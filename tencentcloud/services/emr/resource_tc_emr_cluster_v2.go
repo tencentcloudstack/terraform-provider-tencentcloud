@@ -11,6 +11,7 @@ import (
 
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
+	"github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/common"
 	"github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/common/errors"
 	emr "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/emr/v20190103"
 
@@ -36,11 +37,13 @@ func ResourceTencentCloudEmrClusterV2() *schema.Resource {
 			"product_version": {
 				Type:        schema.TypeString,
 				Required:    true,
+				ForceNew:    true,
 				Description: "EMR product version name, e.g., `EMR-V3.5.0`.",
 			},
 			"enable_support_ha_flag": {
 				Type:        schema.TypeBool,
 				Required:    true,
+				ForceNew:    true,
 				Description: "Whether to enable node high availability. `true` means enabled, `false` means disabled.",
 			},
 			"instance_name": {
@@ -51,11 +54,13 @@ func ResourceTencentCloudEmrClusterV2() *schema.Resource {
 			"instance_charge_type": {
 				Type:        schema.TypeString,
 				Required:    true,
+				ForceNew:    true,
 				Description: "Instance billing mode. Valid values: `PREPAID` (monthly/yearly subscription), `POSTPAID_BY_HOUR` (pay-as-you-go).",
 			},
 			"login_settings": {
 				Type:        schema.TypeList,
 				Required:    true,
+				ForceNew:    true,
 				MaxItems:    1,
 				Description: "Login settings for purchased nodes.",
 				Elem: &schema.Resource{
@@ -63,12 +68,14 @@ func ResourceTencentCloudEmrClusterV2() *schema.Resource {
 						"password": {
 							Type:        schema.TypeString,
 							Optional:    true,
+							ForceNew:    true,
 							Sensitive:   true,
 							Description: "Login password, 8-16 characters, must contain uppercase, lowercase, digit and special character (supported special chars: `!@%^*`). First char cannot be special.",
 						},
 						"public_key_id": {
 							Type:        schema.TypeString,
 							Optional:    true,
+							ForceNew:    true,
 							Description: "Public key ID for key-based login.",
 						},
 					},
@@ -90,6 +97,7 @@ func ResourceTencentCloudEmrClusterV2() *schema.Resource {
 						"scene_name": {
 							Type:        schema.TypeString,
 							Optional:    true,
+							ForceNew:    true,
 							Description: "Scenario name, e.g., `Hadoop-Default`, `Hadoop-Kudu`, `Hadoop-Zookeeper`, `Hadoop-Presto`, `Hadoop-Hbase`.",
 						},
 					},
@@ -98,6 +106,7 @@ func ResourceTencentCloudEmrClusterV2() *schema.Resource {
 			"instance_charge_prepaid": {
 				Type:        schema.TypeList,
 				Optional:    true,
+				ForceNew:    true,
 				MaxItems:    1,
 				Description: "Prepaid (monthly/yearly) billing parameters. Required when `instance_charge_type` is `PREPAID`.",
 				Elem: &schema.Resource{
@@ -105,11 +114,13 @@ func ResourceTencentCloudEmrClusterV2() *schema.Resource {
 						"period": {
 							Type:        schema.TypeInt,
 							Optional:    true,
+							ForceNew:    true,
 							Description: "Purchase duration in months. Valid values: 1-12, 24, 36, 48, 60.",
 						},
 						"renew_flag": {
 							Type:        schema.TypeBool,
 							Optional:    true,
+							ForceNew:    true,
 							Description: "Auto-renew flag. Default is false.",
 						},
 					},
@@ -118,6 +129,7 @@ func ResourceTencentCloudEmrClusterV2() *schema.Resource {
 			"security_group_ids": {
 				Type:        schema.TypeList,
 				Optional:    true,
+				ForceNew:    true,
 				MaxItems:    1,
 				Elem:        &schema.Schema{Type: schema.TypeString},
 				Description: "Security group IDs bound to the instance, e.g., `[\"sg-xxxxxxxx\"]`.",
@@ -125,33 +137,39 @@ func ResourceTencentCloudEmrClusterV2() *schema.Resource {
 			"script_bootstrap_action_config": {
 				Type:        schema.TypeList,
 				Optional:    true,
+				ForceNew:    true,
 				Description: "Bootstrap script configurations.",
 				Elem: &schema.Resource{
 					Schema: map[string]*schema.Schema{
 						"cos_file_uri": {
 							Type:        schema.TypeString,
 							Optional:    true,
+							ForceNew:    true,
 							Description: "COS URI of the script.",
 						},
 						"execution_moment": {
 							Type:        schema.TypeString,
 							Optional:    true,
+							ForceNew:    true,
 							Description: "Execution timing. Valid values: `resourceAfter`, `clusterAfter`, `clusterBefore`.",
 						},
 						"args": {
 							Type:        schema.TypeList,
 							Optional:    true,
+							ForceNew:    true,
 							Elem:        &schema.Schema{Type: schema.TypeString},
 							Description: "Script arguments, following standard Shell convention.",
 						},
 						"cos_file_name": {
 							Type:        schema.TypeString,
 							Optional:    true,
+							ForceNew:    true,
 							Description: "Script file name.",
 						},
 						"remark": {
 							Type:        schema.TypeString,
 							Optional:    true,
+							ForceNew:    true,
 							Description: "Remark.",
 						},
 					},
@@ -160,21 +178,25 @@ func ResourceTencentCloudEmrClusterV2() *schema.Resource {
 			"need_master_wan": {
 				Type:        schema.TypeString,
 				Optional:    true,
+				ForceNew:    true,
 				Description: "Whether to enable master public network. Valid values: `NEED_MASTER_WAN` (default), `NOT_NEED_MASTER_WAN`.",
 			},
 			"enable_remote_login_flag": {
 				Type:        schema.TypeBool,
 				Optional:    true,
+				ForceNew:    true,
 				Description: "Whether to enable external remote login. Invalid when `security_group_ids` is set. Default is false.",
 			},
 			"enable_kerberos_flag": {
 				Type:        schema.TypeBool,
 				Optional:    true,
+				ForceNew:    true,
 				Description: "Whether to enable Kerberos authentication. Default is false.",
 			},
 			"custom_conf": {
 				Type:        schema.TypeString,
 				Optional:    true,
+				ForceNew:    true,
 				Description: "Custom software configuration in JSON format.",
 			},
 			"tags": {
@@ -199,17 +221,20 @@ func ResourceTencentCloudEmrClusterV2() *schema.Resource {
 			"disaster_recover_group_ids": {
 				Type:        schema.TypeList,
 				Optional:    true,
+				ForceNew:    true,
 				Elem:        &schema.Schema{Type: schema.TypeString},
 				Description: "Spread placement group IDs. Currently supports only one ID.",
 			},
 			"enable_cbs_encrypt_flag": {
 				Type:        schema.TypeBool,
 				Optional:    true,
+				ForceNew:    true,
 				Description: "Whether to enable cluster-level CBS encryption. Default is false.",
 			},
 			"meta_db_info": {
 				Type:        schema.TypeList,
 				Optional:    true,
+				ForceNew:    true,
 				MaxItems:    1,
 				Description: "Metadata database information. When `meta_type` is `EMR_NEW_META`/`EMR_DEFAULT_META`, no extra fields are required; when `EMR_EXIT_META`, `unify_meta_instance_id` must be set; when `USER_CUSTOM_META`, `meta_data_jdbc_url`/`meta_data_user`/`meta_data_pass` must be set.",
 				Elem: &schema.Resource{
@@ -217,27 +242,32 @@ func ResourceTencentCloudEmrClusterV2() *schema.Resource {
 						"meta_data_jdbc_url": {
 							Type:        schema.TypeString,
 							Optional:    true,
+							ForceNew:    true,
 							Description: "Custom MetaDB JDBC URL, e.g., `jdbc:mysql://10.10.10.10:3306/dbname`.",
 						},
 						"meta_data_user": {
 							Type:        schema.TypeString,
 							Optional:    true,
+							ForceNew:    true,
 							Description: "Custom MetaDB username.",
 						},
 						"meta_data_pass": {
 							Type:        schema.TypeString,
 							Optional:    true,
+							ForceNew:    true,
 							Sensitive:   true,
 							Description: "Custom MetaDB password.",
 						},
 						"meta_type": {
 							Type:        schema.TypeString,
 							Optional:    true,
+							ForceNew:    true,
 							Description: "Hive shared metadata DB type. Valid values: `EMR_DEFAULT_META`, `EMR_EXIT_META`, `USER_CUSTOM_META`.",
 						},
 						"unify_meta_instance_id": {
 							Type:        schema.TypeString,
 							Optional:    true,
+							ForceNew:    true,
 							Description: "EMR-MetaDB instance ID.",
 						},
 					},
@@ -246,17 +276,20 @@ func ResourceTencentCloudEmrClusterV2() *schema.Resource {
 			"depend_service": {
 				Type:        schema.TypeList,
 				Optional:    true,
+				ForceNew:    true,
 				Description: "Shared component dependency information.",
 				Elem: &schema.Resource{
 					Schema: map[string]*schema.Schema{
 						"service_name": {
 							Type:        schema.TypeString,
 							Optional:    true,
+							ForceNew:    true,
 							Description: "Shared component name.",
 						},
 						"instance_id": {
 							Type:        schema.TypeString,
 							Optional:    true,
+							ForceNew:    true,
 							Description: "Shared component cluster instance ID.",
 						},
 					},
@@ -265,6 +298,7 @@ func ResourceTencentCloudEmrClusterV2() *schema.Resource {
 			"zone_resource_configuration": {
 				Type:        schema.TypeList,
 				Optional:    true,
+				Computed:    true,
 				MaxItems:    3,
 				Description: "Per-zone resource configuration. Supports 1 (single-AZ) or up to 3 entries (multi-AZ: primary, backup, arbitration). ZoneTag is derived automatically from the list index.",
 				Elem: &schema.Resource{
@@ -272,6 +306,7 @@ func ResourceTencentCloudEmrClusterV2() *schema.Resource {
 						"virtual_private_cloud": {
 							Type:        schema.TypeList,
 							Optional:    true,
+							ForceNew:    true,
 							MaxItems:    1,
 							Description: "VPC/Subnet information.",
 							Elem: &schema.Resource{
@@ -279,11 +314,13 @@ func ResourceTencentCloudEmrClusterV2() *schema.Resource {
 									"vpc_id": {
 										Type:        schema.TypeString,
 										Optional:    true,
+										ForceNew:    true,
 										Description: "VPC ID.",
 									},
 									"subnet_id": {
 										Type:        schema.TypeString,
 										Optional:    true,
+										ForceNew:    true,
 										Description: "Subnet ID.",
 									},
 								},
@@ -292,6 +329,7 @@ func ResourceTencentCloudEmrClusterV2() *schema.Resource {
 						"placement": {
 							Type:        schema.TypeList,
 							Optional:    true,
+							ForceNew:    true,
 							MaxItems:    1,
 							Description: "Zone and project placement.",
 							Elem: &schema.Resource{
@@ -299,11 +337,14 @@ func ResourceTencentCloudEmrClusterV2() *schema.Resource {
 									"zone": {
 										Type:        schema.TypeString,
 										Optional:    true,
+										ForceNew:    true,
 										Description: "Availability zone, e.g., `ap-guangzhou-7`.",
 									},
 									"project_id": {
 										Type:        schema.TypeInt,
 										Optional:    true,
+										Computed:    true,
+										ForceNew:    true,
 										Description: "Project ID. Defaults to default project if omitted.",
 									},
 								},
@@ -346,20 +387,21 @@ func ResourceTencentCloudEmrClusterV2() *schema.Resource {
 																Optional:    true,
 																Description: "Disk type. Valid values: `CLOUD_SSD`, `CLOUD_PREMIUM`, `CLOUD_BASIC`, `LOCAL_BASIC`, `LOCAL_SSD`.",
 															},
+															"disk_id": {
+																Type:        schema.TypeString,
+																Computed:    true,
+																Description: "Disk ID.",
+															},
 														},
 													},
 												},
 												"data_disk": {
-													Type:        schema.TypeSet,
-													Optional:    true,
-													Description: "Cloud data disk specifications.",
+													Type:             schema.TypeList,
+													Optional:         true,
+													DiffSuppressFunc: emrDataDiskOrderSuppressFunc,
+													Description:      "Cloud data disk specifications.",
 													Elem: &schema.Resource{
 														Schema: map[string]*schema.Schema{
-															"count": {
-																Type:        schema.TypeInt,
-																Optional:    true,
-																Description: "Number of disks.",
-															},
 															"disk_size": {
 																Type:        schema.TypeInt,
 																Optional:    true,
@@ -370,32 +412,23 @@ func ResourceTencentCloudEmrClusterV2() *schema.Resource {
 																Optional:    true,
 																Description: "Disk type. Valid values: `CLOUD_SSD`, `CLOUD_PREMIUM`, `CLOUD_BASIC`, `LOCAL_BASIC`, `LOCAL_SSD`, `CLOUD_HSSD`, `CLOUD_THROUGHPUT`, `CLOUD_TSSD`, `CLOUD_BIGDATA`, `CLOUD_HIGHIO`, `CLOUD_BSSD`, `REMOTE_SSD`.",
 															},
+															"disk_id": {
+																Type:        schema.TypeString,
+																Computed:    true,
+																Description: "Disk ID.",
+															},
 														},
 													},
 												},
-												// "tags": {
-												// 	Type:        schema.TypeList,
-												// 	Optional:    true,
-												// 	Description: "Tags to bind to the node.",
-												// 	Elem: &schema.Resource{
-												// 		Schema: map[string]*schema.Schema{
-												// 			"tag_key": {
-												// 				Type:        schema.TypeString,
-												// 				Optional:    true,
-												// 				Description: "Tag key.",
-												// 			},
-												// 			"tag_value": {
-												// 				Type:        schema.TypeString,
-												// 				Optional:    true,
-												// 				Description: "Tag value.",
-												// 			},
-												// 		},
-												// 	},
-												// },
 												"emr_resource_id": {
 													Type:        schema.TypeString,
 													Computed:    true,
 													Description: "EMR node resource ID.",
+												},
+												"order_no": {
+													Type:        schema.TypeString,
+													Computed:    true,
+													Description: "Machine instance ID.",
 												},
 											},
 										},
@@ -430,20 +463,21 @@ func ResourceTencentCloudEmrClusterV2() *schema.Resource {
 																Optional:    true,
 																Description: "Disk type. Valid values: `CLOUD_SSD`, `CLOUD_PREMIUM`, `CLOUD_BASIC`, `LOCAL_BASIC`, `LOCAL_SSD`.",
 															},
+															"disk_id": {
+																Type:        schema.TypeString,
+																Computed:    true,
+																Description: "Disk ID.",
+															},
 														},
 													},
 												},
 												"data_disk": {
-													Type:        schema.TypeSet,
-													Optional:    true,
-													Description: "Cloud data disk specifications.",
+													Type:             schema.TypeList,
+													Optional:         true,
+													DiffSuppressFunc: emrDataDiskOrderSuppressFunc,
+													Description:      "Cloud data disk specifications.",
 													Elem: &schema.Resource{
 														Schema: map[string]*schema.Schema{
-															"count": {
-																Type:        schema.TypeInt,
-																Optional:    true,
-																Description: "Number of disks.",
-															},
 															"disk_size": {
 																Type:        schema.TypeInt,
 																Optional:    true,
@@ -454,32 +488,23 @@ func ResourceTencentCloudEmrClusterV2() *schema.Resource {
 																Optional:    true,
 																Description: "Disk type. Valid values: `CLOUD_SSD`, `CLOUD_PREMIUM`, `CLOUD_BASIC`, `LOCAL_BASIC`, `LOCAL_SSD`, `CLOUD_HSSD`, `CLOUD_THROUGHPUT`, `CLOUD_TSSD`, `CLOUD_BIGDATA`, `CLOUD_HIGHIO`, `CLOUD_BSSD`, `REMOTE_SSD`.",
 															},
+															"disk_id": {
+																Type:        schema.TypeString,
+																Computed:    true,
+																Description: "Disk ID.",
+															},
 														},
 													},
 												},
-												// "tags": {
-												// 	Type:        schema.TypeList,
-												// 	Optional:    true,
-												// 	Description: "Tags to bind to the node.",
-												// 	Elem: &schema.Resource{
-												// 		Schema: map[string]*schema.Schema{
-												// 			"tag_key": {
-												// 				Type:        schema.TypeString,
-												// 				Optional:    true,
-												// 				Description: "Tag key.",
-												// 			},
-												// 			"tag_value": {
-												// 				Type:        schema.TypeString,
-												// 				Optional:    true,
-												// 				Description: "Tag value.",
-												// 			},
-												// 		},
-												// 	},
-												// },
 												"emr_resource_id": {
 													Type:        schema.TypeString,
 													Computed:    true,
 													Description: "EMR node resource ID.",
+												},
+												"order_no": {
+													Type:        schema.TypeString,
+													Computed:    true,
+													Description: "Machine instance ID.",
 												},
 											},
 										},
@@ -514,20 +539,21 @@ func ResourceTencentCloudEmrClusterV2() *schema.Resource {
 																Optional:    true,
 																Description: "Disk type. Valid values: `CLOUD_SSD`, `CLOUD_PREMIUM`, `CLOUD_BASIC`, `LOCAL_BASIC`, `LOCAL_SSD`.",
 															},
+															"disk_id": {
+																Type:        schema.TypeString,
+																Computed:    true,
+																Description: "Disk ID.",
+															},
 														},
 													},
 												},
 												"data_disk": {
-													Type:        schema.TypeSet,
-													Optional:    true,
-													Description: "Cloud data disk specifications.",
+													Type:             schema.TypeList,
+													Optional:         true,
+													DiffSuppressFunc: emrDataDiskOrderSuppressFunc,
+													Description:      "Cloud data disk specifications.",
 													Elem: &schema.Resource{
 														Schema: map[string]*schema.Schema{
-															"count": {
-																Type:        schema.TypeInt,
-																Optional:    true,
-																Description: "Number of disks.",
-															},
 															"disk_size": {
 																Type:        schema.TypeInt,
 																Optional:    true,
@@ -538,32 +564,23 @@ func ResourceTencentCloudEmrClusterV2() *schema.Resource {
 																Optional:    true,
 																Description: "Disk type. Valid values: `CLOUD_SSD`, `CLOUD_PREMIUM`, `CLOUD_BASIC`, `LOCAL_BASIC`, `LOCAL_SSD`, `CLOUD_HSSD`, `CLOUD_THROUGHPUT`, `CLOUD_TSSD`, `CLOUD_BIGDATA`, `CLOUD_HIGHIO`, `CLOUD_BSSD`, `REMOTE_SSD`.",
 															},
+															"disk_id": {
+																Type:        schema.TypeString,
+																Computed:    true,
+																Description: "Disk ID.",
+															},
 														},
 													},
 												},
-												// "tags": {
-												// 	Type:        schema.TypeList,
-												// 	Optional:    true,
-												// 	Description: "Tags to bind to the node.",
-												// 	Elem: &schema.Resource{
-												// 		Schema: map[string]*schema.Schema{
-												// 			"tag_key": {
-												// 				Type:        schema.TypeString,
-												// 				Optional:    true,
-												// 				Description: "Tag key.",
-												// 			},
-												// 			"tag_value": {
-												// 				Type:        schema.TypeString,
-												// 				Optional:    true,
-												// 				Description: "Tag value.",
-												// 			},
-												// 		},
-												// 	},
-												// },
 												"emr_resource_id": {
 													Type:        schema.TypeString,
 													Computed:    true,
 													Description: "EMR node resource ID.",
+												},
+												"order_no": {
+													Type:        schema.TypeString,
+													Computed:    true,
+													Description: "Machine instance ID.",
 												},
 											},
 										},
@@ -598,20 +615,21 @@ func ResourceTencentCloudEmrClusterV2() *schema.Resource {
 																Optional:    true,
 																Description: "Disk type. Valid values: `CLOUD_SSD`, `CLOUD_PREMIUM`, `CLOUD_BASIC`, `LOCAL_BASIC`, `LOCAL_SSD`.",
 															},
+															"disk_id": {
+																Type:        schema.TypeString,
+																Computed:    true,
+																Description: "Disk ID.",
+															},
 														},
 													},
 												},
 												"data_disk": {
-													Type:        schema.TypeSet,
-													Optional:    true,
-													Description: "Cloud data disk specifications.",
+													Type:             schema.TypeList,
+													Optional:         true,
+													DiffSuppressFunc: emrDataDiskOrderSuppressFunc,
+													Description:      "Cloud data disk specifications.",
 													Elem: &schema.Resource{
 														Schema: map[string]*schema.Schema{
-															"count": {
-																Type:        schema.TypeInt,
-																Optional:    true,
-																Description: "Number of disks.",
-															},
 															"disk_size": {
 																Type:        schema.TypeInt,
 																Optional:    true,
@@ -622,32 +640,23 @@ func ResourceTencentCloudEmrClusterV2() *schema.Resource {
 																Optional:    true,
 																Description: "Disk type. Valid values: `CLOUD_SSD`, `CLOUD_PREMIUM`, `CLOUD_BASIC`, `LOCAL_BASIC`, `LOCAL_SSD`, `CLOUD_HSSD`, `CLOUD_THROUGHPUT`, `CLOUD_TSSD`, `CLOUD_BIGDATA`, `CLOUD_HIGHIO`, `CLOUD_BSSD`, `REMOTE_SSD`.",
 															},
+															"disk_id": {
+																Type:        schema.TypeString,
+																Computed:    true,
+																Description: "Disk ID.",
+															},
 														},
 													},
 												},
-												// "tags": {
-												// 	Type:        schema.TypeList,
-												// 	Optional:    true,
-												// 	Description: "Tags to bind to the node.",
-												// 	Elem: &schema.Resource{
-												// 		Schema: map[string]*schema.Schema{
-												// 			"tag_key": {
-												// 				Type:        schema.TypeString,
-												// 				Optional:    true,
-												// 				Description: "Tag key.",
-												// 			},
-												// 			"tag_value": {
-												// 				Type:        schema.TypeString,
-												// 				Optional:    true,
-												// 				Description: "Tag value.",
-												// 			},
-												// 		},
-												// 	},
-												// },
 												"emr_resource_id": {
 													Type:        schema.TypeString,
 													Computed:    true,
 													Description: "EMR node resource ID.",
+												},
+												"order_no": {
+													Type:        schema.TypeString,
+													Computed:    true,
+													Description: "Machine instance ID.",
 												},
 											},
 										},
@@ -661,37 +670,50 @@ func ResourceTencentCloudEmrClusterV2() *schema.Resource {
 			"cos_bucket": {
 				Type:        schema.TypeString,
 				Optional:    true,
+				ForceNew:    true,
 				Description: "COS bucket path, used when creating StarRocks storage-compute separation clusters.",
 			},
 			"load_balancer_id": {
 				Type:        schema.TypeString,
 				Optional:    true,
+				ForceNew:    true,
 				Description: "CLB instance ID, e.g., `lb-xxxxxxxx`.",
 			},
 			"default_meta_version": {
 				Type:        schema.TypeString,
 				Optional:    true,
+				ForceNew:    true,
 				Description: "Default metadata DB version. Valid values: `mysql8`, `tdsql8`, `mysql5`.",
 			},
 			"need_cdb_audit": {
 				Type:        schema.TypeInt,
 				Optional:    true,
+				ForceNew:    true,
 				Description: "Whether to enable database auditing.",
 			},
 			"sg_ip": {
 				Type:        schema.TypeString,
 				Optional:    true,
+				ForceNew:    true,
 				Description: "Security source IP, e.g., `10.0.0.0/8`.",
 			},
 			"partition_number": {
 				Type:        schema.TypeInt,
 				Optional:    true,
+				ForceNew:    true,
 				Description: "Partition placement group partition number.",
 			},
 			"web_ui_version": {
 				Type:        schema.TypeInt,
 				Optional:    true,
+				ForceNew:    true,
 				Description: "Service UI address version. `0`: single URL (default); `1`: all URLs.",
+			},
+			"enable_cbs_sys_encrypt_flag": {
+				Type:        schema.TypeBool,
+				Optional:    true,
+				ForceNew:    true,
+				Description: "Whether to enable CBS system encryption.",
 			},
 
 			// Computed read-back fields (populated by Read from DescribeInstances).
@@ -1019,6 +1041,10 @@ func resourceTencentCloudEmrClusterV2Create(d *schema.ResourceData, meta interfa
 		request.WebUiVersion = helper.IntInt64(v.(int))
 	}
 
+	if v, ok := d.GetOkExists("enable_cbs_sys_encrypt_flag"); ok {
+		request.EnableCbsSysEncryptFlag = helper.Bool(v.(bool))
+	}
+
 	reqErr := resource.Retry(tccommon.WriteRetryTimeout, func() *resource.RetryError {
 		result, e := meta.(tccommon.ProviderMeta).GetAPIV3Conn().UseEmrClient().CreateClusterWithContext(ctx, request)
 		if e != nil {
@@ -1257,8 +1283,8 @@ func resourceTencentCloudEmrClusterV2Read(d *schema.ResourceData, meta interface
 				// placement
 				placementItem := make(map[string]interface{})
 				placementItem["zone"] = zone
-				if cluster.ProductId != nil {
-					placementItem["project_id"] = cluster.ProductId
+				if cluster.ProjectId != nil {
+					placementItem["project_id"] = cluster.ProjectId
 				}
 				node["placement"] = []interface{}{placementItem}
 
@@ -1381,6 +1407,12 @@ func resourceTencentCloudEmrClusterV2Read(d *schema.ResourceData, meta interface
 							specItem["emr_resource_id"] = ""
 						}
 
+						if n.OrderNo != nil {
+							specItem["order_no"] = *n.OrderNo
+						} else {
+							specItem["order_no"] = ""
+						}
+
 						// system_disk
 						if n.RootSize != nil && n.RootStorageType != nil {
 							specItem["system_disk"] = []interface{}{
@@ -1393,26 +1425,35 @@ func resourceTencentCloudEmrClusterV2Read(d *schema.ResourceData, meta interface
 							specItem["system_disk"] = []interface{}{}
 						}
 
-						// data_disk (TypeSet → []interface{})
-						dataDisks := make([]interface{}, 0, len(n.MCMultiDisk))
-						for _, d := range n.MCMultiDisk {
-							if d == nil || d.Count == nil || d.Type == nil || d.Size == nil {
-								continue
-							}
-							sizeStr := strings.TrimRightFunc(*d.Size, func(r rune) bool {
-								return r < '0' || r > '9'
-							})
-							sizeGB := 0
-							if v, err := strconv.Atoi(sizeStr); err == nil {
-								sizeGB = v
-							}
-							dataDisks = append(dataDisks, map[string]interface{}{
-								"count":     int(*d.Count),
-								"disk_size": sizeGB,
-								"disk_type": emrDiskTypeIntToString(*d.Type),
-							})
+						// data_disk
+						if n.OrderNo == nil {
+							continue
 						}
-						specItem["data_disk"] = dataDisks
+
+						dataResp, derr := service.DescribeEmrNodeDataDisks(ctx, instanceId, specItem["order_no"].(string))
+						if derr != nil {
+							return derr
+						}
+
+						// Convert API response to a list of disk maps (each has disk_id).
+						apiDisks := make([]map[string]interface{}, 0, len(dataResp))
+						for _, item := range dataResp {
+							tmpObj := map[string]interface{}{
+								"disk_size": 0,
+								"disk_type": "",
+								"disk_id":   "",
+							}
+							if item.DiskSize != nil {
+								tmpObj["disk_size"] = int(*item.DiskSize)
+							}
+							if item.DiskType != nil {
+								tmpObj["disk_type"] = *item.DiskType
+							}
+							if item.DiskId != nil {
+								tmpObj["disk_id"] = *item.DiskId
+							}
+							apiDisks = append(apiDisks, tmpObj)
+						}
 
 						// tags
 						// nodeTags := make([]interface{}, 0, len(n.Tags))
@@ -1434,24 +1475,36 @@ func resourceTencentCloudEmrClusterV2Read(d *schema.ResourceData, meta interface
 						// }
 						// specItem["tags"] = nodeTags
 
-						// Align with state to avoid spurious diffs:
-						//   - id-based: match by emr_resource_id (post-update scenario)
-						//   - index-based: match by position (post-create, all nodes identical)
+						// Align with previous state to keep disk_id→index bindings stable.
+						// stateSpec is fetched from the raw state layer (not the diff layer),
+						// so its disk_id values are authoritative and not index-shifted.
 						var stateSpec map[string]interface{}
 						if useIdMatch && n.EmrResourceId != nil {
 							stateSpec = stateByResourceId[*n.EmrResourceId]
 						} else if !useIdMatch && idx < len(stateSpecs) {
 							stateSpec, _ = stateSpecs[idx].(map[string]interface{})
 						}
+						var stateDataDisks []interface{}
+						if stateSpec != nil {
+							stateDataDisks, _ = stateSpec["data_disk"].([]interface{})
+						}
 
-						// If a matching state spec exists, carry over emr_resource_id
-						// (already set above from API) – primary value is always from API.
-						// For fields the API returns authoritatively, API wins.
-						// stateSpec is kept here as a hook for future non-API-returnable fields.
-						_ = stateSpec
+						// Re-order API disks to match the previous state's disk_id order.
+						// This ensures that each position in state always refers to the same
+						// physical disk, so Terraform's per-index diff shows the correct change.
+						// Newly attached disks (not in previous state) are appended at the end.
+						specItem["data_disk"] = alignDataDisksToConfig(stateDataDisks, apiDisks)
 
 						specs = append(specs, specItem)
 					}
+
+					// Re-order the freshly-built specs to match the node order that was
+					// previously recorded in state (by emr_resource_id).  This keeps the
+					// TypeList index of every existing node stable across refreshes so
+					// that Terraform never sees a "node swap" diff.  Newly attached nodes
+					// (emr_resource_id not found in state) are appended after all existing ones.
+					specs = alignNodeSpecsToState(specs, stateSpecs)
+
 					allSpec[roleKey] = specs
 				}
 				node["all_node_resource_spec"] = []interface{}{allSpec}
@@ -1476,18 +1529,701 @@ func resourceTencentCloudEmrClusterV2Read(d *schema.ResourceData, meta interface
 	return nil
 }
 
-// -----------------------------------------------------------------------------
-// Update (no-op)
-// -----------------------------------------------------------------------------
-
 func resourceTencentCloudEmrClusterV2Update(d *schema.ResourceData, meta interface{}) error {
 	defer tccommon.LogElapsed("resource.tencentcloud_emr_cluster_v2.update")()
 	defer tccommon.InconsistentCheck(d, meta)()
 
-	// NOTE: Modify APIs (scale-out/scale-in, ModifyResourcesTags, rename, ...)
-	// will be added in a follow-up change. The Update handler is intentionally a
-	// no-op for now so that schema fields can stay non-ForceNew without forcing
-	// recreation on accidental re-apply.
+	var (
+		logId      = tccommon.GetLogId(tccommon.ContextNil)
+		ctx        = tccommon.NewResourceLifeCycleHandleFuncContext(context.Background(), logId, d, meta)
+		service    = EMRService{client: meta.(tccommon.ProviderMeta).GetAPIV3Conn()}
+		instanceId = d.Id()
+	)
+
+	if d.HasChange("instance_name") {
+		request := emr.NewModifyInstanceBasicRequest()
+		request.InstanceId = helper.String(instanceId)
+		if v, ok := d.GetOk("instance_name"); ok {
+			request.ClusterName = helper.String(v.(string))
+		}
+
+		reqErr := resource.Retry(tccommon.WriteRetryTimeout, func() *resource.RetryError {
+			result, e := meta.(tccommon.ProviderMeta).GetAPIV3Conn().UseEmrClient().ModifyInstanceBasicWithContext(ctx, request)
+			if e != nil {
+				return tccommon.RetryError(e)
+			}
+			if result != nil {
+				log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), result.ToJsonString())
+			}
+			return nil
+		})
+
+		if reqErr != nil {
+			log.Printf("[CRITAL]%s update emr cluster name failed, reason:%+v", logId, reqErr)
+			return reqErr
+		}
+	}
+
+	if d.HasChange("tags") {
+		oldInterface, newInterface := d.GetChange("tags")
+		oldTagList := oldInterface.([]interface{})
+		newTagsList := newInterface.([]interface{})
+		region := meta.(tccommon.ProviderMeta).GetAPIV3Conn().Region
+		resourceName := tccommon.BuildTagResourceName("emr", "emr-instance", region, instanceId)
+		modifyResourceTags := &emr.ModifyResourceTags{
+			ResourceId:     helper.String(instanceId),
+			Resource:       helper.String(resourceName),
+			ResourcePrefix: helper.String("emr"),
+			ResourceRegion: helper.String(region),
+			ServiceType:    helper.String("emr"),
+		}
+
+		deleteTags := make([]*emr.Tag, 0, len(oldTagList))
+		addTags := make([]*emr.Tag, 0, len(newTagsList))
+		modifyTags := make([]*emr.Tag, 0, len(newTagsList))
+
+		// Build a map of old tags: key -> value
+		oldTagMap := make(map[string]string, len(oldTagList))
+		for _, oItem := range oldTagList {
+			odMap := oItem.(map[string]interface{})
+			k, _ := odMap["tag_key"].(string)
+			v, _ := odMap["tag_value"].(string)
+			oldTagMap[k] = v
+		}
+
+		// Build a map of new tags: key -> value
+		newTagMap := make(map[string]string, len(newTagsList))
+		for _, nItem := range newTagsList {
+			ndMap := nItem.(map[string]interface{})
+			k, _ := ndMap["tag_key"].(string)
+			v, _ := ndMap["tag_value"].(string)
+			newTagMap[k] = v
+		}
+
+		// key only in old -> deleteTags
+		for k, v := range oldTagMap {
+			if _, exists := newTagMap[k]; !exists {
+				deleteTags = append(deleteTags, &emr.Tag{
+					TagKey:   helper.String(k),
+					TagValue: helper.String(v),
+				})
+			}
+		}
+
+		// key only in new -> addTags; key in both -> modifyTags
+		for k, v := range newTagMap {
+			if _, exists := oldTagMap[k]; !exists {
+				addTags = append(addTags, &emr.Tag{
+					TagKey:   helper.String(k),
+					TagValue: helper.String(v),
+				})
+			} else {
+				modifyTags = append(modifyTags, &emr.Tag{
+					TagKey:   helper.String(k),
+					TagValue: helper.String(v),
+				})
+			}
+		}
+
+		if len(deleteTags) > 0 {
+			modifyResourceTags.DeleteTags = deleteTags
+		}
+
+		if len(addTags) > 0 {
+			modifyResourceTags.AddTags = addTags
+		}
+
+		if len(modifyTags) > 0 {
+			modifyResourceTags.ModifyTags = modifyTags
+		}
+
+		request := emr.NewModifyResourcesTagsRequest()
+		response := emr.NewModifyResourcesTagsResponse()
+		request.ModifyType = helper.String("Cluster")
+		request.ModifyResourceTagsInfoList = []*emr.ModifyResourceTags{
+			modifyResourceTags,
+		}
+		reqErr := resource.Retry(tccommon.WriteRetryTimeout, func() *resource.RetryError {
+			result, e := meta.(tccommon.ProviderMeta).GetAPIV3Conn().UseEmrClient().ModifyResourcesTagsWithContext(ctx, request)
+			if e != nil {
+				return tccommon.RetryError(e)
+			} else {
+				log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), result.ToJsonString())
+			}
+
+			if result == nil || result.Response == nil || result.Response.ClusterToFlowIdList == nil || len(result.Response.ClusterToFlowIdList) == 0 {
+				return resource.NonRetryableError(fmt.Errorf("Update emr cluster modify tags failed, Response is nil."))
+			}
+
+			response = result
+			return nil
+		})
+
+		if reqErr != nil {
+			log.Printf("[CRITAL]%s update emr cluster tags failed, reason:%+v", logId, reqErr)
+			return reqErr
+		}
+
+		if response.Response.ClusterToFlowIdList[0].FlowId == nil {
+			return fmt.Errorf("Update emr cluster modify tags failed, FlowId is nil.")
+		}
+
+		// wait
+		flowId := int64(*response.Response.ClusterToFlowIdList[0].FlowId)
+		conf := tccommon.BuildStateChangeConf([]string{"0", "1"}, []string{"2", "-1"}, d.Timeout(schema.TimeoutUpdate)-time.Minute, time.Second, service.FlowStatusRefreshFunc(instanceId, strconv.FormatInt(flowId, 10), F_KEY_FLOW_ID, []string{}))
+		if object, e := conf.WaitForState(); e != nil {
+			return e
+		} else if status, ok := object.(*int64); ok && status != nil && *status == -1 {
+			return fmt.Errorf("Update emr cluster modify tags failed, flow total status is -1.")
+		}
+	}
+
+	if d.HasChange("zone_resource_configuration") {
+		oldZrcRaw, newZrcRaw := d.GetChange("zone_resource_configuration")
+		oldZrcList := oldZrcRaw.([]interface{})
+		newZrcList := newZrcRaw.([]interface{})
+
+		if len(oldZrcList) != len(newZrcList) {
+			return fmt.Errorf("the number of zone_resource_configuration blocks cannot be changed after creation (old: %d, new: %d)",
+				len(oldZrcList), len(newZrcList))
+		}
+
+		for zoneIdx := 0; zoneIdx < len(newZrcList); zoneIdx++ {
+			oldZrcMap, ok1 := oldZrcList[zoneIdx].(map[string]interface{})
+			newZrcMap, ok2 := newZrcList[zoneIdx].(map[string]interface{})
+			if !ok1 || !ok2 {
+				continue
+			}
+
+			oldAllList, _ := oldZrcMap["all_node_resource_spec"].([]interface{})
+			newAllList, _ := newZrcMap["all_node_resource_spec"].([]interface{})
+			if len(oldAllList) == 0 || len(newAllList) == 0 {
+				continue
+			}
+
+			oldAll := oldAllList[0].(map[string]interface{})
+			newAll := newAllList[0].(map[string]interface{})
+
+			// ---------- master_resource_spec ----------
+			if oldMasterList, newMasterList, changed := nodeRoleChanged(oldAll, newAll, "master_resource_spec"); changed {
+				// master_resource_spec does not support scaling (add or remove nodes).
+				// Re-align by emr_resource_id first so that mid-list insertions in config
+				// do not look like scaling.
+				alignedOldMaster, alignedNewMaster, addedMaster := alignNodeListByResourceId(oldMasterList, newMasterList)
+				// Any node present in old but absent from new is a removal attempt.
+				removedMaster := len(oldMasterList) - len(alignedOldMaster)
+				if len(addedMaster) > 0 || removedMaster > 0 {
+					return fmt.Errorf("zone_resource_configuration[%d].all_node_resource_spec.master_resource_spec does not support scaling (add/remove nodes)", zoneIdx)
+				}
+
+				for nodeIdx := 0; nodeIdx < len(alignedNewMaster); nodeIdx++ {
+					oldSpec, _ := alignedOldMaster[nodeIdx].(map[string]interface{})
+					newSpec, _ := alignedNewMaster[nodeIdx].(map[string]interface{})
+
+					// Prevent modifying system_disk of existing nodes (not supported by API).
+					if rid, _ := oldSpec["emr_resource_id"].(string); rid != "" {
+						if sysDiskChanged(oldSpec, newSpec) {
+							return fmt.Errorf("modifying system_disk of an existing node (emr_resource_id=%s) is not supported", rid)
+						}
+					}
+					if instanceTypeChanged(oldSpec, newSpec) {
+						newInstanceType, _ := newSpec["instance_type"].(string)
+						resourceId, _ := oldSpec["emr_resource_id"].(string)
+
+						newCpu, newMem, err := emrParseInstanceTypeCpuMem(newInstanceType)
+						if err != nil {
+							return fmt.Errorf("zone[%d] master_resource_spec[%d]: failed to parse instance_type %q: %v",
+								zoneIdx, nodeIdx, newInstanceType, err)
+						}
+
+						modifyReq := emr.NewModifyResourceRequest()
+						modifyResp := emr.NewModifyResourceResponse()
+						modifyReq.InstanceId = helper.String(instanceId)
+						modifyReq.PayMode = emrPayModeFromChargeType(d.Get("instance_charge_type").(string))
+						modifyReq.InstanceType = helper.String(newInstanceType)
+						modifyReq.NewCpu = helper.Int64(newCpu)
+						modifyReq.NewMem = helper.Int64(newMem)
+						modifyReq.ResourceIdList = []*string{helper.String(resourceId)}
+
+						reqErr := resource.Retry(tccommon.WriteRetryTimeout, func() *resource.RetryError {
+							result, e := meta.(tccommon.ProviderMeta).GetAPIV3Conn().UseEmrClient().ModifyResourceWithContext(ctx, modifyReq)
+							if e != nil {
+								return tccommon.RetryError(e)
+							}
+							log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n",
+								logId, modifyReq.GetAction(), modifyReq.ToJsonString(), result.ToJsonString())
+
+							if result == nil || result.Response == nil || result.Response.TraceId == nil {
+								return resource.NonRetryableError(fmt.Errorf("Update emr cluster modify resource failed, Response is nil."))
+							}
+
+							modifyResp = result
+							return nil
+						})
+						if reqErr != nil {
+							log.Printf("[CRITAL]%s zone[%d] master_resource_spec[%d] modify instance type failed: %+v",
+								logId, zoneIdx, nodeIdx, reqErr)
+							return reqErr
+						}
+
+						// wait
+						traceId := *modifyResp.Response.TraceId
+						conf := tccommon.BuildStateChangeConf([]string{"0", "1"}, []string{"2", "-1"}, d.Timeout(schema.TimeoutUpdate)-time.Minute, time.Second, service.FlowStatusRefreshFunc(instanceId, traceId, F_KEY_TRACE_ID, []string{}))
+						if object, e := conf.WaitForState(); e != nil {
+							return e
+						} else if status, ok := object.(*int64); ok && status != nil && *status == -1 {
+							return fmt.Errorf("EMR cluster flow failed (TraceId=%s), flow total status is -1.", traceId)
+						}
+					}
+
+					if dataDiskChanged(oldSpec, newSpec) {
+						orderNo, _ := oldSpec["order_no"].(string)
+						oldDisks, _ := oldSpec["data_disk"].([]interface{})
+						newDisks, _ := newSpec["data_disk"].([]interface{})
+
+						if err := handleNodeDataDiskChange(ctx, meta, d, logId, instanceId, orderNo,
+							oldDisks, newDisks, "master_resource_spec", zoneIdx, nodeIdx); err != nil {
+							return err
+						}
+					}
+				}
+			}
+
+			// ---------- core_resource_spec ----------
+			if oldCoreList, newCoreList, changed := nodeRoleChanged(oldAll, newAll, "core_resource_spec"); changed {
+				alignedOldCore, alignedNewCore, addedCore := alignNodeListByResourceId(oldCoreList, newCoreList)
+
+				// Content changes on existing nodes.
+				for nodeIdx := 0; nodeIdx < len(alignedNewCore); nodeIdx++ {
+					oldSpec, _ := alignedOldCore[nodeIdx].(map[string]interface{})
+					newSpec, _ := alignedNewCore[nodeIdx].(map[string]interface{})
+
+					if rid, _ := oldSpec["emr_resource_id"].(string); rid != "" {
+						if sysDiskChanged(oldSpec, newSpec) {
+							return fmt.Errorf("modifying system_disk of an existing node (emr_resource_id=%s) is not supported", rid)
+						}
+					}
+					if instanceTypeChanged(oldSpec, newSpec) {
+						newInstanceType, _ := newSpec["instance_type"].(string)
+						resourceId, _ := oldSpec["emr_resource_id"].(string)
+						newCpu, newMem, err := emrParseInstanceTypeCpuMem(newInstanceType)
+						if err != nil {
+							return fmt.Errorf("zone[%d] core_resource_spec[%d]: failed to parse instance_type %q: %v", zoneIdx, nodeIdx, newInstanceType, err)
+						}
+						modifyReq := emr.NewModifyResourceRequest()
+						modifyResp := emr.NewModifyResourceResponse()
+						modifyReq.InstanceId = helper.String(instanceId)
+						modifyReq.PayMode = emrPayModeFromChargeType(d.Get("instance_charge_type").(string))
+						modifyReq.InstanceType = helper.String(newInstanceType)
+						modifyReq.NewCpu = helper.Int64(newCpu)
+						modifyReq.NewMem = helper.Int64(newMem)
+						modifyReq.ResourceIdList = []*string{helper.String(resourceId)}
+						reqErr := resource.Retry(tccommon.WriteRetryTimeout, func() *resource.RetryError {
+							result, e := meta.(tccommon.ProviderMeta).GetAPIV3Conn().UseEmrClient().ModifyResourceWithContext(ctx, modifyReq)
+							if e != nil {
+								return tccommon.RetryError(e)
+							}
+							log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, modifyReq.GetAction(), modifyReq.ToJsonString(), result.ToJsonString())
+							if result == nil || result.Response == nil || result.Response.TraceId == nil {
+								return resource.NonRetryableError(fmt.Errorf("Update emr cluster modify resource failed, Response is nil."))
+							}
+							modifyResp = result
+							return nil
+						})
+						if reqErr != nil {
+							log.Printf("[CRITAL]%s zone[%d] core_resource_spec[%d] modify instance type failed: %+v", logId, zoneIdx, nodeIdx, reqErr)
+							return reqErr
+						}
+						traceId := *modifyResp.Response.TraceId
+						conf := tccommon.BuildStateChangeConf([]string{"0", "1"}, []string{"2", "-1"}, d.Timeout(schema.TimeoutUpdate)-time.Minute, time.Second, service.FlowStatusRefreshFunc(instanceId, traceId, F_KEY_TRACE_ID, []string{}))
+						if object, e := conf.WaitForState(); e != nil {
+							return e
+						} else if status, ok := object.(*int64); ok && status != nil && *status == -1 {
+							return fmt.Errorf("EMR cluster flow failed (TraceId=%s), flow total status is -1.", traceId)
+						}
+					}
+					if dataDiskChanged(oldSpec, newSpec) {
+						orderNo, _ := oldSpec["order_no"].(string)
+						oldDisks, _ := oldSpec["data_disk"].([]interface{})
+						newDisks, _ := newSpec["data_disk"].([]interface{})
+						if err := handleNodeDataDiskChange(ctx, meta, d, logId, instanceId, orderNo, oldDisks, newDisks, "core_resource_spec", zoneIdx, nodeIdx); err != nil {
+							return err
+						}
+					}
+				}
+
+				// Scale-out: new nodes.
+				for addedIdx, addedRaw := range addedCore {
+					addedSpec, _ := addedRaw.(map[string]interface{})
+					scaleOutReq := emr.NewScaleOutClusterRequest()
+					scaleOutResp := emr.NewScaleOutClusterResponse()
+					scaleOutReq.InstanceId = helper.String(instanceId)
+					scaleOutReq.InstanceChargeType = helper.String(d.Get("instance_charge_type").(string))
+					scaleOutReq.ScaleOutNodeConfig = &emr.ScaleOutNodeConfig{NodeFlag: common.StringPtr("CORE"), NodeCount: common.Uint64Ptr(1)}
+					if d.Get("instance_charge_type").(string) == "PREPAID" {
+						if v, ok := d.GetOk("instance_charge_prepaid"); ok {
+							prepaidList := v.([]interface{})
+							if len(prepaidList) > 0 {
+								prepaidMap := prepaidList[0].(map[string]interface{})
+								prepaid := &emr.InstanceChargePrepaid{}
+								if val, ok := prepaidMap["period"].(int); ok && val != 0 {
+									prepaid.Period = helper.IntInt64(val)
+								}
+								if val, ok := prepaidMap["renew_flag"].(bool); ok {
+									prepaid.RenewFlag = helper.Bool(val)
+								}
+								scaleOutReq.InstanceChargePrepaid = prepaid
+							}
+						}
+					}
+					coreResourceSpec := &emr.NodeResourceSpec{}
+					if instanceType, ok := addedSpec["instance_type"].(string); ok && instanceType != "" {
+						coreResourceSpec.InstanceType = helper.String(instanceType)
+					}
+					if sdList, ok := addedSpec["system_disk"].([]interface{}); ok && len(sdList) > 0 {
+						sdMap, _ := sdList[0].(map[string]interface{})
+						coreResourceSpec.SystemDisk = []*emr.DiskSpecInfo{{DiskType: helper.String(sdMap["disk_type"].(string)), Count: helper.Int64(1), DiskSize: helper.Int64(int64(sdMap["disk_size"].(int)))}}
+					}
+					if ddList, ok := addedSpec["data_disk"].([]interface{}); ok {
+						for _, ddItem := range ddList {
+							ddMap, _ := ddItem.(map[string]interface{})
+							coreResourceSpec.DataDisk = append(coreResourceSpec.DataDisk, &emr.DiskSpecInfo{DiskType: helper.String(ddMap["disk_type"].(string)), Count: helper.Int64(1), DiskSize: helper.Int64(int64(ddMap["disk_size"].(int)))})
+						}
+					}
+					scaleOutReq.ResourceSpec = coreResourceSpec
+					if plList, ok := newZrcMap["placement"].([]interface{}); ok && len(plList) > 0 {
+						plMap, _ := plList[0].(map[string]interface{})
+						if zone, ok := plMap["zone"].(string); ok && zone != "" {
+							scaleOutReq.Zone = helper.String(zone)
+						}
+					}
+					scaleOutErr := resource.Retry(tccommon.WriteRetryTimeout, func() *resource.RetryError {
+						result, e := meta.(tccommon.ProviderMeta).GetAPIV3Conn().UseEmrClient().ScaleOutClusterWithContext(ctx, scaleOutReq)
+						if e != nil {
+							return tccommon.RetryError(e)
+						}
+						log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, scaleOutReq.GetAction(), scaleOutReq.ToJsonString(), result.ToJsonString())
+						if result == nil || result.Response == nil || result.Response.TraceId == nil {
+							return resource.NonRetryableError(fmt.Errorf("scale out core nodes failed, Response is nil"))
+						}
+						scaleOutResp = result
+						return nil
+					})
+					if scaleOutErr != nil {
+						log.Printf("[CRITAL]%s zone[%d] core_resource_spec[added:%d] scale-out failed: %+v", logId, zoneIdx, addedIdx, scaleOutErr)
+						return scaleOutErr
+					}
+					traceId := *scaleOutResp.Response.TraceId
+					conf := tccommon.BuildStateChangeConf([]string{"0", "1"}, []string{"2", "-1"}, d.Timeout(schema.TimeoutUpdate)-time.Minute, time.Second, service.FlowStatusRefreshFunc(instanceId, traceId, F_KEY_TRACE_ID, []string{}))
+					if object, e := conf.WaitForState(); e != nil {
+						return e
+					} else if status, ok := object.(*int64); ok && status != nil && *status == -1 {
+						return fmt.Errorf("EMR cluster flow failed (TraceId=%s), flow total status is -1.", traceId)
+					}
+				}
+
+				// Scale-in: nodes removed — find old nodes whose emr_resource_id is not referenced by new list.
+				newResourceIDs := make(map[string]bool, len(newCoreList))
+				for _, raw := range newCoreList {
+					m, _ := raw.(map[string]interface{})
+					if rid, _ := m["emr_resource_id"].(string); rid != "" {
+						newResourceIDs[rid] = true
+					}
+				}
+				var removedCoreOrderNos []*string
+				for _, raw := range oldCoreList {
+					m, _ := raw.(map[string]interface{})
+					rid, _ := m["emr_resource_id"].(string)
+					orderNo, _ := m["order_no"].(string)
+					if rid != "" && !newResourceIDs[rid] && orderNo != "" {
+						removedCoreOrderNos = append(removedCoreOrderNos, helper.String(orderNo))
+					}
+				}
+				if len(removedCoreOrderNos) > 0 {
+					terminateReq := emr.NewTerminateClusterNodesRequest()
+					terminateResp := emr.NewTerminateClusterNodesResponse()
+					terminateReq.InstanceId = helper.String(instanceId)
+					terminateReq.CvmInstanceIds = removedCoreOrderNos
+					terminateReq.NodeFlag = helper.String("CORE")
+					terminateErr := resource.Retry(tccommon.WriteRetryTimeout, func() *resource.RetryError {
+						result, e := meta.(tccommon.ProviderMeta).GetAPIV3Conn().UseEmrClient().TerminateClusterNodesWithContext(ctx, terminateReq)
+						if e != nil {
+							return tccommon.RetryError(e)
+						}
+						log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, terminateReq.GetAction(), terminateReq.ToJsonString(), result.ToJsonString())
+						if result == nil || result.Response == nil || result.Response.FlowId == nil {
+							return resource.NonRetryableError(fmt.Errorf("terminate core nodes failed, Response is nil"))
+						}
+						terminateResp = result
+						return nil
+					})
+					if terminateErr != nil {
+						log.Printf("[CRITAL]%s zone[%d] core_resource_spec scale-in failed: %+v", logId, zoneIdx, terminateErr)
+						return terminateErr
+					}
+					flowId := int64(*terminateResp.Response.FlowId)
+					conf := tccommon.BuildStateChangeConf([]string{"0", "1"}, []string{"2", "-1"}, d.Timeout(schema.TimeoutUpdate)-time.Minute, time.Second, service.FlowStatusRefreshFunc(instanceId, strconv.FormatInt(flowId, 10), F_KEY_FLOW_ID, []string{}))
+					if object, e := conf.WaitForState(); e != nil {
+						return e
+					} else if status, ok := object.(*int64); ok && status != nil && *status == -1 {
+						return fmt.Errorf("EMR cluster flow failed (FlowId=%s), flow total status is -1.", strconv.FormatInt(flowId, 10))
+					}
+				}
+			}
+
+			// ---------- task_resource_spec ----------
+			if oldTaskList, newTaskList, changed := nodeRoleChanged(oldAll, newAll, "task_resource_spec"); changed {
+				alignedOldTask, alignedNewTask, addedTask := alignNodeListByResourceId(oldTaskList, newTaskList)
+
+				// Content changes on existing nodes.
+				for nodeIdx := 0; nodeIdx < len(alignedNewTask); nodeIdx++ {
+					oldSpec, _ := alignedOldTask[nodeIdx].(map[string]interface{})
+					newSpec, _ := alignedNewTask[nodeIdx].(map[string]interface{})
+
+					if rid, _ := oldSpec["emr_resource_id"].(string); rid != "" {
+						if sysDiskChanged(oldSpec, newSpec) {
+							return fmt.Errorf("modifying system_disk of an existing node (emr_resource_id=%s) is not supported", rid)
+						}
+					}
+					if instanceTypeChanged(oldSpec, newSpec) {
+						newInstanceType, _ := newSpec["instance_type"].(string)
+						resourceId, _ := oldSpec["emr_resource_id"].(string)
+						newCpu, newMem, err := emrParseInstanceTypeCpuMem(newInstanceType)
+						if err != nil {
+							return fmt.Errorf("zone[%d] task_resource_spec[%d]: failed to parse instance_type %q: %v", zoneIdx, nodeIdx, newInstanceType, err)
+						}
+						modifyReq := emr.NewModifyResourceRequest()
+						modifyResp := emr.NewModifyResourceResponse()
+						modifyReq.InstanceId = helper.String(instanceId)
+						modifyReq.PayMode = emrPayModeFromChargeType(d.Get("instance_charge_type").(string))
+						modifyReq.InstanceType = helper.String(newInstanceType)
+						modifyReq.NewCpu = helper.Int64(newCpu)
+						modifyReq.NewMem = helper.Int64(newMem)
+						modifyReq.ResourceIdList = []*string{helper.String(resourceId)}
+						reqErr := resource.Retry(tccommon.WriteRetryTimeout, func() *resource.RetryError {
+							result, e := meta.(tccommon.ProviderMeta).GetAPIV3Conn().UseEmrClient().ModifyResourceWithContext(ctx, modifyReq)
+							if e != nil {
+								return tccommon.RetryError(e)
+							}
+							log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, modifyReq.GetAction(), modifyReq.ToJsonString(), result.ToJsonString())
+							if result == nil || result.Response == nil || result.Response.TraceId == nil {
+								return resource.NonRetryableError(fmt.Errorf("Update emr cluster modify resource failed, Response is nil."))
+							}
+							modifyResp = result
+							return nil
+						})
+						if reqErr != nil {
+							log.Printf("[CRITAL]%s zone[%d] task_resource_spec[%d] modify instance type failed: %+v", logId, zoneIdx, nodeIdx, reqErr)
+							return reqErr
+						}
+						traceId := *modifyResp.Response.TraceId
+						conf := tccommon.BuildStateChangeConf([]string{"0", "1"}, []string{"2", "-1"}, d.Timeout(schema.TimeoutUpdate)-time.Minute, time.Second, service.FlowStatusRefreshFunc(instanceId, traceId, F_KEY_TRACE_ID, []string{}))
+						if object, e := conf.WaitForState(); e != nil {
+							return e
+						} else if status, ok := object.(*int64); ok && status != nil && *status == -1 {
+							return fmt.Errorf("EMR cluster flow failed (TraceId=%s), flow total status is -1.", traceId)
+						}
+					}
+					if dataDiskChanged(oldSpec, newSpec) {
+						orderNo, _ := oldSpec["order_no"].(string)
+						oldDisks, _ := oldSpec["data_disk"].([]interface{})
+						newDisks, _ := newSpec["data_disk"].([]interface{})
+						if err := handleNodeDataDiskChange(ctx, meta, d, logId, instanceId, orderNo, oldDisks, newDisks, "task_resource_spec", zoneIdx, nodeIdx); err != nil {
+							return err
+						}
+					}
+				}
+
+				// Scale-out: new nodes.
+				for addedIdx, addedRaw := range addedTask {
+					addedSpec, _ := addedRaw.(map[string]interface{})
+					scaleOutReq := emr.NewScaleOutClusterRequest()
+					scaleOutResp := emr.NewScaleOutClusterResponse()
+					scaleOutReq.InstanceId = helper.String(instanceId)
+					scaleOutReq.InstanceChargeType = helper.String(d.Get("instance_charge_type").(string))
+					scaleOutReq.ScaleOutNodeConfig = &emr.ScaleOutNodeConfig{NodeFlag: common.StringPtr("TASK"), NodeCount: common.Uint64Ptr(1)}
+					if d.Get("instance_charge_type").(string) == "PREPAID" {
+						if v, ok := d.GetOk("instance_charge_prepaid"); ok {
+							prepaidList := v.([]interface{})
+							if len(prepaidList) > 0 {
+								prepaidMap := prepaidList[0].(map[string]interface{})
+								prepaid := &emr.InstanceChargePrepaid{}
+								if val, ok := prepaidMap["period"].(int); ok && val != 0 {
+									prepaid.Period = helper.IntInt64(val)
+								}
+								if val, ok := prepaidMap["renew_flag"].(bool); ok {
+									prepaid.RenewFlag = helper.Bool(val)
+								}
+								scaleOutReq.InstanceChargePrepaid = prepaid
+							}
+						}
+					}
+					taskResourceSpec := &emr.NodeResourceSpec{}
+					if instanceType, ok := addedSpec["instance_type"].(string); ok && instanceType != "" {
+						taskResourceSpec.InstanceType = helper.String(instanceType)
+					}
+					if sdList, ok := addedSpec["system_disk"].([]interface{}); ok && len(sdList) > 0 {
+						sdMap, _ := sdList[0].(map[string]interface{})
+						taskResourceSpec.SystemDisk = []*emr.DiskSpecInfo{{DiskType: helper.String(sdMap["disk_type"].(string)), Count: helper.Int64(1), DiskSize: helper.Int64(int64(sdMap["disk_size"].(int)))}}
+					}
+					if ddList, ok := addedSpec["data_disk"].([]interface{}); ok {
+						for _, ddItem := range ddList {
+							ddMap, _ := ddItem.(map[string]interface{})
+							taskResourceSpec.DataDisk = append(taskResourceSpec.DataDisk, &emr.DiskSpecInfo{DiskType: helper.String(ddMap["disk_type"].(string)), Count: helper.Int64(1), DiskSize: helper.Int64(int64(ddMap["disk_size"].(int)))})
+						}
+					}
+					scaleOutReq.ResourceSpec = taskResourceSpec
+					if plList, ok := newZrcMap["placement"].([]interface{}); ok && len(plList) > 0 {
+						plMap, _ := plList[0].(map[string]interface{})
+						if zone, ok := plMap["zone"].(string); ok && zone != "" {
+							scaleOutReq.Zone = helper.String(zone)
+						}
+					}
+					scaleOutErr := resource.Retry(tccommon.WriteRetryTimeout, func() *resource.RetryError {
+						result, e := meta.(tccommon.ProviderMeta).GetAPIV3Conn().UseEmrClient().ScaleOutClusterWithContext(ctx, scaleOutReq)
+						if e != nil {
+							return tccommon.RetryError(e)
+						}
+						log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, scaleOutReq.GetAction(), scaleOutReq.ToJsonString(), result.ToJsonString())
+						if result == nil || result.Response == nil || result.Response.TraceId == nil {
+							return resource.NonRetryableError(fmt.Errorf("scale out task nodes failed, Response is nil"))
+						}
+						scaleOutResp = result
+						return nil
+					})
+					if scaleOutErr != nil {
+						log.Printf("[CRITAL]%s zone[%d] task_resource_spec[added:%d] scale-out failed: %+v", logId, zoneIdx, addedIdx, scaleOutErr)
+						return scaleOutErr
+					}
+					traceId := *scaleOutResp.Response.TraceId
+					conf := tccommon.BuildStateChangeConf([]string{"0", "1"}, []string{"2", "-1"}, d.Timeout(schema.TimeoutUpdate)-time.Minute, time.Second, service.FlowStatusRefreshFunc(instanceId, traceId, F_KEY_TRACE_ID, []string{}))
+					if object, e := conf.WaitForState(); e != nil {
+						return e
+					} else if status, ok := object.(*int64); ok && status != nil && *status == -1 {
+						return fmt.Errorf("EMR cluster flow failed (TraceId=%s), flow total status is -1.", traceId)
+					}
+				}
+
+				// Scale-in: nodes removed.
+				newTaskResourceIDs := make(map[string]bool, len(newTaskList))
+				for _, raw := range newTaskList {
+					m, _ := raw.(map[string]interface{})
+					if rid, _ := m["emr_resource_id"].(string); rid != "" {
+						newTaskResourceIDs[rid] = true
+					}
+				}
+				var removedTaskOrderNos []*string
+				for _, raw := range oldTaskList {
+					m, _ := raw.(map[string]interface{})
+					rid, _ := m["emr_resource_id"].(string)
+					orderNo, _ := m["order_no"].(string)
+					if rid != "" && !newTaskResourceIDs[rid] && orderNo != "" {
+						removedTaskOrderNos = append(removedTaskOrderNos, helper.String(orderNo))
+					}
+				}
+				if len(removedTaskOrderNos) > 0 {
+					terminateReq := emr.NewTerminateClusterNodesRequest()
+					terminateResp := emr.NewTerminateClusterNodesResponse()
+					terminateReq.InstanceId = helper.String(instanceId)
+					terminateReq.CvmInstanceIds = removedTaskOrderNos
+					terminateReq.NodeFlag = helper.String("TASK")
+					terminateErr := resource.Retry(tccommon.WriteRetryTimeout, func() *resource.RetryError {
+						result, e := meta.(tccommon.ProviderMeta).GetAPIV3Conn().UseEmrClient().TerminateClusterNodesWithContext(ctx, terminateReq)
+						if e != nil {
+							return tccommon.RetryError(e)
+						}
+						log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, terminateReq.GetAction(), terminateReq.ToJsonString(), result.ToJsonString())
+						if result == nil || result.Response == nil || result.Response.FlowId == nil {
+							return resource.NonRetryableError(fmt.Errorf("terminate task nodes failed, Response is nil"))
+						}
+						terminateResp = result
+						return nil
+					})
+					if terminateErr != nil {
+						log.Printf("[CRITAL]%s zone[%d] task_resource_spec scale-in failed: %+v", logId, zoneIdx, terminateErr)
+						return terminateErr
+					}
+					flowId := int64(*terminateResp.Response.FlowId)
+					conf := tccommon.BuildStateChangeConf([]string{"0", "1"}, []string{"2", "-1"}, d.Timeout(schema.TimeoutUpdate)-time.Minute, time.Second, service.FlowStatusRefreshFunc(instanceId, strconv.FormatInt(flowId, 10), F_KEY_FLOW_ID, []string{}))
+					if object, e := conf.WaitForState(); e != nil {
+						return e
+					} else if status, ok := object.(*int64); ok && status != nil && *status == -1 {
+						return fmt.Errorf("EMR cluster flow failed (FlowId=%s), flow total status is -1.", strconv.FormatInt(flowId, 10))
+					}
+				}
+			}
+
+			// ---------- common_resource_spec ----------
+			if oldCommonList, newCommonList, changed := nodeRoleChanged(oldAll, newAll, "common_resource_spec"); changed {
+				// common_resource_spec does not support scaling (add or remove nodes).
+				alignedOldCommon, alignedNewCommon, addedCommon := alignNodeListByResourceId(oldCommonList, newCommonList)
+				removedCommon := len(oldCommonList) - len(alignedOldCommon)
+				if len(addedCommon) > 0 || removedCommon > 0 {
+					return fmt.Errorf("zone_resource_configuration[%d].all_node_resource_spec.common_resource_spec does not support scaling (add/remove nodes)", zoneIdx)
+				}
+
+				for nodeIdx := 0; nodeIdx < len(alignedNewCommon); nodeIdx++ {
+					oldSpec, _ := alignedOldCommon[nodeIdx].(map[string]interface{})
+					newSpec, _ := alignedNewCommon[nodeIdx].(map[string]interface{})
+
+					if rid, _ := oldSpec["emr_resource_id"].(string); rid != "" {
+						if sysDiskChanged(oldSpec, newSpec) {
+							return fmt.Errorf("modifying system_disk of an existing node (emr_resource_id=%s) is not supported", rid)
+						}
+					}
+					if instanceTypeChanged(oldSpec, newSpec) {
+						newInstanceType, _ := newSpec["instance_type"].(string)
+						resourceId, _ := oldSpec["emr_resource_id"].(string)
+						newCpu, newMem, err := emrParseInstanceTypeCpuMem(newInstanceType)
+						if err != nil {
+							return fmt.Errorf("zone[%d] common_resource_spec[%d]: failed to parse instance_type %q: %v", zoneIdx, nodeIdx, newInstanceType, err)
+						}
+						modifyReq := emr.NewModifyResourceRequest()
+						modifyResp := emr.NewModifyResourceResponse()
+						modifyReq.InstanceId = helper.String(instanceId)
+						modifyReq.PayMode = emrPayModeFromChargeType(d.Get("instance_charge_type").(string))
+						modifyReq.InstanceType = helper.String(newInstanceType)
+						modifyReq.NewCpu = helper.Int64(newCpu)
+						modifyReq.NewMem = helper.Int64(newMem)
+						modifyReq.ResourceIdList = []*string{helper.String(resourceId)}
+						reqErr := resource.Retry(tccommon.WriteRetryTimeout, func() *resource.RetryError {
+							result, e := meta.(tccommon.ProviderMeta).GetAPIV3Conn().UseEmrClient().ModifyResourceWithContext(ctx, modifyReq)
+							if e != nil {
+								return tccommon.RetryError(e)
+							}
+							log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, modifyReq.GetAction(), modifyReq.ToJsonString(), result.ToJsonString())
+							if result == nil || result.Response == nil || result.Response.TraceId == nil {
+								return resource.NonRetryableError(fmt.Errorf("Update emr cluster modify resource failed, Response is nil."))
+							}
+							modifyResp = result
+							return nil
+						})
+						if reqErr != nil {
+							log.Printf("[CRITAL]%s zone[%d] common_resource_spec[%d] modify instance type failed: %+v", logId, zoneIdx, nodeIdx, reqErr)
+							return reqErr
+						}
+						traceId := *modifyResp.Response.TraceId
+						conf := tccommon.BuildStateChangeConf([]string{"0", "1"}, []string{"2", "-1"}, d.Timeout(schema.TimeoutUpdate)-time.Minute, time.Second, service.FlowStatusRefreshFunc(instanceId, traceId, F_KEY_TRACE_ID, []string{}))
+						if object, e := conf.WaitForState(); e != nil {
+							return e
+						} else if status, ok := object.(*int64); ok && status != nil && *status == -1 {
+							return fmt.Errorf("EMR cluster flow failed (TraceId=%s), flow total status is -1.", traceId)
+						}
+					}
+					if dataDiskChanged(oldSpec, newSpec) {
+						orderNo, _ := oldSpec["order_no"].(string)
+						oldDisks, _ := oldSpec["data_disk"].([]interface{})
+						newDisks, _ := newSpec["data_disk"].([]interface{})
+						if err := handleNodeDataDiskChange(ctx, meta, d, logId, instanceId, orderNo, oldDisks, newDisks, "common_resource_spec", zoneIdx, nodeIdx); err != nil {
+							return err
+						}
+					}
+				}
+			}
+
+		}
+	}
+
 	return resourceTencentCloudEmrClusterV2Read(d, meta)
 }
 
@@ -1616,27 +2352,11 @@ func buildEmrClusterV2NodeResourceSpec(specMap map[string]interface{}) *emr.Node
 			spec.SystemDisk = append(spec.SystemDisk, disk)
 		}
 	}
-	if val, ok := specMap["data_disk"].(*schema.Set); ok && val != nil {
-		for _, d := range val.List() {
+	if val, ok := specMap["data_disk"].([]interface{}); ok && val != nil {
+		for _, d := range val {
 			spec.DataDisk = append(spec.DataDisk, buildEmrClusterV2DiskSpecInfo(d))
 		}
 	}
-	// if val, ok := specMap["tags"].([]interface{}); ok {
-	// 	for _, t := range val {
-	// 		tagMap, ok := t.(map[string]interface{})
-	// 		if !ok {
-	// 			continue
-	// 		}
-	// 		tag := &emr.Tag{}
-	// 		if tk, ok := tagMap["tag_key"].(string); ok && tk != "" {
-	// 			tag.TagKey = helper.String(tk)
-	// 		}
-	// 		if tv, ok := tagMap["tag_value"].(string); ok && tv != "" {
-	// 			tag.TagValue = helper.String(tv)
-	// 		}
-	// 		spec.Tags = append(spec.Tags, tag)
-	// 	}
-	// }
 	return spec
 }
 
@@ -1646,9 +2366,7 @@ func buildEmrClusterV2DiskSpecInfo(raw interface{}) *emr.DiskSpecInfo {
 		return nil
 	}
 	disk := &emr.DiskSpecInfo{}
-	if val, ok := diskMap["count"].(int); ok && val != 0 {
-		disk.Count = helper.IntInt64(val)
-	}
+	disk.Count = helper.IntInt64(1)
 	if val, ok := diskMap["disk_size"].(int); ok && val != 0 {
 		disk.DiskSize = helper.IntInt64(val)
 	}
@@ -1709,40 +2427,20 @@ func emrNodeResourceSpecEqual(a, b map[string]interface{}) error {
 			}
 		}
 	}
-	// data_disk is TypeSet; compare as unordered bags of {count,disk_size,disk_type}.
-	diskKey := func(m map[string]interface{}) string {
-		return fmt.Sprintf("%v|%v|%v", m["count"], m["disk_size"], m["disk_type"])
+	// data_disk is TypeList; compare by index in declaration order.
+	aDataDisks, _ := a["data_disk"].([]interface{})
+	bDataDisks, _ := b["data_disk"].([]interface{})
+	if len(aDataDisks) != len(bDataDisks) {
+		return fmt.Errorf("data_disk: block count mismatch (%d vs %d)", len(aDataDisks), len(bDataDisks))
 	}
-	aDS, aIsSet := a["data_disk"].(*schema.Set)
-	bDS, bIsSet := b["data_disk"].(*schema.Set)
-	var aDisks, bDisks []map[string]interface{}
-	if aIsSet && aDS != nil {
-		for _, item := range aDS.List() {
-			if m, ok := item.(map[string]interface{}); ok {
-				aDisks = append(aDisks, m)
+	for i := range aDataDisks {
+		aD, _ := aDataDisks[i].(map[string]interface{})
+		bD, _ := bDataDisks[i].(map[string]interface{})
+		for _, k := range []string{"count", "disk_size", "disk_type"} {
+			if aD[k] != bD[k] {
+				return fmt.Errorf("data_disk[%d].%s mismatch: %v vs %v", i, k, aD[k], bD[k])
 			}
 		}
-	}
-	if bIsSet && bDS != nil {
-		for _, item := range bDS.List() {
-			if m, ok := item.(map[string]interface{}); ok {
-				bDisks = append(bDisks, m)
-			}
-		}
-	}
-	if len(aDisks) != len(bDisks) {
-		return fmt.Errorf("data_disk: block count mismatch (%d vs %d)", len(aDisks), len(bDisks))
-	}
-	aKeys := make(map[string]int, len(aDisks))
-	for _, m := range aDisks {
-		aKeys[diskKey(m)]++
-	}
-	for _, m := range bDisks {
-		k := diskKey(m)
-		if aKeys[k] <= 0 {
-			return fmt.Errorf("data_disk: entry {%s} in second spec not found in first", k)
-		}
-		aKeys[k]--
 	}
 	aTags, _ := a["tags"].([]interface{})
 	bTags, _ := b["tags"].([]interface{})
@@ -1833,4 +2531,548 @@ func emrDiskTypeIntToString(t int64) string {
 	default:
 		return ""
 	}
+}
+
+// nodeRoleChanged returns the old/new spec lists for a given node role key and
+// whether any difference exists between them.
+func nodeRoleChanged(oldAll, newAll map[string]interface{}, roleKey string) (oldList, newList []interface{}, changed bool) {
+	oldList, _ = oldAll[roleKey].([]interface{})
+	newList, _ = newAll[roleKey].([]interface{})
+	if len(oldList) == 0 && len(newList) == 0 {
+		return oldList, newList, false
+	}
+	return oldList, newList, fmt.Sprintf("%v", oldList) != fmt.Sprintf("%v", newList)
+}
+
+// firstNodeSpec returns the first element of a node spec list as a map, or an
+// empty map if the list is empty.
+// instanceTypeChanged reports whether the instance_type field differs between
+// the old and new node spec maps.
+func instanceTypeChanged(oldSpec, newSpec map[string]interface{}) bool {
+	oldType, _ := oldSpec["instance_type"].(string)
+	newType, _ := newSpec["instance_type"].(string)
+	return oldType != newType
+}
+
+// diskChanged reports whether system_disk or data_disk fields differ between
+// the old and new node spec maps.
+func dataDiskChanged(oldSpec, newSpec map[string]interface{}) bool {
+	return fmt.Sprintf("%v", oldSpec["data_disk"]) != fmt.Sprintf("%v", newSpec["data_disk"])
+}
+
+// emrParseInstanceTypeCpuMem parses an EMR instance type string (e.g. "S6.2XLARGE32")
+// and returns the corresponding CPU count and memory (GB).
+//
+// Format: {spec}.{sizeLabel}{memGB}
+// sizeLabel → cpu:  SMALL=1, MEDIUM=2, LARGE=4, {n}XLARGE=n*4
+func emrParseInstanceTypeCpuMem(instanceType string) (cpu, mem int64, err error) {
+	// Split on the first '.': "S6.2XLARGE32" → ["S6", "2XLARGE32"]
+	parts := strings.SplitN(instanceType, ".", 2)
+	if len(parts) != 2 {
+		return 0, 0, fmt.Errorf("invalid instance_type format %q: expected {spec}.{sizeLabel}{mem}", instanceType)
+	}
+	suffix := parts[1] // e.g. "2XLARGE32"
+
+	// Extract trailing digits as memory (GB).
+	memStr := ""
+	labelStr := suffix
+	for i := len(suffix) - 1; i >= 0; i-- {
+		if suffix[i] >= '0' && suffix[i] <= '9' {
+			memStr = string(suffix[i]) + memStr
+		} else {
+			labelStr = suffix[:i+1]
+			break
+		}
+	}
+	if memStr == "" {
+		return 0, 0, fmt.Errorf("invalid instance_type format %q: cannot parse memory", instanceType)
+	}
+	memVal, e := strconv.ParseInt(memStr, 10, 64)
+	if e != nil {
+		return 0, 0, fmt.Errorf("invalid instance_type format %q: %v", instanceType, e)
+	}
+
+	// Parse sizeLabel → cpu count.
+	var cpuVal int64
+	switch labelStr {
+	case "SMALL":
+		cpuVal = 1
+	case "MEDIUM":
+		cpuVal = 2
+	case "LARGE":
+		cpuVal = 4
+	default:
+		// Pattern: {n}XLARGE  e.g. "2XLARGE" → n=2, cpu=n*4
+		if strings.HasSuffix(labelStr, "XLARGE") {
+			nStr := strings.TrimSuffix(labelStr, "XLARGE")
+			n, e2 := strconv.ParseInt(nStr, 10, 64)
+			if e2 != nil {
+				return 0, 0, fmt.Errorf("invalid instance_type size label %q in %q", labelStr, instanceType)
+			}
+			cpuVal = n * 4
+		} else {
+			return 0, 0, fmt.Errorf("unknown instance_type size label %q in %q", labelStr, instanceType)
+		}
+	}
+
+	return cpuVal, memVal, nil
+}
+
+// emrPayModeFromChargeType maps instance_charge_type to the PayMode integer
+// expected by ModifyResource: PREPAID → 1, anything else (POSTPAID_BY_HOUR) → 0.
+func emrPayModeFromChargeType(chargeType string) *uint64 {
+	if chargeType == "PREPAID" {
+		return helper.Uint64(1)
+	}
+	return helper.Uint64(0)
+}
+
+// handleNodeDataDiskChange handles data_disk changes for a single node by matching
+// disks via disk_id rather than by index, so disk reordering is handled correctly.
+//
+//   - Existing disks (disk_id found in oldDisks): validate and resize if disk_size grew.
+//   - New disks (disk_id empty or not in oldDisks): attach as new disk.
+//   - Removed disks (disk_id in oldDisks but not in newDisks): return error (not supported).
+func handleNodeDataDiskChange(
+	ctx context.Context,
+	meta interface{},
+	d *schema.ResourceData,
+	logId, instanceId, orderNo string,
+	oldDisks, newDisks []interface{},
+	roleKey string, zoneIdx, nodeIdx int,
+) error {
+	// Build old disk map: disk_id -> disk map
+	oldDiskByID := make(map[string]map[string]interface{}, len(oldDisks))
+	for _, item := range oldDisks {
+		m, _ := item.(map[string]interface{})
+		id, _ := m["disk_id"].(string)
+		if id != "" {
+			oldDiskByID[id] = m
+		}
+	}
+
+	// Track which old disk_ids are referenced by new list (to detect removals)
+	referencedOldIDs := make(map[string]bool, len(oldDisks))
+
+	for diskIdx, item := range newDisks {
+		newDisk, _ := item.(map[string]interface{})
+		diskId, _ := newDisk["disk_id"].(string)
+		newSize, _ := newDisk["disk_size"].(int)
+		diskType, _ := newDisk["disk_type"].(string)
+
+		if diskId != "" {
+			// Existing disk — match by disk_id
+			referencedOldIDs[diskId] = true
+			oldDisk, exists := oldDiskByID[diskId]
+			if !exists {
+				continue
+			}
+			oldSize, _ := oldDisk["disk_size"].(int)
+
+			if newSize < oldSize {
+				return fmt.Errorf("%s[%d][%d] data_disk (disk_id=%s): shrinking disk_size is not supported (old: %d, new: %d)",
+					roleKey, zoneIdx, nodeIdx, diskId, oldSize, newSize)
+			}
+
+			if newSize > oldSize {
+				resizeReq := emr.NewResizeDataDisksRequest()
+				resizeResp := emr.NewResizeDataDisksResponse()
+				resizeReq.InstanceId = helper.String(instanceId)
+				resizeReq.DiskSize = helper.Int64(int64(newSize))
+				resizeReq.CvmInstanceIds = []*string{helper.String(orderNo)}
+				resizeReq.ResizeAll = helper.Bool(false)
+				resizeReq.DiskIds = []*string{helper.String(diskId)}
+
+				resizeErr := resource.Retry(tccommon.WriteRetryTimeout, func() *resource.RetryError {
+					result, e := meta.(tccommon.ProviderMeta).GetAPIV3Conn().UseEmrClient().ResizeDataDisksWithContext(ctx, resizeReq)
+					if e != nil {
+						return tccommon.RetryError(e)
+					}
+					log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n",
+						logId, resizeReq.GetAction(), resizeReq.ToJsonString(), result.ToJsonString())
+
+					if result == nil || result.Response == nil || result.Response.FlowId == nil {
+						return resource.NonRetryableError(fmt.Errorf("resize data disks failed, Response is nil"))
+					}
+
+					resizeResp = result
+					return nil
+				})
+				if resizeErr != nil {
+					log.Printf("[CRITAL]%s %s[%d][%d] data_disk (disk_id=%s) resize failed: %+v",
+						logId, roleKey, zoneIdx, nodeIdx, diskId, resizeErr)
+					return resizeErr
+				}
+
+				// wait
+				flowId := int64(*resizeResp.Response.FlowId)
+				conf := tccommon.BuildStateChangeConf([]string{"0", "1"}, []string{"2", "-1"}, d.Timeout(schema.TimeoutUpdate)-time.Minute, time.Second,
+					(&EMRService{client: meta.(tccommon.ProviderMeta).GetAPIV3Conn()}).FlowStatusRefreshFunc(instanceId, strconv.FormatInt(flowId, 10), F_KEY_FLOW_ID, []string{}))
+				if object, e := conf.WaitForState(); e != nil {
+					return e
+				} else if status, ok := object.(*int64); ok && status != nil && *status == -1 {
+					return fmt.Errorf("EMR cluster flow failed (FlowId=%s), flow total status is -1.", strconv.FormatInt(flowId, 10))
+				}
+			}
+		} else {
+			// New disk — disk_id is empty, attach as new disk
+			attachReq := emr.NewAttachDisksRequest()
+			attachResp := emr.NewAttachDisksResponse()
+			attachReq.InstanceId = helper.String(instanceId)
+			attachReq.CvmInstanceIds = []*string{helper.String(orderNo)}
+			attachReq.CreateDisk = helper.Bool(true)
+			attachReq.DiskSpec = &emr.NodeSpecDiskV2{
+				Count:           helper.Int64(1),
+				DiskType:        helper.String(diskType),
+				DefaultDiskSize: helper.Int64(int64(newSize)),
+			}
+
+			attachErr := resource.Retry(tccommon.WriteRetryTimeout, func() *resource.RetryError {
+				result, e := meta.(tccommon.ProviderMeta).GetAPIV3Conn().UseEmrClient().AttachDisksWithContext(ctx, attachReq)
+				if e != nil {
+					return tccommon.RetryError(e)
+				}
+				log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n",
+					logId, attachReq.GetAction(), attachReq.ToJsonString(), result.ToJsonString())
+
+				if result == nil || result.Response == nil || result.Response.FlowId == nil {
+					return resource.NonRetryableError(fmt.Errorf("attach data disks failed, Response is nil"))
+				}
+
+				attachResp = result
+				return nil
+			})
+			if attachErr != nil {
+				log.Printf("[CRITAL]%s %s[%d][%d] attach disk[%d] failed: %+v",
+					logId, roleKey, zoneIdx, nodeIdx, diskIdx, attachErr)
+				return attachErr
+			}
+
+			// wait
+			flowId := int64(*attachResp.Response.FlowId)
+			conf := tccommon.BuildStateChangeConf([]string{"0", "1"}, []string{"2", "-1"}, d.Timeout(schema.TimeoutUpdate)-time.Minute, time.Second,
+				(&EMRService{client: meta.(tccommon.ProviderMeta).GetAPIV3Conn()}).FlowStatusRefreshFunc(instanceId, strconv.FormatInt(flowId, 10), F_KEY_FLOW_ID, []string{}))
+			if object, e := conf.WaitForState(); e != nil {
+				return e
+			} else if status, ok := object.(*int64); ok && status != nil && *status == -1 {
+				return fmt.Errorf("EMR cluster flow failed (FlowId=%s), flow total status is -1.", strconv.FormatInt(flowId, 10))
+			}
+		}
+	}
+
+	// Detect removed disks (in old but not referenced by new)
+	for id := range oldDiskByID {
+		if !referencedOldIDs[id] {
+			return fmt.Errorf("%s[%d][%d]: removing data_disk (disk_id=%s) is not supported",
+				roleKey, zoneIdx, nodeIdx, id)
+		}
+	}
+
+	return nil
+}
+
+// emrDataDiskOrderSuppressFunc suppresses diffs on data_disk list elements that
+// are caused purely by the user's config having a different ordering than the
+// state, rather than genuine value changes.
+//
+// Because Read writes state with disk_id-stable ordering (each index always
+// refers to the same physical disk), a diff where old==new means the field
+// value did not actually change — the apparent diff is only due to the user
+// declaring disks in a different order than the state.  Such diffs are
+// suppressed.
+//
+// Diffs where old!=new are always surfaced (genuine resize/retype).
+// Purely new elements (index ≥ len(oldList)) are never suppressed.
+// Removal (len(new) < len(old)) is never suppressed.
+// emrDataDiskOrderSuppressFunc suppresses diffs on data_disk list elements that
+// are caused purely by the user's config having a different ordering than the
+// state, rather than genuine value changes.
+//
+// data_disk is treated as an unordered repeatable list.  Read writes state in
+// disk_id-stable order (each index always refers to the same physical disk).
+// The suppress function handles two cases where a diff is not genuine:
+//
+//  1. old == new at this position: the value did not change; the apparent diff
+//     exists only because the user declared disks in a different order than the
+//     state's disk_id-stable order.  Always suppress.
+//
+//  2. old != new, but old multiset ⊆ new multiset (only reordering / appending):
+//     no disk was genuinely modified; the apparent change at this position is
+//     caused by a neighbouring disk being shifted.  Suppress only for existing
+//     positions (elemIdx < len(old)).  Newly added positions are never suppressed.
+//
+// Genuine changes (resize, retype, removal) are never suppressed.
+func emrDataDiskOrderSuppressFunc(k, old, new string, d *schema.ResourceData) bool {
+	// k example: "zone_resource_configuration.0.all_node_resource_spec.0.core_resource_spec.0.data_disk.1.disk_size"
+	parts := strings.Split(k, ".")
+	if len(parts) < 3 {
+		return false
+	}
+
+	// Find the "data_disk" segment position.
+	diskListIdx := -1
+	for i := len(parts) - 1; i >= 0; i-- {
+		if parts[i] == "data_disk" {
+			diskListIdx = i
+			break
+		}
+	}
+	if diskListIdx < 0 || diskListIdx+1 >= len(parts) {
+		return false
+	}
+
+	// Parse the element index within data_disk.
+	elemIdx, err := strconv.Atoi(parts[diskListIdx+1])
+	if err != nil {
+		return false
+	}
+
+	listPath := strings.Join(parts[:diskListIdx+1], ".")
+	oldRaw, newRaw := d.GetChange(listPath)
+	oldList, _ := oldRaw.([]interface{})
+	newList, _ := newRaw.([]interface{})
+
+	// Removal: never suppress.
+	if len(newList) < len(oldList) {
+		return false
+	}
+
+	// No existing disks (new node being added): never suppress.
+	if len(oldList) == 0 {
+		return false
+	}
+
+	// Purely new element (beyond existing list bounds): never suppress.
+	if elemIdx >= len(oldList) {
+		return false
+	}
+
+	// Case 1: value unchanged at this position — ordering diff only.
+	if old == new {
+		return true
+	}
+
+	// Case 2: old != new — suppress only if old multiset ⊆ new multiset,
+	// meaning no disk was removed or genuinely modified (just reordered).
+	diskFP := func(item interface{}) string {
+		m, _ := item.(map[string]interface{})
+		return fmt.Sprintf("%v:%v", m["disk_size"], m["disk_type"])
+	}
+	oldCounts := make(map[string]int, len(oldList))
+	for _, item := range oldList {
+		oldCounts[diskFP(item)]++
+	}
+	newCounts := make(map[string]int, len(newList))
+	for _, item := range newList {
+		newCounts[diskFP(item)]++
+	}
+	for fp, cnt := range oldCounts {
+		if newCounts[fp] < cnt {
+			// A disk was removed or its size/type changed — genuine change.
+			return false
+		}
+	}
+	// Old multiset is a subset of the new multiset: only reordering or appending.
+	return true
+}
+
+// sysDiskChanged reports whether system_disk fields differ between the old and new node spec maps.
+func sysDiskChanged(oldSpec, newSpec map[string]interface{}) bool {
+	return fmt.Sprintf("%v", oldSpec["system_disk"]) != fmt.Sprintf("%v", newSpec["system_disk"])
+}
+
+// alignDataDisksToConfig re-orders apiDisks to match the reference order given
+// by refDisks (previous state or current config/diff), so that the state written
+// by Read keeps the same physical disk at a stable TypeList index.
+//
+// Matching uses two passes:
+//
+//  1. disk_id exact match + disk_size agreement.  When refDisks comes from the
+//     diff layer (Update→Read), Terraform inherits disk_id by index (not by
+//     identity), so we also require size agreement to avoid false matches.
+//
+//  2. Greedy match by {disk_type, disk_size}.  Handles entries where disk_id is
+//     absent or was not matched with correct size.
+//
+// Unmatched API disks (newly attached) are appended in API order at the end.
+func alignDataDisksToConfig(refDisks []interface{}, apiDisks []map[string]interface{}) []interface{} {
+	usedAPIIdx := make([]bool, len(apiDisks))
+
+	// Build lookup: disk_id → api index.
+	idxByDiskID := make(map[string]int, len(apiDisks))
+	for i, d := range apiDisks {
+		if id, _ := d["disk_id"].(string); id != "" {
+			idxByDiskID[id] = i
+		}
+	}
+
+	result := make([]interface{}, 0, len(apiDisks))
+
+	for _, refRaw := range refDisks {
+		refDisk, _ := refRaw.(map[string]interface{})
+		if refDisk == nil {
+			continue
+		}
+
+		refID, _ := refDisk["disk_id"].(string)
+		refSize, _ := refDisk["disk_size"].(int)
+		refType, _ := refDisk["disk_type"].(string)
+
+		matched := false
+
+		// Pass 1: disk_id + disk_size (guards against index-shifted Computed inheritance).
+		if refID != "" {
+			if apiIdx, ok := idxByDiskID[refID]; ok && !usedAPIIdx[apiIdx] {
+				apiSize, _ := apiDisks[apiIdx]["disk_size"].(int)
+				if apiSize == refSize {
+					result = append(result, apiDisks[apiIdx])
+					usedAPIIdx[apiIdx] = true
+					matched = true
+				}
+			}
+		}
+
+		// Pass 2: greedy {disk_type, disk_size} match.
+		if !matched {
+			for i, apiDisk := range apiDisks {
+				if usedAPIIdx[i] {
+					continue
+				}
+				if apiDisk["disk_type"] == refType {
+					apiSize, _ := apiDisk["disk_size"].(int)
+					if apiSize == refSize {
+						result = append(result, apiDisk)
+						usedAPIIdx[i] = true
+						matched = true
+						break
+					}
+				}
+			}
+		}
+		// No match: disk removed externally — omit.
+	}
+
+	// Append newly attached disks (not consumed by either pass) in API order.
+	for i, apiDisk := range apiDisks {
+		if !usedAPIIdx[i] {
+			result = append(result, apiDisk)
+		}
+	}
+
+	return result
+}
+
+// alignNodeSpecsToState re-orders freshly-built node specs (from the API) to
+// match the order that was previously recorded in state, identified by
+// emr_resource_id.
+//
+// This keeps the TypeList index of every existing node stable across refreshes:
+// a node that was at position i in the last state will still be at position i
+// after the next refresh, so Terraform never sees a spurious "node swap" diff.
+// Newly added nodes (whose emr_resource_id is not present in state) are
+// appended after all existing nodes in the order they appear in apiSpecs.
+func alignNodeSpecsToState(apiSpecs []interface{}, stateSpecs []interface{}) []interface{} {
+	if len(stateSpecs) == 0 {
+		// No previous state — keep API order.
+		return apiSpecs
+	}
+
+	// Build a map from emr_resource_id to the corresponding api spec.
+	apiByID := make(map[string]interface{}, len(apiSpecs))
+	for _, raw := range apiSpecs {
+		m, _ := raw.(map[string]interface{})
+		if m == nil {
+			continue
+		}
+		if rid, _ := m["emr_resource_id"].(string); rid != "" {
+			apiByID[rid] = raw
+		}
+	}
+
+	result := make([]interface{}, 0, len(apiSpecs))
+	usedIDs := make(map[string]bool, len(apiSpecs))
+
+	// First pass: place existing nodes in state order.
+	for _, stRaw := range stateSpecs {
+		stMap, _ := stRaw.(map[string]interface{})
+		if stMap == nil {
+			continue
+		}
+		rid, _ := stMap["emr_resource_id"].(string)
+		if rid == "" {
+			continue
+		}
+		if apiSpec, ok := apiByID[rid]; ok {
+			result = append(result, apiSpec)
+			usedIDs[rid] = true
+		}
+		// If a state node is no longer returned by API, skip it (decommissioned).
+	}
+
+	// Second pass: append newly added nodes (not seen in previous state).
+	for _, raw := range apiSpecs {
+		m, _ := raw.(map[string]interface{})
+		if m == nil {
+			continue
+		}
+		rid, _ := m["emr_resource_id"].(string)
+		if !usedIDs[rid] {
+			result = append(result, raw)
+		}
+	}
+
+	return result
+}
+
+// alignNodeListByResourceId re-aligns a pair of old/new TypeList node slices
+// (from d.GetChange) so that each position holds the same physical node
+// (identified by emr_resource_id) in both lists.
+//
+// Background: Terraform's TypeList SDK copies Computed fields (emr_resource_id,
+// order_no) from state to diff by index, not by identity.  When the user inserts
+// a new node in the middle of the config list, the SDK shifts all subsequent
+// nodes, causing their emr_resource_id slots to be filled with wrong values (or
+// empty).  This function recovers the correct pairing so that Update can
+// accurately determine which nodes need resizing and which are brand-new.
+//
+// Returns:
+//   - alignedOld: existing nodes in the same order as alignedNew
+//   - alignedNew: config entries paired with their matching old node, with
+//     genuinely new entries (emr_resource_id=="") appended at the end
+//   - addedNew:   config entries that have no matching old node (scale-out)
+func alignNodeListByResourceId(
+	oldList, newList []interface{},
+) (alignedOld, alignedNew []interface{}, addedNew []interface{}) {
+	// Build old map: emr_resource_id → spec
+	oldByID := make(map[string]interface{}, len(oldList))
+	for _, raw := range oldList {
+		m, _ := raw.(map[string]interface{})
+		if m == nil {
+			continue
+		}
+		if rid, _ := m["emr_resource_id"].(string); rid != "" {
+			oldByID[rid] = raw
+		}
+	}
+
+	// Walk new list.  For entries that carry a valid emr_resource_id that
+	// matches an old node, pair them.  Entries with no id are new nodes.
+	for _, raw := range newList {
+		m, _ := raw.(map[string]interface{})
+		if m == nil {
+			continue
+		}
+		rid, _ := m["emr_resource_id"].(string)
+		if rid != "" {
+			if oldSpec, ok := oldByID[rid]; ok {
+				alignedOld = append(alignedOld, oldSpec)
+				alignedNew = append(alignedNew, raw)
+				delete(oldByID, rid)
+				continue
+			}
+		}
+		// No matching old node — this is a new node.
+		addedNew = append(addedNew, raw)
+	}
+	return
 }

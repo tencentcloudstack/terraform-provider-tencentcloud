@@ -594,6 +594,58 @@ func (me *EMRService) DescribeEmrClusterV2Nodes(ctx context.Context, instanceId,
 	return
 }
 
+func (me *EMRService) DescribeEmrNodeDataDisks(ctx context.Context, clusterId, instanceId string) (cbsList []*emr.CBSInstance, errRet error) {
+	logId := tccommon.GetLogId(ctx)
+
+	var (
+		offset uint64 = 0
+		limit  uint64 = 100
+	)
+
+	for {
+		request := emr.NewDescribeNodeDataDisksRequest()
+		request.InstanceId = helper.String(clusterId)
+		request.CvmInstanceIds = common.StringPtrs([]string{instanceId})
+		request.Offset = &offset
+		request.Limit = &limit
+
+		var response *emr.DescribeNodeDataDisksResponse
+		err := resource.Retry(tccommon.ReadRetryTimeout, func() *resource.RetryError {
+			ratelimit.Check(request.GetAction())
+			result, e := me.client.UseEmrClient().DescribeNodeDataDisks(request)
+			if e != nil {
+				return tccommon.RetryError(e)
+			}
+
+			response = result
+			return nil
+		})
+		if err != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n",
+				logId, request.GetAction(), request.ToJsonString(), err.Error())
+			errRet = err
+			return
+		}
+
+		if response == nil || response.Response == nil {
+			break
+		}
+		log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n",
+			logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+		page := response.Response.CBSList
+		if len(page) == 0 {
+			break
+		}
+		cbsList = append(cbsList, page...)
+		if int64(len(page)) < int64(limit) {
+			break
+		}
+		offset += limit
+	}
+	return
+}
+
 func (me *EMRService) ModifyResourcesTags(ctx context.Context, region string, instanceId string, oldTags, newTags map[string]interface{}) error {
 	resourceName := tccommon.BuildTagResourceName("emr", "emr-instance", region, instanceId)
 	rTags, dTags := svctag.DiffTags(oldTags, newTags)
