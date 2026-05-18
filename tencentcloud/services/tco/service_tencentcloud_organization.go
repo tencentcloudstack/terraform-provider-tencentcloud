@@ -1760,7 +1760,7 @@ func (me *OrganizationService) DescribeIdentityCenterRoleAssignmentById(ctx cont
 	request.TargetUin = helper.Int64(targetUin)
 	request.PrincipalType = helper.String(principalType)
 	request.PrincipalId = helper.String(principalId)
-	request.MaxResults = helper.Int64(10)
+	request.MaxResults = helper.Int64(100)
 
 	defer func() {
 		if errRet != nil {

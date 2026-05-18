@@ -1,0 +1,3 @@
+```release-note:enhancement
+resource/tencentcloud_identity_center_role_assignment: optimize code logic for create function
+```
