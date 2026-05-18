@@ -1,3 +1,17 @@
+## 1.82.94(May 18, 2026)
+
+FEATURES:
+
+* **New Data Source:** `tencentcloud_kubernetes_cluster_available_extra_args` ([#4124](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/4124))
+* **New Resource:** `tencentcloud_kubernetes_cluster_extra_args_config` ([#4124](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/4124))
+
+ENHANCEMENTS:
+
+* data-source/tencentcloud_ssl_describe_host_waf_instance_list: update fields ([#4126](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/4126))
+* resource/tencentcloud_identity_center_role_assignment: optimize code logic for create function ([#4125](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/4125))
+* resource/tencentcloud_kubernetes_cluster: support change field `cluster_extra_args` ([#4124](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/4124))
+* resource/tencentcloud_ssl_pay_certificate: optimize code logic for update function ([#4126](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/4126))
+
 ## 1.82.93(May 11, 2026)
 
 FEATURES:
