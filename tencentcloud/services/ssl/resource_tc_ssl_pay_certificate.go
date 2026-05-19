@@ -390,8 +390,9 @@ func resourceTencentCloudSSLInstanceRead(d *schema.ResourceData, meta interface{
 		response.Response.SubmittedData != nil {
 		setSubmitInfo(d, response.Response.SubmittedData)
 	}
+
+	dvAuths := make([]map[string]string, 0)
 	if response.Response.DvAuthDetail != nil && response.Response.DvAuthDetail.DvAuths != nil && len(response.Response.DvAuthDetail.DvAuths) != 0 {
-		dvAuths := make([]map[string]string, 0)
 		for _, item := range response.Response.DvAuthDetail.DvAuths {
 			dvAuth := make(map[string]string)
 			dvAuth["dv_auth_key"] = *item.DvAuthKey
@@ -399,8 +400,8 @@ func resourceTencentCloudSSLInstanceRead(d *schema.ResourceData, meta interface{
 			dvAuth["dv_auth_verify_type"] = *item.DvAuthVerifyType
 			dvAuths = append(dvAuths, dvAuth)
 		}
-		_ = d.Set("dv_auths", dvAuths)
 	}
+	_ = d.Set("dv_auths", dvAuths)
 
 	return nil
 }
