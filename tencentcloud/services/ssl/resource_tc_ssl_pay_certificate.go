@@ -93,10 +93,11 @@ func ResourceTencentCloudSSLInstance() *schema.Resource {
 			},
 			// ssl information
 			"information": {
-				Type:        schema.TypeList,
-				MaxItems:    1,
-				Required:    true,
-				Description: "Certificate information.",
+				Type:             schema.TypeList,
+				MaxItems:         1,
+				Required:         true,
+				Description:      "Certificate information.",
+				DiffSuppressFunc: suppressInformationWhenIssued,
 				Elem: &schema.Resource{
 					Schema: map[string]*schema.Schema{
 						"csr_type": {
@@ -717,4 +718,15 @@ func resubmit(ctx context.Context, sslService SSLService, certificateId string) 
 		return err
 	}
 	return nil
+}
+
+// suppressInformationWhenIssued suppresses all diffs under the `information` block
+// when the certificate has been issued (status == SSL_STATUS_AVAILABLE).
+// In that state the API no longer returns SubmittedData, so any apparent diff is
+// caused by state drift rather than a real user change.
+func suppressInformationWhenIssued(k, oldVal, newVal string, d *schema.ResourceData) bool {
+	if status, ok := d.GetOk("status"); ok && status.(int) == SSL_STATUS_AVAILABLE {
+		return true
+	}
+	return false
 }
