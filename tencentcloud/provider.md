@@ -1797,6 +1797,7 @@ tencentcloud_css_timeshift_rule_attachment
 tencentcloud_css_stream_monitor
 tencentcloud_css_start_stream_monitor
 tencentcloud_css_pull_stream_task_restart
+tencentcloud_css_origin_stream_info
 
 Data Source
 tencentcloud_css_domains
