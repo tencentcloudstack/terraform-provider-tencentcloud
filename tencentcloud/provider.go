@@ -2188,6 +2188,7 @@ func Provider() *schema.Provider {
 			"tencentcloud_css_callback_template":                                                    css.ResourceTencentCloudCssCallbackTemplate(),
 			"tencentcloud_css_domain_referer":                                                       css.ResourceTencentCloudCssDomainReferer(),
 			"tencentcloud_css_enable_optimal_switching":                                             css.ResourceTencentCloudCssEnableOptimalSwitching(),
+			"tencentcloud_css_origin_stream_info":                                                   css.ResourceTencentCloudCssOriginStreamInfo(),
 			"tencentcloud_css_record_rule_attachment":                                               css.ResourceTencentCloudCssRecordRuleAttachment(),
 			"tencentcloud_css_record_template":                                                      css.ResourceTencentCloudCssRecordTemplate(),
 			"tencentcloud_css_snapshot_rule_attachment":                                             css.ResourceTencentCloudCssSnapshotRuleAttachment(),

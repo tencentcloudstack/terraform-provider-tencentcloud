@@ -1868,3 +1868,33 @@ func (me *CssService) CssStartStreamMonitorStateRefreshFunc(monitorId string, fa
 		return object, helper.UInt64ToStr(*object.Status), nil
 	}
 }
+
+func (me *CssService) DescribeCssOriginStreamInfo(ctx context.Context, domainName string) (respData *css.DescribeOriginStreamInfoResponseParams, errRet error) {
+	logId := tccommon.GetLogId(ctx)
+
+	request := css.NewDescribeOriginStreamInfoRequest()
+	request.DomainName = &domainName
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	ratelimit.Check(request.GetAction())
+
+	response, err := me.client.UseCssClient().DescribeOriginStreamInfo(request)
+	if err != nil {
+		errRet = err
+		return
+	}
+
+	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+	if response == nil || response.Response == nil {
+		return
+	}
+
+	respData = response.Response
+	return
+}
