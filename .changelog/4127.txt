@@ -1,0 +1,3 @@
+```release-note:enhancement
+resource/tencentcloud_kubernetes_cluster_scheduler_policy_config: optimize code logic for update function
+```
