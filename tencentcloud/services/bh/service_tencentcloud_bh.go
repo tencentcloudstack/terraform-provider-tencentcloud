@@ -731,3 +731,49 @@ func (me *BhService) DescribeBhAclById(ctx context.Context, aclId string) (ret *
 	ret = response.Response.AclSet[0]
 	return
 }
+
+func (me *BhService) DescribeBhDeviceByResourceId(ctx context.Context, resourceId string) (deviceSet []*bhv20230418.Device, errRet error) {
+	logId := tccommon.GetLogId(ctx)
+
+	request := bhv20230418.NewDescribeDevicesRequest()
+	request.ResourceIdSet = helper.Strings([]string{resourceId})
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	var (
+		offset uint64 = 0
+		limit  uint64 = 500
+	)
+
+	for {
+		request.Offset = &offset
+		request.Limit = &limit
+
+		ratelimit.Check(request.GetAction())
+
+		response, err := me.client.UseBhV20230418Client().DescribeDevicesWithContext(ctx, request)
+		if err != nil {
+			errRet = err
+			return
+		}
+
+		log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+		if response == nil || len(response.Response.DeviceSet) == 0 {
+			break
+		}
+
+		deviceSet = append(deviceSet, response.Response.DeviceSet...)
+		if len(response.Response.DeviceSet) < int(limit) {
+			break
+		}
+
+		offset += limit
+	}
+
+	return
+}

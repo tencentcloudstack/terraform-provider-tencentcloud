@@ -2595,6 +2595,7 @@ func Provider() *schema.Provider {
 			"tencentcloud_bh_user_directory":                                                        bh.ResourceTencentCloudBhUserDirectory(),
 			"tencentcloud_bh_user_sync_task_operation":                                              bh.ResourceTencentCloudBhUserSyncTaskOperation(),
 			"tencentcloud_bh_sync_devices_to_ioa_operation":                                         bh.ResourceTencentCloudBhSyncDevicesToIoaOperation(),
+			"tencentcloud_bh_bind_device_resource_config":                                           bh.ResourceTencentCloudBhBindDeviceResourceConfig(),
 			"tencentcloud_dasb_acl":                                                                 bh.ResourceTencentCloudDasbAcl(),
 			"tencentcloud_dasb_cmd_template":                                                        bh.ResourceTencentCloudDasbCmdTemplate(),
 			"tencentcloud_dasb_device_group":                                                        bh.ResourceTencentCloudDasbDeviceGroup(),
