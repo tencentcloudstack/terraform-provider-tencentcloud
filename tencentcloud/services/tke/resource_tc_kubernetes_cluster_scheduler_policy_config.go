@@ -84,10 +84,6 @@ func ResourceTencentCloudKubernetesClusterSchedulerPolicyConfig() *schema.Resour
 										Optional:    true,
 										Computed:    true,
 										Description: "List of plugins to enable.",
-										Set: func(v interface{}) int {
-											m := v.(map[string]interface{})
-											return schema.HashString(m["name"].(string))
-										},
 										Elem: &schema.Resource{
 											Schema: map[string]*schema.Schema{
 												"name": {
@@ -109,10 +105,6 @@ func ResourceTencentCloudKubernetesClusterSchedulerPolicyConfig() *schema.Resour
 										Optional:    true,
 										Computed:    true,
 										Description: "List of plugins to disable.",
-										Set: func(v interface{}) int {
-											m := v.(map[string]interface{})
-											return schema.HashString(m["name"].(string))
-										},
 										Elem: &schema.Resource{
 											Schema: map[string]*schema.Schema{
 												"name": {
@@ -647,7 +639,7 @@ func flattenSchedulerPolicyConfigList(items []*tke.SchedulerPolicyConfig) []map[
 				for _, e := range cfg.PluginSet.Enabled {
 					eMap := map[string]interface{}{}
 					if e.Name != nil {
-						eMap["name"] = e.Name
+						eMap["name"] = *e.Name
 					}
 
 					if e.Weight != nil {
@@ -665,7 +657,7 @@ func flattenSchedulerPolicyConfigList(items []*tke.SchedulerPolicyConfig) []map[
 				for _, d := range cfg.PluginSet.Disabled {
 					dMap := map[string]interface{}{}
 					if d.Name != nil {
-						dMap["name"] = d.Name
+						dMap["name"] = *d.Name
 					}
 
 					if d.Weight != nil {
