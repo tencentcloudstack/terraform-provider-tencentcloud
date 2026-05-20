@@ -1,3 +1,13 @@
+## 1.82.95(May 20, 2026)
+
+FEATURES:
+
+* **New Resource:** `tencentcloud_css_origin_stream_info` ([#4130](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/4130))
+
+ENHANCEMENTS:
+
+* resource/tencentcloud_kubernetes_cluster_scheduler_policy_config: optimize code logic for update function ([#4127](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/4127))
+
 ## 1.82.94(May 18, 2026)
 
 FEATURES:
