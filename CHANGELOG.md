@@ -1,3 +1,9 @@
+## 1.82.96(May 20, 2026)
+
+ENHANCEMENTS:
+
+* resource/tencentcloud_identity_center_role_assignment: optimize code logic for read function ([#4131](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/4131))
+
 ## 1.82.95(May 20, 2026)
 
 FEATURES:
