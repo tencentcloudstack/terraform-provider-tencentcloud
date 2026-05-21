@@ -226,7 +226,7 @@ func resourceTencentCloudIdentityCenterRoleAssignmentRead(d *schema.ResourceData
 		return err
 	}
 
-	if roleAssignmentsResponseParams == nil || len(roleAssignmentsResponseParams.RoleAssignments) > 0 {
+	if roleAssignmentsResponseParams == nil || len(roleAssignmentsResponseParams.RoleAssignments) == 0 {
 		log.Printf("[WARN]%s resource `tencentcloud_identity_center_role_assignment` [%s] not found, please check if it has been deleted.\n", logId, d.Id())
 		d.SetId("")
 		return nil
