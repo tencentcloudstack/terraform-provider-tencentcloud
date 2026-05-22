@@ -1,3 +1,11 @@
+## 1.82.97(May 22, 2026)
+
+ENHANCEMENTS:
+
+* resource/tencentcloud_cynosdb_cluster: optimize code logic for update function ([#4133](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/4133))
+* resource/tencentcloud_elasticsearch_instance: optimize code logic for create function ([#4134](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/4134))
+* resource/tencentcloud_tcr_instance: optimize code logic for update and delete function ([#4132](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/4132))
+
 ## 1.82.96(May 21, 2026)
 
 ENHANCEMENTS:
