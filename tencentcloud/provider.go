@@ -2420,6 +2420,7 @@ func Provider() *schema.Provider {
 			"tencentcloud_lighthouse_disk":                                                          lighthouse.ResourceTencentCloudLighthouseDisk(),
 			"tencentcloud_lighthouse_renew_disk":                                                    lighthouse.ResourceTencentCloudLighthouseRenewDisk(),
 			"tencentcloud_lighthouse_renew_instance":                                                lighthouse.ResourceTencentCloudLighthouseRenewInstance(),
+			"tencentcloud_lighthouse_share_blueprint_across_account":                                lighthouse.ResourceTencentCloudLighthouseShareBlueprintAcrossAccountOperation(),
 			"tencentcloud_clickhouse_backup":                                                        cdwch.ResourceTencentCloudClickhouseBackup(),
 			"tencentcloud_clickhouse_backup_strategy":                                               cdwch.ResourceTencentCloudClickhouseBackupStrategy(),
 			"tencentcloud_clickhouse_recover_backup_job":                                            cdwch.ResourceTencentCloudClickhouseRecoverBackupJob(),
