@@ -7,7 +7,6 @@ import (
 	"time"
 
 	tccommon "github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/common"
-	svccdb "github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/services/cdb"
 	svctag "github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/services/tag"
 
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
@@ -768,24 +767,24 @@ func resourceTencentCloudCynosdbClusterUpdate(d *schema.ResourceData, meta inter
 			return err
 		}
 
-		mysqlService := svccdb.NewMysqlService(client)
-		_ = resource.Retry(tccommon.ReadRetryTimeout, func() *resource.RetryError {
-			taskStatus, message, err := mysqlService.DescribeAsyncRequestInfo(ctx, asyncRequestId)
-			if err != nil {
-				return resource.NonRetryableError(err)
+		// wait
+		asyncRequestIdInt := helper.StrToInt64(asyncRequestId)
+		err = resource.Retry(tccommon.ReadRetryTimeout, func() *resource.RetryError {
+			resp, e := cynosdbService.DescribeFlow(ctx, asyncRequestIdInt)
+			if e != nil {
+				return resource.NonRetryableError(e)
 			}
 
-			if taskStatus == svccdb.MYSQL_TASK_STATUS_SUCCESS {
+			if resp {
 				return nil
 			}
 
-			if taskStatus == svccdb.MYSQL_TASK_STATUS_INITIAL || taskStatus == svccdb.MYSQL_TASK_STATUS_RUNNING {
-				return resource.RetryableError(fmt.Errorf("%s modify params task  status is %s", clusterId, taskStatus))
-			}
-
-			err = fmt.Errorf("%s create account task status is %s,we won't wait for it finish ,it show message:%s", clusterId, taskStatus, message)
-			return resource.NonRetryableError(err)
+			return resource.RetryableError(fmt.Errorf("waiting for cynosdb cluster param updating"))
 		})
+
+		if err != nil {
+			return err
+		}
 	}
 
 	// update slave_zone
