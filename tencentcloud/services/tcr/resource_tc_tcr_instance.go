@@ -717,7 +717,6 @@ func resourceTencentCloudTcrInstanceDelete(d *schema.ResourceData, meta interfac
 	repRequest := tcr.NewDescribeReplicationInstancesRequest()
 	repRequest.RegistryId = &instanceId
 	replicas, outErr := tcrService.DescribeReplicationInstances(ctx, repRequest)
-
 	if outErr != nil {
 		return outErr
 	}
@@ -735,6 +734,32 @@ func resourceTencentCloudTcrInstanceDelete(d *schema.ResourceData, meta interfac
 			}
 			return nil
 		})
+	}
+
+	// Delete namespaces under the instance before deleting the instance itself.
+	// Query all namespaces via DescribeNamespaces, then iterate to delete each one via DeleteNamespace.
+	namespaces, outErr := tcrService.DescribeTCRNameSpaces(ctx, instanceId, "")
+	if outErr != nil {
+		return outErr
+	}
+
+	for i := range namespaces {
+		ns := namespaces[i]
+		if ns == nil || ns.Name == nil {
+			continue
+		}
+		nsName := *ns.Name
+		err := resource.Retry(tccommon.WriteRetryTimeout, func() *resource.RetryError {
+			e := tcrService.DeleteTCRNameSpace(ctx, instanceId, nsName)
+			if e != nil {
+				return tccommon.RetryError(e, tcr.INTERNALERROR_ERRORCONFLICT)
+			}
+			return nil
+		})
+		if err != nil {
+			log.Printf("[CRITAL]%s delete tcr namespace [%s] under instance [%s] failed, reason:%+v", logId, nsName, instanceId, err)
+			return err
+		}
 	}
 
 	outErr = tcrService.DeleteTCRInstance(ctx, instanceId, deleteBucket)
