@@ -108,7 +108,7 @@ The following arguments are supported:
 * `delete_bucket` - (Optional, Bool) Indicate to delete the COS bucket which is auto-created with the instance or not.
 * `deletion_protection` - (Optional, Bool) Whether to enable Instance Deletion Protection.
 * `enable_cos_maz` - (Optional, Bool, ForceNew) Whether to enable COS bucket multi-AZ feature. Default is `false`.
-* `enable_cos_versioning` - (Optional, Bool, ForceNew) Whether to enable COS bucket versioning. Default is `false`.
+* `enable_cos_versioning` - (Optional, Bool, ForceNew) Whether to enable COS bucket versioning. Advanced Edition Instances: Default is `true` (versioning enabled); Standard / Basic Edition Instances: Default is `false` (disabled).
 * `instance_charge_type_prepaid_period` - (Optional, Int) Length of time to purchase an instance (in month). Must set when registry_charge_type is prepaid.
 * `instance_charge_type_prepaid_renew_flag` - (Optional, Int) Auto renewal flag. 1: manual renewal, 2: automatic renewal, 3: no renewal and no notification. Must set when registry_charge_type is prepaid.
 * `open_public_operation` - (Optional, Bool) Control public network access.

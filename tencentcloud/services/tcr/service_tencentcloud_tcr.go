@@ -329,7 +329,7 @@ func (me *TCRService) CreateTCRNameSpace(ctx context.Context, instanceId string,
 	return
 }
 
-func (me *TCRService) ModifyInstance(ctx context.Context, registryId, registryType string, deletionProtection bool) (errRet error) {
+func (me *TCRService) ModifyInstance(ctx context.Context, registryId, registryType string) (errRet error) {
 	logId := tccommon.GetLogId(ctx)
 	request := tcr.NewModifyInstanceRequest()
 	defer func() {
@@ -342,6 +342,20 @@ func (me *TCRService) ModifyInstance(ctx context.Context, registryId, registryTy
 		request.RegistryType = helper.String(registryType)
 	}
 
+	ratelimit.Check(request.GetAction())
+	_, err := me.client.UseTCRClient().ModifyInstance(request)
+	return err
+}
+
+func (me *TCRService) ModifyInstanceDP(ctx context.Context, registryId string, deletionProtection bool) (errRet error) {
+	logId := tccommon.GetLogId(ctx)
+	request := tcr.NewModifyInstanceRequest()
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail,reason[%s]", logId, request.GetAction(), errRet.Error())
+		}
+	}()
+	request.RegistryId = helper.String(registryId)
 	request.DeletionProtection = helper.Bool(deletionProtection)
 	ratelimit.Check(request.GetAction())
 	_, err := me.client.UseTCRClient().ModifyInstance(request)

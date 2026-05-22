@@ -148,7 +148,7 @@ func ResourceTencentCloudTcrInstance() *schema.Resource {
 				Optional:    true,
 				Computed:    true,
 				ForceNew:    true,
-				Description: "Whether to enable COS bucket versioning. Default is `false`.",
+				Description: "Whether to enable COS bucket versioning. Advanced Edition Instances: Default is `true` (versioning enabled); Standard / Basic Edition Instances: Default is `false` (disabled).",
 			},
 			//Computed values
 			"status": {
@@ -609,21 +609,10 @@ func resourceTencentCloudTcrInstanceUpdate(d *schema.ResourceData, meta interfac
 
 	}
 
-	if d.HasChange("instance_type") || d.HasChange("deletion_protection") {
-		var (
-			instanceType       string
-			deletionProtection bool
-		)
+	if d.HasChange("instance_type") {
+		instanceType := d.Get("instance_type").(string)
 
-		if d.HasChange("instance_type") {
-			instanceType = d.Get("instance_type").(string)
-		}
-
-		if v, ok := d.GetOkExists("deletion_protection"); ok {
-			deletionProtection = v.(bool)
-		}
-
-		if err := tcrService.ModifyInstance(ctx, d.Id(), instanceType, deletionProtection); err != nil {
+		if err := tcrService.ModifyInstance(ctx, d.Id(), instanceType); err != nil {
 			return err
 		}
 		err := resource.Retry(2*tccommon.ReadRetryTimeout, func() *resource.RetryError {
@@ -638,6 +627,17 @@ func resourceTencentCloudTcrInstanceUpdate(d *schema.ResourceData, meta interfac
 			return nil
 		})
 		if err != nil {
+			return err
+		}
+	}
+
+	if d.HasChange("deletion_protection") {
+		var deletionProtection bool
+		if v, ok := d.GetOkExists("deletion_protection"); ok {
+			deletionProtection = v.(bool)
+		}
+
+		if err := tcrService.ModifyInstanceDP(ctx, d.Id(), deletionProtection); err != nil {
 			return err
 		}
 	}
