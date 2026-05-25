@@ -89,18 +89,24 @@ func (p *Provider) MetaSchema(_ context.Context, _ provider.MetaSchemaRequest, r
 	}
 }
 
-// Schema mirrors the SDKv2 provider's field set.
+// Schema mirrors the SDKv2 provider's field set byte-for-byte.
 //
 // Key principles:
-//   - Field names and type semantics match SDKv2 exactly. SDKv2's
-//     TypeSet/TypeList with MaxItems=1 is equivalent to a nested block at
-//     the protocol v5 layer, so we use SetNestedBlock / ListNestedBlock
-//     here, not nested attributes.
-//   - Every field is Optional. The framework side does not actually consume
-//     these fields (they are declared but not parsed); they must exist to
-//     satisfy mux's schema-consistency invariant.
-//   - Sensitive fields (secret_key / security_token / token_code, etc.) are
-//     explicitly marked Sensitive.
+//   - Field names, types, Required/Optional, Sensitive flags and
+//     Description strings MUST match SDKv2 (tencentcloud/provider.go)
+//     exactly. tf5muxserver compares the protocol-level schema across
+//     underlying providers; any divergence (including a single character
+//     in Description) will fail provider startup with
+//     "Invalid Provider Server Combination".
+//   - SDKv2's TypeSet/TypeList with MaxItems=1 is equivalent to a nested
+//     block at the protocol v5 layer, so we use SetNestedBlock /
+//     ListNestedBlock here, not nested attributes.
+//   - The framework side does not consume any of these fields at runtime;
+//     credential parsing lives exclusively in the SDKv2 providerConfigure.
+//     This Schema only exists to satisfy mux's schema-consistency invariant.
+//   - SDKv2 ConflictsWith / ValidateFunc / DefaultFunc are NOT serialized
+//     into the protocol schema, so they are intentionally not mirrored
+//     here. Only attributes that are part of the wire schema are mirrored.
 func (p *Provider) Schema(_ context.Context, _ provider.SchemaRequest, resp *provider.SchemaResponse) {
 	resp.Schema = schema.Schema{
 		Attributes: map[string]schema.Attribute{
@@ -120,7 +126,7 @@ func (p *Provider) Schema(_ context.Context, _ provider.SchemaRequest, resp *pro
 			},
 			"region": schema.StringAttribute{
 				Optional:    true,
-				Description: "This is the TencentCloud region. It can also be sourced from the `TENCENTCLOUD_REGION` environment variable. The default input value is ap-guangzhou.",
+				Description: "This is the TencentCloud region. It can also be sourced from the `TENCENTCLOUD_REGION` environment variables. The default input value is ap-guangzhou.",
 			},
 			"protocol": schema.StringAttribute{
 				Optional:    true,
@@ -132,7 +138,7 @@ func (p *Provider) Schema(_ context.Context, _ provider.SchemaRequest, resp *pro
 			},
 			"cos_domain": schema.StringAttribute{
 				Optional:    true,
-				Description: "The root domain of the API request, Default is `tencentcloudapi.com`.",
+				Description: "The cos domain of the API request, Default is `https://cos.{region}.myqcloud.com`, Other Examples: `https://cluster-123456.cos-cdc.ap-guangzhou.myqcloud.com`.",
 			},
 			"enable_pod_oidc": schema.BoolAttribute{
 				Optional:    true,
@@ -153,12 +159,12 @@ func (p *Provider) Schema(_ context.Context, _ provider.SchemaRequest, resp *pro
 			"allowed_account_ids": schema.SetAttribute{
 				Optional:    true,
 				ElementType: types.StringType,
-				Description: "List of allowed TencentCloud account IDs to validate against the configured TencentCloud account.",
+				Description: "List of allowed TencentCloud account IDs to prevent you from mistakenly using the wrong one (and potentially end up destroying a live environment). Conflicts with `forbidden_account_ids`, If use `assume_role_with_saml` or `assume_role_with_web_identity`, it is not supported.",
 			},
 			"forbidden_account_ids": schema.SetAttribute{
 				Optional:    true,
 				ElementType: types.StringType,
-				Description: "List of forbidden TencentCloud account IDs to check against the configured TencentCloud account.",
+				Description: "List of forbidden TencentCloud account IDs to prevent you from mistakenly using the wrong one (and potentially end up destroying a live environment). Conflicts with `allowed_account_ids`, If use `assume_role_with_saml` or `assume_role_with_web_identity`, it is not supported.",
 			},
 		},
 		Blocks: map[string]schema.Block{
@@ -167,37 +173,36 @@ func (p *Provider) Schema(_ context.Context, _ provider.SchemaRequest, resp *pro
 				NestedObject: schema.NestedBlockObject{
 					Attributes: map[string]schema.Attribute{
 						"role_arn": schema.StringAttribute{
-							Optional:    true,
-							Description: "The ARN of the role to assume.",
+							Required:    true,
+							Description: "The ARN of the role to assume. It can be sourced from the `TENCENTCLOUD_ASSUME_ROLE_ARN`.",
 						},
 						"session_name": schema.StringAttribute{
-							Optional:    true,
-							Description: "The session name to use when making the AssumeRole call.",
+							Required:    true,
+							Description: "The session name to use when making the AssumeRole call. It can be sourced from the `TENCENTCLOUD_ASSUME_ROLE_SESSION_NAME`.",
 						},
 						"session_duration": schema.Int64Attribute{
-							Optional:    true,
-							Description: "The duration of the session when making the AssumeRole call. Its value ranges from 0 to 43200(seconds).",
+							Required:    true,
+							Description: "The duration of the session when making the AssumeRole call. Its value ranges from 0 to 43200(seconds), and default is 7200 seconds. It can be sourced from the `TENCENTCLOUD_ASSUME_ROLE_SESSION_DURATION`.",
 						},
 						"policy": schema.StringAttribute{
 							Optional:    true,
-							Description: "A more restrictive policy when making the AssumeRole call.",
+							Description: "A more restrictive policy when making the AssumeRole call. Its content must not contains `principal` elements. Notice: more syntax references, please refer to: [policies syntax logic](https://intl.cloud.tencent.com/document/product/598/10603).",
 						},
 						"external_id": schema.StringAttribute{
 							Optional:    true,
-							Description: "External role ID.",
+							Description: "External role ID, which can be obtained by clicking the role name in the CAM console. It can contain 2-128 letters, digits, and symbols (=,.@:/-). Regex: [\\w+=,.@:/-]*. It can be sourced from the `TENCENTCLOUD_ASSUME_ROLE_EXTERNAL_ID`.",
 						},
 						"source_identity": schema.StringAttribute{
 							Optional:    true,
-							Description: "Caller identity uin.",
+							Description: "Caller identity uin. It can be sourced from the `TENCENTCLOUD_ASSUME_ROLE_SOURCE_IDENTITY`.",
 						},
 						"serial_number": schema.StringAttribute{
 							Optional:    true,
-							Description: "MFA serial number.",
+							Description: "MFA serial number, the identification number of the MFA device associated with the calling CAM user. Format qcs: cam:uin/${ownerUin}::mfa/${mfaType}. It can be sourced from the `TENCENTCLOUD_ASSUME_ROLE_SERIAL_NUMBER`.",
 						},
 						"token_code": schema.StringAttribute{
 							Optional:    true,
-							Sensitive:   true,
-							Description: "MFA authentication code.",
+							Description: "MFA authentication code. It can be sourced from the `TENCENTCLOUD_ASSUME_ROLE_TOKEN_CODE`.",
 						},
 					},
 				},
@@ -207,25 +212,24 @@ func (p *Provider) Schema(_ context.Context, _ provider.SchemaRequest, resp *pro
 				NestedObject: schema.NestedBlockObject{
 					Attributes: map[string]schema.Attribute{
 						"saml_assertion": schema.StringAttribute{
-							Optional:    true,
-							Sensitive:   true,
-							Description: "SAML assertion information encoded in base64.",
+							Required:    true,
+							Description: "SAML assertion information encoded in base64. It can be sourced from the `TENCENTCLOUD_ASSUME_ROLE_SAML_ASSERTION`.",
 						},
 						"principal_arn": schema.StringAttribute{
-							Optional:    true,
-							Description: "Player Access Description Name.",
+							Required:    true,
+							Description: "Player Access Description Name. It can be sourced from the `TENCENTCLOUD_ASSUME_ROLE_PRINCIPAL_ARN`.",
 						},
 						"role_arn": schema.StringAttribute{
-							Optional:    true,
-							Description: "The ARN of the role to assume.",
+							Required:    true,
+							Description: "The ARN of the role to assume. It can be sourced from the `TENCENTCLOUD_ASSUME_ROLE_ARN`.",
 						},
 						"session_name": schema.StringAttribute{
-							Optional:    true,
-							Description: "The session name to use when making the AssumeRole call.",
+							Required:    true,
+							Description: "The session name to use when making the AssumeRole call. It can be sourced from the `TENCENTCLOUD_ASSUME_ROLE_SESSION_NAME`.",
 						},
 						"session_duration": schema.Int64Attribute{
-							Optional:    true,
-							Description: "The duration of the session when making the AssumeRoleWithSAML call.",
+							Required:    true,
+							Description: "The duration of the session when making the AssumeRoleWithSAML call. Its value ranges from 0 to 43200(seconds), and default is 7200 seconds. It can be sourced from the `TENCENTCLOUD_ASSUME_ROLE_SESSION_DURATION`.",
 						},
 					},
 				},
@@ -236,32 +240,31 @@ func (p *Provider) Schema(_ context.Context, _ provider.SchemaRequest, resp *pro
 					Attributes: map[string]schema.Attribute{
 						"provider_id": schema.StringAttribute{
 							Optional:    true,
-							Description: "Identity provider name.",
+							Description: "Identity provider name. It can be sourced from the `TENCENTCLOUD_ASSUME_ROLE_PROVIDER_ID`, Default is OIDC.",
 						},
 						"web_identity_token": schema.StringAttribute{
 							Optional:    true,
-							Sensitive:   true,
-							Description: "OIDC token issued by IdP.",
+							Description: "OIDC token issued by IdP. It can be sourced from the `TENCENTCLOUD_ASSUME_ROLE_WEB_IDENTITY_TOKEN`. One of `web_identity_token` or `web_identity_token_file` is required.",
 						},
 						"web_identity_token_file": schema.StringAttribute{
 							Optional:    true,
-							Description: "File containing a web identity token from an OpenID Connect (OIDC) or OAuth provider.",
+							Description: "File containing a web identity token from an OpenID Connect (OIDC) or OAuth provider. It can be sourced from the `TENCENTCLOUD_ASSUME_ROLE_WEB_IDENTITY_TOKEN_FILE`. One of `web_identity_token` or `web_identity_token_file` is required.",
 						},
 						"role_arn": schema.StringAttribute{
 							Optional:    true,
-							Description: "The ARN of the role to assume.",
+							Description: "The ARN of the role to assume. It can be sourced from the `TENCENTCLOUD_ASSUME_ROLE_ARN`. One of `role_arn` or `role_arn_file` is required.",
 						},
 						"role_arn_file": schema.StringAttribute{
 							Optional:    true,
-							Description: "File containin the ARN of the role to assume.",
+							Description: "File containin the ARN of the role to assume. It can be sourced from the `TENCENTCLOUD_ASSUME_ROLE_ARNN_FILE`. One of `role_arn` or `role_arn_file` is required.",
 						},
 						"session_name": schema.StringAttribute{
-							Optional:    true,
-							Description: "The session name to use when making the AssumeRole call.",
+							Required:    true,
+							Description: "The session name to use when making the AssumeRole call. It can be sourced from the `TENCENTCLOUD_ASSUME_ROLE_SESSION_NAME`.",
 						},
 						"session_duration": schema.Int64Attribute{
-							Optional:    true,
-							Description: "The duration of the session when making the AssumeRoleWithWebIdentity call.",
+							Required:    true,
+							Description: "The duration of the session when making the AssumeRoleWithWebIdentity call. Its value ranges from 0 to 43200(seconds), and default is 7200 seconds. It can be sourced from the `TENCENTCLOUD_ASSUME_ROLE_SESSION_DURATION`.",
 						},
 					},
 				},
@@ -271,17 +274,16 @@ func (p *Provider) Schema(_ context.Context, _ provider.SchemaRequest, resp *pro
 				NestedObject: schema.NestedBlockObject{
 					Attributes: map[string]schema.Attribute{
 						"serial_number": schema.StringAttribute{
-							Optional:    true,
-							Description: "MFA serial number.",
+							Required:    true,
+							Description: "MFA serial number, the identification number of the MFA device associated with the calling CAM user. Format qcs: cam:uin/${ownerUin}::mfa/${mfaType}. It can be sourced from the `TENCENTCLOUD_MFA_CERTIFICATION_SERIAL_NUMBER`.",
 						},
 						"token_code": schema.StringAttribute{
-							Optional:    true,
-							Sensitive:   true,
-							Description: "MFA authentication code.",
+							Required:    true,
+							Description: "MFA authentication code. It can be sourced from the `TENCENTCLOUD_MFA_CERTIFICATION_TOKEN_CODE`.",
 						},
 						"duration_seconds": schema.Int64Attribute{
 							Optional:    true,
-							Description: "MFA token duration in seconds.",
+							Description: "Specify the validity period of the temporary certificate. The main account can be set to a maximum validity period of 7200 seconds, and the sub account can be set to a maximum validity period of 129600 seconds, and default is 1800 seconds. It can be sourced from the `TENCENTCLOUD_MFA_CERTIFICATION_DURATION_SECONDS`.",
 						},
 					},
 				},
