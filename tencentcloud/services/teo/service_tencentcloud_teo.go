@@ -1717,13 +1717,12 @@ func (me *TeoService) DescribeTeoZonesByFilter(ctx context.Context, param map[st
 	}()
 
 	for k, v := range param {
-		if k == "Filters" {
+		switch strings.Title(k) {
+		case "Filters":
 			request.Filters = v.([]*teov20220901.AdvancedFilter)
-		}
-		if k == "Order" {
+		case "Order":
 			request.Order = v.(*string)
-		}
-		if k == "Direction" {
+		case "Direction":
 			request.Direction = v.(*string)
 		}
 	}
@@ -1924,15 +1923,12 @@ func (me *TeoService) DescribeTeoPlansByFilters(ctx context.Context, paramMap ma
 	response := teo.NewDescribePlansResponse()
 
 	for k, v := range paramMap {
-		if k == "Filters" {
+		switch strings.Title(k) {
+		case "Filters":
 			request.Filters = v.([]*teov20220901.Filter)
-		}
-
-		if k == "Order" {
+		case "Order":
 			request.Order = v.(*string)
-		}
-
-		if k == "Direction" {
+		case "Direction":
 			request.Direction = v.(*string)
 		}
 	}
@@ -2442,14 +2438,13 @@ func (me *TeoService) DescribeTeoConfigGroupVersionsByFilter(ctx context.Context
 	}()
 
 	for k, v := range param {
-		if k == "ZoneId" {
-			request.ZoneId = v.(*string)
-		}
-		if k == "GroupId" {
-			request.GroupId = v.(*string)
-		}
-		if k == "Filters" {
+		switch strings.Title(k) {
+		case "Filters":
 			request.Filters = v.([]*teov20220901.AdvancedFilter)
+		case "Zoneid":
+			request.ZoneId = v.(*string)
+		case "Groupid":
+			request.GroupId = v.(*string)
 		}
 	}
 
@@ -2496,34 +2491,33 @@ func (me *TeoService) DescribeTeoDeployConfigVersionHistoryByFilter(ctx context.
 	}()
 
 	for k, v := range param {
-		if k == "ZoneId" {
+		switch strings.Title(k) {
+		case "Zoneid":
 			request.ZoneId = v.(*string)
-		}
-		if k == "EnvId" {
+		case "Envid":
 			request.EnvId = v.(*string)
-		}
-		if k == "Filters" {
+		case "Filters":
 			request.Filters = v.([]*teov20220901.AdvancedFilter)
 		}
-	}
 
-	ratelimit.Check(request.GetAction())
+		ratelimit.Check(request.GetAction())
 
-	response, err := me.client.UseTeoV20220901Client().DescribeDeployHistory(request)
-	if err != nil {
-		errRet = err
+		response, err := me.client.UseTeoV20220901Client().DescribeDeployHistory(request)
+		if err != nil {
+			errRet = err
+			return
+		}
+		log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+		if response == nil || response.Response == nil || len(response.Response.Records) < 1 {
+			return
+		}
+
+		ret = response.Response.Records
 		return
 	}
-	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
-
-	if response == nil || response.Response == nil || len(response.Response.Records) < 1 {
-		return
-	}
-
-	ret = response.Response.Records
-	return
+	return ret, errRet
 }
-
 func (me *TeoService) DescribeTeoConfigGroupVersionById(ctx context.Context, zoneId, groupId, versionId string) (ret *teov20220901.DescribeConfigGroupVersionDetailResponseParams, errRet error) {
 	logId := tccommon.GetLogId(ctx)
 
@@ -3367,10 +3361,10 @@ func (me *TeoService) DescribeTeoMultiPathGatewaysByFilter(ctx context.Context, 
 	}()
 
 	for k, v := range param {
-		if k == "ZoneId" {
-			request.ZoneId = v.(*string)
-		}
-		if k == "Filters" {
+		switch strings.Title(k) {
+		case "Zoneid":
+			request.ZoneId = helper.String(v.(string))
+		case "Filters":
 			request.Filters = v.([]*teov20220901.Filter)
 		}
 	}

@@ -125,7 +125,7 @@ func ResourceTencentCloudTeoPlanCreate(d *schema.ResourceData, meta interface{})
 	err := resource.Retry(tccommon.WriteRetryTimeout, func() *resource.RetryError {
 		result, e := meta.(tccommon.ProviderMeta).GetAPIV3Conn().UseTeoV20220901Client().CreatePlanWithContext(ctx, request)
 		if e != nil {
-			return tccommon.RetryError(e)
+			return tccommon.RetryError(e, tccommon.InternalError)
 		} else {
 			log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), result.ToJsonString())
 		}

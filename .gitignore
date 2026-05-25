@@ -22,3 +22,4 @@ dist/
 gendoc/gendoc
 .vscode/
 .codebuddy/
+.vendor/
