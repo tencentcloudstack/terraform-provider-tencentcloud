@@ -1,6 +1,8 @@
 module github.com/tencentcloudstack/terraform-provider-tencentcloud
 
-go 1.25.8
+go 1.25
+
+toolchain go1.25.8
 
 require (
 	cloud.google.com/go/iam v1.0.0 // indirect
