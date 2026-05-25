@@ -4,14 +4,16 @@ layout: "tencentcloud"
 page_title: "TencentCloud: tencentcloud_monitor_tmp_instance"
 sidebar_current: "docs-tencentcloud-resource-monitor_tmp_instance"
 description: |-
-  Provides a resource to create a monitor tmpInstance
+  Provides a resource to create a monitor (Cloud Monitor) tmpInstance
 ---
 
 # tencentcloud_monitor_tmp_instance
 
-Provides a resource to create a monitor tmpInstance
+Provides a resource to create a monitor (Cloud Monitor) tmpInstance
 
 ## Example Usage
+
+### Basic usage
 
 ```hcl
 variable "availability_zone" {
@@ -42,6 +44,38 @@ resource "tencentcloud_monitor_tmp_instance" "example" {
 }
 ```
 
+### With grafana instance bindGrafana
+
+```hcl
+variable "availability_zone" {
+  default = "ap-guangzhou-4"
+}
+
+resource "tencentcloud_vpc" "vpc" {
+  cidr_block = "10.0.0.0/16"
+  name       = "tf_monitor_vpc"
+}
+
+resource "tencentcloud_subnet" "subnet" {
+  vpc_id            = tencentcloud_vpc.vpc.id
+  availability_zone = var.availability_zone
+  name              = "tf_monitor_subnet"
+  cidr_block        = "10.0.1.0/24"
+}
+
+resource "tencentcloud_monitor_tmp_instance" "example" {
+  instance_name       = "tf-tmp-instance"
+  vpc_id              = tencentcloud_vpc.vpc.id
+  subnet_id           = tencentcloud_subnet.subnet.id
+  data_retention_time = 30
+  zone                = var.availability_zone
+  grafana_instance_id = "grafana-xxxxxx"
+  tags = {
+    "createdBy" = "terraform"
+  }
+}
+```
+
 ## Argument Reference
 
 The following arguments are supported:
@@ -51,6 +85,7 @@ The following arguments are supported:
 * `subnet_id` - (Required, String) Subnet Id.
 * `vpc_id` - (Required, String) Vpc Id.
 * `zone` - (Required, String) Available zone.
+* `grafana_instance_id` - (Optional, String) bindGrafana instance ID.
 * `tags` - (Optional, Map) Tag description list.
 
 ## Attributes Reference
