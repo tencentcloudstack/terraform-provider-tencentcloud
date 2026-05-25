@@ -68,6 +68,7 @@ import (
 	emr "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/emr/v20190103"
 	es "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/es/v20180416"
 	gaap "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/gaap/v20180529"
+	ga2v20250115 "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/ga2/v20250115"
 	gsv20191118 "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/gs/v20191118"
 	gwlb "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/gwlb/v20240906"
 	igtmv20231024 "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/igtm/v20231024"
@@ -258,6 +259,7 @@ type TencentCloudClient struct {
 	gwlbv20240906Conn           *gwlb.Client
 	billingv20180709Conn        *billing.Client
 	igtmv20231024Conn           *igtmv20231024.Client
+	ga2v20250115Conn            *ga2v20250115.Client
 	gsv20191118Conn             *gsv20191118.Client
 	keewidbv20220308Conn        *keewidbv20220308.Client
 	vdbv20230616Conn            *vdbv20230616.Client
@@ -2205,6 +2207,18 @@ func (me *TencentCloudClient) UseIgtmV20231024Client() *igtmv20231024.Client {
 	me.igtmv20231024Conn.WithHttpTransport(&LogRoundTripper{})
 
 	return me.igtmv20231024Conn
+}
+
+// UseGa2V20250115Client return GA2 (Global Accelerator 2) client for service
+func (me *TencentCloudClient) UseGa2V20250115Client() *ga2v20250115.Client {
+	if me.ga2v20250115Conn != nil {
+		return me.ga2v20250115Conn
+	}
+	cpf := me.NewClientProfile(300)
+	me.ga2v20250115Conn, _ = ga2v20250115.NewClient(me.Credential, me.Region, cpf)
+	me.ga2v20250115Conn.WithHttpTransport(&LogRoundTripper{})
+
+	return me.ga2v20250115Conn
 }
 
 // UseConfigV20220802Client return Config client for service
