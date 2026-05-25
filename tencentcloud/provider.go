@@ -73,6 +73,7 @@ import (
 	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/services/emr"
 	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/services/es"
 	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/services/fl"
+	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/services/ga2"
 	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/services/gaap"
 	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/services/gs"
 	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/services/gwlb"
@@ -2679,6 +2680,7 @@ func Provider() *schema.Provider {
 			"tencentcloud_igtm_strategy":                                                            igtm.ResourceTencentCloudIgtmStrategy(),
 			"tencentcloud_igtm_package_instance":                                                    igtm.ResourceTencentCloudIgtmPackageInstance(),
 			"tencentcloud_igtm_package_task":                                                        igtm.ResourceTencentCloudIgtmPackageTask(),
+			"tencentcloud_ga2_accelerate_area":                                                      ga2.ResourceTencentCloudGa2AccelerateArea(),
 			"tencentcloud_vcube_application_and_video":                                              vcube.ResourceTencentCloudVcubeApplicationAndVideo(),
 			"tencentcloud_vcube_application_and_web_player_license":                                 vcube.ResourceTencentCloudVcubeApplicationAndWebPlayerLicense(),
 			"tencentcloud_vcube_renew_video_operation":                                              vcube.ResourceTencentCloudVcubeRenewVideoOperation(),
