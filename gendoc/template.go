@@ -59,14 +59,17 @@ In addition to all arguments above, the following attributes are exported:
                         <li>
                             <a href="/docs/providers/{{$.cloud_mark}}/d/{{replace $Resource $.cloudPrefix ""}}.html">{{$Resource}}</a>
                         </li>{{end}}{{else}}
-                        {{ if .DataSources }}<li>
+                        {{- if .DataSources}}
+                        <li>
                             <a href="#">Data Sources</a>
                             <ul class="nav nav-auto-expand">{{range $Resource := .DataSources}}
                                 <li>
                                     <a href="/docs/providers/{{$.cloud_mark}}/d/{{replace $Resource $.cloudPrefix ""}}.html">{{$Resource}}</a>
                                 </li>{{end}}
                             </ul>
-                        </li>{{ end }}
+                        </li>
+                        {{- end}}
+                        {{- if .Resources}}
                         <li>
                             <a href="#">Resources</a>
                             <ul class="nav nav-auto-expand">{{range $Resource := .Resources}}
@@ -74,7 +77,48 @@ In addition to all arguments above, the following attributes are exported:
                                     <a href="/docs/providers/{{$.cloud_mark}}/r/{{replace $Resource $.cloudPrefix ""}}.html">{{$Resource}}</a>
                                 </li>{{end}}
                             </ul>
-                        </li>{{end}}
+                        </li>
+                        {{- end}}
+                        {{- if .Functions}}
+                        <li>
+                            <a href="#">Functions</a>
+                            <ul class="nav nav-auto-expand">{{range $Resource := .Functions}}
+                                <li>
+                                    <a href="/docs/providers/{{$.cloud_mark}}/functions/{{replace $Resource $.cloudPrefix ""}}.html">{{$Resource}}</a>
+                                </li>{{end}}
+                            </ul>
+                        </li>
+                        {{- end}}
+                        {{- if .Ephemerals}}
+                        <li>
+                            <a href="#">Ephemeral Resources</a>
+                            <ul class="nav nav-auto-expand">{{range $Resource := .Ephemerals}}
+                                <li>
+                                    <a href="/docs/providers/{{$.cloud_mark}}/ephemeral-resources/{{replace $Resource $.cloudPrefix ""}}.html">{{$Resource}}</a>
+                                </li>{{end}}
+                            </ul>
+                        </li>
+                        {{- end}}
+                        {{- if .Lists}}
+                        <li>
+                            <a href="#">List Resources</a>
+                            <ul class="nav nav-auto-expand">{{range $Resource := .Lists}}
+                                <li>
+                                    <a href="/docs/providers/{{$.cloud_mark}}/list-resources/{{replace $Resource $.cloudPrefix ""}}.html">{{$Resource}}</a>
+                                </li>{{end}}
+                            </ul>
+                        </li>
+                        {{- end}}
+                        {{- if .Actions}}
+                        <li>
+                            <a href="#">Actions</a>
+                            <ul class="nav nav-auto-expand">{{range $Resource := .Actions}}
+                                <li>
+                                    <a href="/docs/providers/{{$.cloud_mark}}/actions/{{replace $Resource $.cloudPrefix ""}}.html">{{$Resource}}</a>
+                                </li>{{end}}
+                            </ul>
+                        </li>
+                        {{- end}}{{end}}
                     </ul>
                 </li>{{end}}
             </ul>
