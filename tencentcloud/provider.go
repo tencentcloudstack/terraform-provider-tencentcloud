@@ -20,6 +20,7 @@ import (
 	tccommon "github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/common"
 	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/connectivity"
 	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/internal/helper"
+	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/internal/sharedmeta"
 	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/ratelimit"
 	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/services/advisor"
 	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/services/antiddos"
@@ -3062,6 +3063,11 @@ func providerConfigure(d *schema.ResourceData) (interface{}, error) {
 			return nil, err
 		}
 	}
+
+	// 将已配置好的 connectivity 客户端推送给 framework provider，
+	// 后者在 Configure 阶段会从 sharedmeta.GetSharedMeta() 读取同一份实例，
+	// 从而保证 SDKv2 与 framework 两栈共享凭证、SDK client 缓存、UA、retry 策略。
+	sharedmeta.SetSharedMeta(tcClient.apiV3Conn)
 
 	return &tcClient, nil
 }

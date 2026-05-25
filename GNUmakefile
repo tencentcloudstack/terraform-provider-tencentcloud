@@ -18,6 +18,14 @@ sweep:
 test: fmtcheck
 	go test $(TEST) -timeout=30s -parallel=4
 
+# check-mux 在不发起任何远程调用的前提下，验证 SDKv2 + framework
+# 双栈通过 tf5muxserver 合并 schema 时不会冲突，并校验两栈资源/数据源
+# 类型名集合无交集。新加 framework 资源的 PR 必须保证此目标通过。
+check-mux: fmtcheck
+	@echo "==> Checking SDKv2/framework provider mux compatibility..."
+	@go test -count=1 -run 'TestMuxServer_NoStartupError|TestFrameworkProvider_NoTypeNameCollision' ./$(PKG_NAME)/
+
+
 testacc: fmtcheck
 	TF_ACC=1 go test $(TEST) -v $(TESTARGS) -timeout 120m
 
@@ -195,6 +203,6 @@ endif
 changelog:
 	./scripts/generate-changelog.sh
 
-.PHONY: build sweep test testacc fmt fmtcheck lint tools test-compile doc hooks website website-lint website-test
+.PHONY: build sweep test testacc fmt fmtcheck lint tools test-compile doc hooks website website-lint website-test check-mux
 
 ready: doc fmt-faster

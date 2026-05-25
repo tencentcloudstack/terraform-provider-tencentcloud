@@ -1,0 +1,3 @@
+```release-note:enhancement
+data-source/tencentcloud_provider_runtime: Add `protocol`, `domain`, `cos_domain`, and `secret_id_present` computed attributes for non-sensitive provider runtime introspection.
+```
