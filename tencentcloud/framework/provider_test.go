@@ -33,6 +33,48 @@ func TestMuxServer_NoStartupError(t *testing.T) {
 	}
 }
 
+// TestMuxServer_GetProviderSchemaNoError eagerly invokes GetProviderSchema on
+// the muxed server. tf5muxserver validates that all underlying providers
+// expose byte-for-byte identical Provider / ProviderMeta schemas (and
+// resource / data source / ephemeral resource schemas with overlapping type
+// names) at this call. NewMuxServer alone does NOT trigger this validation
+// — schema diffing is lazy. Without this test, schema drift between SDKv2
+// and framework providers would only surface when end users run
+// `terraform plan/apply`, which has happened before in this repository.
+//
+// Whenever someone changes the SDKv2 provider schema in
+// tencentcloud/provider.go they MUST mirror the change in
+// tencentcloud/framework/provider.go (Schema and MetaSchema). This test
+// catches divergence at CI time.
+func TestMuxServer_GetProviderSchemaNoError(t *testing.T) {
+	primary := tencentcloud.Provider()
+
+	providers := []func() tfprotov5.ProviderServer{
+		primary.GRPCProvider,
+		providerserver.NewProtocol5(NewProvider(primary)),
+	}
+
+	ctx := context.Background()
+	muxServer, err := tf5muxserver.NewMuxServer(ctx, providers...)
+	if err != nil {
+		t.Fatalf("tf5muxserver.NewMuxServer failed: %v", err)
+	}
+
+	srv := muxServer.ProviderServer()
+	resp, err := srv.GetProviderSchema(ctx, &tfprotov5.GetProviderSchemaRequest{})
+	if err != nil {
+		t.Fatalf("GetProviderSchema returned error: %v", err)
+	}
+	if resp == nil {
+		t.Fatalf("GetProviderSchema returned nil response")
+	}
+	for _, d := range resp.Diagnostics {
+		if d.Severity == tfprotov5.DiagnosticSeverityError {
+			t.Errorf("GetProviderSchema diagnostic error: summary=%q detail=%q", d.Summary, d.Detail)
+		}
+	}
+}
+
 // TestFrameworkProvider_NoTypeNameCollision verifies that the same
 // resource/data source type name is never registered in both the SDKv2 and
 // the framework stacks. Duplicate registration would panic mux during

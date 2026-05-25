@@ -78,15 +78,15 @@ func (p *Provider) Metadata(_ context.Context, _ provider.MetadataRequest, resp 
 	resp.Version = p.Version
 }
 
-// MetaSchema exposes the same module_name meta attribute as SDKv2.
+// MetaSchema MUST mirror SDKv2 exactly. The SDKv2 provider in
+// tencentcloud/provider.go does NOT define a ProviderMetaSchemaFunc, which
+// means SDKv2 reports an empty (zero-attribute) provider meta schema to
+// the protocol. tf5muxserver compares the meta schema across underlying
+// providers, so framework MUST also report an empty schema. Any attribute
+// declared here that is not declared in SDKv2 will fail provider startup
+// with "Invalid Provider Server Combination".
 func (p *Provider) MetaSchema(_ context.Context, _ provider.MetaSchemaRequest, resp *provider.MetaSchemaResponse) {
-	resp.Schema = metaschema.Schema{
-		Attributes: map[string]metaschema.Attribute{
-			"module_name": metaschema.StringAttribute{
-				Optional: true,
-			},
-		},
-	}
+	resp.Schema = metaschema.Schema{}
 }
 
 // Schema mirrors the SDKv2 provider's field set byte-for-byte.
@@ -181,7 +181,7 @@ func (p *Provider) Schema(_ context.Context, _ provider.SchemaRequest, resp *pro
 							Description: "The session name to use when making the AssumeRole call. It can be sourced from the `TENCENTCLOUD_ASSUME_ROLE_SESSION_NAME`.",
 						},
 						"session_duration": schema.Int64Attribute{
-							Required:    true,
+							Optional:    true,
 							Description: "The duration of the session when making the AssumeRole call. Its value ranges from 0 to 43200(seconds), and default is 7200 seconds. It can be sourced from the `TENCENTCLOUD_ASSUME_ROLE_SESSION_DURATION`.",
 						},
 						"policy": schema.StringAttribute{
@@ -228,7 +228,7 @@ func (p *Provider) Schema(_ context.Context, _ provider.SchemaRequest, resp *pro
 							Description: "The session name to use when making the AssumeRole call. It can be sourced from the `TENCENTCLOUD_ASSUME_ROLE_SESSION_NAME`.",
 						},
 						"session_duration": schema.Int64Attribute{
-							Required:    true,
+							Optional:    true,
 							Description: "The duration of the session when making the AssumeRoleWithSAML call. Its value ranges from 0 to 43200(seconds), and default is 7200 seconds. It can be sourced from the `TENCENTCLOUD_ASSUME_ROLE_SESSION_DURATION`.",
 						},
 					},
@@ -263,7 +263,7 @@ func (p *Provider) Schema(_ context.Context, _ provider.SchemaRequest, resp *pro
 							Description: "The session name to use when making the AssumeRole call. It can be sourced from the `TENCENTCLOUD_ASSUME_ROLE_SESSION_NAME`.",
 						},
 						"session_duration": schema.Int64Attribute{
-							Required:    true,
+							Optional:    true,
 							Description: "The duration of the session when making the AssumeRoleWithWebIdentity call. Its value ranges from 0 to 43200(seconds), and default is 7200 seconds. It can be sourced from the `TENCENTCLOUD_ASSUME_ROLE_SESSION_DURATION`.",
 						},
 					},

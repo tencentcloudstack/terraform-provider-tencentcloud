@@ -19,11 +19,13 @@ test: fmtcheck
 	go test $(TEST) -timeout=30s -parallel=4
 
 # check-mux 在不发起任何远程调用的前提下，验证 SDKv2 + framework
-# 双栈通过 tf5muxserver 合并 schema 时不会冲突，并校验两栈资源/数据源
-# 类型名集合无交集。新加 framework 资源的 PR 必须保证此目标通过。
+# 双栈通过 tf5muxserver 合并 schema 时不会冲突（包含 GetProviderSchema
+# 实际调用，能抓出 NewMuxServer 阶段无法发现的 byte-level schema 漂移），
+# 并校验两栈资源/数据源类型名集合无交集。新加 framework 资源或修改
+# SDKv2/framework provider 顶层 Schema/MetaSchema 的 PR 必须保证此目标通过。
 check-mux: fmtcheck
 	@echo "==> Checking SDKv2/framework provider mux compatibility..."
-	@go test -count=1 -run 'TestMuxServer_NoStartupError|TestFrameworkProvider_NoTypeNameCollision' ./$(PKG_NAME)/
+	@go test -count=1 -run 'TestMuxServer_NoStartupError|TestMuxServer_GetProviderSchemaNoError|TestFrameworkProvider_NoTypeNameCollision' ./$(PKG_NAME)/framework/
 
 
 testacc: fmtcheck
