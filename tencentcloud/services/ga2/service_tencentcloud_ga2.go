@@ -4,6 +4,7 @@ import (
 	"context"
 	"fmt"
 	"log"
+	"time"
 
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
 	ga2v20250115 "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/ga2/v20250115"
@@ -12,9 +13,6 @@ import (
 	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/connectivity"
 	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/internal/helper"
 )
-
-// describeEndpointGroupsLimit is the API documented maximum page size.
-const describeEndpointGroupsLimit = 100
 
 // taskStatusSuccess is the terminal success status returned by DescribeTaskResult.
 const taskStatusSuccess = "SUCCESS"
@@ -34,23 +32,23 @@ func NewGa2Service(client *connectivity.TencentCloudClient) Ga2Service {
 func (me *Ga2Service) DescribeGa2EndpointGroupById(ctx context.Context, gaId, listenerId, egId string) (*ga2v20250115.EndpointGroupConfigurationSet, error) {
 	logId := tccommon.GetLogId(ctx)
 
+	request := ga2v20250115.NewDescribeEndpointGroupsRequest()
+	request.GlobalAcceleratorId = helper.String(gaId)
+	request.Filters = []*ga2v20250115.Filter{
+		{
+			Name:   helper.String("endpoint-group-id"),
+			Values: []*string{helper.String(egId)},
+		},
+	}
+
 	var (
 		offset uint64 = 0
-		limit  uint64 = describeEndpointGroupsLimit
-		match  *ga2v20250115.EndpointGroupConfigurationSet
+		limit  uint64 = 100
 	)
 
 	for {
-		request := ga2v20250115.NewDescribeEndpointGroupsRequest()
-		request.GlobalAcceleratorId = helper.String(gaId)
 		request.Offset = &offset
 		request.Limit = &limit
-		request.Filters = []*ga2v20250115.Filter{
-			{
-				Name:   helper.String("endpoint-group-id"),
-				Values: []*string{helper.String(egId)},
-			},
-		}
 
 		var response *ga2v20250115.DescribeEndpointGroupsResponse
 		err := resource.Retry(tccommon.ReadRetryTimeout, func() *resource.RetryError {
@@ -86,8 +84,7 @@ func (me *Ga2Service) DescribeGa2EndpointGroupById(ctx context.Context, gaId, li
 			}
 
 			if *item.EndpointGroupId == egId && *item.ListenerId == listenerId {
-				match = item
-				return match, nil
+				return item, nil
 			}
 		}
 
@@ -102,18 +99,19 @@ func (me *Ga2Service) DescribeGa2EndpointGroupById(ctx context.Context, gaId, li
 	return nil, nil
 }
 
-// WaitForGa2TaskFinish polls DescribeTaskResult until the task reaches "SUCCESS" or the timeout elapses.
-func (me *Ga2Service) WaitForGa2TaskFinish(ctx context.Context, taskId string) error {
+// WaitForGa2TaskFinish polls DescribeTaskResult until the task reaches "SUCCESS" or the given timeout elapses.
+// The timeout is supplied by the caller because different async operations (create/modify/delete on
+// different resource types) may require very different waiting budgets.
+func (me *Ga2Service) WaitForGa2TaskFinish(ctx context.Context, taskId string, timeout time.Duration) error {
 	if taskId == "" {
 		return fmt.Errorf("ga2 task id is empty, cannot poll task result")
 	}
 
 	logId := tccommon.GetLogId(ctx)
+	request := ga2v20250115.NewDescribeTaskResultRequest()
+	request.TaskId = helper.String(taskId)
 
-	err := resource.Retry(tccommon.WriteRetryTimeout*2, func() *resource.RetryError {
-		request := ga2v20250115.NewDescribeTaskResultRequest()
-		request.TaskId = helper.String(taskId)
-
+	err := resource.Retry(timeout, func() *resource.RetryError {
 		result, e := me.client.UseGa2V20250115Client().DescribeTaskResultWithContext(ctx, request)
 		if e != nil {
 			return tccommon.RetryError(e)

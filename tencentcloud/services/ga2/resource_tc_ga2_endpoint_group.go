@@ -6,6 +6,7 @@ import (
 	"log"
 	"strconv"
 	"strings"
+	"time"
 
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
@@ -23,6 +24,11 @@ func ResourceTencentCloudGa2EndpointGroup() *schema.Resource {
 		Delete: resourceTencentCloudGa2EndpointGroupDelete,
 		Importer: &schema.ResourceImporter{
 			State: schema.ImportStatePassthrough,
+		},
+		Timeouts: &schema.ResourceTimeout{
+			Create: schema.DefaultTimeout(20 * time.Minute),
+			Update: schema.DefaultTimeout(20 * time.Minute),
+			Delete: schema.DefaultTimeout(20 * time.Minute),
 		},
 		Schema: map[string]*schema.Schema{
 			"global_accelerator_id": {
@@ -308,7 +314,7 @@ func resourceTencentCloudGa2EndpointGroupCreate(d *schema.ResourceData, meta int
 	taskId = *response.Response.TaskId
 
 	service := Ga2Service{client: meta.(tccommon.ProviderMeta).GetAPIV3Conn()}
-	if err := service.WaitForGa2TaskFinish(ctx, taskId); err != nil {
+	if err := service.WaitForGa2TaskFinish(ctx, taskId, d.Timeout(schema.TimeoutCreate)); err != nil {
 		return err
 	}
 
@@ -414,7 +420,7 @@ func resourceTencentCloudGa2EndpointGroupUpdate(d *schema.ResourceData, meta int
 	}
 
 	service := Ga2Service{client: meta.(tccommon.ProviderMeta).GetAPIV3Conn()}
-	if err := service.WaitForGa2TaskFinish(ctx, taskId); err != nil {
+	if err := service.WaitForGa2TaskFinish(ctx, taskId, d.Timeout(schema.TimeoutUpdate)); err != nil {
 		return err
 	}
 
@@ -463,7 +469,7 @@ func resourceTencentCloudGa2EndpointGroupDelete(d *schema.ResourceData, meta int
 	}
 
 	service := Ga2Service{client: meta.(tccommon.ProviderMeta).GetAPIV3Conn()}
-	if err := service.WaitForGa2TaskFinish(ctx, taskId); err != nil {
+	if err := service.WaitForGa2TaskFinish(ctx, taskId, d.Timeout(schema.TimeoutDelete)); err != nil {
 		return err
 	}
 
