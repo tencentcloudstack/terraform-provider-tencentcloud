@@ -104,3 +104,132 @@
 - [x] 12.2 In `resourceTencentCloudEmrClusterV2Create`, call the helper for each role (`master_resource_spec`, `core_resource_spec`, `task_resource_spec`, `common_resource_spec`) before building the SDK request, returning early on validation failure
 - [x] 12.3 Run linter / IDE diagnostics and confirm no new errors
 
+## 13. Naming cleanup: remove residual "token" wording
+
+Background: An earlier iteration auto-generated stable identity strings (called "token") via `helper.BuildToken()`. That mechanism was fully removed and replaced by user-supplied `_node_index` / `_disk_index` Required string fields. The runtime code no longer generates any token, but variable names, function names, comments, and schema `Description` strings still say "token", which is misleading. This section is a pure rename / wording cleanup with **zero business-logic changes**.
+
+- [ ] 13.1 Schema `Description` strings: rewrite the descriptions of `_node_index` and `_disk_index` so they no longer contain the word "token"; explain that they are user-supplied stable identifiers required because `*_resource_spec` and `data_disk` are `TypeList` with `DiffSuppressFunc`, and identical configuration blocks must still be matched 1:1 across plan/apply
+- [ ] 13.2 In `resourceTencentCloudEmrClusterV2Read`, rename local variables in the config-side index extraction block (around the `cfgDiskEntry` struct, `configNodeTokens`, `configDisksPerNode`): `cfgDiskEntry.token` → `cfgDiskEntry.diskIndex`; `configNodeTokens` → `configNodeIndexes`; the inner `tok` / `dTok` → `nodeIdxStr` / `diskIdxStr`
+- [ ] 13.3 In the same Read handler, rename the state-side mapping locals: `stateNodeByRID` value type and var stays a string map but rename the inner `tok` to `nodeIdxStr`; `stateDiskByID` inner `dTok` → `diskIdxStr`
+- [ ] 13.4 In the same Read handler, rename the API-disk resolution locals: `nodeTok` → `userNodeIdx`; `diskTok` → `userDiskIdx`; update all references
+- [ ] 13.5 Rename helper `emrNodeListEqualByToken` → `emrNodeListEqualByNodeIndex` and `emrDiskListEqualByToken` → `emrDiskListEqualByDiskIndex`; update all call sites in `emrNodeListOrderSuppressFunc`, `emrDataDiskListOrderSuppressFunc`, and `emrNodeContentEqual`
+- [ ] 13.6 Inside the renamed `emrNodeListEqualByNodeIndex` and `emrDiskListEqualByDiskIndex`, rename `oldByTok` / `newByTok` → `oldByNodeIndex` / `newByNodeIndex` (and disk equivalents); rename the inner `tok` loop variable to `nodeIdxStr` / `diskIdxStr`
+- [ ] 13.7 In `alignNodeListByNodeIndex` (Update path), rename `oldByToken` → `oldByNodeIndex`; `matchedTokens` → `matchedNodeIndexes`; inner `tok` → `nodeIdxStr`
+- [ ] 13.8 In `handleNodeDataDiskChange` (Update path), rename `oldByToken` → `oldByDiskIndex`; `matchedTokens` → `matchedDiskIndexes`; inner `tok` → `diskIdxStr`; update all error message wording so it says `_disk_index` rather than "token" or "_disk_index token"
+- [ ] 13.9 Replace every occurrence of the words "token", "Token", "tok" inside Go comments within `resource_tc_emr_cluster_v2.go` with `_node_index` / `_disk_index` / "user-supplied stable index" as appropriate
+- [ ] 13.10 Run `gofmt -s -w` and `go build ./...` to confirm zero compile errors
+- [ ] 13.11 Run `go vet ./tencentcloud/services/emr/...` and IDE linter to confirm no new warnings
+- [ ] 13.12 Final sweep: `grep -nE "token|Token|\\btok\\b" tencentcloud/services/emr/resource_tc_emr_cluster_v2.go` should return zero hits (excluding the unrelated upstream SDK `client_token` request field, which is a separate Terraform schema attribute)
+
+## 14. Final fix: TypeList + CustomizeDiff to truly suppress reorder drift
+
+Background: The `DiffSuppressFunc` placed on the four `*_resource_spec` and on `data_disk` was proven to never be invoked by the SDK (`schemaMap.diff` calls a leaf field's own `DiffSuppressFunc`; list `.#` diffs go through a temporary `countSchema` that has no `DiffSuppressFunc`). As a result, any block reordering by the user produces a full positional diff that nothing in the schema layer can suppress. The only correct fix is a top-level `CustomizeDiff` that, before SDK diff calculation, reorders the new list to match the old list by user-supplied `_node_index` / `_disk_index`. Once orders match, every `.#` and leaf diff naturally collapses to the user's true intent.
+
+- [x] 14.1 Add `CustomizeDiff: customizeDiffEmrClusterV2` to `resourceTencentCloudEmrClusterV2()` schema definition
+- [x] 14.2 Implement `customizeDiffEmrClusterV2(ctx context.Context, d *schema.ResourceDiff, meta interface{}) error`:
+  - skip when resource is being created (`d.Id() == ""`) — first apply has no old state to align against
+  - call `d.GetChange("zone_resource_configuration")`; cast both old and new to `[]interface{}`
+  - for each zone in new (matched to old by `placement.0.zone`), reorder each role list (`master_resource_spec`, `core_resource_spec`, `task_resource_spec`, `common_resource_spec`) so blocks present in old appear in old's order; new-only blocks (i.e., `_node_index` not found in old) are appended in their original config order
+  - for each retained node, reorder `data_disk` similarly by `_disk_index`; new-only disks appended at the end
+  - call `d.SetNew("zone_resource_configuration", reordered)` to commit the reordered new value back into the diff
+- [x] 14.3 Remove `DiffSuppressFunc: emrNodeListOrderSuppressFunc` from all four `*_resource_spec` schema entries (lines 363/372/381/390); they are confirmed dead code by SDK source review
+- [x] 14.4 Remove `DiffSuppressFunc: emrDataDiskListOrderSuppressFunc` from the `data_disk` schema in `emrNodeSpecElem` (line ~2347)
+- [x] 14.5 Delete the now-unused helper functions: `emrNodeListOrderSuppressFunc`, `emrDataDiskListOrderSuppressFunc`, `emrNodeListEqualByNodeIndex`, `emrDiskListEqualByDiskIndex`, `emrNodeContentEqual`, `emrSystemDiskEqual` (verify no other call sites first)
+- [x] 14.6 Run `gofmt -s -w`, `go build ./tencentcloud/services/emr/...`, `go vet ./tencentcloud/services/emr/...` and confirm zero errors
+- [ ] 14.7 Manual smoke test on `examples/dist/main.tf`: re-apply with no config changes (expect zero drift); reorder several blocks (expect zero drift); resize one disk_size (expect a single targeted diff line)
+
+## 15. Final refactor: TypeList + _node_index/_disk_index + CustomizeDiff (overwrite Computed)
+
+Background: After many iterations the only architecture that satisfies all of the user's drift / scale-out / scale-in requirements is:
+
+- TypeList for the four `*_resource_spec` and for `data_disk` (so identical-shape blocks can coexist as N entries)
+- Required user-supplied `_node_index` and `_disk_index` (logical identity for matching across plan/apply)
+- A single `CustomizeDiff` that **does NOT reorder new**; it instead overwrites Computed fields (`emr_resource_id`, `order_no`, `disk_id`) on each `new` block by matching to the corresponding `old` block via `_node_index` / `_disk_index`. This eliminates positional Computed-field swap drift while leaving the user's HCL declaration order as the authoritative shape of the plan.
+- `Read` writes API order to state (no attempt to align state to user config order), because plan-refresh Read cannot access user config (SDK ReadResource RPC does not transmit it).
+- All business constraints (master/common length immutable, core/task scale-out/in, disk additions only, no shrinking, immutable system_disk) are enforced inside CustomizeDiff so the user sees errors at `plan` time rather than mid-apply.
+
+This section replaces sections 13 and 14 conceptually; those earlier attempts left over half-baked patches and obsolete naming. We perform a full clean reconstruction below.
+
+- [ ] 15.1 Remove the workspace-only state surgeries done during debugging (terraform.tfstate.bak.* backups can stay). The .tfstate file should be left as the user finds it; we do not modify it.
+- [x] 15.2 Schema cleanup in `resourceTencentCloudEmrClusterV2`:
+  - Keep the four `*_resource_spec` and `data_disk` as `TypeList` (no `MaxItems` change).
+  - Remove every `DiffSuppressFunc` left over from earlier attempts on these list fields.
+  - Keep the existing `_node_index` and `_disk_index` (Required, TypeString); rewrite their Description strings so they explicitly describe their identity-matching role and document that they must be unique within their parent list and stable across plan/apply.
+  - Add `CustomizeDiff: customizeDiffEmrClusterV2` at the resource level (already present from a previous iteration; ensure its body matches the new specification below).
+- [x] 15.3 Rewrite `customizeDiffEmrClusterV2` to implement the new contract:
+  1. `d.Id() == ` → return nil (Create).
+  2. Pull old/new `zone_resource_configuration` via `d.GetChange`.
+  3. For each zone (matched by `placement.0.zone`):
+     - For each role (`master_resource_spec`, `core_resource_spec`, `task_resource_spec`, `common_resource_spec`):
+       - Validate uniqueness of `_node_index` within new list; uniqueness of `_disk_index` within each block's data_disk.
+       - **Business rule** master/common: if `len(new) != len(old)` → error "master/common 列表长度不可变更（不支持扩缩容）".
+       - **Business rule** data_disk: if `old` contains a `_disk_index` not present in `new` → error "data_disk 不支持减少".
+       - **Business rule** disk_size: for each `(_disk_index)` matched pair, if new < old → error "data_disk.disk_size 不支持缩容".
+       - **Business rule** system_disk: for each matched node, if old.system_disk fields differ from new.system_disk → error "system_disk 创建后不可更改".
+       - For each new block:
+         - find old by `_node_index`; if found, overwrite `emr_resource_id`, `order_no` with old's values
+         - for each new.data_disk, find old.data_disk by `_disk_index`; if found, overwrite `disk_id`
+   4. `d.SetNew("zone_resource_configuration", newZones)`.
+  - The CustomizeDiff must NEVER reorder `new` lists. The user's HCL declaration order is the authoritative plan shape.
+- [x] 15.4 Read handler simplification:
+  - Remove all logic that tries to use `d.GetOk("zone_resource_configuration")` to build a 'config order map' for repositioning state — that approach was proven non-functional during plan-refresh (no config available there).
+  - Remove all 'reorder apiDisks to match user config' / 'reorder specs to match user config' blocks.
+  - Keep the existing logic that uses `stateNodeByRID` / `stateDiskByID` to preserve user-supplied `_node_index` / `_disk_index` strings across reads (this is what makes Read stable across multiple plan-refreshes).
+  - Read writes API order to state. State physical order is decoupled from user HCL order; that is fine because CustomizeDiff bridges the two at plan time.
+- [x] 15.5 Update handler simplification:
+  - Keep `alignNodeListByNodeIndex` and `handleNodeDataDiskChange` as the matching engines (they already key on `_node_index` / `_disk_index`).
+  - Verify no path uses `d.HasChange(...positional...)` for the four resource_spec lists; everything must go through `d.GetChange` + identity-keyed comparison.
+- [x] 15.6 Documentation: rewrite the `Description` of `_node_index` and `_disk_index` so the user understands these are required stable identifiers, must be unique within their parent list, and must remain stable across plan/apply. Document that changing the index value mid-stream is treated as 'delete the old, add a new' and may trigger destructive operations on disabled-scale roles.
+- [x] 15.7 Run `gofmt -s -w`, `go build ./...`, `go vet ./tencentcloud/services/emr/...`; resolve any new errors.
+- [ ] 15.8 Manual smoke validation in `examples/dist`:
+  - Re-apply with no changes → expected: zero drift
+  - Reorder several blocks in main.tf → expected: zero drift
+  - Resize one disk_size up → expected: single targeted diff
+  - Add a new core block at any position → expected: single + diff
+  - Remove a core block from any position → expected: single - diff
+  - Try to change master count → expected: plan-time error from CustomizeDiff
+  - Try to shrink a disk_size → expected: plan-time error
+  - Try to change system_disk → expected: plan-time error
+
+## 16. Phase 6: TypeSet refactor (final solution for ordering drift)
+
+Background: Sections 14/15 attempted TypeList + CustomizeDiff to bridge config-order vs state-order. Multiple rounds of testing proved that TypeList's positional diff cannot be reliably suppressed when users insert/remove blocks in the middle of a list. The user and the agent jointly settled on the following permanent design:
+
+- Each `*_resource_spec` (master/core/task/common) becomes `TypeSet` with a custom hash function that hashes ONLY `_node_index`.
+- `data_disk` (inside each spec) becomes `TypeSet` with a custom hash function that hashes ONLY `_disk_index`.
+- `_node_index` and `_disk_index` remain Required user-supplied strings; they are the identity keys.
+- All TypeList-era patches (CustomizeDiff overwriting Computed fields, Read reordering specs/disks to match config order, two-pass node identity pre-resolution in Read) are deleted.
+- CustomizeDiff retains only business-rule validation: master/common length immutable; core/task allows scale-out/in but not rename; data_disk allows scale-out (size up only) but never scale-in; disk_type immutable; system_disk immutable; `_node_index` unique within spec; `_disk_index` unique within node.
+
+User contract (documented in schema Description):
+1. `_node_index` MUST be set, MUST be unique within the same role list.
+2. `_disk_index` MUST be set, MUST be unique within the same node's data_disk list.
+3. Once written to state, `_node_index` and `_disk_index` MUST NOT be renamed; renaming is detected by CustomizeDiff and rejected.
+4. State migration: existing TypeList state cannot be migrated; users must `terraform destroy && terraform apply` to recreate.
+
+Tasks:
+
+- [x] 16.1 Schema: change `master_resource_spec`, `core_resource_spec`, `task_resource_spec`, `common_resource_spec` from `TypeList` to `TypeSet`; remove any `MaxItems`. Attach `Set: hashEmrNodeResourceSpec` (custom hash hashing only `_node_index`).
+- [x] 16.2 Schema: change `data_disk` (inside each spec) from `TypeList` to `TypeSet`. Attach `Set: hashEmrDataDisk` (custom hash hashing only `_disk_index`).
+- [x] 16.3 Add helper `hashEmrNodeResourceSpec(v interface{}) int` — extracts `_node_index` from the map and returns `schema.HashString(_node_index)`.
+- [x] 16.4 Add helper `hashEmrDataDisk(v interface{}) int` — extracts `_disk_index` and returns `schema.HashString(_disk_index)`.
+- [x] 16.5 Schema Description: rewrite `_node_index` and `_disk_index` Description to reflect the TypeSet identity-key semantics and the four user contract rules above.
+- [x] 16.6 Replace `customizeDiffEmrClusterV2` body with a TypeSet-native validator (implementation chose to compute add/remove via `_node_index` map diff rather than `(*schema.Set).Difference`, because the maps already need to be built for paired-node validation; the result is equivalent).
+- [x] 16.7 Read handler simplification — deleted the "reorder apiDisks to match cfgDiskList" block and the "reorder specs to match cfgList" block. Kept the two-pass pre-resolution because it is still needed for first-Read-after-Create to populate `_node_index` from user config (TypeSet hashes empty `_node_index` to the same bucket — leaving it blank would collapse all nodes into one set entry).
+- [x] 16.8 CustomizeDiff cleanup — deleted all Computed-field-overwrite logic (`emr_resource_id` / `order_no` / `disk_id`) and the `d.SetNew("zone_resource_configuration", ...)` call. The new CustomizeDiff is pure validation; it never mutates `new`.
+- [x] 16.9 Update handler verification — `nodeRoleChanged`, `handleNodeDataDiskChange`, and all data_disk read sites already routed through `emrNodeSetToList` / `emrDiskSetToList` (defensive helpers that accept both `*schema.Set` and `[]interface{}`), so the schema-type change required no callsite edits. Helper comments updated to reflect that TypeSet is now the canonical schema type.
+- [x] 16.10 Ran `gofmt -s -w`, `go build ./...`, `go vet ./tencentcloud/services/emr/...` — all EXIT=0, no new lint errors (45 HINT items are all pre-existing deprecation warnings in unrelated handlers).
+- [ ] 16.11 Manual smoke validation in `examples/dist` (user-driven; provider side only confirms build):
+  - `terraform destroy && terraform apply` (mandatory state rebuild).
+  - `terraform plan` immediately after apply → expected: zero drift.
+  - Reorder several blocks in main.tf → `terraform plan` → expected: zero drift.
+  - Change `disk_size` 100 → 110 on one disk → expected: single targeted diff (in-place modify, no remove+add).
+  - Add a new `core_resource_spec` block at any position → expected: single + diff (scale-out).
+  - Remove a `core_resource_spec` block from any position → expected: single - diff (scale-in).
+  - Try to remove a master block → expected: plan-time error.
+  - Try to shrink `disk_size` → expected: plan-time error.
+  - Try to remove a `data_disk` → expected: plan-time error.
+  - Try to rename a `_node_index` → expected: plan-time error.
+  - Try to rename a `_disk_index` → expected: plan-time error.
+  - Try to change `system_disk.disk_size` → expected: plan-time error.
+

@@ -33,6 +33,9 @@ func ResourceTencentCloudEmrClusterV2() *schema.Resource {
 			Update: schema.DefaultTimeout(30 * time.Minute),
 			Delete: schema.DefaultTimeout(30 * time.Minute),
 		},
+		// CustomizeDiff enforces business immutability rules at plan time;
+		// see customizeDiffEmrClusterV2 for the full rule set.
+		CustomizeDiff: customizeDiffEmrClusterV2,
 		Schema: map[string]*schema.Schema{
 			"product_version": {
 				Type:        schema.TypeString,
@@ -358,308 +361,40 @@ func ResourceTencentCloudEmrClusterV2() *schema.Resource {
 							Elem: &schema.Resource{
 								Schema: map[string]*schema.Schema{
 									"master_resource_spec": {
-										Type:     schema.TypeList,
+										Type:     schema.TypeSet,
 										Optional: true,
-										Description: "Master node resource specifications. The number of blocks determines `MasterCount` passed to `CreateCluster`. " +
-											"**All blocks must have identical configuration**; the first block is used as the single resource template by the API. " +
-											"A validation error is returned at create time if any block differs from the first.",
-										Elem: &schema.Resource{
-											Schema: map[string]*schema.Schema{
-												"instance_type": {
-													Type:        schema.TypeString,
-													Optional:    true,
-													Description: "CVM instance type, e.g., `S6.2XLARGE32`, `SA4.8XLARGE64`.",
-												},
-												"system_disk": {
-													Type:        schema.TypeList,
-													Optional:    true,
-													MaxItems:    1,
-													Description: "System disk specifications.",
-													Elem: &schema.Resource{
-														Schema: map[string]*schema.Schema{
-															"disk_size": {
-																Type:        schema.TypeInt,
-																Optional:    true,
-																Description: "Disk size in GB.",
-															},
-															"disk_type": {
-																Type:        schema.TypeString,
-																Optional:    true,
-																Description: "Disk type. Valid values: `CLOUD_SSD`, `CLOUD_PREMIUM`, `CLOUD_BASIC`, `LOCAL_BASIC`, `LOCAL_SSD`.",
-															},
-															"disk_id": {
-																Type:        schema.TypeString,
-																Computed:    true,
-																Description: "Disk ID.",
-															},
-														},
-													},
-												},
-												"data_disk": {
-													Type:             schema.TypeList,
-													Optional:         true,
-													DiffSuppressFunc: emrDataDiskOrderSuppressFunc,
-													Description:      "Cloud data disk specifications.",
-													Elem: &schema.Resource{
-														Schema: map[string]*schema.Schema{
-															"disk_size": {
-																Type:        schema.TypeInt,
-																Optional:    true,
-																Description: "Disk size in GB.",
-															},
-															"disk_type": {
-																Type:        schema.TypeString,
-																Optional:    true,
-																Description: "Disk type. Valid values: `CLOUD_SSD`, `CLOUD_PREMIUM`, `CLOUD_BASIC`, `LOCAL_BASIC`, `LOCAL_SSD`, `CLOUD_HSSD`, `CLOUD_THROUGHPUT`, `CLOUD_TSSD`, `CLOUD_BIGDATA`, `CLOUD_HIGHIO`, `CLOUD_BSSD`, `REMOTE_SSD`.",
-															},
-															"disk_id": {
-																Type:        schema.TypeString,
-																Computed:    true,
-																Description: "Disk ID.",
-															},
-														},
-													},
-												},
-												"emr_resource_id": {
-													Type:        schema.TypeString,
-													Computed:    true,
-													Description: "EMR node resource ID.",
-												},
-												"order_no": {
-													Type:        schema.TypeString,
-													Computed:    true,
-													Description: "Machine instance ID.",
-												},
-											},
-										},
+										Set:      hashEmrNodeResourceSpec,
+										Description: "Master node resource specifications. Number of blocks = `MasterCount`. " +
+											"All blocks must have identical configuration; the first block is the single resource template sent to the API. " +
+											"This field is a `TypeSet` keyed by `_node_index` only — block order in HCL is irrelevant.",
+										Elem: emrNodeSpecElem(),
 									},
 									"core_resource_spec": {
-										Type:     schema.TypeList,
+										Type:     schema.TypeSet,
 										Optional: true,
-										Description: "Core node resource specifications. The number of blocks determines `CoreCount` passed to `CreateCluster`. " +
-											"**All blocks must have identical configuration**; the first block is used as the single resource template by the API. " +
-											"A validation error is returned at create time if any block differs from the first.",
-										Elem: &schema.Resource{
-											Schema: map[string]*schema.Schema{
-												"instance_type": {
-													Type:        schema.TypeString,
-													Optional:    true,
-													Description: "CVM instance type, e.g., `S6.2XLARGE32`, `SA4.8XLARGE64`.",
-												},
-												"system_disk": {
-													Type:        schema.TypeList,
-													Optional:    true,
-													MaxItems:    1,
-													Description: "System disk specifications.",
-													Elem: &schema.Resource{
-														Schema: map[string]*schema.Schema{
-															"disk_size": {
-																Type:        schema.TypeInt,
-																Optional:    true,
-																Description: "Disk size in GB.",
-															},
-															"disk_type": {
-																Type:        schema.TypeString,
-																Optional:    true,
-																Description: "Disk type. Valid values: `CLOUD_SSD`, `CLOUD_PREMIUM`, `CLOUD_BASIC`, `LOCAL_BASIC`, `LOCAL_SSD`.",
-															},
-															"disk_id": {
-																Type:        schema.TypeString,
-																Computed:    true,
-																Description: "Disk ID.",
-															},
-														},
-													},
-												},
-												"data_disk": {
-													Type:             schema.TypeList,
-													Optional:         true,
-													DiffSuppressFunc: emrDataDiskOrderSuppressFunc,
-													Description:      "Cloud data disk specifications.",
-													Elem: &schema.Resource{
-														Schema: map[string]*schema.Schema{
-															"disk_size": {
-																Type:        schema.TypeInt,
-																Optional:    true,
-																Description: "Disk size in GB.",
-															},
-															"disk_type": {
-																Type:        schema.TypeString,
-																Optional:    true,
-																Description: "Disk type. Valid values: `CLOUD_SSD`, `CLOUD_PREMIUM`, `CLOUD_BASIC`, `LOCAL_BASIC`, `LOCAL_SSD`, `CLOUD_HSSD`, `CLOUD_THROUGHPUT`, `CLOUD_TSSD`, `CLOUD_BIGDATA`, `CLOUD_HIGHIO`, `CLOUD_BSSD`, `REMOTE_SSD`.",
-															},
-															"disk_id": {
-																Type:        schema.TypeString,
-																Computed:    true,
-																Description: "Disk ID.",
-															},
-														},
-													},
-												},
-												"emr_resource_id": {
-													Type:        schema.TypeString,
-													Computed:    true,
-													Description: "EMR node resource ID.",
-												},
-												"order_no": {
-													Type:        schema.TypeString,
-													Computed:    true,
-													Description: "Machine instance ID.",
-												},
-											},
-										},
+										Set:      hashEmrNodeResourceSpec,
+										Description: "Core node resource specifications. Number of blocks = `CoreCount`. " +
+											"All blocks must have identical configuration; the first block is the single resource template sent to the API. " +
+											"This field is a `TypeSet` keyed by `_node_index` only — block order in HCL is irrelevant.",
+										Elem: emrNodeSpecElem(),
 									},
 									"task_resource_spec": {
-										Type:     schema.TypeList,
+										Type:     schema.TypeSet,
 										Optional: true,
-										Description: "Task node resource specifications. The number of blocks determines `TaskCount` passed to `CreateCluster`. " +
-											"**All blocks must have identical configuration**; the first block is used as the single resource template by the API. " +
-											"A validation error is returned at create time if any block differs from the first.",
-										Elem: &schema.Resource{
-											Schema: map[string]*schema.Schema{
-												"instance_type": {
-													Type:        schema.TypeString,
-													Optional:    true,
-													Description: "CVM instance type, e.g., `S6.2XLARGE32`, `SA4.8XLARGE64`.",
-												},
-												"system_disk": {
-													Type:        schema.TypeList,
-													Optional:    true,
-													MaxItems:    1,
-													Description: "System disk specifications.",
-													Elem: &schema.Resource{
-														Schema: map[string]*schema.Schema{
-															"disk_size": {
-																Type:        schema.TypeInt,
-																Optional:    true,
-																Description: "Disk size in GB.",
-															},
-															"disk_type": {
-																Type:        schema.TypeString,
-																Optional:    true,
-																Description: "Disk type. Valid values: `CLOUD_SSD`, `CLOUD_PREMIUM`, `CLOUD_BASIC`, `LOCAL_BASIC`, `LOCAL_SSD`.",
-															},
-															"disk_id": {
-																Type:        schema.TypeString,
-																Computed:    true,
-																Description: "Disk ID.",
-															},
-														},
-													},
-												},
-												"data_disk": {
-													Type:             schema.TypeList,
-													Optional:         true,
-													DiffSuppressFunc: emrDataDiskOrderSuppressFunc,
-													Description:      "Cloud data disk specifications.",
-													Elem: &schema.Resource{
-														Schema: map[string]*schema.Schema{
-															"disk_size": {
-																Type:        schema.TypeInt,
-																Optional:    true,
-																Description: "Disk size in GB.",
-															},
-															"disk_type": {
-																Type:        schema.TypeString,
-																Optional:    true,
-																Description: "Disk type. Valid values: `CLOUD_SSD`, `CLOUD_PREMIUM`, `CLOUD_BASIC`, `LOCAL_BASIC`, `LOCAL_SSD`, `CLOUD_HSSD`, `CLOUD_THROUGHPUT`, `CLOUD_TSSD`, `CLOUD_BIGDATA`, `CLOUD_HIGHIO`, `CLOUD_BSSD`, `REMOTE_SSD`.",
-															},
-															"disk_id": {
-																Type:        schema.TypeString,
-																Computed:    true,
-																Description: "Disk ID.",
-															},
-														},
-													},
-												},
-												"emr_resource_id": {
-													Type:        schema.TypeString,
-													Computed:    true,
-													Description: "EMR node resource ID.",
-												},
-												"order_no": {
-													Type:        schema.TypeString,
-													Computed:    true,
-													Description: "Machine instance ID.",
-												},
-											},
-										},
+										Set:      hashEmrNodeResourceSpec,
+										Description: "Task node resource specifications. Number of blocks = `TaskCount`. " +
+											"All blocks must have identical configuration; the first block is the single resource template sent to the API. " +
+											"This field is a `TypeSet` keyed by `_node_index` only — block order in HCL is irrelevant.",
+										Elem: emrNodeSpecElem(),
 									},
 									"common_resource_spec": {
-										Type:     schema.TypeList,
+										Type:     schema.TypeSet,
 										Optional: true,
-										Description: "Common node resource specifications. The number of blocks determines `CommonCount` passed to `CreateCluster`. " +
-											"**All blocks must have identical configuration**; the first block is used as the single resource template by the API. " +
-											"A validation error is returned at create time if any block differs from the first.",
-										Elem: &schema.Resource{
-											Schema: map[string]*schema.Schema{
-												"instance_type": {
-													Type:        schema.TypeString,
-													Optional:    true,
-													Description: "CVM instance type, e.g., `S6.2XLARGE32`, `SA4.8XLARGE64`.",
-												},
-												"system_disk": {
-													Type:        schema.TypeList,
-													Optional:    true,
-													MaxItems:    1,
-													Description: "System disk specifications.",
-													Elem: &schema.Resource{
-														Schema: map[string]*schema.Schema{
-															"disk_size": {
-																Type:        schema.TypeInt,
-																Optional:    true,
-																Description: "Disk size in GB.",
-															},
-															"disk_type": {
-																Type:        schema.TypeString,
-																Optional:    true,
-																Description: "Disk type. Valid values: `CLOUD_SSD`, `CLOUD_PREMIUM`, `CLOUD_BASIC`, `LOCAL_BASIC`, `LOCAL_SSD`.",
-															},
-															"disk_id": {
-																Type:        schema.TypeString,
-																Computed:    true,
-																Description: "Disk ID.",
-															},
-														},
-													},
-												},
-												"data_disk": {
-													Type:             schema.TypeList,
-													Optional:         true,
-													DiffSuppressFunc: emrDataDiskOrderSuppressFunc,
-													Description:      "Cloud data disk specifications.",
-													Elem: &schema.Resource{
-														Schema: map[string]*schema.Schema{
-															"disk_size": {
-																Type:        schema.TypeInt,
-																Optional:    true,
-																Description: "Disk size in GB.",
-															},
-															"disk_type": {
-																Type:        schema.TypeString,
-																Optional:    true,
-																Description: "Disk type. Valid values: `CLOUD_SSD`, `CLOUD_PREMIUM`, `CLOUD_BASIC`, `LOCAL_BASIC`, `LOCAL_SSD`, `CLOUD_HSSD`, `CLOUD_THROUGHPUT`, `CLOUD_TSSD`, `CLOUD_BIGDATA`, `CLOUD_HIGHIO`, `CLOUD_BSSD`, `REMOTE_SSD`.",
-															},
-															"disk_id": {
-																Type:        schema.TypeString,
-																Computed:    true,
-																Description: "Disk ID.",
-															},
-														},
-													},
-												},
-												"emr_resource_id": {
-													Type:        schema.TypeString,
-													Computed:    true,
-													Description: "EMR node resource ID.",
-												},
-												"order_no": {
-													Type:        schema.TypeString,
-													Computed:    true,
-													Description: "Machine instance ID.",
-												},
-											},
-										},
+										Set:      hashEmrNodeResourceSpec,
+										Description: "Common node resource specifications. Number of blocks = `CommonCount`. " +
+											"All blocks must have identical configuration; the first block is the single resource template sent to the API. " +
+											"This field is a `TypeSet` keyed by `_node_index` only — block order in HCL is irrelevant.",
+										Elem: emrNodeSpecElem(),
 									},
 								},
 							},
@@ -927,7 +662,7 @@ func resourceTencentCloudEmrClusterV2Create(d *schema.ResourceData, meta interfa
 			}
 			allMap := allList[0].(map[string]interface{})
 			for _, role := range []string{"master_resource_spec", "core_resource_spec", "task_resource_spec", "common_resource_spec"} {
-				rawList, _ := allMap[role].([]interface{})
+				rawList := emrNodeSetToList(allMap[role])
 				if err := validateEmrNodeResourceSpecUniformity(role, zoneIdx, rawList); err != nil {
 					return err
 				}
@@ -979,28 +714,28 @@ func resourceTencentCloudEmrClusterV2Create(d *schema.ResourceData, meta interfa
 				allSpec := emr.AllNodeResourceSpec{}
 
 				// The node count for each role is derived from the length of
-				// its `*_resource_spec` list. The first block is taken as the
+				// its `*_resource_spec` set. The first block is taken as the
 				// single resource template accepted by the SDK; all blocks must
 				// have identical configuration (validated above).
-				if rawList, ok := allMap["master_resource_spec"].([]interface{}); ok && len(rawList) > 0 {
+				if rawList := emrNodeSetToList(allMap["master_resource_spec"]); len(rawList) > 0 {
 					allSpec.MasterCount = helper.IntInt64(len(rawList))
 					if firstMap, ok := rawList[0].(map[string]interface{}); ok {
 						allSpec.MasterResourceSpec = buildEmrClusterV2NodeResourceSpec(firstMap)
 					}
 				}
-				if rawList, ok := allMap["core_resource_spec"].([]interface{}); ok && len(rawList) > 0 {
+				if rawList := emrNodeSetToList(allMap["core_resource_spec"]); len(rawList) > 0 {
 					allSpec.CoreCount = helper.IntInt64(len(rawList))
 					if firstMap, ok := rawList[0].(map[string]interface{}); ok {
 						allSpec.CoreResourceSpec = buildEmrClusterV2NodeResourceSpec(firstMap)
 					}
 				}
-				if rawList, ok := allMap["task_resource_spec"].([]interface{}); ok && len(rawList) > 0 {
+				if rawList := emrNodeSetToList(allMap["task_resource_spec"]); len(rawList) > 0 {
 					allSpec.TaskCount = helper.IntInt64(len(rawList))
 					if firstMap, ok := rawList[0].(map[string]interface{}); ok {
 						allSpec.TaskResourceSpec = buildEmrClusterV2NodeResourceSpec(firstMap)
 					}
 				}
-				if rawList, ok := allMap["common_resource_spec"].([]interface{}); ok && len(rawList) > 0 {
+				if rawList := emrNodeSetToList(allMap["common_resource_spec"]); len(rawList) > 0 {
 					allSpec.CommonCount = helper.IntInt64(len(rawList))
 					if firstMap, ok := rawList[0].(map[string]interface{}); ok {
 						allSpec.CommonResourceSpec = buildEmrClusterV2NodeResourceSpec(firstMap)
@@ -1147,31 +882,30 @@ func resourceTencentCloudEmrClusterV2Read(d *schema.ResourceData, meta interface
 	}
 
 	if cluster.SceneName != nil {
-		// Preserve the scene_name inside scene_software_config if the API returns it.
+		// Round-trip scene_name and software list while preserving the existing
+		// scene_software_config block written by the user.
 		if existing, ok := d.GetOk("scene_software_config"); ok {
-			list := existing.([]interface{})
+			list, _ := existing.([]interface{})
 			if len(list) > 0 {
-				item := list[0].(map[string]interface{})
-				if cluster.Config != nil && cluster.Config.SoftInfo != nil {
-					item["software"] = cluster.Config.SoftInfo
+				if item, ok := list[0].(map[string]interface{}); ok {
+					if cluster.Config != nil && cluster.Config.SoftInfo != nil {
+						item["software"] = cluster.Config.SoftInfo
+					}
+					item["scene_name"] = *cluster.SceneName
+					list[0] = item
+					_ = d.Set("scene_software_config", list)
 				}
-
-				item["scene_name"] = *cluster.SceneName
-				list[0] = item
-				_ = d.Set("scene_software_config", list)
 			}
 		}
 	}
 
-	if cluster.Config.SecurityGroups != nil {
-		_ = d.Set("security_group_ids", cluster.Config.SecurityGroups)
-	}
+	if cluster.Config != nil {
+		if cluster.Config.SecurityGroups != nil {
+			_ = d.Set("security_group_ids", cluster.Config.SecurityGroups)
+		}
 
-	if cluster.Config.CbsEncrypt != nil {
-		if *cluster.Config.CbsEncrypt == 1 {
-			_ = d.Set("enable_cbs_encrypt_flag", true)
-		} else {
-			_ = d.Set("enable_cbs_encrypt_flag", false)
+		if cluster.Config.CbsEncrypt != nil {
+			_ = d.Set("enable_cbs_encrypt_flag", *cluster.Config.CbsEncrypt == 1)
 		}
 	}
 
@@ -1304,13 +1038,16 @@ func resourceTencentCloudEmrClusterV2Read(d *schema.ResourceData, meta interface
 					grouped[*n.Flag] = append(grouped[*n.Flag], n)
 				}
 
-				// Retrieve the state spec list for this zone (for ordering and
-				// emr_resource_id-based matching). stateAllSpec[roleKey] is a
-				// []interface{} of spec blocks from the previous state.
-				stateAllSpec := map[string][]interface{}{}
-				if raw, ok := d.GetOk("zone_resource_configuration"); ok {
-					for _, zrcRaw := range raw.([]interface{}) {
-						zrcMap, _ := zrcRaw.(map[string]interface{})
+				// Build state-side maps so plan-refresh Read keeps the user's
+				// `_node_index` / `_disk_index` values stable across reads:
+				//   - stateNodeByRID[roleKey][emr_resource_id] = _node_index
+				//   - stateDiskByID[roleKey][emr_resource_id][disk_id] = _disk_index
+				stateNodeByRID := map[string]map[string]string{}
+				stateDiskByID := map[string]map[string]map[string]string{}
+				if oldZrcRaw, _ := d.GetChange("zone_resource_configuration"); oldZrcRaw != nil {
+					list, _ := oldZrcRaw.([]interface{})
+					for _, zrc := range list {
+						zrcMap, _ := zrc.(map[string]interface{})
 						if zrcMap == nil {
 							continue
 						}
@@ -1334,9 +1071,111 @@ func resourceTencentCloudEmrClusterV2Read(d *schema.ResourceData, meta interface
 							break
 						}
 						for _, rk := range []string{"master_resource_spec", "core_resource_spec", "task_resource_spec", "common_resource_spec"} {
-							if sl, ok := allMap[rk].([]interface{}); ok {
-								stateAllSpec[rk] = sl
+							rawList := emrNodeSetToList(allMap[rk])
+							nodeMap := map[string]string{}
+							diskMap := map[string]map[string]string{}
+							for _, raw := range rawList {
+								m, ok := raw.(map[string]interface{})
+								if !ok {
+									continue
+								}
+								nodeIdxStr, _ := m["_node_index"].(string)
+								rid, _ := m["emr_resource_id"].(string)
+								if rid != "" && nodeIdxStr != "" {
+									nodeMap[rid] = nodeIdxStr
+								}
+								perDisk := map[string]string{}
+								for _, dRaw := range emrDiskSetToList(m["data_disk"]) {
+									dm, ok := dRaw.(map[string]interface{})
+									if !ok {
+										continue
+									}
+									dID, _ := dm["disk_id"].(string)
+									diskIdxStr, _ := dm["_disk_index"].(string)
+									if dID != "" && diskIdxStr != "" {
+										perDisk[dID] = diskIdxStr
+									}
+								}
+								if rid != "" {
+									diskMap[rid] = perDisk
+								}
 							}
+							stateNodeByRID[rk] = nodeMap
+							stateDiskByID[rk] = diskMap
+						}
+						break
+					}
+				}
+
+				// Build a fallback pool of `_node_index` / `_disk_index` values
+				// from the current config so the FIRST Read after Create can
+				// stamp newly-Read nodes with user-supplied identity strings
+				// (state has no rid→_node_index mapping yet). For subsequent
+				// plan-refresh Reads the pool simply mirrors state, so this
+				// fallback is a no-op there.
+				type cfgDiskEntry struct {
+					diskIndex string
+					diskSize  int
+					diskType  string
+				}
+				configNodeIndexes := map[string][]string{}
+				configDisksByNodeIndex := map[string]map[string][]cfgDiskEntry{}
+				if cfgRaw, ok := d.GetOk("zone_resource_configuration"); ok {
+					list, _ := cfgRaw.([]interface{})
+					for _, zrc := range list {
+						zrcMap, _ := zrc.(map[string]interface{})
+						if zrcMap == nil {
+							continue
+						}
+						plList, _ := zrcMap["placement"].([]interface{})
+						if len(plList) == 0 {
+							continue
+						}
+						plMap, _ := plList[0].(map[string]interface{})
+						if plMap == nil {
+							continue
+						}
+						if sz, _ := plMap["zone"].(string); sz != zone {
+							continue
+						}
+						allList, _ := zrcMap["all_node_resource_spec"].([]interface{})
+						if len(allList) == 0 {
+							break
+						}
+						allMap, _ := allList[0].(map[string]interface{})
+						if allMap == nil {
+							break
+						}
+						for _, rk := range []string{"master_resource_spec", "core_resource_spec", "task_resource_spec", "common_resource_spec"} {
+							rawList := emrNodeSetToList(allMap[rk])
+							nodeOrd := make([]string, 0, len(rawList))
+							perNodeMap := make(map[string][]cfgDiskEntry, len(rawList))
+							for _, raw := range rawList {
+								m, ok := raw.(map[string]interface{})
+								if !ok {
+									continue
+								}
+								nodeIdxStr, _ := m["_node_index"].(string)
+								if nodeIdxStr != "" {
+									nodeOrd = append(nodeOrd, nodeIdxStr)
+								}
+								perDisk := []cfgDiskEntry{}
+								for _, diskRaw := range emrDiskSetToList(m["data_disk"]) {
+									dm, ok := diskRaw.(map[string]interface{})
+									if !ok {
+										continue
+									}
+									diskIdxStr, _ := dm["_disk_index"].(string)
+									dSz, _ := dm["disk_size"].(int)
+									dDt, _ := dm["disk_type"].(string)
+									perDisk = append(perDisk, cfgDiskEntry{diskIndex: diskIdxStr, diskSize: dSz, diskType: dDt})
+								}
+								if nodeIdxStr != "" {
+									perNodeMap[nodeIdxStr] = perDisk
+								}
+							}
+							configNodeIndexes[rk] = nodeOrd
+							configDisksByNodeIndex[rk] = perNodeMap
 						}
 						break
 					}
@@ -1346,74 +1185,78 @@ func resourceTencentCloudEmrClusterV2Read(d *schema.ResourceData, meta interface
 				for flag, roleKey := range roleKeyMap {
 					roleNodes := grouped[flag]
 
-					// Sort role nodes by the numeric index in NameTag
-					// (e.g. "master.0" < "master.1" < "master.10").
-					// NameTag format: "<role>.<index>", e.g. "master.0", "core.2".
-					// We extract the suffix after the last '.' and sort numerically.
-					nameTagIndex := func(n *emr.NodeHardwareInfo) int {
-						if n.NameTag == nil {
-							return 0
-						}
-						tag := *n.NameTag
-						if dot := strings.LastIndex(tag, "."); dot >= 0 {
-							if idx, err := strconv.Atoi(tag[dot+1:]); err == nil {
-								return idx
-							}
-						}
-						return 0
-					}
+					// Sort API nodes by emr_resource_id so first-Read fallback
+					// (when state has no rid mapping yet) consumes the user's
+					// `_node_index` pool deterministically.
 					sort.Slice(roleNodes, func(i, j int) bool {
-						return nameTagIndex(roleNodes[i]) < nameTagIndex(roleNodes[j])
+						ri, rj := "", ""
+						if roleNodes[i].EmrResourceId != nil {
+							ri = *roleNodes[i].EmrResourceId
+						}
+						if roleNodes[j].EmrResourceId != nil {
+							rj = *roleNodes[j].EmrResourceId
+						}
+						return ri < rj
 					})
 
-					stateSpecs := stateAllSpec[roleKey] // may be nil
-
-					// Determine whether state has emr_resource_id populated.
-					// If any state spec carries a non-empty emr_resource_id, use
-					// id-based matching; otherwise use positional (index) matching.
-					useIdMatch := false
-					for _, ss := range stateSpecs {
-						ssMap, _ := ss.(map[string]interface{})
-						if ssMap == nil {
-							continue
-						}
-						if rid, _ := ssMap["emr_resource_id"].(string); rid != "" {
-							useIdMatch = true
-							break
-						}
-					}
-
-					// Build emr_resource_id → state spec index map for id-based matching.
-					stateByResourceId := map[string]map[string]interface{}{}
-					if useIdMatch {
-						for _, ss := range stateSpecs {
-							ssMap, _ := ss.(map[string]interface{})
-							if ssMap == nil {
-								continue
+					// Resolve `_node_index` per API node, two-pass:
+					//   1. Existing state mapping (rid → _node_index) wins.
+					//   2. Unmapped nodes consume unused names from the
+					//      user's config pool (first-Read-after-Create path).
+					userNodeIdxByPos := make([]string, len(roleNodes))
+					{
+						cfgList := configNodeIndexes[roleKey]
+						cfgConsumed := make(map[string]bool, len(cfgList))
+						unmapped := make([]int, 0, len(roleNodes))
+						for i, n := range roleNodes {
+							rid := ""
+							if n.EmrResourceId != nil {
+								rid = *n.EmrResourceId
 							}
-							if rid, _ := ssMap["emr_resource_id"].(string); rid != "" {
-								stateByResourceId[rid] = ssMap
+							if rid != "" {
+								if t, ok := stateNodeByRID[roleKey][rid]; ok && t != "" {
+									userNodeIdxByPos[i] = t
+									cfgConsumed[t] = true
+									continue
+								}
 							}
+							unmapped = append(unmapped, i)
+						}
+						cfgFree := make([]string, 0, len(cfgList))
+						for _, name := range cfgList {
+							if !cfgConsumed[name] {
+								cfgFree = append(cfgFree, name)
+							}
+						}
+						for k, i := range unmapped {
+							if k < len(cfgFree) {
+								userNodeIdxByPos[i] = cfgFree[k]
+							}
+							// else: API has more nodes than config declares
+							// (drift). Leave `_node_index` blank — TypeSet
+							// hash collision will surface the drift on next plan.
 						}
 					}
 
 					specs := make([]interface{}, 0, len(roleNodes))
-					for idx, n := range roleNodes {
+					for nodeIdx, n := range roleNodes {
+						if n.OrderNo == nil {
+							continue
+						}
 						specItem := make(map[string]interface{})
 						specItem["instance_type"] = emrInstanceTypeFromNode(n)
+						rid := ""
 						if n.EmrResourceId != nil {
-							specItem["emr_resource_id"] = *n.EmrResourceId
+							rid = *n.EmrResourceId
+							specItem["emr_resource_id"] = rid
 						} else {
 							specItem["emr_resource_id"] = ""
 						}
+						specItem["order_no"] = *n.OrderNo
 
-						if n.OrderNo != nil {
-							specItem["order_no"] = *n.OrderNo
-						} else {
-							specItem["order_no"] = ""
-						}
+						userNodeIdx := userNodeIdxByPos[nodeIdx]
+						specItem["_node_index"] = userNodeIdx
 
-						// system_disk
 						if n.RootSize != nil && n.RootStorageType != nil {
 							specItem["system_disk"] = []interface{}{
 								map[string]interface{}{
@@ -1425,24 +1268,14 @@ func resourceTencentCloudEmrClusterV2Read(d *schema.ResourceData, meta interface
 							specItem["system_disk"] = []interface{}{}
 						}
 
-						// data_disk
-						if n.OrderNo == nil {
-							continue
-						}
-
-						dataResp, derr := service.DescribeEmrNodeDataDisks(ctx, instanceId, specItem["order_no"].(string))
+						dataResp, derr := service.DescribeEmrNodeDataDisks(ctx, instanceId, *n.OrderNo)
 						if derr != nil {
 							return derr
 						}
 
-						// Convert API response to a list of disk maps (each has disk_id).
 						apiDisks := make([]map[string]interface{}, 0, len(dataResp))
 						for _, item := range dataResp {
-							tmpObj := map[string]interface{}{
-								"disk_size": 0,
-								"disk_type": "",
-								"disk_id":   "",
-							}
+							tmpObj := map[string]interface{}{"disk_size": 0, "disk_type": "", "disk_id": ""}
 							if item.DiskSize != nil {
 								tmpObj["disk_size"] = int(*item.DiskSize)
 							}
@@ -1454,56 +1287,83 @@ func resourceTencentCloudEmrClusterV2Read(d *schema.ResourceData, meta interface
 							}
 							apiDisks = append(apiDisks, tmpObj)
 						}
+						// Sort API disks by disk_id so the (size, type)
+						// fallback below is deterministic.
+						sort.Slice(apiDisks, func(i, j int) bool {
+							di, _ := apiDisks[i]["disk_id"].(string)
+							dj, _ := apiDisks[j]["disk_id"].(string)
+							return di < dj
+						})
 
-						// tags
-						// nodeTags := make([]interface{}, 0, len(n.Tags))
-						// for _, t := range n.Tags {
-						// 	if t == nil {
-						// 		continue
-						// 	}
-						// 	tagItem := map[string]interface{}{
-						// 		"tag_key":   "",
-						// 		"tag_value": "",
-						// 	}
-						// 	if t.TagKey != nil {
-						// 		tagItem["tag_key"] = *t.TagKey
-						// 	}
-						// 	if t.TagValue != nil {
-						// 		tagItem["tag_value"] = *t.TagValue
-						// 	}
-						// 	nodeTags = append(nodeTags, tagItem)
-						// }
-						// specItem["tags"] = nodeTags
-
-						// Align with previous state to keep disk_id→index bindings stable.
-						// stateSpec is fetched from the raw state layer (not the diff layer),
-						// so its disk_id values are authoritative and not index-shifted.
-						var stateSpec map[string]interface{}
-						if useIdMatch && n.EmrResourceId != nil {
-							stateSpec = stateByResourceId[*n.EmrResourceId]
-						} else if !useIdMatch && idx < len(stateSpecs) {
-							stateSpec, _ = stateSpecs[idx].(map[string]interface{})
+						// Resolve `_disk_index` per API disk:
+						//   1. Existing state mapping by disk_id wins.
+						//   2. Fallback: match unconsumed config disk by
+						//      (disk_size, disk_type) — covers brand-new
+						//      disks attached during this Apply.
+						// Look up per-node config by `_node_index` (already
+						// resolved as userNodeIdx), NOT by positional nodeIdx.
+						var cfgDiskList []cfgDiskEntry
+						if userNodeIdx != "" {
+							if perNodeMap := configDisksByNodeIndex[roleKey]; perNodeMap != nil {
+								cfgDiskList = perNodeMap[userNodeIdx]
+							}
 						}
-						var stateDataDisks []interface{}
-						if stateSpec != nil {
-							stateDataDisks, _ = stateSpec["data_disk"].([]interface{})
+						cfgUsed := make([]bool, len(cfgDiskList))
+						cfgIndexByName := make(map[string][]int, len(cfgDiskList))
+						for ci, ce := range cfgDiskList {
+							cfgIndexByName[ce.diskIndex] = append(cfgIndexByName[ce.diskIndex], ci)
+						}
+						resolvedIdx := make([]string, len(apiDisks))
+						// Pass 1: state-mapped disks claim their `_disk_index`
+						// slot first so Pass 2 cannot steal those names.
+						for i, dm := range apiDisks {
+							diskID, _ := dm["disk_id"].(string)
+							if rid == "" || diskID == "" {
+								continue
+							}
+							t, ok := stateDiskByID[roleKey][rid][diskID]
+							if !ok || t == "" {
+								continue
+							}
+							resolvedIdx[i] = t
+							for _, ci := range cfgIndexByName[t] {
+								if !cfgUsed[ci] {
+									cfgUsed[ci] = true
+									break
+								}
+							}
+						}
+						// Pass 2: brand-new disks (no state mapping) match
+						// unconsumed cfgDiskList entries by (disk_size, disk_type).
+						for i, dm := range apiDisks {
+							if resolvedIdx[i] != "" {
+								continue
+							}
+							apiSz, _ := dm["disk_size"].(int)
+							apiDt, _ := dm["disk_type"].(string)
+							for ci, ce := range cfgDiskList {
+								if cfgUsed[ci] {
+									continue
+								}
+								if ce.diskSize == apiSz && ce.diskType == apiDt {
+									resolvedIdx[i] = ce.diskIndex
+									cfgUsed[ci] = true
+									break
+								}
+							}
+						}
+						for i, dm := range apiDisks {
+							dm["_disk_index"] = resolvedIdx[i]
 						}
 
-						// Re-order API disks to match the previous state's disk_id order.
-						// This ensures that each position in state always refers to the same
-						// physical disk, so Terraform's per-index diff shows the correct change.
-						// Newly attached disks (not in previous state) are appended at the end.
-						specItem["data_disk"] = alignDataDisksToConfig(stateDataDisks, apiDisks)
+						diskList := make([]interface{}, len(apiDisks))
+						for i, d := range apiDisks {
+							diskList[i] = d
+						}
+						specItem["data_disk"] = diskList
 
 						specs = append(specs, specItem)
 					}
-
-					// Re-order the freshly-built specs to match the node order that was
-					// previously recorded in state (by emr_resource_id).  This keeps the
-					// TypeList index of every existing node stable across refreshes so
-					// that Terraform never sees a "node swap" diff.  Newly attached nodes
-					// (emr_resource_id not found in state) are appended after all existing ones.
-					specs = alignNodeSpecsToState(specs, stateSpecs)
 
 					allSpec[roleKey] = specs
 				}
@@ -1706,19 +1566,19 @@ func resourceTencentCloudEmrClusterV2Update(d *schema.ResourceData, meta interfa
 
 			// ---------- master_resource_spec ----------
 			if oldMasterList, newMasterList, changed := nodeRoleChanged(oldAll, newAll, "master_resource_spec"); changed {
-				// master_resource_spec does not support scaling (add or remove nodes).
-				// Re-align by emr_resource_id first so that mid-list insertions in config
-				// do not look like scaling.
-				alignedOldMaster, alignedNewMaster, addedMaster := alignNodeListByResourceId(oldMasterList, newMasterList)
-				// Any node present in old but absent from new is a removal attempt.
-				removedMaster := len(oldMasterList) - len(alignedOldMaster)
-				if len(addedMaster) > 0 || removedMaster > 0 {
+				pairedOldMaster, pairedNewMaster, addedMaster, removedMaster := alignNodeListByNodeIndex(oldMasterList, newMasterList)
+				if len(addedMaster) > 0 || len(removedMaster) > 0 {
 					return fmt.Errorf("zone_resource_configuration[%d].all_node_resource_spec.master_resource_spec does not support scaling (add/remove nodes)", zoneIdx)
 				}
 
-				for nodeIdx := 0; nodeIdx < len(alignedNewMaster); nodeIdx++ {
-					oldSpec, _ := alignedOldMaster[nodeIdx].(map[string]interface{})
-					newSpec, _ := alignedNewMaster[nodeIdx].(map[string]interface{})
+				for nodeIdx := 0; nodeIdx < len(pairedNewMaster); nodeIdx++ {
+					oldSpec, _ := pairedOldMaster[nodeIdx].(map[string]interface{})
+					newSpec, _ := pairedNewMaster[nodeIdx].(map[string]interface{})
+
+					// Skip nodes that were never actually provisioned (order_no is empty).
+					if orderNo, _ := oldSpec["order_no"].(string); orderNo == "" {
+						continue
+					}
 
 					// Prevent modifying system_disk of existing nodes (not supported by API).
 					if rid, _ := oldSpec["emr_resource_id"].(string); rid != "" {
@@ -1727,59 +1587,16 @@ func resourceTencentCloudEmrClusterV2Update(d *schema.ResourceData, meta interfa
 						}
 					}
 					if instanceTypeChanged(oldSpec, newSpec) {
-						newInstanceType, _ := newSpec["instance_type"].(string)
-						resourceId, _ := oldSpec["emr_resource_id"].(string)
-
-						newCpu, newMem, err := emrParseInstanceTypeCpuMem(newInstanceType)
-						if err != nil {
-							return fmt.Errorf("zone[%d] master_resource_spec[%d]: failed to parse instance_type %q: %v",
-								zoneIdx, nodeIdx, newInstanceType, err)
-						}
-
-						modifyReq := emr.NewModifyResourceRequest()
-						modifyResp := emr.NewModifyResourceResponse()
-						modifyReq.InstanceId = helper.String(instanceId)
-						modifyReq.PayMode = emrPayModeFromChargeType(d.Get("instance_charge_type").(string))
-						modifyReq.InstanceType = helper.String(newInstanceType)
-						modifyReq.NewCpu = helper.Int64(newCpu)
-						modifyReq.NewMem = helper.Int64(newMem)
-						modifyReq.ResourceIdList = []*string{helper.String(resourceId)}
-
-						reqErr := resource.Retry(tccommon.WriteRetryTimeout, func() *resource.RetryError {
-							result, e := meta.(tccommon.ProviderMeta).GetAPIV3Conn().UseEmrClient().ModifyResourceWithContext(ctx, modifyReq)
-							if e != nil {
-								return tccommon.RetryError(e)
-							}
-							log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n",
-								logId, modifyReq.GetAction(), modifyReq.ToJsonString(), result.ToJsonString())
-
-							if result == nil || result.Response == nil || result.Response.TraceId == nil {
-								return resource.NonRetryableError(fmt.Errorf("Update emr cluster modify resource failed, Response is nil."))
-							}
-
-							modifyResp = result
-							return nil
-						})
-						if reqErr != nil {
-							log.Printf("[CRITAL]%s zone[%d] master_resource_spec[%d] modify instance type failed: %+v",
-								logId, zoneIdx, nodeIdx, reqErr)
-							return reqErr
-						}
-
-						// wait
-						traceId := *modifyResp.Response.TraceId
-						conf := tccommon.BuildStateChangeConf([]string{"0", "1"}, []string{"2", "-1"}, d.Timeout(schema.TimeoutUpdate)-time.Minute, time.Second, service.FlowStatusRefreshFunc(instanceId, traceId, F_KEY_TRACE_ID, []string{}))
-						if object, e := conf.WaitForState(); e != nil {
-							return e
-						} else if status, ok := object.(*int64); ok && status != nil && *status == -1 {
-							return fmt.Errorf("EMR cluster flow failed (TraceId=%s), flow total status is -1.", traceId)
+						if err := emrModifyNodeInstanceType(ctx, meta, d, logId, instanceId,
+							"master_resource_spec", zoneIdx, nodeIdx, oldSpec, newSpec); err != nil {
+							return err
 						}
 					}
 
 					if dataDiskChanged(oldSpec, newSpec) {
 						orderNo, _ := oldSpec["order_no"].(string)
-						oldDisks, _ := oldSpec["data_disk"].([]interface{})
-						newDisks, _ := newSpec["data_disk"].([]interface{})
+						oldDisks := emrDiskSetToList(oldSpec["data_disk"])
+						newDisks := emrDiskSetToList(newSpec["data_disk"])
 
 						if err := handleNodeDataDiskChange(ctx, meta, d, logId, instanceId, orderNo,
 							oldDisks, newDisks, "master_resource_spec", zoneIdx, nodeIdx); err != nil {
@@ -1791,12 +1608,17 @@ func resourceTencentCloudEmrClusterV2Update(d *schema.ResourceData, meta interfa
 
 			// ---------- core_resource_spec ----------
 			if oldCoreList, newCoreList, changed := nodeRoleChanged(oldAll, newAll, "core_resource_spec"); changed {
-				alignedOldCore, alignedNewCore, addedCore := alignNodeListByResourceId(oldCoreList, newCoreList)
+				pairedOldCore, pairedNewCore, addedCore, removedOldCore := alignNodeListByNodeIndex(oldCoreList, newCoreList)
 
 				// Content changes on existing nodes.
-				for nodeIdx := 0; nodeIdx < len(alignedNewCore); nodeIdx++ {
-					oldSpec, _ := alignedOldCore[nodeIdx].(map[string]interface{})
-					newSpec, _ := alignedNewCore[nodeIdx].(map[string]interface{})
+				for nodeIdx := 0; nodeIdx < len(pairedNewCore); nodeIdx++ {
+					oldSpec, _ := pairedOldCore[nodeIdx].(map[string]interface{})
+					newSpec, _ := pairedNewCore[nodeIdx].(map[string]interface{})
+
+					// Skip nodes that were never actually provisioned.
+					if orderNo, _ := oldSpec["order_no"].(string); orderNo == "" {
+						continue
+					}
 
 					if rid, _ := oldSpec["emr_resource_id"].(string); rid != "" {
 						if sysDiskChanged(oldSpec, newSpec) {
@@ -1804,181 +1626,63 @@ func resourceTencentCloudEmrClusterV2Update(d *schema.ResourceData, meta interfa
 						}
 					}
 					if instanceTypeChanged(oldSpec, newSpec) {
-						newInstanceType, _ := newSpec["instance_type"].(string)
-						resourceId, _ := oldSpec["emr_resource_id"].(string)
-						newCpu, newMem, err := emrParseInstanceTypeCpuMem(newInstanceType)
-						if err != nil {
-							return fmt.Errorf("zone[%d] core_resource_spec[%d]: failed to parse instance_type %q: %v", zoneIdx, nodeIdx, newInstanceType, err)
-						}
-						modifyReq := emr.NewModifyResourceRequest()
-						modifyResp := emr.NewModifyResourceResponse()
-						modifyReq.InstanceId = helper.String(instanceId)
-						modifyReq.PayMode = emrPayModeFromChargeType(d.Get("instance_charge_type").(string))
-						modifyReq.InstanceType = helper.String(newInstanceType)
-						modifyReq.NewCpu = helper.Int64(newCpu)
-						modifyReq.NewMem = helper.Int64(newMem)
-						modifyReq.ResourceIdList = []*string{helper.String(resourceId)}
-						reqErr := resource.Retry(tccommon.WriteRetryTimeout, func() *resource.RetryError {
-							result, e := meta.(tccommon.ProviderMeta).GetAPIV3Conn().UseEmrClient().ModifyResourceWithContext(ctx, modifyReq)
-							if e != nil {
-								return tccommon.RetryError(e)
-							}
-							log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, modifyReq.GetAction(), modifyReq.ToJsonString(), result.ToJsonString())
-							if result == nil || result.Response == nil || result.Response.TraceId == nil {
-								return resource.NonRetryableError(fmt.Errorf("Update emr cluster modify resource failed, Response is nil."))
-							}
-							modifyResp = result
-							return nil
-						})
-						if reqErr != nil {
-							log.Printf("[CRITAL]%s zone[%d] core_resource_spec[%d] modify instance type failed: %+v", logId, zoneIdx, nodeIdx, reqErr)
-							return reqErr
-						}
-						traceId := *modifyResp.Response.TraceId
-						conf := tccommon.BuildStateChangeConf([]string{"0", "1"}, []string{"2", "-1"}, d.Timeout(schema.TimeoutUpdate)-time.Minute, time.Second, service.FlowStatusRefreshFunc(instanceId, traceId, F_KEY_TRACE_ID, []string{}))
-						if object, e := conf.WaitForState(); e != nil {
-							return e
-						} else if status, ok := object.(*int64); ok && status != nil && *status == -1 {
-							return fmt.Errorf("EMR cluster flow failed (TraceId=%s), flow total status is -1.", traceId)
+						if err := emrModifyNodeInstanceType(ctx, meta, d, logId, instanceId,
+							"core_resource_spec", zoneIdx, nodeIdx, oldSpec, newSpec); err != nil {
+							return err
 						}
 					}
 					if dataDiskChanged(oldSpec, newSpec) {
 						orderNo, _ := oldSpec["order_no"].(string)
-						oldDisks, _ := oldSpec["data_disk"].([]interface{})
-						newDisks, _ := newSpec["data_disk"].([]interface{})
+						oldDisks := emrDiskSetToList(oldSpec["data_disk"])
+						newDisks := emrDiskSetToList(newSpec["data_disk"])
 						if err := handleNodeDataDiskChange(ctx, meta, d, logId, instanceId, orderNo, oldDisks, newDisks, "core_resource_spec", zoneIdx, nodeIdx); err != nil {
 							return err
 						}
 					}
 				}
 
-				// Scale-out: new nodes.
-				for addedIdx, addedRaw := range addedCore {
-					addedSpec, _ := addedRaw.(map[string]interface{})
-					scaleOutReq := emr.NewScaleOutClusterRequest()
-					scaleOutResp := emr.NewScaleOutClusterResponse()
-					scaleOutReq.InstanceId = helper.String(instanceId)
-					scaleOutReq.InstanceChargeType = helper.String(d.Get("instance_charge_type").(string))
-					scaleOutReq.ScaleOutNodeConfig = &emr.ScaleOutNodeConfig{NodeFlag: common.StringPtr("CORE"), NodeCount: common.Uint64Ptr(1)}
-					if d.Get("instance_charge_type").(string) == "PREPAID" {
-						if v, ok := d.GetOk("instance_charge_prepaid"); ok {
-							prepaidList := v.([]interface{})
-							if len(prepaidList) > 0 {
-								prepaidMap := prepaidList[0].(map[string]interface{})
-								prepaid := &emr.InstanceChargePrepaid{}
-								if val, ok := prepaidMap["period"].(int); ok && val != 0 {
-									prepaid.Period = helper.IntInt64(val)
-								}
-								if val, ok := prepaidMap["renew_flag"].(bool); ok {
-									prepaid.RenewFlag = helper.Bool(val)
-								}
-								scaleOutReq.InstanceChargePrepaid = prepaid
-							}
-						}
-					}
-					coreResourceSpec := &emr.NodeResourceSpec{}
-					if instanceType, ok := addedSpec["instance_type"].(string); ok && instanceType != "" {
-						coreResourceSpec.InstanceType = helper.String(instanceType)
-					}
-					if sdList, ok := addedSpec["system_disk"].([]interface{}); ok && len(sdList) > 0 {
-						sdMap, _ := sdList[0].(map[string]interface{})
-						coreResourceSpec.SystemDisk = []*emr.DiskSpecInfo{{DiskType: helper.String(sdMap["disk_type"].(string)), Count: helper.Int64(1), DiskSize: helper.Int64(int64(sdMap["disk_size"].(int)))}}
-					}
-					if ddList, ok := addedSpec["data_disk"].([]interface{}); ok {
-						for _, ddItem := range ddList {
-							ddMap, _ := ddItem.(map[string]interface{})
-							coreResourceSpec.DataDisk = append(coreResourceSpec.DataDisk, &emr.DiskSpecInfo{DiskType: helper.String(ddMap["disk_type"].(string)), Count: helper.Int64(1), DiskSize: helper.Int64(int64(ddMap["disk_size"].(int)))})
-						}
-					}
-					scaleOutReq.ResourceSpec = coreResourceSpec
-					if plList, ok := newZrcMap["placement"].([]interface{}); ok && len(plList) > 0 {
-						plMap, _ := plList[0].(map[string]interface{})
-						if zone, ok := plMap["zone"].(string); ok && zone != "" {
-							scaleOutReq.Zone = helper.String(zone)
-						}
-					}
-					scaleOutErr := resource.Retry(tccommon.WriteRetryTimeout, func() *resource.RetryError {
-						result, e := meta.(tccommon.ProviderMeta).GetAPIV3Conn().UseEmrClient().ScaleOutClusterWithContext(ctx, scaleOutReq)
-						if e != nil {
-							return tccommon.RetryError(e)
-						}
-						log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, scaleOutReq.GetAction(), scaleOutReq.ToJsonString(), result.ToJsonString())
-						if result == nil || result.Response == nil || result.Response.TraceId == nil {
-							return resource.NonRetryableError(fmt.Errorf("scale out core nodes failed, Response is nil"))
-						}
-						scaleOutResp = result
-						return nil
-					})
-					if scaleOutErr != nil {
-						log.Printf("[CRITAL]%s zone[%d] core_resource_spec[added:%d] scale-out failed: %+v", logId, zoneIdx, addedIdx, scaleOutErr)
-						return scaleOutErr
-					}
-					traceId := *scaleOutResp.Response.TraceId
-					conf := tccommon.BuildStateChangeConf([]string{"0", "1"}, []string{"2", "-1"}, d.Timeout(schema.TimeoutUpdate)-time.Minute, time.Second, service.FlowStatusRefreshFunc(instanceId, traceId, F_KEY_TRACE_ID, []string{}))
-					if object, e := conf.WaitForState(); e != nil {
-						return e
-					} else if status, ok := object.(*int64); ok && status != nil && *status == -1 {
-						return fmt.Errorf("EMR cluster flow failed (TraceId=%s), flow total status is -1.", traceId)
-					}
-				}
-
-				// Scale-in: nodes removed — find old nodes whose emr_resource_id is not referenced by new list.
-				newResourceIDs := make(map[string]bool, len(newCoreList))
-				for _, raw := range newCoreList {
-					m, _ := raw.(map[string]interface{})
-					if rid, _ := m["emr_resource_id"].(string); rid != "" {
-						newResourceIDs[rid] = true
-					}
-				}
+				// Scale-in first: terminate old nodes that have no matching new
+				// entry. Doing scale-in before scale-out frees capacity before
+				// new nodes are added.
 				var removedCoreOrderNos []*string
-				for _, raw := range oldCoreList {
+				for _, raw := range removedOldCore {
 					m, _ := raw.(map[string]interface{})
-					rid, _ := m["emr_resource_id"].(string)
 					orderNo, _ := m["order_no"].(string)
-					if rid != "" && !newResourceIDs[rid] && orderNo != "" {
+					if orderNo != "" {
 						removedCoreOrderNos = append(removedCoreOrderNos, helper.String(orderNo))
 					}
 				}
-				if len(removedCoreOrderNos) > 0 {
-					terminateReq := emr.NewTerminateClusterNodesRequest()
-					terminateResp := emr.NewTerminateClusterNodesResponse()
-					terminateReq.InstanceId = helper.String(instanceId)
-					terminateReq.CvmInstanceIds = removedCoreOrderNos
-					terminateReq.NodeFlag = helper.String("CORE")
-					terminateErr := resource.Retry(tccommon.WriteRetryTimeout, func() *resource.RetryError {
-						result, e := meta.(tccommon.ProviderMeta).GetAPIV3Conn().UseEmrClient().TerminateClusterNodesWithContext(ctx, terminateReq)
-						if e != nil {
-							return tccommon.RetryError(e)
-						}
-						log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, terminateReq.GetAction(), terminateReq.ToJsonString(), result.ToJsonString())
-						if result == nil || result.Response == nil || result.Response.FlowId == nil {
-							return resource.NonRetryableError(fmt.Errorf("terminate core nodes failed, Response is nil"))
-						}
-						terminateResp = result
-						return nil
-					})
-					if terminateErr != nil {
-						log.Printf("[CRITAL]%s zone[%d] core_resource_spec scale-in failed: %+v", logId, zoneIdx, terminateErr)
-						return terminateErr
+				if err := emrTerminateNodes(ctx, meta, d, logId, instanceId, "CORE", zoneIdx, removedCoreOrderNos); err != nil {
+					return err
+				}
+
+				// Scale-out: new nodes.
+				zone := emrZoneOf(newZrcMap)
+				for addedIdx, addedRaw := range addedCore {
+					addedSpec, _ := addedRaw.(map[string]interface{})
+					if addedSpec == nil {
+						continue
 					}
-					flowId := int64(*terminateResp.Response.FlowId)
-					conf := tccommon.BuildStateChangeConf([]string{"0", "1"}, []string{"2", "-1"}, d.Timeout(schema.TimeoutUpdate)-time.Minute, time.Second, service.FlowStatusRefreshFunc(instanceId, strconv.FormatInt(flowId, 10), F_KEY_FLOW_ID, []string{}))
-					if object, e := conf.WaitForState(); e != nil {
-						return e
-					} else if status, ok := object.(*int64); ok && status != nil && *status == -1 {
-						return fmt.Errorf("EMR cluster flow failed (FlowId=%s), flow total status is -1.", strconv.FormatInt(flowId, 10))
+					if err := emrScaleOutSingleNode(ctx, meta, d, logId, instanceId,
+						"CORE", zone, zoneIdx, addedIdx, addedSpec); err != nil {
+						return err
 					}
 				}
 			}
 
 			// ---------- task_resource_spec ----------
 			if oldTaskList, newTaskList, changed := nodeRoleChanged(oldAll, newAll, "task_resource_spec"); changed {
-				alignedOldTask, alignedNewTask, addedTask := alignNodeListByResourceId(oldTaskList, newTaskList)
+				pairedOldTask, pairedNewTask, addedTask, removedOldTask := alignNodeListByNodeIndex(oldTaskList, newTaskList)
 
 				// Content changes on existing nodes.
-				for nodeIdx := 0; nodeIdx < len(alignedNewTask); nodeIdx++ {
-					oldSpec, _ := alignedOldTask[nodeIdx].(map[string]interface{})
-					newSpec, _ := alignedNewTask[nodeIdx].(map[string]interface{})
+				for nodeIdx := 0; nodeIdx < len(pairedNewTask); nodeIdx++ {
+					oldSpec, _ := pairedOldTask[nodeIdx].(map[string]interface{})
+					newSpec, _ := pairedNewTask[nodeIdx].(map[string]interface{})
+
+					// Skip nodes that were never actually provisioned.
+					if orderNo, _ := oldSpec["order_no"].(string); orderNo == "" {
+						continue
+					}
 
 					if rid, _ := oldSpec["emr_resource_id"].(string); rid != "" {
 						if sysDiskChanged(oldSpec, newSpec) {
@@ -1986,169 +1690,46 @@ func resourceTencentCloudEmrClusterV2Update(d *schema.ResourceData, meta interfa
 						}
 					}
 					if instanceTypeChanged(oldSpec, newSpec) {
-						newInstanceType, _ := newSpec["instance_type"].(string)
-						resourceId, _ := oldSpec["emr_resource_id"].(string)
-						newCpu, newMem, err := emrParseInstanceTypeCpuMem(newInstanceType)
-						if err != nil {
-							return fmt.Errorf("zone[%d] task_resource_spec[%d]: failed to parse instance_type %q: %v", zoneIdx, nodeIdx, newInstanceType, err)
-						}
-						modifyReq := emr.NewModifyResourceRequest()
-						modifyResp := emr.NewModifyResourceResponse()
-						modifyReq.InstanceId = helper.String(instanceId)
-						modifyReq.PayMode = emrPayModeFromChargeType(d.Get("instance_charge_type").(string))
-						modifyReq.InstanceType = helper.String(newInstanceType)
-						modifyReq.NewCpu = helper.Int64(newCpu)
-						modifyReq.NewMem = helper.Int64(newMem)
-						modifyReq.ResourceIdList = []*string{helper.String(resourceId)}
-						reqErr := resource.Retry(tccommon.WriteRetryTimeout, func() *resource.RetryError {
-							result, e := meta.(tccommon.ProviderMeta).GetAPIV3Conn().UseEmrClient().ModifyResourceWithContext(ctx, modifyReq)
-							if e != nil {
-								return tccommon.RetryError(e)
-							}
-							log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, modifyReq.GetAction(), modifyReq.ToJsonString(), result.ToJsonString())
-							if result == nil || result.Response == nil || result.Response.TraceId == nil {
-								return resource.NonRetryableError(fmt.Errorf("Update emr cluster modify resource failed, Response is nil."))
-							}
-							modifyResp = result
-							return nil
-						})
-						if reqErr != nil {
-							log.Printf("[CRITAL]%s zone[%d] task_resource_spec[%d] modify instance type failed: %+v", logId, zoneIdx, nodeIdx, reqErr)
-							return reqErr
-						}
-						traceId := *modifyResp.Response.TraceId
-						conf := tccommon.BuildStateChangeConf([]string{"0", "1"}, []string{"2", "-1"}, d.Timeout(schema.TimeoutUpdate)-time.Minute, time.Second, service.FlowStatusRefreshFunc(instanceId, traceId, F_KEY_TRACE_ID, []string{}))
-						if object, e := conf.WaitForState(); e != nil {
-							return e
-						} else if status, ok := object.(*int64); ok && status != nil && *status == -1 {
-							return fmt.Errorf("EMR cluster flow failed (TraceId=%s), flow total status is -1.", traceId)
+						if err := emrModifyNodeInstanceType(ctx, meta, d, logId, instanceId,
+							"task_resource_spec", zoneIdx, nodeIdx, oldSpec, newSpec); err != nil {
+							return err
 						}
 					}
 					if dataDiskChanged(oldSpec, newSpec) {
 						orderNo, _ := oldSpec["order_no"].(string)
-						oldDisks, _ := oldSpec["data_disk"].([]interface{})
-						newDisks, _ := newSpec["data_disk"].([]interface{})
+						oldDisks := emrDiskSetToList(oldSpec["data_disk"])
+						newDisks := emrDiskSetToList(newSpec["data_disk"])
 						if err := handleNodeDataDiskChange(ctx, meta, d, logId, instanceId, orderNo, oldDisks, newDisks, "task_resource_spec", zoneIdx, nodeIdx); err != nil {
 							return err
 						}
 					}
 				}
 
-				// Scale-out: new nodes.
-				for addedIdx, addedRaw := range addedTask {
-					addedSpec, _ := addedRaw.(map[string]interface{})
-					scaleOutReq := emr.NewScaleOutClusterRequest()
-					scaleOutResp := emr.NewScaleOutClusterResponse()
-					scaleOutReq.InstanceId = helper.String(instanceId)
-					scaleOutReq.InstanceChargeType = helper.String(d.Get("instance_charge_type").(string))
-					scaleOutReq.ScaleOutNodeConfig = &emr.ScaleOutNodeConfig{NodeFlag: common.StringPtr("TASK"), NodeCount: common.Uint64Ptr(1)}
-					if d.Get("instance_charge_type").(string) == "PREPAID" {
-						if v, ok := d.GetOk("instance_charge_prepaid"); ok {
-							prepaidList := v.([]interface{})
-							if len(prepaidList) > 0 {
-								prepaidMap := prepaidList[0].(map[string]interface{})
-								prepaid := &emr.InstanceChargePrepaid{}
-								if val, ok := prepaidMap["period"].(int); ok && val != 0 {
-									prepaid.Period = helper.IntInt64(val)
-								}
-								if val, ok := prepaidMap["renew_flag"].(bool); ok {
-									prepaid.RenewFlag = helper.Bool(val)
-								}
-								scaleOutReq.InstanceChargePrepaid = prepaid
-							}
-						}
-					}
-					taskResourceSpec := &emr.NodeResourceSpec{}
-					if instanceType, ok := addedSpec["instance_type"].(string); ok && instanceType != "" {
-						taskResourceSpec.InstanceType = helper.String(instanceType)
-					}
-					if sdList, ok := addedSpec["system_disk"].([]interface{}); ok && len(sdList) > 0 {
-						sdMap, _ := sdList[0].(map[string]interface{})
-						taskResourceSpec.SystemDisk = []*emr.DiskSpecInfo{{DiskType: helper.String(sdMap["disk_type"].(string)), Count: helper.Int64(1), DiskSize: helper.Int64(int64(sdMap["disk_size"].(int)))}}
-					}
-					if ddList, ok := addedSpec["data_disk"].([]interface{}); ok {
-						for _, ddItem := range ddList {
-							ddMap, _ := ddItem.(map[string]interface{})
-							taskResourceSpec.DataDisk = append(taskResourceSpec.DataDisk, &emr.DiskSpecInfo{DiskType: helper.String(ddMap["disk_type"].(string)), Count: helper.Int64(1), DiskSize: helper.Int64(int64(ddMap["disk_size"].(int)))})
-						}
-					}
-					scaleOutReq.ResourceSpec = taskResourceSpec
-					if plList, ok := newZrcMap["placement"].([]interface{}); ok && len(plList) > 0 {
-						plMap, _ := plList[0].(map[string]interface{})
-						if zone, ok := plMap["zone"].(string); ok && zone != "" {
-							scaleOutReq.Zone = helper.String(zone)
-						}
-					}
-					scaleOutErr := resource.Retry(tccommon.WriteRetryTimeout, func() *resource.RetryError {
-						result, e := meta.(tccommon.ProviderMeta).GetAPIV3Conn().UseEmrClient().ScaleOutClusterWithContext(ctx, scaleOutReq)
-						if e != nil {
-							return tccommon.RetryError(e)
-						}
-						log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, scaleOutReq.GetAction(), scaleOutReq.ToJsonString(), result.ToJsonString())
-						if result == nil || result.Response == nil || result.Response.TraceId == nil {
-							return resource.NonRetryableError(fmt.Errorf("scale out task nodes failed, Response is nil"))
-						}
-						scaleOutResp = result
-						return nil
-					})
-					if scaleOutErr != nil {
-						log.Printf("[CRITAL]%s zone[%d] task_resource_spec[added:%d] scale-out failed: %+v", logId, zoneIdx, addedIdx, scaleOutErr)
-						return scaleOutErr
-					}
-					traceId := *scaleOutResp.Response.TraceId
-					conf := tccommon.BuildStateChangeConf([]string{"0", "1"}, []string{"2", "-1"}, d.Timeout(schema.TimeoutUpdate)-time.Minute, time.Second, service.FlowStatusRefreshFunc(instanceId, traceId, F_KEY_TRACE_ID, []string{}))
-					if object, e := conf.WaitForState(); e != nil {
-						return e
-					} else if status, ok := object.(*int64); ok && status != nil && *status == -1 {
-						return fmt.Errorf("EMR cluster flow failed (TraceId=%s), flow total status is -1.", traceId)
-					}
-				}
-
-				// Scale-in: nodes removed.
-				newTaskResourceIDs := make(map[string]bool, len(newTaskList))
-				for _, raw := range newTaskList {
-					m, _ := raw.(map[string]interface{})
-					if rid, _ := m["emr_resource_id"].(string); rid != "" {
-						newTaskResourceIDs[rid] = true
-					}
-				}
+				// Scale-in first: terminate old task nodes that have no matching
+				// new entry. Doing scale-in before scale-out frees capacity
+				// before new nodes are added.
 				var removedTaskOrderNos []*string
-				for _, raw := range oldTaskList {
+				for _, raw := range removedOldTask {
 					m, _ := raw.(map[string]interface{})
-					rid, _ := m["emr_resource_id"].(string)
 					orderNo, _ := m["order_no"].(string)
-					if rid != "" && !newTaskResourceIDs[rid] && orderNo != "" {
+					if orderNo != "" {
 						removedTaskOrderNos = append(removedTaskOrderNos, helper.String(orderNo))
 					}
 				}
-				if len(removedTaskOrderNos) > 0 {
-					terminateReq := emr.NewTerminateClusterNodesRequest()
-					terminateResp := emr.NewTerminateClusterNodesResponse()
-					terminateReq.InstanceId = helper.String(instanceId)
-					terminateReq.CvmInstanceIds = removedTaskOrderNos
-					terminateReq.NodeFlag = helper.String("TASK")
-					terminateErr := resource.Retry(tccommon.WriteRetryTimeout, func() *resource.RetryError {
-						result, e := meta.(tccommon.ProviderMeta).GetAPIV3Conn().UseEmrClient().TerminateClusterNodesWithContext(ctx, terminateReq)
-						if e != nil {
-							return tccommon.RetryError(e)
-						}
-						log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, terminateReq.GetAction(), terminateReq.ToJsonString(), result.ToJsonString())
-						if result == nil || result.Response == nil || result.Response.FlowId == nil {
-							return resource.NonRetryableError(fmt.Errorf("terminate task nodes failed, Response is nil"))
-						}
-						terminateResp = result
-						return nil
-					})
-					if terminateErr != nil {
-						log.Printf("[CRITAL]%s zone[%d] task_resource_spec scale-in failed: %+v", logId, zoneIdx, terminateErr)
-						return terminateErr
+				if err := emrTerminateNodes(ctx, meta, d, logId, instanceId, "TASK", zoneIdx, removedTaskOrderNos); err != nil {
+					return err
+				}
+
+				// Scale-out: new nodes.
+				zone := emrZoneOf(newZrcMap)
+				for addedIdx, addedRaw := range addedTask {
+					addedSpec, _ := addedRaw.(map[string]interface{})
+					if addedSpec == nil {
+						continue
 					}
-					flowId := int64(*terminateResp.Response.FlowId)
-					conf := tccommon.BuildStateChangeConf([]string{"0", "1"}, []string{"2", "-1"}, d.Timeout(schema.TimeoutUpdate)-time.Minute, time.Second, service.FlowStatusRefreshFunc(instanceId, strconv.FormatInt(flowId, 10), F_KEY_FLOW_ID, []string{}))
-					if object, e := conf.WaitForState(); e != nil {
-						return e
-					} else if status, ok := object.(*int64); ok && status != nil && *status == -1 {
-						return fmt.Errorf("EMR cluster flow failed (FlowId=%s), flow total status is -1.", strconv.FormatInt(flowId, 10))
+					if err := emrScaleOutSingleNode(ctx, meta, d, logId, instanceId,
+						"TASK", zone, zoneIdx, addedIdx, addedSpec); err != nil {
+						return err
 					}
 				}
 			}
@@ -2156,15 +1737,19 @@ func resourceTencentCloudEmrClusterV2Update(d *schema.ResourceData, meta interfa
 			// ---------- common_resource_spec ----------
 			if oldCommonList, newCommonList, changed := nodeRoleChanged(oldAll, newAll, "common_resource_spec"); changed {
 				// common_resource_spec does not support scaling (add or remove nodes).
-				alignedOldCommon, alignedNewCommon, addedCommon := alignNodeListByResourceId(oldCommonList, newCommonList)
-				removedCommon := len(oldCommonList) - len(alignedOldCommon)
-				if len(addedCommon) > 0 || removedCommon > 0 {
+				pairedOldCommon, pairedNewCommon, addedCommon, removedCommon := alignNodeListByNodeIndex(oldCommonList, newCommonList)
+				if len(addedCommon) > 0 || len(removedCommon) > 0 {
 					return fmt.Errorf("zone_resource_configuration[%d].all_node_resource_spec.common_resource_spec does not support scaling (add/remove nodes)", zoneIdx)
 				}
 
-				for nodeIdx := 0; nodeIdx < len(alignedNewCommon); nodeIdx++ {
-					oldSpec, _ := alignedOldCommon[nodeIdx].(map[string]interface{})
-					newSpec, _ := alignedNewCommon[nodeIdx].(map[string]interface{})
+				for nodeIdx := 0; nodeIdx < len(pairedNewCommon); nodeIdx++ {
+					oldSpec, _ := pairedOldCommon[nodeIdx].(map[string]interface{})
+					newSpec, _ := pairedNewCommon[nodeIdx].(map[string]interface{})
+
+					// Skip nodes that were never actually provisioned.
+					if orderNo, _ := oldSpec["order_no"].(string); orderNo == "" {
+						continue
+					}
 
 					if rid, _ := oldSpec["emr_resource_id"].(string); rid != "" {
 						if sysDiskChanged(oldSpec, newSpec) {
@@ -2172,55 +1757,21 @@ func resourceTencentCloudEmrClusterV2Update(d *schema.ResourceData, meta interfa
 						}
 					}
 					if instanceTypeChanged(oldSpec, newSpec) {
-						newInstanceType, _ := newSpec["instance_type"].(string)
-						resourceId, _ := oldSpec["emr_resource_id"].(string)
-						newCpu, newMem, err := emrParseInstanceTypeCpuMem(newInstanceType)
-						if err != nil {
-							return fmt.Errorf("zone[%d] common_resource_spec[%d]: failed to parse instance_type %q: %v", zoneIdx, nodeIdx, newInstanceType, err)
-						}
-						modifyReq := emr.NewModifyResourceRequest()
-						modifyResp := emr.NewModifyResourceResponse()
-						modifyReq.InstanceId = helper.String(instanceId)
-						modifyReq.PayMode = emrPayModeFromChargeType(d.Get("instance_charge_type").(string))
-						modifyReq.InstanceType = helper.String(newInstanceType)
-						modifyReq.NewCpu = helper.Int64(newCpu)
-						modifyReq.NewMem = helper.Int64(newMem)
-						modifyReq.ResourceIdList = []*string{helper.String(resourceId)}
-						reqErr := resource.Retry(tccommon.WriteRetryTimeout, func() *resource.RetryError {
-							result, e := meta.(tccommon.ProviderMeta).GetAPIV3Conn().UseEmrClient().ModifyResourceWithContext(ctx, modifyReq)
-							if e != nil {
-								return tccommon.RetryError(e)
-							}
-							log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, modifyReq.GetAction(), modifyReq.ToJsonString(), result.ToJsonString())
-							if result == nil || result.Response == nil || result.Response.TraceId == nil {
-								return resource.NonRetryableError(fmt.Errorf("Update emr cluster modify resource failed, Response is nil."))
-							}
-							modifyResp = result
-							return nil
-						})
-						if reqErr != nil {
-							log.Printf("[CRITAL]%s zone[%d] common_resource_spec[%d] modify instance type failed: %+v", logId, zoneIdx, nodeIdx, reqErr)
-							return reqErr
-						}
-						traceId := *modifyResp.Response.TraceId
-						conf := tccommon.BuildStateChangeConf([]string{"0", "1"}, []string{"2", "-1"}, d.Timeout(schema.TimeoutUpdate)-time.Minute, time.Second, service.FlowStatusRefreshFunc(instanceId, traceId, F_KEY_TRACE_ID, []string{}))
-						if object, e := conf.WaitForState(); e != nil {
-							return e
-						} else if status, ok := object.(*int64); ok && status != nil && *status == -1 {
-							return fmt.Errorf("EMR cluster flow failed (TraceId=%s), flow total status is -1.", traceId)
+						if err := emrModifyNodeInstanceType(ctx, meta, d, logId, instanceId,
+							"common_resource_spec", zoneIdx, nodeIdx, oldSpec, newSpec); err != nil {
+							return err
 						}
 					}
 					if dataDiskChanged(oldSpec, newSpec) {
 						orderNo, _ := oldSpec["order_no"].(string)
-						oldDisks, _ := oldSpec["data_disk"].([]interface{})
-						newDisks, _ := newSpec["data_disk"].([]interface{})
+						oldDisks := emrDiskSetToList(oldSpec["data_disk"])
+						newDisks := emrDiskSetToList(newSpec["data_disk"])
 						if err := handleNodeDataDiskChange(ctx, meta, d, logId, instanceId, orderNo, oldDisks, newDisks, "common_resource_spec", zoneIdx, nodeIdx); err != nil {
 							return err
 						}
 					}
 				}
 			}
-
 		}
 	}
 
@@ -2333,8 +1884,440 @@ func resourceTencentCloudEmrClusterV2Delete(d *schema.ResourceData, meta interfa
 // Helper functions
 // -----------------------------------------------------------------------------
 
+// customizeDiffEmrClusterV2 enforces business immutability rules at plan time
+// for the four `*_resource_spec` TypeSet fields and the inner `data_disk`
+// TypeSet. Both layers are Sets keyed via their full content hash, so the
+// SDK's set-diff handles add/remove/in-place-modify automatically; this hook
+// performs validation only — it never mutates `new` and never overwrites
+// Computed fields.
+//
+// Rules enforced:
+//   - master/common: list length is fixed; rename of `_node_index` is
+//     rejected (length-immutable roles cannot tolerate add+remove).
+//   - core/task: scale-out and scale-in are both allowed, including
+//     simultaneous add+remove in a single apply (legitimate node
+//     replacement). Update processes scale-in before scale-out.
+//   - For nodes paired by `_node_index`:
+//   - `system_disk` is immutable in every dimension.
+//   - `data_disk` allows attach (new `_disk_index`) but never detach.
+//   - For paired disks: `disk_size` only grows; `disk_type` is immutable.
+//   - `_node_index` must be non-empty and unique within each role.
+//   - `_disk_index` must be non-empty and unique within each node.
+//
+// Skipped during create (`d.Id() == ""`): no prior state to compare against,
+// and Create has its own validation path.
+func customizeDiffEmrClusterV2(ctx context.Context, d *schema.ResourceDiff, meta interface{}) error {
+	if d.Id() == "" {
+		return nil
+	}
+	oldRaw, newRaw := d.GetChange("zone_resource_configuration")
+	oldZones, _ := oldRaw.([]interface{})
+	newZones, _ := newRaw.([]interface{})
+	if len(newZones) == 0 {
+		return nil
+	}
+
+	// Pair zones by user-supplied placement.0.zone (zones are user-keyed).
+	oldZoneByName := make(map[string]map[string]interface{}, len(oldZones))
+	for _, z := range oldZones {
+		zm, _ := z.(map[string]interface{})
+		if zm == nil {
+			continue
+		}
+		oldZoneByName[zoneNameOfBlock(zm)] = zm
+	}
+
+	immutableLengthRoles := map[string]bool{
+		"master_resource_spec": true,
+		"common_resource_spec": true,
+	}
+	roleKeys := []string{
+		"master_resource_spec",
+		"core_resource_spec",
+		"task_resource_spec",
+		"common_resource_spec",
+	}
+	roleLabel := map[string]string{
+		"master_resource_spec": "master",
+		"core_resource_spec":   "core",
+		"task_resource_spec":   "task",
+		"common_resource_spec": "common",
+	}
+
+	for zoneIdx, nz := range newZones {
+		newZone, _ := nz.(map[string]interface{})
+		if newZone == nil {
+			continue
+		}
+		zoneName := zoneNameOfBlock(newZone)
+		oldZone := oldZoneByName[zoneName]
+
+		newAll := emrFirstAllNodeResourceSpec(newZone)
+		if newAll == nil {
+			continue
+		}
+		var oldAll map[string]interface{}
+		if oldZone != nil {
+			oldAll = emrFirstAllNodeResourceSpec(oldZone)
+		}
+
+		for _, rk := range roleKeys {
+			newList := emrNodeSetToList(newAll[rk])
+
+			// Validate _node_index: non-empty + unique within this role.
+			seenNodeIdx := make(map[string]bool, len(newList))
+			for _, raw := range newList {
+				nm, _ := raw.(map[string]interface{})
+				if nm == nil {
+					continue
+				}
+				nodeIdxStr, _ := nm["_node_index"].(string)
+				if nodeIdxStr == "" {
+					return fmt.Errorf(
+						"%s.zone_resource_configuration[%d].%s: every block must set a non-empty `_node_index`",
+						zoneName, zoneIdx, rk)
+				}
+				if seenNodeIdx[nodeIdxStr] {
+					return fmt.Errorf(
+						"%s.zone_resource_configuration[%d].%s: duplicate `_node_index` %q within the same role",
+						zoneName, zoneIdx, rk, nodeIdxStr)
+				}
+				seenNodeIdx[nodeIdxStr] = true
+			}
+
+			// Validate _disk_index: non-empty + unique within each node.
+			for _, raw := range newList {
+				nm, _ := raw.(map[string]interface{})
+				if nm == nil {
+					continue
+				}
+				nodeIdxStr, _ := nm["_node_index"].(string)
+				newDisks := emrDiskSetToList(nm["data_disk"])
+				seenDiskIdx := make(map[string]bool, len(newDisks))
+				for _, dRaw := range newDisks {
+					dm, _ := dRaw.(map[string]interface{})
+					if dm == nil {
+						continue
+					}
+					diskIdxStr, _ := dm["_disk_index"].(string)
+					if diskIdxStr == "" {
+						return fmt.Errorf(
+							"%s.zone_resource_configuration[%d].%s[_node_index=%s].data_disk: every block must set a non-empty `_disk_index`",
+							zoneName, zoneIdx, rk, nodeIdxStr)
+					}
+					if seenDiskIdx[diskIdxStr] {
+						return fmt.Errorf(
+							"%s.zone_resource_configuration[%d].%s[_node_index=%s].data_disk: duplicate `_disk_index` %q within the same node",
+							zoneName, zoneIdx, rk, nodeIdxStr, diskIdxStr)
+					}
+					seenDiskIdx[diskIdxStr] = true
+				}
+			}
+
+			// If the corresponding old zone/role does not exist (brand-new
+			// zone), skip cross-old/new comparisons — there is nothing to
+			// compare against, and Create-time validation has already run.
+			if oldAll == nil {
+				continue
+			}
+			oldList := emrNodeSetToList(oldAll[rk])
+
+			// Build _node_index → block maps for both sides.
+			oldByIdx := indexListBy(oldList, "_node_index")
+			newByIdx := indexListBy(newList, "_node_index")
+
+			// Compute set diff at the `_node_index` granularity.
+			var addedNodes, removedNodes []string
+			for idx := range newByIdx {
+				if _, ok := oldByIdx[idx]; !ok {
+					addedNodes = append(addedNodes, idx)
+				}
+			}
+			for idx := range oldByIdx {
+				if _, ok := newByIdx[idx]; !ok {
+					removedNodes = append(removedNodes, idx)
+				}
+			}
+
+			// Length-immutable roles: any add or remove is forbidden.
+			if immutableLengthRoles[rk] {
+				if len(addedNodes) > 0 || len(removedNodes) > 0 {
+					return fmt.Errorf(
+						"%s.zone_resource_configuration[%d].%s: %s 列表长度不可变更，且 `_node_index` 不可重命名（added=%v, removed=%v, old_count=%d, new_count=%d）",
+						zoneName, zoneIdx, rk, roleLabel[rk],
+						addedNodes, removedNodes, len(oldList), len(newList))
+				}
+			}
+			// core/task: simultaneous add+remove is allowed (legitimate node
+			// replacement). Update processes scale-in before scale-out.
+
+			// For nodes present in both old and new (paired by _node_index):
+			// validate system_disk immutability and data_disk constraints.
+			for nodeIdxStr, newRawNode := range newByIdx {
+				oldRawNode, paired := oldByIdx[nodeIdxStr]
+				if !paired {
+					continue
+				}
+				newNode, _ := newRawNode.(map[string]interface{})
+				oldNode, _ := oldRawNode.(map[string]interface{})
+				if newNode == nil || oldNode == nil {
+					continue
+				}
+
+				// system_disk immutable.
+				if err := emrAssertSystemDiskImmutable(
+					oldNode["system_disk"], newNode["system_disk"],
+					zoneName, zoneIdx, rk, nodeIdxStr,
+				); err != nil {
+					return err
+				}
+
+				// data_disk validation: no detach, no shrink, no type change,
+				// no rename (rename surfaces as remove+add at disk level).
+				oldDisks := emrDiskSetToList(oldNode["data_disk"])
+				newDisks := emrDiskSetToList(newNode["data_disk"])
+				oldDiskByIdx := indexListBy(oldDisks, "_disk_index")
+				newDiskByIdx := indexListBy(newDisks, "_disk_index")
+
+				var addedDisks, removedDisks []string
+				for idx := range newDiskByIdx {
+					if _, ok := oldDiskByIdx[idx]; !ok {
+						addedDisks = append(addedDisks, idx)
+					}
+				}
+				for idx := range oldDiskByIdx {
+					if _, ok := newDiskByIdx[idx]; !ok {
+						removedDisks = append(removedDisks, idx)
+					}
+				}
+				if len(removedDisks) > 0 {
+					return fmt.Errorf(
+						"%s.zone_resource_configuration[%d].%s[_node_index=%s].data_disk: data_disk 不允许减少（_disk_index=%v 已从 config 中移除）。如需扩盘，请新增 `_disk_index`，不要移除现有的",
+						zoneName, zoneIdx, rk, nodeIdxStr, removedDisks)
+				}
+				_ = addedDisks // attaching new disks is allowed; nothing to validate beyond uniqueness.
+
+				// Paired disks: disk_size only grows; disk_type immutable.
+				for diskIdxStr, oldRawDisk := range oldDiskByIdx {
+					newRawDisk, ok := newDiskByIdx[diskIdxStr]
+					if !ok {
+						continue
+					}
+					oldDisk, _ := oldRawDisk.(map[string]interface{})
+					newDisk, _ := newRawDisk.(map[string]interface{})
+					if oldDisk == nil || newDisk == nil {
+						continue
+					}
+					oldSz, _ := oldDisk["disk_size"].(int)
+					newSz, _ := newDisk["disk_size"].(int)
+					if newSz < oldSz {
+						return fmt.Errorf(
+							"%s.zone_resource_configuration[%d].%s[_node_index=%s].data_disk[_disk_index=%s]: data_disk.disk_size 只能扩容（old=%d, new=%d）",
+							zoneName, zoneIdx, rk, nodeIdxStr, diskIdxStr, oldSz, newSz)
+					}
+					oldDt, _ := oldDisk["disk_type"].(string)
+					newDt, _ := newDisk["disk_type"].(string)
+					if oldDt != "" && newDt != "" && oldDt != newDt {
+						return fmt.Errorf(
+							"%s.zone_resource_configuration[%d].%s[_node_index=%s].data_disk[_disk_index=%s]: data_disk.disk_type 创建后不可更改（old=%s, new=%s）",
+							zoneName, zoneIdx, rk, nodeIdxStr, diskIdxStr, oldDt, newDt)
+					}
+				}
+			}
+		}
+	}
+	return nil
+}
+
+// emrAssertSystemDiskImmutable returns a non-nil error if any field of the
+// system_disk block (size, type) differs between old and new. Empty old =
+// node had no system_disk in state (shouldn't happen for an existing
+// cluster); in that case we skip the check and let Read repair state on
+// next refresh.
+func emrAssertSystemDiskImmutable(oldRaw, newRaw interface{}, zoneName string, zoneIdx int, rk, nodeIdxStr string) error {
+	oldL, _ := oldRaw.([]interface{})
+	newL, _ := newRaw.([]interface{})
+	if len(oldL) == 0 || len(newL) == 0 {
+		return nil
+	}
+	om, _ := oldL[0].(map[string]interface{})
+	nm, _ := newL[0].(map[string]interface{})
+	if om == nil || nm == nil {
+		return nil
+	}
+	for _, f := range []string{"disk_size", "disk_type"} {
+		ov := fmt.Sprintf("%v", om[f])
+		nv := fmt.Sprintf("%v", nm[f])
+		if ov != nv {
+			return fmt.Errorf(
+				"%s.zone_resource_configuration[%d].%s[_node_index=%s].system_disk.%s: system_disk 创建后不可更改（old=%s, new=%s）",
+				zoneName, zoneIdx, rk, nodeIdxStr, f, ov, nv)
+		}
+	}
+	return nil
+}
+
+// zoneNameOfBlock returns the zone string of a zone_resource_configuration
+// block, or "" if missing.
+func zoneNameOfBlock(zone map[string]interface{}) string {
+	pl, _ := zone["placement"].([]interface{})
+	if len(pl) == 0 {
+		return ""
+	}
+	pm, _ := pl[0].(map[string]interface{})
+	if pm == nil {
+		return ""
+	}
+	z, _ := pm["zone"].(string)
+	return z
+}
+
+// emrFirstAllNodeResourceSpec returns the first all_node_resource_spec block
+// (it is MaxItems:1) of the given zone, as a writable map; nil if missing.
+func emrFirstAllNodeResourceSpec(zone map[string]interface{}) map[string]interface{} {
+	all, _ := zone["all_node_resource_spec"].([]interface{})
+	if len(all) == 0 {
+		return nil
+	}
+	m, _ := all[0].(map[string]interface{})
+	return m
+}
+
+// indexListBy builds a lookup map keyed by the string value of `key` field
+// (typically "_node_index" or "_disk_index"). Empty-keyed and non-map entries
+// are silently skipped.
+func indexListBy(list []interface{}, key string) map[string]interface{} {
+	out := make(map[string]interface{}, len(list))
+	for _, raw := range list {
+		m, _ := raw.(map[string]interface{})
+		if m == nil {
+			continue
+		}
+		k, _ := m[key].(string)
+		if k == "" {
+			continue
+		}
+		out[k] = m
+	}
+	return out
+}
+
+// hashEmrNodeResourceSpec is the Set hash function used by all four
+// *_resource_spec TypeSet fields. It hashes the entire user-supplied content
+// (skipping Computed-only fields like emr_resource_id / order_no / disk_id
+// whose plan-time values are unknown).
+//
+// We hash full content rather than only `_node_index` because the SDK's
+// diffSet short-circuits when the hash multiset is identical: a `_node_index`-
+// only hash would mask in-place edits (resize disk, change instance_type, ...)
+// from the plan. Full-content hash makes any user-visible change shift the
+// element's hash; the Update handler then re-pairs old/new by `_node_index`
+// string match so the cloud operation is still in-place — no destroy/recreate.
+//
+// Trade-off: plan output for an in-place modification visually appears as
+// "remove old block + add new block". This is purely cosmetic; the actual
+// Update is in-place.
+var hashEmrNodeResourceSpec = schema.HashResource(emrNodeSpecElem())
+
+// hashEmrDataDisk is the Set hash function for the inner `data_disk` TypeSet.
+// Same rationale as hashEmrNodeResourceSpec: hash the full content so the SDK
+// diffSet does not short-circuit on inner field edits (e.g., disk_size).
+var hashEmrDataDisk = schema.HashResource(emrDataDiskElem())
+
+// emrDataDiskElem returns the inner `data_disk` Resource schema, used both
+// as the TypeSet's Elem and as input to schema.HashResource above.
+func emrDataDiskElem() *schema.Resource {
+	return &schema.Resource{
+		Schema: map[string]*schema.Schema{
+			"disk_size": {
+				Type:        schema.TypeInt,
+				Optional:    true,
+				Description: "Disk size in GB. Can only be increased after creation; shrinking is rejected at plan time.",
+			},
+			"disk_type": {
+				Type:        schema.TypeString,
+				Optional:    true,
+				Description: "Disk type. Valid values: `CLOUD_SSD`, `CLOUD_PREMIUM`, `CLOUD_BASIC`, `LOCAL_BASIC`, `LOCAL_SSD`, `CLOUD_HSSD`, `CLOUD_THROUGHPUT`, `CLOUD_TSSD`, `CLOUD_BIGDATA`, `CLOUD_HIGHIO`, `CLOUD_BSSD`, `REMOTE_SSD`. Immutable after creation.",
+			},
+			"disk_id": {
+				Type:        schema.TypeString,
+				Computed:    true,
+				Description: "Disk ID (read-only, populated from API).",
+			},
+			"_disk_index": {
+				Type:        schema.TypeString,
+				Required:    true,
+				Description: "**Required** stable identity key for this `data_disk` block. Must be unique within the same node's `data_disk` set, and must remain stable across plan/apply once written to state. Renaming an existing `_disk_index` is rejected (treated as remove+add, which violates the no-shrink rule).",
+			},
+		},
+	}
+}
+
+// emrNodeSpecElem returns the schema.Resource Elem shared by all four
+// *_resource_spec fields. Those fields are TypeSet keyed by `_node_index`;
+// the inner `data_disk` is a TypeSet keyed by `_disk_index`. CustomizeDiff
+// enforces all business immutability rules.
+func emrNodeSpecElem() *schema.Resource {
+	return &schema.Resource{
+		Schema: map[string]*schema.Schema{
+			"instance_type": {
+				Type:        schema.TypeString,
+				Optional:    true,
+				Description: "CVM instance type, e.g., `S6.2XLARGE32`, `SA4.8XLARGE64`.",
+			},
+			"system_disk": {
+				Type:        schema.TypeList,
+				Optional:    true,
+				MaxItems:    1,
+				Description: "System disk specifications.",
+				Elem: &schema.Resource{
+					Schema: map[string]*schema.Schema{
+						"disk_size": {
+							Type:        schema.TypeInt,
+							Optional:    true,
+							Description: "Disk size in GB.",
+						},
+						"disk_type": {
+							Type:        schema.TypeString,
+							Optional:    true,
+							Description: "Disk type. Valid values: `CLOUD_SSD`, `CLOUD_PREMIUM`, `CLOUD_BASIC`, `LOCAL_BASIC`, `LOCAL_SSD`.",
+						},
+						"disk_id": {
+							Type:        schema.TypeString,
+							Computed:    true,
+							Description: "Disk ID.",
+						},
+					},
+				},
+			},
+			"data_disk": {
+				Type:        schema.TypeSet,
+				Optional:    true,
+				Set:         hashEmrDataDisk,
+				Description: "Cloud data disk specifications. `TypeSet` keyed by full content (including `_disk_index`); block order in HCL is irrelevant.",
+				Elem:        emrDataDiskElem(),
+			},
+			"emr_resource_id": {
+				Type:        schema.TypeString,
+				Computed:    true,
+				Description: "EMR node resource ID (read-only).",
+			},
+			"order_no": {
+				Type:        schema.TypeString,
+				Computed:    true,
+				Description: "Machine instance ID (read-only).",
+			},
+			"_node_index": {
+				Type:        schema.TypeString,
+				Required:    true,
+				Description: "**Required** stable identity key for this node spec block. Must be unique within the same role's set, and must remain stable across plan/apply. Used by the Update handler to pair old/new blocks for in-place modification. Renaming an existing `_node_index` is rejected by CustomizeDiff for master/common (length immutable); for core/task it is interpreted as scale-in old + scale-out new.",
+			},
+		},
+	}
+}
+
 // buildEmrClusterV2NodeResourceSpec converts a single Terraform node resource
-// spec block (the first element of a *_resource_spec list) into an
+// spec block (the first element of a *_resource_spec set) into an
 // *emr.NodeResourceSpec. The caller is responsible for passing specList[0].
 func buildEmrClusterV2NodeResourceSpec(specMap map[string]interface{}) *emr.NodeResourceSpec {
 	if specMap == nil {
@@ -2352,10 +2335,8 @@ func buildEmrClusterV2NodeResourceSpec(specMap map[string]interface{}) *emr.Node
 			spec.SystemDisk = append(spec.SystemDisk, disk)
 		}
 	}
-	if val, ok := specMap["data_disk"].([]interface{}); ok && val != nil {
-		for _, d := range val {
-			spec.DataDisk = append(spec.DataDisk, buildEmrClusterV2DiskSpecInfo(d))
-		}
+	for _, d := range emrDiskSetToList(specMap["data_disk"]) {
+		spec.DataDisk = append(spec.DataDisk, buildEmrClusterV2DiskSpecInfo(d))
 	}
 	return spec
 }
@@ -2374,6 +2355,30 @@ func buildEmrClusterV2DiskSpecInfo(raw interface{}) *emr.DiskSpecInfo {
 		disk.DiskType = helper.String(val)
 	}
 	return disk
+}
+
+// emrNodeSetToList extracts []interface{} from either a *schema.Set (the
+// current TypeSet shape — `(*schema.Set).List()` returns entries in hash
+// order) or a []interface{} (kept for forward compatibility), returning nil
+// for any other type.
+func emrNodeSetToList(raw interface{}) []interface{} {
+	if raw == nil {
+		return nil
+	}
+	if s, ok := raw.(*schema.Set); ok {
+		return s.List()
+	}
+	if l, ok := raw.([]interface{}); ok {
+		return l
+	}
+	return nil
+}
+
+// emrDiskSetToList extracts []interface{} from a data_disk value, accepting
+// both *schema.Set (TypeSet) and []interface{} shapes. Identical in logic to
+// emrNodeSetToList; kept separate for naming clarity at call sites.
+func emrDiskSetToList(raw interface{}) []interface{} {
+	return emrNodeSetToList(raw)
 }
 
 // validateEmrNodeResourceSpecUniformity checks that every block in specList is
@@ -2427,32 +2432,25 @@ func emrNodeResourceSpecEqual(a, b map[string]interface{}) error {
 			}
 		}
 	}
-	// data_disk is TypeList; compare by index in declaration order.
-	aDataDisks, _ := a["data_disk"].([]interface{})
-	bDataDisks, _ := b["data_disk"].([]interface{})
+	// data_disk is a TypeSet; compare as multisets by (disk_type, disk_size) — order-independent.
+	aDataDisks := emrDiskSetToList(a["data_disk"])
+	bDataDisks := emrDiskSetToList(b["data_disk"])
 	if len(aDataDisks) != len(bDataDisks) {
 		return fmt.Errorf("data_disk: block count mismatch (%d vs %d)", len(aDataDisks), len(bDataDisks))
 	}
-	for i := range aDataDisks {
-		aD, _ := aDataDisks[i].(map[string]interface{})
-		bD, _ := bDataDisks[i].(map[string]interface{})
-		for _, k := range []string{"count", "disk_size", "disk_type"} {
-			if aD[k] != bD[k] {
-				return fmt.Errorf("data_disk[%d].%s mismatch: %v vs %v", i, k, aD[k], bD[k])
-			}
-		}
+	diskFP := func(raw interface{}) string {
+		m, _ := raw.(map[string]interface{})
+		return fmt.Sprintf("%v:%v", m["disk_type"], m["disk_size"])
 	}
-	aTags, _ := a["tags"].([]interface{})
-	bTags, _ := b["tags"].([]interface{})
-	if len(aTags) != len(bTags) {
-		return fmt.Errorf("tags: block count mismatch (%d vs %d)", len(aTags), len(bTags))
+	aCounts := make(map[string]int, len(aDataDisks))
+	for _, d := range aDataDisks {
+		aCounts[diskFP(d)]++
 	}
-	for i := range aTags {
-		aT, _ := aTags[i].(map[string]interface{})
-		bT, _ := bTags[i].(map[string]interface{})
-		if aT["tag_key"] != bT["tag_key"] || aT["tag_value"] != bT["tag_value"] {
-			return fmt.Errorf("tags[%d] mismatch: {%v:%v} vs {%v:%v}",
-				i, aT["tag_key"], aT["tag_value"], bT["tag_key"], bT["tag_value"])
+	for _, d := range bDataDisks {
+		fp := diskFP(d)
+		aCounts[fp]--
+		if aCounts[fp] < 0 {
+			return fmt.Errorf("data_disk: disk %q present in b but not matched in a", fp)
 		}
 	}
 	return nil
@@ -2533,19 +2531,17 @@ func emrDiskTypeIntToString(t int64) string {
 	}
 }
 
-// nodeRoleChanged returns the old/new spec lists for a given node role key and
-// whether any difference exists between them.
+// nodeRoleChanged returns the old/new spec lists for a given node role key
+// and whether any difference exists between them.
 func nodeRoleChanged(oldAll, newAll map[string]interface{}, roleKey string) (oldList, newList []interface{}, changed bool) {
-	oldList, _ = oldAll[roleKey].([]interface{})
-	newList, _ = newAll[roleKey].([]interface{})
+	oldList = emrNodeSetToList(oldAll[roleKey])
+	newList = emrNodeSetToList(newAll[roleKey])
 	if len(oldList) == 0 && len(newList) == 0 {
 		return oldList, newList, false
 	}
 	return oldList, newList, fmt.Sprintf("%v", oldList) != fmt.Sprintf("%v", newList)
 }
 
-// firstNodeSpec returns the first element of a node spec list as a map, or an
-// empty map if the list is empty.
 // instanceTypeChanged reports whether the instance_type field differs between
 // the old and new node spec maps.
 func instanceTypeChanged(oldSpec, newSpec map[string]interface{}) bool {
@@ -2554,10 +2550,31 @@ func instanceTypeChanged(oldSpec, newSpec map[string]interface{}) bool {
 	return oldType != newType
 }
 
-// diskChanged reports whether system_disk or data_disk fields differ between
-// the old and new node spec maps.
+// dataDiskChanged reports whether data_disk fields differ between old and new node
+// spec maps. Comparison is multiset-based on (disk_type, disk_size) so that
+// ordering differences in the TypeList do not produce false positives.
 func dataDiskChanged(oldSpec, newSpec map[string]interface{}) bool {
-	return fmt.Sprintf("%v", oldSpec["data_disk"]) != fmt.Sprintf("%v", newSpec["data_disk"])
+	diskFP := func(raw interface{}) string {
+		m, _ := raw.(map[string]interface{})
+		return fmt.Sprintf("%v:%v", m["disk_type"], m["disk_size"])
+	}
+	oldDisks := emrDiskSetToList(oldSpec["data_disk"])
+	newDisks := emrDiskSetToList(newSpec["data_disk"])
+	if len(oldDisks) != len(newDisks) {
+		return true
+	}
+	counts := make(map[string]int, len(oldDisks))
+	for _, d := range oldDisks {
+		counts[diskFP(d)]++
+	}
+	for _, d := range newDisks {
+		fp := diskFP(d)
+		counts[fp]--
+		if counts[fp] < 0 {
+			return true
+		}
+	}
+	return false
 }
 
 // emrParseInstanceTypeCpuMem parses an EMR instance type string (e.g. "S6.2XLARGE32")
@@ -2627,12 +2644,28 @@ func emrPayModeFromChargeType(chargeType string) *uint64 {
 	return helper.Uint64(0)
 }
 
-// handleNodeDataDiskChange handles data_disk changes for a single node by matching
-// disks via disk_id rather than by index, so disk reordering is handled correctly.
+// handleNodeDataDiskChange handles data_disk changes for a single node.
 //
-//   - Existing disks (disk_id found in oldDisks): validate and resize if disk_size grew.
-//   - New disks (disk_id empty or not in oldDisks): attach as new disk.
-//   - Removed disks (disk_id in oldDisks but not in newDisks): return error (not supported).
+// oldDisks comes from the paired old node spec (state layer, authoritative).
+// newDisks comes from the user config (diff layer).
+//
+// Matching is done strictly by _disk_index (the user-supplied stable index):
+//
+//   - Same _disk_index in both old and new:
+//
+//   - same disk_size  → no-op
+//
+//   - new disk_size > old disk_size → resize old disk's disk_id to new size
+//
+//   - new disk_size < old disk_size → error (shrinking not supported)
+//
+//   - _disk_index only in new → attach as a brand-new disk.
+//
+//   - _disk_index only in old → error (removing data_disk is not supported).
+//
+// Because _disk_index is required and remains stable across user reorderings,
+// we never need to guess which old disk corresponds to which new entry by
+// content fingerprint. The diff-layer disk_id is ignored entirely.
 func handleNodeDataDiskChange(
 	ctx context.Context,
 	meta interface{},
@@ -2641,438 +2674,454 @@ func handleNodeDataDiskChange(
 	oldDisks, newDisks []interface{},
 	roleKey string, zoneIdx, nodeIdx int,
 ) error {
-	// Build old disk map: disk_id -> disk map
-	oldDiskByID := make(map[string]map[string]interface{}, len(oldDisks))
+	type oldDisk struct {
+		size     int
+		diskID   string
+		diskType string
+	}
+	oldByDiskIndex := make(map[string]oldDisk, len(oldDisks))
 	for _, item := range oldDisks {
 		m, _ := item.(map[string]interface{})
+		if m == nil {
+			continue
+		}
+		diskIdxStr, _ := m["_disk_index"].(string)
+		if diskIdxStr == "" {
+			continue
+		}
+		sz, _ := m["disk_size"].(int)
 		id, _ := m["disk_id"].(string)
-		if id != "" {
-			oldDiskByID[id] = m
+		dt, _ := m["disk_type"].(string)
+		oldByDiskIndex[diskIdxStr] = oldDisk{size: sz, diskID: id, diskType: dt}
+	}
+
+	type resizeOp struct {
+		diskID  string
+		newSize int
+	}
+	type attachOp struct {
+		diskType string
+		size     int
+	}
+	var resizes []resizeOp
+	var attaches []attachOp
+
+	matchedDiskIndexes := make(map[string]bool, len(oldByDiskIndex))
+
+	for _, item := range newDisks {
+		m, _ := item.(map[string]interface{})
+		if m == nil {
+			continue
+		}
+		diskIdxStr, _ := m["_disk_index"].(string)
+		if diskIdxStr == "" {
+			return fmt.Errorf("%s[%d][%d]: data_disk._disk_index must not be empty", roleKey, zoneIdx, nodeIdx)
+		}
+		newSz, _ := m["disk_size"].(int)
+		newDt, _ := m["disk_type"].(string)
+
+		if old, ok := oldByDiskIndex[diskIdxStr]; ok {
+			matchedDiskIndexes[diskIdxStr] = true
+			if newSz < old.size {
+				return fmt.Errorf(
+					"%s[%d][%d]: shrinking data_disk is not supported (_disk_index=%s, old=%d, new=%d)",
+					roleKey, zoneIdx, nodeIdx, diskIdxStr, old.size, newSz)
+			}
+			if newSz > old.size {
+				resizes = append(resizes, resizeOp{old.diskID, newSz})
+			}
+			// disk_type change on existing disk is not supported by the API; warn via error.
+			if newDt != "" && old.diskType != "" && newDt != old.diskType {
+				return fmt.Errorf(
+					"%s[%d][%d]: changing data_disk.disk_type of an existing disk is not supported (_disk_index=%s, old=%s, new=%s)",
+					roleKey, zoneIdx, nodeIdx, diskIdxStr, old.diskType, newDt)
+			}
+			continue
+		}
+		// New _disk_index → attach a new disk.
+		attaches = append(attaches, attachOp{newDt, newSz})
+	}
+
+	for diskIdxStr, old := range oldByDiskIndex {
+		if !matchedDiskIndexes[diskIdxStr] {
+			return fmt.Errorf(
+				"%s[%d][%d]: removing data_disk is not supported (_disk_index=%s, disk_id=%s)",
+				roleKey, zoneIdx, nodeIdx, diskIdxStr, old.diskID)
 		}
 	}
 
-	// Track which old disk_ids are referenced by new list (to detect removals)
-	referencedOldIDs := make(map[string]bool, len(oldDisks))
+	// Execute resize operations.
+	for _, op := range resizes {
+		resizeReq := emr.NewResizeDataDisksRequest()
+		resizeResp := emr.NewResizeDataDisksResponse()
+		resizeReq.InstanceId = helper.String(instanceId)
+		resizeReq.DiskSize = helper.Int64(int64(op.newSize))
+		resizeReq.CvmInstanceIds = []*string{helper.String(orderNo)}
+		resizeReq.ResizeAll = helper.Bool(false)
+		resizeReq.DiskIds = []*string{helper.String(op.diskID)}
 
-	for diskIdx, item := range newDisks {
-		newDisk, _ := item.(map[string]interface{})
-		diskId, _ := newDisk["disk_id"].(string)
-		newSize, _ := newDisk["disk_size"].(int)
-		diskType, _ := newDisk["disk_type"].(string)
-
-		if diskId != "" {
-			// Existing disk — match by disk_id
-			referencedOldIDs[diskId] = true
-			oldDisk, exists := oldDiskByID[diskId]
-			if !exists {
-				continue
+		resizeErr := resource.Retry(tccommon.WriteRetryTimeout, func() *resource.RetryError {
+			result, e := meta.(tccommon.ProviderMeta).GetAPIV3Conn().UseEmrClient().ResizeDataDisksWithContext(ctx, resizeReq)
+			if e != nil {
+				return tccommon.RetryError(e)
 			}
-			oldSize, _ := oldDisk["disk_size"].(int)
-
-			if newSize < oldSize {
-				return fmt.Errorf("%s[%d][%d] data_disk (disk_id=%s): shrinking disk_size is not supported (old: %d, new: %d)",
-					roleKey, zoneIdx, nodeIdx, diskId, oldSize, newSize)
+			log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n",
+				logId, resizeReq.GetAction(), resizeReq.ToJsonString(), result.ToJsonString())
+			if result == nil || result.Response == nil || result.Response.FlowId == nil {
+				return resource.NonRetryableError(fmt.Errorf("resize data disks failed, Response is nil"))
 			}
-
-			if newSize > oldSize {
-				resizeReq := emr.NewResizeDataDisksRequest()
-				resizeResp := emr.NewResizeDataDisksResponse()
-				resizeReq.InstanceId = helper.String(instanceId)
-				resizeReq.DiskSize = helper.Int64(int64(newSize))
-				resizeReq.CvmInstanceIds = []*string{helper.String(orderNo)}
-				resizeReq.ResizeAll = helper.Bool(false)
-				resizeReq.DiskIds = []*string{helper.String(diskId)}
-
-				resizeErr := resource.Retry(tccommon.WriteRetryTimeout, func() *resource.RetryError {
-					result, e := meta.(tccommon.ProviderMeta).GetAPIV3Conn().UseEmrClient().ResizeDataDisksWithContext(ctx, resizeReq)
-					if e != nil {
-						return tccommon.RetryError(e)
-					}
-					log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n",
-						logId, resizeReq.GetAction(), resizeReq.ToJsonString(), result.ToJsonString())
-
-					if result == nil || result.Response == nil || result.Response.FlowId == nil {
-						return resource.NonRetryableError(fmt.Errorf("resize data disks failed, Response is nil"))
-					}
-
-					resizeResp = result
-					return nil
-				})
-				if resizeErr != nil {
-					log.Printf("[CRITAL]%s %s[%d][%d] data_disk (disk_id=%s) resize failed: %+v",
-						logId, roleKey, zoneIdx, nodeIdx, diskId, resizeErr)
-					return resizeErr
-				}
-
-				// wait
-				flowId := int64(*resizeResp.Response.FlowId)
-				conf := tccommon.BuildStateChangeConf([]string{"0", "1"}, []string{"2", "-1"}, d.Timeout(schema.TimeoutUpdate)-time.Minute, time.Second,
-					(&EMRService{client: meta.(tccommon.ProviderMeta).GetAPIV3Conn()}).FlowStatusRefreshFunc(instanceId, strconv.FormatInt(flowId, 10), F_KEY_FLOW_ID, []string{}))
-				if object, e := conf.WaitForState(); e != nil {
-					return e
-				} else if status, ok := object.(*int64); ok && status != nil && *status == -1 {
-					return fmt.Errorf("EMR cluster flow failed (FlowId=%s), flow total status is -1.", strconv.FormatInt(flowId, 10))
-				}
-			}
-		} else {
-			// New disk — disk_id is empty, attach as new disk
-			attachReq := emr.NewAttachDisksRequest()
-			attachResp := emr.NewAttachDisksResponse()
-			attachReq.InstanceId = helper.String(instanceId)
-			attachReq.CvmInstanceIds = []*string{helper.String(orderNo)}
-			attachReq.CreateDisk = helper.Bool(true)
-			attachReq.DiskSpec = &emr.NodeSpecDiskV2{
-				Count:           helper.Int64(1),
-				DiskType:        helper.String(diskType),
-				DefaultDiskSize: helper.Int64(int64(newSize)),
-			}
-
-			attachErr := resource.Retry(tccommon.WriteRetryTimeout, func() *resource.RetryError {
-				result, e := meta.(tccommon.ProviderMeta).GetAPIV3Conn().UseEmrClient().AttachDisksWithContext(ctx, attachReq)
-				if e != nil {
-					return tccommon.RetryError(e)
-				}
-				log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n",
-					logId, attachReq.GetAction(), attachReq.ToJsonString(), result.ToJsonString())
-
-				if result == nil || result.Response == nil || result.Response.FlowId == nil {
-					return resource.NonRetryableError(fmt.Errorf("attach data disks failed, Response is nil"))
-				}
-
-				attachResp = result
-				return nil
-			})
-			if attachErr != nil {
-				log.Printf("[CRITAL]%s %s[%d][%d] attach disk[%d] failed: %+v",
-					logId, roleKey, zoneIdx, nodeIdx, diskIdx, attachErr)
-				return attachErr
-			}
-
-			// wait
-			flowId := int64(*attachResp.Response.FlowId)
-			conf := tccommon.BuildStateChangeConf([]string{"0", "1"}, []string{"2", "-1"}, d.Timeout(schema.TimeoutUpdate)-time.Minute, time.Second,
-				(&EMRService{client: meta.(tccommon.ProviderMeta).GetAPIV3Conn()}).FlowStatusRefreshFunc(instanceId, strconv.FormatInt(flowId, 10), F_KEY_FLOW_ID, []string{}))
-			if object, e := conf.WaitForState(); e != nil {
-				return e
-			} else if status, ok := object.(*int64); ok && status != nil && *status == -1 {
-				return fmt.Errorf("EMR cluster flow failed (FlowId=%s), flow total status is -1.", strconv.FormatInt(flowId, 10))
-			}
+			resizeResp = result
+			return nil
+		})
+		if resizeErr != nil {
+			log.Printf("[CRITAL]%s %s[%d][%d] data_disk (disk_id=%s) resize to %d failed: %+v",
+				logId, roleKey, zoneIdx, nodeIdx, op.diskID, op.newSize, resizeErr)
+			return resizeErr
+		}
+		flowId := int64(*resizeResp.Response.FlowId)
+		conf := tccommon.BuildStateChangeConf([]string{"0", "1"}, []string{"2", "-1"}, d.Timeout(schema.TimeoutUpdate)-time.Minute, time.Second,
+			(&EMRService{client: meta.(tccommon.ProviderMeta).GetAPIV3Conn()}).FlowStatusRefreshFunc(instanceId, strconv.FormatInt(flowId, 10), F_KEY_FLOW_ID, []string{}))
+		if object, e := conf.WaitForState(); e != nil {
+			return e
+		} else if status, ok := object.(*int64); ok && status != nil && *status == -1 {
+			return fmt.Errorf("EMR cluster flow failed (FlowId=%s), flow total status is -1.", strconv.FormatInt(flowId, 10))
 		}
 	}
 
-	// Detect removed disks (in old but not referenced by new)
-	for id := range oldDiskByID {
-		if !referencedOldIDs[id] {
-			return fmt.Errorf("%s[%d][%d]: removing data_disk (disk_id=%s) is not supported",
-				roleKey, zoneIdx, nodeIdx, id)
+	// Execute attach (new disk) operations.
+	for diskIdx, op := range attaches {
+		attachReq := emr.NewAttachDisksRequest()
+		attachResp := emr.NewAttachDisksResponse()
+		attachReq.InstanceId = helper.String(instanceId)
+		attachReq.CvmInstanceIds = []*string{helper.String(orderNo)}
+		attachReq.CreateDisk = helper.Bool(true)
+		attachReq.DiskSpec = &emr.NodeSpecDiskV2{
+			Count:           helper.Int64(1),
+			DiskType:        helper.String(op.diskType),
+			DefaultDiskSize: helper.Int64(int64(op.size)),
+		}
+
+		attachErr := resource.Retry(tccommon.WriteRetryTimeout, func() *resource.RetryError {
+			result, e := meta.(tccommon.ProviderMeta).GetAPIV3Conn().UseEmrClient().AttachDisksWithContext(ctx, attachReq)
+			if e != nil {
+				return tccommon.RetryError(e)
+			}
+			log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n",
+				logId, attachReq.GetAction(), attachReq.ToJsonString(), result.ToJsonString())
+			if result == nil || result.Response == nil || result.Response.FlowId == nil {
+				return resource.NonRetryableError(fmt.Errorf("attach data disks failed, Response is nil"))
+			}
+			attachResp = result
+			return nil
+		})
+		if attachErr != nil {
+			log.Printf("[CRITAL]%s %s[%d][%d] attach new disk[%d] (type=%s size=%d) failed: %+v",
+				logId, roleKey, zoneIdx, nodeIdx, diskIdx, op.diskType, op.size, attachErr)
+			return attachErr
+		}
+		flowId := int64(*attachResp.Response.FlowId)
+		conf := tccommon.BuildStateChangeConf([]string{"0", "1"}, []string{"2", "-1"}, d.Timeout(schema.TimeoutUpdate)-time.Minute, time.Second,
+			(&EMRService{client: meta.(tccommon.ProviderMeta).GetAPIV3Conn()}).FlowStatusRefreshFunc(instanceId, strconv.FormatInt(flowId, 10), F_KEY_FLOW_ID, []string{}))
+		if object, e := conf.WaitForState(); e != nil {
+			return e
+		} else if status, ok := object.(*int64); ok && status != nil && *status == -1 {
+			return fmt.Errorf("EMR cluster flow failed (FlowId=%s), flow total status is -1.", strconv.FormatInt(flowId, 10))
 		}
 	}
 
 	return nil
 }
 
-// emrDataDiskOrderSuppressFunc suppresses diffs on data_disk list elements that
-// are caused purely by the user's config having a different ordering than the
-// state, rather than genuine value changes.
-//
-// Because Read writes state with disk_id-stable ordering (each index always
-// refers to the same physical disk), a diff where old==new means the field
-// value did not actually change — the apparent diff is only due to the user
-// declaring disks in a different order than the state.  Such diffs are
-// suppressed.
-//
-// Diffs where old!=new are always surfaced (genuine resize/retype).
-// Purely new elements (index ≥ len(oldList)) are never suppressed.
-// Removal (len(new) < len(old)) is never suppressed.
-// emrDataDiskOrderSuppressFunc suppresses diffs on data_disk list elements that
-// are caused purely by the user's config having a different ordering than the
-// state, rather than genuine value changes.
-//
-// data_disk is treated as an unordered repeatable list.  Read writes state in
-// disk_id-stable order (each index always refers to the same physical disk).
-// The suppress function handles two cases where a diff is not genuine:
-//
-//  1. old == new at this position: the value did not change; the apparent diff
-//     exists only because the user declared disks in a different order than the
-//     state's disk_id-stable order.  Always suppress.
-//
-//  2. old != new, but old multiset ⊆ new multiset (only reordering / appending):
-//     no disk was genuinely modified; the apparent change at this position is
-//     caused by a neighbouring disk being shifted.  Suppress only for existing
-//     positions (elemIdx < len(old)).  Newly added positions are never suppressed.
-//
-// Genuine changes (resize, retype, removal) are never suppressed.
-func emrDataDiskOrderSuppressFunc(k, old, new string, d *schema.ResourceData) bool {
-	// k example: "zone_resource_configuration.0.all_node_resource_spec.0.core_resource_spec.0.data_disk.1.disk_size"
-	parts := strings.Split(k, ".")
-	if len(parts) < 3 {
-		return false
-	}
-
-	// Find the "data_disk" segment position.
-	diskListIdx := -1
-	for i := len(parts) - 1; i >= 0; i-- {
-		if parts[i] == "data_disk" {
-			diskListIdx = i
-			break
-		}
-	}
-	if diskListIdx < 0 || diskListIdx+1 >= len(parts) {
-		return false
-	}
-
-	// Parse the element index within data_disk.
-	elemIdx, err := strconv.Atoi(parts[diskListIdx+1])
-	if err != nil {
-		return false
-	}
-
-	listPath := strings.Join(parts[:diskListIdx+1], ".")
-	oldRaw, newRaw := d.GetChange(listPath)
-	oldList, _ := oldRaw.([]interface{})
-	newList, _ := newRaw.([]interface{})
-
-	// Removal: never suppress.
-	if len(newList) < len(oldList) {
-		return false
-	}
-
-	// No existing disks (new node being added): never suppress.
-	if len(oldList) == 0 {
-		return false
-	}
-
-	// Purely new element (beyond existing list bounds): never suppress.
-	if elemIdx >= len(oldList) {
-		return false
-	}
-
-	// Case 1: value unchanged at this position — ordering diff only.
-	if old == new {
-		return true
-	}
-
-	// Case 2: old != new — suppress only if old multiset ⊆ new multiset,
-	// meaning no disk was removed or genuinely modified (just reordered).
-	diskFP := func(item interface{}) string {
-		m, _ := item.(map[string]interface{})
-		return fmt.Sprintf("%v:%v", m["disk_size"], m["disk_type"])
-	}
-	oldCounts := make(map[string]int, len(oldList))
-	for _, item := range oldList {
-		oldCounts[diskFP(item)]++
-	}
-	newCounts := make(map[string]int, len(newList))
-	for _, item := range newList {
-		newCounts[diskFP(item)]++
-	}
-	for fp, cnt := range oldCounts {
-		if newCounts[fp] < cnt {
-			// A disk was removed or its size/type changed — genuine change.
-			return false
-		}
-	}
-	// Old multiset is a subset of the new multiset: only reordering or appending.
-	return true
-}
-
-// sysDiskChanged reports whether system_disk fields differ between the old and new node spec maps.
 func sysDiskChanged(oldSpec, newSpec map[string]interface{}) bool {
 	return fmt.Sprintf("%v", oldSpec["system_disk"]) != fmt.Sprintf("%v", newSpec["system_disk"])
 }
 
-// alignDataDisksToConfig re-orders apiDisks to match the reference order given
-// by refDisks (previous state or current config/diff), so that the state written
-// by Read keeps the same physical disk at a stable TypeList index.
-//
-// Matching uses two passes:
-//
-//  1. disk_id exact match + disk_size agreement.  When refDisks comes from the
-//     diff layer (Update→Read), Terraform inherits disk_id by index (not by
-//     identity), so we also require size agreement to avoid false matches.
-//
-//  2. Greedy match by {disk_type, disk_size}.  Handles entries where disk_id is
-//     absent or was not matched with correct size.
-//
-// Unmatched API disks (newly attached) are appended in API order at the end.
-func alignDataDisksToConfig(refDisks []interface{}, apiDisks []map[string]interface{}) []interface{} {
-	usedAPIIdx := make([]bool, len(apiDisks))
-
-	// Build lookup: disk_id → api index.
-	idxByDiskID := make(map[string]int, len(apiDisks))
-	for i, d := range apiDisks {
-		if id, _ := d["disk_id"].(string); id != "" {
-			idxByDiskID[id] = i
-		}
-	}
-
-	result := make([]interface{}, 0, len(apiDisks))
-
-	for _, refRaw := range refDisks {
-		refDisk, _ := refRaw.(map[string]interface{})
-		if refDisk == nil {
-			continue
-		}
-
-		refID, _ := refDisk["disk_id"].(string)
-		refSize, _ := refDisk["disk_size"].(int)
-		refType, _ := refDisk["disk_type"].(string)
-
-		matched := false
-
-		// Pass 1: disk_id + disk_size (guards against index-shifted Computed inheritance).
-		if refID != "" {
-			if apiIdx, ok := idxByDiskID[refID]; ok && !usedAPIIdx[apiIdx] {
-				apiSize, _ := apiDisks[apiIdx]["disk_size"].(int)
-				if apiSize == refSize {
-					result = append(result, apiDisks[apiIdx])
-					usedAPIIdx[apiIdx] = true
-					matched = true
-				}
-			}
-		}
-
-		// Pass 2: greedy {disk_type, disk_size} match.
-		if !matched {
-			for i, apiDisk := range apiDisks {
-				if usedAPIIdx[i] {
-					continue
-				}
-				if apiDisk["disk_type"] == refType {
-					apiSize, _ := apiDisk["disk_size"].(int)
-					if apiSize == refSize {
-						result = append(result, apiDisk)
-						usedAPIIdx[i] = true
-						matched = true
-						break
-					}
-				}
-			}
-		}
-		// No match: disk removed externally — omit.
-	}
-
-	// Append newly attached disks (not consumed by either pass) in API order.
-	for i, apiDisk := range apiDisks {
-		if !usedAPIIdx[i] {
-			result = append(result, apiDisk)
-		}
-	}
-
-	return result
-}
-
-// alignNodeSpecsToState re-orders freshly-built node specs (from the API) to
-// match the order that was previously recorded in state, identified by
-// emr_resource_id.
-//
-// This keeps the TypeList index of every existing node stable across refreshes:
-// a node that was at position i in the last state will still be at position i
-// after the next refresh, so Terraform never sees a spurious "node swap" diff.
-// Newly added nodes (whose emr_resource_id is not present in state) are
-// appended after all existing nodes in the order they appear in apiSpecs.
-func alignNodeSpecsToState(apiSpecs []interface{}, stateSpecs []interface{}) []interface{} {
-	if len(stateSpecs) == 0 {
-		// No previous state — keep API order.
-		return apiSpecs
-	}
-
-	// Build a map from emr_resource_id to the corresponding api spec.
-	apiByID := make(map[string]interface{}, len(apiSpecs))
-	for _, raw := range apiSpecs {
-		m, _ := raw.(map[string]interface{})
-		if m == nil {
-			continue
-		}
-		if rid, _ := m["emr_resource_id"].(string); rid != "" {
-			apiByID[rid] = raw
-		}
-	}
-
-	result := make([]interface{}, 0, len(apiSpecs))
-	usedIDs := make(map[string]bool, len(apiSpecs))
-
-	// First pass: place existing nodes in state order.
-	for _, stRaw := range stateSpecs {
-		stMap, _ := stRaw.(map[string]interface{})
-		if stMap == nil {
-			continue
-		}
-		rid, _ := stMap["emr_resource_id"].(string)
-		if rid == "" {
-			continue
-		}
-		if apiSpec, ok := apiByID[rid]; ok {
-			result = append(result, apiSpec)
-			usedIDs[rid] = true
-		}
-		// If a state node is no longer returned by API, skip it (decommissioned).
-	}
-
-	// Second pass: append newly added nodes (not seen in previous state).
-	for _, raw := range apiSpecs {
-		m, _ := raw.(map[string]interface{})
-		if m == nil {
-			continue
-		}
-		rid, _ := m["emr_resource_id"].(string)
-		if !usedIDs[rid] {
-			result = append(result, raw)
-		}
-	}
-
-	return result
-}
-
-// alignNodeListByResourceId re-aligns a pair of old/new TypeList node slices
-// (from d.GetChange) so that each position holds the same physical node
-// (identified by emr_resource_id) in both lists.
-//
-// Background: Terraform's TypeList SDK copies Computed fields (emr_resource_id,
-// order_no) from state to diff by index, not by identity.  When the user inserts
-// a new node in the middle of the config list, the SDK shifts all subsequent
-// nodes, causing their emr_resource_id slots to be filled with wrong values (or
-// empty).  This function recovers the correct pairing so that Update can
-// accurately determine which nodes need resizing and which are brand-new.
+// alignNodeListByNodeIndex pairs old (state) and new (config) node lists for
+// Update processing using the user-supplied `_node_index` as the stable
+// identity key (Required + user-controlled, unlike the Computed
+// `emr_resource_id` which can be unreliable across reorderings).
 //
 // Returns:
-//   - alignedOld: existing nodes in the same order as alignedNew
-//   - alignedNew: config entries paired with their matching old node, with
-//     genuinely new entries (emr_resource_id=="") appended at the end
-//   - addedNew:   config entries that have no matching old node (scale-out)
-func alignNodeListByResourceId(
+//   - pairedOld:  old node specs for existing nodes (in pairedNew order)
+//   - pairedNew:  new node specs matched to existing old nodes
+//   - addedNew:   new node specs whose `_node_index` is not in oldList
+//   - removedOld: old node specs whose `_node_index` is not in newList
+func alignNodeListByNodeIndex(
 	oldList, newList []interface{},
-) (alignedOld, alignedNew []interface{}, addedNew []interface{}) {
-	// Build old map: emr_resource_id → spec
-	oldByID := make(map[string]interface{}, len(oldList))
+) (pairedOld, pairedNew []interface{}, addedNew []interface{}, removedOld []interface{}) {
+	oldByNodeIndex := make(map[string]interface{}, len(oldList))
 	for _, raw := range oldList {
 		m, _ := raw.(map[string]interface{})
 		if m == nil {
 			continue
 		}
-		if rid, _ := m["emr_resource_id"].(string); rid != "" {
-			oldByID[rid] = raw
+		if nodeIdxStr, _ := m["_node_index"].(string); nodeIdxStr != "" {
+			oldByNodeIndex[nodeIdxStr] = raw
 		}
 	}
 
-	// Walk new list.  For entries that carry a valid emr_resource_id that
-	// matches an old node, pair them.  Entries with no id are new nodes.
+	matchedNodeIndexes := make(map[string]bool, len(oldList))
+
 	for _, raw := range newList {
 		m, _ := raw.(map[string]interface{})
 		if m == nil {
 			continue
 		}
-		rid, _ := m["emr_resource_id"].(string)
-		if rid != "" {
-			if oldSpec, ok := oldByID[rid]; ok {
-				alignedOld = append(alignedOld, oldSpec)
-				alignedNew = append(alignedNew, raw)
-				delete(oldByID, rid)
+		nodeIdxStr, _ := m["_node_index"].(string)
+		if nodeIdxStr != "" {
+			if oldSpec, ok := oldByNodeIndex[nodeIdxStr]; ok && !matchedNodeIndexes[nodeIdxStr] {
+				pairedOld = append(pairedOld, oldSpec)
+				pairedNew = append(pairedNew, raw)
+				matchedNodeIndexes[nodeIdxStr] = true
 				continue
 			}
 		}
-		// No matching old node — this is a new node.
+		// _node_index not found in old → new node (scale-out).
 		addedNew = append(addedNew, raw)
 	}
+
+	for nodeIdxStr, oldSpec := range oldByNodeIndex {
+		if !matchedNodeIndexes[nodeIdxStr] {
+			removedOld = append(removedOld, oldSpec)
+		}
+	}
 	return
+}
+
+// emrModifyNodeInstanceType issues a single ModifyResource call to change a
+// node's instance_type and waits for the resulting flow to finish. It is
+// shared by master/core/task/common Update branches.
+func emrModifyNodeInstanceType(
+	ctx context.Context,
+	meta interface{},
+	d *schema.ResourceData,
+	logId, instanceId, roleKey string,
+	zoneIdx, nodeIdx int,
+	oldSpec, newSpec map[string]interface{},
+) error {
+	newInstanceType, _ := newSpec["instance_type"].(string)
+	resourceId, _ := oldSpec["emr_resource_id"].(string)
+	newCpu, newMem, err := emrParseInstanceTypeCpuMem(newInstanceType)
+	if err != nil {
+		return fmt.Errorf("zone[%d] %s[%d]: failed to parse instance_type %q: %v",
+			zoneIdx, roleKey, nodeIdx, newInstanceType, err)
+	}
+
+	req := emr.NewModifyResourceRequest()
+	resp := emr.NewModifyResourceResponse()
+	req.InstanceId = helper.String(instanceId)
+	req.PayMode = emrPayModeFromChargeType(d.Get("instance_charge_type").(string))
+	req.InstanceType = helper.String(newInstanceType)
+	req.NewCpu = helper.Int64(newCpu)
+	req.NewMem = helper.Int64(newMem)
+	req.ResourceIdList = []*string{helper.String(resourceId)}
+
+	conn := meta.(tccommon.ProviderMeta).GetAPIV3Conn()
+	reqErr := resource.Retry(tccommon.WriteRetryTimeout, func() *resource.RetryError {
+		result, e := conn.UseEmrClient().ModifyResourceWithContext(ctx, req)
+		if e != nil {
+			return tccommon.RetryError(e)
+		}
+		log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n",
+			logId, req.GetAction(), req.ToJsonString(), result.ToJsonString())
+		if result == nil || result.Response == nil || result.Response.TraceId == nil {
+			return resource.NonRetryableError(fmt.Errorf("ModifyResource: response is nil"))
+		}
+		resp = result
+		return nil
+	})
+	if reqErr != nil {
+		log.Printf("[CRITAL]%s zone[%d] %s[%d] modify instance type failed: %+v",
+			logId, zoneIdx, roleKey, nodeIdx, reqErr)
+		return reqErr
+	}
+
+	traceId := *resp.Response.TraceId
+	service := EMRService{client: conn}
+	conf := tccommon.BuildStateChangeConf(
+		[]string{"0", "1"}, []string{"2", "-1"},
+		d.Timeout(schema.TimeoutUpdate)-time.Minute, time.Second,
+		service.FlowStatusRefreshFunc(instanceId, traceId, F_KEY_TRACE_ID, []string{}),
+	)
+	if object, e := conf.WaitForState(); e != nil {
+		return e
+	} else if status, ok := object.(*int64); ok && status != nil && *status == -1 {
+		return fmt.Errorf("EMR cluster flow failed (TraceId=%s), flow total status is -1", traceId)
+	}
+	return nil
+}
+
+// emrTerminateNodes issues a TerminateClusterNodes call to scale-in the given
+// CVM instance IDs (orderNos) for the specified node role (CORE / TASK) and
+// waits for completion.
+func emrTerminateNodes(
+	ctx context.Context,
+	meta interface{},
+	d *schema.ResourceData,
+	logId, instanceId, nodeFlag string,
+	zoneIdx int,
+	orderNos []*string,
+) error {
+	if len(orderNos) == 0 {
+		return nil
+	}
+
+	req := emr.NewTerminateClusterNodesRequest()
+	resp := emr.NewTerminateClusterNodesResponse()
+	req.InstanceId = helper.String(instanceId)
+	req.CvmInstanceIds = orderNos
+	req.NodeFlag = helper.String(nodeFlag)
+
+	conn := meta.(tccommon.ProviderMeta).GetAPIV3Conn()
+	reqErr := resource.Retry(tccommon.WriteRetryTimeout, func() *resource.RetryError {
+		result, e := conn.UseEmrClient().TerminateClusterNodesWithContext(ctx, req)
+		if e != nil {
+			return tccommon.RetryError(e)
+		}
+		log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n",
+			logId, req.GetAction(), req.ToJsonString(), result.ToJsonString())
+		if result == nil || result.Response == nil || result.Response.FlowId == nil {
+			return resource.NonRetryableError(fmt.Errorf("TerminateClusterNodes: response is nil"))
+		}
+		resp = result
+		return nil
+	})
+	if reqErr != nil {
+		log.Printf("[CRITAL]%s zone[%d] %s scale-in failed: %+v", logId, zoneIdx, nodeFlag, reqErr)
+		return reqErr
+	}
+
+	flowId := strconv.FormatInt(int64(*resp.Response.FlowId), 10)
+	service := EMRService{client: conn}
+	conf := tccommon.BuildStateChangeConf(
+		[]string{"0", "1"}, []string{"2", "-1"},
+		d.Timeout(schema.TimeoutUpdate)-time.Minute, time.Second,
+		service.FlowStatusRefreshFunc(instanceId, flowId, F_KEY_FLOW_ID, []string{}),
+	)
+	if object, e := conf.WaitForState(); e != nil {
+		return e
+	} else if status, ok := object.(*int64); ok && status != nil && *status == -1 {
+		return fmt.Errorf("EMR cluster flow failed (FlowId=%s), flow total status is -1", flowId)
+	}
+	return nil
+}
+
+// emrScaleOutSingleNode issues a ScaleOutCluster call to add ONE node of the
+// specified role (CORE / TASK) using the spec block `addedSpec` and waits for
+// the resulting flow to finish. zone is the placement zone string for the
+// new node.
+func emrScaleOutSingleNode(
+	ctx context.Context,
+	meta interface{},
+	d *schema.ResourceData,
+	logId, instanceId, nodeFlag, zone string,
+	zoneIdx, addedIdx int,
+	addedSpec map[string]interface{},
+) error {
+	chargeType := d.Get("instance_charge_type").(string)
+
+	req := emr.NewScaleOutClusterRequest()
+	resp := emr.NewScaleOutClusterResponse()
+	req.InstanceId = helper.String(instanceId)
+	req.InstanceChargeType = helper.String(chargeType)
+	req.ScaleOutNodeConfig = &emr.ScaleOutNodeConfig{
+		NodeFlag:  common.StringPtr(nodeFlag),
+		NodeCount: common.Uint64Ptr(1),
+	}
+	if zone != "" {
+		req.Zone = helper.String(zone)
+	}
+
+	if chargeType == "PREPAID" {
+		if v, ok := d.GetOk("instance_charge_prepaid"); ok {
+			prepaidList, _ := v.([]interface{})
+			if len(prepaidList) > 0 {
+				if prepaidMap, ok := prepaidList[0].(map[string]interface{}); ok {
+					prepaid := &emr.InstanceChargePrepaid{}
+					if val, ok := prepaidMap["period"].(int); ok && val != 0 {
+						prepaid.Period = helper.IntInt64(val)
+					}
+					if val, ok := prepaidMap["renew_flag"].(bool); ok {
+						prepaid.RenewFlag = helper.Bool(val)
+					}
+					req.InstanceChargePrepaid = prepaid
+				}
+			}
+		}
+	}
+
+	resourceSpec := &emr.NodeResourceSpec{}
+	if instanceType, ok := addedSpec["instance_type"].(string); ok && instanceType != "" {
+		resourceSpec.InstanceType = helper.String(instanceType)
+	}
+	if sdList, ok := addedSpec["system_disk"].([]interface{}); ok && len(sdList) > 0 {
+		if sdMap, ok := sdList[0].(map[string]interface{}); ok {
+			resourceSpec.SystemDisk = []*emr.DiskSpecInfo{{
+				DiskType: helper.String(sdMap["disk_type"].(string)),
+				Count:    helper.Int64(1),
+				DiskSize: helper.Int64(int64(sdMap["disk_size"].(int))),
+			}}
+		}
+	}
+	for _, ddItem := range emrDiskSetToList(addedSpec["data_disk"]) {
+		ddMap, ok := ddItem.(map[string]interface{})
+		if !ok {
+			continue
+		}
+		resourceSpec.DataDisk = append(resourceSpec.DataDisk, &emr.DiskSpecInfo{
+			DiskType: helper.String(ddMap["disk_type"].(string)),
+			Count:    helper.Int64(1),
+			DiskSize: helper.Int64(int64(ddMap["disk_size"].(int))),
+		})
+	}
+	req.ResourceSpec = resourceSpec
+
+	conn := meta.(tccommon.ProviderMeta).GetAPIV3Conn()
+	reqErr := resource.Retry(tccommon.WriteRetryTimeout, func() *resource.RetryError {
+		result, e := conn.UseEmrClient().ScaleOutClusterWithContext(ctx, req)
+		if e != nil {
+			return tccommon.RetryError(e)
+		}
+		log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n",
+			logId, req.GetAction(), req.ToJsonString(), result.ToJsonString())
+		if result == nil || result.Response == nil || result.Response.TraceId == nil {
+			return resource.NonRetryableError(fmt.Errorf("ScaleOutCluster: response is nil"))
+		}
+		resp = result
+		return nil
+	})
+	if reqErr != nil {
+		log.Printf("[CRITAL]%s zone[%d] %s[added:%d] scale-out failed: %+v",
+			logId, zoneIdx, nodeFlag, addedIdx, reqErr)
+		return reqErr
+	}
+
+	traceId := *resp.Response.TraceId
+	service := EMRService{client: conn}
+	conf := tccommon.BuildStateChangeConf(
+		[]string{"0", "1"}, []string{"2", "-1"},
+		d.Timeout(schema.TimeoutUpdate)-time.Minute, time.Second,
+		service.FlowStatusRefreshFunc(instanceId, traceId, F_KEY_TRACE_ID, []string{}),
+	)
+	if object, e := conf.WaitForState(); e != nil {
+		return e
+	} else if status, ok := object.(*int64); ok && status != nil && *status == -1 {
+		return fmt.Errorf("EMR cluster flow failed (TraceId=%s), flow total status is -1", traceId)
+	}
+	return nil
+}
+
+// emrZoneOf returns placement.0.zone of a zone_resource_configuration block,
+// or "" if missing.
+func emrZoneOf(zrcMap map[string]interface{}) string {
+	plList, _ := zrcMap["placement"].([]interface{})
+	if len(plList) == 0 {
+		return ""
+	}
+	plMap, _ := plList[0].(map[string]interface{})
+	if plMap == nil {
+		return ""
+	}
+	z, _ := plMap["zone"].(string)
+	return z
 }
