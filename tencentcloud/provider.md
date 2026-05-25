@@ -1100,6 +1100,7 @@ tencentcloud_sqlserver_instance_tde
 tencentcloud_sqlserver_database_tde
 tencentcloud_sqlserver_general_cloud_ro_instance
 tencentcloud_sqlserver_wan_ip_config
+tencentcloud_sqlserver_db_instance_ssl_config
 
 SSL Certificates(ssl)
 Data Source

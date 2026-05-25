@@ -1975,6 +1975,7 @@ func Provider() *schema.Provider {
 			"tencentcloud_sqlserver_general_cloud_ro_instance":                                      sqlserver.ResourceTencentCloudSqlserverGeneralCloudRoInstance(),
 			"tencentcloud_sqlserver_instance_ssl":                                                   sqlserver.ResourceTencentCloudSqlserverInstanceSsl(),
 			"tencentcloud_sqlserver_wan_ip_config":                                                  sqlserver.ResourceTencentCloudSqlserverWanIpConfig(),
+			"tencentcloud_sqlserver_db_instance_ssl_config":                                         sqlserver.ResourceTencentCloudSqlserverDbInstanceSslConfig(),
 			"tencentcloud_tcr_instance":                                                             tcr.ResourceTencentCloudTcrInstance(),
 			"tencentcloud_tcr_namespace":                                                            tcr.ResourceTencentCloudTcrNamespace(),
 			"tencentcloud_tcr_repository":                                                           tcr.ResourceTencentCloudTcrRepository(),
