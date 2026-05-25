@@ -119,6 +119,12 @@ func ResourceTencentCloudMqttInstance() *schema.Resource {
 				Default:     false,
 				Description: "Indicate whether to force delete the instance. Default is `false`. If set true, the instance will be permanently deleted instead of being moved into the recycle bin. Note: only works for `PREPAID` instance.",
 			},
+
+			"block_rule_limit": {
+				Type:        schema.TypeInt,
+				Computed:    true,
+				Description: "Maximum number of block rules.",
+			},
 		},
 	}
 }
@@ -344,6 +350,10 @@ func ResourceTencentCloudMqttInstanceRead(d *schema.ResourceData, meta interface
 
 	if respData.AuthorizationPolicy != nil {
 		_ = d.Set("authorization_policy", respData.AuthorizationPolicy)
+	}
+
+	if respData.BlockRuleLimit != nil {
+		_ = d.Set("block_rule_limit", respData.BlockRuleLimit)
 	}
 
 	forceDelete := false

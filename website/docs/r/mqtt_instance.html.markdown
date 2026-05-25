@@ -123,6 +123,7 @@ The `vpc_list` object supports the following:
 In addition to all arguments above, the following attributes are exported:
 
 * `id` - ID of the resource.
+* `block_rule_limit` - Maximum number of block rules.
 * `device_certificate_provision_type` - Client certificate registration method: JITP: Automatic registration; API: Manually register through the API.
 
 
