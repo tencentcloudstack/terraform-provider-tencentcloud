@@ -73,6 +73,7 @@ import (
 	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/services/emr"
 	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/services/es"
 	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/services/fl"
+	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/services/ga2"
 	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/services/gaap"
 	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/services/gs"
 	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/services/gwlb"
@@ -1734,6 +1735,7 @@ func Provider() *schema.Provider {
 			"tencentcloud_gaap_global_domain":                                                       gaap.ResourceTencentCloudGaapGlobalDomain(),
 			"tencentcloud_gaap_custom_header":                                                       gaap.ResourceTencentCloudGaapCustomHeader(),
 			"tencentcloud_gaap_proxy_group":                                                         gaap.ResourceTencentCloudGaapProxyGroup(),
+			"tencentcloud_ga2_accelerate_area":                                                      ga2.ResourceTencentCloudGa2AccelerateArea(),
 			"tencentcloud_ssl_certificate":                                                          ssl.ResourceTencentCloudSslCertificate(),
 			"tencentcloud_ssl_pay_certificate":                                                      ssl.ResourceTencentCloudSSLInstance(),
 			"tencentcloud_ssl_free_certificate":                                                     ssl.ResourceTencentCloudSSLFreeCertificate(),
