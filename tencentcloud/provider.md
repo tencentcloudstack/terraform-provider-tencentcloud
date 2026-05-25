@@ -2624,6 +2624,10 @@ tencentcloud_igtm_strategy
 tencentcloud_igtm_package_instance
 tencentcloud_igtm_package_task
 
+Global Accelerator 2.0(GA2)
+Resource
+tencentcloud_ga2_accelerate_area
+
 VCube
 Resource
 tencentcloud_vcube_application_and_video
