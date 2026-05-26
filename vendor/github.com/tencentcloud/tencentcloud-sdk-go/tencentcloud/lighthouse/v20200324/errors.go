@@ -1,4 +1,4 @@
-// Copyright (c) 2017-2018 THL A29 Limited, a Tencent company. All Rights Reserved.
+// Copyright (c) 2017-2025 Tencent. All Rights Reserved.
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -20,11 +20,17 @@ const (
 	// CAM签名/鉴权错误。
 	AUTHFAILURE = "AuthFailure"
 
+	// 请求头中的 Uin 无效。
+	AUTHFAILURE_INVALIDHEADERUIN = "AuthFailure.InvalidHeaderUin"
+
 	// 该地域尚未开放，请选择其他地域。
 	AUTHFAILURE_INVALIDREGION = "AuthFailure.InvalidRegion"
 
 	// 操作失败。
 	FAILEDOPERATION = "FailedOperation"
+
+	// 账户余额不足。
+	FAILEDOPERATION_BALANCEINSUFFICIENT = "FailedOperation.BalanceInsufficient"
 
 	// 创建镜像失败。
 	FAILEDOPERATION_CREATEBLUEPRINTFAILED = "FailedOperation.CreateBlueprintFailed"
@@ -41,8 +47,29 @@ const (
 	// 对密钥对的删除操作失败。
 	FAILEDOPERATION_DELETEKEYPAIRFAILED = "FailedOperation.DeleteKeyPairFailed"
 
+	// 资源删除操作失败。
+	FAILEDOPERATION_DELETERESOURCESFAILED = "FailedOperation.DeleteResourcesFailed"
+
+	// 查询镜像配额失败。
+	FAILEDOPERATION_DESCRIBEBLUEPRINTQUOTAFAILED = "FailedOperation.DescribeBlueprintQuotaFailed"
+
 	// 查询镜像失败，请稍后再试。
 	FAILEDOPERATION_DESCRIBEBLUEPRINTSFAILED = "FailedOperation.DescribeBlueprintsFailed"
+
+	// 查询套餐折扣失败。
+	FAILEDOPERATION_DESCRIBEBUNDLEDISCOUNTFAILED = "FailedOperation.DescribeBundleDiscountFailed"
+
+	// 查询套餐失败。
+	FAILEDOPERATION_DESCRIBEBUNDLESFAILED = "FailedOperation.DescribeBundlesFailed"
+
+	// 查询云硬盘配额失败。
+	FAILEDOPERATION_DESCRIBEDISKCONFIGQUOTAFAILED = "FailedOperation.DescribeDiskConfigQuotaFailed"
+
+	// 查询云硬盘是否可以退还操作失败。
+	FAILEDOPERATION_DESCRIBEDISKSRETURNABLEERROR = "FailedOperation.DescribeDisksReturnableError"
+
+	// 查询CVM镜像列表失败。
+	FAILEDOPERATION_DESCRIBEIMAGESFAILED = "FailedOperation.DescribeImagesFailed"
 
 	// 查询实例状态错误。
 	FAILEDOPERATION_DESCRIBEINSTANCESTATUS = "FailedOperation.DescribeInstanceStatus"
@@ -68,11 +95,20 @@ const (
 	// 指定Docker环境操作失败, 请检查Docker环境。
 	FAILEDOPERATION_DOCKEROPERATIONFAILED = "FailedOperation.DockerOperationFailed"
 
+	// 防火墙操作失败。
+	FAILEDOPERATION_FIREWALLOPERATIONFAILED = "FailedOperation.FirewallOperationFailed"
+
 	// 对防火墙规则的操作失败。
 	FAILEDOPERATION_FIREWALLRULESOPERATIONFAILED = "FailedOperation.FirewallRulesOperationFailed"
 
+	// 操作镜像失败。
+	FAILEDOPERATION_IMAGEOPERATIONFAILED = "FailedOperation.ImageOperationFailed"
+
 	// 对密钥对的导入操作失败。
 	FAILEDOPERATION_IMPORTKEYPAIRFAILED = "FailedOperation.ImportKeyPairFailed"
+
+	// 命令内容的长度超出限制。
+	FAILEDOPERATION_INITCOMMANDCONTENTTOOLONG = "FailedOperation.InitCommandContentTooLong"
 
 	// 对实例的操作失败。
 	FAILEDOPERATION_INSTANCEOPERATIONFAILED = "FailedOperation.InstanceOperationFailed"
@@ -86,17 +122,32 @@ const (
 	// 退还资源失败。
 	FAILEDOPERATION_ISOLATERESOURCESFAILED = "FailedOperation.IsolateResourcesFailed"
 
+	// MCP Server操作失败
+	FAILEDOPERATION_MCPSERVEROPERATIONFAILED = "FailedOperation.McpServerOperationFailed"
+
 	// 变更实例套餐失败。
 	FAILEDOPERATION_MODIFYINSTANCESBUNDLEFAILED = "FailedOperation.ModifyInstancesBundleFailed"
 
 	// 变更资源属性失败，请稍后重新操作。
 	FAILEDOPERATION_MODIFYRESOURCESATTRIBUTEFAILED = "FailedOperation.ModifyResourcesAttributeFailed"
 
+	// 修改资源自动续费失败。
+	FAILEDOPERATION_MODIFYRESOURCESRENEWFLAGFAILED = "FailedOperation.ModifyResourcesRenewFlagFailed"
+
+	// 购买数量超过最大限制。
+	FAILEDOPERATION_NUMLIMITERROR = "FailedOperation.NumLimitError"
+
 	// 续费资源失败。
 	FAILEDOPERATION_RENEWRESOURCESFAILED = "FailedOperation.RenewResourcesFailed"
 
 	// 请求错误。
 	FAILEDOPERATION_REQUESTERROR = "FailedOperation.RequestError"
+
+	// 扩容云硬盘失败，请稍后重新操作。
+	FAILEDOPERATION_RESIZEDISKSFAILED = "FailedOperation.ResizeDisksFailed"
+
+	// 跨账号共享镜像失败，请稍后重试。
+	FAILEDOPERATION_SHAREBLUEPRINTACROSSACCOUNTFAILED = "FailedOperation.ShareBlueprintAcrossAccountFailed"
 
 	// 快照操作失败。
 	FAILEDOPERATION_SNAPSHOTOPERATIONFAILED = "FailedOperation.SnapshotOperationFailed"
@@ -116,11 +167,11 @@ const (
 	// 无法创建实例。
 	FAILEDOPERATION_UNABLETOCREATEINSTANCES = "FailedOperation.UnableToCreateInstances"
 
+	// 当前镜像状态无法进行跨地域同步。
+	FAILEDOPERATION_UNABLETOSYNCBLUEPRINT = "FailedOperation.UnableToSyncBlueprint"
+
 	// 内部错误。
 	INTERNALERROR = "InternalError"
-
-	// 查询磁盘返回了不合法内容。
-	INTERNALERROR_DESCRIBEDISKSRETURNABLEERROR = "InternalError.DescribeDisksReturnableError"
 
 	// 查询实例状态失败，请稍后重试。
 	INTERNALERROR_DESCRIBEINSTANCESTATUS = "InternalError.DescribeInstanceStatus"
@@ -173,6 +224,12 @@ const (
 	// 参数冲突。
 	INVALIDPARAMETER_CONFLICT = "InvalidParameter.Conflict"
 
+	// 参数冲突。
+	INVALIDPARAMETER_CONFLICTPARAMETER = "InvalidParameter.ConflictParameter"
+
+	// 创建游戏专区实例不支持该参数。
+	INVALIDPARAMETER_CREATINGGAMEPORTALINSTANCENOTSUPPORTPARAMETER = "InvalidParameter.CreatingGamePortalInstanceNotSupportParameter"
+
 	// 参数非法，Filter 参数中的 Values 取值数量超过允许的最大数量。
 	INVALIDPARAMETER_FILTERVALUELIMITEXCEEDED = "InvalidParameter.FilterValueLimitExceeded"
 
@@ -181,6 +238,18 @@ const (
 
 	// 参数非法，防火墙规则已存在。
 	INVALIDPARAMETER_FIREWALLRULESEXIST = "InvalidParameter.FirewallRulesExist"
+
+	// 游戏专区实例镜像无效。
+	INVALIDPARAMETER_GAMEPORTALINSTANCEBLUEPRINTINVALID = "InvalidParameter.GamePortalInstanceBlueprintInvalid"
+
+	// 游戏专区实例仅支持当前镜像。
+	INVALIDPARAMETER_GAMEPORTALINSTANCEONLYSUPPORTCURRENTBLUEPRINT = "InvalidParameter.GamePortalInstanceOnlySupportCurrentBlueprint"
+
+	// 实例展示区域不支持该参数。
+	INVALIDPARAMETER_INSTANCEDISPLAYAREANOTSUPPORTPARAMETER = "InvalidParameter.InstanceDisplayAreaNotSupportParameter"
+
+	// 实例当前的操作不支持该操作。
+	INVALIDPARAMETER_INSTANCEOPERATIONUNSUPPORTEDPARAMETER = "InvalidParameter.InstanceOperationUnsupportedParameter"
 
 	// 参数非法，Filter 参数非法。
 	INVALIDPARAMETER_INVALIDFILTER = "InvalidParameter.InvalidFilter"
@@ -193,6 +262,9 @@ const (
 
 	// 参数非法，Filter 参数中的 Values 不是列表。
 	INVALIDPARAMETER_INVALIDFILTERINVALIDVALUESNOTLIST = "InvalidParameter.InvalidFilterInvalidValuesNotList"
+
+	// Filter参数名称不正确。
+	INVALIDPARAMETER_INVALIDFILTERNAME = "InvalidParameter.InvalidFilterName"
 
 	// 参数非法，Filter 参数不是字典。
 	INVALIDPARAMETER_INVALIDFILTERNOTDICT = "InvalidParameter.InvalidFilterNotDict"
@@ -211,6 +283,18 @@ const (
 
 	// 参数取值错误。
 	INVALIDPARAMETERVALUE = "InvalidParameterValue"
+
+	// 镜像不允许共享至不同站点的账号。
+	INVALIDPARAMETERVALUE_ACCOUNTIDINVALIDACCOUNTAREA = "InvalidParameterValue.AccountIdInvalidAccountArea"
+
+	// 账号为当前用户。
+	INVALIDPARAMETERVALUE_ACCOUNTIDSAMEWITHUIN = "InvalidParameterValue.AccountIdSameWithUin"
+
+	// 账号ID不存在。
+	INVALIDPARAMETERVALUE_ACCOUNTIDSNOTEXIST = "InvalidParameterValue.AccountIdsNotExist"
+
+	// 账号ID不为主账号。
+	INVALIDPARAMETERVALUE_ACCOUNTIDSNOTOWNERACCOUNT = "InvalidParameterValue.AccountIdsNotOwnerAccount"
 
 	// 该实例配置不符合指定镜像的要求。
 	INVALIDPARAMETERVALUE_BLUEPRINTCONFIGNOTMATCH = "InvalidParameterValue.BlueprintConfigNotMatch"
@@ -233,11 +317,20 @@ const (
 	// 客户令牌长度超出限制。
 	INVALIDPARAMETERVALUE_CLIENTTOKENTOOLONG = "InvalidParameterValue.ClientTokenTooLong"
 
+	// 目的地域与源地域相同。
+	INVALIDPARAMETERVALUE_DESTINATIONREGIONSAMEASSOURCEREGION = "InvalidParameterValue.DestinationRegionSameAsSourceRegion"
+
 	// 参数值非法，云硬盘备份点 ID 格式非法。
 	INVALIDPARAMETERVALUE_DISKBACKUPIDMALFORMED = "InvalidParameterValue.DiskBackupIdMalformed"
 
 	// 指定的云盘备份点名称不可大于最大长度。
 	INVALIDPARAMETERVALUE_DISKBACKUPNAMETOOLONG = "InvalidParameterValue.DiskBackupNameTooLong"
+
+	// 云硬盘备份点配额低于当前云硬盘备份点个数。
+	INVALIDPARAMETERVALUE_DISKBACKUPQUOTALESSTHANCURRENTDISKBACKUPNUM = "InvalidParameterValue.DiskBackupQuotaLessThanCurrentDiskBackupNum"
+
+	// 云硬盘备份点配额小于当前云硬盘备份点数量。
+	INVALIDPARAMETERVALUE_DISKBACKUPQUOTALESSTHENCURRENTDISKBACKUPNUM = "InvalidParameterValue.DiskBackupQuotaLessThenCurrentDiskBackupNum"
 
 	// 云硬盘的可用区与实例的可用区不匹配。
 	INVALIDPARAMETERVALUE_DISKINSTANCEZONENOTMATCH = "InvalidParameterValue.DiskInstanceZoneNotMatch"
@@ -248,13 +341,16 @@ const (
 	// 磁盘大小发生改变。
 	INVALIDPARAMETERVALUE_DISKSIZENOTMATCH = "InvalidParameterValue.DiskSizeNotMatch"
 
+	// 指定云硬盘大小小于当前云硬盘大小。
+	INVALIDPARAMETERVALUE_DISKSIZESMALLERTHANCURRENTDISKSIZE = "InvalidParameterValue.DiskSizeSmallerThanCurrentDiskSize"
+
 	// 参数 `KeyName` 已经存在且重复。
 	INVALIDPARAMETERVALUE_DUPLICATEPARAMETERVALUE = "InvalidParameterValue.DuplicateParameterValue"
 
 	// 参数值非法，不允许包含重复的值。
 	INVALIDPARAMETERVALUE_DUPLICATED = "InvalidParameterValue.Duplicated"
 
-	// 防火墙模板规则已存在
+	// 防火墙模板规则已存在。
 	INVALIDPARAMETERVALUE_DUPLICATEDFIREWALLTEMPLATERULE = "InvalidParameterValue.DuplicatedFirewallTemplateRule"
 
 	// 列值不正确。
@@ -262,6 +358,9 @@ const (
 
 	// 防火墙规则描述长度超出限制。
 	INVALIDPARAMETERVALUE_FIREWALLRULEDESCRIPTIONTOOLONG = "InvalidParameterValue.FirewallRuleDescriptionTooLong"
+
+	// 防火墙模板ID格式非法。
+	INVALIDPARAMETERVALUE_FIREWALLTEMPLATEIDMALFORMED = "InvalidParameterValue.FirewallTemplateIdMalformed"
 
 	// 参数值非法，实例 ID 格式非法。
 	INVALIDPARAMETERVALUE_INSTANCEIDMALFORMED = "InvalidParameterValue.InstanceIdMalformed"
@@ -284,6 +383,9 @@ const (
 	// 非法的套餐参数。
 	INVALIDPARAMETERVALUE_INVALIDBUNDLE = "InvalidParameterValue.InvalidBundle"
 
+	// 套餐和镜像的组合非法。
+	INVALIDPARAMETERVALUE_INVALIDBUNDLEBLUEPRINTCOMBINATION = "InvalidParameterValue.InvalidBundleBlueprintCombination"
+
 	// 控制台显示类型不合法。
 	INVALIDPARAMETERVALUE_INVALIDCONSOLEDISPLAYTYPES = "InvalidParameterValue.InvalidConsoleDisplayTypes"
 
@@ -293,11 +395,14 @@ const (
 	// 参数值非法，磁盘 ID 格式非法。
 	INVALIDPARAMETERVALUE_INVALIDDISKIDMALFORMED = "InvalidParameterValue.InvalidDiskIdMalformed"
 
+	// 指定云硬盘大小不符合要求。
+	INVALIDPARAMETERVALUE_INVALIDDISKSIZE = "InvalidParameterValue.InvalidDiskSize"
+
 	// 云硬盘类型非法。
 	INVALIDPARAMETERVALUE_INVALIDDISKTYPE = "InvalidParameterValue.InvalidDiskType"
 
-	// 设置是否使用默认密钥对登录的值不正确。
-	INVALIDPARAMETERVALUE_INVALIDINSTANCELOGINKEYPAIRPERMITLOGIN = "InvalidParameterValue.InvalidInstanceLoginKeyPairPermitLogin"
+	// 镜像ID格式非法。
+	INVALIDPARAMETERVALUE_INVALIDIMAGEIDMALFORMED = "InvalidParameterValue.InvalidImageIdMalformed"
 
 	// 参数值非法，IP 地址格式非法。
 	INVALIDPARAMETERVALUE_INVALIDIPFORMAT = "InvalidParameterValue.InvalidIpFormat"
@@ -335,14 +440,32 @@ const (
 	// 指定的公钥格式错误。
 	INVALIDPARAMETERVALUE_KEYPAIRPUBLICKEYMALFORMED = "InvalidParameterValue.KeyPairPublicKeyMalformed"
 
+	// 参数取值长度不合法。
+	INVALIDPARAMETERVALUE_LENGTH = "InvalidParameterValue.Length"
+
 	// 参数值非法，参数值的数量超过最大限制。
 	INVALIDPARAMETERVALUE_LIMITEXCEEDED = "InvalidParameterValue.LimitExceeded"
+
+	// 环境变量无效
+	INVALIDPARAMETERVALUE_MCPSERVERENVINVALID = "InvalidParameterValue.McpServerEnvInvalid"
+
+	// MCP Server数量超过限制
+	INVALIDPARAMETERVALUE_MCPSERVERLIMITEXCEEDED = "InvalidParameterValue.McpServerLimitExceeded"
+
+	// MCPServer列表过大
+	INVALIDPARAMETERVALUE_MCPSERVERLISTTOOLARGE = "InvalidParameterValue.McpServerListTooLarge"
 
 	// 参数值非法，不能为负值。
 	INVALIDPARAMETERVALUE_NEGATIVE = "InvalidParameterValue.Negative"
 
 	// 不允许改变平台类型。
 	INVALIDPARAMETERVALUE_NOTALLOWTOCHANGEPLATFORMTYPE = "InvalidParameterValue.NotAllowToChangePlatformType"
+
+	// 不支持跨境同步镜像。
+	INVALIDPARAMETERVALUE_NOTSUPPORTCROSSBORDERSYNCBLUEPRINT = "InvalidParameterValue.NotSupportCrossBorderSyncBlueprint"
+
+	// 实例套餐的套餐类型不支持表更至新套餐。
+	INVALIDPARAMETERVALUE_NOTSUPPORTMODIFYINSTANCEBUNDLETYPE = "InvalidParameterValue.NotSupportModifyInstanceBundleType"
 
 	// 参数值非法，不在合法范围内。
 	INVALIDPARAMETERVALUE_OUTOFRANGE = "InvalidParameterValue.OutOfRange"
@@ -377,6 +500,12 @@ const (
 	// 参数取值过长，超过最大长度。
 	INVALIDPARAMETERVALUE_TOOLONG = "InvalidParameterValue.TooLong"
 
+	// 参数值非法，小于有效值。
+	INVALIDPARAMETERVALUE_TOOSMALL = "InvalidParameterValue.TooSmall"
+
+	// 地域不可用。
+	INVALIDPARAMETERVALUE_UNAVAILABLEREGION = "InvalidParameterValue.UnavailableRegion"
+
 	// 非法的可用区。
 	INVALIDPARAMETERVALUE_ZONEINVALID = "InvalidParameterValue.ZoneInvalid"
 
@@ -398,7 +527,7 @@ const (
 	// 超过防火墙规则配额。
 	LIMITEXCEEDED_FIREWALLRULESLIMITEXCEEDED = "LimitExceeded.FirewallRulesLimitExceeded"
 
-	// 防火墙模板规则超出配额
+	// 防火墙模板规则超出配额。
 	LIMITEXCEEDED_FIREWALLTEMPLATERULEQUOTALIMITEXCEEDED = "LimitExceeded.FirewallTemplateRuleQuotaLimitExceeded"
 
 	// 超过实例配额。
@@ -410,14 +539,29 @@ const (
 	// 超过密钥对配额。
 	LIMITEXCEEDED_KEYPAIRLIMITEXCEEDED = "LimitExceeded.KeyPairLimitExceeded"
 
+	// 镜像当前配额不足，无法共享至指定账号。
+	LIMITEXCEEDED_SHAREBLUEPRINTACROSSACCOUNTQUOTALIMITEXCEEDED = "LimitExceeded.ShareBlueprintAcrossAccountQuotaLimitExceeded"
+
 	// 超过快照配额。
 	LIMITEXCEEDED_SNAPSHOTQUOTALIMITEXCEEDED = "LimitExceeded.SnapshotQuotaLimitExceeded"
+
+	// 超过目的地域镜像的配额限制。
+	LIMITEXCEEDED_SYNCBLUEPRINTQUOTALIMITEXCEEDED = "LimitExceeded.SyncBlueprintQuotaLimitExceeded"
 
 	// 缺少参数错误。
 	MISSINGPARAMETER = "MissingParameter"
 
+	// 套餐缺少参数镜像ID。
+	MISSINGPARAMETER_BUNDLEMISSINGPARAMETERBLUEPRINTID = "MissingParameter.BundleMissingParameterBlueprintId"
+
 	// 必须传入参数Period或CurInstanceDeadline。
 	MISSINGPARAMETER_MISSINGPARAMETERPERIODCURINSTANCEDEADLINE = "MissingParameter.MissingParameterPeriodCurInstanceDeadline"
+
+	// 指定参数`Order`时，必须传入参数 `OrderField`。
+	MISSINGPARAMETER_ORDERFIELDREQUIRED = "MissingParameter.OrderFieldRequired"
+
+	// 镜像在操作中。请稍后再试。
+	OPERATIONDENIED_BLUEPRINTOPERATIONINPROGRESS = "OperationDenied.BlueprintOperationInProgress"
 
 	// 该实例不支持升级套餐操作。
 	OPERATIONDENIED_BUNDLENOTSUPPORTMODIFY = "OperationDenied.BundleNotSupportModify"
@@ -452,8 +596,14 @@ const (
 	// 使用存储型套餐的实例不支持创建快照。
 	OPERATIONDENIED_OPERATIONDENIEDCREATESNAPSHOTFORSTORAGEBUNDLE = "OperationDenied.OperationDeniedCreateSnapshotForStorageBundle"
 
+	// 镜像正在修改共享属性操作中。不支持此操作。
+	RESOURCEINUSE_BLUEPRINTMODIFYINGSHAREPERMISSION = "ResourceInUse.BlueprintModifyingSharePermission"
+
 	// 磁盘备份点正在使用中，不支持此操作。
 	RESOURCEINUSE_DISKBACKUPINUSE = "ResourceInUse.DiskBackupInUse"
+
+	// 镜像在使用中，不支持此操作。
+	RESOURCEINUSE_IMAGEINUSE = "ResourceInUse.ImageInUse"
 
 	// 密钥对正在使用中。
 	RESOURCEINUSE_KEYPAIRINUSE = "ResourceInUse.KeyPairInUse"
@@ -494,8 +644,17 @@ const (
 	// 防火墙规则不存在。
 	RESOURCENOTFOUND_FIREWALLRULESNOTFOUND = "ResourceNotFound.FirewallRulesNotFound"
 
-	// 防火墙模板不存在
+	// 防火墙模板不存在。
 	RESOURCENOTFOUND_FIREWALLTEMPLATENOTFOUND = "ResourceNotFound.FirewallTemplateNotFound"
+
+	// 防火墙模板规则不存在。
+	RESOURCENOTFOUND_FIREWALLTEMPLATERULENOTFOUND = "ResourceNotFound.FirewallTemplateRuleNotFound"
+
+	// 镜像ID不存在。
+	RESOURCENOTFOUND_IMAGEIDNOTFOUND = "ResourceNotFound.ImageIdNotFound"
+
+	// 实例镜像不存在。
+	RESOURCENOTFOUND_INSTANCEBLUEPRINTNOTFOUND = "ResourceNotFound.InstanceBlueprintNotFound"
 
 	// 实例不存在挂载的数据盘。
 	RESOURCENOTFOUND_INSTANCEDATADISKNOTFOUND = "ResourceNotFound.InstanceDataDiskNotFound"
@@ -511,6 +670,12 @@ const (
 
 	// 密钥对不存在。
 	RESOURCENOTFOUND_KEYPAIRNOTFOUND = "ResourceNotFound.KeyPairNotFound"
+
+	// MCP Server不存在
+	RESOURCENOTFOUND_MCPSERVERNOTFOUND = "ResourceNotFound.McpServerNotFound"
+
+	// 部分MCP Servers未找到，请检查
+	RESOURCENOTFOUND_MCPSERVERSPARTIALNOTFOUND = "ResourceNotFound.McpServersPartialNotFound"
 
 	// 自定义镜像不存在。
 	RESOURCENOTFOUND_PRIVATEBLUEPRINTNOTFOUND = "ResourceNotFound.PrivateBlueprintNotFound"
@@ -539,17 +704,26 @@ const (
 	// 套餐不可用。
 	RESOURCEUNAVAILABLE_BUNDLEUNAVAILABLE = "ResourceUnavailable.BundleUnavailable"
 
-	// 不能应用该防火墙模板
+	// 不能应用该防火墙模板。
 	RESOURCEUNAVAILABLE_CANNOTAPPLYEMPTYFIREWALLTEMPLATE = "ResourceUnavailable.CannotApplyEmptyFirewallTemplate"
 
 	// Docker资源不可用。
 	RESOURCEUNAVAILABLE_DOCKERUNAVAILABLE = "ResourceUnavailable.DockerUnavailable"
+
+	// 防火墙模板在使用中，不支持该操作。
+	RESOURCEUNAVAILABLE_FIREWALLTEMPLATEINUSE = "ResourceUnavailable.FirewallTemplateInUse"
+
+	// 当前套餐不支持通过API购买。
+	RESOURCEUNAVAILABLE_INVALIDPURCHASEREQUESTSOURCE = "ResourceUnavailable.InvalidPurchaseRequestSource"
 
 	// TAT agent不可用。
 	RESOURCEUNAVAILABLE_TATAGENTUNAVAILABLE = "ResourceUnavailable.TATAgentUnavailable"
 
 	// TAT 服务错误。
 	RESOURCEUNAVAILABLE_TATSERVICEERROR = "ResourceUnavailable.TATServiceError"
+
+	// 套餐已售罄。
+	RESOURCESSOLDOUT_BUNDLESOLDOUT = "ResourcesSoldOut.BundleSoldOut"
 
 	// 套餐无可用配置。
 	RESOURCESSOLDOUT_PURCHASESOURCEHASNOBUNDLECONFIGS = "ResourcesSoldOut.PurchaseSourceHasNoBundleConfigs"
@@ -559,6 +733,9 @@ const (
 
 	// 未授权操作。
 	UNAUTHORIZEDOPERATION = "UnauthorizedOperation"
+
+	// 因账号安全升级，购买云资源需完善您的实名信息。
+	UNAUTHORIZEDOPERATION_CERTIFICATIONNEEDUPGRADE = "UnauthorizedOperation.CertificationNeedUpgrade"
 
 	// 无效 Token。
 	UNAUTHORIZEDOPERATION_INVALIDTOKEN = "UnauthorizedOperation.InvalidToken"
@@ -572,6 +749,9 @@ const (
 	// 无权限。
 	UNAUTHORIZEDOPERATION_NOPERMISSION = "UnauthorizedOperation.NoPermission"
 
+	// 账号没有实名认证，支付失败。
+	UNAUTHORIZEDOPERATION_NOTCERTIFICATION = "UnauthorizedOperation.NotCertification"
+
 	// 无权限进行此操作，请求中token不合法。
 	UNAUTHORIZEDOPERATION_TOKENINVALID = "UnauthorizedOperation.TokenInvalid"
 
@@ -584,17 +764,32 @@ const (
 	// 将磁盘备份点回滚到其他盘，不支持该操作。
 	UNSUPPORTEDOPERATION_APPLYDISKBACKUPTOANOTHERDISK = "UnsupportedOperation.ApplyDiskBackupToAnotherDisk"
 
+	// 获取角色授权失败，请授予 Lighthouse 相关角色后进行重试。
+	UNSUPPORTEDOPERATION_ASSUMEROLEFAILED = "UnsupportedOperation.AssumeRoleFailed"
+
 	// 没有实例不支持关联到云联网。
 	UNSUPPORTEDOPERATION_ATTACHCCNCONDITIONUNSATISFIED = "UnsupportedOperation.AttachCcnConditionUnsatisfied"
 
 	// 关联云联网失败。请检查云联网状态并稍后再试。
 	UNSUPPORTEDOPERATION_ATTACHCCNFAILED = "UnsupportedOperation.AttachCcnFailed"
 
+	// 镜像已经被共享。不支持此操作。
+	UNSUPPORTEDOPERATION_BLUEPRINTALREADYSHARED = "UnsupportedOperation.BlueprintAlreadyShared"
+
 	// 镜像当前状态不支持该操作。
 	UNSUPPORTEDOPERATION_BLUEPRINTCURSTATEINVALID = "UnsupportedOperation.BlueprintCurStateInvalid"
 
+	// 镜像没有被共享。不支持此操作。
+	UNSUPPORTEDOPERATION_BLUEPRINTHASNOTSHARED = "UnsupportedOperation.BlueprintHasNotShared"
+
+	// 镜像最近一次的操作尚未完成。
+	UNSUPPORTEDOPERATION_BLUEPRINTLATESTOPERATIONUNFINISHED = "UnsupportedOperation.BlueprintLatestOperationUnfinished"
+
 	// 镜像被使用中，不支持该操作。
 	UNSUPPORTEDOPERATION_BLUEPRINTOCCUPIED = "UnsupportedOperation.BlueprintOccupied"
+
+	// 该镜像的镜像类型不支持该操作。
+	UNSUPPORTEDOPERATION_BLUEPRINTTYPENOTSUPPORTOPERATION = "UnsupportedOperation.BlueprintTypeNotSupportOperation"
 
 	// 已经关联云联网，不支持再次关联。
 	UNSUPPORTEDOPERATION_CCNALREADYATTACHED = "UnsupportedOperation.CcnAlreadyAttached"
@@ -622,6 +817,18 @@ const (
 
 	// 指定的防火墙版本号和当前版本不一致。
 	UNSUPPORTEDOPERATION_FIREWALLVERSIONMISMATCH = "UnsupportedOperation.FirewallVersionMismatch"
+
+	// 镜像已经被共享。不支持此操作。
+	UNSUPPORTEDOPERATION_IMAGEALREADYSHARED = "UnsupportedOperation.ImageAlreadyShared"
+
+	// 镜像被其他操作占用，不支持此操作。请稍后再试。
+	UNSUPPORTEDOPERATION_IMAGEOCCUPIED = "UnsupportedOperation.ImageOccupied"
+
+	// 镜像不支持共享。
+	UNSUPPORTEDOPERATION_IMAGEUNABLETOSHARE = "UnsupportedOperation.ImageUnableToShare"
+
+	// 实例展示区域不支持该操作。
+	UNSUPPORTEDOPERATION_INSTANCEDISPLAYAREANOTSUPPORTOPERATION = "UnsupportedOperation.InstanceDisplayAreaNotSupportOperation"
 
 	// 实例已到期，不支持该操作。
 	UNSUPPORTEDOPERATION_INSTANCEEXPIRED = "UnsupportedOperation.InstanceExpired"
@@ -653,11 +860,17 @@ const (
 	// 不支持的操作，实例最近一次的操作尚未完成。
 	UNSUPPORTEDOPERATION_LATESTOPERATIONUNFINISHED = "UnsupportedOperation.LatestOperationUnfinished"
 
+	// 不支持的操作，MCP Server最近一次的操作尚未完成
+	UNSUPPORTEDOPERATION_MCPSERVERLATESTOPERATIONUNFINISHED = "UnsupportedOperation.McpServerLatestOperationUnfinished"
+
 	// 共享镜像不支持此操作。
 	UNSUPPORTEDOPERATION_NOTSUPPORTSHAREDBLUEPRINT = "UnsupportedOperation.NotSupportSharedBlueprint"
 
-	// 此接口已下线。
-	UNSUPPORTEDOPERATION_OPERATIONOFFLINE = "UnsupportedOperation.OperationOffline"
+	// 操作不支持自动生成密码。
+	UNSUPPORTEDOPERATION_OPERATIONNOTSUPPORTAUTOGENERATEPASSWORD = "UnsupportedOperation.OperationNotSupportAutoGeneratePassword"
+
+	// 国际站不支持该操作。
+	UNSUPPORTEDOPERATION_OPERATIONNOTSUPPORTEDININTLSITE = "UnsupportedOperation.OperationNotSupportedInIntlSite"
 
 	// 计费资源中心删除资源失败。
 	UNSUPPORTEDOPERATION_POSTDESTROYRESOURCEFAILED = "UnsupportedOperation.PostDestroyResourceFailed"
@@ -667,6 +880,12 @@ const (
 
 	// 资源不支持退换。
 	UNSUPPORTEDOPERATION_RESOURCENOTRETURNABLE = "UnsupportedOperation.ResourceNotReturnable"
+
+	// 资源变配操作中新旧配置一样，不支持此操作。
+	UNSUPPORTEDOPERATION_SAMEWITHOLDCONFIG = "UnsupportedOperation.SameWithOldConfig"
+
+	// 相关服务角色不存在，无法调用此接口。
+	UNSUPPORTEDOPERATION_SERVICEROLENOTEXIST = "UnsupportedOperation.ServiceRoleNotExist"
 
 	// 快照忙。
 	UNSUPPORTEDOPERATION_SNAPSHOTBUSY = "UnsupportedOperation.SnapshotBusy"
