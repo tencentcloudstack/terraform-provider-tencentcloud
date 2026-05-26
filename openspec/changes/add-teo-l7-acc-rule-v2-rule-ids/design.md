@@ -9,6 +9,8 @@ The `tencentcloud_teo_l7_acc_rule_v2` resource manages individual TEO L7 acceler
 - Add `Vary` action support via `vary_parameters` block
 - Add `OriginAuthentication` action support via `origin_authentication_parameters` block
 - Maintain backward compatibility for existing configurations
+- Revert field description modifications (restore original descriptions)
+- Fix Read function to handle empty Rules array
 
 **Non-Goals:**
 - Changing `rule_id` behavior
@@ -24,6 +26,10 @@ The `tencentcloud_teo_l7_acc_rule_v2` resource manages individual TEO L7 acceler
 4. **Update `name` field description**: Fix `SetContentIdentifierParameters` → `SetContentIdentifier`, add missing action names (`Vary`, `ContentCompression`, `OriginAuthentication`) to align with SDK's `RuleEngineAction.Name` definition. `Shield` is excluded as it is not exposed in this resource.
 
 5. **Remove unit tests for `rule_ids`**: The 5 gomonkey mock tests were specifically for `rule_ids`. Acceptance tests remain.
+
+6. **Revert field descriptions**: Restore all field descriptions in `resource_tc_teo_l7_acc_rule_extension.go` to their original values (they were incorrectly cleared to empty strings).
+
+7. **Fix Read function nil check**: Change `if respData == nil {` to `if respData == nil || len(respData.Rules) == 0 {` to properly handle the case where the API returns a response with an empty Rules array (resource deleted).
 
 ## Risks / Trade-offs
 

@@ -21,3 +21,11 @@
 ## 4. 文档
 
 - [x] 4.1 更新 `resource_tc_teo_l7_acc_rule_v2.md` 示例，添加 `Vary` 和 `OriginAuthentication` action 配置块
+
+## 5. 还原字段描述修改
+
+- [x] 5.1 还原 `resource_tc_teo_l7_acc_rule_extension.go` 中所有字段的 Description 为原始值
+
+## 6. 修复 Read 函数
+
+- [x] 6.1 将 Read 函数中 `if respData == nil {` 修改为 `if respData == nil || len(respData.Rules) == 0 {`

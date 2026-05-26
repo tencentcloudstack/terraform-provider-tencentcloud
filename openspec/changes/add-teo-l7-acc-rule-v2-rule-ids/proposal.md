@@ -10,6 +10,8 @@ The `tencentcloud_teo_l7_acc_rule_v2` resource had a redundant `rule_ids` comput
 - Add `origin_authentication_parameters` action support (schema, Get/flatten, Set/build) with nested `request_properties` list (type/name/value)
 - Fix `actions.name` field description: correct `SetContentIdentifierParameters` to `SetContentIdentifier`, and add missing action names (`ContentCompression`, `OriginAuthentication`)
 - Update documentation with `Vary` and `OriginAuthentication` action examples
+- Revert field description modifications in `resource_tc_teo_l7_acc_rule_extension.go` (restore original descriptions)
+- Fix Read function: change `if respData == nil` to `if respData == nil || len(respData.Rules) == 0` to handle empty Rules array
 
 ## Capabilities
 
@@ -22,8 +24,8 @@ The `tencentcloud_teo_l7_acc_rule_v2` resource had a redundant `rule_ids` comput
 
 ## Impact
 
-- `tencentcloud/services/teo/resource_tc_teo_l7_acc_rule_v2.go`: Remove `rule_ids` schema and related Create/Read logic
-- `tencentcloud/services/teo/resource_tc_teo_l7_acc_rule_extension.go`: Add `vary_parameters` and `origin_authentication_parameters` to schema, Get function, and Set function
+- `tencentcloud/services/teo/resource_tc_teo_l7_acc_rule_v2.go`: Remove `rule_ids` schema and related Create/Read logic; fix Read function nil check to also handle empty Rules array
+- `tencentcloud/services/teo/resource_tc_teo_l7_acc_rule_extension.go`: Add `vary_parameters` and `origin_authentication_parameters` to schema, Get function, and Set function; restore original field descriptions
 - `tencentcloud/services/teo/resource_tc_teo_l7_acc_rule_v2_test.go`: Remove `rule_ids` unit tests
 - `tencentcloud/services/teo/resource_tc_teo_l7_acc_rule_v2.md`: Add `Vary` and `OriginAuthentication` action examples
 - API dependency: `CreateL7AccRules`, `ModifyL7AccRule`, `DescribeL7AccRules` (all already used), `VaryParameters`, `OriginAuthenticationParameters` structs in SDK
