@@ -32,7 +32,11 @@ jobs:
           cache: false
 
       - name: install tfproviderlint
-        run: cd .ci/tools && go install github.com/bflad/tfproviderlint/cmd/tfproviderlint
+        # Pin to v0.31.0: this version pulls in golang.org/x/tools v0.25+, which is
+        # compatible with Go 1.25's internal token package layout. Older versions
+        # (e.g. v0.28.1) bundle x/tools v0.13 and fail to compile under Go 1.25
+        # with: "invalid array length -delta * delta" in tokeninternal.go.
+        run: go install github.com/bflad/tfproviderlint/cmd/tfproviderlint@v0.31.0
 
       # Runs a set of commands using the runners shell
       - name: tfprovider-lint
