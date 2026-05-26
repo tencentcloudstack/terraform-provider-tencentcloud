@@ -55,9 +55,13 @@ type scfFunctionInfo struct {
 }
 
 type scfTrigger struct {
-	name        string
-	triggerType string
-	triggerDesc string
+	name           string
+	triggerType    string
+	triggerDesc    string
+	qualifier      string
+	enable         string
+	customArgument string
+	description    string
 }
 
 func NewScfService(client *connectivity.TencentCloudClient) ScfService {
@@ -526,7 +530,20 @@ func (me *ScfService) CreateTriggers(ctx context.Context, functionName, namespac
 		request.Type = &trigger.triggerType
 		request.TriggerDesc = &trigger.triggerDesc
 		request.Namespace = &namespace
-		request.Enable = helper.String("OPEN")
+		if trigger.qualifier != "" {
+			request.Qualifier = &trigger.qualifier
+		}
+		if trigger.enable != "" {
+			request.Enable = &trigger.enable
+		} else {
+			request.Enable = helper.String("OPEN")
+		}
+		if trigger.customArgument != "" {
+			request.CustomArgument = &trigger.customArgument
+		}
+		if trigger.description != "" {
+			request.Description = &trigger.description
+		}
 
 		if err := resource.Retry(tccommon.WriteRetryTimeout, func() *resource.RetryError {
 			ratelimit.Check(request.GetAction())
@@ -553,6 +570,9 @@ func (me *ScfService) DeleteTriggers(ctx context.Context, functionName, namespac
 		request.TriggerName = &trigger.name
 		request.Type = &trigger.triggerType
 		request.TriggerDesc = &trigger.triggerDesc
+		if trigger.qualifier != "" {
+			request.Qualifier = &trigger.qualifier
+		}
 
 		if err := resource.Retry(tccommon.WriteRetryTimeout, func() *resource.RetryError {
 			ratelimit.Check(request.GetAction())
