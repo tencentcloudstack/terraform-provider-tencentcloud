@@ -30,16 +30,20 @@ jobs:
 
       - uses: actions/setup-go@v5
         with:
-          go-version-file: .go-version
-          go-version: '1.21'
-          cache: false 
+          go-version-file: go.mod
+          cache: false
 
       # Runs a set of commands using the runners shell
       - name: golangci-lint
-        uses: golangci/golangci-lint-action@v4
+        uses: golangci/golangci-lint-action@v6
         with:
           skip-cache: true
-          version: v1.54
+          # v1.64.8 is the last v1.x release and the first v1 line that fully
+          # supports Go 1.25's export data format. Older versions (e.g. v1.54)
+          # ship a go/types built against Go 1.20 and panic with
+          # "could not import sync/atomic ... unsupported version: 2"
+          # when analysing code compiled by Go 1.25.
+          version: v1.64.8
           working-directory: ./tencentcloud
           args: --new-from-rev=origin/master -v
           #args: --enable-all --max-same-issues=0 --max-issues-per-linter=0 --new-from-rev=origin/master -v
