@@ -1073,8 +1073,8 @@ github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/tdmq v1.3.46 h1:hnBTV4y
 github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/tdmq v1.3.46/go.mod h1:brB63yRDKDgCzEBFU5G3OBV+wQ+lpnOnedxwdnLgjjk=
 github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/tem v1.0.578 h1:vBpQhUroO+FAslUmsDWGi8nvczsqZBWVgQwlnyT0Aj8=
 github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/tem v1.0.578/go.mod h1:UlojGQh/9wb7/uXPNi7PvMral1CNAskVDNgqJEV83l0=
-github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/teo v1.3.90 h1:UAefUxiVLj639m5jplPyTyOkF5vT8W0d8TrWZ7cepj4=
-github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/teo v1.3.90/go.mod h1:YV/JlZueAHyf9eyLmowdbeX90MR5jJmy0Dn6gZwPT2M=
+github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/teo v1.3.102 h1:3EqXfnsOtY+rgcoqsp04GwhyHV9MQzCK6ejNWvK68ng=
+github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/teo v1.3.102/go.mod h1:H6TI5f2LSILTMm8HIpPTeTv/1wwV249maexasyVHCCU=
 github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/thpc v1.0.998 h1:f4/n0dVKQTD06xJ84B5asHViNJHrZmGojdAWEPIsITM=
 github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/thpc v1.0.998/go.mod h1:fyi/HUwCwVe2NCCCjz8k/C5GwPu3QazCZO+OBJ3MhLk=
 github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/tke v1.3.86 h1:vTpLGPpzAbZHOv0F6hmy8C9IBwJIUfhTrXH0vi7eiGA=

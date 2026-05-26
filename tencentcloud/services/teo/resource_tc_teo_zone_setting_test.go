@@ -5,8 +5,14 @@ import (
 	"fmt"
 	"testing"
 
+	"github.com/agiledragon/gomonkey/v2"
+	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
+	"github.com/stretchr/testify/assert"
+	teov20220901 "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/teo/v20220901"
+
 	tcacctest "github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/acctest"
 	tccommon "github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/common"
+	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/connectivity"
 	svcteo "github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/services/teo"
 
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
@@ -221,3 +227,181 @@ resource "tencentcloud_teo_zone_setting" "basic" {
   }
 }
 `
+
+// mockMetaForZoneSetting implements tccommon.ProviderMeta
+type mockMetaForZoneSetting struct {
+	client *connectivity.TencentCloudClient
+}
+
+func (m *mockMetaForZoneSetting) GetAPIV3Conn() *connectivity.TencentCloudClient {
+	return m.client
+}
+
+var _ tccommon.ProviderMeta = &mockMetaForZoneSetting{}
+
+func newMockMetaForZoneSetting() *mockMetaForZoneSetting {
+	return &mockMetaForZoneSetting{client: &connectivity.TencentCloudClient{}}
+}
+
+func ptrStrZoneSetting(s string) *string {
+	return &s
+}
+
+// go test ./tencentcloud/services/teo/ -run "TestZoneSettingJITVideoProcess" -v -count=1 -gcflags="all=-l"
+
+// TestZoneSettingJITVideoProcess_Read_SwitchOn tests Read populates jit_video_process with switch=on
+func TestZoneSettingJITVideoProcess_Read_SwitchOn(t *testing.T) {
+	patches := gomonkey.NewPatches()
+	defer patches.Reset()
+
+	teoClient := &teov20220901.Client{}
+	patches.ApplyMethodReturn(newMockMetaForZoneSetting().client, "UseTeoClient", teoClient)
+
+	patches.ApplyMethodFunc(teoClient, "DescribeZoneSetting", func(request *teov20220901.DescribeZoneSettingRequest) (*teov20220901.DescribeZoneSettingResponse, error) {
+		resp := teov20220901.NewDescribeZoneSettingResponse()
+		resp.Response = &teov20220901.DescribeZoneSettingResponseParams{
+			ZoneSetting: &teov20220901.ZoneSetting{
+				JITVideoProcess: &teov20220901.JITVideoProcess{
+					Switch: ptrStrZoneSetting("on"),
+				},
+			},
+			RequestId: ptrStrZoneSetting("fake-request-id"),
+		}
+		return resp, nil
+	})
+
+	meta := newMockMetaForZoneSetting()
+	res := svcteo.ResourceTencentCloudTeoZoneSetting()
+	d := schema.TestResourceDataRaw(t, res.Schema, map[string]interface{}{
+		"zone_id": "zone-test123",
+	})
+	d.SetId("zone-test123")
+
+	err := res.Read(d, meta)
+	assert.NoError(t, err)
+
+	jitVideoProcess := d.Get("jit_video_process").([]interface{})
+	assert.Equal(t, 1, len(jitVideoProcess))
+	jitMap := jitVideoProcess[0].(map[string]interface{})
+	assert.Equal(t, "on", jitMap["switch"])
+}
+
+// TestZoneSettingJITVideoProcess_Read_SwitchOff tests Read populates jit_video_process with switch=off
+func TestZoneSettingJITVideoProcess_Read_SwitchOff(t *testing.T) {
+	patches := gomonkey.NewPatches()
+	defer patches.Reset()
+
+	teoClient := &teov20220901.Client{}
+	patches.ApplyMethodReturn(newMockMetaForZoneSetting().client, "UseTeoClient", teoClient)
+
+	patches.ApplyMethodFunc(teoClient, "DescribeZoneSetting", func(request *teov20220901.DescribeZoneSettingRequest) (*teov20220901.DescribeZoneSettingResponse, error) {
+		resp := teov20220901.NewDescribeZoneSettingResponse()
+		resp.Response = &teov20220901.DescribeZoneSettingResponseParams{
+			ZoneSetting: &teov20220901.ZoneSetting{
+				JITVideoProcess: &teov20220901.JITVideoProcess{
+					Switch: ptrStrZoneSetting("off"),
+				},
+			},
+			RequestId: ptrStrZoneSetting("fake-request-id"),
+		}
+		return resp, nil
+	})
+
+	meta := newMockMetaForZoneSetting()
+	res := svcteo.ResourceTencentCloudTeoZoneSetting()
+	d := schema.TestResourceDataRaw(t, res.Schema, map[string]interface{}{
+		"zone_id": "zone-test123",
+	})
+	d.SetId("zone-test123")
+
+	err := res.Read(d, meta)
+	assert.NoError(t, err)
+
+	jitVideoProcess := d.Get("jit_video_process").([]interface{})
+	assert.Equal(t, 1, len(jitVideoProcess))
+	jitMap := jitVideoProcess[0].(map[string]interface{})
+	assert.Equal(t, "off", jitMap["switch"])
+}
+
+// TestZoneSettingJITVideoProcess_Read_Nil tests Read handles nil JITVideoProcess
+func TestZoneSettingJITVideoProcess_Read_Nil(t *testing.T) {
+	patches := gomonkey.NewPatches()
+	defer patches.Reset()
+
+	teoClient := &teov20220901.Client{}
+	patches.ApplyMethodReturn(newMockMetaForZoneSetting().client, "UseTeoClient", teoClient)
+
+	patches.ApplyMethodFunc(teoClient, "DescribeZoneSetting", func(request *teov20220901.DescribeZoneSettingRequest) (*teov20220901.DescribeZoneSettingResponse, error) {
+		resp := teov20220901.NewDescribeZoneSettingResponse()
+		resp.Response = &teov20220901.DescribeZoneSettingResponseParams{
+			ZoneSetting: &teov20220901.ZoneSetting{
+				JITVideoProcess: nil,
+			},
+			RequestId: ptrStrZoneSetting("fake-request-id"),
+		}
+		return resp, nil
+	})
+
+	meta := newMockMetaForZoneSetting()
+	res := svcteo.ResourceTencentCloudTeoZoneSetting()
+	d := schema.TestResourceDataRaw(t, res.Schema, map[string]interface{}{
+		"zone_id": "zone-test123",
+	})
+	d.SetId("zone-test123")
+
+	err := res.Read(d, meta)
+	assert.NoError(t, err)
+
+	jitVideoProcess := d.Get("jit_video_process").([]interface{})
+	assert.Equal(t, 0, len(jitVideoProcess))
+}
+
+// TestZoneSettingJITVideoProcess_Update tests Update sends JITVideoProcess in request
+func TestZoneSettingJITVideoProcess_Update(t *testing.T) {
+	patches := gomonkey.NewPatches()
+	defer patches.Reset()
+
+	teoClient := &teov20220901.Client{}
+	patches.ApplyMethodReturn(newMockMetaForZoneSetting().client, "UseTeoClient", teoClient)
+
+	var capturedRequest *teov20220901.ModifyZoneSettingRequest
+	patches.ApplyMethodFunc(teoClient, "ModifyZoneSettingWithContext", func(ctx context.Context, request *teov20220901.ModifyZoneSettingRequest) (*teov20220901.ModifyZoneSettingResponse, error) {
+		capturedRequest = request
+		resp := teov20220901.NewModifyZoneSettingResponse()
+		resp.Response = &teov20220901.ModifyZoneSettingResponseParams{
+			RequestId: ptrStrZoneSetting("fake-request-id"),
+		}
+		return resp, nil
+	})
+
+	patches.ApplyMethodFunc(teoClient, "DescribeZoneSetting", func(request *teov20220901.DescribeZoneSettingRequest) (*teov20220901.DescribeZoneSettingResponse, error) {
+		resp := teov20220901.NewDescribeZoneSettingResponse()
+		resp.Response = &teov20220901.DescribeZoneSettingResponseParams{
+			ZoneSetting: &teov20220901.ZoneSetting{
+				JITVideoProcess: &teov20220901.JITVideoProcess{
+					Switch: ptrStrZoneSetting("on"),
+				},
+			},
+			RequestId: ptrStrZoneSetting("fake-request-id"),
+		}
+		return resp, nil
+	})
+
+	meta := newMockMetaForZoneSetting()
+	res := svcteo.ResourceTencentCloudTeoZoneSetting()
+	d := schema.TestResourceDataRaw(t, res.Schema, map[string]interface{}{
+		"zone_id": "zone-test123",
+		"jit_video_process": []interface{}{
+			map[string]interface{}{
+				"switch": "on",
+			},
+		},
+	})
+	d.SetId("zone-test123")
+
+	err := res.Update(d, meta)
+	assert.NoError(t, err)
+	assert.NotNil(t, capturedRequest)
+	assert.NotNil(t, capturedRequest.JITVideoProcess)
+	assert.Equal(t, "on", *capturedRequest.JITVideoProcess.Switch)
+}
