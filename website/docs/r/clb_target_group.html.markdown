@@ -149,6 +149,23 @@ resource "tencentcloud_clb_target_group" "ipv6" {
 }
 ```
 
+### Create target group with SNAT enabled
+
+```hcl
+resource "tencentcloud_clb_target_group" "snat_enabled" {
+  target_group_name = "snat-tg"
+  vpc_id            = "vpc-xxxxxx"
+  type              = "v2"
+  protocol          = "TCP"
+  snat_enable       = true
+
+  health_check {
+    health_switch = true
+    protocol      = "TCP"
+  }
+}
+```
+
 ## Argument Reference
 
 The following arguments are supported:
@@ -161,6 +178,7 @@ The following arguments are supported:
 * `protocol` - (Optional, String, ForceNew) Backend forwarding protocol of the target group. this field is required for the new version (v2) target group. currently supports TCP, UDP, HTTP, HTTPS, GRPC.
 * `schedule_algorithm` - (Optional, String) Scheduling algorithm. Only valid for v2 target groups with HTTP/HTTPS/GRPC protocols. Valid values: WRR (weighted round robin), LEAST_CONN (least connections), IP_HASH (IP hash). Default: WRR.
 * `session_expire_time` - (Optional, Int) Session persistence time in seconds. Only valid for v2 target groups with HTTP/HTTPS/GRPC protocols. Range: 30-3600 or 0 (disabled). Default: 0 (disabled).
+* `snat_enable` - (Optional, Bool) Whether to enable SNAT (source IP replacement). True: enable, False: disable. Default is disable. Note: when SnatEnable is enabled, it will replace the client source IP, and the `pass-through client source IP` option will be disabled, and vice versa.
 * `tags` - (Optional, Map) Resource tags for the target group.
 * `target_group_instances` - (Optional, List, **Deprecated**) It has been deprecated from version 1.77.3. please use `tencentcloud_clb_target_group_instance_attachment` instead. The backend server of target group bind.
 * `target_group_name` - (Optional, String) Target group name.
