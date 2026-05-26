@@ -15,52 +15,52 @@ func TencentTeoL7RuleBranchBasicInfo(depth int) map[string]*schema.Schema {
 		"condition": {
 			Type:        schema.TypeString,
 			Optional:    true,
-			Description: "Match condition. https://www.tencentcloud.com/document/product/1145/54759.",
+			Description: "",
 		},
 		"actions": {
 			Type:        schema.TypeList,
 			Optional:    true,
-			Description: "Sub-Rule branch. this list currently supports filling in only one rule; multiple entries are invalid.",
+			Description: "",
 			Elem: &schema.Resource{
 				Schema: map[string]*schema.Schema{
 					"name": {
 						Type:        schema.TypeString,
 						Required:    true,
-						Description: "Operation name. The name needs to correspond to the parameter structure, for example, if Name=Cache, CacheParameters is required.\n- `Cache`: Node cache TTL;\n- `CacheKey`: Custom Cache Key;\n- `CachePrefresh`: Cache pre-refresh;\n- `AccessURLRedirect`: Access URL redirection;\n- `UpstreamURLRewrite`: Back-to-origin URL rewrite;\n- `QUIC`: QUIC;\n- `WebSocket`: WebSocket;\n- `Authentication`: Token authentication;\n- `MaxAge`: Browser cache TTL;\n- `StatusCodeCache`: Status code cache TTL;\n- `OfflineCache`: Offline cache;\n- `SmartRouting`: Smart acceleration;\n- `RangeOriginPull`: Segment back-to-origin;\n- `UpstreamHTTP2`: HTTP2 back-to-origin;\n- `HostHeader`: Host Header rewrite;\n- `ForceRedirectHTTPS`: Access protocol forced HTTPS jump configuration;\n- `OriginPullProtocol`: Back-to-origin HTTPS;\n- `Compression`: Smart compression configuration;\n- `HSTS`: HSTS;\n- `ClientIPHeader`: Header information configuration for storing client request IP;\n- `OCSPStapling`: OCSP stapling;\n- `HTTP2`: HTTP2 Access;\n- `PostMaxSize`: POST request upload file streaming maximum limit configuration;\n- `ClientIPCountry`: Carry client IP region information when returning to the source;\n- `UpstreamFollowRedirect`: Return to the source follow redirection parameter configuration;\n- `UpstreamRequest`: Return to the source request parameters;\n- `TLSConfig`: SSL/TLS security;\n- `ModifyOrigin`: Modify the source station;\n- `HTTPUpstreamTimeout`: Seven-layer return to the source timeout configuration;\n- `HttpResponse`: HTTP response;\n- `ErrorPage`: Custom error page;\n- `ModifyResponseHeader`: Modify HTTP node response header;\n- `ModifyRequestHeader`: Modify HTTP node request header;\n- `ResponseSpeedLimit`: Single connection download speed limit.\n- `SetContentIdentifier`: Set content identifier.\n- `Vary`: Vary feature configuration.\n- `ContentCompression`: Content compression configuration.\n- `OriginAuthentication`: Origin authentication configuration.",
+						Description: "",
 					},
 					"cache_parameters": {
 						Type:        schema.TypeList,
 						Optional:    true,
 						MaxItems:    1,
-						Description: "Node cache ttl configuration parameter. when name is cache, this parameter is required.",
+						Description: "",
 						Elem: &schema.Resource{
 							Schema: map[string]*schema.Schema{
 								"follow_origin": {
 									Type:        schema.TypeList,
 									Optional:    true,
 									MaxItems:    1,
-									Description: "Cache follows origin server. if not specified, this configuration is not set. only one of followorigin, nocache, or customtime can have switch set to on.",
+									Description: "",
 									Elem: &schema.Resource{
 										Schema: map[string]*schema.Schema{
 											"switch": {
 												Type:        schema.TypeString,
 												Required:    true,
-												Description: "Whether to enable the configuration of following the origin server. Valid values: `on`: Enable; `off`: Disable.",
+												Description: "",
 											},
 											"default_cache": {
 												Type:        schema.TypeString,
 												Optional:    true,
-												Description: "Whether to cache when an origin server does not return the cache-control header. this field is required when switch is on; when switch is off, this field is not required and will be ineffective if filled. valid values: on: cache; off: do not cache.",
+												Description: "",
 											},
 											"default_cache_strategy": {
 												Type:        schema.TypeString,
 												Optional:    true,
-												Description: "Whether to use the default caching policy when an origin server does not return the cache-control header. this field is required when defaultcache is set to on; otherwise, it is ineffective. when defaultcachetime is not 0, this field should be off. valid values: on: use the default caching policy. off: do not use the default caching policy.",
+												Description: "",
 											},
 											"default_cache_time": {
 												Type:        schema.TypeInt,
 												Optional:    true,
-												Description: "The default cache time in seconds when an origin server does not return the cache-control header. the value ranges from 0 to 315360000. this field is required when defaultcache is set to on; otherwise, it is ineffective. when defaultcachestrategy is on, this field should be 0.",
+												Description: "",
 											},
 										},
 									},
@@ -69,13 +69,13 @@ func TencentTeoL7RuleBranchBasicInfo(depth int) map[string]*schema.Schema {
 									Type:        schema.TypeList,
 									Optional:    true,
 									MaxItems:    1,
-									Description: "No cache. if not specified, this configuration is not set. only one of followorigin, nocache, or customtime can have switch set to on.",
+									Description: "",
 									Elem: &schema.Resource{
 										Schema: map[string]*schema.Schema{
 											"switch": {
 												Type:        schema.TypeString,
 												Required:    true,
-												Description: "Whether to enable no-cache configuration. Valid values: `on`: Enable; `off`: Disable.",
+												Description: "",
 											},
 										},
 									},
@@ -84,23 +84,23 @@ func TencentTeoL7RuleBranchBasicInfo(depth int) map[string]*schema.Schema {
 									Type:        schema.TypeList,
 									Optional:    true,
 									MaxItems:    1,
-									Description: "Custom cache time. if not specified, this configuration is not set. only one of followorigin, nocache, or customtime can have switch set to on.",
+									Description: "",
 									Elem: &schema.Resource{
 										Schema: map[string]*schema.Schema{
 											"switch": {
 												Type:        schema.TypeString,
 												Optional:    true,
-												Description: "Custom cache time switch. values: `on`: Enable; `off`: Disable.",
+												Description: "",
 											},
 											"ignore_cache_control": {
 												Type:        schema.TypeString,
 												Optional:    true,
-												Description: "Ignore origin server cachecontrol switch. values: `on`: Enable; `off`: Disable.",
+												Description: "",
 											},
 											"cache_time": {
 												Type:        schema.TypeInt,
 												Optional:    true,
-												Description: "Custom cache time value, unit: seconds. value range: 0-315360000.",
+												Description: "",
 											},
 										},
 									},
@@ -112,35 +112,35 @@ func TencentTeoL7RuleBranchBasicInfo(depth int) map[string]*schema.Schema {
 						Type:        schema.TypeList,
 						Optional:    true,
 						MaxItems:    1,
-						Description: "Custom cache key configuration parameter. when name is cachekey, this parameter is required.",
+						Description: "",
 						Elem: &schema.Resource{
 							Schema: map[string]*schema.Schema{
 								"full_url_cache": {
 									Type:        schema.TypeString,
 									Optional:    true,
-									Description: "Switch for retaining the complete query string. values: on: enable; off: disable.",
+									Description: "",
 								},
 								"query_string": {
 									Type:        schema.TypeList,
 									Optional:    true,
 									MaxItems:    1,
-									Description: "Configuration parameter for retaining the query string. this field and fullurlcache must be set simultaneously, but cannot both be on.",
+									Description: "",
 									Elem: &schema.Resource{
 										Schema: map[string]*schema.Schema{
 											"switch": {
 												Type:        schema.TypeString,
 												Optional:    true,
-												Description: "Query string retain/ignore specified parameter switch. valid values are: on: enable; off: disable.",
+												Description: "",
 											},
 											"action": {
 												Type:        schema.TypeString,
 												Optional:    true,
-												Description: "Actions to retain/ignore specified parameters in the query string. values: `includeCustom`: retain partial parameters. `excludeCustom`: ignore partial parameters.note: this field is required when switch is on. when switch is off, this field is not required and will not take effect if filled.",
+												Description: "",
 											},
 											"values": {
 												Type:        schema.TypeList,
 												Optional:    true,
-												Description: "A list of parameter names to keep/ignore in the query string.",
+												Description: "",
 												Elem: &schema.Schema{
 													Type: schema.TypeString,
 												},
@@ -151,24 +151,24 @@ func TencentTeoL7RuleBranchBasicInfo(depth int) map[string]*schema.Schema {
 								"ignore_case": {
 									Type:        schema.TypeString,
 									Optional:    true,
-									Description: "Switch for ignoring case. values: on: enable; off: disable. note: at least one of fullurlcache, ignorecase, header, scheme, or cookie must be configured.",
+									Description: "",
 								},
 								"header": {
 									Type:        schema.TypeList,
 									Optional:    true,
 									MaxItems:    1,
-									Description: "HTTP request header configuration parameters. at least one of the following configurations must be set: fullurlcache, ignorecase, header, scheme, cookie.",
+									Description: "",
 									Elem: &schema.Resource{
 										Schema: map[string]*schema.Schema{
 											"switch": {
 												Type:        schema.TypeString,
 												Optional:    true,
-												Description: "Whether to enable feature. values: on: enable; off: disable.",
+												Description: "",
 											},
 											"values": {
 												Type:        schema.TypeList,
 												Optional:    true,
-												Description: "Custom cache key http request header list. note: this field is required when switch is on; when switch is off, this field is not required and will not take effect if filled.",
+												Description: "",
 												Elem: &schema.Schema{
 													Type: schema.TypeString,
 												},
@@ -179,29 +179,29 @@ func TencentTeoL7RuleBranchBasicInfo(depth int) map[string]*schema.Schema {
 								"scheme": {
 									Type:        schema.TypeString,
 									Optional:    true,
-									Description: "Request protocol switch. valid values: on: enable; off: disable.",
+									Description: "",
 								},
 								"cookie": {
 									Type:        schema.TypeList,
 									Optional:    true,
 									MaxItems:    1,
-									Description: "Cookie configuration parameters. at least one of the following configurations must be set: fullurlcache, ignorecase, header, scheme, cookie.",
+									Description: "",
 									Elem: &schema.Resource{
 										Schema: map[string]*schema.Schema{
 											"switch": {
 												Type:        schema.TypeString,
 												Optional:    true,
-												Description: "Whether to enable feature. values: on: enable; off: disable.",
+												Description: "",
 											},
 											"action": {
 												Type:        schema.TypeString,
 												Optional:    true,
-												Description: "Cache action. values: full: retain all; ignore: ignore all; includeCustom: retain partial parameters; excludeCustom: ignore partial parameters. note: when switch is on, this field is required. when switch is off, this field is not required and will not take effect if filled.",
+												Description: "",
 											},
 											"values": {
 												Type:        schema.TypeList,
 												Optional:    true,
-												Description: "Custom cache key cookie name list.",
+												Description: "",
 												Elem: &schema.Schema{
 													Type: schema.TypeString,
 												},
@@ -216,18 +216,18 @@ func TencentTeoL7RuleBranchBasicInfo(depth int) map[string]*schema.Schema {
 						Type:        schema.TypeList,
 						Optional:    true,
 						MaxItems:    1,
-						Description: "The cache prefresh configuration parameter. this parameter is required when name is cacheprefresh.",
+						Description: "",
 						Elem: &schema.Resource{
 							Schema: map[string]*schema.Schema{
 								"switch": {
 									Type:        schema.TypeString,
 									Optional:    true,
-									Description: "Whether to enable cache prefresh. values: on: enable; off: disable.",
+									Description: "",
 								},
 								"cache_time_percent": {
 									Type:        schema.TypeInt,
 									Optional:    true,
-									Description: "Prefresh interval set as a percentage of the node cache time. value range: 1-99. note: this field is required when switch is on; when switch is off, this field is not required and will not take effect if filled.",
+									Description: "",
 								},
 							},
 						},
@@ -236,35 +236,35 @@ func TencentTeoL7RuleBranchBasicInfo(depth int) map[string]*schema.Schema {
 						Type:        schema.TypeList,
 						Optional:    true,
 						MaxItems:    1,
-						Description: "The access url redirection configuration parameter. this parameter is required when name is accessurlredirect.",
+						Description: "",
 						Elem: &schema.Resource{
 							Schema: map[string]*schema.Schema{
 								"status_code": {
 									Type:        schema.TypeInt,
 									Optional:    true,
-									Description: "Status code. valid values: 301, 302, 303, 307, 308.",
+									Description: "",
 								},
 								"protocol": {
 									Type:        schema.TypeString,
 									Optional:    true,
-									Description: "Target request protocol. valid values: http: target request protocol http; https: target request protocol https; follow: follow the request.",
+									Description: "",
 								},
 								"host_name": {
 									Type:        schema.TypeList,
 									Optional:    true,
 									MaxItems:    1,
-									Description: "Target hostname.",
+									Description: "",
 									Elem: &schema.Resource{
 										Schema: map[string]*schema.Schema{
 											"action": {
 												Type:        schema.TypeString,
 												Optional:    true,
-												Description: "Target hostname configuration, valid values are: follow: follow the request; custom: custom.",
+												Description: "",
 											},
 											"value": {
 												Type:        schema.TypeString,
 												Optional:    true,
-												Description: "Custom value for target hostname, maximum length is 1024.",
+												Description: "",
 											},
 										},
 									},
@@ -273,23 +273,23 @@ func TencentTeoL7RuleBranchBasicInfo(depth int) map[string]*schema.Schema {
 									Type:        schema.TypeList,
 									Optional:    true,
 									MaxItems:    1,
-									Description: "Target path.",
+									Description: "",
 									Elem: &schema.Resource{
 										Schema: map[string]*schema.Schema{
 											"action": {
 												Type:        schema.TypeString,
 												Optional:    true,
-												Description: "Action to be executed. values: follow: follow the request; custom: custom; regex: regular expression matching.",
+												Description: "",
 											},
 											"regex": {
 												Type:        schema.TypeString,
 												Optional:    true,
-												Description: "Regular expression matching expression, length range is 1-1024. note: when action is regex, this field is required; when action is follow or custom, this field is not required and will not take effect if filled.",
+												Description: "",
 											},
 											"value": {
 												Type:        schema.TypeString,
 												Optional:    true,
-												Description: "Redirect target url, length range is 1-1024.note: when action is regex or custom, this field is required; when action is follow, this field is not required and will not take effect if filled.",
+												Description: "",
 											},
 										},
 									},
@@ -298,13 +298,13 @@ func TencentTeoL7RuleBranchBasicInfo(depth int) map[string]*schema.Schema {
 									Type:        schema.TypeList,
 									Optional:    true,
 									MaxItems:    1,
-									Description: "Carry query parameters.",
+									Description: "",
 									Elem: &schema.Resource{
 										Schema: map[string]*schema.Schema{
 											"action": {
 												Type:        schema.TypeString,
 												Optional:    true,
-												Description: "Action to be executed. values: full: retain all; ignore: ignore all.",
+												Description: "",
 											},
 										},
 									},
@@ -316,28 +316,28 @@ func TencentTeoL7RuleBranchBasicInfo(depth int) map[string]*schema.Schema {
 						Type:        schema.TypeList,
 						Optional:    true,
 						MaxItems:    1,
-						Description: "The origin-pull url rewrite configuration parameter. this parameter is required when name is upstreamurlrewrite.",
+						Description: "",
 						Elem: &schema.Resource{
 							Schema: map[string]*schema.Schema{
 								"type": {
 									Type:        schema.TypeString,
 									Optional:    true,
-									Description: "Origin-Pull url rewriting type, only path is supported.",
+									Description: "",
 								},
 								"action": {
 									Type:        schema.TypeString,
 									Optional:    true,
-									Description: "Origin-Pull url rewrite action. valid values are: replace: replace the path prefix; addPrefix: add the path prefix; rmvPrefix: remove the path prefix.",
+									Description: "",
 								},
 								"value": {
 									Type:        schema.TypeString,
 									Optional:    true,
-									Description: "Origin-Pull url rewrite value, maximum length 1024, must start with /.note: when action is addprefix, it cannot end with /; when action is rmvprefix, * cannot be present.",
+									Description: "",
 								},
 								"regex": {
 									Type:        schema.TypeString,
 									Optional:    true,
-									Description: "Origin URL Rewrite uses a regular expression for matching the complete path. It must conform to the Google RE2 specification and have a length range of 1 to 1024. This field is required when the Action is regexReplace; otherwise, it is optional.",
+									Description: "",
 								},
 							},
 						},
@@ -346,13 +346,13 @@ func TencentTeoL7RuleBranchBasicInfo(depth int) map[string]*schema.Schema {
 						Type:        schema.TypeList,
 						Optional:    true,
 						MaxItems:    1,
-						Description: "The quic configuration parameter. this parameter is required when name is quic.",
+						Description: "",
 						Elem: &schema.Resource{
 							Schema: map[string]*schema.Schema{
 								"switch": {
 									Type:        schema.TypeString,
 									Optional:    true,
-									Description: "Whether to enable quic. values: on: enable; off: disable.",
+									Description: "",
 								},
 							},
 						},
@@ -361,18 +361,18 @@ func TencentTeoL7RuleBranchBasicInfo(depth int) map[string]*schema.Schema {
 						Type:        schema.TypeList,
 						Optional:    true,
 						MaxItems:    1,
-						Description: "The websocket configuration parameter. this parameter is required when name is websocket.",
+						Description: "",
 						Elem: &schema.Resource{
 							Schema: map[string]*schema.Schema{
 								"switch": {
 									Type:        schema.TypeString,
 									Optional:    true,
-									Description: "Whether to enable websocket connection timeout. values: on: use timeout as the websocket timeout;; off: the platform still supports websocket connections, using the system default timeout of 15 seconds.",
+									Description: "",
 								},
 								"timeout": {
 									Type:        schema.TypeInt,
 									Optional:    true,
-									Description: "Timeout, unit: seconds. maximum timeout is 120 seconds.",
+									Description: "",
 								},
 							},
 						},
@@ -381,43 +381,43 @@ func TencentTeoL7RuleBranchBasicInfo(depth int) map[string]*schema.Schema {
 						Type:        schema.TypeList,
 						Optional:    true,
 						MaxItems:    1,
-						Description: "Token authentication configuration parameter. this parameter is required when name is authentication.",
+						Description: "",
 						Elem: &schema.Resource{
 							Schema: map[string]*schema.Schema{
 								"auth_type": {
 									Type:        schema.TypeString,
 									Optional:    true,
-									Description: "Authentication type. valid values:\n- `TypeA`: authentication method a type, for specific meaning please refer to authentication method a. https://www.tencentcloud.com/document/product/1145/62475;\n- `TypeB`: authentication method b type, for specific meaning please refer to authentication method b. https://www.tencentcloud.com/document/product/1145/62476;\n- `TypeC`: authentication method c type, for specific meaning please refer to authentication method c. https://www.tencentcloud.com/document/product/1145/62477;\n- `TypeD`: authentication method d type, for specific meaning please refer to authentication method d. https://www.tencentcloud.com/document/product/1145/62478;\n- `TypeVOD`: authentication method v type, for specific meaning please refer to authentication method v. https://www.tencentcloud.com/document/product/1145/62479.",
+									Description: "",
 								},
 								"secret_key": {
 									Type:        schema.TypeString,
 									Optional:    true,
-									Description: "The primary authentication key consists of 6-40 uppercase and lowercase english letters or digits, and cannot contain \" and $.",
+									Description: "",
 								},
 								"timeout": {
 									Type:        schema.TypeInt,
 									Optional:    true,
-									Description: "Validity period of the authentication url, in seconds, value range: 1-630720000. used to determine if the client access request has expired: If the current time exceeds \"timestamp + validity period\", it is an expired request, and a 403 is returned directly. If the current time does not exceed \"timestamp + validity period\", the request is not expired, and the md5 string is further validated. note: when authtype is one of typea, typeb, typec, or typed, this field is required.",
+									Description: "",
 								},
 								"backup_secret_key": {
 									Type:        schema.TypeString,
 									Optional:    true,
-									Description: "The backup authentication key consists of 6-40 uppercase and lowercase english letters or digits, and cannot contain \" and $.",
+									Description: "",
 								},
 								"auth_param": {
 									Type:        schema.TypeString,
 									Optional:    true,
-									Description: "Authentication parameters name. the node will validate the value corresponding to this parameter name. consists of 1-100 uppercase and lowercase letters, numbers, or underscores.note: this field is required when authtype is either typea or typed.",
+									Description: "",
 								},
 								"time_param": {
 									Type:        schema.TypeString,
 									Optional:    true,
-									Description: "Authentication timestamp. it cannot be the same as the value of the authparam field.note: this field is required when authtype is typed.",
+									Description: "",
 								},
 								"time_format": {
 									Type:        schema.TypeString,
 									Optional:    true,
-									Description: "Authentication time format. values: dec: decimal; hex: hexadecimal.",
+									Description: "",
 								},
 							},
 						},
@@ -426,18 +426,18 @@ func TencentTeoL7RuleBranchBasicInfo(depth int) map[string]*schema.Schema {
 						Type:        schema.TypeList,
 						Optional:    true,
 						MaxItems:    1,
-						Description: "Browser cache ttl configuration parameter. this parameter is required when name is maxage.",
+						Description: "",
 						Elem: &schema.Resource{
 							Schema: map[string]*schema.Schema{
 								"follow_origin": {
 									Type:        schema.TypeString,
 									Optional:    true,
-									Description: "Specifies whether to follow the origin server cache-control configuration, with the following values: on: follow the origin server and ignore the field cachetime; off: do not follow the origin server and apply the field cachetime.",
+									Description: "",
 								},
 								"cache_time": {
 									Type:        schema.TypeInt,
 									Optional:    true,
-									Description: "Custom cache time value, unit: seconds. value range: 0-315360000. note: when followorigin is off, it means not following the origin server and using cachetime to set the cache time; otherwise, this field will not take effect.",
+									Description: "",
 								},
 							},
 						},
@@ -446,24 +446,24 @@ func TencentTeoL7RuleBranchBasicInfo(depth int) map[string]*schema.Schema {
 						Type:        schema.TypeList,
 						Optional:    true,
 						MaxItems:    1,
-						Description: "Status code cache ttl configuration parameter. this parameter is required when name is statuscodecache.",
+						Description: "",
 						Elem: &schema.Resource{
 							Schema: map[string]*schema.Schema{
 								"status_code_cache_params": {
 									Type:        schema.TypeList,
 									Optional:    true,
-									Description: "Status code cache ttl.",
+									Description: "",
 									Elem: &schema.Resource{
 										Schema: map[string]*schema.Schema{
 											"status_code": {
 												Type:        schema.TypeInt,
 												Optional:    true,
-												Description: "Status code. valid values: 400, 401, 403, 404, 405, 407, 414, 500, 501, 502, 503, 504, 509, 514.",
+												Description: "",
 											},
 											"cache_time": {
 												Type:        schema.TypeInt,
 												Optional:    true,
-												Description: "Cache time value in seconds. value range: 0-31536000.",
+												Description: "",
 											},
 										},
 									},
@@ -475,13 +475,13 @@ func TencentTeoL7RuleBranchBasicInfo(depth int) map[string]*schema.Schema {
 						Type:        schema.TypeList,
 						Optional:    true,
 						MaxItems:    1,
-						Description: "Offline cache configuration parameter. this parameter is required when name is offlinecache.",
+						Description: "",
 						Elem: &schema.Resource{
 							Schema: map[string]*schema.Schema{
 								"switch": {
 									Type:        schema.TypeString,
 									Optional:    true,
-									Description: "Whether to enable offline caching. values: on: enable; off: disable.",
+									Description: "",
 								},
 							},
 						},
@@ -490,13 +490,13 @@ func TencentTeoL7RuleBranchBasicInfo(depth int) map[string]*schema.Schema {
 						Type:        schema.TypeList,
 						Optional:    true,
 						MaxItems:    1,
-						Description: "Smart acceleration configuration parameter. this parameter is required when name is smartrouting.",
+						Description: "",
 						Elem: &schema.Resource{
 							Schema: map[string]*schema.Schema{
 								"switch": {
 									Type:        schema.TypeString,
 									Optional:    true,
-									Description: "Whether to enable smart acceleration. values: on: enable; off: disable.",
+									Description: "",
 								},
 							},
 						},
@@ -505,13 +505,13 @@ func TencentTeoL7RuleBranchBasicInfo(depth int) map[string]*schema.Schema {
 						Type:        schema.TypeList,
 						Optional:    true,
 						MaxItems:    1,
-						Description: "Shard source retrieval configuration parameter. this parameter is required when name is set to rangeoriginpull.",
+						Description: "",
 						Elem: &schema.Resource{
 							Schema: map[string]*schema.Schema{
 								"switch": {
 									Type:        schema.TypeString,
 									Optional:    true,
-									Description: "Whether to enable range gets. values are: on: enable; off: disable.",
+									Description: "",
 								},
 							},
 						},
@@ -520,13 +520,13 @@ func TencentTeoL7RuleBranchBasicInfo(depth int) map[string]*schema.Schema {
 						Type:        schema.TypeList,
 						Optional:    true,
 						MaxItems:    1,
-						Description: "HTTP2 origin-pull configuration parameter. this parameter is required when name is set to upstreamhttp2.",
+						Description: "",
 						Elem: &schema.Resource{
 							Schema: map[string]*schema.Schema{
 								"switch": {
 									Type:        schema.TypeString,
 									Optional:    true,
-									Description: "Whether to enable http2 origin-pull. valid values: on: enable; off: disable.",
+									Description: "",
 								},
 							},
 						},
@@ -535,18 +535,18 @@ func TencentTeoL7RuleBranchBasicInfo(depth int) map[string]*schema.Schema {
 						Type:        schema.TypeList,
 						Optional:    true,
 						MaxItems:    1,
-						Description: "Host header rewrite configuration parameter. this parameter is required when name is set to hostheader.",
+						Description: "",
 						Elem: &schema.Resource{
 							Schema: map[string]*schema.Schema{
 								"action": {
 									Type:        schema.TypeString,
 									Optional:    true,
-									Description: "Action to be executed. values: followOrigin: follow origin server domain name; custom: custom.",
+									Description: "",
 								},
 								"server_name": {
 									Type:        schema.TypeString,
 									Optional:    true,
-									Description: "Host header rewrite requires a complete domain name. note: this field is required when switch is on; when switch is off, this field is not required and any value will be ignored.",
+									Description: "",
 								},
 							},
 						},
@@ -555,18 +555,18 @@ func TencentTeoL7RuleBranchBasicInfo(depth int) map[string]*schema.Schema {
 						Type:        schema.TypeList,
 						Optional:    true,
 						MaxItems:    1,
-						Description: "Force https redirect configuration parameter. this parameter is required when the name is set to forceredirecthttps.",
+						Description: "",
 						Elem: &schema.Resource{
 							Schema: map[string]*schema.Schema{
 								"switch": {
 									Type:        schema.TypeString,
 									Optional:    true,
-									Description: "Whether to enable forced redirect configuration switch. values: on: enable; off: disable.",
+									Description: "",
 								},
 								"redirect_status_code": {
 									Type:        schema.TypeInt,
 									Optional:    true,
-									Description: "Redirection status code. this field is required when switch is on; otherwise, it is not effective. valid values are: 301: 301 redirect; 302: 302 redirect.",
+									Description: "",
 								},
 							},
 						},
@@ -575,13 +575,13 @@ func TencentTeoL7RuleBranchBasicInfo(depth int) map[string]*schema.Schema {
 						Type:        schema.TypeList,
 						Optional:    true,
 						MaxItems:    1,
-						Description: "Back-to-origin HTTPS configuration parameter. This parameter is required when the Name value is `OriginPullProtocol`.",
+						Description: "",
 						Elem: &schema.Resource{
 							Schema: map[string]*schema.Schema{
 								"protocol": {
 									Type:        schema.TypeString,
 									Optional:    true,
-									Description: "Back-to-origin protocol configuration. Possible values are: `http`: use HTTP protocol for back-to-origin; `https`: use HTTPS protocol for back-to-origin; `follow`: follow the protocol.",
+									Description: "",
 								},
 							},
 						},
@@ -590,18 +590,18 @@ func TencentTeoL7RuleBranchBasicInfo(depth int) map[string]*schema.Schema {
 						Type:        schema.TypeList,
 						Optional:    true,
 						MaxItems:    1,
-						Description: "Intelligent compression configuration. this parameter is required when name is set to compression.",
+						Description: "",
 						Elem: &schema.Resource{
 							Schema: map[string]*schema.Schema{
 								"switch": {
 									Type:        schema.TypeString,
 									Optional:    true,
-									Description: "Whether to enable smart compression. values: on: enable; off: disable.",
+									Description: "",
 								},
 								"algorithms": {
 									Type:        schema.TypeList,
 									Optional:    true,
-									Description: "Supported compression algorithm list. this field is required when switch is on; otherwise, it is not effective. valid values: brotli: brotli algorithm; gzip: gzip algorithm.",
+									Description: "",
 									Elem: &schema.Schema{
 										Type: schema.TypeString,
 									},
@@ -613,28 +613,28 @@ func TencentTeoL7RuleBranchBasicInfo(depth int) map[string]*schema.Schema {
 						Type:        schema.TypeList,
 						Optional:    true,
 						MaxItems:    1,
-						Description: "HSTS configuration parameter. this parameter is required when name is hsts.",
+						Description: "",
 						Elem: &schema.Resource{
 							Schema: map[string]*schema.Schema{
 								"switch": {
 									Type:        schema.TypeString,
 									Optional:    true,
-									Description: "Whether to enable hsts. values: on: enable; off: disable.",
+									Description: "",
 								},
 								"timeout": {
 									Type:        schema.TypeInt,
 									Optional:    true,
-									Description: "Cache hsts header time, unit: seconds. value range: 1-31536000. note: this field is required when switch is on; when switch is off, this field is not required and will not take effect if filled.",
+									Description: "",
 								},
 								"include_sub_domains": {
 									Type:        schema.TypeString,
 									Optional:    true,
-									Description: "Whether to allow other subdomains to inherit the same hsts header. values: on: allows other subdomains to inherit the same hsts header; off: does not allow other subdomains to inherit the same hsts header. note: when switch is on, this field is required; when switch is off, this field is not required and will not take effect if filled.",
+									Description: "",
 								},
 								"preload": {
 									Type:        schema.TypeString,
 									Optional:    true,
-									Description: "Whether to allow the browser to preload the hsts header. valid values: on: allows the browser to preload the hsts header; off: does not allow the browser to preload the hsts header. note: when switch is on, this field is required; when switch is off, this field is not required and will not take effect if filled.",
+									Description: "",
 								},
 							},
 						},
@@ -643,18 +643,18 @@ func TencentTeoL7RuleBranchBasicInfo(depth int) map[string]*schema.Schema {
 						Type:        schema.TypeList,
 						Optional:    true,
 						MaxItems:    1,
-						Description: "Client ip header configuration for storing client request ip information. this parameter is required when name is clientipheader.",
+						Description: "",
 						Elem: &schema.Resource{
 							Schema: map[string]*schema.Schema{
 								"switch": {
 									Type:        schema.TypeString,
 									Optional:    true,
-									Description: "Whether to enable configuration. values: on: enable; off: disable.",
+									Description: "",
 								},
 								"header_name": {
 									Type:        schema.TypeString,
 									Optional:    true,
-									Description: "Name of the request header containing the client ip address for origin-pull. when switch is on, this parameter is required. x-forwarded-for is not allowed for this parameter.",
+									Description: "",
 								},
 							},
 						},
@@ -663,13 +663,13 @@ func TencentTeoL7RuleBranchBasicInfo(depth int) map[string]*schema.Schema {
 						Type:        schema.TypeList,
 						Optional:    true,
 						MaxItems:    1,
-						Description: "OCSP stapling configuration parameter. this parameter is required when the name is set to ocspstapling.",
+						Description: "",
 						Elem: &schema.Resource{
 							Schema: map[string]*schema.Schema{
 								"switch": {
 									Type:        schema.TypeString,
 									Optional:    true,
-									Description: "Whether to enable ocsp stapling configuration switch. values: on: enable; off: disable.",
+									Description: "",
 								},
 							},
 						},
@@ -678,13 +678,13 @@ func TencentTeoL7RuleBranchBasicInfo(depth int) map[string]*schema.Schema {
 						Type:        schema.TypeList,
 						Optional:    true,
 						MaxItems:    1,
-						Description: "HTTP2 access configuration parameter. this parameter is required when name is http2.",
+						Description: "",
 						Elem: &schema.Resource{
 							Schema: map[string]*schema.Schema{
 								"switch": {
 									Type:        schema.TypeString,
 									Optional:    true,
-									Description: "Whether to enable http2 access. values: on: enable; off: disable.",
+									Description: "",
 								},
 							},
 						},
@@ -693,18 +693,18 @@ func TencentTeoL7RuleBranchBasicInfo(depth int) map[string]*schema.Schema {
 						Type:        schema.TypeList,
 						Optional:    true,
 						MaxItems:    1,
-						Description: "Maximum size configuration for file streaming upload via a post request. this parameter is required when name is postmaxsize.",
+						Description: "",
 						Elem: &schema.Resource{
 							Schema: map[string]*schema.Schema{
 								"switch": {
 									Type:        schema.TypeString,
 									Optional:    true,
-									Description: "Whether to enable post request file upload limit, in bytes (default limit: 32 * 2^20 bytes). valid values: on: enable limit; off: disable limit.",
+									Description: "",
 								},
 								"max_size": {
 									Type:        schema.TypeInt,
 									Optional:    true,
-									Description: "Maximum size of the file uploaded for streaming via a post request, in bytes. value range: 1 * 2^20 bytes to 500 * 2^20 bytes.",
+									Description: "",
 								},
 							},
 						},
@@ -713,18 +713,18 @@ func TencentTeoL7RuleBranchBasicInfo(depth int) map[string]*schema.Schema {
 						Type:        schema.TypeList,
 						Optional:    true,
 						MaxItems:    1,
-						Description: "Configuration parameter for carrying the region information of the client ip during origin-pull. this parameter is required when the name is set to clientipcountry.",
+						Description: "",
 						Elem: &schema.Resource{
 							Schema: map[string]*schema.Schema{
 								"switch": {
 									Type:        schema.TypeString,
 									Optional:    true,
-									Description: "Whether to enable configuration. values: on: enable; off: disable.",
+									Description: "",
 								},
 								"header_name": {
 									Type:        schema.TypeString,
 									Optional:    true,
-									Description: "Name of the request header that contains the client ip region. it is valid when switch=on. the default value EO-Client-IPCountry is used when it is not specified.",
+									Description: "",
 								},
 							},
 						},
@@ -733,18 +733,18 @@ func TencentTeoL7RuleBranchBasicInfo(depth int) map[string]*schema.Schema {
 						Type:        schema.TypeList,
 						Optional:    true,
 						MaxItems:    1,
-						Description: "Configuration parameter for following redirects during origin-pull. this parameter is required when the name is set to upstreamfollowredirect.",
+						Description: "",
 						Elem: &schema.Resource{
 							Schema: map[string]*schema.Schema{
 								"switch": {
 									Type:        schema.TypeString,
 									Optional:    true,
-									Description: "Whether to enable origin-pull to follow the redirection configuration. values: on: enable; off: disable.",
+									Description: "",
 								},
 								"max_times": {
 									Type:        schema.TypeInt,
 									Optional:    true,
-									Description: "The maximum number of redirects. value range: 1-5. Note: this field is required when switch is on; when switch is off, this field is not required and will not take effect if filled.",
+									Description: "",
 								},
 							},
 						},
@@ -753,30 +753,30 @@ func TencentTeoL7RuleBranchBasicInfo(depth int) map[string]*schema.Schema {
 						Type:        schema.TypeList,
 						Optional:    true,
 						MaxItems:    1,
-						Description: "Configuration parameter for origin-pull request. this parameter is required when the name is set to upstreamrequest.",
+						Description: "",
 						Elem: &schema.Resource{
 							Schema: map[string]*schema.Schema{
 								"query_string": {
 									Type:        schema.TypeList,
 									Optional:    true,
 									MaxItems:    1,
-									Description: "Query string configuration. optional. if not provided, it will not be configured.",
+									Description: "",
 									Elem: &schema.Resource{
 										Schema: map[string]*schema.Schema{
 											"switch": {
 												Type:        schema.TypeString,
 												Optional:    true,
-												Description: "Whether to enable origin-pull request parameter query string. values: on: enable; off: disable.",
+												Description: "",
 											},
 											"action": {
 												Type:        schema.TypeString,
 												Optional:    true,
-												Description: "Query string mode. this parameter is required when switch is on. values: full: retain all; ignore: ignore all; includeCustom: retain partial parameters; excludeCustom: ignore partial parameters.",
+												Description: "",
 											},
 											"values": {
 												Type:        schema.TypeList,
 												Optional:    true,
-												Description: "Specifies parameter values. this parameter takes effect only when the query string mode action is includecustom or excludecustom, and is used to specify the parameters to be reserved or ignored. up to 10 parameters are supported.",
+												Description: "",
 												Elem: &schema.Schema{
 													Type: schema.TypeString,
 												},
@@ -788,23 +788,23 @@ func TencentTeoL7RuleBranchBasicInfo(depth int) map[string]*schema.Schema {
 									Type:        schema.TypeList,
 									Optional:    true,
 									MaxItems:    1,
-									Description: "Cookie configuration. optional. if not provided, it will not be configured.",
+									Description: "",
 									Elem: &schema.Resource{
 										Schema: map[string]*schema.Schema{
 											"switch": {
 												Type:        schema.TypeString,
 												Optional:    true,
-												Description: "Whether to enable the origin-pull request parameter cookie. valid values: on: enable; off: disable.",
+												Description: "",
 											},
 											"action": {
 												Type:        schema.TypeString,
 												Optional:    true,
-												Description: "Origin-Pull request parameter cookie mode. this parameter is required when switch is on. valid values are: full: retain all; ignore: ignore all; includeCustom: retain partial parameters; excludeCustom: ignore partial parameters.",
+												Description: "",
 											},
 											"values": {
 												Type:        schema.TypeList,
 												Optional:    true,
-												Description: "Specifies parameter values. this parameter takes effect only when the query string mode action is includecustom or excludecustom, and is used to specify the parameters to be reserved or ignored. up to 10 parameters are supported.",
+												Description: "",
 												Elem: &schema.Schema{
 													Type: schema.TypeString,
 												},
@@ -819,13 +819,13 @@ func TencentTeoL7RuleBranchBasicInfo(depth int) map[string]*schema.Schema {
 						Type:        schema.TypeList,
 						Optional:    true,
 						MaxItems:    1,
-						Description: "SSL/TLS security configuration parameter. this parameter is required when the name is set to tlsconfig.",
+						Description: "",
 						Elem: &schema.Resource{
 							Schema: map[string]*schema.Schema{
 								"version": {
 									Type:        schema.TypeList,
 									Optional:    true,
-									Description: "TLS version. at least one must be specified. if multiple versions are specified, they must be consecutive, e.g., enable TLSv1, TLSv1.1, TLSv1.2, and TLSv1.3. it is not allowed to enable only 1 and 1.2 while disabling 1.1. valid values: TLSv1: TLSv1 version; TLSv1.1: TLSv1.1 version; TLSv1.2: TLSv1.2 version; TLSv1.3: TLSv1.3 version.",
+									Description: "",
 									Elem: &schema.Schema{
 										Type: schema.TypeString,
 									},
@@ -833,7 +833,7 @@ func TencentTeoL7RuleBranchBasicInfo(depth int) map[string]*schema.Schema {
 								"cipher_suite": {
 									Type:        schema.TypeString,
 									Optional:    true,
-									Description: "Cipher suite. for detailed information, please refer to tls versions and cipher suites description, https://www.tencentcloud.com/document/product/1145/54154?has_map=1. valid values: loose-v2023: loose-v2023 cipher suite; general-v2023: general-v2023 cipher suite; strict-v2023: strict-v2023 cipher suite.",
+									Description: "",
 								},
 							},
 						},
@@ -842,67 +842,67 @@ func TencentTeoL7RuleBranchBasicInfo(depth int) map[string]*schema.Schema {
 						Type:        schema.TypeList,
 						Optional:    true,
 						MaxItems:    1,
-						Description: "Configuration parameter for modifying the origin server. this parameter is required when the name is set to modifyorigin.",
+						Description: "",
 						Elem: &schema.Resource{
 							Schema: map[string]*schema.Schema{
 								"origin_type": {
 									Type:        schema.TypeString,
 									Optional:    true,
-									Description: "The origin type. values: IPDomain: ipv4, ipv6, or domain name type origin server; OriginGroup: origin server group type origin server; LoadBalance: cloud load balancer (clb), this feature is in beta test. to use it, please submit a ticket or contact smart customer service; COS: tencent cloud COS origin server; AWSS3: all object storage origin servers that support the aws s3 protocol.",
+									Description: "",
 								},
 								"origin": {
 									Type:        schema.TypeString,
 									Optional:    true,
-									Description: "Origin server address, which varies according to the value of origintype: When origintype = ipdomain, fill in an ipv4 address, an ipv6 address, or a domain name; When origintype = cos, please fill in the access domain name of the cos bucket; When origintype = awss3, fill in the access domain name of the s3 bucket; When origintype = origingroup, fill in the origin server group id; When origintype = loadbalance, fill in the cloud load balancer instance id. this feature is currently only available to the allowlist.",
+									Description: "",
 								},
 								"origin_protocol": {
 									Type:        schema.TypeString,
 									Optional:    true,
-									Description: "Origin-Pull protocol configuration. this parameter is required when origintype is ipdomain, origingroup, or loadbalance. valid values are: http: use http protocol; https: use https protocol; follow: follow the protocol.",
+									Description: "",
 								},
 								"http_origin_port": {
 									Type:         schema.TypeInt,
 									Optional:     true,
 									ValidateFunc: tccommon.ValidateIntegerInRange(1, 65535),
-									Description:  "Ports for http origin-pull requests. value range: 1-65535. this parameter takes effect only when the origin-pull protocol originprotocol is http or follow.",
+									Description:  "",
 								},
 								"https_origin_port": {
 									Type:         schema.TypeInt,
 									Optional:     true,
 									ValidateFunc: tccommon.ValidateIntegerInRange(1, 65535),
-									Description:  "Ports for https origin-pull requests. value range: 1-65535. this parameter takes effect only when the origin-pull protocol originprotocol is https or follow.",
+									Description:  "",
 								},
 								"private_access": {
 									Type:        schema.TypeString,
 									Optional:    true,
-									Description: "Whether access to the private object storage origin server is allowed. this parameter is valid only when the origin server type origintype is COS or awss3. valid values: on: enable private authentication; off: disable private authentication. if not specified, the default value is off.",
+									Description: "",
 								},
 								"private_parameters": {
 									Type:        schema.TypeList,
 									Optional:    true,
 									MaxItems:    1,
-									Description: "Private authentication parameter. this parameter is valid only when origintype = awss3 and privateaccess = on.",
+									Description: "",
 									Elem: &schema.Resource{
 										Schema: map[string]*schema.Schema{
 											"access_key_id": {
 												Type:        schema.TypeString,
 												Required:    true,
-												Description: "Authentication parameter access key id.",
+												Description: "",
 											},
 											"secret_access_key": {
 												Type:        schema.TypeString,
 												Required:    true,
-												Description: "Authentication parameter secret access key.",
+												Description: "",
 											},
 											"signature_version": {
 												Type:        schema.TypeString,
 												Required:    true,
-												Description: "Authentication version. values: v2: v2 version; v4: v4 version.",
+												Description: "",
 											},
 											"region": {
 												Type:        schema.TypeString,
 												Optional:    true,
-												Description: "Region of the bucket.",
+												Description: "",
 											},
 										},
 									},
@@ -914,13 +914,13 @@ func TencentTeoL7RuleBranchBasicInfo(depth int) map[string]*schema.Schema {
 						Type:        schema.TypeList,
 						Optional:    true,
 						MaxItems:    1,
-						Description: "Configuration of layer 7 origin timeout. this parameter is required when name is httpupstreamtimeout.",
+						Description: "",
 						Elem: &schema.Resource{
 							Schema: map[string]*schema.Schema{
 								"response_timeout": {
 									Type:        schema.TypeInt,
 									Optional:    true,
-									Description: "HTTP response timeout in seconds. value range: 5-600.",
+									Description: "",
 								},
 							},
 						},
@@ -929,18 +929,18 @@ func TencentTeoL7RuleBranchBasicInfo(depth int) map[string]*schema.Schema {
 						Type:        schema.TypeList,
 						Optional:    true,
 						MaxItems:    1,
-						Description: "HTTP response configuration parameters. this parameter is required when name is httpresponse.",
+						Description: "",
 						Elem: &schema.Resource{
 							Schema: map[string]*schema.Schema{
 								"status_code": {
 									Type:        schema.TypeInt,
 									Optional:    true,
-									Description: "Response status code. supports 2xx, 4xx, 5xx, excluding 499, 514, 101, 301, 302, 303, 509, 520-599.",
+									Description: "",
 								},
 								"response_page": {
 									Type:        schema.TypeString,
 									Optional:    true,
-									Description: "Response page id.",
+									Description: "",
 								},
 							},
 						},
@@ -949,24 +949,24 @@ func TencentTeoL7RuleBranchBasicInfo(depth int) map[string]*schema.Schema {
 						Type:        schema.TypeList,
 						Optional:    true,
 						MaxItems:    1,
-						Description: "Custom error page configuration parameters. this parameter is required when name is errorpage.",
+						Description: "",
 						Elem: &schema.Resource{
 							Schema: map[string]*schema.Schema{
 								"error_page_params": {
 									Type:        schema.TypeList,
 									Optional:    true,
-									Description: "Custom error page configuration list.",
+									Description: "",
 									Elem: &schema.Resource{
 										Schema: map[string]*schema.Schema{
 											"status_code": {
 												Type:        schema.TypeInt,
 												Required:    true,
-												Description: "Status code. supported values are 400, 403, 404, 405, 414, 416, 451, 500, 501, 502, 503, 504.",
+												Description: "",
 											},
 											"redirect_url": {
 												Type:        schema.TypeString,
 												Required:    true,
-												Description: "Redirect url. requires a full redirect path, such as https://www.test.com/error.html.",
+												Description: "",
 											},
 										},
 									},
@@ -978,29 +978,29 @@ func TencentTeoL7RuleBranchBasicInfo(depth int) map[string]*schema.Schema {
 						Type:        schema.TypeList,
 						Optional:    true,
 						MaxItems:    1,
-						Description: "Modify http node response header configuration parameters. this parameter is required when name is modifyresponseheader.",
+						Description: "",
 						Elem: &schema.Resource{
 							Schema: map[string]*schema.Schema{
 								"header_actions": {
 									Type:        schema.TypeList,
 									Optional:    true,
-									Description: "HTTP origin-pull header rules list.",
+									Description: "",
 									Elem: &schema.Resource{
 										Schema: map[string]*schema.Schema{
 											"action": {
 												Type:        schema.TypeString,
 												Required:    true,
-												Description: "HTTP header setting methods. valid values are: set: sets a value for an existing header parameter; del: deletes a header parameter; add: adds a header parameter.",
+												Description: "",
 											},
 											"name": {
 												Type:        schema.TypeString,
 												Required:    true,
-												Description: "HTTP header name.",
+												Description: "",
 											},
 											"value": {
 												Type:        schema.TypeString,
 												Optional:    true,
-												Description: "HTTP header value. this parameter is required when the action is set to set or add; it is optional when the action is set to del.",
+												Description: "",
 											},
 										},
 									},
@@ -1012,29 +1012,29 @@ func TencentTeoL7RuleBranchBasicInfo(depth int) map[string]*schema.Schema {
 						Type:        schema.TypeList,
 						Optional:    true,
 						MaxItems:    1,
-						Description: "Modify http node request header configuration parameters. this parameter is required when name is modifyrequestheader.",
+						Description: "",
 						Elem: &schema.Resource{
 							Schema: map[string]*schema.Schema{
 								"header_actions": {
 									Type:        schema.TypeList,
 									Optional:    true,
-									Description: "List of http header setting rules.",
+									Description: "",
 									Elem: &schema.Resource{
 										Schema: map[string]*schema.Schema{
 											"action": {
 												Type:        schema.TypeString,
 												Required:    true,
-												Description: "HTTP header setting methods. valid values are: set: sets a value for an existing header parameter; del: deletes a header parameter; add: adds a header parameter.",
+												Description: "",
 											},
 											"name": {
 												Type:        schema.TypeString,
 												Required:    true,
-												Description: "HTTP header name.",
+												Description: "",
 											},
 											"value": {
 												Type:        schema.TypeString,
 												Optional:    true,
-												Description: "HTTP header value. this parameter is required when the action is set to set or add; it is optional when the action is set to del.",
+												Description: "",
 											},
 										},
 									},
@@ -1046,23 +1046,23 @@ func TencentTeoL7RuleBranchBasicInfo(depth int) map[string]*schema.Schema {
 						Type:        schema.TypeList,
 						Optional:    true,
 						MaxItems:    1,
-						Description: "Single connection download speed limit configuration parameter. this parameter is required when name is responsespeedlimit.",
+						Description: "",
 						Elem: &schema.Resource{
 							Schema: map[string]*schema.Schema{
 								"mode": {
 									Type:        schema.TypeString,
 									Required:    true,
-									Description: "Download rate limit mode. valid values: LimitUponDownload: rate limit throughout the download process; LimitAfterSpecificBytesDownloaded: rate limit after downloading specific bytes at full speed; LimitAfterSpecificSecondsDownloaded: start speed limit after downloading at full speed for a specific duration.",
+									Description: "",
 								},
 								"max_speed": {
 									Type:        schema.TypeString,
 									Required:    true,
-									Description: "Rate-Limiting value, in kb/s. enter a numerical value to specify the rate limit.",
+									Description: "",
 								},
 								"start_at": {
 									Type:        schema.TypeString,
 									Optional:    true,
-									Description: "Rate-Limiting start value, which can be the download size or specified duration, in kb or s. this parameter is required when mode is set to limitafterspecificbytesdownloaded or limitafterspecificsecondsdownloaded. enter a numerical value to specify the download size or duration.",
+									Description: "",
 								},
 							},
 						},
@@ -1071,13 +1071,13 @@ func TencentTeoL7RuleBranchBasicInfo(depth int) map[string]*schema.Schema {
 						Type:        schema.TypeList,
 						Optional:    true,
 						MaxItems:    1,
-						Description: "Content identification configuration parameter. this parameter is required when name is httpresponse.",
+						Description: "",
 						Elem: &schema.Resource{
 							Schema: map[string]*schema.Schema{
 								"content_identifier": {
 									Type:        schema.TypeString,
 									Optional:    true,
-									Description: "Content identifier id.",
+									Description: "",
 								},
 							},
 						},
@@ -1086,13 +1086,13 @@ func TencentTeoL7RuleBranchBasicInfo(depth int) map[string]*schema.Schema {
 						Type:        schema.TypeList,
 						Optional:    true,
 						MaxItems:    1,
-						Description: "Content compression configuration parameters. This parameter is required when the `Name` parameter is set to `ContentCompression`. This parameter uses a whitelist function; please contact Tencent Cloud engineers if needed.",
+						Description: "",
 						Elem: &schema.Resource{
 							Schema: map[string]*schema.Schema{
 								"switch": {
 									Type:        schema.TypeString,
 									Required:    true,
-									Description: "Content compression configuration switch, possible values are: on: enabled; off: disabled. When the Switch is set to `on`, both Brotli and gzip compression algorithms will be supported.",
+									Description: "",
 								},
 							},
 						},
@@ -1101,13 +1101,13 @@ func TencentTeoL7RuleBranchBasicInfo(depth int) map[string]*schema.Schema {
 						Type:        schema.TypeList,
 						Optional:    true,
 						MaxItems:    1,
-						Description: "Vary configuration parameter. This parameter is required when Name is set to Vary.",
+						Description: "",
 						Elem: &schema.Resource{
 							Schema: map[string]*schema.Schema{
 								"switch": {
 									Type:        schema.TypeString,
 									Required:    true,
-									Description: "Whether to enable Vary feature. Valid values: on: enable; off: disable.",
+									Description: "",
 								},
 							},
 						},
@@ -1116,29 +1116,29 @@ func TencentTeoL7RuleBranchBasicInfo(depth int) map[string]*schema.Schema {
 						Type:        schema.TypeList,
 						Optional:    true,
 						MaxItems:    1,
-						Description: "Origin authentication configuration parameter. This parameter is required when Name is set to OriginAuthentication. This is a whitelist feature; please contact Tencent Cloud engineers if needed.",
+						Description: "",
 						Elem: &schema.Resource{
 							Schema: map[string]*schema.Schema{
 								"request_properties": {
 									Type:        schema.TypeList,
 									Required:    true,
-									Description: "Origin authentication request properties.",
+									Description: "",
 									Elem: &schema.Resource{
 										Schema: map[string]*schema.Schema{
 											"type": {
 												Type:        schema.TypeString,
 												Required:    true,
-												Description: "Origin authentication parameter type. Valid values: QueryString: set origin authentication parameter type as query string; Header: set origin authentication parameter type as request header.",
+												Description: "",
 											},
 											"name": {
 												Type:        schema.TypeString,
 												Required:    true,
-												Description: "Origin authentication parameter name.",
+												Description: "",
 											},
 											"value": {
 												Type:        schema.TypeString,
 												Required:    true,
-												Description: "Origin authentication parameter value.",
+												Description: "",
 											},
 										},
 									},
@@ -1155,13 +1155,13 @@ func TencentTeoL7RuleBranchBasicInfo(depth int) map[string]*schema.Schema {
 		schemaMap["sub_rules"] = &schema.Schema{
 			Type:        schema.TypeList,
 			Optional:    true,
-			Description: "List of sub-rules. multiple rules exist in this list and are executed sequentially from top to bottom. note: subrules and actions cannot both be empty. currently, only one layer of subrules is supported.",
+			Description: "",
 			Elem: &schema.Resource{
 				Schema: map[string]*schema.Schema{
 					"branches": {
 						Type:        schema.TypeList,
 						Optional:    true,
-						Description: "Sub-rule branch.",
+						Description: "",
 						Elem: &schema.Resource{
 							Schema: TencentTeoL7RuleBranchBasicInfo(depth + 1),
 						},
@@ -1169,7 +1169,7 @@ func TencentTeoL7RuleBranchBasicInfo(depth int) map[string]*schema.Schema {
 					"description": {
 						Type:        schema.TypeList,
 						Optional:    true,
-						Description: "Rule comments.",
+						Description: "",
 						Elem: &schema.Schema{
 							Type: schema.TypeString,
 						},
