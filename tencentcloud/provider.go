@@ -181,7 +181,7 @@ func init() {
 	commonJson.OmitBehaviour = commonJson.OmitEmpty
 }
 
-// GetAPIV3Conn 返回访问云 API 的客户端连接对象
+// GetAPIV3Conn returns the cloud API client connection used to access TencentCloud APIs.
 func (meta *TencentCloudClient) GetAPIV3Conn() *connectivity.TencentCloudClient {
 	return meta.apiV3Conn
 }
@@ -3064,9 +3064,10 @@ func providerConfigure(d *schema.ResourceData) (interface{}, error) {
 		}
 	}
 
-	// 将已配置好的 connectivity 客户端推送给 framework provider，
-	// 后者在 Configure 阶段会从 sharedmeta.GetSharedMeta() 读取同一份实例，
-	// 从而保证 SDKv2 与 framework 两栈共享凭证、SDK client 缓存、UA、retry 策略。
+	// Push the configured connectivity client to the framework provider; its
+	// Configure step reads the same instance back via sharedmeta.GetSharedMeta(),
+	// so the SDKv2 and framework stacks share credentials, the SDK client cache,
+	// the User-Agent and the retry strategy.
 	sharedmeta.SetSharedMeta(tcClient.apiV3Conn)
 
 	return &tcClient, nil

@@ -1,7 +1,3 @@
 ```release-note:enhancement
 provider: introduce dual-stack architecture combining terraform-plugin-sdk/v2 and terraform-plugin-framework via tf5muxserver. New resources and data sources can now be implemented in either stack while continuing to share credentials and the underlying TencentCloud SDK client. Existing resources are unaffected.
 ```
-
-```release-note:new-data-source
-tencentcloud_provider_runtime
-```

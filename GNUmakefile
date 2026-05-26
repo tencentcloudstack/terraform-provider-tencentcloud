@@ -18,11 +18,13 @@ sweep:
 test: fmtcheck
 	go test $(TEST) -timeout=30s -parallel=4
 
-# check-mux 在不发起任何远程调用的前提下，验证 SDKv2 + framework
-# 双栈通过 tf5muxserver 合并 schema 时不会冲突（包含 GetProviderSchema
-# 实际调用，能抓出 NewMuxServer 阶段无法发现的 byte-level schema 漂移），
-# 并校验两栈资源/数据源类型名集合无交集。新加 framework 资源或修改
-# SDKv2/framework provider 顶层 Schema/MetaSchema 的 PR 必须保证此目标通过。
+# check-mux validates SDKv2 + framework dual-stack mux compatibility without
+# making any remote calls. It boots tf5muxserver to merge schemas (including
+# an actual GetProviderSchema call so byte-level schema drift that
+# NewMuxServer cannot detect is caught here), and asserts that the resource /
+# data source type-name sets across the two stacks are disjoint. Any PR that
+# adds framework references or changes the SDKv2 / framework provider top
+# Schema / MetaSchema MUST keep this target green.
 check-mux: fmtcheck
 	@echo "==> Checking SDKv2/framework provider mux compatibility..."
 	@go test -count=1 -run 'TestMuxServer_NoStartupError|TestMuxServer_GetProviderSchemaNoError|TestFrameworkProvider_NoTypeNameCollision' ./$(PKG_NAME)/framework/
@@ -118,9 +120,11 @@ tools:
 	GO111MODULE=on cd .ci/tools && go install github.com/client9/misspell/cmd/misspell && cd ../..
 	GO111MODULE=on cd .ci/tools && go install github.com/golangci/golangci-lint/cmd/golangci-lint@v1.45.2 && cd ../..
 
-# tfproviderlint-local 在本地 1:1 复现 .github/workflows/tfprovider-lint.yml 的 CI 行为：
-# 安装与 CI 完全一致的 tfproviderlint v0.31.0（已确认兼容 Go 1.25），并对
-# ./tencentcloud 跑同一组检查器（AT/R/S/V）。变更 CI yaml 时，请同步更新本 target。
+# tfproviderlint-local mirrors .github/workflows/tfprovider-lint.yml byte for
+# byte locally: it installs the same tfproviderlint v0.31.0 used by CI
+# (already verified to compile under Go 1.25) and runs the identical set of
+# checkers (AT/R/S/V) against ./tencentcloud. Whenever the CI yaml changes,
+# please keep this target in sync.
 TFPROVIDERLINT_VERSION ?= v0.31.0
 TFPROVIDERLINT_BIN ?= $(shell go env GOPATH)/bin/tfproviderlint
 
@@ -140,9 +144,11 @@ tfproviderlint-local: tfproviderlint-install
 		-V002 -V003 -V004 -V005 -V006 -V007 -V008 \
 		./$(PKG_NAME)
 
-# golangci-lint-local 在本地 1:1 复现 .github/workflows/golangci-lint.yml：
-# 安装与 CI 完全一致的 golangci-lint v2.4.0（基于 Go 1.25 编译），在
-# ./tencentcloud 目录下读取仓根 .golangci.yml，仅检查相对 master 的增量。
+# golangci-lint-local mirrors .github/workflows/golangci-lint.yml byte for
+# byte locally: it installs the same golangci-lint v2.4.0 used by CI (built
+# with the Go 1.25 toolchain) and runs from inside ./tencentcloud, picking up
+# the repo-root .golangci.yml and reporting only issues introduced relative
+# to master.
 GOLANGCI_LINT_VERSION ?= v2.4.0
 GOLANGCI_LINT_BIN ?= $(shell go env GOPATH)/bin/golangci-lint
 
