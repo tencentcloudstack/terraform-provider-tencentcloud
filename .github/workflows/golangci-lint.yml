@@ -35,15 +35,16 @@ jobs:
 
       # Runs a set of commands using the runners shell
       - name: golangci-lint
-        uses: golangci/golangci-lint-action@v6
+        uses: golangci/golangci-lint-action@v8
         with:
           skip-cache: true
-          # v1.64.8 is the last v1.x release and the first v1 line that fully
-          # supports Go 1.25's export data format. Older versions (e.g. v1.54)
-          # ship a go/types built against Go 1.20 and panic with
-          # "could not import sync/atomic ... unsupported version: 2"
-          # when analysing code compiled by Go 1.25.
-          version: v1.64.8
+          # v2.4.0 is the first v2 release built with Go 1.25 toolchain. The v1
+          # series ended at v1.64.8 (Go 1.24-built) and refuses to lint code
+          # whose go.mod declares `go 1.25` with:
+          #   "the Go language version (go1.24) used to build golangci-lint
+          #    is lower than the targeted Go version (1.25.8)"
+          # Configuration file (.golangci.yml) is also v2 schema (version: "2").
+          version: v2.4.0
           working-directory: ./tencentcloud
           args: --new-from-rev=origin/master -v
           #args: --enable-all --max-same-issues=0 --max-issues-per-linter=0 --new-from-rev=origin/master -v
