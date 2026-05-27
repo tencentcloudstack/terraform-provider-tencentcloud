@@ -304,6 +304,7 @@ In addition to all arguments above, the following attributes are exported:
 
 * `id` - ID of the resource.
 * `area` - Acceleration area of the zone. Valid values: `mainland`, `overseas`.
+* `zone_name` - Zone name.
 
 
 ## Import

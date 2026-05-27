@@ -573,7 +573,7 @@ type ApplicationProxy struct {
 	// <li>1：开启加速。</li>
 	AccelerateType *int64 `json:"AccelerateType,omitnil,omitempty" name:"AccelerateType"`
 
-	// 会话保持时间。
+	// 会话保持时间，单位为秒。
 	SessionPersistTime *uint64 `json:"SessionPersistTime,omitnil,omitempty" name:"SessionPersistTime"`
 
 	// 状态，取值有：
@@ -631,7 +631,7 @@ type ApplicationProxyRule struct {
 
 	// 源站信息：
 	// <li>当 OriginType 为 custom 时，表示一个或多个源站，如`["8.8.8.8","9.9.9.9"]` 或 `OriginValue=["test.com"]`；</li>
-	// <li>当 OriginType 为 loadbalancer 时，表示一个负载均衡，如`["lb-xdffsfasdfs"]`；</li>
+	// <li>当 OriginType 为 loadbalancer 时，表示一个负载均衡，如`["lb-3pbiw4d9iqz0"]`；</li>
 	// <li>当 OriginType 为 origins 时，要求有且仅有一个元素，表示源站组ID，如`["origin-537f5b41-162a-11ed-abaa-525400c5da15"]`。</li>
 	OriginValue []*string `json:"OriginValue,omitnil,omitempty" name:"OriginValue"`
 
@@ -658,7 +658,7 @@ type ApplicationProxyRule struct {
 	// <li>false：关闭。</li>默认值：false。
 	SessionPersist *bool `json:"SessionPersist,omitnil,omitempty" name:"SessionPersist"`
 
-	// 会话保持的时间，只有当SessionPersist为true时，该值才会生效。
+	// 会话保持的时间，单位为秒，只有当SessionPersist为true时，该值才会生效。
 	SessionPersistTime *uint64 `json:"SessionPersistTime,omitnil,omitempty" name:"SessionPersistTime"`
 
 	// 源站端口，支持格式：
@@ -2635,7 +2635,7 @@ type CreateApplicationProxyRuleRequestParams struct {
 	// <li>false：关闭。</li>默认值：false。
 	SessionPersist *bool `json:"SessionPersist,omitnil,omitempty" name:"SessionPersist"`
 
-	// 会话保持的时间，只有当SessionPersist为true时，该值才会生效。
+	// 会话保持的时间，单位为秒，只有当SessionPersist为true时，该值才会生效。
 	SessionPersistTime *uint64 `json:"SessionPersistTime,omitnil,omitempty" name:"SessionPersistTime"`
 
 	// 源站端口，支持格式：
@@ -2690,7 +2690,7 @@ type CreateApplicationProxyRuleRequest struct {
 	// <li>false：关闭。</li>默认值：false。
 	SessionPersist *bool `json:"SessionPersist,omitnil,omitempty" name:"SessionPersist"`
 
-	// 会话保持的时间，只有当SessionPersist为true时，该值才会生效。
+	// 会话保持的时间，单位为秒，只有当SessionPersist为true时，该值才会生效。
 	SessionPersistTime *uint64 `json:"SessionPersistTime,omitnil,omitempty" name:"SessionPersistTime"`
 
 	// 源站端口，支持格式：
@@ -4660,41 +4660,22 @@ type CreateRealtimeLogDeliveryTaskRequestParams struct {
 	// 站点 ID。
 	ZoneId *string `json:"ZoneId,omitnil,omitempty" name:"ZoneId"`
 
+	// 数据投递区域，可选值：<ul><li>mainland：中国大陆境内；</li><li>overseas：全球（不含中国大陆）。</li></ul>
+	Area *string `json:"Area,omitnil,omitempty" name:"Area"`
+
+	// 数据投递类型，可选值：<ul><li>domain：站点加速日志；</li><li>application：四层代理日志；</li><li>function：边缘函数运行日志；</li><li>web-rateLiming：速率限制和 CC 攻击防护日志；</li><li>web-attack：托管规则日志；</li><li>web-rule：自定义规则日志；</li><li>web-bot：Bot管理日志。</li></ul>
+	LogType *string `json:"LogType,omitnil,omitempty" name:"LogType"`
+
 	// 实时日志投递任务的名称，格式为数字、英文、-和_组合，最多 200 个字符。
 	TaskName *string `json:"TaskName,omitnil,omitempty" name:"TaskName"`
 
-	// 实时日志投递任务类型，取值有：
-	// <li>cls: 推送到腾讯云 CLS；</li>
-	// <li>custom_endpoint：推送到自定义 HTTP(S) 地址；</li>
-	// <li>s3：推送到 AWS S3 兼容存储桶地址；</li>
-	// <li>log_analysis：推送到 EdgeOne 日志分析，该任务类型仅支持“站点加速日志”这一数据投递类型。</li>
+	// 实时日志投递任务类型，取值有：<ul><li>cls: 推送到腾讯云 CLS；</li><li>custom_endpoint：推送到自定义 HTTP(S) 地址；</li><li>s3：推送到 AWS S3 兼容存储桶地址；</li><li>log_analysis：推送到 EdgeOne 日志分析，仅当 LogType = domain 或 web-attack 时支持。</li></ul>
 	TaskType *string `json:"TaskType,omitnil,omitempty" name:"TaskType"`
 
-	// 实时日志投递任务对应的实体列表。取值示例如下：
-	// <li>七层域名：domain.example.com</li>
-	// <li>四层代理实例：sid-2s69eb5wcms7</li>
-	// <li>边缘函数实例：test-zone-2mxigizoh9l9-1257626257</li>
+	// 实时日志投递任务对应的实体列表。取值示例如下：<ul><li>七层域名：domain.example.com</li><li>四层代理实例：sid-2s69eb5wcms7</li><li>边缘函数实例：test-zone-2mxigizoh9l9-1257626257</li></ul>
 	EntityList []*string `json:"EntityList,omitnil,omitempty" name:"EntityList"`
 
-	// 数据投递类型，取值有：
-	// <li>domain：站点加速日志；</li>
-	// <li>application：四层代理日志；</li>
-	// <li>function：边缘函数运行日志；</li>
-	// <li>web-rateLiming：速率限制和 CC 攻击防护日志；</li>
-	// <li>web-attack：托管规则日志；</li>
-	// <li>web-rule：自定义规则日志；</li>
-	// <li>web-bot：Bot管理日志。</li>
-	LogType *string `json:"LogType,omitnil,omitempty" name:"LogType"`
-
-	// 数据投递区域，取值有：
-	// <li>mainland：中国大陆境内；</li>
-	// <li>overseas：全球（不含中国大陆）。</li>
-	Area *string `json:"Area,omitnil,omitempty" name:"Area"`
-
-	// 投递的预设字段列表。取值参考：
-	// <li>[站点加速日志（七层访问日志）](https://cloud.tencent.com/document/product/1552/105791)</li>
-	// <li>[四层代理日志](https://cloud.tencent.com/document/product/1552/105792)</li>
-	// <li>[边缘函数运行日志](https://cloud.tencent.com/document/product/1552/115585)</li>
+	// 投递的预设字段列表。取值参考：<ul><li>[站点加速日志（七层访问日志）](https://cloud.tencent.com/document/product/1552/105791)</li><li>[四层代理日志](https://cloud.tencent.com/document/product/1552/105792)</li><li>[边缘函数运行日志](https://cloud.tencent.com/document/product/1552/115585)</li></ul>
 	Fields []*string `json:"Fields,omitnil,omitempty" name:"Fields"`
 
 	// 投递的自定义字段列表，支持在 HTTP 请求头、响应头、Cookie、请求正文中提取指定内容。自定义字段名称不能重复，且最多不能超过 200 个字段。单个实时日志推送任务最多添加 5 个请求正文类型的自定义字段。目前仅站点加速日志（LogType=domain）支持添加自定义字段。
@@ -4706,9 +4687,7 @@ type CreateRealtimeLogDeliveryTaskRequestParams struct {
 	// 采样比例，采用千分制，取值范围为1-1000，例如：填写 605 表示采样比例为 60.5%。不填表示采样比例为 100%。
 	Sample *uint64 `json:"Sample,omitnil,omitempty" name:"Sample"`
 
-	// 日志投递的输出格式。不填表示为默认格式，默认格式逻辑如下：
-	// <li>当 TaskType 取值为 custom_endpoint 时，默认格式为多个 JSON 对象组成的数组，每个 JSON 对象为一条日志；</li>
-	// <li>当 TaskType 取值为 s3 时，默认格式为 JSON Lines；</li>特别地，当 TaskType 取值为 cls 或 log_analysis 时，LogFormat.FormatType 的值只能为 json，且 LogFormat 中其他参数将被忽略，建议不传 LogFormat。
+	// 日志投递的输出格式。不填表示为默认格式，默认格式逻辑如下：<ul><li>当 TaskType 取值为 custom_endpoint 时，默认格式为多个 JSON 对象组成的数组，每个 JSON 对象为一条日志；</li><li>当 TaskType 取值为 s3 时，默认格式为 JSON Lines；</li></ul>特别地，当 TaskType 取值为 cls 或 log_analysis 时，LogFormat.FormatType 的值只能为 json，且 LogFormat 中其他参数将被忽略，建议不传 LogFormat。
 	LogFormat *LogFormat `json:"LogFormat,omitnil,omitempty" name:"LogFormat"`
 
 	// CLS 的配置信息。当 TaskType 取值为 cls 时，该参数必填。
@@ -4727,41 +4706,22 @@ type CreateRealtimeLogDeliveryTaskRequest struct {
 	// 站点 ID。
 	ZoneId *string `json:"ZoneId,omitnil,omitempty" name:"ZoneId"`
 
+	// 数据投递区域，可选值：<ul><li>mainland：中国大陆境内；</li><li>overseas：全球（不含中国大陆）。</li></ul>
+	Area *string `json:"Area,omitnil,omitempty" name:"Area"`
+
+	// 数据投递类型，可选值：<ul><li>domain：站点加速日志；</li><li>application：四层代理日志；</li><li>function：边缘函数运行日志；</li><li>web-rateLiming：速率限制和 CC 攻击防护日志；</li><li>web-attack：托管规则日志；</li><li>web-rule：自定义规则日志；</li><li>web-bot：Bot管理日志。</li></ul>
+	LogType *string `json:"LogType,omitnil,omitempty" name:"LogType"`
+
 	// 实时日志投递任务的名称，格式为数字、英文、-和_组合，最多 200 个字符。
 	TaskName *string `json:"TaskName,omitnil,omitempty" name:"TaskName"`
 
-	// 实时日志投递任务类型，取值有：
-	// <li>cls: 推送到腾讯云 CLS；</li>
-	// <li>custom_endpoint：推送到自定义 HTTP(S) 地址；</li>
-	// <li>s3：推送到 AWS S3 兼容存储桶地址；</li>
-	// <li>log_analysis：推送到 EdgeOne 日志分析，该任务类型仅支持“站点加速日志”这一数据投递类型。</li>
+	// 实时日志投递任务类型，取值有：<ul><li>cls: 推送到腾讯云 CLS；</li><li>custom_endpoint：推送到自定义 HTTP(S) 地址；</li><li>s3：推送到 AWS S3 兼容存储桶地址；</li><li>log_analysis：推送到 EdgeOne 日志分析，仅当 LogType = domain 或 web-attack 时支持。</li></ul>
 	TaskType *string `json:"TaskType,omitnil,omitempty" name:"TaskType"`
 
-	// 实时日志投递任务对应的实体列表。取值示例如下：
-	// <li>七层域名：domain.example.com</li>
-	// <li>四层代理实例：sid-2s69eb5wcms7</li>
-	// <li>边缘函数实例：test-zone-2mxigizoh9l9-1257626257</li>
+	// 实时日志投递任务对应的实体列表。取值示例如下：<ul><li>七层域名：domain.example.com</li><li>四层代理实例：sid-2s69eb5wcms7</li><li>边缘函数实例：test-zone-2mxigizoh9l9-1257626257</li></ul>
 	EntityList []*string `json:"EntityList,omitnil,omitempty" name:"EntityList"`
 
-	// 数据投递类型，取值有：
-	// <li>domain：站点加速日志；</li>
-	// <li>application：四层代理日志；</li>
-	// <li>function：边缘函数运行日志；</li>
-	// <li>web-rateLiming：速率限制和 CC 攻击防护日志；</li>
-	// <li>web-attack：托管规则日志；</li>
-	// <li>web-rule：自定义规则日志；</li>
-	// <li>web-bot：Bot管理日志。</li>
-	LogType *string `json:"LogType,omitnil,omitempty" name:"LogType"`
-
-	// 数据投递区域，取值有：
-	// <li>mainland：中国大陆境内；</li>
-	// <li>overseas：全球（不含中国大陆）。</li>
-	Area *string `json:"Area,omitnil,omitempty" name:"Area"`
-
-	// 投递的预设字段列表。取值参考：
-	// <li>[站点加速日志（七层访问日志）](https://cloud.tencent.com/document/product/1552/105791)</li>
-	// <li>[四层代理日志](https://cloud.tencent.com/document/product/1552/105792)</li>
-	// <li>[边缘函数运行日志](https://cloud.tencent.com/document/product/1552/115585)</li>
+	// 投递的预设字段列表。取值参考：<ul><li>[站点加速日志（七层访问日志）](https://cloud.tencent.com/document/product/1552/105791)</li><li>[四层代理日志](https://cloud.tencent.com/document/product/1552/105792)</li><li>[边缘函数运行日志](https://cloud.tencent.com/document/product/1552/115585)</li></ul>
 	Fields []*string `json:"Fields,omitnil,omitempty" name:"Fields"`
 
 	// 投递的自定义字段列表，支持在 HTTP 请求头、响应头、Cookie、请求正文中提取指定内容。自定义字段名称不能重复，且最多不能超过 200 个字段。单个实时日志推送任务最多添加 5 个请求正文类型的自定义字段。目前仅站点加速日志（LogType=domain）支持添加自定义字段。
@@ -4773,9 +4733,7 @@ type CreateRealtimeLogDeliveryTaskRequest struct {
 	// 采样比例，采用千分制，取值范围为1-1000，例如：填写 605 表示采样比例为 60.5%。不填表示采样比例为 100%。
 	Sample *uint64 `json:"Sample,omitnil,omitempty" name:"Sample"`
 
-	// 日志投递的输出格式。不填表示为默认格式，默认格式逻辑如下：
-	// <li>当 TaskType 取值为 custom_endpoint 时，默认格式为多个 JSON 对象组成的数组，每个 JSON 对象为一条日志；</li>
-	// <li>当 TaskType 取值为 s3 时，默认格式为 JSON Lines；</li>特别地，当 TaskType 取值为 cls 或 log_analysis 时，LogFormat.FormatType 的值只能为 json，且 LogFormat 中其他参数将被忽略，建议不传 LogFormat。
+	// 日志投递的输出格式。不填表示为默认格式，默认格式逻辑如下：<ul><li>当 TaskType 取值为 custom_endpoint 时，默认格式为多个 JSON 对象组成的数组，每个 JSON 对象为一条日志；</li><li>当 TaskType 取值为 s3 时，默认格式为 JSON Lines；</li></ul>特别地，当 TaskType 取值为 cls 或 log_analysis 时，LogFormat.FormatType 的值只能为 json，且 LogFormat 中其他参数将被忽略，建议不传 LogFormat。
 	LogFormat *LogFormat `json:"LogFormat,omitnil,omitempty" name:"LogFormat"`
 
 	// CLS 的配置信息。当 TaskType 取值为 cls 时，该参数必填。
@@ -4801,11 +4759,11 @@ func (r *CreateRealtimeLogDeliveryTaskRequest) FromJsonString(s string) error {
 		return err
 	}
 	delete(f, "ZoneId")
+	delete(f, "Area")
+	delete(f, "LogType")
 	delete(f, "TaskName")
 	delete(f, "TaskType")
 	delete(f, "EntityList")
-	delete(f, "LogType")
-	delete(f, "Area")
 	delete(f, "Fields")
 	delete(f, "CustomFields")
 	delete(f, "DeliveryConditions")
@@ -14706,10 +14664,10 @@ type EdgeKVPutRequestParams struct {
 	// 键值。不能为空，最大支持 1 MB。支持存储字符串数据。
 	Value *string `json:"Value,omitnil,omitempty" name:"Value"`
 
-	// 过期时间，绝对时间。表示从 1970 年 1 月 1 日（UTC/GMT 的午夜）开始所经过的秒数，不能小于当前时间。若 Expiration 和 ExpirationTTL 都填写，以 ExpirationTTL 为准。若 Expiration 和 ExpirationTTL 都不填写，则该键值对永不过期。
+	// 键值对的过期时间，绝对时间，单位为秒，表示从 1970 年 1 月 1 日 00:00:00（UTC）起经过的秒数（即 Unix 时间戳）。取值必须大于等于当前时间 + 60，即过期时间距当前至少 60 秒。当 Expiration 与 ExpirationTTL 同时填写时，以 ExpirationTTL 为准；当两者均不填写时，键值对永不过期。
 	Expiration *int64 `json:"Expiration,omitnil,omitempty" name:"Expiration"`
 
-	// 过期时间，相对时间，单位为秒。表示数据将在指定秒数后过期，必须大于 0。若 Expiration 和 ExpirationTTL 都填写，以 ExpirationTTL 为准。若 Expiration 和 ExpirationTTL 都不填写，则该键值对永不过期。
+	// 键值对的存活时长，相对时间，单位为秒，表示数据将在写入后经过指定秒数过期。取值范围：大于等于 60。当 Expiration 与 ExpirationTTL 同时填写时，以 ExpirationTTL 为准；当两者均不填写时，键值对永不过期。
 	ExpirationTTL *int64 `json:"ExpirationTTL,omitnil,omitempty" name:"ExpirationTTL"`
 }
 
@@ -14728,10 +14686,10 @@ type EdgeKVPutRequest struct {
 	// 键值。不能为空，最大支持 1 MB。支持存储字符串数据。
 	Value *string `json:"Value,omitnil,omitempty" name:"Value"`
 
-	// 过期时间，绝对时间。表示从 1970 年 1 月 1 日（UTC/GMT 的午夜）开始所经过的秒数，不能小于当前时间。若 Expiration 和 ExpirationTTL 都填写，以 ExpirationTTL 为准。若 Expiration 和 ExpirationTTL 都不填写，则该键值对永不过期。
+	// 键值对的过期时间，绝对时间，单位为秒，表示从 1970 年 1 月 1 日 00:00:00（UTC）起经过的秒数（即 Unix 时间戳）。取值必须大于等于当前时间 + 60，即过期时间距当前至少 60 秒。当 Expiration 与 ExpirationTTL 同时填写时，以 ExpirationTTL 为准；当两者均不填写时，键值对永不过期。
 	Expiration *int64 `json:"Expiration,omitnil,omitempty" name:"Expiration"`
 
-	// 过期时间，相对时间，单位为秒。表示数据将在指定秒数后过期，必须大于 0。若 Expiration 和 ExpirationTTL 都填写，以 ExpirationTTL 为准。若 Expiration 和 ExpirationTTL 都不填写，则该键值对永不过期。
+	// 键值对的存活时长，相对时间，单位为秒，表示数据将在写入后经过指定秒数过期。取值范围：大于等于 60。当 Expiration 与 ExpirationTTL 同时填写时，以 ExpirationTTL 为准；当两者均不填写时，键值对永不过期。
 	ExpirationTTL *int64 `json:"ExpirationTTL,omitnil,omitempty" name:"ExpirationTTL"`
 }
 
@@ -15096,7 +15054,7 @@ type ExportZoneConfigRequestParams struct {
 	// 站点 ID。
 	ZoneId *string `json:"ZoneId,omitnil,omitempty" name:"ZoneId"`
 
-	// 导出配置项的类型列表，不填表示导出所有类型的配置，当前支持的取值有：<li>L7AccelerationConfig：表示导出七层加速配置，对应控制台「站点加速-全局加速配置」和「站点加速-规则引擎」。</li><li>WebSecurity：表示导出 Web 防护配置。</li> 需注意：后续支持导出的类型会随着迭代增加，导出所有类型时需要注意导出文件大小，建议使用时指定需要导出的配置类型，以便控制请求响应包负载大小。
+	// 导出配置项的类型列表，不填表示导出所有类型的配置，当前支持的取值有：<li>L7AccelerationConfig：表示导出七层加速配置，对应控制台「站点加速-全局加速配置」和「站点加速-规则引擎」。</li><li>WebSecurity：表示导出 Web 防护配置。</li><li> AccelerationDomain：表示导出加速域名配置，对应控制台「域名服务-域名管理」和「域名服务-共享 CNAME 管理」。</li><li> Origin：表示导出源站配置，对应控制台「源站配置-源站组」和「源站配置-负载均衡」。</li> 需注意：后续支持导出的类型会随着迭代增加，导出所有类型时需要注意导出文件大小，建议使用时指定需要导出的配置类型，以便控制请求响应包负载大小。
 	Types []*string `json:"Types,omitnil,omitempty" name:"Types"`
 }
 
@@ -15106,7 +15064,7 @@ type ExportZoneConfigRequest struct {
 	// 站点 ID。
 	ZoneId *string `json:"ZoneId,omitnil,omitempty" name:"ZoneId"`
 
-	// 导出配置项的类型列表，不填表示导出所有类型的配置，当前支持的取值有：<li>L7AccelerationConfig：表示导出七层加速配置，对应控制台「站点加速-全局加速配置」和「站点加速-规则引擎」。</li><li>WebSecurity：表示导出 Web 防护配置。</li> 需注意：后续支持导出的类型会随着迭代增加，导出所有类型时需要注意导出文件大小，建议使用时指定需要导出的配置类型，以便控制请求响应包负载大小。
+	// 导出配置项的类型列表，不填表示导出所有类型的配置，当前支持的取值有：<li>L7AccelerationConfig：表示导出七层加速配置，对应控制台「站点加速-全局加速配置」和「站点加速-规则引擎」。</li><li>WebSecurity：表示导出 Web 防护配置。</li><li> AccelerationDomain：表示导出加速域名配置，对应控制台「域名服务-域名管理」和「域名服务-共享 CNAME 管理」。</li><li> Origin：表示导出源站配置，对应控制台「源站配置-源站组」和「源站配置-负载均衡」。</li> 需注意：后续支持导出的类型会随着迭代增加，导出所有类型时需要注意导出文件大小，建议使用时指定需要导出的配置类型，以便控制请求响应包负载大小。
 	Types []*string `json:"Types,omitnil,omitempty" name:"Types"`
 }
 
@@ -15589,10 +15547,10 @@ type HealthChecker struct {
 	// 检查端口。当 Type=HTTP 或 Type=HTTPS 或 Type=TCP 或 Type=UDP 时为必填。
 	Port *uint64 `json:"Port,omitnil,omitempty" name:"Port"`
 
-	// 检查频率，表示多久发起一次健康检查任务，单位为秒。可取值有：30，60，180，300 或 600。
+	// 检查频率，表示多久发起一次健康检查任务，单位为秒。可配置 10-600 秒。
 	Interval *uint64 `json:"Interval,omitnil,omitempty" name:"Interval"`
 
-	// 每一次健康检查的超时时间，若健康检查消耗时间大于此值，则检查结果判定为”不健康“， 单位为秒，默认值为 5s，取值必须小于 Interval。
+	// 每一次健康检查的超时时间，若健康检查消耗时间大于此值，则检查结果判定为“不健康”， 单位为秒，默认值为 5s，取值必须小于 Interval。
 	Timeout *uint64 `json:"Timeout,omitnil,omitempty" name:"Timeout"`
 
 	// 健康阈值，表示连续几次健康检查结果为"健康"，则判断源站为"健康"，单位为次，默认 3 次，最小取值 1 次。
@@ -17148,7 +17106,7 @@ type ModifyApplicationProxyRuleRequestParams struct {
 	// <li>false：关闭。</li>不填为false。
 	SessionPersist *bool `json:"SessionPersist,omitnil,omitempty" name:"SessionPersist"`
 
-	// 会话保持的时间，只有当SessionPersist为true时，该值才会生效。
+	// 会话保持的时间，单位为秒，只有当SessionPersist为true时，该值才会生效。
 	SessionPersistTime *uint64 `json:"SessionPersistTime,omitnil,omitempty" name:"SessionPersistTime"`
 
 	// 源站端口，支持格式：
@@ -17206,7 +17164,7 @@ type ModifyApplicationProxyRuleRequest struct {
 	// <li>false：关闭。</li>不填为false。
 	SessionPersist *bool `json:"SessionPersist,omitnil,omitempty" name:"SessionPersist"`
 
-	// 会话保持的时间，只有当SessionPersist为true时，该值才会生效。
+	// 会话保持的时间，单位为秒，只有当SessionPersist为true时，该值才会生效。
 	SessionPersistTime *uint64 `json:"SessionPersistTime,omitnil,omitempty" name:"SessionPersistTime"`
 
 	// 源站端口，支持格式：
@@ -21895,6 +21853,9 @@ type RateLimitingRule struct {
 	// 精准速率限制的具体内容，需符合表达式语法，详细规范参见[产品文档](https://cloud.tencent.com/document/product/1552/125343)。
 	Condition *string `json:"Condition,omitnil,omitempty" name:"Condition"`
 
+	// 限速方式。在统计时间窗口 CountingPeriod 内，对满足特征 CountBy 的请求，支持配置以下限速方式：<li>Block: 阻断访问源。当统计次数超过阈值 MaxRequestThreshold 时，在 ActionDuration 时长内，对满足特征的所有后续请求执行 Action 处置；</li><li>Throttle: 仅处置超额请求。当统计次数超过阈值 MaxRequestThreshold 时，仅对超过阈值的请求执行 Action 处置，窗口结束后停止处置。此时，ActionDuration 参数将被忽略。</li><br />默认值为 Block。
+	Mode *string `json:"Mode,omitnil,omitempty" name:"Mode"`
+
 	// 速率阈值请求特征的匹配方式， 当 Enabled 为 on 时，此字段必填。<br /><br />当条件有多个时，将组合多个条件共同进行统计计算，条件最多不可超过5条。取值有：<br/><li><b>http.request.ip</b>：客户端 IP；</li><li><b>http.request.xff_header_ip</b>：客户端 IP（优先匹配 XFF 头部）；</li><li><b>http.request.uri.path</b>：请求的访问路径；</li><li><b>http.request.cookies['session']</b>：名称为 session 的 Cookie，其中 session 可替换为自己指定的参数；</li><li><b>http.request.headers['user-agent']</b>：名称为 user-agent 的 HTTP 头部，其中 user-agent 可替换为自己指定的参数；</li><li><b>http.request.ja3</b>：请求的 JA3 指纹；</li><li><b>http.request.ja4</b>：请求的 JA4 指纹；</li><li><b>http.request.uri.query['test']</b>：名称为 test 的 URL 查询参数，其中 test 可替换为自己指定的参数。</li> 
 	CountBy []*string `json:"CountBy,omitnil,omitempty" name:"CountBy"`
 
@@ -21904,7 +21865,7 @@ type RateLimitingRule struct {
 	// 统计的时间窗口，取值有：<li>1s：1秒；</li><li>5s：5秒；</li><li>10s：10秒；</li><li>20s：20秒；</li><li>30s：30秒；</li><li>40s：40秒；</li><li>50s：50秒；</li><li>1m：1分钟；</li><li>2m：2分钟；</li><li>5m：5分钟；</li><li>10m：10分钟；</li><li>1h：1小时。</li> 
 	CountingPeriod *string `json:"CountingPeriod,omitnil,omitempty" name:"CountingPeriod"`
 
-	// Action 动作的持续时长，单位仅支持：<li>s：秒，取值 1 ~ 120；</li><li>m：分钟，取值 1 ~ 120；</li><li>h：小时，取值 1 ~ 48；</li><li>d：天，取值 1 ~ 30。</li>
+	// Action 动作的持续时长，单位仅支持：<li>s：秒，取值 1 ~ 120；</li><li>m：分钟，取值 1 ~ 120；</li><li>h：小时，取值 1 ~ 48；</li><li>d：天，取值 1 ~ 30。</li><br />当 Mode 为 Throttle 时，此参数将被忽略，不会生效。
 	ActionDuration *string `json:"ActionDuration,omitnil,omitempty" name:"ActionDuration"`
 
 	// 精准速率限制的处置方式。取值有：<li>Monitor：观察；</li><li>Deny：拦截，其中DenyActionParameters.Name支持Deny和ReturnCustomPage；</li><li>Challenge：挑战，其中ChallengeActionParameters.Name支持JSChallenge和ManagedChallenge；</li><li>Redirect：重定向至URL；</li>
@@ -22404,6 +22365,7 @@ type RuleEngineAction struct {
 	// <li>Shield：源站卸载配置；</li>
 	// <li>TLSConfig：SSL/TLS 安全；</li>
 	// <li>ModifyOrigin：修改源站；</li>
+	// <li> SiteFailover：源站故障转移；</li>
 	// <li>HTTPUpstreamTimeout：七层回源超时配置；</li>
 	// <li>HttpResponse：HTTP 应答；</li>
 	// <li>ErrorPage：自定义错误页面；</li>
@@ -22531,6 +22493,10 @@ type RuleEngineAction struct {
 	// 修改源站配置参数，当 Name 取值为 ModifyOrigin 时，该参数必填。
 	// 注意：此字段可能返回 null，表示取不到有效值。
 	ModifyOriginParameters *ModifyOriginParameters `json:"ModifyOriginParameters,omitnil,omitempty" name:"ModifyOriginParameters"`
+
+	// 源站故障转移配置参数，当 Name 取值为 SiteFailover 时，该参数必填。
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	SiteFailoverParameters *SiteFailoverParameters `json:"SiteFailoverParameters,omitnil,omitempty" name:"SiteFailoverParameters"`
 
 	// 七层回源超时配置，当 Name 取值为 HTTPUpstreamTimeout 时，该参数必填。
 	// 注意：此字段可能返回 null，表示取不到有效值。
@@ -22989,6 +22955,73 @@ type SharedCNAMEInfo struct {
 type ShieldParameters struct {
 	// 源站卸载空间 ID。
 	ShieldSpaceId *string `json:"ShieldSpaceId,omitnil,omitempty" name:"ShieldSpaceId"`
+}
+
+type SiteFailover struct {
+	// 源站故障转移类型。取值有：
+	// <li>FailoverToHost:回源到指定 IP/域名；</li>
+	// <li> FailoverToCOS:回源到腾讯云 COS；</li>
+	// <li>FailoverToS3CompatibleObjectStorage:回源到 S3 兼容；</li>
+	// <li> FailoverRedirectToURL :重定向至指定 URL；</li>
+	// <li> FailoverCustomResponsePage:使用自定义响应页面。</li>
+	Mode *string `json:"Mode,omitnil,omitempty" name:"Mode"`
+
+	// 源站地址，根据 Mode 的取值分为以下情况：
+	// <li>当 Mode = FailoverToHost 时，该参数请填写 IPV4、IPV6 地址或域名；</li>
+	// <li>当 Mode = FailoverToCOS 时，该参数请填写 COS 桶的访问域名；</li>
+	// <li>当 Mode = FailoverToS3CompatibleObjectStorage，该参数请填写 S3 桶的访问域名。</li>
+	Origin *string `json:"Origin,omitnil,omitempty" name:"Origin"`
+
+	// 回源协议配置。当 Mode 取值为 FailoverToHost 时该参数必填。取值有：
+	// <li>http：使用 HTTP 协议；</li>
+	// <li>https：使用 HTTPS 协议；</li>
+	// <li>follow：协议跟随。</li>
+	OriginProtocol *string `json:"OriginProtocol,omitnil,omitempty" name:"OriginProtocol"`
+
+	// HTTP 回源端口，取值范围 1～65535。当回源协议 OriginProtocol 为 http 或者 follow 时该参数必填。
+	HTTPOriginPort *int64 `json:"HTTPOriginPort,omitnil,omitempty" name:"HTTPOriginPort"`
+
+	// HTTPS 回源端口，取值范围 1～65535。当回源协议 OriginProtocol 为 https 或者 follow 时该参数必填。
+	HTTPSOriginPort *int64 `json:"HTTPSOriginPort,omitnil,omitempty" name:"HTTPSOriginPort"`
+
+	// 回源Host Header 重写配置，
+	UpstreamHostHeader *HostHeaderParameters `json:"UpstreamHostHeader,omitnil,omitempty" name:"UpstreamHostHeader"`
+
+	// 回源 URL 重写配置。
+	UpstreamURLRewrite *UpstreamURLRewriteParameters `json:"UpstreamURLRewrite,omitnil,omitempty" name:"UpstreamURLRewrite"`
+
+	// 回源请求参数配置。
+	UpstreamRequestParameters *UpstreamRequestParameters `json:"UpstreamRequestParameters,omitnil,omitempty" name:"UpstreamRequestParameters"`
+
+	// HTTP2 回源配置参数。
+	UpstreamHTTP2Parameters *UpstreamHTTP2Parameters `json:"UpstreamHTTP2Parameters,omitnil,omitempty" name:"UpstreamHTTP2Parameters"`
+
+	// 指定是否允许访问私有对象存储源站，当源站类型 Mode = FailoverToCOS 或 FailoverToS3CompatibleObjectStorage 时该参数必填，取值有：
+	// <li>on：使用私有鉴权；</li>
+	// <li>off：不使用私有鉴权。</li>
+	PrivateAccess *string `json:"PrivateAccess,omitnil,omitempty" name:"PrivateAccess"`
+
+	// 私有鉴权使用参数，该参数仅当 Mode = FailoverToS3CompatibleObjectStorage 且 PrivateAccess = on 时会生效。
+	PrivateParameters *OriginPrivateParameters `json:"PrivateParameters,omitnil,omitempty" name:"PrivateParameters"`
+
+	// 重定向目标 URL。当 Mode 取值为 FailoverRedirectToURL 时该参数必填。
+	RedirectURL *string `json:"RedirectURL,omitnil,omitempty" name:"RedirectURL"`
+
+	// 响应页面 ID。当 Mode 取值为 FailoverCustomResponsePage 时该参数必填。
+	ResponsePageId *string `json:"ResponsePageId,omitnil,omitempty" name:"ResponsePageId"`
+
+	// 响应状态码。当 Mode 取值为 FailoverRedirectToURL 或 FailoverCustomResponsePage 时该参数必填。取值有：
+	// <li>当 Mode = FailoverRedirectToURL 时，该参数取值为 301、302、303、307、308 之一；</li>
+	// <li>当 Mode = FailoverCustomResponsePage 时，该参数取值为 400、403、404、405、414、416、451、500、501、502、503、504 之一。</li>
+	StatusCode *int64 `json:"StatusCode,omitnil,omitempty" name:"StatusCode"`
+}
+
+type SiteFailoverParameters struct {
+	// 源站故障转移条件状态码。当源站返回的响应状态码命中本字段返回时，才会按照SiteFailoverParams执行源站转移。该参数取值为 4xx、5xx 之一。
+	SiteFailoverStatusCodes []*int64 `json:"SiteFailoverStatusCodes,omitnil,omitempty" name:"SiteFailoverStatusCodes"`
+
+	// 源站故障转移配置参数列表。最小长度为1，最大长度为2。
+	SiteFailoverParams []*SiteFailover `json:"SiteFailoverParams,omitnil,omitempty" name:"SiteFailoverParams"`
 }
 
 type SkipCondition struct {
