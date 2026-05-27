@@ -2668,3 +2668,9 @@ tencentcloud_gs_android_instances
 KeeWiDB
 Data Source
 tencentcloud_keewidb_instances
+
+Global Accelerator 2(GA2)
+Data Source
+tencentcloud_ga2_accelerate_regions
+Resource
+tencentcloud_ga2_endpoint_group
