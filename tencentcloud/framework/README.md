@@ -1,60 +1,70 @@
 # tencentcloud/framework
 
-Home of the terraform-plugin-framework Provider entry point and every
-framework-side resource / data source.
+Home of the terraform-plugin-framework Provider entry point. Business
+references (resources, data sources, functions, ephemeral resources, list
+resources and actions) are **co-located with the SDKv2 implementations**
+under `tencentcloud/services/<product>/` — there is no separate
+framework subtree for business code.
+
+> Current state: the framework Provider is wired into mux but **no
+> business references are registered yet**. The six factory slices in
+> `registry.go` are all empty. Add new references following the workflow
+> in [Adding a new framework reference](#adding-a-new-framework-reference).
 
 ## Directory layout
 
-Everything related to framework (entry point, registry, tests and the
-six business-type implementations) lives under `tencentcloud/framework/`,
-organised in a two-level **"product (service) -> type"** structure:
-
 ```
-tencentcloud/framework/
-├── provider.go              # framework Provider implementation (Schema / Configure / Resources / DataSources / Functions / EphemeralResources / ListResources / Actions)
-├── registry.go              # six aggregator functions: frameworkResources / frameworkDataSources / frameworkFunctions / frameworkEphemeralResources / frameworkListResources / frameworkActions
-├── provider_test.go         # in-package tests: mux startup sanity + no type-name collisions
-├── testhelpers_test.go      # in-package test helpers
-├── README.md                # this file
-├── cvm/                     # product: CVM
-│   └── actions/             # package cvmactions
-│       ├── reboot_instance_action.go
-│       └── reboot_instance_action_test.go
-└── meta/                    # meta product: cross-product / not bound to any specific cloud product
-    ├── resources/           # package metaresources
-    │   ├── local_note_resource.go
-    │   └── local_note_resource_test.go
-    ├── datasources/         # package metadatasources
-    │   ├── provider_runtime_data_source.go
-    │   └── provider_runtime_data_source_test.go
-    ├── functions/           # package metafunctions
-    │   ├── parse_resource_id_function.go
-    │   └── parse_resource_id_function_test.go
-    ├── ephemerals/          # package metaephemerals
-    │   ├── temp_credential_ephemeral_resource.go
-    │   └── temp_credential_ephemeral_resource_test.go
-    └── lists/               # package metalists (**L0 placeholder**, not wired into registry)
-        ├── region_list_resource.go
-        └── region_list_resource_test.go
+tencentcloud/
+├── framework/                # framework entry only — no business code lives here
+│   ├── provider.go           # framework Provider implementation (Schema / Configure / Resources / DataSources / Functions / EphemeralResources / ListResources / Actions)
+│   ├── registry.go           # SDKv2-style central manifest: six append-only factory slices
+│   ├── provider.md           # framework reference index consumed by gendoc/
+│   ├── provider_test.go      # in-package tests: mux startup sanity + no type-name collisions
+│   ├── testhelpers_test.go   # in-package test helpers
+│   ├── acctest/              # ProtoV5 test factories shared by acceptance tests
+│   ├── internal/             # framework-only helpers (Go-internal-visible to framework/...)
+│   └── README.md             # this file
+└── services/
+    ├── common/               # cross-product / provider-meta references (package common)
+    ├── cvm/                  # CVM product (package cvm; SDKv2 + framework can mix)
+    └── <product>/            # any other product follows the same pattern
 ```
 
-### Package naming convention (mandatory)
+### File naming convention (mandatory)
 
-- Top-level package name of `tencentcloud/framework/`: **`framework`**.
-- Product directories (`cvm/` / `meta/` / future `vpc/` etc.) **do not**
-  contain `.go` files of their own; they are pure namespace containers.
-- The package name of a type subdirectory is **`<product><type-plural>`**
-  (the product prefix disambiguates same-named subpackages across
-  products), for example:
-  - `framework/cvm/actions/` -> `package cvmactions`
-  - `framework/meta/resources/` -> `package metaresources`
-  - `framework/meta/datasources/` -> `package metadatasources`
-  - `framework/meta/functions/` -> `package metafunctions`
-  - `framework/meta/ephemerals/` -> `package metaephemerals`
-  - `framework/meta/lists/` -> `package metalists`
+Framework references follow the same `<dtype>_tc_<name>.go` template
+used by SDKv2 resources / data sources, with one new prefix per
+framework type:
 
-This way `registry.go` can import same-typed subpackages from multiple
-products without needing aliases.
+| Framework type | File prefix | Example |
+|---|---|---|
+| Resource | `resource_tc_` | `resource_tc_local_note.go` |
+| Data Source | `data_source_tc_` | `data_source_tc_provider_runtime.go` |
+| Function | `function_tc_` | `function_tc_parse_resource_id.go` |
+| Ephemeral Resource | `ephemeral_tc_` | `ephemeral_tc_temp_credential.go` |
+| List Resource | `list_tc_` | `list_tc_region.go` |
+| Action | `action_tc_` | `action_tc_cvm_reboot_instance.go` |
+
+When a reference is product-specific, include the product segment (e.g.
+`action_tc_cvm_reboot_instance`); when it lives under `services/common/`,
+the product segment is omitted (e.g. `resource_tc_local_note`).
+
+Each reference ships with a sibling Markdown file (`<stem>.md`)
+containing the description and `Example Usage` block consumed by `make
+doc`. `gendoc` accepts both `<dtype>_tc_<resName>.md` and
+`<dtype>_tc_<product>_<resName>.md` — the same naming the file uses.
+
+### Package naming convention
+
+The Go package of every framework reference is the **same as the SDKv2
+package of that product**:
+
+- `services/common/` → `package common`
+- `services/cvm/` → `package cvm`
+
+There is no per-type subpackage (the older `cvmactions` / `metaresources`
+split has been removed): the SDKv2 and framework code share one package
+per service directory and import paths stay simple.
 
 ## Wiring into main.go
 
@@ -62,7 +72,7 @@ products without needing aliases.
 provider binary via `tf5muxserver`:
 
 ```go
-primary := tencentcloud.Provider()                  // SDKv2 entry (still under the tencentcloud package for now)
+primary := tencentcloud.Provider()                  // SDKv2 entry
 fw := framework.NewProvider(primary)                // entry of this package
 providers := []func() tfprotov5.ProviderServer{
     primary.GRPCProvider,
@@ -71,83 +81,76 @@ providers := []func() tfprotov5.ProviderServer{
 muxServer, _ := tf5muxserver.NewMuxServer(ctx, providers...)
 ```
 
-Callers **use the package name `framework` directly**; the legacy
-`fwprovider` alias is no longer used.
+## Adding a new framework reference
 
-## Adding a new framework resource / data source / type
+The central manifest `tencentcloud/framework/registry.go` mirrors the
+SDKv2 `provider.go` style: each framework reference type owns an
+append-only factory slice (`resourceFactories`, `dataSourceFactories`,
+`functionFactories`, `ephemeralResourceFactories`,
+`listResourceFactories`, `actionFactories`). The six framework Provider
+callbacks return these slices verbatim.
 
-Land directly into the two-level "product / type" layout. There is no
-longer a `services/<service>/framework.go` middle layer.
+### Workflow
 
-### Example: add a framework resource under CVM
+1. **Implement the factory** in the matching `services/<product>/`
+   package (e.g. `services/cvm/resource_tc_cvm_my_thing.go`):
 
-```bash
-mkdir -p tencentcloud/framework/cvm/resources
-```
+   ```go
+   package cvm
 
-```go
-// tencentcloud/framework/cvm/resources/instance_resource.go
-package cvmresources
+   func NewMyThingResource() resource.Resource { return &myThingResource{} }
+   // ... implement resource.Resource + resource.ResourceWithConfigure ...
+   ```
 
-func NewInstanceResource() resource.Resource { return &instanceResource{} }
-// ... implement resource.Resource + resource.ResourceWithConfigure ...
-```
+2. **Register the factory** by adding **one line** to the matching
+   slice in `framework/registry.go`:
 
-Then wire it up inside `tencentcloud/framework/registry.go`:
+   ```go
+   var resourceFactories = []func() resource.Resource{
+       cvm.NewMyThingResource, // <- one line, alphabetically grouped by product
+   }
+   ```
 
-```go
-import (
-    cvmresources "github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/framework/cvm/resources"
-    // ... other existing imports ...
-)
+   If the product subpackage is not yet imported in `registry.go`, add
+   one import line as well. `provider.go` does not need to change.
 
-func frameworkResources() []func() resource.Resource {
-    out := make([]func() resource.Resource, 0)
-    out = append(out, metaresources.NewLocalNoteResource)
-    out = append(out, cvmresources.NewInstanceResource)  // <- newly wired in
-    return out
-}
-```
+3. **Add the reference to the framework index** in
+   `framework/provider.md` so `make doc` picks it up. Use the same
+   "product header / type label / type name" syntax as
+   `tencentcloud/provider.md`. For example:
 
-`provider.go` does not need to change.
+   ```
+   Cloud Virtual Machine(CVM)
+   Resource
+   tencentcloud_my_thing
+   ```
+
+4. **Ship a sibling Markdown** next to the Go file (e.g.
+   `resource_tc_cvm_my_thing.md`) containing a short description and a
+   required `Example Usage` HCL block.
+
+That is the complete workflow — no edits to `provider.go`, no per-service
+register file, no init() magic.
 
 ### Product-ownership rules
 
-- Resources that **clearly belong to a real cloud product** MUST land in
-  the corresponding product directory (e.g. `framework/vpc/resources/...`).
-- Resources that are **cross-product or not bound to any specific cloud
-  product** MAY land under `framework/meta/` (for example, the provider's
+- References that **clearly belong to a real cloud product** MUST land
+  in the corresponding product directory (e.g.
+  `services/vpc/resource_tc_vpc_xxx.go`).
+- References that are **cross-product or not bound to any specific cloud
+  product** MAY land in `services/common/` (for example, the provider's
   own runtime metadata, or local-only helper functions).
-
-## Six-type reference implementations cheat sheet
-
-| Type | Package path | Type name | Level | Notes |
-|---|---|---|---|---|
-| resource | `framework/meta/resources/` | `tencentcloud_local_note` | L2 | Pure local in-memory resource (CRUD only operates on a sync.Map). |
-| datasource | `framework/meta/datasources/` | `tencentcloud_provider_runtime` | L2 | Provider runtime metadata (no IO). |
-| function | `framework/meta/functions/` | `parse_resource_id` | L2 | `(id, sep) -> list[string]`, plain `strings.Split`. |
-| ephemeral | `framework/meta/ephemerals/` | `tencentcloud_temp_credential` | L2 | Locally constructs a 5-minute placeholder credential. |
-| list | `framework/meta/lists/` | `tencentcloud_region` | **L0** | Static region data + helper only; `list.ListResource` interface is **not** implemented (see the in-package doc comment). |
-| action | `framework/cvm/actions/` | `tencentcloud_reboot_instance` | L2 | Validates instance_id with a regex and logs; **does NOT call** the CVM API. The execution method is **`Invoke`**. |
-
-> **L0 downgrade note for the list type**: framework v1.19's
-> `list.ListResource` requires the list type name to match an
-> **already-registered managed resource** and demands `ResourceIdentity`
-> plus a Go 1.23 `iter.Seq[ListResult]` iterator. A full integration
-> requires first implementing the same-named `tencentcloud_region`
-> resource together with its IdentitySchema, which is beyond the scope of
-> this directory's initial drop. It will be addressed in a separate
-> follow-up change.
 
 ## Relationship with SDKv2
 
-- Credentials, the SDK client, UA and retry are **resolved and built only
-  by the SDKv2 provider**. This provider reuses the same
+- Credentials, the SDK client, UA and retry are **resolved and built
+  only by the SDKv2 provider**. This provider reuses the same
   `*connectivity.TencentCloudClient` via
   `internal/sharedmeta.GetSharedMeta()`.
 - This provider's Schema **must mirror SDKv2** (same names, same
-  semantics, same nested structure); otherwise mux will reject the user's
-  HCL fields when merging the two schemas.
+  semantics, same nested structure); otherwise mux will reject the
+  user's HCL fields when merging the two schemas. The mux startup
+  invariants are exercised by `make check-mux`.
 - During Configure, `*sharedmeta.ProviderMeta` is written into all four
   fields `resp.{ResourceData, DataSourceData, EphemeralResourceData,
   ActionData}`.

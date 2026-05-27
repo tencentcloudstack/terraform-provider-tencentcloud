@@ -2,24 +2,29 @@
 // TencentCloud provider.
 //
 // This package coexists with the SDKv2-based `tencentcloud.Provider()` inside
-// the same provider binary via tf5muxserver. Directory layout: everything
-// framework-related (entry point, registry and business implementations)
-// lives under `tencentcloud/framework/`:
+// the same provider binary via tf5muxserver. Directory layout: framework
+// entry-points (provider, registry, tests) live under
+// `tencentcloud/framework/`, while every business reference (resource,
+// data source, function, ephemeral, list, action) is co-located with the
+// SDKv2 implementations under `tencentcloud/services/<product>/`:
 //
 //	tencentcloud/
-//	├── framework/                 # this package: framework entry + business code
+//	├── framework/                 # this package: framework entry only
 //	│   ├── provider.go            # Provider Schema/Configure (this file)
 //	│   ├── registry.go            # 6-type aggregator
-//	│   ├── cvm/                   # product-level subdirectory
-//	│   │   └── actions/           # type-level subdirectory (package cvmactions)
-//	│   └── meta/                  # cross-product / not bound to any specific cloud product
-//	│       ├── resources/         # package metaresources
-//	│       ├── datasources/       # package metadatasources
-//	│       ├── functions/         # package metafunctions
-//	│       ├── ephemerals/        # package metaephemerals
-//	│       └── lists/             # package metalists
-//	└── provider/
-//	    └── sdkv2/                 # placeholder: future home of the SDKv2 provider entry
+//	│   ├── acctest/               # ProtoV5 test factories
+//	│   └── internal/              # framework-only helpers
+//	└── services/
+//	    ├── common/                # cross-product / provider-meta references
+//	    │   ├── data_source_tc_provider_runtime.go
+//	    │   ├── resource_tc_local_note.go
+//	    │   ├── function_tc_parse_resource_id.go
+//	    │   ├── ephemeral_tc_temp_credential.go
+//	    │   └── list_tc_region.go
+//	    ├── cvm/                   # CVM product (SDKv2 + framework mixed)
+//	    │   ├── resource_tc_instance.go        # SDKv2
+//	    │   └── action_tc_cvm_reboot_instance.go  # framework
+//	    └── <product>/             # other products follow the same pattern
 //
 // Design notes:
 //   - Credentials, SDK client, UA and retry are constructed exclusively by
@@ -30,8 +35,8 @@
 //     the two schemas.
 //   - Resources/DataSources/Functions/EphemeralResources/ListResources/
 //     Actions are gathered by aggregator functions in registry.go, which
-//     imports product-level factory subpackages directly. There is no longer
-//     an intermediate `services/tcprovider/framework.go` layer.
+//     imports product-level packages directly from
+//     `tencentcloud/services/`.
 package framework
 
 import (
@@ -323,9 +328,9 @@ func (p *Provider) Configure(ctx context.Context, req provider.ConfigureRequest,
 }
 
 // Resources aggregates every framework-side resource. The concrete entries
-// are gathered by frameworkResources() in tencentcloud/framework/registry.go
-// using a two-level "product (service) -> type" directory layout (e.g.
-// framework/meta/resources/).
+// are gathered by frameworkResources() in tencentcloud/framework/registry.go,
+// which imports factories directly from `tencentcloud/services/<product>/`
+// (e.g. `services/common/` for cross-product references).
 func (p *Provider) Resources(_ context.Context) []func() resource.Resource {
 	return frameworkResources()
 }
@@ -351,9 +356,9 @@ func (p *Provider) ListResources(_ context.Context) []func() list.ListResource {
 }
 
 // Actions aggregates every framework-side action. Implementations live in
-// tencentcloud/framework/<product>/actions/ product subpackages (for
-// example, framework/cvm/actions/) and are gathered by frameworkActions() in
-// registry.go.
+// tencentcloud/services/<product>/ packages (for example,
+// `services/cvm/action_tc_cvm_reboot_instance.go`) and are gathered by
+// frameworkActions() in registry.go.
 func (p *Provider) Actions(_ context.Context) []func() action.Action {
 	return frameworkActions()
 }

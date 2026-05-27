@@ -2,8 +2,8 @@
 // sdkv2 documentation generator. It enumerates the six framework
 // reference types (Resource / DataSource / Function / EphemeralResource /
 // ListResource / Action), reads their per-type markdown files placed
-// next to the Go source under tencentcloud/framework/<product>/<type>/,
-// and renders them into website/docs/<dir>/<resource>.html.markdown.
+// next to the Go source under tencentcloud/services/<product>/, and
+// renders them into website/docs/<dir>/<resource>.html.markdown.
 //
 // Output dirs:
 //
@@ -71,14 +71,10 @@ func (t fwDocType) outputDir() string {
 	return ""
 }
 
-// sourceMdRelDir maps a framework doc type to the in-tree path under
-// tencentcloud/framework/<product>/ where the .md file is colocated with
-// the Go source. The full relative path looks like:
-//
-//	framework/<product>/<sourceMdRelDir>/<resource>.md
-//
-// The <product> segment comes from the framework registry — meta for
-// cross-product references, cvm for CVM, etc.
+// sourceMdRelDir is no longer used as a directory name (framework
+// references now live alongside SDKv2 code under
+// tencentcloud/services/<product>/). It is retained as documentation of
+// the legacy directory naming for reference only.
 func (t fwDocType) sourceMdRelDir() string {
 	switch t {
 	case fwResource:
@@ -93,6 +89,28 @@ func (t fwDocType) sourceMdRelDir() string {
 		return "lists"
 	case fwAction:
 		return "actions"
+	}
+	return ""
+}
+
+// mdFilePrefix returns the file-name prefix used by the new
+// services/<product>/ layout. Combined with the resource short name and
+// an optional product segment, it forms the full <prefix><resName>.md or
+// <prefix><product>_<resName>.md filename.
+func (t fwDocType) mdFilePrefix() string {
+	switch t {
+	case fwResource:
+		return "resource_tc_"
+	case fwDataSrc:
+		return "data_source_tc_"
+	case fwFunction:
+		return "function_tc_"
+	case fwEphemeral:
+		return "ephemeral_tc_"
+	case fwList:
+		return "list_tc_"
+	case fwAction:
+		return "action_tc_"
 	}
 	return ""
 }
@@ -113,6 +131,7 @@ type frameworkProduct struct {
 // loop. It is invoked from main() after the sdkv2 generation completes.
 func genFrameworkDocs(repoRoot string) []frameworkProduct {
 	frameworkRoot := filepath.Join(repoRoot, "framework")
+	servicesRoot := filepath.Join(repoRoot, "services")
 
 	// 1) Build framework provider so we can drive 6 factory aggregators.
 	primary := cloud.Provider()
@@ -126,7 +145,7 @@ func genFrameworkDocs(repoRoot string) []frameworkProduct {
 	for _, fac := range prov.Resources(ctx) {
 		r := fac()
 		name := frameworkResourceTypeName(ctx, primary, r)
-		genFrameworkDoc(frameworkRoot, fwResource, name, productOf(products, name, fwResource), func(out *map[string]fwAttrSpec) string {
+		genFrameworkDoc(servicesRoot, fwResource, name, productOf(products, name, fwResource), func(out *map[string]fwAttrSpec) string {
 			resp := resource.SchemaResponse{}
 			r.Schema(ctx, resource.SchemaRequest{}, &resp)
 			*out = flattenResourceSchema(resp.Schema)
@@ -136,7 +155,7 @@ func genFrameworkDocs(repoRoot string) []frameworkProduct {
 	for _, fac := range prov.DataSources(ctx) {
 		ds := fac()
 		name := frameworkDataSourceTypeName(ctx, primary, ds)
-		genFrameworkDoc(frameworkRoot, fwDataSrc, name, productOf(products, name, fwDataSrc), func(out *map[string]fwAttrSpec) string {
+		genFrameworkDoc(servicesRoot, fwDataSrc, name, productOf(products, name, fwDataSrc), func(out *map[string]fwAttrSpec) string {
 			resp := datasource.SchemaResponse{}
 			ds.Schema(ctx, datasource.SchemaRequest{}, &resp)
 			*out = flattenDataSourceSchema(resp.Schema)
@@ -147,7 +166,7 @@ func genFrameworkDocs(repoRoot string) []frameworkProduct {
 		for _, fac := range pf.Functions(ctx) {
 			fn := fac()
 			name := frameworkFunctionName(ctx, primary, fn)
-			genFrameworkDoc(frameworkRoot, fwFunction, name, productOf(products, name, fwFunction), func(out *map[string]fwAttrSpec) string {
+			genFrameworkDoc(servicesRoot, fwFunction, name, productOf(products, name, fwFunction), func(out *map[string]fwAttrSpec) string {
 				resp := function.DefinitionResponse{}
 				fn.Definition(ctx, function.DefinitionRequest{}, &resp)
 				*out = flattenFunctionDefinition(resp.Definition)
@@ -159,7 +178,7 @@ func genFrameworkDocs(repoRoot string) []frameworkProduct {
 		for _, fac := range pe.EphemeralResources(ctx) {
 			er := fac()
 			name := frameworkEphemeralName(ctx, primary, er)
-			genFrameworkDoc(frameworkRoot, fwEphemeral, name, productOf(products, name, fwEphemeral), func(out *map[string]fwAttrSpec) string {
+			genFrameworkDoc(servicesRoot, fwEphemeral, name, productOf(products, name, fwEphemeral), func(out *map[string]fwAttrSpec) string {
 				resp := ephemeral.SchemaResponse{}
 				er.Schema(ctx, ephemeral.SchemaRequest{}, &resp)
 				*out = flattenEphemeralSchema(resp.Schema)
@@ -170,18 +189,18 @@ func genFrameworkDocs(repoRoot string) []frameworkProduct {
 	// list resources are deliberately not enumerated from the registry
 	// (the framework v1.19 list.ListResource interface needs a companion
 	// managed resource that does not yet exist). The .md files placed
-	// under framework/meta/lists/ are however parsed via the framework
+	// under services/common/ are however parsed via the framework
 	// provider.md index so that, once the real list reference is wired
 	// up, the documentation pipeline keeps working with no changes.
 	for _, name := range allListNames(products) {
-		genFrameworkListPlaceholder(frameworkRoot, name, productOfList(products, name))
+		genFrameworkListPlaceholder(servicesRoot, name, productOfList(products, name))
 	}
 	_ = frameworklist.ListResource(nil) // keep the import alive for future use
 	if pa, ok := prov.(frameworkprovider.ProviderWithActions); ok {
 		for _, fac := range pa.Actions(ctx) {
 			a := fac()
 			name := frameworkActionName(ctx, primary, a)
-			genFrameworkDoc(frameworkRoot, fwAction, name, productOf(products, name, fwAction), func(out *map[string]fwAttrSpec) string {
+			genFrameworkDoc(servicesRoot, fwAction, name, productOf(products, name, fwAction), func(out *map[string]fwAttrSpec) string {
 				resp := frameworkaction.SchemaResponse{}
 				a.Schema(ctx, frameworkaction.SchemaRequest{}, &resp)
 				*out = flattenActionSchema(resp.Schema)
@@ -199,9 +218,9 @@ type schemaExtractor func(out *map[string]fwAttrSpec) string
 
 // genFrameworkDoc renders a single .md file for any framework reference
 // type. It mirrors the sdkv2 genDoc function but reads the inline .md
-// from framework/<product>/<type>/<name>.md and writes the rendered
-// markdown to website/docs/<outputDir>/<name>.html.markdown.
-func genFrameworkDoc(frameworkRoot string, dtype fwDocType, name, product string, extract schemaExtractor) {
+// from services/<product>/<dtype>_tc_[<product>_]<resource>.md and writes
+// the rendered markdown to website/docs/<outputDir>/<name>.html.markdown.
+func genFrameworkDoc(servicesRoot string, dtype fwDocType, name, product string, extract schemaExtractor) {
 	if name == "" {
 		fail(fmt.Sprintf("framework %s has empty type name", dtype))
 	}
@@ -210,14 +229,14 @@ func genFrameworkDoc(frameworkRoot string, dtype fwDocType, name, product string
 	}
 	resName := name[len(cloudPrefix):]
 
-	// Locate the colocated .md file. The product string we read from the
-	// framework provider.md is purely a UI label — the on-disk product
-	// segment is fixed by the registry. We try both: explicit product
-	// (lower-cased without parenthesised aliases) first, then a generic
-	// "meta" fallback.
-	mdPath := lookupFrameworkMd(frameworkRoot, dtype, resName, product)
+	// Locate the colocated .md file under services/. The product label
+	// from framework provider.md is purely a UI label; the on-disk file
+	// is matched by prefix (`<dtype>_tc_`) plus a suffix that may or may
+	// not include a product segment (e.g. both `action_tc_reboot_instance.md`
+	// and `action_tc_cvm_reboot_instance.md` are accepted).
+	mdPath := lookupFrameworkMd(servicesRoot, dtype, resName, product)
 	if mdPath == "" {
-		fail(fmt.Sprintf("framework %s %q is missing its .md file under framework/<product>/%s/", dtype, name, dtype.sourceMdRelDir()))
+		fail(fmt.Sprintf("framework %s %q is missing its .md file under services/<product>/ (expected %s[<product>_]%s.md)", dtype, name, dtype.mdFilePrefix(), resName))
 	}
 
 	raw, err := os.ReadFile(mdPath)
@@ -293,11 +312,11 @@ func genFrameworkDoc(frameworkRoot string, dtype fwDocType, name, product string
 
 // genFrameworkListPlaceholder renders a list resource doc strictly from
 // its colocated .md (no Go schema source available yet).
-func genFrameworkListPlaceholder(frameworkRoot, name, product string) {
+func genFrameworkListPlaceholder(servicesRoot, name, product string) {
 	resName := strings.TrimPrefix(name, cloudPrefix)
-	mdPath := lookupFrameworkMd(frameworkRoot, fwList, resName, product)
+	mdPath := lookupFrameworkMd(servicesRoot, fwList, resName, product)
 	if mdPath == "" {
-		fail(fmt.Sprintf("framework list %q is missing its .md file under framework/<product>/lists/", name))
+		fail(fmt.Sprintf("framework list %q is missing its .md file under services/<product>/ (expected list_tc_[<product>_]%s.md)", name, resName))
 	}
 	raw, err := os.ReadFile(mdPath)
 	if err != nil {
@@ -351,24 +370,42 @@ func genFrameworkListPlaceholder(frameworkRoot, name, product string) {
 	message("[SUCC.]write doc to file success: %s", outPath)
 }
 
-// lookupFrameworkMd searches for a .md file matching <name>.md by
-// walking framework/*/[type]/<name>.md. The product label hint speeds up
-// the lookup but is not required to match.
-func lookupFrameworkMd(frameworkRoot string, dtype fwDocType, resName, _ string) string {
-	relDir := dtype.sourceMdRelDir()
-	if relDir == "" {
+// lookupFrameworkMd searches for a .md file matching the new
+// services/<product>/ naming convention:
+//
+//	services/<product>/<prefix><resName>.md
+//	services/<product>/<prefix><productSegment>_<resName>.md
+//
+// where <prefix> is dtype.mdFilePrefix() (e.g. "action_tc_"). The
+// product label hint is currently unused; we walk the tree once and
+// match by file name. The walk stops at the first hit.
+func lookupFrameworkMd(servicesRoot string, dtype fwDocType, resName, _ string) string {
+	prefix := dtype.mdFilePrefix()
+	if prefix == "" {
 		return ""
 	}
+	// Two acceptable filename shapes:
+	//   1. <prefix><resName>.md            (e.g. resource_tc_local_note.md)
+	//   2. <prefix>*_<resName>.md          (e.g. action_tc_cvm_reboot_instance.md)
+	exact := prefix + resName + ".md"
+	suffix := "_" + resName + ".md"
+
 	var found string
-	_ = filepath.Walk(frameworkRoot, func(p string, info os.FileInfo, err error) error {
+	_ = filepath.Walk(servicesRoot, func(p string, info os.FileInfo, err error) error {
 		if err != nil || info.IsDir() {
 			return nil
 		}
-		if filepath.Base(filepath.Dir(p)) != relDir {
-			return nil
-		}
-		if info.Name() == resName+".md" {
+		fn := info.Name()
+		if fn == exact {
 			found = p
+			return filepath.SkipDir
+		}
+		if strings.HasPrefix(fn, prefix) && strings.HasSuffix(fn, suffix) {
+			// Avoid matching unrelated names where the suffix coincides
+			// (e.g. "*_reboot_instance.md" should not match "instance.md").
+			if found == "" {
+				found = p
+			}
 		}
 		return nil
 	})
@@ -377,6 +414,11 @@ func lookupFrameworkMd(frameworkRoot string, dtype fwDocType, resName, _ string)
 
 // readFrameworkIndex parses tencentcloud/framework/provider.md and
 // returns the per-product reference grouping.
+//
+// An empty index (the header is present but no products / references
+// follow) is a legitimate state — it simply means no framework
+// references are wired into the provider yet. In that case we return an
+// empty slice so the rest of the generator can run without fataling.
 func readFrameworkIndex(frameworkRoot string) []frameworkProduct {
 	path := filepath.Join(frameworkRoot, "provider.md")
 	raw, err := os.ReadFile(path)
@@ -384,11 +426,16 @@ func readFrameworkIndex(frameworkRoot string) []frameworkProduct {
 		fail(fmt.Sprintf("read %s failed: %s", path, err))
 	}
 	desc := strings.TrimSpace(string(raw))
-	pos := strings.Index(desc, "\nResources List\n")
+	const header = "\nResources List"
+	pos := strings.Index(desc, header)
 	if pos == -1 {
 		fail(fmt.Sprintf("framework provider.md missing 'Resources List' header: %s", path))
 	}
-	doc := strings.TrimSpace(desc[pos+16:])
+	doc := strings.TrimSpace(desc[pos+len(header):])
+	if doc == "" {
+		// No framework references registered yet.
+		return nil
+	}
 	prods, err := getFrameworkIndex(doc)
 	if err != nil {
 		fail(fmt.Sprintf("parse %s failed: %s", path, err))
