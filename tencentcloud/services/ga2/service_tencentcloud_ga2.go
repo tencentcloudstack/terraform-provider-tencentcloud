@@ -99,6 +99,76 @@ func (me *Ga2Service) DescribeGa2EndpointGroupById(ctx context.Context, gaId, li
 	return nil, nil
 }
 
+// DescribeGa2ListenerById queries a listener by its GlobalAcceleratorId and ListenerId.
+// Returns (nil, nil) when the listener does not exist.
+func (me *Ga2Service) DescribeGa2ListenerById(ctx context.Context, gaId, listenerId string) (*ga2v20250115.ListenerSet, error) {
+	logId := tccommon.GetLogId(ctx)
+
+	request := ga2v20250115.NewDescribeListenersRequest()
+	request.GlobalAcceleratorId = helper.String(gaId)
+	request.Filters = []*ga2v20250115.Filter{
+		{
+			Name:   helper.String("listener-id"),
+			Values: []*string{helper.String(listenerId)},
+		},
+	}
+
+	var (
+		offset uint64 = 0
+		limit  uint64 = 100
+	)
+
+	for {
+		request.Offset = &offset
+		request.Limit = &limit
+
+		var response *ga2v20250115.DescribeListenersResponse
+		err := resource.Retry(tccommon.ReadRetryTimeout, func() *resource.RetryError {
+			result, e := me.client.UseGa2V20250115Client().DescribeListenersWithContext(ctx, request)
+			if e != nil {
+				return tccommon.RetryError(e)
+			}
+
+			if result == nil || result.Response == nil {
+				return resource.NonRetryableError(fmt.Errorf("Describe ga2 listeners failed, Response is nil."))
+			}
+
+			response = result
+			return nil
+		})
+
+		if err != nil {
+			log.Printf("[CRITAL]%s describe ga2 listeners failed, reason:%+v", logId, err)
+			return nil, err
+		}
+
+		set := response.Response.ListenerSet
+		for i := range set {
+			item := set[i]
+			if item == nil {
+				continue
+			}
+
+			if item.ListenerId == nil {
+				continue
+			}
+
+			if *item.ListenerId == listenerId {
+				return item, nil
+			}
+		}
+
+		// Stop when the current page is the last page.
+		if uint64(len(set)) < limit {
+			break
+		}
+
+		offset += limit
+	}
+
+	return nil, nil
+}
+
 // WaitForGa2TaskFinish polls DescribeTaskResult until the task reaches "SUCCESS" or the given timeout elapses.
 // The timeout is supplied by the caller because different async operations (create/modify/delete on
 // different resource types) may require very different waiting budgets.
