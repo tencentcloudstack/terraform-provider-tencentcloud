@@ -716,6 +716,7 @@ func Provider() *schema.Provider {
 			"tencentcloud_antiddos_overview_ddos_trend":                          dayuv2.DataSourceTencentCloudAntiddosOverviewDdosTrend(),
 			"tencentcloud_antiddos_overview_ddos_event_list":                     dayuv2.DataSourceTencentCloudAntiddosOverviewDdosEventList(),
 			"tencentcloud_antiddos_overview_cc_trend":                            dayuv2.DataSourceTencentCloudAntiddosOverviewCcTrend(),
+			"tencentcloud_ga2_cross_border_settlement":                           ga2.DataSourceTencentCloudGa2CrossBorderSettlement(),
 			"tencentcloud_gaap_proxies":                                          gaap.DataSourceTencentCloudGaapProxies(),
 			"tencentcloud_gaap_realservers":                                      gaap.DataSourceTencentCloudGaapRealservers(),
 			"tencentcloud_gaap_layer4_listeners":                                 gaap.DataSourceTencentCloudGaapLayer4Listeners(),

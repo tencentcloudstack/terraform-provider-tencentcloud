@@ -1,0 +1,3 @@
+```release-note:new-data-source
+tencentcloud_ga2_cross_border_settlement
+```
