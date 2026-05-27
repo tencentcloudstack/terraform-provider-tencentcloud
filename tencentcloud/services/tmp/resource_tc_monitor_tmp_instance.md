@@ -1,4 +1,4 @@
-Provides a resource to create a monitor tmpInstance
+Provides a resource to create a monitor (Cloud Monitor) tmpInstance
 
 Example Usage
 
@@ -25,11 +25,13 @@ resource "tencentcloud_monitor_tmp_instance" "example" {
   subnet_id           = tencentcloud_subnet.subnet.id
   data_retention_time = 30
   zone                = var.availability_zone
+  long_term_storage_retention_time = 90
   tags = {
     "createdBy" = "terraform"
   }
 }
 ```
+
 Import
 
 monitor tmpInstance can be imported using the id, e.g.
