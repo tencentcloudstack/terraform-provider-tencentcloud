@@ -619,6 +619,11 @@ tencentcloud_elasticsearch_diagnose
 tencentcloud_elasticsearch_diagnose_instance
 tencentcloud_elasticsearch_update_plugins_operation
 
+Global Accelerator 2(GA2)
+Resource
+tencentcloud_ga2_endpoint_group
+tencentcloud_ga2_listener
+
 Global Application Acceleration(GAAP)
 Data Source
 tencentcloud_gaap_certificates
