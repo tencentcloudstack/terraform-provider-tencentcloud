@@ -45,7 +45,8 @@ resource "tencentcloud_mqtt_instance" "example" {
     vpc_id    = tencentcloud_vpc.vpc.id
     subnet_id = tencentcloud_subnet.subnet.id
   }
-  pay_mode = 0
+  pay_mode  = 0
+  x509_mode = "BYOC"
   tags = {
     createBy = "Terraform"
   }
@@ -112,6 +113,7 @@ The following arguments are supported:
 * `tags` - (Optional, Map) Tags of the MQTT instance.
 * `time_span` - (Optional, Int) Purchase duration (unit: months).
 * `vpc_list` - (Optional, List) VPC information bound to the instance.
+* `x509_mode` - (Optional, String) X509 certificate mode. Valid values: `TLS` (one-way authentication), `mTLS` (two-way authentication), `BYOC` (one device one certificate).
 
 The `vpc_list` object supports the following:
 
@@ -123,7 +125,6 @@ The `vpc_list` object supports the following:
 In addition to all arguments above, the following attributes are exported:
 
 * `id` - ID of the resource.
-* `block_rule_limit` - Maximum number of block rules.
 * `device_certificate_provision_type` - Client certificate registration method: JITP: Automatic registration; API: Manually register through the API.
 
 

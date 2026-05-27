@@ -152,14 +152,10 @@ func ptrMqttInstanceString(s string) *string {
 	return &s
 }
 
-func ptrMqttInstanceBool(b bool) *bool {
-	return &b
-}
+// go test ./tencentcloud/services/mqtt/ -run "TestMqttInstanceX509Mode" -v -count=1 -gcflags="all=-l"
 
-// go test ./tencentcloud/services/mqtt/ -run "TestMqttInstanceBlockRuleLimit" -v -count=1 -gcflags="all=-l"
-
-// TestMqttInstanceBlockRuleLimit_Read tests that block_rule_limit is correctly read from DescribeInstance response
-func TestMqttInstanceBlockRuleLimit_Read(t *testing.T) {
+// TestMqttInstanceX509Mode_Read tests that x509_mode is correctly read from DescribeInstance response
+func TestMqttInstanceX509Mode_Read(t *testing.T) {
 	patches := gomonkey.NewPatches()
 	defer patches.Reset()
 
@@ -167,7 +163,7 @@ func TestMqttInstanceBlockRuleLimit_Read(t *testing.T) {
 	mockClient := &connectivity.TencentCloudClient{}
 	patches.ApplyMethodReturn(mockClient, "UseMqttV20240516Client", mqttClient)
 
-	// Patch DescribeInstance to return response with BlockRuleLimit
+	// Patch DescribeInstance to return response with X509Mode
 	patches.ApplyMethodFunc(mqttClient, "DescribeInstance", func(request *mqttv20240516.DescribeInstanceRequest) (*mqttv20240516.DescribeInstanceResponse, error) {
 		resp := mqttv20240516.NewDescribeInstanceResponse()
 		resp.Response = &mqttv20240516.DescribeInstanceResponseParams{
@@ -178,7 +174,7 @@ func TestMqttInstanceBlockRuleLimit_Read(t *testing.T) {
 			PayMode:        ptrMqttInstanceString("POSTPAID"),
 			RenewFlag:      ptrMqttInstanceInt64(0),
 			InstanceStatus: ptrMqttInstanceString("RUNNING"),
-			BlockRuleLimit: ptrMqttInstanceInt64(100),
+			X509Mode:       ptrMqttInstanceString("mTLS"),
 			RequestId:      ptrMqttInstanceString("fake-request-id"),
 		}
 		return resp, nil
@@ -200,11 +196,11 @@ func TestMqttInstanceBlockRuleLimit_Read(t *testing.T) {
 
 	err := res.Read(d, meta)
 	assert.NoError(t, err)
-	assert.Equal(t, 100, d.Get("block_rule_limit").(int))
+	assert.Equal(t, "mTLS", d.Get("x509_mode").(string))
 }
 
-// TestMqttInstanceBlockRuleLimit_ReadNil tests that block_rule_limit is not set when response field is nil
-func TestMqttInstanceBlockRuleLimit_ReadNil(t *testing.T) {
+// TestMqttInstanceX509Mode_ReadNil tests that x509_mode is not set when response field is nil
+func TestMqttInstanceX509Mode_ReadNil(t *testing.T) {
 	patches := gomonkey.NewPatches()
 	defer patches.Reset()
 
@@ -212,7 +208,7 @@ func TestMqttInstanceBlockRuleLimit_ReadNil(t *testing.T) {
 	mockClient := &connectivity.TencentCloudClient{}
 	patches.ApplyMethodReturn(mockClient, "UseMqttV20240516Client", mqttClient)
 
-	// Patch DescribeInstance to return response without BlockRuleLimit (nil)
+	// Patch DescribeInstance to return response without X509Mode (nil)
 	patches.ApplyMethodFunc(mqttClient, "DescribeInstance", func(request *mqttv20240516.DescribeInstanceRequest) (*mqttv20240516.DescribeInstanceResponse, error) {
 		resp := mqttv20240516.NewDescribeInstanceResponse()
 		resp.Response = &mqttv20240516.DescribeInstanceResponseParams{
@@ -223,7 +219,7 @@ func TestMqttInstanceBlockRuleLimit_ReadNil(t *testing.T) {
 			PayMode:        ptrMqttInstanceString("POSTPAID"),
 			RenewFlag:      ptrMqttInstanceInt64(0),
 			InstanceStatus: ptrMqttInstanceString("RUNNING"),
-			BlockRuleLimit: nil,
+			X509Mode:       nil,
 			RequestId:      ptrMqttInstanceString("fake-request-id"),
 		}
 		return resp, nil
@@ -245,17 +241,18 @@ func TestMqttInstanceBlockRuleLimit_ReadNil(t *testing.T) {
 
 	err := res.Read(d, meta)
 	assert.NoError(t, err)
-	assert.Equal(t, 0, d.Get("block_rule_limit").(int))
+	assert.Equal(t, "", d.Get("x509_mode").(string))
 }
 
-// TestMqttInstanceBlockRuleLimit_Schema tests the schema definition of block_rule_limit
-func TestMqttInstanceBlockRuleLimit_Schema(t *testing.T) {
+// TestMqttInstanceX509Mode_Schema tests the schema definition of x509_mode
+func TestMqttInstanceX509Mode_Schema(t *testing.T) {
 	res := svcmqtt.ResourceTencentCloudMqttInstance()
 
 	assert.NotNil(t, res)
-	assert.Contains(t, res.Schema, "block_rule_limit")
+	assert.Contains(t, res.Schema, "x509_mode")
 
-	blockRuleLimit := res.Schema["block_rule_limit"]
-	assert.Equal(t, schema.TypeInt, blockRuleLimit.Type)
-	assert.True(t, blockRuleLimit.Computed)
+	x509Mode := res.Schema["x509_mode"]
+	assert.Equal(t, schema.TypeString, x509Mode.Type)
+	assert.True(t, x509Mode.Optional)
+	assert.True(t, x509Mode.Computed)
 }

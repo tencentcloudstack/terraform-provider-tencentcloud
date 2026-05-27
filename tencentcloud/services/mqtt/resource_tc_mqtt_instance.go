@@ -120,10 +120,11 @@ func ResourceTencentCloudMqttInstance() *schema.Resource {
 				Description: "Indicate whether to force delete the instance. Default is `false`. If set true, the instance will be permanently deleted instead of being moved into the recycle bin. Note: only works for `PREPAID` instance.",
 			},
 
-			"block_rule_limit": {
-				Type:        schema.TypeInt,
+			"x509_mode": {
+				Type:        schema.TypeString,
+				Optional:    true,
 				Computed:    true,
-				Description: "Maximum number of block rules.",
+				Description: "X509 certificate mode. Valid values: `TLS` (one-way authentication), `mTLS` (two-way authentication), `BYOC` (one device one certificate).",
 			},
 		},
 	}
@@ -243,6 +244,7 @@ func ResourceTencentCloudMqttInstanceCreate(d *schema.ResourceData, meta interfa
 	var (
 		isAutomaticActivation bool
 		isAuthorizationPolicy bool
+		x509Mode              string
 	)
 
 	if v, ok := d.GetOkExists("automatic_activation"); ok {
@@ -253,12 +255,19 @@ func ResourceTencentCloudMqttInstanceCreate(d *schema.ResourceData, meta interfa
 		isAuthorizationPolicy = v.(bool)
 	}
 
-	// open automatic_activation or authorization_policy
-	if isAutomaticActivation || isAuthorizationPolicy {
+	if v, ok := d.GetOk("x509_mode"); ok {
+		x509Mode = v.(string)
+	}
+
+	// open automatic_activation or authorization_policy or set x509_mode
+	if isAutomaticActivation || isAuthorizationPolicy || x509Mode != "" {
 		modifyRequest := mqttv20240516.NewModifyInstanceRequest()
 		modifyRequest.InstanceId = &instanceId
 		modifyRequest.AutomaticActivation = helper.Bool(isAutomaticActivation)
 		modifyRequest.AuthorizationPolicy = helper.Bool(isAuthorizationPolicy)
+		if x509Mode != "" {
+			modifyRequest.X509Mode = helper.String(x509Mode)
+		}
 		reqErr := resource.Retry(tccommon.WriteRetryTimeout, func() *resource.RetryError {
 			result, e := meta.(tccommon.ProviderMeta).GetAPIV3Conn().UseMqttV20240516Client().ModifyInstanceWithContext(ctx, modifyRequest)
 			if e != nil {
@@ -352,8 +361,8 @@ func ResourceTencentCloudMqttInstanceRead(d *schema.ResourceData, meta interface
 		_ = d.Set("authorization_policy", respData.AuthorizationPolicy)
 	}
 
-	if respData.BlockRuleLimit != nil {
-		_ = d.Set("block_rule_limit", respData.BlockRuleLimit)
+	if respData.X509Mode != nil {
+		_ = d.Set("x509_mode", respData.X509Mode)
 	}
 
 	forceDelete := false
@@ -390,7 +399,7 @@ func ResourceTencentCloudMqttInstanceUpdate(d *schema.ResourceData, meta interfa
 	}
 
 	needChange := false
-	mutableArgs := []string{"name", "remark", "sku_code", "device_certificate_provision_type", "automatic_activation", "authorization_policy"}
+	mutableArgs := []string{"name", "remark", "sku_code", "device_certificate_provision_type", "automatic_activation", "authorization_policy", "x509_mode"}
 	for _, v := range mutableArgs {
 		if d.HasChange(v) {
 			needChange = true
@@ -419,6 +428,10 @@ func ResourceTencentCloudMqttInstanceUpdate(d *schema.ResourceData, meta interfa
 
 		if v, ok := d.GetOkExists("authorization_policy"); ok {
 			request.AuthorizationPolicy = helper.Bool(v.(bool))
+		}
+
+		if v, ok := d.GetOk("x509_mode"); ok {
+			request.X509Mode = helper.String(v.(string))
 		}
 
 		reqErr := resource.Retry(tccommon.WriteRetryTimeout, func() *resource.RetryError {
