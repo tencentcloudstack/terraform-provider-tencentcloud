@@ -99,6 +99,70 @@ func (me *Ga2Service) DescribeGa2EndpointGroupById(ctx context.Context, gaId, li
 	return nil, nil
 }
 
+// DescribeGa2GlobalAcceleratorById queries a single global accelerator instance by ID.
+// Returns (nil, nil) when the instance does not exist.
+func (me *Ga2Service) DescribeGa2GlobalAcceleratorById(ctx context.Context, globalAcceleratorId string) (*ga2v20250115.GlobalAcceleratorSet, error) {
+	logId := tccommon.GetLogId(ctx)
+
+	request := ga2v20250115.NewDescribeGlobalAcceleratorsRequest()
+	request.Filters = []*ga2v20250115.Filter{
+		{
+			Name:   helper.String("global-accelerator-id"),
+			Values: []*string{helper.String(globalAcceleratorId)},
+		},
+	}
+
+	var (
+		offset uint64 = 0
+		limit  uint64 = 100
+	)
+
+	for {
+		request.Offset = &offset
+		request.Limit = &limit
+
+		var response *ga2v20250115.DescribeGlobalAcceleratorsResponse
+		err := resource.Retry(tccommon.ReadRetryTimeout, func() *resource.RetryError {
+			result, e := me.client.UseGa2V20250115Client().DescribeGlobalAcceleratorsWithContext(ctx, request)
+			if e != nil {
+				return tccommon.RetryError(e)
+			}
+
+			if result == nil || result.Response == nil {
+				return resource.NonRetryableError(fmt.Errorf("Describe ga2 global accelerators failed, Response is nil."))
+			}
+
+			response = result
+			return nil
+		})
+
+		if err != nil {
+			log.Printf("[CRITAL]%s describe ga2 global accelerators failed, reason:%+v", logId, err)
+			return nil, err
+		}
+
+		set := response.Response.GlobalAcceleratorSet
+		for i := range set {
+			item := set[i]
+			if item == nil {
+				continue
+			}
+
+			if item.GlobalAcceleratorId != nil && *item.GlobalAcceleratorId == globalAcceleratorId {
+				return item, nil
+			}
+		}
+
+		if uint64(len(set)) < limit {
+			break
+		}
+
+		offset += limit
+	}
+
+	return nil, nil
+}
+
 // WaitForGa2TaskFinish polls DescribeTaskResult until the task reaches "SUCCESS" or the given timeout elapses.
 // The timeout is supplied by the caller because different async operations (create/modify/delete on
 // different resource types) may require very different waiting budgets.

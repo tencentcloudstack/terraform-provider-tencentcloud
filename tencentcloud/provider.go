@@ -1722,6 +1722,7 @@ func Provider() *schema.Provider {
 			"tencentcloud_dayu_l7_rule_v2":                                                          dayuv2.ResourceTencentCloudDayuL7RuleV2(),
 			"tencentcloud_dayu_eip":                                                                 dayuv2.ResourceTencentCloudDayuEip(),
 			"tencentcloud_ga2_endpoint_group":                                                       ga2.ResourceTencentCloudGa2EndpointGroup(),
+			"tencentcloud_ga2_global_accelerator":                                                   ga2.ResourceTencentCloudGa2GlobalAccelerator(),
 			"tencentcloud_gaap_proxy":                                                               gaap.ResourceTencentCloudGaapProxy(),
 			"tencentcloud_gaap_realserver":                                                          gaap.ResourceTencentCloudGaapRealserver(),
 			"tencentcloud_gaap_layer4_listener":                                                     gaap.ResourceTencentCloudGaapLayer4Listener(),
