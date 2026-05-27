@@ -99,6 +99,72 @@ func (me *Ga2Service) DescribeGa2EndpointGroupById(ctx context.Context, gaId, li
 	return nil, nil
 }
 
+// DescribeGa2ForwardingRuleById queries a forwarding rule by its identifying IDs.
+// Returns (nil, nil) when the forwarding rule does not exist.
+func (me *Ga2Service) DescribeGa2ForwardingRuleById(ctx context.Context, gaId, listenerId, forwardingPolicyId, forwardingRuleId string) (*ga2v20250115.ForwardingRuleSet, error) {
+	logId := tccommon.GetLogId(ctx)
+
+	request := ga2v20250115.NewDescribeForwardingRuleRequest()
+	request.GlobalAcceleratorId = helper.String(gaId)
+	request.ListenerId = helper.String(listenerId)
+	request.ForwardingPolicyId = helper.String(forwardingPolicyId)
+
+	var (
+		offset uint64 = 0
+		limit  uint64 = 100
+	)
+
+	for {
+		request.Offset = &offset
+		request.Limit = &limit
+
+		var response *ga2v20250115.DescribeForwardingRuleResponse
+		err := resource.Retry(tccommon.ReadRetryTimeout, func() *resource.RetryError {
+			result, e := me.client.UseGa2V20250115Client().DescribeForwardingRuleWithContext(ctx, request)
+			if e != nil {
+				return tccommon.RetryError(e)
+			}
+
+			if result == nil || result.Response == nil {
+				return resource.NonRetryableError(fmt.Errorf("Describe ga2 forwarding rule failed, Response is nil."))
+			}
+
+			response = result
+			return nil
+		})
+
+		if err != nil {
+			log.Printf("[CRITAL]%s describe ga2 forwarding rule failed, reason:%+v", logId, err)
+			return nil, err
+		}
+
+		set := response.Response.ForwardingRuleSet
+		for i := range set {
+			item := set[i]
+			if item == nil {
+				continue
+			}
+
+			if item.ForwardingRuleId == nil {
+				continue
+			}
+
+			if *item.ForwardingRuleId == forwardingRuleId {
+				return item, nil
+			}
+		}
+
+		// Stop when the current page is the last page.
+		if uint64(len(set)) < limit {
+			break
+		}
+
+		offset += limit
+	}
+
+	return nil, nil
+}
+
 // WaitForGa2TaskFinish polls DescribeTaskResult until the task reaches "SUCCESS" or the given timeout elapses.
 // The timeout is supplied by the caller because different async operations (create/modify/delete on
 // different resource types) may require very different waiting budgets.
