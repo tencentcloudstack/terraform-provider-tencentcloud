@@ -53,6 +53,7 @@ resource "tencentcloud_cls_cos_shipper" "example" {
   partition    = "/%Y/%m/%d/%H/"
   prefix       = "ap-guangzhou-fffsasad-1649734752"
   shipper_name = "ap-guangzhou-fffsasad-1649734752"
+  time_zone    = "GMT+08:00"
 
   compress {
     format = "lzop"
@@ -126,6 +127,7 @@ The following arguments are supported:
 * `partition` - (Optional, String) Partition rule of shipped log, which can be represented in strftime time format.
 * `start_time` - (Optional, Int) Start time for data shipping, which cannot be earlier than the lifecycle start time of the log topic. If you do not specify this parameter, it will be set to the time when you create the data shipping task.
 * `storage_type` - (Optional, String) COS bucket storage type. support: STANDARD_IA, ARCHIVE, DEEP_ARCHIVE, STANDARD, MAZ_STANDARD, MAZ_STANDARD_IA, INTELLIGENT_TIERING.
+* `time_zone` - (Optional, String) Timezone used to generate the time variable in the COS file path when shipping logs. Supports GMT and UTC timezone formats, e.g., `GMT+08:00`, `UTC+08:00`.
 
 The `compress` object supports the following:
 
