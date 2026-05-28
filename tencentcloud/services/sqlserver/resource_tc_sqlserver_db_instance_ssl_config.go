@@ -31,43 +31,32 @@ func ResourceTencentCloudSqlserverDbInstanceSslConfig() *schema.Resource {
 				Description: "SQL Server instance ID.",
 			},
 
-			"type": {
+			"encryption": {
 				Type:         schema.TypeString,
 				Required:     true,
-				ValidateFunc: validation.StringInSlice(SSL_TYPE, false),
-				Description:  "SSL operation type. Valid values: enable, disable, renew.",
-			},
-
-			"wait_switch": {
-				Type:        schema.TypeInt,
-				Optional:    true,
-				Default:     0,
-				Description: "Execution timing. 0: execute immediately, 1: execute during maintenance window. Default is 0.",
+				ValidateFunc: validation.StringInSlice([]string{"enable", "disable"}, false),
+				Description:  "SSL encryption desired state. Valid values: `enable`, `disable`.",
 			},
 
 			"is_kms": {
 				Type:        schema.TypeInt,
 				Optional:    true,
-				Default:     0,
-				Description: "Whether to enable KMS encryption protection. 0: no, 1: yes. Default is 0.",
-			},
-
-			"key_id": {
-				Type:        schema.TypeString,
-				Optional:    true,
-				Description: "KMS CMK key ID, required when IsKMS is 1.",
-			},
-
-			"key_region": {
-				Type:        schema.TypeString,
-				Optional:    true,
-				Description: "CMK region, required when IsKMS is 1.",
-			},
-
-			"encryption": {
-				Type:        schema.TypeString,
 				Computed:    true,
-				Description: "SSL encryption status. Valid values: enable, disable, enable_doing, disable_doing, renew_doing, wait_doing.",
+				Description: "Whether to enable KMS encryption protection. 0: no, 1: yes.",
+			},
+
+			"cmk_id": {
+				Type:        schema.TypeString,
+				Optional:    true,
+				Computed:    true,
+				Description: "KMS CMK key ID, required when is_kms is 1.",
+			},
+
+			"cmk_region": {
+				Type:        schema.TypeString,
+				Optional:    true,
+				Computed:    true,
+				Description: "CMK region, required when is_kms is 1.",
 			},
 
 			"ssl_validity_period": {
@@ -116,8 +105,8 @@ func resourceTencentCloudSqlserverDbInstanceSslConfigRead(d *schema.ResourceData
 	}
 
 	if resp == nil {
+		log.Printf("[WARN]%s resource `tencentcloud_sqlserver_db_instance_ssl_config` [%s] not found, please check if it has been deleted.\n", logId, d.Id())
 		d.SetId("")
-		log.Printf("[WARN]%s resource `sqlserver_db_instance_ssl_config` [%s] not found, please check if it has been deleted.\n", logId, d.Id())
 		return nil
 	}
 
@@ -126,13 +115,28 @@ func resourceTencentCloudSqlserverDbInstanceSslConfigRead(d *schema.ResourceData
 	if resp.SSLConfig != nil {
 		sslConfig := resp.SSLConfig
 		if sslConfig.Encryption != nil {
-			_ = d.Set("encryption", sslConfig.Encryption)
+			encryptionStatus := *sslConfig.Encryption
+			switch encryptionStatus {
+			case "enable":
+				_ = d.Set("encryption", "enable")
+			case "disable":
+				_ = d.Set("encryption", "disable")
+			}
 		}
 		if sslConfig.SSLValidityPeriod != nil {
 			_ = d.Set("ssl_validity_period", sslConfig.SSLValidityPeriod)
 		}
 		if sslConfig.SSLValidity != nil {
 			_ = d.Set("ssl_validity", int(*sslConfig.SSLValidity))
+		}
+		if sslConfig.IsKMS != nil {
+			_ = d.Set("is_kms", int(*sslConfig.IsKMS))
+		}
+		if sslConfig.CMKId != nil {
+			_ = d.Set("cmk_id", sslConfig.CMKId)
+		}
+		if sslConfig.CMKRegion != nil {
+			_ = d.Set("cmk_region", sslConfig.CMKRegion)
 		}
 	}
 
@@ -149,26 +153,27 @@ func resourceTencentCloudSqlserverDbInstanceSslConfigUpdate(d *schema.ResourceDa
 		instanceId = d.Id()
 	)
 
+	desiredEncryption := d.Get("encryption").(string)
+
 	request := sqlserver.NewModifyDBInstanceSSLRequest()
 	request.InstanceId = helper.String(instanceId)
+	request.WaitSwitch = helper.Int64Uint64(0)
 
-	if v, ok := d.GetOk("type"); ok {
-		request.Type = helper.String(v.(string))
-	}
-
-	if v, ok := d.GetOkExists("wait_switch"); ok {
-		request.WaitSwitch = helper.Int64Uint64(int64(v.(int)))
+	if desiredEncryption == "enable" {
+		request.Type = helper.String("enable")
+	} else {
+		request.Type = helper.String("disable")
 	}
 
 	if v, ok := d.GetOkExists("is_kms"); ok {
 		request.IsKMS = helper.Int64(int64(v.(int)))
 	}
 
-	if v, ok := d.GetOk("key_id"); ok {
+	if v, ok := d.GetOk("cmk_id"); ok {
 		request.KeyId = helper.String(v.(string))
 	}
 
-	if v, ok := d.GetOk("key_region"); ok {
+	if v, ok := d.GetOk("cmk_region"); ok {
 		request.KeyRegion = helper.String(v.(string))
 	}
 
@@ -198,7 +203,7 @@ func resourceTencentCloudSqlserverDbInstanceSslConfigUpdate(d *schema.ResourceDa
 		return err
 	}
 
-	// wait for async flow to complete
+	// Wait for async flow to complete
 	flowRequest := sqlserver.NewDescribeFlowStatusRequest()
 	flowRequest.FlowId = helper.UInt64Int64(flowId)
 	err = resource.Retry(tccommon.WriteRetryTimeout, func() *resource.RetryError {
@@ -215,7 +220,7 @@ func resourceTencentCloudSqlserverDbInstanceSslConfigUpdate(d *schema.ResourceDa
 			return nil
 		}
 
-		return resource.RetryableError(fmt.Errorf("Operate sqlserver db instance ssl config status is %d.", *result.Response.Status))
+		return resource.RetryableError(fmt.Errorf("Operate sqlserver db instance ssl config flow status is %d.", *result.Response.Status))
 	})
 
 	if err != nil {
