@@ -5,8 +5,14 @@ import (
 	"fmt"
 	"testing"
 
+	"github.com/agiledragon/gomonkey/v2"
+	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
+	"github.com/stretchr/testify/assert"
+	teov20220901 "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/teo/v20220901"
+
 	tcacctest "github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/acctest"
 	tccommon "github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/common"
+	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/connectivity"
 	svcteo "github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/services/teo"
 
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
@@ -221,3 +227,89 @@ resource "tencentcloud_teo_zone_setting" "basic" {
   }
 }
 `
+
+// mockMetaZoneSetting implements tccommon.ProviderMeta
+type mockMetaZoneSetting struct {
+	client *connectivity.TencentCloudClient
+}
+
+func (m *mockMetaZoneSetting) GetAPIV3Conn() *connectivity.TencentCloudClient {
+	return m.client
+}
+
+var _ tccommon.ProviderMeta = &mockMetaZoneSetting{}
+
+func newMockMetaZoneSetting() *mockMetaZoneSetting {
+	return &mockMetaZoneSetting{client: &connectivity.TencentCloudClient{}}
+}
+
+func ptrStringZoneSetting(s string) *string {
+	return &s
+}
+
+// go test ./tencentcloud/services/teo/ -run "TestTeoZoneSetting_ReadZoneName" -v -count=1 -gcflags="all=-l"
+
+// TestTeoZoneSetting_ReadZoneName tests that zone_name is correctly set from DescribeZoneSetting response
+func TestTeoZoneSetting_ReadZoneName(t *testing.T) {
+	patches := gomonkey.NewPatches()
+	defer patches.Reset()
+
+	teoClient := &teov20220901.Client{}
+	patches.ApplyMethodReturn(newMockMetaZoneSetting().client, "UseTeoClient", teoClient)
+
+	expectedZoneName := "example.com"
+	patches.ApplyMethodFunc(teoClient, "DescribeZoneSetting", func(_ *teov20220901.DescribeZoneSettingRequest) (*teov20220901.DescribeZoneSettingResponse, error) {
+		resp := teov20220901.NewDescribeZoneSettingResponse()
+		resp.Response = &teov20220901.DescribeZoneSettingResponseParams{
+			ZoneSetting: &teov20220901.ZoneSetting{
+				ZoneName: ptrStringZoneSetting(expectedZoneName),
+				Area:     ptrStringZoneSetting("overseas"),
+			},
+		}
+		return resp, nil
+	})
+
+	meta := newMockMetaZoneSetting()
+	res := svcteo.ResourceTencentCloudTeoZoneSetting()
+	d := schema.TestResourceDataRaw(t, res.Schema, map[string]interface{}{
+		"zone_id": "zone-test12345",
+	})
+	d.SetId("zone-test12345")
+
+	err := res.Read(d, meta)
+	assert.NoError(t, err)
+	assert.Equal(t, expectedZoneName, d.Get("zone_name"))
+	assert.Equal(t, "overseas", d.Get("area"))
+}
+
+// TestTeoZoneSetting_ReadZoneNameNil tests that zone_name is not set when API returns nil
+func TestTeoZoneSetting_ReadZoneNameNil(t *testing.T) {
+	patches := gomonkey.NewPatches()
+	defer patches.Reset()
+
+	teoClient := &teov20220901.Client{}
+	patches.ApplyMethodReturn(newMockMetaZoneSetting().client, "UseTeoClient", teoClient)
+
+	patches.ApplyMethodFunc(teoClient, "DescribeZoneSetting", func(_ *teov20220901.DescribeZoneSettingRequest) (*teov20220901.DescribeZoneSettingResponse, error) {
+		resp := teov20220901.NewDescribeZoneSettingResponse()
+		resp.Response = &teov20220901.DescribeZoneSettingResponseParams{
+			ZoneSetting: &teov20220901.ZoneSetting{
+				ZoneName: nil,
+				Area:     ptrStringZoneSetting("mainland"),
+			},
+		}
+		return resp, nil
+	})
+
+	meta := newMockMetaZoneSetting()
+	res := svcteo.ResourceTencentCloudTeoZoneSetting()
+	d := schema.TestResourceDataRaw(t, res.Schema, map[string]interface{}{
+		"zone_id": "zone-test12345",
+	})
+	d.SetId("zone-test12345")
+
+	err := res.Read(d, meta)
+	assert.NoError(t, err)
+	assert.Equal(t, "", d.Get("zone_name"))
+	assert.Equal(t, "mainland", d.Get("area"))
+}
