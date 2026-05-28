@@ -2849,15 +2849,24 @@ func (me *TkeService) TkeEncryptionProtectionStateRefreshFunc(clusterId string, 
 			}
 		}()
 
-		object, err := me.client.UseTkeClient().DescribeEncryptionStatus(request)
+		var object *tke.DescribeEncryptionStatusResponse
+		err := resource.Retry(tccommon.ReadRetryTimeout, func() *resource.RetryError {
+			ratelimit.Check(request.GetAction())
+			result, e := me.client.UseTkeClient().DescribeEncryptionStatus(request)
+			if e != nil {
+				return tccommon.RetryError(e)
+			}
 
-		if err != nil {
-			return nil, "", err
-		}
+			if result == nil || result.Response == nil {
+				return resource.NonRetryableError(fmt.Errorf("Describe kubernetes encryption status failed, Response is nil."))
+			}
 
+			object = result
+			return nil
+		})
 		if err != nil {
 			errRet = err
-			return object, "", err
+			return nil, "", err
 		}
 
 		return object, helper.PString(object.Response.Status), nil
@@ -3204,9 +3213,21 @@ func (me *TkeService) DescribeKubernetesEncryptionProtectionById(ctx context.Con
 		}
 	}()
 
-	ratelimit.Check(request.GetAction())
+	var response *tke.DescribeEncryptionStatusResponse
+	err := resource.Retry(tccommon.ReadRetryTimeout, func() *resource.RetryError {
+		ratelimit.Check(request.GetAction())
+		result, e := me.client.UseTkeV20180525Client().DescribeEncryptionStatus(request)
+		if e != nil {
+			return tccommon.RetryError(e)
+		}
 
-	response, err := me.client.UseTkeV20180525Client().DescribeEncryptionStatus(request)
+		if result == nil || result.Response == nil {
+			return resource.NonRetryableError(fmt.Errorf("Describe kubernetes encryption status failed, Response is nil."))
+		}
+
+		response = result
+		return nil
+	})
 	if err != nil {
 		errRet = err
 		return
