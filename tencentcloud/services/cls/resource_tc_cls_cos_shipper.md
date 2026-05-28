@@ -42,6 +42,7 @@ resource "tencentcloud_cls_cos_shipper" "example" {
   partition    = "/%Y/%m/%d/%H/"
   prefix       = "ap-guangzhou-fffsasad-1649734752"
   shipper_name = "ap-guangzhou-fffsasad-1649734752"
+  time_zone    = "GMT+08:00"
 
   compress {
     format = "lzop"
