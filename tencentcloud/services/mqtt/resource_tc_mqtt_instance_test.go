@@ -1,11 +1,20 @@
 package mqtt_test
 
 import (
+	"context"
 	"testing"
 
+	"github.com/agiledragon/gomonkey/v2"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
+	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
+	"github.com/stretchr/testify/assert"
+	mqttv20240516 "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/mqtt/v20240516"
 
 	tcacctest "github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/acctest"
+	tccommon "github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/common"
+	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/connectivity"
+	svcmqtt "github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/services/mqtt"
+	svctag "github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/services/tag"
 )
 
 func TestAccTencentCloudNeedFixMqttInstanceResource_basic(t *testing.T) {
@@ -123,3 +132,127 @@ resource "tencentcloud_mqtt_instance" "example" {
   }
 }
 `
+
+// mockMetaMqttInstance implements tccommon.ProviderMeta
+type mockMetaMqttInstance struct {
+	client *connectivity.TencentCloudClient
+}
+
+func (m *mockMetaMqttInstance) GetAPIV3Conn() *connectivity.TencentCloudClient {
+	return m.client
+}
+
+var _ tccommon.ProviderMeta = &mockMetaMqttInstance{}
+
+func ptrMqttInstanceInt64(i int64) *int64 {
+	return &i
+}
+
+func ptrMqttInstanceString(s string) *string {
+	return &s
+}
+
+// go test ./tencentcloud/services/mqtt/ -run "TestMqttInstanceX509Mode" -v -count=1 -gcflags="all=-l"
+
+// TestMqttInstanceX509Mode_Read tests that x509_mode is correctly read from DescribeInstance response
+func TestMqttInstanceX509Mode_Read(t *testing.T) {
+	patches := gomonkey.NewPatches()
+	defer patches.Reset()
+
+	mqttClient := &mqttv20240516.Client{}
+	mockClient := &connectivity.TencentCloudClient{}
+	patches.ApplyMethodReturn(mockClient, "UseMqttV20240516Client", mqttClient)
+
+	// Patch DescribeInstance to return response with X509Mode
+	patches.ApplyMethodFunc(mqttClient, "DescribeInstance", func(request *mqttv20240516.DescribeInstanceRequest) (*mqttv20240516.DescribeInstanceResponse, error) {
+		resp := mqttv20240516.NewDescribeInstanceResponse()
+		resp.Response = &mqttv20240516.DescribeInstanceResponseParams{
+			InstanceType:   ptrMqttInstanceString("PRO"),
+			InstanceName:   ptrMqttInstanceString("test-instance"),
+			Remark:         ptrMqttInstanceString("test remark"),
+			SkuCode:        ptrMqttInstanceString("pro_6k_1"),
+			PayMode:        ptrMqttInstanceString("POSTPAID"),
+			RenewFlag:      ptrMqttInstanceInt64(0),
+			InstanceStatus: ptrMqttInstanceString("RUNNING"),
+			X509Mode:       ptrMqttInstanceString("mTLS"),
+			RequestId:      ptrMqttInstanceString("fake-request-id"),
+		}
+		return resp, nil
+	})
+
+	// Patch TagService.DescribeResourceTags
+	patches.ApplyMethodFunc(&svctag.TagService{}, "DescribeResourceTags", func(_ context.Context, _, _, _, _ string) (map[string]string, error) {
+		return map[string]string{}, nil
+	})
+
+	meta := &mockMetaMqttInstance{client: mockClient}
+	res := svcmqtt.ResourceTencentCloudMqttInstance()
+	d := schema.TestResourceDataRaw(t, res.Schema, map[string]interface{}{
+		"instance_type": "PRO",
+		"name":          "test-instance",
+		"sku_code":      "pro_6k_1",
+	})
+	d.SetId("mqtt-test-instance-id")
+
+	err := res.Read(d, meta)
+	assert.NoError(t, err)
+	assert.Equal(t, "mTLS", d.Get("x509_mode").(string))
+}
+
+// TestMqttInstanceX509Mode_ReadNil tests that x509_mode is not set when response field is nil
+func TestMqttInstanceX509Mode_ReadNil(t *testing.T) {
+	patches := gomonkey.NewPatches()
+	defer patches.Reset()
+
+	mqttClient := &mqttv20240516.Client{}
+	mockClient := &connectivity.TencentCloudClient{}
+	patches.ApplyMethodReturn(mockClient, "UseMqttV20240516Client", mqttClient)
+
+	// Patch DescribeInstance to return response without X509Mode (nil)
+	patches.ApplyMethodFunc(mqttClient, "DescribeInstance", func(request *mqttv20240516.DescribeInstanceRequest) (*mqttv20240516.DescribeInstanceResponse, error) {
+		resp := mqttv20240516.NewDescribeInstanceResponse()
+		resp.Response = &mqttv20240516.DescribeInstanceResponseParams{
+			InstanceType:   ptrMqttInstanceString("PRO"),
+			InstanceName:   ptrMqttInstanceString("test-instance"),
+			Remark:         ptrMqttInstanceString("test remark"),
+			SkuCode:        ptrMqttInstanceString("pro_6k_1"),
+			PayMode:        ptrMqttInstanceString("POSTPAID"),
+			RenewFlag:      ptrMqttInstanceInt64(0),
+			InstanceStatus: ptrMqttInstanceString("RUNNING"),
+			X509Mode:       nil,
+			RequestId:      ptrMqttInstanceString("fake-request-id"),
+		}
+		return resp, nil
+	})
+
+	// Patch TagService.DescribeResourceTags
+	patches.ApplyMethodFunc(&svctag.TagService{}, "DescribeResourceTags", func(_ context.Context, _, _, _, _ string) (map[string]string, error) {
+		return map[string]string{}, nil
+	})
+
+	meta := &mockMetaMqttInstance{client: mockClient}
+	res := svcmqtt.ResourceTencentCloudMqttInstance()
+	d := schema.TestResourceDataRaw(t, res.Schema, map[string]interface{}{
+		"instance_type": "PRO",
+		"name":          "test-instance",
+		"sku_code":      "pro_6k_1",
+	})
+	d.SetId("mqtt-test-instance-id")
+
+	err := res.Read(d, meta)
+	assert.NoError(t, err)
+	assert.Equal(t, "", d.Get("x509_mode").(string))
+}
+
+// TestMqttInstanceX509Mode_Schema tests the schema definition of x509_mode
+func TestMqttInstanceX509Mode_Schema(t *testing.T) {
+	res := svcmqtt.ResourceTencentCloudMqttInstance()
+
+	assert.NotNil(t, res)
+	assert.Contains(t, res.Schema, "x509_mode")
+
+	x509Mode := res.Schema["x509_mode"]
+	assert.Equal(t, schema.TypeString, x509Mode.Type)
+	assert.True(t, x509Mode.Optional)
+	assert.True(t, x509Mode.Computed)
+}
