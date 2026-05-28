@@ -252,7 +252,6 @@ func DataSourceTencentCloudTeoZones() *schema.Resource {
 						"vanity_name_servers": {
 							Type:        schema.TypeList,
 							Computed:    true,
-							MaxItems:    1,
 							Description: "The custom name server information.\nNote: This field may return null, indicating that no valid values can be obtained.",
 							Elem: &schema.Resource{
 								Schema: map[string]*schema.Schema{
@@ -314,14 +313,12 @@ func DataSourceTencentCloudTeoZones() *schema.Resource {
 						"ownership_verification": {
 							Type:        schema.TypeList,
 							Computed:    true,
-							MaxItems:    1,
 							Description: "Ownership verification information. Note: This field may return null, indicating that no valid values can be obtained.",
 							Elem: &schema.Resource{
 								Schema: map[string]*schema.Schema{
 									"dns_verification": {
 										Type:        schema.TypeList,
 										Computed:    true,
-										MaxItems:    1,
 										Description: "CNAME, when there is no domain name access, the information required for DNS resolution verification is used. For details, refer to [Site/Domain Ownership Verification\n](https://intl.cloud.tencent.com/document/product/1552/70789?from_cn_redirect=1#7af6ecf8-afca-4e35-8811-b5797ed1bde5). Note: This field may return null, which indicates a failure to obtain a valid value.",
 										Elem: &schema.Resource{
 											Schema: map[string]*schema.Schema{
@@ -346,7 +343,6 @@ func DataSourceTencentCloudTeoZones() *schema.Resource {
 									"file_verification": {
 										Type:        schema.TypeList,
 										Computed:    true,
-										MaxItems:    1,
 										Description: "CNAME, when there is no domain name access, the information required for file verification is used. For details, refer to [Site/Domain Ownership Verification\n](https://intl.cloud.tencent.com/document/product/1552/70789?from_cn_redirect=1#7af6ecf8-afca-4e35-8811-b5797ed1bde5). Note: This field may return null, which indicates a failure to obtain a valid value.",
 										Elem: &schema.Resource{
 											Schema: map[string]*schema.Schema{
@@ -366,7 +362,6 @@ func DataSourceTencentCloudTeoZones() *schema.Resource {
 									"ns_verification": {
 										Type:        schema.TypeList,
 										Computed:    true,
-										MaxItems:    1,
 										Description: "Information required for switching DNS servers. It's applicable to sites connected via NSs. For details, see [Modifying DNS Server](https://intl.cloud.tencent.com/document/product/1552/90452?from_cn_redirect=1).\nNote: This field may return null, indicating that no valid values can be obtained.",
 										Elem: &schema.Resource{
 											Schema: map[string]*schema.Schema{
