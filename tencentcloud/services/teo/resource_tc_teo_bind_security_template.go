@@ -37,7 +37,7 @@ func ResourceTencentCloudTeoBindSecurityTemplate() *schema.Resource {
 				Type:        schema.TypeString,
 				Required:    true,
 				ForceNew:    true,
-				Description: "List of domain names to bind to/unbind from a policy template.",
+				Description: "The domain to be bound to or unbound from the policy template.",
 			},
 
 			"template_id": {
