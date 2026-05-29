@@ -496,6 +496,12 @@ func ResourceTencentCloudInstance() *schema.Resource {
 				Default:     false,
 				Description: "Indicate whether to force delete the instance. Default is `false`. If set true, the instance will be permanently deleted instead of being moved into the recycle bin. Note: only works for `PREPAID` instance.",
 			},
+			"force_stop": {
+				Type:        schema.TypeBool,
+				Optional:    true,
+				Computed:    true,
+				Description: "Whether to forcibly shut down a running instance. Default is false.",
+			},
 			"disable_api_termination": {
 				Type:        schema.TypeBool,
 				Optional:    true,
@@ -2293,7 +2299,12 @@ func resourceTencentCloudInstanceUpdate(d *schema.ResourceData, meta interface{}
 	}
 
 	if d.HasChange("instance_type") {
-		err := cvmService.ModifyInstanceType(ctx, instanceId, d.Get("instance_type").(string))
+		var forceStop bool
+		if v, ok := d.GetOkExists("force_stop"); ok {
+			forceStop = v.(bool)
+		}
+
+		err := cvmService.ModifyInstanceType(ctx, instanceId, d.Get("instance_type").(string), forceStop)
 		if err != nil {
 			return err
 		}
@@ -2305,7 +2316,12 @@ func resourceTencentCloudInstanceUpdate(d *schema.ResourceData, meta interface{}
 	}
 
 	if d.HasChange("cdh_instance_type") {
-		err := cvmService.ModifyInstanceType(ctx, instanceId, d.Get("cdh_instance_type").(string))
+		var forceStop bool
+		if v, ok := d.GetOkExists("force_stop"); ok {
+			forceStop = v.(bool)
+		}
+
+		err := cvmService.ModifyInstanceType(ctx, instanceId, d.Get("cdh_instance_type").(string), forceStop)
 		if err != nil {
 			return err
 		}

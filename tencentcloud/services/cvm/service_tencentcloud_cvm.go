@@ -351,12 +351,12 @@ func (me *CvmService) ModifyProjectId(ctx context.Context, instanceId string, pr
 	return nil
 }
 
-func (me *CvmService) ModifyInstanceType(ctx context.Context, instanceId, instanceType string) error {
+func (me *CvmService) ModifyInstanceType(ctx context.Context, instanceId, instanceType string, forceStop bool) error {
 	logId := tccommon.GetLogId(ctx)
 	request := cvm.NewResetInstancesTypeRequest()
 	request.InstanceIds = []*string{&instanceId}
 	request.InstanceType = &instanceType
-	request.ForceStop = helper.Bool(true)
+	request.ForceStop = &forceStop
 
 	ratelimit.Check(request.GetAction())
 	response, err := me.client.UseCvmClient().ResetInstancesType(request)
