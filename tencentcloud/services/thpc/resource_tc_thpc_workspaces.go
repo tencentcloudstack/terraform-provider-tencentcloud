@@ -1112,7 +1112,7 @@ func resourceTencentCloudThpcWorkspacesUpdate(d *schema.ResourceData, meta inter
 			diskType := d.Get(typeKey).(string)
 			req := cvm.NewResizeInstanceDisksRequest()
 			req.InstanceId = &instanceId
-			req.ForceStop = helper.Bool(true)
+			req.ForceStop = helper.Bool(forceStop)
 			req.SystemDisk = &cvm.SystemDisk{
 				DiskSize: helper.IntInt64(size),
 				DiskType: &diskType,
