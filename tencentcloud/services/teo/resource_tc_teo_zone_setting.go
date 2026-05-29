@@ -494,6 +494,23 @@ func ResourceTencentCloudTeoZoneSetting() *schema.Resource {
 					},
 				},
 			},
+
+			"jit_video_process": {
+				Type:        schema.TypeList,
+				Optional:    true,
+				Computed:    true,
+				MaxItems:    1,
+				Description: "JIT video process configuration.",
+				Elem: &schema.Resource{
+					Schema: map[string]*schema.Schema{
+						"switch": {
+							Type:        schema.TypeString,
+							Required:    true,
+							Description: "Whether to enable JIT video process.\n- `on`: Enable.\n- `off`: Disable.",
+						},
+					},
+				},
+			},
 		},
 	}
 }
@@ -820,6 +837,16 @@ func resourceTencentCloudTeoZoneSettingRead(d *schema.ResourceData, meta interfa
 		_ = d.Set("ipv6", []interface{}{ipv6Map})
 	}
 
+	jitVideoProcessMap := map[string]interface{}{}
+
+	if respData.JITVideoProcess != nil {
+		if respData.JITVideoProcess.Switch != nil {
+			jitVideoProcessMap["switch"] = respData.JITVideoProcess.Switch
+		}
+
+		_ = d.Set("jit_video_process", []interface{}{jitVideoProcessMap})
+	}
+
 	return nil
 }
 
@@ -834,7 +861,7 @@ func resourceTencentCloudTeoZoneSettingUpdate(d *schema.ResourceData, meta inter
 	zoneId := d.Id()
 
 	needChange := false
-	mutableArgs := []string{"cache", "cache_key", "max_age", "offline_cache", "quic", "post_max_size", "compression", "upstream_http2", "force_redirect", "https", "origin", "smart_routing", "web_socket", "client_ip_header", "cache_prefresh", "ipv6"}
+	mutableArgs := []string{"cache", "cache_key", "max_age", "offline_cache", "quic", "post_max_size", "compression", "upstream_http2", "force_redirect", "https", "origin", "smart_routing", "web_socket", "client_ip_header", "cache_prefresh", "ipv6", "jit_video_process"}
 	for _, v := range mutableArgs {
 		if d.HasChange(v) {
 			needChange = true
@@ -1079,6 +1106,14 @@ func resourceTencentCloudTeoZoneSettingUpdate(d *schema.ResourceData, meta inter
 				ipv6.Switch = helper.String(v.(string))
 			}
 			request.Ipv6 = &ipv6
+		}
+
+		if jitVideoProcessMap, ok := helper.InterfacesHeadMap(d, "jit_video_process"); ok {
+			jitVideoProcess := teo.JITVideoProcess{}
+			if v, ok := jitVideoProcessMap["switch"]; ok {
+				jitVideoProcess.Switch = helper.String(v.(string))
+			}
+			request.JITVideoProcess = &jitVideoProcess
 		}
 
 		err := resource.Retry(tccommon.WriteRetryTimeout, func() *resource.RetryError {
