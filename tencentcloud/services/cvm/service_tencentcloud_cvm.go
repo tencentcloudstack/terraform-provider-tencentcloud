@@ -371,12 +371,11 @@ func (me *CvmService) ModifyInstanceType(ctx context.Context, instanceId, instan
 	return nil
 }
 
-func (me *CvmService) ModifyPassword(ctx context.Context, instanceId, password string) error {
+func (me *CvmService) ModifyPassword(ctx context.Context, instanceId, password string, forceStop bool) error {
 	logId := tccommon.GetLogId(ctx)
 	request := cvm.NewResetInstancesPasswordRequest()
 	request.InstanceIds = []*string{&instanceId}
 	request.Password = &password
-	forceStop := true
 	request.ForceStop = &forceStop
 
 	ratelimit.Check(request.GetAction())
@@ -747,12 +746,12 @@ func (me *CvmService) DeleteKeyPair(ctx context.Context, keyId string) error {
 	return nil
 }
 
-func (me *CvmService) UnbindKeyPair(ctx context.Context, keyIds []*string, instanceIds []*string) error {
+func (me *CvmService) UnbindKeyPair(ctx context.Context, keyIds []*string, instanceIds []*string, forceStop bool) error {
 	logId := tccommon.GetLogId(ctx)
 	request := cvm.NewDisassociateInstancesKeyPairsRequest()
 	request.KeyIds = keyIds
 	request.InstanceIds = instanceIds
-	request.ForceStop = helper.Bool(true)
+	request.ForceStop = helper.Bool(forceStop)
 
 	ratelimit.Check(request.GetAction())
 	response, err := me.client.UseCvmClient().DisassociateInstancesKeyPairs(request)
@@ -767,12 +766,12 @@ func (me *CvmService) UnbindKeyPair(ctx context.Context, keyIds []*string, insta
 	return nil
 }
 
-func (me *CvmService) BindKeyPair(ctx context.Context, keyIds []*string, instanceId string) error {
+func (me *CvmService) BindKeyPair(ctx context.Context, keyIds []*string, instanceId string, forceStop bool) error {
 	logId := tccommon.GetLogId(ctx)
 	request := cvm.NewAssociateInstancesKeyPairsRequest()
 	request.KeyIds = keyIds
 	request.InstanceIds = []*string{&instanceId}
-	request.ForceStop = helper.Bool(true)
+	request.ForceStop = helper.Bool(forceStop)
 
 	ratelimit.Check(request.GetAction())
 	_, err := me.client.UseCvmClient().AssociateInstancesKeyPairs(request)

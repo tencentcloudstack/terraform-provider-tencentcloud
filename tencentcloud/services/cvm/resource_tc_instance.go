@@ -500,7 +500,7 @@ func ResourceTencentCloudInstance() *schema.Resource {
 				Type:        schema.TypeBool,
 				Optional:    true,
 				Computed:    true,
-				Description: "Whether to forcibly shut down a running instance. Default is false.",
+				Description: "Whether to forcibly shut down a running instance. Default is false. Forcing a shutdown is equivalent to switching off the power button on a physical computer. Forcing a shutdown may result in data loss or file system corruption; therefore, please use this option only when the server cannot be shut down normally.",
 			},
 			"disable_api_termination": {
 				Type:        schema.TypeBool,
@@ -1884,6 +1884,11 @@ func resourceTencentCloudInstanceUpdate(d *schema.ResourceData, meta interface{}
 		expectChargeType = chargeType.(string)
 	}
 
+	var forceStop bool
+	if v, ok := d.GetOkExists("force_stop"); ok {
+		forceStop = v.(bool)
+	}
+
 	if d.HasChange("instance_charge_type") && expectChargeType != currentChargeType {
 		var (
 			period    = -1
@@ -2114,7 +2119,7 @@ func resourceTencentCloudInstanceUpdate(d *schema.ResourceData, meta interface{}
 		// Modify Login Info Directly
 	} else {
 		if d.HasChange("password") {
-			err := cvmService.ModifyPassword(ctx, instanceId, d.Get("password").(string))
+			err := cvmService.ModifyPassword(ctx, instanceId, d.Get("password").(string), forceStop)
 			if err != nil {
 				return err
 			}
@@ -2131,7 +2136,7 @@ func resourceTencentCloudInstanceUpdate(d *schema.ResourceData, meta interface{}
 			keyId := n.(string)
 
 			if oldKeyId != "" {
-				err := cvmService.UnbindKeyPair(ctx, []*string{&oldKeyId}, []*string{&instanceId})
+				err := cvmService.UnbindKeyPair(ctx, []*string{&oldKeyId}, []*string{&instanceId}, forceStop)
 				if err != nil {
 					return err
 				}
@@ -2143,7 +2148,7 @@ func resourceTencentCloudInstanceUpdate(d *schema.ResourceData, meta interface{}
 			}
 
 			if keyId != "" {
-				err = cvmService.BindKeyPair(ctx, []*string{&keyId}, instanceId)
+				err = cvmService.BindKeyPair(ctx, []*string{&keyId}, instanceId, forceStop)
 				if err != nil {
 					return err
 				}
@@ -2166,7 +2171,7 @@ func resourceTencentCloudInstanceUpdate(d *schema.ResourceData, meta interface{}
 			removes.Remove("")
 
 			if removes.Len() > 0 {
-				err := cvmService.UnbindKeyPair(ctx, helper.InterfacesStringsPoint(removes.List()), []*string{&instanceId})
+				err := cvmService.UnbindKeyPair(ctx, helper.InterfacesStringsPoint(removes.List()), []*string{&instanceId}, forceStop)
 				if err != nil {
 					return err
 				}
@@ -2178,7 +2183,7 @@ func resourceTencentCloudInstanceUpdate(d *schema.ResourceData, meta interface{}
 			}
 
 			if adds.Len() > 0 {
-				err = cvmService.BindKeyPair(ctx, helper.InterfacesStringsPoint(adds.List()), instanceId)
+				err = cvmService.BindKeyPair(ctx, helper.InterfacesStringsPoint(adds.List()), instanceId, forceStop)
 				if err != nil {
 					return err
 				}
@@ -2239,7 +2244,7 @@ func resourceTencentCloudInstanceUpdate(d *schema.ResourceData, meta interface{}
 		//diskId := d.Get("system_disk_id").(string)
 		req := cvm.NewResizeInstanceDisksRequest()
 		req.InstanceId = &instanceId
-		req.ForceStop = helper.Bool(true)
+
 		req.SystemDisk = &cvm.SystemDisk{
 			DiskSize: helper.IntInt64(size),
 			DiskType: &diskType,
@@ -2248,6 +2253,7 @@ func resourceTencentCloudInstanceUpdate(d *schema.ResourceData, meta interface{}
 			req.ResizeOnline = helper.Bool(v.(bool))
 		}
 
+		req.ForceStop = helper.Bool(forceStop)
 		err := cvmService.ResizeInstanceDisks(ctx, req)
 		if err != nil {
 			return fmt.Errorf("an error occurred when modifying system_disk, reason: %s", err.Error())
@@ -2299,11 +2305,6 @@ func resourceTencentCloudInstanceUpdate(d *schema.ResourceData, meta interface{}
 	}
 
 	if d.HasChange("instance_type") {
-		var forceStop bool
-		if v, ok := d.GetOkExists("force_stop"); ok {
-			forceStop = v.(bool)
-		}
-
 		err := cvmService.ModifyInstanceType(ctx, instanceId, d.Get("instance_type").(string), forceStop)
 		if err != nil {
 			return err
@@ -2316,11 +2317,6 @@ func resourceTencentCloudInstanceUpdate(d *schema.ResourceData, meta interface{}
 	}
 
 	if d.HasChange("cdh_instance_type") {
-		var forceStop bool
-		if v, ok := d.GetOkExists("force_stop"); ok {
-			forceStop = v.(bool)
-		}
-
 		err := cvmService.ModifyInstanceType(ctx, instanceId, d.Get("cdh_instance_type").(string), forceStop)
 		if err != nil {
 			return err
