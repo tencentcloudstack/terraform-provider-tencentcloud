@@ -1,3 +1,24 @@
+## 1.82.98(May 29, 2026)
+
+ENHANCEMENTS:
+
+* resource/tencentcloud_clb_target_group: support new argument `snat_enable` ([#4163](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/4163))
+* resource/tencentcloud_instance: add new params `force_stop` ([#4168](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/4168))
+* resource/tencentcloud_key_pair: add new params `force_stop` ([#4168](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/4168))
+* resource/tencentcloud_kubernetes_encryption_protection: support custom timeouts ([#4158](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/4158))
+* resource/tencentcloud_monitor_tmp_instance: support `long_term_storage_retention_time` parameter for configuring archive storage retention duration ([#4144](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/4144))
+* resource/tencentcloud_mqtt_instance: support `x509_mode` parameter for configuring X509 certificate mode ([#4136](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/4136))
+* resource/tencentcloud_teo_bind_security_template: update entity field description ([#4167](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/4167))
+* resource/tencentcloud_thpc_workspaces: add new params `force_stop` ([#4168](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/4168))
+* resource/tencentcloud_vpc_private_nat_gateway_translation_nat_rule: support new params ([#4160](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/4160))
+
+BUG FIXES:
+
+* data-source/tencentcloud_teo_zones: update document ([#4161](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/4161))
+* resource/tencentcloud_clb_attachment: optimize code logic for update function ([#4166](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/4166))
+* resource/tencentcloud_teo_l7_acc_rule_v2: fix Read function to handle empty Rules array from API response ([#4147](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/4147))
+* resource/tencentcloud_teo_origin_acl: optimize code logic for create function ([#4169](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/4169))
+
 ## 1.82.97(May 22, 2026)
 
 ENHANCEMENTS:
