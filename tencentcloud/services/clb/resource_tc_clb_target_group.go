@@ -228,6 +228,12 @@ func ResourceTencentCloudClbTargetGroup() *schema.Resource {
 				Computed:    true,
 				Description: "IP version type. Common values: IPv4, IPv6, IPv6FullChain.",
 			},
+			"snat_enable": {
+				Type:        schema.TypeBool,
+				Optional:    true,
+				Computed:    true,
+				Description: "Whether to enable SNAT (source IP replacement). true: enable, false: disable. Default: false. Note: When SnatEnable is enabled, client source IP will be replaced, and the pass-through client source IP option is disabled, and vice versa.",
+			},
 		},
 	}
 }
@@ -304,8 +310,13 @@ func resourceTencentCloudClbTargetCreate(d *schema.ResourceData, meta interface{
 
 	ipVersion := d.Get("ip_version").(string)
 
+	var snatEnable *bool
+	if v, ok := d.GetOkExists("snat_enable"); ok {
+		snatEnable = helper.Bool(v.(bool))
+	}
+
 	targetGroupId, err = clbService.CreateTargetGroup(ctx, targetGroupName, vpcId, port, insAttachments, targetGroupType, protocol,
-		healthCheck, scheduleAlgorithm, tags, weight, fullListenSwitch, keepaliveEnable, sessionExpireTime, ipVersion)
+		healthCheck, scheduleAlgorithm, tags, weight, fullListenSwitch, keepaliveEnable, sessionExpireTime, ipVersion, snatEnable)
 	if err != nil {
 		return err
 	}
@@ -376,6 +387,10 @@ func resourceTencentCloudClbTargetRead(d *schema.ResourceData, meta interface{})
 		_ = d.Set("ip_version", targetGroup.IpVersion)
 	}
 
+	if targetGroup.SnatEnable != nil {
+		_ = d.Set("snat_enable", targetGroup.SnatEnable)
+	}
+
 	return nil
 }
 
@@ -444,6 +459,11 @@ func resourceTencentCloudClbTargetUpdate(d *schema.ResourceData, meta interface{
 			request.SessionExpireTime = &s
 			isChanged = true
 		}
+	}
+
+	if d.HasChange("snat_enable") {
+		request.SnatEnable = helper.Bool(d.Get("snat_enable").(bool))
+		isChanged = true
 	}
 
 	if isChanged {

@@ -138,6 +138,23 @@ resource "tencentcloud_clb_target_group" "ipv6" {
 }
 ```
 
+Create V2 target group with SNAT enabled
+
+```hcl
+resource "tencentcloud_clb_target_group" "snat" {
+  target_group_name = "snat-tg"
+  vpc_id            = "vpc-xxxxxx"
+  type              = "v2"
+  protocol          = "TCP"
+  snat_enable       = true
+
+  health_check {
+    health_switch = true
+    protocol      = "TCP"
+  }
+}
+```
+
 Import
 
 CLB target group can be imported using the id, e.g.

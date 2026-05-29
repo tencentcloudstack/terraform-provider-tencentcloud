@@ -11,8 +11,15 @@ import (
 	"testing"
 	"time"
 
+	"github.com/agiledragon/gomonkey/v2"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
+	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/terraform"
+	"github.com/stretchr/testify/assert"
+	clb "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/clb/v20180317"
+
+	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/connectivity"
+	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/internal/helper"
 )
 
 func init() {
@@ -190,3 +197,228 @@ resource "tencentcloud_clb_target_group" "target_group" {
     }
 }
 `
+
+// mockMetaClbTargetGroup implements tccommon.ProviderMeta for unit tests
+type mockMetaClbTargetGroup struct {
+	client *connectivity.TencentCloudClient
+}
+
+func (m *mockMetaClbTargetGroup) GetAPIV3Conn() *connectivity.TencentCloudClient {
+	return m.client
+}
+
+var _ tccommon.ProviderMeta = &mockMetaClbTargetGroup{}
+
+func newMockMetaClbTargetGroup() *mockMetaClbTargetGroup {
+	return &mockMetaClbTargetGroup{client: &connectivity.TencentCloudClient{}}
+}
+
+// go test ./tencentcloud/services/clb/ -run "TestUnitClbTargetGroup_CreateWithSnatEnable" -v -count=1 -gcflags="all=-l"
+func TestUnitClbTargetGroup_CreateWithSnatEnable(t *testing.T) {
+	patches := gomonkey.NewPatches()
+	defer patches.Reset()
+
+	clbClient := &clb.Client{}
+	patches.ApplyMethodReturn(newMockMetaClbTargetGroup().client, "UseClbClient", clbClient)
+
+	// Patch CreateTargetGroup to return success
+	patches.ApplyMethodFunc(clbClient, "CreateTargetGroup", func(request *clb.CreateTargetGroupRequest) (*clb.CreateTargetGroupResponse, error) {
+		assert.NotNil(t, request.SnatEnable)
+		assert.True(t, *request.SnatEnable)
+
+		resp := &clb.CreateTargetGroupResponse{}
+		resp.Response = &clb.CreateTargetGroupResponseParams{
+			TargetGroupId: helper.String("lbtg-test123"),
+			RequestId:     helper.String("fake-request-id"),
+		}
+		return resp, nil
+	})
+
+	// Patch DescribeTargetGroupList for the Read call after Create
+	patches.ApplyMethodFunc(clbClient, "DescribeTargetGroupList", func(request *clb.DescribeTargetGroupListRequest) (*clb.DescribeTargetGroupListResponse, error) {
+		resp := &clb.DescribeTargetGroupListResponse{}
+		resp.Response = &clb.DescribeTargetGroupListResponseParams{
+			TotalCount: helper.IntUint64(1),
+			TargetGroupSet: []*clb.TargetGroupInfo{
+				{
+					TargetGroupId:   helper.String("lbtg-test123"),
+					TargetGroupName: helper.String("test-snat"),
+					VpcId:           helper.String("vpc-xxxxxx"),
+					Port:            helper.IntUint64(80),
+					TargetGroupType: helper.String("v2"),
+					Protocol:        helper.String("TCP"),
+					SnatEnable:      helper.Bool(true),
+				},
+			},
+			RequestId: helper.String("fake-request-id"),
+		}
+		return resp, nil
+	})
+
+	meta := newMockMetaClbTargetGroup()
+	res := localclb.ResourceTencentCloudClbTargetGroup()
+	d := schema.TestResourceDataRaw(t, res.Schema, map[string]interface{}{
+		"target_group_name": "test-snat",
+		"vpc_id":            "vpc-xxxxxx",
+		"port":              80,
+		"type":              "v2",
+		"protocol":          "TCP",
+		"snat_enable":       true,
+	})
+
+	err := res.Create(d, meta)
+	assert.NoError(t, err)
+	assert.Equal(t, "lbtg-test123", d.Id())
+	assert.Equal(t, true, d.Get("snat_enable").(bool))
+}
+
+// go test ./tencentcloud/services/clb/ -run "TestUnitClbTargetGroup_CreateWithoutSnatEnable" -v -count=1 -gcflags="all=-l"
+func TestUnitClbTargetGroup_CreateWithoutSnatEnable(t *testing.T) {
+	patches := gomonkey.NewPatches()
+	defer patches.Reset()
+
+	clbClient := &clb.Client{}
+	patches.ApplyMethodReturn(newMockMetaClbTargetGroup().client, "UseClbClient", clbClient)
+
+	// Patch CreateTargetGroup - SnatEnable should not be set
+	patches.ApplyMethodFunc(clbClient, "CreateTargetGroup", func(request *clb.CreateTargetGroupRequest) (*clb.CreateTargetGroupResponse, error) {
+		assert.Nil(t, request.SnatEnable)
+
+		resp := &clb.CreateTargetGroupResponse{}
+		resp.Response = &clb.CreateTargetGroupResponseParams{
+			TargetGroupId: helper.String("lbtg-test456"),
+			RequestId:     helper.String("fake-request-id"),
+		}
+		return resp, nil
+	})
+
+	// Patch DescribeTargetGroupList for the Read call after Create
+	patches.ApplyMethodFunc(clbClient, "DescribeTargetGroupList", func(request *clb.DescribeTargetGroupListRequest) (*clb.DescribeTargetGroupListResponse, error) {
+		resp := &clb.DescribeTargetGroupListResponse{}
+		resp.Response = &clb.DescribeTargetGroupListResponseParams{
+			TotalCount: helper.IntUint64(1),
+			TargetGroupSet: []*clb.TargetGroupInfo{
+				{
+					TargetGroupId:   helper.String("lbtg-test456"),
+					TargetGroupName: helper.String("test-no-snat"),
+					VpcId:           helper.String("vpc-xxxxxx"),
+					Port:            helper.IntUint64(80),
+					TargetGroupType: helper.String("v2"),
+					Protocol:        helper.String("TCP"),
+					SnatEnable:      helper.Bool(false),
+				},
+			},
+			RequestId: helper.String("fake-request-id"),
+		}
+		return resp, nil
+	})
+
+	meta := newMockMetaClbTargetGroup()
+	res := localclb.ResourceTencentCloudClbTargetGroup()
+	d := schema.TestResourceDataRaw(t, res.Schema, map[string]interface{}{
+		"target_group_name": "test-no-snat",
+		"vpc_id":            "vpc-xxxxxx",
+		"port":              80,
+		"type":              "v2",
+		"protocol":          "TCP",
+	})
+
+	err := res.Create(d, meta)
+	assert.NoError(t, err)
+	assert.Equal(t, "lbtg-test456", d.Id())
+	assert.Equal(t, false, d.Get("snat_enable").(bool))
+}
+
+// go test ./tencentcloud/services/clb/ -run "TestUnitClbTargetGroup_UpdateSnatEnable" -v -count=1 -gcflags="all=-l"
+func TestUnitClbTargetGroup_UpdateSnatEnable(t *testing.T) {
+	patches := gomonkey.NewPatches()
+	defer patches.Reset()
+
+	clbClient := &clb.Client{}
+	patches.ApplyMethodReturn(newMockMetaClbTargetGroup().client, "UseClbClient", clbClient)
+
+	// Patch ModifyTargetGroupAttribute
+	patches.ApplyMethodFunc(clbClient, "ModifyTargetGroupAttribute", func(request *clb.ModifyTargetGroupAttributeRequest) (*clb.ModifyTargetGroupAttributeResponse, error) {
+		assert.NotNil(t, request.SnatEnable)
+		assert.True(t, *request.SnatEnable)
+		assert.Equal(t, "lbtg-test789", *request.TargetGroupId)
+
+		resp := &clb.ModifyTargetGroupAttributeResponse{}
+		resp.Response = &clb.ModifyTargetGroupAttributeResponseParams{
+			RequestId: helper.String("fake-request-id"),
+		}
+		return resp, nil
+	})
+
+	// Patch DescribeTargetGroupList for the Read call after Update
+	patches.ApplyMethodFunc(clbClient, "DescribeTargetGroupList", func(request *clb.DescribeTargetGroupListRequest) (*clb.DescribeTargetGroupListResponse, error) {
+		resp := &clb.DescribeTargetGroupListResponse{}
+		resp.Response = &clb.DescribeTargetGroupListResponseParams{
+			TotalCount: helper.IntUint64(1),
+			TargetGroupSet: []*clb.TargetGroupInfo{
+				{
+					TargetGroupId:   helper.String("lbtg-test789"),
+					TargetGroupName: helper.String("test-update-snat"),
+					VpcId:           helper.String("vpc-xxxxxx"),
+					Port:            helper.IntUint64(80),
+					TargetGroupType: helper.String("v2"),
+					Protocol:        helper.String("TCP"),
+					SnatEnable:      helper.Bool(true),
+				},
+			},
+			RequestId: helper.String("fake-request-id"),
+		}
+		return resp, nil
+	})
+
+	meta := newMockMetaClbTargetGroup()
+	res := localclb.ResourceTencentCloudClbTargetGroup()
+	d := schema.TestResourceDataRaw(t, res.Schema, map[string]interface{}{
+		"snat_enable": true,
+	})
+	d.SetId("lbtg-test789")
+
+	err := res.Update(d, meta)
+	assert.NoError(t, err)
+	assert.Equal(t, true, d.Get("snat_enable").(bool))
+}
+
+// go test ./tencentcloud/services/clb/ -run "TestUnitClbTargetGroup_ReadSnatEnable" -v -count=1 -gcflags="all=-l"
+func TestUnitClbTargetGroup_ReadSnatEnable(t *testing.T) {
+	patches := gomonkey.NewPatches()
+	defer patches.Reset()
+
+	clbClient := &clb.Client{}
+	patches.ApplyMethodReturn(newMockMetaClbTargetGroup().client, "UseClbClient", clbClient)
+
+	// Patch DescribeTargetGroupList
+	patches.ApplyMethodFunc(clbClient, "DescribeTargetGroupList", func(request *clb.DescribeTargetGroupListRequest) (*clb.DescribeTargetGroupListResponse, error) {
+		resp := &clb.DescribeTargetGroupListResponse{}
+		resp.Response = &clb.DescribeTargetGroupListResponseParams{
+			TotalCount: helper.IntUint64(1),
+			TargetGroupSet: []*clb.TargetGroupInfo{
+				{
+					TargetGroupId:   helper.String("lbtg-testread"),
+					TargetGroupName: helper.String("test-read-snat"),
+					VpcId:           helper.String("vpc-xxxxxx"),
+					Port:            helper.IntUint64(80),
+					TargetGroupType: helper.String("v2"),
+					Protocol:        helper.String("TCP"),
+					SnatEnable:      helper.Bool(true),
+				},
+			},
+			RequestId: helper.String("fake-request-id"),
+		}
+		return resp, nil
+	})
+
+	meta := newMockMetaClbTargetGroup()
+	res := localclb.ResourceTencentCloudClbTargetGroup()
+	d := schema.TestResourceDataRaw(t, res.Schema, map[string]interface{}{})
+	d.SetId("lbtg-testread")
+
+	err := res.Read(d, meta)
+	assert.NoError(t, err)
+	assert.Equal(t, true, d.Get("snat_enable").(bool))
+	assert.Equal(t, "test-read-snat", d.Get("target_group_name").(string))
+}
