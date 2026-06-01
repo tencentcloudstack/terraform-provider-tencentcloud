@@ -2953,7 +2953,7 @@ func handleNodeDataDiskChange(
 				logId, roleKey, zoneIdx, nodeIdx, op.diskID, op.newSize, resizeErr)
 			return resizeErr
 		}
-		flowId := int64(*resizeResp.Response.FlowId)
+		flowId := *resizeResp.Response.FlowId
 		conf := tccommon.BuildStateChangeConf([]string{"0", "1"}, []string{"2", "-1"}, d.Timeout(schema.TimeoutUpdate)-time.Minute, time.Second,
 			(&EMRService{client: meta.(tccommon.ProviderMeta).GetAPIV3Conn()}).FlowStatusRefreshFunc(instanceId, strconv.FormatInt(flowId, 10), F_KEY_FLOW_ID, []string{}))
 		if object, e := conf.WaitForState(); e != nil {
