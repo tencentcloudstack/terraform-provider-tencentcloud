@@ -63,17 +63,17 @@ func DataSourceTencentCloudTeoZones() *schema.Resource {
 					Schema: map[string]*schema.Schema{
 						"zone_id": {
 							Type:        schema.TypeString,
-							Required:    true,
+							Computed:    true,
 							Description: "Site ID.",
 						},
 						"zone_name": {
 							Type:        schema.TypeString,
-							Required:    true,
+							Computed:    true,
 							Description: "The site name.",
 						},
 						"original_name_servers": {
 							Type:        schema.TypeSet,
-							Required:    true,
+							Computed:    true,
 							Description: "List of name servers used by the site.",
 							Elem: &schema.Schema{
 								Type: schema.TypeString,
@@ -81,7 +81,7 @@ func DataSourceTencentCloudTeoZones() *schema.Resource {
 						},
 						"name_servers": {
 							Type:        schema.TypeSet,
-							Required:    true,
+							Computed:    true,
 							Description: "The list of name servers assigned by Tencent Cloud.",
 							Elem: &schema.Schema{
 								Type: schema.TypeString,
@@ -89,43 +89,43 @@ func DataSourceTencentCloudTeoZones() *schema.Resource {
 						},
 						"status": {
 							Type:        schema.TypeString,
-							Required:    true,
+							Computed:    true,
 							Description: "The site status. Values: `active`: The name server is switched to EdgeOne. `pending`: The name server is not switched. `moved`: The name server is changed to other service providers. `deactivated`: The site is blocked. `initializing`: The site is not bound with any plan.",
 						},
 						"type": {
 							Type:        schema.TypeString,
-							Required:    true,
+							Computed:    true,
 							Description: "Site access method. Valid values: full: NS access; partial: CNAME access; noDomainAccess: access with no domain name.",
 						},
 						"paused": {
 							Type:        schema.TypeBool,
-							Required:    true,
+							Computed:    true,
 							Description: "Whether the site is disabled.",
 						},
 						"cname_speed_up": {
 							Type:        schema.TypeString,
-							Required:    true,
+							Computed:    true,
 							Description: "Whether CNAME acceleration is enabled. Values: `enabled`: Enabled; `disabled`: Disabled.",
 						},
 						"cname_status": {
 							Type:        schema.TypeString,
-							Required:    true,
+							Computed:    true,
 							Description: "CNAME record access status. Values: `finished`: The site is verified.`pending`: The site is being verified.",
 						},
 						"tags": {
 							Type:        schema.TypeList,
-							Required:    true,
+							Computed:    true,
 							Description: "The list of resource tags.",
 							Elem: &schema.Resource{
 								Schema: map[string]*schema.Schema{
 									"tag_key": {
 										Type:        schema.TypeString,
-										Required:    true,
+										Computed:    true,
 										Description: "The tag key. Note: This field may return null, indicating that no valid values can be obtained.",
 									},
 									"tag_value": {
 										Type:        schema.TypeString,
-										Required:    true,
+										Computed:    true,
 										Description: "The tag value. Note: This field may return null, indicating that no valid values can be obtained.",
 									},
 								},
@@ -133,69 +133,69 @@ func DataSourceTencentCloudTeoZones() *schema.Resource {
 						},
 						"resources": {
 							Type:        schema.TypeList,
-							Required:    true,
+							Computed:    true,
 							Description: "The list of billable resources.",
 							Elem: &schema.Resource{
 								Schema: map[string]*schema.Schema{
 									"id": {
 										Type:        schema.TypeString,
-										Required:    true,
+										Computed:    true,
 										Description: "The resource ID.",
 									},
 									"pay_mode": {
 										Type:        schema.TypeInt,
-										Required:    true,
-										Description: "Billing mode, `0`: Pay-as-you-go",
+										Computed:    true,
+										Description: "Billing mode, `0`: Pay-as-you-go.",
 									},
 									"create_time": {
 										Type:        schema.TypeString,
-										Required:    true,
+										Computed:    true,
 										Description: "The creation time.",
 									},
 									"enable_time": {
 										Type:        schema.TypeString,
-										Required:    true,
+										Computed:    true,
 										Description: "The effective time.",
 									},
 									"expire_time": {
 										Type:        schema.TypeString,
-										Required:    true,
+										Computed:    true,
 										Description: "The expiration time.",
 									},
 									"status": {
 										Type:        schema.TypeString,
-										Required:    true,
+										Computed:    true,
 										Description: "The plan status. Values: `normal`: Normal; `isolated`: Isolated; `destroyed`: Terminated.",
 									},
 									"sv": {
 										Type:        schema.TypeList,
-										Required:    true,
-										Description: "Pricing query parameter",
+										Computed:    true,
+										Description: "Pricing query parameter.",
 										Elem: &schema.Resource{
 											Schema: map[string]*schema.Schema{
 												"key": {
 													Type:        schema.TypeString,
-													Required:    true,
+													Computed:    true,
 													Description: "The parameter key.",
 												},
 												"value": {
 													Type:        schema.TypeString,
-													Required:    true,
+													Computed:    true,
 													Description: "The parameter value.",
 												},
 												"pack": {
 													Type:        schema.TypeString,
-													Optional:    true,
+													Computed:    true,
 													Description: "Quota for a resource. Values: `zone`: Quota for sites; `custom-rule`: Quota for custom rules; `rate-limiting-rule`: Quota for rate limiting rules; `l4-proxy-instance`: Quota for L4 proxy instances. Note: This field may return null, indicating that no valid values can be obtained.",
 												},
 												"instance_id": {
 													Type:        schema.TypeString,
-													Optional:    true,
+													Computed:    true,
 													Description: "ID of the L4 proxy instance. Note: This field may return null, indicating that no valid values can be obtained.",
 												},
 												"protection_specs": {
 													Type:        schema.TypeString,
-													Optional:    true,
+													Computed:    true,
 													Description: "The protection specification. Values: `cm_30G`: 30 Gbps base protection bandwidth in **Chinese mainland** service area; `cm_60G`: 60 Gbps base protection bandwidth in **Chinese mainland** service area; `cm_100G`: 100 Gbps base protection bandwidth in **Chinese mainland** service area; `anycast_300G`: 300 Gbps Anycast-based protection in **Global (MLC)** service area; `anycast_unlimited`: Unlimited Anycast-based protection bandwidth in **Global (MLC)** service area; `cm_30G_anycast_300G`: 30 Gbps base protection bandwidth in **Chinese mainland** service area and 300 Gbps Anycast-based protection bandwidth in **Global (MLC)** service area; `cm_30G_anycast_unlimited`: 30 Gbps base protection bandwidth in **Chinese mainland** service area and unlimited Anycast-based protection bandwidth in **Global (MLC)** service area; cm_60G_anycast_300G`: 60 Gbps base protection bandwidth in **Chinese mainland** service area and 300 Gbps Anycast-based protection bandwidth in **Global (MLC)** service area; cm_60G_anycast_unlimited`: 60 Gbps base protection bandwidth in **Chinese mainland** service area and unlimited Anycast-based protection bandwidth in **Global (MLC)** service area</li><li> `cm_100G_anycast_300G`: 100 Gbps base protection bandwidth in **Chinese mainland** service area and 300 Gbps Anycast-based protection bandwidth in **Global (MLC)** service area, cm_100G_anycast_unlimited`: 100 Gbps base protection bandwidth in **Chinese mainland** service area and unlimited Anycast-based protection bandwidth in **Global (MLC)** service area. Note: This field may return null, indicating that no valid values can be obtained.",
 												},
 											},
@@ -203,32 +203,32 @@ func DataSourceTencentCloudTeoZones() *schema.Resource {
 									},
 									"auto_renew_flag": {
 										Type:        schema.TypeInt,
-										Required:    true,
+										Computed:    true,
 										Description: "Whether to enable auto-renewal. Values: `0`: Default status. `1`: Enable auto-renewal. `2`: Disable auto-renewal.",
 									},
 									"plan_id": {
 										Type:        schema.TypeString,
-										Required:    true,
+										Computed:    true,
 										Description: "ID of the resource associated with the plan.",
 									},
 									"area": {
 										Type:        schema.TypeString,
-										Required:    true,
+										Computed:    true,
 										Description: "Applicable area. Values: `mainland`: Chinese mainland; `overseas`: Regions outside the Chinese mainland; `global`: Global.",
 									},
 									"group": {
 										Type:        schema.TypeString,
-										Required:    true,
+										Computed:    true,
 										Description: "The resource type. Values: `plan`: Plan resources; `pay-as-you-go`: Pay-as-you-go resources; `value-added`: Value-added resources. Note: This field may return null, indicating that no valid values can be obtained.",
 									},
 									"zone_number": {
 										Type:        schema.TypeInt,
-										Required:    true,
+										Computed:    true,
 										Description: "The sites that are associated with the current resources. Note: This field may return null, indicating that no valid values can be obtained.",
 									},
 									"type": {
 										Type:        schema.TypeString,
-										Required:    true,
+										Computed:    true,
 										Description: "Resource tag type. Valid values: vodeo: vodeo resource.",
 									},
 								},
@@ -236,35 +236,34 @@ func DataSourceTencentCloudTeoZones() *schema.Resource {
 						},
 						"created_on": {
 							Type:        schema.TypeString,
-							Required:    true,
+							Computed:    true,
 							Description: "The creation time of the site.",
 						},
 						"modified_on": {
 							Type:        schema.TypeString,
-							Required:    true,
+							Computed:    true,
 							Description: "The modification date of the site.",
 						},
 						"area": {
 							Type:        schema.TypeString,
-							Required:    true,
+							Computed:    true,
 							Description: "The site access region. Values: `global`: Global. `mainland`: Chinese mainland. `overseas`: Outside the Chinese mainland.",
 						},
 						"vanity_name_servers": {
 							Type:        schema.TypeList,
-							Required:    true,
-							MaxItems:    1,
+							Computed:    true,
 							Description: "The custom name server information.\nNote: This field may return null, indicating that no valid values can be obtained.",
 							Elem: &schema.Resource{
 								Schema: map[string]*schema.Schema{
 									"switch": {
 										Type:        schema.TypeString,
-										Required:    true,
+										Computed:    true,
 										Description: "Whether to enable custom name servers. Values: `on`: Enable; `off`: Disable.",
 									},
 									"servers": {
 										Type:        schema.TypeSet,
-										Optional:    true,
-										Description: "List of custom name servers",
+										Computed:    true,
+										Description: "List of custom name servers.",
 										Elem: &schema.Schema{
 											Type: schema.TypeString,
 										},
@@ -274,70 +273,68 @@ func DataSourceTencentCloudTeoZones() *schema.Resource {
 						},
 						"vanity_name_servers_ips": {
 							Type:        schema.TypeList,
-							Required:    true,
+							Computed:    true,
 							Description: "The custom name server IP information. Note: This field may return null, indicating that no valid values can be obtained.",
 							Elem: &schema.Resource{
 								Schema: map[string]*schema.Schema{
 									"name": {
 										Type:        schema.TypeString,
-										Required:    true,
-										Description: "Custom name of the name server",
+										Computed:    true,
+										Description: "Custom name of the name server.",
 									},
 									"i_pv4": {
 										Type:        schema.TypeString,
-										Required:    true,
-										Description: "IPv4 address of the custom name server",
+										Computed:    true,
+										Description: "IPv4 address of the custom name server.",
 									},
 								},
 							},
 						},
 						"active_status": {
 							Type:        schema.TypeString,
-							Required:    true,
+							Computed:    true,
 							Description: "Status of the proxy. Values: `active`: Enabled; `inactive`: Not activated; `paused`: Disabled.",
 						},
 						"alias_zone_name": {
 							Type:        schema.TypeString,
-							Required:    true,
+							Computed:    true,
 							Description: "The site alias. It can be up to 20 characters consisting of digits, letters, hyphens (-) and underscores (_). Note: This field may return null, indicating that no valid values can be obtained.",
 						},
 						"is_fake": {
 							Type:        schema.TypeInt,
-							Required:    true,
+							Computed:    true,
 							Description: "Whether it is a fake site. Valid values: `0`: Non-fake site; `1`: Fake site.",
 						},
 						"lock_status": {
 							Type:        schema.TypeString,
-							Required:    true,
+							Computed:    true,
 							Description: "Lock status. Values: `enable`: Normal. Modification is allowed. `disable`: Locked. Modification is not allowed. `plan_migrate`: Adjusting the plan. Modification is not allowed.",
 						},
 						"ownership_verification": {
 							Type:        schema.TypeList,
-							Required:    true,
-							MaxItems:    1,
+							Computed:    true,
 							Description: "Ownership verification information. Note: This field may return null, indicating that no valid values can be obtained.",
 							Elem: &schema.Resource{
 								Schema: map[string]*schema.Schema{
 									"dns_verification": {
 										Type:        schema.TypeList,
-										Required:    true,
-										MaxItems:    1,
+										Computed:    true,
 										Description: "CNAME, when there is no domain name access, the information required for DNS resolution verification is used. For details, refer to [Site/Domain Ownership Verification\n](https://intl.cloud.tencent.com/document/product/1552/70789?from_cn_redirect=1#7af6ecf8-afca-4e35-8811-b5797ed1bde5). Note: This field may return null, which indicates a failure to obtain a valid value.",
 										Elem: &schema.Resource{
 											Schema: map[string]*schema.Schema{
 												"subdomain": {
 													Type:        schema.TypeString,
-													Required:    true,
+													Computed:    true,
 													Description: "The host record.",
 												},
 												"record_type": {
 													Type:        schema.TypeString,
-													Required:    true,
+													Computed:    true,
 													Description: "The record type.",
 												},
 												"record_value": {
 													Type:        schema.TypeString,
-													Required:    true,
+													Computed:    true,
 													Description: "The record value.",
 												},
 											},
@@ -345,19 +342,18 @@ func DataSourceTencentCloudTeoZones() *schema.Resource {
 									},
 									"file_verification": {
 										Type:        schema.TypeList,
-										Required:    true,
-										MaxItems:    1,
+										Computed:    true,
 										Description: "CNAME, when there is no domain name access, the information required for file verification is used. For details, refer to [Site/Domain Ownership Verification\n](https://intl.cloud.tencent.com/document/product/1552/70789?from_cn_redirect=1#7af6ecf8-afca-4e35-8811-b5797ed1bde5). Note: This field may return null, which indicates a failure to obtain a valid value.",
 										Elem: &schema.Resource{
 											Schema: map[string]*schema.Schema{
 												"path": {
 													Type:        schema.TypeString,
-													Required:    true,
+													Computed:    true,
 													Description: "EdgeOne obtains the file verification information in the format of \"Scheme + Host + URL Path\", (e.g. https://www.example.com/.well-known/teo-verification/z12h416twn.txt). This field is the URL path section of the URL you need to create.",
 												},
 												"content": {
 													Type:        schema.TypeString,
-													Required:    true,
+													Computed:    true,
 													Description: "Content of the verification file. The contents of this field need to be filled into the text file returned by `Path`.",
 												},
 											},
@@ -365,14 +361,13 @@ func DataSourceTencentCloudTeoZones() *schema.Resource {
 									},
 									"ns_verification": {
 										Type:        schema.TypeList,
-										Required:    true,
-										MaxItems:    1,
-										Description: "u200cInformation required for switching DNS servers. It's applicable to sites connected via NSs. For details, see [Modifying DNS Server](https://intl.cloud.tencent.com/document/product/1552/90452?from_cn_redirect=1).\nNote: This field may return·null, indicating that no valid values can be obtained.",
+										Computed:    true,
+										Description: "Information required for switching DNS servers. It's applicable to sites connected via NSs. For details, see [Modifying DNS Server](https://intl.cloud.tencent.com/document/product/1552/90452?from_cn_redirect=1).\nNote: This field may return null, indicating that no valid values can be obtained.",
 										Elem: &schema.Resource{
 											Schema: map[string]*schema.Schema{
 												"name_servers": {
 													Type:        schema.TypeSet,
-													Required:    true,
+													Computed:    true,
 													Description: "The DNS server address assigned to the user when connecting a site to EO via NS. You need to switch the NameServer of the domain name to this address.",
 													Elem: &schema.Schema{
 														Type: schema.TypeString,

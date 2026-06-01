@@ -217,60 +217,63 @@ type AlarmHistoryMetric struct {
 }
 
 type AlarmNotice struct {
-	// 告警通知模板 ID
+	// <p>告警通知模板 ID</p>
 	// 注意：此字段可能返回 null，表示取不到有效值。
 	Id *string `json:"Id,omitnil,omitempty" name:"Id"`
 
-	// 告警通知模板名称
+	// <p>告警通知模板名称</p>
 	// 注意：此字段可能返回 null，表示取不到有效值。
 	Name *string `json:"Name,omitnil,omitempty" name:"Name"`
 
-	// 上次修改时间
+	// <p>上次修改时间</p>
 	// 注意：此字段可能返回 null，表示取不到有效值。
 	UpdatedAt *string `json:"UpdatedAt,omitnil,omitempty" name:"UpdatedAt"`
 
-	// 上次修改人
+	// <p>上次修改人</p>
 	// 注意：此字段可能返回 null，表示取不到有效值。
 	UpdatedBy *string `json:"UpdatedBy,omitnil,omitempty" name:"UpdatedBy"`
 
-	// 告警通知类型 ALARM=未恢复通知 OK=已恢复通知 ALL=全部通知
+	// <p>告警通知类型 ALARM=未恢复通知 OK=已恢复通知 ALL=全部通知</p>
 	// 注意：此字段可能返回 null，表示取不到有效值。
 	NoticeType *string `json:"NoticeType,omitnil,omitempty" name:"NoticeType"`
 
-	// 用户通知列表
+	// <p>用户通知列表</p>
 	// 注意：此字段可能返回 null，表示取不到有效值。
 	UserNotices []*UserNotice `json:"UserNotices,omitnil,omitempty" name:"UserNotices"`
 
-	// 回调通知列表
+	// <p>回调通知列表</p>
 	// 注意：此字段可能返回 null，表示取不到有效值。
 	URLNotices []*URLNotice `json:"URLNotices,omitnil,omitempty" name:"URLNotices"`
 
-	// 是否是系统预设通知模板 0=否 1=是
+	// <p>是否是系统预设通知模板 0=否 1=是</p>
 	// 注意：此字段可能返回 null，表示取不到有效值。
 	IsPreset *int64 `json:"IsPreset,omitnil,omitempty" name:"IsPreset"`
 
-	// 通知语言 zh-CN=中文 en-US=英文
+	// <p>通知语言 zh-CN=中文 en-US=英文</p>
 	// 注意：此字段可能返回 null，表示取不到有效值。
 	NoticeLanguage *string `json:"NoticeLanguage,omitnil,omitempty" name:"NoticeLanguage"`
 
-	// 告警通知模板绑定的告警策略ID列表
+	// <p>告警通知模板绑定的告警策略ID列表</p>
 	// 注意：此字段可能返回 null，表示取不到有效值。
 	PolicyIds []*string `json:"PolicyIds,omitnil,omitempty" name:"PolicyIds"`
 
-	// 后台 amp consumer id
+	// <p>后台 amp consumer id</p>
 	// 注意：此字段可能返回 null，表示取不到有效值。
 	AMPConsumerId *string `json:"AMPConsumerId,omitnil,omitempty" name:"AMPConsumerId"`
 
-	// 推送cls渠道
+	// <p>推送cls渠道</p>
 	// 注意：此字段可能返回 null，表示取不到有效值。
 	CLSNotices []*CLSNotice `json:"CLSNotices,omitnil,omitempty" name:"CLSNotices"`
 
-	// 通知模板绑定的标签
+	// <p>通知模板绑定的标签</p>
 	// 注意：此字段可能返回 null，表示取不到有效值。
 	Tags []*Tag `json:"Tags,omitnil,omitempty" name:"Tags"`
 
-	// 是否免登录，0-否，1-是
+	// <p>是否免登录，0-否，1-是</p>
 	IsLoginFree *int64 `json:"IsLoginFree,omitnil,omitempty" name:"IsLoginFree"`
+
+	// <p>IANA 时区名</p>
+	TimeZoneName *string `json:"TimeZoneName,omitnil,omitempty" name:"TimeZoneName"`
 }
 
 type AlarmPolicy struct {
@@ -711,50 +714,50 @@ type BindingPolicyObjectDimension struct {
 
 // Predefined struct for user
 type BindingPolicyObjectRequestParams struct {
-	// 必填。固定值"monitor"
+	// <p>必填。固定值&quot;monitor&quot;</p>
 	Module *string `json:"Module,omitnil,omitempty" name:"Module"`
 
-	// 策略组id，例如 4739573。逐渐弃用，建议使用 PolicyId 参数
+	// <p>策略组id，例如 4739573。逐渐弃用，建议使用 PolicyId 参数</p>
 	GroupId *int64 `json:"GroupId,omitnil,omitempty" name:"GroupId"`
 
-	// 告警策略ID，例如“policy-gh892hg0”。PolicyId 参数与 GroupId 参数至少要填一个，否则会报参数错误，建议使用该参数。若两者同时存在则以该参数为准
+	// <p>告警策略ID，例如“policy-gh892hg0”。PolicyId 参数与 GroupId 参数至少要填一个，否则会报参数错误，建议使用该参数。若两者同时存在则以该参数为准</p>
 	PolicyId *string `json:"PolicyId,omitnil,omitempty" name:"PolicyId"`
 
-	// 实例分组ID
+	// <p>实例分组ID</p>
 	InstanceGroupId *int64 `json:"InstanceGroupId,omitnil,omitempty" name:"InstanceGroupId"`
 
-	// 需要绑定的对象维度信息，当为实例绑定渠道时，此处为必填信息
+	// <p>需要绑定的对象维度信息。当告警对象选择为实例绑定方式时，该参数为必填参数；当告警对象选择为标签绑定、实例分组方式时，该参数为选填参数。</p>
 	Dimensions []*BindingPolicyObjectDimension `json:"Dimensions,omitnil,omitempty" name:"Dimensions"`
 
-	// 事件配置的告警
+	// <p>事件配置的告警</p>
 	EbSubject *string `json:"EbSubject,omitnil,omitempty" name:"EbSubject"`
 
-	// 是否配置了事件告警
+	// <p>是否配置了事件告警</p>
 	EbEventFlag *int64 `json:"EbEventFlag,omitnil,omitempty" name:"EbEventFlag"`
 }
 
 type BindingPolicyObjectRequest struct {
 	*tchttp.BaseRequest
 	
-	// 必填。固定值"monitor"
+	// <p>必填。固定值&quot;monitor&quot;</p>
 	Module *string `json:"Module,omitnil,omitempty" name:"Module"`
 
-	// 策略组id，例如 4739573。逐渐弃用，建议使用 PolicyId 参数
+	// <p>策略组id，例如 4739573。逐渐弃用，建议使用 PolicyId 参数</p>
 	GroupId *int64 `json:"GroupId,omitnil,omitempty" name:"GroupId"`
 
-	// 告警策略ID，例如“policy-gh892hg0”。PolicyId 参数与 GroupId 参数至少要填一个，否则会报参数错误，建议使用该参数。若两者同时存在则以该参数为准
+	// <p>告警策略ID，例如“policy-gh892hg0”。PolicyId 参数与 GroupId 参数至少要填一个，否则会报参数错误，建议使用该参数。若两者同时存在则以该参数为准</p>
 	PolicyId *string `json:"PolicyId,omitnil,omitempty" name:"PolicyId"`
 
-	// 实例分组ID
+	// <p>实例分组ID</p>
 	InstanceGroupId *int64 `json:"InstanceGroupId,omitnil,omitempty" name:"InstanceGroupId"`
 
-	// 需要绑定的对象维度信息，当为实例绑定渠道时，此处为必填信息
+	// <p>需要绑定的对象维度信息。当告警对象选择为实例绑定方式时，该参数为必填参数；当告警对象选择为标签绑定、实例分组方式时，该参数为选填参数。</p>
 	Dimensions []*BindingPolicyObjectDimension `json:"Dimensions,omitnil,omitempty" name:"Dimensions"`
 
-	// 事件配置的告警
+	// <p>事件配置的告警</p>
 	EbSubject *string `json:"EbSubject,omitnil,omitempty" name:"EbSubject"`
 
-	// 是否配置了事件告警
+	// <p>是否配置了事件告警</p>
 	EbEventFlag *int64 `json:"EbEventFlag,omitnil,omitempty" name:"EbEventFlag"`
 }
 
@@ -937,6 +940,83 @@ type CLSNotice struct {
 }
 
 // Predefined struct for user
+type CheckAddressByPrometheusRequestParams struct {
+	// <p>实例id</p>
+	InstanceId *string `json:"InstanceId,omitnil,omitempty" name:"InstanceId"`
+
+	// <p>探测地址</p>
+	Target *string `json:"Target,omitnil,omitempty" name:"Target"`
+
+	// <p>探测方式。tcp或http，默认是tcp</p>
+	ProbeProtocol *string `json:"ProbeProtocol,omitnil,omitempty" name:"ProbeProtocol"`
+}
+
+type CheckAddressByPrometheusRequest struct {
+	*tchttp.BaseRequest
+	
+	// <p>实例id</p>
+	InstanceId *string `json:"InstanceId,omitnil,omitempty" name:"InstanceId"`
+
+	// <p>探测地址</p>
+	Target *string `json:"Target,omitnil,omitempty" name:"Target"`
+
+	// <p>探测方式。tcp或http，默认是tcp</p>
+	ProbeProtocol *string `json:"ProbeProtocol,omitnil,omitempty" name:"ProbeProtocol"`
+}
+
+func (r *CheckAddressByPrometheusRequest) ToJsonString() string {
+    b, _ := json.Marshal(r)
+    return string(b)
+}
+
+// FromJsonString It is highly **NOT** recommended to use this function
+// because it has no param check, nor strict type check
+func (r *CheckAddressByPrometheusRequest) FromJsonString(s string) error {
+	f := make(map[string]interface{})
+	if err := json.Unmarshal([]byte(s), &f); err != nil {
+		return err
+	}
+	delete(f, "InstanceId")
+	delete(f, "Target")
+	delete(f, "ProbeProtocol")
+	if len(f) > 0 {
+		return tcerr.NewTencentCloudSDKError("ClientError.BuildRequestError", "CheckAddressByPrometheusRequest has unknown keys!", "")
+	}
+	return json.Unmarshal([]byte(s), &r)
+}
+
+// Predefined struct for user
+type CheckAddressByPrometheusResponseParams struct {
+	// <p>实际探测的地址</p>
+	Target *string `json:"Target,omitnil,omitempty" name:"Target"`
+
+	// <p>探测是否成功</p>
+	Success *bool `json:"Success,omitnil,omitempty" name:"Success"`
+
+	// <p>探测失败时返回错误信息</p>
+	Message *string `json:"Message,omitnil,omitempty" name:"Message"`
+
+	// 唯一请求 ID，由服务端生成，每次请求都会返回（若请求因其他原因未能抵达服务端，则该次请求不会获得 RequestId）。定位问题时需要提供该次请求的 RequestId。
+	RequestId *string `json:"RequestId,omitnil,omitempty" name:"RequestId"`
+}
+
+type CheckAddressByPrometheusResponse struct {
+	*tchttp.BaseResponse
+	Response *CheckAddressByPrometheusResponseParams `json:"Response"`
+}
+
+func (r *CheckAddressByPrometheusResponse) ToJsonString() string {
+    b, _ := json.Marshal(r)
+    return string(b)
+}
+
+// FromJsonString It is highly **NOT** recommended to use this function
+// because it has no param check, nor strict type check
+func (r *CheckAddressByPrometheusResponse) FromJsonString(s string) error {
+	return json.Unmarshal([]byte(s), &r)
+}
+
+// Predefined struct for user
 type CleanGrafanaInstanceRequestParams struct {
 	// Grafana 实例 ID，例如：grafana-abcdefgh
 	InstanceId *string `json:"InstanceId,omitnil,omitempty" name:"InstanceId"`
@@ -1099,63 +1179,69 @@ type ConditionsTemp struct {
 
 // Predefined struct for user
 type CreateAlarmNoticeRequestParams struct {
-	// 模块名，这里填“monitor”
+	// <p>模块名，这里填“monitor”</p>
 	Module *string `json:"Module,omitnil,omitempty" name:"Module"`
 
-	// 通知模板名称 60字符以内
+	// <p>通知模板名称 60字符以内</p>
 	Name *string `json:"Name,omitnil,omitempty" name:"Name"`
 
-	// 通知类型 ALARM=未恢复通知 OK=已恢复通知 ALL=都通知
+	// <p>通知类型 ALARM=未恢复通知 OK=已恢复通知 ALL=都通知</p>
 	NoticeType *string `json:"NoticeType,omitnil,omitempty" name:"NoticeType"`
 
-	// 通知语言 zh-CN=中文 en-US=英文
+	// <p>通知语言 zh-CN=中文 en-US=英文</p>
 	NoticeLanguage *string `json:"NoticeLanguage,omitnil,omitempty" name:"NoticeLanguage"`
 
-	// 用户通知 最多5个
+	// <p>用户通知 最多5个</p>
 	UserNotices []*UserNotice `json:"UserNotices,omitnil,omitempty" name:"UserNotices"`
 
-	// 回调通知 最多6个
+	// <p>回调通知 最多6个</p>
 	URLNotices []*URLNotice `json:"URLNotices,omitnil,omitempty" name:"URLNotices"`
 
-	// 推送CLS日志服务的操作 最多1个
+	// <p>推送CLS日志服务的操作 最多1个</p>
 	CLSNotices []*CLSNotice `json:"CLSNotices,omitnil,omitempty" name:"CLSNotices"`
 
-	// 模板绑定的标签
+	// <p>模板绑定的标签</p>
 	Tags []*Tag `json:"Tags,omitnil,omitempty" name:"Tags"`
 
-	// 是否免登录，0-否，1-是
+	// <p>是否免登录，0-否，1-是</p>
 	IsLoginFree *int64 `json:"IsLoginFree,omitnil,omitempty" name:"IsLoginFree"`
+
+	// <p>IANA 时区名</p>
+	TimeZoneName *string `json:"TimeZoneName,omitnil,omitempty" name:"TimeZoneName"`
 }
 
 type CreateAlarmNoticeRequest struct {
 	*tchttp.BaseRequest
 	
-	// 模块名，这里填“monitor”
+	// <p>模块名，这里填“monitor”</p>
 	Module *string `json:"Module,omitnil,omitempty" name:"Module"`
 
-	// 通知模板名称 60字符以内
+	// <p>通知模板名称 60字符以内</p>
 	Name *string `json:"Name,omitnil,omitempty" name:"Name"`
 
-	// 通知类型 ALARM=未恢复通知 OK=已恢复通知 ALL=都通知
+	// <p>通知类型 ALARM=未恢复通知 OK=已恢复通知 ALL=都通知</p>
 	NoticeType *string `json:"NoticeType,omitnil,omitempty" name:"NoticeType"`
 
-	// 通知语言 zh-CN=中文 en-US=英文
+	// <p>通知语言 zh-CN=中文 en-US=英文</p>
 	NoticeLanguage *string `json:"NoticeLanguage,omitnil,omitempty" name:"NoticeLanguage"`
 
-	// 用户通知 最多5个
+	// <p>用户通知 最多5个</p>
 	UserNotices []*UserNotice `json:"UserNotices,omitnil,omitempty" name:"UserNotices"`
 
-	// 回调通知 最多6个
+	// <p>回调通知 最多6个</p>
 	URLNotices []*URLNotice `json:"URLNotices,omitnil,omitempty" name:"URLNotices"`
 
-	// 推送CLS日志服务的操作 最多1个
+	// <p>推送CLS日志服务的操作 最多1个</p>
 	CLSNotices []*CLSNotice `json:"CLSNotices,omitnil,omitempty" name:"CLSNotices"`
 
-	// 模板绑定的标签
+	// <p>模板绑定的标签</p>
 	Tags []*Tag `json:"Tags,omitnil,omitempty" name:"Tags"`
 
-	// 是否免登录，0-否，1-是
+	// <p>是否免登录，0-否，1-是</p>
 	IsLoginFree *int64 `json:"IsLoginFree,omitnil,omitempty" name:"IsLoginFree"`
+
+	// <p>IANA 时区名</p>
+	TimeZoneName *string `json:"TimeZoneName,omitnil,omitempty" name:"TimeZoneName"`
 }
 
 func (r *CreateAlarmNoticeRequest) ToJsonString() string {
@@ -1179,6 +1265,7 @@ func (r *CreateAlarmNoticeRequest) FromJsonString(s string) error {
 	delete(f, "CLSNotices")
 	delete(f, "Tags")
 	delete(f, "IsLoginFree")
+	delete(f, "TimeZoneName")
 	if len(f) > 0 {
 		return tcerr.NewTencentCloudSDKError("ClientError.BuildRequestError", "CreateAlarmNoticeRequest has unknown keys!", "")
 	}
@@ -1187,7 +1274,7 @@ func (r *CreateAlarmNoticeRequest) FromJsonString(s string) error {
 
 // Predefined struct for user
 type CreateAlarmNoticeResponseParams struct {
-	// 告警通知模板ID
+	// <p>告警通知模板ID</p>
 	NoticeId *string `json:"NoticeId,omitnil,omitempty" name:"NoticeId"`
 
 	// 唯一请求 ID，由服务端生成，每次请求都会返回（若请求因其他原因未能抵达服务端，则该次请求不会获得 RequestId）。定位问题时需要提供该次请求的 RequestId。
@@ -2128,26 +2215,26 @@ func (r *CreateGrafanaInstanceResponse) FromJsonString(s string) error {
 
 // Predefined struct for user
 type CreateGrafanaIntegrationRequestParams struct {
-	// Grafana 实例 ID，例如：grafana-abcdefgh
+	// <p>Grafana 实例 ID，例如：grafana-abcdefgh</p>
 	InstanceId *string `json:"InstanceId,omitnil,omitempty" name:"InstanceId"`
 
-	// 集成类型(接口DescribeGrafanaIntegrationOverviews返回的集成信息中的Code字段)
+	// <p>集成类型(接口DescribeGrafanaIntegrationOverviews返回的集成信息中的Code字段)</p>
 	Kind *string `json:"Kind,omitnil,omitempty" name:"Kind"`
 
-	// 集成配置
+	// <p>集成配置</p>
 	Content *string `json:"Content,omitnil,omitempty" name:"Content"`
 }
 
 type CreateGrafanaIntegrationRequest struct {
 	*tchttp.BaseRequest
 	
-	// Grafana 实例 ID，例如：grafana-abcdefgh
+	// <p>Grafana 实例 ID，例如：grafana-abcdefgh</p>
 	InstanceId *string `json:"InstanceId,omitnil,omitempty" name:"InstanceId"`
 
-	// 集成类型(接口DescribeGrafanaIntegrationOverviews返回的集成信息中的Code字段)
+	// <p>集成类型(接口DescribeGrafanaIntegrationOverviews返回的集成信息中的Code字段)</p>
 	Kind *string `json:"Kind,omitnil,omitempty" name:"Kind"`
 
-	// 集成配置
+	// <p>集成配置</p>
 	Content *string `json:"Content,omitnil,omitempty" name:"Content"`
 }
 
@@ -2174,7 +2261,7 @@ func (r *CreateGrafanaIntegrationRequest) FromJsonString(s string) error {
 
 // Predefined struct for user
 type CreateGrafanaIntegrationResponseParams struct {
-	// 集成 ID
+	// <p>集成 ID</p>
 	// 注意：此字段可能返回 null，表示取不到有效值。
 	IntegrationId *string `json:"IntegrationId,omitnil,omitempty" name:"IntegrationId"`
 
@@ -2915,51 +3002,57 @@ func (r *CreatePrometheusGlobalNotificationResponse) FromJsonString(s string) er
 
 // Predefined struct for user
 type CreatePrometheusMultiTenantInstancePostPayModeRequestParams struct {
-	// 实例名
+	// <p>实例名</p>
 	InstanceName *string `json:"InstanceName,omitnil,omitempty" name:"InstanceName"`
 
-	// VPC ID(可通过 vpc:DescribeVpcs 接口获取，与实例同地域)
+	// <p>VPC ID(可通过 vpc:DescribeVpcs 接口获取，与实例同地域)</p>
 	VpcId *string `json:"VpcId,omitnil,omitempty" name:"VpcId"`
 
-	// 子网 ID(可通过 vpc:DescribeSubnets 接口获取)
+	// <p>子网 ID(可通过 vpc:DescribeSubnets 接口获取)</p>
 	SubnetId *string `json:"SubnetId,omitnil,omitempty" name:"SubnetId"`
 
-	// 数据存储时间（单位天），限制值为15, 30, 45, 90, 180, 365, 730之一
+	// <p>数据存储时间（单位天），限制值为15, 30, 45, 90, 180, 365, 730之一</p>
 	DataRetentionTime *int64 `json:"DataRetentionTime,omitnil,omitempty" name:"DataRetentionTime"`
 
-	// 可用区(与子网同可用区)
+	// <p>可用区(与子网同可用区)</p>
 	Zone *string `json:"Zone,omitnil,omitempty" name:"Zone"`
 
-	// 实例的标签
+	// <p>实例的标签</p>
 	TagSpecification []*PrometheusTag `json:"TagSpecification,omitnil,omitempty" name:"TagSpecification"`
 
-	// 需要关联的 Grafana 实例
+	// <p>需要关联的 Grafana 实例</p>
 	GrafanaInstanceId *string `json:"GrafanaInstanceId,omitnil,omitempty" name:"GrafanaInstanceId"`
+
+	// <p>标识prom实例特殊属性</p><p>归档存储时长(天):<br>key: LongTermStorageRetentionTime<br>value: 60-730</p>
+	InstanceAttributes []*PrometheusRuleKV `json:"InstanceAttributes,omitnil,omitempty" name:"InstanceAttributes"`
 }
 
 type CreatePrometheusMultiTenantInstancePostPayModeRequest struct {
 	*tchttp.BaseRequest
 	
-	// 实例名
+	// <p>实例名</p>
 	InstanceName *string `json:"InstanceName,omitnil,omitempty" name:"InstanceName"`
 
-	// VPC ID(可通过 vpc:DescribeVpcs 接口获取，与实例同地域)
+	// <p>VPC ID(可通过 vpc:DescribeVpcs 接口获取，与实例同地域)</p>
 	VpcId *string `json:"VpcId,omitnil,omitempty" name:"VpcId"`
 
-	// 子网 ID(可通过 vpc:DescribeSubnets 接口获取)
+	// <p>子网 ID(可通过 vpc:DescribeSubnets 接口获取)</p>
 	SubnetId *string `json:"SubnetId,omitnil,omitempty" name:"SubnetId"`
 
-	// 数据存储时间（单位天），限制值为15, 30, 45, 90, 180, 365, 730之一
+	// <p>数据存储时间（单位天），限制值为15, 30, 45, 90, 180, 365, 730之一</p>
 	DataRetentionTime *int64 `json:"DataRetentionTime,omitnil,omitempty" name:"DataRetentionTime"`
 
-	// 可用区(与子网同可用区)
+	// <p>可用区(与子网同可用区)</p>
 	Zone *string `json:"Zone,omitnil,omitempty" name:"Zone"`
 
-	// 实例的标签
+	// <p>实例的标签</p>
 	TagSpecification []*PrometheusTag `json:"TagSpecification,omitnil,omitempty" name:"TagSpecification"`
 
-	// 需要关联的 Grafana 实例
+	// <p>需要关联的 Grafana 实例</p>
 	GrafanaInstanceId *string `json:"GrafanaInstanceId,omitnil,omitempty" name:"GrafanaInstanceId"`
+
+	// <p>标识prom实例特殊属性</p><p>归档存储时长(天):<br>key: LongTermStorageRetentionTime<br>value: 60-730</p>
+	InstanceAttributes []*PrometheusRuleKV `json:"InstanceAttributes,omitnil,omitempty" name:"InstanceAttributes"`
 }
 
 func (r *CreatePrometheusMultiTenantInstancePostPayModeRequest) ToJsonString() string {
@@ -2981,6 +3074,7 @@ func (r *CreatePrometheusMultiTenantInstancePostPayModeRequest) FromJsonString(s
 	delete(f, "Zone")
 	delete(f, "TagSpecification")
 	delete(f, "GrafanaInstanceId")
+	delete(f, "InstanceAttributes")
 	if len(f) > 0 {
 		return tcerr.NewTencentCloudSDKError("ClientError.BuildRequestError", "CreatePrometheusMultiTenantInstancePostPayModeRequest has unknown keys!", "")
 	}
@@ -2989,7 +3083,7 @@ func (r *CreatePrometheusMultiTenantInstancePostPayModeRequest) FromJsonString(s
 
 // Predefined struct for user
 type CreatePrometheusMultiTenantInstancePostPayModeResponseParams struct {
-	// 实例 ID
+	// <p>实例 ID</p>
 	InstanceId *string `json:"InstanceId,omitnil,omitempty" name:"InstanceId"`
 
 	// 唯一请求 ID，由服务端生成，每次请求都会返回（若请求因其他原因未能抵达服务端，则该次请求不会获得 RequestId）。定位问题时需要提供该次请求的 RequestId。
@@ -3370,99 +3464,6 @@ func (r *CreateSSOAccountResponse) ToJsonString() string {
 // FromJsonString It is highly **NOT** recommended to use this function
 // because it has no param check, nor strict type check
 func (r *CreateSSOAccountResponse) FromJsonString(s string) error {
-	return json.Unmarshal([]byte(s), &r)
-}
-
-// Predefined struct for user
-type CreateServiceDiscoveryRequestParams struct {
-	// Prometheus 实例 ID
-	InstanceId *string `json:"InstanceId,omitnil,omitempty" name:"InstanceId"`
-
-	// <li>类型为TKE：对应集成的腾讯云容器服务集群 ID</li>
-	KubeClusterId *string `json:"KubeClusterId,omitnil,omitempty" name:"KubeClusterId"`
-
-	// 用户 Kubernetes 集群类型：
-	// <li> 1 = 容器服务集群(TKE) </li>
-	KubeType *int64 `json:"KubeType,omitnil,omitempty" name:"KubeType"`
-
-	// 服务发现类型，取值如下：
-	// <li> 1 = ServiceMonitor</li>
-	// <li> 2 = PodMonitor</li>
-	// <li> 3 = JobMonitor</li>
-	Type *int64 `json:"Type,omitnil,omitempty" name:"Type"`
-
-	// 服务发现配置信息，YAML 格式，[具体YAML参数内容请参考](https://cloud.tencent.com/document/product/1416/55995#service-monitor)
-	Yaml *string `json:"Yaml,omitnil,omitempty" name:"Yaml"`
-}
-
-type CreateServiceDiscoveryRequest struct {
-	*tchttp.BaseRequest
-	
-	// Prometheus 实例 ID
-	InstanceId *string `json:"InstanceId,omitnil,omitempty" name:"InstanceId"`
-
-	// <li>类型为TKE：对应集成的腾讯云容器服务集群 ID</li>
-	KubeClusterId *string `json:"KubeClusterId,omitnil,omitempty" name:"KubeClusterId"`
-
-	// 用户 Kubernetes 集群类型：
-	// <li> 1 = 容器服务集群(TKE) </li>
-	KubeType *int64 `json:"KubeType,omitnil,omitempty" name:"KubeType"`
-
-	// 服务发现类型，取值如下：
-	// <li> 1 = ServiceMonitor</li>
-	// <li> 2 = PodMonitor</li>
-	// <li> 3 = JobMonitor</li>
-	Type *int64 `json:"Type,omitnil,omitempty" name:"Type"`
-
-	// 服务发现配置信息，YAML 格式，[具体YAML参数内容请参考](https://cloud.tencent.com/document/product/1416/55995#service-monitor)
-	Yaml *string `json:"Yaml,omitnil,omitempty" name:"Yaml"`
-}
-
-func (r *CreateServiceDiscoveryRequest) ToJsonString() string {
-    b, _ := json.Marshal(r)
-    return string(b)
-}
-
-// FromJsonString It is highly **NOT** recommended to use this function
-// because it has no param check, nor strict type check
-func (r *CreateServiceDiscoveryRequest) FromJsonString(s string) error {
-	f := make(map[string]interface{})
-	if err := json.Unmarshal([]byte(s), &f); err != nil {
-		return err
-	}
-	delete(f, "InstanceId")
-	delete(f, "KubeClusterId")
-	delete(f, "KubeType")
-	delete(f, "Type")
-	delete(f, "Yaml")
-	if len(f) > 0 {
-		return tcerr.NewTencentCloudSDKError("ClientError.BuildRequestError", "CreateServiceDiscoveryRequest has unknown keys!", "")
-	}
-	return json.Unmarshal([]byte(s), &r)
-}
-
-// Predefined struct for user
-type CreateServiceDiscoveryResponseParams struct {
-	// 创建成功之后，返回对应服务发现信息
-	ServiceDiscovery *ServiceDiscoveryItem `json:"ServiceDiscovery,omitnil,omitempty" name:"ServiceDiscovery"`
-
-	// 唯一请求 ID，由服务端生成，每次请求都会返回（若请求因其他原因未能抵达服务端，则该次请求不会获得 RequestId）。定位问题时需要提供该次请求的 RequestId。
-	RequestId *string `json:"RequestId,omitnil,omitempty" name:"RequestId"`
-}
-
-type CreateServiceDiscoveryResponse struct {
-	*tchttp.BaseResponse
-	Response *CreateServiceDiscoveryResponseParams `json:"Response"`
-}
-
-func (r *CreateServiceDiscoveryResponse) ToJsonString() string {
-    b, _ := json.Marshal(r)
-    return string(b)
-}
-
-// FromJsonString It is highly **NOT** recommended to use this function
-// because it has no param check, nor strict type check
-func (r *CreateServiceDiscoveryResponse) FromJsonString(s string) error {
 	return json.Unmarshal([]byte(s), &r)
 }
 
@@ -11047,50 +11048,44 @@ func (r *DescribePrometheusZonesResponse) FromJsonString(s string) error {
 
 // Predefined struct for user
 type DescribeRecordingRulesRequestParams struct {
-	// Prometheus 实例 ID
+	// <p>Prometheus 实例 ID</p>
 	InstanceId *string `json:"InstanceId,omitnil,omitempty" name:"InstanceId"`
 
-	// 返回数量，默认为 20，最大值为 100
+	// <p>返回数量，默认为 20，最大值为 100</p>
 	Limit *int64 `json:"Limit,omitnil,omitempty" name:"Limit"`
 
-	// 偏移量，默认为 0
+	// <p>偏移量，默认为 0</p>
 	Offset *int64 `json:"Offset,omitnil,omitempty" name:"Offset"`
 
-	// 规则 ID
+	// <p>规则 ID</p>
 	RuleId *string `json:"RuleId,omitnil,omitempty" name:"RuleId"`
 
-	// 规则状态码，取值如下：
-	// <li>1=RuleDeleted</li>
-	// <li>2=RuleEnabled</li>
-	// <li>3=RuleDisabled</li>
+	// <p>规则状态码，取值如下：</p><li>1=RuleDeleted</li><li>2=RuleEnabled</li><li>3=RuleDisabled</li>
 	RuleState *int64 `json:"RuleState,omitnil,omitempty" name:"RuleState"`
 
-	// 规则名称
+	// <p>规则名称</p>
 	Name *string `json:"Name,omitnil,omitempty" name:"Name"`
 }
 
 type DescribeRecordingRulesRequest struct {
 	*tchttp.BaseRequest
 	
-	// Prometheus 实例 ID
+	// <p>Prometheus 实例 ID</p>
 	InstanceId *string `json:"InstanceId,omitnil,omitempty" name:"InstanceId"`
 
-	// 返回数量，默认为 20，最大值为 100
+	// <p>返回数量，默认为 20，最大值为 100</p>
 	Limit *int64 `json:"Limit,omitnil,omitempty" name:"Limit"`
 
-	// 偏移量，默认为 0
+	// <p>偏移量，默认为 0</p>
 	Offset *int64 `json:"Offset,omitnil,omitempty" name:"Offset"`
 
-	// 规则 ID
+	// <p>规则 ID</p>
 	RuleId *string `json:"RuleId,omitnil,omitempty" name:"RuleId"`
 
-	// 规则状态码，取值如下：
-	// <li>1=RuleDeleted</li>
-	// <li>2=RuleEnabled</li>
-	// <li>3=RuleDisabled</li>
+	// <p>规则状态码，取值如下：</p><li>1=RuleDeleted</li><li>2=RuleEnabled</li><li>3=RuleDisabled</li>
 	RuleState *int64 `json:"RuleState,omitnil,omitempty" name:"RuleState"`
 
-	// 规则名称
+	// <p>规则名称</p>
 	Name *string `json:"Name,omitnil,omitempty" name:"Name"`
 }
 
@@ -11120,12 +11115,15 @@ func (r *DescribeRecordingRulesRequest) FromJsonString(s string) error {
 
 // Predefined struct for user
 type DescribeRecordingRulesResponseParams struct {
-	// 规则组数量
+	// <p>规则组数量</p>
 	TotalCount *int64 `json:"TotalCount,omitnil,omitempty" name:"TotalCount"`
 
-	// 规则组详情
+	// <p>规则组详情</p>
 	// 注意：此字段可能返回 null，表示取不到有效值。
 	RecordingRuleSet []*RecordingRuleSet `json:"RecordingRuleSet,omitnil,omitempty" name:"RecordingRuleSet"`
+
+	// <p>预聚合规则数</p>
+	TotalRuleCount *int64 `json:"TotalRuleCount,omitnil,omitempty" name:"TotalRuleCount"`
 
 	// 唯一请求 ID，由服务端生成，每次请求都会返回（若请求因其他原因未能抵达服务端，则该次请求不会获得 RequestId）。定位问题时需要提供该次请求的 RequestId。
 	RequestId *string `json:"RequestId,omitnil,omitempty" name:"RequestId"`
@@ -11347,80 +11345,6 @@ func (r *DescribeSSOAccountResponse) ToJsonString() string {
 // FromJsonString It is highly **NOT** recommended to use this function
 // because it has no param check, nor strict type check
 func (r *DescribeSSOAccountResponse) FromJsonString(s string) error {
-	return json.Unmarshal([]byte(s), &r)
-}
-
-// Predefined struct for user
-type DescribeServiceDiscoveryRequestParams struct {
-	// Prometheus 实例 ID
-	InstanceId *string `json:"InstanceId,omitnil,omitempty" name:"InstanceId"`
-
-	// <li>类型是 TKE，为对应的腾讯云容器服务集群 ID</li>
-	KubeClusterId *string `json:"KubeClusterId,omitnil,omitempty" name:"KubeClusterId"`
-
-	// 用户 Kubernetes 集群类型：
-	// <li> 1 = 容器服务集群(TKE) </li>
-	KubeType *int64 `json:"KubeType,omitnil,omitempty" name:"KubeType"`
-}
-
-type DescribeServiceDiscoveryRequest struct {
-	*tchttp.BaseRequest
-	
-	// Prometheus 实例 ID
-	InstanceId *string `json:"InstanceId,omitnil,omitempty" name:"InstanceId"`
-
-	// <li>类型是 TKE，为对应的腾讯云容器服务集群 ID</li>
-	KubeClusterId *string `json:"KubeClusterId,omitnil,omitempty" name:"KubeClusterId"`
-
-	// 用户 Kubernetes 集群类型：
-	// <li> 1 = 容器服务集群(TKE) </li>
-	KubeType *int64 `json:"KubeType,omitnil,omitempty" name:"KubeType"`
-}
-
-func (r *DescribeServiceDiscoveryRequest) ToJsonString() string {
-    b, _ := json.Marshal(r)
-    return string(b)
-}
-
-// FromJsonString It is highly **NOT** recommended to use this function
-// because it has no param check, nor strict type check
-func (r *DescribeServiceDiscoveryRequest) FromJsonString(s string) error {
-	f := make(map[string]interface{})
-	if err := json.Unmarshal([]byte(s), &f); err != nil {
-		return err
-	}
-	delete(f, "InstanceId")
-	delete(f, "KubeClusterId")
-	delete(f, "KubeType")
-	if len(f) > 0 {
-		return tcerr.NewTencentCloudSDKError("ClientError.BuildRequestError", "DescribeServiceDiscoveryRequest has unknown keys!", "")
-	}
-	return json.Unmarshal([]byte(s), &r)
-}
-
-// Predefined struct for user
-type DescribeServiceDiscoveryResponseParams struct {
-	// 返回服务发现列表信息
-	// 注意：此字段可能返回 null，表示取不到有效值。
-	ServiceDiscoverySet []*ServiceDiscoveryItem `json:"ServiceDiscoverySet,omitnil,omitempty" name:"ServiceDiscoverySet"`
-
-	// 唯一请求 ID，由服务端生成，每次请求都会返回（若请求因其他原因未能抵达服务端，则该次请求不会获得 RequestId）。定位问题时需要提供该次请求的 RequestId。
-	RequestId *string `json:"RequestId,omitnil,omitempty" name:"RequestId"`
-}
-
-type DescribeServiceDiscoveryResponse struct {
-	*tchttp.BaseResponse
-	Response *DescribeServiceDiscoveryResponseParams `json:"Response"`
-}
-
-func (r *DescribeServiceDiscoveryResponse) ToJsonString() string {
-    b, _ := json.Marshal(r)
-    return string(b)
-}
-
-// FromJsonString It is highly **NOT** recommended to use this function
-// because it has no param check, nor strict type check
-func (r *DescribeServiceDiscoveryResponse) FromJsonString(s string) error {
 	return json.Unmarshal([]byte(s), &r)
 }
 
@@ -11865,12 +11789,45 @@ type EventCondition struct {
 
 // Predefined struct for user
 type ExportPrometheusReadOnlyDynamicAPIRequestParams struct {
+	// <p>Prometheus 实例 ID</p>
+	InstanceId *string `json:"InstanceId,omitnil,omitempty" name:"InstanceId"`
 
+	// <p>HTTP 方法名 GET/POST/PUT/DELETE 等</p>
+	Method *string `json:"Method,omitnil,omitempty" name:"Method"`
+
+	// <p>HTTP 路径（包括 query string）</p>
+	Path *string `json:"Path,omitnil,omitempty" name:"Path"`
+
+	// <p>HTTP 请求体，任何数据</p>
+	RequestBody *string `json:"RequestBody,omitnil,omitempty" name:"RequestBody"`
+
+	// <p>HTTP 请求头</p>
+	Headers []*PrometheusStringKeyValuePair `json:"Headers,omitnil,omitempty" name:"Headers"`
+
+	// <p>是否请求自监控数据。自监控仅支持 /api/v1/query 与 /api/v1/query_range 接口。</p>
+	SelfMonitor *bool `json:"SelfMonitor,omitnil,omitempty" name:"SelfMonitor"`
 }
 
 type ExportPrometheusReadOnlyDynamicAPIRequest struct {
 	*tchttp.BaseRequest
 	
+	// <p>Prometheus 实例 ID</p>
+	InstanceId *string `json:"InstanceId,omitnil,omitempty" name:"InstanceId"`
+
+	// <p>HTTP 方法名 GET/POST/PUT/DELETE 等</p>
+	Method *string `json:"Method,omitnil,omitempty" name:"Method"`
+
+	// <p>HTTP 路径（包括 query string）</p>
+	Path *string `json:"Path,omitnil,omitempty" name:"Path"`
+
+	// <p>HTTP 请求体，任何数据</p>
+	RequestBody *string `json:"RequestBody,omitnil,omitempty" name:"RequestBody"`
+
+	// <p>HTTP 请求头</p>
+	Headers []*PrometheusStringKeyValuePair `json:"Headers,omitnil,omitempty" name:"Headers"`
+
+	// <p>是否请求自监控数据。自监控仅支持 /api/v1/query 与 /api/v1/query_range 接口。</p>
+	SelfMonitor *bool `json:"SelfMonitor,omitnil,omitempty" name:"SelfMonitor"`
 }
 
 func (r *ExportPrometheusReadOnlyDynamicAPIRequest) ToJsonString() string {
@@ -11885,7 +11842,12 @@ func (r *ExportPrometheusReadOnlyDynamicAPIRequest) FromJsonString(s string) err
 	if err := json.Unmarshal([]byte(s), &f); err != nil {
 		return err
 	}
-	
+	delete(f, "InstanceId")
+	delete(f, "Method")
+	delete(f, "Path")
+	delete(f, "RequestBody")
+	delete(f, "Headers")
+	delete(f, "SelfMonitor")
 	if len(f) > 0 {
 		return tcerr.NewTencentCloudSDKError("ClientError.BuildRequestError", "ExportPrometheusReadOnlyDynamicAPIRequest has unknown keys!", "")
 	}
@@ -11894,6 +11856,9 @@ func (r *ExportPrometheusReadOnlyDynamicAPIRequest) FromJsonString(s string) err
 
 // Predefined struct for user
 type ExportPrometheusReadOnlyDynamicAPIResponseParams struct {
+	// <p>HTTP 响应数据</p>
+	HTTP *PrometheusDynamicAPIResponseHTTP `json:"HTTP,omitnil,omitempty" name:"HTTP"`
+
 	// 唯一请求 ID，由服务端生成，每次请求都会返回（若请求因其他原因未能抵达服务端，则该次请求不会获得 RequestId）。定位问题时需要提供该次请求的 RequestId。
 	RequestId *string `json:"RequestId,omitnil,omitempty" name:"RequestId"`
 }
@@ -11939,10 +11904,10 @@ type GetMonitorDataRequestParams struct {
 	// 指标名称，如CPUUsage，仅支持单指标拉取。各个云产品的详细指标说明请参阅各个产品[监控指标](https://cloud.tencent.com/document/product/248/6140)文档，对应的指标英文名即为MetricName
 	MetricName *string `json:"MetricName,omitnil,omitempty" name:"MetricName"`
 
-	// 实例对象的维度组合，格式为key-value键值对形式的集合。不同类型的实例字段完全不同，如CVM为[{"Name":"InstanceId","Value":"ins-j0hk02zo"}]，Ckafka为[{"Name":"instanceId","Value":"ckafka-l49k54dd"}]，COS为[{"Name":"appid","Value":"1258344699"},{"Name":"bucket","Value":"rig-1258344699"}]。各个云产品的维度请参阅各个产品[监控指标](https://cloud.tencent.com/document/product/248/6140)文档，对应的维度列即为维度组合的key，value为key对应的值。单请求最多支持批量拉取10个实例的监控数据。
+	// 实例对象的维度组合，格式为key-value键值对形式的集合。不同类型的实例字段完全不同，如CVM为[{"Name":"InstanceId","Value":"ins-j0hk02zo"}]，Ckafka为[{"Name":"instanceId","Value":"ckafka-l49k54dd"}]，COS为[{"Name":"appid","Value":"1258344699"},{"Name":"bucket","Value":"rig-1258344699"}]。各个云产品的维度请参阅各个产品[监控指标](https://cloud.tencent.com/document/product/248/6140)文档，对应的维度列即为维度组合的key，value为key对应的值。单请求最多支持批量拉取50个实例的监控数据。
 	Instances []*Instance `json:"Instances,omitnil,omitempty" name:"Instances"`
 
-	// 监控统计周期，如60。默认为取值为300，单位为s。每个指标支持的统计周期不一定相同，各个云产品支持的统计周期请参阅各个产品[监控指标](https://cloud.tencent.com/document/product/248/6140)文档，对应的统计周期列即为支持的统计周期。单请求的数据点数限制为1440个。
+	// 监控统计周期，如60。默认为取值为300，单位为s。每个指标支持的统计周期不一定相同，各个云产品支持的统计周期请参阅各个产品[监控指标](https://cloud.tencent.com/document/product/248/6140)文档，对应的统计周期列即为支持的统计周期。单请求的数据点数限制为7200个。
 	Period *uint64 `json:"Period,omitnil,omitempty" name:"Period"`
 
 	// 起始时间，如2018-09-22T19:51:23+08:00
@@ -11964,10 +11929,10 @@ type GetMonitorDataRequest struct {
 	// 指标名称，如CPUUsage，仅支持单指标拉取。各个云产品的详细指标说明请参阅各个产品[监控指标](https://cloud.tencent.com/document/product/248/6140)文档，对应的指标英文名即为MetricName
 	MetricName *string `json:"MetricName,omitnil,omitempty" name:"MetricName"`
 
-	// 实例对象的维度组合，格式为key-value键值对形式的集合。不同类型的实例字段完全不同，如CVM为[{"Name":"InstanceId","Value":"ins-j0hk02zo"}]，Ckafka为[{"Name":"instanceId","Value":"ckafka-l49k54dd"}]，COS为[{"Name":"appid","Value":"1258344699"},{"Name":"bucket","Value":"rig-1258344699"}]。各个云产品的维度请参阅各个产品[监控指标](https://cloud.tencent.com/document/product/248/6140)文档，对应的维度列即为维度组合的key，value为key对应的值。单请求最多支持批量拉取10个实例的监控数据。
+	// 实例对象的维度组合，格式为key-value键值对形式的集合。不同类型的实例字段完全不同，如CVM为[{"Name":"InstanceId","Value":"ins-j0hk02zo"}]，Ckafka为[{"Name":"instanceId","Value":"ckafka-l49k54dd"}]，COS为[{"Name":"appid","Value":"1258344699"},{"Name":"bucket","Value":"rig-1258344699"}]。各个云产品的维度请参阅各个产品[监控指标](https://cloud.tencent.com/document/product/248/6140)文档，对应的维度列即为维度组合的key，value为key对应的值。单请求最多支持批量拉取50个实例的监控数据。
 	Instances []*Instance `json:"Instances,omitnil,omitempty" name:"Instances"`
 
-	// 监控统计周期，如60。默认为取值为300，单位为s。每个指标支持的统计周期不一定相同，各个云产品支持的统计周期请参阅各个产品[监控指标](https://cloud.tencent.com/document/product/248/6140)文档，对应的统计周期列即为支持的统计周期。单请求的数据点数限制为1440个。
+	// 监控统计周期，如60。默认为取值为300，单位为s。每个指标支持的统计周期不一定相同，各个云产品支持的统计周期请参阅各个产品[监控指标](https://cloud.tencent.com/document/product/248/6140)文档，对应的统计周期列即为支持的统计周期。单请求的数据点数限制为7200个。
 	Period *uint64 `json:"Period,omitnil,omitempty" name:"Period"`
 
 	// 起始时间，如2018-09-22T19:51:23+08:00
@@ -12716,69 +12681,75 @@ type MidQueryCondition struct {
 
 // Predefined struct for user
 type ModifyAlarmNoticeRequestParams struct {
-	// 模块名，这里填“monitor”
+	// <p>模块名，这里填“monitor”</p>
 	Module *string `json:"Module,omitnil,omitempty" name:"Module"`
 
-	// 告警通知规则名称 60字符以内
+	// <p>告警通知规则名称 60字符以内</p>
 	Name *string `json:"Name,omitnil,omitempty" name:"Name"`
 
-	// 通知类型 ALARM=未恢复通知 OK=已恢复通知 ALL=都通知
+	// <p>通知类型 ALARM=未恢复通知 OK=已恢复通知 ALL=都通知</p>
 	NoticeType *string `json:"NoticeType,omitnil,omitempty" name:"NoticeType"`
 
-	// 通知语言 zh-CN=中文 en-US=英文
+	// <p>通知语言 zh-CN=中文 en-US=英文</p>
 	NoticeLanguage *string `json:"NoticeLanguage,omitnil,omitempty" name:"NoticeLanguage"`
 
-	// 告警通知模板 ID
+	// <p>告警通知模板 ID</p>
 	NoticeId *string `json:"NoticeId,omitnil,omitempty" name:"NoticeId"`
 
-	// 用户通知 最多5个
+	// <p>用户通知 最多5个</p>
 	UserNotices []*UserNotice `json:"UserNotices,omitnil,omitempty" name:"UserNotices"`
 
-	// 回调通知 最多6个
+	// <p>回调通知 最多6个</p>
 	URLNotices []*URLNotice `json:"URLNotices,omitnil,omitempty" name:"URLNotices"`
 
-	// 告警通知推送到CLS服务 最多1个
+	// <p>告警通知推送到CLS服务 最多1个</p>
 	CLSNotices []*CLSNotice `json:"CLSNotices,omitnil,omitempty" name:"CLSNotices"`
 
-	// 告警通知模板绑定的告警策略ID列表
+	// <p>告警通知模板绑定的告警策略ID列表</p>
 	PolicyIds []*string `json:"PolicyIds,omitnil,omitempty" name:"PolicyIds"`
 
-	// 是否免登录，0-否，1-是
+	// <p>是否免登录，0-否，1-是</p>
 	IsLoginFree *int64 `json:"IsLoginFree,omitnil,omitempty" name:"IsLoginFree"`
+
+	// <p>IANA 时区名</p>
+	TimeZoneName *string `json:"TimeZoneName,omitnil,omitempty" name:"TimeZoneName"`
 }
 
 type ModifyAlarmNoticeRequest struct {
 	*tchttp.BaseRequest
 	
-	// 模块名，这里填“monitor”
+	// <p>模块名，这里填“monitor”</p>
 	Module *string `json:"Module,omitnil,omitempty" name:"Module"`
 
-	// 告警通知规则名称 60字符以内
+	// <p>告警通知规则名称 60字符以内</p>
 	Name *string `json:"Name,omitnil,omitempty" name:"Name"`
 
-	// 通知类型 ALARM=未恢复通知 OK=已恢复通知 ALL=都通知
+	// <p>通知类型 ALARM=未恢复通知 OK=已恢复通知 ALL=都通知</p>
 	NoticeType *string `json:"NoticeType,omitnil,omitempty" name:"NoticeType"`
 
-	// 通知语言 zh-CN=中文 en-US=英文
+	// <p>通知语言 zh-CN=中文 en-US=英文</p>
 	NoticeLanguage *string `json:"NoticeLanguage,omitnil,omitempty" name:"NoticeLanguage"`
 
-	// 告警通知模板 ID
+	// <p>告警通知模板 ID</p>
 	NoticeId *string `json:"NoticeId,omitnil,omitempty" name:"NoticeId"`
 
-	// 用户通知 最多5个
+	// <p>用户通知 最多5个</p>
 	UserNotices []*UserNotice `json:"UserNotices,omitnil,omitempty" name:"UserNotices"`
 
-	// 回调通知 最多6个
+	// <p>回调通知 最多6个</p>
 	URLNotices []*URLNotice `json:"URLNotices,omitnil,omitempty" name:"URLNotices"`
 
-	// 告警通知推送到CLS服务 最多1个
+	// <p>告警通知推送到CLS服务 最多1个</p>
 	CLSNotices []*CLSNotice `json:"CLSNotices,omitnil,omitempty" name:"CLSNotices"`
 
-	// 告警通知模板绑定的告警策略ID列表
+	// <p>告警通知模板绑定的告警策略ID列表</p>
 	PolicyIds []*string `json:"PolicyIds,omitnil,omitempty" name:"PolicyIds"`
 
-	// 是否免登录，0-否，1-是
+	// <p>是否免登录，0-否，1-是</p>
 	IsLoginFree *int64 `json:"IsLoginFree,omitnil,omitempty" name:"IsLoginFree"`
+
+	// <p>IANA 时区名</p>
+	TimeZoneName *string `json:"TimeZoneName,omitnil,omitempty" name:"TimeZoneName"`
 }
 
 func (r *ModifyAlarmNoticeRequest) ToJsonString() string {
@@ -12803,6 +12774,7 @@ func (r *ModifyAlarmNoticeRequest) FromJsonString(s string) error {
 	delete(f, "CLSNotices")
 	delete(f, "PolicyIds")
 	delete(f, "IsLoginFree")
+	delete(f, "TimeZoneName")
 	if len(f) > 0 {
 		return tcerr.NewTencentCloudSDKError("ClientError.BuildRequestError", "ModifyAlarmNoticeRequest has unknown keys!", "")
 	}
@@ -13881,27 +13853,33 @@ func (r *ModifyPrometheusGlobalNotificationResponse) FromJsonString(s string) er
 
 // Predefined struct for user
 type ModifyPrometheusInstanceAttributesRequestParams struct {
-	// 实例 ID
+	// <p>实例 ID</p>
 	InstanceId *string `json:"InstanceId,omitnil,omitempty" name:"InstanceId"`
 
-	// 实例名称
+	// <p>实例名称</p>
 	InstanceName *string `json:"InstanceName,omitnil,omitempty" name:"InstanceName"`
 
-	// 数据存储时间（单位天），限制值为15, 30, 45, 90, 180, 365, 730之一
+	// <p>数据存储时间（单位天），限制值为15, 30, 45, 90, 180, 365, 730之一</p>
 	DataRetentionTime *int64 `json:"DataRetentionTime,omitnil,omitempty" name:"DataRetentionTime"`
+
+	// <p>标识prom实例特殊属性</p><p>归档存储时长(天):<br>key: LongTermStorageRetentionTime<br>value: 60-730</p>
+	InstanceAttributes []*PrometheusRuleKV `json:"InstanceAttributes,omitnil,omitempty" name:"InstanceAttributes"`
 }
 
 type ModifyPrometheusInstanceAttributesRequest struct {
 	*tchttp.BaseRequest
 	
-	// 实例 ID
+	// <p>实例 ID</p>
 	InstanceId *string `json:"InstanceId,omitnil,omitempty" name:"InstanceId"`
 
-	// 实例名称
+	// <p>实例名称</p>
 	InstanceName *string `json:"InstanceName,omitnil,omitempty" name:"InstanceName"`
 
-	// 数据存储时间（单位天），限制值为15, 30, 45, 90, 180, 365, 730之一
+	// <p>数据存储时间（单位天），限制值为15, 30, 45, 90, 180, 365, 730之一</p>
 	DataRetentionTime *int64 `json:"DataRetentionTime,omitnil,omitempty" name:"DataRetentionTime"`
+
+	// <p>标识prom实例特殊属性</p><p>归档存储时长(天):<br>key: LongTermStorageRetentionTime<br>value: 60-730</p>
+	InstanceAttributes []*PrometheusRuleKV `json:"InstanceAttributes,omitnil,omitempty" name:"InstanceAttributes"`
 }
 
 func (r *ModifyPrometheusInstanceAttributesRequest) ToJsonString() string {
@@ -13919,6 +13897,7 @@ func (r *ModifyPrometheusInstanceAttributesRequest) FromJsonString(s string) err
 	delete(f, "InstanceId")
 	delete(f, "InstanceName")
 	delete(f, "DataRetentionTime")
+	delete(f, "InstanceAttributes")
 	if len(f) > 0 {
 		return tcerr.NewTencentCloudSDKError("ClientError.BuildRequestError", "ModifyPrometheusInstanceAttributesRequest has unknown keys!", "")
 	}
@@ -14371,7 +14350,7 @@ type PrometheusAgent struct {
 }
 
 type PrometheusAgentInfo struct {
-	// 集群类型。可填入tke、eks、tkeedge、tdcc，分别代表标准集群、弹性集群、边缘集群、注册集群
+	// 集群类型。可填入tke、eks、tkeedge、tdcc、external，分别代表标准集群、弹性集群、边缘集群、注册集群、外部集群
 	ClusterType *string `json:"ClusterType,omitnil,omitempty" name:"ClusterType"`
 
 	// 集成容器服务中关联的集群ID
@@ -14650,7 +14629,7 @@ type PrometheusClusterScrapeStatistics struct {
 	// 集群ID
 	ClusterID *string `json:"ClusterID,omitnil,omitempty" name:"ClusterID"`
 
-	// 被采集的点数
+	// 被采集的点个数
 	// 注意：此字段可能返回 null，表示取不到有效值。
 	ScrapedRate *float64 `json:"ScrapedRate,omitnil,omitempty" name:"ScrapedRate"`
 
@@ -14658,7 +14637,7 @@ type PrometheusClusterScrapeStatistics struct {
 	// 注意：此字段可能返回 null，表示取不到有效值。
 	Jobs []*PrometheusJobScrapeStatistics `json:"Jobs,omitnil,omitempty" name:"Jobs"`
 
-	// 过滤前的指标采集速率
+	// 每秒过滤前的指标采集速率
 	// 注意：此字段可能返回 null，表示取不到有效值。
 	SamplesRate *float64 `json:"SamplesRate,omitnil,omitempty" name:"SamplesRate"`
 }
@@ -14677,6 +14656,14 @@ type PrometheusConfigItem struct {
 	// 目标数
 	// 注意：此字段可能返回 null，表示取不到有效值。
 	Targets *Targets `json:"Targets,omitnil,omitempty" name:"Targets"`
+}
+
+type PrometheusDynamicAPIResponseHTTP struct {
+	// HTTP 状态码
+	StatusCode *int64 `json:"StatusCode,omitnil,omitempty" name:"StatusCode"`
+
+	// HTTP 响应体
+	ResponseBody *string `json:"ResponseBody,omitnil,omitempty" name:"ResponseBody"`
 }
 
 type PrometheusInstanceGrantInfo struct {
@@ -14703,7 +14690,7 @@ type PrometheusInstanceScrapeStatistics struct {
 	// 实例ID
 	InstanceId *string `json:"InstanceId,omitnil,omitempty" name:"InstanceId"`
 
-	// 被采集的点数
+	// 每秒被采集的点数
 	ScrapedRate *float64 `json:"ScrapedRate,omitnil,omitempty" name:"ScrapedRate"`
 
 	// 集群指标列表
@@ -14713,7 +14700,7 @@ type PrometheusInstanceScrapeStatistics struct {
 	// 注意：此字段可能返回 null，表示取不到有效值。
 	Global []*PrometheusClusterScrapeStatistics `json:"Global,omitnil,omitempty" name:"Global"`
 
-	// 过滤前的指标采集速率
+	// 过滤前的每秒指标采集速率
 	SamplesRate *float64 `json:"SamplesRate,omitnil,omitempty" name:"SamplesRate"`
 }
 
@@ -14730,167 +14717,129 @@ type PrometheusInstanceTenantUsage struct {
 	// 注意：此字段可能返回 null，表示取不到有效值。
 	Total *float64 `json:"Total,omitnil,omitempty" name:"Total"`
 
-	// 基础指标用量
+	// 基础指标用量个数
 	// 注意：此字段可能返回 null，表示取不到有效值。
 	Basic *float64 `json:"Basic,omitnil,omitempty" name:"Basic"`
 
-	// 付费指标用量
+	// 付费指标用量个数
 	// 注意：此字段可能返回 null，表示取不到有效值。
 	Fee *float64 `json:"Fee,omitnil,omitempty" name:"Fee"`
 }
 
 type PrometheusInstancesItem struct {
-	// 实例ID。
+	// <p>实例ID。</p>
 	InstanceId *string `json:"InstanceId,omitnil,omitempty" name:"InstanceId"`
 
-	// 实例名称。
+	// <p>实例名称。</p>
 	InstanceName *string `json:"InstanceName,omitnil,omitempty" name:"InstanceName"`
 
-	// 实例计费模式。取值范围：
-	// <ul>
-	// <li>2：包年包月</li>
-	// <li>3：按量</li>
-	// </ul>
+	// <p>实例计费模式。取值范围：</p><ul><li>2：包年包月</li><li>3：按量</li></ul>
 	InstanceChargeType *int64 `json:"InstanceChargeType,omitnil,omitempty" name:"InstanceChargeType"`
 
-	// 地域 ID
+	// <p>地域 ID</p>
 	RegionId *int64 `json:"RegionId,omitnil,omitempty" name:"RegionId"`
 
-	// 可用区
+	// <p>可用区</p>
 	Zone *string `json:"Zone,omitnil,omitempty" name:"Zone"`
 
-	// VPC ID
+	// <p>VPC ID</p>
 	VpcId *string `json:"VpcId,omitnil,omitempty" name:"VpcId"`
 
-	// 子网 ID
+	// <p>子网 ID</p>
 	SubnetId *string `json:"SubnetId,omitnil,omitempty" name:"SubnetId"`
 
-	// 存储周期
+	// <p>存储周期</p>
 	// 注意：此字段可能返回 null，表示取不到有效值。
 	DataRetentionTime *int64 `json:"DataRetentionTime,omitnil,omitempty" name:"DataRetentionTime"`
 
-	// 实例业务状态。取值范围：
-	// <ul>
-	// <li>1：正在创建</li>
-	// <li>2：运行中</li>
-	// <li>3：异常</li>
-	// <li>4：重建中</li>
-	// <li>5：销毁中</li>
-	// <li>6：已停服</li>
-	// <li>8：欠费停服中</li>
-	// <li>9：欠费已停服</li>
-	// </ul>
+	// <p>实例业务状态。取值范围：</p><ul><li>1：正在创建</li><li>2：运行中</li><li>3：异常</li><li>4：重建中</li><li>5：销毁中</li><li>6：已停服</li><li>8：欠费停服中</li><li>9：欠费已停服</li></ul>
 	InstanceStatus *int64 `json:"InstanceStatus,omitnil,omitempty" name:"InstanceStatus"`
 
-	// Grafana 面板 URL
+	// <p>Grafana 面板 URL</p>
 	// 注意：此字段可能返回 null，表示取不到有效值。
 	GrafanaURL *string `json:"GrafanaURL,omitnil,omitempty" name:"GrafanaURL"`
 
-	// 创建时间
+	// <p>创建时间</p>
 	CreatedAt *string `json:"CreatedAt,omitnil,omitempty" name:"CreatedAt"`
 
-	// 是否开启 Grafana
-	// <li>0：不开启</li>
-	// <li>1：开启</li>
+	// <p>是否开启 Grafana</p><li>0：不开启</li><li>1：开启</li>
 	EnableGrafana *int64 `json:"EnableGrafana,omitnil,omitempty" name:"EnableGrafana"`
 
-	// 实例IPV4地址
+	// <p>实例IPV4地址</p>
 	// 注意：此字段可能返回 null，表示取不到有效值。
 	IPv4Address *string `json:"IPv4Address,omitnil,omitempty" name:"IPv4Address"`
 
-	// 实例关联的标签列表。
+	// <p>实例关联的标签列表。</p>
 	// 注意：此字段可能返回 null，表示取不到有效值。
 	TagSpecification []*PrometheusTag `json:"TagSpecification,omitnil,omitempty" name:"TagSpecification"`
 
-	// 购买的实例过期时间
+	// <p>购买的实例过期时间</p>
 	// 注意：此字段可能返回 null，表示取不到有效值。
 	ExpireTime *string `json:"ExpireTime,omitnil,omitempty" name:"ExpireTime"`
 
-	// 计费状态
-	// <ul>
-	// <li>1：正常</li>
-	// <li>2：过期</li>
-	// <li>3：销毁</li>
-	// <li>4：分配中</li>
-	// <li>5：分配失败</li>
-	// </ul>
+	// <p>计费状态</p><ul><li>1：正常</li><li>2：过期</li><li>3：销毁</li><li>4：分配中</li><li>5：分配失败</li></ul>
 	// 注意：此字段可能返回 null，表示取不到有效值。
 	ChargeStatus *int64 `json:"ChargeStatus,omitnil,omitempty" name:"ChargeStatus"`
 
-	// 规格名称
+	// <p>规格名称</p>
 	// 注意：此字段可能返回 null，表示取不到有效值。
 	SpecName *string `json:"SpecName,omitnil,omitempty" name:"SpecName"`
 
-	// 自动续费标记
-	// <ul>
-	// <li>0：不自动续费</li>
-	// <li>1：开启自动续费</li>
-	// <li>2：禁止自动续费</li>
-	// <li>-1：无效</li>
-	// </ul>
+	// <p>自动续费标记</p><ul><li>0：不自动续费</li><li>1：开启自动续费</li><li>2：禁止自动续费</li><li>-1：无效</li></ul>
 	// 注意：此字段可能返回 null，表示取不到有效值。
 	AutoRenewFlag *int64 `json:"AutoRenewFlag,omitnil,omitempty" name:"AutoRenewFlag"`
 
-	// 是否快过期
-	// <ul>
-	// <li>0：否</li>
-	// <li>1：快过期</li>
-	// </ul>
+	// <p>是否快过期</p><ul><li>0：否</li><li>1：快过期</li></ul>
 	// 注意：此字段可能返回 null，表示取不到有效值。
 	IsNearExpire *int64 `json:"IsNearExpire,omitnil,omitempty" name:"IsNearExpire"`
 
-	// 数据写入需要的 Token
+	// <p>数据写入需要的 Token</p>
 	// 注意：此字段可能返回 null，表示取不到有效值。
 	AuthToken *string `json:"AuthToken,omitnil,omitempty" name:"AuthToken"`
 
-	// Prometheus Remote Write 的地址
+	// <p>Prometheus Remote Write 的地址</p>
 	// 注意：此字段可能返回 null，表示取不到有效值。
 	RemoteWrite *string `json:"RemoteWrite,omitnil,omitempty" name:"RemoteWrite"`
 
-	// Prometheus HTTP Api 根地址
+	// <p>Prometheus HTTP Api 根地址</p>
 	// 注意：此字段可能返回 null，表示取不到有效值。
 	ApiRootPath *string `json:"ApiRootPath,omitnil,omitempty" name:"ApiRootPath"`
 
-	// Proxy 的地址
+	// <p>Proxy 的地址</p>
 	// 注意：此字段可能返回 null，表示取不到有效值。
 	ProxyAddress *string `json:"ProxyAddress,omitnil,omitempty" name:"ProxyAddress"`
 
-	// Grafana 运行状态
-	// <ul>
-	// <li>1：正在创建</li>
-	// <li>2：运行中</li>
-	// <li>3：异常</li>
-	// <li>4：重启中</li>
-	// <li>5：销毁中</li>
-	// <li>6：已停机</li>
-	// <li>7：已删除</li>
-	// </ul>
+	// <p>Grafana 运行状态</p><ul><li>1：正在创建</li><li>2：运行中</li><li>3：异常</li><li>4：重启中</li><li>5：销毁中</li><li>6：已停机</li><li>7：已删除</li></ul>
 	// 注意：此字段可能返回 null，表示取不到有效值。
 	GrafanaStatus *int64 `json:"GrafanaStatus,omitnil,omitempty" name:"GrafanaStatus"`
 
-	// Grafana IP 白名单列表，使用英文分号分隔
+	// <p>Grafana IP 白名单列表，使用英文分号分隔</p>
 	// 注意：此字段可能返回 null，表示取不到有效值。
 	GrafanaIpWhiteList *string `json:"GrafanaIpWhiteList,omitnil,omitempty" name:"GrafanaIpWhiteList"`
 
-	// 实例的授权信息
+	// <p>实例的授权信息</p>
 	// 注意：此字段可能返回 null，表示取不到有效值。
 	Grant *PrometheusInstanceGrantInfo `json:"Grant,omitnil,omitempty" name:"Grant"`
 
-	// 绑定的 Grafana 实例 ID
+	// <p>绑定的 Grafana 实例 ID</p>
 	// 注意：此字段可能返回 null，表示取不到有效值。
 	GrafanaInstanceId *string `json:"GrafanaInstanceId,omitnil,omitempty" name:"GrafanaInstanceId"`
 
-	// 告警规则限制
+	// <p>告警规则限制</p>
 	// 注意：此字段可能返回 null，表示取不到有效值。
 	AlertRuleLimit *int64 `json:"AlertRuleLimit,omitnil,omitempty" name:"AlertRuleLimit"`
 
-	// 预聚合规则限制
+	// <p>预聚合规则限制</p>
 	// 注意：此字段可能返回 null，表示取不到有效值。
 	RecordingRuleLimit *int64 `json:"RecordingRuleLimit,omitnil,omitempty" name:"RecordingRuleLimit"`
 
-	// 迁移状态，0-不在迁移中，1-迁移中、原实例，2-迁移中、目标实例
+	// <p>迁移状态，0-不在迁移中，1-迁移中、原实例，2-迁移中、目标实例</p>
 	// 注意：此字段可能返回 null，表示取不到有效值。
 	MigrationType *int64 `json:"MigrationType,omitnil,omitempty" name:"MigrationType"`
+
+	// <p>标识prom实例特殊属性</p><p>归档存储时长(天):<br>key: LongTermStorageRetentionTime<br>value: 60-730</p><p>实例创建方式：<br>key: CreatedFrom<br>value: 0 - 来自prom控制台<br>1 - 来自tke集群详情页<br>2 - 来自新建集群页</p><p>免费试用到期时间:<br>key: FreeTrialExpireAt<br>value: RFC3339 格式时间字符串</p><p>关联的资源包ID:<br>key: ResourcePackageID<br>value: prompkg-xxxxx</p>
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	InstanceAttributes []*PrometheusRuleKV `json:"InstanceAttributes,omitnil,omitempty" name:"InstanceAttributes"`
 }
 
 type PrometheusInstancesOverview struct {
@@ -15190,6 +15139,14 @@ type PrometheusScrapeJob struct {
 	Config *string `json:"Config,omitnil,omitempty" name:"Config"`
 }
 
+type PrometheusStringKeyValuePair struct {
+	// 键
+	Key *string `json:"Key,omitnil,omitempty" name:"Key"`
+
+	// 值
+	Value *string `json:"Value,omitnil,omitempty" name:"Value"`
+}
+
 type PrometheusTag struct {
 	// 标签的健值
 	Key *string `json:"Key,omitnil,omitempty" name:"Key"`
@@ -15438,32 +15395,36 @@ type RegionPolicyObjectCount struct {
 }
 
 type RemoteWrite struct {
-	// 多写url
+	// <p>多写url</p>
 	URL *string `json:"URL,omitnil,omitempty" name:"URL"`
 
-	// RelabelConfig
+	// <p>RelabelConfig</p>
 	// 注意：此字段可能返回 null，表示取不到有效值。
 	URLRelabelConfig *string `json:"URLRelabelConfig,omitnil,omitempty" name:"URLRelabelConfig"`
 
-	// 鉴权
+	// <p>鉴权</p>
 	// 注意：此字段可能返回 null，表示取不到有效值。
 	BasicAuth *BasicAuth `json:"BasicAuth,omitnil,omitempty" name:"BasicAuth"`
 
-	// 最大block
+	// <p>最大block</p>
 	// 注意：此字段可能返回 null，表示取不到有效值。
 	//
 	// Deprecated: MaxBlockSize is deprecated.
 	MaxBlockSize *string `json:"MaxBlockSize,omitnil,omitempty" name:"MaxBlockSize"`
 
-	// Label
+	// <p>Label</p>
 	// 注意：此字段可能返回 null，表示取不到有效值。
 	//
 	// Deprecated: Label is deprecated.
 	Label *string `json:"Label,omitnil,omitempty" name:"Label"`
 
-	// HTTP 额外添加的头
+	// <p>HTTP 额外添加的头</p>
 	// 注意：此字段可能返回 null，表示取不到有效值。
 	Headers []*RemoteWriteHeader `json:"Headers,omitnil,omitempty" name:"Headers"`
+
+	// <p>数据多写类型:<br>1- 只多写采集指标<br>2- 只多写预聚合指标<br>3- 同时多写采集和预聚合指标</p>
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	RemoteWriteType *int64 `json:"RemoteWriteType,omitnil,omitempty" name:"RemoteWriteType"`
 }
 
 type RemoteWriteHeader struct {

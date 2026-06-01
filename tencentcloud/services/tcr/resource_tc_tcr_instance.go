@@ -148,7 +148,7 @@ func ResourceTencentCloudTcrInstance() *schema.Resource {
 				Optional:    true,
 				Computed:    true,
 				ForceNew:    true,
-				Description: "Whether to enable COS bucket versioning. Default is `false`.",
+				Description: "Whether to enable COS bucket versioning. Advanced Edition Instances: Default is `true` (versioning enabled); Standard / Basic Edition Instances: Default is `false` (disabled).",
 			},
 			//Computed values
 			"status": {
@@ -609,21 +609,10 @@ func resourceTencentCloudTcrInstanceUpdate(d *schema.ResourceData, meta interfac
 
 	}
 
-	if d.HasChange("instance_type") || d.HasChange("deletion_protection") {
-		var (
-			instanceType       string
-			deletionProtection bool
-		)
+	if d.HasChange("instance_type") {
+		instanceType := d.Get("instance_type").(string)
 
-		if d.HasChange("instance_type") {
-			instanceType = d.Get("instance_type").(string)
-		}
-
-		if v, ok := d.GetOkExists("deletion_protection"); ok {
-			deletionProtection = v.(bool)
-		}
-
-		if err := tcrService.ModifyInstance(ctx, d.Id(), instanceType, deletionProtection); err != nil {
+		if err := tcrService.ModifyInstance(ctx, d.Id(), instanceType); err != nil {
 			return err
 		}
 		err := resource.Retry(2*tccommon.ReadRetryTimeout, func() *resource.RetryError {
@@ -638,6 +627,17 @@ func resourceTencentCloudTcrInstanceUpdate(d *schema.ResourceData, meta interfac
 			return nil
 		})
 		if err != nil {
+			return err
+		}
+	}
+
+	if d.HasChange("deletion_protection") {
+		var deletionProtection bool
+		if v, ok := d.GetOkExists("deletion_protection"); ok {
+			deletionProtection = v.(bool)
+		}
+
+		if err := tcrService.ModifyInstanceDP(ctx, d.Id(), deletionProtection); err != nil {
 			return err
 		}
 	}
@@ -717,7 +717,6 @@ func resourceTencentCloudTcrInstanceDelete(d *schema.ResourceData, meta interfac
 	repRequest := tcr.NewDescribeReplicationInstancesRequest()
 	repRequest.RegistryId = &instanceId
 	replicas, outErr := tcrService.DescribeReplicationInstances(ctx, repRequest)
-
 	if outErr != nil {
 		return outErr
 	}
@@ -735,6 +734,32 @@ func resourceTencentCloudTcrInstanceDelete(d *schema.ResourceData, meta interfac
 			}
 			return nil
 		})
+	}
+
+	// Delete namespaces under the instance before deleting the instance itself.
+	// Query all namespaces via DescribeNamespaces, then iterate to delete each one via DeleteNamespace.
+	namespaces, outErr := tcrService.DescribeTCRNameSpaces(ctx, instanceId, "")
+	if outErr != nil {
+		return outErr
+	}
+
+	for i := range namespaces {
+		ns := namespaces[i]
+		if ns == nil || ns.Name == nil {
+			continue
+		}
+		nsName := *ns.Name
+		err := resource.Retry(tccommon.WriteRetryTimeout, func() *resource.RetryError {
+			e := tcrService.DeleteTCRNameSpace(ctx, instanceId, nsName)
+			if e != nil {
+				return tccommon.RetryError(e, tcr.INTERNALERROR_ERRORCONFLICT)
+			}
+			return nil
+		})
+		if err != nil {
+			log.Printf("[CRITAL]%s delete tcr namespace [%s] under instance [%s] failed, reason:%+v", logId, nsName, instanceId, err)
+			return err
+		}
 	}
 
 	outErr = tcrService.DeleteTCRInstance(ctx, instanceId, deleteBucket)

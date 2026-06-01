@@ -705,6 +705,7 @@ tencentcloud_kubernetes_addons
 tencentcloud_kubernetes_cluster_admin_role
 tencentcloud_kubernetes_upgrade_tasks
 tencentcloud_kubernetes_upgrade_task_detail
+tencentcloud_kubernetes_cluster_available_extra_args
 
 Resource
 tencentcloud_kubernetes_cluster
@@ -729,6 +730,7 @@ tencentcloud_kubernetes_global_maintenance_window_and_exclusion
 tencentcloud_kubernetes_cluster_maintenance_window_and_exclusion
 tencentcloud_kubernetes_cancel_upgrade_plan_operation
 tencentcloud_kubernetes_cluster_scheduler_policy_config
+tencentcloud_kubernetes_cluster_extra_args_config
 
 TDMQ for Pulsar(tpulsar)
 Data Source
@@ -1098,6 +1100,7 @@ tencentcloud_sqlserver_instance_tde
 tencentcloud_sqlserver_database_tde
 tencentcloud_sqlserver_general_cloud_ro_instance
 tencentcloud_sqlserver_wan_ip_config
+tencentcloud_sqlserver_db_instance_ssl_config
 
 SSL Certificates(ssl)
 Data Source
@@ -1796,6 +1799,7 @@ tencentcloud_css_timeshift_rule_attachment
 tencentcloud_css_stream_monitor
 tencentcloud_css_start_stream_monitor
 tencentcloud_css_pull_stream_task_restart
+tencentcloud_css_origin_stream_info
 
 Data Source
 tencentcloud_css_domains

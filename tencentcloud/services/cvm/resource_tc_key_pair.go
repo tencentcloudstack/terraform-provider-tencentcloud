@@ -66,6 +66,12 @@ func ResourceTencentCloudKeyPair() *schema.Resource {
 				Optional:    true,
 				Description: "Tags of the key pair.",
 			},
+			"force_stop": {
+				Type:        schema.TypeBool,
+				Optional:    true,
+				Computed:    true,
+				Description: "Whether to forcibly shut down a running instance. Default is false. Forcing a shutdown is equivalent to switching off the power button on a physical computer. Forcing a shutdown may result in data loss or file system corruption; therefore, please use this option only when the server cannot be shut down normally.",
+			},
 			"private_key": {
 				Type:        schema.TypeString,
 				Computed:    true,
@@ -304,8 +310,13 @@ func resourceTencentCloudKeyPairDelete(d *schema.ResourceData, meta interface{})
 	}
 
 	if len(keyPair.AssociatedInstanceIds) > 0 {
+		var forceStop bool
+		if v, ok := d.GetOkExists("force_stop"); ok {
+			forceStop = v.(bool)
+		}
+
 		err = resource.Retry(tccommon.WriteRetryTimeout, func() *resource.RetryError {
-			errRet := cvmService.UnbindKeyPair(ctx, []*string{&keyId}, keyPair.AssociatedInstanceIds)
+			errRet := cvmService.UnbindKeyPair(ctx, []*string{&keyId}, keyPair.AssociatedInstanceIds, forceStop)
 			if errRet != nil {
 				if sdkErr, ok := errRet.(*errors.TencentCloudSDKError); ok {
 					if sdkErr.Code == CVM_NOT_FOUND_ERROR {

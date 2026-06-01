@@ -96,6 +96,25 @@ func (me *SSLService) CommitCertificateInformation(ctx context.Context, request 
 	return
 }
 
+func (me *SSLService) CertificateOrderSubmit(ctx context.Context, request *ssl.CertificateOrderSubmitRequest) (errRet error) {
+	logId := tccommon.GetLogId(ctx)
+	client := me.client.UseSSLCertificateClient()
+	ratelimit.Check(request.GetAction())
+
+	response, err := client.CertificateOrderSubmit(request)
+	if err != nil {
+		errRet = err
+		return
+	}
+	if response == nil || response.Response == nil {
+		errRet = fmt.Errorf("TencentCloud SDK %s return empty response", request.GetAction())
+		return
+	}
+	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n",
+		logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+	return
+}
+
 func (me *SSLService) DescribeCertificateDetail(ctx context.Context, request *ssl.DescribeCertificateDetailRequest) (response *ssl.DescribeCertificateDetailResponse, err error) {
 	logId := tccommon.GetLogId(ctx)
 	client := me.client.UseSSLCertificateClient()
@@ -1320,7 +1339,7 @@ func (me *SslService) DescribeSslDescribeHostVodInstanceListByFilter(ctx context
 	return
 }
 
-func (me *SslService) DescribeSslDescribeHostWafInstanceListByFilter(ctx context.Context, param map[string]interface{}) (describeHostWafInstanceList []*ssl.LiveInstanceDetail, errRet error) {
+func (me *SslService) DescribeSslDescribeHostWafInstanceListByFilter(ctx context.Context, param map[string]interface{}) (describeHostWafInstanceList []*ssl.WafInstanceDetail, errRet error) {
 	var (
 		logId   = tccommon.GetLogId(ctx)
 		request = ssl.NewDescribeHostWafInstanceListRequest()

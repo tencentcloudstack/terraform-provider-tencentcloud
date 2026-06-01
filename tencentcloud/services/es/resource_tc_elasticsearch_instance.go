@@ -470,6 +470,18 @@ func resourceTencentCloudElasticsearchInstanceCreate(d *schema.ResourceData, met
 	if v, ok := d.GetOk("protocol"); ok {
 		request.Protocol = helper.String(v.(string))
 	}
+	// tags - pass via CreateInstance.TagList directly instead of calling tag API afterwards.
+	if tags := helper.GetTags(d, "tags"); len(tags) > 0 {
+		tagList := make([]*es.TagInfo, 0, len(tags))
+		for k, v := range tags {
+			key, value := k, v
+			tagList = append(tagList, &es.TagInfo{
+				TagKey:   &key,
+				TagValue: &value,
+			})
+		}
+		request.TagList = tagList
+	}
 	//internal version: replace reqTag begin, please do not modify this annotation and refrain from inserting any code between the beginning and end lines of the annotation.
 	//internal version: replace reqTag end, please do not modify this annotation and refrain from inserting any code between the beginning and end lines of the annotation.
 	instanceId := ""
@@ -665,18 +677,6 @@ func resourceTencentCloudElasticsearchInstanceCreate(d *schema.ResourceData, met
 		}
 
 		err = tencentCloudElasticsearchInstanceUpgradeWaiting(ctx, &elasticsearchService, instanceId)
-		if err != nil {
-			return err
-		}
-	}
-
-	// tags
-	if tags := helper.GetTags(d, "tags"); len(tags) > 0 {
-		client := meta.(tccommon.ProviderMeta).GetAPIV3Conn()
-		tagService := svctag.NewTagService(client)
-		region := client.Region
-		resourceName := fmt.Sprintf("qcs::es:%s:uin/:instance/%s", region, instanceId)
-		err := tagService.ModifyTags(ctx, resourceName, tags, nil)
 		if err != nil {
 			return err
 		}

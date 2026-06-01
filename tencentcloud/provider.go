@@ -73,6 +73,7 @@ import (
 	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/services/emr"
 	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/services/es"
 	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/services/fl"
+	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/services/ga2"
 	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/services/gaap"
 	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/services/gs"
 	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/services/gwlb"
@@ -599,6 +600,7 @@ func Provider() *schema.Provider {
 			"tencentcloud_kubernetes_cluster_common_names":                       tke.DataSourceTencentCloudKubernetesClusterCommonNames(),
 			"tencentcloud_kubernetes_cluster_authentication_options":             tke.DataSourceTencentCloudKubernetesClusterAuthenticationOptions(),
 			"tencentcloud_kubernetes_cluster_admin_role":                         tke.DataSourceTencentCloudKubernetesClusterAdminRole(),
+			"tencentcloud_kubernetes_cluster_available_extra_args":               tke.DataSourceTencentCloudKubernetesClusterAvailableExtraArgs(),
 			"tencentcloud_kubernetes_available_cluster_versions":                 tke.DataSourceTencentCloudKubernetesAvailableClusterVersions(),
 			"tencentcloud_eks_clusters":                                          tke.DataSourceTencentCloudEKSClusters(),
 			"tencentcloud_eks_cluster_credential":                                tke.DataSourceTencentCloudEksClusterCredential(),
@@ -1600,6 +1602,7 @@ func Provider() *schema.Provider {
 			"tencentcloud_kubernetes_cluster_maintenance_window_and_exclusion":                      tke.ResourceTencentCloudKubernetesClusterMaintenanceWindowAndExclusion(),
 			"tencentcloud_kubernetes_cancel_upgrade_plan_operation":                                 tke.ResourceTencentCloudKubernetesCancelUpgradePlanOperation(),
 			"tencentcloud_kubernetes_cluster_scheduler_policy_config":                               tke.ResourceTencentCloudKubernetesClusterSchedulerPolicyConfig(),
+			"tencentcloud_kubernetes_cluster_extra_args_config":                                     tke.ResourceTencentCloudKubernetesClusterExtraArgsConfig(),
 			"tencentcloud_mysql_backup_policy":                                                      cdb.ResourceTencentCloudMysqlBackupPolicy(),
 			"tencentcloud_mysql_account":                                                            cdb.ResourceTencentCloudMysqlAccount(),
 			"tencentcloud_mysql_account_privilege":                                                  cdb.ResourceTencentCloudMysqlAccountPrivilege(),
@@ -1719,6 +1722,7 @@ func Provider() *schema.Provider {
 			"tencentcloud_dayu_l7_rule":                                                             dayu.ResourceTencentCloudDayuL7Rule(),
 			"tencentcloud_dayu_l7_rule_v2":                                                          dayuv2.ResourceTencentCloudDayuL7RuleV2(),
 			"tencentcloud_dayu_eip":                                                                 dayuv2.ResourceTencentCloudDayuEip(),
+			"tencentcloud_ga2_endpoint_group":                                                       ga2.ResourceTencentCloudGa2EndpointGroup(),
 			"tencentcloud_gaap_proxy":                                                               gaap.ResourceTencentCloudGaapProxy(),
 			"tencentcloud_gaap_realserver":                                                          gaap.ResourceTencentCloudGaapRealserver(),
 			"tencentcloud_gaap_layer4_listener":                                                     gaap.ResourceTencentCloudGaapLayer4Listener(),
@@ -1972,6 +1976,7 @@ func Provider() *schema.Provider {
 			"tencentcloud_sqlserver_general_cloud_ro_instance":                                      sqlserver.ResourceTencentCloudSqlserverGeneralCloudRoInstance(),
 			"tencentcloud_sqlserver_instance_ssl":                                                   sqlserver.ResourceTencentCloudSqlserverInstanceSsl(),
 			"tencentcloud_sqlserver_wan_ip_config":                                                  sqlserver.ResourceTencentCloudSqlserverWanIpConfig(),
+			"tencentcloud_sqlserver_db_instance_ssl_config":                                         sqlserver.ResourceTencentCloudSqlserverDbInstanceSslConfig(),
 			"tencentcloud_tcr_instance":                                                             tcr.ResourceTencentCloudTcrInstance(),
 			"tencentcloud_tcr_namespace":                                                            tcr.ResourceTencentCloudTcrNamespace(),
 			"tencentcloud_tcr_repository":                                                           tcr.ResourceTencentCloudTcrRepository(),
@@ -2187,6 +2192,7 @@ func Provider() *schema.Provider {
 			"tencentcloud_css_callback_template":                                                    css.ResourceTencentCloudCssCallbackTemplate(),
 			"tencentcloud_css_domain_referer":                                                       css.ResourceTencentCloudCssDomainReferer(),
 			"tencentcloud_css_enable_optimal_switching":                                             css.ResourceTencentCloudCssEnableOptimalSwitching(),
+			"tencentcloud_css_origin_stream_info":                                                   css.ResourceTencentCloudCssOriginStreamInfo(),
 			"tencentcloud_css_record_rule_attachment":                                               css.ResourceTencentCloudCssRecordRuleAttachment(),
 			"tencentcloud_css_record_template":                                                      css.ResourceTencentCloudCssRecordTemplate(),
 			"tencentcloud_css_snapshot_rule_attachment":                                             css.ResourceTencentCloudCssSnapshotRuleAttachment(),
