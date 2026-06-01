@@ -3166,7 +3166,7 @@ func emrTerminateNodes(
 		return reqErr
 	}
 
-	flowId := strconv.FormatInt(int64(*resp.Response.FlowId), 10)
+	flowId := strconv.FormatInt(*resp.Response.FlowId, 10)
 	service := EMRService{client: conn}
 	conf := tccommon.BuildStateChangeConf(
 		[]string{"0", "1"}, []string{"2", "-1"},
