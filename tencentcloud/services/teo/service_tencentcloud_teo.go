@@ -1830,6 +1830,7 @@ func (me *TeoService) DescribeTeoDnsRecordById(ctx context.Context, zoneId, reco
 	return
 }
 
+// DescribeTeoBindSecurityTemplateById `DescribeTeoBindSecurityTemplateById` has been deprecated in favor of `DescribeWebSecurityTemplatesById`, as `DescribeSecurityTemplateBindings` is unable to retrieve cross-site binding information.
 func (me *TeoService) DescribeTeoBindSecurityTemplateById(ctx context.Context, zoneId string, templateId string, entity string) (ret *teov20220901.EntityStatus, errRet error) {
 	logId := tccommon.GetLogId(ctx)
 
@@ -1861,6 +1862,47 @@ func (me *TeoService) DescribeTeoBindSecurityTemplateById(ctx context.Context, z
 						if v != nil && *v.Entity == entity {
 							ret = v
 							return
+						}
+					}
+				}
+			}
+		}
+	}
+	return
+}
+
+func (me *TeoService) DescribeWebSecurityTemplatesById(ctx context.Context, zoneId string, templateId string, entity string) (ret *teov20220901.BindDomainInfo, errRet error) {
+	logId := tccommon.GetLogId(ctx)
+
+	request := teov20220901.NewDescribeWebSecurityTemplatesRequest()
+	request.ZoneIds = []*string{helper.String(zoneId)}
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	ratelimit.Check(request.GetAction())
+
+	response, err := me.client.UseTeoV20220901Client().DescribeWebSecurityTemplates(request)
+
+	if err != nil {
+		errRet = err
+		return
+	}
+
+	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+	if response != nil && response.Response != nil {
+		if len(response.Response.SecurityPolicyTemplates) > 0 {
+			for _, template := range response.Response.SecurityPolicyTemplates {
+				if template != nil && *template.TemplateId == templateId {
+					if len(template.BindDomains) > 0 {
+						for _, v := range template.BindDomains {
+							if v != nil && *v.Domain == entity {
+								ret = v
+								return
+							}
 						}
 					}
 				}

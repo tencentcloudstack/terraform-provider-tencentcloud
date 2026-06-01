@@ -164,7 +164,7 @@ func resourceTencentCloudTeoBindSecurityTemplateRead(d *schema.ResourceData, met
 
 	_ = d.Set("entity", entity)
 
-	respData, err := service.DescribeTeoBindSecurityTemplateById(ctx, zoneId, templateId, entity)
+	respData, err := service.DescribeWebSecurityTemplatesById(ctx, zoneId, templateId, entity)
 	if err != nil {
 		return err
 	}

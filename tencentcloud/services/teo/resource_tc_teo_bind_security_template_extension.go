@@ -26,7 +26,7 @@ func resourceTeoBindSecurityTemplateCreateStateRefreshFunc_0_0(ctx context.Conte
 			_ = d
 			req = teov20220901.NewDescribeSecurityTemplateBindingsRequest()
 		}
-		resp, err := service.DescribeTeoBindSecurityTemplateById(ctx, zoneId, templateId, entity)
+		resp, err := service.DescribeWebSecurityTemplatesById(ctx, zoneId, templateId, entity)
 		if err != nil {
 			return nil, "", err
 		}
