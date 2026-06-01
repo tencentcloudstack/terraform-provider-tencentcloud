@@ -1,3 +1,14 @@
+## 1.82.99(June 01, 2026)
+
+FEATURES:
+
+* **New Resource:** `tencentcloud_sqlserver_db_instance_ssl_config` ([#4138](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/4138))
+
+ENHANCEMENTS:
+
+* resource/tencentcloud_ckafka_instance: update document ([#4171](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/4171))
+* resource/tencentcloud_kubernetes_addon: update timeouts ([#4172](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/4172))
+
 ## 1.82.98(May 29, 2026)
 
 ENHANCEMENTS:
