@@ -1,33 +1,23 @@
-Provides a resource to create a EMR cluster (v2) using the `CreateCluster` API.
+Provides a resource to create a EMR cluster (v2).
 
-~> **NOTE:** The current resource `tencentcloud_emr_cluster_v2` does not yet support in-place updates. Any field change after creation will be silently ignored; destroy and re-create the resource to apply modifications. Modify APIs (scale-out/scale-in, tag modification, rename, ...) will be added in a follow-up release.
-
-~> **NOTE:** Node counts are driven implicitly by the number of `master_resource_spec`, `core_resource_spec`, `task_resource_spec`, and `common_resource_spec` blocks declared. Each block represents one node of that role, and the first block is used as the resource template passed to the `CreateCluster` API.
+~> **NOTE:** At create time, every block of the same role within a zone (i.e. all `master_resource_spec` blocks, all `core_resource_spec` blocks, etc.) must declare an identical configuration — including `instance_type`, `system_disk`, `data_disk`, and `software`. The EMR `CreateCluster` API only accepts a single resource template per role and provisions the requested count of identical nodes from it. To run heterogeneous configurations within the same role, first create the cluster with uniform blocks, then customize individual nodes via subsequent `terraform apply` updates (resize disks, change `instance_type`, add data disks, etc.).
 
 Example Usage
 
 ```hcl
 resource "tencentcloud_emr_cluster_v2" "example" {
-  product_version        = "EMR-V3.5.0"
-  enable_support_ha_flag = false
-  instance_name          = "tf-example-emr-v2"
+  product_version        = "EMR-V3.6.0"
+  enable_support_ha_flag = true
+  instance_name          = "tf-example"
   instance_charge_type   = "POSTPAID_BY_HOUR"
   need_master_wan        = "NEED_MASTER_WAN"
 
   login_settings {
-    password = "Tencent@2026"
+    password = "Password@123"
   }
 
   scene_software_config {
     scene_name = "Hadoop-Default"
-    software   = [
-      "hdfs-3.2.2",
-      "yarn-3.2.2",
-      "zookeeper-3.6.3",
-      "openldap-2.4.44",
-      "knox-1.6.1",
-      "hive-3.1.3",
-    ]
   }
 
   meta_db_info {
@@ -36,169 +26,422 @@ resource "tencentcloud_emr_cluster_v2" "example" {
 
   tags {
     tag_key   = "createBy"
-    tag_value = "terraform"
+    tag_value = "Terraform"
   }
+
+  security_group_ids = ["sg-37tigqat"]
+  sg_ip              = "10.0.0.0/8"
 
   zone_resource_configuration {
     virtual_private_cloud {
-      vpc_id    = "vpc-xxxxxxxx"
-      subnet_id = "subnet-xxxxxxxx"
+      vpc_id    = "vpc-i5yyodl9"
+      subnet_id = "subnet-hhi88a58"
     }
 
     placement {
-      zone       = "ap-guangzhou-7"
-      project_id = 0
+      zone = "ap-guangzhou-6"
     }
 
     all_node_resource_spec {
-      # One master_resource_spec block = 1 master node.
       master_resource_spec {
-        instance_type = "S6.2XLARGE32"
-
+        _node_index   = "master_node_1"
+        instance_type = "SA5.2XLARGE16"
         system_disk {
-          count     = 1
-          disk_size = 50
-          disk_type = "CLOUD_HSSD"
-        }
-
-        data_disk {
-          count     = 1
           disk_size = 100
-          disk_type = "CLOUD_SSD"
-        }
-      }
-
-      # Two core_resource_spec blocks = 2 core nodes (first block is the template).
-      core_resource_spec {
-        instance_type = "SA4.8XLARGE64"
-
-        system_disk {
-          count     = 1
-          disk_size = 50
-          disk_type = "CLOUD_SSD"
-        }
-
-        data_disk {
-          count     = 1
-          disk_size = 300
-          disk_type = "CLOUD_TSSD"
-        }
-      }
-
-      core_resource_spec {
-        instance_type = "SA4.8XLARGE64"
-
-        system_disk {
-          count     = 1
-          disk_size = 50
-          disk_type = "CLOUD_SSD"
-        }
-
-        data_disk {
-          count     = 1
-          disk_size = 300
-          disk_type = "CLOUD_TSSD"
-        }
-      }
-    }
-  }
-}
-```
-
-Prepaid cluster with auto-renew
-
-```hcl
-resource "tencentcloud_emr_cluster_v2" "prepaid" {
-  product_version        = "EMR-V3.5.0"
-  enable_support_ha_flag = true
-  instance_name          = "tf-example-emr-v2-prepaid"
-  instance_charge_type   = "PREPAID"
-
-  instance_charge_prepaid {
-    period     = 1
-    renew_flag = true
-  }
-
-  login_settings {
-    password = "Tencent@2026"
-  }
-
-  scene_software_config {
-    scene_name = "Hadoop-Default"
-    software   = ["hdfs-3.2.2", "yarn-3.2.2", "zookeeper-3.6.3"]
-  }
-
-  zone_resource_configuration {
-    virtual_private_cloud {
-      vpc_id    = "vpc-xxxxxxxx"
-      subnet_id = "subnet-xxxxxxxx"
-    }
-
-    placement {
-      zone       = "ap-guangzhou-7"
-      project_id = 0
-    }
-
-    all_node_resource_spec {
-      # Two master_resource_spec blocks = 2 master nodes (HA).
-      master_resource_spec {
-        instance_type = "S6.2XLARGE32"
-        system_disk {
-          count     = 1
-          disk_size = 50
           disk_type = "CLOUD_HSSD"
+        }
+
+        data_disk {
+          _disk_index = "master_disk_1"
+          disk_size   = 100
+          disk_type   = "CLOUD_SSD"
+        }
+
+        data_disk {
+          _disk_index = "master_disk_2"
+          disk_size   = 200
+          disk_type   = "CLOUD_SSD"
+        }
+
+        software {
+          services = "RUNTIME-1.0.0"
+          roles    = ["Sysctl"]
+        }
+
+        software {
+          services = "FILEBEAT-7.2.0"
+          roles    = ["Filebeat"]
+        }
+
+        software {
+          services = "HDFS-3.2.2"
+          roles    = ["NameNode", "ZKFailoverController"]
+        }
+
+        software {
+          services = "YARN-3.2.2"
+          roles    = ["ResourceManager", "JobHistoryServer", "TimeLineServer"]
+        }
+
+        software {
+          services = "OPENLDAP-2.4.44"
+          roles    = ["slapd"]
+        }
+
+        software {
+          services = "KNOX-1.6.1"
+          roles    = ["gateway", "ldap"]
         }
       }
 
       master_resource_spec {
-        instance_type = "S6.2XLARGE32"
+        _node_index   = "master_node_2"
+        instance_type = "SA5.2XLARGE16"
         system_disk {
-          count     = 1
-          disk_size = 50
+          disk_size = 100
           disk_type = "CLOUD_HSSD"
         }
+
+        data_disk {
+          _disk_index = "master_disk_1"
+          disk_size   = 100
+          disk_type   = "CLOUD_SSD"
+        }
+
+        data_disk {
+          _disk_index = "master_disk_2"
+          disk_size   = 200
+          disk_type   = "CLOUD_SSD"
+        }
+
+        software {
+          services = "RUNTIME-1.0.0"
+          roles    = ["Sysctl"]
+        }
+
+        software {
+          services = "FILEBEAT-7.2.0"
+          roles    = ["Filebeat"]
+        }
+
+        software {
+          services = "HDFS-3.2.2"
+          roles    = ["NameNode", "ZKFailoverController"]
+        }
+
+        software {
+          services = "YARN-3.2.2"
+          roles    = ["ResourceManager", "JobHistoryServer", "TimeLineServer"]
+        }
+
+        software {
+          services = "OPENLDAP-2.4.44"
+          roles    = ["slapd"]
+        }
+
+        software {
+          services = "KNOX-1.6.1"
+          roles    = ["gateway", "ldap"]
+        }
       }
 
-      # Three core_resource_spec blocks = 3 core nodes.
       core_resource_spec {
-        instance_type = "SA4.8XLARGE64"
+        _node_index   = "core_node_1"
+        instance_type = "SA5.LARGE8"
         system_disk {
-          count     = 1
-          disk_size = 50
-          disk_type = "CLOUD_SSD"
+          disk_size = 100
+          disk_type = "CLOUD_HSSD"
         }
+
         data_disk {
-          count     = 2
-          disk_size = 300
-          disk_type = "CLOUD_TSSD"
+          _disk_index = "core_disk_1"
+          disk_size   = 100
+          disk_type   = "CLOUD_SSD"
+        }
+
+        data_disk {
+          _disk_index = "core_disk_2"
+          disk_size   = 100
+          disk_type   = "CLOUD_SSD"
+        }
+
+        software {
+          services = "RUNTIME-1.0.0"
+          roles    = ["Sysctl"]
+        }
+
+        software {
+          services = "FILEBEAT-7.2.0"
+          roles    = ["Filebeat"]
+        }
+
+        software {
+          services = "HDFS-3.2.2"
+          roles    = ["DataNode"]
+        }
+
+        software {
+          services = "YARN-3.2.2"
+          roles    = ["NodeManager"]
         }
       }
 
       core_resource_spec {
-        instance_type = "SA4.8XLARGE64"
+        _node_index   = "core_node_2"
+        instance_type = "SA5.LARGE8"
         system_disk {
-          count     = 1
-          disk_size = 50
-          disk_type = "CLOUD_SSD"
+          disk_size = 100
+          disk_type = "CLOUD_HSSD"
         }
+
         data_disk {
-          count     = 2
-          disk_size = 300
-          disk_type = "CLOUD_TSSD"
+          _disk_index = "core_disk_1"
+          disk_size   = 100
+          disk_type   = "CLOUD_SSD"
+        }
+
+        data_disk {
+          _disk_index = "core_disk_2"
+          disk_size   = 100
+          disk_type   = "CLOUD_SSD"
+        }
+
+        software {
+          services = "RUNTIME-1.0.0"
+          roles    = ["Sysctl"]
+        }
+
+        software {
+          services = "FILEBEAT-7.2.0"
+          roles    = ["Filebeat"]
+        }
+
+        software {
+          services = "HDFS-3.2.2"
+          roles    = ["DataNode"]
+        }
+
+        software {
+          services = "YARN-3.2.2"
+          roles    = ["NodeManager"]
         }
       }
 
       core_resource_spec {
-        instance_type = "SA4.8XLARGE64"
+        _node_index   = "core_node_3"
+        instance_type = "SA5.LARGE8"
         system_disk {
-          count     = 1
-          disk_size = 50
-          disk_type = "CLOUD_SSD"
+          disk_size = 100
+          disk_type = "CLOUD_HSSD"
         }
+
         data_disk {
-          count     = 2
-          disk_size = 300
-          disk_type = "CLOUD_TSSD"
+          _disk_index = "core_disk_1"
+          disk_size   = 100
+          disk_type   = "CLOUD_SSD"
+        }
+
+        data_disk {
+          _disk_index = "core_disk_2"
+          disk_size   = 100
+          disk_type   = "CLOUD_SSD"
+        }
+
+        software {
+          services = "RUNTIME-1.0.0"
+          roles    = ["Sysctl"]
+        }
+
+        software {
+          services = "FILEBEAT-7.2.0"
+          roles    = ["Filebeat"]
+        }
+
+        software {
+          services = "HDFS-3.2.2"
+          roles    = ["DataNode"]
+        }
+
+        software {
+          services = "YARN-3.2.2"
+          roles    = ["NodeManager"]
+        }
+      }
+
+      task_resource_spec {
+        _node_index   = "task_node_1"
+        instance_type = "SA5.LARGE8"
+        system_disk {
+          disk_size = 100
+          disk_type = "CLOUD_HSSD"
+        }
+
+        data_disk {
+          _disk_index = "task_disk_1"
+          disk_size   = 100
+          disk_type   = "CLOUD_SSD"
+        }
+
+        data_disk {
+          _disk_index = "task_disk_2"
+          disk_size   = 100
+          disk_type   = "CLOUD_SSD"
+        }
+
+        software {
+          services = "RUNTIME-1.0.0"
+          roles    = ["Sysctl"]
+        }
+
+        software {
+          services = "FILEBEAT-7.2.0"
+          roles    = ["Filebeat"]
+        }
+
+        software {
+          services = "YARN-3.2.2"
+          roles    = ["NodeManager"]
+        }
+      }
+
+      task_resource_spec {
+        _node_index   = "task_node_2"
+        instance_type = "SA5.LARGE8"
+        system_disk {
+          disk_size = 100
+          disk_type = "CLOUD_HSSD"
+        }
+
+        data_disk {
+          _disk_index = "task_disk_1"
+          disk_size   = 100
+          disk_type   = "CLOUD_SSD"
+        }
+
+        data_disk {
+          _disk_index = "task_disk_2"
+          disk_size   = 100
+          disk_type   = "CLOUD_SSD"
+        }
+
+        software {
+          services = "RUNTIME-1.0.0"
+          roles    = ["Sysctl"]
+        }
+
+        software {
+          services = "FILEBEAT-7.2.0"
+          roles    = ["Filebeat"]
+        }
+
+        software {
+          services = "YARN-3.2.2"
+          roles    = ["NodeManager"]
+        }
+      }
+
+      common_resource_spec {
+        _node_index   = "common_node_1"
+        instance_type = "SA5.LARGE8"
+        system_disk {
+          disk_size = 100
+          disk_type = "CLOUD_HSSD"
+        }
+
+        data_disk {
+          _disk_index = "common_disk_1"
+          disk_size   = 100
+          disk_type   = "CLOUD_SSD"
+        }
+
+        software {
+          services = "RUNTIME-1.0.0"
+          roles    = ["Sysctl"]
+        }
+
+        software {
+          services = "FILEBEAT-7.2.0"
+          roles    = ["Filebeat"]
+        }
+
+        software {
+          services = "HDFS-3.2.2"
+          roles    = ["JournalNode"]
+        }
+
+        software {
+          services = "ZOOKEEPER-3.6.3"
+          roles    = ["Zookeeper"]
+        }
+      }
+
+      common_resource_spec {
+        _node_index   = "common_node_2"
+        instance_type = "SA5.LARGE8"
+        system_disk {
+          disk_size = 100
+          disk_type = "CLOUD_HSSD"
+        }
+
+        data_disk {
+          _disk_index = "common_disk_1"
+          disk_size   = 100
+          disk_type   = "CLOUD_SSD"
+        }
+
+        software {
+          services = "RUNTIME-1.0.0"
+          roles    = ["Sysctl"]
+        }
+
+        software {
+          services = "FILEBEAT-7.2.0"
+          roles    = ["Filebeat"]
+        }
+
+        software {
+          services = "HDFS-3.2.2"
+          roles    = ["JournalNode"]
+        }
+
+        software {
+          services = "ZOOKEEPER-3.6.3"
+          roles    = ["Zookeeper"]
+        }
+      }
+
+      common_resource_spec {
+        _node_index   = "common_node_3"
+        instance_type = "SA5.LARGE8"
+        system_disk {
+          disk_size = 100
+          disk_type = "CLOUD_HSSD"
+        }
+
+        data_disk {
+          _disk_index = "common_disk_1"
+          disk_size   = 100
+          disk_type   = "CLOUD_SSD"
+        }
+
+        software {
+          services = "RUNTIME-1.0.0"
+          roles    = ["Sysctl"]
+        }
+
+        software {
+          services = "FILEBEAT-7.2.0"
+          roles    = ["Filebeat"]
+        }
+
+        software {
+          services = "HDFS-3.2.2"
+          roles    = ["JournalNode"]
+        }
+
+        software {
+          services = "ZOOKEEPER-3.6.3"
+          roles    = ["Zookeeper"]
         }
       }
     }
@@ -211,5 +454,5 @@ Import
 EMR cluster (v2) can be imported using the instance ID, e.g.
 
 ```
-terraform import tencentcloud_emr_cluster_v2.example emr-xxxxxxxx
+terraform import tencentcloud_emr_cluster_v2.example emr-dvacz2w2
 ```

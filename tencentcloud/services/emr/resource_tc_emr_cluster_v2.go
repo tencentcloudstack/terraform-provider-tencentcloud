@@ -88,20 +88,20 @@ func ResourceTencentCloudEmrClusterV2() *schema.Resource {
 				Type:        schema.TypeList,
 				Required:    true,
 				MaxItems:    1,
-				Description: "Cluster scenario and components to deploy.",
+				Description: "Cluster scenario configuration. Components to deploy are now declared per node role via the `soft_ware` field inside each `*_resource_spec` block; the cluster-level `software` list below is computed (read-back from API) for observability.",
 				Elem: &schema.Resource{
 					Schema: map[string]*schema.Schema{
-						"software": {
-							Type:        schema.TypeList,
-							Required:    true,
-							Elem:        &schema.Schema{Type: schema.TypeString},
-							Description: "List of components with versions, e.g., `[\"hdfs-3.2.2\", \"yarn-3.2.2\"]`.",
-						},
 						"scene_name": {
 							Type:        schema.TypeString,
 							Optional:    true,
 							ForceNew:    true,
 							Description: "Scenario name, e.g., `Hadoop-Default`, `Hadoop-Kudu`, `Hadoop-Zookeeper`, `Hadoop-Presto`, `Hadoop-Hbase`.",
+						},
+						"software": {
+							Type:        schema.TypeList,
+							Computed:    true,
+							Elem:        &schema.Schema{Type: schema.TypeString},
+							Description: "Deduped list of components actually deployed on the cluster (read-back from API).",
 						},
 					},
 				},
@@ -366,7 +366,7 @@ func ResourceTencentCloudEmrClusterV2() *schema.Resource {
 										Set:      hashEmrNodeResourceSpec,
 										Description: "Master node resource specifications. Number of blocks = `MasterCount`. " +
 											"All blocks must have identical configuration; the first block is the single resource template sent to the API. " +
-											"This field is a `TypeSet` keyed by `_node_index` only — block order in HCL is irrelevant.",
+											"This field is a `TypeSet` keyed by `_node_index` only  block order in HCL is irrelevant.",
 										Elem: emrNodeSpecElem(),
 									},
 									"core_resource_spec": {
@@ -375,7 +375,7 @@ func ResourceTencentCloudEmrClusterV2() *schema.Resource {
 										Set:      hashEmrNodeResourceSpec,
 										Description: "Core node resource specifications. Number of blocks = `CoreCount`. " +
 											"All blocks must have identical configuration; the first block is the single resource template sent to the API. " +
-											"This field is a `TypeSet` keyed by `_node_index` only — block order in HCL is irrelevant.",
+											"This field is a `TypeSet` keyed by `_node_index` only  block order in HCL is irrelevant.",
 										Elem: emrNodeSpecElem(),
 									},
 									"task_resource_spec": {
@@ -384,7 +384,7 @@ func ResourceTencentCloudEmrClusterV2() *schema.Resource {
 										Set:      hashEmrNodeResourceSpec,
 										Description: "Task node resource specifications. Number of blocks = `TaskCount`. " +
 											"All blocks must have identical configuration; the first block is the single resource template sent to the API. " +
-											"This field is a `TypeSet` keyed by `_node_index` only — block order in HCL is irrelevant.",
+											"This field is a `TypeSet` keyed by `_node_index` only  block order in HCL is irrelevant.",
 										Elem: emrNodeSpecElem(),
 									},
 									"common_resource_spec": {
@@ -393,7 +393,7 @@ func ResourceTencentCloudEmrClusterV2() *schema.Resource {
 										Set:      hashEmrNodeResourceSpec,
 										Description: "Common node resource specifications. Number of blocks = `CommonCount`. " +
 											"All blocks must have identical configuration; the first block is the single resource template sent to the API. " +
-											"This field is a `TypeSet` keyed by `_node_index` only — block order in HCL is irrelevant.",
+											"This field is a `TypeSet` keyed by `_node_index` only  block order in HCL is irrelevant.",
 										Elem: emrNodeSpecElem(),
 									},
 								},
@@ -516,11 +516,6 @@ func resourceTencentCloudEmrClusterV2Create(d *schema.ResourceData, meta interfa
 		for _, item := range v.([]interface{}) {
 			sceneMap := item.(map[string]interface{})
 			sceneSoftwareConfig := emr.SceneSoftwareConfig{}
-			if val, ok := sceneMap["software"].([]interface{}); ok {
-				for _, s := range val {
-					sceneSoftwareConfig.Software = append(sceneSoftwareConfig.Software, helper.String(s.(string)))
-				}
-			}
 			if val, ok := sceneMap["scene_name"].(string); ok && val != "" {
 				sceneSoftwareConfig.SceneName = helper.String(val)
 			}
@@ -746,6 +741,34 @@ func resourceTencentCloudEmrClusterV2Create(d *schema.ResourceData, meta interfa
 
 			request.ZoneResourceConfiguration = append(request.ZoneResourceConfiguration, &zrc)
 		}
+
+		// Aggregate `soft_ware[*].services` across all roles of all zones
+		// (deduped, order-preserving) and feed it to SceneSoftwareConfig.Software.
+		// This is the only path that supplies the cluster-wide component list
+		// to CreateCluster — the user-facing `software` field is Computed.
+		// At least one component must be declared somewhere; otherwise we
+		// would send an empty Software list and EMR would reject the create
+		// with an unhelpful error.
+		serviceList := emrCollectServiceNames(zrcList)
+		if len(serviceList) == 0 {
+			return fmt.Errorf("at least one `soft_ware` block must be declared on a node role: aggregated component list (SceneSoftwareConfig.Software) is empty, EMR cluster cannot be created without components")
+		}
+		if request.SceneSoftwareConfig == nil {
+			request.SceneSoftwareConfig = &emr.SceneSoftwareConfig{}
+		}
+
+		tmpList := []*string{}
+		for _, item := range serviceList {
+			if item != nil {
+				if strings.HasPrefix(*item, "RUNTIME") || strings.HasPrefix(*item, "FILEBEAT") {
+					continue
+				}
+			}
+
+			tmpList = append(tmpList, item)
+		}
+
+		request.SceneSoftwareConfig.Software = tmpList
 	}
 
 	if v, ok := d.GetOk("cos_bucket"); ok {
@@ -882,8 +905,9 @@ func resourceTencentCloudEmrClusterV2Read(d *schema.ResourceData, meta interface
 	}
 
 	if cluster.SceneName != nil {
-		// Round-trip scene_name and software list while preserving the existing
-		// scene_software_config block written by the user.
+		// Round-trip scene_name and the cluster-wide deployed software list
+		// (Computed). soft_ware (per-role) is intentionally NOT touched here —
+		// the API does not return the role/process breakdown.
 		if existing, ok := d.GetOk("scene_software_config"); ok {
 			list, _ := existing.([]interface{})
 			if len(list) > 0 {
@@ -1042,8 +1066,12 @@ func resourceTencentCloudEmrClusterV2Read(d *schema.ResourceData, meta interface
 				// `_node_index` / `_disk_index` values stable across reads:
 				//   - stateNodeByRID[roleKey][emr_resource_id] = _node_index
 				//   - stateDiskByID[roleKey][emr_resource_id][disk_id] = _disk_index
+				//   - stateSoftWareByRID[roleKey][emr_resource_id] = soft_ware
+				//     (preserved verbatim because the EMR API does not return
+				//     the per-role services/roles breakdown).
 				stateNodeByRID := map[string]map[string]string{}
 				stateDiskByID := map[string]map[string]map[string]string{}
+				stateSoftWareByRID := map[string]map[string][]interface{}{}
 				if oldZrcRaw, _ := d.GetChange("zone_resource_configuration"); oldZrcRaw != nil {
 					list, _ := oldZrcRaw.([]interface{})
 					for _, zrc := range list {
@@ -1074,6 +1102,7 @@ func resourceTencentCloudEmrClusterV2Read(d *schema.ResourceData, meta interface
 							rawList := emrNodeSetToList(allMap[rk])
 							nodeMap := map[string]string{}
 							diskMap := map[string]map[string]string{}
+							softWareMap := map[string][]interface{}{}
 							for _, raw := range rawList {
 								m, ok := raw.(map[string]interface{})
 								if !ok {
@@ -1099,9 +1128,13 @@ func resourceTencentCloudEmrClusterV2Read(d *schema.ResourceData, meta interface
 								if rid != "" {
 									diskMap[rid] = perDisk
 								}
+								if rid != "" {
+									softWareMap[rid] = emrNodeSetToList(m["software"])
+								}
 							}
 							stateNodeByRID[rk] = nodeMap
 							stateDiskByID[rk] = diskMap
+							stateSoftWareByRID[rk] = softWareMap
 						}
 						break
 					}
@@ -1120,6 +1153,7 @@ func resourceTencentCloudEmrClusterV2Read(d *schema.ResourceData, meta interface
 				}
 				configNodeIndexes := map[string][]string{}
 				configDisksByNodeIndex := map[string]map[string][]cfgDiskEntry{}
+				configSoftWareByNodeIndex := map[string]map[string][]interface{}{}
 				if cfgRaw, ok := d.GetOk("zone_resource_configuration"); ok {
 					list, _ := cfgRaw.([]interface{})
 					for _, zrc := range list {
@@ -1150,6 +1184,7 @@ func resourceTencentCloudEmrClusterV2Read(d *schema.ResourceData, meta interface
 							rawList := emrNodeSetToList(allMap[rk])
 							nodeOrd := make([]string, 0, len(rawList))
 							perNodeMap := make(map[string][]cfgDiskEntry, len(rawList))
+							perNodeSoftWare := make(map[string][]interface{}, len(rawList))
 							for _, raw := range rawList {
 								m, ok := raw.(map[string]interface{})
 								if !ok {
@@ -1172,10 +1207,12 @@ func resourceTencentCloudEmrClusterV2Read(d *schema.ResourceData, meta interface
 								}
 								if nodeIdxStr != "" {
 									perNodeMap[nodeIdxStr] = perDisk
+									perNodeSoftWare[nodeIdxStr] = emrNodeSetToList(m["software"])
 								}
 							}
 							configNodeIndexes[rk] = nodeOrd
 							configDisksByNodeIndex[rk] = perNodeMap
+							configSoftWareByNodeIndex[rk] = perNodeSoftWare
 						}
 						break
 					}
@@ -1361,6 +1398,27 @@ func resourceTencentCloudEmrClusterV2Read(d *schema.ResourceData, meta interface
 							diskList[i] = d
 						}
 						specItem["data_disk"] = diskList
+
+						// soft_ware: the EMR API does not return per-role
+						// services/roles, so we restore it from previous
+						// state (rid → soft_ware). For the FIRST Read after
+						// Create the state mapping is empty, so we fall back
+						// to the user's config pool indexed by `_node_index`.
+						// Without this, the Set diff would treat every
+						// `soft_ware` block as drift and force-replace the
+						// whole cluster on the next plan.
+						var softWare []interface{}
+						if rid != "" {
+							if m := stateSoftWareByRID[roleKey]; m != nil {
+								softWare = m[rid]
+							}
+						}
+						if len(softWare) == 0 && userNodeIdx != "" {
+							if m := configSoftWareByNodeIndex[roleKey]; m != nil {
+								softWare = m[userNodeIdx]
+							}
+						}
+						specItem["software"] = softWare
 
 						specs = append(specs, specItem)
 					}
@@ -2043,7 +2101,7 @@ func customizeDiffEmrClusterV2(ctx context.Context, d *schema.ResourceDiff, meta
 			if immutableLengthRoles[rk] {
 				if len(addedNodes) > 0 || len(removedNodes) > 0 {
 					return fmt.Errorf(
-						"%s.zone_resource_configuration[%d].%s: %s 列表长度不可变更，且 `_node_index` 不可重命名（added=%v, removed=%v, old_count=%d, new_count=%d）",
+						"%s.zone_resource_configuration[%d].%s: %s list length is immutable and `_node_index` cannot be renamed (added=%v, removed=%v, old_count=%d, new_count=%d)",
 						zoneName, zoneIdx, rk, roleLabel[rk],
 						addedNodes, removedNodes, len(oldList), len(newList))
 				}
@@ -2072,6 +2130,13 @@ func customizeDiffEmrClusterV2(ctx context.Context, d *schema.ResourceDiff, meta
 					return err
 				}
 
+				// software immutable: any add/remove/content change is rejected.
+				if err := emrSoftWareSetsEqual(oldNode["software"], newNode["software"]); err != nil {
+					return fmt.Errorf(
+						"%s.zone_resource_configuration[%d].%s[_node_index=%s].software: software is immutable after create: %v",
+						zoneName, zoneIdx, rk, nodeIdxStr, err)
+				}
+
 				// data_disk validation: no detach, no shrink, no type change,
 				// no rename (rename surfaces as remove+add at disk level).
 				oldDisks := emrDiskSetToList(oldNode["data_disk"])
@@ -2092,7 +2157,7 @@ func customizeDiffEmrClusterV2(ctx context.Context, d *schema.ResourceDiff, meta
 				}
 				if len(removedDisks) > 0 {
 					return fmt.Errorf(
-						"%s.zone_resource_configuration[%d].%s[_node_index=%s].data_disk: data_disk 不允许减少（_disk_index=%v 已从 config 中移除）。如需扩盘，请新增 `_disk_index`，不要移除现有的",
+						"%s.zone_resource_configuration[%d].%s[_node_index=%s].data_disk: removing data_disk is not allowed (_disk_index=%v removed from config). To grow capacity, add a new `_disk_index` instead of removing existing ones",
 						zoneName, zoneIdx, rk, nodeIdxStr, removedDisks)
 				}
 				_ = addedDisks // attaching new disks is allowed; nothing to validate beyond uniqueness.
@@ -2112,14 +2177,14 @@ func customizeDiffEmrClusterV2(ctx context.Context, d *schema.ResourceDiff, meta
 					newSz, _ := newDisk["disk_size"].(int)
 					if newSz < oldSz {
 						return fmt.Errorf(
-							"%s.zone_resource_configuration[%d].%s[_node_index=%s].data_disk[_disk_index=%s]: data_disk.disk_size 只能扩容（old=%d, new=%d）",
+							"%s.zone_resource_configuration[%d].%s[_node_index=%s].data_disk[_disk_index=%s]: data_disk.disk_size can only grow (old=%d, new=%d)",
 							zoneName, zoneIdx, rk, nodeIdxStr, diskIdxStr, oldSz, newSz)
 					}
 					oldDt, _ := oldDisk["disk_type"].(string)
 					newDt, _ := newDisk["disk_type"].(string)
 					if oldDt != "" && newDt != "" && oldDt != newDt {
 						return fmt.Errorf(
-							"%s.zone_resource_configuration[%d].%s[_node_index=%s].data_disk[_disk_index=%s]: data_disk.disk_type 创建后不可更改（old=%s, new=%s）",
+							"%s.zone_resource_configuration[%d].%s[_node_index=%s].data_disk[_disk_index=%s]: data_disk.disk_type is immutable after create (old=%s, new=%s)",
 							zoneName, zoneIdx, rk, nodeIdxStr, diskIdxStr, oldDt, newDt)
 					}
 				}
@@ -2150,7 +2215,7 @@ func emrAssertSystemDiskImmutable(oldRaw, newRaw interface{}, zoneName string, z
 		nv := fmt.Sprintf("%v", nm[f])
 		if ov != nv {
 			return fmt.Errorf(
-				"%s.zone_resource_configuration[%d].%s[_node_index=%s].system_disk.%s: system_disk 创建后不可更改（old=%s, new=%s）",
+				"%s.zone_resource_configuration[%d].%s[_node_index=%s].system_disk.%s: system_disk is immutable after create (old=%s, new=%s)",
 				zoneName, zoneIdx, rk, nodeIdxStr, f, ov, nv)
 		}
 	}
@@ -2296,6 +2361,27 @@ func emrNodeSpecElem() *schema.Resource {
 				Set:         hashEmrDataDisk,
 				Description: "Cloud data disk specifications. `TypeSet` keyed by full content (including `_disk_index`); block order in HCL is irrelevant.",
 				Elem:        emrDataDiskElem(),
+			},
+			"software": {
+				Type:        schema.TypeSet,
+				Required:    true,
+				MinItems:    1,
+				Description: "Per-role software components (with their role/process lists) deployed on this node role. Must be identical across every block of the same role at create time. Aggregated across all four roles (deduped by `services`) and passed to `CreateCluster` as `SceneSoftwareConfig.Software`. Immutable after create modification is rejected at plan time by CustomizeDiff.",
+				Elem: &schema.Resource{
+					Schema: map[string]*schema.Schema{
+						"services": {
+							Type:        schema.TypeString,
+							Required:    true,
+							Description: "Component name with version, e.g., `hdfs-3.2.2`.",
+						},
+						"roles": {
+							Type:        schema.TypeSet,
+							Required:    true,
+							Elem:        &schema.Schema{Type: schema.TypeString},
+							Description: "Process list for this component on this role, e.g., `[\"NameNode\", \"ZKFailoverController\"]` for hdfs.",
+						},
+					},
+				},
 			},
 			"emr_resource_id": {
 				Type:        schema.TypeString,
@@ -2453,7 +2539,96 @@ func emrNodeResourceSpecEqual(a, b map[string]interface{}) error {
 			return fmt.Errorf("data_disk: disk %q present in b but not matched in a", fp)
 		}
 	}
+	// soft_ware is a TypeSet of {services, roles(TypeSet of strings)}; compare
+	// as multisets by full content (services + sorted roles list).
+	if err := emrSoftWareSetsEqual(a["software"], b["software"]); err != nil {
+		return err
+	}
 	return nil
+}
+
+// emrSoftWareSetsEqual returns a non-nil error if the two `soft_ware` set
+// values differ in content. Equality is full-content (`services` + `roles`
+// multiset), order-independent.
+func emrSoftWareSetsEqual(aRaw, bRaw interface{}) error {
+	aList := emrNodeSetToList(aRaw)
+	bList := emrNodeSetToList(bRaw)
+	if len(aList) != len(bList) {
+		return fmt.Errorf("soft_ware: block count mismatch (%d vs %d)", len(aList), len(bList))
+	}
+	fp := func(raw interface{}) string {
+		m, _ := raw.(map[string]interface{})
+		if m == nil {
+			return ""
+		}
+		services, _ := m["services"].(string)
+		rolesList := emrNodeSetToList(m["roles"])
+		roles := make([]string, 0, len(rolesList))
+		for _, r := range rolesList {
+			if s, ok := r.(string); ok {
+				roles = append(roles, s)
+			}
+		}
+		sort.Strings(roles)
+		return services + "|" + strings.Join(roles, ",")
+	}
+	counts := make(map[string]int, len(aList))
+	for _, raw := range aList {
+		counts[fp(raw)]++
+	}
+	for _, raw := range bList {
+		key := fp(raw)
+		counts[key]--
+		if counts[key] < 0 {
+			return fmt.Errorf("soft_ware: entry %q present in b but not matched in a", key)
+		}
+	}
+	return nil
+}
+
+// emrCollectServiceNames walks every zone in the user-provided
+// `zone_resource_configuration` list and collects the union of
+// `soft_ware[*].services` values across all four roles, deduping while
+// preserving first-seen order. Returns the result as a slice of *string ready
+// to be assigned to `request.SceneSoftwareConfig.Software`.
+func emrCollectServiceNames(zrcList []interface{}) []*string {
+	seen := make(map[string]bool)
+	var out []*string
+	for _, zrc := range zrcList {
+		zrcMap, _ := zrc.(map[string]interface{})
+		if zrcMap == nil {
+			continue
+		}
+		allList, _ := zrcMap["all_node_resource_spec"].([]interface{})
+		if len(allList) == 0 {
+			continue
+		}
+		allMap, _ := allList[0].(map[string]interface{})
+		if allMap == nil {
+			continue
+		}
+		for _, role := range []string{"master_resource_spec", "core_resource_spec", "task_resource_spec", "common_resource_spec"} {
+			for _, raw := range emrNodeSetToList(allMap[role]) {
+				m, _ := raw.(map[string]interface{})
+				if m == nil {
+					continue
+				}
+				for _, sw := range emrNodeSetToList(m["software"]) {
+					sm, _ := sw.(map[string]interface{})
+					if sm == nil {
+						continue
+					}
+					services, _ := sm["services"].(string)
+					if services == "" || seen[services] {
+						continue
+					}
+					seen[services] = true
+					out = append(out, helper.String(services))
+				}
+			}
+		}
+	}
+	return out
 }
 
 // emrInstanceTypeFromNode reconstructs the instance_type string from the three

@@ -233,3 +233,45 @@ Tasks:
   - Try to rename a `_disk_index` → expected: plan-time error.
   - Try to change `system_disk.disk_size` → expected: plan-time error.
 
+
+## 17. Move `software` from `scene_software_config` to per-node `soft_ware` (May 27 2026)
+
+Background: the API's SoftInfo (deduped software list) better reflects reality when each node role declares which components/processes it runs. Refactor the user-facing schema to:
+
+1. Remove `scene_software_config.software`. The block remains Required and now contains only `scene_name`.
+2. Add a new `soft_ware` field inside each of the four `*_resource_spec` blocks. Shape:
+   - `soft_ware` is `TypeSet`, `Optional`, `ForceNew=true` (cannot be modified after create).
+   - Each element has:
+     - `name`: `TypeString`, `Required` — component name with version, e.g. `hdfs-3.2.2`.
+     - `process`: `TypeSet` of `TypeString`, `Required` — process list for this component on this role.
+3. Create-time uniformity: every `*_resource_spec` block within the same role must declare an identical `soft_ware` set (full `name + process` content equality, multiset semantics).
+4. Cross-role aggregation: at Create time, collect `name` from `soft_ware` of all four roles, dedupe, and pass that aggregated list as `request.SceneSoftwareConfig.Software` to `CreateCluster` — replacing the removed `scene_software_config.software` input path.
+5. Read: do NOT overwrite `soft_ware` on Read (process list is not returned by API). `scene_software_config.scene_name` continues to round-trip from API.
+6. Update: `soft_ware` is ForceNew, so any modification triggers destroy+recreate by the SDK; no Update branch needed.
+
+Tasks:
+
+- [x] 17.1 Schema: remove `software` field from `scene_software_config` Elem.
+- [x] 17.2 Schema: add `soft_ware` (TypeSet, Optional, ForceNew) to `emrNodeSpecElem()` with `name` (Required string) and `process` (Required TypeSet of strings) sub-fields.
+- [x] 17.3 Create: remove the `software` extraction from `scene_software_config`. Add a new helper that, given the four role specs of a single zone (or all zones), aggregates and dedupes `soft_ware[*].name` into a `[]*string` for `request.SceneSoftwareConfig.Software`.
+- [x] 17.4 Create-time uniformity: extend `validateEmrNodeResourceSpecUniformity` (or its caller) to compare `soft_ware` content across blocks within the same role, rejecting non-uniform input with a clear error.
+- [x] 17.5 Create: SDK gap — verified that `emr.NodeResourceSpec` has no `SoftWare` field (only `InstanceType`, `SystemDisk`, `Tags`, `DataDisk`, `LocalDataDisk`). Per-role `soft_ware` is therefore consumed only at the provider layer (uniformity validation + name aggregation into `SceneSoftwareConfig.Software`); the user-supplied `process` list is currently informational and not transmitted to the EMR API. Documented in the field Description.
+- [x] 17.6 Read: drop the `if cluster.Config != nil && cluster.Config.SoftInfo != nil { item["software"] = cluster.Config.SoftInfo }` block (the field no longer exists in schema). Keep the `scene_name` round-trip.
+- [ ] 17.7 Update existing `examples/dist/main.tf` and `resource_tc_emr_cluster_v2.md` / `_test.go` to use the new `soft_ware` shape.
+- [x] 17.8 `gofmt` + `go build` + `go vet` validation.
+- [ ] 17.9 Manual validation (user-driven): destroy old cluster, apply with new schema, verify second apply yields no diff; verify trying to modify `soft_ware` triggers ForceNew (destroy+recreate plan).
+
+## 18. Refinements on Section 17 schema (May 27 2026, follow-up)
+
+After 17 landed, two adjustments were made:
+
+1. `scene_software_config.software` is restored as a Computed-only field. It is no longer accepted as user input, but it is round-tripped from `cluster.Config.SoftInfo` in Read so users can still observe the cluster-wide deployed component list in state.
+2. The per-role `soft_ware` element fields are renamed: `name` → `services` (still the versioned component name like `hdfs-3.2.2`), `process` → `roles` (still the process list for that component on this role). Semantics unchanged.
+
+Tasks:
+
+- [x] 18.1 Schema: add back `software` as `TypeList` of strings, `Computed: true`, no longer Required.
+- [x] 18.2 Schema: rename `soft_ware` element fields `name` → `services`, `process` → `roles`. Keep ForceNew on both.
+- [x] 18.3 Helpers: `emrCollectSoftwareNames` now reads `services` instead of `name`. `emrSoftWareSetsEqual` now uses `services` and `roles`. Update both.
+- [x] 18.4 Read: re-add the `item["software"] = cluster.Config.SoftInfo` round-trip alongside `scene_name`. Keep skipping `soft_ware` (process list isn't returned by API anyway).
+- [x] 18.5 `gofmt` + `go build` + `go vet` validation.
