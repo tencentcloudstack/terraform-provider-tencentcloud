@@ -182,7 +182,7 @@ func ResourceTencentCloudCkafkaInstance() *schema.Resource {
 				Type:        schema.TypeString,
 				Optional:    true,
 				Computed:    true,
-				Description: "Type of disk.",
+				Description: "Disk type for Professional Edition instances; this field is not required for Standard Edition instances. `CLOUD_SSD`: SSD Cloud Disk; `CLOUD_BASIC`: High-Performance Cloud Disk. If not specified, the default value is `CLOUD_BASIC`.",
 			},
 			"config": {
 				Type:     schema.TypeList,
