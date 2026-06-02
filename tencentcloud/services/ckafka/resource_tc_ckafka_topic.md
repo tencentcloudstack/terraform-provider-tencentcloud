@@ -4,13 +4,11 @@ Example Usage
 
 ```hcl
 resource "tencentcloud_ckafka_topic" "example" {
-  instance_id                    = "ckafka-bzmjpavn"
+  instance_id                    = "ckafka-bzmja3mb"
   topic_name                     = "tf-example"
   note                           = "topic note"
-  replica_num                    = 4
-  partition_num                  = 2
-  enable_white_list              = true
-  ip_white_list                  = ["1.1.1.1", "2.2.2.2"]
+  replica_num                    = 2
+  partition_num                  = 3
   clean_up_policy                = "delete"
   sync_replica_min_num           = 2
   unclean_leader_election_enable = false

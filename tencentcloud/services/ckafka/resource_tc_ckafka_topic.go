@@ -45,7 +45,7 @@ func ResourceTencentCloudCkafkaTopic() *schema.Resource {
 			"replica_num": {
 				Type:        schema.TypeInt,
 				Required:    true,
-				Description: "The number of replica.",
+				Description: "The number of replica. Maximum is 3.",
 			},
 			"enable_white_list": {
 				Type:        schema.TypeBool,
@@ -236,6 +236,8 @@ func resourceTencentCloudCkafkaTopicCreate(d *schema.ResourceData, meta interfac
 		return fmt.Errorf("this Topic %s Create Failed", topicName)
 	}
 
+	d.SetId(strings.Join([]string{instanceId, topicName}, tccommon.FILED_SP))
+
 	if len(request.IpWhiteList) > 0 && whiteListSwitch {
 		err = ckafkcService.AddCkafkaTopicIpWhiteList(ctx, instanceId, topicName, request.IpWhiteList)
 		if err != nil {
@@ -243,8 +245,6 @@ func resourceTencentCloudCkafkaTopicCreate(d *schema.ResourceData, meta interfac
 		}
 	}
 
-	resourceId := instanceId + tccommon.FILED_SP + topicName
-	d.SetId(resourceId)
 	return resourceTencentCloudCkafkaTopicRead(d, meta)
 }
 

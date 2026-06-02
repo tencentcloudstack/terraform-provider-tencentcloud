@@ -15,13 +15,11 @@ Use this resource to create ckafka topic.
 
 ```hcl
 resource "tencentcloud_ckafka_topic" "example" {
-  instance_id                    = "ckafka-bzmjpavn"
+  instance_id                    = "ckafka-bzmja3mb"
   topic_name                     = "tf-example"
   note                           = "topic note"
-  replica_num                    = 4
-  partition_num                  = 2
-  enable_white_list              = true
-  ip_white_list                  = ["1.1.1.1", "2.2.2.2"]
+  replica_num                    = 2
+  partition_num                  = 3
   clean_up_policy                = "delete"
   sync_replica_min_num           = 2
   unclean_leader_election_enable = false
@@ -37,7 +35,7 @@ The following arguments are supported:
 
 * `instance_id` - (Required, String, ForceNew) Ckafka instance ID.
 * `partition_num` - (Required, Int) The number of partition.
-* `replica_num` - (Required, Int) The number of replica.
+* `replica_num` - (Required, Int) The number of replica. Maximum is 3.
 * `topic_name` - (Required, String, ForceNew) Name of the CKafka topic. It must start with a letter, the rest can contain letters, numbers and dashes(-).
 * `clean_up_policy` - (Optional, String) Clear log policy, log clear mode, default is `delete`. `delete`: logs are deleted according to the storage time. `compact`: logs are compressed according to the key. `compact, delete`: logs are compressed according to the key and will be deleted according to the storage time.
 * `enable_white_list` - (Optional, Bool) Whether to open the ip whitelist, `true`: open, `false`: close.
