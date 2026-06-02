@@ -2476,6 +2476,7 @@ tencentcloud_bh_source_types
 tencentcloud_bh_devices
 Resource
 tencentcloud_bh_acl
+tencentcloud_bh_bind_device_account_kubeconfig
 tencentcloud_bh_access_white_list_rule
 tencentcloud_bh_access_white_list_config
 tencentcloud_bh_device

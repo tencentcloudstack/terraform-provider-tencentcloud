@@ -112,7 +112,7 @@ require (
 	github.com/agiledragon/gomonkey/v2 v2.14.0
 	github.com/hashicorp/go-uuid v1.0.3
 	github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/advisor v1.3.37
-	github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/bh v1.3.68
+	github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/bh v1.3.93
 	github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/billing v1.3.39
 	github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/cdc v1.0.1149
 	github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/cdwdoris v1.0.993
