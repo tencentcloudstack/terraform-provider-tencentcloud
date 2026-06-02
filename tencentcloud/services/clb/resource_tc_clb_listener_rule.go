@@ -185,10 +185,9 @@ func ResourceTencentCloudClbListenerRule() *schema.Resource {
 				},
 			},
 			"session_expire_time": {
-				Type:         schema.TypeInt,
-				Optional:     true,
-				ValidateFunc: tccommon.ValidateIntegerInRange(30, 3600),
-				Description:  "Session Persistence Duration. Setting this to 0 disables session persistence; to enable it, the value must be between 30 and 86,400 (inclusive), in seconds.",
+				Type:        schema.TypeInt,
+				Optional:    true,
+				Description: "Session Persistence Duration. Setting this to 0 disables session persistence; to enable it, the value must be between 30 and 86,400 (inclusive), in seconds.",
 			},
 			"http2_switch": {
 				Type:        schema.TypeBool,
