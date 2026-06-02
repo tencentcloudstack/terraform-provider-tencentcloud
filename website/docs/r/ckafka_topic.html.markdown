@@ -44,7 +44,7 @@ The following arguments are supported:
 * `ip_white_list` - (Optional, List: [`String`]) Ip whitelist, quota limit, required when enableWhileList=true.
 * `max_message_bytes` - (Optional, Int) Max message bytes. min: 1024 Byte(1KB), max: 8388608 Byte(8MB).
 * `note` - (Optional, String) The subject note. It must start with a letter, and the remaining part can contain letters, numbers and dashes (-).
-* `retention` - (Optional, Int) Message can be selected. Retention time, unit is ms, the current minimum value is 60000ms.
+* `retention` - (Optional, Int) Optional parameter: Message retention time. Value range: [60000, 7776000000]. Unit: milliseconds. Default value: 7200000.
 * `segment` - (Optional, Int) Segment scrolling time, in ms, the current minimum is 3600000ms.
 * `sync_replica_min_num` - (Optional, Int) Min number of sync replicas, Default is `1`.
 * `unclean_leader_election_enable` - (Optional, Bool) Whether to allow unsynchronized replicas to be selected as leader, default is `false`, `true: `allowed, `false`: not allowed.

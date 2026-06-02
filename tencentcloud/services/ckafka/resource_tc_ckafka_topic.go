@@ -69,7 +69,7 @@ func ResourceTencentCloudCkafkaTopic() *schema.Resource {
 				Optional:     true,
 				Default:      60000,
 				ValidateFunc: tccommon.ValidateIntegerMin(60000),
-				Description:  "Message can be selected. Retention time, unit is ms, the current minimum value is 60000ms.",
+				Description:  "Optional parameter: Message retention time. Value range: [60000, 7776000000]. Unit: milliseconds. Default value: 7200000.",
 			},
 			"sync_replica_min_num": {
 				Type:        schema.TypeInt,
