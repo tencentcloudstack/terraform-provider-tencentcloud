@@ -73,14 +73,11 @@ func resourceTencentCloudBhBindDeviceAccountKubeconfigUpdate(d *schema.ResourceD
 	defer tccommon.InconsistentCheck(d, meta)()
 
 	var (
-		logId   = tccommon.GetLogId(tccommon.ContextNil)
-		ctx     = tccommon.NewResourceLifeCycleHandleFuncContext(context.Background(), logId, d, meta)
-		request = bhv20230418.NewBindDeviceAccountKubeconfigRequest()
+		logId     = tccommon.GetLogId(tccommon.ContextNil)
+		ctx       = tccommon.NewResourceLifeCycleHandleFuncContext(context.Background(), logId, d, meta)
+		request   = bhv20230418.NewBindDeviceAccountKubeconfigRequest()
+		accountId = d.Id()
 	)
-
-	if v, ok := d.GetOkExists("account_id"); ok {
-		request.Id = helper.IntUint64(v.(int))
-	}
 
 	if v, ok := d.GetOk("kubeconfig"); ok {
 		request.Kubeconfig = helper.String(v.(string))
@@ -90,6 +87,7 @@ func resourceTencentCloudBhBindDeviceAccountKubeconfigUpdate(d *schema.ResourceD
 		request.ManageDimension = helper.IntUint64(v.(int))
 	}
 
+	request.Id = helper.StrToUint64Point(accountId)
 	reqErr := resource.Retry(tccommon.WriteRetryTimeout, func() *resource.RetryError {
 		result, e := meta.(tccommon.ProviderMeta).GetAPIV3Conn().UseBhV20230418Client().BindDeviceAccountKubeconfigWithContext(ctx, request)
 		if e != nil {
