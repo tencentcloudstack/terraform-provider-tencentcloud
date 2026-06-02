@@ -192,6 +192,19 @@ func ResourceTencentCloudClsConsole() *schema.Resource {
 				Description: "Access control rules. Required when `login_mode` is `2` (third-party authentication login) and AccessMode contains `internal` with Action ACCEPT rules.",
 				Elem: &schema.Resource{
 					Schema: map[string]*schema.Schema{
+						"cidr_blocks": {
+							Type:        schema.TypeList,
+							Optional:    true,
+							Description: "CIDR blocks or IPs, supporting IPv4 or IPv6.",
+							Elem: &schema.Schema{
+								Type: schema.TypeString,
+							},
+						},
+						"action": {
+							Type:        schema.TypeString,
+							Optional:    true,
+							Description: "Rule action. Valid values: `ACCEPT`, `DROP`.",
+						},
 						"access_mode": {
 							Type:        schema.TypeString,
 							Optional:    true,
@@ -365,6 +378,14 @@ func resourceTencentCloudClsConsoleCreate(d *schema.ResourceData, meta interface
 		for _, item := range rulesList {
 			ruleMap := item.(map[string]interface{})
 			rule := &cls.AccessControlRule{}
+			if v, ok := ruleMap["cidr_blocks"].([]interface{}); ok && len(v) > 0 {
+				for _, cidr := range v {
+					rule.CidrBlocks = append(rule.CidrBlocks, helper.String(cidr.(string)))
+				}
+			}
+			if v, ok := ruleMap["action"].(string); ok && v != "" {
+				rule.Action = helper.String(v)
+			}
 			if v, ok := ruleMap["access_mode"].(string); ok && v != "" {
 				rule.AccessMode = helper.String(v)
 			}
@@ -502,6 +523,12 @@ func resourceTencentCloudClsConsoleRead(d *schema.ResourceData, meta interface{}
 				continue
 			}
 			ruleMap := map[string]interface{}{}
+			if rule.CidrBlocks != nil {
+				ruleMap["cidr_blocks"] = helper.StringsInterfaces(rule.CidrBlocks)
+			}
+			if rule.Action != nil {
+				ruleMap["action"] = rule.Action
+			}
 			if rule.AccessMode != nil {
 				ruleMap["access_mode"] = rule.AccessMode
 			}
@@ -661,6 +688,14 @@ func resourceTencentCloudClsConsoleUpdate(d *schema.ResourceData, meta interface
 			for _, item := range rulesList {
 				ruleMap := item.(map[string]interface{})
 				rule := &cls.AccessControlRule{}
+				if v, ok := ruleMap["cidr_blocks"].([]interface{}); ok && len(v) > 0 {
+					for _, cidr := range v {
+						rule.CidrBlocks = append(rule.CidrBlocks, helper.String(cidr.(string)))
+					}
+				}
+				if v, ok := ruleMap["action"].(string); ok && v != "" {
+					rule.Action = helper.String(v)
+				}
 				if v, ok := ruleMap["access_mode"].(string); ok && v != "" {
 					rule.AccessMode = helper.String(v)
 				}
