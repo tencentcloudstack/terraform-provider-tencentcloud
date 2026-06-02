@@ -1647,6 +1647,8 @@ tencentcloud_ses_black_list_delete
 Security Token Service(STS)
 Data Source
 tencentcloud_sts_caller_identity
+Resource
+tencentcloud_sts_assume_role_operation
 
 TDSQL for MySQL(DCDB)
 Data Source
