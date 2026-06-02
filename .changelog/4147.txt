@@ -1,0 +1,3 @@
+```release-note:bug
+resource/tencentcloud_teo_l7_acc_rule_v2: fix Read function to handle empty Rules array from API response
+```

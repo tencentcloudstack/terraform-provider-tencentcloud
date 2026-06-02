@@ -203,6 +203,60 @@ func (c *Client) BindingPolicyTagWithContext(ctx context.Context, request *Bindi
     return
 }
 
+func NewCheckAddressByPrometheusRequest() (request *CheckAddressByPrometheusRequest) {
+    request = &CheckAddressByPrometheusRequest{
+        BaseRequest: &tchttp.BaseRequest{},
+    }
+    
+    request.Init().WithApiInfo("monitor", APIVersion, "CheckAddressByPrometheus")
+    
+    
+    return
+}
+
+func NewCheckAddressByPrometheusResponse() (response *CheckAddressByPrometheusResponse) {
+    response = &CheckAddressByPrometheusResponse{
+        BaseResponse: &tchttp.BaseResponse{},
+    } 
+    return
+
+}
+
+// CheckAddressByPrometheus
+// 检查用户地址联通性
+//
+// 可能返回的错误码:
+//  AUTHFAILURE = "AuthFailure"
+//  FAILEDOPERATION = "FailedOperation"
+//  INTERNALERROR = "InternalError"
+func (c *Client) CheckAddressByPrometheus(request *CheckAddressByPrometheusRequest) (response *CheckAddressByPrometheusResponse, err error) {
+    return c.CheckAddressByPrometheusWithContext(context.Background(), request)
+}
+
+// CheckAddressByPrometheus
+// 检查用户地址联通性
+//
+// 可能返回的错误码:
+//  AUTHFAILURE = "AuthFailure"
+//  FAILEDOPERATION = "FailedOperation"
+//  INTERNALERROR = "InternalError"
+func (c *Client) CheckAddressByPrometheusWithContext(ctx context.Context, request *CheckAddressByPrometheusRequest) (response *CheckAddressByPrometheusResponse, err error) {
+    if request == nil {
+        request = NewCheckAddressByPrometheusRequest()
+    }
+    c.InitBaseRequest(&request.BaseRequest, "monitor", APIVersion, "CheckAddressByPrometheus")
+    
+    if c.GetCredential() == nil {
+        return nil, errors.New("CheckAddressByPrometheus require credential")
+    }
+
+    request.SetContext(ctx)
+    
+    response = NewCheckAddressByPrometheusResponse()
+    err = c.Send(request, response)
+    return
+}
+
 func NewCleanGrafanaInstanceRequest() (request *CleanGrafanaInstanceRequest) {
     request = &CleanGrafanaInstanceRequest{
         BaseRequest: &tchttp.BaseRequest{},
@@ -1781,84 +1835,6 @@ func (c *Client) CreateSSOAccountWithContext(ctx context.Context, request *Creat
     return
 }
 
-func NewCreateServiceDiscoveryRequest() (request *CreateServiceDiscoveryRequest) {
-    request = &CreateServiceDiscoveryRequest{
-        BaseRequest: &tchttp.BaseRequest{},
-    }
-    
-    request.Init().WithApiInfo("monitor", APIVersion, "CreateServiceDiscovery")
-    
-    
-    return
-}
-
-func NewCreateServiceDiscoveryResponse() (response *CreateServiceDiscoveryResponse) {
-    response = &CreateServiceDiscoveryResponse{
-        BaseResponse: &tchttp.BaseResponse{},
-    } 
-    return
-
-}
-
-// CreateServiceDiscovery
-// 在腾讯云容器服务下创建 Prometheus 服务发现。
-//
-// <p>注意：前提条件，已经通过 Prometheus 控制台集成了对应的腾讯云容器服务，具体请参考
-//
-// <a href="https://cloud.tencent.com/document/product/248/48859" target="_blank">Agent 安装</a>。</p>
-//
-// 可能返回的错误码:
-//  FAILEDOPERATION = "FailedOperation"
-//  FAILEDOPERATION_ACCESSSTSFAIL = "FailedOperation.AccessSTSFail"
-//  FAILEDOPERATION_ACCESSTKEFAIL = "FailedOperation.AccessTKEFail"
-//  FAILEDOPERATION_AGENTVERSIONNOTSUPPORTED = "FailedOperation.AgentVersionNotSupported"
-//  FAILEDOPERATION_BADYAMLFORMAT = "FailedOperation.BadYamlFormat"
-//  FAILEDOPERATION_RESOURCENOTFOUND = "FailedOperation.ResourceNotFound"
-//  FAILEDOPERATION_TKECLIENTAUTHFAIL = "FailedOperation.TKEClientAuthFail"
-//  FAILEDOPERATION_TKEENDPOINTSTATUSERROR = "FailedOperation.TKEEndpointStatusError"
-//  FAILEDOPERATION_TKERESOURCECONFLICT = "FailedOperation.TKEResourceConflict"
-//  INTERNALERROR = "InternalError"
-//  INVALIDPARAMETER = "InvalidParameter"
-func (c *Client) CreateServiceDiscovery(request *CreateServiceDiscoveryRequest) (response *CreateServiceDiscoveryResponse, err error) {
-    return c.CreateServiceDiscoveryWithContext(context.Background(), request)
-}
-
-// CreateServiceDiscovery
-// 在腾讯云容器服务下创建 Prometheus 服务发现。
-//
-// <p>注意：前提条件，已经通过 Prometheus 控制台集成了对应的腾讯云容器服务，具体请参考
-//
-// <a href="https://cloud.tencent.com/document/product/248/48859" target="_blank">Agent 安装</a>。</p>
-//
-// 可能返回的错误码:
-//  FAILEDOPERATION = "FailedOperation"
-//  FAILEDOPERATION_ACCESSSTSFAIL = "FailedOperation.AccessSTSFail"
-//  FAILEDOPERATION_ACCESSTKEFAIL = "FailedOperation.AccessTKEFail"
-//  FAILEDOPERATION_AGENTVERSIONNOTSUPPORTED = "FailedOperation.AgentVersionNotSupported"
-//  FAILEDOPERATION_BADYAMLFORMAT = "FailedOperation.BadYamlFormat"
-//  FAILEDOPERATION_RESOURCENOTFOUND = "FailedOperation.ResourceNotFound"
-//  FAILEDOPERATION_TKECLIENTAUTHFAIL = "FailedOperation.TKEClientAuthFail"
-//  FAILEDOPERATION_TKEENDPOINTSTATUSERROR = "FailedOperation.TKEEndpointStatusError"
-//  FAILEDOPERATION_TKERESOURCECONFLICT = "FailedOperation.TKEResourceConflict"
-//  INTERNALERROR = "InternalError"
-//  INVALIDPARAMETER = "InvalidParameter"
-func (c *Client) CreateServiceDiscoveryWithContext(ctx context.Context, request *CreateServiceDiscoveryRequest) (response *CreateServiceDiscoveryResponse, err error) {
-    if request == nil {
-        request = NewCreateServiceDiscoveryRequest()
-    }
-    c.InitBaseRequest(&request.BaseRequest, "monitor", APIVersion, "CreateServiceDiscovery")
-    
-    if c.GetCredential() == nil {
-        return nil, errors.New("CreateServiceDiscovery require credential")
-    }
-
-    request.SetContext(ctx)
-    
-    response = NewCreateServiceDiscoveryResponse()
-    err = c.Send(request, response)
-    return
-}
-
 func NewDeleteAlarmNoticesRequest() (request *DeleteAlarmNoticesRequest) {
     request = &DeleteAlarmNoticesRequest{
         BaseRequest: &tchttp.BaseRequest{},
@@ -2375,6 +2351,10 @@ func NewDeletePolicyGroupResponse() (response *DeletePolicyGroupResponse) {
 }
 
 // DeletePolicyGroup
+// 告警 1.0 API，不能再使用否则会导致后端数据不一致
+//
+// 
+//
 // 删除告警策略组
 //
 // 可能返回的错误码:
@@ -2419,6 +2399,10 @@ func (c *Client) DeletePolicyGroup(request *DeletePolicyGroupRequest) (response 
 }
 
 // DeletePolicyGroup
+// 告警 1.0 API，不能再使用否则会导致后端数据不一致
+//
+// 
+//
 // 删除告警策略组
 //
 // 可能返回的错误码:
@@ -7641,80 +7625,6 @@ func (c *Client) DescribeSSOAccountWithContext(ctx context.Context, request *Des
     return
 }
 
-func NewDescribeServiceDiscoveryRequest() (request *DescribeServiceDiscoveryRequest) {
-    request = &DescribeServiceDiscoveryRequest{
-        BaseRequest: &tchttp.BaseRequest{},
-    }
-    
-    request.Init().WithApiInfo("monitor", APIVersion, "DescribeServiceDiscovery")
-    
-    
-    return
-}
-
-func NewDescribeServiceDiscoveryResponse() (response *DescribeServiceDiscoveryResponse) {
-    response = &DescribeServiceDiscoveryResponse{
-        BaseResponse: &tchttp.BaseResponse{},
-    } 
-    return
-
-}
-
-// DescribeServiceDiscovery
-// 列出在腾讯云容器服务下创建的 Prometheus 服务发现。
-//
-// <p>注意：前提条件，已经通过 Prometheus 控制台集成了对应的腾讯云容器服务，具体请参考
-//
-// <a href="https://cloud.tencent.com/document/product/248/48859" target="_blank">Agent 安装</a>。</p>
-//
-// 可能返回的错误码:
-//  FAILEDOPERATION_ACCESSSTSFAIL = "FailedOperation.AccessSTSFail"
-//  FAILEDOPERATION_ACCESSTKEFAIL = "FailedOperation.AccessTKEFail"
-//  FAILEDOPERATION_DBQUERYFAILED = "FailedOperation.DbQueryFailed"
-//  FAILEDOPERATION_INSTANCENOTRUNNING = "FailedOperation.InstanceNotRunning"
-//  FAILEDOPERATION_RESOURCENOTFOUND = "FailedOperation.ResourceNotFound"
-//  FAILEDOPERATION_TKEENDPOINTSTATUSERROR = "FailedOperation.TKEEndpointStatusError"
-//  INTERNALERROR = "InternalError"
-//  INVALIDPARAMETER = "InvalidParameter"
-//  RESOURCENOTFOUND = "ResourceNotFound"
-func (c *Client) DescribeServiceDiscovery(request *DescribeServiceDiscoveryRequest) (response *DescribeServiceDiscoveryResponse, err error) {
-    return c.DescribeServiceDiscoveryWithContext(context.Background(), request)
-}
-
-// DescribeServiceDiscovery
-// 列出在腾讯云容器服务下创建的 Prometheus 服务发现。
-//
-// <p>注意：前提条件，已经通过 Prometheus 控制台集成了对应的腾讯云容器服务，具体请参考
-//
-// <a href="https://cloud.tencent.com/document/product/248/48859" target="_blank">Agent 安装</a>。</p>
-//
-// 可能返回的错误码:
-//  FAILEDOPERATION_ACCESSSTSFAIL = "FailedOperation.AccessSTSFail"
-//  FAILEDOPERATION_ACCESSTKEFAIL = "FailedOperation.AccessTKEFail"
-//  FAILEDOPERATION_DBQUERYFAILED = "FailedOperation.DbQueryFailed"
-//  FAILEDOPERATION_INSTANCENOTRUNNING = "FailedOperation.InstanceNotRunning"
-//  FAILEDOPERATION_RESOURCENOTFOUND = "FailedOperation.ResourceNotFound"
-//  FAILEDOPERATION_TKEENDPOINTSTATUSERROR = "FailedOperation.TKEEndpointStatusError"
-//  INTERNALERROR = "InternalError"
-//  INVALIDPARAMETER = "InvalidParameter"
-//  RESOURCENOTFOUND = "ResourceNotFound"
-func (c *Client) DescribeServiceDiscoveryWithContext(ctx context.Context, request *DescribeServiceDiscoveryRequest) (response *DescribeServiceDiscoveryResponse, err error) {
-    if request == nil {
-        request = NewDescribeServiceDiscoveryRequest()
-    }
-    c.InitBaseRequest(&request.BaseRequest, "monitor", APIVersion, "DescribeServiceDiscovery")
-    
-    if c.GetCredential() == nil {
-        return nil, errors.New("DescribeServiceDiscovery require credential")
-    }
-
-    request.SetContext(ctx)
-    
-    response = NewDescribeServiceDiscoveryResponse()
-    err = c.Send(request, response)
-    return
-}
-
 func NewDescribeStatisticDataRequest() (request *DescribeStatisticDataRequest) {
     request = &DescribeStatisticDataRequest{
         BaseRequest: &tchttp.BaseRequest{},
@@ -8089,7 +7999,35 @@ func NewExportPrometheusReadOnlyDynamicAPIResponse() (response *ExportPrometheus
 }
 
 // ExportPrometheusReadOnlyDynamicAPI
-// Prometheus 内部动态 api 代理，仅内部使用
+// Prometheus 内部只读动态 api 代理，支持以云api形式访问prometheus原生api
+//
+// 支持以下api:
+//
+// 
+//
+// | path | method | 用途 |
+//
+// | - | - | - |
+//
+// | /api/v1/query | GET, POST | 点查询 |
+//
+// | /api/v1/query_range | GET, POST |  范围查询 |
+//
+// | /api/v1/series | GET, POST | series列表查询 |
+//
+// | /api/v1/labels | GET, POST | label名查询 |
+//
+// | /api/v1/label/{label_name}/values | GET | label值查询 |
+//
+// | /api/v1/rules | GET | 告警，预聚合规则查询 |
+//
+// | /api/v1/user_limits | GET | prometheus实例限制查询 |
+//
+// | /alertmanager/api/v2/alerts/groups | GET | 当前告警信息查询 | 
+//
+// | /alertmanager/api/v2/silences | GET | 告警静默查询 |
+//
+// | /alertmanager/api/v2/silence/{id} | GET | 告警静默详情查询 |
 //
 // 可能返回的错误码:
 //  AUTHFAILURE = "AuthFailure"
@@ -8129,7 +8067,35 @@ func (c *Client) ExportPrometheusReadOnlyDynamicAPI(request *ExportPrometheusRea
 }
 
 // ExportPrometheusReadOnlyDynamicAPI
-// Prometheus 内部动态 api 代理，仅内部使用
+// Prometheus 内部只读动态 api 代理，支持以云api形式访问prometheus原生api
+//
+// 支持以下api:
+//
+// 
+//
+// | path | method | 用途 |
+//
+// | - | - | - |
+//
+// | /api/v1/query | GET, POST | 点查询 |
+//
+// | /api/v1/query_range | GET, POST |  范围查询 |
+//
+// | /api/v1/series | GET, POST | series列表查询 |
+//
+// | /api/v1/labels | GET, POST | label名查询 |
+//
+// | /api/v1/label/{label_name}/values | GET | label值查询 |
+//
+// | /api/v1/rules | GET | 告警，预聚合规则查询 |
+//
+// | /api/v1/user_limits | GET | prometheus实例限制查询 |
+//
+// | /alertmanager/api/v2/alerts/groups | GET | 当前告警信息查询 | 
+//
+// | /alertmanager/api/v2/silences | GET | 告警静默查询 |
+//
+// | /alertmanager/api/v2/silence/{id} | GET | 告警静默详情查询 |
 //
 // 可能返回的错误码:
 //  AUTHFAILURE = "AuthFailure"
@@ -8205,7 +8171,7 @@ func NewGetMonitorDataResponse() (response *GetMonitorDataResponse) {
 //
 // 传入产品的命名空间、对象维度描述和监控指标即可获得相应的监控数据。
 //
-// 接口调用限制：单请求最多可支持批量拉取10个实例的监控数据，单请求的数据点数限制为1440个。
+// 接口调用限制：单请求最多可支持批量拉取50个实例的监控数据，单请求的数据点数限制为7200个。
 //
 // 若您需要调用的指标、对象较多，可能存在因限频出现拉取失败的情况，建议尽量将请求按时间维度均摊。
 //
@@ -8234,7 +8200,7 @@ func (c *Client) GetMonitorData(request *GetMonitorDataRequest) (response *GetMo
 //
 // 传入产品的命名空间、对象维度描述和监控指标即可获得相应的监控数据。
 //
-// 接口调用限制：单请求最多可支持批量拉取10个实例的监控数据，单请求的数据点数限制为1440个。
+// 接口调用限制：单请求最多可支持批量拉取50个实例的监控数据，单请求的数据点数限制为7200个。
 //
 // 若您需要调用的指标、对象较多，可能存在因限频出现拉取失败的情况，建议尽量将请求按时间维度均摊。
 //

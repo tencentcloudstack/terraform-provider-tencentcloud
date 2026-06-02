@@ -387,6 +387,12 @@ func ResourceTencentCloudThpcWorkspaces() *schema.Resource {
 				Optional:    true,
 				Description: "The hostname of the instance. Windows instance: The name should be a combination of 2 to 15 characters comprised of letters (case insensitive), numbers, and hyphens (-). Period (.) is not supported, and the name cannot be a string of pure numbers. Other types (such as Linux) of instances: The name should be a combination of 2 to 60 characters, supporting multiple periods (.). The piece between two periods is composed of letters (case insensitive), numbers, and hyphens (-). Modifying will cause the instance reset.",
 			},
+			"force_stop": {
+				Type:        schema.TypeBool,
+				Optional:    true,
+				Computed:    true,
+				Description: "Whether to forcibly shut down a running instance. Default is false. Forcing a shutdown is equivalent to switching off the power button on a physical computer. Forcing a shutdown may result in data loss or file system corruption; therefore, please use this option only when the server cannot be shut down normally.",
+			},
 			// computed
 			"resource_id": {
 				Type:        schema.TypeString,
@@ -1067,6 +1073,11 @@ func resourceTencentCloudThpcWorkspacesUpdate(d *schema.ResourceData, meta inter
 		}
 	}
 
+	var forceStop bool
+	if v, ok := d.GetOkExists("force_stop"); ok {
+		forceStop = v.(bool)
+	}
+
 	if d.HasChange("space_name") {
 		request := thpcv20230321.NewModifyWorkspacesAttributeRequest()
 		request.SpaceIds = helper.Strings([]string{spaceId})
@@ -1101,7 +1112,7 @@ func resourceTencentCloudThpcWorkspacesUpdate(d *schema.ResourceData, meta inter
 			diskType := d.Get(typeKey).(string)
 			req := cvm.NewResizeInstanceDisksRequest()
 			req.InstanceId = &instanceId
-			req.ForceStop = helper.Bool(true)
+			req.ForceStop = helper.Bool(forceStop)
 			req.SystemDisk = &cvm.SystemDisk{
 				DiskSize: helper.IntInt64(size),
 				DiskType: &diskType,
@@ -1181,7 +1192,7 @@ func resourceTencentCloudThpcWorkspacesUpdate(d *schema.ResourceData, meta inter
 		instanceId := d.Get("resource_id").(string)
 		cvmService := svccvm.NewCvmService(meta.(tccommon.ProviderMeta).GetAPIV3Conn())
 		if d.HasChange(passwordKey) {
-			err := cvmService.ModifyPassword(ctx, instanceId, d.Get(passwordKey).(string))
+			err := cvmService.ModifyPassword(ctx, instanceId, d.Get(passwordKey).(string), forceStop)
 			if err != nil {
 				return err
 			}
@@ -1223,7 +1234,7 @@ func resourceTencentCloudThpcWorkspacesUpdate(d *schema.ResourceData, meta inter
 			removes.Remove("")
 
 			if removes.Len() > 0 {
-				err := cvmService.UnbindKeyPair(ctx, helper.InterfacesStringsPoint(removes.List()), []*string{&instanceId})
+				err := cvmService.UnbindKeyPair(ctx, helper.InterfacesStringsPoint(removes.List()), []*string{&instanceId}, forceStop)
 				if err != nil {
 					return err
 				}
@@ -1256,7 +1267,7 @@ func resourceTencentCloudThpcWorkspacesUpdate(d *schema.ResourceData, meta inter
 			}
 
 			if adds.Len() > 0 {
-				err := cvmService.BindKeyPair(ctx, helper.InterfacesStringsPoint(adds.List()), instanceId)
+				err := cvmService.BindKeyPair(ctx, helper.InterfacesStringsPoint(adds.List()), instanceId, forceStop)
 				if err != nil {
 					return err
 				}

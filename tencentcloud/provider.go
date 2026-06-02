@@ -74,6 +74,7 @@ import (
 	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/services/emr"
 	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/services/es"
 	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/services/fl"
+	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/services/ga2"
 	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/services/gaap"
 	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/services/gs"
 	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/services/gwlb"
@@ -1401,6 +1402,7 @@ func Provider() *schema.Provider {
 		ResourcesMap: map[string]*schema.Resource{
 			"tencentcloud_project":                                                                  project.ResourceTencentCloudProject(),
 			"tencentcloud_emr_cluster":                                                              emr.ResourceTencentCloudEmrCluster(),
+			"tencentcloud_emr_cluster_v2":                                                           emr.ResourceTencentCloudEmrClusterV2(),
 			"tencentcloud_emr_user_manager":                                                         emr.ResourceTencentCloudEmrUserManager(),
 			"tencentcloud_instance":                                                                 cvm.ResourceTencentCloudInstance(),
 			"tencentcloud_instance_set":                                                             cvm.ResourceTencentCloudInstanceSet(),
@@ -1721,6 +1723,7 @@ func Provider() *schema.Provider {
 			"tencentcloud_dayu_l7_rule":                                                             dayu.ResourceTencentCloudDayuL7Rule(),
 			"tencentcloud_dayu_l7_rule_v2":                                                          dayuv2.ResourceTencentCloudDayuL7RuleV2(),
 			"tencentcloud_dayu_eip":                                                                 dayuv2.ResourceTencentCloudDayuEip(),
+			"tencentcloud_ga2_endpoint_group":                                                       ga2.ResourceTencentCloudGa2EndpointGroup(),
 			"tencentcloud_gaap_proxy":                                                               gaap.ResourceTencentCloudGaapProxy(),
 			"tencentcloud_gaap_realserver":                                                          gaap.ResourceTencentCloudGaapRealserver(),
 			"tencentcloud_gaap_layer4_listener":                                                     gaap.ResourceTencentCloudGaapLayer4Listener(),
@@ -1974,6 +1977,7 @@ func Provider() *schema.Provider {
 			"tencentcloud_sqlserver_general_cloud_ro_instance":                                      sqlserver.ResourceTencentCloudSqlserverGeneralCloudRoInstance(),
 			"tencentcloud_sqlserver_instance_ssl":                                                   sqlserver.ResourceTencentCloudSqlserverInstanceSsl(),
 			"tencentcloud_sqlserver_wan_ip_config":                                                  sqlserver.ResourceTencentCloudSqlserverWanIpConfig(),
+			"tencentcloud_sqlserver_db_instance_ssl_config":                                         sqlserver.ResourceTencentCloudSqlserverDbInstanceSslConfig(),
 			"tencentcloud_tcr_instance":                                                             tcr.ResourceTencentCloudTcrInstance(),
 			"tencentcloud_tcr_namespace":                                                            tcr.ResourceTencentCloudTcrNamespace(),
 			"tencentcloud_tcr_repository":                                                           tcr.ResourceTencentCloudTcrRepository(),

@@ -326,56 +326,45 @@ func resourceTencentCloudClbServerAttachmentUpdate(d *schema.ResourceData, meta 
 	clbActionMu.Lock()
 	defer clbActionMu.Unlock()
 
-	if d.HasChange("targets") {
-		o, n := d.GetChange("targets")
-		os := o.(*schema.Set)
-		ns := n.(*schema.Set)
-		add := ns.Difference(os).List()
-		remove := os.Difference(ns).List()
-		addLen := len(add)
-		removeLen := len(remove)
-		if removeLen > 0 {
-			for count := 0; count < removeLen; count += 20 {
-				removeList := make([]interface{}, 0, 20)
-				for i := 0; i < 20; i++ {
-					index := count + i
-					if index >= removeLen {
-						break
-					}
-
-					removeList = append(removeList, remove[index])
-				}
-
-				err := resourceTencentCloudClbServerAttachmentRemove(d, meta, removeList)
-				if err != nil {
-					return err
-				}
-			}
-		}
-
-		if addLen > 0 {
-			for count := 0; count < addLen; count += 20 {
-				addList := make([]interface{}, 0, 20)
-				for i := 0; i < 20; i++ {
-					index := count + i
-					if index >= addLen {
-						break
-					}
-
-					addList = append(addList, add[index])
-				}
-
-				err := resourceTencentCloudClbServerAttachmentAdd(d, meta, addList)
-				if err != nil {
-					return err
-				}
-			}
-		}
-
-		return resourceTencentCloudClbServerAttachmentRead(d, meta)
+	if !d.HasChange("targets") {
+		return nil
 	}
 
-	return nil
+	o, n := d.GetChange("targets")
+	os := o.(*schema.Set)
+	ns := n.(*schema.Set)
+
+	// Set.Difference uses the default hash that includes every inner field
+	// (instance_id, eni_ip, port, weight). So a pure weight change for the
+	// same (instance_id|eni_ip, port) target lands as one entry in `add` AND
+	// one entry in `remove`. Partition the raw add/remove sets into three
+	// buckets: weightOnly (Modify), pureRemove (Deregister), pureAdd (Register).
+	rawAdd := ns.Difference(os).List()
+	rawRemove := os.Difference(ns).List()
+
+	weightOnly, pureAdd, pureRemove := partitionTargetChanges(rawAdd, rawRemove)
+
+	// Order: Deregister → Modify → Register.
+	// Deregister first frees backend slots; Modify only touches surviving
+	// identities; Register re-fills with whatever remains. No identity is
+	// ever interpreted twice within a single apply.
+	if err := batchProcessTargets(pureRemove, 20, func(chunk []interface{}) error {
+		return resourceTencentCloudClbServerAttachmentRemove(d, meta, chunk)
+	}); err != nil {
+		return err
+	}
+	if err := batchProcessTargets(weightOnly, 20, func(chunk []interface{}) error {
+		return resourceTencentCloudClbServerAttachmentModifyWeight(d, meta, chunk)
+	}); err != nil {
+		return err
+	}
+	if err := batchProcessTargets(pureAdd, 20, func(chunk []interface{}) error {
+		return resourceTencentCloudClbServerAttachmentAdd(d, meta, chunk)
+	}); err != nil {
+		return err
+	}
+
+	return resourceTencentCloudClbServerAttachmentRead(d, meta)
 }
 
 func resourceTencentCloudClbServerAttachmentDelete(d *schema.ResourceData, meta interface{}) error {
@@ -638,6 +627,141 @@ func targetGroupContainsInstance(targets []*clb.Backend, instanceId interface{})
 	log.Printf("[WARN] Instance %s not exist, skip deregister.", id)
 
 	return
+}
+
+// targetIdentityKey returns the bucket key used to detect "same target with a
+// different weight". Identity is (instance_id|eni_ip, port). `weight` is the
+// only mutable, non-identity inner field.
+func targetIdentityKey(m map[string]interface{}) string {
+	port, _ := m["port"].(int)
+	if id, ok := m["instance_id"].(string); ok && id != "" {
+		return fmt.Sprintf("inst:%s:%d", id, port)
+	}
+	if ip, ok := m["eni_ip"].(string); ok && ip != "" {
+		return fmt.Sprintf("eni:%s:%d", ip, port)
+	}
+	// neither key set — treat as unique-per-pointer to avoid false collisions.
+	return fmt.Sprintf("anon:%p:%d", m, port)
+}
+
+// partitionTargetChanges splits the raw set-diff (add ∪ remove) into three
+// disjoint buckets:
+//   - weightOnly: same (instance_id|eni_ip, port) appears in both add and remove,
+//     differing only by `weight`. Routed to ModifyTargetWeight.
+//   - pureAdd:    identity present only in `add`. Routed to RegisterTargets.
+//   - pureRemove: identity present only in `remove`. Routed to DeregisterTargets.
+//
+// `weightOnly` always carries the NEW (post-change) inner map so its weight is
+// the value to push to the API.
+func partitionTargetChanges(rawAdd, rawRemove []interface{}) (weightOnly, pureAdd, pureRemove []interface{}) {
+	addByKey := make(map[string]map[string]interface{}, len(rawAdd))
+	for _, item := range rawAdd {
+		m := item.(map[string]interface{})
+		addByKey[targetIdentityKey(m)] = m
+	}
+	removeByKey := make(map[string]map[string]interface{}, len(rawRemove))
+	for _, item := range rawRemove {
+		m := item.(map[string]interface{})
+		removeByKey[targetIdentityKey(m)] = m
+	}
+
+	for k, addItem := range addByKey {
+		if _, hit := removeByKey[k]; hit {
+			weightOnly = append(weightOnly, addItem)
+			continue
+		}
+		pureAdd = append(pureAdd, addItem)
+	}
+	for k, removeItem := range removeByKey {
+		if _, hit := addByKey[k]; hit {
+			continue
+		}
+		pureRemove = append(pureRemove, removeItem)
+	}
+	return
+}
+
+// batchProcessTargets walks `items` in chunks of `chunkSize` and calls fn per
+// chunk. Returns the first error from fn.
+func batchProcessTargets(items []interface{}, chunkSize int, fn func(chunk []interface{}) error) error {
+	total := len(items)
+	if total == 0 {
+		return nil
+	}
+	for start := 0; start < total; start += chunkSize {
+		end := start + chunkSize
+		if end > total {
+			end = total
+		}
+		if err := fn(items[start:end]); err != nil {
+			return err
+		}
+	}
+	return nil
+}
+
+// resourceTencentCloudClbServerAttachmentModifyWeight issues
+// ModifyTargetWeight for each (instance_id|eni_ip, port) whose weight changed
+// in place. The API accepts a list of Targets where each Target carries its
+// own per-target Weight (request-level Weight is omitted, since per-target
+// Weight has higher priority anyway).
+func resourceTencentCloudClbServerAttachmentModifyWeight(d *schema.ResourceData, meta interface{}, modify []interface{}) error {
+	defer tccommon.LogElapsed("resource.tencentcloud_clb_attachment.modifyWeight")()
+
+	if len(modify) == 0 {
+		return nil
+	}
+
+	var (
+		logId      = tccommon.GetLogId(tccommon.ContextNil)
+		request    = clb.NewModifyTargetWeightRequest()
+		locationId string
+	)
+
+	listenerId := d.Get("listener_id").(string)
+	clbId := d.Get("clb_id").(string)
+	request.LoadBalancerId = helper.String(clbId)
+	request.ListenerId = helper.String(listenerId)
+	if v, ok := d.GetOk("rule_id"); ok {
+		locationId = v.(string)
+		if locationId != "" {
+			request.LocationId = helper.String(locationId)
+		}
+	}
+	if v, ok := d.GetOk("domain"); ok {
+		request.Domain = helper.String(v.(string))
+	}
+	if v, ok := d.GetOk("url"); ok {
+		request.Url = helper.String(v.(string))
+	}
+
+	for _, v := range modify {
+		inst := v.(map[string]interface{})
+		request.Targets = append(request.Targets,
+			clbNewTarget(inst["instance_id"], inst["eni_ip"], inst["port"], inst["weight"]))
+	}
+
+	err := resource.Retry(tccommon.WriteRetryTimeout, func() *resource.RetryError {
+		ratelimit.Check(request.GetAction())
+		response, e := meta.(tccommon.ProviderMeta).GetAPIV3Conn().UseClbClient().ModifyTargetWeight(request)
+		if e != nil {
+			return tccommon.RetryError(e)
+		}
+		log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n",
+			logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+		requestId := *response.Response.RequestId
+		if retryErr := waitForTaskFinish(requestId, meta.(tccommon.ProviderMeta).GetAPIV3Conn().UseClbClient()); retryErr != nil {
+			return resource.NonRetryableError(errors.WithStack(retryErr))
+		}
+		return nil
+	})
+
+	if err != nil {
+		log.Printf("[CRITAL]%s modify CLB target weight failed, reason:%+v", logId, err)
+		return err
+	}
+
+	return nil
 }
 
 func targetGroupContainsEni(targets []*clb.Backend, eniIp interface{}) (contains bool) {
