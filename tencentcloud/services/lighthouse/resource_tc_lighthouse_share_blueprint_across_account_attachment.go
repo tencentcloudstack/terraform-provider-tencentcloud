@@ -2,10 +2,7 @@ package lighthouse
 
 import (
 	"context"
-	"fmt"
 	"log"
-	"sort"
-	"strings"
 
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
@@ -15,10 +12,16 @@ import (
 	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/internal/helper"
 )
 
+const (
+	shareBlueprintBatchSize  = 10
+	cancelBlueprintBatchSize = 10
+)
+
 func ResourceTencentCloudLighthouseShareBlueprintAcrossAccountAttachment() *schema.Resource {
 	return &schema.Resource{
 		Create: resourceTencentCloudLighthouseShareBlueprintAcrossAccountAttachmentCreate,
 		Read:   resourceTencentCloudLighthouseShareBlueprintAcrossAccountAttachmentRead,
+		Update: resourceTencentCloudLighthouseShareBlueprintAcrossAccountAttachmentUpdate,
 		Delete: resourceTencentCloudLighthouseShareBlueprintAcrossAccountAttachmentDelete,
 		Importer: &schema.ResourceImporter{
 			State: schema.ImportStatePassthrough,
@@ -33,8 +36,7 @@ func ResourceTencentCloudLighthouseShareBlueprintAcrossAccountAttachment() *sche
 
 			"account_ids": {
 				Required:    true,
-				ForceNew:    true,
-				Type:        schema.TypeList,
+				Type:        schema.TypeSet,
 				Elem:        &schema.Schema{Type: schema.TypeString},
 				Description: "List of target TencentCloud account IDs to share the blueprint with.",
 			},
@@ -48,37 +50,42 @@ func resourceTencentCloudLighthouseShareBlueprintAcrossAccountAttachmentCreate(d
 
 	logId := tccommon.GetLogId(tccommon.ContextNil)
 
-	var (
-		request = lighthouse.NewShareBlueprintAcrossAccountsRequest()
-	)
-
 	blueprintId := d.Get("blueprint_id").(string)
-	accountIds := helper.InterfacesStrings(d.Get("account_ids").([]interface{}))
+	accountIds := helper.InterfacesStrings(d.Get("account_ids").(*schema.Set).List())
 
-	request.BlueprintId = &blueprintId
-	request.AccountIds = make([]*string, 0, len(accountIds))
-	for _, v := range accountIds {
-		accountId := v
-		request.AccountIds = append(request.AccountIds, &accountId)
-	}
-
-	err := resource.Retry(tccommon.WriteRetryTimeout, func() *resource.RetryError {
-		result, e := meta.(tccommon.ProviderMeta).GetAPIV3Conn().UseLighthouseClient().ShareBlueprintAcrossAccounts(request)
-		if e != nil {
-			return tccommon.RetryError(e)
-		} else {
-			log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), result.ToJsonString())
+	// Batch share accounts (API limit: 10 per request)
+	for i := 0; i < len(accountIds); i += shareBlueprintBatchSize {
+		end := i + shareBlueprintBatchSize
+		if end > len(accountIds) {
+			end = len(accountIds)
 		}
-		return nil
-	})
-	if err != nil {
-		log.Printf("[CRITAL]%s create lighthouse shareBlueprintAcrossAccountAttachment failed, reason:%+v", logId, err)
-		return err
+
+		request := lighthouse.NewShareBlueprintAcrossAccountsRequest()
+		request.BlueprintId = &blueprintId
+		batch := accountIds[i:end]
+		request.AccountIds = make([]*string, 0, len(batch))
+		for _, v := range batch {
+			accountId := v
+			request.AccountIds = append(request.AccountIds, &accountId)
+		}
+
+		err := resource.Retry(tccommon.WriteRetryTimeout, func() *resource.RetryError {
+			result, e := meta.(tccommon.ProviderMeta).GetAPIV3Conn().UseLighthouseClient().ShareBlueprintAcrossAccounts(request)
+			if e != nil {
+				return tccommon.RetryError(e)
+			} else {
+				log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), result.ToJsonString())
+			}
+			return nil
+		})
+		if err != nil {
+			log.Printf("[CRITAL]%s create tencentcloud_lighthouse_share_blueprint_across_account_attachment failed, reason:%+v", logId, err)
+			return err
+		}
 	}
 
-	// Build composite ID: blueprint_id#sorted_account_ids
-	sort.Strings(accountIds)
-	d.SetId(blueprintId + tccommon.FILED_SP + strings.Join(accountIds, tccommon.FILED_SP))
+	// Set resource ID as blueprint_id
+	d.SetId(blueprintId)
 
 	return resourceTencentCloudLighthouseShareBlueprintAcrossAccountAttachmentRead(d, meta)
 }
@@ -90,15 +97,7 @@ func resourceTencentCloudLighthouseShareBlueprintAcrossAccountAttachmentRead(d *
 	logId := tccommon.GetLogId(tccommon.ContextNil)
 	ctx := context.WithValue(context.TODO(), tccommon.LogIdKey, logId)
 
-	idSplit := strings.Split(d.Id(), tccommon.FILED_SP)
-	if len(idSplit) < 2 {
-		return fmt.Errorf("id is broken,%s", d.Id())
-	}
-	blueprintId := idSplit[0]
-	expectedAccountIds := idSplit[1:]
-
-	// Sort expected account IDs
-	sort.Strings(expectedAccountIds)
+	blueprintId := d.Id()
 
 	_ = ctx
 
@@ -106,53 +105,46 @@ func resourceTencentCloudLighthouseShareBlueprintAcrossAccountAttachmentRead(d *
 	request.BlueprintIds = []*string{&blueprintId}
 	limit := int64(100)
 	request.Limit = &limit
+	var offset int64 = 0
 
-	var response *lighthouse.DescribeBlueprintsShareAcrossAccountInfosResponse
-	err := resource.Retry(tccommon.ReadRetryTimeout, func() *resource.RetryError {
-		result, e := meta.(tccommon.ProviderMeta).GetAPIV3Conn().UseLighthouseClient().DescribeBlueprintsShareAcrossAccountInfos(request)
-		if e != nil {
-			return tccommon.RetryError(e)
-		}
-		response = result
-		return nil
-	})
-	if err != nil {
-		log.Printf("[CRITAL]%s read lighthouse shareBlueprintAcrossAccountAttachment failed, reason:%+v", logId, err)
-		return err
-	}
-
-	// Check if response is valid
-	if response == nil || response.Response == nil {
-		d.SetId("")
-		log.Printf("[WARN]%s resource `LighthouseShareBlueprintAcrossAccountAttachment` [%s] not found, please check if it has been deleted.\n", logId, d.Id())
-		return nil
-	}
-
-	// Collect actual account IDs from the response
+	// Collect actual account IDs from the response with pagination support
 	var actualAccountIds []string
-	if response.Response.BlueprintShareAcrossAccountInfoSet != nil {
-		for _, info := range response.Response.BlueprintShareAcrossAccountInfoSet {
-			if info.AccountId != nil {
-				actualAccountIds = append(actualAccountIds, *info.AccountId)
+	for {
+		request.Offset = &offset
+
+		var response *lighthouse.DescribeBlueprintsShareAcrossAccountInfosResponse
+		err := resource.Retry(tccommon.ReadRetryTimeout, func() *resource.RetryError {
+			result, e := meta.(tccommon.ProviderMeta).GetAPIV3Conn().UseLighthouseClient().DescribeBlueprintsShareAcrossAccountInfos(request)
+			if e != nil {
+				return tccommon.RetryError(e)
+			}
+			response = result
+			return nil
+		})
+		if err != nil {
+			log.Printf("[CRITAL]%s read tencentcloud_lighthouse_share_blueprint_across_account_attachment failed, reason:%+v", logId, err)
+			return err
+		}
+
+		if response == nil || response.Response == nil {
+			log.Printf("[WARN]%s resource `tencentcloud_lighthouse_share_blueprint_across_account_attachment` [%s] not found, please check if it has been deleted.\n", logId, d.Id())
+			d.SetId("")
+			return nil
+		}
+
+		if response.Response.BlueprintShareAcrossAccountInfoSet != nil {
+			for _, info := range response.Response.BlueprintShareAcrossAccountInfoSet {
+				if info.AccountId != nil {
+					actualAccountIds = append(actualAccountIds, *info.AccountId)
+				}
 			}
 		}
-	}
 
-	// Sort actual account IDs
-	sort.Strings(actualAccountIds)
-
-	// Check if the expected account IDs match the actual account IDs
-	if len(expectedAccountIds) != len(actualAccountIds) {
-		d.SetId("")
-		log.Printf("[WARN]%s resource `LighthouseShareBlueprintAcrossAccountAttachment` [%s] not found, account count mismatch (expected=%d, actual=%d).\n", logId, d.Id(), len(expectedAccountIds), len(actualAccountIds))
-		return nil
-	}
-
-	for i := range expectedAccountIds {
-		if expectedAccountIds[i] != actualAccountIds[i] {
-			d.SetId("")
-			log.Printf("[WARN]%s resource `LighthouseShareBlueprintAcrossAccountAttachment` [%s] not found, account mismatch at index %d (expected=%s, actual=%s).\n", logId, d.Id(), i, expectedAccountIds[i], actualAccountIds[i])
-			return nil
+		// Check if there are more pages to fetch
+		if response.Response.TotalCount != nil && offset+int64(len(actualAccountIds)) < *response.Response.TotalCount {
+			offset += limit
+		} else {
+			break
 		}
 	}
 
@@ -162,39 +154,148 @@ func resourceTencentCloudLighthouseShareBlueprintAcrossAccountAttachmentRead(d *
 	return nil
 }
 
+func resourceTencentCloudLighthouseShareBlueprintAcrossAccountAttachmentUpdate(d *schema.ResourceData, meta interface{}) error {
+	defer tccommon.LogElapsed("resource.tencentcloud_lighthouse_share_blueprint_across_account_attachment.update")()
+	defer tccommon.InconsistentCheck(d, meta)()
+
+	logId := tccommon.GetLogId(tccommon.ContextNil)
+	blueprintId := d.Id()
+
+	if d.HasChange("account_ids") {
+		oldAccountIds, newAccountIds := d.GetChange("account_ids")
+		oldSet := helper.InterfacesStrings(oldAccountIds.(*schema.Set).List())
+		newSet := helper.InterfacesStrings(newAccountIds.(*schema.Set).List())
+
+		// Calculate accounts to remove (in old but not in new)
+		toRemove := diffStringSlices(oldSet, newSet)
+
+		// Calculate accounts to add (in new but not in old)
+		toAdd := diffStringSlices(newSet, oldSet)
+
+		// Batch cancel sharing for removed accounts (API limit: 10 per request)
+		if len(toRemove) > 0 {
+			for i := 0; i < len(toRemove); i += cancelBlueprintBatchSize {
+				end := i + cancelBlueprintBatchSize
+				if end > len(toRemove) {
+					end = len(toRemove)
+				}
+
+				removeRequest := lighthouse.NewCancelShareBlueprintAcrossAccountsRequest()
+				removeRequest.BlueprintId = &blueprintId
+				batch := toRemove[i:end]
+				removeRequest.AccountIds = make([]*string, 0, len(batch))
+				for _, v := range batch {
+					accountId := v
+					removeRequest.AccountIds = append(removeRequest.AccountIds, &accountId)
+				}
+
+				err := resource.Retry(tccommon.WriteRetryTimeout, func() *resource.RetryError {
+					result, e := meta.(tccommon.ProviderMeta).GetAPIV3Conn().UseLighthouseClient().CancelShareBlueprintAcrossAccounts(removeRequest)
+					if e != nil {
+						return tccommon.RetryError(e)
+					} else {
+						log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, removeRequest.GetAction(), removeRequest.ToJsonString(), result.ToJsonString())
+					}
+					return nil
+				})
+				if err != nil {
+					log.Printf("[CRITAL]%s update tencentcloud_lighthouse_share_blueprint_across_account_attachment (remove accounts) failed, reason:%+v", logId, err)
+					return err
+				}
+			}
+		}
+
+		// Batch share for added accounts (API limit: 10 per request)
+		if len(toAdd) > 0 {
+			for i := 0; i < len(toAdd); i += shareBlueprintBatchSize {
+				end := i + shareBlueprintBatchSize
+				if end > len(toAdd) {
+					end = len(toAdd)
+				}
+
+				addRequest := lighthouse.NewShareBlueprintAcrossAccountsRequest()
+				addRequest.BlueprintId = &blueprintId
+				batch := toAdd[i:end]
+				addRequest.AccountIds = make([]*string, 0, len(batch))
+				for _, v := range batch {
+					accountId := v
+					addRequest.AccountIds = append(addRequest.AccountIds, &accountId)
+				}
+
+				err := resource.Retry(tccommon.WriteRetryTimeout, func() *resource.RetryError {
+					result, e := meta.(tccommon.ProviderMeta).GetAPIV3Conn().UseLighthouseClient().ShareBlueprintAcrossAccounts(addRequest)
+					if e != nil {
+						return tccommon.RetryError(e)
+					} else {
+						log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, addRequest.GetAction(), addRequest.ToJsonString(), result.ToJsonString())
+					}
+					return nil
+				})
+				if err != nil {
+					log.Printf("[CRITAL]%s update tencentcloud_lighthouse_share_blueprint_across_account_attachment (add accounts) failed, reason:%+v", logId, err)
+					return err
+				}
+			}
+		}
+	}
+
+	return resourceTencentCloudLighthouseShareBlueprintAcrossAccountAttachmentRead(d, meta)
+}
+
+// diffStringSlices returns elements in 'a' that are not in 'b'
+func diffStringSlices(a []string, b []string) []string {
+	bMap := make(map[string]bool)
+	for _, v := range b {
+		bMap[v] = true
+	}
+
+	var diff []string
+	for _, v := range a {
+		if !bMap[v] {
+			diff = append(diff, v)
+		}
+	}
+	return diff
+}
+
 func resourceTencentCloudLighthouseShareBlueprintAcrossAccountAttachmentDelete(d *schema.ResourceData, meta interface{}) error {
 	defer tccommon.LogElapsed("resource.tencentcloud_lighthouse_share_blueprint_across_account_attachment.delete")()
 	defer tccommon.InconsistentCheck(d, meta)()
 
 	logId := tccommon.GetLogId(tccommon.ContextNil)
 
-	idSplit := strings.Split(d.Id(), tccommon.FILED_SP)
-	if len(idSplit) < 2 {
-		return fmt.Errorf("id is broken,%s", d.Id())
-	}
-	blueprintId := idSplit[0]
-	accountIds := idSplit[1:]
+	blueprintId := d.Id()
+	accountIds := helper.InterfacesStrings(d.Get("account_ids").(*schema.Set).List())
 
-	request := lighthouse.NewCancelShareBlueprintAcrossAccountsRequest()
-	request.BlueprintId = &blueprintId
-	request.AccountIds = make([]*string, 0, len(accountIds))
-	for _, v := range accountIds {
-		accountId := v
-		request.AccountIds = append(request.AccountIds, &accountId)
-	}
-
-	err := resource.Retry(tccommon.WriteRetryTimeout, func() *resource.RetryError {
-		result, e := meta.(tccommon.ProviderMeta).GetAPIV3Conn().UseLighthouseClient().CancelShareBlueprintAcrossAccounts(request)
-		if e != nil {
-			return tccommon.RetryError(e)
-		} else {
-			log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), result.ToJsonString())
+	// Batch cancel sharing (API limit: 10 per request)
+	for i := 0; i < len(accountIds); i += cancelBlueprintBatchSize {
+		end := i + cancelBlueprintBatchSize
+		if end > len(accountIds) {
+			end = len(accountIds)
 		}
-		return nil
-	})
-	if err != nil {
-		log.Printf("[CRITAL]%s delete lighthouse shareBlueprintAcrossAccountAttachment failed, reason:%+v", logId, err)
-		return err
+
+		request := lighthouse.NewCancelShareBlueprintAcrossAccountsRequest()
+		request.BlueprintId = &blueprintId
+		batch := accountIds[i:end]
+		request.AccountIds = make([]*string, 0, len(batch))
+		for _, v := range batch {
+			accountId := v
+			request.AccountIds = append(request.AccountIds, &accountId)
+		}
+
+		err := resource.Retry(tccommon.WriteRetryTimeout, func() *resource.RetryError {
+			result, e := meta.(tccommon.ProviderMeta).GetAPIV3Conn().UseLighthouseClient().CancelShareBlueprintAcrossAccounts(request)
+			if e != nil {
+				return tccommon.RetryError(e)
+			} else {
+				log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), result.ToJsonString())
+			}
+			return nil
+		})
+		if err != nil {
+			log.Printf("[CRITAL]%s delete tencentcloud_lighthouse_share_blueprint_across_account_attachment failed, reason:%+v", logId, err)
+			return err
+		}
 	}
 
 	return nil

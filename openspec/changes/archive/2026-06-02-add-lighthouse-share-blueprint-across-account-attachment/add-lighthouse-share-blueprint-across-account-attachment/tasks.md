@@ -1,12 +1,13 @@
 ## 1. Resource Implementation (Core)
 
 - [x] 1.1 Create resource file `tencentcloud/services/lighthouse/resource_tc_lighthouse_share_blueprint_across_account_attachment.go` with package, imports, and `ResourceTencentCloudLighthouseShareBlueprintAcrossAccountAttachment()` function
-- [x] 1.2 Define Schema with `blueprint_id` (Required, ForceNew, TypeString) and `account_ids` (Required, ForceNew: false, TypeList of TypeString)
-- [x] 1.3 Implement Create function: call `ShareBlueprintAcrossAccounts` API with retry, set ID as `blueprint_id`
-- [x] 1.4 Implement Read function: use `blueprint_id` from ID, call `DescribeBlueprintsShareAcrossAccountInfos` API, update or clear state
-- [x] 1.5 Implement Update function: calculate diff of account_ids, incrementally call Cancel/Share APIs
-- [x] 1.6 Implement Delete function: get account_ids from state, call `CancelShareBlueprintAcrossAccounts` API with retry
+- [x] 1.2 Define Schema with `blueprint_id` (Required, ForceNew, TypeString) and `account_ids` (Required, ForceNew: false, TypeSet of TypeString)
+- [x] 1.3 Implement Create function: call `ShareBlueprintAcrossAccounts` API with retry in batches of 10 accounts per request, set ID as `blueprint_id`
+- [x] 1.4 Implement Read function: use `blueprint_id` from ID, call `DescribeBlueprintsShareAcrossAccountInfos` API with pagination support (Offset/Limit loop), update or clear state
+- [x] 1.5 Implement Update function: calculate diff of account_ids, batch-call Cancel/Share APIs for removed/added accounts
+- [x] 1.6 Implement Delete function: get account_ids from state, batch-call `CancelShareBlueprintAcrossAccounts` API with retry
 - [x] 1.7 Add `Importer` with `schema.ImportStatePassthrough`
+- [x] 1.8 Add constant `shareBlueprintBatchSize = 10` for write API batch size limit
 
 ## 2. Provider Registration
 

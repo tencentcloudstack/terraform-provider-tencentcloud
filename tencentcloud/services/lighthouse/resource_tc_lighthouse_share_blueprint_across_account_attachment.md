@@ -11,8 +11,8 @@ resource "tencentcloud_lighthouse_share_blueprint_across_account_attachment" "sh
 
 Import
 
-lighthouse share_blueprint_across_account_attachment can be imported using the id, e.g.
+tencentcloud_lighthouse_share_blueprint_across_account_attachment can be imported using the blueprint_id, e.g.
 
 ```
-terraform import tencentcloud_lighthouse_share_blueprint_across_account_attachment.share_blueprint_across_account_attachment lhbp-xxxxxx#100012345678
+terraform import tencentcloud_lighthouse_share_blueprint_across_account_attachment.share_blueprint_across_account_attachment lhbp-xxxxxx
 ```

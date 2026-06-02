@@ -24,7 +24,7 @@ resource "tencentcloud_lighthouse_share_blueprint_across_account_attachment" "sh
 
 The following arguments are supported:
 
-* `account_ids` - (Required, List: [`String`], ForceNew) List of target TencentCloud account IDs to share the blueprint with.
+* `account_ids` - (Required, Set: [`String`]) List of target TencentCloud account IDs to share the blueprint with.
 * `blueprint_id` - (Required, String, ForceNew) Lighthouse blueprint ID.
 
 ## Attributes Reference
@@ -37,9 +37,9 @@ In addition to all arguments above, the following attributes are exported:
 
 ## Import
 
-lighthouse share_blueprint_across_account_attachment can be imported using the id, e.g.
+tencentcloud_lighthouse_share_blueprint_across_account_attachment can be imported using the blueprint_id, e.g.
 
 ```
-terraform import tencentcloud_lighthouse_share_blueprint_across_account_attachment.share_blueprint_across_account_attachment lhbp-xxxxxx#100012345678
+terraform import tencentcloud_lighthouse_share_blueprint_across_account_attachment.share_blueprint_across_account_attachment lhbp-xxxxxx
 ```
 

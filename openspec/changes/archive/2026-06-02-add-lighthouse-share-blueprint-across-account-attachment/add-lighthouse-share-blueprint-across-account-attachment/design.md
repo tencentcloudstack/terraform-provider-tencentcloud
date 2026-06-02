@@ -48,8 +48,8 @@ Currently there is no Terraform resource to manage these sharing relationships. 
 
 **Choice**: The Update function implements incremental updates by:
 1. Calculating the diff between old and new `account_ids`
-2. Calling `CancelShareBlueprintAcrossAccounts` for removed accounts
-3. Calling `ShareBlueprintAcrossAccounts` for added accounts
+2. Calling `CancelShareBlueprintAcrossAccounts` for removed accounts (in batches)
+3. Calling `ShareBlueprintAcrossAccounts` for added accounts (in batches)
 4. Calling Read to refresh state
 
 **Rationale**: This approach provides several benefits:
@@ -61,28 +61,37 @@ Currently there is no Terraform resource to manage these sharing relationships. 
 **Alternatives considered**:
 - Destroy + Recreate: Simpler but causes temporary complete removal of sharing.
 
-### Decision 4: Read Operation - Query by BlueprintId
+### Decision 4: Read Operation - Query by BlueprintId with Pagination
 
-**Choice**: In the Read function, call `DescribeBlueprintsShareAcrossAccountInfos` with `BlueprintIds` containing the `blueprint_id`, then return all currently shared account IDs.
+**Choice**: In the Read function, call `DescribeBlueprintsShareAcrossAccountInfos` with `BlueprintIds` containing the `blueprint_id`, then paginate through results using `Offset`/`Limit` (page size 100) until all shared account IDs are collected.
 
-**Rationale**: Since the resource ID is now just `blueprint_id`, the Read function should return the actual state of all accounts this blueprint is shared with. This ensures Terraform state stays in sync with reality.
+**Rationale**: Since the resource ID is just `blueprint_id`, the Read function should return the actual state of all accounts this blueprint is shared with. The API supports pagination via `Limit`/`Offset` parameters and returns `TotalCount`. If there are many shared accounts, a single page may not be sufficient, so we must loop through all pages.
 
 **Alternatives considered**:
+- Single query without pagination: Would miss accounts if more than one page of data exists.
 - Filtering by specific accounts: Not needed since we're tracking the full share state for the blueprint.
 
-### Decision 5: Account IDs Sorting for State Consistency
+### Decision 5: Use TypeSet for account_ids
 
-**Choice**: Both Create and Read functions sort `account_ids` in ascending order before storing to state.
+**Choice**: Define `account_ids` as `schema.TypeSet` (not `schema.TypeList`) to handle ordering automatically.
 
-**Rationale**: The API may return account IDs in any order, and users may specify them in any order in their configuration. To prevent Terraform from showing spurious diffs during `plan`, we ensure consistent ordering:
-1. **Create function**: Sorts `account_ids` after successful API call and before storing to state
-2. **Read function**: Sorts `account_ids` returned from API before updating state
-
-This guarantees that regardless of input order or API return order, the state always contains sorted account IDs. When a user runs `terraform plan`, if the set of accounts is the same (even if specified in different order), there will be no changes shown.
+**Rationale**: Using TypeSet means Terraform treats `account_ids` as an unordered collection. Since the API returns account IDs in non-deterministic order and users may specify them in any order, TypeSet eliminates spurious plan diffs caused by ordering differences. No manual sorting logic is needed — the framework handles this natively.
 
 **Alternatives considered**:
-- Using TypeSet instead of TypeList: Would handle ordering automatically but loses list semantics and position information.
-- No sorting: Would cause unnecessary plan diffs when only order differs, confusing users.
+- Using TypeList with manual sorting: Adds unnecessary sorting complexity; TypeSet handles this automatically.
+- No ordering control: Would cause unnecessary plan diffs when only order differs, confusing users.
+
+### Decision 6: Batch Processing for Write APIs
+
+**Choice**: Both `ShareBlueprintAcrossAccounts` and `CancelShareBlueprintAcrossAccounts` APIs have a maximum limit of 10 account IDs per request. All write operations (Create, Update, Delete) split the account ID list into batches of 10 and make sequential API calls.
+
+**Rationale**: This ensures the resource works correctly regardless of how many account IDs the user provides. Without batching, providing more than 10 accounts would cause API errors. The batching is transparent to users — they simply provide any number of account IDs and the provider handles splitting internally.
+
+**Implementation details**:
+- Constant `shareBlueprintBatchSize = 10` defines the batch size
+- Create loops through batches calling `ShareBlueprintAcrossAccounts`
+- Update splits `toRemove` into batches for `CancelShareBlueprintAcrossAccounts` and `toAdd` into batches for `ShareBlueprintAcrossAccounts`
+- Delete loops through batches calling `CancelShareBlueprintAcrossAccounts`
 
 ## Risks / Trade-offs
 
