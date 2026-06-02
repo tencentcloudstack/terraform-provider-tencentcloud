@@ -30,6 +30,7 @@ func ResourceTencentCloudBhBindDeviceAccountKubeconfig() *schema.Resource {
 			"kubeconfig": {
 				Type:        schema.TypeString,
 				Required:    true,
+				Sensitive:   true,
 				Description: "Container account kubeconfig credential.",
 			},
 
