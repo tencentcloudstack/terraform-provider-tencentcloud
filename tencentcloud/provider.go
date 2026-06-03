@@ -2591,6 +2591,7 @@ func Provider() *schema.Provider {
 			"tencentcloud_config_rule":                                                              config.ResourceTencentCloudConfigRule(),
 			"tencentcloud_bh_acl":                                                                   bh.ResourceTencentCloudBhAcl(),
 			"tencentcloud_bh_bind_device_account_kubeconfig":                                        bh.ResourceTencentCloudBhBindDeviceAccountKubeconfig(),
+			"tencentcloud_bh_bind_device_resource":                                                  bh.ResourceTencentCloudBhBindDeviceResource(),
 			"tencentcloud_bh_access_white_list_rule":                                                bh.ResourceTencentCloudBhAccessWhiteListRule(),
 			"tencentcloud_bh_access_white_list_config":                                              bh.ResourceTencentCloudBhAccessWhiteListConfig(),
 			"tencentcloud_bh_device":                                                                bh.ResourceTencentCloudBhDevice(),
