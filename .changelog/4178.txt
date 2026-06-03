@@ -1,6 +1,0 @@
-```release-note:enhancement
-resource/tencentcloud_dnspod_record: support new attribute `updated_on`
-```
-```release-note:enhancement
-data-source/tencentcloud_dnspod_record_list: add `updated_on` attribute under `record_list` and `instance_list`
-```
