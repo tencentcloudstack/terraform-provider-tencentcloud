@@ -1,3 +1,18 @@
+## 1.82.100(June 03, 2026)
+
+FEATURES:
+
+* **New Resource:** `tencentcloud_bh_bind_device_account_kubeconfig` ([#4174](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/4174))
+* **New Resource:** `tencentcloud_cls_console` ([#4170](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/4170))
+* **New Resource:** `tencentcloud_lighthouse_share_blueprint_across_account_attachment` ([#4175](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/4175))
+* **New Resource:** `tencentcloud_sts_assume_role_operation` ([#4177](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/4177))
+
+ENHANCEMENTS:
+
+* resource/tencentcloud_ckafka_topic: update documentation ([#4176](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/4176))
+* resource/tencentcloud_clb_listener_rule: update resource documentation ([#4173](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/4173))
+* resource/tencentcloud_dnspod_record: support new attribute `updated_on` ([#4180](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/4180))
+
 ## 1.82.99(June 01, 2026)
 
 FEATURES:
