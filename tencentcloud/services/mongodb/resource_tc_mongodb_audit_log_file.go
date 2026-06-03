@@ -267,6 +267,51 @@ func resourceTencentCloudMongodbAuditLogFileCreate(d *schema.ResourceData, meta 
 	fileName = *response.Response.FileName
 	d.SetId(strings.Join([]string{instanceId, fileName}, tccommon.FILED_SP))
 
+	// Wait for the audit log file to be generated.
+	describeRequest := mongodb.NewDescribeAuditLogFilesRequest()
+	describeRequest.InstanceId = helper.String(instanceId)
+	describeRequest.FileName = helper.String(fileName)
+	describeRequest.Limit = helper.Uint64(uint64(100))
+	describeRequest.Offset = helper.Uint64(uint64(0))
+
+	waitErr := resource.Retry(tccommon.WriteRetryTimeout, func() *resource.RetryError {
+		ratelimit.Check(describeRequest.GetAction())
+		result, e := meta.(tccommon.ProviderMeta).GetAPIV3Conn().UseMongodbClient().DescribeAuditLogFiles(describeRequest)
+		if e != nil {
+			return tccommon.RetryError(e)
+		}
+
+		log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, describeRequest.GetAction(), describeRequest.ToJsonString(), result.ToJsonString())
+		if result == nil || result.Response == nil || len(result.Response.Items) == 0 {
+			return resource.RetryableError(fmt.Errorf("mongodb audit log file [%s] is still creating, items is empty", fileName))
+		}
+
+		item := result.Response.Items[0]
+		if item == nil || item.Status == nil {
+			return resource.RetryableError(fmt.Errorf("mongodb audit log file [%s] is still creating, status is nil", fileName))
+		}
+
+		status := *item.Status
+		switch status {
+		case "success":
+			return nil
+		case "failed":
+			errMsg := ""
+			if item.ErrMsg != nil {
+				errMsg = *item.ErrMsg
+			}
+
+			return resource.NonRetryableError(fmt.Errorf("mongodb audit log file [%s] create failed, err_msg: [%s]", fileName, errMsg))
+		default:
+			return resource.RetryableError(fmt.Errorf("mongodb audit log file [%s] is still creating, current status: [%s]", fileName, status))
+		}
+	})
+
+	if waitErr != nil {
+		log.Printf("[CRITAL]%s wait mongodb audit log file create failed, reason:%+v", logId, waitErr)
+		return waitErr
+	}
+
 	return resourceTencentCloudMongodbAuditLogFileRead(d, meta)
 }
 
@@ -409,6 +454,37 @@ func resourceTencentCloudMongodbAuditLogFileDelete(d *schema.ResourceData, meta 
 	if err != nil {
 		log.Printf("[CRITAL]%s delete mongodb audit log file failed, reason:%+v", logId, err)
 		return err
+	}
+
+	// Wait for the audit log file to be generated.
+	describeRequest := mongodb.NewDescribeAuditLogFilesRequest()
+	describeRequest.InstanceId = helper.String(instanceId)
+	describeRequest.FileName = helper.String(fileName)
+	describeRequest.Limit = helper.Uint64(uint64(100))
+	describeRequest.Offset = helper.Uint64(uint64(0))
+
+	waitErr := resource.Retry(tccommon.WriteRetryTimeout, func() *resource.RetryError {
+		ratelimit.Check(describeRequest.GetAction())
+		result, e := meta.(tccommon.ProviderMeta).GetAPIV3Conn().UseMongodbClient().DescribeAuditLogFiles(describeRequest)
+		if e != nil {
+			return tccommon.RetryError(e)
+		}
+
+		log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, describeRequest.GetAction(), describeRequest.ToJsonString(), result.ToJsonString())
+		if result == nil || result.Response == nil {
+			return resource.NonRetryableError(fmt.Errorf("Describe mongodb audit log file filed, Response is nil"))
+		}
+
+		if len(result.Response.Items) == 0 {
+			return nil
+		}
+
+		return resource.RetryableError(fmt.Errorf("mongodb audit log file [%s] is still deleting", fileName))
+	})
+
+	if waitErr != nil {
+		log.Printf("[CRITAL]%s wait mongodb audit log file delete failed, reason:%+v", logId, waitErr)
+		return waitErr
 	}
 
 	return nil

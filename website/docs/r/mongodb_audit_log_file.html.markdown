@@ -15,9 +15,9 @@ Provides a resource to create a MongoDB audit log file
 
 ```hcl
 resource "tencentcloud_mongodb_audit_log_file" "example" {
-  instance_id = "cmgo-xfts1234"
-  start_time  = "2021-07-12 10:29:20"
-  end_time    = "2021-07-12 10:39:20"
+  instance_id = "cmgo-5aqo4yf7"
+  start_time  = "2026-06-01 10:29:20"
+  end_time    = "2026-06-01 10:39:20"
   order       = "ASC"
   order_by    = "timestamp"
 
@@ -28,7 +28,7 @@ resource "tencentcloud_mongodb_audit_log_file" "example" {
     affect_rows = 10
     atype       = ["insert", "update"]
     result      = ["ok"]
-    param       = ["test"]
+    param       = ["keyword"]
   }
 }
 ```
@@ -72,9 +72,9 @@ In addition to all arguments above, the following attributes are exported:
 
 ## Import
 
-mongodb audit_log_file can be imported using the composite id, e.g.
+mongodb audit_log_file can be imported using the composite instance_id#file_name, e.g.
 
 ```
-terraform import tencentcloud_mongodb_audit_log_file.example cmgo-xfts1234#audit_log_20210712.log
+terraform import tencentcloud_mongodb_audit_log_file.example cmgo-5aqo4yf7#1309118522_cmgo-5aqo4yf7_1780474413_109642711.csv
 ```
 
