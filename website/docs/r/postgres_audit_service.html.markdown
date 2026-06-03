@@ -15,10 +15,10 @@ Provides a resource to manage PostgreSQL audit service
 
 ```hcl
 resource "tencentcloud_postgres_audit_service" "example" {
-  instance_id        = "postgres-xxxxxx"
+  instance_id        = "postgres-ckwcgdf1"
   log_expire_day     = 30
   hot_log_expire_day = 7
-  audit_type         = "simple"
+  audit_type         = "complex"
 }
 ```
 
@@ -30,7 +30,6 @@ The following arguments are supported:
 * `hot_log_expire_day` - (Required, Int) Hot log retention days. Valid values: 7, 30, 90, 180, 365, 1095, 1825.
 * `instance_id` - (Required, String, ForceNew) PostgreSQL instance ID.
 * `log_expire_day` - (Required, Int) Log retention days. Valid values: 7, 30, 90, 180, 365, 1095, 1825.
-* `product` - (Optional, String) Product name. Fixed to postgres.
 
 ## Attributes Reference
 
@@ -40,7 +39,6 @@ In addition to all arguments above, the following attributes are exported:
 * `audit_status` - Audit status. Values: ON, OFF.
 * `cold_log_expire_day` - Cold log retention days.
 * `cold_log_size` - Cold log size in MB.
-* `create_time` - Audit service enable time.
 * `hot_log_size` - Hot log size in MB.
 
 
@@ -49,6 +47,6 @@ In addition to all arguments above, the following attributes are exported:
 PostgreSQL audit service can be imported using the instance_id, e.g.
 
 ```
-terraform import tencentcloud_postgres_audit_service.example postgres-xxxxxx
+terraform import tencentcloud_postgres_audit_service.example postgres-ckwcgdf1
 ```
 

@@ -44,12 +44,6 @@ func ResourceTencentCloudPostgresAuditService() *schema.Resource {
 				Required:    true,
 				Description: "Audit type. Valid values: complex (fine-grained audit), simple (fast audit).",
 			},
-			"product": {
-				Type:        schema.TypeString,
-				Optional:    true,
-				Default:     "postgres",
-				Description: "Product name. Fixed to postgres.",
-			},
 			"audit_status": {
 				Type:        schema.TypeString,
 				Computed:    true,
@@ -69,11 +63,6 @@ func ResourceTencentCloudPostgresAuditService() *schema.Resource {
 				Type:        schema.TypeFloat,
 				Computed:    true,
 				Description: "Cold log size in MB.",
-			},
-			"create_time": {
-				Type:        schema.TypeString,
-				Computed:    true,
-				Description: "Audit service enable time.",
 			},
 		},
 	}
@@ -107,10 +96,7 @@ func resourceTencentCloudPostgresAuditServiceCreate(d *schema.ResourceData, meta
 		request.AuditType = helper.String(v.(string))
 	}
 
-	if v, ok := d.GetOk("product"); ok {
-		request.Product = helper.String(v.(string))
-	}
-
+	request.Product = helper.String("postgres")
 	reqErr := resource.Retry(tccommon.WriteRetryTimeout, func() *resource.RetryError {
 		err := service.OpenAuditService(ctx, request)
 		if err != nil {
@@ -143,7 +129,7 @@ func resourceTencentCloudPostgresAuditServiceRead(d *schema.ResourceData, meta i
 	request := postgresql.NewDescribeAuditInstanceListRequest()
 	request.Product = helper.String("postgres")
 	request.AuditSwitch = helper.Uint64(1)
-	request.Limit = helper.Uint64(20)
+	request.Limit = helper.Uint64(100)
 	request.Offset = helper.Uint64(0)
 	request.Filters = []*postgresql.Filter{
 		{
@@ -179,12 +165,6 @@ func resourceTencentCloudPostgresAuditServiceRead(d *schema.ResourceData, meta i
 		return nil
 	}
 
-	if auditInfo.AuditStatus != nil && *auditInfo.AuditStatus == "OFF" {
-		log.Printf("[WARN]%s resource `tencentcloud_postgres_audit_service` [%s] audit status is OFF, removing from state.\n", logId, d.Id())
-		d.SetId("")
-		return nil
-	}
-
 	_ = d.Set("instance_id", instanceId)
 
 	if auditInfo.AuditStatus != nil {
@@ -209,10 +189,6 @@ func resourceTencentCloudPostgresAuditServiceRead(d *schema.ResourceData, meta i
 
 	if auditInfo.ColdLogSize != nil {
 		_ = d.Set("cold_log_size", auditInfo.ColdLogSize)
-	}
-
-	if auditInfo.CreateTime != nil {
-		_ = d.Set("create_time", auditInfo.CreateTime)
 	}
 
 	return nil
@@ -254,10 +230,7 @@ func resourceTencentCloudPostgresAuditServiceUpdate(d *schema.ResourceData, meta
 			request.AuditType = helper.String(v.(string))
 		}
 
-		if v, ok := d.GetOk("product"); ok {
-			request.Product = helper.String(v.(string))
-		}
-
+		request.Product = helper.String("postgres")
 		reqErr := resource.Retry(tccommon.WriteRetryTimeout, func() *resource.RetryError {
 			err := service.ModifyAuditService(ctx, request)
 			if err != nil {
@@ -288,12 +261,7 @@ func resourceTencentCloudPostgresAuditServiceDelete(d *schema.ResourceData, meta
 
 	instanceId := d.Id()
 	request.InstanceId = helper.String(instanceId)
-
-	if v, ok := d.GetOk("product"); ok {
-		request.Product = helper.String(v.(string))
-	} else {
-		request.Product = helper.String("postgres")
-	}
+	request.Product = helper.String("postgres")
 
 	reqErr := resource.Retry(tccommon.WriteRetryTimeout, func() *resource.RetryError {
 		err := service.CloseAuditService(ctx, request)
