@@ -112,6 +112,8 @@ func resourceTencentCloudPostgresAuditServiceCreate(d *schema.ResourceData, meta
 		return reqErr
 	}
 
+	d.SetId(instanceId)
+
 	// Wait for the audit service to be fully enabled.
 	describeRequest := postgresql.NewDescribeAuditInstanceListRequest()
 	describeRequest.Product = helper.String("postgres")
@@ -154,7 +156,6 @@ func resourceTencentCloudPostgresAuditServiceCreate(d *schema.ResourceData, meta
 		return waitErr
 	}
 
-	d.SetId(instanceId)
 	return resourceTencentCloudPostgresAuditServiceRead(d, meta)
 }
 func resourceTencentCloudPostgresAuditServiceRead(d *schema.ResourceData, meta interface{}) error {
