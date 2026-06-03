@@ -1293,7 +1293,7 @@ github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/oceanus/v20190422
 # github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/organization v1.3.89
 ## explicit; go 1.14
 github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/organization/v20210331
-# github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/postgres v1.3.63
+# github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/postgres v1.3.89
 ## explicit; go 1.14
 github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/postgres/v20170312
 # github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/privatedns v1.1.42
