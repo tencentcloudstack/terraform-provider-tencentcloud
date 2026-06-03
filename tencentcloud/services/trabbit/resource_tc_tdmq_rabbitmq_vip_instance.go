@@ -355,7 +355,7 @@ func resourceTencentCloudTdmqRabbitmqVipInstanceRead(d *schema.ResourceData, met
 			if *rabbitmqVipInstance.ClusterSpecInfo.NodeCount > 1 {
 				tmp := *rabbitmqVipInstance.ClusterSpecInfo.MaxStorage / *rabbitmqVipInstance.ClusterSpecInfo.NodeCount
 				_ = d.Set("storage_size", tmp)
-			} else if *rabbitmqVipInstance.ClusterSpecInfo.NodeCount == 1 {
+			} else {
 				_ = d.Set("storage_size", rabbitmqVipInstance.ClusterSpecInfo.MaxStorage)
 			}
 		} else {
