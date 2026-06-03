@@ -1616,6 +1616,7 @@ tencentcloud_teo_security_js_injection_rule
 tencentcloud_teo_load_balancer
 tencentcloud_teo_prefetch_origin_limit
 tencentcloud_teo_purge_task
+tencentcloud_teo_edge_k_v_put
 
 TencentCloud ServiceMesh(TCM)
 Data Source
