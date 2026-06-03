@@ -1265,7 +1265,7 @@ github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/keewidb/v20220308
 # github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/kms v1.0.1145
 ## explicit; go 1.14
 github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/kms/v20190118
-# github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/lighthouse v1.0.729
+# github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/lighthouse v1.3.108
 ## explicit; go 1.14
 github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/lighthouse/v20200324
 # github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/live v1.3.95
@@ -1293,7 +1293,7 @@ github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/oceanus/v20190422
 # github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/organization v1.3.89
 ## explicit; go 1.14
 github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/organization/v20210331
-# github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/postgres v1.3.63
+# github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/postgres v1.3.89
 ## explicit; go 1.14
 github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/postgres/v20170312
 # github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/privatedns v1.1.42
