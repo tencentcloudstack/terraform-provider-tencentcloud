@@ -11,6 +11,8 @@ description: |-
 
 Provides a resource to bind devices to a BH (Bastion Host) service instance.
 
+~> **NOTE:** This resource must exclusive in one bh resource, do not declare additional device id resources of this device elsewhere.
+
 ## Example Usage
 
 ```hcl
