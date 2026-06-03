@@ -774,6 +774,7 @@ tencentcloud_mongodb_instance_srv_connection
 tencentcloud_mongodb_instance_ssl
 tencentcloud_mongodb_readonly_instance
 tencentcloud_mongodb_audit_log_file
+tencentcloud_mongodb_audit_service
 
 TencentDB for MySQL(cdb)
 Data Source
