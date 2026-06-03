@@ -1833,3 +1833,50 @@ func (me *ClsService) DescribeClsDlcDeliverById(ctx context.Context, topicId, ta
 	ret = response.Response.Infos[0]
 	return
 }
+
+func (me *ClsService) DescribeClsConsoleById(ctx context.Context, consoleId string) (ret *cls.Console, errRet error) {
+	logId := tccommon.GetLogId(ctx)
+
+	request := cls.NewDescribeConsolesRequest()
+	request.Limit = helper.Int64(100)
+	request.Filters = []*cls.Filter{
+		{
+			Key:    helper.String("ConsoleId"),
+			Values: []*string{helper.String(consoleId)},
+		},
+	}
+
+	response := cls.NewDescribeConsolesResponse()
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	err := resource.Retry(tccommon.ReadRetryTimeout, func() *resource.RetryError {
+		ratelimit.Check(request.GetAction())
+		result, e := me.client.UseClsClient().DescribeConsolesWithContext(ctx, request)
+		if e != nil {
+			return tccommon.RetryError(e)
+		}
+
+		if result == nil || result.Response == nil {
+			return resource.NonRetryableError(fmt.Errorf("Describe cls console failed, Response is nil."))
+		}
+
+		response = result
+		return nil
+	})
+
+	if err != nil {
+		errRet = err
+		return
+	}
+
+	if len(response.Response.Consoles) == 0 {
+		return
+	}
+
+	ret = response.Response.Consoles[0]
+	return
+}

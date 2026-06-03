@@ -1485,6 +1485,7 @@ tencentcloud_cls_notice_content
 tencentcloud_cls_web_callback
 tencentcloud_cls_cloud_product_log_task_v2
 tencentcloud_cls_dlc_deliver
+tencentcloud_cls_console
 
 Data Source
 tencentcloud_cls_shipper_tasks
@@ -1510,6 +1511,7 @@ tencentcloud_lighthouse_start_instance
 tencentcloud_lighthouse_stop_instance
 tencentcloud_lighthouse_reboot_instance
 tencentcloud_lighthouse_key_pair_attachment
+tencentcloud_lighthouse_share_blueprint_across_account_attachment
 tencentcloud_lighthouse_disk
 tencentcloud_lighthouse_renew_disk
 tencentcloud_lighthouse_renew_instance
@@ -1647,6 +1649,8 @@ tencentcloud_ses_black_list_delete
 Security Token Service(STS)
 Data Source
 tencentcloud_sts_caller_identity
+Resource
+tencentcloud_sts_assume_role_operation
 
 TDSQL for MySQL(DCDB)
 Data Source
@@ -2477,6 +2481,7 @@ tencentcloud_bh_source_types
 tencentcloud_bh_devices
 Resource
 tencentcloud_bh_acl
+tencentcloud_bh_bind_device_account_kubeconfig
 tencentcloud_bh_access_white_list_rule
 tencentcloud_bh_access_white_list_config
 tencentcloud_bh_device
