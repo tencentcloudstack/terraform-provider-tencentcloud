@@ -4,12 +4,12 @@ layout: "tencentcloud"
 page_title: "TencentCloud: tencentcloud_mongodb_audit_service"
 sidebar_current: "docs-tencentcloud-resource-mongodb_audit_service"
 description: |-
-  Provides a resource to manage MongoDB audit service configuration.
+  Provides a resource to manage MongoDB audit service.
 ---
 
 # tencentcloud_mongodb_audit_service
 
-Provides a resource to manage MongoDB audit service configuration.
+Provides a resource to manage MongoDB audit service.
 
 ## Example Usage
 
@@ -17,8 +17,8 @@ Provides a resource to manage MongoDB audit service configuration.
 
 ```hcl
 resource "tencentcloud_mongodb_audit_service" "example" {
-  instance_id    = "cmgo-xxxxxx"
-  log_expire_day = 30
+  instance_id    = "cmgo-5aqo4yf7"
+  log_expire_day = 7
   audit_all      = true
 }
 ```
@@ -27,7 +27,7 @@ resource "tencentcloud_mongodb_audit_service" "example" {
 
 ```hcl
 resource "tencentcloud_mongodb_audit_service" "example" {
-  instance_id    = "cmgo-xxxxxx"
+  instance_id    = "cmgo-5aqo4yf7"
   log_expire_day = 30
   audit_all      = false
 
@@ -75,14 +75,14 @@ In addition to all arguments above, the following attributes are exported:
 
 The `timeouts` block allows you to specify [timeouts](https://developer.hashicorp.com/terraform/language/resources/syntax#operation-timeouts) for certain actions:
 
-* `create` - (Defaults to `10m`) Used when creating the resource.
-* `delete` - (Defaults to `10m`) Used when deleting the resource.
+* `create` - (Defaults to `5m`) Used when creating the resource.
+* `delete` - (Defaults to `5m`) Used when deleting the resource.
 
 ## Import
 
 MongoDB audit service can be imported using the instance id, e.g.
 
 ```
-terraform import tencentcloud_mongodb_audit_service.example cmgo-xxxxxx
+terraform import tencentcloud_mongodb_audit_service.example cmgo-5aqo4yf7
 ```
 

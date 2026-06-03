@@ -24,8 +24,8 @@ func ResourceTencentCloudMongodbAuditService() *schema.Resource {
 			State: schema.ImportStatePassthrough,
 		},
 		Timeouts: &schema.ResourceTimeout{
-			Create: schema.DefaultTimeout(10 * time.Minute),
-			Delete: schema.DefaultTimeout(10 * time.Minute),
+			Create: schema.DefaultTimeout(5 * time.Minute),
+			Delete: schema.DefaultTimeout(5 * time.Minute),
 		},
 		Schema: map[string]*schema.Schema{
 			"instance_id": {
@@ -111,8 +111,6 @@ func resourceTencentCloudMongodbAuditServiceCreate(d *schema.ResourceData, meta 
 		instanceId string
 	)
 
-	_ = ctx
-
 	if v, ok := d.GetOk("instance_id"); ok {
 		instanceId = v.(string)
 		request.InstanceId = helper.String(instanceId)
@@ -147,7 +145,7 @@ func resourceTencentCloudMongodbAuditServiceCreate(d *schema.ResourceData, meta 
 	}
 
 	err := resource.Retry(tccommon.WriteRetryTimeout, func() *resource.RetryError {
-		result, e := meta.(tccommon.ProviderMeta).GetAPIV3Conn().UseMongodbClient().OpenAuditService(request)
+		result, e := meta.(tccommon.ProviderMeta).GetAPIV3Conn().UseMongodbClient().OpenAuditServiceWithContext(ctx, request)
 		if e != nil {
 			return tccommon.RetryError(e)
 		}
@@ -167,20 +165,36 @@ func resourceTencentCloudMongodbAuditServiceCreate(d *schema.ResourceData, meta 
 
 	d.SetId(instanceId)
 
+	// wait
+	describeRequest := mongodb.NewDescribeAuditInstanceListRequest()
+	describeRequest.Filters = []*mongodb.Filters{
+		{
+			Name:   helper.String("InstanceId"),
+			Values: []*string{helper.String(instanceId)},
+		},
+	}
 	err = resource.Retry(d.Timeout(schema.TimeoutCreate), func() *resource.RetryError {
-		describeRequest := mongodb.NewDescribeAuditConfigRequest()
-		describeRequest.InstanceId = helper.String(instanceId)
-		result, e := meta.(tccommon.ProviderMeta).GetAPIV3Conn().UseMongodbClient().DescribeAuditConfig(describeRequest)
+		result, e := meta.(tccommon.ProviderMeta).GetAPIV3Conn().UseMongodbClient().DescribeAuditInstanceListWithContext(ctx, describeRequest)
 		if e != nil {
 			return tccommon.RetryError(e)
 		}
 
 		if result == nil || result.Response == nil {
-			return resource.NonRetryableError(fmt.Errorf("Describe mongodb audit config failed, Response is nil"))
+			return resource.NonRetryableError(fmt.Errorf("Describe mongodb audit instance list failed, Response is nil"))
 		}
 
-		if result.Response.IsOpening != nil && *result.Response.IsOpening == "true" {
-			return resource.RetryableError(fmt.Errorf("mongodb audit service is still opening"))
+		var auditStatus string
+		for _, item := range result.Response.Items {
+			if item != nil && item.InstanceId != nil && *item.InstanceId == instanceId {
+				if item.AuditStatus != nil {
+					auditStatus = *item.AuditStatus
+				}
+				break
+			}
+		}
+
+		if auditStatus != "ON" {
+			return resource.RetryableError(fmt.Errorf("mongodb audit service is still opening, current status: %s", auditStatus))
 		}
 
 		return nil
@@ -206,12 +220,10 @@ func resourceTencentCloudMongodbAuditServiceRead(d *schema.ResourceData, meta in
 		instanceId = d.Id()
 	)
 
-	_ = ctx
-
 	request.InstanceId = helper.String(instanceId)
 
 	err := resource.Retry(tccommon.ReadRetryTimeout, func() *resource.RetryError {
-		result, e := meta.(tccommon.ProviderMeta).GetAPIV3Conn().UseMongodbClient().DescribeAuditConfig(request)
+		result, e := meta.(tccommon.ProviderMeta).GetAPIV3Conn().UseMongodbClient().DescribeAuditConfigWithContext(ctx, request)
 		if e != nil {
 			return tccommon.RetryError(e)
 		}
@@ -227,8 +239,8 @@ func resourceTencentCloudMongodbAuditServiceRead(d *schema.ResourceData, meta in
 	}
 
 	if response == nil || response.Response == nil {
+		log.Printf("[WARN]%s resource `tencentcloud_mongodb_audit_service` [%s] not found, please check if it has been deleted.\n", logId, d.Id())
 		d.SetId("")
-		log.Printf("[WARN]%s resource `MongodbAuditService` [%s] not found, please check if it has been deleted.\n", logId, d.Id())
 		return nil
 	}
 
@@ -276,8 +288,6 @@ func resourceTencentCloudMongodbAuditServiceUpdate(d *schema.ResourceData, meta 
 		instanceId = d.Id()
 	)
 
-	_ = ctx
-
 	request.InstanceId = helper.String(instanceId)
 
 	if v, ok := d.GetOkExists("log_expire_day"); ok {
@@ -309,7 +319,7 @@ func resourceTencentCloudMongodbAuditServiceUpdate(d *schema.ResourceData, meta 
 	}
 
 	err := resource.Retry(tccommon.WriteRetryTimeout, func() *resource.RetryError {
-		result, e := meta.(tccommon.ProviderMeta).GetAPIV3Conn().UseMongodbClient().ModifyAuditService(request)
+		result, e := meta.(tccommon.ProviderMeta).GetAPIV3Conn().UseMongodbClient().ModifyAuditServiceWithContext(ctx, request)
 		if e != nil {
 			return tccommon.RetryError(e)
 		}
@@ -337,12 +347,10 @@ func resourceTencentCloudMongodbAuditServiceDelete(d *schema.ResourceData, meta 
 		instanceId = d.Id()
 	)
 
-	_ = ctx
-
 	request.InstanceId = helper.String(instanceId)
 
 	err := resource.Retry(tccommon.WriteRetryTimeout, func() *resource.RetryError {
-		result, e := meta.(tccommon.ProviderMeta).GetAPIV3Conn().UseMongodbClient().CloseAuditService(request)
+		result, e := meta.(tccommon.ProviderMeta).GetAPIV3Conn().UseMongodbClient().CloseAuditServiceWithContext(ctx, request)
 		if e != nil {
 			return tccommon.RetryError(e)
 		}
@@ -356,27 +364,43 @@ func resourceTencentCloudMongodbAuditServiceDelete(d *schema.ResourceData, meta 
 		return err
 	}
 
+	// wait
+	describeRequest := mongodb.NewDescribeAuditInstanceListRequest()
+	describeRequest.Filters = []*mongodb.Filters{
+		{
+			Name:   helper.String("InstanceId"),
+			Values: []*string{helper.String(instanceId)},
+		},
+	}
 	err = resource.Retry(d.Timeout(schema.TimeoutDelete), func() *resource.RetryError {
-		describeRequest := mongodb.NewDescribeAuditConfigRequest()
-		describeRequest.InstanceId = helper.String(instanceId)
-		result, e := meta.(tccommon.ProviderMeta).GetAPIV3Conn().UseMongodbClient().DescribeAuditConfig(describeRequest)
+		result, e := meta.(tccommon.ProviderMeta).GetAPIV3Conn().UseMongodbClient().DescribeAuditInstanceListWithContext(ctx, describeRequest)
 		if e != nil {
 			return tccommon.RetryError(e)
 		}
 
 		if result == nil || result.Response == nil {
-			return resource.NonRetryableError(fmt.Errorf("Describe mongodb audit config failed, Response is nil"))
+			return resource.NonRetryableError(fmt.Errorf("Describe mongodb audit instance list failed, Response is nil"))
 		}
 
-		if result.Response.IsClosing != nil && *result.Response.IsClosing == "true" {
-			return resource.RetryableError(fmt.Errorf("mongodb audit service is still closing"))
+		var auditStatus string
+		for _, item := range result.Response.Items {
+			if item != nil && item.InstanceId != nil && *item.InstanceId == instanceId {
+				if item.AuditStatus != nil {
+					auditStatus = *item.AuditStatus
+				}
+				break
+			}
+		}
+
+		if auditStatus != "OFF" {
+			return resource.RetryableError(fmt.Errorf("mongodb audit service is still closing, current status: %s", auditStatus))
 		}
 
 		return nil
 	})
 
 	if err != nil {
-		log.Printf("[CRITAL]%s delete mongodb audit service poll failed, reason:%+v", logId, err)
+		log.Printf("[CRITAL]%s close mongodb audit service poll failed, reason:%+v", logId, err)
 		return err
 	}
 
