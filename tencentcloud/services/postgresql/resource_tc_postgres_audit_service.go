@@ -2,6 +2,7 @@ package postgresql
 
 import (
 	"context"
+	"fmt"
 	"log"
 
 	tccommon "github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/common"
@@ -109,6 +110,48 @@ func resourceTencentCloudPostgresAuditServiceCreate(d *schema.ResourceData, meta
 	if reqErr != nil {
 		log.Printf("[CRITAL]%s create postgres audit service failed, reason:%+v", logId, reqErr)
 		return reqErr
+	}
+
+	// Wait for the audit service to be fully enabled.
+	describeRequest := postgresql.NewDescribeAuditInstanceListRequest()
+	describeRequest.Product = helper.String("postgres")
+	describeRequest.AuditSwitch = helper.Uint64(1)
+	describeRequest.Limit = helper.Uint64(100)
+	describeRequest.Offset = helper.Uint64(0)
+	describeRequest.Filters = []*postgresql.Filter{
+		{
+			Name:   helper.String("InstanceId"),
+			Values: []*string{helper.String(instanceId)},
+		},
+	}
+
+	waitErr := resource.Retry(tccommon.WriteRetryTimeout, func() *resource.RetryError {
+		items, err := service.DescribeAuditInstanceList(ctx, describeRequest)
+		if err != nil {
+			return tccommon.RetryError(err)
+		}
+
+		var auditStatus string
+		for _, item := range items {
+			if item != nil && item.InstanceId != nil && *item.InstanceId == instanceId {
+				if item.AuditStatus != nil {
+					auditStatus = *item.AuditStatus
+				}
+
+				break
+			}
+		}
+
+		if auditStatus == "ON" {
+			return nil
+		}
+
+		return resource.RetryableError(fmt.Errorf("postgres audit service [%s] is still enabling, current status: [%s]", instanceId, auditStatus))
+	})
+
+	if waitErr != nil {
+		log.Printf("[CRITAL]%s wait postgres audit service enable failed, reason:%+v", logId, waitErr)
+		return waitErr
 	}
 
 	d.SetId(instanceId)
@@ -275,6 +318,53 @@ func resourceTencentCloudPostgresAuditServiceDelete(d *schema.ResourceData, meta
 	if reqErr != nil {
 		log.Printf("[CRITAL]%s delete postgres audit service failed, reason:%+v", logId, reqErr)
 		return reqErr
+	}
+
+	// Wait for the audit service to be fully closed.
+	describeRequest := postgresql.NewDescribeAuditInstanceListRequest()
+	describeRequest.Product = helper.String("postgres")
+	describeRequest.AuditSwitch = helper.Uint64(0)
+	describeRequest.Limit = helper.Uint64(100)
+	describeRequest.Offset = helper.Uint64(0)
+	describeRequest.Filters = []*postgresql.Filter{
+		{
+			Name:   helper.String("InstanceId"),
+			Values: []*string{helper.String(instanceId)},
+		},
+	}
+
+	waitErr := resource.Retry(tccommon.WriteRetryTimeout, func() *resource.RetryError {
+		items, err := service.DescribeAuditInstanceList(ctx, describeRequest)
+		if err != nil {
+			return tccommon.RetryError(err)
+		}
+
+		var (
+			found       bool
+			auditStatus string
+		)
+		for _, item := range items {
+			if item != nil && item.InstanceId != nil && *item.InstanceId == instanceId {
+				found = true
+				if item.AuditStatus != nil {
+					auditStatus = *item.AuditStatus
+				}
+
+				break
+			}
+		}
+
+		// The instance may be removed from the list once the audit service is closed.
+		if !found || auditStatus == "OFF" {
+			return nil
+		}
+
+		return resource.RetryableError(fmt.Errorf("postgres audit service [%s] is still closing, current status: [%s]", instanceId, auditStatus))
+	})
+
+	if waitErr != nil {
+		log.Printf("[CRITAL]%s wait postgres audit service close failed, reason:%+v", logId, waitErr)
+		return waitErr
 	}
 
 	return nil
