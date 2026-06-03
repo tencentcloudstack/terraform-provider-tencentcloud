@@ -65,10 +65,7 @@ The `rule_filters` object supports the following:
 In addition to all arguments above, the following attributes are exported:
 
 * `id` - ID of the resource.
-* `create_time` - Time when audit was enabled.
 * `instance_name` - Instance name.
-* `is_closing` - Whether audit is being closed.
-* `is_opening` - Whether audit is being opened.
 * `log_type` - Audit log storage type.
 
 ## Timeouts

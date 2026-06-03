@@ -76,25 +76,10 @@ func ResourceTencentCloudMongodbAuditService() *schema.Resource {
 				Computed:    true,
 				Description: "Instance name.",
 			},
-			"create_time": {
-				Type:        schema.TypeString,
-				Computed:    true,
-				Description: "Time when audit was enabled.",
-			},
 			"log_type": {
 				Type:        schema.TypeString,
 				Computed:    true,
 				Description: "Audit log storage type.",
-			},
-			"is_closing": {
-				Type:        schema.TypeString,
-				Computed:    true,
-				Description: "Whether audit is being closed.",
-			},
-			"is_opening": {
-				Type:        schema.TypeString,
-				Computed:    true,
-				Description: "Whether audit is being opened.",
 			},
 		},
 	}
@@ -258,20 +243,8 @@ func resourceTencentCloudMongodbAuditServiceRead(d *schema.ResourceData, meta in
 		_ = d.Set("instance_name", response.Response.InstanceName)
 	}
 
-	if response.Response.CreateTime != nil {
-		_ = d.Set("create_time", response.Response.CreateTime)
-	}
-
 	if response.Response.LogType != nil {
 		_ = d.Set("log_type", response.Response.LogType)
-	}
-
-	if response.Response.IsClosing != nil {
-		_ = d.Set("is_closing", response.Response.IsClosing)
-	}
-
-	if response.Response.IsOpening != nil {
-		_ = d.Set("is_opening", response.Response.IsOpening)
 	}
 
 	return nil
