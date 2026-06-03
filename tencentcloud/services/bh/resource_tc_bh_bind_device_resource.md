@@ -4,29 +4,28 @@ Example Usage
 
 ```hcl
 resource "tencentcloud_bh_bind_device_resource" "example" {
-  device_id_set = [123, 456]
-  resource_id   = "bh-saas-abc123"
-  domain_id     = "dm-domain01"
+  device_id_set = [4173, 4175]
+  resource_id   = "bh-saas-4ikvobas"
+  domain_id     = "net-telc7g8p"
 }
 ```
 
 K8S cluster managed scenario
 
 ```hcl
-resource "tencentcloud_bh_bind_device_resource" "k8s_example" {
-  device_id_set    = [789]
-  resource_id      = "bh-saas-abc123"
-  manage_dimension = 1
-  manage_account   = "admin"
-  namespace        = "default"
-  workload         = "deployment/nginx"
+resource "tencentcloud_bh_bind_device_resource" "example" {
+  device_id_set     = [3434]
+  resource_id       = "bh-saas-sk8eyhcn"
+  domain_id         = "net-89sng6ha"
+  manage_dimension  = 1
+  manage_account_id = 3970
 }
 ```
 
 Import
 
-BH bind device resource can be imported using the composite ID `device_ids_comma_separated#resource_id`, e.g.
+BH bind device resource can be imported using the resource_id, e.g.
 
 ```
-terraform import tencentcloud_bh_bind_device_resource.example 123,456#bh-saas-abc123
+terraform import tencentcloud_bh_bind_device_resource.example bh-saas-4ikvobas
 ```
