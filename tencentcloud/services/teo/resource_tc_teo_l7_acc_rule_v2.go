@@ -65,6 +65,51 @@ func ResourceTencentCloudTeoL7AccRuleV2() *schema.Resource {
 				Computed:    true,
 				Description: "Rule priority. only used as an output parameter.",
 			},
+			"rules": {
+				Type:        schema.TypeList,
+				Computed:    true,
+				Description: "The full rules list returned by the DescribeL7AccRules API response.",
+				Elem: &schema.Resource{
+					Schema: map[string]*schema.Schema{
+						"status": {
+							Type:        schema.TypeString,
+							Computed:    true,
+							Description: "Rule status. Values: `enable`: enabled; `disable`: disabled.",
+						},
+						"rule_id": {
+							Type:        schema.TypeString,
+							Computed:    true,
+							Description: "Rule ID. Unique identifier of the rule.",
+						},
+						"rule_name": {
+							Type:        schema.TypeString,
+							Computed:    true,
+							Description: "Rule name.",
+						},
+						"description": {
+							Type:        schema.TypeList,
+							Computed:    true,
+							Description: "Rule annotations.",
+							Elem: &schema.Schema{
+								Type: schema.TypeString,
+							},
+						},
+						"branches": {
+							Type:        schema.TypeList,
+							Computed:    true,
+							Description: "Sub-rule branches.",
+							Elem: &schema.Resource{
+								Schema: TencentTeoL7RuleBranchComputedInfo(1),
+							},
+						},
+						"rule_priority": {
+							Type:        schema.TypeInt,
+							Computed:    true,
+							Description: "Rule priority.",
+						},
+					},
+				},
+			},
 		},
 	}
 }
@@ -160,6 +205,10 @@ func ResourceTencentCloudTeoL7AccRuleV2Read(d *schema.ResourceData, meta interfa
 		_ = d.Set("description", rule.Description)
 		_ = d.Set("rule_priority", rule.RulePriority)
 		_ = d.Set("branches", resourceTencentCloudTeoL7AccRuleSetBranchs(rule.Branches))
+	}
+
+	if respData.Rules != nil {
+		_ = d.Set("rules", flattenRuleEngineItems(respData.Rules))
 	}
 
 	return nil

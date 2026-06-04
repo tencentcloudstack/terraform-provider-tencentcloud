@@ -2652,6 +2652,72 @@ func resourceTencentCloudTeoL7AccRuleSetBranchs(ruleBranches []*teo.RuleBranch) 
 	return branchesList
 }
 
+func makeSchemaComputed(src map[string]*schema.Schema) map[string]*schema.Schema {
+	dst := make(map[string]*schema.Schema, len(src))
+	for k, v := range src {
+		cp := &schema.Schema{
+			Type:        v.Type,
+			Computed:    true,
+			Description: v.Description,
+		}
+		if v.Elem != nil {
+			switch e := v.Elem.(type) {
+			case *schema.Resource:
+				cp.Elem = &schema.Resource{
+					Schema: makeSchemaComputed(e.Schema),
+				}
+			case *schema.Schema:
+				cp.Elem = &schema.Schema{
+					Type: e.Type,
+				}
+			}
+		}
+		dst[k] = cp
+	}
+	return dst
+}
+
+func TencentTeoL7RuleBranchComputedInfo(depth int) map[string]*schema.Schema {
+	schemaMap := makeSchemaComputed(TencentTeoL7RuleBranchBasicInfo(depth))
+	return schemaMap
+}
+
+func flattenRuleEngineItems(rules []*teo.RuleEngineItem) []map[string]interface{} {
+	if len(rules) == 0 {
+		return []map[string]interface{}{}
+	}
+	result := make([]map[string]interface{}, 0, len(rules))
+	for _, rule := range rules {
+		ruleMap := map[string]interface{}{}
+		if rule.Status != nil {
+			ruleMap["status"] = rule.Status
+		}
+		if rule.RuleId != nil {
+			ruleMap["rule_id"] = rule.RuleId
+		}
+		if rule.RuleName != nil {
+			ruleMap["rule_name"] = rule.RuleName
+		}
+		if rule.Description != nil {
+			descList := make([]interface{}, 0, len(rule.Description))
+			for _, d := range rule.Description {
+				if d != nil {
+					descList = append(descList, *d)
+				}
+			}
+			ruleMap["description"] = descList
+		}
+		if rule.Branches != nil {
+			ruleMap["branches"] = resourceTencentCloudTeoL7AccRuleSetBranchs(rule.Branches)
+		}
+		if rule.RulePriority != nil {
+			ruleMap["rule_priority"] = rule.RulePriority
+		}
+		result = append(result, ruleMap)
+	}
+	return result
+}
+
 func resourceTencentCloudTeoL7AccRuleContent(rules []*teo.RuleEngineItem) (string, error) {
 	type Content struct {
 		FormatVersion string                `json:"FormatVersion,omitempty"`
