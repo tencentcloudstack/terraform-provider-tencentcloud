@@ -541,6 +541,1722 @@ In addition to all arguments above, the following attributes are exported:
 * `id` - ID of the resource.
 * `rule_id` - Rule ID. Unique identifier of the rule.
 * `rule_priority` - Rule priority. only used as an output parameter.
+* `rules` - The full rules list returned by the DescribeL7AccRules API response.
+  * `branches` - Sub-rule branches.
+    * `actions` - Sub-Rule branch. this list currently supports filling in only one rule; multiple entries are invalid.
+      * `access_url_redirect_parameters` - The access url redirection configuration parameter. this parameter is required when name is accessurlredirect.
+        * `host_name` - Target hostname.
+          * `action` - Target hostname configuration, valid values are: follow: follow the request; custom: custom.
+          * `value` - Custom value for target hostname, maximum length is 1024.
+        * `protocol` - Target request protocol. valid values: http: target request protocol http; https: target request protocol https; follow: follow the request.
+        * `query_string` - Carry query parameters.
+          * `action` - Action to be executed. values: full: retain all; ignore: ignore all.
+        * `status_code` - Status code. valid values: 301, 302, 303, 307, 308.
+        * `url_path` - Target path.
+          * `action` - Action to be executed. values: follow: follow the request; custom: custom; regex: regular expression matching.
+          * `regex` - Regular expression matching expression, length range is 1-1024. note: when action is regex, this field is required; when action is follow or custom, this field is not required and will not take effect if filled.
+          * `value` - Redirect target url, length range is 1-1024.note: when action is regex or custom, this field is required; when action is follow, this field is not required and will not take effect if filled.
+      * `authentication_parameters` - Token authentication configuration parameter. this parameter is required when name is authentication.
+        * `auth_param` - Authentication parameters name. the node will validate the value corresponding to this parameter name. consists of 1-100 uppercase and lowercase letters, numbers, or underscores.note: this field is required when authtype is either typea or typed.
+        * `auth_type` - Authentication type. valid values:
+- `TypeA`: authentication method a type, for specific meaning please refer to authentication method a. https://www.tencentcloud.com/document/product/1145/62475;
+- `TypeB`: authentication method b type, for specific meaning please refer to authentication method b. https://www.tencentcloud.com/document/product/1145/62476;
+- `TypeC`: authentication method c type, for specific meaning please refer to authentication method c. https://www.tencentcloud.com/document/product/1145/62477;
+- `TypeD`: authentication method d type, for specific meaning please refer to authentication method d. https://www.tencentcloud.com/document/product/1145/62478;
+- `TypeVOD`: authentication method v type, for specific meaning please refer to authentication method v. https://www.tencentcloud.com/document/product/1145/62479.
+        * `backup_secret_key` - The backup authentication key consists of 6-40 uppercase and lowercase english letters or digits, and cannot contain " and $.
+        * `secret_key` - The primary authentication key consists of 6-40 uppercase and lowercase english letters or digits, and cannot contain " and $.
+        * `time_format` - Authentication time format. values: dec: decimal; hex: hexadecimal.
+        * `time_param` - Authentication timestamp. it cannot be the same as the value of the authparam field.note: this field is required when authtype is typed.
+        * `timeout` - Validity period of the authentication url, in seconds, value range: 1-630720000. used to determine if the client access request has expired: If the current time exceeds "timestamp + validity period", it is an expired request, and a 403 is returned directly. If the current time does not exceed "timestamp + validity period", the request is not expired, and the md5 string is further validated. note: when authtype is one of typea, typeb, typec, or typed, this field is required.
+      * `cache_key_parameters` - Custom cache key configuration parameter. when name is cachekey, this parameter is required.
+        * `cookie` - Cookie configuration parameters. at least one of the following configurations must be set: fullurlcache, ignorecase, header, scheme, cookie.
+          * `action` - Cache action. values: full: retain all; ignore: ignore all; includeCustom: retain partial parameters; excludeCustom: ignore partial parameters. note: when switch is on, this field is required. when switch is off, this field is not required and will not take effect if filled.
+          * `switch` - Whether to enable feature. values: on: enable; off: disable.
+          * `values` - Custom cache key cookie name list.
+        * `full_url_cache` - Switch for retaining the complete query string. values: on: enable; off: disable.
+        * `header` - HTTP request header configuration parameters. at least one of the following configurations must be set: fullurlcache, ignorecase, header, scheme, cookie.
+          * `switch` - Whether to enable feature. values: on: enable; off: disable.
+          * `values` - Custom cache key http request header list. note: this field is required when switch is on; when switch is off, this field is not required and will not take effect if filled.
+        * `ignore_case` - Switch for ignoring case. values: on: enable; off: disable. note: at least one of fullurlcache, ignorecase, header, scheme, or cookie must be configured.
+        * `query_string` - Configuration parameter for retaining the query string. this field and fullurlcache must be set simultaneously, but cannot both be on.
+          * `action` - Actions to retain/ignore specified parameters in the query string. values: `includeCustom`: retain partial parameters. `excludeCustom`: ignore partial parameters.note: this field is required when switch is on. when switch is off, this field is not required and will not take effect if filled.
+          * `switch` - Query string retain/ignore specified parameter switch. valid values are: on: enable; off: disable.
+          * `values` - A list of parameter names to keep/ignore in the query string.
+        * `scheme` - Request protocol switch. valid values: on: enable; off: disable.
+      * `cache_parameters` - Node cache ttl configuration parameter. when name is cache, this parameter is required.
+        * `custom_time` - Custom cache time. if not specified, this configuration is not set. only one of followorigin, nocache, or customtime can have switch set to on.
+          * `cache_time` - Custom cache time value, unit: seconds. value range: 0-315360000.
+          * `ignore_cache_control` - Ignore origin server cachecontrol switch. values: `on`: Enable; `off`: Disable.
+          * `switch` - Custom cache time switch. values: `on`: Enable; `off`: Disable.
+        * `follow_origin` - Cache follows origin server. if not specified, this configuration is not set. only one of followorigin, nocache, or customtime can have switch set to on.
+          * `default_cache_strategy` - Whether to use the default caching policy when an origin server does not return the cache-control header. this field is required when defaultcache is set to on; otherwise, it is ineffective. when defaultcachetime is not 0, this field should be off. valid values: on: use the default caching policy. off: do not use the default caching policy.
+          * `default_cache_time` - The default cache time in seconds when an origin server does not return the cache-control header. the value ranges from 0 to 315360000. this field is required when defaultcache is set to on; otherwise, it is ineffective. when defaultcachestrategy is on, this field should be 0.
+          * `default_cache` - Whether to cache when an origin server does not return the cache-control header. this field is required when switch is on; when switch is off, this field is not required and will be ineffective if filled. valid values: on: cache; off: do not cache.
+          * `switch` - Whether to enable the configuration of following the origin server. Valid values: `on`: Enable; `off`: Disable.
+        * `no_cache` - No cache. if not specified, this configuration is not set. only one of followorigin, nocache, or customtime can have switch set to on.
+          * `switch` - Whether to enable no-cache configuration. Valid values: `on`: Enable; `off`: Disable.
+      * `cache_prefresh_parameters` - The cache prefresh configuration parameter. this parameter is required when name is cacheprefresh.
+        * `cache_time_percent` - Prefresh interval set as a percentage of the node cache time. value range: 1-99. note: this field is required when switch is on; when switch is off, this field is not required and will not take effect if filled.
+        * `switch` - Whether to enable cache prefresh. values: on: enable; off: disable.
+      * `client_ip_country_parameters` - Configuration parameter for carrying the region information of the client ip during origin-pull. this parameter is required when the name is set to clientipcountry.
+        * `header_name` - Name of the request header that contains the client ip region. it is valid when switch=on. the default value EO-Client-IPCountry is used when it is not specified.
+        * `switch` - Whether to enable configuration. values: on: enable; off: disable.
+      * `client_ip_header_parameters` - Client ip header configuration for storing client request ip information. this parameter is required when name is clientipheader.
+        * `header_name` - Name of the request header containing the client ip address for origin-pull. when switch is on, this parameter is required. x-forwarded-for is not allowed for this parameter.
+        * `switch` - Whether to enable configuration. values: on: enable; off: disable.
+      * `compression_parameters` - Intelligent compression configuration. this parameter is required when name is set to compression.
+        * `algorithms` - Supported compression algorithm list. this field is required when switch is on; otherwise, it is not effective. valid values: brotli: brotli algorithm; gzip: gzip algorithm.
+        * `switch` - Whether to enable smart compression. values: on: enable; off: disable.
+      * `content_compression_parameters` - Content compression configuration parameters. This parameter is required when the `Name` parameter is set to `ContentCompression`. This parameter uses a whitelist function; please contact Tencent Cloud engineers if needed.
+        * `switch` - Content compression configuration switch, possible values are: on: enabled; off: disabled. When the Switch is set to `on`, both Brotli and gzip compression algorithms will be supported.
+      * `error_page_parameters` - Custom error page configuration parameters. this parameter is required when name is errorpage.
+        * `error_page_params` - Custom error page configuration list.
+          * `redirect_url` - Redirect url. requires a full redirect path, such as https://www.test.com/error.html.
+          * `status_code` - Status code. supported values are 400, 403, 404, 405, 414, 416, 451, 500, 501, 502, 503, 504.
+      * `force_redirect_https_parameters` - Force https redirect configuration parameter. this parameter is required when the name is set to forceredirecthttps.
+        * `redirect_status_code` - Redirection status code. this field is required when switch is on; otherwise, it is not effective. valid values are: 301: 301 redirect; 302: 302 redirect.
+        * `switch` - Whether to enable forced redirect configuration switch. values: on: enable; off: disable.
+      * `host_header_parameters` - Host header rewrite configuration parameter. this parameter is required when name is set to hostheader.
+        * `action` - Action to be executed. values: followOrigin: follow origin server domain name; custom: custom.
+        * `server_name` - Host header rewrite requires a complete domain name. note: this field is required when switch is on; when switch is off, this field is not required and any value will be ignored.
+      * `hsts_parameters` - HSTS configuration parameter. this parameter is required when name is hsts.
+        * `include_sub_domains` - Whether to allow other subdomains to inherit the same hsts header. values: on: allows other subdomains to inherit the same hsts header; off: does not allow other subdomains to inherit the same hsts header. note: when switch is on, this field is required; when switch is off, this field is not required and will not take effect if filled.
+        * `preload` - Whether to allow the browser to preload the hsts header. valid values: on: allows the browser to preload the hsts header; off: does not allow the browser to preload the hsts header. note: when switch is on, this field is required; when switch is off, this field is not required and will not take effect if filled.
+        * `switch` - Whether to enable hsts. values: on: enable; off: disable.
+        * `timeout` - Cache hsts header time, unit: seconds. value range: 1-31536000. note: this field is required when switch is on; when switch is off, this field is not required and will not take effect if filled.
+      * `http2_parameters` - HTTP2 access configuration parameter. this parameter is required when name is http2.
+        * `switch` - Whether to enable http2 access. values: on: enable; off: disable.
+      * `http_response_parameters` - HTTP response configuration parameters. this parameter is required when name is httpresponse.
+        * `response_page` - Response page id.
+        * `status_code` - Response status code. supports 2xx, 4xx, 5xx, excluding 499, 514, 101, 301, 302, 303, 509, 520-599.
+      * `http_upstream_timeout_parameters` - Configuration of layer 7 origin timeout. this parameter is required when name is httpupstreamtimeout.
+        * `response_timeout` - HTTP response timeout in seconds. value range: 5-600.
+      * `max_age_parameters` - Browser cache ttl configuration parameter. this parameter is required when name is maxage.
+        * `cache_time` - Custom cache time value, unit: seconds. value range: 0-315360000. note: when followorigin is off, it means not following the origin server and using cachetime to set the cache time; otherwise, this field will not take effect.
+        * `follow_origin` - Specifies whether to follow the origin server cache-control configuration, with the following values: on: follow the origin server and ignore the field cachetime; off: do not follow the origin server and apply the field cachetime.
+      * `modify_origin_parameters` - Configuration parameter for modifying the origin server. this parameter is required when the name is set to modifyorigin.
+        * `http_origin_port` - Ports for http origin-pull requests. value range: 1-65535. this parameter takes effect only when the origin-pull protocol originprotocol is http or follow.
+        * `https_origin_port` - Ports for https origin-pull requests. value range: 1-65535. this parameter takes effect only when the origin-pull protocol originprotocol is https or follow.
+        * `origin_protocol` - Origin-Pull protocol configuration. this parameter is required when origintype is ipdomain, origingroup, or loadbalance. valid values are: http: use http protocol; https: use https protocol; follow: follow the protocol.
+        * `origin_type` - The origin type. values: IPDomain: ipv4, ipv6, or domain name type origin server; OriginGroup: origin server group type origin server; LoadBalance: cloud load balancer (clb), this feature is in beta test. to use it, please submit a ticket or contact smart customer service; COS: tencent cloud COS origin server; AWSS3: all object storage origin servers that support the aws s3 protocol.
+        * `origin` - Origin server address, which varies according to the value of origintype: When origintype = ipdomain, fill in an ipv4 address, an ipv6 address, or a domain name; When origintype = cos, please fill in the access domain name of the cos bucket; When origintype = awss3, fill in the access domain name of the s3 bucket; When origintype = origingroup, fill in the origin server group id; When origintype = loadbalance, fill in the cloud load balancer instance id. this feature is currently only available to the allowlist.
+        * `private_access` - Whether access to the private object storage origin server is allowed. this parameter is valid only when the origin server type origintype is COS or awss3. valid values: on: enable private authentication; off: disable private authentication. if not specified, the default value is off.
+        * `private_parameters` - Private authentication parameter. this parameter is valid only when origintype = awss3 and privateaccess = on.
+          * `access_key_id` - Authentication parameter access key id.
+          * `region` - Region of the bucket.
+          * `secret_access_key` - Authentication parameter secret access key.
+          * `signature_version` - Authentication version. values: v2: v2 version; v4: v4 version.
+      * `modify_request_header_parameters` - Modify http node request header configuration parameters. this parameter is required when name is modifyrequestheader.
+        * `header_actions` - List of http header setting rules.
+          * `action` - HTTP header setting methods. valid values are: set: sets a value for an existing header parameter; del: deletes a header parameter; add: adds a header parameter.
+          * `name` - HTTP header name.
+          * `value` - HTTP header value. this parameter is required when the action is set to set or add; it is optional when the action is set to del.
+      * `modify_response_header_parameters` - Modify http node response header configuration parameters. this parameter is required when name is modifyresponseheader.
+        * `header_actions` - HTTP origin-pull header rules list.
+          * `action` - HTTP header setting methods. valid values are: set: sets a value for an existing header parameter; del: deletes a header parameter; add: adds a header parameter.
+          * `name` - HTTP header name.
+          * `value` - HTTP header value. this parameter is required when the action is set to set or add; it is optional when the action is set to del.
+      * `name` - Operation name. The name needs to correspond to the parameter structure, for example, if Name=Cache, CacheParameters is required.
+- `Cache`: Node cache TTL;
+- `CacheKey`: Custom Cache Key;
+- `CachePrefresh`: Cache pre-refresh;
+- `AccessURLRedirect`: Access URL redirection;
+- `UpstreamURLRewrite`: Back-to-origin URL rewrite;
+- `QUIC`: QUIC;
+- `WebSocket`: WebSocket;
+- `Authentication`: Token authentication;
+- `MaxAge`: Browser cache TTL;
+- `StatusCodeCache`: Status code cache TTL;
+- `OfflineCache`: Offline cache;
+- `SmartRouting`: Smart acceleration;
+- `RangeOriginPull`: Segment back-to-origin;
+- `UpstreamHTTP2`: HTTP2 back-to-origin;
+- `HostHeader`: Host Header rewrite;
+- `ForceRedirectHTTPS`: Access protocol forced HTTPS jump configuration;
+- `OriginPullProtocol`: Back-to-origin HTTPS;
+- `Compression`: Smart compression configuration;
+- `HSTS`: HSTS;
+- `ClientIPHeader`: Header information configuration for storing client request IP;
+- `OCSPStapling`: OCSP stapling;
+- `HTTP2`: HTTP2 Access;
+- `PostMaxSize`: POST request upload file streaming maximum limit configuration;
+- `ClientIPCountry`: Carry client IP region information when returning to the source;
+- `UpstreamFollowRedirect`: Return to the source follow redirection parameter configuration;
+- `UpstreamRequest`: Return to the source request parameters;
+- `TLSConfig`: SSL/TLS security;
+- `ModifyOrigin`: Modify the source station;
+- `HTTPUpstreamTimeout`: Seven-layer return to the source timeout configuration;
+- `HttpResponse`: HTTP response;
+- `ErrorPage`: Custom error page;
+- `ModifyResponseHeader`: Modify HTTP node response header;
+- `ModifyRequestHeader`: Modify HTTP node request header;
+- `ResponseSpeedLimit`: Single connection download speed limit.
+- `SetContentIdentifier`: Set content identifier.
+- `Vary`: Vary feature configuration.
+- `ContentCompression`: Content compression configuration.
+- `OriginAuthentication`: Origin authentication configuration.
+      * `ocsp_stapling_parameters` - OCSP stapling configuration parameter. this parameter is required when the name is set to ocspstapling.
+        * `switch` - Whether to enable ocsp stapling configuration switch. values: on: enable; off: disable.
+      * `offline_cache_parameters` - Offline cache configuration parameter. this parameter is required when name is offlinecache.
+        * `switch` - Whether to enable offline caching. values: on: enable; off: disable.
+      * `origin_authentication_parameters` - Origin authentication configuration parameter. This parameter is required when Name is set to OriginAuthentication. This is a whitelist feature; please contact Tencent Cloud engineers if needed.
+        * `request_properties` - Origin authentication request properties.
+          * `name` - Origin authentication parameter name.
+          * `type` - Origin authentication parameter type. Valid values: QueryString: set origin authentication parameter type as query string; Header: set origin authentication parameter type as request header.
+          * `value` - Origin authentication parameter value.
+      * `origin_pull_protocol_parameters` - Back-to-origin HTTPS configuration parameter. This parameter is required when the Name value is `OriginPullProtocol`.
+        * `protocol` - Back-to-origin protocol configuration. Possible values are: `http`: use HTTP protocol for back-to-origin; `https`: use HTTPS protocol for back-to-origin; `follow`: follow the protocol.
+      * `post_max_size_parameters` - Maximum size configuration for file streaming upload via a post request. this parameter is required when name is postmaxsize.
+        * `max_size` - Maximum size of the file uploaded for streaming via a post request, in bytes. value range: 1 * 2^20 bytes to 500 * 2^20 bytes.
+        * `switch` - Whether to enable post request file upload limit, in bytes (default limit: 32 * 2^20 bytes). valid values: on: enable limit; off: disable limit.
+      * `quic_parameters` - The quic configuration parameter. this parameter is required when name is quic.
+        * `switch` - Whether to enable quic. values: on: enable; off: disable.
+      * `range_origin_pull_parameters` - Shard source retrieval configuration parameter. this parameter is required when name is set to rangeoriginpull.
+        * `switch` - Whether to enable range gets. values are: on: enable; off: disable.
+      * `response_speed_limit_parameters` - Single connection download speed limit configuration parameter. this parameter is required when name is responsespeedlimit.
+        * `max_speed` - Rate-Limiting value, in kb/s. enter a numerical value to specify the rate limit.
+        * `mode` - Download rate limit mode. valid values: LimitUponDownload: rate limit throughout the download process; LimitAfterSpecificBytesDownloaded: rate limit after downloading specific bytes at full speed; LimitAfterSpecificSecondsDownloaded: start speed limit after downloading at full speed for a specific duration.
+        * `start_at` - Rate-Limiting start value, which can be the download size or specified duration, in kb or s. this parameter is required when mode is set to limitafterspecificbytesdownloaded or limitafterspecificsecondsdownloaded. enter a numerical value to specify the download size or duration.
+      * `set_content_identifier_parameters` - Content identification configuration parameter. this parameter is required when name is httpresponse.
+        * `content_identifier` - Content identifier id.
+      * `smart_routing_parameters` - Smart acceleration configuration parameter. this parameter is required when name is smartrouting.
+        * `switch` - Whether to enable smart acceleration. values: on: enable; off: disable.
+      * `status_code_cache_parameters` - Status code cache ttl configuration parameter. this parameter is required when name is statuscodecache.
+        * `status_code_cache_params` - Status code cache ttl.
+          * `cache_time` - Cache time value in seconds. value range: 0-31536000.
+          * `status_code` - Status code. valid values: 400, 401, 403, 404, 405, 407, 414, 500, 501, 502, 503, 504, 509, 514.
+      * `tls_config_parameters` - SSL/TLS security configuration parameter. this parameter is required when the name is set to tlsconfig.
+        * `cipher_suite` - Cipher suite. for detailed information, please refer to tls versions and cipher suites description, https://www.tencentcloud.com/document/product/1145/54154?has_map=1. valid values: loose-v2023: loose-v2023 cipher suite; general-v2023: general-v2023 cipher suite; strict-v2023: strict-v2023 cipher suite.
+        * `version` - TLS version. at least one must be specified. if multiple versions are specified, they must be consecutive, e.g., enable TLSv1, TLSv1.1, TLSv1.2, and TLSv1.3. it is not allowed to enable only 1 and 1.2 while disabling 1.1. valid values: TLSv1: TLSv1 version; TLSv1.1: TLSv1.1 version; TLSv1.2: TLSv1.2 version; TLSv1.3: TLSv1.3 version.
+      * `upstream_follow_redirect_parameters` - Configuration parameter for following redirects during origin-pull. this parameter is required when the name is set to upstreamfollowredirect.
+        * `max_times` - The maximum number of redirects. value range: 1-5. Note: this field is required when switch is on; when switch is off, this field is not required and will not take effect if filled.
+        * `switch` - Whether to enable origin-pull to follow the redirection configuration. values: on: enable; off: disable.
+      * `upstream_http2_parameters` - HTTP2 origin-pull configuration parameter. this parameter is required when name is set to upstreamhttp2.
+        * `switch` - Whether to enable http2 origin-pull. valid values: on: enable; off: disable.
+      * `upstream_request_parameters` - Configuration parameter for origin-pull request. this parameter is required when the name is set to upstreamrequest.
+        * `cookie` - Cookie configuration. optional. if not provided, it will not be configured.
+          * `action` - Origin-Pull request parameter cookie mode. this parameter is required when switch is on. valid values are: full: retain all; ignore: ignore all; includeCustom: retain partial parameters; excludeCustom: ignore partial parameters.
+          * `switch` - Whether to enable the origin-pull request parameter cookie. valid values: on: enable; off: disable.
+          * `values` - Specifies parameter values. this parameter takes effect only when the query string mode action is includecustom or excludecustom, and is used to specify the parameters to be reserved or ignored. up to 10 parameters are supported.
+        * `query_string` - Query string configuration. optional. if not provided, it will not be configured.
+          * `action` - Query string mode. this parameter is required when switch is on. values: full: retain all; ignore: ignore all; includeCustom: retain partial parameters; excludeCustom: ignore partial parameters.
+          * `switch` - Whether to enable origin-pull request parameter query string. values: on: enable; off: disable.
+          * `values` - Specifies parameter values. this parameter takes effect only when the query string mode action is includecustom or excludecustom, and is used to specify the parameters to be reserved or ignored. up to 10 parameters are supported.
+      * `upstream_url_rewrite_parameters` - The origin-pull url rewrite configuration parameter. this parameter is required when name is upstreamurlrewrite.
+        * `action` - Origin-Pull url rewrite action. valid values are: replace: replace the path prefix; addPrefix: add the path prefix; rmvPrefix: remove the path prefix.
+        * `regex` - Origin URL Rewrite uses a regular expression for matching the complete path. It must conform to the Google RE2 specification and have a length range of 1 to 1024. This field is required when the Action is regexReplace; otherwise, it is optional.
+        * `type` - Origin-Pull url rewriting type, only path is supported.
+        * `value` - Origin-Pull url rewrite value, maximum length 1024, must start with /.note: when action is addprefix, it cannot end with /; when action is rmvprefix, * cannot be present.
+      * `vary_parameters` - Vary configuration parameter. This parameter is required when Name is set to Vary.
+        * `switch` - Whether to enable Vary feature. Valid values: on: enable; off: disable.
+      * `web_socket_parameters` - The websocket configuration parameter. this parameter is required when name is websocket.
+        * `switch` - Whether to enable websocket connection timeout. values: on: use timeout as the websocket timeout;; off: the platform still supports websocket connections, using the system default timeout of 15 seconds.
+        * `timeout` - Timeout, unit: seconds. maximum timeout is 120 seconds.
+    * `condition` - Match condition. https://www.tencentcloud.com/document/product/1145/54759.
+    * `sub_rules` - List of sub-rules. multiple rules exist in this list and are executed sequentially from top to bottom. note: subrules and actions cannot both be empty. currently, only one layer of subrules is supported.
+      * `branches` - Sub-rule branch.
+        * `actions` - Sub-Rule branch. this list currently supports filling in only one rule; multiple entries are invalid.
+          * `access_url_redirect_parameters` - The access url redirection configuration parameter. this parameter is required when name is accessurlredirect.
+            * `host_name` - Target hostname.
+              * `action` - Target hostname configuration, valid values are: follow: follow the request; custom: custom.
+              * `value` - Custom value for target hostname, maximum length is 1024.
+            * `protocol` - Target request protocol. valid values: http: target request protocol http; https: target request protocol https; follow: follow the request.
+            * `query_string` - Carry query parameters.
+              * `action` - Action to be executed. values: full: retain all; ignore: ignore all.
+            * `status_code` - Status code. valid values: 301, 302, 303, 307, 308.
+            * `url_path` - Target path.
+              * `action` - Action to be executed. values: follow: follow the request; custom: custom; regex: regular expression matching.
+              * `regex` - Regular expression matching expression, length range is 1-1024. note: when action is regex, this field is required; when action is follow or custom, this field is not required and will not take effect if filled.
+              * `value` - Redirect target url, length range is 1-1024.note: when action is regex or custom, this field is required; when action is follow, this field is not required and will not take effect if filled.
+          * `authentication_parameters` - Token authentication configuration parameter. this parameter is required when name is authentication.
+            * `auth_param` - Authentication parameters name. the node will validate the value corresponding to this parameter name. consists of 1-100 uppercase and lowercase letters, numbers, or underscores.note: this field is required when authtype is either typea or typed.
+            * `auth_type` - Authentication type. valid values:
+- `TypeA`: authentication method a type, for specific meaning please refer to authentication method a. https://www.tencentcloud.com/document/product/1145/62475;
+- `TypeB`: authentication method b type, for specific meaning please refer to authentication method b. https://www.tencentcloud.com/document/product/1145/62476;
+- `TypeC`: authentication method c type, for specific meaning please refer to authentication method c. https://www.tencentcloud.com/document/product/1145/62477;
+- `TypeD`: authentication method d type, for specific meaning please refer to authentication method d. https://www.tencentcloud.com/document/product/1145/62478;
+- `TypeVOD`: authentication method v type, for specific meaning please refer to authentication method v. https://www.tencentcloud.com/document/product/1145/62479.
+            * `backup_secret_key` - The backup authentication key consists of 6-40 uppercase and lowercase english letters or digits, and cannot contain " and $.
+            * `secret_key` - The primary authentication key consists of 6-40 uppercase and lowercase english letters or digits, and cannot contain " and $.
+            * `time_format` - Authentication time format. values: dec: decimal; hex: hexadecimal.
+            * `time_param` - Authentication timestamp. it cannot be the same as the value of the authparam field.note: this field is required when authtype is typed.
+            * `timeout` - Validity period of the authentication url, in seconds, value range: 1-630720000. used to determine if the client access request has expired: If the current time exceeds "timestamp + validity period", it is an expired request, and a 403 is returned directly. If the current time does not exceed "timestamp + validity period", the request is not expired, and the md5 string is further validated. note: when authtype is one of typea, typeb, typec, or typed, this field is required.
+          * `cache_key_parameters` - Custom cache key configuration parameter. when name is cachekey, this parameter is required.
+            * `cookie` - Cookie configuration parameters. at least one of the following configurations must be set: fullurlcache, ignorecase, header, scheme, cookie.
+              * `action` - Cache action. values: full: retain all; ignore: ignore all; includeCustom: retain partial parameters; excludeCustom: ignore partial parameters. note: when switch is on, this field is required. when switch is off, this field is not required and will not take effect if filled.
+              * `switch` - Whether to enable feature. values: on: enable; off: disable.
+              * `values` - Custom cache key cookie name list.
+            * `full_url_cache` - Switch for retaining the complete query string. values: on: enable; off: disable.
+            * `header` - HTTP request header configuration parameters. at least one of the following configurations must be set: fullurlcache, ignorecase, header, scheme, cookie.
+              * `switch` - Whether to enable feature. values: on: enable; off: disable.
+              * `values` - Custom cache key http request header list. note: this field is required when switch is on; when switch is off, this field is not required and will not take effect if filled.
+            * `ignore_case` - Switch for ignoring case. values: on: enable; off: disable. note: at least one of fullurlcache, ignorecase, header, scheme, or cookie must be configured.
+            * `query_string` - Configuration parameter for retaining the query string. this field and fullurlcache must be set simultaneously, but cannot both be on.
+              * `action` - Actions to retain/ignore specified parameters in the query string. values: `includeCustom`: retain partial parameters. `excludeCustom`: ignore partial parameters.note: this field is required when switch is on. when switch is off, this field is not required and will not take effect if filled.
+              * `switch` - Query string retain/ignore specified parameter switch. valid values are: on: enable; off: disable.
+              * `values` - A list of parameter names to keep/ignore in the query string.
+            * `scheme` - Request protocol switch. valid values: on: enable; off: disable.
+          * `cache_parameters` - Node cache ttl configuration parameter. when name is cache, this parameter is required.
+            * `custom_time` - Custom cache time. if not specified, this configuration is not set. only one of followorigin, nocache, or customtime can have switch set to on.
+              * `cache_time` - Custom cache time value, unit: seconds. value range: 0-315360000.
+              * `ignore_cache_control` - Ignore origin server cachecontrol switch. values: `on`: Enable; `off`: Disable.
+              * `switch` - Custom cache time switch. values: `on`: Enable; `off`: Disable.
+            * `follow_origin` - Cache follows origin server. if not specified, this configuration is not set. only one of followorigin, nocache, or customtime can have switch set to on.
+              * `default_cache_strategy` - Whether to use the default caching policy when an origin server does not return the cache-control header. this field is required when defaultcache is set to on; otherwise, it is ineffective. when defaultcachetime is not 0, this field should be off. valid values: on: use the default caching policy. off: do not use the default caching policy.
+              * `default_cache_time` - The default cache time in seconds when an origin server does not return the cache-control header. the value ranges from 0 to 315360000. this field is required when defaultcache is set to on; otherwise, it is ineffective. when defaultcachestrategy is on, this field should be 0.
+              * `default_cache` - Whether to cache when an origin server does not return the cache-control header. this field is required when switch is on; when switch is off, this field is not required and will be ineffective if filled. valid values: on: cache; off: do not cache.
+              * `switch` - Whether to enable the configuration of following the origin server. Valid values: `on`: Enable; `off`: Disable.
+            * `no_cache` - No cache. if not specified, this configuration is not set. only one of followorigin, nocache, or customtime can have switch set to on.
+              * `switch` - Whether to enable no-cache configuration. Valid values: `on`: Enable; `off`: Disable.
+          * `cache_prefresh_parameters` - The cache prefresh configuration parameter. this parameter is required when name is cacheprefresh.
+            * `cache_time_percent` - Prefresh interval set as a percentage of the node cache time. value range: 1-99. note: this field is required when switch is on; when switch is off, this field is not required and will not take effect if filled.
+            * `switch` - Whether to enable cache prefresh. values: on: enable; off: disable.
+          * `client_ip_country_parameters` - Configuration parameter for carrying the region information of the client ip during origin-pull. this parameter is required when the name is set to clientipcountry.
+            * `header_name` - Name of the request header that contains the client ip region. it is valid when switch=on. the default value EO-Client-IPCountry is used when it is not specified.
+            * `switch` - Whether to enable configuration. values: on: enable; off: disable.
+          * `client_ip_header_parameters` - Client ip header configuration for storing client request ip information. this parameter is required when name is clientipheader.
+            * `header_name` - Name of the request header containing the client ip address for origin-pull. when switch is on, this parameter is required. x-forwarded-for is not allowed for this parameter.
+            * `switch` - Whether to enable configuration. values: on: enable; off: disable.
+          * `compression_parameters` - Intelligent compression configuration. this parameter is required when name is set to compression.
+            * `algorithms` - Supported compression algorithm list. this field is required when switch is on; otherwise, it is not effective. valid values: brotli: brotli algorithm; gzip: gzip algorithm.
+            * `switch` - Whether to enable smart compression. values: on: enable; off: disable.
+          * `content_compression_parameters` - Content compression configuration parameters. This parameter is required when the `Name` parameter is set to `ContentCompression`. This parameter uses a whitelist function; please contact Tencent Cloud engineers if needed.
+            * `switch` - Content compression configuration switch, possible values are: on: enabled; off: disabled. When the Switch is set to `on`, both Brotli and gzip compression algorithms will be supported.
+          * `error_page_parameters` - Custom error page configuration parameters. this parameter is required when name is errorpage.
+            * `error_page_params` - Custom error page configuration list.
+              * `redirect_url` - Redirect url. requires a full redirect path, such as https://www.test.com/error.html.
+              * `status_code` - Status code. supported values are 400, 403, 404, 405, 414, 416, 451, 500, 501, 502, 503, 504.
+          * `force_redirect_https_parameters` - Force https redirect configuration parameter. this parameter is required when the name is set to forceredirecthttps.
+            * `redirect_status_code` - Redirection status code. this field is required when switch is on; otherwise, it is not effective. valid values are: 301: 301 redirect; 302: 302 redirect.
+            * `switch` - Whether to enable forced redirect configuration switch. values: on: enable; off: disable.
+          * `host_header_parameters` - Host header rewrite configuration parameter. this parameter is required when name is set to hostheader.
+            * `action` - Action to be executed. values: followOrigin: follow origin server domain name; custom: custom.
+            * `server_name` - Host header rewrite requires a complete domain name. note: this field is required when switch is on; when switch is off, this field is not required and any value will be ignored.
+          * `hsts_parameters` - HSTS configuration parameter. this parameter is required when name is hsts.
+            * `include_sub_domains` - Whether to allow other subdomains to inherit the same hsts header. values: on: allows other subdomains to inherit the same hsts header; off: does not allow other subdomains to inherit the same hsts header. note: when switch is on, this field is required; when switch is off, this field is not required and will not take effect if filled.
+            * `preload` - Whether to allow the browser to preload the hsts header. valid values: on: allows the browser to preload the hsts header; off: does not allow the browser to preload the hsts header. note: when switch is on, this field is required; when switch is off, this field is not required and will not take effect if filled.
+            * `switch` - Whether to enable hsts. values: on: enable; off: disable.
+            * `timeout` - Cache hsts header time, unit: seconds. value range: 1-31536000. note: this field is required when switch is on; when switch is off, this field is not required and will not take effect if filled.
+          * `http2_parameters` - HTTP2 access configuration parameter. this parameter is required when name is http2.
+            * `switch` - Whether to enable http2 access. values: on: enable; off: disable.
+          * `http_response_parameters` - HTTP response configuration parameters. this parameter is required when name is httpresponse.
+            * `response_page` - Response page id.
+            * `status_code` - Response status code. supports 2xx, 4xx, 5xx, excluding 499, 514, 101, 301, 302, 303, 509, 520-599.
+          * `http_upstream_timeout_parameters` - Configuration of layer 7 origin timeout. this parameter is required when name is httpupstreamtimeout.
+            * `response_timeout` - HTTP response timeout in seconds. value range: 5-600.
+          * `max_age_parameters` - Browser cache ttl configuration parameter. this parameter is required when name is maxage.
+            * `cache_time` - Custom cache time value, unit: seconds. value range: 0-315360000. note: when followorigin is off, it means not following the origin server and using cachetime to set the cache time; otherwise, this field will not take effect.
+            * `follow_origin` - Specifies whether to follow the origin server cache-control configuration, with the following values: on: follow the origin server and ignore the field cachetime; off: do not follow the origin server and apply the field cachetime.
+          * `modify_origin_parameters` - Configuration parameter for modifying the origin server. this parameter is required when the name is set to modifyorigin.
+            * `http_origin_port` - Ports for http origin-pull requests. value range: 1-65535. this parameter takes effect only when the origin-pull protocol originprotocol is http or follow.
+            * `https_origin_port` - Ports for https origin-pull requests. value range: 1-65535. this parameter takes effect only when the origin-pull protocol originprotocol is https or follow.
+            * `origin_protocol` - Origin-Pull protocol configuration. this parameter is required when origintype is ipdomain, origingroup, or loadbalance. valid values are: http: use http protocol; https: use https protocol; follow: follow the protocol.
+            * `origin_type` - The origin type. values: IPDomain: ipv4, ipv6, or domain name type origin server; OriginGroup: origin server group type origin server; LoadBalance: cloud load balancer (clb), this feature is in beta test. to use it, please submit a ticket or contact smart customer service; COS: tencent cloud COS origin server; AWSS3: all object storage origin servers that support the aws s3 protocol.
+            * `origin` - Origin server address, which varies according to the value of origintype: When origintype = ipdomain, fill in an ipv4 address, an ipv6 address, or a domain name; When origintype = cos, please fill in the access domain name of the cos bucket; When origintype = awss3, fill in the access domain name of the s3 bucket; When origintype = origingroup, fill in the origin server group id; When origintype = loadbalance, fill in the cloud load balancer instance id. this feature is currently only available to the allowlist.
+            * `private_access` - Whether access to the private object storage origin server is allowed. this parameter is valid only when the origin server type origintype is COS or awss3. valid values: on: enable private authentication; off: disable private authentication. if not specified, the default value is off.
+            * `private_parameters` - Private authentication parameter. this parameter is valid only when origintype = awss3 and privateaccess = on.
+              * `access_key_id` - Authentication parameter access key id.
+              * `region` - Region of the bucket.
+              * `secret_access_key` - Authentication parameter secret access key.
+              * `signature_version` - Authentication version. values: v2: v2 version; v4: v4 version.
+          * `modify_request_header_parameters` - Modify http node request header configuration parameters. this parameter is required when name is modifyrequestheader.
+            * `header_actions` - List of http header setting rules.
+              * `action` - HTTP header setting methods. valid values are: set: sets a value for an existing header parameter; del: deletes a header parameter; add: adds a header parameter.
+              * `name` - HTTP header name.
+              * `value` - HTTP header value. this parameter is required when the action is set to set or add; it is optional when the action is set to del.
+          * `modify_response_header_parameters` - Modify http node response header configuration parameters. this parameter is required when name is modifyresponseheader.
+            * `header_actions` - HTTP origin-pull header rules list.
+              * `action` - HTTP header setting methods. valid values are: set: sets a value for an existing header parameter; del: deletes a header parameter; add: adds a header parameter.
+              * `name` - HTTP header name.
+              * `value` - HTTP header value. this parameter is required when the action is set to set or add; it is optional when the action is set to del.
+          * `name` - Operation name. The name needs to correspond to the parameter structure, for example, if Name=Cache, CacheParameters is required.
+- `Cache`: Node cache TTL;
+- `CacheKey`: Custom Cache Key;
+- `CachePrefresh`: Cache pre-refresh;
+- `AccessURLRedirect`: Access URL redirection;
+- `UpstreamURLRewrite`: Back-to-origin URL rewrite;
+- `QUIC`: QUIC;
+- `WebSocket`: WebSocket;
+- `Authentication`: Token authentication;
+- `MaxAge`: Browser cache TTL;
+- `StatusCodeCache`: Status code cache TTL;
+- `OfflineCache`: Offline cache;
+- `SmartRouting`: Smart acceleration;
+- `RangeOriginPull`: Segment back-to-origin;
+- `UpstreamHTTP2`: HTTP2 back-to-origin;
+- `HostHeader`: Host Header rewrite;
+- `ForceRedirectHTTPS`: Access protocol forced HTTPS jump configuration;
+- `OriginPullProtocol`: Back-to-origin HTTPS;
+- `Compression`: Smart compression configuration;
+- `HSTS`: HSTS;
+- `ClientIPHeader`: Header information configuration for storing client request IP;
+- `OCSPStapling`: OCSP stapling;
+- `HTTP2`: HTTP2 Access;
+- `PostMaxSize`: POST request upload file streaming maximum limit configuration;
+- `ClientIPCountry`: Carry client IP region information when returning to the source;
+- `UpstreamFollowRedirect`: Return to the source follow redirection parameter configuration;
+- `UpstreamRequest`: Return to the source request parameters;
+- `TLSConfig`: SSL/TLS security;
+- `ModifyOrigin`: Modify the source station;
+- `HTTPUpstreamTimeout`: Seven-layer return to the source timeout configuration;
+- `HttpResponse`: HTTP response;
+- `ErrorPage`: Custom error page;
+- `ModifyResponseHeader`: Modify HTTP node response header;
+- `ModifyRequestHeader`: Modify HTTP node request header;
+- `ResponseSpeedLimit`: Single connection download speed limit.
+- `SetContentIdentifier`: Set content identifier.
+- `Vary`: Vary feature configuration.
+- `ContentCompression`: Content compression configuration.
+- `OriginAuthentication`: Origin authentication configuration.
+          * `ocsp_stapling_parameters` - OCSP stapling configuration parameter. this parameter is required when the name is set to ocspstapling.
+            * `switch` - Whether to enable ocsp stapling configuration switch. values: on: enable; off: disable.
+          * `offline_cache_parameters` - Offline cache configuration parameter. this parameter is required when name is offlinecache.
+            * `switch` - Whether to enable offline caching. values: on: enable; off: disable.
+          * `origin_authentication_parameters` - Origin authentication configuration parameter. This parameter is required when Name is set to OriginAuthentication. This is a whitelist feature; please contact Tencent Cloud engineers if needed.
+            * `request_properties` - Origin authentication request properties.
+              * `name` - Origin authentication parameter name.
+              * `type` - Origin authentication parameter type. Valid values: QueryString: set origin authentication parameter type as query string; Header: set origin authentication parameter type as request header.
+              * `value` - Origin authentication parameter value.
+          * `origin_pull_protocol_parameters` - Back-to-origin HTTPS configuration parameter. This parameter is required when the Name value is `OriginPullProtocol`.
+            * `protocol` - Back-to-origin protocol configuration. Possible values are: `http`: use HTTP protocol for back-to-origin; `https`: use HTTPS protocol for back-to-origin; `follow`: follow the protocol.
+          * `post_max_size_parameters` - Maximum size configuration for file streaming upload via a post request. this parameter is required when name is postmaxsize.
+            * `max_size` - Maximum size of the file uploaded for streaming via a post request, in bytes. value range: 1 * 2^20 bytes to 500 * 2^20 bytes.
+            * `switch` - Whether to enable post request file upload limit, in bytes (default limit: 32 * 2^20 bytes). valid values: on: enable limit; off: disable limit.
+          * `quic_parameters` - The quic configuration parameter. this parameter is required when name is quic.
+            * `switch` - Whether to enable quic. values: on: enable; off: disable.
+          * `range_origin_pull_parameters` - Shard source retrieval configuration parameter. this parameter is required when name is set to rangeoriginpull.
+            * `switch` - Whether to enable range gets. values are: on: enable; off: disable.
+          * `response_speed_limit_parameters` - Single connection download speed limit configuration parameter. this parameter is required when name is responsespeedlimit.
+            * `max_speed` - Rate-Limiting value, in kb/s. enter a numerical value to specify the rate limit.
+            * `mode` - Download rate limit mode. valid values: LimitUponDownload: rate limit throughout the download process; LimitAfterSpecificBytesDownloaded: rate limit after downloading specific bytes at full speed; LimitAfterSpecificSecondsDownloaded: start speed limit after downloading at full speed for a specific duration.
+            * `start_at` - Rate-Limiting start value, which can be the download size or specified duration, in kb or s. this parameter is required when mode is set to limitafterspecificbytesdownloaded or limitafterspecificsecondsdownloaded. enter a numerical value to specify the download size or duration.
+          * `set_content_identifier_parameters` - Content identification configuration parameter. this parameter is required when name is httpresponse.
+            * `content_identifier` - Content identifier id.
+          * `smart_routing_parameters` - Smart acceleration configuration parameter. this parameter is required when name is smartrouting.
+            * `switch` - Whether to enable smart acceleration. values: on: enable; off: disable.
+          * `status_code_cache_parameters` - Status code cache ttl configuration parameter. this parameter is required when name is statuscodecache.
+            * `status_code_cache_params` - Status code cache ttl.
+              * `cache_time` - Cache time value in seconds. value range: 0-31536000.
+              * `status_code` - Status code. valid values: 400, 401, 403, 404, 405, 407, 414, 500, 501, 502, 503, 504, 509, 514.
+          * `tls_config_parameters` - SSL/TLS security configuration parameter. this parameter is required when the name is set to tlsconfig.
+            * `cipher_suite` - Cipher suite. for detailed information, please refer to tls versions and cipher suites description, https://www.tencentcloud.com/document/product/1145/54154?has_map=1. valid values: loose-v2023: loose-v2023 cipher suite; general-v2023: general-v2023 cipher suite; strict-v2023: strict-v2023 cipher suite.
+            * `version` - TLS version. at least one must be specified. if multiple versions are specified, they must be consecutive, e.g., enable TLSv1, TLSv1.1, TLSv1.2, and TLSv1.3. it is not allowed to enable only 1 and 1.2 while disabling 1.1. valid values: TLSv1: TLSv1 version; TLSv1.1: TLSv1.1 version; TLSv1.2: TLSv1.2 version; TLSv1.3: TLSv1.3 version.
+          * `upstream_follow_redirect_parameters` - Configuration parameter for following redirects during origin-pull. this parameter is required when the name is set to upstreamfollowredirect.
+            * `max_times` - The maximum number of redirects. value range: 1-5. Note: this field is required when switch is on; when switch is off, this field is not required and will not take effect if filled.
+            * `switch` - Whether to enable origin-pull to follow the redirection configuration. values: on: enable; off: disable.
+          * `upstream_http2_parameters` - HTTP2 origin-pull configuration parameter. this parameter is required when name is set to upstreamhttp2.
+            * `switch` - Whether to enable http2 origin-pull. valid values: on: enable; off: disable.
+          * `upstream_request_parameters` - Configuration parameter for origin-pull request. this parameter is required when the name is set to upstreamrequest.
+            * `cookie` - Cookie configuration. optional. if not provided, it will not be configured.
+              * `action` - Origin-Pull request parameter cookie mode. this parameter is required when switch is on. valid values are: full: retain all; ignore: ignore all; includeCustom: retain partial parameters; excludeCustom: ignore partial parameters.
+              * `switch` - Whether to enable the origin-pull request parameter cookie. valid values: on: enable; off: disable.
+              * `values` - Specifies parameter values. this parameter takes effect only when the query string mode action is includecustom or excludecustom, and is used to specify the parameters to be reserved or ignored. up to 10 parameters are supported.
+            * `query_string` - Query string configuration. optional. if not provided, it will not be configured.
+              * `action` - Query string mode. this parameter is required when switch is on. values: full: retain all; ignore: ignore all; includeCustom: retain partial parameters; excludeCustom: ignore partial parameters.
+              * `switch` - Whether to enable origin-pull request parameter query string. values: on: enable; off: disable.
+              * `values` - Specifies parameter values. this parameter takes effect only when the query string mode action is includecustom or excludecustom, and is used to specify the parameters to be reserved or ignored. up to 10 parameters are supported.
+          * `upstream_url_rewrite_parameters` - The origin-pull url rewrite configuration parameter. this parameter is required when name is upstreamurlrewrite.
+            * `action` - Origin-Pull url rewrite action. valid values are: replace: replace the path prefix; addPrefix: add the path prefix; rmvPrefix: remove the path prefix.
+            * `regex` - Origin URL Rewrite uses a regular expression for matching the complete path. It must conform to the Google RE2 specification and have a length range of 1 to 1024. This field is required when the Action is regexReplace; otherwise, it is optional.
+            * `type` - Origin-Pull url rewriting type, only path is supported.
+            * `value` - Origin-Pull url rewrite value, maximum length 1024, must start with /.note: when action is addprefix, it cannot end with /; when action is rmvprefix, * cannot be present.
+          * `vary_parameters` - Vary configuration parameter. This parameter is required when Name is set to Vary.
+            * `switch` - Whether to enable Vary feature. Valid values: on: enable; off: disable.
+          * `web_socket_parameters` - The websocket configuration parameter. this parameter is required when name is websocket.
+            * `switch` - Whether to enable websocket connection timeout. values: on: use timeout as the websocket timeout;; off: the platform still supports websocket connections, using the system default timeout of 15 seconds.
+            * `timeout` - Timeout, unit: seconds. maximum timeout is 120 seconds.
+        * `condition` - Match condition. https://www.tencentcloud.com/document/product/1145/54759.
+        * `sub_rules` - List of sub-rules. multiple rules exist in this list and are executed sequentially from top to bottom. note: subrules and actions cannot both be empty. currently, only one layer of subrules is supported.
+          * `branches` - Sub-rule branch.
+            * `actions` - Sub-Rule branch. this list currently supports filling in only one rule; multiple entries are invalid.
+              * `access_url_redirect_parameters` - The access url redirection configuration parameter. this parameter is required when name is accessurlredirect.
+                * `host_name` - Target hostname.
+                  * `action` - Target hostname configuration, valid values are: follow: follow the request; custom: custom.
+                  * `value` - Custom value for target hostname, maximum length is 1024.
+                * `protocol` - Target request protocol. valid values: http: target request protocol http; https: target request protocol https; follow: follow the request.
+                * `query_string` - Carry query parameters.
+                  * `action` - Action to be executed. values: full: retain all; ignore: ignore all.
+                * `status_code` - Status code. valid values: 301, 302, 303, 307, 308.
+                * `url_path` - Target path.
+                  * `action` - Action to be executed. values: follow: follow the request; custom: custom; regex: regular expression matching.
+                  * `regex` - Regular expression matching expression, length range is 1-1024. note: when action is regex, this field is required; when action is follow or custom, this field is not required and will not take effect if filled.
+                  * `value` - Redirect target url, length range is 1-1024.note: when action is regex or custom, this field is required; when action is follow, this field is not required and will not take effect if filled.
+              * `authentication_parameters` - Token authentication configuration parameter. this parameter is required when name is authentication.
+                * `auth_param` - Authentication parameters name. the node will validate the value corresponding to this parameter name. consists of 1-100 uppercase and lowercase letters, numbers, or underscores.note: this field is required when authtype is either typea or typed.
+                * `auth_type` - Authentication type. valid values:
+- `TypeA`: authentication method a type, for specific meaning please refer to authentication method a. https://www.tencentcloud.com/document/product/1145/62475;
+- `TypeB`: authentication method b type, for specific meaning please refer to authentication method b. https://www.tencentcloud.com/document/product/1145/62476;
+- `TypeC`: authentication method c type, for specific meaning please refer to authentication method c. https://www.tencentcloud.com/document/product/1145/62477;
+- `TypeD`: authentication method d type, for specific meaning please refer to authentication method d. https://www.tencentcloud.com/document/product/1145/62478;
+- `TypeVOD`: authentication method v type, for specific meaning please refer to authentication method v. https://www.tencentcloud.com/document/product/1145/62479.
+                * `backup_secret_key` - The backup authentication key consists of 6-40 uppercase and lowercase english letters or digits, and cannot contain " and $.
+                * `secret_key` - The primary authentication key consists of 6-40 uppercase and lowercase english letters or digits, and cannot contain " and $.
+                * `time_format` - Authentication time format. values: dec: decimal; hex: hexadecimal.
+                * `time_param` - Authentication timestamp. it cannot be the same as the value of the authparam field.note: this field is required when authtype is typed.
+                * `timeout` - Validity period of the authentication url, in seconds, value range: 1-630720000. used to determine if the client access request has expired: If the current time exceeds "timestamp + validity period", it is an expired request, and a 403 is returned directly. If the current time does not exceed "timestamp + validity period", the request is not expired, and the md5 string is further validated. note: when authtype is one of typea, typeb, typec, or typed, this field is required.
+              * `cache_key_parameters` - Custom cache key configuration parameter. when name is cachekey, this parameter is required.
+                * `cookie` - Cookie configuration parameters. at least one of the following configurations must be set: fullurlcache, ignorecase, header, scheme, cookie.
+                  * `action` - Cache action. values: full: retain all; ignore: ignore all; includeCustom: retain partial parameters; excludeCustom: ignore partial parameters. note: when switch is on, this field is required. when switch is off, this field is not required and will not take effect if filled.
+                  * `switch` - Whether to enable feature. values: on: enable; off: disable.
+                  * `values` - Custom cache key cookie name list.
+                * `full_url_cache` - Switch for retaining the complete query string. values: on: enable; off: disable.
+                * `header` - HTTP request header configuration parameters. at least one of the following configurations must be set: fullurlcache, ignorecase, header, scheme, cookie.
+                  * `switch` - Whether to enable feature. values: on: enable; off: disable.
+                  * `values` - Custom cache key http request header list. note: this field is required when switch is on; when switch is off, this field is not required and will not take effect if filled.
+                * `ignore_case` - Switch for ignoring case. values: on: enable; off: disable. note: at least one of fullurlcache, ignorecase, header, scheme, or cookie must be configured.
+                * `query_string` - Configuration parameter for retaining the query string. this field and fullurlcache must be set simultaneously, but cannot both be on.
+                  * `action` - Actions to retain/ignore specified parameters in the query string. values: `includeCustom`: retain partial parameters. `excludeCustom`: ignore partial parameters.note: this field is required when switch is on. when switch is off, this field is not required and will not take effect if filled.
+                  * `switch` - Query string retain/ignore specified parameter switch. valid values are: on: enable; off: disable.
+                  * `values` - A list of parameter names to keep/ignore in the query string.
+                * `scheme` - Request protocol switch. valid values: on: enable; off: disable.
+              * `cache_parameters` - Node cache ttl configuration parameter. when name is cache, this parameter is required.
+                * `custom_time` - Custom cache time. if not specified, this configuration is not set. only one of followorigin, nocache, or customtime can have switch set to on.
+                  * `cache_time` - Custom cache time value, unit: seconds. value range: 0-315360000.
+                  * `ignore_cache_control` - Ignore origin server cachecontrol switch. values: `on`: Enable; `off`: Disable.
+                  * `switch` - Custom cache time switch. values: `on`: Enable; `off`: Disable.
+                * `follow_origin` - Cache follows origin server. if not specified, this configuration is not set. only one of followorigin, nocache, or customtime can have switch set to on.
+                  * `default_cache_strategy` - Whether to use the default caching policy when an origin server does not return the cache-control header. this field is required when defaultcache is set to on; otherwise, it is ineffective. when defaultcachetime is not 0, this field should be off. valid values: on: use the default caching policy. off: do not use the default caching policy.
+                  * `default_cache_time` - The default cache time in seconds when an origin server does not return the cache-control header. the value ranges from 0 to 315360000. this field is required when defaultcache is set to on; otherwise, it is ineffective. when defaultcachestrategy is on, this field should be 0.
+                  * `default_cache` - Whether to cache when an origin server does not return the cache-control header. this field is required when switch is on; when switch is off, this field is not required and will be ineffective if filled. valid values: on: cache; off: do not cache.
+                  * `switch` - Whether to enable the configuration of following the origin server. Valid values: `on`: Enable; `off`: Disable.
+                * `no_cache` - No cache. if not specified, this configuration is not set. only one of followorigin, nocache, or customtime can have switch set to on.
+                  * `switch` - Whether to enable no-cache configuration. Valid values: `on`: Enable; `off`: Disable.
+              * `cache_prefresh_parameters` - The cache prefresh configuration parameter. this parameter is required when name is cacheprefresh.
+                * `cache_time_percent` - Prefresh interval set as a percentage of the node cache time. value range: 1-99. note: this field is required when switch is on; when switch is off, this field is not required and will not take effect if filled.
+                * `switch` - Whether to enable cache prefresh. values: on: enable; off: disable.
+              * `client_ip_country_parameters` - Configuration parameter for carrying the region information of the client ip during origin-pull. this parameter is required when the name is set to clientipcountry.
+                * `header_name` - Name of the request header that contains the client ip region. it is valid when switch=on. the default value EO-Client-IPCountry is used when it is not specified.
+                * `switch` - Whether to enable configuration. values: on: enable; off: disable.
+              * `client_ip_header_parameters` - Client ip header configuration for storing client request ip information. this parameter is required when name is clientipheader.
+                * `header_name` - Name of the request header containing the client ip address for origin-pull. when switch is on, this parameter is required. x-forwarded-for is not allowed for this parameter.
+                * `switch` - Whether to enable configuration. values: on: enable; off: disable.
+              * `compression_parameters` - Intelligent compression configuration. this parameter is required when name is set to compression.
+                * `algorithms` - Supported compression algorithm list. this field is required when switch is on; otherwise, it is not effective. valid values: brotli: brotli algorithm; gzip: gzip algorithm.
+                * `switch` - Whether to enable smart compression. values: on: enable; off: disable.
+              * `content_compression_parameters` - Content compression configuration parameters. This parameter is required when the `Name` parameter is set to `ContentCompression`. This parameter uses a whitelist function; please contact Tencent Cloud engineers if needed.
+                * `switch` - Content compression configuration switch, possible values are: on: enabled; off: disabled. When the Switch is set to `on`, both Brotli and gzip compression algorithms will be supported.
+              * `error_page_parameters` - Custom error page configuration parameters. this parameter is required when name is errorpage.
+                * `error_page_params` - Custom error page configuration list.
+                  * `redirect_url` - Redirect url. requires a full redirect path, such as https://www.test.com/error.html.
+                  * `status_code` - Status code. supported values are 400, 403, 404, 405, 414, 416, 451, 500, 501, 502, 503, 504.
+              * `force_redirect_https_parameters` - Force https redirect configuration parameter. this parameter is required when the name is set to forceredirecthttps.
+                * `redirect_status_code` - Redirection status code. this field is required when switch is on; otherwise, it is not effective. valid values are: 301: 301 redirect; 302: 302 redirect.
+                * `switch` - Whether to enable forced redirect configuration switch. values: on: enable; off: disable.
+              * `host_header_parameters` - Host header rewrite configuration parameter. this parameter is required when name is set to hostheader.
+                * `action` - Action to be executed. values: followOrigin: follow origin server domain name; custom: custom.
+                * `server_name` - Host header rewrite requires a complete domain name. note: this field is required when switch is on; when switch is off, this field is not required and any value will be ignored.
+              * `hsts_parameters` - HSTS configuration parameter. this parameter is required when name is hsts.
+                * `include_sub_domains` - Whether to allow other subdomains to inherit the same hsts header. values: on: allows other subdomains to inherit the same hsts header; off: does not allow other subdomains to inherit the same hsts header. note: when switch is on, this field is required; when switch is off, this field is not required and will not take effect if filled.
+                * `preload` - Whether to allow the browser to preload the hsts header. valid values: on: allows the browser to preload the hsts header; off: does not allow the browser to preload the hsts header. note: when switch is on, this field is required; when switch is off, this field is not required and will not take effect if filled.
+                * `switch` - Whether to enable hsts. values: on: enable; off: disable.
+                * `timeout` - Cache hsts header time, unit: seconds. value range: 1-31536000. note: this field is required when switch is on; when switch is off, this field is not required and will not take effect if filled.
+              * `http2_parameters` - HTTP2 access configuration parameter. this parameter is required when name is http2.
+                * `switch` - Whether to enable http2 access. values: on: enable; off: disable.
+              * `http_response_parameters` - HTTP response configuration parameters. this parameter is required when name is httpresponse.
+                * `response_page` - Response page id.
+                * `status_code` - Response status code. supports 2xx, 4xx, 5xx, excluding 499, 514, 101, 301, 302, 303, 509, 520-599.
+              * `http_upstream_timeout_parameters` - Configuration of layer 7 origin timeout. this parameter is required when name is httpupstreamtimeout.
+                * `response_timeout` - HTTP response timeout in seconds. value range: 5-600.
+              * `max_age_parameters` - Browser cache ttl configuration parameter. this parameter is required when name is maxage.
+                * `cache_time` - Custom cache time value, unit: seconds. value range: 0-315360000. note: when followorigin is off, it means not following the origin server and using cachetime to set the cache time; otherwise, this field will not take effect.
+                * `follow_origin` - Specifies whether to follow the origin server cache-control configuration, with the following values: on: follow the origin server and ignore the field cachetime; off: do not follow the origin server and apply the field cachetime.
+              * `modify_origin_parameters` - Configuration parameter for modifying the origin server. this parameter is required when the name is set to modifyorigin.
+                * `http_origin_port` - Ports for http origin-pull requests. value range: 1-65535. this parameter takes effect only when the origin-pull protocol originprotocol is http or follow.
+                * `https_origin_port` - Ports for https origin-pull requests. value range: 1-65535. this parameter takes effect only when the origin-pull protocol originprotocol is https or follow.
+                * `origin_protocol` - Origin-Pull protocol configuration. this parameter is required when origintype is ipdomain, origingroup, or loadbalance. valid values are: http: use http protocol; https: use https protocol; follow: follow the protocol.
+                * `origin_type` - The origin type. values: IPDomain: ipv4, ipv6, or domain name type origin server; OriginGroup: origin server group type origin server; LoadBalance: cloud load balancer (clb), this feature is in beta test. to use it, please submit a ticket or contact smart customer service; COS: tencent cloud COS origin server; AWSS3: all object storage origin servers that support the aws s3 protocol.
+                * `origin` - Origin server address, which varies according to the value of origintype: When origintype = ipdomain, fill in an ipv4 address, an ipv6 address, or a domain name; When origintype = cos, please fill in the access domain name of the cos bucket; When origintype = awss3, fill in the access domain name of the s3 bucket; When origintype = origingroup, fill in the origin server group id; When origintype = loadbalance, fill in the cloud load balancer instance id. this feature is currently only available to the allowlist.
+                * `private_access` - Whether access to the private object storage origin server is allowed. this parameter is valid only when the origin server type origintype is COS or awss3. valid values: on: enable private authentication; off: disable private authentication. if not specified, the default value is off.
+                * `private_parameters` - Private authentication parameter. this parameter is valid only when origintype = awss3 and privateaccess = on.
+                  * `access_key_id` - Authentication parameter access key id.
+                  * `region` - Region of the bucket.
+                  * `secret_access_key` - Authentication parameter secret access key.
+                  * `signature_version` - Authentication version. values: v2: v2 version; v4: v4 version.
+              * `modify_request_header_parameters` - Modify http node request header configuration parameters. this parameter is required when name is modifyrequestheader.
+                * `header_actions` - List of http header setting rules.
+                  * `action` - HTTP header setting methods. valid values are: set: sets a value for an existing header parameter; del: deletes a header parameter; add: adds a header parameter.
+                  * `name` - HTTP header name.
+                  * `value` - HTTP header value. this parameter is required when the action is set to set or add; it is optional when the action is set to del.
+              * `modify_response_header_parameters` - Modify http node response header configuration parameters. this parameter is required when name is modifyresponseheader.
+                * `header_actions` - HTTP origin-pull header rules list.
+                  * `action` - HTTP header setting methods. valid values are: set: sets a value for an existing header parameter; del: deletes a header parameter; add: adds a header parameter.
+                  * `name` - HTTP header name.
+                  * `value` - HTTP header value. this parameter is required when the action is set to set or add; it is optional when the action is set to del.
+              * `name` - Operation name. The name needs to correspond to the parameter structure, for example, if Name=Cache, CacheParameters is required.
+- `Cache`: Node cache TTL;
+- `CacheKey`: Custom Cache Key;
+- `CachePrefresh`: Cache pre-refresh;
+- `AccessURLRedirect`: Access URL redirection;
+- `UpstreamURLRewrite`: Back-to-origin URL rewrite;
+- `QUIC`: QUIC;
+- `WebSocket`: WebSocket;
+- `Authentication`: Token authentication;
+- `MaxAge`: Browser cache TTL;
+- `StatusCodeCache`: Status code cache TTL;
+- `OfflineCache`: Offline cache;
+- `SmartRouting`: Smart acceleration;
+- `RangeOriginPull`: Segment back-to-origin;
+- `UpstreamHTTP2`: HTTP2 back-to-origin;
+- `HostHeader`: Host Header rewrite;
+- `ForceRedirectHTTPS`: Access protocol forced HTTPS jump configuration;
+- `OriginPullProtocol`: Back-to-origin HTTPS;
+- `Compression`: Smart compression configuration;
+- `HSTS`: HSTS;
+- `ClientIPHeader`: Header information configuration for storing client request IP;
+- `OCSPStapling`: OCSP stapling;
+- `HTTP2`: HTTP2 Access;
+- `PostMaxSize`: POST request upload file streaming maximum limit configuration;
+- `ClientIPCountry`: Carry client IP region information when returning to the source;
+- `UpstreamFollowRedirect`: Return to the source follow redirection parameter configuration;
+- `UpstreamRequest`: Return to the source request parameters;
+- `TLSConfig`: SSL/TLS security;
+- `ModifyOrigin`: Modify the source station;
+- `HTTPUpstreamTimeout`: Seven-layer return to the source timeout configuration;
+- `HttpResponse`: HTTP response;
+- `ErrorPage`: Custom error page;
+- `ModifyResponseHeader`: Modify HTTP node response header;
+- `ModifyRequestHeader`: Modify HTTP node request header;
+- `ResponseSpeedLimit`: Single connection download speed limit.
+- `SetContentIdentifier`: Set content identifier.
+- `Vary`: Vary feature configuration.
+- `ContentCompression`: Content compression configuration.
+- `OriginAuthentication`: Origin authentication configuration.
+              * `ocsp_stapling_parameters` - OCSP stapling configuration parameter. this parameter is required when the name is set to ocspstapling.
+                * `switch` - Whether to enable ocsp stapling configuration switch. values: on: enable; off: disable.
+              * `offline_cache_parameters` - Offline cache configuration parameter. this parameter is required when name is offlinecache.
+                * `switch` - Whether to enable offline caching. values: on: enable; off: disable.
+              * `origin_authentication_parameters` - Origin authentication configuration parameter. This parameter is required when Name is set to OriginAuthentication. This is a whitelist feature; please contact Tencent Cloud engineers if needed.
+                * `request_properties` - Origin authentication request properties.
+                  * `name` - Origin authentication parameter name.
+                  * `type` - Origin authentication parameter type. Valid values: QueryString: set origin authentication parameter type as query string; Header: set origin authentication parameter type as request header.
+                  * `value` - Origin authentication parameter value.
+              * `origin_pull_protocol_parameters` - Back-to-origin HTTPS configuration parameter. This parameter is required when the Name value is `OriginPullProtocol`.
+                * `protocol` - Back-to-origin protocol configuration. Possible values are: `http`: use HTTP protocol for back-to-origin; `https`: use HTTPS protocol for back-to-origin; `follow`: follow the protocol.
+              * `post_max_size_parameters` - Maximum size configuration for file streaming upload via a post request. this parameter is required when name is postmaxsize.
+                * `max_size` - Maximum size of the file uploaded for streaming via a post request, in bytes. value range: 1 * 2^20 bytes to 500 * 2^20 bytes.
+                * `switch` - Whether to enable post request file upload limit, in bytes (default limit: 32 * 2^20 bytes). valid values: on: enable limit; off: disable limit.
+              * `quic_parameters` - The quic configuration parameter. this parameter is required when name is quic.
+                * `switch` - Whether to enable quic. values: on: enable; off: disable.
+              * `range_origin_pull_parameters` - Shard source retrieval configuration parameter. this parameter is required when name is set to rangeoriginpull.
+                * `switch` - Whether to enable range gets. values are: on: enable; off: disable.
+              * `response_speed_limit_parameters` - Single connection download speed limit configuration parameter. this parameter is required when name is responsespeedlimit.
+                * `max_speed` - Rate-Limiting value, in kb/s. enter a numerical value to specify the rate limit.
+                * `mode` - Download rate limit mode. valid values: LimitUponDownload: rate limit throughout the download process; LimitAfterSpecificBytesDownloaded: rate limit after downloading specific bytes at full speed; LimitAfterSpecificSecondsDownloaded: start speed limit after downloading at full speed for a specific duration.
+                * `start_at` - Rate-Limiting start value, which can be the download size or specified duration, in kb or s. this parameter is required when mode is set to limitafterspecificbytesdownloaded or limitafterspecificsecondsdownloaded. enter a numerical value to specify the download size or duration.
+              * `set_content_identifier_parameters` - Content identification configuration parameter. this parameter is required when name is httpresponse.
+                * `content_identifier` - Content identifier id.
+              * `smart_routing_parameters` - Smart acceleration configuration parameter. this parameter is required when name is smartrouting.
+                * `switch` - Whether to enable smart acceleration. values: on: enable; off: disable.
+              * `status_code_cache_parameters` - Status code cache ttl configuration parameter. this parameter is required when name is statuscodecache.
+                * `status_code_cache_params` - Status code cache ttl.
+                  * `cache_time` - Cache time value in seconds. value range: 0-31536000.
+                  * `status_code` - Status code. valid values: 400, 401, 403, 404, 405, 407, 414, 500, 501, 502, 503, 504, 509, 514.
+              * `tls_config_parameters` - SSL/TLS security configuration parameter. this parameter is required when the name is set to tlsconfig.
+                * `cipher_suite` - Cipher suite. for detailed information, please refer to tls versions and cipher suites description, https://www.tencentcloud.com/document/product/1145/54154?has_map=1. valid values: loose-v2023: loose-v2023 cipher suite; general-v2023: general-v2023 cipher suite; strict-v2023: strict-v2023 cipher suite.
+                * `version` - TLS version. at least one must be specified. if multiple versions are specified, they must be consecutive, e.g., enable TLSv1, TLSv1.1, TLSv1.2, and TLSv1.3. it is not allowed to enable only 1 and 1.2 while disabling 1.1. valid values: TLSv1: TLSv1 version; TLSv1.1: TLSv1.1 version; TLSv1.2: TLSv1.2 version; TLSv1.3: TLSv1.3 version.
+              * `upstream_follow_redirect_parameters` - Configuration parameter for following redirects during origin-pull. this parameter is required when the name is set to upstreamfollowredirect.
+                * `max_times` - The maximum number of redirects. value range: 1-5. Note: this field is required when switch is on; when switch is off, this field is not required and will not take effect if filled.
+                * `switch` - Whether to enable origin-pull to follow the redirection configuration. values: on: enable; off: disable.
+              * `upstream_http2_parameters` - HTTP2 origin-pull configuration parameter. this parameter is required when name is set to upstreamhttp2.
+                * `switch` - Whether to enable http2 origin-pull. valid values: on: enable; off: disable.
+              * `upstream_request_parameters` - Configuration parameter for origin-pull request. this parameter is required when the name is set to upstreamrequest.
+                * `cookie` - Cookie configuration. optional. if not provided, it will not be configured.
+                  * `action` - Origin-Pull request parameter cookie mode. this parameter is required when switch is on. valid values are: full: retain all; ignore: ignore all; includeCustom: retain partial parameters; excludeCustom: ignore partial parameters.
+                  * `switch` - Whether to enable the origin-pull request parameter cookie. valid values: on: enable; off: disable.
+                  * `values` - Specifies parameter values. this parameter takes effect only when the query string mode action is includecustom or excludecustom, and is used to specify the parameters to be reserved or ignored. up to 10 parameters are supported.
+                * `query_string` - Query string configuration. optional. if not provided, it will not be configured.
+                  * `action` - Query string mode. this parameter is required when switch is on. values: full: retain all; ignore: ignore all; includeCustom: retain partial parameters; excludeCustom: ignore partial parameters.
+                  * `switch` - Whether to enable origin-pull request parameter query string. values: on: enable; off: disable.
+                  * `values` - Specifies parameter values. this parameter takes effect only when the query string mode action is includecustom or excludecustom, and is used to specify the parameters to be reserved or ignored. up to 10 parameters are supported.
+              * `upstream_url_rewrite_parameters` - The origin-pull url rewrite configuration parameter. this parameter is required when name is upstreamurlrewrite.
+                * `action` - Origin-Pull url rewrite action. valid values are: replace: replace the path prefix; addPrefix: add the path prefix; rmvPrefix: remove the path prefix.
+                * `regex` - Origin URL Rewrite uses a regular expression for matching the complete path. It must conform to the Google RE2 specification and have a length range of 1 to 1024. This field is required when the Action is regexReplace; otherwise, it is optional.
+                * `type` - Origin-Pull url rewriting type, only path is supported.
+                * `value` - Origin-Pull url rewrite value, maximum length 1024, must start with /.note: when action is addprefix, it cannot end with /; when action is rmvprefix, * cannot be present.
+              * `vary_parameters` - Vary configuration parameter. This parameter is required when Name is set to Vary.
+                * `switch` - Whether to enable Vary feature. Valid values: on: enable; off: disable.
+              * `web_socket_parameters` - The websocket configuration parameter. this parameter is required when name is websocket.
+                * `switch` - Whether to enable websocket connection timeout. values: on: use timeout as the websocket timeout;; off: the platform still supports websocket connections, using the system default timeout of 15 seconds.
+                * `timeout` - Timeout, unit: seconds. maximum timeout is 120 seconds.
+            * `condition` - Match condition. https://www.tencentcloud.com/document/product/1145/54759.
+            * `sub_rules` - List of sub-rules. multiple rules exist in this list and are executed sequentially from top to bottom. note: subrules and actions cannot both be empty. currently, only one layer of subrules is supported.
+              * `branches` - Sub-rule branch.
+                * `actions` - Sub-Rule branch. this list currently supports filling in only one rule; multiple entries are invalid.
+                  * `access_url_redirect_parameters` - The access url redirection configuration parameter. this parameter is required when name is accessurlredirect.
+                    * `host_name` - Target hostname.
+                      * `action` - Target hostname configuration, valid values are: follow: follow the request; custom: custom.
+                      * `value` - Custom value for target hostname, maximum length is 1024.
+                    * `protocol` - Target request protocol. valid values: http: target request protocol http; https: target request protocol https; follow: follow the request.
+                    * `query_string` - Carry query parameters.
+                      * `action` - Action to be executed. values: full: retain all; ignore: ignore all.
+                    * `status_code` - Status code. valid values: 301, 302, 303, 307, 308.
+                    * `url_path` - Target path.
+                      * `action` - Action to be executed. values: follow: follow the request; custom: custom; regex: regular expression matching.
+                      * `regex` - Regular expression matching expression, length range is 1-1024. note: when action is regex, this field is required; when action is follow or custom, this field is not required and will not take effect if filled.
+                      * `value` - Redirect target url, length range is 1-1024.note: when action is regex or custom, this field is required; when action is follow, this field is not required and will not take effect if filled.
+                  * `authentication_parameters` - Token authentication configuration parameter. this parameter is required when name is authentication.
+                    * `auth_param` - Authentication parameters name. the node will validate the value corresponding to this parameter name. consists of 1-100 uppercase and lowercase letters, numbers, or underscores.note: this field is required when authtype is either typea or typed.
+                    * `auth_type` - Authentication type. valid values:
+- `TypeA`: authentication method a type, for specific meaning please refer to authentication method a. https://www.tencentcloud.com/document/product/1145/62475;
+- `TypeB`: authentication method b type, for specific meaning please refer to authentication method b. https://www.tencentcloud.com/document/product/1145/62476;
+- `TypeC`: authentication method c type, for specific meaning please refer to authentication method c. https://www.tencentcloud.com/document/product/1145/62477;
+- `TypeD`: authentication method d type, for specific meaning please refer to authentication method d. https://www.tencentcloud.com/document/product/1145/62478;
+- `TypeVOD`: authentication method v type, for specific meaning please refer to authentication method v. https://www.tencentcloud.com/document/product/1145/62479.
+                    * `backup_secret_key` - The backup authentication key consists of 6-40 uppercase and lowercase english letters or digits, and cannot contain " and $.
+                    * `secret_key` - The primary authentication key consists of 6-40 uppercase and lowercase english letters or digits, and cannot contain " and $.
+                    * `time_format` - Authentication time format. values: dec: decimal; hex: hexadecimal.
+                    * `time_param` - Authentication timestamp. it cannot be the same as the value of the authparam field.note: this field is required when authtype is typed.
+                    * `timeout` - Validity period of the authentication url, in seconds, value range: 1-630720000. used to determine if the client access request has expired: If the current time exceeds "timestamp + validity period", it is an expired request, and a 403 is returned directly. If the current time does not exceed "timestamp + validity period", the request is not expired, and the md5 string is further validated. note: when authtype is one of typea, typeb, typec, or typed, this field is required.
+                  * `cache_key_parameters` - Custom cache key configuration parameter. when name is cachekey, this parameter is required.
+                    * `cookie` - Cookie configuration parameters. at least one of the following configurations must be set: fullurlcache, ignorecase, header, scheme, cookie.
+                      * `action` - Cache action. values: full: retain all; ignore: ignore all; includeCustom: retain partial parameters; excludeCustom: ignore partial parameters. note: when switch is on, this field is required. when switch is off, this field is not required and will not take effect if filled.
+                      * `switch` - Whether to enable feature. values: on: enable; off: disable.
+                      * `values` - Custom cache key cookie name list.
+                    * `full_url_cache` - Switch for retaining the complete query string. values: on: enable; off: disable.
+                    * `header` - HTTP request header configuration parameters. at least one of the following configurations must be set: fullurlcache, ignorecase, header, scheme, cookie.
+                      * `switch` - Whether to enable feature. values: on: enable; off: disable.
+                      * `values` - Custom cache key http request header list. note: this field is required when switch is on; when switch is off, this field is not required and will not take effect if filled.
+                    * `ignore_case` - Switch for ignoring case. values: on: enable; off: disable. note: at least one of fullurlcache, ignorecase, header, scheme, or cookie must be configured.
+                    * `query_string` - Configuration parameter for retaining the query string. this field and fullurlcache must be set simultaneously, but cannot both be on.
+                      * `action` - Actions to retain/ignore specified parameters in the query string. values: `includeCustom`: retain partial parameters. `excludeCustom`: ignore partial parameters.note: this field is required when switch is on. when switch is off, this field is not required and will not take effect if filled.
+                      * `switch` - Query string retain/ignore specified parameter switch. valid values are: on: enable; off: disable.
+                      * `values` - A list of parameter names to keep/ignore in the query string.
+                    * `scheme` - Request protocol switch. valid values: on: enable; off: disable.
+                  * `cache_parameters` - Node cache ttl configuration parameter. when name is cache, this parameter is required.
+                    * `custom_time` - Custom cache time. if not specified, this configuration is not set. only one of followorigin, nocache, or customtime can have switch set to on.
+                      * `cache_time` - Custom cache time value, unit: seconds. value range: 0-315360000.
+                      * `ignore_cache_control` - Ignore origin server cachecontrol switch. values: `on`: Enable; `off`: Disable.
+                      * `switch` - Custom cache time switch. values: `on`: Enable; `off`: Disable.
+                    * `follow_origin` - Cache follows origin server. if not specified, this configuration is not set. only one of followorigin, nocache, or customtime can have switch set to on.
+                      * `default_cache_strategy` - Whether to use the default caching policy when an origin server does not return the cache-control header. this field is required when defaultcache is set to on; otherwise, it is ineffective. when defaultcachetime is not 0, this field should be off. valid values: on: use the default caching policy. off: do not use the default caching policy.
+                      * `default_cache_time` - The default cache time in seconds when an origin server does not return the cache-control header. the value ranges from 0 to 315360000. this field is required when defaultcache is set to on; otherwise, it is ineffective. when defaultcachestrategy is on, this field should be 0.
+                      * `default_cache` - Whether to cache when an origin server does not return the cache-control header. this field is required when switch is on; when switch is off, this field is not required and will be ineffective if filled. valid values: on: cache; off: do not cache.
+                      * `switch` - Whether to enable the configuration of following the origin server. Valid values: `on`: Enable; `off`: Disable.
+                    * `no_cache` - No cache. if not specified, this configuration is not set. only one of followorigin, nocache, or customtime can have switch set to on.
+                      * `switch` - Whether to enable no-cache configuration. Valid values: `on`: Enable; `off`: Disable.
+                  * `cache_prefresh_parameters` - The cache prefresh configuration parameter. this parameter is required when name is cacheprefresh.
+                    * `cache_time_percent` - Prefresh interval set as a percentage of the node cache time. value range: 1-99. note: this field is required when switch is on; when switch is off, this field is not required and will not take effect if filled.
+                    * `switch` - Whether to enable cache prefresh. values: on: enable; off: disable.
+                  * `client_ip_country_parameters` - Configuration parameter for carrying the region information of the client ip during origin-pull. this parameter is required when the name is set to clientipcountry.
+                    * `header_name` - Name of the request header that contains the client ip region. it is valid when switch=on. the default value EO-Client-IPCountry is used when it is not specified.
+                    * `switch` - Whether to enable configuration. values: on: enable; off: disable.
+                  * `client_ip_header_parameters` - Client ip header configuration for storing client request ip information. this parameter is required when name is clientipheader.
+                    * `header_name` - Name of the request header containing the client ip address for origin-pull. when switch is on, this parameter is required. x-forwarded-for is not allowed for this parameter.
+                    * `switch` - Whether to enable configuration. values: on: enable; off: disable.
+                  * `compression_parameters` - Intelligent compression configuration. this parameter is required when name is set to compression.
+                    * `algorithms` - Supported compression algorithm list. this field is required when switch is on; otherwise, it is not effective. valid values: brotli: brotli algorithm; gzip: gzip algorithm.
+                    * `switch` - Whether to enable smart compression. values: on: enable; off: disable.
+                  * `content_compression_parameters` - Content compression configuration parameters. This parameter is required when the `Name` parameter is set to `ContentCompression`. This parameter uses a whitelist function; please contact Tencent Cloud engineers if needed.
+                    * `switch` - Content compression configuration switch, possible values are: on: enabled; off: disabled. When the Switch is set to `on`, both Brotli and gzip compression algorithms will be supported.
+                  * `error_page_parameters` - Custom error page configuration parameters. this parameter is required when name is errorpage.
+                    * `error_page_params` - Custom error page configuration list.
+                      * `redirect_url` - Redirect url. requires a full redirect path, such as https://www.test.com/error.html.
+                      * `status_code` - Status code. supported values are 400, 403, 404, 405, 414, 416, 451, 500, 501, 502, 503, 504.
+                  * `force_redirect_https_parameters` - Force https redirect configuration parameter. this parameter is required when the name is set to forceredirecthttps.
+                    * `redirect_status_code` - Redirection status code. this field is required when switch is on; otherwise, it is not effective. valid values are: 301: 301 redirect; 302: 302 redirect.
+                    * `switch` - Whether to enable forced redirect configuration switch. values: on: enable; off: disable.
+                  * `host_header_parameters` - Host header rewrite configuration parameter. this parameter is required when name is set to hostheader.
+                    * `action` - Action to be executed. values: followOrigin: follow origin server domain name; custom: custom.
+                    * `server_name` - Host header rewrite requires a complete domain name. note: this field is required when switch is on; when switch is off, this field is not required and any value will be ignored.
+                  * `hsts_parameters` - HSTS configuration parameter. this parameter is required when name is hsts.
+                    * `include_sub_domains` - Whether to allow other subdomains to inherit the same hsts header. values: on: allows other subdomains to inherit the same hsts header; off: does not allow other subdomains to inherit the same hsts header. note: when switch is on, this field is required; when switch is off, this field is not required and will not take effect if filled.
+                    * `preload` - Whether to allow the browser to preload the hsts header. valid values: on: allows the browser to preload the hsts header; off: does not allow the browser to preload the hsts header. note: when switch is on, this field is required; when switch is off, this field is not required and will not take effect if filled.
+                    * `switch` - Whether to enable hsts. values: on: enable; off: disable.
+                    * `timeout` - Cache hsts header time, unit: seconds. value range: 1-31536000. note: this field is required when switch is on; when switch is off, this field is not required and will not take effect if filled.
+                  * `http2_parameters` - HTTP2 access configuration parameter. this parameter is required when name is http2.
+                    * `switch` - Whether to enable http2 access. values: on: enable; off: disable.
+                  * `http_response_parameters` - HTTP response configuration parameters. this parameter is required when name is httpresponse.
+                    * `response_page` - Response page id.
+                    * `status_code` - Response status code. supports 2xx, 4xx, 5xx, excluding 499, 514, 101, 301, 302, 303, 509, 520-599.
+                  * `http_upstream_timeout_parameters` - Configuration of layer 7 origin timeout. this parameter is required when name is httpupstreamtimeout.
+                    * `response_timeout` - HTTP response timeout in seconds. value range: 5-600.
+                  * `max_age_parameters` - Browser cache ttl configuration parameter. this parameter is required when name is maxage.
+                    * `cache_time` - Custom cache time value, unit: seconds. value range: 0-315360000. note: when followorigin is off, it means not following the origin server and using cachetime to set the cache time; otherwise, this field will not take effect.
+                    * `follow_origin` - Specifies whether to follow the origin server cache-control configuration, with the following values: on: follow the origin server and ignore the field cachetime; off: do not follow the origin server and apply the field cachetime.
+                  * `modify_origin_parameters` - Configuration parameter for modifying the origin server. this parameter is required when the name is set to modifyorigin.
+                    * `http_origin_port` - Ports for http origin-pull requests. value range: 1-65535. this parameter takes effect only when the origin-pull protocol originprotocol is http or follow.
+                    * `https_origin_port` - Ports for https origin-pull requests. value range: 1-65535. this parameter takes effect only when the origin-pull protocol originprotocol is https or follow.
+                    * `origin_protocol` - Origin-Pull protocol configuration. this parameter is required when origintype is ipdomain, origingroup, or loadbalance. valid values are: http: use http protocol; https: use https protocol; follow: follow the protocol.
+                    * `origin_type` - The origin type. values: IPDomain: ipv4, ipv6, or domain name type origin server; OriginGroup: origin server group type origin server; LoadBalance: cloud load balancer (clb), this feature is in beta test. to use it, please submit a ticket or contact smart customer service; COS: tencent cloud COS origin server; AWSS3: all object storage origin servers that support the aws s3 protocol.
+                    * `origin` - Origin server address, which varies according to the value of origintype: When origintype = ipdomain, fill in an ipv4 address, an ipv6 address, or a domain name; When origintype = cos, please fill in the access domain name of the cos bucket; When origintype = awss3, fill in the access domain name of the s3 bucket; When origintype = origingroup, fill in the origin server group id; When origintype = loadbalance, fill in the cloud load balancer instance id. this feature is currently only available to the allowlist.
+                    * `private_access` - Whether access to the private object storage origin server is allowed. this parameter is valid only when the origin server type origintype is COS or awss3. valid values: on: enable private authentication; off: disable private authentication. if not specified, the default value is off.
+                    * `private_parameters` - Private authentication parameter. this parameter is valid only when origintype = awss3 and privateaccess = on.
+                      * `access_key_id` - Authentication parameter access key id.
+                      * `region` - Region of the bucket.
+                      * `secret_access_key` - Authentication parameter secret access key.
+                      * `signature_version` - Authentication version. values: v2: v2 version; v4: v4 version.
+                  * `modify_request_header_parameters` - Modify http node request header configuration parameters. this parameter is required when name is modifyrequestheader.
+                    * `header_actions` - List of http header setting rules.
+                      * `action` - HTTP header setting methods. valid values are: set: sets a value for an existing header parameter; del: deletes a header parameter; add: adds a header parameter.
+                      * `name` - HTTP header name.
+                      * `value` - HTTP header value. this parameter is required when the action is set to set or add; it is optional when the action is set to del.
+                  * `modify_response_header_parameters` - Modify http node response header configuration parameters. this parameter is required when name is modifyresponseheader.
+                    * `header_actions` - HTTP origin-pull header rules list.
+                      * `action` - HTTP header setting methods. valid values are: set: sets a value for an existing header parameter; del: deletes a header parameter; add: adds a header parameter.
+                      * `name` - HTTP header name.
+                      * `value` - HTTP header value. this parameter is required when the action is set to set or add; it is optional when the action is set to del.
+                  * `name` - Operation name. The name needs to correspond to the parameter structure, for example, if Name=Cache, CacheParameters is required.
+- `Cache`: Node cache TTL;
+- `CacheKey`: Custom Cache Key;
+- `CachePrefresh`: Cache pre-refresh;
+- `AccessURLRedirect`: Access URL redirection;
+- `UpstreamURLRewrite`: Back-to-origin URL rewrite;
+- `QUIC`: QUIC;
+- `WebSocket`: WebSocket;
+- `Authentication`: Token authentication;
+- `MaxAge`: Browser cache TTL;
+- `StatusCodeCache`: Status code cache TTL;
+- `OfflineCache`: Offline cache;
+- `SmartRouting`: Smart acceleration;
+- `RangeOriginPull`: Segment back-to-origin;
+- `UpstreamHTTP2`: HTTP2 back-to-origin;
+- `HostHeader`: Host Header rewrite;
+- `ForceRedirectHTTPS`: Access protocol forced HTTPS jump configuration;
+- `OriginPullProtocol`: Back-to-origin HTTPS;
+- `Compression`: Smart compression configuration;
+- `HSTS`: HSTS;
+- `ClientIPHeader`: Header information configuration for storing client request IP;
+- `OCSPStapling`: OCSP stapling;
+- `HTTP2`: HTTP2 Access;
+- `PostMaxSize`: POST request upload file streaming maximum limit configuration;
+- `ClientIPCountry`: Carry client IP region information when returning to the source;
+- `UpstreamFollowRedirect`: Return to the source follow redirection parameter configuration;
+- `UpstreamRequest`: Return to the source request parameters;
+- `TLSConfig`: SSL/TLS security;
+- `ModifyOrigin`: Modify the source station;
+- `HTTPUpstreamTimeout`: Seven-layer return to the source timeout configuration;
+- `HttpResponse`: HTTP response;
+- `ErrorPage`: Custom error page;
+- `ModifyResponseHeader`: Modify HTTP node response header;
+- `ModifyRequestHeader`: Modify HTTP node request header;
+- `ResponseSpeedLimit`: Single connection download speed limit.
+- `SetContentIdentifier`: Set content identifier.
+- `Vary`: Vary feature configuration.
+- `ContentCompression`: Content compression configuration.
+- `OriginAuthentication`: Origin authentication configuration.
+                  * `ocsp_stapling_parameters` - OCSP stapling configuration parameter. this parameter is required when the name is set to ocspstapling.
+                    * `switch` - Whether to enable ocsp stapling configuration switch. values: on: enable; off: disable.
+                  * `offline_cache_parameters` - Offline cache configuration parameter. this parameter is required when name is offlinecache.
+                    * `switch` - Whether to enable offline caching. values: on: enable; off: disable.
+                  * `origin_authentication_parameters` - Origin authentication configuration parameter. This parameter is required when Name is set to OriginAuthentication. This is a whitelist feature; please contact Tencent Cloud engineers if needed.
+                    * `request_properties` - Origin authentication request properties.
+                      * `name` - Origin authentication parameter name.
+                      * `type` - Origin authentication parameter type. Valid values: QueryString: set origin authentication parameter type as query string; Header: set origin authentication parameter type as request header.
+                      * `value` - Origin authentication parameter value.
+                  * `origin_pull_protocol_parameters` - Back-to-origin HTTPS configuration parameter. This parameter is required when the Name value is `OriginPullProtocol`.
+                    * `protocol` - Back-to-origin protocol configuration. Possible values are: `http`: use HTTP protocol for back-to-origin; `https`: use HTTPS protocol for back-to-origin; `follow`: follow the protocol.
+                  * `post_max_size_parameters` - Maximum size configuration for file streaming upload via a post request. this parameter is required when name is postmaxsize.
+                    * `max_size` - Maximum size of the file uploaded for streaming via a post request, in bytes. value range: 1 * 2^20 bytes to 500 * 2^20 bytes.
+                    * `switch` - Whether to enable post request file upload limit, in bytes (default limit: 32 * 2^20 bytes). valid values: on: enable limit; off: disable limit.
+                  * `quic_parameters` - The quic configuration parameter. this parameter is required when name is quic.
+                    * `switch` - Whether to enable quic. values: on: enable; off: disable.
+                  * `range_origin_pull_parameters` - Shard source retrieval configuration parameter. this parameter is required when name is set to rangeoriginpull.
+                    * `switch` - Whether to enable range gets. values are: on: enable; off: disable.
+                  * `response_speed_limit_parameters` - Single connection download speed limit configuration parameter. this parameter is required when name is responsespeedlimit.
+                    * `max_speed` - Rate-Limiting value, in kb/s. enter a numerical value to specify the rate limit.
+                    * `mode` - Download rate limit mode. valid values: LimitUponDownload: rate limit throughout the download process; LimitAfterSpecificBytesDownloaded: rate limit after downloading specific bytes at full speed; LimitAfterSpecificSecondsDownloaded: start speed limit after downloading at full speed for a specific duration.
+                    * `start_at` - Rate-Limiting start value, which can be the download size or specified duration, in kb or s. this parameter is required when mode is set to limitafterspecificbytesdownloaded or limitafterspecificsecondsdownloaded. enter a numerical value to specify the download size or duration.
+                  * `set_content_identifier_parameters` - Content identification configuration parameter. this parameter is required when name is httpresponse.
+                    * `content_identifier` - Content identifier id.
+                  * `smart_routing_parameters` - Smart acceleration configuration parameter. this parameter is required when name is smartrouting.
+                    * `switch` - Whether to enable smart acceleration. values: on: enable; off: disable.
+                  * `status_code_cache_parameters` - Status code cache ttl configuration parameter. this parameter is required when name is statuscodecache.
+                    * `status_code_cache_params` - Status code cache ttl.
+                      * `cache_time` - Cache time value in seconds. value range: 0-31536000.
+                      * `status_code` - Status code. valid values: 400, 401, 403, 404, 405, 407, 414, 500, 501, 502, 503, 504, 509, 514.
+                  * `tls_config_parameters` - SSL/TLS security configuration parameter. this parameter is required when the name is set to tlsconfig.
+                    * `cipher_suite` - Cipher suite. for detailed information, please refer to tls versions and cipher suites description, https://www.tencentcloud.com/document/product/1145/54154?has_map=1. valid values: loose-v2023: loose-v2023 cipher suite; general-v2023: general-v2023 cipher suite; strict-v2023: strict-v2023 cipher suite.
+                    * `version` - TLS version. at least one must be specified. if multiple versions are specified, they must be consecutive, e.g., enable TLSv1, TLSv1.1, TLSv1.2, and TLSv1.3. it is not allowed to enable only 1 and 1.2 while disabling 1.1. valid values: TLSv1: TLSv1 version; TLSv1.1: TLSv1.1 version; TLSv1.2: TLSv1.2 version; TLSv1.3: TLSv1.3 version.
+                  * `upstream_follow_redirect_parameters` - Configuration parameter for following redirects during origin-pull. this parameter is required when the name is set to upstreamfollowredirect.
+                    * `max_times` - The maximum number of redirects. value range: 1-5. Note: this field is required when switch is on; when switch is off, this field is not required and will not take effect if filled.
+                    * `switch` - Whether to enable origin-pull to follow the redirection configuration. values: on: enable; off: disable.
+                  * `upstream_http2_parameters` - HTTP2 origin-pull configuration parameter. this parameter is required when name is set to upstreamhttp2.
+                    * `switch` - Whether to enable http2 origin-pull. valid values: on: enable; off: disable.
+                  * `upstream_request_parameters` - Configuration parameter for origin-pull request. this parameter is required when the name is set to upstreamrequest.
+                    * `cookie` - Cookie configuration. optional. if not provided, it will not be configured.
+                      * `action` - Origin-Pull request parameter cookie mode. this parameter is required when switch is on. valid values are: full: retain all; ignore: ignore all; includeCustom: retain partial parameters; excludeCustom: ignore partial parameters.
+                      * `switch` - Whether to enable the origin-pull request parameter cookie. valid values: on: enable; off: disable.
+                      * `values` - Specifies parameter values. this parameter takes effect only when the query string mode action is includecustom or excludecustom, and is used to specify the parameters to be reserved or ignored. up to 10 parameters are supported.
+                    * `query_string` - Query string configuration. optional. if not provided, it will not be configured.
+                      * `action` - Query string mode. this parameter is required when switch is on. values: full: retain all; ignore: ignore all; includeCustom: retain partial parameters; excludeCustom: ignore partial parameters.
+                      * `switch` - Whether to enable origin-pull request parameter query string. values: on: enable; off: disable.
+                      * `values` - Specifies parameter values. this parameter takes effect only when the query string mode action is includecustom or excludecustom, and is used to specify the parameters to be reserved or ignored. up to 10 parameters are supported.
+                  * `upstream_url_rewrite_parameters` - The origin-pull url rewrite configuration parameter. this parameter is required when name is upstreamurlrewrite.
+                    * `action` - Origin-Pull url rewrite action. valid values are: replace: replace the path prefix; addPrefix: add the path prefix; rmvPrefix: remove the path prefix.
+                    * `regex` - Origin URL Rewrite uses a regular expression for matching the complete path. It must conform to the Google RE2 specification and have a length range of 1 to 1024. This field is required when the Action is regexReplace; otherwise, it is optional.
+                    * `type` - Origin-Pull url rewriting type, only path is supported.
+                    * `value` - Origin-Pull url rewrite value, maximum length 1024, must start with /.note: when action is addprefix, it cannot end with /; when action is rmvprefix, * cannot be present.
+                  * `vary_parameters` - Vary configuration parameter. This parameter is required when Name is set to Vary.
+                    * `switch` - Whether to enable Vary feature. Valid values: on: enable; off: disable.
+                  * `web_socket_parameters` - The websocket configuration parameter. this parameter is required when name is websocket.
+                    * `switch` - Whether to enable websocket connection timeout. values: on: use timeout as the websocket timeout;; off: the platform still supports websocket connections, using the system default timeout of 15 seconds.
+                    * `timeout` - Timeout, unit: seconds. maximum timeout is 120 seconds.
+                * `condition` - Match condition. https://www.tencentcloud.com/document/product/1145/54759.
+                * `sub_rules` - List of sub-rules. multiple rules exist in this list and are executed sequentially from top to bottom. note: subrules and actions cannot both be empty. currently, only one layer of subrules is supported.
+                  * `branches` - Sub-rule branch.
+                    * `actions` - Sub-Rule branch. this list currently supports filling in only one rule; multiple entries are invalid.
+                      * `access_url_redirect_parameters` - The access url redirection configuration parameter. this parameter is required when name is accessurlredirect.
+                        * `host_name` - Target hostname.
+                          * `action` - Target hostname configuration, valid values are: follow: follow the request; custom: custom.
+                          * `value` - Custom value for target hostname, maximum length is 1024.
+                        * `protocol` - Target request protocol. valid values: http: target request protocol http; https: target request protocol https; follow: follow the request.
+                        * `query_string` - Carry query parameters.
+                          * `action` - Action to be executed. values: full: retain all; ignore: ignore all.
+                        * `status_code` - Status code. valid values: 301, 302, 303, 307, 308.
+                        * `url_path` - Target path.
+                          * `action` - Action to be executed. values: follow: follow the request; custom: custom; regex: regular expression matching.
+                          * `regex` - Regular expression matching expression, length range is 1-1024. note: when action is regex, this field is required; when action is follow or custom, this field is not required and will not take effect if filled.
+                          * `value` - Redirect target url, length range is 1-1024.note: when action is regex or custom, this field is required; when action is follow, this field is not required and will not take effect if filled.
+                      * `authentication_parameters` - Token authentication configuration parameter. this parameter is required when name is authentication.
+                        * `auth_param` - Authentication parameters name. the node will validate the value corresponding to this parameter name. consists of 1-100 uppercase and lowercase letters, numbers, or underscores.note: this field is required when authtype is either typea or typed.
+                        * `auth_type` - Authentication type. valid values:
+- `TypeA`: authentication method a type, for specific meaning please refer to authentication method a. https://www.tencentcloud.com/document/product/1145/62475;
+- `TypeB`: authentication method b type, for specific meaning please refer to authentication method b. https://www.tencentcloud.com/document/product/1145/62476;
+- `TypeC`: authentication method c type, for specific meaning please refer to authentication method c. https://www.tencentcloud.com/document/product/1145/62477;
+- `TypeD`: authentication method d type, for specific meaning please refer to authentication method d. https://www.tencentcloud.com/document/product/1145/62478;
+- `TypeVOD`: authentication method v type, for specific meaning please refer to authentication method v. https://www.tencentcloud.com/document/product/1145/62479.
+                        * `backup_secret_key` - The backup authentication key consists of 6-40 uppercase and lowercase english letters or digits, and cannot contain " and $.
+                        * `secret_key` - The primary authentication key consists of 6-40 uppercase and lowercase english letters or digits, and cannot contain " and $.
+                        * `time_format` - Authentication time format. values: dec: decimal; hex: hexadecimal.
+                        * `time_param` - Authentication timestamp. it cannot be the same as the value of the authparam field.note: this field is required when authtype is typed.
+                        * `timeout` - Validity period of the authentication url, in seconds, value range: 1-630720000. used to determine if the client access request has expired: If the current time exceeds "timestamp + validity period", it is an expired request, and a 403 is returned directly. If the current time does not exceed "timestamp + validity period", the request is not expired, and the md5 string is further validated. note: when authtype is one of typea, typeb, typec, or typed, this field is required.
+                      * `cache_key_parameters` - Custom cache key configuration parameter. when name is cachekey, this parameter is required.
+                        * `cookie` - Cookie configuration parameters. at least one of the following configurations must be set: fullurlcache, ignorecase, header, scheme, cookie.
+                          * `action` - Cache action. values: full: retain all; ignore: ignore all; includeCustom: retain partial parameters; excludeCustom: ignore partial parameters. note: when switch is on, this field is required. when switch is off, this field is not required and will not take effect if filled.
+                          * `switch` - Whether to enable feature. values: on: enable; off: disable.
+                          * `values` - Custom cache key cookie name list.
+                        * `full_url_cache` - Switch for retaining the complete query string. values: on: enable; off: disable.
+                        * `header` - HTTP request header configuration parameters. at least one of the following configurations must be set: fullurlcache, ignorecase, header, scheme, cookie.
+                          * `switch` - Whether to enable feature. values: on: enable; off: disable.
+                          * `values` - Custom cache key http request header list. note: this field is required when switch is on; when switch is off, this field is not required and will not take effect if filled.
+                        * `ignore_case` - Switch for ignoring case. values: on: enable; off: disable. note: at least one of fullurlcache, ignorecase, header, scheme, or cookie must be configured.
+                        * `query_string` - Configuration parameter for retaining the query string. this field and fullurlcache must be set simultaneously, but cannot both be on.
+                          * `action` - Actions to retain/ignore specified parameters in the query string. values: `includeCustom`: retain partial parameters. `excludeCustom`: ignore partial parameters.note: this field is required when switch is on. when switch is off, this field is not required and will not take effect if filled.
+                          * `switch` - Query string retain/ignore specified parameter switch. valid values are: on: enable; off: disable.
+                          * `values` - A list of parameter names to keep/ignore in the query string.
+                        * `scheme` - Request protocol switch. valid values: on: enable; off: disable.
+                      * `cache_parameters` - Node cache ttl configuration parameter. when name is cache, this parameter is required.
+                        * `custom_time` - Custom cache time. if not specified, this configuration is not set. only one of followorigin, nocache, or customtime can have switch set to on.
+                          * `cache_time` - Custom cache time value, unit: seconds. value range: 0-315360000.
+                          * `ignore_cache_control` - Ignore origin server cachecontrol switch. values: `on`: Enable; `off`: Disable.
+                          * `switch` - Custom cache time switch. values: `on`: Enable; `off`: Disable.
+                        * `follow_origin` - Cache follows origin server. if not specified, this configuration is not set. only one of followorigin, nocache, or customtime can have switch set to on.
+                          * `default_cache_strategy` - Whether to use the default caching policy when an origin server does not return the cache-control header. this field is required when defaultcache is set to on; otherwise, it is ineffective. when defaultcachetime is not 0, this field should be off. valid values: on: use the default caching policy. off: do not use the default caching policy.
+                          * `default_cache_time` - The default cache time in seconds when an origin server does not return the cache-control header. the value ranges from 0 to 315360000. this field is required when defaultcache is set to on; otherwise, it is ineffective. when defaultcachestrategy is on, this field should be 0.
+                          * `default_cache` - Whether to cache when an origin server does not return the cache-control header. this field is required when switch is on; when switch is off, this field is not required and will be ineffective if filled. valid values: on: cache; off: do not cache.
+                          * `switch` - Whether to enable the configuration of following the origin server. Valid values: `on`: Enable; `off`: Disable.
+                        * `no_cache` - No cache. if not specified, this configuration is not set. only one of followorigin, nocache, or customtime can have switch set to on.
+                          * `switch` - Whether to enable no-cache configuration. Valid values: `on`: Enable; `off`: Disable.
+                      * `cache_prefresh_parameters` - The cache prefresh configuration parameter. this parameter is required when name is cacheprefresh.
+                        * `cache_time_percent` - Prefresh interval set as a percentage of the node cache time. value range: 1-99. note: this field is required when switch is on; when switch is off, this field is not required and will not take effect if filled.
+                        * `switch` - Whether to enable cache prefresh. values: on: enable; off: disable.
+                      * `client_ip_country_parameters` - Configuration parameter for carrying the region information of the client ip during origin-pull. this parameter is required when the name is set to clientipcountry.
+                        * `header_name` - Name of the request header that contains the client ip region. it is valid when switch=on. the default value EO-Client-IPCountry is used when it is not specified.
+                        * `switch` - Whether to enable configuration. values: on: enable; off: disable.
+                      * `client_ip_header_parameters` - Client ip header configuration for storing client request ip information. this parameter is required when name is clientipheader.
+                        * `header_name` - Name of the request header containing the client ip address for origin-pull. when switch is on, this parameter is required. x-forwarded-for is not allowed for this parameter.
+                        * `switch` - Whether to enable configuration. values: on: enable; off: disable.
+                      * `compression_parameters` - Intelligent compression configuration. this parameter is required when name is set to compression.
+                        * `algorithms` - Supported compression algorithm list. this field is required when switch is on; otherwise, it is not effective. valid values: brotli: brotli algorithm; gzip: gzip algorithm.
+                        * `switch` - Whether to enable smart compression. values: on: enable; off: disable.
+                      * `content_compression_parameters` - Content compression configuration parameters. This parameter is required when the `Name` parameter is set to `ContentCompression`. This parameter uses a whitelist function; please contact Tencent Cloud engineers if needed.
+                        * `switch` - Content compression configuration switch, possible values are: on: enabled; off: disabled. When the Switch is set to `on`, both Brotli and gzip compression algorithms will be supported.
+                      * `error_page_parameters` - Custom error page configuration parameters. this parameter is required when name is errorpage.
+                        * `error_page_params` - Custom error page configuration list.
+                          * `redirect_url` - Redirect url. requires a full redirect path, such as https://www.test.com/error.html.
+                          * `status_code` - Status code. supported values are 400, 403, 404, 405, 414, 416, 451, 500, 501, 502, 503, 504.
+                      * `force_redirect_https_parameters` - Force https redirect configuration parameter. this parameter is required when the name is set to forceredirecthttps.
+                        * `redirect_status_code` - Redirection status code. this field is required when switch is on; otherwise, it is not effective. valid values are: 301: 301 redirect; 302: 302 redirect.
+                        * `switch` - Whether to enable forced redirect configuration switch. values: on: enable; off: disable.
+                      * `host_header_parameters` - Host header rewrite configuration parameter. this parameter is required when name is set to hostheader.
+                        * `action` - Action to be executed. values: followOrigin: follow origin server domain name; custom: custom.
+                        * `server_name` - Host header rewrite requires a complete domain name. note: this field is required when switch is on; when switch is off, this field is not required and any value will be ignored.
+                      * `hsts_parameters` - HSTS configuration parameter. this parameter is required when name is hsts.
+                        * `include_sub_domains` - Whether to allow other subdomains to inherit the same hsts header. values: on: allows other subdomains to inherit the same hsts header; off: does not allow other subdomains to inherit the same hsts header. note: when switch is on, this field is required; when switch is off, this field is not required and will not take effect if filled.
+                        * `preload` - Whether to allow the browser to preload the hsts header. valid values: on: allows the browser to preload the hsts header; off: does not allow the browser to preload the hsts header. note: when switch is on, this field is required; when switch is off, this field is not required and will not take effect if filled.
+                        * `switch` - Whether to enable hsts. values: on: enable; off: disable.
+                        * `timeout` - Cache hsts header time, unit: seconds. value range: 1-31536000. note: this field is required when switch is on; when switch is off, this field is not required and will not take effect if filled.
+                      * `http2_parameters` - HTTP2 access configuration parameter. this parameter is required when name is http2.
+                        * `switch` - Whether to enable http2 access. values: on: enable; off: disable.
+                      * `http_response_parameters` - HTTP response configuration parameters. this parameter is required when name is httpresponse.
+                        * `response_page` - Response page id.
+                        * `status_code` - Response status code. supports 2xx, 4xx, 5xx, excluding 499, 514, 101, 301, 302, 303, 509, 520-599.
+                      * `http_upstream_timeout_parameters` - Configuration of layer 7 origin timeout. this parameter is required when name is httpupstreamtimeout.
+                        * `response_timeout` - HTTP response timeout in seconds. value range: 5-600.
+                      * `max_age_parameters` - Browser cache ttl configuration parameter. this parameter is required when name is maxage.
+                        * `cache_time` - Custom cache time value, unit: seconds. value range: 0-315360000. note: when followorigin is off, it means not following the origin server and using cachetime to set the cache time; otherwise, this field will not take effect.
+                        * `follow_origin` - Specifies whether to follow the origin server cache-control configuration, with the following values: on: follow the origin server and ignore the field cachetime; off: do not follow the origin server and apply the field cachetime.
+                      * `modify_origin_parameters` - Configuration parameter for modifying the origin server. this parameter is required when the name is set to modifyorigin.
+                        * `http_origin_port` - Ports for http origin-pull requests. value range: 1-65535. this parameter takes effect only when the origin-pull protocol originprotocol is http or follow.
+                        * `https_origin_port` - Ports for https origin-pull requests. value range: 1-65535. this parameter takes effect only when the origin-pull protocol originprotocol is https or follow.
+                        * `origin_protocol` - Origin-Pull protocol configuration. this parameter is required when origintype is ipdomain, origingroup, or loadbalance. valid values are: http: use http protocol; https: use https protocol; follow: follow the protocol.
+                        * `origin_type` - The origin type. values: IPDomain: ipv4, ipv6, or domain name type origin server; OriginGroup: origin server group type origin server; LoadBalance: cloud load balancer (clb), this feature is in beta test. to use it, please submit a ticket or contact smart customer service; COS: tencent cloud COS origin server; AWSS3: all object storage origin servers that support the aws s3 protocol.
+                        * `origin` - Origin server address, which varies according to the value of origintype: When origintype = ipdomain, fill in an ipv4 address, an ipv6 address, or a domain name; When origintype = cos, please fill in the access domain name of the cos bucket; When origintype = awss3, fill in the access domain name of the s3 bucket; When origintype = origingroup, fill in the origin server group id; When origintype = loadbalance, fill in the cloud load balancer instance id. this feature is currently only available to the allowlist.
+                        * `private_access` - Whether access to the private object storage origin server is allowed. this parameter is valid only when the origin server type origintype is COS or awss3. valid values: on: enable private authentication; off: disable private authentication. if not specified, the default value is off.
+                        * `private_parameters` - Private authentication parameter. this parameter is valid only when origintype = awss3 and privateaccess = on.
+                          * `access_key_id` - Authentication parameter access key id.
+                          * `region` - Region of the bucket.
+                          * `secret_access_key` - Authentication parameter secret access key.
+                          * `signature_version` - Authentication version. values: v2: v2 version; v4: v4 version.
+                      * `modify_request_header_parameters` - Modify http node request header configuration parameters. this parameter is required when name is modifyrequestheader.
+                        * `header_actions` - List of http header setting rules.
+                          * `action` - HTTP header setting methods. valid values are: set: sets a value for an existing header parameter; del: deletes a header parameter; add: adds a header parameter.
+                          * `name` - HTTP header name.
+                          * `value` - HTTP header value. this parameter is required when the action is set to set or add; it is optional when the action is set to del.
+                      * `modify_response_header_parameters` - Modify http node response header configuration parameters. this parameter is required when name is modifyresponseheader.
+                        * `header_actions` - HTTP origin-pull header rules list.
+                          * `action` - HTTP header setting methods. valid values are: set: sets a value for an existing header parameter; del: deletes a header parameter; add: adds a header parameter.
+                          * `name` - HTTP header name.
+                          * `value` - HTTP header value. this parameter is required when the action is set to set or add; it is optional when the action is set to del.
+                      * `name` - Operation name. The name needs to correspond to the parameter structure, for example, if Name=Cache, CacheParameters is required.
+- `Cache`: Node cache TTL;
+- `CacheKey`: Custom Cache Key;
+- `CachePrefresh`: Cache pre-refresh;
+- `AccessURLRedirect`: Access URL redirection;
+- `UpstreamURLRewrite`: Back-to-origin URL rewrite;
+- `QUIC`: QUIC;
+- `WebSocket`: WebSocket;
+- `Authentication`: Token authentication;
+- `MaxAge`: Browser cache TTL;
+- `StatusCodeCache`: Status code cache TTL;
+- `OfflineCache`: Offline cache;
+- `SmartRouting`: Smart acceleration;
+- `RangeOriginPull`: Segment back-to-origin;
+- `UpstreamHTTP2`: HTTP2 back-to-origin;
+- `HostHeader`: Host Header rewrite;
+- `ForceRedirectHTTPS`: Access protocol forced HTTPS jump configuration;
+- `OriginPullProtocol`: Back-to-origin HTTPS;
+- `Compression`: Smart compression configuration;
+- `HSTS`: HSTS;
+- `ClientIPHeader`: Header information configuration for storing client request IP;
+- `OCSPStapling`: OCSP stapling;
+- `HTTP2`: HTTP2 Access;
+- `PostMaxSize`: POST request upload file streaming maximum limit configuration;
+- `ClientIPCountry`: Carry client IP region information when returning to the source;
+- `UpstreamFollowRedirect`: Return to the source follow redirection parameter configuration;
+- `UpstreamRequest`: Return to the source request parameters;
+- `TLSConfig`: SSL/TLS security;
+- `ModifyOrigin`: Modify the source station;
+- `HTTPUpstreamTimeout`: Seven-layer return to the source timeout configuration;
+- `HttpResponse`: HTTP response;
+- `ErrorPage`: Custom error page;
+- `ModifyResponseHeader`: Modify HTTP node response header;
+- `ModifyRequestHeader`: Modify HTTP node request header;
+- `ResponseSpeedLimit`: Single connection download speed limit.
+- `SetContentIdentifier`: Set content identifier.
+- `Vary`: Vary feature configuration.
+- `ContentCompression`: Content compression configuration.
+- `OriginAuthentication`: Origin authentication configuration.
+                      * `ocsp_stapling_parameters` - OCSP stapling configuration parameter. this parameter is required when the name is set to ocspstapling.
+                        * `switch` - Whether to enable ocsp stapling configuration switch. values: on: enable; off: disable.
+                      * `offline_cache_parameters` - Offline cache configuration parameter. this parameter is required when name is offlinecache.
+                        * `switch` - Whether to enable offline caching. values: on: enable; off: disable.
+                      * `origin_authentication_parameters` - Origin authentication configuration parameter. This parameter is required when Name is set to OriginAuthentication. This is a whitelist feature; please contact Tencent Cloud engineers if needed.
+                        * `request_properties` - Origin authentication request properties.
+                          * `name` - Origin authentication parameter name.
+                          * `type` - Origin authentication parameter type. Valid values: QueryString: set origin authentication parameter type as query string; Header: set origin authentication parameter type as request header.
+                          * `value` - Origin authentication parameter value.
+                      * `origin_pull_protocol_parameters` - Back-to-origin HTTPS configuration parameter. This parameter is required when the Name value is `OriginPullProtocol`.
+                        * `protocol` - Back-to-origin protocol configuration. Possible values are: `http`: use HTTP protocol for back-to-origin; `https`: use HTTPS protocol for back-to-origin; `follow`: follow the protocol.
+                      * `post_max_size_parameters` - Maximum size configuration for file streaming upload via a post request. this parameter is required when name is postmaxsize.
+                        * `max_size` - Maximum size of the file uploaded for streaming via a post request, in bytes. value range: 1 * 2^20 bytes to 500 * 2^20 bytes.
+                        * `switch` - Whether to enable post request file upload limit, in bytes (default limit: 32 * 2^20 bytes). valid values: on: enable limit; off: disable limit.
+                      * `quic_parameters` - The quic configuration parameter. this parameter is required when name is quic.
+                        * `switch` - Whether to enable quic. values: on: enable; off: disable.
+                      * `range_origin_pull_parameters` - Shard source retrieval configuration parameter. this parameter is required when name is set to rangeoriginpull.
+                        * `switch` - Whether to enable range gets. values are: on: enable; off: disable.
+                      * `response_speed_limit_parameters` - Single connection download speed limit configuration parameter. this parameter is required when name is responsespeedlimit.
+                        * `max_speed` - Rate-Limiting value, in kb/s. enter a numerical value to specify the rate limit.
+                        * `mode` - Download rate limit mode. valid values: LimitUponDownload: rate limit throughout the download process; LimitAfterSpecificBytesDownloaded: rate limit after downloading specific bytes at full speed; LimitAfterSpecificSecondsDownloaded: start speed limit after downloading at full speed for a specific duration.
+                        * `start_at` - Rate-Limiting start value, which can be the download size or specified duration, in kb or s. this parameter is required when mode is set to limitafterspecificbytesdownloaded or limitafterspecificsecondsdownloaded. enter a numerical value to specify the download size or duration.
+                      * `set_content_identifier_parameters` - Content identification configuration parameter. this parameter is required when name is httpresponse.
+                        * `content_identifier` - Content identifier id.
+                      * `smart_routing_parameters` - Smart acceleration configuration parameter. this parameter is required when name is smartrouting.
+                        * `switch` - Whether to enable smart acceleration. values: on: enable; off: disable.
+                      * `status_code_cache_parameters` - Status code cache ttl configuration parameter. this parameter is required when name is statuscodecache.
+                        * `status_code_cache_params` - Status code cache ttl.
+                          * `cache_time` - Cache time value in seconds. value range: 0-31536000.
+                          * `status_code` - Status code. valid values: 400, 401, 403, 404, 405, 407, 414, 500, 501, 502, 503, 504, 509, 514.
+                      * `tls_config_parameters` - SSL/TLS security configuration parameter. this parameter is required when the name is set to tlsconfig.
+                        * `cipher_suite` - Cipher suite. for detailed information, please refer to tls versions and cipher suites description, https://www.tencentcloud.com/document/product/1145/54154?has_map=1. valid values: loose-v2023: loose-v2023 cipher suite; general-v2023: general-v2023 cipher suite; strict-v2023: strict-v2023 cipher suite.
+                        * `version` - TLS version. at least one must be specified. if multiple versions are specified, they must be consecutive, e.g., enable TLSv1, TLSv1.1, TLSv1.2, and TLSv1.3. it is not allowed to enable only 1 and 1.2 while disabling 1.1. valid values: TLSv1: TLSv1 version; TLSv1.1: TLSv1.1 version; TLSv1.2: TLSv1.2 version; TLSv1.3: TLSv1.3 version.
+                      * `upstream_follow_redirect_parameters` - Configuration parameter for following redirects during origin-pull. this parameter is required when the name is set to upstreamfollowredirect.
+                        * `max_times` - The maximum number of redirects. value range: 1-5. Note: this field is required when switch is on; when switch is off, this field is not required and will not take effect if filled.
+                        * `switch` - Whether to enable origin-pull to follow the redirection configuration. values: on: enable; off: disable.
+                      * `upstream_http2_parameters` - HTTP2 origin-pull configuration parameter. this parameter is required when name is set to upstreamhttp2.
+                        * `switch` - Whether to enable http2 origin-pull. valid values: on: enable; off: disable.
+                      * `upstream_request_parameters` - Configuration parameter for origin-pull request. this parameter is required when the name is set to upstreamrequest.
+                        * `cookie` - Cookie configuration. optional. if not provided, it will not be configured.
+                          * `action` - Origin-Pull request parameter cookie mode. this parameter is required when switch is on. valid values are: full: retain all; ignore: ignore all; includeCustom: retain partial parameters; excludeCustom: ignore partial parameters.
+                          * `switch` - Whether to enable the origin-pull request parameter cookie. valid values: on: enable; off: disable.
+                          * `values` - Specifies parameter values. this parameter takes effect only when the query string mode action is includecustom or excludecustom, and is used to specify the parameters to be reserved or ignored. up to 10 parameters are supported.
+                        * `query_string` - Query string configuration. optional. if not provided, it will not be configured.
+                          * `action` - Query string mode. this parameter is required when switch is on. values: full: retain all; ignore: ignore all; includeCustom: retain partial parameters; excludeCustom: ignore partial parameters.
+                          * `switch` - Whether to enable origin-pull request parameter query string. values: on: enable; off: disable.
+                          * `values` - Specifies parameter values. this parameter takes effect only when the query string mode action is includecustom or excludecustom, and is used to specify the parameters to be reserved or ignored. up to 10 parameters are supported.
+                      * `upstream_url_rewrite_parameters` - The origin-pull url rewrite configuration parameter. this parameter is required when name is upstreamurlrewrite.
+                        * `action` - Origin-Pull url rewrite action. valid values are: replace: replace the path prefix; addPrefix: add the path prefix; rmvPrefix: remove the path prefix.
+                        * `regex` - Origin URL Rewrite uses a regular expression for matching the complete path. It must conform to the Google RE2 specification and have a length range of 1 to 1024. This field is required when the Action is regexReplace; otherwise, it is optional.
+                        * `type` - Origin-Pull url rewriting type, only path is supported.
+                        * `value` - Origin-Pull url rewrite value, maximum length 1024, must start with /.note: when action is addprefix, it cannot end with /; when action is rmvprefix, * cannot be present.
+                      * `vary_parameters` - Vary configuration parameter. This parameter is required when Name is set to Vary.
+                        * `switch` - Whether to enable Vary feature. Valid values: on: enable; off: disable.
+                      * `web_socket_parameters` - The websocket configuration parameter. this parameter is required when name is websocket.
+                        * `switch` - Whether to enable websocket connection timeout. values: on: use timeout as the websocket timeout;; off: the platform still supports websocket connections, using the system default timeout of 15 seconds.
+                        * `timeout` - Timeout, unit: seconds. maximum timeout is 120 seconds.
+                    * `condition` - Match condition. https://www.tencentcloud.com/document/product/1145/54759.
+                    * `sub_rules` - List of sub-rules. multiple rules exist in this list and are executed sequentially from top to bottom. note: subrules and actions cannot both be empty. currently, only one layer of subrules is supported.
+                      * `branches` - Sub-rule branch.
+                        * `actions` - Sub-Rule branch. this list currently supports filling in only one rule; multiple entries are invalid.
+                          * `access_url_redirect_parameters` - The access url redirection configuration parameter. this parameter is required when name is accessurlredirect.
+                            * `host_name` - Target hostname.
+                              * `action` - Target hostname configuration, valid values are: follow: follow the request; custom: custom.
+                              * `value` - Custom value for target hostname, maximum length is 1024.
+                            * `protocol` - Target request protocol. valid values: http: target request protocol http; https: target request protocol https; follow: follow the request.
+                            * `query_string` - Carry query parameters.
+                              * `action` - Action to be executed. values: full: retain all; ignore: ignore all.
+                            * `status_code` - Status code. valid values: 301, 302, 303, 307, 308.
+                            * `url_path` - Target path.
+                              * `action` - Action to be executed. values: follow: follow the request; custom: custom; regex: regular expression matching.
+                              * `regex` - Regular expression matching expression, length range is 1-1024. note: when action is regex, this field is required; when action is follow or custom, this field is not required and will not take effect if filled.
+                              * `value` - Redirect target url, length range is 1-1024.note: when action is regex or custom, this field is required; when action is follow, this field is not required and will not take effect if filled.
+                          * `authentication_parameters` - Token authentication configuration parameter. this parameter is required when name is authentication.
+                            * `auth_param` - Authentication parameters name. the node will validate the value corresponding to this parameter name. consists of 1-100 uppercase and lowercase letters, numbers, or underscores.note: this field is required when authtype is either typea or typed.
+                            * `auth_type` - Authentication type. valid values:
+- `TypeA`: authentication method a type, for specific meaning please refer to authentication method a. https://www.tencentcloud.com/document/product/1145/62475;
+- `TypeB`: authentication method b type, for specific meaning please refer to authentication method b. https://www.tencentcloud.com/document/product/1145/62476;
+- `TypeC`: authentication method c type, for specific meaning please refer to authentication method c. https://www.tencentcloud.com/document/product/1145/62477;
+- `TypeD`: authentication method d type, for specific meaning please refer to authentication method d. https://www.tencentcloud.com/document/product/1145/62478;
+- `TypeVOD`: authentication method v type, for specific meaning please refer to authentication method v. https://www.tencentcloud.com/document/product/1145/62479.
+                            * `backup_secret_key` - The backup authentication key consists of 6-40 uppercase and lowercase english letters or digits, and cannot contain " and $.
+                            * `secret_key` - The primary authentication key consists of 6-40 uppercase and lowercase english letters or digits, and cannot contain " and $.
+                            * `time_format` - Authentication time format. values: dec: decimal; hex: hexadecimal.
+                            * `time_param` - Authentication timestamp. it cannot be the same as the value of the authparam field.note: this field is required when authtype is typed.
+                            * `timeout` - Validity period of the authentication url, in seconds, value range: 1-630720000. used to determine if the client access request has expired: If the current time exceeds "timestamp + validity period", it is an expired request, and a 403 is returned directly. If the current time does not exceed "timestamp + validity period", the request is not expired, and the md5 string is further validated. note: when authtype is one of typea, typeb, typec, or typed, this field is required.
+                          * `cache_key_parameters` - Custom cache key configuration parameter. when name is cachekey, this parameter is required.
+                            * `cookie` - Cookie configuration parameters. at least one of the following configurations must be set: fullurlcache, ignorecase, header, scheme, cookie.
+                              * `action` - Cache action. values: full: retain all; ignore: ignore all; includeCustom: retain partial parameters; excludeCustom: ignore partial parameters. note: when switch is on, this field is required. when switch is off, this field is not required and will not take effect if filled.
+                              * `switch` - Whether to enable feature. values: on: enable; off: disable.
+                              * `values` - Custom cache key cookie name list.
+                            * `full_url_cache` - Switch for retaining the complete query string. values: on: enable; off: disable.
+                            * `header` - HTTP request header configuration parameters. at least one of the following configurations must be set: fullurlcache, ignorecase, header, scheme, cookie.
+                              * `switch` - Whether to enable feature. values: on: enable; off: disable.
+                              * `values` - Custom cache key http request header list. note: this field is required when switch is on; when switch is off, this field is not required and will not take effect if filled.
+                            * `ignore_case` - Switch for ignoring case. values: on: enable; off: disable. note: at least one of fullurlcache, ignorecase, header, scheme, or cookie must be configured.
+                            * `query_string` - Configuration parameter for retaining the query string. this field and fullurlcache must be set simultaneously, but cannot both be on.
+                              * `action` - Actions to retain/ignore specified parameters in the query string. values: `includeCustom`: retain partial parameters. `excludeCustom`: ignore partial parameters.note: this field is required when switch is on. when switch is off, this field is not required and will not take effect if filled.
+                              * `switch` - Query string retain/ignore specified parameter switch. valid values are: on: enable; off: disable.
+                              * `values` - A list of parameter names to keep/ignore in the query string.
+                            * `scheme` - Request protocol switch. valid values: on: enable; off: disable.
+                          * `cache_parameters` - Node cache ttl configuration parameter. when name is cache, this parameter is required.
+                            * `custom_time` - Custom cache time. if not specified, this configuration is not set. only one of followorigin, nocache, or customtime can have switch set to on.
+                              * `cache_time` - Custom cache time value, unit: seconds. value range: 0-315360000.
+                              * `ignore_cache_control` - Ignore origin server cachecontrol switch. values: `on`: Enable; `off`: Disable.
+                              * `switch` - Custom cache time switch. values: `on`: Enable; `off`: Disable.
+                            * `follow_origin` - Cache follows origin server. if not specified, this configuration is not set. only one of followorigin, nocache, or customtime can have switch set to on.
+                              * `default_cache_strategy` - Whether to use the default caching policy when an origin server does not return the cache-control header. this field is required when defaultcache is set to on; otherwise, it is ineffective. when defaultcachetime is not 0, this field should be off. valid values: on: use the default caching policy. off: do not use the default caching policy.
+                              * `default_cache_time` - The default cache time in seconds when an origin server does not return the cache-control header. the value ranges from 0 to 315360000. this field is required when defaultcache is set to on; otherwise, it is ineffective. when defaultcachestrategy is on, this field should be 0.
+                              * `default_cache` - Whether to cache when an origin server does not return the cache-control header. this field is required when switch is on; when switch is off, this field is not required and will be ineffective if filled. valid values: on: cache; off: do not cache.
+                              * `switch` - Whether to enable the configuration of following the origin server. Valid values: `on`: Enable; `off`: Disable.
+                            * `no_cache` - No cache. if not specified, this configuration is not set. only one of followorigin, nocache, or customtime can have switch set to on.
+                              * `switch` - Whether to enable no-cache configuration. Valid values: `on`: Enable; `off`: Disable.
+                          * `cache_prefresh_parameters` - The cache prefresh configuration parameter. this parameter is required when name is cacheprefresh.
+                            * `cache_time_percent` - Prefresh interval set as a percentage of the node cache time. value range: 1-99. note: this field is required when switch is on; when switch is off, this field is not required and will not take effect if filled.
+                            * `switch` - Whether to enable cache prefresh. values: on: enable; off: disable.
+                          * `client_ip_country_parameters` - Configuration parameter for carrying the region information of the client ip during origin-pull. this parameter is required when the name is set to clientipcountry.
+                            * `header_name` - Name of the request header that contains the client ip region. it is valid when switch=on. the default value EO-Client-IPCountry is used when it is not specified.
+                            * `switch` - Whether to enable configuration. values: on: enable; off: disable.
+                          * `client_ip_header_parameters` - Client ip header configuration for storing client request ip information. this parameter is required when name is clientipheader.
+                            * `header_name` - Name of the request header containing the client ip address for origin-pull. when switch is on, this parameter is required. x-forwarded-for is not allowed for this parameter.
+                            * `switch` - Whether to enable configuration. values: on: enable; off: disable.
+                          * `compression_parameters` - Intelligent compression configuration. this parameter is required when name is set to compression.
+                            * `algorithms` - Supported compression algorithm list. this field is required when switch is on; otherwise, it is not effective. valid values: brotli: brotli algorithm; gzip: gzip algorithm.
+                            * `switch` - Whether to enable smart compression. values: on: enable; off: disable.
+                          * `content_compression_parameters` - Content compression configuration parameters. This parameter is required when the `Name` parameter is set to `ContentCompression`. This parameter uses a whitelist function; please contact Tencent Cloud engineers if needed.
+                            * `switch` - Content compression configuration switch, possible values are: on: enabled; off: disabled. When the Switch is set to `on`, both Brotli and gzip compression algorithms will be supported.
+                          * `error_page_parameters` - Custom error page configuration parameters. this parameter is required when name is errorpage.
+                            * `error_page_params` - Custom error page configuration list.
+                              * `redirect_url` - Redirect url. requires a full redirect path, such as https://www.test.com/error.html.
+                              * `status_code` - Status code. supported values are 400, 403, 404, 405, 414, 416, 451, 500, 501, 502, 503, 504.
+                          * `force_redirect_https_parameters` - Force https redirect configuration parameter. this parameter is required when the name is set to forceredirecthttps.
+                            * `redirect_status_code` - Redirection status code. this field is required when switch is on; otherwise, it is not effective. valid values are: 301: 301 redirect; 302: 302 redirect.
+                            * `switch` - Whether to enable forced redirect configuration switch. values: on: enable; off: disable.
+                          * `host_header_parameters` - Host header rewrite configuration parameter. this parameter is required when name is set to hostheader.
+                            * `action` - Action to be executed. values: followOrigin: follow origin server domain name; custom: custom.
+                            * `server_name` - Host header rewrite requires a complete domain name. note: this field is required when switch is on; when switch is off, this field is not required and any value will be ignored.
+                          * `hsts_parameters` - HSTS configuration parameter. this parameter is required when name is hsts.
+                            * `include_sub_domains` - Whether to allow other subdomains to inherit the same hsts header. values: on: allows other subdomains to inherit the same hsts header; off: does not allow other subdomains to inherit the same hsts header. note: when switch is on, this field is required; when switch is off, this field is not required and will not take effect if filled.
+                            * `preload` - Whether to allow the browser to preload the hsts header. valid values: on: allows the browser to preload the hsts header; off: does not allow the browser to preload the hsts header. note: when switch is on, this field is required; when switch is off, this field is not required and will not take effect if filled.
+                            * `switch` - Whether to enable hsts. values: on: enable; off: disable.
+                            * `timeout` - Cache hsts header time, unit: seconds. value range: 1-31536000. note: this field is required when switch is on; when switch is off, this field is not required and will not take effect if filled.
+                          * `http2_parameters` - HTTP2 access configuration parameter. this parameter is required when name is http2.
+                            * `switch` - Whether to enable http2 access. values: on: enable; off: disable.
+                          * `http_response_parameters` - HTTP response configuration parameters. this parameter is required when name is httpresponse.
+                            * `response_page` - Response page id.
+                            * `status_code` - Response status code. supports 2xx, 4xx, 5xx, excluding 499, 514, 101, 301, 302, 303, 509, 520-599.
+                          * `http_upstream_timeout_parameters` - Configuration of layer 7 origin timeout. this parameter is required when name is httpupstreamtimeout.
+                            * `response_timeout` - HTTP response timeout in seconds. value range: 5-600.
+                          * `max_age_parameters` - Browser cache ttl configuration parameter. this parameter is required when name is maxage.
+                            * `cache_time` - Custom cache time value, unit: seconds. value range: 0-315360000. note: when followorigin is off, it means not following the origin server and using cachetime to set the cache time; otherwise, this field will not take effect.
+                            * `follow_origin` - Specifies whether to follow the origin server cache-control configuration, with the following values: on: follow the origin server and ignore the field cachetime; off: do not follow the origin server and apply the field cachetime.
+                          * `modify_origin_parameters` - Configuration parameter for modifying the origin server. this parameter is required when the name is set to modifyorigin.
+                            * `http_origin_port` - Ports for http origin-pull requests. value range: 1-65535. this parameter takes effect only when the origin-pull protocol originprotocol is http or follow.
+                            * `https_origin_port` - Ports for https origin-pull requests. value range: 1-65535. this parameter takes effect only when the origin-pull protocol originprotocol is https or follow.
+                            * `origin_protocol` - Origin-Pull protocol configuration. this parameter is required when origintype is ipdomain, origingroup, or loadbalance. valid values are: http: use http protocol; https: use https protocol; follow: follow the protocol.
+                            * `origin_type` - The origin type. values: IPDomain: ipv4, ipv6, or domain name type origin server; OriginGroup: origin server group type origin server; LoadBalance: cloud load balancer (clb), this feature is in beta test. to use it, please submit a ticket or contact smart customer service; COS: tencent cloud COS origin server; AWSS3: all object storage origin servers that support the aws s3 protocol.
+                            * `origin` - Origin server address, which varies according to the value of origintype: When origintype = ipdomain, fill in an ipv4 address, an ipv6 address, or a domain name; When origintype = cos, please fill in the access domain name of the cos bucket; When origintype = awss3, fill in the access domain name of the s3 bucket; When origintype = origingroup, fill in the origin server group id; When origintype = loadbalance, fill in the cloud load balancer instance id. this feature is currently only available to the allowlist.
+                            * `private_access` - Whether access to the private object storage origin server is allowed. this parameter is valid only when the origin server type origintype is COS or awss3. valid values: on: enable private authentication; off: disable private authentication. if not specified, the default value is off.
+                            * `private_parameters` - Private authentication parameter. this parameter is valid only when origintype = awss3 and privateaccess = on.
+                              * `access_key_id` - Authentication parameter access key id.
+                              * `region` - Region of the bucket.
+                              * `secret_access_key` - Authentication parameter secret access key.
+                              * `signature_version` - Authentication version. values: v2: v2 version; v4: v4 version.
+                          * `modify_request_header_parameters` - Modify http node request header configuration parameters. this parameter is required when name is modifyrequestheader.
+                            * `header_actions` - List of http header setting rules.
+                              * `action` - HTTP header setting methods. valid values are: set: sets a value for an existing header parameter; del: deletes a header parameter; add: adds a header parameter.
+                              * `name` - HTTP header name.
+                              * `value` - HTTP header value. this parameter is required when the action is set to set or add; it is optional when the action is set to del.
+                          * `modify_response_header_parameters` - Modify http node response header configuration parameters. this parameter is required when name is modifyresponseheader.
+                            * `header_actions` - HTTP origin-pull header rules list.
+                              * `action` - HTTP header setting methods. valid values are: set: sets a value for an existing header parameter; del: deletes a header parameter; add: adds a header parameter.
+                              * `name` - HTTP header name.
+                              * `value` - HTTP header value. this parameter is required when the action is set to set or add; it is optional when the action is set to del.
+                          * `name` - Operation name. The name needs to correspond to the parameter structure, for example, if Name=Cache, CacheParameters is required.
+- `Cache`: Node cache TTL;
+- `CacheKey`: Custom Cache Key;
+- `CachePrefresh`: Cache pre-refresh;
+- `AccessURLRedirect`: Access URL redirection;
+- `UpstreamURLRewrite`: Back-to-origin URL rewrite;
+- `QUIC`: QUIC;
+- `WebSocket`: WebSocket;
+- `Authentication`: Token authentication;
+- `MaxAge`: Browser cache TTL;
+- `StatusCodeCache`: Status code cache TTL;
+- `OfflineCache`: Offline cache;
+- `SmartRouting`: Smart acceleration;
+- `RangeOriginPull`: Segment back-to-origin;
+- `UpstreamHTTP2`: HTTP2 back-to-origin;
+- `HostHeader`: Host Header rewrite;
+- `ForceRedirectHTTPS`: Access protocol forced HTTPS jump configuration;
+- `OriginPullProtocol`: Back-to-origin HTTPS;
+- `Compression`: Smart compression configuration;
+- `HSTS`: HSTS;
+- `ClientIPHeader`: Header information configuration for storing client request IP;
+- `OCSPStapling`: OCSP stapling;
+- `HTTP2`: HTTP2 Access;
+- `PostMaxSize`: POST request upload file streaming maximum limit configuration;
+- `ClientIPCountry`: Carry client IP region information when returning to the source;
+- `UpstreamFollowRedirect`: Return to the source follow redirection parameter configuration;
+- `UpstreamRequest`: Return to the source request parameters;
+- `TLSConfig`: SSL/TLS security;
+- `ModifyOrigin`: Modify the source station;
+- `HTTPUpstreamTimeout`: Seven-layer return to the source timeout configuration;
+- `HttpResponse`: HTTP response;
+- `ErrorPage`: Custom error page;
+- `ModifyResponseHeader`: Modify HTTP node response header;
+- `ModifyRequestHeader`: Modify HTTP node request header;
+- `ResponseSpeedLimit`: Single connection download speed limit.
+- `SetContentIdentifier`: Set content identifier.
+- `Vary`: Vary feature configuration.
+- `ContentCompression`: Content compression configuration.
+- `OriginAuthentication`: Origin authentication configuration.
+                          * `ocsp_stapling_parameters` - OCSP stapling configuration parameter. this parameter is required when the name is set to ocspstapling.
+                            * `switch` - Whether to enable ocsp stapling configuration switch. values: on: enable; off: disable.
+                          * `offline_cache_parameters` - Offline cache configuration parameter. this parameter is required when name is offlinecache.
+                            * `switch` - Whether to enable offline caching. values: on: enable; off: disable.
+                          * `origin_authentication_parameters` - Origin authentication configuration parameter. This parameter is required when Name is set to OriginAuthentication. This is a whitelist feature; please contact Tencent Cloud engineers if needed.
+                            * `request_properties` - Origin authentication request properties.
+                              * `name` - Origin authentication parameter name.
+                              * `type` - Origin authentication parameter type. Valid values: QueryString: set origin authentication parameter type as query string; Header: set origin authentication parameter type as request header.
+                              * `value` - Origin authentication parameter value.
+                          * `origin_pull_protocol_parameters` - Back-to-origin HTTPS configuration parameter. This parameter is required when the Name value is `OriginPullProtocol`.
+                            * `protocol` - Back-to-origin protocol configuration. Possible values are: `http`: use HTTP protocol for back-to-origin; `https`: use HTTPS protocol for back-to-origin; `follow`: follow the protocol.
+                          * `post_max_size_parameters` - Maximum size configuration for file streaming upload via a post request. this parameter is required when name is postmaxsize.
+                            * `max_size` - Maximum size of the file uploaded for streaming via a post request, in bytes. value range: 1 * 2^20 bytes to 500 * 2^20 bytes.
+                            * `switch` - Whether to enable post request file upload limit, in bytes (default limit: 32 * 2^20 bytes). valid values: on: enable limit; off: disable limit.
+                          * `quic_parameters` - The quic configuration parameter. this parameter is required when name is quic.
+                            * `switch` - Whether to enable quic. values: on: enable; off: disable.
+                          * `range_origin_pull_parameters` - Shard source retrieval configuration parameter. this parameter is required when name is set to rangeoriginpull.
+                            * `switch` - Whether to enable range gets. values are: on: enable; off: disable.
+                          * `response_speed_limit_parameters` - Single connection download speed limit configuration parameter. this parameter is required when name is responsespeedlimit.
+                            * `max_speed` - Rate-Limiting value, in kb/s. enter a numerical value to specify the rate limit.
+                            * `mode` - Download rate limit mode. valid values: LimitUponDownload: rate limit throughout the download process; LimitAfterSpecificBytesDownloaded: rate limit after downloading specific bytes at full speed; LimitAfterSpecificSecondsDownloaded: start speed limit after downloading at full speed for a specific duration.
+                            * `start_at` - Rate-Limiting start value, which can be the download size or specified duration, in kb or s. this parameter is required when mode is set to limitafterspecificbytesdownloaded or limitafterspecificsecondsdownloaded. enter a numerical value to specify the download size or duration.
+                          * `set_content_identifier_parameters` - Content identification configuration parameter. this parameter is required when name is httpresponse.
+                            * `content_identifier` - Content identifier id.
+                          * `smart_routing_parameters` - Smart acceleration configuration parameter. this parameter is required when name is smartrouting.
+                            * `switch` - Whether to enable smart acceleration. values: on: enable; off: disable.
+                          * `status_code_cache_parameters` - Status code cache ttl configuration parameter. this parameter is required when name is statuscodecache.
+                            * `status_code_cache_params` - Status code cache ttl.
+                              * `cache_time` - Cache time value in seconds. value range: 0-31536000.
+                              * `status_code` - Status code. valid values: 400, 401, 403, 404, 405, 407, 414, 500, 501, 502, 503, 504, 509, 514.
+                          * `tls_config_parameters` - SSL/TLS security configuration parameter. this parameter is required when the name is set to tlsconfig.
+                            * `cipher_suite` - Cipher suite. for detailed information, please refer to tls versions and cipher suites description, https://www.tencentcloud.com/document/product/1145/54154?has_map=1. valid values: loose-v2023: loose-v2023 cipher suite; general-v2023: general-v2023 cipher suite; strict-v2023: strict-v2023 cipher suite.
+                            * `version` - TLS version. at least one must be specified. if multiple versions are specified, they must be consecutive, e.g., enable TLSv1, TLSv1.1, TLSv1.2, and TLSv1.3. it is not allowed to enable only 1 and 1.2 while disabling 1.1. valid values: TLSv1: TLSv1 version; TLSv1.1: TLSv1.1 version; TLSv1.2: TLSv1.2 version; TLSv1.3: TLSv1.3 version.
+                          * `upstream_follow_redirect_parameters` - Configuration parameter for following redirects during origin-pull. this parameter is required when the name is set to upstreamfollowredirect.
+                            * `max_times` - The maximum number of redirects. value range: 1-5. Note: this field is required when switch is on; when switch is off, this field is not required and will not take effect if filled.
+                            * `switch` - Whether to enable origin-pull to follow the redirection configuration. values: on: enable; off: disable.
+                          * `upstream_http2_parameters` - HTTP2 origin-pull configuration parameter. this parameter is required when name is set to upstreamhttp2.
+                            * `switch` - Whether to enable http2 origin-pull. valid values: on: enable; off: disable.
+                          * `upstream_request_parameters` - Configuration parameter for origin-pull request. this parameter is required when the name is set to upstreamrequest.
+                            * `cookie` - Cookie configuration. optional. if not provided, it will not be configured.
+                              * `action` - Origin-Pull request parameter cookie mode. this parameter is required when switch is on. valid values are: full: retain all; ignore: ignore all; includeCustom: retain partial parameters; excludeCustom: ignore partial parameters.
+                              * `switch` - Whether to enable the origin-pull request parameter cookie. valid values: on: enable; off: disable.
+                              * `values` - Specifies parameter values. this parameter takes effect only when the query string mode action is includecustom or excludecustom, and is used to specify the parameters to be reserved or ignored. up to 10 parameters are supported.
+                            * `query_string` - Query string configuration. optional. if not provided, it will not be configured.
+                              * `action` - Query string mode. this parameter is required when switch is on. values: full: retain all; ignore: ignore all; includeCustom: retain partial parameters; excludeCustom: ignore partial parameters.
+                              * `switch` - Whether to enable origin-pull request parameter query string. values: on: enable; off: disable.
+                              * `values` - Specifies parameter values. this parameter takes effect only when the query string mode action is includecustom or excludecustom, and is used to specify the parameters to be reserved or ignored. up to 10 parameters are supported.
+                          * `upstream_url_rewrite_parameters` - The origin-pull url rewrite configuration parameter. this parameter is required when name is upstreamurlrewrite.
+                            * `action` - Origin-Pull url rewrite action. valid values are: replace: replace the path prefix; addPrefix: add the path prefix; rmvPrefix: remove the path prefix.
+                            * `regex` - Origin URL Rewrite uses a regular expression for matching the complete path. It must conform to the Google RE2 specification and have a length range of 1 to 1024. This field is required when the Action is regexReplace; otherwise, it is optional.
+                            * `type` - Origin-Pull url rewriting type, only path is supported.
+                            * `value` - Origin-Pull url rewrite value, maximum length 1024, must start with /.note: when action is addprefix, it cannot end with /; when action is rmvprefix, * cannot be present.
+                          * `vary_parameters` - Vary configuration parameter. This parameter is required when Name is set to Vary.
+                            * `switch` - Whether to enable Vary feature. Valid values: on: enable; off: disable.
+                          * `web_socket_parameters` - The websocket configuration parameter. this parameter is required when name is websocket.
+                            * `switch` - Whether to enable websocket connection timeout. values: on: use timeout as the websocket timeout;; off: the platform still supports websocket connections, using the system default timeout of 15 seconds.
+                            * `timeout` - Timeout, unit: seconds. maximum timeout is 120 seconds.
+                        * `condition` - Match condition. https://www.tencentcloud.com/document/product/1145/54759.
+                        * `sub_rules` - List of sub-rules. multiple rules exist in this list and are executed sequentially from top to bottom. note: subrules and actions cannot both be empty. currently, only one layer of subrules is supported.
+                          * `branches` - Sub-rule branch.
+                            * `actions` - Sub-Rule branch. this list currently supports filling in only one rule; multiple entries are invalid.
+                              * `access_url_redirect_parameters` - The access url redirection configuration parameter. this parameter is required when name is accessurlredirect.
+                                * `host_name` - Target hostname.
+                                  * `action` - Target hostname configuration, valid values are: follow: follow the request; custom: custom.
+                                  * `value` - Custom value for target hostname, maximum length is 1024.
+                                * `protocol` - Target request protocol. valid values: http: target request protocol http; https: target request protocol https; follow: follow the request.
+                                * `query_string` - Carry query parameters.
+                                  * `action` - Action to be executed. values: full: retain all; ignore: ignore all.
+                                * `status_code` - Status code. valid values: 301, 302, 303, 307, 308.
+                                * `url_path` - Target path.
+                                  * `action` - Action to be executed. values: follow: follow the request; custom: custom; regex: regular expression matching.
+                                  * `regex` - Regular expression matching expression, length range is 1-1024. note: when action is regex, this field is required; when action is follow or custom, this field is not required and will not take effect if filled.
+                                  * `value` - Redirect target url, length range is 1-1024.note: when action is regex or custom, this field is required; when action is follow, this field is not required and will not take effect if filled.
+                              * `authentication_parameters` - Token authentication configuration parameter. this parameter is required when name is authentication.
+                                * `auth_param` - Authentication parameters name. the node will validate the value corresponding to this parameter name. consists of 1-100 uppercase and lowercase letters, numbers, or underscores.note: this field is required when authtype is either typea or typed.
+                                * `auth_type` - Authentication type. valid values:
+- `TypeA`: authentication method a type, for specific meaning please refer to authentication method a. https://www.tencentcloud.com/document/product/1145/62475;
+- `TypeB`: authentication method b type, for specific meaning please refer to authentication method b. https://www.tencentcloud.com/document/product/1145/62476;
+- `TypeC`: authentication method c type, for specific meaning please refer to authentication method c. https://www.tencentcloud.com/document/product/1145/62477;
+- `TypeD`: authentication method d type, for specific meaning please refer to authentication method d. https://www.tencentcloud.com/document/product/1145/62478;
+- `TypeVOD`: authentication method v type, for specific meaning please refer to authentication method v. https://www.tencentcloud.com/document/product/1145/62479.
+                                * `backup_secret_key` - The backup authentication key consists of 6-40 uppercase and lowercase english letters or digits, and cannot contain " and $.
+                                * `secret_key` - The primary authentication key consists of 6-40 uppercase and lowercase english letters or digits, and cannot contain " and $.
+                                * `time_format` - Authentication time format. values: dec: decimal; hex: hexadecimal.
+                                * `time_param` - Authentication timestamp. it cannot be the same as the value of the authparam field.note: this field is required when authtype is typed.
+                                * `timeout` - Validity period of the authentication url, in seconds, value range: 1-630720000. used to determine if the client access request has expired: If the current time exceeds "timestamp + validity period", it is an expired request, and a 403 is returned directly. If the current time does not exceed "timestamp + validity period", the request is not expired, and the md5 string is further validated. note: when authtype is one of typea, typeb, typec, or typed, this field is required.
+                              * `cache_key_parameters` - Custom cache key configuration parameter. when name is cachekey, this parameter is required.
+                                * `cookie` - Cookie configuration parameters. at least one of the following configurations must be set: fullurlcache, ignorecase, header, scheme, cookie.
+                                  * `action` - Cache action. values: full: retain all; ignore: ignore all; includeCustom: retain partial parameters; excludeCustom: ignore partial parameters. note: when switch is on, this field is required. when switch is off, this field is not required and will not take effect if filled.
+                                  * `switch` - Whether to enable feature. values: on: enable; off: disable.
+                                  * `values` - Custom cache key cookie name list.
+                                * `full_url_cache` - Switch for retaining the complete query string. values: on: enable; off: disable.
+                                * `header` - HTTP request header configuration parameters. at least one of the following configurations must be set: fullurlcache, ignorecase, header, scheme, cookie.
+                                  * `switch` - Whether to enable feature. values: on: enable; off: disable.
+                                  * `values` - Custom cache key http request header list. note: this field is required when switch is on; when switch is off, this field is not required and will not take effect if filled.
+                                * `ignore_case` - Switch for ignoring case. values: on: enable; off: disable. note: at least one of fullurlcache, ignorecase, header, scheme, or cookie must be configured.
+                                * `query_string` - Configuration parameter for retaining the query string. this field and fullurlcache must be set simultaneously, but cannot both be on.
+                                  * `action` - Actions to retain/ignore specified parameters in the query string. values: `includeCustom`: retain partial parameters. `excludeCustom`: ignore partial parameters.note: this field is required when switch is on. when switch is off, this field is not required and will not take effect if filled.
+                                  * `switch` - Query string retain/ignore specified parameter switch. valid values are: on: enable; off: disable.
+                                  * `values` - A list of parameter names to keep/ignore in the query string.
+                                * `scheme` - Request protocol switch. valid values: on: enable; off: disable.
+                              * `cache_parameters` - Node cache ttl configuration parameter. when name is cache, this parameter is required.
+                                * `custom_time` - Custom cache time. if not specified, this configuration is not set. only one of followorigin, nocache, or customtime can have switch set to on.
+                                  * `cache_time` - Custom cache time value, unit: seconds. value range: 0-315360000.
+                                  * `ignore_cache_control` - Ignore origin server cachecontrol switch. values: `on`: Enable; `off`: Disable.
+                                  * `switch` - Custom cache time switch. values: `on`: Enable; `off`: Disable.
+                                * `follow_origin` - Cache follows origin server. if not specified, this configuration is not set. only one of followorigin, nocache, or customtime can have switch set to on.
+                                  * `default_cache_strategy` - Whether to use the default caching policy when an origin server does not return the cache-control header. this field is required when defaultcache is set to on; otherwise, it is ineffective. when defaultcachetime is not 0, this field should be off. valid values: on: use the default caching policy. off: do not use the default caching policy.
+                                  * `default_cache_time` - The default cache time in seconds when an origin server does not return the cache-control header. the value ranges from 0 to 315360000. this field is required when defaultcache is set to on; otherwise, it is ineffective. when defaultcachestrategy is on, this field should be 0.
+                                  * `default_cache` - Whether to cache when an origin server does not return the cache-control header. this field is required when switch is on; when switch is off, this field is not required and will be ineffective if filled. valid values: on: cache; off: do not cache.
+                                  * `switch` - Whether to enable the configuration of following the origin server. Valid values: `on`: Enable; `off`: Disable.
+                                * `no_cache` - No cache. if not specified, this configuration is not set. only one of followorigin, nocache, or customtime can have switch set to on.
+                                  * `switch` - Whether to enable no-cache configuration. Valid values: `on`: Enable; `off`: Disable.
+                              * `cache_prefresh_parameters` - The cache prefresh configuration parameter. this parameter is required when name is cacheprefresh.
+                                * `cache_time_percent` - Prefresh interval set as a percentage of the node cache time. value range: 1-99. note: this field is required when switch is on; when switch is off, this field is not required and will not take effect if filled.
+                                * `switch` - Whether to enable cache prefresh. values: on: enable; off: disable.
+                              * `client_ip_country_parameters` - Configuration parameter for carrying the region information of the client ip during origin-pull. this parameter is required when the name is set to clientipcountry.
+                                * `header_name` - Name of the request header that contains the client ip region. it is valid when switch=on. the default value EO-Client-IPCountry is used when it is not specified.
+                                * `switch` - Whether to enable configuration. values: on: enable; off: disable.
+                              * `client_ip_header_parameters` - Client ip header configuration for storing client request ip information. this parameter is required when name is clientipheader.
+                                * `header_name` - Name of the request header containing the client ip address for origin-pull. when switch is on, this parameter is required. x-forwarded-for is not allowed for this parameter.
+                                * `switch` - Whether to enable configuration. values: on: enable; off: disable.
+                              * `compression_parameters` - Intelligent compression configuration. this parameter is required when name is set to compression.
+                                * `algorithms` - Supported compression algorithm list. this field is required when switch is on; otherwise, it is not effective. valid values: brotli: brotli algorithm; gzip: gzip algorithm.
+                                * `switch` - Whether to enable smart compression. values: on: enable; off: disable.
+                              * `content_compression_parameters` - Content compression configuration parameters. This parameter is required when the `Name` parameter is set to `ContentCompression`. This parameter uses a whitelist function; please contact Tencent Cloud engineers if needed.
+                                * `switch` - Content compression configuration switch, possible values are: on: enabled; off: disabled. When the Switch is set to `on`, both Brotli and gzip compression algorithms will be supported.
+                              * `error_page_parameters` - Custom error page configuration parameters. this parameter is required when name is errorpage.
+                                * `error_page_params` - Custom error page configuration list.
+                                  * `redirect_url` - Redirect url. requires a full redirect path, such as https://www.test.com/error.html.
+                                  * `status_code` - Status code. supported values are 400, 403, 404, 405, 414, 416, 451, 500, 501, 502, 503, 504.
+                              * `force_redirect_https_parameters` - Force https redirect configuration parameter. this parameter is required when the name is set to forceredirecthttps.
+                                * `redirect_status_code` - Redirection status code. this field is required when switch is on; otherwise, it is not effective. valid values are: 301: 301 redirect; 302: 302 redirect.
+                                * `switch` - Whether to enable forced redirect configuration switch. values: on: enable; off: disable.
+                              * `host_header_parameters` - Host header rewrite configuration parameter. this parameter is required when name is set to hostheader.
+                                * `action` - Action to be executed. values: followOrigin: follow origin server domain name; custom: custom.
+                                * `server_name` - Host header rewrite requires a complete domain name. note: this field is required when switch is on; when switch is off, this field is not required and any value will be ignored.
+                              * `hsts_parameters` - HSTS configuration parameter. this parameter is required when name is hsts.
+                                * `include_sub_domains` - Whether to allow other subdomains to inherit the same hsts header. values: on: allows other subdomains to inherit the same hsts header; off: does not allow other subdomains to inherit the same hsts header. note: when switch is on, this field is required; when switch is off, this field is not required and will not take effect if filled.
+                                * `preload` - Whether to allow the browser to preload the hsts header. valid values: on: allows the browser to preload the hsts header; off: does not allow the browser to preload the hsts header. note: when switch is on, this field is required; when switch is off, this field is not required and will not take effect if filled.
+                                * `switch` - Whether to enable hsts. values: on: enable; off: disable.
+                                * `timeout` - Cache hsts header time, unit: seconds. value range: 1-31536000. note: this field is required when switch is on; when switch is off, this field is not required and will not take effect if filled.
+                              * `http2_parameters` - HTTP2 access configuration parameter. this parameter is required when name is http2.
+                                * `switch` - Whether to enable http2 access. values: on: enable; off: disable.
+                              * `http_response_parameters` - HTTP response configuration parameters. this parameter is required when name is httpresponse.
+                                * `response_page` - Response page id.
+                                * `status_code` - Response status code. supports 2xx, 4xx, 5xx, excluding 499, 514, 101, 301, 302, 303, 509, 520-599.
+                              * `http_upstream_timeout_parameters` - Configuration of layer 7 origin timeout. this parameter is required when name is httpupstreamtimeout.
+                                * `response_timeout` - HTTP response timeout in seconds. value range: 5-600.
+                              * `max_age_parameters` - Browser cache ttl configuration parameter. this parameter is required when name is maxage.
+                                * `cache_time` - Custom cache time value, unit: seconds. value range: 0-315360000. note: when followorigin is off, it means not following the origin server and using cachetime to set the cache time; otherwise, this field will not take effect.
+                                * `follow_origin` - Specifies whether to follow the origin server cache-control configuration, with the following values: on: follow the origin server and ignore the field cachetime; off: do not follow the origin server and apply the field cachetime.
+                              * `modify_origin_parameters` - Configuration parameter for modifying the origin server. this parameter is required when the name is set to modifyorigin.
+                                * `http_origin_port` - Ports for http origin-pull requests. value range: 1-65535. this parameter takes effect only when the origin-pull protocol originprotocol is http or follow.
+                                * `https_origin_port` - Ports for https origin-pull requests. value range: 1-65535. this parameter takes effect only when the origin-pull protocol originprotocol is https or follow.
+                                * `origin_protocol` - Origin-Pull protocol configuration. this parameter is required when origintype is ipdomain, origingroup, or loadbalance. valid values are: http: use http protocol; https: use https protocol; follow: follow the protocol.
+                                * `origin_type` - The origin type. values: IPDomain: ipv4, ipv6, or domain name type origin server; OriginGroup: origin server group type origin server; LoadBalance: cloud load balancer (clb), this feature is in beta test. to use it, please submit a ticket or contact smart customer service; COS: tencent cloud COS origin server; AWSS3: all object storage origin servers that support the aws s3 protocol.
+                                * `origin` - Origin server address, which varies according to the value of origintype: When origintype = ipdomain, fill in an ipv4 address, an ipv6 address, or a domain name; When origintype = cos, please fill in the access domain name of the cos bucket; When origintype = awss3, fill in the access domain name of the s3 bucket; When origintype = origingroup, fill in the origin server group id; When origintype = loadbalance, fill in the cloud load balancer instance id. this feature is currently only available to the allowlist.
+                                * `private_access` - Whether access to the private object storage origin server is allowed. this parameter is valid only when the origin server type origintype is COS or awss3. valid values: on: enable private authentication; off: disable private authentication. if not specified, the default value is off.
+                                * `private_parameters` - Private authentication parameter. this parameter is valid only when origintype = awss3 and privateaccess = on.
+                                  * `access_key_id` - Authentication parameter access key id.
+                                  * `region` - Region of the bucket.
+                                  * `secret_access_key` - Authentication parameter secret access key.
+                                  * `signature_version` - Authentication version. values: v2: v2 version; v4: v4 version.
+                              * `modify_request_header_parameters` - Modify http node request header configuration parameters. this parameter is required when name is modifyrequestheader.
+                                * `header_actions` - List of http header setting rules.
+                                  * `action` - HTTP header setting methods. valid values are: set: sets a value for an existing header parameter; del: deletes a header parameter; add: adds a header parameter.
+                                  * `name` - HTTP header name.
+                                  * `value` - HTTP header value. this parameter is required when the action is set to set or add; it is optional when the action is set to del.
+                              * `modify_response_header_parameters` - Modify http node response header configuration parameters. this parameter is required when name is modifyresponseheader.
+                                * `header_actions` - HTTP origin-pull header rules list.
+                                  * `action` - HTTP header setting methods. valid values are: set: sets a value for an existing header parameter; del: deletes a header parameter; add: adds a header parameter.
+                                  * `name` - HTTP header name.
+                                  * `value` - HTTP header value. this parameter is required when the action is set to set or add; it is optional when the action is set to del.
+                              * `name` - Operation name. The name needs to correspond to the parameter structure, for example, if Name=Cache, CacheParameters is required.
+- `Cache`: Node cache TTL;
+- `CacheKey`: Custom Cache Key;
+- `CachePrefresh`: Cache pre-refresh;
+- `AccessURLRedirect`: Access URL redirection;
+- `UpstreamURLRewrite`: Back-to-origin URL rewrite;
+- `QUIC`: QUIC;
+- `WebSocket`: WebSocket;
+- `Authentication`: Token authentication;
+- `MaxAge`: Browser cache TTL;
+- `StatusCodeCache`: Status code cache TTL;
+- `OfflineCache`: Offline cache;
+- `SmartRouting`: Smart acceleration;
+- `RangeOriginPull`: Segment back-to-origin;
+- `UpstreamHTTP2`: HTTP2 back-to-origin;
+- `HostHeader`: Host Header rewrite;
+- `ForceRedirectHTTPS`: Access protocol forced HTTPS jump configuration;
+- `OriginPullProtocol`: Back-to-origin HTTPS;
+- `Compression`: Smart compression configuration;
+- `HSTS`: HSTS;
+- `ClientIPHeader`: Header information configuration for storing client request IP;
+- `OCSPStapling`: OCSP stapling;
+- `HTTP2`: HTTP2 Access;
+- `PostMaxSize`: POST request upload file streaming maximum limit configuration;
+- `ClientIPCountry`: Carry client IP region information when returning to the source;
+- `UpstreamFollowRedirect`: Return to the source follow redirection parameter configuration;
+- `UpstreamRequest`: Return to the source request parameters;
+- `TLSConfig`: SSL/TLS security;
+- `ModifyOrigin`: Modify the source station;
+- `HTTPUpstreamTimeout`: Seven-layer return to the source timeout configuration;
+- `HttpResponse`: HTTP response;
+- `ErrorPage`: Custom error page;
+- `ModifyResponseHeader`: Modify HTTP node response header;
+- `ModifyRequestHeader`: Modify HTTP node request header;
+- `ResponseSpeedLimit`: Single connection download speed limit.
+- `SetContentIdentifier`: Set content identifier.
+- `Vary`: Vary feature configuration.
+- `ContentCompression`: Content compression configuration.
+- `OriginAuthentication`: Origin authentication configuration.
+                              * `ocsp_stapling_parameters` - OCSP stapling configuration parameter. this parameter is required when the name is set to ocspstapling.
+                                * `switch` - Whether to enable ocsp stapling configuration switch. values: on: enable; off: disable.
+                              * `offline_cache_parameters` - Offline cache configuration parameter. this parameter is required when name is offlinecache.
+                                * `switch` - Whether to enable offline caching. values: on: enable; off: disable.
+                              * `origin_authentication_parameters` - Origin authentication configuration parameter. This parameter is required when Name is set to OriginAuthentication. This is a whitelist feature; please contact Tencent Cloud engineers if needed.
+                                * `request_properties` - Origin authentication request properties.
+                                  * `name` - Origin authentication parameter name.
+                                  * `type` - Origin authentication parameter type. Valid values: QueryString: set origin authentication parameter type as query string; Header: set origin authentication parameter type as request header.
+                                  * `value` - Origin authentication parameter value.
+                              * `origin_pull_protocol_parameters` - Back-to-origin HTTPS configuration parameter. This parameter is required when the Name value is `OriginPullProtocol`.
+                                * `protocol` - Back-to-origin protocol configuration. Possible values are: `http`: use HTTP protocol for back-to-origin; `https`: use HTTPS protocol for back-to-origin; `follow`: follow the protocol.
+                              * `post_max_size_parameters` - Maximum size configuration for file streaming upload via a post request. this parameter is required when name is postmaxsize.
+                                * `max_size` - Maximum size of the file uploaded for streaming via a post request, in bytes. value range: 1 * 2^20 bytes to 500 * 2^20 bytes.
+                                * `switch` - Whether to enable post request file upload limit, in bytes (default limit: 32 * 2^20 bytes). valid values: on: enable limit; off: disable limit.
+                              * `quic_parameters` - The quic configuration parameter. this parameter is required when name is quic.
+                                * `switch` - Whether to enable quic. values: on: enable; off: disable.
+                              * `range_origin_pull_parameters` - Shard source retrieval configuration parameter. this parameter is required when name is set to rangeoriginpull.
+                                * `switch` - Whether to enable range gets. values are: on: enable; off: disable.
+                              * `response_speed_limit_parameters` - Single connection download speed limit configuration parameter. this parameter is required when name is responsespeedlimit.
+                                * `max_speed` - Rate-Limiting value, in kb/s. enter a numerical value to specify the rate limit.
+                                * `mode` - Download rate limit mode. valid values: LimitUponDownload: rate limit throughout the download process; LimitAfterSpecificBytesDownloaded: rate limit after downloading specific bytes at full speed; LimitAfterSpecificSecondsDownloaded: start speed limit after downloading at full speed for a specific duration.
+                                * `start_at` - Rate-Limiting start value, which can be the download size or specified duration, in kb or s. this parameter is required when mode is set to limitafterspecificbytesdownloaded or limitafterspecificsecondsdownloaded. enter a numerical value to specify the download size or duration.
+                              * `set_content_identifier_parameters` - Content identification configuration parameter. this parameter is required when name is httpresponse.
+                                * `content_identifier` - Content identifier id.
+                              * `smart_routing_parameters` - Smart acceleration configuration parameter. this parameter is required when name is smartrouting.
+                                * `switch` - Whether to enable smart acceleration. values: on: enable; off: disable.
+                              * `status_code_cache_parameters` - Status code cache ttl configuration parameter. this parameter is required when name is statuscodecache.
+                                * `status_code_cache_params` - Status code cache ttl.
+                                  * `cache_time` - Cache time value in seconds. value range: 0-31536000.
+                                  * `status_code` - Status code. valid values: 400, 401, 403, 404, 405, 407, 414, 500, 501, 502, 503, 504, 509, 514.
+                              * `tls_config_parameters` - SSL/TLS security configuration parameter. this parameter is required when the name is set to tlsconfig.
+                                * `cipher_suite` - Cipher suite. for detailed information, please refer to tls versions and cipher suites description, https://www.tencentcloud.com/document/product/1145/54154?has_map=1. valid values: loose-v2023: loose-v2023 cipher suite; general-v2023: general-v2023 cipher suite; strict-v2023: strict-v2023 cipher suite.
+                                * `version` - TLS version. at least one must be specified. if multiple versions are specified, they must be consecutive, e.g., enable TLSv1, TLSv1.1, TLSv1.2, and TLSv1.3. it is not allowed to enable only 1 and 1.2 while disabling 1.1. valid values: TLSv1: TLSv1 version; TLSv1.1: TLSv1.1 version; TLSv1.2: TLSv1.2 version; TLSv1.3: TLSv1.3 version.
+                              * `upstream_follow_redirect_parameters` - Configuration parameter for following redirects during origin-pull. this parameter is required when the name is set to upstreamfollowredirect.
+                                * `max_times` - The maximum number of redirects. value range: 1-5. Note: this field is required when switch is on; when switch is off, this field is not required and will not take effect if filled.
+                                * `switch` - Whether to enable origin-pull to follow the redirection configuration. values: on: enable; off: disable.
+                              * `upstream_http2_parameters` - HTTP2 origin-pull configuration parameter. this parameter is required when name is set to upstreamhttp2.
+                                * `switch` - Whether to enable http2 origin-pull. valid values: on: enable; off: disable.
+                              * `upstream_request_parameters` - Configuration parameter for origin-pull request. this parameter is required when the name is set to upstreamrequest.
+                                * `cookie` - Cookie configuration. optional. if not provided, it will not be configured.
+                                  * `action` - Origin-Pull request parameter cookie mode. this parameter is required when switch is on. valid values are: full: retain all; ignore: ignore all; includeCustom: retain partial parameters; excludeCustom: ignore partial parameters.
+                                  * `switch` - Whether to enable the origin-pull request parameter cookie. valid values: on: enable; off: disable.
+                                  * `values` - Specifies parameter values. this parameter takes effect only when the query string mode action is includecustom or excludecustom, and is used to specify the parameters to be reserved or ignored. up to 10 parameters are supported.
+                                * `query_string` - Query string configuration. optional. if not provided, it will not be configured.
+                                  * `action` - Query string mode. this parameter is required when switch is on. values: full: retain all; ignore: ignore all; includeCustom: retain partial parameters; excludeCustom: ignore partial parameters.
+                                  * `switch` - Whether to enable origin-pull request parameter query string. values: on: enable; off: disable.
+                                  * `values` - Specifies parameter values. this parameter takes effect only when the query string mode action is includecustom or excludecustom, and is used to specify the parameters to be reserved or ignored. up to 10 parameters are supported.
+                              * `upstream_url_rewrite_parameters` - The origin-pull url rewrite configuration parameter. this parameter is required when name is upstreamurlrewrite.
+                                * `action` - Origin-Pull url rewrite action. valid values are: replace: replace the path prefix; addPrefix: add the path prefix; rmvPrefix: remove the path prefix.
+                                * `regex` - Origin URL Rewrite uses a regular expression for matching the complete path. It must conform to the Google RE2 specification and have a length range of 1 to 1024. This field is required when the Action is regexReplace; otherwise, it is optional.
+                                * `type` - Origin-Pull url rewriting type, only path is supported.
+                                * `value` - Origin-Pull url rewrite value, maximum length 1024, must start with /.note: when action is addprefix, it cannot end with /; when action is rmvprefix, * cannot be present.
+                              * `vary_parameters` - Vary configuration parameter. This parameter is required when Name is set to Vary.
+                                * `switch` - Whether to enable Vary feature. Valid values: on: enable; off: disable.
+                              * `web_socket_parameters` - The websocket configuration parameter. this parameter is required when name is websocket.
+                                * `switch` - Whether to enable websocket connection timeout. values: on: use timeout as the websocket timeout;; off: the platform still supports websocket connections, using the system default timeout of 15 seconds.
+                                * `timeout` - Timeout, unit: seconds. maximum timeout is 120 seconds.
+                            * `condition` - Match condition. https://www.tencentcloud.com/document/product/1145/54759.
+                            * `sub_rules` - List of sub-rules. multiple rules exist in this list and are executed sequentially from top to bottom. note: subrules and actions cannot both be empty. currently, only one layer of subrules is supported.
+                              * `branches` - Sub-rule branch.
+                                * `actions` - Sub-Rule branch. this list currently supports filling in only one rule; multiple entries are invalid.
+                                  * `access_url_redirect_parameters` - The access url redirection configuration parameter. this parameter is required when name is accessurlredirect.
+                                    * `host_name` - Target hostname.
+                                      * `action` - Target hostname configuration, valid values are: follow: follow the request; custom: custom.
+                                      * `value` - Custom value for target hostname, maximum length is 1024.
+                                    * `protocol` - Target request protocol. valid values: http: target request protocol http; https: target request protocol https; follow: follow the request.
+                                    * `query_string` - Carry query parameters.
+                                      * `action` - Action to be executed. values: full: retain all; ignore: ignore all.
+                                    * `status_code` - Status code. valid values: 301, 302, 303, 307, 308.
+                                    * `url_path` - Target path.
+                                      * `action` - Action to be executed. values: follow: follow the request; custom: custom; regex: regular expression matching.
+                                      * `regex` - Regular expression matching expression, length range is 1-1024. note: when action is regex, this field is required; when action is follow or custom, this field is not required and will not take effect if filled.
+                                      * `value` - Redirect target url, length range is 1-1024.note: when action is regex or custom, this field is required; when action is follow, this field is not required and will not take effect if filled.
+                                  * `authentication_parameters` - Token authentication configuration parameter. this parameter is required when name is authentication.
+                                    * `auth_param` - Authentication parameters name. the node will validate the value corresponding to this parameter name. consists of 1-100 uppercase and lowercase letters, numbers, or underscores.note: this field is required when authtype is either typea or typed.
+                                    * `auth_type` - Authentication type. valid values:
+- `TypeA`: authentication method a type, for specific meaning please refer to authentication method a. https://www.tencentcloud.com/document/product/1145/62475;
+- `TypeB`: authentication method b type, for specific meaning please refer to authentication method b. https://www.tencentcloud.com/document/product/1145/62476;
+- `TypeC`: authentication method c type, for specific meaning please refer to authentication method c. https://www.tencentcloud.com/document/product/1145/62477;
+- `TypeD`: authentication method d type, for specific meaning please refer to authentication method d. https://www.tencentcloud.com/document/product/1145/62478;
+- `TypeVOD`: authentication method v type, for specific meaning please refer to authentication method v. https://www.tencentcloud.com/document/product/1145/62479.
+                                    * `backup_secret_key` - The backup authentication key consists of 6-40 uppercase and lowercase english letters or digits, and cannot contain " and $.
+                                    * `secret_key` - The primary authentication key consists of 6-40 uppercase and lowercase english letters or digits, and cannot contain " and $.
+                                    * `time_format` - Authentication time format. values: dec: decimal; hex: hexadecimal.
+                                    * `time_param` - Authentication timestamp. it cannot be the same as the value of the authparam field.note: this field is required when authtype is typed.
+                                    * `timeout` - Validity period of the authentication url, in seconds, value range: 1-630720000. used to determine if the client access request has expired: If the current time exceeds "timestamp + validity period", it is an expired request, and a 403 is returned directly. If the current time does not exceed "timestamp + validity period", the request is not expired, and the md5 string is further validated. note: when authtype is one of typea, typeb, typec, or typed, this field is required.
+                                  * `cache_key_parameters` - Custom cache key configuration parameter. when name is cachekey, this parameter is required.
+                                    * `cookie` - Cookie configuration parameters. at least one of the following configurations must be set: fullurlcache, ignorecase, header, scheme, cookie.
+                                      * `action` - Cache action. values: full: retain all; ignore: ignore all; includeCustom: retain partial parameters; excludeCustom: ignore partial parameters. note: when switch is on, this field is required. when switch is off, this field is not required and will not take effect if filled.
+                                      * `switch` - Whether to enable feature. values: on: enable; off: disable.
+                                      * `values` - Custom cache key cookie name list.
+                                    * `full_url_cache` - Switch for retaining the complete query string. values: on: enable; off: disable.
+                                    * `header` - HTTP request header configuration parameters. at least one of the following configurations must be set: fullurlcache, ignorecase, header, scheme, cookie.
+                                      * `switch` - Whether to enable feature. values: on: enable; off: disable.
+                                      * `values` - Custom cache key http request header list. note: this field is required when switch is on; when switch is off, this field is not required and will not take effect if filled.
+                                    * `ignore_case` - Switch for ignoring case. values: on: enable; off: disable. note: at least one of fullurlcache, ignorecase, header, scheme, or cookie must be configured.
+                                    * `query_string` - Configuration parameter for retaining the query string. this field and fullurlcache must be set simultaneously, but cannot both be on.
+                                      * `action` - Actions to retain/ignore specified parameters in the query string. values: `includeCustom`: retain partial parameters. `excludeCustom`: ignore partial parameters.note: this field is required when switch is on. when switch is off, this field is not required and will not take effect if filled.
+                                      * `switch` - Query string retain/ignore specified parameter switch. valid values are: on: enable; off: disable.
+                                      * `values` - A list of parameter names to keep/ignore in the query string.
+                                    * `scheme` - Request protocol switch. valid values: on: enable; off: disable.
+                                  * `cache_parameters` - Node cache ttl configuration parameter. when name is cache, this parameter is required.
+                                    * `custom_time` - Custom cache time. if not specified, this configuration is not set. only one of followorigin, nocache, or customtime can have switch set to on.
+                                      * `cache_time` - Custom cache time value, unit: seconds. value range: 0-315360000.
+                                      * `ignore_cache_control` - Ignore origin server cachecontrol switch. values: `on`: Enable; `off`: Disable.
+                                      * `switch` - Custom cache time switch. values: `on`: Enable; `off`: Disable.
+                                    * `follow_origin` - Cache follows origin server. if not specified, this configuration is not set. only one of followorigin, nocache, or customtime can have switch set to on.
+                                      * `default_cache_strategy` - Whether to use the default caching policy when an origin server does not return the cache-control header. this field is required when defaultcache is set to on; otherwise, it is ineffective. when defaultcachetime is not 0, this field should be off. valid values: on: use the default caching policy. off: do not use the default caching policy.
+                                      * `default_cache_time` - The default cache time in seconds when an origin server does not return the cache-control header. the value ranges from 0 to 315360000. this field is required when defaultcache is set to on; otherwise, it is ineffective. when defaultcachestrategy is on, this field should be 0.
+                                      * `default_cache` - Whether to cache when an origin server does not return the cache-control header. this field is required when switch is on; when switch is off, this field is not required and will be ineffective if filled. valid values: on: cache; off: do not cache.
+                                      * `switch` - Whether to enable the configuration of following the origin server. Valid values: `on`: Enable; `off`: Disable.
+                                    * `no_cache` - No cache. if not specified, this configuration is not set. only one of followorigin, nocache, or customtime can have switch set to on.
+                                      * `switch` - Whether to enable no-cache configuration. Valid values: `on`: Enable; `off`: Disable.
+                                  * `cache_prefresh_parameters` - The cache prefresh configuration parameter. this parameter is required when name is cacheprefresh.
+                                    * `cache_time_percent` - Prefresh interval set as a percentage of the node cache time. value range: 1-99. note: this field is required when switch is on; when switch is off, this field is not required and will not take effect if filled.
+                                    * `switch` - Whether to enable cache prefresh. values: on: enable; off: disable.
+                                  * `client_ip_country_parameters` - Configuration parameter for carrying the region information of the client ip during origin-pull. this parameter is required when the name is set to clientipcountry.
+                                    * `header_name` - Name of the request header that contains the client ip region. it is valid when switch=on. the default value EO-Client-IPCountry is used when it is not specified.
+                                    * `switch` - Whether to enable configuration. values: on: enable; off: disable.
+                                  * `client_ip_header_parameters` - Client ip header configuration for storing client request ip information. this parameter is required when name is clientipheader.
+                                    * `header_name` - Name of the request header containing the client ip address for origin-pull. when switch is on, this parameter is required. x-forwarded-for is not allowed for this parameter.
+                                    * `switch` - Whether to enable configuration. values: on: enable; off: disable.
+                                  * `compression_parameters` - Intelligent compression configuration. this parameter is required when name is set to compression.
+                                    * `algorithms` - Supported compression algorithm list. this field is required when switch is on; otherwise, it is not effective. valid values: brotli: brotli algorithm; gzip: gzip algorithm.
+                                    * `switch` - Whether to enable smart compression. values: on: enable; off: disable.
+                                  * `content_compression_parameters` - Content compression configuration parameters. This parameter is required when the `Name` parameter is set to `ContentCompression`. This parameter uses a whitelist function; please contact Tencent Cloud engineers if needed.
+                                    * `switch` - Content compression configuration switch, possible values are: on: enabled; off: disabled. When the Switch is set to `on`, both Brotli and gzip compression algorithms will be supported.
+                                  * `error_page_parameters` - Custom error page configuration parameters. this parameter is required when name is errorpage.
+                                    * `error_page_params` - Custom error page configuration list.
+                                      * `redirect_url` - Redirect url. requires a full redirect path, such as https://www.test.com/error.html.
+                                      * `status_code` - Status code. supported values are 400, 403, 404, 405, 414, 416, 451, 500, 501, 502, 503, 504.
+                                  * `force_redirect_https_parameters` - Force https redirect configuration parameter. this parameter is required when the name is set to forceredirecthttps.
+                                    * `redirect_status_code` - Redirection status code. this field is required when switch is on; otherwise, it is not effective. valid values are: 301: 301 redirect; 302: 302 redirect.
+                                    * `switch` - Whether to enable forced redirect configuration switch. values: on: enable; off: disable.
+                                  * `host_header_parameters` - Host header rewrite configuration parameter. this parameter is required when name is set to hostheader.
+                                    * `action` - Action to be executed. values: followOrigin: follow origin server domain name; custom: custom.
+                                    * `server_name` - Host header rewrite requires a complete domain name. note: this field is required when switch is on; when switch is off, this field is not required and any value will be ignored.
+                                  * `hsts_parameters` - HSTS configuration parameter. this parameter is required when name is hsts.
+                                    * `include_sub_domains` - Whether to allow other subdomains to inherit the same hsts header. values: on: allows other subdomains to inherit the same hsts header; off: does not allow other subdomains to inherit the same hsts header. note: when switch is on, this field is required; when switch is off, this field is not required and will not take effect if filled.
+                                    * `preload` - Whether to allow the browser to preload the hsts header. valid values: on: allows the browser to preload the hsts header; off: does not allow the browser to preload the hsts header. note: when switch is on, this field is required; when switch is off, this field is not required and will not take effect if filled.
+                                    * `switch` - Whether to enable hsts. values: on: enable; off: disable.
+                                    * `timeout` - Cache hsts header time, unit: seconds. value range: 1-31536000. note: this field is required when switch is on; when switch is off, this field is not required and will not take effect if filled.
+                                  * `http2_parameters` - HTTP2 access configuration parameter. this parameter is required when name is http2.
+                                    * `switch` - Whether to enable http2 access. values: on: enable; off: disable.
+                                  * `http_response_parameters` - HTTP response configuration parameters. this parameter is required when name is httpresponse.
+                                    * `response_page` - Response page id.
+                                    * `status_code` - Response status code. supports 2xx, 4xx, 5xx, excluding 499, 514, 101, 301, 302, 303, 509, 520-599.
+                                  * `http_upstream_timeout_parameters` - Configuration of layer 7 origin timeout. this parameter is required when name is httpupstreamtimeout.
+                                    * `response_timeout` - HTTP response timeout in seconds. value range: 5-600.
+                                  * `max_age_parameters` - Browser cache ttl configuration parameter. this parameter is required when name is maxage.
+                                    * `cache_time` - Custom cache time value, unit: seconds. value range: 0-315360000. note: when followorigin is off, it means not following the origin server and using cachetime to set the cache time; otherwise, this field will not take effect.
+                                    * `follow_origin` - Specifies whether to follow the origin server cache-control configuration, with the following values: on: follow the origin server and ignore the field cachetime; off: do not follow the origin server and apply the field cachetime.
+                                  * `modify_origin_parameters` - Configuration parameter for modifying the origin server. this parameter is required when the name is set to modifyorigin.
+                                    * `http_origin_port` - Ports for http origin-pull requests. value range: 1-65535. this parameter takes effect only when the origin-pull protocol originprotocol is http or follow.
+                                    * `https_origin_port` - Ports for https origin-pull requests. value range: 1-65535. this parameter takes effect only when the origin-pull protocol originprotocol is https or follow.
+                                    * `origin_protocol` - Origin-Pull protocol configuration. this parameter is required when origintype is ipdomain, origingroup, or loadbalance. valid values are: http: use http protocol; https: use https protocol; follow: follow the protocol.
+                                    * `origin_type` - The origin type. values: IPDomain: ipv4, ipv6, or domain name type origin server; OriginGroup: origin server group type origin server; LoadBalance: cloud load balancer (clb), this feature is in beta test. to use it, please submit a ticket or contact smart customer service; COS: tencent cloud COS origin server; AWSS3: all object storage origin servers that support the aws s3 protocol.
+                                    * `origin` - Origin server address, which varies according to the value of origintype: When origintype = ipdomain, fill in an ipv4 address, an ipv6 address, or a domain name; When origintype = cos, please fill in the access domain name of the cos bucket; When origintype = awss3, fill in the access domain name of the s3 bucket; When origintype = origingroup, fill in the origin server group id; When origintype = loadbalance, fill in the cloud load balancer instance id. this feature is currently only available to the allowlist.
+                                    * `private_access` - Whether access to the private object storage origin server is allowed. this parameter is valid only when the origin server type origintype is COS or awss3. valid values: on: enable private authentication; off: disable private authentication. if not specified, the default value is off.
+                                    * `private_parameters` - Private authentication parameter. this parameter is valid only when origintype = awss3 and privateaccess = on.
+                                      * `access_key_id` - Authentication parameter access key id.
+                                      * `region` - Region of the bucket.
+                                      * `secret_access_key` - Authentication parameter secret access key.
+                                      * `signature_version` - Authentication version. values: v2: v2 version; v4: v4 version.
+                                  * `modify_request_header_parameters` - Modify http node request header configuration parameters. this parameter is required when name is modifyrequestheader.
+                                    * `header_actions` - List of http header setting rules.
+                                      * `action` - HTTP header setting methods. valid values are: set: sets a value for an existing header parameter; del: deletes a header parameter; add: adds a header parameter.
+                                      * `name` - HTTP header name.
+                                      * `value` - HTTP header value. this parameter is required when the action is set to set or add; it is optional when the action is set to del.
+                                  * `modify_response_header_parameters` - Modify http node response header configuration parameters. this parameter is required when name is modifyresponseheader.
+                                    * `header_actions` - HTTP origin-pull header rules list.
+                                      * `action` - HTTP header setting methods. valid values are: set: sets a value for an existing header parameter; del: deletes a header parameter; add: adds a header parameter.
+                                      * `name` - HTTP header name.
+                                      * `value` - HTTP header value. this parameter is required when the action is set to set or add; it is optional when the action is set to del.
+                                  * `name` - Operation name. The name needs to correspond to the parameter structure, for example, if Name=Cache, CacheParameters is required.
+- `Cache`: Node cache TTL;
+- `CacheKey`: Custom Cache Key;
+- `CachePrefresh`: Cache pre-refresh;
+- `AccessURLRedirect`: Access URL redirection;
+- `UpstreamURLRewrite`: Back-to-origin URL rewrite;
+- `QUIC`: QUIC;
+- `WebSocket`: WebSocket;
+- `Authentication`: Token authentication;
+- `MaxAge`: Browser cache TTL;
+- `StatusCodeCache`: Status code cache TTL;
+- `OfflineCache`: Offline cache;
+- `SmartRouting`: Smart acceleration;
+- `RangeOriginPull`: Segment back-to-origin;
+- `UpstreamHTTP2`: HTTP2 back-to-origin;
+- `HostHeader`: Host Header rewrite;
+- `ForceRedirectHTTPS`: Access protocol forced HTTPS jump configuration;
+- `OriginPullProtocol`: Back-to-origin HTTPS;
+- `Compression`: Smart compression configuration;
+- `HSTS`: HSTS;
+- `ClientIPHeader`: Header information configuration for storing client request IP;
+- `OCSPStapling`: OCSP stapling;
+- `HTTP2`: HTTP2 Access;
+- `PostMaxSize`: POST request upload file streaming maximum limit configuration;
+- `ClientIPCountry`: Carry client IP region information when returning to the source;
+- `UpstreamFollowRedirect`: Return to the source follow redirection parameter configuration;
+- `UpstreamRequest`: Return to the source request parameters;
+- `TLSConfig`: SSL/TLS security;
+- `ModifyOrigin`: Modify the source station;
+- `HTTPUpstreamTimeout`: Seven-layer return to the source timeout configuration;
+- `HttpResponse`: HTTP response;
+- `ErrorPage`: Custom error page;
+- `ModifyResponseHeader`: Modify HTTP node response header;
+- `ModifyRequestHeader`: Modify HTTP node request header;
+- `ResponseSpeedLimit`: Single connection download speed limit.
+- `SetContentIdentifier`: Set content identifier.
+- `Vary`: Vary feature configuration.
+- `ContentCompression`: Content compression configuration.
+- `OriginAuthentication`: Origin authentication configuration.
+                                  * `ocsp_stapling_parameters` - OCSP stapling configuration parameter. this parameter is required when the name is set to ocspstapling.
+                                    * `switch` - Whether to enable ocsp stapling configuration switch. values: on: enable; off: disable.
+                                  * `offline_cache_parameters` - Offline cache configuration parameter. this parameter is required when name is offlinecache.
+                                    * `switch` - Whether to enable offline caching. values: on: enable; off: disable.
+                                  * `origin_authentication_parameters` - Origin authentication configuration parameter. This parameter is required when Name is set to OriginAuthentication. This is a whitelist feature; please contact Tencent Cloud engineers if needed.
+                                    * `request_properties` - Origin authentication request properties.
+                                      * `name` - Origin authentication parameter name.
+                                      * `type` - Origin authentication parameter type. Valid values: QueryString: set origin authentication parameter type as query string; Header: set origin authentication parameter type as request header.
+                                      * `value` - Origin authentication parameter value.
+                                  * `origin_pull_protocol_parameters` - Back-to-origin HTTPS configuration parameter. This parameter is required when the Name value is `OriginPullProtocol`.
+                                    * `protocol` - Back-to-origin protocol configuration. Possible values are: `http`: use HTTP protocol for back-to-origin; `https`: use HTTPS protocol for back-to-origin; `follow`: follow the protocol.
+                                  * `post_max_size_parameters` - Maximum size configuration for file streaming upload via a post request. this parameter is required when name is postmaxsize.
+                                    * `max_size` - Maximum size of the file uploaded for streaming via a post request, in bytes. value range: 1 * 2^20 bytes to 500 * 2^20 bytes.
+                                    * `switch` - Whether to enable post request file upload limit, in bytes (default limit: 32 * 2^20 bytes). valid values: on: enable limit; off: disable limit.
+                                  * `quic_parameters` - The quic configuration parameter. this parameter is required when name is quic.
+                                    * `switch` - Whether to enable quic. values: on: enable; off: disable.
+                                  * `range_origin_pull_parameters` - Shard source retrieval configuration parameter. this parameter is required when name is set to rangeoriginpull.
+                                    * `switch` - Whether to enable range gets. values are: on: enable; off: disable.
+                                  * `response_speed_limit_parameters` - Single connection download speed limit configuration parameter. this parameter is required when name is responsespeedlimit.
+                                    * `max_speed` - Rate-Limiting value, in kb/s. enter a numerical value to specify the rate limit.
+                                    * `mode` - Download rate limit mode. valid values: LimitUponDownload: rate limit throughout the download process; LimitAfterSpecificBytesDownloaded: rate limit after downloading specific bytes at full speed; LimitAfterSpecificSecondsDownloaded: start speed limit after downloading at full speed for a specific duration.
+                                    * `start_at` - Rate-Limiting start value, which can be the download size or specified duration, in kb or s. this parameter is required when mode is set to limitafterspecificbytesdownloaded or limitafterspecificsecondsdownloaded. enter a numerical value to specify the download size or duration.
+                                  * `set_content_identifier_parameters` - Content identification configuration parameter. this parameter is required when name is httpresponse.
+                                    * `content_identifier` - Content identifier id.
+                                  * `smart_routing_parameters` - Smart acceleration configuration parameter. this parameter is required when name is smartrouting.
+                                    * `switch` - Whether to enable smart acceleration. values: on: enable; off: disable.
+                                  * `status_code_cache_parameters` - Status code cache ttl configuration parameter. this parameter is required when name is statuscodecache.
+                                    * `status_code_cache_params` - Status code cache ttl.
+                                      * `cache_time` - Cache time value in seconds. value range: 0-31536000.
+                                      * `status_code` - Status code. valid values: 400, 401, 403, 404, 405, 407, 414, 500, 501, 502, 503, 504, 509, 514.
+                                  * `tls_config_parameters` - SSL/TLS security configuration parameter. this parameter is required when the name is set to tlsconfig.
+                                    * `cipher_suite` - Cipher suite. for detailed information, please refer to tls versions and cipher suites description, https://www.tencentcloud.com/document/product/1145/54154?has_map=1. valid values: loose-v2023: loose-v2023 cipher suite; general-v2023: general-v2023 cipher suite; strict-v2023: strict-v2023 cipher suite.
+                                    * `version` - TLS version. at least one must be specified. if multiple versions are specified, they must be consecutive, e.g., enable TLSv1, TLSv1.1, TLSv1.2, and TLSv1.3. it is not allowed to enable only 1 and 1.2 while disabling 1.1. valid values: TLSv1: TLSv1 version; TLSv1.1: TLSv1.1 version; TLSv1.2: TLSv1.2 version; TLSv1.3: TLSv1.3 version.
+                                  * `upstream_follow_redirect_parameters` - Configuration parameter for following redirects during origin-pull. this parameter is required when the name is set to upstreamfollowredirect.
+                                    * `max_times` - The maximum number of redirects. value range: 1-5. Note: this field is required when switch is on; when switch is off, this field is not required and will not take effect if filled.
+                                    * `switch` - Whether to enable origin-pull to follow the redirection configuration. values: on: enable; off: disable.
+                                  * `upstream_http2_parameters` - HTTP2 origin-pull configuration parameter. this parameter is required when name is set to upstreamhttp2.
+                                    * `switch` - Whether to enable http2 origin-pull. valid values: on: enable; off: disable.
+                                  * `upstream_request_parameters` - Configuration parameter for origin-pull request. this parameter is required when the name is set to upstreamrequest.
+                                    * `cookie` - Cookie configuration. optional. if not provided, it will not be configured.
+                                      * `action` - Origin-Pull request parameter cookie mode. this parameter is required when switch is on. valid values are: full: retain all; ignore: ignore all; includeCustom: retain partial parameters; excludeCustom: ignore partial parameters.
+                                      * `switch` - Whether to enable the origin-pull request parameter cookie. valid values: on: enable; off: disable.
+                                      * `values` - Specifies parameter values. this parameter takes effect only when the query string mode action is includecustom or excludecustom, and is used to specify the parameters to be reserved or ignored. up to 10 parameters are supported.
+                                    * `query_string` - Query string configuration. optional. if not provided, it will not be configured.
+                                      * `action` - Query string mode. this parameter is required when switch is on. values: full: retain all; ignore: ignore all; includeCustom: retain partial parameters; excludeCustom: ignore partial parameters.
+                                      * `switch` - Whether to enable origin-pull request parameter query string. values: on: enable; off: disable.
+                                      * `values` - Specifies parameter values. this parameter takes effect only when the query string mode action is includecustom or excludecustom, and is used to specify the parameters to be reserved or ignored. up to 10 parameters are supported.
+                                  * `upstream_url_rewrite_parameters` - The origin-pull url rewrite configuration parameter. this parameter is required when name is upstreamurlrewrite.
+                                    * `action` - Origin-Pull url rewrite action. valid values are: replace: replace the path prefix; addPrefix: add the path prefix; rmvPrefix: remove the path prefix.
+                                    * `regex` - Origin URL Rewrite uses a regular expression for matching the complete path. It must conform to the Google RE2 specification and have a length range of 1 to 1024. This field is required when the Action is regexReplace; otherwise, it is optional.
+                                    * `type` - Origin-Pull url rewriting type, only path is supported.
+                                    * `value` - Origin-Pull url rewrite value, maximum length 1024, must start with /.note: when action is addprefix, it cannot end with /; when action is rmvprefix, * cannot be present.
+                                  * `vary_parameters` - Vary configuration parameter. This parameter is required when Name is set to Vary.
+                                    * `switch` - Whether to enable Vary feature. Valid values: on: enable; off: disable.
+                                  * `web_socket_parameters` - The websocket configuration parameter. this parameter is required when name is websocket.
+                                    * `switch` - Whether to enable websocket connection timeout. values: on: use timeout as the websocket timeout;; off: the platform still supports websocket connections, using the system default timeout of 15 seconds.
+                                    * `timeout` - Timeout, unit: seconds. maximum timeout is 120 seconds.
+                                * `condition` - Match condition. https://www.tencentcloud.com/document/product/1145/54759.
+                              * `description` - Rule comments.
+                          * `description` - Rule comments.
+                      * `description` - Rule comments.
+                  * `description` - Rule comments.
+              * `description` - Rule comments.
+          * `description` - Rule comments.
+      * `description` - Rule comments.
+  * `description` - Rule annotations.
+  * `rule_id` - Rule ID. Unique identifier of the rule.
+  * `rule_name` - Rule name.
+  * `rule_priority` - Rule priority.
+  * `status` - Rule status. Values: `enable`: enabled; `disable`: disabled.
 
 
 ## Import

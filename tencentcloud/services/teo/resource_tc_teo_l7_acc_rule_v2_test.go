@@ -1,10 +1,19 @@
 package teo_test
 
 import (
+	"context"
 	"testing"
 
+	"github.com/agiledragon/gomonkey/v2"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
+	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
+	"github.com/stretchr/testify/assert"
+	teov20220901 "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/teo/v20220901"
+
 	tcacctest "github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/acctest"
+	tccommon "github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/common"
+	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/connectivity"
+	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/services/teo"
 )
 
 func TestAccTencentCloudTeoL7AccRuleV2Resource_basic(t *testing.T) {
@@ -187,3 +196,157 @@ resource "tencentcloud_teo_l7_acc_rule_v2" "teo_l7_acc_rule_v2" {
 `
 
 // go test ./tencentcloud/services/teo/ -run "TestL7AccRuleV2" -v -count=1 -gcflags="all=-l"
+
+// mockMetaL7AccRuleV2 implements tccommon.ProviderMeta
+type mockMetaL7AccRuleV2 struct {
+	client *connectivity.TencentCloudClient
+}
+
+func (m *mockMetaL7AccRuleV2) GetAPIV3Conn() *connectivity.TencentCloudClient {
+	return m.client
+}
+
+var _ tccommon.ProviderMeta = &mockMetaL7AccRuleV2{}
+
+func newMockMetaL7AccRuleV2() *mockMetaL7AccRuleV2 {
+	return &mockMetaL7AccRuleV2{client: &connectivity.TencentCloudClient{}}
+}
+
+func ptrStringL7AccRuleV2(s string) *string {
+	return &s
+}
+
+func ptrInt64L7AccRuleV2(i int64) *int64 {
+	return &i
+}
+
+// TestL7AccRuleV2_ReadPopulatesRules tests that the Read function populates the rules attribute
+func TestL7AccRuleV2_ReadPopulatesRules(t *testing.T) {
+	patches := gomonkey.NewPatches()
+	defer patches.Reset()
+
+	teoClient := &teov20220901.Client{}
+	patches.ApplyMethodReturn(newMockMetaL7AccRuleV2().client, "UseTeoV20220901Client", teoClient)
+
+	patches.ApplyMethodFunc(teoClient, "DescribeL7AccRulesWithContext", func(_ context.Context, request *teov20220901.DescribeL7AccRulesRequest) (*teov20220901.DescribeL7AccRulesResponse, error) {
+		resp := teov20220901.NewDescribeL7AccRulesResponse()
+		resp.Response = &teov20220901.DescribeL7AccRulesResponseParams{
+			TotalCount: ptrInt64L7AccRuleV2(2),
+			Rules: []*teov20220901.RuleEngineItem{
+				{
+					Status:       ptrStringL7AccRuleV2("enable"),
+					RuleId:       ptrStringL7AccRuleV2("rule-001"),
+					RuleName:     ptrStringL7AccRuleV2("Rule 1"),
+					Description:  []*string{ptrStringL7AccRuleV2("desc1")},
+					RulePriority: ptrInt64L7AccRuleV2(1),
+					Branches: []*teov20220901.RuleBranch{
+						{
+							Condition: ptrStringL7AccRuleV2("${http.request.host} in ['example.com']"),
+							Actions: []*teov20220901.RuleEngineAction{
+								{
+									Name: ptrStringL7AccRuleV2("Cache"),
+									CacheParameters: &teov20220901.CacheParameters{
+										CustomTime: &teov20220901.CustomTime{
+											Switch:             ptrStringL7AccRuleV2("on"),
+											CacheTime:          ptrInt64L7AccRuleV2(3600),
+											IgnoreCacheControl: ptrStringL7AccRuleV2("off"),
+										},
+									},
+								},
+							},
+						},
+					},
+				},
+				{
+					Status:       ptrStringL7AccRuleV2("disable"),
+					RuleId:       ptrStringL7AccRuleV2("rule-002"),
+					RuleName:     ptrStringL7AccRuleV2("Rule 2"),
+					Description:  []*string{ptrStringL7AccRuleV2("desc2")},
+					RulePriority: ptrInt64L7AccRuleV2(2),
+					Branches: []*teov20220901.RuleBranch{
+						{
+							Condition: ptrStringL7AccRuleV2("${http.request.uri} contains '/api'"),
+							Actions: []*teov20220901.RuleEngineAction{
+								{
+									Name: ptrStringL7AccRuleV2("MaxAge"),
+									MaxAgeParameters: &teov20220901.MaxAgeParameters{
+										FollowOrigin: ptrStringL7AccRuleV2("off"),
+										CacheTime:    ptrInt64L7AccRuleV2(7200),
+									},
+								},
+							},
+						},
+					},
+				},
+			},
+		}
+		return resp, nil
+	})
+
+	meta := newMockMetaL7AccRuleV2()
+	res := teo.ResourceTencentCloudTeoL7AccRuleV2()
+	d := schema.TestResourceDataRaw(t, res.Schema, map[string]interface{}{
+		"zone_id": "zone-test123",
+	})
+	d.SetId("zone-test123" + tccommon.FILED_SP + "rule-001")
+
+	err := res.Read(d, meta)
+	assert.NoError(t, err)
+
+	// Verify the rules attribute is populated
+	rules := d.Get("rules").([]interface{})
+	assert.Equal(t, 2, len(rules))
+
+	// Verify first rule
+	rule0 := rules[0].(map[string]interface{})
+	assert.Equal(t, "enable", rule0["status"])
+	assert.Equal(t, "rule-001", rule0["rule_id"])
+	assert.Equal(t, "Rule 1", rule0["rule_name"])
+	assert.Equal(t, 1, rule0["rule_priority"])
+
+	desc0 := rule0["description"].([]interface{})
+	assert.Equal(t, 1, len(desc0))
+	assert.Equal(t, "desc1", desc0[0])
+
+	branches0 := rule0["branches"].([]interface{})
+	assert.Equal(t, 1, len(branches0))
+	branch0 := branches0[0].(map[string]interface{})
+	assert.Equal(t, "${http.request.host} in ['example.com']", branch0["condition"])
+
+	// Verify second rule
+	rule1 := rules[1].(map[string]interface{})
+	assert.Equal(t, "disable", rule1["status"])
+	assert.Equal(t, "rule-002", rule1["rule_id"])
+	assert.Equal(t, "Rule 2", rule1["rule_name"])
+	assert.Equal(t, 2, rule1["rule_priority"])
+}
+
+// TestL7AccRuleV2_ReadEmptyRules tests that the Read function handles nil/empty rules gracefully
+func TestL7AccRuleV2_ReadEmptyRules(t *testing.T) {
+	patches := gomonkey.NewPatches()
+	defer patches.Reset()
+
+	teoClient := &teov20220901.Client{}
+	patches.ApplyMethodReturn(newMockMetaL7AccRuleV2().client, "UseTeoV20220901Client", teoClient)
+
+	patches.ApplyMethodFunc(teoClient, "DescribeL7AccRulesWithContext", func(_ context.Context, request *teov20220901.DescribeL7AccRulesRequest) (*teov20220901.DescribeL7AccRulesResponse, error) {
+		resp := teov20220901.NewDescribeL7AccRulesResponse()
+		resp.Response = &teov20220901.DescribeL7AccRulesResponseParams{
+			TotalCount: ptrInt64L7AccRuleV2(0),
+			Rules:      []*teov20220901.RuleEngineItem{},
+		}
+		return resp, nil
+	})
+
+	meta := newMockMetaL7AccRuleV2()
+	res := teo.ResourceTencentCloudTeoL7AccRuleV2()
+	d := schema.TestResourceDataRaw(t, res.Schema, map[string]interface{}{
+		"zone_id": "zone-test123",
+	})
+	d.SetId("zone-test123" + tccommon.FILED_SP + "rule-001")
+
+	err := res.Read(d, meta)
+	assert.NoError(t, err)
+	// When rules is empty, the resource should be removed from state
+	assert.Equal(t, "", d.Id())
+}
