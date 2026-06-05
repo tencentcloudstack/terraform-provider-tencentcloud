@@ -1,3 +1,17 @@
+## 1.82.101(June 05, 2026)
+
+FEATURES:
+
+* **New Resource:** `tencentcloud_bh_bind_device_resource` ([#4185](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/4185))
+* **New Resource:** `tencentcloud_mongodb_audit_log_file` ([#4181](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/4181))
+* **New Resource:** `tencentcloud_mongodb_audit_service` ([#4179](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/4179))
+* **New Resource:** `tencentcloud_postgres_audit_service` ([#4178](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/4178))
+
+ENHANCEMENTS:
+
+* resource/tencentcloud_ssm_secret_version: update documentation ([#4183](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/4183))
+* resource/tencentcloud_tdmq_rabbitmq_vip_instance: optimize code logic for read function ([#4182](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/4182))
+
 ## 1.82.100(June 03, 2026)
 
 FEATURES:
