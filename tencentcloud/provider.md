@@ -1568,6 +1568,7 @@ tencentcloud_teo_multi_path_gateway_origin_acl
 tencentcloud_teo_security_ip_group_content
 tencentcloud_teo_web_security_templates
 tencentcloud_teo_content_quota
+tencentcloud_teo_edge_k_v_list
 
 Resource
 tencentcloud_teo_zone
