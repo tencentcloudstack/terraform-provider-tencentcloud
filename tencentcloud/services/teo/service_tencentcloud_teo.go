@@ -3412,3 +3412,51 @@ func (me *TeoService) DescribeTeoMultiPathGatewaysByFilter(ctx context.Context, 
 
 	return
 }
+
+func (me *TeoService) DescribeTeoEdgeKVList(ctx context.Context, zoneId, namespace string, prefix, cursor *string) (keys []*string, nextCursor *string, errRet error) {
+	var (
+		logId   = tccommon.GetLogId(ctx)
+		request = teo.NewEdgeKVListRequest()
+	)
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	request.ZoneId = helper.String(zoneId)
+	request.Namespace = helper.String(namespace)
+	if prefix != nil {
+		request.Prefix = prefix
+	}
+	if cursor != nil {
+		request.Cursor = cursor
+	}
+	var limit int64 = 1000
+	request.Limit = &limit
+
+	err := resource.Retry(tccommon.ReadRetryTimeout, func() *resource.RetryError {
+		ratelimit.Check(request.GetAction())
+		result, e := me.client.UseTeoClient().EdgeKVList(request)
+		if e != nil {
+			return tccommon.RetryError(e)
+		}
+
+		log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), result.ToJsonString())
+
+		if result == nil || result.Response == nil {
+			return resource.NonRetryableError(fmt.Errorf("DescribeTeoEdgeKVList failed, Response is nil"))
+		}
+
+		keys = result.Response.Keys
+		nextCursor = result.Response.Cursor
+		return nil
+	})
+
+	if err != nil {
+		errRet = err
+	}
+
+	return
+}
