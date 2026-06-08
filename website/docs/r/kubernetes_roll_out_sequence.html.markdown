@@ -20,20 +20,39 @@ resource "tencentcloud_kubernetes_roll_out_sequence" "example" {
 
   sequence_flows {
     tags {
-      key   = "env"
-      value = ["production"]
+      key   = "Env"
+      value = ["Test"]
     }
 
-    soak_time = 3600
+    soak_time = 300
   }
 
   sequence_flows {
     tags {
-      key   = "env"
-      value = ["staging", "testing"]
+      key   = "Env"
+      value = ["Pre-Production"]
     }
 
-    soak_time = 1800
+    tags {
+      key   = "Protection-Level"
+      value = ["Medium"]
+    }
+
+    soak_time = 600
+  }
+
+  sequence_flows {
+    tags {
+      key   = "Env"
+      value = ["Production"]
+    }
+
+    tags {
+      key   = "Protection-Level"
+      value = ["High"]
+    }
+
+    soak_time = 600
   }
 }
 ```
@@ -61,14 +80,14 @@ The `tags` object of `sequence_flows` supports the following:
 In addition to all arguments above, the following attributes are exported:
 
 * `id` - ID of the resource.
-
+* `sequence_id` - The ID of the roll-out sequence.
 
 
 ## Import
 
-TKE roll-out sequence can be imported using the id, e.g.
+TKE roll-out sequence can be imported using the sequenceId, e.g.
 
 ```
-terraform import tencentcloud_kubernetes_roll_out_sequence.example 123
+terraform import tencentcloud_kubernetes_roll_out_sequence.example 29
 ```
 

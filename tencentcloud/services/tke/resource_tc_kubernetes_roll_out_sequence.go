@@ -70,6 +70,12 @@ func ResourceTencentCloudKubernetesRollOutSequence() *schema.Resource {
 				Required:    true,
 				Description: "Whether the roll-out sequence is enabled.",
 			},
+			// computed
+			"sequence_id": {
+				Type:        schema.TypeInt,
+				Computed:    true,
+				Description: "The ID of the roll-out sequence.",
+			},
 		},
 	}
 }
@@ -119,7 +125,9 @@ func resourceTencentCloudKubernetesRollOutSequenceCreate(d *schema.ResourceData,
 		}
 	}
 
-	request.Enabled = helper.Bool(d.Get("enabled").(bool))
+	if v, ok := d.GetOkExists("enabled"); ok {
+		request.Enabled = helper.Bool(v.(bool))
+	}
 
 	reqErr := resource.Retry(tccommon.WriteRetryTimeout, func() *resource.RetryError {
 		result, e := meta.(tccommon.ProviderMeta).GetAPIV3Conn().UseTkeClient().CreateRollOutSequenceWithContext(ctx, request)
@@ -165,15 +173,16 @@ func resourceTencentCloudKubernetesRollOutSequenceRead(d *schema.ResourceData, m
 		return fmt.Errorf("id is invalid, %s: %v", idStr, err)
 	}
 
+	request := tkev20180525.NewDescribeRollOutSequencesRequest()
+	response := tkev20180525.NewDescribeRollOutSequencesResponse()
 	var sequence *tkev20180525.RollOutSequence
-	reqErr := resource.Retry(tccommon.ReadRetryTimeout, func() *resource.RetryError {
-		var offset int64
-		var limit int64 = 20
-		for {
-			request := tkev20180525.NewDescribeRollOutSequencesRequest()
-			request.Offset = helper.Int64(offset)
-			request.Limit = helper.Int64(limit)
+	var offset int64
+	var limit int64 = 20
 
+	for {
+		request.Offset = helper.Int64(offset)
+		request.Limit = helper.Int64(limit)
+		reqErr := resource.Retry(tccommon.ReadRetryTimeout, func() *resource.RetryError {
 			result, e := meta.(tccommon.ProviderMeta).GetAPIV3Conn().UseTkeClient().DescribeRollOutSequencesWithContext(ctx, request)
 			if e != nil {
 				return tccommon.RetryError(e)
@@ -183,31 +192,36 @@ func resourceTencentCloudKubernetesRollOutSequenceRead(d *schema.ResourceData, m
 				return resource.NonRetryableError(fmt.Errorf("Describe kubernetes roll out sequences failed, Response is nil."))
 			}
 
-			for _, seq := range result.Response.Sequences {
-				if seq.ID != nil && *seq.ID == sequenceId {
-					sequence = seq
-					return nil
-				}
-			}
+			response = result
+			return nil
+		})
 
-			if result.Response.TotalCount == nil || offset+limit >= *result.Response.TotalCount {
-				break
-			}
-
-			offset += limit
+		if reqErr != nil {
+			return reqErr
 		}
 
-		return nil
-	})
+		for _, seq := range response.Response.Sequences {
+			if seq.ID != nil && *seq.ID == sequenceId {
+				sequence = seq
+				break
+			}
+		}
 
-	if reqErr != nil {
-		return reqErr
+		if response.Response.TotalCount == nil || offset+limit >= *response.Response.TotalCount {
+			break
+		}
+
+		offset += limit
 	}
 
 	if sequence == nil {
 		log.Printf("[WARN]%s resource `tencentcloud_kubernetes_roll_out_sequence` [%s] not found, please check if it has been deleted.\n", logId, d.Id())
 		d.SetId("")
 		return nil
+	}
+
+	if sequence.ID != nil {
+		_ = d.Set("sequence_id", sequence.ID)
 	}
 
 	if sequence.Name != nil {
@@ -319,7 +333,9 @@ func resourceTencentCloudKubernetesRollOutSequenceUpdate(d *schema.ResourceData,
 			}
 		}
 
-		request.Enabled = helper.Bool(d.Get("enabled").(bool))
+		if v, ok := d.GetOkExists("enabled"); ok {
+			request.Enabled = helper.Bool(v.(bool))
+		}
 
 		reqErr := resource.Retry(tccommon.WriteRetryTimeout, func() *resource.RetryError {
 			result, e := meta.(tccommon.ProviderMeta).GetAPIV3Conn().UseTkeClient().ModifyRollOutSequenceWithContext(ctx, request)
