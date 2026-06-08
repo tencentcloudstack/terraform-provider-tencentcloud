@@ -559,7 +559,7 @@ tencentcloud_cynosdb_ssl
 tencentcloud_cynosdb_cluster_transparent_encrypt
 tencentcloud_cynosdb_audit_service
 tencentcloud_cynosdb_cls_delivery
-tencentcloud_cynosdb_libra_db_instance_attachment
+tencentcloud_cynosdb_libra_db_instance
 
 Direct Connect(DC)
 Data Source

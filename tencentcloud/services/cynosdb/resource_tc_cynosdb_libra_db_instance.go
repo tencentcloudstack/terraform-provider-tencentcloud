@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"log"
 	"strings"
+	"time"
 
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
@@ -14,14 +15,18 @@ import (
 	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/internal/helper"
 )
 
-func ResourceTencentCloudCynosdbLibraDbInstanceAttachment() *schema.Resource {
+func ResourceTencentCloudCynosdbLibraDbInstance() *schema.Resource {
 	return &schema.Resource{
-		Create: resourceTencentCloudCynosdbLibraDbInstanceAttachmentCreate,
-		Read:   resourceTencentCloudCynosdbLibraDbInstanceAttachmentRead,
-		Update: resourceTencentCloudCynosdbLibraDbInstanceAttachmentUpdate,
-		Delete: resourceTencentCloudCynosdbLibraDbInstanceAttachmentDelete,
+		Create: resourceTencentCloudCynosdbLibraDbInstanceCreate,
+		Read:   resourceTencentCloudCynosdbLibraDbInstanceRead,
+		Update: resourceTencentCloudCynosdbLibraDbInstanceUpdate,
+		Delete: resourceTencentCloudCynosdbLibraDbInstanceDelete,
 		Importer: &schema.ResourceImporter{
 			State: schema.ImportStatePassthrough,
+		},
+		Timeouts: &schema.ResourceTimeout{
+			Create: schema.DefaultTimeout(10 * time.Minute),
+			Delete: schema.DefaultTimeout(10 * time.Minute),
 		},
 		Schema: map[string]*schema.Schema{
 			"cluster_id": {
@@ -118,11 +123,6 @@ func ResourceTencentCloudCynosdbLibraDbInstanceAttachment() *schema.Resource {
 				Optional:    true,
 				Description: "Port for the new RO group, value range [0, 65535).",
 			},
-			"goods_num": {
-				Type:        schema.TypeInt,
-				Optional:    true,
-				Description: "Number of new read-only instances, value range (0, 15].",
-			},
 			"instance_name": {
 				Type:        schema.TypeString,
 				Optional:    true,
@@ -196,49 +196,12 @@ func ResourceTencentCloudCynosdbLibraDbInstanceAttachment() *schema.Resource {
 				Optional:    true,
 				Description: "Source instance ID.",
 			},
-			"isolate_reason_types": {
-				Type:        schema.TypeList,
+			"force_delete": {
+				Type:        schema.TypeBool,
 				Optional:    true,
-				Description: "Isolation reason types for delete operation.",
-				Elem: &schema.Schema{
-					Type: schema.TypeInt,
-				},
-			},
-			"isolate_reason": {
-				Type:        schema.TypeString,
-				Optional:    true,
-				Description: "Isolation reason for delete operation.",
+				Description: "Whether to force delete the instance. Default is false.",
 			},
 			// computed attributes
-			"big_deal_ids": {
-				Type:        schema.TypeList,
-				Computed:    true,
-				Description: "Big deal IDs.",
-				Elem: &schema.Schema{
-					Type: schema.TypeString,
-				},
-			},
-			"tran_id": {
-				Type:        schema.TypeString,
-				Computed:    true,
-				Description: "Frozen transaction ID.",
-			},
-			"deal_names": {
-				Type:        schema.TypeList,
-				Computed:    true,
-				Description: "Post-paid order names.",
-				Elem: &schema.Schema{
-					Type: schema.TypeString,
-				},
-			},
-			"resource_ids": {
-				Type:        schema.TypeList,
-				Computed:    true,
-				Description: "Resource ID list.",
-				Elem: &schema.Schema{
-					Type: schema.TypeString,
-				},
-			},
 			"instance_id": {
 				Type:        schema.TypeString,
 				Computed:    true,
@@ -248,8 +211,8 @@ func ResourceTencentCloudCynosdbLibraDbInstanceAttachment() *schema.Resource {
 	}
 }
 
-func resourceTencentCloudCynosdbLibraDbInstanceAttachmentCreate(d *schema.ResourceData, meta interface{}) error {
-	defer tccommon.LogElapsed("resource.tencentcloud_cynosdb_libra_db_instance_attachment.create")()
+func resourceTencentCloudCynosdbLibraDbInstanceCreate(d *schema.ResourceData, meta interface{}) error {
+	defer tccommon.LogElapsed("resource.tencentcloud_cynosdb_libra_db_instance.create")()
 	defer tccommon.InconsistentCheck(d, meta)()
 
 	var (
@@ -331,10 +294,6 @@ func resourceTencentCloudCynosdbLibraDbInstanceAttachmentCreate(d *schema.Resour
 		request.Port = helper.IntInt64(v.(int))
 	}
 
-	if v, ok := d.GetOkExists("goods_num"); ok {
-		request.GoodsNum = helper.IntInt64(v.(int))
-	}
-
 	if v, ok := d.GetOk("instance_name"); ok {
 		request.InstanceName = helper.String(v.(string))
 	}
@@ -393,6 +352,7 @@ func resourceTencentCloudCynosdbLibraDbInstanceAttachmentCreate(d *schema.Resour
 		request.SrcInstanceId = helper.String(v.(string))
 	}
 
+	request.GoodsNum = helper.IntInt64(1)
 	reqErr := resource.Retry(tccommon.WriteRetryTimeout, func() *resource.RetryError {
 		result, e := meta.(tccommon.ProviderMeta).GetAPIV3Conn().UseCynosdbClient().AddLibraDBInstances(request)
 		if e != nil {
@@ -421,40 +381,13 @@ func resourceTencentCloudCynosdbLibraDbInstanceAttachmentCreate(d *schema.Resour
 	instanceId := *response.Response.ResourceIds[0]
 	d.SetId(strings.Join([]string{clusterId, instanceId}, tccommon.FILED_SP))
 
-	if response.Response.BigDealIds != nil {
-		bigDealIds := make([]string, 0, len(response.Response.BigDealIds))
-		for _, v := range response.Response.BigDealIds {
-			bigDealIds = append(bigDealIds, *v)
-		}
-		_ = d.Set("big_deal_ids", bigDealIds)
-	}
-
-	if response.Response.TranId != nil {
-		_ = d.Set("tran_id", response.Response.TranId)
-	}
-
-	if response.Response.DealNames != nil {
-		dealNames := make([]string, 0, len(response.Response.DealNames))
-		for _, v := range response.Response.DealNames {
-			dealNames = append(dealNames, *v)
-		}
-		_ = d.Set("deal_names", dealNames)
-	}
-
-	if response.Response.ResourceIds != nil {
-		resourceIds := make([]string, 0, len(response.Response.ResourceIds))
-		for _, v := range response.Response.ResourceIds {
-			resourceIds = append(resourceIds, *v)
-		}
-		_ = d.Set("resource_ids", resourceIds)
-	}
-
 	// Poll DescribeLibraDBInstanceDetail until instance is ready
+	time.Sleep(60 * time.Second)
 	descRequest := cynosdb.NewDescribeLibraDBInstanceDetailRequest()
 	descRequest.ClusterId = helper.String(clusterId)
 	descRequest.InstanceId = helper.String(instanceId)
 
-	pollErr := resource.Retry(tccommon.ReadRetryTimeout, func() *resource.RetryError {
+	pollErr := resource.Retry(d.Timeout(schema.TimeoutCreate), func() *resource.RetryError {
 		result, e := meta.(tccommon.ProviderMeta).GetAPIV3Conn().UseCynosdbClient().DescribeLibraDBInstanceDetail(descRequest)
 		if e != nil {
 			return tccommon.RetryError(e)
@@ -475,11 +408,11 @@ func resourceTencentCloudCynosdbLibraDbInstanceAttachmentCreate(d *schema.Resour
 		log.Printf("[WARN]%s poll cynosdb libra db instance status failed, reason:%+v", logId, pollErr)
 	}
 
-	return resourceTencentCloudCynosdbLibraDbInstanceAttachmentRead(d, meta)
+	return resourceTencentCloudCynosdbLibraDbInstanceRead(d, meta)
 }
 
-func resourceTencentCloudCynosdbLibraDbInstanceAttachmentRead(d *schema.ResourceData, meta interface{}) error {
-	defer tccommon.LogElapsed("resource.tencentcloud_cynosdb_libra_db_instance_attachment.read")()
+func resourceTencentCloudCynosdbLibraDbInstanceRead(d *schema.ResourceData, meta interface{}) error {
+	defer tccommon.LogElapsed("resource.tencentcloud_cynosdb_libra_db_instance.read")()
 	defer tccommon.InconsistentCheck(d, meta)()
 
 	var (
@@ -514,8 +447,8 @@ func resourceTencentCloudCynosdbLibraDbInstanceAttachmentRead(d *schema.Resource
 		return reqErr
 	}
 
-	if response == nil || response.Response == nil || response.Response.InstanceId == nil {
-		log.Printf("[WARN]%s resource `tencentcloud_cynosdb_libra_db_instance_attachment` [%s] not found, please check if it has been deleted.\n", logId, d.Id())
+	if response == nil || response.Response == nil {
+		log.Printf("[WARN]%s resource `tencentcloud_cynosdb_libra_db_instance` [%s] not found, please check if it has been deleted.\n", logId, d.Id())
 		d.SetId("")
 		return nil
 	}
@@ -557,12 +490,18 @@ func resourceTencentCloudCynosdbLibraDbInstanceAttachmentRead(d *schema.Resource
 		_ = d.Set("storage_type", respData.StorageType)
 	}
 
-	if respData.VpcId != nil {
-		_ = d.Set("vpc_id", respData.VpcId)
-	}
+	if respData.InstanceNetInfo != nil {
+		if respData.InstanceNetInfo.VpcId != nil {
+			_ = d.Set("vpc_id", respData.InstanceNetInfo.VpcId)
+		}
 
-	if respData.SubnetId != nil {
-		_ = d.Set("subnet_id", respData.SubnetId)
+		if respData.InstanceNetInfo.SubnetId != nil {
+			_ = d.Set("subnet_id", respData.InstanceNetInfo.SubnetId)
+		}
+
+		if respData.InstanceNetInfo.Vport != nil {
+			_ = d.Set("port", respData.InstanceNetInfo.Vport)
+		}
 	}
 
 	if respData.LibraDBVersion != nil {
@@ -572,17 +511,16 @@ func resourceTencentCloudCynosdbLibraDbInstanceAttachmentRead(d *schema.Resource
 	return nil
 }
 
-func resourceTencentCloudCynosdbLibraDbInstanceAttachmentUpdate(d *schema.ResourceData, meta interface{}) error {
-	defer tccommon.LogElapsed("resource.tencentcloud_cynosdb_libra_db_instance_attachment.update")()
+func resourceTencentCloudCynosdbLibraDbInstanceUpdate(d *schema.ResourceData, meta interface{}) error {
+	defer tccommon.LogElapsed("resource.tencentcloud_cynosdb_libra_db_instance.update")()
 	defer tccommon.InconsistentCheck(d, meta)()
 
 	immutableArgs := []string{
 		"zone", "cpu", "mem", "storage_size", "pay_mode", "objects",
-		"port", "goods_num", "instance_name", "replicas_num", "instance_type",
+		"port", "instance_name", "replicas_num", "instance_type",
 		"storage_type", "auto_voucher", "order_source", "deal_mode",
 		"vpc_id", "subnet_id", "security_group_ids", "libra_db_version",
 		"time_span", "time_unit", "src_instance_id",
-		"isolate_reason_types", "isolate_reason",
 	}
 
 	for _, v := range immutableArgs {
@@ -591,20 +529,20 @@ func resourceTencentCloudCynosdbLibraDbInstanceAttachmentUpdate(d *schema.Resour
 		}
 	}
 
-	return resourceTencentCloudCynosdbLibraDbInstanceAttachmentRead(d, meta)
+	return resourceTencentCloudCynosdbLibraDbInstanceRead(d, meta)
 }
 
-func resourceTencentCloudCynosdbLibraDbInstanceAttachmentDelete(d *schema.ResourceData, meta interface{}) error {
-	defer tccommon.LogElapsed("resource.tencentcloud_cynosdb_libra_db_instance_attachment.delete")()
+func resourceTencentCloudCynosdbLibraDbInstanceDelete(d *schema.ResourceData, meta interface{}) error {
+	defer tccommon.LogElapsed("resource.tencentcloud_cynosdb_libra_db_instance.delete")()
 	defer tccommon.InconsistentCheck(d, meta)()
 
 	var (
-		logId   = tccommon.GetLogId(tccommon.ContextNil)
-		ctx     = context.WithValue(context.TODO(), tccommon.LogIdKey, logId)
-		request = cynosdb.NewIsolateLibraDBClusterRequest()
+		logId          = tccommon.GetLogId(tccommon.ContextNil)
+		ctx            = context.WithValue(context.TODO(), tccommon.LogIdKey, logId)
+		cynosdbService = CynosdbService{client: meta.(tccommon.ProviderMeta).GetAPIV3Conn()}
+		request        = cynosdb.NewIsolateLibraDBInstanceRequest()
+		response       = cynosdb.NewIsolateLibraDBInstanceResponse()
 	)
-
-	_ = ctx
 
 	idSplit := strings.Split(d.Id(), tccommon.FILED_SP)
 	if len(idSplit) != 2 {
@@ -612,32 +550,97 @@ func resourceTencentCloudCynosdbLibraDbInstanceAttachmentDelete(d *schema.Resour
 	}
 
 	clusterId := idSplit[0]
+	instanceId := idSplit[1]
+
 	request.ClusterId = helper.String(clusterId)
-
-	if v, ok := d.GetOk("isolate_reason_types"); ok {
-		for _, item := range v.([]interface{}) {
-			request.IsolateReasonTypes = append(request.IsolateReasonTypes, helper.IntInt64(item.(int)))
-		}
-	}
-
-	if v, ok := d.GetOk("isolate_reason"); ok {
-		request.IsolateReason = helper.String(v.(string))
-	}
+	request.InstanceIdList = helper.Strings([]string{instanceId})
 
 	reqErr := resource.Retry(tccommon.WriteRetryTimeout, func() *resource.RetryError {
-		result, e := meta.(tccommon.ProviderMeta).GetAPIV3Conn().UseCynosdbClient().IsolateLibraDBCluster(request)
+		result, e := meta.(tccommon.ProviderMeta).GetAPIV3Conn().UseCynosdbClient().IsolateLibraDBInstanceWithContext(ctx, request)
 		if e != nil {
 			return tccommon.RetryError(e)
 		} else {
 			log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), result.ToJsonString())
 		}
 
+		if result == nil || result.Response == nil || result.Response.FlowId == nil {
+			return resource.NonRetryableError(fmt.Errorf("Cynosdb libra db instance isolate failed, Response is nil."))
+		}
+
+		response = result
 		return nil
 	})
 
 	if reqErr != nil {
-		log.Printf("[CRITAL]%s delete cynosdb libra db instance failed, reason:%+v", logId, reqErr)
+		log.Printf("[CRITAL]%s isolate cynosdb libra db instance failed, reason:%+v", logId, reqErr)
 		return reqErr
+	}
+
+	// wait
+	flowId := *response.Response.FlowId
+	reqErr = resource.Retry(d.Timeout(schema.TimeoutDelete), func() *resource.RetryError {
+		resp, e := cynosdbService.DescribeFlow(ctx, flowId)
+		if e != nil {
+			return resource.NonRetryableError(e)
+		}
+
+		if resp {
+			return nil
+		}
+
+		return resource.RetryableError(fmt.Errorf("waiting for cynosdb cluster libra isolate"))
+	})
+
+	if reqErr != nil {
+		return reqErr
+	}
+
+	if v, ok := d.GetOkExists("force_delete"); ok {
+		if v.(bool) {
+			request := cynosdb.NewOfflineLibraDBInstanceRequest()
+			response := cynosdb.NewOfflineLibraDBInstanceResponse()
+			request.ClusterId = helper.String(clusterId)
+			request.InstanceIdList = helper.Strings([]string{instanceId})
+			reqErr := resource.Retry(tccommon.WriteRetryTimeout, func() *resource.RetryError {
+				result, e := meta.(tccommon.ProviderMeta).GetAPIV3Conn().UseCynosdbClient().OfflineLibraDBInstanceWithContext(ctx, request)
+				if e != nil {
+					return tccommon.RetryError(e)
+				} else {
+					log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), result.ToJsonString())
+				}
+
+				if result == nil || result.Response == nil || result.Response.FlowId == nil {
+					return resource.NonRetryableError(fmt.Errorf("Cynosdb libra db instance offline failed, Response is nil."))
+				}
+
+				response = result
+				return nil
+			})
+
+			if reqErr != nil {
+				log.Printf("[CRITAL]%s offline cynosdb libra db instance failed, reason:%+v", logId, reqErr)
+				return reqErr
+			}
+
+			// wait
+			flowId := *response.Response.FlowId
+			reqErr = resource.Retry(d.Timeout(schema.TimeoutDelete), func() *resource.RetryError {
+				resp, e := cynosdbService.DescribeFlow(ctx, flowId)
+				if e != nil {
+					return resource.NonRetryableError(e)
+				}
+
+				if resp {
+					return nil
+				}
+
+				return resource.RetryableError(fmt.Errorf("waiting for cynosdb cluster libra offline"))
+			})
+
+			if reqErr != nil {
+				return reqErr
+			}
+		}
 	}
 
 	return nil
