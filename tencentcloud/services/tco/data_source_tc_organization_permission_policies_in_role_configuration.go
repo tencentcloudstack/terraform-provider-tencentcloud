@@ -2,6 +2,7 @@ package tco
 
 import (
 	"context"
+	"fmt"
 
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
@@ -37,12 +38,6 @@ func DataSourceTencentCloudOrganizationPermissionPoliciesInRoleConfiguration() *
 				Type:        schema.TypeString,
 				Optional:    true,
 				Description: "Search by policy name.",
-			},
-
-			"total_counts": {
-				Type:        schema.TypeInt,
-				Computed:    true,
-				Description: "Total number of permission policies.",
 			},
 
 			"role_policies": {
@@ -123,21 +118,17 @@ func dataSourceTencentCloudOrganizationPermissionPoliciesInRoleConfigurationRead
 		if e != nil {
 			return tccommon.RetryError(e)
 		}
+
+		if result == nil || result.Response == nil {
+			return resource.NonRetryableError(fmt.Errorf("organization ListPermissionPoliciesInRoleConfiguration no result, response is nil."))
+		}
+
 		response = result
 		return nil
 	})
 
 	if err != nil {
 		return err
-	}
-
-	if response == nil || response.Response == nil {
-		d.SetId("")
-		return nil
-	}
-
-	if response.Response.TotalCounts != nil {
-		_ = d.Set("total_counts", *response.Response.TotalCounts)
 	}
 
 	rolePoliciesList := make([]map[string]interface{}, 0)
@@ -172,7 +163,6 @@ func dataSourceTencentCloudOrganizationPermissionPoliciesInRoleConfigurationRead
 	_ = d.Set("role_policies", rolePoliciesList)
 
 	d.SetId(zoneId + tccommon.FILED_SP + roleConfigurationId)
-
 	output, ok := d.GetOk("result_output_file")
 	if ok && output.(string) != "" {
 		if e := tccommon.WriteToFile(output.(string), rolePoliciesList); e != nil {

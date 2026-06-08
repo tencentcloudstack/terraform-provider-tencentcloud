@@ -17,8 +17,8 @@ Use this data source to query detailed information of Organization permission po
 
 ```hcl
 data "tencentcloud_organization_permission_policies_in_role_configuration" "example" {
-  zone_id               = "z-xxxxxx"
-  role_configuration_id = "rc-xxxxxx"
+  zone_id               = "z-1os7c9znogct"
+  role_configuration_id = "rc-ihogrs0e6ceg"
 }
 ```
 
@@ -26,8 +26,8 @@ data "tencentcloud_organization_permission_policies_in_role_configuration" "exam
 
 ```hcl
 data "tencentcloud_organization_permission_policies_in_role_configuration" "example" {
-  zone_id               = "z-xxxxxx"
-  role_configuration_id = "rc-xxxxxx"
+  zone_id               = "z-1os7c9znogct"
+  role_configuration_id = "rc-ihogrs0e6ceg"
   role_policy_type      = "System"
 }
 ```
@@ -36,8 +36,8 @@ data "tencentcloud_organization_permission_policies_in_role_configuration" "exam
 
 ```hcl
 data "tencentcloud_organization_permission_policies_in_role_configuration" "example" {
-  zone_id               = "z-xxxxxx"
-  role_configuration_id = "rc-xxxxxx"
+  zone_id               = "z-1os7c9znogct"
+  role_configuration_id = "rc-ihogrs0e6ceg"
   filter                = "AdministratorAccess"
 }
 ```
@@ -62,6 +62,5 @@ In addition to all arguments above, the following attributes are exported:
   * `role_policy_id` - Policy ID.
   * `role_policy_name` - Permission policy name.
   * `role_policy_type` - Permission policy type.
-* `total_counts` - Total number of permission policies.
 
 
