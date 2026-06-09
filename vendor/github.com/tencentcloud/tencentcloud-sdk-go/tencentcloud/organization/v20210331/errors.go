@@ -287,6 +287,9 @@ const (
 	// 代付者不合法。
 	FAILEDOPERATION_PAYUINILLEGAL = "FailedOperation.PayUinIllegal"
 
+	// 操作权限被拒绝，OwnerUin不一致
+	FAILEDOPERATION_PERMISSIONDENIED = "FailedOperation.PermissionDenied"
+
 	// 存在成员账号已经开启标签策略，不支持开启集团标签策略
 	FAILEDOPERATION_POLICYENABLEINVALID = "FailedOperation.PolicyEnableInvalid"
 
@@ -343,6 +346,12 @@ const (
 
 	// 共享成员不存在。
 	FAILEDOPERATION_SHAREMEMBERNOTEXIST = "FailedOperation.ShareMemberNotExist"
+
+	// 部门在共享单元中。
+	FAILEDOPERATION_SHARENODEEXISTED = "FailedOperation.ShareNodeExisted"
+
+	// 共享部门不存在。
+	FAILEDOPERATION_SHARENODENOTEXIST = "FailedOperation.ShareNodeNotExist"
 
 	// 成员正在使用共享资源。
 	FAILEDOPERATION_SHARERESOURCEMEMBERINUSE = "FailedOperation.ShareResourceMemberInUse"
@@ -710,6 +719,9 @@ const (
 	// 当次操作的共享成员超过上限。
 	LIMITEXCEEDED_SHAREUNITMEMBEROVERLIMIT = "LimitExceeded.ShareUnitMemberOverLimit"
 
+	// 共享单元部门超过上限。
+	LIMITEXCEEDED_SHAREUNITNODEOVERLIMIT = "LimitExceeded.ShareUnitNodeOverLimit"
+
 	// 当次操作的共享资源超过上限。
 	LIMITEXCEEDED_SHAREUNITRESOURCEOVERLIMIT = "LimitExceeded.ShareUnitResourceOverLimit"
 
@@ -916,6 +928,9 @@ const (
 
 	// 成员不支持操作。
 	UNSUPPORTEDOPERATION_MEMBERUNSUPPORTEDOPERATION = "UnsupportedOperation.MemberUnsupportedOperation"
+
+	// 操作被禁止。
+	UNSUPPORTEDOPERATION_OPERATIONFORBIDDEN = "UnsupportedOperation.OperationForbidden"
 
 	// 存在在途订单。
 	UNSUPPORTEDOPERATION_ORDERINPROGRESSEXISTED = "UnsupportedOperation.OrderInProgressExisted"

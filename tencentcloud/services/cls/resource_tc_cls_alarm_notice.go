@@ -32,7 +32,8 @@ func ResourceTencentCloudClsAlarmNotice() *schema.Resource {
 			},
 
 			"type": {
-				Required:    true,
+				Optional:    true,
+				Computed:    true,
 				Type:        schema.TypeString,
 				Description: "Notice type. Value: Trigger, Recovery, All.",
 			},
@@ -162,6 +163,355 @@ func ResourceTencentCloudClsAlarmNotice() *schema.Resource {
 				},
 			},
 
+			"jump_domain": {
+				Optional:    true,
+				Type:        schema.TypeString,
+				Description: "Jump domain. Must start with http:// or https://, cannot end with /.",
+			},
+
+			"deliver_status": {
+				Optional:    true,
+				Computed:    true,
+				Type:        schema.TypeInt,
+				Description: "Deliver log switch. Valid values: 1 (off, default), 2 (on). When set to 2, deliver_config is required.",
+			},
+
+			"alarm_shield_status": {
+				Optional:    true,
+				Computed:    true,
+				Type:        schema.TypeInt,
+				Description: "Alarm shield status (no-login operation). Valid values: 1 (off), 2 (on, default).",
+			},
+
+			"callback_prioritize": {
+				Optional:    true,
+				Type:        schema.TypeBool,
+				Description: "Callback prioritize. true: use custom callback params from notice content template; false: use params from alarm policy.",
+			},
+
+			"deliver_config": {
+				Optional:    true,
+				Type:        schema.TypeList,
+				MaxItems:    1,
+				Description: "Deliver log configuration. Required when deliver_status is 2.",
+				Elem: &schema.Resource{
+					Schema: map[string]*schema.Schema{
+						"region": {
+							Type:        schema.TypeString,
+							Required:    true,
+							Description: "Region of the target log topic. e.g. ap-guangzhou.",
+						},
+						"topic_id": {
+							Type:        schema.TypeString,
+							Required:    true,
+							Description: "Target log topic ID.",
+						},
+						"scope": {
+							Type:        schema.TypeInt,
+							Optional:    true,
+							Description: "Deliver data scope. 0: all logs (default); 1: only alarm trigger and recovery logs.",
+						},
+					},
+				},
+			},
+
+			"notice_rules": {
+				Optional:    true,
+				Type:        schema.TypeList,
+				Description: "Notice rules (advanced mode). Mutually exclusive with type/notice_receivers/web_callbacks (simple mode).",
+				Elem: &schema.Resource{
+					Schema: map[string]*schema.Schema{
+						"rule": {
+							Type:        schema.TypeString,
+							Optional:    true,
+							Description: "Matching rule JSON string.",
+						},
+						"notice_receivers": {
+							Type:        schema.TypeList,
+							Optional:    true,
+							Description: "Notice receivers for this rule.",
+							Elem: &schema.Resource{
+								Schema: map[string]*schema.Schema{
+									"receiver_type": {
+										Type:        schema.TypeString,
+										Required:    true,
+										Description: "Receiver type, Uin or Group.",
+									},
+									"receiver_ids": {
+										Type:     schema.TypeSet,
+										Required: true,
+										Elem: &schema.Schema{
+											Type: schema.TypeInt,
+										},
+										Description: "Receiver id list.",
+									},
+									"receiver_channels": {
+										Type:     schema.TypeSet,
+										Required: true,
+										Elem: &schema.Schema{
+											Type: schema.TypeString,
+										},
+										Description: "Receiver channels, Value: Email, Sms, WeChat, Phone.",
+									},
+									"notice_content_id": {
+										Type:        schema.TypeString,
+										Optional:    true,
+										Description: "Notice content ID.",
+									},
+									"start_time": {
+										Type:        schema.TypeString,
+										Optional:    true,
+										Description: "Start time allowed to receive messages.",
+									},
+									"end_time": {
+										Type:        schema.TypeString,
+										Optional:    true,
+										Description: "End time allowed to receive messages.",
+									},
+									"index": {
+										Type:        schema.TypeInt,
+										Optional:    true,
+										Computed:    true,
+										Description: "Index. The input parameter is invalid, but the output parameter is valid.",
+									},
+								},
+							},
+						},
+						"web_callbacks": {
+							Type:        schema.TypeList,
+							Optional:    true,
+							Description: "Web callbacks for this rule.",
+							Elem: &schema.Resource{
+								Schema: map[string]*schema.Schema{
+									"callback_type": {
+										Type:        schema.TypeString,
+										Required:    true,
+										Description: "Callback type, Values: Http, WeCom, DingTalk, Lark.",
+									},
+									"url": {
+										Type:        schema.TypeString,
+										Required:    true,
+										Description: "Callback url.",
+									},
+									"web_callback_id": {
+										Type:        schema.TypeString,
+										Optional:    true,
+										Description: "Integration configuration ID.",
+									},
+									"method": {
+										Type:        schema.TypeString,
+										Optional:    true,
+										Description: "Method, POST or PUT.",
+									},
+									"notice_content_id": {
+										Type:        schema.TypeString,
+										Optional:    true,
+										Description: "Notice content ID.",
+									},
+									"remind_type": {
+										Type:        schema.TypeInt,
+										Optional:    true,
+										Description: "Remind type. 0: Do not remind; 1: Specified person; 2: Everyone.",
+									},
+									"mobiles": {
+										Type:        schema.TypeSet,
+										Optional:    true,
+										Elem:        &schema.Schema{Type: schema.TypeString},
+										Description: "Telephone list.",
+									},
+									"user_ids": {
+										Type:        schema.TypeSet,
+										Optional:    true,
+										Elem:        &schema.Schema{Type: schema.TypeString},
+										Description: "User ID list.",
+									},
+									"headers": {
+										Type:        schema.TypeSet,
+										Optional:    true,
+										Elem:        &schema.Schema{Type: schema.TypeString},
+										Deprecated:  "This parameter is deprecated. Please use `notice_content_id`.",
+										Description: "Request headers.",
+									},
+									"body": {
+										Type:        schema.TypeString,
+										Optional:    true,
+										Deprecated:  "This parameter is deprecated. Please use `notice_content_id`.",
+										Description: "Request body.",
+									},
+									"index": {
+										Type:        schema.TypeInt,
+										Optional:    true,
+										Computed:    true,
+										Description: "Index. The input parameter is invalid, but the output parameter is valid.",
+									},
+								},
+							},
+						},
+						"escalate": {
+							Type:        schema.TypeBool,
+							Optional:    true,
+							Description: "Alarm escalate switch. true: enable; false: disable (default).",
+						},
+						"type": {
+							Type:        schema.TypeInt,
+							Optional:    true,
+							Description: "Alarm escalate condition. 1: unclaimed and unresolved (default); 2: unresolved.",
+						},
+						"interval": {
+							Type:        schema.TypeInt,
+							Optional:    true,
+							Description: "Alarm escalate interval in minutes. Range: [1, 14400].",
+						},
+						"escalate_notices": {
+							Type:        schema.TypeList,
+							Optional:    true,
+							MaxItems:    5,
+							Description: "Alarm escalate notice chain, ordered from level 1 to level 5 (max). Each element represents the next escalation level.",
+							Elem: &schema.Resource{
+								Schema: map[string]*schema.Schema{
+									"notice_receivers": {
+										Type:        schema.TypeList,
+										Optional:    true,
+										Description: "Notice receivers for this escalation level.",
+										Elem: &schema.Resource{
+											Schema: map[string]*schema.Schema{
+												"receiver_type": {
+													Type:        schema.TypeString,
+													Required:    true,
+													Description: "Receiver type, Uin or Group.",
+												},
+												"receiver_ids": {
+													Type:     schema.TypeSet,
+													Required: true,
+													Elem: &schema.Schema{
+														Type: schema.TypeInt,
+													},
+													Description: "Receiver id list.",
+												},
+												"receiver_channels": {
+													Type:     schema.TypeSet,
+													Required: true,
+													Elem: &schema.Schema{
+														Type: schema.TypeString,
+													},
+													Description: "Receiver channels, Value: Email, Sms, WeChat, Phone.",
+												},
+												"notice_content_id": {
+													Type:        schema.TypeString,
+													Optional:    true,
+													Description: "Notice content ID.",
+												},
+												"start_time": {
+													Type:        schema.TypeString,
+													Optional:    true,
+													Description: "Start time allowed to receive messages.",
+												},
+												"end_time": {
+													Type:        schema.TypeString,
+													Optional:    true,
+													Description: "End time allowed to receive messages.",
+												},
+												"index": {
+													Type:        schema.TypeInt,
+													Optional:    true,
+													Computed:    true,
+													Description: "Index. The input parameter is invalid, but the output parameter is valid.",
+												},
+											},
+										},
+									},
+									"web_callbacks": {
+										Type:        schema.TypeList,
+										Optional:    true,
+										Description: "Web callbacks for this escalation level.",
+										Elem: &schema.Resource{
+											Schema: map[string]*schema.Schema{
+												"callback_type": {
+													Type:        schema.TypeString,
+													Required:    true,
+													Description: "Callback type, Values: Http, WeCom, DingTalk, Lark.",
+												},
+												"url": {
+													Type:        schema.TypeString,
+													Required:    true,
+													Description: "Callback url.",
+												},
+												"web_callback_id": {
+													Type:        schema.TypeString,
+													Optional:    true,
+													Description: "Integration configuration ID.",
+												},
+												"method": {
+													Type:        schema.TypeString,
+													Optional:    true,
+													Description: "Method, POST or PUT.",
+												},
+												"notice_content_id": {
+													Type:        schema.TypeString,
+													Optional:    true,
+													Description: "Notice content ID.",
+												},
+												"remind_type": {
+													Type:        schema.TypeInt,
+													Optional:    true,
+													Description: "Remind type. 0: Do not remind; 1: Specified person; 2: Everyone.",
+												},
+												"mobiles": {
+													Type:        schema.TypeSet,
+													Optional:    true,
+													Elem:        &schema.Schema{Type: schema.TypeString},
+													Description: "Telephone list.",
+												},
+												"user_ids": {
+													Type:        schema.TypeSet,
+													Optional:    true,
+													Elem:        &schema.Schema{Type: schema.TypeString},
+													Description: "User ID list.",
+												},
+												"headers": {
+													Type:        schema.TypeSet,
+													Optional:    true,
+													Elem:        &schema.Schema{Type: schema.TypeString},
+													Deprecated:  "This parameter is deprecated. Please use `notice_content_id`.",
+													Description: "Request headers.",
+												},
+												"body": {
+													Type:        schema.TypeString,
+													Optional:    true,
+													Deprecated:  "This parameter is deprecated. Please use `notice_content_id`.",
+													Description: "Request body.",
+												},
+												"index": {
+													Type:        schema.TypeInt,
+													Optional:    true,
+													Computed:    true,
+													Description: "Index. The input parameter is invalid, but the output parameter is valid.",
+												},
+											},
+										},
+									},
+									"escalate": {
+										Type:        schema.TypeBool,
+										Optional:    true,
+										Description: "Whether to continue escalating from this level. true: enable; false: disable.",
+									},
+									"type": {
+										Type:        schema.TypeInt,
+										Optional:    true,
+										Description: "Escalate condition. 1: unclaimed and unresolved (default); 2: unresolved.",
+									},
+									"interval": {
+										Type:        schema.TypeInt,
+										Optional:    true,
+										Description: "Escalate interval in minutes. Range: [1, 14400].",
+									},
+								},
+							},
+						},
+					},
+				},
+			},
+
 			"tags": {
 				Type:        schema.TypeMap,
 				Optional:    true,
@@ -277,6 +627,135 @@ func resourceTencentCloudClsAlarmNoticeCreate(d *schema.ResourceData, meta inter
 				webCallback.Index = helper.IntInt64(v)
 			}
 			request.WebCallbacks = append(request.WebCallbacks, &webCallback)
+		}
+	}
+
+	if v, ok := d.GetOk("jump_domain"); ok {
+		request.JumpDomain = helper.String(v.(string))
+	}
+
+	if v, ok := d.GetOkExists("deliver_status"); ok {
+		request.DeliverStatus = helper.IntUint64(v.(int))
+	}
+
+	if v, ok := d.GetOkExists("alarm_shield_status"); ok {
+		request.AlarmShieldStatus = helper.IntUint64(v.(int))
+	}
+
+	if v, ok := d.GetOkExists("callback_prioritize"); ok {
+		request.CallbackPrioritize = helper.Bool(v.(bool))
+	}
+
+	if v, ok := helper.InterfacesHeadMap(d, "deliver_config"); ok {
+		deliverConfig := cls.DeliverConfig{}
+		if region, ok := v["region"].(string); ok && region != "" {
+			deliverConfig.Region = helper.String(region)
+		}
+		if topicId, ok := v["topic_id"].(string); ok && topicId != "" {
+			deliverConfig.TopicId = helper.String(topicId)
+		}
+		if scope, ok := v["scope"].(int); ok {
+			deliverConfig.Scope = helper.IntUint64(scope)
+		}
+		request.DeliverConfig = &deliverConfig
+	}
+
+	if v, ok := d.GetOk("notice_rules"); ok {
+		for _, item := range v.([]interface{}) {
+			dMap := item.(map[string]interface{})
+			noticeRule := cls.NoticeRule{}
+			if rule, ok := dMap["rule"].(string); ok && rule != "" {
+				noticeRule.Rule = helper.String(rule)
+			}
+			if escalate, ok := dMap["escalate"].(bool); ok {
+				noticeRule.Escalate = helper.Bool(escalate)
+			}
+			if t, ok := dMap["type"].(int); ok && t != 0 {
+				noticeRule.Type = helper.IntUint64(t)
+			}
+			if interval, ok := dMap["interval"].(int); ok && interval != 0 {
+				noticeRule.Interval = helper.IntUint64(interval)
+			}
+			if nrList, ok := dMap["notice_receivers"].([]interface{}); ok {
+				for _, nrItem := range nrList {
+					nrMap := nrItem.(map[string]interface{})
+					nr := cls.NoticeReceiver{}
+					if v, ok := nrMap["receiver_type"].(string); ok {
+						nr.ReceiverType = helper.String(v)
+					}
+					if ids, ok := nrMap["receiver_ids"]; ok {
+						for _, id := range ids.(*schema.Set).List() {
+							nr.ReceiverIds = append(nr.ReceiverIds, helper.IntInt64(id.(int)))
+						}
+					}
+					if channels, ok := nrMap["receiver_channels"]; ok {
+						for _, ch := range channels.(*schema.Set).List() {
+							c := ch.(string)
+							nr.ReceiverChannels = append(nr.ReceiverChannels, &c)
+						}
+					}
+					if v, ok := nrMap["notice_content_id"].(string); ok && v != "" {
+						nr.NoticeContentId = helper.String(v)
+					}
+					if v, ok := nrMap["start_time"].(string); ok && v != "" {
+						nr.StartTime = helper.String(v)
+					}
+					if v, ok := nrMap["end_time"].(string); ok && v != "" {
+						nr.EndTime = helper.String(v)
+					}
+					noticeRule.NoticeReceivers = append(noticeRule.NoticeReceivers, &nr)
+				}
+			}
+			if wcList, ok := dMap["web_callbacks"].([]interface{}); ok {
+				for _, wcItem := range wcList {
+					wcMap := wcItem.(map[string]interface{})
+					wc := cls.WebCallback{}
+					if v, ok := wcMap["callback_type"].(string); ok {
+						wc.CallbackType = helper.String(v)
+					}
+					if v, ok := wcMap["url"].(string); ok {
+						wc.Url = helper.String(v)
+					}
+					if v, ok := wcMap["web_callback_id"].(string); ok && v != "" {
+						wc.WebCallbackId = helper.String(v)
+					}
+					if v, ok := wcMap["method"].(string); ok && v != "" {
+						wc.Method = helper.String(v)
+					}
+					if v, ok := wcMap["notice_content_id"].(string); ok && v != "" {
+						wc.NoticeContentId = helper.String(v)
+					}
+					if v, ok := wcMap["remind_type"].(int); ok {
+						wc.RemindType = helper.IntUint64(v)
+					}
+					if mobiles, ok := wcMap["mobiles"]; ok {
+						for _, m := range mobiles.(*schema.Set).List() {
+							mobile := m.(string)
+							wc.Mobiles = append(wc.Mobiles, &mobile)
+						}
+					}
+					if userIds, ok := wcMap["user_ids"]; ok {
+						for _, u := range userIds.(*schema.Set).List() {
+							uid := u.(string)
+							wc.UserIds = append(wc.UserIds, &uid)
+						}
+					}
+					if headers, ok := wcMap["headers"]; ok {
+						for _, h := range headers.(*schema.Set).List() {
+							header := h.(string)
+							wc.Headers = append(wc.Headers, &header)
+						}
+					}
+					if v, ok := wcMap["body"].(string); ok && v != "" {
+						wc.Body = helper.String(v)
+					}
+					noticeRule.WebCallbacks = append(noticeRule.WebCallbacks, &wc)
+				}
+			}
+			if escalateList, ok := dMap["escalate_notices"].([]interface{}); ok && len(escalateList) > 0 {
+				noticeRule.EscalateNotice = buildEscalateNoticeChain(escalateList)
+			}
+			request.NoticeRules = append(request.NoticeRules, &noticeRule)
 		}
 	}
 
@@ -453,6 +932,143 @@ func resourceTencentCloudClsAlarmNoticeRead(d *schema.ResourceData, meta interfa
 
 	}
 
+	if alarmNotice.JumpDomain != nil {
+		_ = d.Set("jump_domain", alarmNotice.JumpDomain)
+	}
+
+	if alarmNotice.DeliverStatus != nil {
+		_ = d.Set("deliver_status", alarmNotice.DeliverStatus)
+	}
+
+	if alarmNotice.AlarmShieldStatus != nil {
+		_ = d.Set("alarm_shield_status", alarmNotice.AlarmShieldStatus)
+	}
+
+	if alarmNotice.CallbackPrioritize != nil {
+		_ = d.Set("callback_prioritize", alarmNotice.CallbackPrioritize)
+	}
+
+	if alarmNotice.AlarmNoticeDeliverConfig != nil && alarmNotice.AlarmNoticeDeliverConfig.DeliverConfig != nil {
+		dc := alarmNotice.AlarmNoticeDeliverConfig.DeliverConfig
+		deliverConfigMap := map[string]interface{}{}
+		if dc.Region != nil {
+			deliverConfigMap["region"] = dc.Region
+		}
+		if dc.TopicId != nil {
+			deliverConfigMap["topic_id"] = dc.TopicId
+		}
+		if dc.Scope != nil {
+			deliverConfigMap["scope"] = dc.Scope
+		}
+		_ = d.Set("deliver_config", []interface{}{deliverConfigMap})
+	}
+
+	if alarmNotice.NoticeRules != nil {
+		noticeRulesList := []interface{}{}
+		for _, nr := range alarmNotice.NoticeRules {
+			nrMap := map[string]interface{}{}
+			if nr.Rule != nil {
+				nrMap["rule"] = nr.Rule
+			}
+			if nr.Escalate != nil {
+				nrMap["escalate"] = nr.Escalate
+			}
+			if nr.Type != nil {
+				nrMap["type"] = nr.Type
+			}
+			if nr.Interval != nil {
+				nrMap["interval"] = nr.Interval
+			}
+			if nr.NoticeReceivers != nil {
+				nrReceiverList := []interface{}{}
+				for _, rec := range nr.NoticeReceivers {
+					recMap := map[string]interface{}{}
+					if rec.ReceiverType != nil {
+						recMap["receiver_type"] = rec.ReceiverType
+					}
+					if rec.ReceiverIds != nil {
+						recMap["receiver_ids"] = rec.ReceiverIds
+					}
+					if rec.ReceiverChannels != nil {
+						recMap["receiver_channels"] = rec.ReceiverChannels
+					}
+					if rec.NoticeContentId != nil {
+						recMap["notice_content_id"] = rec.NoticeContentId
+					}
+					if rec.StartTime != nil {
+						recMap["start_time"] = rec.StartTime
+					}
+					if rec.EndTime != nil {
+						recMap["end_time"] = rec.EndTime
+					}
+					if rec.Index != nil {
+						recMap["index"] = rec.Index
+					}
+					nrReceiverList = append(nrReceiverList, recMap)
+				}
+				nrMap["notice_receivers"] = nrReceiverList
+			}
+			if nr.WebCallbacks != nil {
+				nrWcList := []interface{}{}
+				for _, wc := range nr.WebCallbacks {
+					wcMap := map[string]interface{}{}
+					if wc.CallbackType != nil {
+						wcMap["callback_type"] = wc.CallbackType
+					}
+					if wc.Url != nil {
+						wcMap["url"] = wc.Url
+					}
+					if wc.WebCallbackId != nil {
+						wcMap["web_callback_id"] = wc.WebCallbackId
+					}
+					if wc.Method != nil {
+						wcMap["method"] = wc.Method
+					}
+					if wc.NoticeContentId != nil {
+						wcMap["notice_content_id"] = wc.NoticeContentId
+					}
+					if wc.RemindType != nil {
+						wcMap["remind_type"] = wc.RemindType
+					}
+					if wc.Mobiles != nil {
+						tmpList := make([]string, 0, len(wc.Mobiles))
+						for _, m := range wc.Mobiles {
+							tmpList = append(tmpList, *m)
+						}
+						wcMap["mobiles"] = tmpList
+					}
+					if wc.UserIds != nil {
+						tmpList := make([]string, 0, len(wc.UserIds))
+						for _, u := range wc.UserIds {
+							tmpList = append(tmpList, *u)
+						}
+						wcMap["user_ids"] = tmpList
+					}
+					if wc.Headers != nil {
+						tmpList := make([]string, 0, len(wc.Headers))
+						for _, h := range wc.Headers {
+							tmpList = append(tmpList, *h)
+						}
+						wcMap["headers"] = tmpList
+					}
+					if wc.Body != nil {
+						wcMap["body"] = wc.Body
+					}
+					if wc.Index != nil {
+						wcMap["index"] = wc.Index
+					}
+					nrWcList = append(nrWcList, wcMap)
+				}
+				nrMap["web_callbacks"] = nrWcList
+			}
+			if nr.EscalateNotice != nil {
+				nrMap["escalate_notices"] = flattenEscalateNoticeChain(nr.EscalateNotice)
+			}
+			noticeRulesList = append(noticeRulesList, nrMap)
+		}
+		_ = d.Set("notice_rules", noticeRulesList)
+	}
+
 	tcClient := meta.(tccommon.ProviderMeta).GetAPIV3Conn()
 	tagService := svctag.NewTagService(tcClient)
 	tags, err := tagService.DescribeResourceTags(ctx, "cls", "alarmNotice", tcClient.Region, d.Id())
@@ -477,7 +1093,7 @@ func resourceTencentCloudClsAlarmNoticeUpdate(d *schema.ResourceData, meta inter
 	needChange := false
 	request.AlarmNoticeId = &alarmNoticeId
 
-	mutableArgs := []string{"name", "type", "notice_receivers", "web_callbacks"}
+	mutableArgs := []string{"name", "type", "notice_receivers", "web_callbacks", "jump_domain", "deliver_status", "deliver_config", "alarm_shield_status", "callback_prioritize", "notice_rules"}
 
 	for _, v := range mutableArgs {
 		if d.HasChange(v) {
@@ -586,6 +1202,135 @@ func resourceTencentCloudClsAlarmNoticeUpdate(d *schema.ResourceData, meta inter
 			}
 		}
 
+		if v, ok := d.GetOk("jump_domain"); ok {
+			request.JumpDomain = helper.String(v.(string))
+		}
+
+		if v, ok := d.GetOkExists("deliver_status"); ok {
+			request.DeliverStatus = helper.IntUint64(v.(int))
+		}
+
+		if v, ok := d.GetOkExists("alarm_shield_status"); ok {
+			request.AlarmShieldStatus = helper.IntUint64(v.(int))
+		}
+
+		if v, ok := d.GetOkExists("callback_prioritize"); ok {
+			request.CallbackPrioritize = helper.Bool(v.(bool))
+		}
+
+		if v, ok := helper.InterfacesHeadMap(d, "deliver_config"); ok {
+			deliverConfig := cls.DeliverConfig{}
+			if region, ok := v["region"].(string); ok && region != "" {
+				deliverConfig.Region = helper.String(region)
+			}
+			if topicId, ok := v["topic_id"].(string); ok && topicId != "" {
+				deliverConfig.TopicId = helper.String(topicId)
+			}
+			if scope, ok := v["scope"].(int); ok {
+				deliverConfig.Scope = helper.IntUint64(scope)
+			}
+			request.DeliverConfig = &deliverConfig
+		}
+
+		if v, ok := d.GetOk("notice_rules"); ok {
+			for _, item := range v.([]interface{}) {
+				dMap := item.(map[string]interface{})
+				noticeRule := cls.NoticeRule{}
+				if rule, ok := dMap["rule"].(string); ok && rule != "" {
+					noticeRule.Rule = helper.String(rule)
+				}
+				if escalate, ok := dMap["escalate"].(bool); ok {
+					noticeRule.Escalate = helper.Bool(escalate)
+				}
+				if t, ok := dMap["type"].(int); ok && t != 0 {
+					noticeRule.Type = helper.IntUint64(t)
+				}
+				if interval, ok := dMap["interval"].(int); ok && interval != 0 {
+					noticeRule.Interval = helper.IntUint64(interval)
+				}
+				if nrList, ok := dMap["notice_receivers"].([]interface{}); ok {
+					for _, nrItem := range nrList {
+						nrMap := nrItem.(map[string]interface{})
+						nr := cls.NoticeReceiver{}
+						if v, ok := nrMap["receiver_type"].(string); ok {
+							nr.ReceiverType = helper.String(v)
+						}
+						if ids, ok := nrMap["receiver_ids"]; ok {
+							for _, id := range ids.(*schema.Set).List() {
+								nr.ReceiverIds = append(nr.ReceiverIds, helper.IntInt64(id.(int)))
+							}
+						}
+						if channels, ok := nrMap["receiver_channels"]; ok {
+							for _, ch := range channels.(*schema.Set).List() {
+								c := ch.(string)
+								nr.ReceiverChannels = append(nr.ReceiverChannels, &c)
+							}
+						}
+						if v, ok := nrMap["notice_content_id"].(string); ok && v != "" {
+							nr.NoticeContentId = helper.String(v)
+						}
+						if v, ok := nrMap["start_time"].(string); ok && v != "" {
+							nr.StartTime = helper.String(v)
+						}
+						if v, ok := nrMap["end_time"].(string); ok && v != "" {
+							nr.EndTime = helper.String(v)
+						}
+						noticeRule.NoticeReceivers = append(noticeRule.NoticeReceivers, &nr)
+					}
+				}
+				if wcList, ok := dMap["web_callbacks"].([]interface{}); ok {
+					for _, wcItem := range wcList {
+						wcMap := wcItem.(map[string]interface{})
+						wc := cls.WebCallback{}
+						if v, ok := wcMap["callback_type"].(string); ok {
+							wc.CallbackType = helper.String(v)
+						}
+						if v, ok := wcMap["url"].(string); ok {
+							wc.Url = helper.String(v)
+						}
+						if v, ok := wcMap["web_callback_id"].(string); ok && v != "" {
+							wc.WebCallbackId = helper.String(v)
+						}
+						if v, ok := wcMap["method"].(string); ok && v != "" {
+							wc.Method = helper.String(v)
+						}
+						if v, ok := wcMap["notice_content_id"].(string); ok && v != "" {
+							wc.NoticeContentId = helper.String(v)
+						}
+						if v, ok := wcMap["remind_type"].(int); ok {
+							wc.RemindType = helper.IntUint64(v)
+						}
+						if mobiles, ok := wcMap["mobiles"]; ok {
+							for _, m := range mobiles.(*schema.Set).List() {
+								mobile := m.(string)
+								wc.Mobiles = append(wc.Mobiles, &mobile)
+							}
+						}
+						if userIds, ok := wcMap["user_ids"]; ok {
+							for _, u := range userIds.(*schema.Set).List() {
+								uid := u.(string)
+								wc.UserIds = append(wc.UserIds, &uid)
+							}
+						}
+						if headers, ok := wcMap["headers"]; ok {
+							for _, h := range headers.(*schema.Set).List() {
+								header := h.(string)
+								wc.Headers = append(wc.Headers, &header)
+							}
+						}
+						if v, ok := wcMap["body"].(string); ok && v != "" {
+							wc.Body = helper.String(v)
+						}
+						noticeRule.WebCallbacks = append(noticeRule.WebCallbacks, &wc)
+					}
+				}
+				if escalateList, ok := dMap["escalate_notices"].([]interface{}); ok && len(escalateList) > 0 {
+					noticeRule.EscalateNotice = buildEscalateNoticeChain(escalateList)
+				}
+				request.NoticeRules = append(request.NoticeRules, &noticeRule)
+			}
+		}
+
 		err := resource.Retry(tccommon.WriteRetryTimeout, func() *resource.RetryError {
 			result, e := meta.(tccommon.ProviderMeta).GetAPIV3Conn().UseClsClient().ModifyAlarmNotice(request)
 			if e != nil {
@@ -631,4 +1376,208 @@ func resourceTencentCloudClsAlarmNoticeDelete(d *schema.ResourceData, meta inter
 	}
 
 	return nil
+}
+
+// buildEscalateNoticeChain converts an ordered list (plan D) into the SDK's recursive chain structure.
+// escalateList[0] = level 1, escalateList[1] = level 2, ...
+func buildEscalateNoticeChain(escalateList []interface{}) *cls.EscalateNoticeInfo {
+	if len(escalateList) == 0 {
+		return nil
+	}
+	m := escalateList[0].(map[string]interface{})
+	info := &cls.EscalateNoticeInfo{}
+	if v, ok := m["escalate"].(bool); ok {
+		info.Escalate = helper.Bool(v)
+	}
+	if v, ok := m["type"].(int); ok && v != 0 {
+		info.Type = helper.IntUint64(v)
+	}
+	if v, ok := m["interval"].(int); ok && v != 0 {
+		info.Interval = helper.IntUint64(v)
+	}
+	if nrList, ok := m["notice_receivers"].([]interface{}); ok {
+		for _, nrItem := range nrList {
+			nrMap := nrItem.(map[string]interface{})
+			nr := cls.NoticeReceiver{}
+			if v, ok := nrMap["receiver_type"].(string); ok {
+				nr.ReceiverType = helper.String(v)
+			}
+			if ids, ok := nrMap["receiver_ids"]; ok {
+				for _, id := range ids.(*schema.Set).List() {
+					nr.ReceiverIds = append(nr.ReceiverIds, helper.IntInt64(id.(int)))
+				}
+			}
+			if channels, ok := nrMap["receiver_channels"]; ok {
+				for _, ch := range channels.(*schema.Set).List() {
+					c := ch.(string)
+					nr.ReceiverChannels = append(nr.ReceiverChannels, &c)
+				}
+			}
+			if v, ok := nrMap["notice_content_id"].(string); ok && v != "" {
+				nr.NoticeContentId = helper.String(v)
+			}
+			if v, ok := nrMap["start_time"].(string); ok && v != "" {
+				nr.StartTime = helper.String(v)
+			}
+			if v, ok := nrMap["end_time"].(string); ok && v != "" {
+				nr.EndTime = helper.String(v)
+			}
+			info.NoticeReceivers = append(info.NoticeReceivers, &nr)
+		}
+	}
+	if wcList, ok := m["web_callbacks"].([]interface{}); ok {
+		for _, wcItem := range wcList {
+			wcMap := wcItem.(map[string]interface{})
+			wc := cls.WebCallback{}
+			if v, ok := wcMap["callback_type"].(string); ok {
+				wc.CallbackType = helper.String(v)
+			}
+			if v, ok := wcMap["url"].(string); ok {
+				wc.Url = helper.String(v)
+			}
+			if v, ok := wcMap["web_callback_id"].(string); ok && v != "" {
+				wc.WebCallbackId = helper.String(v)
+			}
+			if v, ok := wcMap["method"].(string); ok && v != "" {
+				wc.Method = helper.String(v)
+			}
+			if v, ok := wcMap["notice_content_id"].(string); ok && v != "" {
+				wc.NoticeContentId = helper.String(v)
+			}
+			if v, ok := wcMap["remind_type"].(int); ok {
+				wc.RemindType = helper.IntUint64(v)
+			}
+			if mobiles, ok := wcMap["mobiles"]; ok {
+				for _, mb := range mobiles.(*schema.Set).List() {
+					mobile := mb.(string)
+					wc.Mobiles = append(wc.Mobiles, &mobile)
+				}
+			}
+			if userIds, ok := wcMap["user_ids"]; ok {
+				for _, u := range userIds.(*schema.Set).List() {
+					uid := u.(string)
+					wc.UserIds = append(wc.UserIds, &uid)
+				}
+			}
+			if headers, ok := wcMap["headers"]; ok {
+				for _, h := range headers.(*schema.Set).List() {
+					header := h.(string)
+					wc.Headers = append(wc.Headers, &header)
+				}
+			}
+			if v, ok := wcMap["body"].(string); ok && v != "" {
+				wc.Body = helper.String(v)
+			}
+			info.WebCallbacks = append(info.WebCallbacks, &wc)
+		}
+	}
+	// Recursively process the next level.
+	info.EscalateNotice = buildEscalateNoticeChain(escalateList[1:])
+	return info
+}
+
+// flattenEscalateNoticeChain flattens the SDK's recursive chain structure into an ordered list (plan D).
+func flattenEscalateNoticeChain(info *cls.EscalateNoticeInfo) []interface{} {
+	if info == nil {
+		return nil
+	}
+	result := []interface{}{}
+	cur := info
+	for cur != nil {
+		m := map[string]interface{}{}
+		if cur.Escalate != nil {
+			m["escalate"] = cur.Escalate
+		}
+		if cur.Type != nil {
+			m["type"] = cur.Type
+		}
+		if cur.Interval != nil {
+			m["interval"] = cur.Interval
+		}
+		if cur.NoticeReceivers != nil {
+			nrList := []interface{}{}
+			for _, rec := range cur.NoticeReceivers {
+				recMap := map[string]interface{}{}
+				if rec.ReceiverType != nil {
+					recMap["receiver_type"] = rec.ReceiverType
+				}
+				if rec.ReceiverIds != nil {
+					recMap["receiver_ids"] = rec.ReceiverIds
+				}
+				if rec.ReceiverChannels != nil {
+					recMap["receiver_channels"] = rec.ReceiverChannels
+				}
+				if rec.NoticeContentId != nil {
+					recMap["notice_content_id"] = rec.NoticeContentId
+				}
+				if rec.StartTime != nil {
+					recMap["start_time"] = rec.StartTime
+				}
+				if rec.EndTime != nil {
+					recMap["end_time"] = rec.EndTime
+				}
+				if rec.Index != nil {
+					recMap["index"] = rec.Index
+				}
+				nrList = append(nrList, recMap)
+			}
+			m["notice_receivers"] = nrList
+		}
+		if cur.WebCallbacks != nil {
+			wcList := []interface{}{}
+			for _, wc := range cur.WebCallbacks {
+				wcMap := map[string]interface{}{}
+				if wc.CallbackType != nil {
+					wcMap["callback_type"] = wc.CallbackType
+				}
+				if wc.Url != nil {
+					wcMap["url"] = wc.Url
+				}
+				if wc.WebCallbackId != nil {
+					wcMap["web_callback_id"] = wc.WebCallbackId
+				}
+				if wc.Method != nil {
+					wcMap["method"] = wc.Method
+				}
+				if wc.NoticeContentId != nil {
+					wcMap["notice_content_id"] = wc.NoticeContentId
+				}
+				if wc.RemindType != nil {
+					wcMap["remind_type"] = wc.RemindType
+				}
+				if wc.Mobiles != nil {
+					tmpList := make([]string, 0, len(wc.Mobiles))
+					for _, mb := range wc.Mobiles {
+						tmpList = append(tmpList, *mb)
+					}
+					wcMap["mobiles"] = tmpList
+				}
+				if wc.UserIds != nil {
+					tmpList := make([]string, 0, len(wc.UserIds))
+					for _, u := range wc.UserIds {
+						tmpList = append(tmpList, *u)
+					}
+					wcMap["user_ids"] = tmpList
+				}
+				if wc.Headers != nil {
+					tmpList := make([]string, 0, len(wc.Headers))
+					for _, h := range wc.Headers {
+						tmpList = append(tmpList, *h)
+					}
+					wcMap["headers"] = tmpList
+				}
+				if wc.Body != nil {
+					wcMap["body"] = wc.Body
+				}
+				if wc.Index != nil {
+					wcMap["index"] = wc.Index
+				}
+				wcList = append(wcList, wcMap)
+			}
+			m["web_callbacks"] = wcList
+		}
+		result = append(result, m)
+		cur = cur.EscalateNotice
+	}
+	return result
 }

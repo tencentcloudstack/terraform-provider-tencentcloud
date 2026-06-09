@@ -93,6 +93,11 @@ func ResourceTencentCloudDnspodRecord() *schema.Resource {
 				Computed:    true,
 				Description: "ID of the record.",
 			},
+			"updated_on": {
+				Type:        schema.TypeString,
+				Computed:    true,
+				Description: "Last update time of the record.",
+			},
 		},
 		CustomizeDiff: func(ctx context.Context, d *schema.ResourceDiff, meta interface{}) error {
 			// weight设置后不能单独关闭
@@ -245,6 +250,9 @@ func resourceTencentCloudDnspodRecordRead(d *schema.ResourceData, meta interface
 		_ = d.Set("status", "ENABLE")
 	}
 	_ = d.Set("record_id", items[1])
+	if recordInfo.UpdatedOn != nil {
+		_ = d.Set("updated_on", recordInfo.UpdatedOn)
+	}
 	return nil
 }
 

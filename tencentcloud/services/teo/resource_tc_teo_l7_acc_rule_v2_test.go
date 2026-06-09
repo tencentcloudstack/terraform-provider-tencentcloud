@@ -185,3 +185,5 @@ resource "tencentcloud_teo_l7_acc_rule_v2" "teo_l7_acc_rule_v2" {
   }
 }
 `
+
+// go test ./tencentcloud/services/teo/ -run "TestL7AccRuleV2" -v -count=1 -gcflags="all=-l"

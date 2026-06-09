@@ -1,4 +1,4 @@
-// Copyright (c) 2017-2018 THL A29 Limited, a Tencent company. All Rights Reserved.
+// Copyright (c) 2017-2025 Tencent. All Rights Reserved.
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -44,6 +44,378 @@ func NewClient(credential common.CredentialIface, region string, clientProfile *
     return
 }
 
+
+func NewAddCasterInputInfoRequest() (request *AddCasterInputInfoRequest) {
+    request = &AddCasterInputInfoRequest{
+        BaseRequest: &tchttp.BaseRequest{},
+    }
+    
+    request.Init().WithApiInfo("live", APIVersion, "AddCasterInputInfo")
+    
+    
+    return
+}
+
+func NewAddCasterInputInfoResponse() (response *AddCasterInputInfoResponse) {
+    response = &AddCasterInputInfoResponse{
+        BaseResponse: &tchttp.BaseResponse{},
+    } 
+    return
+
+}
+
+// AddCasterInputInfo
+// 该接口用来向导播台中添加一个输入源，该输入源可以是拉流地址、或是一个文件链接
+//
+// 可能返回的错误码:
+//  FAILEDOPERATION_CASTERNOTFOUND = "FailedOperation.CasterNotFound"
+//  FAILEDOPERATION_INPUTALREADYEXIST = "FailedOperation.InputAlreadyExist"
+//  FAILEDOPERATION_INPUTUSEDINPGM = "FailedOperation.InputUsedInPgm"
+//  FAILEDOPERATION_INPUTUSEDINPVW = "FailedOperation.InputUsedInPvw"
+//  FAILEDOPERATION_STARTPULLFAILED = "FailedOperation.StartPullFailed"
+//  FAILEDOPERATION_STOPPULLFAILED = "FailedOperation.StopPullFailed"
+//  FAILEDOPERATION_TOOMUCHINPUT = "FailedOperation.TooMuchInput"
+//  INTERNALERROR = "InternalError"
+//  INVALIDPARAMETER = "InvalidParameter"
+//  RESOURCENOTFOUND_FORBIDSERVICE = "ResourceNotFound.ForbidService"
+//  RESOURCENOTFOUND_FREEZESERVICE = "ResourceNotFound.FreezeService"
+//  RESOURCENOTFOUND_STOPSERVICE = "ResourceNotFound.StopService"
+//  RESOURCENOTFOUND_USERDISABLESERVICE = "ResourceNotFound.UserDisableService"
+//  RESOURCENOTFOUND_USERNOTEXIST = "ResourceNotFound.UserNotExist"
+//  UNKNOWNPARAMETER = "UnknownParameter"
+//  UNSUPPORTEDOPERATION = "UnsupportedOperation"
+func (c *Client) AddCasterInputInfo(request *AddCasterInputInfoRequest) (response *AddCasterInputInfoResponse, err error) {
+    return c.AddCasterInputInfoWithContext(context.Background(), request)
+}
+
+// AddCasterInputInfo
+// 该接口用来向导播台中添加一个输入源，该输入源可以是拉流地址、或是一个文件链接
+//
+// 可能返回的错误码:
+//  FAILEDOPERATION_CASTERNOTFOUND = "FailedOperation.CasterNotFound"
+//  FAILEDOPERATION_INPUTALREADYEXIST = "FailedOperation.InputAlreadyExist"
+//  FAILEDOPERATION_INPUTUSEDINPGM = "FailedOperation.InputUsedInPgm"
+//  FAILEDOPERATION_INPUTUSEDINPVW = "FailedOperation.InputUsedInPvw"
+//  FAILEDOPERATION_STARTPULLFAILED = "FailedOperation.StartPullFailed"
+//  FAILEDOPERATION_STOPPULLFAILED = "FailedOperation.StopPullFailed"
+//  FAILEDOPERATION_TOOMUCHINPUT = "FailedOperation.TooMuchInput"
+//  INTERNALERROR = "InternalError"
+//  INVALIDPARAMETER = "InvalidParameter"
+//  RESOURCENOTFOUND_FORBIDSERVICE = "ResourceNotFound.ForbidService"
+//  RESOURCENOTFOUND_FREEZESERVICE = "ResourceNotFound.FreezeService"
+//  RESOURCENOTFOUND_STOPSERVICE = "ResourceNotFound.StopService"
+//  RESOURCENOTFOUND_USERDISABLESERVICE = "ResourceNotFound.UserDisableService"
+//  RESOURCENOTFOUND_USERNOTEXIST = "ResourceNotFound.UserNotExist"
+//  UNKNOWNPARAMETER = "UnknownParameter"
+//  UNSUPPORTEDOPERATION = "UnsupportedOperation"
+func (c *Client) AddCasterInputInfoWithContext(ctx context.Context, request *AddCasterInputInfoRequest) (response *AddCasterInputInfoResponse, err error) {
+    if request == nil {
+        request = NewAddCasterInputInfoRequest()
+    }
+    c.InitBaseRequest(&request.BaseRequest, "live", APIVersion, "AddCasterInputInfo")
+    
+    if c.GetCredential() == nil {
+        return nil, errors.New("AddCasterInputInfo require credential")
+    }
+
+    request.SetContext(ctx)
+    
+    response = NewAddCasterInputInfoResponse()
+    err = c.Send(request, response)
+    return
+}
+
+func NewAddCasterLayoutInfoRequest() (request *AddCasterLayoutInfoRequest) {
+    request = &AddCasterLayoutInfoRequest{
+        BaseRequest: &tchttp.BaseRequest{},
+    }
+    
+    request.Init().WithApiInfo("live", APIVersion, "AddCasterLayoutInfo")
+    
+    
+    return
+}
+
+func NewAddCasterLayoutInfoResponse() (response *AddCasterLayoutInfoResponse) {
+    response = &AddCasterLayoutInfoResponse{
+        BaseResponse: &tchttp.BaseResponse{},
+    } 
+    return
+
+}
+
+// AddCasterLayoutInfo
+// 该接口用来增加导播台的布局参数。
+//
+// 可能返回的错误码:
+//  FAILEDOPERATION_CASTERNOTFOUND = "FailedOperation.CasterNotFound"
+//  FAILEDOPERATION_LAYOUTALREADYEXIST = "FailedOperation.LayoutAlreadyExist"
+//  FAILEDOPERATION_LAYOUTUSEDINPGM = "FailedOperation.LayoutUsedInPgm"
+//  FAILEDOPERATION_LAYOUTUSEDINPVW = "FailedOperation.LayoutUsedInPvw"
+//  INTERNALERROR = "InternalError"
+//  INVALIDPARAMETER = "InvalidParameter"
+//  RESOURCENOTFOUND_FORBIDSERVICE = "ResourceNotFound.ForbidService"
+//  RESOURCENOTFOUND_FREEZESERVICE = "ResourceNotFound.FreezeService"
+//  RESOURCENOTFOUND_STOPSERVICE = "ResourceNotFound.StopService"
+//  RESOURCENOTFOUND_USERDISABLESERVICE = "ResourceNotFound.UserDisableService"
+//  RESOURCENOTFOUND_USERNOTEXIST = "ResourceNotFound.UserNotExist"
+//  UNKNOWNPARAMETER = "UnknownParameter"
+//  UNSUPPORTEDOPERATION = "UnsupportedOperation"
+func (c *Client) AddCasterLayoutInfo(request *AddCasterLayoutInfoRequest) (response *AddCasterLayoutInfoResponse, err error) {
+    return c.AddCasterLayoutInfoWithContext(context.Background(), request)
+}
+
+// AddCasterLayoutInfo
+// 该接口用来增加导播台的布局参数。
+//
+// 可能返回的错误码:
+//  FAILEDOPERATION_CASTERNOTFOUND = "FailedOperation.CasterNotFound"
+//  FAILEDOPERATION_LAYOUTALREADYEXIST = "FailedOperation.LayoutAlreadyExist"
+//  FAILEDOPERATION_LAYOUTUSEDINPGM = "FailedOperation.LayoutUsedInPgm"
+//  FAILEDOPERATION_LAYOUTUSEDINPVW = "FailedOperation.LayoutUsedInPvw"
+//  INTERNALERROR = "InternalError"
+//  INVALIDPARAMETER = "InvalidParameter"
+//  RESOURCENOTFOUND_FORBIDSERVICE = "ResourceNotFound.ForbidService"
+//  RESOURCENOTFOUND_FREEZESERVICE = "ResourceNotFound.FreezeService"
+//  RESOURCENOTFOUND_STOPSERVICE = "ResourceNotFound.StopService"
+//  RESOURCENOTFOUND_USERDISABLESERVICE = "ResourceNotFound.UserDisableService"
+//  RESOURCENOTFOUND_USERNOTEXIST = "ResourceNotFound.UserNotExist"
+//  UNKNOWNPARAMETER = "UnknownParameter"
+//  UNSUPPORTEDOPERATION = "UnsupportedOperation"
+func (c *Client) AddCasterLayoutInfoWithContext(ctx context.Context, request *AddCasterLayoutInfoRequest) (response *AddCasterLayoutInfoResponse, err error) {
+    if request == nil {
+        request = NewAddCasterLayoutInfoRequest()
+    }
+    c.InitBaseRequest(&request.BaseRequest, "live", APIVersion, "AddCasterLayoutInfo")
+    
+    if c.GetCredential() == nil {
+        return nil, errors.New("AddCasterLayoutInfo require credential")
+    }
+
+    request.SetContext(ctx)
+    
+    response = NewAddCasterLayoutInfoResponse()
+    err = c.Send(request, response)
+    return
+}
+
+func NewAddCasterMarkPicInfoRequest() (request *AddCasterMarkPicInfoRequest) {
+    request = &AddCasterMarkPicInfoRequest{
+        BaseRequest: &tchttp.BaseRequest{},
+    }
+    
+    request.Init().WithApiInfo("live", APIVersion, "AddCasterMarkPicInfo")
+    
+    
+    return
+}
+
+func NewAddCasterMarkPicInfoResponse() (response *AddCasterMarkPicInfoResponse) {
+    response = &AddCasterMarkPicInfoResponse{
+        BaseResponse: &tchttp.BaseResponse{},
+    } 
+    return
+
+}
+
+// AddCasterMarkPicInfo
+// 该接口用来新增图片水印。
+//
+// 可能返回的错误码:
+//  FAILEDOPERATION = "FailedOperation"
+//  FAILEDOPERATION_CASTERNOTFOUND = "FailedOperation.CasterNotFound"
+//  FAILEDOPERATION_MARKPICALREADYEXIST = "FailedOperation.MarkPicAlreadyExist"
+//  INTERNALERROR = "InternalError"
+//  INVALIDPARAMETER = "InvalidParameter"
+//  RESOURCENOTFOUND_FORBIDSERVICE = "ResourceNotFound.ForbidService"
+//  RESOURCENOTFOUND_FREEZESERVICE = "ResourceNotFound.FreezeService"
+//  RESOURCENOTFOUND_STOPSERVICE = "ResourceNotFound.StopService"
+//  RESOURCENOTFOUND_USERDISABLESERVICE = "ResourceNotFound.UserDisableService"
+//  RESOURCENOTFOUND_USERNOTEXIST = "ResourceNotFound.UserNotExist"
+//  UNKNOWNPARAMETER = "UnknownParameter"
+//  UNSUPPORTEDOPERATION = "UnsupportedOperation"
+func (c *Client) AddCasterMarkPicInfo(request *AddCasterMarkPicInfoRequest) (response *AddCasterMarkPicInfoResponse, err error) {
+    return c.AddCasterMarkPicInfoWithContext(context.Background(), request)
+}
+
+// AddCasterMarkPicInfo
+// 该接口用来新增图片水印。
+//
+// 可能返回的错误码:
+//  FAILEDOPERATION = "FailedOperation"
+//  FAILEDOPERATION_CASTERNOTFOUND = "FailedOperation.CasterNotFound"
+//  FAILEDOPERATION_MARKPICALREADYEXIST = "FailedOperation.MarkPicAlreadyExist"
+//  INTERNALERROR = "InternalError"
+//  INVALIDPARAMETER = "InvalidParameter"
+//  RESOURCENOTFOUND_FORBIDSERVICE = "ResourceNotFound.ForbidService"
+//  RESOURCENOTFOUND_FREEZESERVICE = "ResourceNotFound.FreezeService"
+//  RESOURCENOTFOUND_STOPSERVICE = "ResourceNotFound.StopService"
+//  RESOURCENOTFOUND_USERDISABLESERVICE = "ResourceNotFound.UserDisableService"
+//  RESOURCENOTFOUND_USERNOTEXIST = "ResourceNotFound.UserNotExist"
+//  UNKNOWNPARAMETER = "UnknownParameter"
+//  UNSUPPORTEDOPERATION = "UnsupportedOperation"
+func (c *Client) AddCasterMarkPicInfoWithContext(ctx context.Context, request *AddCasterMarkPicInfoRequest) (response *AddCasterMarkPicInfoResponse, err error) {
+    if request == nil {
+        request = NewAddCasterMarkPicInfoRequest()
+    }
+    c.InitBaseRequest(&request.BaseRequest, "live", APIVersion, "AddCasterMarkPicInfo")
+    
+    if c.GetCredential() == nil {
+        return nil, errors.New("AddCasterMarkPicInfo require credential")
+    }
+
+    request.SetContext(ctx)
+    
+    response = NewAddCasterMarkPicInfoResponse()
+    err = c.Send(request, response)
+    return
+}
+
+func NewAddCasterMarkWordInfoRequest() (request *AddCasterMarkWordInfoRequest) {
+    request = &AddCasterMarkWordInfoRequest{
+        BaseRequest: &tchttp.BaseRequest{},
+    }
+    
+    request.Init().WithApiInfo("live", APIVersion, "AddCasterMarkWordInfo")
+    
+    
+    return
+}
+
+func NewAddCasterMarkWordInfoResponse() (response *AddCasterMarkWordInfoResponse) {
+    response = &AddCasterMarkWordInfoResponse{
+        BaseResponse: &tchttp.BaseResponse{},
+    } 
+    return
+
+}
+
+// AddCasterMarkWordInfo
+// 为导播台添加文本配置。
+//
+// 可能返回的错误码:
+//  FAILEDOPERATION = "FailedOperation"
+//  FAILEDOPERATION_CASTERNOTFOUND = "FailedOperation.CasterNotFound"
+//  FAILEDOPERATION_MARKWORDALREADYEXIST = "FailedOperation.MarkWordAlreadyExist"
+//  INTERNALERROR = "InternalError"
+//  INVALIDPARAMETER = "InvalidParameter"
+//  RESOURCENOTFOUND_FORBIDSERVICE = "ResourceNotFound.ForbidService"
+//  RESOURCENOTFOUND_FREEZESERVICE = "ResourceNotFound.FreezeService"
+//  RESOURCENOTFOUND_STOPSERVICE = "ResourceNotFound.StopService"
+//  RESOURCENOTFOUND_USERDISABLESERVICE = "ResourceNotFound.UserDisableService"
+//  RESOURCENOTFOUND_USERNOTEXIST = "ResourceNotFound.UserNotExist"
+//  UNAUTHORIZEDOPERATION = "UnauthorizedOperation"
+//  UNKNOWNPARAMETER = "UnknownParameter"
+//  UNSUPPORTEDOPERATION = "UnsupportedOperation"
+func (c *Client) AddCasterMarkWordInfo(request *AddCasterMarkWordInfoRequest) (response *AddCasterMarkWordInfoResponse, err error) {
+    return c.AddCasterMarkWordInfoWithContext(context.Background(), request)
+}
+
+// AddCasterMarkWordInfo
+// 为导播台添加文本配置。
+//
+// 可能返回的错误码:
+//  FAILEDOPERATION = "FailedOperation"
+//  FAILEDOPERATION_CASTERNOTFOUND = "FailedOperation.CasterNotFound"
+//  FAILEDOPERATION_MARKWORDALREADYEXIST = "FailedOperation.MarkWordAlreadyExist"
+//  INTERNALERROR = "InternalError"
+//  INVALIDPARAMETER = "InvalidParameter"
+//  RESOURCENOTFOUND_FORBIDSERVICE = "ResourceNotFound.ForbidService"
+//  RESOURCENOTFOUND_FREEZESERVICE = "ResourceNotFound.FreezeService"
+//  RESOURCENOTFOUND_STOPSERVICE = "ResourceNotFound.StopService"
+//  RESOURCENOTFOUND_USERDISABLESERVICE = "ResourceNotFound.UserDisableService"
+//  RESOURCENOTFOUND_USERNOTEXIST = "ResourceNotFound.UserNotExist"
+//  UNAUTHORIZEDOPERATION = "UnauthorizedOperation"
+//  UNKNOWNPARAMETER = "UnknownParameter"
+//  UNSUPPORTEDOPERATION = "UnsupportedOperation"
+func (c *Client) AddCasterMarkWordInfoWithContext(ctx context.Context, request *AddCasterMarkWordInfoRequest) (response *AddCasterMarkWordInfoResponse, err error) {
+    if request == nil {
+        request = NewAddCasterMarkWordInfoRequest()
+    }
+    c.InitBaseRequest(&request.BaseRequest, "live", APIVersion, "AddCasterMarkWordInfo")
+    
+    if c.GetCredential() == nil {
+        return nil, errors.New("AddCasterMarkWordInfo require credential")
+    }
+
+    request.SetContext(ctx)
+    
+    response = NewAddCasterMarkWordInfoResponse()
+    err = c.Send(request, response)
+    return
+}
+
+func NewAddCasterOutputInfoRequest() (request *AddCasterOutputInfoRequest) {
+    request = &AddCasterOutputInfoRequest{
+        BaseRequest: &tchttp.BaseRequest{},
+    }
+    
+    request.Init().WithApiInfo("live", APIVersion, "AddCasterOutputInfo")
+    
+    
+    return
+}
+
+func NewAddCasterOutputInfoResponse() (response *AddCasterOutputInfoResponse) {
+    response = &AddCasterOutputInfoResponse{
+        BaseResponse: &tchttp.BaseResponse{},
+    } 
+    return
+
+}
+
+// AddCasterOutputInfo
+// 该接口用来新增导播台推流信息。导播台主监启动后，将会将主监画面推向该接口设置的地址。
+//
+// 可能返回的错误码:
+//  FAILEDOPERATION_CASTERNOTFOUND = "FailedOperation.CasterNotFound"
+//  FAILEDOPERATION_OUTPUTALREADYEXIST = "FailedOperation.OutputAlreadyExist"
+//  INTERNALERROR = "InternalError"
+//  INVALIDPARAMETER = "InvalidParameter"
+//  INVALIDPARAMETER_INVALIDURL = "InvalidParameter.InvalidUrl"
+//  RESOURCENOTFOUND_FORBIDSERVICE = "ResourceNotFound.ForbidService"
+//  RESOURCENOTFOUND_FREEZESERVICE = "ResourceNotFound.FreezeService"
+//  RESOURCENOTFOUND_STOPSERVICE = "ResourceNotFound.StopService"
+//  RESOURCENOTFOUND_USERDISABLESERVICE = "ResourceNotFound.UserDisableService"
+//  RESOURCENOTFOUND_USERNOTEXIST = "ResourceNotFound.UserNotExist"
+//  UNKNOWNPARAMETER = "UnknownParameter"
+//  UNSUPPORTEDOPERATION = "UnsupportedOperation"
+func (c *Client) AddCasterOutputInfo(request *AddCasterOutputInfoRequest) (response *AddCasterOutputInfoResponse, err error) {
+    return c.AddCasterOutputInfoWithContext(context.Background(), request)
+}
+
+// AddCasterOutputInfo
+// 该接口用来新增导播台推流信息。导播台主监启动后，将会将主监画面推向该接口设置的地址。
+//
+// 可能返回的错误码:
+//  FAILEDOPERATION_CASTERNOTFOUND = "FailedOperation.CasterNotFound"
+//  FAILEDOPERATION_OUTPUTALREADYEXIST = "FailedOperation.OutputAlreadyExist"
+//  INTERNALERROR = "InternalError"
+//  INVALIDPARAMETER = "InvalidParameter"
+//  INVALIDPARAMETER_INVALIDURL = "InvalidParameter.InvalidUrl"
+//  RESOURCENOTFOUND_FORBIDSERVICE = "ResourceNotFound.ForbidService"
+//  RESOURCENOTFOUND_FREEZESERVICE = "ResourceNotFound.FreezeService"
+//  RESOURCENOTFOUND_STOPSERVICE = "ResourceNotFound.StopService"
+//  RESOURCENOTFOUND_USERDISABLESERVICE = "ResourceNotFound.UserDisableService"
+//  RESOURCENOTFOUND_USERNOTEXIST = "ResourceNotFound.UserNotExist"
+//  UNKNOWNPARAMETER = "UnknownParameter"
+//  UNSUPPORTEDOPERATION = "UnsupportedOperation"
+func (c *Client) AddCasterOutputInfoWithContext(ctx context.Context, request *AddCasterOutputInfoRequest) (response *AddCasterOutputInfoResponse, err error) {
+    if request == nil {
+        request = NewAddCasterOutputInfoRequest()
+    }
+    c.InitBaseRequest(&request.BaseRequest, "live", APIVersion, "AddCasterOutputInfo")
+    
+    if c.GetCredential() == nil {
+        return nil, errors.New("AddCasterOutputInfo require credential")
+    }
+
+    request.SetContext(ctx)
+    
+    response = NewAddCasterOutputInfoResponse()
+    err = c.Send(request, response)
+    return
+}
 
 func NewAddDelayLiveStreamRequest() (request *AddDelayLiveStreamRequest) {
     request = &AddDelayLiveStreamRequest{
@@ -126,6 +498,7 @@ func (c *Client) AddDelayLiveStreamWithContext(ctx context.Context, request *Add
     if request == nil {
         request = NewAddDelayLiveStreamRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "live", APIVersion, "AddDelayLiveStream")
     
     if c.GetCredential() == nil {
         return nil, errors.New("AddDelayLiveStream require credential")
@@ -251,6 +624,7 @@ func (c *Client) AddLiveDomainWithContext(ctx context.Context, request *AddLiveD
     if request == nil {
         request = NewAddLiveDomainRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "live", APIVersion, "AddLiveDomain")
     
     if c.GetCredential() == nil {
         return nil, errors.New("AddLiveDomain require credential")
@@ -316,6 +690,7 @@ func (c *Client) AddLiveWatermarkWithContext(ctx context.Context, request *AddLi
     if request == nil {
         request = NewAddLiveWatermarkRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "live", APIVersion, "AddLiveWatermark")
     
     if c.GetCredential() == nil {
         return nil, errors.New("AddLiveWatermark require credential")
@@ -369,6 +744,7 @@ func (c *Client) AuthenticateDomainOwnerWithContext(ctx context.Context, request
     if request == nil {
         request = NewAuthenticateDomainOwnerRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "live", APIVersion, "AuthenticateDomainOwner")
     
     if c.GetCredential() == nil {
         return nil, errors.New("AuthenticateDomainOwner require credential")
@@ -440,6 +816,7 @@ func (c *Client) CancelCommonMixStreamWithContext(ctx context.Context, request *
     if request == nil {
         request = NewCancelCommonMixStreamRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "live", APIVersion, "CancelCommonMixStream")
     
     if c.GetCredential() == nil {
         return nil, errors.New("CancelCommonMixStream require credential")
@@ -448,6 +825,680 @@ func (c *Client) CancelCommonMixStreamWithContext(ctx context.Context, request *
     request.SetContext(ctx)
     
     response = NewCancelCommonMixStreamResponse()
+    err = c.Send(request, response)
+    return
+}
+
+func NewCloseSourceStreamRequest() (request *CloseSourceStreamRequest) {
+    request = &CloseSourceStreamRequest{
+        BaseRequest: &tchttp.BaseRequest{},
+    }
+    
+    request.Init().WithApiInfo("live", APIVersion, "CloseSourceStream")
+    
+    
+    return
+}
+
+func NewCloseSourceStreamResponse() (response *CloseSourceStreamResponse) {
+    response = &CloseSourceStreamResponse{
+        BaseResponse: &tchttp.BaseResponse{},
+    } 
+    return
+
+}
+
+// CloseSourceStream
+// 用于关闭回源客户源站功能
+//
+// 可能返回的错误码:
+//  FAILEDOPERATION = "FailedOperation"
+//  INTERNALERROR_DBERROR = "InternalError.DBError"
+//  INVALIDPARAMETERVALUE = "InvalidParameterValue"
+//  RESOURCENOTFOUND = "ResourceNotFound"
+//  RESOURCENOTFOUND_FORBIDSERVICE = "ResourceNotFound.ForbidService"
+//  RESOURCENOTFOUND_FREEZESERVICE = "ResourceNotFound.FreezeService"
+//  RESOURCENOTFOUND_STOPSERVICE = "ResourceNotFound.StopService"
+//  RESOURCENOTFOUND_USERDISABLESERVICE = "ResourceNotFound.UserDisableService"
+func (c *Client) CloseSourceStream(request *CloseSourceStreamRequest) (response *CloseSourceStreamResponse, err error) {
+    return c.CloseSourceStreamWithContext(context.Background(), request)
+}
+
+// CloseSourceStream
+// 用于关闭回源客户源站功能
+//
+// 可能返回的错误码:
+//  FAILEDOPERATION = "FailedOperation"
+//  INTERNALERROR_DBERROR = "InternalError.DBError"
+//  INVALIDPARAMETERVALUE = "InvalidParameterValue"
+//  RESOURCENOTFOUND = "ResourceNotFound"
+//  RESOURCENOTFOUND_FORBIDSERVICE = "ResourceNotFound.ForbidService"
+//  RESOURCENOTFOUND_FREEZESERVICE = "ResourceNotFound.FreezeService"
+//  RESOURCENOTFOUND_STOPSERVICE = "ResourceNotFound.StopService"
+//  RESOURCENOTFOUND_USERDISABLESERVICE = "ResourceNotFound.UserDisableService"
+func (c *Client) CloseSourceStreamWithContext(ctx context.Context, request *CloseSourceStreamRequest) (response *CloseSourceStreamResponse, err error) {
+    if request == nil {
+        request = NewCloseSourceStreamRequest()
+    }
+    c.InitBaseRequest(&request.BaseRequest, "live", APIVersion, "CloseSourceStream")
+    
+    if c.GetCredential() == nil {
+        return nil, errors.New("CloseSourceStream require credential")
+    }
+
+    request.SetContext(ctx)
+    
+    response = NewCloseSourceStreamResponse()
+    err = c.Send(request, response)
+    return
+}
+
+func NewCopyCasterRequest() (request *CopyCasterRequest) {
+    request = &CopyCasterRequest{
+        BaseRequest: &tchttp.BaseRequest{},
+    }
+    
+    request.Init().WithApiInfo("live", APIVersion, "CopyCaster")
+    
+    
+    return
+}
+
+func NewCopyCasterResponse() (response *CopyCasterResponse) {
+    response = &CopyCasterResponse{
+        BaseResponse: &tchttp.BaseResponse{},
+    } 
+    return
+
+}
+
+// CopyCaster
+// 该接口用来复制导播台配置
+//
+// 可能返回的错误码:
+//  FAILEDOPERATION = "FailedOperation"
+//  FAILEDOPERATION_CASTERNOTFOUND = "FailedOperation.CasterNotFound"
+//  INTERNALERROR = "InternalError"
+//  INVALIDPARAMETER = "InvalidParameter"
+//  RESOURCENOTFOUND_FORBIDSERVICE = "ResourceNotFound.ForbidService"
+//  RESOURCENOTFOUND_FREEZESERVICE = "ResourceNotFound.FreezeService"
+//  RESOURCENOTFOUND_STOPSERVICE = "ResourceNotFound.StopService"
+//  RESOURCENOTFOUND_USERDISABLESERVICE = "ResourceNotFound.UserDisableService"
+//  RESOURCENOTFOUND_USERNOTEXIST = "ResourceNotFound.UserNotExist"
+//  UNAUTHORIZEDOPERATION = "UnauthorizedOperation"
+//  UNKNOWNPARAMETER = "UnknownParameter"
+//  UNSUPPORTEDOPERATION = "UnsupportedOperation"
+func (c *Client) CopyCaster(request *CopyCasterRequest) (response *CopyCasterResponse, err error) {
+    return c.CopyCasterWithContext(context.Background(), request)
+}
+
+// CopyCaster
+// 该接口用来复制导播台配置
+//
+// 可能返回的错误码:
+//  FAILEDOPERATION = "FailedOperation"
+//  FAILEDOPERATION_CASTERNOTFOUND = "FailedOperation.CasterNotFound"
+//  INTERNALERROR = "InternalError"
+//  INVALIDPARAMETER = "InvalidParameter"
+//  RESOURCENOTFOUND_FORBIDSERVICE = "ResourceNotFound.ForbidService"
+//  RESOURCENOTFOUND_FREEZESERVICE = "ResourceNotFound.FreezeService"
+//  RESOURCENOTFOUND_STOPSERVICE = "ResourceNotFound.StopService"
+//  RESOURCENOTFOUND_USERDISABLESERVICE = "ResourceNotFound.UserDisableService"
+//  RESOURCENOTFOUND_USERNOTEXIST = "ResourceNotFound.UserNotExist"
+//  UNAUTHORIZEDOPERATION = "UnauthorizedOperation"
+//  UNKNOWNPARAMETER = "UnknownParameter"
+//  UNSUPPORTEDOPERATION = "UnsupportedOperation"
+func (c *Client) CopyCasterWithContext(ctx context.Context, request *CopyCasterRequest) (response *CopyCasterResponse, err error) {
+    if request == nil {
+        request = NewCopyCasterRequest()
+    }
+    c.InitBaseRequest(&request.BaseRequest, "live", APIVersion, "CopyCaster")
+    
+    if c.GetCredential() == nil {
+        return nil, errors.New("CopyCaster require credential")
+    }
+
+    request.SetContext(ctx)
+    
+    response = NewCopyCasterResponse()
+    err = c.Send(request, response)
+    return
+}
+
+func NewCopyLiveAvatarRoomRequest() (request *CopyLiveAvatarRoomRequest) {
+    request = &CopyLiveAvatarRoomRequest{
+        BaseRequest: &tchttp.BaseRequest{},
+    }
+    
+    request.Init().WithApiInfo("live", APIVersion, "CopyLiveAvatarRoom")
+    
+    
+    return
+}
+
+func NewCopyLiveAvatarRoomResponse() (response *CopyLiveAvatarRoomResponse) {
+    response = &CopyLiveAvatarRoomResponse{
+        BaseResponse: &tchttp.BaseResponse{},
+    } 
+    return
+
+}
+
+// CopyLiveAvatarRoom
+// 调用该接口，用于复制数字人直播间。
+//
+// 可能返回的错误码:
+//  FAILEDOPERATION = "FailedOperation"
+//  FAILEDOPERATION_CASTERNOTFOUND = "FailedOperation.CasterNotFound"
+//  INTERNALERROR = "InternalError"
+//  INVALIDPARAMETER = "InvalidParameter"
+//  RESOURCENOTFOUND_FORBIDSERVICE = "ResourceNotFound.ForbidService"
+//  RESOURCENOTFOUND_FREEZESERVICE = "ResourceNotFound.FreezeService"
+//  RESOURCENOTFOUND_STOPSERVICE = "ResourceNotFound.StopService"
+//  RESOURCENOTFOUND_USERDISABLESERVICE = "ResourceNotFound.UserDisableService"
+//  RESOURCENOTFOUND_USERNOTEXIST = "ResourceNotFound.UserNotExist"
+//  UNAUTHORIZEDOPERATION = "UnauthorizedOperation"
+//  UNKNOWNPARAMETER = "UnknownParameter"
+//  UNSUPPORTEDOPERATION = "UnsupportedOperation"
+func (c *Client) CopyLiveAvatarRoom(request *CopyLiveAvatarRoomRequest) (response *CopyLiveAvatarRoomResponse, err error) {
+    return c.CopyLiveAvatarRoomWithContext(context.Background(), request)
+}
+
+// CopyLiveAvatarRoom
+// 调用该接口，用于复制数字人直播间。
+//
+// 可能返回的错误码:
+//  FAILEDOPERATION = "FailedOperation"
+//  FAILEDOPERATION_CASTERNOTFOUND = "FailedOperation.CasterNotFound"
+//  INTERNALERROR = "InternalError"
+//  INVALIDPARAMETER = "InvalidParameter"
+//  RESOURCENOTFOUND_FORBIDSERVICE = "ResourceNotFound.ForbidService"
+//  RESOURCENOTFOUND_FREEZESERVICE = "ResourceNotFound.FreezeService"
+//  RESOURCENOTFOUND_STOPSERVICE = "ResourceNotFound.StopService"
+//  RESOURCENOTFOUND_USERDISABLESERVICE = "ResourceNotFound.UserDisableService"
+//  RESOURCENOTFOUND_USERNOTEXIST = "ResourceNotFound.UserNotExist"
+//  UNAUTHORIZEDOPERATION = "UnauthorizedOperation"
+//  UNKNOWNPARAMETER = "UnknownParameter"
+//  UNSUPPORTEDOPERATION = "UnsupportedOperation"
+func (c *Client) CopyLiveAvatarRoomWithContext(ctx context.Context, request *CopyLiveAvatarRoomRequest) (response *CopyLiveAvatarRoomResponse, err error) {
+    if request == nil {
+        request = NewCopyLiveAvatarRoomRequest()
+    }
+    c.InitBaseRequest(&request.BaseRequest, "live", APIVersion, "CopyLiveAvatarRoom")
+    
+    if c.GetCredential() == nil {
+        return nil, errors.New("CopyLiveAvatarRoom require credential")
+    }
+
+    request.SetContext(ctx)
+    
+    response = NewCopyLiveAvatarRoomResponse()
+    err = c.Send(request, response)
+    return
+}
+
+func NewCreateAuditKeywordLibRequest() (request *CreateAuditKeywordLibRequest) {
+    request = &CreateAuditKeywordLibRequest{
+        BaseRequest: &tchttp.BaseRequest{},
+    }
+    
+    request.Init().WithApiInfo("live", APIVersion, "CreateAuditKeywordLib")
+    
+    
+    return
+}
+
+func NewCreateAuditKeywordLibResponse() (response *CreateAuditKeywordLibResponse) {
+    response = &CreateAuditKeywordLibResponse{
+        BaseResponse: &tchttp.BaseResponse{},
+    } 
+    return
+
+}
+
+// CreateAuditKeywordLib
+// 创建关键词库，直播审核功能使用。
+//
+// 可能返回的错误码:
+//  FAILEDOPERATION = "FailedOperation"
+func (c *Client) CreateAuditKeywordLib(request *CreateAuditKeywordLibRequest) (response *CreateAuditKeywordLibResponse, err error) {
+    return c.CreateAuditKeywordLibWithContext(context.Background(), request)
+}
+
+// CreateAuditKeywordLib
+// 创建关键词库，直播审核功能使用。
+//
+// 可能返回的错误码:
+//  FAILEDOPERATION = "FailedOperation"
+func (c *Client) CreateAuditKeywordLibWithContext(ctx context.Context, request *CreateAuditKeywordLibRequest) (response *CreateAuditKeywordLibResponse, err error) {
+    if request == nil {
+        request = NewCreateAuditKeywordLibRequest()
+    }
+    c.InitBaseRequest(&request.BaseRequest, "live", APIVersion, "CreateAuditKeywordLib")
+    
+    if c.GetCredential() == nil {
+        return nil, errors.New("CreateAuditKeywordLib require credential")
+    }
+
+    request.SetContext(ctx)
+    
+    response = NewCreateAuditKeywordLibResponse()
+    err = c.Send(request, response)
+    return
+}
+
+func NewCreateAuditKeywordsRequest() (request *CreateAuditKeywordsRequest) {
+    request = &CreateAuditKeywordsRequest{
+        BaseRequest: &tchttp.BaseRequest{},
+    }
+    
+    request.Init().WithApiInfo("live", APIVersion, "CreateAuditKeywords")
+    
+    
+    return
+}
+
+func NewCreateAuditKeywordsResponse() (response *CreateAuditKeywordsResponse) {
+    response = &CreateAuditKeywordsResponse{
+        BaseResponse: &tchttp.BaseResponse{},
+    } 
+    return
+
+}
+
+// CreateAuditKeywords
+// 创建关键词，并关联到关键词库。
+//
+// 可能返回的错误码:
+//  FAILEDOPERATION = "FailedOperation"
+func (c *Client) CreateAuditKeywords(request *CreateAuditKeywordsRequest) (response *CreateAuditKeywordsResponse, err error) {
+    return c.CreateAuditKeywordsWithContext(context.Background(), request)
+}
+
+// CreateAuditKeywords
+// 创建关键词，并关联到关键词库。
+//
+// 可能返回的错误码:
+//  FAILEDOPERATION = "FailedOperation"
+func (c *Client) CreateAuditKeywordsWithContext(ctx context.Context, request *CreateAuditKeywordsRequest) (response *CreateAuditKeywordsResponse, err error) {
+    if request == nil {
+        request = NewCreateAuditKeywordsRequest()
+    }
+    c.InitBaseRequest(&request.BaseRequest, "live", APIVersion, "CreateAuditKeywords")
+    
+    if c.GetCredential() == nil {
+        return nil, errors.New("CreateAuditKeywords require credential")
+    }
+
+    request.SetContext(ctx)
+    
+    response = NewCreateAuditKeywordsResponse()
+    err = c.Send(request, response)
+    return
+}
+
+func NewCreateCasterRequest() (request *CreateCasterRequest) {
+    request = &CreateCasterRequest{
+        BaseRequest: &tchttp.BaseRequest{},
+    }
+    
+    request.Init().WithApiInfo("live", APIVersion, "CreateCaster")
+    
+    
+    return
+}
+
+func NewCreateCasterResponse() (response *CreateCasterResponse) {
+    response = &CreateCasterResponse{
+        BaseResponse: &tchttp.BaseResponse{},
+    } 
+    return
+
+}
+
+// CreateCaster
+// 该接口用来创建新的导播台
+//
+// 可能返回的错误码:
+//  INTERNALERROR = "InternalError"
+//  INVALIDPARAMETER = "InvalidParameter"
+//  RESOURCENOTFOUND_FORBIDSERVICE = "ResourceNotFound.ForbidService"
+//  RESOURCENOTFOUND_FREEZESERVICE = "ResourceNotFound.FreezeService"
+//  RESOURCENOTFOUND_STOPSERVICE = "ResourceNotFound.StopService"
+//  RESOURCENOTFOUND_USERDISABLESERVICE = "ResourceNotFound.UserDisableService"
+//  RESOURCENOTFOUND_USERNOTEXIST = "ResourceNotFound.UserNotExist"
+//  UNKNOWNPARAMETER = "UnknownParameter"
+//  UNSUPPORTEDOPERATION = "UnsupportedOperation"
+func (c *Client) CreateCaster(request *CreateCasterRequest) (response *CreateCasterResponse, err error) {
+    return c.CreateCasterWithContext(context.Background(), request)
+}
+
+// CreateCaster
+// 该接口用来创建新的导播台
+//
+// 可能返回的错误码:
+//  INTERNALERROR = "InternalError"
+//  INVALIDPARAMETER = "InvalidParameter"
+//  RESOURCENOTFOUND_FORBIDSERVICE = "ResourceNotFound.ForbidService"
+//  RESOURCENOTFOUND_FREEZESERVICE = "ResourceNotFound.FreezeService"
+//  RESOURCENOTFOUND_STOPSERVICE = "ResourceNotFound.StopService"
+//  RESOURCENOTFOUND_USERDISABLESERVICE = "ResourceNotFound.UserDisableService"
+//  RESOURCENOTFOUND_USERNOTEXIST = "ResourceNotFound.UserNotExist"
+//  UNKNOWNPARAMETER = "UnknownParameter"
+//  UNSUPPORTEDOPERATION = "UnsupportedOperation"
+func (c *Client) CreateCasterWithContext(ctx context.Context, request *CreateCasterRequest) (response *CreateCasterResponse, err error) {
+    if request == nil {
+        request = NewCreateCasterRequest()
+    }
+    c.InitBaseRequest(&request.BaseRequest, "live", APIVersion, "CreateCaster")
+    
+    if c.GetCredential() == nil {
+        return nil, errors.New("CreateCaster require credential")
+    }
+
+    request.SetContext(ctx)
+    
+    response = NewCreateCasterResponse()
+    err = c.Send(request, response)
+    return
+}
+
+func NewCreateCasterInputPushUrlRequest() (request *CreateCasterInputPushUrlRequest) {
+    request = &CreateCasterInputPushUrlRequest{
+        BaseRequest: &tchttp.BaseRequest{},
+    }
+    
+    request.Init().WithApiInfo("live", APIVersion, "CreateCasterInputPushUrl")
+    
+    
+    return
+}
+
+func NewCreateCasterInputPushUrlResponse() (response *CreateCasterInputPushUrlResponse) {
+    response = &CreateCasterInputPushUrlResponse{
+        BaseResponse: &tchttp.BaseResponse{},
+    } 
+    return
+
+}
+
+// CreateCasterInputPushUrl
+// 该接口用来生成导播台推流地址
+//
+// 可能返回的错误码:
+//  INTERNALERROR = "InternalError"
+//  INVALIDPARAMETER = "InvalidParameter"
+//  INVALIDPARAMETER_INVALIDPROTOCOL = "InvalidParameter.InvalidProtocol"
+//  RESOURCENOTFOUND_FORBIDSERVICE = "ResourceNotFound.ForbidService"
+//  RESOURCENOTFOUND_FREEZESERVICE = "ResourceNotFound.FreezeService"
+//  RESOURCENOTFOUND_STOPSERVICE = "ResourceNotFound.StopService"
+//  RESOURCENOTFOUND_USERDISABLESERVICE = "ResourceNotFound.UserDisableService"
+//  RESOURCENOTFOUND_USERNOTEXIST = "ResourceNotFound.UserNotExist"
+//  UNKNOWNPARAMETER = "UnknownParameter"
+//  UNSUPPORTEDOPERATION = "UnsupportedOperation"
+func (c *Client) CreateCasterInputPushUrl(request *CreateCasterInputPushUrlRequest) (response *CreateCasterInputPushUrlResponse, err error) {
+    return c.CreateCasterInputPushUrlWithContext(context.Background(), request)
+}
+
+// CreateCasterInputPushUrl
+// 该接口用来生成导播台推流地址
+//
+// 可能返回的错误码:
+//  INTERNALERROR = "InternalError"
+//  INVALIDPARAMETER = "InvalidParameter"
+//  INVALIDPARAMETER_INVALIDPROTOCOL = "InvalidParameter.InvalidProtocol"
+//  RESOURCENOTFOUND_FORBIDSERVICE = "ResourceNotFound.ForbidService"
+//  RESOURCENOTFOUND_FREEZESERVICE = "ResourceNotFound.FreezeService"
+//  RESOURCENOTFOUND_STOPSERVICE = "ResourceNotFound.StopService"
+//  RESOURCENOTFOUND_USERDISABLESERVICE = "ResourceNotFound.UserDisableService"
+//  RESOURCENOTFOUND_USERNOTEXIST = "ResourceNotFound.UserNotExist"
+//  UNKNOWNPARAMETER = "UnknownParameter"
+//  UNSUPPORTEDOPERATION = "UnsupportedOperation"
+func (c *Client) CreateCasterInputPushUrlWithContext(ctx context.Context, request *CreateCasterInputPushUrlRequest) (response *CreateCasterInputPushUrlResponse, err error) {
+    if request == nil {
+        request = NewCreateCasterInputPushUrlRequest()
+    }
+    c.InitBaseRequest(&request.BaseRequest, "live", APIVersion, "CreateCasterInputPushUrl")
+    
+    if c.GetCredential() == nil {
+        return nil, errors.New("CreateCasterInputPushUrl require credential")
+    }
+
+    request.SetContext(ctx)
+    
+    response = NewCreateCasterInputPushUrlResponse()
+    err = c.Send(request, response)
+    return
+}
+
+func NewCreateCasterPgmRequest() (request *CreateCasterPgmRequest) {
+    request = &CreateCasterPgmRequest{
+        BaseRequest: &tchttp.BaseRequest{},
+    }
+    
+    request.Init().WithApiInfo("live", APIVersion, "CreateCasterPgm")
+    
+    
+    return
+}
+
+func NewCreateCasterPgmResponse() (response *CreateCasterPgmResponse) {
+    response = &CreateCasterPgmResponse{
+        BaseResponse: &tchttp.BaseResponse{},
+    } 
+    return
+
+}
+
+// CreateCasterPgm
+// 该接口用来启动主监任务，并将获取主监画面的播放地址。
+//
+// 可能返回的错误码:
+//  FAILEDOPERATION_CASTERNOTFOUND = "FailedOperation.CasterNotFound"
+//  FAILEDOPERATION_CREATECASTERTASKFAILED = "FailedOperation.CreateCasterTaskFailed"
+//  FAILEDOPERATION_NOLVBPUSHORPLAYDOMAIN = "FailedOperation.NoLVBPushOrPlayDomain"
+//  FAILEDOPERATION_RESOURCENOTENOUGH = "FailedOperation.ResourceNotEnough"
+//  INTERNALERROR = "InternalError"
+//  INVALIDPARAMETER = "InvalidParameter"
+//  RESOURCENOTFOUND_FORBIDSERVICE = "ResourceNotFound.ForbidService"
+//  RESOURCENOTFOUND_FREEZESERVICE = "ResourceNotFound.FreezeService"
+//  RESOURCENOTFOUND_NOTBINDPACKAGE = "ResourceNotFound.NotBindPackage"
+//  RESOURCENOTFOUND_STOPSERVICE = "ResourceNotFound.StopService"
+//  RESOURCENOTFOUND_USERDISABLESERVICE = "ResourceNotFound.UserDisableService"
+//  RESOURCENOTFOUND_USERNOTEXIST = "ResourceNotFound.UserNotExist"
+//  UNKNOWNPARAMETER = "UnknownParameter"
+//  UNSUPPORTEDOPERATION = "UnsupportedOperation"
+func (c *Client) CreateCasterPgm(request *CreateCasterPgmRequest) (response *CreateCasterPgmResponse, err error) {
+    return c.CreateCasterPgmWithContext(context.Background(), request)
+}
+
+// CreateCasterPgm
+// 该接口用来启动主监任务，并将获取主监画面的播放地址。
+//
+// 可能返回的错误码:
+//  FAILEDOPERATION_CASTERNOTFOUND = "FailedOperation.CasterNotFound"
+//  FAILEDOPERATION_CREATECASTERTASKFAILED = "FailedOperation.CreateCasterTaskFailed"
+//  FAILEDOPERATION_NOLVBPUSHORPLAYDOMAIN = "FailedOperation.NoLVBPushOrPlayDomain"
+//  FAILEDOPERATION_RESOURCENOTENOUGH = "FailedOperation.ResourceNotEnough"
+//  INTERNALERROR = "InternalError"
+//  INVALIDPARAMETER = "InvalidParameter"
+//  RESOURCENOTFOUND_FORBIDSERVICE = "ResourceNotFound.ForbidService"
+//  RESOURCENOTFOUND_FREEZESERVICE = "ResourceNotFound.FreezeService"
+//  RESOURCENOTFOUND_NOTBINDPACKAGE = "ResourceNotFound.NotBindPackage"
+//  RESOURCENOTFOUND_STOPSERVICE = "ResourceNotFound.StopService"
+//  RESOURCENOTFOUND_USERDISABLESERVICE = "ResourceNotFound.UserDisableService"
+//  RESOURCENOTFOUND_USERNOTEXIST = "ResourceNotFound.UserNotExist"
+//  UNKNOWNPARAMETER = "UnknownParameter"
+//  UNSUPPORTEDOPERATION = "UnsupportedOperation"
+func (c *Client) CreateCasterPgmWithContext(ctx context.Context, request *CreateCasterPgmRequest) (response *CreateCasterPgmResponse, err error) {
+    if request == nil {
+        request = NewCreateCasterPgmRequest()
+    }
+    c.InitBaseRequest(&request.BaseRequest, "live", APIVersion, "CreateCasterPgm")
+    
+    if c.GetCredential() == nil {
+        return nil, errors.New("CreateCasterPgm require credential")
+    }
+
+    request.SetContext(ctx)
+    
+    response = NewCreateCasterPgmResponse()
+    err = c.Send(request, response)
+    return
+}
+
+func NewCreateCasterPgmFromPvwRequest() (request *CreateCasterPgmFromPvwRequest) {
+    request = &CreateCasterPgmFromPvwRequest{
+        BaseRequest: &tchttp.BaseRequest{},
+    }
+    
+    request.Init().WithApiInfo("live", APIVersion, "CreateCasterPgmFromPvw")
+    
+    
+    return
+}
+
+func NewCreateCasterPgmFromPvwResponse() (response *CreateCasterPgmFromPvwResponse) {
+    response = &CreateCasterPgmFromPvwResponse{
+        BaseResponse: &tchttp.BaseResponse{},
+    } 
+    return
+
+}
+
+// CreateCasterPgmFromPvw
+// 该接口用来将预监画面的布局、水印、字幕等配置，复制到主监画面中。
+//
+// 该接口使用时，预监任务需处于运行状态。
+//
+// 可能返回的错误码:
+//  FAILEDOPERATION_CASTEREXPIRED = "FailedOperation.CasterExpired"
+//  FAILEDOPERATION_CASTERNOTFOUND = "FailedOperation.CasterNotFound"
+//  FAILEDOPERATION_CREATECASTERTASKFAILED = "FailedOperation.CreateCasterTaskFailed"
+//  FAILEDOPERATION_NOLVBPUSHORPLAYDOMAIN = "FailedOperation.NoLVBPushOrPlayDomain"
+//  FAILEDOPERATION_RESOURCENOTENOUGH = "FailedOperation.ResourceNotEnough"
+//  INTERNALERROR = "InternalError"
+//  INVALIDPARAMETER = "InvalidParameter"
+//  RESOURCENOTFOUND_FORBIDSERVICE = "ResourceNotFound.ForbidService"
+//  RESOURCENOTFOUND_FREEZESERVICE = "ResourceNotFound.FreezeService"
+//  RESOURCENOTFOUND_NOTBINDPACKAGE = "ResourceNotFound.NotBindPackage"
+//  RESOURCENOTFOUND_STOPSERVICE = "ResourceNotFound.StopService"
+//  RESOURCENOTFOUND_USERDISABLESERVICE = "ResourceNotFound.UserDisableService"
+//  RESOURCENOTFOUND_USERNOTEXIST = "ResourceNotFound.UserNotExist"
+//  UNKNOWNPARAMETER = "UnknownParameter"
+//  UNSUPPORTEDOPERATION = "UnsupportedOperation"
+func (c *Client) CreateCasterPgmFromPvw(request *CreateCasterPgmFromPvwRequest) (response *CreateCasterPgmFromPvwResponse, err error) {
+    return c.CreateCasterPgmFromPvwWithContext(context.Background(), request)
+}
+
+// CreateCasterPgmFromPvw
+// 该接口用来将预监画面的布局、水印、字幕等配置，复制到主监画面中。
+//
+// 该接口使用时，预监任务需处于运行状态。
+//
+// 可能返回的错误码:
+//  FAILEDOPERATION_CASTEREXPIRED = "FailedOperation.CasterExpired"
+//  FAILEDOPERATION_CASTERNOTFOUND = "FailedOperation.CasterNotFound"
+//  FAILEDOPERATION_CREATECASTERTASKFAILED = "FailedOperation.CreateCasterTaskFailed"
+//  FAILEDOPERATION_NOLVBPUSHORPLAYDOMAIN = "FailedOperation.NoLVBPushOrPlayDomain"
+//  FAILEDOPERATION_RESOURCENOTENOUGH = "FailedOperation.ResourceNotEnough"
+//  INTERNALERROR = "InternalError"
+//  INVALIDPARAMETER = "InvalidParameter"
+//  RESOURCENOTFOUND_FORBIDSERVICE = "ResourceNotFound.ForbidService"
+//  RESOURCENOTFOUND_FREEZESERVICE = "ResourceNotFound.FreezeService"
+//  RESOURCENOTFOUND_NOTBINDPACKAGE = "ResourceNotFound.NotBindPackage"
+//  RESOURCENOTFOUND_STOPSERVICE = "ResourceNotFound.StopService"
+//  RESOURCENOTFOUND_USERDISABLESERVICE = "ResourceNotFound.UserDisableService"
+//  RESOURCENOTFOUND_USERNOTEXIST = "ResourceNotFound.UserNotExist"
+//  UNKNOWNPARAMETER = "UnknownParameter"
+//  UNSUPPORTEDOPERATION = "UnsupportedOperation"
+func (c *Client) CreateCasterPgmFromPvwWithContext(ctx context.Context, request *CreateCasterPgmFromPvwRequest) (response *CreateCasterPgmFromPvwResponse, err error) {
+    if request == nil {
+        request = NewCreateCasterPgmFromPvwRequest()
+    }
+    c.InitBaseRequest(&request.BaseRequest, "live", APIVersion, "CreateCasterPgmFromPvw")
+    
+    if c.GetCredential() == nil {
+        return nil, errors.New("CreateCasterPgmFromPvw require credential")
+    }
+
+    request.SetContext(ctx)
+    
+    response = NewCreateCasterPgmFromPvwResponse()
+    err = c.Send(request, response)
+    return
+}
+
+func NewCreateCasterPvwRequest() (request *CreateCasterPvwRequest) {
+    request = &CreateCasterPvwRequest{
+        BaseRequest: &tchttp.BaseRequest{},
+    }
+    
+    request.Init().WithApiInfo("live", APIVersion, "CreateCasterPvw")
+    
+    
+    return
+}
+
+func NewCreateCasterPvwResponse() (response *CreateCasterPvwResponse) {
+    response = &CreateCasterPvwResponse{
+        BaseResponse: &tchttp.BaseResponse{},
+    } 
+    return
+
+}
+
+// CreateCasterPvw
+// 该接口用来启动预监任务，并将获取预监画面的播放地址。
+//
+// 可能返回的错误码:
+//  FAILEDOPERATION_CASTEREXPIRED = "FailedOperation.CasterExpired"
+//  FAILEDOPERATION_CASTERNOTFOUND = "FailedOperation.CasterNotFound"
+//  FAILEDOPERATION_CREATECASTERTASKFAILED = "FailedOperation.CreateCasterTaskFailed"
+//  FAILEDOPERATION_RESOURCENOTENOUGH = "FailedOperation.ResourceNotEnough"
+//  INTERNALERROR = "InternalError"
+//  INVALIDPARAMETER = "InvalidParameter"
+//  RESOURCENOTFOUND_FORBIDSERVICE = "ResourceNotFound.ForbidService"
+//  RESOURCENOTFOUND_FREEZESERVICE = "ResourceNotFound.FreezeService"
+//  RESOURCENOTFOUND_STOPSERVICE = "ResourceNotFound.StopService"
+//  RESOURCENOTFOUND_USERDISABLESERVICE = "ResourceNotFound.UserDisableService"
+//  RESOURCENOTFOUND_USERNOTEXIST = "ResourceNotFound.UserNotExist"
+//  UNKNOWNPARAMETER = "UnknownParameter"
+//  UNSUPPORTEDOPERATION = "UnsupportedOperation"
+func (c *Client) CreateCasterPvw(request *CreateCasterPvwRequest) (response *CreateCasterPvwResponse, err error) {
+    return c.CreateCasterPvwWithContext(context.Background(), request)
+}
+
+// CreateCasterPvw
+// 该接口用来启动预监任务，并将获取预监画面的播放地址。
+//
+// 可能返回的错误码:
+//  FAILEDOPERATION_CASTEREXPIRED = "FailedOperation.CasterExpired"
+//  FAILEDOPERATION_CASTERNOTFOUND = "FailedOperation.CasterNotFound"
+//  FAILEDOPERATION_CREATECASTERTASKFAILED = "FailedOperation.CreateCasterTaskFailed"
+//  FAILEDOPERATION_RESOURCENOTENOUGH = "FailedOperation.ResourceNotEnough"
+//  INTERNALERROR = "InternalError"
+//  INVALIDPARAMETER = "InvalidParameter"
+//  RESOURCENOTFOUND_FORBIDSERVICE = "ResourceNotFound.ForbidService"
+//  RESOURCENOTFOUND_FREEZESERVICE = "ResourceNotFound.FreezeService"
+//  RESOURCENOTFOUND_STOPSERVICE = "ResourceNotFound.StopService"
+//  RESOURCENOTFOUND_USERDISABLESERVICE = "ResourceNotFound.UserDisableService"
+//  RESOURCENOTFOUND_USERNOTEXIST = "ResourceNotFound.UserNotExist"
+//  UNKNOWNPARAMETER = "UnknownParameter"
+//  UNSUPPORTEDOPERATION = "UnsupportedOperation"
+func (c *Client) CreateCasterPvwWithContext(ctx context.Context, request *CreateCasterPvwRequest) (response *CreateCasterPvwResponse, err error) {
+    if request == nil {
+        request = NewCreateCasterPvwRequest()
+    }
+    c.InitBaseRequest(&request.BaseRequest, "live", APIVersion, "CreateCasterPvw")
+    
+    if c.GetCredential() == nil {
+        return nil, errors.New("CreateCasterPvw require credential")
+    }
+
+    request.SetContext(ctx)
+    
+    response = NewCreateCasterPvwResponse()
     err = c.Send(request, response)
     return
 }
@@ -551,6 +1602,7 @@ func (c *Client) CreateCommonMixStreamWithContext(ctx context.Context, request *
     if request == nil {
         request = NewCreateCommonMixStreamRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "live", APIVersion, "CreateCommonMixStream")
     
     if c.GetCredential() == nil {
         return nil, errors.New("CreateCommonMixStream require credential")
@@ -559,6 +1611,214 @@ func (c *Client) CreateCommonMixStreamWithContext(ctx context.Context, request *
     request.SetContext(ctx)
     
     response = NewCreateCommonMixStreamResponse()
+    err = c.Send(request, response)
+    return
+}
+
+func NewCreateLiveAvatarRoomRequest() (request *CreateLiveAvatarRoomRequest) {
+    request = &CreateLiveAvatarRoomRequest{
+        BaseRequest: &tchttp.BaseRequest{},
+    }
+    
+    request.Init().WithApiInfo("live", APIVersion, "CreateLiveAvatarRoom")
+    
+    
+    return
+}
+
+func NewCreateLiveAvatarRoomResponse() (response *CreateLiveAvatarRoomResponse) {
+    response = &CreateLiveAvatarRoomResponse{
+        BaseResponse: &tchttp.BaseResponse{},
+    } 
+    return
+
+}
+
+// CreateLiveAvatarRoom
+// 调用该接口，用于创建数字人直播间。
+//
+// 可能返回的错误码:
+//  FAILEDOPERATION = "FailedOperation"
+//  FAILEDOPERATION_CALLOTHERSVRERROR = "FailedOperation.CallOtherSvrError"
+//  FAILEDOPERATION_CALLOTHERSVRFAILED = "FailedOperation.CallOtherSvrFailed"
+//  FAILEDOPERATION_CANCELSESSIONNOTEXIST = "FailedOperation.CancelSessionNotExist"
+//  FAILEDOPERATION_GETPICTUREURLERROR = "FailedOperation.GetPictureUrlError"
+//  FAILEDOPERATION_GETSTREAMRESOLUTIONERROR = "FailedOperation.GetStreamResolutionError"
+//  FAILEDOPERATION_PROCESSMIXERROR = "FailedOperation.ProcessMixError"
+//  FAILEDOPERATION_STREAMNOTEXIST = "FailedOperation.StreamNotExist"
+//  INTERNALERROR = "InternalError"
+//  INTERNALERROR_JIFEIOTHERERROR = "InternalError.JiFeiOtherError"
+//  INVALIDPARAMETER = "InvalidParameter"
+//  INVALIDPARAMETER_CANCELSESSIONNOTEXIST = "InvalidParameter.CancelSessionNotExist"
+//  INVALIDPARAMETER_INPUTNUMLIMITEXCEEDED = "InvalidParameter.InputNumLimitExceeded"
+//  INVALIDPARAMETER_INVALIDBACKGROUDRESOLUTION = "InvalidParameter.InvalidBackgroudResolution"
+//  INVALIDPARAMETER_INVALIDBITRATE = "InvalidParameter.InvalidBitrate"
+//  INVALIDPARAMETER_INVALIDCROPPARAM = "InvalidParameter.InvalidCropParam"
+//  INVALIDPARAMETER_INVALIDLAYERPARAM = "InvalidParameter.InvalidLayerParam"
+//  INVALIDPARAMETER_INVALIDOUTPUTSTREAMID = "InvalidParameter.InvalidOutputStreamID"
+//  INVALIDPARAMETER_INVALIDOUTPUTTYPE = "InvalidParameter.InvalidOutputType"
+//  INVALIDPARAMETER_INVALIDPICTUREID = "InvalidParameter.InvalidPictureID"
+//  INVALIDPARAMETER_INVALIDROUNDRECTRADIUS = "InvalidParameter.InvalidRoundRectRadius"
+//  INVALIDPARAMETER_OTHERERROR = "InvalidParameter.OtherError"
+//  INVALIDPARAMETER_SESSIONOUTPUTSTREAMCHANGED = "InvalidParameter.SessionOutputStreamChanged"
+//  INVALIDPARAMETER_TEMPLATENOTMATCHINPUTNUM = "InvalidParameter.TemplateNotMatchInputNum"
+//  RESOURCENOTFOUND_FORBIDSERVICE = "ResourceNotFound.ForbidService"
+//  RESOURCENOTFOUND_FREEZESERVICE = "ResourceNotFound.FreezeService"
+//  RESOURCENOTFOUND_STOPSERVICE = "ResourceNotFound.StopService"
+//  RESOURCENOTFOUND_USERDISABLESERVICE = "ResourceNotFound.UserDisableService"
+func (c *Client) CreateLiveAvatarRoom(request *CreateLiveAvatarRoomRequest) (response *CreateLiveAvatarRoomResponse, err error) {
+    return c.CreateLiveAvatarRoomWithContext(context.Background(), request)
+}
+
+// CreateLiveAvatarRoom
+// 调用该接口，用于创建数字人直播间。
+//
+// 可能返回的错误码:
+//  FAILEDOPERATION = "FailedOperation"
+//  FAILEDOPERATION_CALLOTHERSVRERROR = "FailedOperation.CallOtherSvrError"
+//  FAILEDOPERATION_CALLOTHERSVRFAILED = "FailedOperation.CallOtherSvrFailed"
+//  FAILEDOPERATION_CANCELSESSIONNOTEXIST = "FailedOperation.CancelSessionNotExist"
+//  FAILEDOPERATION_GETPICTUREURLERROR = "FailedOperation.GetPictureUrlError"
+//  FAILEDOPERATION_GETSTREAMRESOLUTIONERROR = "FailedOperation.GetStreamResolutionError"
+//  FAILEDOPERATION_PROCESSMIXERROR = "FailedOperation.ProcessMixError"
+//  FAILEDOPERATION_STREAMNOTEXIST = "FailedOperation.StreamNotExist"
+//  INTERNALERROR = "InternalError"
+//  INTERNALERROR_JIFEIOTHERERROR = "InternalError.JiFeiOtherError"
+//  INVALIDPARAMETER = "InvalidParameter"
+//  INVALIDPARAMETER_CANCELSESSIONNOTEXIST = "InvalidParameter.CancelSessionNotExist"
+//  INVALIDPARAMETER_INPUTNUMLIMITEXCEEDED = "InvalidParameter.InputNumLimitExceeded"
+//  INVALIDPARAMETER_INVALIDBACKGROUDRESOLUTION = "InvalidParameter.InvalidBackgroudResolution"
+//  INVALIDPARAMETER_INVALIDBITRATE = "InvalidParameter.InvalidBitrate"
+//  INVALIDPARAMETER_INVALIDCROPPARAM = "InvalidParameter.InvalidCropParam"
+//  INVALIDPARAMETER_INVALIDLAYERPARAM = "InvalidParameter.InvalidLayerParam"
+//  INVALIDPARAMETER_INVALIDOUTPUTSTREAMID = "InvalidParameter.InvalidOutputStreamID"
+//  INVALIDPARAMETER_INVALIDOUTPUTTYPE = "InvalidParameter.InvalidOutputType"
+//  INVALIDPARAMETER_INVALIDPICTUREID = "InvalidParameter.InvalidPictureID"
+//  INVALIDPARAMETER_INVALIDROUNDRECTRADIUS = "InvalidParameter.InvalidRoundRectRadius"
+//  INVALIDPARAMETER_OTHERERROR = "InvalidParameter.OtherError"
+//  INVALIDPARAMETER_SESSIONOUTPUTSTREAMCHANGED = "InvalidParameter.SessionOutputStreamChanged"
+//  INVALIDPARAMETER_TEMPLATENOTMATCHINPUTNUM = "InvalidParameter.TemplateNotMatchInputNum"
+//  RESOURCENOTFOUND_FORBIDSERVICE = "ResourceNotFound.ForbidService"
+//  RESOURCENOTFOUND_FREEZESERVICE = "ResourceNotFound.FreezeService"
+//  RESOURCENOTFOUND_STOPSERVICE = "ResourceNotFound.StopService"
+//  RESOURCENOTFOUND_USERDISABLESERVICE = "ResourceNotFound.UserDisableService"
+func (c *Client) CreateLiveAvatarRoomWithContext(ctx context.Context, request *CreateLiveAvatarRoomRequest) (response *CreateLiveAvatarRoomResponse, err error) {
+    if request == nil {
+        request = NewCreateLiveAvatarRoomRequest()
+    }
+    c.InitBaseRequest(&request.BaseRequest, "live", APIVersion, "CreateLiveAvatarRoom")
+    
+    if c.GetCredential() == nil {
+        return nil, errors.New("CreateLiveAvatarRoom require credential")
+    }
+
+    request.SetContext(ctx)
+    
+    response = NewCreateLiveAvatarRoomResponse()
+    err = c.Send(request, response)
+    return
+}
+
+func NewCreateLiveAvatarScriptRequest() (request *CreateLiveAvatarScriptRequest) {
+    request = &CreateLiveAvatarScriptRequest{
+        BaseRequest: &tchttp.BaseRequest{},
+    }
+    
+    request.Init().WithApiInfo("live", APIVersion, "CreateLiveAvatarScript")
+    
+    
+    return
+}
+
+func NewCreateLiveAvatarScriptResponse() (response *CreateLiveAvatarScriptResponse) {
+    response = &CreateLiveAvatarScriptResponse{
+        BaseResponse: &tchttp.BaseResponse{},
+    } 
+    return
+
+}
+
+// CreateLiveAvatarScript
+// 调用该接口，用于创建数字人直播间/AIGC直播间话术。
+//
+// 可能返回的错误码:
+//  FAILEDOPERATION = "FailedOperation"
+//  FAILEDOPERATION_CALLOTHERSVRERROR = "FailedOperation.CallOtherSvrError"
+//  FAILEDOPERATION_CALLOTHERSVRFAILED = "FailedOperation.CallOtherSvrFailed"
+//  FAILEDOPERATION_CANCELSESSIONNOTEXIST = "FailedOperation.CancelSessionNotExist"
+//  FAILEDOPERATION_GETPICTUREURLERROR = "FailedOperation.GetPictureUrlError"
+//  FAILEDOPERATION_GETSTREAMRESOLUTIONERROR = "FailedOperation.GetStreamResolutionError"
+//  FAILEDOPERATION_PROCESSMIXERROR = "FailedOperation.ProcessMixError"
+//  FAILEDOPERATION_STREAMNOTEXIST = "FailedOperation.StreamNotExist"
+//  INTERNALERROR = "InternalError"
+//  INTERNALERROR_JIFEIOTHERERROR = "InternalError.JiFeiOtherError"
+//  INVALIDPARAMETER = "InvalidParameter"
+//  INVALIDPARAMETER_CANCELSESSIONNOTEXIST = "InvalidParameter.CancelSessionNotExist"
+//  INVALIDPARAMETER_INPUTNUMLIMITEXCEEDED = "InvalidParameter.InputNumLimitExceeded"
+//  INVALIDPARAMETER_INVALIDBACKGROUDRESOLUTION = "InvalidParameter.InvalidBackgroudResolution"
+//  INVALIDPARAMETER_INVALIDBITRATE = "InvalidParameter.InvalidBitrate"
+//  INVALIDPARAMETER_INVALIDCROPPARAM = "InvalidParameter.InvalidCropParam"
+//  INVALIDPARAMETER_INVALIDLAYERPARAM = "InvalidParameter.InvalidLayerParam"
+//  INVALIDPARAMETER_INVALIDOUTPUTSTREAMID = "InvalidParameter.InvalidOutputStreamID"
+//  INVALIDPARAMETER_INVALIDOUTPUTTYPE = "InvalidParameter.InvalidOutputType"
+//  INVALIDPARAMETER_INVALIDPICTUREID = "InvalidParameter.InvalidPictureID"
+//  INVALIDPARAMETER_INVALIDROUNDRECTRADIUS = "InvalidParameter.InvalidRoundRectRadius"
+//  INVALIDPARAMETER_OTHERERROR = "InvalidParameter.OtherError"
+//  INVALIDPARAMETER_SESSIONOUTPUTSTREAMCHANGED = "InvalidParameter.SessionOutputStreamChanged"
+//  INVALIDPARAMETER_TEMPLATENOTMATCHINPUTNUM = "InvalidParameter.TemplateNotMatchInputNum"
+//  RESOURCENOTFOUND_FORBIDSERVICE = "ResourceNotFound.ForbidService"
+//  RESOURCENOTFOUND_FREEZESERVICE = "ResourceNotFound.FreezeService"
+//  RESOURCENOTFOUND_STOPSERVICE = "ResourceNotFound.StopService"
+//  RESOURCENOTFOUND_USERDISABLESERVICE = "ResourceNotFound.UserDisableService"
+func (c *Client) CreateLiveAvatarScript(request *CreateLiveAvatarScriptRequest) (response *CreateLiveAvatarScriptResponse, err error) {
+    return c.CreateLiveAvatarScriptWithContext(context.Background(), request)
+}
+
+// CreateLiveAvatarScript
+// 调用该接口，用于创建数字人直播间/AIGC直播间话术。
+//
+// 可能返回的错误码:
+//  FAILEDOPERATION = "FailedOperation"
+//  FAILEDOPERATION_CALLOTHERSVRERROR = "FailedOperation.CallOtherSvrError"
+//  FAILEDOPERATION_CALLOTHERSVRFAILED = "FailedOperation.CallOtherSvrFailed"
+//  FAILEDOPERATION_CANCELSESSIONNOTEXIST = "FailedOperation.CancelSessionNotExist"
+//  FAILEDOPERATION_GETPICTUREURLERROR = "FailedOperation.GetPictureUrlError"
+//  FAILEDOPERATION_GETSTREAMRESOLUTIONERROR = "FailedOperation.GetStreamResolutionError"
+//  FAILEDOPERATION_PROCESSMIXERROR = "FailedOperation.ProcessMixError"
+//  FAILEDOPERATION_STREAMNOTEXIST = "FailedOperation.StreamNotExist"
+//  INTERNALERROR = "InternalError"
+//  INTERNALERROR_JIFEIOTHERERROR = "InternalError.JiFeiOtherError"
+//  INVALIDPARAMETER = "InvalidParameter"
+//  INVALIDPARAMETER_CANCELSESSIONNOTEXIST = "InvalidParameter.CancelSessionNotExist"
+//  INVALIDPARAMETER_INPUTNUMLIMITEXCEEDED = "InvalidParameter.InputNumLimitExceeded"
+//  INVALIDPARAMETER_INVALIDBACKGROUDRESOLUTION = "InvalidParameter.InvalidBackgroudResolution"
+//  INVALIDPARAMETER_INVALIDBITRATE = "InvalidParameter.InvalidBitrate"
+//  INVALIDPARAMETER_INVALIDCROPPARAM = "InvalidParameter.InvalidCropParam"
+//  INVALIDPARAMETER_INVALIDLAYERPARAM = "InvalidParameter.InvalidLayerParam"
+//  INVALIDPARAMETER_INVALIDOUTPUTSTREAMID = "InvalidParameter.InvalidOutputStreamID"
+//  INVALIDPARAMETER_INVALIDOUTPUTTYPE = "InvalidParameter.InvalidOutputType"
+//  INVALIDPARAMETER_INVALIDPICTUREID = "InvalidParameter.InvalidPictureID"
+//  INVALIDPARAMETER_INVALIDROUNDRECTRADIUS = "InvalidParameter.InvalidRoundRectRadius"
+//  INVALIDPARAMETER_OTHERERROR = "InvalidParameter.OtherError"
+//  INVALIDPARAMETER_SESSIONOUTPUTSTREAMCHANGED = "InvalidParameter.SessionOutputStreamChanged"
+//  INVALIDPARAMETER_TEMPLATENOTMATCHINPUTNUM = "InvalidParameter.TemplateNotMatchInputNum"
+//  RESOURCENOTFOUND_FORBIDSERVICE = "ResourceNotFound.ForbidService"
+//  RESOURCENOTFOUND_FREEZESERVICE = "ResourceNotFound.FreezeService"
+//  RESOURCENOTFOUND_STOPSERVICE = "ResourceNotFound.StopService"
+//  RESOURCENOTFOUND_USERDISABLESERVICE = "ResourceNotFound.UserDisableService"
+func (c *Client) CreateLiveAvatarScriptWithContext(ctx context.Context, request *CreateLiveAvatarScriptRequest) (response *CreateLiveAvatarScriptResponse, err error) {
+    if request == nil {
+        request = NewCreateLiveAvatarScriptRequest()
+    }
+    c.InitBaseRequest(&request.BaseRequest, "live", APIVersion, "CreateLiveAvatarScript")
+    
+    if c.GetCredential() == nil {
+        return nil, errors.New("CreateLiveAvatarScript require credential")
+    }
+
+    request.SetContext(ctx)
+    
+    response = NewCreateLiveAvatarScriptResponse()
     err = c.Send(request, response)
     return
 }
@@ -592,7 +1852,6 @@ func NewCreateLiveCallbackRuleResponse() (response *CreateLiveCallbackRuleRespon
 //  INTERNALERROR_CONFNOTFOUND = "InternalError.ConfNotFound"
 //  INVALIDPARAMETER = "InvalidParameter"
 //  INVALIDPARAMETER_CONFNOTFOUND = "InvalidParameter.ConfNotFound"
-//  INVALIDPARAMETER_DOMAINFORMATERROR = "InvalidParameter.DomainFormatError"
 //  INVALIDPARAMETERVALUE = "InvalidParameterValue"
 //  MISSINGPARAMETER = "MissingParameter"
 //  RESOURCENOTFOUND_FORBIDSERVICE = "ResourceNotFound.ForbidService"
@@ -614,7 +1873,6 @@ func (c *Client) CreateLiveCallbackRule(request *CreateLiveCallbackRuleRequest) 
 //  INTERNALERROR_CONFNOTFOUND = "InternalError.ConfNotFound"
 //  INVALIDPARAMETER = "InvalidParameter"
 //  INVALIDPARAMETER_CONFNOTFOUND = "InvalidParameter.ConfNotFound"
-//  INVALIDPARAMETER_DOMAINFORMATERROR = "InvalidParameter.DomainFormatError"
 //  INVALIDPARAMETERVALUE = "InvalidParameterValue"
 //  MISSINGPARAMETER = "MissingParameter"
 //  RESOURCENOTFOUND_FORBIDSERVICE = "ResourceNotFound.ForbidService"
@@ -626,6 +1884,7 @@ func (c *Client) CreateLiveCallbackRuleWithContext(ctx context.Context, request 
     if request == nil {
         request = NewCreateLiveCallbackRuleRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "live", APIVersion, "CreateLiveCallbackRule")
     
     if c.GetCredential() == nil {
         return nil, errors.New("CreateLiveCallbackRule require credential")
@@ -729,6 +1988,7 @@ func (c *Client) CreateLiveCallbackTemplateWithContext(ctx context.Context, requ
     if request == nil {
         request = NewCreateLiveCallbackTemplateRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "live", APIVersion, "CreateLiveCallbackTemplate")
     
     if c.GetCredential() == nil {
         return nil, errors.New("CreateLiveCallbackTemplate require credential")
@@ -737,6 +1997,96 @@ func (c *Client) CreateLiveCallbackTemplateWithContext(ctx context.Context, requ
     request.SetContext(ctx)
     
     response = NewCreateLiveCallbackTemplateResponse()
+    err = c.Send(request, response)
+    return
+}
+
+func NewCreateLiveCloudEffectRequest() (request *CreateLiveCloudEffectRequest) {
+    request = &CreateLiveCloudEffectRequest{
+        BaseRequest: &tchttp.BaseRequest{},
+    }
+    
+    request.Init().WithApiInfo("live", APIVersion, "CreateLiveCloudEffect")
+    
+    
+    return
+}
+
+func NewCreateLiveCloudEffectResponse() (response *CreateLiveCloudEffectResponse) {
+    response = &CreateLiveCloudEffectResponse{
+        BaseResponse: &tchttp.BaseResponse{},
+    } 
+    return
+
+}
+
+// CreateLiveCloudEffect
+// 使用该接口生成云端特效。特效可用于叠加到直播流上，供播放端观看。
+//
+// 注意：云端特效生成需要一定时间，调用生成接口后，可通过查询接口，获取是否特效已生成。
+//
+// 可能返回的错误码:
+//  FAILEDOPERATION = "FailedOperation"
+//  FAILEDOPERATION_CALLOTHERSVRFAILED = "FailedOperation.CallOtherSvrFailed"
+//  INTERNALERROR = "InternalError"
+//  INTERNALERROR_CALLOTHERSVRERROR = "InternalError.CallOtherSvrError"
+//  INTERNALERROR_CONFIGNOTEXIST = "InternalError.ConfigNotExist"
+//  INTERNALERROR_GETBIZIDERROR = "InternalError.GetBizidError"
+//  INTERNALERROR_GETSTREAMINFOERROR = "InternalError.GetStreamInfoError"
+//  INTERNALERROR_GETUPSTREAMINFOERROR = "InternalError.GetUpstreamInfoError"
+//  INTERNALERROR_NOTPERMMITOPERAT = "InternalError.NotPermmitOperat"
+//  INTERNALERROR_STREAMSTATUSERROR = "InternalError.StreamStatusError"
+//  INTERNALERROR_UPDATEDATAERROR = "InternalError.UpdateDataError"
+//  INVALIDPARAMETER = "InvalidParameter"
+//  INVALIDPARAMETERVALUE = "InvalidParameterValue"
+//  MISSINGPARAMETER = "MissingParameter"
+//  RESOURCENOTFOUND_FORBIDSERVICE = "ResourceNotFound.ForbidService"
+//  RESOURCENOTFOUND_FREEZESERVICE = "ResourceNotFound.FreezeService"
+//  RESOURCENOTFOUND_STOPSERVICE = "ResourceNotFound.StopService"
+//  RESOURCENOTFOUND_USERDISABLESERVICE = "ResourceNotFound.UserDisableService"
+//  RESOURCENOTFOUND_USERNOTEXIST = "ResourceNotFound.UserNotExist"
+func (c *Client) CreateLiveCloudEffect(request *CreateLiveCloudEffectRequest) (response *CreateLiveCloudEffectResponse, err error) {
+    return c.CreateLiveCloudEffectWithContext(context.Background(), request)
+}
+
+// CreateLiveCloudEffect
+// 使用该接口生成云端特效。特效可用于叠加到直播流上，供播放端观看。
+//
+// 注意：云端特效生成需要一定时间，调用生成接口后，可通过查询接口，获取是否特效已生成。
+//
+// 可能返回的错误码:
+//  FAILEDOPERATION = "FailedOperation"
+//  FAILEDOPERATION_CALLOTHERSVRFAILED = "FailedOperation.CallOtherSvrFailed"
+//  INTERNALERROR = "InternalError"
+//  INTERNALERROR_CALLOTHERSVRERROR = "InternalError.CallOtherSvrError"
+//  INTERNALERROR_CONFIGNOTEXIST = "InternalError.ConfigNotExist"
+//  INTERNALERROR_GETBIZIDERROR = "InternalError.GetBizidError"
+//  INTERNALERROR_GETSTREAMINFOERROR = "InternalError.GetStreamInfoError"
+//  INTERNALERROR_GETUPSTREAMINFOERROR = "InternalError.GetUpstreamInfoError"
+//  INTERNALERROR_NOTPERMMITOPERAT = "InternalError.NotPermmitOperat"
+//  INTERNALERROR_STREAMSTATUSERROR = "InternalError.StreamStatusError"
+//  INTERNALERROR_UPDATEDATAERROR = "InternalError.UpdateDataError"
+//  INVALIDPARAMETER = "InvalidParameter"
+//  INVALIDPARAMETERVALUE = "InvalidParameterValue"
+//  MISSINGPARAMETER = "MissingParameter"
+//  RESOURCENOTFOUND_FORBIDSERVICE = "ResourceNotFound.ForbidService"
+//  RESOURCENOTFOUND_FREEZESERVICE = "ResourceNotFound.FreezeService"
+//  RESOURCENOTFOUND_STOPSERVICE = "ResourceNotFound.StopService"
+//  RESOURCENOTFOUND_USERDISABLESERVICE = "ResourceNotFound.UserDisableService"
+//  RESOURCENOTFOUND_USERNOTEXIST = "ResourceNotFound.UserNotExist"
+func (c *Client) CreateLiveCloudEffectWithContext(ctx context.Context, request *CreateLiveCloudEffectRequest) (response *CreateLiveCloudEffectResponse, err error) {
+    if request == nil {
+        request = NewCreateLiveCloudEffectRequest()
+    }
+    c.InitBaseRequest(&request.BaseRequest, "live", APIVersion, "CreateLiveCloudEffect")
+    
+    if c.GetCredential() == nil {
+        return nil, errors.New("CreateLiveCloudEffect require credential")
+    }
+
+    request.SetContext(ctx)
+    
+    response = NewCreateLiveCloudEffectResponse()
     err = c.Send(request, response)
     return
 }
@@ -812,6 +2162,7 @@ func (c *Client) CreateLivePadRuleWithContext(ctx context.Context, request *Crea
     if request == nil {
         request = NewCreateLivePadRuleRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "live", APIVersion, "CreateLivePadRule")
     
     if c.GetCredential() == nil {
         return nil, errors.New("CreateLivePadRule require credential")
@@ -891,6 +2242,7 @@ func (c *Client) CreateLivePadTemplateWithContext(ctx context.Context, request *
     if request == nil {
         request = NewCreateLivePadTemplateRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "live", APIVersion, "CreateLivePadTemplate")
     
     if c.GetCredential() == nil {
         return nil, errors.New("CreateLivePadTemplate require credential")
@@ -1006,6 +2358,7 @@ func (c *Client) CreateLivePullStreamTaskWithContext(ctx context.Context, reques
     if request == nil {
         request = NewCreateLivePullStreamTaskRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "live", APIVersion, "CreateLivePullStreamTask")
     
     if c.GetCredential() == nil {
         return nil, errors.New("CreateLivePullStreamTask require credential")
@@ -1141,6 +2494,7 @@ func (c *Client) CreateLiveRecordWithContext(ctx context.Context, request *Creat
     if request == nil {
         request = NewCreateLiveRecordRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "live", APIVersion, "CreateLiveRecord")
     
     if c.GetCredential() == nil {
         return nil, errors.New("CreateLiveRecord require credential")
@@ -1228,6 +2582,7 @@ func (c *Client) CreateLiveRecordRuleWithContext(ctx context.Context, request *C
     if request == nil {
         request = NewCreateLiveRecordRuleRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "live", APIVersion, "CreateLiveRecordRule")
     
     if c.GetCredential() == nil {
         return nil, errors.New("CreateLiveRecordRule require credential")
@@ -1319,6 +2674,7 @@ func (c *Client) CreateLiveRecordTemplateWithContext(ctx context.Context, reques
     if request == nil {
         request = NewCreateLiveRecordTemplateRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "live", APIVersion, "CreateLiveRecordTemplate")
     
     if c.GetCredential() == nil {
         return nil, errors.New("CreateLiveRecordTemplate require credential")
@@ -1412,6 +2768,7 @@ func (c *Client) CreateLiveSnapshotRuleWithContext(ctx context.Context, request 
     if request == nil {
         request = NewCreateLiveSnapshotRuleRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "live", APIVersion, "CreateLiveSnapshotRule")
     
     if c.GetCredential() == nil {
         return nil, errors.New("CreateLiveSnapshotRule require credential")
@@ -1509,6 +2866,7 @@ func (c *Client) CreateLiveSnapshotTemplateWithContext(ctx context.Context, requ
     if request == nil {
         request = NewCreateLiveSnapshotTemplateRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "live", APIVersion, "CreateLiveSnapshotTemplate")
     
     if c.GetCredential() == nil {
         return nil, errors.New("CreateLiveSnapshotTemplate require credential")
@@ -1592,6 +2950,7 @@ func (c *Client) CreateLiveStreamMonitorWithContext(ctx context.Context, request
     if request == nil {
         request = NewCreateLiveStreamMonitorRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "live", APIVersion, "CreateLiveStreamMonitor")
     
     if c.GetCredential() == nil {
         return nil, errors.New("CreateLiveStreamMonitor require credential")
@@ -1677,6 +3036,7 @@ func (c *Client) CreateLiveTimeShiftRuleWithContext(ctx context.Context, request
     if request == nil {
         request = NewCreateLiveTimeShiftRuleRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "live", APIVersion, "CreateLiveTimeShiftRule")
     
     if c.GetCredential() == nil {
         return nil, errors.New("CreateLiveTimeShiftRule require credential")
@@ -1756,6 +3116,7 @@ func (c *Client) CreateLiveTimeShiftTemplateWithContext(ctx context.Context, req
     if request == nil {
         request = NewCreateLiveTimeShiftTemplateRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "live", APIVersion, "CreateLiveTimeShiftTemplate")
     
     if c.GetCredential() == nil {
         return nil, errors.New("CreateLiveTimeShiftTemplate require credential")
@@ -1849,6 +3210,7 @@ func (c *Client) CreateLiveTranscodeRuleWithContext(ctx context.Context, request
     if request == nil {
         request = NewCreateLiveTranscodeRuleRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "live", APIVersion, "CreateLiveTranscodeRule")
     
     if c.GetCredential() == nil {
         return nil, errors.New("CreateLiveTranscodeRule require credential")
@@ -1948,6 +3310,7 @@ func (c *Client) CreateLiveTranscodeTemplateWithContext(ctx context.Context, req
     if request == nil {
         request = NewCreateLiveTranscodeTemplateRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "live", APIVersion, "CreateLiveTranscodeTemplate")
     
     if c.GetCredential() == nil {
         return nil, errors.New("CreateLiveTranscodeTemplate require credential")
@@ -2035,6 +3398,7 @@ func (c *Client) CreateLiveWatermarkRuleWithContext(ctx context.Context, request
     if request == nil {
         request = NewCreateLiveWatermarkRuleRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "live", APIVersion, "CreateLiveWatermarkRule")
     
     if c.GetCredential() == nil {
         return nil, errors.New("CreateLiveWatermarkRule require credential")
@@ -2128,6 +3492,7 @@ func (c *Client) CreatePullStreamConfigWithContext(ctx context.Context, request 
     if request == nil {
         request = NewCreatePullStreamConfigRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "live", APIVersion, "CreatePullStreamConfig")
     
     if c.GetCredential() == nil {
         return nil, errors.New("CreatePullStreamConfig require credential")
@@ -2164,9 +3529,9 @@ func NewCreateRecordTaskResponse() (response *CreateRecordTaskResponse) {
 //
 // - 使用前提
 //
-// 1. 录制文件存放于点播平台，所以用户如需使用录制功能，需首先自行开通点播服务。
+// 1. 录制文件存放于点播平台或对象存储内，所以用户如需使用录制功能，需首先自行开通点播服务或对象存储服务。
 //
-// 2. 录制文件存放后相关费用（含存储以及下行播放流量）按照点播平台计费方式收取，具体请参考 [对应文档](https://cloud.tencent.com/document/product/266/2837)。
+// 2. 录制文件存放后相关费用（含存储以及下行播放流量）按照点播平台计费方式收取，具体请参考[对应文档](https://cloud.tencent.com/document/product/266/2837)。
 //
 // - 注意事项
 //
@@ -2201,9 +3566,9 @@ func (c *Client) CreateRecordTask(request *CreateRecordTaskRequest) (response *C
 //
 // - 使用前提
 //
-// 1. 录制文件存放于点播平台，所以用户如需使用录制功能，需首先自行开通点播服务。
+// 1. 录制文件存放于点播平台或对象存储内，所以用户如需使用录制功能，需首先自行开通点播服务或对象存储服务。
 //
-// 2. 录制文件存放后相关费用（含存储以及下行播放流量）按照点播平台计费方式收取，具体请参考 [对应文档](https://cloud.tencent.com/document/product/266/2837)。
+// 2. 录制文件存放后相关费用（含存储以及下行播放流量）按照点播平台计费方式收取，具体请参考[对应文档](https://cloud.tencent.com/document/product/266/2837)。
 //
 // - 注意事项
 //
@@ -2233,6 +3598,7 @@ func (c *Client) CreateRecordTaskWithContext(ctx context.Context, request *Creat
     if request == nil {
         request = NewCreateRecordTaskRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "live", APIVersion, "CreateRecordTask")
     
     if c.GetCredential() == nil {
         return nil, errors.New("CreateRecordTask require credential")
@@ -2241,6 +3607,76 @@ func (c *Client) CreateRecordTaskWithContext(ctx context.Context, request *Creat
     request.SetContext(ctx)
     
     response = NewCreateRecordTaskResponse()
+    err = c.Send(request, response)
+    return
+}
+
+func NewCreateSceneVideoTaskRequest() (request *CreateSceneVideoTaskRequest) {
+    request = &CreateSceneVideoTaskRequest{
+        BaseRequest: &tchttp.BaseRequest{},
+    }
+    
+    request.Init().WithApiInfo("live", APIVersion, "CreateSceneVideoTask")
+    
+    
+    return
+}
+
+func NewCreateSceneVideoTaskResponse() (response *CreateSceneVideoTaskResponse) {
+    response = &CreateSceneVideoTaskResponse{
+        BaseResponse: &tchttp.BaseResponse{},
+    } 
+    return
+
+}
+
+// CreateSceneVideoTask
+// 该接口用于创建场景化视频任务。
+//
+// 可能返回的错误码:
+//  INTERNALERROR = "InternalError"
+//  INTERNALERROR_GETCONFIGERROR = "InternalError.GetConfigError"
+//  INTERNALERROR_NETWORKERROR = "InternalError.NetworkError"
+//  INVALIDPARAMETER = "InvalidParameter"
+//  LIMITEXCEEDED_MAXIMUMRUNNINGTASK = "LimitExceeded.MaximumRunningTask"
+//  RESOURCENOTFOUND_FORBIDSERVICE = "ResourceNotFound.ForbidService"
+//  RESOURCENOTFOUND_FREEZESERVICE = "ResourceNotFound.FreezeService"
+//  RESOURCENOTFOUND_STOPSERVICE = "ResourceNotFound.StopService"
+//  RESOURCENOTFOUND_USERDISABLESERVICE = "ResourceNotFound.UserDisableService"
+//  RESOURCEUNAVAILABLE_INVALIDVODSTATUS = "ResourceUnavailable.InvalidVodStatus"
+//  UNSUPPORTEDOPERATION = "UnsupportedOperation"
+func (c *Client) CreateSceneVideoTask(request *CreateSceneVideoTaskRequest) (response *CreateSceneVideoTaskResponse, err error) {
+    return c.CreateSceneVideoTaskWithContext(context.Background(), request)
+}
+
+// CreateSceneVideoTask
+// 该接口用于创建场景化视频任务。
+//
+// 可能返回的错误码:
+//  INTERNALERROR = "InternalError"
+//  INTERNALERROR_GETCONFIGERROR = "InternalError.GetConfigError"
+//  INTERNALERROR_NETWORKERROR = "InternalError.NetworkError"
+//  INVALIDPARAMETER = "InvalidParameter"
+//  LIMITEXCEEDED_MAXIMUMRUNNINGTASK = "LimitExceeded.MaximumRunningTask"
+//  RESOURCENOTFOUND_FORBIDSERVICE = "ResourceNotFound.ForbidService"
+//  RESOURCENOTFOUND_FREEZESERVICE = "ResourceNotFound.FreezeService"
+//  RESOURCENOTFOUND_STOPSERVICE = "ResourceNotFound.StopService"
+//  RESOURCENOTFOUND_USERDISABLESERVICE = "ResourceNotFound.UserDisableService"
+//  RESOURCEUNAVAILABLE_INVALIDVODSTATUS = "ResourceUnavailable.InvalidVodStatus"
+//  UNSUPPORTEDOPERATION = "UnsupportedOperation"
+func (c *Client) CreateSceneVideoTaskWithContext(ctx context.Context, request *CreateSceneVideoTaskRequest) (response *CreateSceneVideoTaskResponse, err error) {
+    if request == nil {
+        request = NewCreateSceneVideoTaskRequest()
+    }
+    c.InitBaseRequest(&request.BaseRequest, "live", APIVersion, "CreateSceneVideoTask")
+    
+    if c.GetCredential() == nil {
+        return nil, errors.New("CreateSceneVideoTask require credential")
+    }
+
+    request.SetContext(ctx)
+    
+    response = NewCreateSceneVideoTaskResponse()
     err = c.Send(request, response)
     return
 }
@@ -2324,6 +3760,7 @@ func (c *Client) CreateScreenshotTaskWithContext(ctx context.Context, request *C
     if request == nil {
         request = NewCreateScreenshotTaskRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "live", APIVersion, "CreateScreenshotTask")
     
     if c.GetCredential() == nil {
         return nil, errors.New("CreateScreenshotTask require credential")
@@ -2332,6 +3769,712 @@ func (c *Client) CreateScreenshotTaskWithContext(ctx context.Context, request *C
     request.SetContext(ctx)
     
     response = NewCreateScreenshotTaskResponse()
+    err = c.Send(request, response)
+    return
+}
+
+func NewCreateVideoRedrawTaskRequest() (request *CreateVideoRedrawTaskRequest) {
+    request = &CreateVideoRedrawTaskRequest{
+        BaseRequest: &tchttp.BaseRequest{},
+    }
+    
+    request.Init().WithApiInfo("live", APIVersion, "CreateVideoRedrawTask")
+    
+    
+    return
+}
+
+func NewCreateVideoRedrawTaskResponse() (response *CreateVideoRedrawTaskResponse) {
+    response = &CreateVideoRedrawTaskResponse{
+        BaseResponse: &tchttp.BaseResponse{},
+    } 
+    return
+
+}
+
+// CreateVideoRedrawTask
+// 创建AI转绘任务
+//
+// 可能返回的错误码:
+//  FAILEDOPERATION_CREATEAIGCTASKFAILED = "FailedOperation.CreateAIGCTaskFailed"
+//  INVALIDPARAMETER = "InvalidParameter"
+//  INVALIDPARAMETER_INVALIDTASKID = "InvalidParameter.InvalidTaskId"
+//  INVALIDPARAMETER_INVALIDURL = "InvalidParameter.InvalidUrl"
+func (c *Client) CreateVideoRedrawTask(request *CreateVideoRedrawTaskRequest) (response *CreateVideoRedrawTaskResponse, err error) {
+    return c.CreateVideoRedrawTaskWithContext(context.Background(), request)
+}
+
+// CreateVideoRedrawTask
+// 创建AI转绘任务
+//
+// 可能返回的错误码:
+//  FAILEDOPERATION_CREATEAIGCTASKFAILED = "FailedOperation.CreateAIGCTaskFailed"
+//  INVALIDPARAMETER = "InvalidParameter"
+//  INVALIDPARAMETER_INVALIDTASKID = "InvalidParameter.InvalidTaskId"
+//  INVALIDPARAMETER_INVALIDURL = "InvalidParameter.InvalidUrl"
+func (c *Client) CreateVideoRedrawTaskWithContext(ctx context.Context, request *CreateVideoRedrawTaskRequest) (response *CreateVideoRedrawTaskResponse, err error) {
+    if request == nil {
+        request = NewCreateVideoRedrawTaskRequest()
+    }
+    c.InitBaseRequest(&request.BaseRequest, "live", APIVersion, "CreateVideoRedrawTask")
+    
+    if c.GetCredential() == nil {
+        return nil, errors.New("CreateVideoRedrawTask require credential")
+    }
+
+    request.SetContext(ctx)
+    
+    response = NewCreateVideoRedrawTaskResponse()
+    err = c.Send(request, response)
+    return
+}
+
+func NewDeleteAuditKeywordsRequest() (request *DeleteAuditKeywordsRequest) {
+    request = &DeleteAuditKeywordsRequest{
+        BaseRequest: &tchttp.BaseRequest{},
+    }
+    
+    request.Init().WithApiInfo("live", APIVersion, "DeleteAuditKeywords")
+    
+    
+    return
+}
+
+func NewDeleteAuditKeywordsResponse() (response *DeleteAuditKeywordsResponse) {
+    response = &DeleteAuditKeywordsResponse{
+        BaseResponse: &tchttp.BaseResponse{},
+    } 
+    return
+
+}
+
+// DeleteAuditKeywords
+// 删除关键词信息。
+//
+// 可能返回的错误码:
+//  FAILEDOPERATION = "FailedOperation"
+func (c *Client) DeleteAuditKeywords(request *DeleteAuditKeywordsRequest) (response *DeleteAuditKeywordsResponse, err error) {
+    return c.DeleteAuditKeywordsWithContext(context.Background(), request)
+}
+
+// DeleteAuditKeywords
+// 删除关键词信息。
+//
+// 可能返回的错误码:
+//  FAILEDOPERATION = "FailedOperation"
+func (c *Client) DeleteAuditKeywordsWithContext(ctx context.Context, request *DeleteAuditKeywordsRequest) (response *DeleteAuditKeywordsResponse, err error) {
+    if request == nil {
+        request = NewDeleteAuditKeywordsRequest()
+    }
+    c.InitBaseRequest(&request.BaseRequest, "live", APIVersion, "DeleteAuditKeywords")
+    
+    if c.GetCredential() == nil {
+        return nil, errors.New("DeleteAuditKeywords require credential")
+    }
+
+    request.SetContext(ctx)
+    
+    response = NewDeleteAuditKeywordsResponse()
+    err = c.Send(request, response)
+    return
+}
+
+func NewDeleteCasterRequest() (request *DeleteCasterRequest) {
+    request = &DeleteCasterRequest{
+        BaseRequest: &tchttp.BaseRequest{},
+    }
+    
+    request.Init().WithApiInfo("live", APIVersion, "DeleteCaster")
+    
+    
+    return
+}
+
+func NewDeleteCasterResponse() (response *DeleteCasterResponse) {
+    response = &DeleteCasterResponse{
+        BaseResponse: &tchttp.BaseResponse{},
+    } 
+    return
+
+}
+
+// DeleteCaster
+// 该接口用来删除一个导播台的所有信息。
+//
+// 注意，调用该接口后，所有的导播台信息将被清除，包括正在直播的内容也将直接中断。
+//
+// 可能返回的错误码:
+//  FAILEDOPERATION = "FailedOperation"
+//  FAILEDOPERATION_CASTERBINDED = "FailedOperation.CasterBinded"
+//  FAILEDOPERATION_CASTERNOTFOUND = "FailedOperation.CasterNotFound"
+//  FAILEDOPERATION_STOPCASTERTASKFAILED = "FailedOperation.StopCasterTaskFailed"
+//  INTERNALERROR = "InternalError"
+//  INVALIDPARAMETER = "InvalidParameter"
+//  RESOURCENOTFOUND_FORBIDSERVICE = "ResourceNotFound.ForbidService"
+//  RESOURCENOTFOUND_FREEZESERVICE = "ResourceNotFound.FreezeService"
+//  RESOURCENOTFOUND_STOPSERVICE = "ResourceNotFound.StopService"
+//  RESOURCENOTFOUND_USERDISABLESERVICE = "ResourceNotFound.UserDisableService"
+//  RESOURCENOTFOUND_USERNOTEXIST = "ResourceNotFound.UserNotExist"
+//  UNKNOWNPARAMETER = "UnknownParameter"
+//  UNSUPPORTEDOPERATION = "UnsupportedOperation"
+func (c *Client) DeleteCaster(request *DeleteCasterRequest) (response *DeleteCasterResponse, err error) {
+    return c.DeleteCasterWithContext(context.Background(), request)
+}
+
+// DeleteCaster
+// 该接口用来删除一个导播台的所有信息。
+//
+// 注意，调用该接口后，所有的导播台信息将被清除，包括正在直播的内容也将直接中断。
+//
+// 可能返回的错误码:
+//  FAILEDOPERATION = "FailedOperation"
+//  FAILEDOPERATION_CASTERBINDED = "FailedOperation.CasterBinded"
+//  FAILEDOPERATION_CASTERNOTFOUND = "FailedOperation.CasterNotFound"
+//  FAILEDOPERATION_STOPCASTERTASKFAILED = "FailedOperation.StopCasterTaskFailed"
+//  INTERNALERROR = "InternalError"
+//  INVALIDPARAMETER = "InvalidParameter"
+//  RESOURCENOTFOUND_FORBIDSERVICE = "ResourceNotFound.ForbidService"
+//  RESOURCENOTFOUND_FREEZESERVICE = "ResourceNotFound.FreezeService"
+//  RESOURCENOTFOUND_STOPSERVICE = "ResourceNotFound.StopService"
+//  RESOURCENOTFOUND_USERDISABLESERVICE = "ResourceNotFound.UserDisableService"
+//  RESOURCENOTFOUND_USERNOTEXIST = "ResourceNotFound.UserNotExist"
+//  UNKNOWNPARAMETER = "UnknownParameter"
+//  UNSUPPORTEDOPERATION = "UnsupportedOperation"
+func (c *Client) DeleteCasterWithContext(ctx context.Context, request *DeleteCasterRequest) (response *DeleteCasterResponse, err error) {
+    if request == nil {
+        request = NewDeleteCasterRequest()
+    }
+    c.InitBaseRequest(&request.BaseRequest, "live", APIVersion, "DeleteCaster")
+    
+    if c.GetCredential() == nil {
+        return nil, errors.New("DeleteCaster require credential")
+    }
+
+    request.SetContext(ctx)
+    
+    response = NewDeleteCasterResponse()
+    err = c.Send(request, response)
+    return
+}
+
+func NewDeleteCasterInputInfoRequest() (request *DeleteCasterInputInfoRequest) {
+    request = &DeleteCasterInputInfoRequest{
+        BaseRequest: &tchttp.BaseRequest{},
+    }
+    
+    request.Init().WithApiInfo("live", APIVersion, "DeleteCasterInputInfo")
+    
+    
+    return
+}
+
+func NewDeleteCasterInputInfoResponse() (response *DeleteCasterInputInfoResponse) {
+    response = &DeleteCasterInputInfoResponse{
+        BaseResponse: &tchttp.BaseResponse{},
+    } 
+    return
+
+}
+
+// DeleteCasterInputInfo
+// 该接口用来删除导播台中的输入源信息。
+//
+// 可能返回的错误码:
+//  FAILEDOPERATION_CASTEREXPIRED = "FailedOperation.CasterExpired"
+//  FAILEDOPERATION_CASTERNOTFOUND = "FailedOperation.CasterNotFound"
+//  FAILEDOPERATION_INPUTUSEDINAUTOCAST = "FailedOperation.InputUsedInAutoCast"
+//  FAILEDOPERATION_INPUTUSEDINLAYOUT = "FailedOperation.InputUsedInLayout"
+//  FAILEDOPERATION_INPUTUSEDINPGM = "FailedOperation.InputUsedInPgm"
+//  FAILEDOPERATION_INPUTUSEDINPVW = "FailedOperation.InputUsedInPvw"
+//  FAILEDOPERATION_STARTPULLFAILED = "FailedOperation.StartPullFailed"
+//  FAILEDOPERATION_STOPPULLFAILED = "FailedOperation.StopPullFailed"
+//  INTERNALERROR = "InternalError"
+//  INVALIDPARAMETER = "InvalidParameter"
+//  RESOURCENOTFOUND_FORBIDSERVICE = "ResourceNotFound.ForbidService"
+//  RESOURCENOTFOUND_FREEZESERVICE = "ResourceNotFound.FreezeService"
+//  RESOURCENOTFOUND_STOPSERVICE = "ResourceNotFound.StopService"
+//  RESOURCENOTFOUND_USERDISABLESERVICE = "ResourceNotFound.UserDisableService"
+//  RESOURCENOTFOUND_USERNOTEXIST = "ResourceNotFound.UserNotExist"
+//  UNKNOWNPARAMETER = "UnknownParameter"
+//  UNSUPPORTEDOPERATION = "UnsupportedOperation"
+func (c *Client) DeleteCasterInputInfo(request *DeleteCasterInputInfoRequest) (response *DeleteCasterInputInfoResponse, err error) {
+    return c.DeleteCasterInputInfoWithContext(context.Background(), request)
+}
+
+// DeleteCasterInputInfo
+// 该接口用来删除导播台中的输入源信息。
+//
+// 可能返回的错误码:
+//  FAILEDOPERATION_CASTEREXPIRED = "FailedOperation.CasterExpired"
+//  FAILEDOPERATION_CASTERNOTFOUND = "FailedOperation.CasterNotFound"
+//  FAILEDOPERATION_INPUTUSEDINAUTOCAST = "FailedOperation.InputUsedInAutoCast"
+//  FAILEDOPERATION_INPUTUSEDINLAYOUT = "FailedOperation.InputUsedInLayout"
+//  FAILEDOPERATION_INPUTUSEDINPGM = "FailedOperation.InputUsedInPgm"
+//  FAILEDOPERATION_INPUTUSEDINPVW = "FailedOperation.InputUsedInPvw"
+//  FAILEDOPERATION_STARTPULLFAILED = "FailedOperation.StartPullFailed"
+//  FAILEDOPERATION_STOPPULLFAILED = "FailedOperation.StopPullFailed"
+//  INTERNALERROR = "InternalError"
+//  INVALIDPARAMETER = "InvalidParameter"
+//  RESOURCENOTFOUND_FORBIDSERVICE = "ResourceNotFound.ForbidService"
+//  RESOURCENOTFOUND_FREEZESERVICE = "ResourceNotFound.FreezeService"
+//  RESOURCENOTFOUND_STOPSERVICE = "ResourceNotFound.StopService"
+//  RESOURCENOTFOUND_USERDISABLESERVICE = "ResourceNotFound.UserDisableService"
+//  RESOURCENOTFOUND_USERNOTEXIST = "ResourceNotFound.UserNotExist"
+//  UNKNOWNPARAMETER = "UnknownParameter"
+//  UNSUPPORTEDOPERATION = "UnsupportedOperation"
+func (c *Client) DeleteCasterInputInfoWithContext(ctx context.Context, request *DeleteCasterInputInfoRequest) (response *DeleteCasterInputInfoResponse, err error) {
+    if request == nil {
+        request = NewDeleteCasterInputInfoRequest()
+    }
+    c.InitBaseRequest(&request.BaseRequest, "live", APIVersion, "DeleteCasterInputInfo")
+    
+    if c.GetCredential() == nil {
+        return nil, errors.New("DeleteCasterInputInfo require credential")
+    }
+
+    request.SetContext(ctx)
+    
+    response = NewDeleteCasterInputInfoResponse()
+    err = c.Send(request, response)
+    return
+}
+
+func NewDeleteCasterLayoutInfoRequest() (request *DeleteCasterLayoutInfoRequest) {
+    request = &DeleteCasterLayoutInfoRequest{
+        BaseRequest: &tchttp.BaseRequest{},
+    }
+    
+    request.Init().WithApiInfo("live", APIVersion, "DeleteCasterLayoutInfo")
+    
+    
+    return
+}
+
+func NewDeleteCasterLayoutInfoResponse() (response *DeleteCasterLayoutInfoResponse) {
+    response = &DeleteCasterLayoutInfoResponse{
+        BaseResponse: &tchttp.BaseResponse{},
+    } 
+    return
+
+}
+
+// DeleteCasterLayoutInfo
+// 该接口用来将布局信息从导播台中删除
+//
+// 可能返回的错误码:
+//  FAILEDOPERATION_CASTERNOTFOUND = "FailedOperation.CasterNotFound"
+//  FAILEDOPERATION_LAYOUTUSEDINAUTOCAST = "FailedOperation.LayoutUsedInAutoCast"
+//  FAILEDOPERATION_LAYOUTUSEDINPGM = "FailedOperation.LayoutUsedInPgm"
+//  FAILEDOPERATION_LAYOUTUSEDINPVW = "FailedOperation.LayoutUsedInPvw"
+//  INTERNALERROR = "InternalError"
+//  INVALIDPARAMETER = "InvalidParameter"
+//  RESOURCENOTFOUND_FORBIDSERVICE = "ResourceNotFound.ForbidService"
+//  RESOURCENOTFOUND_FREEZESERVICE = "ResourceNotFound.FreezeService"
+//  RESOURCENOTFOUND_STOPSERVICE = "ResourceNotFound.StopService"
+//  RESOURCENOTFOUND_USERDISABLESERVICE = "ResourceNotFound.UserDisableService"
+//  RESOURCENOTFOUND_USERNOTEXIST = "ResourceNotFound.UserNotExist"
+//  UNKNOWNPARAMETER = "UnknownParameter"
+//  UNSUPPORTEDOPERATION = "UnsupportedOperation"
+func (c *Client) DeleteCasterLayoutInfo(request *DeleteCasterLayoutInfoRequest) (response *DeleteCasterLayoutInfoResponse, err error) {
+    return c.DeleteCasterLayoutInfoWithContext(context.Background(), request)
+}
+
+// DeleteCasterLayoutInfo
+// 该接口用来将布局信息从导播台中删除
+//
+// 可能返回的错误码:
+//  FAILEDOPERATION_CASTERNOTFOUND = "FailedOperation.CasterNotFound"
+//  FAILEDOPERATION_LAYOUTUSEDINAUTOCAST = "FailedOperation.LayoutUsedInAutoCast"
+//  FAILEDOPERATION_LAYOUTUSEDINPGM = "FailedOperation.LayoutUsedInPgm"
+//  FAILEDOPERATION_LAYOUTUSEDINPVW = "FailedOperation.LayoutUsedInPvw"
+//  INTERNALERROR = "InternalError"
+//  INVALIDPARAMETER = "InvalidParameter"
+//  RESOURCENOTFOUND_FORBIDSERVICE = "ResourceNotFound.ForbidService"
+//  RESOURCENOTFOUND_FREEZESERVICE = "ResourceNotFound.FreezeService"
+//  RESOURCENOTFOUND_STOPSERVICE = "ResourceNotFound.StopService"
+//  RESOURCENOTFOUND_USERDISABLESERVICE = "ResourceNotFound.UserDisableService"
+//  RESOURCENOTFOUND_USERNOTEXIST = "ResourceNotFound.UserNotExist"
+//  UNKNOWNPARAMETER = "UnknownParameter"
+//  UNSUPPORTEDOPERATION = "UnsupportedOperation"
+func (c *Client) DeleteCasterLayoutInfoWithContext(ctx context.Context, request *DeleteCasterLayoutInfoRequest) (response *DeleteCasterLayoutInfoResponse, err error) {
+    if request == nil {
+        request = NewDeleteCasterLayoutInfoRequest()
+    }
+    c.InitBaseRequest(&request.BaseRequest, "live", APIVersion, "DeleteCasterLayoutInfo")
+    
+    if c.GetCredential() == nil {
+        return nil, errors.New("DeleteCasterLayoutInfo require credential")
+    }
+
+    request.SetContext(ctx)
+    
+    response = NewDeleteCasterLayoutInfoResponse()
+    err = c.Send(request, response)
+    return
+}
+
+func NewDeleteCasterMarkPicInfoRequest() (request *DeleteCasterMarkPicInfoRequest) {
+    request = &DeleteCasterMarkPicInfoRequest{
+        BaseRequest: &tchttp.BaseRequest{},
+    }
+    
+    request.Init().WithApiInfo("live", APIVersion, "DeleteCasterMarkPicInfo")
+    
+    
+    return
+}
+
+func NewDeleteCasterMarkPicInfoResponse() (response *DeleteCasterMarkPicInfoResponse) {
+    response = &DeleteCasterMarkPicInfoResponse{
+        BaseResponse: &tchttp.BaseResponse{},
+    } 
+    return
+
+}
+
+// DeleteCasterMarkPicInfo
+// 该接口用来删除导播台某个Index对应的水印。
+//
+// 可能返回的错误码:
+//  FAILEDOPERATION = "FailedOperation"
+//  FAILEDOPERATION_CASTERNOTFOUND = "FailedOperation.CasterNotFound"
+//  FAILEDOPERATION_LAYOUTUSEDINPGM = "FailedOperation.LayoutUsedInPgm"
+//  FAILEDOPERATION_LAYOUTUSEDINPVW = "FailedOperation.LayoutUsedInPvw"
+//  FAILEDOPERATION_MARKPICUSEDINAUTOCAST = "FailedOperation.MarkPicUsedInAutoCast"
+//  INTERNALERROR = "InternalError"
+//  INVALIDPARAMETER = "InvalidParameter"
+//  RESOURCENOTFOUND_FORBIDSERVICE = "ResourceNotFound.ForbidService"
+//  RESOURCENOTFOUND_FREEZESERVICE = "ResourceNotFound.FreezeService"
+//  RESOURCENOTFOUND_STOPSERVICE = "ResourceNotFound.StopService"
+//  RESOURCENOTFOUND_USERDISABLESERVICE = "ResourceNotFound.UserDisableService"
+//  RESOURCENOTFOUND_USERNOTEXIST = "ResourceNotFound.UserNotExist"
+//  UNKNOWNPARAMETER = "UnknownParameter"
+//  UNSUPPORTEDOPERATION = "UnsupportedOperation"
+func (c *Client) DeleteCasterMarkPicInfo(request *DeleteCasterMarkPicInfoRequest) (response *DeleteCasterMarkPicInfoResponse, err error) {
+    return c.DeleteCasterMarkPicInfoWithContext(context.Background(), request)
+}
+
+// DeleteCasterMarkPicInfo
+// 该接口用来删除导播台某个Index对应的水印。
+//
+// 可能返回的错误码:
+//  FAILEDOPERATION = "FailedOperation"
+//  FAILEDOPERATION_CASTERNOTFOUND = "FailedOperation.CasterNotFound"
+//  FAILEDOPERATION_LAYOUTUSEDINPGM = "FailedOperation.LayoutUsedInPgm"
+//  FAILEDOPERATION_LAYOUTUSEDINPVW = "FailedOperation.LayoutUsedInPvw"
+//  FAILEDOPERATION_MARKPICUSEDINAUTOCAST = "FailedOperation.MarkPicUsedInAutoCast"
+//  INTERNALERROR = "InternalError"
+//  INVALIDPARAMETER = "InvalidParameter"
+//  RESOURCENOTFOUND_FORBIDSERVICE = "ResourceNotFound.ForbidService"
+//  RESOURCENOTFOUND_FREEZESERVICE = "ResourceNotFound.FreezeService"
+//  RESOURCENOTFOUND_STOPSERVICE = "ResourceNotFound.StopService"
+//  RESOURCENOTFOUND_USERDISABLESERVICE = "ResourceNotFound.UserDisableService"
+//  RESOURCENOTFOUND_USERNOTEXIST = "ResourceNotFound.UserNotExist"
+//  UNKNOWNPARAMETER = "UnknownParameter"
+//  UNSUPPORTEDOPERATION = "UnsupportedOperation"
+func (c *Client) DeleteCasterMarkPicInfoWithContext(ctx context.Context, request *DeleteCasterMarkPicInfoRequest) (response *DeleteCasterMarkPicInfoResponse, err error) {
+    if request == nil {
+        request = NewDeleteCasterMarkPicInfoRequest()
+    }
+    c.InitBaseRequest(&request.BaseRequest, "live", APIVersion, "DeleteCasterMarkPicInfo")
+    
+    if c.GetCredential() == nil {
+        return nil, errors.New("DeleteCasterMarkPicInfo require credential")
+    }
+
+    request.SetContext(ctx)
+    
+    response = NewDeleteCasterMarkPicInfoResponse()
+    err = c.Send(request, response)
+    return
+}
+
+func NewDeleteCasterMarkWordInfoRequest() (request *DeleteCasterMarkWordInfoRequest) {
+    request = &DeleteCasterMarkWordInfoRequest{
+        BaseRequest: &tchttp.BaseRequest{},
+    }
+    
+    request.Init().WithApiInfo("live", APIVersion, "DeleteCasterMarkWordInfo")
+    
+    
+    return
+}
+
+func NewDeleteCasterMarkWordInfoResponse() (response *DeleteCasterMarkWordInfoResponse) {
+    response = &DeleteCasterMarkWordInfoResponse{
+        BaseResponse: &tchttp.BaseResponse{},
+    } 
+    return
+
+}
+
+// DeleteCasterMarkWordInfo
+// 该接口用来删除导播台的文本配置。
+//
+// 可能返回的错误码:
+//  FAILEDOPERATION = "FailedOperation"
+//  FAILEDOPERATION_CASTERNOTFOUND = "FailedOperation.CasterNotFound"
+//  FAILEDOPERATION_LAYOUTUSEDINPGM = "FailedOperation.LayoutUsedInPgm"
+//  FAILEDOPERATION_LAYOUTUSEDINPVW = "FailedOperation.LayoutUsedInPvw"
+//  FAILEDOPERATION_MARKWORDUSEDINAUTOCAST = "FailedOperation.MarkWordUsedInAutoCast"
+//  INTERNALERROR = "InternalError"
+//  INVALIDPARAMETER = "InvalidParameter"
+//  RESOURCENOTFOUND_FORBIDSERVICE = "ResourceNotFound.ForbidService"
+//  RESOURCENOTFOUND_FREEZESERVICE = "ResourceNotFound.FreezeService"
+//  RESOURCENOTFOUND_STOPSERVICE = "ResourceNotFound.StopService"
+//  RESOURCENOTFOUND_USERDISABLESERVICE = "ResourceNotFound.UserDisableService"
+//  RESOURCENOTFOUND_USERNOTEXIST = "ResourceNotFound.UserNotExist"
+//  UNKNOWNPARAMETER = "UnknownParameter"
+//  UNSUPPORTEDOPERATION = "UnsupportedOperation"
+func (c *Client) DeleteCasterMarkWordInfo(request *DeleteCasterMarkWordInfoRequest) (response *DeleteCasterMarkWordInfoResponse, err error) {
+    return c.DeleteCasterMarkWordInfoWithContext(context.Background(), request)
+}
+
+// DeleteCasterMarkWordInfo
+// 该接口用来删除导播台的文本配置。
+//
+// 可能返回的错误码:
+//  FAILEDOPERATION = "FailedOperation"
+//  FAILEDOPERATION_CASTERNOTFOUND = "FailedOperation.CasterNotFound"
+//  FAILEDOPERATION_LAYOUTUSEDINPGM = "FailedOperation.LayoutUsedInPgm"
+//  FAILEDOPERATION_LAYOUTUSEDINPVW = "FailedOperation.LayoutUsedInPvw"
+//  FAILEDOPERATION_MARKWORDUSEDINAUTOCAST = "FailedOperation.MarkWordUsedInAutoCast"
+//  INTERNALERROR = "InternalError"
+//  INVALIDPARAMETER = "InvalidParameter"
+//  RESOURCENOTFOUND_FORBIDSERVICE = "ResourceNotFound.ForbidService"
+//  RESOURCENOTFOUND_FREEZESERVICE = "ResourceNotFound.FreezeService"
+//  RESOURCENOTFOUND_STOPSERVICE = "ResourceNotFound.StopService"
+//  RESOURCENOTFOUND_USERDISABLESERVICE = "ResourceNotFound.UserDisableService"
+//  RESOURCENOTFOUND_USERNOTEXIST = "ResourceNotFound.UserNotExist"
+//  UNKNOWNPARAMETER = "UnknownParameter"
+//  UNSUPPORTEDOPERATION = "UnsupportedOperation"
+func (c *Client) DeleteCasterMarkWordInfoWithContext(ctx context.Context, request *DeleteCasterMarkWordInfoRequest) (response *DeleteCasterMarkWordInfoResponse, err error) {
+    if request == nil {
+        request = NewDeleteCasterMarkWordInfoRequest()
+    }
+    c.InitBaseRequest(&request.BaseRequest, "live", APIVersion, "DeleteCasterMarkWordInfo")
+    
+    if c.GetCredential() == nil {
+        return nil, errors.New("DeleteCasterMarkWordInfo require credential")
+    }
+
+    request.SetContext(ctx)
+    
+    response = NewDeleteCasterMarkWordInfoResponse()
+    err = c.Send(request, response)
+    return
+}
+
+func NewDeleteCasterOutputInfoRequest() (request *DeleteCasterOutputInfoRequest) {
+    request = &DeleteCasterOutputInfoRequest{
+        BaseRequest: &tchttp.BaseRequest{},
+    }
+    
+    request.Init().WithApiInfo("live", APIVersion, "DeleteCasterOutputInfo")
+    
+    
+    return
+}
+
+func NewDeleteCasterOutputInfoResponse() (response *DeleteCasterOutputInfoResponse) {
+    response = &DeleteCasterOutputInfoResponse{
+        BaseResponse: &tchttp.BaseResponse{},
+    } 
+    return
+
+}
+
+// DeleteCasterOutputInfo
+// 该接口用来删除导播台的推流信息。
+//
+// 注：若删除推流到腾讯云直播源站配置，即OutputIndex为0，OutputType为1的推流配置，在重新启动主监后，系统会自动重新生成一个推流到腾讯云直播源站配置。
+//
+// 可能返回的错误码:
+//  FAILEDOPERATION = "FailedOperation"
+//  FAILEDOPERATION_CASTERNOTFOUND = "FailedOperation.CasterNotFound"
+//  INTERNALERROR = "InternalError"
+//  INVALIDPARAMETER = "InvalidParameter"
+//  RESOURCENOTFOUND_FORBIDSERVICE = "ResourceNotFound.ForbidService"
+//  RESOURCENOTFOUND_FREEZESERVICE = "ResourceNotFound.FreezeService"
+//  RESOURCENOTFOUND_STOPSERVICE = "ResourceNotFound.StopService"
+//  RESOURCENOTFOUND_USERDISABLESERVICE = "ResourceNotFound.UserDisableService"
+//  RESOURCENOTFOUND_USERNOTEXIST = "ResourceNotFound.UserNotExist"
+//  UNKNOWNPARAMETER = "UnknownParameter"
+//  UNSUPPORTEDOPERATION = "UnsupportedOperation"
+func (c *Client) DeleteCasterOutputInfo(request *DeleteCasterOutputInfoRequest) (response *DeleteCasterOutputInfoResponse, err error) {
+    return c.DeleteCasterOutputInfoWithContext(context.Background(), request)
+}
+
+// DeleteCasterOutputInfo
+// 该接口用来删除导播台的推流信息。
+//
+// 注：若删除推流到腾讯云直播源站配置，即OutputIndex为0，OutputType为1的推流配置，在重新启动主监后，系统会自动重新生成一个推流到腾讯云直播源站配置。
+//
+// 可能返回的错误码:
+//  FAILEDOPERATION = "FailedOperation"
+//  FAILEDOPERATION_CASTERNOTFOUND = "FailedOperation.CasterNotFound"
+//  INTERNALERROR = "InternalError"
+//  INVALIDPARAMETER = "InvalidParameter"
+//  RESOURCENOTFOUND_FORBIDSERVICE = "ResourceNotFound.ForbidService"
+//  RESOURCENOTFOUND_FREEZESERVICE = "ResourceNotFound.FreezeService"
+//  RESOURCENOTFOUND_STOPSERVICE = "ResourceNotFound.StopService"
+//  RESOURCENOTFOUND_USERDISABLESERVICE = "ResourceNotFound.UserDisableService"
+//  RESOURCENOTFOUND_USERNOTEXIST = "ResourceNotFound.UserNotExist"
+//  UNKNOWNPARAMETER = "UnknownParameter"
+//  UNSUPPORTEDOPERATION = "UnsupportedOperation"
+func (c *Client) DeleteCasterOutputInfoWithContext(ctx context.Context, request *DeleteCasterOutputInfoRequest) (response *DeleteCasterOutputInfoResponse, err error) {
+    if request == nil {
+        request = NewDeleteCasterOutputInfoRequest()
+    }
+    c.InitBaseRequest(&request.BaseRequest, "live", APIVersion, "DeleteCasterOutputInfo")
+    
+    if c.GetCredential() == nil {
+        return nil, errors.New("DeleteCasterOutputInfo require credential")
+    }
+
+    request.SetContext(ctx)
+    
+    response = NewDeleteCasterOutputInfoResponse()
+    err = c.Send(request, response)
+    return
+}
+
+func NewDeleteLiveAvatarRoomRequest() (request *DeleteLiveAvatarRoomRequest) {
+    request = &DeleteLiveAvatarRoomRequest{
+        BaseRequest: &tchttp.BaseRequest{},
+    }
+    
+    request.Init().WithApiInfo("live", APIVersion, "DeleteLiveAvatarRoom")
+    
+    
+    return
+}
+
+func NewDeleteLiveAvatarRoomResponse() (response *DeleteLiveAvatarRoomResponse) {
+    response = &DeleteLiveAvatarRoomResponse{
+        BaseResponse: &tchttp.BaseResponse{},
+    } 
+    return
+
+}
+
+// DeleteLiveAvatarRoom
+// 调用该接口，用于删除已有的数字人直播间。
+//
+// 可能返回的错误码:
+//  FAILEDOPERATION = "FailedOperation"
+//  FAILEDOPERATION_CASTERNOTFOUND = "FailedOperation.CasterNotFound"
+//  INTERNALERROR = "InternalError"
+//  INVALIDPARAMETER = "InvalidParameter"
+//  RESOURCENOTFOUND_FORBIDSERVICE = "ResourceNotFound.ForbidService"
+//  RESOURCENOTFOUND_FREEZESERVICE = "ResourceNotFound.FreezeService"
+//  RESOURCENOTFOUND_STOPSERVICE = "ResourceNotFound.StopService"
+//  RESOURCENOTFOUND_USERDISABLESERVICE = "ResourceNotFound.UserDisableService"
+//  RESOURCENOTFOUND_USERNOTEXIST = "ResourceNotFound.UserNotExist"
+//  UNKNOWNPARAMETER = "UnknownParameter"
+//  UNSUPPORTEDOPERATION = "UnsupportedOperation"
+func (c *Client) DeleteLiveAvatarRoom(request *DeleteLiveAvatarRoomRequest) (response *DeleteLiveAvatarRoomResponse, err error) {
+    return c.DeleteLiveAvatarRoomWithContext(context.Background(), request)
+}
+
+// DeleteLiveAvatarRoom
+// 调用该接口，用于删除已有的数字人直播间。
+//
+// 可能返回的错误码:
+//  FAILEDOPERATION = "FailedOperation"
+//  FAILEDOPERATION_CASTERNOTFOUND = "FailedOperation.CasterNotFound"
+//  INTERNALERROR = "InternalError"
+//  INVALIDPARAMETER = "InvalidParameter"
+//  RESOURCENOTFOUND_FORBIDSERVICE = "ResourceNotFound.ForbidService"
+//  RESOURCENOTFOUND_FREEZESERVICE = "ResourceNotFound.FreezeService"
+//  RESOURCENOTFOUND_STOPSERVICE = "ResourceNotFound.StopService"
+//  RESOURCENOTFOUND_USERDISABLESERVICE = "ResourceNotFound.UserDisableService"
+//  RESOURCENOTFOUND_USERNOTEXIST = "ResourceNotFound.UserNotExist"
+//  UNKNOWNPARAMETER = "UnknownParameter"
+//  UNSUPPORTEDOPERATION = "UnsupportedOperation"
+func (c *Client) DeleteLiveAvatarRoomWithContext(ctx context.Context, request *DeleteLiveAvatarRoomRequest) (response *DeleteLiveAvatarRoomResponse, err error) {
+    if request == nil {
+        request = NewDeleteLiveAvatarRoomRequest()
+    }
+    c.InitBaseRequest(&request.BaseRequest, "live", APIVersion, "DeleteLiveAvatarRoom")
+    
+    if c.GetCredential() == nil {
+        return nil, errors.New("DeleteLiveAvatarRoom require credential")
+    }
+
+    request.SetContext(ctx)
+    
+    response = NewDeleteLiveAvatarRoomResponse()
+    err = c.Send(request, response)
+    return
+}
+
+func NewDeleteLiveAvatarScriptRequest() (request *DeleteLiveAvatarScriptRequest) {
+    request = &DeleteLiveAvatarScriptRequest{
+        BaseRequest: &tchttp.BaseRequest{},
+    }
+    
+    request.Init().WithApiInfo("live", APIVersion, "DeleteLiveAvatarScript")
+    
+    
+    return
+}
+
+func NewDeleteLiveAvatarScriptResponse() (response *DeleteLiveAvatarScriptResponse) {
+    response = &DeleteLiveAvatarScriptResponse{
+        BaseResponse: &tchttp.BaseResponse{},
+    } 
+    return
+
+}
+
+// DeleteLiveAvatarScript
+// 调用该接口，用于删除已有的数字人直播间里面的话术。
+//
+// 可能返回的错误码:
+//  FAILEDOPERATION = "FailedOperation"
+//  FAILEDOPERATION_CASTERNOTFOUND = "FailedOperation.CasterNotFound"
+//  INTERNALERROR = "InternalError"
+//  INVALIDPARAMETER = "InvalidParameter"
+//  RESOURCENOTFOUND_FORBIDSERVICE = "ResourceNotFound.ForbidService"
+//  RESOURCENOTFOUND_FREEZESERVICE = "ResourceNotFound.FreezeService"
+//  RESOURCENOTFOUND_STOPSERVICE = "ResourceNotFound.StopService"
+//  RESOURCENOTFOUND_USERDISABLESERVICE = "ResourceNotFound.UserDisableService"
+//  RESOURCENOTFOUND_USERNOTEXIST = "ResourceNotFound.UserNotExist"
+//  UNKNOWNPARAMETER = "UnknownParameter"
+//  UNSUPPORTEDOPERATION = "UnsupportedOperation"
+func (c *Client) DeleteLiveAvatarScript(request *DeleteLiveAvatarScriptRequest) (response *DeleteLiveAvatarScriptResponse, err error) {
+    return c.DeleteLiveAvatarScriptWithContext(context.Background(), request)
+}
+
+// DeleteLiveAvatarScript
+// 调用该接口，用于删除已有的数字人直播间里面的话术。
+//
+// 可能返回的错误码:
+//  FAILEDOPERATION = "FailedOperation"
+//  FAILEDOPERATION_CASTERNOTFOUND = "FailedOperation.CasterNotFound"
+//  INTERNALERROR = "InternalError"
+//  INVALIDPARAMETER = "InvalidParameter"
+//  RESOURCENOTFOUND_FORBIDSERVICE = "ResourceNotFound.ForbidService"
+//  RESOURCENOTFOUND_FREEZESERVICE = "ResourceNotFound.FreezeService"
+//  RESOURCENOTFOUND_STOPSERVICE = "ResourceNotFound.StopService"
+//  RESOURCENOTFOUND_USERDISABLESERVICE = "ResourceNotFound.UserDisableService"
+//  RESOURCENOTFOUND_USERNOTEXIST = "ResourceNotFound.UserNotExist"
+//  UNKNOWNPARAMETER = "UnknownParameter"
+//  UNSUPPORTEDOPERATION = "UnsupportedOperation"
+func (c *Client) DeleteLiveAvatarScriptWithContext(ctx context.Context, request *DeleteLiveAvatarScriptRequest) (response *DeleteLiveAvatarScriptResponse, err error) {
+    if request == nil {
+        request = NewDeleteLiveAvatarScriptRequest()
+    }
+    c.InitBaseRequest(&request.BaseRequest, "live", APIVersion, "DeleteLiveAvatarScript")
+    
+    if c.GetCredential() == nil {
+        return nil, errors.New("DeleteLiveAvatarScript require credential")
+    }
+
+    request.SetContext(ctx)
+    
+    response = NewDeleteLiveAvatarScriptResponse()
     err = c.Send(request, response)
     return
 }
@@ -2391,6 +4534,7 @@ func (c *Client) DeleteLiveCallbackRuleWithContext(ctx context.Context, request 
     if request == nil {
         request = NewDeleteLiveCallbackRuleRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "live", APIVersion, "DeleteLiveCallbackRule")
     
     if c.GetCredential() == nil {
         return nil, errors.New("DeleteLiveCallbackRule require credential")
@@ -2478,6 +4622,7 @@ func (c *Client) DeleteLiveCallbackTemplateWithContext(ctx context.Context, requ
     if request == nil {
         request = NewDeleteLiveCallbackTemplateRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "live", APIVersion, "DeleteLiveCallbackTemplate")
     
     if c.GetCredential() == nil {
         return nil, errors.New("DeleteLiveCallbackTemplate require credential")
@@ -2559,6 +4704,7 @@ func (c *Client) DeleteLiveDomainWithContext(ctx context.Context, request *Delet
     if request == nil {
         request = NewDeleteLiveDomainRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "live", APIVersion, "DeleteLiveDomain")
     
     if c.GetCredential() == nil {
         return nil, errors.New("DeleteLiveDomain require credential")
@@ -2642,6 +4788,7 @@ func (c *Client) DeleteLivePadRuleWithContext(ctx context.Context, request *Dele
     if request == nil {
         request = NewDeleteLivePadRuleRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "live", APIVersion, "DeleteLivePadRule")
     
     if c.GetCredential() == nil {
         return nil, errors.New("DeleteLivePadRule require credential")
@@ -2727,6 +4874,7 @@ func (c *Client) DeleteLivePadTemplateWithContext(ctx context.Context, request *
     if request == nil {
         request = NewDeleteLivePadTemplateRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "live", APIVersion, "DeleteLivePadTemplate")
     
     if c.GetCredential() == nil {
         return nil, errors.New("DeleteLivePadTemplate require credential")
@@ -2806,6 +4954,7 @@ func (c *Client) DeleteLivePullStreamTaskWithContext(ctx context.Context, reques
     if request == nil {
         request = NewDeleteLivePullStreamTaskRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "live", APIVersion, "DeleteLivePullStreamTask")
     
     if c.GetCredential() == nil {
         return nil, errors.New("DeleteLivePullStreamTask require credential")
@@ -2879,6 +5028,7 @@ func (c *Client) DeleteLiveRecordWithContext(ctx context.Context, request *Delet
     if request == nil {
         request = NewDeleteLiveRecordRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "live", APIVersion, "DeleteLiveRecord")
     
     if c.GetCredential() == nil {
         return nil, errors.New("DeleteLiveRecord require credential")
@@ -2962,6 +5112,7 @@ func (c *Client) DeleteLiveRecordRuleWithContext(ctx context.Context, request *D
     if request == nil {
         request = NewDeleteLiveRecordRuleRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "live", APIVersion, "DeleteLiveRecordRule")
     
     if c.GetCredential() == nil {
         return nil, errors.New("DeleteLiveRecordRule require credential")
@@ -3043,6 +5194,7 @@ func (c *Client) DeleteLiveRecordTemplateWithContext(ctx context.Context, reques
     if request == nil {
         request = NewDeleteLiveRecordTemplateRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "live", APIVersion, "DeleteLiveRecordTemplate")
     
     if c.GetCredential() == nil {
         return nil, errors.New("DeleteLiveRecordTemplate require credential")
@@ -3126,6 +5278,7 @@ func (c *Client) DeleteLiveSnapshotRuleWithContext(ctx context.Context, request 
     if request == nil {
         request = NewDeleteLiveSnapshotRuleRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "live", APIVersion, "DeleteLiveSnapshotRule")
     
     if c.GetCredential() == nil {
         return nil, errors.New("DeleteLiveSnapshotRule require credential")
@@ -3207,6 +5360,7 @@ func (c *Client) DeleteLiveSnapshotTemplateWithContext(ctx context.Context, requ
     if request == nil {
         request = NewDeleteLiveSnapshotTemplateRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "live", APIVersion, "DeleteLiveSnapshotTemplate")
     
     if c.GetCredential() == nil {
         return nil, errors.New("DeleteLiveSnapshotTemplate require credential")
@@ -3284,6 +5438,7 @@ func (c *Client) DeleteLiveStreamMonitorWithContext(ctx context.Context, request
     if request == nil {
         request = NewDeleteLiveStreamMonitorRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "live", APIVersion, "DeleteLiveStreamMonitor")
     
     if c.GetCredential() == nil {
         return nil, errors.New("DeleteLiveStreamMonitor require credential")
@@ -3367,6 +5522,7 @@ func (c *Client) DeleteLiveTimeShiftRuleWithContext(ctx context.Context, request
     if request == nil {
         request = NewDeleteLiveTimeShiftRuleRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "live", APIVersion, "DeleteLiveTimeShiftRule")
     
     if c.GetCredential() == nil {
         return nil, errors.New("DeleteLiveTimeShiftRule require credential")
@@ -3452,6 +5608,7 @@ func (c *Client) DeleteLiveTimeShiftTemplateWithContext(ctx context.Context, req
     if request == nil {
         request = NewDeleteLiveTimeShiftTemplateRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "live", APIVersion, "DeleteLiveTimeShiftTemplate")
     
     if c.GetCredential() == nil {
         return nil, errors.New("DeleteLiveTimeShiftTemplate require credential")
@@ -3541,6 +5698,7 @@ func (c *Client) DeleteLiveTranscodeRuleWithContext(ctx context.Context, request
     if request == nil {
         request = NewDeleteLiveTranscodeRuleRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "live", APIVersion, "DeleteLiveTranscodeRule")
     
     if c.GetCredential() == nil {
         return nil, errors.New("DeleteLiveTranscodeRule require credential")
@@ -3626,6 +5784,7 @@ func (c *Client) DeleteLiveTranscodeTemplateWithContext(ctx context.Context, req
     if request == nil {
         request = NewDeleteLiveTranscodeTemplateRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "live", APIVersion, "DeleteLiveTranscodeTemplate")
     
     if c.GetCredential() == nil {
         return nil, errors.New("DeleteLiveTranscodeTemplate require credential")
@@ -3695,6 +5854,7 @@ func (c *Client) DeleteLiveWatermarkWithContext(ctx context.Context, request *De
     if request == nil {
         request = NewDeleteLiveWatermarkRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "live", APIVersion, "DeleteLiveWatermark")
     
     if c.GetCredential() == nil {
         return nil, errors.New("DeleteLiveWatermark require credential")
@@ -3778,6 +5938,7 @@ func (c *Client) DeleteLiveWatermarkRuleWithContext(ctx context.Context, request
     if request == nil {
         request = NewDeleteLiveWatermarkRuleRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "live", APIVersion, "DeleteLiveWatermarkRule")
     
     if c.GetCredential() == nil {
         return nil, errors.New("DeleteLiveWatermarkRule require credential")
@@ -3847,6 +6008,7 @@ func (c *Client) DeletePullStreamConfigWithContext(ctx context.Context, request 
     if request == nil {
         request = NewDeletePullStreamConfigRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "live", APIVersion, "DeletePullStreamConfig")
     
     if c.GetCredential() == nil {
         return nil, errors.New("DeletePullStreamConfig require credential")
@@ -3914,6 +6076,7 @@ func (c *Client) DeleteRecordTaskWithContext(ctx context.Context, request *Delet
     if request == nil {
         request = NewDeleteRecordTaskRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "live", APIVersion, "DeleteRecordTask")
     
     if c.GetCredential() == nil {
         return nil, errors.New("DeleteRecordTask require credential")
@@ -3979,6 +6142,7 @@ func (c *Client) DeleteScreenshotTaskWithContext(ctx context.Context, request *D
     if request == nil {
         request = NewDeleteScreenshotTaskRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "live", APIVersion, "DeleteScreenshotTask")
     
     if c.GetCredential() == nil {
         return nil, errors.New("DeleteScreenshotTask require credential")
@@ -3987,6 +6151,60 @@ func (c *Client) DeleteScreenshotTaskWithContext(ctx context.Context, request *D
     request.SetContext(ctx)
     
     response = NewDeleteScreenshotTaskResponse()
+    err = c.Send(request, response)
+    return
+}
+
+func NewDescribeAIGCTaskStatusRequest() (request *DescribeAIGCTaskStatusRequest) {
+    request = &DescribeAIGCTaskStatusRequest{
+        BaseRequest: &tchttp.BaseRequest{},
+    }
+    
+    request.Init().WithApiInfo("live", APIVersion, "DescribeAIGCTaskStatus")
+    
+    
+    return
+}
+
+func NewDescribeAIGCTaskStatusResponse() (response *DescribeAIGCTaskStatusResponse) {
+    response = &DescribeAIGCTaskStatusResponse{
+        BaseResponse: &tchttp.BaseResponse{},
+    } 
+    return
+
+}
+
+// DescribeAIGCTaskStatus
+// 查询视频转绘任务
+//
+// 可能返回的错误码:
+//  FAILEDOPERATION_QUERYAIGCTASKFAILED = "FailedOperation.QueryAIGCTaskFailed"
+//  INVALIDPARAMETER_INVALIDTASKID = "InvalidParameter.InvalidTaskId"
+//  INVALIDPARAMETER_INVALIDURL = "InvalidParameter.InvalidUrl"
+func (c *Client) DescribeAIGCTaskStatus(request *DescribeAIGCTaskStatusRequest) (response *DescribeAIGCTaskStatusResponse, err error) {
+    return c.DescribeAIGCTaskStatusWithContext(context.Background(), request)
+}
+
+// DescribeAIGCTaskStatus
+// 查询视频转绘任务
+//
+// 可能返回的错误码:
+//  FAILEDOPERATION_QUERYAIGCTASKFAILED = "FailedOperation.QueryAIGCTaskFailed"
+//  INVALIDPARAMETER_INVALIDTASKID = "InvalidParameter.InvalidTaskId"
+//  INVALIDPARAMETER_INVALIDURL = "InvalidParameter.InvalidUrl"
+func (c *Client) DescribeAIGCTaskStatusWithContext(ctx context.Context, request *DescribeAIGCTaskStatusRequest) (response *DescribeAIGCTaskStatusResponse, err error) {
+    if request == nil {
+        request = NewDescribeAIGCTaskStatusRequest()
+    }
+    c.InitBaseRequest(&request.BaseRequest, "live", APIVersion, "DescribeAIGCTaskStatus")
+    
+    if c.GetCredential() == nil {
+        return nil, errors.New("DescribeAIGCTaskStatus require credential")
+    }
+
+    request.SetContext(ctx)
+    
+    response = NewDescribeAIGCTaskStatusResponse()
     err = c.Send(request, response)
     return
 }
@@ -4046,6 +6264,7 @@ func (c *Client) DescribeAllStreamPlayInfoListWithContext(ctx context.Context, r
     if request == nil {
         request = NewDescribeAllStreamPlayInfoListRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "live", APIVersion, "DescribeAllStreamPlayInfoList")
     
     if c.GetCredential() == nil {
         return nil, errors.New("DescribeAllStreamPlayInfoList require credential")
@@ -4107,6 +6326,7 @@ func (c *Client) DescribeAreaBillBandwidthAndFluxListWithContext(ctx context.Con
     if request == nil {
         request = NewDescribeAreaBillBandwidthAndFluxListRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "live", APIVersion, "DescribeAreaBillBandwidthAndFluxList")
     
     if c.GetCredential() == nil {
         return nil, errors.New("DescribeAreaBillBandwidthAndFluxList require credential")
@@ -4115,6 +6335,56 @@ func (c *Client) DescribeAreaBillBandwidthAndFluxListWithContext(ctx context.Con
     request.SetContext(ctx)
     
     response = NewDescribeAreaBillBandwidthAndFluxListResponse()
+    err = c.Send(request, response)
+    return
+}
+
+func NewDescribeAuditKeywordsRequest() (request *DescribeAuditKeywordsRequest) {
+    request = &DescribeAuditKeywordsRequest{
+        BaseRequest: &tchttp.BaseRequest{},
+    }
+    
+    request.Init().WithApiInfo("live", APIVersion, "DescribeAuditKeywords")
+    
+    
+    return
+}
+
+func NewDescribeAuditKeywordsResponse() (response *DescribeAuditKeywordsResponse) {
+    response = &DescribeAuditKeywordsResponse{
+        BaseResponse: &tchttp.BaseResponse{},
+    } 
+    return
+
+}
+
+// DescribeAuditKeywords
+// 获取关键词信息。
+//
+// 可能返回的错误码:
+//  FAILEDOPERATION = "FailedOperation"
+func (c *Client) DescribeAuditKeywords(request *DescribeAuditKeywordsRequest) (response *DescribeAuditKeywordsResponse, err error) {
+    return c.DescribeAuditKeywordsWithContext(context.Background(), request)
+}
+
+// DescribeAuditKeywords
+// 获取关键词信息。
+//
+// 可能返回的错误码:
+//  FAILEDOPERATION = "FailedOperation"
+func (c *Client) DescribeAuditKeywordsWithContext(ctx context.Context, request *DescribeAuditKeywordsRequest) (response *DescribeAuditKeywordsResponse, err error) {
+    if request == nil {
+        request = NewDescribeAuditKeywordsRequest()
+    }
+    c.InitBaseRequest(&request.BaseRequest, "live", APIVersion, "DescribeAuditKeywords")
+    
+    if c.GetCredential() == nil {
+        return nil, errors.New("DescribeAuditKeywords require credential")
+    }
+
+    request.SetContext(ctx)
+    
+    response = NewDescribeAuditKeywordsResponse()
     err = c.Send(request, response)
     return
 }
@@ -4206,6 +6476,7 @@ func (c *Client) DescribeBackupStreamListWithContext(ctx context.Context, reques
     if request == nil {
         request = NewDescribeBackupStreamListRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "live", APIVersion, "DescribeBackupStreamList")
     
     if c.GetCredential() == nil {
         return nil, errors.New("DescribeBackupStreamList require credential")
@@ -4267,6 +6538,7 @@ func (c *Client) DescribeBillBandwidthAndFluxListWithContext(ctx context.Context
     if request == nil {
         request = NewDescribeBillBandwidthAndFluxListRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "live", APIVersion, "DescribeBillBandwidthAndFluxList")
     
     if c.GetCredential() == nil {
         return nil, errors.New("DescribeBillBandwidthAndFluxList require credential")
@@ -4332,6 +6604,7 @@ func (c *Client) DescribeCallbackRecordsListWithContext(ctx context.Context, req
     if request == nil {
         request = NewDescribeCallbackRecordsListRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "live", APIVersion, "DescribeCallbackRecordsList")
     
     if c.GetCredential() == nil {
         return nil, errors.New("DescribeCallbackRecordsList require credential")
@@ -4340,6 +6613,850 @@ func (c *Client) DescribeCallbackRecordsListWithContext(ctx context.Context, req
     request.SetContext(ctx)
     
     response = NewDescribeCallbackRecordsListResponse()
+    err = c.Send(request, response)
+    return
+}
+
+func NewDescribeCasterRequest() (request *DescribeCasterRequest) {
+    request = &DescribeCasterRequest{
+        BaseRequest: &tchttp.BaseRequest{},
+    }
+    
+    request.Init().WithApiInfo("live", APIVersion, "DescribeCaster")
+    
+    
+    return
+}
+
+func NewDescribeCasterResponse() (response *DescribeCasterResponse) {
+    response = &DescribeCasterResponse{
+        BaseResponse: &tchttp.BaseResponse{},
+    } 
+    return
+
+}
+
+// DescribeCaster
+// 查询导播台信息接口，用来查询导播台状态、描述、输出长、宽等信息
+//
+// 可能返回的错误码:
+//  FAILEDOPERATION_CASTERNOTFOUND = "FailedOperation.CasterNotFound"
+//  FAILEDOPERATION_OUTOFSERVICE = "FailedOperation.OutOfService"
+//  INTERNALERROR = "InternalError"
+//  INVALIDPARAMETER = "InvalidParameter"
+//  RESOURCENOTFOUND_FORBIDSERVICE = "ResourceNotFound.ForbidService"
+//  RESOURCENOTFOUND_FREEZESERVICE = "ResourceNotFound.FreezeService"
+//  RESOURCENOTFOUND_STOPSERVICE = "ResourceNotFound.StopService"
+//  RESOURCENOTFOUND_USERDISABLESERVICE = "ResourceNotFound.UserDisableService"
+//  RESOURCENOTFOUND_USERNOTEXIST = "ResourceNotFound.UserNotExist"
+//  UNKNOWNPARAMETER = "UnknownParameter"
+//  UNSUPPORTEDOPERATION = "UnsupportedOperation"
+func (c *Client) DescribeCaster(request *DescribeCasterRequest) (response *DescribeCasterResponse, err error) {
+    return c.DescribeCasterWithContext(context.Background(), request)
+}
+
+// DescribeCaster
+// 查询导播台信息接口，用来查询导播台状态、描述、输出长、宽等信息
+//
+// 可能返回的错误码:
+//  FAILEDOPERATION_CASTERNOTFOUND = "FailedOperation.CasterNotFound"
+//  FAILEDOPERATION_OUTOFSERVICE = "FailedOperation.OutOfService"
+//  INTERNALERROR = "InternalError"
+//  INVALIDPARAMETER = "InvalidParameter"
+//  RESOURCENOTFOUND_FORBIDSERVICE = "ResourceNotFound.ForbidService"
+//  RESOURCENOTFOUND_FREEZESERVICE = "ResourceNotFound.FreezeService"
+//  RESOURCENOTFOUND_STOPSERVICE = "ResourceNotFound.StopService"
+//  RESOURCENOTFOUND_USERDISABLESERVICE = "ResourceNotFound.UserDisableService"
+//  RESOURCENOTFOUND_USERNOTEXIST = "ResourceNotFound.UserNotExist"
+//  UNKNOWNPARAMETER = "UnknownParameter"
+//  UNSUPPORTEDOPERATION = "UnsupportedOperation"
+func (c *Client) DescribeCasterWithContext(ctx context.Context, request *DescribeCasterRequest) (response *DescribeCasterResponse, err error) {
+    if request == nil {
+        request = NewDescribeCasterRequest()
+    }
+    c.InitBaseRequest(&request.BaseRequest, "live", APIVersion, "DescribeCaster")
+    
+    if c.GetCredential() == nil {
+        return nil, errors.New("DescribeCaster require credential")
+    }
+
+    request.SetContext(ctx)
+    
+    response = NewDescribeCasterResponse()
+    err = c.Send(request, response)
+    return
+}
+
+func NewDescribeCasterDisplayInfoRequest() (request *DescribeCasterDisplayInfoRequest) {
+    request = &DescribeCasterDisplayInfoRequest{
+        BaseRequest: &tchttp.BaseRequest{},
+    }
+    
+    request.Init().WithApiInfo("live", APIVersion, "DescribeCasterDisplayInfo")
+    
+    
+    return
+}
+
+func NewDescribeCasterDisplayInfoResponse() (response *DescribeCasterDisplayInfoResponse) {
+    response = &DescribeCasterDisplayInfoResponse{
+        BaseResponse: &tchttp.BaseResponse{},
+    } 
+    return
+
+}
+
+// DescribeCasterDisplayInfo
+// 查询导播台PVW任务和PGM任务的展示信息，包括使用的布局、水印、字幕等信息。
+//
+// 可能返回的错误码:
+//  AUTHFAILURE = "AuthFailure"
+//  FAILEDOPERATION = "FailedOperation"
+//  INTERNALERROR = "InternalError"
+//  INVALIDPARAMETER = "InvalidParameter"
+//  RESOURCENOTFOUND_CASTERNOTEXISTS = "ResourceNotFound.CasterNotExists"
+//  RESOURCENOTFOUND_USERNOTEXIST = "ResourceNotFound.UserNotExist"
+//  RESOURCEUNAVAILABLE = "ResourceUnavailable"
+//  UNAUTHORIZEDOPERATION = "UnauthorizedOperation"
+//  UNKNOWNPARAMETER = "UnknownParameter"
+//  UNSUPPORTEDOPERATION = "UnsupportedOperation"
+func (c *Client) DescribeCasterDisplayInfo(request *DescribeCasterDisplayInfoRequest) (response *DescribeCasterDisplayInfoResponse, err error) {
+    return c.DescribeCasterDisplayInfoWithContext(context.Background(), request)
+}
+
+// DescribeCasterDisplayInfo
+// 查询导播台PVW任务和PGM任务的展示信息，包括使用的布局、水印、字幕等信息。
+//
+// 可能返回的错误码:
+//  AUTHFAILURE = "AuthFailure"
+//  FAILEDOPERATION = "FailedOperation"
+//  INTERNALERROR = "InternalError"
+//  INVALIDPARAMETER = "InvalidParameter"
+//  RESOURCENOTFOUND_CASTERNOTEXISTS = "ResourceNotFound.CasterNotExists"
+//  RESOURCENOTFOUND_USERNOTEXIST = "ResourceNotFound.UserNotExist"
+//  RESOURCEUNAVAILABLE = "ResourceUnavailable"
+//  UNAUTHORIZEDOPERATION = "UnauthorizedOperation"
+//  UNKNOWNPARAMETER = "UnknownParameter"
+//  UNSUPPORTEDOPERATION = "UnsupportedOperation"
+func (c *Client) DescribeCasterDisplayInfoWithContext(ctx context.Context, request *DescribeCasterDisplayInfoRequest) (response *DescribeCasterDisplayInfoResponse, err error) {
+    if request == nil {
+        request = NewDescribeCasterDisplayInfoRequest()
+    }
+    c.InitBaseRequest(&request.BaseRequest, "live", APIVersion, "DescribeCasterDisplayInfo")
+    
+    if c.GetCredential() == nil {
+        return nil, errors.New("DescribeCasterDisplayInfo require credential")
+    }
+
+    request.SetContext(ctx)
+    
+    response = NewDescribeCasterDisplayInfoResponse()
+    err = c.Send(request, response)
+    return
+}
+
+func NewDescribeCasterEmergencyStatusRequest() (request *DescribeCasterEmergencyStatusRequest) {
+    request = &DescribeCasterEmergencyStatusRequest{
+        BaseRequest: &tchttp.BaseRequest{},
+    }
+    
+    request.Init().WithApiInfo("live", APIVersion, "DescribeCasterEmergencyStatus")
+    
+    
+    return
+}
+
+func NewDescribeCasterEmergencyStatusResponse() (response *DescribeCasterEmergencyStatusResponse) {
+    response = &DescribeCasterEmergencyStatusResponse{
+        BaseResponse: &tchttp.BaseResponse{},
+    } 
+    return
+
+}
+
+// DescribeCasterEmergencyStatus
+// 该接口用查询导播台的备播状态
+//
+// 可能返回的错误码:
+//  FAILEDOPERATION_CASTEREXPIRED = "FailedOperation.CasterExpired"
+//  FAILEDOPERATION_CASTERNOTFOUND = "FailedOperation.CasterNotFound"
+//  FAILEDOPERATION_CREATECASTERTASKFAILED = "FailedOperation.CreateCasterTaskFailed"
+//  FAILEDOPERATION_NOBACKUPINPUT = "FailedOperation.NoBackupInput"
+//  FAILEDOPERATION_NOLVBPUSHORPLAYDOMAIN = "FailedOperation.NoLVBPushOrPlayDomain"
+//  FAILEDOPERATION_NOPGMRUNNING = "FailedOperation.NoPgmRunning"
+//  FAILEDOPERATION_RESOURCENOTENOUGH = "FailedOperation.ResourceNotEnough"
+//  INTERNALERROR = "InternalError"
+//  INVALIDPARAMETER = "InvalidParameter"
+//  RESOURCENOTFOUND_FORBIDSERVICE = "ResourceNotFound.ForbidService"
+//  RESOURCENOTFOUND_FREEZESERVICE = "ResourceNotFound.FreezeService"
+//  RESOURCENOTFOUND_STOPSERVICE = "ResourceNotFound.StopService"
+//  RESOURCENOTFOUND_USERDISABLESERVICE = "ResourceNotFound.UserDisableService"
+//  RESOURCENOTFOUND_USERNOTEXIST = "ResourceNotFound.UserNotExist"
+//  UNKNOWNPARAMETER = "UnknownParameter"
+//  UNSUPPORTEDOPERATION = "UnsupportedOperation"
+func (c *Client) DescribeCasterEmergencyStatus(request *DescribeCasterEmergencyStatusRequest) (response *DescribeCasterEmergencyStatusResponse, err error) {
+    return c.DescribeCasterEmergencyStatusWithContext(context.Background(), request)
+}
+
+// DescribeCasterEmergencyStatus
+// 该接口用查询导播台的备播状态
+//
+// 可能返回的错误码:
+//  FAILEDOPERATION_CASTEREXPIRED = "FailedOperation.CasterExpired"
+//  FAILEDOPERATION_CASTERNOTFOUND = "FailedOperation.CasterNotFound"
+//  FAILEDOPERATION_CREATECASTERTASKFAILED = "FailedOperation.CreateCasterTaskFailed"
+//  FAILEDOPERATION_NOBACKUPINPUT = "FailedOperation.NoBackupInput"
+//  FAILEDOPERATION_NOLVBPUSHORPLAYDOMAIN = "FailedOperation.NoLVBPushOrPlayDomain"
+//  FAILEDOPERATION_NOPGMRUNNING = "FailedOperation.NoPgmRunning"
+//  FAILEDOPERATION_RESOURCENOTENOUGH = "FailedOperation.ResourceNotEnough"
+//  INTERNALERROR = "InternalError"
+//  INVALIDPARAMETER = "InvalidParameter"
+//  RESOURCENOTFOUND_FORBIDSERVICE = "ResourceNotFound.ForbidService"
+//  RESOURCENOTFOUND_FREEZESERVICE = "ResourceNotFound.FreezeService"
+//  RESOURCENOTFOUND_STOPSERVICE = "ResourceNotFound.StopService"
+//  RESOURCENOTFOUND_USERDISABLESERVICE = "ResourceNotFound.UserDisableService"
+//  RESOURCENOTFOUND_USERNOTEXIST = "ResourceNotFound.UserNotExist"
+//  UNKNOWNPARAMETER = "UnknownParameter"
+//  UNSUPPORTEDOPERATION = "UnsupportedOperation"
+func (c *Client) DescribeCasterEmergencyStatusWithContext(ctx context.Context, request *DescribeCasterEmergencyStatusRequest) (response *DescribeCasterEmergencyStatusResponse, err error) {
+    if request == nil {
+        request = NewDescribeCasterEmergencyStatusRequest()
+    }
+    c.InitBaseRequest(&request.BaseRequest, "live", APIVersion, "DescribeCasterEmergencyStatus")
+    
+    if c.GetCredential() == nil {
+        return nil, errors.New("DescribeCasterEmergencyStatus require credential")
+    }
+
+    request.SetContext(ctx)
+    
+    response = NewDescribeCasterEmergencyStatusResponse()
+    err = c.Send(request, response)
+    return
+}
+
+func NewDescribeCasterInputInfosRequest() (request *DescribeCasterInputInfosRequest) {
+    request = &DescribeCasterInputInfosRequest{
+        BaseRequest: &tchttp.BaseRequest{},
+    }
+    
+    request.Init().WithApiInfo("live", APIVersion, "DescribeCasterInputInfos")
+    
+    
+    return
+}
+
+func NewDescribeCasterInputInfosResponse() (response *DescribeCasterInputInfosResponse) {
+    response = &DescribeCasterInputInfosResponse{
+        BaseResponse: &tchttp.BaseResponse{},
+    } 
+    return
+
+}
+
+// DescribeCasterInputInfos
+// 该接口用来查询导播台的输入源信息列表。
+//
+// 可能返回的错误码:
+//  INTERNALERROR = "InternalError"
+//  INVALIDPARAMETER = "InvalidParameter"
+//  INVALIDPARAMETER_INVALIDPROTOCOL = "InvalidParameter.InvalidProtocol"
+//  RESOURCENOTFOUND_FORBIDSERVICE = "ResourceNotFound.ForbidService"
+//  RESOURCENOTFOUND_FREEZESERVICE = "ResourceNotFound.FreezeService"
+//  RESOURCENOTFOUND_STOPSERVICE = "ResourceNotFound.StopService"
+//  RESOURCENOTFOUND_USERDISABLESERVICE = "ResourceNotFound.UserDisableService"
+//  RESOURCENOTFOUND_USERNOTEXIST = "ResourceNotFound.UserNotExist"
+//  UNKNOWNPARAMETER = "UnknownParameter"
+//  UNSUPPORTEDOPERATION = "UnsupportedOperation"
+func (c *Client) DescribeCasterInputInfos(request *DescribeCasterInputInfosRequest) (response *DescribeCasterInputInfosResponse, err error) {
+    return c.DescribeCasterInputInfosWithContext(context.Background(), request)
+}
+
+// DescribeCasterInputInfos
+// 该接口用来查询导播台的输入源信息列表。
+//
+// 可能返回的错误码:
+//  INTERNALERROR = "InternalError"
+//  INVALIDPARAMETER = "InvalidParameter"
+//  INVALIDPARAMETER_INVALIDPROTOCOL = "InvalidParameter.InvalidProtocol"
+//  RESOURCENOTFOUND_FORBIDSERVICE = "ResourceNotFound.ForbidService"
+//  RESOURCENOTFOUND_FREEZESERVICE = "ResourceNotFound.FreezeService"
+//  RESOURCENOTFOUND_STOPSERVICE = "ResourceNotFound.StopService"
+//  RESOURCENOTFOUND_USERDISABLESERVICE = "ResourceNotFound.UserDisableService"
+//  RESOURCENOTFOUND_USERNOTEXIST = "ResourceNotFound.UserNotExist"
+//  UNKNOWNPARAMETER = "UnknownParameter"
+//  UNSUPPORTEDOPERATION = "UnsupportedOperation"
+func (c *Client) DescribeCasterInputInfosWithContext(ctx context.Context, request *DescribeCasterInputInfosRequest) (response *DescribeCasterInputInfosResponse, err error) {
+    if request == nil {
+        request = NewDescribeCasterInputInfosRequest()
+    }
+    c.InitBaseRequest(&request.BaseRequest, "live", APIVersion, "DescribeCasterInputInfos")
+    
+    if c.GetCredential() == nil {
+        return nil, errors.New("DescribeCasterInputInfos require credential")
+    }
+
+    request.SetContext(ctx)
+    
+    response = NewDescribeCasterInputInfosResponse()
+    err = c.Send(request, response)
+    return
+}
+
+func NewDescribeCasterLayoutInfosRequest() (request *DescribeCasterLayoutInfosRequest) {
+    request = &DescribeCasterLayoutInfosRequest{
+        BaseRequest: &tchttp.BaseRequest{},
+    }
+    
+    request.Init().WithApiInfo("live", APIVersion, "DescribeCasterLayoutInfos")
+    
+    
+    return
+}
+
+func NewDescribeCasterLayoutInfosResponse() (response *DescribeCasterLayoutInfosResponse) {
+    response = &DescribeCasterLayoutInfosResponse{
+        BaseResponse: &tchttp.BaseResponse{},
+    } 
+    return
+
+}
+
+// DescribeCasterLayoutInfos
+// 该接口用来查询某个导播台的布局列表
+//
+// 可能返回的错误码:
+//  FAILEDOPERATION_CASTERNOTFOUND = "FailedOperation.CasterNotFound"
+//  FAILEDOPERATION_LAYOUTUSEDINPGM = "FailedOperation.LayoutUsedInPgm"
+//  FAILEDOPERATION_LAYOUTUSEDINPVW = "FailedOperation.LayoutUsedInPvw"
+//  INTERNALERROR = "InternalError"
+//  INVALIDPARAMETER = "InvalidParameter"
+//  RESOURCENOTFOUND_FORBIDSERVICE = "ResourceNotFound.ForbidService"
+//  RESOURCENOTFOUND_FREEZESERVICE = "ResourceNotFound.FreezeService"
+//  RESOURCENOTFOUND_STOPSERVICE = "ResourceNotFound.StopService"
+//  RESOURCENOTFOUND_USERDISABLESERVICE = "ResourceNotFound.UserDisableService"
+//  RESOURCENOTFOUND_USERNOTEXIST = "ResourceNotFound.UserNotExist"
+//  UNKNOWNPARAMETER = "UnknownParameter"
+//  UNSUPPORTEDOPERATION = "UnsupportedOperation"
+func (c *Client) DescribeCasterLayoutInfos(request *DescribeCasterLayoutInfosRequest) (response *DescribeCasterLayoutInfosResponse, err error) {
+    return c.DescribeCasterLayoutInfosWithContext(context.Background(), request)
+}
+
+// DescribeCasterLayoutInfos
+// 该接口用来查询某个导播台的布局列表
+//
+// 可能返回的错误码:
+//  FAILEDOPERATION_CASTERNOTFOUND = "FailedOperation.CasterNotFound"
+//  FAILEDOPERATION_LAYOUTUSEDINPGM = "FailedOperation.LayoutUsedInPgm"
+//  FAILEDOPERATION_LAYOUTUSEDINPVW = "FailedOperation.LayoutUsedInPvw"
+//  INTERNALERROR = "InternalError"
+//  INVALIDPARAMETER = "InvalidParameter"
+//  RESOURCENOTFOUND_FORBIDSERVICE = "ResourceNotFound.ForbidService"
+//  RESOURCENOTFOUND_FREEZESERVICE = "ResourceNotFound.FreezeService"
+//  RESOURCENOTFOUND_STOPSERVICE = "ResourceNotFound.StopService"
+//  RESOURCENOTFOUND_USERDISABLESERVICE = "ResourceNotFound.UserDisableService"
+//  RESOURCENOTFOUND_USERNOTEXIST = "ResourceNotFound.UserNotExist"
+//  UNKNOWNPARAMETER = "UnknownParameter"
+//  UNSUPPORTEDOPERATION = "UnsupportedOperation"
+func (c *Client) DescribeCasterLayoutInfosWithContext(ctx context.Context, request *DescribeCasterLayoutInfosRequest) (response *DescribeCasterLayoutInfosResponse, err error) {
+    if request == nil {
+        request = NewDescribeCasterLayoutInfosRequest()
+    }
+    c.InitBaseRequest(&request.BaseRequest, "live", APIVersion, "DescribeCasterLayoutInfos")
+    
+    if c.GetCredential() == nil {
+        return nil, errors.New("DescribeCasterLayoutInfos require credential")
+    }
+
+    request.SetContext(ctx)
+    
+    response = NewDescribeCasterLayoutInfosResponse()
+    err = c.Send(request, response)
+    return
+}
+
+func NewDescribeCasterListRequest() (request *DescribeCasterListRequest) {
+    request = &DescribeCasterListRequest{
+        BaseRequest: &tchttp.BaseRequest{},
+    }
+    
+    request.Init().WithApiInfo("live", APIVersion, "DescribeCasterList")
+    
+    
+    return
+}
+
+func NewDescribeCasterListResponse() (response *DescribeCasterListResponse) {
+    response = &DescribeCasterListResponse{
+        BaseResponse: &tchttp.BaseResponse{},
+    } 
+    return
+
+}
+
+// DescribeCasterList
+// 该接口用来查询账号下所有的导播台列表
+//
+// 可能返回的错误码:
+//  AUTHFAILURE_UNAUTHORIZEDOPERATION = "AuthFailure.UnauthorizedOperation"
+//  INTERNALERROR = "InternalError"
+//  INVALIDPARAMETER = "InvalidParameter"
+//  RESOURCENOTFOUND_FORBIDSERVICE = "ResourceNotFound.ForbidService"
+//  RESOURCENOTFOUND_FREEZESERVICE = "ResourceNotFound.FreezeService"
+//  RESOURCENOTFOUND_STOPSERVICE = "ResourceNotFound.StopService"
+//  RESOURCENOTFOUND_USERDISABLESERVICE = "ResourceNotFound.UserDisableService"
+//  RESOURCENOTFOUND_USERNOTEXIST = "ResourceNotFound.UserNotExist"
+//  UNKNOWNPARAMETER = "UnknownParameter"
+//  UNSUPPORTEDOPERATION = "UnsupportedOperation"
+func (c *Client) DescribeCasterList(request *DescribeCasterListRequest) (response *DescribeCasterListResponse, err error) {
+    return c.DescribeCasterListWithContext(context.Background(), request)
+}
+
+// DescribeCasterList
+// 该接口用来查询账号下所有的导播台列表
+//
+// 可能返回的错误码:
+//  AUTHFAILURE_UNAUTHORIZEDOPERATION = "AuthFailure.UnauthorizedOperation"
+//  INTERNALERROR = "InternalError"
+//  INVALIDPARAMETER = "InvalidParameter"
+//  RESOURCENOTFOUND_FORBIDSERVICE = "ResourceNotFound.ForbidService"
+//  RESOURCENOTFOUND_FREEZESERVICE = "ResourceNotFound.FreezeService"
+//  RESOURCENOTFOUND_STOPSERVICE = "ResourceNotFound.StopService"
+//  RESOURCENOTFOUND_USERDISABLESERVICE = "ResourceNotFound.UserDisableService"
+//  RESOURCENOTFOUND_USERNOTEXIST = "ResourceNotFound.UserNotExist"
+//  UNKNOWNPARAMETER = "UnknownParameter"
+//  UNSUPPORTEDOPERATION = "UnsupportedOperation"
+func (c *Client) DescribeCasterListWithContext(ctx context.Context, request *DescribeCasterListRequest) (response *DescribeCasterListResponse, err error) {
+    if request == nil {
+        request = NewDescribeCasterListRequest()
+    }
+    c.InitBaseRequest(&request.BaseRequest, "live", APIVersion, "DescribeCasterList")
+    
+    if c.GetCredential() == nil {
+        return nil, errors.New("DescribeCasterList require credential")
+    }
+
+    request.SetContext(ctx)
+    
+    response = NewDescribeCasterListResponse()
+    err = c.Send(request, response)
+    return
+}
+
+func NewDescribeCasterMarkPicInfosRequest() (request *DescribeCasterMarkPicInfosRequest) {
+    request = &DescribeCasterMarkPicInfosRequest{
+        BaseRequest: &tchttp.BaseRequest{},
+    }
+    
+    request.Init().WithApiInfo("live", APIVersion, "DescribeCasterMarkPicInfos")
+    
+    
+    return
+}
+
+func NewDescribeCasterMarkPicInfosResponse() (response *DescribeCasterMarkPicInfosResponse) {
+    response = &DescribeCasterMarkPicInfosResponse{
+        BaseResponse: &tchttp.BaseResponse{},
+    } 
+    return
+
+}
+
+// DescribeCasterMarkPicInfos
+// 该接口用来查询某个导播台的水印列表。
+//
+// 可能返回的错误码:
+//  FAILEDOPERATION_CASTERNOTFOUND = "FailedOperation.CasterNotFound"
+//  INTERNALERROR = "InternalError"
+//  INVALIDPARAMETER = "InvalidParameter"
+//  RESOURCENOTFOUND_FORBIDSERVICE = "ResourceNotFound.ForbidService"
+//  RESOURCENOTFOUND_FREEZESERVICE = "ResourceNotFound.FreezeService"
+//  RESOURCENOTFOUND_STOPSERVICE = "ResourceNotFound.StopService"
+//  RESOURCENOTFOUND_USERDISABLESERVICE = "ResourceNotFound.UserDisableService"
+//  RESOURCENOTFOUND_USERNOTEXIST = "ResourceNotFound.UserNotExist"
+//  UNKNOWNPARAMETER = "UnknownParameter"
+//  UNSUPPORTEDOPERATION = "UnsupportedOperation"
+func (c *Client) DescribeCasterMarkPicInfos(request *DescribeCasterMarkPicInfosRequest) (response *DescribeCasterMarkPicInfosResponse, err error) {
+    return c.DescribeCasterMarkPicInfosWithContext(context.Background(), request)
+}
+
+// DescribeCasterMarkPicInfos
+// 该接口用来查询某个导播台的水印列表。
+//
+// 可能返回的错误码:
+//  FAILEDOPERATION_CASTERNOTFOUND = "FailedOperation.CasterNotFound"
+//  INTERNALERROR = "InternalError"
+//  INVALIDPARAMETER = "InvalidParameter"
+//  RESOURCENOTFOUND_FORBIDSERVICE = "ResourceNotFound.ForbidService"
+//  RESOURCENOTFOUND_FREEZESERVICE = "ResourceNotFound.FreezeService"
+//  RESOURCENOTFOUND_STOPSERVICE = "ResourceNotFound.StopService"
+//  RESOURCENOTFOUND_USERDISABLESERVICE = "ResourceNotFound.UserDisableService"
+//  RESOURCENOTFOUND_USERNOTEXIST = "ResourceNotFound.UserNotExist"
+//  UNKNOWNPARAMETER = "UnknownParameter"
+//  UNSUPPORTEDOPERATION = "UnsupportedOperation"
+func (c *Client) DescribeCasterMarkPicInfosWithContext(ctx context.Context, request *DescribeCasterMarkPicInfosRequest) (response *DescribeCasterMarkPicInfosResponse, err error) {
+    if request == nil {
+        request = NewDescribeCasterMarkPicInfosRequest()
+    }
+    c.InitBaseRequest(&request.BaseRequest, "live", APIVersion, "DescribeCasterMarkPicInfos")
+    
+    if c.GetCredential() == nil {
+        return nil, errors.New("DescribeCasterMarkPicInfos require credential")
+    }
+
+    request.SetContext(ctx)
+    
+    response = NewDescribeCasterMarkPicInfosResponse()
+    err = c.Send(request, response)
+    return
+}
+
+func NewDescribeCasterMarkWordInfosRequest() (request *DescribeCasterMarkWordInfosRequest) {
+    request = &DescribeCasterMarkWordInfosRequest{
+        BaseRequest: &tchttp.BaseRequest{},
+    }
+    
+    request.Init().WithApiInfo("live", APIVersion, "DescribeCasterMarkWordInfos")
+    
+    
+    return
+}
+
+func NewDescribeCasterMarkWordInfosResponse() (response *DescribeCasterMarkWordInfosResponse) {
+    response = &DescribeCasterMarkWordInfosResponse{
+        BaseResponse: &tchttp.BaseResponse{},
+    } 
+    return
+
+}
+
+// DescribeCasterMarkWordInfos
+// 该接口用来查询某个导播台的文本列表。
+//
+// 可能返回的错误码:
+//  FAILEDOPERATION_CASTERNOTFOUND = "FailedOperation.CasterNotFound"
+//  INTERNALERROR = "InternalError"
+//  INVALIDPARAMETER = "InvalidParameter"
+//  RESOURCENOTFOUND_FORBIDSERVICE = "ResourceNotFound.ForbidService"
+//  RESOURCENOTFOUND_FREEZESERVICE = "ResourceNotFound.FreezeService"
+//  RESOURCENOTFOUND_STOPSERVICE = "ResourceNotFound.StopService"
+//  RESOURCENOTFOUND_USERDISABLESERVICE = "ResourceNotFound.UserDisableService"
+//  RESOURCENOTFOUND_USERNOTEXIST = "ResourceNotFound.UserNotExist"
+//  UNKNOWNPARAMETER = "UnknownParameter"
+//  UNSUPPORTEDOPERATION = "UnsupportedOperation"
+func (c *Client) DescribeCasterMarkWordInfos(request *DescribeCasterMarkWordInfosRequest) (response *DescribeCasterMarkWordInfosResponse, err error) {
+    return c.DescribeCasterMarkWordInfosWithContext(context.Background(), request)
+}
+
+// DescribeCasterMarkWordInfos
+// 该接口用来查询某个导播台的文本列表。
+//
+// 可能返回的错误码:
+//  FAILEDOPERATION_CASTERNOTFOUND = "FailedOperation.CasterNotFound"
+//  INTERNALERROR = "InternalError"
+//  INVALIDPARAMETER = "InvalidParameter"
+//  RESOURCENOTFOUND_FORBIDSERVICE = "ResourceNotFound.ForbidService"
+//  RESOURCENOTFOUND_FREEZESERVICE = "ResourceNotFound.FreezeService"
+//  RESOURCENOTFOUND_STOPSERVICE = "ResourceNotFound.StopService"
+//  RESOURCENOTFOUND_USERDISABLESERVICE = "ResourceNotFound.UserDisableService"
+//  RESOURCENOTFOUND_USERNOTEXIST = "ResourceNotFound.UserNotExist"
+//  UNKNOWNPARAMETER = "UnknownParameter"
+//  UNSUPPORTEDOPERATION = "UnsupportedOperation"
+func (c *Client) DescribeCasterMarkWordInfosWithContext(ctx context.Context, request *DescribeCasterMarkWordInfosRequest) (response *DescribeCasterMarkWordInfosResponse, err error) {
+    if request == nil {
+        request = NewDescribeCasterMarkWordInfosRequest()
+    }
+    c.InitBaseRequest(&request.BaseRequest, "live", APIVersion, "DescribeCasterMarkWordInfos")
+    
+    if c.GetCredential() == nil {
+        return nil, errors.New("DescribeCasterMarkWordInfos require credential")
+    }
+
+    request.SetContext(ctx)
+    
+    response = NewDescribeCasterMarkWordInfosResponse()
+    err = c.Send(request, response)
+    return
+}
+
+func NewDescribeCasterOutputInfosRequest() (request *DescribeCasterOutputInfosRequest) {
+    request = &DescribeCasterOutputInfosRequest{
+        BaseRequest: &tchttp.BaseRequest{},
+    }
+    
+    request.Init().WithApiInfo("live", APIVersion, "DescribeCasterOutputInfos")
+    
+    
+    return
+}
+
+func NewDescribeCasterOutputInfosResponse() (response *DescribeCasterOutputInfosResponse) {
+    response = &DescribeCasterOutputInfosResponse{
+        BaseResponse: &tchttp.BaseResponse{},
+    } 
+    return
+
+}
+
+// DescribeCasterOutputInfos
+// 该接口用来查询某个导播台的推流信息列表。
+//
+// 可能返回的错误码:
+//  FAILEDOPERATION_CASTERNOTFOUND = "FailedOperation.CasterNotFound"
+//  FAILEDOPERATION_LAYOUTUSEDINPGM = "FailedOperation.LayoutUsedInPgm"
+//  FAILEDOPERATION_LAYOUTUSEDINPVW = "FailedOperation.LayoutUsedInPvw"
+//  INTERNALERROR = "InternalError"
+//  INVALIDPARAMETER = "InvalidParameter"
+//  RESOURCENOTFOUND_FORBIDSERVICE = "ResourceNotFound.ForbidService"
+//  RESOURCENOTFOUND_FREEZESERVICE = "ResourceNotFound.FreezeService"
+//  RESOURCENOTFOUND_STOPSERVICE = "ResourceNotFound.StopService"
+//  RESOURCENOTFOUND_USERDISABLESERVICE = "ResourceNotFound.UserDisableService"
+//  RESOURCENOTFOUND_USERNOTEXIST = "ResourceNotFound.UserNotExist"
+//  UNKNOWNPARAMETER = "UnknownParameter"
+//  UNSUPPORTEDOPERATION = "UnsupportedOperation"
+func (c *Client) DescribeCasterOutputInfos(request *DescribeCasterOutputInfosRequest) (response *DescribeCasterOutputInfosResponse, err error) {
+    return c.DescribeCasterOutputInfosWithContext(context.Background(), request)
+}
+
+// DescribeCasterOutputInfos
+// 该接口用来查询某个导播台的推流信息列表。
+//
+// 可能返回的错误码:
+//  FAILEDOPERATION_CASTERNOTFOUND = "FailedOperation.CasterNotFound"
+//  FAILEDOPERATION_LAYOUTUSEDINPGM = "FailedOperation.LayoutUsedInPgm"
+//  FAILEDOPERATION_LAYOUTUSEDINPVW = "FailedOperation.LayoutUsedInPvw"
+//  INTERNALERROR = "InternalError"
+//  INVALIDPARAMETER = "InvalidParameter"
+//  RESOURCENOTFOUND_FORBIDSERVICE = "ResourceNotFound.ForbidService"
+//  RESOURCENOTFOUND_FREEZESERVICE = "ResourceNotFound.FreezeService"
+//  RESOURCENOTFOUND_STOPSERVICE = "ResourceNotFound.StopService"
+//  RESOURCENOTFOUND_USERDISABLESERVICE = "ResourceNotFound.UserDisableService"
+//  RESOURCENOTFOUND_USERNOTEXIST = "ResourceNotFound.UserNotExist"
+//  UNKNOWNPARAMETER = "UnknownParameter"
+//  UNSUPPORTEDOPERATION = "UnsupportedOperation"
+func (c *Client) DescribeCasterOutputInfosWithContext(ctx context.Context, request *DescribeCasterOutputInfosRequest) (response *DescribeCasterOutputInfosResponse, err error) {
+    if request == nil {
+        request = NewDescribeCasterOutputInfosRequest()
+    }
+    c.InitBaseRequest(&request.BaseRequest, "live", APIVersion, "DescribeCasterOutputInfos")
+    
+    if c.GetCredential() == nil {
+        return nil, errors.New("DescribeCasterOutputInfos require credential")
+    }
+
+    request.SetContext(ctx)
+    
+    response = NewDescribeCasterOutputInfosResponse()
+    err = c.Send(request, response)
+    return
+}
+
+func NewDescribeCasterPlayUrlRequest() (request *DescribeCasterPlayUrlRequest) {
+    request = &DescribeCasterPlayUrlRequest{
+        BaseRequest: &tchttp.BaseRequest{},
+    }
+    
+    request.Init().WithApiInfo("live", APIVersion, "DescribeCasterPlayUrl")
+    
+    
+    return
+}
+
+func NewDescribeCasterPlayUrlResponse() (response *DescribeCasterPlayUrlResponse) {
+    response = &DescribeCasterPlayUrlResponse{
+        BaseResponse: &tchttp.BaseResponse{},
+    } 
+    return
+
+}
+
+// DescribeCasterPlayUrl
+// 该接口用来获取导播台视频流的播放url，用来在页面上拉流展示。
+//
+// 可能返回的错误码:
+//  FAILEDOPERATION = "FailedOperation"
+//  FAILEDOPERATION_CASTERNOTFOUND = "FailedOperation.CasterNotFound"
+//  FAILEDOPERATION_INPUTISNOTACTIVE = "FailedOperation.InputIsNotActive"
+//  INTERNALERROR = "InternalError"
+//  INVALIDPARAMETER = "InvalidParameter"
+//  RESOURCENOTFOUND_FORBIDSERVICE = "ResourceNotFound.ForbidService"
+//  RESOURCENOTFOUND_FREEZESERVICE = "ResourceNotFound.FreezeService"
+//  RESOURCENOTFOUND_STOPSERVICE = "ResourceNotFound.StopService"
+//  RESOURCENOTFOUND_USERDISABLESERVICE = "ResourceNotFound.UserDisableService"
+//  RESOURCENOTFOUND_USERNOTEXIST = "ResourceNotFound.UserNotExist"
+//  UNKNOWNPARAMETER = "UnknownParameter"
+//  UNSUPPORTEDOPERATION = "UnsupportedOperation"
+func (c *Client) DescribeCasterPlayUrl(request *DescribeCasterPlayUrlRequest) (response *DescribeCasterPlayUrlResponse, err error) {
+    return c.DescribeCasterPlayUrlWithContext(context.Background(), request)
+}
+
+// DescribeCasterPlayUrl
+// 该接口用来获取导播台视频流的播放url，用来在页面上拉流展示。
+//
+// 可能返回的错误码:
+//  FAILEDOPERATION = "FailedOperation"
+//  FAILEDOPERATION_CASTERNOTFOUND = "FailedOperation.CasterNotFound"
+//  FAILEDOPERATION_INPUTISNOTACTIVE = "FailedOperation.InputIsNotActive"
+//  INTERNALERROR = "InternalError"
+//  INVALIDPARAMETER = "InvalidParameter"
+//  RESOURCENOTFOUND_FORBIDSERVICE = "ResourceNotFound.ForbidService"
+//  RESOURCENOTFOUND_FREEZESERVICE = "ResourceNotFound.FreezeService"
+//  RESOURCENOTFOUND_STOPSERVICE = "ResourceNotFound.StopService"
+//  RESOURCENOTFOUND_USERDISABLESERVICE = "ResourceNotFound.UserDisableService"
+//  RESOURCENOTFOUND_USERNOTEXIST = "ResourceNotFound.UserNotExist"
+//  UNKNOWNPARAMETER = "UnknownParameter"
+//  UNSUPPORTEDOPERATION = "UnsupportedOperation"
+func (c *Client) DescribeCasterPlayUrlWithContext(ctx context.Context, request *DescribeCasterPlayUrlRequest) (response *DescribeCasterPlayUrlResponse, err error) {
+    if request == nil {
+        request = NewDescribeCasterPlayUrlRequest()
+    }
+    c.InitBaseRequest(&request.BaseRequest, "live", APIVersion, "DescribeCasterPlayUrl")
+    
+    if c.GetCredential() == nil {
+        return nil, errors.New("DescribeCasterPlayUrl require credential")
+    }
+
+    request.SetContext(ctx)
+    
+    response = NewDescribeCasterPlayUrlResponse()
+    err = c.Send(request, response)
+    return
+}
+
+func NewDescribeCasterTransitionTypesRequest() (request *DescribeCasterTransitionTypesRequest) {
+    request = &DescribeCasterTransitionTypesRequest{
+        BaseRequest: &tchttp.BaseRequest{},
+    }
+    
+    request.Init().WithApiInfo("live", APIVersion, "DescribeCasterTransitionTypes")
+    
+    
+    return
+}
+
+func NewDescribeCasterTransitionTypesResponse() (response *DescribeCasterTransitionTypesResponse) {
+    response = &DescribeCasterTransitionTypesResponse{
+        BaseResponse: &tchttp.BaseResponse{},
+    } 
+    return
+
+}
+
+// DescribeCasterTransitionTypes
+// 该接口用来获取所有的转场名称及其对应的素材url。
+//
+// 可能返回的错误码:
+//  FAILEDOPERATION = "FailedOperation"
+//  FAILEDOPERATION_CASTERNOTFOUND = "FailedOperation.CasterNotFound"
+//  INTERNALERROR = "InternalError"
+//  INVALIDPARAMETER = "InvalidParameter"
+//  RESOURCENOTFOUND_FORBIDSERVICE = "ResourceNotFound.ForbidService"
+//  RESOURCENOTFOUND_FREEZESERVICE = "ResourceNotFound.FreezeService"
+//  RESOURCENOTFOUND_STOPSERVICE = "ResourceNotFound.StopService"
+//  RESOURCENOTFOUND_USERDISABLESERVICE = "ResourceNotFound.UserDisableService"
+//  RESOURCENOTFOUND_USERNOTEXIST = "ResourceNotFound.UserNotExist"
+func (c *Client) DescribeCasterTransitionTypes(request *DescribeCasterTransitionTypesRequest) (response *DescribeCasterTransitionTypesResponse, err error) {
+    return c.DescribeCasterTransitionTypesWithContext(context.Background(), request)
+}
+
+// DescribeCasterTransitionTypes
+// 该接口用来获取所有的转场名称及其对应的素材url。
+//
+// 可能返回的错误码:
+//  FAILEDOPERATION = "FailedOperation"
+//  FAILEDOPERATION_CASTERNOTFOUND = "FailedOperation.CasterNotFound"
+//  INTERNALERROR = "InternalError"
+//  INVALIDPARAMETER = "InvalidParameter"
+//  RESOURCENOTFOUND_FORBIDSERVICE = "ResourceNotFound.ForbidService"
+//  RESOURCENOTFOUND_FREEZESERVICE = "ResourceNotFound.FreezeService"
+//  RESOURCENOTFOUND_STOPSERVICE = "ResourceNotFound.StopService"
+//  RESOURCENOTFOUND_USERDISABLESERVICE = "ResourceNotFound.UserDisableService"
+//  RESOURCENOTFOUND_USERNOTEXIST = "ResourceNotFound.UserNotExist"
+func (c *Client) DescribeCasterTransitionTypesWithContext(ctx context.Context, request *DescribeCasterTransitionTypesRequest) (response *DescribeCasterTransitionTypesResponse, err error) {
+    if request == nil {
+        request = NewDescribeCasterTransitionTypesRequest()
+    }
+    c.InitBaseRequest(&request.BaseRequest, "live", APIVersion, "DescribeCasterTransitionTypes")
+    
+    if c.GetCredential() == nil {
+        return nil, errors.New("DescribeCasterTransitionTypes require credential")
+    }
+
+    request.SetContext(ctx)
+    
+    response = NewDescribeCasterTransitionTypesResponse()
+    err = c.Send(request, response)
+    return
+}
+
+func NewDescribeCasterUserStatusRequest() (request *DescribeCasterUserStatusRequest) {
+    request = &DescribeCasterUserStatusRequest{
+        BaseRequest: &tchttp.BaseRequest{},
+    }
+    
+    request.Init().WithApiInfo("live", APIVersion, "DescribeCasterUserStatus")
+    
+    
+    return
+}
+
+func NewDescribeCasterUserStatusResponse() (response *DescribeCasterUserStatusResponse) {
+    response = &DescribeCasterUserStatusResponse{
+        BaseResponse: &tchttp.BaseResponse{},
+    } 
+    return
+
+}
+
+// DescribeCasterUserStatus
+// 本接口用来查询当前APPID导播台业务状态
+//
+// 可能返回的错误码:
+//  FAILEDOPERATION = "FailedOperation"
+//  INTERNALERROR = "InternalError"
+//  INVALIDPARAMETER = "InvalidParameter"
+//  MISSINGPARAMETER = "MissingParameter"
+//  RESOURCENOTFOUND_FORBIDSERVICE = "ResourceNotFound.ForbidService"
+//  RESOURCENOTFOUND_FREEZESERVICE = "ResourceNotFound.FreezeService"
+//  RESOURCENOTFOUND_STOPSERVICE = "ResourceNotFound.StopService"
+//  RESOURCENOTFOUND_USERDISABLESERVICE = "ResourceNotFound.UserDisableService"
+//  RESOURCENOTFOUND_USERNOTEXIST = "ResourceNotFound.UserNotExist"
+//  UNAUTHORIZEDOPERATION = "UnauthorizedOperation"
+//  UNKNOWNPARAMETER = "UnknownParameter"
+//  UNSUPPORTEDOPERATION = "UnsupportedOperation"
+func (c *Client) DescribeCasterUserStatus(request *DescribeCasterUserStatusRequest) (response *DescribeCasterUserStatusResponse, err error) {
+    return c.DescribeCasterUserStatusWithContext(context.Background(), request)
+}
+
+// DescribeCasterUserStatus
+// 本接口用来查询当前APPID导播台业务状态
+//
+// 可能返回的错误码:
+//  FAILEDOPERATION = "FailedOperation"
+//  INTERNALERROR = "InternalError"
+//  INVALIDPARAMETER = "InvalidParameter"
+//  MISSINGPARAMETER = "MissingParameter"
+//  RESOURCENOTFOUND_FORBIDSERVICE = "ResourceNotFound.ForbidService"
+//  RESOURCENOTFOUND_FREEZESERVICE = "ResourceNotFound.FreezeService"
+//  RESOURCENOTFOUND_STOPSERVICE = "ResourceNotFound.StopService"
+//  RESOURCENOTFOUND_USERDISABLESERVICE = "ResourceNotFound.UserDisableService"
+//  RESOURCENOTFOUND_USERNOTEXIST = "ResourceNotFound.UserNotExist"
+//  UNAUTHORIZEDOPERATION = "UnauthorizedOperation"
+//  UNKNOWNPARAMETER = "UnknownParameter"
+//  UNSUPPORTEDOPERATION = "UnsupportedOperation"
+func (c *Client) DescribeCasterUserStatusWithContext(ctx context.Context, request *DescribeCasterUserStatusRequest) (response *DescribeCasterUserStatusResponse, err error) {
+    if request == nil {
+        request = NewDescribeCasterUserStatusRequest()
+    }
+    c.InitBaseRequest(&request.BaseRequest, "live", APIVersion, "DescribeCasterUserStatus")
+    
+    if c.GetCredential() == nil {
+        return nil, errors.New("DescribeCasterUserStatus require credential")
+    }
+
+    request.SetContext(ctx)
+    
+    response = NewDescribeCasterUserStatusResponse()
     err = c.Send(request, response)
     return
 }
@@ -4395,6 +7512,7 @@ func (c *Client) DescribeConcurrentRecordStreamNumWithContext(ctx context.Contex
     if request == nil {
         request = NewDescribeConcurrentRecordStreamNumRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "live", APIVersion, "DescribeConcurrentRecordStreamNum")
     
     if c.GetCredential() == nil {
         return nil, errors.New("DescribeConcurrentRecordStreamNum require credential")
@@ -4458,6 +7576,7 @@ func (c *Client) DescribeDeliverBandwidthListWithContext(ctx context.Context, re
     if request == nil {
         request = NewDescribeDeliverBandwidthListRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "live", APIVersion, "DescribeDeliverBandwidthList")
     
     if c.GetCredential() == nil {
         return nil, errors.New("DescribeDeliverBandwidthList require credential")
@@ -4531,6 +7650,7 @@ func (c *Client) DescribeDeliverLogDownListWithContext(ctx context.Context, requ
     if request == nil {
         request = NewDescribeDeliverLogDownListRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "live", APIVersion, "DescribeDeliverLogDownList")
     
     if c.GetCredential() == nil {
         return nil, errors.New("DescribeDeliverLogDownList require credential")
@@ -4598,6 +7718,7 @@ func (c *Client) DescribeGroupProIspPlayInfoListWithContext(ctx context.Context,
     if request == nil {
         request = NewDescribeGroupProIspPlayInfoListRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "live", APIVersion, "DescribeGroupProIspPlayInfoList")
     
     if c.GetCredential() == nil {
         return nil, errors.New("DescribeGroupProIspPlayInfoList require credential")
@@ -4667,6 +7788,7 @@ func (c *Client) DescribeHttpStatusInfoListWithContext(ctx context.Context, requ
     if request == nil {
         request = NewDescribeHttpStatusInfoListRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "live", APIVersion, "DescribeHttpStatusInfoList")
     
     if c.GetCredential() == nil {
         return nil, errors.New("DescribeHttpStatusInfoList require credential")
@@ -4675,6 +7797,378 @@ func (c *Client) DescribeHttpStatusInfoListWithContext(ctx context.Context, requ
     request.SetContext(ctx)
     
     response = NewDescribeHttpStatusInfoListResponse()
+    err = c.Send(request, response)
+    return
+}
+
+func NewDescribeLiveAvatarBackgroundListRequest() (request *DescribeLiveAvatarBackgroundListRequest) {
+    request = &DescribeLiveAvatarBackgroundListRequest{
+        BaseRequest: &tchttp.BaseRequest{},
+    }
+    
+    request.Init().WithApiInfo("live", APIVersion, "DescribeLiveAvatarBackgroundList")
+    
+    
+    return
+}
+
+func NewDescribeLiveAvatarBackgroundListResponse() (response *DescribeLiveAvatarBackgroundListResponse) {
+    response = &DescribeLiveAvatarBackgroundListResponse{
+        BaseResponse: &tchttp.BaseResponse{},
+    } 
+    return
+
+}
+
+// DescribeLiveAvatarBackgroundList
+// 调用该接口，获取可用的数字人背景列表信息列表。根据入参，可返回官方预设背景，以及用户上传背景。
+//
+// 可能返回的错误码:
+//  FAILEDOPERATION = "FailedOperation"
+//  INVALIDPARAMETERVALUE = "InvalidParameterValue"
+//  MISSINGPARAMETER = "MissingParameter"
+//  RESOURCENOTFOUND_FORBIDSERVICE = "ResourceNotFound.ForbidService"
+//  RESOURCENOTFOUND_FREEZESERVICE = "ResourceNotFound.FreezeService"
+//  RESOURCENOTFOUND_STOPSERVICE = "ResourceNotFound.StopService"
+//  RESOURCENOTFOUND_USERDISABLESERVICE = "ResourceNotFound.UserDisableService"
+func (c *Client) DescribeLiveAvatarBackgroundList(request *DescribeLiveAvatarBackgroundListRequest) (response *DescribeLiveAvatarBackgroundListResponse, err error) {
+    return c.DescribeLiveAvatarBackgroundListWithContext(context.Background(), request)
+}
+
+// DescribeLiveAvatarBackgroundList
+// 调用该接口，获取可用的数字人背景列表信息列表。根据入参，可返回官方预设背景，以及用户上传背景。
+//
+// 可能返回的错误码:
+//  FAILEDOPERATION = "FailedOperation"
+//  INVALIDPARAMETERVALUE = "InvalidParameterValue"
+//  MISSINGPARAMETER = "MissingParameter"
+//  RESOURCENOTFOUND_FORBIDSERVICE = "ResourceNotFound.ForbidService"
+//  RESOURCENOTFOUND_FREEZESERVICE = "ResourceNotFound.FreezeService"
+//  RESOURCENOTFOUND_STOPSERVICE = "ResourceNotFound.StopService"
+//  RESOURCENOTFOUND_USERDISABLESERVICE = "ResourceNotFound.UserDisableService"
+func (c *Client) DescribeLiveAvatarBackgroundListWithContext(ctx context.Context, request *DescribeLiveAvatarBackgroundListRequest) (response *DescribeLiveAvatarBackgroundListResponse, err error) {
+    if request == nil {
+        request = NewDescribeLiveAvatarBackgroundListRequest()
+    }
+    c.InitBaseRequest(&request.BaseRequest, "live", APIVersion, "DescribeLiveAvatarBackgroundList")
+    
+    if c.GetCredential() == nil {
+        return nil, errors.New("DescribeLiveAvatarBackgroundList require credential")
+    }
+
+    request.SetContext(ctx)
+    
+    response = NewDescribeLiveAvatarBackgroundListResponse()
+    err = c.Send(request, response)
+    return
+}
+
+func NewDescribeLiveAvatarImageListRequest() (request *DescribeLiveAvatarImageListRequest) {
+    request = &DescribeLiveAvatarImageListRequest{
+        BaseRequest: &tchttp.BaseRequest{},
+    }
+    
+    request.Init().WithApiInfo("live", APIVersion, "DescribeLiveAvatarImageList")
+    
+    
+    return
+}
+
+func NewDescribeLiveAvatarImageListResponse() (response *DescribeLiveAvatarImageListResponse) {
+    response = &DescribeLiveAvatarImageListResponse{
+        BaseResponse: &tchttp.BaseResponse{},
+    } 
+    return
+
+}
+
+// DescribeLiveAvatarImageList
+// 调用该接口，获取可用的数字人形象信息列表。包括官方预制形象，以及个人定制形象。
+//
+// 可能返回的错误码:
+//  FAILEDOPERATION = "FailedOperation"
+//  INVALIDPARAMETERVALUE = "InvalidParameterValue"
+//  MISSINGPARAMETER = "MissingParameter"
+//  RESOURCENOTFOUND_FORBIDSERVICE = "ResourceNotFound.ForbidService"
+//  RESOURCENOTFOUND_FREEZESERVICE = "ResourceNotFound.FreezeService"
+//  RESOURCENOTFOUND_STOPSERVICE = "ResourceNotFound.StopService"
+//  RESOURCENOTFOUND_USERDISABLESERVICE = "ResourceNotFound.UserDisableService"
+func (c *Client) DescribeLiveAvatarImageList(request *DescribeLiveAvatarImageListRequest) (response *DescribeLiveAvatarImageListResponse, err error) {
+    return c.DescribeLiveAvatarImageListWithContext(context.Background(), request)
+}
+
+// DescribeLiveAvatarImageList
+// 调用该接口，获取可用的数字人形象信息列表。包括官方预制形象，以及个人定制形象。
+//
+// 可能返回的错误码:
+//  FAILEDOPERATION = "FailedOperation"
+//  INVALIDPARAMETERVALUE = "InvalidParameterValue"
+//  MISSINGPARAMETER = "MissingParameter"
+//  RESOURCENOTFOUND_FORBIDSERVICE = "ResourceNotFound.ForbidService"
+//  RESOURCENOTFOUND_FREEZESERVICE = "ResourceNotFound.FreezeService"
+//  RESOURCENOTFOUND_STOPSERVICE = "ResourceNotFound.StopService"
+//  RESOURCENOTFOUND_USERDISABLESERVICE = "ResourceNotFound.UserDisableService"
+func (c *Client) DescribeLiveAvatarImageListWithContext(ctx context.Context, request *DescribeLiveAvatarImageListRequest) (response *DescribeLiveAvatarImageListResponse, err error) {
+    if request == nil {
+        request = NewDescribeLiveAvatarImageListRequest()
+    }
+    c.InitBaseRequest(&request.BaseRequest, "live", APIVersion, "DescribeLiveAvatarImageList")
+    
+    if c.GetCredential() == nil {
+        return nil, errors.New("DescribeLiveAvatarImageList require credential")
+    }
+
+    request.SetContext(ctx)
+    
+    response = NewDescribeLiveAvatarImageListResponse()
+    err = c.Send(request, response)
+    return
+}
+
+func NewDescribeLiveAvatarRoomsRequest() (request *DescribeLiveAvatarRoomsRequest) {
+    request = &DescribeLiveAvatarRoomsRequest{
+        BaseRequest: &tchttp.BaseRequest{},
+    }
+    
+    request.Init().WithApiInfo("live", APIVersion, "DescribeLiveAvatarRooms")
+    
+    
+    return
+}
+
+func NewDescribeLiveAvatarRoomsResponse() (response *DescribeLiveAvatarRoomsResponse) {
+    response = &DescribeLiveAvatarRoomsResponse{
+        BaseResponse: &tchttp.BaseResponse{},
+    } 
+    return
+
+}
+
+// DescribeLiveAvatarRooms
+// 调用该接口，查询数字人直播间信息列表。
+//
+// 可能返回的错误码:
+//  FAILEDOPERATION = "FailedOperation"
+//  INVALIDPARAMETERVALUE = "InvalidParameterValue"
+//  MISSINGPARAMETER = "MissingParameter"
+//  RESOURCENOTFOUND_FORBIDSERVICE = "ResourceNotFound.ForbidService"
+//  RESOURCENOTFOUND_FREEZESERVICE = "ResourceNotFound.FreezeService"
+//  RESOURCENOTFOUND_STOPSERVICE = "ResourceNotFound.StopService"
+//  RESOURCENOTFOUND_USERDISABLESERVICE = "ResourceNotFound.UserDisableService"
+func (c *Client) DescribeLiveAvatarRooms(request *DescribeLiveAvatarRoomsRequest) (response *DescribeLiveAvatarRoomsResponse, err error) {
+    return c.DescribeLiveAvatarRoomsWithContext(context.Background(), request)
+}
+
+// DescribeLiveAvatarRooms
+// 调用该接口，查询数字人直播间信息列表。
+//
+// 可能返回的错误码:
+//  FAILEDOPERATION = "FailedOperation"
+//  INVALIDPARAMETERVALUE = "InvalidParameterValue"
+//  MISSINGPARAMETER = "MissingParameter"
+//  RESOURCENOTFOUND_FORBIDSERVICE = "ResourceNotFound.ForbidService"
+//  RESOURCENOTFOUND_FREEZESERVICE = "ResourceNotFound.FreezeService"
+//  RESOURCENOTFOUND_STOPSERVICE = "ResourceNotFound.StopService"
+//  RESOURCENOTFOUND_USERDISABLESERVICE = "ResourceNotFound.UserDisableService"
+func (c *Client) DescribeLiveAvatarRoomsWithContext(ctx context.Context, request *DescribeLiveAvatarRoomsRequest) (response *DescribeLiveAvatarRoomsResponse, err error) {
+    if request == nil {
+        request = NewDescribeLiveAvatarRoomsRequest()
+    }
+    c.InitBaseRequest(&request.BaseRequest, "live", APIVersion, "DescribeLiveAvatarRooms")
+    
+    if c.GetCredential() == nil {
+        return nil, errors.New("DescribeLiveAvatarRooms require credential")
+    }
+
+    request.SetContext(ctx)
+    
+    response = NewDescribeLiveAvatarRoomsResponse()
+    err = c.Send(request, response)
+    return
+}
+
+func NewDescribeLiveAvatarScriptsRequest() (request *DescribeLiveAvatarScriptsRequest) {
+    request = &DescribeLiveAvatarScriptsRequest{
+        BaseRequest: &tchttp.BaseRequest{},
+    }
+    
+    request.Init().WithApiInfo("live", APIVersion, "DescribeLiveAvatarScripts")
+    
+    
+    return
+}
+
+func NewDescribeLiveAvatarScriptsResponse() (response *DescribeLiveAvatarScriptsResponse) {
+    response = &DescribeLiveAvatarScriptsResponse{
+        BaseResponse: &tchttp.BaseResponse{},
+    } 
+    return
+
+}
+
+// DescribeLiveAvatarScripts
+// 调用该接口，查询数字人直播间话术信息列表。新增产品ID参数
+//
+// 可能返回的错误码:
+//  FAILEDOPERATION = "FailedOperation"
+//  INVALIDPARAMETERVALUE = "InvalidParameterValue"
+//  MISSINGPARAMETER = "MissingParameter"
+//  RESOURCENOTFOUND_FORBIDSERVICE = "ResourceNotFound.ForbidService"
+//  RESOURCENOTFOUND_FREEZESERVICE = "ResourceNotFound.FreezeService"
+//  RESOURCENOTFOUND_STOPSERVICE = "ResourceNotFound.StopService"
+//  RESOURCENOTFOUND_USERDISABLESERVICE = "ResourceNotFound.UserDisableService"
+func (c *Client) DescribeLiveAvatarScripts(request *DescribeLiveAvatarScriptsRequest) (response *DescribeLiveAvatarScriptsResponse, err error) {
+    return c.DescribeLiveAvatarScriptsWithContext(context.Background(), request)
+}
+
+// DescribeLiveAvatarScripts
+// 调用该接口，查询数字人直播间话术信息列表。新增产品ID参数
+//
+// 可能返回的错误码:
+//  FAILEDOPERATION = "FailedOperation"
+//  INVALIDPARAMETERVALUE = "InvalidParameterValue"
+//  MISSINGPARAMETER = "MissingParameter"
+//  RESOURCENOTFOUND_FORBIDSERVICE = "ResourceNotFound.ForbidService"
+//  RESOURCENOTFOUND_FREEZESERVICE = "ResourceNotFound.FreezeService"
+//  RESOURCENOTFOUND_STOPSERVICE = "ResourceNotFound.StopService"
+//  RESOURCENOTFOUND_USERDISABLESERVICE = "ResourceNotFound.UserDisableService"
+func (c *Client) DescribeLiveAvatarScriptsWithContext(ctx context.Context, request *DescribeLiveAvatarScriptsRequest) (response *DescribeLiveAvatarScriptsResponse, err error) {
+    if request == nil {
+        request = NewDescribeLiveAvatarScriptsRequest()
+    }
+    c.InitBaseRequest(&request.BaseRequest, "live", APIVersion, "DescribeLiveAvatarScripts")
+    
+    if c.GetCredential() == nil {
+        return nil, errors.New("DescribeLiveAvatarScripts require credential")
+    }
+
+    request.SetContext(ctx)
+    
+    response = NewDescribeLiveAvatarScriptsResponse()
+    err = c.Send(request, response)
+    return
+}
+
+func NewDescribeLiveAvatarTemporaryScriptListRequest() (request *DescribeLiveAvatarTemporaryScriptListRequest) {
+    request = &DescribeLiveAvatarTemporaryScriptListRequest{
+        BaseRequest: &tchttp.BaseRequest{},
+    }
+    
+    request.Init().WithApiInfo("live", APIVersion, "DescribeLiveAvatarTemporaryScriptList")
+    
+    
+    return
+}
+
+func NewDescribeLiveAvatarTemporaryScriptListResponse() (response *DescribeLiveAvatarTemporaryScriptListResponse) {
+    response = &DescribeLiveAvatarTemporaryScriptListResponse{
+        BaseResponse: &tchttp.BaseResponse{},
+    } 
+    return
+
+}
+
+// DescribeLiveAvatarTemporaryScriptList
+// 调用该接口，用于查询临时驱动数字人播报话术列表。
+//
+// 可能返回的错误码:
+//  FAILEDOPERATION = "FailedOperation"
+//  INVALIDPARAMETERVALUE = "InvalidParameterValue"
+//  MISSINGPARAMETER = "MissingParameter"
+//  RESOURCENOTFOUND_FORBIDSERVICE = "ResourceNotFound.ForbidService"
+//  RESOURCENOTFOUND_FREEZESERVICE = "ResourceNotFound.FreezeService"
+//  RESOURCENOTFOUND_STOPSERVICE = "ResourceNotFound.StopService"
+//  RESOURCENOTFOUND_USERDISABLESERVICE = "ResourceNotFound.UserDisableService"
+func (c *Client) DescribeLiveAvatarTemporaryScriptList(request *DescribeLiveAvatarTemporaryScriptListRequest) (response *DescribeLiveAvatarTemporaryScriptListResponse, err error) {
+    return c.DescribeLiveAvatarTemporaryScriptListWithContext(context.Background(), request)
+}
+
+// DescribeLiveAvatarTemporaryScriptList
+// 调用该接口，用于查询临时驱动数字人播报话术列表。
+//
+// 可能返回的错误码:
+//  FAILEDOPERATION = "FailedOperation"
+//  INVALIDPARAMETERVALUE = "InvalidParameterValue"
+//  MISSINGPARAMETER = "MissingParameter"
+//  RESOURCENOTFOUND_FORBIDSERVICE = "ResourceNotFound.ForbidService"
+//  RESOURCENOTFOUND_FREEZESERVICE = "ResourceNotFound.FreezeService"
+//  RESOURCENOTFOUND_STOPSERVICE = "ResourceNotFound.StopService"
+//  RESOURCENOTFOUND_USERDISABLESERVICE = "ResourceNotFound.UserDisableService"
+func (c *Client) DescribeLiveAvatarTemporaryScriptListWithContext(ctx context.Context, request *DescribeLiveAvatarTemporaryScriptListRequest) (response *DescribeLiveAvatarTemporaryScriptListResponse, err error) {
+    if request == nil {
+        request = NewDescribeLiveAvatarTemporaryScriptListRequest()
+    }
+    c.InitBaseRequest(&request.BaseRequest, "live", APIVersion, "DescribeLiveAvatarTemporaryScriptList")
+    
+    if c.GetCredential() == nil {
+        return nil, errors.New("DescribeLiveAvatarTemporaryScriptList require credential")
+    }
+
+    request.SetContext(ctx)
+    
+    response = NewDescribeLiveAvatarTemporaryScriptListResponse()
+    err = c.Send(request, response)
+    return
+}
+
+func NewDescribeLiveAvatarTimbreListRequest() (request *DescribeLiveAvatarTimbreListRequest) {
+    request = &DescribeLiveAvatarTimbreListRequest{
+        BaseRequest: &tchttp.BaseRequest{},
+    }
+    
+    request.Init().WithApiInfo("live", APIVersion, "DescribeLiveAvatarTimbreList")
+    
+    
+    return
+}
+
+func NewDescribeLiveAvatarTimbreListResponse() (response *DescribeLiveAvatarTimbreListResponse) {
+    response = &DescribeLiveAvatarTimbreListResponse{
+        BaseResponse: &tchttp.BaseResponse{},
+    } 
+    return
+
+}
+
+// DescribeLiveAvatarTimbreList
+// 调用该接口，获取可用的数字人声音信息列表。包括官方预制音色，以及个人复刻音色。
+//
+// 可能返回的错误码:
+//  FAILEDOPERATION = "FailedOperation"
+//  INVALIDPARAMETERVALUE = "InvalidParameterValue"
+//  MISSINGPARAMETER = "MissingParameter"
+//  RESOURCENOTFOUND_FORBIDSERVICE = "ResourceNotFound.ForbidService"
+//  RESOURCENOTFOUND_FREEZESERVICE = "ResourceNotFound.FreezeService"
+//  RESOURCENOTFOUND_STOPSERVICE = "ResourceNotFound.StopService"
+//  RESOURCENOTFOUND_USERDISABLESERVICE = "ResourceNotFound.UserDisableService"
+func (c *Client) DescribeLiveAvatarTimbreList(request *DescribeLiveAvatarTimbreListRequest) (response *DescribeLiveAvatarTimbreListResponse, err error) {
+    return c.DescribeLiveAvatarTimbreListWithContext(context.Background(), request)
+}
+
+// DescribeLiveAvatarTimbreList
+// 调用该接口，获取可用的数字人声音信息列表。包括官方预制音色，以及个人复刻音色。
+//
+// 可能返回的错误码:
+//  FAILEDOPERATION = "FailedOperation"
+//  INVALIDPARAMETERVALUE = "InvalidParameterValue"
+//  MISSINGPARAMETER = "MissingParameter"
+//  RESOURCENOTFOUND_FORBIDSERVICE = "ResourceNotFound.ForbidService"
+//  RESOURCENOTFOUND_FREEZESERVICE = "ResourceNotFound.FreezeService"
+//  RESOURCENOTFOUND_STOPSERVICE = "ResourceNotFound.StopService"
+//  RESOURCENOTFOUND_USERDISABLESERVICE = "ResourceNotFound.UserDisableService"
+func (c *Client) DescribeLiveAvatarTimbreListWithContext(ctx context.Context, request *DescribeLiveAvatarTimbreListRequest) (response *DescribeLiveAvatarTimbreListResponse, err error) {
+    if request == nil {
+        request = NewDescribeLiveAvatarTimbreListRequest()
+    }
+    c.InitBaseRequest(&request.BaseRequest, "live", APIVersion, "DescribeLiveAvatarTimbreList")
+    
+    if c.GetCredential() == nil {
+        return nil, errors.New("DescribeLiveAvatarTimbreList require credential")
+    }
+
+    request.SetContext(ctx)
+    
+    response = NewDescribeLiveAvatarTimbreListResponse()
     err = c.Send(request, response)
     return
 }
@@ -4732,6 +8226,7 @@ func (c *Client) DescribeLiveCallbackRulesWithContext(ctx context.Context, reque
     if request == nil {
         request = NewDescribeLiveCallbackRulesRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "live", APIVersion, "DescribeLiveCallbackRules")
     
     if c.GetCredential() == nil {
         return nil, errors.New("DescribeLiveCallbackRules require credential")
@@ -4819,6 +8314,7 @@ func (c *Client) DescribeLiveCallbackTemplateWithContext(ctx context.Context, re
     if request == nil {
         request = NewDescribeLiveCallbackTemplateRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "live", APIVersion, "DescribeLiveCallbackTemplate")
     
     if c.GetCredential() == nil {
         return nil, errors.New("DescribeLiveCallbackTemplate require credential")
@@ -4908,6 +8404,7 @@ func (c *Client) DescribeLiveCallbackTemplatesWithContext(ctx context.Context, r
     if request == nil {
         request = NewDescribeLiveCallbackTemplatesRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "live", APIVersion, "DescribeLiveCallbackTemplates")
     
     if c.GetCredential() == nil {
         return nil, errors.New("DescribeLiveCallbackTemplates require credential")
@@ -4975,6 +8472,7 @@ func (c *Client) DescribeLiveCertWithContext(ctx context.Context, request *Descr
     if request == nil {
         request = NewDescribeLiveCertRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "live", APIVersion, "DescribeLiveCert")
     
     if c.GetCredential() == nil {
         return nil, errors.New("DescribeLiveCert require credential")
@@ -5042,6 +8540,7 @@ func (c *Client) DescribeLiveCertsWithContext(ctx context.Context, request *Desc
     if request == nil {
         request = NewDescribeLiveCertsRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "live", APIVersion, "DescribeLiveCerts")
     
     if c.GetCredential() == nil {
         return nil, errors.New("DescribeLiveCerts require credential")
@@ -5050,6 +8549,178 @@ func (c *Client) DescribeLiveCertsWithContext(ctx context.Context, request *Desc
     request.SetContext(ctx)
     
     response = NewDescribeLiveCertsResponse()
+    err = c.Send(request, response)
+    return
+}
+
+func NewDescribeLiveCloudEffectConfigRequest() (request *DescribeLiveCloudEffectConfigRequest) {
+    request = &DescribeLiveCloudEffectConfigRequest{
+        BaseRequest: &tchttp.BaseRequest{},
+    }
+    
+    request.Init().WithApiInfo("live", APIVersion, "DescribeLiveCloudEffectConfig")
+    
+    
+    return
+}
+
+func NewDescribeLiveCloudEffectConfigResponse() (response *DescribeLiveCloudEffectConfigResponse) {
+    response = &DescribeLiveCloudEffectConfigResponse{
+        BaseResponse: &tchttp.BaseResponse{},
+    } 
+    return
+
+}
+
+// DescribeLiveCloudEffectConfig
+// 使用该接口查询云端特效配置信息。
+//
+// 可能返回的错误码:
+//  FAILEDOPERATION = "FailedOperation"
+//  FAILEDOPERATION_CALLOTHERSVRFAILED = "FailedOperation.CallOtherSvrFailed"
+//  INTERNALERROR = "InternalError"
+//  INTERNALERROR_CALLOTHERSVRERROR = "InternalError.CallOtherSvrError"
+//  INTERNALERROR_CONFIGNOTEXIST = "InternalError.ConfigNotExist"
+//  INTERNALERROR_GETBIZIDERROR = "InternalError.GetBizidError"
+//  INTERNALERROR_GETSTREAMINFOERROR = "InternalError.GetStreamInfoError"
+//  INTERNALERROR_GETUPSTREAMINFOERROR = "InternalError.GetUpstreamInfoError"
+//  INTERNALERROR_NOTPERMMITOPERAT = "InternalError.NotPermmitOperat"
+//  INTERNALERROR_STREAMSTATUSERROR = "InternalError.StreamStatusError"
+//  INTERNALERROR_UPDATEDATAERROR = "InternalError.UpdateDataError"
+//  INVALIDPARAMETER = "InvalidParameter"
+//  INVALIDPARAMETERVALUE = "InvalidParameterValue"
+//  MISSINGPARAMETER = "MissingParameter"
+//  RESOURCENOTFOUND_FORBIDSERVICE = "ResourceNotFound.ForbidService"
+//  RESOURCENOTFOUND_FREEZESERVICE = "ResourceNotFound.FreezeService"
+//  RESOURCENOTFOUND_STOPSERVICE = "ResourceNotFound.StopService"
+//  RESOURCENOTFOUND_USERDISABLESERVICE = "ResourceNotFound.UserDisableService"
+//  RESOURCENOTFOUND_USERNOTEXIST = "ResourceNotFound.UserNotExist"
+func (c *Client) DescribeLiveCloudEffectConfig(request *DescribeLiveCloudEffectConfigRequest) (response *DescribeLiveCloudEffectConfigResponse, err error) {
+    return c.DescribeLiveCloudEffectConfigWithContext(context.Background(), request)
+}
+
+// DescribeLiveCloudEffectConfig
+// 使用该接口查询云端特效配置信息。
+//
+// 可能返回的错误码:
+//  FAILEDOPERATION = "FailedOperation"
+//  FAILEDOPERATION_CALLOTHERSVRFAILED = "FailedOperation.CallOtherSvrFailed"
+//  INTERNALERROR = "InternalError"
+//  INTERNALERROR_CALLOTHERSVRERROR = "InternalError.CallOtherSvrError"
+//  INTERNALERROR_CONFIGNOTEXIST = "InternalError.ConfigNotExist"
+//  INTERNALERROR_GETBIZIDERROR = "InternalError.GetBizidError"
+//  INTERNALERROR_GETSTREAMINFOERROR = "InternalError.GetStreamInfoError"
+//  INTERNALERROR_GETUPSTREAMINFOERROR = "InternalError.GetUpstreamInfoError"
+//  INTERNALERROR_NOTPERMMITOPERAT = "InternalError.NotPermmitOperat"
+//  INTERNALERROR_STREAMSTATUSERROR = "InternalError.StreamStatusError"
+//  INTERNALERROR_UPDATEDATAERROR = "InternalError.UpdateDataError"
+//  INVALIDPARAMETER = "InvalidParameter"
+//  INVALIDPARAMETERVALUE = "InvalidParameterValue"
+//  MISSINGPARAMETER = "MissingParameter"
+//  RESOURCENOTFOUND_FORBIDSERVICE = "ResourceNotFound.ForbidService"
+//  RESOURCENOTFOUND_FREEZESERVICE = "ResourceNotFound.FreezeService"
+//  RESOURCENOTFOUND_STOPSERVICE = "ResourceNotFound.StopService"
+//  RESOURCENOTFOUND_USERDISABLESERVICE = "ResourceNotFound.UserDisableService"
+//  RESOURCENOTFOUND_USERNOTEXIST = "ResourceNotFound.UserNotExist"
+func (c *Client) DescribeLiveCloudEffectConfigWithContext(ctx context.Context, request *DescribeLiveCloudEffectConfigRequest) (response *DescribeLiveCloudEffectConfigResponse, err error) {
+    if request == nil {
+        request = NewDescribeLiveCloudEffectConfigRequest()
+    }
+    c.InitBaseRequest(&request.BaseRequest, "live", APIVersion, "DescribeLiveCloudEffectConfig")
+    
+    if c.GetCredential() == nil {
+        return nil, errors.New("DescribeLiveCloudEffectConfig require credential")
+    }
+
+    request.SetContext(ctx)
+    
+    response = NewDescribeLiveCloudEffectConfigResponse()
+    err = c.Send(request, response)
+    return
+}
+
+func NewDescribeLiveCloudEffectListRequest() (request *DescribeLiveCloudEffectListRequest) {
+    request = &DescribeLiveCloudEffectListRequest{
+        BaseRequest: &tchttp.BaseRequest{},
+    }
+    
+    request.Init().WithApiInfo("live", APIVersion, "DescribeLiveCloudEffectList")
+    
+    
+    return
+}
+
+func NewDescribeLiveCloudEffectListResponse() (response *DescribeLiveCloudEffectListResponse) {
+    response = &DescribeLiveCloudEffectListResponse{
+        BaseResponse: &tchttp.BaseResponse{},
+    } 
+    return
+
+}
+
+// DescribeLiveCloudEffectList
+// 使用该接口查询云端特效列表，特效列表中包含一部分官方精品特效，同时包含用户自定义生成的特效。
+//
+// 可能返回的错误码:
+//  FAILEDOPERATION = "FailedOperation"
+//  FAILEDOPERATION_CALLOTHERSVRFAILED = "FailedOperation.CallOtherSvrFailed"
+//  INTERNALERROR = "InternalError"
+//  INTERNALERROR_CALLOTHERSVRERROR = "InternalError.CallOtherSvrError"
+//  INTERNALERROR_CONFIGNOTEXIST = "InternalError.ConfigNotExist"
+//  INTERNALERROR_GETBIZIDERROR = "InternalError.GetBizidError"
+//  INTERNALERROR_GETSTREAMINFOERROR = "InternalError.GetStreamInfoError"
+//  INTERNALERROR_GETUPSTREAMINFOERROR = "InternalError.GetUpstreamInfoError"
+//  INTERNALERROR_NOTPERMMITOPERAT = "InternalError.NotPermmitOperat"
+//  INTERNALERROR_STREAMSTATUSERROR = "InternalError.StreamStatusError"
+//  INTERNALERROR_UPDATEDATAERROR = "InternalError.UpdateDataError"
+//  INVALIDPARAMETER = "InvalidParameter"
+//  INVALIDPARAMETERVALUE = "InvalidParameterValue"
+//  MISSINGPARAMETER = "MissingParameter"
+//  RESOURCENOTFOUND_FORBIDSERVICE = "ResourceNotFound.ForbidService"
+//  RESOURCENOTFOUND_FREEZESERVICE = "ResourceNotFound.FreezeService"
+//  RESOURCENOTFOUND_STOPSERVICE = "ResourceNotFound.StopService"
+//  RESOURCENOTFOUND_USERDISABLESERVICE = "ResourceNotFound.UserDisableService"
+//  RESOURCENOTFOUND_USERNOTEXIST = "ResourceNotFound.UserNotExist"
+func (c *Client) DescribeLiveCloudEffectList(request *DescribeLiveCloudEffectListRequest) (response *DescribeLiveCloudEffectListResponse, err error) {
+    return c.DescribeLiveCloudEffectListWithContext(context.Background(), request)
+}
+
+// DescribeLiveCloudEffectList
+// 使用该接口查询云端特效列表，特效列表中包含一部分官方精品特效，同时包含用户自定义生成的特效。
+//
+// 可能返回的错误码:
+//  FAILEDOPERATION = "FailedOperation"
+//  FAILEDOPERATION_CALLOTHERSVRFAILED = "FailedOperation.CallOtherSvrFailed"
+//  INTERNALERROR = "InternalError"
+//  INTERNALERROR_CALLOTHERSVRERROR = "InternalError.CallOtherSvrError"
+//  INTERNALERROR_CONFIGNOTEXIST = "InternalError.ConfigNotExist"
+//  INTERNALERROR_GETBIZIDERROR = "InternalError.GetBizidError"
+//  INTERNALERROR_GETSTREAMINFOERROR = "InternalError.GetStreamInfoError"
+//  INTERNALERROR_GETUPSTREAMINFOERROR = "InternalError.GetUpstreamInfoError"
+//  INTERNALERROR_NOTPERMMITOPERAT = "InternalError.NotPermmitOperat"
+//  INTERNALERROR_STREAMSTATUSERROR = "InternalError.StreamStatusError"
+//  INTERNALERROR_UPDATEDATAERROR = "InternalError.UpdateDataError"
+//  INVALIDPARAMETER = "InvalidParameter"
+//  INVALIDPARAMETERVALUE = "InvalidParameterValue"
+//  MISSINGPARAMETER = "MissingParameter"
+//  RESOURCENOTFOUND_FORBIDSERVICE = "ResourceNotFound.ForbidService"
+//  RESOURCENOTFOUND_FREEZESERVICE = "ResourceNotFound.FreezeService"
+//  RESOURCENOTFOUND_STOPSERVICE = "ResourceNotFound.StopService"
+//  RESOURCENOTFOUND_USERDISABLESERVICE = "ResourceNotFound.UserDisableService"
+//  RESOURCENOTFOUND_USERNOTEXIST = "ResourceNotFound.UserNotExist"
+func (c *Client) DescribeLiveCloudEffectListWithContext(ctx context.Context, request *DescribeLiveCloudEffectListRequest) (response *DescribeLiveCloudEffectListResponse, err error) {
+    if request == nil {
+        request = NewDescribeLiveCloudEffectListRequest()
+    }
+    c.InitBaseRequest(&request.BaseRequest, "live", APIVersion, "DescribeLiveCloudEffectList")
+    
+    if c.GetCredential() == nil {
+        return nil, errors.New("DescribeLiveCloudEffectList require credential")
+    }
+
+    request.SetContext(ctx)
+    
+    response = NewDescribeLiveCloudEffectListResponse()
     err = c.Send(request, response)
     return
 }
@@ -5109,6 +8780,7 @@ func (c *Client) DescribeLiveDelayInfoListWithContext(ctx context.Context, reque
     if request == nil {
         request = NewDescribeLiveDelayInfoListRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "live", APIVersion, "DescribeLiveDelayInfoList")
     
     if c.GetCredential() == nil {
         return nil, errors.New("DescribeLiveDelayInfoList require credential")
@@ -5180,6 +8852,7 @@ func (c *Client) DescribeLiveDomainWithContext(ctx context.Context, request *Des
     if request == nil {
         request = NewDescribeLiveDomainRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "live", APIVersion, "DescribeLiveDomain")
     
     if c.GetCredential() == nil {
         return nil, errors.New("DescribeLiveDomain require credential")
@@ -5247,6 +8920,7 @@ func (c *Client) DescribeLiveDomainCertWithContext(ctx context.Context, request 
     if request == nil {
         request = NewDescribeLiveDomainCertRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "live", APIVersion, "DescribeLiveDomainCert")
     
     if c.GetCredential() == nil {
         return nil, errors.New("DescribeLiveDomainCert require credential")
@@ -5312,6 +8986,7 @@ func (c *Client) DescribeLiveDomainCertBindingsWithContext(ctx context.Context, 
     if request == nil {
         request = NewDescribeLiveDomainCertBindingsRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "live", APIVersion, "DescribeLiveDomainCertBindings")
     
     if c.GetCredential() == nil {
         return nil, errors.New("DescribeLiveDomainCertBindings require credential")
@@ -5377,6 +9052,7 @@ func (c *Client) DescribeLiveDomainPlayInfoListWithContext(ctx context.Context, 
     if request == nil {
         request = NewDescribeLiveDomainPlayInfoListRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "live", APIVersion, "DescribeLiveDomainPlayInfoList")
     
     if c.GetCredential() == nil {
         return nil, errors.New("DescribeLiveDomainPlayInfoList require credential")
@@ -5452,6 +9128,7 @@ func (c *Client) DescribeLiveDomainRefererWithContext(ctx context.Context, reque
     if request == nil {
         request = NewDescribeLiveDomainRefererRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "live", APIVersion, "DescribeLiveDomainReferer")
     
     if c.GetCredential() == nil {
         return nil, errors.New("DescribeLiveDomainReferer require credential")
@@ -5521,6 +9198,7 @@ func (c *Client) DescribeLiveDomainsWithContext(ctx context.Context, request *De
     if request == nil {
         request = NewDescribeLiveDomainsRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "live", APIVersion, "DescribeLiveDomains")
     
     if c.GetCredential() == nil {
         return nil, errors.New("DescribeLiveDomains require credential")
@@ -5533,77 +9211,64 @@ func (c *Client) DescribeLiveDomainsWithContext(ctx context.Context, request *De
     return
 }
 
-func NewDescribeLiveForbidStreamListRequest() (request *DescribeLiveForbidStreamListRequest) {
-    request = &DescribeLiveForbidStreamListRequest{
+func NewDescribeLiveEnhanceInfoListRequest() (request *DescribeLiveEnhanceInfoListRequest) {
+    request = &DescribeLiveEnhanceInfoListRequest{
         BaseRequest: &tchttp.BaseRequest{},
     }
     
-    request.Init().WithApiInfo("live", APIVersion, "DescribeLiveForbidStreamList")
+    request.Init().WithApiInfo("live", APIVersion, "DescribeLiveEnhanceInfoList")
     
     
     return
 }
 
-func NewDescribeLiveForbidStreamListResponse() (response *DescribeLiveForbidStreamListResponse) {
-    response = &DescribeLiveForbidStreamListResponse{
+func NewDescribeLiveEnhanceInfoListResponse() (response *DescribeLiveEnhanceInfoListResponse) {
+    response = &DescribeLiveEnhanceInfoListResponse{
         BaseResponse: &tchttp.BaseResponse{},
     } 
     return
 
 }
 
-// DescribeLiveForbidStreamList
-// 获取禁推流列表。
-//
-// 
-//
-// 注意：该接口仅作为直播辅助查询接口，重要业务场景不可强依赖该接口。
+// DescribeLiveEnhanceInfoList
+// 查询直播增强用量明细信息。
 //
 // 可能返回的错误码:
-//  FAILEDOPERATION_CALLOTHERSVRFAILED = "FailedOperation.CallOtherSvrFailed"
-//  INTERNALERROR = "InternalError"
+//  FAILEDOPERATION = "FailedOperation"
 //  INVALIDPARAMETER = "InvalidParameter"
 //  INVALIDPARAMETERVALUE = "InvalidParameterValue"
-//  MISSINGPARAMETER = "MissingParameter"
 //  RESOURCENOTFOUND_FORBIDSERVICE = "ResourceNotFound.ForbidService"
 //  RESOURCENOTFOUND_FREEZESERVICE = "ResourceNotFound.FreezeService"
 //  RESOURCENOTFOUND_STOPSERVICE = "ResourceNotFound.StopService"
 //  RESOURCENOTFOUND_USERDISABLESERVICE = "ResourceNotFound.UserDisableService"
-//  RESOURCENOTFOUND_USERNOTEXIST = "ResourceNotFound.UserNotExist"
-func (c *Client) DescribeLiveForbidStreamList(request *DescribeLiveForbidStreamListRequest) (response *DescribeLiveForbidStreamListResponse, err error) {
-    return c.DescribeLiveForbidStreamListWithContext(context.Background(), request)
+func (c *Client) DescribeLiveEnhanceInfoList(request *DescribeLiveEnhanceInfoListRequest) (response *DescribeLiveEnhanceInfoListResponse, err error) {
+    return c.DescribeLiveEnhanceInfoListWithContext(context.Background(), request)
 }
 
-// DescribeLiveForbidStreamList
-// 获取禁推流列表。
-//
-// 
-//
-// 注意：该接口仅作为直播辅助查询接口，重要业务场景不可强依赖该接口。
+// DescribeLiveEnhanceInfoList
+// 查询直播增强用量明细信息。
 //
 // 可能返回的错误码:
-//  FAILEDOPERATION_CALLOTHERSVRFAILED = "FailedOperation.CallOtherSvrFailed"
-//  INTERNALERROR = "InternalError"
+//  FAILEDOPERATION = "FailedOperation"
 //  INVALIDPARAMETER = "InvalidParameter"
 //  INVALIDPARAMETERVALUE = "InvalidParameterValue"
-//  MISSINGPARAMETER = "MissingParameter"
 //  RESOURCENOTFOUND_FORBIDSERVICE = "ResourceNotFound.ForbidService"
 //  RESOURCENOTFOUND_FREEZESERVICE = "ResourceNotFound.FreezeService"
 //  RESOURCENOTFOUND_STOPSERVICE = "ResourceNotFound.StopService"
 //  RESOURCENOTFOUND_USERDISABLESERVICE = "ResourceNotFound.UserDisableService"
-//  RESOURCENOTFOUND_USERNOTEXIST = "ResourceNotFound.UserNotExist"
-func (c *Client) DescribeLiveForbidStreamListWithContext(ctx context.Context, request *DescribeLiveForbidStreamListRequest) (response *DescribeLiveForbidStreamListResponse, err error) {
+func (c *Client) DescribeLiveEnhanceInfoListWithContext(ctx context.Context, request *DescribeLiveEnhanceInfoListRequest) (response *DescribeLiveEnhanceInfoListResponse, err error) {
     if request == nil {
-        request = NewDescribeLiveForbidStreamListRequest()
+        request = NewDescribeLiveEnhanceInfoListRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "live", APIVersion, "DescribeLiveEnhanceInfoList")
     
     if c.GetCredential() == nil {
-        return nil, errors.New("DescribeLiveForbidStreamList require credential")
+        return nil, errors.New("DescribeLiveEnhanceInfoList require credential")
     }
 
     request.SetContext(ctx)
     
-    response = NewDescribeLiveForbidStreamListResponse()
+    response = NewDescribeLiveEnhanceInfoListResponse()
     err = c.Send(request, response)
     return
 }
@@ -5663,6 +9328,7 @@ func (c *Client) DescribeLivePackageInfoWithContext(ctx context.Context, request
     if request == nil {
         request = NewDescribeLivePackageInfoRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "live", APIVersion, "DescribeLivePackageInfo")
     
     if c.GetCredential() == nil {
         return nil, errors.New("DescribeLivePackageInfo require credential")
@@ -5728,6 +9394,7 @@ func (c *Client) DescribeLivePadRulesWithContext(ctx context.Context, request *D
     if request == nil {
         request = NewDescribeLivePadRulesRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "live", APIVersion, "DescribeLivePadRules")
     
     if c.GetCredential() == nil {
         return nil, errors.New("DescribeLivePadRules require credential")
@@ -5736,6 +9403,92 @@ func (c *Client) DescribeLivePadRulesWithContext(ctx context.Context, request *D
     request.SetContext(ctx)
     
     response = NewDescribeLivePadRulesResponse()
+    err = c.Send(request, response)
+    return
+}
+
+func NewDescribeLivePadStreamListRequest() (request *DescribeLivePadStreamListRequest) {
+    request = &DescribeLivePadStreamListRequest{
+        BaseRequest: &tchttp.BaseRequest{},
+    }
+    
+    request.Init().WithApiInfo("live", APIVersion, "DescribeLivePadStreamList")
+    
+    
+    return
+}
+
+func NewDescribeLivePadStreamListResponse() (response *DescribeLivePadStreamListResponse) {
+    response = &DescribeLivePadStreamListResponse{
+        BaseResponse: &tchttp.BaseResponse{},
+    } 
+    return
+
+}
+
+// DescribeLivePadStreamList
+// 使用该接口查询垫片流列表。垫片流状态更新存在一定延迟，可间隔30秒以上查询，避免频繁查询该接口。
+//
+// 可能返回的错误码:
+//  FAILEDOPERATION = "FailedOperation"
+//  FAILEDOPERATION_CALLOTHERSVRFAILED = "FailedOperation.CallOtherSvrFailed"
+//  INTERNALERROR = "InternalError"
+//  INTERNALERROR_CALLOTHERSVRERROR = "InternalError.CallOtherSvrError"
+//  INTERNALERROR_CONFIGNOTEXIST = "InternalError.ConfigNotExist"
+//  INTERNALERROR_GETBIZIDERROR = "InternalError.GetBizidError"
+//  INTERNALERROR_GETSTREAMINFOERROR = "InternalError.GetStreamInfoError"
+//  INTERNALERROR_GETUPSTREAMINFOERROR = "InternalError.GetUpstreamInfoError"
+//  INTERNALERROR_NOTPERMMITOPERAT = "InternalError.NotPermmitOperat"
+//  INTERNALERROR_STREAMSTATUSERROR = "InternalError.StreamStatusError"
+//  INTERNALERROR_UPDATEDATAERROR = "InternalError.UpdateDataError"
+//  INVALIDPARAMETER = "InvalidParameter"
+//  INVALIDPARAMETERVALUE = "InvalidParameterValue"
+//  MISSINGPARAMETER = "MissingParameter"
+//  RESOURCENOTFOUND_FORBIDSERVICE = "ResourceNotFound.ForbidService"
+//  RESOURCENOTFOUND_FREEZESERVICE = "ResourceNotFound.FreezeService"
+//  RESOURCENOTFOUND_STOPSERVICE = "ResourceNotFound.StopService"
+//  RESOURCENOTFOUND_USERDISABLESERVICE = "ResourceNotFound.UserDisableService"
+//  RESOURCENOTFOUND_USERNOTEXIST = "ResourceNotFound.UserNotExist"
+func (c *Client) DescribeLivePadStreamList(request *DescribeLivePadStreamListRequest) (response *DescribeLivePadStreamListResponse, err error) {
+    return c.DescribeLivePadStreamListWithContext(context.Background(), request)
+}
+
+// DescribeLivePadStreamList
+// 使用该接口查询垫片流列表。垫片流状态更新存在一定延迟，可间隔30秒以上查询，避免频繁查询该接口。
+//
+// 可能返回的错误码:
+//  FAILEDOPERATION = "FailedOperation"
+//  FAILEDOPERATION_CALLOTHERSVRFAILED = "FailedOperation.CallOtherSvrFailed"
+//  INTERNALERROR = "InternalError"
+//  INTERNALERROR_CALLOTHERSVRERROR = "InternalError.CallOtherSvrError"
+//  INTERNALERROR_CONFIGNOTEXIST = "InternalError.ConfigNotExist"
+//  INTERNALERROR_GETBIZIDERROR = "InternalError.GetBizidError"
+//  INTERNALERROR_GETSTREAMINFOERROR = "InternalError.GetStreamInfoError"
+//  INTERNALERROR_GETUPSTREAMINFOERROR = "InternalError.GetUpstreamInfoError"
+//  INTERNALERROR_NOTPERMMITOPERAT = "InternalError.NotPermmitOperat"
+//  INTERNALERROR_STREAMSTATUSERROR = "InternalError.StreamStatusError"
+//  INTERNALERROR_UPDATEDATAERROR = "InternalError.UpdateDataError"
+//  INVALIDPARAMETER = "InvalidParameter"
+//  INVALIDPARAMETERVALUE = "InvalidParameterValue"
+//  MISSINGPARAMETER = "MissingParameter"
+//  RESOURCENOTFOUND_FORBIDSERVICE = "ResourceNotFound.ForbidService"
+//  RESOURCENOTFOUND_FREEZESERVICE = "ResourceNotFound.FreezeService"
+//  RESOURCENOTFOUND_STOPSERVICE = "ResourceNotFound.StopService"
+//  RESOURCENOTFOUND_USERDISABLESERVICE = "ResourceNotFound.UserDisableService"
+//  RESOURCENOTFOUND_USERNOTEXIST = "ResourceNotFound.UserNotExist"
+func (c *Client) DescribeLivePadStreamListWithContext(ctx context.Context, request *DescribeLivePadStreamListRequest) (response *DescribeLivePadStreamListResponse, err error) {
+    if request == nil {
+        request = NewDescribeLivePadStreamListRequest()
+    }
+    c.InitBaseRequest(&request.BaseRequest, "live", APIVersion, "DescribeLivePadStreamList")
+    
+    if c.GetCredential() == nil {
+        return nil, errors.New("DescribeLivePadStreamList require credential")
+    }
+
+    request.SetContext(ctx)
+    
+    response = NewDescribeLivePadStreamListResponse()
     err = c.Send(request, response)
     return
 }
@@ -5819,6 +9572,7 @@ func (c *Client) DescribeLivePadTemplateWithContext(ctx context.Context, request
     if request == nil {
         request = NewDescribeLivePadTemplateRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "live", APIVersion, "DescribeLivePadTemplate")
     
     if c.GetCredential() == nil {
         return nil, errors.New("DescribeLivePadTemplate require credential")
@@ -5912,6 +9666,7 @@ func (c *Client) DescribeLivePadTemplatesWithContext(ctx context.Context, reques
     if request == nil {
         request = NewDescribeLivePadTemplatesRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "live", APIVersion, "DescribeLivePadTemplates")
     
     if c.GetCredential() == nil {
         return nil, errors.New("DescribeLivePadTemplates require credential")
@@ -5983,6 +9738,7 @@ func (c *Client) DescribeLivePlayAuthKeyWithContext(ctx context.Context, request
     if request == nil {
         request = NewDescribeLivePlayAuthKeyRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "live", APIVersion, "DescribeLivePlayAuthKey")
     
     if c.GetCredential() == nil {
         return nil, errors.New("DescribeLivePlayAuthKey require credential")
@@ -6040,6 +9796,7 @@ func (c *Client) DescribeLivePullStreamTaskStatusWithContext(ctx context.Context
     if request == nil {
         request = NewDescribeLivePullStreamTaskStatusRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "live", APIVersion, "DescribeLivePullStreamTaskStatus")
     
     if c.GetCredential() == nil {
         return nil, errors.New("DescribeLivePullStreamTaskStatus require credential")
@@ -6107,6 +9864,7 @@ func (c *Client) DescribeLivePullStreamTasksWithContext(ctx context.Context, req
     if request == nil {
         request = NewDescribeLivePullStreamTasksRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "live", APIVersion, "DescribeLivePullStreamTasks")
     
     if c.GetCredential() == nil {
         return nil, errors.New("DescribeLivePullStreamTasks require credential")
@@ -6178,6 +9936,7 @@ func (c *Client) DescribeLivePushAuthKeyWithContext(ctx context.Context, request
     if request == nil {
         request = NewDescribeLivePushAuthKeyRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "live", APIVersion, "DescribeLivePushAuthKey")
     
     if c.GetCredential() == nil {
         return nil, errors.New("DescribeLivePushAuthKey require credential")
@@ -6257,6 +10016,7 @@ func (c *Client) DescribeLiveRecordRulesWithContext(ctx context.Context, request
     if request == nil {
         request = NewDescribeLiveRecordRulesRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "live", APIVersion, "DescribeLiveRecordRules")
     
     if c.GetCredential() == nil {
         return nil, errors.New("DescribeLiveRecordRules require credential")
@@ -6338,6 +10098,7 @@ func (c *Client) DescribeLiveRecordTemplateWithContext(ctx context.Context, requ
     if request == nil {
         request = NewDescribeLiveRecordTemplateRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "live", APIVersion, "DescribeLiveRecordTemplate")
     
     if c.GetCredential() == nil {
         return nil, errors.New("DescribeLiveRecordTemplate require credential")
@@ -6417,6 +10178,7 @@ func (c *Client) DescribeLiveRecordTemplatesWithContext(ctx context.Context, req
     if request == nil {
         request = NewDescribeLiveRecordTemplatesRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "live", APIVersion, "DescribeLiveRecordTemplates")
     
     if c.GetCredential() == nil {
         return nil, errors.New("DescribeLiveRecordTemplates require credential")
@@ -6496,6 +10258,7 @@ func (c *Client) DescribeLiveSnapshotRulesWithContext(ctx context.Context, reque
     if request == nil {
         request = NewDescribeLiveSnapshotRulesRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "live", APIVersion, "DescribeLiveSnapshotRules")
     
     if c.GetCredential() == nil {
         return nil, errors.New("DescribeLiveSnapshotRules require credential")
@@ -6583,6 +10346,7 @@ func (c *Client) DescribeLiveSnapshotTemplateWithContext(ctx context.Context, re
     if request == nil {
         request = NewDescribeLiveSnapshotTemplateRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "live", APIVersion, "DescribeLiveSnapshotTemplate")
     
     if c.GetCredential() == nil {
         return nil, errors.New("DescribeLiveSnapshotTemplate require credential")
@@ -6664,6 +10428,7 @@ func (c *Client) DescribeLiveSnapshotTemplatesWithContext(ctx context.Context, r
     if request == nil {
         request = NewDescribeLiveSnapshotTemplatesRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "live", APIVersion, "DescribeLiveSnapshotTemplates")
     
     if c.GetCredential() == nil {
         return nil, errors.New("DescribeLiveSnapshotTemplates require credential")
@@ -6747,6 +10512,7 @@ func (c *Client) DescribeLiveStreamEventListWithContext(ctx context.Context, req
     if request == nil {
         request = NewDescribeLiveStreamEventListRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "live", APIVersion, "DescribeLiveStreamEventList")
     
     if c.GetCredential() == nil {
         return nil, errors.New("DescribeLiveStreamEventList require credential")
@@ -6824,6 +10590,7 @@ func (c *Client) DescribeLiveStreamMonitorWithContext(ctx context.Context, reque
     if request == nil {
         request = NewDescribeLiveStreamMonitorRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "live", APIVersion, "DescribeLiveStreamMonitor")
     
     if c.GetCredential() == nil {
         return nil, errors.New("DescribeLiveStreamMonitor require credential")
@@ -6883,6 +10650,7 @@ func (c *Client) DescribeLiveStreamMonitorListWithContext(ctx context.Context, r
     if request == nil {
         request = NewDescribeLiveStreamMonitorListRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "live", APIVersion, "DescribeLiveStreamMonitorList")
     
     if c.GetCredential() == nil {
         return nil, errors.New("DescribeLiveStreamMonitorList require credential")
@@ -6982,6 +10750,7 @@ func (c *Client) DescribeLiveStreamOnlineListWithContext(ctx context.Context, re
     if request == nil {
         request = NewDescribeLiveStreamOnlineListRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "live", APIVersion, "DescribeLiveStreamOnlineList")
     
     if c.GetCredential() == nil {
         return nil, errors.New("DescribeLiveStreamOnlineList require credential")
@@ -7071,6 +10840,7 @@ func (c *Client) DescribeLiveStreamPublishedListWithContext(ctx context.Context,
     if request == nil {
         request = NewDescribeLiveStreamPublishedListRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "live", APIVersion, "DescribeLiveStreamPublishedList")
     
     if c.GetCredential() == nil {
         return nil, errors.New("DescribeLiveStreamPublishedList require credential")
@@ -7148,6 +10918,7 @@ func (c *Client) DescribeLiveStreamPushInfoListWithContext(ctx context.Context, 
     if request == nil {
         request = NewDescribeLiveStreamPushInfoListRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "live", APIVersion, "DescribeLiveStreamPushInfoList")
     
     if c.GetCredential() == nil {
         return nil, errors.New("DescribeLiveStreamPushInfoList require credential")
@@ -7269,6 +11040,7 @@ func (c *Client) DescribeLiveStreamStateWithContext(ctx context.Context, request
     if request == nil {
         request = NewDescribeLiveStreamStateRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "live", APIVersion, "DescribeLiveStreamState")
     
     if c.GetCredential() == nil {
         return nil, errors.New("DescribeLiveStreamState require credential")
@@ -7332,6 +11104,7 @@ func (c *Client) DescribeLiveTimeShiftBillInfoListWithContext(ctx context.Contex
     if request == nil {
         request = NewDescribeLiveTimeShiftBillInfoListRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "live", APIVersion, "DescribeLiveTimeShiftBillInfoList")
     
     if c.GetCredential() == nil {
         return nil, errors.New("DescribeLiveTimeShiftBillInfoList require credential")
@@ -7397,6 +11170,7 @@ func (c *Client) DescribeLiveTimeShiftRulesWithContext(ctx context.Context, requ
     if request == nil {
         request = NewDescribeLiveTimeShiftRulesRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "live", APIVersion, "DescribeLiveTimeShiftRules")
     
     if c.GetCredential() == nil {
         return nil, errors.New("DescribeLiveTimeShiftRules require credential")
@@ -7490,6 +11264,7 @@ func (c *Client) DescribeLiveTimeShiftTemplatesWithContext(ctx context.Context, 
     if request == nil {
         request = NewDescribeLiveTimeShiftTemplatesRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "live", APIVersion, "DescribeLiveTimeShiftTemplates")
     
     if c.GetCredential() == nil {
         return nil, errors.New("DescribeLiveTimeShiftTemplates require credential")
@@ -7498,6 +11273,66 @@ func (c *Client) DescribeLiveTimeShiftTemplatesWithContext(ctx context.Context, 
     request.SetContext(ctx)
     
     response = NewDescribeLiveTimeShiftTemplatesResponse()
+    err = c.Send(request, response)
+    return
+}
+
+func NewDescribeLiveTimeShiftWriteSizeInfoListRequest() (request *DescribeLiveTimeShiftWriteSizeInfoListRequest) {
+    request = &DescribeLiveTimeShiftWriteSizeInfoListRequest{
+        BaseRequest: &tchttp.BaseRequest{},
+    }
+    
+    request.Init().WithApiInfo("live", APIVersion, "DescribeLiveTimeShiftWriteSizeInfoList")
+    
+    
+    return
+}
+
+func NewDescribeLiveTimeShiftWriteSizeInfoListResponse() (response *DescribeLiveTimeShiftWriteSizeInfoListResponse) {
+    response = &DescribeLiveTimeShiftWriteSizeInfoListResponse{
+        BaseResponse: &tchttp.BaseResponse{},
+    } 
+    return
+
+}
+
+// DescribeLiveTimeShiftWriteSizeInfoList
+// 支持直播时移写入量数据查询。
+//
+// 可能返回的错误码:
+//  FAILEDOPERATION = "FailedOperation"
+//  INVALIDPARAMETERVALUE = "InvalidParameterValue"
+//  RESOURCENOTFOUND_FORBIDSERVICE = "ResourceNotFound.ForbidService"
+//  RESOURCENOTFOUND_FREEZESERVICE = "ResourceNotFound.FreezeService"
+//  RESOURCENOTFOUND_STOPSERVICE = "ResourceNotFound.StopService"
+//  RESOURCENOTFOUND_USERDISABLESERVICE = "ResourceNotFound.UserDisableService"
+func (c *Client) DescribeLiveTimeShiftWriteSizeInfoList(request *DescribeLiveTimeShiftWriteSizeInfoListRequest) (response *DescribeLiveTimeShiftWriteSizeInfoListResponse, err error) {
+    return c.DescribeLiveTimeShiftWriteSizeInfoListWithContext(context.Background(), request)
+}
+
+// DescribeLiveTimeShiftWriteSizeInfoList
+// 支持直播时移写入量数据查询。
+//
+// 可能返回的错误码:
+//  FAILEDOPERATION = "FailedOperation"
+//  INVALIDPARAMETERVALUE = "InvalidParameterValue"
+//  RESOURCENOTFOUND_FORBIDSERVICE = "ResourceNotFound.ForbidService"
+//  RESOURCENOTFOUND_FREEZESERVICE = "ResourceNotFound.FreezeService"
+//  RESOURCENOTFOUND_STOPSERVICE = "ResourceNotFound.StopService"
+//  RESOURCENOTFOUND_USERDISABLESERVICE = "ResourceNotFound.UserDisableService"
+func (c *Client) DescribeLiveTimeShiftWriteSizeInfoListWithContext(ctx context.Context, request *DescribeLiveTimeShiftWriteSizeInfoListRequest) (response *DescribeLiveTimeShiftWriteSizeInfoListResponse, err error) {
+    if request == nil {
+        request = NewDescribeLiveTimeShiftWriteSizeInfoListRequest()
+    }
+    c.InitBaseRequest(&request.BaseRequest, "live", APIVersion, "DescribeLiveTimeShiftWriteSizeInfoList")
+    
+    if c.GetCredential() == nil {
+        return nil, errors.New("DescribeLiveTimeShiftWriteSizeInfoList require credential")
+    }
+
+    request.SetContext(ctx)
+    
+    response = NewDescribeLiveTimeShiftWriteSizeInfoListResponse()
     err = c.Send(request, response)
     return
 }
@@ -7555,6 +11390,7 @@ func (c *Client) DescribeLiveTranscodeDetailInfoWithContext(ctx context.Context,
     if request == nil {
         request = NewDescribeLiveTranscodeDetailInfoRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "live", APIVersion, "DescribeLiveTranscodeDetailInfo")
     
     if c.GetCredential() == nil {
         return nil, errors.New("DescribeLiveTranscodeDetailInfo require credential")
@@ -7634,6 +11470,7 @@ func (c *Client) DescribeLiveTranscodeRulesWithContext(ctx context.Context, requ
     if request == nil {
         request = NewDescribeLiveTranscodeRulesRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "live", APIVersion, "DescribeLiveTranscodeRules")
     
     if c.GetCredential() == nil {
         return nil, errors.New("DescribeLiveTranscodeRules require credential")
@@ -7717,6 +11554,7 @@ func (c *Client) DescribeLiveTranscodeTemplateWithContext(ctx context.Context, r
     if request == nil {
         request = NewDescribeLiveTranscodeTemplateRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "live", APIVersion, "DescribeLiveTranscodeTemplate")
     
     if c.GetCredential() == nil {
         return nil, errors.New("DescribeLiveTranscodeTemplate require credential")
@@ -7798,6 +11636,7 @@ func (c *Client) DescribeLiveTranscodeTemplatesWithContext(ctx context.Context, 
     if request == nil {
         request = NewDescribeLiveTranscodeTemplatesRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "live", APIVersion, "DescribeLiveTranscodeTemplates")
     
     if c.GetCredential() == nil {
         return nil, errors.New("DescribeLiveTranscodeTemplates require credential")
@@ -7873,6 +11712,7 @@ func (c *Client) DescribeLiveTranscodeTotalInfoWithContext(ctx context.Context, 
     if request == nil {
         request = NewDescribeLiveTranscodeTotalInfoRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "live", APIVersion, "DescribeLiveTranscodeTotalInfo")
     
     if c.GetCredential() == nil {
         return nil, errors.New("DescribeLiveTranscodeTotalInfo require credential")
@@ -7954,6 +11794,7 @@ func (c *Client) DescribeLiveWatermarkWithContext(ctx context.Context, request *
     if request == nil {
         request = NewDescribeLiveWatermarkRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "live", APIVersion, "DescribeLiveWatermark")
     
     if c.GetCredential() == nil {
         return nil, errors.New("DescribeLiveWatermark require credential")
@@ -8033,6 +11874,7 @@ func (c *Client) DescribeLiveWatermarkRulesWithContext(ctx context.Context, requ
     if request == nil {
         request = NewDescribeLiveWatermarkRulesRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "live", APIVersion, "DescribeLiveWatermarkRules")
     
     if c.GetCredential() == nil {
         return nil, errors.New("DescribeLiveWatermarkRules require credential")
@@ -8088,6 +11930,7 @@ func (c *Client) DescribeLiveWatermarksWithContext(ctx context.Context, request 
     if request == nil {
         request = NewDescribeLiveWatermarksRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "live", APIVersion, "DescribeLiveWatermarks")
     
     if c.GetCredential() == nil {
         return nil, errors.New("DescribeLiveWatermarks require credential")
@@ -8151,6 +11994,7 @@ func (c *Client) DescribeLiveXP2PDetailInfoListWithContext(ctx context.Context, 
     if request == nil {
         request = NewDescribeLiveXP2PDetailInfoListRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "live", APIVersion, "DescribeLiveXP2PDetailInfoList")
     
     if c.GetCredential() == nil {
         return nil, errors.New("DescribeLiveXP2PDetailInfoList require credential")
@@ -8185,6 +12029,8 @@ func NewDescribeLogDownloadListResponse() (response *DescribeLogDownloadListResp
 // DescribeLogDownloadList
 // 批量获取日志URL。
 //
+// 日志数据打包存在一定延迟，24小时候数据包趋于完整。
+//
 // 可能返回的错误码:
 //  FAILEDOPERATION = "FailedOperation"
 //  FAILEDOPERATION_INVOKECDNAPIFAIL = "FailedOperation.InvokeCdnApiFail"
@@ -8206,6 +12052,8 @@ func (c *Client) DescribeLogDownloadList(request *DescribeLogDownloadListRequest
 // DescribeLogDownloadList
 // 批量获取日志URL。
 //
+// 日志数据打包存在一定延迟，24小时候数据包趋于完整。
+//
 // 可能返回的错误码:
 //  FAILEDOPERATION = "FailedOperation"
 //  FAILEDOPERATION_INVOKECDNAPIFAIL = "FailedOperation.InvokeCdnApiFail"
@@ -8224,6 +12072,7 @@ func (c *Client) DescribeLogDownloadListWithContext(ctx context.Context, request
     if request == nil {
         request = NewDescribeLogDownloadListRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "live", APIVersion, "DescribeLogDownloadList")
     
     if c.GetCredential() == nil {
         return nil, errors.New("DescribeLogDownloadList require credential")
@@ -8293,6 +12142,7 @@ func (c *Client) DescribeMonitorReportWithContext(ctx context.Context, request *
     if request == nil {
         request = NewDescribeMonitorReportRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "live", APIVersion, "DescribeMonitorReport")
     
     if c.GetCredential() == nil {
         return nil, errors.New("DescribeMonitorReport require credential")
@@ -8301,6 +12151,72 @@ func (c *Client) DescribeMonitorReportWithContext(ctx context.Context, request *
     request.SetContext(ctx)
     
     response = NewDescribeMonitorReportResponse()
+    err = c.Send(request, response)
+    return
+}
+
+func NewDescribeOriginStreamInfoRequest() (request *DescribeOriginStreamInfoRequest) {
+    request = &DescribeOriginStreamInfoRequest{
+        BaseRequest: &tchttp.BaseRequest{},
+    }
+    
+    request.Init().WithApiInfo("live", APIVersion, "DescribeOriginStreamInfo")
+    
+    
+    return
+}
+
+func NewDescribeOriginStreamInfoResponse() (response *DescribeOriginStreamInfoResponse) {
+    response = &DescribeOriginStreamInfoResponse{
+        BaseResponse: &tchttp.BaseResponse{},
+    } 
+    return
+
+}
+
+// DescribeOriginStreamInfo
+// 获取直播源站配置信息，支持直播源站格式。
+//
+// 可能返回的错误码:
+//  FAILEDOPERATION = "FailedOperation"
+//  INTERNALERROR_DBERROR = "InternalError.DBError"
+//  INVALIDPARAMETER = "InvalidParameter"
+//  RESOURCENOTFOUND = "ResourceNotFound"
+//  RESOURCENOTFOUND_FORBIDSERVICE = "ResourceNotFound.ForbidService"
+//  RESOURCENOTFOUND_FREEZESERVICE = "ResourceNotFound.FreezeService"
+//  RESOURCENOTFOUND_INVALIDUSER = "ResourceNotFound.InvalidUser"
+//  RESOURCENOTFOUND_STOPSERVICE = "ResourceNotFound.StopService"
+//  RESOURCENOTFOUND_USERDISABLESERVICE = "ResourceNotFound.UserDisableService"
+func (c *Client) DescribeOriginStreamInfo(request *DescribeOriginStreamInfoRequest) (response *DescribeOriginStreamInfoResponse, err error) {
+    return c.DescribeOriginStreamInfoWithContext(context.Background(), request)
+}
+
+// DescribeOriginStreamInfo
+// 获取直播源站配置信息，支持直播源站格式。
+//
+// 可能返回的错误码:
+//  FAILEDOPERATION = "FailedOperation"
+//  INTERNALERROR_DBERROR = "InternalError.DBError"
+//  INVALIDPARAMETER = "InvalidParameter"
+//  RESOURCENOTFOUND = "ResourceNotFound"
+//  RESOURCENOTFOUND_FORBIDSERVICE = "ResourceNotFound.ForbidService"
+//  RESOURCENOTFOUND_FREEZESERVICE = "ResourceNotFound.FreezeService"
+//  RESOURCENOTFOUND_INVALIDUSER = "ResourceNotFound.InvalidUser"
+//  RESOURCENOTFOUND_STOPSERVICE = "ResourceNotFound.StopService"
+//  RESOURCENOTFOUND_USERDISABLESERVICE = "ResourceNotFound.UserDisableService"
+func (c *Client) DescribeOriginStreamInfoWithContext(ctx context.Context, request *DescribeOriginStreamInfoRequest) (response *DescribeOriginStreamInfoResponse, err error) {
+    if request == nil {
+        request = NewDescribeOriginStreamInfoRequest()
+    }
+    c.InitBaseRequest(&request.BaseRequest, "live", APIVersion, "DescribeOriginStreamInfo")
+    
+    if c.GetCredential() == nil {
+        return nil, errors.New("DescribeOriginStreamInfo require credential")
+    }
+
+    request.SetContext(ctx)
+    
+    response = NewDescribeOriginStreamInfoResponse()
     err = c.Send(request, response)
     return
 }
@@ -8358,6 +12274,7 @@ func (c *Client) DescribePlayErrorCodeDetailInfoListWithContext(ctx context.Cont
     if request == nil {
         request = NewDescribePlayErrorCodeDetailInfoListRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "live", APIVersion, "DescribePlayErrorCodeDetailInfoList")
     
     if c.GetCredential() == nil {
         return nil, errors.New("DescribePlayErrorCodeDetailInfoList require credential")
@@ -8423,6 +12340,7 @@ func (c *Client) DescribePlayErrorCodeSumInfoListWithContext(ctx context.Context
     if request == nil {
         request = NewDescribePlayErrorCodeSumInfoListRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "live", APIVersion, "DescribePlayErrorCodeSumInfoList")
     
     if c.GetCredential() == nil {
         return nil, errors.New("DescribePlayErrorCodeSumInfoList require credential")
@@ -8488,6 +12406,7 @@ func (c *Client) DescribeProIspPlaySumInfoListWithContext(ctx context.Context, r
     if request == nil {
         request = NewDescribeProIspPlaySumInfoListRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "live", APIVersion, "DescribeProIspPlaySumInfoList")
     
     if c.GetCredential() == nil {
         return nil, errors.New("DescribeProIspPlaySumInfoList require credential")
@@ -8563,6 +12482,7 @@ func (c *Client) DescribeProvinceIspPlayInfoListWithContext(ctx context.Context,
     if request == nil {
         request = NewDescribeProvinceIspPlayInfoListRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "live", APIVersion, "DescribeProvinceIspPlayInfoList")
     
     if c.GetCredential() == nil {
         return nil, errors.New("DescribeProvinceIspPlayInfoList require credential")
@@ -8636,6 +12556,7 @@ func (c *Client) DescribePullStreamConfigsWithContext(ctx context.Context, reque
     if request == nil {
         request = NewDescribePullStreamConfigsRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "live", APIVersion, "DescribePullStreamConfigs")
     
     if c.GetCredential() == nil {
         return nil, errors.New("DescribePullStreamConfigs require credential")
@@ -8644,6 +12565,132 @@ func (c *Client) DescribePullStreamConfigsWithContext(ctx context.Context, reque
     request.SetContext(ctx)
     
     response = NewDescribePullStreamConfigsResponse()
+    err = c.Send(request, response)
+    return
+}
+
+func NewDescribePullTransformPushInfoRequest() (request *DescribePullTransformPushInfoRequest) {
+    request = &DescribePullTransformPushInfoRequest{
+        BaseRequest: &tchttp.BaseRequest{},
+    }
+    
+    request.Init().WithApiInfo("live", APIVersion, "DescribePullTransformPushInfo")
+    
+    
+    return
+}
+
+func NewDescribePullTransformPushInfoResponse() (response *DescribePullTransformPushInfoResponse) {
+    response = &DescribePullTransformPushInfoResponse{
+        BaseResponse: &tchttp.BaseResponse{},
+    } 
+    return
+
+}
+
+// DescribePullTransformPushInfo
+// 查询拉流转推任务的时长信息。
+//
+// 可能返回的错误码:
+//  FAILEDOPERATION = "FailedOperation"
+//  INVALIDPARAMETERVALUE = "InvalidParameterValue"
+//  MISSINGPARAMETER = "MissingParameter"
+//  RESOURCENOTFOUND_FORBIDSERVICE = "ResourceNotFound.ForbidService"
+//  RESOURCENOTFOUND_FREEZESERVICE = "ResourceNotFound.FreezeService"
+//  RESOURCENOTFOUND_STOPSERVICE = "ResourceNotFound.StopService"
+//  RESOURCENOTFOUND_USERDISABLESERVICE = "ResourceNotFound.UserDisableService"
+func (c *Client) DescribePullTransformPushInfo(request *DescribePullTransformPushInfoRequest) (response *DescribePullTransformPushInfoResponse, err error) {
+    return c.DescribePullTransformPushInfoWithContext(context.Background(), request)
+}
+
+// DescribePullTransformPushInfo
+// 查询拉流转推任务的时长信息。
+//
+// 可能返回的错误码:
+//  FAILEDOPERATION = "FailedOperation"
+//  INVALIDPARAMETERVALUE = "InvalidParameterValue"
+//  MISSINGPARAMETER = "MissingParameter"
+//  RESOURCENOTFOUND_FORBIDSERVICE = "ResourceNotFound.ForbidService"
+//  RESOURCENOTFOUND_FREEZESERVICE = "ResourceNotFound.FreezeService"
+//  RESOURCENOTFOUND_STOPSERVICE = "ResourceNotFound.StopService"
+//  RESOURCENOTFOUND_USERDISABLESERVICE = "ResourceNotFound.UserDisableService"
+func (c *Client) DescribePullTransformPushInfoWithContext(ctx context.Context, request *DescribePullTransformPushInfoRequest) (response *DescribePullTransformPushInfoResponse, err error) {
+    if request == nil {
+        request = NewDescribePullTransformPushInfoRequest()
+    }
+    c.InitBaseRequest(&request.BaseRequest, "live", APIVersion, "DescribePullTransformPushInfo")
+    
+    if c.GetCredential() == nil {
+        return nil, errors.New("DescribePullTransformPushInfo require credential")
+    }
+
+    request.SetContext(ctx)
+    
+    response = NewDescribePullTransformPushInfoResponse()
+    err = c.Send(request, response)
+    return
+}
+
+func NewDescribePullTransformPushInfoListRequest() (request *DescribePullTransformPushInfoListRequest) {
+    request = &DescribePullTransformPushInfoListRequest{
+        BaseRequest: &tchttp.BaseRequest{},
+    }
+    
+    request.Init().WithApiInfo("live", APIVersion, "DescribePullTransformPushInfoList")
+    
+    
+    return
+}
+
+func NewDescribePullTransformPushInfoListResponse() (response *DescribePullTransformPushInfoListResponse) {
+    response = &DescribePullTransformPushInfoListResponse{
+        BaseResponse: &tchttp.BaseResponse{},
+    } 
+    return
+
+}
+
+// DescribePullTransformPushInfoList
+// 查询拉流转推任务流数据统计信息。
+//
+// 可能返回的错误码:
+//  FAILEDOPERATION = "FailedOperation"
+//  FAILEDOPERATION_NOTFOUND = "FailedOperation.NotFound"
+//  INTERNALERROR = "InternalError"
+//  INVALIDPARAMETER = "InvalidParameter"
+//  RESOURCENOTFOUND_FORBIDSERVICE = "ResourceNotFound.ForbidService"
+//  RESOURCENOTFOUND_FREEZESERVICE = "ResourceNotFound.FreezeService"
+//  RESOURCENOTFOUND_STOPSERVICE = "ResourceNotFound.StopService"
+//  RESOURCENOTFOUND_USERDISABLESERVICE = "ResourceNotFound.UserDisableService"
+func (c *Client) DescribePullTransformPushInfoList(request *DescribePullTransformPushInfoListRequest) (response *DescribePullTransformPushInfoListResponse, err error) {
+    return c.DescribePullTransformPushInfoListWithContext(context.Background(), request)
+}
+
+// DescribePullTransformPushInfoList
+// 查询拉流转推任务流数据统计信息。
+//
+// 可能返回的错误码:
+//  FAILEDOPERATION = "FailedOperation"
+//  FAILEDOPERATION_NOTFOUND = "FailedOperation.NotFound"
+//  INTERNALERROR = "InternalError"
+//  INVALIDPARAMETER = "InvalidParameter"
+//  RESOURCENOTFOUND_FORBIDSERVICE = "ResourceNotFound.ForbidService"
+//  RESOURCENOTFOUND_FREEZESERVICE = "ResourceNotFound.FreezeService"
+//  RESOURCENOTFOUND_STOPSERVICE = "ResourceNotFound.StopService"
+//  RESOURCENOTFOUND_USERDISABLESERVICE = "ResourceNotFound.UserDisableService"
+func (c *Client) DescribePullTransformPushInfoListWithContext(ctx context.Context, request *DescribePullTransformPushInfoListRequest) (response *DescribePullTransformPushInfoListResponse, err error) {
+    if request == nil {
+        request = NewDescribePullTransformPushInfoListRequest()
+    }
+    c.InitBaseRequest(&request.BaseRequest, "live", APIVersion, "DescribePullTransformPushInfoList")
+    
+    if c.GetCredential() == nil {
+        return nil, errors.New("DescribePullTransformPushInfoList require credential")
+    }
+
+    request.SetContext(ctx)
+    
+    response = NewDescribePullTransformPushInfoListResponse()
     err = c.Send(request, response)
     return
 }
@@ -8701,6 +12748,7 @@ func (c *Client) DescribePushBandwidthAndFluxListWithContext(ctx context.Context
     if request == nil {
         request = NewDescribePushBandwidthAndFluxListRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "live", APIVersion, "DescribePushBandwidthAndFluxList")
     
     if c.GetCredential() == nil {
         return nil, errors.New("DescribePushBandwidthAndFluxList require credential")
@@ -8778,6 +12826,7 @@ func (c *Client) DescribeRecordTaskWithContext(ctx context.Context, request *Des
     if request == nil {
         request = NewDescribeRecordTaskRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "live", APIVersion, "DescribeRecordTask")
     
     if c.GetCredential() == nil {
         return nil, errors.New("DescribeRecordTask require credential")
@@ -8786,6 +12835,72 @@ func (c *Client) DescribeRecordTaskWithContext(ctx context.Context, request *Des
     request.SetContext(ctx)
     
     response = NewDescribeRecordTaskResponse()
+    err = c.Send(request, response)
+    return
+}
+
+func NewDescribeSceneVideoTaskRequest() (request *DescribeSceneVideoTaskRequest) {
+    request = &DescribeSceneVideoTaskRequest{
+        BaseRequest: &tchttp.BaseRequest{},
+    }
+    
+    request.Init().WithApiInfo("live", APIVersion, "DescribeSceneVideoTask")
+    
+    
+    return
+}
+
+func NewDescribeSceneVideoTaskResponse() (response *DescribeSceneVideoTaskResponse) {
+    response = &DescribeSceneVideoTaskResponse{
+        BaseResponse: &tchttp.BaseResponse{},
+    } 
+    return
+
+}
+
+// DescribeSceneVideoTask
+// 该接口用于查询场景化视频任务进展及结果。
+//
+// 可能返回的错误码:
+//  INTERNALERROR = "InternalError"
+//  INTERNALERROR_GETCONFIGERROR = "InternalError.GetConfigError"
+//  INTERNALERROR_NETWORKERROR = "InternalError.NetworkError"
+//  INVALIDPARAMETER = "InvalidParameter"
+//  RESOURCENOTFOUND_FORBIDSERVICE = "ResourceNotFound.ForbidService"
+//  RESOURCENOTFOUND_FREEZESERVICE = "ResourceNotFound.FreezeService"
+//  RESOURCENOTFOUND_STOPSERVICE = "ResourceNotFound.StopService"
+//  RESOURCENOTFOUND_USERDISABLESERVICE = "ResourceNotFound.UserDisableService"
+//  UNSUPPORTEDOPERATION = "UnsupportedOperation"
+func (c *Client) DescribeSceneVideoTask(request *DescribeSceneVideoTaskRequest) (response *DescribeSceneVideoTaskResponse, err error) {
+    return c.DescribeSceneVideoTaskWithContext(context.Background(), request)
+}
+
+// DescribeSceneVideoTask
+// 该接口用于查询场景化视频任务进展及结果。
+//
+// 可能返回的错误码:
+//  INTERNALERROR = "InternalError"
+//  INTERNALERROR_GETCONFIGERROR = "InternalError.GetConfigError"
+//  INTERNALERROR_NETWORKERROR = "InternalError.NetworkError"
+//  INVALIDPARAMETER = "InvalidParameter"
+//  RESOURCENOTFOUND_FORBIDSERVICE = "ResourceNotFound.ForbidService"
+//  RESOURCENOTFOUND_FREEZESERVICE = "ResourceNotFound.FreezeService"
+//  RESOURCENOTFOUND_STOPSERVICE = "ResourceNotFound.StopService"
+//  RESOURCENOTFOUND_USERDISABLESERVICE = "ResourceNotFound.UserDisableService"
+//  UNSUPPORTEDOPERATION = "UnsupportedOperation"
+func (c *Client) DescribeSceneVideoTaskWithContext(ctx context.Context, request *DescribeSceneVideoTaskRequest) (response *DescribeSceneVideoTaskResponse, err error) {
+    if request == nil {
+        request = NewDescribeSceneVideoTaskRequest()
+    }
+    c.InitBaseRequest(&request.BaseRequest, "live", APIVersion, "DescribeSceneVideoTask")
+    
+    if c.GetCredential() == nil {
+        return nil, errors.New("DescribeSceneVideoTask require credential")
+    }
+
+    request.SetContext(ctx)
+    
+    response = NewDescribeSceneVideoTaskResponse()
     err = c.Send(request, response)
     return
 }
@@ -8843,6 +12958,7 @@ func (c *Client) DescribeScreenShotSheetNumListWithContext(ctx context.Context, 
     if request == nil {
         request = NewDescribeScreenShotSheetNumListRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "live", APIVersion, "DescribeScreenShotSheetNumList")
     
     if c.GetCredential() == nil {
         return nil, errors.New("DescribeScreenShotSheetNumList require credential")
@@ -8920,6 +13036,7 @@ func (c *Client) DescribeScreenshotTaskWithContext(ctx context.Context, request 
     if request == nil {
         request = NewDescribeScreenshotTaskRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "live", APIVersion, "DescribeScreenshotTask")
     
     if c.GetCredential() == nil {
         return nil, errors.New("DescribeScreenshotTask require credential")
@@ -8987,6 +13104,7 @@ func (c *Client) DescribeStreamDayPlayInfoListWithContext(ctx context.Context, r
     if request == nil {
         request = NewDescribeStreamDayPlayInfoListRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "live", APIVersion, "DescribeStreamDayPlayInfoList")
     
     if c.GetCredential() == nil {
         return nil, errors.New("DescribeStreamDayPlayInfoList require credential")
@@ -9056,6 +13174,7 @@ func (c *Client) DescribeStreamPlayInfoListWithContext(ctx context.Context, requ
     if request == nil {
         request = NewDescribeStreamPlayInfoListRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "live", APIVersion, "DescribeStreamPlayInfoList")
     
     if c.GetCredential() == nil {
         return nil, errors.New("DescribeStreamPlayInfoList require credential")
@@ -9121,6 +13240,7 @@ func (c *Client) DescribeStreamPushInfoListWithContext(ctx context.Context, requ
     if request == nil {
         request = NewDescribeStreamPushInfoListRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "live", APIVersion, "DescribeStreamPushInfoList")
     
     if c.GetCredential() == nil {
         return nil, errors.New("DescribeStreamPushInfoList require credential")
@@ -9186,6 +13306,7 @@ func (c *Client) DescribeTimeShiftRecordDetailWithContext(ctx context.Context, r
     if request == nil {
         request = NewDescribeTimeShiftRecordDetailRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "live", APIVersion, "DescribeTimeShiftRecordDetail")
     
     if c.GetCredential() == nil {
         return nil, errors.New("DescribeTimeShiftRecordDetail require credential")
@@ -9251,6 +13372,7 @@ func (c *Client) DescribeTimeShiftStreamListWithContext(ctx context.Context, req
     if request == nil {
         request = NewDescribeTimeShiftStreamListRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "live", APIVersion, "DescribeTimeShiftStreamList")
     
     if c.GetCredential() == nil {
         return nil, errors.New("DescribeTimeShiftStreamList require credential")
@@ -9316,6 +13438,7 @@ func (c *Client) DescribeTopClientIpSumInfoListWithContext(ctx context.Context, 
     if request == nil {
         request = NewDescribeTopClientIpSumInfoListRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "live", APIVersion, "DescribeTopClientIpSumInfoList")
     
     if c.GetCredential() == nil {
         return nil, errors.New("DescribeTopClientIpSumInfoList require credential")
@@ -9371,6 +13494,7 @@ func (c *Client) DescribeTranscodeTaskNumWithContext(ctx context.Context, reques
     if request == nil {
         request = NewDescribeTranscodeTaskNumRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "live", APIVersion, "DescribeTranscodeTaskNum")
     
     if c.GetCredential() == nil {
         return nil, errors.New("DescribeTranscodeTaskNum require credential")
@@ -9432,6 +13556,7 @@ func (c *Client) DescribeUploadStreamNumsWithContext(ctx context.Context, reques
     if request == nil {
         request = NewDescribeUploadStreamNumsRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "live", APIVersion, "DescribeUploadStreamNums")
     
     if c.GetCredential() == nil {
         return nil, errors.New("DescribeUploadStreamNums require credential")
@@ -9495,6 +13620,7 @@ func (c *Client) DescribeVisitTopSumInfoListWithContext(ctx context.Context, req
     if request == nil {
         request = NewDescribeVisitTopSumInfoListRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "live", APIVersion, "DescribeVisitTopSumInfoList")
     
     if c.GetCredential() == nil {
         return nil, errors.New("DescribeVisitTopSumInfoList require credential")
@@ -9584,6 +13710,7 @@ func (c *Client) DropLiveStreamWithContext(ctx context.Context, request *DropLiv
     if request == nil {
         request = NewDropLiveStreamRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "live", APIVersion, "DropLiveStream")
     
     if c.GetCredential() == nil {
         return nil, errors.New("DropLiveStream require credential")
@@ -9659,6 +13786,7 @@ func (c *Client) EnableLiveDomainWithContext(ctx context.Context, request *Enabl
     if request == nil {
         request = NewEnableLiveDomainRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "live", APIVersion, "EnableLiveDomain")
     
     if c.GetCredential() == nil {
         return nil, errors.New("EnableLiveDomain require credential")
@@ -9738,6 +13866,7 @@ func (c *Client) EnableOptimalSwitchingWithContext(ctx context.Context, request 
     if request == nil {
         request = NewEnableOptimalSwitchingRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "live", APIVersion, "EnableOptimalSwitching")
     
     if c.GetCredential() == nil {
         return nil, errors.New("EnableOptimalSwitching require credential")
@@ -9801,6 +13930,7 @@ func (c *Client) ForbidLiveDomainWithContext(ctx context.Context, request *Forbi
     if request == nil {
         request = NewForbidLiveDomainRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "live", APIVersion, "ForbidLiveDomain")
     
     if c.GetCredential() == nil {
         return nil, errors.New("ForbidLiveDomain require credential")
@@ -9902,6 +14032,7 @@ func (c *Client) ForbidLiveStreamWithContext(ctx context.Context, request *Forbi
     if request == nil {
         request = NewForbidLiveStreamRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "live", APIVersion, "ForbidLiveStream")
     
     if c.GetCredential() == nil {
         return nil, errors.New("ForbidLiveStream require credential")
@@ -9910,6 +14041,778 @@ func (c *Client) ForbidLiveStreamWithContext(ctx context.Context, request *Forbi
     request.SetContext(ctx)
     
     response = NewForbidLiveStreamResponse()
+    err = c.Send(request, response)
+    return
+}
+
+func NewGenerateLiveAvatarScriptBroadcastRequest() (request *GenerateLiveAvatarScriptBroadcastRequest) {
+    request = &GenerateLiveAvatarScriptBroadcastRequest{
+        BaseRequest: &tchttp.BaseRequest{},
+    }
+    
+    request.Init().WithApiInfo("live", APIVersion, "GenerateLiveAvatarScriptBroadcast")
+    
+    
+    return
+}
+
+func NewGenerateLiveAvatarScriptBroadcastResponse() (response *GenerateLiveAvatarScriptBroadcastResponse) {
+    response = &GenerateLiveAvatarScriptBroadcastResponse{
+        BaseResponse: &tchttp.BaseResponse{},
+    } 
+    return
+
+}
+
+// GenerateLiveAvatarScriptBroadcast
+// 调用该接口，用于触发话术播报生成，并返回音频播报URL。
+//
+// 可能返回的错误码:
+//  FAILEDOPERATION = "FailedOperation"
+//  FAILEDOPERATION_CALLOTHERSVRFAILED = "FailedOperation.CallOtherSvrFailed"
+//  INTERNALERROR = "InternalError"
+//  INTERNALERROR_CALLOTHERSVRERROR = "InternalError.CallOtherSvrError"
+//  INTERNALERROR_CONFIGNOTEXIST = "InternalError.ConfigNotExist"
+//  INTERNALERROR_GETBIZIDERROR = "InternalError.GetBizidError"
+//  INTERNALERROR_GETSTREAMINFOERROR = "InternalError.GetStreamInfoError"
+//  INTERNALERROR_GETUPSTREAMINFOERROR = "InternalError.GetUpstreamInfoError"
+//  INTERNALERROR_NOTPERMMITOPERAT = "InternalError.NotPermmitOperat"
+//  INTERNALERROR_STREAMSTATUSERROR = "InternalError.StreamStatusError"
+//  INTERNALERROR_UPDATEDATAERROR = "InternalError.UpdateDataError"
+//  INVALIDPARAMETER = "InvalidParameter"
+//  INVALIDPARAMETERVALUE = "InvalidParameterValue"
+//  MISSINGPARAMETER = "MissingParameter"
+//  RESOURCENOTFOUND_FORBIDSERVICE = "ResourceNotFound.ForbidService"
+//  RESOURCENOTFOUND_FREEZESERVICE = "ResourceNotFound.FreezeService"
+//  RESOURCENOTFOUND_STOPSERVICE = "ResourceNotFound.StopService"
+//  RESOURCENOTFOUND_USERDISABLESERVICE = "ResourceNotFound.UserDisableService"
+//  RESOURCENOTFOUND_USERNOTEXIST = "ResourceNotFound.UserNotExist"
+func (c *Client) GenerateLiveAvatarScriptBroadcast(request *GenerateLiveAvatarScriptBroadcastRequest) (response *GenerateLiveAvatarScriptBroadcastResponse, err error) {
+    return c.GenerateLiveAvatarScriptBroadcastWithContext(context.Background(), request)
+}
+
+// GenerateLiveAvatarScriptBroadcast
+// 调用该接口，用于触发话术播报生成，并返回音频播报URL。
+//
+// 可能返回的错误码:
+//  FAILEDOPERATION = "FailedOperation"
+//  FAILEDOPERATION_CALLOTHERSVRFAILED = "FailedOperation.CallOtherSvrFailed"
+//  INTERNALERROR = "InternalError"
+//  INTERNALERROR_CALLOTHERSVRERROR = "InternalError.CallOtherSvrError"
+//  INTERNALERROR_CONFIGNOTEXIST = "InternalError.ConfigNotExist"
+//  INTERNALERROR_GETBIZIDERROR = "InternalError.GetBizidError"
+//  INTERNALERROR_GETSTREAMINFOERROR = "InternalError.GetStreamInfoError"
+//  INTERNALERROR_GETUPSTREAMINFOERROR = "InternalError.GetUpstreamInfoError"
+//  INTERNALERROR_NOTPERMMITOPERAT = "InternalError.NotPermmitOperat"
+//  INTERNALERROR_STREAMSTATUSERROR = "InternalError.StreamStatusError"
+//  INTERNALERROR_UPDATEDATAERROR = "InternalError.UpdateDataError"
+//  INVALIDPARAMETER = "InvalidParameter"
+//  INVALIDPARAMETERVALUE = "InvalidParameterValue"
+//  MISSINGPARAMETER = "MissingParameter"
+//  RESOURCENOTFOUND_FORBIDSERVICE = "ResourceNotFound.ForbidService"
+//  RESOURCENOTFOUND_FREEZESERVICE = "ResourceNotFound.FreezeService"
+//  RESOURCENOTFOUND_STOPSERVICE = "ResourceNotFound.StopService"
+//  RESOURCENOTFOUND_USERDISABLESERVICE = "ResourceNotFound.UserDisableService"
+//  RESOURCENOTFOUND_USERNOTEXIST = "ResourceNotFound.UserNotExist"
+func (c *Client) GenerateLiveAvatarScriptBroadcastWithContext(ctx context.Context, request *GenerateLiveAvatarScriptBroadcastRequest) (response *GenerateLiveAvatarScriptBroadcastResponse, err error) {
+    if request == nil {
+        request = NewGenerateLiveAvatarScriptBroadcastRequest()
+    }
+    c.InitBaseRequest(&request.BaseRequest, "live", APIVersion, "GenerateLiveAvatarScriptBroadcast")
+    
+    if c.GetCredential() == nil {
+        return nil, errors.New("GenerateLiveAvatarScriptBroadcast require credential")
+    }
+
+    request.SetContext(ctx)
+    
+    response = NewGenerateLiveAvatarScriptBroadcastResponse()
+    err = c.Send(request, response)
+    return
+}
+
+func NewInsertTaskTemporaryFilesRequest() (request *InsertTaskTemporaryFilesRequest) {
+    request = &InsertTaskTemporaryFilesRequest{
+        BaseRequest: &tchttp.BaseRequest{},
+    }
+    
+    request.Init().WithApiInfo("live", APIVersion, "InsertTaskTemporaryFiles")
+    
+    
+    return
+}
+
+func NewInsertTaskTemporaryFilesResponse() (response *InsertTaskTemporaryFilesResponse) {
+    response = &InsertTaskTemporaryFilesResponse{
+        BaseResponse: &tchttp.BaseResponse{},
+    } 
+    return
+
+}
+
+// InsertTaskTemporaryFiles
+// 可通过调用该接口，对点播源的直播拉流任务进行插播操作。
+//
+// 注意：
+//
+// 1. 仅支持对有效且运行中的点播源任务进行插播操作。
+//
+// 2. 拉转推插播文件时，事件及回调中的索引均保持为插播前的值。
+//
+// 可能返回的错误码:
+//  INVALIDPARAMETER_TASKNOTEXIST = "InvalidParameter.TaskNotExist"
+//  RESOURCENOTFOUND_FORBIDSERVICE = "ResourceNotFound.ForbidService"
+//  RESOURCENOTFOUND_FREEZESERVICE = "ResourceNotFound.FreezeService"
+//  RESOURCENOTFOUND_STOPSERVICE = "ResourceNotFound.StopService"
+//  RESOURCENOTFOUND_USERDISABLESERVICE = "ResourceNotFound.UserDisableService"
+func (c *Client) InsertTaskTemporaryFiles(request *InsertTaskTemporaryFilesRequest) (response *InsertTaskTemporaryFilesResponse, err error) {
+    return c.InsertTaskTemporaryFilesWithContext(context.Background(), request)
+}
+
+// InsertTaskTemporaryFiles
+// 可通过调用该接口，对点播源的直播拉流任务进行插播操作。
+//
+// 注意：
+//
+// 1. 仅支持对有效且运行中的点播源任务进行插播操作。
+//
+// 2. 拉转推插播文件时，事件及回调中的索引均保持为插播前的值。
+//
+// 可能返回的错误码:
+//  INVALIDPARAMETER_TASKNOTEXIST = "InvalidParameter.TaskNotExist"
+//  RESOURCENOTFOUND_FORBIDSERVICE = "ResourceNotFound.ForbidService"
+//  RESOURCENOTFOUND_FREEZESERVICE = "ResourceNotFound.FreezeService"
+//  RESOURCENOTFOUND_STOPSERVICE = "ResourceNotFound.StopService"
+//  RESOURCENOTFOUND_USERDISABLESERVICE = "ResourceNotFound.UserDisableService"
+func (c *Client) InsertTaskTemporaryFilesWithContext(ctx context.Context, request *InsertTaskTemporaryFilesRequest) (response *InsertTaskTemporaryFilesResponse, err error) {
+    if request == nil {
+        request = NewInsertTaskTemporaryFilesRequest()
+    }
+    c.InitBaseRequest(&request.BaseRequest, "live", APIVersion, "InsertTaskTemporaryFiles")
+    
+    if c.GetCredential() == nil {
+        return nil, errors.New("InsertTaskTemporaryFiles require credential")
+    }
+
+    request.SetContext(ctx)
+    
+    response = NewInsertTaskTemporaryFilesResponse()
+    err = c.Send(request, response)
+    return
+}
+
+func NewModifyCasterRequest() (request *ModifyCasterRequest) {
+    request = &ModifyCasterRequest{
+        BaseRequest: &tchttp.BaseRequest{},
+    }
+    
+    request.Init().WithApiInfo("live", APIVersion, "ModifyCaster")
+    
+    
+    return
+}
+
+func NewModifyCasterResponse() (response *ModifyCasterResponse) {
+    response = &ModifyCasterResponse{
+        BaseResponse: &tchttp.BaseResponse{},
+    } 
+    return
+
+}
+
+// ModifyCaster
+// 该接口用来设置导播台的描述、名称、录制模板id等参数。
+//
+// 可能返回的错误码:
+//  FAILEDOPERATION = "FailedOperation"
+//  FAILEDOPERATION_CASTERNOTFOUND = "FailedOperation.CasterNotFound"
+//  INTERNALERROR = "InternalError"
+//  INVALIDPARAMETER = "InvalidParameter"
+//  RESOURCENOTFOUND_FORBIDSERVICE = "ResourceNotFound.ForbidService"
+//  RESOURCENOTFOUND_FREEZESERVICE = "ResourceNotFound.FreezeService"
+//  RESOURCENOTFOUND_STOPSERVICE = "ResourceNotFound.StopService"
+//  RESOURCENOTFOUND_USERDISABLESERVICE = "ResourceNotFound.UserDisableService"
+//  RESOURCENOTFOUND_USERNOTEXIST = "ResourceNotFound.UserNotExist"
+//  UNKNOWNPARAMETER = "UnknownParameter"
+//  UNSUPPORTEDOPERATION = "UnsupportedOperation"
+func (c *Client) ModifyCaster(request *ModifyCasterRequest) (response *ModifyCasterResponse, err error) {
+    return c.ModifyCasterWithContext(context.Background(), request)
+}
+
+// ModifyCaster
+// 该接口用来设置导播台的描述、名称、录制模板id等参数。
+//
+// 可能返回的错误码:
+//  FAILEDOPERATION = "FailedOperation"
+//  FAILEDOPERATION_CASTERNOTFOUND = "FailedOperation.CasterNotFound"
+//  INTERNALERROR = "InternalError"
+//  INVALIDPARAMETER = "InvalidParameter"
+//  RESOURCENOTFOUND_FORBIDSERVICE = "ResourceNotFound.ForbidService"
+//  RESOURCENOTFOUND_FREEZESERVICE = "ResourceNotFound.FreezeService"
+//  RESOURCENOTFOUND_STOPSERVICE = "ResourceNotFound.StopService"
+//  RESOURCENOTFOUND_USERDISABLESERVICE = "ResourceNotFound.UserDisableService"
+//  RESOURCENOTFOUND_USERNOTEXIST = "ResourceNotFound.UserNotExist"
+//  UNKNOWNPARAMETER = "UnknownParameter"
+//  UNSUPPORTEDOPERATION = "UnsupportedOperation"
+func (c *Client) ModifyCasterWithContext(ctx context.Context, request *ModifyCasterRequest) (response *ModifyCasterResponse, err error) {
+    if request == nil {
+        request = NewModifyCasterRequest()
+    }
+    c.InitBaseRequest(&request.BaseRequest, "live", APIVersion, "ModifyCaster")
+    
+    if c.GetCredential() == nil {
+        return nil, errors.New("ModifyCaster require credential")
+    }
+
+    request.SetContext(ctx)
+    
+    response = NewModifyCasterResponse()
+    err = c.Send(request, response)
+    return
+}
+
+func NewModifyCasterInputInfoRequest() (request *ModifyCasterInputInfoRequest) {
+    request = &ModifyCasterInputInfoRequest{
+        BaseRequest: &tchttp.BaseRequest{},
+    }
+    
+    request.Init().WithApiInfo("live", APIVersion, "ModifyCasterInputInfo")
+    
+    
+    return
+}
+
+func NewModifyCasterInputInfoResponse() (response *ModifyCasterInputInfoResponse) {
+    response = &ModifyCasterInputInfoResponse{
+        BaseResponse: &tchttp.BaseResponse{},
+    } 
+    return
+
+}
+
+// ModifyCasterInputInfo
+// 该接口用来修改已经设置过的输入源信息，如源地址，源类型等。
+//
+// 设置前，需保证待修改的输入源已经存在。若不存在，需使用AddCasterInputInfo接口。
+//
+// 可能返回的错误码:
+//  FAILEDOPERATION = "FailedOperation"
+//  FAILEDOPERATION_CASTERNOTFOUND = "FailedOperation.CasterNotFound"
+//  FAILEDOPERATION_INPUTISNOTACTIVE = "FailedOperation.InputIsNotActive"
+//  FAILEDOPERATION_INPUTNOTEXIST = "FailedOperation.InputNotExist"
+//  FAILEDOPERATION_INPUTUSEDINAUTOCAST = "FailedOperation.InputUsedInAutoCast"
+//  FAILEDOPERATION_INPUTUSEDINPGM = "FailedOperation.InputUsedInPgm"
+//  FAILEDOPERATION_INPUTUSEDINPVW = "FailedOperation.InputUsedInPvw"
+//  FAILEDOPERATION_LAYOUTUSEDINPGM = "FailedOperation.LayoutUsedInPgm"
+//  FAILEDOPERATION_LAYOUTUSEDINPVW = "FailedOperation.LayoutUsedInPvw"
+//  FAILEDOPERATION_STARTPULLFAILED = "FailedOperation.StartPullFailed"
+//  FAILEDOPERATION_STOPPULLFAILED = "FailedOperation.StopPullFailed"
+//  INTERNALERROR = "InternalError"
+//  INVALIDPARAMETER = "InvalidParameter"
+//  RESOURCENOTFOUND_FORBIDSERVICE = "ResourceNotFound.ForbidService"
+//  RESOURCENOTFOUND_FREEZESERVICE = "ResourceNotFound.FreezeService"
+//  RESOURCENOTFOUND_STOPSERVICE = "ResourceNotFound.StopService"
+//  RESOURCENOTFOUND_USERDISABLESERVICE = "ResourceNotFound.UserDisableService"
+//  RESOURCENOTFOUND_USERNOTEXIST = "ResourceNotFound.UserNotExist"
+//  UNKNOWNPARAMETER = "UnknownParameter"
+//  UNSUPPORTEDOPERATION = "UnsupportedOperation"
+func (c *Client) ModifyCasterInputInfo(request *ModifyCasterInputInfoRequest) (response *ModifyCasterInputInfoResponse, err error) {
+    return c.ModifyCasterInputInfoWithContext(context.Background(), request)
+}
+
+// ModifyCasterInputInfo
+// 该接口用来修改已经设置过的输入源信息，如源地址，源类型等。
+//
+// 设置前，需保证待修改的输入源已经存在。若不存在，需使用AddCasterInputInfo接口。
+//
+// 可能返回的错误码:
+//  FAILEDOPERATION = "FailedOperation"
+//  FAILEDOPERATION_CASTERNOTFOUND = "FailedOperation.CasterNotFound"
+//  FAILEDOPERATION_INPUTISNOTACTIVE = "FailedOperation.InputIsNotActive"
+//  FAILEDOPERATION_INPUTNOTEXIST = "FailedOperation.InputNotExist"
+//  FAILEDOPERATION_INPUTUSEDINAUTOCAST = "FailedOperation.InputUsedInAutoCast"
+//  FAILEDOPERATION_INPUTUSEDINPGM = "FailedOperation.InputUsedInPgm"
+//  FAILEDOPERATION_INPUTUSEDINPVW = "FailedOperation.InputUsedInPvw"
+//  FAILEDOPERATION_LAYOUTUSEDINPGM = "FailedOperation.LayoutUsedInPgm"
+//  FAILEDOPERATION_LAYOUTUSEDINPVW = "FailedOperation.LayoutUsedInPvw"
+//  FAILEDOPERATION_STARTPULLFAILED = "FailedOperation.StartPullFailed"
+//  FAILEDOPERATION_STOPPULLFAILED = "FailedOperation.StopPullFailed"
+//  INTERNALERROR = "InternalError"
+//  INVALIDPARAMETER = "InvalidParameter"
+//  RESOURCENOTFOUND_FORBIDSERVICE = "ResourceNotFound.ForbidService"
+//  RESOURCENOTFOUND_FREEZESERVICE = "ResourceNotFound.FreezeService"
+//  RESOURCENOTFOUND_STOPSERVICE = "ResourceNotFound.StopService"
+//  RESOURCENOTFOUND_USERDISABLESERVICE = "ResourceNotFound.UserDisableService"
+//  RESOURCENOTFOUND_USERNOTEXIST = "ResourceNotFound.UserNotExist"
+//  UNKNOWNPARAMETER = "UnknownParameter"
+//  UNSUPPORTEDOPERATION = "UnsupportedOperation"
+func (c *Client) ModifyCasterInputInfoWithContext(ctx context.Context, request *ModifyCasterInputInfoRequest) (response *ModifyCasterInputInfoResponse, err error) {
+    if request == nil {
+        request = NewModifyCasterInputInfoRequest()
+    }
+    c.InitBaseRequest(&request.BaseRequest, "live", APIVersion, "ModifyCasterInputInfo")
+    
+    if c.GetCredential() == nil {
+        return nil, errors.New("ModifyCasterInputInfo require credential")
+    }
+
+    request.SetContext(ctx)
+    
+    response = NewModifyCasterInputInfoResponse()
+    err = c.Send(request, response)
+    return
+}
+
+func NewModifyCasterLayoutInfoRequest() (request *ModifyCasterLayoutInfoRequest) {
+    request = &ModifyCasterLayoutInfoRequest{
+        BaseRequest: &tchttp.BaseRequest{},
+    }
+    
+    request.Init().WithApiInfo("live", APIVersion, "ModifyCasterLayoutInfo")
+    
+    
+    return
+}
+
+func NewModifyCasterLayoutInfoResponse() (response *ModifyCasterLayoutInfoResponse) {
+    response = &ModifyCasterLayoutInfoResponse{
+        BaseResponse: &tchttp.BaseResponse{},
+    } 
+    return
+
+}
+
+// ModifyCasterLayoutInfo
+// 该接口用来修改布局参数
+//
+// 可能返回的错误码:
+//  FAILEDOPERATION = "FailedOperation"
+//  FAILEDOPERATION_CASTERNOTFOUND = "FailedOperation.CasterNotFound"
+//  FAILEDOPERATION_LAYOUTNOTEXIST = "FailedOperation.LayoutNotExist"
+//  FAILEDOPERATION_LAYOUTUSEDINAUTOCAST = "FailedOperation.LayoutUsedInAutoCast"
+//  FAILEDOPERATION_LAYOUTUSEDINPGM = "FailedOperation.LayoutUsedInPgm"
+//  FAILEDOPERATION_LAYOUTUSEDINPVW = "FailedOperation.LayoutUsedInPvw"
+//  INTERNALERROR = "InternalError"
+//  INVALIDPARAMETER = "InvalidParameter"
+//  RESOURCENOTFOUND_FORBIDSERVICE = "ResourceNotFound.ForbidService"
+//  RESOURCENOTFOUND_FREEZESERVICE = "ResourceNotFound.FreezeService"
+//  RESOURCENOTFOUND_STOPSERVICE = "ResourceNotFound.StopService"
+//  RESOURCENOTFOUND_USERDISABLESERVICE = "ResourceNotFound.UserDisableService"
+//  RESOURCENOTFOUND_USERNOTEXIST = "ResourceNotFound.UserNotExist"
+//  UNKNOWNPARAMETER = "UnknownParameter"
+//  UNSUPPORTEDOPERATION = "UnsupportedOperation"
+func (c *Client) ModifyCasterLayoutInfo(request *ModifyCasterLayoutInfoRequest) (response *ModifyCasterLayoutInfoResponse, err error) {
+    return c.ModifyCasterLayoutInfoWithContext(context.Background(), request)
+}
+
+// ModifyCasterLayoutInfo
+// 该接口用来修改布局参数
+//
+// 可能返回的错误码:
+//  FAILEDOPERATION = "FailedOperation"
+//  FAILEDOPERATION_CASTERNOTFOUND = "FailedOperation.CasterNotFound"
+//  FAILEDOPERATION_LAYOUTNOTEXIST = "FailedOperation.LayoutNotExist"
+//  FAILEDOPERATION_LAYOUTUSEDINAUTOCAST = "FailedOperation.LayoutUsedInAutoCast"
+//  FAILEDOPERATION_LAYOUTUSEDINPGM = "FailedOperation.LayoutUsedInPgm"
+//  FAILEDOPERATION_LAYOUTUSEDINPVW = "FailedOperation.LayoutUsedInPvw"
+//  INTERNALERROR = "InternalError"
+//  INVALIDPARAMETER = "InvalidParameter"
+//  RESOURCENOTFOUND_FORBIDSERVICE = "ResourceNotFound.ForbidService"
+//  RESOURCENOTFOUND_FREEZESERVICE = "ResourceNotFound.FreezeService"
+//  RESOURCENOTFOUND_STOPSERVICE = "ResourceNotFound.StopService"
+//  RESOURCENOTFOUND_USERDISABLESERVICE = "ResourceNotFound.UserDisableService"
+//  RESOURCENOTFOUND_USERNOTEXIST = "ResourceNotFound.UserNotExist"
+//  UNKNOWNPARAMETER = "UnknownParameter"
+//  UNSUPPORTEDOPERATION = "UnsupportedOperation"
+func (c *Client) ModifyCasterLayoutInfoWithContext(ctx context.Context, request *ModifyCasterLayoutInfoRequest) (response *ModifyCasterLayoutInfoResponse, err error) {
+    if request == nil {
+        request = NewModifyCasterLayoutInfoRequest()
+    }
+    c.InitBaseRequest(&request.BaseRequest, "live", APIVersion, "ModifyCasterLayoutInfo")
+    
+    if c.GetCredential() == nil {
+        return nil, errors.New("ModifyCasterLayoutInfo require credential")
+    }
+
+    request.SetContext(ctx)
+    
+    response = NewModifyCasterLayoutInfoResponse()
+    err = c.Send(request, response)
+    return
+}
+
+func NewModifyCasterMarkPicInfoRequest() (request *ModifyCasterMarkPicInfoRequest) {
+    request = &ModifyCasterMarkPicInfoRequest{
+        BaseRequest: &tchttp.BaseRequest{},
+    }
+    
+    request.Init().WithApiInfo("live", APIVersion, "ModifyCasterMarkPicInfo")
+    
+    
+    return
+}
+
+func NewModifyCasterMarkPicInfoResponse() (response *ModifyCasterMarkPicInfoResponse) {
+    response = &ModifyCasterMarkPicInfoResponse{
+        BaseResponse: &tchttp.BaseResponse{},
+    } 
+    return
+
+}
+
+// ModifyCasterMarkPicInfo
+// 该接口用来修改导播台水印信息。
+//
+// 注意，修改的Index对应的水印需已存在
+//
+// 可能返回的错误码:
+//  FAILEDOPERATION = "FailedOperation"
+//  FAILEDOPERATION_CASTERNOTFOUND = "FailedOperation.CasterNotFound"
+//  FAILEDOPERATION_MARKPICNOTEXIST = "FailedOperation.MarkPicNotExist"
+//  INTERNALERROR = "InternalError"
+//  INVALIDPARAMETER = "InvalidParameter"
+//  RESOURCENOTFOUND_FORBIDSERVICE = "ResourceNotFound.ForbidService"
+//  RESOURCENOTFOUND_FREEZESERVICE = "ResourceNotFound.FreezeService"
+//  RESOURCENOTFOUND_STOPSERVICE = "ResourceNotFound.StopService"
+//  RESOURCENOTFOUND_USERDISABLESERVICE = "ResourceNotFound.UserDisableService"
+//  RESOURCENOTFOUND_USERNOTEXIST = "ResourceNotFound.UserNotExist"
+//  UNKNOWNPARAMETER = "UnknownParameter"
+//  UNSUPPORTEDOPERATION = "UnsupportedOperation"
+func (c *Client) ModifyCasterMarkPicInfo(request *ModifyCasterMarkPicInfoRequest) (response *ModifyCasterMarkPicInfoResponse, err error) {
+    return c.ModifyCasterMarkPicInfoWithContext(context.Background(), request)
+}
+
+// ModifyCasterMarkPicInfo
+// 该接口用来修改导播台水印信息。
+//
+// 注意，修改的Index对应的水印需已存在
+//
+// 可能返回的错误码:
+//  FAILEDOPERATION = "FailedOperation"
+//  FAILEDOPERATION_CASTERNOTFOUND = "FailedOperation.CasterNotFound"
+//  FAILEDOPERATION_MARKPICNOTEXIST = "FailedOperation.MarkPicNotExist"
+//  INTERNALERROR = "InternalError"
+//  INVALIDPARAMETER = "InvalidParameter"
+//  RESOURCENOTFOUND_FORBIDSERVICE = "ResourceNotFound.ForbidService"
+//  RESOURCENOTFOUND_FREEZESERVICE = "ResourceNotFound.FreezeService"
+//  RESOURCENOTFOUND_STOPSERVICE = "ResourceNotFound.StopService"
+//  RESOURCENOTFOUND_USERDISABLESERVICE = "ResourceNotFound.UserDisableService"
+//  RESOURCENOTFOUND_USERNOTEXIST = "ResourceNotFound.UserNotExist"
+//  UNKNOWNPARAMETER = "UnknownParameter"
+//  UNSUPPORTEDOPERATION = "UnsupportedOperation"
+func (c *Client) ModifyCasterMarkPicInfoWithContext(ctx context.Context, request *ModifyCasterMarkPicInfoRequest) (response *ModifyCasterMarkPicInfoResponse, err error) {
+    if request == nil {
+        request = NewModifyCasterMarkPicInfoRequest()
+    }
+    c.InitBaseRequest(&request.BaseRequest, "live", APIVersion, "ModifyCasterMarkPicInfo")
+    
+    if c.GetCredential() == nil {
+        return nil, errors.New("ModifyCasterMarkPicInfo require credential")
+    }
+
+    request.SetContext(ctx)
+    
+    response = NewModifyCasterMarkPicInfoResponse()
+    err = c.Send(request, response)
+    return
+}
+
+func NewModifyCasterMarkWordInfoRequest() (request *ModifyCasterMarkWordInfoRequest) {
+    request = &ModifyCasterMarkWordInfoRequest{
+        BaseRequest: &tchttp.BaseRequest{},
+    }
+    
+    request.Init().WithApiInfo("live", APIVersion, "ModifyCasterMarkWordInfo")
+    
+    
+    return
+}
+
+func NewModifyCasterMarkWordInfoResponse() (response *ModifyCasterMarkWordInfoResponse) {
+    response = &ModifyCasterMarkWordInfoResponse{
+        BaseResponse: &tchttp.BaseResponse{},
+    } 
+    return
+
+}
+
+// ModifyCasterMarkWordInfo
+// 该接口用来修改导播台文本配置。
+//
+// 可能返回的错误码:
+//  FAILEDOPERATION = "FailedOperation"
+//  FAILEDOPERATION_CASTERNOTFOUND = "FailedOperation.CasterNotFound"
+//  FAILEDOPERATION_LAYOUTUSEDINPVW = "FailedOperation.LayoutUsedInPvw"
+//  FAILEDOPERATION_MARKWORDNOTEXIST = "FailedOperation.MarkWordNotExist"
+//  INTERNALERROR = "InternalError"
+//  INVALIDPARAMETER = "InvalidParameter"
+//  RESOURCENOTFOUND_FORBIDSERVICE = "ResourceNotFound.ForbidService"
+//  RESOURCENOTFOUND_FREEZESERVICE = "ResourceNotFound.FreezeService"
+//  RESOURCENOTFOUND_STOPSERVICE = "ResourceNotFound.StopService"
+//  RESOURCENOTFOUND_USERDISABLESERVICE = "ResourceNotFound.UserDisableService"
+//  RESOURCENOTFOUND_USERNOTEXIST = "ResourceNotFound.UserNotExist"
+//  UNKNOWNPARAMETER = "UnknownParameter"
+//  UNSUPPORTEDOPERATION = "UnsupportedOperation"
+func (c *Client) ModifyCasterMarkWordInfo(request *ModifyCasterMarkWordInfoRequest) (response *ModifyCasterMarkWordInfoResponse, err error) {
+    return c.ModifyCasterMarkWordInfoWithContext(context.Background(), request)
+}
+
+// ModifyCasterMarkWordInfo
+// 该接口用来修改导播台文本配置。
+//
+// 可能返回的错误码:
+//  FAILEDOPERATION = "FailedOperation"
+//  FAILEDOPERATION_CASTERNOTFOUND = "FailedOperation.CasterNotFound"
+//  FAILEDOPERATION_LAYOUTUSEDINPVW = "FailedOperation.LayoutUsedInPvw"
+//  FAILEDOPERATION_MARKWORDNOTEXIST = "FailedOperation.MarkWordNotExist"
+//  INTERNALERROR = "InternalError"
+//  INVALIDPARAMETER = "InvalidParameter"
+//  RESOURCENOTFOUND_FORBIDSERVICE = "ResourceNotFound.ForbidService"
+//  RESOURCENOTFOUND_FREEZESERVICE = "ResourceNotFound.FreezeService"
+//  RESOURCENOTFOUND_STOPSERVICE = "ResourceNotFound.StopService"
+//  RESOURCENOTFOUND_USERDISABLESERVICE = "ResourceNotFound.UserDisableService"
+//  RESOURCENOTFOUND_USERNOTEXIST = "ResourceNotFound.UserNotExist"
+//  UNKNOWNPARAMETER = "UnknownParameter"
+//  UNSUPPORTEDOPERATION = "UnsupportedOperation"
+func (c *Client) ModifyCasterMarkWordInfoWithContext(ctx context.Context, request *ModifyCasterMarkWordInfoRequest) (response *ModifyCasterMarkWordInfoResponse, err error) {
+    if request == nil {
+        request = NewModifyCasterMarkWordInfoRequest()
+    }
+    c.InitBaseRequest(&request.BaseRequest, "live", APIVersion, "ModifyCasterMarkWordInfo")
+    
+    if c.GetCredential() == nil {
+        return nil, errors.New("ModifyCasterMarkWordInfo require credential")
+    }
+
+    request.SetContext(ctx)
+    
+    response = NewModifyCasterMarkWordInfoResponse()
+    err = c.Send(request, response)
+    return
+}
+
+func NewModifyCasterOutputInfoRequest() (request *ModifyCasterOutputInfoRequest) {
+    request = &ModifyCasterOutputInfoRequest{
+        BaseRequest: &tchttp.BaseRequest{},
+    }
+    
+    request.Init().WithApiInfo("live", APIVersion, "ModifyCasterOutputInfo")
+    
+    
+    return
+}
+
+func NewModifyCasterOutputInfoResponse() (response *ModifyCasterOutputInfoResponse) {
+    response = &ModifyCasterOutputInfoResponse{
+        BaseResponse: &tchttp.BaseResponse{},
+    } 
+    return
+
+}
+
+// ModifyCasterOutputInfo
+// 该接口用来修改导播台的推流信息。
+//
+// 注：只有在主监启动前设置才生效，主监启动后设置，下次推流生效。
+//
+// 可能返回的错误码:
+//  FAILEDOPERATION = "FailedOperation"
+//  FAILEDOPERATION_CASTERNOTFOUND = "FailedOperation.CasterNotFound"
+//  FAILEDOPERATION_OUTPUTISNOTEXIST = "FailedOperation.OutputIsNotExist"
+//  INTERNALERROR = "InternalError"
+//  INVALIDPARAMETER = "InvalidParameter"
+//  INVALIDPARAMETER_INVALIDURL = "InvalidParameter.InvalidUrl"
+//  RESOURCENOTFOUND_FORBIDSERVICE = "ResourceNotFound.ForbidService"
+//  RESOURCENOTFOUND_FREEZESERVICE = "ResourceNotFound.FreezeService"
+//  RESOURCENOTFOUND_STOPSERVICE = "ResourceNotFound.StopService"
+//  RESOURCENOTFOUND_USERDISABLESERVICE = "ResourceNotFound.UserDisableService"
+//  RESOURCENOTFOUND_USERNOTEXIST = "ResourceNotFound.UserNotExist"
+//  UNKNOWNPARAMETER = "UnknownParameter"
+//  UNSUPPORTEDOPERATION = "UnsupportedOperation"
+func (c *Client) ModifyCasterOutputInfo(request *ModifyCasterOutputInfoRequest) (response *ModifyCasterOutputInfoResponse, err error) {
+    return c.ModifyCasterOutputInfoWithContext(context.Background(), request)
+}
+
+// ModifyCasterOutputInfo
+// 该接口用来修改导播台的推流信息。
+//
+// 注：只有在主监启动前设置才生效，主监启动后设置，下次推流生效。
+//
+// 可能返回的错误码:
+//  FAILEDOPERATION = "FailedOperation"
+//  FAILEDOPERATION_CASTERNOTFOUND = "FailedOperation.CasterNotFound"
+//  FAILEDOPERATION_OUTPUTISNOTEXIST = "FailedOperation.OutputIsNotExist"
+//  INTERNALERROR = "InternalError"
+//  INVALIDPARAMETER = "InvalidParameter"
+//  INVALIDPARAMETER_INVALIDURL = "InvalidParameter.InvalidUrl"
+//  RESOURCENOTFOUND_FORBIDSERVICE = "ResourceNotFound.ForbidService"
+//  RESOURCENOTFOUND_FREEZESERVICE = "ResourceNotFound.FreezeService"
+//  RESOURCENOTFOUND_STOPSERVICE = "ResourceNotFound.StopService"
+//  RESOURCENOTFOUND_USERDISABLESERVICE = "ResourceNotFound.UserDisableService"
+//  RESOURCENOTFOUND_USERNOTEXIST = "ResourceNotFound.UserNotExist"
+//  UNKNOWNPARAMETER = "UnknownParameter"
+//  UNSUPPORTEDOPERATION = "UnsupportedOperation"
+func (c *Client) ModifyCasterOutputInfoWithContext(ctx context.Context, request *ModifyCasterOutputInfoRequest) (response *ModifyCasterOutputInfoResponse, err error) {
+    if request == nil {
+        request = NewModifyCasterOutputInfoRequest()
+    }
+    c.InitBaseRequest(&request.BaseRequest, "live", APIVersion, "ModifyCasterOutputInfo")
+    
+    if c.GetCredential() == nil {
+        return nil, errors.New("ModifyCasterOutputInfo require credential")
+    }
+
+    request.SetContext(ctx)
+    
+    response = NewModifyCasterOutputInfoResponse()
+    err = c.Send(request, response)
+    return
+}
+
+func NewModifyLiveAvatarRoomRequest() (request *ModifyLiveAvatarRoomRequest) {
+    request = &ModifyLiveAvatarRoomRequest{
+        BaseRequest: &tchttp.BaseRequest{},
+    }
+    
+    request.Init().WithApiInfo("live", APIVersion, "ModifyLiveAvatarRoom")
+    
+    
+    return
+}
+
+func NewModifyLiveAvatarRoomResponse() (response *ModifyLiveAvatarRoomResponse) {
+    response = &ModifyLiveAvatarRoomResponse{
+        BaseResponse: &tchttp.BaseResponse{},
+    } 
+    return
+
+}
+
+// ModifyLiveAvatarRoom
+// 调用该接口，用于修改数字人(包括AIGC数字人)直播间。
+//
+// 可能返回的错误码:
+//  FAILEDOPERATION = "FailedOperation"
+//  FAILEDOPERATION_CASTERNOTFOUND = "FailedOperation.CasterNotFound"
+//  FAILEDOPERATION_OUTPUTISNOTEXIST = "FailedOperation.OutputIsNotExist"
+//  INTERNALERROR = "InternalError"
+//  INVALIDPARAMETER = "InvalidParameter"
+//  INVALIDPARAMETER_INVALIDURL = "InvalidParameter.InvalidUrl"
+//  RESOURCENOTFOUND_FORBIDSERVICE = "ResourceNotFound.ForbidService"
+//  RESOURCENOTFOUND_FREEZESERVICE = "ResourceNotFound.FreezeService"
+//  RESOURCENOTFOUND_STOPSERVICE = "ResourceNotFound.StopService"
+//  RESOURCENOTFOUND_USERDISABLESERVICE = "ResourceNotFound.UserDisableService"
+//  RESOURCENOTFOUND_USERNOTEXIST = "ResourceNotFound.UserNotExist"
+//  UNKNOWNPARAMETER = "UnknownParameter"
+//  UNSUPPORTEDOPERATION = "UnsupportedOperation"
+func (c *Client) ModifyLiveAvatarRoom(request *ModifyLiveAvatarRoomRequest) (response *ModifyLiveAvatarRoomResponse, err error) {
+    return c.ModifyLiveAvatarRoomWithContext(context.Background(), request)
+}
+
+// ModifyLiveAvatarRoom
+// 调用该接口，用于修改数字人(包括AIGC数字人)直播间。
+//
+// 可能返回的错误码:
+//  FAILEDOPERATION = "FailedOperation"
+//  FAILEDOPERATION_CASTERNOTFOUND = "FailedOperation.CasterNotFound"
+//  FAILEDOPERATION_OUTPUTISNOTEXIST = "FailedOperation.OutputIsNotExist"
+//  INTERNALERROR = "InternalError"
+//  INVALIDPARAMETER = "InvalidParameter"
+//  INVALIDPARAMETER_INVALIDURL = "InvalidParameter.InvalidUrl"
+//  RESOURCENOTFOUND_FORBIDSERVICE = "ResourceNotFound.ForbidService"
+//  RESOURCENOTFOUND_FREEZESERVICE = "ResourceNotFound.FreezeService"
+//  RESOURCENOTFOUND_STOPSERVICE = "ResourceNotFound.StopService"
+//  RESOURCENOTFOUND_USERDISABLESERVICE = "ResourceNotFound.UserDisableService"
+//  RESOURCENOTFOUND_USERNOTEXIST = "ResourceNotFound.UserNotExist"
+//  UNKNOWNPARAMETER = "UnknownParameter"
+//  UNSUPPORTEDOPERATION = "UnsupportedOperation"
+func (c *Client) ModifyLiveAvatarRoomWithContext(ctx context.Context, request *ModifyLiveAvatarRoomRequest) (response *ModifyLiveAvatarRoomResponse, err error) {
+    if request == nil {
+        request = NewModifyLiveAvatarRoomRequest()
+    }
+    c.InitBaseRequest(&request.BaseRequest, "live", APIVersion, "ModifyLiveAvatarRoom")
+    
+    if c.GetCredential() == nil {
+        return nil, errors.New("ModifyLiveAvatarRoom require credential")
+    }
+
+    request.SetContext(ctx)
+    
+    response = NewModifyLiveAvatarRoomResponse()
+    err = c.Send(request, response)
+    return
+}
+
+func NewModifyLiveAvatarScriptRequest() (request *ModifyLiveAvatarScriptRequest) {
+    request = &ModifyLiveAvatarScriptRequest{
+        BaseRequest: &tchttp.BaseRequest{},
+    }
+    
+    request.Init().WithApiInfo("live", APIVersion, "ModifyLiveAvatarScript")
+    
+    
+    return
+}
+
+func NewModifyLiveAvatarScriptResponse() (response *ModifyLiveAvatarScriptResponse) {
+    response = &ModifyLiveAvatarScriptResponse{
+        BaseResponse: &tchttp.BaseResponse{},
+    } 
+    return
+
+}
+
+// ModifyLiveAvatarScript
+// 调用该接口，用于修改数字人直播间话术。
+//
+// 可能返回的错误码:
+//  FAILEDOPERATION = "FailedOperation"
+//  FAILEDOPERATION_CASTERNOTFOUND = "FailedOperation.CasterNotFound"
+//  FAILEDOPERATION_OUTPUTISNOTEXIST = "FailedOperation.OutputIsNotExist"
+//  INTERNALERROR = "InternalError"
+//  INVALIDPARAMETER = "InvalidParameter"
+//  INVALIDPARAMETER_INVALIDURL = "InvalidParameter.InvalidUrl"
+//  RESOURCENOTFOUND_FORBIDSERVICE = "ResourceNotFound.ForbidService"
+//  RESOURCENOTFOUND_FREEZESERVICE = "ResourceNotFound.FreezeService"
+//  RESOURCENOTFOUND_STOPSERVICE = "ResourceNotFound.StopService"
+//  RESOURCENOTFOUND_USERDISABLESERVICE = "ResourceNotFound.UserDisableService"
+//  RESOURCENOTFOUND_USERNOTEXIST = "ResourceNotFound.UserNotExist"
+//  UNKNOWNPARAMETER = "UnknownParameter"
+//  UNSUPPORTEDOPERATION = "UnsupportedOperation"
+func (c *Client) ModifyLiveAvatarScript(request *ModifyLiveAvatarScriptRequest) (response *ModifyLiveAvatarScriptResponse, err error) {
+    return c.ModifyLiveAvatarScriptWithContext(context.Background(), request)
+}
+
+// ModifyLiveAvatarScript
+// 调用该接口，用于修改数字人直播间话术。
+//
+// 可能返回的错误码:
+//  FAILEDOPERATION = "FailedOperation"
+//  FAILEDOPERATION_CASTERNOTFOUND = "FailedOperation.CasterNotFound"
+//  FAILEDOPERATION_OUTPUTISNOTEXIST = "FailedOperation.OutputIsNotExist"
+//  INTERNALERROR = "InternalError"
+//  INVALIDPARAMETER = "InvalidParameter"
+//  INVALIDPARAMETER_INVALIDURL = "InvalidParameter.InvalidUrl"
+//  RESOURCENOTFOUND_FORBIDSERVICE = "ResourceNotFound.ForbidService"
+//  RESOURCENOTFOUND_FREEZESERVICE = "ResourceNotFound.FreezeService"
+//  RESOURCENOTFOUND_STOPSERVICE = "ResourceNotFound.StopService"
+//  RESOURCENOTFOUND_USERDISABLESERVICE = "ResourceNotFound.UserDisableService"
+//  RESOURCENOTFOUND_USERNOTEXIST = "ResourceNotFound.UserNotExist"
+//  UNKNOWNPARAMETER = "UnknownParameter"
+//  UNSUPPORTEDOPERATION = "UnsupportedOperation"
+func (c *Client) ModifyLiveAvatarScriptWithContext(ctx context.Context, request *ModifyLiveAvatarScriptRequest) (response *ModifyLiveAvatarScriptResponse, err error) {
+    if request == nil {
+        request = NewModifyLiveAvatarScriptRequest()
+    }
+    c.InitBaseRequest(&request.BaseRequest, "live", APIVersion, "ModifyLiveAvatarScript")
+    
+    if c.GetCredential() == nil {
+        return nil, errors.New("ModifyLiveAvatarScript require credential")
+    }
+
+    request.SetContext(ctx)
+    
+    response = NewModifyLiveAvatarScriptResponse()
     err = c.Send(request, response)
     return
 }
@@ -9995,6 +14898,7 @@ func (c *Client) ModifyLiveCallbackTemplateWithContext(ctx context.Context, requ
     if request == nil {
         request = NewModifyLiveCallbackTemplateRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "live", APIVersion, "ModifyLiveCallbackTemplate")
     
     if c.GetCredential() == nil {
         return nil, errors.New("ModifyLiveCallbackTemplate require credential")
@@ -10130,6 +15034,7 @@ func (c *Client) ModifyLiveDomainCertBindingsWithContext(ctx context.Context, re
     if request == nil {
         request = NewModifyLiveDomainCertBindingsRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "live", APIVersion, "ModifyLiveDomainCertBindings")
     
     if c.GetCredential() == nil {
         return nil, errors.New("ModifyLiveDomainCertBindings require credential")
@@ -10205,6 +15110,7 @@ func (c *Client) ModifyLiveDomainRefererWithContext(ctx context.Context, request
     if request == nil {
         request = NewModifyLiveDomainRefererRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "live", APIVersion, "ModifyLiveDomainReferer")
     
     if c.GetCredential() == nil {
         return nil, errors.New("ModifyLiveDomainReferer require credential")
@@ -10294,6 +15200,7 @@ func (c *Client) ModifyLivePadTemplateWithContext(ctx context.Context, request *
     if request == nil {
         request = NewModifyLivePadTemplateRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "live", APIVersion, "ModifyLivePadTemplate")
     
     if c.GetCredential() == nil {
         return nil, errors.New("ModifyLivePadTemplate require credential")
@@ -10363,6 +15270,7 @@ func (c *Client) ModifyLivePlayAuthKeyWithContext(ctx context.Context, request *
     if request == nil {
         request = NewModifyLivePlayAuthKeyRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "live", APIVersion, "ModifyLivePlayAuthKey")
     
     if c.GetCredential() == nil {
         return nil, errors.New("ModifyLivePlayAuthKey require credential")
@@ -10438,6 +15346,7 @@ func (c *Client) ModifyLivePlayDomainWithContext(ctx context.Context, request *M
     if request == nil {
         request = NewModifyLivePlayDomainRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "live", APIVersion, "ModifyLivePlayDomain")
     
     if c.GetCredential() == nil {
         return nil, errors.New("ModifyLivePlayDomain require credential")
@@ -10523,6 +15432,7 @@ func (c *Client) ModifyLivePullStreamTaskWithContext(ctx context.Context, reques
     if request == nil {
         request = NewModifyLivePullStreamTaskRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "live", APIVersion, "ModifyLivePullStreamTask")
     
     if c.GetCredential() == nil {
         return nil, errors.New("ModifyLivePullStreamTask require credential")
@@ -10594,6 +15504,7 @@ func (c *Client) ModifyLivePushAuthKeyWithContext(ctx context.Context, request *
     if request == nil {
         request = NewModifyLivePushAuthKeyRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "live", APIVersion, "ModifyLivePushAuthKey")
     
     if c.GetCredential() == nil {
         return nil, errors.New("ModifyLivePushAuthKey require credential")
@@ -10677,6 +15588,7 @@ func (c *Client) ModifyLiveRecordTemplateWithContext(ctx context.Context, reques
     if request == nil {
         request = NewModifyLiveRecordTemplateRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "live", APIVersion, "ModifyLiveRecordTemplate")
     
     if c.GetCredential() == nil {
         return nil, errors.New("ModifyLiveRecordTemplate require credential")
@@ -10770,6 +15682,7 @@ func (c *Client) ModifyLiveSnapshotTemplateWithContext(ctx context.Context, requ
     if request == nil {
         request = NewModifyLiveSnapshotTemplateRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "live", APIVersion, "ModifyLiveSnapshotTemplate")
     
     if c.GetCredential() == nil {
         return nil, errors.New("ModifyLiveSnapshotTemplate require credential")
@@ -10851,6 +15764,7 @@ func (c *Client) ModifyLiveStreamMonitorWithContext(ctx context.Context, request
     if request == nil {
         request = NewModifyLiveStreamMonitorRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "live", APIVersion, "ModifyLiveStreamMonitor")
     
     if c.GetCredential() == nil {
         return nil, errors.New("ModifyLiveStreamMonitor require credential")
@@ -10930,6 +15844,7 @@ func (c *Client) ModifyLiveTimeShiftTemplateWithContext(ctx context.Context, req
     if request == nil {
         request = NewModifyLiveTimeShiftTemplateRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "live", APIVersion, "ModifyLiveTimeShiftTemplate")
     
     if c.GetCredential() == nil {
         return nil, errors.New("ModifyLiveTimeShiftTemplate require credential")
@@ -11021,6 +15936,7 @@ func (c *Client) ModifyLiveTranscodeTemplateWithContext(ctx context.Context, req
     if request == nil {
         request = NewModifyLiveTranscodeTemplateRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "live", APIVersion, "ModifyLiveTranscodeTemplate")
     
     if c.GetCredential() == nil {
         return nil, errors.New("ModifyLiveTranscodeTemplate require credential")
@@ -11029,6 +15945,72 @@ func (c *Client) ModifyLiveTranscodeTemplateWithContext(ctx context.Context, req
     request.SetContext(ctx)
     
     response = NewModifyLiveTranscodeTemplateResponse()
+    err = c.Send(request, response)
+    return
+}
+
+func NewModifyOriginStreamInfoRequest() (request *ModifyOriginStreamInfoRequest) {
+    request = &ModifyOriginStreamInfoRequest{
+        BaseRequest: &tchttp.BaseRequest{},
+    }
+    
+    request.Init().WithApiInfo("live", APIVersion, "ModifyOriginStreamInfo")
+    
+    
+    return
+}
+
+func NewModifyOriginStreamInfoResponse() (response *ModifyOriginStreamInfoResponse) {
+    response = &ModifyOriginStreamInfoResponse{
+        BaseResponse: &tchttp.BaseResponse{},
+    } 
+    return
+
+}
+
+// ModifyOriginStreamInfo
+// 变更直播源站配置，支持直播源站格式。
+//
+// 可能返回的错误码:
+//  FAILEDOPERATION = "FailedOperation"
+//  INTERNALERROR_DBERROR = "InternalError.DBError"
+//  INVALIDPARAMETER = "InvalidParameter"
+//  INVALIDPARAMETER_MATCHRULEONLYSUPPORTNORMALSUFFIX = "InvalidParameter.MatchRuleOnlySupportNormalSuffix"
+//  RESOURCENOTFOUND_FORBIDSERVICE = "ResourceNotFound.ForbidService"
+//  RESOURCENOTFOUND_FREEZESERVICE = "ResourceNotFound.FreezeService"
+//  RESOURCENOTFOUND_INVALIDUSER = "ResourceNotFound.InvalidUser"
+//  RESOURCENOTFOUND_STOPSERVICE = "ResourceNotFound.StopService"
+//  RESOURCENOTFOUND_USERDISABLESERVICE = "ResourceNotFound.UserDisableService"
+func (c *Client) ModifyOriginStreamInfo(request *ModifyOriginStreamInfoRequest) (response *ModifyOriginStreamInfoResponse, err error) {
+    return c.ModifyOriginStreamInfoWithContext(context.Background(), request)
+}
+
+// ModifyOriginStreamInfo
+// 变更直播源站配置，支持直播源站格式。
+//
+// 可能返回的错误码:
+//  FAILEDOPERATION = "FailedOperation"
+//  INTERNALERROR_DBERROR = "InternalError.DBError"
+//  INVALIDPARAMETER = "InvalidParameter"
+//  INVALIDPARAMETER_MATCHRULEONLYSUPPORTNORMALSUFFIX = "InvalidParameter.MatchRuleOnlySupportNormalSuffix"
+//  RESOURCENOTFOUND_FORBIDSERVICE = "ResourceNotFound.ForbidService"
+//  RESOURCENOTFOUND_FREEZESERVICE = "ResourceNotFound.FreezeService"
+//  RESOURCENOTFOUND_INVALIDUSER = "ResourceNotFound.InvalidUser"
+//  RESOURCENOTFOUND_STOPSERVICE = "ResourceNotFound.StopService"
+//  RESOURCENOTFOUND_USERDISABLESERVICE = "ResourceNotFound.UserDisableService"
+func (c *Client) ModifyOriginStreamInfoWithContext(ctx context.Context, request *ModifyOriginStreamInfoRequest) (response *ModifyOriginStreamInfoResponse, err error) {
+    if request == nil {
+        request = NewModifyOriginStreamInfoRequest()
+    }
+    c.InitBaseRequest(&request.BaseRequest, "live", APIVersion, "ModifyOriginStreamInfo")
+    
+    if c.GetCredential() == nil {
+        return nil, errors.New("ModifyOriginStreamInfo require credential")
+    }
+
+    request.SetContext(ctx)
+    
+    response = NewModifyOriginStreamInfoResponse()
     err = c.Send(request, response)
     return
 }
@@ -11053,7 +16035,7 @@ func NewModifyPullStreamConfigResponse() (response *ModifyPullStreamConfigRespon
 }
 
 // ModifyPullStreamConfig
-// 更新拉流配置。该接口为已下线接口，请使用新接口 ModifyLivePullStreamTask。 
+// 更新拉流配置。该接口为已下线接口，请使用新接口 ModifyLivePullStreamTask。
 //
 // 可能返回的错误码:
 //  FAILEDOPERATION_CALLOTHERSVRFAILED = "FailedOperation.CallOtherSvrFailed"
@@ -11074,7 +16056,7 @@ func (c *Client) ModifyPullStreamConfig(request *ModifyPullStreamConfigRequest) 
 }
 
 // ModifyPullStreamConfig
-// 更新拉流配置。该接口为已下线接口，请使用新接口 ModifyLivePullStreamTask。 
+// 更新拉流配置。该接口为已下线接口，请使用新接口 ModifyLivePullStreamTask。
 //
 // 可能返回的错误码:
 //  FAILEDOPERATION_CALLOTHERSVRFAILED = "FailedOperation.CallOtherSvrFailed"
@@ -11094,6 +16076,7 @@ func (c *Client) ModifyPullStreamConfigWithContext(ctx context.Context, request 
     if request == nil {
         request = NewModifyPullStreamConfigRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "live", APIVersion, "ModifyPullStreamConfig")
     
     if c.GetCredential() == nil {
         return nil, errors.New("ModifyPullStreamConfig require credential")
@@ -11165,6 +16148,7 @@ func (c *Client) ModifyPullStreamStatusWithContext(ctx context.Context, request 
     if request == nil {
         request = NewModifyPullStreamStatusRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "live", APIVersion, "ModifyPullStreamStatus")
     
     if c.GetCredential() == nil {
         return nil, errors.New("ModifyPullStreamStatus require credential")
@@ -11173,6 +16157,86 @@ func (c *Client) ModifyPullStreamStatusWithContext(ctx context.Context, request 
     request.SetContext(ctx)
     
     response = NewModifyPullStreamStatusResponse()
+    err = c.Send(request, response)
+    return
+}
+
+func NewReleaseCasterRequest() (request *ReleaseCasterRequest) {
+    request = &ReleaseCasterRequest{
+        BaseRequest: &tchttp.BaseRequest{},
+    }
+    
+    request.Init().WithApiInfo("live", APIVersion, "ReleaseCaster")
+    
+    
+    return
+}
+
+func NewReleaseCasterResponse() (response *ReleaseCasterResponse) {
+    response = &ReleaseCasterResponse{
+        BaseResponse: &tchttp.BaseResponse{},
+    } 
+    return
+
+}
+
+// ReleaseCaster
+// 调用该接口，释放导播台实例，但保留所有的配置。
+//
+// 执行该接口，预监与主监画面停止，第三方推流停止。
+//
+// 点播文件与直播地址将停止展示，客户自行推到导播台的流需要手动停止。
+//
+// 可能返回的错误码:
+//  FAILEDOPERATION = "FailedOperation"
+//  FAILEDOPERATION_RELEASECASTERFAILED = "FailedOperation.ReleaseCasterFailed"
+//  FAILEDOPERATION_STOPCASTERTASKFAILED = "FailedOperation.StopCasterTaskFailed"
+//  INTERNALERROR = "InternalError"
+//  INVALIDPARAMETER = "InvalidParameter"
+//  RESOURCENOTFOUND_FORBIDSERVICE = "ResourceNotFound.ForbidService"
+//  RESOURCENOTFOUND_FREEZESERVICE = "ResourceNotFound.FreezeService"
+//  RESOURCENOTFOUND_STOPSERVICE = "ResourceNotFound.StopService"
+//  RESOURCENOTFOUND_USERDISABLESERVICE = "ResourceNotFound.UserDisableService"
+//  RESOURCENOTFOUND_USERNOTEXIST = "ResourceNotFound.UserNotExist"
+//  UNKNOWNPARAMETER = "UnknownParameter"
+//  UNSUPPORTEDOPERATION = "UnsupportedOperation"
+func (c *Client) ReleaseCaster(request *ReleaseCasterRequest) (response *ReleaseCasterResponse, err error) {
+    return c.ReleaseCasterWithContext(context.Background(), request)
+}
+
+// ReleaseCaster
+// 调用该接口，释放导播台实例，但保留所有的配置。
+//
+// 执行该接口，预监与主监画面停止，第三方推流停止。
+//
+// 点播文件与直播地址将停止展示，客户自行推到导播台的流需要手动停止。
+//
+// 可能返回的错误码:
+//  FAILEDOPERATION = "FailedOperation"
+//  FAILEDOPERATION_RELEASECASTERFAILED = "FailedOperation.ReleaseCasterFailed"
+//  FAILEDOPERATION_STOPCASTERTASKFAILED = "FailedOperation.StopCasterTaskFailed"
+//  INTERNALERROR = "InternalError"
+//  INVALIDPARAMETER = "InvalidParameter"
+//  RESOURCENOTFOUND_FORBIDSERVICE = "ResourceNotFound.ForbidService"
+//  RESOURCENOTFOUND_FREEZESERVICE = "ResourceNotFound.FreezeService"
+//  RESOURCENOTFOUND_STOPSERVICE = "ResourceNotFound.StopService"
+//  RESOURCENOTFOUND_USERDISABLESERVICE = "ResourceNotFound.UserDisableService"
+//  RESOURCENOTFOUND_USERNOTEXIST = "ResourceNotFound.UserNotExist"
+//  UNKNOWNPARAMETER = "UnknownParameter"
+//  UNSUPPORTEDOPERATION = "UnsupportedOperation"
+func (c *Client) ReleaseCasterWithContext(ctx context.Context, request *ReleaseCasterRequest) (response *ReleaseCasterResponse, err error) {
+    if request == nil {
+        request = NewReleaseCasterRequest()
+    }
+    c.InitBaseRequest(&request.BaseRequest, "live", APIVersion, "ReleaseCaster")
+    
+    if c.GetCredential() == nil {
+        return nil, errors.New("ReleaseCaster require credential")
+    }
+
+    request.SetContext(ctx)
+    
+    response = NewReleaseCasterResponse()
     err = c.Send(request, response)
     return
 }
@@ -11240,6 +16304,7 @@ func (c *Client) RestartLivePullStreamTaskWithContext(ctx context.Context, reque
     if request == nil {
         request = NewRestartLivePullStreamTaskRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "live", APIVersion, "RestartLivePullStreamTask")
     
     if c.GetCredential() == nil {
         return nil, errors.New("RestartLivePullStreamTask require credential")
@@ -11343,6 +16408,7 @@ func (c *Client) ResumeDelayLiveStreamWithContext(ctx context.Context, request *
     if request == nil {
         request = NewResumeDelayLiveStreamRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "live", APIVersion, "ResumeDelayLiveStream")
     
     if c.GetCredential() == nil {
         return nil, errors.New("ResumeDelayLiveStream require credential")
@@ -11428,6 +16494,7 @@ func (c *Client) ResumeLiveStreamWithContext(ctx context.Context, request *Resum
     if request == nil {
         request = NewResumeLiveStreamRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "live", APIVersion, "ResumeLiveStream")
     
     if c.GetCredential() == nil {
         return nil, errors.New("ResumeLiveStream require credential")
@@ -11436,6 +16503,350 @@ func (c *Client) ResumeLiveStreamWithContext(ctx context.Context, request *Resum
     request.SetContext(ctx)
     
     response = NewResumeLiveStreamResponse()
+    err = c.Send(request, response)
+    return
+}
+
+func NewSendLiveCloudEffectRequest() (request *SendLiveCloudEffectRequest) {
+    request = &SendLiveCloudEffectRequest{
+        BaseRequest: &tchttp.BaseRequest{},
+    }
+    
+    request.Init().WithApiInfo("live", APIVersion, "SendLiveCloudEffect")
+    
+    
+    return
+}
+
+func NewSendLiveCloudEffectResponse() (response *SendLiveCloudEffectResponse) {
+    response = &SendLiveCloudEffectResponse{
+        BaseResponse: &tchttp.BaseResponse{},
+    } 
+    return
+
+}
+
+// SendLiveCloudEffect
+// 使用该接口发送云端特效到线上正活跃的直播流，观众可在播放端看到特效从直播流画面中展示。
+//
+// 可能返回的错误码:
+//  FAILEDOPERATION = "FailedOperation"
+//  FAILEDOPERATION_CALLOTHERSVRFAILED = "FailedOperation.CallOtherSvrFailed"
+//  INTERNALERROR = "InternalError"
+//  INTERNALERROR_CALLOTHERSVRERROR = "InternalError.CallOtherSvrError"
+//  INTERNALERROR_CONFIGNOTEXIST = "InternalError.ConfigNotExist"
+//  INTERNALERROR_GETBIZIDERROR = "InternalError.GetBizidError"
+//  INTERNALERROR_GETSTREAMINFOERROR = "InternalError.GetStreamInfoError"
+//  INTERNALERROR_GETUPSTREAMINFOERROR = "InternalError.GetUpstreamInfoError"
+//  INTERNALERROR_NOTPERMMITOPERAT = "InternalError.NotPermmitOperat"
+//  INTERNALERROR_STREAMSTATUSERROR = "InternalError.StreamStatusError"
+//  INTERNALERROR_UPDATEDATAERROR = "InternalError.UpdateDataError"
+//  INVALIDPARAMETER = "InvalidParameter"
+//  INVALIDPARAMETERVALUE = "InvalidParameterValue"
+//  MISSINGPARAMETER = "MissingParameter"
+//  RESOURCENOTFOUND_FORBIDSERVICE = "ResourceNotFound.ForbidService"
+//  RESOURCENOTFOUND_FREEZESERVICE = "ResourceNotFound.FreezeService"
+//  RESOURCENOTFOUND_STOPSERVICE = "ResourceNotFound.StopService"
+//  RESOURCENOTFOUND_USERDISABLESERVICE = "ResourceNotFound.UserDisableService"
+//  RESOURCENOTFOUND_USERNOTEXIST = "ResourceNotFound.UserNotExist"
+func (c *Client) SendLiveCloudEffect(request *SendLiveCloudEffectRequest) (response *SendLiveCloudEffectResponse, err error) {
+    return c.SendLiveCloudEffectWithContext(context.Background(), request)
+}
+
+// SendLiveCloudEffect
+// 使用该接口发送云端特效到线上正活跃的直播流，观众可在播放端看到特效从直播流画面中展示。
+//
+// 可能返回的错误码:
+//  FAILEDOPERATION = "FailedOperation"
+//  FAILEDOPERATION_CALLOTHERSVRFAILED = "FailedOperation.CallOtherSvrFailed"
+//  INTERNALERROR = "InternalError"
+//  INTERNALERROR_CALLOTHERSVRERROR = "InternalError.CallOtherSvrError"
+//  INTERNALERROR_CONFIGNOTEXIST = "InternalError.ConfigNotExist"
+//  INTERNALERROR_GETBIZIDERROR = "InternalError.GetBizidError"
+//  INTERNALERROR_GETSTREAMINFOERROR = "InternalError.GetStreamInfoError"
+//  INTERNALERROR_GETUPSTREAMINFOERROR = "InternalError.GetUpstreamInfoError"
+//  INTERNALERROR_NOTPERMMITOPERAT = "InternalError.NotPermmitOperat"
+//  INTERNALERROR_STREAMSTATUSERROR = "InternalError.StreamStatusError"
+//  INTERNALERROR_UPDATEDATAERROR = "InternalError.UpdateDataError"
+//  INVALIDPARAMETER = "InvalidParameter"
+//  INVALIDPARAMETERVALUE = "InvalidParameterValue"
+//  MISSINGPARAMETER = "MissingParameter"
+//  RESOURCENOTFOUND_FORBIDSERVICE = "ResourceNotFound.ForbidService"
+//  RESOURCENOTFOUND_FREEZESERVICE = "ResourceNotFound.FreezeService"
+//  RESOURCENOTFOUND_STOPSERVICE = "ResourceNotFound.StopService"
+//  RESOURCENOTFOUND_USERDISABLESERVICE = "ResourceNotFound.UserDisableService"
+//  RESOURCENOTFOUND_USERNOTEXIST = "ResourceNotFound.UserNotExist"
+func (c *Client) SendLiveCloudEffectWithContext(ctx context.Context, request *SendLiveCloudEffectRequest) (response *SendLiveCloudEffectResponse, err error) {
+    if request == nil {
+        request = NewSendLiveCloudEffectRequest()
+    }
+    c.InitBaseRequest(&request.BaseRequest, "live", APIVersion, "SendLiveCloudEffect")
+    
+    if c.GetCredential() == nil {
+        return nil, errors.New("SendLiveCloudEffect require credential")
+    }
+
+    request.SetContext(ctx)
+    
+    response = NewSendLiveCloudEffectResponse()
+    err = c.Send(request, response)
+    return
+}
+
+func NewSendTemporaryScriptToAvatarRoomRequest() (request *SendTemporaryScriptToAvatarRoomRequest) {
+    request = &SendTemporaryScriptToAvatarRoomRequest{
+        BaseRequest: &tchttp.BaseRequest{},
+    }
+    
+    request.Init().WithApiInfo("live", APIVersion, "SendTemporaryScriptToAvatarRoom")
+    
+    
+    return
+}
+
+func NewSendTemporaryScriptToAvatarRoomResponse() (response *SendTemporaryScriptToAvatarRoomResponse) {
+    response = &SendTemporaryScriptToAvatarRoomResponse{
+        BaseResponse: &tchttp.BaseResponse{},
+    } 
+    return
+
+}
+
+// SendTemporaryScriptToAvatarRoom
+// 调用该接口，用于临时驱动数字人播报。
+//
+// 可能返回的错误码:
+//  FAILEDOPERATION = "FailedOperation"
+//  FAILEDOPERATION_CALLOTHERSVRFAILED = "FailedOperation.CallOtherSvrFailed"
+//  INTERNALERROR = "InternalError"
+//  INTERNALERROR_CALLOTHERSVRERROR = "InternalError.CallOtherSvrError"
+//  INTERNALERROR_CONFIGNOTEXIST = "InternalError.ConfigNotExist"
+//  INTERNALERROR_GETBIZIDERROR = "InternalError.GetBizidError"
+//  INTERNALERROR_GETSTREAMINFOERROR = "InternalError.GetStreamInfoError"
+//  INTERNALERROR_GETUPSTREAMINFOERROR = "InternalError.GetUpstreamInfoError"
+//  INTERNALERROR_NOTPERMMITOPERAT = "InternalError.NotPermmitOperat"
+//  INTERNALERROR_STREAMSTATUSERROR = "InternalError.StreamStatusError"
+//  INTERNALERROR_UPDATEDATAERROR = "InternalError.UpdateDataError"
+//  INVALIDPARAMETER = "InvalidParameter"
+//  INVALIDPARAMETERVALUE = "InvalidParameterValue"
+//  MISSINGPARAMETER = "MissingParameter"
+//  RESOURCENOTFOUND_FORBIDSERVICE = "ResourceNotFound.ForbidService"
+//  RESOURCENOTFOUND_FREEZESERVICE = "ResourceNotFound.FreezeService"
+//  RESOURCENOTFOUND_STOPSERVICE = "ResourceNotFound.StopService"
+//  RESOURCENOTFOUND_USERDISABLESERVICE = "ResourceNotFound.UserDisableService"
+//  RESOURCENOTFOUND_USERNOTEXIST = "ResourceNotFound.UserNotExist"
+func (c *Client) SendTemporaryScriptToAvatarRoom(request *SendTemporaryScriptToAvatarRoomRequest) (response *SendTemporaryScriptToAvatarRoomResponse, err error) {
+    return c.SendTemporaryScriptToAvatarRoomWithContext(context.Background(), request)
+}
+
+// SendTemporaryScriptToAvatarRoom
+// 调用该接口，用于临时驱动数字人播报。
+//
+// 可能返回的错误码:
+//  FAILEDOPERATION = "FailedOperation"
+//  FAILEDOPERATION_CALLOTHERSVRFAILED = "FailedOperation.CallOtherSvrFailed"
+//  INTERNALERROR = "InternalError"
+//  INTERNALERROR_CALLOTHERSVRERROR = "InternalError.CallOtherSvrError"
+//  INTERNALERROR_CONFIGNOTEXIST = "InternalError.ConfigNotExist"
+//  INTERNALERROR_GETBIZIDERROR = "InternalError.GetBizidError"
+//  INTERNALERROR_GETSTREAMINFOERROR = "InternalError.GetStreamInfoError"
+//  INTERNALERROR_GETUPSTREAMINFOERROR = "InternalError.GetUpstreamInfoError"
+//  INTERNALERROR_NOTPERMMITOPERAT = "InternalError.NotPermmitOperat"
+//  INTERNALERROR_STREAMSTATUSERROR = "InternalError.StreamStatusError"
+//  INTERNALERROR_UPDATEDATAERROR = "InternalError.UpdateDataError"
+//  INVALIDPARAMETER = "InvalidParameter"
+//  INVALIDPARAMETERVALUE = "InvalidParameterValue"
+//  MISSINGPARAMETER = "MissingParameter"
+//  RESOURCENOTFOUND_FORBIDSERVICE = "ResourceNotFound.ForbidService"
+//  RESOURCENOTFOUND_FREEZESERVICE = "ResourceNotFound.FreezeService"
+//  RESOURCENOTFOUND_STOPSERVICE = "ResourceNotFound.StopService"
+//  RESOURCENOTFOUND_USERDISABLESERVICE = "ResourceNotFound.UserDisableService"
+//  RESOURCENOTFOUND_USERNOTEXIST = "ResourceNotFound.UserNotExist"
+func (c *Client) SendTemporaryScriptToAvatarRoomWithContext(ctx context.Context, request *SendTemporaryScriptToAvatarRoomRequest) (response *SendTemporaryScriptToAvatarRoomResponse, err error) {
+    if request == nil {
+        request = NewSendTemporaryScriptToAvatarRoomRequest()
+    }
+    c.InitBaseRequest(&request.BaseRequest, "live", APIVersion, "SendTemporaryScriptToAvatarRoom")
+    
+    if c.GetCredential() == nil {
+        return nil, errors.New("SendTemporaryScriptToAvatarRoom require credential")
+    }
+
+    request.SetContext(ctx)
+    
+    response = NewSendTemporaryScriptToAvatarRoomResponse()
+    err = c.Send(request, response)
+    return
+}
+
+func NewStartLiveAvatarRoomRequest() (request *StartLiveAvatarRoomRequest) {
+    request = &StartLiveAvatarRoomRequest{
+        BaseRequest: &tchttp.BaseRequest{},
+    }
+    
+    request.Init().WithApiInfo("live", APIVersion, "StartLiveAvatarRoom")
+    
+    
+    return
+}
+
+func NewStartLiveAvatarRoomResponse() (response *StartLiveAvatarRoomResponse) {
+    response = &StartLiveAvatarRoomResponse{
+        BaseResponse: &tchttp.BaseResponse{},
+    } 
+    return
+
+}
+
+// StartLiveAvatarRoom
+// 调用该接口，用于启动数字人（包括AIGC数字人）直播间。
+//
+// 可能返回的错误码:
+//  FAILEDOPERATION = "FailedOperation"
+//  FAILEDOPERATION_CALLOTHERSVRFAILED = "FailedOperation.CallOtherSvrFailed"
+//  INTERNALERROR = "InternalError"
+//  INTERNALERROR_CALLOTHERSVRERROR = "InternalError.CallOtherSvrError"
+//  INTERNALERROR_CONFIGNOTEXIST = "InternalError.ConfigNotExist"
+//  INTERNALERROR_GETBIZIDERROR = "InternalError.GetBizidError"
+//  INTERNALERROR_GETSTREAMINFOERROR = "InternalError.GetStreamInfoError"
+//  INTERNALERROR_GETUPSTREAMINFOERROR = "InternalError.GetUpstreamInfoError"
+//  INTERNALERROR_NOTPERMMITOPERAT = "InternalError.NotPermmitOperat"
+//  INTERNALERROR_STREAMSTATUSERROR = "InternalError.StreamStatusError"
+//  INTERNALERROR_UPDATEDATAERROR = "InternalError.UpdateDataError"
+//  INVALIDPARAMETER = "InvalidParameter"
+//  INVALIDPARAMETERVALUE = "InvalidParameterValue"
+//  MISSINGPARAMETER = "MissingParameter"
+//  RESOURCENOTFOUND_FORBIDSERVICE = "ResourceNotFound.ForbidService"
+//  RESOURCENOTFOUND_FREEZESERVICE = "ResourceNotFound.FreezeService"
+//  RESOURCENOTFOUND_STOPSERVICE = "ResourceNotFound.StopService"
+//  RESOURCENOTFOUND_USERDISABLESERVICE = "ResourceNotFound.UserDisableService"
+//  RESOURCENOTFOUND_USERNOTEXIST = "ResourceNotFound.UserNotExist"
+func (c *Client) StartLiveAvatarRoom(request *StartLiveAvatarRoomRequest) (response *StartLiveAvatarRoomResponse, err error) {
+    return c.StartLiveAvatarRoomWithContext(context.Background(), request)
+}
+
+// StartLiveAvatarRoom
+// 调用该接口，用于启动数字人（包括AIGC数字人）直播间。
+//
+// 可能返回的错误码:
+//  FAILEDOPERATION = "FailedOperation"
+//  FAILEDOPERATION_CALLOTHERSVRFAILED = "FailedOperation.CallOtherSvrFailed"
+//  INTERNALERROR = "InternalError"
+//  INTERNALERROR_CALLOTHERSVRERROR = "InternalError.CallOtherSvrError"
+//  INTERNALERROR_CONFIGNOTEXIST = "InternalError.ConfigNotExist"
+//  INTERNALERROR_GETBIZIDERROR = "InternalError.GetBizidError"
+//  INTERNALERROR_GETSTREAMINFOERROR = "InternalError.GetStreamInfoError"
+//  INTERNALERROR_GETUPSTREAMINFOERROR = "InternalError.GetUpstreamInfoError"
+//  INTERNALERROR_NOTPERMMITOPERAT = "InternalError.NotPermmitOperat"
+//  INTERNALERROR_STREAMSTATUSERROR = "InternalError.StreamStatusError"
+//  INTERNALERROR_UPDATEDATAERROR = "InternalError.UpdateDataError"
+//  INVALIDPARAMETER = "InvalidParameter"
+//  INVALIDPARAMETERVALUE = "InvalidParameterValue"
+//  MISSINGPARAMETER = "MissingParameter"
+//  RESOURCENOTFOUND_FORBIDSERVICE = "ResourceNotFound.ForbidService"
+//  RESOURCENOTFOUND_FREEZESERVICE = "ResourceNotFound.FreezeService"
+//  RESOURCENOTFOUND_STOPSERVICE = "ResourceNotFound.StopService"
+//  RESOURCENOTFOUND_USERDISABLESERVICE = "ResourceNotFound.UserDisableService"
+//  RESOURCENOTFOUND_USERNOTEXIST = "ResourceNotFound.UserNotExist"
+func (c *Client) StartLiveAvatarRoomWithContext(ctx context.Context, request *StartLiveAvatarRoomRequest) (response *StartLiveAvatarRoomResponse, err error) {
+    if request == nil {
+        request = NewStartLiveAvatarRoomRequest()
+    }
+    c.InitBaseRequest(&request.BaseRequest, "live", APIVersion, "StartLiveAvatarRoom")
+    
+    if c.GetCredential() == nil {
+        return nil, errors.New("StartLiveAvatarRoom require credential")
+    }
+
+    request.SetContext(ctx)
+    
+    response = NewStartLiveAvatarRoomResponse()
+    err = c.Send(request, response)
+    return
+}
+
+func NewStartLivePadStreamRequest() (request *StartLivePadStreamRequest) {
+    request = &StartLivePadStreamRequest{
+        BaseRequest: &tchttp.BaseRequest{},
+    }
+    
+    request.Init().WithApiInfo("live", APIVersion, "StartLivePadStream")
+    
+    
+    return
+}
+
+func NewStartLivePadStreamResponse() (response *StartLivePadStreamResponse) {
+    response = &StartLivePadStreamResponse{
+        BaseResponse: &tchttp.BaseResponse{},
+    } 
+    return
+
+}
+
+// StartLivePadStream
+// 使用该接口将直播流开始切入垫片。
+//
+// 可能返回的错误码:
+//  FAILEDOPERATION = "FailedOperation"
+//  FAILEDOPERATION_CALLOTHERSVRFAILED = "FailedOperation.CallOtherSvrFailed"
+//  INTERNALERROR = "InternalError"
+//  INTERNALERROR_CALLOTHERSVRERROR = "InternalError.CallOtherSvrError"
+//  INTERNALERROR_CONFIGNOTEXIST = "InternalError.ConfigNotExist"
+//  INTERNALERROR_GETBIZIDERROR = "InternalError.GetBizidError"
+//  INTERNALERROR_GETSTREAMINFOERROR = "InternalError.GetStreamInfoError"
+//  INTERNALERROR_GETUPSTREAMINFOERROR = "InternalError.GetUpstreamInfoError"
+//  INTERNALERROR_NOTPERMMITOPERAT = "InternalError.NotPermmitOperat"
+//  INTERNALERROR_STREAMSTATUSERROR = "InternalError.StreamStatusError"
+//  INTERNALERROR_UPDATEDATAERROR = "InternalError.UpdateDataError"
+//  INVALIDPARAMETER = "InvalidParameter"
+//  INVALIDPARAMETERVALUE = "InvalidParameterValue"
+//  MISSINGPARAMETER = "MissingParameter"
+//  RESOURCENOTFOUND_FORBIDSERVICE = "ResourceNotFound.ForbidService"
+//  RESOURCENOTFOUND_FREEZESERVICE = "ResourceNotFound.FreezeService"
+//  RESOURCENOTFOUND_STOPSERVICE = "ResourceNotFound.StopService"
+//  RESOURCENOTFOUND_USERDISABLESERVICE = "ResourceNotFound.UserDisableService"
+//  RESOURCENOTFOUND_USERNOTEXIST = "ResourceNotFound.UserNotExist"
+func (c *Client) StartLivePadStream(request *StartLivePadStreamRequest) (response *StartLivePadStreamResponse, err error) {
+    return c.StartLivePadStreamWithContext(context.Background(), request)
+}
+
+// StartLivePadStream
+// 使用该接口将直播流开始切入垫片。
+//
+// 可能返回的错误码:
+//  FAILEDOPERATION = "FailedOperation"
+//  FAILEDOPERATION_CALLOTHERSVRFAILED = "FailedOperation.CallOtherSvrFailed"
+//  INTERNALERROR = "InternalError"
+//  INTERNALERROR_CALLOTHERSVRERROR = "InternalError.CallOtherSvrError"
+//  INTERNALERROR_CONFIGNOTEXIST = "InternalError.ConfigNotExist"
+//  INTERNALERROR_GETBIZIDERROR = "InternalError.GetBizidError"
+//  INTERNALERROR_GETSTREAMINFOERROR = "InternalError.GetStreamInfoError"
+//  INTERNALERROR_GETUPSTREAMINFOERROR = "InternalError.GetUpstreamInfoError"
+//  INTERNALERROR_NOTPERMMITOPERAT = "InternalError.NotPermmitOperat"
+//  INTERNALERROR_STREAMSTATUSERROR = "InternalError.StreamStatusError"
+//  INTERNALERROR_UPDATEDATAERROR = "InternalError.UpdateDataError"
+//  INVALIDPARAMETER = "InvalidParameter"
+//  INVALIDPARAMETERVALUE = "InvalidParameterValue"
+//  MISSINGPARAMETER = "MissingParameter"
+//  RESOURCENOTFOUND_FORBIDSERVICE = "ResourceNotFound.ForbidService"
+//  RESOURCENOTFOUND_FREEZESERVICE = "ResourceNotFound.FreezeService"
+//  RESOURCENOTFOUND_STOPSERVICE = "ResourceNotFound.StopService"
+//  RESOURCENOTFOUND_USERDISABLESERVICE = "ResourceNotFound.UserDisableService"
+//  RESOURCENOTFOUND_USERNOTEXIST = "ResourceNotFound.UserNotExist"
+func (c *Client) StartLivePadStreamWithContext(ctx context.Context, request *StartLivePadStreamRequest) (response *StartLivePadStreamResponse, err error) {
+    if request == nil {
+        request = NewStartLivePadStreamRequest()
+    }
+    c.InitBaseRequest(&request.BaseRequest, "live", APIVersion, "StartLivePadStream")
+    
+    if c.GetCredential() == nil {
+        return nil, errors.New("StartLivePadStream require credential")
+    }
+
+    request.SetContext(ctx)
+    
+    response = NewStartLivePadStreamResponse()
     err = c.Send(request, response)
     return
 }
@@ -11507,6 +16918,7 @@ func (c *Client) StartLiveStreamMonitorWithContext(ctx context.Context, request 
     if request == nil {
         request = NewStartLiveStreamMonitorRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "live", APIVersion, "StartLiveStreamMonitor")
     
     if c.GetCredential() == nil {
         return nil, errors.New("StartLiveStreamMonitor require credential")
@@ -11515,6 +16927,306 @@ func (c *Client) StartLiveStreamMonitorWithContext(ctx context.Context, request 
     request.SetContext(ctx)
     
     response = NewStartLiveStreamMonitorResponse()
+    err = c.Send(request, response)
+    return
+}
+
+func NewStopCasterPgmRequest() (request *StopCasterPgmRequest) {
+    request = &StopCasterPgmRequest{
+        BaseRequest: &tchttp.BaseRequest{},
+    }
+    
+    request.Init().WithApiInfo("live", APIVersion, "StopCasterPgm")
+    
+    
+    return
+}
+
+func NewStopCasterPgmResponse() (response *StopCasterPgmResponse) {
+    response = &StopCasterPgmResponse{
+        BaseResponse: &tchttp.BaseResponse{},
+    } 
+    return
+
+}
+
+// StopCasterPgm
+// 该接口用来停止导播台的主监输出。
+//
+// 停止主监后，对应的推流到腾讯云直播源站和推流到其他第三方平台均将会停止。
+//
+// 可能返回的错误码:
+//  FAILEDOPERATION_CASTERNOTFOUND = "FailedOperation.CasterNotFound"
+//  FAILEDOPERATION_STOPCASTERTASKFAILED = "FailedOperation.StopCasterTaskFailed"
+//  INTERNALERROR = "InternalError"
+//  INVALIDPARAMETER = "InvalidParameter"
+//  RESOURCENOTFOUND_FORBIDSERVICE = "ResourceNotFound.ForbidService"
+//  RESOURCENOTFOUND_FREEZESERVICE = "ResourceNotFound.FreezeService"
+//  RESOURCENOTFOUND_STOPSERVICE = "ResourceNotFound.StopService"
+//  RESOURCENOTFOUND_USERDISABLESERVICE = "ResourceNotFound.UserDisableService"
+//  RESOURCENOTFOUND_USERNOTEXIST = "ResourceNotFound.UserNotExist"
+//  UNKNOWNPARAMETER = "UnknownParameter"
+//  UNSUPPORTEDOPERATION = "UnsupportedOperation"
+func (c *Client) StopCasterPgm(request *StopCasterPgmRequest) (response *StopCasterPgmResponse, err error) {
+    return c.StopCasterPgmWithContext(context.Background(), request)
+}
+
+// StopCasterPgm
+// 该接口用来停止导播台的主监输出。
+//
+// 停止主监后，对应的推流到腾讯云直播源站和推流到其他第三方平台均将会停止。
+//
+// 可能返回的错误码:
+//  FAILEDOPERATION_CASTERNOTFOUND = "FailedOperation.CasterNotFound"
+//  FAILEDOPERATION_STOPCASTERTASKFAILED = "FailedOperation.StopCasterTaskFailed"
+//  INTERNALERROR = "InternalError"
+//  INVALIDPARAMETER = "InvalidParameter"
+//  RESOURCENOTFOUND_FORBIDSERVICE = "ResourceNotFound.ForbidService"
+//  RESOURCENOTFOUND_FREEZESERVICE = "ResourceNotFound.FreezeService"
+//  RESOURCENOTFOUND_STOPSERVICE = "ResourceNotFound.StopService"
+//  RESOURCENOTFOUND_USERDISABLESERVICE = "ResourceNotFound.UserDisableService"
+//  RESOURCENOTFOUND_USERNOTEXIST = "ResourceNotFound.UserNotExist"
+//  UNKNOWNPARAMETER = "UnknownParameter"
+//  UNSUPPORTEDOPERATION = "UnsupportedOperation"
+func (c *Client) StopCasterPgmWithContext(ctx context.Context, request *StopCasterPgmRequest) (response *StopCasterPgmResponse, err error) {
+    if request == nil {
+        request = NewStopCasterPgmRequest()
+    }
+    c.InitBaseRequest(&request.BaseRequest, "live", APIVersion, "StopCasterPgm")
+    
+    if c.GetCredential() == nil {
+        return nil, errors.New("StopCasterPgm require credential")
+    }
+
+    request.SetContext(ctx)
+    
+    response = NewStopCasterPgmResponse()
+    err = c.Send(request, response)
+    return
+}
+
+func NewStopCasterPvwRequest() (request *StopCasterPvwRequest) {
+    request = &StopCasterPvwRequest{
+        BaseRequest: &tchttp.BaseRequest{},
+    }
+    
+    request.Init().WithApiInfo("live", APIVersion, "StopCasterPvw")
+    
+    
+    return
+}
+
+func NewStopCasterPvwResponse() (response *StopCasterPvwResponse) {
+    response = &StopCasterPvwResponse{
+        BaseResponse: &tchttp.BaseResponse{},
+    } 
+    return
+
+}
+
+// StopCasterPvw
+// 该接口用来停止导播台的预监任务。
+//
+// 可能返回的错误码:
+//  FAILEDOPERATION_CASTERNOTFOUND = "FailedOperation.CasterNotFound"
+//  FAILEDOPERATION_STOPCASTERTASKFAILED = "FailedOperation.StopCasterTaskFailed"
+//  INTERNALERROR = "InternalError"
+//  INVALIDPARAMETER = "InvalidParameter"
+//  RESOURCENOTFOUND_FORBIDSERVICE = "ResourceNotFound.ForbidService"
+//  RESOURCENOTFOUND_FREEZESERVICE = "ResourceNotFound.FreezeService"
+//  RESOURCENOTFOUND_STOPSERVICE = "ResourceNotFound.StopService"
+//  RESOURCENOTFOUND_USERDISABLESERVICE = "ResourceNotFound.UserDisableService"
+//  RESOURCENOTFOUND_USERNOTEXIST = "ResourceNotFound.UserNotExist"
+//  UNKNOWNPARAMETER = "UnknownParameter"
+//  UNSUPPORTEDOPERATION = "UnsupportedOperation"
+func (c *Client) StopCasterPvw(request *StopCasterPvwRequest) (response *StopCasterPvwResponse, err error) {
+    return c.StopCasterPvwWithContext(context.Background(), request)
+}
+
+// StopCasterPvw
+// 该接口用来停止导播台的预监任务。
+//
+// 可能返回的错误码:
+//  FAILEDOPERATION_CASTERNOTFOUND = "FailedOperation.CasterNotFound"
+//  FAILEDOPERATION_STOPCASTERTASKFAILED = "FailedOperation.StopCasterTaskFailed"
+//  INTERNALERROR = "InternalError"
+//  INVALIDPARAMETER = "InvalidParameter"
+//  RESOURCENOTFOUND_FORBIDSERVICE = "ResourceNotFound.ForbidService"
+//  RESOURCENOTFOUND_FREEZESERVICE = "ResourceNotFound.FreezeService"
+//  RESOURCENOTFOUND_STOPSERVICE = "ResourceNotFound.StopService"
+//  RESOURCENOTFOUND_USERDISABLESERVICE = "ResourceNotFound.UserDisableService"
+//  RESOURCENOTFOUND_USERNOTEXIST = "ResourceNotFound.UserNotExist"
+//  UNKNOWNPARAMETER = "UnknownParameter"
+//  UNSUPPORTEDOPERATION = "UnsupportedOperation"
+func (c *Client) StopCasterPvwWithContext(ctx context.Context, request *StopCasterPvwRequest) (response *StopCasterPvwResponse, err error) {
+    if request == nil {
+        request = NewStopCasterPvwRequest()
+    }
+    c.InitBaseRequest(&request.BaseRequest, "live", APIVersion, "StopCasterPvw")
+    
+    if c.GetCredential() == nil {
+        return nil, errors.New("StopCasterPvw require credential")
+    }
+
+    request.SetContext(ctx)
+    
+    response = NewStopCasterPvwResponse()
+    err = c.Send(request, response)
+    return
+}
+
+func NewStopLiveAvatarRoomRequest() (request *StopLiveAvatarRoomRequest) {
+    request = &StopLiveAvatarRoomRequest{
+        BaseRequest: &tchttp.BaseRequest{},
+    }
+    
+    request.Init().WithApiInfo("live", APIVersion, "StopLiveAvatarRoom")
+    
+    
+    return
+}
+
+func NewStopLiveAvatarRoomResponse() (response *StopLiveAvatarRoomResponse) {
+    response = &StopLiveAvatarRoomResponse{
+        BaseResponse: &tchttp.BaseResponse{},
+    } 
+    return
+
+}
+
+// StopLiveAvatarRoom
+// 调用该接口，用于停止数字人直播间。
+//
+// 可能返回的错误码:
+//  FAILEDOPERATION_CASTERNOTFOUND = "FailedOperation.CasterNotFound"
+//  FAILEDOPERATION_STOPCASTERTASKFAILED = "FailedOperation.StopCasterTaskFailed"
+//  INTERNALERROR = "InternalError"
+//  INVALIDPARAMETER = "InvalidParameter"
+//  RESOURCENOTFOUND_FORBIDSERVICE = "ResourceNotFound.ForbidService"
+//  RESOURCENOTFOUND_FREEZESERVICE = "ResourceNotFound.FreezeService"
+//  RESOURCENOTFOUND_STOPSERVICE = "ResourceNotFound.StopService"
+//  RESOURCENOTFOUND_USERDISABLESERVICE = "ResourceNotFound.UserDisableService"
+//  RESOURCENOTFOUND_USERNOTEXIST = "ResourceNotFound.UserNotExist"
+//  UNKNOWNPARAMETER = "UnknownParameter"
+//  UNSUPPORTEDOPERATION = "UnsupportedOperation"
+func (c *Client) StopLiveAvatarRoom(request *StopLiveAvatarRoomRequest) (response *StopLiveAvatarRoomResponse, err error) {
+    return c.StopLiveAvatarRoomWithContext(context.Background(), request)
+}
+
+// StopLiveAvatarRoom
+// 调用该接口，用于停止数字人直播间。
+//
+// 可能返回的错误码:
+//  FAILEDOPERATION_CASTERNOTFOUND = "FailedOperation.CasterNotFound"
+//  FAILEDOPERATION_STOPCASTERTASKFAILED = "FailedOperation.StopCasterTaskFailed"
+//  INTERNALERROR = "InternalError"
+//  INVALIDPARAMETER = "InvalidParameter"
+//  RESOURCENOTFOUND_FORBIDSERVICE = "ResourceNotFound.ForbidService"
+//  RESOURCENOTFOUND_FREEZESERVICE = "ResourceNotFound.FreezeService"
+//  RESOURCENOTFOUND_STOPSERVICE = "ResourceNotFound.StopService"
+//  RESOURCENOTFOUND_USERDISABLESERVICE = "ResourceNotFound.UserDisableService"
+//  RESOURCENOTFOUND_USERNOTEXIST = "ResourceNotFound.UserNotExist"
+//  UNKNOWNPARAMETER = "UnknownParameter"
+//  UNSUPPORTEDOPERATION = "UnsupportedOperation"
+func (c *Client) StopLiveAvatarRoomWithContext(ctx context.Context, request *StopLiveAvatarRoomRequest) (response *StopLiveAvatarRoomResponse, err error) {
+    if request == nil {
+        request = NewStopLiveAvatarRoomRequest()
+    }
+    c.InitBaseRequest(&request.BaseRequest, "live", APIVersion, "StopLiveAvatarRoom")
+    
+    if c.GetCredential() == nil {
+        return nil, errors.New("StopLiveAvatarRoom require credential")
+    }
+
+    request.SetContext(ctx)
+    
+    response = NewStopLiveAvatarRoomResponse()
+    err = c.Send(request, response)
+    return
+}
+
+func NewStopLivePadStreamRequest() (request *StopLivePadStreamRequest) {
+    request = &StopLivePadStreamRequest{
+        BaseRequest: &tchttp.BaseRequest{},
+    }
+    
+    request.Init().WithApiInfo("live", APIVersion, "StopLivePadStream")
+    
+    
+    return
+}
+
+func NewStopLivePadStreamResponse() (response *StopLivePadStreamResponse) {
+    response = &StopLivePadStreamResponse{
+        BaseResponse: &tchttp.BaseResponse{},
+    } 
+    return
+
+}
+
+// StopLivePadStream
+// 使用该接口将直播流停止切入垫片。
+//
+// 可能返回的错误码:
+//  FAILEDOPERATION = "FailedOperation"
+//  FAILEDOPERATION_CALLOTHERSVRFAILED = "FailedOperation.CallOtherSvrFailed"
+//  INTERNALERROR = "InternalError"
+//  INTERNALERROR_CALLOTHERSVRERROR = "InternalError.CallOtherSvrError"
+//  INTERNALERROR_CONFIGNOTEXIST = "InternalError.ConfigNotExist"
+//  INTERNALERROR_GETBIZIDERROR = "InternalError.GetBizidError"
+//  INTERNALERROR_GETSTREAMINFOERROR = "InternalError.GetStreamInfoError"
+//  INTERNALERROR_GETUPSTREAMINFOERROR = "InternalError.GetUpstreamInfoError"
+//  INTERNALERROR_NOTPERMMITOPERAT = "InternalError.NotPermmitOperat"
+//  INTERNALERROR_STREAMSTATUSERROR = "InternalError.StreamStatusError"
+//  INTERNALERROR_UPDATEDATAERROR = "InternalError.UpdateDataError"
+//  INVALIDPARAMETER = "InvalidParameter"
+//  INVALIDPARAMETERVALUE = "InvalidParameterValue"
+//  MISSINGPARAMETER = "MissingParameter"
+//  RESOURCENOTFOUND_FORBIDSERVICE = "ResourceNotFound.ForbidService"
+//  RESOURCENOTFOUND_FREEZESERVICE = "ResourceNotFound.FreezeService"
+//  RESOURCENOTFOUND_STOPSERVICE = "ResourceNotFound.StopService"
+//  RESOURCENOTFOUND_USERDISABLESERVICE = "ResourceNotFound.UserDisableService"
+//  RESOURCENOTFOUND_USERNOTEXIST = "ResourceNotFound.UserNotExist"
+func (c *Client) StopLivePadStream(request *StopLivePadStreamRequest) (response *StopLivePadStreamResponse, err error) {
+    return c.StopLivePadStreamWithContext(context.Background(), request)
+}
+
+// StopLivePadStream
+// 使用该接口将直播流停止切入垫片。
+//
+// 可能返回的错误码:
+//  FAILEDOPERATION = "FailedOperation"
+//  FAILEDOPERATION_CALLOTHERSVRFAILED = "FailedOperation.CallOtherSvrFailed"
+//  INTERNALERROR = "InternalError"
+//  INTERNALERROR_CALLOTHERSVRERROR = "InternalError.CallOtherSvrError"
+//  INTERNALERROR_CONFIGNOTEXIST = "InternalError.ConfigNotExist"
+//  INTERNALERROR_GETBIZIDERROR = "InternalError.GetBizidError"
+//  INTERNALERROR_GETSTREAMINFOERROR = "InternalError.GetStreamInfoError"
+//  INTERNALERROR_GETUPSTREAMINFOERROR = "InternalError.GetUpstreamInfoError"
+//  INTERNALERROR_NOTPERMMITOPERAT = "InternalError.NotPermmitOperat"
+//  INTERNALERROR_STREAMSTATUSERROR = "InternalError.StreamStatusError"
+//  INTERNALERROR_UPDATEDATAERROR = "InternalError.UpdateDataError"
+//  INVALIDPARAMETER = "InvalidParameter"
+//  INVALIDPARAMETERVALUE = "InvalidParameterValue"
+//  MISSINGPARAMETER = "MissingParameter"
+//  RESOURCENOTFOUND_FORBIDSERVICE = "ResourceNotFound.ForbidService"
+//  RESOURCENOTFOUND_FREEZESERVICE = "ResourceNotFound.FreezeService"
+//  RESOURCENOTFOUND_STOPSERVICE = "ResourceNotFound.StopService"
+//  RESOURCENOTFOUND_USERDISABLESERVICE = "ResourceNotFound.UserDisableService"
+//  RESOURCENOTFOUND_USERNOTEXIST = "ResourceNotFound.UserNotExist"
+func (c *Client) StopLivePadStreamWithContext(ctx context.Context, request *StopLivePadStreamRequest) (response *StopLivePadStreamResponse, err error) {
+    if request == nil {
+        request = NewStopLivePadStreamRequest()
+    }
+    c.InitBaseRequest(&request.BaseRequest, "live", APIVersion, "StopLivePadStream")
+    
+    if c.GetCredential() == nil {
+        return nil, errors.New("StopLivePadStream require credential")
+    }
+
+    request.SetContext(ctx)
+    
+    response = NewStopLivePadStreamResponse()
     err = c.Send(request, response)
     return
 }
@@ -11578,6 +17290,7 @@ func (c *Client) StopLiveRecordWithContext(ctx context.Context, request *StopLiv
     if request == nil {
         request = NewStopLiveRecordRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "live", APIVersion, "StopLiveRecord")
     
     if c.GetCredential() == nil {
         return nil, errors.New("StopLiveRecord require credential")
@@ -11655,6 +17368,7 @@ func (c *Client) StopLiveStreamMonitorWithContext(ctx context.Context, request *
     if request == nil {
         request = NewStopLiveStreamMonitorRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "live", APIVersion, "StopLiveStreamMonitor")
     
     if c.GetCredential() == nil {
         return nil, errors.New("StopLiveStreamMonitor require credential")
@@ -11724,6 +17438,7 @@ func (c *Client) StopRecordTaskWithContext(ctx context.Context, request *StopRec
     if request == nil {
         request = NewStopRecordTaskRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "live", APIVersion, "StopRecordTask")
     
     if c.GetCredential() == nil {
         return nil, errors.New("StopRecordTask require credential")
@@ -11791,6 +17506,7 @@ func (c *Client) StopScreenshotTaskWithContext(ctx context.Context, request *Sto
     if request == nil {
         request = NewStopScreenshotTaskRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "live", APIVersion, "StopScreenshotTask")
     
     if c.GetCredential() == nil {
         return nil, errors.New("StopScreenshotTask require credential")
@@ -11850,6 +17566,7 @@ func (c *Client) SwitchBackupStreamWithContext(ctx context.Context, request *Swi
     if request == nil {
         request = NewSwitchBackupStreamRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "live", APIVersion, "SwitchBackupStream")
     
     if c.GetCredential() == nil {
         return nil, errors.New("SwitchBackupStream require credential")
@@ -11858,6 +17575,90 @@ func (c *Client) SwitchBackupStreamWithContext(ctx context.Context, request *Swi
     request.SetContext(ctx)
     
     response = NewSwitchBackupStreamResponse()
+    err = c.Send(request, response)
+    return
+}
+
+func NewSwitchCasterToEmergencyRequest() (request *SwitchCasterToEmergencyRequest) {
+    request = &SwitchCasterToEmergencyRequest{
+        BaseRequest: &tchttp.BaseRequest{},
+    }
+    
+    request.Init().WithApiInfo("live", APIVersion, "SwitchCasterToEmergency")
+    
+    
+    return
+}
+
+func NewSwitchCasterToEmergencyResponse() (response *SwitchCasterToEmergencyResponse) {
+    response = &SwitchCasterToEmergencyResponse{
+        BaseResponse: &tchttp.BaseResponse{},
+    } 
+    return
+
+}
+
+// SwitchCasterToEmergency
+// 该接口用来将导播台切换到备播状态。
+//
+// 该接口使用时，主监任务需处于运行状态。
+//
+// 可能返回的错误码:
+//  FAILEDOPERATION_CASTEREXPIRED = "FailedOperation.CasterExpired"
+//  FAILEDOPERATION_CASTERNOTFOUND = "FailedOperation.CasterNotFound"
+//  FAILEDOPERATION_CREATECASTERTASKFAILED = "FailedOperation.CreateCasterTaskFailed"
+//  FAILEDOPERATION_NOBACKUPINPUT = "FailedOperation.NoBackupInput"
+//  FAILEDOPERATION_NOLVBPUSHORPLAYDOMAIN = "FailedOperation.NoLVBPushOrPlayDomain"
+//  FAILEDOPERATION_NOPGMRUNNING = "FailedOperation.NoPgmRunning"
+//  FAILEDOPERATION_RESOURCENOTENOUGH = "FailedOperation.ResourceNotEnough"
+//  INTERNALERROR = "InternalError"
+//  INVALIDPARAMETER = "InvalidParameter"
+//  RESOURCENOTFOUND_FORBIDSERVICE = "ResourceNotFound.ForbidService"
+//  RESOURCENOTFOUND_FREEZESERVICE = "ResourceNotFound.FreezeService"
+//  RESOURCENOTFOUND_STOPSERVICE = "ResourceNotFound.StopService"
+//  RESOURCENOTFOUND_USERDISABLESERVICE = "ResourceNotFound.UserDisableService"
+//  RESOURCENOTFOUND_USERNOTEXIST = "ResourceNotFound.UserNotExist"
+//  UNKNOWNPARAMETER = "UnknownParameter"
+//  UNSUPPORTEDOPERATION = "UnsupportedOperation"
+func (c *Client) SwitchCasterToEmergency(request *SwitchCasterToEmergencyRequest) (response *SwitchCasterToEmergencyResponse, err error) {
+    return c.SwitchCasterToEmergencyWithContext(context.Background(), request)
+}
+
+// SwitchCasterToEmergency
+// 该接口用来将导播台切换到备播状态。
+//
+// 该接口使用时，主监任务需处于运行状态。
+//
+// 可能返回的错误码:
+//  FAILEDOPERATION_CASTEREXPIRED = "FailedOperation.CasterExpired"
+//  FAILEDOPERATION_CASTERNOTFOUND = "FailedOperation.CasterNotFound"
+//  FAILEDOPERATION_CREATECASTERTASKFAILED = "FailedOperation.CreateCasterTaskFailed"
+//  FAILEDOPERATION_NOBACKUPINPUT = "FailedOperation.NoBackupInput"
+//  FAILEDOPERATION_NOLVBPUSHORPLAYDOMAIN = "FailedOperation.NoLVBPushOrPlayDomain"
+//  FAILEDOPERATION_NOPGMRUNNING = "FailedOperation.NoPgmRunning"
+//  FAILEDOPERATION_RESOURCENOTENOUGH = "FailedOperation.ResourceNotEnough"
+//  INTERNALERROR = "InternalError"
+//  INVALIDPARAMETER = "InvalidParameter"
+//  RESOURCENOTFOUND_FORBIDSERVICE = "ResourceNotFound.ForbidService"
+//  RESOURCENOTFOUND_FREEZESERVICE = "ResourceNotFound.FreezeService"
+//  RESOURCENOTFOUND_STOPSERVICE = "ResourceNotFound.StopService"
+//  RESOURCENOTFOUND_USERDISABLESERVICE = "ResourceNotFound.UserDisableService"
+//  RESOURCENOTFOUND_USERNOTEXIST = "ResourceNotFound.UserNotExist"
+//  UNKNOWNPARAMETER = "UnknownParameter"
+//  UNSUPPORTEDOPERATION = "UnsupportedOperation"
+func (c *Client) SwitchCasterToEmergencyWithContext(ctx context.Context, request *SwitchCasterToEmergencyRequest) (response *SwitchCasterToEmergencyResponse, err error) {
+    if request == nil {
+        request = NewSwitchCasterToEmergencyRequest()
+    }
+    c.InitBaseRequest(&request.BaseRequest, "live", APIVersion, "SwitchCasterToEmergency")
+    
+    if c.GetCredential() == nil {
+        return nil, errors.New("SwitchCasterToEmergency require credential")
+    }
+
+    request.SetContext(ctx)
+    
+    response = NewSwitchCasterToEmergencyResponse()
     err = c.Send(request, response)
     return
 }
@@ -11913,6 +17714,7 @@ func (c *Client) UnBindLiveDomainCertWithContext(ctx context.Context, request *U
     if request == nil {
         request = NewUnBindLiveDomainCertRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "live", APIVersion, "UnBindLiveDomainCert")
     
     if c.GetCredential() == nil {
         return nil, errors.New("UnBindLiveDomainCert require credential")
@@ -11980,6 +17782,7 @@ func (c *Client) UpdateLiveWatermarkWithContext(ctx context.Context, request *Up
     if request == nil {
         request = NewUpdateLiveWatermarkRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "live", APIVersion, "UpdateLiveWatermark")
     
     if c.GetCredential() == nil {
         return nil, errors.New("UpdateLiveWatermark require credential")

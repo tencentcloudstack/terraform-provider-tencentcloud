@@ -130,24 +130,24 @@ The following arguments are supported:
 * `event_id` - (Optional, String) Event ID.
 * `limit_method` - (Optional, String) Frequency limiting method.
 * `logical_op` - (Optional, String) Logical operator of configuration mode, and/or.
-* `options_arr` - (Optional, String) CC matching conditions JSON serialized string, example: [{"key":"Method","args":["=R0VU"],"match":"0","encodeflag":true}] 
+* `options_arr` - (Optional, String) CC matching conditions JSON serialized string. Example: [{"key":"Method","args":["=R0VU"],"match":"0","encodeflag":true}]. 
 
-				Available key values: Method, Post, Referer, Cookie, User-Agent, CustomHeader, CaptchaRisk, CaptchaDeviceRisk, CaptchaScore
+Supported key types: URL, Method, Post, Referer, Cookie, User-Agent, CustomHeader, IPLocation, CaptchaRisk, CaptchaDeviceRisk, CaptchaScore. 
 
-				Available match values:
-				- When Key is Method: 0 (equal to), 3 (not equal to)
-				- When Key is Post: 0 (equal to), 3 (not equal to)
-				- When Key is Cookie: 0 (equal to), 2 (contains), 3 (not equal to), 7 (does not contain)
-				- When Key is Referer: 0 (equal to), 3 (not equal to), 1 (prefix match), 6 (suffix match), 2 (contains), 7 (does not contain), 12 (exists), 5 (does not exist), 4 (content is empty)
-				- When Key is Cookie: 0 (equal to), 3 (not equal to), 2 (contains), 7 (does not contain), 12 (exists), 5 (does not exist), 4 (content is empty)
-				- When Key is User-Agent: 0 (equal to), 3 (not equal to), 1 (prefix match), 6 (suffix match), 2 (contains), 7 (does not contain), 12 (exists), 5 (does not exist), 4 (content is empty)
-				- When Key is CustomHeader: 0 (equal to), 3 (not equal to), 2 (contains), 7 (does not contain), 12 (exists), 5 (does not exist), 4 (content is empty)
-				- When Key is IPLocation: 13 (belongs to), 14 (does not belong to)
-				- When Key is CaptchaRisk: 0 (equal to), 3 (not equal to), 13 (belongs to), 14 (does not belong to), 12 (exists), 5 (does not exist)
-				- When Key is CaptchaDeviceRisk: 0 (equal to), 3 (not equal to), 13 (belongs to), 14 (does not belong to), 12 (exists), 5 (does not exist)
-				- When Key is CaptchaScore: 15 (numerically equal to), 16 (numerically not equal to), 17 (numerically greater than), 18 (numerically less than), 19 (numerically greater than or equal to), 20 (numerically less than or equal to), 12 (exists), 5 (does not exist)
+Match operators by key type:
+- When Key is URL: 0 (equal), 3 (not equal), 1 (prefix), 6 (suffix), 2 (contains), 7 (not contains)
+- When Key is Method: 0 (equal), 3 (not equal)
+- When Key is Post: 0 (equal), 3 (not equal), 2 (contains), 7 (not contains)
+- When Key is Cookie: 0 (equal), 3 (not equal), 2 (contains), 7 (not contains)
+- When Key is Referer: 0 (equal), 3 (not equal), 1 (prefix), 6 (suffix), 2 (contains), 7 (not contains), 12 (exists), 5 (not exists), 4 (empty)
+- When Key is User-Agent: 0 (equal), 3 (not equal), 1 (prefix), 6 (suffix), 2 (contains), 7 (not contains), 12 (exists), 5 (not exists), 4 (empty)
+- When Key is CustomHeader: 0 (equal), 3 (not equal), 2 (contains), 7 (not contains), 4 (empty), 5 (not exists)
+- When Key is IPLocation: 13 (belongs to), 14 (not belongs to)
+- When Key is CaptchaRisk: 15 (numerically equal), 16 (numerically not equal), 13 (belongs to), 14 (not belongs to), 12 (exists), 5 (not exists)
+- When Key is CaptchaDeviceRisk: 13 (belongs to), 14 (not belongs to), 12 (exists), 5 (not exists)
+- When Key is CaptchaScore: 15 (numerically equal), 17 (numerically greater than), 18 (numerically less than), 19 (numerically greater than or equal), 20 (numerically less than or equal), 12 (exists), 5 (not exists)
 
-				The args parameter represents matching content and requires encodeflag to be set to true. When Key is Post, Cookie, or CustomHeader, use equals sign = to concatenate Key and Value separately, and encode both with Base64, similar to YWJj=YWJj. When Key is Referer or User-Agent, use equals sign = to concatenate Value, similar to =YWJj.
+Encoding rules: The args parameter requires encodeflag to be set to true. For Post, Cookie, or CustomHeader keys, Base64 encode both parameter name and value (remove trailing =), then concatenate with = sign (e.g., Base64(name)=Base64(value)). For Referer or User-Agent keys, Base64 encode the value (remove trailing =) and prefix with = sign (e.g., =Base64(value)).
 * `session_applied` - (Optional, Set: [`Int`]) Session ID that needs to be enabled for the rule.
 * `type` - (Optional, Int) Operate Type.
 

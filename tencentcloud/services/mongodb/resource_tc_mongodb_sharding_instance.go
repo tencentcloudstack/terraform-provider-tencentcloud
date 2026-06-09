@@ -7,6 +7,7 @@ import (
 	"log"
 	"reflect"
 	"strings"
+	"time"
 
 	tccommon "github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/common"
 	svctag "github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/services/tag"
@@ -36,9 +37,10 @@ func ResourceTencentCloudMongodbShardingInstance() *schema.Resource {
 			Description: "Number of nodes per shard, at least 3(one master and two slaves). Allow value[3, 5, 7].",
 		},
 		"availability_zone_list": {
-			Type:     schema.TypeList,
-			Optional: true,
-			Computed: true,
+			Type:             schema.TypeList,
+			Optional:         true,
+			Computed:         true,
+			DiffSuppressFunc: tccommon.StringListDiffSuppressIgnoreOrder("availability_zone_list"),
 			Elem: &schema.Schema{
 				Type: schema.TypeString,
 			},
@@ -426,12 +428,116 @@ func resourceMongodbShardingInstanceUpdate(d *schema.ResourceData, meta interfac
 	region := client.Region
 
 	d.Partial(true)
-	if d.HasChange("availability_zone_list") || d.HasChange("hidden_zone") {
-		return fmt.Errorf("setting of the field[availability_zone_list, hidden_zone] does not support update")
-	}
 	if d.HasChange("mongos_node_num") {
 		return fmt.Errorf("setting of the field[mongos_node_num] does not support update")
 	}
+	if d.HasChange("available_zone") || d.HasChange("availability_zone_list") || d.HasChange("hidden_zone") {
+		request := mongodb.NewModifyInstanceAzRequest()
+		response := mongodb.NewModifyInstanceAzResponse()
+		var (
+			primaryNodeZone      string
+			hiddenNodeZone       string
+			availabilityZoneList []string
+		)
+
+		if v, ok := d.GetOk("available_zone"); ok {
+			request.PrimaryNodeZone = helper.String(v.(string))
+			primaryNodeZone = v.(string)
+		}
+
+		if v, ok := d.GetOk("hidden_zone"); ok {
+			request.HiddenNodeZone = helper.String(v.(string))
+			hiddenNodeZone = v.(string)
+		}
+
+		if v, ok := d.GetOk("availability_zone_list"); ok {
+			for _, item := range v.([]interface{}) {
+				availabilityZoneList = append(availabilityZoneList, item.(string))
+			}
+
+			// Validate: primaryNodeZone and hiddenNodeZone must be in availabilityZoneList if not empty
+			zoneSet := make(map[string]bool, len(availabilityZoneList))
+			for _, z := range availabilityZoneList {
+				zoneSet[z] = true
+			}
+			if primaryNodeZone != "" && !zoneSet[primaryNodeZone] {
+				return fmt.Errorf("available_zone `%s` must be in availability_zone_list", primaryNodeZone)
+			}
+			if hiddenNodeZone != "" && !zoneSet[hiddenNodeZone] {
+				return fmt.Errorf("hidden_zone `%s` must be in availability_zone_list", hiddenNodeZone)
+			}
+
+			// Pick secondary node zone: last element in availabilityZoneList that differs from primaryNodeZone and hiddenNodeZone
+			var secondaryNodeZone string
+			for i := len(availabilityZoneList) - 1; i >= 0; i-- {
+				z := availabilityZoneList[i]
+				if z != primaryNodeZone && z != hiddenNodeZone {
+					secondaryNodeZone = z
+					break
+				}
+			}
+
+			request.SecondaryNodeZone = append(request.SecondaryNodeZone, &secondaryNodeZone)
+		}
+
+		request.InstanceId = &instanceId
+		request.InMaintenance = helper.IntUint64(0)
+		err := resource.Retry(tccommon.WriteRetryTimeout, func() *resource.RetryError {
+			result, e := meta.(tccommon.ProviderMeta).GetAPIV3Conn().UseMongodbClient().ModifyInstanceAz(request)
+			if e != nil {
+				return tccommon.RetryError(e)
+			} else {
+				log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), result.ToJsonString())
+			}
+
+			if result == nil || result.Response == nil || result.Response.DealId == nil {
+				return resource.NonRetryableError(fmt.Errorf("Modify instance az failed, Response is nil"))
+			}
+
+			response = result
+			return nil
+		})
+
+		if err != nil {
+			log.Printf("[CRITAL]%s update mongodb az failed, reason:%+v", logId, err)
+			return err
+		}
+
+		dealId := *response.Response.DealId
+
+		// wait for api sync
+		time.Sleep(10 * time.Second)
+		waitReq := mongodb.NewDescribeDBInstanceDealRequest()
+		waitReq.DealId = &dealId
+		err = resource.Retry(tccommon.ReadRetryTimeout*20, func() *resource.RetryError {
+			result, e := meta.(tccommon.ProviderMeta).GetAPIV3Conn().UseMongodbClient().DescribeDBInstanceDeal(waitReq)
+			if e != nil {
+				return tccommon.RetryError(e)
+			} else {
+				log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, waitReq.GetAction(), waitReq.ToJsonString(), result.ToJsonString())
+			}
+
+			if result == nil || result.Response == nil {
+				return resource.NonRetryableError(fmt.Errorf("Describe db instance deal failed, Response is nil"))
+			}
+
+			if result.Response.Status == nil {
+				return resource.NonRetryableError(fmt.Errorf("Describe db instance deal failed, Status is nil"))
+			}
+
+			if *result.Response.Status == 4 {
+				return nil
+			}
+
+			return resource.RetryableError(fmt.Errorf("mongodb az is still in running, status: %d", *result.Response.Status))
+		})
+
+		if err != nil {
+			log.Printf("[CRITAL]%s update mongodb az failed, reason:%+v", logId, err)
+			return err
+		}
+	}
+
 	if d.HasChange("mongos_cpu") && d.HasChange("mongos_memory") {
 		if v, ok := d.GetOk("mongos_memory"); ok {
 			dealId, err := mongodbService.ModifyMongosMemory(ctx, instanceId, v.(int))

@@ -72,6 +72,15 @@ func (me *TCRService) CreateTCRInstance(ctx context.Context, name string, instan
 		}
 		request.TagSpecification = &tagSpec
 	}
+	if v, ok := params["deletion_protection"]; ok {
+		request.DeletionProtection = helper.Bool(v.(bool))
+	}
+	if v, ok := params["enable_cos_maz"]; ok {
+		request.EnableCosMAZ = helper.Bool(v.(bool))
+	}
+	if v, ok := params["enable_cos_versioning"]; ok {
+		request.EnableCosVersioning = helper.Bool(v.(bool))
+	}
 
 	ratelimit.Check(request.GetAction())
 	response, err := me.client.UseTCRClient().CreateInstance(request)
@@ -329,7 +338,25 @@ func (me *TCRService) ModifyInstance(ctx context.Context, registryId, registryTy
 		}
 	}()
 	request.RegistryId = helper.String(registryId)
-	request.RegistryType = helper.String(registryType)
+	if registryType != "" {
+		request.RegistryType = helper.String(registryType)
+	}
+
+	ratelimit.Check(request.GetAction())
+	_, err := me.client.UseTCRClient().ModifyInstance(request)
+	return err
+}
+
+func (me *TCRService) ModifyInstanceDP(ctx context.Context, registryId string, deletionProtection bool) (errRet error) {
+	logId := tccommon.GetLogId(ctx)
+	request := tcr.NewModifyInstanceRequest()
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail,reason[%s]", logId, request.GetAction(), errRet.Error())
+		}
+	}()
+	request.RegistryId = helper.String(registryId)
+	request.DeletionProtection = helper.Bool(deletionProtection)
 	ratelimit.Check(request.GetAction())
 	_, err := me.client.UseTCRClient().ModifyInstance(request)
 	return err
@@ -401,15 +428,24 @@ func (me *TCRService) DescribeTCRNameSpaces(ctx context.Context, instanceId stri
 	for {
 		request.Offset = &offset
 		request.Limit = &limit
-		ratelimit.Check(request.GetAction())
-		response, err := me.client.UseTCRClient().DescribeNamespaces(request)
-		if err != nil {
-			ee, ok := err.(*sdkErrors.TencentCloudSDKError)
-			if !ok {
-				errRet = err
-				return
+
+		var response *tcr.DescribeNamespacesResponse
+		err := resource.Retry(tccommon.ReadRetryTimeout, func() *resource.RetryError {
+			ratelimit.Check(request.GetAction())
+			resp, e := me.client.UseTCRClient().DescribeNamespaces(request)
+			if e != nil {
+				// ResourceNotFound is a terminal condition, do not retry.
+				if ee, ok := e.(*sdkErrors.TencentCloudSDKError); ok && ee.Code == "ResourceNotFound" {
+					return resource.NonRetryableError(e)
+				}
+				return tccommon.RetryError(e)
 			}
-			if ee.Code == "ResourceNotFound" {
+			response = resp
+			return nil
+		})
+
+		if err != nil {
+			if ee, ok := err.(*sdkErrors.TencentCloudSDKError); ok && ee.Code == "ResourceNotFound" {
 				errRet = nil
 			} else {
 				errRet = err
@@ -418,6 +454,7 @@ func (me *TCRService) DescribeTCRNameSpaces(ctx context.Context, instanceId stri
 		}
 		if response == nil || response.Response == nil {
 			errRet = fmt.Errorf("TencentCloud SDK return nil response, %s", request.GetAction())
+			return
 		}
 		namespaceList = append(namespaceList, response.Response.NamespaceList...)
 		if len(response.Response.NamespaceList) < int(limit) {
@@ -986,8 +1023,16 @@ func (me *TCRService) DeleteReplicationInstance(ctx context.Context, request *tc
 		}
 	}()
 
-	ratelimit.Check(request.GetAction())
-	response, err := me.client.UseTCRClient().DeleteReplicationInstance(request)
+	var response *tcr.DeleteReplicationInstanceResponse
+	err := resource.Retry(tccommon.WriteRetryTimeout, func() *resource.RetryError {
+		ratelimit.Check(request.GetAction())
+		resp, e := me.client.UseTCRClient().DeleteReplicationInstance(request)
+		if e != nil {
+			return tccommon.RetryError(e, tcr.INTERNALERROR_ERRORCONFLICT)
+		}
+		response = resp
+		return nil
+	})
 	if err != nil {
 		errRet = err
 		return
@@ -1044,10 +1089,23 @@ func (me *TCRService) DescribeReplicationInstances(ctx context.Context, request 
 		}
 	}()
 
-	ratelimit.Check(request.GetAction())
-	response, err := me.client.UseTCRClient().DescribeReplicationInstances(request)
+	var response *tcr.DescribeReplicationInstancesResponse
+	err := resource.Retry(tccommon.ReadRetryTimeout, func() *resource.RetryError {
+		ratelimit.Check(request.GetAction())
+		resp, e := me.client.UseTCRClient().DescribeReplicationInstances(request)
+		if e != nil {
+			return tccommon.RetryError(e)
+		}
+		response = resp
+		return nil
+	})
 	if err != nil {
 		errRet = err
+		return
+	}
+
+	if response == nil || response.Response == nil {
+		errRet = fmt.Errorf("TencentCloud SDK return nil response, %s", request.GetAction())
 		return
 	}
 

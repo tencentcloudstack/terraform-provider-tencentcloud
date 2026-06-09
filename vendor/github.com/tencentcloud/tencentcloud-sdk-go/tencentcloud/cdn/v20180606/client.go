@@ -1,4 +1,4 @@
-// Copyright (c) 2017-2018 THL A29 Limited, a Tencent company. All Rights Reserved.
+// Copyright (c) 2017-2025 Tencent. All Rights Reserved.
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -152,6 +152,7 @@ func (c *Client) AddCLSTopicDomainsWithContext(ctx context.Context, request *Add
     if request == nil {
         request = NewAddCLSTopicDomainsRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "cdn", APIVersion, "AddCLSTopicDomains")
     
     if c.GetCredential() == nil {
         return nil, errors.New("AddCLSTopicDomains require credential")
@@ -202,6 +203,7 @@ func NewAddCdnDomainResponse() (response *AddCdnDomainResponse) {
 //  INVALIDPARAMETER_CDNCONFIGINVALIDHOST = "InvalidParameter.CdnConfigInvalidHost"
 //  INVALIDPARAMETER_CDNCONFIGINVALIDTAG = "InvalidParameter.CdnConfigInvalidTag"
 //  INVALIDPARAMETER_CDNCONFIGTAGREQUIRED = "InvalidParameter.CdnConfigTagRequired"
+//  INVALIDPARAMETER_CDNHOSTEXISTSINEDGEONE = "InvalidParameter.CdnHostExistsInEdgeOne"
 //  INVALIDPARAMETER_CDNHOSTINTERNALHOST = "InvalidParameter.CdnHostInternalHost"
 //  INVALIDPARAMETER_CDNHOSTISCOSDEFAULTACCESS = "InvalidParameter.CdnHostIsCosDefaultAccess"
 //  INVALIDPARAMETER_CDNHOSTTOOLONGHOST = "InvalidParameter.CdnHostTooLongHost"
@@ -218,6 +220,9 @@ func NewAddCdnDomainResponse() (response *AddCdnDomainResponse) {
 //  LIMITEXCEEDED_CDNCONFIGTOOMANYCACHERULES = "LimitExceeded.CdnConfigTooManyCacheRules"
 //  LIMITEXCEEDED_CDNHOSTOPTOOOFTEN = "LimitExceeded.CdnHostOpTooOften"
 //  LIMITEXCEEDED_CDNUSERTOOMANYHOSTS = "LimitExceeded.CdnUserTooManyHosts"
+//  OPERATIONDENIED_CDNHOSTHASDDOSRISK = "OperationDenied.CdnHostHasDDosRisk"
+//  OPERATIONDENIED_PRODUCTUPGRADED = "OperationDenied.ProductUpgraded"
+//  OPERATIONDENIED_USERMIGRATING = "OperationDenied.UserMigrating"
 //  RESOURCEINUSE_CDNCONFLICTHOSTEXISTS = "ResourceInUse.CdnConflictHostExists"
 //  RESOURCEINUSE_CDNHOSTEXISTS = "ResourceInUse.CdnHostExists"
 //  RESOURCEINUSE_CDNOPINPROGRESS = "ResourceInUse.CdnOpInProgress"
@@ -228,6 +233,7 @@ func NewAddCdnDomainResponse() (response *AddCdnDomainResponse) {
 //  RESOURCEUNAVAILABLE_CDNHOSTEXISTSINTCB = "ResourceUnavailable.CdnHostExistsInTcb"
 //  RESOURCEUNAVAILABLE_CDNHOSTISMALICIOUS = "ResourceUnavailable.CdnHostIsMalicious"
 //  RESOURCEUNAVAILABLE_CDNHOSTNOICP = "ResourceUnavailable.CdnHostNoIcp"
+//  RESOURCEUNAVAILABLE_CHECKUSERHIGHRISK = "ResourceUnavailable.CheckUserHighRisk"
 //  RESOURCEUNAVAILABLE_HOSTEXISTINVOD = "ResourceUnavailable.HostExistInVod"
 //  UNAUTHORIZEDOPERATION_CDNCAMUNAUTHORIZED = "UnauthorizedOperation.CdnCamUnauthorized"
 //  UNAUTHORIZEDOPERATION_CDNDOMAINRECORDNOTVERIFIED = "UnauthorizedOperation.CdnDomainRecordNotVerified"
@@ -268,6 +274,7 @@ func (c *Client) AddCdnDomain(request *AddCdnDomainRequest) (response *AddCdnDom
 //  INVALIDPARAMETER_CDNCONFIGINVALIDHOST = "InvalidParameter.CdnConfigInvalidHost"
 //  INVALIDPARAMETER_CDNCONFIGINVALIDTAG = "InvalidParameter.CdnConfigInvalidTag"
 //  INVALIDPARAMETER_CDNCONFIGTAGREQUIRED = "InvalidParameter.CdnConfigTagRequired"
+//  INVALIDPARAMETER_CDNHOSTEXISTSINEDGEONE = "InvalidParameter.CdnHostExistsInEdgeOne"
 //  INVALIDPARAMETER_CDNHOSTINTERNALHOST = "InvalidParameter.CdnHostInternalHost"
 //  INVALIDPARAMETER_CDNHOSTISCOSDEFAULTACCESS = "InvalidParameter.CdnHostIsCosDefaultAccess"
 //  INVALIDPARAMETER_CDNHOSTTOOLONGHOST = "InvalidParameter.CdnHostTooLongHost"
@@ -284,6 +291,9 @@ func (c *Client) AddCdnDomain(request *AddCdnDomainRequest) (response *AddCdnDom
 //  LIMITEXCEEDED_CDNCONFIGTOOMANYCACHERULES = "LimitExceeded.CdnConfigTooManyCacheRules"
 //  LIMITEXCEEDED_CDNHOSTOPTOOOFTEN = "LimitExceeded.CdnHostOpTooOften"
 //  LIMITEXCEEDED_CDNUSERTOOMANYHOSTS = "LimitExceeded.CdnUserTooManyHosts"
+//  OPERATIONDENIED_CDNHOSTHASDDOSRISK = "OperationDenied.CdnHostHasDDosRisk"
+//  OPERATIONDENIED_PRODUCTUPGRADED = "OperationDenied.ProductUpgraded"
+//  OPERATIONDENIED_USERMIGRATING = "OperationDenied.UserMigrating"
 //  RESOURCEINUSE_CDNCONFLICTHOSTEXISTS = "ResourceInUse.CdnConflictHostExists"
 //  RESOURCEINUSE_CDNHOSTEXISTS = "ResourceInUse.CdnHostExists"
 //  RESOURCEINUSE_CDNOPINPROGRESS = "ResourceInUse.CdnOpInProgress"
@@ -294,6 +304,7 @@ func (c *Client) AddCdnDomain(request *AddCdnDomainRequest) (response *AddCdnDom
 //  RESOURCEUNAVAILABLE_CDNHOSTEXISTSINTCB = "ResourceUnavailable.CdnHostExistsInTcb"
 //  RESOURCEUNAVAILABLE_CDNHOSTISMALICIOUS = "ResourceUnavailable.CdnHostIsMalicious"
 //  RESOURCEUNAVAILABLE_CDNHOSTNOICP = "ResourceUnavailable.CdnHostNoIcp"
+//  RESOURCEUNAVAILABLE_CHECKUSERHIGHRISK = "ResourceUnavailable.CheckUserHighRisk"
 //  RESOURCEUNAVAILABLE_HOSTEXISTINVOD = "ResourceUnavailable.HostExistInVod"
 //  UNAUTHORIZEDOPERATION_CDNCAMUNAUTHORIZED = "UnauthorizedOperation.CdnCamUnauthorized"
 //  UNAUTHORIZEDOPERATION_CDNDOMAINRECORDNOTVERIFIED = "UnauthorizedOperation.CdnDomainRecordNotVerified"
@@ -315,6 +326,7 @@ func (c *Client) AddCdnDomainWithContext(ctx context.Context, request *AddCdnDom
     if request == nil {
         request = NewAddCdnDomainRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "cdn", APIVersion, "AddCdnDomain")
     
     if c.GetCredential() == nil {
         return nil, errors.New("AddCdnDomain require credential")
@@ -432,6 +444,7 @@ func (c *Client) CreateClsLogTopicWithContext(ctx context.Context, request *Crea
     if request == nil {
         request = NewCreateClsLogTopicRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "cdn", APIVersion, "CreateClsLogTopic")
     
     if c.GetCredential() == nil {
         return nil, errors.New("CreateClsLogTopic require credential")
@@ -440,87 +453,6 @@ func (c *Client) CreateClsLogTopicWithContext(ctx context.Context, request *Crea
     request.SetContext(ctx)
     
     response = NewCreateClsLogTopicResponse()
-    err = c.Send(request, response)
-    return
-}
-
-func NewCreateDiagnoseUrlRequest() (request *CreateDiagnoseUrlRequest) {
-    request = &CreateDiagnoseUrlRequest{
-        BaseRequest: &tchttp.BaseRequest{},
-    }
-    
-    request.Init().WithApiInfo("cdn", APIVersion, "CreateDiagnoseUrl")
-    
-    
-    return
-}
-
-func NewCreateDiagnoseUrlResponse() (response *CreateDiagnoseUrlResponse) {
-    response = &CreateDiagnoseUrlResponse{
-        BaseResponse: &tchttp.BaseResponse{},
-    } 
-    return
-
-}
-
-// CreateDiagnoseUrl
-// ### <font color=red>**该接口已废弃** </font><br>
-//
-// CreateDiagnoseUrl 用于添加域名诊断任务URL。
-//
-// 可能返回的错误码:
-//  FAILEDOPERATION_CDNCONFIGERROR = "FailedOperation.CdnConfigError"
-//  INTERNALERROR_CDNDBERROR = "InternalError.CdnDbError"
-//  INTERNALERROR_CDNQUERYPARAMERROR = "InternalError.CdnQueryParamError"
-//  INTERNALERROR_CDNQUERYSYSTEMERROR = "InternalError.CdnQuerySystemError"
-//  INTERNALERROR_CDNSYSTEMERROR = "InternalError.CdnSystemError"
-//  INVALIDPARAMETER_CDNHOSTINVALIDPARAM = "InvalidParameter.CdnHostInvalidParam"
-//  INVALIDPARAMETER_CDNHOSTINVALIDSTATUS = "InvalidParameter.CdnHostInvalidStatus"
-//  INVALIDPARAMETER_CDNPARAMERROR = "InvalidParameter.CdnParamError"
-//  RESOURCEINUSE_CDNOPINPROGRESS = "ResourceInUse.CdnOpInProgress"
-//  RESOURCENOTFOUND_CDNHOSTNOTEXISTS = "ResourceNotFound.CdnHostNotExists"
-//  RESOURCENOTFOUND_CDNUSERNOTEXISTS = "ResourceNotFound.CdnUserNotExists"
-//  RESOURCEUNAVAILABLE_CDNHOSTISLOCKED = "ResourceUnavailable.CdnHostIsLocked"
-//  UNAUTHORIZEDOPERATION_CDNCAMUNAUTHORIZED = "UnauthorizedOperation.CdnCamUnauthorized"
-//  UNAUTHORIZEDOPERATION_CDNHOSTUNAUTHORIZED = "UnauthorizedOperation.CdnHostUnauthorized"
-//  UNAUTHORIZEDOPERATION_OPERATIONTOOOFTEN = "UnauthorizedOperation.OperationTooOften"
-func (c *Client) CreateDiagnoseUrl(request *CreateDiagnoseUrlRequest) (response *CreateDiagnoseUrlResponse, err error) {
-    return c.CreateDiagnoseUrlWithContext(context.Background(), request)
-}
-
-// CreateDiagnoseUrl
-// ### <font color=red>**该接口已废弃** </font><br>
-//
-// CreateDiagnoseUrl 用于添加域名诊断任务URL。
-//
-// 可能返回的错误码:
-//  FAILEDOPERATION_CDNCONFIGERROR = "FailedOperation.CdnConfigError"
-//  INTERNALERROR_CDNDBERROR = "InternalError.CdnDbError"
-//  INTERNALERROR_CDNQUERYPARAMERROR = "InternalError.CdnQueryParamError"
-//  INTERNALERROR_CDNQUERYSYSTEMERROR = "InternalError.CdnQuerySystemError"
-//  INTERNALERROR_CDNSYSTEMERROR = "InternalError.CdnSystemError"
-//  INVALIDPARAMETER_CDNHOSTINVALIDPARAM = "InvalidParameter.CdnHostInvalidParam"
-//  INVALIDPARAMETER_CDNHOSTINVALIDSTATUS = "InvalidParameter.CdnHostInvalidStatus"
-//  INVALIDPARAMETER_CDNPARAMERROR = "InvalidParameter.CdnParamError"
-//  RESOURCEINUSE_CDNOPINPROGRESS = "ResourceInUse.CdnOpInProgress"
-//  RESOURCENOTFOUND_CDNHOSTNOTEXISTS = "ResourceNotFound.CdnHostNotExists"
-//  RESOURCENOTFOUND_CDNUSERNOTEXISTS = "ResourceNotFound.CdnUserNotExists"
-//  RESOURCEUNAVAILABLE_CDNHOSTISLOCKED = "ResourceUnavailable.CdnHostIsLocked"
-//  UNAUTHORIZEDOPERATION_CDNCAMUNAUTHORIZED = "UnauthorizedOperation.CdnCamUnauthorized"
-//  UNAUTHORIZEDOPERATION_CDNHOSTUNAUTHORIZED = "UnauthorizedOperation.CdnHostUnauthorized"
-//  UNAUTHORIZEDOPERATION_OPERATIONTOOOFTEN = "UnauthorizedOperation.OperationTooOften"
-func (c *Client) CreateDiagnoseUrlWithContext(ctx context.Context, request *CreateDiagnoseUrlRequest) (response *CreateDiagnoseUrlResponse, err error) {
-    if request == nil {
-        request = NewCreateDiagnoseUrlRequest()
-    }
-    
-    if c.GetCredential() == nil {
-        return nil, errors.New("CreateDiagnoseUrl require credential")
-    }
-
-    request.SetContext(ctx)
-    
-    response = NewCreateDiagnoseUrlResponse()
     err = c.Send(request, response)
     return
 }
@@ -580,6 +512,7 @@ func (c *Client) CreateEdgePackTaskWithContext(ctx context.Context, request *Cre
     if request == nil {
         request = NewCreateEdgePackTaskRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "cdn", APIVersion, "CreateEdgePackTask")
     
     if c.GetCredential() == nil {
         return nil, errors.New("CreateEdgePackTask require credential")
@@ -588,253 +521,6 @@ func (c *Client) CreateEdgePackTaskWithContext(ctx context.Context, request *Cre
     request.SetContext(ctx)
     
     response = NewCreateEdgePackTaskResponse()
-    err = c.Send(request, response)
-    return
-}
-
-func NewCreateScdnDomainRequest() (request *CreateScdnDomainRequest) {
-    request = &CreateScdnDomainRequest{
-        BaseRequest: &tchttp.BaseRequest{},
-    }
-    
-    request.Init().WithApiInfo("cdn", APIVersion, "CreateScdnDomain")
-    
-    
-    return
-}
-
-func NewCreateScdnDomainResponse() (response *CreateScdnDomainResponse) {
-    response = &CreateScdnDomainResponse{
-        BaseResponse: &tchttp.BaseResponse{},
-    } 
-    return
-
-}
-
-// CreateScdnDomain
-// CreateScdnDomain 用于创建 SCDN 加速域名
-//
-// 可能返回的错误码:
-//  FAILEDOPERATION_CDNCONFIGERROR = "FailedOperation.CdnConfigError"
-//  INTERNALERROR_CDNCONFIGERROR = "InternalError.CdnConfigError"
-//  INTERNALERROR_CDNDBERROR = "InternalError.CdnDbError"
-//  INTERNALERROR_CDNSYSTEMERROR = "InternalError.CdnSystemError"
-//  INTERNALERROR_ROUTEERROR = "InternalError.RouteError"
-//  INTERNALERROR_SCDNUSERNOPACKAGE = "InternalError.ScdnUserNoPackage"
-//  INVALIDPARAMETER_CDNSTATUSINVALIDDOMAIN = "InvalidParameter.CDNStatusInvalidDomain"
-//  INVALIDPARAMETER_CDNHOSTHASSPECIALCONFIG = "InvalidParameter.CdnHostHasSpecialConfig"
-//  INVALIDPARAMETER_CDNHOSTINTERNALHOST = "InvalidParameter.CdnHostInternalHost"
-//  INVALIDPARAMETER_CDNHOSTINVALIDSTATUS = "InvalidParameter.CdnHostInvalidStatus"
-//  INVALIDPARAMETER_CDNINTERFACEERROR = "InvalidParameter.CdnInterfaceError"
-//  INVALIDPARAMETER_CDNPARAMERROR = "InvalidParameter.CdnParamError"
-//  LIMITEXCEEDED_CDNHOSTOPTOOOFTEN = "LimitExceeded.CdnHostOpTooOften"
-//  LIMITEXCEEDED_CDNUSERTOOMANYHOSTS = "LimitExceeded.CdnUserTooManyHosts"
-//  RESOURCEINUSE_CDNHOSTEXISTS = "ResourceInUse.CdnHostExists"
-//  RESOURCEINUSE_CDNOPINPROGRESS = "ResourceInUse.CdnOpInProgress"
-//  RESOURCENOTFOUND_CDNHOSTNOTEXISTS = "ResourceNotFound.CdnHostNotExists"
-//  RESOURCENOTFOUND_CDNUSERNOTEXISTS = "ResourceNotFound.CdnUserNotExists"
-//  RESOURCEUNAVAILABLE_CDNHOSTISLOCKED = "ResourceUnavailable.CdnHostIsLocked"
-//  RESOURCEUNAVAILABLE_SCDNUSERNOPACKAGE = "ResourceUnavailable.ScdnUserNoPackage"
-//  RESOURCEUNAVAILABLE_SCDNUSERSUSPEND = "ResourceUnavailable.ScdnUserSuspend"
-//  UNAUTHORIZEDOPERATION_CDNCAMUNAUTHORIZED = "UnauthorizedOperation.CdnCamUnauthorized"
-//  UNAUTHORIZEDOPERATION_CDNHOSTUNAUTHORIZED = "UnauthorizedOperation.CdnHostUnauthorized"
-//  UNAUTHORIZEDOPERATION_CDNUSERAUTHFAIL = "UnauthorizedOperation.CdnUserAuthFail"
-//  UNAUTHORIZEDOPERATION_CDNUSERISSUSPENDED = "UnauthorizedOperation.CdnUserIsSuspended"
-//  UNAUTHORIZEDOPERATION_CDNUSERNOWHITELIST = "UnauthorizedOperation.CdnUserNoWhitelist"
-//  UNAUTHORIZEDOPERATION_OPERATIONTOOOFTEN = "UnauthorizedOperation.OperationTooOften"
-func (c *Client) CreateScdnDomain(request *CreateScdnDomainRequest) (response *CreateScdnDomainResponse, err error) {
-    return c.CreateScdnDomainWithContext(context.Background(), request)
-}
-
-// CreateScdnDomain
-// CreateScdnDomain 用于创建 SCDN 加速域名
-//
-// 可能返回的错误码:
-//  FAILEDOPERATION_CDNCONFIGERROR = "FailedOperation.CdnConfigError"
-//  INTERNALERROR_CDNCONFIGERROR = "InternalError.CdnConfigError"
-//  INTERNALERROR_CDNDBERROR = "InternalError.CdnDbError"
-//  INTERNALERROR_CDNSYSTEMERROR = "InternalError.CdnSystemError"
-//  INTERNALERROR_ROUTEERROR = "InternalError.RouteError"
-//  INTERNALERROR_SCDNUSERNOPACKAGE = "InternalError.ScdnUserNoPackage"
-//  INVALIDPARAMETER_CDNSTATUSINVALIDDOMAIN = "InvalidParameter.CDNStatusInvalidDomain"
-//  INVALIDPARAMETER_CDNHOSTHASSPECIALCONFIG = "InvalidParameter.CdnHostHasSpecialConfig"
-//  INVALIDPARAMETER_CDNHOSTINTERNALHOST = "InvalidParameter.CdnHostInternalHost"
-//  INVALIDPARAMETER_CDNHOSTINVALIDSTATUS = "InvalidParameter.CdnHostInvalidStatus"
-//  INVALIDPARAMETER_CDNINTERFACEERROR = "InvalidParameter.CdnInterfaceError"
-//  INVALIDPARAMETER_CDNPARAMERROR = "InvalidParameter.CdnParamError"
-//  LIMITEXCEEDED_CDNHOSTOPTOOOFTEN = "LimitExceeded.CdnHostOpTooOften"
-//  LIMITEXCEEDED_CDNUSERTOOMANYHOSTS = "LimitExceeded.CdnUserTooManyHosts"
-//  RESOURCEINUSE_CDNHOSTEXISTS = "ResourceInUse.CdnHostExists"
-//  RESOURCEINUSE_CDNOPINPROGRESS = "ResourceInUse.CdnOpInProgress"
-//  RESOURCENOTFOUND_CDNHOSTNOTEXISTS = "ResourceNotFound.CdnHostNotExists"
-//  RESOURCENOTFOUND_CDNUSERNOTEXISTS = "ResourceNotFound.CdnUserNotExists"
-//  RESOURCEUNAVAILABLE_CDNHOSTISLOCKED = "ResourceUnavailable.CdnHostIsLocked"
-//  RESOURCEUNAVAILABLE_SCDNUSERNOPACKAGE = "ResourceUnavailable.ScdnUserNoPackage"
-//  RESOURCEUNAVAILABLE_SCDNUSERSUSPEND = "ResourceUnavailable.ScdnUserSuspend"
-//  UNAUTHORIZEDOPERATION_CDNCAMUNAUTHORIZED = "UnauthorizedOperation.CdnCamUnauthorized"
-//  UNAUTHORIZEDOPERATION_CDNHOSTUNAUTHORIZED = "UnauthorizedOperation.CdnHostUnauthorized"
-//  UNAUTHORIZEDOPERATION_CDNUSERAUTHFAIL = "UnauthorizedOperation.CdnUserAuthFail"
-//  UNAUTHORIZEDOPERATION_CDNUSERISSUSPENDED = "UnauthorizedOperation.CdnUserIsSuspended"
-//  UNAUTHORIZEDOPERATION_CDNUSERNOWHITELIST = "UnauthorizedOperation.CdnUserNoWhitelist"
-//  UNAUTHORIZEDOPERATION_OPERATIONTOOOFTEN = "UnauthorizedOperation.OperationTooOften"
-func (c *Client) CreateScdnDomainWithContext(ctx context.Context, request *CreateScdnDomainRequest) (response *CreateScdnDomainResponse, err error) {
-    if request == nil {
-        request = NewCreateScdnDomainRequest()
-    }
-    
-    if c.GetCredential() == nil {
-        return nil, errors.New("CreateScdnDomain require credential")
-    }
-
-    request.SetContext(ctx)
-    
-    response = NewCreateScdnDomainResponse()
-    err = c.Send(request, response)
-    return
-}
-
-func NewCreateScdnFailedLogTaskRequest() (request *CreateScdnFailedLogTaskRequest) {
-    request = &CreateScdnFailedLogTaskRequest{
-        BaseRequest: &tchttp.BaseRequest{},
-    }
-    
-    request.Init().WithApiInfo("cdn", APIVersion, "CreateScdnFailedLogTask")
-    
-    
-    return
-}
-
-func NewCreateScdnFailedLogTaskResponse() (response *CreateScdnFailedLogTaskResponse) {
-    response = &CreateScdnFailedLogTaskResponse{
-        BaseResponse: &tchttp.BaseResponse{},
-    } 
-    return
-
-}
-
-// CreateScdnFailedLogTask
-// CreateScdnFailedLogTask 用于重试创建失败的事件日志任务
-//
-// 可能返回的错误码:
-//  INTERNALERROR_CDNDBERROR = "InternalError.CdnDbError"
-//  INTERNALERROR_CDNSYSTEMERROR = "InternalError.CdnSystemError"
-//  INVALIDPARAMETER_CDNSTATUSINVALIDDOMAIN = "InvalidParameter.CDNStatusInvalidDomain"
-//  INVALIDPARAMETER_CDNPARAMERROR = "InvalidParameter.CdnParamError"
-//  INVALIDPARAMETER_SCDNLOGTASKEXPIRED = "InvalidParameter.ScdnLogTaskExpired"
-//  INVALIDPARAMETER_SCDNLOGTASKNOTFOUNDORNOTFAIL = "InvalidParameter.ScdnLogTaskNotFoundOrNotFail"
-//  INVALIDPARAMETER_SCDNLOGTASKTIMERANGEINVALID = "InvalidParameter.ScdnLogTaskTimeRangeInvalid"
-//  LIMITEXCEEDED_SCDNLOGTASKEXCEEDDAYLIMIT = "LimitExceeded.ScdnLogTaskExceedDayLimit"
-//  RESOURCENOTFOUND_CDNHOSTNOTEXISTS = "ResourceNotFound.CdnHostNotExists"
-//  RESOURCENOTFOUND_CDNUSERNOTEXISTS = "ResourceNotFound.CdnUserNotExists"
-//  UNAUTHORIZEDOPERATION_CDNCAMUNAUTHORIZED = "UnauthorizedOperation.CdnCamUnauthorized"
-func (c *Client) CreateScdnFailedLogTask(request *CreateScdnFailedLogTaskRequest) (response *CreateScdnFailedLogTaskResponse, err error) {
-    return c.CreateScdnFailedLogTaskWithContext(context.Background(), request)
-}
-
-// CreateScdnFailedLogTask
-// CreateScdnFailedLogTask 用于重试创建失败的事件日志任务
-//
-// 可能返回的错误码:
-//  INTERNALERROR_CDNDBERROR = "InternalError.CdnDbError"
-//  INTERNALERROR_CDNSYSTEMERROR = "InternalError.CdnSystemError"
-//  INVALIDPARAMETER_CDNSTATUSINVALIDDOMAIN = "InvalidParameter.CDNStatusInvalidDomain"
-//  INVALIDPARAMETER_CDNPARAMERROR = "InvalidParameter.CdnParamError"
-//  INVALIDPARAMETER_SCDNLOGTASKEXPIRED = "InvalidParameter.ScdnLogTaskExpired"
-//  INVALIDPARAMETER_SCDNLOGTASKNOTFOUNDORNOTFAIL = "InvalidParameter.ScdnLogTaskNotFoundOrNotFail"
-//  INVALIDPARAMETER_SCDNLOGTASKTIMERANGEINVALID = "InvalidParameter.ScdnLogTaskTimeRangeInvalid"
-//  LIMITEXCEEDED_SCDNLOGTASKEXCEEDDAYLIMIT = "LimitExceeded.ScdnLogTaskExceedDayLimit"
-//  RESOURCENOTFOUND_CDNHOSTNOTEXISTS = "ResourceNotFound.CdnHostNotExists"
-//  RESOURCENOTFOUND_CDNUSERNOTEXISTS = "ResourceNotFound.CdnUserNotExists"
-//  UNAUTHORIZEDOPERATION_CDNCAMUNAUTHORIZED = "UnauthorizedOperation.CdnCamUnauthorized"
-func (c *Client) CreateScdnFailedLogTaskWithContext(ctx context.Context, request *CreateScdnFailedLogTaskRequest) (response *CreateScdnFailedLogTaskResponse, err error) {
-    if request == nil {
-        request = NewCreateScdnFailedLogTaskRequest()
-    }
-    
-    if c.GetCredential() == nil {
-        return nil, errors.New("CreateScdnFailedLogTask require credential")
-    }
-
-    request.SetContext(ctx)
-    
-    response = NewCreateScdnFailedLogTaskResponse()
-    err = c.Send(request, response)
-    return
-}
-
-func NewCreateScdnLogTaskRequest() (request *CreateScdnLogTaskRequest) {
-    request = &CreateScdnLogTaskRequest{
-        BaseRequest: &tchttp.BaseRequest{},
-    }
-    
-    request.Init().WithApiInfo("cdn", APIVersion, "CreateScdnLogTask")
-    
-    
-    return
-}
-
-func NewCreateScdnLogTaskResponse() (response *CreateScdnLogTaskResponse) {
-    response = &CreateScdnLogTaskResponse{
-        BaseResponse: &tchttp.BaseResponse{},
-    } 
-    return
-
-}
-
-// CreateScdnLogTask
-// CreateScdnLogTask 用于创建事件日志任务
-//
-// 可能返回的错误码:
-//  INTERNALERROR_CDNCONFIGERROR = "InternalError.CdnConfigError"
-//  INTERNALERROR_CDNDBERROR = "InternalError.CdnDbError"
-//  INTERNALERROR_CDNSYSTEMERROR = "InternalError.CdnSystemError"
-//  INTERNALERROR_PROXYSERVER = "InternalError.ProxyServer"
-//  INVALIDPARAMETER_CDNSTATUSINVALIDDOMAIN = "InvalidParameter.CDNStatusInvalidDomain"
-//  INVALIDPARAMETER_CDNPARAMERROR = "InvalidParameter.CdnParamError"
-//  INVALIDPARAMETER_CDNSTATINVALIDDATE = "InvalidParameter.CdnStatInvalidDate"
-//  INVALIDPARAMETER_SCDNLOGTASKEXPIRED = "InvalidParameter.ScdnLogTaskExpired"
-//  INVALIDPARAMETER_SCDNLOGTASKNOTFOUNDORNOTFAIL = "InvalidParameter.ScdnLogTaskNotFoundOrNotFail"
-//  INVALIDPARAMETER_SCDNLOGTASKTIMERANGEINVALID = "InvalidParameter.ScdnLogTaskTimeRangeInvalid"
-//  LIMITEXCEEDED_SCDNLOGTASKEXCEEDDAYLIMIT = "LimitExceeded.ScdnLogTaskExceedDayLimit"
-//  RESOURCENOTFOUND_CDNHOSTNOTEXISTS = "ResourceNotFound.CdnHostNotExists"
-//  RESOURCENOTFOUND_CDNUSERNOTEXISTS = "ResourceNotFound.CdnUserNotExists"
-//  UNAUTHORIZEDOPERATION_CDNACCOUNTUNAUTHORIZED = "UnauthorizedOperation.CdnAccountUnauthorized"
-//  UNAUTHORIZEDOPERATION_CDNCAMUNAUTHORIZED = "UnauthorizedOperation.CdnCamUnauthorized"
-func (c *Client) CreateScdnLogTask(request *CreateScdnLogTaskRequest) (response *CreateScdnLogTaskResponse, err error) {
-    return c.CreateScdnLogTaskWithContext(context.Background(), request)
-}
-
-// CreateScdnLogTask
-// CreateScdnLogTask 用于创建事件日志任务
-//
-// 可能返回的错误码:
-//  INTERNALERROR_CDNCONFIGERROR = "InternalError.CdnConfigError"
-//  INTERNALERROR_CDNDBERROR = "InternalError.CdnDbError"
-//  INTERNALERROR_CDNSYSTEMERROR = "InternalError.CdnSystemError"
-//  INTERNALERROR_PROXYSERVER = "InternalError.ProxyServer"
-//  INVALIDPARAMETER_CDNSTATUSINVALIDDOMAIN = "InvalidParameter.CDNStatusInvalidDomain"
-//  INVALIDPARAMETER_CDNPARAMERROR = "InvalidParameter.CdnParamError"
-//  INVALIDPARAMETER_CDNSTATINVALIDDATE = "InvalidParameter.CdnStatInvalidDate"
-//  INVALIDPARAMETER_SCDNLOGTASKEXPIRED = "InvalidParameter.ScdnLogTaskExpired"
-//  INVALIDPARAMETER_SCDNLOGTASKNOTFOUNDORNOTFAIL = "InvalidParameter.ScdnLogTaskNotFoundOrNotFail"
-//  INVALIDPARAMETER_SCDNLOGTASKTIMERANGEINVALID = "InvalidParameter.ScdnLogTaskTimeRangeInvalid"
-//  LIMITEXCEEDED_SCDNLOGTASKEXCEEDDAYLIMIT = "LimitExceeded.ScdnLogTaskExceedDayLimit"
-//  RESOURCENOTFOUND_CDNHOSTNOTEXISTS = "ResourceNotFound.CdnHostNotExists"
-//  RESOURCENOTFOUND_CDNUSERNOTEXISTS = "ResourceNotFound.CdnUserNotExists"
-//  UNAUTHORIZEDOPERATION_CDNACCOUNTUNAUTHORIZED = "UnauthorizedOperation.CdnAccountUnauthorized"
-//  UNAUTHORIZEDOPERATION_CDNCAMUNAUTHORIZED = "UnauthorizedOperation.CdnCamUnauthorized"
-func (c *Client) CreateScdnLogTaskWithContext(ctx context.Context, request *CreateScdnLogTaskRequest) (response *CreateScdnLogTaskResponse, err error) {
-    if request == nil {
-        request = NewCreateScdnLogTaskRequest()
-    }
-    
-    if c.GetCredential() == nil {
-        return nil, errors.New("CreateScdnLogTask require credential")
-    }
-
-    request.SetContext(ctx)
-    
-    response = NewCreateScdnLogTaskResponse()
     err = c.Send(request, response)
     return
 }
@@ -908,6 +594,7 @@ func (c *Client) CreateVerifyRecordWithContext(ctx context.Context, request *Cre
     if request == nil {
         request = NewCreateVerifyRecordRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "cdn", APIVersion, "CreateVerifyRecord")
     
     if c.GetCredential() == nil {
         return nil, errors.New("CreateVerifyRecord require credential")
@@ -997,6 +684,7 @@ func (c *Client) DeleteCdnDomainWithContext(ctx context.Context, request *Delete
     if request == nil {
         request = NewDeleteCdnDomainRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "cdn", APIVersion, "DeleteCdnDomain")
     
     if c.GetCredential() == nil {
         return nil, errors.New("DeleteCdnDomain require credential")
@@ -1100,6 +788,7 @@ func (c *Client) DeleteClsLogTopicWithContext(ctx context.Context, request *Dele
     if request == nil {
         request = NewDeleteClsLogTopicRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "cdn", APIVersion, "DeleteClsLogTopic")
     
     if c.GetCredential() == nil {
         return nil, errors.New("DeleteClsLogTopic require credential")
@@ -1108,85 +797,6 @@ func (c *Client) DeleteClsLogTopicWithContext(ctx context.Context, request *Dele
     request.SetContext(ctx)
     
     response = NewDeleteClsLogTopicResponse()
-    err = c.Send(request, response)
-    return
-}
-
-func NewDeleteScdnDomainRequest() (request *DeleteScdnDomainRequest) {
-    request = &DeleteScdnDomainRequest{
-        BaseRequest: &tchttp.BaseRequest{},
-    }
-    
-    request.Init().WithApiInfo("cdn", APIVersion, "DeleteScdnDomain")
-    
-    
-    return
-}
-
-func NewDeleteScdnDomainResponse() (response *DeleteScdnDomainResponse) {
-    response = &DeleteScdnDomainResponse{
-        BaseResponse: &tchttp.BaseResponse{},
-    } 
-    return
-
-}
-
-// DeleteScdnDomain
-// 删除SCDN域名
-//
-// 可能返回的错误码:
-//  FAILEDOPERATION_CDNCONFIGERROR = "FailedOperation.CdnConfigError"
-//  INTERNALERROR_CDNCONFIGERROR = "InternalError.CdnConfigError"
-//  INTERNALERROR_CDNDBERROR = "InternalError.CdnDbError"
-//  INTERNALERROR_CDNSYSTEMERROR = "InternalError.CdnSystemError"
-//  INTERNALERROR_SCDNUSERNOPACKAGE = "InternalError.ScdnUserNoPackage"
-//  INVALIDPARAMETER_CDNSTATUSINVALIDDOMAIN = "InvalidParameter.CDNStatusInvalidDomain"
-//  INVALIDPARAMETER_CDNHOSTINVALIDSTATUS = "InvalidParameter.CdnHostInvalidStatus"
-//  INVALIDPARAMETER_CDNINTERFACEERROR = "InvalidParameter.CdnInterfaceError"
-//  INVALIDPARAMETER_CDNPARAMERROR = "InvalidParameter.CdnParamError"
-//  LIMITEXCEEDED_CDNHOSTOPTOOOFTEN = "LimitExceeded.CdnHostOpTooOften"
-//  RESOURCEINUSE_CDNOPINPROGRESS = "ResourceInUse.CdnOpInProgress"
-//  RESOURCENOTFOUND_CDNHOSTNOTEXISTS = "ResourceNotFound.CdnHostNotExists"
-//  RESOURCENOTFOUND_CDNUSERNOTEXISTS = "ResourceNotFound.CdnUserNotExists"
-//  RESOURCEUNAVAILABLE_CDNHOSTISLOCKED = "ResourceUnavailable.CdnHostIsLocked"
-//  RESOURCEUNAVAILABLE_SCDNUSERNOPACKAGE = "ResourceUnavailable.ScdnUserNoPackage"
-//  UNAUTHORIZEDOPERATION_CDNCAMUNAUTHORIZED = "UnauthorizedOperation.CdnCamUnauthorized"
-func (c *Client) DeleteScdnDomain(request *DeleteScdnDomainRequest) (response *DeleteScdnDomainResponse, err error) {
-    return c.DeleteScdnDomainWithContext(context.Background(), request)
-}
-
-// DeleteScdnDomain
-// 删除SCDN域名
-//
-// 可能返回的错误码:
-//  FAILEDOPERATION_CDNCONFIGERROR = "FailedOperation.CdnConfigError"
-//  INTERNALERROR_CDNCONFIGERROR = "InternalError.CdnConfigError"
-//  INTERNALERROR_CDNDBERROR = "InternalError.CdnDbError"
-//  INTERNALERROR_CDNSYSTEMERROR = "InternalError.CdnSystemError"
-//  INTERNALERROR_SCDNUSERNOPACKAGE = "InternalError.ScdnUserNoPackage"
-//  INVALIDPARAMETER_CDNSTATUSINVALIDDOMAIN = "InvalidParameter.CDNStatusInvalidDomain"
-//  INVALIDPARAMETER_CDNHOSTINVALIDSTATUS = "InvalidParameter.CdnHostInvalidStatus"
-//  INVALIDPARAMETER_CDNINTERFACEERROR = "InvalidParameter.CdnInterfaceError"
-//  INVALIDPARAMETER_CDNPARAMERROR = "InvalidParameter.CdnParamError"
-//  LIMITEXCEEDED_CDNHOSTOPTOOOFTEN = "LimitExceeded.CdnHostOpTooOften"
-//  RESOURCEINUSE_CDNOPINPROGRESS = "ResourceInUse.CdnOpInProgress"
-//  RESOURCENOTFOUND_CDNHOSTNOTEXISTS = "ResourceNotFound.CdnHostNotExists"
-//  RESOURCENOTFOUND_CDNUSERNOTEXISTS = "ResourceNotFound.CdnUserNotExists"
-//  RESOURCEUNAVAILABLE_CDNHOSTISLOCKED = "ResourceUnavailable.CdnHostIsLocked"
-//  RESOURCEUNAVAILABLE_SCDNUSERNOPACKAGE = "ResourceUnavailable.ScdnUserNoPackage"
-//  UNAUTHORIZEDOPERATION_CDNCAMUNAUTHORIZED = "UnauthorizedOperation.CdnCamUnauthorized"
-func (c *Client) DeleteScdnDomainWithContext(ctx context.Context, request *DeleteScdnDomainRequest) (response *DeleteScdnDomainResponse, err error) {
-    if request == nil {
-        request = NewDeleteScdnDomainRequest()
-    }
-    
-    if c.GetCredential() == nil {
-        return nil, errors.New("DeleteScdnDomain require credential")
-    }
-
-    request.SetContext(ctx)
-    
-    response = NewDeleteScdnDomainResponse()
     err = c.Send(request, response)
     return
 }
@@ -1212,6 +822,10 @@ func NewDescribeBillingDataResponse() (response *DescribeBillingDataResponse) {
 
 // DescribeBillingData
 // DescribeBillingData 用于查询实际计费数据明细。
+//
+// 注意:
+//
+// 受计费算法的影响，计费数据接口返回的数据均存在一定延时。小时结算客户预计延时3-5小时。月结算客户预计延迟4-28小时，在凌晨4点（不含4点）之前，仅能查询到前2天数据，4点（含）之后，能查询到前1天数据。若您对数据及时性较强的诉求，建议使用[监控访问数据](https://cloud.tencent.com/document/product/228/30986)。
 //
 // 可能返回的错误码:
 //  INTERNALERROR_CAMSYSTEMERROR = "InternalError.CamSystemError"
@@ -1249,6 +863,10 @@ func (c *Client) DescribeBillingData(request *DescribeBillingDataRequest) (respo
 // DescribeBillingData
 // DescribeBillingData 用于查询实际计费数据明细。
 //
+// 注意:
+//
+// 受计费算法的影响，计费数据接口返回的数据均存在一定延时。小时结算客户预计延时3-5小时。月结算客户预计延迟4-28小时，在凌晨4点（不含4点）之前，仅能查询到前2天数据，4点（含）之后，能查询到前1天数据。若您对数据及时性较强的诉求，建议使用[监控访问数据](https://cloud.tencent.com/document/product/228/30986)。
+//
 // 可能返回的错误码:
 //  INTERNALERROR_CAMSYSTEMERROR = "InternalError.CamSystemError"
 //  INTERNALERROR_CDNCONFIGERROR = "InternalError.CdnConfigError"
@@ -1282,6 +900,7 @@ func (c *Client) DescribeBillingDataWithContext(ctx context.Context, request *De
     if request == nil {
         request = NewDescribeBillingDataRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "cdn", APIVersion, "DescribeBillingData")
     
     if c.GetCredential() == nil {
         return nil, errors.New("DescribeBillingData require credential")
@@ -1290,65 +909,6 @@ func (c *Client) DescribeBillingDataWithContext(ctx context.Context, request *De
     request.SetContext(ctx)
     
     response = NewDescribeBillingDataResponse()
-    err = c.Send(request, response)
-    return
-}
-
-func NewDescribeCcDataRequest() (request *DescribeCcDataRequest) {
-    request = &DescribeCcDataRequest{
-        BaseRequest: &tchttp.BaseRequest{},
-    }
-    
-    request.Init().WithApiInfo("cdn", APIVersion, "DescribeCcData")
-    
-    
-    return
-}
-
-func NewDescribeCcDataResponse() (response *DescribeCcDataResponse) {
-    response = &DescribeCcDataResponse{
-        BaseResponse: &tchttp.BaseResponse{},
-    } 
-    return
-
-}
-
-// DescribeCcData
-// CC统计数据查询
-//
-// 可能返回的错误码:
-//  INTERNALERROR_PROXYSERVER = "InternalError.ProxyServer"
-//  INVALIDPARAMETER_PARAMERROR = "InvalidParameter.ParamError"
-//  UNAUTHORIZEDOPERATION_CDNCAMUNAUTHORIZED = "UnauthorizedOperation.CdnCamUnauthorized"
-//  UNAUTHORIZEDOPERATION_DOMAINEMPTY = "UnauthorizedOperation.DomainEmpty"
-//  UNAUTHORIZEDOPERATION_NOPERMISSION = "UnauthorizedOperation.NoPermission"
-//  UNAUTHORIZEDOPERATION_UNKNOWN = "UnauthorizedOperation.Unknown"
-func (c *Client) DescribeCcData(request *DescribeCcDataRequest) (response *DescribeCcDataResponse, err error) {
-    return c.DescribeCcDataWithContext(context.Background(), request)
-}
-
-// DescribeCcData
-// CC统计数据查询
-//
-// 可能返回的错误码:
-//  INTERNALERROR_PROXYSERVER = "InternalError.ProxyServer"
-//  INVALIDPARAMETER_PARAMERROR = "InvalidParameter.ParamError"
-//  UNAUTHORIZEDOPERATION_CDNCAMUNAUTHORIZED = "UnauthorizedOperation.CdnCamUnauthorized"
-//  UNAUTHORIZEDOPERATION_DOMAINEMPTY = "UnauthorizedOperation.DomainEmpty"
-//  UNAUTHORIZEDOPERATION_NOPERMISSION = "UnauthorizedOperation.NoPermission"
-//  UNAUTHORIZEDOPERATION_UNKNOWN = "UnauthorizedOperation.Unknown"
-func (c *Client) DescribeCcDataWithContext(ctx context.Context, request *DescribeCcDataRequest) (response *DescribeCcDataResponse, err error) {
-    if request == nil {
-        request = NewDescribeCcDataRequest()
-    }
-    
-    if c.GetCredential() == nil {
-        return nil, errors.New("DescribeCcData require credential")
-    }
-
-    request.SetContext(ctx)
-    
-    response = NewDescribeCcDataResponse()
     err = c.Send(request, response)
     return
 }
@@ -1508,6 +1068,7 @@ func (c *Client) DescribeCdnDataWithContext(ctx context.Context, request *Descri
     if request == nil {
         request = NewDescribeCdnDataRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "cdn", APIVersion, "DescribeCdnData")
     
     if c.GetCredential() == nil {
         return nil, errors.New("DescribeCdnData require credential")
@@ -1601,6 +1162,7 @@ func (c *Client) DescribeCdnDomainLogsWithContext(ctx context.Context, request *
     if request == nil {
         request = NewDescribeCdnDomainLogsRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "cdn", APIVersion, "DescribeCdnDomainLogs")
     
     if c.GetCredential() == nil {
         return nil, errors.New("DescribeCdnDomainLogs require credential")
@@ -1676,6 +1238,7 @@ func (c *Client) DescribeCdnIpWithContext(ctx context.Context, request *Describe
     if request == nil {
         request = NewDescribeCdnIpRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "cdn", APIVersion, "DescribeCdnIp")
     
     if c.GetCredential() == nil {
         return nil, errors.New("DescribeCdnIp require credential")
@@ -1749,6 +1312,7 @@ func (c *Client) DescribeCdnOriginIpWithContext(ctx context.Context, request *De
     if request == nil {
         request = NewDescribeCdnOriginIpRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "cdn", APIVersion, "DescribeCdnOriginIp")
     
     if c.GetCredential() == nil {
         return nil, errors.New("DescribeCdnOriginIp require credential")
@@ -1834,6 +1398,7 @@ func (c *Client) DescribeCertDomainsWithContext(ctx context.Context, request *De
     if request == nil {
         request = NewDescribeCertDomainsRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "cdn", APIVersion, "DescribeCertDomains")
     
     if c.GetCredential() == nil {
         return nil, errors.New("DescribeCertDomains require credential")
@@ -1842,142 +1407,6 @@ func (c *Client) DescribeCertDomainsWithContext(ctx context.Context, request *De
     request.SetContext(ctx)
     
     response = NewDescribeCertDomainsResponse()
-    err = c.Send(request, response)
-    return
-}
-
-func NewDescribeDDoSDataRequest() (request *DescribeDDoSDataRequest) {
-    request = &DescribeDDoSDataRequest{
-        BaseRequest: &tchttp.BaseRequest{},
-    }
-    
-    request.Init().WithApiInfo("cdn", APIVersion, "DescribeDDoSData")
-    
-    
-    return
-}
-
-func NewDescribeDDoSDataResponse() (response *DescribeDDoSDataResponse) {
-    response = &DescribeDDoSDataResponse{
-        BaseResponse: &tchttp.BaseResponse{},
-    } 
-    return
-
-}
-
-// DescribeDDoSData
-// DDoS统计数据查询
-//
-// 可能返回的错误码:
-//  INTERNALERROR = "InternalError"
-//  INTERNALERROR_PROXYSERVER = "InternalError.ProxyServer"
-//  INTERNALERROR_SYSTEMDBERROR = "InternalError.SystemDBError"
-//  INVALIDPARAMETER = "InvalidParameter"
-//  INVALIDPARAMETER_PARAMERROR = "InvalidParameter.ParamError"
-//  LIMITEXCEEDED = "LimitExceeded"
-//  OPERATIONDENIED = "OperationDenied"
-//  REQUESTLIMITEXCEEDED = "RequestLimitExceeded"
-//  RESOURCEUNAVAILABLE = "ResourceUnavailable"
-//  UNAUTHORIZEDOPERATION = "UnauthorizedOperation"
-//  UNAUTHORIZEDOPERATION_CDNCAMUNAUTHORIZED = "UnauthorizedOperation.CdnCamUnauthorized"
-//  UNAUTHORIZEDOPERATION_UNKNOWN = "UnauthorizedOperation.Unknown"
-//  UNKNOWNPARAMETER = "UnknownParameter"
-//  UNSUPPORTEDOPERATION = "UnsupportedOperation"
-func (c *Client) DescribeDDoSData(request *DescribeDDoSDataRequest) (response *DescribeDDoSDataResponse, err error) {
-    return c.DescribeDDoSDataWithContext(context.Background(), request)
-}
-
-// DescribeDDoSData
-// DDoS统计数据查询
-//
-// 可能返回的错误码:
-//  INTERNALERROR = "InternalError"
-//  INTERNALERROR_PROXYSERVER = "InternalError.ProxyServer"
-//  INTERNALERROR_SYSTEMDBERROR = "InternalError.SystemDBError"
-//  INVALIDPARAMETER = "InvalidParameter"
-//  INVALIDPARAMETER_PARAMERROR = "InvalidParameter.ParamError"
-//  LIMITEXCEEDED = "LimitExceeded"
-//  OPERATIONDENIED = "OperationDenied"
-//  REQUESTLIMITEXCEEDED = "RequestLimitExceeded"
-//  RESOURCEUNAVAILABLE = "ResourceUnavailable"
-//  UNAUTHORIZEDOPERATION = "UnauthorizedOperation"
-//  UNAUTHORIZEDOPERATION_CDNCAMUNAUTHORIZED = "UnauthorizedOperation.CdnCamUnauthorized"
-//  UNAUTHORIZEDOPERATION_UNKNOWN = "UnauthorizedOperation.Unknown"
-//  UNKNOWNPARAMETER = "UnknownParameter"
-//  UNSUPPORTEDOPERATION = "UnsupportedOperation"
-func (c *Client) DescribeDDoSDataWithContext(ctx context.Context, request *DescribeDDoSDataRequest) (response *DescribeDDoSDataResponse, err error) {
-    if request == nil {
-        request = NewDescribeDDoSDataRequest()
-    }
-    
-    if c.GetCredential() == nil {
-        return nil, errors.New("DescribeDDoSData require credential")
-    }
-
-    request.SetContext(ctx)
-    
-    response = NewDescribeDDoSDataResponse()
-    err = c.Send(request, response)
-    return
-}
-
-func NewDescribeDiagnoseReportRequest() (request *DescribeDiagnoseReportRequest) {
-    request = &DescribeDiagnoseReportRequest{
-        BaseRequest: &tchttp.BaseRequest{},
-    }
-    
-    request.Init().WithApiInfo("cdn", APIVersion, "DescribeDiagnoseReport")
-    
-    
-    return
-}
-
-func NewDescribeDiagnoseReportResponse() (response *DescribeDiagnoseReportResponse) {
-    response = &DescribeDiagnoseReportResponse{
-        BaseResponse: &tchttp.BaseResponse{},
-    } 
-    return
-
-}
-
-// DescribeDiagnoseReport
-// ### <font color=red>**该接口已废弃** </font><br>
-//
-// DescribeDiagnoseReport 用于获取指定报告id的内容。
-//
-// 可能返回的错误码:
-//  INTERNALERROR_CDNDBERROR = "InternalError.CdnDbError"
-//  INTERNALERROR_CDNSYSTEMERROR = "InternalError.CdnSystemError"
-//  INVALIDPARAMETER_CDNPARAMERROR = "InvalidParameter.CdnParamError"
-//  RESOURCENOTFOUND_CDNUSERNOTEXISTS = "ResourceNotFound.CdnUserNotExists"
-//  UNAUTHORIZEDOPERATION_CDNCAMUNAUTHORIZED = "UnauthorizedOperation.CdnCamUnauthorized"
-func (c *Client) DescribeDiagnoseReport(request *DescribeDiagnoseReportRequest) (response *DescribeDiagnoseReportResponse, err error) {
-    return c.DescribeDiagnoseReportWithContext(context.Background(), request)
-}
-
-// DescribeDiagnoseReport
-// ### <font color=red>**该接口已废弃** </font><br>
-//
-// DescribeDiagnoseReport 用于获取指定报告id的内容。
-//
-// 可能返回的错误码:
-//  INTERNALERROR_CDNDBERROR = "InternalError.CdnDbError"
-//  INTERNALERROR_CDNSYSTEMERROR = "InternalError.CdnSystemError"
-//  INVALIDPARAMETER_CDNPARAMERROR = "InvalidParameter.CdnParamError"
-//  RESOURCENOTFOUND_CDNUSERNOTEXISTS = "ResourceNotFound.CdnUserNotExists"
-//  UNAUTHORIZEDOPERATION_CDNCAMUNAUTHORIZED = "UnauthorizedOperation.CdnCamUnauthorized"
-func (c *Client) DescribeDiagnoseReportWithContext(ctx context.Context, request *DescribeDiagnoseReportRequest) (response *DescribeDiagnoseReportResponse, err error) {
-    if request == nil {
-        request = NewDescribeDiagnoseReportRequest()
-    }
-    
-    if c.GetCredential() == nil {
-        return nil, errors.New("DescribeDiagnoseReport require credential")
-    }
-
-    request.SetContext(ctx)
-    
-    response = NewDescribeDiagnoseReportResponse()
     err = c.Send(request, response)
     return
 }
@@ -2007,6 +1436,7 @@ func NewDescribeDistrictIspDataResponse() (response *DescribeDistrictIspDataResp
 // 注意事项：接口尚未全面开放，未在内测名单中的账号不支持调用
 //
 // 可能返回的错误码:
+//  FAILEDOPERATION_DATASYSTEMERROR = "FailedOperation.DataSystemError"
 //  INTERNALERROR_CAMSYSTEMERROR = "InternalError.CamSystemError"
 //  INTERNALERROR_CDNCONFIGERROR = "InternalError.CdnConfigError"
 //  INTERNALERROR_CDNDBERROR = "InternalError.CdnDbError"
@@ -2034,6 +1464,7 @@ func (c *Client) DescribeDistrictIspData(request *DescribeDistrictIspDataRequest
 // 注意事项：接口尚未全面开放，未在内测名单中的账号不支持调用
 //
 // 可能返回的错误码:
+//  FAILEDOPERATION_DATASYSTEMERROR = "FailedOperation.DataSystemError"
 //  INTERNALERROR_CAMSYSTEMERROR = "InternalError.CamSystemError"
 //  INTERNALERROR_CDNCONFIGERROR = "InternalError.CdnConfigError"
 //  INTERNALERROR_CDNDBERROR = "InternalError.CdnDbError"
@@ -2055,6 +1486,7 @@ func (c *Client) DescribeDistrictIspDataWithContext(ctx context.Context, request
     if request == nil {
         request = NewDescribeDistrictIspDataRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "cdn", APIVersion, "DescribeDistrictIspData")
     
     if c.GetCredential() == nil {
         return nil, errors.New("DescribeDistrictIspData require credential")
@@ -2150,6 +1582,7 @@ func (c *Client) DescribeDomainsWithContext(ctx context.Context, request *Descri
     if request == nil {
         request = NewDescribeDomainsRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "cdn", APIVersion, "DescribeDomains")
     
     if c.GetCredential() == nil {
         return nil, errors.New("DescribeDomains require credential")
@@ -2247,6 +1680,7 @@ func (c *Client) DescribeDomainsConfigWithContext(ctx context.Context, request *
     if request == nil {
         request = NewDescribeDomainsConfigRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "cdn", APIVersion, "DescribeDomainsConfig")
     
     if c.GetCredential() == nil {
         return nil, errors.New("DescribeDomainsConfig require credential")
@@ -2304,6 +1738,7 @@ func (c *Client) DescribeEdgePackTaskStatusWithContext(ctx context.Context, requ
     if request == nil {
         request = NewDescribeEdgePackTaskStatusRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "cdn", APIVersion, "DescribeEdgePackTaskStatus")
     
     if c.GetCredential() == nil {
         return nil, errors.New("DescribeEdgePackTaskStatus require credential")
@@ -2312,65 +1747,6 @@ func (c *Client) DescribeEdgePackTaskStatusWithContext(ctx context.Context, requ
     request.SetContext(ctx)
     
     response = NewDescribeEdgePackTaskStatusResponse()
-    err = c.Send(request, response)
-    return
-}
-
-func NewDescribeEventLogDataRequest() (request *DescribeEventLogDataRequest) {
-    request = &DescribeEventLogDataRequest{
-        BaseRequest: &tchttp.BaseRequest{},
-    }
-    
-    request.Init().WithApiInfo("cdn", APIVersion, "DescribeEventLogData")
-    
-    
-    return
-}
-
-func NewDescribeEventLogDataResponse() (response *DescribeEventLogDataResponse) {
-    response = &DescribeEventLogDataResponse{
-        BaseResponse: &tchttp.BaseResponse{},
-    } 
-    return
-
-}
-
-// DescribeEventLogData
-// DescribeEventLogData 用于查询事件日志统计曲线
-//
-// 可能返回的错误码:
-//  INTERNALERROR_PROXYSERVER = "InternalError.ProxyServer"
-//  INTERNALERROR_ROUTEERROR = "InternalError.RouteError"
-//  INTERNALERROR_SYSTEMDBERROR = "InternalError.SystemDBError"
-//  INVALIDPARAMETER_PARAMERROR = "InvalidParameter.ParamError"
-//  UNAUTHORIZEDOPERATION_CDNCAMUNAUTHORIZED = "UnauthorizedOperation.CdnCamUnauthorized"
-//  UNAUTHORIZEDOPERATION_UNKNOWN = "UnauthorizedOperation.Unknown"
-func (c *Client) DescribeEventLogData(request *DescribeEventLogDataRequest) (response *DescribeEventLogDataResponse, err error) {
-    return c.DescribeEventLogDataWithContext(context.Background(), request)
-}
-
-// DescribeEventLogData
-// DescribeEventLogData 用于查询事件日志统计曲线
-//
-// 可能返回的错误码:
-//  INTERNALERROR_PROXYSERVER = "InternalError.ProxyServer"
-//  INTERNALERROR_ROUTEERROR = "InternalError.RouteError"
-//  INTERNALERROR_SYSTEMDBERROR = "InternalError.SystemDBError"
-//  INVALIDPARAMETER_PARAMERROR = "InvalidParameter.ParamError"
-//  UNAUTHORIZEDOPERATION_CDNCAMUNAUTHORIZED = "UnauthorizedOperation.CdnCamUnauthorized"
-//  UNAUTHORIZEDOPERATION_UNKNOWN = "UnauthorizedOperation.Unknown"
-func (c *Client) DescribeEventLogDataWithContext(ctx context.Context, request *DescribeEventLogDataRequest) (response *DescribeEventLogDataResponse, err error) {
-    if request == nil {
-        request = NewDescribeEventLogDataRequest()
-    }
-    
-    if c.GetCredential() == nil {
-        return nil, errors.New("DescribeEventLogData require credential")
-    }
-
-    request.SetContext(ctx)
-    
-    response = NewDescribeEventLogDataResponse()
     err = c.Send(request, response)
     return
 }
@@ -2428,6 +1804,7 @@ func (c *Client) DescribeHttpsPackagesWithContext(ctx context.Context, request *
     if request == nil {
         request = NewDescribeHttpsPackagesRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "cdn", APIVersion, "DescribeHttpsPackages")
     
     if c.GetCredential() == nil {
         return nil, errors.New("DescribeHttpsPackages require credential")
@@ -2460,7 +1837,7 @@ func NewDescribeImageConfigResponse() (response *DescribeImageConfigResponse) {
 }
 
 // DescribeImageConfig
-// DescribeImageConfig 用于获取域名图片优化的当前配置，支持Webp、TPG、 Guetzli 和 Avif。 
+// DescribeImageConfig 用于获取域名图片优化的当前配置，支持Webp、TPG、 Guetzli 和 Avif。
 //
 // 可能返回的错误码:
 //  INTERNALERROR_CDNCONFIGERROR = "InternalError.CdnConfigError"
@@ -2479,7 +1856,7 @@ func (c *Client) DescribeImageConfig(request *DescribeImageConfigRequest) (respo
 }
 
 // DescribeImageConfig
-// DescribeImageConfig 用于获取域名图片优化的当前配置，支持Webp、TPG、 Guetzli 和 Avif。 
+// DescribeImageConfig 用于获取域名图片优化的当前配置，支持Webp、TPG、 Guetzli 和 Avif。
 //
 // 可能返回的错误码:
 //  INTERNALERROR_CDNCONFIGERROR = "InternalError.CdnConfigError"
@@ -2497,6 +1874,7 @@ func (c *Client) DescribeImageConfigWithContext(ctx context.Context, request *De
     if request == nil {
         request = NewDescribeImageConfigRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "cdn", APIVersion, "DescribeImageConfig")
     
     if c.GetCredential() == nil {
         return nil, errors.New("DescribeImageConfig require credential")
@@ -2582,6 +1960,7 @@ func (c *Client) DescribeIpStatusWithContext(ctx context.Context, request *Descr
     if request == nil {
         request = NewDescribeIpStatusRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "cdn", APIVersion, "DescribeIpStatus")
     
     if c.GetCredential() == nil {
         return nil, errors.New("DescribeIpStatus require credential")
@@ -2689,6 +2068,7 @@ func (c *Client) DescribeIpVisitWithContext(ctx context.Context, request *Descri
     if request == nil {
         request = NewDescribeIpVisitRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "cdn", APIVersion, "DescribeIpVisit")
     
     if c.GetCredential() == nil {
         return nil, errors.New("DescribeIpVisit require credential")
@@ -2764,6 +2144,7 @@ func (c *Client) DescribeMapInfoWithContext(ctx context.Context, request *Descri
     if request == nil {
         request = NewDescribeMapInfoRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "cdn", APIVersion, "DescribeMapInfo")
     
     if c.GetCredential() == nil {
         return nil, errors.New("DescribeMapInfo require credential")
@@ -2915,6 +2296,7 @@ func (c *Client) DescribeOriginDataWithContext(ctx context.Context, request *Des
     if request == nil {
         request = NewDescribeOriginDataRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "cdn", APIVersion, "DescribeOriginData")
     
     if c.GetCredential() == nil {
         return nil, errors.New("DescribeOriginData require credential")
@@ -2984,6 +2366,7 @@ func (c *Client) DescribePayTypeWithContext(ctx context.Context, request *Descri
     if request == nil {
         request = NewDescribePayTypeRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "cdn", APIVersion, "DescribePayType")
     
     if c.GetCredential() == nil {
         return nil, errors.New("DescribePayType require credential")
@@ -3043,6 +2426,7 @@ func (c *Client) DescribePurgeQuotaWithContext(ctx context.Context, request *Des
     if request == nil {
         request = NewDescribePurgeQuotaRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "cdn", APIVersion, "DescribePurgeQuota")
     
     if c.GetCredential() == nil {
         return nil, errors.New("DescribePurgeQuota require credential")
@@ -3116,6 +2500,7 @@ func (c *Client) DescribePurgeTasksWithContext(ctx context.Context, request *Des
     if request == nil {
         request = NewDescribePurgeTasksRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "cdn", APIVersion, "DescribePurgeTasks")
     
     if c.GetCredential() == nil {
         return nil, errors.New("DescribePurgeTasks require credential")
@@ -3177,6 +2562,7 @@ func (c *Client) DescribePushQuotaWithContext(ctx context.Context, request *Desc
     if request == nil {
         request = NewDescribePushQuotaRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "cdn", APIVersion, "DescribePushQuota")
     
     if c.GetCredential() == nil {
         return nil, errors.New("DescribePushQuota require credential")
@@ -3272,6 +2658,7 @@ func (c *Client) DescribePushTasksWithContext(ctx context.Context, request *Desc
     if request == nil {
         request = NewDescribePushTasksRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "cdn", APIVersion, "DescribePushTasks")
     
     if c.GetCredential() == nil {
         return nil, errors.New("DescribePushTasks require credential")
@@ -3339,6 +2726,7 @@ func (c *Client) DescribeReportDataWithContext(ctx context.Context, request *Des
     if request == nil {
         request = NewDescribeReportDataRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "cdn", APIVersion, "DescribeReportData")
     
     if c.GetCredential() == nil {
         return nil, errors.New("DescribeReportData require credential")
@@ -3347,331 +2735,6 @@ func (c *Client) DescribeReportDataWithContext(ctx context.Context, request *Des
     request.SetContext(ctx)
     
     response = NewDescribeReportDataResponse()
-    err = c.Send(request, response)
-    return
-}
-
-func NewDescribeScdnBotDataRequest() (request *DescribeScdnBotDataRequest) {
-    request = &DescribeScdnBotDataRequest{
-        BaseRequest: &tchttp.BaseRequest{},
-    }
-    
-    request.Init().WithApiInfo("cdn", APIVersion, "DescribeScdnBotData")
-    
-    
-    return
-}
-
-func NewDescribeScdnBotDataResponse() (response *DescribeScdnBotDataResponse) {
-    response = &DescribeScdnBotDataResponse{
-        BaseResponse: &tchttp.BaseResponse{},
-    } 
-    return
-
-}
-
-// DescribeScdnBotData
-// 获取BOT统计数据列表
-//
-// 可能返回的错误码:
-//  INTERNALERROR_CDNCONFIGERROR = "InternalError.CdnConfigError"
-//  INTERNALERROR_CDNDBERROR = "InternalError.CdnDbError"
-//  INTERNALERROR_ERROR = "InternalError.Error"
-//  INTERNALERROR_PROXYSERVER = "InternalError.ProxyServer"
-//  INTERNALERROR_SYSTEMDBERROR = "InternalError.SystemDBError"
-//  INVALIDPARAMETER_CDNPARAMERROR = "InvalidParameter.CdnParamError"
-//  INVALIDPARAMETER_PARAMERROR = "InvalidParameter.ParamError"
-//  UNAUTHORIZEDOPERATION_CDNACCOUNTUNAUTHORIZED = "UnauthorizedOperation.CdnAccountUnauthorized"
-//  UNAUTHORIZEDOPERATION_CDNCAMUNAUTHORIZED = "UnauthorizedOperation.CdnCamUnauthorized"
-//  UNAUTHORIZEDOPERATION_DOMAINEMPTY = "UnauthorizedOperation.DomainEmpty"
-//  UNAUTHORIZEDOPERATION_NOPERMISSION = "UnauthorizedOperation.NoPermission"
-//  UNAUTHORIZEDOPERATION_UNKNOWN = "UnauthorizedOperation.Unknown"
-func (c *Client) DescribeScdnBotData(request *DescribeScdnBotDataRequest) (response *DescribeScdnBotDataResponse, err error) {
-    return c.DescribeScdnBotDataWithContext(context.Background(), request)
-}
-
-// DescribeScdnBotData
-// 获取BOT统计数据列表
-//
-// 可能返回的错误码:
-//  INTERNALERROR_CDNCONFIGERROR = "InternalError.CdnConfigError"
-//  INTERNALERROR_CDNDBERROR = "InternalError.CdnDbError"
-//  INTERNALERROR_ERROR = "InternalError.Error"
-//  INTERNALERROR_PROXYSERVER = "InternalError.ProxyServer"
-//  INTERNALERROR_SYSTEMDBERROR = "InternalError.SystemDBError"
-//  INVALIDPARAMETER_CDNPARAMERROR = "InvalidParameter.CdnParamError"
-//  INVALIDPARAMETER_PARAMERROR = "InvalidParameter.ParamError"
-//  UNAUTHORIZEDOPERATION_CDNACCOUNTUNAUTHORIZED = "UnauthorizedOperation.CdnAccountUnauthorized"
-//  UNAUTHORIZEDOPERATION_CDNCAMUNAUTHORIZED = "UnauthorizedOperation.CdnCamUnauthorized"
-//  UNAUTHORIZEDOPERATION_DOMAINEMPTY = "UnauthorizedOperation.DomainEmpty"
-//  UNAUTHORIZEDOPERATION_NOPERMISSION = "UnauthorizedOperation.NoPermission"
-//  UNAUTHORIZEDOPERATION_UNKNOWN = "UnauthorizedOperation.Unknown"
-func (c *Client) DescribeScdnBotDataWithContext(ctx context.Context, request *DescribeScdnBotDataRequest) (response *DescribeScdnBotDataResponse, err error) {
-    if request == nil {
-        request = NewDescribeScdnBotDataRequest()
-    }
-    
-    if c.GetCredential() == nil {
-        return nil, errors.New("DescribeScdnBotData require credential")
-    }
-
-    request.SetContext(ctx)
-    
-    response = NewDescribeScdnBotDataResponse()
-    err = c.Send(request, response)
-    return
-}
-
-func NewDescribeScdnBotRecordsRequest() (request *DescribeScdnBotRecordsRequest) {
-    request = &DescribeScdnBotRecordsRequest{
-        BaseRequest: &tchttp.BaseRequest{},
-    }
-    
-    request.Init().WithApiInfo("cdn", APIVersion, "DescribeScdnBotRecords")
-    
-    
-    return
-}
-
-func NewDescribeScdnBotRecordsResponse() (response *DescribeScdnBotRecordsResponse) {
-    response = &DescribeScdnBotRecordsResponse{
-        BaseResponse: &tchttp.BaseResponse{},
-    } 
-    return
-
-}
-
-// DescribeScdnBotRecords
-// 查询BOT会话记录列表
-//
-// 可能返回的错误码:
-//  INTERNALERROR_CDNCONFIGERROR = "InternalError.CdnConfigError"
-//  INTERNALERROR_ERROR = "InternalError.Error"
-//  INTERNALERROR_SYSTEMDBERROR = "InternalError.SystemDBError"
-//  UNAUTHORIZEDOPERATION_CDNCAMUNAUTHORIZED = "UnauthorizedOperation.CdnCamUnauthorized"
-//  UNAUTHORIZEDOPERATION_CLSINVALIDAUTHORIZATION = "UnauthorizedOperation.ClsInvalidAuthorization"
-//  UNAUTHORIZEDOPERATION_CLSUNAUTHORIZED = "UnauthorizedOperation.ClsUnauthorized"
-func (c *Client) DescribeScdnBotRecords(request *DescribeScdnBotRecordsRequest) (response *DescribeScdnBotRecordsResponse, err error) {
-    return c.DescribeScdnBotRecordsWithContext(context.Background(), request)
-}
-
-// DescribeScdnBotRecords
-// 查询BOT会话记录列表
-//
-// 可能返回的错误码:
-//  INTERNALERROR_CDNCONFIGERROR = "InternalError.CdnConfigError"
-//  INTERNALERROR_ERROR = "InternalError.Error"
-//  INTERNALERROR_SYSTEMDBERROR = "InternalError.SystemDBError"
-//  UNAUTHORIZEDOPERATION_CDNCAMUNAUTHORIZED = "UnauthorizedOperation.CdnCamUnauthorized"
-//  UNAUTHORIZEDOPERATION_CLSINVALIDAUTHORIZATION = "UnauthorizedOperation.ClsInvalidAuthorization"
-//  UNAUTHORIZEDOPERATION_CLSUNAUTHORIZED = "UnauthorizedOperation.ClsUnauthorized"
-func (c *Client) DescribeScdnBotRecordsWithContext(ctx context.Context, request *DescribeScdnBotRecordsRequest) (response *DescribeScdnBotRecordsResponse, err error) {
-    if request == nil {
-        request = NewDescribeScdnBotRecordsRequest()
-    }
-    
-    if c.GetCredential() == nil {
-        return nil, errors.New("DescribeScdnBotRecords require credential")
-    }
-
-    request.SetContext(ctx)
-    
-    response = NewDescribeScdnBotRecordsResponse()
-    err = c.Send(request, response)
-    return
-}
-
-func NewDescribeScdnConfigRequest() (request *DescribeScdnConfigRequest) {
-    request = &DescribeScdnConfigRequest{
-        BaseRequest: &tchttp.BaseRequest{},
-    }
-    
-    request.Init().WithApiInfo("cdn", APIVersion, "DescribeScdnConfig")
-    
-    
-    return
-}
-
-func NewDescribeScdnConfigResponse() (response *DescribeScdnConfigResponse) {
-    response = &DescribeScdnConfigResponse{
-        BaseResponse: &tchttp.BaseResponse{},
-    } 
-    return
-
-}
-
-// DescribeScdnConfig
-// DescribeScdnConfig 用于查询指定 SCDN 加速域名的安全相关配置
-//
-// 可能返回的错误码:
-//  INTERNALERROR_CDNCONFIGERROR = "InternalError.CdnConfigError"
-//  INTERNALERROR_CDNDBERROR = "InternalError.CdnDbError"
-//  INTERNALERROR_CDNSYSTEMERROR = "InternalError.CdnSystemError"
-//  INVALIDPARAMETER_CDNINTERFACEERROR = "InvalidParameter.CdnInterfaceError"
-//  INVALIDPARAMETER_CDNPARAMERROR = "InvalidParameter.CdnParamError"
-//  RESOURCENOTFOUND_CDNHOSTNOTEXISTS = "ResourceNotFound.CdnHostNotExists"
-//  RESOURCENOTFOUND_CDNUSERNOTEXISTS = "ResourceNotFound.CdnUserNotExists"
-//  UNAUTHORIZEDOPERATION_CDNCAMUNAUTHORIZED = "UnauthorizedOperation.CdnCamUnauthorized"
-//  UNAUTHORIZEDOPERATION_CDNHOSTUNAUTHORIZED = "UnauthorizedOperation.CdnHostUnauthorized"
-func (c *Client) DescribeScdnConfig(request *DescribeScdnConfigRequest) (response *DescribeScdnConfigResponse, err error) {
-    return c.DescribeScdnConfigWithContext(context.Background(), request)
-}
-
-// DescribeScdnConfig
-// DescribeScdnConfig 用于查询指定 SCDN 加速域名的安全相关配置
-//
-// 可能返回的错误码:
-//  INTERNALERROR_CDNCONFIGERROR = "InternalError.CdnConfigError"
-//  INTERNALERROR_CDNDBERROR = "InternalError.CdnDbError"
-//  INTERNALERROR_CDNSYSTEMERROR = "InternalError.CdnSystemError"
-//  INVALIDPARAMETER_CDNINTERFACEERROR = "InvalidParameter.CdnInterfaceError"
-//  INVALIDPARAMETER_CDNPARAMERROR = "InvalidParameter.CdnParamError"
-//  RESOURCENOTFOUND_CDNHOSTNOTEXISTS = "ResourceNotFound.CdnHostNotExists"
-//  RESOURCENOTFOUND_CDNUSERNOTEXISTS = "ResourceNotFound.CdnUserNotExists"
-//  UNAUTHORIZEDOPERATION_CDNCAMUNAUTHORIZED = "UnauthorizedOperation.CdnCamUnauthorized"
-//  UNAUTHORIZEDOPERATION_CDNHOSTUNAUTHORIZED = "UnauthorizedOperation.CdnHostUnauthorized"
-func (c *Client) DescribeScdnConfigWithContext(ctx context.Context, request *DescribeScdnConfigRequest) (response *DescribeScdnConfigResponse, err error) {
-    if request == nil {
-        request = NewDescribeScdnConfigRequest()
-    }
-    
-    if c.GetCredential() == nil {
-        return nil, errors.New("DescribeScdnConfig require credential")
-    }
-
-    request.SetContext(ctx)
-    
-    response = NewDescribeScdnConfigResponse()
-    err = c.Send(request, response)
-    return
-}
-
-func NewDescribeScdnIpStrategyRequest() (request *DescribeScdnIpStrategyRequest) {
-    request = &DescribeScdnIpStrategyRequest{
-        BaseRequest: &tchttp.BaseRequest{},
-    }
-    
-    request.Init().WithApiInfo("cdn", APIVersion, "DescribeScdnIpStrategy")
-    
-    
-    return
-}
-
-func NewDescribeScdnIpStrategyResponse() (response *DescribeScdnIpStrategyResponse) {
-    response = &DescribeScdnIpStrategyResponse{
-        BaseResponse: &tchttp.BaseResponse{},
-    } 
-    return
-
-}
-
-// DescribeScdnIpStrategy
-// 查询在SCDN IP安全策略
-//
-// 可能返回的错误码:
-//  INTERNALERROR_CDNSYSTEMERROR = "InternalError.CdnSystemError"
-//  INTERNALERROR_SCDNUSERNOPACKAGE = "InternalError.ScdnUserNoPackage"
-//  INVALIDPARAMETER_CDNPARAMERROR = "InvalidParameter.CdnParamError"
-//  RESOURCENOTFOUND_CDNHOSTNOTEXISTS = "ResourceNotFound.CdnHostNotExists"
-//  RESOURCENOTFOUND_CDNUSERNOTEXISTS = "ResourceNotFound.CdnUserNotExists"
-//  UNAUTHORIZEDOPERATION_CDNUSERNOWHITELIST = "UnauthorizedOperation.CdnUserNoWhitelist"
-func (c *Client) DescribeScdnIpStrategy(request *DescribeScdnIpStrategyRequest) (response *DescribeScdnIpStrategyResponse, err error) {
-    return c.DescribeScdnIpStrategyWithContext(context.Background(), request)
-}
-
-// DescribeScdnIpStrategy
-// 查询在SCDN IP安全策略
-//
-// 可能返回的错误码:
-//  INTERNALERROR_CDNSYSTEMERROR = "InternalError.CdnSystemError"
-//  INTERNALERROR_SCDNUSERNOPACKAGE = "InternalError.ScdnUserNoPackage"
-//  INVALIDPARAMETER_CDNPARAMERROR = "InvalidParameter.CdnParamError"
-//  RESOURCENOTFOUND_CDNHOSTNOTEXISTS = "ResourceNotFound.CdnHostNotExists"
-//  RESOURCENOTFOUND_CDNUSERNOTEXISTS = "ResourceNotFound.CdnUserNotExists"
-//  UNAUTHORIZEDOPERATION_CDNUSERNOWHITELIST = "UnauthorizedOperation.CdnUserNoWhitelist"
-func (c *Client) DescribeScdnIpStrategyWithContext(ctx context.Context, request *DescribeScdnIpStrategyRequest) (response *DescribeScdnIpStrategyResponse, err error) {
-    if request == nil {
-        request = NewDescribeScdnIpStrategyRequest()
-    }
-    
-    if c.GetCredential() == nil {
-        return nil, errors.New("DescribeScdnIpStrategy require credential")
-    }
-
-    request.SetContext(ctx)
-    
-    response = NewDescribeScdnIpStrategyResponse()
-    err = c.Send(request, response)
-    return
-}
-
-func NewDescribeScdnTopDataRequest() (request *DescribeScdnTopDataRequest) {
-    request = &DescribeScdnTopDataRequest{
-        BaseRequest: &tchttp.BaseRequest{},
-    }
-    
-    request.Init().WithApiInfo("cdn", APIVersion, "DescribeScdnTopData")
-    
-    
-    return
-}
-
-func NewDescribeScdnTopDataResponse() (response *DescribeScdnTopDataResponse) {
-    response = &DescribeScdnTopDataResponse{
-        BaseResponse: &tchttp.BaseResponse{},
-    } 
-    return
-
-}
-
-// DescribeScdnTopData
-// 获取SCDN的Top数据
-//
-// 可能返回的错误码:
-//  INTERNALERROR_CDNDBERROR = "InternalError.CdnDbError"
-//  INTERNALERROR_CDNSYSTEMERROR = "InternalError.CdnSystemError"
-//  INTERNALERROR_DATASYSTEMERROR = "InternalError.DataSystemError"
-//  INVALIDPARAMETER_CDNSTATUSINVALIDDOMAIN = "InvalidParameter.CDNStatusInvalidDomain"
-//  INVALIDPARAMETER_CDNPARAMERROR = "InvalidParameter.CdnParamError"
-//  INVALIDPARAMETER_CDNSTATINVALIDDATE = "InvalidParameter.CdnStatInvalidDate"
-//  INVALIDPARAMETER_CDNSTATINVALIDFILTER = "InvalidParameter.CdnStatInvalidFilter"
-//  INVALIDPARAMETER_CDNSTATINVALIDMETRIC = "InvalidParameter.CdnStatInvalidMetric"
-//  RESOURCENOTFOUND_CDNHOSTNOTEXISTS = "ResourceNotFound.CdnHostNotExists"
-//  RESOURCENOTFOUND_CDNUSERNOTEXISTS = "ResourceNotFound.CdnUserNotExists"
-//  UNAUTHORIZEDOPERATION_CDNACCOUNTUNAUTHORIZED = "UnauthorizedOperation.CdnAccountUnauthorized"
-//  UNAUTHORIZEDOPERATION_CDNCAMUNAUTHORIZED = "UnauthorizedOperation.CdnCamUnauthorized"
-func (c *Client) DescribeScdnTopData(request *DescribeScdnTopDataRequest) (response *DescribeScdnTopDataResponse, err error) {
-    return c.DescribeScdnTopDataWithContext(context.Background(), request)
-}
-
-// DescribeScdnTopData
-// 获取SCDN的Top数据
-//
-// 可能返回的错误码:
-//  INTERNALERROR_CDNDBERROR = "InternalError.CdnDbError"
-//  INTERNALERROR_CDNSYSTEMERROR = "InternalError.CdnSystemError"
-//  INTERNALERROR_DATASYSTEMERROR = "InternalError.DataSystemError"
-//  INVALIDPARAMETER_CDNSTATUSINVALIDDOMAIN = "InvalidParameter.CDNStatusInvalidDomain"
-//  INVALIDPARAMETER_CDNPARAMERROR = "InvalidParameter.CdnParamError"
-//  INVALIDPARAMETER_CDNSTATINVALIDDATE = "InvalidParameter.CdnStatInvalidDate"
-//  INVALIDPARAMETER_CDNSTATINVALIDFILTER = "InvalidParameter.CdnStatInvalidFilter"
-//  INVALIDPARAMETER_CDNSTATINVALIDMETRIC = "InvalidParameter.CdnStatInvalidMetric"
-//  RESOURCENOTFOUND_CDNHOSTNOTEXISTS = "ResourceNotFound.CdnHostNotExists"
-//  RESOURCENOTFOUND_CDNUSERNOTEXISTS = "ResourceNotFound.CdnUserNotExists"
-//  UNAUTHORIZEDOPERATION_CDNACCOUNTUNAUTHORIZED = "UnauthorizedOperation.CdnAccountUnauthorized"
-//  UNAUTHORIZEDOPERATION_CDNCAMUNAUTHORIZED = "UnauthorizedOperation.CdnCamUnauthorized"
-func (c *Client) DescribeScdnTopDataWithContext(ctx context.Context, request *DescribeScdnTopDataRequest) (response *DescribeScdnTopDataResponse, err error) {
-    if request == nil {
-        request = NewDescribeScdnTopDataRequest()
-    }
-    
-    if c.GetCredential() == nil {
-        return nil, errors.New("DescribeScdnTopData require credential")
-    }
-
-    request.SetContext(ctx)
-    
-    response = NewDescribeScdnTopDataResponse()
     err = c.Send(request, response)
     return
 }
@@ -3715,8 +2778,6 @@ func NewDescribeTopDataResponse() (response *DescribeTopDataResponse) {
 // 注意：
 //
 // + 仅支持 90 天内数据查询，且从2021年09月20日开始有数据
-//
-// + 本接口为beta版，尚未正式全量发布
 //
 // 可能返回的错误码:
 //  FAILEDOPERATION_CDNCONFIGERROR = "FailedOperation.CdnConfigError"
@@ -3773,8 +2834,6 @@ func (c *Client) DescribeTopData(request *DescribeTopDataRequest) (response *Des
 //
 // + 仅支持 90 天内数据查询，且从2021年09月20日开始有数据
 //
-// + 本接口为beta版，尚未正式全量发布
-//
 // 可能返回的错误码:
 //  FAILEDOPERATION_CDNCONFIGERROR = "FailedOperation.CdnConfigError"
 //  INTERNALERROR_CAMSYSTEMERROR = "InternalError.CamSystemError"
@@ -3809,6 +2868,7 @@ func (c *Client) DescribeTopDataWithContext(ctx context.Context, request *Descri
     if request == nil {
         request = NewDescribeTopDataRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "cdn", APIVersion, "DescribeTopData")
     
     if c.GetCredential() == nil {
         return nil, errors.New("DescribeTopData require credential")
@@ -3874,6 +2934,7 @@ func (c *Client) DescribeTrafficPackagesWithContext(ctx context.Context, request
     if request == nil {
         request = NewDescribeTrafficPackagesRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "cdn", APIVersion, "DescribeTrafficPackages")
     
     if c.GetCredential() == nil {
         return nil, errors.New("DescribeTrafficPackages require credential")
@@ -3908,7 +2969,7 @@ func NewDescribeUrlViolationsResponse() (response *DescribeUrlViolationsResponse
 // DescribeUrlViolations
 // DescribeUrlViolations 用于查询被 CDN 系统扫描到的域名违规 URL 列表及当前状态。
 //
-// 对应内容分发网络控制台【图片鉴黄】页面。
+// 对应内容分发网络控制台【内容合规】页面。
 //
 // 可能返回的错误码:
 //  INTERNALERROR_CDNDBERROR = "InternalError.CdnDbError"
@@ -3927,7 +2988,7 @@ func (c *Client) DescribeUrlViolations(request *DescribeUrlViolationsRequest) (r
 // DescribeUrlViolations
 // DescribeUrlViolations 用于查询被 CDN 系统扫描到的域名违规 URL 列表及当前状态。
 //
-// 对应内容分发网络控制台【图片鉴黄】页面。
+// 对应内容分发网络控制台【内容合规】页面。
 //
 // 可能返回的错误码:
 //  INTERNALERROR_CDNDBERROR = "InternalError.CdnDbError"
@@ -3943,6 +3004,7 @@ func (c *Client) DescribeUrlViolationsWithContext(ctx context.Context, request *
     if request == nil {
         request = NewDescribeUrlViolationsRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "cdn", APIVersion, "DescribeUrlViolations")
     
     if c.GetCredential() == nil {
         return nil, errors.New("DescribeUrlViolations require credential")
@@ -3951,186 +3013,6 @@ func (c *Client) DescribeUrlViolationsWithContext(ctx context.Context, request *
     request.SetContext(ctx)
     
     response = NewDescribeUrlViolationsResponse()
-    err = c.Send(request, response)
-    return
-}
-
-func NewDescribeWafDataRequest() (request *DescribeWafDataRequest) {
-    request = &DescribeWafDataRequest{
-        BaseRequest: &tchttp.BaseRequest{},
-    }
-    
-    request.Init().WithApiInfo("cdn", APIVersion, "DescribeWafData")
-    
-    
-    return
-}
-
-func NewDescribeWafDataResponse() (response *DescribeWafDataResponse) {
-    response = &DescribeWafDataResponse{
-        BaseResponse: &tchttp.BaseResponse{},
-    } 
-    return
-
-}
-
-// DescribeWafData
-// Waf统计数据查询
-//
-// 可能返回的错误码:
-//  INTERNALERROR_CDNCONFIGERROR = "InternalError.CdnConfigError"
-//  INTERNALERROR_CDNDBERROR = "InternalError.CdnDbError"
-//  INTERNALERROR_CDNSYSTEMERROR = "InternalError.CdnSystemError"
-//  INTERNALERROR_DATASYSTEMERROR = "InternalError.DataSystemError"
-//  INTERNALERROR_PROXYSERVER = "InternalError.ProxyServer"
-//  INTERNALERROR_SYSTEMDBERROR = "InternalError.SystemDBError"
-//  INVALIDPARAMETER_CDNSTATUSINVALIDDOMAIN = "InvalidParameter.CDNStatusInvalidDomain"
-//  INVALIDPARAMETER_CDNPARAMERROR = "InvalidParameter.CdnParamError"
-//  INVALIDPARAMETER_CDNSTATINVALIDDATE = "InvalidParameter.CdnStatInvalidDate"
-//  INVALIDPARAMETER_CDNSTATINVALIDFILTER = "InvalidParameter.CdnStatInvalidFilter"
-//  INVALIDPARAMETER_CDNSTATINVALIDMETRIC = "InvalidParameter.CdnStatInvalidMetric"
-//  INVALIDPARAMETER_PARAMERROR = "InvalidParameter.ParamError"
-//  RESOURCENOTFOUND_CDNHOSTNOTEXISTS = "ResourceNotFound.CdnHostNotExists"
-//  RESOURCENOTFOUND_CDNUSERNOTEXISTS = "ResourceNotFound.CdnUserNotExists"
-//  UNAUTHORIZEDOPERATION_CDNACCOUNTUNAUTHORIZED = "UnauthorizedOperation.CdnAccountUnauthorized"
-//  UNAUTHORIZEDOPERATION_CDNCAMUNAUTHORIZED = "UnauthorizedOperation.CdnCamUnauthorized"
-//  UNAUTHORIZEDOPERATION_CDNHOSTUNAUTHORIZED = "UnauthorizedOperation.CdnHostUnauthorized"
-//  UNAUTHORIZEDOPERATION_DOMAINEMPTY = "UnauthorizedOperation.DomainEmpty"
-//  UNAUTHORIZEDOPERATION_NOPERMISSION = "UnauthorizedOperation.NoPermission"
-//  UNAUTHORIZEDOPERATION_UNKNOWN = "UnauthorizedOperation.Unknown"
-func (c *Client) DescribeWafData(request *DescribeWafDataRequest) (response *DescribeWafDataResponse, err error) {
-    return c.DescribeWafDataWithContext(context.Background(), request)
-}
-
-// DescribeWafData
-// Waf统计数据查询
-//
-// 可能返回的错误码:
-//  INTERNALERROR_CDNCONFIGERROR = "InternalError.CdnConfigError"
-//  INTERNALERROR_CDNDBERROR = "InternalError.CdnDbError"
-//  INTERNALERROR_CDNSYSTEMERROR = "InternalError.CdnSystemError"
-//  INTERNALERROR_DATASYSTEMERROR = "InternalError.DataSystemError"
-//  INTERNALERROR_PROXYSERVER = "InternalError.ProxyServer"
-//  INTERNALERROR_SYSTEMDBERROR = "InternalError.SystemDBError"
-//  INVALIDPARAMETER_CDNSTATUSINVALIDDOMAIN = "InvalidParameter.CDNStatusInvalidDomain"
-//  INVALIDPARAMETER_CDNPARAMERROR = "InvalidParameter.CdnParamError"
-//  INVALIDPARAMETER_CDNSTATINVALIDDATE = "InvalidParameter.CdnStatInvalidDate"
-//  INVALIDPARAMETER_CDNSTATINVALIDFILTER = "InvalidParameter.CdnStatInvalidFilter"
-//  INVALIDPARAMETER_CDNSTATINVALIDMETRIC = "InvalidParameter.CdnStatInvalidMetric"
-//  INVALIDPARAMETER_PARAMERROR = "InvalidParameter.ParamError"
-//  RESOURCENOTFOUND_CDNHOSTNOTEXISTS = "ResourceNotFound.CdnHostNotExists"
-//  RESOURCENOTFOUND_CDNUSERNOTEXISTS = "ResourceNotFound.CdnUserNotExists"
-//  UNAUTHORIZEDOPERATION_CDNACCOUNTUNAUTHORIZED = "UnauthorizedOperation.CdnAccountUnauthorized"
-//  UNAUTHORIZEDOPERATION_CDNCAMUNAUTHORIZED = "UnauthorizedOperation.CdnCamUnauthorized"
-//  UNAUTHORIZEDOPERATION_CDNHOSTUNAUTHORIZED = "UnauthorizedOperation.CdnHostUnauthorized"
-//  UNAUTHORIZEDOPERATION_DOMAINEMPTY = "UnauthorizedOperation.DomainEmpty"
-//  UNAUTHORIZEDOPERATION_NOPERMISSION = "UnauthorizedOperation.NoPermission"
-//  UNAUTHORIZEDOPERATION_UNKNOWN = "UnauthorizedOperation.Unknown"
-func (c *Client) DescribeWafDataWithContext(ctx context.Context, request *DescribeWafDataRequest) (response *DescribeWafDataResponse, err error) {
-    if request == nil {
-        request = NewDescribeWafDataRequest()
-    }
-    
-    if c.GetCredential() == nil {
-        return nil, errors.New("DescribeWafData require credential")
-    }
-
-    request.SetContext(ctx)
-    
-    response = NewDescribeWafDataResponse()
-    err = c.Send(request, response)
-    return
-}
-
-func NewDisableCachesRequest() (request *DisableCachesRequest) {
-    request = &DisableCachesRequest{
-        BaseRequest: &tchttp.BaseRequest{},
-    }
-    
-    request.Init().WithApiInfo("cdn", APIVersion, "DisableCaches")
-    
-    
-    return
-}
-
-func NewDisableCachesResponse() (response *DisableCachesResponse) {
-    response = &DisableCachesResponse{
-        BaseResponse: &tchttp.BaseResponse{},
-    } 
-    return
-
-}
-
-// DisableCaches
-// ### <font color=red>**该接口已废弃** </font><br>
-//
-// DisableCaches 用于禁用 CDN 上指定 URL 的访问，禁用完成后，中国境内访问会直接返回 403。
-//
-// 可能返回的错误码:
-//  INTERNALERROR_CDNDBERROR = "InternalError.CdnDbError"
-//  INTERNALERROR_CDNSYSTEMERROR = "InternalError.CdnSystemError"
-//  INVALIDPARAMETER_CDNSTATUSINVALIDDOMAIN = "InvalidParameter.CDNStatusInvalidDomain"
-//  INVALIDPARAMETER_CDNHOSTINVALIDPARAM = "InvalidParameter.CdnHostInvalidParam"
-//  INVALIDPARAMETER_CDNHOSTINVALIDSTATUS = "InvalidParameter.CdnHostInvalidStatus"
-//  INVALIDPARAMETER_CDNINTERFACEERROR = "InvalidParameter.CdnInterfaceError"
-//  INVALIDPARAMETER_CDNPARAMERROR = "InvalidParameter.CdnParamError"
-//  INVALIDPARAMETER_CDNSTATINVALIDDATE = "InvalidParameter.CdnStatInvalidDate"
-//  INVALIDPARAMETER_CDNSTATINVALIDPROJECTID = "InvalidParameter.CdnStatInvalidProjectId"
-//  LIMITEXCEEDED_CDNHOSTOPTOOOFTEN = "LimitExceeded.CdnHostOpTooOften"
-//  LIMITEXCEEDED_CDNPUSHEXCEEDDAYLIMIT = "LimitExceeded.CdnPushExceedDayLimit"
-//  RESOURCENOTFOUND_CDNHOSTNOTEXISTS = "ResourceNotFound.CdnHostNotExists"
-//  RESOURCENOTFOUND_CDNUSERNOTEXISTS = "ResourceNotFound.CdnUserNotExists"
-//  UNAUTHORIZEDOPERATION_CDNACCOUNTUNAUTHORIZED = "UnauthorizedOperation.CdnAccountUnauthorized"
-//  UNAUTHORIZEDOPERATION_CDNCAMUNAUTHORIZED = "UnauthorizedOperation.CdnCamUnauthorized"
-//  UNAUTHORIZEDOPERATION_CDNHOSTUNAUTHORIZED = "UnauthorizedOperation.CdnHostUnauthorized"
-//  UNAUTHORIZEDOPERATION_CDNUSERAUTHFAIL = "UnauthorizedOperation.CdnUserAuthFail"
-//  UNAUTHORIZEDOPERATION_CDNUSERAUTHWAIT = "UnauthorizedOperation.CdnUserAuthWait"
-//  UNAUTHORIZEDOPERATION_CDNUSERISSUSPENDED = "UnauthorizedOperation.CdnUserIsSuspended"
-//  UNAUTHORIZEDOPERATION_CDNUSERNOWHITELIST = "UnauthorizedOperation.CdnUserNoWhitelist"
-//  UNAUTHORIZEDOPERATION_OPERATIONTOOOFTEN = "UnauthorizedOperation.OperationTooOften"
-func (c *Client) DisableCaches(request *DisableCachesRequest) (response *DisableCachesResponse, err error) {
-    return c.DisableCachesWithContext(context.Background(), request)
-}
-
-// DisableCaches
-// ### <font color=red>**该接口已废弃** </font><br>
-//
-// DisableCaches 用于禁用 CDN 上指定 URL 的访问，禁用完成后，中国境内访问会直接返回 403。
-//
-// 可能返回的错误码:
-//  INTERNALERROR_CDNDBERROR = "InternalError.CdnDbError"
-//  INTERNALERROR_CDNSYSTEMERROR = "InternalError.CdnSystemError"
-//  INVALIDPARAMETER_CDNSTATUSINVALIDDOMAIN = "InvalidParameter.CDNStatusInvalidDomain"
-//  INVALIDPARAMETER_CDNHOSTINVALIDPARAM = "InvalidParameter.CdnHostInvalidParam"
-//  INVALIDPARAMETER_CDNHOSTINVALIDSTATUS = "InvalidParameter.CdnHostInvalidStatus"
-//  INVALIDPARAMETER_CDNINTERFACEERROR = "InvalidParameter.CdnInterfaceError"
-//  INVALIDPARAMETER_CDNPARAMERROR = "InvalidParameter.CdnParamError"
-//  INVALIDPARAMETER_CDNSTATINVALIDDATE = "InvalidParameter.CdnStatInvalidDate"
-//  INVALIDPARAMETER_CDNSTATINVALIDPROJECTID = "InvalidParameter.CdnStatInvalidProjectId"
-//  LIMITEXCEEDED_CDNHOSTOPTOOOFTEN = "LimitExceeded.CdnHostOpTooOften"
-//  LIMITEXCEEDED_CDNPUSHEXCEEDDAYLIMIT = "LimitExceeded.CdnPushExceedDayLimit"
-//  RESOURCENOTFOUND_CDNHOSTNOTEXISTS = "ResourceNotFound.CdnHostNotExists"
-//  RESOURCENOTFOUND_CDNUSERNOTEXISTS = "ResourceNotFound.CdnUserNotExists"
-//  UNAUTHORIZEDOPERATION_CDNACCOUNTUNAUTHORIZED = "UnauthorizedOperation.CdnAccountUnauthorized"
-//  UNAUTHORIZEDOPERATION_CDNCAMUNAUTHORIZED = "UnauthorizedOperation.CdnCamUnauthorized"
-//  UNAUTHORIZEDOPERATION_CDNHOSTUNAUTHORIZED = "UnauthorizedOperation.CdnHostUnauthorized"
-//  UNAUTHORIZEDOPERATION_CDNUSERAUTHFAIL = "UnauthorizedOperation.CdnUserAuthFail"
-//  UNAUTHORIZEDOPERATION_CDNUSERAUTHWAIT = "UnauthorizedOperation.CdnUserAuthWait"
-//  UNAUTHORIZEDOPERATION_CDNUSERISSUSPENDED = "UnauthorizedOperation.CdnUserIsSuspended"
-//  UNAUTHORIZEDOPERATION_CDNUSERNOWHITELIST = "UnauthorizedOperation.CdnUserNoWhitelist"
-//  UNAUTHORIZEDOPERATION_OPERATIONTOOOFTEN = "UnauthorizedOperation.OperationTooOften"
-func (c *Client) DisableCachesWithContext(ctx context.Context, request *DisableCachesRequest) (response *DisableCachesResponse, err error) {
-    if request == nil {
-        request = NewDisableCachesRequest()
-    }
-    
-    if c.GetCredential() == nil {
-        return nil, errors.New("DisableCaches require credential")
-    }
-
-    request.SetContext(ctx)
-    
-    response = NewDisableCachesResponse()
     err = c.Send(request, response)
     return
 }
@@ -4230,6 +3112,7 @@ func (c *Client) DisableClsLogTopicWithContext(ctx context.Context, request *Dis
     if request == nil {
         request = NewDisableClsLogTopicRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "cdn", APIVersion, "DisableClsLogTopic")
     
     if c.GetCredential() == nil {
         return nil, errors.New("DisableClsLogTopic require credential")
@@ -4367,6 +3250,7 @@ func (c *Client) DuplicateDomainConfigWithContext(ctx context.Context, request *
     if request == nil {
         request = NewDuplicateDomainConfigRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "cdn", APIVersion, "DuplicateDomainConfig")
     
     if c.GetCredential() == nil {
         return nil, errors.New("DuplicateDomainConfig require credential")
@@ -4375,91 +3259,6 @@ func (c *Client) DuplicateDomainConfigWithContext(ctx context.Context, request *
     request.SetContext(ctx)
     
     response = NewDuplicateDomainConfigResponse()
-    err = c.Send(request, response)
-    return
-}
-
-func NewEnableCachesRequest() (request *EnableCachesRequest) {
-    request = &EnableCachesRequest{
-        BaseRequest: &tchttp.BaseRequest{},
-    }
-    
-    request.Init().WithApiInfo("cdn", APIVersion, "EnableCaches")
-    
-    
-    return
-}
-
-func NewEnableCachesResponse() (response *EnableCachesResponse) {
-    response = &EnableCachesResponse{
-        BaseResponse: &tchttp.BaseResponse{},
-    } 
-    return
-
-}
-
-// EnableCaches
-// ### <font color=red>**该接口已废弃** </font><br>
-//
-// EnableCaches 用于解禁手工封禁的 URL，解禁成功后，全网生效时间约 5~10 分钟。
-//
-// 可能返回的错误码:
-//  INTERNALERROR_CDNDBERROR = "InternalError.CdnDbError"
-//  INTERNALERROR_CDNSYSTEMERROR = "InternalError.CdnSystemError"
-//  INVALIDPARAMETER_CDNSTATUSINVALIDDOMAIN = "InvalidParameter.CDNStatusInvalidDomain"
-//  INVALIDPARAMETER_CDNHOSTINVALIDPARAM = "InvalidParameter.CdnHostInvalidParam"
-//  INVALIDPARAMETER_CDNINTERFACEERROR = "InvalidParameter.CdnInterfaceError"
-//  INVALIDPARAMETER_CDNPARAMERROR = "InvalidParameter.CdnParamError"
-//  INVALIDPARAMETER_CDNSTATINVALIDDATE = "InvalidParameter.CdnStatInvalidDate"
-//  INVALIDPARAMETER_CDNSTATINVALIDPROJECTID = "InvalidParameter.CdnStatInvalidProjectId"
-//  RESOURCENOTFOUND_CDNHOSTNOTEXISTS = "ResourceNotFound.CdnHostNotExists"
-//  RESOURCENOTFOUND_CDNUSERNOTEXISTS = "ResourceNotFound.CdnUserNotExists"
-//  UNAUTHORIZEDOPERATION_CDNACCOUNTUNAUTHORIZED = "UnauthorizedOperation.CdnAccountUnauthorized"
-//  UNAUTHORIZEDOPERATION_CDNCAMUNAUTHORIZED = "UnauthorizedOperation.CdnCamUnauthorized"
-//  UNAUTHORIZEDOPERATION_CDNUSERAUTHFAIL = "UnauthorizedOperation.CdnUserAuthFail"
-//  UNAUTHORIZEDOPERATION_CDNUSERAUTHWAIT = "UnauthorizedOperation.CdnUserAuthWait"
-//  UNAUTHORIZEDOPERATION_CDNUSERISSUSPENDED = "UnauthorizedOperation.CdnUserIsSuspended"
-//  UNAUTHORIZEDOPERATION_CDNUSERNOWHITELIST = "UnauthorizedOperation.CdnUserNoWhitelist"
-//  UNAUTHORIZEDOPERATION_OPERATIONTOOOFTEN = "UnauthorizedOperation.OperationTooOften"
-func (c *Client) EnableCaches(request *EnableCachesRequest) (response *EnableCachesResponse, err error) {
-    return c.EnableCachesWithContext(context.Background(), request)
-}
-
-// EnableCaches
-// ### <font color=red>**该接口已废弃** </font><br>
-//
-// EnableCaches 用于解禁手工封禁的 URL，解禁成功后，全网生效时间约 5~10 分钟。
-//
-// 可能返回的错误码:
-//  INTERNALERROR_CDNDBERROR = "InternalError.CdnDbError"
-//  INTERNALERROR_CDNSYSTEMERROR = "InternalError.CdnSystemError"
-//  INVALIDPARAMETER_CDNSTATUSINVALIDDOMAIN = "InvalidParameter.CDNStatusInvalidDomain"
-//  INVALIDPARAMETER_CDNHOSTINVALIDPARAM = "InvalidParameter.CdnHostInvalidParam"
-//  INVALIDPARAMETER_CDNINTERFACEERROR = "InvalidParameter.CdnInterfaceError"
-//  INVALIDPARAMETER_CDNPARAMERROR = "InvalidParameter.CdnParamError"
-//  INVALIDPARAMETER_CDNSTATINVALIDDATE = "InvalidParameter.CdnStatInvalidDate"
-//  INVALIDPARAMETER_CDNSTATINVALIDPROJECTID = "InvalidParameter.CdnStatInvalidProjectId"
-//  RESOURCENOTFOUND_CDNHOSTNOTEXISTS = "ResourceNotFound.CdnHostNotExists"
-//  RESOURCENOTFOUND_CDNUSERNOTEXISTS = "ResourceNotFound.CdnUserNotExists"
-//  UNAUTHORIZEDOPERATION_CDNACCOUNTUNAUTHORIZED = "UnauthorizedOperation.CdnAccountUnauthorized"
-//  UNAUTHORIZEDOPERATION_CDNCAMUNAUTHORIZED = "UnauthorizedOperation.CdnCamUnauthorized"
-//  UNAUTHORIZEDOPERATION_CDNUSERAUTHFAIL = "UnauthorizedOperation.CdnUserAuthFail"
-//  UNAUTHORIZEDOPERATION_CDNUSERAUTHWAIT = "UnauthorizedOperation.CdnUserAuthWait"
-//  UNAUTHORIZEDOPERATION_CDNUSERISSUSPENDED = "UnauthorizedOperation.CdnUserIsSuspended"
-//  UNAUTHORIZEDOPERATION_CDNUSERNOWHITELIST = "UnauthorizedOperation.CdnUserNoWhitelist"
-//  UNAUTHORIZEDOPERATION_OPERATIONTOOOFTEN = "UnauthorizedOperation.OperationTooOften"
-func (c *Client) EnableCachesWithContext(ctx context.Context, request *EnableCachesRequest) (response *EnableCachesResponse, err error) {
-    if request == nil {
-        request = NewEnableCachesRequest()
-    }
-    
-    if c.GetCredential() == nil {
-        return nil, errors.New("EnableCaches require credential")
-    }
-
-    request.SetContext(ctx)
-    
-    response = NewEnableCachesResponse()
     err = c.Send(request, response)
     return
 }
@@ -4559,6 +3358,7 @@ func (c *Client) EnableClsLogTopicWithContext(ctx context.Context, request *Enab
     if request == nil {
         request = NewEnableClsLogTopicRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "cdn", APIVersion, "EnableClsLogTopic")
     
     if c.GetCredential() == nil {
         return nil, errors.New("EnableClsLogTopic require credential")
@@ -4567,91 +3367,6 @@ func (c *Client) EnableClsLogTopicWithContext(ctx context.Context, request *Enab
     request.SetContext(ctx)
     
     response = NewEnableClsLogTopicResponse()
-    err = c.Send(request, response)
-    return
-}
-
-func NewGetDisableRecordsRequest() (request *GetDisableRecordsRequest) {
-    request = &GetDisableRecordsRequest{
-        BaseRequest: &tchttp.BaseRequest{},
-    }
-    
-    request.Init().WithApiInfo("cdn", APIVersion, "GetDisableRecords")
-    
-    
-    return
-}
-
-func NewGetDisableRecordsResponse() (response *GetDisableRecordsResponse) {
-    response = &GetDisableRecordsResponse{
-        BaseResponse: &tchttp.BaseResponse{},
-    } 
-    return
-
-}
-
-// GetDisableRecords
-// ### <font color=red>**该接口已废弃** </font><br>
-//
-// GetDisableRecords 用于查询资源禁用历史，及 URL 当前状态。
-//
-// 可能返回的错误码:
-//  INTERNALERROR_CDNDBERROR = "InternalError.CdnDbError"
-//  INTERNALERROR_CDNSYSTEMERROR = "InternalError.CdnSystemError"
-//  INTERNALERROR_ERROR = "InternalError.Error"
-//  INVALIDPARAMETER_CDNHOSTINVALIDPARAM = "InvalidParameter.CdnHostInvalidParam"
-//  INVALIDPARAMETER_CDNINTERFACEERROR = "InvalidParameter.CdnInterfaceError"
-//  INVALIDPARAMETER_CDNPARAMERROR = "InvalidParameter.CdnParamError"
-//  INVALIDPARAMETER_CDNSTATINVALIDDATE = "InvalidParameter.CdnStatInvalidDate"
-//  INVALIDPARAMETER_CDNSTATINVALIDPROJECTID = "InvalidParameter.CdnStatInvalidProjectId"
-//  RESOURCENOTFOUND_CDNHOSTNOTEXISTS = "ResourceNotFound.CdnHostNotExists"
-//  RESOURCENOTFOUND_CDNUSERNOTEXISTS = "ResourceNotFound.CdnUserNotExists"
-//  UNAUTHORIZEDOPERATION_CDNACCOUNTUNAUTHORIZED = "UnauthorizedOperation.CdnAccountUnauthorized"
-//  UNAUTHORIZEDOPERATION_CDNCAMUNAUTHORIZED = "UnauthorizedOperation.CdnCamUnauthorized"
-//  UNAUTHORIZEDOPERATION_CDNUSERAUTHFAIL = "UnauthorizedOperation.CdnUserAuthFail"
-//  UNAUTHORIZEDOPERATION_CDNUSERAUTHWAIT = "UnauthorizedOperation.CdnUserAuthWait"
-//  UNAUTHORIZEDOPERATION_CDNUSERISSUSPENDED = "UnauthorizedOperation.CdnUserIsSuspended"
-//  UNAUTHORIZEDOPERATION_CDNUSERNOWHITELIST = "UnauthorizedOperation.CdnUserNoWhitelist"
-//  UNAUTHORIZEDOPERATION_OPERATIONTOOOFTEN = "UnauthorizedOperation.OperationTooOften"
-func (c *Client) GetDisableRecords(request *GetDisableRecordsRequest) (response *GetDisableRecordsResponse, err error) {
-    return c.GetDisableRecordsWithContext(context.Background(), request)
-}
-
-// GetDisableRecords
-// ### <font color=red>**该接口已废弃** </font><br>
-//
-// GetDisableRecords 用于查询资源禁用历史，及 URL 当前状态。
-//
-// 可能返回的错误码:
-//  INTERNALERROR_CDNDBERROR = "InternalError.CdnDbError"
-//  INTERNALERROR_CDNSYSTEMERROR = "InternalError.CdnSystemError"
-//  INTERNALERROR_ERROR = "InternalError.Error"
-//  INVALIDPARAMETER_CDNHOSTINVALIDPARAM = "InvalidParameter.CdnHostInvalidParam"
-//  INVALIDPARAMETER_CDNINTERFACEERROR = "InvalidParameter.CdnInterfaceError"
-//  INVALIDPARAMETER_CDNPARAMERROR = "InvalidParameter.CdnParamError"
-//  INVALIDPARAMETER_CDNSTATINVALIDDATE = "InvalidParameter.CdnStatInvalidDate"
-//  INVALIDPARAMETER_CDNSTATINVALIDPROJECTID = "InvalidParameter.CdnStatInvalidProjectId"
-//  RESOURCENOTFOUND_CDNHOSTNOTEXISTS = "ResourceNotFound.CdnHostNotExists"
-//  RESOURCENOTFOUND_CDNUSERNOTEXISTS = "ResourceNotFound.CdnUserNotExists"
-//  UNAUTHORIZEDOPERATION_CDNACCOUNTUNAUTHORIZED = "UnauthorizedOperation.CdnAccountUnauthorized"
-//  UNAUTHORIZEDOPERATION_CDNCAMUNAUTHORIZED = "UnauthorizedOperation.CdnCamUnauthorized"
-//  UNAUTHORIZEDOPERATION_CDNUSERAUTHFAIL = "UnauthorizedOperation.CdnUserAuthFail"
-//  UNAUTHORIZEDOPERATION_CDNUSERAUTHWAIT = "UnauthorizedOperation.CdnUserAuthWait"
-//  UNAUTHORIZEDOPERATION_CDNUSERISSUSPENDED = "UnauthorizedOperation.CdnUserIsSuspended"
-//  UNAUTHORIZEDOPERATION_CDNUSERNOWHITELIST = "UnauthorizedOperation.CdnUserNoWhitelist"
-//  UNAUTHORIZEDOPERATION_OPERATIONTOOOFTEN = "UnauthorizedOperation.OperationTooOften"
-func (c *Client) GetDisableRecordsWithContext(ctx context.Context, request *GetDisableRecordsRequest) (response *GetDisableRecordsResponse, err error) {
-    if request == nil {
-        request = NewGetDisableRecordsRequest()
-    }
-    
-    if c.GetCredential() == nil {
-        return nil, errors.New("GetDisableRecords require credential")
-    }
-
-    request.SetContext(ctx)
-    
-    response = NewGetDisableRecordsResponse()
     err = c.Send(request, response)
     return
 }
@@ -4763,6 +3478,7 @@ func (c *Client) ListClsLogTopicsWithContext(ctx context.Context, request *ListC
     if request == nil {
         request = NewListClsLogTopicsRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "cdn", APIVersion, "ListClsLogTopics")
     
     if c.GetCredential() == nil {
         return nil, errors.New("ListClsLogTopics require credential")
@@ -4874,6 +3590,7 @@ func (c *Client) ListClsTopicDomainsWithContext(ctx context.Context, request *Li
     if request == nil {
         request = NewListClsTopicDomainsRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "cdn", APIVersion, "ListClsTopicDomains")
     
     if c.GetCredential() == nil {
         return nil, errors.New("ListClsTopicDomains require credential")
@@ -4882,382 +3599,6 @@ func (c *Client) ListClsTopicDomainsWithContext(ctx context.Context, request *Li
     request.SetContext(ctx)
     
     response = NewListClsTopicDomainsResponse()
-    err = c.Send(request, response)
-    return
-}
-
-func NewListDiagnoseReportRequest() (request *ListDiagnoseReportRequest) {
-    request = &ListDiagnoseReportRequest{
-        BaseRequest: &tchttp.BaseRequest{},
-    }
-    
-    request.Init().WithApiInfo("cdn", APIVersion, "ListDiagnoseReport")
-    
-    
-    return
-}
-
-func NewListDiagnoseReportResponse() (response *ListDiagnoseReportResponse) {
-    response = &ListDiagnoseReportResponse{
-        BaseResponse: &tchttp.BaseResponse{},
-    } 
-    return
-
-}
-
-// ListDiagnoseReport
-// ### <font color=red>**该接口已废弃** </font><br>
-//
-// ListDiagnoseReport 用于获取用户诊断URL访问后各个子任务的简要详情。
-//
-// 可能返回的错误码:
-//  INTERNALERROR_CDNDBERROR = "InternalError.CdnDbError"
-//  INTERNALERROR_CDNSYSTEMERROR = "InternalError.CdnSystemError"
-//  INVALIDPARAMETER_CDNPARAMERROR = "InvalidParameter.CdnParamError"
-//  RESOURCENOTFOUND_CDNUSERNOTEXISTS = "ResourceNotFound.CdnUserNotExists"
-//  UNAUTHORIZEDOPERATION_CDNCAMUNAUTHORIZED = "UnauthorizedOperation.CdnCamUnauthorized"
-//  UNAUTHORIZEDOPERATION_OPERATIONTOOOFTEN = "UnauthorizedOperation.OperationTooOften"
-func (c *Client) ListDiagnoseReport(request *ListDiagnoseReportRequest) (response *ListDiagnoseReportResponse, err error) {
-    return c.ListDiagnoseReportWithContext(context.Background(), request)
-}
-
-// ListDiagnoseReport
-// ### <font color=red>**该接口已废弃** </font><br>
-//
-// ListDiagnoseReport 用于获取用户诊断URL访问后各个子任务的简要详情。
-//
-// 可能返回的错误码:
-//  INTERNALERROR_CDNDBERROR = "InternalError.CdnDbError"
-//  INTERNALERROR_CDNSYSTEMERROR = "InternalError.CdnSystemError"
-//  INVALIDPARAMETER_CDNPARAMERROR = "InvalidParameter.CdnParamError"
-//  RESOURCENOTFOUND_CDNUSERNOTEXISTS = "ResourceNotFound.CdnUserNotExists"
-//  UNAUTHORIZEDOPERATION_CDNCAMUNAUTHORIZED = "UnauthorizedOperation.CdnCamUnauthorized"
-//  UNAUTHORIZEDOPERATION_OPERATIONTOOOFTEN = "UnauthorizedOperation.OperationTooOften"
-func (c *Client) ListDiagnoseReportWithContext(ctx context.Context, request *ListDiagnoseReportRequest) (response *ListDiagnoseReportResponse, err error) {
-    if request == nil {
-        request = NewListDiagnoseReportRequest()
-    }
-    
-    if c.GetCredential() == nil {
-        return nil, errors.New("ListDiagnoseReport require credential")
-    }
-
-    request.SetContext(ctx)
-    
-    response = NewListDiagnoseReportResponse()
-    err = c.Send(request, response)
-    return
-}
-
-func NewListScdnDomainsRequest() (request *ListScdnDomainsRequest) {
-    request = &ListScdnDomainsRequest{
-        BaseRequest: &tchttp.BaseRequest{},
-    }
-    
-    request.Init().WithApiInfo("cdn", APIVersion, "ListScdnDomains")
-    
-    
-    return
-}
-
-func NewListScdnDomainsResponse() (response *ListScdnDomainsResponse) {
-    response = &ListScdnDomainsResponse{
-        BaseResponse: &tchttp.BaseResponse{},
-    } 
-    return
-
-}
-
-// ListScdnDomains
-// ListScdnDomains 用于查询 SCDN 安全加速域名列表，及域名基本配置信息
-//
-// 可能返回的错误码:
-//  INTERNALERROR_CDNDBERROR = "InternalError.CdnDbError"
-//  INTERNALERROR_CDNSYSTEMERROR = "InternalError.CdnSystemError"
-//  INTERNALERROR_ERROR = "InternalError.Error"
-//  INVALIDPARAMETER_CDNSTATUSINVALIDDOMAIN = "InvalidParameter.CDNStatusInvalidDomain"
-//  INVALIDPARAMETER_CDNINTERFACEERROR = "InvalidParameter.CdnInterfaceError"
-//  INVALIDPARAMETER_CDNPARAMERROR = "InvalidParameter.CdnParamError"
-//  INVALIDPARAMETER_ECDNINTERFACEERROR = "InvalidParameter.EcdnInterfaceError"
-//  RESOURCENOTFOUND_CDNHOSTNOTEXISTS = "ResourceNotFound.CdnHostNotExists"
-//  RESOURCENOTFOUND_CDNUSERNOTEXISTS = "ResourceNotFound.CdnUserNotExists"
-func (c *Client) ListScdnDomains(request *ListScdnDomainsRequest) (response *ListScdnDomainsResponse, err error) {
-    return c.ListScdnDomainsWithContext(context.Background(), request)
-}
-
-// ListScdnDomains
-// ListScdnDomains 用于查询 SCDN 安全加速域名列表，及域名基本配置信息
-//
-// 可能返回的错误码:
-//  INTERNALERROR_CDNDBERROR = "InternalError.CdnDbError"
-//  INTERNALERROR_CDNSYSTEMERROR = "InternalError.CdnSystemError"
-//  INTERNALERROR_ERROR = "InternalError.Error"
-//  INVALIDPARAMETER_CDNSTATUSINVALIDDOMAIN = "InvalidParameter.CDNStatusInvalidDomain"
-//  INVALIDPARAMETER_CDNINTERFACEERROR = "InvalidParameter.CdnInterfaceError"
-//  INVALIDPARAMETER_CDNPARAMERROR = "InvalidParameter.CdnParamError"
-//  INVALIDPARAMETER_ECDNINTERFACEERROR = "InvalidParameter.EcdnInterfaceError"
-//  RESOURCENOTFOUND_CDNHOSTNOTEXISTS = "ResourceNotFound.CdnHostNotExists"
-//  RESOURCENOTFOUND_CDNUSERNOTEXISTS = "ResourceNotFound.CdnUserNotExists"
-func (c *Client) ListScdnDomainsWithContext(ctx context.Context, request *ListScdnDomainsRequest) (response *ListScdnDomainsResponse, err error) {
-    if request == nil {
-        request = NewListScdnDomainsRequest()
-    }
-    
-    if c.GetCredential() == nil {
-        return nil, errors.New("ListScdnDomains require credential")
-    }
-
-    request.SetContext(ctx)
-    
-    response = NewListScdnDomainsResponse()
-    err = c.Send(request, response)
-    return
-}
-
-func NewListScdnLogTasksRequest() (request *ListScdnLogTasksRequest) {
-    request = &ListScdnLogTasksRequest{
-        BaseRequest: &tchttp.BaseRequest{},
-    }
-    
-    request.Init().WithApiInfo("cdn", APIVersion, "ListScdnLogTasks")
-    
-    
-    return
-}
-
-func NewListScdnLogTasksResponse() (response *ListScdnLogTasksResponse) {
-    response = &ListScdnLogTasksResponse{
-        BaseResponse: &tchttp.BaseResponse{},
-    } 
-    return
-
-}
-
-// ListScdnLogTasks
-// ListScdnLogTasks 用于查询SCDN日志下载任务列表,以及展示下载任务基本信息
-//
-// 可能返回的错误码:
-//  INTERNALERROR_CDNDBERROR = "InternalError.CdnDbError"
-//  INTERNALERROR_CDNSYSTEMERROR = "InternalError.CdnSystemError"
-//  INTERNALERROR_PROXYSERVER = "InternalError.ProxyServer"
-//  INVALIDPARAMETER_CDNSTATUSINVALIDDOMAIN = "InvalidParameter.CDNStatusInvalidDomain"
-//  INVALIDPARAMETER_CDNPARAMERROR = "InvalidParameter.CdnParamError"
-//  RESOURCENOTFOUND_CDNHOSTNOTEXISTS = "ResourceNotFound.CdnHostNotExists"
-//  RESOURCENOTFOUND_CDNUSERNOTEXISTS = "ResourceNotFound.CdnUserNotExists"
-//  UNAUTHORIZEDOPERATION_CDNCAMUNAUTHORIZED = "UnauthorizedOperation.CdnCamUnauthorized"
-//  UNAUTHORIZEDOPERATION_NOPERMISSION = "UnauthorizedOperation.NoPermission"
-func (c *Client) ListScdnLogTasks(request *ListScdnLogTasksRequest) (response *ListScdnLogTasksResponse, err error) {
-    return c.ListScdnLogTasksWithContext(context.Background(), request)
-}
-
-// ListScdnLogTasks
-// ListScdnLogTasks 用于查询SCDN日志下载任务列表,以及展示下载任务基本信息
-//
-// 可能返回的错误码:
-//  INTERNALERROR_CDNDBERROR = "InternalError.CdnDbError"
-//  INTERNALERROR_CDNSYSTEMERROR = "InternalError.CdnSystemError"
-//  INTERNALERROR_PROXYSERVER = "InternalError.ProxyServer"
-//  INVALIDPARAMETER_CDNSTATUSINVALIDDOMAIN = "InvalidParameter.CDNStatusInvalidDomain"
-//  INVALIDPARAMETER_CDNPARAMERROR = "InvalidParameter.CdnParamError"
-//  RESOURCENOTFOUND_CDNHOSTNOTEXISTS = "ResourceNotFound.CdnHostNotExists"
-//  RESOURCENOTFOUND_CDNUSERNOTEXISTS = "ResourceNotFound.CdnUserNotExists"
-//  UNAUTHORIZEDOPERATION_CDNCAMUNAUTHORIZED = "UnauthorizedOperation.CdnCamUnauthorized"
-//  UNAUTHORIZEDOPERATION_NOPERMISSION = "UnauthorizedOperation.NoPermission"
-func (c *Client) ListScdnLogTasksWithContext(ctx context.Context, request *ListScdnLogTasksRequest) (response *ListScdnLogTasksResponse, err error) {
-    if request == nil {
-        request = NewListScdnLogTasksRequest()
-    }
-    
-    if c.GetCredential() == nil {
-        return nil, errors.New("ListScdnLogTasks require credential")
-    }
-
-    request.SetContext(ctx)
-    
-    response = NewListScdnLogTasksResponse()
-    err = c.Send(request, response)
-    return
-}
-
-func NewListScdnTopBotDataRequest() (request *ListScdnTopBotDataRequest) {
-    request = &ListScdnTopBotDataRequest{
-        BaseRequest: &tchttp.BaseRequest{},
-    }
-    
-    request.Init().WithApiInfo("cdn", APIVersion, "ListScdnTopBotData")
-    
-    
-    return
-}
-
-func NewListScdnTopBotDataResponse() (response *ListScdnTopBotDataResponse) {
-    response = &ListScdnTopBotDataResponse{
-        BaseResponse: &tchttp.BaseResponse{},
-    } 
-    return
-
-}
-
-// ListScdnTopBotData
-// 获取Bot攻击的Top数据列表
-//
-// 可能返回的错误码:
-//  INTERNALERROR_ERROR = "InternalError.Error"
-//  INTERNALERROR_SYSTEMDBERROR = "InternalError.SystemDBError"
-//  UNAUTHORIZEDOPERATION_CDNACCOUNTUNAUTHORIZED = "UnauthorizedOperation.CdnAccountUnauthorized"
-//  UNAUTHORIZEDOPERATION_CDNCAMUNAUTHORIZED = "UnauthorizedOperation.CdnCamUnauthorized"
-//  UNAUTHORIZEDOPERATION_CLSINVALIDAUTHORIZATION = "UnauthorizedOperation.ClsInvalidAuthorization"
-//  UNAUTHORIZEDOPERATION_CLSUNAUTHORIZED = "UnauthorizedOperation.ClsUnauthorized"
-//  UNAUTHORIZEDOPERATION_DOMAINEMPTY = "UnauthorizedOperation.DomainEmpty"
-//  UNAUTHORIZEDOPERATION_UNKNOWN = "UnauthorizedOperation.Unknown"
-func (c *Client) ListScdnTopBotData(request *ListScdnTopBotDataRequest) (response *ListScdnTopBotDataResponse, err error) {
-    return c.ListScdnTopBotDataWithContext(context.Background(), request)
-}
-
-// ListScdnTopBotData
-// 获取Bot攻击的Top数据列表
-//
-// 可能返回的错误码:
-//  INTERNALERROR_ERROR = "InternalError.Error"
-//  INTERNALERROR_SYSTEMDBERROR = "InternalError.SystemDBError"
-//  UNAUTHORIZEDOPERATION_CDNACCOUNTUNAUTHORIZED = "UnauthorizedOperation.CdnAccountUnauthorized"
-//  UNAUTHORIZEDOPERATION_CDNCAMUNAUTHORIZED = "UnauthorizedOperation.CdnCamUnauthorized"
-//  UNAUTHORIZEDOPERATION_CLSINVALIDAUTHORIZATION = "UnauthorizedOperation.ClsInvalidAuthorization"
-//  UNAUTHORIZEDOPERATION_CLSUNAUTHORIZED = "UnauthorizedOperation.ClsUnauthorized"
-//  UNAUTHORIZEDOPERATION_DOMAINEMPTY = "UnauthorizedOperation.DomainEmpty"
-//  UNAUTHORIZEDOPERATION_UNKNOWN = "UnauthorizedOperation.Unknown"
-func (c *Client) ListScdnTopBotDataWithContext(ctx context.Context, request *ListScdnTopBotDataRequest) (response *ListScdnTopBotDataResponse, err error) {
-    if request == nil {
-        request = NewListScdnTopBotDataRequest()
-    }
-    
-    if c.GetCredential() == nil {
-        return nil, errors.New("ListScdnTopBotData require credential")
-    }
-
-    request.SetContext(ctx)
-    
-    response = NewListScdnTopBotDataResponse()
-    err = c.Send(request, response)
-    return
-}
-
-func NewListTopBotDataRequest() (request *ListTopBotDataRequest) {
-    request = &ListTopBotDataRequest{
-        BaseRequest: &tchttp.BaseRequest{},
-    }
-    
-    request.Init().WithApiInfo("cdn", APIVersion, "ListTopBotData")
-    
-    
-    return
-}
-
-func NewListTopBotDataResponse() (response *ListTopBotDataResponse) {
-    response = &ListTopBotDataResponse{
-        BaseResponse: &tchttp.BaseResponse{},
-    } 
-    return
-
-}
-
-// ListTopBotData
-// 获取Bot攻击的Top信息
-//
-// 可能返回的错误码:
-//  INTERNALERROR_ERROR = "InternalError.Error"
-//  INVALIDPARAMETER_PARAMERROR = "InvalidParameter.ParamError"
-//  UNAUTHORIZEDOPERATION_CDNACCOUNTUNAUTHORIZED = "UnauthorizedOperation.CdnAccountUnauthorized"
-//  UNAUTHORIZEDOPERATION_CDNCAMUNAUTHORIZED = "UnauthorizedOperation.CdnCamUnauthorized"
-//  UNAUTHORIZEDOPERATION_CLSINVALIDAUTHORIZATION = "UnauthorizedOperation.ClsInvalidAuthorization"
-//  UNAUTHORIZEDOPERATION_CLSUNAUTHORIZED = "UnauthorizedOperation.ClsUnauthorized"
-func (c *Client) ListTopBotData(request *ListTopBotDataRequest) (response *ListTopBotDataResponse, err error) {
-    return c.ListTopBotDataWithContext(context.Background(), request)
-}
-
-// ListTopBotData
-// 获取Bot攻击的Top信息
-//
-// 可能返回的错误码:
-//  INTERNALERROR_ERROR = "InternalError.Error"
-//  INVALIDPARAMETER_PARAMERROR = "InvalidParameter.ParamError"
-//  UNAUTHORIZEDOPERATION_CDNACCOUNTUNAUTHORIZED = "UnauthorizedOperation.CdnAccountUnauthorized"
-//  UNAUTHORIZEDOPERATION_CDNCAMUNAUTHORIZED = "UnauthorizedOperation.CdnCamUnauthorized"
-//  UNAUTHORIZEDOPERATION_CLSINVALIDAUTHORIZATION = "UnauthorizedOperation.ClsInvalidAuthorization"
-//  UNAUTHORIZEDOPERATION_CLSUNAUTHORIZED = "UnauthorizedOperation.ClsUnauthorized"
-func (c *Client) ListTopBotDataWithContext(ctx context.Context, request *ListTopBotDataRequest) (response *ListTopBotDataResponse, err error) {
-    if request == nil {
-        request = NewListTopBotDataRequest()
-    }
-    
-    if c.GetCredential() == nil {
-        return nil, errors.New("ListTopBotData require credential")
-    }
-
-    request.SetContext(ctx)
-    
-    response = NewListTopBotDataResponse()
-    err = c.Send(request, response)
-    return
-}
-
-func NewListTopCcDataRequest() (request *ListTopCcDataRequest) {
-    request = &ListTopCcDataRequest{
-        BaseRequest: &tchttp.BaseRequest{},
-    }
-    
-    request.Init().WithApiInfo("cdn", APIVersion, "ListTopCcData")
-    
-    
-    return
-}
-
-func NewListTopCcDataResponse() (response *ListTopCcDataResponse) {
-    response = &ListTopCcDataResponse{
-        BaseResponse: &tchttp.BaseResponse{},
-    } 
-    return
-
-}
-
-// ListTopCcData
-// 获取CC攻击Top数据
-//
-// 可能返回的错误码:
-//  INTERNALERROR_PROXYSERVER = "InternalError.ProxyServer"
-//  INTERNALERROR_SYSTEMERROR = "InternalError.SystemError"
-//  INVALIDPARAMETER_PARAMERROR = "InvalidParameter.ParamError"
-//  UNAUTHORIZEDOPERATION_CDNCAMUNAUTHORIZED = "UnauthorizedOperation.CdnCamUnauthorized"
-//  UNAUTHORIZEDOPERATION_DOMAINEMPTY = "UnauthorizedOperation.DomainEmpty"
-//  UNAUTHORIZEDOPERATION_UNKNOWN = "UnauthorizedOperation.Unknown"
-//  UNKNOWNPARAMETER = "UnknownParameter"
-func (c *Client) ListTopCcData(request *ListTopCcDataRequest) (response *ListTopCcDataResponse, err error) {
-    return c.ListTopCcDataWithContext(context.Background(), request)
-}
-
-// ListTopCcData
-// 获取CC攻击Top数据
-//
-// 可能返回的错误码:
-//  INTERNALERROR_PROXYSERVER = "InternalError.ProxyServer"
-//  INTERNALERROR_SYSTEMERROR = "InternalError.SystemError"
-//  INVALIDPARAMETER_PARAMERROR = "InvalidParameter.ParamError"
-//  UNAUTHORIZEDOPERATION_CDNCAMUNAUTHORIZED = "UnauthorizedOperation.CdnCamUnauthorized"
-//  UNAUTHORIZEDOPERATION_DOMAINEMPTY = "UnauthorizedOperation.DomainEmpty"
-//  UNAUTHORIZEDOPERATION_UNKNOWN = "UnauthorizedOperation.Unknown"
-//  UNKNOWNPARAMETER = "UnknownParameter"
-func (c *Client) ListTopCcDataWithContext(ctx context.Context, request *ListTopCcDataRequest) (response *ListTopCcDataResponse, err error) {
-    if request == nil {
-        request = NewListTopCcDataRequest()
-    }
-    
-    if c.GetCredential() == nil {
-        return nil, errors.New("ListTopCcData require credential")
-    }
-
-    request.SetContext(ctx)
-    
-    response = NewListTopCcDataResponse()
     err = c.Send(request, response)
     return
 }
@@ -5367,6 +3708,7 @@ func (c *Client) ListTopClsLogDataWithContext(ctx context.Context, request *List
     if request == nil {
         request = NewListTopClsLogDataRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "cdn", APIVersion, "ListTopClsLogData")
     
     if c.GetCredential() == nil {
         return nil, errors.New("ListTopClsLogData require credential")
@@ -5375,79 +3717,6 @@ func (c *Client) ListTopClsLogDataWithContext(ctx context.Context, request *List
     request.SetContext(ctx)
     
     response = NewListTopClsLogDataResponse()
-    err = c.Send(request, response)
-    return
-}
-
-func NewListTopDDoSDataRequest() (request *ListTopDDoSDataRequest) {
-    request = &ListTopDDoSDataRequest{
-        BaseRequest: &tchttp.BaseRequest{},
-    }
-    
-    request.Init().WithApiInfo("cdn", APIVersion, "ListTopDDoSData")
-    
-    
-    return
-}
-
-func NewListTopDDoSDataResponse() (response *ListTopDDoSDataResponse) {
-    response = &ListTopDDoSDataResponse{
-        BaseResponse: &tchttp.BaseResponse{},
-    } 
-    return
-
-}
-
-// ListTopDDoSData
-// 获取DDoS攻击Top数据
-//
-// 可能返回的错误码:
-//  INTERNALERROR = "InternalError"
-//  INTERNALERROR_PROXYSERVER = "InternalError.ProxyServer"
-//  INVALIDPARAMETER = "InvalidParameter"
-//  INVALIDPARAMETER_PARAMERROR = "InvalidParameter.ParamError"
-//  LIMITEXCEEDED = "LimitExceeded"
-//  MISSINGPARAMETER = "MissingParameter"
-//  REQUESTLIMITEXCEEDED = "RequestLimitExceeded"
-//  RESOURCEUNAVAILABLE = "ResourceUnavailable"
-//  UNAUTHORIZEDOPERATION = "UnauthorizedOperation"
-//  UNAUTHORIZEDOPERATION_CDNCAMUNAUTHORIZED = "UnauthorizedOperation.CdnCamUnauthorized"
-//  UNAUTHORIZEDOPERATION_UNKNOWN = "UnauthorizedOperation.Unknown"
-//  UNKNOWNPARAMETER = "UnknownParameter"
-//  UNSUPPORTEDOPERATION = "UnsupportedOperation"
-func (c *Client) ListTopDDoSData(request *ListTopDDoSDataRequest) (response *ListTopDDoSDataResponse, err error) {
-    return c.ListTopDDoSDataWithContext(context.Background(), request)
-}
-
-// ListTopDDoSData
-// 获取DDoS攻击Top数据
-//
-// 可能返回的错误码:
-//  INTERNALERROR = "InternalError"
-//  INTERNALERROR_PROXYSERVER = "InternalError.ProxyServer"
-//  INVALIDPARAMETER = "InvalidParameter"
-//  INVALIDPARAMETER_PARAMERROR = "InvalidParameter.ParamError"
-//  LIMITEXCEEDED = "LimitExceeded"
-//  MISSINGPARAMETER = "MissingParameter"
-//  REQUESTLIMITEXCEEDED = "RequestLimitExceeded"
-//  RESOURCEUNAVAILABLE = "ResourceUnavailable"
-//  UNAUTHORIZEDOPERATION = "UnauthorizedOperation"
-//  UNAUTHORIZEDOPERATION_CDNCAMUNAUTHORIZED = "UnauthorizedOperation.CdnCamUnauthorized"
-//  UNAUTHORIZEDOPERATION_UNKNOWN = "UnauthorizedOperation.Unknown"
-//  UNKNOWNPARAMETER = "UnknownParameter"
-//  UNSUPPORTEDOPERATION = "UnsupportedOperation"
-func (c *Client) ListTopDDoSDataWithContext(ctx context.Context, request *ListTopDDoSDataRequest) (response *ListTopDDoSDataResponse, err error) {
-    if request == nil {
-        request = NewListTopDDoSDataRequest()
-    }
-    
-    if c.GetCredential() == nil {
-        return nil, errors.New("ListTopDDoSData require credential")
-    }
-
-    request.SetContext(ctx)
-    
-    response = NewListTopDDoSDataResponse()
     err = c.Send(request, response)
     return
 }
@@ -5579,6 +3848,7 @@ func (c *Client) ListTopDataWithContext(ctx context.Context, request *ListTopDat
     if request == nil {
         request = NewListTopDataRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "cdn", APIVersion, "ListTopData")
     
     if c.GetCredential() == nil {
         return nil, errors.New("ListTopData require credential")
@@ -5587,87 +3857,6 @@ func (c *Client) ListTopDataWithContext(ctx context.Context, request *ListTopDat
     request.SetContext(ctx)
     
     response = NewListTopDataResponse()
-    err = c.Send(request, response)
-    return
-}
-
-func NewListTopWafDataRequest() (request *ListTopWafDataRequest) {
-    request = &ListTopWafDataRequest{
-        BaseRequest: &tchttp.BaseRequest{},
-    }
-    
-    request.Init().WithApiInfo("cdn", APIVersion, "ListTopWafData")
-    
-    
-    return
-}
-
-func NewListTopWafDataResponse() (response *ListTopWafDataResponse) {
-    response = &ListTopWafDataResponse{
-        BaseResponse: &tchttp.BaseResponse{},
-    } 
-    return
-
-}
-
-// ListTopWafData
-// 获取Waf攻击Top数据
-//
-// 可能返回的错误码:
-//  INTERNALERROR_CDNDBERROR = "InternalError.CdnDbError"
-//  INTERNALERROR_CDNSYSTEMERROR = "InternalError.CdnSystemError"
-//  INTERNALERROR_DATASYSTEMERROR = "InternalError.DataSystemError"
-//  INTERNALERROR_PROXYSERVER = "InternalError.ProxyServer"
-//  INVALIDPARAMETER_CDNSTATUSINVALIDDOMAIN = "InvalidParameter.CDNStatusInvalidDomain"
-//  INVALIDPARAMETER_CDNPARAMERROR = "InvalidParameter.CdnParamError"
-//  INVALIDPARAMETER_CDNSTATINVALIDDATE = "InvalidParameter.CdnStatInvalidDate"
-//  INVALIDPARAMETER_CDNSTATINVALIDFILTER = "InvalidParameter.CdnStatInvalidFilter"
-//  INVALIDPARAMETER_CDNSTATINVALIDMETRIC = "InvalidParameter.CdnStatInvalidMetric"
-//  INVALIDPARAMETER_PARAMERROR = "InvalidParameter.ParamError"
-//  RESOURCENOTFOUND_CDNHOSTNOTEXISTS = "ResourceNotFound.CdnHostNotExists"
-//  RESOURCENOTFOUND_CDNUSERNOTEXISTS = "ResourceNotFound.CdnUserNotExists"
-//  UNAUTHORIZEDOPERATION_CDNACCOUNTUNAUTHORIZED = "UnauthorizedOperation.CdnAccountUnauthorized"
-//  UNAUTHORIZEDOPERATION_CDNCAMUNAUTHORIZED = "UnauthorizedOperation.CdnCamUnauthorized"
-//  UNAUTHORIZEDOPERATION_DOMAINEMPTY = "UnauthorizedOperation.DomainEmpty"
-//  UNAUTHORIZEDOPERATION_NOPERMISSION = "UnauthorizedOperation.NoPermission"
-//  UNAUTHORIZEDOPERATION_UNKNOWN = "UnauthorizedOperation.Unknown"
-func (c *Client) ListTopWafData(request *ListTopWafDataRequest) (response *ListTopWafDataResponse, err error) {
-    return c.ListTopWafDataWithContext(context.Background(), request)
-}
-
-// ListTopWafData
-// 获取Waf攻击Top数据
-//
-// 可能返回的错误码:
-//  INTERNALERROR_CDNDBERROR = "InternalError.CdnDbError"
-//  INTERNALERROR_CDNSYSTEMERROR = "InternalError.CdnSystemError"
-//  INTERNALERROR_DATASYSTEMERROR = "InternalError.DataSystemError"
-//  INTERNALERROR_PROXYSERVER = "InternalError.ProxyServer"
-//  INVALIDPARAMETER_CDNSTATUSINVALIDDOMAIN = "InvalidParameter.CDNStatusInvalidDomain"
-//  INVALIDPARAMETER_CDNPARAMERROR = "InvalidParameter.CdnParamError"
-//  INVALIDPARAMETER_CDNSTATINVALIDDATE = "InvalidParameter.CdnStatInvalidDate"
-//  INVALIDPARAMETER_CDNSTATINVALIDFILTER = "InvalidParameter.CdnStatInvalidFilter"
-//  INVALIDPARAMETER_CDNSTATINVALIDMETRIC = "InvalidParameter.CdnStatInvalidMetric"
-//  INVALIDPARAMETER_PARAMERROR = "InvalidParameter.ParamError"
-//  RESOURCENOTFOUND_CDNHOSTNOTEXISTS = "ResourceNotFound.CdnHostNotExists"
-//  RESOURCENOTFOUND_CDNUSERNOTEXISTS = "ResourceNotFound.CdnUserNotExists"
-//  UNAUTHORIZEDOPERATION_CDNACCOUNTUNAUTHORIZED = "UnauthorizedOperation.CdnAccountUnauthorized"
-//  UNAUTHORIZEDOPERATION_CDNCAMUNAUTHORIZED = "UnauthorizedOperation.CdnCamUnauthorized"
-//  UNAUTHORIZEDOPERATION_DOMAINEMPTY = "UnauthorizedOperation.DomainEmpty"
-//  UNAUTHORIZEDOPERATION_NOPERMISSION = "UnauthorizedOperation.NoPermission"
-//  UNAUTHORIZEDOPERATION_UNKNOWN = "UnauthorizedOperation.Unknown"
-func (c *Client) ListTopWafDataWithContext(ctx context.Context, request *ListTopWafDataRequest) (response *ListTopWafDataResponse, err error) {
-    if request == nil {
-        request = NewListTopWafDataRequest()
-    }
-    
-    if c.GetCredential() == nil {
-        return nil, errors.New("ListTopWafData require credential")
-    }
-
-    request.SetContext(ctx)
-    
-    response = NewListTopWafDataResponse()
     err = c.Send(request, response)
     return
 }
@@ -5769,6 +3958,7 @@ func (c *Client) ManageClsTopicDomainsWithContext(ctx context.Context, request *
     if request == nil {
         request = NewManageClsTopicDomainsRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "cdn", APIVersion, "ManageClsTopicDomains")
     
     if c.GetCredential() == nil {
         return nil, errors.New("ManageClsTopicDomains require credential")
@@ -5934,6 +4124,7 @@ func (c *Client) ModifyDomainConfigWithContext(ctx context.Context, request *Mod
     if request == nil {
         request = NewModifyDomainConfigRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "cdn", APIVersion, "ModifyDomainConfig")
     
     if c.GetCredential() == nil {
         return nil, errors.New("ModifyDomainConfig require credential")
@@ -5993,6 +4184,7 @@ func (c *Client) ModifyPurgeFetchTaskStatusWithContext(ctx context.Context, requ
     if request == nil {
         request = NewModifyPurgeFetchTaskStatusRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "cdn", APIVersion, "ModifyPurgeFetchTaskStatus")
     
     if c.GetCredential() == nil {
         return nil, errors.New("ModifyPurgeFetchTaskStatus require credential")
@@ -6102,6 +4294,7 @@ func (c *Client) PurgePathCacheWithContext(ctx context.Context, request *PurgePa
     if request == nil {
         request = NewPurgePathCacheRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "cdn", APIVersion, "PurgePathCache")
     
     if c.GetCredential() == nil {
         return nil, errors.New("PurgePathCache require credential")
@@ -6217,6 +4410,7 @@ func (c *Client) PurgeUrlsCacheWithContext(ctx context.Context, request *PurgeUr
     if request == nil {
         request = NewPurgeUrlsCacheRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "cdn", APIVersion, "PurgeUrlsCache")
     
     if c.GetCredential() == nil {
         return nil, errors.New("PurgeUrlsCache require credential")
@@ -6334,6 +4528,7 @@ func (c *Client) PushUrlsCacheWithContext(ctx context.Context, request *PushUrls
     if request == nil {
         request = NewPushUrlsCacheRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "cdn", APIVersion, "PushUrlsCache")
     
     if c.GetCredential() == nil {
         return nil, errors.New("PushUrlsCache require credential")
@@ -6447,6 +4642,7 @@ func (c *Client) SearchClsLogWithContext(ctx context.Context, request *SearchCls
     if request == nil {
         request = NewSearchClsLogRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "cdn", APIVersion, "SearchClsLog")
     
     if c.GetCredential() == nil {
         return nil, errors.New("SearchClsLog require credential")
@@ -6546,6 +4742,7 @@ func (c *Client) StartCdnDomainWithContext(ctx context.Context, request *StartCd
     if request == nil {
         request = NewStartCdnDomainRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "cdn", APIVersion, "StartCdnDomain")
     
     if c.GetCredential() == nil {
         return nil, errors.New("StartCdnDomain require credential")
@@ -6554,91 +4751,6 @@ func (c *Client) StartCdnDomainWithContext(ctx context.Context, request *StartCd
     request.SetContext(ctx)
     
     response = NewStartCdnDomainResponse()
-    err = c.Send(request, response)
-    return
-}
-
-func NewStartScdnDomainRequest() (request *StartScdnDomainRequest) {
-    request = &StartScdnDomainRequest{
-        BaseRequest: &tchttp.BaseRequest{},
-    }
-    
-    request.Init().WithApiInfo("cdn", APIVersion, "StartScdnDomain")
-    
-    
-    return
-}
-
-func NewStartScdnDomainResponse() (response *StartScdnDomainResponse) {
-    response = &StartScdnDomainResponse{
-        BaseResponse: &tchttp.BaseResponse{},
-    } 
-    return
-
-}
-
-// StartScdnDomain
-// StartScdnDomain 用于开启域名的安全防护配置
-//
-// 可能返回的错误码:
-//  FAILEDOPERATION_CDNCONFIGERROR = "FailedOperation.CdnConfigError"
-//  INTERNALERROR_CDNCONFIGERROR = "InternalError.CdnConfigError"
-//  INTERNALERROR_CDNDBERROR = "InternalError.CdnDbError"
-//  INTERNALERROR_CDNSYSTEMERROR = "InternalError.CdnSystemError"
-//  INVALIDPARAMETER_CDNSTATUSINVALIDDOMAIN = "InvalidParameter.CDNStatusInvalidDomain"
-//  INVALIDPARAMETER_CDNHOSTHASSPECIALCONFIG = "InvalidParameter.CdnHostHasSpecialConfig"
-//  INVALIDPARAMETER_CDNHOSTINVALIDSTATUS = "InvalidParameter.CdnHostInvalidStatus"
-//  INVALIDPARAMETER_CDNINTERFACEERROR = "InvalidParameter.CdnInterfaceError"
-//  INVALIDPARAMETER_CDNPARAMERROR = "InvalidParameter.CdnParamError"
-//  LIMITEXCEEDED_CDNHOSTOPTOOOFTEN = "LimitExceeded.CdnHostOpTooOften"
-//  RESOURCEINUSE_CDNOPINPROGRESS = "ResourceInUse.CdnOpInProgress"
-//  RESOURCENOTFOUND_CDNHOSTNOTEXISTS = "ResourceNotFound.CdnHostNotExists"
-//  RESOURCENOTFOUND_CDNUSERNOTEXISTS = "ResourceNotFound.CdnUserNotExists"
-//  RESOURCENOTFOUND_CDNUSERTOOMANYHOSTS = "ResourceNotFound.CdnUserTooManyHosts"
-//  RESOURCEUNAVAILABLE_CDNHOSTISLOCKED = "ResourceUnavailable.CdnHostIsLocked"
-//  RESOURCEUNAVAILABLE_SCDNUSERNOPACKAGE = "ResourceUnavailable.ScdnUserNoPackage"
-//  UNAUTHORIZEDOPERATION_CDNCAMUNAUTHORIZED = "UnauthorizedOperation.CdnCamUnauthorized"
-//  UNAUTHORIZEDOPERATION_CDNUSERISSUSPENDED = "UnauthorizedOperation.CdnUserIsSuspended"
-//  UNAUTHORIZEDOPERATION_CDNUSERNOWHITELIST = "UnauthorizedOperation.CdnUserNoWhitelist"
-func (c *Client) StartScdnDomain(request *StartScdnDomainRequest) (response *StartScdnDomainResponse, err error) {
-    return c.StartScdnDomainWithContext(context.Background(), request)
-}
-
-// StartScdnDomain
-// StartScdnDomain 用于开启域名的安全防护配置
-//
-// 可能返回的错误码:
-//  FAILEDOPERATION_CDNCONFIGERROR = "FailedOperation.CdnConfigError"
-//  INTERNALERROR_CDNCONFIGERROR = "InternalError.CdnConfigError"
-//  INTERNALERROR_CDNDBERROR = "InternalError.CdnDbError"
-//  INTERNALERROR_CDNSYSTEMERROR = "InternalError.CdnSystemError"
-//  INVALIDPARAMETER_CDNSTATUSINVALIDDOMAIN = "InvalidParameter.CDNStatusInvalidDomain"
-//  INVALIDPARAMETER_CDNHOSTHASSPECIALCONFIG = "InvalidParameter.CdnHostHasSpecialConfig"
-//  INVALIDPARAMETER_CDNHOSTINVALIDSTATUS = "InvalidParameter.CdnHostInvalidStatus"
-//  INVALIDPARAMETER_CDNINTERFACEERROR = "InvalidParameter.CdnInterfaceError"
-//  INVALIDPARAMETER_CDNPARAMERROR = "InvalidParameter.CdnParamError"
-//  LIMITEXCEEDED_CDNHOSTOPTOOOFTEN = "LimitExceeded.CdnHostOpTooOften"
-//  RESOURCEINUSE_CDNOPINPROGRESS = "ResourceInUse.CdnOpInProgress"
-//  RESOURCENOTFOUND_CDNHOSTNOTEXISTS = "ResourceNotFound.CdnHostNotExists"
-//  RESOURCENOTFOUND_CDNUSERNOTEXISTS = "ResourceNotFound.CdnUserNotExists"
-//  RESOURCENOTFOUND_CDNUSERTOOMANYHOSTS = "ResourceNotFound.CdnUserTooManyHosts"
-//  RESOURCEUNAVAILABLE_CDNHOSTISLOCKED = "ResourceUnavailable.CdnHostIsLocked"
-//  RESOURCEUNAVAILABLE_SCDNUSERNOPACKAGE = "ResourceUnavailable.ScdnUserNoPackage"
-//  UNAUTHORIZEDOPERATION_CDNCAMUNAUTHORIZED = "UnauthorizedOperation.CdnCamUnauthorized"
-//  UNAUTHORIZEDOPERATION_CDNUSERISSUSPENDED = "UnauthorizedOperation.CdnUserIsSuspended"
-//  UNAUTHORIZEDOPERATION_CDNUSERNOWHITELIST = "UnauthorizedOperation.CdnUserNoWhitelist"
-func (c *Client) StartScdnDomainWithContext(ctx context.Context, request *StartScdnDomainRequest) (response *StartScdnDomainResponse, err error) {
-    if request == nil {
-        request = NewStartScdnDomainRequest()
-    }
-    
-    if c.GetCredential() == nil {
-        return nil, errors.New("StartScdnDomain require credential")
-    }
-
-    request.SetContext(ctx)
-    
-    response = NewStartScdnDomainResponse()
     err = c.Send(request, response)
     return
 }
@@ -6678,6 +4790,8 @@ func NewStopCdnDomainResponse() (response *StopCdnDomainResponse) {
 //  INVALIDPARAMETER_CDNKEYRULESEXCLUDECUSTOMREQUIRESFULLLEGO = "InvalidParameter.CdnKeyRulesExcludeCustomRequiresFullLego"
 //  INVALIDPARAMETER_CDNPARAMERROR = "InvalidParameter.CdnParamError"
 //  LIMITEXCEEDED_CDNHOSTOPTOOOFTEN = "LimitExceeded.CdnHostOpTooOften"
+//  OPERATIONDENIED_PRODUCTUPDATING = "OperationDenied.ProductUpdating"
+//  OPERATIONDENIED_PRODUCTUPGRADED = "OperationDenied.ProductUpgraded"
 //  RESOURCEINUSE_CDNOPINPROGRESS = "ResourceInUse.CdnOpInProgress"
 //  RESOURCENOTFOUND_CDNHOSTNOTEXISTS = "ResourceNotFound.CdnHostNotExists"
 //  RESOURCENOTFOUND_CDNUSERNOTEXISTS = "ResourceNotFound.CdnUserNotExists"
@@ -6710,6 +4824,8 @@ func (c *Client) StopCdnDomain(request *StopCdnDomainRequest) (response *StopCdn
 //  INVALIDPARAMETER_CDNKEYRULESEXCLUDECUSTOMREQUIRESFULLLEGO = "InvalidParameter.CdnKeyRulesExcludeCustomRequiresFullLego"
 //  INVALIDPARAMETER_CDNPARAMERROR = "InvalidParameter.CdnParamError"
 //  LIMITEXCEEDED_CDNHOSTOPTOOOFTEN = "LimitExceeded.CdnHostOpTooOften"
+//  OPERATIONDENIED_PRODUCTUPDATING = "OperationDenied.ProductUpdating"
+//  OPERATIONDENIED_PRODUCTUPGRADED = "OperationDenied.ProductUpgraded"
 //  RESOURCEINUSE_CDNOPINPROGRESS = "ResourceInUse.CdnOpInProgress"
 //  RESOURCENOTFOUND_CDNHOSTNOTEXISTS = "ResourceNotFound.CdnHostNotExists"
 //  RESOURCENOTFOUND_CDNUSERNOTEXISTS = "ResourceNotFound.CdnUserNotExists"
@@ -6726,6 +4842,7 @@ func (c *Client) StopCdnDomainWithContext(ctx context.Context, request *StopCdnD
     if request == nil {
         request = NewStopCdnDomainRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "cdn", APIVersion, "StopCdnDomain")
     
     if c.GetCredential() == nil {
         return nil, errors.New("StopCdnDomain require credential")
@@ -6734,91 +4851,6 @@ func (c *Client) StopCdnDomainWithContext(ctx context.Context, request *StopCdnD
     request.SetContext(ctx)
     
     response = NewStopCdnDomainResponse()
-    err = c.Send(request, response)
-    return
-}
-
-func NewStopScdnDomainRequest() (request *StopScdnDomainRequest) {
-    request = &StopScdnDomainRequest{
-        BaseRequest: &tchttp.BaseRequest{},
-    }
-    
-    request.Init().WithApiInfo("cdn", APIVersion, "StopScdnDomain")
-    
-    
-    return
-}
-
-func NewStopScdnDomainResponse() (response *StopScdnDomainResponse) {
-    response = &StopScdnDomainResponse{
-        BaseResponse: &tchttp.BaseResponse{},
-    } 
-    return
-
-}
-
-// StopScdnDomain
-// StopScdnDomain 用于关闭域名的安全防护配置
-//
-// 可能返回的错误码:
-//  FAILEDOPERATION_CDNCONFIGERROR = "FailedOperation.CdnConfigError"
-//  INTERNALERROR_CDNCONFIGERROR = "InternalError.CdnConfigError"
-//  INTERNALERROR_CDNDBERROR = "InternalError.CdnDbError"
-//  INTERNALERROR_CDNSYSTEMERROR = "InternalError.CdnSystemError"
-//  INVALIDPARAMETER_CDNSTATUSINVALIDDOMAIN = "InvalidParameter.CDNStatusInvalidDomain"
-//  INVALIDPARAMETER_CDNHOSTHASSPECIALCONFIG = "InvalidParameter.CdnHostHasSpecialConfig"
-//  INVALIDPARAMETER_CDNHOSTINVALIDSTATUS = "InvalidParameter.CdnHostInvalidStatus"
-//  INVALIDPARAMETER_CDNINTERFACEERROR = "InvalidParameter.CdnInterfaceError"
-//  INVALIDPARAMETER_CDNPARAMERROR = "InvalidParameter.CdnParamError"
-//  LIMITEXCEEDED_CDNHOSTOPTOOOFTEN = "LimitExceeded.CdnHostOpTooOften"
-//  RESOURCEINUSE_CDNOPINPROGRESS = "ResourceInUse.CdnOpInProgress"
-//  RESOURCENOTFOUND_CDNHOSTNOTEXISTS = "ResourceNotFound.CdnHostNotExists"
-//  RESOURCENOTFOUND_CDNUSERNOTEXISTS = "ResourceNotFound.CdnUserNotExists"
-//  RESOURCENOTFOUND_CDNUSERTOOMANYHOSTS = "ResourceNotFound.CdnUserTooManyHosts"
-//  RESOURCEUNAVAILABLE_SCDNUSERNOPACKAGE = "ResourceUnavailable.ScdnUserNoPackage"
-//  UNAUTHORIZEDOPERATION_CDNCAMUNAUTHORIZED = "UnauthorizedOperation.CdnCamUnauthorized"
-//  UNAUTHORIZEDOPERATION_CDNUSERAUTHFAIL = "UnauthorizedOperation.CdnUserAuthFail"
-//  UNAUTHORIZEDOPERATION_CDNUSERISSUSPENDED = "UnauthorizedOperation.CdnUserIsSuspended"
-//  UNAUTHORIZEDOPERATION_CDNUSERNOWHITELIST = "UnauthorizedOperation.CdnUserNoWhitelist"
-func (c *Client) StopScdnDomain(request *StopScdnDomainRequest) (response *StopScdnDomainResponse, err error) {
-    return c.StopScdnDomainWithContext(context.Background(), request)
-}
-
-// StopScdnDomain
-// StopScdnDomain 用于关闭域名的安全防护配置
-//
-// 可能返回的错误码:
-//  FAILEDOPERATION_CDNCONFIGERROR = "FailedOperation.CdnConfigError"
-//  INTERNALERROR_CDNCONFIGERROR = "InternalError.CdnConfigError"
-//  INTERNALERROR_CDNDBERROR = "InternalError.CdnDbError"
-//  INTERNALERROR_CDNSYSTEMERROR = "InternalError.CdnSystemError"
-//  INVALIDPARAMETER_CDNSTATUSINVALIDDOMAIN = "InvalidParameter.CDNStatusInvalidDomain"
-//  INVALIDPARAMETER_CDNHOSTHASSPECIALCONFIG = "InvalidParameter.CdnHostHasSpecialConfig"
-//  INVALIDPARAMETER_CDNHOSTINVALIDSTATUS = "InvalidParameter.CdnHostInvalidStatus"
-//  INVALIDPARAMETER_CDNINTERFACEERROR = "InvalidParameter.CdnInterfaceError"
-//  INVALIDPARAMETER_CDNPARAMERROR = "InvalidParameter.CdnParamError"
-//  LIMITEXCEEDED_CDNHOSTOPTOOOFTEN = "LimitExceeded.CdnHostOpTooOften"
-//  RESOURCEINUSE_CDNOPINPROGRESS = "ResourceInUse.CdnOpInProgress"
-//  RESOURCENOTFOUND_CDNHOSTNOTEXISTS = "ResourceNotFound.CdnHostNotExists"
-//  RESOURCENOTFOUND_CDNUSERNOTEXISTS = "ResourceNotFound.CdnUserNotExists"
-//  RESOURCENOTFOUND_CDNUSERTOOMANYHOSTS = "ResourceNotFound.CdnUserTooManyHosts"
-//  RESOURCEUNAVAILABLE_SCDNUSERNOPACKAGE = "ResourceUnavailable.ScdnUserNoPackage"
-//  UNAUTHORIZEDOPERATION_CDNCAMUNAUTHORIZED = "UnauthorizedOperation.CdnCamUnauthorized"
-//  UNAUTHORIZEDOPERATION_CDNUSERAUTHFAIL = "UnauthorizedOperation.CdnUserAuthFail"
-//  UNAUTHORIZEDOPERATION_CDNUSERISSUSPENDED = "UnauthorizedOperation.CdnUserIsSuspended"
-//  UNAUTHORIZEDOPERATION_CDNUSERNOWHITELIST = "UnauthorizedOperation.CdnUserNoWhitelist"
-func (c *Client) StopScdnDomainWithContext(ctx context.Context, request *StopScdnDomainRequest) (response *StopScdnDomainResponse, err error) {
-    if request == nil {
-        request = NewStopScdnDomainRequest()
-    }
-    
-    if c.GetCredential() == nil {
-        return nil, errors.New("StopScdnDomain require credential")
-    }
-
-    request.SetContext(ctx)
-    
-    response = NewStopScdnDomainResponse()
     err = c.Send(request, response)
     return
 }
@@ -6845,12 +4877,14 @@ func NewUpdateDomainConfigResponse() (response *UpdateDomainConfigResponse) {
 // UpdateDomainConfig
 // UpdateDomainConfig 用于修改内容分发网络加速域名配置信息。
 //
-// 注意：如果需要更新复杂类型的配置项，必须传递整个对象的所有属性，未传递的属性将使用默认值，建议通过查询接口获取配置属性后，直接修改后传递给本接口。
+// 注意：如果需要更新复杂类型的配置项，必须传递整个对象的所有属性，未传递的属性将使用默认值，建议通过查询接口获取配置属性后，直接修改后传递给本接口；如果仅修改单独配置项只传对应配置参数即可。
 //
 // 操作审计相关：接口的入参可能包含密钥等敏感信息，所以此接口的入参不会上报到操作审计。
 //
 // 可能返回的错误码:
 //  FAILEDOPERATION_CDNCONFIGERROR = "FailedOperation.CdnConfigError"
+//  FAILEDOPERATION_SSLCERTCANNOTGETORDER = "FailedOperation.SslCertCannotGetOrder"
+//  FAILEDOPERATION_SSLCERTNOTFOUND = "FailedOperation.SslCertNotFound"
 //  INTERNALERROR_CAMSYSTEMERROR = "InternalError.CamSystemError"
 //  INTERNALERROR_CDNCONFIGERROR = "InternalError.CdnConfigError"
 //  INTERNALERROR_CDNDBERROR = "InternalError.CdnDbError"
@@ -6877,8 +4911,12 @@ func NewUpdateDomainConfigResponse() (response *UpdateDomainConfigResponse) {
 //  INVALIDPARAMETER_PATHREGEXTOOMANYSUBPATTERN = "InvalidParameter.PathRegexTooManySubPattern"
 //  INVALIDPARAMETER_REMOTEAUTHINVALIDPLATFORM = "InvalidParameter.RemoteAuthInvalidPlatform"
 //  INVALIDPARAMETER_REMOTEAUTHINVALIDPROTOCOL = "InvalidParameter.RemoteAuthInvalidProtocol"
+//  INVALIDPARAMETER_SSLCERTCHAINERROR = "InvalidParameter.SslCertChainError"
+//  INVALIDPARAMETER_SSLCERTMATCHERROR = "InvalidParameter.SslCertMatchError"
+//  INVALIDPARAMETER_SSLCERTPARSEERROR = "InvalidParameter.SslCertParseError"
 //  LIMITEXCEEDED_CDNCONFIGTOOMANYCACHERULES = "LimitExceeded.CdnConfigTooManyCacheRules"
 //  LIMITEXCEEDED_CDNHOSTOPTOOOFTEN = "LimitExceeded.CdnHostOpTooOften"
+//  LIMITEXCEEDED_SSLCERTREQUESTLIMITEXCEEDED = "LimitExceeded.SslCertRequestLimitExceeded"
 //  OPERATIONDENIED_SHARECACHEAREADNSNOTMATCH = "OperationDenied.ShareCacheAreaDnsNotMatch"
 //  RESOURCEINUSE_CDNHOSTEXISTS = "ResourceInUse.CdnHostExists"
 //  RESOURCEINUSE_CDNOPINPROGRESS = "ResourceInUse.CdnOpInProgress"
@@ -6909,12 +4947,14 @@ func (c *Client) UpdateDomainConfig(request *UpdateDomainConfigRequest) (respons
 // UpdateDomainConfig
 // UpdateDomainConfig 用于修改内容分发网络加速域名配置信息。
 //
-// 注意：如果需要更新复杂类型的配置项，必须传递整个对象的所有属性，未传递的属性将使用默认值，建议通过查询接口获取配置属性后，直接修改后传递给本接口。
+// 注意：如果需要更新复杂类型的配置项，必须传递整个对象的所有属性，未传递的属性将使用默认值，建议通过查询接口获取配置属性后，直接修改后传递给本接口；如果仅修改单独配置项只传对应配置参数即可。
 //
 // 操作审计相关：接口的入参可能包含密钥等敏感信息，所以此接口的入参不会上报到操作审计。
 //
 // 可能返回的错误码:
 //  FAILEDOPERATION_CDNCONFIGERROR = "FailedOperation.CdnConfigError"
+//  FAILEDOPERATION_SSLCERTCANNOTGETORDER = "FailedOperation.SslCertCannotGetOrder"
+//  FAILEDOPERATION_SSLCERTNOTFOUND = "FailedOperation.SslCertNotFound"
 //  INTERNALERROR_CAMSYSTEMERROR = "InternalError.CamSystemError"
 //  INTERNALERROR_CDNCONFIGERROR = "InternalError.CdnConfigError"
 //  INTERNALERROR_CDNDBERROR = "InternalError.CdnDbError"
@@ -6941,8 +4981,12 @@ func (c *Client) UpdateDomainConfig(request *UpdateDomainConfigRequest) (respons
 //  INVALIDPARAMETER_PATHREGEXTOOMANYSUBPATTERN = "InvalidParameter.PathRegexTooManySubPattern"
 //  INVALIDPARAMETER_REMOTEAUTHINVALIDPLATFORM = "InvalidParameter.RemoteAuthInvalidPlatform"
 //  INVALIDPARAMETER_REMOTEAUTHINVALIDPROTOCOL = "InvalidParameter.RemoteAuthInvalidProtocol"
+//  INVALIDPARAMETER_SSLCERTCHAINERROR = "InvalidParameter.SslCertChainError"
+//  INVALIDPARAMETER_SSLCERTMATCHERROR = "InvalidParameter.SslCertMatchError"
+//  INVALIDPARAMETER_SSLCERTPARSEERROR = "InvalidParameter.SslCertParseError"
 //  LIMITEXCEEDED_CDNCONFIGTOOMANYCACHERULES = "LimitExceeded.CdnConfigTooManyCacheRules"
 //  LIMITEXCEEDED_CDNHOSTOPTOOOFTEN = "LimitExceeded.CdnHostOpTooOften"
+//  LIMITEXCEEDED_SSLCERTREQUESTLIMITEXCEEDED = "LimitExceeded.SslCertRequestLimitExceeded"
 //  OPERATIONDENIED_SHARECACHEAREADNSNOTMATCH = "OperationDenied.ShareCacheAreaDnsNotMatch"
 //  RESOURCEINUSE_CDNHOSTEXISTS = "ResourceInUse.CdnHostExists"
 //  RESOURCEINUSE_CDNOPINPROGRESS = "ResourceInUse.CdnOpInProgress"
@@ -6970,6 +5014,7 @@ func (c *Client) UpdateDomainConfigWithContext(ctx context.Context, request *Upd
     if request == nil {
         request = NewUpdateDomainConfigRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "cdn", APIVersion, "UpdateDomainConfig")
     
     if c.GetCredential() == nil {
         return nil, errors.New("UpdateDomainConfig require credential")
@@ -7047,6 +5092,7 @@ func (c *Client) UpdateImageConfigWithContext(ctx context.Context, request *Upda
     if request == nil {
         request = NewUpdateImageConfigRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "cdn", APIVersion, "UpdateImageConfig")
     
     if c.GetCredential() == nil {
         return nil, errors.New("UpdateImageConfig require credential")
@@ -7112,6 +5158,7 @@ func (c *Client) UpdatePayTypeWithContext(ctx context.Context, request *UpdatePa
     if request == nil {
         request = NewUpdatePayTypeRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "cdn", APIVersion, "UpdatePayType")
     
     if c.GetCredential() == nil {
         return nil, errors.New("UpdatePayType require credential")
@@ -7120,97 +5167,6 @@ func (c *Client) UpdatePayTypeWithContext(ctx context.Context, request *UpdatePa
     request.SetContext(ctx)
     
     response = NewUpdatePayTypeResponse()
-    err = c.Send(request, response)
-    return
-}
-
-func NewUpdateScdnDomainRequest() (request *UpdateScdnDomainRequest) {
-    request = &UpdateScdnDomainRequest{
-        BaseRequest: &tchttp.BaseRequest{},
-    }
-    
-    request.Init().WithApiInfo("cdn", APIVersion, "UpdateScdnDomain")
-    
-    
-    return
-}
-
-func NewUpdateScdnDomainResponse() (response *UpdateScdnDomainResponse) {
-    response = &UpdateScdnDomainResponse{
-        BaseResponse: &tchttp.BaseResponse{},
-    } 
-    return
-
-}
-
-// UpdateScdnDomain
-// UpdateScdnDomain 用于修改 SCDN 加速域名安全相关配置
-//
-// 可能返回的错误码:
-//  FAILEDOPERATION_CDNCONFIGERROR = "FailedOperation.CdnConfigError"
-//  INTERNALERROR_CDNCONFIGERROR = "InternalError.CdnConfigError"
-//  INTERNALERROR_CDNDBERROR = "InternalError.CdnDbError"
-//  INTERNALERROR_CDNSYSTEMERROR = "InternalError.CdnSystemError"
-//  INTERNALERROR_SCDNUSERNOPACKAGE = "InternalError.ScdnUserNoPackage"
-//  INTERNALERROR_SCDNUSERSUSPEND = "InternalError.ScdnUserSuspend"
-//  INVALIDPARAMETER_ACCESSPORTOPENEDHTTPS = "InvalidParameter.AccessPortOpenedHttps"
-//  INVALIDPARAMETER_CDNSTATUSINVALIDDOMAIN = "InvalidParameter.CDNStatusInvalidDomain"
-//  INVALIDPARAMETER_CDNHOSTINTERNALHOST = "InvalidParameter.CdnHostInternalHost"
-//  INVALIDPARAMETER_CDNHOSTINVALIDSTATUS = "InvalidParameter.CdnHostInvalidStatus"
-//  INVALIDPARAMETER_CDNINTERFACEERROR = "InvalidParameter.CdnInterfaceError"
-//  INVALIDPARAMETER_CDNPARAMERROR = "InvalidParameter.CdnParamError"
-//  LIMITEXCEEDED_CDNHOSTOPTOOOFTEN = "LimitExceeded.CdnHostOpTooOften"
-//  RESOURCEINUSE_CDNOPINPROGRESS = "ResourceInUse.CdnOpInProgress"
-//  RESOURCENOTFOUND_CDNHOSTNOTEXISTS = "ResourceNotFound.CdnHostNotExists"
-//  RESOURCENOTFOUND_CDNUSERNOTEXISTS = "ResourceNotFound.CdnUserNotExists"
-//  RESOURCEUNAVAILABLE_CDNHOSTISLOCKED = "ResourceUnavailable.CdnHostIsLocked"
-//  RESOURCEUNAVAILABLE_SCDNUSERNOPACKAGE = "ResourceUnavailable.ScdnUserNoPackage"
-//  UNAUTHORIZEDOPERATION_CDNCAMUNAUTHORIZED = "UnauthorizedOperation.CdnCamUnauthorized"
-//  UNAUTHORIZEDOPERATION_CDNHOSTUNAUTHORIZED = "UnauthorizedOperation.CdnHostUnauthorized"
-//  UNAUTHORIZEDOPERATION_CDNUSERISSUSPENDED = "UnauthorizedOperation.CdnUserIsSuspended"
-//  UNAUTHORIZEDOPERATION_CDNUSERNOWHITELIST = "UnauthorizedOperation.CdnUserNoWhitelist"
-func (c *Client) UpdateScdnDomain(request *UpdateScdnDomainRequest) (response *UpdateScdnDomainResponse, err error) {
-    return c.UpdateScdnDomainWithContext(context.Background(), request)
-}
-
-// UpdateScdnDomain
-// UpdateScdnDomain 用于修改 SCDN 加速域名安全相关配置
-//
-// 可能返回的错误码:
-//  FAILEDOPERATION_CDNCONFIGERROR = "FailedOperation.CdnConfigError"
-//  INTERNALERROR_CDNCONFIGERROR = "InternalError.CdnConfigError"
-//  INTERNALERROR_CDNDBERROR = "InternalError.CdnDbError"
-//  INTERNALERROR_CDNSYSTEMERROR = "InternalError.CdnSystemError"
-//  INTERNALERROR_SCDNUSERNOPACKAGE = "InternalError.ScdnUserNoPackage"
-//  INTERNALERROR_SCDNUSERSUSPEND = "InternalError.ScdnUserSuspend"
-//  INVALIDPARAMETER_ACCESSPORTOPENEDHTTPS = "InvalidParameter.AccessPortOpenedHttps"
-//  INVALIDPARAMETER_CDNSTATUSINVALIDDOMAIN = "InvalidParameter.CDNStatusInvalidDomain"
-//  INVALIDPARAMETER_CDNHOSTINTERNALHOST = "InvalidParameter.CdnHostInternalHost"
-//  INVALIDPARAMETER_CDNHOSTINVALIDSTATUS = "InvalidParameter.CdnHostInvalidStatus"
-//  INVALIDPARAMETER_CDNINTERFACEERROR = "InvalidParameter.CdnInterfaceError"
-//  INVALIDPARAMETER_CDNPARAMERROR = "InvalidParameter.CdnParamError"
-//  LIMITEXCEEDED_CDNHOSTOPTOOOFTEN = "LimitExceeded.CdnHostOpTooOften"
-//  RESOURCEINUSE_CDNOPINPROGRESS = "ResourceInUse.CdnOpInProgress"
-//  RESOURCENOTFOUND_CDNHOSTNOTEXISTS = "ResourceNotFound.CdnHostNotExists"
-//  RESOURCENOTFOUND_CDNUSERNOTEXISTS = "ResourceNotFound.CdnUserNotExists"
-//  RESOURCEUNAVAILABLE_CDNHOSTISLOCKED = "ResourceUnavailable.CdnHostIsLocked"
-//  RESOURCEUNAVAILABLE_SCDNUSERNOPACKAGE = "ResourceUnavailable.ScdnUserNoPackage"
-//  UNAUTHORIZEDOPERATION_CDNCAMUNAUTHORIZED = "UnauthorizedOperation.CdnCamUnauthorized"
-//  UNAUTHORIZEDOPERATION_CDNHOSTUNAUTHORIZED = "UnauthorizedOperation.CdnHostUnauthorized"
-//  UNAUTHORIZEDOPERATION_CDNUSERISSUSPENDED = "UnauthorizedOperation.CdnUserIsSuspended"
-//  UNAUTHORIZEDOPERATION_CDNUSERNOWHITELIST = "UnauthorizedOperation.CdnUserNoWhitelist"
-func (c *Client) UpdateScdnDomainWithContext(ctx context.Context, request *UpdateScdnDomainRequest) (response *UpdateScdnDomainResponse, err error) {
-    if request == nil {
-        request = NewUpdateScdnDomainRequest()
-    }
-    
-    if c.GetCredential() == nil {
-        return nil, errors.New("UpdateScdnDomain require credential")
-    }
-
-    request.SetContext(ctx)
-    
-    response = NewUpdateScdnDomainResponse()
     err = c.Send(request, response)
     return
 }
@@ -7270,6 +5226,7 @@ func (c *Client) VerifyDomainRecordWithContext(ctx context.Context, request *Ver
     if request == nil {
         request = NewVerifyDomainRecordRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "cdn", APIVersion, "VerifyDomainRecord")
     
     if c.GetCredential() == nil {
         return nil, errors.New("VerifyDomainRecord require credential")

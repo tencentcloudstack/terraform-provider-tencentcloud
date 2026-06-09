@@ -89,6 +89,7 @@ In addition to all arguments above, the following attributes are exported:
   * `private_ip` - Private IP of the instance.
   * `project_id` - The project CVM belongs to.
   * `public_ip` - Public IP of the instance.
+  * `rack_id` - The rack ID of the instance resource pool to which the instance belongs.
   * `security_groups` - Security groups of the instance.
   * `status` - Status of the instance.
   * `subnet_id` - ID of a vpc subnetwork.

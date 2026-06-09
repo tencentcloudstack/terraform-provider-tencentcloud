@@ -4,33 +4,126 @@ Example Usage
 
 ```hcl
 resource "tencentcloud_cls_alarm_notice" "example" {
-  name = "tf-example"
-  type = "All"
+  name                = "tf-example"
+  jump_domain         = "https://console.cloud.tencent.com"
+  deliver_status      = 2
+  alarm_shield_status = 2
+  callback_prioritize = true
+  notice_rules {
+    escalate = true
+    interval = 10
+    rule = jsonencode(
+      {
+        Children = [
+          {
+            Children = [
+              {
+                Type  = "Compare"
+                Value = "In"
+              },
+              {
+                Type = "Value"
+                Value = jsonencode(
+                  [
+                    1,
+                  ]
+                )
+              },
+            ]
+            Type  = "Condition"
+            Value = "NotifyType"
+          },
+          {
+            Children = [
+              {
+                Type  = "Compare"
+                Value = "In"
+              },
+              {
+                Type = "Value"
+                Value = jsonencode(
+                  [
+                    0,
+                    2,
+                  ]
+                )
+              },
+            ]
+            Type  = "Condition"
+            Value = "Level"
+          },
+        ]
+        Type  = "Operation"
+        Value = "AND"
+      }
+    )
+    type = 1
 
-  notice_receivers {
-    receiver_type = "Uin"
-    receiver_ids = [
-      100037718139,
-    ]
-    receiver_channels = [
-      "Email",
-      "Sms",
-    ]
-    notice_content_id = "noticetemplate-b417f32a-bdf9-46c5-933e-28c23cd7a6b7"
-    start_time        = "00:00:00"
-    end_time          = "23:59:59"
+    escalate_notices {
+      escalate = true
+      interval = 10
+      type     = 1
+
+      notice_receivers {
+        end_time          = "23:59:59"
+        index             = 1
+        notice_content_id = "Default-zh"
+        receiver_channels = [
+          "Phone",
+          "Sms",
+        ]
+        receiver_ids = [
+          19284382,
+        ]
+        receiver_type = "Uin"
+        start_time    = "00:00:00"
+      }
+    }
+    escalate_notices {
+      escalate = false
+      interval = 10
+      type     = 1
+
+      notice_receivers {
+        end_time          = "23:59:59"
+        index             = 1
+        notice_content_id = "Default-en"
+        receiver_channels = [
+          "Email",
+          "Phone",
+          "Sms",
+        ]
+        receiver_ids = [
+          19284382,
+        ]
+        receiver_type = "Uin"
+        start_time    = "00:00:00"
+      }
+    }
+
+    notice_receivers {
+      end_time          = "23:59:59"
+      index             = 1
+      notice_content_id = "Default-en"
+      receiver_channels = [
+        "Sms",
+      ]
+      receiver_ids = [
+        19284382,
+      ]
+      receiver_type = "Uin"
+      start_time    = "00:00:00"
+    }
   }
 
-  web_callbacks {
-    callback_type     = "Http"
-    url               = "example.com"
-    method            = "POST"
-    notice_content_id = "noticetemplate-b417f32a-bdf9-46c5-933e-28c23cd7a6b7"
-    remind_type       = 1
+  deliver_config {
+    region   = "ap-guangzhou"
+    topic_id = "898016cf-7e17-426f-9167-9b56fcfc603e"
+    scope    = 0
   }
 
   tags = {
-    createdBy = "terraform"
+    createdBy = "Terraform"
   }
 }
 ```

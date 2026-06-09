@@ -148,8 +148,10 @@ The following arguments are supported:
 * `domain` - (Required, String, ForceNew) Name of the acceleration domain.
 * `origin` - (Required, List) Origin server configuration. It's a list and consist of at most one item.
 * `service_type` - (Required, String, ForceNew) Acceleration domain name service type. `web`: static acceleration, `download`: download acceleration, `media`: streaming media VOD acceleration, `hybrid`: hybrid acceleration, `dynamic`: dynamic acceleration.
+* `access_port` - (Optional, List: [`Int`]) Access port configuration. List of ports that can be accessed.
 * `area` - (Optional, String) Domain name acceleration region. `mainland`: acceleration inside mainland China, `overseas`: acceleration outside mainland China, `global`: global acceleration. Overseas acceleration service must be enabled to use overseas acceleration and global acceleration.
 * `authentication` - (Optional, List) Specify timestamp hotlink protection configuration, NOTE: only one type can choose for the sub elements.
+* `auto_guard` - (Optional, List) Traffic anti-hotlinking protection configuration. Note: Create API does not support this field, it will be set via Update API after creation.
 * `aws_private_access` - (Optional, List) Access authentication for S3 origin.
 * `band_width_alert` - (Optional, List) Bandwidth cap configuration.
 * `cache_key` - (Optional, List) Cache key configuration (Ignore Query String configuration). NOTE: All of `full_url_cache` default value is `on`.
@@ -159,6 +161,7 @@ The following arguments are supported:
 * `explicit_using_dry_run` - (Optional, Bool) Used for validate only by store arguments to request json string as expected, WARNING: if set to `true`, NO Cloud Api will be invoked but store as local data, do not use this argument unless you really know what you are doing.
 * `follow_redirect_switch` - (Optional, String) 301/302 redirect following switch, available values: `on`, `off` (default).
 * `full_url_cache` - (Optional, Bool, **Deprecated**) Use `cache_key` -> `full_url_cache` instead. Whether to enable full-path cache. Default value is `true`.
+* `geo_blocker` - (Optional, List) Regional access control configuration. Note: Create API does not support this field, it will be set via Update API after creation.
 * `https_billing` - (Optional, List) HTTPS service is enabled by default (this is a paid service; please refer to the billing information and product documentation for details).
 * `https_config` - (Optional, List) HTTPS acceleration configuration. It's a list and consist of at most one item.
 * `hw_private_access` - (Optional, List) Access authentication for OBS origin.
@@ -167,6 +170,7 @@ The following arguments are supported:
 * `ipv6_access_switch` - (Optional, String) ipv6 access configuration switch. Only available when area set to `mainland`. Valid values are `on` and `off`. Default value is `off`.
 * `max_age` - (Optional, List) Browser cache configuration. (This feature is in beta and not generally available yet).
 * `offline_cache_switch` - (Optional, String) Offline cache switch, available values: `on`, `off` (default).
+* `origin_combine` - (Optional, List) Origin combine configuration.
 * `origin_pull_optimization` - (Optional, List) Cross-border linkage optimization configuration. (This feature is in beta and not generally available yet).
 * `origin_pull_timeout` - (Optional, List) Cross-border linkage optimization configuration.
 * `oss_private_access` - (Optional, List) Access authentication for OSS origin.
@@ -175,6 +179,7 @@ The following arguments are supported:
 * `project_id` - (Optional, Int) The project CDN belongs to, default to 0.
 * `qn_private_access` - (Optional, List) Access authentication for OBS origin.
 * `quic_switch` - (Optional, String) QUIC switch, available values: `on`, `off` (default).
+* `range_origin_pull` - (Optional, List) Range origin pull configuration with path-based rules.
 * `range_origin_switch` - (Optional, String) Sharding back to source configuration switch. Valid values are `on` and `off`. Default value is `on`.
 * `referer` - (Optional, List) Referer configuration.
 * `request_header` - (Optional, List) Request header configuration. It's a list and consist of at most one item.
@@ -186,6 +191,8 @@ The following arguments are supported:
 * `specific_config_overseas` - (Optional, String) Specific configuration for oversea, NOTE: Both specifying full schema or using it is superfluous, please use cloud api parameters json passthroughs, check the [Data Types](https://www.tencentcloud.com/document/api/228/31739#OverseaConfig) for more details.
 * `status_code_cache` - (Optional, List) Status code cache configurations.
 * `tags` - (Optional, Map) Tags of cdn domain.
+* `url_redirect` - (Optional, List) URL redirect configuration.
+* `user_agent_filter` - (Optional, List) UserAgent blacklist/whitelist configuration.
 * `video_seek_switch` - (Optional, String) Video seek switch, available values: `on`, `off` (default).
 
 The `authentication` object supports the following:
@@ -195,6 +202,11 @@ The `authentication` object supports the following:
 * `type_b` - (Optional, List) Timestamp hotlink protection mode B configuration. NOTE: according to upgrading of TencentCloud Platform, TypeB is unavailable for now.
 * `type_c` - (Optional, List) Timestamp hotlink protection mode C configuration.
 * `type_d` - (Optional, List) Timestamp hotlink protection mode D configuration.
+
+The `auto_guard` object supports the following:
+
+* `switch` - (Required, String) AutoGuard switch, valid values are `on` and `off`.
+* `filter_rules` - (Optional, List) AutoGuard filter rules.
 
 The `aws_private_access` object supports the following:
 
@@ -213,6 +225,13 @@ The `band_width_alert` object supports the following:
 * `counter_measure` - (Optional, String) Counter measure.
 * `metric` - (Optional, String) Metric.
 * `statistic_item` - (Optional, List) Specify statistic item configuration.
+
+The `block_rules` object of `geo_blocker` supports the following:
+
+* `block_type` - (Optional, String) Rule type. `whitelist`: whitelist; `blacklist`: blacklist.
+* `districts` - (Optional, List) Effective districts, e.g. `CN-HK`, `CN-BJ`, etc.
+* `rule_paths` - (Optional, List) Rule paths.
+* `rule_type` - (Optional, String) Rule effective type. `all`: all; `directory`: directory.
 
 The `cache_key` object supports the following:
 
@@ -261,6 +280,12 @@ The `error_page` object supports the following:
 * `switch` - (Required, String) Configuration switch, available values: `on`, `off` (default).
 * `page_rules` - (Optional, List) List of error page rule.
 
+The `filter_rules` object of `auto_guard` supports the following:
+
+* `filter_type` - (Optional, String) Block type. `forbidden`: block.
+* `rule_paths` - (Optional, List) Block rule paths.
+* `rule_type` - (Optional, String) Block rule type. `all`: all requests; `file`: file requests with specified suffix.
+
 The `filter_rules` object of `ip_filter` supports the following:
 
 * `filter_type` - (Required, String) Ip filter `blacklist`/`whitelist` type of filter rules.
@@ -268,12 +293,24 @@ The `filter_rules` object of `ip_filter` supports the following:
 * `rule_paths` - (Required, List) Content list for each `rule_type`: `*` for `all`, file ext like `jpg` for `file`, `/dir/like/` for `directory` and `/path/index.html` for `path`.
 * `rule_type` - (Required, String) Ip filter rule type of filter rules, available: `all`, `file`, `directory`, `path`.
 
+The `filter_rules` object of `user_agent_filter` supports the following:
+
+* `filter_type` - (Required, String) Blacklist or whitelist, valid values: `blacklist`, `whitelist`.
+* `rule_paths` - (Required, List) Rule paths.
+* `rule_type` - (Required, String) Rule type, valid values: `all`, `file`, `directory`, `path`.
+* `user_agents` - (Required, List) UserAgent list.
+
 The `force_redirect` object of `https_config` supports the following:
 
 * `carry_headers` - (Optional, String) Whether to return the newly added header during force redirection. Values: `on`, `off`.
 * `redirect_status_code` - (Optional, Int) Forced redirect status code. Valid values are `301` and `302`. When `switch` setting `off`, this property does not need to be set or set to `302`. Default value is `302`.
 * `redirect_type` - (Optional, String) Forced redirect type. Valid values are `http` and `https`. `http` means a forced redirect from HTTPS to HTTP, `https` means a forced redirect from HTTP to HTTPS. When `switch` setting `off`, this property does not need to be set or set to `http`. Default value is `http`.
 * `switch` - (Optional, String) Forced redirect configuration switch. Valid values are `on` and `off`. Default value is `off`.
+
+The `geo_blocker` object supports the following:
+
+* `switch` - (Required, String) GeoBlocker switch, valid values are `on` and `off`.
+* `block_rules` - (Optional, List) GeoBlocker block rules.
 
 The `header_rules` object of `request_header` supports the following:
 
@@ -291,6 +328,12 @@ The `header_rules` object of `response_header` supports the following:
 * `rule_paths` - (Required, List) response rule paths of rule.
 * `rule_type` - (Required, String) response rule type of rule.
 
+The `hsts` object of `https_config` supports the following:
+
+* `switch` - (Required, String) HSTS configuration switch. Valid values are `on` and `off`.
+* `include_sub_domains` - (Optional, String) Whether to include sub domains, values `on` and `off`.
+* `max_age` - (Optional, Int) MaxAge value.
+
 The `https_billing` object supports the following:
 
 * `switch` - (Required, String) HTTPS service configuration switch, possible values are: on: Enabled (default setting), will incur charges; off: Disabled, will block HTTPS requests.
@@ -300,6 +343,7 @@ The `https_config` object supports the following:
 * `https_switch` - (Required, String) HTTPS configuration switch. Valid values are `on` and `off`.
 * `client_certificate_config` - (Optional, List) Client certificate configuration information.
 * `force_redirect` - (Optional, List) Configuration of forced HTTP or HTTPS redirects.
+* `hsts` - (Optional, List) HSTS configuration.
 * `http2_switch` - (Optional, String) HTTP2 configuration switch. Valid values are `on` and `off`. and default value is `off`.
 * `ocsp_stapling_switch` - (Optional, String) OCSP configuration switch. Valid values are `on` and `off`. and default value is `off`.
 * `server_certificate_config` - (Optional, List) Server certificate configuration information.
@@ -348,6 +392,10 @@ The `max_age` object supports the following:
 * `switch` - (Required, String) Configuration switch, available values: `on`, `off` (default).
 * `max_age_rules` - (Optional, List) List of Max Age rule configuration.
 
+The `origin_combine` object supports the following:
+
+* `switch` - (Required, String) Configuration switch, valid values are `on` and `off`.
+
 The `origin_pull_optimization` object supports the following:
 
 * `switch` - (Required, String) Configuration switch, available values: `on`, `off` (default).
@@ -392,6 +440,14 @@ The `page_rules` object of `error_page` supports the following:
 * `redirect_url` - (Required, String) Redirect url of error page rules.
 * `status_code` - (Required, Int) Status code of error page rules.
 
+The `path_rules` object of `url_redirect` supports the following:
+
+* `pattern` - (Required, String) URL path to match, supports wildcard `*`, max length 1024.
+* `redirect_status_code` - (Required, Int) Redirect status code, valid values: `301`, `302`.
+* `redirect_url` - (Required, String) Target URL, must start with `/`, max length 1024.
+* `full_match` - (Optional, Bool) Whether to use full path match.
+* `redirect_host` - (Optional, String) Target host, must start with `http://` or `https://`.
+
 The `post_max_size` object supports the following:
 
 * `switch` - (Required, String) Configuration switch, available values: `on`, `off` (default).
@@ -415,6 +471,17 @@ The `query_string` object of `key_rules` supports the following:
 * `action` - (Optional, String) Specify key rule QS action, values: `includeCustom`, `excludeCustom`.
 * `switch` - (Optional, String) Whether to use QueryString as part of CacheKey, values `on`, `off` (Default).
 * `value` - (Optional, String) Array of included/excluded query strings (separated by `;`).
+
+The `range_origin_pull` object supports the following:
+
+* `switch` - (Required, String) Global range origin pull switch, valid values are `on` and `off`.
+* `range_rules` - (Optional, List) Path-based range origin pull rules.
+
+The `range_rules` object of `range_origin_pull` supports the following:
+
+* `rule_paths` - (Required, List) Rule paths.
+* `rule_type` - (Required, String) Rule type, valid values: `file`, `directory`, `path`.
+* `switch` - (Required, String) Rule switch, valid values are `on` and `off`.
 
 The `referer_rules` object of `referer` supports the following:
 
@@ -514,6 +581,16 @@ The `type_d` object of `authentication` supports the following:
 * `time_format` - (Optional, String) Timestamp formation, available values: `dec`, `hex`.
 * `time_param` - (Optional, String) Timestamp parameter name. Only upper and lower-case letters, digits, and underscores (_) are allowed. It cannot start with a digit. Length limit: 1-100 characters.
 
+The `url_redirect` object supports the following:
+
+* `switch` - (Required, String) Configuration switch, valid values are `on` and `off`.
+* `path_rules` - (Optional, List) URL redirect rule list, maximum 10 rules.
+
+The `user_agent_filter` object supports the following:
+
+* `switch` - (Required, String) Configuration switch, valid values are `on` and `off`.
+* `filter_rules` - (Optional, List) UA blacklist/whitelist effect rule list.
+
 ## Attributes Reference
 
 In addition to all arguments above, the following attributes are exported:
@@ -532,5 +609,70 @@ CDN domain can be imported using the id, e.g.
 
 ```
 $ terraform import tencentcloud_cdn_domain.foo xxxx.com
+```
+
+Example Usage of CDN domain with advanced fields
+
+```hcl
+resource "tencentcloud_cdn_domain" "advanced" {
+  domain       = "xxxx.com"
+  service_type = "web"
+  area         = "mainland"
+
+  origin {
+    origin_type          = "ip"
+    origin_list          = ["127.0.0.1"]
+    origin_pull_protocol = "follow"
+  }
+
+  https_config {
+    https_switch         = "off"
+    http2_switch         = "off"
+    ocsp_stapling_switch = "off"
+    spdy_switch          = "off"
+    verify_client        = "off"
+
+    hsts {
+      switch               = "on"
+      max_age              = 31536000
+      include_sub_domains  = "on"
+    }
+  }
+
+  user_agent_filter {
+    switch = "on"
+
+    filter_rules {
+      rule_type   = "all"
+      rule_paths  = ["*"]
+      user_agents = ["Mozilla/5.0"]
+      filter_type = "blacklist"
+    }
+  }
+
+  url_redirect {
+    switch = "on"
+
+    path_rules {
+      redirect_status_code = 302
+      pattern              = "/old/*"
+      redirect_url         = "/new/$1"
+    }
+  }
+
+  origin_combine {
+    switch = "on"
+  }
+
+  range_origin_pull {
+    switch = "on"
+
+    range_rules {
+      switch    = "on"
+      rule_type = "file"
+      rule_paths = ["jpg", "png"]
+    }
+  }
+}
 ```
 

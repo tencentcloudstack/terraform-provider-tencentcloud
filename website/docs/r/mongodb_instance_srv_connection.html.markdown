@@ -30,7 +30,7 @@ output "domain" {
 ```hcl
 resource "tencentcloud_mongodb_instance_srv_connection" "example" {
   instance_id = "cmgo-p8vnipr5"
-  domain      = "example.mongodb.com"
+  domain      = "exampleDomain"
 }
 ```
 

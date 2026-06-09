@@ -68,7 +68,7 @@ func testAccCheckClbRedirectionDestroy(s *terraform.State) error {
 		}
 		time.Sleep(5 * time.Second)
 		instance, err := clbService.DescribeRedirectionById(ctx, rs.Primary.ID)
-		if instance != nil && len(*instance) > 0 && err == nil {
+		if instance != nil && err == nil {
 			return fmt.Errorf("[CHECK][CLB redirection][Destroy] check: CLB redirection still exists: %s", rs.Primary.ID)
 		}
 	}
@@ -92,7 +92,7 @@ func testAccCheckClbRedirectionExists(n string) resource.TestCheckFunc {
 		if err != nil {
 			return err
 		}
-		if instance == nil || len(*instance) == 0 {
+		if instance == nil {
 			return fmt.Errorf("[CHECK][CLB redirection][Exists] id %s is not exist", rs.Primary.ID)
 		}
 		return nil

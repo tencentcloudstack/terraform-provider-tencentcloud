@@ -75,6 +75,24 @@ resource "tencentcloud_cynosdb_backup_config" "example" {
 }
 ```
 
+Enable secondary snapshot backup configuration
+
+```hcl
+resource "tencentcloud_cynosdb_backup_config" "example" {
+  cluster_id       = tencentcloud_cynosdb_cluster.example.id
+  backup_time_beg  = 7200
+  backup_time_end  = 21600
+  reserve_duration = 604800
+
+  snapshot_secondary_backup_config {
+    backup_time_beg         = 7200
+    backup_time_end         = 21600
+    reserve_duration        = 604800
+    backup_trigger_strategy = "periodically"
+  }
+}
+```
+
 Import
 
 CynosDB backup config can be imported using the id, e.g.

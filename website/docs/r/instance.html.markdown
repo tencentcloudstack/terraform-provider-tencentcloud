@@ -23,6 +23,8 @@ Provides a CVM instance resource.
 
 ~> **NOTE:** When creating a prepaid CVM instance and binding a data disk, you need to explicitly set `delete_with_instance` to `false`.
 
+~> **NOTE:** When using dedicated resource pool packs, both `dedicated_resource_pack_tenancy` and `dedicated_resource_pack_ids` must be specified together. These parameters work with pre-purchased resource pool packs (resource `tencentcloud_cvm_resource_pool_packs`).
+
 ## Example Usage
 
 ### Create a general POSTPAID_BY_HOUR CVM instance
@@ -219,6 +221,78 @@ resource "tencentcloud_instance" "example" {
 }
 ```
 
+### Create a CVM instance using dedicated resource pool pack
+
+```hcl
+variable "availability_zone" {
+  default = "ap-guangzhou-4"
+}
+
+data "tencentcloud_images" "images" {
+  image_type       = ["PUBLIC_IMAGE"]
+  image_name_regex = "OpenCloudOS Server"
+}
+
+data "tencentcloud_instance_types" "types" {
+  filter {
+    name   = "instance-family"
+    values = ["S1", "S2", "S3", "S4", "S5"]
+  }
+
+  cpu_core_count   = 2
+  exclude_sold_out = true
+}
+
+// create vpc
+resource "tencentcloud_vpc" "vpc" {
+  cidr_block = "10.0.0.0/16"
+  name       = "vpc"
+}
+
+// create subnet
+resource "tencentcloud_subnet" "subnet" {
+  vpc_id            = tencentcloud_vpc.vpc.id
+  availability_zone = var.availability_zone
+  name              = "subnet"
+  cidr_block        = "10.0.1.0/24"
+}
+
+// create resource pool pack (prerequisite)
+resource "tencentcloud_cvm_resource_pool_pack" "example" {
+  zone                    = var.availability_zone
+  instance_type           = data.tencentcloud_instance_types.types.instance_types.0.instance_type
+  instance_count          = 10
+  period                  = 1
+  resource_pool_pack_type = "Standard"
+}
+
+// create CVM instance using resource pool pack
+resource "tencentcloud_instance" "example" {
+  instance_name                   = "tf-example-with-pool-pack"
+  availability_zone               = var.availability_zone
+  image_id                        = data.tencentcloud_images.images.images.0.image_id
+  instance_type                   = data.tencentcloud_instance_types.types.instance_types.0.instance_type
+  system_disk_type                = "CLOUD_PREMIUM"
+  system_disk_size                = 50
+  hostname                        = "user"
+  project_id                      = 0
+  vpc_id                          = tencentcloud_vpc.vpc.id
+  subnet_id                       = tencentcloud_subnet.subnet.id
+  dedicated_resource_pack_tenancy = "ResourcePool"
+  dedicated_resource_pack_ids     = [tencentcloud_cvm_resource_pool_packs.example.dedicated_resource_pack_id]
+
+  data_disks {
+    data_disk_type = "CLOUD_PREMIUM"
+    data_disk_size = 50
+    encrypt        = false
+  }
+
+  tags = {
+    tagKey = "tagValue"
+  }
+}
+```
+
 ### Create CVM instance with placement_group_id
 
 ```hcl
@@ -363,6 +437,8 @@ The following arguments are supported:
 * `cdh_instance_type` - (Optional, String) Type of instance created on cdh, the value of this parameter is in the format of CDH_XCXG based on the number of CPU cores and memory capacity. Note: it only works when instance_charge_type is set to `CDHPAID`.
 * `data_disks` - (Optional, List, ForceNew) Settings for data disks.
 * `dedicated_cluster_id` - (Optional, String, ForceNew) Exclusive cluster id.
+* `dedicated_resource_pack_ids` - (Optional, Set: [`String`], ForceNew) List of dedicated resource pack IDs (e.g., rpp-xxxxxxxx). When creating instances using pre-purchased resource pool packs, this parameter must be specified together with `dedicated_resource_pack_tenancy` to match the corresponding tenancy strategy. Related resource: `tencentcloud_cvm_resource_pool_packs`.
+* `dedicated_resource_pack_tenancy` - (Optional, String, ForceNew) Dedicated resource pack tenancy strategy. Valid values: `ResourcePool` (use instance resource pool for resource pre-deduction).
 * `disable_api_termination` - (Optional, Bool) Whether the termination protection is enabled. Default is `false`. If set true, which means that this instance can not be deleted by an API action.
 * `disable_automation_service` - (Optional, Bool) Disable enhance service for automation, it is enabled by default. When this options is set, monitor agent won't be installed. Modifications may lead to the reinstallation of the instance's operating system.
 * `disable_monitor_service` - (Optional, Bool) Disable enhance service for monitor, it is enabled by default. When this options is set, monitor agent won't be installed. Modifications may lead to the reinstallation of the instance's operating system.
@@ -370,6 +446,7 @@ The following arguments are supported:
 * `disaster_recover_group_ids` - (Optional, Set: [`String`], ForceNew) Placement group ID.
 * `force_delete` - (Optional, Bool) Indicate whether to force delete the instance. Default is `false`. If set true, the instance will be permanently deleted instead of being moved into the recycle bin. Note: only works for `PREPAID` instance.
 * `force_replace_placement_group_id` - (Optional, Bool) Whether to force the instance host to be replaced. Value range: true: Allows the instance to change the host and restart the instance. Local disk machines do not support specifying this parameter; false: Does not allow the instance to change the host and only join the placement group on the current host. This may cause the placement group to fail to change. Only useful for change `placement_group_id`, Default is false.
+* `force_stop` - (Optional, Bool) Whether to forcibly shut down a running instance. Default is false. Forcing a shutdown is equivalent to switching off the power button on a physical computer. Forcing a shutdown may result in data loss or file system corruption; therefore, please use this option only when the server cannot be shut down normally.
 * `hostname` - (Optional, String) The hostname of the instance. Windows instance: The name should be a combination of 2 to 15 characters comprised of letters (case insensitive), numbers, and hyphens (-). Period (.) is not supported, and the name cannot be a string of pure numbers. Other types (such as Linux) of instances: The name should be a combination of 2 to 60 characters, supporting multiple periods (.). The piece between two periods is composed of letters (case insensitive), numbers, and hyphens (-). Changing the `hostname` will cause the instance system to restart.
 * `hpc_cluster_id` - (Optional, String, ForceNew) High-performance computing cluster ID. If the instance created is a high-performance computing instance, you need to specify the cluster in which the instance is placed, otherwise it cannot be specified.
 * `image_id` - (Optional, String) The image to use for the instance. Modifications may lead to the reinstallation of the instance's operating system.
@@ -439,6 +516,7 @@ In addition to all arguments above, the following attributes are exported:
 * `os_name` - Instance os name.
 * `public_ip` - Public IP of the instance.
 * `public_ipv6_addresses` - The public IPv6 address to which the instance is bound.
+* `rack_id` - The rack ID of the instance resource pool to which the instance belongs.
 * `uuid` - Globally unique ID of the instance.
 
 ## Timeouts

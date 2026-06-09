@@ -4,11 +4,11 @@ import (
 	"context"
 	"fmt"
 
+	cvmintl "github.com/tencentcloud/tencentcloud-sdk-go-intl-en/tencentcloud/cvm/v20170312"
 	tccommon "github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/common"
 
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
-	cvm "github.com/tencentcloud/tencentcloud-sdk-go-intl-en/tencentcloud/cvm/v20170312"
 )
 
 func ResourceTencentCloudReservedInstance() *schema.Resource {
@@ -106,7 +106,7 @@ func resourceTencentCloudReservedInstanceRead(d *schema.ResourceData, meta inter
 	filter := map[string]string{
 		"reserved-instances-id": id,
 	}
-	var instances []*cvm.ReservedInstances
+	var instances []*cvmintl.ReservedInstances
 	var errRet error
 	err := resource.Retry(tccommon.ReadRetryTimeout, func() *resource.RetryError {
 		instances, errRet = cvmService.DescribeReservedInstanceByFilter(ctx, filter)

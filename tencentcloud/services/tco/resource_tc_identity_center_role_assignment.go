@@ -154,6 +154,11 @@ func resourceTencentCloudIdentityCenterRoleAssignmentCreate(d *schema.ResourceDa
 		} else {
 			log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), result.ToJsonString())
 		}
+
+		if result == nil || result.Response == nil {
+			return resource.NonRetryableError(fmt.Errorf("Create identity center role assignment failed, Response is nil."))
+		}
+
 		response = result
 		return nil
 	})
@@ -165,7 +170,7 @@ func resourceTencentCloudIdentityCenterRoleAssignmentCreate(d *schema.ResourceDa
 	if len(response.Response.Tasks) > 0 {
 		task := response.Response.Tasks[0]
 		if task == nil {
-			return fmt.Errorf("task is nil")
+			return fmt.Errorf("Tasks is nil")
 		}
 		if task.Status != nil && *task.Status == TASK_STATUS_FAILED {
 			if task.FailureReason != nil {
@@ -185,12 +190,14 @@ func resourceTencentCloudIdentityCenterRoleAssignmentCreate(d *schema.ResourceDa
 		} else {
 			taskStatus := object.(*organization.TaskStatus)
 			if taskStatus.Status != nil && *taskStatus.Status == TASK_STATUS_FAILED {
-				return fmt.Errorf("create role assignment task failed")
+				return fmt.Errorf("create role assignment task status is %s", *taskStatus.Status)
 			}
 		}
 
 		targetUinString := strconv.FormatInt(targetUin, 10)
 		d.SetId(strings.Join([]string{zoneId, roleConfigurationId, targetType, targetUinString, principalType, principalId}, tccommon.FILED_SP))
+	} else {
+		return fmt.Errorf("Tasks is nil")
 	}
 
 	return resourceTencentCloudIdentityCenterRoleAssignmentRead(d, meta)
@@ -219,46 +226,42 @@ func resourceTencentCloudIdentityCenterRoleAssignmentRead(d *schema.ResourceData
 		return err
 	}
 
-	if roleAssignmentsResponseParams == nil {
+	if roleAssignmentsResponseParams == nil || len(roleAssignmentsResponseParams.RoleAssignments) == 0 {
+		log.Printf("[WARN]%s resource `tencentcloud_identity_center_role_assignment` [%s] not found, please check if it has been deleted.\n", logId, d.Id())
 		d.SetId("")
-		log.Printf("[WARN]%s resource `identity_center_role_assignment` [%s] not found, please check if it has been deleted.\n", logId, d.Id())
 		return nil
 	}
-	if len(roleAssignmentsResponseParams.RoleAssignments) > 0 {
-		roleAssignment := roleAssignmentsResponseParams.RoleAssignments[0]
-		if roleAssignment.RoleConfigurationId != nil {
-			_ = d.Set("role_configuration_id", roleAssignment.RoleConfigurationId)
-		}
-		if roleAssignment.RoleConfigurationName != nil {
-			_ = d.Set("role_configuration_name", roleAssignment.RoleConfigurationName)
-		}
-		if roleAssignment.TargetUin != nil {
-			_ = d.Set("target_uin", roleAssignment.TargetUin)
-		}
-		if roleAssignment.TargetType != nil {
-			_ = d.Set("target_type", roleAssignment.TargetType)
-		}
-		if roleAssignment.PrincipalId != nil {
-			_ = d.Set("principal_id", roleAssignment.PrincipalId)
-		}
-		if roleAssignment.PrincipalType != nil {
-			_ = d.Set("principal_type", roleAssignment.PrincipalType)
-		}
-		if roleAssignment.PrincipalName != nil {
-			_ = d.Set("principal_name", roleAssignment.PrincipalName)
-		}
-		if roleAssignment.TargetName != nil {
-			_ = d.Set("target_name", roleAssignment.TargetName)
-		}
-		if roleAssignment.CreateTime != nil {
-			_ = d.Set("create_time", roleAssignment.CreateTime)
-		}
-		if roleAssignment.UpdateTime != nil {
-			_ = d.Set("update_time", roleAssignment.UpdateTime)
-		}
 
-	} else {
-		d.SetId("")
+	roleAssignment := roleAssignmentsResponseParams.RoleAssignments[0]
+	if roleAssignment.RoleConfigurationId != nil {
+		_ = d.Set("role_configuration_id", roleAssignment.RoleConfigurationId)
+	}
+	if roleAssignment.RoleConfigurationName != nil {
+		_ = d.Set("role_configuration_name", roleAssignment.RoleConfigurationName)
+	}
+	if roleAssignment.TargetUin != nil {
+		_ = d.Set("target_uin", roleAssignment.TargetUin)
+	}
+	if roleAssignment.TargetType != nil {
+		_ = d.Set("target_type", roleAssignment.TargetType)
+	}
+	if roleAssignment.PrincipalId != nil {
+		_ = d.Set("principal_id", roleAssignment.PrincipalId)
+	}
+	if roleAssignment.PrincipalType != nil {
+		_ = d.Set("principal_type", roleAssignment.PrincipalType)
+	}
+	if roleAssignment.PrincipalName != nil {
+		_ = d.Set("principal_name", roleAssignment.PrincipalName)
+	}
+	if roleAssignment.TargetName != nil {
+		_ = d.Set("target_name", roleAssignment.TargetName)
+	}
+	if roleAssignment.CreateTime != nil {
+		_ = d.Set("create_time", roleAssignment.CreateTime)
+	}
+	if roleAssignment.UpdateTime != nil {
+		_ = d.Set("update_time", roleAssignment.UpdateTime)
 	}
 
 	return nil

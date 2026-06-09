@@ -36,20 +36,21 @@ require (
 	github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/cat v1.0.825
 	github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/cbs v1.1.0
 	github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/cdb v1.1.27
-	github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/cdn v1.0.1010
+	github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/cdn v1.3.61
 	github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/cdwch v1.1.7
 	github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/cfs v1.3.49
 	github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/cfw v1.3.33
 	github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/chdfs v1.0.600
 	github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/ciam v1.0.695
 	github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/ckafka v1.3.16
-	github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/clb v1.3.52
+	github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/clb v1.3.105
 	github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/cloudaudit v1.0.1033
-	github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/cls v1.3.58
-	github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/common v1.3.63
-	github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/cvm v1.0.1206
+	github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/cls v1.3.108
+	github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/common v1.3.110
+	github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/config v1.3.80
+	github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/cvm v1.3.69
 	github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/cwp v1.3.30
-	github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/cynosdb v1.3.32
+	github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/cynosdb v1.3.110
 	github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/dayu v1.0.335
 	github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/dbbrain v1.3.26
 	github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/dc v1.0.633
@@ -59,43 +60,45 @@ require (
 	github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/domain v1.0.414
 	github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/dts v1.1.46
 	github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/eb v1.1.30
-	github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/emr v1.0.1115
+	github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/emr v1.3.94
 	github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/es v1.1.13
 	github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/gaap v1.0.970
+	github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/gs v1.3.58
+	github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/keewidb v1.3.32
 	github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/kms v1.0.1145
-	github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/lighthouse v1.0.729
-	github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/live v1.0.777
+	github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/lighthouse v1.3.108
+	github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/live v1.3.95
 	github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/mariadb v1.0.672
-	github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/mongodb v1.3.48
-	github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/monitor v1.3.49
+	github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/mongodb v1.3.103
+	github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/monitor v1.3.101
 	github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/mps v1.3.45
-	github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/organization v1.1.49
-	github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/postgres v1.3.63
+	github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/organization v1.3.110
+	github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/postgres v1.3.89
 	github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/privatedns v1.1.42
 	github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/pts v1.0.762
-	github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/redis v1.0.1008
+	github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/redis v1.3.73
 	github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/rum v1.0.744
 	github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/scf v1.0.1034
 	github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/ses v1.0.748
 	github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/sms v1.0.486
-	github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/sqlserver v1.0.1136
-	github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/ssl v1.0.1015
+	github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/sqlserver v1.3.68
+	github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/ssl v1.3.94
 	github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/ssm v1.0.691
-	github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/sts v1.0.1142
+	github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/sts v1.1.11
 	github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/tag v1.0.860
 	github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/tat v1.0.634
 	github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/tcaplusdb v1.0.199
 	github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/tcm v1.0.547
-	github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/tcr v1.3.44
+	github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/tcr v1.3.89
 	github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/tdcpg v1.0.533
 	github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/tdmq v1.3.46
 	github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/tem v1.0.578
-	github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/teo v1.3.38
-	github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/tke v1.3.53
+	github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/teo v1.3.90
+	github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/tke v1.3.86
 	github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/trocket v1.1.0
 	github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/tse v1.0.857
 	github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/tsf v1.0.674
-	github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/vod v1.3.40
+	github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/vod v1.3.90
 	github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/vpc v1.3.62
 	github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/waf v1.3.36
 	github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/wedata v1.3.30
@@ -106,9 +109,10 @@ require (
 )
 
 require (
+	github.com/agiledragon/gomonkey/v2 v2.14.0
 	github.com/hashicorp/go-uuid v1.0.3
 	github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/advisor v1.3.37
-	github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/bh v1.3.21
+	github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/bh v1.3.93
 	github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/billing v1.3.39
 	github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/cdc v1.0.1149
 	github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/cdwdoris v1.0.993
@@ -116,14 +120,16 @@ require (
 	github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/controlcenter v1.1.51
 	github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/csip v1.0.860
 	github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/dasb v1.0.970
+	github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/ga2 v1.3.102
 	github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/gwlb v1.0.1127
 	github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/igtm v1.3.29
-	github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/mqtt v1.3.7
+	github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/mqtt v1.3.98
 	github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/oceanus v1.0.831
-	github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/region v1.0.920
+	github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/region v1.3.40
 	github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/tcss v1.1.50
 	github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/thpc v1.0.998
 	github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/vcube v1.3.20
+	github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/vdb v1.3.27
 	github.com/wI2L/jsondiff v0.3.0
 	k8s.io/apimachinery v0.22.4
 )

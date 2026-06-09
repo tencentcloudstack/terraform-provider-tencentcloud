@@ -402,6 +402,10 @@ func resourceTencentCloudMongodbStandbyInstanceUpdate(d *schema.ResourceData, me
 		return fmt.Errorf("setting of the field[engine_version] does not support update")
 	}
 
+	if d.HasChange("available_zone") {
+		return fmt.Errorf("setting of the field[available_zone] does not support update")
+	}
+
 	d.Partial(true)
 
 	if d.HasChange("memory") || d.HasChange("volume") {

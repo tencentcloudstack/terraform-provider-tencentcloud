@@ -59,9 +59,9 @@ resource "tencentcloud_sqlserver_basic_instance" "example" {
 
 resource "tencentcloud_sqlserver_account" "example" {
   instance_id = tencentcloud_sqlserver_basic_instance.example.id
-  name        = "tf_example_account"
-  password    = "Qwer@234"
-  remark      = "test-remark"
+  name        = "tf_example"
+  password    = "Password@123"
+  remark      = "remark."
 }
 ```
 
@@ -84,12 +84,18 @@ In addition to all arguments above, the following attributes are exported:
 * `status` - Status of the SQL Server account. Valid values: 1, 2, 3, 4. 1 for creating, 2 for running, 3 for modifying, 4 for resetting password, -1 for deleting.
 * `update_time` - Last updated time of the SQL Server account.
 
+## Timeouts
+
+The `timeouts` block allows you to specify [timeouts](https://developer.hashicorp.com/terraform/language/resources/syntax#operation-timeouts) for certain actions:
+
+* `create` - (Defaults to `30m`) Used when creating the resource.
+* `delete` - (Defaults to `10m`) Used when deleting the resource.
 
 ## Import
 
 SQL Server account can be imported using the id, e.g.
 
 ```
-$ terraform import tencentcloud_sqlserver_account.example mssql-3cdq7kx5#tf_example_account
+terraform import tencentcloud_sqlserver_account.example mssql-3cdq7kx5#tf_example
 ```
 

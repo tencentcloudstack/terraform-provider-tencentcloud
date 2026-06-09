@@ -122,6 +122,14 @@ In addition to all arguments above, the following attributes are exported:
 * `id` - ID of the resource.
 * `cname` - CNAME address.
 
+## Timeouts
+
+The `timeouts` block allows you to specify [timeouts](https://developer.hashicorp.com/terraform/language/resources/syntax#operation-timeouts) for certain actions:
+
+* `create` - (Defaults to `20m`) Used when creating the resource.
+* `read` - (Defaults to `3m`) Used when reading the resource.
+* `update` - (Defaults to `20m`) Used when updating the resource.
+* `delete` - (Defaults to `20m`) Used when deleting the resource.
 
 ## Import
 

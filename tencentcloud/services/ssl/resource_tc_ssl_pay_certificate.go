@@ -93,10 +93,11 @@ func ResourceTencentCloudSSLInstance() *schema.Resource {
 			},
 			// ssl information
 			"information": {
-				Type:        schema.TypeList,
-				MaxItems:    1,
-				Required:    true,
-				Description: "Certificate information.",
+				Type:             schema.TypeList,
+				MaxItems:         1,
+				Required:         true,
+				Description:      "Certificate information.",
+				DiffSuppressFunc: suppressInformationWhenIssued,
 				Elem: &schema.Resource{
 					Schema: map[string]*schema.Schema{
 						"csr_type": {
@@ -381,11 +382,17 @@ func resourceTencentCloudSSLInstanceRead(d *schema.ResourceData, meta interface{
 	if response.Response.Status != nil {
 		_ = d.Set("status", response.Response.Status)
 	}
-	if response.Response.SubmittedData != nil {
+	// When Status is SSL_STATUS_AVAILABLE (1), the certificate has been issued and
+	// SubmittedData will not be returned (or returned with all nil fields) because
+	// information can no longer be modified at this point.
+	// Skip setSubmitInfo to preserve the existing state value and avoid false drift.
+	if response.Response.Status != nil && *response.Response.Status != SSL_STATUS_AVAILABLE &&
+		response.Response.SubmittedData != nil {
 		setSubmitInfo(d, response.Response.SubmittedData)
 	}
+
+	dvAuths := make([]map[string]string, 0)
 	if response.Response.DvAuthDetail != nil && response.Response.DvAuthDetail.DvAuths != nil && len(response.Response.DvAuthDetail.DvAuths) != 0 {
-		dvAuths := make([]map[string]string, 0)
 		for _, item := range response.Response.DvAuthDetail.DvAuths {
 			dvAuth := make(map[string]string)
 			dvAuth["dv_auth_key"] = *item.DvAuthKey
@@ -393,8 +400,8 @@ func resourceTencentCloudSSLInstanceRead(d *schema.ResourceData, meta interface{
 			dvAuth["dv_auth_verify_type"] = *item.DvAuthVerifyType
 			dvAuths = append(dvAuths, dvAuth)
 		}
-		_ = d.Set("dv_auths", dvAuths)
 	}
+	_ = d.Set("dv_auths", dvAuths)
 
 	return nil
 }
@@ -471,6 +478,11 @@ func resourceTencentCloudSSLInstanceUpdate(d *schema.ResourceData, meta interfac
 		if err != nil {
 			return err
 		}
+
+		if status == SSL_STATUS_AVAILABLE {
+			return fmt.Errorf("status[%v] information cannot be modified in this status certificateId[%s]", status, certificateId)
+		}
+
 		if status == SSL_STATUS_CANCELING {
 			err := fmt.Errorf("%s \n\tcertificateId[%s], status[%v]", SSL_ERR_CANCELING, certificateId, status)
 			return err
@@ -512,10 +524,10 @@ func resourceTencentCloudSSLInstanceUpdate(d *schema.ResourceData, meta interfac
 			return err
 		}
 
-		commitInfoRequest := ssl.NewCommitCertificateInformationRequest()
-		commitInfoRequest.CertificateId = helper.String(certificateId)
+		orderSubmitRequest := ssl.NewCertificateOrderSubmitRequest()
+		orderSubmitRequest.CertId = helper.String(certificateId)
 		if err = resource.Retry(tccommon.WriteRetryTimeout, func() *resource.RetryError {
-			if err = sslService.CommitCertificateInformation(ctx, commitInfoRequest); err != nil {
+			if err = sslService.CertificateOrderSubmit(ctx, orderSubmitRequest); err != nil {
 				if sdkError, ok := err.(*errors.TencentCloudSDKError); ok {
 					code := sdkError.GetCode()
 					if code == InvalidParam || code == CertificateNotFound || code == CertificateInvalid {
@@ -707,4 +719,15 @@ func resubmit(ctx context.Context, sslService SSLService, certificateId string) 
 		return err
 	}
 	return nil
+}
+
+// suppressInformationWhenIssued suppresses all diffs under the `information` block
+// when the certificate has been issued (status == SSL_STATUS_AVAILABLE).
+// In that state the API no longer returns SubmittedData, so any apparent diff is
+// caused by state drift rather than a real user change.
+func suppressInformationWhenIssued(k, oldVal, newVal string, d *schema.ResourceData) bool {
+	if status, ok := d.GetOk("status"); ok && status.(int) == SSL_STATUS_AVAILABLE {
+		return true
+	}
+	return false
 }

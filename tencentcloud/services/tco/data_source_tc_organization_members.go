@@ -159,6 +159,11 @@ func DataSourceTencentCloudOrganizationMembers() *schema.Resource {
 							Computed:    true,
 							Description: "Member permission status. Valid values: `Confirmed`, `UnConfirmed`.Note: This field may return null, indicating that no valid values can be obtained.",
 						},
+						"nick_name": {
+							Type:        schema.TypeString,
+							Computed:    true,
+							Description: "Tencent Cloud nickname. Note: This field may return null, indicating that no valid values can be obtained.",
+						},
 					},
 				},
 			},
@@ -316,6 +321,10 @@ func dataSourceTencentCloudOrganizationMembersRead(d *schema.ResourceData, meta 
 
 			if orgMember.PermissionStatus != nil {
 				orgMemberMap["permission_status"] = orgMember.PermissionStatus
+			}
+
+			if orgMember.NickName != nil {
+				orgMemberMap["nick_name"] = orgMember.NickName
 			}
 
 			ids = append(ids, *orgMember.Name)

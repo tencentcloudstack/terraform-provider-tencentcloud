@@ -121,7 +121,7 @@ The `envs` object of `containers` supports the following:
 
 The `login_configuration` object supports the following:
 
-* `auto_generate_password` - (Required, String) whether auto generate password. if false, need set password.
+* `auto_generate_password` - (Required, String) `YES` represents selecting to automatically generate a password, without specifying the Password field. `NO` represents selecting a custom password, in which case the Password field needs to be specified.
 * `password` - (Optional, String) Login password.
 
 The `publish_ports` object of `containers` supports the following:

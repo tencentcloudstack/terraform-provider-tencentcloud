@@ -459,6 +459,67 @@ func (r *AddShareUnitMembersResponse) FromJsonString(s string) error {
 }
 
 // Predefined struct for user
+type AddShareUnitNodeRequestParams struct {
+	// <p>共享单元ID。</p>
+	UnitId *string `json:"UnitId,omitnil,omitempty" name:"UnitId"`
+
+	// <p>共享部门ID。</p>
+	NodeId *int64 `json:"NodeId,omitnil,omitempty" name:"NodeId"`
+}
+
+type AddShareUnitNodeRequest struct {
+	*tchttp.BaseRequest
+	
+	// <p>共享单元ID。</p>
+	UnitId *string `json:"UnitId,omitnil,omitempty" name:"UnitId"`
+
+	// <p>共享部门ID。</p>
+	NodeId *int64 `json:"NodeId,omitnil,omitempty" name:"NodeId"`
+}
+
+func (r *AddShareUnitNodeRequest) ToJsonString() string {
+    b, _ := json.Marshal(r)
+    return string(b)
+}
+
+// FromJsonString It is highly **NOT** recommended to use this function
+// because it has no param check, nor strict type check
+func (r *AddShareUnitNodeRequest) FromJsonString(s string) error {
+	f := make(map[string]interface{})
+	if err := json.Unmarshal([]byte(s), &f); err != nil {
+		return err
+	}
+	delete(f, "UnitId")
+	delete(f, "NodeId")
+	if len(f) > 0 {
+		return tcerr.NewTencentCloudSDKError("ClientError.BuildRequestError", "AddShareUnitNodeRequest has unknown keys!", "")
+	}
+	return json.Unmarshal([]byte(s), &r)
+}
+
+// Predefined struct for user
+type AddShareUnitNodeResponseParams struct {
+	// 唯一请求 ID，由服务端生成，每次请求都会返回（若请求因其他原因未能抵达服务端，则该次请求不会获得 RequestId）。定位问题时需要提供该次请求的 RequestId。
+	RequestId *string `json:"RequestId,omitnil,omitempty" name:"RequestId"`
+}
+
+type AddShareUnitNodeResponse struct {
+	*tchttp.BaseResponse
+	Response *AddShareUnitNodeResponseParams `json:"Response"`
+}
+
+func (r *AddShareUnitNodeResponse) ToJsonString() string {
+    b, _ := json.Marshal(r)
+    return string(b)
+}
+
+// FromJsonString It is highly **NOT** recommended to use this function
+// because it has no param check, nor strict type check
+func (r *AddShareUnitNodeResponse) FromJsonString(s string) error {
+	return json.Unmarshal([]byte(s), &r)
+}
+
+// Predefined struct for user
 type AddShareUnitRequestParams struct {
 	// 共享单元名称。仅支持大小写字母、数字、-、以及_的组合，3-128个字符。
 	Name *string `json:"Name,omitnil,omitempty" name:"Name"`
@@ -681,32 +742,32 @@ func (r *AddUserToGroupResponse) FromJsonString(s string) error {
 
 // Predefined struct for user
 type AttachPolicyRequestParams struct {
-	// 绑定策略目标ID。成员Uin或部门ID
+	// <p>绑定策略目标ID。成员Uin或部门ID</p>
 	TargetId *uint64 `json:"TargetId,omitnil,omitempty" name:"TargetId"`
 
-	// 目标类型。取值范围：NODE-部门、MEMBER-成员
+	// <p>目标类型。取值范围：NODE-部门、MEMBER-成员</p>
 	TargetType *string `json:"TargetType,omitnil,omitempty" name:"TargetType"`
 
-	// 策略ID。
+	// <p>策略Id。可以调用<a href="https://cloud.tencent.com/document/product/850/105311">ListPolicies</a>获取</p>
 	PolicyId *uint64 `json:"PolicyId,omitnil,omitempty" name:"PolicyId"`
 
-	// 策略类型。默认值SERVICE_CONTROL_POLICY，取值范围：SERVICE_CONTROL_POLICY-服务控制策略、TAG_POLICY-标签策略
+	// <p>策略类型。默认值SERVICE_CONTROL_POLICY，取值范围：SERVICE_CONTROL_POLICY-服务控制策略、TAG_POLICY-标签策略</p>
 	Type *string `json:"Type,omitnil,omitempty" name:"Type"`
 }
 
 type AttachPolicyRequest struct {
 	*tchttp.BaseRequest
 	
-	// 绑定策略目标ID。成员Uin或部门ID
+	// <p>绑定策略目标ID。成员Uin或部门ID</p>
 	TargetId *uint64 `json:"TargetId,omitnil,omitempty" name:"TargetId"`
 
-	// 目标类型。取值范围：NODE-部门、MEMBER-成员
+	// <p>目标类型。取值范围：NODE-部门、MEMBER-成员</p>
 	TargetType *string `json:"TargetType,omitnil,omitempty" name:"TargetType"`
 
-	// 策略ID。
+	// <p>策略Id。可以调用<a href="https://cloud.tencent.com/document/product/850/105311">ListPolicies</a>获取</p>
 	PolicyId *uint64 `json:"PolicyId,omitnil,omitempty" name:"PolicyId"`
 
-	// 策略类型。默认值SERVICE_CONTROL_POLICY，取值范围：SERVICE_CONTROL_POLICY-服务控制策略、TAG_POLICY-标签策略
+	// <p>策略类型。默认值SERVICE_CONTROL_POLICY，取值范围：SERVICE_CONTROL_POLICY-服务控制策略、TAG_POLICY-标签策略</p>
 	Type *string `json:"Type,omitnil,omitempty" name:"Type"`
 }
 
@@ -1524,74 +1585,74 @@ func (r *CreateOrganizationMemberPolicyResponse) FromJsonString(s string) error 
 
 // Predefined struct for user
 type CreateOrganizationMemberRequestParams struct {
-	// 成员名称。最大长度为25个字符，支持英文字母、数字、汉字、符号+@、&._[]-:,
+	// <p>成员名称。最大长度为25个字符，支持英文字母、数字、汉字、符号+@、&amp;._[]-:,</p>
 	Name *string `json:"Name,omitnil,omitempty" name:"Name"`
 
-	// 关系策略。取值：Financial
+	// <p>关系策略。取值：Financial</p>
 	PolicyType *string `json:"PolicyType,omitnil,omitempty" name:"PolicyType"`
 
-	// 成员财务权限ID列表。取值：1-查看账单、2-查看余额、3-资金划拨（若需要开启资金划拨权限，请联系您的商务经理内部开通。）、4-合并出账、5-开票、6-优惠继承、7-代付费、8-成本分析、9-预算管理、10-信用额度设置（若需要开启信用额度设置权限，请联系您的商务经理内部开通。），1、2 默认必须
+	// <p>成员财务权限ID列表。取值：1-查看账单、2-查看余额、3-资金划拨（若需要开启资金划拨权限，请联系您的商务经理内部开通。）、4-合并出账、5-开票、6-优惠继承、7-代付费、8-成本分析、9-预算管理、10-信用额度设置（若需要开启信用额度设置权限，请联系您的商务经理内部开通。），1、2 默认必须</p>
 	PermissionIds []*uint64 `json:"PermissionIds,omitnil,omitempty" name:"PermissionIds"`
 
-	// 成员所属部门的节点ID。可以通过[DescribeOrganizationNodes](https://cloud.tencent.com/document/product/850/82926)获取
+	// <p>成员所属部门的节点ID。可以通过<a href="https://cloud.tencent.com/document/product/850/82926">DescribeOrganizationNodes</a>获取</p>
 	NodeId *int64 `json:"NodeId,omitnil,omitempty" name:"NodeId"`
 
-	// 账号名称。最大长度为25个字符，支持英文字母、数字、汉字、符号+@、&._[]-:,
+	// <p>账号名称。最大长度为25个字符，支持英文字母、数字、汉字、符号+@、&amp;._[]-:,</p>
 	AccountName *string `json:"AccountName,omitnil,omitempty" name:"AccountName"`
 
-	// 备注。
+	// <p>备注。</p>
 	Remark *string `json:"Remark,omitnil,omitempty" name:"Remark"`
 
-	// 成员创建记录ID。创建异常重试时需要
+	// <p>成员创建记录ID。创建异常重试时需要</p>
 	RecordId *int64 `json:"RecordId,omitnil,omitempty" name:"RecordId"`
 
-	// 代付者Uin。成员代付费时需要
+	// <p>代付者Uin。成员代付费时需要</p>
 	PayUin *string `json:"PayUin,omitnil,omitempty" name:"PayUin"`
 
-	// 成员访问身份ID列表。可以调用ListOrganizationIdentity获取，1默认支持
+	// <p>成员访问身份ID列表。可以调用ListOrganizationIdentity获取，1默认支持</p>
 	IdentityRoleID []*uint64 `json:"IdentityRoleID,omitnil,omitempty" name:"IdentityRoleID"`
 
-	// 认证主体关系ID。给不同主体创建成员时需要，可以调用DescribeOrganizationAuthNode获取
+	// <p>认证主体关系ID。给不同主体创建成员时需要，可以调用DescribeOrganizationAuthNode获取</p>
 	AuthRelationId *int64 `json:"AuthRelationId,omitnil,omitempty" name:"AuthRelationId"`
 
-	// 成员标签列表。最大10个
+	// <p>成员标签列表。最大10个</p>
 	Tags []*Tag `json:"Tags,omitnil,omitempty" name:"Tags"`
 }
 
 type CreateOrganizationMemberRequest struct {
 	*tchttp.BaseRequest
 	
-	// 成员名称。最大长度为25个字符，支持英文字母、数字、汉字、符号+@、&._[]-:,
+	// <p>成员名称。最大长度为25个字符，支持英文字母、数字、汉字、符号+@、&amp;._[]-:,</p>
 	Name *string `json:"Name,omitnil,omitempty" name:"Name"`
 
-	// 关系策略。取值：Financial
+	// <p>关系策略。取值：Financial</p>
 	PolicyType *string `json:"PolicyType,omitnil,omitempty" name:"PolicyType"`
 
-	// 成员财务权限ID列表。取值：1-查看账单、2-查看余额、3-资金划拨（若需要开启资金划拨权限，请联系您的商务经理内部开通。）、4-合并出账、5-开票、6-优惠继承、7-代付费、8-成本分析、9-预算管理、10-信用额度设置（若需要开启信用额度设置权限，请联系您的商务经理内部开通。），1、2 默认必须
+	// <p>成员财务权限ID列表。取值：1-查看账单、2-查看余额、3-资金划拨（若需要开启资金划拨权限，请联系您的商务经理内部开通。）、4-合并出账、5-开票、6-优惠继承、7-代付费、8-成本分析、9-预算管理、10-信用额度设置（若需要开启信用额度设置权限，请联系您的商务经理内部开通。），1、2 默认必须</p>
 	PermissionIds []*uint64 `json:"PermissionIds,omitnil,omitempty" name:"PermissionIds"`
 
-	// 成员所属部门的节点ID。可以通过[DescribeOrganizationNodes](https://cloud.tencent.com/document/product/850/82926)获取
+	// <p>成员所属部门的节点ID。可以通过<a href="https://cloud.tencent.com/document/product/850/82926">DescribeOrganizationNodes</a>获取</p>
 	NodeId *int64 `json:"NodeId,omitnil,omitempty" name:"NodeId"`
 
-	// 账号名称。最大长度为25个字符，支持英文字母、数字、汉字、符号+@、&._[]-:,
+	// <p>账号名称。最大长度为25个字符，支持英文字母、数字、汉字、符号+@、&amp;._[]-:,</p>
 	AccountName *string `json:"AccountName,omitnil,omitempty" name:"AccountName"`
 
-	// 备注。
+	// <p>备注。</p>
 	Remark *string `json:"Remark,omitnil,omitempty" name:"Remark"`
 
-	// 成员创建记录ID。创建异常重试时需要
+	// <p>成员创建记录ID。创建异常重试时需要</p>
 	RecordId *int64 `json:"RecordId,omitnil,omitempty" name:"RecordId"`
 
-	// 代付者Uin。成员代付费时需要
+	// <p>代付者Uin。成员代付费时需要</p>
 	PayUin *string `json:"PayUin,omitnil,omitempty" name:"PayUin"`
 
-	// 成员访问身份ID列表。可以调用ListOrganizationIdentity获取，1默认支持
+	// <p>成员访问身份ID列表。可以调用ListOrganizationIdentity获取，1默认支持</p>
 	IdentityRoleID []*uint64 `json:"IdentityRoleID,omitnil,omitempty" name:"IdentityRoleID"`
 
-	// 认证主体关系ID。给不同主体创建成员时需要，可以调用DescribeOrganizationAuthNode获取
+	// <p>认证主体关系ID。给不同主体创建成员时需要，可以调用DescribeOrganizationAuthNode获取</p>
 	AuthRelationId *int64 `json:"AuthRelationId,omitnil,omitempty" name:"AuthRelationId"`
 
-	// 成员标签列表。最大10个
+	// <p>成员标签列表。最大10个</p>
 	Tags []*Tag `json:"Tags,omitnil,omitempty" name:"Tags"`
 }
 
@@ -1626,7 +1687,7 @@ func (r *CreateOrganizationMemberRequest) FromJsonString(s string) error {
 
 // Predefined struct for user
 type CreateOrganizationMemberResponseParams struct {
-	// 成员Uin。
+	// <p>成员Uin。</p>
 	Uin *int64 `json:"Uin,omitnil,omitempty" name:"Uin"`
 
 	// 唯一请求 ID，由服务端生成，每次请求都会返回（若请求因其他原因未能抵达服务端，则该次请求不会获得 RequestId）。定位问题时需要提供该次请求的 RequestId。
@@ -3137,6 +3198,67 @@ func (r *DeleteShareUnitMembersResponse) ToJsonString() string {
 // FromJsonString It is highly **NOT** recommended to use this function
 // because it has no param check, nor strict type check
 func (r *DeleteShareUnitMembersResponse) FromJsonString(s string) error {
+	return json.Unmarshal([]byte(s), &r)
+}
+
+// Predefined struct for user
+type DeleteShareUnitNodeRequestParams struct {
+	// <p>共享单元ID。</p>
+	UnitId *string `json:"UnitId,omitnil,omitempty" name:"UnitId"`
+
+	// <p>部门ID。</p>
+	NodeId *int64 `json:"NodeId,omitnil,omitempty" name:"NodeId"`
+}
+
+type DeleteShareUnitNodeRequest struct {
+	*tchttp.BaseRequest
+	
+	// <p>共享单元ID。</p>
+	UnitId *string `json:"UnitId,omitnil,omitempty" name:"UnitId"`
+
+	// <p>部门ID。</p>
+	NodeId *int64 `json:"NodeId,omitnil,omitempty" name:"NodeId"`
+}
+
+func (r *DeleteShareUnitNodeRequest) ToJsonString() string {
+    b, _ := json.Marshal(r)
+    return string(b)
+}
+
+// FromJsonString It is highly **NOT** recommended to use this function
+// because it has no param check, nor strict type check
+func (r *DeleteShareUnitNodeRequest) FromJsonString(s string) error {
+	f := make(map[string]interface{})
+	if err := json.Unmarshal([]byte(s), &f); err != nil {
+		return err
+	}
+	delete(f, "UnitId")
+	delete(f, "NodeId")
+	if len(f) > 0 {
+		return tcerr.NewTencentCloudSDKError("ClientError.BuildRequestError", "DeleteShareUnitNodeRequest has unknown keys!", "")
+	}
+	return json.Unmarshal([]byte(s), &r)
+}
+
+// Predefined struct for user
+type DeleteShareUnitNodeResponseParams struct {
+	// 唯一请求 ID，由服务端生成，每次请求都会返回（若请求因其他原因未能抵达服务端，则该次请求不会获得 RequestId）。定位问题时需要提供该次请求的 RequestId。
+	RequestId *string `json:"RequestId,omitnil,omitempty" name:"RequestId"`
+}
+
+type DeleteShareUnitNodeResponse struct {
+	*tchttp.BaseResponse
+	Response *DeleteShareUnitNodeResponseParams `json:"Response"`
+}
+
+func (r *DeleteShareUnitNodeResponse) ToJsonString() string {
+    b, _ := json.Marshal(r)
+    return string(b)
+}
+
+// FromJsonString It is highly **NOT** recommended to use this function
+// because it has no param check, nor strict type check
+func (r *DeleteShareUnitNodeResponse) FromJsonString(s string) error {
 	return json.Unmarshal([]byte(s), &r)
 }
 
@@ -4973,6 +5095,87 @@ func (r *DescribeShareUnitMembersResponse) FromJsonString(s string) error {
 }
 
 // Predefined struct for user
+type DescribeShareUnitNodesRequestParams struct {
+	// <p>共享单元ID。</p>
+	UnitId *string `json:"UnitId,omitnil,omitempty" name:"UnitId"`
+
+	// <p>偏移量。取值是limit的整数倍，默认值 : 0</p>
+	Offset *uint64 `json:"Offset,omitnil,omitempty" name:"Offset"`
+
+	// <p>限制数目。取值范围：1~50。</p>
+	Limit *uint64 `json:"Limit,omitnil,omitempty" name:"Limit"`
+
+	// <p>搜索关键字。支持部门ID搜索。</p>
+	SearchKey *string `json:"SearchKey,omitnil,omitempty" name:"SearchKey"`
+}
+
+type DescribeShareUnitNodesRequest struct {
+	*tchttp.BaseRequest
+	
+	// <p>共享单元ID。</p>
+	UnitId *string `json:"UnitId,omitnil,omitempty" name:"UnitId"`
+
+	// <p>偏移量。取值是limit的整数倍，默认值 : 0</p>
+	Offset *uint64 `json:"Offset,omitnil,omitempty" name:"Offset"`
+
+	// <p>限制数目。取值范围：1~50。</p>
+	Limit *uint64 `json:"Limit,omitnil,omitempty" name:"Limit"`
+
+	// <p>搜索关键字。支持部门ID搜索。</p>
+	SearchKey *string `json:"SearchKey,omitnil,omitempty" name:"SearchKey"`
+}
+
+func (r *DescribeShareUnitNodesRequest) ToJsonString() string {
+    b, _ := json.Marshal(r)
+    return string(b)
+}
+
+// FromJsonString It is highly **NOT** recommended to use this function
+// because it has no param check, nor strict type check
+func (r *DescribeShareUnitNodesRequest) FromJsonString(s string) error {
+	f := make(map[string]interface{})
+	if err := json.Unmarshal([]byte(s), &f); err != nil {
+		return err
+	}
+	delete(f, "UnitId")
+	delete(f, "Offset")
+	delete(f, "Limit")
+	delete(f, "SearchKey")
+	if len(f) > 0 {
+		return tcerr.NewTencentCloudSDKError("ClientError.BuildRequestError", "DescribeShareUnitNodesRequest has unknown keys!", "")
+	}
+	return json.Unmarshal([]byte(s), &r)
+}
+
+// Predefined struct for user
+type DescribeShareUnitNodesResponseParams struct {
+	// <p>总数目。</p>
+	Total *int64 `json:"Total,omitnil,omitempty" name:"Total"`
+
+	// <p>共享单元部门列表。</p>
+	Items []*ShareUnitNode `json:"Items,omitnil,omitempty" name:"Items"`
+
+	// 唯一请求 ID，由服务端生成，每次请求都会返回（若请求因其他原因未能抵达服务端，则该次请求不会获得 RequestId）。定位问题时需要提供该次请求的 RequestId。
+	RequestId *string `json:"RequestId,omitnil,omitempty" name:"RequestId"`
+}
+
+type DescribeShareUnitNodesResponse struct {
+	*tchttp.BaseResponse
+	Response *DescribeShareUnitNodesResponseParams `json:"Response"`
+}
+
+func (r *DescribeShareUnitNodesResponse) ToJsonString() string {
+    b, _ := json.Marshal(r)
+    return string(b)
+}
+
+// FromJsonString It is highly **NOT** recommended to use this function
+// because it has no param check, nor strict type check
+func (r *DescribeShareUnitNodesResponse) FromJsonString(s string) error {
+	return json.Unmarshal([]byte(s), &r)
+}
+
+// Predefined struct for user
 type DescribeShareUnitResourcesRequestParams struct {
 	// 共享单元ID。
 	UnitId *string `json:"UnitId,omitnil,omitempty" name:"UnitId"`
@@ -5150,32 +5353,32 @@ func (r *DescribeShareUnitsResponse) FromJsonString(s string) error {
 
 // Predefined struct for user
 type DetachPolicyRequestParams struct {
-	// 解绑策略目标ID。成员Uin或部门ID
+	// <p>解绑策略目标ID。成员Uin或部门ID</p>
 	TargetId *uint64 `json:"TargetId,omitnil,omitempty" name:"TargetId"`
 
-	// 目标类型。取值范围：NODE-部门、MEMBER-成员
+	// <p>目标类型。取值范围：NODE-部门、MEMBER-成员</p>
 	TargetType *string `json:"TargetType,omitnil,omitempty" name:"TargetType"`
 
-	// 策略ID。
+	// <p>策略Id。可以调用<a href="https://cloud.tencent.com/document/product/850/105311">ListPolicies</a>获取</p>
 	PolicyId *uint64 `json:"PolicyId,omitnil,omitempty" name:"PolicyId"`
 
-	// 策略类型。默认值SERVICE_CONTROL_POLICY，取值范围：SERVICE_CONTROL_POLICY-服务控制策略、TAG_POLICY-标签策略
+	// <p>策略类型。默认值SERVICE_CONTROL_POLICY，取值范围：SERVICE_CONTROL_POLICY-服务控制策略、TAG_POLICY-标签策略</p>
 	Type *string `json:"Type,omitnil,omitempty" name:"Type"`
 }
 
 type DetachPolicyRequest struct {
 	*tchttp.BaseRequest
 	
-	// 解绑策略目标ID。成员Uin或部门ID
+	// <p>解绑策略目标ID。成员Uin或部门ID</p>
 	TargetId *uint64 `json:"TargetId,omitnil,omitempty" name:"TargetId"`
 
-	// 目标类型。取值范围：NODE-部门、MEMBER-成员
+	// <p>目标类型。取值范围：NODE-部门、MEMBER-成员</p>
 	TargetType *string `json:"TargetType,omitnil,omitempty" name:"TargetType"`
 
-	// 策略ID。
+	// <p>策略Id。可以调用<a href="https://cloud.tencent.com/document/product/850/105311">ListPolicies</a>获取</p>
 	PolicyId *uint64 `json:"PolicyId,omitnil,omitempty" name:"PolicyId"`
 
-	// 策略类型。默认值SERVICE_CONTROL_POLICY，取值范围：SERVICE_CONTROL_POLICY-服务控制策略、TAG_POLICY-标签策略
+	// <p>策略类型。默认值SERVICE_CONTROL_POLICY，取值范围：SERVICE_CONTROL_POLICY-服务控制策略、TAG_POLICY-标签策略</p>
 	Type *string `json:"Type,omitnil,omitempty" name:"Type"`
 }
 
@@ -5552,6 +5755,63 @@ func (r *GetGroupResponse) ToJsonString() string {
 // FromJsonString It is highly **NOT** recommended to use this function
 // because it has no param check, nor strict type check
 func (r *GetGroupResponse) FromJsonString(s string) error {
+	return json.Unmarshal([]byte(s), &r)
+}
+
+// Predefined struct for user
+type GetIPWhitelistRequestParams struct {
+	// 空间ID
+	ZoneId *string `json:"ZoneId,omitnil,omitempty" name:"ZoneId"`
+}
+
+type GetIPWhitelistRequest struct {
+	*tchttp.BaseRequest
+	
+	// 空间ID
+	ZoneId *string `json:"ZoneId,omitnil,omitempty" name:"ZoneId"`
+}
+
+func (r *GetIPWhitelistRequest) ToJsonString() string {
+    b, _ := json.Marshal(r)
+    return string(b)
+}
+
+// FromJsonString It is highly **NOT** recommended to use this function
+// because it has no param check, nor strict type check
+func (r *GetIPWhitelistRequest) FromJsonString(s string) error {
+	f := make(map[string]interface{})
+	if err := json.Unmarshal([]byte(s), &f); err != nil {
+		return err
+	}
+	delete(f, "ZoneId")
+	if len(f) > 0 {
+		return tcerr.NewTencentCloudSDKError("ClientError.BuildRequestError", "GetIPWhitelistRequest has unknown keys!", "")
+	}
+	return json.Unmarshal([]byte(s), &r)
+}
+
+// Predefined struct for user
+type GetIPWhitelistResponseParams struct {
+	// ip白名单
+	IpWhitelist []*string `json:"IpWhitelist,omitnil,omitempty" name:"IpWhitelist"`
+
+	// 唯一请求 ID，由服务端生成，每次请求都会返回（若请求因其他原因未能抵达服务端，则该次请求不会获得 RequestId）。定位问题时需要提供该次请求的 RequestId。
+	RequestId *string `json:"RequestId,omitnil,omitempty" name:"RequestId"`
+}
+
+type GetIPWhitelistResponse struct {
+	*tchttp.BaseResponse
+	Response *GetIPWhitelistResponseParams `json:"Response"`
+}
+
+func (r *GetIPWhitelistResponse) ToJsonString() string {
+    b, _ := json.Marshal(r)
+    return string(b)
+}
+
+// FromJsonString It is highly **NOT** recommended to use this function
+// because it has no param check, nor strict type check
+func (r *GetIPWhitelistResponse) FromJsonString(s string) error {
 	return json.Unmarshal([]byte(s), &r)
 }
 
@@ -6415,62 +6675,62 @@ func (r *ListGroupMembersResponse) FromJsonString(s string) error {
 
 // Predefined struct for user
 type ListGroupsRequestParams struct {
-	// 空间 ID。
+	// <p>空间 ID。</p>
 	ZoneId *string `json:"ZoneId,omitnil,omitempty" name:"ZoneId"`
 
-	// 查询返回结果下一页的令牌。首次调用 API 不需要NextToken。  当您首次调用 API 时，如果返回数据总条数超过MaxResults限制，数据会被截断，只返回MaxResults条数据，同时，返回参数IsTruncated为true，返回一个NextToken。您可以使用上一次返回的NextToken继续调用 API，其他请求参数保持不变，查询被截断的数据。您可以按此方法多次查询，直到IsTruncated为false，表示全部数据查询完毕。
+	// <p>查询返回结果下一页的令牌。首次调用 API 不需要NextToken。  当您首次调用 API 时，如果返回数据总条数超过MaxResults限制，数据会被截断，只返回MaxResults条数据，同时，返回参数IsTruncated为true，返回一个NextToken。您可以使用上一次返回的NextToken继续调用 API，其他请求参数保持不变，查询被截断的数据。您可以按此方法多次查询，直到IsTruncated为false，表示全部数据查询完毕。</p>
 	NextToken *string `json:"NextToken,omitnil,omitempty" name:"NextToken"`
 
-	// 每页的最大数据条数。  取值范围：1~100。  默认值：10。
+	// <p>每页的最大数据条数。  取值范围：1~100。  默认值：10。</p>
 	MaxResults *int64 `json:"MaxResults,omitnil,omitempty" name:"MaxResults"`
 
-	// 过滤条件。  格式：<Attribute> <Operator> <Value>，不区分大小写。目前，<Attribute>只支持GroupName，<Operator>只支持eq（Equals）和sw（Start With）。  示例：Filter = "GroupName sw test"，表示查询名称以 test 开头的全部用户组。Filter = "GroupName eq testgroup"，表示查询名称为 testgroup 的用户组。
+	// <p>过滤条件，用户组名称</p>
 	Filter *string `json:"Filter,omitnil,omitempty" name:"Filter"`
 
-	// 用户组的类型  Manual：手动创建，Synchronized：外部导入。
+	// <p>用户组的类型  Manual：手动创建，Synchronized：外部导入。</p>
 	GroupType *string `json:"GroupType,omitnil,omitempty" name:"GroupType"`
 
-	// 筛选的用户，该用户关联的用户组会返回IsSelected=1
+	// <p>筛选的用户，该用户关联的用户组会返回IsSelected=1</p>
 	FilterUsers []*string `json:"FilterUsers,omitnil,omitempty" name:"FilterUsers"`
 
-	// 排序的字段，目前只支持CreateTime，默认是CreateTime字段
+	// <p>排序的字段，目前只支持CreateTime，默认是CreateTime字段</p>
 	SortField *string `json:"SortField,omitnil,omitempty" name:"SortField"`
 
-	// 排序类型：Desc 倒序 Asc  正序，需要您和SortField一起设置
+	// <p>排序类型：Desc 倒序 Asc  正序，需要您和SortField一起设置</p>
 	SortType *string `json:"SortType,omitnil,omitempty" name:"SortType"`
 
-	// 翻页offset. 不要与NextToken同时使用，优先使用NextToken
+	// <p>翻页offset. 不要与NextToken同时使用，优先使用NextToken</p>
 	Offset *int64 `json:"Offset,omitnil,omitempty" name:"Offset"`
 }
 
 type ListGroupsRequest struct {
 	*tchttp.BaseRequest
 	
-	// 空间 ID。
+	// <p>空间 ID。</p>
 	ZoneId *string `json:"ZoneId,omitnil,omitempty" name:"ZoneId"`
 
-	// 查询返回结果下一页的令牌。首次调用 API 不需要NextToken。  当您首次调用 API 时，如果返回数据总条数超过MaxResults限制，数据会被截断，只返回MaxResults条数据，同时，返回参数IsTruncated为true，返回一个NextToken。您可以使用上一次返回的NextToken继续调用 API，其他请求参数保持不变，查询被截断的数据。您可以按此方法多次查询，直到IsTruncated为false，表示全部数据查询完毕。
+	// <p>查询返回结果下一页的令牌。首次调用 API 不需要NextToken。  当您首次调用 API 时，如果返回数据总条数超过MaxResults限制，数据会被截断，只返回MaxResults条数据，同时，返回参数IsTruncated为true，返回一个NextToken。您可以使用上一次返回的NextToken继续调用 API，其他请求参数保持不变，查询被截断的数据。您可以按此方法多次查询，直到IsTruncated为false，表示全部数据查询完毕。</p>
 	NextToken *string `json:"NextToken,omitnil,omitempty" name:"NextToken"`
 
-	// 每页的最大数据条数。  取值范围：1~100。  默认值：10。
+	// <p>每页的最大数据条数。  取值范围：1~100。  默认值：10。</p>
 	MaxResults *int64 `json:"MaxResults,omitnil,omitempty" name:"MaxResults"`
 
-	// 过滤条件。  格式：<Attribute> <Operator> <Value>，不区分大小写。目前，<Attribute>只支持GroupName，<Operator>只支持eq（Equals）和sw（Start With）。  示例：Filter = "GroupName sw test"，表示查询名称以 test 开头的全部用户组。Filter = "GroupName eq testgroup"，表示查询名称为 testgroup 的用户组。
+	// <p>过滤条件，用户组名称</p>
 	Filter *string `json:"Filter,omitnil,omitempty" name:"Filter"`
 
-	// 用户组的类型  Manual：手动创建，Synchronized：外部导入。
+	// <p>用户组的类型  Manual：手动创建，Synchronized：外部导入。</p>
 	GroupType *string `json:"GroupType,omitnil,omitempty" name:"GroupType"`
 
-	// 筛选的用户，该用户关联的用户组会返回IsSelected=1
+	// <p>筛选的用户，该用户关联的用户组会返回IsSelected=1</p>
 	FilterUsers []*string `json:"FilterUsers,omitnil,omitempty" name:"FilterUsers"`
 
-	// 排序的字段，目前只支持CreateTime，默认是CreateTime字段
+	// <p>排序的字段，目前只支持CreateTime，默认是CreateTime字段</p>
 	SortField *string `json:"SortField,omitnil,omitempty" name:"SortField"`
 
-	// 排序类型：Desc 倒序 Asc  正序，需要您和SortField一起设置
+	// <p>排序类型：Desc 倒序 Asc  正序，需要您和SortField一起设置</p>
 	SortType *string `json:"SortType,omitnil,omitempty" name:"SortType"`
 
-	// 翻页offset. 不要与NextToken同时使用，优先使用NextToken
+	// <p>翻页offset. 不要与NextToken同时使用，优先使用NextToken</p>
 	Offset *int64 `json:"Offset,omitnil,omitempty" name:"Offset"`
 }
 
@@ -6503,19 +6763,19 @@ func (r *ListGroupsRequest) FromJsonString(s string) error {
 
 // Predefined struct for user
 type ListGroupsResponseParams struct {
-	// 查询返回结果下一页的令牌。  说明 只有IsTruncated为true时，才显示该参数。
+	// <p>查询返回结果下一页的令牌。  说明 只有IsTruncated为true时，才显示该参数。</p>
 	NextToken *string `json:"NextToken,omitnil,omitempty" name:"NextToken"`
 
-	// 用户组列表。
+	// <p>用户组列表。</p>
 	Groups []*GroupInfo `json:"Groups,omitnil,omitempty" name:"Groups"`
 
-	// 每页的最大数据条数。
+	// <p>每页的最大数据条数。</p>
 	MaxResults *int64 `json:"MaxResults,omitnil,omitempty" name:"MaxResults"`
 
-	// 符合请求参数条件的数据总条数。
+	// <p>符合请求参数条件的数据总条数。</p>
 	TotalCounts *int64 `json:"TotalCounts,omitnil,omitempty" name:"TotalCounts"`
 
-	// 返回结果是否被截断。取值：  true：已截断。 false：未截断。
+	// <p>返回结果是否被截断。取值：  true：已截断。 false：未截断。</p>
 	IsTruncated *bool `json:"IsTruncated,omitnil,omitempty" name:"IsTruncated"`
 
 	// 唯一请求 ID，由服务端生成，每次请求都会返回（若请求因其他原因未能抵达服务端，则该次请求不会获得 RequestId）。定位问题时需要提供该次请求的 RequestId。
@@ -8169,35 +8429,38 @@ func (r *ListUsersResponse) FromJsonString(s string) error {
 }
 
 type ManagerShareUnit struct {
-	// 共享单元ID。
+	// <p>共享单元ID。</p>
 	UnitId *string `json:"UnitId,omitnil,omitempty" name:"UnitId"`
 
-	// 共享单元名称。
+	// <p>共享单元名称。</p>
 	Name *string `json:"Name,omitnil,omitempty" name:"Name"`
 
-	// 共享单元管理员Uin。
+	// <p>共享单元管理员Uin。</p>
 	Uin *int64 `json:"Uin,omitnil,omitempty" name:"Uin"`
 
-	// 共享单元管理员OwnerUin。
+	// <p>共享单元管理员OwnerUin。</p>
 	OwnerUin *int64 `json:"OwnerUin,omitnil,omitempty" name:"OwnerUin"`
 
-	// 共享单元地域。
+	// <p>共享单元地域。</p>
 	Area *string `json:"Area,omitnil,omitempty" name:"Area"`
 
-	// 描述。
+	// <p>描述。</p>
 	Description *string `json:"Description,omitnil,omitempty" name:"Description"`
 
-	// 创建时间。
+	// <p>创建时间。</p>
 	CreateTime *string `json:"CreateTime,omitnil,omitempty" name:"CreateTime"`
 
-	// 共享单元资源数。
+	// <p>共享单元资源数。</p>
 	ShareResourceNum *int64 `json:"ShareResourceNum,omitnil,omitempty" name:"ShareResourceNum"`
 
-	// 共享单元成员数。
+	// <p>共享单元成员数。</p>
 	ShareMemberNum *int64 `json:"ShareMemberNum,omitnil,omitempty" name:"ShareMemberNum"`
 
-	// 共享范围。取值：1-仅允许集团组织内共享 2-允许共享给任意账号
+	// <p>共享范围。取值：1-仅允许集团组织内共享 2-允许共享给任意账号</p>
 	ShareScope *uint64 `json:"ShareScope,omitnil,omitempty" name:"ShareScope"`
+
+	// <p>共享单元部门数。</p>
+	ShareNodeNum *int64 `json:"ShareNodeNum,omitnil,omitempty" name:"ShareNodeNum"`
 }
 
 type MemberIdentity struct {
@@ -9604,6 +9867,14 @@ type ShareUnitMember struct {
 	CreateTime *string `json:"CreateTime,omitnil,omitempty" name:"CreateTime"`
 }
 
+type ShareUnitNode struct {
+	// <p>共享部门ID。</p>
+	ShareNodeId *int64 `json:"ShareNodeId,omitnil,omitempty" name:"ShareNodeId"`
+
+	// <p>创建时间。</p>
+	CreateTime *string `json:"CreateTime,omitnil,omitempty" name:"CreateTime"`
+}
+
 type ShareUnitResource struct {
 	// 共享资源ID。
 	ResourceId *string `json:"ResourceId,omitnil,omitempty" name:"ResourceId"`
@@ -9856,6 +10127,70 @@ func (r *UpdateGroupResponse) ToJsonString() string {
 // FromJsonString It is highly **NOT** recommended to use this function
 // because it has no param check, nor strict type check
 func (r *UpdateGroupResponse) FromJsonString(s string) error {
+	return json.Unmarshal([]byte(s), &r)
+}
+
+// Predefined struct for user
+type UpdateIPWhitelistRequestParams struct {
+	// 空间ID
+	ZoneId *string `json:"ZoneId,omitnil,omitempty" name:"ZoneId"`
+
+	// ip白名单（上限100个）
+	IpWhitelist []*string `json:"IpWhitelist,omitnil,omitempty" name:"IpWhitelist"`
+}
+
+type UpdateIPWhitelistRequest struct {
+	*tchttp.BaseRequest
+	
+	// 空间ID
+	ZoneId *string `json:"ZoneId,omitnil,omitempty" name:"ZoneId"`
+
+	// ip白名单（上限100个）
+	IpWhitelist []*string `json:"IpWhitelist,omitnil,omitempty" name:"IpWhitelist"`
+}
+
+func (r *UpdateIPWhitelistRequest) ToJsonString() string {
+    b, _ := json.Marshal(r)
+    return string(b)
+}
+
+// FromJsonString It is highly **NOT** recommended to use this function
+// because it has no param check, nor strict type check
+func (r *UpdateIPWhitelistRequest) FromJsonString(s string) error {
+	f := make(map[string]interface{})
+	if err := json.Unmarshal([]byte(s), &f); err != nil {
+		return err
+	}
+	delete(f, "ZoneId")
+	delete(f, "IpWhitelist")
+	if len(f) > 0 {
+		return tcerr.NewTencentCloudSDKError("ClientError.BuildRequestError", "UpdateIPWhitelistRequest has unknown keys!", "")
+	}
+	return json.Unmarshal([]byte(s), &r)
+}
+
+// Predefined struct for user
+type UpdateIPWhitelistResponseParams struct {
+	// 成功返回
+	Success *bool `json:"Success,omitnil,omitempty" name:"Success"`
+
+	// 唯一请求 ID，由服务端生成，每次请求都会返回（若请求因其他原因未能抵达服务端，则该次请求不会获得 RequestId）。定位问题时需要提供该次请求的 RequestId。
+	RequestId *string `json:"RequestId,omitnil,omitempty" name:"RequestId"`
+}
+
+type UpdateIPWhitelistResponse struct {
+	*tchttp.BaseResponse
+	Response *UpdateIPWhitelistResponseParams `json:"Response"`
+}
+
+func (r *UpdateIPWhitelistResponse) ToJsonString() string {
+    b, _ := json.Marshal(r)
+    return string(b)
+}
+
+// FromJsonString It is highly **NOT** recommended to use this function
+// because it has no param check, nor strict type check
+func (r *UpdateIPWhitelistResponse) FromJsonString(s string) error {
 	return json.Unmarshal([]byte(s), &r)
 }
 

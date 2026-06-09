@@ -40,7 +40,7 @@ In addition to all arguments above, the following attributes are exported:
   * `create_time` - The time when the AS group was created.
   * `default_cooldown` - Default cooldown time of scaling group.
   * `desired_capacity` - The desired number of CVM instances.
-  * `forward_balancer_ids` - A list of application clb ids.
+  * `forward_load_balancers` - A list of application clb.
     * `listener_id` - Listener ID for application load balancers.
     * `load_balancer_id` - ID of available load balancers.
     * `location_id` - ID of forwarding rules.

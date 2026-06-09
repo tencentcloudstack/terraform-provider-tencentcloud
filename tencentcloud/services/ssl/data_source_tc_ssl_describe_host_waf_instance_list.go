@@ -79,7 +79,13 @@ func DataSourceTencentCloudSslDescribeHostWafInstanceList() *schema.Resource {
 						"status": {
 							Type:        schema.TypeInt,
 							Computed:    true,
+							Deprecated:  "Deprecated from version v1.82.94.",
 							Description: "-1: Unrelated certificate of domain name.1: The domain name HTTPS has been opened.0: The domain name HTTPS has been closed.",
+						},
+						"keepalive": {
+							Type:        schema.TypeInt,
+							Computed:    true,
+							Description: "Whether to maintain a persistent connection (1: Yes, 0: No).",
 						},
 					},
 				},
@@ -140,7 +146,7 @@ func dataSourceTencentCloudSslDescribeHostWafInstanceListRead(d *schema.Resource
 
 	service := SslService{client: meta.(tccommon.ProviderMeta).GetAPIV3Conn()}
 
-	var instanceList []*ssl.LiveInstanceDetail
+	var instanceList []*ssl.WafInstanceDetail
 
 	err := resource.Retry(tccommon.ReadRetryTimeout, func() *resource.RetryError {
 		result, e := service.DescribeSslDescribeHostWafInstanceListByFilter(ctx, paramMap)
@@ -169,8 +175,8 @@ func dataSourceTencentCloudSslDescribeHostWafInstanceListRead(d *schema.Resource
 				liveInstanceDetailMap["cert_id"] = liveInstanceDetail.CertId
 			}
 
-			if liveInstanceDetail.Status != nil {
-				liveInstanceDetailMap["status"] = liveInstanceDetail.Status
+			if liveInstanceDetail.Keepalive != nil {
+				liveInstanceDetailMap["keepalive"] = liveInstanceDetail.Keepalive
 			}
 
 			ids = append(ids, *liveInstanceDetail.CertId)

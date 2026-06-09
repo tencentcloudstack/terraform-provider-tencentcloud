@@ -63,6 +63,22 @@ func ResourceTencentCloudInstance() *schema.Resource {
 				ForceNew:    true,
 				Description: "Exclusive cluster id.",
 			},
+			"dedicated_resource_pack_tenancy": {
+				Type:        schema.TypeString,
+				Optional:    true,
+				ForceNew:    true,
+				Description: "Dedicated resource pack tenancy strategy. Valid values: `ResourcePool` (use instance resource pool for resource pre-deduction).",
+			},
+			"dedicated_resource_pack_ids": {
+				Type:     schema.TypeSet,
+				Optional: true,
+				ForceNew: true,
+				Elem: &schema.Schema{
+					Type: schema.TypeString,
+				},
+				RequiredWith: []string{"dedicated_resource_pack_tenancy"},
+				Description:  "List of dedicated resource pack IDs (e.g., rpp-xxxxxxxx). When creating instances using pre-purchased resource pool packs, this parameter must be specified together with `dedicated_resource_pack_tenancy` to match the corresponding tenancy strategy. Related resource: `tencentcloud_cvm_resource_pool_packs`.",
+			},
 			"instance_name": {
 				Type:         schema.TypeString,
 				Optional:     true,
@@ -480,6 +496,12 @@ func ResourceTencentCloudInstance() *schema.Resource {
 				Default:     false,
 				Description: "Indicate whether to force delete the instance. Default is `false`. If set true, the instance will be permanently deleted instead of being moved into the recycle bin. Note: only works for `PREPAID` instance.",
 			},
+			"force_stop": {
+				Type:        schema.TypeBool,
+				Optional:    true,
+				Computed:    true,
+				Description: "Whether to forcibly shut down a running instance. Default is false. Forcing a shutdown is equivalent to switching off the power button on a physical computer. Forcing a shutdown may result in data loss or file system corruption; therefore, please use this option only when the server cannot be shut down normally.",
+			},
 			"disable_api_termination": {
 				Type:        schema.TypeBool,
 				Optional:    true,
@@ -558,6 +580,11 @@ func ResourceTencentCloudInstance() *schema.Resource {
 				Type:        schema.TypeString,
 				Computed:    true,
 				Description: "Instance os name.",
+			},
+			"rack_id": {
+				Type:        schema.TypeString,
+				Computed:    true,
+				Description: "The rack ID of the instance resource pool to which the instance belongs.",
 			},
 			"ipv6_addresses": {
 				Type:        schema.TypeList,
@@ -680,6 +707,21 @@ func resourceTencentCloudInstanceCreate(d *schema.ResourceData, meta interface{}
 			} else {
 				return fmt.Errorf("cdh_host_id can not be empty when instance_charge_type is %s", instanceChargeType)
 			}
+		}
+	}
+
+	// Dedicated resource pack placement parameters
+	if v, ok := d.GetOk("dedicated_resource_pack_tenancy"); ok {
+		request.Placement.DedicatedResourcePackTenancy = helper.String(v.(string))
+	}
+
+	if v, ok := d.GetOk("dedicated_resource_pack_ids"); ok {
+		packIds := v.(*schema.Set).List()
+		for _, packId := range packIds {
+			request.Placement.DedicatedResourcePackIds = append(
+				request.Placement.DedicatedResourcePackIds,
+				helper.String(packId.(string)),
+			)
 		}
 	}
 
@@ -1225,6 +1267,20 @@ func resourceTencentCloudInstanceRead(d *schema.ResourceData, meta interface{}) 
 	_ = d.Set("instance_name", instance.InstanceName)
 	_ = d.Set("instance_type", instance.InstanceType)
 	_ = d.Set("project_id", instance.Placement.ProjectId)
+
+	// Set dedicated resource pack placement parameters
+	if instance.Placement != nil {
+		if instance.Placement.DedicatedResourcePackTenancy != nil {
+			_ = d.Set("dedicated_resource_pack_tenancy", instance.Placement.DedicatedResourcePackTenancy)
+		}
+		// if len(instance.Placement.DedicatedResourcePackIds) > 0 {
+		// 	_ = d.Set("dedicated_resource_pack_ids", helper.StringsInterfaces(instance.Placement.DedicatedResourcePackIds))
+		// }
+		if instance.Placement.RackId != nil {
+			_ = d.Set("rack_id", instance.Placement.RackId)
+		}
+	}
+
 	_ = d.Set("instance_charge_type", instance.InstanceChargeType)
 	_ = d.Set("instance_charge_type_prepaid_renew_flag", instance.RenewFlag)
 	_ = d.Set("internet_charge_type", instance.InternetAccessible.InternetChargeType)
@@ -1828,6 +1884,11 @@ func resourceTencentCloudInstanceUpdate(d *schema.ResourceData, meta interface{}
 		expectChargeType = chargeType.(string)
 	}
 
+	var forceStop bool
+	if v, ok := d.GetOkExists("force_stop"); ok {
+		forceStop = v.(bool)
+	}
+
 	if d.HasChange("instance_charge_type") && expectChargeType != currentChargeType {
 		var (
 			period    = -1
@@ -2058,7 +2119,7 @@ func resourceTencentCloudInstanceUpdate(d *schema.ResourceData, meta interface{}
 		// Modify Login Info Directly
 	} else {
 		if d.HasChange("password") {
-			err := cvmService.ModifyPassword(ctx, instanceId, d.Get("password").(string))
+			err := cvmService.ModifyPassword(ctx, instanceId, d.Get("password").(string), forceStop)
 			if err != nil {
 				return err
 			}
@@ -2075,7 +2136,7 @@ func resourceTencentCloudInstanceUpdate(d *schema.ResourceData, meta interface{}
 			keyId := n.(string)
 
 			if oldKeyId != "" {
-				err := cvmService.UnbindKeyPair(ctx, []*string{&oldKeyId}, []*string{&instanceId})
+				err := cvmService.UnbindKeyPair(ctx, []*string{&oldKeyId}, []*string{&instanceId}, forceStop)
 				if err != nil {
 					return err
 				}
@@ -2087,7 +2148,7 @@ func resourceTencentCloudInstanceUpdate(d *schema.ResourceData, meta interface{}
 			}
 
 			if keyId != "" {
-				err = cvmService.BindKeyPair(ctx, []*string{&keyId}, instanceId)
+				err = cvmService.BindKeyPair(ctx, []*string{&keyId}, instanceId, forceStop)
 				if err != nil {
 					return err
 				}
@@ -2110,7 +2171,7 @@ func resourceTencentCloudInstanceUpdate(d *schema.ResourceData, meta interface{}
 			removes.Remove("")
 
 			if removes.Len() > 0 {
-				err := cvmService.UnbindKeyPair(ctx, helper.InterfacesStringsPoint(removes.List()), []*string{&instanceId})
+				err := cvmService.UnbindKeyPair(ctx, helper.InterfacesStringsPoint(removes.List()), []*string{&instanceId}, forceStop)
 				if err != nil {
 					return err
 				}
@@ -2122,7 +2183,7 @@ func resourceTencentCloudInstanceUpdate(d *schema.ResourceData, meta interface{}
 			}
 
 			if adds.Len() > 0 {
-				err = cvmService.BindKeyPair(ctx, helper.InterfacesStringsPoint(adds.List()), instanceId)
+				err = cvmService.BindKeyPair(ctx, helper.InterfacesStringsPoint(adds.List()), instanceId, forceStop)
 				if err != nil {
 					return err
 				}
@@ -2161,7 +2222,7 @@ func resourceTencentCloudInstanceUpdate(d *schema.ResourceData, meta interface{}
 			if d.HasChange(nameKey) {
 				name := d.Get(nameKey).(string)
 				diskId := d.Get(idKey).(string)
-				err := cbsService.ModifyDiskAttributes(ctx, diskId, name, -1, "")
+				err := cbsService.ModifyDiskAttributes(ctx, "", diskId, name, -1, "")
 				if err != nil {
 					return fmt.Errorf("an error occurred when modifying data disk name: %s, reason: %s", name, err.Error())
 				}
@@ -2183,7 +2244,7 @@ func resourceTencentCloudInstanceUpdate(d *schema.ResourceData, meta interface{}
 		//diskId := d.Get("system_disk_id").(string)
 		req := cvm.NewResizeInstanceDisksRequest()
 		req.InstanceId = &instanceId
-		req.ForceStop = helper.Bool(true)
+
 		req.SystemDisk = &cvm.SystemDisk{
 			DiskSize: helper.IntInt64(size),
 			DiskType: &diskType,
@@ -2192,6 +2253,7 @@ func resourceTencentCloudInstanceUpdate(d *schema.ResourceData, meta interface{}
 			req.ResizeOnline = helper.Bool(v.(bool))
 		}
 
+		req.ForceStop = helper.Bool(forceStop)
 		err := cvmService.ResizeInstanceDisks(ctx, req)
 		if err != nil {
 			return fmt.Errorf("an error occurred when modifying system_disk, reason: %s", err.Error())
@@ -2233,7 +2295,7 @@ func resourceTencentCloudInstanceUpdate(d *schema.ResourceData, meta interface{}
 		if v, ok := d.GetOk("system_disk_id"); ok {
 			systemDiskId := v.(string)
 			cbsService := svccbs.NewCbsService(meta.(tccommon.ProviderMeta).GetAPIV3Conn())
-			err := cbsService.ModifyDiskAttributes(ctx, systemDiskId, systemDiskName, -1, "")
+			err := cbsService.ModifyDiskAttributes(ctx, "", systemDiskId, systemDiskName, -1, "")
 			if err != nil {
 				return fmt.Errorf("an error occurred when modifying system disk name %s, reason: %s", systemDiskName, err.Error())
 			}
@@ -2243,7 +2305,7 @@ func resourceTencentCloudInstanceUpdate(d *schema.ResourceData, meta interface{}
 	}
 
 	if d.HasChange("instance_type") {
-		err := cvmService.ModifyInstanceType(ctx, instanceId, d.Get("instance_type").(string))
+		err := cvmService.ModifyInstanceType(ctx, instanceId, d.Get("instance_type").(string), forceStop)
 		if err != nil {
 			return err
 		}
@@ -2255,7 +2317,7 @@ func resourceTencentCloudInstanceUpdate(d *schema.ResourceData, meta interface{}
 	}
 
 	if d.HasChange("cdh_instance_type") {
-		err := cvmService.ModifyInstanceType(ctx, instanceId, d.Get("cdh_instance_type").(string))
+		err := cvmService.ModifyInstanceType(ctx, instanceId, d.Get("cdh_instance_type").(string), forceStop)
 		if err != nil {
 			return err
 		}

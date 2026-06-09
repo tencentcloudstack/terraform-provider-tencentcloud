@@ -1,4 +1,4 @@
-Provides a resource to create a teo origin_group
+Provides a resource to create a TEO origin_group
 
 ~> **NOTE:** Please note that `tencentcloud_teo_origin_group` had to undergo incompatible changes in version v1.81.96.
 

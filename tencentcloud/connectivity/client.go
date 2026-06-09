@@ -49,6 +49,7 @@ import (
 	cls "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/cls/v20201016"
 	"github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/common"
 	"github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/common/profile"
+	configv20220802 "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/config/v20220802"
 	controlcenter "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/controlcenter/v20230110"
 	csip "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/csip/v20221121"
 	cvmv20170312 "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/cvm/v20170312"
@@ -66,9 +67,12 @@ import (
 	eb "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/eb/v20210416"
 	emr "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/emr/v20190103"
 	es "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/es/v20180416"
+	ga2v20250115 "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/ga2/v20250115"
 	gaap "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/gaap/v20180529"
+	gsv20191118 "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/gs/v20191118"
 	gwlb "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/gwlb/v20240906"
 	igtmv20231024 "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/igtm/v20231024"
+	keewidbv20220308 "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/keewidb/v20220308"
 	kms "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/kms/v20190118"
 	lighthouse "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/lighthouse/v20200324"
 	css "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/live/v20180801"
@@ -110,6 +114,7 @@ import (
 	tse "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/tse/v20201207"
 	tsf "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/tsf/v20180326"
 	vcubev20220410 "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/vcube/v20220410"
+	vdbv20230616 "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/vdb/v20230616"
 	vod "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/vod/v20180717"
 	vpc "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/vpc/v20170312"
 	waf "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/waf/v20180125"
@@ -205,6 +210,7 @@ type TencentCloudClient struct {
 	mpsConn              *mps.Client
 	cwpConn              *cwp.Client
 	chdfsConn            *chdfs.Client
+	configv20220802Conn  *configv20220802.Client
 	mdlConn              *mdl.Client
 	apmConn              *apm.Client
 	ciamConn             *ciam.Client
@@ -253,6 +259,10 @@ type TencentCloudClient struct {
 	gwlbv20240906Conn           *gwlb.Client
 	billingv20180709Conn        *billing.Client
 	igtmv20231024Conn           *igtmv20231024.Client
+	ga2v20250115Conn            *ga2v20250115.Client
+	gsv20191118Conn             *gsv20191118.Client
+	keewidbv20220308Conn        *keewidbv20220308.Client
+	vdbv20230616Conn            *vdbv20230616.Client
 	bhv20230418Conn             *bhv20230418.Client
 	vcubev20220410Conn          *vcubev20220410.Client
 	advisorv20200721Conn        *advisorv20200721.Client
@@ -2199,6 +2209,30 @@ func (me *TencentCloudClient) UseIgtmV20231024Client() *igtmv20231024.Client {
 	return me.igtmv20231024Conn
 }
 
+// UseGa2V20250115Client return GA2 (Global Accelerator 2) client for service
+func (me *TencentCloudClient) UseGa2V20250115Client() *ga2v20250115.Client {
+	if me.ga2v20250115Conn != nil {
+		return me.ga2v20250115Conn
+	}
+	cpf := me.NewClientProfile(300)
+	me.ga2v20250115Conn, _ = ga2v20250115.NewClient(me.Credential, me.Region, cpf)
+	me.ga2v20250115Conn.WithHttpTransport(&LogRoundTripper{})
+
+	return me.ga2v20250115Conn
+}
+
+// UseConfigV20220802Client return Config client for service
+func (me *TencentCloudClient) UseConfigV20220802Client() *configv20220802.Client {
+	if me.configv20220802Conn != nil {
+		return me.configv20220802Conn
+	}
+	cpf := me.NewClientProfile(300)
+	me.configv20220802Conn, _ = configv20220802.NewClient(me.Credential, me.Region, cpf)
+	me.configv20220802Conn.WithHttpTransport(&LogRoundTripper{})
+
+	return me.configv20220802Conn
+}
+
 // UseVcubeV20220410Client return VCUBE client for service
 func (me *TencentCloudClient) UseVcubeV20220410Client() *vcubev20220410.Client {
 	if me.vcubev20220410Conn != nil {
@@ -2221,4 +2255,40 @@ func (me *TencentCloudClient) UseAdvisorV20200721Client() *advisorv20200721.Clie
 	me.advisorv20200721Conn.WithHttpTransport(&LogRoundTripper{})
 
 	return me.advisorv20200721Conn
+}
+
+// UseVdbV20230616Client return VDB client for service
+func (me *TencentCloudClient) UseVdbV20230616Client() *vdbv20230616.Client {
+	if me.vdbv20230616Conn != nil {
+		return me.vdbv20230616Conn
+	}
+	cpf := me.NewClientProfile(300)
+	me.vdbv20230616Conn, _ = vdbv20230616.NewClient(me.Credential, me.Region, cpf)
+	me.vdbv20230616Conn.WithHttpTransport(&LogRoundTripper{})
+
+	return me.vdbv20230616Conn
+}
+
+// UseGsV20191118Client return GS client for service
+func (me *TencentCloudClient) UseGsV20191118Client() *gsv20191118.Client {
+	if me.gsv20191118Conn != nil {
+		return me.gsv20191118Conn
+	}
+	cpf := me.NewClientProfile(300)
+	me.gsv20191118Conn, _ = gsv20191118.NewClient(me.Credential, me.Region, cpf)
+	me.gsv20191118Conn.WithHttpTransport(&LogRoundTripper{})
+
+	return me.gsv20191118Conn
+}
+
+// UseKeewidbV20220308Client return KeeWiDB client for service
+func (me *TencentCloudClient) UseKeewidbV20220308Client() *keewidbv20220308.Client {
+	if me.keewidbv20220308Conn != nil {
+		return me.keewidbv20220308Conn
+	}
+	cpf := me.NewClientProfile(300)
+	me.keewidbv20220308Conn, _ = keewidbv20220308.NewClient(me.Credential, me.Region, cpf)
+	me.keewidbv20220308Conn.WithHttpTransport(&LogRoundTripper{})
+
+	return me.keewidbv20220308Conn
 }

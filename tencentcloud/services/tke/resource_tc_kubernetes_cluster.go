@@ -201,7 +201,7 @@ func ResourceTencentCloudKubernetesCluster() *schema.Resource {
 			"cluster_extra_args": {
 				Type:        schema.TypeList,
 				Optional:    true,
-				ForceNew:    true,
+				Computed:    true,
 				MaxItems:    1,
 				Description: "Customized parameters for master component,such as kube-apiserver, kube-controller-manager, kube-scheduler.",
 				Elem: &schema.Resource{
@@ -209,7 +209,7 @@ func ResourceTencentCloudKubernetesCluster() *schema.Resource {
 						"kube_apiserver": {
 							Type:        schema.TypeList,
 							Optional:    true,
-							ForceNew:    true,
+							Computed:    true,
 							Description: "The customized parameters for kube-apiserver.",
 							Elem: &schema.Schema{
 								Type: schema.TypeString,
@@ -218,7 +218,7 @@ func ResourceTencentCloudKubernetesCluster() *schema.Resource {
 						"kube_controller_manager": {
 							Type:        schema.TypeList,
 							Optional:    true,
-							ForceNew:    true,
+							Computed:    true,
 							Description: "The customized parameters for kube-controller-manager.",
 							Elem: &schema.Schema{
 								Type: schema.TypeString,
@@ -227,7 +227,7 @@ func ResourceTencentCloudKubernetesCluster() *schema.Resource {
 						"kube_scheduler": {
 							Type:        schema.TypeList,
 							Optional:    true,
-							ForceNew:    true,
+							Computed:    true,
 							Description: "The customized parameters for kube-scheduler.",
 							Elem: &schema.Schema{
 								Type: schema.TypeString,
@@ -460,6 +460,28 @@ func ResourceTencentCloudKubernetesCluster() *schema.Resource {
 				Description: "Subnet Ids for cluster with VPC-CNI network mode. This field can only set when field `network_type` is 'VPC-CNI'. `eni_subnet_ids` can not empty once be set.",
 				Elem: &schema.Schema{
 					Type: schema.TypeString,
+				},
+				DiffSuppressFunc: func(k, old, new string, d *schema.ResourceData) bool {
+					// Suppress diff when the list elements are the same set but in a different order.
+					// This function is called for both the length key "eni_subnet_ids.#" and each
+					// element key "eni_subnet_ids.N", so we apply the same set-equality check for all.
+					oldRaw, newRaw := d.GetChange("eni_subnet_ids")
+					oldList := oldRaw.([]interface{})
+					newList := newRaw.([]interface{})
+					if len(oldList) != len(newList) {
+						return false
+					}
+					oldSet := make(map[string]int, len(oldList))
+					for _, v := range oldList {
+						oldSet[v.(string)]++
+					}
+					for _, v := range newList {
+						oldSet[v.(string)]--
+						if oldSet[v.(string)] < 0 {
+							return false
+						}
+					}
+					return true
 				},
 			},
 
@@ -1981,6 +2003,28 @@ func resourceTencentCloudKubernetesClusterRead(d *schema.ResourceData, meta inte
 		return err
 	}
 
+	extraArgs, err := service.DescribeKubernetesClusterExtraArgsConfig(ctx, clusterId)
+	if err != nil {
+		return err
+	}
+
+	if extraArgs != nil {
+		extraArgsMap := map[string]interface{}{}
+		if extraArgs.KubeAPIServer != nil {
+			extraArgsMap["kube_apiserver"] = helper.PStrings(extraArgs.KubeAPIServer)
+		}
+
+		if extraArgs.KubeControllerManager != nil {
+			extraArgsMap["kube_controller_manager"] = helper.PStrings(extraArgs.KubeControllerManager)
+		}
+
+		if extraArgs.KubeScheduler != nil {
+			extraArgsMap["kube_scheduler"] = helper.PStrings(extraArgs.KubeScheduler)
+		}
+
+		_ = d.Set("cluster_extra_args", []interface{}{extraArgsMap})
+	}
+
 	return nil
 }
 
@@ -2425,6 +2469,44 @@ func resourceTencentCloudKubernetesClusterUpdate(d *schema.ResourceData, meta in
 					return err
 				}
 			}
+		}
+	}
+
+	if d.HasChange("cluster_extra_args") {
+		extraArgsRequest := tkev20180525.NewModifyClusterExtraArgsRequest()
+		extraArgsRequest.ClusterId = helper.String(clusterId)
+		extraArgsRequest.ClusterExtraArgs = &tkev20180525.ClusterExtraArgs{}
+
+		if extraArgsMap, ok := helper.InterfacesHeadMap(d, "cluster_extra_args"); ok {
+			if v, ok := extraArgsMap["kube_apiserver"]; ok {
+				extraArgsRequest.ClusterExtraArgs.KubeAPIServer = helper.InterfacesStringsPoint(v.([]interface{}))
+			}
+
+			if v, ok := extraArgsMap["kube_controller_manager"]; ok {
+				extraArgsRequest.ClusterExtraArgs.KubeControllerManager = helper.InterfacesStringsPoint(v.([]interface{}))
+			}
+
+			if v, ok := extraArgsMap["kube_scheduler"]; ok {
+				extraArgsRequest.ClusterExtraArgs.KubeScheduler = helper.InterfacesStringsPoint(v.([]interface{}))
+			}
+		}
+
+		err := resource.Retry(tccommon.WriteRetryTimeout, func() *resource.RetryError {
+			result, e := meta.(tccommon.ProviderMeta).GetAPIV3Conn().UseTkeV20180525Client().ModifyClusterExtraArgsWithContext(ctx, extraArgsRequest)
+			if e != nil {
+				return tccommon.RetryError(e)
+			}
+			log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, extraArgsRequest.GetAction(), extraArgsRequest.ToJsonString(), result.ToJsonString())
+			return nil
+		})
+		if err != nil {
+			log.Printf("[CRITAL]%s update kubernetes cluster extra args failed, reason:%+v", logId, err)
+			return err
+		}
+
+		if err := waitForClusterExtraArgsTaskDone(ctx, meta, clusterId, logId, 4*tccommon.WriteRetryTimeout); err != nil {
+			log.Printf("[CRITAL]%s wait for cluster extra args task failed, reason:%+v", logId, err)
+			return err
 		}
 	}
 

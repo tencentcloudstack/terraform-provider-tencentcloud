@@ -1,0 +1,11 @@
+```release-note:new-data-source
+tencentcloud_products
+```
+
+```release-note:new-data-source
+tencentcloud_regions
+```
+
+```release-note:new-data-source
+tencentcloud_zones
+```

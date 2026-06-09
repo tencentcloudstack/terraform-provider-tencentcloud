@@ -98,7 +98,7 @@ func resourceTencentCloudTcssClusterAccessCreate(d *schema.ResourceData, meta in
 	waitReq.Offset = helper.IntUint64(0)
 	waitReq.Limit = helper.IntUint64(1)
 	waitReq.Filters = []*tcssv20201101.ComplianceFilters{
-		&tcssv20201101.ComplianceFilters{
+		{
 			Name:       helper.String("ClusterID"),
 			Values:     helper.Strings([]string{clusterId}),
 			ExactMatch: helper.Bool(true),
@@ -166,7 +166,7 @@ func resourceTencentCloudTcssClusterAccessCreate(d *schema.ResourceData, meta in
 			waitReq.Offset = helper.IntUint64(0)
 			waitReq.Limit = helper.IntUint64(1)
 			waitReq.Filters = []*tcssv20201101.ComplianceFilters{
-				&tcssv20201101.ComplianceFilters{
+				{
 					Name:       helper.String("ClusterID"),
 					Values:     helper.Strings([]string{clusterId}),
 					ExactMatch: helper.Bool(true),
@@ -291,7 +291,7 @@ func resourceTencentCloudTcssClusterAccessUpdate(d *schema.ResourceData, meta in
 		waitReq.Offset = helper.IntUint64(0)
 		waitReq.Limit = helper.IntUint64(1)
 		waitReq.Filters = []*tcssv20201101.ComplianceFilters{
-			&tcssv20201101.ComplianceFilters{
+			{
 				Name:       helper.String("ClusterID"),
 				Values:     helper.Strings([]string{clusterId}),
 				ExactMatch: helper.Bool(true),
@@ -369,7 +369,7 @@ func resourceTencentCloudTcssClusterAccessDelete(d *schema.ResourceData, meta in
 	waitReq.Offset = helper.IntUint64(0)
 	waitReq.Limit = helper.IntUint64(1)
 	waitReq.Filters = []*tcssv20201101.ComplianceFilters{
-		&tcssv20201101.ComplianceFilters{
+		{
 			Name:       helper.String("ClusterID"),
 			Values:     helper.Strings([]string{clusterId}),
 			ExactMatch: helper.Bool(true),

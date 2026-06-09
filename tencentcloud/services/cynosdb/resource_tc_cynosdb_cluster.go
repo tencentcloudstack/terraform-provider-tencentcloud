@@ -7,7 +7,6 @@ import (
 	"time"
 
 	tccommon "github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/common"
-	svccdb "github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/services/cdb"
 	svctag "github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/services/tag"
 
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
@@ -712,6 +711,18 @@ func resourceTencentCloudCynosdbClusterUpdate(d *schema.ResourceData, meta inter
 			return fmt.Errorf("`param_items` dosen't support remove for now")
 		}
 
+		currentChangeParamMap := make(map[string]*cynosdb.ParamInfo)
+		params, err := cynosdbService.DescribeClusterParams(ctx, clusterId)
+		if err != nil {
+			return err
+		}
+
+		for _, param := range params {
+			if param.ModifiableInfo != nil && param.ModifiableInfo.IsModifiable != nil && *param.ModifiableInfo.IsModifiable == 1 {
+				currentChangeParamMap[*param.ParamName] = param
+			}
+		}
+
 		request := cynosdb.NewModifyClusterParamRequest()
 		request.ClusterId = &clusterId
 		request.IsInMaintainPeriod = helper.String("no")
@@ -719,14 +730,17 @@ func resourceTencentCloudCynosdbClusterUpdate(d *schema.ResourceData, meta inter
 		for i := range newParams {
 			item := newParams[i].(map[string]interface{})
 			name := item["name"].(string)
-			oldVal, ok := item["old_value"].(string)
+			if currentChangeParamMap[name] == nil {
+				continue
+			}
+
 			currVal := item["current_value"].(string)
 			param := &cynosdb.ParamItem{
 				ParamName:    &name,
 				CurrentValue: &currVal,
 			}
 
-			if ok {
+			if oldVal, ok := item["old_value"].(string); ok {
 				param.OldValue = &oldVal
 			}
 
@@ -734,7 +748,7 @@ func resourceTencentCloudCynosdbClusterUpdate(d *schema.ResourceData, meta inter
 		}
 
 		var asyncRequestId string
-		err := resource.Retry(tccommon.WriteRetryTimeout, func() *resource.RetryError {
+		err = resource.Retry(tccommon.WriteRetryTimeout, func() *resource.RetryError {
 			aReqId, modifyErr := cynosdbService.ModifyClusterParam(ctx, request)
 			if modifyErr != nil {
 				err := modifyErr.(*sdkErrors.TencentCloudSDKError)
@@ -753,24 +767,24 @@ func resourceTencentCloudCynosdbClusterUpdate(d *schema.ResourceData, meta inter
 			return err
 		}
 
-		mysqlService := svccdb.NewMysqlService(client)
-		_ = resource.Retry(tccommon.ReadRetryTimeout, func() *resource.RetryError {
-			taskStatus, message, err := mysqlService.DescribeAsyncRequestInfo(ctx, asyncRequestId)
-			if err != nil {
-				return resource.NonRetryableError(err)
+		// wait
+		asyncRequestIdInt := helper.StrToInt64(asyncRequestId)
+		err = resource.Retry(tccommon.ReadRetryTimeout, func() *resource.RetryError {
+			resp, e := cynosdbService.DescribeFlow(ctx, asyncRequestIdInt)
+			if e != nil {
+				return resource.NonRetryableError(e)
 			}
 
-			if taskStatus == svccdb.MYSQL_TASK_STATUS_SUCCESS {
+			if resp {
 				return nil
 			}
 
-			if taskStatus == svccdb.MYSQL_TASK_STATUS_INITIAL || taskStatus == svccdb.MYSQL_TASK_STATUS_RUNNING {
-				return resource.RetryableError(fmt.Errorf("%s modify params task  status is %s", clusterId, taskStatus))
-			}
-
-			err = fmt.Errorf("%s create account task status is %s,we won't wait for it finish ,it show message:%s", clusterId, taskStatus, message)
-			return resource.NonRetryableError(err)
+			return resource.RetryableError(fmt.Errorf("waiting for cynosdb cluster param updating"))
 		})
+
+		if err != nil {
+			return err
+		}
 	}
 
 	// update slave_zone

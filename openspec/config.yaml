@@ -17,6 +17,7 @@ context: |
   - 最终一致性重试: helper.Retry()
   - 复合 ID 用分隔符: "instanceId#userId"
   - 错误处理: defer tccommon.LogElapsed(), defer tccommon.InconsistentCheck()
+  - 数据源分页:不暴露 limit/offset 参数给用户,内部实现自动分页获取所有数据
   
   硬约束(经常被忽略):
   - 必须保持向后兼容:不能破坏现有 TF 配置和 state

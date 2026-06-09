@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"log"
 	"strings"
+	"time"
 
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
@@ -22,6 +23,12 @@ func ResourceTencentCloudTeoAccelerationDomain() *schema.Resource {
 		Delete: resourceTencentCloudTeoAccelerationDomainDelete,
 		Importer: &schema.ResourceImporter{
 			State: schema.ImportStatePassthrough,
+		},
+		Timeouts: &schema.ResourceTimeout{
+			Create: schema.DefaultTimeout(20 * time.Minute),
+			Read:   schema.DefaultTimeout(3 * time.Minute),
+			Update: schema.DefaultTimeout(20 * time.Minute),
+			Delete: schema.DefaultTimeout(20 * time.Minute),
 		},
 		Schema: map[string]*schema.Schema{
 			"zone_id": {
@@ -154,8 +161,9 @@ func resourceTencentCloudTeoAccelerationDomainCreate(d *schema.ResourceData, met
 	defer tccommon.InconsistentCheck(d, meta)()
 
 	var (
-		logId      = tccommon.GetLogId(tccommon.ContextNil)
-		ctx        = tccommon.NewResourceLifeCycleHandleFuncContext(context.Background(), logId, d, meta)
+		logId = tccommon.GetLogId(tccommon.ContextNil)
+		ctx   = tccommon.NewResourceLifeCycleHandleFuncContext(
+			context.Background(), logId, d, meta)
 		request    = teo.NewCreateAccelerationDomainRequest()
 		response   = teo.NewCreateAccelerationDomainResponse()
 		zoneId     string
@@ -312,8 +320,9 @@ func resourceTencentCloudTeoAccelerationDomainRead(d *schema.ResourceData, meta 
 	defer tccommon.InconsistentCheck(d, meta)()
 
 	var (
-		logId   = tccommon.GetLogId(tccommon.ContextNil)
-		ctx     = tccommon.NewResourceLifeCycleHandleFuncContext(context.Background(), logId, d, meta)
+		logId = tccommon.GetLogId(tccommon.ContextNil)
+		ctx   = tccommon.NewResourceLifeCycleHandleFuncContext(
+			context.Background(), logId, d, meta)
 		service = TeoService{client: meta.(tccommon.ProviderMeta).GetAPIV3Conn()}
 	)
 
@@ -431,7 +440,8 @@ func resourceTencentCloudTeoAccelerationDomainUpdate(d *schema.ResourceData, met
 
 	var (
 		logId = tccommon.GetLogId(tccommon.ContextNil)
-		ctx   = tccommon.NewResourceLifeCycleHandleFuncContext(context.Background(), logId, d, meta)
+		ctx   = tccommon.NewResourceLifeCycleHandleFuncContext(
+			context.Background(), logId, d, meta)
 	)
 
 	immutableArgs := []string{"https_origin_port"}
@@ -591,8 +601,9 @@ func resourceTencentCloudTeoAccelerationDomainDelete(d *schema.ResourceData, met
 	defer tccommon.InconsistentCheck(d, meta)()
 
 	var (
-		logId    = tccommon.GetLogId(tccommon.ContextNil)
-		ctx      = tccommon.NewResourceLifeCycleHandleFuncContext(context.Background(), logId, d, meta)
+		logId = tccommon.GetLogId(tccommon.ContextNil)
+		ctx   = tccommon.NewResourceLifeCycleHandleFuncContext(
+			context.Background(), logId, d, meta)
 		request  = teo.NewModifyAccelerationDomainStatusesRequest()
 		response = teo.NewModifyAccelerationDomainStatusesResponse()
 	)

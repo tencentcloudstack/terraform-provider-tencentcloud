@@ -3203,14 +3203,14 @@ func (r *DescribeInstanceListResponse) FromJsonString(s string) error {
 
 // Predefined struct for user
 type DescribeInstanceRequestParams struct {
-	// 腾讯云MQTT实例ID，从 [DescribeInstanceList](https://cloud.tencent.com/document/api/1778/111029)接口或控制台获得。
+	// <p>腾讯云MQTT实例ID，从 <a href="https://cloud.tencent.com/document/api/1778/111029">DescribeInstanceList</a>接口或控制台获得。</p>
 	InstanceId *string `json:"InstanceId,omitnil,omitempty" name:"InstanceId"`
 }
 
 type DescribeInstanceRequest struct {
 	*tchttp.BaseRequest
 	
-	// 腾讯云MQTT实例ID，从 [DescribeInstanceList](https://cloud.tencent.com/document/api/1778/111029)接口或控制台获得。
+	// <p>腾讯云MQTT实例ID，从 <a href="https://cloud.tencent.com/document/api/1778/111029">DescribeInstanceList</a>接口或控制台获得。</p>
 	InstanceId *string `json:"InstanceId,omitnil,omitempty" name:"InstanceId"`
 }
 
@@ -3235,115 +3235,115 @@ func (r *DescribeInstanceRequest) FromJsonString(s string) error {
 
 // Predefined struct for user
 type DescribeInstanceResponseParams struct {
-	// 实例类型
-	// BASIC 基础版
-	// PRO  专业版
-	// PLATINUM 铂金版
+	// <p>实例类型<br>BASIC 基础版<br>PRO  专业版<br>PLATINUM 铂金版</p>
 	InstanceType *string `json:"InstanceType,omitnil,omitempty" name:"InstanceType"`
 
-	// 实例ID
+	// <p>实例ID</p>
 	InstanceId *string `json:"InstanceId,omitnil,omitempty" name:"InstanceId"`
 
-	// 实例名称
+	// <p>实例名称</p>
 	InstanceName *string `json:"InstanceName,omitnil,omitempty" name:"InstanceName"`
 
-	// 主题数量
+	// <p>主题数量</p>
 	TopicNum *int64 `json:"TopicNum,omitnil,omitempty" name:"TopicNum"`
 
-	// 实例最大主题数量
+	// <p>实例最大主题数量</p>
 	TopicNumLimit *int64 `json:"TopicNumLimit,omitnil,omitempty" name:"TopicNumLimit"`
 
-	// TPS限流值
+	// <p>TPS限流值</p>
 	TpsLimit *int64 `json:"TpsLimit,omitnil,omitempty" name:"TpsLimit"`
 
-	// 创建时间，秒为单位
+	// <p>创建时间，秒为单位</p>
 	CreatedTime *int64 `json:"CreatedTime,omitnil,omitempty" name:"CreatedTime"`
 
-	// 备注信息
+	// <p>备注信息</p>
 	Remark *string `json:"Remark,omitnil,omitempty" name:"Remark"`
 
-	// 实例状态， RUNNING, 运行中 MAINTAINING，维护中 ABNORMAL，异常 OVERDUE，欠费 DESTROYED，已删除 CREATING，创建中 MODIFYING，变配中 CREATE_FAILURE，创建失败 MODIFY_FAILURE，变配失败 DELETING，删除中
+	// <p>实例状态， RUNNING, 运行中 MAINTAINING，维护中 ABNORMAL，异常 OVERDUE，欠费 DESTROYED，已删除 CREATING，创建中 MODIFYING，变配中 CREATE_FAILURE，创建失败 MODIFY_FAILURE，变配失败 DELETING，删除中</p>
 	InstanceStatus *string `json:"InstanceStatus,omitnil,omitempty" name:"InstanceStatus"`
 
-	// 实例规格
+	// <p>实例规格</p>
 	SkuCode *string `json:"SkuCode,omitnil,omitempty" name:"SkuCode"`
 
-	// 单客户端最大订阅数
+	// <p>单客户端最大订阅数</p>
 	MaxSubscriptionPerClient *int64 `json:"MaxSubscriptionPerClient,omitnil,omitempty" name:"MaxSubscriptionPerClient"`
 
-	// 授权规则条数
+	// <p>授权规则条数</p>
 	AuthorizationPolicyLimit *int64 `json:"AuthorizationPolicyLimit,omitnil,omitempty" name:"AuthorizationPolicyLimit"`
 
-	// 客户端数量上限
+	// <p>客户端数量上限</p>
 	ClientNumLimit *int64 `json:"ClientNumLimit,omitnil,omitempty" name:"ClientNumLimit"`
 
-	// 客户端证书注册方式：
-	// JITP：自动注册
-	// API：通过API手动注册
+	// <p>客户端证书注册方式：<br>JITP：自动注册<br>API：通过API手动注册</p>
 	DeviceCertificateProvisionType *string `json:"DeviceCertificateProvisionType,omitnil,omitempty" name:"DeviceCertificateProvisionType"`
 
-	// 自动注册设备证书时是否自动激活
+	// <p>自动注册设备证书时是否自动激活</p>
 	AutomaticActivation *bool `json:"AutomaticActivation,omitnil,omitempty" name:"AutomaticActivation"`
 
-	// 是否自动续费。仅包年包月集群生效。 1:自动续费 0:非自动续费
+	// <p>是否自动续费。仅包年包月集群生效。 1:自动续费 0:非自动续费</p>
 	RenewFlag *int64 `json:"RenewFlag,omitnil,omitempty" name:"RenewFlag"`
 
-	// 计费模式， POSTPAID，按量计费 PREPAID，包年包月
+	// <p>计费模式， POSTPAID，按量计费 PREPAID，包年包月</p>
 	PayMode *string `json:"PayMode,omitnil,omitempty" name:"PayMode"`
 
-	// 到期时间，毫秒级时间戳
+	// <p>到期时间，毫秒级时间戳</p>
 	ExpiryTime *int64 `json:"ExpiryTime,omitnil,omitempty" name:"ExpiryTime"`
 
-	// 预销毁时间，毫秒级时间戳
+	// <p>预销毁时间，毫秒级时间戳</p>
 	DestroyTime *int64 `json:"DestroyTime,omitnil,omitempty" name:"DestroyTime"`
 
-	// TLS,单向认证    mTLS,双向认证    BYOC;一机一证
+	// <p>TLS,单向认证    mTLS,双向认证    BYOC;一机一证</p>
 	X509Mode *string `json:"X509Mode,omitnil,omitempty" name:"X509Mode"`
 
-	// 最大Ca配额
+	// <p>最大Ca配额</p>
 	MaxCaNum *int64 `json:"MaxCaNum,omitnil,omitempty" name:"MaxCaNum"`
 
-	// 证书注册码
+	// <p>证书注册码</p>
 	RegistrationCode *string `json:"RegistrationCode,omitnil,omitempty" name:"RegistrationCode"`
 
-	// 集群最大订阅数
+	// <p>集群最大订阅数</p>
 	MaxSubscription *int64 `json:"MaxSubscription,omitnil,omitempty" name:"MaxSubscription"`
 
-	// 授权策略开关
+	// <p>授权策略开关</p>
 	AuthorizationPolicy *bool `json:"AuthorizationPolicy,omitnil,omitempty" name:"AuthorizationPolicy"`
 
-	// 共享订阅组数最大限制
+	// <p>共享订阅组数最大限制</p>
 	SharedSubscriptionGroupLimit *int64 `json:"SharedSubscriptionGroupLimit,omitnil,omitempty" name:"SharedSubscriptionGroupLimit"`
 
-	// 单个共享订阅组TopicFilter数限制
+	// <p>单个共享订阅组TopicFilter数限制</p>
+	//
+	// Deprecated: MaxTopicFilterPerSharedSubscriptionGroup is deprecated.
 	MaxTopicFilterPerSharedSubscriptionGroup *int64 `json:"MaxTopicFilterPerSharedSubscriptionGroup,omitnil,omitempty" name:"MaxTopicFilterPerSharedSubscriptionGroup"`
 
-	// 自动订阅规则条数限制
+	// <p>自动订阅规则条数限制</p>
 	AutoSubscriptionPolicyLimit *int64 `json:"AutoSubscriptionPolicyLimit,omitnil,omitempty" name:"AutoSubscriptionPolicyLimit"`
 
-	// 单条自动订阅规则TopicFilter数限制
+	// <p>单条自动订阅规则TopicFilter数限制</p>
 	MaxTopicFilterPerAutoSubscriptionPolicy *int64 `json:"MaxTopicFilterPerAutoSubscriptionPolicy,omitnil,omitempty" name:"MaxTopicFilterPerAutoSubscriptionPolicy"`
 
-	// 是否使用默认的服务端证书
+	// <p>是否使用默认的服务端证书</p>
 	UseDefaultServerCert *bool `json:"UseDefaultServerCert,omitnil,omitempty" name:"UseDefaultServerCert"`
 
-	// 服务端CA最大数量
+	// <p>服务端CA最大数量</p>
 	TrustedCaLimit *int64 `json:"TrustedCaLimit,omitnil,omitempty" name:"TrustedCaLimit"`
 
-	// 服务端证书最大数量
+	// <p>服务端证书最大数量</p>
 	ServerCertLimit *int64 `json:"ServerCertLimit,omitnil,omitempty" name:"ServerCertLimit"`
 
-	// topic前缀最大层级
+	// <p>topic前缀最大层级</p>
 	TopicPrefixSlashLimit *int64 `json:"TopicPrefixSlashLimit,omitnil,omitempty" name:"TopicPrefixSlashLimit"`
 
-	// 单客户端发送消息限速，单位 条/秒
+	// <p>单客户端发送消息限速，单位 条/秒</p>
 	MessageRate *int64 `json:"MessageRate,omitnil,omitempty" name:"MessageRate"`
 
-	// 服务端tls支持的协议，使用“,”分割。例如：TLSv1.3,TLSv1.2,TLSv1.1,TLSv1
+	// <p>服务端tls支持的协议，使用“,”分割。例如：TLSv1.3,TLSv1.2,TLSv1.1,TLSv1</p>
 	TransportLayerSecurity *string `json:"TransportLayerSecurity,omitnil,omitempty" name:"TransportLayerSecurity"`
 
-	// 消息属性增强规则配额
+	// <p>消息属性增强规则配额</p>
 	MessageEnrichmentRuleLimit *int64 `json:"MessageEnrichmentRuleLimit,omitnil,omitempty" name:"MessageEnrichmentRuleLimit"`
+
+	// <p>封禁规则最大数量</p>
+	BlockRuleLimit *int64 `json:"BlockRuleLimit,omitnil,omitempty" name:"BlockRuleLimit"`
 
 	// 唯一请求 ID，由服务端生成，每次请求都会返回（若请求因其他原因未能抵达服务端，则该次请求不会获得 RequestId）。定位问题时需要提供该次请求的 RequestId。
 	RequestId *string `json:"RequestId,omitnil,omitempty" name:"RequestId"`
@@ -3795,6 +3795,140 @@ func (r *DescribeProductSKUListResponse) FromJsonString(s string) error {
 }
 
 // Predefined struct for user
+type DescribeSharedSubscriptionClientRequestParams struct {
+	// 腾讯云MQTT实例ID，从 [DescribeInstanceList](https://cloud.tencent.com/document/api/1778/111029)接口或控制台获得。
+	InstanceId *string `json:"InstanceId,omitnil,omitempty" name:"InstanceId"`
+
+	// 共享订阅组名
+	SharedName *string `json:"SharedName,omitnil,omitempty" name:"SharedName"`
+
+	// 订阅表达式
+	TopicFilter *string `json:"TopicFilter,omitnil,omitempty" name:"TopicFilter"`
+}
+
+type DescribeSharedSubscriptionClientRequest struct {
+	*tchttp.BaseRequest
+	
+	// 腾讯云MQTT实例ID，从 [DescribeInstanceList](https://cloud.tencent.com/document/api/1778/111029)接口或控制台获得。
+	InstanceId *string `json:"InstanceId,omitnil,omitempty" name:"InstanceId"`
+
+	// 共享订阅组名
+	SharedName *string `json:"SharedName,omitnil,omitempty" name:"SharedName"`
+
+	// 订阅表达式
+	TopicFilter *string `json:"TopicFilter,omitnil,omitempty" name:"TopicFilter"`
+}
+
+func (r *DescribeSharedSubscriptionClientRequest) ToJsonString() string {
+    b, _ := json.Marshal(r)
+    return string(b)
+}
+
+// FromJsonString It is highly **NOT** recommended to use this function
+// because it has no param check, nor strict type check
+func (r *DescribeSharedSubscriptionClientRequest) FromJsonString(s string) error {
+	f := make(map[string]interface{})
+	if err := json.Unmarshal([]byte(s), &f); err != nil {
+		return err
+	}
+	delete(f, "InstanceId")
+	delete(f, "SharedName")
+	delete(f, "TopicFilter")
+	if len(f) > 0 {
+		return tcerr.NewTencentCloudSDKError("ClientError.BuildRequestError", "DescribeSharedSubscriptionClientRequest has unknown keys!", "")
+	}
+	return json.Unmarshal([]byte(s), &r)
+}
+
+// Predefined struct for user
+type DescribeSharedSubscriptionClientResponseParams struct {
+	// 共享订阅组下Client信息
+	Data []*SharedSubscriptionClient `json:"Data,omitnil,omitempty" name:"Data"`
+
+	// 查询总数
+	TotalCount *int64 `json:"TotalCount,omitnil,omitempty" name:"TotalCount"`
+
+	// 唯一请求 ID，由服务端生成，每次请求都会返回（若请求因其他原因未能抵达服务端，则该次请求不会获得 RequestId）。定位问题时需要提供该次请求的 RequestId。
+	RequestId *string `json:"RequestId,omitnil,omitempty" name:"RequestId"`
+}
+
+type DescribeSharedSubscriptionClientResponse struct {
+	*tchttp.BaseResponse
+	Response *DescribeSharedSubscriptionClientResponseParams `json:"Response"`
+}
+
+func (r *DescribeSharedSubscriptionClientResponse) ToJsonString() string {
+    b, _ := json.Marshal(r)
+    return string(b)
+}
+
+// FromJsonString It is highly **NOT** recommended to use this function
+// because it has no param check, nor strict type check
+func (r *DescribeSharedSubscriptionClientResponse) FromJsonString(s string) error {
+	return json.Unmarshal([]byte(s), &r)
+}
+
+// Predefined struct for user
+type DescribeSharedSubscriptionGroupsRequestParams struct {
+	// 腾讯云MQTT实例ID，从 [DescribeInstanceList](https://cloud.tencent.com/document/api/1778/111029)接口或控制台获得。
+	InstanceId *string `json:"InstanceId,omitnil,omitempty" name:"InstanceId"`
+}
+
+type DescribeSharedSubscriptionGroupsRequest struct {
+	*tchttp.BaseRequest
+	
+	// 腾讯云MQTT实例ID，从 [DescribeInstanceList](https://cloud.tencent.com/document/api/1778/111029)接口或控制台获得。
+	InstanceId *string `json:"InstanceId,omitnil,omitempty" name:"InstanceId"`
+}
+
+func (r *DescribeSharedSubscriptionGroupsRequest) ToJsonString() string {
+    b, _ := json.Marshal(r)
+    return string(b)
+}
+
+// FromJsonString It is highly **NOT** recommended to use this function
+// because it has no param check, nor strict type check
+func (r *DescribeSharedSubscriptionGroupsRequest) FromJsonString(s string) error {
+	f := make(map[string]interface{})
+	if err := json.Unmarshal([]byte(s), &f); err != nil {
+		return err
+	}
+	delete(f, "InstanceId")
+	if len(f) > 0 {
+		return tcerr.NewTencentCloudSDKError("ClientError.BuildRequestError", "DescribeSharedSubscriptionGroupsRequest has unknown keys!", "")
+	}
+	return json.Unmarshal([]byte(s), &r)
+}
+
+// Predefined struct for user
+type DescribeSharedSubscriptionGroupsResponseParams struct {
+	// 集群下共享订阅组列表
+	Data []*SharedGroup `json:"Data,omitnil,omitempty" name:"Data"`
+
+	// 	查询总数
+	TotalCount *int64 `json:"TotalCount,omitnil,omitempty" name:"TotalCount"`
+
+	// 唯一请求 ID，由服务端生成，每次请求都会返回（若请求因其他原因未能抵达服务端，则该次请求不会获得 RequestId）。定位问题时需要提供该次请求的 RequestId。
+	RequestId *string `json:"RequestId,omitnil,omitempty" name:"RequestId"`
+}
+
+type DescribeSharedSubscriptionGroupsResponse struct {
+	*tchttp.BaseResponse
+	Response *DescribeSharedSubscriptionGroupsResponseParams `json:"Response"`
+}
+
+func (r *DescribeSharedSubscriptionGroupsResponse) ToJsonString() string {
+    b, _ := json.Marshal(r)
+    return string(b)
+}
+
+// FromJsonString It is highly **NOT** recommended to use this function
+// because it has no param check, nor strict type check
+func (r *DescribeSharedSubscriptionGroupsResponse) FromJsonString(s string) error {
+	return json.Unmarshal([]byte(s), &r)
+}
+
+// Predefined struct for user
 type DescribeSharedSubscriptionLagRequestParams struct {
 	// 集群id	
 	InstanceId *string `json:"InstanceId,omitnil,omitempty" name:"InstanceId"`
@@ -3855,6 +3989,76 @@ func (r *DescribeSharedSubscriptionLagResponse) ToJsonString() string {
 // FromJsonString It is highly **NOT** recommended to use this function
 // because it has no param check, nor strict type check
 func (r *DescribeSharedSubscriptionLagResponse) FromJsonString(s string) error {
+	return json.Unmarshal([]byte(s), &r)
+}
+
+// Predefined struct for user
+type DescribeSharedSubscriptionsRequestParams struct {
+	// 腾讯云MQTT实例ID，从 [DescribeInstanceList](https://cloud.tencent.com/document/api/1778/111029)接口或控制台获得。
+	InstanceId *string `json:"InstanceId,omitnil,omitempty" name:"InstanceId"`
+
+	// 共享订阅组名
+	SharedName *string `json:"SharedName,omitnil,omitempty" name:"SharedName"`
+}
+
+type DescribeSharedSubscriptionsRequest struct {
+	*tchttp.BaseRequest
+	
+	// 腾讯云MQTT实例ID，从 [DescribeInstanceList](https://cloud.tencent.com/document/api/1778/111029)接口或控制台获得。
+	InstanceId *string `json:"InstanceId,omitnil,omitempty" name:"InstanceId"`
+
+	// 共享订阅组名
+	SharedName *string `json:"SharedName,omitnil,omitempty" name:"SharedName"`
+}
+
+func (r *DescribeSharedSubscriptionsRequest) ToJsonString() string {
+    b, _ := json.Marshal(r)
+    return string(b)
+}
+
+// FromJsonString It is highly **NOT** recommended to use this function
+// because it has no param check, nor strict type check
+func (r *DescribeSharedSubscriptionsRequest) FromJsonString(s string) error {
+	f := make(map[string]interface{})
+	if err := json.Unmarshal([]byte(s), &f); err != nil {
+		return err
+	}
+	delete(f, "InstanceId")
+	delete(f, "SharedName")
+	if len(f) > 0 {
+		return tcerr.NewTencentCloudSDKError("ClientError.BuildRequestError", "DescribeSharedSubscriptionsRequest has unknown keys!", "")
+	}
+	return json.Unmarshal([]byte(s), &r)
+}
+
+// Predefined struct for user
+type DescribeSharedSubscriptionsResponseParams struct {
+	// 集群id
+	InstanceId *string `json:"InstanceId,omitnil,omitempty" name:"InstanceId"`
+
+	// 共享组名
+	SharedName *string `json:"SharedName,omitnil,omitempty" name:"SharedName"`
+
+	// 共享组下的订阅表达式列表
+	TopicFilter []*string `json:"TopicFilter,omitnil,omitempty" name:"TopicFilter"`
+
+	// 唯一请求 ID，由服务端生成，每次请求都会返回（若请求因其他原因未能抵达服务端，则该次请求不会获得 RequestId）。定位问题时需要提供该次请求的 RequestId。
+	RequestId *string `json:"RequestId,omitnil,omitempty" name:"RequestId"`
+}
+
+type DescribeSharedSubscriptionsResponse struct {
+	*tchttp.BaseResponse
+	Response *DescribeSharedSubscriptionsResponseParams `json:"Response"`
+}
+
+func (r *DescribeSharedSubscriptionsResponse) ToJsonString() string {
+    b, _ := json.Marshal(r)
+    return string(b)
+}
+
+// FromJsonString It is highly **NOT** recommended to use this function
+// because it has no param check, nor strict type check
+func (r *DescribeSharedSubscriptionsResponse) FromJsonString(s string) error {
 	return json.Unmarshal([]byte(s), &r)
 }
 
@@ -5165,13 +5369,9 @@ type ModifyInstanceRequestParams struct {
 	// 客户端证书注册方式：
 	// JITP：自动注册
 	// API：手动通过API注册
-	//
-	// Deprecated: DeviceCertificateProvisionType is deprecated.
 	DeviceCertificateProvisionType *string `json:"DeviceCertificateProvisionType,omitnil,omitempty" name:"DeviceCertificateProvisionType"`
 
 	// 自动注册证书是否自动激活
-	//
-	// Deprecated: AutomaticActivation is deprecated.
 	AutomaticActivation *bool `json:"AutomaticActivation,omitnil,omitempty" name:"AutomaticActivation"`
 
 	// 授权策略开关
@@ -6163,6 +6363,45 @@ func (r *RevokedDeviceCertificateResponse) ToJsonString() string {
 // because it has no param check, nor strict type check
 func (r *RevokedDeviceCertificateResponse) FromJsonString(s string) error {
 	return json.Unmarshal([]byte(s), &r)
+}
+
+type SharedGroup struct {
+	// 腾讯云MQTT实例ID
+	InstanceId *string `json:"InstanceId,omitnil,omitempty" name:"InstanceId"`
+
+	// 共享订阅组名
+	SharedName *string `json:"SharedName,omitnil,omitempty" name:"SharedName"`
+
+	// 共享组消费负载均衡策略 1.RANDOM 2.HASH_PARTITION
+	LbStrategy *int64 `json:"LbStrategy,omitnil,omitempty" name:"LbStrategy"`
+
+	// HASH_PARTITION 策略下生效，表示Client掉线或新Client上线加入共享订阅组消费的延迟时间。
+	// 范围：0～600秒
+	ExpiryInterval *int64 `json:"ExpiryInterval,omitnil,omitempty" name:"ExpiryInterval"`
+
+	// 备注，长度不超过128个字符。
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	Remark *string `json:"Remark,omitnil,omitempty" name:"Remark"`
+
+	// 创建时间，毫秒级时间戳 。
+	CreateTime *int64 `json:"CreateTime,omitnil,omitempty" name:"CreateTime"`
+
+	// 上次更新时间，毫秒级时间戳 。
+	UpdateTime *int64 `json:"UpdateTime,omitnil,omitempty" name:"UpdateTime"`
+}
+
+type SharedSubscriptionClient struct {
+	// 客户端ID
+	ClientId *string `json:"ClientId,omitnil,omitempty" name:"ClientId"`
+
+	// 共享订阅组名
+	SharedName *string `json:"SharedName,omitnil,omitempty" name:"SharedName"`
+
+	// 共享组下的订阅表达式列表
+	TopicFilter *string `json:"TopicFilter,omitnil,omitempty" name:"TopicFilter"`
+
+	// 在线状态
+	Online *bool `json:"Online,omitnil,omitempty" name:"Online"`
 }
 
 type SubscriptionUserProperty struct {

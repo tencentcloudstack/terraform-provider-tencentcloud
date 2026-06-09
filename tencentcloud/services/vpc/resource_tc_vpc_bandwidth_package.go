@@ -58,6 +58,14 @@ func ResourceTencentCloudVpcBandwidthPackage() *schema.Resource {
 				Type:        schema.TypeMap,
 				Optional:    true,
 				Description: "Tag description list.",
+				Deprecated:  "Use `tag` instead.",
+			},
+
+			"tag": {
+				Type:        schema.TypeMap,
+				Optional:    true,
+				Computed:    true,
+				Description: "Tag description list.",
 			},
 
 			"time_span": {
@@ -105,7 +113,19 @@ func resourceTencentCloudVpcBandwidthPackageCreate(d *schema.ResourceData, meta 
 		request.InternetMaxBandwidth = helper.IntInt64(v.(int))
 	}
 
+	// Deprecated: Use `tag` instead.
 	if v := helper.GetTags(d, "tags"); len(v) > 0 {
+		for tagKey, tagValue := range v {
+			tag := vpc.Tag{
+				Key:   helper.String(tagKey),
+				Value: helper.String(tagValue),
+			}
+
+			request.Tags = append(request.Tags, &tag)
+		}
+	}
+
+	if v := helper.GetTags(d, "tag"); len(v) > 0 {
 		for tagKey, tagValue := range v {
 			tag := vpc.Tag{
 				Key:   helper.String(tagKey),
@@ -152,10 +172,21 @@ func resourceTencentCloudVpcBandwidthPackageCreate(d *schema.ResourceData, meta 
 	bandwidthPackageId := *response.Response.BandwidthPackageId
 	d.SetId(bandwidthPackageId)
 
+	// Deprecated: Use `tag` instead.
 	if tags := helper.GetTags(d, "tags"); len(tags) > 0 {
 		tagService := svctag.NewTagService(meta.(tccommon.ProviderMeta).GetAPIV3Conn())
 		region := meta.(tccommon.ProviderMeta).GetAPIV3Conn().Region
 		resourceName := fmt.Sprintf("qcs::vpc:%s:uin/:bandwidthPackage/%s", region, bandwidthPackageId)
+		if err := tagService.ModifyTags(ctx, resourceName, tags, nil); err != nil {
+			return err
+		}
+	}
+
+	if tags := helper.GetTags(d, "tag"); len(tags) > 0 {
+		tagService := svctag.NewTagService(meta.(tccommon.ProviderMeta).GetAPIV3Conn())
+		region := meta.(tccommon.ProviderMeta).GetAPIV3Conn().Region
+		// qcs::vpc:ap-beijing:uin/10000057****:bwp/****, https://cloud.tencent.com/document/product/651/89122
+		resourceName := fmt.Sprintf("qcs::vpc:%s:uin/:bwp/%s", region, bandwidthPackageId)
 		if err := tagService.ModifyTags(ctx, resourceName, tags, nil); err != nil {
 			return err
 		}
@@ -231,12 +262,19 @@ func resourceTencentCloudVpcBandwidthPackageRead(d *schema.ResourceData, meta in
 
 	tcClient := meta.(tccommon.ProviderMeta).GetAPIV3Conn()
 	tagService := svctag.NewTagService(tcClient)
+
+	// Deprecated: Use `tag` instead.
 	tags, err := tagService.DescribeResourceTags(ctx, "vpc", "bandwidthPackage", tcClient.Region, d.Id())
 	if err != nil {
 		return err
 	}
-
 	_ = d.Set("tags", tags)
+
+	tags, err = tagService.DescribeResourceTags(ctx, "vpc", "bwp", tcClient.Region, d.Id())
+	if err != nil {
+		return err
+	}
+	_ = d.Set("tag", tags)
 
 	return nil
 }
@@ -265,12 +303,16 @@ func resourceTencentCloudVpcBandwidthPackageUpdate(d *schema.ResourceData, meta 
 	if d.HasChange("bandwidth_package_name") || d.HasChange("charge_type") {
 		request := vpc.NewModifyBandwidthPackageAttributeRequest()
 		request.BandwidthPackageId = &bandwidthPackageId
-		if v, ok := d.GetOk("bandwidth_package_name"); ok {
-			request.BandwidthPackageName = helper.String(v.(string))
+		if d.HasChange("bandwidth_package_name") {
+			if v, ok := d.GetOk("bandwidth_package_name"); ok {
+				request.BandwidthPackageName = helper.String(v.(string))
+			}
 		}
 
-		if v, ok := d.GetOk("charge_type"); ok {
-			request.ChargeType = helper.String(v.(string))
+		if d.HasChange("charge_type") {
+			if v, ok := d.GetOk("charge_type"); ok {
+				request.ChargeType = helper.String(v.(string))
+			}
 		}
 
 		err := resource.Retry(tccommon.WriteRetryTimeout, func() *resource.RetryError {
@@ -314,12 +356,24 @@ func resourceTencentCloudVpcBandwidthPackageUpdate(d *schema.ResourceData, meta 
 		}
 	}
 
+	// Deprecated: Use `tag` instead.
 	if d.HasChange("tags") {
 		tcClient := meta.(tccommon.ProviderMeta).GetAPIV3Conn()
 		tagService := svctag.NewTagService(tcClient)
 		oldTags, newTags := d.GetChange("tags")
 		replaceTags, deleteTags := svctag.DiffTags(oldTags.(map[string]interface{}), newTags.(map[string]interface{}))
 		resourceName := tccommon.BuildTagResourceName("vpc", "bandwidthPackage", tcClient.Region, d.Id())
+		if err := tagService.ModifyTags(ctx, resourceName, replaceTags, deleteTags); err != nil {
+			return err
+		}
+	}
+
+	if d.HasChange("tag") {
+		tcClient := meta.(tccommon.ProviderMeta).GetAPIV3Conn()
+		tagService := svctag.NewTagService(tcClient)
+		oldTags, newTags := d.GetChange("tag")
+		replaceTags, deleteTags := svctag.DiffTags(oldTags.(map[string]interface{}), newTags.(map[string]interface{}))
+		resourceName := tccommon.BuildTagResourceName("vpc", "bwp", tcClient.Region, d.Id())
 		if err := tagService.ModifyTags(ctx, resourceName, replaceTags, deleteTags); err != nil {
 			return err
 		}

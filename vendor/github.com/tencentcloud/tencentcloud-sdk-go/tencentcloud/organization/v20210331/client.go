@@ -521,6 +521,78 @@ func (c *Client) AddShareUnitMembersWithContext(ctx context.Context, request *Ad
     return
 }
 
+func NewAddShareUnitNodeRequest() (request *AddShareUnitNodeRequest) {
+    request = &AddShareUnitNodeRequest{
+        BaseRequest: &tchttp.BaseRequest{},
+    }
+    
+    request.Init().WithApiInfo("organization", APIVersion, "AddShareUnitNode")
+    
+    
+    return
+}
+
+func NewAddShareUnitNodeResponse() (response *AddShareUnitNodeResponse) {
+    response = &AddShareUnitNodeResponse{
+        BaseResponse: &tchttp.BaseResponse{},
+    } 
+    return
+
+}
+
+// AddShareUnitNode
+// 添加共享单元部门
+//
+// 可能返回的错误码:
+//  FAILEDOPERATION = "FailedOperation"
+//  FAILEDOPERATION_MEMBERACCOUNTDEREGISTERPENDING = "FailedOperation.MemberAccountDeregisterPending"
+//  FAILEDOPERATION_SHAREAREANOTEXIST = "FailedOperation.ShareAreaNotExist"
+//  FAILEDOPERATION_SHAREUNITNOTEXIST = "FailedOperation.ShareUnitNotExist"
+//  INTERNALERROR = "InternalError"
+//  INVALIDPARAMETER = "InvalidParameter"
+//  LIMITEXCEEDED_SHAREUNITNODEOVERLIMIT = "LimitExceeded.ShareUnitNodeOverLimit"
+//  OPERATIONDENIED = "OperationDenied"
+//  RESOURCENOTFOUND = "ResourceNotFound"
+//  RESOURCENOTFOUND_ORGANIZATIONNODENOTEXIST = "ResourceNotFound.OrganizationNodeNotExist"
+//  RESOURCENOTFOUND_ORGANIZATIONNOTEXIST = "ResourceNotFound.OrganizationNotExist"
+//  UNSUPPORTEDOPERATION = "UnsupportedOperation"
+func (c *Client) AddShareUnitNode(request *AddShareUnitNodeRequest) (response *AddShareUnitNodeResponse, err error) {
+    return c.AddShareUnitNodeWithContext(context.Background(), request)
+}
+
+// AddShareUnitNode
+// 添加共享单元部门
+//
+// 可能返回的错误码:
+//  FAILEDOPERATION = "FailedOperation"
+//  FAILEDOPERATION_MEMBERACCOUNTDEREGISTERPENDING = "FailedOperation.MemberAccountDeregisterPending"
+//  FAILEDOPERATION_SHAREAREANOTEXIST = "FailedOperation.ShareAreaNotExist"
+//  FAILEDOPERATION_SHAREUNITNOTEXIST = "FailedOperation.ShareUnitNotExist"
+//  INTERNALERROR = "InternalError"
+//  INVALIDPARAMETER = "InvalidParameter"
+//  LIMITEXCEEDED_SHAREUNITNODEOVERLIMIT = "LimitExceeded.ShareUnitNodeOverLimit"
+//  OPERATIONDENIED = "OperationDenied"
+//  RESOURCENOTFOUND = "ResourceNotFound"
+//  RESOURCENOTFOUND_ORGANIZATIONNODENOTEXIST = "ResourceNotFound.OrganizationNodeNotExist"
+//  RESOURCENOTFOUND_ORGANIZATIONNOTEXIST = "ResourceNotFound.OrganizationNotExist"
+//  UNSUPPORTEDOPERATION = "UnsupportedOperation"
+func (c *Client) AddShareUnitNodeWithContext(ctx context.Context, request *AddShareUnitNodeRequest) (response *AddShareUnitNodeResponse, err error) {
+    if request == nil {
+        request = NewAddShareUnitNodeRequest()
+    }
+    c.InitBaseRequest(&request.BaseRequest, "organization", APIVersion, "AddShareUnitNode")
+    
+    if c.GetCredential() == nil {
+        return nil, errors.New("AddShareUnitNode require credential")
+    }
+
+    request.SetContext(ctx)
+    
+    response = NewAddShareUnitNodeResponse()
+    err = c.Send(request, response)
+    return
+}
+
 func NewAddShareUnitResourcesRequest() (request *AddShareUnitResourcesRequest) {
     request = &AddShareUnitResourcesRequest{
         BaseRequest: &tchttp.BaseRequest{},
@@ -1247,6 +1319,7 @@ func NewCreateOrganizationResponse() (response *CreateOrganizationResponse) {
 //  INVALIDPARAMETER = "InvalidParameter"
 //  UNSUPPORTEDOPERATION = "UnsupportedOperation"
 //  UNSUPPORTEDOPERATION_CREATEMEMBERNOTALLOWCREATEORGANIZATION = "UnsupportedOperation.CreateMemberNotAllowCreateOrganization"
+//  UNSUPPORTEDOPERATION_OPERATIONFORBIDDEN = "UnsupportedOperation.OperationForbidden"
 func (c *Client) CreateOrganization(request *CreateOrganizationRequest) (response *CreateOrganizationResponse, err error) {
     return c.CreateOrganizationWithContext(context.Background(), request)
 }
@@ -1262,6 +1335,7 @@ func (c *Client) CreateOrganization(request *CreateOrganizationRequest) (respons
 //  INVALIDPARAMETER = "InvalidParameter"
 //  UNSUPPORTEDOPERATION = "UnsupportedOperation"
 //  UNSUPPORTEDOPERATION_CREATEMEMBERNOTALLOWCREATEORGANIZATION = "UnsupportedOperation.CreateMemberNotAllowCreateOrganization"
+//  UNSUPPORTEDOPERATION_OPERATIONFORBIDDEN = "UnsupportedOperation.OperationForbidden"
 func (c *Client) CreateOrganizationWithContext(ctx context.Context, request *CreateOrganizationRequest) (response *CreateOrganizationResponse, err error) {
     if request == nil {
         request = NewCreateOrganizationRequest()
@@ -1403,6 +1477,7 @@ func NewCreateOrganizationMemberResponse() (response *CreateOrganizationMemberRe
 //  UNSUPPORTEDOPERATION_MEMBERDISCOUNTINHERITEXISTED = "UnsupportedOperation.MemberDiscountInheritExisted"
 //  UNSUPPORTEDOPERATION_MEMBEREXISTACCOUNTLEVELDISCOUNTINHERIT = "UnsupportedOperation.MemberExistAccountLevelDiscountInherit"
 //  UNSUPPORTEDOPERATION_MEMBERISAGENT = "UnsupportedOperation.MemberIsAgent"
+//  UNSUPPORTEDOPERATION_OPERATIONFORBIDDEN = "UnsupportedOperation.OperationForbidden"
 //  UNSUPPORTEDOPERATION_ORDERINPROGRESSEXISTED = "UnsupportedOperation.OrderInProgressExisted"
 //  UNSUPPORTEDOPERATION_OWNERDISCOUNTINHERITEXISTED = "UnsupportedOperation.OwnerDiscountInheritExisted"
 //  UNSUPPORTEDOPERATION_PAYERARREARSANDNOCREDITACCOUNT = "UnsupportedOperation.PayerArrearsAndNoCreditAccount"
@@ -1455,6 +1530,7 @@ func (c *Client) CreateOrganizationMember(request *CreateOrganizationMemberReque
 //  UNSUPPORTEDOPERATION_MEMBERDISCOUNTINHERITEXISTED = "UnsupportedOperation.MemberDiscountInheritExisted"
 //  UNSUPPORTEDOPERATION_MEMBEREXISTACCOUNTLEVELDISCOUNTINHERIT = "UnsupportedOperation.MemberExistAccountLevelDiscountInherit"
 //  UNSUPPORTEDOPERATION_MEMBERISAGENT = "UnsupportedOperation.MemberIsAgent"
+//  UNSUPPORTEDOPERATION_OPERATIONFORBIDDEN = "UnsupportedOperation.OperationForbidden"
 //  UNSUPPORTEDOPERATION_ORDERINPROGRESSEXISTED = "UnsupportedOperation.OrderInProgressExisted"
 //  UNSUPPORTEDOPERATION_OWNERDISCOUNTINHERITEXISTED = "UnsupportedOperation.OwnerDiscountInheritExisted"
 //  UNSUPPORTEDOPERATION_PAYERARREARSANDNOCREDITACCOUNT = "UnsupportedOperation.PayerArrearsAndNoCreditAccount"
@@ -2639,6 +2715,7 @@ func NewDeleteOrganizationNodesResponse() (response *DeleteOrganizationNodesResp
 //  FAILEDOPERATION_NODENOTEMPTY = "FailedOperation.NodeNotEmpty"
 //  FAILEDOPERATION_ORGANIZATIONNODEDELETEOVERLIMIT = "FailedOperation.OrganizationNodeDeleteOverLimit"
 //  FAILEDOPERATION_ORGANIZATIONNODENOTEMPTY = "FailedOperation.OrganizationNodeNotEmpty"
+//  FAILEDOPERATION_SHARENODEEXISTED = "FailedOperation.ShareNodeExisted"
 //  INTERNALERROR = "InternalError"
 //  INVALIDPARAMETER = "InvalidParameter"
 //  RESOURCENOTFOUND_ORGANIZATIONMEMBERNOTEXIST = "ResourceNotFound.OrganizationMemberNotExist"
@@ -2654,6 +2731,7 @@ func (c *Client) DeleteOrganizationNodes(request *DeleteOrganizationNodesRequest
 //  FAILEDOPERATION_NODENOTEMPTY = "FailedOperation.NodeNotEmpty"
 //  FAILEDOPERATION_ORGANIZATIONNODEDELETEOVERLIMIT = "FailedOperation.OrganizationNodeDeleteOverLimit"
 //  FAILEDOPERATION_ORGANIZATIONNODENOTEMPTY = "FailedOperation.OrganizationNodeNotEmpty"
+//  FAILEDOPERATION_SHARENODEEXISTED = "FailedOperation.ShareNodeExisted"
 //  INTERNALERROR = "InternalError"
 //  INVALIDPARAMETER = "InvalidParameter"
 //  RESOURCENOTFOUND_ORGANIZATIONMEMBERNOTEXIST = "ResourceNotFound.OrganizationMemberNotExist"
@@ -3043,6 +3121,76 @@ func (c *Client) DeleteShareUnitMembersWithContext(ctx context.Context, request 
     request.SetContext(ctx)
     
     response = NewDeleteShareUnitMembersResponse()
+    err = c.Send(request, response)
+    return
+}
+
+func NewDeleteShareUnitNodeRequest() (request *DeleteShareUnitNodeRequest) {
+    request = &DeleteShareUnitNodeRequest{
+        BaseRequest: &tchttp.BaseRequest{},
+    }
+    
+    request.Init().WithApiInfo("organization", APIVersion, "DeleteShareUnitNode")
+    
+    
+    return
+}
+
+func NewDeleteShareUnitNodeResponse() (response *DeleteShareUnitNodeResponse) {
+    response = &DeleteShareUnitNodeResponse{
+        BaseResponse: &tchttp.BaseResponse{},
+    } 
+    return
+
+}
+
+// DeleteShareUnitNode
+// 删除共享单元部门
+//
+// 可能返回的错误码:
+//  FAILEDOPERATION = "FailedOperation"
+//  FAILEDOPERATION_SHARENODENOTEXIST = "FailedOperation.ShareNodeNotExist"
+//  FAILEDOPERATION_SHARERESOURCEMEMBERINUSE = "FailedOperation.ShareResourceMemberInUse"
+//  FAILEDOPERATION_SHARERESOURCENOTEXIST = "FailedOperation.ShareResourceNotExist"
+//  FAILEDOPERATION_SHARERESOURCETYPENOTEXIST = "FailedOperation.ShareResourceTypeNotExist"
+//  FAILEDOPERATION_SHAREUNITNOTEXIST = "FailedOperation.ShareUnitNotExist"
+//  INTERNALERROR = "InternalError"
+//  INVALIDPARAMETER = "InvalidParameter"
+//  OPERATIONDENIED = "OperationDenied"
+//  RESOURCENOTFOUND = "ResourceNotFound"
+//  UNSUPPORTEDOPERATION = "UnsupportedOperation"
+func (c *Client) DeleteShareUnitNode(request *DeleteShareUnitNodeRequest) (response *DeleteShareUnitNodeResponse, err error) {
+    return c.DeleteShareUnitNodeWithContext(context.Background(), request)
+}
+
+// DeleteShareUnitNode
+// 删除共享单元部门
+//
+// 可能返回的错误码:
+//  FAILEDOPERATION = "FailedOperation"
+//  FAILEDOPERATION_SHARENODENOTEXIST = "FailedOperation.ShareNodeNotExist"
+//  FAILEDOPERATION_SHARERESOURCEMEMBERINUSE = "FailedOperation.ShareResourceMemberInUse"
+//  FAILEDOPERATION_SHARERESOURCENOTEXIST = "FailedOperation.ShareResourceNotExist"
+//  FAILEDOPERATION_SHARERESOURCETYPENOTEXIST = "FailedOperation.ShareResourceTypeNotExist"
+//  FAILEDOPERATION_SHAREUNITNOTEXIST = "FailedOperation.ShareUnitNotExist"
+//  INTERNALERROR = "InternalError"
+//  INVALIDPARAMETER = "InvalidParameter"
+//  OPERATIONDENIED = "OperationDenied"
+//  RESOURCENOTFOUND = "ResourceNotFound"
+//  UNSUPPORTEDOPERATION = "UnsupportedOperation"
+func (c *Client) DeleteShareUnitNodeWithContext(ctx context.Context, request *DeleteShareUnitNodeRequest) (response *DeleteShareUnitNodeResponse, err error) {
+    if request == nil {
+        request = NewDeleteShareUnitNodeRequest()
+    }
+    c.InitBaseRequest(&request.BaseRequest, "organization", APIVersion, "DeleteShareUnitNode")
+    
+    if c.GetCredential() == nil {
+        return nil, errors.New("DeleteShareUnitNode require credential")
+    }
+
+    request.SetContext(ctx)
+    
+    response = NewDeleteShareUnitNodeResponse()
     err = c.Send(request, response)
     return
 }
@@ -4393,6 +4541,66 @@ func (c *Client) DescribeShareUnitMembersWithContext(ctx context.Context, reques
     return
 }
 
+func NewDescribeShareUnitNodesRequest() (request *DescribeShareUnitNodesRequest) {
+    request = &DescribeShareUnitNodesRequest{
+        BaseRequest: &tchttp.BaseRequest{},
+    }
+    
+    request.Init().WithApiInfo("organization", APIVersion, "DescribeShareUnitNodes")
+    
+    
+    return
+}
+
+func NewDescribeShareUnitNodesResponse() (response *DescribeShareUnitNodesResponse) {
+    response = &DescribeShareUnitNodesResponse{
+        BaseResponse: &tchttp.BaseResponse{},
+    } 
+    return
+
+}
+
+// DescribeShareUnitNodes
+// 获取共享单元部门列表。
+//
+// 可能返回的错误码:
+//  FAILEDOPERATION = "FailedOperation"
+//  INTERNALERROR = "InternalError"
+//  INVALIDPARAMETER = "InvalidParameter"
+//  OPERATIONDENIED = "OperationDenied"
+//  RESOURCENOTFOUND = "ResourceNotFound"
+//  UNSUPPORTEDOPERATION = "UnsupportedOperation"
+func (c *Client) DescribeShareUnitNodes(request *DescribeShareUnitNodesRequest) (response *DescribeShareUnitNodesResponse, err error) {
+    return c.DescribeShareUnitNodesWithContext(context.Background(), request)
+}
+
+// DescribeShareUnitNodes
+// 获取共享单元部门列表。
+//
+// 可能返回的错误码:
+//  FAILEDOPERATION = "FailedOperation"
+//  INTERNALERROR = "InternalError"
+//  INVALIDPARAMETER = "InvalidParameter"
+//  OPERATIONDENIED = "OperationDenied"
+//  RESOURCENOTFOUND = "ResourceNotFound"
+//  UNSUPPORTEDOPERATION = "UnsupportedOperation"
+func (c *Client) DescribeShareUnitNodesWithContext(ctx context.Context, request *DescribeShareUnitNodesRequest) (response *DescribeShareUnitNodesResponse, err error) {
+    if request == nil {
+        request = NewDescribeShareUnitNodesRequest()
+    }
+    c.InitBaseRequest(&request.BaseRequest, "organization", APIVersion, "DescribeShareUnitNodes")
+    
+    if c.GetCredential() == nil {
+        return nil, errors.New("DescribeShareUnitNodes require credential")
+    }
+
+    request.SetContext(ctx)
+    
+    response = NewDescribeShareUnitNodesResponse()
+    err = c.Send(request, response)
+    return
+}
+
 func NewDescribeShareUnitResourcesRequest() (request *DescribeShareUnitResourcesRequest) {
     request = &DescribeShareUnitResourcesRequest{
         BaseRequest: &tchttp.BaseRequest{},
@@ -4863,6 +5071,56 @@ func (c *Client) GetGroupWithContext(ctx context.Context, request *GetGroupReque
     request.SetContext(ctx)
     
     response = NewGetGroupResponse()
+    err = c.Send(request, response)
+    return
+}
+
+func NewGetIPWhitelistRequest() (request *GetIPWhitelistRequest) {
+    request = &GetIPWhitelistRequest{
+        BaseRequest: &tchttp.BaseRequest{},
+    }
+    
+    request.Init().WithApiInfo("organization", APIVersion, "GetIPWhitelist")
+    
+    
+    return
+}
+
+func NewGetIPWhitelistResponse() (response *GetIPWhitelistResponse) {
+    response = &GetIPWhitelistResponse{
+        BaseResponse: &tchttp.BaseResponse{},
+    } 
+    return
+
+}
+
+// GetIPWhitelist
+// 获取CIC的ip白名单
+//
+// 可能返回的错误码:
+//  FAILEDOPERATION_PERMISSIONDENIED = "FailedOperation.PermissionDenied"
+func (c *Client) GetIPWhitelist(request *GetIPWhitelistRequest) (response *GetIPWhitelistResponse, err error) {
+    return c.GetIPWhitelistWithContext(context.Background(), request)
+}
+
+// GetIPWhitelist
+// 获取CIC的ip白名单
+//
+// 可能返回的错误码:
+//  FAILEDOPERATION_PERMISSIONDENIED = "FailedOperation.PermissionDenied"
+func (c *Client) GetIPWhitelistWithContext(ctx context.Context, request *GetIPWhitelistRequest) (response *GetIPWhitelistResponse, err error) {
+    if request == nil {
+        request = NewGetIPWhitelistRequest()
+    }
+    c.InitBaseRequest(&request.BaseRequest, "organization", APIVersion, "GetIPWhitelist")
+    
+    if c.GetCredential() == nil {
+        return nil, errors.New("GetIPWhitelist require credential")
+    }
+
+    request.SetContext(ctx)
+    
+    response = NewGetIPWhitelistResponse()
     err = c.Send(request, response)
     return
 }
@@ -7419,6 +7677,56 @@ func (c *Client) UpdateGroupWithContext(ctx context.Context, request *UpdateGrou
     request.SetContext(ctx)
     
     response = NewUpdateGroupResponse()
+    err = c.Send(request, response)
+    return
+}
+
+func NewUpdateIPWhitelistRequest() (request *UpdateIPWhitelistRequest) {
+    request = &UpdateIPWhitelistRequest{
+        BaseRequest: &tchttp.BaseRequest{},
+    }
+    
+    request.Init().WithApiInfo("organization", APIVersion, "UpdateIPWhitelist")
+    
+    
+    return
+}
+
+func NewUpdateIPWhitelistResponse() (response *UpdateIPWhitelistResponse) {
+    response = &UpdateIPWhitelistResponse{
+        BaseResponse: &tchttp.BaseResponse{},
+    } 
+    return
+
+}
+
+// UpdateIPWhitelist
+// 更新新建ip白名单
+//
+// 可能返回的错误码:
+//  FAILEDOPERATION_PERMISSIONDENIED = "FailedOperation.PermissionDenied"
+func (c *Client) UpdateIPWhitelist(request *UpdateIPWhitelistRequest) (response *UpdateIPWhitelistResponse, err error) {
+    return c.UpdateIPWhitelistWithContext(context.Background(), request)
+}
+
+// UpdateIPWhitelist
+// 更新新建ip白名单
+//
+// 可能返回的错误码:
+//  FAILEDOPERATION_PERMISSIONDENIED = "FailedOperation.PermissionDenied"
+func (c *Client) UpdateIPWhitelistWithContext(ctx context.Context, request *UpdateIPWhitelistRequest) (response *UpdateIPWhitelistResponse, err error) {
+    if request == nil {
+        request = NewUpdateIPWhitelistRequest()
+    }
+    c.InitBaseRequest(&request.BaseRequest, "organization", APIVersion, "UpdateIPWhitelist")
+    
+    if c.GetCredential() == nil {
+        return nil, errors.New("UpdateIPWhitelist require credential")
+    }
+
+    request.SetContext(ctx)
+    
+    response = NewUpdateIPWhitelistResponse()
     err = c.Send(request, response)
     return
 }

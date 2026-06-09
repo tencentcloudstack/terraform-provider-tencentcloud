@@ -154,6 +154,20 @@ func ResourceTencentCloudBhResource() *schema.Resource {
 				Computed:    true,
 				Description: "Resource instance ID.",
 			},
+
+			"public_ip_set": {
+				Type:        schema.TypeList,
+				Computed:    true,
+				Elem:        &schema.Schema{Type: schema.TypeString},
+				Description: "Public IP address list of the bastion host instance.",
+			},
+
+			"private_ip_set": {
+				Type:        schema.TypeList,
+				Computed:    true,
+				Elem:        &schema.Schema{Type: schema.TypeString},
+				Description: "Private IP address list of the bastion host instance.",
+			},
 		},
 	}
 }
@@ -424,6 +438,14 @@ func resourceTencentCloudBhResourceRead(d *schema.ResourceData, meta interface{}
 
 	if respData.ExternalAccess != nil {
 		_ = d.Set("external_access", respData.ExternalAccess)
+	}
+
+	if respData.PublicIpSet != nil {
+		_ = d.Set("public_ip_set", respData.PublicIpSet)
+	}
+
+	if respData.PrivateIpSet != nil {
+		_ = d.Set("private_ip_set", respData.PrivateIpSet)
 	}
 
 	return nil

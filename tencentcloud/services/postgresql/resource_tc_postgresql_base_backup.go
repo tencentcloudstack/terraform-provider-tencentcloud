@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"log"
 	"strings"
+	"time"
 
 	tccommon "github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/common"
 	svctag "github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/services/tag"
@@ -22,6 +23,12 @@ func ResourceTencentCloudPostgresqlBaseBackup() *schema.Resource {
 		Read:   resourceTencentCloudPostgresqlBaseBackupRead,
 		Update: resourceTencentCloudPostgresqlBaseBackupUpdate,
 		Delete: resourceTencentCloudPostgresqlBaseBackupDelete,
+		Importer: &schema.ResourceImporter{
+			State: schema.ImportStatePassthrough,
+		},
+		Timeouts: &schema.ResourceTimeout{
+			Create: schema.DefaultTimeout(15 * time.Minute),
+		},
 		Schema: map[string]*schema.Schema{
 			"db_instance_id": {
 				Required:    true,
@@ -55,14 +62,15 @@ func resourceTencentCloudPostgresqlBaseBackupCreate(d *schema.ResourceData, meta
 	defer tccommon.LogElapsed("resource.tencentcloud_postgresql_base_backup.create")()
 	defer tccommon.InconsistentCheck(d, meta)()
 
-	logId := tccommon.GetLogId(tccommon.ContextNil)
-
 	var (
+		logId        = tccommon.GetLogId(tccommon.ContextNil)
+		ctx          = context.WithValue(context.TODO(), tccommon.LogIdKey, logId)
 		request      = postgresql.NewCreateBaseBackupRequest()
 		response     = postgresql.NewCreateBaseBackupResponse()
 		dBInstanceId string
 		baseBackupId string
 	)
+
 	if v, ok := d.GetOk("db_instance_id"); ok {
 		request.DBInstanceId = helper.String(v.(string))
 		dBInstanceId = v.(string)
@@ -75,6 +83,11 @@ func resourceTencentCloudPostgresqlBaseBackupCreate(d *schema.ResourceData, meta
 		} else {
 			log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), result.ToJsonString())
 		}
+
+		if result == nil || result.Response == nil {
+			return resource.NonRetryableError(fmt.Errorf("Create postgresql BaseBackup failed, Response is nil."))
+		}
+
 		response = result
 		return nil
 	})
@@ -83,11 +96,82 @@ func resourceTencentCloudPostgresqlBaseBackupCreate(d *schema.ResourceData, meta
 		return err
 	}
 
+	if response.Response.BaseBackupId == nil {
+		return fmt.Errorf("BaseBackupId is nil.")
+	}
+
 	baseBackupId = *response.Response.BaseBackupId
 
 	d.SetId(strings.Join([]string{dBInstanceId, baseBackupId}, tccommon.FILED_SP))
 
-	ctx := context.WithValue(context.TODO(), tccommon.LogIdKey, logId)
+	// wait
+	waitReq := postgresql.NewDescribeBaseBackupsRequest()
+	waitReq.Filters = []*postgresql.Filter{
+		{
+			Name:   helper.String("db-instance-id"),
+			Values: helper.Strings([]string{dBInstanceId}),
+		},
+		{
+			Name:   helper.String("base-backup-id"),
+			Values: helper.Strings([]string{baseBackupId}),
+		},
+	}
+
+	err = resource.Retry(d.Timeout(schema.TimeoutCreate), func() *resource.RetryError {
+		result, e := meta.(tccommon.ProviderMeta).GetAPIV3Conn().UsePostgresqlClient().DescribeBaseBackupsWithContext(ctx, waitReq)
+		if e != nil {
+			return tccommon.RetryError(e)
+		} else {
+			log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, waitReq.GetAction(), waitReq.ToJsonString(), result.ToJsonString())
+		}
+
+		if result == nil || result.Response == nil {
+			return resource.NonRetryableError(fmt.Errorf("Describe base backups failed, Response is nil."))
+		}
+
+		if len(result.Response.BaseBackupSet) < 1 {
+			return resource.NonRetryableError(fmt.Errorf("BaseBackupSet is nil."))
+		}
+
+		tmpObj := result.Response.BaseBackupSet[0]
+		if tmpObj.State == nil {
+			return resource.NonRetryableError(fmt.Errorf("State is nil."))
+		}
+
+		if *tmpObj.State == "finished" {
+			return nil
+		}
+
+		return resource.RetryableError(fmt.Errorf("Base backup is still running..."))
+	})
+
+	if err != nil {
+		log.Printf("[CRITAL]%s describe base backup failed, reason:%+v", logId, err)
+		return err
+	}
+
+	if v, ok := d.GetOk("new_expire_time"); ok {
+		request := postgresql.NewModifyBaseBackupExpireTimeRequest()
+		request.NewExpireTime = helper.String(v.(string))
+		request.DBInstanceId = &dBInstanceId
+		request.BaseBackupId = &baseBackupId
+		err := resource.Retry(tccommon.WriteRetryTimeout, func() *resource.RetryError {
+			result, e := meta.(tccommon.ProviderMeta).GetAPIV3Conn().UsePostgresqlClient().ModifyBaseBackupExpireTime(request)
+			if e != nil {
+				return tccommon.RetryError(e)
+			} else {
+				log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), result.ToJsonString())
+			}
+
+			return nil
+		})
+
+		if err != nil {
+			log.Printf("[CRITAL]%s update postgresql BaseBackup failed, reason:%+v", logId, err)
+			return err
+		}
+	}
+
 	if tags := helper.GetTags(d, "tags"); len(tags) > 0 {
 		tagService := svctag.NewTagService(meta.(tccommon.ProviderMeta).GetAPIV3Conn())
 		region := meta.(tccommon.ProviderMeta).GetAPIV3Conn().Region
@@ -123,8 +207,8 @@ func resourceTencentCloudPostgresqlBaseBackupRead(d *schema.ResourceData, meta i
 	}
 
 	if BaseBackup == nil {
+		log.Printf("[WARN]%s resource `tencentcloud_postgresql_base_backup` [%s] not found, please check if it has been deleted.\n", logId, d.Id())
 		d.SetId("")
-		log.Printf("[WARN]%s resource `PostgresqlBaseBackup` [%s] not found, please check if it has been deleted.\n", logId, d.Id())
 		return nil
 	}
 
@@ -153,17 +237,12 @@ func resourceTencentCloudPostgresqlBaseBackupUpdate(d *schema.ResourceData, meta
 
 	logId := tccommon.GetLogId(tccommon.ContextNil)
 
-	request := postgresql.NewModifyBaseBackupExpireTimeRequest()
-
 	idSplit := strings.Split(d.Id(), tccommon.FILED_SP)
 	if len(idSplit) != 2 {
 		return fmt.Errorf("id is broken,%s", d.Id())
 	}
 	dBInstanceId := idSplit[0]
 	baseBackupId := idSplit[1]
-
-	request.DBInstanceId = &dBInstanceId
-	request.BaseBackupId = &baseBackupId
 
 	immutableArgs := []string{"db_instance_id", "base_backup_id"}
 
@@ -174,23 +253,28 @@ func resourceTencentCloudPostgresqlBaseBackupUpdate(d *schema.ResourceData, meta
 	}
 
 	if d.HasChange("new_expire_time") {
+		request := postgresql.NewModifyBaseBackupExpireTimeRequest()
 		if v, ok := d.GetOk("new_expire_time"); ok {
 			request.NewExpireTime = helper.String(v.(string))
 		}
-	}
 
-	err := resource.Retry(tccommon.WriteRetryTimeout, func() *resource.RetryError {
-		result, e := meta.(tccommon.ProviderMeta).GetAPIV3Conn().UsePostgresqlClient().ModifyBaseBackupExpireTime(request)
-		if e != nil {
-			return tccommon.RetryError(e)
-		} else {
-			log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), result.ToJsonString())
+		request.DBInstanceId = &dBInstanceId
+		request.BaseBackupId = &baseBackupId
+		err := resource.Retry(tccommon.WriteRetryTimeout, func() *resource.RetryError {
+			result, e := meta.(tccommon.ProviderMeta).GetAPIV3Conn().UsePostgresqlClient().ModifyBaseBackupExpireTime(request)
+			if e != nil {
+				return tccommon.RetryError(e)
+			} else {
+				log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), result.ToJsonString())
+			}
+
+			return nil
+		})
+
+		if err != nil {
+			log.Printf("[CRITAL]%s update postgresql BaseBackup failed, reason:%+v", logId, err)
+			return err
 		}
-		return nil
-	})
-	if err != nil {
-		log.Printf("[CRITAL]%s update postgresql BaseBackup failed, reason:%+v", logId, err)
-		return err
 	}
 
 	if d.HasChange("tags") {

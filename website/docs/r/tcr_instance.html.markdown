@@ -11,6 +11,8 @@ description: |-
 
 Use this resource to create tcr instance.
 
+~> **NOTE:**If `security_policy` needs to be configured, `open_public_operation` needs to be set to true
+
 ## Example Usage
 
 ### Create a basic tcr instance.
@@ -36,6 +38,7 @@ resource "tencentcloud_tcr_instance" "example" {
   security_policy {
     cidr_block = "10.0.0.1/24"
   }
+
   security_policy {
     cidr_block = "192.168.1.1"
   }
@@ -51,6 +54,7 @@ resource "tencentcloud_tcr_instance" "example" {
   replications {
     region_id = var.tcr_region_map["ap-guangzhou"] # 1
   }
+
   replications {
     region_id = var.tcr_region_map["ap-singapore"] # 9
   }
@@ -80,6 +84,21 @@ variable "tcr_region_map" {
 }
 ```
 
+### Create instance with COS bucket configuration.
+
+```hcl
+resource "tencentcloud_tcr_instance" "example" {
+  name                  = "tf-example-tcr"
+  instance_type         = "standard"
+  enable_cos_maz        = true
+  enable_cos_versioning = true
+
+  tags = {
+    "createdBy" = "terraform"
+  }
+}
+```
+
 ## Argument Reference
 
 The following arguments are supported:
@@ -87,6 +106,9 @@ The following arguments are supported:
 * `instance_type` - (Required, String) TCR types. Valid values are: `standard`, `basic`, `premium`.
 * `name` - (Required, String, ForceNew) Name of the TCR instance.
 * `delete_bucket` - (Optional, Bool) Indicate to delete the COS bucket which is auto-created with the instance or not.
+* `deletion_protection` - (Optional, Bool) Whether to enable Instance Deletion Protection.
+* `enable_cos_maz` - (Optional, Bool, ForceNew) Whether to enable COS bucket multi-AZ feature. Default is `false`.
+* `enable_cos_versioning` - (Optional, Bool, ForceNew) Whether to enable COS bucket versioning. Advanced Edition Instances: Default is `true` (versioning enabled); Standard / Basic Edition Instances: Default is `false` (disabled).
 * `instance_charge_type_prepaid_period` - (Optional, Int) Length of time to purchase an instance (in month). Must set when registry_charge_type is prepaid.
 * `instance_charge_type_prepaid_renew_flag` - (Optional, Int) Auto renewal flag. 1: manual renewal, 2: automatic renewal, 3: no renewal and no notification. Must set when registry_charge_type is prepaid.
 * `open_public_operation` - (Optional, Bool) Control public network access.
@@ -123,6 +145,6 @@ In addition to all arguments above, the following attributes are exported:
 tcr instance can be imported using the id, e.g.
 
 ```
-$ terraform import tencentcloud_tcr_instance.foo instance_id
+terraform import tencentcloud_tcr_instance.example tcr-4detlt3v
 ```
 

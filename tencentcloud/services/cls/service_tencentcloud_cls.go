@@ -1470,6 +1470,60 @@ func (me *ClsService) ClsCloudProductLogTaskStateRefreshFunc(ctx context.Context
 	}
 }
 
+func (me *ClsService) DescribeClsNoticeContentsByFilter(ctx context.Context, filters []*cls.Filter) (items []*cls.NoticeContentTemplate, errRet error) {
+	logId := tccommon.GetLogId(ctx)
+
+	request := cls.NewDescribeNoticeContentsRequest()
+	request.Limit = helper.Int64(100)
+	request.Offset = helper.Int64(0)
+	request.Filters = filters
+
+	items = make([]*cls.NoticeContentTemplate, 0)
+
+	var (
+		total     int64
+		pageItems []*cls.NoticeContentTemplate
+	)
+
+	for {
+		err := resource.Retry(tccommon.ReadRetryTimeout, func() *resource.RetryError {
+			ratelimit.Check(request.GetAction())
+			response, e := me.client.UseClsClient().DescribeNoticeContents(request)
+			if e != nil {
+				return tccommon.RetryError(e)
+			}
+
+			if response == nil || response.Response == nil {
+				return resource.NonRetryableError(fmt.Errorf("describe cls notice contents failed, Response is nil"))
+			}
+
+			log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+			if response.Response.TotalCount != nil {
+				total = *response.Response.TotalCount
+			}
+
+			pageItems = response.Response.NoticeContents
+			return nil
+		})
+
+		if err != nil {
+			errRet = err
+			return
+		}
+
+		items = append(items, pageItems...)
+
+		if int64(len(items)) >= total {
+			break
+		}
+
+		*request.Offset += *request.Limit
+	}
+
+	return
+}
+
 func (me *ClsService) DescribeClsNoticeContentById(ctx context.Context, noticeContentId string) (ret *cls.NoticeContentTemplate, errRet error) {
 	logId := tccommon.GetLogId(ctx)
 
@@ -1731,5 +1785,98 @@ func (me *ClsService) DescribeClsAlarmNoticesByFilter(ctx context.Context, param
 		offset += limit
 	}
 
+	return
+}
+
+func (me *ClsService) DescribeClsDlcDeliverById(ctx context.Context, topicId, taskId string) (ret *cls.DlcDeliverInfo, errRet error) {
+	logId := tccommon.GetLogId(ctx)
+
+	request := cls.NewDescribeDlcDeliversRequest()
+	response := cls.NewDescribeDlcDeliversResponse()
+	request.TopicId = &topicId
+	request.Filters = []*cls.Filter{
+		{Key: helper.String("taskId"), Values: []*string{&taskId}},
+	}
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	err := resource.Retry(tccommon.ReadRetryTimeout, func() *resource.RetryError {
+		ratelimit.Check(request.GetAction())
+		result, e := me.client.UseClsClient().DescribeDlcDelivers(request)
+		if e != nil {
+			return tccommon.RetryError(e)
+		} else {
+			log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), result.ToJsonString())
+		}
+
+		if result == nil || result.Response == nil {
+			return resource.NonRetryableError(fmt.Errorf("Describe cls dlc deliver failed, Response is nil."))
+		}
+
+		response = result
+		return nil
+	})
+
+	if err != nil {
+		errRet = err
+		return
+	}
+
+	if len(response.Response.Infos) == 0 {
+		return
+	}
+
+	ret = response.Response.Infos[0]
+	return
+}
+
+func (me *ClsService) DescribeClsConsoleById(ctx context.Context, consoleId string) (ret *cls.Console, errRet error) {
+	logId := tccommon.GetLogId(ctx)
+
+	request := cls.NewDescribeConsolesRequest()
+	request.Limit = helper.Int64(100)
+	request.Filters = []*cls.Filter{
+		{
+			Key:    helper.String("ConsoleId"),
+			Values: []*string{helper.String(consoleId)},
+		},
+	}
+
+	response := cls.NewDescribeConsolesResponse()
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	err := resource.Retry(tccommon.ReadRetryTimeout, func() *resource.RetryError {
+		ratelimit.Check(request.GetAction())
+		result, e := me.client.UseClsClient().DescribeConsolesWithContext(ctx, request)
+		if e != nil {
+			return tccommon.RetryError(e)
+		}
+
+		if result == nil || result.Response == nil {
+			return resource.NonRetryableError(fmt.Errorf("Describe cls console failed, Response is nil."))
+		}
+
+		response = result
+		return nil
+	})
+
+	if err != nil {
+		errRet = err
+		return
+	}
+
+	if len(response.Response.Consoles) == 0 {
+		return
+	}
+
+	ret = response.Response.Consoles[0]
 	return
 }

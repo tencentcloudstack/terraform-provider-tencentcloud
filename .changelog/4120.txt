@@ -1,0 +1,7 @@
+```release-note:enhancement
+resource/tencentcloud_vpc: update `is_multicast` default value
+```
+
+```release-note:enhancement
+resource/tencentcloud_subnet: update `is_multicast` default value
+```

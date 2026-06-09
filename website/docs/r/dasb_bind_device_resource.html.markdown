@@ -11,6 +11,10 @@ description: |-
 
 Provides a resource to create a dasb bind device resource
 
+~> **NOTE:** This resource has been deprecated in Terraform TencentCloud provider version 1.82.101. Please use `tencentcloud_bh_bind_device_resource` instead.
+
+~> **NOTE:** This resource must exclusive in one dasb resource, do not declare additional rule resources of this device elsewhere.
+
 ## Example Usage
 
 ```hcl

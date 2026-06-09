@@ -16,22 +16,25 @@ Provides a resource to create a CLB redirection.
 ### Manual Rewrite
 
 ```hcl
-resource "tencentcloud_clb_redirection" "foo" {
-  clb_id             = "lb-p7olt9e5"
-  source_listener_id = "lbl-jc1dx6ju"
-  target_listener_id = "lbl-asj1hzuo"
-  source_rule_id     = "loc-ft8fmngv"
-  target_rule_id     = "loc-4xxr2cy7"
+resource "tencentcloud_clb_redirection" "example" {
+  clb_id             = "lb-ab09jtd2"
+  source_listener_id = "lbl-qgtfowas"
+  target_listener_id = "lbl-lpwdkukk"
+  source_rule_id     = "loc-liz99mtg"
+  target_rule_id     = "loc-4f53xn52"
+  rewrite_code       = 307
+  take_url           = true
+  source_domian      = "www.demo.com"
 }
 ```
 
 ### Auto Rewrite
 
 ```hcl
-resource "tencentcloud_clb_redirection" "foo" {
-  clb_id             = "lb-p7olt9e5"
-  target_listener_id = "lbl-asj1hzuo"
-  target_rule_id     = "loc-4xxr2cy7"
+resource "tencentcloud_clb_redirection" "example" {
+  clb_id             = "lb-ab09jtd2"
+  target_listener_id = "lbl-l7550kum"
+  target_rule_id     = "loc-op7uz010"
   is_auto_rewrite    = true
 }
 ```
@@ -45,8 +48,11 @@ The following arguments are supported:
 * `target_rule_id` - (Required, String, ForceNew) Rule ID of target listener.
 * `delete_all_auto_rewrite` - (Optional, Bool) Indicates whether delete all auto redirection. Default is `false`. It will take effect only when this redirection is auto-rewrite and this auto-rewrite auto redirected more than one rules. All the auto-rewrite relations will be deleted when this parameter set true.
 * `is_auto_rewrite` - (Optional, Bool, ForceNew) Indicates whether automatic forwarding is enable, default is `false`. If enabled, the source listener and location should be empty, the target listener must be https protocol and port is 443.
+* `rewrite_code` - (Optional, Int, ForceNew) Redirection status codes, with possible values of `301`, `302`, `307`.
+* `source_domian` - (Optional, String, ForceNew) The domain name for source forwarding must be the domain name corresponding to `source_rule_id`, which is required when configuring `rewrite_code`. Only support `is_auto_rewrite` is `false`.
 * `source_listener_id` - (Optional, String, ForceNew) ID of source listener.
 * `source_rule_id` - (Optional, String, ForceNew) Rule ID of source listener.
+* `take_url` - (Optional, Bool, ForceNew) Whether the redirect carries a matching URL is required when configuring `rewrite_code`.
 
 ## Attributes Reference
 
@@ -58,9 +64,9 @@ In addition to all arguments above, the following attributes are exported:
 
 ## Import
 
-CLB redirection can be imported using the id, e.g.
+CLB redirection can be imported using the sourceLocId#targetLocId#sourceListenerId#targetListenerId#clbId, e.g.
 
 ```
-$ terraform import tencentcloud_clb_redirection.foo loc-ft8fmngv#loc-4xxr2cy7#lbl-jc1dx6ju#lbl-asj1hzuo#lb-p7olt9e5
+terraform import tencentcloud_clb_redirection.example loc-ft8fmngv#loc-4xxr2cy7#lbl-jc1dx6ju#lbl-asj1hzuo#lb-p7olt9e5
 ```
 

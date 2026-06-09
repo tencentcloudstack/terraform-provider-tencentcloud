@@ -1,0 +1,7 @@
+ARCHIVED: 2026-03-20
+STATUS: COMPLETED
+TYPE: Breaking Change (State Migration)
+SCOPE: MongoDB Resources - availability_zone_list field
+
+This change has been successfully implemented and archived.
+See ARCHIVE.md for complete details.

@@ -311,8 +311,6 @@ func resourceTencentCloudWafClbDomainCreate(d *schema.ResourceData, meta interfa
 
 					hostRecord.LoadBalancerSet = append(hostRecord.LoadBalancerSet, &loadBalancer)
 				}
-			} else {
-				return fmt.Errorf("If `alb_type` is clb, `load_balancer_set` is required.")
 			}
 		} else {
 			if _, ok := d.GetOk("load_balancer_set"); ok {
@@ -916,8 +914,6 @@ func resourceTencentCloudWafClbDomainUpdate(d *schema.ResourceData, meta interfa
 
 					hostRecord.LoadBalancerSet = append(hostRecord.LoadBalancerSet, &loadBalancer)
 				}
-			} else {
-				return fmt.Errorf("If `alb_type` is clb, `load_balancer_set` is required.")
 			}
 		} else {
 			if _, ok := d.GetOk("load_balancer_set"); ok {

@@ -29,7 +29,7 @@ resource "tencentcloud_teo_bind_security_template" "teo_bind_security_template" 
 
 The following arguments are supported:
 
-* `entity` - (Required, String, ForceNew) List of domain names to bind to/unbind from a policy template.
+* `entity` - (Required, String, ForceNew) The domain to be bound to or unbound from the policy template.
 * `template_id` - (Required, String, ForceNew) Specifies the ID of the policy template or the site global policy to be bound or unbound.
 <li>To bind to a policy template, or unbind from it, specify the policy template ID.</li>.
 <li>To bind to the site's global policy, or unbind from it, use the @ZoneLevel@domain parameter value.</li>.

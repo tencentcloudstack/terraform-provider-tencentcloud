@@ -1,4 +1,4 @@
-// Copyright (c) 2017-2018 THL A29 Limited, a Tencent company. All Rights Reserved.
+// Copyright (c) 2017-2025 Tencent. All Rights Reserved.
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -28,6 +28,15 @@ const (
 
 	// 域名配置更新操作失败，请重试或联系客服人员解决。
 	FAILEDOPERATION_CDNCONFIGERROR = "FailedOperation.CdnConfigError"
+
+	// 数据查询错误，请联系腾讯云工程师进一步排查。
+	FAILEDOPERATION_DATASYSTEMERROR = "FailedOperation.DataSystemError"
+
+	// SSL无法获取订单，请稍后重试
+	FAILEDOPERATION_SSLCERTCANNOTGETORDER = "FailedOperation.SslCertCannotGetOrder"
+
+	// 证书不存在
+	FAILEDOPERATION_SSLCERTNOTFOUND = "FailedOperation.SslCertNotFound"
 
 	// 内部错误。
 	INTERNALERROR = "InternalError"
@@ -70,18 +79,6 @@ const (
 
 	// 内部服务错误，请联系腾讯云工程师进一步排查。
 	INTERNALERROR_ROUTEERROR = "InternalError.RouteError"
-
-	// SCDN服务未生效，请购买或续费SCDN套餐后重试。
-	INTERNALERROR_SCDNUSERNOPACKAGE = "InternalError.ScdnUserNoPackage"
-
-	// 安全加速服务已停服，请重新购买套餐后开启。
-	INTERNALERROR_SCDNUSERSUSPEND = "InternalError.ScdnUserSuspend"
-
-	// 内部数据错误，请重试或联系客服人员解决。
-	INTERNALERROR_SYSTEMDBERROR = "InternalError.SystemDBError"
-
-	// 内部服务错误，请联系腾讯云工程师进一步排查。
-	INTERNALERROR_SYSTEMERROR = "InternalError.SystemError"
 
 	// 标签内部错误，请重试或联系客服人员解决。
 	INTERNALERROR_TAGSYSTEMERROR = "InternalError.TagSystemError"
@@ -151,6 +148,9 @@ const (
 
 	// 域名添加失败，当前域名必须选择标签，请确认后重试。
 	INVALIDPARAMETER_CDNCONFIGTAGREQUIRED = "InvalidParameter.CdnConfigTagRequired"
+
+	// 域名已在Edgeone接入
+	INVALIDPARAMETER_CDNHOSTEXISTSINEDGEONE = "InvalidParameter.CdnHostExistsInEdgeOne"
 
 	// 域名拥有特殊配置，需人工处理。
 	INVALIDPARAMETER_CDNHOSTHASSPECIALCONFIG = "InvalidParameter.CdnHostHasSpecialConfig"
@@ -260,9 +260,6 @@ const (
 	// 内部接口错误，请重试或联系客服人员解决。
 	INVALIDPARAMETER_ECDNINTERFACEERROR = "InvalidParameter.EcdnInterfaceError"
 
-	// 参数错误。
-	INVALIDPARAMETER_PARAMERROR = "InvalidParameter.ParamError"
-
 	// 正则子模式超出上限。
 	INVALIDPARAMETER_PATHREGEXTOOMANYSUBPATTERN = "InvalidParameter.PathRegexTooManySubPattern"
 
@@ -272,14 +269,14 @@ const (
 	// 域名所在平台不支持使用https协议访问远程鉴权地址。
 	INVALIDPARAMETER_REMOTEAUTHINVALIDPROTOCOL = "InvalidParameter.RemoteAuthInvalidProtocol"
 
-	// 任务已过期,无法重试。
-	INVALIDPARAMETER_SCDNLOGTASKEXPIRED = "InvalidParameter.ScdnLogTaskExpired"
+	// SSL证书链错误，请检查证书链后重试
+	INVALIDPARAMETER_SSLCERTCHAINERROR = "InvalidParameter.SslCertChainError"
 
-	// 任务不存在或任务未失败。
-	INVALIDPARAMETER_SCDNLOGTASKNOTFOUNDORNOTFAIL = "InvalidParameter.ScdnLogTaskNotFoundOrNotFail"
+	// SSL证书与私钥不匹配，请检查后重试
+	INVALIDPARAMETER_SSLCERTMATCHERROR = "InvalidParameter.SslCertMatchError"
 
-	// 时间范围错误。
-	INVALIDPARAMETER_SCDNLOGTASKTIMERANGEINVALID = "InvalidParameter.ScdnLogTaskTimeRangeInvalid"
+	// SSL证书解析错误，请检查证书格式后重试
+	INVALIDPARAMETER_SSLCERTPARSEERROR = "InvalidParameter.SslCertParseError"
 
 	// 参数取值错误。
 	INVALIDPARAMETERVALUE = "InvalidParameterValue"
@@ -356,20 +353,26 @@ const (
 	// 主题超限。
 	LIMITEXCEEDED_CLSTOPICEXCEED = "LimitExceeded.ClsTopicExceed"
 
-	// 每日任务数量超出最大值。
-	LIMITEXCEEDED_SCDNLOGTASKEXCEEDDAYLIMIT = "LimitExceeded.ScdnLogTaskExceedDayLimit"
+	// SSL请求频率超限，请稍后重试
+	LIMITEXCEEDED_SSLCERTREQUESTLIMITEXCEEDED = "LimitExceeded.SslCertRequestLimitExceeded"
 
 	// 缺少参数错误。
 	MISSINGPARAMETER = "MissingParameter"
 
-	// 操作被拒绝。
-	OPERATIONDENIED = "OperationDenied"
+	// 此域名因遭受过大规模 DDoS 攻击，为了保证平台稳定，当前无法接入。
+	OPERATIONDENIED_CDNHOSTHASDDOSRISK = "OperationDenied.CdnHostHasDDosRisk"
+
+	// 您的域名正在顺利升级至EdgeOne平台。在升级期间，您可能暂时无法进行配置修改。
+	OPERATIONDENIED_PRODUCTUPDATING = "OperationDenied.ProductUpdating"
+
+	// 腾讯云CDN已全面升级为边缘安全加速平台
+	OPERATIONDENIED_PRODUCTUPGRADED = "OperationDenied.ProductUpgraded"
 
 	// 所选目标域名与当前域名平台不一致，请重新选择或联系腾讯云技术支持
 	OPERATIONDENIED_SHARECACHEAREADNSNOTMATCH = "OperationDenied.ShareCacheAreaDnsNotMatch"
 
-	// 请求的次数超过了频率限制。
-	REQUESTLIMITEXCEEDED = "RequestLimitExceeded"
+	// 此账号正迁移EdgeOne，若有疑问请联系售后客服！
+	OPERATIONDENIED_USERMIGRATING = "OperationDenied.UserMigrating"
 
 	// 域名与系统中已存在域名存在冲突。
 	RESOURCEINUSE_CDNCONFLICTHOSTEXISTS = "ResourceInUse.CdnConflictHostExists"
@@ -443,14 +446,11 @@ const (
 	// 域名未备案，请将域名备案。备案同步周期为2小时，若域名已备案，可稍后重新接入。
 	RESOURCEUNAVAILABLE_CDNHOSTNOICP = "ResourceUnavailable.CdnHostNoIcp"
 
+	// 您的账号存在合规安全风险
+	RESOURCEUNAVAILABLE_CHECKUSERHIGHRISK = "ResourceUnavailable.CheckUserHighRisk"
+
 	// 该域名已在云点播内接入，请先在云点播内删除域名后再接入。
 	RESOURCEUNAVAILABLE_HOSTEXISTINVOD = "ResourceUnavailable.HostExistInVod"
-
-	// SCDN服务未生效，请购买或续费SCDN套餐后重试。
-	RESOURCEUNAVAILABLE_SCDNUSERNOPACKAGE = "ResourceUnavailable.ScdnUserNoPackage"
-
-	// SCDN服务未生效，请购买或续费SCDN套餐后重试。
-	RESOURCEUNAVAILABLE_SCDNUSERSUSPEND = "ResourceUnavailable.ScdnUserSuspend"
 
 	// 未授权操作。
 	UNAUTHORIZEDOPERATION = "UnauthorizedOperation"
@@ -464,7 +464,7 @@ const (
 	// 该账号未授权开通CLS。
 	UNAUTHORIZEDOPERATION_CDNCLSNOTREGISTERED = "UnauthorizedOperation.CdnClsNotRegistered"
 
-	// 域名解析未进行验证。
+	// 域名未进行归属权校验。
 	UNAUTHORIZEDOPERATION_CDNDOMAINRECORDNOTVERIFIED = "UnauthorizedOperation.CdnDomainRecordNotVerified"
 
 	// 域名在内部系统已存在，请提工单处理。
@@ -527,14 +527,8 @@ const (
 	// 内部服务错误，请联系腾讯云工程师进一步排查。
 	UNAUTHORIZEDOPERATION_CSRFERROR = "UnauthorizedOperation.CsrfError"
 
-	// 鉴权域名为空。
-	UNAUTHORIZEDOPERATION_DOMAINEMPTY = "UnauthorizedOperation.DomainEmpty"
-
 	// 请前往CDN控制台进行操作。
 	UNAUTHORIZEDOPERATION_ECDNMIGRATEDCDN = "UnauthorizedOperation.EcdnMigratedCdn"
-
-	// 未授权的操作。
-	UNAUTHORIZEDOPERATION_NOPERMISSION = "UnauthorizedOperation.NoPermission"
 
 	// 暂不支持此操作，请联系腾讯云工程师处理。
 	UNAUTHORIZEDOPERATION_OPNOAUTH = "UnauthorizedOperation.OpNoAuth"
@@ -547,9 +541,6 @@ const (
 
 	// 未知参数错误。
 	UNKNOWNPARAMETER = "UnknownParameter"
-
-	// 操作不支持。
-	UNSUPPORTEDOPERATION = "UnsupportedOperation"
 
 	// 不允许操作。
 	UNSUPPORTEDOPERATION_CLSNOTALLOWED = "UnsupportedOperation.ClsNotAllowed"

@@ -25,6 +25,12 @@ func ResourceTencentCloudTeoZone() *schema.Resource {
 			State: schema.ImportStatePassthrough,
 		},
 		Schema: map[string]*schema.Schema{
+			"zone_id": {
+				Type:        schema.TypeString,
+				Computed:    true,
+				Description: "Site ID.",
+			},
+
 			"zone_name": {
 				Type:        schema.TypeString,
 				Required:    true,
@@ -35,7 +41,7 @@ func ResourceTencentCloudTeoZone() *schema.Resource {
 			"type": {
 				Type:        schema.TypeString,
 				Required:    true,
-				Description: "Site access type. The value of this parameter is as follows, and the default is partial if not filled in:partial: CNAME access; full: NS access; noDomainAccess: No domain access.",
+				Description: "Site Access Type. The possible values for this parameter are as follows; if left unspecified, the default value is `partial`:\n\n- `partial`: CNAME Access;\n- `full`: NS Access;\n- `noDomainAccess`: No-Domain Access;\n- `dnsPodAccess`: DNSPod Managed Access (this mode requires your domain to already be hosted on DNSPod);\n- `ai`: Edge Inference Access.",
 			},
 
 			"alias_zone_name": {
@@ -241,6 +247,10 @@ func resourceTencentCloudTeoZoneRead(d *schema.ResourceData, meta interface{}) e
 	}
 	if respData.ZoneName != nil {
 		_ = d.Set("zone_name", respData.ZoneName)
+	}
+
+	if respData.ZoneId != nil {
+		_ = d.Set("zone_id", respData.ZoneId)
 	}
 
 	if respData.NameServers != nil {

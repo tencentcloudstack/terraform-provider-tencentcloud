@@ -1,4 +1,4 @@
-// Copyright (c) 2017-2018 THL A29 Limited, a Tencent company. All Rights Reserved.
+// Copyright (c) 2017-2025 Tencent. All Rights Reserved.
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -19,6 +19,9 @@ const (
 
 	// CAM签名/鉴权错误。
 	AUTHFAILURE = "AuthFailure"
+
+	// 请求未授权。请参考 [CAM](https://cloud.tencent.com/document/product/598) 文档对鉴权的说明。
+	AUTHFAILURE_UNAUTHORIZEDOPERATION = "AuthFailure.UnauthorizedOperation"
 
 	// DryRun 操作，代表请求将会是成功的，只是多传了 DryRun 参数。
 	DRYRUNOPERATION = "DryRunOperation"
@@ -50,6 +53,15 @@ const (
 	// 免费证书申请1小时内不允许删除。
 	FAILEDOPERATION_CANNOTBEDELETEDWITHINHOUR = "FailedOperation.CannotBeDeletedWithinHour"
 
+	// 导播台绑定了预付费套餐包。
+	FAILEDOPERATION_CASTERBINDED = "FailedOperation.CasterBinded"
+
+	// 导播台处于过期状态。
+	FAILEDOPERATION_CASTEREXPIRED = "FailedOperation.CasterExpired"
+
+	// 导播台不存在。
+	FAILEDOPERATION_CASTERNOTFOUND = "FailedOperation.CasterNotFound"
+
 	// 证书已存在。
 	FAILEDOPERATION_CERTIFICATEEXISTS = "FailedOperation.CertificateExists"
 
@@ -79,6 +91,12 @@ const (
 
 	// Cos 角色不存在，请前往 控制台 -> 功能配置 -> 直播截图&鉴黄 页面进行授权。
 	FAILEDOPERATION_COSROLENOTEXISTS = "FailedOperation.CosRoleNotExists"
+
+	// 创建AIGC任务失败
+	FAILEDOPERATION_CREATEAIGCTASKFAILED = "FailedOperation.CreateAIGCTaskFailed"
+
+	// 创建/更新导播台主监、预监任务失败，可能是并发操作了同一个主监或预监任务。
+	FAILEDOPERATION_CREATECASTERTASKFAILED = "FailedOperation.CreateCasterTaskFailed"
 
 	// 数据库访问异常。
 	FAILEDOPERATION_DATABASENOTACCESSIBLE = "FailedOperation.DatabaseNotAccessible"
@@ -116,8 +134,29 @@ const (
 	// 域名数量超过限制(100个）。
 	FAILEDOPERATION_HOSTOUTLIMIT = "FailedOperation.HostOutLimit"
 
+	// 输入已经存在。
+	FAILEDOPERATION_INPUTALREADYEXIST = "FailedOperation.InputAlreadyExist"
+
+	// 输入源不活跃。
+	FAILEDOPERATION_INPUTISNOTACTIVE = "FailedOperation.InputIsNotActive"
+
+	// 输入不存在。
+	FAILEDOPERATION_INPUTNOTEXIST = "FailedOperation.InputNotExist"
+
 	// 禁止监播c流。
 	FAILEDOPERATION_INPUTSTREAMMIXTYPENOTACCESSIBLE = "FailedOperation.InputStreamMixTypeNotAccessible"
+
+	// 输入在自动导播中被使用，不允许修改或删除
+	FAILEDOPERATION_INPUTUSEDINAUTOCAST = "FailedOperation.InputUsedInAutoCast"
+
+	// 输入在布局中被使用。
+	FAILEDOPERATION_INPUTUSEDINLAYOUT = "FailedOperation.InputUsedInLayout"
+
+	// 输入源在节目 (pgm) 中正在使用。
+	FAILEDOPERATION_INPUTUSEDINPGM = "FailedOperation.InputUsedInPgm"
+
+	// 输入源在预监 (pvw) 中正在使用。
+	FAILEDOPERATION_INPUTUSEDINPVW = "FailedOperation.InputUsedInPvw"
 
 	// 证书状态不正确。
 	FAILEDOPERATION_INVALIDCERTIFICATESTATUSCODE = "FailedOperation.InvalidCertificateStatusCode"
@@ -134,6 +173,39 @@ const (
 	// 计费平台返回余额不足。
 	FAILEDOPERATION_JIFEINOENOUGHFUND = "FailedOperation.JiFeiNoEnoughFund"
 
+	// 布局已经存在。
+	FAILEDOPERATION_LAYOUTALREADYEXIST = "FailedOperation.LayoutAlreadyExist"
+
+	// 修改的布局不存在。
+	FAILEDOPERATION_LAYOUTNOTEXIST = "FailedOperation.LayoutNotExist"
+
+	// 布局在自动导播中被使用，不允许修改或删除。
+	FAILEDOPERATION_LAYOUTUSEDINAUTOCAST = "FailedOperation.LayoutUsedInAutoCast"
+
+	// 布局正在节目 (pgm) 中使用。
+	FAILEDOPERATION_LAYOUTUSEDINPGM = "FailedOperation.LayoutUsedInPgm"
+
+	// 布局正在预监 (pvw) 中使用。
+	FAILEDOPERATION_LAYOUTUSEDINPVW = "FailedOperation.LayoutUsedInPvw"
+
+	// 新增的水印已经存在。
+	FAILEDOPERATION_MARKPICALREADYEXIST = "FailedOperation.MarkPicAlreadyExist"
+
+	// 修改的水印不存在。
+	FAILEDOPERATION_MARKPICNOTEXIST = "FailedOperation.MarkPicNotExist"
+
+	// 水印在自动导播中被使用，不允许删除。
+	FAILEDOPERATION_MARKPICUSEDINAUTOCAST = "FailedOperation.MarkPicUsedInAutoCast"
+
+	// 新增水印下标已存在。
+	FAILEDOPERATION_MARKWORDALREADYEXIST = "FailedOperation.MarkWordAlreadyExist"
+
+	// 修改的字幕不存在。
+	FAILEDOPERATION_MARKWORDNOTEXIST = "FailedOperation.MarkWordNotExist"
+
+	// 文本字幕在自动导播中被使用，不允许删除。
+	FAILEDOPERATION_MARKWORDUSEDINAUTOCAST = "FailedOperation.MarkWordUsedInAutoCast"
+
 	// 监播任务处于启动状态。
 	FAILEDOPERATION_MONITORISACTIVE = "FailedOperation.MonitorIsActive"
 
@@ -146,6 +218,15 @@ const (
 	// 当前 CA 机构访问繁忙，请稍后重试。
 	FAILEDOPERATION_NETWORKERROR = "FailedOperation.NetworkError"
 
+	// 未设置备播流
+	FAILEDOPERATION_NOBACKUPINPUT = "FailedOperation.NoBackupInput"
+
+	// 直播未配置推流或播放域名
+	FAILEDOPERATION_NOLVBPUSHORPLAYDOMAIN = "FailedOperation.NoLVBPushOrPlayDomain"
+
+	// 无运行中的PGM
+	FAILEDOPERATION_NOPGMRUNNING = "FailedOperation.NoPgmRunning"
+
 	// 您没有该项目的操作权限。
 	FAILEDOPERATION_NOPROJECTPERMISSION = "FailedOperation.NoProjectPermission"
 
@@ -155,11 +236,23 @@ const (
 	// 找不到记录。
 	FAILEDOPERATION_NOTFOUND = "FailedOperation.NotFound"
 
+	// 账户被停服。
+	FAILEDOPERATION_OUTOFSERVICE = "FailedOperation.OutOfService"
+
+	// 新增的输出已经存在。
+	FAILEDOPERATION_OUTPUTALREADYEXIST = "FailedOperation.OutputAlreadyExist"
+
+	// 修改的输出不存在。
+	FAILEDOPERATION_OUTPUTISNOTEXIST = "FailedOperation.OutputIsNotExist"
+
 	// 父域名已添加。
 	FAILEDOPERATION_PARENTDOMAINADDED = "FailedOperation.ParentDomainAdded"
 
 	// 启动混流失败。
 	FAILEDOPERATION_PROCESSMIXERROR = "FailedOperation.ProcessMixError"
+
+	// 查询AIGC任务失败
+	FAILEDOPERATION_QUERYAIGCTASKFAILED = "FailedOperation.QueryAIGCTaskFailed"
 
 	// 查询 upload 信息失败。
 	FAILEDOPERATION_QUERYUPLOADINFOFAILED = "FailedOperation.QueryUploadInfoFailed"
@@ -170,14 +263,29 @@ const (
 	// 输入关联的运行中的监播任务超出限制。
 	FAILEDOPERATION_RELATEDRUNNINGMONITORLIMITEXCEEDED = "FailedOperation.RelatedRunningMonitorLimitExceeded"
 
+	// 释放导播台失败。
+	FAILEDOPERATION_RELEASECASTERFAILED = "FailedOperation.ReleaseCasterFailed"
+
+	// 启动时后台资源不足。
+	FAILEDOPERATION_RESOURCENOTENOUGH = "FailedOperation.ResourceNotEnough"
+
 	// 规则已经存在。
 	FAILEDOPERATION_RULEALREADYEXIST = "FailedOperation.RuleAlreadyExist"
 
 	// 用户没有有效的流量套餐包。
 	FAILEDOPERATION_SDKNOPACKAGE = "FailedOperation.SdkNoPackage"
 
+	// 启动拉流失败。
+	FAILEDOPERATION_STARTPULLFAILED = "FailedOperation.StartPullFailed"
+
 	// 启动监播任务失败。
 	FAILEDOPERATION_STARTTASKFAILED = "FailedOperation.StartTaskFailed"
+
+	// 停止导播台主监、预监任务失败，可能是在同一时间操作了同一个导播台任务（如同时启动和停止）
+	FAILEDOPERATION_STOPCASTERTASKFAILED = "FailedOperation.StopCasterTaskFailed"
+
+	// 停止拉流失败。
+	FAILEDOPERATION_STOPPULLFAILED = "FailedOperation.StopPullFailed"
 
 	// 停止监播任务失败。
 	FAILEDOPERATION_STOPTASKFAILED = "FailedOperation.StopTaskFailed"
@@ -190,6 +298,9 @@ const (
 
 	// 解绑Tag失败，请尝试手动解绑。
 	FAILEDOPERATION_TAGUNBINDERROR = "FailedOperation.TagUnbindError"
+
+	// 输入条数超出限制。
+	FAILEDOPERATION_TOOMUCHINPUT = "FailedOperation.TooMuchInput"
 
 	// 内部错误。
 	INTERNALERROR = "InternalError"
@@ -449,11 +560,17 @@ const (
 	// 水印 ID 未设置。
 	INVALIDPARAMETER_INVALIDPICTUREID = "InvalidParameter.InvalidPictureID"
 
+	// 非法协议类型。
+	INVALIDPARAMETER_INVALIDPROTOCOL = "InvalidParameter.InvalidProtocol"
+
 	// 非法的圆角矩形圆角半径。
 	INVALIDPARAMETER_INVALIDROUNDRECTRADIUS = "InvalidParameter.InvalidRoundRectRadius"
 
 	// 源地址不规范。
 	INVALIDPARAMETER_INVALIDSOURCEURL = "InvalidParameter.InvalidSourceUrl"
+
+	// TaskId非法
+	INVALIDPARAMETER_INVALIDTASKID = "InvalidParameter.InvalidTaskId"
 
 	// 任务时间超出限制。
 	INVALIDPARAMETER_INVALIDTASKTIME = "InvalidParameter.InvalidTaskTime"
@@ -461,11 +578,17 @@ const (
 	// 目标地址不规范。
 	INVALIDPARAMETER_INVALIDTOURL = "InvalidParameter.InvalidToUrl"
 
+	// url非法。
+	INVALIDPARAMETER_INVALIDURL = "InvalidParameter.InvalidUrl"
+
 	// 错误的VodFileName。
 	INVALIDPARAMETER_INVALIDVODFILENAME = "InvalidParameter.InvalidVodFileName"
 
 	// 水印参数有误。
 	INVALIDPARAMETER_INVALIDWATERMARK = "InvalidParameter.InvalidWatermark"
+
+	// 匹配规则仅支持音视频格式后缀。
+	INVALIDPARAMETER_MATCHRULEONLYSUPPORTNORMALSUFFIX = "InvalidParameter.MatchRuleOnlySupportNormalSuffix"
 
 	// 当月不允许添加已删除的小程序域名。
 	INVALIDPARAMETER_MPHOSTDELETE = "InvalidParameter.MpHostDelete"
@@ -530,6 +653,9 @@ const (
 	// 资源不存在。
 	RESOURCENOTFOUND = "ResourceNotFound"
 
+	// 导播台不存在。
+	RESOURCENOTFOUND_CASTERNOTEXISTS = "ResourceNotFound.CasterNotExists"
+
 	// 日志下载 URL 不存在。
 	RESOURCENOTFOUND_CDNLOGEMPTY = "ResourceNotFound.CdnLogEmpty"
 
@@ -562,6 +688,9 @@ const (
 
 	// 用户不支持此接口。
 	RESOURCENOTFOUND_INVALIDUSER = "ResourceNotFound.InvalidUser"
+
+	// 预付费客户，未绑定套餐包
+	RESOURCENOTFOUND_NOTBINDPACKAGE = "ResourceNotFound.NotBindPackage"
 
 	// 播放域名不存在。
 	RESOURCENOTFOUND_PLAYDOMAINNORECORD = "ResourceNotFound.PlayDomainNoRecord"

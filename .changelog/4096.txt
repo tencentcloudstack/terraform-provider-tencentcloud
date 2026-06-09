@@ -1,0 +1,3 @@
+```release-note:enhancement
+resource/tencentcloud_cls_ckafka_consumer: support `json_type`
+```

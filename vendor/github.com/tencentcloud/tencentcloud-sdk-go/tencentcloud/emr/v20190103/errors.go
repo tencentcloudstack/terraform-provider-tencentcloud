@@ -1,4 +1,4 @@
-// Copyright (c) 2017-2018 THL A29 Limited, a Tencent company. All Rights Reserved.
+// Copyright (c) 2017-2025 Tencent. All Rights Reserved.
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -17,11 +17,17 @@ package v20190103
 const (
 	// 此产品的特有错误码
 
+	// CAM签名/鉴权错误。
+	AUTHFAILURE = "AuthFailure"
+
 	// 操作失败。
 	FAILEDOPERATION = "FailedOperation"
 
 	// 操作失败。
 	FAILEDOPERATION_CHECKIFSUPPORTPODSTRETCH = "FailedOperation.CheckIfSupportPodStretch"
+
+	// DB异常
+	FAILEDOPERATION_DBEXCEPTION = "FailedOperation.DBException"
 
 	// 拉取资源标签失败
 	FAILEDOPERATION_DESCRIBERESOURCETAGSFAILED = "FailedOperation.DescribeResourceTagsFailed"
@@ -44,14 +50,26 @@ const (
 	// 调去询价中心服务失败
 	FAILEDOPERATION_GETTRADESERVERFAILED = "FailedOperation.GetTradeServerFailed"
 
+	// 余额不足
+	FAILEDOPERATION_INSUFFICIENTACCOUNTBALANCE = "FailedOperation.InsufficientAccountBalance"
+
 	// 不允许更多的扩缩容规则。
 	FAILEDOPERATION_MORESTRATEGYNOTALLOWED = "FailedOperation.MoreStrategyNotAllowed"
+
+	// Namespace中有用户手动拉起的pod
+	FAILEDOPERATION_NAMESPACEHASUSERCUSTOMPODS = "FailedOperation.NamespaceHasUserCustomPods"
+
+	// 未授权操作。
+	FAILEDOPERATION_NOTAUTHENTICATED = "FailedOperation.NotAuthenticated"
 
 	// 操作失败，不支持pod。
 	FAILEDOPERATION_NOTSUPPORTPOD = "FailedOperation.NotSupportPod"
 
 	// 操作失败。
 	FAILEDOPERATION_REFUNDCVMFAILED = "FailedOperation.RefundCvmFailed"
+
+	// 操作失败。
+	FAILEDOPERATION_SPECDELETEDENYFORAUTOSCALESTRATEGIES = "FailedOperation.SpecDeleteDenyForAutoScaleStrategies"
 
 	// 内部错误。
 	INTERNALERROR = "InternalError"
@@ -131,6 +149,9 @@ const (
 	// 参数错误。
 	INVALIDPARAMETER_APPIDRESOURCENOTMATCH = "InvalidParameter.AppIdResourceNotMatch"
 
+	// CpuType参数无效。
+	INVALIDPARAMETER_CPUTYPE = "InvalidParameter.CpuType"
+
 	// 展示策略错误。
 	INVALIDPARAMETER_DISPLAYSTRATEGYNOTMATCH = "InvalidParameter.DisplayStrategyNotMatch"
 
@@ -185,6 +206,9 @@ const (
 	// 至少需要一个触发条件。
 	INVALIDPARAMETER_INVALIDCONDITIONNUM = "InvalidParameter.InvalidConditionNum"
 
+	// 无效的下发配置文件类型。
+	INVALIDPARAMETER_INVALIDCONFIGTYPE = "InvalidParameter.InvalidConfigType"
+
 	// Core节点数量无效。
 	INVALIDPARAMETER_INVALIDCORECOUNT = "InvalidParameter.InvalidCoreCount"
 
@@ -218,17 +242,32 @@ const (
 	// 参数错误。
 	INVALIDPARAMETER_INVALIDDISKTYPE = "InvalidParameter.InvalidDiskType"
 
+	// 下载对象参数值无效。
+	INVALIDPARAMETER_INVALIDDOWNLOADOBJ = "InvalidParameter.InvalidDownloadObj"
+
+	// 无效的DynamicInstanceType参数。
+	INVALIDPARAMETER_INVALIDDYNAMICINSTANCETYPE = "InvalidParameter.InvalidDynamicInstanceType"
+
 	// 无效的EKS实例。
 	INVALIDPARAMETER_INVALIDEKSINSTANCE = "InvalidParameter.InvalidEksInstance"
 
+	// 指定的将导出配置文件参数有误。
+	INVALIDPARAMETER_INVALIDEXPORTCONFCONTEXTS = "InvalidParameter.InvalidExportConfContexts"
+
 	// CustomConfig参数值无效。
 	INVALIDPARAMETER_INVALIDEXTENDFIELD = "InvalidParameter.InvalidExtendField"
+
+	// NameServiceName参数值无效。
+	INVALIDPARAMETER_INVALIDEXTENDNAMESERVICE = "InvalidParameter.InvalidExtendNameService"
 
 	// 无效组件依赖集群vpc。
 	INVALIDPARAMETER_INVALIDEXTERNALSERVICEVPCID = "InvalidParameter.InvalidExternalServiceVpcId"
 
 	// 无效的任务失败处理策略。
 	INVALIDPARAMETER_INVALIDFAILUREPOLICY = "InvalidParameter.InvalidFailurePolicy"
+
+	// 文件路径参数值无效。
+	INVALIDPARAMETER_INVALIDFILEPATH = "InvalidParameter.InvalidFilePath"
 
 	// 无效过滤参数。
 	INVALIDPARAMETER_INVALIDFILTERKEY = "InvalidParameter.InvalidFilterKey"
@@ -248,11 +287,17 @@ const (
 	// 无效的机型。
 	INVALIDPARAMETER_INVALIDINSTANCETYPE = "InvalidParameter.InvalidInstanceType"
 
+	// 指定的销毁IP无效。
+	INVALIDPARAMETER_INVALIDIPLIST = "InvalidParameter.InvalidIpList"
+
 	// 无效的流程任务。
 	INVALIDPARAMETER_INVALIDJOBFLOW = "InvalidParameter.InvalidJobFlow"
 
 	// 无效的任务步骤类型。
 	INVALIDPARAMETER_INVALIDJOBTYPE = "InvalidParameter.InvalidJobType"
+
+	// 不合法的LoadBalancerId
+	INVALIDPARAMETER_INVALIDLOADBALANCER = "InvalidParameter.InvalidLoadBalancer"
 
 	// 无效的登录设置。
 	INVALIDPARAMETER_INVALIDLOGINSETTING = "InvalidParameter.InvalidLoginSetting"
@@ -290,6 +335,9 @@ const (
 	// 无效的付费类型。
 	INVALIDPARAMETER_INVALIDPAYMODE = "InvalidParameter.InvalidPaymode"
 
+	// PodNum参数无效。
+	INVALIDPARAMETER_INVALIDPODNUM = "InvalidParameter.InvalidPodNum"
+
 	// 无效的引导操作脚本。
 	INVALIDPARAMETER_INVALIDPREEXECUTEDFILE = "InvalidParameter.InvalidPreExecutedFile"
 
@@ -308,8 +356,14 @@ const (
 	// 无效的项目ID。
 	INVALIDPARAMETER_INVALIDPROJECTID = "InvalidParameter.InvalidProjectId"
 
+	// Region参数值无效。
+	INVALIDPARAMETER_INVALIDREGION = "InvalidParameter.InvalidRegion"
+
 	// 不合法自动续费标识。
 	INVALIDPARAMETER_INVALIDRENEWFLAG = "InvalidParameter.InvalidRenewFlag"
+
+	// ResType值无效。
+	INVALIDPARAMETER_INVALIDRESTYPE = "InvalidParameter.InvalidResType"
 
 	// 无效资源ID。
 	INVALIDPARAMETER_INVALIDRESOURCEID = "InvalidParameter.InvalidResourceId"
@@ -319,6 +373,9 @@ const (
 
 	// 无效的资源规格。
 	INVALIDPARAMETER_INVALIDRESOURCESPEC = "InvalidParameter.InvalidResourceSpec"
+
+	// 扩容Router节点数量无效。
+	INVALIDPARAMETER_INVALIDROUTERCOUNT = "InvalidParameter.InvalidRouterCount"
 
 	// 无效的扩缩容动作。
 	INVALIDPARAMETER_INVALIDSCALEACTION = "InvalidParameter.InvalidScaleAction"
@@ -405,16 +462,31 @@ const (
 	INVALIDPARAMETER_INVALIDUNIFYMETA = "InvalidParameter.InvalidUnifyMeta"
 
 	// 参数错误。
+	INVALIDPARAMETER_INVALIDVENDORTYPE = "InvalidParameter.InvalidVendorType"
+
+	// 参数错误。
 	INVALIDPARAMETER_INVALIDVOLUMETYPE = "InvalidParameter.InvalidVolumeType"
 
 	// 无效的私有网络ID。
 	INVALIDPARAMETER_INVALIDVPCID = "InvalidParameter.InvalidVpcId"
+
+	// cosFileUri中的WriteFile参数值无效。
+	INVALIDPARAMETER_INVALIDWRITEFILE = "InvalidParameter.InvalidWriteFile"
 
 	// 无效的可用区。
 	INVALIDPARAMETER_INVALIDZONE = "InvalidParameter.InvalidZone"
 
 	// 不合法的支持Kerberos标识。
 	INVALIDPARAMETER_KERBEROSSUPPORT = "InvalidParameter.KerberosSupport"
+
+	// 参数错误。
+	INVALIDPARAMETER_LESSCOMMONCOUNT = "InvalidParameter.LessCommonCount"
+
+	// 参数错误。
+	INVALIDPARAMETER_LESSTASKCOUNT = "InvalidParameter.LessTaskCount"
+
+	// 超过cvm实例最大限制个数。
+	INVALIDPARAMETER_MOREMAXLIMITNUM = "InvalidParameter.MoreMaxlimitNum"
 
 	// 无效参数，不满足必须组件。
 	INVALIDPARAMETER_NOTCONTAINMUSTSELECTSOFTWARE = "InvalidParameter.NotContainMustSelectSoftware"
@@ -434,6 +506,15 @@ const (
 	// 扩缩容规则名重复。
 	INVALIDPARAMETER_REPEATEDSTRATEGYNAME = "InvalidParameter.RepeatedStrategyName"
 
+	// ResourceProviderType参数无效。
+	INVALIDPARAMETER_RESOURCEPROVIDERTYPE = "InvalidParameter.ResourceProviderType"
+
+	// 该服务不支持重启。
+	INVALIDPARAMETER_RESTARTSERVICEUNSUPPORTED = "InvalidParameter.RestartServiceUnsupported"
+
+	// 存在无效的产品组件。
+	INVALIDPARAMETER_SOFTWARENOTINPRODUCR = "InvalidParameter.SoftwareNotInProducr"
+
 	// 存在无效的产品组件。
 	INVALIDPARAMETER_SOFTWARENOTINPRODUCT = "InvalidParameter.SoftwareNotInProduct"
 
@@ -443,6 +524,9 @@ const (
 	// 角色未授权。
 	INVALIDPARAMETER_UNGRANTEDROLE = "InvalidParameter.UngrantedRole"
 
+	// 参数错误。
+	INVALIDPARAMETER_UNSATISFIEDSOFTDEPENDECY = "InvalidParameter.UnsatisfiedSoftDependecy"
+
 	// 可用区与资源不匹配。
 	INVALIDPARAMETER_ZONERESOURCENOTMATCH = "InvalidParameter.ZoneResourceNotMatch"
 
@@ -451,6 +535,9 @@ const (
 
 	// 无效的Tke集群ID，或Tke集群不符合条件。
 	INVALIDPARAMETERVALUE_INVALIDTKEINSTANCE = "InvalidParameterValue.InvalidTkeInstance"
+
+	// 超过配额限制。
+	LIMITEXCEEDED = "LimitExceeded"
 
 	// 引导脚本数量超过限制。
 	LIMITEXCEEDED_BOOTSTRAPACTIONSNUMLIMITEXCEEDED = "LimitExceeded.BootstrapActionsNumLimitExceeded"
@@ -464,11 +551,26 @@ const (
 	// Pod 内存请求数量超过集群限制。
 	LIMITEXCEEDED_PODMEMORYLIMITEXCEEDEDAVAILABLEMEMORY = "LimitExceeded.PodMemoryLimitExceededAvailableMemory"
 
+	// 请求已经积压并超过了限制
+	LIMITEXCEEDED_REQUESTBACKLOGEXCEEDSLIMIT = "LimitExceeded.RequestBacklogExceedsLimit"
+
 	// 安全组数量超过限制。
 	LIMITEXCEEDED_SECURITYGROUPNUMLIMITEXCEEDED = "LimitExceeded.SecurityGroupNumLimitExceeded"
 
+	// 用户数量超过了限制
+	LIMITEXCEEDED_USERCOUNTEXCEEDSLIMIT = "LimitExceeded.UserCountExceedsLimit"
+
 	// 缺少参数错误。
 	MISSINGPARAMETER = "MissingParameter"
+
+	// 缺少参数错误。
+	MISSINGPARAMETER_MISSINGCORERESOURCE = "MissingParameter.MissingCoreResource"
+
+	// 操作被拒绝。
+	OPERATIONDENIED = "OperationDenied"
+
+	// 请求的次数超过了频率限制。
+	REQUESTLIMITEXCEEDED = "RequestLimitExceeded"
 
 	// 实例在流程中。
 	RESOURCEINUSE_INSTANCEINPROCESS = "ResourceInUse.InstanceInProcess"
@@ -498,10 +600,25 @@ const (
 	RESOURCENOTFOUND_INSTANCENOTFOUND = "ResourceNotFound.InstanceNotFound"
 
 	// 无法找到监控元数据。
+	RESOURCENOTFOUND_METRICSMETANOTFOUND = "ResourceNotFound.MetricsMetaNotFound"
+
+	// 该集群没有备选规格。
+	RESOURCENOTFOUND_OPTIONALSPECFOUND = "ResourceNotFound.OptionalSpecFound"
+
+	// 无法找到监控元数据。
 	RESOURCENOTFOUND_RESOURCENOTFOUND = "ResourceNotFound.ResourceNotFound"
+
+	// 无法找到服务组件配置。
+	RESOURCENOTFOUND_SERVICECONFNOTFOUND = "ResourceNotFound.ServiceConfNotFound"
 
 	// 无法找到该服务组件。
 	RESOURCENOTFOUND_SERVICEGROUPNOTFOUND = "ResourceNotFound.ServiceGroupNotFound"
+
+	// 服务节点没有找到。
+	RESOURCENOTFOUND_SERVICENODENOTFOUND = "ResourceNotFound.ServiceNodeNotFound"
+
+	// 不存在的规格。
+	RESOURCENOTFOUND_SPECNOTFOUND = "ResourceNotFound.SpecNotFound"
 
 	// 未找到相应扩缩容规则。
 	RESOURCENOTFOUND_STRATEGYNOTFOUND = "ResourceNotFound.StrategyNotFound"
@@ -517,6 +634,9 @@ const (
 
 	// 资源不可用。
 	RESOURCEUNAVAILABLE_NOTSUPPORTCLUSTERTYPE = "ResourceUnavailable.NotSupportClusterType"
+
+	// 资源不可用。
+	RESOURCEUNAVAILABLE_NOTSUPPORTNODETYPE = "ResourceUnavailable.NotSupportNodeType"
 
 	// 资源不可用。
 	RESOURCEUNAVAILABLE_NOTSUPPORTRESOURCETYPE = "ResourceUnavailable.NotSupportResourceType"
@@ -559,4 +679,7 @@ const (
 
 	// 该服务不支持此操作。
 	UNSUPPORTEDOPERATION_SERVICENOTSUPPORT = "UnsupportedOperation.ServiceNotSupport"
+
+	// 操作不支持。
+	UNSUPPORTEDOPERATION_UNSUPPORTEDDISKTYPE = "UnsupportedOperation.UnsupportedDiskType"
 )

@@ -12,6 +12,8 @@ Provides a CVM instance resource.
 
 ~> **NOTE:** When creating a prepaid CVM instance and binding a data disk, you need to explicitly set `delete_with_instance` to `false`.
 
+~> **NOTE:** When using dedicated resource pool packs, both `dedicated_resource_pack_tenancy` and `dedicated_resource_pack_ids` must be specified together. These parameters work with pre-purchased resource pool packs (resource `tencentcloud_cvm_resource_pool_packs`).
+
 Example Usage
 
 Create a general POSTPAID_BY_HOUR CVM instance
@@ -198,6 +200,78 @@ resource "tencentcloud_instance" "example" {
 
   data_disks {
     data_disk_type = "CLOUD_SSD"
+    data_disk_size = 50
+    encrypt        = false
+  }
+
+  tags = {
+    tagKey = "tagValue"
+  }
+}
+```
+
+Create a CVM instance using dedicated resource pool pack
+
+```hcl
+variable "availability_zone" {
+  default = "ap-guangzhou-4"
+}
+
+data "tencentcloud_images" "images" {
+  image_type       = ["PUBLIC_IMAGE"]
+  image_name_regex = "OpenCloudOS Server"
+}
+
+data "tencentcloud_instance_types" "types" {
+  filter {
+    name   = "instance-family"
+    values = ["S1", "S2", "S3", "S4", "S5"]
+  }
+
+  cpu_core_count   = 2
+  exclude_sold_out = true
+}
+
+// create vpc
+resource "tencentcloud_vpc" "vpc" {
+  cidr_block = "10.0.0.0/16"
+  name       = "vpc"
+}
+
+// create subnet
+resource "tencentcloud_subnet" "subnet" {
+  vpc_id            = tencentcloud_vpc.vpc.id
+  availability_zone = var.availability_zone
+  name              = "subnet"
+  cidr_block        = "10.0.1.0/24"
+}
+
+// create resource pool pack (prerequisite)
+resource "tencentcloud_cvm_resource_pool_pack" "example" {
+  zone                  = var.availability_zone
+  instance_type         = data.tencentcloud_instance_types.types.instance_types.0.instance_type
+  instance_count        = 10
+  period                = 1
+  resource_pool_pack_type = "Standard"
+}
+
+// create CVM instance using resource pool pack
+resource "tencentcloud_instance" "example" {
+  instance_name                    = "tf-example-with-pool-pack"
+  availability_zone                = var.availability_zone
+  image_id                         = data.tencentcloud_images.images.images.0.image_id
+  instance_type                    = data.tencentcloud_instance_types.types.instance_types.0.instance_type
+  system_disk_type                 = "CLOUD_PREMIUM"
+  system_disk_size                 = 50
+  hostname                         = "user"
+  project_id                       = 0
+  vpc_id                           = tencentcloud_vpc.vpc.id
+  subnet_id                        = tencentcloud_subnet.subnet.id
+  dedicated_resource_pack_tenancy  = "ResourcePool"
+  dedicated_resource_pack_ids      = [tencentcloud_cvm_resource_pool_packs.example.dedicated_resource_pack_id]
+
+  data_disks {
+    data_disk_type = "CLOUD_PREMIUM"
     data_disk_size = 50
     encrypt        = false
   }

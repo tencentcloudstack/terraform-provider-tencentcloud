@@ -15,10 +15,14 @@ import (
 
 func ResourceTencentCloudDasbBindDeviceResource() *schema.Resource {
 	return &schema.Resource{
-		Create: resourceTencentCloudDasbBindDeviceResourceCreate,
-		Read:   resourceTencentCloudDasbBindDeviceResourceRead,
-		Update: resourceTencentCloudDasbBindDeviceResourceUpdate,
-		Delete: resourceTencentCloudDasbBindDeviceResourceDelete,
+		DeprecationMessage: "This resource has been deprecated in Terraform TencentCloud provider version 1.82.101. Please use `tencentcloud_bh_bind_device_resource` instead.",
+		Create:             resourceTencentCloudDasbBindDeviceResourceCreate,
+		Read:               resourceTencentCloudDasbBindDeviceResourceRead,
+		Update:             resourceTencentCloudDasbBindDeviceResourceUpdate,
+		Delete:             resourceTencentCloudDasbBindDeviceResourceDelete,
+		Importer: &schema.ResourceImporter{
+			State: schema.ImportStatePassthrough,
+		},
 
 		Schema: map[string]*schema.Schema{
 			"device_id_set": {
@@ -108,8 +112,8 @@ func resourceTencentCloudDasbBindDeviceResourceRead(d *schema.ResourceData, meta
 	}
 
 	if deviceSets == nil {
+		log.Printf("[WARN]%s resource `tencentcloud_dasb_bind_device_resource` [%s] not found, please check if it has been deleted.\n", logId, d.Id())
 		d.SetId("")
-		log.Printf("[WARN]%s resource `DeviceResource` [%s] not found, please check if it has been deleted.\n", logId, d.Id())
 		return nil
 	}
 

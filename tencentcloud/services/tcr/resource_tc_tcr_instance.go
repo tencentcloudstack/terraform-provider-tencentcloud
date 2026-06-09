@@ -130,6 +130,26 @@ func ResourceTencentCloudTcrInstance() *schema.Resource {
 				ValidateFunc: tccommon.ValidateIntegerInRange(1, 3),
 				Description:  "Auto renewal flag. 1: manual renewal, 2: automatic renewal, 3: no renewal and no notification. Must set when registry_charge_type is prepaid.",
 			},
+			"deletion_protection": {
+				Type:        schema.TypeBool,
+				Optional:    true,
+				Computed:    true,
+				Description: "Whether to enable Instance Deletion Protection.",
+			},
+			"enable_cos_maz": {
+				Type:        schema.TypeBool,
+				Optional:    true,
+				Computed:    true,
+				ForceNew:    true,
+				Description: "Whether to enable COS bucket multi-AZ feature. Default is `false`.",
+			},
+			"enable_cos_versioning": {
+				Type:        schema.TypeBool,
+				Optional:    true,
+				Computed:    true,
+				ForceNew:    true,
+				Description: "Whether to enable COS bucket versioning. Advanced Edition Instances: Default is `true` (versioning enabled); Standard / Basic Edition Instances: Default is `false` (disabled).",
+			},
 			//Computed values
 			"status": {
 				Type:        schema.TypeString,
@@ -215,6 +235,15 @@ func resourceTencentCloudTcrInstanceCreate(d *schema.ResourceData, meta interfac
 	}
 	if v, ok := d.GetOk("instance_charge_type_prepaid_renew_flag"); ok {
 		params["instance_charge_type_prepaid_renew_flag"] = v.(int)
+	}
+	if v, ok := d.GetOkExists("deletion_protection"); ok {
+		params["deletion_protection"] = v.(bool)
+	}
+	if v, ok := d.GetOkExists("enable_cos_maz"); ok {
+		params["enable_cos_maz"] = v.(bool)
+	}
+	if v, ok := d.GetOkExists("enable_cos_versioning"); ok {
+		params["enable_cos_versioning"] = v.(bool)
 	}
 
 	outErr = resource.Retry(tccommon.WriteRetryTimeout, func() *resource.RetryError {
@@ -385,6 +414,15 @@ func resourceTencentCloudTcrInstanceRead(d *schema.ResourceData, meta interface{
 		_ = d.Set("expired_at", instance.ExpiredAt)
 
 	}
+	if instance.DeletionProtection != nil {
+		_ = d.Set("deletion_protection", instance.DeletionProtection)
+	}
+	if instance.EnableCosMAZ != nil {
+		_ = d.Set("enable_cos_maz", instance.EnableCosMAZ)
+	}
+	if instance.EnableCosVersioning != nil {
+		_ = d.Set("enable_cos_versioning", instance.EnableCosVersioning)
+	}
 
 	request := tcr.NewDescribeSecurityPoliciesRequest()
 	request.RegistryId = helper.String(d.Id())
@@ -496,11 +534,9 @@ func resourceTencentCloudTcrInstanceUpdate(d *schema.ResourceData, meta interfac
 		if outErr != nil {
 			return outErr
 		}
-	}
 
-	if d.HasChange("security_policy") {
+		// Waiting for External EndPoint status changed
 		var err error
-		// Waiting for External EndPoint opened
 		err = resource.Retry(5*tccommon.ReadRetryTimeout, func() *resource.RetryError {
 			var (
 				status string
@@ -510,21 +546,31 @@ func resourceTencentCloudTcrInstanceUpdate(d *schema.ResourceData, meta interfac
 				return resource.NonRetryableError(fmt.Errorf("an error occurred during DescribeExternalEndpointStatus: %s", err.Error()))
 			}
 
-			if status == "Opened" {
-				return nil
+			if operation {
+				if status == "Opened" {
+					return nil
+				}
+				if status == "Opening" {
+					return resource.RetryableError(fmt.Errorf("external endpoint status is `%s`, retrying", status))
+				}
+				return resource.NonRetryableError(fmt.Errorf("unexpected external endpoint status: `%s`", status))
+			} else {
+				if status == "Closed" {
+					return nil
+				}
+				if status == "Deleting" {
+					return resource.RetryableError(fmt.Errorf("external endpoint status is `%s`, retrying", status))
+				}
+				return resource.NonRetryableError(fmt.Errorf("unexpected external endpoint status: `%s`", status))
 			}
-
-			if status == "Opening" {
-				return resource.RetryableError(fmt.Errorf("external endpoint status is `%s`, retrying", status))
-			}
-
-			return resource.NonRetryableError(fmt.Errorf("unexpected external endpoint status: `%s`", status))
 		})
 
 		if err != nil {
 			return err
 		}
+	}
 
+	if d.HasChange("security_policy") {
 		o, n := d.GetChange("security_policy")
 		os := o.(*schema.Set)
 		ns := n.(*schema.Set)
@@ -565,6 +611,7 @@ func resourceTencentCloudTcrInstanceUpdate(d *schema.ResourceData, meta interfac
 
 	if d.HasChange("instance_type") {
 		instanceType := d.Get("instance_type").(string)
+
 		if err := tcrService.ModifyInstance(ctx, d.Id(), instanceType); err != nil {
 			return err
 		}
@@ -580,6 +627,17 @@ func resourceTencentCloudTcrInstanceUpdate(d *schema.ResourceData, meta interfac
 			return nil
 		})
 		if err != nil {
+			return err
+		}
+	}
+
+	if d.HasChange("deletion_protection") {
+		var deletionProtection bool
+		if v, ok := d.GetOkExists("deletion_protection"); ok {
+			deletionProtection = v.(bool)
+		}
+
+		if err := tcrService.ModifyInstanceDP(ctx, d.Id(), deletionProtection); err != nil {
 			return err
 		}
 	}
@@ -659,7 +717,6 @@ func resourceTencentCloudTcrInstanceDelete(d *schema.ResourceData, meta interfac
 	repRequest := tcr.NewDescribeReplicationInstancesRequest()
 	repRequest.RegistryId = &instanceId
 	replicas, outErr := tcrService.DescribeReplicationInstances(ctx, repRequest)
-
 	if outErr != nil {
 		return outErr
 	}
@@ -677,6 +734,32 @@ func resourceTencentCloudTcrInstanceDelete(d *schema.ResourceData, meta interfac
 			}
 			return nil
 		})
+	}
+
+	// Delete namespaces under the instance before deleting the instance itself.
+	// Query all namespaces via DescribeNamespaces, then iterate to delete each one via DeleteNamespace.
+	namespaces, outErr := tcrService.DescribeTCRNameSpaces(ctx, instanceId, "")
+	if outErr != nil {
+		return outErr
+	}
+
+	for i := range namespaces {
+		ns := namespaces[i]
+		if ns == nil || ns.Name == nil {
+			continue
+		}
+		nsName := *ns.Name
+		err := resource.Retry(tccommon.WriteRetryTimeout, func() *resource.RetryError {
+			e := tcrService.DeleteTCRNameSpace(ctx, instanceId, nsName)
+			if e != nil {
+				return tccommon.RetryError(e, tcr.INTERNALERROR_ERRORCONFLICT)
+			}
+			return nil
+		})
+		if err != nil {
+			log.Printf("[CRITAL]%s delete tcr namespace [%s] under instance [%s] failed, reason:%+v", logId, nsName, instanceId, err)
+			return err
+		}
 	}
 
 	outErr = tcrService.DeleteTCRInstance(ctx, instanceId, deleteBucket)

@@ -1,0 +1,4 @@
+```release-note:enhancement
+resource/tencentcloud_redis_instance: support change `charge_type`
+
+```

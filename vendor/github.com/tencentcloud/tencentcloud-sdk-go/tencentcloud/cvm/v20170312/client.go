@@ -102,6 +102,7 @@ func (c *Client) AllocateHostsWithContext(ctx context.Context, request *Allocate
     if request == nil {
         request = NewAllocateHostsRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "cvm", APIVersion, "AllocateHosts")
     
     if c.GetCredential() == nil {
         return nil, errors.New("AllocateHosts require credential")
@@ -239,6 +240,7 @@ func (c *Client) AssociateInstancesKeyPairsWithContext(ctx context.Context, requ
     if request == nil {
         request = NewAssociateInstancesKeyPairsRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "cvm", APIVersion, "AssociateInstancesKeyPairs")
     
     if c.GetCredential() == nil {
         return nil, errors.New("AssociateInstancesKeyPairs require credential")
@@ -273,7 +275,7 @@ func NewAssociateSecurityGroupsResponse() (response *AssociateSecurityGroupsResp
 // AssociateSecurityGroups
 // 本接口 (AssociateSecurityGroups) 用于绑定安全组到指定实例。
 //
-// * 实例操作结果可以通过调用 [DescribeInstances](https://cloud.tencent.com/document/api/213/15728#.E7.A4.BA.E4.BE.8B3-.E6.9F.A5.E8.AF.A2.E5.AE.9E.E4.BE.8B.E7.9A.84.E6.9C.80.E6.96.B0.E6.93.8D.E4.BD.9C.E6.83.85.E5.86.B5) 接口查询，如果实例的最新操作状态(LatestOperationState)为“SUCCESS”，则代表操作成功。
+// * 实例操作结果可以通过调用 [DescribeInstances](https://cloud.tencent.com/document/api/213/15728) 接口查询，如果实例的最新操作状态(LatestOperationState)为“SUCCESS”，则代表操作成功。
 //
 // <dx-alert infotype="explain" title="">
 //
@@ -304,7 +306,7 @@ func (c *Client) AssociateSecurityGroups(request *AssociateSecurityGroupsRequest
 // AssociateSecurityGroups
 // 本接口 (AssociateSecurityGroups) 用于绑定安全组到指定实例。
 //
-// * 实例操作结果可以通过调用 [DescribeInstances](https://cloud.tencent.com/document/api/213/15728#.E7.A4.BA.E4.BE.8B3-.E6.9F.A5.E8.AF.A2.E5.AE.9E.E4.BE.8B.E7.9A.84.E6.9C.80.E6.96.B0.E6.93.8D.E4.BD.9C.E6.83.85.E5.86.B5) 接口查询，如果实例的最新操作状态(LatestOperationState)为“SUCCESS”，则代表操作成功。
+// * 实例操作结果可以通过调用 [DescribeInstances](https://cloud.tencent.com/document/api/213/15728) 接口查询，如果实例的最新操作状态(LatestOperationState)为“SUCCESS”，则代表操作成功。
 //
 // <dx-alert infotype="explain" title="">
 //
@@ -332,6 +334,7 @@ func (c *Client) AssociateSecurityGroupsWithContext(ctx context.Context, request
     if request == nil {
         request = NewAssociateSecurityGroupsRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "cvm", APIVersion, "AssociateSecurityGroups")
     
     if c.GetCredential() == nil {
         return nil, errors.New("AssociateSecurityGroups require credential")
@@ -407,6 +410,7 @@ func (c *Client) ConfigureChcAssistVpcWithContext(ctx context.Context, request *
     if request == nil {
         request = NewConfigureChcAssistVpcRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "cvm", APIVersion, "ConfigureChcAssistVpc")
     
     if c.GetCredential() == nil {
         return nil, errors.New("ConfigureChcAssistVpc require credential")
@@ -478,6 +482,7 @@ func (c *Client) ConfigureChcDeployVpcWithContext(ctx context.Context, request *
     if request == nil {
         request = NewConfigureChcDeployVpcRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "cvm", APIVersion, "ConfigureChcDeployVpc")
     
     if c.GetCredential() == nil {
         return nil, errors.New("ConfigureChcDeployVpc require credential")
@@ -510,7 +515,7 @@ func NewConvertOperatingSystemsResponse() (response *ConvertOperatingSystemsResp
 }
 
 // ConvertOperatingSystems
-// 本接口(ConvertOperatingSystem)用于转换实例的操作系统，仅支持源操作系统为 CentOS 7、CentOS 8 的实例。
+// 本接口(ConvertOperatingSystems)用于转换实例的操作系统，仅支持源操作系统为 CentOS 7、CentOS 8 的实例。
 //
 // 可能返回的错误码:
 //  FAILEDOPERATION_GETINSTANCETATAGENTSTATUSFAILED = "FailedOperation.GetInstanceTATAgentStatusFailed"
@@ -531,7 +536,7 @@ func (c *Client) ConvertOperatingSystems(request *ConvertOperatingSystemsRequest
 }
 
 // ConvertOperatingSystems
-// 本接口(ConvertOperatingSystem)用于转换实例的操作系统，仅支持源操作系统为 CentOS 7、CentOS 8 的实例。
+// 本接口(ConvertOperatingSystems)用于转换实例的操作系统，仅支持源操作系统为 CentOS 7、CentOS 8 的实例。
 //
 // 可能返回的错误码:
 //  FAILEDOPERATION_GETINSTANCETATAGENTSTATUSFAILED = "FailedOperation.GetInstanceTATAgentStatusFailed"
@@ -551,6 +556,7 @@ func (c *Client) ConvertOperatingSystemsWithContext(ctx context.Context, request
     if request == nil {
         request = NewConvertOperatingSystemsRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "cvm", APIVersion, "ConvertOperatingSystems")
     
     if c.GetCredential() == nil {
         return nil, errors.New("ConvertOperatingSystems require credential")
@@ -606,6 +612,7 @@ func (c *Client) CreateDisasterRecoverGroupWithContext(ctx context.Context, requ
     if request == nil {
         request = NewCreateDisasterRecoverGroupRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "cvm", APIVersion, "CreateDisasterRecoverGroup")
     
     if c.GetCredential() == nil {
         return nil, errors.New("CreateDisasterRecoverGroup require credential")
@@ -642,6 +649,7 @@ func NewCreateHpcClusterResponse() (response *CreateHpcClusterResponse) {
 //
 // 可能返回的错误码:
 //  INVALIDPARAMETERVALUE = "InvalidParameterValue"
+//  INVALIDPARAMETERVALUE_HPCCLUSTERBUSINESSIDNOTSUPPORTED = "InvalidParameterValue.HpcClusterBusinessIdNotSupported"
 //  INVALIDZONE_MISMATCHREGION = "InvalidZone.MismatchRegion"
 //  LIMITEXCEEDED_HPCCLUSTERQUOTA = "LimitExceeded.HpcClusterQuota"
 //  UNSUPPORTEDOPERATION_INSUFFICIENTCLUSTERQUOTA = "UnsupportedOperation.InsufficientClusterQuota"
@@ -655,6 +663,7 @@ func (c *Client) CreateHpcCluster(request *CreateHpcClusterRequest) (response *C
 //
 // 可能返回的错误码:
 //  INVALIDPARAMETERVALUE = "InvalidParameterValue"
+//  INVALIDPARAMETERVALUE_HPCCLUSTERBUSINESSIDNOTSUPPORTED = "InvalidParameterValue.HpcClusterBusinessIdNotSupported"
 //  INVALIDZONE_MISMATCHREGION = "InvalidZone.MismatchRegion"
 //  LIMITEXCEEDED_HPCCLUSTERQUOTA = "LimitExceeded.HpcClusterQuota"
 //  UNSUPPORTEDOPERATION_INSUFFICIENTCLUSTERQUOTA = "UnsupportedOperation.InsufficientClusterQuota"
@@ -663,6 +672,7 @@ func (c *Client) CreateHpcClusterWithContext(ctx context.Context, request *Creat
     if request == nil {
         request = NewCreateHpcClusterRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "cvm", APIVersion, "CreateHpcCluster")
     
     if c.GetCredential() == nil {
         return nil, errors.New("CreateHpcCluster require credential")
@@ -812,6 +822,7 @@ func (c *Client) CreateImageWithContext(ctx context.Context, request *CreateImag
     if request == nil {
         request = NewCreateImageRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "cvm", APIVersion, "CreateImage")
     
     if c.GetCredential() == nil {
         return nil, errors.New("CreateImage require credential")
@@ -901,6 +912,7 @@ func (c *Client) CreateKeyPairWithContext(ctx context.Context, request *CreateKe
     if request == nil {
         request = NewCreateKeyPairRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "cvm", APIVersion, "CreateKeyPair")
     
     if c.GetCredential() == nil {
         return nil, errors.New("CreateKeyPair require credential")
@@ -1144,6 +1156,7 @@ func (c *Client) CreateLaunchTemplateWithContext(ctx context.Context, request *C
     if request == nil {
         request = NewCreateLaunchTemplateRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "cvm", APIVersion, "CreateLaunchTemplate")
     
     if c.GetCredential() == nil {
         return nil, errors.New("CreateLaunchTemplate require credential")
@@ -1347,6 +1360,7 @@ func (c *Client) CreateLaunchTemplateVersionWithContext(ctx context.Context, req
     if request == nil {
         request = NewCreateLaunchTemplateVersionRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "cvm", APIVersion, "CreateLaunchTemplateVersion")
     
     if c.GetCredential() == nil {
         return nil, errors.New("CreateLaunchTemplateVersion require credential")
@@ -1404,6 +1418,7 @@ func (c *Client) DeleteDisasterRecoverGroupsWithContext(ctx context.Context, req
     if request == nil {
         request = NewDeleteDisasterRecoverGroupsRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "cvm", APIVersion, "DeleteDisasterRecoverGroups")
     
     if c.GetCredential() == nil {
         return nil, errors.New("DeleteDisasterRecoverGroups require credential")
@@ -1455,6 +1470,7 @@ func (c *Client) DeleteHpcClustersWithContext(ctx context.Context, request *Dele
     if request == nil {
         request = NewDeleteHpcClustersRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "cvm", APIVersion, "DeleteHpcClusters")
     
     if c.GetCredential() == nil {
         return nil, errors.New("DeleteHpcClusters require credential")
@@ -1491,7 +1507,9 @@ func NewDeleteImagesResponse() (response *DeleteImagesResponse) {
 //
 // 
 //
-// * 当[镜像状态](https://cloud.tencent.com/document/product/213/15753#Image)为`创建中`和`使用中`时, 不允许删除。镜像状态可以通过[DescribeImages](https://cloud.tencent.com/document/api/213/9418)获取。
+// * 当[镜像状态](https://cloud.tencent.com/document/product/213/15753#Image) 为`创建中`、`复制中`、`导入中`时, 不允许删除。镜像状态可以通过[DescribeImages](https://cloud.tencent.com/document/api/213/9418)获取。
+//
+// * 被共享的镜像，需要先取消共享关系，才能删除。
 //
 // * 每个地域最多只支持创建500个自定义镜像，删除镜像可以释放账户的配额。
 //
@@ -1516,7 +1534,9 @@ func (c *Client) DeleteImages(request *DeleteImagesRequest) (response *DeleteIma
 //
 // 
 //
-// * 当[镜像状态](https://cloud.tencent.com/document/product/213/15753#Image)为`创建中`和`使用中`时, 不允许删除。镜像状态可以通过[DescribeImages](https://cloud.tencent.com/document/api/213/9418)获取。
+// * 当[镜像状态](https://cloud.tencent.com/document/product/213/15753#Image) 为`创建中`、`复制中`、`导入中`时, 不允许删除。镜像状态可以通过[DescribeImages](https://cloud.tencent.com/document/api/213/9418)获取。
+//
+// * 被共享的镜像，需要先取消共享关系，才能删除。
 //
 // * 每个地域最多只支持创建500个自定义镜像，删除镜像可以释放账户的配额。
 //
@@ -1536,6 +1556,7 @@ func (c *Client) DeleteImagesWithContext(ctx context.Context, request *DeleteIma
     if request == nil {
         request = NewDeleteImagesRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "cvm", APIVersion, "DeleteImages")
     
     if c.GetCredential() == nil {
         return nil, errors.New("DeleteImages require credential")
@@ -1585,6 +1606,7 @@ func (c *Client) DeleteInstancesActionTimerWithContext(ctx context.Context, requ
     if request == nil {
         request = NewDeleteInstancesActionTimerRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "cvm", APIVersion, "DeleteInstancesActionTimer")
     
     if c.GetCredential() == nil {
         return nil, errors.New("DeleteInstancesActionTimer require credential")
@@ -1660,6 +1682,7 @@ func (c *Client) DeleteKeyPairsWithContext(ctx context.Context, request *DeleteK
     if request == nil {
         request = NewDeleteKeyPairsRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "cvm", APIVersion, "DeleteKeyPairs")
     
     if c.GetCredential() == nil {
         return nil, errors.New("DeleteKeyPairs require credential")
@@ -1721,6 +1744,7 @@ func (c *Client) DeleteLaunchTemplateWithContext(ctx context.Context, request *D
     if request == nil {
         request = NewDeleteLaunchTemplateRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "cvm", APIVersion, "DeleteLaunchTemplate")
     
     if c.GetCredential() == nil {
         return nil, errors.New("DeleteLaunchTemplate require credential")
@@ -1788,6 +1812,7 @@ func (c *Client) DeleteLaunchTemplateVersionsWithContext(ctx context.Context, re
     if request == nil {
         request = NewDeleteLaunchTemplateVersionsRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "cvm", APIVersion, "DeleteLaunchTemplateVersions")
     
     if c.GetCredential() == nil {
         return nil, errors.New("DeleteLaunchTemplateVersions require credential")
@@ -1845,6 +1870,7 @@ func (c *Client) DescribeAccountQuotaWithContext(ctx context.Context, request *D
     if request == nil {
         request = NewDescribeAccountQuotaRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "cvm", APIVersion, "DescribeAccountQuota")
     
     if c.GetCredential() == nil {
         return nil, errors.New("DescribeAccountQuota require credential")
@@ -1898,6 +1924,7 @@ func (c *Client) DescribeChcDeniedActionsWithContext(ctx context.Context, reques
     if request == nil {
         request = NewDescribeChcDeniedActionsRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "cvm", APIVersion, "DescribeChcDeniedActions")
     
     if c.GetCredential() == nil {
         return nil, errors.New("DescribeChcDeniedActions require credential")
@@ -1985,6 +2012,7 @@ func (c *Client) DescribeChcHostsWithContext(ctx context.Context, request *Descr
     if request == nil {
         request = NewDescribeChcHostsRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "cvm", APIVersion, "DescribeChcHosts")
     
     if c.GetCredential() == nil {
         return nil, errors.New("DescribeChcHosts require credential")
@@ -2060,6 +2088,7 @@ func (c *Client) DescribeDisasterRecoverGroupQuotaWithContext(ctx context.Contex
     if request == nil {
         request = NewDescribeDisasterRecoverGroupQuotaRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "cvm", APIVersion, "DescribeDisasterRecoverGroupQuota")
     
     if c.GetCredential() == nil {
         return nil, errors.New("DescribeDisasterRecoverGroupQuota require credential")
@@ -2111,6 +2140,7 @@ func (c *Client) DescribeDisasterRecoverGroupsWithContext(ctx context.Context, r
     if request == nil {
         request = NewDescribeDisasterRecoverGroupsRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "cvm", APIVersion, "DescribeDisasterRecoverGroups")
     
     if c.GetCredential() == nil {
         return nil, errors.New("DescribeDisasterRecoverGroups require credential")
@@ -2174,6 +2204,7 @@ func (c *Client) DescribeHostsWithContext(ctx context.Context, request *Describe
     if request == nil {
         request = NewDescribeHostsRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "cvm", APIVersion, "DescribeHosts")
     
     if c.GetCredential() == nil {
         return nil, errors.New("DescribeHosts require credential")
@@ -2225,6 +2256,7 @@ func (c *Client) DescribeHpcClustersWithContext(ctx context.Context, request *De
     if request == nil {
         request = NewDescribeHpcClustersRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "cvm", APIVersion, "DescribeHpcClusters")
     
     if c.GetCredential() == nil {
         return nil, errors.New("DescribeHpcClusters require credential")
@@ -2276,6 +2308,7 @@ func (c *Client) DescribeImageFromFamilyWithContext(ctx context.Context, request
     if request == nil {
         request = NewDescribeImageFromFamilyRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "cvm", APIVersion, "DescribeImageFromFamily")
     
     if c.GetCredential() == nil {
         return nil, errors.New("DescribeImageFromFamily require credential")
@@ -2327,6 +2360,7 @@ func (c *Client) DescribeImageQuotaWithContext(ctx context.Context, request *Des
     if request == nil {
         request = NewDescribeImageQuotaRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "cvm", APIVersion, "DescribeImageQuota")
     
     if c.GetCredential() == nil {
         return nil, errors.New("DescribeImageQuota require credential")
@@ -2388,6 +2422,7 @@ func (c *Client) DescribeImageSharePermissionWithContext(ctx context.Context, re
     if request == nil {
         request = NewDescribeImageSharePermissionRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "cvm", APIVersion, "DescribeImageSharePermission")
     
     if c.GetCredential() == nil {
         return nil, errors.New("DescribeImageSharePermission require credential")
@@ -2483,6 +2518,7 @@ func (c *Client) DescribeImagesWithContext(ctx context.Context, request *Describ
     if request == nil {
         request = NewDescribeImagesRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "cvm", APIVersion, "DescribeImages")
     
     if c.GetCredential() == nil {
         return nil, errors.New("DescribeImages require credential")
@@ -2566,6 +2602,7 @@ func (c *Client) DescribeImportImageOsWithContext(ctx context.Context, request *
     if request == nil {
         request = NewDescribeImportImageOsRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "cvm", APIVersion, "DescribeImportImageOs")
     
     if c.GetCredential() == nil {
         return nil, errors.New("DescribeImportImageOs require credential")
@@ -2619,6 +2656,7 @@ func (c *Client) DescribeInstanceFamilyConfigsWithContext(ctx context.Context, r
     if request == nil {
         request = NewDescribeInstanceFamilyConfigsRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "cvm", APIVersion, "DescribeInstanceFamilyConfigs")
     
     if c.GetCredential() == nil {
         return nil, errors.New("DescribeInstanceFamilyConfigs require credential")
@@ -2694,6 +2732,7 @@ func (c *Client) DescribeInstanceInternetBandwidthConfigsWithContext(ctx context
     if request == nil {
         request = NewDescribeInstanceInternetBandwidthConfigsRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "cvm", APIVersion, "DescribeInstanceInternetBandwidthConfigs")
     
     if c.GetCredential() == nil {
         return nil, errors.New("DescribeInstanceInternetBandwidthConfigs require credential")
@@ -2773,6 +2812,7 @@ func (c *Client) DescribeInstanceTypeConfigsWithContext(ctx context.Context, req
     if request == nil {
         request = NewDescribeInstanceTypeConfigsRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "cvm", APIVersion, "DescribeInstanceTypeConfigs")
     
     if c.GetCredential() == nil {
         return nil, errors.New("DescribeInstanceTypeConfigs require credential")
@@ -2926,6 +2966,7 @@ func (c *Client) DescribeInstanceVncUrlWithContext(ctx context.Context, request 
     if request == nil {
         request = NewDescribeInstanceVncUrlRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "cvm", APIVersion, "DescribeInstanceVncUrl")
     
     if c.GetCredential() == nil {
         return nil, errors.New("DescribeInstanceVncUrl require credential")
@@ -3045,6 +3086,7 @@ func (c *Client) DescribeInstancesWithContext(ctx context.Context, request *Desc
     if request == nil {
         request = NewDescribeInstancesRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "cvm", APIVersion, "DescribeInstances")
     
     if c.GetCredential() == nil {
         return nil, errors.New("DescribeInstances require credential")
@@ -3098,6 +3140,7 @@ func (c *Client) DescribeInstancesActionTimerWithContext(ctx context.Context, re
     if request == nil {
         request = NewDescribeInstancesActionTimerRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "cvm", APIVersion, "DescribeInstancesActionTimer")
     
     if c.GetCredential() == nil {
         return nil, errors.New("DescribeInstancesActionTimer require credential")
@@ -3149,6 +3192,7 @@ func (c *Client) DescribeInstancesAttributesWithContext(ctx context.Context, req
     if request == nil {
         request = NewDescribeInstancesAttributesRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "cvm", APIVersion, "DescribeInstancesAttributes")
     
     if c.GetCredential() == nil {
         return nil, errors.New("DescribeInstancesAttributes require credential")
@@ -3190,6 +3234,7 @@ func NewDescribeInstancesModificationResponse() (response *DescribeInstancesModi
 //  INVALIDINSTANCE_NOTSUPPORTED = "InvalidInstance.NotSupported"
 //  INVALIDINSTANCEID_MALFORMED = "InvalidInstanceId.Malformed"
 //  INVALIDINSTANCEID_NOTFOUND = "InvalidInstanceId.NotFound"
+//  INVALIDPARAMETER_CDZNOTSUPPORTED = "InvalidParameter.CdzNotSupported"
 //  INVALIDPARAMETERVALUE_INSTANCEIDMALFORMED = "InvalidParameterValue.InstanceIdMalformed"
 //  INVALIDPARAMETERVALUE_LIMITEXCEEDED = "InvalidParameterValue.LimitExceeded"
 //  INVALIDPARAMETERVALUE_ZONENOTSUPPORTED = "InvalidParameterValue.ZoneNotSupported"
@@ -3208,6 +3253,7 @@ func (c *Client) DescribeInstancesModification(request *DescribeInstancesModific
 //  INVALIDINSTANCE_NOTSUPPORTED = "InvalidInstance.NotSupported"
 //  INVALIDINSTANCEID_MALFORMED = "InvalidInstanceId.Malformed"
 //  INVALIDINSTANCEID_NOTFOUND = "InvalidInstanceId.NotFound"
+//  INVALIDPARAMETER_CDZNOTSUPPORTED = "InvalidParameter.CdzNotSupported"
 //  INVALIDPARAMETERVALUE_INSTANCEIDMALFORMED = "InvalidParameterValue.InstanceIdMalformed"
 //  INVALIDPARAMETERVALUE_LIMITEXCEEDED = "InvalidParameterValue.LimitExceeded"
 //  INVALIDPARAMETERVALUE_ZONENOTSUPPORTED = "InvalidParameterValue.ZoneNotSupported"
@@ -3216,6 +3262,7 @@ func (c *Client) DescribeInstancesModificationWithContext(ctx context.Context, r
     if request == nil {
         request = NewDescribeInstancesModificationRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "cvm", APIVersion, "DescribeInstancesModification")
     
     if c.GetCredential() == nil {
         return nil, errors.New("DescribeInstancesModification require credential")
@@ -3279,6 +3326,7 @@ func (c *Client) DescribeInstancesOperationLimitWithContext(ctx context.Context,
     if request == nil {
         request = NewDescribeInstancesOperationLimitRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "cvm", APIVersion, "DescribeInstancesOperationLimit")
     
     if c.GetCredential() == nil {
         return nil, errors.New("DescribeInstancesOperationLimit require credential")
@@ -3354,6 +3402,7 @@ func (c *Client) DescribeInstancesStatusWithContext(ctx context.Context, request
     if request == nil {
         request = NewDescribeInstancesStatusRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "cvm", APIVersion, "DescribeInstancesStatus")
     
     if c.GetCredential() == nil {
         return nil, errors.New("DescribeInstancesStatus require credential")
@@ -3417,6 +3466,7 @@ func (c *Client) DescribeInternetChargeTypeConfigsWithContext(ctx context.Contex
     if request == nil {
         request = NewDescribeInternetChargeTypeConfigsRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "cvm", APIVersion, "DescribeInternetChargeTypeConfigs")
     
     if c.GetCredential() == nil {
         return nil, errors.New("DescribeInternetChargeTypeConfigs require credential")
@@ -3496,6 +3546,7 @@ func (c *Client) DescribeKeyPairsWithContext(ctx context.Context, request *Descr
     if request == nil {
         request = NewDescribeKeyPairsRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "cvm", APIVersion, "DescribeKeyPairs")
     
     if c.GetCredential() == nil {
         return nil, errors.New("DescribeKeyPairs require credential")
@@ -3530,6 +3581,10 @@ func NewDescribeLaunchTemplateVersionsResponse() (response *DescribeLaunchTempla
 // DescribeLaunchTemplateVersions
 // 本接口（DescribeLaunchTemplateVersions）用于查询实例模板版本信息。
 //
+// 
+//
+// - 不支持参数`LaunchTemplateVersions`与以下参数同时指定，包括 `MaxVersion`、`MinVersion`、`Limit`、`Offset`和`DefaultVersion`。
+//
 // 可能返回的错误码:
 //  INTERNALERROR = "InternalError"
 //  INTERNALSERVERERROR = "InternalServerError"
@@ -3556,6 +3611,10 @@ func (c *Client) DescribeLaunchTemplateVersions(request *DescribeLaunchTemplateV
 // DescribeLaunchTemplateVersions
 // 本接口（DescribeLaunchTemplateVersions）用于查询实例模板版本信息。
 //
+// 
+//
+// - 不支持参数`LaunchTemplateVersions`与以下参数同时指定，包括 `MaxVersion`、`MinVersion`、`Limit`、`Offset`和`DefaultVersion`。
+//
 // 可能返回的错误码:
 //  INTERNALERROR = "InternalError"
 //  INTERNALSERVERERROR = "InternalServerError"
@@ -3579,6 +3638,7 @@ func (c *Client) DescribeLaunchTemplateVersionsWithContext(ctx context.Context, 
     if request == nil {
         request = NewDescribeLaunchTemplateVersionsRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "cvm", APIVersion, "DescribeLaunchTemplateVersions")
     
     if c.GetCredential() == nil {
         return nil, errors.New("DescribeLaunchTemplateVersions require credential")
@@ -3648,6 +3708,7 @@ func (c *Client) DescribeLaunchTemplatesWithContext(ctx context.Context, request
     if request == nil {
         request = NewDescribeLaunchTemplatesRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "cvm", APIVersion, "DescribeLaunchTemplates")
     
     if c.GetCredential() == nil {
         return nil, errors.New("DescribeLaunchTemplates require credential")
@@ -3697,6 +3758,7 @@ func (c *Client) DescribeRegionsWithContext(ctx context.Context, request *Descri
     if request == nil {
         request = NewDescribeRegionsRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "cvm", APIVersion, "DescribeRegions")
     
     if c.GetCredential() == nil {
         return nil, errors.New("DescribeRegions require credential")
@@ -3709,122 +3771,198 @@ func (c *Client) DescribeRegionsWithContext(ctx context.Context, request *Descri
     return
 }
 
-func NewDescribeReservedInstancesConfigInfosRequest() (request *DescribeReservedInstancesConfigInfosRequest) {
-    request = &DescribeReservedInstancesConfigInfosRequest{
+func NewDescribeResourcePoolPackInstancesRequest() (request *DescribeResourcePoolPackInstancesRequest) {
+    request = &DescribeResourcePoolPackInstancesRequest{
         BaseRequest: &tchttp.BaseRequest{},
     }
     
-    request.Init().WithApiInfo("cvm", APIVersion, "DescribeReservedInstancesConfigInfos")
+    request.Init().WithApiInfo("cvm", APIVersion, "DescribeResourcePoolPackInstances")
     
     
     return
 }
 
-func NewDescribeReservedInstancesConfigInfosResponse() (response *DescribeReservedInstancesConfigInfosResponse) {
-    response = &DescribeReservedInstancesConfigInfosResponse{
+func NewDescribeResourcePoolPackInstancesResponse() (response *DescribeResourcePoolPackInstancesResponse) {
+    response = &DescribeResourcePoolPackInstancesResponse{
         BaseResponse: &tchttp.BaseResponse{},
     } 
     return
 
 }
 
-// DescribeReservedInstancesConfigInfos
-// 本接口(DescribeReservedInstancesConfigInfos)供用户列出可购买预留实例机型配置。预留实例当前只针对国际站白名单用户开放。
+// DescribeResourcePoolPackInstances
+// 本接口(DescribeResourcePoolPackInstances)用于查询指定实例资源池内已创建的实例列表及其物理拓扑信息。
 //
 // 可能返回的错误码:
-//  INVALIDFILTER = "InvalidFilter"
-//  INVALIDZONE_MISMATCHREGION = "InvalidZone.MismatchRegion"
-//  UNSUPPORTEDOPERATION_INVALIDPERMISSIONNONINTERNATIONALACCOUNT = "UnsupportedOperation.InvalidPermissionNonInternationalAccount"
-//  UNSUPPORTEDOPERATION_RESERVEDINSTANCEINVISIBLEFORUSER = "UnsupportedOperation.ReservedInstanceInvisibleForUser"
-func (c *Client) DescribeReservedInstancesConfigInfos(request *DescribeReservedInstancesConfigInfosRequest) (response *DescribeReservedInstancesConfigInfosResponse, err error) {
-    return c.DescribeReservedInstancesConfigInfosWithContext(context.Background(), request)
+//  INTERNALSERVERERROR = "InternalServerError"
+//  INVALIDPARAMETER = "InvalidParameter"
+//  INVALIDPARAMETERVALUE = "InvalidParameterValue"
+//  INVALIDPARAMETERVALUE_RESOURCEPOOLPACKIDMALFORMED = "InvalidParameterValue.ResourcePoolPackIdMalformed"
+//  MISSINGPARAMETER = "MissingParameter"
+//  UNAUTHORIZEDOPERATION = "UnauthorizedOperation"
+//  UNSUPPORTEDOPERATION_RESOURCEPOOLPACKAGEINVISIBLEFORUSER = "UnsupportedOperation.ResourcePoolPackageInvisibleForUser"
+func (c *Client) DescribeResourcePoolPackInstances(request *DescribeResourcePoolPackInstancesRequest) (response *DescribeResourcePoolPackInstancesResponse, err error) {
+    return c.DescribeResourcePoolPackInstancesWithContext(context.Background(), request)
 }
 
-// DescribeReservedInstancesConfigInfos
-// 本接口(DescribeReservedInstancesConfigInfos)供用户列出可购买预留实例机型配置。预留实例当前只针对国际站白名单用户开放。
+// DescribeResourcePoolPackInstances
+// 本接口(DescribeResourcePoolPackInstances)用于查询指定实例资源池内已创建的实例列表及其物理拓扑信息。
 //
 // 可能返回的错误码:
-//  INVALIDFILTER = "InvalidFilter"
-//  INVALIDZONE_MISMATCHREGION = "InvalidZone.MismatchRegion"
-//  UNSUPPORTEDOPERATION_INVALIDPERMISSIONNONINTERNATIONALACCOUNT = "UnsupportedOperation.InvalidPermissionNonInternationalAccount"
-//  UNSUPPORTEDOPERATION_RESERVEDINSTANCEINVISIBLEFORUSER = "UnsupportedOperation.ReservedInstanceInvisibleForUser"
-func (c *Client) DescribeReservedInstancesConfigInfosWithContext(ctx context.Context, request *DescribeReservedInstancesConfigInfosRequest) (response *DescribeReservedInstancesConfigInfosResponse, err error) {
+//  INTERNALSERVERERROR = "InternalServerError"
+//  INVALIDPARAMETER = "InvalidParameter"
+//  INVALIDPARAMETERVALUE = "InvalidParameterValue"
+//  INVALIDPARAMETERVALUE_RESOURCEPOOLPACKIDMALFORMED = "InvalidParameterValue.ResourcePoolPackIdMalformed"
+//  MISSINGPARAMETER = "MissingParameter"
+//  UNAUTHORIZEDOPERATION = "UnauthorizedOperation"
+//  UNSUPPORTEDOPERATION_RESOURCEPOOLPACKAGEINVISIBLEFORUSER = "UnsupportedOperation.ResourcePoolPackageInvisibleForUser"
+func (c *Client) DescribeResourcePoolPackInstancesWithContext(ctx context.Context, request *DescribeResourcePoolPackInstancesRequest) (response *DescribeResourcePoolPackInstancesResponse, err error) {
     if request == nil {
-        request = NewDescribeReservedInstancesConfigInfosRequest()
+        request = NewDescribeResourcePoolPackInstancesRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "cvm", APIVersion, "DescribeResourcePoolPackInstances")
     
     if c.GetCredential() == nil {
-        return nil, errors.New("DescribeReservedInstancesConfigInfos require credential")
+        return nil, errors.New("DescribeResourcePoolPackInstances require credential")
     }
 
     request.SetContext(ctx)
     
-    response = NewDescribeReservedInstancesConfigInfosResponse()
+    response = NewDescribeResourcePoolPackInstancesResponse()
     err = c.Send(request, response)
     return
 }
 
-func NewDescribeReservedInstancesOfferingsRequest() (request *DescribeReservedInstancesOfferingsRequest) {
-    request = &DescribeReservedInstancesOfferingsRequest{
+func NewDescribeResourcePoolPackTypeConfigsRequest() (request *DescribeResourcePoolPackTypeConfigsRequest) {
+    request = &DescribeResourcePoolPackTypeConfigsRequest{
         BaseRequest: &tchttp.BaseRequest{},
     }
     
-    request.Init().WithApiInfo("cvm", APIVersion, "DescribeReservedInstancesOfferings")
+    request.Init().WithApiInfo("cvm", APIVersion, "DescribeResourcePoolPackTypeConfigs")
     
     
     return
 }
 
-func NewDescribeReservedInstancesOfferingsResponse() (response *DescribeReservedInstancesOfferingsResponse) {
-    response = &DescribeReservedInstancesOfferingsResponse{
+func NewDescribeResourcePoolPackTypeConfigsResponse() (response *DescribeResourcePoolPackTypeConfigsResponse) {
+    response = &DescribeResourcePoolPackTypeConfigsResponse{
         BaseResponse: &tchttp.BaseResponse{},
     } 
     return
 
 }
 
-// DescribeReservedInstancesOfferings
-// 本接口(DescribeReservedInstancesOfferings)供用户列出可购买的预留实例配置，预留实例当前只针对国际站白名单用户开放。
+// DescribeResourcePoolPackTypeConfigs
+// 本接口(DescribeResourcePoolPackTypeConfigs)用于查询当前地域/可用区支持创建实例资源池的整机/半整机规格列表。
 //
 // 可能返回的错误码:
 //  INTERNALSERVERERROR = "InternalServerError"
 //  INVALIDFILTER = "InvalidFilter"
 //  INVALIDFILTERVALUE_LIMITEXCEEDED = "InvalidFilterValue.LimitExceeded"
-//  INVALIDINSTANCETYPE_MALFORMED = "InvalidInstanceType.Malformed"
 //  INVALIDPARAMETER = "InvalidParameter"
 //  INVALIDPARAMETERVALUE = "InvalidParameterValue"
-//  INVALIDPARAMETERVALUE_LIMITEXCEEDED = "InvalidParameterValue.LimitExceeded"
-//  UNSUPPORTEDOPERATION_INVALIDPERMISSIONNONINTERNATIONALACCOUNT = "UnsupportedOperation.InvalidPermissionNonInternationalAccount"
-//  UNSUPPORTEDOPERATION_RESERVEDINSTANCEINVISIBLEFORUSER = "UnsupportedOperation.ReservedInstanceInvisibleForUser"
-func (c *Client) DescribeReservedInstancesOfferings(request *DescribeReservedInstancesOfferingsRequest) (response *DescribeReservedInstancesOfferingsResponse, err error) {
-    return c.DescribeReservedInstancesOfferingsWithContext(context.Background(), request)
+//  MISSINGPARAMETER = "MissingParameter"
+//  UNAUTHORIZEDOPERATION = "UnauthorizedOperation"
+//  UNSUPPORTEDOPERATION_RESOURCEPOOLPACKAGEINVISIBLEFORUSER = "UnsupportedOperation.ResourcePoolPackageInvisibleForUser"
+func (c *Client) DescribeResourcePoolPackTypeConfigs(request *DescribeResourcePoolPackTypeConfigsRequest) (response *DescribeResourcePoolPackTypeConfigsResponse, err error) {
+    return c.DescribeResourcePoolPackTypeConfigsWithContext(context.Background(), request)
 }
 
-// DescribeReservedInstancesOfferings
-// 本接口(DescribeReservedInstancesOfferings)供用户列出可购买的预留实例配置，预留实例当前只针对国际站白名单用户开放。
+// DescribeResourcePoolPackTypeConfigs
+// 本接口(DescribeResourcePoolPackTypeConfigs)用于查询当前地域/可用区支持创建实例资源池的整机/半整机规格列表。
 //
 // 可能返回的错误码:
 //  INTERNALSERVERERROR = "InternalServerError"
 //  INVALIDFILTER = "InvalidFilter"
 //  INVALIDFILTERVALUE_LIMITEXCEEDED = "InvalidFilterValue.LimitExceeded"
-//  INVALIDINSTANCETYPE_MALFORMED = "InvalidInstanceType.Malformed"
 //  INVALIDPARAMETER = "InvalidParameter"
 //  INVALIDPARAMETERVALUE = "InvalidParameterValue"
-//  INVALIDPARAMETERVALUE_LIMITEXCEEDED = "InvalidParameterValue.LimitExceeded"
-//  UNSUPPORTEDOPERATION_INVALIDPERMISSIONNONINTERNATIONALACCOUNT = "UnsupportedOperation.InvalidPermissionNonInternationalAccount"
-//  UNSUPPORTEDOPERATION_RESERVEDINSTANCEINVISIBLEFORUSER = "UnsupportedOperation.ReservedInstanceInvisibleForUser"
-func (c *Client) DescribeReservedInstancesOfferingsWithContext(ctx context.Context, request *DescribeReservedInstancesOfferingsRequest) (response *DescribeReservedInstancesOfferingsResponse, err error) {
+//  MISSINGPARAMETER = "MissingParameter"
+//  UNAUTHORIZEDOPERATION = "UnauthorizedOperation"
+//  UNSUPPORTEDOPERATION_RESOURCEPOOLPACKAGEINVISIBLEFORUSER = "UnsupportedOperation.ResourcePoolPackageInvisibleForUser"
+func (c *Client) DescribeResourcePoolPackTypeConfigsWithContext(ctx context.Context, request *DescribeResourcePoolPackTypeConfigsRequest) (response *DescribeResourcePoolPackTypeConfigsResponse, err error) {
     if request == nil {
-        request = NewDescribeReservedInstancesOfferingsRequest()
+        request = NewDescribeResourcePoolPackTypeConfigsRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "cvm", APIVersion, "DescribeResourcePoolPackTypeConfigs")
     
     if c.GetCredential() == nil {
-        return nil, errors.New("DescribeReservedInstancesOfferings require credential")
+        return nil, errors.New("DescribeResourcePoolPackTypeConfigs require credential")
     }
 
     request.SetContext(ctx)
     
-    response = NewDescribeReservedInstancesOfferingsResponse()
+    response = NewDescribeResourcePoolPackTypeConfigsResponse()
+    err = c.Send(request, response)
+    return
+}
+
+func NewDescribeResourcePoolPacksRequest() (request *DescribeResourcePoolPacksRequest) {
+    request = &DescribeResourcePoolPacksRequest{
+        BaseRequest: &tchttp.BaseRequest{},
+    }
+    
+    request.Init().WithApiInfo("cvm", APIVersion, "DescribeResourcePoolPacks")
+    
+    
+    return
+}
+
+func NewDescribeResourcePoolPacksResponse() (response *DescribeResourcePoolPacksResponse) {
+    response = &DescribeResourcePoolPacksResponse{
+        BaseResponse: &tchttp.BaseResponse{},
+    } 
+    return
+
+}
+
+// DescribeResourcePoolPacks
+// 本接口(DescribeResourcePoolPacks)用于查询用户已创建的实例资源池列表，包括资源池基本信息、剩余容量、底层物理拓扑信息等。
+//
+// 可能返回的错误码:
+//  INTERNALSERVERERROR = "InternalServerError"
+//  INVALIDFILTER = "InvalidFilter"
+//  INVALIDFILTERVALUE_LIMITEXCEEDED = "InvalidFilterValue.LimitExceeded"
+//  INVALIDPARAMETER = "InvalidParameter"
+//  INVALIDPARAMETERVALUE = "InvalidParameterValue"
+//  INVALIDPARAMETERVALUE_LIMITEXCEEDED = "InvalidParameterValue.LimitExceeded"
+//  INVALIDPARAMETERVALUE_RESOURCEPOOLPACKIDMALFORMED = "InvalidParameterValue.ResourcePoolPackIdMalformed"
+//  INVALIDZONE_MISMATCHREGION = "InvalidZone.MismatchRegion"
+//  MISSINGPARAMETER = "MissingParameter"
+//  UNAUTHORIZEDOPERATION = "UnauthorizedOperation"
+//  UNSUPPORTEDOPERATION_RESOURCEPOOLPACKAGEINVISIBLEFORUSER = "UnsupportedOperation.ResourcePoolPackageInvisibleForUser"
+func (c *Client) DescribeResourcePoolPacks(request *DescribeResourcePoolPacksRequest) (response *DescribeResourcePoolPacksResponse, err error) {
+    return c.DescribeResourcePoolPacksWithContext(context.Background(), request)
+}
+
+// DescribeResourcePoolPacks
+// 本接口(DescribeResourcePoolPacks)用于查询用户已创建的实例资源池列表，包括资源池基本信息、剩余容量、底层物理拓扑信息等。
+//
+// 可能返回的错误码:
+//  INTERNALSERVERERROR = "InternalServerError"
+//  INVALIDFILTER = "InvalidFilter"
+//  INVALIDFILTERVALUE_LIMITEXCEEDED = "InvalidFilterValue.LimitExceeded"
+//  INVALIDPARAMETER = "InvalidParameter"
+//  INVALIDPARAMETERVALUE = "InvalidParameterValue"
+//  INVALIDPARAMETERVALUE_LIMITEXCEEDED = "InvalidParameterValue.LimitExceeded"
+//  INVALIDPARAMETERVALUE_RESOURCEPOOLPACKIDMALFORMED = "InvalidParameterValue.ResourcePoolPackIdMalformed"
+//  INVALIDZONE_MISMATCHREGION = "InvalidZone.MismatchRegion"
+//  MISSINGPARAMETER = "MissingParameter"
+//  UNAUTHORIZEDOPERATION = "UnauthorizedOperation"
+//  UNSUPPORTEDOPERATION_RESOURCEPOOLPACKAGEINVISIBLEFORUSER = "UnsupportedOperation.ResourcePoolPackageInvisibleForUser"
+func (c *Client) DescribeResourcePoolPacksWithContext(ctx context.Context, request *DescribeResourcePoolPacksRequest) (response *DescribeResourcePoolPacksResponse, err error) {
+    if request == nil {
+        request = NewDescribeResourcePoolPacksRequest()
+    }
+    c.InitBaseRequest(&request.BaseRequest, "cvm", APIVersion, "DescribeResourcePoolPacks")
+    
+    if c.GetCredential() == nil {
+        return nil, errors.New("DescribeResourcePoolPacks require credential")
+    }
+
+    request.SetContext(ctx)
+    
+    response = NewDescribeResourcePoolPacksResponse()
     err = c.Send(request, response)
     return
 }
@@ -3882,6 +4020,7 @@ func (c *Client) DescribeTaskInfoWithContext(ctx context.Context, request *Descr
     if request == nil {
         request = NewDescribeTaskInfoRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "cvm", APIVersion, "DescribeTaskInfo")
     
     if c.GetCredential() == nil {
         return nil, errors.New("DescribeTaskInfo require credential")
@@ -3957,6 +4096,7 @@ func (c *Client) DescribeZoneInstanceConfigInfosWithContext(ctx context.Context,
     if request == nil {
         request = NewDescribeZoneInstanceConfigInfosRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "cvm", APIVersion, "DescribeZoneInstanceConfigInfos")
     
     if c.GetCredential() == nil {
         return nil, errors.New("DescribeZoneInstanceConfigInfos require credential")
@@ -4012,6 +4152,7 @@ func (c *Client) DescribeZonesWithContext(ctx context.Context, request *Describe
     if request == nil {
         request = NewDescribeZonesRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "cvm", APIVersion, "DescribeZones")
     
     if c.GetCredential() == nil {
         return nil, errors.New("DescribeZones require credential")
@@ -4137,6 +4278,7 @@ func (c *Client) DisassociateInstancesKeyPairsWithContext(ctx context.Context, r
     if request == nil {
         request = NewDisassociateInstancesKeyPairsRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "cvm", APIVersion, "DisassociateInstancesKeyPairs")
     
     if c.GetCredential() == nil {
         return nil, errors.New("DisassociateInstancesKeyPairs require credential")
@@ -4171,7 +4313,7 @@ func NewDisassociateSecurityGroupsResponse() (response *DisassociateSecurityGrou
 // DisassociateSecurityGroups
 // 本接口 (DisassociateSecurityGroups) 用于解绑实例的指定安全组。
 //
-// * 实例操作结果可以通过调用 [DescribeInstances](https://cloud.tencent.com/document/api/213/15728#.E7.A4.BA.E4.BE.8B3-.E6.9F.A5.E8.AF.A2.E5.AE.9E.E4.BE.8B.E7.9A.84.E6.9C.80.E6.96.B0.E6.93.8D.E4.BD.9C.E6.83.85.E5.86.B5) 接口查询，如果实例的最新操作状态(LatestOperationState)为“SUCCESS”，则代表操作成功。
+// * 实例操作结果可以通过调用 [DescribeInstances](https://cloud.tencent.com/document/api/213/15728) 接口查询，如果实例的最新操作状态(LatestOperationState)为“SUCCESS”，则代表操作成功。
 //
 // 可能返回的错误码:
 //  FAILEDOPERATION_SECURITYGROUPACTIONFAILED = "FailedOperation.SecurityGroupActionFailed"
@@ -4192,7 +4334,7 @@ func (c *Client) DisassociateSecurityGroups(request *DisassociateSecurityGroupsR
 // DisassociateSecurityGroups
 // 本接口 (DisassociateSecurityGroups) 用于解绑实例的指定安全组。
 //
-// * 实例操作结果可以通过调用 [DescribeInstances](https://cloud.tencent.com/document/api/213/15728#.E7.A4.BA.E4.BE.8B3-.E6.9F.A5.E8.AF.A2.E5.AE.9E.E4.BE.8B.E7.9A.84.E6.9C.80.E6.96.B0.E6.93.8D.E4.BD.9C.E6.83.85.E5.86.B5) 接口查询，如果实例的最新操作状态(LatestOperationState)为“SUCCESS”，则代表操作成功。
+// * 实例操作结果可以通过调用 [DescribeInstances](https://cloud.tencent.com/document/api/213/15728) 接口查询，如果实例的最新操作状态(LatestOperationState)为“SUCCESS”，则代表操作成功。
 //
 // 可能返回的错误码:
 //  FAILEDOPERATION_SECURITYGROUPACTIONFAILED = "FailedOperation.SecurityGroupActionFailed"
@@ -4210,6 +4352,7 @@ func (c *Client) DisassociateSecurityGroupsWithContext(ctx context.Context, requ
     if request == nil {
         request = NewDisassociateSecurityGroupsRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "cvm", APIVersion, "DisassociateSecurityGroups")
     
     if c.GetCredential() == nil {
         return nil, errors.New("DisassociateSecurityGroups require credential")
@@ -4307,6 +4450,7 @@ func (c *Client) EnterRescueModeWithContext(ctx context.Context, request *EnterR
     if request == nil {
         request = NewEnterRescueModeRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "cvm", APIVersion, "EnterRescueMode")
     
     if c.GetCredential() == nil {
         return nil, errors.New("EnterRescueMode require credential")
@@ -4382,6 +4526,7 @@ func (c *Client) ExitRescueModeWithContext(ctx context.Context, request *ExitRes
     if request == nil {
         request = NewExitRescueModeRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "cvm", APIVersion, "ExitRescueMode")
     
     if c.GetCredential() == nil {
         return nil, errors.New("ExitRescueMode require credential")
@@ -4430,6 +4575,7 @@ func NewExportImagesResponse() (response *ExportImagesResponse) {
 //  INVALIDPARAMETERVALUE_INVALIDIMAGEOSNAME = "InvalidParameterValue.InvalidImageOsName"
 //  INVALIDPARAMETERVALUE_INVALIDIMAGESTATE = "InvalidParameterValue.InvalidImageState"
 //  INVALIDPARAMETERVALUE_LIMITEXCEEDED = "InvalidParameterValue.LimitExceeded"
+//  INVALIDPARAMETERVALUE_MISSINGLOCATIONCOSENDPOINT = "InvalidParameterValue.MissingLocationCosEndpoint"
 //  INVALIDPARAMETERVALUE_TOOLARGE = "InvalidParameterValue.TooLarge"
 //  LIMITEXCEEDED_EXPORTIMAGETASKLIMITEXCEEDED = "LimitExceeded.ExportImageTaskLimitExceeded"
 //  UNSUPPORTEDOPERATION_ENCRYPTEDIMAGESNOTSUPPORTED = "UnsupportedOperation.EncryptedImagesNotSupported"
@@ -4460,6 +4606,7 @@ func (c *Client) ExportImages(request *ExportImagesRequest) (response *ExportIma
 //  INVALIDPARAMETERVALUE_INVALIDIMAGEOSNAME = "InvalidParameterValue.InvalidImageOsName"
 //  INVALIDPARAMETERVALUE_INVALIDIMAGESTATE = "InvalidParameterValue.InvalidImageState"
 //  INVALIDPARAMETERVALUE_LIMITEXCEEDED = "InvalidParameterValue.LimitExceeded"
+//  INVALIDPARAMETERVALUE_MISSINGLOCATIONCOSENDPOINT = "InvalidParameterValue.MissingLocationCosEndpoint"
 //  INVALIDPARAMETERVALUE_TOOLARGE = "InvalidParameterValue.TooLarge"
 //  LIMITEXCEEDED_EXPORTIMAGETASKLIMITEXCEEDED = "LimitExceeded.ExportImageTaskLimitExceeded"
 //  UNSUPPORTEDOPERATION_ENCRYPTEDIMAGESNOTSUPPORTED = "UnsupportedOperation.EncryptedImagesNotSupported"
@@ -4473,6 +4620,7 @@ func (c *Client) ExportImagesWithContext(ctx context.Context, request *ExportIma
     if request == nil {
         request = NewExportImagesRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "cvm", APIVersion, "ExportImages")
     
     if c.GetCredential() == nil {
         return nil, errors.New("ExportImages require credential")
@@ -4548,6 +4696,7 @@ func (c *Client) ImportImageWithContext(ctx context.Context, request *ImportImag
     if request == nil {
         request = NewImportImageRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "cvm", APIVersion, "ImportImage")
     
     if c.GetCredential() == nil {
         return nil, errors.New("ImportImage require credential")
@@ -4609,6 +4758,7 @@ func (c *Client) ImportInstancesActionTimerWithContext(ctx context.Context, requ
     if request == nil {
         request = NewImportInstancesActionTimerRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "cvm", APIVersion, "ImportInstancesActionTimer")
     
     if c.GetCredential() == nil {
         return nil, errors.New("ImportInstancesActionTimer require credential")
@@ -4696,6 +4846,7 @@ func (c *Client) ImportKeyPairWithContext(ctx context.Context, request *ImportKe
     if request == nil {
         request = NewImportKeyPairRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "cvm", APIVersion, "ImportKeyPair")
     
     if c.GetCredential() == nil {
         return nil, errors.New("ImportKeyPair require credential")
@@ -4708,55 +4859,72 @@ func (c *Client) ImportKeyPairWithContext(ctx context.Context, request *ImportKe
     return
 }
 
-func NewInquirePricePurchaseReservedInstancesOfferingRequest() (request *InquirePricePurchaseReservedInstancesOfferingRequest) {
-    request = &InquirePricePurchaseReservedInstancesOfferingRequest{
+func NewInquirePricePurchaseResourcePoolPacksRequest() (request *InquirePricePurchaseResourcePoolPacksRequest) {
+    request = &InquirePricePurchaseResourcePoolPacksRequest{
         BaseRequest: &tchttp.BaseRequest{},
     }
     
-    request.Init().WithApiInfo("cvm", APIVersion, "InquirePricePurchaseReservedInstancesOffering")
+    request.Init().WithApiInfo("cvm", APIVersion, "InquirePricePurchaseResourcePoolPacks")
     
     
     return
 }
 
-func NewInquirePricePurchaseReservedInstancesOfferingResponse() (response *InquirePricePurchaseReservedInstancesOfferingResponse) {
-    response = &InquirePricePurchaseReservedInstancesOfferingResponse{
+func NewInquirePricePurchaseResourcePoolPacksResponse() (response *InquirePricePurchaseResourcePoolPacksResponse) {
+    response = &InquirePricePurchaseResourcePoolPacksResponse{
         BaseResponse: &tchttp.BaseResponse{},
     } 
     return
 
 }
 
-// InquirePricePurchaseReservedInstancesOffering
-// 本接口(InquirePricePurchaseReservedInstancesOffering)用于创建预留实例询价。本接口仅允许针对购买限制范围内的预留实例配置进行询价。预留实例当前只针对国际站白名单用户开放。
+// InquirePricePurchaseResourcePoolPacks
+// 本接口(InquirePricePurchaseResourcePoolPacks)用于查询创建实例资源池的价格。
 //
 // 可能返回的错误码:
-//  FAILEDOPERATION_INQUIRYPRICEFAILED = "FailedOperation.InquiryPriceFailed"
+//  INTERNALSERVERERROR = "InternalServerError"
+//  INVALIDINSTANCETYPE_MALFORMED = "InvalidInstanceType.Malformed"
+//  INVALIDPARAMETER = "InvalidParameter"
+//  INVALIDPARAMETER_INSTANCETYPENOTSUPPORT = "InvalidParameter.InstanceTypeNotSupport"
+//  INVALIDPARAMETERVALUE = "InvalidParameterValue"
 //  INVALIDPARAMETERVALUE_RANGE = "InvalidParameterValue.Range"
-//  UNSUPPORTEDOPERATION_INVALIDPERMISSIONNONINTERNATIONALACCOUNT = "UnsupportedOperation.InvalidPermissionNonInternationalAccount"
-func (c *Client) InquirePricePurchaseReservedInstancesOffering(request *InquirePricePurchaseReservedInstancesOfferingRequest) (response *InquirePricePurchaseReservedInstancesOfferingResponse, err error) {
-    return c.InquirePricePurchaseReservedInstancesOfferingWithContext(context.Background(), request)
+//  INVALIDPERIOD = "InvalidPeriod"
+//  INVALIDZONE_MISMATCHREGION = "InvalidZone.MismatchRegion"
+//  MISSINGPARAMETER = "MissingParameter"
+//  UNAUTHORIZEDOPERATION = "UnauthorizedOperation"
+//  UNSUPPORTEDOPERATION_RESOURCEPOOLPACKAGEINVISIBLEFORUSER = "UnsupportedOperation.ResourcePoolPackageInvisibleForUser"
+func (c *Client) InquirePricePurchaseResourcePoolPacks(request *InquirePricePurchaseResourcePoolPacksRequest) (response *InquirePricePurchaseResourcePoolPacksResponse, err error) {
+    return c.InquirePricePurchaseResourcePoolPacksWithContext(context.Background(), request)
 }
 
-// InquirePricePurchaseReservedInstancesOffering
-// 本接口(InquirePricePurchaseReservedInstancesOffering)用于创建预留实例询价。本接口仅允许针对购买限制范围内的预留实例配置进行询价。预留实例当前只针对国际站白名单用户开放。
+// InquirePricePurchaseResourcePoolPacks
+// 本接口(InquirePricePurchaseResourcePoolPacks)用于查询创建实例资源池的价格。
 //
 // 可能返回的错误码:
-//  FAILEDOPERATION_INQUIRYPRICEFAILED = "FailedOperation.InquiryPriceFailed"
+//  INTERNALSERVERERROR = "InternalServerError"
+//  INVALIDINSTANCETYPE_MALFORMED = "InvalidInstanceType.Malformed"
+//  INVALIDPARAMETER = "InvalidParameter"
+//  INVALIDPARAMETER_INSTANCETYPENOTSUPPORT = "InvalidParameter.InstanceTypeNotSupport"
+//  INVALIDPARAMETERVALUE = "InvalidParameterValue"
 //  INVALIDPARAMETERVALUE_RANGE = "InvalidParameterValue.Range"
-//  UNSUPPORTEDOPERATION_INVALIDPERMISSIONNONINTERNATIONALACCOUNT = "UnsupportedOperation.InvalidPermissionNonInternationalAccount"
-func (c *Client) InquirePricePurchaseReservedInstancesOfferingWithContext(ctx context.Context, request *InquirePricePurchaseReservedInstancesOfferingRequest) (response *InquirePricePurchaseReservedInstancesOfferingResponse, err error) {
+//  INVALIDPERIOD = "InvalidPeriod"
+//  INVALIDZONE_MISMATCHREGION = "InvalidZone.MismatchRegion"
+//  MISSINGPARAMETER = "MissingParameter"
+//  UNAUTHORIZEDOPERATION = "UnauthorizedOperation"
+//  UNSUPPORTEDOPERATION_RESOURCEPOOLPACKAGEINVISIBLEFORUSER = "UnsupportedOperation.ResourcePoolPackageInvisibleForUser"
+func (c *Client) InquirePricePurchaseResourcePoolPacksWithContext(ctx context.Context, request *InquirePricePurchaseResourcePoolPacksRequest) (response *InquirePricePurchaseResourcePoolPacksResponse, err error) {
     if request == nil {
-        request = NewInquirePricePurchaseReservedInstancesOfferingRequest()
+        request = NewInquirePricePurchaseResourcePoolPacksRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "cvm", APIVersion, "InquirePricePurchaseResourcePoolPacks")
     
     if c.GetCredential() == nil {
-        return nil, errors.New("InquirePricePurchaseReservedInstancesOffering require credential")
+        return nil, errors.New("InquirePricePurchaseResourcePoolPacks require credential")
     }
 
     request.SetContext(ctx)
     
-    response = NewInquirePricePurchaseReservedInstancesOfferingResponse()
+    response = NewInquirePricePurchaseResourcePoolPacksResponse()
     err = c.Send(request, response)
     return
 }
@@ -4850,6 +5018,7 @@ func (c *Client) InquiryPriceModifyInstancesChargeTypeWithContext(ctx context.Co
     if request == nil {
         request = NewInquiryPriceModifyInstancesChargeTypeRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "cvm", APIVersion, "InquiryPriceModifyInstancesChargeType")
     
     if c.GetCredential() == nil {
         return nil, errors.New("InquiryPriceModifyInstancesChargeType require credential")
@@ -4909,6 +5078,7 @@ func (c *Client) InquiryPriceRenewHostsWithContext(ctx context.Context, request 
     if request == nil {
         request = NewInquiryPriceRenewHostsRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "cvm", APIVersion, "InquiryPriceRenewHosts")
     
     if c.GetCredential() == nil {
         return nil, errors.New("InquiryPriceRenewHosts require credential")
@@ -5006,6 +5176,7 @@ func (c *Client) InquiryPriceRenewInstancesWithContext(ctx context.Context, requ
     if request == nil {
         request = NewInquiryPriceRenewInstancesRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "cvm", APIVersion, "InquiryPriceRenewInstances")
     
     if c.GetCredential() == nil {
         return nil, errors.New("InquiryPriceRenewInstances require credential")
@@ -5115,6 +5286,7 @@ func (c *Client) InquiryPriceResetInstanceWithContext(ctx context.Context, reque
     if request == nil {
         request = NewInquiryPriceResetInstanceRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "cvm", APIVersion, "InquiryPriceResetInstance")
     
     if c.GetCredential() == nil {
         return nil, errors.New("InquiryPriceResetInstance require credential")
@@ -5228,6 +5400,7 @@ func (c *Client) InquiryPriceResetInstancesInternetMaxBandwidthWithContext(ctx c
     if request == nil {
         request = NewInquiryPriceResetInstancesInternetMaxBandwidthRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "cvm", APIVersion, "InquiryPriceResetInstancesInternetMaxBandwidth")
     
     if c.GetCredential() == nil {
         return nil, errors.New("InquiryPriceResetInstancesInternetMaxBandwidth require credential")
@@ -5375,6 +5548,7 @@ func (c *Client) InquiryPriceResetInstancesTypeWithContext(ctx context.Context, 
     if request == nil {
         request = NewInquiryPriceResetInstancesTypeRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "cvm", APIVersion, "InquiryPriceResetInstancesType")
     
     if c.GetCredential() == nil {
         return nil, errors.New("InquiryPriceResetInstancesType require credential")
@@ -5474,6 +5648,7 @@ func (c *Client) InquiryPriceResizeInstanceDisksWithContext(ctx context.Context,
     if request == nil {
         request = NewInquiryPriceResizeInstanceDisksRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "cvm", APIVersion, "InquiryPriceResizeInstanceDisks")
     
     if c.GetCredential() == nil {
         return nil, errors.New("InquiryPriceResizeInstanceDisks require credential")
@@ -5687,6 +5862,7 @@ func (c *Client) InquiryPriceRunInstancesWithContext(ctx context.Context, reques
     if request == nil {
         request = NewInquiryPriceRunInstancesRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "cvm", APIVersion, "InquiryPriceRunInstances")
     
     if c.GetCredential() == nil {
         return nil, errors.New("InquiryPriceRunInstances require credential")
@@ -5782,6 +5958,7 @@ func (c *Client) InquiryPriceTerminateInstancesWithContext(ctx context.Context, 
     if request == nil {
         request = NewInquiryPriceTerminateInstancesRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "cvm", APIVersion, "InquiryPriceTerminateInstances")
     
     if c.GetCredential() == nil {
         return nil, errors.New("InquiryPriceTerminateInstances require credential")
@@ -5849,6 +6026,7 @@ func (c *Client) ModifyChcAttributeWithContext(ctx context.Context, request *Mod
     if request == nil {
         request = NewModifyChcAttributeRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "cvm", APIVersion, "ModifyChcAttribute")
     
     if c.GetCredential() == nil {
         return nil, errors.New("ModifyChcAttribute require credential")
@@ -5902,6 +6080,7 @@ func (c *Client) ModifyDisasterRecoverGroupAttributeWithContext(ctx context.Cont
     if request == nil {
         request = NewModifyDisasterRecoverGroupAttributeRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "cvm", APIVersion, "ModifyDisasterRecoverGroupAttribute")
     
     if c.GetCredential() == nil {
         return nil, errors.New("ModifyDisasterRecoverGroupAttribute require credential")
@@ -5957,6 +6136,7 @@ func (c *Client) ModifyHostsAttributeWithContext(ctx context.Context, request *M
     if request == nil {
         request = NewModifyHostsAttributeRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "cvm", APIVersion, "ModifyHostsAttribute")
     
     if c.GetCredential() == nil {
         return nil, errors.New("ModifyHostsAttribute require credential")
@@ -6008,6 +6188,7 @@ func (c *Client) ModifyHpcClusterAttributeWithContext(ctx context.Context, reque
     if request == nil {
         request = NewModifyHpcClusterAttributeRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "cvm", APIVersion, "ModifyHpcClusterAttribute")
     
     if c.GetCredential() == nil {
         return nil, errors.New("ModifyHpcClusterAttribute require credential")
@@ -6055,6 +6236,7 @@ func NewModifyImageAttributeResponse() (response *ModifyImageAttributeResponse) 
 //  INVALIDPARAMETERVALUE_INVALIDIMAGEFAMILY = "InvalidParameterValue.InvalidImageFamily"
 //  INVALIDPARAMETERVALUE_TOOLARGE = "InvalidParameterValue.TooLarge"
 //  UNAUTHORIZEDOPERATION_INVALIDTOKEN = "UnauthorizedOperation.InvalidToken"
+//  UNSUPPORTEDOPERATION_SHAREDIMAGEMODIFYUNSUPPORTED = "UnsupportedOperation.SharedImageModifyUnsupported"
 func (c *Client) ModifyImageAttribute(request *ModifyImageAttributeRequest) (response *ModifyImageAttributeResponse, err error) {
     return c.ModifyImageAttributeWithContext(context.Background(), request)
 }
@@ -6075,10 +6257,12 @@ func (c *Client) ModifyImageAttribute(request *ModifyImageAttributeRequest) (res
 //  INVALIDPARAMETERVALUE_INVALIDIMAGEFAMILY = "InvalidParameterValue.InvalidImageFamily"
 //  INVALIDPARAMETERVALUE_TOOLARGE = "InvalidParameterValue.TooLarge"
 //  UNAUTHORIZEDOPERATION_INVALIDTOKEN = "UnauthorizedOperation.InvalidToken"
+//  UNSUPPORTEDOPERATION_SHAREDIMAGEMODIFYUNSUPPORTED = "UnsupportedOperation.SharedImageModifyUnsupported"
 func (c *Client) ModifyImageAttributeWithContext(ctx context.Context, request *ModifyImageAttributeRequest) (response *ModifyImageAttributeResponse, err error) {
     if request == nil {
         request = NewModifyImageAttributeRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "cvm", APIVersion, "ModifyImageAttribute")
     
     if c.GetCredential() == nil {
         return nil, errors.New("ModifyImageAttribute require credential")
@@ -6186,6 +6370,7 @@ func (c *Client) ModifyImageSharePermissionWithContext(ctx context.Context, requ
     if request == nil {
         request = NewModifyImageSharePermissionRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "cvm", APIVersion, "ModifyImageSharePermission")
     
     if c.GetCredential() == nil {
         return nil, errors.New("ModifyImageSharePermission require credential")
@@ -6303,6 +6488,7 @@ func (c *Client) ModifyInstanceDiskTypeWithContext(ctx context.Context, request 
     if request == nil {
         request = NewModifyInstanceDiskTypeRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "cvm", APIVersion, "ModifyInstanceDiskType")
     
     if c.GetCredential() == nil {
         return nil, errors.New("ModifyInstanceDiskType require credential")
@@ -6466,6 +6652,7 @@ func (c *Client) ModifyInstancesAttributeWithContext(ctx context.Context, reques
     if request == nil {
         request = NewModifyInstancesAttributeRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "cvm", APIVersion, "ModifyInstancesAttribute")
     
     if c.GetCredential() == nil {
         return nil, errors.New("ModifyInstancesAttribute require credential")
@@ -6595,6 +6782,7 @@ func (c *Client) ModifyInstancesChargeTypeWithContext(ctx context.Context, reque
     if request == nil {
         request = NewModifyInstancesChargeTypeRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "cvm", APIVersion, "ModifyInstancesChargeType")
     
     if c.GetCredential() == nil {
         return nil, errors.New("ModifyInstancesChargeType require credential")
@@ -6694,6 +6882,7 @@ func (c *Client) ModifyInstancesDisasterRecoverGroupWithContext(ctx context.Cont
     if request == nil {
         request = NewModifyInstancesDisasterRecoverGroupRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "cvm", APIVersion, "ModifyInstancesDisasterRecoverGroup")
     
     if c.GetCredential() == nil {
         return nil, errors.New("ModifyInstancesDisasterRecoverGroup require credential")
@@ -6736,7 +6925,7 @@ func NewModifyInstancesProjectResponse() (response *ModifyInstancesProjectRespon
 //
 // * 支持批量操作。每次请求批量实例的上限为100。
 //
-// * 实例操作结果可以通过调用 [DescribeInstances](https://cloud.tencent.com/document/api/213/15728#.E7.A4.BA.E4.BE.8B3-.E6.9F.A5.E8.AF.A2.E5.AE.9E.E4.BE.8B.E7.9A.84.E6.9C.80.E6.96.B0.E6.93.8D.E4.BD.9C.E6.83.85.E5.86.B5) 接口查询，如果实例的最新操作状态(LatestOperationState)为“SUCCESS”，则代表操作成功。
+// * 实例操作结果可以通过调用 [DescribeInstances](https://cloud.tencent.com/document/api/213/15728) 接口查询，如果实例的最新操作状态(LatestOperationState)为“SUCCESS”，则代表操作成功。
 //
 // 可能返回的错误码:
 //  INTERNALSERVERERROR = "InternalServerError"
@@ -6766,7 +6955,7 @@ func (c *Client) ModifyInstancesProject(request *ModifyInstancesProjectRequest) 
 //
 // * 支持批量操作。每次请求批量实例的上限为100。
 //
-// * 实例操作结果可以通过调用 [DescribeInstances](https://cloud.tencent.com/document/api/213/15728#.E7.A4.BA.E4.BE.8B3-.E6.9F.A5.E8.AF.A2.E5.AE.9E.E4.BE.8B.E7.9A.84.E6.9C.80.E6.96.B0.E6.93.8D.E4.BD.9C.E6.83.85.E5.86.B5) 接口查询，如果实例的最新操作状态(LatestOperationState)为“SUCCESS”，则代表操作成功。
+// * 实例操作结果可以通过调用 [DescribeInstances](https://cloud.tencent.com/document/api/213/15728) 接口查询，如果实例的最新操作状态(LatestOperationState)为“SUCCESS”，则代表操作成功。
 //
 // 可能返回的错误码:
 //  INTERNALSERVERERROR = "InternalServerError"
@@ -6785,6 +6974,7 @@ func (c *Client) ModifyInstancesProjectWithContext(ctx context.Context, request 
     if request == nil {
         request = NewModifyInstancesProjectRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "cvm", APIVersion, "ModifyInstancesProject")
     
     if c.GetCredential() == nil {
         return nil, errors.New("ModifyInstancesProject require credential")
@@ -6904,6 +7094,7 @@ func (c *Client) ModifyInstancesRenewFlagWithContext(ctx context.Context, reques
     if request == nil {
         request = NewModifyInstancesRenewFlagRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "cvm", APIVersion, "ModifyInstancesRenewFlag")
     
     if c.GetCredential() == nil {
         return nil, errors.New("ModifyInstancesRenewFlag require credential")
@@ -7047,6 +7238,7 @@ func (c *Client) ModifyInstancesVpcAttributeWithContext(ctx context.Context, req
     if request == nil {
         request = NewModifyInstancesVpcAttributeRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "cvm", APIVersion, "ModifyInstancesVpcAttribute")
     
     if c.GetCredential() == nil {
         return nil, errors.New("ModifyInstancesVpcAttribute require credential")
@@ -7128,6 +7320,7 @@ func (c *Client) ModifyKeyPairAttributeWithContext(ctx context.Context, request 
     if request == nil {
         request = NewModifyKeyPairAttributeRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "cvm", APIVersion, "ModifyKeyPairAttribute")
     
     if c.GetCredential() == nil {
         return nil, errors.New("ModifyKeyPairAttribute require credential")
@@ -7195,6 +7388,7 @@ func (c *Client) ModifyLaunchTemplateDefaultVersionWithContext(ctx context.Conte
     if request == nil {
         request = NewModifyLaunchTemplateDefaultVersionRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "cvm", APIVersion, "ModifyLaunchTemplateDefaultVersion")
     
     if c.GetCredential() == nil {
         return nil, errors.New("ModifyLaunchTemplateDefaultVersion require credential")
@@ -7264,6 +7458,7 @@ func (c *Client) ProgramFpgaImageWithContext(ctx context.Context, request *Progr
     if request == nil {
         request = NewProgramFpgaImageRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "cvm", APIVersion, "ProgramFpgaImage")
     
     if c.GetCredential() == nil {
         return nil, errors.New("ProgramFpgaImage require credential")
@@ -7276,65 +7471,96 @@ func (c *Client) ProgramFpgaImageWithContext(ctx context.Context, request *Progr
     return
 }
 
-func NewPurchaseReservedInstancesOfferingRequest() (request *PurchaseReservedInstancesOfferingRequest) {
-    request = &PurchaseReservedInstancesOfferingRequest{
+func NewPurchaseResourcePoolPacksRequest() (request *PurchaseResourcePoolPacksRequest) {
+    request = &PurchaseResourcePoolPacksRequest{
         BaseRequest: &tchttp.BaseRequest{},
     }
     
-    request.Init().WithApiInfo("cvm", APIVersion, "PurchaseReservedInstancesOffering")
+    request.Init().WithApiInfo("cvm", APIVersion, "PurchaseResourcePoolPacks")
     
     
     return
 }
 
-func NewPurchaseReservedInstancesOfferingResponse() (response *PurchaseReservedInstancesOfferingResponse) {
-    response = &PurchaseReservedInstancesOfferingResponse{
+func NewPurchaseResourcePoolPacksResponse() (response *PurchaseResourcePoolPacksResponse) {
+    response = &PurchaseResourcePoolPacksResponse{
         BaseResponse: &tchttp.BaseResponse{},
     } 
     return
 
 }
 
-// PurchaseReservedInstancesOffering
-// 本接口(PurchaseReservedInstancesOffering)用于用户购买一个或者多个指定配置的预留实例，预留实例当前只针对国际站白名单用户开放。
+// PurchaseResourcePoolPacks
+// 本接口(PurchaseResourcePoolPacks)用于创建一个或多个实例资源池，每个资源池绑定一个整机或半整机规格的物理资源容量。
+//
+// 
+//
+// * 实例资源池为剩余容量按量付费模式，购买前请确保账户余额充足。
+//
+// * 本接口为异步接口，创建请求发送成功后会返回DedicatedResourcePackIds，此时创建任务并未完成。
 //
 // 可能返回的错误码:
-//  INTERNALERROR_TRADEUNKNOWNERROR = "InternalError.TradeUnknownError"
-//  INVALIDACCOUNT_INSUFFICIENTBALANCE = "InvalidAccount.InsufficientBalance"
-//  INVALIDCLIENTTOKEN_TOOLONG = "InvalidClientToken.TooLong"
+//  INTERNALSERVERERROR = "InternalServerError"
+//  INVALIDINSTANCETYPE_MALFORMED = "InvalidInstanceType.Malformed"
+//  INVALIDPARAMETER = "InvalidParameter"
+//  INVALIDPARAMETER_INSTANCETYPENOTSUPPORT = "InvalidParameter.InstanceTypeNotSupport"
 //  INVALIDPARAMETERVALUE = "InvalidParameterValue"
+//  INVALIDPARAMETERVALUE_DEDICATEDRESOURCEPACKNAME = "InvalidParameterValue.DedicatedResourcePackName"
 //  INVALIDPARAMETERVALUE_RANGE = "InvalidParameterValue.Range"
-//  UNSUPPORTEDOPERATION_INVALIDPERMISSIONNONINTERNATIONALACCOUNT = "UnsupportedOperation.InvalidPermissionNonInternationalAccount"
-//  UNSUPPORTEDOPERATION_RESERVEDINSTANCEINVISIBLEFORUSER = "UnsupportedOperation.ReservedInstanceInvisibleForUser"
-//  UNSUPPORTEDOPERATION_RESERVEDINSTANCEOUTOFQUATA = "UnsupportedOperation.ReservedInstanceOutofQuata"
-func (c *Client) PurchaseReservedInstancesOffering(request *PurchaseReservedInstancesOfferingRequest) (response *PurchaseReservedInstancesOfferingResponse, err error) {
-    return c.PurchaseReservedInstancesOfferingWithContext(context.Background(), request)
+//  INVALIDPARAMETERVALUE_RESOURCEPOOLPACKTYPENOTSUPPORTED = "InvalidParameterValue.ResourcePoolPackTypeNotSupported"
+//  INVALIDPERIOD = "InvalidPeriod"
+//  INVALIDZONE_MISMATCHREGION = "InvalidZone.MismatchRegion"
+//  MISSINGPARAMETER = "MissingParameter"
+//  RESOURCEINSUFFICIENT_SPECIFIEDINSTANCETYPE = "ResourceInsufficient.SpecifiedInstanceType"
+//  RESOURCENOTFOUND_INVALIDZONEINSTANCETYPE = "ResourceNotFound.InvalidZoneInstanceType"
+//  RESOURCESSOLDOUT_AVAILABLEZONE = "ResourcesSoldOut.AvailableZone"
+//  UNAUTHORIZEDOPERATION = "UnauthorizedOperation"
+//  UNSUPPORTEDOPERATION_EDGEZONENOTSUPPORTPURCHASERESERVED = "UnsupportedOperation.EdgeZoneNotSupportPurchaseReserved"
+//  UNSUPPORTEDOPERATION_RESOURCEPOOLPACKAGEINVISIBLEFORUSER = "UnsupportedOperation.ResourcePoolPackageInvisibleForUser"
+func (c *Client) PurchaseResourcePoolPacks(request *PurchaseResourcePoolPacksRequest) (response *PurchaseResourcePoolPacksResponse, err error) {
+    return c.PurchaseResourcePoolPacksWithContext(context.Background(), request)
 }
 
-// PurchaseReservedInstancesOffering
-// 本接口(PurchaseReservedInstancesOffering)用于用户购买一个或者多个指定配置的预留实例，预留实例当前只针对国际站白名单用户开放。
+// PurchaseResourcePoolPacks
+// 本接口(PurchaseResourcePoolPacks)用于创建一个或多个实例资源池，每个资源池绑定一个整机或半整机规格的物理资源容量。
+//
+// 
+//
+// * 实例资源池为剩余容量按量付费模式，购买前请确保账户余额充足。
+//
+// * 本接口为异步接口，创建请求发送成功后会返回DedicatedResourcePackIds，此时创建任务并未完成。
 //
 // 可能返回的错误码:
-//  INTERNALERROR_TRADEUNKNOWNERROR = "InternalError.TradeUnknownError"
-//  INVALIDACCOUNT_INSUFFICIENTBALANCE = "InvalidAccount.InsufficientBalance"
-//  INVALIDCLIENTTOKEN_TOOLONG = "InvalidClientToken.TooLong"
+//  INTERNALSERVERERROR = "InternalServerError"
+//  INVALIDINSTANCETYPE_MALFORMED = "InvalidInstanceType.Malformed"
+//  INVALIDPARAMETER = "InvalidParameter"
+//  INVALIDPARAMETER_INSTANCETYPENOTSUPPORT = "InvalidParameter.InstanceTypeNotSupport"
 //  INVALIDPARAMETERVALUE = "InvalidParameterValue"
+//  INVALIDPARAMETERVALUE_DEDICATEDRESOURCEPACKNAME = "InvalidParameterValue.DedicatedResourcePackName"
 //  INVALIDPARAMETERVALUE_RANGE = "InvalidParameterValue.Range"
-//  UNSUPPORTEDOPERATION_INVALIDPERMISSIONNONINTERNATIONALACCOUNT = "UnsupportedOperation.InvalidPermissionNonInternationalAccount"
-//  UNSUPPORTEDOPERATION_RESERVEDINSTANCEINVISIBLEFORUSER = "UnsupportedOperation.ReservedInstanceInvisibleForUser"
-//  UNSUPPORTEDOPERATION_RESERVEDINSTANCEOUTOFQUATA = "UnsupportedOperation.ReservedInstanceOutofQuata"
-func (c *Client) PurchaseReservedInstancesOfferingWithContext(ctx context.Context, request *PurchaseReservedInstancesOfferingRequest) (response *PurchaseReservedInstancesOfferingResponse, err error) {
+//  INVALIDPARAMETERVALUE_RESOURCEPOOLPACKTYPENOTSUPPORTED = "InvalidParameterValue.ResourcePoolPackTypeNotSupported"
+//  INVALIDPERIOD = "InvalidPeriod"
+//  INVALIDZONE_MISMATCHREGION = "InvalidZone.MismatchRegion"
+//  MISSINGPARAMETER = "MissingParameter"
+//  RESOURCEINSUFFICIENT_SPECIFIEDINSTANCETYPE = "ResourceInsufficient.SpecifiedInstanceType"
+//  RESOURCENOTFOUND_INVALIDZONEINSTANCETYPE = "ResourceNotFound.InvalidZoneInstanceType"
+//  RESOURCESSOLDOUT_AVAILABLEZONE = "ResourcesSoldOut.AvailableZone"
+//  UNAUTHORIZEDOPERATION = "UnauthorizedOperation"
+//  UNSUPPORTEDOPERATION_EDGEZONENOTSUPPORTPURCHASERESERVED = "UnsupportedOperation.EdgeZoneNotSupportPurchaseReserved"
+//  UNSUPPORTEDOPERATION_RESOURCEPOOLPACKAGEINVISIBLEFORUSER = "UnsupportedOperation.ResourcePoolPackageInvisibleForUser"
+func (c *Client) PurchaseResourcePoolPacksWithContext(ctx context.Context, request *PurchaseResourcePoolPacksRequest) (response *PurchaseResourcePoolPacksResponse, err error) {
     if request == nil {
-        request = NewPurchaseReservedInstancesOfferingRequest()
+        request = NewPurchaseResourcePoolPacksRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "cvm", APIVersion, "PurchaseResourcePoolPacks")
     
     if c.GetCredential() == nil {
-        return nil, errors.New("PurchaseReservedInstancesOffering require credential")
+        return nil, errors.New("PurchaseResourcePoolPacks require credential")
     }
 
     request.SetContext(ctx)
     
-    response = NewPurchaseReservedInstancesOfferingResponse()
+    response = NewPurchaseResourcePoolPacksResponse()
     err = c.Send(request, response)
     return
 }
@@ -7462,6 +7688,7 @@ func (c *Client) RebootInstancesWithContext(ctx context.Context, request *Reboot
     if request == nil {
         request = NewRebootInstancesRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "cvm", APIVersion, "RebootInstances")
     
     if c.GetCredential() == nil {
         return nil, errors.New("RebootInstances require credential")
@@ -7517,6 +7744,7 @@ func (c *Client) RemoveChcAssistVpcWithContext(ctx context.Context, request *Rem
     if request == nil {
         request = NewRemoveChcAssistVpcRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "cvm", APIVersion, "RemoveChcAssistVpc")
     
     if c.GetCredential() == nil {
         return nil, errors.New("RemoveChcAssistVpc require credential")
@@ -7574,6 +7802,7 @@ func (c *Client) RemoveChcDeployVpcWithContext(ctx context.Context, request *Rem
     if request == nil {
         request = NewRemoveChcDeployVpcRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "cvm", APIVersion, "RemoveChcDeployVpc")
     
     if c.GetCredential() == nil {
         return nil, errors.New("RemoveChcDeployVpc require credential")
@@ -7649,6 +7878,7 @@ func (c *Client) RenewHostsWithContext(ctx context.Context, request *RenewHostsR
     if request == nil {
         request = NewRenewHostsRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "cvm", APIVersion, "RenewHosts")
     
     if c.GetCredential() == nil {
         return nil, errors.New("RenewHosts require credential")
@@ -7689,7 +7919,7 @@ func NewRenewInstancesResponse() (response *RenewInstancesResponse) {
 //
 // * 续费时请确保账户余额充足。可通过[DescribeAccountBalance](https://cloud.tencent.com/document/product/555/20253)接口查询账户余额。
 //
-// * 实例操作结果可以通过调用 [DescribeInstances](https://cloud.tencent.com/document/api/213/15728#.E7.A4.BA.E4.BE.8B3-.E6.9F.A5.E8.AF.A2.E5.AE.9E.E4.BE.8B.E7.9A.84.E6.9C.80.E6.96.B0.E6.93.8D.E4.BD.9C.E6.83.85.E5.86.B5) 接口查询，如果实例的最新操作状态(LatestOperationState)为“SUCCESS”，则代表操作成功。
+// * 实例操作结果可以通过调用 [DescribeInstances](https://cloud.tencent.com/document/api/213/15728) 接口查询，如果实例的最新操作状态(LatestOperationState)为“SUCCESS”，则代表操作成功。
 //
 // 可能返回的错误码:
 //  FAILEDOPERATION_INVALIDINSTANCEAPPLICATIONROLE = "FailedOperation.InvalidInstanceApplicationRole"
@@ -7718,6 +7948,7 @@ func NewRenewInstancesResponse() (response *RenewInstancesResponse) {
 //  UNSUPPORTEDOPERATION_INSTANCESTATESTOPPING = "UnsupportedOperation.InstanceStateStopping"
 //  UNSUPPORTEDOPERATION_INSTANCESTATETERMINATING = "UnsupportedOperation.InstanceStateTerminating"
 //  UNSUPPORTEDOPERATION_INVALIDDISKBACKUPQUOTA = "UnsupportedOperation.InvalidDiskBackupQuota"
+//  UNSUPPORTEDOPERATION_PERIODICCONTRACTNOTSUPPORTMANUALRENEW = "UnsupportedOperation.PeriodicContractNotSupportManualRenew"
 //  UNSUPPORTEDOPERATION_SPECIALINSTANCETYPE = "UnsupportedOperation.SpecialInstanceType"
 func (c *Client) RenewInstances(request *RenewInstancesRequest) (response *RenewInstancesResponse, err error) {
     return c.RenewInstancesWithContext(context.Background(), request)
@@ -7732,7 +7963,7 @@ func (c *Client) RenewInstances(request *RenewInstancesRequest) (response *Renew
 //
 // * 续费时请确保账户余额充足。可通过[DescribeAccountBalance](https://cloud.tencent.com/document/product/555/20253)接口查询账户余额。
 //
-// * 实例操作结果可以通过调用 [DescribeInstances](https://cloud.tencent.com/document/api/213/15728#.E7.A4.BA.E4.BE.8B3-.E6.9F.A5.E8.AF.A2.E5.AE.9E.E4.BE.8B.E7.9A.84.E6.9C.80.E6.96.B0.E6.93.8D.E4.BD.9C.E6.83.85.E5.86.B5) 接口查询，如果实例的最新操作状态(LatestOperationState)为“SUCCESS”，则代表操作成功。
+// * 实例操作结果可以通过调用 [DescribeInstances](https://cloud.tencent.com/document/api/213/15728) 接口查询，如果实例的最新操作状态(LatestOperationState)为“SUCCESS”，则代表操作成功。
 //
 // 可能返回的错误码:
 //  FAILEDOPERATION_INVALIDINSTANCEAPPLICATIONROLE = "FailedOperation.InvalidInstanceApplicationRole"
@@ -7761,11 +7992,13 @@ func (c *Client) RenewInstances(request *RenewInstancesRequest) (response *Renew
 //  UNSUPPORTEDOPERATION_INSTANCESTATESTOPPING = "UnsupportedOperation.InstanceStateStopping"
 //  UNSUPPORTEDOPERATION_INSTANCESTATETERMINATING = "UnsupportedOperation.InstanceStateTerminating"
 //  UNSUPPORTEDOPERATION_INVALIDDISKBACKUPQUOTA = "UnsupportedOperation.InvalidDiskBackupQuota"
+//  UNSUPPORTEDOPERATION_PERIODICCONTRACTNOTSUPPORTMANUALRENEW = "UnsupportedOperation.PeriodicContractNotSupportManualRenew"
 //  UNSUPPORTEDOPERATION_SPECIALINSTANCETYPE = "UnsupportedOperation.SpecialInstanceType"
 func (c *Client) RenewInstancesWithContext(ctx context.Context, request *RenewInstancesRequest) (response *RenewInstancesResponse, err error) {
     if request == nil {
         request = NewRenewInstancesRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "cvm", APIVersion, "RenewInstances")
     
     if c.GetCredential() == nil {
         return nil, errors.New("RenewInstances require credential")
@@ -7839,6 +8072,7 @@ func (c *Client) RepairTaskControlWithContext(ctx context.Context, request *Repa
     if request == nil {
         request = NewRepairTaskControlRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "cvm", APIVersion, "RepairTaskControl")
     
     if c.GetCredential() == nil {
         return nil, errors.New("RepairTaskControl require credential")
@@ -8044,6 +8278,7 @@ func (c *Client) ResetInstanceWithContext(ctx context.Context, request *ResetIns
     if request == nil {
         request = NewResetInstanceRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "cvm", APIVersion, "ResetInstance")
     
     if c.GetCredential() == nil {
         return nil, errors.New("ResetInstance require credential")
@@ -8195,6 +8430,7 @@ func (c *Client) ResetInstancesInternetMaxBandwidthWithContext(ctx context.Conte
     if request == nil {
         request = NewResetInstancesInternetMaxBandwidthRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "cvm", APIVersion, "ResetInstancesInternetMaxBandwidth")
     
     if c.GetCredential() == nil {
         return nil, errors.New("ResetInstancesInternetMaxBandwidth require credential")
@@ -8324,6 +8560,7 @@ func (c *Client) ResetInstancesPasswordWithContext(ctx context.Context, request 
     if request == nil {
         request = NewResetInstancesPasswordRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "cvm", APIVersion, "ResetInstancesPassword")
     
     if c.GetCredential() == nil {
         return nil, errors.New("ResetInstancesPassword require credential")
@@ -8364,7 +8601,7 @@ func NewResetInstancesTypeResponse() (response *ResetInstancesTypeResponse) {
 //
 // * 目前不支持[CDH](https://cloud.tencent.com/document/product/416)实例使用该接口调整机型。对于包年包月实例，使用该接口会涉及扣费，请确保账户余额充足。可通过[DescribeAccountBalance](https://cloud.tencent.com/document/product/555/20253)接口查询账户余额。
 //
-// * 本接口为异步接口，调整实例配置请求发送成功后会返回一个RequestId，此时操作并未立即完成。实例操作结果可以通过调用 [DescribeInstances](https://cloud.tencent.com/document/api/213/15728#.E7.A4.BA.E4.BE.8B3-.E6.9F.A5.E8.AF.A2.E5.AE.9E.E4.BE.8B.E7.9A.84.E6.9C.80.E6.96.B0.E6.93.8D.E4.BD.9C.E6.83.85.E5.86.B5) 接口查询，如果实例的最新操作状态(LatestOperationState)为“SUCCESS”，则代表调整实例配置操作成功。
+// * 本接口为异步接口，调整实例配置请求发送成功后会返回一个RequestId，此时操作并未立即完成。实例操作结果可以通过调用 [DescribeInstances](https://cloud.tencent.com/document/api/213/15728#.E7.A4.BA.E4.BE.8B3-.E6.9F.A5.E8.AF.A2.E5.AE.9E.E4.BE.8B.E7.9A.84.E6.9C.80.E6.96.B0.E6.93.8D.E4.BD.9C.E6.83.85.E5.86.B5) 接口查询，如果实例的最新操作状态(LatestOperationState)为“SUCCESS”，则代表调整实例配置操作成功。完成实例配置调整后，实例将自动显示为运行中，无需手动进行开机。
 //
 // 可能返回的错误码:
 //  FAILEDOPERATION_INVALIDINSTANCEAPPLICATIONROLE = "FailedOperation.InvalidInstanceApplicationRole"
@@ -8380,6 +8617,7 @@ func NewResetInstancesTypeResponse() (response *ResetInstancesTypeResponse) {
 //  INVALIDINSTANCEID_NOTFOUND = "InvalidInstanceId.NotFound"
 //  INVALIDINSTANCETYPE_MALFORMED = "InvalidInstanceType.Malformed"
 //  INVALIDPARAMETER = "InvalidParameter"
+//  INVALIDPARAMETER_CDZNOTSUPPORTED = "InvalidParameter.CdzNotSupported"
 //  INVALIDPARAMETER_HOSTIDCUSTOMIZEDINSTANCETYPENOTSUPPORT = "InvalidParameter.HostIdCustomizedInstanceTypeNotSupport"
 //  INVALIDPARAMETER_HOSTIDINSTANCETYPENOTSUPPORT = "InvalidParameter.HostIdInstanceTypeNotSupport"
 //  INVALIDPARAMETER_HOSTIDSTANDARDINSTANCETYPENOTSUPPORT = "InvalidParameter.HostIdStandardInstanceTypeNotSupport"
@@ -8455,7 +8693,7 @@ func (c *Client) ResetInstancesType(request *ResetInstancesTypeRequest) (respons
 //
 // * 目前不支持[CDH](https://cloud.tencent.com/document/product/416)实例使用该接口调整机型。对于包年包月实例，使用该接口会涉及扣费，请确保账户余额充足。可通过[DescribeAccountBalance](https://cloud.tencent.com/document/product/555/20253)接口查询账户余额。
 //
-// * 本接口为异步接口，调整实例配置请求发送成功后会返回一个RequestId，此时操作并未立即完成。实例操作结果可以通过调用 [DescribeInstances](https://cloud.tencent.com/document/api/213/15728#.E7.A4.BA.E4.BE.8B3-.E6.9F.A5.E8.AF.A2.E5.AE.9E.E4.BE.8B.E7.9A.84.E6.9C.80.E6.96.B0.E6.93.8D.E4.BD.9C.E6.83.85.E5.86.B5) 接口查询，如果实例的最新操作状态(LatestOperationState)为“SUCCESS”，则代表调整实例配置操作成功。
+// * 本接口为异步接口，调整实例配置请求发送成功后会返回一个RequestId，此时操作并未立即完成。实例操作结果可以通过调用 [DescribeInstances](https://cloud.tencent.com/document/api/213/15728#.E7.A4.BA.E4.BE.8B3-.E6.9F.A5.E8.AF.A2.E5.AE.9E.E4.BE.8B.E7.9A.84.E6.9C.80.E6.96.B0.E6.93.8D.E4.BD.9C.E6.83.85.E5.86.B5) 接口查询，如果实例的最新操作状态(LatestOperationState)为“SUCCESS”，则代表调整实例配置操作成功。完成实例配置调整后，实例将自动显示为运行中，无需手动进行开机。
 //
 // 可能返回的错误码:
 //  FAILEDOPERATION_INVALIDINSTANCEAPPLICATIONROLE = "FailedOperation.InvalidInstanceApplicationRole"
@@ -8471,6 +8709,7 @@ func (c *Client) ResetInstancesType(request *ResetInstancesTypeRequest) (respons
 //  INVALIDINSTANCEID_NOTFOUND = "InvalidInstanceId.NotFound"
 //  INVALIDINSTANCETYPE_MALFORMED = "InvalidInstanceType.Malformed"
 //  INVALIDPARAMETER = "InvalidParameter"
+//  INVALIDPARAMETER_CDZNOTSUPPORTED = "InvalidParameter.CdzNotSupported"
 //  INVALIDPARAMETER_HOSTIDCUSTOMIZEDINSTANCETYPENOTSUPPORT = "InvalidParameter.HostIdCustomizedInstanceTypeNotSupport"
 //  INVALIDPARAMETER_HOSTIDINSTANCETYPENOTSUPPORT = "InvalidParameter.HostIdInstanceTypeNotSupport"
 //  INVALIDPARAMETER_HOSTIDSTANDARDINSTANCETYPENOTSUPPORT = "InvalidParameter.HostIdStandardInstanceTypeNotSupport"
@@ -8537,6 +8776,7 @@ func (c *Client) ResetInstancesTypeWithContext(ctx context.Context, request *Res
     if request == nil {
         request = NewResetInstancesTypeRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "cvm", APIVersion, "ResetInstancesType")
     
     if c.GetCredential() == nil {
         return nil, errors.New("ResetInstancesType require credential")
@@ -8686,6 +8926,7 @@ func (c *Client) ResizeInstanceDisksWithContext(ctx context.Context, request *Re
     if request == nil {
         request = NewResizeInstanceDisksRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "cvm", APIVersion, "ResizeInstanceDisks")
     
     if c.GetCredential() == nil {
         return nil, errors.New("ResizeInstanceDisks require credential")
@@ -8783,6 +9024,9 @@ func NewRunInstancesResponse() (response *RunInstancesResponse) {
 //  INVALIDPARAMETERVALUE_CLOUDSSDDATADISKSIZETOOSMALL = "InvalidParameterValue.CloudSsdDataDiskSizeTooSmall"
 //  INVALIDPARAMETERVALUE_CORECOUNTVALUE = "InvalidParameterValue.CoreCountValue"
 //  INVALIDPARAMETERVALUE_DEDICATEDCLUSTERNOTSUPPORTEDCHARGETYPE = "InvalidParameterValue.DedicatedClusterNotSupportedChargeType"
+//  INVALIDPARAMETERVALUE_DEDICATEDRESOURCEPACKIDSNOTFOUND = "InvalidParameterValue.DedicatedResourcePackIdsNotFound"
+//  INVALIDPARAMETERVALUE_DEDICATEDRESOURCEPACKNOTVALID = "InvalidParameterValue.DedicatedResourcePackNotValid"
+//  INVALIDPARAMETERVALUE_DEDICATEDRESOURCEPACKTENANCYMISMATCH = "InvalidParameterValue.DedicatedResourcePackTenancyMismatch"
 //  INVALIDPARAMETERVALUE_DUPLICATE = "InvalidParameterValue.Duplicate"
 //  INVALIDPARAMETERVALUE_DUPLICATETAGS = "InvalidParameterValue.DuplicateTags"
 //  INVALIDPARAMETERVALUE_ELASTICNETWORKNOTEXIST = "InvalidParameterValue.ElasticNetworkNotExist"
@@ -8804,8 +9048,10 @@ func NewRunInstancesResponse() (response *RunInstancesResponse) {
 //  INVALIDPARAMETERVALUE_INVALIDIMAGEID = "InvalidParameterValue.InvalidImageId"
 //  INVALIDPARAMETERVALUE_INVALIDIMAGEOSNAME = "InvalidParameterValue.InvalidImageOsName"
 //  INVALIDPARAMETERVALUE_INVALIDIMAGESTATE = "InvalidParameterValue.InvalidImageState"
+//  INVALIDPARAMETERVALUE_INVALIDINSTANCETYPEPERIODICCONTRACT = "InvalidParameterValue.InvalidInstanceTypePeriodicContract"
 //  INVALIDPARAMETERVALUE_INVALIDIPFORMAT = "InvalidParameterValue.InvalidIpFormat"
 //  INVALIDPARAMETERVALUE_INVALIDNETWORKINTERFACEID = "InvalidParameterValue.InvalidNetworkInterfaceId"
+//  INVALIDPARAMETERVALUE_INVALIDPARAMETERMINCOUNT = "InvalidParameterValue.InvalidParameterMinCount"
 //  INVALIDPARAMETERVALUE_INVALIDPASSWORD = "InvalidParameterValue.InvalidPassword"
 //  INVALIDPARAMETERVALUE_INVALIDTIMEFORMAT = "InvalidParameterValue.InvalidTimeFormat"
 //  INVALIDPARAMETERVALUE_INVALIDUSERDATAFORMAT = "InvalidParameterValue.InvalidUserDataFormat"
@@ -8865,6 +9111,7 @@ func NewRunInstancesResponse() (response *RunInstancesResponse) {
 //  RESOURCEINSUFFICIENT_CLOUDDISKSOLDOUT = "ResourceInsufficient.CloudDiskSoldOut"
 //  RESOURCEINSUFFICIENT_CLOUDDISKUNAVAILABLE = "ResourceInsufficient.CloudDiskUnavailable"
 //  RESOURCEINSUFFICIENT_DISASTERRECOVERGROUPCVMQUOTA = "ResourceInsufficient.DisasterRecoverGroupCvmQuota"
+//  RESOURCEINSUFFICIENT_INSUFFICIENTOFFERINGMINIMUM = "ResourceInsufficient.InsufficientOfferingMinimum"
 //  RESOURCEINSUFFICIENT_SPECIFIEDINSTANCETYPE = "ResourceInsufficient.SpecifiedInstanceType"
 //  RESOURCENOTFOUND_HPCCLUSTER = "ResourceNotFound.HpcCluster"
 //  RESOURCENOTFOUND_KEYPAIRNOTFOUND = "ResourceNotFound.KeyPairNotFound"
@@ -8885,9 +9132,12 @@ func NewRunInstancesResponse() (response *RunInstancesResponse) {
 //  UNSUPPORTEDOPERATION_INVALIDDISK = "UnsupportedOperation.InvalidDisk"
 //  UNSUPPORTEDOPERATION_INVALIDREGIONDISKENCRYPT = "UnsupportedOperation.InvalidRegionDiskEncrypt"
 //  UNSUPPORTEDOPERATION_KEYPAIRUNSUPPORTEDWINDOWS = "UnsupportedOperation.KeyPairUnsupportedWindows"
+//  UNSUPPORTEDOPERATION_MINCOUNTUNSUPPORTEDCHARGETYPE = "UnsupportedOperation.MinCountUnsupportedChargeType"
+//  UNSUPPORTEDOPERATION_MINCOUNTUNSUPPORTEDREGION = "UnsupportedOperation.MinCountUnsupportedRegion"
 //  UNSUPPORTEDOPERATION_NOINSTANCETYPESUPPORTSPOT = "UnsupportedOperation.NoInstanceTypeSupportSpot"
 //  UNSUPPORTEDOPERATION_NOTSUPPORTIMPORTINSTANCESACTIONTIMER = "UnsupportedOperation.NotSupportImportInstancesActionTimer"
 //  UNSUPPORTEDOPERATION_ONLYFORPREPAIDACCOUNT = "UnsupportedOperation.OnlyForPrepaidAccount"
+//  UNSUPPORTEDOPERATION_PERIODICCONTRACTNOTSUPPORTMANUALRENEW = "UnsupportedOperation.PeriodicContractNotSupportManualRenew"
 //  UNSUPPORTEDOPERATION_RAWLOCALDISKINSREINSTALLTOQCOW2 = "UnsupportedOperation.RawLocalDiskInsReinstalltoQcow2"
 //  UNSUPPORTEDOPERATION_SPOTUNSUPPORTEDREGION = "UnsupportedOperation.SpotUnsupportedRegion"
 //  UNSUPPORTEDOPERATION_UNDERWRITINGINSTANCETYPEONLYSUPPORTAUTORENEW = "UnsupportedOperation.UnderwritingInstanceTypeOnlySupportAutoRenew"
@@ -8964,6 +9214,9 @@ func (c *Client) RunInstances(request *RunInstancesRequest) (response *RunInstan
 //  INVALIDPARAMETERVALUE_CLOUDSSDDATADISKSIZETOOSMALL = "InvalidParameterValue.CloudSsdDataDiskSizeTooSmall"
 //  INVALIDPARAMETERVALUE_CORECOUNTVALUE = "InvalidParameterValue.CoreCountValue"
 //  INVALIDPARAMETERVALUE_DEDICATEDCLUSTERNOTSUPPORTEDCHARGETYPE = "InvalidParameterValue.DedicatedClusterNotSupportedChargeType"
+//  INVALIDPARAMETERVALUE_DEDICATEDRESOURCEPACKIDSNOTFOUND = "InvalidParameterValue.DedicatedResourcePackIdsNotFound"
+//  INVALIDPARAMETERVALUE_DEDICATEDRESOURCEPACKNOTVALID = "InvalidParameterValue.DedicatedResourcePackNotValid"
+//  INVALIDPARAMETERVALUE_DEDICATEDRESOURCEPACKTENANCYMISMATCH = "InvalidParameterValue.DedicatedResourcePackTenancyMismatch"
 //  INVALIDPARAMETERVALUE_DUPLICATE = "InvalidParameterValue.Duplicate"
 //  INVALIDPARAMETERVALUE_DUPLICATETAGS = "InvalidParameterValue.DuplicateTags"
 //  INVALIDPARAMETERVALUE_ELASTICNETWORKNOTEXIST = "InvalidParameterValue.ElasticNetworkNotExist"
@@ -8985,8 +9238,10 @@ func (c *Client) RunInstances(request *RunInstancesRequest) (response *RunInstan
 //  INVALIDPARAMETERVALUE_INVALIDIMAGEID = "InvalidParameterValue.InvalidImageId"
 //  INVALIDPARAMETERVALUE_INVALIDIMAGEOSNAME = "InvalidParameterValue.InvalidImageOsName"
 //  INVALIDPARAMETERVALUE_INVALIDIMAGESTATE = "InvalidParameterValue.InvalidImageState"
+//  INVALIDPARAMETERVALUE_INVALIDINSTANCETYPEPERIODICCONTRACT = "InvalidParameterValue.InvalidInstanceTypePeriodicContract"
 //  INVALIDPARAMETERVALUE_INVALIDIPFORMAT = "InvalidParameterValue.InvalidIpFormat"
 //  INVALIDPARAMETERVALUE_INVALIDNETWORKINTERFACEID = "InvalidParameterValue.InvalidNetworkInterfaceId"
+//  INVALIDPARAMETERVALUE_INVALIDPARAMETERMINCOUNT = "InvalidParameterValue.InvalidParameterMinCount"
 //  INVALIDPARAMETERVALUE_INVALIDPASSWORD = "InvalidParameterValue.InvalidPassword"
 //  INVALIDPARAMETERVALUE_INVALIDTIMEFORMAT = "InvalidParameterValue.InvalidTimeFormat"
 //  INVALIDPARAMETERVALUE_INVALIDUSERDATAFORMAT = "InvalidParameterValue.InvalidUserDataFormat"
@@ -9046,6 +9301,7 @@ func (c *Client) RunInstances(request *RunInstancesRequest) (response *RunInstan
 //  RESOURCEINSUFFICIENT_CLOUDDISKSOLDOUT = "ResourceInsufficient.CloudDiskSoldOut"
 //  RESOURCEINSUFFICIENT_CLOUDDISKUNAVAILABLE = "ResourceInsufficient.CloudDiskUnavailable"
 //  RESOURCEINSUFFICIENT_DISASTERRECOVERGROUPCVMQUOTA = "ResourceInsufficient.DisasterRecoverGroupCvmQuota"
+//  RESOURCEINSUFFICIENT_INSUFFICIENTOFFERINGMINIMUM = "ResourceInsufficient.InsufficientOfferingMinimum"
 //  RESOURCEINSUFFICIENT_SPECIFIEDINSTANCETYPE = "ResourceInsufficient.SpecifiedInstanceType"
 //  RESOURCENOTFOUND_HPCCLUSTER = "ResourceNotFound.HpcCluster"
 //  RESOURCENOTFOUND_KEYPAIRNOTFOUND = "ResourceNotFound.KeyPairNotFound"
@@ -9066,9 +9322,12 @@ func (c *Client) RunInstances(request *RunInstancesRequest) (response *RunInstan
 //  UNSUPPORTEDOPERATION_INVALIDDISK = "UnsupportedOperation.InvalidDisk"
 //  UNSUPPORTEDOPERATION_INVALIDREGIONDISKENCRYPT = "UnsupportedOperation.InvalidRegionDiskEncrypt"
 //  UNSUPPORTEDOPERATION_KEYPAIRUNSUPPORTEDWINDOWS = "UnsupportedOperation.KeyPairUnsupportedWindows"
+//  UNSUPPORTEDOPERATION_MINCOUNTUNSUPPORTEDCHARGETYPE = "UnsupportedOperation.MinCountUnsupportedChargeType"
+//  UNSUPPORTEDOPERATION_MINCOUNTUNSUPPORTEDREGION = "UnsupportedOperation.MinCountUnsupportedRegion"
 //  UNSUPPORTEDOPERATION_NOINSTANCETYPESUPPORTSPOT = "UnsupportedOperation.NoInstanceTypeSupportSpot"
 //  UNSUPPORTEDOPERATION_NOTSUPPORTIMPORTINSTANCESACTIONTIMER = "UnsupportedOperation.NotSupportImportInstancesActionTimer"
 //  UNSUPPORTEDOPERATION_ONLYFORPREPAIDACCOUNT = "UnsupportedOperation.OnlyForPrepaidAccount"
+//  UNSUPPORTEDOPERATION_PERIODICCONTRACTNOTSUPPORTMANUALRENEW = "UnsupportedOperation.PeriodicContractNotSupportManualRenew"
 //  UNSUPPORTEDOPERATION_RAWLOCALDISKINSREINSTALLTOQCOW2 = "UnsupportedOperation.RawLocalDiskInsReinstalltoQcow2"
 //  UNSUPPORTEDOPERATION_SPOTUNSUPPORTEDREGION = "UnsupportedOperation.SpotUnsupportedRegion"
 //  UNSUPPORTEDOPERATION_UNDERWRITINGINSTANCETYPEONLYSUPPORTAUTORENEW = "UnsupportedOperation.UnderwritingInstanceTypeOnlySupportAutoRenew"
@@ -9079,6 +9338,7 @@ func (c *Client) RunInstancesWithContext(ctx context.Context, request *RunInstan
     if request == nil {
         request = NewRunInstancesRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "cvm", APIVersion, "RunInstances")
     
     if c.GetCredential() == nil {
         return nil, errors.New("RunInstances require credential")
@@ -9121,7 +9381,7 @@ func NewStartInstancesResponse() (response *StartInstancesResponse) {
 //
 // * 支持批量操作。每次请求批量实例的上限为100。
 //
-// * 本接口为异步接口，启动实例请求发送成功后会返回一个RequestId，此时操作并未立即完成。实例操作结果可以通过调用 [DescribeInstances](https://cloud.tencent.com/document/api/213/15728#.E7.A4.BA.E4.BE.8B3-.E6.9F.A5.E8.AF.A2.E5.AE.9E.E4.BE.8B.E7.9A.84.E6.9C.80.E6.96.B0.E6.93.8D.E4.BD.9C.E6.83.85.E5.86.B5) 接口查询，如果实例的最新操作状态(LatestOperationState)为“SUCCESS”，则代表启动实例操作成功。
+// * 本接口为异步接口，启动实例请求发送成功后会返回一个RequestId，此时操作并未立即完成。实例操作结果可以通过调用 [DescribeInstances](https://cloud.tencent.com/document/api/213/15728) 接口查询，如果实例的最新操作状态(LatestOperationState)为“SUCCESS”，则代表启动实例操作成功。
 //
 // 可能返回的错误码:
 //  INTERNALSERVERERROR = "InternalServerError"
@@ -9167,7 +9427,7 @@ func (c *Client) StartInstances(request *StartInstancesRequest) (response *Start
 //
 // * 支持批量操作。每次请求批量实例的上限为100。
 //
-// * 本接口为异步接口，启动实例请求发送成功后会返回一个RequestId，此时操作并未立即完成。实例操作结果可以通过调用 [DescribeInstances](https://cloud.tencent.com/document/api/213/15728#.E7.A4.BA.E4.BE.8B3-.E6.9F.A5.E8.AF.A2.E5.AE.9E.E4.BE.8B.E7.9A.84.E6.9C.80.E6.96.B0.E6.93.8D.E4.BD.9C.E6.83.85.E5.86.B5) 接口查询，如果实例的最新操作状态(LatestOperationState)为“SUCCESS”，则代表启动实例操作成功。
+// * 本接口为异步接口，启动实例请求发送成功后会返回一个RequestId，此时操作并未立即完成。实例操作结果可以通过调用 [DescribeInstances](https://cloud.tencent.com/document/api/213/15728) 接口查询，如果实例的最新操作状态(LatestOperationState)为“SUCCESS”，则代表启动实例操作成功。
 //
 // 可能返回的错误码:
 //  INTERNALSERVERERROR = "InternalServerError"
@@ -9202,6 +9462,7 @@ func (c *Client) StartInstancesWithContext(ctx context.Context, request *StartIn
     if request == nil {
         request = NewStartInstancesRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "cvm", APIVersion, "StartInstances")
     
     if c.GetCredential() == nil {
         return nil, errors.New("StartInstances require credential")
@@ -9343,6 +9604,7 @@ func (c *Client) StopInstancesWithContext(ctx context.Context, request *StopInst
     if request == nil {
         request = NewStopInstancesRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "cvm", APIVersion, "StopInstances")
     
     if c.GetCredential() == nil {
         return nil, errors.New("StopInstances require credential")
@@ -9452,6 +9714,7 @@ func (c *Client) SyncImagesWithContext(ctx context.Context, request *SyncImagesR
     if request == nil {
         request = NewSyncImagesRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "cvm", APIVersion, "SyncImages")
     
     if c.GetCredential() == nil {
         return nil, errors.New("SyncImages require credential")
@@ -9619,6 +9882,7 @@ func (c *Client) TerminateInstancesWithContext(ctx context.Context, request *Ter
     if request == nil {
         request = NewTerminateInstancesRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "cvm", APIVersion, "TerminateInstances")
     
     if c.GetCredential() == nil {
         return nil, errors.New("TerminateInstances require credential")
@@ -9627,6 +9891,90 @@ func (c *Client) TerminateInstancesWithContext(ctx context.Context, request *Ter
     request.SetContext(ctx)
     
     response = NewTerminateInstancesResponse()
+    err = c.Send(request, response)
+    return
+}
+
+func NewTerminateResourcePoolPacksRequest() (request *TerminateResourcePoolPacksRequest) {
+    request = &TerminateResourcePoolPacksRequest{
+        BaseRequest: &tchttp.BaseRequest{},
+    }
+    
+    request.Init().WithApiInfo("cvm", APIVersion, "TerminateResourcePoolPacks")
+    
+    
+    return
+}
+
+func NewTerminateResourcePoolPacksResponse() (response *TerminateResourcePoolPacksResponse) {
+    response = &TerminateResourcePoolPacksResponse{
+        BaseResponse: &tchttp.BaseResponse{},
+    } 
+    return
+
+}
+
+// TerminateResourcePoolPacks
+// 本接口(TerminateResourcePoolPacks)用于销毁指定的实例资源池。
+//
+// 
+//
+// * 销毁资源池不会销毁池内已创建的实例。
+//
+// * 池内实例会从专属资源池解绑，转移至公共资源池，继续按原生命周期运行。
+//
+// * 转移后无法再查询底层物理拓扑信息。
+//
+// * 释放底层物理资源并删除资源池记录。
+//
+// 可能返回的错误码:
+//  INTERNALSERVERERROR = "InternalServerError"
+//  INVALIDPARAMETER = "InvalidParameter"
+//  INVALIDPARAMETERVALUE = "InvalidParameterValue"
+//  INVALIDPARAMETERVALUE_RESOURCEPOOLPACKIDMALFORMED = "InvalidParameterValue.ResourcePoolPackIdMalformed"
+//  INVALIDPARAMETERVALUE_RESOURCEPOOLPACKSTATUS = "InvalidParameterValue.ResourcePoolPackStatus"
+//  RESOURCENOTFOUND_RESOURCEPOOLPACKIDNOTFOUND = "ResourceNotFound.ResourcePoolPackIdNotFound"
+//  UNAUTHORIZEDOPERATION = "UnauthorizedOperation"
+//  UNSUPPORTEDOPERATION_RESOURCEPOOLPACKAGEINVISIBLEFORUSER = "UnsupportedOperation.ResourcePoolPackageInvisibleForUser"
+func (c *Client) TerminateResourcePoolPacks(request *TerminateResourcePoolPacksRequest) (response *TerminateResourcePoolPacksResponse, err error) {
+    return c.TerminateResourcePoolPacksWithContext(context.Background(), request)
+}
+
+// TerminateResourcePoolPacks
+// 本接口(TerminateResourcePoolPacks)用于销毁指定的实例资源池。
+//
+// 
+//
+// * 销毁资源池不会销毁池内已创建的实例。
+//
+// * 池内实例会从专属资源池解绑，转移至公共资源池，继续按原生命周期运行。
+//
+// * 转移后无法再查询底层物理拓扑信息。
+//
+// * 释放底层物理资源并删除资源池记录。
+//
+// 可能返回的错误码:
+//  INTERNALSERVERERROR = "InternalServerError"
+//  INVALIDPARAMETER = "InvalidParameter"
+//  INVALIDPARAMETERVALUE = "InvalidParameterValue"
+//  INVALIDPARAMETERVALUE_RESOURCEPOOLPACKIDMALFORMED = "InvalidParameterValue.ResourcePoolPackIdMalformed"
+//  INVALIDPARAMETERVALUE_RESOURCEPOOLPACKSTATUS = "InvalidParameterValue.ResourcePoolPackStatus"
+//  RESOURCENOTFOUND_RESOURCEPOOLPACKIDNOTFOUND = "ResourceNotFound.ResourcePoolPackIdNotFound"
+//  UNAUTHORIZEDOPERATION = "UnauthorizedOperation"
+//  UNSUPPORTEDOPERATION_RESOURCEPOOLPACKAGEINVISIBLEFORUSER = "UnsupportedOperation.ResourcePoolPackageInvisibleForUser"
+func (c *Client) TerminateResourcePoolPacksWithContext(ctx context.Context, request *TerminateResourcePoolPacksRequest) (response *TerminateResourcePoolPacksResponse, err error) {
+    if request == nil {
+        request = NewTerminateResourcePoolPacksRequest()
+    }
+    c.InitBaseRequest(&request.BaseRequest, "cvm", APIVersion, "TerminateResourcePoolPacks")
+    
+    if c.GetCredential() == nil {
+        return nil, errors.New("TerminateResourcePoolPacks require credential")
+    }
+
+    request.SetContext(ctx)
+    
+    response = NewTerminateResourcePoolPacksResponse()
     err = c.Send(request, response)
     return
 }

@@ -48,9 +48,9 @@ resource "tencentcloud_sqlserver_basic_instance" "example" {
 
 resource "tencentcloud_sqlserver_account" "example" {
   instance_id = tencentcloud_sqlserver_basic_instance.example.id
-  name        = "tf_example_account"
-  password    = "Qwer@234"
-  remark      = "test-remark"
+  name        = "tf_example"
+  password    = "Password@123"
+  remark      = "remark."
 }
 ```
 
@@ -59,5 +59,5 @@ Import
 SQL Server account can be imported using the id, e.g.
 
 ```
-$ terraform import tencentcloud_sqlserver_account.example mssql-3cdq7kx5#tf_example_account
+terraform import tencentcloud_sqlserver_account.example mssql-3cdq7kx5#tf_example
 ```

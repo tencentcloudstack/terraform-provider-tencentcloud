@@ -86,6 +86,24 @@ resource "tencentcloud_cynosdb_backup_config" "example" {
 }
 ```
 
+### Enable secondary snapshot backup configuration
+
+```hcl
+resource "tencentcloud_cynosdb_backup_config" "example" {
+  cluster_id       = tencentcloud_cynosdb_cluster.example.id
+  backup_time_beg  = 7200
+  backup_time_end  = 21600
+  reserve_duration = 604800
+
+  snapshot_secondary_backup_config {
+    backup_time_beg         = 7200
+    backup_time_end         = 21600
+    reserve_duration        = 604800
+    backup_trigger_strategy = "periodically"
+  }
+}
+```
+
 ## Argument Reference
 
 The following arguments are supported:
@@ -95,6 +113,12 @@ The following arguments are supported:
 * `cluster_id` - (Required, String, ForceNew) Cluster ID.
 * `reserve_duration` - (Required, Int) Backup retention period in seconds. Backups will be cleared after this period elapses. 7 days is represented by 3600*24*7 = 604800. Maximum value: 158112000.
 * `logic_backup_config` - (Optional, List) Logical backup configuration. Do not set this field if it is not enabled. Example value: [{"LogicBackupEnable": "ON","LogicBackupTimeBeg": "2023-04-24 15:06:04","LogicBackupTimeEnd": "2024-04-24 15:06:04","LogicReserveDuration": "60","LogicCrossRegionsEnable": "ON","LogicCrossRegions": ["ap-guangzhou"]}].
+* `snapshot_secondary_backup_config` - (Optional, List) Secondary snapshot backup configuration.
+
+The `auto_copy_vaults` object of `snapshot_secondary_backup_config` supports the following:
+
+* `vault_id` - (Optional, String) Vault ID.
+* `vault_region` - (Optional, String) Vault region.
 
 The `logic_backup_config` object supports the following:
 
@@ -104,6 +128,17 @@ The `logic_backup_config` object supports the following:
 * `logic_cross_regions_enable` - (Optional, String) Whether to enable cross-region logical backup. Cannot be input when `logic_backup_enable` is `OFF`. When `logic_backup_enable` is `ON`, `logic_cross_regions_enable` setting `ON` will take effect. Value: `ON`, `OFF`.
 * `logic_cross_regions` - (Optional, Set) Logical backup across regions. Example value: ["ap-guangzhou"]. When `logic_backup_enable` is `OFF`, it must be `[]` or not entered.
 * `logic_reserve_duration` - (Optional, Int) Automatic logical backup retention period. When `logic_backup_enable` is `OFF`, it must be `0` or not entered. Value range: [259200,158112000]. `logic_backup_enable` is `OFF`, `logic_reserve_duration` cannot be set when creating.
+
+The `snapshot_secondary_backup_config` object supports the following:
+
+* `auto_copy_vaults` - (Optional, List) Auto copy vault configuration list.
+* `backup_custom_auto_time` - (Optional, Bool) Whether to use system auto time.
+* `backup_interval_time` - (Optional, Int) Backup interval time.
+* `backup_time_beg` - (Optional, Int) Backup start time. Range: [0-24*3600]. E.g. 0:00, 1:00, 2:00 are 0, 3600, 7200.
+* `backup_time_end` - (Optional, Int) Backup end time. Range: [0-24*3600]. E.g. 0:00, 1:00, 2:00 are 0, 3600, 7200.
+* `backup_trigger_strategy` - (Optional, String) Backup trigger strategy. Values: `periodically` (periodic auto backup), `frequent` (high-frequency backup).
+* `backup_week_days` - (Optional, List) Backup week days array (length 7, Sunday to Saturday). Values: full, increment, none.
+* `reserve_duration` - (Optional, Int) Backup retention period in seconds. 7 days = 604800. Max: 158112000.
 
 ## Attributes Reference
 

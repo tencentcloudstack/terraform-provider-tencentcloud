@@ -34,6 +34,8 @@ func TestAccTencentCloudDnspodRecordListDataSource_subDomains(t *testing.T) {
 					tcacctest.AccCheckTencentCloudDataSourceID("data.tencentcloud_dnspod_record_list.subdomains"),
 					resource.TestCheckResourceAttr("data.tencentcloud_dnspod_record_list.subdomains", "record_list.#", "2"),
 					resource.TestCheckResourceAttr("data.tencentcloud_dnspod_record_list.subdomains", "instance_list.#", "2"),
+					resource.TestCheckResourceAttrSet("data.tencentcloud_dnspod_record_list.subdomains", "record_list.0.updated_on"),
+					resource.TestCheckResourceAttrSet("data.tencentcloud_dnspod_record_list.subdomains", "instance_list.0.updated_on"),
 				),
 			},
 		},

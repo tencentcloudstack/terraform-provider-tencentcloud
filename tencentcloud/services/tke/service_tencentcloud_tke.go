@@ -305,6 +305,142 @@ func (me *TkeService) DescribeClusterInstancesByRole(ctx context.Context, id, ro
 	return
 }
 
+func (me *TkeService) DescribeAllClusterInstances(ctx context.Context, id string) (masters []InstanceInfo, workers []InstanceInfo, errRet error) {
+	logId := tccommon.GetLogId(ctx)
+	request := tke.NewDescribeClusterInstancesRequest()
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n",
+				logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	request.ClusterId = &id
+	masters = make([]InstanceInfo, 0, 100)
+	workers = make([]InstanceInfo, 0, 100)
+	var offset int64 = 0
+	var limit int64 = 100
+	var has = map[string]bool{}
+	var total int64 = -1
+
+	for {
+		if total >= 0 && offset >= total {
+			break
+		}
+		request.Limit = &limit
+		request.Offset = &offset
+
+		var response *tke.DescribeClusterInstancesResponse
+		if err := resource.Retry(tccommon.ReadRetryTimeout, func() *resource.RetryError {
+			ratelimit.Check(request.GetAction())
+			resp, err := me.client.UseTkeClient().DescribeClusterInstances(request)
+			if err != nil {
+				return tccommon.RetryError(err, tccommon.InternalError)
+			}
+			response = resp
+			return nil
+		}); err != nil {
+			errRet = err
+			return
+		}
+
+		if total < 0 {
+			total = int64(*response.Response.TotalCount)
+		}
+
+		if len(response.Response.InstanceSet) == 0 {
+			break
+		}
+
+		offset += limit
+
+		for _, item := range response.Response.InstanceSet {
+			if has[*item.InstanceId] {
+				errRet = fmt.Errorf("get repeated instance_id[%s] when doing DescribeClusterInstances", *item.InstanceId)
+				return
+			}
+			has[*item.InstanceId] = true
+			instanceInfo := InstanceInfo{
+				InstanceId:               *item.InstanceId,
+				InstanceRole:             *item.InstanceRole,
+				InstanceState:            *item.InstanceState,
+				FailedReason:             *item.FailedReason,
+				InstanceAdvancedSettings: item.InstanceAdvancedSettings,
+			}
+			if item.CreatedTime != nil {
+				instanceInfo.CreatedTime = *item.CreatedTime
+			}
+			if item.NodePoolId != nil {
+				instanceInfo.NodePoolId = *item.NodePoolId
+			}
+			if item.LanIP != nil {
+				instanceInfo.LanIp = *item.LanIP
+			}
+			if instanceInfo.InstanceRole == TKE_ROLE_WORKER {
+				workers = append(workers, instanceInfo)
+			} else {
+				masters = append(masters, instanceInfo)
+			}
+		}
+	}
+
+	return
+}
+
+func (me *TkeService) DescribeClusterInstanceById(ctx context.Context, clusterId, instanceId string) (ret *InstanceInfo, errRet error) {
+	logId := tccommon.GetLogId(ctx)
+	request := tke.NewDescribeClusterInstancesRequest()
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n",
+				logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	request.ClusterId = &clusterId
+	request.InstanceIds = []*string{&instanceId}
+
+	var response *tke.DescribeClusterInstancesResponse
+	if err := resource.Retry(tccommon.ReadRetryTimeout, func() *resource.RetryError {
+		ratelimit.Check(request.GetAction())
+		resp, err := me.client.UseTkeClient().DescribeClusterInstances(request)
+		if err != nil {
+			return tccommon.RetryError(err, tccommon.InternalError)
+		}
+		response = resp
+		return nil
+	}); err != nil {
+		errRet = err
+		return
+	}
+
+	if len(response.Response.InstanceSet) == 0 {
+		return nil, nil
+	}
+
+	item := response.Response.InstanceSet[0]
+	instanceInfo := InstanceInfo{
+		InstanceId:               *item.InstanceId,
+		InstanceRole:             *item.InstanceRole,
+		InstanceState:            *item.InstanceState,
+		FailedReason:             *item.FailedReason,
+		InstanceAdvancedSettings: item.InstanceAdvancedSettings,
+	}
+	if item.CreatedTime != nil {
+		instanceInfo.CreatedTime = *item.CreatedTime
+	}
+	if item.NodePoolId != nil {
+		instanceInfo.NodePoolId = *item.NodePoolId
+	}
+	if item.LanIP != nil {
+		instanceInfo.LanIp = *item.LanIP
+	}
+	ret = &instanceInfo
+	return
+}
+
 func (me *TkeService) DescribeClusters(ctx context.Context, id string, name string) (clusterInfos []ClusterInfo, errRet error) {
 
 	logId := tccommon.GetLogId(ctx)
@@ -2713,15 +2849,24 @@ func (me *TkeService) TkeEncryptionProtectionStateRefreshFunc(clusterId string, 
 			}
 		}()
 
-		object, err := me.client.UseTkeClient().DescribeEncryptionStatus(request)
+		var object *tke.DescribeEncryptionStatusResponse
+		err := resource.Retry(tccommon.ReadRetryTimeout, func() *resource.RetryError {
+			ratelimit.Check(request.GetAction())
+			result, e := me.client.UseTkeClient().DescribeEncryptionStatus(request)
+			if e != nil {
+				return tccommon.RetryError(e)
+			}
 
-		if err != nil {
-			return nil, "", err
-		}
+			if result == nil || result.Response == nil {
+				return resource.NonRetryableError(fmt.Errorf("Describe kubernetes encryption status failed, Response is nil."))
+			}
 
+			object = result
+			return nil
+		})
 		if err != nil {
 			errRet = err
-			return object, "", err
+			return nil, "", err
 		}
 
 		return object, helper.PString(object.Response.Status), nil
@@ -3068,9 +3213,21 @@ func (me *TkeService) DescribeKubernetesEncryptionProtectionById(ctx context.Con
 		}
 	}()
 
-	ratelimit.Check(request.GetAction())
+	var response *tke.DescribeEncryptionStatusResponse
+	err := resource.Retry(tccommon.ReadRetryTimeout, func() *resource.RetryError {
+		ratelimit.Check(request.GetAction())
+		result, e := me.client.UseTkeV20180525Client().DescribeEncryptionStatus(request)
+		if e != nil {
+			return tccommon.RetryError(e)
+		}
 
-	response, err := me.client.UseTkeV20180525Client().DescribeEncryptionStatus(request)
+		if result == nil || result.Response == nil {
+			return resource.NonRetryableError(fmt.Errorf("Describe kubernetes encryption status failed, Response is nil."))
+		}
+
+		response = result
+		return nil
+	})
 	if err != nil {
 		errRet = err
 		return
@@ -4193,6 +4350,104 @@ func (me *TkeService) DescribeKubernetesUpgradeTaskDetailByFilter(ctx context.Co
 		}
 
 		offset += limit
+	}
+
+	return
+}
+
+func (me *TkeService) DescribeKubernetesClusterSchedulerPolicy(ctx context.Context, clusterId string) (ret *tke.DescribeClusterSchedulerPolicyResponseParams, errRet error) {
+	logId := tccommon.GetLogId(ctx)
+
+	request := tke.NewDescribeClusterSchedulerPolicyRequest()
+	response := tke.NewDescribeClusterSchedulerPolicyResponse()
+	request.ClusterId = &clusterId
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	err := resource.Retry(tccommon.ReadRetryTimeout, func() *resource.RetryError {
+		ratelimit.Check(request.GetAction())
+		result, e := me.client.UseTkeV20180525Client().DescribeClusterSchedulerPolicyWithContext(ctx, request)
+		if e != nil {
+			return tccommon.RetryError(e)
+		}
+
+		if result == nil || result.Response == nil {
+			return resource.NonRetryableError(fmt.Errorf("describe kubernetes cluster scheduler policy failed, Response is nil"))
+		}
+
+		log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), result.ToJsonString())
+
+		response = result
+		return nil
+	})
+
+	if err != nil {
+		errRet = err
+		return
+	}
+
+	ret = response.Response
+	return
+}
+
+func (me *TkeService) DescribeKubernetesClusterExtraArgsConfig(ctx context.Context, clusterId string) (extraArgs *tke.ClusterExtraArgs, errRet error) {
+	logId := tccommon.GetLogId(ctx)
+	request := tke.NewDescribeClusterExtraArgsRequest()
+	request.ClusterId = &clusterId
+
+	var response *tke.DescribeClusterExtraArgsResponse
+	err := resource.Retry(tccommon.ReadRetryTimeout, func() *resource.RetryError {
+		ratelimit.Check(request.GetAction())
+		result, e := me.client.UseTkeV20180525Client().DescribeClusterExtraArgsWithContext(ctx, request)
+		if e != nil {
+			return tccommon.RetryError(e)
+		}
+		log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), result.ToJsonString())
+		response = result
+		return nil
+	})
+
+	if err != nil {
+		errRet = err
+		return
+	}
+
+	if response != nil && response.Response != nil {
+		extraArgs = response.Response.ClusterExtraArgs
+	}
+
+	return
+}
+
+func (me *TkeService) DescribeClusterAvailableExtraArgs(ctx context.Context, clusterVersion, clusterType string) (respParams *tke.DescribeClusterAvailableExtraArgsResponseParams, errRet error) {
+	logId := tccommon.GetLogId(ctx)
+	request := tke.NewDescribeClusterAvailableExtraArgsRequest()
+	request.ClusterVersion = &clusterVersion
+	request.ClusterType = &clusterType
+
+	var response *tke.DescribeClusterAvailableExtraArgsResponse
+	err := resource.Retry(tccommon.ReadRetryTimeout, func() *resource.RetryError {
+		ratelimit.Check(request.GetAction())
+		result, e := me.client.UseTkeV20180525Client().DescribeClusterAvailableExtraArgsWithContext(ctx, request)
+		if e != nil {
+			return tccommon.RetryError(e)
+		}
+		log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), result.ToJsonString())
+		response = result
+		return nil
+	})
+
+	if err != nil {
+		errRet = err
+		return
+	}
+
+	if response != nil {
+		respParams = response.Response
 	}
 
 	return
