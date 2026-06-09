@@ -1,6 +1,17 @@
+---
+subcategory: "TencentDB for Redis(crs)"
+layout: "tencentcloud"
+page_title: "TencentCloud: tencentcloud_redis_param"
+sidebar_current: "docs-tencentcloud-resource-redis_param"
+description: |-
+  Provides a resource to create a redis param
+---
+
+# tencentcloud_redis_param
+
 Provides a resource to create a redis param
 
-Example Usage
+## Example Usage
 
 ```hcl
 resource "tencentcloud_redis_param" "example" {
@@ -27,10 +38,26 @@ resource "tencentcloud_redis_param" "example" {
 }
 ```
 
-Import
+## Argument Reference
+
+The following arguments are supported:
+
+* `instance_id` - (Required, String) The ID of instance.
+* `instance_params` - (Required, Map) A list of parameters modified by the instance.
+
+## Attributes Reference
+
+In addition to all arguments above, the following attributes are exported:
+
+* `id` - ID of the resource.
+
+
+
+## Import
 
 redis param can be imported using the instanceId, e.g.
 
 ```
 terraform import tencentcloud_redis_param.example crs-cqdfdzvt
 ```
+
