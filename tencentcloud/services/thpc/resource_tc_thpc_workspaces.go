@@ -711,7 +711,7 @@ func resourceTencentCloudThpcWorkspacesCreate(d *schema.ResourceData, meta inter
 		}
 
 		if *result.Response.SpaceSet[0].SpaceState != SPACE_STATE_ONLINE {
-			return resource.RetryableError(fmt.Errorf("create thpc workspaces status is %d, requestId is %s", *result.Response.SpaceSet[0].SpaceState, *result.Response.RequestId))
+			return resource.RetryableError(fmt.Errorf("create thpc workspaces status is %s, requestId is %s", *result.Response.SpaceSet[0].SpaceState, *result.Response.RequestId))
 		}
 
 		return nil
@@ -1349,7 +1349,7 @@ func resourceTencentCloudThpcWorkspacesDelete(d *schema.ResourceData, meta inter
 		}
 
 		if *result.Response.SpaceSet[0].SpaceState != SPACE_STATE_ARREARS {
-			return resource.RetryableError(fmt.Errorf("delete thpc workspaces status is %d, requestId is %s", *result.Response.SpaceSet[0].SpaceState, *result.Response.RequestId))
+			return resource.RetryableError(fmt.Errorf("delete thpc workspaces status is %s, requestId is %s", *result.Response.SpaceSet[0].SpaceState, *result.Response.RequestId))
 		}
 
 		return nil
@@ -1391,7 +1391,7 @@ func resourceTencentCloudThpcWorkspacesDelete(d *schema.ResourceData, meta inter
 		}
 
 		if len(result.Response.SpaceSet) != 0 {
-			return resource.RetryableError(fmt.Errorf("delete thpc workspaces status is %d, requestId is %s", *result.Response.SpaceSet[0].SpaceState, *result.Response.RequestId))
+			return resource.RetryableError(fmt.Errorf("delete thpc workspaces status is %s, requestId is %s", *result.Response.SpaceSet[0].SpaceState, *result.Response.RequestId))
 		}
 
 		return nil
