@@ -2074,6 +2074,7 @@ func Provider() *schema.Provider {
 			"tencentcloud_cls_notice_content":                                                       cls.ResourceTencentCloudClsNoticeContent(),
 			"tencentcloud_cls_web_callback":                                                         cls.ResourceTencentCloudClsWebCallback(),
 			"tencentcloud_cls_cloud_product_log_task_v2":                                            cls.ResourceTencentCloudClsCloudProductLogTaskV2(),
+			"tencentcloud_cls_open_service_operation":                                               cls.ResourceTencentCloudClsOpenServiceOperation(),
 			"tencentcloud_cls_kafka_recharge":                                                       cls.ResourceTencentCloudClsKafkaRecharge(),
 			"tencentcloud_cls_scheduled_sql":                                                        cls.ResourceTencentCloudClsScheduledSql(),
 			"tencentcloud_cls_dlc_deliver":                                                          cls.ResourceTencentCloudClsDlcDeliver(),
