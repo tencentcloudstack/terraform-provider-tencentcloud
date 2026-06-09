@@ -288,6 +288,7 @@ tencentcloud_cam_policy_version
 tencentcloud_cam_set_policy_version_config
 tencentcloud_cam_user_permission_boundary_attachment
 tencentcloud_cam_role_permission_boundary_attachment
+tencentcloud_cam_message_receiver
 
 Customer Identity and Access Management(CIAM)
 Resource
