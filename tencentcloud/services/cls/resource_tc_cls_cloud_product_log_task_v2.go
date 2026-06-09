@@ -101,6 +101,7 @@ func ResourceTencentCloudClsCloudProductLogTaskV2() *schema.Resource {
 			"force_delete": {
 				Type:        schema.TypeBool,
 				Optional:    true,
+				Deprecated:  "It has been deprecated from version 1.82.102. Please use `is_delete_topic` or `is_delete_logset` instead.",
 				Description: "Indicate whether to forcibly delete the corresponding logset and topic. If set to true, it will be forcibly deleted. Default is false.",
 			},
 
@@ -384,12 +385,12 @@ func resourceTencentCloudClsCloudProductLogTaskV2Delete(d *schema.ResourceData, 
 	request.LogType = helper.String(logType)
 	request.CloudProductRegion = helper.String(cloudProductRegion)
 
-	// 读取删除选项配置
+	// Read the delete option configuration
 	if v, ok := d.GetOkExists("force_delete"); ok {
 		deleteForce = v.(bool)
 	}
 
-	// 参数校验：force_delete 为 true 时，不允许配置 is_delete_* 字段
+	// Parameter validation: is_delete_* fields cannot be set when force_delete is true
 	if deleteForce {
 		if _, ok := d.GetOkExists("is_delete_topic"); ok {
 			return fmt.Errorf("`is_delete_topic` cannot be set when `force_delete` is true")
@@ -399,7 +400,7 @@ func resourceTencentCloudClsCloudProductLogTaskV2Delete(d *schema.ResourceData, 
 		}
 	}
 
-	// 读取 is_delete_* 字段（仅在 force_delete 为 false 时使用）
+	// Read is_delete_* fields (only used when force_delete is false)
 	if !deleteForce {
 		if v, ok := d.GetOkExists("is_delete_topic"); ok {
 			isDeleteTopic = v.(bool)
@@ -409,7 +410,7 @@ func resourceTencentCloudClsCloudProductLogTaskV2Delete(d *schema.ResourceData, 
 			isDeleteLogset = v.(bool)
 		}
 
-		// 设置 API 参数（仅在 force_delete 为 false 时）
+		// Set API parameters (only when force_delete is false)
 		if isDeleteTopic {
 			request.IsDeleteTopic = helper.Bool(true)
 		}
@@ -441,7 +442,7 @@ func resourceTencentCloudClsCloudProductLogTaskV2Delete(d *schema.ResourceData, 
 		return e
 	}
 
-	// force_delete 为 true 时，手动删除 Topic 和 Logset
+	// When force_delete is true, manually delete the Topic and Logset
 	if deleteForce {
 		var (
 			request1 = clsv20201016.NewDeleteTopicRequest()
