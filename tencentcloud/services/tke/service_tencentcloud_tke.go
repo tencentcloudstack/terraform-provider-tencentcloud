@@ -4452,3 +4452,67 @@ func (me *TkeService) DescribeClusterAvailableExtraArgs(ctx context.Context, clu
 
 	return
 }
+
+func (me *TkeService) DescribeKubernetesClusterRollOutSequenceTagConfigById(ctx context.Context, clusterId string) (ret []*tke.ClusterRollOutSequenceTag, errRet error) {
+	logId := tccommon.GetLogId(ctx)
+
+	request := tke.NewDescribeClusterRollOutSequenceTagsRequest()
+	request.Filters = []*tke.Filter{
+		{
+			Name:   common.StringPtr("ClusterID"),
+			Values: common.StringPtrs([]string{clusterId}),
+		},
+	}
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	var (
+		offset int64
+		limit  int64 = 100
+	)
+
+	for {
+		request.Offset = helper.Int64(offset)
+		request.Limit = helper.Int64(limit)
+		var response *tke.DescribeClusterRollOutSequenceTagsResponse
+		err := resource.Retry(tccommon.ReadRetryTimeout, func() *resource.RetryError {
+			ratelimit.Check(request.GetAction())
+			result, e := me.client.UseTkeV20180525Client().DescribeClusterRollOutSequenceTagsWithContext(ctx, request)
+			if e != nil {
+				return tccommon.RetryError(e)
+			} else {
+				log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), result.ToJsonString())
+			}
+
+			if result == nil || result.Response == nil {
+				return resource.NonRetryableError(fmt.Errorf("Describe kubernetes cluster roll out sequence tags failed, Response is nil."))
+			}
+
+			response = result
+			return nil
+		})
+
+		if err != nil {
+			errRet = err
+			return
+		}
+
+		if len(response.Response.ClusterTags) < 1 {
+			break
+		}
+
+		ret = append(ret, response.Response.ClusterTags...)
+
+		if len(response.Response.ClusterTags) < int(limit) {
+			break
+		}
+
+		offset += limit
+	}
+
+	return
+}
