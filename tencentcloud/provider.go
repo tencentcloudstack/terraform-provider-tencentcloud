@@ -1605,6 +1605,7 @@ func Provider() *schema.Provider {
 			"tencentcloud_kubernetes_cluster_scheduler_policy_config":                               tke.ResourceTencentCloudKubernetesClusterSchedulerPolicyConfig(),
 			"tencentcloud_kubernetes_cluster_extra_args_config":                                     tke.ResourceTencentCloudKubernetesClusterExtraArgsConfig(),
 			"tencentcloud_kubernetes_roll_out_sequence":                                             tke.ResourceTencentCloudKubernetesRollOutSequence(),
+			"tencentcloud_kubernetes_cluster_roll_out_sequence_tag_config":                          tke.ResourceTencentCloudKubernetesClusterRollOutSequenceTagConfig(),
 			"tencentcloud_mysql_backup_policy":                                                      cdb.ResourceTencentCloudMysqlBackupPolicy(),
 			"tencentcloud_mysql_account":                                                            cdb.ResourceTencentCloudMysqlAccount(),
 			"tencentcloud_mysql_account_privilege":                                                  cdb.ResourceTencentCloudMysqlAccountPrivilege(),
