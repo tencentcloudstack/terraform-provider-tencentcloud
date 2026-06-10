@@ -64,12 +64,6 @@ func TestCfwClusterFwBypassConfig_Read_Normal(t *testing.T) {
 					AttachName: ptrStringCFB("test-ccn"),
 				},
 			},
-			RegionList: []*cfwv20190904.FilterDataObject{
-				{
-					Text:  ptrStringCFB("Guangzhou"),
-					Value: ptrStringCFB("ap-guangzhou"),
-				},
-			},
 		}
 		return resp, nil
 	})
@@ -87,7 +81,55 @@ func TestCfwClusterFwBypassConfig_Read_Normal(t *testing.T) {
 	err := res.Read(d, meta)
 	assert.NoError(t, err)
 	assert.Equal(t, "NAT_FW#ccn-xxxxxxxx#nat-xxxxxxxx", d.Id())
-	assert.Equal(t, 1, d.Get("total"))
+	assert.Equal(t, false, d.Get("enable"))
+}
+
+func TestCfwClusterFwBypassConfig_Read_BypassEnabled(t *testing.T) {
+	patches := gomonkey.NewPatches()
+	defer patches.Reset()
+
+	cfwClient := &cfwv20190904.Client{}
+	patches.ApplyMethodReturn(newMockMetaClusterFwBypass().client, "UseCfwV20190904Client", cfwClient)
+
+	patches.ApplyMethodFunc(cfwClient, "DescribeClusterNatCcnFwSwitchListWithContext", func(_ context.Context, request *cfwv20190904.DescribeClusterNatCcnFwSwitchListRequest) (*cfwv20190904.DescribeClusterNatCcnFwSwitchListResponse, error) {
+		resp := cfwv20190904.NewDescribeClusterNatCcnFwSwitchListResponse()
+		total := int64(1)
+		bypass := int64(1)
+		status := int64(1)
+		resp.Response = &cfwv20190904.DescribeClusterNatCcnFwSwitchListResponseParams{
+			RequestId: ptrStringCFB("fake-request-id"),
+			Total:     &total,
+			Data: []*cfwv20190904.NatFwSwitchDetailS{
+				{
+					InsObj:     ptrStringCFB("nat-xxxxxxxx"),
+					ObjName:    ptrStringCFB("test-nat"),
+					FwType:     ptrStringCFB("NAT_FW"),
+					AssetType:  ptrStringCFB("nat_ccn"),
+					Region:     ptrStringCFB("ap-guangzhou"),
+					Status:     &status,
+					Bypass:     &bypass,
+					AttachId:   ptrStringCFB("ccn-xxxxxxxx"),
+					AttachName: ptrStringCFB("test-ccn"),
+				},
+			},
+		}
+		return resp, nil
+	})
+
+	meta := newMockMetaClusterFwBypass()
+	res := cfw.ResourceTencentCloudCfwClusterFwBypassConfig()
+	d := schema.TestResourceDataRaw(t, res.Schema, map[string]interface{}{
+		"fw_type":    "NAT_FW",
+		"ccn_id":     "ccn-xxxxxxxx",
+		"nat_ins_id": "nat-xxxxxxxx",
+		"enable":     true,
+	})
+	d.SetId("NAT_FW#ccn-xxxxxxxx#nat-xxxxxxxx")
+
+	err := res.Read(d, meta)
+	assert.NoError(t, err)
+	assert.Equal(t, "NAT_FW#ccn-xxxxxxxx#nat-xxxxxxxx", d.Id())
+	assert.Equal(t, true, d.Get("enable"))
 }
 
 func TestCfwClusterFwBypassConfig_Read_NotFound(t *testing.T) {
@@ -166,7 +208,7 @@ func TestCfwClusterFwBypassConfig_Read_VpcFw_Normal(t *testing.T) {
 	err := res.Read(d, meta)
 	assert.NoError(t, err)
 	assert.Equal(t, "VPC_FW#ccn-xxxxxxxx", d.Id())
-	assert.Equal(t, 1, d.Get("total"))
+	assert.Equal(t, true, d.Get("enable"))
 }
 
 func TestCfwClusterFwBypassConfig_Update_Normal(t *testing.T) {

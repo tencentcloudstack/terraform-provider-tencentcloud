@@ -4,9 +4,10 @@
 
 ## What Changes
 
-- 新增 `tencentcloud_cfw_cluster_fw_bypass` CONFIG 类型资源，支持读取和更新集群防火墙的 Bypass 状态配置
+- 新增 `tencentcloud_cfw_cluster_fw_bypass_config` CONFIG 类型资源，支持读取和更新集群防火墙的 Bypass 状态配置
 - 资源通过 `DescribeClusterNatCcnFwSwitchList` 接口读取当前 Bypass 状态
 - 资源通过 `ModifyClusterFwBypass` 接口更新 Bypass 开关状态
+- Schema 仅展示 `ModifyClusterFwBypass` 接口入参（`fw_type`、`ccn_id`、`enable`、`nat_ins_id`），不展示 Read 接口入参
 
 ## Capabilities
 

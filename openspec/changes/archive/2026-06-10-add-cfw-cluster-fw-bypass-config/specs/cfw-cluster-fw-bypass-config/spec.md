@@ -1,11 +1,11 @@
 ## ADDED Requirements
 
 ### Requirement: 读取集群防火墙 Bypass 配置
-资源 SHALL 通过 `DescribeClusterNatCcnFwSwitchList` 接口读取集群防火墙的当前 Bypass 状态及相关信息，并将结果存储到 Terraform state 中。
+资源 SHALL 通过 `DescribeClusterNatCcnFwSwitchList` 接口读取集群防火墙的当前 Bypass 状态，并将 `enable` 字段写入 Terraform state。
 
 #### Scenario: 成功读取 Bypass 配置
 - **WHEN** 用户执行 `terraform plan` 或 `terraform refresh`，且防火墙实例存在
-- **THEN** 资源 SHALL 调用 `DescribeClusterNatCcnFwSwitchList` 接口，从返回的 `Data` 列表中找到匹配实例，并将 `total`、`data`、`region_list` 等字段写入 state
+- **THEN** 资源 SHALL 调用 `DescribeClusterNatCcnFwSwitchList` 接口，从返回的 `Data` 列表中找到匹配实例，并将 `enable`（基于 Bypass 字段）写入 state
 
 #### Scenario: 防火墙实例不存在时处理
 - **WHEN** `DescribeClusterNatCcnFwSwitchList` 返回空列表或找不到匹配实例
@@ -38,16 +38,13 @@
 - **THEN** 资源 ID SHALL 为 `{fw_type}#{ccn_id}#{nat_ins_id}` 格式，且 `nat_ins_id` 为必填字段
 
 ### Requirement: 资源参数 Schema 定义
-资源 SHALL 定义以下参数：
+资源 SHALL 仅定义 `ModifyClusterFwBypass` 接口入参作为 Schema 字段：
 - `fw_type`（Required, ForceNew）：防火墙类型，取值 "VPC_FW" 或 "NAT_FW"
 - `ccn_id`（Required, ForceNew）：云联网实例 ID
 - `enable`（Required）：Bypass 开关，true-开启 Bypass，false-关闭 Bypass
 - `nat_ins_id`（Optional, ForceNew）：NAT 防火墙实例 ID，fw_type 为 NAT_FW 时必填
-- `nat_type`（Optional）：NAT 防火墙类型筛选，用于 Read 查询
-- `filters`（Optional）：过滤条件列表，用于 Read 查询
-- `total`（Computed）：符合条件的总记录数
-- `data`（Computed）：NAT 防火墙开关详情列表
-- `region_list`（Computed）：地域列表
+
+不展示 Read 接口（`DescribeClusterNatCcnFwSwitchList`）的入参（如 `nat_type`、`filters`）和返回字段（如 `total`、`data`、`region_list`）。
 
 #### Scenario: 必填参数校验
 - **WHEN** 用户未提供 `fw_type` 或 `ccn_id`
@@ -61,7 +58,7 @@
 资源 SHALL 在 `tencentcloud/provider.go` 和 `tencentcloud/provider.md` 中注册，使其可被 Terraform 识别和使用。
 
 #### Scenario: Provider 注册
-- **WHEN** 用户在 Terraform 配置中使用 `tencentcloud_cfw_cluster_fw_bypass` 资源
+- **WHEN** 用户在 Terraform 配置中使用 `tencentcloud_cfw_cluster_fw_bypass_config` 资源
 - **THEN** Terraform SHALL 能够识别并加载该资源的 schema 和 CRUD 函数
 
 ### Requirement: 单元测试覆盖

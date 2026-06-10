@@ -2590,7 +2590,7 @@ func Provider() *schema.Provider {
 			"tencentcloud_sg_rule":                                                                  cfw.ResourceTencentCloudSgRule(),
 			"tencentcloud_cfw_cluster_vpc_fw_switch":                                                cfw.ResourceTencentCloudCfwClusterVpcFwSwitch(),
 			"tencentcloud_cfw_ips_mode_switch":                                                      cfw.ResourceTencentCloudCfwIpsModeSwitch(),
-			"tencentcloud_cfw_cluster_fw_bypass":                                                    cfw.ResourceTencentCloudCfwClusterFwBypassConfig(),
+			"tencentcloud_cfw_cluster_fw_bypass_config":                                             cfw.ResourceTencentCloudCfwClusterFwBypassConfig(),
 			"tencentcloud_config_compliance_pack":                                                   config.ResourceTencentCloudConfigCompliancePack(),
 			"tencentcloud_config_remediation":                                                       config.ResourceTencentCloudConfigRemediation(),
 			"tencentcloud_config_start_config_rule_evaluation_operation":                            config.ResourceTencentCloudConfigStartConfigRuleEvaluationOperation(),

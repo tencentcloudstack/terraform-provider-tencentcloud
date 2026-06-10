@@ -2483,7 +2483,7 @@ tencentcloud_cfw_edge_firewall_switch
 tencentcloud_sg_rule
 tencentcloud_cfw_cluster_vpc_fw_switch
 tencentcloud_cfw_ips_mode_switch
-tencentcloud_cfw_cluster_fw_bypass
+tencentcloud_cfw_cluster_fw_bypass_config
 
 Bastion Host(BH)
 Data Source

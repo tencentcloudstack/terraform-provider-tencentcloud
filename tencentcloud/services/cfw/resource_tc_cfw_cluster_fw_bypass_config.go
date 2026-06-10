@@ -47,132 +47,12 @@ func ResourceTencentCloudCfwClusterFwBypassConfig() *schema.Resource {
 				ForceNew:    true,
 				Description: "NAT firewall instance ID. Required when fw_type is `NAT_FW`.",
 			},
-			"nat_type": {
-				Type:        schema.TypeString,
-				Optional:    true,
-				Description: "NAT firewall type filter. `nat` - VPC internal protection type, `nat_ccn` - CCN cluster mode type. If not specified, both types are queried.",
-			},
-			"filters": {
-				Type:        schema.TypeList,
-				Optional:    true,
-				Description: "Filter condition list. Supports filtering by Common (general search), InsObj (instance ID), ObjName (instance name), etc.",
-				Elem: &schema.Resource{
-					Schema: map[string]*schema.Schema{
-						"name": {
-							Type:        schema.TypeString,
-							Required:    true,
-							Description: "Filter key.",
-						},
-						"operator_type": {
-							Type:        schema.TypeInt,
-							Required:    true,
-							Description: "Operator type. 1: equal, 2: greater than, 3: less than, 4: greater than or equal, 5: less than or equal, 6: not equal, 8: not in, 9: fuzzy match.",
-						},
-						"values": {
-							Type:        schema.TypeList,
-							Required:    true,
-							Description: "Filter values.",
-							Elem: &schema.Schema{
-								Type: schema.TypeString,
-							},
-						},
-					},
-				},
-			},
-			"total": {
-				Type:        schema.TypeInt,
-				Computed:    true,
-				Description: "Total number of records matching the conditions.",
-			},
-			"data": {
-				Type:        schema.TypeList,
-				Computed:    true,
-				Description: "NAT firewall switch detail list.",
-				Elem: &schema.Resource{
-					Schema: map[string]*schema.Schema{
-						"ins_obj": {
-							Type:        schema.TypeString,
-							Computed:    true,
-							Description: "NAT instance ID.",
-						},
-						"obj_name": {
-							Type:        schema.TypeString,
-							Computed:    true,
-							Description: "Instance name.",
-						},
-						"fw_type": {
-							Type:        schema.TypeString,
-							Computed:    true,
-							Description: "Firewall type.",
-						},
-						"asset_type": {
-							Type:        schema.TypeString,
-							Computed:    true,
-							Description: "Asset type. `nat` - VPC internal protection, `nat_ccn` - CCN cluster mode.",
-						},
-						"region": {
-							Type:        schema.TypeString,
-							Computed:    true,
-							Description: "Region.",
-						},
-						"switch_mode": {
-							Type:        schema.TypeInt,
-							Computed:    true,
-							Description: "Switch access mode. 1: automatic, 2: manual.",
-						},
-						"routing_mode": {
-							Type:        schema.TypeInt,
-							Computed:    true,
-							Description: "Traffic routing method. 0: multi-route table, 1: policy routing.",
-						},
-						"status": {
-							Type:        schema.TypeInt,
-							Computed:    true,
-							Description: "Switch status. 0: not enabled, 1: enabled, 2: enabling, 3: disabling.",
-						},
-						"bypass": {
-							Type:        schema.TypeInt,
-							Computed:    true,
-							Description: "Bypass status. 0: disabled, 1: enabled.",
-						},
-						"attach_id": {
-							Type:        schema.TypeString,
-							Computed:    true,
-							Description: "Associated ID. For nat_ccn asset type, this is the CCN instance ID.",
-						},
-						"attach_name": {
-							Type:        schema.TypeString,
-							Computed:    true,
-							Description: "Associated ID instance name. For nat_ccn asset type, this is the CCN name.",
-						},
-					},
-				},
-			},
-			"region_list": {
-				Type:        schema.TypeList,
-				Computed:    true,
-				Description: "Region list.",
-				Elem: &schema.Resource{
-					Schema: map[string]*schema.Schema{
-						"text": {
-							Type:        schema.TypeString,
-							Computed:    true,
-							Description: "Display name.",
-						},
-						"value": {
-							Type:        schema.TypeString,
-							Computed:    true,
-							Description: "Actual value.",
-						},
-					},
-				},
-			},
 		},
 	}
 }
 
 func resourceTencentCloudCfwClusterFwBypassConfigCreate(d *schema.ResourceData, meta interface{}) error {
-	defer tccommon.LogElapsed("resource.tencentcloud_cfw_cluster_fw_bypass.create")()
+	defer tccommon.LogElapsed("resource.tencentcloud_cfw_cluster_fw_bypass_config.create")()
 	defer tccommon.InconsistentCheck(d, meta)()
 
 	fwType := d.Get("fw_type").(string)
@@ -191,7 +71,7 @@ func resourceTencentCloudCfwClusterFwBypassConfigCreate(d *schema.ResourceData, 
 }
 
 func resourceTencentCloudCfwClusterFwBypassConfigRead(d *schema.ResourceData, meta interface{}) error {
-	defer tccommon.LogElapsed("resource.tencentcloud_cfw_cluster_fw_bypass.read")()
+	defer tccommon.LogElapsed("resource.tencentcloud_cfw_cluster_fw_bypass_config.read")()
 	defer tccommon.InconsistentCheck(d, meta)()
 
 	var (
@@ -215,29 +95,6 @@ func resourceTencentCloudCfwClusterFwBypassConfigRead(d *schema.ResourceData, me
 	request.Limit = helper.IntInt64(100)
 	request.Offset = helper.IntInt64(0)
 
-	if v, ok := d.GetOk("nat_type"); ok {
-		request.NatType = helper.String(v.(string))
-	}
-
-	if v, ok := d.GetOk("filters"); ok {
-		for _, item := range v.([]interface{}) {
-			filterMap := item.(map[string]interface{})
-			commonFilter := cfwv20190904.CommonFilter{}
-			if name, ok := filterMap["name"].(string); ok && name != "" {
-				commonFilter.Name = helper.String(name)
-			}
-			if opType, ok := filterMap["operator_type"].(int); ok {
-				commonFilter.OperatorType = helper.IntInt64(opType)
-			}
-			if vals, ok := filterMap["values"]; ok {
-				for _, v := range vals.([]interface{}) {
-					commonFilter.Values = append(commonFilter.Values, helper.String(v.(string)))
-				}
-			}
-			request.Filters = append(request.Filters, &commonFilter)
-		}
-	}
-
 	var response *cfwv20190904.DescribeClusterNatCcnFwSwitchListResponse
 	reqErr := resource.Retry(tccommon.ReadRetryTimeout, func() *resource.RetryError {
 		result, e := meta.(tccommon.ProviderMeta).GetAPIV3Conn().UseCfwV20190904Client().DescribeClusterNatCcnFwSwitchListWithContext(ctx, request)
@@ -250,12 +107,12 @@ func resourceTencentCloudCfwClusterFwBypassConfigRead(d *schema.ResourceData, me
 	})
 
 	if reqErr != nil {
-		log.Printf("[CRITAL]%s read cfw_cluster_fw_bypass failed, reason:%+v", logId, reqErr)
+		log.Printf("[CRITAL]%s read cfw_cluster_fw_bypass_config failed, reason:%+v", logId, reqErr)
 		return reqErr
 	}
 
 	if response == nil || response.Response == nil {
-		log.Printf("[WARN]%s resource `cfw_cluster_fw_bypass` id=%s not found, response is nil", logId, d.Id())
+		log.Printf("[WARN]%s resource `cfw_cluster_fw_bypass_config` id=%s not found, response is nil", logId, d.Id())
 		d.SetId("")
 		return nil
 	}
@@ -266,7 +123,6 @@ func resourceTencentCloudCfwClusterFwBypassConfigRead(d *schema.ResourceData, me
 		if item == nil {
 			continue
 		}
-		// match by ccn_id (AttachId for nat_ccn type) or InsObj
 		if fwType == "NAT_FW" && natInsId != "" {
 			if item.InsObj != nil && *item.InsObj == natInsId &&
 				item.AttachId != nil && *item.AttachId == ccnId {
@@ -274,7 +130,6 @@ func resourceTencentCloudCfwClusterFwBypassConfigRead(d *schema.ResourceData, me
 				break
 			}
 		} else {
-			// VPC_FW: match by AttachId == ccnId
 			if item.AttachId != nil && *item.AttachId == ccnId {
 				matchedItem = item
 				break
@@ -283,7 +138,7 @@ func resourceTencentCloudCfwClusterFwBypassConfigRead(d *schema.ResourceData, me
 	}
 
 	if matchedItem == nil {
-		log.Printf("[WARN]%s resource `cfw_cluster_fw_bypass` id=%s not found in response data", logId, d.Id())
+		log.Printf("[WARN]%s resource `cfw_cluster_fw_bypass_config` id=%s not found in response data", logId, d.Id())
 		d.SetId("")
 		return nil
 	}
@@ -294,76 +149,16 @@ func resourceTencentCloudCfwClusterFwBypassConfigRead(d *schema.ResourceData, me
 		_ = d.Set("nat_ins_id", natInsId)
 	}
 
-	if response.Response.Total != nil {
-		_ = d.Set("total", response.Response.Total)
-	}
-
-	dataList := make([]map[string]interface{}, 0, len(response.Response.Data))
-	for _, item := range response.Response.Data {
-		if item == nil {
-			continue
-		}
-		itemMap := map[string]interface{}{}
-		if item.InsObj != nil {
-			itemMap["ins_obj"] = item.InsObj
-		}
-		if item.ObjName != nil {
-			itemMap["obj_name"] = item.ObjName
-		}
-		if item.FwType != nil {
-			itemMap["fw_type"] = item.FwType
-		}
-		if item.AssetType != nil {
-			itemMap["asset_type"] = item.AssetType
-		}
-		if item.Region != nil {
-			itemMap["region"] = item.Region
-		}
-		if item.SwitchMode != nil {
-			itemMap["switch_mode"] = item.SwitchMode
-		}
-		if item.RoutingMode != nil {
-			itemMap["routing_mode"] = item.RoutingMode
-		}
-		if item.Status != nil {
-			itemMap["status"] = item.Status
-		}
-		if item.Bypass != nil {
-			itemMap["bypass"] = item.Bypass
-		}
-		if item.AttachId != nil {
-			itemMap["attach_id"] = item.AttachId
-		}
-		if item.AttachName != nil {
-			itemMap["attach_name"] = item.AttachName
-		}
-		dataList = append(dataList, itemMap)
-	}
-	_ = d.Set("data", dataList)
-
-	if response.Response.RegionList != nil {
-		regionList := make([]map[string]interface{}, 0, len(response.Response.RegionList))
-		for _, region := range response.Response.RegionList {
-			if region == nil {
-				continue
-			}
-			regionMap := map[string]interface{}{}
-			if region.Text != nil {
-				regionMap["text"] = region.Text
-			}
-			if region.Value != nil {
-				regionMap["value"] = region.Value
-			}
-			regionList = append(regionList, regionMap)
-		}
-		_ = d.Set("region_list", regionList)
+	// Set enable based on Bypass field: 1 means bypass enabled (true), 0 means bypass disabled (false)
+	if matchedItem.Bypass != nil {
+		_ = d.Set("enable", *matchedItem.Bypass == 1)
 	}
 
 	return nil
 }
 
 func resourceTencentCloudCfwClusterFwBypassConfigUpdate(d *schema.ResourceData, meta interface{}) error {
-	defer tccommon.LogElapsed("resource.tencentcloud_cfw_cluster_fw_bypass.update")()
+	defer tccommon.LogElapsed("resource.tencentcloud_cfw_cluster_fw_bypass_config.update")()
 	defer tccommon.InconsistentCheck(d, meta)()
 
 	var (
@@ -405,7 +200,7 @@ func resourceTencentCloudCfwClusterFwBypassConfigUpdate(d *schema.ResourceData, 
 	})
 
 	if reqErr != nil {
-		log.Printf("[CRITAL]%s update cfw_cluster_fw_bypass failed, reason:%+v", logId, reqErr)
+		log.Printf("[CRITAL]%s update cfw_cluster_fw_bypass_config failed, reason:%+v", logId, reqErr)
 		return reqErr
 	}
 
@@ -413,9 +208,8 @@ func resourceTencentCloudCfwClusterFwBypassConfigUpdate(d *schema.ResourceData, 
 }
 
 func resourceTencentCloudCfwClusterFwBypassConfigDelete(d *schema.ResourceData, meta interface{}) error {
-	defer tccommon.LogElapsed("resource.tencentcloud_cfw_cluster_fw_bypass.delete")()
+	defer tccommon.LogElapsed("resource.tencentcloud_cfw_cluster_fw_bypass_config.delete")()
 	defer tccommon.InconsistentCheck(d, meta)()
 
-	d.SetId("")
 	return nil
 }

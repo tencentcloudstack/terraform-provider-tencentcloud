@@ -2,7 +2,7 @@
 
 腾讯云防火墙（CFW）提供集群防火墙 Bypass 状态管理能力。Bypass 模式允许流量绕过防火墙（Enable=true）或经过防火墙（Enable=false）。
 
-当前 Terraform Provider 的 CFW 服务目录（`tencentcloud/services/cfw/`）已有部分资源，本次新增 `tencentcloud_cfw_cluster_fw_bypass` CONFIG 类型资源，用于管理集群防火墙的 Bypass 状态。
+当前 Terraform Provider 的 CFW 服务目录（`tencentcloud/services/cfw/`）已有部分资源，本次新增 `tencentcloud_cfw_cluster_fw_bypass_config` CONFIG 类型资源，用于管理集群防火墙的 Bypass 状态。
 
 涉及的云 API：
 - `DescribeClusterNatCcnFwSwitchList`：查询 NAT CCN 集群模式防火墙开关列表，用于 Read 操作
@@ -11,7 +11,8 @@
 ## Goals / Non-Goals
 
 **Goals:**
-- 新增 `tencentcloud_cfw_cluster_fw_bypass` CONFIG 资源，支持读取和更新集群防火墙 Bypass 状态
+- 新增 `tencentcloud_cfw_cluster_fw_bypass_config` CONFIG 资源，支持读取和更新集群防火墙 Bypass 状态
+- Schema 仅展示 `ModifyClusterFwBypass` 接口入参（`fw_type`、`ccn_id`、`enable`、`nat_ins_id`），不展示 Read 接口入参
 - 资源 ID 使用 `fw_type` + `ccn_id`（+ `nat_ins_id` 当 fw_type 为 NAT_FW 时）的联合 ID
 - 在 `provider.go` 和 `provider.md` 中注册新资源
 - 提供对应的单元测试（使用 gomonkey mock 云 API）
@@ -34,13 +35,10 @@
 
 使用 `tccommon.FILED_SP`（`#`）作为分隔符，与 Provider 其他资源保持一致。
 
-### 3. Read 接口参数设计
-`DescribeClusterNatCcnFwSwitchList` 接口支持通过 `NatType` 和 `Filters` 过滤。Read 时通过 `nat_type` 和 `filters` 参数查询，从返回的 `Data` 列表中找到匹配的实例。
+### 3. Schema 设计
+Schema 仅展示 `ModifyClusterFwBypass` 接口入参（`fw_type`、`ccn_id`、`enable`、`nat_ins_id`），不展示 Read 接口的 `nat_type`、`filters` 等入参，也不展示 `total`、`data`、`region_list` 等返回字段。Read 方法内部直接调用 `DescribeClusterNatCcnFwSwitchList` 获取数据，从返回的 `Data` 列表中匹配实例并读取 `Bypass` 字段。
 
-### 4. 只读字段处理
-`DescribeClusterNatCcnFwSwitchList` 返回的 `Data`（NatFwSwitchDetailS 列表）、`Total`、`RegionList` 等字段作为 Computed 字段存储在 state 中，供用户查看。
-
-### 5. 单元测试策略
+### 4. 单元测试策略
 使用 gomonkey 对云 API 进行 mock，测试资源的 CRUD 业务逻辑，不依赖真实云环境。
 
 ## Risks / Trade-offs
