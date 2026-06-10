@@ -32,10 +32,6 @@ func ptrStringCFB(s string) *string {
 	return &s
 }
 
-func ptrInt64CFB(i int64) *int64 {
-	return &i
-}
-
 func TestCfwClusterFwBypassConfig_Read_Normal(t *testing.T) {
 	patches := gomonkey.NewPatches()
 	defer patches.Reset()
