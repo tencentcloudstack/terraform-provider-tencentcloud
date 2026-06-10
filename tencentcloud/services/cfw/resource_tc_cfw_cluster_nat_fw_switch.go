@@ -98,28 +98,6 @@ func ResourceTencentCloudCfwClusterNatFwSwitch() *schema.Resource {
 					},
 				},
 			},
-
-			// computed
-			"switch_mode": {
-				Type:        schema.TypeInt,
-				Computed:    true,
-				Description: "Switch access mode, 1: automatic access, 2: manual access.",
-			},
-			"routing_mode": {
-				Type:        schema.TypeInt,
-				Computed:    true,
-				Description: "Traffic steering routing method, 0: multi-route table, 1: policy routing.",
-			},
-			"bypass": {
-				Type:        schema.TypeInt,
-				Computed:    true,
-				Description: "Bypass status, 0: disabled, 1: enabled.",
-			},
-			"ccn_id": {
-				Type:        schema.TypeString,
-				Computed:    true,
-				Description: "CCN instance ID.",
-			},
 		},
 	}
 }
@@ -207,19 +185,26 @@ func resourceTencentCloudCfwClusterNatFwSwitchCreate(d *schema.ResourceData, met
 		}
 
 		if result == nil || result.Response == nil {
-			return resource.NonRetryableError(fmt.Errorf("open cfw cluster_nat_fw_switch failed, Response is nil."))
+			return resource.NonRetryableError(fmt.Errorf("open cfw cluster nat fw switch failed, Response is nil."))
 		}
 
 		return nil
 	})
 
 	if reqErr != nil {
-		log.Printf("[CRITAL]%s create cfw cluster_nat_fw_switch failed, reason:%+v", logId, reqErr)
+		log.Printf("[CRITAL]%s create cfw cluster nat fw switch failed, reason:%+v", logId, reqErr)
 		return reqErr
 	}
 
-	log.Printf("[DEBUG]%s create cfw cluster_nat_fw_switch, nat_ins_id=%s, ccn_id=%s", logId, natInsId, ccnId)
+	log.Printf("[DEBUG]%s create cfw cluster nat fw switch, nat_ins_id=%s, ccn_id=%s", logId, natInsId, ccnId)
 	d.SetId(strings.Join([]string{natInsId, ccnId}, tccommon.FILED_SP))
+
+	// Wait for the switch to be fully opened (Status: 1-open).
+	if err := waitClusterNatCcnFwSwitchStatus(ctx, meta, natInsId, ccnId, []int64{1}, false); err != nil {
+		log.Printf("[CRITAL]%s wait cfw cluster nat fw switch open failed, reason:%+v", logId, err)
+		return err
+	}
+
 	return resourceTencentCloudCfwClusterNatFwSwitchRead(d, meta)
 }
 
@@ -252,114 +237,50 @@ func resourceTencentCloudCfwClusterNatFwSwitchRead(d *schema.ResourceData, meta 
 		return nil
 	}
 
+	natCcnSwitchMap := map[string]interface{}{
+		"nat_ins_id": natInsId,
+		"ccn_id":     ccnId,
+	}
+
 	if respData.SwitchMode != nil {
-		_ = d.Set("switch_mode", respData.SwitchMode)
+		natCcnSwitchMap["switch_mode"] = int(*respData.SwitchMode)
 	}
 
 	if respData.RoutingMode != nil {
-		_ = d.Set("routing_mode", respData.RoutingMode)
+		natCcnSwitchMap["routing_mode"] = int(*respData.RoutingMode)
 	}
 
-	if respData.Bypass != nil {
-		_ = d.Set("bypass", respData.Bypass)
+	if respData.AccessInstanceList != nil {
+		accessInstanceListResult := make([]map[string]interface{}, 0, len(respData.AccessInstanceList))
+		for _, accessInstance := range respData.AccessInstanceList {
+			accessInstanceMap := map[string]interface{}{}
+			if accessInstance.InstanceId != nil {
+				accessInstanceMap["instance_id"] = accessInstance.InstanceId
+			}
+
+			if accessInstance.InstanceType != nil {
+				accessInstanceMap["instance_type"] = accessInstance.InstanceType
+			}
+
+			if accessInstance.InstanceRegion != nil {
+				accessInstanceMap["instance_region"] = accessInstance.InstanceRegion
+			}
+
+			if accessInstance.AccessCidrMode != nil {
+				accessInstanceMap["access_cidr_mode"] = accessInstance.AccessCidrMode
+			}
+
+			if accessInstance.AccessCidrList != nil {
+				accessInstanceMap["access_cidr_list"] = accessInstance.AccessCidrList
+			}
+
+			accessInstanceListResult = append(accessInstanceListResult, accessInstanceMap)
+		}
+
+		natCcnSwitchMap["access_instance_list"] = accessInstanceListResult
 	}
 
-	if respData.CcnId != nil {
-		_ = d.Set("ccn_id", respData.CcnId)
-	}
-
-	// Update nat_ccn_switch block with current values
-	if v, ok := d.GetOk("nat_ccn_switch"); ok {
-		natCcnSwitchList := v.([]interface{})
-		if len(natCcnSwitchList) > 0 {
-			natCcnSwitchMap := natCcnSwitchList[0].(map[string]interface{})
-			natCcnSwitchMap["nat_ins_id"] = natInsId
-			natCcnSwitchMap["ccn_id"] = ccnId
-			if respData.SwitchMode != nil {
-				natCcnSwitchMap["switch_mode"] = int(*respData.SwitchMode)
-			}
-
-			if respData.RoutingMode != nil {
-				natCcnSwitchMap["routing_mode"] = int(*respData.RoutingMode)
-			}
-
-			if respData.AccessInstanceList != nil {
-				accessInstanceListResult := make([]map[string]interface{}, 0, len(respData.AccessInstanceList))
-				for _, accessInstance := range respData.AccessInstanceList {
-					accessInstanceMap := map[string]interface{}{}
-					if accessInstance.InstanceId != nil {
-						accessInstanceMap["instance_id"] = accessInstance.InstanceId
-					}
-
-					if accessInstance.InstanceType != nil {
-						accessInstanceMap["instance_type"] = accessInstance.InstanceType
-					}
-
-					if accessInstance.InstanceRegion != nil {
-						accessInstanceMap["instance_region"] = accessInstance.InstanceRegion
-					}
-
-					if accessInstance.AccessCidrMode != nil {
-						accessInstanceMap["access_cidr_mode"] = accessInstance.AccessCidrMode
-					}
-
-					if accessInstance.AccessCidrList != nil {
-						accessInstanceMap["access_cidr_list"] = accessInstance.AccessCidrList
-					}
-
-					accessInstanceListResult = append(accessInstanceListResult, accessInstanceMap)
-				}
-
-				natCcnSwitchMap["access_instance_list"] = accessInstanceListResult
-			}
-
-			_ = d.Set("nat_ccn_switch", []interface{}{natCcnSwitchMap})
-		}
-	} else {
-		natCcnSwitchMap := map[string]interface{}{
-			"nat_ins_id": natInsId,
-			"ccn_id":     ccnId,
-		}
-		if respData.SwitchMode != nil {
-			natCcnSwitchMap["switch_mode"] = int(*respData.SwitchMode)
-		}
-
-		if respData.RoutingMode != nil {
-			natCcnSwitchMap["routing_mode"] = int(*respData.RoutingMode)
-		}
-
-		if respData.AccessInstanceList != nil {
-			accessInstanceListResult := make([]map[string]interface{}, 0, len(respData.AccessInstanceList))
-			for _, accessInstance := range respData.AccessInstanceList {
-				accessInstanceMap := map[string]interface{}{}
-				if accessInstance.InstanceId != nil {
-					accessInstanceMap["instance_id"] = accessInstance.InstanceId
-				}
-
-				if accessInstance.InstanceType != nil {
-					accessInstanceMap["instance_type"] = accessInstance.InstanceType
-				}
-
-				if accessInstance.InstanceRegion != nil {
-					accessInstanceMap["instance_region"] = accessInstance.InstanceRegion
-				}
-
-				if accessInstance.AccessCidrMode != nil {
-					accessInstanceMap["access_cidr_mode"] = accessInstance.AccessCidrMode
-				}
-
-				if accessInstance.AccessCidrList != nil {
-					accessInstanceMap["access_cidr_list"] = accessInstance.AccessCidrList
-				}
-
-				accessInstanceListResult = append(accessInstanceListResult, accessInstanceMap)
-			}
-
-			natCcnSwitchMap["access_instance_list"] = accessInstanceListResult
-		}
-
-		_ = d.Set("nat_ccn_switch", []interface{}{natCcnSwitchMap})
-	}
+	_ = d.Set("nat_ccn_switch", []interface{}{natCcnSwitchMap})
 
 	return nil
 }
@@ -382,14 +303,13 @@ func resourceTencentCloudCfwClusterNatFwSwitchUpdate(d *schema.ResourceData, met
 	ccnId := idSplit[1]
 
 	if d.HasChange("nat_ccn_switch") {
-		request := cfwv20190904.NewModifyClusterNatFwSwitchRequest()
-		natCcnSwitch := cfwv20190904.NatCcnSwitchConfig{}
-		natCcnSwitch.NatInsId = &natInsId
-		natCcnSwitch.CcnId = &ccnId
-
 		if v, ok := d.GetOk("nat_ccn_switch"); ok {
 			natCcnSwitchList := v.([]interface{})
 			if len(natCcnSwitchList) > 0 {
+				request := cfwv20190904.NewModifyClusterNatFwSwitchRequest()
+				natCcnSwitch := cfwv20190904.NatCcnSwitchConfig{}
+				natCcnSwitch.NatInsId = &natInsId
+				natCcnSwitch.CcnId = &ccnId
 				natCcnSwitchMap := natCcnSwitchList[0].(map[string]interface{})
 
 				if v, ok := natCcnSwitchMap["switch_mode"].(int); ok {
@@ -433,28 +353,34 @@ func resourceTencentCloudCfwClusterNatFwSwitchUpdate(d *schema.ResourceData, met
 				if v, ok := natCcnSwitchMap["lead_vpc_cidr"].(string); ok && v != "" {
 					natCcnSwitch.LeadVpcCidr = helper.String(v)
 				}
+
+				request.NatCcnSwitch = &natCcnSwitch
+				reqErr := resource.Retry(tccommon.WriteRetryTimeout, func() *resource.RetryError {
+					result, e := meta.(tccommon.ProviderMeta).GetAPIV3Conn().UseCfwV20190904Client().ModifyClusterNatFwSwitchWithContext(ctx, request)
+					if e != nil {
+						return tccommon.RetryError(e)
+					} else {
+						log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), result.ToJsonString())
+					}
+
+					if result == nil || result.Response == nil {
+						return resource.NonRetryableError(fmt.Errorf("modify cfw cluster nat fw switch failed, Response is nil."))
+					}
+
+					return nil
+				})
+
+				if reqErr != nil {
+					log.Printf("[CRITAL]%s update cfw cluster nat fw switch failed, reason:%+v", logId, reqErr)
+					return reqErr
+				}
+
+				// Wait for the switch to reach a steady opened status (Status: 1-open).
+				if err := waitClusterNatCcnFwSwitchStatus(ctx, meta, natInsId, ccnId, []int64{1}, false); err != nil {
+					log.Printf("[CRITAL]%s wait cfw cluster nat fw switch update failed, reason:%+v", logId, err)
+					return err
+				}
 			}
-		}
-
-		request.NatCcnSwitch = &natCcnSwitch
-		reqErr := resource.Retry(tccommon.WriteRetryTimeout, func() *resource.RetryError {
-			result, e := meta.(tccommon.ProviderMeta).GetAPIV3Conn().UseCfwV20190904Client().ModifyClusterNatFwSwitchWithContext(ctx, request)
-			if e != nil {
-				return tccommon.RetryError(e)
-			} else {
-				log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), result.ToJsonString())
-			}
-
-			if result == nil || result.Response == nil {
-				return resource.NonRetryableError(fmt.Errorf("modify cfw cluster_nat_fw_switch failed, Response is nil."))
-			}
-
-			return nil
-		})
-
-		if reqErr != nil {
-			log.Printf("[CRITAL]%s update cfw cluster_nat_fw_switch failed, reason:%+v", logId, reqErr)
-			return reqErr
 		}
 	}
 
@@ -491,16 +417,96 @@ func resourceTencentCloudCfwClusterNatFwSwitchDelete(d *schema.ResourceData, met
 		}
 
 		if result == nil || result.Response == nil {
-			return resource.NonRetryableError(fmt.Errorf("close cfw cluster_nat_fw_switch failed, Response is nil."))
+			return resource.NonRetryableError(fmt.Errorf("close cfw cluster nat fw switch failed, Response is nil."))
 		}
 
 		return nil
 	})
 
 	if reqErr != nil {
-		log.Printf("[CRITAL]%s delete cfw cluster_nat_fw_switch failed, reason:%+v", logId, reqErr)
+		log.Printf("[CRITAL]%s delete cfw cluster nat fw switch failed, reason:%+v", logId, reqErr)
 		return reqErr
 	}
 
+	// Wait for the switch to be fully closed (Status: 0-closed) or removed from the list.
+	if err := waitClusterNatCcnFwSwitchStatus(ctx, meta, natInsId, ccnId, []int64{0}, true); err != nil {
+		log.Printf("[CRITAL]%s wait cfw cluster nat fw switch close failed, reason:%+v", logId, err)
+		return err
+	}
+
 	return nil
+}
+
+// waitClusterNatCcnFwSwitchStatus polls DescribeClusterNatCcnFwSwitchList until the switch of the
+// target instance (natInsId/ccnId) reaches one of the expected terminal statuses.
+// Switch status: 0-closed, 1-open, 2-opening, 3-closing.
+// When treatMissingAsDone is true, the target no longer existing in the list is also treated as done
+// (used by the close/delete flow).
+func waitClusterNatCcnFwSwitchStatus(ctx context.Context, meta interface{}, natInsId, ccnId string, expectStatus []int64, treatMissingAsDone bool) error {
+	logId := tccommon.GetLogId(ctx)
+
+	expectSet := make(map[int64]struct{}, len(expectStatus))
+	for _, s := range expectStatus {
+		expectSet[s] = struct{}{}
+	}
+
+	return resource.Retry(5*tccommon.ReadRetryTimeout, func() *resource.RetryError {
+		request := cfwv20190904.NewDescribeClusterNatCcnFwSwitchListRequest()
+		request.NatType = helper.String("nat_ccn")
+		request.Limit = helper.IntInt64(100)
+		request.Offset = helper.IntInt64(0)
+		request.Filters = []*cfwv20190904.CommonFilter{
+			{
+				Name:         helper.String("InsObj"),
+				OperatorType: helper.IntInt64(1),
+				Values:       []*string{helper.String(natInsId)},
+			},
+			{
+				Name:         helper.String("AttachId"),
+				OperatorType: helper.IntInt64(1),
+				Values:       []*string{helper.String(ccnId)},
+			},
+		}
+
+		result, e := meta.(tccommon.ProviderMeta).GetAPIV3Conn().UseCfwV20190904Client().DescribeClusterNatCcnFwSwitchListWithContext(ctx, request)
+		if e != nil {
+			return tccommon.RetryError(e)
+		}
+
+		log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), result.ToJsonString())
+
+		if result == nil || result.Response == nil {
+			return resource.NonRetryableError(fmt.Errorf("describe cfw cluster nat ccn fw switch list failed, Response is nil."))
+		}
+
+		var target *cfwv20190904.NatFwSwitchDetailS
+		for _, item := range result.Response.Data {
+			if item == nil {
+				continue
+			}
+
+			if item.InsObj != nil && *item.InsObj == natInsId && item.AttachId != nil && *item.AttachId == ccnId {
+				target = item
+				break
+			}
+		}
+
+		if target == nil {
+			if treatMissingAsDone {
+				return nil
+			}
+
+			return resource.RetryableError(fmt.Errorf("cfw cluster nat ccn fw switch [%s/%s] not found yet, retrying", natInsId, ccnId))
+		}
+
+		if target.Status == nil {
+			return resource.RetryableError(fmt.Errorf("cfw cluster nat ccn fw switch [%s/%s] status is nil, retrying", natInsId, ccnId))
+		}
+
+		if _, ok := expectSet[*target.Status]; ok {
+			return nil
+		}
+
+		return resource.RetryableError(fmt.Errorf("cfw cluster nat ccn fw switch [%s/%s] is still in status [%d], retrying", natInsId, ccnId, *target.Status))
+	})
 }
