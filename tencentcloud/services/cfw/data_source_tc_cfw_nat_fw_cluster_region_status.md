@@ -5,9 +5,9 @@ Example Usage
 ```hcl
 data "tencentcloud_cfw_nat_fw_cluster_region_status" "example" {
   nat_cluster_region_status_query_list {
-    ccn_id      = "ccn-fkb9bo2v"
-    nat_ins_id  = "nat-xxxxxxxx"
-    asset_type  = "nat_ccn"
+    ccn_id       = "ccn-p3mlp0tj"
+    nat_ins_id   = "nat-h1i1mf4n"
+    asset_type   = "nat_ccn"
     routing_mode = 0
   }
 }

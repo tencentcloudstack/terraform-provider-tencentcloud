@@ -19,23 +19,23 @@ func DataSourceTencentCloudCfwNatFwClusterRegionStatus() *schema.Resource {
 		Schema: map[string]*schema.Schema{
 			"nat_cluster_region_status_query_list": {
 				Type:        schema.TypeList,
-				Optional:    true,
+				Required:    true,
 				Description: "List of query conditions for NAT firewall cluster region status.",
 				Elem: &schema.Resource{
 					Schema: map[string]*schema.Schema{
 						"ccn_id": {
 							Type:        schema.TypeString,
-							Optional:    true,
+							Required:    true,
 							Description: "CCN ID.",
 						},
 						"nat_ins_id": {
 							Type:        schema.TypeString,
-							Optional:    true,
+							Required:    true,
 							Description: "NAT gateway ID.",
 						},
 						"asset_type": {
 							Type:        schema.TypeString,
-							Optional:    true,
+							Required:    true,
 							Description: "Asset type. Valid values: `nat_ccn` (CCN+NAT scenario), `nat` (standalone NAT scenario).",
 						},
 						"routing_mode": {
@@ -45,12 +45,6 @@ func DataSourceTencentCloudCfwNatFwClusterRegionStatus() *schema.Resource {
 						},
 					},
 				},
-			},
-
-			"total": {
-				Type:        schema.TypeInt,
-				Computed:    true,
-				Description: "Total number of regions returned.",
 			},
 
 			"region_fw_status": {
@@ -153,10 +147,6 @@ func dataSourceTencentCloudCfwNatFwClusterRegionStatusRead(d *schema.ResourceDat
 	if err != nil {
 		log.Printf("[DATASOURCE] read empty, skip SetId")
 		return err
-	}
-
-	if response.Response.Total != nil {
-		_ = d.Set("total", response.Response.Total)
 	}
 
 	regionFwStatusList := make([]map[string]interface{}, 0)
