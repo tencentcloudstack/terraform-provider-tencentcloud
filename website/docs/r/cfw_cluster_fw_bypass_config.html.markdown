@@ -16,9 +16,9 @@ Provides a resource to manage CFW (Cloud Firewall) cluster firewall bypass confi
 ### VPC_FW type
 
 ```hcl
-resource "tencentcloud_cfw_cluster_fw_bypass_config" "vpc_fw_example" {
+resource "tencentcloud_cfw_cluster_fw_bypass_config" "example" {
   fw_type = "VPC_FW"
-  ccn_id  = "ccn-xxxxxxxx"
+  ccn_id  = "ccn-p3mlp0tj"
   enable  = false
 }
 ```
@@ -26,11 +26,11 @@ resource "tencentcloud_cfw_cluster_fw_bypass_config" "vpc_fw_example" {
 ### NAT_FW type
 
 ```hcl
-resource "tencentcloud_cfw_cluster_fw_bypass_config" "nat_fw_example" {
+resource "tencentcloud_cfw_cluster_fw_bypass_config" "example" {
   fw_type    = "NAT_FW"
-  ccn_id     = "ccn-xxxxxxxx"
-  nat_ins_id = "nat-xxxxxxxx"
-  enable     = false
+  ccn_id     = "ccn-p3mlp0tj"
+  nat_ins_id = "nat-h1i1mf4n"
+  enable     = true
 }
 ```
 
@@ -58,12 +58,12 @@ CFW cluster firewall bypass config can be imported using the composite ID.
 For VPC_FW type, the format is `{fw_type}#{ccn_id}`:
 
 ```
-terraform import tencentcloud_cfw_cluster_fw_bypass_config.vpc_fw_example VPC_FW#ccn-xxxxxxxx
+terraform import tencentcloud_cfw_cluster_fw_bypass_config.example VPC_FW#ccn-p3mlp0tj
 ```
 
-For NAT_FW type, the format is `{fw_type}#{ccn_id}#{nat_ins_id}`:
+For NAT_FW type, the format is `{fw_type}#{nat_ins_id},{ccn_id}`:
 
 ```
-terraform import tencentcloud_cfw_cluster_fw_bypass_config.nat_fw_example NAT_FW#ccn-xxxxxxxx#nat-xxxxxxxx
+terraform import tencentcloud_cfw_cluster_fw_bypass_config.example NAT_FW#nat-h1i1mf4n,ccn-p3mlp0tj
 ```
 

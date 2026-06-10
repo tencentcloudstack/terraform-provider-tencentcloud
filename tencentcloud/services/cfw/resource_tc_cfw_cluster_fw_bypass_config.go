@@ -59,11 +59,18 @@ func resourceTencentCloudCfwClusterFwBypassConfigCreate(d *schema.ResourceData, 
 	ccnId := d.Get("ccn_id").(string)
 
 	var id string
-	if v, ok := d.GetOk("nat_ins_id"); ok && fwType == "NAT_FW" {
-		natInsId := v.(string)
-		id = strings.Join([]string{fwType, ccnId, natInsId}, tccommon.FILED_SP)
-	} else {
+	if fwType == "NAT_FW" {
+		natInsId := d.Get("nat_ins_id").(string)
+		if natInsId == "" {
+			return fmt.Errorf("`nat_ins_id` is required when fw_type is `NAT_FW`")
+		}
+
+		res := strings.Join([]string{natInsId, ccnId}, tccommon.COMMA_SP)
+		id = strings.Join([]string{fwType, res}, tccommon.FILED_SP)
+	} else if fwType == "VPC_FW" {
 		id = strings.Join([]string{fwType, ccnId}, tccommon.FILED_SP)
+	} else {
+		return fmt.Errorf("invalid fw_type: %s", fwType)
 	}
 
 	d.SetId(id)
@@ -82,18 +89,53 @@ func resourceTencentCloudCfwClusterFwBypassConfigRead(d *schema.ResourceData, me
 	)
 
 	parts := strings.Split(id, tccommon.FILED_SP)
-	if len(parts) < 2 {
+	if len(parts) != 2 {
 		return fmt.Errorf("invalid id format: %s", id)
 	}
+
 	fwType := parts[0]
-	ccnId := parts[1]
+	tmp := parts[1]
 	var natInsId string
-	if len(parts) >= 3 {
-		natInsId = parts[2]
+	var ccnId string
+	if fwType == "NAT_FW" {
+		res := strings.Split(tmp, tccommon.COMMA_SP)
+		if len(res) != 2 {
+			return fmt.Errorf("invalid id format: %s", id)
+		}
+
+		natInsId = res[0]
+		ccnId = res[1]
+	} else if fwType == "VPC_FW" {
+		ccnId = tmp
+	} else {
+		return fmt.Errorf("invalid fw_type: %s", fwType)
 	}
 
 	request.Limit = helper.IntInt64(100)
 	request.Offset = helper.IntInt64(0)
+	request.NatType = helper.String("nat_ccn")
+	if natInsId != "" {
+		request.Filters = []*cfwv20190904.CommonFilter{
+			{
+				Name:         helper.String("InsObj"),
+				OperatorType: helper.IntInt64(1),
+				Values:       []*string{helper.String(natInsId)},
+			},
+			{
+				Name:         helper.String("AttachId"),
+				OperatorType: helper.IntInt64(1),
+				Values:       []*string{helper.String(ccnId)},
+			},
+		}
+	} else {
+		request.Filters = []*cfwv20190904.CommonFilter{
+			{
+				Name:         helper.String("AttachId"),
+				OperatorType: helper.IntInt64(1),
+				Values:       []*string{helper.String(ccnId)},
+			},
+		}
+	}
 
 	var response *cfwv20190904.DescribeClusterNatCcnFwSwitchListResponse
 	reqErr := resource.Retry(tccommon.ReadRetryTimeout, func() *resource.RetryError {
@@ -101,6 +143,7 @@ func resourceTencentCloudCfwClusterFwBypassConfigRead(d *schema.ResourceData, me
 		if e != nil {
 			return tccommon.RetryError(e)
 		}
+
 		log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), result.ToJsonString())
 		response = result
 		return nil
@@ -112,7 +155,7 @@ func resourceTencentCloudCfwClusterFwBypassConfigRead(d *schema.ResourceData, me
 	}
 
 	if response == nil || response.Response == nil {
-		log.Printf("[WARN]%s resource `cfw_cluster_fw_bypass_config` id=%s not found, response is nil", logId, d.Id())
+		log.Printf("[WARN]%s resource `tencentcloud_cfw_cluster_fw_bypass_config` id=%s not found, response is nil", logId, d.Id())
 		d.SetId("")
 		return nil
 	}
@@ -123,6 +166,7 @@ func resourceTencentCloudCfwClusterFwBypassConfigRead(d *schema.ResourceData, me
 		if item == nil {
 			continue
 		}
+
 		if fwType == "NAT_FW" && natInsId != "" {
 			if item.InsObj != nil && *item.InsObj == natInsId &&
 				item.AttachId != nil && *item.AttachId == ccnId {
@@ -138,7 +182,7 @@ func resourceTencentCloudCfwClusterFwBypassConfigRead(d *schema.ResourceData, me
 	}
 
 	if matchedItem == nil {
-		log.Printf("[WARN]%s resource `cfw_cluster_fw_bypass_config` id=%s not found in response data", logId, d.Id())
+		log.Printf("[WARN]%s resource `tencentcloud_cfw_cluster_fw_bypass_config` id=%s not found in response data", logId, d.Id())
 		d.SetId("")
 		return nil
 	}
@@ -151,7 +195,11 @@ func resourceTencentCloudCfwClusterFwBypassConfigRead(d *schema.ResourceData, me
 
 	// Set enable based on Bypass field: 1 means bypass enabled (true), 0 means bypass disabled (false)
 	if matchedItem.Bypass != nil {
-		_ = d.Set("enable", *matchedItem.Bypass == 1)
+		if *matchedItem.Bypass == 1 {
+			_ = d.Set("enable", true)
+		} else {
+			_ = d.Set("enable", false)
+		}
 	}
 
 	return nil
@@ -169,25 +217,39 @@ func resourceTencentCloudCfwClusterFwBypassConfigUpdate(d *schema.ResourceData, 
 	)
 
 	parts := strings.Split(id, tccommon.FILED_SP)
-	if len(parts) < 2 {
+	if len(parts) != 2 {
 		return fmt.Errorf("invalid id format: %s", id)
 	}
+
 	fwType := parts[0]
-	ccnId := parts[1]
+	tmp := parts[1]
+	var natInsId string
+	var ccnId string
+	var enable bool
+	if fwType == "NAT_FW" {
+		res := strings.Split(tmp, tccommon.COMMA_SP)
+		if len(res) != 2 {
+			return fmt.Errorf("invalid id format: %s", id)
+		}
+
+		natInsId = res[0]
+		ccnId = res[1]
+	} else if fwType == "VPC_FW" {
+		ccnId = tmp
+	} else {
+		return fmt.Errorf("invalid fw_type: %s", fwType)
+	}
 
 	request.FwType = helper.String(fwType)
 	request.CcnId = helper.String(ccnId)
 
 	if v, ok := d.GetOkExists("enable"); ok {
-		request.Enable = helper.Bool(v.(bool))
+		enable = v.(bool)
+		request.Enable = helper.Bool(enable)
 	}
 
-	if fwType == "NAT_FW" {
-		if len(parts) >= 3 {
-			request.NatInsId = helper.String(parts[2])
-		} else if v, ok := d.GetOk("nat_ins_id"); ok {
-			request.NatInsId = helper.String(v.(string))
-		}
+	if natInsId != "" {
+		request.NatInsId = helper.String(natInsId)
 	}
 
 	reqErr := resource.Retry(tccommon.WriteRetryTimeout, func() *resource.RetryError {
@@ -201,6 +263,86 @@ func resourceTencentCloudCfwClusterFwBypassConfigUpdate(d *schema.ResourceData, 
 
 	if reqErr != nil {
 		log.Printf("[CRITAL]%s update cfw_cluster_fw_bypass_config failed, reason:%+v", logId, reqErr)
+		return reqErr
+	}
+
+	// wait
+	waitReq := cfwv20190904.NewDescribeClusterNatCcnFwSwitchListRequest()
+	waitReq.Limit = helper.IntInt64(100)
+	waitReq.Offset = helper.IntInt64(0)
+	waitReq.NatType = helper.String("nat_ccn")
+	if natInsId != "" {
+		waitReq.Filters = []*cfwv20190904.CommonFilter{
+			{
+				Name:         helper.String("InsObj"),
+				OperatorType: helper.IntInt64(1),
+				Values:       []*string{helper.String(natInsId)},
+			},
+			{
+				Name:         helper.String("AttachId"),
+				OperatorType: helper.IntInt64(1),
+				Values:       []*string{helper.String(ccnId)},
+			},
+		}
+	} else {
+		waitReq.Filters = []*cfwv20190904.CommonFilter{
+			{
+				Name:         helper.String("AttachId"),
+				OperatorType: helper.IntInt64(1),
+				Values:       []*string{helper.String(ccnId)},
+			},
+		}
+	}
+
+	reqErr = resource.Retry(tccommon.ReadRetryTimeout, func() *resource.RetryError {
+		result, e := meta.(tccommon.ProviderMeta).GetAPIV3Conn().UseCfwV20190904Client().DescribeClusterNatCcnFwSwitchListWithContext(ctx, waitReq)
+		if e != nil {
+			return tccommon.RetryError(e)
+		}
+
+		log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), result.ToJsonString())
+
+		if result == nil || result.Response == nil || result.Response.Data == nil {
+			return resource.NonRetryableError(fmt.Errorf("describe cfw_cluster_fw_bypass_config failed, response is nil"))
+		}
+
+		var matchedItem *cfwv20190904.NatFwSwitchDetailS
+		for _, item := range result.Response.Data {
+			if item == nil {
+				continue
+			}
+
+			if fwType == "NAT_FW" && natInsId != "" {
+				if item.InsObj != nil && *item.InsObj == natInsId &&
+					item.AttachId != nil && *item.AttachId == ccnId {
+					matchedItem = item
+					break
+				}
+			} else {
+				if item.AttachId != nil && *item.AttachId == ccnId {
+					matchedItem = item
+					break
+				}
+			}
+		}
+
+		if matchedItem == nil {
+			return resource.NonRetryableError(fmt.Errorf("describe cfw_cluster_fw_bypass_config failed, matchedItem is nil"))
+		}
+
+		if matchedItem.Bypass != nil {
+			if enable && *matchedItem.Bypass != 1 {
+				return resource.RetryableError(fmt.Errorf("waiting for cfw_cluster_fw_bypass_config to be enabled"))
+			} else if !enable && *matchedItem.Bypass != 0 {
+				return resource.RetryableError(fmt.Errorf("waiting for cfw_cluster_fw_bypass_config to be disabled"))
+			}
+		}
+
+		return nil
+	})
+
+	if reqErr != nil {
+		log.Printf("[CRITAL]%s read cfw_cluster_fw_bypass_config failed, reason:%+v", logId, reqErr)
 		return reqErr
 	}
 
