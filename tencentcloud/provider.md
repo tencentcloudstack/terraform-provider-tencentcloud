@@ -288,6 +288,7 @@ tencentcloud_cam_policy_version
 tencentcloud_cam_set_policy_version_config
 tencentcloud_cam_user_permission_boundary_attachment
 tencentcloud_cam_role_permission_boundary_attachment
+tencentcloud_cam_message_receiver
 
 Customer Identity and Access Management(CIAM)
 Resource
@@ -559,6 +560,7 @@ tencentcloud_cynosdb_ssl
 tencentcloud_cynosdb_cluster_transparent_encrypt
 tencentcloud_cynosdb_audit_service
 tencentcloud_cynosdb_cls_delivery
+tencentcloud_cynosdb_libra_db_instance
 
 Direct Connect(DC)
 Data Source
@@ -731,6 +733,8 @@ tencentcloud_kubernetes_cluster_maintenance_window_and_exclusion
 tencentcloud_kubernetes_cancel_upgrade_plan_operation
 tencentcloud_kubernetes_cluster_scheduler_policy_config
 tencentcloud_kubernetes_cluster_extra_args_config
+tencentcloud_kubernetes_roll_out_sequence
+tencentcloud_kubernetes_cluster_roll_out_sequence_tag_config
 
 TDMQ for Pulsar(tpulsar)
 Data Source
@@ -773,6 +777,8 @@ tencentcloud_mongodb_instance_params
 tencentcloud_mongodb_instance_srv_connection
 tencentcloud_mongodb_instance_ssl
 tencentcloud_mongodb_readonly_instance
+tencentcloud_mongodb_audit_log_file
+tencentcloud_mongodb_audit_service
 
 TencentDB for MySQL(cdb)
 Data Source
@@ -969,6 +975,7 @@ tencentcloud_postgresql_parameters
 tencentcloud_postgresql_instance_ssl_config
 tencentcloud_postgresql_restore_db_instance_objects_operation
 tencentcloud_postgresql_time_window
+tencentcloud_postgres_audit_service
 
 TencentDB for Redis(crs)
 Data Source
@@ -986,6 +993,7 @@ tencentcloud_redis_clusters
 Resource
 tencentcloud_redis_instance
 tencentcloud_redis_backup_config
+tencentcloud_redis_param
 tencentcloud_redis_param_template
 tencentcloud_redis_account
 tencentcloud_redis_read_only
@@ -1484,6 +1492,7 @@ tencentcloud_cls_cloud_product_log_task
 tencentcloud_cls_notice_content
 tencentcloud_cls_web_callback
 tencentcloud_cls_cloud_product_log_task_v2
+tencentcloud_cls_open_service_operation
 tencentcloud_cls_dlc_deliver
 tencentcloud_cls_console
 
@@ -1855,6 +1864,7 @@ tencentcloud_organization_org_financial_by_member
 tencentcloud_organization_org_financial_by_month
 tencentcloud_organization_org_financial_by_product
 tencentcloud_organization_org_share_area
+tencentcloud_organization_permission_policies_in_role_configuration
 tencentcloud_organization_services
 tencentcloud_identity_center_groups
 tencentcloud_identity_center_role_configurations
@@ -2482,6 +2492,7 @@ tencentcloud_bh_devices
 Resource
 tencentcloud_bh_acl
 tencentcloud_bh_bind_device_account_kubeconfig
+tencentcloud_bh_bind_device_resource
 tencentcloud_bh_access_white_list_rule
 tencentcloud_bh_access_white_list_config
 tencentcloud_bh_device

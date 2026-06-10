@@ -32,5 +32,5 @@ Import
 redis param can be imported using the instanceId, e.g.
 
 ```
-terraform import tencentcloud_redis_param.example crs-c1nl9rpv
+terraform import tencentcloud_redis_param.example crs-cqdfdzvt
 ```

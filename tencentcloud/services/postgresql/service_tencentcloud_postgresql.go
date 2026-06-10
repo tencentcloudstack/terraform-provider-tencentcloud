@@ -2486,3 +2486,76 @@ func (me *PostgresqlService) DescribePostgresqlParameterTemplateConfigById(ctx c
 	ret = response.Response
 	return
 }
+
+func (me *PostgresqlService) OpenAuditService(ctx context.Context, request *postgresql.OpenAuditServiceRequest) (errRet error) {
+	logId := tccommon.GetLogId(ctx)
+	ratelimit.Check(request.GetAction())
+	response, err := me.client.UsePostgresqlClient().OpenAuditService(request)
+	if err != nil {
+		errRet = err
+		return
+	}
+
+	if response == nil || response.Response == nil {
+		errRet = fmt.Errorf("OpenAuditService response is nil")
+		return
+	}
+
+	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+	return
+}
+
+func (me *PostgresqlService) DescribeAuditInstanceList(ctx context.Context, request *postgresql.DescribeAuditInstanceListRequest) (items []*postgresql.AuditInstanceInfo, errRet error) {
+	logId := tccommon.GetLogId(ctx)
+	ratelimit.Check(request.GetAction())
+	response, err := me.client.UsePostgresqlClient().DescribeAuditInstanceList(request)
+	if err != nil {
+		errRet = err
+		return
+	}
+
+	if response == nil || response.Response == nil {
+		errRet = fmt.Errorf("DescribeAuditInstanceList response is nil")
+		return
+	}
+
+	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+	items = response.Response.Items
+	return
+}
+
+func (me *PostgresqlService) ModifyAuditService(ctx context.Context, request *postgresql.ModifyAuditServiceRequest) (errRet error) {
+	logId := tccommon.GetLogId(ctx)
+	ratelimit.Check(request.GetAction())
+	response, err := me.client.UsePostgresqlClient().ModifyAuditService(request)
+	if err != nil {
+		errRet = err
+		return
+	}
+
+	if response == nil || response.Response == nil {
+		errRet = fmt.Errorf("ModifyAuditService response is nil")
+		return
+	}
+
+	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+	return
+}
+
+func (me *PostgresqlService) CloseAuditService(ctx context.Context, request *postgresql.CloseAuditServiceRequest) (errRet error) {
+	logId := tccommon.GetLogId(ctx)
+	ratelimit.Check(request.GetAction())
+	response, err := me.client.UsePostgresqlClient().CloseAuditService(request)
+	if err != nil {
+		errRet = err
+		return
+	}
+
+	if response == nil || response.Response == nil {
+		errRet = fmt.Errorf("CloseAuditService response is nil")
+		return
+	}
+
+	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+	return
+}

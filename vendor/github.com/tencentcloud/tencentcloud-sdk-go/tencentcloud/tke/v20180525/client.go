@@ -1918,6 +1918,8 @@ func NewCreateClusterVirtualNodePoolResponse() (response *CreateClusterVirtualNo
 // 可能返回的错误码:
 //  INTERNALERROR_UNEXPECTEDINTERNAL = "InternalError.UnexpectedInternal"
 //  INVALIDPARAMETER_PARAM = "InvalidParameter.Param"
+//  INVALIDPARAMETER_SUBNETALLOCATIONPOLICYCONFLICT = "InvalidParameter.SubnetAllocationPolicyConflict"
+//  INVALIDPARAMETER_SUBNETALLOCATIONPOLICYINVALID = "InvalidParameter.SubnetAllocationPolicyInvalid"
 //  INVALIDPARAMETER_SUBNETINVALIDERROR = "InvalidParameter.SubnetInvalidError"
 //  INVALIDPARAMETER_SUBNETNOTEXIST = "InvalidParameter.SubnetNotExist"
 //  RESOURCEINUSE_SUBNETALREADYEXIST = "ResourceInUse.SubnetAlreadyExist"
@@ -1935,6 +1937,8 @@ func (c *Client) CreateClusterVirtualNodePool(request *CreateClusterVirtualNodeP
 // 可能返回的错误码:
 //  INTERNALERROR_UNEXPECTEDINTERNAL = "InternalError.UnexpectedInternal"
 //  INVALIDPARAMETER_PARAM = "InvalidParameter.Param"
+//  INVALIDPARAMETER_SUBNETALLOCATIONPOLICYCONFLICT = "InvalidParameter.SubnetAllocationPolicyConflict"
+//  INVALIDPARAMETER_SUBNETALLOCATIONPOLICYINVALID = "InvalidParameter.SubnetAllocationPolicyInvalid"
 //  INVALIDPARAMETER_SUBNETINVALIDERROR = "InvalidParameter.SubnetInvalidError"
 //  INVALIDPARAMETER_SUBNETNOTEXIST = "InvalidParameter.SubnetNotExist"
 //  RESOURCEINUSE_SUBNETALREADYEXIST = "ResourceInUse.SubnetAlreadyExist"
@@ -8009,7 +8013,7 @@ func NewDescribeClusterVirtualNodeResponse() (response *DescribeClusterVirtualNo
 }
 
 // DescribeClusterVirtualNode
-// 查看超级节点列表
+// 查看超级节点列表，仅支持TKE标准集群
 //
 // 可能返回的错误码:
 //  FAILEDOPERATION_KUBERNETESLISTOPERATIONERROR = "FailedOperation.KubernetesListOperationError"
@@ -8023,7 +8027,7 @@ func (c *Client) DescribeClusterVirtualNode(request *DescribeClusterVirtualNodeR
 }
 
 // DescribeClusterVirtualNode
-// 查看超级节点列表
+// 查看超级节点列表，仅支持TKE标准集群
 //
 // 可能返回的错误码:
 //  FAILEDOPERATION_KUBERNETESLISTOPERATIONERROR = "FailedOperation.KubernetesListOperationError"
