@@ -41,7 +41,10 @@ func main() {
 	filePath := filepath.Dir(filename)
 	message("generating doc from: %s\n", filePath)
 
-	// document for Index
+	// 1) sdkv2 phase: build the sidebar products and emit r/<...> + d/<...>
+	//    documents. genIdx no longer writes the .erb itself; that is
+	//    deferred until the framework products are also collected so the
+	//    sidebar can list both stacks in one go.
 	products := genIdx(filePath)
 
 	for _, product := range products {
@@ -55,9 +58,21 @@ func main() {
 			genDoc(product.Name, "resource", filePath, resource, provider.ResourcesMap[resource])
 		}
 	}
+
+	// 2) framework phase: render r / d / functions / ephemeral-resources /
+	//    list-resources / actions / ... documents for every framework
+	//    reference type registered in tencentcloud/framework/registry.go.
+	fwProducts := genFrameworkDocs(filePath)
+
+	// 3) Merge the two stacks' product lists and re-render the sidebar
+	//    .erb. Doing this last guarantees framework references appear in
+	//    the sidebar alongside their sdkv2 counterparts.
+	writeIdxErb(filePath, products, fwProducts)
 }
 
-// genIdx generating index for resource
+// genIdx parses the sdkv2 provider.md "Resources List" section into the
+// per-product Product slice. Writing of the sidebar .erb is deferred to
+// writeIdxErb so the final output can also include the framework stack.
 func genIdx(filePath string) (prods []Product) {
 	filename := "provider.md"
 
@@ -83,39 +98,86 @@ func genIdx(filePath string) (prods []Product) {
 	}
 
 	doc := strings.TrimSpace(description[pos+16:])
-	// description = strings.TrimSpace(description[:pos])
 
 	prods, err = GetIndex(doc)
 	if err != nil {
 		message("[FAIL!]: %s", err)
 		os.Exit(1)
 	}
+	return
+}
+
+// writeIdxErb renders the merged sidebar .erb for both the sdkv2 stack
+// (sdkProds) and the framework stack (fwProds). Framework products are
+// adapted into the sdkv2 Product struct (with the four extra slices
+// stitched in) and emitted as additional sidebar entries.
+func writeIdxErb(filePath string, sdkProds []Product, fwProds []frameworkProduct) {
+	merged := mergeProductsForErb(sdkProds, fwProds)
 
 	data := map[string]interface{}{
 		"cloud_mark":  cloudMark,
 		"cloud_title": cloudTitle,
 		"cloudPrefix": cloudPrefix,
-		"Products":    prods,
+		"Products":    merged,
 	}
 
-	filename = filepath.Join(docRoot, "..", fmt.Sprintf("%s.erb", cloudMark))
+	filename := filepath.Join(docRoot, "..", fmt.Sprintf("%s.erb", cloudMark))
 	fd, err := os.OpenFile(filename, os.O_WRONLY|os.O_CREATE|os.O_TRUNC, 0644)
 	if err != nil {
 		message("[FAIL!]open file %s failed: %s", filename, err)
 		os.Exit(1)
 	}
-
 	defer fd.Close()
 
 	tmpl := template.Must(template.New("t").Funcs(template.FuncMap{"replace": replace}).Parse(idxTPL))
-
 	if err := tmpl.Execute(fd, data); err != nil {
 		message("[FAIL!]write file %s failed: %s", filename, err)
 		os.Exit(1)
 	}
-
+	_ = filePath // currently unused; kept for parity with genIdx and for forward extensions.
 	message("[SUCC.]write doc to file success: %s", filename)
-	return
+}
+
+// mergeProductsForErb combines sdkv2 Products with framework Products
+// keyed by Name. Resources/DataSources are unioned and the four
+// framework-only collections are passed through onto the merged
+// Product (relying on Product gaining four optional slices).
+func mergeProductsForErb(sdkProds []Product, fwProds []frameworkProduct) []Product {
+	byName := map[string]*Product{}
+	order := []string{}
+	for i := range sdkProds {
+		p := sdkProds[i]
+		clone := p
+		byName[p.Name] = &clone
+		order = append(order, p.Name)
+	}
+	for _, fp := range fwProds {
+		if existing, ok := byName[fp.Name]; ok {
+			existing.DataSources = append(existing.DataSources, fp.DataSources...)
+			existing.Resources = append(existing.Resources, fp.Resources...)
+			existing.Functions = append(existing.Functions, fp.Functions...)
+			existing.Ephemerals = append(existing.Ephemerals, fp.Ephemerals...)
+			existing.Lists = append(existing.Lists, fp.Lists...)
+			existing.Actions = append(existing.Actions, fp.Actions...)
+			continue
+		}
+		clone := Product{
+			Name:        fp.Name,
+			DataSources: append([]string(nil), fp.DataSources...),
+			Resources:   append([]string(nil), fp.Resources...),
+			Functions:   append([]string(nil), fp.Functions...),
+			Ephemerals:  append([]string(nil), fp.Ephemerals...),
+			Lists:       append([]string(nil), fp.Lists...),
+			Actions:     append([]string(nil), fp.Actions...),
+		}
+		byName[fp.Name] = &clone
+		order = append(order, fp.Name)
+	}
+	out := make([]Product, 0, len(order))
+	for _, n := range order {
+		out = append(out, *byName[n])
+	}
+	return out
 }
 
 // genDoc generating doc for data source and resource

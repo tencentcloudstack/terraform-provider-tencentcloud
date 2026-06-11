@@ -20,6 +20,7 @@ import (
 	tccommon "github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/common"
 	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/connectivity"
 	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/internal/helper"
+	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/internal/sharedmeta"
 	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/ratelimit"
 	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/services/advisor"
 	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/services/antiddos"
@@ -181,7 +182,7 @@ func init() {
 	commonJson.OmitBehaviour = commonJson.OmitEmpty
 }
 
-// GetAPIV3Conn 返回访问云 API 的客户端连接对象
+// GetAPIV3Conn returns the cloud API client connection used to access TencentCloud APIs.
 func (meta *TencentCloudClient) GetAPIV3Conn() *connectivity.TencentCloudClient {
 	return meta.apiV3Conn
 }
@@ -3080,6 +3081,12 @@ func providerConfigure(d *schema.ResourceData) (interface{}, error) {
 			return nil, err
 		}
 	}
+
+	// Push the configured connectivity client to the framework provider; its
+	// Configure step reads the same instance back via sharedmeta.GetSharedMeta(),
+	// so the SDKv2 and framework stacks share credentials, the SDK client cache,
+	// the User-Agent and the retry strategy.
+	sharedmeta.SetSharedMeta(tcClient.apiV3Conn)
 
 	return &tcClient, nil
 }
