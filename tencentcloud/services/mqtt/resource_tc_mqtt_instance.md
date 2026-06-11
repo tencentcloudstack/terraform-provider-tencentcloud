@@ -37,6 +37,8 @@ resource "tencentcloud_mqtt_instance" "example" {
   pay_mode                          = 0
   x509_mode                         = "BYOC"
   device_certificate_provision_type = "JITP"
+  message_rate                      = 100
+  use_default_server_cert           = true
   tags = {
     createBy = "Terraform"
   }
