@@ -2149,7 +2149,7 @@ func (me *PostgresqlService) DescribePostgresqlAccountById(ctx context.Context, 
 		response, err := me.client.UsePostgresqlClient().DescribeAccounts(request)
 		if err != nil {
 			errRet = err
-			return // errRet will trigger the defer block logging
+			return
 		}
 
 		log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
