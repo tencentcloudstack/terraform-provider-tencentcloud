@@ -522,6 +522,29 @@ func ResourceTencentCloudInstance() *schema.Resource {
 				ForceNew:    true,
 				Description: "High-performance computing cluster ID. If the instance created is a high-performance computing instance, you need to specify the cluster in which the instance is placed, otherwise it cannot be specified.",
 			},
+			"cpu_topology": {
+				Type:        schema.TypeList,
+				Optional:    true,
+				ForceNew:    true,
+				MaxItems:    1,
+				Description: "CPU topology configuration. Only supported when creating instances.",
+				Elem: &schema.Resource{
+					Schema: map[string]*schema.Schema{
+						"core_count": {
+							Type:        schema.TypeInt,
+							Optional:    true,
+							ForceNew:    true,
+							Description: "Number of enabled CPU physical cores.",
+						},
+						"thread_per_core": {
+							Type:        schema.TypeInt,
+							Optional:    true,
+							ForceNew:    true,
+							Description: "Threads per core. 1 means hyper-threading is off, 2 means hyper-threading is on.",
+						},
+					},
+				},
+			},
 			// template
 			"launch_template_id": {
 				Type:        schema.TypeString,
@@ -660,6 +683,21 @@ func resourceTencentCloudInstanceCreate(d *schema.ResourceData, meta interface{}
 
 	if v, ok := d.GetOk("hpc_cluster_id"); ok {
 		request.HpcClusterId = helper.String(v.(string))
+	}
+
+	if v, ok := d.GetOk("cpu_topology"); ok {
+		cpuTopologyList := v.([]interface{})
+		if len(cpuTopologyList) > 0 {
+			cpuTopologyMap := cpuTopologyList[0].(map[string]interface{})
+			cpuTopology := &cvm.CpuTopology{}
+			if coreCount, ok := cpuTopologyMap["core_count"]; ok && coreCount.(int) > 0 {
+				cpuTopology.CoreCount = helper.IntInt64(coreCount.(int))
+			}
+			if threadPerCore, ok := cpuTopologyMap["thread_per_core"]; ok && threadPerCore.(int) > 0 {
+				cpuTopology.ThreadPerCore = helper.IntInt64(threadPerCore.(int))
+			}
+			request.CpuTopology = cpuTopology
+		}
 	}
 
 	if v, ok := d.GetOk("instance_charge_type"); ok {
@@ -1303,6 +1341,17 @@ func resourceTencentCloudInstanceRead(d *schema.ResourceData, meta interface{}) 
 	_ = d.Set("hpc_cluster_id", instance.HpcClusterId)
 	_ = d.Set("ipv6_addresses", instance.IPv6Addresses)
 	_ = d.Set("public_ipv6_addresses", instance.PublicIPv6Addresses)
+
+	if instance.CpuTopology != nil {
+		cpuTopologyMap := map[string]interface{}{}
+		if instance.CpuTopology.CoreCount != nil {
+			cpuTopologyMap["core_count"] = *instance.CpuTopology.CoreCount
+		}
+		if instance.CpuTopology.ThreadPerCore != nil {
+			cpuTopologyMap["thread_per_core"] = *instance.CpuTopology.ThreadPerCore
+		}
+		_ = d.Set("cpu_topology", []interface{}{cpuTopologyMap})
+	}
 
 	if instance.Uuid != nil {
 		_ = d.Set("uuid", instance.Uuid)
