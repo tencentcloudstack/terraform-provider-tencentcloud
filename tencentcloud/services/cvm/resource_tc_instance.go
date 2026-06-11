@@ -525,6 +525,7 @@ func ResourceTencentCloudInstance() *schema.Resource {
 			"cpu_topology": {
 				Type:        schema.TypeList,
 				Optional:    true,
+				Computed:    true,
 				ForceNew:    true,
 				MaxItems:    1,
 				Description: "CPU topology configuration. Only supported when creating instances.",
@@ -533,12 +534,14 @@ func ResourceTencentCloudInstance() *schema.Resource {
 						"core_count": {
 							Type:        schema.TypeInt,
 							Optional:    true,
+							Computed:    true,
 							ForceNew:    true,
 							Description: "Number of enabled CPU physical cores.",
 						},
 						"thread_per_core": {
 							Type:        schema.TypeInt,
 							Optional:    true,
+							Computed:    true,
 							ForceNew:    true,
 							Description: "Threads per core. 1 means hyper-threading is off, 2 means hyper-threading is on.",
 						},
