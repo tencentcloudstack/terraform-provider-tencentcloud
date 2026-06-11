@@ -90,6 +90,27 @@ func ResourceTencentCloudMariadbHourDbInstance() *schema.Resource {
 				Description: "name of this instance.",
 			},
 
+			"init_params": {
+				Type:        schema.TypeList,
+				Optional:    true,
+				ForceNew:    true,
+				Description: "parameter list. This interface's optional values include: `character_set_server` (character set, required), `lower_case_table_names` (table name case sensitivity, required, 0 - sensitive; 1 - insensitive), `innodb_page_size` (innodb data page, default 16K), `sync_mode` (sync mode: 0 - async; 1 - strong sync; 2 - strong sync degradable, default is strong sync degradable).",
+				Elem: &schema.Resource{
+					Schema: map[string]*schema.Schema{
+						"param": {
+							Type:        schema.TypeString,
+							Required:    true,
+							Description: "parameter name.",
+						},
+						"value": {
+							Type:        schema.TypeString,
+							Required:    true,
+							Description: "parameter value.",
+						},
+					},
+				},
+			},
+
 			"tags": {
 				Type:        schema.TypeMap,
 				Optional:    true,
@@ -152,6 +173,21 @@ func resourceTencentCloudMariadbHourDbInstanceCreate(d *schema.ResourceData, met
 		request.InstanceName = helper.String(v.(string))
 	}
 
+	if v, ok := d.GetOk("init_params"); ok {
+		initParamsList := v.([]interface{})
+		for _, item := range initParamsList {
+			paramMap := item.(map[string]interface{})
+			dbParamValue := &mariadb.DBParamValue{}
+			if v, ok := paramMap["param"]; ok {
+				dbParamValue.Param = helper.String(v.(string))
+			}
+			if v, ok := paramMap["value"]; ok {
+				dbParamValue.Value = helper.String(v.(string))
+			}
+			request.InitParams = append(request.InitParams, dbParamValue)
+		}
+	}
+
 	err := resource.Retry(tccommon.WriteRetryTimeout, func() *resource.RetryError {
 		result, e := meta.(tccommon.ProviderMeta).GetAPIV3Conn().UseMariadbClient().CreateHourDBInstance(request)
 		if e != nil {
@@ -170,35 +206,43 @@ func resourceTencentCloudMariadbHourDbInstanceCreate(d *schema.ResourceData, met
 		return err
 	}
 
+	log.Printf("[DEBUG]%s create mariadb_hour_db_instance, logId: %s, current d.Id(): %s", logId, logId, d.Id())
+
+	if response == nil || response.Response == nil || len(response.Response.InstanceIds) == 0 || response.Response.InstanceIds[0] == nil || *response.Response.InstanceIds[0] == "" {
+		return fmt.Errorf("create mariadb_hour_db_instance failed, response instance id is empty")
+	}
+
 	instanceId = *response.Response.InstanceIds[0]
 	d.SetId(instanceId)
 
-	initParams := []*mariadb.DBParamValue{
-		{
-			Param: helper.String("character_set_server"),
-			Value: helper.String("utf8mb4"),
-		},
-		{
-			Param: helper.String("lower_case_table_names"),
-			Value: helper.String("1"),
-		},
-		{
-			Param: helper.String("sync_mode"),
-			Value: helper.String("2"),
-		},
-		{
-			Param: helper.String("innodb_page_size"),
-			Value: helper.String("16384"),
-		},
-	}
+	if _, ok := d.GetOk("init_params"); !ok {
+		initParams := []*mariadb.DBParamValue{
+			{
+				Param: helper.String("character_set_server"),
+				Value: helper.String("utf8mb4"),
+			},
+			{
+				Param: helper.String("lower_case_table_names"),
+				Value: helper.String("1"),
+			},
+			{
+				Param: helper.String("sync_mode"),
+				Value: helper.String("2"),
+			},
+			{
+				Param: helper.String("innodb_page_size"),
+				Value: helper.String("16384"),
+			},
+		}
 
-	initRet, err := service.InitDbInstance(ctx, instanceId, initParams)
-	if err != nil {
-		return err
-	}
+		initRet, err := service.InitDbInstance(ctx, instanceId, initParams)
+		if err != nil {
+			return err
+		}
 
-	if !initRet {
-		return fmt.Errorf("db instance init failed")
+		if !initRet {
+			return fmt.Errorf("mariadb_hour_db_instance init failed")
+		}
 	}
 
 	// set Tags
@@ -231,8 +275,9 @@ func resourceTencentCloudMariadbHourDbInstanceRead(d *schema.ResourceData, meta 
 	}
 
 	if hourDbInstance == nil {
+		log.Printf("[WARN]%s resource mariadb_hour_db_instance [%s] not found, removing from state", logId, instanceId)
 		d.SetId("")
-		return fmt.Errorf("resource `hourDbInstance` %s does not exist", instanceId)
+		return fmt.Errorf("resource mariadb_hour_db_instance %s does not exist", instanceId)
 	}
 
 	if hourDbInstance.Zone != nil {
