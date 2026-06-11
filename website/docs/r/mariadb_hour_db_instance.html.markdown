@@ -4,46 +4,49 @@ layout: "tencentcloud"
 page_title: "TencentCloud: tencentcloud_mariadb_hour_db_instance"
 sidebar_current: "docs-tencentcloud-resource-mariadb_hour_db_instance"
 description: |-
-  Provides a resource to create a MariaDB hour_db_instance
+  Provides a resource to create a MariaDB hour db instance
 ---
 
 # tencentcloud_mariadb_hour_db_instance
 
-Provides a resource to create a MariaDB hour_db_instance
+Provides a resource to create a MariaDB hour db instance
 
 ## Example Usage
 
+### Create with default init params
+
 ```hcl
-resource "tencentcloud_mariadb_hour_db_instance" "basic" {
-  db_version_id = "10.0"
-  instance_name = "db-test-del"
-  memory        = 2
+resource "tencentcloud_mariadb_hour_db_instance" "example" {
+  instance_name = "tf-example"
+  memory        = 4
   node_count    = 2
-  storage       = 10
-  subnet_id     = "subnet-jdi5xn22"
-  vpc_id        = "vpc-k1t8ickr"
-  vip           = "10.0.0.197"
+  storage       = 100
+  vpc_id        = "vpc-i5yyodl9"
+  subnet_id     = "subnet-d4umunpy"
+  vip           = "10.0.0.8"
   zones = [
     "ap-guangzhou-6",
     "ap-guangzhou-7",
   ]
+
   tags = {
-    createdBy = "terraform"
+    createdBy = "Terraform"
   }
 }
 ```
 
-### Create with custom init_params
+### Create with custom init params
 
 ```hcl
-resource "tencentcloud_mariadb_hour_db_instance" "with_init_params" {
-  db_version_id = "10.0"
-  instance_name = "db-test-init"
+resource "tencentcloud_mariadb_hour_db_instance" "example" {
+  db_version_id = "5.7"
+  instance_name = "tf-example"
   memory        = 2
   node_count    = 2
-  storage       = 10
-  subnet_id     = "subnet-jdi5xn22"
-  vpc_id        = "vpc-k1t8ickr"
+  storage       = 100
+  vpc_id        = "vpc-i5yyodl9"
+  subnet_id     = "subnet-d4umunpy"
+  vip           = "10.0.0.8"
   zones = [
     "ap-guangzhou-6",
     "ap-guangzhou-7",
@@ -51,19 +54,16 @@ resource "tencentcloud_mariadb_hour_db_instance" "with_init_params" {
 
   init_params {
     param = "character_set_server"
-    value = "utf8mb4"
+    value = "utf8"
   }
+
   init_params {
     param = "lower_case_table_names"
     value = "1"
   }
-  init_params {
-    param = "innodb_page_size"
-    value = "16384"
-  }
-  init_params {
-    param = "sync_mode"
-    value = "2"
+
+  tags = {
+    createdBy = "Terraform"
   }
 }
 ```
@@ -77,7 +77,7 @@ The following arguments are supported:
 * `storage` - (Required, Int) instance disk storage.
 * `zones` - (Required, List: [`String`]) available zone of instance.
 * `db_version_id` - (Optional, String) db engine version, default to 10.1.9.
-* `init_params` - (Optional, List, ForceNew) parameter list. This interface's optional values include: `character_set_server` (character set, required), `lower_case_table_names` (table name case sensitivity, required, 0 - sensitive; 1 - insensitive), `innodb_page_size` (innodb data page, default 16K), `sync_mode` (sync mode: 0 - async; 1 - strong sync; 2 - strong sync degradable, default is strong sync degradable).
+* `init_params` - (Optional, List) parameter list. This interface's optional values include: `character_set_server` (character set, required), `lower_case_table_names` (table name case sensitivity, required, 0 - sensitive; 1 - insensitive), `innodb_page_size` (innodb data page, default 16K), `sync_mode` (sync mode: 0 - async; 1 - strong sync; 2 - strong sync degradable, default is strong sync degradable).
 * `instance_name` - (Optional, String) name of this instance.
 * `project_id` - (Optional, Int) project id.
 * `subnet_id` - (Optional, String) subnet id, it&amp;#39;s required when vpcId is set.
@@ -100,8 +100,8 @@ In addition to all arguments above, the following attributes are exported:
 
 ## Import
 
-mariadb hour_db_instance can be imported using the id, e.g.
+MariaDB hour db instance can be imported using the id, e.g.
 ```
-$ terraform import tencentcloud_mariadb_hour_db_instance.hour_db_instance tdsql-kjqih9nn
+terraform import tencentcloud_mariadb_hour_db_instance.example tdsql-kjqih9nn
 ```
 
