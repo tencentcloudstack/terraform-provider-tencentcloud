@@ -256,3 +256,173 @@ func TestMqttInstanceX509Mode_Schema(t *testing.T) {
 	assert.True(t, x509Mode.Optional)
 	assert.True(t, x509Mode.Computed)
 }
+
+// go test ./tencentcloud/services/mqtt/ -run "TestMqttInstanceDeviceCertificateProvisionType" -v -count=1 -gcflags="all=-l"
+
+// TestMqttInstanceDeviceCertificateProvisionType_Schema tests the schema definition of device_certificate_provision_type
+func TestMqttInstanceDeviceCertificateProvisionType_Schema(t *testing.T) {
+	res := svcmqtt.ResourceTencentCloudMqttInstance()
+
+	assert.NotNil(t, res)
+	assert.Contains(t, res.Schema, "device_certificate_provision_type")
+
+	field := res.Schema["device_certificate_provision_type"]
+	assert.Equal(t, schema.TypeString, field.Type)
+	assert.True(t, field.Optional)
+	assert.True(t, field.Computed)
+}
+
+// TestMqttInstanceDeviceCertificateProvisionType_Read tests that device_certificate_provision_type is correctly read from DescribeInstance response
+func TestMqttInstanceDeviceCertificateProvisionType_Read(t *testing.T) {
+	patches := gomonkey.NewPatches()
+	defer patches.Reset()
+
+	mqttClient := &mqttv20240516.Client{}
+	mockClient := &connectivity.TencentCloudClient{}
+	patches.ApplyMethodReturn(mockClient, "UseMqttV20240516Client", mqttClient)
+
+	// Patch DescribeInstance to return response with DeviceCertificateProvisionType
+	patches.ApplyMethodFunc(mqttClient, "DescribeInstance", func(request *mqttv20240516.DescribeInstanceRequest) (*mqttv20240516.DescribeInstanceResponse, error) {
+		resp := mqttv20240516.NewDescribeInstanceResponse()
+		resp.Response = &mqttv20240516.DescribeInstanceResponseParams{
+			InstanceType:                   ptrMqttInstanceString("PRO"),
+			InstanceName:                   ptrMqttInstanceString("test-instance"),
+			Remark:                         ptrMqttInstanceString("test remark"),
+			SkuCode:                        ptrMqttInstanceString("pro_6k_1"),
+			PayMode:                        ptrMqttInstanceString("POSTPAID"),
+			RenewFlag:                      ptrMqttInstanceInt64(0),
+			InstanceStatus:                 ptrMqttInstanceString("RUNNING"),
+			DeviceCertificateProvisionType: ptrMqttInstanceString("JITP"),
+			RequestId:                      ptrMqttInstanceString("fake-request-id"),
+		}
+		return resp, nil
+	})
+
+	// Patch TagService.DescribeResourceTags
+	patches.ApplyMethodFunc(&svctag.TagService{}, "DescribeResourceTags", func(_ context.Context, _, _, _, _ string) (map[string]string, error) {
+		return map[string]string{}, nil
+	})
+
+	meta := &mockMetaMqttInstance{client: mockClient}
+	res := svcmqtt.ResourceTencentCloudMqttInstance()
+	d := schema.TestResourceDataRaw(t, res.Schema, map[string]interface{}{
+		"instance_type": "PRO",
+		"name":          "test-instance",
+		"sku_code":      "pro_6k_1",
+	})
+	d.SetId("mqtt-test-instance-id")
+
+	err := res.Read(d, meta)
+	assert.NoError(t, err)
+	assert.Equal(t, "JITP", d.Get("device_certificate_provision_type").(string))
+}
+
+// TestMqttInstanceDeviceCertificateProvisionType_ReadNil tests that device_certificate_provision_type is not set when response field is nil
+func TestMqttInstanceDeviceCertificateProvisionType_ReadNil(t *testing.T) {
+	patches := gomonkey.NewPatches()
+	defer patches.Reset()
+
+	mqttClient := &mqttv20240516.Client{}
+	mockClient := &connectivity.TencentCloudClient{}
+	patches.ApplyMethodReturn(mockClient, "UseMqttV20240516Client", mqttClient)
+
+	// Patch DescribeInstance to return response without DeviceCertificateProvisionType (nil)
+	patches.ApplyMethodFunc(mqttClient, "DescribeInstance", func(request *mqttv20240516.DescribeInstanceRequest) (*mqttv20240516.DescribeInstanceResponse, error) {
+		resp := mqttv20240516.NewDescribeInstanceResponse()
+		resp.Response = &mqttv20240516.DescribeInstanceResponseParams{
+			InstanceType:                   ptrMqttInstanceString("PRO"),
+			InstanceName:                   ptrMqttInstanceString("test-instance"),
+			Remark:                         ptrMqttInstanceString("test remark"),
+			SkuCode:                        ptrMqttInstanceString("pro_6k_1"),
+			PayMode:                        ptrMqttInstanceString("POSTPAID"),
+			RenewFlag:                      ptrMqttInstanceInt64(0),
+			InstanceStatus:                 ptrMqttInstanceString("RUNNING"),
+			DeviceCertificateProvisionType: nil,
+			RequestId:                      ptrMqttInstanceString("fake-request-id"),
+		}
+		return resp, nil
+	})
+
+	// Patch TagService.DescribeResourceTags
+	patches.ApplyMethodFunc(&svctag.TagService{}, "DescribeResourceTags", func(_ context.Context, _, _, _, _ string) (map[string]string, error) {
+		return map[string]string{}, nil
+	})
+
+	meta := &mockMetaMqttInstance{client: mockClient}
+	res := svcmqtt.ResourceTencentCloudMqttInstance()
+	d := schema.TestResourceDataRaw(t, res.Schema, map[string]interface{}{
+		"instance_type": "PRO",
+		"name":          "test-instance",
+		"sku_code":      "pro_6k_1",
+	})
+	d.SetId("mqtt-test-instance-id")
+
+	err := res.Read(d, meta)
+	assert.NoError(t, err)
+	assert.Equal(t, "", d.Get("device_certificate_provision_type").(string))
+}
+
+// TestMqttInstanceDeviceCertificateProvisionType_Update tests that device_certificate_provision_type is sent in ModifyInstance request
+func TestMqttInstanceDeviceCertificateProvisionType_Update(t *testing.T) {
+	patches := gomonkey.NewPatches()
+	defer patches.Reset()
+
+	mqttClient := &mqttv20240516.Client{}
+	mockClient := &connectivity.TencentCloudClient{}
+	patches.ApplyMethodReturn(mockClient, "UseMqttV20240516Client", mqttClient)
+
+	var capturedRequest *mqttv20240516.ModifyInstanceRequest
+
+	// Patch ModifyInstanceWithContext to capture the request
+	patches.ApplyMethodFunc(mqttClient, "ModifyInstanceWithContext", func(_ context.Context, request *mqttv20240516.ModifyInstanceRequest) (*mqttv20240516.ModifyInstanceResponse, error) {
+		capturedRequest = request
+		resp := mqttv20240516.NewModifyInstanceResponse()
+		resp.Response = &mqttv20240516.ModifyInstanceResponseParams{
+			RequestId: ptrMqttInstanceString("fake-request-id"),
+		}
+		return resp, nil
+	})
+
+	// Patch DescribeInstance for the Read call after Update
+	patches.ApplyMethodFunc(mqttClient, "DescribeInstance", func(request *mqttv20240516.DescribeInstanceRequest) (*mqttv20240516.DescribeInstanceResponse, error) {
+		resp := mqttv20240516.NewDescribeInstanceResponse()
+		resp.Response = &mqttv20240516.DescribeInstanceResponseParams{
+			InstanceType:                   ptrMqttInstanceString("PRO"),
+			InstanceName:                   ptrMqttInstanceString("test-instance"),
+			Remark:                         ptrMqttInstanceString("test remark"),
+			SkuCode:                        ptrMqttInstanceString("pro_6k_1"),
+			PayMode:                        ptrMqttInstanceString("POSTPAID"),
+			RenewFlag:                      ptrMqttInstanceInt64(0),
+			InstanceStatus:                 ptrMqttInstanceString("RUNNING"),
+			DeviceCertificateProvisionType: ptrMqttInstanceString("JITP"),
+			RequestId:                      ptrMqttInstanceString("fake-request-id"),
+		}
+		return resp, nil
+	})
+
+	// Patch TagService.DescribeResourceTags
+	patches.ApplyMethodFunc(&svctag.TagService{}, "DescribeResourceTags", func(_ context.Context, _, _, _, _ string) (map[string]string, error) {
+		return map[string]string{}, nil
+	})
+
+	meta := &mockMetaMqttInstance{client: mockClient}
+	res := svcmqtt.ResourceTencentCloudMqttInstance()
+	d := schema.TestResourceDataRaw(t, res.Schema, map[string]interface{}{
+		"instance_type":                     "PRO",
+		"name":                              "test-instance",
+		"sku_code":                          "pro_6k_1",
+		"device_certificate_provision_type": "JITP",
+	})
+	d.SetId("mqtt-test-instance-id")
+
+	// Patch HasChange to simulate a change in device_certificate_provision_type
+	patches.ApplyMethodFunc(d, "HasChange", func(key string) bool {
+		return key == "device_certificate_provision_type"
+	})
+
+	err := res.Update(d, meta)
+	assert.NoError(t, err)
+	assert.NotNil(t, capturedRequest)
+	assert.NotNil(t, capturedRequest.DeviceCertificateProvisionType)
+	assert.Equal(t, "JITP", *capturedRequest.DeviceCertificateProvisionType)
+}

@@ -95,6 +95,7 @@ func ResourceTencentCloudMqttInstance() *schema.Resource {
 
 			"device_certificate_provision_type": {
 				Type:        schema.TypeString,
+				Optional:    true,
 				Computed:    true,
 				Description: "Client certificate registration method: JITP: Automatic registration; API: Manually register through the API.",
 			},
@@ -242,9 +243,10 @@ func ResourceTencentCloudMqttInstanceCreate(d *schema.ResourceData, meta interfa
 	}
 
 	var (
-		isAutomaticActivation bool
-		isAuthorizationPolicy bool
-		x509Mode              string
+		isAutomaticActivation          bool
+		isAuthorizationPolicy          bool
+		x509Mode                       string
+		deviceCertificateProvisionType string
 	)
 
 	if v, ok := d.GetOkExists("automatic_activation"); ok {
@@ -259,14 +261,22 @@ func ResourceTencentCloudMqttInstanceCreate(d *schema.ResourceData, meta interfa
 		x509Mode = v.(string)
 	}
 
-	// open automatic_activation or authorization_policy or set x509_mode
-	if isAutomaticActivation || isAuthorizationPolicy || x509Mode != "" {
+	if v, ok := d.GetOk("device_certificate_provision_type"); ok {
+		deviceCertificateProvisionType = v.(string)
+	}
+
+	// open automatic_activation or authorization_policy or set x509_mode or set device_certificate_provision_type
+	if isAutomaticActivation || isAuthorizationPolicy || x509Mode != "" || deviceCertificateProvisionType != "" {
 		modifyRequest := mqttv20240516.NewModifyInstanceRequest()
 		modifyRequest.InstanceId = &instanceId
 		modifyRequest.AutomaticActivation = helper.Bool(isAutomaticActivation)
 		modifyRequest.AuthorizationPolicy = helper.Bool(isAuthorizationPolicy)
 		if x509Mode != "" {
 			modifyRequest.X509Mode = helper.String(x509Mode)
+		}
+
+		if deviceCertificateProvisionType != "" {
+			modifyRequest.DeviceCertificateProvisionType = helper.String(deviceCertificateProvisionType)
 		}
 		reqErr := resource.Retry(tccommon.WriteRetryTimeout, func() *resource.RetryError {
 			result, e := meta.(tccommon.ProviderMeta).GetAPIV3Conn().UseMqttV20240516Client().ModifyInstanceWithContext(ctx, modifyRequest)
@@ -428,6 +438,10 @@ func ResourceTencentCloudMqttInstanceUpdate(d *schema.ResourceData, meta interfa
 
 		if v, ok := d.GetOkExists("authorization_policy"); ok {
 			request.AuthorizationPolicy = helper.Bool(v.(bool))
+		}
+
+		if v, ok := d.GetOk("device_certificate_provision_type"); ok {
+			request.DeviceCertificateProvisionType = helper.String(v.(string))
 		}
 
 		if v, ok := d.GetOk("x509_mode"); ok {

@@ -45,8 +45,9 @@ resource "tencentcloud_mqtt_instance" "example" {
     vpc_id    = tencentcloud_vpc.vpc.id
     subnet_id = tencentcloud_subnet.subnet.id
   }
-  pay_mode  = 0
-  x509_mode = "BYOC"
+  pay_mode                          = 0
+  x509_mode                         = "BYOC"
+  device_certificate_provision_type = "JITP"
   tags = {
     createBy = "Terraform"
   }
@@ -106,6 +107,7 @@ The following arguments are supported:
 * `sku_code` - (Required, String) Product SKU, available SKUs can be queried via the DescribeProductSKUList API.
 * `authorization_policy` - (Optional, Bool) Authorization policy switch. Default is false.
 * `automatic_activation` - (Optional, Bool) Is the automatic registration certificate automatically activated. Default is false.
+* `device_certificate_provision_type` - (Optional, String) Client certificate registration method: JITP: Automatic registration; API: Manually register through the API.
 * `force_delete` - (Optional, Bool) Indicate whether to force delete the instance. Default is `false`. If set true, the instance will be permanently deleted instead of being moved into the recycle bin. Note: only works for `PREPAID` instance.
 * `pay_mode` - (Optional, Int) Payment mode (0: Postpaid; 1: Prepaid).
 * `remark` - (Optional, String) Remarks.
@@ -125,6 +127,6 @@ The `vpc_list` object supports the following:
 In addition to all arguments above, the following attributes are exported:
 
 * `id` - ID of the resource.
-* `device_certificate_provision_type` - Client certificate registration method: JITP: Automatic registration; API: Manually register through the API.
+
 
 

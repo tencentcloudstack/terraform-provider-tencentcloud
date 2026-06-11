@@ -34,8 +34,9 @@ resource "tencentcloud_mqtt_instance" "example" {
     vpc_id    = tencentcloud_vpc.vpc.id
     subnet_id = tencentcloud_subnet.subnet.id
   }
-  pay_mode  = 0
-  x509_mode = "BYOC"
+  pay_mode                          = 0
+  x509_mode                         = "BYOC"
+  device_certificate_provision_type = "JITP"
   tags = {
     createBy = "Terraform"
   }
