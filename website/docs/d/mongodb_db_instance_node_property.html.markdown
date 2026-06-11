@@ -15,7 +15,7 @@ Use this data source to query detailed information of MongoDB (mongodb) DB insta
 
 ```hcl
 data "tencentcloud_mongodb_db_instance_node_property" "example" {
-  instance_id = "cmgo-9d0p6umb"
+  instance_id = "cmgo-5aqo4yf7"
 }
 ```
 
@@ -23,7 +23,7 @@ data "tencentcloud_mongodb_db_instance_node_property" "example" {
 
 ```hcl
 data "tencentcloud_mongodb_db_instance_node_property" "example" {
-  instance_id = "cmgo-9d0p6umb"
+  instance_id = "cmgo-5aqo4yf7"
   roles       = ["PRIMARY", "SECONDARY"]
   only_hidden = false
   priority    = 1
