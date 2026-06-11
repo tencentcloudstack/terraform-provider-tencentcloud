@@ -18,6 +18,18 @@ sweep:
 test: fmtcheck
 	go test $(TEST) -timeout=30s -parallel=4
 
+# check-mux validates SDKv2 + framework dual-stack mux compatibility without
+# making any remote calls. It boots tf5muxserver to merge schemas (including
+# an actual GetProviderSchema call so byte-level schema drift that
+# NewMuxServer cannot detect is caught here), and asserts that the resource /
+# data source type-name sets across the two stacks are disjoint. Any PR that
+# adds framework references or changes the SDKv2 / framework provider top
+# Schema / MetaSchema MUST keep this target green.
+check-mux: fmtcheck
+	@echo "==> Checking SDKv2/framework provider mux compatibility..."
+	@go test -count=1 -run 'TestMuxServer_NoStartupError|TestMuxServer_GetProviderSchemaNoError|TestFrameworkProvider_NoTypeNameCollision' ./$(PKG_NAME)/framework/
+
+
 testacc: fmtcheck
 	TF_ACC=1 go test $(TEST) -v $(TESTARGS) -timeout 120m
 
@@ -108,6 +120,46 @@ tools:
 	GO111MODULE=on cd .ci/tools && go install github.com/client9/misspell/cmd/misspell && cd ../..
 	GO111MODULE=on cd .ci/tools && go install github.com/golangci/golangci-lint/cmd/golangci-lint@v1.45.2 && cd ../..
 
+# tfproviderlint-local mirrors .github/workflows/tfprovider-lint.yml byte for
+# byte locally: it installs the same tfproviderlint v0.31.0 used by CI
+# (already verified to compile under Go 1.25) and runs the identical set of
+# checkers (AT/R/S/V) against ./tencentcloud. Whenever the CI yaml changes,
+# please keep this target in sync.
+TFPROVIDERLINT_VERSION ?= v0.31.0
+TFPROVIDERLINT_BIN ?= $(shell go env GOPATH)/bin/tfproviderlint
+
+tfproviderlint-install:
+	@echo "==> Installing tfproviderlint $(TFPROVIDERLINT_VERSION)..."
+	@go install github.com/bflad/tfproviderlint/cmd/tfproviderlint@$(TFPROVIDERLINT_VERSION)
+
+tfproviderlint-local: tfproviderlint-install
+	@echo "==> Running tfproviderlint against ./$(PKG_NAME) (mirrors CI)..."
+	@$(TFPROVIDERLINT_BIN) \
+		-c 1 \
+		-AT002 -AT005 -AT006 -AT007 -AT008 \
+		-R003 -R012 -R013 \
+		-S001 -S002 -S003 -S004 -S005 -S007 -S008 -S009 -S010 -S011 -S012 \
+		-S013 -S014 -S015 -S016 -S017 -S019 -S020 -S021 -S023 -S024 -S025 \
+		-S026 -S027 -S028 -S029 -S030 -S031 -S032 -S033 -S034 -S035 -S036 -S037 \
+		-V002 -V003 -V004 -V005 -V006 -V007 -V008 \
+		./$(PKG_NAME)
+
+# golangci-lint-local mirrors .github/workflows/golangci-lint.yml byte for
+# byte locally: it installs the same golangci-lint v2.4.0 used by CI (built
+# with the Go 1.25 toolchain) and runs from inside ./tencentcloud, picking up
+# the repo-root .golangci.yml and reporting only issues introduced relative
+# to master.
+GOLANGCI_LINT_VERSION ?= v2.4.0
+GOLANGCI_LINT_BIN ?= $(shell go env GOPATH)/bin/golangci-lint
+
+golangci-lint-install:
+	@echo "==> Installing golangci-lint $(GOLANGCI_LINT_VERSION)..."
+	@go install github.com/golangci/golangci-lint/v2/cmd/golangci-lint@$(GOLANGCI_LINT_VERSION)
+
+golangci-lint-local: golangci-lint-install
+	@echo "==> Running golangci-lint against ./$(PKG_NAME) (mirrors CI)..."
+	@cd ./$(PKG_NAME) && $(GOLANGCI_LINT_BIN) run --new-from-rev=origin/master -v
+
 test-compile:
 	@if [ "$(TEST)" = "./..." ]; then \
 		echo "ERROR: Set TEST to a specific package. For example,"; \
@@ -195,6 +247,6 @@ endif
 changelog:
 	./scripts/generate-changelog.sh
 
-.PHONY: build sweep test testacc fmt fmtcheck lint tools test-compile doc hooks website website-lint website-test
+.PHONY: build sweep test testacc fmt fmtcheck lint tools tfproviderlint-install tfproviderlint-local golangci-lint-install golangci-lint-local test-compile doc hooks website website-lint website-test check-mux
 
 ready: doc fmt-faster
