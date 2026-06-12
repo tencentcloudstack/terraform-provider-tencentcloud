@@ -2142,6 +2142,7 @@ func Provider() *schema.Provider {
 			"tencentcloud_teo_load_balancer":                                                        teo.ResourceTencentCloudTeoLoadBalancer(),
 			"tencentcloud_teo_prefetch_origin_limit":                                                teo.ResourceTencentCloudTeoPrefetchOriginLimit(),
 			"tencentcloud_teo_purge_task":                                                           teo.ResourceTencentCloudTeoPurgeTaskOperation(),
+			"tencentcloud_teo_shared_cname":                                                         teo.ResourceTencentCloudTeoSharedCname(),
 			"tencentcloud_tcm_mesh":                                                                 tcm.ResourceTencentCloudTcmMesh(),
 			"tencentcloud_tcm_cluster_attachment":                                                   tcm.ResourceTencentCloudTcmClusterAttachment(),
 			"tencentcloud_tcm_prometheus_attachment":                                                tcm.ResourceTencentCloudTcmPrometheusAttachment(),
