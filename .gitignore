@@ -22,3 +22,7 @@ dist/
 gendoc/gendoc
 .vscode/
 .codebuddy/
+
+terraform-provider-tencentcloud*
+mise.toml
+build.md
