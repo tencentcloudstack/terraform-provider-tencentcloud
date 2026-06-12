@@ -32,8 +32,8 @@ The following arguments are supported:
 
 The `ipssl_setting` object supports the following:
 
-* `associated_domain` - (Required, String) The associated domain for IP SSL.
-* `operation` - (Required, String) Operation type. Valid values: `bind`, `unbind`.
+* `associated_domain` - (Required, String) The domain associated with IP SSL.
+* `status` - (Required, String) Association status. Valid values: `bound` (IP SSL configuration bound), `binding` (IP SSL configuration binding), `unbinding` (IP SSL configuration unbinding), `unbound` (IP SSL configuration unbound).
 
 ## Attributes Reference
 

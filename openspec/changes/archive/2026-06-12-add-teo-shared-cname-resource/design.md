@@ -16,6 +16,7 @@ TencentCloud EdgeOne (TEO) 提供共享 CNAME 功能，允许用户创建共享 
 - 实现 `tencentcloud_teo_shared_cname` 资源的完整 CRUD 生命周期
 - 支持通过 `zone_id` + `shared_cname` 联合 ID 进行 import
 - 支持修改 description 和 ipssl_setting
+- 创建时如果传入了 ipssl_setting，立即调用 ModifySharedCNAME 接口设置 IP SSL
 - 遵循现有 provider 代码模式（retry、错误处理、日志等）
 - 提供单元测试（使用 gomonkey mock 云 API）
 
@@ -48,12 +49,17 @@ TencentCloud EdgeOne (TEO) 提供共享 CNAME 功能，允许用户创建共享 
 
 **理由**：这是 ModifySharedCNAME 接口支持的全部可修改参数。
 
-### 5. Schema 中 ipssl_setting 的设计
-**决策**：`ipssl_setting` 作为 Optional 的嵌套 block，包含 `operation`（bind/unbind）和 `associated_domain` 两个字段。
+### 5. Create 时处理 ipssl_setting
+**决策**：Create 方法在调用 `CreateSharedCNAME` 成功后，如果用户传入了 `ipssl_setting` 参数，立即调用 `ModifySharedCNAME` 接口设置 IP SSL。
 
-**理由**：与 SDK 中 `IPSSLSetting` 结构体一致，用于设置 IP SSL 类型共享 CNAME 的绑定关系。
+**理由**：`CreateSharedCNAME` 接口不支持 `ipssl_setting` 参数，只有 `ModifySharedCNAME` 接口支持。为了让用户在首次创建资源时就能设置 IP SSL，需要在 Create 中额外调用 Modify 接口。
 
-### 6. 测试方式
+### 6. Schema 中 ipssl_setting 的设计
+**决策**：`ipssl_setting` 作为 Optional 的嵌套 block，包含 `status`（bound/binding/unbinding/unbound）和 `associated_domain` 两个字段。用户通过 `status` 字段表达期望状态，系统在调用 `ModifySharedCNAME` 时自动将 `status` 映射为 `Operation`（bound/binding → bind，unbound/unbinding → unbind）。
+
+**理由**：`DescribeSharedCNAME` 返回的 `IPSSLConfig` 使用 `Status` 字段表示关联状态，为保持 Terraform 状态与 API 返回一致，schema 使用 `status` 而非 `operation`。
+
+### 7. 测试方式
 **决策**：使用 gomonkey mock 云 API 进行单元测试，不使用 Terraform 验收测试套件。
 
 **理由**：按照项目要求，新增资源使用 mock 方式进行单元测试。

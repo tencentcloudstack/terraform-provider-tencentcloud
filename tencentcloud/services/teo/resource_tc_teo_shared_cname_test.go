@@ -86,6 +86,75 @@ func TestTeoSharedCname_Create_Success(t *testing.T) {
 	assert.Equal(t, "test-api.sai2ig51kaa5.share.dnse2.com", d.Get("shared_cname"))
 }
 
+// TestTeoSharedCname_Create_WithIPSSLSetting tests successful creation with ipssl_setting
+func TestTeoSharedCname_Create_WithIPSSLSetting(t *testing.T) {
+	patches := gomonkey.NewPatches()
+	defer patches.Reset()
+
+	teoClient := &teov20220901.Client{}
+	patches.ApplyMethodReturn(newMockMetaSharedCname().client, "UseTeoClient", teoClient)
+
+	patches.ApplyMethodFunc(teoClient, "CreateSharedCNAMEWithContext", func(_ interface{}, request *teov20220901.CreateSharedCNAMERequest) (*teov20220901.CreateSharedCNAMEResponse, error) {
+		resp := teov20220901.NewCreateSharedCNAMEResponse()
+		resp.Response = &teov20220901.CreateSharedCNAMEResponseParams{
+			SharedCNAME: ptrStringSharedCname("test-api.sai2ig51kaa5.share.dnse2.com"),
+			RequestId:   ptrStringSharedCname("fake-request-id"),
+		}
+		return resp, nil
+	})
+
+	modifyCalled := false
+	patches.ApplyMethodFunc(teoClient, "ModifySharedCNAMEWithContext", func(_ interface{}, request *teov20220901.ModifySharedCNAMERequest) (*teov20220901.ModifySharedCNAMEResponse, error) {
+		modifyCalled = true
+		assert.Equal(t, "zone-39quuimqg8r6", *request.ZoneId)
+		assert.Equal(t, "test-api.sai2ig51kaa5.share.dnse2.com", *request.SharedCNAME)
+		assert.NotNil(t, request.IPSSLSetting)
+		assert.Equal(t, "bind", *request.IPSSLSetting.Operation)
+		assert.Equal(t, "example.com", *request.IPSSLSetting.AssociatedDomain)
+		resp := teov20220901.NewModifySharedCNAMEResponse()
+		resp.Response = &teov20220901.ModifySharedCNAMEResponseParams{
+			RequestId: ptrStringSharedCname("fake-request-id"),
+		}
+		return resp, nil
+	})
+
+	// Mock DescribeSharedCNAME for the Read call after Create
+	patches.ApplyMethodFunc(teoClient, "DescribeSharedCNAMEWithContext", func(_ interface{}, request *teov20220901.DescribeSharedCNAMERequest) (*teov20220901.DescribeSharedCNAMEResponse, error) {
+		resp := teov20220901.NewDescribeSharedCNAMEResponse()
+		resp.Response = &teov20220901.DescribeSharedCNAMEResponseParams{
+			TotalCount: ptrInt64SharedCname(1),
+			SharedCNAMEInfo: []*teov20220901.SharedCNAMEInfo{
+				{
+					Type:        ptrStringSharedCname("custom"),
+					SharedCNAME: ptrStringSharedCname("test-api.sai2ig51kaa5.share.dnse2.com"),
+					Description: ptrStringSharedCname("example shared cname"),
+				},
+			},
+			RequestId: ptrStringSharedCname("fake-request-id"),
+		}
+		return resp, nil
+	})
+
+	meta := newMockMetaSharedCname()
+	res := teo.ResourceTencentCloudTeoSharedCname()
+	d := schema.TestResourceDataRaw(t, res.Schema, map[string]interface{}{
+		"zone_id":             "zone-39quuimqg8r6",
+		"shared_cname_prefix": "test-api",
+		"description":         "example shared cname",
+		"ipssl_setting": []interface{}{
+			map[string]interface{}{
+				"status":            "bound",
+				"associated_domain": "example.com",
+			},
+		},
+	})
+
+	err := res.Create(d, meta)
+	assert.NoError(t, err)
+	assert.Equal(t, "zone-39quuimqg8r6#test-api.sai2ig51kaa5.share.dnse2.com", d.Id())
+	assert.True(t, modifyCalled, "ModifySharedCNAME should be called to set ipssl_setting after creation")
+}
+
 // TestTeoSharedCname_Create_EmptyResponse tests creation with empty SharedCNAME response
 func TestTeoSharedCname_Create_EmptyResponse(t *testing.T) {
 	patches := gomonkey.NewPatches()
@@ -154,6 +223,208 @@ func TestTeoSharedCname_Read_Success(t *testing.T) {
 	assert.Equal(t, "zone-39quuimqg8r6", d.Get("zone_id"))
 	assert.Equal(t, "test-api.sai2ig51kaa5.share.dnse2.com", d.Get("shared_cname"))
 	assert.Equal(t, "example shared cname", d.Get("description"))
+}
+
+// TestTeoSharedCname_Read_ExtractsPrefixOnImport tests that Read correctly extracts
+// shared_cname_prefix from the full shared CNAME, preventing force replace on import.
+func TestTeoSharedCname_Read_ExtractsPrefixOnImport(t *testing.T) {
+	patches := gomonkey.NewPatches()
+	defer patches.Reset()
+
+	teoClient := &teov20220901.Client{}
+	patches.ApplyMethodReturn(newMockMetaSharedCname().client, "UseTeoClient", teoClient)
+
+	patches.ApplyMethodFunc(teoClient, "DescribeSharedCNAMEWithContext", func(_ interface{}, request *teov20220901.DescribeSharedCNAMERequest) (*teov20220901.DescribeSharedCNAMEResponse, error) {
+		resp := teov20220901.NewDescribeSharedCNAMEResponse()
+		resp.Response = &teov20220901.DescribeSharedCNAMEResponseParams{
+			TotalCount: ptrInt64SharedCname(1),
+			SharedCNAMEInfo: []*teov20220901.SharedCNAMEInfo{
+				{
+					Type:        ptrStringSharedCname("custom"),
+					SharedCNAME: ptrStringSharedCname("test-api.39quuimqg8r6.share.dnse27.com"),
+					Description: ptrStringSharedCname("example shared cname"),
+				},
+			},
+			RequestId: ptrStringSharedCname("fake-request-id"),
+		}
+		return resp, nil
+	})
+
+	meta := newMockMetaSharedCname()
+	res := teo.ResourceTencentCloudTeoSharedCname()
+	// Simulate import: shared_cname_prefix is empty (not set by user config)
+	d := schema.TestResourceDataRaw(t, res.Schema, map[string]interface{}{
+		"zone_id":             "",
+		"shared_cname_prefix": "",
+	})
+	d.SetId("zone-39quuimqg8r6#test-api.39quuimqg8r6.share.dnse27.com")
+
+	err := res.Read(d, meta)
+	assert.NoError(t, err)
+	// Verify prefix is correctly extracted from the full shared CNAME
+	assert.Equal(t, "test-api", d.Get("shared_cname_prefix"))
+	assert.Equal(t, "zone-39quuimqg8r6", d.Get("zone_id"))
+	assert.Equal(t, "test-api.39quuimqg8r6.share.dnse27.com", d.Get("shared_cname"))
+	assert.Equal(t, "example shared cname", d.Get("description"))
+}
+
+// TestTeoSharedCname_Read_ExtractsPrefixWithDotInPrefix tests prefix extraction
+// when the prefix itself contains dots (e.g., "test-api.com").
+func TestTeoSharedCname_Read_ExtractsPrefixWithDotInPrefix(t *testing.T) {
+	patches := gomonkey.NewPatches()
+	defer patches.Reset()
+
+	teoClient := &teov20220901.Client{}
+	patches.ApplyMethodReturn(newMockMetaSharedCname().client, "UseTeoClient", teoClient)
+
+	patches.ApplyMethodFunc(teoClient, "DescribeSharedCNAMEWithContext", func(_ interface{}, request *teov20220901.DescribeSharedCNAMERequest) (*teov20220901.DescribeSharedCNAMEResponse, error) {
+		resp := teov20220901.NewDescribeSharedCNAMEResponse()
+		resp.Response = &teov20220901.DescribeSharedCNAMEResponseParams{
+			TotalCount: ptrInt64SharedCname(1),
+			SharedCNAMEInfo: []*teov20220901.SharedCNAMEInfo{
+				{
+					Type:        ptrStringSharedCname("custom"),
+					SharedCNAME: ptrStringSharedCname("test-api.com.abc123xyz.share.dnse27.com"),
+					Description: ptrStringSharedCname("dot prefix cname"),
+				},
+			},
+			RequestId: ptrStringSharedCname("fake-request-id"),
+		}
+		return resp, nil
+	})
+
+	meta := newMockMetaSharedCname()
+	res := teo.ResourceTencentCloudTeoSharedCname()
+	d := schema.TestResourceDataRaw(t, res.Schema, map[string]interface{}{
+		"zone_id":             "",
+		"shared_cname_prefix": "",
+	})
+	d.SetId("zone-abc123xyz#test-api.com.abc123xyz.share.dnse27.com")
+
+	err := res.Read(d, meta)
+	assert.NoError(t, err)
+	// Prefix "test-api.com" contains a dot, should still be extracted correctly
+	assert.Equal(t, "test-api.com", d.Get("shared_cname_prefix"))
+}
+
+// TestTeoSharedCname_Read_PrefixNotExtractedWhenSuffixMismatch tests that
+// shared_cname_prefix is NOT set when the CNAME suffix doesn't match the expected format.
+func TestTeoSharedCname_Read_PrefixNotExtractedWhenSuffixMismatch(t *testing.T) {
+	patches := gomonkey.NewPatches()
+	defer patches.Reset()
+
+	teoClient := &teov20220901.Client{}
+	patches.ApplyMethodReturn(newMockMetaSharedCname().client, "UseTeoClient", teoClient)
+
+	patches.ApplyMethodFunc(teoClient, "DescribeSharedCNAMEWithContext", func(_ interface{}, request *teov20220901.DescribeSharedCNAMERequest) (*teov20220901.DescribeSharedCNAMEResponse, error) {
+		resp := teov20220901.NewDescribeSharedCNAMEResponse()
+		resp.Response = &teov20220901.DescribeSharedCNAMEResponseParams{
+			TotalCount: ptrInt64SharedCname(1),
+			SharedCNAMEInfo: []*teov20220901.SharedCNAMEInfo{
+				{
+					Type:        ptrStringSharedCname("custom"),
+					SharedCNAME: ptrStringSharedCname("test-api.39quuimqg8r6.share.otherdomain.com"),
+					Description: ptrStringSharedCname("mismatched suffix"),
+				},
+			},
+			RequestId: ptrStringSharedCname("fake-request-id"),
+		}
+		return resp, nil
+	})
+
+	meta := newMockMetaSharedCname()
+	res := teo.ResourceTencentCloudTeoSharedCname()
+	d := schema.TestResourceDataRaw(t, res.Schema, map[string]interface{}{
+		"zone_id":             "",
+		"shared_cname_prefix": "",
+	})
+	d.SetId("zone-39quuimqg8r6#test-api.39quuimqg8r6.share.otherdomain.com")
+
+	err := res.Read(d, meta)
+	assert.NoError(t, err)
+	// When suffix doesn't match, shared_cname_prefix should remain empty
+	assert.Equal(t, "", d.Get("shared_cname_prefix"))
+}
+
+// TestTeoSharedCname_Read_ExtractsPrefixWithVariousDnseSuffixes tests that the regex
+// correctly matches different dnse digit suffixes (dnse0, dnse2, dnse5, dnse123, etc.)
+func TestTeoSharedCname_Read_ExtractsPrefixWithVariousDnseSuffixes(t *testing.T) {
+	testCases := []struct {
+		name        string
+		sharedCname string
+		zoneId      string
+		wantPrefix  string
+	}{
+		{
+			name:        "single digit dnse0",
+			sharedCname: "my-prefix.39quuimqg8r6.share.dnse0.com",
+			zoneId:      "zone-39quuimqg8r6",
+			wantPrefix:  "my-prefix",
+		},
+		{
+			name:        "single digit dnse5",
+			sharedCname: "api-gateway.39quuimqg8r6.share.dnse5.com",
+			zoneId:      "zone-39quuimqg8r6",
+			wantPrefix:  "api-gateway",
+		},
+		{
+			name:        "double digit dnse27",
+			sharedCname: "test-api.39quuimqg8r6.share.dnse27.com",
+			zoneId:      "zone-39quuimqg8r6",
+			wantPrefix:  "test-api",
+		},
+		{
+			name:        "triple digit dnse123",
+			sharedCname: "cdn.39quuimqg8r6.share.dnse123.com",
+			zoneId:      "zone-39quuimqg8r6",
+			wantPrefix:  "cdn",
+		},
+		{
+			name:        "prefix with dots and dnse2",
+			sharedCname: "sub.domain.abc123xyz456.share.dnse2.com",
+			zoneId:      "zone-abc123xyz456",
+			wantPrefix:  "sub.domain",
+		},
+	}
+
+	for _, tc := range testCases {
+		t.Run(tc.name, func(t *testing.T) {
+			patches := gomonkey.NewPatches()
+			defer patches.Reset()
+
+			teoClient := &teov20220901.Client{}
+			patches.ApplyMethodReturn(newMockMetaSharedCname().client, "UseTeoClient", teoClient)
+
+			sharedCname := tc.sharedCname
+			patches.ApplyMethodFunc(teoClient, "DescribeSharedCNAMEWithContext", func(_ interface{}, request *teov20220901.DescribeSharedCNAMERequest) (*teov20220901.DescribeSharedCNAMEResponse, error) {
+				resp := teov20220901.NewDescribeSharedCNAMEResponse()
+				resp.Response = &teov20220901.DescribeSharedCNAMEResponseParams{
+					TotalCount: ptrInt64SharedCname(1),
+					SharedCNAMEInfo: []*teov20220901.SharedCNAMEInfo{
+						{
+							Type:        ptrStringSharedCname("custom"),
+							SharedCNAME: ptrStringSharedCname(sharedCname),
+							Description: ptrStringSharedCname("test"),
+						},
+					},
+					RequestId: ptrStringSharedCname("fake-request-id"),
+				}
+				return resp, nil
+			})
+
+			meta := newMockMetaSharedCname()
+			res := teo.ResourceTencentCloudTeoSharedCname()
+			d := schema.TestResourceDataRaw(t, res.Schema, map[string]interface{}{
+				"zone_id":             "",
+				"shared_cname_prefix": "",
+			})
+			d.SetId(tc.zoneId + "#" + tc.sharedCname)
+
+			err := res.Read(d, meta)
+			assert.NoError(t, err)
+			assert.Equal(t, tc.wantPrefix, d.Get("shared_cname_prefix"))
+		})
+	}
 }
 
 // TestTeoSharedCname_Read_NotFound tests read when resource is not found

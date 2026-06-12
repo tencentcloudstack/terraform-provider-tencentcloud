@@ -1,11 +1,15 @@
 ## ADDED Requirements
 
 ### Requirement: Create shared CNAME resource
-The system SHALL provide a Terraform resource `tencentcloud_teo_shared_cname` that creates a shared CNAME via the `CreateSharedCNAME` API. The resource SHALL accept `zone_id` (Required, ForceNew), `shared_cname_prefix` (Required, ForceNew), and `description` (Optional) as input parameters. Upon successful creation, the resource SHALL store the returned `shared_cname` value and set the resource ID as the composite of `zone_id` and `shared_cname` joined by `tccommon.FILED_SP`.
+The system SHALL provide a Terraform resource `tencentcloud_teo_shared_cname` that creates a shared CNAME via the `CreateSharedCNAME` API. The resource SHALL accept `zone_id` (Required, ForceNew), `shared_cname_prefix` (Required, ForceNew), and `description` (Optional) as input parameters. Upon successful creation, the resource SHALL store the returned `shared_cname` value and set the resource ID as the composite of `zone_id` and `shared_cname` joined by `tccommon.FILED_SP`. If `ipssl_setting` is provided, the system SHALL immediately call the `ModifySharedCNAME` API after creation to apply the IP SSL setting.
 
 #### Scenario: Successful creation of shared CNAME
 - **WHEN** user applies a Terraform config with `tencentcloud_teo_shared_cname` specifying `zone_id`, `shared_cname_prefix`, and `description`
 - **THEN** the system calls `CreateSharedCNAME` API, stores the returned `shared_cname` in state, and sets the resource ID as `zone_id + FILED_SP + shared_cname`
+
+#### Scenario: Creation with ipssl_setting
+- **WHEN** user applies a Terraform config with `tencentcloud_teo_shared_cname` specifying `zone_id`, `shared_cname_prefix`, `description`, and `ipssl_setting`
+- **THEN** the system calls `CreateSharedCNAME` API first, then immediately calls `ModifySharedCNAME` API with the `IPSSLSetting` containing `Status` (mapped to `Operation`: bound/binding→bind, unbound/unbinding→unbind) and `AssociatedDomain` to apply the IP SSL setting
 
 #### Scenario: API returns empty shared_cname on creation
 - **WHEN** the `CreateSharedCNAME` API returns a nil or empty `SharedCNAME` value
@@ -31,7 +35,7 @@ The system SHALL support updating the `description` and `ipssl_setting` fields o
 
 #### Scenario: Update ipssl_setting
 - **WHEN** user sets or changes the `ipssl_setting` block in the Terraform config
-- **THEN** the system calls `ModifySharedCNAME` API with the `IPSSLSetting` containing `Operation` and `AssociatedDomain`
+- **THEN** the system calls `ModifySharedCNAME` API with the `IPSSLSetting` containing `Status` (mapped to `Operation`: bound/binding→bind, unbound/unbinding→unbind) and `AssociatedDomain`
 
 ### Requirement: Delete shared CNAME resource
 The system SHALL delete the shared CNAME resource using the `DeleteSharedCNAME` API with `zone_id` and `shared_cname` extracted from the composite resource ID.
@@ -54,12 +58,12 @@ The resource schema SHALL include the following fields:
 - `description`: Optional, String - description (1-50 chars)
 - `shared_cname`: Computed, String - the full shared CNAME returned by API
 - `ipssl_setting`: Optional, List(MaxItems:1) - IP SSL setting block containing:
-  - `operation`: Required, String - operation type (bind/unbind)
-  - `associated_domain`: Required, String - the associated domain for IP SSL
+  - `status`: Required, String - association status. Valid values: `bound` (IP SSL configuration bound), `binding` (IP SSL configuration binding), `unbinding` (IP SSL configuration unbinding), `unbound` (IP SSL configuration unbound)
+  - `associated_domain`: Required, String - the domain associated with IP SSL. This field is empty when Status is `unbound`
 
 #### Scenario: Schema validation
 - **WHEN** user provides a valid Terraform configuration for `tencentcloud_teo_shared_cname`
-- **THEN** the schema validates that `zone_id` and `shared_cname_prefix` are provided, and `ipssl_setting` block (if present) contains both `operation` and `associated_domain`
+- **THEN** the schema validates that `zone_id` and `shared_cname_prefix` are provided, and `ipssl_setting` block (if present) contains both `status` and `associated_domain`
 
 ### Requirement: Retry and error handling
 All API calls SHALL be wrapped with `tccommon.ReadRetryTimeout` retry logic. Errors SHALL be wrapped with `tccommon.RetryError()`. The resource SHALL use `defer tccommon.LogElapsed()` for performance logging and `defer tccommon.InconsistentCheck()` for consistency checks.
