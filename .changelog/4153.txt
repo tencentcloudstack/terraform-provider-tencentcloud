@@ -1,0 +1,15 @@
+```release-note:new-resource
+tencentcloud_ga2_global_accelerator
+```
+
+```release-note:new-resource
+tencentcloud_ga2_listener
+```
+
+```release-note:new-resource
+tencentcloud_ga2_endpoint_group
+```
+
+```release-note:new-resource
+tencentcloud_ga2_forwarding_rule
+```

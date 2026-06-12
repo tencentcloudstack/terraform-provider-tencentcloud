@@ -43,7 +43,7 @@ func (me *Ga2Service) DescribeGa2EndpointGroupById(ctx context.Context, gaId, li
 
 	var (
 		offset uint64 = 0
-		limit  uint64 = 100
+		limit  uint64 = 10
 	)
 
 	for {
@@ -84,6 +84,221 @@ func (me *Ga2Service) DescribeGa2EndpointGroupById(ctx context.Context, gaId, li
 			}
 
 			if *item.EndpointGroupId == egId && *item.ListenerId == listenerId {
+				return item, nil
+			}
+		}
+
+		// Stop when the current page is the last page.
+		if uint64(len(set)) < limit {
+			break
+		}
+
+		offset += limit
+	}
+
+	return nil, nil
+}
+
+// DescribeGa2GlobalAcceleratorById queries a global accelerator instance by its ID.
+// Returns (nil, nil) when the instance does not exist.
+func (me *Ga2Service) DescribeGa2GlobalAcceleratorById(ctx context.Context, gaId string) (*ga2v20250115.GlobalAcceleratorSet, error) {
+	logId := tccommon.GetLogId(ctx)
+
+	request := ga2v20250115.NewDescribeGlobalAcceleratorsRequest()
+	request.Filters = []*ga2v20250115.Filter{
+		{
+			Name:   helper.String("global-accelerator-id"),
+			Values: []*string{helper.String(gaId)},
+		},
+	}
+
+	var (
+		offset uint64 = 0
+		// limit equals the API-documented maximum to minimize round-trips.
+		limit uint64 = 100
+	)
+
+	for {
+		request.Offset = &offset
+		request.Limit = &limit
+
+		var response *ga2v20250115.DescribeGlobalAcceleratorsResponse
+		err := resource.Retry(tccommon.ReadRetryTimeout, func() *resource.RetryError {
+			result, e := me.client.UseGa2V20250115Client().DescribeGlobalAcceleratorsWithContext(ctx, request)
+			if e != nil {
+				return tccommon.RetryError(e)
+			}
+
+			if result == nil || result.Response == nil {
+				return resource.NonRetryableError(fmt.Errorf("Describe ga2 global accelerators failed, Response is nil."))
+			}
+
+			response = result
+			return nil
+		})
+
+		if err != nil {
+			log.Printf("[CRITAL]%s describe ga2 global accelerators failed, reason:%+v", logId, err)
+			return nil, err
+		}
+
+		set := response.Response.GlobalAcceleratorSet
+		for i := range set {
+			item := set[i]
+			if item == nil || item.GlobalAcceleratorId == nil {
+				continue
+			}
+
+			// Strict equality check: filter values are advisory and may not be enforced server-side.
+			if *item.GlobalAcceleratorId == gaId {
+				return item, nil
+			}
+		}
+
+		// Stop when the current page is the last page.
+		if uint64(len(set)) < limit {
+			break
+		}
+
+		offset += limit
+	}
+
+	return nil, nil
+}
+
+// DescribeGa2ListenerById queries a listener by its (gaId, listenerId) tuple.
+// Returns (nil, nil) when the listener does not exist.
+func (me *Ga2Service) DescribeGa2ListenerById(ctx context.Context, gaId, listenerId string) (*ga2v20250115.ListenerSet, error) {
+	logId := tccommon.GetLogId(ctx)
+
+	request := ga2v20250115.NewDescribeListenersRequest()
+	request.GlobalAcceleratorId = helper.String(gaId)
+	request.Filters = []*ga2v20250115.Filter{
+		{
+			Name:   helper.String("listener-id"),
+			Values: []*string{helper.String(listenerId)},
+		},
+	}
+
+	var (
+		offset uint64 = 0
+		// limit equals the API-documented maximum to minimize round-trips.
+		limit uint64 = 100
+	)
+
+	for {
+		request.Offset = &offset
+		request.Limit = &limit
+
+		var response *ga2v20250115.DescribeListenersResponse
+		err := resource.Retry(tccommon.ReadRetryTimeout, func() *resource.RetryError {
+			result, e := me.client.UseGa2V20250115Client().DescribeListenersWithContext(ctx, request)
+			if e != nil {
+				return tccommon.RetryError(e)
+			}
+
+			if result == nil || result.Response == nil {
+				return resource.NonRetryableError(fmt.Errorf("Describe ga2 listeners failed, Response is nil."))
+			}
+
+			response = result
+			return nil
+		})
+
+		if err != nil {
+			log.Printf("[CRITAL]%s describe ga2 listeners failed, reason:%+v", logId, err)
+			return nil, err
+		}
+
+		set := response.Response.ListenerSet
+		for i := range set {
+			item := set[i]
+			if item == nil || item.ListenerId == nil || item.GlobalAcceleratorId == nil {
+				continue
+			}
+
+			// Strict equality check on both IDs: filter values are advisory and may not be enforced server-side.
+			if *item.ListenerId == listenerId && *item.GlobalAcceleratorId == gaId {
+				return item, nil
+			}
+		}
+
+		// Stop when the current page is the last page.
+		if uint64(len(set)) < limit {
+			break
+		}
+
+		offset += limit
+	}
+
+	return nil, nil
+}
+
+// DescribeGa2ForwardingRuleById queries a forwarding rule by its (gaId, listenerId, policyId, ruleId) tuple.
+// Returns (nil, nil) when the rule does not exist.
+//
+// Note: DescribeForwardingRule is keyed by (GlobalAcceleratorId, ListenerId, ForwardingPolicyId)
+// and lacks a per-rule filter slot. We paginate through every rule under the policy and match
+// `ForwardingRuleId` strictly client-side.
+func (me *Ga2Service) DescribeGa2ForwardingRuleById(ctx context.Context, gaId, listenerId, policyId, ruleId string) (*ga2v20250115.ForwardingRuleSet, error) {
+	logId := tccommon.GetLogId(ctx)
+
+	request := ga2v20250115.NewDescribeForwardingRuleRequest()
+	request.GlobalAcceleratorId = helper.String(gaId)
+	request.ListenerId = helper.String(listenerId)
+	request.ForwardingPolicyId = helper.String(policyId)
+
+	var (
+		offset uint64 = 0
+		// limit equals the API-documented maximum to minimize round-trips.
+		limit uint64 = 100
+	)
+
+	for {
+		request.Offset = &offset
+		request.Limit = &limit
+
+		var response *ga2v20250115.DescribeForwardingRuleResponse
+		err := resource.Retry(tccommon.ReadRetryTimeout, func() *resource.RetryError {
+			result, e := me.client.UseGa2V20250115Client().DescribeForwardingRuleWithContext(ctx, request)
+			if e != nil {
+				return tccommon.RetryError(e)
+			}
+
+			if result == nil || result.Response == nil {
+				return resource.NonRetryableError(fmt.Errorf("Describe ga2 forwarding rule failed, Response is nil."))
+			}
+
+			response = result
+			return nil
+		})
+
+		if err != nil {
+			log.Printf("[CRITAL]%s describe ga2 forwarding rule failed, reason:%+v", logId, err)
+			return nil, err
+		}
+
+		set := response.Response.ForwardingRuleSet
+		for i := range set {
+			item := set[i]
+			if item == nil || item.ForwardingRuleId == nil {
+				continue
+			}
+
+			// Defensive: skip items whose parent IDs do not match the request, then strict-equal
+			// on the rule ID. The parent IDs *should* match since they were sent on the request,
+			// but we guard against API quirks all the same.
+			if item.GlobalAcceleratorId != nil && *item.GlobalAcceleratorId != gaId {
+				continue
+			}
+			if item.ListenerId != nil && *item.ListenerId != listenerId {
+				continue
+			}
+			if item.ForwardingPolicyId != nil && *item.ForwardingPolicyId != policyId {
+				continue
+			}
+
+			if *item.ForwardingRuleId == ruleId {
 				return item, nil
 			}
 		}

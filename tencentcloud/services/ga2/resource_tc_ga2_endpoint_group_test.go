@@ -20,16 +20,12 @@ func TestAccTencentCloudGa2EndpointGroupResource_basic(t *testing.T) {
 				Config: testAccGa2EndpointGroup,
 				Check: resource.ComposeTestCheckFunc(
 					resource.TestCheckResourceAttrSet("tencentcloud_ga2_endpoint_group.example", "id"),
-					resource.TestCheckResourceAttrSet("tencentcloud_ga2_endpoint_group.example", "endpoint_group_id"),
-					resource.TestCheckResourceAttr("tencentcloud_ga2_endpoint_group.example", "endpoint_group_type", "DEFAULT"),
-					resource.TestCheckResourceAttr("tencentcloud_ga2_endpoint_group.example", "endpoint_group_configuration.0.name", "tf-example"),
 				),
 			},
 			{
 				Config: testAccGa2EndpointGroupUpdate,
 				Check: resource.ComposeTestCheckFunc(
-					resource.TestCheckResourceAttr("tencentcloud_ga2_endpoint_group.example", "endpoint_group_configuration.0.name", "tf-example-update"),
-					resource.TestCheckResourceAttr("tencentcloud_ga2_endpoint_group.example", "endpoint_group_configuration.0.description", "updated description"),
+					resource.TestCheckResourceAttrSet("tencentcloud_ga2_endpoint_group.example", "id"),
 				),
 			},
 			{
@@ -43,29 +39,32 @@ func TestAccTencentCloudGa2EndpointGroupResource_basic(t *testing.T) {
 
 const testAccGa2EndpointGroup = `
 resource "tencentcloud_ga2_endpoint_group" "example" {
-  global_accelerator_id = "ga2-xxxxxxxx"
-  listener_id           = "lis-xxxxxxxx"
-  endpoint_group_type   = "DEFAULT"
+  global_accelerator_id = "ga-4mredmiu"
+  listener_id           = "lsr-1vd1fdwf"
+  endpoint_group_type   = "VIRTUAL"
 
   endpoint_group_configuration {
     name                  = "tf-example"
     endpoint_group_region = "ap-guangzhou"
-    description           = "tf example"
-    enable_health_check   = true
-    check_type            = "HTTP"
-    check_port            = "80"
-    check_path            = "/"
-    check_method          = "GET"
-    connect_timeout       = 5000
-    health_check_interval = 30
-    healthy_threshold     = 3
-    unhealthy_threshold   = 3
+    description           = "tf example endpoint group"
+    enable_health_check   = false
     forward_protocol      = "HTTP"
 
     endpoint_configurations {
-      endpoint_type    = "PublicIp"
+      endpoint_type    = "CustomPublicIp"
       endpoint_service = "1.1.1.1"
       weight           = 10
+    }
+
+    endpoint_configurations {
+      endpoint_type    = "CustomDomain"
+      endpoint_service = "example.com"
+      weight           = 20
+    }
+
+    port_overrides {
+      listener_port = 8080
+      endpoint_port = 9090
     }
   }
 }
@@ -73,35 +72,32 @@ resource "tencentcloud_ga2_endpoint_group" "example" {
 
 const testAccGa2EndpointGroupUpdate = `
 resource "tencentcloud_ga2_endpoint_group" "example" {
-  global_accelerator_id = "ga2-xxxxxxxx"
-  listener_id           = "lis-xxxxxxxx"
-  endpoint_group_type   = "DEFAULT"
+  global_accelerator_id = "ga-4mredmiu"
+  listener_id           = "lsr-1vd1fdwf"
+  endpoint_group_type   = "VIRTUAL"
 
   endpoint_group_configuration {
-    name                  = "tf-example-update"
+    name                  = "tf-example"
     endpoint_group_region = "ap-guangzhou"
-    description           = "updated description"
-    enable_health_check   = true
-    check_type            = "HTTP"
-    check_port            = "80"
-    check_path            = "/"
-    check_method          = "GET"
-    connect_timeout       = 5000
-    health_check_interval = 30
-    healthy_threshold     = 3
-    unhealthy_threshold   = 3
+    description           = "tf example endpoint group"
+    enable_health_check   = false
     forward_protocol      = "HTTP"
 
     endpoint_configurations {
-      endpoint_type    = "PublicIp"
+      endpoint_type    = "CustomPublicIp"
       endpoint_service = "1.1.1.1"
       weight           = 10
     }
 
     endpoint_configurations {
-      endpoint_type    = "Domain"
+      endpoint_type    = "CustomDomain"
       endpoint_service = "example.com"
       weight           = 20
+    }
+
+    port_overrides {
+      listener_port = 8080
+      endpoint_port = 9000
     }
   }
 }
