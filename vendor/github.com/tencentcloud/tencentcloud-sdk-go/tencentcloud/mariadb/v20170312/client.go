@@ -1,4 +1,4 @@
-// Copyright (c) 2017-2018 THL A29 Limited, a Tencent company. All Rights Reserved.
+// Copyright (c) 2017-2025 Tencent. All Rights Reserved.
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -59,8 +59,9 @@ func NewActivateHourDBInstanceRequest() (request *ActivateHourDBInstanceRequest)
 func NewActivateHourDBInstanceResponse() (response *ActivateHourDBInstanceResponse) {
     response = &ActivateHourDBInstanceResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // ActivateHourDBInstance
@@ -89,6 +90,7 @@ func (c *Client) ActivateHourDBInstanceWithContext(ctx context.Context, request 
     if request == nil {
         request = NewActivateHourDBInstanceRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "mariadb", APIVersion, "ActivateHourDBInstance")
     
     if c.GetCredential() == nil {
         return nil, errors.New("ActivateHourDBInstance require credential")
@@ -115,8 +117,9 @@ func NewAssociateSecurityGroupsRequest() (request *AssociateSecurityGroupsReques
 func NewAssociateSecurityGroupsResponse() (response *AssociateSecurityGroupsResponse) {
     response = &AssociateSecurityGroupsResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // AssociateSecurityGroups
@@ -193,6 +196,7 @@ func (c *Client) AssociateSecurityGroupsWithContext(ctx context.Context, request
     if request == nil {
         request = NewAssociateSecurityGroupsRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "mariadb", APIVersion, "AssociateSecurityGroups")
     
     if c.GetCredential() == nil {
         return nil, errors.New("AssociateSecurityGroups require credential")
@@ -219,12 +223,13 @@ func NewCancelDcnJobRequest() (request *CancelDcnJobRequest) {
 func NewCancelDcnJobResponse() (response *CancelDcnJobResponse) {
     response = &CancelDcnJobResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // CancelDcnJob
-// 取消DCN同步
+// 本接口（CancelDcnJob）用于取消DCN同步
 //
 // 可能返回的错误码:
 //  FAILEDOPERATION_OSSOPERATIONFAILED = "FailedOperation.OssOperationFailed"
@@ -233,12 +238,13 @@ func NewCancelDcnJobResponse() (response *CancelDcnJobResponse) {
 //  INVALIDPARAMETER = "InvalidParameter"
 //  INVALIDPARAMETER_INSTANCENOTFOUND = "InvalidParameter.InstanceNotFound"
 //  RESOURCEUNAVAILABLE_INSTANCESTATUSABNORMAL = "ResourceUnavailable.InstanceStatusAbnormal"
+//  UNAUTHORIZEDOPERATION_PERMISSIONDENIED = "UnauthorizedOperation.PermissionDenied"
 func (c *Client) CancelDcnJob(request *CancelDcnJobRequest) (response *CancelDcnJobResponse, err error) {
     return c.CancelDcnJobWithContext(context.Background(), request)
 }
 
 // CancelDcnJob
-// 取消DCN同步
+// 本接口（CancelDcnJob）用于取消DCN同步
 //
 // 可能返回的错误码:
 //  FAILEDOPERATION_OSSOPERATIONFAILED = "FailedOperation.OssOperationFailed"
@@ -247,10 +253,12 @@ func (c *Client) CancelDcnJob(request *CancelDcnJobRequest) (response *CancelDcn
 //  INVALIDPARAMETER = "InvalidParameter"
 //  INVALIDPARAMETER_INSTANCENOTFOUND = "InvalidParameter.InstanceNotFound"
 //  RESOURCEUNAVAILABLE_INSTANCESTATUSABNORMAL = "ResourceUnavailable.InstanceStatusAbnormal"
+//  UNAUTHORIZEDOPERATION_PERMISSIONDENIED = "UnauthorizedOperation.PermissionDenied"
 func (c *Client) CancelDcnJobWithContext(ctx context.Context, request *CancelDcnJobRequest) (response *CancelDcnJobResponse, err error) {
     if request == nil {
         request = NewCancelDcnJobRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "mariadb", APIVersion, "CancelDcnJob")
     
     if c.GetCredential() == nil {
         return nil, errors.New("CancelDcnJob require credential")
@@ -277,8 +285,9 @@ func NewCloneAccountRequest() (request *CloneAccountRequest) {
 func NewCloneAccountResponse() (response *CloneAccountResponse) {
     response = &CloneAccountResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // CloneAccount
@@ -319,6 +328,7 @@ func (c *Client) CloneAccountWithContext(ctx context.Context, request *CloneAcco
     if request == nil {
         request = NewCloneAccountRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "mariadb", APIVersion, "CloneAccount")
     
     if c.GetCredential() == nil {
         return nil, errors.New("CloneAccount require credential")
@@ -345,8 +355,9 @@ func NewCloseDBExtranetAccessRequest() (request *CloseDBExtranetAccessRequest) {
 func NewCloseDBExtranetAccessResponse() (response *CloseDBExtranetAccessResponse) {
     response = &CloseDBExtranetAccessResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // CloseDBExtranetAccess
@@ -383,6 +394,7 @@ func (c *Client) CloseDBExtranetAccessWithContext(ctx context.Context, request *
     if request == nil {
         request = NewCloseDBExtranetAccessRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "mariadb", APIVersion, "CloseDBExtranetAccess")
     
     if c.GetCredential() == nil {
         return nil, errors.New("CloseDBExtranetAccess require credential")
@@ -409,8 +421,9 @@ func NewCopyAccountPrivilegesRequest() (request *CopyAccountPrivilegesRequest) {
 func NewCopyAccountPrivilegesResponse() (response *CopyAccountPrivilegesResponse) {
     response = &CopyAccountPrivilegesResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // CopyAccountPrivileges
@@ -424,6 +437,7 @@ func NewCopyAccountPrivilegesResponse() (response *CopyAccountPrivilegesResponse
 //  INTERNALERROR_DBOPERATIONFAILED = "InternalError.DbOperationFailed"
 //  INVALIDPARAMETER_GENERICPARAMETERERROR = "InvalidParameter.GenericParameterError"
 //  INVALIDPARAMETERVALUE_BADUSERTYPE = "InvalidParameterValue.BadUserType"
+//  RESOURCENOTFOUND_ACCOUNTDOESNOTEXIST = "ResourceNotFound.AccountDoesNotExist"
 //  RESOURCEUNAVAILABLE_INSTANCEALREADYDELETED = "ResourceUnavailable.InstanceAlreadyDeleted"
 //  RESOURCEUNAVAILABLE_INSTANCEHASBEENLOCKED = "ResourceUnavailable.InstanceHasBeenLocked"
 //  RESOURCEUNAVAILABLE_INSTANCESTATUSABNORMAL = "ResourceUnavailable.InstanceStatusAbnormal"
@@ -443,6 +457,7 @@ func (c *Client) CopyAccountPrivileges(request *CopyAccountPrivilegesRequest) (r
 //  INTERNALERROR_DBOPERATIONFAILED = "InternalError.DbOperationFailed"
 //  INVALIDPARAMETER_GENERICPARAMETERERROR = "InvalidParameter.GenericParameterError"
 //  INVALIDPARAMETERVALUE_BADUSERTYPE = "InvalidParameterValue.BadUserType"
+//  RESOURCENOTFOUND_ACCOUNTDOESNOTEXIST = "ResourceNotFound.AccountDoesNotExist"
 //  RESOURCEUNAVAILABLE_INSTANCEALREADYDELETED = "ResourceUnavailable.InstanceAlreadyDeleted"
 //  RESOURCEUNAVAILABLE_INSTANCEHASBEENLOCKED = "ResourceUnavailable.InstanceHasBeenLocked"
 //  RESOURCEUNAVAILABLE_INSTANCESTATUSABNORMAL = "ResourceUnavailable.InstanceStatusAbnormal"
@@ -451,6 +466,7 @@ func (c *Client) CopyAccountPrivilegesWithContext(ctx context.Context, request *
     if request == nil {
         request = NewCopyAccountPrivilegesRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "mariadb", APIVersion, "CopyAccountPrivileges")
     
     if c.GetCredential() == nil {
         return nil, errors.New("CopyAccountPrivileges require credential")
@@ -477,8 +493,9 @@ func NewCreateAccountRequest() (request *CreateAccountRequest) {
 func NewCreateAccountResponse() (response *CreateAccountResponse) {
     response = &CreateAccountResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // CreateAccount
@@ -490,6 +507,7 @@ func NewCreateAccountResponse() (response *CreateAccountResponse) {
 //  INTERNALERROR_CAMAUTHFAILED = "InternalError.CamAuthFailed"
 //  INTERNALERROR_DBOPERATIONFAILED = "InternalError.DbOperationFailed"
 //  INTERNALERROR_GETUSERLISTFAILED = "InternalError.GetUserListFailed"
+//  INTERNALERROR_INNERSYSTEMERROR = "InternalError.InnerSystemError"
 //  INVALIDPARAMETER = "InvalidParameter"
 //  INVALIDPARAMETER_CHARACTERERROR = "InvalidParameter.CharacterError"
 //  INVALIDPARAMETER_GENERICPARAMETERERROR = "InvalidParameter.GenericParameterError"
@@ -513,6 +531,7 @@ func (c *Client) CreateAccount(request *CreateAccountRequest) (response *CreateA
 //  INTERNALERROR_CAMAUTHFAILED = "InternalError.CamAuthFailed"
 //  INTERNALERROR_DBOPERATIONFAILED = "InternalError.DbOperationFailed"
 //  INTERNALERROR_GETUSERLISTFAILED = "InternalError.GetUserListFailed"
+//  INTERNALERROR_INNERSYSTEMERROR = "InternalError.InnerSystemError"
 //  INVALIDPARAMETER = "InvalidParameter"
 //  INVALIDPARAMETER_CHARACTERERROR = "InvalidParameter.CharacterError"
 //  INVALIDPARAMETER_GENERICPARAMETERERROR = "InvalidParameter.GenericParameterError"
@@ -527,6 +546,7 @@ func (c *Client) CreateAccountWithContext(ctx context.Context, request *CreateAc
     if request == nil {
         request = NewCreateAccountRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "mariadb", APIVersion, "CreateAccount")
     
     if c.GetCredential() == nil {
         return nil, errors.New("CreateAccount require credential")
@@ -553,8 +573,9 @@ func NewCreateDBInstanceRequest() (request *CreateDBInstanceRequest) {
 func NewCreateDBInstanceResponse() (response *CreateDBInstanceResponse) {
     response = &CreateDBInstanceResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // CreateDBInstance
@@ -564,6 +585,7 @@ func NewCreateDBInstanceResponse() (response *CreateDBInstanceResponse) {
 //  FAILEDOPERATION_CREATEORDERFAILED = "FailedOperation.CreateOrderFailed"
 //  FAILEDOPERATION_PAYFAILED = "FailedOperation.PayFailed"
 //  FAILEDOPERATION_TAGDRYRUNERROR = "FailedOperation.TagDryRunError"
+//  FAILEDOPERATION_TRADECONFIGNOTFOUND = "FailedOperation.TradeConfigNotFound"
 //  INTERNALERROR_CAMAUTHFAILED = "InternalError.CamAuthFailed"
 //  INTERNALERROR_CHECKVIPSTATUSFAILED = "InternalError.CheckVipStatusFailed"
 //  INTERNALERROR_GETSUBNETFAILED = "InternalError.GetSubnetFailed"
@@ -578,6 +600,7 @@ func NewCreateDBInstanceResponse() (response *CreateDBInstanceResponse) {
 //  INVALIDPARAMETERVALUE_ILLEGALZONE = "InvalidParameterValue.IllegalZone"
 //  INVALIDPARAMETERVALUE_SPECIDILLEGAL = "InvalidParameterValue.SpecIdIllegal"
 //  UNAUTHORIZEDOPERATION_PERMISSIONDENIED = "UnauthorizedOperation.PermissionDenied"
+//  UNSUPPORTEDOPERATION_DBVERSIONNOTSUPPORTED = "UnsupportedOperation.DbVersionNotSupported"
 func (c *Client) CreateDBInstance(request *CreateDBInstanceRequest) (response *CreateDBInstanceResponse, err error) {
     return c.CreateDBInstanceWithContext(context.Background(), request)
 }
@@ -589,6 +612,7 @@ func (c *Client) CreateDBInstance(request *CreateDBInstanceRequest) (response *C
 //  FAILEDOPERATION_CREATEORDERFAILED = "FailedOperation.CreateOrderFailed"
 //  FAILEDOPERATION_PAYFAILED = "FailedOperation.PayFailed"
 //  FAILEDOPERATION_TAGDRYRUNERROR = "FailedOperation.TagDryRunError"
+//  FAILEDOPERATION_TRADECONFIGNOTFOUND = "FailedOperation.TradeConfigNotFound"
 //  INTERNALERROR_CAMAUTHFAILED = "InternalError.CamAuthFailed"
 //  INTERNALERROR_CHECKVIPSTATUSFAILED = "InternalError.CheckVipStatusFailed"
 //  INTERNALERROR_GETSUBNETFAILED = "InternalError.GetSubnetFailed"
@@ -603,10 +627,12 @@ func (c *Client) CreateDBInstance(request *CreateDBInstanceRequest) (response *C
 //  INVALIDPARAMETERVALUE_ILLEGALZONE = "InvalidParameterValue.IllegalZone"
 //  INVALIDPARAMETERVALUE_SPECIDILLEGAL = "InvalidParameterValue.SpecIdIllegal"
 //  UNAUTHORIZEDOPERATION_PERMISSIONDENIED = "UnauthorizedOperation.PermissionDenied"
+//  UNSUPPORTEDOPERATION_DBVERSIONNOTSUPPORTED = "UnsupportedOperation.DbVersionNotSupported"
 func (c *Client) CreateDBInstanceWithContext(ctx context.Context, request *CreateDBInstanceRequest) (response *CreateDBInstanceResponse, err error) {
     if request == nil {
         request = NewCreateDBInstanceRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "mariadb", APIVersion, "CreateDBInstance")
     
     if c.GetCredential() == nil {
         return nil, errors.New("CreateDBInstance require credential")
@@ -633,8 +659,9 @@ func NewCreateDedicatedClusterDBInstanceRequest() (request *CreateDedicatedClust
 func NewCreateDedicatedClusterDBInstanceResponse() (response *CreateDedicatedClusterDBInstanceResponse) {
     response = &CreateDedicatedClusterDBInstanceResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // CreateDedicatedClusterDBInstance
@@ -683,6 +710,7 @@ func (c *Client) CreateDedicatedClusterDBInstanceWithContext(ctx context.Context
     if request == nil {
         request = NewCreateDedicatedClusterDBInstanceRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "mariadb", APIVersion, "CreateDedicatedClusterDBInstance")
     
     if c.GetCredential() == nil {
         return nil, errors.New("CreateDedicatedClusterDBInstance require credential")
@@ -709,8 +737,9 @@ func NewCreateHourDBInstanceRequest() (request *CreateHourDBInstanceRequest) {
 func NewCreateHourDBInstanceResponse() (response *CreateHourDBInstanceResponse) {
     response = &CreateHourDBInstanceResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // CreateHourDBInstance
@@ -719,8 +748,10 @@ func NewCreateHourDBInstanceResponse() (response *CreateHourDBInstanceResponse) 
 // 可能返回的错误码:
 //  FAILEDOPERATION_CREATEORDERFAILED = "FailedOperation.CreateOrderFailed"
 //  FAILEDOPERATION_TAGDRYRUNERROR = "FailedOperation.TagDryRunError"
+//  FAILEDOPERATION_TRADECONFIGNOTFOUND = "FailedOperation.TradeConfigNotFound"
 //  FAILEDOPERATION_USERNOTAUTHED = "FailedOperation.UserNotAuthed"
 //  INTERNALERROR_CAMAUTHFAILED = "InternalError.CamAuthFailed"
+//  INTERNALERROR_CHECKVIPSTATUSFAILED = "InternalError.CheckVipStatusFailed"
 //  INTERNALERROR_GETSUBNETFAILED = "InternalError.GetSubnetFailed"
 //  INTERNALERROR_GETVPCFAILED = "InternalError.GetVpcFailed"
 //  INTERNALERROR_INNERSYSTEMERROR = "InternalError.InnerSystemError"
@@ -736,6 +767,7 @@ func NewCreateHourDBInstanceResponse() (response *CreateHourDBInstanceResponse) 
 //  INVALIDPARAMETERVALUE_SPECIDILLEGAL = "InvalidParameterValue.SpecIdIllegal"
 //  RESOURCEUNAVAILABLE_INSTANCESTATUSABNORMAL = "ResourceUnavailable.InstanceStatusAbnormal"
 //  UNAUTHORIZEDOPERATION_PERMISSIONDENIED = "UnauthorizedOperation.PermissionDenied"
+//  UNSUPPORTEDOPERATION_DBVERSIONNOTSUPPORTED = "UnsupportedOperation.DbVersionNotSupported"
 func (c *Client) CreateHourDBInstance(request *CreateHourDBInstanceRequest) (response *CreateHourDBInstanceResponse, err error) {
     return c.CreateHourDBInstanceWithContext(context.Background(), request)
 }
@@ -746,8 +778,10 @@ func (c *Client) CreateHourDBInstance(request *CreateHourDBInstanceRequest) (res
 // 可能返回的错误码:
 //  FAILEDOPERATION_CREATEORDERFAILED = "FailedOperation.CreateOrderFailed"
 //  FAILEDOPERATION_TAGDRYRUNERROR = "FailedOperation.TagDryRunError"
+//  FAILEDOPERATION_TRADECONFIGNOTFOUND = "FailedOperation.TradeConfigNotFound"
 //  FAILEDOPERATION_USERNOTAUTHED = "FailedOperation.UserNotAuthed"
 //  INTERNALERROR_CAMAUTHFAILED = "InternalError.CamAuthFailed"
+//  INTERNALERROR_CHECKVIPSTATUSFAILED = "InternalError.CheckVipStatusFailed"
 //  INTERNALERROR_GETSUBNETFAILED = "InternalError.GetSubnetFailed"
 //  INTERNALERROR_GETVPCFAILED = "InternalError.GetVpcFailed"
 //  INTERNALERROR_INNERSYSTEMERROR = "InternalError.InnerSystemError"
@@ -763,10 +797,12 @@ func (c *Client) CreateHourDBInstance(request *CreateHourDBInstanceRequest) (res
 //  INVALIDPARAMETERVALUE_SPECIDILLEGAL = "InvalidParameterValue.SpecIdIllegal"
 //  RESOURCEUNAVAILABLE_INSTANCESTATUSABNORMAL = "ResourceUnavailable.InstanceStatusAbnormal"
 //  UNAUTHORIZEDOPERATION_PERMISSIONDENIED = "UnauthorizedOperation.PermissionDenied"
+//  UNSUPPORTEDOPERATION_DBVERSIONNOTSUPPORTED = "UnsupportedOperation.DbVersionNotSupported"
 func (c *Client) CreateHourDBInstanceWithContext(ctx context.Context, request *CreateHourDBInstanceRequest) (response *CreateHourDBInstanceResponse, err error) {
     if request == nil {
         request = NewCreateHourDBInstanceRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "mariadb", APIVersion, "CreateHourDBInstance")
     
     if c.GetCredential() == nil {
         return nil, errors.New("CreateHourDBInstance require credential")
@@ -793,8 +829,9 @@ func NewCreateTmpInstancesRequest() (request *CreateTmpInstancesRequest) {
 func NewCreateTmpInstancesResponse() (response *CreateTmpInstancesResponse) {
     response = &CreateTmpInstancesResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // CreateTmpInstances
@@ -839,6 +876,7 @@ func (c *Client) CreateTmpInstancesWithContext(ctx context.Context, request *Cre
     if request == nil {
         request = NewCreateTmpInstancesRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "mariadb", APIVersion, "CreateTmpInstances")
     
     if c.GetCredential() == nil {
         return nil, errors.New("CreateTmpInstances require credential")
@@ -865,8 +903,9 @@ func NewDeleteAccountRequest() (request *DeleteAccountRequest) {
 func NewDeleteAccountResponse() (response *DeleteAccountResponse) {
     response = &DeleteAccountResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // DeleteAccount
@@ -903,6 +942,7 @@ func (c *Client) DeleteAccountWithContext(ctx context.Context, request *DeleteAc
     if request == nil {
         request = NewDeleteAccountRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "mariadb", APIVersion, "DeleteAccount")
     
     if c.GetCredential() == nil {
         return nil, errors.New("DeleteAccount require credential")
@@ -929,8 +969,9 @@ func NewDescribeAccountPrivilegesRequest() (request *DescribeAccountPrivilegesRe
 func NewDescribeAccountPrivilegesResponse() (response *DescribeAccountPrivilegesResponse) {
     response = &DescribeAccountPrivilegesResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // DescribeAccountPrivileges
@@ -969,6 +1010,7 @@ func (c *Client) DescribeAccountPrivilegesWithContext(ctx context.Context, reque
     if request == nil {
         request = NewDescribeAccountPrivilegesRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "mariadb", APIVersion, "DescribeAccountPrivileges")
     
     if c.GetCredential() == nil {
         return nil, errors.New("DescribeAccountPrivileges require credential")
@@ -995,8 +1037,9 @@ func NewDescribeAccountsRequest() (request *DescribeAccountsRequest) {
 func NewDescribeAccountsResponse() (response *DescribeAccountsResponse) {
     response = &DescribeAccountsResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // DescribeAccounts
@@ -1029,6 +1072,7 @@ func (c *Client) DescribeAccountsWithContext(ctx context.Context, request *Descr
     if request == nil {
         request = NewDescribeAccountsRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "mariadb", APIVersion, "DescribeAccounts")
     
     if c.GetCredential() == nil {
         return nil, errors.New("DescribeAccounts require credential")
@@ -1037,6 +1081,56 @@ func (c *Client) DescribeAccountsWithContext(ctx context.Context, request *Descr
     request.SetContext(ctx)
     
     response = NewDescribeAccountsResponse()
+    err = c.Send(request, response)
+    return
+}
+
+func NewDescribeBackupConfigsRequest() (request *DescribeBackupConfigsRequest) {
+    request = &DescribeBackupConfigsRequest{
+        BaseRequest: &tchttp.BaseRequest{},
+    }
+    
+    request.Init().WithApiInfo("mariadb", APIVersion, "DescribeBackupConfigs")
+    
+    
+    return
+}
+
+func NewDescribeBackupConfigsResponse() (response *DescribeBackupConfigsResponse) {
+    response = &DescribeBackupConfigsResponse{
+        BaseResponse: &tchttp.BaseResponse{},
+    } 
+    return
+
+}
+
+// DescribeBackupConfigs
+// 本接口(DescribeBackupConfigs)用于查询数据库备份配置信息。
+//
+// 可能返回的错误码:
+//  FAILEDOPERATION_OSSOPERATIONFAILED = "FailedOperation.OssOperationFailed"
+func (c *Client) DescribeBackupConfigs(request *DescribeBackupConfigsRequest) (response *DescribeBackupConfigsResponse, err error) {
+    return c.DescribeBackupConfigsWithContext(context.Background(), request)
+}
+
+// DescribeBackupConfigs
+// 本接口(DescribeBackupConfigs)用于查询数据库备份配置信息。
+//
+// 可能返回的错误码:
+//  FAILEDOPERATION_OSSOPERATIONFAILED = "FailedOperation.OssOperationFailed"
+func (c *Client) DescribeBackupConfigsWithContext(ctx context.Context, request *DescribeBackupConfigsRequest) (response *DescribeBackupConfigsResponse, err error) {
+    if request == nil {
+        request = NewDescribeBackupConfigsRequest()
+    }
+    c.InitBaseRequest(&request.BaseRequest, "mariadb", APIVersion, "DescribeBackupConfigs")
+    
+    if c.GetCredential() == nil {
+        return nil, errors.New("DescribeBackupConfigs require credential")
+    }
+
+    request.SetContext(ctx)
+    
+    response = NewDescribeBackupConfigsResponse()
     err = c.Send(request, response)
     return
 }
@@ -1055,14 +1149,16 @@ func NewDescribeBackupFilesRequest() (request *DescribeBackupFilesRequest) {
 func NewDescribeBackupFilesResponse() (response *DescribeBackupFilesResponse) {
     response = &DescribeBackupFilesResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // DescribeBackupFiles
 // 本接口(DescribeBackupFiles)用于查看备份文件列表。
 //
 // 可能返回的错误码:
+//  INTERNALERROR_INNERSYSTEMERROR = "InternalError.InnerSystemError"
 //  INVALIDPARAMETER_ACTIONNOTFOUND = "InvalidParameter.ActionNotFound"
 //  UNAUTHORIZEDOPERATION_PERMISSIONDENIED = "UnauthorizedOperation.PermissionDenied"
 func (c *Client) DescribeBackupFiles(request *DescribeBackupFilesRequest) (response *DescribeBackupFilesResponse, err error) {
@@ -1073,12 +1169,14 @@ func (c *Client) DescribeBackupFiles(request *DescribeBackupFilesRequest) (respo
 // 本接口(DescribeBackupFiles)用于查看备份文件列表。
 //
 // 可能返回的错误码:
+//  INTERNALERROR_INNERSYSTEMERROR = "InternalError.InnerSystemError"
 //  INVALIDPARAMETER_ACTIONNOTFOUND = "InvalidParameter.ActionNotFound"
 //  UNAUTHORIZEDOPERATION_PERMISSIONDENIED = "UnauthorizedOperation.PermissionDenied"
 func (c *Client) DescribeBackupFilesWithContext(ctx context.Context, request *DescribeBackupFilesRequest) (response *DescribeBackupFilesResponse, err error) {
     if request == nil {
         request = NewDescribeBackupFilesRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "mariadb", APIVersion, "DescribeBackupFiles")
     
     if c.GetCredential() == nil {
         return nil, errors.New("DescribeBackupFiles require credential")
@@ -1105,8 +1203,9 @@ func NewDescribeBackupTimeRequest() (request *DescribeBackupTimeRequest) {
 func NewDescribeBackupTimeResponse() (response *DescribeBackupTimeResponse) {
     response = &DescribeBackupTimeResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // DescribeBackupTime
@@ -1139,6 +1238,7 @@ func (c *Client) DescribeBackupTimeWithContext(ctx context.Context, request *Des
     if request == nil {
         request = NewDescribeBackupTimeRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "mariadb", APIVersion, "DescribeBackupTime")
     
     if c.GetCredential() == nil {
         return nil, errors.New("DescribeBackupTime require credential")
@@ -1147,6 +1247,76 @@ func (c *Client) DescribeBackupTimeWithContext(ctx context.Context, request *Des
     request.SetContext(ctx)
     
     response = NewDescribeBackupTimeResponse()
+    err = c.Send(request, response)
+    return
+}
+
+func NewDescribeBinlogTimeRequest() (request *DescribeBinlogTimeRequest) {
+    request = &DescribeBinlogTimeRequest{
+        BaseRequest: &tchttp.BaseRequest{},
+    }
+    
+    request.Init().WithApiInfo("mariadb", APIVersion, "DescribeBinlogTime")
+    
+    
+    return
+}
+
+func NewDescribeBinlogTimeResponse() (response *DescribeBinlogTimeResponse) {
+    response = &DescribeBinlogTimeResponse{
+        BaseResponse: &tchttp.BaseResponse{},
+    } 
+    return
+
+}
+
+// DescribeBinlogTime
+// 本接口（DescribeBinlogTime）用于查询可回档时间范围。
+//
+// 可能返回的错误码:
+//  FAILEDOPERATION_LOGNOTEXISTED = "FailedOperation.LogNotExisted"
+//  FAILEDOPERATION_OSSOPERATIONFAILED = "FailedOperation.OssOperationFailed"
+//  INTERNALERROR = "InternalError"
+//  INTERNALERROR_DBOPERATIONFAILED = "InternalError.DbOperationFailed"
+//  INTERNALERROR_GETVPCFAILED = "InternalError.GetVpcFailed"
+//  INVALIDPARAMETER = "InvalidParameter"
+//  INVALIDPARAMETER_ACTIONNOTFOUND = "InvalidParameter.ActionNotFound"
+//  INVALIDPARAMETER_INSTANCENOTFOUND = "InvalidParameter.InstanceNotFound"
+//  INVALIDPARAMETER_PERMISSIONDENIED = "InvalidParameter.PermissionDenied"
+//  RESOURCEUNAVAILABLE_INSTANCESTATUSABNORMAL = "ResourceUnavailable.InstanceStatusAbnormal"
+//  UNAUTHORIZEDOPERATION_PERMISSIONDENIED = "UnauthorizedOperation.PermissionDenied"
+func (c *Client) DescribeBinlogTime(request *DescribeBinlogTimeRequest) (response *DescribeBinlogTimeResponse, err error) {
+    return c.DescribeBinlogTimeWithContext(context.Background(), request)
+}
+
+// DescribeBinlogTime
+// 本接口（DescribeBinlogTime）用于查询可回档时间范围。
+//
+// 可能返回的错误码:
+//  FAILEDOPERATION_LOGNOTEXISTED = "FailedOperation.LogNotExisted"
+//  FAILEDOPERATION_OSSOPERATIONFAILED = "FailedOperation.OssOperationFailed"
+//  INTERNALERROR = "InternalError"
+//  INTERNALERROR_DBOPERATIONFAILED = "InternalError.DbOperationFailed"
+//  INTERNALERROR_GETVPCFAILED = "InternalError.GetVpcFailed"
+//  INVALIDPARAMETER = "InvalidParameter"
+//  INVALIDPARAMETER_ACTIONNOTFOUND = "InvalidParameter.ActionNotFound"
+//  INVALIDPARAMETER_INSTANCENOTFOUND = "InvalidParameter.InstanceNotFound"
+//  INVALIDPARAMETER_PERMISSIONDENIED = "InvalidParameter.PermissionDenied"
+//  RESOURCEUNAVAILABLE_INSTANCESTATUSABNORMAL = "ResourceUnavailable.InstanceStatusAbnormal"
+//  UNAUTHORIZEDOPERATION_PERMISSIONDENIED = "UnauthorizedOperation.PermissionDenied"
+func (c *Client) DescribeBinlogTimeWithContext(ctx context.Context, request *DescribeBinlogTimeRequest) (response *DescribeBinlogTimeResponse, err error) {
+    if request == nil {
+        request = NewDescribeBinlogTimeRequest()
+    }
+    c.InitBaseRequest(&request.BaseRequest, "mariadb", APIVersion, "DescribeBinlogTime")
+    
+    if c.GetCredential() == nil {
+        return nil, errors.New("DescribeBinlogTime require credential")
+    }
+
+    request.SetContext(ctx)
+    
+    response = NewDescribeBinlogTimeResponse()
     err = c.Send(request, response)
     return
 }
@@ -1165,8 +1335,9 @@ func NewDescribeDBEncryptAttributesRequest() (request *DescribeDBEncryptAttribut
 func NewDescribeDBEncryptAttributesResponse() (response *DescribeDBEncryptAttributesResponse) {
     response = &DescribeDBEncryptAttributesResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // DescribeDBEncryptAttributes
@@ -1180,6 +1351,7 @@ func NewDescribeDBEncryptAttributesResponse() (response *DescribeDBEncryptAttrib
 //  INVALIDPARAMETER = "InvalidParameter"
 //  INVALIDPARAMETER_INSTANCENOTFOUND = "InvalidParameter.InstanceNotFound"
 //  RESOURCEUNAVAILABLE_INSTANCESTATUSABNORMAL = "ResourceUnavailable.InstanceStatusAbnormal"
+//  UNAUTHORIZEDOPERATION_PERMISSIONDENIED = "UnauthorizedOperation.PermissionDenied"
 //  UNSUPPORTEDOPERATION_INVALIDOPERATION = "UnsupportedOperation.InvalidOperation"
 func (c *Client) DescribeDBEncryptAttributes(request *DescribeDBEncryptAttributesRequest) (response *DescribeDBEncryptAttributesResponse, err error) {
     return c.DescribeDBEncryptAttributesWithContext(context.Background(), request)
@@ -1196,11 +1368,13 @@ func (c *Client) DescribeDBEncryptAttributes(request *DescribeDBEncryptAttribute
 //  INVALIDPARAMETER = "InvalidParameter"
 //  INVALIDPARAMETER_INSTANCENOTFOUND = "InvalidParameter.InstanceNotFound"
 //  RESOURCEUNAVAILABLE_INSTANCESTATUSABNORMAL = "ResourceUnavailable.InstanceStatusAbnormal"
+//  UNAUTHORIZEDOPERATION_PERMISSIONDENIED = "UnauthorizedOperation.PermissionDenied"
 //  UNSUPPORTEDOPERATION_INVALIDOPERATION = "UnsupportedOperation.InvalidOperation"
 func (c *Client) DescribeDBEncryptAttributesWithContext(ctx context.Context, request *DescribeDBEncryptAttributesRequest) (response *DescribeDBEncryptAttributesResponse, err error) {
     if request == nil {
         request = NewDescribeDBEncryptAttributesRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "mariadb", APIVersion, "DescribeDBEncryptAttributes")
     
     if c.GetCredential() == nil {
         return nil, errors.New("DescribeDBEncryptAttributes require credential")
@@ -1227,14 +1401,16 @@ func NewDescribeDBInstanceDetailRequest() (request *DescribeDBInstanceDetailRequ
 func NewDescribeDBInstanceDetailResponse() (response *DescribeDBInstanceDetailResponse) {
     response = &DescribeDBInstanceDetailResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // DescribeDBInstanceDetail
 // 本接口(DescribeDBInstanceDetail)用于查询指定实例的详细信息。
 //
 // 可能返回的错误码:
+//  FAILEDOPERATION_TRADECONFIGNOTFOUND = "FailedOperation.TradeConfigNotFound"
 //  INTERNALERROR_DBOPERATIONFAILED = "InternalError.DbOperationFailed"
 //  INTERNALERROR_GETINSTANCEDETAILFAILED = "InternalError.GetInstanceDetailFailed"
 //  INTERNALERROR_GETSUBNETFAILED = "InternalError.GetSubnetFailed"
@@ -1249,6 +1425,7 @@ func (c *Client) DescribeDBInstanceDetail(request *DescribeDBInstanceDetailReque
 // 本接口(DescribeDBInstanceDetail)用于查询指定实例的详细信息。
 //
 // 可能返回的错误码:
+//  FAILEDOPERATION_TRADECONFIGNOTFOUND = "FailedOperation.TradeConfigNotFound"
 //  INTERNALERROR_DBOPERATIONFAILED = "InternalError.DbOperationFailed"
 //  INTERNALERROR_GETINSTANCEDETAILFAILED = "InternalError.GetInstanceDetailFailed"
 //  INTERNALERROR_GETSUBNETFAILED = "InternalError.GetSubnetFailed"
@@ -1259,6 +1436,7 @@ func (c *Client) DescribeDBInstanceDetailWithContext(ctx context.Context, reques
     if request == nil {
         request = NewDescribeDBInstanceDetailRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "mariadb", APIVersion, "DescribeDBInstanceDetail")
     
     if c.GetCredential() == nil {
         return nil, errors.New("DescribeDBInstanceDetail require credential")
@@ -1285,8 +1463,9 @@ func NewDescribeDBInstanceSpecsRequest() (request *DescribeDBInstanceSpecsReques
 func NewDescribeDBInstanceSpecsResponse() (response *DescribeDBInstanceSpecsResponse) {
     response = &DescribeDBInstanceSpecsResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // DescribeDBInstanceSpecs
@@ -1313,6 +1492,7 @@ func (c *Client) DescribeDBInstanceSpecsWithContext(ctx context.Context, request
     if request == nil {
         request = NewDescribeDBInstanceSpecsRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "mariadb", APIVersion, "DescribeDBInstanceSpecs")
     
     if c.GetCredential() == nil {
         return nil, errors.New("DescribeDBInstanceSpecs require credential")
@@ -1339,8 +1519,9 @@ func NewDescribeDBInstancesRequest() (request *DescribeDBInstancesRequest) {
 func NewDescribeDBInstancesResponse() (response *DescribeDBInstancesResponse) {
     response = &DescribeDBInstancesResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // DescribeDBInstances
@@ -1381,6 +1562,7 @@ func (c *Client) DescribeDBInstancesWithContext(ctx context.Context, request *De
     if request == nil {
         request = NewDescribeDBInstancesRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "mariadb", APIVersion, "DescribeDBInstances")
     
     if c.GetCredential() == nil {
         return nil, errors.New("DescribeDBInstances require credential")
@@ -1407,8 +1589,9 @@ func NewDescribeDBLogFilesRequest() (request *DescribeDBLogFilesRequest) {
 func NewDescribeDBLogFilesResponse() (response *DescribeDBLogFilesResponse) {
     response = &DescribeDBLogFilesResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // DescribeDBLogFiles
@@ -1453,6 +1636,7 @@ func (c *Client) DescribeDBLogFilesWithContext(ctx context.Context, request *Des
     if request == nil {
         request = NewDescribeDBLogFilesRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "mariadb", APIVersion, "DescribeDBLogFiles")
     
     if c.GetCredential() == nil {
         return nil, errors.New("DescribeDBLogFiles require credential")
@@ -1479,8 +1663,9 @@ func NewDescribeDBParametersRequest() (request *DescribeDBParametersRequest) {
 func NewDescribeDBParametersResponse() (response *DescribeDBParametersResponse) {
     response = &DescribeDBParametersResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // DescribeDBParameters
@@ -1515,6 +1700,7 @@ func (c *Client) DescribeDBParametersWithContext(ctx context.Context, request *D
     if request == nil {
         request = NewDescribeDBParametersRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "mariadb", APIVersion, "DescribeDBParameters")
     
     if c.GetCredential() == nil {
         return nil, errors.New("DescribeDBParameters require credential")
@@ -1541,8 +1727,9 @@ func NewDescribeDBSecurityGroupsRequest() (request *DescribeDBSecurityGroupsRequ
 func NewDescribeDBSecurityGroupsResponse() (response *DescribeDBSecurityGroupsResponse) {
     response = &DescribeDBSecurityGroupsResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // DescribeDBSecurityGroups
@@ -1551,6 +1738,8 @@ func NewDescribeDBSecurityGroupsResponse() (response *DescribeDBSecurityGroupsRe
 // 可能返回的错误码:
 //  AUTHFAILURE = "AuthFailure"
 //  FAILEDOPERATION_AUTHNOSTRATEGY = "FailedOperation.AuthNoStrategy"
+//  FAILEDOPERATION_GETSECURITYGROUPDETAILFAILED = "FailedOperation.GetSecurityGroupDetailFailed"
+//  FAILEDOPERATION_SGOPERATIONFAILED = "FailedOperation.SGOperationFailed"
 //  INTERNALERROR_GETSECURITYGROUPDETAILFAILED = "InternalError.GetSecurityGroupDetailFailed"
 //  INTERNALERROR_INSTANCEOPERATEPERMISSIONERROR = "InternalError.InstanceOperatePermissionError"
 //  INTERNALERROR_LISTINSTANCERESPRESOURCECOUNTNOTMATCHERROR = "InternalError.ListInstanceRespResourceCountNotMatchError"
@@ -1577,6 +1766,8 @@ func (c *Client) DescribeDBSecurityGroups(request *DescribeDBSecurityGroupsReque
 // 可能返回的错误码:
 //  AUTHFAILURE = "AuthFailure"
 //  FAILEDOPERATION_AUTHNOSTRATEGY = "FailedOperation.AuthNoStrategy"
+//  FAILEDOPERATION_GETSECURITYGROUPDETAILFAILED = "FailedOperation.GetSecurityGroupDetailFailed"
+//  FAILEDOPERATION_SGOPERATIONFAILED = "FailedOperation.SGOperationFailed"
 //  INTERNALERROR_GETSECURITYGROUPDETAILFAILED = "InternalError.GetSecurityGroupDetailFailed"
 //  INTERNALERROR_INSTANCEOPERATEPERMISSIONERROR = "InternalError.InstanceOperatePermissionError"
 //  INTERNALERROR_LISTINSTANCERESPRESOURCECOUNTNOTMATCHERROR = "InternalError.ListInstanceRespResourceCountNotMatchError"
@@ -1597,6 +1788,7 @@ func (c *Client) DescribeDBSecurityGroupsWithContext(ctx context.Context, reques
     if request == nil {
         request = NewDescribeDBSecurityGroupsRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "mariadb", APIVersion, "DescribeDBSecurityGroups")
     
     if c.GetCredential() == nil {
         return nil, errors.New("DescribeDBSecurityGroups require credential")
@@ -1623,8 +1815,9 @@ func NewDescribeDBSlowLogsRequest() (request *DescribeDBSlowLogsRequest) {
 func NewDescribeDBSlowLogsResponse() (response *DescribeDBSlowLogsResponse) {
     response = &DescribeDBSlowLogsResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // DescribeDBSlowLogs
@@ -1663,6 +1856,7 @@ func (c *Client) DescribeDBSlowLogsWithContext(ctx context.Context, request *Des
     if request == nil {
         request = NewDescribeDBSlowLogsRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "mariadb", APIVersion, "DescribeDBSlowLogs")
     
     if c.GetCredential() == nil {
         return nil, errors.New("DescribeDBSlowLogs require credential")
@@ -1671,6 +1865,128 @@ func (c *Client) DescribeDBSlowLogsWithContext(ctx context.Context, request *Des
     request.SetContext(ctx)
     
     response = NewDescribeDBSlowLogsResponse()
+    err = c.Send(request, response)
+    return
+}
+
+func NewDescribeDBSyncModeRequest() (request *DescribeDBSyncModeRequest) {
+    request = &DescribeDBSyncModeRequest{
+        BaseRequest: &tchttp.BaseRequest{},
+    }
+    
+    request.Init().WithApiInfo("mariadb", APIVersion, "DescribeDBSyncMode")
+    
+    
+    return
+}
+
+func NewDescribeDBSyncModeResponse() (response *DescribeDBSyncModeResponse) {
+    response = &DescribeDBSyncModeResponse{
+        BaseResponse: &tchttp.BaseResponse{},
+    } 
+    return
+
+}
+
+// DescribeDBSyncMode
+// 本接口（DescribeDBSyncMode）用于查询云数据库实例的同步模式。
+//
+// 可能返回的错误码:
+//  FAILEDOPERATION_OSSOPERATIONFAILED = "FailedOperation.OssOperationFailed"
+//  INTERNALERROR_CAMAUTHFAILED = "InternalError.CamAuthFailed"
+//  INTERNALERROR_DBOPERATIONFAILED = "InternalError.DbOperationFailed"
+//  INTERNALERROR_GETINSTANCEDETAILFAILED = "InternalError.GetInstanceDetailFailed"
+//  INTERNALERROR_INNERSYSTEMERROR = "InternalError.InnerSystemError"
+//  INVALIDPARAMETER_GENERICPARAMETERERROR = "InvalidParameter.GenericParameterError"
+//  INVALIDPARAMETER_INSTANCENOTFOUND = "InvalidParameter.InstanceNotFound"
+//  RESOURCEUNAVAILABLE_INSTANCESTATUSABNORMAL = "ResourceUnavailable.InstanceStatusAbnormal"
+//  UNAUTHORIZEDOPERATION_PERMISSIONDENIED = "UnauthorizedOperation.PermissionDenied"
+func (c *Client) DescribeDBSyncMode(request *DescribeDBSyncModeRequest) (response *DescribeDBSyncModeResponse, err error) {
+    return c.DescribeDBSyncModeWithContext(context.Background(), request)
+}
+
+// DescribeDBSyncMode
+// 本接口（DescribeDBSyncMode）用于查询云数据库实例的同步模式。
+//
+// 可能返回的错误码:
+//  FAILEDOPERATION_OSSOPERATIONFAILED = "FailedOperation.OssOperationFailed"
+//  INTERNALERROR_CAMAUTHFAILED = "InternalError.CamAuthFailed"
+//  INTERNALERROR_DBOPERATIONFAILED = "InternalError.DbOperationFailed"
+//  INTERNALERROR_GETINSTANCEDETAILFAILED = "InternalError.GetInstanceDetailFailed"
+//  INTERNALERROR_INNERSYSTEMERROR = "InternalError.InnerSystemError"
+//  INVALIDPARAMETER_GENERICPARAMETERERROR = "InvalidParameter.GenericParameterError"
+//  INVALIDPARAMETER_INSTANCENOTFOUND = "InvalidParameter.InstanceNotFound"
+//  RESOURCEUNAVAILABLE_INSTANCESTATUSABNORMAL = "ResourceUnavailable.InstanceStatusAbnormal"
+//  UNAUTHORIZEDOPERATION_PERMISSIONDENIED = "UnauthorizedOperation.PermissionDenied"
+func (c *Client) DescribeDBSyncModeWithContext(ctx context.Context, request *DescribeDBSyncModeRequest) (response *DescribeDBSyncModeResponse, err error) {
+    if request == nil {
+        request = NewDescribeDBSyncModeRequest()
+    }
+    c.InitBaseRequest(&request.BaseRequest, "mariadb", APIVersion, "DescribeDBSyncMode")
+    
+    if c.GetCredential() == nil {
+        return nil, errors.New("DescribeDBSyncMode require credential")
+    }
+
+    request.SetContext(ctx)
+    
+    response = NewDescribeDBSyncModeResponse()
+    err = c.Send(request, response)
+    return
+}
+
+func NewDescribeDBTmpInstancesRequest() (request *DescribeDBTmpInstancesRequest) {
+    request = &DescribeDBTmpInstancesRequest{
+        BaseRequest: &tchttp.BaseRequest{},
+    }
+    
+    request.Init().WithApiInfo("mariadb", APIVersion, "DescribeDBTmpInstances")
+    
+    
+    return
+}
+
+func NewDescribeDBTmpInstancesResponse() (response *DescribeDBTmpInstancesResponse) {
+    response = &DescribeDBTmpInstancesResponse{
+        BaseResponse: &tchttp.BaseResponse{},
+    } 
+    return
+
+}
+
+// DescribeDBTmpInstances
+// 本接口（DescribeDBTmpInstances）用于获取实例回档生成的临时实例
+//
+// 可能返回的错误码:
+//  INTERNALERROR_DBOPERATIONFAILED = "InternalError.DbOperationFailed"
+//  INVALIDPARAMETER = "InvalidParameter"
+//  INVALIDPARAMETER_INSTANCENOTFOUND = "InvalidParameter.InstanceNotFound"
+//  UNAUTHORIZEDOPERATION_PERMISSIONDENIED = "UnauthorizedOperation.PermissionDenied"
+func (c *Client) DescribeDBTmpInstances(request *DescribeDBTmpInstancesRequest) (response *DescribeDBTmpInstancesResponse, err error) {
+    return c.DescribeDBTmpInstancesWithContext(context.Background(), request)
+}
+
+// DescribeDBTmpInstances
+// 本接口（DescribeDBTmpInstances）用于获取实例回档生成的临时实例
+//
+// 可能返回的错误码:
+//  INTERNALERROR_DBOPERATIONFAILED = "InternalError.DbOperationFailed"
+//  INVALIDPARAMETER = "InvalidParameter"
+//  INVALIDPARAMETER_INSTANCENOTFOUND = "InvalidParameter.InstanceNotFound"
+//  UNAUTHORIZEDOPERATION_PERMISSIONDENIED = "UnauthorizedOperation.PermissionDenied"
+func (c *Client) DescribeDBTmpInstancesWithContext(ctx context.Context, request *DescribeDBTmpInstancesRequest) (response *DescribeDBTmpInstancesResponse, err error) {
+    if request == nil {
+        request = NewDescribeDBTmpInstancesRequest()
+    }
+    c.InitBaseRequest(&request.BaseRequest, "mariadb", APIVersion, "DescribeDBTmpInstances")
+    
+    if c.GetCredential() == nil {
+        return nil, errors.New("DescribeDBTmpInstances require credential")
+    }
+
+    request.SetContext(ctx)
+    
+    response = NewDescribeDBTmpInstancesResponse()
     err = c.Send(request, response)
     return
 }
@@ -1689,8 +2005,9 @@ func NewDescribeDatabaseObjectsRequest() (request *DescribeDatabaseObjectsReques
 func NewDescribeDatabaseObjectsResponse() (response *DescribeDatabaseObjectsResponse) {
     response = &DescribeDatabaseObjectsResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // DescribeDatabaseObjects
@@ -1721,6 +2038,7 @@ func (c *Client) DescribeDatabaseObjectsWithContext(ctx context.Context, request
     if request == nil {
         request = NewDescribeDatabaseObjectsRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "mariadb", APIVersion, "DescribeDatabaseObjects")
     
     if c.GetCredential() == nil {
         return nil, errors.New("DescribeDatabaseObjects require credential")
@@ -1747,8 +2065,9 @@ func NewDescribeDatabaseTableRequest() (request *DescribeDatabaseTableRequest) {
 func NewDescribeDatabaseTableResponse() (response *DescribeDatabaseTableResponse) {
     response = &DescribeDatabaseTableResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // DescribeDatabaseTable
@@ -1781,6 +2100,7 @@ func (c *Client) DescribeDatabaseTableWithContext(ctx context.Context, request *
     if request == nil {
         request = NewDescribeDatabaseTableRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "mariadb", APIVersion, "DescribeDatabaseTable")
     
     if c.GetCredential() == nil {
         return nil, errors.New("DescribeDatabaseTable require credential")
@@ -1807,8 +2127,9 @@ func NewDescribeDatabasesRequest() (request *DescribeDatabasesRequest) {
 func NewDescribeDatabasesResponse() (response *DescribeDatabasesResponse) {
     response = &DescribeDatabasesResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // DescribeDatabases
@@ -1837,6 +2158,7 @@ func (c *Client) DescribeDatabasesWithContext(ctx context.Context, request *Desc
     if request == nil {
         request = NewDescribeDatabasesRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "mariadb", APIVersion, "DescribeDatabases")
     
     if c.GetCredential() == nil {
         return nil, errors.New("DescribeDatabases require credential")
@@ -1863,8 +2185,9 @@ func NewDescribeDcnDetailRequest() (request *DescribeDcnDetailRequest) {
 func NewDescribeDcnDetailResponse() (response *DescribeDcnDetailResponse) {
     response = &DescribeDcnDetailResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // DescribeDcnDetail
@@ -1895,6 +2218,7 @@ func (c *Client) DescribeDcnDetailWithContext(ctx context.Context, request *Desc
     if request == nil {
         request = NewDescribeDcnDetailRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "mariadb", APIVersion, "DescribeDcnDetail")
     
     if c.GetCredential() == nil {
         return nil, errors.New("DescribeDcnDetail require credential")
@@ -1921,8 +2245,9 @@ func NewDescribeFileDownloadUrlRequest() (request *DescribeFileDownloadUrlReques
 func NewDescribeFileDownloadUrlResponse() (response *DescribeFileDownloadUrlResponse) {
     response = &DescribeFileDownloadUrlResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // DescribeFileDownloadUrl
@@ -1951,6 +2276,7 @@ func (c *Client) DescribeFileDownloadUrlWithContext(ctx context.Context, request
     if request == nil {
         request = NewDescribeFileDownloadUrlRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "mariadb", APIVersion, "DescribeFileDownloadUrl")
     
     if c.GetCredential() == nil {
         return nil, errors.New("DescribeFileDownloadUrl require credential")
@@ -1977,8 +2303,9 @@ func NewDescribeFlowRequest() (request *DescribeFlowRequest) {
 func NewDescribeFlowResponse() (response *DescribeFlowResponse) {
     response = &DescribeFlowResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // DescribeFlow
@@ -2007,6 +2334,7 @@ func (c *Client) DescribeFlowWithContext(ctx context.Context, request *DescribeF
     if request == nil {
         request = NewDescribeFlowRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "mariadb", APIVersion, "DescribeFlow")
     
     if c.GetCredential() == nil {
         return nil, errors.New("DescribeFlow require credential")
@@ -2033,8 +2361,9 @@ func NewDescribeInstanceNodeInfoRequest() (request *DescribeInstanceNodeInfoRequ
 func NewDescribeInstanceNodeInfoResponse() (response *DescribeInstanceNodeInfoResponse) {
     response = &DescribeInstanceNodeInfoResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // DescribeInstanceNodeInfo
@@ -2059,6 +2388,7 @@ func (c *Client) DescribeInstanceNodeInfoWithContext(ctx context.Context, reques
     if request == nil {
         request = NewDescribeInstanceNodeInfoRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "mariadb", APIVersion, "DescribeInstanceNodeInfo")
     
     if c.GetCredential() == nil {
         return nil, errors.New("DescribeInstanceNodeInfo require credential")
@@ -2067,6 +2397,66 @@ func (c *Client) DescribeInstanceNodeInfoWithContext(ctx context.Context, reques
     request.SetContext(ctx)
     
     response = NewDescribeInstanceNodeInfoResponse()
+    err = c.Send(request, response)
+    return
+}
+
+func NewDescribeInstanceSSLAttributesRequest() (request *DescribeInstanceSSLAttributesRequest) {
+    request = &DescribeInstanceSSLAttributesRequest{
+        BaseRequest: &tchttp.BaseRequest{},
+    }
+    
+    request.Init().WithApiInfo("mariadb", APIVersion, "DescribeInstanceSSLAttributes")
+    
+    
+    return
+}
+
+func NewDescribeInstanceSSLAttributesResponse() (response *DescribeInstanceSSLAttributesResponse) {
+    response = &DescribeInstanceSSLAttributesResponse{
+        BaseResponse: &tchttp.BaseResponse{},
+    } 
+    return
+
+}
+
+// DescribeInstanceSSLAttributes
+// 本接口（DescribeInstanceSSLAttributes）用于拉取实例SSL认证属性
+//
+// 可能返回的错误码:
+//  FAILEDOPERATION_OSSOPERATIONFAILED = "FailedOperation.OssOperationFailed"
+//  INTERNALERROR_DBOPERATIONFAILED = "InternalError.DbOperationFailed"
+//  INVALIDPARAMETER_INSTANCENOTFOUND = "InvalidParameter.InstanceNotFound"
+//  RESOURCEUNAVAILABLE_INSTANCEALREADYDELETED = "ResourceUnavailable.InstanceAlreadyDeleted"
+//  RESOURCEUNAVAILABLE_INSTANCESTATUSABNORMAL = "ResourceUnavailable.InstanceStatusAbnormal"
+//  UNAUTHORIZEDOPERATION_PERMISSIONDENIED = "UnauthorizedOperation.PermissionDenied"
+func (c *Client) DescribeInstanceSSLAttributes(request *DescribeInstanceSSLAttributesRequest) (response *DescribeInstanceSSLAttributesResponse, err error) {
+    return c.DescribeInstanceSSLAttributesWithContext(context.Background(), request)
+}
+
+// DescribeInstanceSSLAttributes
+// 本接口（DescribeInstanceSSLAttributes）用于拉取实例SSL认证属性
+//
+// 可能返回的错误码:
+//  FAILEDOPERATION_OSSOPERATIONFAILED = "FailedOperation.OssOperationFailed"
+//  INTERNALERROR_DBOPERATIONFAILED = "InternalError.DbOperationFailed"
+//  INVALIDPARAMETER_INSTANCENOTFOUND = "InvalidParameter.InstanceNotFound"
+//  RESOURCEUNAVAILABLE_INSTANCEALREADYDELETED = "ResourceUnavailable.InstanceAlreadyDeleted"
+//  RESOURCEUNAVAILABLE_INSTANCESTATUSABNORMAL = "ResourceUnavailable.InstanceStatusAbnormal"
+//  UNAUTHORIZEDOPERATION_PERMISSIONDENIED = "UnauthorizedOperation.PermissionDenied"
+func (c *Client) DescribeInstanceSSLAttributesWithContext(ctx context.Context, request *DescribeInstanceSSLAttributesRequest) (response *DescribeInstanceSSLAttributesResponse, err error) {
+    if request == nil {
+        request = NewDescribeInstanceSSLAttributesRequest()
+    }
+    c.InitBaseRequest(&request.BaseRequest, "mariadb", APIVersion, "DescribeInstanceSSLAttributes")
+    
+    if c.GetCredential() == nil {
+        return nil, errors.New("DescribeInstanceSSLAttributes require credential")
+    }
+
+    request.SetContext(ctx)
+    
+    response = NewDescribeInstanceSSLAttributesResponse()
     err = c.Send(request, response)
     return
 }
@@ -2085,8 +2475,9 @@ func NewDescribeLogFileRetentionPeriodRequest() (request *DescribeLogFileRetenti
 func NewDescribeLogFileRetentionPeriodResponse() (response *DescribeLogFileRetentionPeriodResponse) {
     response = &DescribeLogFileRetentionPeriodResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // DescribeLogFileRetentionPeriod
@@ -2119,6 +2510,7 @@ func (c *Client) DescribeLogFileRetentionPeriodWithContext(ctx context.Context, 
     if request == nil {
         request = NewDescribeLogFileRetentionPeriodRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "mariadb", APIVersion, "DescribeLogFileRetentionPeriod")
     
     if c.GetCredential() == nil {
         return nil, errors.New("DescribeLogFileRetentionPeriod require credential")
@@ -2145,8 +2537,9 @@ func NewDescribeOrdersRequest() (request *DescribeOrdersRequest) {
 func NewDescribeOrdersResponse() (response *DescribeOrdersResponse) {
     response = &DescribeOrdersResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // DescribeOrders
@@ -2175,6 +2568,7 @@ func (c *Client) DescribeOrdersWithContext(ctx context.Context, request *Describ
     if request == nil {
         request = NewDescribeOrdersRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "mariadb", APIVersion, "DescribeOrders")
     
     if c.GetCredential() == nil {
         return nil, errors.New("DescribeOrders require credential")
@@ -2201,14 +2595,16 @@ func NewDescribePriceRequest() (request *DescribePriceRequest) {
 func NewDescribePriceResponse() (response *DescribePriceResponse) {
     response = &DescribePriceResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // DescribePrice
 // 本接口（DescribePrice）用于在购买实例前，查询实例的价格。
 //
 // 可能返回的错误码:
+//  FAILEDOPERATION_TRADECONFIGNOTFOUND = "FailedOperation.TradeConfigNotFound"
 //  INTERNALERROR_CAMAUTHFAILED = "InternalError.CamAuthFailed"
 //  INTERNALERROR_QUERYPRICEFAILED = "InternalError.QueryPriceFailed"
 //  INVALIDPARAMETER_GENERICPARAMETERERROR = "InvalidParameter.GenericParameterError"
@@ -2225,6 +2621,7 @@ func (c *Client) DescribePrice(request *DescribePriceRequest) (response *Describ
 // 本接口（DescribePrice）用于在购买实例前，查询实例的价格。
 //
 // 可能返回的错误码:
+//  FAILEDOPERATION_TRADECONFIGNOTFOUND = "FailedOperation.TradeConfigNotFound"
 //  INTERNALERROR_CAMAUTHFAILED = "InternalError.CamAuthFailed"
 //  INTERNALERROR_QUERYPRICEFAILED = "InternalError.QueryPriceFailed"
 //  INVALIDPARAMETER_GENERICPARAMETERERROR = "InvalidParameter.GenericParameterError"
@@ -2237,6 +2634,7 @@ func (c *Client) DescribePriceWithContext(ctx context.Context, request *Describe
     if request == nil {
         request = NewDescribePriceRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "mariadb", APIVersion, "DescribePrice")
     
     if c.GetCredential() == nil {
         return nil, errors.New("DescribePrice require credential")
@@ -2245,6 +2643,74 @@ func (c *Client) DescribePriceWithContext(ctx context.Context, request *Describe
     request.SetContext(ctx)
     
     response = NewDescribePriceResponse()
+    err = c.Send(request, response)
+    return
+}
+
+func NewDescribeProcessListRequest() (request *DescribeProcessListRequest) {
+    request = &DescribeProcessListRequest{
+        BaseRequest: &tchttp.BaseRequest{},
+    }
+    
+    request.Init().WithApiInfo("mariadb", APIVersion, "DescribeProcessList")
+    
+    
+    return
+}
+
+func NewDescribeProcessListResponse() (response *DescribeProcessListResponse) {
+    response = &DescribeProcessListResponse{
+        BaseResponse: &tchttp.BaseResponse{},
+    } 
+    return
+
+}
+
+// DescribeProcessList
+// 本接口 (DescribeProcessList) 用于查询当前正在运行的线程（连接/查询）信息。
+//
+// 
+//
+// - 可以根据客户端IP，DB，执行时间等信息来查询实例正在运行的线程信息。过滤信息详细请见过滤器Filter。
+//
+// - 如果参数为空，返回当前用户一定数量（Limit所指定的数量，默认为20）的线程信息。
+//
+// 可能返回的错误码:
+//  INTERNALERROR_OPERATEDATABASEFAILED = "InternalError.OperateDatabaseFailed"
+//  INVALIDPARAMETER = "InvalidParameter"
+//  INVALIDPARAMETER_INSTANCENOTFOUND = "InvalidParameter.InstanceNotFound"
+//  UNAUTHORIZEDOPERATION_PERMISSIONDENIED = "UnauthorizedOperation.PermissionDenied"
+func (c *Client) DescribeProcessList(request *DescribeProcessListRequest) (response *DescribeProcessListResponse, err error) {
+    return c.DescribeProcessListWithContext(context.Background(), request)
+}
+
+// DescribeProcessList
+// 本接口 (DescribeProcessList) 用于查询当前正在运行的线程（连接/查询）信息。
+//
+// 
+//
+// - 可以根据客户端IP，DB，执行时间等信息来查询实例正在运行的线程信息。过滤信息详细请见过滤器Filter。
+//
+// - 如果参数为空，返回当前用户一定数量（Limit所指定的数量，默认为20）的线程信息。
+//
+// 可能返回的错误码:
+//  INTERNALERROR_OPERATEDATABASEFAILED = "InternalError.OperateDatabaseFailed"
+//  INVALIDPARAMETER = "InvalidParameter"
+//  INVALIDPARAMETER_INSTANCENOTFOUND = "InvalidParameter.InstanceNotFound"
+//  UNAUTHORIZEDOPERATION_PERMISSIONDENIED = "UnauthorizedOperation.PermissionDenied"
+func (c *Client) DescribeProcessListWithContext(ctx context.Context, request *DescribeProcessListRequest) (response *DescribeProcessListResponse, err error) {
+    if request == nil {
+        request = NewDescribeProcessListRequest()
+    }
+    c.InitBaseRequest(&request.BaseRequest, "mariadb", APIVersion, "DescribeProcessList")
+    
+    if c.GetCredential() == nil {
+        return nil, errors.New("DescribeProcessList require credential")
+    }
+
+    request.SetContext(ctx)
+    
+    response = NewDescribeProcessListResponse()
     err = c.Send(request, response)
     return
 }
@@ -2263,8 +2729,9 @@ func NewDescribeProjectSecurityGroupsRequest() (request *DescribeProjectSecurity
 func NewDescribeProjectSecurityGroupsResponse() (response *DescribeProjectSecurityGroupsResponse) {
     response = &DescribeProjectSecurityGroupsResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // DescribeProjectSecurityGroups
@@ -2291,6 +2758,7 @@ func (c *Client) DescribeProjectSecurityGroupsWithContext(ctx context.Context, r
     if request == nil {
         request = NewDescribeProjectSecurityGroupsRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "mariadb", APIVersion, "DescribeProjectSecurityGroups")
     
     if c.GetCredential() == nil {
         return nil, errors.New("DescribeProjectSecurityGroups require credential")
@@ -2317,8 +2785,9 @@ func NewDescribeRenewalPriceRequest() (request *DescribeRenewalPriceRequest) {
 func NewDescribeRenewalPriceResponse() (response *DescribeRenewalPriceResponse) {
     response = &DescribeRenewalPriceResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // DescribeRenewalPrice
@@ -2349,6 +2818,7 @@ func (c *Client) DescribeRenewalPriceWithContext(ctx context.Context, request *D
     if request == nil {
         request = NewDescribeRenewalPriceRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "mariadb", APIVersion, "DescribeRenewalPrice")
     
     if c.GetCredential() == nil {
         return nil, errors.New("DescribeRenewalPrice require credential")
@@ -2375,8 +2845,9 @@ func NewDescribeSaleInfoRequest() (request *DescribeSaleInfoRequest) {
 func NewDescribeSaleInfoResponse() (response *DescribeSaleInfoResponse) {
     response = &DescribeSaleInfoResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // DescribeSaleInfo
@@ -2403,6 +2874,7 @@ func (c *Client) DescribeSaleInfoWithContext(ctx context.Context, request *Descr
     if request == nil {
         request = NewDescribeSaleInfoRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "mariadb", APIVersion, "DescribeSaleInfo")
     
     if c.GetCredential() == nil {
         return nil, errors.New("DescribeSaleInfo require credential")
@@ -2429,8 +2901,9 @@ func NewDescribeUpgradePriceRequest() (request *DescribeUpgradePriceRequest) {
 func NewDescribeUpgradePriceResponse() (response *DescribeUpgradePriceResponse) {
     response = &DescribeUpgradePriceResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // DescribeUpgradePrice
@@ -2467,6 +2940,7 @@ func (c *Client) DescribeUpgradePriceWithContext(ctx context.Context, request *D
     if request == nil {
         request = NewDescribeUpgradePriceRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "mariadb", APIVersion, "DescribeUpgradePrice")
     
     if c.GetCredential() == nil {
         return nil, errors.New("DescribeUpgradePrice require credential")
@@ -2493,8 +2967,9 @@ func NewDestroyDBInstanceRequest() (request *DestroyDBInstanceRequest) {
 func NewDestroyDBInstanceResponse() (response *DestroyDBInstanceResponse) {
     response = &DestroyDBInstanceResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // DestroyDBInstance
@@ -2527,6 +3002,7 @@ func (c *Client) DestroyDBInstanceWithContext(ctx context.Context, request *Dest
     if request == nil {
         request = NewDestroyDBInstanceRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "mariadb", APIVersion, "DestroyDBInstance")
     
     if c.GetCredential() == nil {
         return nil, errors.New("DestroyDBInstance require credential")
@@ -2553,8 +3029,9 @@ func NewDestroyHourDBInstanceRequest() (request *DestroyHourDBInstanceRequest) {
 func NewDestroyHourDBInstanceResponse() (response *DestroyHourDBInstanceResponse) {
     response = &DestroyHourDBInstanceResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // DestroyHourDBInstance
@@ -2563,6 +3040,7 @@ func NewDestroyHourDBInstanceResponse() (response *DestroyHourDBInstanceResponse
 // 可能返回的错误码:
 //  AUTHFAILURE = "AuthFailure"
 //  FAILEDOPERATION_CREATEFLOWFAILED = "FailedOperation.CreateFlowFailed"
+//  FAILEDOPERATION_INSTANCERETURNFAILED = "FailedOperation.InstanceReturnFailed"
 //  INTERNALERROR_OPERATEDATABASEFAILED = "InternalError.OperateDatabaseFailed"
 //  INVALIDPARAMETER = "InvalidParameter"
 //  INVALIDPARAMETER_INSTANCENOTFOUND = "InvalidParameter.InstanceNotFound"
@@ -2578,6 +3056,7 @@ func (c *Client) DestroyHourDBInstance(request *DestroyHourDBInstanceRequest) (r
 // 可能返回的错误码:
 //  AUTHFAILURE = "AuthFailure"
 //  FAILEDOPERATION_CREATEFLOWFAILED = "FailedOperation.CreateFlowFailed"
+//  FAILEDOPERATION_INSTANCERETURNFAILED = "FailedOperation.InstanceReturnFailed"
 //  INTERNALERROR_OPERATEDATABASEFAILED = "InternalError.OperateDatabaseFailed"
 //  INVALIDPARAMETER = "InvalidParameter"
 //  INVALIDPARAMETER_INSTANCENOTFOUND = "InvalidParameter.InstanceNotFound"
@@ -2587,6 +3066,7 @@ func (c *Client) DestroyHourDBInstanceWithContext(ctx context.Context, request *
     if request == nil {
         request = NewDestroyHourDBInstanceRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "mariadb", APIVersion, "DestroyHourDBInstance")
     
     if c.GetCredential() == nil {
         return nil, errors.New("DestroyHourDBInstance require credential")
@@ -2613,8 +3093,9 @@ func NewDisassociateSecurityGroupsRequest() (request *DisassociateSecurityGroups
 func NewDisassociateSecurityGroupsResponse() (response *DisassociateSecurityGroupsResponse) {
     response = &DisassociateSecurityGroupsResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // DisassociateSecurityGroups
@@ -2669,6 +3150,7 @@ func (c *Client) DisassociateSecurityGroupsWithContext(ctx context.Context, requ
     if request == nil {
         request = NewDisassociateSecurityGroupsRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "mariadb", APIVersion, "DisassociateSecurityGroups")
     
     if c.GetCredential() == nil {
         return nil, errors.New("DisassociateSecurityGroups require credential")
@@ -2695,8 +3177,9 @@ func NewFlushBinlogRequest() (request *FlushBinlogRequest) {
 func NewFlushBinlogResponse() (response *FlushBinlogResponse) {
     response = &FlushBinlogResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // FlushBinlog
@@ -2712,6 +3195,7 @@ func NewFlushBinlogResponse() (response *FlushBinlogResponse) {
 //  LIMITEXCEEDED_TOOFREQUENTLYCALLED = "LimitExceeded.TooFrequentlyCalled"
 //  RESOURCEUNAVAILABLE_INSTANCESTATUSABNORMAL = "ResourceUnavailable.InstanceStatusAbnormal"
 //  UNAUTHORIZEDOPERATION_PERMISSIONDENIED = "UnauthorizedOperation.PermissionDenied"
+//  UNSUPPORTEDOPERATION_DBVERSIONNOTSUPPORTED = "UnsupportedOperation.DbVersionNotSupported"
 func (c *Client) FlushBinlog(request *FlushBinlogRequest) (response *FlushBinlogResponse, err error) {
     return c.FlushBinlogWithContext(context.Background(), request)
 }
@@ -2729,10 +3213,12 @@ func (c *Client) FlushBinlog(request *FlushBinlogRequest) (response *FlushBinlog
 //  LIMITEXCEEDED_TOOFREQUENTLYCALLED = "LimitExceeded.TooFrequentlyCalled"
 //  RESOURCEUNAVAILABLE_INSTANCESTATUSABNORMAL = "ResourceUnavailable.InstanceStatusAbnormal"
 //  UNAUTHORIZEDOPERATION_PERMISSIONDENIED = "UnauthorizedOperation.PermissionDenied"
+//  UNSUPPORTEDOPERATION_DBVERSIONNOTSUPPORTED = "UnsupportedOperation.DbVersionNotSupported"
 func (c *Client) FlushBinlogWithContext(ctx context.Context, request *FlushBinlogRequest) (response *FlushBinlogResponse, err error) {
     if request == nil {
         request = NewFlushBinlogRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "mariadb", APIVersion, "FlushBinlog")
     
     if c.GetCredential() == nil {
         return nil, errors.New("FlushBinlog require credential")
@@ -2759,8 +3245,9 @@ func NewGrantAccountPrivilegesRequest() (request *GrantAccountPrivilegesRequest)
 func NewGrantAccountPrivilegesResponse() (response *GrantAccountPrivilegesResponse) {
     response = &GrantAccountPrivilegesResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // GrantAccountPrivileges
@@ -2809,6 +3296,7 @@ func (c *Client) GrantAccountPrivilegesWithContext(ctx context.Context, request 
     if request == nil {
         request = NewGrantAccountPrivilegesRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "mariadb", APIVersion, "GrantAccountPrivileges")
     
     if c.GetCredential() == nil {
         return nil, errors.New("GrantAccountPrivileges require credential")
@@ -2835,8 +3323,9 @@ func NewInitDBInstancesRequest() (request *InitDBInstancesRequest) {
 func NewInitDBInstancesResponse() (response *InitDBInstancesResponse) {
     response = &InitDBInstancesResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // InitDBInstances
@@ -2879,6 +3368,7 @@ func (c *Client) InitDBInstancesWithContext(ctx context.Context, request *InitDB
     if request == nil {
         request = NewInitDBInstancesRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "mariadb", APIVersion, "InitDBInstances")
     
     if c.GetCredential() == nil {
         return nil, errors.New("InitDBInstances require credential")
@@ -2905,8 +3395,9 @@ func NewIsolateDBInstanceRequest() (request *IsolateDBInstanceRequest) {
 func NewIsolateDBInstanceResponse() (response *IsolateDBInstanceResponse) {
     response = &IsolateDBInstanceResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // IsolateDBInstance
@@ -2943,6 +3434,7 @@ func (c *Client) IsolateDBInstanceWithContext(ctx context.Context, request *Isol
     if request == nil {
         request = NewIsolateDBInstanceRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "mariadb", APIVersion, "IsolateDBInstance")
     
     if c.GetCredential() == nil {
         return nil, errors.New("IsolateDBInstance require credential")
@@ -2969,8 +3461,9 @@ func NewIsolateDedicatedDBInstanceRequest() (request *IsolateDedicatedDBInstance
 func NewIsolateDedicatedDBInstanceResponse() (response *IsolateDedicatedDBInstanceResponse) {
     response = &IsolateDedicatedDBInstanceResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // IsolateDedicatedDBInstance
@@ -2984,6 +3477,7 @@ func NewIsolateDedicatedDBInstanceResponse() (response *IsolateDedicatedDBInstan
 //  RESOURCEUNAVAILABLE_INSTANCEALREADYDELETED = "ResourceUnavailable.InstanceAlreadyDeleted"
 //  RESOURCEUNAVAILABLE_INSTANCESTATUSABNORMAL = "ResourceUnavailable.InstanceStatusAbnormal"
 //  UNAUTHORIZEDOPERATION_PERMISSIONDENIED = "UnauthorizedOperation.PermissionDenied"
+//  UNSUPPORTEDOPERATION_INVALIDOPERATION = "UnsupportedOperation.InvalidOperation"
 func (c *Client) IsolateDedicatedDBInstance(request *IsolateDedicatedDBInstanceRequest) (response *IsolateDedicatedDBInstanceResponse, err error) {
     return c.IsolateDedicatedDBInstanceWithContext(context.Background(), request)
 }
@@ -2999,10 +3493,12 @@ func (c *Client) IsolateDedicatedDBInstance(request *IsolateDedicatedDBInstanceR
 //  RESOURCEUNAVAILABLE_INSTANCEALREADYDELETED = "ResourceUnavailable.InstanceAlreadyDeleted"
 //  RESOURCEUNAVAILABLE_INSTANCESTATUSABNORMAL = "ResourceUnavailable.InstanceStatusAbnormal"
 //  UNAUTHORIZEDOPERATION_PERMISSIONDENIED = "UnauthorizedOperation.PermissionDenied"
+//  UNSUPPORTEDOPERATION_INVALIDOPERATION = "UnsupportedOperation.InvalidOperation"
 func (c *Client) IsolateDedicatedDBInstanceWithContext(ctx context.Context, request *IsolateDedicatedDBInstanceRequest) (response *IsolateDedicatedDBInstanceResponse, err error) {
     if request == nil {
         request = NewIsolateDedicatedDBInstanceRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "mariadb", APIVersion, "IsolateDedicatedDBInstance")
     
     if c.GetCredential() == nil {
         return nil, errors.New("IsolateDedicatedDBInstance require credential")
@@ -3029,8 +3525,9 @@ func NewIsolateHourDBInstanceRequest() (request *IsolateHourDBInstanceRequest) {
 func NewIsolateHourDBInstanceResponse() (response *IsolateHourDBInstanceResponse) {
     response = &IsolateHourDBInstanceResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // IsolateHourDBInstance
@@ -3061,6 +3558,7 @@ func (c *Client) IsolateHourDBInstanceWithContext(ctx context.Context, request *
     if request == nil {
         request = NewIsolateHourDBInstanceRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "mariadb", APIVersion, "IsolateHourDBInstance")
     
     if c.GetCredential() == nil {
         return nil, errors.New("IsolateHourDBInstance require credential")
@@ -3087,8 +3585,9 @@ func NewKillSessionRequest() (request *KillSessionRequest) {
 func NewKillSessionResponse() (response *KillSessionResponse) {
     response = &KillSessionResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // KillSession
@@ -3115,6 +3614,7 @@ func (c *Client) KillSessionWithContext(ctx context.Context, request *KillSessio
     if request == nil {
         request = NewKillSessionRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "mariadb", APIVersion, "KillSession")
     
     if c.GetCredential() == nil {
         return nil, errors.New("KillSession require credential")
@@ -3141,8 +3641,9 @@ func NewModifyAccountDescriptionRequest() (request *ModifyAccountDescriptionRequ
 func NewModifyAccountDescriptionResponse() (response *ModifyAccountDescriptionResponse) {
     response = &ModifyAccountDescriptionResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // ModifyAccountDescription
@@ -3175,6 +3676,7 @@ func (c *Client) ModifyAccountDescriptionWithContext(ctx context.Context, reques
     if request == nil {
         request = NewModifyAccountDescriptionRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "mariadb", APIVersion, "ModifyAccountDescription")
     
     if c.GetCredential() == nil {
         return nil, errors.New("ModifyAccountDescription require credential")
@@ -3201,8 +3703,9 @@ func NewModifyAccountPrivilegesRequest() (request *ModifyAccountPrivilegesReques
 func NewModifyAccountPrivilegesResponse() (response *ModifyAccountPrivilegesResponse) {
     response = &ModifyAccountPrivilegesResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // ModifyAccountPrivileges
@@ -3216,7 +3719,7 @@ func NewModifyAccountPrivilegesResponse() (response *ModifyAccountPrivilegesResp
 //
 // - 只读账号授予读写权限会报错
 //
-// - 不传该参数表示保留现有权限，如需清除，请在复杂类型Privileges字段传空数组
+// - 不传权限参数表示保留现有权限，如需清除，请在复杂类型Privileges字段传空数组
 //
 // 可能返回的错误码:
 //  AUTHFAILURE = "AuthFailure"
@@ -3242,7 +3745,7 @@ func (c *Client) ModifyAccountPrivileges(request *ModifyAccountPrivilegesRequest
 //
 // - 只读账号授予读写权限会报错
 //
-// - 不传该参数表示保留现有权限，如需清除，请在复杂类型Privileges字段传空数组
+// - 不传权限参数表示保留现有权限，如需清除，请在复杂类型Privileges字段传空数组
 //
 // 可能返回的错误码:
 //  AUTHFAILURE = "AuthFailure"
@@ -3257,6 +3760,7 @@ func (c *Client) ModifyAccountPrivilegesWithContext(ctx context.Context, request
     if request == nil {
         request = NewModifyAccountPrivilegesRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "mariadb", APIVersion, "ModifyAccountPrivileges")
     
     if c.GetCredential() == nil {
         return nil, errors.New("ModifyAccountPrivileges require credential")
@@ -3265,6 +3769,68 @@ func (c *Client) ModifyAccountPrivilegesWithContext(ctx context.Context, request
     request.SetContext(ctx)
     
     response = NewModifyAccountPrivilegesResponse()
+    err = c.Send(request, response)
+    return
+}
+
+func NewModifyBackupConfigsRequest() (request *ModifyBackupConfigsRequest) {
+    request = &ModifyBackupConfigsRequest{
+        BaseRequest: &tchttp.BaseRequest{},
+    }
+    
+    request.Init().WithApiInfo("mariadb", APIVersion, "ModifyBackupConfigs")
+    
+    
+    return
+}
+
+func NewModifyBackupConfigsResponse() (response *ModifyBackupConfigsResponse) {
+    response = &ModifyBackupConfigsResponse{
+        BaseResponse: &tchttp.BaseResponse{},
+    } 
+    return
+
+}
+
+// ModifyBackupConfigs
+// 本接口(ModifyBackupConfigs)用于修改数据库备份配置信息。
+//
+// 
+//
+// 1. 修改数据库超期备份配置，目前按年、按月、按日只支持一种，存在互斥关系，如当前策略按年备份，如果传入按月备份策略将会覆盖当前的按年备份策略，务必注意。
+//
+// 可能返回的错误码:
+//  FAILEDOPERATION_MODIFYBACKUPCONFIGSFAILED = "FailedOperation.ModifyBackupConfigsFailed"
+//  FAILEDOPERATION_OSSOPERATIONFAILED = "FailedOperation.OssOperationFailed"
+//  INTERNALERROR_OPERATEDATABASEFAILED = "InternalError.OperateDatabaseFailed"
+func (c *Client) ModifyBackupConfigs(request *ModifyBackupConfigsRequest) (response *ModifyBackupConfigsResponse, err error) {
+    return c.ModifyBackupConfigsWithContext(context.Background(), request)
+}
+
+// ModifyBackupConfigs
+// 本接口(ModifyBackupConfigs)用于修改数据库备份配置信息。
+//
+// 
+//
+// 1. 修改数据库超期备份配置，目前按年、按月、按日只支持一种，存在互斥关系，如当前策略按年备份，如果传入按月备份策略将会覆盖当前的按年备份策略，务必注意。
+//
+// 可能返回的错误码:
+//  FAILEDOPERATION_MODIFYBACKUPCONFIGSFAILED = "FailedOperation.ModifyBackupConfigsFailed"
+//  FAILEDOPERATION_OSSOPERATIONFAILED = "FailedOperation.OssOperationFailed"
+//  INTERNALERROR_OPERATEDATABASEFAILED = "InternalError.OperateDatabaseFailed"
+func (c *Client) ModifyBackupConfigsWithContext(ctx context.Context, request *ModifyBackupConfigsRequest) (response *ModifyBackupConfigsResponse, err error) {
+    if request == nil {
+        request = NewModifyBackupConfigsRequest()
+    }
+    c.InitBaseRequest(&request.BaseRequest, "mariadb", APIVersion, "ModifyBackupConfigs")
+    
+    if c.GetCredential() == nil {
+        return nil, errors.New("ModifyBackupConfigs require credential")
+    }
+
+    request.SetContext(ctx)
+    
+    response = NewModifyBackupConfigsResponse()
     err = c.Send(request, response)
     return
 }
@@ -3283,8 +3849,9 @@ func NewModifyBackupTimeRequest() (request *ModifyBackupTimeRequest) {
 func NewModifyBackupTimeResponse() (response *ModifyBackupTimeResponse) {
     response = &ModifyBackupTimeResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // ModifyBackupTime
@@ -3317,6 +3884,7 @@ func (c *Client) ModifyBackupTimeWithContext(ctx context.Context, request *Modif
     if request == nil {
         request = NewModifyBackupTimeRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "mariadb", APIVersion, "ModifyBackupTime")
     
     if c.GetCredential() == nil {
         return nil, errors.New("ModifyBackupTime require credential")
@@ -3343,8 +3911,9 @@ func NewModifyDBEncryptAttributesRequest() (request *ModifyDBEncryptAttributesRe
 func NewModifyDBEncryptAttributesResponse() (response *ModifyDBEncryptAttributesResponse) {
     response = &ModifyDBEncryptAttributesResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // ModifyDBEncryptAttributes
@@ -3383,6 +3952,7 @@ func (c *Client) ModifyDBEncryptAttributesWithContext(ctx context.Context, reque
     if request == nil {
         request = NewModifyDBEncryptAttributesRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "mariadb", APIVersion, "ModifyDBEncryptAttributes")
     
     if c.GetCredential() == nil {
         return nil, errors.New("ModifyDBEncryptAttributes require credential")
@@ -3409,8 +3979,9 @@ func NewModifyDBInstanceNameRequest() (request *ModifyDBInstanceNameRequest) {
 func NewModifyDBInstanceNameResponse() (response *ModifyDBInstanceNameResponse) {
     response = &ModifyDBInstanceNameResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // ModifyDBInstanceName
@@ -3447,6 +4018,7 @@ func (c *Client) ModifyDBInstanceNameWithContext(ctx context.Context, request *M
     if request == nil {
         request = NewModifyDBInstanceNameRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "mariadb", APIVersion, "ModifyDBInstanceName")
     
     if c.GetCredential() == nil {
         return nil, errors.New("ModifyDBInstanceName require credential")
@@ -3473,8 +4045,9 @@ func NewModifyDBInstanceSecurityGroupsRequest() (request *ModifyDBInstanceSecuri
 func NewModifyDBInstanceSecurityGroupsResponse() (response *ModifyDBInstanceSecurityGroupsResponse) {
     response = &ModifyDBInstanceSecurityGroupsResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // ModifyDBInstanceSecurityGroups
@@ -3539,6 +4112,7 @@ func (c *Client) ModifyDBInstanceSecurityGroupsWithContext(ctx context.Context, 
     if request == nil {
         request = NewModifyDBInstanceSecurityGroupsRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "mariadb", APIVersion, "ModifyDBInstanceSecurityGroups")
     
     if c.GetCredential() == nil {
         return nil, errors.New("ModifyDBInstanceSecurityGroups require credential")
@@ -3565,8 +4139,9 @@ func NewModifyDBInstancesProjectRequest() (request *ModifyDBInstancesProjectRequ
 func NewModifyDBInstancesProjectResponse() (response *ModifyDBInstancesProjectResponse) {
     response = &ModifyDBInstancesProjectResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // ModifyDBInstancesProject
@@ -3595,6 +4170,7 @@ func (c *Client) ModifyDBInstancesProjectWithContext(ctx context.Context, reques
     if request == nil {
         request = NewModifyDBInstancesProjectRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "mariadb", APIVersion, "ModifyDBInstancesProject")
     
     if c.GetCredential() == nil {
         return nil, errors.New("ModifyDBInstancesProject require credential")
@@ -3621,8 +4197,9 @@ func NewModifyDBParametersRequest() (request *ModifyDBParametersRequest) {
 func NewModifyDBParametersResponse() (response *ModifyDBParametersResponse) {
     response = &ModifyDBParametersResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // ModifyDBParameters
@@ -3657,6 +4234,7 @@ func (c *Client) ModifyDBParametersWithContext(ctx context.Context, request *Mod
     if request == nil {
         request = NewModifyDBParametersRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "mariadb", APIVersion, "ModifyDBParameters")
     
     if c.GetCredential() == nil {
         return nil, errors.New("ModifyDBParameters require credential")
@@ -3683,8 +4261,9 @@ func NewModifyDBSyncModeRequest() (request *ModifyDBSyncModeRequest) {
 func NewModifyDBSyncModeResponse() (response *ModifyDBSyncModeResponse) {
     response = &ModifyDBSyncModeResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // ModifyDBSyncMode
@@ -3725,6 +4304,7 @@ func (c *Client) ModifyDBSyncModeWithContext(ctx context.Context, request *Modif
     if request == nil {
         request = NewModifyDBSyncModeRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "mariadb", APIVersion, "ModifyDBSyncMode")
     
     if c.GetCredential() == nil {
         return nil, errors.New("ModifyDBSyncMode require credential")
@@ -3751,8 +4331,9 @@ func NewModifyInstanceNetworkRequest() (request *ModifyInstanceNetworkRequest) {
 func NewModifyInstanceNetworkResponse() (response *ModifyInstanceNetworkResponse) {
     response = &ModifyInstanceNetworkResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // ModifyInstanceNetwork
@@ -3797,6 +4378,7 @@ func (c *Client) ModifyInstanceNetworkWithContext(ctx context.Context, request *
     if request == nil {
         request = NewModifyInstanceNetworkRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "mariadb", APIVersion, "ModifyInstanceNetwork")
     
     if c.GetCredential() == nil {
         return nil, errors.New("ModifyInstanceNetwork require credential")
@@ -3805,6 +4387,124 @@ func (c *Client) ModifyInstanceNetworkWithContext(ctx context.Context, request *
     request.SetContext(ctx)
     
     response = NewModifyInstanceNetworkResponse()
+    err = c.Send(request, response)
+    return
+}
+
+func NewModifyInstanceProtectedPropertyRequest() (request *ModifyInstanceProtectedPropertyRequest) {
+    request = &ModifyInstanceProtectedPropertyRequest{
+        BaseRequest: &tchttp.BaseRequest{},
+    }
+    
+    request.Init().WithApiInfo("mariadb", APIVersion, "ModifyInstanceProtectedProperty")
+    
+    
+    return
+}
+
+func NewModifyInstanceProtectedPropertyResponse() (response *ModifyInstanceProtectedPropertyResponse) {
+    response = &ModifyInstanceProtectedPropertyResponse{
+        BaseResponse: &tchttp.BaseResponse{},
+    } 
+    return
+
+}
+
+// ModifyInstanceProtectedProperty
+// 该接口用于对实例修改删除保护属性
+//
+// 可能返回的错误码:
+//  FAILEDOPERATION_OSSOPERATIONFAILED = "FailedOperation.OssOperationFailed"
+//  INTERNALERROR_OPERATEDATABASEFAILED = "InternalError.OperateDatabaseFailed"
+//  INVALIDPARAMETER_INSTANCENOTFOUND = "InvalidParameter.InstanceNotFound"
+//  RESOURCEUNAVAILABLE_INSTANCESTATUSABNORMAL = "ResourceUnavailable.InstanceStatusAbnormal"
+func (c *Client) ModifyInstanceProtectedProperty(request *ModifyInstanceProtectedPropertyRequest) (response *ModifyInstanceProtectedPropertyResponse, err error) {
+    return c.ModifyInstanceProtectedPropertyWithContext(context.Background(), request)
+}
+
+// ModifyInstanceProtectedProperty
+// 该接口用于对实例修改删除保护属性
+//
+// 可能返回的错误码:
+//  FAILEDOPERATION_OSSOPERATIONFAILED = "FailedOperation.OssOperationFailed"
+//  INTERNALERROR_OPERATEDATABASEFAILED = "InternalError.OperateDatabaseFailed"
+//  INVALIDPARAMETER_INSTANCENOTFOUND = "InvalidParameter.InstanceNotFound"
+//  RESOURCEUNAVAILABLE_INSTANCESTATUSABNORMAL = "ResourceUnavailable.InstanceStatusAbnormal"
+func (c *Client) ModifyInstanceProtectedPropertyWithContext(ctx context.Context, request *ModifyInstanceProtectedPropertyRequest) (response *ModifyInstanceProtectedPropertyResponse, err error) {
+    if request == nil {
+        request = NewModifyInstanceProtectedPropertyRequest()
+    }
+    c.InitBaseRequest(&request.BaseRequest, "mariadb", APIVersion, "ModifyInstanceProtectedProperty")
+    
+    if c.GetCredential() == nil {
+        return nil, errors.New("ModifyInstanceProtectedProperty require credential")
+    }
+
+    request.SetContext(ctx)
+    
+    response = NewModifyInstanceProtectedPropertyResponse()
+    err = c.Send(request, response)
+    return
+}
+
+func NewModifyInstanceSSLAttributesRequest() (request *ModifyInstanceSSLAttributesRequest) {
+    request = &ModifyInstanceSSLAttributesRequest{
+        BaseRequest: &tchttp.BaseRequest{},
+    }
+    
+    request.Init().WithApiInfo("mariadb", APIVersion, "ModifyInstanceSSLAttributes")
+    
+    
+    return
+}
+
+func NewModifyInstanceSSLAttributesResponse() (response *ModifyInstanceSSLAttributesResponse) {
+    response = &ModifyInstanceSSLAttributesResponse{
+        BaseResponse: &tchttp.BaseResponse{},
+    } 
+    return
+
+}
+
+// ModifyInstanceSSLAttributes
+// 本接口  （ModifyInstanceSSLAttributes）用于修改实例SSL认证功能属性
+//
+// 可能返回的错误码:
+//  FAILEDOPERATION_OSSOPERATIONFAILED = "FailedOperation.OssOperationFailed"
+//  FAILEDOPERATION_SSLSTATUSABNORMAL = "FailedOperation.SslStatusAbnormal"
+//  INTERNALERROR_DBOPERATIONFAILED = "InternalError.DbOperationFailed"
+//  RESOURCEUNAVAILABLE_INSTANCEALREADYDELETED = "ResourceUnavailable.InstanceAlreadyDeleted"
+//  RESOURCEUNAVAILABLE_SSLSTATUSABNORMAL = "ResourceUnavailable.SSLStatusAbnormal"
+//  UNAUTHORIZEDOPERATION_PERMISSIONDENIED = "UnauthorizedOperation.PermissionDenied"
+//  UNSUPPORTEDOPERATION_SSLNOTSUPPORTED = "UnsupportedOperation.SSLNotSupported"
+func (c *Client) ModifyInstanceSSLAttributes(request *ModifyInstanceSSLAttributesRequest) (response *ModifyInstanceSSLAttributesResponse, err error) {
+    return c.ModifyInstanceSSLAttributesWithContext(context.Background(), request)
+}
+
+// ModifyInstanceSSLAttributes
+// 本接口  （ModifyInstanceSSLAttributes）用于修改实例SSL认证功能属性
+//
+// 可能返回的错误码:
+//  FAILEDOPERATION_OSSOPERATIONFAILED = "FailedOperation.OssOperationFailed"
+//  FAILEDOPERATION_SSLSTATUSABNORMAL = "FailedOperation.SslStatusAbnormal"
+//  INTERNALERROR_DBOPERATIONFAILED = "InternalError.DbOperationFailed"
+//  RESOURCEUNAVAILABLE_INSTANCEALREADYDELETED = "ResourceUnavailable.InstanceAlreadyDeleted"
+//  RESOURCEUNAVAILABLE_SSLSTATUSABNORMAL = "ResourceUnavailable.SSLStatusAbnormal"
+//  UNAUTHORIZEDOPERATION_PERMISSIONDENIED = "UnauthorizedOperation.PermissionDenied"
+//  UNSUPPORTEDOPERATION_SSLNOTSUPPORTED = "UnsupportedOperation.SSLNotSupported"
+func (c *Client) ModifyInstanceSSLAttributesWithContext(ctx context.Context, request *ModifyInstanceSSLAttributesRequest) (response *ModifyInstanceSSLAttributesResponse, err error) {
+    if request == nil {
+        request = NewModifyInstanceSSLAttributesRequest()
+    }
+    c.InitBaseRequest(&request.BaseRequest, "mariadb", APIVersion, "ModifyInstanceSSLAttributes")
+    
+    if c.GetCredential() == nil {
+        return nil, errors.New("ModifyInstanceSSLAttributes require credential")
+    }
+
+    request.SetContext(ctx)
+    
+    response = NewModifyInstanceSSLAttributesResponse()
     err = c.Send(request, response)
     return
 }
@@ -3823,8 +4523,9 @@ func NewModifyInstanceVipRequest() (request *ModifyInstanceVipRequest) {
 func NewModifyInstanceVipResponse() (response *ModifyInstanceVipResponse) {
     response = &ModifyInstanceVipResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // ModifyInstanceVip
@@ -3865,6 +4566,7 @@ func (c *Client) ModifyInstanceVipWithContext(ctx context.Context, request *Modi
     if request == nil {
         request = NewModifyInstanceVipRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "mariadb", APIVersion, "ModifyInstanceVip")
     
     if c.GetCredential() == nil {
         return nil, errors.New("ModifyInstanceVip require credential")
@@ -3891,14 +4593,16 @@ func NewModifyInstanceVportRequest() (request *ModifyInstanceVportRequest) {
 func NewModifyInstanceVportResponse() (response *ModifyInstanceVportResponse) {
     response = &ModifyInstanceVportResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // ModifyInstanceVport
 // 本接口（ModifyInstanceVport）用于修改实例VPORT
 //
 // 可能返回的错误码:
+//  FAILEDOPERATION_OSSOPERATIONFAILED = "FailedOperation.OssOperationFailed"
 //  FAILEDOPERATION_SGCHANGEVIP = "FailedOperation.SGChangeVip"
 //  FAILEDOPERATION_VPCADDSERVICEFAILED = "FailedOperation.VpcAddServiceFailed"
 //  INTERNALERROR_DBOPERATIONFAILED = "InternalError.DbOperationFailed"
@@ -3918,6 +4622,7 @@ func (c *Client) ModifyInstanceVport(request *ModifyInstanceVportRequest) (respo
 // 本接口（ModifyInstanceVport）用于修改实例VPORT
 //
 // 可能返回的错误码:
+//  FAILEDOPERATION_OSSOPERATIONFAILED = "FailedOperation.OssOperationFailed"
 //  FAILEDOPERATION_SGCHANGEVIP = "FailedOperation.SGChangeVip"
 //  FAILEDOPERATION_VPCADDSERVICEFAILED = "FailedOperation.VpcAddServiceFailed"
 //  INTERNALERROR_DBOPERATIONFAILED = "InternalError.DbOperationFailed"
@@ -3933,6 +4638,7 @@ func (c *Client) ModifyInstanceVportWithContext(ctx context.Context, request *Mo
     if request == nil {
         request = NewModifyInstanceVportRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "mariadb", APIVersion, "ModifyInstanceVport")
     
     if c.GetCredential() == nil {
         return nil, errors.New("ModifyInstanceVport require credential")
@@ -3959,8 +4665,9 @@ func NewModifyLogFileRetentionPeriodRequest() (request *ModifyLogFileRetentionPe
 func NewModifyLogFileRetentionPeriodResponse() (response *ModifyLogFileRetentionPeriodResponse) {
     response = &ModifyLogFileRetentionPeriodResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // ModifyLogFileRetentionPeriod
@@ -3995,6 +4702,7 @@ func (c *Client) ModifyLogFileRetentionPeriodWithContext(ctx context.Context, re
     if request == nil {
         request = NewModifyLogFileRetentionPeriodRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "mariadb", APIVersion, "ModifyLogFileRetentionPeriod")
     
     if c.GetCredential() == nil {
         return nil, errors.New("ModifyLogFileRetentionPeriod require credential")
@@ -4021,8 +4729,9 @@ func NewModifyRealServerAccessStrategyRequest() (request *ModifyRealServerAccess
 func NewModifyRealServerAccessStrategyResponse() (response *ModifyRealServerAccessStrategyResponse) {
     response = &ModifyRealServerAccessStrategyResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // ModifyRealServerAccessStrategy
@@ -4081,6 +4790,7 @@ func (c *Client) ModifyRealServerAccessStrategyWithContext(ctx context.Context, 
     if request == nil {
         request = NewModifyRealServerAccessStrategyRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "mariadb", APIVersion, "ModifyRealServerAccessStrategy")
     
     if c.GetCredential() == nil {
         return nil, errors.New("ModifyRealServerAccessStrategy require credential")
@@ -4107,8 +4817,9 @@ func NewModifySyncTaskAttributeRequest() (request *ModifySyncTaskAttributeReques
 func NewModifySyncTaskAttributeResponse() (response *ModifySyncTaskAttributeResponse) {
     response = &ModifySyncTaskAttributeResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // ModifySyncTaskAttribute
@@ -4133,6 +4844,7 @@ func (c *Client) ModifySyncTaskAttributeWithContext(ctx context.Context, request
     if request == nil {
         request = NewModifySyncTaskAttributeRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "mariadb", APIVersion, "ModifySyncTaskAttribute")
     
     if c.GetCredential() == nil {
         return nil, errors.New("ModifySyncTaskAttribute require credential")
@@ -4159,8 +4871,9 @@ func NewOpenDBExtranetAccessRequest() (request *OpenDBExtranetAccessRequest) {
 func NewOpenDBExtranetAccessResponse() (response *OpenDBExtranetAccessResponse) {
     response = &OpenDBExtranetAccessResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // OpenDBExtranetAccess
@@ -4199,6 +4912,7 @@ func (c *Client) OpenDBExtranetAccessWithContext(ctx context.Context, request *O
     if request == nil {
         request = NewOpenDBExtranetAccessRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "mariadb", APIVersion, "OpenDBExtranetAccess")
     
     if c.GetCredential() == nil {
         return nil, errors.New("OpenDBExtranetAccess require credential")
@@ -4225,8 +4939,9 @@ func NewRenewDBInstanceRequest() (request *RenewDBInstanceRequest) {
 func NewRenewDBInstanceResponse() (response *RenewDBInstanceResponse) {
     response = &RenewDBInstanceResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // RenewDBInstance
@@ -4265,6 +4980,7 @@ func (c *Client) RenewDBInstanceWithContext(ctx context.Context, request *RenewD
     if request == nil {
         request = NewRenewDBInstanceRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "mariadb", APIVersion, "RenewDBInstance")
     
     if c.GetCredential() == nil {
         return nil, errors.New("RenewDBInstance require credential")
@@ -4291,8 +5007,9 @@ func NewResetAccountPasswordRequest() (request *ResetAccountPasswordRequest) {
 func NewResetAccountPasswordResponse() (response *ResetAccountPasswordResponse) {
     response = &ResetAccountPasswordResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // ResetAccountPassword
@@ -4304,6 +5021,7 @@ func NewResetAccountPasswordResponse() (response *ResetAccountPasswordResponse) 
 //  FAILEDOPERATION_RESETPASSWORDFAILED = "FailedOperation.ResetPasswordFailed"
 //  INTERNALERROR_CAMAUTHFAILED = "InternalError.CamAuthFailed"
 //  INTERNALERROR_DBOPERATIONFAILED = "InternalError.DbOperationFailed"
+//  INTERNALERROR_INNERSYSTEMERROR = "InternalError.InnerSystemError"
 //  INVALIDPARAMETER_CHARACTERERROR = "InvalidParameter.CharacterError"
 //  INVALIDPARAMETER_GENERICPARAMETERERROR = "InvalidParameter.GenericParameterError"
 //  RESOURCEUNAVAILABLE_INSTANCEALREADYDELETED = "ResourceUnavailable.InstanceAlreadyDeleted"
@@ -4323,6 +5041,7 @@ func (c *Client) ResetAccountPassword(request *ResetAccountPasswordRequest) (res
 //  FAILEDOPERATION_RESETPASSWORDFAILED = "FailedOperation.ResetPasswordFailed"
 //  INTERNALERROR_CAMAUTHFAILED = "InternalError.CamAuthFailed"
 //  INTERNALERROR_DBOPERATIONFAILED = "InternalError.DbOperationFailed"
+//  INTERNALERROR_INNERSYSTEMERROR = "InternalError.InnerSystemError"
 //  INVALIDPARAMETER_CHARACTERERROR = "InvalidParameter.CharacterError"
 //  INVALIDPARAMETER_GENERICPARAMETERERROR = "InvalidParameter.GenericParameterError"
 //  RESOURCEUNAVAILABLE_INSTANCEALREADYDELETED = "ResourceUnavailable.InstanceAlreadyDeleted"
@@ -4333,6 +5052,7 @@ func (c *Client) ResetAccountPasswordWithContext(ctx context.Context, request *R
     if request == nil {
         request = NewResetAccountPasswordRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "mariadb", APIVersion, "ResetAccountPassword")
     
     if c.GetCredential() == nil {
         return nil, errors.New("ResetAccountPassword require credential")
@@ -4359,8 +5079,9 @@ func NewRestartDBInstancesRequest() (request *RestartDBInstancesRequest) {
 func NewRestartDBInstancesResponse() (response *RestartDBInstancesResponse) {
     response = &RestartDBInstancesResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // RestartDBInstances
@@ -4391,6 +5112,7 @@ func (c *Client) RestartDBInstancesWithContext(ctx context.Context, request *Res
     if request == nil {
         request = NewRestartDBInstancesRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "mariadb", APIVersion, "RestartDBInstances")
     
     if c.GetCredential() == nil {
         return nil, errors.New("RestartDBInstances require credential")
@@ -4417,8 +5139,9 @@ func NewSwitchDBInstanceHARequest() (request *SwitchDBInstanceHARequest) {
 func NewSwitchDBInstanceHAResponse() (response *SwitchDBInstanceHAResponse) {
     response = &SwitchDBInstanceHAResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // SwitchDBInstanceHA
@@ -4455,6 +5178,7 @@ func (c *Client) SwitchDBInstanceHAWithContext(ctx context.Context, request *Swi
     if request == nil {
         request = NewSwitchDBInstanceHARequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "mariadb", APIVersion, "SwitchDBInstanceHA")
     
     if c.GetCredential() == nil {
         return nil, errors.New("SwitchDBInstanceHA require credential")
@@ -4481,8 +5205,9 @@ func NewTerminateDedicatedDBInstanceRequest() (request *TerminateDedicatedDBInst
 func NewTerminateDedicatedDBInstanceResponse() (response *TerminateDedicatedDBInstanceResponse) {
     response = &TerminateDedicatedDBInstanceResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // TerminateDedicatedDBInstance
@@ -4515,6 +5240,7 @@ func (c *Client) TerminateDedicatedDBInstanceWithContext(ctx context.Context, re
     if request == nil {
         request = NewTerminateDedicatedDBInstanceRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "mariadb", APIVersion, "TerminateDedicatedDBInstance")
     
     if c.GetCredential() == nil {
         return nil, errors.New("TerminateDedicatedDBInstance require credential")
@@ -4541,8 +5267,9 @@ func NewUpgradeDBInstanceRequest() (request *UpgradeDBInstanceRequest) {
 func NewUpgradeDBInstanceResponse() (response *UpgradeDBInstanceResponse) {
     response = &UpgradeDBInstanceResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // UpgradeDBInstance
@@ -4552,6 +5279,7 @@ func NewUpgradeDBInstanceResponse() (response *UpgradeDBInstanceResponse) {
 //  FAILEDOPERATION_CREATEORDERFAILED = "FailedOperation.CreateOrderFailed"
 //  FAILEDOPERATION_PAYFAILED = "FailedOperation.PayFailed"
 //  INTERNALERROR_DBOPERATIONFAILED = "InternalError.DbOperationFailed"
+//  INVALIDPARAMETER = "InvalidParameter"
 //  INVALIDPARAMETER_SPECNOTFOUND = "InvalidParameter.SpecNotFound"
 //  INVALIDPARAMETERVALUE_SPECIDILLEGAL = "InvalidParameterValue.SpecIdIllegal"
 //  RESOURCENOTFOUND_NOINSTANCEFOUND = "ResourceNotFound.NoInstanceFound"
@@ -4568,6 +5296,7 @@ func (c *Client) UpgradeDBInstance(request *UpgradeDBInstanceRequest) (response 
 //  FAILEDOPERATION_CREATEORDERFAILED = "FailedOperation.CreateOrderFailed"
 //  FAILEDOPERATION_PAYFAILED = "FailedOperation.PayFailed"
 //  INTERNALERROR_DBOPERATIONFAILED = "InternalError.DbOperationFailed"
+//  INVALIDPARAMETER = "InvalidParameter"
 //  INVALIDPARAMETER_SPECNOTFOUND = "InvalidParameter.SpecNotFound"
 //  INVALIDPARAMETERVALUE_SPECIDILLEGAL = "InvalidParameterValue.SpecIdIllegal"
 //  RESOURCENOTFOUND_NOINSTANCEFOUND = "ResourceNotFound.NoInstanceFound"
@@ -4577,6 +5306,7 @@ func (c *Client) UpgradeDBInstanceWithContext(ctx context.Context, request *Upgr
     if request == nil {
         request = NewUpgradeDBInstanceRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "mariadb", APIVersion, "UpgradeDBInstance")
     
     if c.GetCredential() == nil {
         return nil, errors.New("UpgradeDBInstance require credential")
@@ -4603,8 +5333,9 @@ func NewUpgradeDedicatedDBInstanceRequest() (request *UpgradeDedicatedDBInstance
 func NewUpgradeDedicatedDBInstanceResponse() (response *UpgradeDedicatedDBInstanceResponse) {
     response = &UpgradeDedicatedDBInstanceResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // UpgradeDedicatedDBInstance
@@ -4645,6 +5376,7 @@ func (c *Client) UpgradeDedicatedDBInstanceWithContext(ctx context.Context, requ
     if request == nil {
         request = NewUpgradeDedicatedDBInstanceRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "mariadb", APIVersion, "UpgradeDedicatedDBInstance")
     
     if c.GetCredential() == nil {
         return nil, errors.New("UpgradeDedicatedDBInstance require credential")
@@ -4653,6 +5385,76 @@ func (c *Client) UpgradeDedicatedDBInstanceWithContext(ctx context.Context, requ
     request.SetContext(ctx)
     
     response = NewUpgradeDedicatedDBInstanceResponse()
+    err = c.Send(request, response)
+    return
+}
+
+func NewUpgradeHourDBInstanceRequest() (request *UpgradeHourDBInstanceRequest) {
+    request = &UpgradeHourDBInstanceRequest{
+        BaseRequest: &tchttp.BaseRequest{},
+    }
+    
+    request.Init().WithApiInfo("mariadb", APIVersion, "UpgradeHourDBInstance")
+    
+    
+    return
+}
+
+func NewUpgradeHourDBInstanceResponse() (response *UpgradeHourDBInstanceResponse) {
+    response = &UpgradeHourDBInstanceResponse{
+        BaseResponse: &tchttp.BaseResponse{},
+    } 
+    return
+
+}
+
+// UpgradeHourDBInstance
+// 升级MariaDB按量计费实例
+//
+// 可能返回的错误码:
+//  FAILEDOPERATION_CREATEORDERFAILED = "FailedOperation.CreateOrderFailed"
+//  INTERNALERROR_CREATEFLOWFAILED = "InternalError.CreateFlowFailed"
+//  INTERNALERROR_INNERSYSTEMERROR = "InternalError.InnerSystemError"
+//  INTERNALERROR_OPERATEDATABASEFAILED = "InternalError.OperateDatabaseFailed"
+//  INVALIDPARAMETER = "InvalidParameter"
+//  INVALIDPARAMETER_INSTANCENOTFOUND = "InvalidParameter.InstanceNotFound"
+//  INVALIDPARAMETERVALUE_SPECIDILLEGAL = "InvalidParameterValue.SpecIdIllegal"
+//  RESOURCEINUSE_TEMPINSTANCEEXIST = "ResourceInUse.TempInstanceExist"
+//  RESOURCEUNAVAILABLE_INSTANCESTATUSABNORMAL = "ResourceUnavailable.InstanceStatusAbnormal"
+//  UNAUTHORIZEDOPERATION_PERMISSIONDENIED = "UnauthorizedOperation.PermissionDenied"
+//  UNSUPPORTEDOPERATION_OPERATIONNOTAPPLICABLE = "UnsupportedOperation.OperationNotApplicable"
+func (c *Client) UpgradeHourDBInstance(request *UpgradeHourDBInstanceRequest) (response *UpgradeHourDBInstanceResponse, err error) {
+    return c.UpgradeHourDBInstanceWithContext(context.Background(), request)
+}
+
+// UpgradeHourDBInstance
+// 升级MariaDB按量计费实例
+//
+// 可能返回的错误码:
+//  FAILEDOPERATION_CREATEORDERFAILED = "FailedOperation.CreateOrderFailed"
+//  INTERNALERROR_CREATEFLOWFAILED = "InternalError.CreateFlowFailed"
+//  INTERNALERROR_INNERSYSTEMERROR = "InternalError.InnerSystemError"
+//  INTERNALERROR_OPERATEDATABASEFAILED = "InternalError.OperateDatabaseFailed"
+//  INVALIDPARAMETER = "InvalidParameter"
+//  INVALIDPARAMETER_INSTANCENOTFOUND = "InvalidParameter.InstanceNotFound"
+//  INVALIDPARAMETERVALUE_SPECIDILLEGAL = "InvalidParameterValue.SpecIdIllegal"
+//  RESOURCEINUSE_TEMPINSTANCEEXIST = "ResourceInUse.TempInstanceExist"
+//  RESOURCEUNAVAILABLE_INSTANCESTATUSABNORMAL = "ResourceUnavailable.InstanceStatusAbnormal"
+//  UNAUTHORIZEDOPERATION_PERMISSIONDENIED = "UnauthorizedOperation.PermissionDenied"
+//  UNSUPPORTEDOPERATION_OPERATIONNOTAPPLICABLE = "UnsupportedOperation.OperationNotApplicable"
+func (c *Client) UpgradeHourDBInstanceWithContext(ctx context.Context, request *UpgradeHourDBInstanceRequest) (response *UpgradeHourDBInstanceResponse, err error) {
+    if request == nil {
+        request = NewUpgradeHourDBInstanceRequest()
+    }
+    c.InitBaseRequest(&request.BaseRequest, "mariadb", APIVersion, "UpgradeHourDBInstance")
+    
+    if c.GetCredential() == nil {
+        return nil, errors.New("UpgradeHourDBInstance require credential")
+    }
+
+    request.SetContext(ctx)
+    
+    response = NewUpgradeHourDBInstanceResponse()
     err = c.Send(request, response)
     return
 }
