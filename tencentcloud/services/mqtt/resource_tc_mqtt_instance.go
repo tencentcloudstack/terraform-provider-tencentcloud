@@ -132,7 +132,7 @@ func ResourceTencentCloudMqttInstance() *schema.Resource {
 				Type:        schema.TypeInt,
 				Optional:    true,
 				Computed:    true,
-				Description: "Single client message send/receive rate limit, unit: messages/second.",
+				Description: "Single client message send/receive rate limit, unit: messages/second. Set to 0 to indicate no limit.",
 			},
 
 			"use_default_server_cert": {

@@ -111,7 +111,7 @@ The following arguments are supported:
 * `automatic_activation` - (Optional, Bool) Is the automatic registration certificate automatically activated. Default is false.
 * `device_certificate_provision_type` - (Optional, String) Client certificate registration method: JITP: Automatic registration; API: Manually register through the API.
 * `force_delete` - (Optional, Bool) Indicate whether to force delete the instance. Default is `false`. If set true, the instance will be permanently deleted instead of being moved into the recycle bin. Note: only works for `PREPAID` instance.
-* `message_rate` - (Optional, Int) Single client message send/receive rate limit, unit: messages/second.
+* `message_rate` - (Optional, Int) Single client message send/receive rate limit, unit: messages/second. Set to 0 to indicate no limit.
 * `pay_mode` - (Optional, Int) Payment mode (0: Postpaid; 1: Prepaid).
 * `remark` - (Optional, String) Remarks.
 * `renew_flag` - (Optional, Int) Whether to enable auto-renewal (0: Disabled; 1: Enabled).
