@@ -45,8 +45,11 @@ resource "tencentcloud_mqtt_instance" "example" {
     vpc_id    = tencentcloud_vpc.vpc.id
     subnet_id = tencentcloud_subnet.subnet.id
   }
-  pay_mode  = 0
-  x509_mode = "BYOC"
+  pay_mode                          = 0
+  x509_mode                         = "BYOC"
+  device_certificate_provision_type = "JITP"
+  message_rate                      = 100
+  use_default_server_cert           = true
   tags = {
     createBy = "Terraform"
   }
@@ -106,12 +109,15 @@ The following arguments are supported:
 * `sku_code` - (Required, String) Product SKU, available SKUs can be queried via the DescribeProductSKUList API.
 * `authorization_policy` - (Optional, Bool) Authorization policy switch. Default is false.
 * `automatic_activation` - (Optional, Bool) Is the automatic registration certificate automatically activated. Default is false.
+* `device_certificate_provision_type` - (Optional, String) Client certificate registration method: JITP: Automatic registration; API: Manually register through the API.
 * `force_delete` - (Optional, Bool) Indicate whether to force delete the instance. Default is `false`. If set true, the instance will be permanently deleted instead of being moved into the recycle bin. Note: only works for `PREPAID` instance.
+* `message_rate` - (Optional, Int) Single client message send/receive rate limit, unit: messages/second. Set to 0 to indicate no limit.
 * `pay_mode` - (Optional, Int) Payment mode (0: Postpaid; 1: Prepaid).
 * `remark` - (Optional, String) Remarks.
 * `renew_flag` - (Optional, Int) Whether to enable auto-renewal (0: Disabled; 1: Enabled).
 * `tags` - (Optional, Map) Tags of the MQTT instance.
 * `time_span` - (Optional, Int) Purchase duration (unit: months).
+* `use_default_server_cert` - (Optional, Bool) Whether to use the default server certificate.
 * `vpc_list` - (Optional, List) VPC information bound to the instance.
 * `x509_mode` - (Optional, String) X509 certificate mode. Valid values: `TLS` (one-way authentication), `mTLS` (two-way authentication), `BYOC` (one device one certificate).
 
@@ -125,6 +131,6 @@ The `vpc_list` object supports the following:
 In addition to all arguments above, the following attributes are exported:
 
 * `id` - ID of the resource.
-* `device_certificate_provision_type` - Client certificate registration method: JITP: Automatic registration; API: Manually register through the API.
+
 
 
