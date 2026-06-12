@@ -561,6 +561,7 @@ tencentcloud_cynosdb_cluster_transparent_encrypt
 tencentcloud_cynosdb_audit_service
 tencentcloud_cynosdb_cls_delivery
 tencentcloud_cynosdb_libra_db_instance
+tencentcloud_cynosdb_cluster_read_only_instance_group_acces_operation
 
 Direct Connect(DC)
 Data Source
