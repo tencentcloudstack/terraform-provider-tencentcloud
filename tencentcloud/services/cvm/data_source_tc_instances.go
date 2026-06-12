@@ -263,6 +263,31 @@ func DataSourceTencentCloudInstances() *schema.Resource {
 							Computed:    true,
 							Description: "Globally unique ID of the instance.",
 						},
+						"gpu_info": {
+							Type:        schema.TypeList,
+							Computed:    true,
+							Description: "Instance GPU info.",
+							Elem: &schema.Resource{
+								Schema: map[string]*schema.Schema{
+									"gpu_count": {
+										Type:        schema.TypeFloat,
+										Computed:    true,
+										Description: "Number of instance GPUs. A value less than 1 indicates a VGPU type, and a value greater than 1 indicates a GPU passthrough type.",
+									},
+									"gpu_id": {
+										Type:        schema.TypeList,
+										Computed:    true,
+										Elem:        &schema.Schema{Type: schema.TypeString},
+										Description: "Instance GPU address.",
+									},
+									"gpu_type": {
+										Type:        schema.TypeString,
+										Computed:    true,
+										Description: "Instance GPU type.",
+									},
+								},
+							},
+						},
 					},
 				},
 			},
@@ -389,6 +414,24 @@ func dataSourceTencentCloudInstancesRead(d *schema.ResourceData, meta interface{
 		}
 
 		mapping["data_disks"] = dataDisks
+
+		if instance.GPUInfo != nil {
+			gpuInfoMap := map[string]interface{}{}
+			if instance.GPUInfo.GPUCount != nil {
+				gpuInfoMap["gpu_count"] = instance.GPUInfo.GPUCount
+			}
+
+			if instance.GPUInfo.GPUId != nil {
+				gpuInfoMap["gpu_id"] = helper.StringsInterfaces(instance.GPUInfo.GPUId)
+			}
+
+			if instance.GPUInfo.GPUType != nil {
+				gpuInfoMap["gpu_type"] = instance.GPUInfo.GPUType
+			}
+
+			mapping["gpu_info"] = []interface{}{gpuInfoMap}
+		}
+
 		instanceList = append(instanceList, mapping)
 		ids = append(ids, *instance.InstanceId)
 	}
