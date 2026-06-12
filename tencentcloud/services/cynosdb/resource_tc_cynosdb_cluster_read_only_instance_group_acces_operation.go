@@ -44,11 +44,6 @@ func ResourceTencentCloudCynosdbClusterReadOnlyInstanceGroupAccesOperation() *sc
 				Elem:        &schema.Schema{Type: schema.TypeString},
 				Description: "Security group IDs.",
 			},
-			"flow_id": {
-				Computed:    true,
-				Type:        schema.TypeInt,
-				Description: "Flow ID of the open operation.",
-			},
 		},
 	}
 }
@@ -58,14 +53,16 @@ func resourceTencentCloudCynosdbClusterReadOnlyInstanceGroupAccesOperationCreate
 	defer tccommon.InconsistentCheck(d, meta)()
 
 	var (
-		logId   = tccommon.GetLogId(tccommon.ContextNil)
-		ctx     = context.WithValue(context.TODO(), tccommon.LogIdKey, logId)
-		request = cynosdb.NewOpenClusterReadOnlyInstanceGroupAccessRequest()
-		flowId  int64
+		logId     = tccommon.GetLogId(tccommon.ContextNil)
+		ctx       = context.WithValue(context.TODO(), tccommon.LogIdKey, logId)
+		request   = cynosdb.NewOpenClusterReadOnlyInstanceGroupAccessRequest()
+		clusterId string
+		flowId    int64
 	)
 
 	if v, ok := d.GetOk("cluster_id"); ok {
-		request.ClusterId = helper.String(v.(string))
+		clusterId = v.(string)
+		request.ClusterId = helper.String(clusterId)
 	}
 
 	if v, ok := d.GetOk("port"); ok {
@@ -102,9 +99,10 @@ func resourceTencentCloudCynosdbClusterReadOnlyInstanceGroupAccesOperationCreate
 		return fmt.Errorf("create cynosdb_cluster_read_only_instance_group_acces_operation failed, Response or FlowId is nil")
 	}
 
-	flowId = *response.Response.FlowId
-	_ = d.Set("flow_id", flowId)
+	d.SetId(clusterId)
 
+	// wait
+	flowId = *response.Response.FlowId
 	service := CynosdbService{client: meta.(tccommon.ProviderMeta).GetAPIV3Conn()}
 	err = resource.Retry(d.Timeout(schema.TimeoutCreate), func() *resource.RetryError {
 		ok, e := service.DescribeFlow(ctx, flowId)
@@ -128,7 +126,6 @@ func resourceTencentCloudCynosdbClusterReadOnlyInstanceGroupAccesOperationCreate
 		return err
 	}
 
-	d.SetId(helper.BuildToken())
 	return resourceTencentCloudCynosdbClusterReadOnlyInstanceGroupAccesOperationRead(d, meta)
 }
 

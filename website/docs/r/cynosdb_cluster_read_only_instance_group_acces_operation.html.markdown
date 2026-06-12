@@ -15,9 +15,9 @@ Provides a resource to open CynosDB (TDSQL-C) cluster read-only instance group a
 
 ```hcl
 resource "tencentcloud_cynosdb_cluster_read_only_instance_group_acces_operation" "example" {
-  cluster_id         = "cynosdbmysql-xxxxxxxx"
+  cluster_id         = "cynosdbmysql-8rn1byp7"
   port               = "3306"
-  security_group_ids = ["sg-xxxxxxxx"]
+  security_group_ids = ["sg-4rd5741x"]
 }
 ```
 
@@ -34,7 +34,7 @@ The following arguments are supported:
 In addition to all arguments above, the following attributes are exported:
 
 * `id` - ID of the resource.
-* `flow_id` - Flow ID of the open operation.
+
 
 ## Timeouts
 

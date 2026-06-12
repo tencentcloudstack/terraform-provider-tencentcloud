@@ -4,8 +4,8 @@ Example Usage
 
 ```hcl
 resource "tencentcloud_cynosdb_cluster_read_only_instance_group_acces_operation" "example" {
-  cluster_id         = "cynosdbmysql-xxxxxxxx"
+  cluster_id         = "cynosdbmysql-8rn1byp7"
   port               = "3306"
-  security_group_ids = ["sg-xxxxxxxx"]
+  security_group_ids = ["sg-4rd5741x"]
 }
 ```
