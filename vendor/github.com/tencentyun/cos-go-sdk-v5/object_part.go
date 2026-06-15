@@ -361,7 +361,7 @@ func (s *ObjectService) CopyPart(ctx context.Context, name, uploadID string, par
 	}
 	surl := strings.SplitN(sourceURL, "/", 2)
 	if len(surl) < 2 {
-		return nil, nil, errors.New(fmt.Sprintf("x-cos-copy-source format error: %s", sourceURL))
+		return nil, nil, fmt.Errorf("x-cos-copy-source format error: %s", sourceURL)
 	}
 	var u string
 	if len(id) == 1 {
@@ -512,8 +512,11 @@ func (s *ObjectService) innerHead(ctx context.Context, sourceURL string, id []st
 	if len(surl) < 2 {
 		return nil, fmt.Errorf("sourceURL format error: %s", sourceURL)
 	}
-
-	u, err := url.Parse(fmt.Sprintf("http://%s", surl[0]))
+	scheme := "http"
+	if s.client.BaseURL.BucketURL != nil && s.client.BaseURL.BucketURL.Scheme == "https" {
+		scheme = "https"
+	}
+	u, err := url.Parse(fmt.Sprintf("%s://%s", scheme, surl[0]))
 	if err != nil {
 		return nil, err
 	}
@@ -623,7 +626,7 @@ func (s *ObjectService) MultiCopy(ctx context.Context, name string, sourceURL st
 	for i := 0; i < partNum; i++ {
 		res := <-chresults
 		if res.res == nil || res.err != nil {
-			err = fmt.Errorf("UploadID %s, part %d failed to get resp content. error: %s", uploadID, res.PartNumber, res.err.Error())
+			err = fmt.Errorf("UploadID %s, part %d failed to get resp content. error: %w", uploadID, res.PartNumber, res.err)
 			continue
 		}
 		etag := res.res.ETag

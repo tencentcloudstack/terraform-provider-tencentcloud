@@ -485,6 +485,49 @@ func (me *CosService) ForceCleanObject(ctx context.Context, bucket string, versi
 	return nil
 }
 
+func (me *CosService) GetBucketCorsNew(ctx context.Context, bucket string, cdcId string) (corsRules []map[string]interface{}, responseVary string, errRet error) {
+	logId := tccommon.GetLogId(ctx)
+
+	ratelimit.Check("GetBucketCORS")
+	result, response, err := me.client.UseTencentCosClientNew(bucket, cdcId).Bucket.GetCORS(ctx)
+	if err != nil {
+		// No CORS configuration set on the bucket is treated as an empty result.
+		if response != nil && response.StatusCode == http.StatusNotFound {
+			return
+		}
+
+		log.Printf("[CRITAL]%s api[%s] fail, bucket [%s], reason[%s]\n",
+			logId, "get bucket cors", bucket, err.Error())
+		errRet = fmt.Errorf("cos get bucket cors error: %s, bucket: %s", err.Error(), bucket)
+		return
+	}
+
+	if result == nil {
+		return
+	}
+
+	corsRules = make([]map[string]interface{}, 0, len(result.Rules))
+	for _, value := range result.Rules {
+		rule := make(map[string]interface{})
+		rule["allowed_origins"] = value.AllowedOrigins
+		rule["allowed_methods"] = value.AllowedMethods
+		rule["allowed_headers"] = value.AllowedHeaders
+
+		if len(value.ExposeHeaders) > 0 {
+			rule["expose_headers"] = value.ExposeHeaders
+		}
+
+		if value.MaxAgeSeconds > 0 {
+			rule["max_age_seconds"] = value.MaxAgeSeconds
+		}
+
+		corsRules = append(corsRules, rule)
+	}
+
+	responseVary = result.ResponseVary
+	return
+}
+
 func (me *CosService) GetBucketCors(ctx context.Context, bucket string, cdcId string) (corsRules []map[string]interface{}, errRet error) {
 	logId := tccommon.GetLogId(ctx)
 
