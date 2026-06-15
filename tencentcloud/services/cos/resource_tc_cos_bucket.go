@@ -412,6 +412,12 @@ func ResourceTencentCloudCosBucket() *schema.Resource {
 					},
 				},
 			},
+			"cors_response_vary": {
+				Type:        schema.TypeString,
+				Optional:    true,
+				Computed:    true,
+				Description: "Whether to return the `Vary: Origin` header in the CORS response. Valid values: `true`, `false`.",
+			},
 			"origin_pull_rules": {
 				Type:        schema.TypeList,
 				Optional:    true,
@@ -1063,12 +1069,15 @@ func resourceTencentCloudCosBucketRead(d *schema.ResourceData, meta interface{})
 	}
 
 	// read the cors
-	corsRules, err := cosService.GetBucketCors(ctx, bucket, cdcId)
+	corsRules, corsResponseVary, err := cosService.GetBucketCorsNew(ctx, bucket, cdcId)
 	if err != nil {
 		return err
 	}
 	if err = d.Set("cors_rules", corsRules); err != nil {
 		return fmt.Errorf("setting cors_rules error: %v", err)
+	}
+	if err = d.Set("cors_response_vary", corsResponseVary); err != nil {
+		return fmt.Errorf("setting cors_response_vary error: %v", err)
 	}
 
 	// read the lifecycle
@@ -1415,7 +1424,7 @@ func resourceTencentCloudCosBucketUpdate(d *schema.ResourceData, meta interface{
 		_ = d.Set("acl_body", body)
 	}
 
-	if d.HasChange("cors_rules") {
+	if d.HasChange("cors_rules") || d.HasChange("cors_response_vary") {
 		err := resourceTencentCloudCosBucketCorsUpdate(ctx, meta, d)
 		if err != nil {
 			return err
@@ -1779,64 +1788,62 @@ func resourceTencentCloudCosBucketCorsUpdate(ctx context.Context, meta interface
 	bucket := d.Get("bucket").(string)
 	cors := d.Get("cors_rules").([]interface{})
 	cdcId := d.Get("cdc_id").(string)
+	responseVary := d.Get("cors_response_vary").(string)
 
-	if len(cors) == 0 {
-		request := s3.DeleteBucketCorsInput{
-			Bucket: aws.String(bucket),
-		}
-		response, err := meta.(tccommon.ProviderMeta).GetAPIV3Conn().UseCosClientNew(cdcId).DeleteBucketCors(&request)
+	cosClient := meta.(tccommon.ProviderMeta).GetAPIV3Conn().UseTencentCosClientNew(bucket, cdcId)
 
+	if len(cors) == 0 && responseVary == "" {
+		response, err := cosClient.Bucket.DeleteCORS(ctx)
 		if err != nil {
-			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n",
-				logId, "delete bucket cors", request.String(), err.Error())
+			log.Printf("[CRITAL]%s api[%s] fail, bucket [%s], reason[%s]\n",
+				logId, "delete bucket cors", bucket, err.Error())
 			return fmt.Errorf("cos delete bucket cors error: %s, bucket: %s", err.Error(), bucket)
 		}
-		log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n",
-			logId, "delete bucket cors", request.String(), response.String())
+
+		log.Printf("[DEBUG]%s api[%s] success, bucket [%s], response status [%s]\n",
+			logId, "delete bucket cors", bucket, response.Status)
 	} else {
-		rules := make([]*s3.CORSRule, 0, len(cors))
+		rules := make([]cos.BucketCORSRule, 0, len(cors))
 		for _, item := range cors {
 			corsMap := item.(map[string]interface{})
-			rule := &s3.CORSRule{}
-			for k, v := range corsMap {
-				if k == "max_age_seconds" {
-					rule.MaxAgeSeconds = aws.Int64(int64(v.(int)))
-				} else {
-					vMap := make([]*string, len(v.([]interface{})))
-					for i, value := range v.([]interface{}) {
-						if str, ok := value.(string); ok {
-							vMap[i] = aws.String(str)
-						}
-					}
-					switch k {
-					case "allowed_origins":
-						rule.AllowedOrigins = vMap
-					case "allowed_methods":
-						rule.AllowedMethods = vMap
-					case "allowed_headers":
-						rule.AllowedHeaders = vMap
-					case "expose_headers":
-						rule.ExposeHeaders = vMap
-					}
-				}
+			rule := cos.BucketCORSRule{}
+			if v, ok := corsMap["allowed_origins"]; ok {
+				rule.AllowedOrigins = helper.InterfacesStrings(v.([]interface{}))
 			}
+
+			if v, ok := corsMap["allowed_methods"]; ok {
+				rule.AllowedMethods = helper.InterfacesStrings(v.([]interface{}))
+			}
+
+			if v, ok := corsMap["allowed_headers"]; ok {
+				rule.AllowedHeaders = helper.InterfacesStrings(v.([]interface{}))
+			}
+
+			if v, ok := corsMap["expose_headers"]; ok {
+				rule.ExposeHeaders = helper.InterfacesStrings(v.([]interface{}))
+			}
+
+			if v, ok := corsMap["max_age_seconds"]; ok {
+				rule.MaxAgeSeconds = v.(int)
+			}
+
 			rules = append(rules, rule)
 		}
-		request := s3.PutBucketCorsInput{
-			Bucket: aws.String(bucket),
-			CORSConfiguration: &s3.CORSConfiguration{
-				CORSRules: rules,
-			},
-		}
-		response, err := meta.(tccommon.ProviderMeta).GetAPIV3Conn().UseCosClientNew(cdcId).PutBucketCors(&request)
 
+		opt := &cos.BucketPutCORSOptions{
+			Rules:        rules,
+			ResponseVary: responseVary,
+		}
+
+		response, err := cosClient.Bucket.PutCORS(ctx, opt)
 		if err != nil {
-			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n",
-				logId, "put bucket cors", request.String(), err.Error())
+			log.Printf("[CRITAL]%s api[%s] fail, bucket [%s], reason[%s]\n",
+				logId, "put bucket cors", bucket, err.Error())
 			return fmt.Errorf("cos put bucket cors error: %s, bucket: %s", err.Error(), bucket)
 		}
-		log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n",
-			logId, "put bucket cors", request.String(), response.String())
+
+		log.Printf("[DEBUG]%s api[%s] success, bucket [%s], response status [%s]\n",
+			logId, "put bucket cors", bucket, response.Status)
 	}
 	return nil
 }
