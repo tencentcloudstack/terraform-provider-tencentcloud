@@ -1,3 +1,29 @@
+## 1.83.2(June 15, 2026)
+
+FEATURES:
+
+* **New Data Source:** `tencentcloud_cfw_nat_fw_cluster_region_status` ([#4205](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/4205))
+* **New Data Source:** `tencentcloud_mongodb_db_instance_node_property` ([#4208](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/4208))
+* **New Resource:** `tencentcloud_cfw_cluster_fw_bypass_config` ([#4207](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/4207))
+* **New Resource:** `tencentcloud_cfw_cluster_nat_fw_switch` ([#4206](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/4206))
+* **New Resource:** `tencentcloud_teo_shared_cname` ([#4214](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/4214))
+
+ENHANCEMENTS:
+
+* data-source/tencentcloud_instances: support `gpu_info` ([#4216](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/4216))
+* resource/tencentcloud_as_scaling_policy: Support import. ([#4219](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/4219))
+* resource/tencentcloud_as_schedule: Support import. ([#4219](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/4219))
+* resource/tencentcloud_instance: add `cpu_topology` parameter to support configuring CPU physical core count and hyper-threading settings ([#4210](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/4210))
+* resource/tencentcloud_kubernetes_cluster: optimize code logic for create function ([#4220](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/4220))
+* resource/tencentcloud_mariadb_hour_db_instance: add init_params parameter to support custom database initialization parameters ([#4213](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/4213))
+* resource/tencentcloud_mqtt_instance: add `message_rate` and `use_default_server_cert` parameters, make `device_certificate_provision_type` configurable ([#4209](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/4209))
+
+## 1.83.1(June 11, 2026)
+
+FEATURES:
+
+* feat(provider): [134193389]framework in https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/4143
+
 ## 1.82.102(June 10, 2026)
 
 FEATURES:
