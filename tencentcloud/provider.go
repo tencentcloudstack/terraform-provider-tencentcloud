@@ -20,6 +20,7 @@ import (
 	tccommon "github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/common"
 	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/connectivity"
 	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/internal/helper"
+	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/internal/sharedmeta"
 	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/ratelimit"
 	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/services/advisor"
 	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/services/antiddos"
@@ -181,7 +182,7 @@ func init() {
 	commonJson.OmitBehaviour = commonJson.OmitEmpty
 }
 
-// GetAPIV3Conn 返回访问云 API 的客户端连接对象
+// GetAPIV3Conn returns the cloud API client connection used to access TencentCloud APIs.
 func (meta *TencentCloudClient) GetAPIV3Conn() *connectivity.TencentCloudClient {
 	return meta.apiV3Conn
 }
@@ -702,6 +703,7 @@ func Provider() *schema.Provider {
 			"tencentcloud_mongodb_instance_params":                                mongodb.DataSourceTencentCloudMongodbInstanceParams(),
 			"tencentcloud_mongodb_instance_slow_log":                              mongodb.DataSourceTencentCloudMongodbInstanceSlowLog(),
 			"tencentcloud_mongodb_instance_urls":                                  mongodb.DataSourceTencentCloudMongodbInstanceUrls(),
+			"tencentcloud_mongodb_db_instance_node_property":                      mongodb.DataSourceTencentCloudMongodbDbInstanceNodeProperty(),
 			"tencentcloud_dayu_cc_https_policies":                                 dayu.DataSourceTencentCloudDayuCCHttpsPolicies(),
 			"tencentcloud_dayu_cc_http_policies":                                  dayu.DataSourceTencentCloudDayuCCHttpPolicies(),
 			"tencentcloud_dayu_ddos_policies":                                     dayu.DataSourceTencentCloudDayuDdosPolicies(),
@@ -1298,6 +1300,7 @@ func Provider() *schema.Provider {
 			"tencentcloud_cfw_ccn_instance_region_status":                         cfw.DataSourceTencentCloudCfwCcnInstanceRegionStatus(),
 			"tencentcloud_cfw_ccn_associated_instances":                           cfw.DataSourceTencentCloudCfwCcnAssociatedInstances(),
 			"tencentcloud_cfw_ccn_vpc_fw_switch":                                  cfw.DataSourceTencentCloudCfwCcnVpcFwSwitch(),
+			"tencentcloud_cfw_nat_fw_cluster_region_status":                       cfw.DataSourceTencentCloudCfwNatFwClusterRegionStatus(),
 			"tencentcloud_bh_account_groups":                                      bh.DataSourceTencentCloudBhAccountGroups(),
 			"tencentcloud_bh_source_types":                                        bh.DataSourceTencentCloudBhSourceTypes(),
 			"tencentcloud_bh_devices":                                             bh.DataSourceTencentCloudBhDevices(),
@@ -2140,6 +2143,7 @@ func Provider() *schema.Provider {
 			"tencentcloud_teo_load_balancer":                                                        teo.ResourceTencentCloudTeoLoadBalancer(),
 			"tencentcloud_teo_prefetch_origin_limit":                                                teo.ResourceTencentCloudTeoPrefetchOriginLimit(),
 			"tencentcloud_teo_purge_task":                                                           teo.ResourceTencentCloudTeoPurgeTaskOperation(),
+			"tencentcloud_teo_shared_cname":                                                         teo.ResourceTencentCloudTeoSharedCname(),
 			"tencentcloud_tcm_mesh":                                                                 tcm.ResourceTencentCloudTcmMesh(),
 			"tencentcloud_tcm_cluster_attachment":                                                   tcm.ResourceTencentCloudTcmClusterAttachment(),
 			"tencentcloud_tcm_prometheus_attachment":                                                tcm.ResourceTencentCloudTcmPrometheusAttachment(),
@@ -2590,6 +2594,7 @@ func Provider() *schema.Provider {
 			"tencentcloud_sg_rule":                                                                  cfw.ResourceTencentCloudSgRule(),
 			"tencentcloud_cfw_cluster_vpc_fw_switch":                                                cfw.ResourceTencentCloudCfwClusterVpcFwSwitch(),
 			"tencentcloud_cfw_ips_mode_switch":                                                      cfw.ResourceTencentCloudCfwIpsModeSwitch(),
+			"tencentcloud_cfw_cluster_nat_fw_switch":                                                cfw.ResourceTencentCloudCfwClusterNatFwSwitch(),
 			"tencentcloud_cfw_cluster_fw_bypass_config":                                             cfw.ResourceTencentCloudCfwClusterFwBypassConfig(),
 			"tencentcloud_config_compliance_pack":                                                   config.ResourceTencentCloudConfigCompliancePack(),
 			"tencentcloud_config_remediation":                                                       config.ResourceTencentCloudConfigRemediation(),
@@ -3080,6 +3085,12 @@ func providerConfigure(d *schema.ResourceData) (interface{}, error) {
 			return nil, err
 		}
 	}
+
+	// Push the configured connectivity client to the framework provider; its
+	// Configure step reads the same instance back via sharedmeta.GetSharedMeta(),
+	// so the SDKv2 and framework stacks share credentials, the SDK client cache,
+	// the User-Agent and the retry strategy.
+	sharedmeta.SetSharedMeta(tcClient.apiV3Conn)
 
 	return &tcClient, nil
 }

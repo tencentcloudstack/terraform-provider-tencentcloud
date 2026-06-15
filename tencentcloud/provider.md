@@ -764,6 +764,7 @@ tencentcloud_mongodb_instance_current_op
 tencentcloud_mongodb_instance_params
 tencentcloud_mongodb_instance_slow_log
 tencentcloud_mongodb_instance_urls
+tencentcloud_mongodb_db_instance_node_property
 
 Resource
 tencentcloud_mongodb_instance
@@ -1625,6 +1626,7 @@ tencentcloud_teo_security_js_injection_rule
 tencentcloud_teo_load_balancer
 tencentcloud_teo_prefetch_origin_limit
 tencentcloud_teo_purge_task
+tencentcloud_teo_shared_cname
 
 TencentCloud ServiceMesh(TCM)
 Data Source
@@ -2463,6 +2465,7 @@ tencentcloud_cfw_edge_fw_switches
 tencentcloud_cfw_ccn_instance_region_status
 tencentcloud_cfw_ccn_associated_instances
 tencentcloud_cfw_ccn_vpc_fw_switch
+tencentcloud_cfw_nat_fw_cluster_region_status
 
 Resource
 tencentcloud_cfw_address_template
@@ -2483,6 +2486,7 @@ tencentcloud_cfw_edge_firewall_switch
 tencentcloud_sg_rule
 tencentcloud_cfw_cluster_vpc_fw_switch
 tencentcloud_cfw_ips_mode_switch
+tencentcloud_cfw_cluster_nat_fw_switch
 tencentcloud_cfw_cluster_fw_bypass_config
 
 Bastion Host(BH)

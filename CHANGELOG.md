@@ -1,3 +1,21 @@
+## 1.82.102(June 10, 2026)
+
+FEATURES:
+
+* **New Data Source:** `tencentcloud_organization_permission_policies_in_role_configuration` ([#4198](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/4198))
+* **New Resource:** `tencentcloud_cam_message_receiver` ([#4203](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/4203))
+* **New Resource:** `tencentcloud_cls_open_service_operation` ([#4204](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/4204))
+* **New Resource:** `tencentcloud_cynosdb_libra_db_instance_attachment` ([#4196](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/4196))
+* **New Resource:** `tencentcloud_kubernetes_cluster_roll_out_sequence_tag_config` ([#4202](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/4202))
+* **New Resource:** `tencentcloud_kubernetes_roll_out_sequence` ([#4199](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/4199))
+* **New Resource:** `tencentcloud_redis_param` ([#4200](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/4200))
+
+ENHANCEMENTS:
+
+* resource/tencentcloud_cls_cloud_product_log_task_v2: support `is_delete_topic` and `is_delete_logset` ([#3919](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/3919))
+* resource/tencentcloud_cvm_launch_template_version: optimize code logic for `snapshot_id` ([#4197](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/4197))
+* resource/tencentcloud_tat_invocation_invoke_attachment: optimize code logic ([#4201](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/4201))
+
 ## 1.82.101(June 05, 2026)
 
 FEATURES:

@@ -20,7 +20,9 @@ func ResourceTencentCloudAsSchedule() *schema.Resource {
 		Read:   resourceTencentCloudAsScheduleRead,
 		Update: resourceTencentCloudAsScheduleUpdate,
 		Delete: resourceTencentCloudAsScheduleDelete,
-
+		Importer: &schema.ResourceImporter{
+			State: schema.ImportStatePassthrough,
+		},
 		Schema: map[string]*schema.Schema{
 			"scaling_group_id": {
 				Type:        schema.TypeString,

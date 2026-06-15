@@ -21,7 +21,11 @@ type setRules struct {
 	Type Type
 }
 
-var _ set.OrderedRules = setRules{}
+var _ set.OrderedRules[any] = setRules{}
+
+func newSetRules(ety Type) set.Rules[any] {
+	return setRules{ety}
+}
 
 // Hash returns a hash value for the receiver that can be used for equality
 // checks where some inaccuracy is tolerable.
@@ -39,14 +43,14 @@ func (val Value) Hash() int {
 	return int(crc32.ChecksumIEEE(hashBytes))
 }
 
-func (r setRules) Hash(v interface{}) int {
+func (r setRules) Hash(v any) int {
 	return Value{
 		ty: r.Type,
 		v:  v,
 	}.Hash()
 }
 
-func (r setRules) Equivalent(v1 interface{}, v2 interface{}) bool {
+func (r setRules) Equivalent(v1 any, v2 any) bool {
 	v1v := Value{
 		ty: r.Type,
 		v:  v1,
@@ -67,7 +71,7 @@ func (r setRules) Equivalent(v1 interface{}, v2 interface{}) bool {
 
 // SameRules is only true if the other Rules instance is also a setRules struct,
 // and the types are considered equal.
-func (r setRules) SameRules(other set.Rules) bool {
+func (r setRules) SameRules(other set.Rules[any]) bool {
 	rules, ok := other.(setRules)
 	if !ok {
 		return false
@@ -78,7 +82,7 @@ func (r setRules) SameRules(other set.Rules) bool {
 
 // Less is an implementation of set.OrderedRules so that we can iterate over
 // set elements in a consistent order, where such an order is possible.
-func (r setRules) Less(v1, v2 interface{}) bool {
+func (r setRules) Less(v1, v2 any) bool {
 	v1v := Value{
 		ty: r.Type,
 		v:  v1,
@@ -250,6 +254,25 @@ func appendSetHashBytes(val Value, buf *bytes.Buffer, marks ValueMarks) {
 		return
 	}
 
+	if val.ty.IsCapsuleType() {
+		buf.WriteRune('«')
+		ops := val.ty.CapsuleOps()
+		if ops != nil && ops.HashKey != nil {
+			key := ops.HashKey(val.EncapsulatedValue())
+			buf.WriteString(fmt.Sprintf("%q", key))
+		} else {
+			// If there isn't an explicit hash implementation then we'll
+			// just generate the same hash value for every value of this
+			// type, which is logically fine but less efficient for
+			// larger sets because we'll have to bucket all values
+			// together and scan over them with Equals to determine
+			// set membership.
+			buf.WriteRune('?')
+		}
+		buf.WriteRune('»')
+		return
+	}
+
 	// should never get down here
-	panic("unsupported type in set hash")
+	panic(fmt.Sprintf("unsupported type %#v in set hash", val.ty))
 }

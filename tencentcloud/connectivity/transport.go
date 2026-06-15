@@ -8,6 +8,7 @@ import (
 	"log"
 	"net/http"
 	"os"
+	"strings"
 	"time"
 )
 
@@ -138,4 +139,18 @@ func (me *LogRoundTripper) log(in []byte, out []byte, err error, start time.Time
 	buf.WriteString(costFormat)
 
 	log.Println(buf.String())
+}
+
+// GetReqClientVersion returns the version of request client, if the version is empty or latest, return dev.
+func GetReqClientVersion() string {
+	version := ""
+	if idx := strings.Index(ReqClient, "-"); idx >= 0 {
+		version = ReqClient[idx+1:]
+	}
+
+	if version == "" || version == "latest" {
+		return "dev"
+	}
+
+	return version
 }

@@ -2642,12 +2642,7 @@ func ModifyClusterInternetOrIntranetAccess(ctx context.Context, d *schema.Resour
 	isInternet bool, enable bool, sg string, subnetId string, domain string) error {
 
 	id := d.Id()
-	var accessType string
-	if isInternet {
-		accessType = "cluster internet"
-	} else {
-		accessType = "cluster intranet"
-	}
+
 	// open access
 	if enable {
 		err := resource.Retry(tccommon.WriteRetryTimeout, func() *resource.RetryError {
@@ -2660,20 +2655,19 @@ func ModifyClusterInternetOrIntranetAccess(ctx context.Context, d *schema.Resour
 		if err != nil {
 			return err
 		}
-		err = resource.Retry(2*tccommon.ReadRetryTimeout, func() *resource.RetryError {
+
+		finishStates := []string{TkeInternetStatusNotfound, TkeInternetStatusCreated}
+		err = resource.Retry(10*tccommon.ReadRetryTimeout, func() *resource.RetryError {
 			status, message, inErr := tkeSvc.DescribeClusterEndpointStatus(ctx, id, isInternet)
 			if inErr != nil {
 				return tccommon.RetryError(inErr)
 			}
-			if status == TkeInternetStatusCreating {
-				return resource.RetryableError(
-					fmt.Errorf("%s create %s endpoint status still is %s", id, accessType, status))
-			}
-			if status == TkeInternetStatusNotfound || status == TkeInternetStatusCreated {
+
+			if tccommon.IsContains(finishStates, status) {
 				return nil
 			}
-			return resource.NonRetryableError(
-				fmt.Errorf("%s create %s endpoint error ,status is %s,message is %s", id, accessType, status, message))
+
+			return resource.RetryableError(fmt.Errorf("%s create cluster endpoint status is %s, message is %s. retry...", id, status, message))
 		})
 		if err != nil {
 			return err
@@ -2689,21 +2683,21 @@ func ModifyClusterInternetOrIntranetAccess(ctx context.Context, d *schema.Resour
 		if err != nil {
 			return err
 		}
-		err = resource.Retry(2*tccommon.ReadRetryTimeout, func() *resource.RetryError {
+
+		finishStates := []string{TkeInternetStatusNotfound, TkeInternetStatusDeleted}
+		err = resource.Retry(10*tccommon.ReadRetryTimeout, func() *resource.RetryError {
 			status, message, inErr := tkeSvc.DescribeClusterEndpointStatus(ctx, id, isInternet)
 			if inErr != nil {
 				return tccommon.RetryError(inErr)
 			}
-			if status == TkeInternetStatusDeleting {
-				return resource.RetryableError(
-					fmt.Errorf("%s close %s endpoint status still is %s", id, accessType, status))
-			}
-			if status == TkeInternetStatusNotfound || status == TkeInternetStatusDeleted || status == TkeInternetStatusCreated {
+
+			if tccommon.IsContains(finishStates, status) {
 				return nil
 			}
-			return resource.NonRetryableError(
-				fmt.Errorf("%s close %s endpoint error ,status is %s,message is %s", id, accessType, status, message))
+
+			return resource.RetryableError(fmt.Errorf("%s delete cluster endpoint status is %s, message is %s. retry...", id, status, message))
 		})
+
 		if err != nil {
 			return err
 		}
