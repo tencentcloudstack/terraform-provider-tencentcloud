@@ -5,14 +5,15 @@ TencentCloud TEO (EdgeOne) supports binding acceleration domains to shared CNAME
 ## What Changes
 
 - Add a new Terraform resource `tencentcloud_teo_domain_shared_cname_attachment` of type RESOURCE_KIND_ATTACHMENT
-- The resource manages the binding relationship between acceleration domains and shared CNAMEs using the `BindSharedCNAME` API (bind on create, unbind on delete)
-- The resource reads binding status via the `DescribeSharedCNAME` API to verify the attachment exists
-- Resource ID is a composite of `zone_id`, `shared_cname`, and `domain_names` joined by `tccommon.FILED_SP`
+- The resource manages the binding relationship between acceleration domains and a single shared CNAME using the `BindSharedCNAMEWithContext` API (bind on create/update, unbind on delete/update)
+- The resource reads binding state via the `DescribeSharedCNAMEWithContext` API and populates `domain_names` from the response
+- Resource ID is a composite of `zone_id` and `shared_cname` joined by `tccommon.FILED_SP` (format: `{zone_id}#{shared_cname}`)
+- Supports in-place update of `domain_names`: unbinds removed domains and binds added domains
 
 ## Capabilities
 
 ### New Capabilities
-- `teo-domain-shared-cname-attachment`: Terraform resource to manage the binding/unbinding of acceleration domains to a shared CNAME within a TEO zone
+- `teo-domain-shared-cname-attachment`: Terraform resource to manage the binding/unbinding of acceleration domains to a shared CNAME within a TEO zone, with support for in-place update of domain list
 
 ### Modified Capabilities
 

@@ -1,6 +1,7 @@
 package teo
 
 import (
+	"context"
 	"fmt"
 	"log"
 	"strings"
@@ -17,6 +18,7 @@ func ResourceTencentCloudTeoDomainSharedCnameAttachment() *schema.Resource {
 	return &schema.Resource{
 		Create: resourceTencentCloudTeoDomainSharedCnameAttachmentCreate,
 		Read:   resourceTencentCloudTeoDomainSharedCnameAttachmentRead,
+		Update: resourceTencentCloudTeoDomainSharedCnameAttachmentUpdate,
 		Delete: resourceTencentCloudTeoDomainSharedCnameAttachmentDelete,
 		Importer: &schema.ResourceImporter{
 			State: schema.ImportStatePassthrough,
@@ -28,33 +30,78 @@ func ResourceTencentCloudTeoDomainSharedCnameAttachment() *schema.Resource {
 				ForceNew:    true,
 				Description: "The zone ID that the acceleration domain belongs to.",
 			},
-			"bind_shared_cname_maps": {
-				Type:        schema.TypeList,
+			"shared_cname": {
+				Type:        schema.TypeString,
 				Required:    true,
 				ForceNew:    true,
-				Description: "The binding relationships between acceleration domains and shared CNAMEs.",
-				Elem: &schema.Resource{
-					Schema: map[string]*schema.Schema{
-						"shared_cname": {
-							Type:        schema.TypeString,
-							Required:    true,
-							ForceNew:    true,
-							Description: "The shared CNAME to bind to.",
-						},
-						"domain_names": {
-							Type:        schema.TypeList,
-							Required:    true,
-							ForceNew:    true,
-							Description: "The acceleration domain names to bind, up to 20.",
-							Elem: &schema.Schema{
-								Type: schema.TypeString,
-							},
-						},
-					},
+				Description: "The shared CNAME to bind to.",
+			},
+			"domain_names": {
+				Type:        schema.TypeSet,
+				Required:    true,
+				Description: "The acceleration domain names to bind.",
+				Elem: &schema.Schema{
+					Type: schema.TypeString,
 				},
 			},
 		},
 	}
+}
+
+// bindSharedCNAMEInBatches calls BindSharedCNAMEWithContext in batches of up to 20 domain names per request.
+func bindSharedCNAMEInBatches(ctx context.Context, logId string, meta interface{}, zoneId, sharedCname, bindType string, domainNames []string) error {
+	if len(domainNames) == 0 {
+		request := teov20220901.NewBindSharedCNAMERequest()
+		request.ZoneId = helper.String(zoneId)
+		request.BindType = helper.String(bindType)
+		bindMap := teov20220901.BindSharedCNAMEMap{
+			SharedCNAME: helper.String(sharedCname),
+		}
+		request.BindSharedCNAMEMaps = []*teov20220901.BindSharedCNAMEMap{&bindMap}
+		reqErr := resource.Retry(tccommon.WriteRetryTimeout, func() *resource.RetryError {
+			result, e := meta.(tccommon.ProviderMeta).GetAPIV3Conn().UseTeoClient().BindSharedCNAMEWithContext(ctx, request)
+			if e != nil {
+				return tccommon.RetryError(e)
+			}
+			log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), result.ToJsonString())
+			return nil
+		})
+		if reqErr != nil {
+			return reqErr
+		}
+	}
+	const batchSize = 20
+	for i := 0; i < len(domainNames); i += batchSize {
+		end := i + batchSize
+		if end > len(domainNames) {
+			end = len(domainNames)
+		}
+		batch := domainNames[i:end]
+
+		request := teov20220901.NewBindSharedCNAMERequest()
+		request.ZoneId = helper.String(zoneId)
+		request.BindType = helper.String(bindType)
+		bindMap := teov20220901.BindSharedCNAMEMap{
+			SharedCNAME: helper.String(sharedCname),
+		}
+		for _, dn := range batch {
+			bindMap.DomainNames = append(bindMap.DomainNames, helper.String(dn))
+		}
+		request.BindSharedCNAMEMaps = []*teov20220901.BindSharedCNAMEMap{&bindMap}
+
+		reqErr := resource.Retry(tccommon.WriteRetryTimeout, func() *resource.RetryError {
+			result, e := meta.(tccommon.ProviderMeta).GetAPIV3Conn().UseTeoClient().BindSharedCNAMEWithContext(ctx, request)
+			if e != nil {
+				return tccommon.RetryError(e)
+			}
+			log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), result.ToJsonString())
+			return nil
+		})
+		if reqErr != nil {
+			return reqErr
+		}
+	}
+	return nil
 }
 
 func resourceTencentCloudTeoDomainSharedCnameAttachmentCreate(d *schema.ResourceData, meta interface{}) error {
@@ -62,69 +109,33 @@ func resourceTencentCloudTeoDomainSharedCnameAttachmentCreate(d *schema.Resource
 	defer tccommon.InconsistentCheck(d, meta)()
 
 	var (
-		logId   = tccommon.GetLogId(tccommon.ContextNil)
-		request = teov20220901.NewBindSharedCNAMERequest()
-		zoneId  string
+		logId       = tccommon.GetLogId(tccommon.ContextNil)
+		ctx         = tccommon.NewResourceLifeCycleHandleFuncContext(context.Background(), logId, d, meta)
+		zoneId      string
+		sharedCname string
 	)
 
 	if v, ok := d.GetOk("zone_id"); ok {
 		zoneId = v.(string)
-		request.ZoneId = helper.String(zoneId)
 	}
 
-	request.BindType = helper.String("bind")
+	if v, ok := d.GetOk("shared_cname"); ok {
+		sharedCname = v.(string)
+	}
 
-	var sharedCname string
 	var domainNames []string
-
-	if v, ok := d.GetOk("bind_shared_cname_maps"); ok {
-		for _, item := range v.([]interface{}) {
-			mapItem := item.(map[string]interface{})
-			bindMap := teov20220901.BindSharedCNAMEMap{}
-			if v, ok := mapItem["shared_cname"].(string); ok && v != "" {
-				bindMap.SharedCNAME = helper.String(v)
-				sharedCname = v
-			}
-
-			if v, ok := mapItem["domain_names"]; ok {
-				for _, domainName := range v.([]interface{}) {
-					dn := domainName.(string)
-					bindMap.DomainNames = append(bindMap.DomainNames, helper.String(dn))
-					domainNames = append(domainNames, dn)
-				}
-			}
-
-			request.BindSharedCNAMEMaps = append(request.BindSharedCNAMEMaps, &bindMap)
+	if v, ok := d.GetOk("domain_names"); ok {
+		for _, domainName := range v.(*schema.Set).List() {
+			domainNames = append(domainNames, domainName.(string))
 		}
 	}
 
-	reqErr := resource.Retry(tccommon.WriteRetryTimeout, func() *resource.RetryError {
-		result, e := meta.(tccommon.ProviderMeta).GetAPIV3Conn().UseTeoClient().BindSharedCNAME(request)
-		if e != nil {
-			return tccommon.RetryError(e)
-		}
+	d.SetId(strings.Join([]string{zoneId, sharedCname}, tccommon.FILED_SP))
 
-		log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), result.ToJsonString())
-
-		if result == nil || result.Response == nil {
-			return resource.NonRetryableError(fmt.Errorf("Create teo_domain_shared_cname_attachment failed, Response is nil"))
-		}
-
-		return nil
-	})
-
-	if reqErr != nil {
+	if reqErr := bindSharedCNAMEInBatches(ctx, logId, meta, zoneId, sharedCname, "bind", domainNames); reqErr != nil {
 		log.Printf("[CRITAL]%s create teo_domain_shared_cname_attachment failed, reason:%+v", logId, reqErr)
 		return reqErr
 	}
-
-	log.Printf("[DEBUG]%s create teo_domain_shared_cname_attachment, logId: %s, id: %s", logId, logId, d.Id())
-
-	if sharedCname == "" || len(domainNames) == 0 {
-		return fmt.Errorf("Create teo_domain_shared_cname_attachment failed, shared_cname or domain_names is empty")
-	}
-
-	d.SetId(strings.Join([]string{zoneId, sharedCname, strings.Join(domainNames, ",")}, tccommon.FILED_SP))
 
 	return resourceTencentCloudTeoDomainSharedCnameAttachmentRead(d, meta)
 }
@@ -135,18 +146,17 @@ func resourceTencentCloudTeoDomainSharedCnameAttachmentRead(d *schema.ResourceDa
 
 	var (
 		logId   = tccommon.GetLogId(tccommon.ContextNil)
+		ctx     = tccommon.NewResourceLifeCycleHandleFuncContext(context.Background(), logId, d, meta)
 		request = teov20220901.NewDescribeSharedCNAMERequest()
 	)
 
 	idSplit := strings.Split(d.Id(), tccommon.FILED_SP)
-	if len(idSplit) != 3 {
+	if len(idSplit) != 2 {
 		return fmt.Errorf("id is broken, %s", d.Id())
 	}
 
 	zoneId := idSplit[0]
 	sharedCname := idSplit[1]
-	domainNamesStr := idSplit[2]
-	domainNames := strings.Split(domainNamesStr, ",")
 
 	request.ZoneId = helper.String(zoneId)
 	request.Filters = []*teov20220901.AdvancedFilter{
@@ -159,7 +169,7 @@ func resourceTencentCloudTeoDomainSharedCnameAttachmentRead(d *schema.ResourceDa
 
 	var response *teov20220901.DescribeSharedCNAMEResponse
 	reqErr := resource.Retry(tccommon.ReadRetryTimeout, func() *resource.RetryError {
-		result, e := meta.(tccommon.ProviderMeta).GetAPIV3Conn().UseTeoClient().DescribeSharedCNAME(request)
+		result, e := meta.(tccommon.ProviderMeta).GetAPIV3Conn().UseTeoClient().DescribeSharedCNAMEWithContext(ctx, request)
 		if e != nil {
 			return tccommon.RetryError(e)
 		}
@@ -180,32 +190,16 @@ func resourceTencentCloudTeoDomainSharedCnameAttachmentRead(d *schema.ResourceDa
 		return nil
 	}
 
-	// Find the matching shared CNAME info
+	// Find the matching shared CNAME info and collect all bound domain names
+	var boundDomainNames []string
 	var found bool
 	for _, info := range response.Response.SharedCNAMEInfo {
 		if info.SharedCNAME != nil && *info.SharedCNAME == sharedCname {
-			// Check if all expected domains are bound
-			boundDomains := make(map[string]bool)
 			for _, ref := range info.AccelerationDomains {
 				if ref.Instance != nil {
-					boundDomains[*ref.Instance] = true
+					boundDomainNames = append(boundDomainNames, *ref.Instance)
 				}
 			}
-
-			allBound := true
-			for _, dn := range domainNames {
-				if !boundDomains[dn] {
-					allBound = false
-					break
-				}
-			}
-
-			if !allBound {
-				log.Printf("[WARN]%s resource `teo_domain_shared_cname_attachment` [%s] domains not all bound, removing from state", logId, d.Id())
-				d.SetId("")
-				return nil
-			}
-
 			found = true
 			break
 		}
@@ -218,16 +212,65 @@ func resourceTencentCloudTeoDomainSharedCnameAttachmentRead(d *schema.ResourceDa
 	}
 
 	_ = d.Set("zone_id", zoneId)
-
-	bindSharedCnameMaps := []map[string]interface{}{
-		{
-			"shared_cname": sharedCname,
-			"domain_names": domainNames,
-		},
-	}
-	_ = d.Set("bind_shared_cname_maps", bindSharedCnameMaps)
+	_ = d.Set("shared_cname", sharedCname)
+	_ = d.Set("domain_names", boundDomainNames)
 
 	return nil
+}
+
+func resourceTencentCloudTeoDomainSharedCnameAttachmentUpdate(d *schema.ResourceData, meta interface{}) error {
+	defer tccommon.LogElapsed("resource.tencentcloud_teo_domain_shared_cname_attachment.update")()
+	defer tccommon.InconsistentCheck(d, meta)()
+
+	var (
+		logId = tccommon.GetLogId(tccommon.ContextNil)
+		ctx   = tccommon.NewResourceLifeCycleHandleFuncContext(context.Background(), logId, d, meta)
+	)
+
+	idSplit := strings.Split(d.Id(), tccommon.FILED_SP)
+	if len(idSplit) != 2 {
+		return fmt.Errorf("id is broken, %s", d.Id())
+	}
+
+	zoneId := idSplit[0]
+	sharedCname := idSplit[1]
+
+	if d.HasChange("domain_names") {
+		oldVal, newVal := d.GetChange("domain_names")
+
+		oldSet := oldVal.(*schema.Set)
+		newSet := newVal.(*schema.Set)
+
+		// Compute domains to unbind (in old but not in new)
+		var domainsToUnbind []string
+		for _, dn := range oldSet.Difference(newSet).List() {
+			domainsToUnbind = append(domainsToUnbind, dn.(string))
+		}
+
+		// Compute domains to bind (in new but not in old)
+		var domainsToBind []string
+		for _, dn := range newSet.Difference(oldSet).List() {
+			domainsToBind = append(domainsToBind, dn.(string))
+		}
+
+		// Unbind removed domains
+		if len(domainsToUnbind) > 0 {
+			if reqErr := bindSharedCNAMEInBatches(ctx, logId, meta, zoneId, sharedCname, "unbind", domainsToUnbind); reqErr != nil {
+				log.Printf("[CRITAL]%s unbind domains during update teo_domain_shared_cname_attachment failed, reason:%+v", logId, reqErr)
+				return reqErr
+			}
+		}
+
+		// Bind new domains
+		if len(domainsToBind) > 0 {
+			if reqErr := bindSharedCNAMEInBatches(ctx, logId, meta, zoneId, sharedCname, "bind", domainsToBind); reqErr != nil {
+				log.Printf("[CRITAL]%s bind domains during update teo_domain_shared_cname_attachment failed, reason:%+v", logId, reqErr)
+				return reqErr
+			}
+		}
+	}
+
+	return resourceTencentCloudTeoDomainSharedCnameAttachmentRead(d, meta)
 }
 
 func resourceTencentCloudTeoDomainSharedCnameAttachmentDelete(d *schema.ResourceData, meta interface{}) error {
@@ -235,47 +278,30 @@ func resourceTencentCloudTeoDomainSharedCnameAttachmentDelete(d *schema.Resource
 	defer tccommon.InconsistentCheck(d, meta)()
 
 	var (
-		logId   = tccommon.GetLogId(tccommon.ContextNil)
-		request = teov20220901.NewBindSharedCNAMERequest()
+		logId = tccommon.GetLogId(tccommon.ContextNil)
+		ctx   = tccommon.NewResourceLifeCycleHandleFuncContext(context.Background(), logId, d, meta)
 	)
 
 	idSplit := strings.Split(d.Id(), tccommon.FILED_SP)
-	if len(idSplit) != 3 {
+	if len(idSplit) != 2 {
 		return fmt.Errorf("id is broken, %s", d.Id())
 	}
 
 	zoneId := idSplit[0]
 	sharedCname := idSplit[1]
-	domainNamesStr := idSplit[2]
-	domainNames := strings.Split(domainNamesStr, ",")
 
-	request.ZoneId = helper.String(zoneId)
-	request.BindType = helper.String("unbind")
-
-	bindMap := teov20220901.BindSharedCNAMEMap{
-		SharedCNAME: helper.String(sharedCname),
-	}
-	for _, dn := range domainNames {
-		bindMap.DomainNames = append(bindMap.DomainNames, helper.String(dn))
-	}
-	request.BindSharedCNAMEMaps = []*teov20220901.BindSharedCNAMEMap{&bindMap}
-
-	reqErr := resource.Retry(tccommon.WriteRetryTimeout, func() *resource.RetryError {
-		result, e := meta.(tccommon.ProviderMeta).GetAPIV3Conn().UseTeoClient().BindSharedCNAME(request)
-		if e != nil {
-			return tccommon.RetryError(e)
+	var domainNames []string
+	if v, ok := d.GetOk("domain_names"); ok {
+		for _, domainName := range v.(*schema.Set).List() {
+			domainNames = append(domainNames, domainName.(string))
 		}
+	}
 
-		log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), result.ToJsonString())
-
-		if result == nil || result.Response == nil {
-			return resource.NonRetryableError(fmt.Errorf("Delete teo_domain_shared_cname_attachment failed, Response is nil"))
-		}
-
+	if len(domainNames) == 0 {
 		return nil
-	})
+	}
 
-	if reqErr != nil {
+	if reqErr := bindSharedCNAMEInBatches(ctx, logId, meta, zoneId, sharedCname, "unbind", domainNames); reqErr != nil {
 		log.Printf("[CRITAL]%s delete teo_domain_shared_cname_attachment failed, reason:%+v", logId, reqErr)
 		return reqErr
 	}

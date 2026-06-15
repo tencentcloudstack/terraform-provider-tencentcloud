@@ -15,12 +15,9 @@ Provides a resource to manage TEO (EdgeOne) acceleration domain shared CNAME bin
 
 ```hcl
 resource "tencentcloud_teo_domain_shared_cname_attachment" "example" {
-  zone_id = "zone-2qtuhspy7cr6"
-
-  bind_shared_cname_maps {
-    shared_cname = "shared.example.com"
-    domain_names = ["domain1.example.com", "domain2.example.com"]
-  }
+  zone_id      = "zone-2qtuhspy7cr6"
+  shared_cname = "shared.example.com"
+  domain_names = ["domain1.example.com", "domain2.example.com"]
 }
 ```
 
@@ -28,13 +25,9 @@ resource "tencentcloud_teo_domain_shared_cname_attachment" "example" {
 
 The following arguments are supported:
 
-* `bind_shared_cname_maps` - (Required, List, ForceNew) The binding relationships between acceleration domains and shared CNAMEs.
-* `zone_id` - (Required, String, ForceNew) The zone ID that the acceleration domain belongs to.
-
-The `bind_shared_cname_maps` object supports the following:
-
-* `domain_names` - (Required, List, ForceNew) The acceleration domain names to bind, up to 20.
+* `domain_names` - (Required, Set: [`String`]) The acceleration domain names to bind.
 * `shared_cname` - (Required, String, ForceNew) The shared CNAME to bind to.
+* `zone_id` - (Required, String, ForceNew) The zone ID that the acceleration domain belongs to.
 
 ## Attributes Reference
 
@@ -46,8 +39,8 @@ In addition to all arguments above, the following attributes are exported:
 
 ## Import
 
-teo domain_shared_cname_attachment can be imported using the zone_id#shared_cname#domain_names (domain names joined by comma), e.g.
+teo domain_shared_cname_attachment can be imported using the zone_id#shared_cname, e.g.
 ```
-terraform import tencentcloud_teo_domain_shared_cname_attachment.example zone-2qtuhspy7cr6#shared.example.com#domain1.example.com,domain2.example.com
+terraform import tencentcloud_teo_domain_shared_cname_attachment.example zone-2qtuhspy7cr6#shared.example.com
 ```
 
