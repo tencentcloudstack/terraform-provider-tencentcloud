@@ -1627,6 +1627,7 @@ tencentcloud_teo_load_balancer
 tencentcloud_teo_prefetch_origin_limit
 tencentcloud_teo_purge_task
 tencentcloud_teo_shared_cname
+tencentcloud_teo_domain_shared_cname_attachment
 
 TencentCloud ServiceMesh(TCM)
 Data Source
