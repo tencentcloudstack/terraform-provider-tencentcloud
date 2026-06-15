@@ -424,6 +424,39 @@ resource "tencentcloud_instance" "example" {
 }
 ```
 
+### Create CVM instance with CPU topology configuration
+
+```hcl
+resource "tencentcloud_instance" "example" {
+  instance_name           = "tf-example"
+  availability_zone       = "ap-guangzhou-6"
+  image_id                = "img-eb30mz89"
+  instance_type           = "S5.MEDIUM4"
+  system_disk_type        = "CLOUD_HSSD"
+  system_disk_size        = 50
+  hostname                = "user"
+  project_id              = 0
+  vpc_id                  = "vpc-i5yyodl9"
+  subnet_id               = "subnet-hhi88a58"
+  orderly_security_groups = ["sg-ma82yjwp"]
+
+  cpu_topology {
+    core_count      = 2
+    thread_per_core = 1
+  }
+
+  data_disks {
+    data_disk_type = "CLOUD_HSSD"
+    data_disk_size = 100
+    encrypt        = false
+  }
+
+  tags = {
+    tagKey = "tagValue"
+  }
+}
+```
+
 ## Argument Reference
 
 The following arguments are supported:
@@ -435,6 +468,7 @@ The following arguments are supported:
 * `cam_role_name` - (Optional, String) CAM role name authorized to access.
 * `cdh_host_id` - (Optional, String, ForceNew) Id of cdh instance. Note: it only works when instance_charge_type is set to `CDHPAID`.
 * `cdh_instance_type` - (Optional, String) Type of instance created on cdh, the value of this parameter is in the format of CDH_XCXG based on the number of CPU cores and memory capacity. Note: it only works when instance_charge_type is set to `CDHPAID`.
+* `cpu_topology` - (Optional, List, ForceNew) CPU topology configuration. Only supported when creating instances.
 * `data_disks` - (Optional, List, ForceNew) Settings for data disks.
 * `dedicated_cluster_id` - (Optional, String, ForceNew) Exclusive cluster id.
 * `dedicated_resource_pack_ids` - (Optional, Set: [`String`], ForceNew) List of dedicated resource pack IDs (e.g., rpp-xxxxxxxx). When creating instances using pre-purchased resource pool packs, this parameter must be specified together with `dedicated_resource_pack_tenancy` to match the corresponding tenancy strategy. Related resource: `tencentcloud_cvm_resource_pool_packs`.
@@ -488,6 +522,11 @@ The following arguments are supported:
 * `user_data_replace_on_change` - (Optional, Bool) When used in combination with `user_data` or `user_data_raw` will trigger a destroy and recreate of the CVM instance when set to `true`. Default is `false`.
 * `user_data` - (Optional, String) The user data to be injected into this instance. Must be base64 encoded and up to 16 KB. If `user_data_replace_on_change` is set to `true`, updates to this field will trigger the destruction and recreation of the CVM instance.
 * `vpc_id` - (Optional, String) The ID of a VPC network. If you want to create instances in a VPC network, this parameter must be set.
+
+The `cpu_topology` object supports the following:
+
+* `core_count` - (Optional, Int, ForceNew) Number of enabled CPU physical cores.
+* `thread_per_core` - (Optional, Int, ForceNew) Threads per core. 1 means hyper-threading is off, 2 means hyper-threading is on.
 
 The `data_disks` object supports the following:
 
