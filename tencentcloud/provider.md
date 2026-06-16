@@ -2352,6 +2352,7 @@ tencentcloud_waf_owasp_rule_status_config
 tencentcloud_waf_owasp_white_rule
 tencentcloud_waf_object
 tencentcloud_waf_bot_id_rule
+tencentcloud_waf_rate_limit
 
 Wedata
 Data Source

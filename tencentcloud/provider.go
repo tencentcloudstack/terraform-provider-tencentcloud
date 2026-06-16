@@ -2533,6 +2533,7 @@ func Provider() *schema.Provider {
 			"tencentcloud_waf_owasp_white_rule":                                                     waf.ResourceTencentCloudWafOwaspWhiteRule(),
 			"tencentcloud_waf_object":                                                               waf.ResourceTencentCloudWafObject(),
 			"tencentcloud_waf_bot_id_rule":                                                          waf.ResourceTencentCloudWafBotIdRule(),
+			"tencentcloud_waf_rate_limit":                                                           waf.ResourceTencentCloudWafRateLimit(),
 			"tencentcloud_wedata_submit_task_operation":                                             wedata.ResourceTencentCloudWedataSubmitTaskOperation(),
 			"tencentcloud_wedata_task":                                                              wedata.ResourceTencentCloudWedataTask(),
 			"tencentcloud_wedata_workflow_folder":                                                   wedata.ResourceTencentCloudWedataWorkflowFolder(),
