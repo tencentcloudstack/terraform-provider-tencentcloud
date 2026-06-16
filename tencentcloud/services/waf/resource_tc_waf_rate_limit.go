@@ -649,7 +649,7 @@ func resourceTencentCloudWafRateLimitRead(d *schema.ResourceData, meta interface
 	}
 
 	if ruleData == nil {
-		log.Printf("[WARN]%s resource `waf_rate_limit` [%s] not found, please check if it has been deleted.\n", logId, d.Id())
+		log.Printf("[WARN]%s resource `tencentcloud_waf_rate_limit` [%s] not found, please check if it has been deleted.\n", logId, d.Id())
 		d.SetId("")
 		return nil
 	}
