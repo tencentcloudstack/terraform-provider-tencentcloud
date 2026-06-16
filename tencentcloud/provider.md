@@ -747,6 +747,7 @@ tencentcloud_tdmq_pro_instance_detail
 Resource
 tencentcloud_tdmq_instance
 tencentcloud_tdmq_professional_cluster
+tencentcloud_tdmq_pro_instance
 tencentcloud_tdmq_namespace
 tencentcloud_tdmq_topic
 tencentcloud_tdmq_topic_with_full_id

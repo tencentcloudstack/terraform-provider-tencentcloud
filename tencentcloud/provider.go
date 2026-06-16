@@ -2014,6 +2014,7 @@ func Provider() *schema.Provider {
 			"tencentcloud_tdmq_rabbitmq_vip_instance":                                               trabbit.ResourceTencentCloudTdmqRabbitmqVipInstance(),
 			"tencentcloud_tdmq_send_rocketmq_message":                                               trocket.ResourceTencentCloudTdmqSendRocketmqMessage(),
 			"tencentcloud_tdmq_professional_cluster":                                                tpulsar.ResourceTencentCloudTdmqProfessionalCluster(),
+			"tencentcloud_tdmq_pro_instance":                                                        tpulsar.ResourceTencentCloudTdmqProInstance(),
 			"tencentcloud_tdmq_subscription":                                                        tpulsar.ResourceTencentCloudTdmqSubscription(),
 			"tencentcloud_cos_bucket_policy":                                                        cos.ResourceTencentCloudCosBucketPolicy(),
 			"tencentcloud_cos_bucket_domain_certificate_attachment":                                 cos.ResourceTencentCloudCosBucketDomainCertificateAttachment(),

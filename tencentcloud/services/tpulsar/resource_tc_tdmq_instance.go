@@ -7,13 +7,9 @@ import (
 
 	"context"
 	"fmt"
-	"log"
 
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
-	tdmq "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/tdmq/v20200217"
-
-	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/internal/helper"
 )
 
 //internal version: replace import begin, please do not modify this annotation and refrain from inserting any code between the beginning and end lines of the annotation.
@@ -57,66 +53,7 @@ func ResourceTencentCloudTdmqInstance() *schema.Resource {
 func resourceTencentCloudTdmqCreate(d *schema.ResourceData, meta interface{}) error {
 	defer tccommon.LogElapsed("resource.tencentcloud_tdmq_instance.create")()
 
-	//internal version: replace client begin, please do not modify this annotation and refrain from inserting any code between the beginning and end lines of the annotation.
-	//internal version: replace client end, please do not modify this annotation and refrain from inserting any code between the beginning and end lines of the annotation.
-
-	var (
-		logId    = tccommon.GetLogId(tccommon.ContextNil)
-		ctx      = context.WithValue(context.TODO(), tccommon.LogIdKey, logId)
-		request  = tdmq.NewCreateClusterRequest()
-		response *tdmq.CreateClusterResponse
-	)
-
-	if v, ok := d.GetOk("cluster_name"); ok {
-		request.ClusterName = helper.String(v.(string))
-	}
-
-	if v, ok := d.GetOk("bind_cluster_id"); ok {
-		request.BindClusterId = helper.IntUint64(v.(int))
-	}
-
-	if v, ok := d.GetOk("remark"); ok {
-		request.Remark = helper.String(v.(string))
-	}
-
-	err := resource.Retry(tccommon.WriteRetryTimeout, func() *resource.RetryError {
-		result, e := meta.(tccommon.ProviderMeta).GetAPIV3Conn().UseTdmqClient().CreateCluster(request)
-		if e != nil {
-			return tccommon.RetryError(e)
-		} else {
-			log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n",
-				logId, request.GetAction(), request.ToJsonString(), result.ToJsonString())
-		}
-
-		response = result
-		return nil
-	})
-
-	if err != nil {
-		log.Printf("[CRITAL]%s create tdmq instance failed, reason:%+v", logId, err)
-		return err
-	}
-
-	clusterId := *response.Response.ClusterId
-
-	if tags := helper.GetTags(d, "tags"); len(tags) > 0 {
-		//internal version: replace buildName begin, please do not modify this annotation and refrain from inserting any code between the beginning and end lines of the annotation.
-		tagService := svctag.NewTagService(meta.(tccommon.ProviderMeta).GetAPIV3Conn())
-		region := meta.(tccommon.ProviderMeta).GetAPIV3Conn().Region
-		resourceName := fmt.Sprintf("qcs::tdmq:%s:uin/:cluster/%s", region, clusterId)
-		//internal version: replace buildName end, please do not modify this annotation and refrain from inserting any code between the beginning and end lines of the annotation.
-
-		if err := tagService.ModifyTags(ctx, resourceName, tags, nil); err != nil {
-			return err
-		}
-
-		//internal version: replace waitTag begin, please do not modify this annotation and refrain from inserting any code between the beginning and end lines of the annotation.
-		//internal version: replace waitTag end, please do not modify this annotation and refrain from inserting any code between the beginning and end lines of the annotation.
-	}
-
-	d.SetId(clusterId)
-
-	return resourceTencentCloudTdmqRead(d, meta)
+	return fmt.Errorf("tencentcloud_tdmq_instance creation has been deprecated, please use tencentcloud_tdmq_pro_instance instead")
 }
 
 func resourceTencentCloudTdmqRead(d *schema.ResourceData, meta interface{}) error {
