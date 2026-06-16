@@ -9,7 +9,7 @@ resource "tencentcloud_waf_rate_limit" "example" {
   domain         = "example.com"
   name           = "tf-example"
   priority       = 10
-  status         = 0
+  status         = 1
   limit_strategy = 0
   limit_object   = "API"
   block_page     = 209057
