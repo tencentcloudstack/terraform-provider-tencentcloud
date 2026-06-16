@@ -89,6 +89,7 @@ func ResourceTencentCloudWafRateLimit() *schema.Resource {
 			"limit_method": {
 				Type:        schema.TypeList,
 				Optional:    true,
+				Computed:    true,
 				MaxItems:    1,
 				Description: "Rate limit method configuration.",
 				Elem: &schema.Resource{
@@ -109,6 +110,7 @@ func ResourceTencentCloudWafRateLimit() *schema.Resource {
 			"limit_paths": {
 				Type:        schema.TypeList,
 				Optional:    true,
+				Computed:    true,
 				MaxItems:    1,
 				Description: "Rate limit path configuration.",
 				Elem: &schema.Resource{
@@ -153,6 +155,7 @@ func ResourceTencentCloudWafRateLimit() *schema.Resource {
 			"limit_header_name": {
 				Type:        schema.TypeList,
 				Optional:    true,
+				Computed:    true,
 				MaxItems:    1,
 				Description: "Rate limit based on header parameter name.",
 				Elem: &schema.Resource{
@@ -173,6 +176,7 @@ func ResourceTencentCloudWafRateLimit() *schema.Resource {
 			"get_params_name": {
 				Type:        schema.TypeList,
 				Optional:    true,
+				Computed:    true,
 				MaxItems:    1,
 				Description: "Rate limit based on GET parameter name.",
 				Elem: &schema.Resource{
@@ -198,6 +202,7 @@ func ResourceTencentCloudWafRateLimit() *schema.Resource {
 			"get_params_value": {
 				Type:        schema.TypeList,
 				Optional:    true,
+				Computed:    true,
 				MaxItems:    1,
 				Description: "Rate limit based on GET parameter value.",
 				Elem: &schema.Resource{
@@ -223,6 +228,7 @@ func ResourceTencentCloudWafRateLimit() *schema.Resource {
 			"post_params_name": {
 				Type:        schema.TypeList,
 				Optional:    true,
+				Computed:    true,
 				MaxItems:    1,
 				Description: "Rate limit based on POST parameter name.",
 				Elem: &schema.Resource{
@@ -248,6 +254,7 @@ func ResourceTencentCloudWafRateLimit() *schema.Resource {
 			"post_params_value": {
 				Type:        schema.TypeList,
 				Optional:    true,
+				Computed:    true,
 				MaxItems:    1,
 				Description: "Rate limit based on POST parameter value.",
 				Elem: &schema.Resource{
@@ -273,6 +280,7 @@ func ResourceTencentCloudWafRateLimit() *schema.Resource {
 			"ip_location": {
 				Type:        schema.TypeList,
 				Optional:    true,
+				Computed:    true,
 				MaxItems:    1,
 				Description: "Rate limit based on IP location.",
 				Elem: &schema.Resource{
@@ -298,6 +306,7 @@ func ResourceTencentCloudWafRateLimit() *schema.Resource {
 			"redirect_info": {
 				Type:        schema.TypeList,
 				Optional:    true,
+				Computed:    true,
 				MaxItems:    1,
 				Description: "Redirect information. Required when LimitStrategy is redirect.",
 				Elem: &schema.Resource{
@@ -333,6 +342,7 @@ func ResourceTencentCloudWafRateLimit() *schema.Resource {
 			"quota_share": {
 				Type:        schema.TypeBool,
 				Optional:    true,
+				Computed:    true,
 				Description: "Whether to share quota. Only valid when object is URL. false: URL exclusive quota, true: all URLs share quota.",
 			},
 			"paths_option": {
@@ -389,11 +399,11 @@ func resourceTencentCloudWafRateLimitCreate(d *schema.ResourceData, meta interfa
 		request.Name = helper.String(v.(string))
 	}
 
-	if v, ok := d.GetOk("priority"); ok {
+	if v, ok := d.GetOkExists("priority"); ok {
 		request.Priority = helper.IntInt64(v.(int))
 	}
 
-	if v, ok := d.GetOk("status"); ok {
+	if v, ok := d.GetOkExists("status"); ok {
 		request.Status = helper.IntInt64(v.(int))
 	}
 
@@ -422,7 +432,7 @@ func resourceTencentCloudWafRateLimitCreate(d *schema.ResourceData, meta interfa
 		request.LimitObject = helper.String(v.(string))
 	}
 
-	if v, ok := d.GetOk("limit_strategy"); ok {
+	if v, ok := d.GetOkExists("limit_strategy"); ok {
 		request.LimitStrategy = helper.IntInt64(v.(int))
 	}
 
@@ -527,11 +537,11 @@ func resourceTencentCloudWafRateLimitCreate(d *schema.ResourceData, meta interfa
 		}
 	}
 
-	if v, ok := d.GetOk("block_page"); ok {
+	if v, ok := d.GetOkExists("block_page"); ok {
 		request.BlockPage = helper.IntInt64(v.(int))
 	}
 
-	if v, ok := d.GetOk("object_src"); ok {
+	if v, ok := d.GetOkExists("object_src"); ok {
 		request.ObjectSrc = helper.IntInt64(v.(int))
 	}
 
@@ -554,7 +564,7 @@ func resourceTencentCloudWafRateLimitCreate(d *schema.ResourceData, meta interfa
 		}
 	}
 
-	if v, ok := d.GetOk("order"); ok {
+	if v, ok := d.GetOkExists("order"); ok {
 		request.Order = helper.IntInt64(v.(int))
 	}
 
@@ -587,7 +597,6 @@ func resourceTencentCloudWafRateLimitCreate(d *schema.ResourceData, meta interfa
 
 	limitRuleId := *response.Response.LimitRuleID
 	d.SetId(strings.Join([]string{domain, strconv.FormatInt(limitRuleId, 10)}, tccommon.FILED_SP))
-
 	return resourceTencentCloudWafRateLimitRead(d, meta)
 }
 
@@ -852,11 +861,11 @@ func resourceTencentCloudWafRateLimitUpdate(d *schema.ResourceData, meta interfa
 			request.Name = helper.String(v.(string))
 		}
 
-		if v, ok := d.GetOk("priority"); ok {
+		if v, ok := d.GetOkExists("priority"); ok {
 			request.Priority = helper.IntInt64(v.(int))
 		}
 
-		if v, ok := d.GetOk("status"); ok {
+		if v, ok := d.GetOkExists("status"); ok {
 			request.Status = helper.IntInt64(v.(int))
 		}
 
@@ -885,7 +894,7 @@ func resourceTencentCloudWafRateLimitUpdate(d *schema.ResourceData, meta interfa
 			request.LimitObject = helper.String(v.(string))
 		}
 
-		if v, ok := d.GetOk("limit_strategy"); ok {
+		if v, ok := d.GetOkExists("limit_strategy"); ok {
 			request.LimitStrategy = helper.IntInt64(v.(int))
 		}
 
@@ -990,11 +999,11 @@ func resourceTencentCloudWafRateLimitUpdate(d *schema.ResourceData, meta interfa
 			}
 		}
 
-		if v, ok := d.GetOk("block_page"); ok {
+		if v, ok := d.GetOkExists("block_page"); ok {
 			request.BlockPage = helper.IntInt64(v.(int))
 		}
 
-		if v, ok := d.GetOk("object_src"); ok {
+		if v, ok := d.GetOkExists("object_src"); ok {
 			request.ObjectSrc = helper.IntInt64(v.(int))
 		}
 
@@ -1017,7 +1026,7 @@ func resourceTencentCloudWafRateLimitUpdate(d *schema.ResourceData, meta interfa
 			}
 		}
 
-		if v, ok := d.GetOk("order"); ok {
+		if v, ok := d.GetOkExists("order"); ok {
 			request.Order = helper.IntInt64(v.(int))
 		}
 
@@ -1116,4 +1125,47 @@ func flattenMatchOption(matchOption *wafv20180125.MatchOption) []interface{} {
 		matchOptionMap["content"] = *matchOption.Content
 	}
 	return []interface{}{matchOptionMap}
+}
+
+// updateWafRateLimitStatus toggles the rate limit rule switch via the EnableRateLimitsV2 API.
+// Note: the resource `status` field uses 0:off, 1:on, while EnableLimitRuleItem.Status uses the
+// INVERTED semantics 0:on (开启), 1:off (关闭), so the value must be converted before the request.
+func updateWafRateLimitStatus(ctx context.Context, meta interface{}, domain string, limitRuleId, resourceStatus int64) error {
+	logId := tccommon.GetLogId(ctx)
+
+	// Convert resource status (0:off, 1:on) to EnableRateLimitsV2 status (0:on, 1:off).
+	var enableStatus int64 = 1
+	if resourceStatus == 1 {
+		enableStatus = 0
+	}
+
+	request := wafv20180125.NewEnableRateLimitsV2Request()
+	request.Domain = helper.String(domain)
+	request.EnableItems = []*wafv20180125.EnableLimitRuleItem{
+		{
+			LimitRuleId: helper.Int64(limitRuleId),
+			Status:      helper.Int64(enableStatus),
+		},
+	}
+
+	reqErr := resource.Retry(tccommon.WriteRetryTimeout, func() *resource.RetryError {
+		result, e := meta.(tccommon.ProviderMeta).GetAPIV3Conn().UseWafV20180125Client().EnableRateLimitsV2WithContext(ctx, request)
+		if e != nil {
+			return tccommon.RetryError(e)
+		}
+
+		log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), result.ToJsonString())
+		if result == nil || result.Response == nil {
+			return resource.NonRetryableError(fmt.Errorf("enable waf_rate_limit status failed, response is nil"))
+		}
+
+		return nil
+	})
+
+	if reqErr != nil {
+		log.Printf("[CRITAL]%s enable waf_rate_limit status failed, reason:%+v", logId, reqErr)
+		return reqErr
+	}
+
+	return nil
 }

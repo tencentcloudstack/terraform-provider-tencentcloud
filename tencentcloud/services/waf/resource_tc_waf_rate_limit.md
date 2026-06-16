@@ -2,52 +2,38 @@ Provides a resource to create a WAF rate limit rule
 
 Example Usage
 
+Create with API path rate limiting
+
 ```hcl
 resource "tencentcloud_waf_rate_limit" "example" {
   domain         = "example.com"
   name           = "tf-example"
-  priority       = 100
-  status         = 1
-  limit_object   = "Domain"
-  limit_strategy = 1
-
-  limit_window {
-    second = 10
-    minute = 100
-  }
-}
-```
-
-Create with API path rate limiting
-
-```hcl
-resource "tencentcloud_waf_rate_limit" "api_example" {
-  domain         = "example.com"
-  name           = "tf-api-example"
-  priority       = 200
-  status         = 1
+  priority       = 10
+  status         = 0
+  limit_strategy = 0
   limit_object   = "API"
-  limit_strategy = 1
-  object_src     = 0
-  order          = 0
+  block_page     = 209057
 
-  limit_window {
-    second = 5
+  get_params_name {
+    content = "get"
+    func    = "IN"
+  }
+
+  limit_headers {
+    key   = "myKey"
+    type  = "IN"
+    value = "myValue"
   }
 
   limit_paths {
-    path = "/api/v1/users"
+    path = "/url"
     type = "EXACT"
   }
 
-  limit_method {
-    method = "POST"
-    type   = "EXACT"
-  }
-
-  paths_option {
-    path   = "/api/v1/users"
-    method = "POST"
+  limit_window {
+    second = 0
+    minute = 10
+    hour   = 0
   }
 }
 ```
@@ -57,5 +43,5 @@ Import
 WAF rate limit rule can be imported using the composite id domain#limit_rule_id, e.g.
 
 ```
-terraform import tencentcloud_waf_rate_limit.example example.com#12345
+terraform import tencentcloud_waf_rate_limit.example example.com#4000077639
 ```
