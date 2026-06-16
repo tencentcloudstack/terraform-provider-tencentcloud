@@ -18,6 +18,7 @@ func ResourceTencentCloudKubernetesScaleWorker() *schema.Resource {
 	return &schema.Resource{
 		Create: resourceTencentCloudKubernetesScaleWorkerCreate,
 		Read:   resourceTencentCloudKubernetesScaleWorkerRead,
+		Update: resourceTencentCloudKubernetesScaleWorkerUpdate,
 		Delete: resourceTencentCloudKubernetesScaleWorkerDelete,
 		Importer: &schema.ResourceImporter{
 			StateContext: customScaleWorkerResourceImporter,
@@ -119,26 +120,31 @@ func ResourceTencentCloudKubernetesScaleWorker() *schema.Resource {
 						"cuda": {
 							Type:        schema.TypeMap,
 							Optional:    true,
+							ForceNew:    true,
 							Description: "CUDA  version. Format like: `{ version: String, name: String }`. `version`: Version of GPU driver or CUDA; `name`: Name of GPU driver or CUDA.",
 						},
 						"cudnn": {
 							Type:        schema.TypeMap,
 							Optional:    true,
+							ForceNew:    true,
 							Description: "cuDNN version. Format like: `{ version: String, name: String, doc_name: String, dev_name: String }`. `version`: cuDNN version; `name`: cuDNN name; `doc_name`: Doc name of cuDNN; `dev_name`: Dev name of cuDNN.",
 						},
 						"custom_driver": {
 							Type:        schema.TypeMap,
 							Optional:    true,
+							ForceNew:    true,
 							Description: "Custom GPU driver. Format like: `{address: String}`. `address`: URL of custom GPU driver address.",
 						},
 						"driver": {
 							Type:        schema.TypeMap,
 							Optional:    true,
+							ForceNew:    true,
 							Description: "GPU driver version. Format like: `{ version: String, name: String }`. `version`: Version of GPU driver or CUDA; `name`: Name of GPU driver or CUDA.",
 						},
 						"mig_enable": {
 							Type:        schema.TypeBool,
 							Optional:    true,
+							ForceNew:    true,
 							Default:     false,
 							Description: "Whether to enable MIG.",
 						},
@@ -171,7 +177,6 @@ func ResourceTencentCloudKubernetesScaleWorker() *schema.Resource {
 			"worker_config": {
 				Type:        schema.TypeList,
 				Required:    true,
-				ForceNew:    true,
 				MaxItems:    1,
 				MinItems:    1,
 				Description: "Deploy the machine configuration information of the 'WORK' service, and create <=20 units for common users.",
@@ -186,6 +191,7 @@ func ResourceTencentCloudKubernetesScaleWorker() *schema.Resource {
 						"bandwidth_package_id": {
 							Type:        schema.TypeString,
 							Optional:    true,
+							ForceNew:    true,
 							Description: "bandwidth package id. if user is standard user, then the bandwidth_package_id is needed, or default has bandwidth_package_id.",
 						},
 						"cam_role_name": {
@@ -241,6 +247,7 @@ func ResourceTencentCloudKubernetesScaleWorker() *schema.Resource {
 									"encrypt": {
 										Type:        schema.TypeBool,
 										Optional:    true,
+										ForceNew:    true,
 										Description: "Indicates whether to encrypt data disk, default `false`.",
 									},
 									"file_system": {
@@ -253,6 +260,7 @@ func ResourceTencentCloudKubernetesScaleWorker() *schema.Resource {
 									"kms_key_id": {
 										Type:        schema.TypeString,
 										Optional:    true,
+										ForceNew:    true,
 										Description: "ID of the custom CMK in the format of UUID or `kms-abcd1234`. This parameter is used to encrypt cloud disks.",
 									},
 									"mount_target": {
@@ -310,24 +318,24 @@ func ResourceTencentCloudKubernetesScaleWorker() *schema.Resource {
 						"hpc_cluster_id": {
 							Type:        schema.TypeString,
 							Optional:    true,
+							ForceNew:    true,
 							Description: "Id of cvm hpc cluster.",
 						},
 						"img_id": {
 							Type:        schema.TypeString,
 							Optional:    true,
+							ForceNew:    true,
 							Description: "The valid image id, format of img-xxx.",
 						},
 						"instance_charge_type": {
 							Type:        schema.TypeString,
 							Optional:    true,
-							ForceNew:    true,
 							Default:     "POSTPAID_BY_HOUR",
 							Description: "The charge type of instance. Valid values are `PREPAID`, `POSTPAID_BY_HOUR`, `SPOTPAID`, `CDCPAID`. The default is `POSTPAID_BY_HOUR`. Note: TencentCloud International only supports `POSTPAID_BY_HOUR`, `PREPAID` instance will not terminated after cluster deleted, and may not allow to delete before expired.",
 						},
 						"instance_charge_type_prepaid_period": {
 							Type:        schema.TypeInt,
 							Optional:    true,
-							ForceNew:    true,
 							Default:     1,
 							Description: "The tenancy (time unit is month) of the prepaid instance. NOTE: it only works when instance_charge_type is set to `PREPAID`. Valid values are `1`, `2`, `3`, `4`, `5`, `6`, `7`, `8`, `9`, `10`, `11`, `12`, `24`, `36`.",
 						},
@@ -335,7 +343,6 @@ func ResourceTencentCloudKubernetesScaleWorker() *schema.Resource {
 							Type:        schema.TypeString,
 							Optional:    true,
 							Computed:    true,
-							ForceNew:    true,
 							Description: "Auto renewal flag. Valid values: `NOTIFY_AND_AUTO_RENEW`: notify upon expiration and renew automatically, `NOTIFY_AND_MANUAL_RENEW`: notify upon expiration but do not renew automatically, `DISABLE_NOTIFY_AND_MANUAL_RENEW`: neither notify upon expiration nor renew automatically. Default value: `NOTIFY_AND_MANUAL_RENEW`. If this parameter is specified as `NOTIFY_AND_AUTO_RENEW`, the instance will be automatically renewed on a monthly basis if the account balance is sufficient. NOTE: it only works when instance_charge_type is set to `PREPAID`.",
 						},
 						"instance_name": {
@@ -361,6 +368,7 @@ func ResourceTencentCloudKubernetesScaleWorker() *schema.Resource {
 						"internet_max_bandwidth_out": {
 							Type:        schema.TypeInt,
 							Optional:    true,
+							ForceNew:    true,
 							Default:     0,
 							Description: "Max bandwidth of Internet access in Mbps. Default is 0.",
 						},
@@ -594,6 +602,35 @@ func resourceTencentCloudKubernetesScaleWorkerRead(d *schema.ResourceData, meta 
 
 	_ = instanceIdSet
 	return nil
+}
+
+func resourceTencentCloudKubernetesScaleWorkerUpdate(d *schema.ResourceData, meta interface{}) error {
+	defer tccommon.LogElapsed("resource.tencentcloud_kubernetes_scale_worker.update")()
+	defer tccommon.InconsistentCheck(d, meta)()
+
+	logId := tccommon.GetLogId(tccommon.ContextNil)
+	ctx := tccommon.NewResourceLifeCycleHandleFuncContext(context.Background(), logId, d, meta)
+
+	idSplit := strings.Split(d.Id(), tccommon.FILED_SP)
+	if len(idSplit) != 2 {
+		return fmt.Errorf("id is broken,%s", d.Id())
+	}
+
+	instanceIds := strings.Split(idSplit[1], tccommon.COMMA_SP)
+	if len(instanceIds) == 0 {
+		return fmt.Errorf("instance ids is empty, id:%s", d.Id())
+	}
+
+	// Only the instance charge type related arguments support modification.
+	if d.HasChange("worker_config.0.instance_charge_type") ||
+		d.HasChange("worker_config.0.instance_charge_type_prepaid_period") ||
+		d.HasChange("worker_config.0.instance_charge_type_prepaid_renew_flag") {
+		if err := modifyKubernetesScaleWorkerInstancesChargeType(ctx, meta, d, instanceIds); err != nil {
+			return err
+		}
+	}
+
+	return resourceTencentCloudKubernetesScaleWorkerRead(d, meta)
 }
 
 func resourceTencentCloudKubernetesScaleWorkerDelete(d *schema.ResourceData, meta interface{}) error {

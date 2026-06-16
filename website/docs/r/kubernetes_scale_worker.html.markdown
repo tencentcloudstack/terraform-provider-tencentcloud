@@ -160,7 +160,7 @@ resource "tencentcloud_kubernetes_scale_worker" "example" {
 The following arguments are supported:
 
 * `cluster_id` - (Required, String, ForceNew) ID of the cluster.
-* `worker_config` - (Required, List, ForceNew) Deploy the machine configuration information of the 'WORK' service, and create <=20 units for common users.
+* `worker_config` - (Required, List) Deploy the machine configuration information of the 'WORK' service, and create <=20 units for common users.
 * `create_result_output_file` - (Optional, String, ForceNew) Used to save results of CVMs creation error messages.
 * `data_disk` - (Optional, List, ForceNew) Configurations of tke data disk.
 * `desired_pod_num` - (Optional, Int, ForceNew) Indicate to set desired pod number in current node. Valid when the cluster enable customized pod cidr.
@@ -180,9 +180,9 @@ The `data_disk` object of `worker_config` supports the following:
 * `disk_partition` - (Optional, String, ForceNew, **Deprecated**) This argument was deprecated, use `data_disk` instead. The name of the device or partition to mount.
 * `disk_size` - (Optional, Int, ForceNew) Volume of disk in GB. Default is `0`.
 * `disk_type` - (Optional, String, ForceNew) Types of disk, available values: `CLOUD_PREMIUM` and `CLOUD_SSD` and `CLOUD_HSSD` and `CLOUD_TSSD`.
-* `encrypt` - (Optional, Bool) Indicates whether to encrypt data disk, default `false`.
+* `encrypt` - (Optional, Bool, ForceNew) Indicates whether to encrypt data disk, default `false`.
 * `file_system` - (Optional, String, ForceNew, **Deprecated**) This argument was deprecated, use `data_disk` instead. File system, e.g. `ext3/ext4/xfs`.
-* `kms_key_id` - (Optional, String) ID of the custom CMK in the format of UUID or `kms-abcd1234`. This parameter is used to encrypt cloud disks.
+* `kms_key_id` - (Optional, String, ForceNew) ID of the custom CMK in the format of UUID or `kms-abcd1234`. This parameter is used to encrypt cloud disks.
 * `mount_target` - (Optional, String, ForceNew, **Deprecated**) This argument was deprecated, use `data_disk` instead. Mount target.
 * `snapshot_id` - (Optional, String, ForceNew) Data disk snapshot ID.
 
@@ -197,11 +197,11 @@ The `data_disk` object supports the following:
 
 The `gpu_args` object supports the following:
 
-* `cuda` - (Optional, Map) CUDA  version. Format like: `{ version: String, name: String }`. `version`: Version of GPU driver or CUDA; `name`: Name of GPU driver or CUDA.
-* `cudnn` - (Optional, Map) cuDNN version. Format like: `{ version: String, name: String, doc_name: String, dev_name: String }`. `version`: cuDNN version; `name`: cuDNN name; `doc_name`: Doc name of cuDNN; `dev_name`: Dev name of cuDNN.
-* `custom_driver` - (Optional, Map) Custom GPU driver. Format like: `{address: String}`. `address`: URL of custom GPU driver address.
-* `driver` - (Optional, Map) GPU driver version. Format like: `{ version: String, name: String }`. `version`: Version of GPU driver or CUDA; `name`: Name of GPU driver or CUDA.
-* `mig_enable` - (Optional, Bool) Whether to enable MIG.
+* `cuda` - (Optional, Map, ForceNew) CUDA  version. Format like: `{ version: String, name: String }`. `version`: Version of GPU driver or CUDA; `name`: Name of GPU driver or CUDA.
+* `cudnn` - (Optional, Map, ForceNew) cuDNN version. Format like: `{ version: String, name: String, doc_name: String, dev_name: String }`. `version`: cuDNN version; `name`: cuDNN name; `doc_name`: Doc name of cuDNN; `dev_name`: Dev name of cuDNN.
+* `custom_driver` - (Optional, Map, ForceNew) Custom GPU driver. Format like: `{address: String}`. `address`: URL of custom GPU driver address.
+* `driver` - (Optional, Map, ForceNew) GPU driver version. Format like: `{ version: String, name: String }`. `version`: Version of GPU driver or CUDA; `name`: Name of GPU driver or CUDA.
+* `mig_enable` - (Optional, Bool, ForceNew) Whether to enable MIG.
 
 The `tags` object of `worker_config` supports the following:
 
@@ -219,7 +219,7 @@ The `worker_config` object supports the following:
 * `instance_type` - (Required, String, ForceNew) Specified types of CVM instance.
 * `subnet_id` - (Required, String, ForceNew) Private network ID.
 * `availability_zone` - (Optional, String, ForceNew) Indicates which availability zone will be used.
-* `bandwidth_package_id` - (Optional, String) bandwidth package id. if user is standard user, then the bandwidth_package_id is needed, or default has bandwidth_package_id.
+* `bandwidth_package_id` - (Optional, String, ForceNew) bandwidth package id. if user is standard user, then the bandwidth_package_id is needed, or default has bandwidth_package_id.
 * `cam_role_name` - (Optional, String, ForceNew) CAM role name authorized to access.
 * `cdc_id` - (Optional, String, ForceNew) CDC ID.
 * `count` - (Optional, Int, ForceNew) Number of cvm.
@@ -229,14 +229,14 @@ The `worker_config` object supports the following:
 * `enhanced_monitor_service` - (Optional, Bool, ForceNew) To specify whether to enable cloud monitor service. Default is TRUE.
 * `enhanced_security_service` - (Optional, Bool, ForceNew) To specify whether to enable cloud security service. Default is TRUE.
 * `hostname` - (Optional, String, ForceNew) The host name of the attached instance. Dot (.) and dash (-) cannot be used as the first and last characters of HostName and cannot be used consecutively. Windows example: The length of the name character is [2, 15], letters (capitalization is not restricted), numbers and dashes (-) are allowed, dots (.) are not supported, and not all numbers are allowed. Examples of other types (Linux, etc.): The character length is [2, 60], and multiple dots are allowed. There is a segment between the dots. Each segment allows letters (with no limitation on capitalization), numbers and dashes (-).
-* `hpc_cluster_id` - (Optional, String) Id of cvm hpc cluster.
-* `img_id` - (Optional, String) The valid image id, format of img-xxx.
-* `instance_charge_type_prepaid_period` - (Optional, Int, ForceNew) The tenancy (time unit is month) of the prepaid instance. NOTE: it only works when instance_charge_type is set to `PREPAID`. Valid values are `1`, `2`, `3`, `4`, `5`, `6`, `7`, `8`, `9`, `10`, `11`, `12`, `24`, `36`.
-* `instance_charge_type_prepaid_renew_flag` - (Optional, String, ForceNew) Auto renewal flag. Valid values: `NOTIFY_AND_AUTO_RENEW`: notify upon expiration and renew automatically, `NOTIFY_AND_MANUAL_RENEW`: notify upon expiration but do not renew automatically, `DISABLE_NOTIFY_AND_MANUAL_RENEW`: neither notify upon expiration nor renew automatically. Default value: `NOTIFY_AND_MANUAL_RENEW`. If this parameter is specified as `NOTIFY_AND_AUTO_RENEW`, the instance will be automatically renewed on a monthly basis if the account balance is sufficient. NOTE: it only works when instance_charge_type is set to `PREPAID`.
-* `instance_charge_type` - (Optional, String, ForceNew) The charge type of instance. Valid values are `PREPAID`, `POSTPAID_BY_HOUR`, `SPOTPAID`, `CDCPAID`. The default is `POSTPAID_BY_HOUR`. Note: TencentCloud International only supports `POSTPAID_BY_HOUR`, `PREPAID` instance will not terminated after cluster deleted, and may not allow to delete before expired.
+* `hpc_cluster_id` - (Optional, String, ForceNew) Id of cvm hpc cluster.
+* `img_id` - (Optional, String, ForceNew) The valid image id, format of img-xxx.
+* `instance_charge_type_prepaid_period` - (Optional, Int) The tenancy (time unit is month) of the prepaid instance. NOTE: it only works when instance_charge_type is set to `PREPAID`. Valid values are `1`, `2`, `3`, `4`, `5`, `6`, `7`, `8`, `9`, `10`, `11`, `12`, `24`, `36`.
+* `instance_charge_type_prepaid_renew_flag` - (Optional, String) Auto renewal flag. Valid values: `NOTIFY_AND_AUTO_RENEW`: notify upon expiration and renew automatically, `NOTIFY_AND_MANUAL_RENEW`: notify upon expiration but do not renew automatically, `DISABLE_NOTIFY_AND_MANUAL_RENEW`: neither notify upon expiration nor renew automatically. Default value: `NOTIFY_AND_MANUAL_RENEW`. If this parameter is specified as `NOTIFY_AND_AUTO_RENEW`, the instance will be automatically renewed on a monthly basis if the account balance is sufficient. NOTE: it only works when instance_charge_type is set to `PREPAID`.
+* `instance_charge_type` - (Optional, String) The charge type of instance. Valid values are `PREPAID`, `POSTPAID_BY_HOUR`, `SPOTPAID`, `CDCPAID`. The default is `POSTPAID_BY_HOUR`. Note: TencentCloud International only supports `POSTPAID_BY_HOUR`, `PREPAID` instance will not terminated after cluster deleted, and may not allow to delete before expired.
 * `instance_name` - (Optional, String, ForceNew) Name of the CVMs.
 * `internet_charge_type` - (Optional, String, ForceNew) Charge types for network traffic. Available values include `TRAFFIC_POSTPAID_BY_HOUR`.
-* `internet_max_bandwidth_out` - (Optional, Int) Max bandwidth of Internet access in Mbps. Default is 0.
+* `internet_max_bandwidth_out` - (Optional, Int, ForceNew) Max bandwidth of Internet access in Mbps. Default is 0.
 * `key_ids` - (Optional, List, ForceNew) ID list of keys, should be set if `password` not set.
 * `password` - (Optional, String, ForceNew) Password to access, should be set if `key_ids` not set.
 * `public_ip_assigned` - (Optional, Bool, ForceNew) Specify whether to assign an Internet IP address.
