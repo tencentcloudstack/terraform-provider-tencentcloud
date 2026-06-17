@@ -106,6 +106,11 @@ The following arguments are supported:
 * `rule` - (Optional, List) Index rule.
 * `status` - (Optional, Bool) Whether to take effect. Default value: true.
 
+The `child_node` object of `value` supports the following:
+
+* `key` - (Optional, String) Field name of the json child node.
+* `value` - (Optional, List) Field index description information of the json child node.
+
 The `dynamic_index` object of `rule` supports the following:
 
 * `status` - (Required, Bool) index automatic configuration switch.
@@ -143,10 +148,32 @@ The `tag` object of `rule` supports the following:
 * `case_sensitive` - (Required, Bool) Case sensitivity.
 * `key_values` - (Optional, List) Key-Value pair information of the index to be created. Up to 100 key-value pairs can be configured.
 
+The `value` object of `child_node` supports the following:
+
+* `type` - (Required, String) Field type. Valid values: long, text, double.
+* `alias` - (Optional, String) Field alias.
+* `child_node` - (Optional, List) Json child node list (recursive, up to 5 levels). Note: only json type fields can configure this parameter.
+* `contain_z_h` - (Optional, Bool) Whether Chinese characters are contained.
+* `open_index_for_child_only` - (Optional, Bool) Only enable index for child nodes, this field itself is not enabled. Note: only json type fields can configure this parameter.
+* `sql_flag` - (Optional, Bool) Whether the analysis feature is enabled for the field.
+* `tokenizer` - (Optional, String) Field delimiter, which is meaningful only if the field type is text. Each character in the entered string represents a delimiter.
+
+The `value` object of `child_node` supports the following:
+
+* `type` - (Required, String) Field type. Valid values: long, text, double.
+* `alias` - (Optional, String) Field alias.
+* `contain_z_h` - (Optional, Bool) Whether Chinese characters are contained.
+* `open_index_for_child_only` - (Optional, Bool) Only enable index for child nodes, this field itself is not enabled. Note: only json type fields can configure this parameter.
+* `sql_flag` - (Optional, Bool) Whether the analysis feature is enabled for the field.
+* `tokenizer` - (Optional, String) Field delimiter, which is meaningful only if the field type is text. Each character in the entered string represents a delimiter.
+
 The `value` object of `key_values` supports the following:
 
 * `type` - (Required, String) Field type. Valid values: long, text, double.
+* `alias` - (Optional, String) Field alias.
+* `child_node` - (Optional, List) Json child node list (recursive, up to 5 levels). Note: only json type fields can configure this parameter.
 * `contain_z_h` - (Optional, Bool) Whether Chinese characters are contained.
+* `open_index_for_child_only` - (Optional, Bool) Only enable index for child nodes, this field itself is not enabled. Note: only json type fields can configure this parameter.
 * `sql_flag` - (Optional, Bool) Whether the analysis feature is enabled for the field.
 * `tokenizer` - (Optional, String) Field delimiter, which is meaningful only if the field type is text. Each character in the entered string represents a delimiter.
 
