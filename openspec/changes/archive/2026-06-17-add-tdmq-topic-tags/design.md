@@ -5,34 +5,37 @@ The `tencentcloud_tdmq_topic` resource manages TDMQ Pulsar topics. It currently 
 The TDMQ SDK (`github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/tdmq/v20200217`) supports Tags in:
 - `CreateTopicRequest.Tags` — `[]*Tag` (TagKey, TagValue) for setting tags at creation time.
 - `Topic.Tags` — `[]*Tag` returned by `DescribeTopics` for reading tags.
-- `ModifyTopicRequest` — does **not** have a Tags field, so tags cannot be updated after creation.
+- `ModifyTopicRequest` — does **not** have a Tags field, so tags cannot be updated via this API.
 - `DeleteTopicsRequest` — does not involve tags.
+
+The TencentCloud Tag service SDK (`github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/tag/v20180813`) provides:
+- `TagResources` — binds tags to cloud resources using the resource six-segment format.
+- `UnTagResources` — unbinds tag keys from cloud resources using the resource six-segment format.
 
 The resource code is in `tencentcloud/services/tpulsar/resource_tc_tdmq_topic.go`, and the service layer is in `tencentcloud/services/tdmq/service_tencentcloud_tdmq.go`.
 
 ## Goals / Non-Goals
 
 **Goals:**
-- Add an `Optional`, `ForceNew` `tags` parameter (type `map[string]string`) to the `tencentcloud_tdmq_topic` resource schema.
+- Add an `Optional` `tags` parameter (type `map[string]string`) to the `tencentcloud_tdmq_topic` resource schema.
 - Pass tags to the `CreateTopic` API during resource creation by converting the map to `[]*tdmq.Tag`.
 - Read tags from the `Topic` struct returned by `DescribeTopics` and set them back into Terraform state.
+- Support in-place tag updates in the Update function using the Tag service's `UnTagResources` and `TagResources` APIs.
 - Add unit tests using gomonkey mocks for the new tags functionality.
 - Update the resource documentation (`.md` file) with example usage including tags.
 
 **Non-Goals:**
-- Tag update support (ModifyTopic API does not support Tags).
 - Tag-based filtering in data sources.
-- Integration with the common tag service (this uses TDMQ-native tags, not the generic TencentCloud tag API).
 
 ## Decisions
 
-### 1. Use `ForceNew` for the `tags` parameter
+### 1. Use Tag service APIs (`TagResources`/`UnTagResources`) for tag updates
 
-**Decision**: Mark `tags` as `ForceNew` so that changing tags forces resource recreation.
+**Decision**: Use the TencentCloud Tag service's `TagResources` and `UnTagResources` APIs to handle tag updates in the Update function, since the `ModifyTopic` API does not support a `Tags` field.
 
-**Rationale**: The `ModifyTopic` API does not include a `Tags` field, so there is no way to update tags after creation. Using `ForceNew` is the standard Terraform pattern when an attribute cannot be updated in-place.
+**Rationale**: The Tag service provides a universal mechanism for managing tags on any TencentCloud resource. By using `UnTagResources` to remove deleted tag keys and `TagResources` to add/update tags, we can support in-place tag modifications without requiring resource recreation.
 
-**Alternative considered**: Adding tags to the `immutableArgs` check in the update function. Rejected because `ForceNew` is the idiomatic Terraform approach and provides better plan output to users.
+**Alternative considered**: Marking `tags` as `ForceNew` to force resource recreation on tag changes. Rejected because using the Tag service APIs provides a better user experience by avoiding unnecessary resource destruction and recreation.
 
 ### 2. Use `map[string]string` type for tags
 
@@ -46,8 +49,14 @@ The resource code is in `tencentcloud/services/tpulsar/resource_tc_tdmq_topic.go
 
 **Rationale**: The service layer function directly constructs the API request. Adding the tags parameter keeps the pattern consistent with how other parameters are passed.
 
+### 4. Use `svctag.DiffTags` for computing tag differences
+
+**Decision**: Use the existing `svctag.DiffTags` utility to compute which tags to add/update (`replaceTags`) and which to delete (`deleteTags`).
+
+**Rationale**: This utility is already used by other resources in the project (e.g., `resource_tc_tdmq_instance.go`) and correctly handles the diff logic.
+
 ## Risks / Trade-offs
 
 - **[Risk] Breaking existing configurations** → Mitigated: `tags` is `Optional`, so existing configurations without tags continue to work unchanged.
-- **[Risk] Tags cannot be updated** → Mitigated: `ForceNew` clearly communicates to users that changing tags requires recreation. This is documented in the resource docs.
-- **[Trade-off] ForceNew vs immutableArgs** → ForceNew provides better UX (Terraform shows "forces replacement" in plan) at the cost of resource recreation when tags change.
+- **[Risk] Tag service API consistency** → The Tag service APIs operate on the resource six-segment format (`qcs::tdmq:{region}:uin/{account}:topic/{topicName}`). The resource name is constructed using `tccommon.BuildTagResourceName("tdmq", "topic", region, topicName)`.
+- **[Trade-off] Tag service vs ModifyTopic** → Using the Tag service adds a dependency on the tag SDK but enables in-place updates, which is a better UX than ForceNew.

@@ -57,8 +57,13 @@ The following arguments are supported:
 * `topic_name` - (Required, String, ForceNew) The name of topic to be created.
 * `pulsar_topic_type` - (Optional, Int) Pulsar Topic Type 0: Non-persistent non-partitioned 1: Non-persistent partitioned 2: Persistent non-partitioned 3: Persistent partitioned.
 * `remark` - (Optional, String) Description of the namespace.
-* `tags` - (Optional, Map, ForceNew) Tag description list.
+* `tags` - (Optional, List) Tag description list.
 * `topic_type` - (Optional, Int, **Deprecated**) This input will be gradually discarded and can be switched to PulsarTopicType parameter 0: Normal message; 1: Global sequential messages; 2: Local sequential messages; 3: Retrying queue; 4: Dead letter queue. The type of topic.
+
+The `tags` object supports the following:
+
+* `tag_key` - (Required, String) Tag key.
+* `tag_value` - (Required, String) Tag value.
 
 ## Attributes Reference
 

@@ -183,7 +183,7 @@ func TestTdmqTopicTags_CreateWithTags(t *testing.T) {
 		return resp, nil
 	})
 
-	meta := &mockMetaTdmqTopic{client: mockClient}
+	metaCreate := &mockMetaTdmqTopic{client: mockClient}
 	res := tpulsar.ResourceTencentCloudTdmqTopic()
 	d := schema.TestResourceDataRaw(t, res.Schema, map[string]interface{}{
 		"environ_id":        "test-env",
@@ -192,12 +192,15 @@ func TestTdmqTopicTags_CreateWithTags(t *testing.T) {
 		"cluster_id":        "test-cluster",
 		"pulsar_topic_type": 3,
 		"remark":            "test remark",
-		"tags": map[string]interface{}{
-			"env": "test",
+		"tags": []interface{}{
+			map[string]interface{}{
+				"tag_key":   "env",
+				"tag_value": "test",
+			},
 		},
 	})
 
-	err := res.Create(d, meta)
+	err := res.Create(d, metaCreate)
 	assert.NoError(t, err)
 	assert.Equal(t, "test-topic", d.Id())
 
@@ -321,10 +324,16 @@ func TestTdmqTopicTags_ReadWithTags(t *testing.T) {
 	err := res.Read(d, meta)
 	assert.NoError(t, err)
 
-	tags := d.Get("tags").(map[string]interface{})
+	tags := d.Get("tags").([]interface{})
 	assert.Len(t, tags, 2)
-	assert.Equal(t, "production", tags["env"])
-	assert.Equal(t, "backend", tags["team"])
+	tag0 := tags[0].(map[string]interface{})
+	tag1 := tags[1].(map[string]interface{})
+	// Verify both tags are present (order may vary)
+	tagMap := map[string]string{}
+	tagMap[tag0["tag_key"].(string)] = tag0["tag_value"].(string)
+	tagMap[tag1["tag_key"].(string)] = tag1["tag_value"].(string)
+	assert.Equal(t, "production", tagMap["env"])
+	assert.Equal(t, "backend", tagMap["team"])
 }
 
 // TestTdmqTopicTags_Schema tests the schema definition of tags
@@ -335,9 +344,16 @@ func TestTdmqTopicTags_Schema(t *testing.T) {
 	assert.Contains(t, res.Schema, "tags")
 
 	tagsSchema := res.Schema["tags"]
-	assert.Equal(t, schema.TypeMap, tagsSchema.Type)
+	assert.Equal(t, schema.TypeList, tagsSchema.Type)
 	assert.True(t, tagsSchema.Optional)
-	assert.True(t, tagsSchema.ForceNew)
+	assert.False(t, tagsSchema.ForceNew)
+
+	// Verify sub-schema has tag_key and tag_value
+	tagsElem := tagsSchema.Elem.(*schema.Resource)
+	assert.Contains(t, tagsElem.Schema, "tag_key")
+	assert.Contains(t, tagsElem.Schema, "tag_value")
+	assert.Equal(t, schema.TypeString, tagsElem.Schema["tag_key"].Type)
+	assert.Equal(t, schema.TypeString, tagsElem.Schema["tag_value"].Type)
 }
 
 // TestTdmqTopicTags_ReadWithNilTags tests that tags are not set when response Tags field is nil
@@ -384,6 +400,6 @@ func TestTdmqTopicTags_ReadWithNilTags(t *testing.T) {
 	err := res.Read(d, meta)
 	assert.NoError(t, err)
 
-	tags := d.Get("tags").(map[string]interface{})
+	tags := d.Get("tags").([]interface{})
 	assert.Len(t, tags, 0)
 }

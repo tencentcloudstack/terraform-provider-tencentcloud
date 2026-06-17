@@ -4,9 +4,10 @@
 
 ## 2. Resource Schema and CRUD Changes
 
-- [x] 2.1 Add `tags` parameter to the `tencentcloud_tdmq_topic` resource schema in `tencentcloud/services/tpulsar/resource_tc_tdmq_topic.go` as `Optional`, `ForceNew`, type `map[string]string`
+- [x] 2.1 Add `tags` parameter to the `tencentcloud_tdmq_topic` resource schema in `tencentcloud/services/tpulsar/resource_tc_tdmq_topic.go` as `Optional`, type `map[string]string`
 - [x] 2.2 Update `resourceTencentCloudTdmqTopicCreate` to read `tags` from config, convert `map[string]string` to `[]*tdmq.Tag`, and pass to `CreateTdmqTopic`
 - [x] 2.3 Update `resourceTencentCloudTdmqTopicRead` to read `Tags` from the `Topic` struct returned by `DescribeTopics` and set into state as `map[string]string`
+- [x] 2.4 Update `resourceTencentCloudTdmqTopicUpdate` to handle tag changes using `UnTagResources` and `TagResources` APIs from the TencentCloud Tag service (`tag/v20180813`), computing diffs via `svctag.DiffTags`
 
 ## 3. Unit Tests
 

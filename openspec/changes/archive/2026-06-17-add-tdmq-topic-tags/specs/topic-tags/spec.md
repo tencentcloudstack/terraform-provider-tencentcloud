@@ -2,7 +2,7 @@
 
 ### Requirement: Tags parameter in resource schema
 
-The `tencentcloud_tdmq_topic` resource SHALL support an optional `tags` parameter of type `map[string]string`. The parameter SHALL be marked as `ForceNew` since the ModifyTopic API does not support updating tags. Each map entry represents a tag where the key is the tag key and the value is the tag value.
+The `tencentcloud_tdmq_topic` resource SHALL support an optional `tags` parameter of type `map[string]string`. Each map entry represents a tag where the key is the tag key and the value is the tag value.
 
 #### Scenario: Create topic with tags
 - **WHEN** a user specifies `tags` in the `tencentcloud_tdmq_topic` resource configuration
@@ -12,9 +12,13 @@ The `tencentcloud_tdmq_topic` resource SHALL support an optional `tags` paramete
 - **WHEN** a user does not specify `tags` in the `tencentcloud_tdmq_topic` resource configuration
 - **THEN** the resource SHALL not set the `Tags` field in the `CreateTopic` API request, and the resource SHALL be created successfully without tags
 
-#### Scenario: Tags force recreation on change
+#### Scenario: Update tags in-place
 - **WHEN** a user modifies the `tags` parameter in an existing `tencentcloud_tdmq_topic` resource
-- **THEN** Terraform SHALL plan to destroy and recreate the resource because `tags` is marked as `ForceNew`
+- **THEN** the resource Update function SHALL:
+  1. Compute the diff between old and new tags using `svctag.DiffTags`
+  2. Call `UnTagResources` API with the deleted tag keys to remove them from the resource
+  3. Call `TagResources` API with the new/updated tag key-value pairs to bind them to the resource
+  4. The resource six-segment name SHALL be constructed as `tccommon.BuildTagResourceName("tdmq", "topic", region, topicName)`
 
 ### Requirement: Read tags from API response
 
