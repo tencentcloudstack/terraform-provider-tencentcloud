@@ -263,7 +263,7 @@ func (me *TdmqService) DeleteTdmqNamespace(ctx context.Context, environId string
 
 // tdmq topic
 func (me *TdmqService) CreateTdmqTopic(ctx context.Context, environId string, topicName string, partitions uint64,
-	topicType int64, remark string, clusterId string, pulsarTopicType int64) (errRet error) {
+	topicType int64, remark string, clusterId string, pulsarTopicType int64, tags []*tdmq.Tag) (errRet error) {
 	logId := tccommon.GetLogId(ctx)
 	request := tdmq.NewCreateTopicRequest()
 	defer func() {
@@ -283,6 +283,9 @@ func (me *TdmqService) CreateTdmqTopic(ctx context.Context, environId string, to
 	request.ClusterId = &clusterId
 	if pulsarTopicType != NonePulsarTopicType {
 		request.PulsarTopicType = &pulsarTopicType
+	}
+	if len(tags) > 0 {
+		request.Tags = tags
 	}
 
 	if err := resource.Retry(tccommon.ReadRetryTimeout, func() *resource.RetryError {
