@@ -53,7 +53,7 @@ func ResourceTencentCloudTdmqInstance() *schema.Resource {
 func resourceTencentCloudTdmqCreate(d *schema.ResourceData, meta interface{}) error {
 	defer tccommon.LogElapsed("resource.tencentcloud_tdmq_instance.create")()
 
-	return fmt.Errorf("tencentcloud_tdmq_instance creation has been deprecated, please use tencentcloud_tdmq_pro_instance instead")
+	return fmt.Errorf("tencentcloud_tdmq_instance creation has been deprecated, please use tencentcloud_tdmq_professional_cluster instead")
 }
 
 func resourceTencentCloudTdmqRead(d *schema.ResourceData, meta interface{}) error {
