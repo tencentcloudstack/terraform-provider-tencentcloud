@@ -7,10 +7,12 @@ import (
 
 	"context"
 	"fmt"
+	"log"
 
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 	"github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/common/errors"
+	tdmq "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/tdmq/v20200217"
 )
 
 func ResourceTencentCloudTdmqTopic() *schema.Resource {
@@ -62,6 +64,15 @@ func ResourceTencentCloudTdmqTopic() *schema.Resource {
 				Type:        schema.TypeString,
 				Optional:    true,
 				Description: "Description of the namespace.",
+			},
+			"tags": {
+				Type:        schema.TypeMap,
+				Optional:    true,
+				ForceNew:    true,
+				Description: "Tag description list.",
+				Elem: &schema.Schema{
+					Type: schema.TypeString,
+				},
 			},
 
 			//compute
@@ -125,7 +136,19 @@ func resourceTencentCloudTdmqTopicCreate(d *schema.ResourceData, meta interface{
 		}
 	}
 
-	err := tdmqService.CreateTdmqTopic(ctx, environId, topicName, partitions, topicType, remark, clusterId, pulsarTopicType)
+	var tags []*tdmq.Tag
+	if v, ok := d.GetOk("tags"); ok {
+		for key, value := range v.(map[string]interface{}) {
+			tagKey := key
+			tagValue := value.(string)
+			tags = append(tags, &tdmq.Tag{
+				TagKey:   &tagKey,
+				TagValue: &tagValue,
+			})
+		}
+	}
+
+	err := tdmqService.CreateTdmqTopic(ctx, environId, topicName, partitions, topicType, remark, clusterId, pulsarTopicType, tags)
 	if err != nil {
 		return err
 	}
@@ -155,15 +178,35 @@ func resourceTencentCloudTdmqTopicRead(d *schema.ResourceData, meta interface{})
 		}
 
 		if !has {
+			log.Printf("[WARN] tdmq_topic id=%s not found, removing from state", d.Id())
 			d.SetId("")
 			return nil
 		}
 
-		_ = d.Set("partitions", info.Partitions)
-		_ = d.Set("topic_type", info.TopicType)
-		_ = d.Set("pulsar_topic_type", info.PulsarTopicType)
-		_ = d.Set("remark", info.Remark)
-		_ = d.Set("create_time", info.CreateTime)
+		if info.Partitions != nil {
+			_ = d.Set("partitions", info.Partitions)
+		}
+		if info.TopicType != nil {
+			_ = d.Set("topic_type", info.TopicType)
+		}
+		if info.PulsarTopicType != nil {
+			_ = d.Set("pulsar_topic_type", info.PulsarTopicType)
+		}
+		if info.Remark != nil {
+			_ = d.Set("remark", info.Remark)
+		}
+		if info.CreateTime != nil {
+			_ = d.Set("create_time", info.CreateTime)
+		}
+		if info.Tags != nil {
+			tagsMap := make(map[string]string)
+			for _, tag := range info.Tags {
+				if tag.TagKey != nil && tag.TagValue != nil {
+					tagsMap[*tag.TagKey] = *tag.TagValue
+				}
+			}
+			_ = d.Set("tags", tagsMap)
+		}
 		return nil
 	})
 
