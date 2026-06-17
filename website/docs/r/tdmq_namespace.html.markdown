@@ -31,6 +31,10 @@ resource "tencentcloud_tdmq_namespace" "example" {
     size_in_mb      = 10
   }
   remark = "remark."
+  tags {
+    tag_key   = "createdBy"
+    tag_value = "terraform"
+  }
 }
 ```
 
@@ -43,11 +47,17 @@ The following arguments are supported:
 * `msg_ttl` - (Required, Int) The expiration time of unconsumed message.
 * `remark` - (Optional, String) Description of the namespace.
 * `retention_policy` - (Optional, List) The Policy of message to retain. Format like: `{time_in_minutes: Int, size_in_mb: Int}`. `time_in_minutes`: the time of message to retain; `size_in_mb`: the size of message to retain.
+* `tags` - (Optional, List, ForceNew) The tags of the tdmq_namespace.
 
 The `retention_policy` object supports the following:
 
 * `size_in_mb` - (Optional, Int) the size of message to retain.
 * `time_in_minutes` - (Optional, Int) the time of message to retain.
+
+The `tags` object supports the following:
+
+* `tag_key` - (Required, String) Tag key.
+* `tag_value` - (Required, String) Tag value.
 
 ## Attributes Reference
 

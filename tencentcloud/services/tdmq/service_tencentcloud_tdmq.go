@@ -122,7 +122,7 @@ func (me *TdmqService) DeleteTdmqInstance(ctx context.Context, clusterId string)
 
 // tdmq namespace
 func (me *TdmqService) CreateTdmqNamespace(ctx context.Context, environName string, msgTtl uint64, clusterId string,
-	remark string, retentionPolicy tdmq.RetentionPolicy) (environId string, errRet error) {
+	remark string, retentionPolicy tdmq.RetentionPolicy, tags []*tdmq.Tag) (environId string, errRet error) {
 	logId := tccommon.GetLogId(ctx)
 	request := tdmq.NewCreateEnvironmentRequest()
 	defer func() {
@@ -137,6 +137,9 @@ func (me *TdmqService) CreateTdmqNamespace(ctx context.Context, environName stri
 	request.ClusterId = &clusterId
 	request.Remark = &remark
 	request.RetentionPolicy = &retentionPolicy
+	if len(tags) > 0 {
+		request.Tags = tags
+	}
 
 	var response *tdmq.CreateEnvironmentResponse
 	if err := resource.Retry(tccommon.ReadRetryTimeout, func() *resource.RetryError {
@@ -154,6 +157,10 @@ func (me *TdmqService) CreateTdmqNamespace(ctx context.Context, environName stri
 		return
 	}
 
+	if response == nil || response.Response == nil || response.Response.EnvironmentId == nil {
+		errRet = fmt.Errorf("create tdmq_namespace failed, response or EnvironmentId is nil")
+		return
+	}
 	environId = *response.Response.EnvironmentId
 	return
 }
