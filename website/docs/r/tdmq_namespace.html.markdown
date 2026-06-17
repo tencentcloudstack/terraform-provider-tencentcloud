@@ -47,7 +47,7 @@ The following arguments are supported:
 * `msg_ttl` - (Required, Int) The expiration time of unconsumed message.
 * `remark` - (Optional, String) Description of the namespace.
 * `retention_policy` - (Optional, List) The Policy of message to retain. Format like: `{time_in_minutes: Int, size_in_mb: Int}`. `time_in_minutes`: the time of message to retain; `size_in_mb`: the size of message to retain.
-* `tags` - (Optional, List, ForceNew) The tags of the tdmq_namespace.
+* `tags` - (Optional, List) The tags of the tencentcloud_tdmq_namespace.
 
 The `retention_policy` object supports the following:
 

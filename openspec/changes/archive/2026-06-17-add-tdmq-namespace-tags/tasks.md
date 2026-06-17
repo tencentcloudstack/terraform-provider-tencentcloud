@@ -5,10 +5,10 @@
 
 ## 2. Resource Schema and CRUD Updates
 
-- [x] 2.1 Add `Tags` schema field to `tencentcloud_tdmq_namespace` resource in `tencentcloud/services/tpulsar/resource_tc_tdmq_namespace.go` as `TypeList`, `Optional`, `ForceNew`, with `tag_key` (Required TypeString) and `tag_value` (Required TypeString) sub-fields
+- [x] 2.1 Add `Tags` schema field to `tencentcloud_tdmq_namespace` resource in `tencentcloud/services/tpulsar/resource_tc_tdmq_namespace.go` as `TypeList`, `Optional`, with `tag_key` (Required TypeString) and `tag_value` (Required TypeString) sub-fields
 - [x] 2.2 Update `resourceTencentCloudTdmqNamespaceCreate` to read Tags from schema and pass to `CreateTdmqNamespace` service function
 - [x] 2.3 Update `resourceTencentCloudTdmqNamespaceRead` to flatten `info.Tags` into the schema (check for nil before setting)
-- [x] 2.4 Update `resourceTencentCloudTdmqNamespaceUpdate` to add "tags" to the `immutableArgs` list
+- [x] 2.4 Update `resourceTencentCloudTdmqNamespaceUpdate` to detect tag changes and use `svctag.ModifyTags` (via `TagResources`/`UnTagResources` APIs) to apply tag updates in-place
 - [x] 2.5 Verify the `Delete` method does not need changes (Tags are destroyed with the namespace)
 
 ## 3. Documentation

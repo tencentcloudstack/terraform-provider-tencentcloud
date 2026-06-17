@@ -3,6 +3,7 @@ package tpulsar
 import (
 	tccommon "github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/common"
 	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/internal/helper"
+	svctag "github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/services/tag"
 	svctdmq "github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/services/tdmq"
 	svcvpc "github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/services/vpc"
 
@@ -74,8 +75,7 @@ func ResourceTencentCloudTdmqNamespace() *schema.Resource {
 			"tags": {
 				Type:        schema.TypeList,
 				Optional:    true,
-				ForceNew:    true,
-				Description: "The tags of the tdmq_namespace.",
+				Description: "The tags of the tencentcloud_tdmq_namespace.",
 				Elem: &schema.Resource{
 					Schema: map[string]*schema.Schema{
 						"tag_key": {
@@ -155,9 +155,9 @@ func resourceTencentCloudTdmqNamespaceCreate(d *schema.ResourceData, meta interf
 		return err
 	}
 
-	log.Printf("[CRUD] tdmq_namespace logId=%s, environId=%s", logId, environId)
+	log.Printf("[CRUD] tencentcloud_tdmq_namespace logId=%s, environId=%s", logId, environId)
 	if environId == "" {
-		return fmt.Errorf("create tdmq_namespace failed, environId is empty")
+		return fmt.Errorf("create tencentcloud_tdmq_namespace failed, environId is empty")
 	}
 
 	d.SetId(strings.Join([]string{environId, clusterId}, tccommon.FILED_SP))
@@ -188,7 +188,7 @@ func resourceTencentCloudTdmqNamespaceRead(d *schema.ResourceData, meta interfac
 			return tccommon.RetryError(e)
 		}
 		if !has {
-			log.Printf("[CRUD] tdmq_namespace id=%s, not found", d.Id())
+			log.Printf("[CRUD] tencentcloud_tdmq_namespace id=%s, not found", d.Id())
 			d.SetId("")
 			return nil
 		}
@@ -239,7 +239,7 @@ func resourceTencentCloudTdmqNamespaceUpdate(d *schema.ResourceData, meta interf
 		retentionPolicy = new(tdmq.RetentionPolicy)
 	)
 
-	immutableArgs := []string{"environ_name", "cluster_id", "tags"}
+	immutableArgs := []string{"environ_name", "cluster_id"}
 
 	for _, v := range immutableArgs {
 		if d.HasChange(v) {
@@ -286,6 +286,33 @@ func resourceTencentCloudTdmqNamespaceUpdate(d *schema.ResourceData, meta interf
 
 	if err := service.ModifyTdmqNamespaceAttribute(ctx, environId, msgTtl, remark, clusterId, retentionPolicy); err != nil {
 		return err
+	}
+
+	if d.HasChange("tags") {
+		tcClient := meta.(tccommon.ProviderMeta).GetAPIV3Conn()
+		tagService := svctag.NewTagService(tcClient)
+
+		oldValue, newValue := d.GetChange("tags")
+		oldTags := oldValue.([]interface{})
+		newTags := newValue.([]interface{})
+
+		// Convert TypeList tags to map format for DiffTags
+		oldTagMap := make(map[string]interface{})
+		for _, item := range oldTags {
+			v := item.(map[string]interface{})
+			oldTagMap[v["tag_key"].(string)] = v["tag_value"].(string)
+		}
+		newTagMap := make(map[string]interface{})
+		for _, item := range newTags {
+			v := item.(map[string]interface{})
+			newTagMap[v["tag_key"].(string)] = v["tag_value"].(string)
+		}
+
+		replaceTags, deleteTags := svctag.DiffTags(oldTagMap, newTagMap)
+		resourceName := tccommon.BuildTagResourceName("tdmq", "environment", tcClient.Region, fmt.Sprintf("%s/%s", clusterId, environId))
+		if err := tagService.ModifyTags(ctx, resourceName, replaceTags, deleteTags); err != nil {
+			return err
+		}
 	}
 
 	d.Partial(false)

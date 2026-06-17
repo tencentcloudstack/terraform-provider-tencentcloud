@@ -6,6 +6,7 @@ import (
 	"github.com/agiledragon/gomonkey/v2"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 	"github.com/stretchr/testify/assert"
+	tag "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/tag/v20180813"
 	tdmq "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/tdmq/v20200217"
 
 	tccommon "github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/common"
@@ -29,14 +30,6 @@ func newMockMetaTdmqNamespace() *mockMetaTdmqNamespace {
 
 func ptrStringNamespace(s string) *string {
 	return &s
-}
-
-func ptrUint64Namespace(v uint64) *uint64 {
-	return &v
-}
-
-func ptrInt64Namespace(v int64) *int64 {
-	return &v
 }
 
 // TestTdmqNamespace_CreateWithTags tests creating a namespace with tags
@@ -296,8 +289,136 @@ func TestTdmqNamespace_ReadWithNilTags(t *testing.T) {
 // TestTdmqNamespace_UpdateWithTagsImmutable tests that updating tags returns an error
 func TestTdmqNamespace_UpdateWithTagsImmutable(t *testing.T) {
 	// Verify that "tags" is in the immutableArgs list
-	immutableArgs := []string{"environ_name", "cluster_id", "tags"}
-	assert.Contains(t, immutableArgs, "tags", "tags should be in immutableArgs list")
+	immutableArgs := []string{"environ_name", "cluster_id"}
+	assert.NotContains(t, immutableArgs, "tags", "tags should not be in immutableArgs list as it is updatable")
+}
+
+// TestTdmqNamespace_UpdateTags tests updating namespace tags
+func TestTdmqNamespace_UpdateTags(t *testing.T) {
+	patches := gomonkey.NewPatches()
+	defer patches.Reset()
+
+	tdmqClient := &tdmq.Client{}
+	tagClient := &tag.Client{}
+
+	// Mock TDMQ client
+	patches.ApplyMethodReturn(newMockMetaTdmqNamespace().client, "UseTdmqClient", tdmqClient)
+	// Mock Tag client
+	patches.ApplyMethodReturn(newMockMetaTdmqNamespace().client, "UseTagClient", tagClient)
+
+	// Mock ModifyEnvironmentAttributes API
+	patches.ApplyMethodFunc(tdmqClient, "ModifyEnvironmentAttributes", func(request *tdmq.ModifyEnvironmentAttributesRequest) (*tdmq.ModifyEnvironmentAttributesResponse, error) {
+		assert.NotNil(t, request.EnvironmentId)
+		assert.Equal(t, "test_ns", *request.EnvironmentId)
+		assert.NotNil(t, request.MsgTTL)
+		assert.Equal(t, uint64(400), *request.MsgTTL)
+		assert.NotNil(t, request.Remark)
+		assert.Equal(t, "updated remark", *request.Remark)
+
+		resp := tdmq.NewModifyEnvironmentAttributesResponse()
+		resp.Response = &tdmq.ModifyEnvironmentAttributesResponseParams{
+			EnvironmentId: ptrStringNamespace("test_ns"),
+			RequestId:     ptrStringNamespace("fake-request-id"),
+		}
+		return resp, nil
+	})
+
+	// Mock ModifyResourceTags API
+	patches.ApplyMethodFunc(tagClient, "ModifyResourceTags", func(request *tag.ModifyResourceTagsRequest) (*tag.ModifyResourceTagsResponse, error) {
+		resp := tag.NewModifyResourceTagsResponse()
+		resp.Response = &tag.ModifyResourceTagsResponseParams{
+			RequestId: ptrStringNamespace("fake-request-id"),
+		}
+		return resp, nil
+	})
+
+	// Mock DescribeEnvironments API (called by Read after Update)
+	patches.ApplyMethodFunc(tdmqClient, "DescribeEnvironments", func(request *tdmq.DescribeEnvironmentsRequest) (*tdmq.DescribeEnvironmentsResponse, error) {
+		msgTtl := int64(400)
+		timeInMinutes := int64(60)
+		sizeInMB := int64(10)
+		resp := tdmq.NewDescribeEnvironmentsResponse()
+		resp.Response = &tdmq.DescribeEnvironmentsResponseParams{
+			EnvironmentSet: []*tdmq.Environment{
+				{
+					EnvironmentId: ptrStringNamespace("test_ns"),
+					MsgTTL:        &msgTtl,
+					Remark:        ptrStringNamespace("updated remark"),
+					RetentionPolicy: &tdmq.RetentionPolicy{
+						TimeInMinutes: &timeInMinutes,
+						SizeInMB:      &sizeInMB,
+					},
+					Tags: []*tdmq.Tag{
+						{
+							TagKey:   ptrStringNamespace("env"),
+							TagValue: ptrStringNamespace("staging"),
+						},
+						{
+							TagKey:   ptrStringNamespace("team"),
+							TagValue: ptrStringNamespace("backend"),
+						},
+					},
+				},
+			},
+			RequestId: ptrStringNamespace("fake-request-id"),
+		}
+		return resp, nil
+	})
+
+	meta := newMockMetaTdmqNamespace()
+	res := tpulsar.ResourceTencentCloudTdmqNamespace()
+	d := schema.TestResourceDataRaw(t, res.Schema, map[string]interface{}{
+		"environ_name": "test_ns",
+		"msg_ttl":      300,
+		"cluster_id":   "pulsar-test",
+		"remark":       "test remark",
+		"retention_policy": []interface{}{
+			map[string]interface{}{
+				"time_in_minutes": 60,
+				"size_in_mb":      10,
+			},
+		},
+		"tags": []interface{}{
+			map[string]interface{}{
+				"tag_key":   "env",
+				"tag_value": "prod",
+			},
+			map[string]interface{}{
+				"tag_key":   "team",
+				"tag_value": "platform",
+			},
+		},
+	})
+	d.SetId("test_ns#pulsar-test")
+
+	// Create new ResourceData with updated values to simulate update operation
+	// Note: environ_name and cluster_id are immutable and should not be included in update
+	updatedData := schema.TestResourceDataRaw(t, res.Schema, map[string]interface{}{
+		"msg_ttl": 400,
+		"remark":  "updated remark",
+		"retention_policy": []interface{}{
+			map[string]interface{}{
+				"time_in_minutes": 60,
+				"size_in_mb":      10,
+			},
+		},
+		"tags": []interface{}{
+			map[string]interface{}{
+				"tag_key":   "env",
+				"tag_value": "staging",
+			},
+			map[string]interface{}{
+				"tag_key":   "team",
+				"tag_value": "backend",
+			},
+		},
+	})
+	updatedData.SetId("test_ns#pulsar-test")
+
+	// Simulate the update by calling Update method with the new data
+	err := res.Update(updatedData, meta)
+	assert.NoError(t, err)
+	assert.Equal(t, "test_ns#pulsar-test", updatedData.Id())
 }
 
 // TestTdmqNamespace_Delete tests deleting a namespace
