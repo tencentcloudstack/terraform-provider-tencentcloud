@@ -53,6 +53,11 @@ func ResourceTencentCloudSsmSshKeyPairSecret() *schema.Resource {
 				Type:        schema.TypeString,
 				Description: "Name of the SSH key pair, which only contains digits, letters and underscores and must start with a digit or letter. The maximum length is 25 characters.",
 			},
+			"ssh_key_id": {
+				Computed:    true,
+				Type:        schema.TypeString,
+				Description: "The key pair ID is the unique identifier of the key pair in the cloud server.",
+			},
 			"tags": {
 				Type:        schema.TypeMap,
 				Optional:    true,
@@ -140,6 +145,10 @@ func resourceTencentCloudSsmSshKeyPairSecretCreate(d *schema.ResourceData, meta 
 	secretName = *response.Response.SecretName
 	d.SetId(secretName)
 
+	if response.Response.SSHKeyID != nil {
+		_ = d.Set("ssh_key_id", response.Response.SSHKeyID)
+	}
+
 	// update status if disabled
 	if v, ok := d.GetOk("status"); ok {
 		status := v.(string)
@@ -217,6 +226,10 @@ func resourceTencentCloudSsmSshKeyPairSecretRead(d *schema.ResourceData, meta in
 
 	if sshKeyPairSecret.ResourceName != nil {
 		_ = d.Set("ssh_key_name", sshKeyPairSecret.ResourceName)
+	}
+
+	if sshKeyPairSecret.ResourceID != nil {
+		_ = d.Set("ssh_key_id", sshKeyPairSecret.ResourceID)
 	}
 
 	if sshKeyPairSecret.Status != nil {
