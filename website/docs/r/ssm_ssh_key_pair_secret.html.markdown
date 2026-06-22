@@ -70,3 +70,4 @@ ssm ssh_key_pair_secret can be imported using the id, e.g.
 ```
 terraform import tencentcloud_ssm_ssh_key_pair_secret.ssh_key_pair_secret ssh_key_pair_secret_name
 ```
+
