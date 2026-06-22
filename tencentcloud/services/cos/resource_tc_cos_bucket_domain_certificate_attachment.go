@@ -72,14 +72,14 @@ func ResourceTencentCloudCosBucketDomainCertificateAttachment() *schema.Resource
 												},
 												"cert": {
 													Type:        schema.TypeString,
-													Required:    true,
+													Optional:    true,
 													ForceNew:    true,
 													Sensitive:   true,
 													Description: "Public key of certificate.",
 												},
 												"private_key": {
 													Type:        schema.TypeString,
-													Required:    true,
+													Optional:    true,
 													ForceNew:    true,
 													Sensitive:   true,
 													Description: "Private key of certificate.",
@@ -189,14 +189,15 @@ func resourceTencentCloudCosBucketDomainCertificateAttachmentRead(d *schema.Reso
 	)
 
 	certResult, bucket, err := service.DescribeCosBucketDomainCertificate(ctx, id)
-	log.Printf("[DEBUG] resource `bucketDomainCertificate certResult: %s`\n", certResult)
+	log.Printf("[DEBUG] resource `tencentcloud_cos_bucket_domain_certificate_attachment certResult: %s`\n", certResult)
 	if err != nil {
 		return err
 	}
 
 	if certResult == nil {
+		log.Printf("resource `tencentcloud_cos_bucket_domain_certificate_attachment` %s does not exist", id)
 		d.SetId("")
-		return fmt.Errorf("resource `bucketDomainCertificate` %s does not exist", id)
+		return nil
 	}
 
 	_ = d.Set("bucket", bucket)

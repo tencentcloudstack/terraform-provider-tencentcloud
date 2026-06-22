@@ -85,9 +85,9 @@ The `certificate` object of `domain_certificate` supports the following:
 
 The `custom_cert` object of `certificate` supports the following:
 
-* `cert` - (Required, String, ForceNew) Public key of certificate.
-* `private_key` - (Required, String, ForceNew) Private key of certificate.
 * `cert_id` - (Optional, String, ForceNew) ID of certificate.
+* `cert` - (Optional, String, ForceNew) Public key of certificate.
+* `private_key` - (Optional, String, ForceNew) Private key of certificate.
 
 The `domain_certificate` object supports the following:
 
