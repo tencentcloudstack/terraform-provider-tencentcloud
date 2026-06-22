@@ -15,10 +15,9 @@ Provides a resource to create a CBS copy snapshot cross region resource.
 
 ```hcl
 resource "tencentcloud_cbs_copy_snapshot_cross_region" "example" {
-  snapshot_id         = "snap-xxxxxxxx"
-  destination_regions = ["ap-shanghai", "ap-chengdu"]
-
-  snapshot_name = "my-copied-snapshot"
+  snapshot_id        = "snap-07ttd84z"
+  destination_region = "ap-beijing"
+  snapshot_name      = "tf-example-copy-snapshot"
 }
 ```
 
@@ -26,9 +25,9 @@ resource "tencentcloud_cbs_copy_snapshot_cross_region" "example" {
 
 The following arguments are supported:
 
-* `destination_regions` - (Required, List: [`String`], ForceNew) Target region names for cross-region copy.
+* `destination_region` - (Required, String, ForceNew) Target region name for cross-region copy.
 * `snapshot_id` - (Required, String, ForceNew) Source snapshot ID for cross-region copy.
-* `delete_bind_images` - (Optional, Bool, ForceNew) Whether to force-delete images associated with the snapshots when deleting.
+* `delete_bind_images` - (Optional, Bool) Whether to force-delete images associated with the snapshots when deleting.
 * `snapshot_name` - (Optional, String, ForceNew) Name of the copied snapshot.
 
 ## Attributes Reference
@@ -36,18 +35,12 @@ The following arguments are supported:
 In addition to all arguments above, the following attributes are exported:
 
 * `id` - ID of the resource.
-* `snapshot_copy_result_set` - Cross-region copy results.
-  * `code` - Error code, Success on success.
-  * `destination_region` - Destination region for cross-region copy.
-  * `message` - Error message, empty string on success.
-  * `snapshot_id` - New snapshot ID in the destination region.
 
 
-## Import
+## Timeouts
 
-CBS copy snapshot cross region can be imported using the composite ID, e.g.
+The `timeouts` block allows you to specify [timeouts](https://developer.hashicorp.com/terraform/language/resources/syntax#operation-timeouts) for certain actions:
 
-```
-$ terraform import tencentcloud_cbs_copy_snapshot_cross_region.example snap-xxxxxxxx#snap-yyyyyyyy
-```
+* `create` - (Defaults to `15m`) Used when creating the resource.
+* `delete` - (Defaults to `15m`) Used when deleting the resource.
 

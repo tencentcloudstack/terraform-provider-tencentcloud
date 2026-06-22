@@ -5,12 +5,14 @@ import (
 	"fmt"
 	"log"
 	"strings"
+	"time"
 
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 	cbs "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/cbs/v20170312"
 
 	tccommon "github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/common"
+	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/connectivity"
 	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/internal/helper"
 )
 
@@ -18,9 +20,11 @@ func ResourceTencentCloudCbsCopySnapshotCrossRegionAttachment() *schema.Resource
 	return &schema.Resource{
 		Create: resourceTencentCloudCbsCopySnapshotCrossRegionAttachmentCreate,
 		Read:   resourceTencentCloudCbsCopySnapshotCrossRegionAttachmentRead,
+		Update: resourceTencentCloudCbsCopySnapshotCrossRegionAttachmentUpdate,
 		Delete: resourceTencentCloudCbsCopySnapshotCrossRegionAttachmentDelete,
-		Importer: &schema.ResourceImporter{
-			State: schema.ImportStatePassthrough,
+		Timeouts: &schema.ResourceTimeout{
+			Create: schema.DefaultTimeout(15 * time.Minute),
+			Delete: schema.DefaultTimeout(15 * time.Minute),
 		},
 		Schema: map[string]*schema.Schema{
 			"snapshot_id": {
@@ -30,12 +34,11 @@ func ResourceTencentCloudCbsCopySnapshotCrossRegionAttachment() *schema.Resource
 				Description: "Source snapshot ID for cross-region copy.",
 			},
 
-			"destination_regions": {
-				Type:        schema.TypeList,
+			"destination_region": {
+				Type:        schema.TypeString,
 				Required:    true,
 				ForceNew:    true,
-				Description: "Target region names for cross-region copy.",
-				Elem:        &schema.Schema{Type: schema.TypeString},
+				Description: "Target region name for cross-region copy.",
 			},
 
 			"snapshot_name": {
@@ -48,42 +51,27 @@ func ResourceTencentCloudCbsCopySnapshotCrossRegionAttachment() *schema.Resource
 			"delete_bind_images": {
 				Type:        schema.TypeBool,
 				Optional:    true,
-				ForceNew:    true,
 				Default:     false,
 				Description: "Whether to force-delete images associated with the snapshots when deleting.",
 			},
-
-			"snapshot_copy_result_set": {
-				Type:        schema.TypeList,
-				Computed:    true,
-				Description: "Cross-region copy results.",
-				Elem: &schema.Resource{
-					Schema: map[string]*schema.Schema{
-						"snapshot_id": {
-							Type:        schema.TypeString,
-							Computed:    true,
-							Description: "New snapshot ID in the destination region.",
-						},
-						"code": {
-							Type:        schema.TypeString,
-							Computed:    true,
-							Description: "Error code, Success on success.",
-						},
-						"message": {
-							Type:        schema.TypeString,
-							Computed:    true,
-							Description: "Error message, empty string on success.",
-						},
-						"destination_region": {
-							Type:        schema.TypeString,
-							Computed:    true,
-							Description: "Destination region for cross-region copy.",
-						},
-					},
-				},
-			},
 		},
 	}
+}
+
+// cbsClientWithRegion builds a CBS client bound to the given region using the
+// provider's credential and client profile. The snapshots copied by
+// CopySnapshotCrossRegions reside in the destination region, so describing and
+// deleting them must use a client pointing at that region instead of the
+// provider's default region.
+func cbsClientWithRegion(meta interface{}, region string) *cbs.Client {
+	conn := meta.(tccommon.ProviderMeta).GetAPIV3Conn()
+	cpf := conn.NewClientProfile(300)
+	client, _ := cbs.NewClient(conn.Credential, region, cpf)
+	// Attach the LogRoundTripper so that requests issued by this region-specific client
+	// (e.g. DescribeSnapshots / DeleteSnapshots) are printed in the SDK debug log,
+	// consistent with clients created via UseCbsClient().
+	client.WithHttpTransport(&connectivity.LogRoundTripper{})
+	return client
 }
 
 func resourceTencentCloudCbsCopySnapshotCrossRegionAttachmentCreate(d *schema.ResourceData, meta interface{}) error {
@@ -100,12 +88,8 @@ func resourceTencentCloudCbsCopySnapshotCrossRegionAttachmentCreate(d *schema.Re
 		request.SnapshotId = helper.String(v.(string))
 	}
 
-	if v, ok := d.GetOk("destination_regions"); ok {
-		regions := make([]string, 0, len(v.([]interface{})))
-		for _, item := range v.([]interface{}) {
-			regions = append(regions, item.(string))
-		}
-		request.DestinationRegions = helper.Strings(regions)
+	if v, ok := d.GetOk("destination_region"); ok {
+		request.DestinationRegions = helper.Strings([]string{v.(string)})
 	}
 
 	if v, ok := d.GetOk("snapshot_name"); ok {
@@ -149,53 +133,53 @@ func resourceTencentCloudCbsCopySnapshotCrossRegionAttachmentCreate(d *schema.Re
 		}
 	}
 
-	// Set composite ID using snapshot_id + FILED_SP + copied_snapshot_id (using first copied snapshot ID)
-	snapshotId := d.Get("snapshot_id").(string)
+	// Set composite ID using copied_snapshot_id (returned by CopySnapshotCrossRegions)
+	// + FILED_SP + destination_region (using the first copied snapshot result).
 	copiedSnapshotId := *snapshotCopyResultSet[0].SnapshotId
-	d.SetId(strings.Join([]string{snapshotId, copiedSnapshotId}, tccommon.FILED_SP))
-
-	// Save snapshot_copy_result_set to state
-	snapshotCopyResultList := make([]map[string]interface{}, 0, len(snapshotCopyResultSet))
-	for _, result := range snapshotCopyResultSet {
-		resultMap := map[string]interface{}{}
-		if result.SnapshotId != nil {
-			resultMap["snapshot_id"] = *result.SnapshotId
-		}
-		if result.Code != nil {
-			resultMap["code"] = *result.Code
-		}
-		if result.Message != nil {
-			resultMap["message"] = *result.Message
-		}
-		if result.DestinationRegion != nil {
-			resultMap["destination_region"] = *result.DestinationRegion
-		}
-		snapshotCopyResultList = append(snapshotCopyResultList, resultMap)
+	destinationRegion := d.Get("destination_region").(string)
+	if snapshotCopyResultSet[0].DestinationRegion != nil {
+		destinationRegion = *snapshotCopyResultSet[0].DestinationRegion
 	}
-	_ = d.Set("snapshot_copy_result_set", snapshotCopyResultList)
+	d.SetId(strings.Join([]string{copiedSnapshotId, destinationRegion}, tccommon.FILED_SP))
 
-	// Async polling: for each copied snapshot_id, poll DescribeSnapshots until SnapshotState is NORMAL
-	cbsService := CbsService{client: meta.(tccommon.ProviderMeta).GetAPIV3Conn()}
+	// Async polling: CopySnapshotCrossRegions is an asynchronous API. For each copied
+	// snapshot, poll DescribeSnapshots in its DestinationRegion (using a region-specific
+	// client) until SnapshotState becomes NORMAL, which indicates the copy succeeded.
 	for _, result := range snapshotCopyResultSet {
-		if result.SnapshotId != nil && *result.Code == "Success" {
-			copiedId := *result.SnapshotId
-			err := resource.Retry(20*tccommon.ReadRetryTimeout, func() *resource.RetryError {
-				snapshot, e := cbsService.DescribeSnapshotById(ctx, copiedId)
-				if e != nil {
-					return tccommon.RetryError(e, tccommon.InternalError)
-				}
-				if snapshot == nil || snapshot.SnapshotState == nil {
-					return resource.RetryableError(fmt.Errorf("cbs_copy_snapshot_cross_region copied snapshot %s not ready yet", copiedId))
-				}
-				if *snapshot.SnapshotState != CBS_SNAPSHOT_STATUS_NORMAL {
-					return resource.RetryableError(fmt.Errorf("cbs_copy_snapshot_cross_region copied snapshot %s state is %s, waiting for NORMAL", copiedId, *snapshot.SnapshotState))
-				}
-				return nil
-			})
-			if err != nil {
-				log.Printf("[CRITAL]%s cbs_copy_snapshot_cross_region async polling failed for snapshot %s, reason:%+v", logId, copiedId, err)
-				return err
+		if result.SnapshotId == nil || result.DestinationRegion == nil || result.Code == nil || *result.Code != "Success" {
+			continue
+		}
+
+		copiedId := *result.SnapshotId
+		region := *result.DestinationRegion
+		regionCbsClient := cbsClientWithRegion(meta, region)
+
+		err := resource.Retry(d.Timeout(schema.TimeoutCreate), func() *resource.RetryError {
+			describeRequest := cbs.NewDescribeSnapshotsRequest()
+			describeRequest.SnapshotIds = []*string{helper.String(copiedId)}
+			describeResponse, e := regionCbsClient.DescribeSnapshotsWithContext(ctx, describeRequest)
+			if e != nil {
+				return tccommon.RetryError(e, tccommon.InternalError)
 			}
+
+			if describeResponse == nil || describeResponse.Response == nil || len(describeResponse.Response.SnapshotSet) == 0 {
+				return resource.RetryableError(fmt.Errorf("cbs_copy_snapshot_cross_region copied snapshot %s in region %s not ready yet", copiedId, region))
+			}
+
+			snapshot := describeResponse.Response.SnapshotSet[0]
+			if snapshot.SnapshotState == nil {
+				return resource.RetryableError(fmt.Errorf("cbs_copy_snapshot_cross_region copied snapshot %s in region %s state unknown", copiedId, region))
+			}
+
+			if *snapshot.SnapshotState != CBS_SNAPSHOT_STATUS_NORMAL {
+				return resource.RetryableError(fmt.Errorf("cbs_copy_snapshot_cross_region copied snapshot %s in region %s state is %s, waiting for NORMAL", copiedId, region, *snapshot.SnapshotState))
+			}
+
+			return nil
+		})
+		if err != nil {
+			log.Printf("[CRITAL]%s cbs_copy_snapshot_cross_region async polling failed for snapshot %s, reason:%+v", logId, copiedId, err)
+			return err
 		}
 	}
 
@@ -207,26 +191,35 @@ func resourceTencentCloudCbsCopySnapshotCrossRegionAttachmentRead(d *schema.Reso
 	defer tccommon.InconsistentCheck(d, meta)()
 
 	var (
-		logId      = tccommon.GetLogId(tccommon.ContextNil)
-		ctx        = tccommon.NewResourceLifeCycleHandleFuncContext(context.Background(), logId, d, meta)
-		cbsService = CbsService{client: meta.(tccommon.ProviderMeta).GetAPIV3Conn()}
+		logId = tccommon.GetLogId(tccommon.ContextNil)
+		ctx   = tccommon.NewResourceLifeCycleHandleFuncContext(context.Background(), logId, d, meta)
 	)
 
 	idSplit := strings.Split(d.Id(), tccommon.FILED_SP)
 	if len(idSplit) != 2 {
-		return fmt.Errorf("cbs_copy_snapshot_cross_region id is illegal: %s", d.Id())
+		return fmt.Errorf("id is illegal: %s", d.Id())
 	}
 
-	snapshotId := idSplit[0]
-	copiedSnapshotId := idSplit[1]
+	copiedSnapshotId := idSplit[0]
+	region := idSplit[1]
+
+	// The copied snapshot resides in the destination region, so describe it with a
+	// region-specific client based on the region parsed from the resource ID.
+	regionCbsClient := cbsClientWithRegion(meta, region)
 
 	var snapshot *cbs.Snapshot
 	err := resource.Retry(tccommon.ReadRetryTimeout, func() *resource.RetryError {
-		result, e := cbsService.DescribeSnapshotById(ctx, copiedSnapshotId)
+		describeRequest := cbs.NewDescribeSnapshotsRequest()
+		describeRequest.SnapshotIds = []*string{helper.String(copiedSnapshotId)}
+		describeResponse, e := regionCbsClient.DescribeSnapshotsWithContext(ctx, describeRequest)
 		if e != nil {
 			return tccommon.RetryError(e, tccommon.InternalError)
 		}
-		snapshot = result
+
+		if describeResponse != nil && describeResponse.Response != nil && len(describeResponse.Response.SnapshotSet) > 0 {
+			snapshot = describeResponse.Response.SnapshotSet[0]
+		}
+
 		return nil
 	})
 
@@ -236,34 +229,27 @@ func resourceTencentCloudCbsCopySnapshotCrossRegionAttachmentRead(d *schema.Reso
 	}
 
 	if snapshot == nil {
-		log.Printf("[CRUD] cbs_copy_snapshot_cross_region id=%s", d.Id())
+		log.Printf("[CRUD] tencentcloud_cbs_copy_snapshot_cross_region id=%s", d.Id())
 		d.SetId("")
 		return nil
 	}
 
-	_ = d.Set("snapshot_id", snapshotId)
+	_ = d.Set("destination_region", region)
 
 	if snapshot.SnapshotName != nil {
 		_ = d.Set("snapshot_name", snapshot.SnapshotName)
 	}
 
-	// Populate snapshot_copy_result_set if not already set (e.g., after import)
-	// During normal Create-then-Read flow, snapshot_copy_result_set is preserved from state.
-	// After import, we need to reconstruct it from the composite ID and API response.
-	existingResults := d.Get("snapshot_copy_result_set").([]interface{})
-	if len(existingResults) == 0 {
-		resultMap := map[string]interface{}{
-			"snapshot_id": copiedSnapshotId,
-			"code":        "Success",
-			"message":     "",
-		}
-		if snapshot.Placement != nil && snapshot.Placement.Zone != nil {
-			resultMap["destination_region"] = *snapshot.Placement.Zone
-		}
-		_ = d.Set("snapshot_copy_result_set", []map[string]interface{}{resultMap})
-	}
-
 	return nil
+}
+
+func resourceTencentCloudCbsCopySnapshotCrossRegionAttachmentUpdate(d *schema.ResourceData, meta interface{}) error {
+	defer tccommon.LogElapsed("resource.tencentcloud_cbs_copy_snapshot_cross_region.update")()
+	defer tccommon.InconsistentCheck(d, meta)()
+
+	// delete_bind_images is only consumed during deletion. Updating it just persists
+	// the new value into state, no API call is required here.
+	return resourceTencentCloudCbsCopySnapshotCrossRegionAttachmentRead(d, meta)
 }
 
 func resourceTencentCloudCbsCopySnapshotCrossRegionAttachmentDelete(d *schema.ResourceData, meta interface{}) error {
@@ -275,27 +261,22 @@ func resourceTencentCloudCbsCopySnapshotCrossRegionAttachmentDelete(d *schema.Re
 		request = cbs.NewDeleteSnapshotsRequest()
 	)
 
-	// Read all copied snapshot IDs from state's snapshot_copy_result_set field
-	snapshotCopyResultSet := d.Get("snapshot_copy_result_set").([]interface{})
-	snapshotIds := make([]*string, 0, len(snapshotCopyResultSet))
-	for _, item := range snapshotCopyResultSet {
-		resultMap := item.(map[string]interface{})
-		if v, ok := resultMap["snapshot_id"].(string); ok && v != "" {
-			snapshotIds = append(snapshotIds, helper.String(v))
-		}
+	// Parse the composite ID (copied_snapshot_id + FILED_SP + destination_region).
+	idSplit := strings.Split(d.Id(), tccommon.FILED_SP)
+	if len(idSplit) != 2 {
+		return fmt.Errorf("cbs_copy_snapshot_cross_region id is illegal: %s", d.Id())
 	}
 
-	// Fallback: if snapshot_copy_result_set is empty (e.g., after import),
-	// parse the composite ID to get the copied_snapshot_id
-	if len(snapshotIds) == 0 {
-		idSplit := strings.Split(d.Id(), tccommon.FILED_SP)
-		if len(idSplit) == 2 && idSplit[1] != "" {
-			snapshotIds = append(snapshotIds, helper.String(idSplit[1]))
-		}
+	copiedSnapshotId := idSplit[0]
+	region := idSplit[1]
+
+	snapshotIds := make([]*string, 0, 1)
+	if copiedSnapshotId != "" {
+		snapshotIds = append(snapshotIds, helper.String(copiedSnapshotId))
 	}
 
 	if len(snapshotIds) == 0 {
-		log.Printf("[WARN]%s cbs_copy_snapshot_cross_region no copied snapshot IDs found, skip delete", logId)
+		log.Printf("[WARN]%s tencentcloud_cbs_copy_snapshot_cross_region no copied snapshot IDs found, skip delete", logId)
 		return nil
 	}
 
@@ -307,8 +288,12 @@ func resourceTencentCloudCbsCopySnapshotCrossRegionAttachmentDelete(d *schema.Re
 		request.DeleteBindImages = helper.Bool(false)
 	}
 
-	reqErr := resource.Retry(tccommon.WriteRetryTimeout, func() *resource.RetryError {
-		result, e := meta.(tccommon.ProviderMeta).GetAPIV3Conn().UseCbsClient().DeleteSnapshotsWithContext(ctx, request)
+	// The copied snapshots reside in the destination region, so delete them with a
+	// region-specific client based on the region parsed from the resource ID.
+	regionCbsClient := cbsClientWithRegion(meta, region)
+
+	reqErr := resource.Retry(d.Timeout(schema.TimeoutDelete), func() *resource.RetryError {
+		result, e := regionCbsClient.DeleteSnapshotsWithContext(ctx, request)
 		if e != nil {
 			return tccommon.RetryError(e)
 		} else {
@@ -324,6 +309,32 @@ func resourceTencentCloudCbsCopySnapshotCrossRegionAttachmentDelete(d *schema.Re
 	if reqErr != nil {
 		log.Printf("[CRITAL]%s delete cbs_copy_snapshot_cross_region failed, reason:%+v", logId, reqErr)
 		return reqErr
+	}
+
+	// DeleteSnapshots is asynchronous. Poll DescribeSnapshots until SnapshotSet is an
+	// empty list, which indicates the snapshot has been fully deleted.
+	pollErr := resource.Retry(d.Timeout(schema.TimeoutDelete), func() *resource.RetryError {
+		describeRequest := cbs.NewDescribeSnapshotsRequest()
+		describeRequest.SnapshotIds = []*string{helper.String(copiedSnapshotId)}
+		describeResponse, e := regionCbsClient.DescribeSnapshotsWithContext(ctx, describeRequest)
+		if e != nil {
+			return tccommon.RetryError(e, tccommon.InternalError)
+		}
+
+		if describeResponse == nil || describeResponse.Response == nil {
+			return resource.NonRetryableError(fmt.Errorf("DescribeSnapshots return nil Response"))
+		}
+
+		if len(describeResponse.Response.SnapshotSet) > 0 {
+			return resource.RetryableError(fmt.Errorf("cbs_copy_snapshot_cross_region snapshot %s in region %s is still deleting", copiedSnapshotId, region))
+		}
+
+		return nil
+	})
+
+	if pollErr != nil {
+		log.Printf("[CRITAL]%s delete cbs_copy_snapshot_cross_region polling failed, reason:%+v", logId, pollErr)
+		return pollErr
 	}
 
 	return nil
