@@ -32,10 +32,6 @@ func ptrStringCSCR(s string) *string {
 	return &s
 }
 
-func ptrBoolCSCR(b bool) *bool {
-	return &b
-}
-
 func TestCbsCopySnapshotCrossRegion_Create(t *testing.T) {
 	patches := gomonkey.NewPatches()
 	defer patches.Reset()
