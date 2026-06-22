@@ -189,7 +189,7 @@ func resourceTencentCloudCosBucketDomainCertificateAttachmentRead(d *schema.Reso
 	)
 
 	certResult, bucket, err := service.DescribeCosBucketDomainCertificate(ctx, id)
-	log.Printf("[DEBUG] resource `tencentcloud_cos_bucket_domain_certificate_attachment certResult: %s`\n", certResult)
+	log.Printf("[DEBUG] resource `tencentcloud_cos_bucket_domain_certificate_attachment certResult: %v`\n", certResult)
 	if err != nil {
 		return err
 	}
