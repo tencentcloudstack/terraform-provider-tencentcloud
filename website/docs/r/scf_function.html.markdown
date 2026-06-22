@@ -176,6 +176,10 @@ The `triggers` object supports the following:
 * `trigger_desc` - (Required, String) TriggerDesc of the SCF function trigger, parameter format of `timer` is linux cron expression; parameter of `cos` type is json string `{"bucketUrl":"<name-appid>.cos.<region>.myqcloud.com","event":"cos:ObjectCreated:*","filter":{"Prefix":"","Suffix":""}}`, where `bucketUrl` is cos bucket (optional), `event` is the cos event trigger, `Prefix` is the corresponding file prefix filter condition, `Suffix` is the suffix filter condition, if not need filter condition can not pass; `cmq` type does not pass this parameter; `ckafka` type parameter format is json string `{"maxMsgNum":"1","offset":"latest"}`; `apigw` type parameter format is json string `{"api":{"authRequired":"FALSE","requestConfig":{"method":"ANY"},"isIntegratedResponse":"FALSE"},"service":{"serviceId":"service-dqzh68sg"},"release":{"environmentName":"test"}}`.
 * `type` - (Required, String) Type of the SCF function trigger, support `timer`, `ckafka`, `custom_kafka`, `apigw`, `cmq`, `cos`, `mqtt`, `cls`, `clb`, `mps`, `vod`, `cm`, `eb`, `http`.
 * `cos_region` - (Optional, String) Region of cos bucket. if `type` is `cos`, `cos_region` is required.
+* `custom_argument` - (Optional, String) User-defined parameters; supported only by the timer trigger.
+* `description` - (Optional, String) Trigger Description.
+* `enable` - (Optional, String) The initial state of the trigger is its enabled status; `OPEN` indicates enabled, and `CLOSE` indicates disabled. Default is `OPEN`.
+* `qualifier` - (Optional, String) The version or alias to which the trigger applies. It is recommended to specify `$DEFAULT` to facilitate subsequent canary releases; the default value is `$LATEST`.
 
 ## Attributes Reference
 

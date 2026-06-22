@@ -335,6 +335,26 @@ func ResourceTencentCloudScfFunction() *schema.Resource {
 							Required:    true,
 							Description: "TriggerDesc of the SCF function trigger, parameter format of `timer` is linux cron expression; parameter of `cos` type is json string `{\"bucketUrl\":\"<name-appid>.cos.<region>.myqcloud.com\",\"event\":\"cos:ObjectCreated:*\",\"filter\":{\"Prefix\":\"\",\"Suffix\":\"\"}}`, where `bucketUrl` is cos bucket (optional), `event` is the cos event trigger, `Prefix` is the corresponding file prefix filter condition, `Suffix` is the suffix filter condition, if not need filter condition can not pass; `cmq` type does not pass this parameter; `ckafka` type parameter format is json string `{\"maxMsgNum\":\"1\",\"offset\":\"latest\"}`; `apigw` type parameter format is json string `{\"api\":{\"authRequired\":\"FALSE\",\"requestConfig\":{\"method\":\"ANY\"},\"isIntegratedResponse\":\"FALSE\"},\"service\":{\"serviceId\":\"service-dqzh68sg\"},\"release\":{\"environmentName\":\"test\"}}`.",
 						},
+						"qualifier": {
+							Type:        schema.TypeString,
+							Optional:    true,
+							Description: "The version or alias to which the trigger applies. It is recommended to specify `$DEFAULT` to facilitate subsequent canary releases; the default value is `$LATEST`.",
+						},
+						"enable": {
+							Type:        schema.TypeString,
+							Optional:    true,
+							Description: "The initial state of the trigger is its enabled status; `OPEN` indicates enabled, and `CLOSE` indicates disabled. Default is `OPEN`.",
+						},
+						"custom_argument": {
+							Type:        schema.TypeString,
+							Optional:    true,
+							Description: "User-defined parameters; supported only by the timer trigger.",
+						},
+						"description": {
+							Type:        schema.TypeString,
+							Optional:    true,
+							Description: "Trigger Description.",
+						},
 					},
 				},
 			},
@@ -833,9 +853,13 @@ func resourceTencentCloudScfFunctionCreate(d *schema.ResourceData, m interface{}
 			}
 
 			triggers = append(triggers, scfTrigger{
-				name:        tg["name"].(string),
-				triggerType: tg["type"].(string),
-				triggerDesc: tg["trigger_desc"].(string),
+				name:           tg["name"].(string),
+				triggerType:    tg["type"].(string),
+				triggerDesc:    tg["trigger_desc"].(string),
+				qualifier:      tg["qualifier"].(string),
+				enable:         tg["enable"].(string),
+				customArgument: tg["custom_argument"].(string),
+				description:    tg["description"].(string),
 			})
 		}
 
@@ -1399,9 +1423,13 @@ func resourceTencentCloudScfFunctionUpdate(d *schema.ResourceData, m interface{}
 			}
 
 			oldTriggers = append(oldTriggers, scfTrigger{
-				name:        tg["name"].(string),
-				triggerType: tg["type"].(string),
-				triggerDesc: tg["trigger_desc"].(string),
+				name:           tg["name"].(string),
+				triggerType:    tg["type"].(string),
+				triggerDesc:    tg["trigger_desc"].(string),
+				qualifier:      tg["qualifier"].(string),
+				enable:         tg["enable"].(string),
+				customArgument: tg["custom_argument"].(string),
+				description:    tg["description"].(string),
 			})
 		}
 		if err := scfService.DeleteTriggers(ctx, name, namespace, oldTriggers); err != nil {
@@ -1422,9 +1450,13 @@ func resourceTencentCloudScfFunctionUpdate(d *schema.ResourceData, m interface{}
 			}
 
 			newTriggers = append(newTriggers, scfTrigger{
-				name:        tg["name"].(string),
-				triggerType: tg["type"].(string),
-				triggerDesc: tg["trigger_desc"].(string),
+				name:           tg["name"].(string),
+				triggerType:    tg["type"].(string),
+				triggerDesc:    tg["trigger_desc"].(string),
+				qualifier:      tg["qualifier"].(string),
+				enable:         tg["enable"].(string),
+				customArgument: tg["custom_argument"].(string),
+				description:    tg["description"].(string),
 			})
 		}
 		if err := scfService.CreateTriggers(ctx, name, namespace, newTriggers); err != nil {
