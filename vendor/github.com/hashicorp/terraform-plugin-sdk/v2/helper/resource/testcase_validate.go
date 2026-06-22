@@ -1,3 +1,6 @@
+// Copyright IBM Corp. 2019, 2026
+// SPDX-License-Identifier: MPL-2.0
+
 package resource
 
 import (
@@ -36,10 +39,9 @@ func (c TestCase) hasProviders(_ context.Context) bool {
 
 // validate ensures the TestCase is valid based on the following criteria:
 //
-//     - No overlapping ExternalProviders and Providers entries
-//     - No overlapping ExternalProviders and ProviderFactories entries
-//     - TestStep validations performed by the (TestStep).validate() method.
-//
+//   - No overlapping ExternalProviders and Providers entries
+//   - No overlapping ExternalProviders and ProviderFactories entries
+//   - TestStep validations performed by the (TestStep).validate() method.
 func (c TestCase) validate(ctx context.Context) error {
 	logging.HelperResourceTrace(ctx, "Validating TestCase")
 

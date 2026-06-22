@@ -26,11 +26,14 @@ import (
 
 const (
 	// Version current go sdk version
-	Version               = "0.7.72"
+	Version               = "0.7.74"
 	UserAgent             = "cos-go-sdk-v5/" + Version
 	contentTypeXML        = "application/xml"
 	defaultServiceBaseURL = "http://service.cos.myqcloud.com"
 	XOptionalKey          = "cos-go-sdk-v5-XOptionalKey"
+
+	CAMAllUsers  = "http://cam.qcloud.com/groups/global/AllUsers"
+	CAMAuthUsers = "http://cam.qcloud.com/groups/global/AuthenticatedUsers"
 )
 
 var (
@@ -41,11 +44,11 @@ var (
 	)
 
 	// {<http://>|<https://>}{bucketname-appid}.{cos|cos-internal|cos-website|ci}.{region}.{myqcloud.com/tencentcos.cn}{/}
-	hostSuffix            = regexp.MustCompile(`^.*((cos|cos-internal|cos-website|ci)\.[a-z-1]+|file)\.(myqcloud\.com|tencentcos\.cn).*$`)
-	hostPrefix            = regexp.MustCompile(`^(http://|https://){0,1}([a-z0-9-]+-[0-9]+\.){0,1}((cos|cos-internal|cos-website|ci)\.[a-z-1]+|file)\.(myqcloud\.com|tencentcos\.cn).*$`)
-	metaInsightHostPrefix = regexp.MustCompile(`^(http://|https://){0,1}([0-9]+\.){1}((cos|cos-internal|cos-website|ci)\.[a-z-1]+|file)\.(myqcloud\.com|tencentcos\.cn).*$`)
+	hostSuffix            = regexp.MustCompile(`^.*((cos|cos-internal|cos-website|ci)\.[a-z0-9-]+|file)\.(myqcloud\.com|tencentcos\.cn).*$`)
+	hostPrefix            = regexp.MustCompile(`^(http://|https://){0,1}([a-z0-9-]+-[0-9]+\.){0,1}((cos|cos-internal|cos-website|ci)\.[a-z0-9-]+|file)\.(myqcloud\.com|tencentcos\.cn).*$`)
+	metaInsightHostPrefix = regexp.MustCompile(`^(http://|https://){0,1}([0-9]+\.){1}((cos|cos-internal|cos-website|ci)\.[a-z0-9-]+|file)\.(myqcloud\.com|tencentcos\.cn).*$`)
 	bucketChecker         = regexp.MustCompile(`^[a-z0-9-]+-[0-9]+$`)
-	regionChecker         = regexp.MustCompile(`^[a-z-1]+$`)
+	regionChecker         = regexp.MustCompile(`^[a-z0-9-]+$`)
 
 	// 校验传入的url
 	domainSuffix        = regexp.MustCompile(`^.*\.(myqcloud\.com(:[0-9]+){0,1}|tencentcos\.cn(:[0-9]+){0,1})$`)
@@ -74,6 +77,8 @@ type BaseURL struct {
 	FetchURL *url.URL
 	// 访问 MetaInsight 的基础 URL
 	MetaInsightURL *url.URL
+	// 访问 Vector 的基础 URL
+	VectorURL *url.URL
 }
 
 func (*BaseURL) innerCheck(u *url.URL, reg *regexp.Regexp) bool {
@@ -156,6 +161,7 @@ type Client struct {
 	Batch       *BatchService
 	CI          *CIService
 	MetaInsight *MetaInsightService
+	Vector      *VectorService
 
 	Conf *Config
 
@@ -194,6 +200,7 @@ func NewClient(uri *BaseURL, httpClient *http.Client) *Client {
 		baseURL.CIURL = uri.CIURL
 		baseURL.FetchURL = uri.FetchURL
 		baseURL.MetaInsightURL = uri.MetaInsightURL
+		baseURL.VectorURL = uri.VectorURL
 	}
 	if baseURL.ServiceURL == nil {
 		baseURL.ServiceURL, _ = url.Parse(defaultServiceBaseURL)
@@ -226,6 +233,7 @@ func NewClient(uri *BaseURL, httpClient *http.Client) *Client {
 	c.Batch = (*BatchService)(&c.common)
 	c.CI = (*CIService)(&c.common)
 	c.MetaInsight = (*MetaInsightService)(&c.common)
+	c.Vector = (*VectorService)(&c.common)
 	return c
 }
 
@@ -276,6 +284,9 @@ func (c *Client) newPresignedRequest(ctx context.Context, sendOpt *sendOptions, 
 	req.Header, err = addHeaderOptions(ctx, req.Header, sendOpt.optHeader)
 	if err != nil {
 		return
+	}
+	if c.Host != "" {
+		req.Host = c.Host
 	}
 	return req, err
 }

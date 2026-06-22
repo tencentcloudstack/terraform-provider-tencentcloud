@@ -4,25 +4,36 @@ layout: "tencentcloud"
 page_title: "TencentCloud: tencentcloud_tat_invocation_invoke_attachment"
 sidebar_current: "docs-tencentcloud-resource-tat_invocation_invoke_attachment"
 description: |-
-  Provides a resource to create a tat invocation_invoke_attachment
+  Provides a resource to create a tat invocation invoke attachment
 ---
 
 # tencentcloud_tat_invocation_invoke_attachment
 
-Provides a resource to create a tat invocation_invoke_attachment
+Provides a resource to create a tat invocation invoke attachment
 
 ## Example Usage
 
 ```hcl
-resource "tencentcloud_tat_invocation_invoke_attachment" "invocation_invoke_attachment" {
-  instance_id       = "ins-881b1c8w"
-  working_directory = "/root"
-  timeout           = 100
-  # parameters = "{\"varA\": \"222\"}"
+resource "tencentcloud_tat_invocation_invoke_attachment" "example" {
+  instance_id       = "ins-hoek7x44"
+  working_directory = "/root/"
+  timeout           = 60
+  username          = "root"
+  command_id        = "cmd-l7otm4cn"
+}
+```
+
+### or
+
+```hcl
+resource "tencentcloud_tat_invocation_invoke_attachment" "example" {
+  instance_id           = "ins-hoek7x44"
+  working_directory     = "/root/"
+  timeout               = 60
   username              = "root"
-  output_cos_bucket_url = "https://BucketName-123454321.cos.ap-beijing.myqcloud.com"
-  output_cos_key_prefix = "log"
-  command_id            = "cmd-rxbs7f5z"
+  command_id            = "cmd-l7otm4cn"
+  output_cos_bucket_url = "https://your-bucket.cos.ap-guangzhou.myqcloud.com"
+  output_cos_key_prefix = "tat/invoke"
 }
 ```
 
@@ -44,14 +55,20 @@ The following arguments are supported:
 In addition to all arguments above, the following attributes are exported:
 
 * `id` - ID of the resource.
+* `invocation_id` - Invocation ID.
 
+## Timeouts
 
+The `timeouts` block allows you to specify [timeouts](https://developer.hashicorp.com/terraform/language/resources/syntax#operation-timeouts) for certain actions:
+
+* `create` - (Defaults to `20m`) Used when creating the resource.
+* `delete` - (Defaults to `20m`) Used when deleting the resource.
 
 ## Import
 
 tat invocation can be imported using the invocation_id#instance_id, e.g.
 
 ```
-terraform import tencentcloud_tat_invocation_invoke_attachment.invocation_invoke_attachment inv-mhs6ca8z#ins-881b1c8w
+terraform import tencentcloud_tat_invocation_invoke_attachment.example inv-64mrb10i1j#ins-hoek7x44
 ```
 

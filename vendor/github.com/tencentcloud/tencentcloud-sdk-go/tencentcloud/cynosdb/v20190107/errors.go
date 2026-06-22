@@ -92,6 +92,9 @@ const (
 	// 修改策略失败。
 	FAILEDOPERATION_SERVERLESSSETSTRATEGYERROR = "FailedOperation.ServerlessSetStrategyError"
 
+	// 日志查询失败，请缩小查询范围。如果持续不成功，请联系客服进行处理。
+	FAILEDOPERATION_SERVICEACCESSERROR = "FailedOperation.ServiceAccessError"
+
 	// 规格信息{{1}}搜索失败
 	FAILEDOPERATION_SPECNOTFOUNDERROR = "FailedOperation.SpecNotFoundError"
 
@@ -304,6 +307,9 @@ const (
 
 	// 创建任务失败。{{1}}
 	OPERATIONDENIED_CREATETASKANDFLOWERROR = "OperationDenied.CreateTaskAndFlowError"
+
+	// 实例内核版本不支持{{1}}
+	OPERATIONDENIED_CYNOSDBVERSIONNOTSUPPORTERROR = "OperationDenied.CynosdbVersionNotSupportError"
 
 	// 新存储架构多可用区部署功能暂未开放
 	OPERATIONDENIED_DISABLENEWSTORAGEMULTIZONEDEPLOYMENTERROR = "OperationDenied.DisableNewStorageMultiZoneDeploymentError"
