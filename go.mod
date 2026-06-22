@@ -34,7 +34,7 @@ require (
 	github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/bi v1.0.824
 	github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/cam v1.3.21
 	github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/cat v1.0.825
-	github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/cbs v1.1.0
+	github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/cbs v1.3.115
 	github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/cdb v1.1.27
 	github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/cdn v1.3.61
 	github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/cdwch v1.1.7
@@ -46,7 +46,7 @@ require (
 	github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/clb v1.3.105
 	github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/cloudaudit v1.0.1033
 	github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/cls v1.3.112
-	github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/common v1.3.113
+	github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/common v1.3.115
 	github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/config v1.3.80
 	github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/cvm v1.3.113
 	github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/cwp v1.3.30
