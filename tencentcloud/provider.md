@@ -313,6 +313,7 @@ tencentcloud_cbs_snapshot_policy_attachment
 tencentcloud_cbs_snapshot_share_permission
 tencentcloud_cbs_disk_backup
 tencentcloud_cbs_disk_backup_rollback_operation
+tencentcloud_cbs_copy_snapshot_cross_region
 
 Cloud Connect Network(CCN)
 Data Source

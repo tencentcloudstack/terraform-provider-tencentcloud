@@ -1443,6 +1443,7 @@ func Provider() *schema.Provider {
 			"tencentcloud_cbs_storage_attachment":                                                   cbs.ResourceTencentCloudCbsStorageAttachment(),
 			"tencentcloud_cbs_storage_set_attachment":                                               cbs.ResourceTencentCloudCbsStorageSetAttachment(),
 			"tencentcloud_cbs_snapshot_policy_attachment":                                           cbs.ResourceTencentCloudCbsSnapshotPolicyAttachment(),
+			"tencentcloud_cbs_copy_snapshot_cross_region":                                           cbs.ResourceTencentCloudCbsCopySnapshotCrossRegionAttachment(),
 			"tencentcloud_vpc":                                                                      vpc.ResourceTencentCloudVpcInstance(),
 			"tencentcloud_vpc_acl":                                                                  vpc.ResourceTencentCloudVpcACL(),
 			"tencentcloud_vpc_acl_attachment":                                                       vpc.ResourceTencentCloudVpcAclAttachment(),
