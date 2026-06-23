@@ -672,6 +672,10 @@ tencentcloud_gaap_global_domain_dns
 tencentcloud_gaap_global_domain
 tencentcloud_gaap_custom_header
 
+Global Accelerator 2(GA2)
+Resource
+tencentcloud_ga2_endpoint_group
+
 Key Management Service(KMS)
 Data Source
 tencentcloud_kms_keys
