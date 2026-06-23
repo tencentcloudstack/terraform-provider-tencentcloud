@@ -41,7 +41,6 @@ package framework
 
 import (
 	"context"
-	"os"
 
 	"github.com/hashicorp/terraform-plugin-framework/action"
 	"github.com/hashicorp/terraform-plugin-framework/datasource"
@@ -95,44 +94,6 @@ func (p *Provider) MetaSchema(_ context.Context, _ provider.MetaSchemaRequest, r
 	resp.Schema = metaschema.Schema{}
 }
 
-// Environment-variable keys that the SDKv2 provider binds to the following
-// nested-block attributes via schema.EnvDefaultFunc(key, nil). These MUST stay
-// byte-identical to the constants declared in tencentcloud/provider.go.
-const (
-	envAssumeRoleArn                = "TENCENTCLOUD_ASSUME_ROLE_ARN"
-	envAssumeRoleSessionName        = "TENCENTCLOUD_ASSUME_ROLE_SESSION_NAME"
-	envAssumeRoleSamlAssertion      = "TENCENTCLOUD_ASSUME_ROLE_SAML_ASSERTION"
-	envAssumeRolePrincipalArn       = "TENCENTCLOUD_ASSUME_ROLE_PRINCIPAL_ARN"
-	envMfaCertificationSerialNumber = "TENCENTCLOUD_MFA_CERTIFICATION_SERIAL_NUMBER"
-	envMfaCertificationTokenCode    = "TENCENTCLOUD_MFA_CERTIFICATION_TOKEN_CODE"
-)
-
-// requiredUnlessEnv builds a StringAttribute whose Required/Optional flags
-// mirror the SDKv2 provider's *runtime* protocol schema.
-//
-// In SDKv2 these attributes are declared Required:true together with
-// schema.EnvDefaultFunc(key, nil). helper/schema.coreConfigSchemaAttribute
-// downgrades such an attribute to Optional whenever the DefaultFunc returns a
-// non-nil value, i.e. whenever the environment variable is set (see
-// terraform-plugin-sdk/v2/helper/schema/core_schema.go). When the variable is
-// unset the attribute stays Required.
-//
-// Because tf5muxserver requires the framework protocol schema to be identical
-// to SDKv2's, and both schemas are produced within the same GetProviderSchema
-// RPC (observing the same environment), we must replicate this env-dependent
-// decision here. A static Required/Optional value would fail schema-consistency
-// validation in exactly the half of cases where the variable's set-ness does
-// not match the hard-coded flag.
-func requiredUnlessEnv(envKey, description string) schema.StringAttribute {
-	attr := schema.StringAttribute{Description: description}
-	if os.Getenv(envKey) != "" {
-		attr.Optional = true
-	} else {
-		attr.Required = true
-	}
-	return attr
-}
-
 // Schema mirrors the SDKv2 provider's field set byte-for-byte.
 //
 // Key principles:
@@ -148,12 +109,9 @@ func requiredUnlessEnv(envKey, description string) schema.StringAttribute {
 //   - The framework side does not consume any of these fields at runtime;
 //     credential parsing lives exclusively in the SDKv2 providerConfigure.
 //     This Schema only exists to satisfy mux's schema-consistency invariant.
-//   - SDKv2 ConflictsWith / ValidateFunc are NOT serialized into the
-//     protocol schema, so they are intentionally not mirrored here. SDKv2
-//     DefaultFunc is likewise not serialized as a value, but a Required
-//     attribute combined with EnvDefaultFunc is downgraded to Optional at the
-//     protocol layer when the env var is set; that env-dependent behaviour is
-//     reproduced via requiredUnlessEnv (see its doc comment).
+//   - SDKv2 ConflictsWith / ValidateFunc / DefaultFunc are NOT serialized
+//     into the protocol schema, so they are intentionally not mirrored
+//     here. Only attributes that are part of the wire schema are mirrored.
 func (p *Provider) Schema(_ context.Context, _ provider.SchemaRequest, resp *provider.SchemaResponse) {
 	resp.Schema = schema.Schema{
 		Attributes: map[string]schema.Attribute{
@@ -219,10 +177,14 @@ func (p *Provider) Schema(_ context.Context, _ provider.SchemaRequest, resp *pro
 				Description: "The `assume_role` block. If provided, terraform will attempt to assume this role using the supplied credentials.",
 				NestedObject: schema.NestedBlockObject{
 					Attributes: map[string]schema.Attribute{
-						"role_arn": requiredUnlessEnv(envAssumeRoleArn,
-							"The ARN of the role to assume. It can be sourced from the `TENCENTCLOUD_ASSUME_ROLE_ARN`."),
-						"session_name": requiredUnlessEnv(envAssumeRoleSessionName,
-							"The session name to use when making the AssumeRole call. It can be sourced from the `TENCENTCLOUD_ASSUME_ROLE_SESSION_NAME`."),
+						"role_arn": schema.StringAttribute{
+							Optional:    true,
+							Description: "The ARN of the role to assume. It can be sourced from the `TENCENTCLOUD_ASSUME_ROLE_ARN`.",
+						},
+						"session_name": schema.StringAttribute{
+							Optional:    true,
+							Description: "The session name to use when making the AssumeRole call. It can be sourced from the `TENCENTCLOUD_ASSUME_ROLE_SESSION_NAME`.",
+						},
 						"session_duration": schema.Int64Attribute{
 							Optional:    true,
 							Description: "The duration of the session when making the AssumeRole call. Its value ranges from 0 to 43200(seconds), and default is 7200 seconds. It can be sourced from the `TENCENTCLOUD_ASSUME_ROLE_SESSION_DURATION`.",
@@ -254,14 +216,22 @@ func (p *Provider) Schema(_ context.Context, _ provider.SchemaRequest, resp *pro
 				Description: "The `assume_role_with_saml` block. If provided, terraform will attempt to assume this role using the supplied credentials.",
 				NestedObject: schema.NestedBlockObject{
 					Attributes: map[string]schema.Attribute{
-						"saml_assertion": requiredUnlessEnv(envAssumeRoleSamlAssertion,
-							"SAML assertion information encoded in base64. It can be sourced from the `TENCENTCLOUD_ASSUME_ROLE_SAML_ASSERTION`."),
-						"principal_arn": requiredUnlessEnv(envAssumeRolePrincipalArn,
-							"Player Access Description Name. It can be sourced from the `TENCENTCLOUD_ASSUME_ROLE_PRINCIPAL_ARN`."),
-						"role_arn": requiredUnlessEnv(envAssumeRoleArn,
-							"The ARN of the role to assume. It can be sourced from the `TENCENTCLOUD_ASSUME_ROLE_ARN`."),
-						"session_name": requiredUnlessEnv(envAssumeRoleSessionName,
-							"The session name to use when making the AssumeRole call. It can be sourced from the `TENCENTCLOUD_ASSUME_ROLE_SESSION_NAME`."),
+						"saml_assertion": schema.StringAttribute{
+							Optional:    true,
+							Description: "SAML assertion information encoded in base64. It can be sourced from the `TENCENTCLOUD_ASSUME_ROLE_SAML_ASSERTION`.",
+						},
+						"principal_arn": schema.StringAttribute{
+							Optional:    true,
+							Description: "Player Access Description Name. It can be sourced from the `TENCENTCLOUD_ASSUME_ROLE_PRINCIPAL_ARN`.",
+						},
+						"role_arn": schema.StringAttribute{
+							Optional:    true,
+							Description: "The ARN of the role to assume. It can be sourced from the `TENCENTCLOUD_ASSUME_ROLE_ARN`.",
+						},
+						"session_name": schema.StringAttribute{
+							Optional:    true,
+							Description: "The session name to use when making the AssumeRole call. It can be sourced from the `TENCENTCLOUD_ASSUME_ROLE_SESSION_NAME`.",
+						},
 						"session_duration": schema.Int64Attribute{
 							Optional:    true,
 							Description: "The duration of the session when making the AssumeRoleWithSAML call. Its value ranges from 0 to 43200(seconds), and default is 7200 seconds. It can be sourced from the `TENCENTCLOUD_ASSUME_ROLE_SESSION_DURATION`.",
@@ -293,8 +263,10 @@ func (p *Provider) Schema(_ context.Context, _ provider.SchemaRequest, resp *pro
 							Optional:    true,
 							Description: "File containin the ARN of the role to assume. It can be sourced from the `TENCENTCLOUD_ASSUME_ROLE_ARNN_FILE`. One of `role_arn` or `role_arn_file` is required.",
 						},
-						"session_name": requiredUnlessEnv(envAssumeRoleSessionName,
-							"The session name to use when making the AssumeRole call. It can be sourced from the `TENCENTCLOUD_ASSUME_ROLE_SESSION_NAME`."),
+						"session_name": schema.StringAttribute{
+							Optional:    true,
+							Description: "The session name to use when making the AssumeRole call. It can be sourced from the `TENCENTCLOUD_ASSUME_ROLE_SESSION_NAME`.",
+						},
 						"session_duration": schema.Int64Attribute{
 							Optional:    true,
 							Description: "The duration of the session when making the AssumeRoleWithWebIdentity call. Its value ranges from 0 to 43200(seconds), and default is 7200 seconds. It can be sourced from the `TENCENTCLOUD_ASSUME_ROLE_SESSION_DURATION`.",
@@ -306,10 +278,14 @@ func (p *Provider) Schema(_ context.Context, _ provider.SchemaRequest, resp *pro
 				Description: "The `mfa_certification` block. If provided, terraform will attempt to use the provided credentials for MFA authentication.",
 				NestedObject: schema.NestedBlockObject{
 					Attributes: map[string]schema.Attribute{
-						"serial_number": requiredUnlessEnv(envMfaCertificationSerialNumber,
-							"MFA serial number, the identification number of the MFA device associated with the calling CAM user. Format qcs: cam:uin/${ownerUin}::mfa/${mfaType}. It can be sourced from the `TENCENTCLOUD_MFA_CERTIFICATION_SERIAL_NUMBER`."),
-						"token_code": requiredUnlessEnv(envMfaCertificationTokenCode,
-							"MFA authentication code. It can be sourced from the `TENCENTCLOUD_MFA_CERTIFICATION_TOKEN_CODE`."),
+						"serial_number": schema.StringAttribute{
+							Optional:    true,
+							Description: "MFA serial number, the identification number of the MFA device associated with the calling CAM user. Format qcs: cam:uin/${ownerUin}::mfa/${mfaType}. It can be sourced from the `TENCENTCLOUD_MFA_CERTIFICATION_SERIAL_NUMBER`.",
+						},
+						"token_code": schema.StringAttribute{
+							Optional:    true,
+							Description: "MFA authentication code. It can be sourced from the `TENCENTCLOUD_MFA_CERTIFICATION_TOKEN_CODE`.",
+						},
 						"duration_seconds": schema.Int64Attribute{
 							Optional:    true,
 							Description: "Specify the validity period of the temporary certificate. The main account can be set to a maximum validity period of 7200 seconds, and the sub account can be set to a maximum validity period of 129600 seconds, and default is 1800 seconds. It can be sourced from the `TENCENTCLOUD_MFA_CERTIFICATION_DURATION_SECONDS`.",
