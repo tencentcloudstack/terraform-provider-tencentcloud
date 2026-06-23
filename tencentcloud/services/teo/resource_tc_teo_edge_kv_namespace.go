@@ -66,7 +66,7 @@ func ResourceTencentCloudTeoEdgeKVNamespace() *schema.Resource {
 }
 
 func resourceTencentCloudTeoEdgeKVNamespaceCreate(d *schema.ResourceData, meta interface{}) error {
-	defer tccommon.LogElapsed("resource.tencentcloud_teo_edge_k_v_namespace.create")()
+	defer tccommon.LogElapsed("resource.tencentcloud_teo_edge_kv_namespace.create")()
 	defer tccommon.InconsistentCheck(d, meta)()
 
 	var (
@@ -100,25 +100,25 @@ func resourceTencentCloudTeoEdgeKVNamespaceCreate(d *schema.ResourceData, meta i
 		log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), result.ToJsonString())
 
 		if result == nil || result.Response == nil {
-			return resource.NonRetryableError(fmt.Errorf("Create teo_edge_k_v_namespace failed, Response is nil"))
+			return resource.NonRetryableError(fmt.Errorf("Create teo_edge_kv_namespace failed, Response is nil"))
 		}
 
 		return nil
 	})
 
 	if reqErr != nil {
-		log.Printf("[CRITAL]%s create teo_edge_k_v_namespace failed, reason:%+v", logId, reqErr)
+		log.Printf("[CRITAL]%s create teo_edge_kv_namespace failed, reason:%+v", logId, reqErr)
 		return reqErr
 	}
 
-	log.Printf("[DEBUG]%s create teo_edge_k_v_namespace, logId: %s, id: %s", logId, logId, d.Id())
+	log.Printf("[DEBUG]%s create teo_edge_kv_namespace, logId: %s, id: %s", logId, logId, d.Id())
 	d.SetId(strings.Join([]string{zoneId, ns}, tccommon.FILED_SP))
 
 	return resourceTencentCloudTeoEdgeKVNamespaceRead(d, meta)
 }
 
 func resourceTencentCloudTeoEdgeKVNamespaceRead(d *schema.ResourceData, meta interface{}) error {
-	defer tccommon.LogElapsed("resource.tencentcloud_teo_edge_k_v_namespace.read")()
+	defer tccommon.LogElapsed("resource.tencentcloud_teo_edge_kv_namespace.read")()
 	defer tccommon.InconsistentCheck(d, meta)()
 
 	var (
@@ -160,12 +160,12 @@ func resourceTencentCloudTeoEdgeKVNamespaceRead(d *schema.ResourceData, meta int
 	})
 
 	if reqErr != nil {
-		log.Printf("[CRITAL]%s read teo_edge_k_v_namespace failed, reason:%+v", logId, reqErr)
+		log.Printf("[CRITAL]%s read teo_edge_kv_namespace failed, reason:%+v", logId, reqErr)
 		return reqErr
 	}
 
 	if response == nil || response.Response == nil || len(response.Response.KVNamespaces) == 0 {
-		log.Printf("[CRUD] teo_edge_k_v_namespace id=%s", d.Id())
+		log.Printf("[CRUD] teo_edge_kv_namespace id=%s", d.Id())
 		d.SetId("")
 		return nil
 	}
@@ -180,7 +180,7 @@ func resourceTencentCloudTeoEdgeKVNamespaceRead(d *schema.ResourceData, meta int
 	}
 
 	if target == nil {
-		log.Printf("[CRUD] teo_edge_k_v_namespace id=%s", d.Id())
+		log.Printf("[CRUD] teo_edge_kv_namespace id=%s", d.Id())
 		d.SetId("")
 		return nil
 	}
@@ -215,7 +215,7 @@ func resourceTencentCloudTeoEdgeKVNamespaceRead(d *schema.ResourceData, meta int
 }
 
 func resourceTencentCloudTeoEdgeKVNamespaceUpdate(d *schema.ResourceData, meta interface{}) error {
-	defer tccommon.LogElapsed("resource.tencentcloud_teo_edge_k_v_namespace.update")()
+	defer tccommon.LogElapsed("resource.tencentcloud_teo_edge_kv_namespace.update")()
 	defer tccommon.InconsistentCheck(d, meta)()
 
 	var (
@@ -251,14 +251,14 @@ func resourceTencentCloudTeoEdgeKVNamespaceUpdate(d *schema.ResourceData, meta i
 			log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), result.ToJsonString())
 
 			if result == nil || result.Response == nil {
-				return resource.NonRetryableError(fmt.Errorf("Update teo_edge_k_v_namespace failed, Response is nil"))
+				return resource.NonRetryableError(fmt.Errorf("Update teo_edge_kv_namespace failed, Response is nil"))
 			}
 
 			return nil
 		})
 
 		if reqErr != nil {
-			log.Printf("[CRITAL]%s update teo_edge_k_v_namespace failed, reason:%+v", logId, reqErr)
+			log.Printf("[CRITAL]%s update teo_edge_kv_namespace failed, reason:%+v", logId, reqErr)
 			return reqErr
 		}
 	}
@@ -267,7 +267,7 @@ func resourceTencentCloudTeoEdgeKVNamespaceUpdate(d *schema.ResourceData, meta i
 }
 
 func resourceTencentCloudTeoEdgeKVNamespaceDelete(d *schema.ResourceData, meta interface{}) error {
-	defer tccommon.LogElapsed("resource.tencentcloud_teo_edge_k_v_namespace.delete")()
+	defer tccommon.LogElapsed("resource.tencentcloud_teo_edge_kv_namespace.delete")()
 	defer tccommon.InconsistentCheck(d, meta)()
 
 	var (
@@ -296,14 +296,14 @@ func resourceTencentCloudTeoEdgeKVNamespaceDelete(d *schema.ResourceData, meta i
 		log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), result.ToJsonString())
 
 		if result == nil || result.Response == nil {
-			return resource.NonRetryableError(fmt.Errorf("Delete teo_edge_k_v_namespace failed, Response is nil"))
+			return resource.NonRetryableError(fmt.Errorf("Delete teo_edge_kv_namespace failed, Response is nil"))
 		}
 
 		return nil
 	})
 
 	if reqErr != nil {
-		log.Printf("[CRITAL]%s delete teo_edge_k_v_namespace failed, reason:%+v", logId, reqErr)
+		log.Printf("[CRITAL]%s delete teo_edge_kv_namespace failed, reason:%+v", logId, reqErr)
 		return reqErr
 	}
 

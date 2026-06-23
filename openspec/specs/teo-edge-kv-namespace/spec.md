@@ -24,7 +24,7 @@ The system SHALL read the Edge KV namespace state by calling `DescribeEdgeKVName
 
 #### Scenario: Resource not found
 - **WHEN** `DescribeEdgeKVNamespaces` returns an empty `KVNamespaces` list or no matching namespace
-- **THEN** the system logs `[CRUD] teo_edge_k_v_namespace id=<current_id>` before calling `d.SetId("")` to remove the resource from state
+- **THEN** the system logs `[CRUD] teo_edge_kv_namespace id=<current_id>` before calling `d.SetId("")` to remove the resource from state
 
 ### Requirement: Update Edge KV Namespace
 The system SHALL allow updating the `remark` field of an existing Edge KV namespace by calling the `ModifyEdgeKVNamespace` API. The `zone_id` and `namespace` fields SHALL be ForceNew, meaning changes to these fields trigger resource recreation.
@@ -48,18 +48,18 @@ The system SHALL delete an Edge KV namespace by calling the `DeleteEdgeKVNamespa
 The system SHALL support importing an existing Edge KV namespace using the composite ID format `zone_id#namespace`.
 
 #### Scenario: Successful import
-- **WHEN** user runs `terraform import tencentcloud_teo_edge_k_v_namespace.example zone_id#namespace`
+- **WHEN** user runs `terraform import tencentcloud_teo_edge_kv_namespace.example zone_id#namespace`
 - **THEN** the system parses the composite ID, calls `DescribeEdgeKVNamespaces` to read the resource state, and populates all fields
 
 ### Requirement: Provider Registration
-The system SHALL register `tencentcloud_teo_edge_k_v_namespace` in `tencentcloud/provider.go` resource map and add the corresponding entry in `tencentcloud/provider.md`.
+The system SHALL register `tencentcloud_teo_edge_kv_namespace` in `tencentcloud/provider.go` resource map and add the corresponding entry in `tencentcloud/provider.md`.
 
 #### Scenario: Resource available after registration
 - **WHEN** the provider is initialized
-- **THEN** `tencentcloud_teo_edge_k_v_namespace` is available as a valid resource type
+- **THEN** `tencentcloud_teo_edge_kv_namespace` is available as a valid resource type
 
 ### Requirement: Unit Tests with Gomonkey Mock
-The system SHALL provide unit tests in `resource_tc_teo_edge_k_v_namespace_test.go` using gomonkey to mock cloud API calls. Tests SHALL cover Create, Read, Update, and Delete operations and SHALL pass with `go test -gcflags=all=-l`.
+The system SHALL provide unit tests in `resource_tc_teo_edge_kv_namespace_test.go` using gomonkey to mock cloud API calls. Tests SHALL cover Create, Read, Update, and Delete operations and SHALL pass with `go test -gcflags=all=-l`.
 
 #### Scenario: Test CRUD operations
 - **WHEN** unit tests are executed with `go test -gcflags=all=-l`
