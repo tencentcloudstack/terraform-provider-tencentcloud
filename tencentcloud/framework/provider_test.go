@@ -75,6 +75,39 @@ func TestMuxServer_GetProviderSchemaNoError(t *testing.T) {
 	}
 }
 
+func TestMuxServer_GetProviderSchemaNoErrorWithAssumeRoleEnv(t *testing.T) {
+	t.Setenv(tencentcloud.PROVIDER_ASSUME_ROLE_ARN, "qcs::cam::uin/100000000001:roleName/test")
+	t.Setenv(tencentcloud.PROVIDER_ASSUME_ROLE_SESSION_NAME, "terraform-test")
+	t.Setenv(tencentcloud.PROVIDER_ASSUME_ROLE_SESSION_DURATION, "7200")
+
+	primary := tencentcloud.Provider()
+
+	providers := []func() tfprotov5.ProviderServer{
+		primary.GRPCProvider,
+		providerserver.NewProtocol5(NewProvider(primary)),
+	}
+
+	ctx := context.Background()
+	muxServer, err := tf5muxserver.NewMuxServer(ctx, providers...)
+	if err != nil {
+		t.Fatalf("tf5muxserver.NewMuxServer failed: %v", err)
+	}
+
+	srv := muxServer.ProviderServer()
+	resp, err := srv.GetProviderSchema(ctx, &tfprotov5.GetProviderSchemaRequest{})
+	if err != nil {
+		t.Fatalf("GetProviderSchema returned error with assume role environment variables set: %v", err)
+	}
+	if resp == nil {
+		t.Fatalf("GetProviderSchema returned nil response")
+	}
+	for _, d := range resp.Diagnostics {
+		if d.Severity == tfprotov5.DiagnosticSeverityError {
+			t.Errorf("GetProviderSchema diagnostic error: summary=%q detail=%q", d.Summary, d.Detail)
+		}
+	}
+}
+
 // TestFrameworkProvider_NoTypeNameCollision verifies that the same
 // resource/data source type name is never registered in both the SDKv2 and
 // the framework stacks. Duplicate registration would panic mux during
