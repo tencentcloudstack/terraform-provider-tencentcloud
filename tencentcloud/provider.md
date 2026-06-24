@@ -1631,6 +1631,7 @@ tencentcloud_teo_purge_task
 tencentcloud_teo_shared_cname
 tencentcloud_teo_domain_shared_cname_attachment
 tencentcloud_teo_edge_kv
+tencentcloud_teo_edge_kv_namespace
 
 TencentCloud ServiceMesh(TCM)
 Data Source
