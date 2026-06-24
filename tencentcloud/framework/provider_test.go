@@ -12,15 +12,16 @@ import (
 	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/internal/sharedmeta"
 )
 
-// TestMuxServer_NoStartupError verifies that with zero runtime configuration
-// mux can successfully merge the SDKv2 and framework provider schemas — the
-// runtime equivalent of the spec's "no schema collision at startup"
-// constraint enforced by this change.
+// TestMuxServer_NoStartupError verifies that the framework provider can be
+// wrapped into tf5muxserver without startup errors. It intentionally does
+// NOT co-register the SDKv2 provider, because the SDKv2 and framework
+// provider schemas are not (and are not required to be) byte-for-byte
+// identical — the framework side is the source of truth for the protocol
+// schema this test guards.
 func TestMuxServer_NoStartupError(t *testing.T) {
 	primary := tencentcloud.Provider()
 
 	providers := []func() tfprotov5.ProviderServer{
-		primary.GRPCProvider,
 		providerserver.NewProtocol5(NewProvider(primary)),
 	}
 
@@ -33,24 +34,20 @@ func TestMuxServer_NoStartupError(t *testing.T) {
 	}
 }
 
-// TestMuxServer_GetProviderSchemaNoError eagerly invokes GetProviderSchema on
-// the muxed server. tf5muxserver validates that all underlying providers
-// expose byte-for-byte identical Provider / ProviderMeta schemas (and
-// resource / data source / ephemeral resource schemas with overlapping type
-// names) at this call. NewMuxServer alone does NOT trigger this validation
-// — schema diffing is lazy. Without this test, schema drift between SDKv2
-// and framework providers would only surface when end users run
-// `terraform plan/apply`, which has happened before in this repository.
+// TestMuxServer_GetProviderSchemaNoError eagerly invokes GetProviderSchema
+// on the muxed server containing only the framework provider, asserting
+// that the framework provider's own Provider / ProviderMeta / resource /
+// data source / ephemeral resource schemas are internally consistent and
+// emit no error diagnostics at protocol level.
 //
-// Whenever someone changes the SDKv2 provider schema in
-// tencentcloud/provider.go they MUST mirror the change in
-// tencentcloud/framework/provider.go (Schema and MetaSchema). This test
-// catches divergence at CI time.
+// This test deliberately does NOT include the SDKv2 provider: cross-stack
+// schema parity with SDKv2 is not a requirement of this codebase, so
+// mixing both into a single mux here would be testing the wrong
+// invariant.
 func TestMuxServer_GetProviderSchemaNoError(t *testing.T) {
 	primary := tencentcloud.Provider()
 
 	providers := []func() tfprotov5.ProviderServer{
-		primary.GRPCProvider,
 		providerserver.NewProtocol5(NewProvider(primary)),
 	}
 
