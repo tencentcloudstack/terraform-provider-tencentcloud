@@ -36,10 +36,6 @@ func ptrInt64EKVN(i int64) *int64 {
 	return &i
 }
 
-func ptrBoolEKVN(b bool) *bool {
-	return &b
-}
-
 func TestTeoEdgeKVNamespace_Create_Normal(t *testing.T) {
 	patches := gomonkey.NewPatches()
 	defer patches.Reset()
