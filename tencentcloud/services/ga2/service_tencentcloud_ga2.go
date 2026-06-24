@@ -314,6 +314,107 @@ func (me *Ga2Service) DescribeGa2ForwardingRuleById(ctx context.Context, gaId, l
 	return nil, nil
 }
 
+// describeGa2AccelerateAreas paginates DescribeAccelerateAreas for the given accelerator and
+// returns every acceleration region under it. DescribeAccelerateAreas has no per-area filter slot
+// (only GlobalAcceleratorId + Offset/Limit), so callers must match the desired item client-side.
+func (me *Ga2Service) describeGa2AccelerateAreas(ctx context.Context, gaId string) ([]*ga2v20250115.AcceleratorAreas, error) {
+	logId := tccommon.GetLogId(ctx)
+
+	request := ga2v20250115.NewDescribeAccelerateAreasRequest()
+	request.GlobalAcceleratorId = helper.String(gaId)
+
+	var (
+		offset uint64 = 0
+		// limit equals the API-documented maximum to minimize round-trips.
+		limit uint64 = 100
+		areas []*ga2v20250115.AcceleratorAreas
+	)
+
+	for {
+		request.Offset = &offset
+		request.Limit = &limit
+
+		var response *ga2v20250115.DescribeAccelerateAreasResponse
+		err := resource.Retry(tccommon.ReadRetryTimeout, func() *resource.RetryError {
+			result, e := me.client.UseGa2V20250115Client().DescribeAccelerateAreasWithContext(ctx, request)
+			if e != nil {
+				return tccommon.RetryError(e)
+			}
+
+			if result == nil || result.Response == nil {
+				return resource.NonRetryableError(fmt.Errorf("Describe ga2 accelerate areas failed, Response is nil."))
+			}
+
+			response = result
+			return nil
+		})
+
+		if err != nil {
+			log.Printf("[CRITAL]%s describe ga2 accelerate areas failed, reason:%+v", logId, err)
+			return nil, err
+		}
+
+		set := response.Response.AccelerateAreaSet
+		areas = append(areas, set...)
+
+		// Stop when the current page is the last page.
+		if uint64(len(set)) < limit {
+			break
+		}
+
+		offset += limit
+	}
+
+	return areas, nil
+}
+
+// DescribeGa2AccelerateAreaById queries an acceleration region by its (gaId, areaId) tuple.
+// Returns (nil, nil) when the acceleration region does not exist.
+func (me *Ga2Service) DescribeGa2AccelerateAreaById(ctx context.Context, gaId, areaId string) (*ga2v20250115.AcceleratorAreas, error) {
+	areas, err := me.describeGa2AccelerateAreas(ctx, gaId)
+	if err != nil {
+		return nil, err
+	}
+
+	for i := range areas {
+		item := areas[i]
+		if item == nil || item.AcceleratorAreaId == nil {
+			continue
+		}
+
+		// Strict equality check: the API has no per-area filter, so we match client-side.
+		if *item.AcceleratorAreaId == areaId {
+			return item, nil
+		}
+	}
+
+	return nil, nil
+}
+
+// DescribeGa2AccelerateAreaByRegion queries an acceleration region by its (gaId, region) tuple.
+// This is used on Create to resolve the server-generated AcceleratorAreaId, because
+// CreateAccelerateAreas only returns a TaskId. Returns (nil, nil) when not found.
+func (me *Ga2Service) DescribeGa2AccelerateAreaByRegion(ctx context.Context, gaId, region string) (*ga2v20250115.AcceleratorAreas, error) {
+	areas, err := me.describeGa2AccelerateAreas(ctx, gaId)
+	if err != nil {
+		return nil, err
+	}
+
+	for i := range areas {
+		item := areas[i]
+		if item == nil || item.AccelerateRegion == nil {
+			continue
+		}
+
+		// Strict equality check on the natural key: the API has no per-area filter, so we match client-side.
+		if *item.AccelerateRegion == region {
+			return item, nil
+		}
+	}
+
+	return nil, nil
+}
+
 // WaitForGa2TaskFinish polls DescribeTaskResult until the task reaches "SUCCESS" or the given timeout elapses.
 // The timeout is supplied by the caller because different async operations (create/modify/delete on
 // different resource types) may require very different waiting budgets.

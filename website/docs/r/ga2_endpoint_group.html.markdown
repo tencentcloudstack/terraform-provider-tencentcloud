@@ -26,8 +26,16 @@ resource "tencentcloud_ga2_global_accelerator" "example" {
   }
 }
 
-resource "tencentcloud_ga2_listener" "example1" {
+resource "tencentcloud_ga2_accelerate_area" "example" {
   global_accelerator_id = tencentcloud_ga2_global_accelerator.example.id
+  accelerate_region     = "ap-guangzhou"
+  bandwidth             = 10
+  isp_type              = "BGP"
+  ip_version            = "IPv4"
+}
+
+resource "tencentcloud_ga2_listener" "example1" {
+  global_accelerator_id = tencentcloud_ga2_accelerate_area.example.global_accelerator_id
   name                  = "tf-example-tcp"
   protocol              = "TCP"
 
@@ -44,7 +52,7 @@ resource "tencentcloud_ga2_listener" "example1" {
 }
 
 resource "tencentcloud_ga2_listener" "example2" {
-  global_accelerator_id = tencentcloud_ga2_global_accelerator.example.id
+  global_accelerator_id = tencentcloud_ga2_accelerate_area.example.global_accelerator_id
   name                  = "tf-example-http"
   protocol              = "HTTP"
 

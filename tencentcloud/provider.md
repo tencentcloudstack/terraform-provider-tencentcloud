@@ -622,6 +622,7 @@ tencentcloud_elasticsearch_update_plugins_operation
 Global Accelerator(GA2)
 Resource
 tencentcloud_ga2_global_accelerator
+tencentcloud_ga2_accelerate_area
 tencentcloud_ga2_listener
 tencentcloud_ga2_endpoint_group
 tencentcloud_ga2_forwarding_rule
