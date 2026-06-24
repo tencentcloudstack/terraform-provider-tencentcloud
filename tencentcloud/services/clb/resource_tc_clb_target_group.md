@@ -138,6 +138,25 @@ resource "tencentcloud_clb_target_group" "ipv6" {
 }
 ```
 
+Create V2 target group with SNAT enabled
+
+```hcl
+resource "tencentcloud_clb_target_group" "snat" {
+  target_group_name = "snat-tg"
+  vpc_id            = "vpc-xxxxxx"
+  type              = "v2"
+  protocol          = "TCP"
+  snat_enable       = true
+
+  health_check {
+    health_switch = true
+    protocol      = "TCP"
+  }
+}
+```
+
+~> **NOTE:** `snat_enable` controls whether SNAT (Source Network Address Translation) is enabled for the target group. Whether SNAT actually takes effect depends on the target group type (`v1`/`v2`) and protocol; the cloud side determines applicability.
+
 Import
 
 CLB target group can be imported using the id, e.g.

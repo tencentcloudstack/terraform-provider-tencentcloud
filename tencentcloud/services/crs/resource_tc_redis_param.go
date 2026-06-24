@@ -73,8 +73,8 @@ func resourceTencentCloudRedisParamRead(d *schema.ResourceData, meta interface{}
 	}
 
 	if len(param) == 0 {
+		log.Printf("[WARN]%s resource `tencentcloud_redis_param` [%s] not found, please check if it has been deleted.\n", logId, d.Id())
 		d.SetId("")
-		log.Printf("[WARN]%s resource `RedisParam` [%s] not found, please check if it has been deleted.\n", logId, d.Id())
 		return nil
 	}
 

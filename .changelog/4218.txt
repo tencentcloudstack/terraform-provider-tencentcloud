@@ -1,0 +1,3 @@
+```release-note:new-resource
+tencentcloud_teo_domain_shared_cname_attachment
+```

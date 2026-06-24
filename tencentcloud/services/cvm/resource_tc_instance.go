@@ -496,6 +496,12 @@ func ResourceTencentCloudInstance() *schema.Resource {
 				Default:     false,
 				Description: "Indicate whether to force delete the instance. Default is `false`. If set true, the instance will be permanently deleted instead of being moved into the recycle bin. Note: only works for `PREPAID` instance.",
 			},
+			"force_stop": {
+				Type:        schema.TypeBool,
+				Optional:    true,
+				Computed:    true,
+				Description: "Whether to forcibly shut down a running instance. Default is false. Forcing a shutdown is equivalent to switching off the power button on a physical computer. Forcing a shutdown may result in data loss or file system corruption; therefore, please use this option only when the server cannot be shut down normally.",
+			},
 			"disable_api_termination": {
 				Type:        schema.TypeBool,
 				Optional:    true,
@@ -515,6 +521,32 @@ func ResourceTencentCloudInstance() *schema.Resource {
 				Computed:    true,
 				ForceNew:    true,
 				Description: "High-performance computing cluster ID. If the instance created is a high-performance computing instance, you need to specify the cluster in which the instance is placed, otherwise it cannot be specified.",
+			},
+			"cpu_topology": {
+				Type:        schema.TypeList,
+				Optional:    true,
+				Computed:    true,
+				ForceNew:    true,
+				MaxItems:    1,
+				Description: "CPU topology configuration. Only supported when creating instances.",
+				Elem: &schema.Resource{
+					Schema: map[string]*schema.Schema{
+						"core_count": {
+							Type:        schema.TypeInt,
+							Optional:    true,
+							Computed:    true,
+							ForceNew:    true,
+							Description: "Number of enabled CPU physical cores.",
+						},
+						"thread_per_core": {
+							Type:        schema.TypeInt,
+							Optional:    true,
+							Computed:    true,
+							ForceNew:    true,
+							Description: "Threads per core. 1 means hyper-threading is off, 2 means hyper-threading is on.",
+						},
+					},
+				},
 			},
 			// template
 			"launch_template_id": {
@@ -654,6 +686,21 @@ func resourceTencentCloudInstanceCreate(d *schema.ResourceData, meta interface{}
 
 	if v, ok := d.GetOk("hpc_cluster_id"); ok {
 		request.HpcClusterId = helper.String(v.(string))
+	}
+
+	if v, ok := d.GetOk("cpu_topology"); ok {
+		cpuTopologyList := v.([]interface{})
+		if len(cpuTopologyList) > 0 {
+			cpuTopologyMap := cpuTopologyList[0].(map[string]interface{})
+			cpuTopology := &cvm.CpuTopology{}
+			if coreCount, ok := cpuTopologyMap["core_count"]; ok && coreCount.(int) > 0 {
+				cpuTopology.CoreCount = helper.IntInt64(coreCount.(int))
+			}
+			if threadPerCore, ok := cpuTopologyMap["thread_per_core"]; ok && threadPerCore.(int) > 0 {
+				cpuTopology.ThreadPerCore = helper.IntInt64(threadPerCore.(int))
+			}
+			request.CpuTopology = cpuTopology
+		}
 	}
 
 	if v, ok := d.GetOk("instance_charge_type"); ok {
@@ -1298,6 +1345,17 @@ func resourceTencentCloudInstanceRead(d *schema.ResourceData, meta interface{}) 
 	_ = d.Set("ipv6_addresses", instance.IPv6Addresses)
 	_ = d.Set("public_ipv6_addresses", instance.PublicIPv6Addresses)
 
+	if instance.CpuTopology != nil {
+		cpuTopologyMap := map[string]interface{}{}
+		if instance.CpuTopology.CoreCount != nil {
+			cpuTopologyMap["core_count"] = *instance.CpuTopology.CoreCount
+		}
+		if instance.CpuTopology.ThreadPerCore != nil {
+			cpuTopologyMap["thread_per_core"] = *instance.CpuTopology.ThreadPerCore
+		}
+		_ = d.Set("cpu_topology", []interface{}{cpuTopologyMap})
+	}
+
 	if instance.Uuid != nil {
 		_ = d.Set("uuid", instance.Uuid)
 	}
@@ -1878,6 +1936,11 @@ func resourceTencentCloudInstanceUpdate(d *schema.ResourceData, meta interface{}
 		expectChargeType = chargeType.(string)
 	}
 
+	var forceStop bool
+	if v, ok := d.GetOkExists("force_stop"); ok {
+		forceStop = v.(bool)
+	}
+
 	if d.HasChange("instance_charge_type") && expectChargeType != currentChargeType {
 		var (
 			period    = -1
@@ -2108,7 +2171,7 @@ func resourceTencentCloudInstanceUpdate(d *schema.ResourceData, meta interface{}
 		// Modify Login Info Directly
 	} else {
 		if d.HasChange("password") {
-			err := cvmService.ModifyPassword(ctx, instanceId, d.Get("password").(string))
+			err := cvmService.ModifyPassword(ctx, instanceId, d.Get("password").(string), forceStop)
 			if err != nil {
 				return err
 			}
@@ -2125,7 +2188,7 @@ func resourceTencentCloudInstanceUpdate(d *schema.ResourceData, meta interface{}
 			keyId := n.(string)
 
 			if oldKeyId != "" {
-				err := cvmService.UnbindKeyPair(ctx, []*string{&oldKeyId}, []*string{&instanceId})
+				err := cvmService.UnbindKeyPair(ctx, []*string{&oldKeyId}, []*string{&instanceId}, forceStop)
 				if err != nil {
 					return err
 				}
@@ -2137,7 +2200,7 @@ func resourceTencentCloudInstanceUpdate(d *schema.ResourceData, meta interface{}
 			}
 
 			if keyId != "" {
-				err = cvmService.BindKeyPair(ctx, []*string{&keyId}, instanceId)
+				err = cvmService.BindKeyPair(ctx, []*string{&keyId}, instanceId, forceStop)
 				if err != nil {
 					return err
 				}
@@ -2160,7 +2223,7 @@ func resourceTencentCloudInstanceUpdate(d *schema.ResourceData, meta interface{}
 			removes.Remove("")
 
 			if removes.Len() > 0 {
-				err := cvmService.UnbindKeyPair(ctx, helper.InterfacesStringsPoint(removes.List()), []*string{&instanceId})
+				err := cvmService.UnbindKeyPair(ctx, helper.InterfacesStringsPoint(removes.List()), []*string{&instanceId}, forceStop)
 				if err != nil {
 					return err
 				}
@@ -2172,7 +2235,7 @@ func resourceTencentCloudInstanceUpdate(d *schema.ResourceData, meta interface{}
 			}
 
 			if adds.Len() > 0 {
-				err = cvmService.BindKeyPair(ctx, helper.InterfacesStringsPoint(adds.List()), instanceId)
+				err = cvmService.BindKeyPair(ctx, helper.InterfacesStringsPoint(adds.List()), instanceId, forceStop)
 				if err != nil {
 					return err
 				}
@@ -2233,7 +2296,7 @@ func resourceTencentCloudInstanceUpdate(d *schema.ResourceData, meta interface{}
 		//diskId := d.Get("system_disk_id").(string)
 		req := cvm.NewResizeInstanceDisksRequest()
 		req.InstanceId = &instanceId
-		req.ForceStop = helper.Bool(true)
+
 		req.SystemDisk = &cvm.SystemDisk{
 			DiskSize: helper.IntInt64(size),
 			DiskType: &diskType,
@@ -2242,6 +2305,7 @@ func resourceTencentCloudInstanceUpdate(d *schema.ResourceData, meta interface{}
 			req.ResizeOnline = helper.Bool(v.(bool))
 		}
 
+		req.ForceStop = helper.Bool(forceStop)
 		err := cvmService.ResizeInstanceDisks(ctx, req)
 		if err != nil {
 			return fmt.Errorf("an error occurred when modifying system_disk, reason: %s", err.Error())
@@ -2293,7 +2357,7 @@ func resourceTencentCloudInstanceUpdate(d *schema.ResourceData, meta interface{}
 	}
 
 	if d.HasChange("instance_type") {
-		err := cvmService.ModifyInstanceType(ctx, instanceId, d.Get("instance_type").(string))
+		err := cvmService.ModifyInstanceType(ctx, instanceId, d.Get("instance_type").(string), forceStop)
 		if err != nil {
 			return err
 		}
@@ -2305,7 +2369,7 @@ func resourceTencentCloudInstanceUpdate(d *schema.ResourceData, meta interface{}
 	}
 
 	if d.HasChange("cdh_instance_type") {
-		err := cvmService.ModifyInstanceType(ctx, instanceId, d.Get("cdh_instance_type").(string))
+		err := cvmService.ModifyInstanceType(ctx, instanceId, d.Get("cdh_instance_type").(string), forceStop)
 		if err != nil {
 			return err
 		}

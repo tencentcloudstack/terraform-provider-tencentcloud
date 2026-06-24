@@ -2642,12 +2642,7 @@ func ModifyClusterInternetOrIntranetAccess(ctx context.Context, d *schema.Resour
 	isInternet bool, enable bool, sg string, subnetId string, domain string) error {
 
 	id := d.Id()
-	var accessType string
-	if isInternet {
-		accessType = "cluster internet"
-	} else {
-		accessType = "cluster intranet"
-	}
+
 	// open access
 	if enable {
 		err := resource.Retry(tccommon.WriteRetryTimeout, func() *resource.RetryError {
@@ -2660,20 +2655,19 @@ func ModifyClusterInternetOrIntranetAccess(ctx context.Context, d *schema.Resour
 		if err != nil {
 			return err
 		}
-		err = resource.Retry(2*tccommon.ReadRetryTimeout, func() *resource.RetryError {
+
+		finishStates := []string{TkeInternetStatusNotfound, TkeInternetStatusCreated}
+		err = resource.Retry(10*tccommon.ReadRetryTimeout, func() *resource.RetryError {
 			status, message, inErr := tkeSvc.DescribeClusterEndpointStatus(ctx, id, isInternet)
 			if inErr != nil {
 				return tccommon.RetryError(inErr)
 			}
-			if status == TkeInternetStatusCreating {
-				return resource.RetryableError(
-					fmt.Errorf("%s create %s endpoint status still is %s", id, accessType, status))
-			}
-			if status == TkeInternetStatusNotfound || status == TkeInternetStatusCreated {
+
+			if tccommon.IsContains(finishStates, status) {
 				return nil
 			}
-			return resource.NonRetryableError(
-				fmt.Errorf("%s create %s endpoint error ,status is %s,message is %s", id, accessType, status, message))
+
+			return resource.RetryableError(fmt.Errorf("%s create cluster endpoint status is %s, message is %s. retry...", id, status, message))
 		})
 		if err != nil {
 			return err
@@ -2689,21 +2683,21 @@ func ModifyClusterInternetOrIntranetAccess(ctx context.Context, d *schema.Resour
 		if err != nil {
 			return err
 		}
-		err = resource.Retry(2*tccommon.ReadRetryTimeout, func() *resource.RetryError {
+
+		finishStates := []string{TkeInternetStatusNotfound, TkeInternetStatusDeleted}
+		err = resource.Retry(10*tccommon.ReadRetryTimeout, func() *resource.RetryError {
 			status, message, inErr := tkeSvc.DescribeClusterEndpointStatus(ctx, id, isInternet)
 			if inErr != nil {
 				return tccommon.RetryError(inErr)
 			}
-			if status == TkeInternetStatusDeleting {
-				return resource.RetryableError(
-					fmt.Errorf("%s close %s endpoint status still is %s", id, accessType, status))
-			}
-			if status == TkeInternetStatusNotfound || status == TkeInternetStatusDeleted || status == TkeInternetStatusCreated {
+
+			if tccommon.IsContains(finishStates, status) {
 				return nil
 			}
-			return resource.NonRetryableError(
-				fmt.Errorf("%s close %s endpoint error ,status is %s,message is %s", id, accessType, status, message))
+
+			return resource.RetryableError(fmt.Errorf("%s delete cluster endpoint status is %s, message is %s. retry...", id, status, message))
 		})
+
 		if err != nil {
 			return err
 		}
@@ -2849,15 +2843,24 @@ func (me *TkeService) TkeEncryptionProtectionStateRefreshFunc(clusterId string, 
 			}
 		}()
 
-		object, err := me.client.UseTkeClient().DescribeEncryptionStatus(request)
+		var object *tke.DescribeEncryptionStatusResponse
+		err := resource.Retry(tccommon.ReadRetryTimeout, func() *resource.RetryError {
+			ratelimit.Check(request.GetAction())
+			result, e := me.client.UseTkeClient().DescribeEncryptionStatus(request)
+			if e != nil {
+				return tccommon.RetryError(e)
+			}
 
-		if err != nil {
-			return nil, "", err
-		}
+			if result == nil || result.Response == nil {
+				return resource.NonRetryableError(fmt.Errorf("Describe kubernetes encryption status failed, Response is nil."))
+			}
 
+			object = result
+			return nil
+		})
 		if err != nil {
 			errRet = err
-			return object, "", err
+			return nil, "", err
 		}
 
 		return object, helper.PString(object.Response.Status), nil
@@ -3204,9 +3207,21 @@ func (me *TkeService) DescribeKubernetesEncryptionProtectionById(ctx context.Con
 		}
 	}()
 
-	ratelimit.Check(request.GetAction())
+	var response *tke.DescribeEncryptionStatusResponse
+	err := resource.Retry(tccommon.ReadRetryTimeout, func() *resource.RetryError {
+		ratelimit.Check(request.GetAction())
+		result, e := me.client.UseTkeV20180525Client().DescribeEncryptionStatus(request)
+		if e != nil {
+			return tccommon.RetryError(e)
+		}
 
-	response, err := me.client.UseTkeV20180525Client().DescribeEncryptionStatus(request)
+		if result == nil || result.Response == nil {
+			return resource.NonRetryableError(fmt.Errorf("Describe kubernetes encryption status failed, Response is nil."))
+		}
+
+		response = result
+		return nil
+	})
 	if err != nil {
 		errRet = err
 		return
@@ -4427,6 +4442,70 @@ func (me *TkeService) DescribeClusterAvailableExtraArgs(ctx context.Context, clu
 
 	if response != nil {
 		respParams = response.Response
+	}
+
+	return
+}
+
+func (me *TkeService) DescribeKubernetesClusterRollOutSequenceTagConfigById(ctx context.Context, clusterId string) (ret []*tke.ClusterRollOutSequenceTag, errRet error) {
+	logId := tccommon.GetLogId(ctx)
+
+	request := tke.NewDescribeClusterRollOutSequenceTagsRequest()
+	request.Filters = []*tke.Filter{
+		{
+			Name:   common.StringPtr("ClusterID"),
+			Values: common.StringPtrs([]string{clusterId}),
+		},
+	}
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	var (
+		offset int64
+		limit  int64 = 100
+	)
+
+	for {
+		request.Offset = helper.Int64(offset)
+		request.Limit = helper.Int64(limit)
+		var response *tke.DescribeClusterRollOutSequenceTagsResponse
+		err := resource.Retry(tccommon.ReadRetryTimeout, func() *resource.RetryError {
+			ratelimit.Check(request.GetAction())
+			result, e := me.client.UseTkeV20180525Client().DescribeClusterRollOutSequenceTagsWithContext(ctx, request)
+			if e != nil {
+				return tccommon.RetryError(e)
+			} else {
+				log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), result.ToJsonString())
+			}
+
+			if result == nil || result.Response == nil {
+				return resource.NonRetryableError(fmt.Errorf("Describe kubernetes cluster roll out sequence tags failed, Response is nil."))
+			}
+
+			response = result
+			return nil
+		})
+
+		if err != nil {
+			errRet = err
+			return
+		}
+
+		if len(response.Response.ClusterTags) < 1 {
+			break
+		}
+
+		ret = append(ret, response.Response.ClusterTags...)
+
+		if len(response.Response.ClusterTags) < int(limit) {
+			break
+		}
+
+		offset += limit
 	}
 
 	return

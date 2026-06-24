@@ -30,6 +30,23 @@
 
     <img src=".github/02_Tcloud_wechat.jpg" width="200"/>
 
+## Architecture
+
+This provider serves both [`terraform-plugin-sdk/v2`][sdkv2] and
+[`terraform-plugin-framework`][framework] resources from a single binary,
+combined via [`tf5muxserver`][mux]. New resources and data sources are
+written using the framework, while existing SDKv2 resources continue to be
+maintained in place. The two stacks share credentials and the underlying
+TencentCloud SDK client, so users do not need to configure the provider
+twice.
+
+See [CONTRIBUTING.md](./CONTRIBUTING.md) for the rules on which stack to
+use and how to add new resources.
+
+[sdkv2]: https://github.com/hashicorp/terraform-plugin-sdk
+[framework]: https://github.com/hashicorp/terraform-plugin-framework
+[mux]: https://github.com/hashicorp/terraform-plugin-mux
+
 ## Requirements
 
 * [Terraform](https://www.terraform.io/downloads.html) 0.13.x

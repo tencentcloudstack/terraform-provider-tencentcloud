@@ -1329,7 +1329,7 @@ func (me *ClbService) CreateTargetGroup(ctx context.Context, targetGroupName str
 	targetGroupInstances []*clb.TargetGroupInstance, targetGroupType string, protocol string,
 	healthCheck *clb.TargetGroupHealthCheck, scheduleAlgorithm string, tags []*clb.TagInfo,
 	weight *uint64, fullListenSwitch *bool, keepaliveEnable *bool,
-	sessionExpireTime *uint64, ipVersion string) (targetGroupId string, err error) {
+	sessionExpireTime *uint64, ipVersion string, snatEnable *bool) (targetGroupId string, err error) {
 	var response *clb.CreateTargetGroupResponse
 
 	request := clb.NewCreateTargetGroupRequest()
@@ -1372,6 +1372,9 @@ func (me *ClbService) CreateTargetGroup(ctx context.Context, targetGroupName str
 	}
 	if ipVersion != "" {
 		request.IpVersion = &ipVersion
+	}
+	if snatEnable != nil {
+		request.SnatEnable = snatEnable
 	}
 
 	err = resource.Retry(tccommon.WriteRetryTimeout, func() *resource.RetryError {

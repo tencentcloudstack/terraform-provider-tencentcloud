@@ -1,5 +1,6 @@
 # Visit https://goreleaser.com for documentation on how to customize this
 # behavior.
+version: 2
 before:
   hooks:
     - go mod tidy -compat=1.17
@@ -26,7 +27,7 @@ builds:
       goarch: '386'
   binary: '{{ .ProjectName }}_v{{ .Version }}'
 archives:
-- format: zip
+- formats: [zip]
   name_template: '{{ .ProjectName }}_{{ .Version }}_{{ .Os }}_{{ .Arch }}'
 checksum:
   name_template: '{{ .ProjectName }}_{{ .Version }}_SHA256SUMS'
@@ -47,4 +48,4 @@ release:
   # Visit your project's GitHub Releases page to publish this release.
   draft: true
 changelog:
-  skip: true
+  disable: true

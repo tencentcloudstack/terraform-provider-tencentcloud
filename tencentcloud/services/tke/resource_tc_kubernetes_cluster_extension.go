@@ -424,21 +424,21 @@ func resourceTencentCloudKubernetesClusterCreatePostHandleResponse0(ctx context.
 		if err != nil {
 			return err
 		}
-		err = resource.Retry(2*tccommon.ReadRetryTimeout, func() *resource.RetryError {
+
+		finishStates := []string{TkeInternetStatusNotfound, TkeInternetStatusCreated}
+		err = resource.Retry(10*tccommon.ReadRetryTimeout, func() *resource.RetryError {
 			status, message, inErr := service.DescribeClusterEndpointStatus(ctx, id, false)
 			if inErr != nil {
 				return tccommon.RetryError(inErr)
 			}
-			if status == TkeInternetStatusCreating {
-				return resource.RetryableError(
-					fmt.Errorf("%s create intranet cluster endpoint status still is %s", id, status))
-			}
-			if status == TkeInternetStatusNotfound || status == TkeInternetStatusCreated {
+
+			if tccommon.IsContains(finishStates, status) {
 				return nil
 			}
-			return resource.NonRetryableError(
-				fmt.Errorf("%s create intranet cluster endpoint error ,status is %s,message is %s", id, status, message))
+
+			return resource.RetryableError(fmt.Errorf("%s create cluster intranet endpoint status is %s, message is %s. retry...", id, status, message))
 		})
+
 		if err != nil {
 			return err
 		}
@@ -455,21 +455,21 @@ func resourceTencentCloudKubernetesClusterCreatePostHandleResponse0(ctx context.
 		if err != nil {
 			return err
 		}
-		err = resource.Retry(2*tccommon.ReadRetryTimeout, func() *resource.RetryError {
+
+		finishStates := []string{TkeInternetStatusNotfound, TkeInternetStatusCreated}
+		err = resource.Retry(10*tccommon.ReadRetryTimeout, func() *resource.RetryError {
 			status, message, inErr := service.DescribeClusterEndpointStatus(ctx, id, true)
 			if inErr != nil {
 				return tccommon.RetryError(inErr)
 			}
-			if status == TkeInternetStatusCreating {
-				return resource.RetryableError(
-					fmt.Errorf("%s create cluster internet endpoint status still is %s", id, status))
-			}
-			if status == TkeInternetStatusNotfound || status == TkeInternetStatusCreated {
+
+			if tccommon.IsContains(finishStates, status) {
 				return nil
 			}
-			return resource.NonRetryableError(
-				fmt.Errorf("%s create cluster internet endpoint error ,status is %s,message is %s", id, status, message))
+
+			return resource.RetryableError(fmt.Errorf("%s create cluster internet endpoint status is %s, message is %s. retry...", id, status, message))
 		})
+
 		if err != nil {
 			return err
 		}
@@ -1295,7 +1295,6 @@ func resourceTencentCloudKubernetesClusterUpdateOnStart(ctx context.Context) err
 		if err := ModifyClusterInternetOrIntranetAccess(ctx, d, &tkeService, TKE_CLUSTER_INTRANET, clusterIntranet, clusterInternetSecurityGroup, intranetSubnetId, clusterIntranetDomain); err != nil {
 			return err
 		}
-
 	}
 
 	if d.HasChange("cluster_internet") {

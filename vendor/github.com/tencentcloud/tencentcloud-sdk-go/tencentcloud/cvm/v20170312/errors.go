@@ -41,6 +41,9 @@ const (
 	// 未找到指定的容灾组
 	FAILEDOPERATION_DISASTERRECOVERGROUPNOTFOUND = "FailedOperation.DisasterRecoverGroupNotFound"
 
+	// 实例置放群组信息不匹配，操作失败。
+	FAILEDOPERATION_DISASTERRECOVERGROUPNOTMATCH = "FailedOperation.DisasterRecoverGroupNotMatch"
+
 	// 获取实例的自动化助手状态失败
 	FAILEDOPERATION_GETINSTANCETATAGENTSTATUSFAILED = "FailedOperation.GetInstanceTATAgentStatusFailed"
 
@@ -818,6 +821,12 @@ const (
 	// 不支持该账户的操作。
 	OPERATIONDENIED_ACCOUNTNOTSUPPORTED = "OperationDenied.AccountNotSupported"
 
+	// CHC的部署配置非法。
+	OPERATIONDENIED_CHCDEPLOYCONFIGINVALID = "OperationDenied.ChcDeployConfigInvalid"
+
+	// chc物理服务器当前状态不支持此项操作
+	OPERATIONDENIED_CHCHOSTSTATENOTSUPPORTED = "OperationDenied.ChcHostStateNotSupported"
+
 	// 不允许未配置部署网络的CHC安装云上镜像。
 	OPERATIONDENIED_CHCINSTALLCLOUDIMAGEWITHOUTDEPLOYNETWORK = "OperationDenied.ChcInstallCloudImageWithoutDeployNetwork"
 
@@ -874,6 +883,9 @@ const (
 
 	// 高性能计算集群不存在。
 	RESOURCENOTFOUND_HPCCLUSTER = "ResourceNotFound.HpcCluster"
+
+	// 实例ID未找到。
+	RESOURCENOTFOUND_INVALIDINSTANCEIDNOTFOUND = "ResourceNotFound.InvalidInstanceIdNotFound"
 
 	// 指定的置放群组不存在。
 	RESOURCENOTFOUND_INVALIDPLACEMENTSET = "ResourceNotFound.InvalidPlacementSet"

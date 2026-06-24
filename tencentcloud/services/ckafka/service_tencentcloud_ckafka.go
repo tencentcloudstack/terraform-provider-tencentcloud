@@ -568,7 +568,7 @@ func (me *CkafkaService) DescribeCkafkaTopics(ctx context.Context, instanceId st
 	if topicName != "" {
 		request.SearchWord = &topicName
 	}
-	var offset, limit int64 = 0, 20
+	var offset, limit int64 = 0, 200
 	request.Offset = &offset
 	request.Limit = &limit
 	//check ckafka exist
@@ -642,7 +642,7 @@ func (me *CkafkaService) DescribeCkafkaTopicByName(ctx context.Context, instance
 		return
 	}
 	for _, v := range topicList {
-		if *v.TopicName == topicName {
+		if v.TopicName != nil && *v.TopicName == topicName {
 			has = true
 			topic = v
 			break
@@ -843,7 +843,11 @@ func (me *CkafkaService) DeleteCkafkaTopic(ctx context.Context, instanceId strin
 			return tccommon.RetryError(err)
 		}
 		if len(topicList) != 0 {
-			return resource.RetryableError(fmt.Errorf("this Topic %s Delete Failed", name))
+			for _, v := range topicList {
+				if v.TopicName != nil && *v.TopicName == name {
+					return resource.RetryableError(fmt.Errorf("this Topic %s Delete Failed", name))
+				}
+			}
 		}
 		return nil
 	})

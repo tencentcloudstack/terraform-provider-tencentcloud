@@ -424,6 +424,39 @@ resource "tencentcloud_instance" "example" {
 }
 ```
 
+### Create CVM instance with CPU topology configuration
+
+```hcl
+resource "tencentcloud_instance" "example" {
+  instance_name           = "tf-example"
+  availability_zone       = "ap-guangzhou-6"
+  image_id                = "img-eb30mz89"
+  instance_type           = "S5.MEDIUM4"
+  system_disk_type        = "CLOUD_HSSD"
+  system_disk_size        = 50
+  hostname                = "user"
+  project_id              = 0
+  vpc_id                  = "vpc-i5yyodl9"
+  subnet_id               = "subnet-hhi88a58"
+  orderly_security_groups = ["sg-ma82yjwp"]
+
+  cpu_topology {
+    core_count      = 2
+    thread_per_core = 1
+  }
+
+  data_disks {
+    data_disk_type = "CLOUD_HSSD"
+    data_disk_size = 100
+    encrypt        = false
+  }
+
+  tags = {
+    tagKey = "tagValue"
+  }
+}
+```
+
 ## Argument Reference
 
 The following arguments are supported:
@@ -435,6 +468,7 @@ The following arguments are supported:
 * `cam_role_name` - (Optional, String) CAM role name authorized to access.
 * `cdh_host_id` - (Optional, String, ForceNew) Id of cdh instance. Note: it only works when instance_charge_type is set to `CDHPAID`.
 * `cdh_instance_type` - (Optional, String) Type of instance created on cdh, the value of this parameter is in the format of CDH_XCXG based on the number of CPU cores and memory capacity. Note: it only works when instance_charge_type is set to `CDHPAID`.
+* `cpu_topology` - (Optional, List, ForceNew) CPU topology configuration. Only supported when creating instances.
 * `data_disks` - (Optional, List, ForceNew) Settings for data disks.
 * `dedicated_cluster_id` - (Optional, String, ForceNew) Exclusive cluster id.
 * `dedicated_resource_pack_ids` - (Optional, Set: [`String`], ForceNew) List of dedicated resource pack IDs (e.g., rpp-xxxxxxxx). When creating instances using pre-purchased resource pool packs, this parameter must be specified together with `dedicated_resource_pack_tenancy` to match the corresponding tenancy strategy. Related resource: `tencentcloud_cvm_resource_pool_packs`.
@@ -446,6 +480,7 @@ The following arguments are supported:
 * `disaster_recover_group_ids` - (Optional, Set: [`String`], ForceNew) Placement group ID.
 * `force_delete` - (Optional, Bool) Indicate whether to force delete the instance. Default is `false`. If set true, the instance will be permanently deleted instead of being moved into the recycle bin. Note: only works for `PREPAID` instance.
 * `force_replace_placement_group_id` - (Optional, Bool) Whether to force the instance host to be replaced. Value range: true: Allows the instance to change the host and restart the instance. Local disk machines do not support specifying this parameter; false: Does not allow the instance to change the host and only join the placement group on the current host. This may cause the placement group to fail to change. Only useful for change `placement_group_id`, Default is false.
+* `force_stop` - (Optional, Bool) Whether to forcibly shut down a running instance. Default is false. Forcing a shutdown is equivalent to switching off the power button on a physical computer. Forcing a shutdown may result in data loss or file system corruption; therefore, please use this option only when the server cannot be shut down normally.
 * `hostname` - (Optional, String) The hostname of the instance. Windows instance: The name should be a combination of 2 to 15 characters comprised of letters (case insensitive), numbers, and hyphens (-). Period (.) is not supported, and the name cannot be a string of pure numbers. Other types (such as Linux) of instances: The name should be a combination of 2 to 60 characters, supporting multiple periods (.). The piece between two periods is composed of letters (case insensitive), numbers, and hyphens (-). Changing the `hostname` will cause the instance system to restart.
 * `hpc_cluster_id` - (Optional, String, ForceNew) High-performance computing cluster ID. If the instance created is a high-performance computing instance, you need to specify the cluster in which the instance is placed, otherwise it cannot be specified.
 * `image_id` - (Optional, String) The image to use for the instance. Modifications may lead to the reinstallation of the instance's operating system.
@@ -487,6 +522,11 @@ The following arguments are supported:
 * `user_data_replace_on_change` - (Optional, Bool) When used in combination with `user_data` or `user_data_raw` will trigger a destroy and recreate of the CVM instance when set to `true`. Default is `false`.
 * `user_data` - (Optional, String) The user data to be injected into this instance. Must be base64 encoded and up to 16 KB. If `user_data_replace_on_change` is set to `true`, updates to this field will trigger the destruction and recreation of the CVM instance.
 * `vpc_id` - (Optional, String) The ID of a VPC network. If you want to create instances in a VPC network, this parameter must be set.
+
+The `cpu_topology` object supports the following:
+
+* `core_count` - (Optional, Int, ForceNew) Number of enabled CPU physical cores.
+* `thread_per_core` - (Optional, Int, ForceNew) Threads per core. 1 means hyper-threading is off, 2 means hyper-threading is on.
 
 The `data_disks` object supports the following:
 

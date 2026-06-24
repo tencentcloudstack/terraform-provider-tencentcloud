@@ -185,10 +185,9 @@ func ResourceTencentCloudClbListenerRule() *schema.Resource {
 				},
 			},
 			"session_expire_time": {
-				Type:         schema.TypeInt,
-				Optional:     true,
-				ValidateFunc: tccommon.ValidateIntegerInRange(30, 3600),
-				Description:  "Time of session persistence within the CLB listener. NOTES: Available when scheduler is specified as `WRR`, and not available when listener protocol is `TCP_SSL`.  NOTES: TCP/UDP/TCP_SSL listener allows direct configuration, HTTP/HTTPS listener needs to be configured in `tencentcloud_clb_listener_rule`.",
+				Type:        schema.TypeInt,
+				Optional:    true,
+				Description: "Session Persistence Duration. Setting this to 0 disables session persistence; to enable it, the value must be between 30 and 86,400 (inclusive), in seconds.",
 			},
 			"http2_switch": {
 				Type:        schema.TypeBool,

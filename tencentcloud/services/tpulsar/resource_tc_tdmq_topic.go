@@ -2,15 +2,19 @@ package tpulsar
 
 import (
 	tccommon "github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/common"
+	svctag "github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/services/tag"
 	svctdmq "github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/services/tdmq"
 	svcvpc "github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/services/vpc"
 
 	"context"
 	"fmt"
+	"log"
 
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 	"github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/common/errors"
+	tag "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/tag/v20180813"
+	tdmq "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/tdmq/v20200217"
 )
 
 func ResourceTencentCloudTdmqTopic() *schema.Resource {
@@ -62,6 +66,25 @@ func ResourceTencentCloudTdmqTopic() *schema.Resource {
 				Type:        schema.TypeString,
 				Optional:    true,
 				Description: "Description of the namespace.",
+			},
+			"tags": {
+				Type:        schema.TypeList,
+				Optional:    true,
+				Description: "Tag description list.",
+				Elem: &schema.Resource{
+					Schema: map[string]*schema.Schema{
+						"tag_key": {
+							Type:        schema.TypeString,
+							Required:    true,
+							Description: "Tag key.",
+						},
+						"tag_value": {
+							Type:        schema.TypeString,
+							Required:    true,
+							Description: "Tag value.",
+						},
+					},
+				},
 			},
 
 			//compute
@@ -125,7 +148,20 @@ func resourceTencentCloudTdmqTopicCreate(d *schema.ResourceData, meta interface{
 		}
 	}
 
-	err := tdmqService.CreateTdmqTopic(ctx, environId, topicName, partitions, topicType, remark, clusterId, pulsarTopicType)
+	var tags []*tdmq.Tag
+	if v, ok := d.GetOk("tags"); ok {
+		for _, item := range v.([]interface{}) {
+			dMap := item.(map[string]interface{})
+			tagKey := dMap["tag_key"].(string)
+			tagValue := dMap["tag_value"].(string)
+			tags = append(tags, &tdmq.Tag{
+				TagKey:   &tagKey,
+				TagValue: &tagValue,
+			})
+		}
+	}
+
+	err := tdmqService.CreateTdmqTopic(ctx, environId, topicName, partitions, topicType, remark, clusterId, pulsarTopicType, tags)
 	if err != nil {
 		return err
 	}
@@ -155,15 +191,40 @@ func resourceTencentCloudTdmqTopicRead(d *schema.ResourceData, meta interface{})
 		}
 
 		if !has {
+			log.Printf("[WARN] tencentcloud_tdmq_topic id=%s not found, removing from state", d.Id())
 			d.SetId("")
 			return nil
 		}
 
-		_ = d.Set("partitions", info.Partitions)
-		_ = d.Set("topic_type", info.TopicType)
-		_ = d.Set("pulsar_topic_type", info.PulsarTopicType)
-		_ = d.Set("remark", info.Remark)
-		_ = d.Set("create_time", info.CreateTime)
+		if info.Partitions != nil {
+			_ = d.Set("partitions", info.Partitions)
+		}
+		if info.TopicType != nil {
+			_ = d.Set("topic_type", info.TopicType)
+		}
+		if info.PulsarTopicType != nil {
+			_ = d.Set("pulsar_topic_type", info.PulsarTopicType)
+		}
+		if info.Remark != nil {
+			_ = d.Set("remark", info.Remark)
+		}
+		if info.CreateTime != nil {
+			_ = d.Set("create_time", info.CreateTime)
+		}
+		if info.Tags != nil {
+			tagsList := []interface{}{}
+			for _, t := range info.Tags {
+				tagsMap := map[string]interface{}{}
+				if t.TagKey != nil {
+					tagsMap["tag_key"] = *t.TagKey
+				}
+				if t.TagValue != nil {
+					tagsMap["tag_value"] = *t.TagValue
+				}
+				tagsList = append(tagsList, tagsMap)
+			}
+			_ = d.Set("tags", tagsList)
+		}
 		return nil
 	})
 
@@ -218,6 +279,69 @@ func resourceTencentCloudTdmqTopicUpdate(d *schema.ResourceData, meta interface{
 		return err
 	}
 
+	if d.HasChange("tags") {
+		tcClient := meta.(tccommon.ProviderMeta).GetAPIV3Conn()
+		oldRaw, newRaw := d.GetChange("tags")
+		oldTagsMap := tagsListToMap(oldRaw.([]interface{}))
+		newTagsMap := tagsListToMap(newRaw.([]interface{}))
+		replaceTags, deleteTags := svctag.DiffTags(oldTagsMap, newTagsMap)
+		resourceName := tccommon.BuildTagResourceName("tdmq", "topic", tcClient.Region, fmt.Sprintf("%s/%s/%s", clusterId, environId, topicName))
+
+		// Untag removed keys
+		if len(deleteTags) > 0 {
+			unTagRequest := tag.NewUnTagResourcesRequest()
+			unTagRequest.ResourceList = []*string{&resourceName}
+			tagKeys := make([]*string, 0, len(deleteTags))
+			for _, key := range deleteTags {
+				k := key
+				tagKeys = append(tagKeys, &k)
+			}
+			unTagRequest.TagKeys = tagKeys
+
+			err := resource.Retry(tccommon.WriteRetryTimeout, func() *resource.RetryError {
+				log.Printf("[DEBUG]%s api[UnTagResources] request: %s", logId, unTagRequest.ToJsonString())
+				response, e := tcClient.UseTagClient().UnTagResources(unTagRequest)
+				if e != nil {
+					return tccommon.RetryError(e)
+				}
+				log.Printf("[DEBUG]%s api[UnTagResources] response: %s", logId, response.ToJsonString())
+				return nil
+			})
+			if err != nil {
+				return err
+			}
+		}
+
+		// Tag new/updated keys
+		if len(replaceTags) > 0 {
+			tagRequest := tag.NewTagResourcesRequest()
+			tagRequest.ResourceList = []*string{&resourceName}
+			tags := make([]*tag.Tag, 0, len(replaceTags))
+			for k, v := range replaceTags {
+				tagKey := k
+				tagValue := v
+				tags = append(tags, &tag.Tag{
+					TagKey:   &tagKey,
+					TagValue: &tagValue,
+				})
+			}
+			tagRequest.Tags = tags
+
+			err := resource.Retry(tccommon.WriteRetryTimeout, func() *resource.RetryError {
+				log.Printf("[DEBUG]%s api[TagResources] request: %s", logId, tagRequest.ToJsonString())
+				response, e := tcClient.UseTagClient().TagResources(tagRequest)
+				if e != nil {
+					return tccommon.RetryError(e)
+				}
+				log.Printf("[DEBUG]%s api[TagResources] response: %s", logId, response.ToJsonString())
+				return nil
+			})
+			if err != nil {
+				return err
+			}
+		}
+	}
+
 	d.Partial(false)
 	return resourceTencentCloudTdmqTopicRead(d, meta)
 }
@@ -250,4 +374,18 @@ func resourceTencentCloudTdmqTopicDelete(d *schema.ResourceData, meta interface{
 	})
 
 	return err
+}
+
+// tagsListToMap converts a tags list ([]interface{} with tag_key/tag_value) to map[string]interface{}
+func tagsListToMap(tagsList []interface{}) map[string]interface{} {
+	result := make(map[string]interface{})
+	for _, item := range tagsList {
+		dMap := item.(map[string]interface{})
+		if key, ok := dMap["tag_key"].(string); ok {
+			if value, ok := dMap["tag_value"].(string); ok {
+				result[key] = value
+			}
+		}
+	}
+	return result
 }
