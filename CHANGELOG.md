@@ -1,3 +1,15 @@
+## 1.83.4(June 22, 2026)
+
+FEATURES:
+
+* **New Resource:** `tencentcloud_cbs_copy_snapshot_cross_region` ([#4231](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/4231))
+* **New Resource:** `tencentcloud_teo_function_replica` ([#4186](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/4186))
+
+ENHANCEMENTS:
+
+* resource/tencentcloud_cos_bucket_domain_certificate_attachment: optimize code logic ([#4230](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/4230))
+* resource/tencentcloud_waf_clb_domain: update doc ([#4234](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/4234))
+
 ## 1.83.3(June 18, 2026)
 
 FEATURES:
