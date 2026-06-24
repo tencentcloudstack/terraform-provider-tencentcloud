@@ -122,9 +122,34 @@ func resourceTencentCloudCynosdbSslUpdate(d *schema.ResourceData, meta interface
 	clusterId := idSplit[0]
 	instanceId := idSplit[1]
 
+	ctx := context.WithValue(context.TODO(), tccommon.LogIdKey, logId)
+	service := CynosdbService{client: meta.(tccommon.ProviderMeta).GetAPIV3Conn()}
+
 	var taskId *int64
 	if v, ok := d.GetOk("status"); ok {
 		status := v.(string)
+		if status != "ON" && status != "OFF" {
+			return fmt.Errorf("[CRITAL]%s update cynosdb ssl failed, reason:your status must be ON or OFF!", logId)
+		}
+
+		// Check the current SSL status before opening/closing. If it is already in the expected
+		// state, skip the OpenSSL/CloseSSL call and jump to the read stage directly.
+		ssl, err := service.DescribeSSLStatus(ctx, clusterId, instanceId)
+		if err != nil {
+			return err
+		}
+
+		if ssl != nil && ssl.IsOpenSSL != nil {
+			currentStatus := "OFF"
+			if *ssl.IsOpenSSL == "yes" {
+				currentStatus = "ON"
+			}
+			if currentStatus == status {
+				log.Printf("[DEBUG]%s cynosdb ssl status is already [%s], skip update.", logId, status)
+				return resourceTencentCloudCynosdbSslRead(d, meta)
+			}
+		}
+
 		if status == "ON" {
 			request := cynosdb.NewOpenSSLRequest()
 			request.ClusterId = helper.String(clusterId)
@@ -144,7 +169,7 @@ func resourceTencentCloudCynosdbSslUpdate(d *schema.ResourceData, meta interface
 				log.Printf("[CRITAL]%s update cynosdb ssl failed, reason:%+v", logId, err)
 				return err
 			}
-		} else if status == "OFF" {
+		} else {
 			request := cynosdb.NewCloseSSLRequest()
 			request.ClusterId = helper.String(clusterId)
 			request.InstanceId = helper.String(instanceId)
@@ -163,10 +188,8 @@ func resourceTencentCloudCynosdbSslUpdate(d *schema.ResourceData, meta interface
 				log.Printf("[CRITAL]%s update cynosdb ssl failed, reason:%+v", logId, err)
 				return err
 			}
-		} else {
-			return fmt.Errorf("[CRITAL]%s update cynosdb ssl failed, reason:your status must be ON or OFF!", logId)
 		}
-		service := CynosdbService{client: meta.(tccommon.ProviderMeta).GetAPIV3Conn()}
+
 		conf := tccommon.BuildStateChangeConf([]string{}, []string{"success"}, 10*tccommon.ReadRetryTimeout, time.Second, service.taskStateRefreshFunc(strconv.FormatInt(*taskId, 10), []string{}))
 		if _, e := conf.WaitForState(); e != nil {
 			return e
