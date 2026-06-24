@@ -234,9 +234,7 @@ func resourceTencentCloudWafApiSecSensitivePrivilegeRuleDelete(d *schema.Resourc
 	request.RuleName = helper.String(ruleName)
 	// Status 3 means delete the rule.
 	request.Status = helper.IntUint64(3)
-	request.ApiSecPrivilegeRule = &waf.ApiSecPrivilegeRule{
-		RuleName: helper.String(ruleName),
-	}
+	request.ApiSecPrivilegeRuleName = helper.Strings([]string{ruleName})
 
 	reqErr := resource.Retry(tccommon.WriteRetryTimeout, func() *resource.RetryError {
 		result, e := meta.(tccommon.ProviderMeta).GetAPIV3Conn().UseWafV20180125Client().ModifyApiSecSensitiveRuleWithContext(ctx, request)

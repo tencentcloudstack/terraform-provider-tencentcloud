@@ -196,9 +196,7 @@ func resourceTencentCloudWafApiSecSensitiveSceneRuleDelete(d *schema.ResourceDat
 	request.RuleName = helper.String(ruleName)
 	// Status 3 means delete the rule.
 	request.Status = helper.IntUint64(3)
-	request.ApiSecSceneRule = &waf.ApiSecSceneRule{
-		RuleName: helper.String(ruleName),
-	}
+	request.ApiSecSceneRuleNameList = helper.Strings([]string{ruleName})
 
 	reqErr := resource.Retry(tccommon.WriteRetryTimeout, func() *resource.RetryError {
 		result, e := meta.(tccommon.ProviderMeta).GetAPIV3Conn().UseWafV20180125Client().ModifyApiSecSensitiveRuleWithContext(ctx, request)
