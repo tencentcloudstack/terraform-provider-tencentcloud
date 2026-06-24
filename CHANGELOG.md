@@ -1,3 +1,31 @@
+## 1.83.4(June 22, 2026)
+
+FEATURES:
+
+* **New Resource:** `tencentcloud_cbs_copy_snapshot_cross_region` ([#4231](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/4231))
+* **New Resource:** `tencentcloud_teo_function_replica` ([#4186](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/4186))
+
+ENHANCEMENTS:
+
+* resource/tencentcloud_cos_bucket_domain_certificate_attachment: optimize code logic ([#4230](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/4230))
+* resource/tencentcloud_waf_clb_domain: update doc ([#4234](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/4234))
+
+## 1.83.3(June 18, 2026)
+
+FEATURES:
+
+* **New Resource:** `tencentcloud_teo_domain_shared_cname_attachment` ([#4218](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/4218))
+* **New Resource:** `tencentcloud_teo_edge_kv` ([#4188](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/4188))
+* **New Resource:** `tencentcloud_waf_rate_limit` ([#4223](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/4223))
+
+ENHANCEMENTS:
+
+* resource/tencentcloud_cos_bucket: support `cors_response_vary` ([#4221](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/4221))
+* resource/tencentcloud_kubernetes_scale_worker: support modify `instance_charge_type` and optimize delete code logic ([#4222](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/4222))
+* resource/tencentcloud_tdmq_instance: Deprecate tencentcloud_tdmq_instance creation ([#4226](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/4226))
+* resource/tencentcloud_tdmq_namespace: add tags parameter support ([#4228](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/4228))
+* resource/tencentcloud_tdmq_topic: add `tags` parameter to support setting tags on TDMQ topics at creation time ([#4227](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/4227))
+
 ## 1.83.2(June 15, 2026)
 
 FEATURES:
