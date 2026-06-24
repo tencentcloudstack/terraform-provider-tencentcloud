@@ -3,6 +3,10 @@ tencentcloud_ga2_global_accelerator
 ```
 
 ```release-note:new-resource
+tencentcloud_ga2_accelerate_area
+```
+
+```release-note:new-resource
 tencentcloud_ga2_listener
 ```
 
