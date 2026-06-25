@@ -2,8 +2,6 @@ package dbdc
 
 import (
 	"context"
-	"fmt"
-	"log"
 
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
@@ -148,12 +146,6 @@ func DataSourceTencentCloudDbdcDbCustomClusters() *schema.Resource {
 					},
 				},
 			},
-
-			"total_count": {
-				Type:        schema.TypeInt,
-				Computed:    true,
-				Description: "Total number of clusters.",
-			},
 		},
 	}
 }
@@ -220,20 +212,13 @@ func dataSourceTencentCloudDbdcDbCustomClustersRead(d *schema.ResourceData, meta
 	}
 
 	var respData []*dbdcv20201029.DBCustomCluster
-	var totalCount int64
 	reqErr := resource.Retry(tccommon.ReadRetryTimeout, func() *resource.RetryError {
-		result, count, e := service.DescribeDBCustomClustersByFilter(ctx, paramMap)
+		result, _, e := service.DescribeDBCustomClustersByFilter(ctx, paramMap)
 		if e != nil {
 			return tccommon.RetryError(e)
 		}
 
-		if result == nil || len(result) == 0 {
-			log.Printf("[DATASOURCE] read empty, skip SetId")
-			return resource.NonRetryableError(fmt.Errorf("Describe dbdc_db_custom_clusters returned empty result"))
-		}
-
 		respData = result
-		totalCount = count
 		return nil
 	})
 
@@ -245,7 +230,6 @@ func dataSourceTencentCloudDbdcDbCustomClustersRead(d *schema.ResourceData, meta
 	if respData != nil {
 		for _, cluster := range respData {
 			clusterMap := map[string]interface{}{}
-
 			if cluster.ClusterId != nil {
 				clusterMap["cluster_id"] = cluster.ClusterId
 			}
@@ -302,8 +286,6 @@ func dataSourceTencentCloudDbdcDbCustomClustersRead(d *schema.ResourceData, meta
 
 		_ = d.Set("cluster_set", clusterSetList)
 	}
-
-	_ = d.Set("total_count", totalCount)
 
 	d.SetId(helper.BuildToken())
 	output, ok := d.GetOk("result_output_file")

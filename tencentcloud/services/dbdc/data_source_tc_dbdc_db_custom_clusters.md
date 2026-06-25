@@ -12,7 +12,10 @@ Query dbdc db custom clusters by cluster_ids
 
 ```hcl
 data "tencentcloud_dbdc_db_custom_clusters" "example" {
-  cluster_ids = ["cluster-id-1", "cluster-id-2"]
+  cluster_ids = [
+    "dbcc-nmtmsew8",
+    "dbcc-9yui67ac"
+  ]
 }
 ```
 
@@ -22,7 +25,7 @@ Query dbdc db custom clusters by filters
 data "tencentcloud_dbdc_db_custom_clusters" "example" {
   filters {
     name   = "cluster-name"
-    values = ["my-cluster"]
+    values = ["tf-example"]
   }
 
   filters {
