@@ -56,6 +56,49 @@ func ResourceTencentCloudMongodbShardingInstance() *schema.Resource {
 			Computed:    true,
 			Description: "The availability zone to which the Hidden node belongs. This parameter is required in cross-AZ instance deployment.",
 		},
+		"add_node_list": {
+			Type:        schema.TypeList,
+			Optional:    true,
+			Description: "Add node list. Node type and availability zone information.",
+			Elem: &schema.Resource{
+				Schema: map[string]*schema.Schema{
+					"role": {
+						Type:        schema.TypeString,
+						Required:    true,
+						Description: "Node role to add. Valid values: `SECONDARY` (Mongod node), `READONLY` (read-only node), `MONGOS` (Mongos node).",
+					},
+					"zone": {
+						Type:        schema.TypeString,
+						Required:    true,
+						Description: "The availability zone for the new node.",
+					},
+				},
+			},
+		},
+		"remove_node_list": {
+			Type:        schema.TypeList,
+			Optional:    true,
+			Description: "Remove node list. Node type, node name, and availability zone information. Note: Based on the consistency principle of each shard node in a sharding instance, when removing nodes, you only need to specify the node corresponding to shard 0, e.g., `cmgo-xxxx_0-node-readonly0` will remove the first readonly node of each shard.",
+			Elem: &schema.Resource{
+				Schema: map[string]*schema.Schema{
+					"role": {
+						Type:        schema.TypeString,
+						Required:    true,
+						Description: "Node role to remove. Valid values: `SECONDARY` (Mongod secondary node), `READONLY` (read-only node), `MONGOS` (Mongos node).",
+					},
+					"node_name": {
+						Type:        schema.TypeString,
+						Required:    true,
+						Description: "Node ID to remove. For sharding cluster, specify the node name corresponding to one shard group. For example: `cmgo-xxxx_0-node-readonly0`.",
+					},
+					"zone": {
+						Type:        schema.TypeString,
+						Required:    true,
+						Description: "The availability zone of the node to remove.",
+					},
+				},
+			},
+		},
 	}
 	basic := TencentMongodbBasicInfo()
 	for k, v := range basic {
@@ -569,7 +612,7 @@ func resourceMongodbShardingInstanceUpdate(d *schema.ResourceData, meta interfac
 			}
 		}
 	}
-	if d.HasChange("memory") || d.HasChange("volume") {
+	if d.HasChange("memory") || d.HasChange("volume") || d.HasChange("add_node_list") || d.HasChange("remove_node_list") {
 		memory := d.Get("memory").(int)
 		volume := d.Get("volume").(int)
 		params := make(map[string]interface{})
@@ -578,6 +621,12 @@ func resourceMongodbShardingInstanceUpdate(d *schema.ResourceData, meta interfac
 		if v, ok := d.GetOkExists("in_maintenance"); ok {
 			inMaintenance = v.(int)
 			params["in_maintenance"] = v.(int)
+		}
+		if v, ok := d.GetOk("add_node_list"); ok {
+			params["add_node_list"] = v.([]interface{})
+		}
+		if v, ok := d.GetOk("remove_node_list"); ok {
+			params["remove_node_list"] = v.([]interface{})
 		}
 		_, err := mongodbService.UpgradeInstance(ctx, instanceId, memory, volume, params)
 		if err != nil {
