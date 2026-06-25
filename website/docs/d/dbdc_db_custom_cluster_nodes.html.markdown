@@ -29,7 +29,7 @@ data "tencentcloud_dbdc_db_custom_cluster_nodes" "example" {
 
   filters {
     name   = "node-name"
-    values = ["node-1"]
+    values = ["tf-example"]
   }
 }
 ```
@@ -59,6 +59,5 @@ In addition to all arguments above, the following attributes are exported:
   * `ssh_endpoint` - Node SSH access endpoint. Format: IP:Port.
   * `status` - Node instance status in the cluster.
   * `zone` - Node region.
-* `total_count` - Total number of nodes in the cluster.
 
 

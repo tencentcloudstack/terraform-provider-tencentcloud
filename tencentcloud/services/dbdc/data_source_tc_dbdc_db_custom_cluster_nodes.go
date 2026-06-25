@@ -94,12 +94,6 @@ func DataSourceTencentCloudDbdcDbCustomClusterNodes() *schema.Resource {
 					},
 				},
 			},
-
-			"total_count": {
-				Type:        schema.TypeInt,
-				Computed:    true,
-				Description: "Total number of nodes in the cluster.",
-			},
 		},
 	}
 }
@@ -142,15 +136,13 @@ func dataSourceTencentCloudDbdcDbCustomClusterNodesRead(d *schema.ResourceData, 
 	}
 
 	var respData []*dbdcv20201029.DBCustomClusterNode
-	var totalCount int64
 	reqErr := resource.Retry(tccommon.ReadRetryTimeout, func() *resource.RetryError {
-		result, count, e := service.DescribeDBCustomClusterNodesByFilter(ctx, paramMap)
+		result, _, e := service.DescribeDBCustomClusterNodesByFilter(ctx, paramMap)
 		if e != nil {
 			return tccommon.RetryError(e)
 		}
 
 		respData = result
-		totalCount = count
 		return nil
 	})
 
@@ -195,8 +187,6 @@ func dataSourceTencentCloudDbdcDbCustomClusterNodesRead(d *schema.ResourceData, 
 
 		_ = d.Set("node_set", nodeSetList)
 	}
-
-	_ = d.Set("total_count", totalCount)
 
 	d.SetId(helper.BuildToken())
 	output, ok := d.GetOk("result_output_file")

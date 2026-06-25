@@ -18,7 +18,7 @@ data "tencentcloud_dbdc_db_custom_cluster_nodes" "example" {
 
   filters {
     name   = "node-name"
-    values = ["node-1"]
+    values = ["tf-example"]
   }
 }
 ```
