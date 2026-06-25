@@ -30,7 +30,6 @@ func newMockMetaForCdbStartCpuExpand() *mockMetaForCdbStartCpuExpand {
 
 func ptrStringCdbExpand(s string) *string { return &s }
 func ptrInt64CdbExpand(v int64) *int64    { return &v }
-func ptrBoolCdbExpand(b bool) *bool       { return &b }
 
 func TestCdbStartCpuExpandAttachment_Create_Auto_Success(t *testing.T) {
 	patches := gomonkey.NewPatches()

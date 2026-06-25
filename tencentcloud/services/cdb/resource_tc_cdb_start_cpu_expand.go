@@ -23,6 +23,10 @@ func ResourceTencentCloudCdbStartCpuExpandAttachment() *schema.Resource {
 		Importer: &schema.ResourceImporter{
 			State: schema.ImportStatePassthrough,
 		},
+		Timeouts: &schema.ResourceTimeout{
+			Create: schema.DefaultTimeout(20 * time.Minute),
+			Delete: schema.DefaultTimeout(20 * time.Minute),
+		},
 		Schema: map[string]*schema.Schema{
 			"instance_id": {
 				Type:        schema.TypeString,
@@ -170,15 +174,6 @@ func ResourceTencentCloudCdbStartCpuExpandAttachment() *schema.Resource {
 					},
 				},
 			},
-			"async_request_id": {
-				Type:        schema.TypeString,
-				Computed:    true,
-				Description: "Async request ID returned by Create/Delete APIs.",
-			},
-		},
-		Timeouts: &schema.ResourceTimeout{
-			Create: schema.DefaultTimeout(20 * time.Minute),
-			Delete: schema.DefaultTimeout(20 * time.Minute),
 		},
 	}
 }
@@ -314,22 +309,26 @@ func resourceTencentCloudCdbStartCpuExpandAttachmentCreate(d *schema.ResourceDat
 		return reqErr
 	}
 
-	_ = d.Set("async_request_id", asyncRequestId)
 	d.SetId(instanceId)
 
 	service := MysqlService{client: meta.(tccommon.ProviderMeta).GetAPIV3Conn()}
 	err := resource.Retry(d.Timeout(schema.TimeoutCreate), func() *resource.RetryError {
-		result, e := service.DescribeCdbStartCpuExpandAttachmentById(ctx, instanceId)
-		if e != nil {
-			return tccommon.RetryError(e)
+		taskStatus, message, err := service.DescribeAsyncRequestInfo(ctx, asyncRequestId)
+		if err != nil {
+			return resource.NonRetryableError(err)
 		}
-		if result == nil || result.Type == nil {
-			return resource.RetryableError(fmt.Errorf("cdb_start_cpu_expand strategy not active yet"))
+		if taskStatus == MYSQL_TASK_STATUS_SUCCESS {
+			return nil
 		}
-		return nil
+		if taskStatus == MYSQL_TASK_STATUS_INITIAL || taskStatus == MYSQL_TASK_STATUS_RUNNING {
+			return resource.RetryableError(fmt.Errorf("%s create dbImportJob  status is %s", instanceId, taskStatus))
+		}
+		err = fmt.Errorf("%s create dbImportJob status is %s,we won't wait for it finish ,it show message:%s", instanceId, taskStatus, message)
+		return resource.NonRetryableError(err)
 	})
+
 	if err != nil {
-		log.Printf("[CRITAL]%s create cdb_start_cpu_expand poll failed, reason:%+v", logId, err)
+		log.Printf("[CRITAL]%s create dbImportJob fail, reason:%s\n ", logId, err.Error())
 		return err
 	}
 
@@ -474,23 +473,27 @@ func resourceTencentCloudCdbStartCpuExpandAttachmentDelete(d *schema.ResourceDat
 		instanceId = d.Id()
 	)
 
-	err := service.DeleteCdbStartCpuExpandAttachmentById(ctx, instanceId)
+	asyncRequestId, err := service.DeleteCdbStartCpuExpandAttachmentById(ctx, instanceId)
 	if err != nil {
 		return err
 	}
 
 	err = resource.Retry(d.Timeout(schema.TimeoutDelete), func() *resource.RetryError {
-		result, e := service.DescribeCdbStartCpuExpandAttachmentById(ctx, instanceId)
-		if e != nil {
-			return tccommon.RetryError(e)
+		taskStatus, message, err := service.DescribeAsyncRequestInfo(ctx, asyncRequestId)
+		if err != nil {
+			return resource.NonRetryableError(err)
 		}
-		if result != nil && result.Type != nil {
-			return resource.RetryableError(fmt.Errorf("cdb_start_cpu_expand strategy still active"))
+		if taskStatus == MYSQL_TASK_STATUS_SUCCESS {
+			return nil
 		}
-		return nil
+		if taskStatus == MYSQL_TASK_STATUS_INITIAL || taskStatus == MYSQL_TASK_STATUS_RUNNING {
+			return resource.RetryableError(fmt.Errorf("%s delete cdb_start_cpu_expand status is %s", instanceId, taskStatus))
+		}
+		err = fmt.Errorf("%s delete cdb_start_cpu_expand status is %s,we won't wait for it finish ,it show message:%s", instanceId, taskStatus, message)
+		return resource.NonRetryableError(err)
 	})
 	if err != nil {
-		log.Printf("[CRITAL]%s delete cdb_start_cpu_expand poll failed, reason:%+v", logId, err)
+		log.Printf("[CRITAL]%s delete cdb_start_cpu_expand fail, reason:%s\n ", logId, err.Error())
 		return err
 	}
 

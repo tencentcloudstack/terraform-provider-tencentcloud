@@ -3588,7 +3588,7 @@ func (me *MysqlService) DescribeCdbStartCpuExpandAttachmentById(ctx context.Cont
 	return
 }
 
-func (me *MysqlService) DeleteCdbStartCpuExpandAttachmentById(ctx context.Context, instanceId string) (errRet error) {
+func (me *MysqlService) DeleteCdbStartCpuExpandAttachmentById(ctx context.Context, instanceId string) (asyncRequestId string, errRet error) {
 	logId := tccommon.GetLogId(ctx)
 	request := cdb.NewStopCpuExpandRequest()
 	request.InstanceId = &instanceId
@@ -3612,6 +3612,7 @@ func (me *MysqlService) DeleteCdbStartCpuExpandAttachmentById(ctx context.Contex
 		if result.Response.AsyncRequestId == nil || *result.Response.AsyncRequestId == "" {
 			return resource.NonRetryableError(fmt.Errorf("Stop cdb_start_cpu_expand failed, AsyncRequestId is nil or empty."))
 		}
+		asyncRequestId = *result.Response.AsyncRequestId
 		return nil
 	})
 
