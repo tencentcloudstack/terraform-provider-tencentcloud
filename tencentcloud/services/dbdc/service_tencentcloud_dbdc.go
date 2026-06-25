@@ -131,7 +131,7 @@ func (me *DbdcService) DescribeDBCustomNodesByFilter(ctx context.Context, param 
 				log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), result.ToJsonString())
 			}
 
-			if result == nil || result.Response == nil || result.Response.NodeSet == nil || len(result.Response.NodeSet) == 0 {
+			if result == nil || result.Response == nil || result.Response.NodeSet == nil {
 				return resource.NonRetryableError(fmt.Errorf("Describe dbdc_db_custom_nodes failed, Response is nil."))
 			}
 

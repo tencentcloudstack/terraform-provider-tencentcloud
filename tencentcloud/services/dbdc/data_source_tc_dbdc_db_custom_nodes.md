@@ -13,8 +13,8 @@ Query dbdc db custom nodes by node_ids
 ```hcl
 data "tencentcloud_dbdc_db_custom_nodes" "example" {
   node_ids = [
-    "dbcn-abc12345",
-    "dbcn-def67890"
+    "dbcn-wamuy21e",
+    "dbcn-hjuz19sx"
   ]
 }
 ```
