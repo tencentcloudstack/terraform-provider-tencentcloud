@@ -2661,6 +2661,10 @@ tencentcloud_igtm_strategy
 tencentcloud_igtm_package_instance
 tencentcloud_igtm_package_task
 
+DB Custom(DBDC)
+Data Source
+tencentcloud_dbdc_db_custom_clusters
+
 VCube
 Resource
 tencentcloud_vcube_application_and_video

@@ -79,6 +79,7 @@ import (
 	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/services/gs"
 	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/services/gwlb"
 	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/services/igtm"
+	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/services/dbdc"
 	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/services/keewidb"
 	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/services/kms"
 	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/services/lighthouse"
@@ -1388,6 +1389,7 @@ func Provider() *schema.Provider {
 			"tencentcloud_igtm_strategy_list":                                     igtm.DataSourceTencentCloudIgtmStrategyList(),
 			"tencentcloud_igtm_instance_package_list":                             igtm.DataSourceTencentCloudIgtmInstancePackageList(),
 			"tencentcloud_igtm_detect_task_package_list":                          igtm.DataSourceTencentCloudIgtmDetectTaskPackageList(),
+			"tencentcloud_dbdc_db_custom_clusters":                                dbdc.DataSourceTencentCloudDbdcDbCustomClusters(),
 			"tencentcloud_gs_android_instances":                                   gs.DataSourceTencentCloudGsAndroidInstances(),
 			"tencentcloud_keewidb_instances":                                      keewidb.DataSourceTencentCloudKeewidbInstances(),
 			"tencentcloud_config_compliance_packs":                                config.DataSourceTencentCloudConfigCompliancePacks(),

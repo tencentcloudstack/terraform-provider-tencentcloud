@@ -1262,7 +1262,7 @@ github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/cloudaudit/v20190319
 # github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/cls v1.3.112
 ## explicit; go 1.14
 github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/cls/v20201016
-# github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/common v1.3.115
+# github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/common v1.3.118
 ## explicit; go 1.11
 github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/common
 github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/common/errors
@@ -1297,6 +1297,9 @@ github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/dayu/v20180709
 # github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/dbbrain v1.3.26
 ## explicit; go 1.14
 github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/dbbrain/v20210527
+# github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/dbdc v1.3.118
+## explicit; go 1.14
+github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/dbdc/v20201029
 # github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/dc v1.0.633
 ## explicit; go 1.14
 github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/dc/v20180410

@@ -58,6 +58,7 @@ import (
 	dasb "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/dasb/v20191018"
 	dayu "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/dayu/v20180709"
 	dbbrain "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/dbbrain/v20210527"
+	dbdcv20201029 "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/dbdc/v20201029"
 	dc "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/dc/v20180410"
 	dcdb "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/dcdb/v20180411"
 	dlc "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/dlc/v20210125"
@@ -264,6 +265,7 @@ type TencentCloudClient struct {
 	keewidbv20220308Conn        *keewidbv20220308.Client
 	vdbv20230616Conn            *vdbv20230616.Client
 	bhv20230418Conn             *bhv20230418.Client
+	dbdcv20201029Conn           *dbdcv20201029.Client
 	vcubev20220410Conn          *vcubev20220410.Client
 	advisorv20200721Conn        *advisorv20200721.Client
 }
@@ -2291,4 +2293,16 @@ func (me *TencentCloudClient) UseKeewidbV20220308Client() *keewidbv20220308.Clie
 	me.keewidbv20220308Conn.WithHttpTransport(&LogRoundTripper{})
 
 	return me.keewidbv20220308Conn
+}
+
+// UseDbdcV20201029Client return DBDC client for service
+func (me *TencentCloudClient) UseDbdcV20201029Client() *dbdcv20201029.Client {
+	if me.dbdcv20201029Conn != nil {
+		return me.dbdcv20201029Conn
+	}
+	cpf := me.NewClientProfile(300)
+	me.dbdcv20201029Conn, _ = dbdcv20201029.NewClient(me.Credential, me.Region, cpf)
+	me.dbdcv20201029Conn.WithHttpTransport(&LogRoundTripper{})
+
+	return me.dbdcv20201029Conn
 }
