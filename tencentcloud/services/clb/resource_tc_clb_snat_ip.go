@@ -78,17 +78,30 @@ func resourceTencentCloudClbSnatIpRead(d *schema.ResourceData, meta interface{})
 		return err
 	}
 
-	d.SetId(clbId)
+	if instance == nil {
+		d.SetId("")
+		return nil
+	}
 
-	if ipLen := len(instance.SnatIps); ipLen > 0 {
-		snatIps := make([]interface{}, 0)
+	if instance.SnatIps != nil && len(instance.SnatIps) > 0 {
+		snatIps := make([]interface{}, 0, len(instance.SnatIps))
 		for i := range instance.SnatIps {
 			item := instance.SnatIps[i]
+			var subnetId, ip string
+			if item.SubnetId != nil {
+				subnetId = *item.SubnetId
+			}
+
+			if item.Ip != nil {
+				ip = *item.Ip
+			}
+
 			snatIps = append(snatIps, map[string]interface{}{
-				"subnet_id": *item.SubnetId,
-				"ip":        *item.Ip,
+				"subnet_id": subnetId,
+				"ip":        ip,
 			})
 		}
+
 		_ = d.Set("ips", snatIps)
 	}
 
@@ -135,11 +148,11 @@ func resourceTencentCloudClbSnatIpCreate(d *schema.ResourceData, meta interface{
 		return err
 	}
 
+	d.SetId(clbId)
+
 	if err := waitForTaskFinish(taskId, client.UseClbClient()); err != nil {
 		return err
 	}
-
-	d.SetId(clbId)
 
 	return resourceTencentCloudClbSnatIpRead(d, meta)
 }
@@ -261,32 +274,35 @@ func resourceTencentCloudClbSnatIpDelete(d *schema.ResourceData, meta interface{
 		return err
 	}
 
+	if instance == nil {
+		return nil
+	}
+
 	if len(instance.SnatIps) > 0 {
 		for i := range instance.SnatIps {
 			ip := instance.SnatIps[i].Ip
 			instanceSnatIps = append(instanceSnatIps, ip)
 		}
-	}
 
-	var taskId string
-	err = resource.Retry(tccommon.ReadRetryTimeout, func() *resource.RetryError {
-		reqId, err := service.DeleteLoadBalancerSnatIps(ctx, clbId, instanceSnatIps)
+		var taskId string
+		err = resource.Retry(tccommon.ReadRetryTimeout, func() *resource.RetryError {
+			reqId, err := service.DeleteLoadBalancerSnatIps(ctx, clbId, instanceSnatIps)
+			if err != nil {
+				return tccommon.RetryError(err, clb.FAILEDOPERATION)
+			}
+			taskId = reqId
+			return nil
+		})
+
 		if err != nil {
-			return tccommon.RetryError(err, clb.FAILEDOPERATION)
+			return err
 		}
-		taskId = reqId
-		return nil
-	})
 
-	if err != nil {
-		return err
+		if err := waitForTaskFinish(taskId, client.UseClbClient()); err != nil {
+			return err
+		}
+
 	}
-
-	if err := waitForTaskFinish(taskId, client.UseClbClient()); err != nil {
-		return err
-	}
-
-	d.SetId("")
 
 	return err
 }

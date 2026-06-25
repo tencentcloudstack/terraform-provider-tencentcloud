@@ -35,7 +35,7 @@ require (
 	github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/cam v1.3.21
 	github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/cat v1.0.825
 	github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/cbs v1.3.115
-	github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/cdb v1.1.27
+	github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/cdb v1.3.122
 	github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/cdn v1.3.61
 	github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/cdwch v1.1.7
 	github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/cfs v1.3.49
@@ -46,7 +46,7 @@ require (
 	github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/clb v1.3.105
 	github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/cloudaudit v1.0.1033
 	github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/cls v1.3.112
-	github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/common v1.3.121
+	github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/common v1.3.122
 	github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/config v1.3.80
 	github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/cvm v1.3.113
 	github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/cwp v1.3.30
@@ -123,6 +123,7 @@ require (
 	github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/controlcenter v1.1.51
 	github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/csip v1.0.860
 	github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/dasb v1.0.970
+	github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/dbdc v1.3.118
 	github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/ga2 v1.3.102
 	github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/gwlb v1.0.1127
 	github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/igtm v1.3.29
