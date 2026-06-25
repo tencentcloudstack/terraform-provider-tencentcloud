@@ -415,6 +415,82 @@ func (me *Ga2Service) DescribeGa2AccelerateAreaByRegion(ctx context.Context, gaI
 	return nil, nil
 }
 
+// DescribeGa2ForwardingPolicyById queries a forwarding policy by its (gaId, listenerId, policyId) tuple.
+// Returns (nil, nil) when the policy does not exist.
+//
+// Note: DescribeForwardingPolicy is keyed by (GlobalAcceleratorId, ListenerId) and lacks a per-policy
+// filter slot. We paginate through every policy under the listener and match `ForwardingPolicyId`
+// strictly client-side.
+func (me *Ga2Service) DescribeGa2ForwardingPolicyById(ctx context.Context, gaId, listenerId, policyId string) (*ga2v20250115.ForwardingPolicySet, error) {
+	logId := tccommon.GetLogId(ctx)
+
+	request := ga2v20250115.NewDescribeForwardingPolicyRequest()
+	request.GlobalAcceleratorId = helper.String(gaId)
+	request.ListenerId = helper.String(listenerId)
+
+	var (
+		offset uint64 = 0
+		// limit equals the API-documented maximum to minimize round-trips.
+		limit uint64 = 100
+	)
+
+	for {
+		request.Offset = &offset
+		request.Limit = &limit
+
+		var response *ga2v20250115.DescribeForwardingPolicyResponse
+		err := resource.Retry(tccommon.ReadRetryTimeout, func() *resource.RetryError {
+			result, e := me.client.UseGa2V20250115Client().DescribeForwardingPolicyWithContext(ctx, request)
+			if e != nil {
+				return tccommon.RetryError(e)
+			}
+
+			if result == nil || result.Response == nil {
+				return resource.NonRetryableError(fmt.Errorf("Describe ga2 forwarding policy failed, Response is nil."))
+			}
+
+			response = result
+			return nil
+		})
+
+		if err != nil {
+			log.Printf("[CRITAL]%s describe ga2 forwarding policy failed, reason:%+v", logId, err)
+			return nil, err
+		}
+
+		set := response.Response.ForwardingPolicySet
+		for i := range set {
+			item := set[i]
+			if item == nil || item.ForwardingPolicyId == nil {
+				continue
+			}
+
+			// Defensive: skip items whose parent IDs do not match the request, then strict-equal
+			// on the policy ID. The parent IDs *should* match since they were sent on the request,
+			// but we guard against API quirks all the same.
+			if item.GlobalAcceleratorId != nil && *item.GlobalAcceleratorId != gaId {
+				continue
+			}
+			if item.ListenerId != nil && *item.ListenerId != listenerId {
+				continue
+			}
+
+			if *item.ForwardingPolicyId == policyId {
+				return item, nil
+			}
+		}
+
+		// Stop when the current page is the last page.
+		if uint64(len(set)) < limit {
+			break
+		}
+
+		offset += limit
+	}
+
+	return nil, nil
+}
+
 // WaitForGa2TaskFinish polls DescribeTaskResult until the task reaches "SUCCESS" or the given timeout elapses.
 // The timeout is supplied by the caller because different async operations (create/modify/delete on
 // different resource types) may require very different waiting budgets.
