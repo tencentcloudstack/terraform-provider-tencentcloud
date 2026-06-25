@@ -2665,6 +2665,7 @@ Database Dedicated Cluster(DBDC)
 Data Source
 tencentcloud_dbdc_db_custom_clusters
 tencentcloud_dbdc_db_custom_nodes
+tencentcloud_dbdc_db_custom_cluster_nodes
 
 VCube
 Resource
