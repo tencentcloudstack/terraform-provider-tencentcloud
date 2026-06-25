@@ -68,9 +68,14 @@ func (me *ClbService) DescribeLoadBalancerById(ctx context.Context, clbId string
 	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n",
 		logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
 
+	if response == nil || response.Response == nil || response.Response.LoadBalancerSet == nil {
+		return
+	}
+
 	if len(response.Response.LoadBalancerSet) < 1 {
 		return
 	}
+
 	clbInstance = response.Response.LoadBalancerSet[0]
 	return
 }
@@ -2099,6 +2104,11 @@ func (me *ClbService) DeleteLoadBalancerSnatIps(ctx context.Context, id string, 
 
 	if err != nil {
 		errRet = err
+		return
+	}
+
+	if response == nil || response.Response == nil || response.Response.RequestId == nil {
+		errRet = fmt.Errorf("Delete loadBalancer SnatIps failed, Response is nil")
 		return
 	}
 
