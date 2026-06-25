@@ -106,18 +106,19 @@ func ResourceTencentCloudTeoL7AccRuleV2Create(d *schema.ResourceData, meta inter
 		result, e := meta.(tccommon.ProviderMeta).GetAPIV3Conn().UseTeoV20220901Client().CreateL7AccRules(request)
 		if e != nil {
 			return tccommon.RetryError(e)
-		} else {
-			log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), result.ToJsonString())
 		}
-		if result.Response != nil && len(result.Response.RuleIds) > 0 && result.Response.RuleIds[0] != nil {
-			ruleId = *result.Response.RuleIds[0]
+		log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), result.ToJsonString())
+		if result.Response == nil || len(result.Response.RuleIds) == 0 || result.Response.RuleIds[0] == nil || *result.Response.RuleIds[0] == "" {
+			return resource.NonRetryableError(fmt.Errorf("api[%s] returned empty rule id, response: %s", request.GetAction(), result.ToJsonString()))
 		}
+		ruleId = *result.Response.RuleIds[0]
 		return nil
 	})
 	if err != nil {
 		return err
 	}
 
+	log.Printf("[DEBUG]%s teo_l7_acc_rule_v2 created, logId: %s, id: %s\n", logId, logId, zoneId+tccommon.FILED_SP+ruleId)
 	d.SetId(zoneId + tccommon.FILED_SP + ruleId)
 
 	return ResourceTencentCloudTeoL7AccRuleV2Read(d, meta)
@@ -149,16 +150,25 @@ func ResourceTencentCloudTeoL7AccRuleV2Read(d *schema.ResourceData, meta interfa
 	}
 
 	if respData == nil || len(respData.Rules) == 0 {
+		log.Printf("[WARN]%s resource `teo_l7_acc_rule_v2` [%s] not found, please check if it has been deleted.\n", logId, d.Id())
 		d.SetId("")
-		log.Printf("[WARN]%s resource `teo_l7_acc_rule` [%s] not found, please check if it has been deleted.\n", logId, d.Id())
 		return nil
 	}
-	if len(respData.Rules) > 0 {
-		rule := respData.Rules[0]
+
+	rule := respData.Rules[0]
+	if rule.Status != nil {
 		_ = d.Set("status", rule.Status)
+	}
+	if rule.RuleName != nil {
 		_ = d.Set("rule_name", rule.RuleName)
+	}
+	if rule.Description != nil {
 		_ = d.Set("description", rule.Description)
+	}
+	if rule.RulePriority != nil {
 		_ = d.Set("rule_priority", rule.RulePriority)
+	}
+	if rule.Branches != nil {
 		_ = d.Set("branches", resourceTencentCloudTeoL7AccRuleSetBranchs(rule.Branches))
 	}
 
