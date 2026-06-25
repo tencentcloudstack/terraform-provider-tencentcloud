@@ -63,6 +63,7 @@ import (
 	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/services/dayu"
 	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/services/dayuv2"
 	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/services/dbbrain"
+	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/services/dbdc"
 	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/services/dc"
 	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/services/dcdb"
 	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/services/dcg"
@@ -1388,6 +1389,7 @@ func Provider() *schema.Provider {
 			"tencentcloud_igtm_strategy_list":                                     igtm.DataSourceTencentCloudIgtmStrategyList(),
 			"tencentcloud_igtm_instance_package_list":                             igtm.DataSourceTencentCloudIgtmInstancePackageList(),
 			"tencentcloud_igtm_detect_task_package_list":                          igtm.DataSourceTencentCloudIgtmDetectTaskPackageList(),
+			"tencentcloud_dbdc_db_custom_clusters":                                dbdc.DataSourceTencentCloudDbdcDbCustomClusters(),
 			"tencentcloud_gs_android_instances":                                   gs.DataSourceTencentCloudGsAndroidInstances(),
 			"tencentcloud_keewidb_instances":                                      keewidb.DataSourceTencentCloudKeewidbInstances(),
 			"tencentcloud_config_compliance_packs":                                config.DataSourceTencentCloudConfigCompliancePacks(),
@@ -1731,7 +1733,11 @@ func Provider() *schema.Provider {
 			"tencentcloud_dayu_l7_rule":                                                             dayu.ResourceTencentCloudDayuL7Rule(),
 			"tencentcloud_dayu_l7_rule_v2":                                                          dayuv2.ResourceTencentCloudDayuL7RuleV2(),
 			"tencentcloud_dayu_eip":                                                                 dayuv2.ResourceTencentCloudDayuEip(),
+			"tencentcloud_ga2_global_accelerator":                                                   ga2.ResourceTencentCloudGa2GlobalAccelerator(),
+			"tencentcloud_ga2_accelerate_area":                                                      ga2.ResourceTencentCloudGa2AccelerateArea(),
+			"tencentcloud_ga2_listener":                                                             ga2.ResourceTencentCloudGa2Listener(),
 			"tencentcloud_ga2_endpoint_group":                                                       ga2.ResourceTencentCloudGa2EndpointGroup(),
+			"tencentcloud_ga2_forwarding_rule":                                                      ga2.ResourceTencentCloudGa2ForwardingRule(),
 			"tencentcloud_gaap_proxy":                                                               gaap.ResourceTencentCloudGaapProxy(),
 			"tencentcloud_gaap_realserver":                                                          gaap.ResourceTencentCloudGaapRealserver(),
 			"tencentcloud_gaap_layer4_listener":                                                     gaap.ResourceTencentCloudGaapLayer4Listener(),
@@ -2148,6 +2154,7 @@ func Provider() *schema.Provider {
 			"tencentcloud_teo_shared_cname":                                                         teo.ResourceTencentCloudTeoSharedCname(),
 			"tencentcloud_teo_domain_shared_cname_attachment":                                       teo.ResourceTencentCloudTeoDomainSharedCnameAttachment(),
 			"tencentcloud_teo_edge_kv":                                                              teo.ResourceTencentCloudTeoEdgeKV(),
+			"tencentcloud_teo_edge_kv_namespace":                                                    teo.ResourceTencentCloudTeoEdgeKVNamespace(),
 			"tencentcloud_tcm_mesh":                                                                 tcm.ResourceTencentCloudTcmMesh(),
 			"tencentcloud_tcm_cluster_attachment":                                                   tcm.ResourceTencentCloudTcmClusterAttachment(),
 			"tencentcloud_tcm_prometheus_attachment":                                                tcm.ResourceTencentCloudTcmPrometheusAttachment(),

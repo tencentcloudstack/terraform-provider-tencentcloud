@@ -26,9 +26,9 @@ func ResourceTencentCloudGa2EndpointGroup() *schema.Resource {
 			State: schema.ImportStatePassthrough,
 		},
 		Timeouts: &schema.ResourceTimeout{
-			Create: schema.DefaultTimeout(20 * time.Minute),
-			Update: schema.DefaultTimeout(20 * time.Minute),
-			Delete: schema.DefaultTimeout(20 * time.Minute),
+			Create: schema.DefaultTimeout(5 * time.Minute),
+			Update: schema.DefaultTimeout(5 * time.Minute),
+			Delete: schema.DefaultTimeout(5 * time.Minute),
 		},
 		Schema: map[string]*schema.Schema{
 			"global_accelerator_id": {
@@ -72,17 +72,17 @@ func ResourceTencentCloudGa2EndpointGroup() *schema.Resource {
 							Description: "Region of the endpoint group.",
 						},
 						"endpoint_configurations": {
-							Type:        schema.TypeList,
+							Type:        schema.TypeSet,
 							Optional:    true,
 							Computed:    true,
-							Description: "Endpoint configurations under this group.",
+							Description: "Endpoint configurations under this group. This is an unordered set; element order in HCL has no semantic meaning.",
 							Elem: &schema.Resource{
 								Schema: map[string]*schema.Schema{
 									"endpoint_type": {
 										Type:        schema.TypeString,
 										Optional:    true,
 										Computed:    true,
-										Description: "Endpoint type. Valid values: `Domain`, `PublicIp`.",
+										Description: "Endpoint type. Valid values: `CustomDomain`, `CustomPublicIp`.",
 									},
 									"endpoint_service": {
 										Type:        schema.TypeString,
@@ -285,7 +285,7 @@ func resourceTencentCloudGa2EndpointGroupCreate(d *schema.ResourceData, meta int
 	reqErr := resource.Retry(tccommon.WriteRetryTimeout, func() *resource.RetryError {
 		result, e := meta.(tccommon.ProviderMeta).GetAPIV3Conn().UseGa2V20250115Client().CreateEndpointGroupWithContext(ctx, request)
 		if e != nil {
-			return tccommon.RetryError(e)
+			return tccommon.RetryError(e, "UnsupportedOperation.InstanceNotRunning", "UnsupportedOperation.InstanceStateNotAllowedOperate")
 		} else {
 			log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), result.ToJsonString())
 		}
@@ -401,7 +401,7 @@ func resourceTencentCloudGa2EndpointGroupUpdate(d *schema.ResourceData, meta int
 	reqErr := resource.Retry(tccommon.WriteRetryTimeout, func() *resource.RetryError {
 		result, e := meta.(tccommon.ProviderMeta).GetAPIV3Conn().UseGa2V20250115Client().ModifyEndpointGroupWithContext(ctx, request)
 		if e != nil {
-			return tccommon.RetryError(e)
+			return tccommon.RetryError(e, "UnsupportedOperation.InstanceNotRunning", "UnsupportedOperation.InstanceStateNotAllowedOperate")
 		} else {
 			log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), result.ToJsonString())
 		}
@@ -450,7 +450,7 @@ func resourceTencentCloudGa2EndpointGroupDelete(d *schema.ResourceData, meta int
 	reqErr := resource.Retry(tccommon.WriteRetryTimeout, func() *resource.RetryError {
 		result, e := meta.(tccommon.ProviderMeta).GetAPIV3Conn().UseGa2V20250115Client().DeleteEndpointGroupsWithContext(ctx, request)
 		if e != nil {
-			return tccommon.RetryError(e)
+			return tccommon.RetryError(e, "UnsupportedOperation.InstanceNotRunning", "UnsupportedOperation.InstanceStateNotAllowedOperate")
 		} else {
 			log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), result.ToJsonString())
 		}
@@ -505,8 +505,8 @@ func buildEndpointGroupConfiguration(rawList []interface{}) *ga2v20250115.Endpoi
 	if v, ok := m["endpoint_group_region"].(string); ok && v != "" {
 		cfg.EndpointGroupRegion = helper.String(v)
 	}
-	if v, ok := m["endpoint_configurations"]; ok {
-		cfg.EndpointConfigurations = buildEndpointConfigurations(v.([]interface{}))
+	if v, ok := m["endpoint_configurations"]; ok && v != nil {
+		cfg.EndpointConfigurations = buildEndpointConfigurations(v.(*schema.Set).List())
 	}
 	if v, ok := m["check_type"].(string); ok && v != "" {
 		cfg.CheckType = helper.String(v)
@@ -616,6 +616,9 @@ func buildPortOverrides(rawList []interface{}) []*ga2v20250115.PortOverride {
 }
 
 // applyConfigurationToModifyRequest copies the nested configuration block onto the flat ModifyEndpointGroup request.
+//
+// When enable_health_check=false, all health-check-related fields are intentionally
+// omitted from the request, because the API rejects them in that mode.
 func applyConfigurationToModifyRequest(request *ga2v20250115.ModifyEndpointGroupRequest, rawList []interface{}) {
 	if len(rawList) == 0 || rawList[0] == nil {
 		return
@@ -628,62 +631,72 @@ func applyConfigurationToModifyRequest(request *ga2v20250115.ModifyEndpointGroup
 	if v, ok := m["description"].(string); ok && v != "" {
 		request.Description = helper.String(v)
 	}
-	if v, ok := m["endpoint_configurations"]; ok {
-		request.EndpointConfigurations = buildEndpointConfigurations(v.([]interface{}))
+	if v, ok := m["endpoint_configurations"]; ok && v != nil {
+		request.EndpointConfigurations = buildEndpointConfigurations(v.(*schema.Set).List())
 	}
+
+	enableHealthCheck := false
 	if v, ok := m["enable_health_check"].(bool); ok {
+		enableHealthCheck = v
 		request.EnableHealthCheck = helper.Bool(v)
 	}
-	if v, ok := m["connect_timeout"].(int); ok && v > 0 {
-		request.ConnectTimeout = helper.IntUint64(v)
-	}
-	if v, ok := m["health_check_interval"].(int); ok && v > 0 {
-		request.HealthCheckInterval = helper.IntUint64(v)
-	}
-	if v, ok := m["unhealthy_threshold"].(int); ok && v > 0 {
-		request.UnhealthyThreshold = helper.IntUint64(v)
-	}
-	if v, ok := m["healthy_threshold"].(int); ok && v > 0 {
-		request.HealthyThreshold = helper.IntUint64(v)
-	}
-	if v, ok := m["check_type"].(string); ok && v != "" {
-		request.CheckType = helper.String(v)
-	}
-	if v, ok := m["check_port"].(string); ok && v != "" {
-		// ModifyEndpointGroup uses uint64 CheckPort; parse the string from schema.
-		if port, err := strconv.ParseUint(v, 10, 64); err == nil {
-			request.CheckPort = &port
-		}
-	}
-	if v, ok := m["context_type"].(string); ok && v != "" {
-		request.ContextType = helper.String(v)
-	}
-	if v, ok := m["check_send_context"].(string); ok && v != "" {
-		request.CheckSendContext = helper.String(v)
-	}
-	if v, ok := m["check_recv_context"].(string); ok && v != "" {
-		request.CheckRecvContext = helper.String(v)
-	}
-	if v, ok := m["check_domain"].(string); ok && v != "" {
-		request.CheckDomain = helper.String(v)
-	}
-	if v, ok := m["check_path"].(string); ok && v != "" {
-		request.CheckPath = helper.String(v)
-	}
-	if v, ok := m["check_method"].(string); ok && v != "" {
-		request.CheckMethod = helper.String(v)
-	}
-	if v, ok := m["status_mask"]; ok {
-		request.StatusMask = helper.InterfacesStringsPoint(v.([]interface{}))
-	}
+
 	if v, ok := m["forward_protocol"].(string); ok && v != "" {
 		request.ForwardProtocol = helper.String(v)
 	}
 	if v, ok := m["port_overrides"]; ok {
 		request.PortOverrides = buildPortOverrides(v.([]interface{}))
 	}
-	if v, ok := m["cipher_policy_id"].(string); ok && v != "" {
-		request.CipherPolicyId = helper.String(v)
+
+	// Health-check fields are only forwarded when health check is enabled.
+	if enableHealthCheck {
+		if v, ok := m["connect_timeout"].(int); ok && v > 0 {
+			request.ConnectTimeout = helper.IntUint64(v)
+		}
+		if v, ok := m["health_check_interval"].(int); ok && v > 0 {
+			request.HealthCheckInterval = helper.IntUint64(v)
+		}
+		if v, ok := m["unhealthy_threshold"].(int); ok && v > 0 {
+			request.UnhealthyThreshold = helper.IntUint64(v)
+		}
+		if v, ok := m["healthy_threshold"].(int); ok && v > 0 {
+			request.HealthyThreshold = helper.IntUint64(v)
+		}
+		if v, ok := m["check_type"].(string); ok && v != "" {
+			request.CheckType = helper.String(v)
+		}
+		if v, ok := m["check_port"].(string); ok && v != "" {
+			// ModifyEndpointGroup uses uint64 CheckPort; parse the string from schema.
+			if port, err := strconv.ParseUint(v, 10, 64); err == nil {
+				if port != 0 {
+					request.CheckPort = &port
+				}
+			}
+		}
+		if v, ok := m["context_type"].(string); ok && v != "" {
+			request.ContextType = helper.String(v)
+		}
+		if v, ok := m["check_send_context"].(string); ok && v != "" {
+			request.CheckSendContext = helper.String(v)
+		}
+		if v, ok := m["check_recv_context"].(string); ok && v != "" {
+			request.CheckRecvContext = helper.String(v)
+		}
+		if v, ok := m["check_domain"].(string); ok && v != "" {
+			request.CheckDomain = helper.String(v)
+		}
+		if v, ok := m["check_path"].(string); ok && v != "" {
+			request.CheckPath = helper.String(v)
+		}
+		if v, ok := m["check_method"].(string); ok && v != "" {
+			request.CheckMethod = helper.String(v)
+		}
+		if v, ok := m["status_mask"]; ok {
+			request.StatusMask = helper.InterfacesStringsPoint(v.([]interface{}))
+		}
+		if v, ok := m["cipher_policy_id"].(string); ok && v != "" {
+			request.CipherPolicyId = helper.String(v)
+		}
 	}
 }
 

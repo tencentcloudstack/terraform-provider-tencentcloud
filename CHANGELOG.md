@@ -1,3 +1,19 @@
+## 1.83.5(June 23, 2026)
+
+FEATURES:
+
+* **New Resource:** `tencentcloud_ga2_accelerate_area` ([#4153](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/4153))
+* **New Resource:** `tencentcloud_ga2_endpoint_group` ([#4153](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/4153))
+* **New Resource:** `tencentcloud_ga2_forwarding_rule` ([#4153](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/4153))
+* **New Resource:** `tencentcloud_ga2_global_accelerator` ([#4153](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/4153))
+* **New Resource:** `tencentcloud_ga2_listener` ([#4153](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/4153))
+* **New Resource:** `tencentcloud_teo_edge_kv_namespace` ([#4235](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/4235))
+
+ENHANCEMENTS:
+
+* provider: Update the field attributes for `assume_role`, `assume_role_with_saml`, `assume_role_with_web_identity`, and `mfa_certification` in the framework. ([#4237](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/4237))
+* resource/tencentcloud_cls_index: support `child_node` ([#4225](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/4225))
+
 ## 1.83.4(June 22, 2026)
 
 FEATURES:

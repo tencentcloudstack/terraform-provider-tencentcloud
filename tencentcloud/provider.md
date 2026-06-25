@@ -622,6 +622,14 @@ tencentcloud_elasticsearch_diagnose
 tencentcloud_elasticsearch_diagnose_instance
 tencentcloud_elasticsearch_update_plugins_operation
 
+Global Accelerator(GA2)
+Resource
+tencentcloud_ga2_global_accelerator
+tencentcloud_ga2_accelerate_area
+tencentcloud_ga2_listener
+tencentcloud_ga2_endpoint_group
+tencentcloud_ga2_forwarding_rule
+
 Global Application Acceleration(GAAP)
 Data Source
 tencentcloud_gaap_certificates
@@ -1631,6 +1639,7 @@ tencentcloud_teo_purge_task
 tencentcloud_teo_shared_cname
 tencentcloud_teo_domain_shared_cname_attachment
 tencentcloud_teo_edge_kv
+tencentcloud_teo_edge_kv_namespace
 
 TencentCloud ServiceMesh(TCM)
 Data Source
@@ -2651,6 +2660,10 @@ tencentcloud_igtm_monitor
 tencentcloud_igtm_strategy
 tencentcloud_igtm_package_instance
 tencentcloud_igtm_package_task
+
+Database Dedicated Cluster(DBDC)
+Data Source
+tencentcloud_dbdc_db_custom_clusters
 
 VCube
 Resource
