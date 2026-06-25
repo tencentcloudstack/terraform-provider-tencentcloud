@@ -46,7 +46,7 @@ func patchAsyncRequestSuccess(patches *gomonkey.Patches, cdbClient *cdb_sdk.Clie
 	})
 }
 
-func TestCdbStartCpuExpandAttachment_Create_Auto_Success(t *testing.T) {
+func TestCdbStartCpuExpand_Create_Auto_Success(t *testing.T) {
 	patches := gomonkey.NewPatches()
 	defer patches.Reset()
 
@@ -80,7 +80,7 @@ func TestCdbStartCpuExpandAttachment_Create_Auto_Success(t *testing.T) {
 	patchAsyncRequestSuccess(patches, cdbClient)
 
 	meta := newMockMetaForCdbStartCpuExpand()
-	res := cdb.ResourceTencentCloudCdbStartCpuExpandAttachment()
+	res := cdb.ResourceTencentCloudCdbStartCpuExpand()
 	d := schema.TestResourceDataRaw(t, res.Schema, map[string]interface{}{
 		"instance_id": "cdb-test1234",
 		"type":        "auto",
@@ -100,7 +100,7 @@ func TestCdbStartCpuExpandAttachment_Create_Auto_Success(t *testing.T) {
 	assert.Equal(t, "auto", d.Get("type"))
 }
 
-func TestCdbStartCpuExpandAttachment_Create_Manual_Success(t *testing.T) {
+func TestCdbStartCpuExpand_Create_Manual_Success(t *testing.T) {
 	patches := gomonkey.NewPatches()
 	defer patches.Reset()
 
@@ -129,7 +129,7 @@ func TestCdbStartCpuExpandAttachment_Create_Manual_Success(t *testing.T) {
 	patchAsyncRequestSuccess(patches, cdbClient)
 
 	meta := newMockMetaForCdbStartCpuExpand()
-	res := cdb.ResourceTencentCloudCdbStartCpuExpandAttachment()
+	res := cdb.ResourceTencentCloudCdbStartCpuExpand()
 	d := schema.TestResourceDataRaw(t, res.Schema, map[string]interface{}{
 		"instance_id": "cdb-test5678",
 		"type":        "manual",
@@ -143,7 +143,7 @@ func TestCdbStartCpuExpandAttachment_Create_Manual_Success(t *testing.T) {
 	assert.Equal(t, 4, d.Get("expand_cpu"))
 }
 
-func TestCdbStartCpuExpandAttachment_Read_Success(t *testing.T) {
+func TestCdbStartCpuExpand_Read_Success(t *testing.T) {
 	patches := gomonkey.NewPatches()
 	defer patches.Reset()
 
@@ -166,7 +166,7 @@ func TestCdbStartCpuExpandAttachment_Read_Success(t *testing.T) {
 	})
 
 	meta := newMockMetaForCdbStartCpuExpand()
-	res := cdb.ResourceTencentCloudCdbStartCpuExpandAttachment()
+	res := cdb.ResourceTencentCloudCdbStartCpuExpand()
 	d := schema.TestResourceDataRaw(t, res.Schema, map[string]interface{}{
 		"instance_id": "cdb-test1234",
 		"type":        "auto",
@@ -188,7 +188,7 @@ func TestCdbStartCpuExpandAttachment_Read_Success(t *testing.T) {
 	assert.Equal(t, 600, autoStrategyMap["shrink_second_period"])
 }
 
-func TestCdbStartCpuExpandAttachment_Read_NotFound(t *testing.T) {
+func TestCdbStartCpuExpand_Read_NotFound(t *testing.T) {
 	patches := gomonkey.NewPatches()
 	defer patches.Reset()
 
@@ -205,7 +205,7 @@ func TestCdbStartCpuExpandAttachment_Read_NotFound(t *testing.T) {
 	})
 
 	meta := newMockMetaForCdbStartCpuExpand()
-	res := cdb.ResourceTencentCloudCdbStartCpuExpandAttachment()
+	res := cdb.ResourceTencentCloudCdbStartCpuExpand()
 	d := schema.TestResourceDataRaw(t, res.Schema, map[string]interface{}{
 		"instance_id": "cdb-test1234",
 		"type":        "auto",
@@ -217,7 +217,7 @@ func TestCdbStartCpuExpandAttachment_Read_NotFound(t *testing.T) {
 	assert.Equal(t, "", d.Id())
 }
 
-func TestCdbStartCpuExpandAttachment_Delete_Success(t *testing.T) {
+func TestCdbStartCpuExpand_Delete_Success(t *testing.T) {
 	patches := gomonkey.NewPatches()
 	defer patches.Reset()
 
@@ -236,7 +236,7 @@ func TestCdbStartCpuExpandAttachment_Delete_Success(t *testing.T) {
 	patchAsyncRequestSuccess(patches, cdbClient)
 
 	meta := newMockMetaForCdbStartCpuExpand()
-	res := cdb.ResourceTencentCloudCdbStartCpuExpandAttachment()
+	res := cdb.ResourceTencentCloudCdbStartCpuExpand()
 	d := schema.TestResourceDataRaw(t, res.Schema, map[string]interface{}{
 		"instance_id": "cdb-test1234",
 		"type":        "auto",
@@ -247,8 +247,8 @@ func TestCdbStartCpuExpandAttachment_Delete_Success(t *testing.T) {
 	assert.NoError(t, err)
 }
 
-func TestCdbStartCpuExpandAttachment_Update_ImmutableChange(t *testing.T) {
-	res := cdb.ResourceTencentCloudCdbStartCpuExpandAttachment()
+func TestCdbStartCpuExpand_Update_ImmutableChange(t *testing.T) {
+	res := cdb.ResourceTencentCloudCdbStartCpuExpand()
 
 	// Build a prior state where type=auto, and a new config where type=manual,
 	// so that d.HasChange("type") returns true inside Update and triggers the

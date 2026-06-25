@@ -14,12 +14,11 @@ import (
 	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/internal/helper"
 )
 
-func ResourceTencentCloudCdbStartCpuExpandAttachment() *schema.Resource {
+func ResourceTencentCloudCdbStartCpuExpand() *schema.Resource {
 	return &schema.Resource{
-		Create: resourceTencentCloudCdbStartCpuExpandAttachmentCreate,
-		Read:   resourceTencentCloudCdbStartCpuExpandAttachmentRead,
-		Update: resourceTencentCloudCdbStartCpuExpandAttachmentUpdate,
-		Delete: resourceTencentCloudCdbStartCpuExpandAttachmentDelete,
+		Create: resourceTencentCloudCdbStartCpuExpandCreate,
+		Read:   resourceTencentCloudCdbStartCpuExpandRead,
+		Delete: resourceTencentCloudCdbStartCpuExpandDelete,
 		Importer: &schema.ResourceImporter{
 			State: schema.ImportStatePassthrough,
 		},
@@ -178,7 +177,7 @@ func ResourceTencentCloudCdbStartCpuExpandAttachment() *schema.Resource {
 	}
 }
 
-func resourceTencentCloudCdbStartCpuExpandAttachmentCreate(d *schema.ResourceData, meta interface{}) error {
+func resourceTencentCloudCdbStartCpuExpandCreate(d *schema.ResourceData, meta interface{}) error {
 	defer tccommon.LogElapsed("resource.tencentcloud_cdb_start_cpu_expand.create")()
 	defer tccommon.InconsistentCheck(d, meta)()
 
@@ -332,10 +331,10 @@ func resourceTencentCloudCdbStartCpuExpandAttachmentCreate(d *schema.ResourceDat
 		return err
 	}
 
-	return resourceTencentCloudCdbStartCpuExpandAttachmentRead(d, meta)
+	return resourceTencentCloudCdbStartCpuExpandRead(d, meta)
 }
 
-func resourceTencentCloudCdbStartCpuExpandAttachmentRead(d *schema.ResourceData, meta interface{}) error {
+func resourceTencentCloudCdbStartCpuExpandRead(d *schema.ResourceData, meta interface{}) error {
 	defer tccommon.LogElapsed("resource.tencentcloud_cdb_start_cpu_expand.read")()
 	defer tccommon.InconsistentCheck(d, meta)()
 
@@ -346,7 +345,7 @@ func resourceTencentCloudCdbStartCpuExpandAttachmentRead(d *schema.ResourceData,
 		instanceId = d.Id()
 	)
 
-	respData, err := service.DescribeCdbStartCpuExpandAttachmentById(ctx, instanceId)
+	respData, err := service.DescribeCdbStartCpuExpandById(ctx, instanceId)
 	if err != nil {
 		return err
 	}
@@ -448,21 +447,7 @@ func resourceTencentCloudCdbStartCpuExpandAttachmentRead(d *schema.ResourceData,
 	return nil
 }
 
-func resourceTencentCloudCdbStartCpuExpandAttachmentUpdate(d *schema.ResourceData, meta interface{}) error {
-	defer tccommon.LogElapsed("resource.tencentcloud_cdb_start_cpu_expand.update")()
-	defer tccommon.InconsistentCheck(d, meta)()
-
-	immutableArgs := []string{"type", "expand_cpu", "auto_strategy", "time_interval_strategy", "period_strategy"}
-	for _, arg := range immutableArgs {
-		if d.HasChange(arg) {
-			return fmt.Errorf("cdb_start_cpu_expand argument `%s` has changed, this is an immutable argument which can only be changed by recreating the resource", arg)
-		}
-	}
-
-	return resourceTencentCloudCdbStartCpuExpandAttachmentRead(d, meta)
-}
-
-func resourceTencentCloudCdbStartCpuExpandAttachmentDelete(d *schema.ResourceData, meta interface{}) error {
+func resourceTencentCloudCdbStartCpuExpandDelete(d *schema.ResourceData, meta interface{}) error {
 	defer tccommon.LogElapsed("resource.tencentcloud_cdb_start_cpu_expand.delete")()
 	defer tccommon.InconsistentCheck(d, meta)()
 
@@ -473,7 +458,7 @@ func resourceTencentCloudCdbStartCpuExpandAttachmentDelete(d *schema.ResourceDat
 		instanceId = d.Id()
 	)
 
-	asyncRequestId, err := service.DeleteCdbStartCpuExpandAttachmentById(ctx, instanceId)
+	asyncRequestId, err := service.DeleteCdbStartCpuExpandById(ctx, instanceId)
 	if err != nil {
 		return err
 	}

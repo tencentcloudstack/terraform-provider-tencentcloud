@@ -3556,7 +3556,7 @@ func (me *MysqlService) DescribeMysqlProxyAddressConfig(ctx context.Context, ins
 	return
 }
 
-func (me *MysqlService) DescribeCdbStartCpuExpandAttachmentById(ctx context.Context, instanceId string) (ret *cdb.DescribeCPUExpandStrategyInfoResponseParams, errRet error) {
+func (me *MysqlService) DescribeCdbStartCpuExpandById(ctx context.Context, instanceId string) (ret *cdb.DescribeCPUExpandStrategyInfoResponseParams, errRet error) {
 	logId := tccommon.GetLogId(ctx)
 	request := cdb.NewDescribeCPUExpandStrategyInfoRequest()
 	request.InstanceId = &instanceId
@@ -3588,7 +3588,7 @@ func (me *MysqlService) DescribeCdbStartCpuExpandAttachmentById(ctx context.Cont
 	return
 }
 
-func (me *MysqlService) DeleteCdbStartCpuExpandAttachmentById(ctx context.Context, instanceId string) (asyncRequestId string, errRet error) {
+func (me *MysqlService) DeleteCdbStartCpuExpandById(ctx context.Context, instanceId string) (asyncRequestId string, errRet error) {
 	logId := tccommon.GetLogId(ctx)
 	request := cdb.NewStopCpuExpandRequest()
 	request.InstanceId = &instanceId
