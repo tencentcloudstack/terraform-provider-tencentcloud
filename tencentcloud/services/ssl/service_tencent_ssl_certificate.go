@@ -6,7 +6,6 @@ import (
 	"log"
 	"math"
 
-	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
 	ssl "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/ssl/v20191205"
 
 	tccommon "github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/common"
@@ -119,23 +118,12 @@ func (me *SSLService) CertificateOrderSubmit(ctx context.Context, request *ssl.C
 func (me *SSLService) DescribeCertificateDetail(ctx context.Context, request *ssl.DescribeCertificateDetailRequest) (response *ssl.DescribeCertificateDetailResponse, err error) {
 	logId := tccommon.GetLogId(ctx)
 	client := me.client.UseSSLCertificateClient()
+	ratelimit.Check(request.GetAction())
 
-	err = resource.Retry(tccommon.ReadRetryTimeout, func() *resource.RetryError {
-		ratelimit.Check(request.GetAction())
-		result, e := client.DescribeCertificateDetail(request)
-		if e != nil {
-			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n",
-				logId, request.GetAction(), request.ToJsonString(), e.Error())
-			if sdkErr := helper.UnwarpSDKError(e); sdkErr != nil && tccommon.IsContains("LimitExceeded", sdkErr.Code) {
-				return resource.RetryableError(e)
-			}
-			return tccommon.RetryError(e)
-		}
-		response = result
-		return nil
-	})
+	response, err = client.DescribeCertificateDetail(request)
 	if err != nil {
-		log.Printf("[CRITAL]%s describe certificate detail failed, reason: %v", logId, err)
+		log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n",
+			logId, request.GetAction(), request.ToJsonString(), err.Error())
 		return
 	}
 	return
