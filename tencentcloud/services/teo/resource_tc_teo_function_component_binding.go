@@ -166,49 +166,16 @@ func resourceTencentCloudTeoFunctionComponentBindingRead(d *schema.ResourceData,
 	_ = d.Set("zone_id", zoneId)
 	_ = d.Set("function_id", functionId)
 
-	var allBindings []*teov20220901.FunctionComponentBinding
-	var offset int64
+	service := TeoService{client: meta.(tccommon.ProviderMeta).GetAPIV3Conn()}
+	allBindings, err := service.DescribeTeoFunctionComponentBindingsById(ctx, zoneId, functionId)
+	if err != nil {
+		return err
+	}
 
-	for {
-		request := teov20220901.NewDescribeFunctionComponentBindingsRequest()
-		request.ZoneId = helper.String(zoneId)
-		request.FunctionId = helper.String(functionId)
-		request.Offset = helper.Int64(offset)
-		request.Limit = helper.Int64(1000)
-
-		var response *teov20220901.DescribeFunctionComponentBindingsResponse
-		err := resource.Retry(tccommon.ReadRetryTimeout, func() *resource.RetryError {
-			result, e := meta.(tccommon.ProviderMeta).GetAPIV3Conn().UseTeoV20220901Client().DescribeFunctionComponentBindingsWithContext(ctx, request)
-			if e != nil {
-				return tccommon.RetryError(e)
-			}
-			log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), result.ToJsonString())
-			response = result
-			return nil
-		})
-		if err != nil {
-			return err
-		}
-
-		if response == nil || response.Response == nil {
-			log.Printf("[WARN]%s resource `teo_function_component_binding` [%s] read response is nil\n", logId, d.Id())
-			d.SetId("")
-			return nil
-		}
-
-		if response.Response.FunctionComponentBindings != nil {
-			allBindings = append(allBindings, response.Response.FunctionComponentBindings...)
-		}
-
-		totalCount := int64(0)
-		if response.Response.TotalCount != nil {
-			totalCount = *response.Response.TotalCount
-		}
-
-		offset += int64(len(response.Response.FunctionComponentBindings))
-		if offset >= totalCount {
-			break
-		}
+	if len(allBindings) == 0 {
+		log.Printf("[WARN]%s resource `teo_function_component_binding` [%s] not found, removing from state\n", logId, d.Id())
+		d.SetId("")
+		return nil
 	}
 
 	bindingsList := make([]map[string]interface{}, 0, len(allBindings))
@@ -334,7 +301,35 @@ func resourceTencentCloudTeoFunctionComponentBindingDelete(d *schema.ResourceDat
 	request.ZoneId = helper.String(zoneId)
 	request.FunctionId = helper.String(functionId)
 	request.Operation = helper.String("rebind")
-	request.FunctionComponentBindings = []*teov20220901.FunctionComponentBinding{}
+	binding := teov20220901.FunctionComponentBinding{}
+	if v, ok := d.GetOk("function_component_bindings"); ok {
+		for _, item := range v.([]interface{}) {
+			bindingMap := item.(map[string]interface{})
+			if v, ok := bindingMap["type"]; ok {
+				binding.Type = helper.String(v.(string))
+			}
+			if v, ok := bindingMap["variable_name"]; ok {
+				binding.VariableName = helper.String(v.(string))
+			}
+			if v, ok := bindingMap["kv_namespace_parameters"]; ok {
+				kvList := v.([]interface{})
+				if len(kvList) > 0 {
+					kvMap := kvList[0].(map[string]interface{})
+					kvParams := teov20220901.KVNamespaceParameters{}
+					if v, ok := kvMap["zone_id"]; ok {
+						kvParams.ZoneId = helper.String(v.(string))
+					}
+					if v, ok := kvMap["namespace"]; ok {
+						kvParams.Namespace = helper.String(v.(string))
+					}
+					binding.KVNamespaceParameters = &kvParams
+				}
+			}
+		}
+	}
+
+	// Regarding the EO interface specification: tests failed for both `[{}]` and `[null]`, while omitting the parameter resulted in an error.
+	request.FunctionComponentBindings = append(request.FunctionComponentBindings, &binding)
 
 	err := resource.Retry(tccommon.WriteRetryTimeout, func() *resource.RetryError {
 		result, e := meta.(tccommon.ProviderMeta).GetAPIV3Conn().UseTeoV20220901Client().ModifyFunctionComponentBindingsWithContext(ctx, request)
