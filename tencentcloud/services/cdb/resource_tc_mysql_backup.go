@@ -15,11 +15,11 @@ import (
 	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/internal/helper"
 )
 
-func ResourceTencentCloudMysqlBackupAttachment() *schema.Resource {
+func ResourceTencentCloudMysqlBackup() *schema.Resource {
 	return &schema.Resource{
-		Create: resourceTencentCloudMysqlBackupAttachmentCreate,
-		Read:   resourceTencentCloudMysqlBackupAttachmentRead,
-		Delete: resourceTencentCloudMysqlBackupAttachmentDelete,
+		Create: resourceTencentCloudMysqlBackupCreate,
+		Read:   resourceTencentCloudMysqlBackupRead,
+		Delete: resourceTencentCloudMysqlBackupDelete,
 		Importer: &schema.ResourceImporter{
 			State: schema.ImportStatePassthrough,
 		},
@@ -77,7 +77,7 @@ func ResourceTencentCloudMysqlBackupAttachment() *schema.Resource {
 	}
 }
 
-func resourceTencentCloudMysqlBackupAttachmentCreate(d *schema.ResourceData, meta interface{}) error {
+func resourceTencentCloudMysqlBackupCreate(d *schema.ResourceData, meta interface{}) error {
 	defer tccommon.LogElapsed("resource.tencentcloud_mysql_backup.create")()
 	defer tccommon.InconsistentCheck(d, meta)()
 
@@ -145,10 +145,10 @@ func resourceTencentCloudMysqlBackupAttachmentCreate(d *schema.ResourceData, met
 
 	d.SetId(backupId + tccommon.FILED_SP + instanceId)
 
-	return resourceTencentCloudMysqlBackupAttachmentRead(d, meta)
+	return resourceTencentCloudMysqlBackupRead(d, meta)
 }
 
-func resourceTencentCloudMysqlBackupAttachmentRead(d *schema.ResourceData, meta interface{}) error {
+func resourceTencentCloudMysqlBackupRead(d *schema.ResourceData, meta interface{}) error {
 	defer tccommon.LogElapsed("resource.tencentcloud_mysql_backup.read")()
 	defer tccommon.InconsistentCheck(d, meta)()
 
@@ -205,7 +205,7 @@ func resourceTencentCloudMysqlBackupAttachmentRead(d *schema.ResourceData, meta 
 	return nil
 }
 
-func resourceTencentCloudMysqlBackupAttachmentDelete(d *schema.ResourceData, meta interface{}) error {
+func resourceTencentCloudMysqlBackupDelete(d *schema.ResourceData, meta interface{}) error {
 	defer tccommon.LogElapsed("resource.tencentcloud_mysql_backup.delete")()
 	defer tccommon.InconsistentCheck(d, meta)()
 

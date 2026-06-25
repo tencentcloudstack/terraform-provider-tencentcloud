@@ -37,8 +37,8 @@ func ptrUint64(i uint64) *uint64 {
 	return &i
 }
 
-// TestMysqlBackupAttachmentCreate_Success tests successful backup creation
-func TestMysqlBackupAttachmentCreate_Success(t *testing.T) {
+// TestMysqlBackupCreate_Success tests successful backup creation
+func TestMysqlBackupCreate_Success(t *testing.T) {
 	patches := gomonkey.NewPatches()
 	defer patches.Reset()
 
@@ -79,7 +79,7 @@ func TestMysqlBackupAttachmentCreate_Success(t *testing.T) {
 	})
 
 	meta := newMockMysqlBackupMeta()
-	res := cdb.ResourceTencentCloudMysqlBackupAttachment()
+	res := cdb.ResourceTencentCloudMysqlBackup()
 	d := schema.TestResourceDataRaw(t, res.Schema, map[string]interface{}{
 		"instance_id":        "cdb-test123",
 		"backup_method":      "physical",
@@ -93,8 +93,8 @@ func TestMysqlBackupAttachmentCreate_Success(t *testing.T) {
 	assert.Equal(t, int64(12345), int64(d.Get("backup_id").(int)))
 }
 
-// TestMysqlBackupAttachmentCreate_LogicalWithDbTable tests logical backup with db/table list
-func TestMysqlBackupAttachmentCreate_LogicalWithDbTable(t *testing.T) {
+// TestMysqlBackupCreate_LogicalWithDbTable tests logical backup with db/table list
+func TestMysqlBackupCreate_LogicalWithDbTable(t *testing.T) {
 	patches := gomonkey.NewPatches()
 	defer patches.Reset()
 
@@ -136,7 +136,7 @@ func TestMysqlBackupAttachmentCreate_LogicalWithDbTable(t *testing.T) {
 	})
 
 	meta := newMockMysqlBackupMeta()
-	res := cdb.ResourceTencentCloudMysqlBackupAttachment()
+	res := cdb.ResourceTencentCloudMysqlBackup()
 	d := schema.TestResourceDataRaw(t, res.Schema, map[string]interface{}{
 		"instance_id":   "cdb-test456",
 		"backup_method": "logical",
@@ -156,8 +156,8 @@ func TestMysqlBackupAttachmentCreate_LogicalWithDbTable(t *testing.T) {
 	assert.Equal(t, "67890#cdb-test456", d.Id())
 }
 
-// TestMysqlBackupAttachmentCreate_APIError tests API error handling during create
-func TestMysqlBackupAttachmentCreate_APIError(t *testing.T) {
+// TestMysqlBackupCreate_APIError tests API error handling during create
+func TestMysqlBackupCreate_APIError(t *testing.T) {
 	patches := gomonkey.NewPatches()
 	defer patches.Reset()
 
@@ -169,7 +169,7 @@ func TestMysqlBackupAttachmentCreate_APIError(t *testing.T) {
 	})
 
 	meta := newMockMysqlBackupMeta()
-	res := cdb.ResourceTencentCloudMysqlBackupAttachment()
+	res := cdb.ResourceTencentCloudMysqlBackup()
 	d := schema.TestResourceDataRaw(t, res.Schema, map[string]interface{}{
 		"instance_id":   "cdb-invalid",
 		"backup_method": "physical",
@@ -180,8 +180,8 @@ func TestMysqlBackupAttachmentCreate_APIError(t *testing.T) {
 	assert.Contains(t, err.Error(), "FailedOperation")
 }
 
-// TestMysqlBackupAttachmentCreate_EmptyBackupId tests empty backup ID handling
-func TestMysqlBackupAttachmentCreate_EmptyBackupId(t *testing.T) {
+// TestMysqlBackupCreate_EmptyBackupId tests empty backup ID handling
+func TestMysqlBackupCreate_EmptyBackupId(t *testing.T) {
 	patches := gomonkey.NewPatches()
 	defer patches.Reset()
 
@@ -198,7 +198,7 @@ func TestMysqlBackupAttachmentCreate_EmptyBackupId(t *testing.T) {
 	})
 
 	meta := newMockMysqlBackupMeta()
-	res := cdb.ResourceTencentCloudMysqlBackupAttachment()
+	res := cdb.ResourceTencentCloudMysqlBackup()
 	d := schema.TestResourceDataRaw(t, res.Schema, map[string]interface{}{
 		"instance_id":   "cdb-test789",
 		"backup_method": "physical",
@@ -209,8 +209,8 @@ func TestMysqlBackupAttachmentCreate_EmptyBackupId(t *testing.T) {
 	assert.Contains(t, err.Error(), "BackupId is empty")
 }
 
-// TestMysqlBackupAttachmentRead_NotFound tests Read clears ID when backup not found
-func TestMysqlBackupAttachmentRead_NotFound(t *testing.T) {
+// TestMysqlBackupRead_NotFound tests Read clears ID when backup not found
+func TestMysqlBackupRead_NotFound(t *testing.T) {
 	patches := gomonkey.NewPatches()
 	defer patches.Reset()
 
@@ -228,7 +228,7 @@ func TestMysqlBackupAttachmentRead_NotFound(t *testing.T) {
 	})
 
 	meta := newMockMysqlBackupMeta()
-	res := cdb.ResourceTencentCloudMysqlBackupAttachment()
+	res := cdb.ResourceTencentCloudMysqlBackup()
 	d := schema.TestResourceDataRaw(t, res.Schema, map[string]interface{}{
 		"instance_id":   "cdb-test123",
 		"backup_method": "physical",
@@ -240,8 +240,8 @@ func TestMysqlBackupAttachmentRead_NotFound(t *testing.T) {
 	assert.Equal(t, "", d.Id())
 }
 
-// TestMysqlBackupAttachmentRead_Success tests Read populates fields
-func TestMysqlBackupAttachmentRead_Success(t *testing.T) {
+// TestMysqlBackupRead_Success tests Read populates fields
+func TestMysqlBackupRead_Success(t *testing.T) {
 	patches := gomonkey.NewPatches()
 	defer patches.Reset()
 
@@ -269,7 +269,7 @@ func TestMysqlBackupAttachmentRead_Success(t *testing.T) {
 	})
 
 	meta := newMockMysqlBackupMeta()
-	res := cdb.ResourceTencentCloudMysqlBackupAttachment()
+	res := cdb.ResourceTencentCloudMysqlBackup()
 	d := schema.TestResourceDataRaw(t, res.Schema, map[string]interface{}{
 		"instance_id":   "cdb-test123",
 		"backup_method": "physical",
@@ -285,8 +285,8 @@ func TestMysqlBackupAttachmentRead_Success(t *testing.T) {
 	assert.Equal(t, "on", d.Get("encryption_flag"))
 }
 
-// TestMysqlBackupAttachmentDelete_Success tests successful backup deletion
-func TestMysqlBackupAttachmentDelete_Success(t *testing.T) {
+// TestMysqlBackupDelete_Success tests successful backup deletion
+func TestMysqlBackupDelete_Success(t *testing.T) {
 	patches := gomonkey.NewPatches()
 	defer patches.Reset()
 
@@ -305,7 +305,7 @@ func TestMysqlBackupAttachmentDelete_Success(t *testing.T) {
 	})
 
 	meta := newMockMysqlBackupMeta()
-	res := cdb.ResourceTencentCloudMysqlBackupAttachment()
+	res := cdb.ResourceTencentCloudMysqlBackup()
 	d := schema.TestResourceDataRaw(t, res.Schema, map[string]interface{}{
 		"instance_id":   "cdb-test123",
 		"backup_method": "physical",
@@ -316,8 +316,8 @@ func TestMysqlBackupAttachmentDelete_Success(t *testing.T) {
 	assert.NoError(t, err)
 }
 
-// TestMysqlBackupAttachmentDelete_APIError tests API error during deletion
-func TestMysqlBackupAttachmentDelete_APIError(t *testing.T) {
+// TestMysqlBackupDelete_APIError tests API error during deletion
+func TestMysqlBackupDelete_APIError(t *testing.T) {
 	patches := gomonkey.NewPatches()
 	defer patches.Reset()
 
@@ -329,7 +329,7 @@ func TestMysqlBackupAttachmentDelete_APIError(t *testing.T) {
 	})
 
 	meta := newMockMysqlBackupMeta()
-	res := cdb.ResourceTencentCloudMysqlBackupAttachment()
+	res := cdb.ResourceTencentCloudMysqlBackup()
 	d := schema.TestResourceDataRaw(t, res.Schema, map[string]interface{}{
 		"instance_id":   "cdb-test123",
 		"backup_method": "physical",
@@ -341,9 +341,9 @@ func TestMysqlBackupAttachmentDelete_APIError(t *testing.T) {
 	assert.Contains(t, err.Error(), "ResourceNotFound")
 }
 
-// TestMysqlBackupAttachment_Schema validates schema definition
-func TestMysqlBackupAttachment_Schema(t *testing.T) {
-	res := cdb.ResourceTencentCloudMysqlBackupAttachment()
+// TestMysqlBackup_Schema validates schema definition
+func TestMysqlBackup_Schema(t *testing.T) {
+	res := cdb.ResourceTencentCloudMysqlBackup()
 
 	assert.NotNil(t, res)
 	assert.NotNil(t, res.Create)
@@ -383,8 +383,8 @@ func TestMysqlBackupAttachment_Schema(t *testing.T) {
 	assert.True(t, dbTableList.ForceNew)
 }
 
-// TestMysqlBackupAttachment_IdFormat tests that ID uses correct format
-func TestMysqlBackupAttachment_IdFormat(t *testing.T) {
+// TestMysqlBackup_IdFormat tests that ID uses correct format
+func TestMysqlBackup_IdFormat(t *testing.T) {
 	patches := gomonkey.NewPatches()
 	defer patches.Reset()
 
@@ -418,7 +418,7 @@ func TestMysqlBackupAttachment_IdFormat(t *testing.T) {
 	})
 
 	meta := newMockMysqlBackupMeta()
-	res := cdb.ResourceTencentCloudMysqlBackupAttachment()
+	res := cdb.ResourceTencentCloudMysqlBackup()
 	d := schema.TestResourceDataRaw(t, res.Schema, map[string]interface{}{
 		"instance_id":   "cdb-snap",
 		"backup_method": "snapshot",
