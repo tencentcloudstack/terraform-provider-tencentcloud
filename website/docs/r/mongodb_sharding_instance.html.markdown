@@ -33,6 +33,61 @@ resource "tencentcloud_mongodb_sharding_instance" "example" {
 }
 ```
 
+### Add a read-only node
+
+```hcl
+resource "tencentcloud_mongodb_sharding_instance" "example" {
+  instance_name   = "tf-example"
+  shard_quantity  = 2
+  nodes_per_shard = 3
+  memory          = 4
+  volume          = 100
+  engine_version  = "MONGO_40_WT"
+  machine_type    = "HIO10G"
+  available_zone  = "ap-guangzhou-6"
+  vpc_id          = "vpc-i5yyodl9"
+  subnet_id       = "subnet-hhi88a58"
+  project_id      = 0
+  password        = "Password@123"
+  mongos_cpu      = 1
+  mongos_memory   = 2
+  mongos_node_num = 3
+
+  add_node_list {
+    role = "READONLY"
+    zone = "ap-guangzhou-6"
+  }
+}
+```
+
+### Remove a read-only node
+
+```hcl
+resource "tencentcloud_mongodb_sharding_instance" "example" {
+  instance_name   = "tf-example"
+  shard_quantity  = 2
+  nodes_per_shard = 3
+  memory          = 4
+  volume          = 100
+  engine_version  = "MONGO_40_WT"
+  machine_type    = "HIO10G"
+  available_zone  = "ap-guangzhou-6"
+  vpc_id          = "vpc-i5yyodl9"
+  subnet_id       = "subnet-hhi88a58"
+  project_id      = 0
+  password        = "Password@123"
+  mongos_cpu      = 1
+  mongos_memory   = 2
+  mongos_node_num = 3
+
+  remove_node_list {
+    role      = "READONLY"
+    node_name = "cmgo-xxxx_0-node-readonly0"
+    zone      = "ap-guangzhou-6"
+  }
+}
+```
+
 ## Argument Reference
 
 The following arguments are supported:
@@ -52,6 +107,7 @@ The following arguments are supported:
 * `nodes_per_shard` - (Required, Int, ForceNew) Number of nodes per shard, at least 3(one master and two slaves). Allow value[3, 5, 7].
 * `shard_quantity` - (Required, Int, ForceNew) Number of sharding.
 * `volume` - (Required, Int) Disk size. The minimum value is 25, and unit is GB. Memory and volume must be upgraded or degraded simultaneously.
+* `add_node_list` - (Optional, List) Add node list. Node type and availability zone information.
 * `auto_renew_flag` - (Optional, Int) Auto renew flag. Valid values are `0`(NOTIFY_AND_MANUAL_RENEW), `1`(NOTIFY_AND_AUTO_RENEW) and `2`(DISABLE_NOTIFY_AND_MANUAL_RENEW). Default value is `0`. Note: only works for PREPAID instance. Only supports`0` and `1` for creation.
 * `availability_zone_list` - (Optional, List: [`String`]) A list of nodes deployed in multiple availability zones. For more information, please use the API DescribeSpecInfo.
 			- Multi-availability zone deployment nodes can only be deployed in 3 different availability zones. It is not supported to deploy most nodes of the cluster in the same availability zone. For example, a 3-node cluster does not support the deployment of 2 nodes in the same zone.
@@ -70,10 +126,22 @@ Note: Adjusting the number of nodes and slices does not support changes within t
 * `password` - (Optional, String) Password of this Mongodb account.
 * `prepaid_period` - (Optional, Int) The tenancy (time unit is month) of the prepaid instance. Valid values are 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 24, 36. NOTE: it only works when charge_type is set to `PREPAID`.
 * `project_id` - (Optional, Int) ID of the project which the instance belongs.
+* `remove_node_list` - (Optional, List) Remove node list. Node type, node name, and availability zone information. Note: Based on the consistency principle of each shard node in a sharding instance, when removing nodes, you only need to specify the node corresponding to shard 0, e.g., `cmgo-xxxx_0-node-readonly0` will remove the first readonly node of each shard.
 * `security_groups` - (Optional, Set: [`String`]) ID of the security group.
 * `subnet_id` - (Optional, String, ForceNew) ID of the subnet within this VPC. The value is required if `vpc_id` is set.
 * `tags` - (Optional, Map) The tags of the Mongodb. Key name `project` is system reserved and can't be used.
 * `vpc_id` - (Optional, String, ForceNew) ID of the VPC.
+
+The `add_node_list` object supports the following:
+
+* `role` - (Required, String) Node role to add. Valid values: `SECONDARY` (Mongod node), `READONLY` (read-only node), `MONGOS` (Mongos node).
+* `zone` - (Required, String) The availability zone for the new node.
+
+The `remove_node_list` object supports the following:
+
+* `node_name` - (Required, String) Node ID to remove. For sharding cluster, specify the node name corresponding to one shard group. For example: `cmgo-xxxx_0-node-readonly0`.
+* `role` - (Required, String) Node role to remove. Valid values: `SECONDARY` (Mongod secondary node), `READONLY` (read-only node), `MONGOS` (Mongos node).
+* `zone` - (Required, String) The availability zone of the node to remove.
 
 ## Attributes Reference
 
