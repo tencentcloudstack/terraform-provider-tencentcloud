@@ -1628,6 +1628,7 @@ func Provider() *schema.Provider {
 			"tencentcloud_mysql_deploy_group":                                                       cdb.ResourceTencentCloudMysqlDeployGroup(),
 			"tencentcloud_mysql_local_binlog_config":                                                cdb.ResourceTencentCloudMysqlLocalBinlogConfig(),
 			"tencentcloud_mysql_audit_log_file":                                                     cdb.ResourceTencentCloudMysqlAuditLogFile(),
+			"tencentcloud_mysql_backup":                                                             cdb.ResourceTencentCloudMysqlBackupAttachment(),
 			"tencentcloud_mysql_backup_download_restriction":                                        cdb.ResourceTencentCloudMysqlBackupDownloadRestriction(),
 			"tencentcloud_mysql_renew_db_instance_operation":                                        cdb.ResourceTencentCloudMysqlRenewDbInstanceOperation(),
 			"tencentcloud_mysql_backup_encryption_status":                                           cdb.ResourceTencentCloudMysqlBackupEncryptionStatus(),
