@@ -860,6 +860,7 @@ tencentcloud_mysql_isolate_instance
 tencentcloud_mysql_dr_instance
 tencentcloud_mysql_ssl
 tencentcloud_mysql_cls_log_attachment
+tencentcloud_cdb_start_cpu_expand
 tencentcloud_mysql_audit_service
 
 Cloud Monitor(Monitor)
