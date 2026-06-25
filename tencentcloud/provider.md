@@ -313,6 +313,7 @@ tencentcloud_cbs_snapshot_policy_attachment
 tencentcloud_cbs_snapshot_share_permission
 tencentcloud_cbs_disk_backup
 tencentcloud_cbs_disk_backup_rollback_operation
+tencentcloud_cbs_copy_snapshot_cross_region
 
 Cloud Connect Network(CCN)
 Data Source
@@ -620,6 +621,14 @@ tencentcloud_elasticsearch_restart_kibana_operation
 tencentcloud_elasticsearch_diagnose
 tencentcloud_elasticsearch_diagnose_instance
 tencentcloud_elasticsearch_update_plugins_operation
+
+Global Accelerator(GA2)
+Resource
+tencentcloud_ga2_global_accelerator
+tencentcloud_ga2_accelerate_area
+tencentcloud_ga2_listener
+tencentcloud_ga2_endpoint_group
+tencentcloud_ga2_forwarding_rule
 
 Global Application Acceleration(GAAP)
 Data Source
@@ -1592,6 +1601,7 @@ tencentcloud_teo_function
 tencentcloud_teo_function_rule
 tencentcloud_teo_function_rule_priority
 tencentcloud_teo_function_runtime_environment
+tencentcloud_teo_function_replica
 tencentcloud_teo_l7_acc_rule
 tencentcloud_teo_l7_acc_rule_v2
 tencentcloud_teo_l7_acc_rule_priority_operation
@@ -1629,6 +1639,7 @@ tencentcloud_teo_purge_task
 tencentcloud_teo_shared_cname
 tencentcloud_teo_domain_shared_cname_attachment
 tencentcloud_teo_edge_kv
+tencentcloud_teo_edge_kv_namespace
 
 TencentCloud ServiceMesh(TCM)
 Data Source
