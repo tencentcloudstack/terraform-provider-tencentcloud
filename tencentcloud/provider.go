@@ -1390,6 +1390,8 @@ func Provider() *schema.Provider {
 			"tencentcloud_igtm_instance_package_list":                             igtm.DataSourceTencentCloudIgtmInstancePackageList(),
 			"tencentcloud_igtm_detect_task_package_list":                          igtm.DataSourceTencentCloudIgtmDetectTaskPackageList(),
 			"tencentcloud_dbdc_db_custom_clusters":                                dbdc.DataSourceTencentCloudDbdcDbCustomClusters(),
+			"tencentcloud_dbdc_db_custom_nodes":                                   dbdc.DataSourceTencentCloudDbdcDbCustomNodes(),
+			"tencentcloud_dbdc_db_custom_cluster_nodes":                           dbdc.DataSourceTencentCloudDbdcDbCustomClusterNodes(),
 			"tencentcloud_dbdc_db_custom_images":                                  dbdc.DataSourceTencentCloudDbdcDbCustomImages(),
 			"tencentcloud_gs_android_instances":                                   gs.DataSourceTencentCloudGsAndroidInstances(),
 			"tencentcloud_keewidb_instances":                                      keewidb.DataSourceTencentCloudKeewidbInstances(),
