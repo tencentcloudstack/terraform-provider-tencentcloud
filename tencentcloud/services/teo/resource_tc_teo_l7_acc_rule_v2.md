@@ -1,6 +1,8 @@
-Provides a resource to create a TEO l7 acc rule v2
+Provides a resource to create a TEO l7 acc rule v2.
 
 ~> **NOTE:** Compared to tencentcloud_teo_l7_acc_rule, tencentcloud_teo_l7_acc_rule_v2 is simpler to use but is limited to managing a single rule and lacks the ability to maintain rule ordering. It is best suited for scenarios where you need to manage multiple rules independently and priority/sequencing is not a concern.
+
+~> **NOTE:** The `rules` attribute is a Computed-only output field that returns the structured rule data as returned by the `DescribeL7AccRules` API. It mirrors the `RuleEngineItem` structure with `rule_id`, `status`, `rule_name`, `description`, `branches`, and `rule_priority`. Use this attribute in conjunction with `output` blocks or references to access the full rule details.
 
 Example Usage
 

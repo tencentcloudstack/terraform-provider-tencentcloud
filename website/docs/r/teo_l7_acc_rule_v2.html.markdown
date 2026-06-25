@@ -4,14 +4,16 @@ layout: "tencentcloud"
 page_title: "TencentCloud: tencentcloud_teo_l7_acc_rule_v2"
 sidebar_current: "docs-tencentcloud-resource-teo_l7_acc_rule_v2"
 description: |-
-  Provides a resource to create a TEO l7 acc rule v2
+  Provides a resource to create a TEO l7 acc rule v2.
 ---
 
 # tencentcloud_teo_l7_acc_rule_v2
 
-Provides a resource to create a TEO l7 acc rule v2
+Provides a resource to create a TEO l7 acc rule v2.
 
 ~> **NOTE:** Compared to tencentcloud_teo_l7_acc_rule, tencentcloud_teo_l7_acc_rule_v2 is simpler to use but is limited to managing a single rule and lacks the ability to maintain rule ordering. It is best suited for scenarios where you need to manage multiple rules independently and priority/sequencing is not a concern.
+
+~> **NOTE:** The `rules` attribute is a Computed-only output field that returns the structured rule data as returned by the `DescribeL7AccRules` API. It mirrors the `RuleEngineItem` structure with `rule_id`, `status`, `rule_name`, `description`, `branches`, and `rule_priority`. Use this attribute in conjunction with `output` blocks or references to access the full rule details.
 
 ## Example Usage
 
@@ -541,6 +543,13 @@ In addition to all arguments above, the following attributes are exported:
 * `id` - ID of the resource.
 * `rule_id` - Rule ID. Unique identifier of the rule.
 * `rule_priority` - Rule priority. only used as an output parameter.
+* `rules` - Rule Engine Item list. Output parameter used to return the structured rule data as returned by the DescribeL7AccRules API.
+  * `branches` - Sub-Rule branch. This list currently supports filling in only one rule; multiple entries are invalid.
+  * `description` - Rule annotation. multiple annotations can be added.
+  * `rule_id` - Rule ID. Unique identifier of the rule.
+  * `rule_name` - Rule name. The name length limit is 255 characters.
+  * `rule_priority` - Rule priority. Only used as an output parameter.
+  * `status` - Rule status. The possible values are: `enable`: enabled; `disable`: disabled.
 
 
 ## Import

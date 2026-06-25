@@ -65,6 +65,51 @@ func ResourceTencentCloudTeoL7AccRuleV2() *schema.Resource {
 				Computed:    true,
 				Description: "Rule priority. only used as an output parameter.",
 			},
+			"rules": {
+				Type:        schema.TypeList,
+				Computed:    true,
+				Description: "Rule Engine Item list. Output parameter used to return the structured rule data as returned by the DescribeL7AccRules API.",
+				Elem: &schema.Resource{
+					Schema: map[string]*schema.Schema{
+						"rule_id": {
+							Type:        schema.TypeString,
+							Computed:    true,
+							Description: "Rule ID. Unique identifier of the rule.",
+						},
+						"status": {
+							Type:        schema.TypeString,
+							Computed:    true,
+							Description: "Rule status. The possible values are: `enable`: enabled; `disable`: disabled.",
+						},
+						"rule_name": {
+							Type:        schema.TypeString,
+							Computed:    true,
+							Description: "Rule name. The name length limit is 255 characters.",
+						},
+						"description": {
+							Type:        schema.TypeList,
+							Computed:    true,
+							Description: "Rule annotation. multiple annotations can be added.",
+							Elem: &schema.Schema{
+								Type: schema.TypeString,
+							},
+						},
+						"branches": {
+							Type:        schema.TypeList,
+							Computed:    true,
+							Description: "Sub-Rule branch. This list currently supports filling in only one rule; multiple entries are invalid.",
+							Elem: &schema.Resource{
+								Schema: TencentTeoL7RuleBranchBasicInfo(1),
+							},
+						},
+						"rule_priority": {
+							Type:        schema.TypeInt,
+							Computed:    true,
+							Description: "Rule priority. Only used as an output parameter.",
+						},
+					},
+				},
+			},
 		},
 	}
 }
@@ -162,6 +207,8 @@ func ResourceTencentCloudTeoL7AccRuleV2Read(d *schema.ResourceData, meta interfa
 		_ = d.Set("branches", resourceTencentCloudTeoL7AccRuleSetBranchs(rule.Branches))
 	}
 
+	_ = d.Set("rules", flattenTeoL7AccRuleV2Rules(respData.Rules))
+
 	return nil
 }
 
@@ -241,9 +288,8 @@ func ResourceTencentCloudTeoL7AccRuleV2Delete(d *schema.ResourceData, meta inter
 		result, e := meta.(tccommon.ProviderMeta).GetAPIV3Conn().UseTeoV20220901Client().DeleteL7AccRules(request)
 		if e != nil {
 			return tccommon.RetryError(e)
-		} else {
-			log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), result.ToJsonString())
 		}
+		log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), result.ToJsonString())
 		return nil
 	})
 	if err != nil {
@@ -251,4 +297,40 @@ func ResourceTencentCloudTeoL7AccRuleV2Delete(d *schema.ResourceData, meta inter
 	}
 
 	return ResourceTencentCloudTeoL7AccRuleV2Read(d, meta)
+}
+
+func flattenTeoL7AccRuleV2Rules(rules []*teov20220901.RuleEngineItem) []map[string]interface{} {
+	if len(rules) == 0 {
+		return nil
+	}
+	result := make([]map[string]interface{}, 0, len(rules))
+	for _, rule := range rules {
+		ruleMap := map[string]interface{}{}
+		if rule.RuleId != nil {
+			ruleMap["rule_id"] = rule.RuleId
+		}
+		if rule.Status != nil {
+			ruleMap["status"] = rule.Status
+		}
+		if rule.RuleName != nil {
+			ruleMap["rule_name"] = rule.RuleName
+		}
+		if len(rule.Description) > 0 {
+			descList := make([]interface{}, 0, len(rule.Description))
+			for _, desc := range rule.Description {
+				if desc != nil {
+					descList = append(descList, desc)
+				}
+			}
+			ruleMap["description"] = descList
+		}
+		if rule.Branches != nil {
+			ruleMap["branches"] = resourceTencentCloudTeoL7AccRuleSetBranchs(rule.Branches)
+		}
+		if rule.RulePriority != nil {
+			ruleMap["rule_priority"] = rule.RulePriority
+		}
+		result = append(result, ruleMap)
+	}
+	return result
 }
