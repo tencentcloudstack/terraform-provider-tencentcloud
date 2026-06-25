@@ -119,7 +119,7 @@ func (me *DbdcService) DescribeDBCustomImagesByFilter(ctx context.Context, param
 				log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), result.ToJsonString())
 			}
 
-			if result == nil || result.Response == nil || result.Response.ImageSet == nil || len(result.Response.ImageSet) == 0 {
+			if result == nil || result.Response == nil || result.Response.ImageSet == nil {
 				log.Printf("[DATASOURCE] read empty, skip SetId")
 				return resource.NonRetryableError(fmt.Errorf("Describe dbdc_db_custom_images failed, Response is nil or empty."))
 			}
