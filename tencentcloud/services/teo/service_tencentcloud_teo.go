@@ -3412,3 +3412,58 @@ func (me *TeoService) DescribeTeoMultiPathGatewaysByFilter(ctx context.Context, 
 
 	return
 }
+
+func (me *TeoService) DescribeTeoFunctionComponentBindingsById(ctx context.Context, zoneId, functionId string) (ret []*teov20220901.FunctionComponentBinding, errRet error) {
+	logId := tccommon.GetLogId(ctx)
+
+	var (
+		offset int64 = 0
+		limit  int64 = 100
+	)
+	for {
+		request := teov20220901.NewDescribeFunctionComponentBindingsRequest()
+		request.ZoneId = helper.String(zoneId)
+		request.FunctionId = helper.String(functionId)
+		request.Offset = &offset
+		request.Limit = &limit
+
+		ratelimit.Check(request.GetAction())
+		response := teov20220901.NewDescribeFunctionComponentBindingsResponse()
+		err := resource.Retry(tccommon.ReadRetryTimeout, func() *resource.RetryError {
+			result, e := me.client.UseTeoV20220901Client().DescribeFunctionComponentBindingsWithContext(ctx, request)
+			if e != nil {
+				return tccommon.RetryError(e)
+			}
+			response = result
+			return nil
+		})
+		if err != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n",
+				logId, request.GetAction(), request.ToJsonString(), err.Error())
+			errRet = err
+			return
+		}
+		log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n",
+			logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+		if response == nil || response.Response == nil {
+			break
+		}
+
+		if len(response.Response.FunctionComponentBindings) > 0 {
+			ret = append(ret, response.Response.FunctionComponentBindings...)
+		}
+
+		totalCount := int64(0)
+		if response.Response.TotalCount != nil {
+			totalCount = *response.Response.TotalCount
+		}
+
+		offset += int64(len(response.Response.FunctionComponentBindings))
+		if offset >= totalCount || len(response.Response.FunctionComponentBindings) == 0 {
+			break
+		}
+	}
+
+	return
+}
