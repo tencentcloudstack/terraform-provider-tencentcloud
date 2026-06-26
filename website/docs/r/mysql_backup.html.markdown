@@ -11,6 +11,8 @@ description: |-
 
 Provides a resource to create a CDB mysql backup
 
+~> **NOTE:** Concurrent backups are not supported; multiple backups must be executed sequentially.
+
 ## Example Usage
 
 ### Create a physical full backup
@@ -112,7 +114,15 @@ In addition to all arguments above, the following attributes are exported:
 
 * `id` - ID of the resource.
 * `backup_id` - ID of the backup task.
+* `internet_url` - Internet download URL of the backup file.
+* `intranet_url` - Intranet download URL of the backup file.
 
+## Timeouts
+
+The `timeouts` block allows you to specify [timeouts](https://developer.hashicorp.com/terraform/language/resources/syntax#operation-timeouts) for certain actions:
+
+* `create` - (Defaults to `20m`) Used when creating the resource.
+* `delete` - (Defaults to `20m`) Used when deleting the resource.
 
 ## Import
 

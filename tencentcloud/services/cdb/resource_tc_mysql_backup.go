@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"log"
 	"strings"
+	"time"
 
 	tccommon "github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/common"
 
@@ -22,6 +23,10 @@ func ResourceTencentCloudMysqlBackup() *schema.Resource {
 		Delete: resourceTencentCloudMysqlBackupDelete,
 		Importer: &schema.ResourceImporter{
 			State: schema.ImportStatePassthrough,
+		},
+		Timeouts: &schema.ResourceTimeout{
+			Create: schema.DefaultTimeout(20 * time.Minute),
+			Delete: schema.DefaultTimeout(20 * time.Minute),
 		},
 		Schema: map[string]*schema.Schema{
 			"instance_id": {
@@ -73,6 +78,16 @@ func ResourceTencentCloudMysqlBackup() *schema.Resource {
 				Type:        schema.TypeInt,
 				Description: "ID of the backup task.",
 			},
+			"intranet_url": {
+				Computed:    true,
+				Type:        schema.TypeString,
+				Description: "Intranet download URL of the backup file.",
+			},
+			"internet_url": {
+				Computed:    true,
+				Type:        schema.TypeString,
+				Description: "Internet download URL of the backup file.",
+			},
 		},
 	}
 }
@@ -82,6 +97,7 @@ func resourceTencentCloudMysqlBackupCreate(d *schema.ResourceData, meta interfac
 	defer tccommon.InconsistentCheck(d, meta)()
 
 	logId := tccommon.GetLogId(tccommon.ContextNil)
+	ctx := context.WithValue(context.TODO(), tccommon.LogIdKey, logId)
 
 	var (
 		instanceId string
@@ -145,6 +161,38 @@ func resourceTencentCloudMysqlBackupCreate(d *schema.ResourceData, meta interfac
 
 	d.SetId(backupId + tccommon.FILED_SP + instanceId)
 
+	// Wait for the backup task to finish since CreateBackup is asynchronous.
+	service := MysqlService{client: meta.(tccommon.ProviderMeta).GetAPIV3Conn()}
+	err = resource.Retry(d.Timeout(schema.TimeoutCreate), func() *resource.RetryError {
+		backupInfos, e := service.DescribeBackupsByMysqlId(ctx, instanceId, 1000)
+		if e != nil {
+			return tccommon.RetryError(e)
+		}
+
+		for _, item := range backupInfos {
+			if item.BackupId == nil || helper.Int64ToStr(*item.BackupId) != backupId {
+				continue
+			}
+			if item.Status == nil {
+				return resource.RetryableError(fmt.Errorf("mysql_backup [%s] status is nil, retrying", backupId))
+			}
+			switch *item.Status {
+			case "SUCCESS":
+				return nil
+			case "FAILED":
+				return resource.NonRetryableError(fmt.Errorf("mysql_backup [%s] create failed, status: FAILED", backupId))
+			default:
+				return resource.RetryableError(fmt.Errorf("mysql_backup [%s] is in unknown status [%s], retrying", backupId, *item.Status))
+			}
+		}
+
+		return resource.RetryableError(fmt.Errorf("mysql_backup [%s] not found yet, retrying", backupId))
+	})
+	if err != nil {
+		log.Printf("[CRITAL]%s wait for mysql_backup [%s] ready failed, reason:%+v", logId, backupId, err)
+		return err
+	}
+
 	return resourceTencentCloudMysqlBackupRead(d, meta)
 }
 
@@ -198,8 +246,14 @@ func resourceTencentCloudMysqlBackupRead(d *schema.ResourceData, meta interface{
 	if backupInfo.ManualBackupName != nil {
 		_ = d.Set("manual_backup_name", backupInfo.ManualBackupName)
 	}
-	if backupInfo.EncryptionFlag != nil {
+	if backupInfo.EncryptionFlag != nil && backupInfo.Type != nil && *backupInfo.Type == "physical" {
 		_ = d.Set("encryption_flag", backupInfo.EncryptionFlag)
+	}
+	if backupInfo.IntranetUrl != nil {
+		_ = d.Set("intranet_url", backupInfo.IntranetUrl)
+	}
+	if backupInfo.InternetUrl != nil {
+		_ = d.Set("internet_url", backupInfo.InternetUrl)
 	}
 
 	return nil
@@ -210,6 +264,7 @@ func resourceTencentCloudMysqlBackupDelete(d *schema.ResourceData, meta interfac
 	defer tccommon.InconsistentCheck(d, meta)()
 
 	logId := tccommon.GetLogId(tccommon.ContextNil)
+	ctx := context.WithValue(context.TODO(), tccommon.LogIdKey, logId)
 
 	idSplit := strings.Split(d.Id(), tccommon.FILED_SP)
 	if len(idSplit) != 2 {
@@ -231,6 +286,26 @@ func resourceTencentCloudMysqlBackupDelete(d *schema.ResourceData, meta interfac
 	})
 	if err != nil {
 		log.Printf("[CRITAL]%s delete mysql_backup failed, reason:%+v", logId, err)
+		return err
+	}
+
+	// Wait for the backup to be removed since DeleteBackup is asynchronous.
+	service := MysqlService{client: meta.(tccommon.ProviderMeta).GetAPIV3Conn()}
+	err = resource.Retry(d.Timeout(schema.TimeoutDelete), func() *resource.RetryError {
+		backupInfos, e := service.DescribeBackupsByMysqlId(ctx, instanceId, 1000)
+		if e != nil {
+			return tccommon.RetryError(e)
+		}
+
+		for _, item := range backupInfos {
+			if item.BackupId != nil && helper.Int64ToStr(*item.BackupId) == backupId {
+				return resource.RetryableError(fmt.Errorf("mysql_backup [%s] is still being deleted, retrying", backupId))
+			}
+		}
+		return nil
+	})
+	if err != nil {
+		log.Printf("[CRITAL]%s wait for mysql_backup [%s] delete failed, reason:%+v", logId, backupId, err)
 		return err
 	}
 

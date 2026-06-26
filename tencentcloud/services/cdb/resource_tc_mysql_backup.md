@@ -1,5 +1,7 @@
 Provides a resource to create a CDB mysql backup
 
+~> **NOTE:** Concurrent backups are not supported; multiple backups must be executed sequentially.
+
 Example Usage
 
 Create a physical full backup
