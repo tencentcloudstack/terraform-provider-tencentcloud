@@ -60,6 +60,11 @@ resource "tencentcloud_mysql_backup" "example" {
   backup_method     = "physical"
   manual_backup_name = "tf-example-backup"
   encryption_flag   = "off"
+
+  timeouts {
+    create = "20m"
+    delete = "20m"
+  }
 }
 ```
 
@@ -79,13 +84,11 @@ resource "tencentcloud_mysql_backup" "logical" {
   backup_db_table_list {
     database = "db2"
   }
+
+  timeouts {
+    create = "20m"
+    delete = "20m"
+  }
 }
 ```
 
-Import
-
-mysql backup can be imported using the id, e.g.
-
-```
-terraform import tencentcloud_mysql_backup.foo backupId#instanceId
-```
