@@ -1,3 +1,29 @@
+## 1.83.6(June 26, 2026)
+
+FEATURES:
+
+* **New Data Source:** `tencentcloud_dbdc_db_custom_cluster_nodes` ([#4248](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/4248))
+* **New Data Source:** `tencentcloud_dbdc_db_custom_clusters` ([#4243](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/4243))
+* **New Data Source:** `tencentcloud_dbdc_db_custom_images` ([#4246](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/4246))
+* **New Data Source:** `tencentcloud_dbdc_db_custom_nodes` ([#4247](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/4247))
+* **New Resource:** `tencentcloud_cdb_start_cpu_expand` ([#4250](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/4250))
+* **New Resource:** `tencentcloud_ga2_forwarding_policy` ([#4254](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/4254))
+* **New Resource:** `tencentcloud_mysql_backup` ([#4255](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/4255))
+* **New Resource:** `tencentcloud_teo_function_component_binding` ([#4240](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/4240))
+* **New Resource:** `tencentcloud_waf_api_sec_sensitive_custom_api_exclude_rule` ([#4229](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/4229))
+* **New Resource:** `tencentcloud_waf_api_sec_sensitive_custom_api_extract_rule` ([#4229](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/4229))
+* **New Resource:** `tencentcloud_waf_api_sec_sensitive_custom_event_rule` ([#4229](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/4229))
+* **New Resource:** `tencentcloud_waf_api_sec_sensitive_custom_rule` ([#4229](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/4229))
+* **New Resource:** `tencentcloud_waf_api_sec_sensitive_privilege_rule` ([#4229](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/4229))
+* **New Resource:** `tencentcloud_waf_api_sec_sensitive_scene_rule` ([#4229](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/4229))
+* **New Resource:** `tencentcloud_waf_api_sec_sensitive_white_rule` ([#4229](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/4229))
+
+ENHANCEMENTS:
+
+* resource/tencentcloud_clb_snat_ip: optimize code logic ([#4253](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/4253))
+* resource/tencentcloud_cynosdb_ssl: optimize code logic ([#4241](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/4241))
+* resource/tencentcloud_ssl_free_certificate: Added retries for read interfaces to alleviate concurrency rate limiting. ([#4249](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/4249))
+
 ## 1.83.5(June 23, 2026)
 
 FEATURES:
