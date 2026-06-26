@@ -114,44 +114,42 @@ resource "tencentcloud_teo_l7_acc_rule_v2" "example" {
 }
 ```
 
-Using top-level actions (simplified usage)
+Using AdvancedOriginRouting, Shield, and SiteFailover actions
 
 ```hcl
-resource "tencentcloud_teo_l7_acc_rule_v2" "example_actions" {
+resource "tencentcloud_teo_l7_acc_rule_v2" "example_failover" {
   zone_id     = "zone-3fkff38fyw8s"
   description = ["description"]
-  rule_name   = "Web Acceleration Simple"
+  rule_name   = "Web Acceleration Failover"
   status      = "enable"
-  actions {
-    name = "Cache"
-    cache_parameters {
-      custom_time {
-        cache_time           = 2592000
-        ignore_cache_control = "off"
-        switch               = "on"
+  branches {
+    condition = "$${http.request.host} in ['www.example.com']"
+    actions {
+      name = "AdvancedOriginRouting"
+      advanced_origin_routing_parameters {
+        direction = "MainlandChinaAndGlobalAdaptive"
       }
     }
-  }
 
-  actions {
-    name = "CacheKey"
-    cache_key_parameters {
-      full_url_cache = "on"
-      ignore_case    = "off"
-      query_string {
-        switch = "off"
-        values = []
+    actions {
+      name = "Shield"
+      shield_parameters {
+        shield_space_id = "shield-space-abc123"
       }
     }
-  }
 
-  actions {
-    name = "HSTS"
-    hsts_parameters {
-      switch             = "on"
-      timeout            = 86400
-      include_sub_domains = "off"
-      preload            = "off"
+    actions {
+      name = "SiteFailover"
+      site_failover_parameters {
+        site_failover_status_codes = [500]
+        site_failover_params {
+          mode           = "FailoverToHost"
+          origin         = "backup.example.com"
+          origin_protocol = "https"
+          https_origin_port = 443
+          status_code    = 302
+        }
+      }
     }
   }
 }
