@@ -11,6 +11,8 @@ description: |-
 
 Provides a resource to manage TEO edge function component binding configuration
 
+~> **NOTE:** If this resource management method is used, it must be the sole method employed; management via other channels—such as the console, API, or CLI—is prohibited. Doing so would result in unintended changes or cause `apply` or `destroy` operations to overwrite existing configurations.
+
 ## Example Usage
 
 ```hcl
