@@ -1,0 +1,103 @@
+Provides a resource to create a CDB mysql backup
+
+~> **NOTE:** Concurrent backups are not supported; multiple backups must be executed sequentially.
+
+Documentation: https://cloud.tencent.com/document/product/236/35172
+
+TencentDB for MySQL (Local Disk)—supporting 2-node, 3-node, and 4-node architectures—supports two backup types:
+`Physical backup`: A full copy of physical data (supported by automatic backups).
+`Logical backup`: Backup via SQL statements (supported by both manual and automatic backups).
+
+TencentDB for MySQL Single-Node (Cloud Disk) and Cloud Disk editions support snapshot backups:
+`Snapshot backup`: Backup performed by creating snapshots of disks at the storage layer (supported by both automatic and manual backups).
+
+Example Usage
+
+Create a physical full backup
+
+```hcl
+data "tencentcloud_availability_zones_by_product" "zones" {
+  product = "cdb"
+}
+
+resource "tencentcloud_vpc" "vpc" {
+  name       = "vpc-mysql"
+  cidr_block = "10.0.0.0/16"
+}
+
+resource "tencentcloud_subnet" "subnet" {
+  availability_zone = data.tencentcloud_availability_zones_by_product.zones.zones.0.name
+  name              = "subnet-mysql"
+  vpc_id            = tencentcloud_vpc.vpc.id
+  cidr_block        = "10.0.0.0/16"
+  is_multicast      = false
+}
+
+resource "tencentcloud_security_group" "security_group" {
+  name        = "sg-mysql"
+  description = "mysql test"
+}
+
+resource "tencentcloud_mysql_instance" "example" {
+  internet_service  = 1
+  engine_version    = "5.7"
+  charge_type       = "POSTPAID"
+  root_password     = "PassWord123"
+  slave_deploy_mode = 0
+  availability_zone = data.tencentcloud_availability_zones_by_product.zones.zones.0.name
+  slave_sync_mode   = 1
+  instance_name     = "tf-example-mysql"
+  mem_size          = 4000
+  volume_size       = 200
+  vpc_id            = tencentcloud_vpc.vpc.id
+  subnet_id         = tencentcloud_subnet.subnet.id
+  intranet_port     = 3306
+  security_groups   = [tencentcloud_security_group.security_group.id]
+
+  tags = {
+    name = "test"
+  }
+
+  parameters = {
+    character_set_server = "utf8"
+    max_connections      = "1000"
+  }
+}
+
+resource "tencentcloud_mysql_backup" "example" {
+  instance_id       = tencentcloud_mysql_instance.example.id
+  backup_method     = "physical"
+  manual_backup_name = "tf-example-backup"
+  encryption_flag   = "off"
+
+  timeouts {
+    create = "20m"
+    delete = "20m"
+  }
+}
+```
+
+Create a logical backup with specific database and table
+
+```hcl
+resource "tencentcloud_mysql_backup" "logical" {
+  instance_id       = tencentcloud_mysql_instance.example.id
+  backup_method     = "logical"
+  manual_backup_name = "tf-logical-backup"
+
+  backup_db_table_list {
+    database = "db1"
+    table    = "tb1"
+  }
+
+  backup_db_table_list {
+    database = "db2"
+  }
+
+  timeouts {
+    create = "20m"
+    delete = "20m"
+  }
+}
+```
+
