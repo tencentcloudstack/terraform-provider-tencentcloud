@@ -114,6 +114,49 @@ resource "tencentcloud_teo_l7_acc_rule_v2" "example" {
 }
 ```
 
+Using top-level actions (simplified usage)
+
+```hcl
+resource "tencentcloud_teo_l7_acc_rule_v2" "example_actions" {
+  zone_id     = "zone-3fkff38fyw8s"
+  description = ["description"]
+  rule_name   = "Web Acceleration Simple"
+  status      = "enable"
+  actions {
+    name = "Cache"
+    cache_parameters {
+      custom_time {
+        cache_time           = 2592000
+        ignore_cache_control = "off"
+        switch               = "on"
+      }
+    }
+  }
+
+  actions {
+    name = "CacheKey"
+    cache_key_parameters {
+      full_url_cache = "on"
+      ignore_case    = "off"
+      query_string {
+        switch = "off"
+        values = []
+      }
+    }
+  }
+
+  actions {
+    name = "HSTS"
+    hsts_parameters {
+      switch             = "on"
+      timeout            = 86400
+      include_sub_domains = "off"
+      preload            = "off"
+    }
+  }
+}
+```
+
 Import
 
 TEO l7 acc rule v2 can be imported using the {zone_id}#{rule_id}, e.g.

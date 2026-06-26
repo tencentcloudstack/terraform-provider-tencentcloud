@@ -55,6 +55,13 @@ func ResourceTencentCloudTeoL7AccRuleV2() *schema.Resource {
 					Schema: TencentTeoL7RuleBranchBasicInfo(1),
 				},
 			},
+			"actions": {
+				Type:        schema.TypeList,
+				Optional:    true,
+				Computed:    true,
+				Description: "L7 acceleration rule actions list. This parameter can be used as a simplified alternative to configuring actions inside `branches`. When both `actions` and `branches` are set, the top-level actions are appended to the branch actions.",
+				Elem:        TencentTeoL7RuleBranchBasicInfo(1)["actions"].Elem,
+			},
 			"rule_id": {
 				Type:        schema.TypeString,
 				Computed:    true,
@@ -99,6 +106,28 @@ func ResourceTencentCloudTeoL7AccRuleV2Create(d *schema.ResourceData, meta inter
 
 	if v, ok := d.GetOk("branches"); ok {
 		rule.Branches = resourceTencentCloudTeoL7AccRuleGetBranchs(map[string]interface{}{"branches": v})
+	}
+
+	// Process top-level actions parameter
+	if v, ok := d.GetOk("actions"); ok {
+		// Wrap top-level actions in branch structure to reuse existing conversion logic
+		branchesWithActions := resourceTencentCloudTeoL7AccRuleGetBranchs(map[string]interface{}{
+			"branches": []interface{}{
+				map[string]interface{}{
+					"actions": v,
+				},
+			},
+		})
+		topActions := branchesWithActions[0].Actions
+		if len(rule.Branches) > 0 {
+			// Both branches and top-level actions are set - append top-level actions
+			rule.Branches[0].Actions = append(rule.Branches[0].Actions, topActions...)
+		} else {
+			// Only top-level actions, no branches - create a branch with just actions
+			ruleBranch := &teov20220901.RuleBranch{}
+			ruleBranch.Actions = topActions
+			rule.Branches = []*teov20220901.RuleBranch{ruleBranch}
+		}
 	}
 
 	request.Rules = []*teov20220901.RuleEngineItem{rule}
@@ -160,6 +189,20 @@ func ResourceTencentCloudTeoL7AccRuleV2Read(d *schema.ResourceData, meta interfa
 		_ = d.Set("description", rule.Description)
 		_ = d.Set("rule_priority", rule.RulePriority)
 		_ = d.Set("branches", resourceTencentCloudTeoL7AccRuleSetBranchs(rule.Branches))
+
+		// Extract top-level actions from Branches[0].Actions
+		if len(rule.Branches) > 0 && rule.Branches[0].Actions != nil {
+			// Reuse SetBranchs to convert, then extract just the actions
+			wrapperBranch := &teov20220901.RuleBranch{}
+			wrapperBranch.Actions = rule.Branches[0].Actions
+			wrapperBranchs := []*teov20220901.RuleBranch{wrapperBranch}
+			branchsResult := resourceTencentCloudTeoL7AccRuleSetBranchs(wrapperBranchs)
+			if len(branchsResult) > 0 {
+				if actionsVal, ok := branchsResult[0]["actions"]; ok {
+					_ = d.Set("actions", actionsVal)
+				}
+			}
+		}
 	}
 
 	return nil
@@ -183,7 +226,7 @@ func ResourceTencentCloudTeoL7AccRuleV2Update(d *schema.ResourceData, meta inter
 	rule := &teov20220901.RuleEngineItem{}
 	rule.RuleId = &ruleId
 
-	if d.HasChange("status") || d.HasChange("rule_name") || d.HasChange("description") || d.HasChange("branches") {
+	if d.HasChange("status") || d.HasChange("rule_name") || d.HasChange("description") || d.HasChange("branches") || d.HasChange("actions") {
 		if v, ok := d.GetOk("status"); ok {
 			rule.Status = helper.String(v.(string))
 		}
@@ -199,6 +242,25 @@ func ResourceTencentCloudTeoL7AccRuleV2Update(d *schema.ResourceData, meta inter
 		}
 		if v, ok := d.GetOk("branches"); ok {
 			rule.Branches = resourceTencentCloudTeoL7AccRuleGetBranchs(map[string]interface{}{"branches": v})
+		}
+
+		// Process top-level actions parameter
+		if v, ok := d.GetOk("actions"); ok {
+			branchesWithActions := resourceTencentCloudTeoL7AccRuleGetBranchs(map[string]interface{}{
+				"branches": []interface{}{
+					map[string]interface{}{
+						"actions": v,
+					},
+				},
+			})
+			topActions := branchesWithActions[0].Actions
+			if len(rule.Branches) > 0 {
+				rule.Branches[0].Actions = append(rule.Branches[0].Actions, topActions...)
+			} else {
+				ruleBranch := &teov20220901.RuleBranch{}
+				ruleBranch.Actions = topActions
+				rule.Branches = []*teov20220901.RuleBranch{ruleBranch}
+			}
 		}
 
 		request.Rule = rule

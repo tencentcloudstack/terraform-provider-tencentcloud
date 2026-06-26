@@ -125,11 +125,55 @@ resource "tencentcloud_teo_l7_acc_rule_v2" "example" {
 }
 ```
 
+### Using top-level actions (simplified usage)
+
+```hcl
+resource "tencentcloud_teo_l7_acc_rule_v2" "example_actions" {
+  zone_id     = "zone-3fkff38fyw8s"
+  description = ["description"]
+  rule_name   = "Web Acceleration Simple"
+  status      = "enable"
+  actions {
+    name = "Cache"
+    cache_parameters {
+      custom_time {
+        cache_time           = 2592000
+        ignore_cache_control = "off"
+        switch               = "on"
+      }
+    }
+  }
+
+  actions {
+    name = "CacheKey"
+    cache_key_parameters {
+      full_url_cache = "on"
+      ignore_case    = "off"
+      query_string {
+        switch = "off"
+        values = []
+      }
+    }
+  }
+
+  actions {
+    name = "HSTS"
+    hsts_parameters {
+      switch              = "on"
+      timeout             = 86400
+      include_sub_domains = "off"
+      preload             = "off"
+    }
+  }
+}
+```
+
 ## Argument Reference
 
 The following arguments are supported:
 
 * `zone_id` - (Required, String, ForceNew) Zone id.
+* `actions` - (Optional, List) L7 acceleration rule actions list. This parameter can be used as a simplified alternative to configuring actions inside `branches`. When both `actions` and `branches` are set, the top-level actions are appended to the branch actions.
 * `branches` - (Optional, List) Sub-Rule branch. this list currently supports filling in only one rule; multiple entries are invalid.
 * `description` - (Optional, List: [`String`]) Rule annotation. multiple annotations can be added.
 * `rule_name` - (Optional, String) Rule name. The name length limit is 255 characters.
@@ -144,6 +188,86 @@ The `access_url_redirect_parameters` object of `actions` supports the following:
 * `url_path` - (Optional, List) Target path.
 
 The `actions` object of `branches` supports the following:
+
+* `name` - (Required, String) Operation name. The name needs to correspond to the parameter structure, for example, if Name=Cache, CacheParameters is required.
+- `Cache`: Node cache TTL;
+- `CacheKey`: Custom Cache Key;
+- `CachePrefresh`: Cache pre-refresh;
+- `AccessURLRedirect`: Access URL redirection;
+- `UpstreamURLRewrite`: Back-to-origin URL rewrite;
+- `QUIC`: QUIC;
+- `WebSocket`: WebSocket;
+- `Authentication`: Token authentication;
+- `MaxAge`: Browser cache TTL;
+- `StatusCodeCache`: Status code cache TTL;
+- `OfflineCache`: Offline cache;
+- `SmartRouting`: Smart acceleration;
+- `RangeOriginPull`: Segment back-to-origin;
+- `UpstreamHTTP2`: HTTP2 back-to-origin;
+- `HostHeader`: Host Header rewrite;
+- `ForceRedirectHTTPS`: Access protocol forced HTTPS jump configuration;
+- `OriginPullProtocol`: Back-to-origin HTTPS;
+- `Compression`: Smart compression configuration;
+- `HSTS`: HSTS;
+- `ClientIPHeader`: Header information configuration for storing client request IP;
+- `OCSPStapling`: OCSP stapling;
+- `HTTP2`: HTTP2 Access;
+- `PostMaxSize`: POST request upload file streaming maximum limit configuration;
+- `ClientIPCountry`: Carry client IP region information when returning to the source;
+- `UpstreamFollowRedirect`: Return to the source follow redirection parameter configuration;
+- `UpstreamRequest`: Return to the source request parameters;
+- `TLSConfig`: SSL/TLS security;
+- `ModifyOrigin`: Modify the source station;
+- `HTTPUpstreamTimeout`: Seven-layer return to the source timeout configuration;
+- `HttpResponse`: HTTP response;
+- `ErrorPage`: Custom error page;
+- `ModifyResponseHeader`: Modify HTTP node response header;
+- `ModifyRequestHeader`: Modify HTTP node request header;
+- `ResponseSpeedLimit`: Single connection download speed limit.
+- `SetContentIdentifier`: Set content identifier.
+- `Vary`: Vary feature configuration.
+- `ContentCompression`: Content compression configuration.
+- `OriginAuthentication`: Origin authentication configuration.
+* `access_url_redirect_parameters` - (Optional, List) The access url redirection configuration parameter. this parameter is required when name is accessurlredirect.
+* `authentication_parameters` - (Optional, List) Token authentication configuration parameter. this parameter is required when name is authentication.
+* `cache_key_parameters` - (Optional, List) Custom cache key configuration parameter. when name is cachekey, this parameter is required.
+* `cache_parameters` - (Optional, List) Node cache ttl configuration parameter. when name is cache, this parameter is required.
+* `cache_prefresh_parameters` - (Optional, List) The cache prefresh configuration parameter. this parameter is required when name is cacheprefresh.
+* `client_ip_country_parameters` - (Optional, List) Configuration parameter for carrying the region information of the client ip during origin-pull. this parameter is required when the name is set to clientipcountry.
+* `client_ip_header_parameters` - (Optional, List) Client ip header configuration for storing client request ip information. this parameter is required when name is clientipheader.
+* `compression_parameters` - (Optional, List) Intelligent compression configuration. this parameter is required when name is set to compression.
+* `content_compression_parameters` - (Optional, List) Content compression configuration parameters. This parameter is required when the `Name` parameter is set to `ContentCompression`. This parameter uses a whitelist function; please contact Tencent Cloud engineers if needed.
+* `error_page_parameters` - (Optional, List) Custom error page configuration parameters. this parameter is required when name is errorpage.
+* `force_redirect_https_parameters` - (Optional, List) Force https redirect configuration parameter. this parameter is required when the name is set to forceredirecthttps.
+* `host_header_parameters` - (Optional, List) Host header rewrite configuration parameter. this parameter is required when name is set to hostheader.
+* `hsts_parameters` - (Optional, List) HSTS configuration parameter. this parameter is required when name is hsts.
+* `http2_parameters` - (Optional, List) HTTP2 access configuration parameter. this parameter is required when name is http2.
+* `http_response_parameters` - (Optional, List) HTTP response configuration parameters. this parameter is required when name is httpresponse.
+* `http_upstream_timeout_parameters` - (Optional, List) Configuration of layer 7 origin timeout. this parameter is required when name is httpupstreamtimeout.
+* `max_age_parameters` - (Optional, List) Browser cache ttl configuration parameter. this parameter is required when name is maxage.
+* `modify_origin_parameters` - (Optional, List) Configuration parameter for modifying the origin server. this parameter is required when the name is set to modifyorigin.
+* `modify_request_header_parameters` - (Optional, List) Modify http node request header configuration parameters. this parameter is required when name is modifyrequestheader.
+* `modify_response_header_parameters` - (Optional, List) Modify http node response header configuration parameters. this parameter is required when name is modifyresponseheader.
+* `ocsp_stapling_parameters` - (Optional, List) OCSP stapling configuration parameter. this parameter is required when the name is set to ocspstapling.
+* `offline_cache_parameters` - (Optional, List) Offline cache configuration parameter. this parameter is required when name is offlinecache.
+* `origin_authentication_parameters` - (Optional, List) Origin authentication configuration parameter. This parameter is required when Name is set to OriginAuthentication. This is a whitelist feature; please contact Tencent Cloud engineers if needed.
+* `origin_pull_protocol_parameters` - (Optional, List) Back-to-origin HTTPS configuration parameter. This parameter is required when the Name value is `OriginPullProtocol`.
+* `post_max_size_parameters` - (Optional, List) Maximum size configuration for file streaming upload via a post request. this parameter is required when name is postmaxsize.
+* `quic_parameters` - (Optional, List) The quic configuration parameter. this parameter is required when name is quic.
+* `range_origin_pull_parameters` - (Optional, List) Shard source retrieval configuration parameter. this parameter is required when name is set to rangeoriginpull.
+* `response_speed_limit_parameters` - (Optional, List) Single connection download speed limit configuration parameter. this parameter is required when name is responsespeedlimit.
+* `set_content_identifier_parameters` - (Optional, List) Content identification configuration parameter. this parameter is required when name is httpresponse.
+* `smart_routing_parameters` - (Optional, List) Smart acceleration configuration parameter. this parameter is required when name is smartrouting.
+* `status_code_cache_parameters` - (Optional, List) Status code cache ttl configuration parameter. this parameter is required when name is statuscodecache.
+* `tls_config_parameters` - (Optional, List) SSL/TLS security configuration parameter. this parameter is required when the name is set to tlsconfig.
+* `upstream_follow_redirect_parameters` - (Optional, List) Configuration parameter for following redirects during origin-pull. this parameter is required when the name is set to upstreamfollowredirect.
+* `upstream_http2_parameters` - (Optional, List) HTTP2 origin-pull configuration parameter. this parameter is required when name is set to upstreamhttp2.
+* `upstream_request_parameters` - (Optional, List) Configuration parameter for origin-pull request. this parameter is required when the name is set to upstreamrequest.
+* `upstream_url_rewrite_parameters` - (Optional, List) The origin-pull url rewrite configuration parameter. this parameter is required when name is upstreamurlrewrite.
+* `vary_parameters` - (Optional, List) Vary configuration parameter. This parameter is required when Name is set to Vary.
+* `web_socket_parameters` - (Optional, List) The websocket configuration parameter. this parameter is required when name is websocket.
+
+The `actions` object supports the following:
 
 * `name` - (Required, String) Operation name. The name needs to correspond to the parameter structure, for example, if Name=Cache, CacheParameters is required.
 - `Cache`: Node cache TTL;
