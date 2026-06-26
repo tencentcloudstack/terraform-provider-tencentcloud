@@ -13,6 +13,15 @@ Provides a resource to create a CDB mysql backup
 
 ~> **NOTE:** Concurrent backups are not supported; multiple backups must be executed sequentially.
 
+Documentation: https://cloud.tencent.com/document/product/236/35172
+
+TencentDB for MySQL (Local Disk)—supporting 2-node, 3-node, and 4-node architectures—supports two backup types:
+`Physical backup`: A full copy of physical data (supported by automatic backups).
+`Logical backup`: Backup via SQL statements (supported by both manual and automatic backups).
+
+TencentDB for MySQL Single-Node (Cloud Disk) and Cloud Disk editions support snapshot backups:
+`Snapshot backup`: Backup performed by creating snapshots of disks at the storage layer (supported by both automatic and manual backups).
+
 ## Example Usage
 
 ### Create a physical full backup
