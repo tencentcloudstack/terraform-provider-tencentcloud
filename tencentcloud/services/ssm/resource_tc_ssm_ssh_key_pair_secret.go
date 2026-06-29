@@ -58,6 +58,11 @@ func ResourceTencentCloudSsmSshKeyPairSecret() *schema.Resource {
 				Type:        schema.TypeString,
 				Description: "The key pair ID is the unique identifier of the key pair in the cloud server.",
 			},
+			"resource_id": {
+				Computed:    true,
+				Type:        schema.TypeString,
+				Description: "The resource ID associated with the secret.",
+			},
 			"tags": {
 				Type:        schema.TypeMap,
 				Optional:    true,
@@ -133,6 +138,10 @@ func resourceTencentCloudSsmSshKeyPairSecretCreate(d *schema.ResourceData, meta 
 			log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), result.ToJsonString())
 		}
 
+		if result == nil || result.Response == nil {
+			return resource.NonRetryableError(fmt.Errorf("Create ssm ssh key pair secret failed, Response is nil"))
+		}
+
 		response = result
 		return nil
 	})
@@ -140,6 +149,10 @@ func resourceTencentCloudSsmSshKeyPairSecretCreate(d *schema.ResourceData, meta 
 	if err != nil {
 		log.Printf("[CRITAL]%s create ssm sshKeyPairSecret failed, reason:%+v", logId, err)
 		return err
+	}
+
+	if response.Response.SecretName == nil {
+		return fmt.Errorf("SecretName is nil")
 	}
 
 	secretName = *response.Response.SecretName
@@ -203,8 +216,8 @@ func resourceTencentCloudSsmSshKeyPairSecretRead(d *schema.ResourceData, meta in
 	}
 
 	if sshKeyPairSecret == nil {
+		log.Printf("[WARN]%s resource `tencentcloud_ssm_ssh_key_pair_secret` [%s] not found, please check if it has been deleted.\n", logId, d.Id())
 		d.SetId("")
-		log.Printf("[WARN]%s resource `SsmSshKeyPairSecret` [%s] not found, please check if it has been deleted.\n", logId, d.Id())
 		return nil
 	}
 
@@ -229,7 +242,17 @@ func resourceTencentCloudSsmSshKeyPairSecretRead(d *schema.ResourceData, meta in
 	}
 
 	if sshKeyPairSecret.ResourceID != nil {
-		_ = d.Set("ssh_key_id", sshKeyPairSecret.ResourceID)
+		_ = d.Set("resource_id", sshKeyPairSecret.ResourceID)
+	}
+
+	// The ssh_key_id is obtained from the GetSSHKeyPairValue API by secret name.
+	sshKeyId, err := service.DescribeSshKeyPairSecretValueBySecretName(ctx, secretName)
+	if err != nil {
+		return err
+	}
+
+	if sshKeyId != "" {
+		_ = d.Set("ssh_key_id", sshKeyId)
 	}
 
 	if sshKeyPairSecret.Status != nil {
