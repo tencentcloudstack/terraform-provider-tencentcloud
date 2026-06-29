@@ -18,7 +18,6 @@ tencentcloud/
 ├── framework/                # framework entry only — no business code lives here
 │   ├── provider.go           # framework Provider implementation (Schema / Configure / Resources / DataSources / Functions / EphemeralResources / ListResources / Actions)
 │   ├── registry.go           # SDKv2-style central manifest: six append-only factory slices
-│   ├── provider.md           # framework reference index consumed by gendoc/
 │   ├── provider_test.go      # in-package tests: mux startup sanity + no type-name collisions
 │   ├── testhelpers_test.go   # in-package test helpers
 │   ├── acctest/              # ProtoV5 test factories shared by acceptance tests
@@ -29,6 +28,28 @@ tencentcloud/
     ├── cvm/                  # CVM product (package cvm; SDKv2 + framework can mix)
     └── <product>/            # any other product follows the same pattern
 ```
+
+> The single SDKv2 reference index `tencentcloud/provider.md` is the
+> only documentation index of the provider. Framework references are
+> listed under their corresponding product node alongside SDKv2
+> entries (using the new sub-section headers `Function`,
+> `Ephemeral Resource`, `List Resource`, `Action`). The previously
+> dedicated `framework/provider.md` has been removed.
+
+### Generated docs directory layout
+
+`make doc` writes one HTML markdown per reference into
+`website/docs/<short>/<resName>.html.markdown`, where `<short>` is a
+single letter mirroring the SDKv2 `d` / `r` shorthand:
+
+| Framework type | Output dir |
+|---|---|
+| Resource | `r/` |
+| Data Source | `d/` |
+| Function | `f/` |
+| Ephemeral Resource | `e/` |
+| List Resource | `l/` |
+| Action | `a/` |
 
 ### File naming convention (mandatory)
 
@@ -114,16 +135,25 @@ callbacks return these slices verbatim.
    If the product subpackage is not yet imported in `registry.go`, add
    one import line as well. `provider.go` does not need to change.
 
-3. **Add the reference to the framework index** in
-   `framework/provider.md` so `make doc` picks it up. Use the same
-   "product header / type label / type name" syntax as
-   `tencentcloud/provider.md`. For example:
+3. **Add the reference to the unified index** in
+   `tencentcloud/provider.md` so `make doc` picks it up. Use the
+   product node that already exists for that cloud product (or add a
+   new product node if the product is new), then list the type under
+   the matching sub-section header. Six headers are recognised:
+   `Data Source`, `Resource`, `Function`, `Ephemeral Resource`,
+   `List Resource`, `Action`. For example:
 
    ```
    Cloud Virtual Machine(CVM)
    Resource
    tencentcloud_my_thing
+
+   Action
+   tencentcloud_cvm_reboot_instance
    ```
+
+   The same provider.md is consumed by the SDKv2 stack — there is no
+   separate framework index file.
 
 4. **Ship a sibling Markdown** next to the Go file (e.g.
    `resource_tc_cvm_my_thing.md`) containing a short description and a

@@ -5,19 +5,20 @@
 // next to the Go source under tencentcloud/services/<product>/, and
 // renders them into website/docs/<dir>/<resource>.html.markdown.
 //
-// Output dirs:
+// Output dirs (single-letter where possible, mirroring the SDKv2 d/r
+// shorthand):
 //
 //	resource           -> website/docs/r/
 //	datasource         -> website/docs/d/
-//	function           -> website/docs/functions/
-//	ephemeral resource -> website/docs/ephemeral-resources/
-//	list resource      -> website/docs/list-resources/
-//	action             -> website/docs/actions/
+//	function           -> website/docs/f/
+//	ephemeral resource -> website/docs/e/
+//	list resource      -> website/docs/l/
+//	action             -> website/docs/a/
 //
-// The framework index file is tencentcloud/framework/provider.md. It
-// follows the same "Resources List" syntax as the sdkv2 provider.md but
-// adds four extra section headers — "Function", "Ephemeral Resource",
-// "List Resource", "Action" — handled by GetFrameworkIndex.
+// The framework references are listed inside the unified index file
+// tencentcloud/provider.md alongside SDKv2 references. GetIndex (in
+// index.go) handles the six section headers; this file only consumes
+// the parsed []Product slice via genFrameworkDocs.
 package main
 
 import (
@@ -53,6 +54,7 @@ const (
 )
 
 // outputDir maps a framework doc type to its registry website directory.
+// The single-letter shorthands mirror the SDKv2 d/r convention.
 func (t fwDocType) outputDir() string {
 	switch t {
 	case fwResource:
@@ -60,13 +62,13 @@ func (t fwDocType) outputDir() string {
 	case fwDataSrc:
 		return "d"
 	case fwFunction:
-		return "functions"
+		return "f"
 	case fwEphemeral:
-		return "ephemeral-resources"
+		return "e"
 	case fwList:
-		return "list-resources"
+		return "l"
 	case fwAction:
-		return "actions"
+		return "a"
 	}
 	return ""
 }
@@ -115,22 +117,10 @@ func (t fwDocType) mdFilePrefix() string {
 	return ""
 }
 
-// frameworkProduct mirrors the sdkv2 Product struct but with the four
-// framework-only collections appended.
-type frameworkProduct struct {
-	Name        string
-	DataSources []string
-	Resources   []string
-	Functions   []string
-	Ephemerals  []string
-	Lists       []string
-	Actions     []string
-}
-
 // genFrameworkDocs is the framework-side equivalent of the sdkv2 main
-// loop. It is invoked from main() after the sdkv2 generation completes.
-func genFrameworkDocs(repoRoot string) []frameworkProduct {
-	frameworkRoot := filepath.Join(repoRoot, "framework")
+// loop. It is invoked from main() with the unified product list parsed
+// from tencentcloud/provider.md.
+func genFrameworkDocs(repoRoot string, products []Product) {
 	servicesRoot := filepath.Join(repoRoot, "services")
 
 	// 1) Build framework provider so we can drive 6 factory aggregators.
@@ -138,10 +128,7 @@ func genFrameworkDocs(repoRoot string) []frameworkProduct {
 	prov := tcfw.NewProvider(primary)
 	ctx := context.Background()
 
-	// 2) Read framework provider.md to learn the per-product groupings.
-	products := readFrameworkIndex(frameworkRoot)
-
-	// 3) Render each reference type.
+	// 2) Render each reference type.
 	for _, fac := range prov.Resources(ctx) {
 		r := fac()
 		name := frameworkResourceTypeName(ctx, primary, r)
@@ -189,11 +176,11 @@ func genFrameworkDocs(repoRoot string) []frameworkProduct {
 	// list resources are deliberately not enumerated from the registry
 	// (the framework v1.19 list.ListResource interface needs a companion
 	// managed resource that does not yet exist). The .md files placed
-	// under services/common/ are however parsed via the framework
-	// provider.md index so that, once the real list reference is wired
-	// up, the documentation pipeline keeps working with no changes.
+	// under services/<product>/ are however parsed via the unified index
+	// so that, once the real list reference is wired up, the
+	// documentation pipeline keeps working with no changes.
 	for _, name := range allListNames(products) {
-		genFrameworkListPlaceholder(servicesRoot, name, productOfList(products, name))
+		genFrameworkListPlaceholder(servicesRoot, name, productOf(products, name, fwList))
 	}
 	_ = frameworklist.ListResource(nil) // keep the import alive for future use
 	if pa, ok := prov.(frameworkprovider.ProviderWithActions); ok {
@@ -208,7 +195,6 @@ func genFrameworkDocs(repoRoot string) []frameworkProduct {
 			})
 		}
 	}
-	return products
 }
 
 // schemaExtractor is the closure passed to genFrameworkDoc to delay the
@@ -238,6 +224,8 @@ func genFrameworkDoc(servicesRoot string, dtype fwDocType, name, product string,
 	if mdPath == "" {
 		fail(fmt.Sprintf("framework %s %q is missing its .md file under services/<product>/ (expected %s[<product>_]%s.md)", dtype, name, dtype.mdFilePrefix(), resName))
 	}
+
+	message("[START]get description from file: %s\n", relMdPath(mdPath))
 
 	raw, err := os.ReadFile(mdPath)
 	if err != nil {
@@ -318,6 +306,7 @@ func genFrameworkListPlaceholder(servicesRoot, name, product string) {
 	if mdPath == "" {
 		fail(fmt.Sprintf("framework list %q is missing its .md file under services/<product>/ (expected list_tc_[<product>_]%s.md)", name, resName))
 	}
+	message("[START]get description from file: %s\n", relMdPath(mdPath))
 	raw, err := os.ReadFile(mdPath)
 	if err != nil {
 		fail(fmt.Sprintf("read %s failed: %s", mdPath, err))
@@ -370,6 +359,17 @@ func genFrameworkListPlaceholder(servicesRoot, name, product string) {
 	message("[SUCC.]write doc to file success: %s", outPath)
 }
 
+// relMdPath converts an absolute markdown path under tencentcloud/services/
+// into a path relative to tencentcloud/ (e.g. services/ssm/ephemeral_tc_ssm_secret_version.md),
+// matching the format SDKv2's [START] log uses.
+func relMdPath(absPath string) string {
+	const seg = string(filepath.Separator) + "services" + string(filepath.Separator)
+	if i := strings.Index(absPath, seg); i >= 0 {
+		return strings.TrimPrefix(absPath[i+1:], "")
+	}
+	return absPath
+}
+
 // lookupFrameworkMd searches for a .md file matching the new
 // services/<product>/ naming convention:
 //
@@ -412,40 +412,11 @@ func lookupFrameworkMd(servicesRoot string, dtype fwDocType, resName, _ string) 
 	return found
 }
 
-// readFrameworkIndex parses tencentcloud/framework/provider.md and
-// returns the per-product reference grouping.
-//
-// An empty index (the header is present but no products / references
-// follow) is a legitimate state — it simply means no framework
-// references are wired into the provider yet. In that case we return an
-// empty slice so the rest of the generator can run without fataling.
-func readFrameworkIndex(frameworkRoot string) []frameworkProduct {
-	path := filepath.Join(frameworkRoot, "provider.md")
-	raw, err := os.ReadFile(path)
-	if err != nil {
-		fail(fmt.Sprintf("read %s failed: %s", path, err))
-	}
-	desc := strings.TrimSpace(string(raw))
-	const header = "\nResources List"
-	pos := strings.Index(desc, header)
-	if pos == -1 {
-		fail(fmt.Sprintf("framework provider.md missing 'Resources List' header: %s", path))
-	}
-	doc := strings.TrimSpace(desc[pos+len(header):])
-	if doc == "" {
-		// No framework references registered yet.
-		return nil
-	}
-	prods, err := getFrameworkIndex(doc)
-	if err != nil {
-		fail(fmt.Sprintf("parse %s failed: %s", path, err))
-	}
-	return prods
-}
-
-// productOf returns the product label of a typed resource by scanning
-// the parsed framework index.
-func productOf(prods []frameworkProduct, name string, dtype fwDocType) string {
+// productOf returns the product label of a typed framework reference
+// by scanning the unified Product list parsed from provider.md. If no
+// matching entry is found, "Provider Meta" is returned as the fallback
+// product label — mirroring the original framework-only behaviour.
+func productOf(prods []Product, name string, dtype fwDocType) string {
 	for _, p := range prods {
 		var bag []string
 		switch dtype {
@@ -471,13 +442,8 @@ func productOf(prods []frameworkProduct, name string, dtype fwDocType) string {
 	return "Provider Meta"
 }
 
-// productOfList is a thin convenience wrapper.
-func productOfList(prods []frameworkProduct, name string) string {
-	return productOf(prods, name, fwList)
-}
-
 // allListNames flattens every list-resource entry in the parsed index.
-func allListNames(prods []frameworkProduct) []string {
+func allListNames(prods []Product) []string {
 	var out []string
 	for _, p := range prods {
 		out = append(out, p.Lists...)

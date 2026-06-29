@@ -1177,9 +1177,13 @@ tencentcloud_ssm_ssh_key_pair_value
 Resource
 tencentcloud_ssm_secret
 tencentcloud_ssm_secret_version
+tencentcloud_ssm_secret_version_v2
 tencentcloud_ssm_product_secret
 tencentcloud_ssm_ssh_key_pair_secret
 tencentcloud_ssm_rotate_product_secret
+
+Ephemeral Resource
+tencentcloud_ssm_secret_version
 
 TcaplusDB
 Data Source
