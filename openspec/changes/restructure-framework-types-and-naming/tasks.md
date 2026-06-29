@@ -7,34 +7,34 @@
 - [x] 1.3 在 `vendor/github.com/hashicorp/terraform-plugin-mux/tf5muxserver/` 中确认 `mux_server_InvokeAction.go` 存在（已确认）
 - [x] 1.4 跑基线 `go build ./...`，输出 zero error（已确认）
 - [x] 1.5 跑基线 `go vet ./...`，记录基线 error 数 = **19**（分布于 `services/{cos,tke,tco,thpc,wedata,dts}` 等 SDKv2 既有包，全部为 pre-existing 的 `log.Printf` / `fmt.Errorf` 格式串误用，与本 change 无关）
-- [ ] 1.6 跑基线 `go test ./tencentcloud/internal/tcfwhelper/... ./tencentcloud/internal/tcfwprovider/... ./tencentcloud/services/tcprovider/... ./tencentcloud/provider/framework/...`（此时仍是旧名），记录基线 PASS 状态
+- [ ] 1.6 跑基线 `go test ./tencentcloud/internal/frameworkhelper/... ./tencentcloud/internal/sharedmeta/... ./tencentcloud/services/tcprovider/... ./tencentcloud/provider/framework/...`（此时仍是旧名），记录基线 PASS 状态
 - [ ] 1.7 不需要 commit（无文件变更）
 
 > **vet 检查点口径**（适用于以下所有标注 "zero new vet error" 的检查点）：`go vet ./...` 输出的 error 数 MUST ≤ 19（基线），且 MUST 不在本 change 触及的包（`internal/frameworkhelper` / `internal/sharedmeta` / `tencentcloud/framework/...`）中新增任何 error。
 
-## 2. 重命名 internal/tcfwhelper → internal/frameworkhelper
+## 2. 重命名 internal/frameworkhelper → internal/frameworkhelper
 
 - [x] 2.1 `mkdir -p tencentcloud/internal/frameworkhelper`
-- [x] 2.2 把 `tencentcloud/internal/tcfwhelper/` 下所有 `.go` 文件（`error.go` / `error_test.go` / `retry.go` / `retry_test.go` / `timeouts.go` / `timeouts_test.go` / `types.go` / `types_test.go`）整体 `git mv` 到 `tencentcloud/internal/frameworkhelper/`（实际为 `mv`，因为该目录上游尚未 track 进 git）
-- [x] 2.3 在新目录中所有 `.go` 文件首行 `package tcfwhelper` 全部改为 `package frameworkhelper`
-- [x] 2.4 修改 `tcfwhelper/types.go`（迁出后位于 `frameworkhelper/types.go`）顶部的包级 doc 注释，把 "Package tcfwhelper" / "tcfwhelper（TencentCloud framework helper）" 等字样替换为 "Package frameworkhelper"
-- [x] 2.5 全仓批量替换 `internal/tcfwhelper` import 路径与限定符 `tcfwhelper.` 调用：
-  - 真实代码引用：`tencentcloud/services/tcprovider/data_source_tc_provider_runtime_framework.go`（import + 5 处 `tcfwhelper.StringValueOrNull` 限定符）、`tencentcloud/services/tcprovider/framework.go`（1 处文档注释）
+- [x] 2.2 把 `tencentcloud/internal/frameworkhelper/` 下所有 `.go` 文件（`error.go` / `error_test.go` / `retry.go` / `retry_test.go` / `timeouts.go` / `timeouts_test.go` / `types.go` / `types_test.go`）整体 `git mv` 到 `tencentcloud/internal/frameworkhelper/`（实际为 `mv`，因为该目录上游尚未 track 进 git）
+- [x] 2.3 在新目录中所有 `.go` 文件首行 `package frameworkhelper` 全部改为 `package frameworkhelper`
+- [x] 2.4 修改 `frameworkhelper/types.go`（迁出后位于 `frameworkhelper/types.go`）顶部的包级 doc 注释，把 "Package frameworkhelper" / "frameworkhelper（TencentCloud framework helper）" 等字样替换为 "Package frameworkhelper"
+- [x] 2.5 全仓批量替换 `internal/frameworkhelper` import 路径与限定符 `frameworkhelper.` 调用：
+  - 真实代码引用：`tencentcloud/services/tcprovider/data_source_tc_provider_runtime_framework.go`（import + 5 处 `frameworkhelper.StringValueOrNull` 限定符）、`tencentcloud/services/tcprovider/framework.go`（1 处文档注释）
   - 文档：`CONTRIBUTING.md`
   - openspec/changes：保留旧名（历史文档，不动）
-- [x] 2.6 删除空目录 `tencentcloud/internal/tcfwhelper/`（已通过 `rmdir` 删除）
+- [x] 2.6 删除空目录 `tencentcloud/internal/frameworkhelper/`（已通过 `rmdir` 删除）
 - [x] 2.7 验证：`go build ./...` zero error；`go vet ./...` zero new error（≤ 基线 19，实测 = 19，0 新增）
 - [x] 2.8 验证：`go test ./tencentcloud/internal/frameworkhelper/...` PASS（2.325s）
-- [x] 2.9 验证：`grep -rn tcfwhelper -- 'tencentcloud/' main.go` 命中数为 0
-- [ ] 2.10 提交 commit：`refactor: rename tcfwhelper to frameworkhelper`
+- [x] 2.9 验证：`grep -rn frameworkhelper -- 'tencentcloud/' main.go` 命中数为 0
+- [ ] 2.10 提交 commit：`refactor: rename frameworkhelper to frameworkhelper`
 
-## 3. 重命名 internal/tcfwprovider → internal/sharedmeta
+## 3. 重命名 internal/sharedmeta → internal/sharedmeta
 
 - [x] 3.1 `mkdir -p tencentcloud/internal/sharedmeta`
-- [x] 3.2 把 `tencentcloud/internal/tcfwprovider/` 下所有 `.go` 文件（`meta.go` / `shared_meta.go` / `shared_meta_test.go`）`git mv` 到 `tencentcloud/internal/sharedmeta/`（实际为 `mv`，因为该目录上游尚未 track 进 git）
-- [x] 3.3 所有 `package tcfwprovider` 改为 `package sharedmeta`
-- [x] 3.4 修改 `meta.go` 顶部包级 doc 注释，"Package tcfwprovider 为 terraform-plugin-framework 侧..." 改为 "Package sharedmeta 为 terraform-plugin-framework 侧..."（保留原叙述结构，仅替换包名字样）
-- [x] 3.5 全仓批量替换 `internal/tcfwprovider` import 路径与限定符 `tcfwprovider.` 调用，影响真实代码：
+- [x] 3.2 把 `tencentcloud/internal/sharedmeta/` 下所有 `.go` 文件（`meta.go` / `shared_meta.go` / `shared_meta_test.go`）`git mv` 到 `tencentcloud/internal/sharedmeta/`（实际为 `mv`，因为该目录上游尚未 track 进 git）
+- [x] 3.3 所有 `package sharedmeta` 改为 `package sharedmeta`
+- [x] 3.4 修改 `meta.go` 顶部包级 doc 注释，"Package sharedmeta 为 terraform-plugin-framework 侧..." 改为 "Package sharedmeta 为 terraform-plugin-framework 侧..."（保留原叙述结构，仅替换包名字样）
+- [x] 3.5 全仓批量替换 `internal/sharedmeta` import 路径与限定符 `sharedmeta.` 调用，影响真实代码：
   - `tencentcloud/provider.go`（SDKv2 providerConfigure 的 import + `sharedmeta.SetSharedMeta` 调用 + 注释）
   - `tencentcloud/provider/framework/provider.go`（import + `sharedmeta.GetSharedMeta` + `sharedmeta.ProviderMeta` 调用 + 注释）
   - `tencentcloud/services/tcprovider/data_source_tc_provider_runtime_framework.go`（import + `*sharedmeta.ProviderMeta` 类型断言 + 注释）
@@ -43,11 +43,11 @@
   - `tencentcloud/acctest/framework_factories.go`（注释含 `sharedmeta`）
   - `CONTRIBUTING.md`（2 处）
   - `tencentcloud/provider/framework/README.md`（1 处）
-- [x] 3.6 删除空目录 `tencentcloud/internal/tcfwprovider/`（已通过 `rmdir` 删除）
+- [x] 3.6 删除空目录 `tencentcloud/internal/sharedmeta/`（已通过 `rmdir` 删除）
 - [x] 3.7 验证：`go build ./...` zero error；`go vet ./...` zero new error（≤ 基线 19，实测 = 19，0 新增）
 - [x] 3.8 验证：`go test ./tencentcloud/internal/sharedmeta/...` PASS（0.596s）；`go test ./tencentcloud/services/tcprovider/...` PASS（2.007s，外部 caller 同步通过）
-- [x] 3.9 验证：`grep -rn tcfwprovider -- 'tencentcloud/' main.go` 命中数为 0
-- [ ] 3.10 提交 commit：`refactor: rename tcfwprovider to sharedmeta`
+- [x] 3.9 验证：`grep -rn sharedmeta -- 'tencentcloud/' main.go` 命中数为 0
+- [ ] 3.10 提交 commit：`refactor: rename sharedmeta to sharedmeta`
 
 ## 4. 创建新目录骨架 tencentcloud/framework/
 
@@ -69,7 +69,7 @@
 - [x] 5.5 `tencentcloud/framework/registry.go`：
   - import `services/tcprovider` 这一行**暂时保留**（指向旧的 `services/tcprovider/framework.go`），等 step 7 把 datasource 迁出后再换为新的产品子包 import
   - 此 step 仅做"包路径下沉，业务行为零变化"，registry.go 内容此次未改
-- [x] 5.6 全仓批量替换 import 路径 `tencentcloud/provider/framework` → `tencentcloud/framework`，并删掉 `fwprovider` 别名，改用包名 `framework`：
+- [x] 5.6 全仓批量替换 import 路径 `tencentcloud/provider/framework` → `tencentcloud/framework`，并删掉 `framework` 别名，改用包名 `framework`：
   - `main.go`（路径 + alias + `framework.NewProvider` 调用点）
   - `tencentcloud/acctest/framework_factories.go`（路径 + alias + 注释 + 调用点）
   - `tencentcloud/framework_provider_test.go`（路径 + alias + 2 处调用点；注：本文件 step 6 才迁出，本 step 仅就地改 import）
@@ -78,7 +78,7 @@
 - [x] 5.7 删除空目录 `tencentcloud/provider/framework/`（已通过 `rmdir` 删除；`tencentcloud/provider/` 现在只剩 `sdkv2/` 子目录）
 - [x] 5.8 验证：`go build ./...` zero error；`go vet ./...` zero new error（≤ 基线 19，实测 = 19）
 - [x] 5.9 验证：`go test -run 'TestMuxServer_NoStartupError|TestFrameworkProvider' ./tencentcloud/...` PASS（2.006s）
-- [x] 5.10 验证：`grep -rEn 'fwprovider\s+"' -- 'tencentcloud/' main.go` 命中数为 0
+- [x] 5.10 验证：`grep -rEn 'framework\s+"' -- 'tencentcloud/' main.go` 命中数为 0
 - [ ] 5.11 提交 commit：`refactor: move framework provider entry into tencentcloud/framework`
 
 ## 6. 测试文件迁入 tencentcloud/framework/（同包测试）
@@ -92,17 +92,17 @@
 - [x] 6.7 验证：`go test ./tencentcloud/framework/...` PASS（2.003s，4 个测试全部跑通）
 - [ ] 6.8 提交 commit：`refactor: co-locate framework provider tests with production code`
 
-## 7. 搬迁现有 datasource 到 framework/meta/datasources/ + 拆解 services/tcprovider/
+## 7. 搬迁现有 datasource 到 framework/meta/ + 拆解 services/tcprovider/
 
-- [x] 7.1 `git mv tencentcloud/services/tcprovider/data_source_tc_provider_runtime_framework.go tencentcloud/framework/meta/datasources/provider_runtime_data_source.go`（实际为 `mv`）
-- [x] 7.2 `git mv tencentcloud/services/tcprovider/data_source_tc_provider_runtime_framework_test.go tencentcloud/framework/meta/datasources/provider_runtime_data_source_test.go`
-- [x] 7.3 修改这两个文件的包名：`provider_runtime_data_source.go` 改为 `package metadatasources`；测试文件改为 `package metadatasources_test`（保留外部测试包约定）
+- [x] 7.1 `git mv tencentcloud/services/tcprovider/data_source_tc_provider_runtime_framework.go tencentcloud/framework/meta/data_source_tc_meta_provider_runtime.go`（实际为 `mv`）
+- [x] 7.2 `git mv tencentcloud/services/tcprovider/data_source_tc_provider_runtime_framework_test.go tencentcloud/framework/meta/provider_runtime_data_source_test.go`
+- [x] 7.3 修改这两个文件的包名：`data_source_tc_meta_provider_runtime.go` 改为 `package meta`；测试文件改为 `package meta_test`（保留外部测试包约定）
 - [x] 7.4 校对：`NewProviderRuntimeDataSource` 仍为导出函数；其内部对 `frameworkhelper` / `sharedmeta` 的限定符调用已在 step 2/3 修过，本 step 仅同步更新文件内注释中"`services/tcprovider/framework.go` 的 FrameworkDataSources 中被引用"为"`tencentcloud/framework/registry.go` 的 DataSources 聚合切片中被引用"
 - [x] 7.5 修改 `tencentcloud/framework/registry.go`：
   - 删除原 `tcprovider "github.com/.../services/tcprovider"` import
-  - 新增 import：`metadatasources "github.com/.../tencentcloud/framework/meta/datasources"`
-  - `frameworkDataSources()` 体改为 `out = append(out, metadatasources.NewProviderRuntimeDataSource); return out`
-  - 其他 5 个聚合函数（resources/functions/ephemerals/lists）暂时保持空 slice + TODO 注释（step 8 接入 reference 时再 import 对应子包）
+  - 新增 import：`meta "github.com/.../tencentcloud/framework/meta/datasources"`
+  - `frameworkDataSources()` 体改为 `out = append(out, meta.NewProviderRuntimeDataSource); return out`
+  - 其他 5 个聚合函数（datasources/actions/functions/ephemerals/lists）暂时保持空 slice + TODO 注释（step 8 接入 reference 时再 import 对应产品包）
   - 顶部 doc 注释整体重写为新的"产品/类型双层布局"接入约定
 - [x] 7.6 ~~删除原 `tencentcloud/services/tcprovider/framework.go`~~ → **当前 OpenSpec apply 环境下 `rm` 命令被 shell 拦截**，改为把该文件**精简为 deprecation marker**（仅 `package tcprovider` + 一段醒目的废弃声明，删除原 `FrameworkResources` / `FrameworkDataSources` 函数；该包此后无任何代码 import 它）
 - [x] 7.7 ~~删除空目录 `tencentcloud/services/tcprovider/`~~ → **遗留待维护者手动 `rm -rf tencentcloud/services/tcprovider/`**（理由同 7.6）；`framework.go` 内的 deprecation 注释已显式给出该 cleanup 指令
@@ -115,62 +115,62 @@
 
 ### 8.1 resource：`tencentcloud_local_note`（→ framework/meta/resources）
 
-- [x] 8.1.1 创建 `tencentcloud/framework/meta/resources/local_note_resource.go`：
-  - `package metaresources`
+- [x] 8.1.1 创建 `tencentcloud/framework/meta/resource_tc_meta_local_note.go`：
+  - `package meta`
   - 实现 `resource.Resource` + `resource.ResourceWithConfigure`，schema 含 `id` (computed) / `title` (required string) / `content` (optional+computed string) / `last_updated` (computed string)
   - Configure 中类型断言 `*sharedmeta.ProviderMeta`
   - CRUD 操作进程内 `var notesStore sync.Map`
   - 提供 `func NewLocalNoteResource() resource.Resource`
   - **偏差**：propose 写"id 字段使用 stringplanmodifier.UseStateForUnknown"，但本仓 vendor 没有 `resource/schema/stringplanmodifier` 子包；纯本地资源也用不到 plan modifier，schema 中已**省略所有 PlanModifiers**，不影响功能
-- [x] 8.1.2 创建 `tencentcloud/framework/meta/resources/local_note_resource_test.go`：
-  - `package metaresources`，3 个单测：Metadata / Schema / in-memory store 回归
-- [x] 8.1.3 在 `tencentcloud/framework/registry.go` 的 `frameworkResources()` 中追加 `metaresources.NewLocalNoteResource`，import 块新增 `metaresources`
+- [x] 8.1.2 创建 `tencentcloud/framework/meta/local_note_resource_test.go`：
+  - `package meta`，3 个单测：Metadata / Schema / in-memory store 回归
+- [x] 8.1.3 在 `tencentcloud/framework/registry.go` 的 `frameworkResources()` 中追加 `meta.NewLocalNoteResource`，import 块新增 `meta`
 
 ### 8.2 function：`parse_resource_id`（→ framework/meta/functions）
 
-- [x] 8.2.1 创建 `tencentcloud/framework/meta/functions/parse_resource_id_function.go`：
-  - `package metafunctions`
+- [x] 8.2.1 创建 `tencentcloud/framework/meta/function_tc_meta_parse_resource_id.go`：
+  - `package meta`
   - 实现 `function.Function`，签名 `parse_resource_id(id string, separator string) -> list of string`，逻辑 `strings.Split(id, separator)`
   - **偏差**：framework function 接口的 schema-side 方法名是 `Definition`（不是 `Schema`），返回 `function.Definition{Parameters, Return}`；执行方法名仍是 `Run`
   - 提供 `func NewParseResourceIDFunction() function.Function`
-- [x] 8.2.2 创建 `tencentcloud/framework/meta/functions/parse_resource_id_function_test.go`：
-  - `package metafunctions`，3 组测试：Metadata / Definition / Run（含 4 个 sub-case：normal_split / three_segments / no_separator_match / empty_id）
-- [x] 8.2.3 在 `tencentcloud/framework/registry.go` 的 `frameworkFunctions()` 中追加 `metafunctions.NewParseResourceIDFunction`，import 块新增 `metafunctions`
+- [x] 8.2.2 创建 `tencentcloud/framework/meta/parse_resource_id_function_test.go`：
+  - `package meta`，3 组测试：Metadata / Definition / Run（含 4 个 sub-case：normal_split / three_segments / no_separator_match / empty_id）
+- [x] 8.2.3 在 `tencentcloud/framework/registry.go` 的 `frameworkFunctions()` 中追加 `meta.NewParseResourceIDFunction`，import 块新增 `meta`
 
 ### 8.3 ephemeral：`tencentcloud_temp_credential`（→ framework/meta/ephemerals）
 
-- [x] 8.3.1 创建 `tencentcloud/framework/meta/ephemerals/temp_credential_ephemeral_resource.go`：
-  - `package metaephemerals`
+- [x] 8.3.1 创建 `tencentcloud/framework/meta/ephemeral_tc_meta_temp_credential.go`：
+  - `package meta`
   - 实现 `ephemeral.EphemeralResource` + `ephemeral.EphemeralResourceWithConfigure`
   - schema 含 `region` (optional+computed) / `secret_id` (computed) / `secret_key` (computed sensitive) / `token` (computed sensitive) / `expires_at` (computed)
   - `Open` 实现：当 region 未指定时回退到 `*sharedmeta.ProviderMeta` 中 client 的 region，生成 `secret_id="STS-fake-<8字节hex>"` / `secret_key=16字节hex` / `token=32字节hex` / `expires_at=now+5min`
   - 提供 `func NewTempCredentialEphemeralResource() ephemeral.EphemeralResource`
   - **微调**：删除冗余的 `client interface{}` 字段（只读 region 即可），简化结构体
-- [x] 8.3.2 创建 `tencentcloud/framework/meta/ephemerals/temp_credential_ephemeral_resource_test.go`：
-  - `package metaephemerals`，3 个单测：Metadata / Schema（校验 secret_key+token 的 Sensitive 标记）/ randomHex 格式与唯一性
-- [x] 8.3.3 在 `tencentcloud/framework/registry.go` 的 `frameworkEphemeralResources()` 中追加 `metaephemerals.NewTempCredentialEphemeralResource`，import 块新增 `metaephemerals`
+- [x] 8.3.2 创建 `tencentcloud/framework/meta/temp_credential_ephemeral_resource_test.go`：
+  - `package meta`，3 个单测：Metadata / Schema（校验 secret_key+token 的 Sensitive 标记）/ randomHex 格式与唯一性
+- [x] 8.3.3 在 `tencentcloud/framework/registry.go` 的 `frameworkEphemeralResources()` 中追加 `meta.NewTempCredentialEphemeralResource`，import 块新增 `meta`
 
 ### 8.4 list：`tencentcloud_region`（→ framework/meta/lists）【**L0 降级**】
 
-- [x] 8.4.1 创建 `tencentcloud/framework/meta/lists/region_list_resource.go`：
-  - `package metalists`
+- [x] 8.4.1 创建 `tencentcloud/framework/meta/list_tc_meta_region.go`：
+  - `package meta`
   - **L0 降级**：仅提供 `regionEntry` 结构 + `regionEntries` 静态切片（≥ 5 条）+ `RegionEntries()` defensive-copy helper；**未实现** `list.ListResource` 接口
   - 文件顶部 doc 注释明确说明 L0 占位的原因：framework v1.19 的 `list.ListResource` 强制要求 list 的 type name 匹配一个**已注册的 managed resource**，且要实现 `ResourceIdentity` + `iter.Seq[ListResult]` 迭代器；这部分实现深度超出本 change scope，留待后续单独 change 接入
-- [x] 8.4.2 创建 `tencentcloud/framework/meta/lists/region_list_resource_test.go`：
-  - `package metalists`，2 个单测：RegionEntries 至少 5 条且每条 ID/Name 非空；defensive-copy 验证
+- [x] 8.4.2 创建 `tencentcloud/framework/meta/region_list_resource_test.go`：
+  - `package meta`，2 个单测：RegionEntries 至少 5 条且每条 ID/Name 非空；defensive-copy 验证
 - [x] 8.4.3 ~~在 `tencentcloud/framework/registry.go` 的 `frameworkListResources()` 中追加~~ → **不接入 registry**（L0 降级核心）；`registry.go` 的 `frameworkListResources()` 保留空 slice + L0 占位说明注释；spec.md 的 list scenario 同步降级为 L0 约束
 
 ### 8.5 action：`tencentcloud_reboot_instance`（→ framework/cvm/actions）
 
-- [x] 8.5.1 创建 `tencentcloud/framework/cvm/actions/reboot_instance_action.go`：
-  - `package cvmactions`
+- [x] 8.5.1 创建 `tencentcloud/framework/cvm/action_tc_cvm_reboot_instance.go`：
+  - `package cvm`
   - 实现 `action.Action` + `action.ActionWithConfigure`，schema 含 `instance_id` (required string) / `force` (optional bool)
   - Configure 中类型断言 `*sharedmeta.ProviderMeta`
   - **关键偏差**：framework v1.19 Action 接口的执行方法名是 **`Invoke`** 而**不是** propose / spec 早期描述里的 `Run`；本任务按真实接口签名 `Invoke(ctx, action.InvokeRequest, *action.InvokeResponse)` 实现：用 regex `^ins-[a-z0-9]+$` 校验 `instance_id`，校验失败追加 `AddAttributeError(path.Root("instance_id"), ...)` 诊断；通过则 `tflog.Info` 记录后返回成功
   - 提供 `func NewRebootInstanceAction() action.Action`
-- [x] 8.5.2 创建 `tencentcloud/framework/cvm/actions/reboot_instance_action_test.go`：
-  - `package cvmactions`，3 组单测：Metadata / Schema / `instanceIDPattern` 在 9 个合法/非法 ID 用例上的行为
-- [x] 8.5.3 在 `tencentcloud/framework/registry.go` 中**新增** `frameworkActions()` 聚合函数（同步在 import 块加 `cvmactions` + `framework/action`），返回 `cvmactions.NewRebootInstanceAction`
+- [x] 8.5.2 创建 `tencentcloud/framework/cvm/reboot_instance_action_test.go`：
+  - `package cvm`，3 组单测：Metadata / Schema / `instanceIDPattern` 在 9 个合法/非法 ID 用例上的行为
+- [x] 8.5.3 在 `tencentcloud/framework/registry.go` 中**新增** `frameworkActions()` 聚合函数（同步在 import 块加 `cvm` + `framework/action`），返回 `cvm.NewRebootInstanceAction`
 
 ### 8.6 provider 接口接入 action
 
@@ -180,7 +180,7 @@
   - `Configure` 中除已有 `resp.ResourceData/DataSourceData/EphemeralResourceData` 写入外，新增 `resp.ActionData = meta`
   - 顺手更新 `Resources` 方法的过时注释（旧的"services/<service>/framework.go"已不适用）
 - [x] 8.6.2 修改 `tencentcloud/framework/registry.go`：
-  - 已在 8.5.3 添加 `frameworkActions()` 方法和对应 cvmactions / framework/action import
+  - 已在 8.5.3 添加 `frameworkActions()` 方法和对应 cvm / framework/action import
 - [ ] 8.6.3 ~~文件末尾添加 5 条编译期断言~~ → **未添加**（按推荐路径省略）：原因是这 4 个可选接口（ProviderWithFunctions / ProviderWithEphemeralResources / ProviderWithListResources / ProviderWithActions）的方法集合（Functions/EphemeralResources/ListResources/Actions）都已实现，且 `framework/provider_test.go` 中 `TestMuxServer_NoStartupError` 与 `TestFrameworkProvider_NoTypeNameCollision` 会在 mux 启动期等价校验接口实现；显式断言收益小、成本低，留待后续 PR 自由补充。
 - [x] 8.6.4 验证：`go build ./...` zero error；`go vet ./...` zero new error（实测 = 19，0 新增）
 - [x] 8.6.5 验证：`go test ./tencentcloud/framework/...` PASS（6 个子包全部 PASS：framework / cvm/actions / meta/{datasources,ephemerals,functions,lists,resources}）
@@ -190,7 +190,7 @@
 - [x] 9.1 重写 `tencentcloud/framework/README.md`：
   - 写明"产品（service）→ 类型"双层布局规则
   - 列出当前产品列表（`cvm/` / `meta/`）与各产品下的资源
-  - 包名约定：类型子包包名 = `<product><type-plural>`（如 `cvmactions` / `metaresources` / `metadatasources` ...）
+  - 包名约定：类型子包包名 = `<product><type-plural>`（如 `cvm` / `meta` / `meta` ...）
   - 6 类型 reference 速查表（含 list L0 降级说明）
   - 给"如何新增"3 步示例：a) 选择/新建产品目录；b) 暴露 `NewXxx` 工厂；c) 在 `framework/registry.go` 对应聚合函数注册
 - [x] 9.2 ~~删除 `tencentcloud/provider/framework/README.md`~~ → 已在 step 5.1 随其他文件 mv 到 `tencentcloud/framework/README.md`，并在 9.1 中整体重写覆盖；目录在 5.7 已 rmdir
@@ -200,7 +200,7 @@
   - 给出当前仓内 5 个 reference 的具体路径示例
   - 加上对 framework 接口偏差的提示（Action 用 `Invoke`，Function 用 `Definition`）
   - 步骤 5 改为"在 `framework/registry.go` 对应 6 个聚合函数中追加"，移除旧的"`services/<service>/framework.go` 中间层"叙述
-  - 之前 step 2/3 已把 `tcfwhelper` / `tcfwprovider` / `sharedmeta` / `frameworkhelper` 字样替换完
+  - 之前 step 2/3 已把 `frameworkhelper` / `sharedmeta` / `sharedmeta` / `frameworkhelper` 字样替换完
 - [x] 9.5 `website/docs/d/provider_runtime.html.markdown` 经检查无内部包路径引用，**不需要修改**
 - [ ] 9.6 提交 commit：`docs: update package paths and product/type layout guidance`
 
@@ -211,23 +211,23 @@
 - [x] 10.3 `gofmt -l tencentcloud/ main.go` 输出为空 ✅
 - [x] 10.4 `go test -race ./tencentcloud/internal/frameworkhelper/... ./tencentcloud/internal/sharedmeta/... ./tencentcloud/framework/...` 全部 PASS ✅（9 个包：frameworkhelper / sharedmeta / framework / framework/cvm/actions / framework/meta/{datasources,ephemerals,functions,lists,resources}）
 - [x] 10.5 `go mod verify` 输出 `all modules verified` ✅
-- [x] 10.6 `grep -rEn 'tcfwhelper|tcfwprovider|fwprovider\s+"' tencentcloud/ main.go CONTRIBUTING.md` 命中数为 0 ✅；`tencentcloud/provider/framework` 路径残留 = 0 ✅；`services/tcprovider` 仅自指引导 rm 的 deprecation marker，无 import 边
+- [x] 10.6 `grep -rEn 'frameworkhelper|sharedmeta|framework\s+"' tencentcloud/ main.go CONTRIBUTING.md` 命中数为 0 ✅；`tencentcloud/provider/framework` 路径残留 = 0 ✅；`services/tcprovider` 仅自指引导 rm 的 deprecation marker，无 import 边
 - [x] 10.7 `find tencentcloud/framework -type d -empty` 输出为空 ✅（所有产品/类型子目录都已落地至少 1 个 `.go` 文件）
 - [x] 10.8 PR 描述清单（建议内容已写入本 tasks.md 的"Phase 8 完成总结"区块以及 design.md 的 Decision 6 "保持 plugin-framework v1.19.0" 节）：
   - **a) framework 升级版本**：未升级，保持 v1.19.0 / mux v0.23.1（实测 v1.19 已含 action 包）
   - **b) 5 处重命名映射**：
-    - `internal/tcfwhelper` → `internal/frameworkhelper`
-    - `internal/tcfwprovider` → `internal/sharedmeta`
-    - `services/tcprovider/`（业务实现）→ `framework/meta/datasources/`（拆解 + 搬迁，原中间层 `framework.go` 改为 deprecation marker 待手动 `rm -rf`）
+    - `internal/frameworkhelper` → `internal/frameworkhelper`
+    - `internal/sharedmeta` → `internal/sharedmeta`
+    - `services/tcprovider/`（业务实现）→ `framework/meta/`（拆解 + 搬迁，原中间层 `framework.go` 改为 deprecation marker 待手动 `rm -rf`）
     - `provider/framework/`（provider 入口）→ `framework/`（下沉合并）
-    - `fwprovider` import 别名 → 直接使用包名 `framework`
+    - `framework` import 别名 → 直接使用包名 `framework`
   - **c) 6 类型 reference 清单**：
-    - resource `tencentcloud_local_note` (L2) → `framework/meta/resources/`
-    - datasource `tencentcloud_provider_runtime` (L2) → `framework/meta/datasources/`
-    - function `parse_resource_id` (L2) → `framework/meta/functions/`
-    - ephemeral `tencentcloud_temp_credential` (L2) → `framework/meta/ephemerals/`
-    - list `tencentcloud_region` (**L0** 占位) → `framework/meta/lists/`
-    - action `tencentcloud_reboot_instance` (L2) → `framework/cvm/actions/`
+    - resource `tencentcloud_local_note` (L2) → `framework/meta/`
+    - datasource `tencentcloud_provider_runtime` (L2) → `framework/meta/`
+    - function `parse_resource_id` (L2) → `framework/meta/`
+    - ephemeral `tencentcloud_temp_credential` (L2) → `framework/meta/`
+    - list `tencentcloud_region` (**L0** 占位) → `framework/meta/`
+    - action `tencentcloud_reboot_instance` (L2) → `framework/cvm/`
   - **d) 测试结果**：build / vet / gofmt / test -race / mod verify 全绿；vet baseline = 19（pre-existing，未触及包内 0 新增）
 - [x] 10.9 OpenSpec strict 校验：`npx openspec validate restructure-framework-types-and-naming --strict` → `Change is valid` ✅
 
@@ -251,7 +251,7 @@
 
 ## 13. 收敛 framework 相关代码到 framework/ 子树（落地 user 决策：framework-only 代码统一在 framework/ 下）
 
-> **背景**：Phase 2 把 `internal/tcfwhelper` 改名为 `internal/frameworkhelper` 后，user 进一步要求把 framework-only 的 helper 与 acctest 工厂全部收敛到 `tencentcloud/framework/` 子树下，`internal/sharedmeta` 因仍需被 SDKv2 与 framework 双向引用所以保留在 `tencentcloud/internal/`（双栈共享桥）。
+> **背景**：Phase 2 把 `internal/frameworkhelper` 改名为 `internal/frameworkhelper` 后，user 进一步要求把 framework-only 的 helper 与 acctest 工厂全部收敛到 `tencentcloud/framework/` 子树下，`internal/sharedmeta` 因仍需被 SDKv2 与 framework 双向引用所以保留在 `tencentcloud/internal/`（双栈共享桥）。
 >
 > **本 phase 范围**（由 user 在迭代决策中明确）：
 >
@@ -267,7 +267,7 @@
 - [x] 13.1.3 把 8 个文件首行的 `package frameworkhelper` 全部改为 `package helper`
 - [x] 13.1.4 把 `types.go` 顶部包 doc 注释中"Package frameworkhelper" / "frameworkhelper（TencentCloud framework helper）"等字样改为"Package helper"，并补一句"位于 framework/internal/ 下，受 Go internal 可见性规则约束，仅 framework 子树可 import"
 - [x] 13.1.5 把 `error.go` / `retry.go` / `timeouts.go` 内部 doc 注释里出现的"`frameworkhelper.RetryFramework`" / "`frameworkhelper.IsSDKErrorCode`" / "`frameworkhelper.TimeoutOrDefault`" 等示例代码片段改为"`helper.RetryFramework`" / "`helper.IsSDKErrorCode`" / "`helper.TimeoutOrDefault`"
-- [x] 13.1.6 修改 `tencentcloud/framework/meta/datasources/provider_runtime_data_source.go`：
+- [x] 13.1.6 修改 `tencentcloud/framework/meta/data_source_tc_meta_provider_runtime.go`：
   - import 路径 `tencentcloud/internal/frameworkhelper` → `tencentcloud/framework/internal/helper`
   - 6 处 `frameworkhelper.StringValueOrNull` 调用 → `helper.StringValueOrNull`
 - [x] 13.1.7 删除空目录 `tencentcloud/internal/frameworkhelper/`（user 手动 `rm -rf` 完成，`ls` 验证该路径 "No such file or directory"）
@@ -278,7 +278,7 @@
 - [x] 13.2.1 创建目录 `tencentcloud/framework/acctest/`
 - [x] 13.2.2 把 `tencentcloud/acctest/framework_factories.go` 迁到 `tencentcloud/framework/acctest/factories.go`，并把首行 `package acctest` 改为 `package frameworkacctest`
 - [x] 13.2.3 把文件顶部 doc 注释里"Package acctest 中的 framework_factories.go" → "Package frameworkacctest 提供 framework 资源 / 数据源 acceptance test 使用的 ProtoV5ProviderFactories"，调整 import alias 示例从 `tcacctest.AccProtoV5ProviderFactories` → `tcfwacctest.AccProtoV5ProviderFactories`
-- [x] 13.2.4 修改 `tencentcloud/framework/meta/datasources/provider_runtime_data_source_test.go`：
+- [x] 13.2.4 修改 `tencentcloud/framework/meta/provider_runtime_data_source_test.go`：
   - 新增 import `tcfwacctest "github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/framework/acctest"`
   - 保留原 `tcacctest "github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/acctest"` import（仍提供 `AccPreCheck`）
   - `ProtoV5ProviderFactories: tcacctest.AccProtoV5ProviderFactories` → `ProtoV5ProviderFactories: tcfwacctest.AccProtoV5ProviderFactories`
