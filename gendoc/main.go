@@ -41,33 +41,41 @@ func main() {
 	filePath := filepath.Dir(filename)
 	message("generating doc from: %s\n", filePath)
 
-	// 1) sdkv2 phase: build the sidebar products and emit r/<...> + d/<...>
-	//    documents. genIdx no longer writes the .erb itself; that is
-	//    deferred until the framework products are also collected so the
-	//    sidebar can list both stacks in one go.
+	// 1) Parse the unified provider.md once. The same product list now
+	//    feeds both the SDKv2 renderer and the framework renderer; which
+	//    pipeline owns each entry is decided by SDKv2 / framework
+	//    registries (see step 2 + step 3).
 	products := genIdx(filePath)
 
+	// 2) sdkv2 phase: emit r/<...> + d/<...> for every entry that the
+	//    SDKv2 provider knows about. Anything that is *not* present in
+	//    provider.ResourcesMap / provider.DataSourcesMap is silently
+	//    skipped here — those are framework references and step 3 will
+	//    pick them up.
 	for _, product := range products {
-		// document for DataSources
 		for _, dataSource := range product.DataSources {
+			if _, ok := provider.DataSourcesMap[dataSource]; !ok {
+				continue
+			}
 			genDoc(product.Name, "data_source", filePath, dataSource, provider.DataSourcesMap[dataSource])
 		}
 
-		// document for Resources
 		for _, resource := range product.Resources {
+			if _, ok := provider.ResourcesMap[resource]; !ok {
+				continue
+			}
 			genDoc(product.Name, "resource", filePath, resource, provider.ResourcesMap[resource])
 		}
 	}
 
-	// 2) framework phase: render r / d / functions / ephemeral-resources /
-	//    list-resources / actions / ... documents for every framework
-	//    reference type registered in tencentcloud/framework/registry.go.
-	fwProducts := genFrameworkDocs(filePath)
+	// 3) framework phase: render r / d / f / e / l / a / ... documents
+	//    for every framework reference type registered in
+	//    tencentcloud/framework/registry.go. The unified product list is
+	//    consulted to derive the sidebar product label for each entry.
+	genFrameworkDocs(filePath, products)
 
-	// 3) Merge the two stacks' product lists and re-render the sidebar
-	//    .erb. Doing this last guarantees framework references appear in
-	//    the sidebar alongside their sdkv2 counterparts.
-	writeIdxErb(filePath, products, fwProducts)
+	// 4) Re-render the sidebar .erb from the same unified product list.
+	writeIdxErb(filePath, products)
 }
 
 // genIdx parses the sdkv2 provider.md "Resources List" section into the
@@ -107,18 +115,15 @@ func genIdx(filePath string) (prods []Product) {
 	return
 }
 
-// writeIdxErb renders the merged sidebar .erb for both the sdkv2 stack
-// (sdkProds) and the framework stack (fwProds). Framework products are
-// adapted into the sdkv2 Product struct (with the four extra slices
-// stitched in) and emitted as additional sidebar entries.
-func writeIdxErb(filePath string, sdkProds []Product, fwProds []frameworkProduct) {
-	merged := mergeProductsForErb(sdkProds, fwProds)
-
+// writeIdxErb renders the sidebar .erb from the unified Product list.
+// Both SDKv2 and framework references contribute to the same Product
+// nodes — the rendering is purely a function of the parsed provider.md.
+func writeIdxErb(filePath string, prods []Product) {
 	data := map[string]interface{}{
 		"cloud_mark":  cloudMark,
 		"cloud_title": cloudTitle,
 		"cloudPrefix": cloudPrefix,
-		"Products":    merged,
+		"Products":    prods,
 	}
 
 	filename := filepath.Join(docRoot, "..", fmt.Sprintf("%s.erb", cloudMark))
@@ -136,48 +141,6 @@ func writeIdxErb(filePath string, sdkProds []Product, fwProds []frameworkProduct
 	}
 	_ = filePath // currently unused; kept for parity with genIdx and for forward extensions.
 	message("[SUCC.]write doc to file success: %s", filename)
-}
-
-// mergeProductsForErb combines sdkv2 Products with framework Products
-// keyed by Name. Resources/DataSources are unioned and the four
-// framework-only collections are passed through onto the merged
-// Product (relying on Product gaining four optional slices).
-func mergeProductsForErb(sdkProds []Product, fwProds []frameworkProduct) []Product {
-	byName := map[string]*Product{}
-	order := []string{}
-	for i := range sdkProds {
-		p := sdkProds[i]
-		clone := p
-		byName[p.Name] = &clone
-		order = append(order, p.Name)
-	}
-	for _, fp := range fwProds {
-		if existing, ok := byName[fp.Name]; ok {
-			existing.DataSources = append(existing.DataSources, fp.DataSources...)
-			existing.Resources = append(existing.Resources, fp.Resources...)
-			existing.Functions = append(existing.Functions, fp.Functions...)
-			existing.Ephemerals = append(existing.Ephemerals, fp.Ephemerals...)
-			existing.Lists = append(existing.Lists, fp.Lists...)
-			existing.Actions = append(existing.Actions, fp.Actions...)
-			continue
-		}
-		clone := Product{
-			Name:        fp.Name,
-			DataSources: append([]string(nil), fp.DataSources...),
-			Resources:   append([]string(nil), fp.Resources...),
-			Functions:   append([]string(nil), fp.Functions...),
-			Ephemerals:  append([]string(nil), fp.Ephemerals...),
-			Lists:       append([]string(nil), fp.Lists...),
-			Actions:     append([]string(nil), fp.Actions...),
-		}
-		byName[fp.Name] = &clone
-		order = append(order, fp.Name)
-	}
-	out := make([]Product, 0, len(order))
-	for _, n := range order {
-		out = append(out, *byName[n])
-	}
-	return out
 }
 
 // genDoc generating doc for data source and resource
