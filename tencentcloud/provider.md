@@ -1454,6 +1454,7 @@ tencentcloud_dnspod_line_group
 tencentcloud_dnspod_snapshot_config
 tencentcloud_dnspod_domain_lock
 tencentcloud_subdomain_validate_txt_value_operation
+tencentcloud_dnspod_package_domain
 tencentcloud_dnspod_package_order
 
 Data Source
