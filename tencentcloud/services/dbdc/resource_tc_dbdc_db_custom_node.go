@@ -134,7 +134,7 @@ func ResourceTencentCloudDbdcDbCustomNode() *schema.Resource {
 				Type:        schema.TypeInt,
 				Optional:    true,
 				Computed:    true,
-				Description: "Auto-renew flag. Valid values: `1` (auto-renew), `0` (not auto-renew). Mutable via the renew API.",
+				Description: "Auto-renew flag. Valid values: `1` (auto-renew), `2` (not auto-renew). Mutable via the renew API.",
 			},
 
 			"tags": {
