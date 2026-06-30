@@ -2679,6 +2679,11 @@ tencentcloud_dbdc_db_custom_nodes
 tencentcloud_dbdc_db_custom_cluster_nodes
 tencentcloud_dbdc_db_custom_images
 
+Resource
+tencentcloud_dbdc_db_custom_cluster
+tencentcloud_dbdc_db_custom_node
+tencentcloud_dbdc_node_to_db_custom_cluster_attachment
+
 VCube
 Resource
 tencentcloud_vcube_application_and_video
