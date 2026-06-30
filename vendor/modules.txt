@@ -1394,7 +1394,7 @@ github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/region/v20220627
 # github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/rum v1.0.744
 ## explicit; go 1.14
 github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/rum/v20210622
-# github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/scf v1.0.1034
+# github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/scf v1.3.101
 ## explicit; go 1.14
 github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/scf/v20180416
 # github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/ses v1.0.748

@@ -67,6 +67,31 @@ resource "tencentcloud_scf_function" "foo" {
 }
 ```
 
+### Using instance concurrency config
+
+```hcl
+resource "tencentcloud_scf_function" "foo" {
+  name    = "ci-test-function"
+  handler = "main.do_it"
+  runtime = "Python3.6"
+
+  instance_concurrency_config {
+    dynamic_enabled            = "FALSE"
+    max_concurrency            = 10
+    instance_isolation_enabled = "FALSE"
+    type                       = "Request-Based"
+
+    session_config {
+      session_source                           = "HEADER"
+      session_name                             = "my_session"
+      maximum_concurrency_session_per_instance = 50
+      maximum_ttl_in_seconds                   = 3600
+      maximum_idle_time_in_seconds             = 600
+    }
+  }
+}
+```
+
 ### Using triggers
 
 ```hcl
@@ -124,6 +149,7 @@ The following arguments are supported:
 * `func_type` - (Optional, String) Function type. The default value is Event. Enter Event if you need to create a trigger function. Enter HTTP if you need to create an HTTP function service.
 * `handler` - (Optional, String) Handler of the SCF function. The format of name is `<filename>.<method_name>`, and it supports 26 English letters, numbers, connectors, and underscores, it should start with a letter. The last character cannot be `-` or `_`. Available length is 2-60.
 * `image_config` - (Optional, List) Image of the SCF function, conflict with `cos_bucket_name`, `cos_object_name`, `cos_bucket_region`, `zip_file`.
+* `instance_concurrency_config` - (Optional, List) Instance concurrency configuration for the function.
 * `intranet_config` - (Optional, List) Intranet access configuration.
 * `l5_enable` - (Optional, Bool) Enable L5 for SCF function, default is `false`.
 * `layers` - (Optional, List) The list of association layers.
@@ -161,6 +187,15 @@ The `image_config` object supports the following:
 * `image_port` - (Optional, Int) Image function port setting. Default is `9000`, -1 indicates no port mirroring function. Other value ranges 0 ~ 65535.
 * `registry_id` - (Optional, String) The registry id of TCR. When image type is enterprise, it must be set.
 
+The `instance_concurrency_config` object supports the following:
+
+* `dynamic_enabled` - (Optional, String) Whether to enable intelligent dynamic concurrency. Valid values: 'TRUE', 'FALSE'. 'FALSE' means static concurrency.
+* `instance_isolation_enabled` - (Optional, String) Security isolation switch. Valid values: 'TRUE', 'FALSE'.
+* `max_concurrency` - (Optional, Int) Maximum single-instance concurrency, range: 1-100.
+* `mix_node_config` - (Optional, List) Dynamic concurrency configuration parameters.
+* `session_config` - (Optional, List) Session configuration parameters.
+* `type` - (Optional, String) Concurrency mode, valid values: 'Session-Based' or 'Request-Based'.
+
 The `intranet_config` object supports the following:
 
 * `ip_fixed` - (Required, String) Whether to enable fixed intranet IP, ENABLE is enabled, DISABLE is disabled.
@@ -169,6 +204,21 @@ The `layers` object supports the following:
 
 * `layer_name` - (Required, String) The name of Layer.
 * `layer_version` - (Required, Int) The version of layer.
+
+The `mix_node_config` object of `instance_concurrency_config` supports the following:
+
+* `node_spec` - (Optional, String) GPU model name.
+* `num` - (Optional, Int) Number of concurrent instances.
+
+The `session_config` object of `instance_concurrency_config` supports the following:
+
+* `idle_timeout_strategy` - (Optional, String) Idle timeout strategy. Valid values: 'FATAL' for auto destroy, 'PAUSE' for auto pause. Only available when security isolation is enabled.
+* `maximum_concurrency_session_per_instance` - (Optional, Int) Maximum number of concurrent sessions per instance.
+* `maximum_idle_time_in_seconds` - (Optional, Int) Session idle timeout in seconds.
+* `maximum_ttl_in_seconds` - (Optional, Int) Session lifecycle in seconds.
+* `session_name` - (Optional, String) Session name, starts with a letter, length 5-40 characters, can contain letters, digits, underscores, and hyphens.
+* `session_path` - (Optional, String) Session path information.
+* `session_source` - (Optional, String) Session source. Valid values: 'HEADER', 'COOKIE', 'QUERY_STRING'.
 
 The `triggers` object supports the following:
 

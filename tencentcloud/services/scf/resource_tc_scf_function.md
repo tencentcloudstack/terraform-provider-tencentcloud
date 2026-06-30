@@ -56,6 +56,31 @@ resource "tencentcloud_scf_function" "foo" {
 }
 ```
 
+Using instance concurrency config
+
+```hcl
+resource "tencentcloud_scf_function" "foo" {
+  name    = "ci-test-function"
+  handler = "main.do_it"
+  runtime = "Python3.6"
+
+  instance_concurrency_config {
+    dynamic_enabled            = "FALSE"
+    max_concurrency            = 10
+    instance_isolation_enabled = "FALSE"
+    type                       = "Request-Based"
+
+    session_config {
+      session_source                             = "HEADER"
+      session_name                               = "my_session"
+      maximum_concurrency_session_per_instance   = 50
+      maximum_ttl_in_seconds                     = 3600
+      maximum_idle_time_in_seconds               = 600
+    }
+  }
+}
+```
+
 Using triggers
 
 ```hcl
