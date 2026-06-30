@@ -44,12 +44,12 @@ The following arguments are supported:
 * `vpc_id` - (Required, String, ForceNew) VPC ID used to establish the SSH connection for the node. Must be owned by the current account and cannot be cross-region.
 * `zone` - (Required, String, ForceNew) Availability zone supported by the product, e.g. `ap-shanghai-5`, `ap-shanghai-8`, `ap-nanjing-3`.
 * `auto_renew` - (Optional, Int) Auto-renew flag. Valid values: `1` (auto-renew), `2` (not auto-renew). Mutable via the renew API.
-* `auto_voucher` - (Optional, Int, ForceNew) Whether to use voucher to deduct automatically. Valid values: `1` (use), `0` (not use). Default value is `0`.
+* `auto_voucher` - (Optional, Int) Whether to use voucher to deduct automatically. Valid values: `1` (use), `0` (not use). Default value is `0`.
 * `login_settings` - (Optional, List, ForceNew) Instance login settings. You can set the login method to password, key, or keep the original image login settings. Only one method can be set.
 * `node_name` - (Optional, String, ForceNew) Node name. Up to 128 characters.
-* `period` - (Optional, Int, ForceNew) Purchase duration in months. Valid values: 1/2/3/4/5/6/7/8/9/10/11/12/24/36. Default value is `1`.
+* `period` - (Optional, Int) Purchase duration in months. Valid values: 1/2/3/4/5/6/7/8/9/10/11/12/24/36. Default value is `1`.
 * `tags` - (Optional, Map) Node tags.
-* `voucher_ids` - (Optional, List: [`String`], ForceNew) Voucher ID list. Must be undeducted voucher IDs owned by the current account.
+* `voucher_ids` - (Optional, List: [`String`]) Voucher ID list. Must be undeducted voucher IDs owned by the current account.
 
 The `login_settings` object supports the following:
 
