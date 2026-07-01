@@ -3,13 +3,13 @@ Provide a resource to create a SCF function.
 Example Usage
 
 ```hcl
-resource "tencentcloud_scf_function" "foo" {
+resource "tencentcloud_scf_function" "example" {
   name    = "ci-test-function"
   handler = "main.do_it"
   runtime = "Python3.6"
 
   cos_bucket_name   = "scf-code-1234567890"
-  cos_object_name   = "code.zip"
+  cos_object_name   = "/path/to/code.zip"
   cos_bucket_region = "ap-guangzhou"
 }
 ```
@@ -17,7 +17,7 @@ resource "tencentcloud_scf_function" "foo" {
 Using Zip file
 
 ```hcl
-resource "tencentcloud_scf_function" "foo" {
+resource "tencentcloud_scf_function" "example" {
   name              = "ci-test-function"
   handler           = "first.do_it_first"
   runtime           = "Python3.6"
@@ -40,7 +40,7 @@ resource "tencentcloud_scf_function" "foo" {
 Using CFS config
 
 ```
-resource "tencentcloud_scf_function" "foo" {
+resource "tencentcloud_scf_function" "example" {
   name    = "ci-test-function"
   handler = "main.do_it"
   runtime = "Python3.6"
@@ -56,35 +56,10 @@ resource "tencentcloud_scf_function" "foo" {
 }
 ```
 
-Using instance concurrency config
-
-```hcl
-resource "tencentcloud_scf_function" "foo" {
-  name    = "ci-test-function"
-  handler = "main.do_it"
-  runtime = "Python3.6"
-
-  instance_concurrency_config {
-    dynamic_enabled            = "FALSE"
-    max_concurrency            = 10
-    instance_isolation_enabled = "FALSE"
-    type                       = "Request-Based"
-
-    session_config {
-      session_source                             = "HEADER"
-      session_name                               = "my_session"
-      maximum_concurrency_session_per_instance   = 50
-      maximum_ttl_in_seconds                     = 3600
-      maximum_idle_time_in_seconds               = 600
-    }
-  }
-}
-```
-
 Using triggers
 
 ```hcl
-resource "tencentcloud_scf_function" "foo" {
+resource "tencentcloud_scf_function" "example" {
   name              = "ci-test-function"
   handler           = "first.do_it_first"
   runtime           = "Python3.6"
@@ -125,5 +100,5 @@ SCF function can be imported, e.g.
 -> **NOTE:** function id is `<function namespace>+<function name>`
 
 ```
-$ terraform import tencentcloud_scf_function.test default+test
+$ terraform import tencentcloud_scf_function.example default+test
 ```
