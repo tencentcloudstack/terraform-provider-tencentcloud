@@ -1289,6 +1289,7 @@ func resourceTencentCloudEmrClusterV2Read(d *schema.ResourceData, meta interface
 						} else {
 							specItem["emr_resource_id"] = ""
 						}
+						specItem["serial_no"] = *n.SerialNo
 						specItem["order_no"] = *n.OrderNo
 
 						userNodeIdx := userNodeIdxByPos[nodeIdx]
@@ -1400,22 +1401,31 @@ func resourceTencentCloudEmrClusterV2Read(d *schema.ResourceData, meta interface
 						specItem["data_disk"] = diskList
 
 						// soft_ware: the EMR API does not return per-role
-						// services/roles, so we restore it from previous
-						// state (rid → soft_ware). For the FIRST Read after
-						// Create the state mapping is empty, so we fall back
-						// to the user's config pool indexed by `_node_index`.
-						// Without this, the Set diff would treat every
-						// `soft_ware` block as drift and force-replace the
-						// whole cluster on the next plan.
+						// services/roles, so we reconstruct it locally.
+						//
+						// Prefer the user's config (indexed by `_node_index`)
+						// over the previous state (rid → soft_ware). Config is
+						// the desired value (add-only enforced at plan time) and
+						// reflects components just installed via InstallSoftware
+						// during this Apply; the previous state is a pre-change
+						// snapshot that lags behind such additions. State is only
+						// used as a fallback when config has nothing for this
+						// node (e.g. an imported node not yet in config).
+						//
+						// During a plan-refresh Read `d` is populated from state,
+						// so the config lookup simply mirrors state there  no
+						// spurious drift. Without this reconstruction the Set diff
+						// would treat every `soft_ware` block as drift and
+						// force-replace the whole cluster on the next plan.
 						var softWare []interface{}
-						if rid != "" {
-							if m := stateSoftWareByRID[roleKey]; m != nil {
-								softWare = m[rid]
-							}
-						}
-						if len(softWare) == 0 && userNodeIdx != "" {
+						if userNodeIdx != "" {
 							if m := configSoftWareByNodeIndex[roleKey]; m != nil {
 								softWare = m[userNodeIdx]
+							}
+						}
+						if len(softWare) == 0 && rid != "" {
+							if m := stateSoftWareByRID[roleKey]; m != nil {
+								softWare = m[rid]
 							}
 						}
 						specItem["software"] = softWare
@@ -1595,6 +1605,12 @@ func resourceTencentCloudEmrClusterV2Update(d *schema.ResourceData, meta interfa
 			return fmt.Errorf("Update emr cluster modify tags failed, flow total status is -1.")
 		}
 	}
+
+	// Tracks nodes whose software install failed so their `software` can be
+	// reverted to the previously-installed set before state is persisted, and
+	// carries the first install error to surface after the final Read.
+	failedNodeSoftware := map[string][]interface{}{}
+	var softwareInstallErr error
 
 	if d.HasChange("zone_resource_configuration") {
 		oldZrcRaw, newZrcRaw := d.GetChange("zone_resource_configuration")
@@ -1831,9 +1847,94 @@ func resourceTencentCloudEmrClusterV2Update(d *schema.ResourceData, meta interfa
 				}
 			}
 		}
+
+		// After all other node mutations are applied, handle add-only software
+		// additions per node. For each existing node whose `software` set has
+		// brand-new components (by `services`), install them via the
+		// InstallSoftware API. Newly scaled-out nodes already receive their
+		// software at scale-out time, so only paired (existing) nodes are
+		// considered here.
+		//
+		// Installs are attempted for every eligible node instead of aborting on
+		// the first failure. InstallSoftware is atomic per node (one batched
+		// call), so a failure means none of that node's additions took effect;
+		// we record such nodes to later revert their `software` to the
+		// previously-installed set, preventing a failed install from being
+		// wrongly persisted to state. The first error is surfaced afterwards.
+		for zoneIdx := 0; zoneIdx < len(newZrcList); zoneIdx++ {
+			oldZrcMap, ok1 := oldZrcList[zoneIdx].(map[string]interface{})
+			newZrcMap, ok2 := newZrcList[zoneIdx].(map[string]interface{})
+			if !ok1 || !ok2 {
+				continue
+			}
+			zoneName := emrZoneOf(newZrcMap)
+
+			oldAllList, _ := oldZrcMap["all_node_resource_spec"].([]interface{})
+			newAllList, _ := newZrcMap["all_node_resource_spec"].([]interface{})
+			if len(oldAllList) == 0 || len(newAllList) == 0 {
+				continue
+			}
+
+			oldAll := oldAllList[0].(map[string]interface{})
+			newAll := newAllList[0].(map[string]interface{})
+
+			for _, roleKey := range []string{"master_resource_spec", "core_resource_spec", "task_resource_spec", "common_resource_spec"} {
+				oldList, newList, changed := nodeRoleChanged(oldAll, newAll, roleKey)
+				if !changed {
+					continue
+				}
+
+				pairedOld, pairedNew, _, _ := alignNodeListByNodeIndex(oldList, newList)
+				for nodeIdx := 0; nodeIdx < len(pairedNew); nodeIdx++ {
+					oldSpec, _ := pairedOld[nodeIdx].(map[string]interface{})
+					newSpec, _ := pairedNew[nodeIdx].(map[string]interface{})
+					if oldSpec == nil || newSpec == nil {
+						continue
+					}
+
+					// Skip nodes that were never actually provisioned.
+					if orderNo, _ := oldSpec["order_no"].(string); orderNo == "" {
+						continue
+					}
+
+					if err := emrInstallAddedSoftwareOnNode(ctx, meta, d, logId, instanceId, oldSpec, newSpec); err != nil {
+						if softwareInstallErr == nil {
+							softwareInstallErr = err
+						}
+						// Revert this node's software to the previously
+						// installed set so the failed additions are not
+						// persisted to state.
+						nodeIndex, _ := newSpec["_node_index"].(string)
+						key := strings.Join([]string{zoneName, roleKey, nodeIndex}, "|")
+						failedNodeSoftware[key] = emrNodeSetToList(oldSpec["software"])
+					}
+				}
+			}
+		}
 	}
 
-	return resourceTencentCloudEmrClusterV2Read(d, meta)
+	if err := resourceTencentCloudEmrClusterV2Read(d, meta); err != nil {
+		if softwareInstallErr != nil {
+			return softwareInstallErr
+		}
+		return err
+	}
+
+	// Reconcile state for nodes whose software install failed: overwrite the
+	// (config-derived) software that Read just wrote with the actually
+	// installed set, so a failed InstallSoftware is never reflected as a
+	// success in state.
+	if len(failedNodeSoftware) > 0 {
+		if err := emrRevertFailedNodeSoftware(d, failedNodeSoftware); err != nil {
+			log.Printf("[WARN]%s revert failed-node software in state failed: %v\n", logId, err)
+		}
+	}
+
+	if softwareInstallErr != nil {
+		return softwareInstallErr
+	}
+
+	return nil
 }
 
 // -----------------------------------------------------------------------------
@@ -2130,10 +2231,12 @@ func customizeDiffEmrClusterV2(ctx context.Context, d *schema.ResourceDiff, meta
 					return err
 				}
 
-				// software immutable: any add/remove/content change is rejected.
-				if err := emrSoftWareSetsEqual(oldNode["software"], newNode["software"]); err != nil {
+				// software is add-only: brand-new components may be added,
+				// but existing components cannot be removed and their roles
+				// cannot be modified.
+				if err := emrValidateSoftWareAddOnly(oldNode["software"], newNode["software"]); err != nil {
 					return fmt.Errorf(
-						"%s.zone_resource_configuration[%d].%s[_node_index=%s].software: software is immutable after create: %v",
+						"%s.zone_resource_configuration[%d].%s[_node_index=%s].software: %v",
 						zoneName, zoneIdx, rk, nodeIdxStr, err)
 				}
 
@@ -2388,6 +2491,11 @@ func emrNodeSpecElem() *schema.Resource {
 				Computed:    true,
 				Description: "EMR node resource ID (read-only).",
 			},
+			"serial_no": {
+				Type:        schema.TypeString,
+				Computed:    true,
+				Description: "Serial number (read-only).",
+			},
 			"order_no": {
 				Type:        schema.TypeString,
 				Computed:    true,
@@ -2423,6 +2531,25 @@ func buildEmrClusterV2NodeResourceSpec(specMap map[string]interface{}) *emr.Node
 	}
 	for _, d := range emrDiskSetToList(specMap["data_disk"]) {
 		spec.DataDisk = append(spec.DataDisk, buildEmrClusterV2DiskSpecInfo(d))
+	}
+	// Per-node SoftwareConfig: map each `software` block to a ServiceDeploy
+	// (SoftwareName=services, Roles=roles). This is in addition to the
+	// cluster-wide SceneSoftwareConfig aggregation handled by the caller.
+	for _, sw := range emrNodeSetToList(specMap["software"]) {
+		sm, ok := sw.(map[string]interface{})
+		if !ok || sm == nil {
+			continue
+		}
+		serviceDeploy := &emr.ServiceDeploy{}
+		if services, ok := sm["services"].(string); ok && services != "" {
+			serviceDeploy.SoftwareName = helper.String(services)
+		}
+		for _, r := range emrNodeSetToList(sm["roles"]) {
+			if role, ok := r.(string); ok && role != "" {
+				serviceDeploy.Roles = append(serviceDeploy.Roles, helper.String(role))
+			}
+		}
+		spec.SoftwareConfig = append(spec.SoftwareConfig, serviceDeploy)
 	}
 	return spec
 }
@@ -2583,6 +2710,51 @@ func emrSoftWareSetsEqual(aRaw, bRaw interface{}) error {
 			return fmt.Errorf("soft_ware: entry %q present in b but not matched in a", key)
 		}
 	}
+	return nil
+}
+
+// emrValidateSoftWareAddOnly enforces the "add-only" rule for the per-node
+// `software` set, keyed by `services` (component name): brand-new components
+// may be added, but removing an existing component or modifying the roles of
+// an existing component is rejected.
+func emrValidateSoftWareAddOnly(oldRaw, newRaw interface{}) error {
+	parse := func(raw interface{}) map[string]string {
+		out := make(map[string]string)
+		for _, item := range emrNodeSetToList(raw) {
+			m, _ := item.(map[string]interface{})
+			if m == nil {
+				continue
+			}
+			services, _ := m["services"].(string)
+			if services == "" {
+				continue
+			}
+			rolesList := emrNodeSetToList(m["roles"])
+			roles := make([]string, 0, len(rolesList))
+			for _, r := range rolesList {
+				if s, ok := r.(string); ok {
+					roles = append(roles, s)
+				}
+			}
+			sort.Strings(roles)
+			out[services] = strings.Join(roles, ",")
+		}
+		return out
+	}
+
+	oldMap := parse(oldRaw)
+	newMap := parse(newRaw)
+
+	for services, oldRoles := range oldMap {
+		newRoles, ok := newMap[services]
+		if !ok {
+			return fmt.Errorf("removing existing software component %q is not allowed (software only supports adding new components)", services)
+		}
+		if oldRoles != newRoles {
+			return fmt.Errorf("modifying roles of existing software component %q is not allowed (software only supports adding new components)", services)
+		}
+	}
+
 	return nil
 }
 
@@ -3249,6 +3421,24 @@ func emrScaleOutSingleNode(
 			DiskSize: helper.Int64(int64(ddMap["disk_size"].(int))),
 		})
 	}
+	// Per-node SoftwareConfig: map each `software` block to a ServiceDeploy
+	// (SoftwareName=services, Roles=roles), consistent with the create path.
+	for _, sw := range emrNodeSetToList(addedSpec["software"]) {
+		sm, ok := sw.(map[string]interface{})
+		if !ok || sm == nil {
+			continue
+		}
+		serviceDeploy := &emr.ServiceDeploy{}
+		if services, ok := sm["services"].(string); ok && services != "" {
+			serviceDeploy.SoftwareName = helper.String(services)
+		}
+		for _, r := range emrNodeSetToList(sm["roles"]) {
+			if role, ok := r.(string); ok && role != "" {
+				serviceDeploy.Roles = append(serviceDeploy.Roles, helper.String(role))
+			}
+		}
+		resourceSpec.SoftwareConfig = append(resourceSpec.SoftwareConfig, serviceDeploy)
+	}
 	req.ResourceSpec = resourceSpec
 
 	conn := meta.(tccommon.ProviderMeta).GetAPIV3Conn()
@@ -3286,6 +3476,139 @@ func emrScaleOutSingleNode(
 	return nil
 }
 
+// emrInstallAddedSoftwareOnNode detects software components present in newSpec
+// but absent in oldSpec (keyed by `services`) and installs them on the node
+// identified by its `serial_no` via the InstallSoftware API. Existing
+// components are never modified or removed here (add-only is enforced at plan
+// time by emrValidateSoftWareAddOnly). All newly-added components are batched
+// into a single InstallSoftware call (SoftInfo and ServiceDeployInfoList both
+// accept multiple elements), and the call waits for the resulting flow to
+// finish.
+func emrInstallAddedSoftwareOnNode(
+	ctx context.Context,
+	meta interface{},
+	d *schema.ResourceData,
+	logId, instanceId string,
+	oldSpec, newSpec map[string]interface{},
+) error {
+	if newSpec == nil {
+		return nil
+	}
+
+	// Existing components (by services) carried by the old state.
+	oldServices := make(map[string]bool)
+	for _, raw := range emrNodeSetToList(oldSpec["software"]) {
+		m, _ := raw.(map[string]interface{})
+		if m == nil {
+			continue
+		}
+		if s, _ := m["services"].(string); s != "" {
+			oldServices[s] = true
+		}
+	}
+
+	// Collect brand-new software components.
+	var added []map[string]interface{}
+	for _, raw := range emrNodeSetToList(newSpec["software"]) {
+		m, _ := raw.(map[string]interface{})
+		if m == nil {
+			continue
+		}
+		s, _ := m["services"].(string)
+		if s == "" || oldServices[s] {
+			continue
+		}
+		added = append(added, m)
+	}
+	if len(added) == 0 {
+		return nil
+	}
+
+	// serial_no is the DeployHostUuid target. It is a read-only field, so
+	// prefer the value carried by the old state and fall back to the new one.
+	serialNo := ""
+	if v, ok := oldSpec["serial_no"].(string); ok && v != "" {
+		serialNo = v
+	} else if v, ok := newSpec["serial_no"].(string); ok {
+		serialNo = v
+	}
+	if serialNo == "" {
+		return fmt.Errorf("cannot install software: node `serial_no` is empty")
+	}
+
+	conn := meta.(tccommon.ProviderMeta).GetAPIV3Conn()
+	service := EMRService{client: conn}
+
+	// InstallSoftware supports batching: aggregate all newly-added software
+	// components into a single request (SoftInfo and ServiceDeployInfoList both
+	// accept multiple elements) so that all additions on this node are handled
+	// by one flow.
+	var (
+		softInfo              = make([]*string, 0, len(added))
+		serviceDeployInfoList = make([]*emr.ServiceDeployInfo, 0, len(added))
+	)
+	for _, sw := range added {
+		services, _ := sw["services"].(string)
+
+		componentList := make([]*emr.ComponentDeployInfo, 0)
+		for _, r := range emrNodeSetToList(sw["roles"]) {
+			role, ok := r.(string)
+			if !ok || role == "" {
+				continue
+			}
+			componentList = append(componentList, &emr.ComponentDeployInfo{
+				ComponentName:      helper.String(role),
+				DeployHostUuidList: []*string{helper.String(serialNo)},
+			})
+		}
+
+		softInfo = append(softInfo, helper.String(services))
+		serviceDeployInfoList = append(serviceDeployInfoList, &emr.ServiceDeployInfo{
+			ServiceName:             helper.String(services),
+			ComponentDeployInfoList: componentList,
+		})
+	}
+
+	req := emr.NewInstallSoftwareRequest()
+	resp := emr.NewInstallSoftwareResponse()
+	req.InstanceId = helper.String(instanceId)
+	req.SoftInfo = softInfo
+	req.ServiceDeployInfoList = serviceDeployInfoList
+	req.CheckServiceDeployInfo = helper.Bool(true)
+
+	reqErr := resource.Retry(tccommon.WriteRetryTimeout, func() *resource.RetryError {
+		result, e := conn.UseEmrClient().InstallSoftwareWithContext(ctx, req)
+		if e != nil {
+			return tccommon.RetryError(e)
+		}
+		log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n",
+			logId, req.GetAction(), req.ToJsonString(), result.ToJsonString())
+		if result == nil || result.Response == nil || result.Response.FlowId == nil {
+			return resource.NonRetryableError(fmt.Errorf("InstallSoftware: response or FlowId is nil"))
+		}
+		resp = result
+		return nil
+	})
+	if reqErr != nil {
+		log.Printf("[CRITAL]%s install software (%d components) failed: %+v", logId, len(softInfo), reqErr)
+		return reqErr
+	}
+
+	flowId := *resp.Response.FlowId
+	conf := tccommon.BuildStateChangeConf(
+		[]string{"0", "1"}, []string{"2", "-1"},
+		d.Timeout(schema.TimeoutUpdate)-time.Minute, time.Second,
+		service.FlowStatusRefreshFunc(instanceId, strconv.FormatInt(flowId, 10), F_KEY_FLOW_ID, []string{}),
+	)
+	if object, e := conf.WaitForState(); e != nil {
+		return e
+	} else if status, ok := object.(*int64); ok && status != nil && *status == -1 {
+		return fmt.Errorf("EMR InstallSoftware flow failed (FlowId=%d), flow total status is -1", flowId)
+	}
+
+	return nil
+}
+
 // emrZoneOf returns placement.0.zone of a zone_resource_configuration block,
 // or "" if missing.
 func emrZoneOf(zrcMap map[string]interface{}) string {
@@ -3299,4 +3622,91 @@ func emrZoneOf(zrcMap map[string]interface{}) string {
 	}
 	z, _ := plMap["zone"].(string)
 	return z
+}
+
+// emrRevertFailedNodeSoftware rewrites `zone_resource_configuration` in state so
+// that nodes whose InstallSoftware call failed have their `software` reverted to
+// the previously-installed set (passed via failedNodeSoftware, keyed by
+// "zone|roleKey|_node_index"). This runs after Read (which reconstructs
+// `software` from the desired config) to ensure a failed install is never
+// recorded as a success in state.
+//
+// The whole structure is rebuilt as plain []interface{}/map values (TypeSet
+// fields converted via emrNodeSetToList/emrDiskSetToList) so the SDK re-hashes
+// the sets correctly on Set. Non-set fields (placement, system_disk, scalars)
+// are copied verbatim.
+func emrRevertFailedNodeSoftware(d *schema.ResourceData, failedNodeSoftware map[string][]interface{}) error {
+	raw := d.Get("zone_resource_configuration")
+	zoneList, ok := raw.([]interface{})
+	if !ok || len(zoneList) == 0 {
+		return nil
+	}
+
+	roleKeys := []string{"master_resource_spec", "core_resource_spec", "task_resource_spec", "common_resource_spec"}
+
+	newZones := make([]interface{}, 0, len(zoneList))
+	for _, zRaw := range zoneList {
+		zMap, ok := zRaw.(map[string]interface{})
+		if !ok {
+			newZones = append(newZones, zRaw)
+			continue
+		}
+
+		// Shallow copy of the zone map, then rebuild the node specs.
+		newZone := make(map[string]interface{}, len(zMap))
+		for k, v := range zMap {
+			newZone[k] = v
+		}
+		zoneName := emrZoneOf(zMap)
+
+		allList, _ := zMap["all_node_resource_spec"].([]interface{})
+		if len(allList) > 0 {
+			if allMap, ok := allList[0].(map[string]interface{}); ok {
+				newAll := make(map[string]interface{}, len(allMap))
+				for k, v := range allMap {
+					newAll[k] = v
+				}
+
+				for _, roleKey := range roleKeys {
+					nodes := emrNodeSetToList(allMap[roleKey])
+					if len(nodes) == 0 {
+						continue
+					}
+
+					newNodes := make([]interface{}, 0, len(nodes))
+					for _, nRaw := range nodes {
+						nMap, ok := nRaw.(map[string]interface{})
+						if !ok {
+							newNodes = append(newNodes, nRaw)
+							continue
+						}
+
+						newNode := make(map[string]interface{}, len(nMap))
+						for k, v := range nMap {
+							newNode[k] = v
+						}
+						// Normalize inner TypeSet fields to lists so Set re-hashes.
+						newNode["data_disk"] = emrDiskSetToList(nMap["data_disk"])
+
+						nodeIndex, _ := nMap["_node_index"].(string)
+						key := strings.Join([]string{zoneName, roleKey, nodeIndex}, "|")
+						if ov, ok := failedNodeSoftware[key]; ok {
+							newNode["software"] = ov
+						} else {
+							newNode["software"] = emrNodeSetToList(nMap["software"])
+						}
+
+						newNodes = append(newNodes, newNode)
+					}
+					newAll[roleKey] = newNodes
+				}
+
+				newZone["all_node_resource_spec"] = []interface{}{newAll}
+			}
+		}
+
+		newZones = append(newZones, newZone)
+	}
+
+	return d.Set("zone_resource_configuration", newZones)
 }
