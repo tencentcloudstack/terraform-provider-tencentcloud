@@ -4,15 +4,13 @@ import (
 	"context"
 	"fmt"
 	"log"
-	"strconv"
 	"strings"
-
-	tccommon "github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/common"
 
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 	dnspod "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/dnspod/v20210323"
 
+	tccommon "github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/common"
 	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/internal/helper"
 )
 
@@ -26,84 +24,24 @@ func ResourceTencentCloudDnspodPackageDomain() *schema.Resource {
 			State: schema.ImportStatePassthrough,
 		},
 		Schema: map[string]*schema.Schema{
-			"domain_id": {
-				Required:    true,
-				Type:        schema.TypeInt,
-				Description: "Domain ID to bind to the package.",
-			},
-
 			"resource_id": {
+				Type:        schema.TypeString,
 				Required:    true,
 				ForceNew:    true,
-				Type:        schema.TypeString,
 				Description: "Package resource ID.",
+			},
+
+			"domain_id": {
+				Type:        schema.TypeInt,
+				Required:    true,
+				Description: "Domain ID to bind to the package.",
 			},
 
 			// computed
 			"domain": {
-				Computed:    true,
 				Type:        schema.TypeString,
+				Computed:    true,
 				Description: "Domain.",
-			},
-
-			"grade": {
-				Computed:    true,
-				Type:        schema.TypeString,
-				Description: "Package grade code.",
-			},
-
-			"grade_title": {
-				Computed:    true,
-				Type:        schema.TypeString,
-				Description: "Package grade title.",
-			},
-
-			"vip_start_at": {
-				Computed:    true,
-				Type:        schema.TypeString,
-				Description: "VIP start time.",
-			},
-
-			"vip_end_at": {
-				Computed:    true,
-				Type:        schema.TypeString,
-				Description: "VIP end time.",
-			},
-
-			"vip_auto_renew": {
-				Computed:    true,
-				Type:        schema.TypeString,
-				Description: "VIP auto renew status. YES: enabled, NO: disabled, DEFAULT: default.",
-			},
-
-			"remain_times": {
-				Computed:    true,
-				Type:        schema.TypeInt,
-				Description: "Remaining domain bind/change times for the package.",
-			},
-
-			"grade_level": {
-				Computed:    true,
-				Type:        schema.TypeInt,
-				Description: "Domain grade level.",
-			},
-
-			"status": {
-				Computed:    true,
-				Type:        schema.TypeString,
-				Description: "Package binding status.",
-			},
-
-			"is_grace_period": {
-				Computed:    true,
-				Type:        schema.TypeString,
-				Description: "Whether the package is in grace period.",
-			},
-
-			"downgrade": {
-				Computed:    true,
-				Type:        schema.TypeBool,
-				Description: "Whether the package is downgraded.",
 			},
 		},
 	}
@@ -113,9 +51,10 @@ func resourceTencentCloudDnspodPackageDomainCreate(d *schema.ResourceData, meta 
 	defer tccommon.LogElapsed("resource.tencentcloud_dnspod_package_domain.create")()
 	defer tccommon.InconsistentCheck(d, meta)()
 
-	logId := tccommon.GetLogId(tccommon.ContextNil)
-
 	var (
+		logId      = tccommon.GetLogId(tccommon.ContextNil)
+		ctx        = tccommon.NewResourceLifeCycleHandleFuncContext(context.Background(), logId, d, meta)
+		request    = dnspod.NewModifyPackageDomainRequest()
 		resourceId string
 		domainId   uint64
 	)
@@ -124,29 +63,41 @@ func resourceTencentCloudDnspodPackageDomainCreate(d *schema.ResourceData, meta 
 		resourceId = v.(string)
 	}
 
-	if v, ok := d.GetOk("domain_id"); ok {
+	if v, ok := d.GetOkExists("domain_id"); ok {
 		domainId = uint64(v.(int))
 	}
 
-	request := dnspod.NewModifyPackageDomainRequest()
 	request.Operation = helper.String("bind")
 	request.ResourceId = helper.String(resourceId)
 	request.NewDomainId = helper.IntUint64(int(domainId))
 
-	err := resource.Retry(tccommon.WriteRetryTimeout, func() *resource.RetryError {
-		result, e := meta.(tccommon.ProviderMeta).GetAPIV3Conn().UseDnsPodClient().ModifyPackageDomainWithContext(context.TODO(), request)
+	reqErr := resource.Retry(tccommon.WriteRetryTimeout, func() *resource.RetryError {
+		result, e := meta.(tccommon.ProviderMeta).GetAPIV3Conn().UseDnsPodClient().ModifyPackageDomainWithContext(ctx, request)
 		if e != nil {
 			return tccommon.RetryError(e)
+		} else {
+			log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), result.ToJsonString())
 		}
-		log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), result.ToJsonString())
+
+		if result == nil || result.Response == nil {
+			return resource.NonRetryableError(fmt.Errorf("Bind dnspod package domain failed, Response is nil."))
+		}
+
 		return nil
 	})
-	if err != nil {
-		log.Printf("[CRITAL]%s create dnspod package_domain failed, reason:%+v", logId, err)
-		return err
+
+	if reqErr != nil {
+		log.Printf("[CRITAL]%s create dnspod package_domain failed, reason:%+v", logId, reqErr)
+		return reqErr
 	}
 
-	d.SetId(strings.Join([]string{resourceId, strconv.FormatUint(domainId, 10)}, tccommon.FILED_SP))
+	d.SetId(resourceId)
+
+	// ModifyPackageDomain is async, poll DescribeDomainVipList until the bound
+	// domain reports Status `enable`.
+	if err := waitDnspodPackageDomainStatus(ctx, meta, resourceId, domainId, true); err != nil {
+		return err
+	}
 
 	return resourceTencentCloudDnspodPackageDomainRead(d, meta)
 }
@@ -155,96 +106,32 @@ func resourceTencentCloudDnspodPackageDomainRead(d *schema.ResourceData, meta in
 	defer tccommon.LogElapsed("resource.tencentcloud_dnspod_package_domain.read")()
 	defer tccommon.InconsistentCheck(d, meta)()
 
-	logId := tccommon.GetLogId(tccommon.ContextNil)
-	ctx := context.WithValue(context.TODO(), tccommon.LogIdKey, logId)
-
-	idSplit := strings.Split(d.Id(), tccommon.FILED_SP)
-	if len(idSplit) != 2 {
-		return fmt.Errorf("id is broken,%s", d.Id())
-	}
-	resourceId := idSplit[0]
-	domainIdStr := idSplit[1]
-	domainId, err := strconv.ParseUint(domainIdStr, 10, 64)
-	if err != nil {
-		return fmt.Errorf("id is broken, domain_id parse error for id=%s: %v", d.Id(), err)
-	}
-
 	var (
-		packageItem *dnspod.PackageListItem
+		logId      = tccommon.GetLogId(tccommon.ContextNil)
+		ctx        = tccommon.NewResourceLifeCycleHandleFuncContext(context.Background(), logId, d, meta)
+		service    = DnspodService{client: meta.(tccommon.ProviderMeta).GetAPIV3Conn()}
+		resourceId = d.Id()
 	)
 
-	err = resource.Retry(tccommon.ReadRetryTimeout, func() *resource.RetryError {
-		request := dnspod.NewDescribeDomainVipListRequest()
-		request.ResourceIdList = []*string{helper.String(resourceId)}
-		limit := uint64(100)
-		request.Limit = &limit
-		request.Offset = helper.IntUint64(0)
-
-		result, e := meta.(tccommon.ProviderMeta).GetAPIV3Conn().UseDnsPodClient().DescribeDomainVipListWithContext(ctx, request)
-		if e != nil {
-			return tccommon.RetryError(e)
-		}
-		log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), result.ToJsonString())
-
-		if result == nil || result.Response == nil {
-			log.Printf("[CRUD] dnspod package_domain id=%s, response is nil", d.Id())
-			return nil
-		}
-
-		for _, item := range result.Response.PackageList {
-			if item != nil && item.DomainId != nil && *item.DomainId == domainId {
-				packageItem = item
-				break
-			}
-		}
-		return nil
-	})
+	respData, err := service.DescribeDnspodPackageDomainById(ctx, resourceId)
 	if err != nil {
-		log.Printf("[CRITAL]%s read dnspod package_domain failed, reason:%+v", logId, err)
 		return err
 	}
 
-	if packageItem == nil {
-		log.Printf("[WARN]%s resource `dnspod package_domain` [%s] not found, please check if it has been deleted.\n", logId, d.Id())
+	if respData == nil {
+		log.Printf("[WARN]%s resource `tencentcloud_dnspod_package_domain` [%s] not found, please check if it has been deleted.\n", logId, d.Id())
 		d.SetId("")
 		return nil
 	}
 
 	_ = d.Set("resource_id", resourceId)
-	_ = d.Set("domain_id", int(domainId))
 
-	if packageItem.Domain != nil {
-		_ = d.Set("domain", packageItem.Domain)
+	if respData.DomainId != nil {
+		_ = d.Set("domain_id", int(*respData.DomainId))
 	}
-	if packageItem.Grade != nil {
-		_ = d.Set("grade", packageItem.Grade)
-	}
-	if packageItem.GradeTitle != nil {
-		_ = d.Set("grade_title", packageItem.GradeTitle)
-	}
-	if packageItem.VipStartAt != nil {
-		_ = d.Set("vip_start_at", packageItem.VipStartAt)
-	}
-	if packageItem.VipEndAt != nil {
-		_ = d.Set("vip_end_at", packageItem.VipEndAt)
-	}
-	if packageItem.VipAutoRenew != nil {
-		_ = d.Set("vip_auto_renew", packageItem.VipAutoRenew)
-	}
-	if packageItem.RemainTimes != nil {
-		_ = d.Set("remain_times", int(*packageItem.RemainTimes))
-	}
-	if packageItem.GradeLevel != nil {
-		_ = d.Set("grade_level", int(*packageItem.GradeLevel))
-	}
-	if packageItem.Status != nil {
-		_ = d.Set("status", packageItem.Status)
-	}
-	if packageItem.IsGracePeriod != nil {
-		_ = d.Set("is_grace_period", packageItem.IsGracePeriod)
-	}
-	if packageItem.Downgrade != nil {
-		_ = d.Set("downgrade", *packageItem.Downgrade)
+
+	if respData.Domain != nil {
+		_ = d.Set("domain", respData.Domain)
 	}
 
 	return nil
@@ -254,23 +141,24 @@ func resourceTencentCloudDnspodPackageDomainUpdate(d *schema.ResourceData, meta 
 	defer tccommon.LogElapsed("resource.tencentcloud_dnspod_package_domain.update")()
 	defer tccommon.InconsistentCheck(d, meta)()
 
-	logId := tccommon.GetLogId(tccommon.ContextNil)
+	var (
+		logId      = tccommon.GetLogId(tccommon.ContextNil)
+		ctx        = tccommon.NewResourceLifeCycleHandleFuncContext(context.Background(), logId, d, meta)
+		resourceId = d.Id()
+	)
 
-	idSplit := strings.Split(d.Id(), tccommon.FILED_SP)
-	if len(idSplit) != 2 {
-		return fmt.Errorf("id is broken,%s", d.Id())
-	}
-	resourceId := idSplit[0]
-	oldDomainIdStr := idSplit[1]
-	oldDomainId, err := strconv.ParseUint(oldDomainIdStr, 10, 64)
-	if err != nil {
-		return fmt.Errorf("id is broken, domain_id parse error for id=%s: %v", d.Id(), err)
+	needChange := false
+	mutableArgs := []string{"domain_id"}
+	for _, v := range mutableArgs {
+		if d.HasChange(v) {
+			needChange = true
+			break
+		}
 	}
 
-	if d.HasChange("domain_id") {
+	if needChange {
 		oldId, newId := d.GetChange("domain_id")
-		_ = oldId
-
+		oldDomainId := uint64(oldId.(int))
 		newDomainId := uint64(newId.(int))
 
 		request := dnspod.NewModifyPackageDomainRequest()
@@ -279,20 +167,31 @@ func resourceTencentCloudDnspodPackageDomainUpdate(d *schema.ResourceData, meta 
 		request.DomainId = helper.IntUint64(int(oldDomainId))
 		request.NewDomainId = helper.IntUint64(int(newDomainId))
 
-		err := resource.Retry(tccommon.WriteRetryTimeout, func() *resource.RetryError {
-			result, e := meta.(tccommon.ProviderMeta).GetAPIV3Conn().UseDnsPodClient().ModifyPackageDomainWithContext(context.TODO(), request)
+		reqErr := resource.Retry(tccommon.WriteRetryTimeout, func() *resource.RetryError {
+			result, e := meta.(tccommon.ProviderMeta).GetAPIV3Conn().UseDnsPodClient().ModifyPackageDomainWithContext(ctx, request)
 			if e != nil {
 				return tccommon.RetryError(e)
+			} else {
+				log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), result.ToJsonString())
 			}
-			log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), result.ToJsonString())
+
+			if result == nil || result.Response == nil {
+				return resource.NonRetryableError(fmt.Errorf("Change dnspod package domain failed, Response is nil."))
+			}
+
 			return nil
 		})
-		if err != nil {
-			log.Printf("[CRITAL]%s update dnspod package_domain failed, reason:%+v", logId, err)
-			return err
+
+		if reqErr != nil {
+			log.Printf("[CRITAL]%s update dnspod package_domain failed, reason:%+v", logId, reqErr)
+			return reqErr
 		}
 
-		d.SetId(strings.Join([]string{resourceId, strconv.FormatUint(newDomainId, 10)}, tccommon.FILED_SP))
+		// ModifyPackageDomain is async, poll DescribeDomainVipList until the
+		// newly bound domain reports Status `enable`.
+		if err := waitDnspodPackageDomainStatus(ctx, meta, resourceId, newDomainId, true); err != nil {
+			return err
+		}
 	}
 
 	return resourceTencentCloudDnspodPackageDomainRead(d, meta)
@@ -302,36 +201,81 @@ func resourceTencentCloudDnspodPackageDomainDelete(d *schema.ResourceData, meta 
 	defer tccommon.LogElapsed("resource.tencentcloud_dnspod_package_domain.delete")()
 	defer tccommon.InconsistentCheck(d, meta)()
 
-	logId := tccommon.GetLogId(tccommon.ContextNil)
+	var (
+		logId      = tccommon.GetLogId(tccommon.ContextNil)
+		ctx        = tccommon.NewResourceLifeCycleHandleFuncContext(context.Background(), logId, d, meta)
+		request    = dnspod.NewModifyPackageDomainRequest()
+		resourceId = d.Id()
+		domainId   uint64
+	)
 
-	idSplit := strings.Split(d.Id(), tccommon.FILED_SP)
-	if len(idSplit) != 2 {
-		return fmt.Errorf("id is broken,%s", d.Id())
-	}
-	resourceId := idSplit[0]
-	domainIdStr := idSplit[1]
-	domainId, err := strconv.ParseUint(domainIdStr, 10, 64)
-	if err != nil {
-		return fmt.Errorf("id is broken, domain_id parse error for id=%s: %v", d.Id(), err)
+	if v, ok := d.GetOkExists("domain_id"); ok {
+		domainId = uint64(v.(int))
 	}
 
-	request := dnspod.NewModifyPackageDomainRequest()
 	request.Operation = helper.String("unbind")
 	request.ResourceId = helper.String(resourceId)
-	request.DomainId = helper.IntUint64(int(domainId))
 
-	err = resource.Retry(tccommon.WriteRetryTimeout, func() *resource.RetryError {
-		result, e := meta.(tccommon.ProviderMeta).GetAPIV3Conn().UseDnsPodClient().ModifyPackageDomainWithContext(context.TODO(), request)
+	reqErr := resource.Retry(tccommon.WriteRetryTimeout, func() *resource.RetryError {
+		result, e := meta.(tccommon.ProviderMeta).GetAPIV3Conn().UseDnsPodClient().ModifyPackageDomainWithContext(ctx, request)
 		if e != nil {
 			return tccommon.RetryError(e)
+		} else {
+			log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), result.ToJsonString())
 		}
-		log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), result.ToJsonString())
+
+		if result == nil || result.Response == nil {
+			return resource.NonRetryableError(fmt.Errorf("Unbind dnspod package domain failed, Response is nil."))
+		}
+
 		return nil
 	})
-	if err != nil {
-		log.Printf("[CRITAL]%s delete dnspod package_domain failed, reason:%+v", logId, err)
+
+	if reqErr != nil {
+		log.Printf("[CRITAL]%s delete dnspod package_domain failed, reason:%+v", logId, reqErr)
+		return reqErr
+	}
+
+	// ModifyPackageDomain is async, poll DescribeDomainVipList until the
+	// package reports Status `enable`.
+	if err := waitDnspodPackageDomainStatus(ctx, meta, resourceId, domainId, false); err != nil {
 		return err
 	}
 
 	return nil
+}
+
+// waitDnspodPackageDomainStatus polls DescribeDomainVipList (queried by the
+// package resource id) until the package task finishes. ModifyPackageDomain is
+// asynchronous: the domain stays in a transient status until the task
+// completes, at which point its Status turns to `enable` (compared
+// case-insensitively to tolerate `ENABLE`).
+//
+// requireDomainMatch controls whether the bound domain must equal domainId:
+//   - true  (bind / change): waits until the package item whose DomainId equals
+//     domainId reports Status `enable`.
+//   - false (unbind): waits until the package item reports Status `enable`,
+//     regardless of which domain it currently carries.
+func waitDnspodPackageDomainStatus(ctx context.Context, meta interface{}, resourceId string, domainId uint64, requireDomainMatch bool) error {
+	service := DnspodService{client: meta.(tccommon.ProviderMeta).GetAPIV3Conn()}
+	return resource.Retry(tccommon.WriteRetryTimeout, func() *resource.RetryError {
+		item, e := service.DescribeDnspodPackageDomainById(ctx, resourceId)
+		if e != nil {
+			return resource.NonRetryableError(e)
+		}
+
+		if item == nil || item.Status == nil {
+			return resource.RetryableError(fmt.Errorf("dnspod package_domain async task not finished, resource_id=%s domain_id=%d: package not ready", resourceId, domainId))
+		}
+
+		if requireDomainMatch && (item.DomainId == nil || *item.DomainId != domainId) {
+			return resource.RetryableError(fmt.Errorf("dnspod package_domain async task not finished, resource_id=%s domain_id=%d not bound yet", resourceId, domainId))
+		}
+
+		if strings.EqualFold(*item.Status, "enable") {
+			return nil
+		}
+
+		return resource.RetryableError(fmt.Errorf("dnspod package_domain async task not finished, resource_id=%s domain_id=%d current status=%q", resourceId, domainId, *item.Status))
+	})
 }
