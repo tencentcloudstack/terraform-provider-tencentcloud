@@ -1488,6 +1488,9 @@ func resourceTencentCloudEmrClusterV2Update(d *schema.ResourceData, meta interfa
 
 		if reqErr != nil {
 			log.Printf("[CRITAL]%s update emr cluster name failed, reason:%+v", logId, reqErr)
+			// Re-sync state from the API before returning so the failed change
+			// is not persisted to state as a success.
+			_ = resourceTencentCloudEmrClusterV2Read(d, meta)
 			return reqErr
 		}
 	}
@@ -1589,10 +1592,14 @@ func resourceTencentCloudEmrClusterV2Update(d *schema.ResourceData, meta interfa
 
 		if reqErr != nil {
 			log.Printf("[CRITAL]%s update emr cluster tags failed, reason:%+v", logId, reqErr)
+			// Re-sync state from the API before returning so the failed change
+			// is not persisted to state as a success.
+			_ = resourceTencentCloudEmrClusterV2Read(d, meta)
 			return reqErr
 		}
 
 		if response.Response.ClusterToFlowIdList[0].FlowId == nil {
+			_ = resourceTencentCloudEmrClusterV2Read(d, meta)
 			return fmt.Errorf("Update emr cluster modify tags failed, FlowId is nil.")
 		}
 
@@ -1600,8 +1607,10 @@ func resourceTencentCloudEmrClusterV2Update(d *schema.ResourceData, meta interfa
 		flowId := int64(*response.Response.ClusterToFlowIdList[0].FlowId)
 		conf := tccommon.BuildStateChangeConf([]string{"0", "1"}, []string{"2", "-1"}, d.Timeout(schema.TimeoutUpdate)-time.Minute, time.Second, service.FlowStatusRefreshFunc(instanceId, strconv.FormatInt(flowId, 10), F_KEY_FLOW_ID, []string{}))
 		if object, e := conf.WaitForState(); e != nil {
+			_ = resourceTencentCloudEmrClusterV2Read(d, meta)
 			return e
 		} else if status, ok := object.(*int64); ok && status != nil && *status == -1 {
+			_ = resourceTencentCloudEmrClusterV2Read(d, meta)
 			return fmt.Errorf("Update emr cluster modify tags failed, flow total status is -1.")
 		}
 	}
@@ -1612,7 +1621,16 @@ func resourceTencentCloudEmrClusterV2Update(d *schema.ResourceData, meta interfa
 	failedNodeSoftware := map[string][]interface{}{}
 	var softwareInstallErr error
 
-	if d.HasChange("zone_resource_configuration") {
+	// The whole zone_resource_configuration mutation phase runs inside a closure
+	// so that, whether it succeeds or fails, we always fall through to the Read
+	// below. Read rebuilds zone_resource_configuration from the nodes that
+	// actually exist on the cloud, ensuring a failed ScaleOutCluster (or any
+	// other partially-applied mutation) is never persisted to state as success.
+	mutationErr := func() error {
+		if !d.HasChange("zone_resource_configuration") {
+			return nil
+		}
+
 		oldZrcRaw, newZrcRaw := d.GetChange("zone_resource_configuration")
 		oldZrcList := oldZrcRaw.([]interface{})
 		newZrcList := newZrcRaw.([]interface{})
@@ -1849,18 +1867,76 @@ func resourceTencentCloudEmrClusterV2Update(d *schema.ResourceData, meta interfa
 		}
 
 		// After all other node mutations are applied, handle add-only software
-		// additions per node. For each existing node whose `software` set has
-		// brand-new components (by `services`), install them via the
-		// InstallSoftware API. Newly scaled-out nodes already receive their
-		// software at scale-out time, so only paired (existing) nodes are
-		// considered here.
+		// additions. First scan every existing (paired) node to collect its
+		// brand-new software components (keyed by `services`), then aggregate
+		// ALL of them across nodes into a SINGLE InstallSoftware call instead of
+		// invoking the API once per node:
+		//   - SoftInfo:              the de-duplicated list of added services.
+		//   - ServiceDeployInfoList: one entry per added service; each service
+		//     carries one ComponentDeployInfo per added role (component), whose
+		//     DeployHostUuidList gathers the serial_no of every node adding that
+		//     service+role.
+		// Newly scaled-out nodes already receive their software at scale-out
+		// time, so only paired (existing) nodes are considered here. Existing
+		// components are never modified or removed (add-only, enforced at plan
+		// time by emrValidateSoftWareAddOnly).
 		//
-		// Installs are attempted for every eligible node instead of aborting on
-		// the first failure. InstallSoftware is atomic per node (one batched
-		// call), so a failure means none of that node's additions took effect;
-		// we record such nodes to later revert their `software` to the
-		// previously-installed set, preventing a failed install from being
-		// wrongly persisted to state. The first error is surfaced afterwards.
+		// The aggregated install is a single flow: on failure none of the
+		// additions took effect, so every participating node's `software` is
+		// reverted to its previously-installed set to avoid persisting a failed
+		// install as success in state.
+		var (
+			softInfo              = make([]*string, 0)
+			serviceDeployInfoList = make([]*emr.ServiceDeployInfo, 0)
+
+			softInfoSeen = make(map[string]bool)
+			serviceIdx   = make(map[string]int)
+			compIdx      = make(map[string]map[string]int)
+			hostSeen     = make(map[string]map[string]map[string]bool)
+
+			// participating nodes keyed by "zone|roleKey|_node_index" -> old software
+			participatingNodes = make(map[string][]interface{})
+		)
+
+		// addComponent merges a single (service, role, serialNo) tuple into the
+		// aggregated request, de-duplicating services, roles and hosts.
+		addComponent := func(service, role, serialNo string) {
+			if !softInfoSeen[service] {
+				softInfoSeen[service] = true
+				softInfo = append(softInfo, helper.String(service))
+			}
+
+			sIdx, ok := serviceIdx[service]
+			if !ok {
+				sIdx = len(serviceDeployInfoList)
+				serviceIdx[service] = sIdx
+				serviceDeployInfoList = append(serviceDeployInfoList, &emr.ServiceDeployInfo{
+					ServiceName:             helper.String(service),
+					ComponentDeployInfoList: make([]*emr.ComponentDeployInfo, 0),
+				})
+				compIdx[service] = make(map[string]int)
+				hostSeen[service] = make(map[string]map[string]bool)
+			}
+			sdi := serviceDeployInfoList[sIdx]
+
+			cIdx, ok := compIdx[service][role]
+			if !ok {
+				cIdx = len(sdi.ComponentDeployInfoList)
+				compIdx[service][role] = cIdx
+				sdi.ComponentDeployInfoList = append(sdi.ComponentDeployInfoList, &emr.ComponentDeployInfo{
+					ComponentName:      helper.String(role),
+					DeployHostUuidList: make([]*string, 0),
+				})
+				hostSeen[service][role] = make(map[string]bool)
+			}
+			cdi := sdi.ComponentDeployInfoList[cIdx]
+
+			if !hostSeen[service][role][serialNo] {
+				hostSeen[service][role][serialNo] = true
+				cdi.DeployHostUuidList = append(cdi.DeployHostUuidList, helper.String(serialNo))
+			}
+		}
+
 		for zoneIdx := 0; zoneIdx < len(newZrcList); zoneIdx++ {
 			oldZrcMap, ok1 := oldZrcList[zoneIdx].(map[string]interface{})
 			newZrcMap, ok2 := newZrcList[zoneIdx].(map[string]interface{})
@@ -1897,23 +1973,68 @@ func resourceTencentCloudEmrClusterV2Update(d *schema.ResourceData, meta interfa
 						continue
 					}
 
-					if err := emrInstallAddedSoftwareOnNode(ctx, meta, d, logId, instanceId, oldSpec, newSpec); err != nil {
-						if softwareInstallErr == nil {
-							softwareInstallErr = err
-						}
-						// Revert this node's software to the previously
-						// installed set so the failed additions are not
-						// persisted to state.
-						nodeIndex, _ := newSpec["_node_index"].(string)
-						key := strings.Join([]string{zoneName, roleKey, nodeIndex}, "|")
-						failedNodeSoftware[key] = emrNodeSetToList(oldSpec["software"])
+					added, serialNo := emrDetectNodeAddedSoftware(oldSpec, newSpec)
+					if len(added) == 0 {
+						continue
 					}
+
+					nodeIndex, _ := newSpec["_node_index"].(string)
+					key := strings.Join([]string{zoneName, roleKey, nodeIndex}, "|")
+
+					// serial_no is the DeployHostUuid target; without it the
+					// node cannot be installed. Revert it to the old software so
+					// the (unperformed) additions are not persisted as success.
+					if serialNo == "" {
+						if softwareInstallErr == nil {
+							softwareInstallErr = fmt.Errorf("cannot install software: node `serial_no` is empty (node_index=%s)", nodeIndex)
+						}
+						failedNodeSoftware[key] = emrNodeSetToList(oldSpec["software"])
+						continue
+					}
+
+					for _, sw := range added {
+						service, _ := sw["services"].(string)
+						if service == "" {
+							continue
+						}
+						for _, r := range emrNodeSetToList(sw["roles"]) {
+							role, ok := r.(string)
+							if !ok || role == "" {
+								continue
+							}
+							addComponent(service, role, serialNo)
+						}
+					}
+
+					participatingNodes[key] = emrNodeSetToList(oldSpec["software"])
 				}
 			}
 		}
-	}
 
+		// Issue a single aggregated InstallSoftware call covering the added
+		// components of every node. On failure, revert all participating nodes.
+		if len(serviceDeployInfoList) > 0 {
+			if err := emrInstallAddedSoftware(ctx, meta, d, logId, instanceId, softInfo, serviceDeployInfoList); err != nil {
+				if softwareInstallErr == nil {
+					softwareInstallErr = err
+				}
+				for k, v := range participatingNodes {
+					failedNodeSoftware[k] = v
+				}
+			}
+		}
+
+		return nil
+	}()
+
+	// Always sync state with the actual cloud state, even when a mutation
+	// failed above. Read rebuilds zone_resource_configuration from the nodes
+	// that really exist, so a failed ScaleOutCluster node (which was never
+	// created) is not persisted to state.
 	if err := resourceTencentCloudEmrClusterV2Read(d, meta); err != nil {
+		if mutationErr != nil {
+			return mutationErr
+		}
 		if softwareInstallErr != nil {
 			return softwareInstallErr
 		}
@@ -1928,6 +2049,10 @@ func resourceTencentCloudEmrClusterV2Update(d *schema.ResourceData, meta interfa
 		if err := emrRevertFailedNodeSoftware(d, failedNodeSoftware); err != nil {
 			log.Printf("[WARN]%s revert failed-node software in state failed: %v\n", logId, err)
 		}
+	}
+
+	if mutationErr != nil {
+		return mutationErr
 	}
 
 	if softwareInstallErr != nil {
@@ -3476,23 +3601,15 @@ func emrScaleOutSingleNode(
 	return nil
 }
 
-// emrInstallAddedSoftwareOnNode detects software components present in newSpec
-// but absent in oldSpec (keyed by `services`) and installs them on the node
-// identified by its `serial_no` via the InstallSoftware API. Existing
-// components are never modified or removed here (add-only is enforced at plan
-// time by emrValidateSoftWareAddOnly). All newly-added components are batched
-// into a single InstallSoftware call (SoftInfo and ServiceDeployInfoList both
-// accept multiple elements), and the call waits for the resulting flow to
-// finish.
-func emrInstallAddedSoftwareOnNode(
-	ctx context.Context,
-	meta interface{},
-	d *schema.ResourceData,
-	logId, instanceId string,
-	oldSpec, newSpec map[string]interface{},
-) error {
+// emrDetectNodeAddedSoftware detects software components present in newSpec but
+// absent from oldSpec (keyed by `services`) for a single node, and returns them
+// together with the node's serial_no (the DeployHostUuid target). serial_no is
+// a read-only field, so the old-state value is preferred with a fallback to the
+// new one. Existing components are never returned here (add-only is enforced at
+// plan time by emrValidateSoftWareAddOnly).
+func emrDetectNodeAddedSoftware(oldSpec, newSpec map[string]interface{}) (added []map[string]interface{}, serialNo string) {
 	if newSpec == nil {
-		return nil
+		return nil, ""
 	}
 
 	// Existing components (by services) carried by the old state.
@@ -3508,7 +3625,6 @@ func emrInstallAddedSoftwareOnNode(
 	}
 
 	// Collect brand-new software components.
-	var added []map[string]interface{}
 	for _, raw := range emrNodeSetToList(newSpec["software"]) {
 		m, _ := raw.(map[string]interface{})
 		if m == nil {
@@ -3521,53 +3637,37 @@ func emrInstallAddedSoftwareOnNode(
 		added = append(added, m)
 	}
 	if len(added) == 0 {
-		return nil
+		return nil, ""
 	}
 
-	// serial_no is the DeployHostUuid target. It is a read-only field, so
-	// prefer the value carried by the old state and fall back to the new one.
-	serialNo := ""
 	if v, ok := oldSpec["serial_no"].(string); ok && v != "" {
 		serialNo = v
 	} else if v, ok := newSpec["serial_no"].(string); ok {
 		serialNo = v
 	}
-	if serialNo == "" {
-		return fmt.Errorf("cannot install software: node `serial_no` is empty")
+
+	return added, serialNo
+}
+
+// emrInstallAddedSoftware issues a single InstallSoftware call for the given
+// aggregated softInfo / serviceDeployInfoList (covering added components across
+// all nodes) and waits for the resulting flow to finish. Only three request
+// fields are set (InstanceId / SoftInfo / ServiceDeployInfoList) plus the fixed
+// CheckServiceDeployInfo=true.
+func emrInstallAddedSoftware(
+	ctx context.Context,
+	meta interface{},
+	d *schema.ResourceData,
+	logId, instanceId string,
+	softInfo []*string,
+	serviceDeployInfoList []*emr.ServiceDeployInfo,
+) error {
+	if len(serviceDeployInfoList) == 0 {
+		return nil
 	}
 
 	conn := meta.(tccommon.ProviderMeta).GetAPIV3Conn()
 	service := EMRService{client: conn}
-
-	// InstallSoftware supports batching: aggregate all newly-added software
-	// components into a single request (SoftInfo and ServiceDeployInfoList both
-	// accept multiple elements) so that all additions on this node are handled
-	// by one flow.
-	var (
-		softInfo              = make([]*string, 0, len(added))
-		serviceDeployInfoList = make([]*emr.ServiceDeployInfo, 0, len(added))
-	)
-	for _, sw := range added {
-		services, _ := sw["services"].(string)
-
-		componentList := make([]*emr.ComponentDeployInfo, 0)
-		for _, r := range emrNodeSetToList(sw["roles"]) {
-			role, ok := r.(string)
-			if !ok || role == "" {
-				continue
-			}
-			componentList = append(componentList, &emr.ComponentDeployInfo{
-				ComponentName:      helper.String(role),
-				DeployHostUuidList: []*string{helper.String(serialNo)},
-			})
-		}
-
-		softInfo = append(softInfo, helper.String(services))
-		serviceDeployInfoList = append(serviceDeployInfoList, &emr.ServiceDeployInfo{
-			ServiceName:             helper.String(services),
-			ComponentDeployInfoList: componentList,
-		})
-	}
 
 	req := emr.NewInstallSoftwareRequest()
 	resp := emr.NewInstallSoftwareResponse()
@@ -3590,7 +3690,7 @@ func emrInstallAddedSoftwareOnNode(
 		return nil
 	})
 	if reqErr != nil {
-		log.Printf("[CRITAL]%s install software (%d components) failed: %+v", logId, len(softInfo), reqErr)
+		log.Printf("[CRITAL]%s install software (%d services) failed: %+v", logId, len(serviceDeployInfoList), reqErr)
 		return reqErr
 	}
 
