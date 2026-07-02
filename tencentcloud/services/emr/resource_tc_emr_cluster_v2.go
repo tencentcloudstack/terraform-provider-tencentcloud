@@ -3496,6 +3496,7 @@ func emrScaleOutSingleNode(
 	resp := emr.NewScaleOutClusterResponse()
 	req.InstanceId = helper.String(instanceId)
 	req.InstanceChargeType = helper.String(chargeType)
+	req.HardwareSourceType = helper.String("HOST")
 	req.ScaleOutNodeConfig = &emr.ScaleOutNodeConfig{
 		NodeFlag:  common.StringPtr(nodeFlag),
 		NodeCount: common.Uint64Ptr(1),
