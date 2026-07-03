@@ -2062,6 +2062,7 @@ func Provider() *schema.Provider {
 			"tencentcloud_dnspod_domain_lock":                                                       dnspod.ResourceTencentCloudDnspodDomainLock(),
 			"tencentcloud_subdomain_validate_txt_value_operation":                                   dnspod.ResourceTencentCloudSubdomainValidateTxtValueOperation(),
 			"tencentcloud_dnspod_package_order":                                                     dnspod.ResourceTencentCloudDnspodPackageOrder(),
+			"tencentcloud_dnspod_package_domain":                                                    dnspod.ResourceTencentCloudDnspodPackageDomain(),
 			"tencentcloud_private_dns_zone":                                                         privatedns.ResourceTencentCloudPrivateDnsZone(),
 			"tencentcloud_private_dns_record":                                                       privatedns.ResourceTencentCloudPrivateDnsRecord(),
 			"tencentcloud_private_dns_account":                                                      privatedns.ResourceTencentCloudPrivateDnsAccount(),
