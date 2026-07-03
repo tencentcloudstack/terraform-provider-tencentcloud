@@ -16,8 +16,8 @@ Provide a resource to create a VOD sub application.
 ### ### Basic Usage
 
 ```hcl
-resource "tencentcloud_vod_sub_application" "foo" {
-  name        = "foo"
+resource "tencentcloud_vod_sub_application" "example" {
+  name        = "tf-example"
   status      = "On"
   description = "this is sub application"
 }
@@ -26,8 +26,8 @@ resource "tencentcloud_vod_sub_application" "foo" {
 ### ### Tags Update Example
 
 ```hcl
-resource "tencentcloud_vod_sub_application" "with_tags" {
-  name        = "my-app-with-tags"
+resource "tencentcloud_vod_sub_application" "example" {
+  name        = "tf-example"
   status      = "On"
   description = "Sub application with updatable tags"
 
@@ -56,13 +56,14 @@ In addition to all arguments above, the following attributes are exported:
 
 * `id` - ID of the resource.
 * `create_time` - The time when the sub application was created.
+* `sub_app_id` - Sub application ID.
 
 
 ## Import
 
-VOD sub application can be imported using the name and id separated by `#`, e.g.
+VOD sub application can be imported using the name and id separated by `name#sub_app_id`, e.g.
 
 ```
-$ terraform import tencentcloud_vod_sub_application.foo name#id
+terraform import tencentcloud_vod_sub_application.example tf-example#1500066377
 ```
 

@@ -52,6 +52,8 @@ type scfFunctionInfo struct {
 	asyncRunEnable *string
 	dnsCache       *string
 	intranetConfig *scf.IntranetConfigIn
+
+	instanceConcurrencyConfig *scf.InstanceConcurrencyConfig
 }
 
 type scfTrigger struct {
@@ -129,6 +131,7 @@ func (me *ScfService) CreateFunction(ctx context.Context, info scfFunctionInfo) 
 	request.AsyncRunEnable = info.asyncRunEnable
 	request.DnsCache = info.dnsCache
 	request.IntranetConfig = info.intranetConfig
+	request.InstanceConcurrencyConfig = info.instanceConcurrencyConfig
 
 	if err := resource.Retry(tccommon.WriteRetryTimeout, func() *resource.RetryError {
 		ratelimit.Check(request.GetAction())
@@ -321,6 +324,7 @@ func (me *ScfService) ModifyFunctionConfig(ctx context.Context, info scfFunction
 
 	request.DnsCache = info.dnsCache
 	request.IntranetConfig = info.intranetConfig
+	request.InstanceConcurrencyConfig = info.instanceConcurrencyConfig
 
 	if err := resource.Retry(tccommon.WriteRetryTimeout, func() *resource.RetryError {
 		ratelimit.Check(request.GetAction())
