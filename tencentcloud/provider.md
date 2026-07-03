@@ -1250,6 +1250,7 @@ tencentcloud_vod_transcode_template
 tencentcloud_vod_watermark_template
 tencentcloud_vod_event_config
 tencentcloud_vod_aigc_api_token
+tencentcloud_vod_aigc_quota
 
 Oceanus
 Data Source
@@ -2683,6 +2684,11 @@ tencentcloud_dbdc_db_custom_clusters
 tencentcloud_dbdc_db_custom_nodes
 tencentcloud_dbdc_db_custom_cluster_nodes
 tencentcloud_dbdc_db_custom_images
+
+Resource
+tencentcloud_dbdc_db_custom_cluster
+tencentcloud_dbdc_db_custom_node
+tencentcloud_dbdc_node_to_db_custom_cluster_attachment
 
 VCube
 Resource

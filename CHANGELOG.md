@@ -1,3 +1,11 @@
+## 1.83.7(June 30, 2026)
+
+FEATURES:
+
+* **New Resource:** `tencentcloud_ssm_secret_version_v2` ([#4260](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/4260))
+
+* **New Ephemeral:** `tencentcloud_ssm_secret_version` ([#4260](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/4260))
+
 ## 1.83.6(June 26, 2026)
 
 FEATURES:
