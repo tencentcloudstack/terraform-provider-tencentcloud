@@ -953,34 +953,34 @@ func (me *VodService) DescribeVodAigcQuotaById(ctx context.Context, subAppId uin
 	request.Limit = helper.IntUint64(VOD_MAX_LIMIT)
 	request.Offset = helper.IntUint64(VOD_DEFAULT_OFFSET)
 
-	var requestId string
 	err := resource.Retry(tccommon.ReadRetryTimeout, func() *resource.RetryError {
 		ratelimit.Check(request.GetAction())
 		response, e := me.client.UseVodClient().DescribeAigcQuotas(request)
 		if e != nil {
 			return tccommon.RetryError(e)
 		}
+
+		log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
 		if response == nil || response.Response == nil {
 			return resource.NonRetryableError(fmt.Errorf("api[%s] response is nil", request.GetAction()))
 		}
-		if response.Response.RequestId != nil {
-			requestId = *response.Response.RequestId
-		}
+
 		for _, item := range response.Response.QuotaSet {
 			if item != nil {
 				quotaItem = item
 				break
 			}
 		}
+
 		return nil
 	})
+
 	if err != nil {
 		errRet = fmt.Errorf("[CRITAL]%s api[%s] fail, sub_app_id [%d], reason[%s]", logId, request.GetAction(), subAppId, err.Error())
 		return
 	}
 
-	log.Printf("[DEBUG]%s api[%s] success, sub_app_id [%d], found [%v], request_id [%s]\n",
-		logId, request.GetAction(), subAppId, quotaItem != nil, requestId)
 	return
 }
 

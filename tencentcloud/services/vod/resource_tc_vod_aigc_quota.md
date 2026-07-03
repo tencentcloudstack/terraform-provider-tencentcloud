@@ -28,6 +28,6 @@ Import
 VOD AIGC Quota can be imported using the composite id `sub_app_id#quota_type#api_token`, e.g.
 
 ```
-$ terraform import tencentcloud_vod_aigc_quota.image 251006666#Image#
+$ terraform import tencentcloud_vod_aigc_quota.image 251006666#Image
 $ terraform import tencentcloud_vod_aigc_quota.text 251006666#Text#my-api-token
 ```

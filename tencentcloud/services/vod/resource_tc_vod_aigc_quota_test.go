@@ -1,6 +1,7 @@
 package vod_test
 
 import (
+	"context"
 	"testing"
 
 	"github.com/agiledragon/gomonkey/v2"
@@ -41,7 +42,7 @@ func TestUnitVodAigcQuotaCreate(t *testing.T) {
 	patches.ApplyMethodReturn(meta.client, "UseVodClient", vodClient)
 
 	createCalled := false
-	patches.ApplyMethodFunc(vodClient, "CreateAigcQuota", func(request *vod.CreateAigcQuotaRequest) (*vod.CreateAigcQuotaResponse, error) {
+	patches.ApplyMethodFunc(vodClient, "CreateAigcQuotaWithContext", func(ctx context.Context, request *vod.CreateAigcQuotaRequest) (*vod.CreateAigcQuotaResponse, error) {
 		createCalled = true
 		assert.Equal(t, uint64(251006666), *request.SubAppId)
 		assert.Equal(t, "Image", *request.QuotaType)
@@ -54,7 +55,7 @@ func TestUnitVodAigcQuotaCreate(t *testing.T) {
 	})
 
 	describeCalled := false
-	patches.ApplyMethodFunc(vodClient, "DescribeAigcQuotas", func(request *vod.DescribeAigcQuotasRequest) (*vod.DescribeAigcQuotasResponse, error) {
+	patches.ApplyMethodFunc(vodClient, "DescribeAigcQuotasWithContext", func(ctx context.Context, request *vod.DescribeAigcQuotasRequest) (*vod.DescribeAigcQuotasResponse, error) {
 		describeCalled = true
 		assert.Equal(t, uint64(251006666), *request.SubAppId)
 		assert.Equal(t, "Image", *request.QuotaType)
@@ -83,7 +84,7 @@ func TestUnitVodAigcQuotaCreate(t *testing.T) {
 	assert.NoError(t, err)
 	assert.True(t, createCalled)
 	assert.True(t, describeCalled)
-	assert.Equal(t, "251006666#Image#", d.Id())
+	assert.Equal(t, "251006666#Image", d.Id())
 }
 
 func TestUnitVodAigcQuotaCreateText(t *testing.T) {
@@ -95,7 +96,7 @@ func TestUnitVodAigcQuotaCreateText(t *testing.T) {
 	patches.ApplyMethodReturn(meta.client, "UseVodClient", vodClient)
 
 	createCalled := false
-	patches.ApplyMethodFunc(vodClient, "CreateAigcQuota", func(request *vod.CreateAigcQuotaRequest) (*vod.CreateAigcQuotaResponse, error) {
+	patches.ApplyMethodFunc(vodClient, "CreateAigcQuotaWithContext", func(ctx context.Context, request *vod.CreateAigcQuotaRequest) (*vod.CreateAigcQuotaResponse, error) {
 		createCalled = true
 		assert.Equal(t, uint64(251006666), *request.SubAppId)
 		assert.Equal(t, "Text", *request.QuotaType)
@@ -108,7 +109,7 @@ func TestUnitVodAigcQuotaCreateText(t *testing.T) {
 		return resp, nil
 	})
 
-	patches.ApplyMethodFunc(vodClient, "DescribeAigcQuotas", func(request *vod.DescribeAigcQuotasRequest) (*vod.DescribeAigcQuotasResponse, error) {
+	patches.ApplyMethodFunc(vodClient, "DescribeAigcQuotasWithContext", func(ctx context.Context, request *vod.DescribeAigcQuotasRequest) (*vod.DescribeAigcQuotasResponse, error) {
 		assert.Equal(t, uint64(251006666), *request.SubAppId)
 		assert.Equal(t, "Text", *request.QuotaType)
 		assert.Equal(t, "my-token", *request.ApiToken)
@@ -149,7 +150,7 @@ func TestUnitVodAigcQuotaRead(t *testing.T) {
 	vodClient := &vod.Client{}
 	patches.ApplyMethodReturn(meta.client, "UseVodClient", vodClient)
 
-	patches.ApplyMethodFunc(vodClient, "DescribeAigcQuotas", func(request *vod.DescribeAigcQuotasRequest) (*vod.DescribeAigcQuotasResponse, error) {
+	patches.ApplyMethodFunc(vodClient, "DescribeAigcQuotasWithContext", func(ctx context.Context, request *vod.DescribeAigcQuotasRequest) (*vod.DescribeAigcQuotasResponse, error) {
 		assert.Equal(t, uint64(251006666), *request.SubAppId)
 		assert.Equal(t, "Image", *request.QuotaType)
 		resp := &vod.DescribeAigcQuotasResponse{}
@@ -172,7 +173,7 @@ func TestUnitVodAigcQuotaRead(t *testing.T) {
 		"quota_type":  "Image",
 		"quota_limit": 200,
 	})
-	d.SetId("251006666#Image#")
+	d.SetId("251006666#Image")
 
 	err := res.Read(d, meta)
 	assert.NoError(t, err)
@@ -190,7 +191,7 @@ func TestUnitVodAigcQuotaReadNotFound(t *testing.T) {
 	vodClient := &vod.Client{}
 	patches.ApplyMethodReturn(meta.client, "UseVodClient", vodClient)
 
-	patches.ApplyMethodFunc(vodClient, "DescribeAigcQuotas", func(request *vod.DescribeAigcQuotasRequest) (*vod.DescribeAigcQuotasResponse, error) {
+	patches.ApplyMethodFunc(vodClient, "DescribeAigcQuotasWithContext", func(ctx context.Context, request *vod.DescribeAigcQuotasRequest) (*vod.DescribeAigcQuotasResponse, error) {
 		resp := &vod.DescribeAigcQuotasResponse{}
 		resp.Response = &vod.DescribeAigcQuotasResponseParams{
 			QuotaSet:  []*vod.AigcQuotaItem{},
@@ -205,7 +206,7 @@ func TestUnitVodAigcQuotaReadNotFound(t *testing.T) {
 		"quota_type":  "Image",
 		"quota_limit": 200,
 	})
-	d.SetId("251006666#Image#")
+	d.SetId("251006666#Image")
 
 	err := res.Read(d, meta)
 	assert.NoError(t, err)
@@ -221,7 +222,7 @@ func TestUnitVodAigcQuotaUpdate(t *testing.T) {
 	patches.ApplyMethodReturn(meta.client, "UseVodClient", vodClient)
 
 	modifyCalled := false
-	patches.ApplyMethodFunc(vodClient, "ModifyAigcQuota", func(request *vod.ModifyAigcQuotaRequest) (*vod.ModifyAigcQuotaResponse, error) {
+	patches.ApplyMethodFunc(vodClient, "ModifyAigcQuotaWithContext", func(ctx context.Context, request *vod.ModifyAigcQuotaRequest) (*vod.ModifyAigcQuotaResponse, error) {
 		modifyCalled = true
 		assert.Equal(t, uint64(251006666), *request.SubAppId)
 		assert.Equal(t, "Image", *request.QuotaType)
@@ -233,7 +234,7 @@ func TestUnitVodAigcQuotaUpdate(t *testing.T) {
 		return resp, nil
 	})
 
-	patches.ApplyMethodFunc(vodClient, "DescribeAigcQuotas", func(request *vod.DescribeAigcQuotasRequest) (*vod.DescribeAigcQuotasResponse, error) {
+	patches.ApplyMethodFunc(vodClient, "DescribeAigcQuotasWithContext", func(ctx context.Context, request *vod.DescribeAigcQuotasRequest) (*vod.DescribeAigcQuotasResponse, error) {
 		resp := &vod.DescribeAigcQuotasResponse{}
 		resp.Response = &vod.DescribeAigcQuotasResponseParams{
 			QuotaSet: []*vod.AigcQuotaItem{
@@ -254,7 +255,7 @@ func TestUnitVodAigcQuotaUpdate(t *testing.T) {
 		"quota_type":  "Image",
 		"quota_limit": 300,
 	})
-	d.SetId("251006666#Image#")
+	d.SetId("251006666#Image")
 
 	err := res.Update(d, meta)
 	assert.NoError(t, err)
@@ -271,7 +272,7 @@ func TestUnitVodAigcQuotaDelete(t *testing.T) {
 	patches.ApplyMethodReturn(meta.client, "UseVodClient", vodClient)
 
 	deleteCalled := false
-	patches.ApplyMethodFunc(vodClient, "DeleteAigcQuota", func(request *vod.DeleteAigcQuotaRequest) (*vod.DeleteAigcQuotaResponse, error) {
+	patches.ApplyMethodFunc(vodClient, "DeleteAigcQuotaWithContext", func(ctx context.Context, request *vod.DeleteAigcQuotaRequest) (*vod.DeleteAigcQuotaResponse, error) {
 		deleteCalled = true
 		assert.Equal(t, uint64(251006666), *request.SubAppId)
 		assert.Equal(t, "Image", *request.QuotaType)
@@ -283,7 +284,7 @@ func TestUnitVodAigcQuotaDelete(t *testing.T) {
 	})
 
 	// After delete, describe returns empty
-	patches.ApplyMethodFunc(vodClient, "DescribeAigcQuotas", func(request *vod.DescribeAigcQuotasRequest) (*vod.DescribeAigcQuotasResponse, error) {
+	patches.ApplyMethodFunc(vodClient, "DescribeAigcQuotasWithContext", func(ctx context.Context, request *vod.DescribeAigcQuotasRequest) (*vod.DescribeAigcQuotasResponse, error) {
 		resp := &vod.DescribeAigcQuotasResponse{}
 		resp.Response = &vod.DescribeAigcQuotasResponseParams{
 			QuotaSet:  []*vod.AigcQuotaItem{},
@@ -298,7 +299,7 @@ func TestUnitVodAigcQuotaDelete(t *testing.T) {
 		"quota_type":  "Image",
 		"quota_limit": 100,
 	})
-	d.SetId("251006666#Image#")
+	d.SetId("251006666#Image")
 
 	err := res.Delete(d, meta)
 	assert.NoError(t, err)
@@ -306,27 +307,51 @@ func TestUnitVodAigcQuotaDelete(t *testing.T) {
 }
 
 func TestUnitVodAigcQuotaParseId(t *testing.T) {
-	subAppId, quotaType, apiToken, err := svcvod.ParseVodAigcQuotaId("251006666#Image#")
+	// two-part id (Image/Video, no api_token)
+	subAppId, quotaType, apiToken, err := svcvod.ParseVodAigcQuotaId("251006666#Image")
 	assert.NoError(t, err)
 	assert.Equal(t, uint64(251006666), subAppId)
 	assert.Equal(t, "Image", quotaType)
 	assert.Equal(t, "", apiToken)
 
+	// two-part id (Video)
+	subAppId, quotaType, apiToken, err = svcvod.ParseVodAigcQuotaId("251006666#Video")
+	assert.NoError(t, err)
+	assert.Equal(t, uint64(251006666), subAppId)
+	assert.Equal(t, "Video", quotaType)
+	assert.Equal(t, "", apiToken)
+
+	// three-part id with empty api_token (Image)
+	subAppId, quotaType, apiToken, err = svcvod.ParseVodAigcQuotaId("251006666#Image#")
+	assert.NoError(t, err)
+	assert.Equal(t, uint64(251006666), subAppId)
+	assert.Equal(t, "Image", quotaType)
+	assert.Equal(t, "", apiToken)
+
+	// three-part id with api_token (Text)
 	subAppId, quotaType, apiToken, err = svcvod.ParseVodAigcQuotaId("251006666#Text#my-token")
 	assert.NoError(t, err)
 	assert.Equal(t, uint64(251006666), subAppId)
 	assert.Equal(t, "Text", quotaType)
 	assert.Equal(t, "my-token", apiToken)
 
-	// Invalid: missing parts
+	// Invalid: single part
 	_, _, _, err = svcvod.ParseVodAigcQuotaId("251006666")
 	assert.Error(t, err)
 
-	// Invalid: not enough parts
-	_, _, _, err = svcvod.ParseVodAigcQuotaId("251006666#Image")
+	// Invalid: too many parts
+	_, _, _, err = svcvod.ParseVodAigcQuotaId("251006666#Image#token#extra")
 	assert.Error(t, err)
 
-	// Invalid: non-numeric sub_app_id
+	// Invalid: non-numeric sub_app_id (2-part)
+	_, _, _, err = svcvod.ParseVodAigcQuotaId("abc#Image")
+	assert.Error(t, err)
+
+	// Invalid: non-numeric sub_app_id (3-part)
 	_, _, _, err = svcvod.ParseVodAigcQuotaId("abc#Image#")
+	assert.Error(t, err)
+
+	// Invalid: empty sub_app_id
+	_, _, _, err = svcvod.ParseVodAigcQuotaId("#Image")
 	assert.Error(t, err)
 }
