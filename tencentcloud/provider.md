@@ -1250,6 +1250,7 @@ tencentcloud_vod_transcode_template
 tencentcloud_vod_watermark_template
 tencentcloud_vod_event_config
 tencentcloud_vod_aigc_api_token
+tencentcloud_vod_aigc_quota
 
 Oceanus
 Data Source
