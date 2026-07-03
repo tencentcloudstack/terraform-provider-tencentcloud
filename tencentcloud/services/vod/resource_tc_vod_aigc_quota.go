@@ -101,6 +101,13 @@ func resourceTencentCloudVodAigcQuotaCreate(d *schema.ResourceData, meta interfa
 	reqErr := resource.Retry(tccommon.WriteRetryTimeout, func() *resource.RetryError {
 		result, e := meta.(tccommon.ProviderMeta).GetAPIV3Conn().UseVodClient().CreateAigcQuotaWithContext(ctx, request)
 		if e != nil {
+			if sdkErr, ok := e.(*sdkErrors.TencentCloudSDKError); ok {
+				// [TencentCloudSDKError] Code=InvalidParameterValue, Message=quota already exists, please use ModifyAigcQuota to update, RequestId=85a9f1b4-e096-46d7-a720-bf8da3b4f0f7
+				if sdkErr.Code == "InvalidParameterValue" && strings.Contains(sdkErr.GetMessage(), "quota already exists") {
+					return nil
+				}
+			}
+
 			return tccommon.RetryError(e)
 		} else {
 			log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), result.ToJsonString())
