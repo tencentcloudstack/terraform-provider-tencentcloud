@@ -56,7 +56,7 @@ require (
 	github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/dc v1.0.633
 	github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/dcdb v1.0.673
 	github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/dlc v1.1.35
-	github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/dnspod v1.0.1056
+	github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/dnspod v1.3.124
 	github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/domain v1.0.414
 	github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/dts v1.1.46
 	github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/eb v1.1.30
