@@ -5,8 +5,15 @@ Example Usage
 If quota type is Image
 
 ```hcl
+# create sub application
+resource "tencentcloud_vod_sub_application" "example" {
+  name        = "tf-example"
+  status      = "On"
+  description = "this is sub application"
+}
+
 resource "tencentcloud_vod_aigc_quota" "example" {
-  sub_app_id  = 1500066373
+  sub_app_id  = tencentcloud_vod_sub_application.example.sub_app_id
   quota_type  = "Image"
   quota_limit = 100
 }
@@ -15,8 +22,15 @@ resource "tencentcloud_vod_aigc_quota" "example" {
 If quota type is Video
 
 ```hcl
+# create sub application
+resource "tencentcloud_vod_sub_application" "example" {
+  name        = "tf-example"
+  status      = "On"
+  description = "this is sub application"
+}
+
 resource "tencentcloud_vod_aigc_quota" "example" {
-  sub_app_id  = 1500066373
+  sub_app_id  = tencentcloud_vod_sub_application.example.sub_app_id
   quota_type  = "Video"
   quota_limit = 200
 }
@@ -25,14 +39,20 @@ resource "tencentcloud_vod_aigc_quota" "example" {
 If quota type is Text
 
 ```hcl
-# create api token
-resource "tencentcloud_vod_aigc_api_token" "example" {
-  sub_app_id = 1500066373
+# create sub application
+resource "tencentcloud_vod_sub_application" "example" {
+  name        = "tf-example"
+  status      = "On"
+  description = "this is sub application"
 }
 
-# set quota limit
+# create api token
+resource "tencentcloud_vod_aigc_api_token" "example" {
+  sub_app_id = tencentcloud_vod_sub_application.example.sub_app_id
+}
+
 resource "tencentcloud_vod_aigc_quota" "example" {
-  sub_app_id  = 1500066373
+  sub_app_id  = tencentcloud_vod_sub_application.example.sub_app_id
   quota_type  = "Text"
   quota_limit = 50
   api_token   = tencentcloud_vod_aigc_api_token.example.api_token
