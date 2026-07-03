@@ -71,6 +71,7 @@ resource "tencentcloud_instance" "example" {
   instance_type     = data.tencentcloud_instance_types.types.instance_types.0.instance_type
   system_disk_type  = "CLOUD_PREMIUM"
   system_disk_size  = 50
+  kms_key_id        = "kms-xxxxxxxx"
   hostname          = "user"
   project_id        = 0
   vpc_id            = tencentcloud_vpc.vpc.id
@@ -497,6 +498,7 @@ The following arguments are supported:
 * `keep_image_login` - (Optional, Bool) Whether to keep image login or not, default is `false`. When the image type is private or shared or imported, this parameter can be set `true`. Modifications may lead to the reinstallation of the instance's operating system..
 * `key_ids` - (Optional, Set: [`String`]) The key pair to use for the instance, it looks like `skey-16jig7tx`. Modifications may lead to the reinstallation of the instance's operating system.
 * `key_name` - (Optional, String, **Deprecated**) Please use `key_ids` instead. The key pair to use for the instance, it looks like `skey-16jig7tx`. Modifications may lead to the reinstallation of the instance's operating system.
+* `kms_key_id` - (Optional, String, ForceNew) Custom KMS key ID for system disk encryption. This parameter is used to specify a custom KMS key for encrypting the system disk during instance creation or reinstallation.
 * `launch_template_id` - (Optional, String, ForceNew) Instance launch template ID. This parameter allows you to create an instance using the preset parameters in the instance template.
 * `launch_template_version` - (Optional, Int, ForceNew) The instance launch template version number. If given, a new instance launch template will be created based on the given version number.
 * `orderly_security_groups` - (Optional, List: [`String`]) A list of orderly security group IDs to associate with.

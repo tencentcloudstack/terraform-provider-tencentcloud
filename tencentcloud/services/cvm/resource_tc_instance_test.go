@@ -5,8 +5,11 @@ import (
 	tcacctest "github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/acctest"
 	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/common"
 	tccommon "github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/common"
+	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/connectivity"
+	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/internal/helper"
 	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/services/cvm"
 	svccvm "github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/services/cvm"
+	svctag "github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/services/tag"
 	svcvpc "github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/services/vpc"
 
 	"context"
@@ -15,8 +18,12 @@ import (
 	"testing"
 	"time"
 
+	"github.com/agiledragon/gomonkey/v2"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
+	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/terraform"
+	"github.com/stretchr/testify/assert"
+	cvmsdk "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/cvm/v20170312"
 )
 
 func init() {
@@ -3210,3 +3217,246 @@ resource "tencentcloud_instance" "dedicated_resource_pack" {
   dedicated_resource_pack_ids     = ["drp-xxxxxx"]
 }
 `
+
+// go test ./tencentcloud/services/cvm/ -run "TestCvmInstanceSystemDiskKmsKeyId" -v -count=1 -gcflags="all=-l"
+
+func TestCvmInstanceSystemDiskKmsKeyId_Create(t *testing.T) {
+	patches := gomonkey.NewPatches()
+	defer patches.Reset()
+
+	// Mock the TencentCloudClient and CVM client
+	mockClient := &connectivity.TencentCloudClient{}
+	cvmSDKClient := &cvmsdk.Client{}
+	patches.ApplyMethodReturn(mockClient, "UseCvmClient", cvmSDKClient)
+
+	// Track the captured RunInstances request
+	var capturedRunReq *cvmsdk.RunInstancesRequest
+	patches.ApplyMethodFunc(cvmSDKClient, "RunInstances", func(request *cvmsdk.RunInstancesRequest) (*cvmsdk.RunInstancesResponse, error) {
+		capturedRunReq = request
+		resp := cvmsdk.NewRunInstancesResponse()
+		instanceId := "ins-test-kms"
+		resp.Response = &cvmsdk.RunInstancesResponseParams{
+			InstanceIdSet: []*string{&instanceId},
+			RequestId:     helper.String("fake-request-id"),
+		}
+		return resp, nil
+	})
+
+	// Mock DescribeImages to return the image used in test
+	patches.ApplyMethodFunc(cvmSDKClient, "DescribeImages", func(request *cvmsdk.DescribeImagesRequest) (*cvmsdk.DescribeImagesResponse, error) {
+		resp := cvmsdk.NewDescribeImagesResponse()
+		resp.Response = &cvmsdk.DescribeImagesResponseParams{
+			TotalCount: helper.Int64(1),
+			ImageSet: []*cvmsdk.Image{
+				{
+					ImageId: helper.String("img-xxxxxxxx"),
+				},
+			},
+			RequestId: helper.String("fake-request-id"),
+		}
+		return resp, nil
+	})
+
+	// Mock DescribeInstancesAttributes to return empty attributes
+	patches.ApplyMethodFunc(cvmSDKClient, "DescribeInstancesAttributes", func(request *cvmsdk.DescribeInstancesAttributesRequest) (*cvmsdk.DescribeInstancesAttributesResponse, error) {
+		resp := cvmsdk.NewDescribeInstancesAttributesResponse()
+		resp.Response = &cvmsdk.DescribeInstancesAttributesResponseParams{
+			InstanceSet: []*cvmsdk.InstanceAttribute{
+				{
+					InstanceId: helper.String("ins-test-kms"),
+				},
+			},
+			RequestId: helper.String("fake-request-id"),
+		}
+		return resp, nil
+	})
+
+	// Mock DescribeInstanceById to return a running instance
+	var svccvmService svccvm.CvmService
+	patches.ApplyMethodFunc(&svccvmService, "DescribeInstanceById", func(ctx context.Context, instanceId string) (*cvmsdk.Instance, error) {
+		return &cvmsdk.Instance{
+			InstanceId:         &instanceId,
+			InstanceState:      helper.String("RUNNING"),
+			SystemDisk:         &cvmsdk.SystemDisk{},
+			InstanceName:       helper.String("test-instance"),
+			InstanceType:       helper.String("S5.MEDIUM4"),
+			ImageId:            helper.String("img-xxxxxxxx"),
+			InstanceChargeType: helper.String("POSTPAID_BY_HOUR"),
+			VirtualPrivateCloud: &cvmsdk.VirtualPrivateCloud{
+				VpcId:    helper.String("vpc-xxxxxxxx"),
+				SubnetId: helper.String("subnet-xxxxxxxx"),
+			},
+			SecurityGroupIds: []*string{helper.String("sg-xxxxxxxx")},
+			Placement: &cvmsdk.Placement{
+				Zone:      helper.String("ap-guangzhou-3"),
+				ProjectId: helper.Int64(0),
+			},
+			InternetAccessible: &cvmsdk.InternetAccessible{
+				InternetMaxBandwidthOut: helper.Int64(1),
+				InternetChargeType:      helper.String("BANDWIDTH_PREPAID"),
+			},
+			PublicIpAddresses: []*string{helper.String("1.2.3.4")},
+			OsName:            helper.String("TencentOS"),
+			CreatedTime:       helper.String("2024-01-01T00:00:00Z"),
+			CPU:               helper.Int64(4),
+			Memory:            helper.Int64(8),
+			LoginSettings:     &cvmsdk.LoginSettings{},
+		}, nil
+	})
+
+	// Mock DescribeResourceTags to return empty tags
+	var tagService svctag.TagService
+	patches.ApplyMethodFunc(&tagService, "DescribeResourceTags", func(ctx context.Context, serviceType, resourceType, region, resourceId string) (map[string]string, error) {
+		return map[string]string{}, nil
+	})
+
+	meta := &mockMeta{client: mockClient}
+	res := svccvm.ResourceTencentCloudInstance()
+
+	testKmsKeyId := "kms-abcd1234"
+	d := schema.TestResourceDataRaw(t, res.Schema, map[string]interface{}{
+		"image_id":               "img-xxxxxxxx",
+		"availability_zone":      "ap-guangzhou-3",
+		"instance_name":          "test-instance",
+		"instance_type":          "S5.MEDIUM4",
+		"system_disk_type":       "CLOUD_PREMIUM",
+		"system_disk_size":       50,
+		"kms_key_id":             testKmsKeyId,
+		"allocate_public_ip":     true,
+		"internet_max_bandwidth": 1,
+		"vpc_id":                 "vpc-xxxxxxxx",
+		"subnet_id":              "subnet-xxxxxxxx",
+	})
+
+	err := res.Create(d, meta)
+	assert.NoError(t, err)
+	assert.Equal(t, "ins-test-kms", d.Id())
+
+	// Verify kms_key_id was passed to SystemDisk.KmsKeyId in RunInstances
+	assert.NotNil(t, capturedRunReq)
+	assert.NotNil(t, capturedRunReq.SystemDisk)
+	assert.NotNil(t, capturedRunReq.SystemDisk.KmsKeyId)
+	assert.Equal(t, testKmsKeyId, *capturedRunReq.SystemDisk.KmsKeyId)
+}
+
+func TestCvmInstanceSystemDiskKmsKeyId_CreateWithoutKmsKey(t *testing.T) {
+	patches := gomonkey.NewPatches()
+	defer patches.Reset()
+
+	mockClient := &connectivity.TencentCloudClient{}
+	cvmSDKClient := &cvmsdk.Client{}
+	patches.ApplyMethodReturn(mockClient, "UseCvmClient", cvmSDKClient)
+
+	var capturedRunReq *cvmsdk.RunInstancesRequest
+	patches.ApplyMethodFunc(cvmSDKClient, "RunInstances", func(request *cvmsdk.RunInstancesRequest) (*cvmsdk.RunInstancesResponse, error) {
+		capturedRunReq = request
+		resp := cvmsdk.NewRunInstancesResponse()
+		instanceId := "ins-test-no-kms"
+		resp.Response = &cvmsdk.RunInstancesResponseParams{
+			InstanceIdSet: []*string{&instanceId},
+			RequestId:     helper.String("fake-request-id"),
+		}
+		return resp, nil
+	})
+
+	// Mock DescribeImages
+	patches.ApplyMethodFunc(cvmSDKClient, "DescribeImages", func(request *cvmsdk.DescribeImagesRequest) (*cvmsdk.DescribeImagesResponse, error) {
+		resp := cvmsdk.NewDescribeImagesResponse()
+		resp.Response = &cvmsdk.DescribeImagesResponseParams{
+			TotalCount: helper.Int64(1),
+			ImageSet: []*cvmsdk.Image{
+				{
+					ImageId: helper.String("img-xxxxxxxx"),
+				},
+			},
+			RequestId: helper.String("fake-request-id"),
+		}
+		return resp, nil
+	})
+
+	// Mock DescribeInstancesAttributes
+	patches.ApplyMethodFunc(cvmSDKClient, "DescribeInstancesAttributes", func(request *cvmsdk.DescribeInstancesAttributesRequest) (*cvmsdk.DescribeInstancesAttributesResponse, error) {
+		resp := cvmsdk.NewDescribeInstancesAttributesResponse()
+		resp.Response = &cvmsdk.DescribeInstancesAttributesResponseParams{
+			InstanceSet: []*cvmsdk.InstanceAttribute{
+				{
+					InstanceId: helper.String("ins-test-no-kms"),
+				},
+			},
+			RequestId: helper.String("fake-request-id"),
+		}
+		return resp, nil
+	})
+
+	var svccvmService svccvm.CvmService
+	patches.ApplyMethodFunc(&svccvmService, "DescribeInstanceById", func(ctx context.Context, instanceId string) (*cvmsdk.Instance, error) {
+		return &cvmsdk.Instance{
+			InstanceId:         &instanceId,
+			InstanceState:      helper.String("RUNNING"),
+			SystemDisk:         &cvmsdk.SystemDisk{},
+			InstanceName:       helper.String("test-instance"),
+			InstanceType:       helper.String("S5.MEDIUM4"),
+			ImageId:            helper.String("img-xxxxxxxx"),
+			InstanceChargeType: helper.String("POSTPAID_BY_HOUR"),
+			VirtualPrivateCloud: &cvmsdk.VirtualPrivateCloud{
+				VpcId:    helper.String("vpc-xxxxxxxx"),
+				SubnetId: helper.String("subnet-xxxxxxxx"),
+			},
+			SecurityGroupIds: []*string{helper.String("sg-xxxxxxxx")},
+			Placement: &cvmsdk.Placement{
+				Zone:      helper.String("ap-guangzhou-3"),
+				ProjectId: helper.Int64(0),
+			},
+			InternetAccessible: &cvmsdk.InternetAccessible{
+				InternetMaxBandwidthOut: helper.Int64(1),
+				InternetChargeType:      helper.String("BANDWIDTH_PREPAID"),
+			},
+			PublicIpAddresses: []*string{helper.String("1.2.3.4")},
+			OsName:            helper.String("TencentOS"),
+			CreatedTime:       helper.String("2024-01-01T00:00:00Z"),
+			CPU:               helper.Int64(4),
+			Memory:            helper.Int64(8),
+			LoginSettings:     &cvmsdk.LoginSettings{},
+		}, nil
+	})
+
+	// Mock DescribeResourceTags
+	var tagService svctag.TagService
+	patches.ApplyMethodFunc(&tagService, "DescribeResourceTags", func(ctx context.Context, serviceType, resourceType, region, resourceId string) (map[string]string, error) {
+		return map[string]string{}, nil
+	})
+
+	meta := &mockMeta{client: mockClient}
+	res := svccvm.ResourceTencentCloudInstance()
+
+	d := schema.TestResourceDataRaw(t, res.Schema, map[string]interface{}{
+		"image_id":               "img-xxxxxxxx",
+		"availability_zone":      "ap-guangzhou-3",
+		"instance_name":          "test-instance",
+		"instance_type":          "S5.MEDIUM4",
+		"system_disk_type":       "CLOUD_PREMIUM",
+		"system_disk_size":       50,
+		"allocate_public_ip":     true,
+		"internet_max_bandwidth": 1,
+		"vpc_id":                 "vpc-xxxxxxxx",
+		"subnet_id":              "subnet-xxxxxxxx",
+	})
+
+	err := res.Create(d, meta)
+	assert.NoError(t, err)
+	assert.Equal(t, "ins-test-no-kms", d.Id())
+
+	// Verify kms_key_id is NOT set in SystemDisk when not provided
+	assert.NotNil(t, capturedRunReq)
+	if capturedRunReq.SystemDisk != nil {
+		assert.Nil(t, capturedRunReq.SystemDisk.KmsKeyId)
+	}
+}
+
+type mockMeta struct {
+	client *connectivity.TencentCloudClient
+}
+
+func (m *mockMeta) GetAPIV3Conn() *connectivity.TencentCloudClient {
+	return m.client
+}

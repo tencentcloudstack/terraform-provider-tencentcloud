@@ -327,6 +327,12 @@ func ResourceTencentCloudInstance() *schema.Resource {
 				Computed:    true,
 				Description: "Name of the system disk.",
 			},
+			"kms_key_id": {
+				Type:        schema.TypeString,
+				Optional:    true,
+				ForceNew:    true,
+				Description: "Custom KMS key ID for system disk encryption. This parameter is used to specify a custom KMS key for encrypting the system disk during instance creation or reinstallation.",
+			},
 			"system_disk_resize_online": {
 				Type:        schema.TypeBool,
 				Optional:    true,
@@ -890,6 +896,11 @@ func resourceTencentCloudInstanceCreate(d *schema.ResourceData, meta interface{}
 
 	if v, ok := d.GetOk("system_disk_name"); ok {
 		systemDisk.DiskName = helper.String(v.(string))
+		systemDiskFlag = true
+	}
+
+	if v, ok := d.GetOk("kms_key_id"); ok {
+		systemDisk.KmsKeyId = helper.String(v.(string))
 		systemDiskFlag = true
 	}
 
@@ -2091,6 +2102,13 @@ func resourceTencentCloudInstanceUpdate(d *schema.ResourceData, meta interface{}
 
 		if v, ok := d.GetOk("image_id"); ok {
 			request.ImageId = helper.String(v.(string))
+		}
+
+		// system disk
+		if v, ok := d.GetOk("kms_key_id"); ok {
+			request.SystemDisk = &cvm.SystemDisk{
+				KmsKeyId: helper.String(v.(string)),
+			}
 		}
 
 		// enhanced service
