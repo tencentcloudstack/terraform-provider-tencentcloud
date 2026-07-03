@@ -23,7 +23,6 @@ resource "tencentcloud_dbdc_db_custom_cluster" "example" {
   }
 }
 
-# create node
 resource "tencentcloud_dbdc_db_custom_node" "example" {
   zone       = "ap-shanghai-5"
   image_id   = "img-rm13akp3"
@@ -31,7 +30,7 @@ resource "tencentcloud_dbdc_db_custom_node" "example" {
   subnet_id  = "subnet-qd4upp83"
   node_type  = "DB.AT5.8XLARGE128"
   period     = 1
-  auto_renew = 0
+  auto_renew = 2
   node_name  = "tf-example"
 
   login_settings {
@@ -43,7 +42,6 @@ resource "tencentcloud_dbdc_db_custom_node" "example" {
   }
 }
 
-# attach node to cluster
 resource "tencentcloud_dbdc_node_to_db_custom_cluster_attachment" "example" {
   cluster_id = tencentcloud_dbdc_db_custom_cluster.example.id
   node_id    = tencentcloud_dbdc_db_custom_node.example.id
