@@ -396,6 +396,16 @@ func ResourceTencentCloudEmrClusterV2() *schema.Resource {
 											"This field is a `TypeSet` keyed by `_node_index` only  block order in HCL is irrelevant.",
 										Elem: emrNodeSpecElem(),
 									},
+									"router_resource_spec": {
+										Type:     schema.TypeSet,
+										Optional: true,
+										Set:      hashEmrNodeResourceSpec,
+										Description: "Router node resource specifications. Router nodes are NOT created by `CreateCluster`; " +
+											"instead they are added via `ScaleOutCluster` (NodeFlag=ROUTER) after the cluster becomes running. " +
+											"Unlike the other roles, router blocks are NOT required to be identical to each other. " +
+											"This field is a `TypeSet` keyed by `_node_index` only  block order in HCL is irrelevant.",
+										Elem: emrNodeSpecElem(),
+									},
 								},
 							},
 						},
@@ -852,6 +862,41 @@ func resourceTencentCloudEmrClusterV2Create(d *schema.ResourceData, meta interfa
 		return waitErr
 	}
 
+	// Router nodes are not part of CreateCluster. Once the cluster is running,
+	// add any configured router nodes via ScaleOutCluster (NodeFlag=ROUTER),
+	// one node per spec block, reusing the shared scale-out helper. Failures
+	// fall through to Read so state reflects the nodes that were actually
+	// created.
+	if v, ok := d.GetOk("zone_resource_configuration"); ok {
+		for zoneIdx, item := range v.([]interface{}) {
+			zrcMap, _ := item.(map[string]interface{})
+			if zrcMap == nil {
+				continue
+			}
+			zone := emrZoneOf(zrcMap)
+			allList, _ := zrcMap["all_node_resource_spec"].([]interface{})
+			if len(allList) == 0 {
+				continue
+			}
+			allMap, _ := allList[0].(map[string]interface{})
+			if allMap == nil {
+				continue
+			}
+			for addedIdx, raw := range emrNodeSetToList(allMap["router_resource_spec"]) {
+				routerSpec, _ := raw.(map[string]interface{})
+				if routerSpec == nil {
+					continue
+				}
+				if err := emrScaleOutSingleNode(ctx, meta, d, logId, instanceId,
+					"ROUTER", zone, zoneIdx, addedIdx, routerSpec); err != nil {
+					log.Printf("[CRITAL]%s zone[%d] router scale-out failed during create: %+v", logId, zoneIdx, err)
+					_ = resourceTencentCloudEmrClusterV2Read(d, meta)
+					return err
+				}
+			}
+		}
+	}
+
 	return resourceTencentCloudEmrClusterV2Read(d, meta)
 }
 
@@ -1047,12 +1092,13 @@ func resourceTencentCloudEmrClusterV2Read(d *schema.ResourceData, meta interface
 				node["placement"] = []interface{}{placementItem}
 
 				// all_node_resource_spec: group nodes in this Zone by Flag.
-				// Flag: 1=master, 2=core, 3=task, 0=common
+				// Flag: 1=master, 2=core, 3=task, 0=common, 4=router
 				roleKeyMap := map[int64]string{
 					1: "master_resource_spec",
 					2: "core_resource_spec",
 					3: "task_resource_spec",
 					0: "common_resource_spec",
+					4: "router_resource_spec",
 				}
 				grouped := make(map[int64][]*emr.NodeHardwareInfo)
 				for _, n := range zoneNodes {
@@ -1098,7 +1144,7 @@ func resourceTencentCloudEmrClusterV2Read(d *schema.ResourceData, meta interface
 						if allMap == nil {
 							break
 						}
-						for _, rk := range []string{"master_resource_spec", "core_resource_spec", "task_resource_spec", "common_resource_spec"} {
+						for _, rk := range []string{"master_resource_spec", "core_resource_spec", "task_resource_spec", "common_resource_spec", "router_resource_spec"} {
 							rawList := emrNodeSetToList(allMap[rk])
 							nodeMap := map[string]string{}
 							diskMap := map[string]map[string]string{}
@@ -1180,7 +1226,7 @@ func resourceTencentCloudEmrClusterV2Read(d *schema.ResourceData, meta interface
 						if allMap == nil {
 							break
 						}
-						for _, rk := range []string{"master_resource_spec", "core_resource_spec", "task_resource_spec", "common_resource_spec"} {
+						for _, rk := range []string{"master_resource_spec", "core_resource_spec", "task_resource_spec", "common_resource_spec", "router_resource_spec"} {
 							rawList := emrNodeSetToList(allMap[rk])
 							nodeOrd := make([]string, 0, len(rawList))
 							perNodeMap := make(map[string][]cfgDiskEntry, len(rawList))
@@ -1826,6 +1872,74 @@ func resourceTencentCloudEmrClusterV2Update(d *schema.ResourceData, meta interfa
 				}
 			}
 
+			// ---------- router_resource_spec ----------
+			// Router behaves like task: it supports in-place reconfiguration
+			// (instance_type / data_disk), scale-out and scale-in, all via the
+			// shared helpers with NodeFlag=ROUTER. Router blocks are not subject
+			// to the cross-block uniformity requirement of the other roles.
+			if oldRouterList, newRouterList, changed := nodeRoleChanged(oldAll, newAll, "router_resource_spec"); changed {
+				pairedOldRouter, pairedNewRouter, addedRouter, removedOldRouter := alignNodeListByNodeIndex(oldRouterList, newRouterList)
+
+				// Content changes on existing nodes.
+				for nodeIdx := 0; nodeIdx < len(pairedNewRouter); nodeIdx++ {
+					oldSpec, _ := pairedOldRouter[nodeIdx].(map[string]interface{})
+					newSpec, _ := pairedNewRouter[nodeIdx].(map[string]interface{})
+
+					// Skip nodes that were never actually provisioned.
+					if orderNo, _ := oldSpec["order_no"].(string); orderNo == "" {
+						continue
+					}
+
+					if rid, _ := oldSpec["emr_resource_id"].(string); rid != "" {
+						if sysDiskChanged(oldSpec, newSpec) {
+							return fmt.Errorf("modifying system_disk of an existing node (emr_resource_id=%s) is not supported", rid)
+						}
+					}
+					if instanceTypeChanged(oldSpec, newSpec) {
+						if err := emrModifyNodeInstanceType(ctx, meta, d, logId, instanceId,
+							"router_resource_spec", zoneIdx, nodeIdx, oldSpec, newSpec); err != nil {
+							return err
+						}
+					}
+					if dataDiskChanged(oldSpec, newSpec) {
+						orderNo, _ := oldSpec["order_no"].(string)
+						oldDisks := emrDiskSetToList(oldSpec["data_disk"])
+						newDisks := emrDiskSetToList(newSpec["data_disk"])
+						if err := handleNodeDataDiskChange(ctx, meta, d, logId, instanceId, orderNo, oldDisks, newDisks, "router_resource_spec", zoneIdx, nodeIdx); err != nil {
+							return err
+						}
+					}
+				}
+
+				// Scale-in first: terminate old router nodes that have no matching
+				// new entry. Doing scale-in before scale-out frees capacity
+				// before new nodes are added.
+				var removedRouterOrderNos []*string
+				for _, raw := range removedOldRouter {
+					m, _ := raw.(map[string]interface{})
+					orderNo, _ := m["order_no"].(string)
+					if orderNo != "" {
+						removedRouterOrderNos = append(removedRouterOrderNos, helper.String(orderNo))
+					}
+				}
+				if err := emrTerminateNodes(ctx, meta, d, logId, instanceId, "ROUTER", zoneIdx, removedRouterOrderNos); err != nil {
+					return err
+				}
+
+				// Scale-out: new nodes.
+				zone := emrZoneOf(newZrcMap)
+				for addedIdx, addedRaw := range addedRouter {
+					addedSpec, _ := addedRaw.(map[string]interface{})
+					if addedSpec == nil {
+						continue
+					}
+					if err := emrScaleOutSingleNode(ctx, meta, d, logId, instanceId,
+						"ROUTER", zone, zoneIdx, addedIdx, addedSpec); err != nil {
+						return err
+					}
+				}
+			}
+
 			// ---------- common_resource_spec ----------
 			if oldCommonList, newCommonList, changed := nodeRoleChanged(oldAll, newAll, "common_resource_spec"); changed {
 				// common_resource_spec does not support scaling (add or remove nodes).
@@ -1954,7 +2068,7 @@ func resourceTencentCloudEmrClusterV2Update(d *schema.ResourceData, meta interfa
 			oldAll := oldAllList[0].(map[string]interface{})
 			newAll := newAllList[0].(map[string]interface{})
 
-			for _, roleKey := range []string{"master_resource_spec", "core_resource_spec", "task_resource_spec", "common_resource_spec"} {
+			for _, roleKey := range []string{"master_resource_spec", "core_resource_spec", "task_resource_spec", "common_resource_spec", "router_resource_spec"} {
 				oldList, newList, changed := nodeRoleChanged(oldAll, newAll, roleKey)
 				if !changed {
 					continue
@@ -2220,12 +2334,14 @@ func customizeDiffEmrClusterV2(ctx context.Context, d *schema.ResourceDiff, meta
 		"core_resource_spec",
 		"task_resource_spec",
 		"common_resource_spec",
+		"router_resource_spec",
 	}
 	roleLabel := map[string]string{
 		"master_resource_spec": "master",
 		"core_resource_spec":   "core",
 		"task_resource_spec":   "task",
 		"common_resource_spec": "common",
+		"router_resource_spec": "router",
 	}
 
 	for zoneIdx, nz := range newZones {
@@ -3743,7 +3859,7 @@ func emrRevertFailedNodeSoftware(d *schema.ResourceData, failedNodeSoftware map[
 		return nil
 	}
 
-	roleKeys := []string{"master_resource_spec", "core_resource_spec", "task_resource_spec", "common_resource_spec"}
+	roleKeys := []string{"master_resource_spec", "core_resource_spec", "task_resource_spec", "common_resource_spec", "router_resource_spec"}
 
 	newZones := make([]interface{}, 0, len(zoneList))
 	for _, zRaw := range zoneList {
