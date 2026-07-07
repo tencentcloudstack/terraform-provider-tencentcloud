@@ -427,6 +427,41 @@ func (me *CynosdbService) DescribeInsGrpSecurityGroups(ctx context.Context, inst
 	return
 }
 
+func (me *CynosdbService) OpenClusterReadOnlyInstanceGroupAccess(ctx context.Context, clusterId, port string, sg []*string) (flowId int64, errRet error) {
+	logId := tccommon.GetLogId(ctx)
+	request := cynosdb.NewOpenClusterReadOnlyInstanceGroupAccessRequest()
+	response := cynosdb.NewOpenClusterReadOnlyInstanceGroupAccessResponse()
+
+	request.ClusterId = &clusterId
+	request.Port = &port
+	if sg != nil && len(sg) > 0 {
+		request.SecurityGroupIds = sg
+	}
+
+	errRet = resource.Retry(tccommon.WriteRetryTimeout, func() *resource.RetryError {
+		ratelimit.Check(request.GetAction())
+		result, errRet := me.client.UseCynosdbClient().OpenClusterReadOnlyInstanceGroupAccess(request)
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, reason:%s", logId, request.GetAction(), errRet.Error())
+			return tccommon.RetryError(errRet)
+		}
+
+		if result == nil || result.Response == nil || result.Response.FlowId == nil {
+			return resource.RetryableError(fmt.Errorf("cynosdb open cluster read only instance group access failed, flowId is nil"))
+		}
+
+		response = result
+		return nil
+	})
+
+	if errRet != nil {
+		return
+	}
+
+	flowId = *response.Response.FlowId
+	return
+}
+
 func (me *CynosdbService) ModifyInsGrpSecurityGroups(ctx context.Context, insGrp, az string, sg []*string) (errRet error) {
 	logId := tccommon.GetLogId(ctx)
 	request := cynosdb.NewModifyDBInstanceSecurityGroupsRequest()

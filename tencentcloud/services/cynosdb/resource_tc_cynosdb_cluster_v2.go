@@ -334,6 +334,36 @@ func resourceTencentCloudCynosdbClusterV2Create(d *schema.ResourceData, meta int
 		return err
 	}
 
+	// open ro group
+	var openRoGroupFlag bool
+	if v, ok := d.GetOkExists("open_ro_group"); ok {
+		openRoGroupFlag = v.(bool)
+		if openRoGroupFlag {
+			flowId, err := cynosdbService.OpenClusterReadOnlyInstanceGroupAccess(ctx, id, helper.IntToStr(d.Get("port").(int)), nil)
+			if err != nil {
+				return err
+			}
+
+			// wait
+			err = resource.Retry(5*tccommon.ReadRetryTimeout, func() *resource.RetryError {
+				resp, e := cynosdbService.DescribeFlow(ctx, flowId)
+				if e != nil {
+					return resource.NonRetryableError(e)
+				}
+
+				if resp {
+					return nil
+				}
+
+				return resource.RetryableError(fmt.Errorf("waiting for cynosdb cluster read only instance group access"))
+			})
+
+			if err != nil {
+				return err
+			}
+		}
+	}
+
 	// set sg
 	insGrps, err := cynosdbService.DescribeClusterInstanceGrps(ctx, id)
 	if err != nil {
@@ -364,15 +394,19 @@ func resourceTencentCloudCynosdbClusterV2Create(d *schema.ResourceData, meta int
 		}
 	}
 
-	if v, ok := d.GetOk("ro_group_sg"); ok {
-		vv := v.([]interface{})
-		vvv := make([]*string, 0, len(vv))
-		for _, item := range vv {
-			vvv = append(vvv, helper.String(item.(string)))
-		}
+	if vv, ok := d.GetOk("ro_group_sg"); ok {
+		if openRoGroupFlag {
+			tmpList := vv.([]interface{})
+			sgIds := make([]*string, 0, len(tmpList))
+			for _, item := range tmpList {
+				sgIds = append(sgIds, helper.String(item.(string)))
+			}
 
-		if err = cynosdbService.ModifyInsGrpSecurityGroups(ctx, roGroupId, d.Get("available_zone").(string), vvv); err != nil {
-			return err
+			if err = cynosdbService.ModifyInsGrpSecurityGroups(ctx, roGroupId, d.Get("available_zone").(string), sgIds); err != nil {
+				return err
+			}
+		} else {
+			return fmt.Errorf("`ro_group_sg` only can be set when `open_ro_group` is true")
 		}
 	}
 
@@ -388,7 +422,6 @@ func resourceTencentCloudCynosdbClusterV2Create(d *schema.ResourceData, meta int
 				return err
 			}
 		}
-
 	}
 
 	// serverless status
@@ -531,6 +564,7 @@ func resourceTencentCloudCynosdbClusterV2Read(d *schema.ResourceData, meta inter
 		} else if *insGrp.Type == CYNOSDB_INSGRP_RO {
 			roGroupId = *insGrp.InstanceGroupId
 			_ = d.Set("ro_group_id", roGroupId)
+			_ = d.Set("open_ro_group", true)
 			for _, roIns := range insGrp.InstanceSet {
 				roGroupIns = append(roGroupIns, map[string]interface{}{
 					"instance_id":   *roIns.InstanceId,
@@ -574,6 +608,9 @@ func resourceTencentCloudCynosdbClusterV2Read(d *schema.ResourceData, meta inter
 	_ = d.Set("single_ro_group_infos", singleRoGroupInfos)
 
 	// sg infos
+	_ = d.Set("rw_group_sg", []string{})
+	_ = d.Set("ro_group_sg", []string{})
+	_ = d.Set("single_ro_group_sg", []string{})
 	if rwGroupId != "" {
 		sgs, err := cynosdbService.DescribeInsGrpSecurityGroups(ctx, rwGroupId)
 		if err != nil {
@@ -969,6 +1006,54 @@ func resourceTencentCloudCynosdbClusterV2Update(d *schema.ResourceData, meta int
 		//internal version: replace waitTag end, please do not modify this annotation and refrain from inserting any code between the beginning and end lines of the annotation.
 	}
 
+	// open ro group(only support open)
+	if d.HasChange("open_ro_group") {
+		if v, ok := d.GetOkExists("open_ro_group"); ok {
+			openRoGroupFlag := v.(bool)
+			if openRoGroupFlag {
+				flowId, err := cynosdbService.OpenClusterReadOnlyInstanceGroupAccess(ctx, clusterId, helper.IntToStr(d.Get("port").(int)), nil)
+				if err != nil {
+					return err
+				}
+
+				// wait
+				err = resource.Retry(5*tccommon.ReadRetryTimeout, func() *resource.RetryError {
+					resp, e := cynosdbService.DescribeFlow(ctx, flowId)
+					if e != nil {
+						return resource.NonRetryableError(e)
+					}
+
+					if resp {
+						return nil
+					}
+
+					return resource.RetryableError(fmt.Errorf("waiting for cynosdb cluster read only instance group access"))
+				})
+
+				if err != nil {
+					return err
+				}
+
+				// instance group infos
+				insGrps, err := cynosdbService.DescribeClusterInstanceGrps(ctx, clusterId)
+				if err != nil {
+					return err
+				}
+
+				var roGroupId string
+				for _, insGrp := range insGrps.Response.InstanceGroupInfoList {
+					if *insGrp.Type == CYNOSDB_INSGRP_RO {
+						roGroupId = *insGrp.InstanceGroupId
+						_ = d.Set("ro_group_id", roGroupId)
+						break
+					}
+				}
+			} else {
+				return fmt.Errorf("close ro group is not supported")
+			}
+		}
+	}
+
 	// update sg
 	if d.HasChange("rw_group_sg") {
 		v := d.Get("rw_group_sg").([]interface{})
@@ -994,6 +1079,8 @@ func resourceTencentCloudCynosdbClusterV2Update(d *schema.ResourceData, meta int
 			if err != nil {
 				return err
 			}
+		} else {
+			return fmt.Errorf("ro group id is empty, please open ro group first")
 		}
 	}
 

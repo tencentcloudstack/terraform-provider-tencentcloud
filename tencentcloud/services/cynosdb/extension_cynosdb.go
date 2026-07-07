@@ -326,7 +326,7 @@ func TencentCynosdbClusterBaseInfo() map[string]*schema.Schema {
 			Type:        schema.TypeList,
 			Optional:    true,
 			Elem:        &schema.Schema{Type: schema.TypeString},
-			Description: "IDs of security group for `ro_group`.",
+			Description: "IDs of security group for `ro_group`. If you need to configure `ro_group_sg` security group, please use Resource `tencentcloud_cynosdb_cluster_v2`.",
 		},
 		"ro_group_addr": {
 			Type:        schema.TypeList,
@@ -346,65 +346,6 @@ func TencentCynosdbClusterBaseInfo() map[string]*schema.Schema {
 					},
 				},
 			},
-		},
-		// single ro instance group infos
-		"single_ro_group_infos": {
-			Type:        schema.TypeSet,
-			Computed:    true,
-			Description: "List of single-read-only instance group.",
-			Elem: &schema.Resource{
-				Schema: map[string]*schema.Schema{
-					"single_ro_group_id": {
-						Type:        schema.TypeString,
-						Computed:    true,
-						Description: "ID list of single-read-only instance group.",
-					},
-					"single_ro_group_instance": {
-						Type:        schema.TypeList,
-						Computed:    true,
-						Description: "List of instances in the single-read-only instance group.",
-						Elem: &schema.Resource{
-							Schema: map[string]*schema.Schema{
-								"instance_id": {
-									Type:        schema.TypeString,
-									Computed:    true,
-									Description: "ID of instance.",
-								},
-								"instance_name": {
-									Type:        schema.TypeString,
-									Computed:    true,
-									Description: "Name of instance.",
-								},
-							},
-						},
-					},
-					"single_ro_group_addr": {
-						Type:        schema.TypeList,
-						Computed:    true,
-						Description: "Single-readonly addresses. Each element contains the following attributes:",
-						Elem: &schema.Resource{
-							Schema: map[string]*schema.Schema{
-								"ip": {
-									Type:        schema.TypeString,
-									Computed:    true,
-									Description: "IP address for single-readonly connection.",
-								},
-								"port": {
-									Type:        schema.TypeInt,
-									Computed:    true,
-									Description: "Port number for single-readonly connection.",
-								},
-							},
-						},
-					},
-				},
-			},
-		},
-		"single_ro_group_sg": {
-			Type:        schema.TypeList,
-			Optional:    true,
-			Elem:        &schema.Schema{Type: schema.TypeString},
-			Description: "IDs of security group for `single_ro_group`.",
 		},
 		"param_items": {
 			Type:        schema.TypeList,
@@ -774,11 +715,17 @@ func TencentCynosdbClusterBaseInfoV2() map[string]*schema.Schema {
 				},
 			},
 		},
+		"open_ro_group": {
+			Type:        schema.TypeBool,
+			Optional:    true,
+			Computed:    true,
+			Description: "Indicate whether to open read-only group or not. Once activated, it cannot be turned off. Default is false.",
+		},
 		"ro_group_sg": {
 			Type:        schema.TypeList,
 			Optional:    true,
 			Elem:        &schema.Schema{Type: schema.TypeString},
-			Description: "IDs of security group for `ro_group`.",
+			Description: "IDs of security group for `ro_group`. Only work for `open_ro_group` is true.",
 		},
 		"ro_group_addr": {
 			Type:        schema.TypeList,
