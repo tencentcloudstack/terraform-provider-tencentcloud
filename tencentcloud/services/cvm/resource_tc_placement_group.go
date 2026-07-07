@@ -2,6 +2,7 @@ package cvm
 
 import (
 	"context"
+	"log"
 
 	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/internal/helper"
 	svctag "github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/services/tag"
@@ -45,6 +46,14 @@ func ResourceTencentCloudPlacementGroup() *schema.Resource {
 				ValidateFunc: tccommon.ValidateIntegerInRange(1, 10),
 				Description:  "Affinity of the placement group.Valid values: 1~10, default is 1.",
 			},
+			"partition_count": {
+				Type:         schema.TypeInt,
+				Optional:     true,
+				Computed:     true,
+				ForceNew:     true,
+				ValidateFunc: tccommon.ValidateIntegerInRange(2, 30),
+				Description:  "Partition count of the placement group. Valid values: 2~30. Only valid when type is partition placement group.",
+			},
 			"tags": {
 				Type:        schema.TypeMap,
 				Optional:    true,
@@ -87,6 +96,11 @@ func resourceTencentCloudPlacementGroupCreate(d *schema.ResourceData, meta inter
 		affinity = v.(int)
 	}
 
+	var partitionCount int
+	if v, ok := d.GetOkExists("partition_count"); ok {
+		partitionCount = v.(int)
+	}
+
 	tags := make([]*cvm.Tag, 0)
 	if v := helper.GetTags(d, "tags"); len(v) > 0 {
 		for tagKey, tagValue := range v {
@@ -98,9 +112,10 @@ func resourceTencentCloudPlacementGroupCreate(d *schema.ResourceData, meta inter
 		}
 	}
 	var id string
+	var respPartitionCount int
 	var errRet error
 	err := resource.Retry(tccommon.WriteRetryTimeout, func() *resource.RetryError {
-		id, errRet = cvmService.CreatePlacementGroup(ctx, placementName, placementType, affinity, tags)
+		id, respPartitionCount, errRet = cvmService.CreatePlacementGroup(ctx, placementName, placementType, affinity, partitionCount, tags)
 		if errRet != nil {
 			return tccommon.RetryError(errRet)
 		}
@@ -110,6 +125,10 @@ func resourceTencentCloudPlacementGroupCreate(d *schema.ResourceData, meta inter
 		return err
 	}
 	d.SetId(id)
+
+	if respPartitionCount > 0 {
+		_ = d.Set("partition_count", respPartitionCount)
+	}
 
 	return resourceTencentCloudPlacementGroupRead(d, meta)
 }
@@ -138,6 +157,7 @@ func resourceTencentCloudPlacementGroupRead(d *schema.ResourceData, meta interfa
 		return err
 	}
 	if placement == nil {
+		log.Printf("[CRUD] tencentcloud_placement_group read placement is nil, id=%s", d.Id())
 		d.SetId("")
 		return nil
 	}

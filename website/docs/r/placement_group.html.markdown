@@ -24,6 +24,16 @@ resource "tencentcloud_placement_group" "foo" {
 }
 ```
 
+### Create partition placement group
+
+```hcl
+resource "tencentcloud_placement_group" "bar" {
+  name            = "test-partition"
+  type            = "HOST"
+  partition_count = 5
+}
+```
+
 ## Argument Reference
 
 The following arguments are supported:
@@ -31,6 +41,7 @@ The following arguments are supported:
 * `name` - (Required, String) Name of the placement group, 1-60 characters in length.
 * `type` - (Required, String, ForceNew) Type of the placement group. Valid values: `HOST`, `SW` and `RACK`.
 * `affinity` - (Optional, Int, ForceNew) Affinity of the placement group.Valid values: 1~10, default is 1.
+* `partition_count` - (Optional, Int, ForceNew) Partition count of the placement group. Valid values: 2~30. Only valid when type is partition placement group.
 * `tags` - (Optional, Map) Tags of the placement group.
 
 ## Attributes Reference
