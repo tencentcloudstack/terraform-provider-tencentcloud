@@ -1338,16 +1338,23 @@ func (me *PostgresqlService) DescribePostgresqlBackupPlanConfigById(ctx context.
 		}
 	}()
 
-	ratelimit.Check(request.GetAction())
-
-	response, err := me.client.UsePostgresqlClient().DescribeBackupPlans(request)
+	var response *postgresql.DescribeBackupPlansResponse
+	err := resource.Retry(tccommon.ReadRetryTimeout, func() *resource.RetryError {
+		ratelimit.Check(request.GetAction())
+		result, e := me.client.UsePostgresqlClient().DescribeBackupPlans(request)
+		if e != nil {
+			return tccommon.RetryError(e)
+		}
+		response = result
+		return nil
+	})
 	if err != nil {
 		errRet = err
 		return
 	}
 	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
 
-	if len(response.Response.Plans) < 1 {
+	if response == nil || response.Response == nil || len(response.Response.Plans) < 1 {
 		return
 	}
 

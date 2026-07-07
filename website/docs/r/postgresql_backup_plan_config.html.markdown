@@ -20,6 +20,9 @@ resource "tencentcloud_postgresql_backup_plan_config" "backup_plan_config" {
   max_backup_start_time        = "02:00:00"
   base_backup_retention_period = 7
   backup_period                = ["monday", "wednesday", "friday"]
+  log_backup_retention_period  = 7
+  plan_name                    = "default"
+  backup_method                = "physical"
 }
 ```
 
@@ -28,10 +31,14 @@ resource "tencentcloud_postgresql_backup_plan_config" "backup_plan_config" {
 The following arguments are supported:
 
 * `db_instance_id` - (Required, String) instance id.
+* `backup_method` - (Optional, String) Backup method. Valid values: `physical` (physical backup), `logical` (logical backup), `snapshot` (snapshot backup).
 * `backup_period` - (Optional, Set: [`String`]) Backup cycle, which means on which days each week the instance will be backed up. The parameter value should be the lowercase names of the days of the week.
 * `base_backup_retention_period` - (Optional, Int) Backup retention period in days. Value range:7-1830.
+* `log_backup_retention_period` - (Optional, Int) Log backup retention period in days. Value range: 7-1830.
 * `max_backup_start_time` - (Optional, String) The latest time to start a backup.
 * `min_backup_start_time` - (Optional, String) The earliest time to start a backup.
+* `plan_id` - (Optional, String) Backup plan ID, used to specify which backup plan to modify. If not set, the default backup plan will be modified.
+* `plan_name` - (Optional, String) Custom name of the backup plan to modify.
 
 ## Attributes Reference
 
