@@ -292,6 +292,13 @@ func ResourceTencentCloudPostgresqlInstance() *schema.Resource {
 							Computed:    true,
 							Description: "Monthly plan id.",
 						},
+						"backup_method": {
+							Type:     schema.TypeString,
+							Optional: true,
+							Computed: true,
+							Description: "Backup method. Valid values: `physical` (physical backup), `logical` (logical backup), " +
+								"`snapshot` (snapshot backup). Only takes effect on the default (week) backup plan.",
+						},
 					},
 				},
 			},
@@ -788,6 +795,10 @@ func resourceTencentCloudPostgresqlInstanceCreate(d *schema.ResourceData, meta i
 			request.BackupPeriod = helper.InterfacesStringsPoint(v)
 		}
 
+		if v, ok := plan["backup_method"].(string); ok && v != "" {
+			request.BackupMethod = &v
+		}
+
 		err := resource.Retry(tccommon.WriteRetryTimeout, func() *resource.RetryError {
 			err := postgresqlService.ModifyBackupPlan(ctx, request)
 			if err != nil {
@@ -1098,6 +1109,10 @@ func resourceTencentCloudPostgresqlInstanceRead(d *schema.ResourceData, meta int
 			}
 
 			planMap["backup_period"] = strSlice
+		}
+
+		if backupPlan.BackupMethod != nil {
+			planMap["backup_method"] = backupPlan.BackupMethod
 		}
 
 		if monthlyBackupPlan != nil && monthlyBackupPlan.PlanId != nil {
@@ -1604,6 +1619,10 @@ func resourceTencentCloudPostgresqlInstanceUpdate(d *schema.ResourceData, meta i
 
 			if v, ok := plan["backup_period"].([]interface{}); ok && len(v) > 0 {
 				request.BackupPeriod = helper.InterfacesStringsPoint(v)
+			}
+
+			if v, ok := plan["backup_method"].(string); ok && v != "" {
+				request.BackupMethod = &v
 			}
 
 			err := postgresqlService.ModifyBackupPlan(ctx, request)

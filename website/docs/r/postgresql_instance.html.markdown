@@ -259,6 +259,43 @@ resource "tencentcloud_postgresql_instance" "example" {
     max_backup_start_time        = "01:10:11"
     base_backup_retention_period = 7
     backup_period                = ["tuesday", "wednesday"]
+    backup_method                = "physical"
+  }
+
+  tags = {
+    CreateBy = "Terraform"
+  }
+}
+```
+
+### (snapshot backup). If not specified, the cloud API uses the default backup method.
+
+```hcl
+variable "availability_zone" {
+  default = "ap-guangzhou-6"
+}
+
+resource "tencentcloud_postgresql_instance" "example" {
+  name              = "tf_postsql_instance"
+  availability_zone = var.availability_zone
+  charge_type       = "POSTPAID_BY_HOUR"
+  vpc_id            = "vpc-86v957zb"
+  subnet_id         = "subnet-enm92y0m"
+  db_major_version  = "11"
+  engine_version    = "11.12"
+  db_kernel_version = "v11.12_r1.3"
+  root_password     = "Root123$"
+  charset           = "LATIN1"
+  project_id        = 0
+  memory            = 4
+  storage           = 100
+
+  backup_plan {
+    min_backup_start_time        = "00:10:11"
+    max_backup_start_time        = "01:10:11"
+    base_backup_retention_period = 7
+    backup_period                = ["tuesday", "wednesday"]
+    backup_method                = "snapshot"
   }
 
   tags = {
@@ -296,6 +333,7 @@ resource "tencentcloud_postgresql_instance" "example" {
     max_backup_start_time        = "02:10:11"
     base_backup_retention_period = 5
     backup_period                = ["monday", "thursday", "sunday"]
+    backup_method                = "logical"
   }
 
   tags = {
@@ -350,6 +388,7 @@ The following arguments are supported:
 
 The `backup_plan` object supports the following:
 
+* `backup_method` - (Optional, String) Backup method. Valid values: `physical` (physical backup), `logical` (logical backup), `snapshot` (snapshot backup). Only takes effect on the default (week) backup plan.
 * `backup_period` - (Optional, List) List of backup period per week, available values: `monday`, `tuesday`, `wednesday`, `thursday`, `friday`, `saturday`, `sunday`. NOTE: At least specify two days.
 * `base_backup_retention_period` - (Optional, Int) Specify days of the retention.
 * `max_backup_start_time` - (Optional, String) Specify latest backup start time, format `hh:mm:ss`.
