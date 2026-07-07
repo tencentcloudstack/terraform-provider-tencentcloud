@@ -21,22 +21,22 @@ import (
 //internal version: replace import begin, please do not modify this annotation and refrain from inserting any code between the beginning and end lines of the annotation.
 //internal version: replace import end, please do not modify this annotation and refrain from inserting any code between the beginning and end lines of the annotation.
 
-func ResourceTencentCloudCynosdbCluster() *schema.Resource {
+func ResourceTencentCloudCynosdbClusterV2() *schema.Resource {
 	return &schema.Resource{
-		Create: resourceTencentCloudCynosdbClusterCreate,
-		Read:   resourceTencentCloudCynosdbClusterRead,
-		Update: resourceTencentCloudCynosdbClusterUpdate,
-		Delete: resourceTencentCloudCynosdbClusterDelete,
+		Create: resourceTencentCloudCynosdbClusterV2Create,
+		Read:   resourceTencentCloudCynosdbClusterV2Read,
+		Update: resourceTencentCloudCynosdbClusterV2Update,
+		Delete: resourceTencentCloudCynosdbClusterV2Delete,
 		Importer: &schema.ResourceImporter{
 			State: schema.ImportStatePassthrough,
 		},
 
-		Schema: TencentCynosdbClusterBaseInfo(),
+		Schema: TencentCynosdbClusterBaseInfoV2(),
 	}
 }
 
-func resourceTencentCloudCynosdbClusterCreate(d *schema.ResourceData, meta interface{}) error {
-	defer tccommon.LogElapsed("resource.tencentcloud_cynosdb_cluster.create")()
+func resourceTencentCloudCynosdbClusterV2Create(d *schema.ResourceData, meta interface{}) error {
+	defer tccommon.LogElapsed("resource.tencentcloud_cynosdb_cluster_v2.create")()
 
 	var (
 		logId          = tccommon.GetLogId(tccommon.ContextNil)
@@ -340,12 +340,15 @@ func resourceTencentCloudCynosdbClusterCreate(d *schema.ResourceData, meta inter
 		return err
 	}
 	var rwGroupId string
-	var roGroupIds []string
-	for _, insGrp := range insGrps.Response.InstanceGrpInfoList {
+	var roGroupId string
+	var singleRoGroupIds []string
+	for _, insGrp := range insGrps.Response.InstanceGroupInfoList {
 		if *insGrp.Type == CYNOSDB_INSGRP_HA {
-			rwGroupId = *insGrp.InstanceGrpId
-		} else if *insGrp.Type == CYNOSDB_INSGRP_RO || *insGrp.Type == CYNOSDB_INSGRP_SINGLERO {
-			roGroupIds = append(roGroupIds, *insGrp.InstanceGrpId)
+			rwGroupId = *insGrp.InstanceGroupId
+		} else if *insGrp.Type == CYNOSDB_INSGRP_RO {
+			roGroupId = *insGrp.InstanceGroupId
+		} else if *insGrp.Type == CYNOSDB_INSGRP_SINGLERO {
+			singleRoGroupIds = append(singleRoGroupIds, *insGrp.InstanceGroupId)
 		}
 	}
 
@@ -361,18 +364,31 @@ func resourceTencentCloudCynosdbClusterCreate(d *schema.ResourceData, meta inter
 		}
 	}
 
-	if v, ok := d.GetOk("ro_group_sg"); ok && len(roGroupIds) > 0 {
-		for _, roGroupId := range roGroupIds {
-			vv := v.([]interface{})
-			vvv := make([]*string, 0, len(vv))
-			for _, item := range vv {
-				vvv = append(vvv, helper.String(item.(string)))
-			}
+	if v, ok := d.GetOk("ro_group_sg"); ok {
+		vv := v.([]interface{})
+		vvv := make([]*string, 0, len(vv))
+		for _, item := range vv {
+			vvv = append(vvv, helper.String(item.(string)))
+		}
 
-			if err = cynosdbService.ModifyInsGrpSecurityGroups(ctx, roGroupId, d.Get("available_zone").(string), vvv); err != nil {
+		if err = cynosdbService.ModifyInsGrpSecurityGroups(ctx, roGroupId, d.Get("available_zone").(string), vvv); err != nil {
+			return err
+		}
+	}
+
+	if v, ok := d.GetOk("single_ro_group_sg"); ok {
+		vv := v.([]interface{})
+		vvv := make([]*string, 0, len(vv))
+		for _, item := range vv {
+			vvv = append(vvv, helper.String(item.(string)))
+		}
+
+		for _, item := range singleRoGroupIds {
+			if err = cynosdbService.ModifyInsGrpSecurityGroups(ctx, item, d.Get("available_zone").(string), vvv); err != nil {
 				return err
 			}
 		}
+
 	}
 
 	// serverless status
@@ -384,11 +400,11 @@ func resourceTencentCloudCynosdbClusterCreate(d *schema.ResourceData, meta inter
 		}
 	}
 
-	return resourceTencentCloudCynosdbClusterRead(d, meta)
+	return resourceTencentCloudCynosdbClusterV2Read(d, meta)
 }
 
-func resourceTencentCloudCynosdbClusterRead(d *schema.ResourceData, meta interface{}) error {
-	defer tccommon.LogElapsed("resource.tencentcloud_cynosdb_cluster.read")()
+func resourceTencentCloudCynosdbClusterV2Read(d *schema.ResourceData, meta interface{}) error {
+	defer tccommon.LogElapsed("resource.tencentcloud_cynosdb_cluster_v2.read")()
 	defer tccommon.InconsistentCheck(d, meta)()
 
 	var (
@@ -495,9 +511,11 @@ func resourceTencentCloudCynosdbClusterRead(d *schema.ResourceData, meta interfa
 	var roGroupId string
 	roGroupIns := make([]map[string]interface{}, 0)
 	roGroupAddr := make([]map[string]interface{}, 0)
-	for _, insGrp := range insGrps.Response.InstanceGrpInfoList {
+	singleRoGroupInfos := make([]map[string]interface{}, 0)
+	singleRoGroupIns := make([]string, 0)
+	for _, insGrp := range insGrps.Response.InstanceGroupInfoList {
 		if *insGrp.Type == CYNOSDB_INSGRP_HA {
-			rwGroupId = *insGrp.InstanceGrpId
+			rwGroupId = *insGrp.InstanceGroupId
 			_ = d.Set("rw_group_id", rwGroupId)
 			for _, rwIns := range insGrp.InstanceSet {
 				rwGroupIns = append(rwGroupIns, map[string]interface{}{
@@ -510,8 +528,8 @@ func resourceTencentCloudCynosdbClusterRead(d *schema.ResourceData, meta interfa
 				"ip":   *insGrp.Vip,
 				"port": *insGrp.Vport,
 			})
-		} else if *insGrp.Type == CYNOSDB_INSGRP_RO || *insGrp.Type == CYNOSDB_INSGRP_SINGLERO {
-			roGroupId = *insGrp.InstanceGrpId
+		} else if *insGrp.Type == CYNOSDB_INSGRP_RO {
+			roGroupId = *insGrp.InstanceGroupId
 			_ = d.Set("ro_group_id", roGroupId)
 			for _, roIns := range insGrp.InstanceSet {
 				roGroupIns = append(roGroupIns, map[string]interface{}{
@@ -524,6 +542,28 @@ func resourceTencentCloudCynosdbClusterRead(d *schema.ResourceData, meta interfa
 				"ip":   *insGrp.Vip,
 				"port": *insGrp.Vport,
 			})
+		} else if *insGrp.Type == CYNOSDB_INSGRP_SINGLERO {
+			singleRoGroupInstances := make([]map[string]interface{}, 0)
+			for _, roIns := range insGrp.InstanceSet {
+				singleRoGroupInstances = append(singleRoGroupInstances, map[string]interface{}{
+					"instance_id":   *roIns.InstanceId,
+					"instance_name": *roIns.InstanceName,
+				})
+
+				singleRoGroupIns = append(singleRoGroupIns, *roIns.InstanceId)
+			}
+
+			singleRoGroupAddrs := make([]map[string]interface{}, 0)
+			singleRoGroupAddrs = append(singleRoGroupAddrs, map[string]interface{}{
+				"ip":   *insGrp.Vip,
+				"port": *insGrp.Vport,
+			})
+
+			singleRoGroupInfos = append(singleRoGroupInfos, map[string]interface{}{
+				"single_ro_group_id":       *insGrp.InstanceGroupId,
+				"single_ro_group_instance": singleRoGroupInstances,
+				"single_ro_group_addr":     singleRoGroupAddrs,
+			})
 		}
 	}
 
@@ -531,6 +571,7 @@ func resourceTencentCloudCynosdbClusterRead(d *schema.ResourceData, meta interfa
 	_ = d.Set("rw_group_addr", rwGroupAddr)
 	_ = d.Set("ro_group_instances", roGroupIns)
 	_ = d.Set("ro_group_addr", roGroupAddr)
+	_ = d.Set("single_ro_group_infos", singleRoGroupInfos)
 
 	// sg infos
 	if rwGroupId != "" {
@@ -560,6 +601,29 @@ func resourceTencentCloudCynosdbClusterRead(d *schema.ResourceData, meta interfa
 				sgIds = append(sgIds, item.SecurityGroupId)
 			}
 			_ = d.Set("ro_group_sg", sgIds)
+		}
+	}
+
+	if len(singleRoGroupIns) > 0 {
+		sgIds := make([]*string, 0)
+		for _, item := range singleRoGroupIns {
+			sgs, err := cynosdbService.DescribeInsGrpSecurityGroups(ctx, item)
+			if err != nil {
+				return err
+			}
+
+			if sgs != nil {
+				for _, item := range sgs.Response.Groups {
+					sgIds = append(sgIds, item.SecurityGroupId)
+				}
+			}
+
+			// only get the first one
+			break
+		}
+
+		if len(sgIds) > 0 {
+			_ = d.Set("single_ro_group_sg", sgIds)
 		}
 	}
 
@@ -612,8 +676,8 @@ func resourceTencentCloudCynosdbClusterRead(d *schema.ResourceData, meta interfa
 	return nil
 }
 
-func resourceTencentCloudCynosdbClusterUpdate(d *schema.ResourceData, meta interface{}) error {
-	defer tccommon.LogElapsed("resource.tencentcloud_cynosdb_cluster.update")()
+func resourceTencentCloudCynosdbClusterV2Update(d *schema.ResourceData, meta interface{}) error {
+	defer tccommon.LogElapsed("resource.tencentcloud_cynosdb_cluster_v2.update")()
 
 	var (
 		logId          = tccommon.GetLogId(tccommon.ContextNil)
@@ -933,6 +997,30 @@ func resourceTencentCloudCynosdbClusterUpdate(d *schema.ResourceData, meta inter
 		}
 	}
 
+	if d.HasChange("single_ro_group_sg") {
+		v := d.Get("single_ro_group_sg").([]interface{})
+		vv := make([]*string, 0, len(v))
+		for _, item := range v {
+			vv = append(vv, helper.String(item.(string)))
+		}
+
+		if infos, ok := d.Get("single_ro_group_infos").(*schema.Set); ok {
+			for _, info := range infos.List() {
+				m, ok := info.(map[string]interface{})
+				if !ok {
+					continue
+				}
+				singleRoGroupId, _ := m["single_ro_group_id"].(string)
+				if singleRoGroupId == "" {
+					continue
+				}
+				if err := cynosdbService.ModifyInsGrpSecurityGroups(ctx, singleRoGroupId, d.Get("available_zone").(string), vv); err != nil {
+					return err
+				}
+			}
+		}
+	}
+
 	// update serverless status
 	if d.HasChange("serverless_status_flag") {
 		resume := d.Get("serverless_status_flag").(string) == "resume"
@@ -1012,11 +1100,11 @@ func resourceTencentCloudCynosdbClusterUpdate(d *schema.ResourceData, meta inter
 
 	d.Partial(false)
 
-	return resourceTencentCloudCynosdbClusterRead(d, meta)
+	return resourceTencentCloudCynosdbClusterV2Read(d, meta)
 }
 
-func resourceTencentCloudCynosdbClusterDelete(d *schema.ResourceData, meta interface{}) error {
-	defer tccommon.LogElapsed("resource.tencentcloud_cynosdb_cluster.delete")()
+func resourceTencentCloudCynosdbClusterV2Delete(d *schema.ResourceData, meta interface{}) error {
+	defer tccommon.LogElapsed("resource.tencentcloud_cynosdb_cluster_v2.delete")()
 
 	var (
 		logId          = tccommon.GetLogId(tccommon.ContextNil)
