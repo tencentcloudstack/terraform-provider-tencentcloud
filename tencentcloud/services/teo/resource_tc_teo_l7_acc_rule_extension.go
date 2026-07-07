@@ -26,7 +26,7 @@ func TencentTeoL7RuleBranchBasicInfo(depth int) map[string]*schema.Schema {
 					"name": {
 						Type:        schema.TypeString,
 						Required:    true,
-						Description: "Operation name. The name needs to correspond to the parameter structure, for example, if Name=Cache, CacheParameters is required.\n- `Cache`: Node cache TTL;\n- `CacheKey`: Custom Cache Key;\n- `CachePrefresh`: Cache pre-refresh;\n- `AccessURLRedirect`: Access URL redirection;\n- `UpstreamURLRewrite`: Back-to-origin URL rewrite;\n- `QUIC`: QUIC;\n- `WebSocket`: WebSocket;\n- `Authentication`: Token authentication;\n- `MaxAge`: Browser cache TTL;\n- `StatusCodeCache`: Status code cache TTL;\n- `OfflineCache`: Offline cache;\n- `SmartRouting`: Smart acceleration;\n- `RangeOriginPull`: Segment back-to-origin;\n- `UpstreamHTTP2`: HTTP2 back-to-origin;\n- `HostHeader`: Host Header rewrite;\n- `ForceRedirectHTTPS`: Access protocol forced HTTPS jump configuration;\n- `OriginPullProtocol`: Back-to-origin HTTPS;\n- `Compression`: Smart compression configuration;\n- `HSTS`: HSTS;\n- `ClientIPHeader`: Header information configuration for storing client request IP;\n- `OCSPStapling`: OCSP stapling;\n- `HTTP2`: HTTP2 Access;\n- `PostMaxSize`: POST request upload file streaming maximum limit configuration;\n- `ClientIPCountry`: Carry client IP region information when returning to the source;\n- `UpstreamFollowRedirect`: Return to the source follow redirection parameter configuration;\n- `UpstreamRequest`: Return to the source request parameters;\n- `TLSConfig`: SSL/TLS security;\n- `ModifyOrigin`: Modify the source station;\n- `HTTPUpstreamTimeout`: Seven-layer return to the source timeout configuration;\n- `HttpResponse`: HTTP response;\n- `ErrorPage`: Custom error page;\n- `ModifyResponseHeader`: Modify HTTP node response header;\n- `ModifyRequestHeader`: Modify HTTP node request header;\n- `ResponseSpeedLimit`: Single connection download speed limit.\n- `SetContentIdentifier`: Set content identifier.\n- `Vary`: Vary feature configuration.\n- `ContentCompression`: Content compression configuration.\n- `OriginAuthentication`: Origin authentication configuration.",
+						Description: "Operation name. The name needs to correspond to the parameter structure, for example, if Name=Cache, CacheParameters is required.\n- `Cache`: Node cache TTL;\n- `CacheKey`: Custom Cache Key;\n- `CachePrefresh`: Cache pre-refresh;\n- `AccessURLRedirect`: Access URL redirection;\n- `UpstreamURLRewrite`: Back-to-origin URL rewrite;\n- `QUIC`: QUIC;\n- `WebSocket`: WebSocket;\n- `Authentication`: Token authentication;\n- `MaxAge`: Browser cache TTL;\n- `StatusCodeCache`: Status code cache TTL;\n- `OfflineCache`: Offline cache;\n- `SmartRouting`: Smart acceleration;\n- `RangeOriginPull`: Segment back-to-origin;\n- `UpstreamHTTP2`: HTTP2 back-to-origin;\n- `HostHeader`: Host Header rewrite;\n- `ForceRedirectHTTPS`: Access protocol forced HTTPS jump configuration;\n- `OriginPullProtocol`: Back-to-origin HTTPS;\n- `Compression`: Smart compression configuration;\n- `HSTS`: HSTS;\n- `ClientIPHeader`: Header information configuration for storing client request IP;\n- `OCSPStapling`: OCSP stapling;\n- `HTTP2`: HTTP2 Access;\n- `PostMaxSize`: POST request upload file streaming maximum limit configuration;\n- `ClientIPCountry`: Carry client IP region information when returning to the source;\n- `UpstreamFollowRedirect`: Return to the source follow redirection parameter configuration;\n- `UpstreamRequest`: Return to the source request parameters;\n- `TLSConfig`: SSL/TLS security;\n- `ModifyOrigin`: Modify the source station;\n- `HTTPUpstreamTimeout`: Seven-layer return to the source timeout configuration;\n- `HttpResponse`: HTTP response;\n- `ErrorPage`: Custom error page;\n- `ModifyResponseHeader`: Modify HTTP node response header;\n- `ModifyRequestHeader`: Modify HTTP node request header;\n- `ResponseSpeedLimit`: Single connection download speed limit.\n- `SetContentIdentifier`: Set content identifier.\n- `Vary`: Vary feature configuration.\n- `ContentCompression`: Content compression configuration.\n- `OriginAuthentication`: Origin authentication configuration.\n- `AdvancedOriginRouting`: Advanced origin routing optimization.\n- `Shield`: Origin offload (Shield).\n- `SiteFailover`: Origin site failover.",
 					},
 					"cache_parameters": {
 						Type:        schema.TypeList,
@@ -1146,6 +1146,271 @@ func TencentTeoL7RuleBranchBasicInfo(depth int) map[string]*schema.Schema {
 							},
 						},
 					},
+					"advanced_origin_routing_parameters": {
+						Type:        schema.TypeList,
+						Optional:    true,
+						MaxItems:    1,
+						Description: "Advanced origin routing optimization configuration parameter. This parameter is required when Name is set to AdvancedOriginRouting.",
+						Elem: &schema.Resource{
+							Schema: map[string]*schema.Schema{
+								"direction": {
+									Type:        schema.TypeString,
+									Optional:    true,
+									Description: "Origin routing optimization direction. Values: MainlandChinaAndGlobalAdaptive: Adaptive. Domain must have SmartRouting enabled. EdgeOne will auto-match the optimal routing direction based on client/origin geography.",
+								},
+							},
+						},
+					},
+					"shield_parameters": {
+						Type:        schema.TypeList,
+						Optional:    true,
+						MaxItems:    1,
+						Description: "Origin offload (Shield) configuration parameter. This parameter is required when Name is set to Shield.",
+						Elem: &schema.Resource{
+							Schema: map[string]*schema.Schema{
+								"shield_space_id": {
+									Type:        schema.TypeString,
+									Optional:    true,
+									Description: "Origin offload space ID.",
+								},
+							},
+						},
+					},
+					"site_failover_parameters": {
+						Type:        schema.TypeList,
+						Optional:    true,
+						MaxItems:    1,
+						Description: "Origin site failover configuration parameter. This parameter is required when Name is set to SiteFailover.",
+						Elem: &schema.Resource{
+							Schema: map[string]*schema.Schema{
+								"site_failover_status_codes": {
+									Type:        schema.TypeList,
+									Optional:    true,
+									Description: "Condition status codes for origin failover. When the origin returns a response status code matching this field, failover is triggered. Value: 4xx or 5xx.",
+									Elem: &schema.Schema{
+										Type: schema.TypeInt,
+									},
+								},
+								"site_failover_params": {
+									Type:        schema.TypeList,
+									Optional:    true,
+									Description: "Origin failover configuration parameter list. Min length: 1, Max length: 2.",
+									Elem: &schema.Resource{
+										Schema: map[string]*schema.Schema{
+											"mode": {
+												Type:        schema.TypeString,
+												Optional:    true,
+												Description: "Origin failover type. Values: FailoverToHost: failover to specified IP/domain; FailoverToCOS: failover to Tencent Cloud COS; FailoverToS3CompatibleObjectStorage: failover to S3 compatible storage; FailoverRedirectToURL: redirect to specified URL; FailoverCustomResponsePage: use custom response page.",
+											},
+											"origin": {
+												Type:        schema.TypeString,
+												Optional:    true,
+												Description: "Origin address, varies by Mode: When Mode=FailoverToHost, fill in IPV4/IPv6/domain; When Mode=FailoverToCOS, fill in COS bucket access domain; When Mode=FailoverToS3CompatibleObjectStorage, fill in S3 bucket access domain.",
+											},
+											"origin_protocol": {
+												Type:        schema.TypeString,
+												Optional:    true,
+												Description: "Origin protocol. Required when Mode=FailoverToHost. Values: http: HTTP; https: HTTPS; follow: follow the protocol.",
+											},
+											"http_origin_port": {
+												Type:         schema.TypeInt,
+												Optional:     true,
+												ValidateFunc: tccommon.ValidateIntegerInRange(1, 65535),
+												Description:  "HTTP origin port. Value range: 1-65535. Required when OriginProtocol is http or follow.",
+											},
+											"https_origin_port": {
+												Type:         schema.TypeInt,
+												Optional:     true,
+												ValidateFunc: tccommon.ValidateIntegerInRange(1, 65535),
+												Description:  "HTTPS origin port. Value range: 1-65535. Required when OriginProtocol is https or follow.",
+											},
+											"upstream_host_header": {
+												Type:        schema.TypeList,
+												Optional:    true,
+												MaxItems:    1,
+												Description: "Origin-pull host header rewrite configuration.",
+												Elem: &schema.Resource{
+													Schema: map[string]*schema.Schema{
+														"action": {
+															Type:        schema.TypeString,
+															Optional:    true,
+															Description: "Action to be executed. Values: followOrigin: follow origin server domain name; custom: custom.",
+														},
+														"server_name": {
+															Type:        schema.TypeString,
+															Optional:    true,
+															Description: "Host header rewrite requires a complete domain name.",
+														},
+													},
+												},
+											},
+											"upstream_url_rewrite": {
+												Type:        schema.TypeList,
+												Optional:    true,
+												MaxItems:    1,
+												Description: "Origin-pull URL rewrite configuration.",
+												Elem: &schema.Resource{
+													Schema: map[string]*schema.Schema{
+														"type": {
+															Type:        schema.TypeString,
+															Optional:    true,
+															Description: "Origin-pull URL rewriting type, only path is supported.",
+														},
+														"action": {
+															Type:        schema.TypeString,
+															Optional:    true,
+															Description: "Origin-pull URL rewrite action. Values: replace: replace the path prefix; addPrefix: add the path prefix; rmvPrefix: remove the path prefix; regexReplace: regular expression replacement.",
+														},
+														"value": {
+															Type:        schema.TypeString,
+															Optional:    true,
+															Description: "Origin-pull URL rewrite value, maximum length 1024, must start with /.",
+														},
+														"regex": {
+															Type:        schema.TypeString,
+															Optional:    true,
+															Description: "Origin URL Rewrite uses a regular expression for matching the complete path. It must conform to the Google RE2 specification and have a length range of 1 to 1024.",
+														},
+													},
+												},
+											},
+											"upstream_request_parameters": {
+												Type:        schema.TypeList,
+												Optional:    true,
+												MaxItems:    1,
+												Description: "Origin-pull request parameters configuration.",
+												Elem: &schema.Resource{
+													Schema: map[string]*schema.Schema{
+														"query_string": {
+															Type:        schema.TypeList,
+															Optional:    true,
+															MaxItems:    1,
+															Description: "Query string configuration. Optional. If not provided, it will not be configured.",
+															Elem: &schema.Resource{
+																Schema: map[string]*schema.Schema{
+																	"switch": {
+																		Type:        schema.TypeString,
+																		Optional:    true,
+																		Description: "Whether to enable origin-pull request parameter query string. Values: on: enable; off: disable.",
+																	},
+																	"action": {
+																		Type:        schema.TypeString,
+																		Optional:    true,
+																		Description: "Query string mode. Required when switch is on. Values: full: retain all; ignore: ignore all; includeCustom: retain partial parameters; excludeCustom: ignore partial parameters.",
+																	},
+																	"values": {
+																		Type:        schema.TypeList,
+																		Optional:    true,
+																		Description: "Specifies parameter values. Up to 10 parameters are supported.",
+																		Elem: &schema.Schema{
+																			Type: schema.TypeString,
+																		},
+																	},
+																},
+															},
+														},
+														"cookie": {
+															Type:        schema.TypeList,
+															Optional:    true,
+															MaxItems:    1,
+															Description: "Cookie configuration. Optional. If not provided, it will not be configured.",
+															Elem: &schema.Resource{
+																Schema: map[string]*schema.Schema{
+																	"switch": {
+																		Type:        schema.TypeString,
+																		Optional:    true,
+																		Description: "Whether to enable the origin-pull request parameter cookie. Values: on: enable; off: disable.",
+																	},
+																	"action": {
+																		Type:        schema.TypeString,
+																		Optional:    true,
+																		Description: "Origin-pull request parameter cookie mode. Required when switch is on. Values: full: retain all; ignore: ignore all; includeCustom: retain partial parameters; excludeCustom: ignore partial parameters.",
+																	},
+																	"values": {
+																		Type:        schema.TypeList,
+																		Optional:    true,
+																		Description: "Specifies parameter values. Up to 10 parameters are supported.",
+																		Elem: &schema.Schema{
+																			Type: schema.TypeString,
+																		},
+																	},
+																},
+															},
+														},
+													},
+												},
+											},
+											"upstream_http2_parameters": {
+												Type:        schema.TypeList,
+												Optional:    true,
+												MaxItems:    1,
+												Description: "HTTP2 origin-pull configuration parameter.",
+												Elem: &schema.Resource{
+													Schema: map[string]*schema.Schema{
+														"switch": {
+															Type:        schema.TypeString,
+															Optional:    true,
+															Description: "Whether to enable HTTP2 origin-pull. Values: on: enable; off: disable.",
+														},
+													},
+												},
+											},
+											"private_access": {
+												Type:        schema.TypeString,
+												Optional:    true,
+												Description: "Whether access to the private object storage origin server is allowed. Valid only when Mode=FailoverToCOS or FailoverToS3CompatibleObjectStorage. Values: on: enable private authentication; off: disable private authentication.",
+											},
+											"private_parameters": {
+												Type:        schema.TypeList,
+												Optional:    true,
+												MaxItems:    1,
+												Description: "Private authentication parameter. Valid only when Mode=FailoverToS3CompatibleObjectStorage and PrivateAccess=on.",
+												Elem: &schema.Resource{
+													Schema: map[string]*schema.Schema{
+														"access_key_id": {
+															Type:        schema.TypeString,
+															Required:    true,
+															Description: "Authentication parameter access key id.",
+														},
+														"secret_access_key": {
+															Type:        schema.TypeString,
+															Required:    true,
+															Description: "Authentication parameter secret access key.",
+														},
+														"signature_version": {
+															Type:        schema.TypeString,
+															Required:    true,
+															Description: "Authentication version. Values: v2: v2 version; v4: v4 version.",
+														},
+														"region": {
+															Type:        schema.TypeString,
+															Optional:    true,
+															Description: "Region of the bucket.",
+														},
+													},
+												},
+											},
+											"redirect_url": {
+												Type:        schema.TypeString,
+												Optional:    true,
+												Description: "Redirect target URL. Required when Mode=FailoverRedirectToURL.",
+											},
+											"response_page_id": {
+												Type:        schema.TypeString,
+												Optional:    true,
+												Description: "Response page ID. Required when Mode=FailoverCustomResponsePage.",
+											},
+											"status_code": {
+												Type:        schema.TypeInt,
+												Optional:    true,
+												Description: "Response status code. Required when Mode=FailoverRedirectToURL (values: 301, 302, 303, 307, 308) or FailoverCustomResponsePage (values: 400, 403, 404, 405, 414, 416, 451, 500, 501, 502, 503, 504).",
+											},
+										},
+									},
+								},
+							},
+						},
+					},
 				},
 			},
 		},
@@ -1790,6 +2055,150 @@ func resourceTencentCloudTeoL7AccRuleGetBranchs(rulesMap map[string]interface{})
 							}
 						}
 						ruleEngineAction.OriginAuthenticationParameters = &originAuthenticationParameters
+					}
+					if advancedOriginRoutingParametersMap, ok := helper.ConvertInterfacesHeadToMap(actionsMap["advanced_origin_routing_parameters"]); ok {
+						advancedOriginRoutingParameters := teov20220901.AdvancedOriginRoutingParameters{}
+						if v, ok := advancedOriginRoutingParametersMap["direction"].(string); ok && v != "" {
+							advancedOriginRoutingParameters.Direction = helper.String(v)
+						}
+						ruleEngineAction.AdvancedOriginRoutingParameters = &advancedOriginRoutingParameters
+					}
+					if shieldParametersMap, ok := helper.ConvertInterfacesHeadToMap(actionsMap["shield_parameters"]); ok {
+						shieldParameters := teov20220901.ShieldParameters{}
+						if v, ok := shieldParametersMap["shield_space_id"].(string); ok && v != "" {
+							shieldParameters.ShieldSpaceId = helper.String(v)
+						}
+						ruleEngineAction.ShieldParameters = &shieldParameters
+					}
+					if siteFailoverParametersMap, ok := helper.ConvertInterfacesHeadToMap(actionsMap["site_failover_parameters"]); ok {
+						siteFailoverParameters := teov20220901.SiteFailoverParameters{}
+						if v, ok := siteFailoverParametersMap["site_failover_status_codes"]; ok {
+							for _, item := range v.([]interface{}) {
+								siteFailoverParameters.SiteFailoverStatusCodes = append(siteFailoverParameters.SiteFailoverStatusCodes, helper.IntInt64(item.(int)))
+							}
+						}
+						if v, ok := siteFailoverParametersMap["site_failover_params"]; ok {
+							for _, item := range v.([]interface{}) {
+								siteFailoverParamsMap := item.(map[string]interface{})
+								siteFailover := teov20220901.SiteFailover{}
+								if v, ok := siteFailoverParamsMap["mode"].(string); ok && v != "" {
+									siteFailover.Mode = helper.String(v)
+								}
+								if v, ok := siteFailoverParamsMap["origin"].(string); ok && v != "" {
+									siteFailover.Origin = helper.String(v)
+								}
+								if v, ok := siteFailoverParamsMap["origin_protocol"].(string); ok && v != "" {
+									siteFailover.OriginProtocol = helper.String(v)
+								}
+								if v, ok := siteFailoverParamsMap["http_origin_port"].(int); ok && v != 0 {
+									siteFailover.HTTPOriginPort = helper.IntInt64(v)
+								}
+								if v, ok := siteFailoverParamsMap["https_origin_port"].(int); ok && v != 0 {
+									siteFailover.HTTPSOriginPort = helper.IntInt64(v)
+								}
+								if upstreamHostHeaderMap, ok := helper.ConvertInterfacesHeadToMap(siteFailoverParamsMap["upstream_host_header"]); ok {
+									hostHeaderParameters := teov20220901.HostHeaderParameters{}
+									if v, ok := upstreamHostHeaderMap["action"].(string); ok && v != "" {
+										hostHeaderParameters.Action = helper.String(v)
+									}
+									if v, ok := upstreamHostHeaderMap["server_name"].(string); ok && v != "" {
+										hostHeaderParameters.ServerName = helper.String(v)
+									}
+									siteFailover.UpstreamHostHeader = &hostHeaderParameters
+								}
+								if upstreamURLRewriteMap, ok := helper.ConvertInterfacesHeadToMap(siteFailoverParamsMap["upstream_url_rewrite"]); ok {
+									upstreamURLRewriteParameters := teov20220901.UpstreamURLRewriteParameters{}
+									if v, ok := upstreamURLRewriteMap["type"].(string); ok && v != "" {
+										upstreamURLRewriteParameters.Type = helper.String(v)
+									}
+									if v, ok := upstreamURLRewriteMap["action"].(string); ok && v != "" {
+										upstreamURLRewriteParameters.Action = helper.String(v)
+									}
+									if v, ok := upstreamURLRewriteMap["value"].(string); ok && v != "" {
+										upstreamURLRewriteParameters.Value = helper.String(v)
+									}
+									if v, ok := upstreamURLRewriteMap["regex"].(string); ok && v != "" {
+										upstreamURLRewriteParameters.Regex = helper.String(v)
+									}
+									siteFailover.UpstreamURLRewrite = &upstreamURLRewriteParameters
+								}
+								if upstreamRequestParamsMap, ok := helper.ConvertInterfacesHeadToMap(siteFailoverParamsMap["upstream_request_parameters"]); ok {
+									upstreamRequestParameters := teov20220901.UpstreamRequestParameters{}
+									if queryStringMap, ok := helper.ConvertInterfacesHeadToMap(upstreamRequestParamsMap["query_string"]); ok {
+										upstreamRequestQueryString := teov20220901.UpstreamRequestQueryString{}
+										if v, ok := queryStringMap["switch"].(string); ok && v != "" {
+											upstreamRequestQueryString.Switch = helper.String(v)
+										}
+										if v, ok := queryStringMap["action"].(string); ok && v != "" {
+											upstreamRequestQueryString.Action = helper.String(v)
+										}
+										if v, ok := queryStringMap["values"]; ok {
+											valuesSet := v.([]interface{})
+											for i := range valuesSet {
+												values := valuesSet[i].(string)
+												upstreamRequestQueryString.Values = append(upstreamRequestQueryString.Values, helper.String(values))
+											}
+										}
+										upstreamRequestParameters.QueryString = &upstreamRequestQueryString
+									}
+									if cookieMap, ok := helper.ConvertInterfacesHeadToMap(upstreamRequestParamsMap["cookie"]); ok {
+										upstreamRequestCookie := teov20220901.UpstreamRequestCookie{}
+										if v, ok := cookieMap["switch"].(string); ok && v != "" {
+											upstreamRequestCookie.Switch = helper.String(v)
+										}
+										if v, ok := cookieMap["action"].(string); ok && v != "" {
+											upstreamRequestCookie.Action = helper.String(v)
+										}
+										if v, ok := cookieMap["values"]; ok {
+											valuesSet := v.([]interface{})
+											for i := range valuesSet {
+												values := valuesSet[i].(string)
+												upstreamRequestCookie.Values = append(upstreamRequestCookie.Values, helper.String(values))
+											}
+										}
+										upstreamRequestParameters.Cookie = &upstreamRequestCookie
+									}
+									siteFailover.UpstreamRequestParameters = &upstreamRequestParameters
+								}
+								if upstreamHTTP2ParamsMap, ok := helper.ConvertInterfacesHeadToMap(siteFailoverParamsMap["upstream_http2_parameters"]); ok {
+									upstreamHTTP2Parameters := teov20220901.UpstreamHTTP2Parameters{}
+									if v, ok := upstreamHTTP2ParamsMap["switch"].(string); ok && v != "" {
+										upstreamHTTP2Parameters.Switch = helper.String(v)
+									}
+									siteFailover.UpstreamHTTP2Parameters = &upstreamHTTP2Parameters
+								}
+								if v, ok := siteFailoverParamsMap["private_access"].(string); ok && v != "" {
+									siteFailover.PrivateAccess = helper.String(v)
+								}
+								if privateParametersMap, ok := helper.ConvertInterfacesHeadToMap(siteFailoverParamsMap["private_parameters"]); ok {
+									originPrivateParameters := teov20220901.OriginPrivateParameters{}
+									if v, ok := privateParametersMap["access_key_id"].(string); ok && v != "" {
+										originPrivateParameters.AccessKeyId = helper.String(v)
+									}
+									if v, ok := privateParametersMap["secret_access_key"].(string); ok && v != "" {
+										originPrivateParameters.SecretAccessKey = helper.String(v)
+									}
+									if v, ok := privateParametersMap["signature_version"].(string); ok && v != "" {
+										originPrivateParameters.SignatureVersion = helper.String(v)
+									}
+									if v, ok := privateParametersMap["region"].(string); ok && v != "" {
+										originPrivateParameters.Region = helper.String(v)
+									}
+									siteFailover.PrivateParameters = &originPrivateParameters
+								}
+								if v, ok := siteFailoverParamsMap["redirect_url"].(string); ok && v != "" {
+									siteFailover.RedirectURL = helper.String(v)
+								}
+								if v, ok := siteFailoverParamsMap["response_page_id"].(string); ok && v != "" {
+									siteFailover.ResponsePageId = helper.String(v)
+								}
+								if v, ok := siteFailoverParamsMap["status_code"].(int); ok && v != 0 {
+									siteFailover.StatusCode = helper.IntInt64(v)
+								}
+								siteFailoverParameters.SiteFailoverParams = append(siteFailoverParameters.SiteFailoverParams, &siteFailover)
+							}
+						}
+						ruleEngineAction.SiteFailoverParameters = &siteFailoverParameters
 					}
 					ruleBranch.Actions = append(ruleBranch.Actions, &ruleEngineAction)
 				}
@@ -2619,6 +3028,150 @@ func resourceTencentCloudTeoL7AccRuleSetBranchs(ruleBranches []*teo.RuleBranch) 
 						originAuthenticationParametersMap["request_properties"] = requestPropertiesList
 
 						actionsMap["origin_authentication_parameters"] = []interface{}{originAuthenticationParametersMap}
+					}
+
+					advancedOriginRoutingParametersMap := map[string]interface{}{}
+					if actions.AdvancedOriginRoutingParameters != nil {
+						if actions.AdvancedOriginRoutingParameters.Direction != nil {
+							advancedOriginRoutingParametersMap["direction"] = actions.AdvancedOriginRoutingParameters.Direction
+						}
+						actionsMap["advanced_origin_routing_parameters"] = []interface{}{advancedOriginRoutingParametersMap}
+					}
+
+					shieldParametersMap := map[string]interface{}{}
+					if actions.ShieldParameters != nil {
+						if actions.ShieldParameters.ShieldSpaceId != nil {
+							shieldParametersMap["shield_space_id"] = actions.ShieldParameters.ShieldSpaceId
+						}
+						actionsMap["shield_parameters"] = []interface{}{shieldParametersMap}
+					}
+
+					siteFailoverParametersMap := map[string]interface{}{}
+					if actions.SiteFailoverParameters != nil {
+						if actions.SiteFailoverParameters.SiteFailoverStatusCodes != nil {
+							siteFailoverStatusCodesList := make([]interface{}, 0, len(actions.SiteFailoverParameters.SiteFailoverStatusCodes))
+							for _, code := range actions.SiteFailoverParameters.SiteFailoverStatusCodes {
+								if code != nil {
+									siteFailoverStatusCodesList = append(siteFailoverStatusCodesList, code)
+								}
+							}
+							siteFailoverParametersMap["site_failover_status_codes"] = siteFailoverStatusCodesList
+						}
+						if actions.SiteFailoverParameters.SiteFailoverParams != nil {
+							siteFailoverParamsList := make([]map[string]interface{}, 0, len(actions.SiteFailoverParameters.SiteFailoverParams))
+							for _, siteFailoverParam := range actions.SiteFailoverParameters.SiteFailoverParams {
+								siteFailoverParamMap := map[string]interface{}{}
+								if siteFailoverParam.Mode != nil {
+									siteFailoverParamMap["mode"] = siteFailoverParam.Mode
+								}
+								if siteFailoverParam.Origin != nil {
+									siteFailoverParamMap["origin"] = siteFailoverParam.Origin
+								}
+								if siteFailoverParam.OriginProtocol != nil {
+									siteFailoverParamMap["origin_protocol"] = siteFailoverParam.OriginProtocol
+								}
+								if siteFailoverParam.HTTPOriginPort != nil {
+									siteFailoverParamMap["http_origin_port"] = siteFailoverParam.HTTPOriginPort
+								}
+								if siteFailoverParam.HTTPSOriginPort != nil {
+									siteFailoverParamMap["https_origin_port"] = siteFailoverParam.HTTPSOriginPort
+								}
+								if siteFailoverParam.UpstreamHostHeader != nil {
+									upstreamHostHeaderMap := map[string]interface{}{}
+									if siteFailoverParam.UpstreamHostHeader.Action != nil {
+										upstreamHostHeaderMap["action"] = siteFailoverParam.UpstreamHostHeader.Action
+									}
+									if siteFailoverParam.UpstreamHostHeader.ServerName != nil {
+										upstreamHostHeaderMap["server_name"] = siteFailoverParam.UpstreamHostHeader.ServerName
+									}
+									siteFailoverParamMap["upstream_host_header"] = []interface{}{upstreamHostHeaderMap}
+								}
+								if siteFailoverParam.UpstreamURLRewrite != nil {
+									upstreamURLRewriteMap := map[string]interface{}{}
+									if siteFailoverParam.UpstreamURLRewrite.Type != nil {
+										upstreamURLRewriteMap["type"] = siteFailoverParam.UpstreamURLRewrite.Type
+									}
+									if siteFailoverParam.UpstreamURLRewrite.Action != nil {
+										upstreamURLRewriteMap["action"] = siteFailoverParam.UpstreamURLRewrite.Action
+									}
+									if siteFailoverParam.UpstreamURLRewrite.Value != nil {
+										upstreamURLRewriteMap["value"] = siteFailoverParam.UpstreamURLRewrite.Value
+									}
+									if siteFailoverParam.UpstreamURLRewrite.Regex != nil {
+										upstreamURLRewriteMap["regex"] = siteFailoverParam.UpstreamURLRewrite.Regex
+									}
+									siteFailoverParamMap["upstream_url_rewrite"] = []interface{}{upstreamURLRewriteMap}
+								}
+								if siteFailoverParam.UpstreamRequestParameters != nil {
+									upstreamRequestParamsMap := map[string]interface{}{}
+									if siteFailoverParam.UpstreamRequestParameters.QueryString != nil {
+										queryStringMap := map[string]interface{}{}
+										if siteFailoverParam.UpstreamRequestParameters.QueryString.Switch != nil {
+											queryStringMap["switch"] = siteFailoverParam.UpstreamRequestParameters.QueryString.Switch
+										}
+										if siteFailoverParam.UpstreamRequestParameters.QueryString.Action != nil {
+											queryStringMap["action"] = siteFailoverParam.UpstreamRequestParameters.QueryString.Action
+										}
+										if siteFailoverParam.UpstreamRequestParameters.QueryString.Values != nil {
+											queryStringMap["values"] = siteFailoverParam.UpstreamRequestParameters.QueryString.Values
+										}
+										upstreamRequestParamsMap["query_string"] = []interface{}{queryStringMap}
+									}
+									if siteFailoverParam.UpstreamRequestParameters.Cookie != nil {
+										cookieMap := map[string]interface{}{}
+										if siteFailoverParam.UpstreamRequestParameters.Cookie.Switch != nil {
+											cookieMap["switch"] = siteFailoverParam.UpstreamRequestParameters.Cookie.Switch
+										}
+										if siteFailoverParam.UpstreamRequestParameters.Cookie.Action != nil {
+											cookieMap["action"] = siteFailoverParam.UpstreamRequestParameters.Cookie.Action
+										}
+										if siteFailoverParam.UpstreamRequestParameters.Cookie.Values != nil {
+											cookieMap["values"] = siteFailoverParam.UpstreamRequestParameters.Cookie.Values
+										}
+										upstreamRequestParamsMap["cookie"] = []interface{}{cookieMap}
+									}
+									siteFailoverParamMap["upstream_request_parameters"] = []interface{}{upstreamRequestParamsMap}
+								}
+								if siteFailoverParam.UpstreamHTTP2Parameters != nil {
+									upstreamHTTP2Map := map[string]interface{}{}
+									if siteFailoverParam.UpstreamHTTP2Parameters.Switch != nil {
+										upstreamHTTP2Map["switch"] = siteFailoverParam.UpstreamHTTP2Parameters.Switch
+									}
+									siteFailoverParamMap["upstream_http2_parameters"] = []interface{}{upstreamHTTP2Map}
+								}
+								if siteFailoverParam.PrivateAccess != nil {
+									siteFailoverParamMap["private_access"] = siteFailoverParam.PrivateAccess
+								}
+								if siteFailoverParam.PrivateParameters != nil {
+									privateParamsMap := map[string]interface{}{}
+									if siteFailoverParam.PrivateParameters.AccessKeyId != nil {
+										privateParamsMap["access_key_id"] = siteFailoverParam.PrivateParameters.AccessKeyId
+									}
+									if siteFailoverParam.PrivateParameters.SecretAccessKey != nil {
+										privateParamsMap["secret_access_key"] = siteFailoverParam.PrivateParameters.SecretAccessKey
+									}
+									if siteFailoverParam.PrivateParameters.SignatureVersion != nil {
+										privateParamsMap["signature_version"] = siteFailoverParam.PrivateParameters.SignatureVersion
+									}
+									if siteFailoverParam.PrivateParameters.Region != nil {
+										privateParamsMap["region"] = siteFailoverParam.PrivateParameters.Region
+									}
+									siteFailoverParamMap["private_parameters"] = []interface{}{privateParamsMap}
+								}
+								if siteFailoverParam.RedirectURL != nil {
+									siteFailoverParamMap["redirect_url"] = siteFailoverParam.RedirectURL
+								}
+								if siteFailoverParam.ResponsePageId != nil {
+									siteFailoverParamMap["response_page_id"] = siteFailoverParam.ResponsePageId
+								}
+								if siteFailoverParam.StatusCode != nil {
+									siteFailoverParamMap["status_code"] = siteFailoverParam.StatusCode
+								}
+								siteFailoverParamsList = append(siteFailoverParamsList, siteFailoverParamMap)
+							}
+							siteFailoverParametersMap["site_failover_params"] = siteFailoverParamsList
+						}
+						actionsMap["site_failover_parameters"] = []interface{}{siteFailoverParametersMap}
 					}
 
 					actionsList = append(actionsList, actionsMap)
