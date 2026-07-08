@@ -59,6 +59,26 @@ resource "tencentcloud_ga2_listener" "example2" {
   depends_on = [tencentcloud_ga2_listener.example1]
 }
 
+resource "tencentcloud_ga2_listener" "example3" {
+  global_accelerator_id = tencentcloud_ga2_accelerate_area.example.global_accelerator_id
+  name                  = "tf-example-https"
+  protocol              = "HTTPS"
+
+  port_ranges {
+    from_port = 9090
+    to_port   = 9090
+  }
+
+  listener_type       = "Standard"
+  idle_timeout        = 60
+  request_timeout     = 60
+  certification_type  = "SVR"
+  cipher_policy_id    = "tls_policy_1.2_strict-1.3"
+  server_certificates = ["Yj6CmODs"]
+
+  depends_on = [tencentcloud_ga2_listener.example2]
+}
+
 resource "tencentcloud_ga2_endpoint_group" "example1" {
   global_accelerator_id = tencentcloud_ga2_global_accelerator.example.id
   listener_id           = tencentcloud_ga2_listener.example1.listener_id
@@ -138,6 +158,49 @@ resource "tencentcloud_ga2_endpoint_group" "example2" {
   }
 
   depends_on = [tencentcloud_ga2_endpoint_group.example1]
+}
+
+resource "tencentcloud_ga2_endpoint_group" "example3" {
+  global_accelerator_id = tencentcloud_ga2_global_accelerator.example.id
+  listener_id           = tencentcloud_ga2_listener.example3.listener_id
+  endpoint_group_type   = "DEFAULT"
+
+  endpoint_group_configuration {
+    name                   = "tf-example"
+    endpoint_group_region  = "ap-guangzhou"
+    enable_health_check    = true
+    forward_protocol       = "HTTPS"
+    check_type             = "HTTP"
+    check_port             = "8080"
+    check_domain           = "www.tencent.com"
+    check_path             = "/test"
+    check_method           = "GET"
+    connect_timeout        = 2
+    health_check_interval  = 30
+    healthy_threshold      = 3
+    unhealthy_threshold    = 3
+    cipher_policy_id       = "tls_policy_1.2_strict-1.3"
+    http_version           = "HTTP/1.1"
+    status_mask = [
+      "http_2xx",
+      "http_3xx",
+      "http_4xx",
+      "http_5xx"
+    ]
+
+    endpoint_configurations {
+      endpoint_type    = "CustomPublicIp"
+      endpoint_service = "12.15.13.16"
+      weight           = 100
+    }
+
+    port_overrides {
+      listener_port = 9090
+      endpoint_port = 80
+    }
+  }
+
+  depends_on = [tencentcloud_ga2_endpoint_group.example2]
 }
 ```
 

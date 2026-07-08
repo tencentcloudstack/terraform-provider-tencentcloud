@@ -9,6 +9,7 @@ import (
 
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
+	sdkErrors "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/common/errors"
 	ga2v20250115 "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/ga2/v20250115"
 
 	tccommon "github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/common"
@@ -56,19 +57,20 @@ func ResourceTencentCloudGa2ForwardingRule() *schema.Resource {
 			"rule_conditions": {
 				Type:        schema.TypeSet,
 				Required:    true,
-				Description: "Layer-7 forwarding rule condition list. Treated as an unordered set; HCL element order has no semantic meaning.",
+				Description: "Layer-7 forwarding rule condition list. Maximum of 1 element. Treated as an unordered set; HCL element order has no semantic meaning.",
 				Elem: &schema.Resource{
 					Schema: map[string]*schema.Schema{
 						"rule_condition_type": {
 							Type:        schema.TypeString,
 							Required:    true,
-							Description: "Layer-7 forwarding rule condition type.",
+							Description: "Layer-7 forwarding rule condition type. Valid values: `Path`.",
 						},
 						"rule_condition_value": {
-							Type:        schema.TypeSet,
-							Required:    true,
-							Elem:        &schema.Schema{Type: schema.TypeString},
-							Description: "Layer-7 forwarding rule condition values. Treated as an unordered set.",
+							Type:     schema.TypeSet,
+							Required: true,
+							Elem:     &schema.Schema{Type: schema.TypeString},
+							Description: "Layer-7 forwarding rule condition values. Each value must match the regular expression " +
+								"`^[a-zA-Z0-9_.-/]{1,80}$`. Maximum of 1 element. Treated as an unordered set.",
 						},
 					},
 				},
@@ -80,55 +82,62 @@ func ResourceTencentCloudGa2ForwardingRule() *schema.Resource {
 				Elem: &schema.Resource{
 					Schema: map[string]*schema.Schema{
 						"rule_action_type": {
-							Type:        schema.TypeString,
-							Required:    true,
-							Description: "Layer-7 forwarding rule action type.",
+							Type:     schema.TypeString,
+							Required: true,
+							Description: "Layer-7 forwarding rule action type. Valid values: `ForwardGroup` (forward to an endpoint group), " +
+								"`Drop` (drop the request).",
 						},
 						"rule_action_value": {
-							Type:        schema.TypeString,
-							Required:    true,
-							Description: "Layer-7 forwarding rule action value.",
+							Type:     schema.TypeString,
+							Required: true,
+							Description: "Layer-7 forwarding rule action value. Not required when `rule_action_type` is `Drop`. " +
+								"Required when `rule_action_type` is `ForwardGroup`, in which case it must be a custom endpoint group ID " +
+								"(the default endpoint group is not supported).",
 						},
 					},
 				},
 			},
 			"origin_headers": {
-				Type:        schema.TypeSet,
-				Optional:    true,
-				Computed:    true,
-				Description: "Origin request header list. Treated as an unordered set; HCL element order has no semantic meaning.",
+				Type:     schema.TypeSet,
+				Optional: true,
+				Computed: true,
+				Description: "Origin request header list. Maximum of 5 elements. Required when `rule_actions.rule_action_type` " +
+					"is `ForwardGroup`. Treated as an unordered set; HCL element order has no semantic meaning.",
 				Elem: &schema.Resource{
 					Schema: map[string]*schema.Schema{
 						"key": {
 							Type:        schema.TypeString,
 							Required:    true,
-							Description: "Origin request header key.",
+							Description: "Origin request header key. Must contain only printable ASCII characters and must not contain `()<>@,;:\\\"/[ ]?={}`. Length must be between 1 and 40 characters.",
 						},
 						"value": {
 							Type:        schema.TypeString,
 							Required:    true,
-							Description: "Origin request header value.",
+							Description: "Origin request header value. Maximum length is 128 characters. If the value contains `$`, only `$remote_addr` or `$remote_port` are supported.",
 						},
 					},
 				},
 			},
 			"enable_origin_sni": {
-				Type:        schema.TypeBool,
-				Optional:    true,
-				Computed:    true,
-				Description: "Whether to enable origin SNI.",
+				Type:     schema.TypeBool,
+				Optional: true,
+				Computed: true,
+				Description: "Whether to enable origin SNI. Default: `false`. Required when `rule_actions.rule_action_type` " +
+					"is `ForwardGroup`.",
 			},
 			"origin_sni": {
-				Type:        schema.TypeString,
-				Optional:    true,
-				Computed:    true,
-				Description: "Origin SNI value.",
+				Type:     schema.TypeString,
+				Optional: true,
+				Computed: true,
+				Description: "Origin SNI value. Maximum length is 80 characters. Required when `enable_origin_sni` is `true`, " +
+					"and also required when `rule_actions.rule_action_type` is `ForwardGroup`.",
 			},
 			"origin_host": {
-				Type:        schema.TypeString,
-				Optional:    true,
-				Computed:    true,
-				Description: "Origin host value.",
+				Type:     schema.TypeString,
+				Optional: true,
+				Computed: true,
+				Description: "Origin host value. Maximum length is 80 characters. Required when `rule_actions.rule_action_type` " +
+					"is `ForwardGroup`.",
 			},
 
 			// Computed
@@ -425,6 +434,12 @@ func resourceTencentCloudGa2ForwardingRuleDelete(d *schema.ResourceData, meta in
 	reqErr := resource.Retry(tccommon.WriteRetryTimeout, func() *resource.RetryError {
 		result, e := meta.(tccommon.ProviderMeta).GetAPIV3Conn().UseGa2V20250115Client().DeleteForwardingRuleWithContext(ctx, request)
 		if e != nil {
+			if sdkerr, ok := e.(*sdkErrors.TencentCloudSDKError); ok {
+				if sdkerr.Code == "ResourceNotFound" {
+					return nil
+				}
+			}
+
 			return tccommon.RetryError(e)
 		} else {
 			log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), result.ToJsonString())

@@ -42,7 +42,7 @@ The following arguments are supported:
 * `bandwidth` - (Optional, Int) Acceleration bandwidth in Mbps.
 * `ip_address` - (Optional, Set: [`String`]) Bound IP address list. Treated as an unordered set; HCL element order has no semantic meaning.
 * `ip_version` - (Optional, String) IP version. Only `IPv4` is supported. Default: `IPv4`.
-* `isp_type` - (Optional, String) ISP type. Default: `BGP`. Besides `BGP`, multi-line and premium BGP ISP types are also supported; refer to the CreateAccelerateAreas API for the exact enum values.
+* `isp_type` - (Optional, String) ISP type. Valid values: `BGP` (BGP), `STATIC_IP` (multi-ISP static IP), `QUALITY_BGP` (premium BGP). Default: `BGP`.
 
 ## Attributes Reference
 
@@ -52,7 +52,7 @@ In addition to all arguments above, the following attributes are exported:
 * `accelerator_area_id` - Acceleration region ID.
 * `ip_address_info_set` - IP address information list.
   * `ip_address` - IP address.
-  * `isp_type` - IP ISP type.
+  * `isp_type` - ISP type of the IP address.
 
 ## Timeouts
 

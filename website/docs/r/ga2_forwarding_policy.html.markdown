@@ -61,7 +61,7 @@ resource "tencentcloud_ga2_forwarding_policy" "example" {
 The following arguments are supported:
 
 * `global_accelerator_id` - (Required, String, ForceNew) Global accelerator instance ID this forwarding policy belongs to.
-* `host` - (Required, String) The domain/host for the forwarding policy.
+* `host` - (Required, String) Domain name. Must match the regular expression `^(?:[a-z0-9-]{0,61}[a-z0-9]?.)+[a-z]{2,}$`. Length must be between 1 and 80 characters.
 * `listener_id` - (Required, String, ForceNew) Listener ID this forwarding policy belongs to.
 
 ## Attributes Reference
@@ -69,7 +69,7 @@ The following arguments are supported:
 In addition to all arguments above, the following attributes are exported:
 
 * `id` - ID of the resource.
-* `default_host_flag` - Whether this is the default host policy for the listener.
+* `default_host_flag` - Whether this is the default domain name for the listener.
 * `forwarding_policy_id` - Forwarding policy ID.
 
 ## Timeouts
