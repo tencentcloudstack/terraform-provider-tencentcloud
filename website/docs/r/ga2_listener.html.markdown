@@ -67,6 +67,28 @@ resource "tencentcloud_ga2_listener" "example2" {
 
   depends_on = [tencentcloud_ga2_listener.example1]
 }
+
+resource "tencentcloud_ga2_listener" "example3" {
+  global_accelerator_id = tencentcloud_ga2_accelerate_area.example.global_accelerator_id
+  name                  = "tf-example-https"
+  protocol              = "HTTPS"
+
+  port_ranges {
+    from_port = 9090
+    to_port   = 9090
+  }
+
+  listener_type           = "Standard"
+  idle_timeout            = 38
+  request_timeout         = 60
+  x_forwarded_for_real_ip = true
+  certification_type      = "MUTUAL"
+  cipher_policy_id        = "tls_policy_1.2_strict-1.3"
+  server_certificates     = ["Yj6CmODs"]
+  client_ca_certificates  = ["W6aH2tOc"]
+
+  depends_on = [tencentcloud_ga2_listener.example2]
+}
 ```
 
 ## Argument Reference
