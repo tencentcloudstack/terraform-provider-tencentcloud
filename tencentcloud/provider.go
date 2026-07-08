@@ -1939,6 +1939,7 @@ func Provider() *schema.Provider {
 			"tencentcloud_cynosdb_reload_proxy_node":                                                cynosdb.ResourceTencentCloudCynosdbReloadProxyNode(),
 			"tencentcloud_cynosdb_cluster_resource_packages_attachment":                             cynosdb.ResourceTencentCloudCynosdbClusterResourcePackagesAttachment(),
 			"tencentcloud_cynosdb_cluster":                                                          cynosdb.ResourceTencentCloudCynosdbCluster(),
+			"tencentcloud_cynosdb_cluster_v2":                                                       cynosdb.ResourceTencentCloudCynosdbClusterV2(),
 			"tencentcloud_cynosdb_readonly_instance":                                                cynosdb.ResourceTencentCloudCynosdbReadonlyInstance(),
 			"tencentcloud_cynosdb_cluster_password_complexity":                                      cynosdb.ResourceTencentCloudCynosdbClusterPasswordComplexity(),
 			"tencentcloud_cynosdb_export_instance_error_logs":                                       cynosdb.ResourceTencentCloudCynosdbExportInstanceErrorLogs(),
