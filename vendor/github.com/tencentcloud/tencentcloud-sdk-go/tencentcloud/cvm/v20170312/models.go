@@ -6781,6 +6781,8 @@ type Instance struct {
 	LatestOperationRequestId *string `json:"LatestOperationRequestId,omitnil,omitempty" name:"LatestOperationRequestId"`
 
 	// <p>分散置放群组ID。</p>
+	//
+	// Deprecated: DisasterRecoverGroupId is deprecated.
 	DisasterRecoverGroupId *string `json:"DisasterRecoverGroupId,omitnil,omitempty" name:"DisasterRecoverGroupId"`
 
 	// <p>实例的IPv6地址。</p>
@@ -6803,6 +6805,9 @@ type Instance struct {
 
 	// <p>实例隔离类型。取值范围：<br><li>ARREAR：表示欠费隔离<br></li><li>EXPIRE：表示到期隔离<br></li><li>MANMADE：表示主动退还隔离<br></li><li>NOTISOLATED：表示未隔离<br></li></p>
 	IsolatedSource *string `json:"IsolatedSource,omitnil,omitempty" name:"IsolatedSource"`
+
+	// <p>置放群组列表(目前仅支持一个)</p>
+	DisasterRecoverGroupIds []*string `json:"DisasterRecoverGroupIds,omitnil,omitempty" name:"DisasterRecoverGroupIds"`
 
 	// <p>GPU信息。如果是gpu类型子机，该值会返回GPU信息，如果是其他类型子机则不返回。</p>
 	GPUInfo *GPUInfo `json:"GPUInfo,omitnil,omitempty" name:"GPUInfo"`
@@ -8108,27 +8113,41 @@ func (r *ModifyInstancesChargeTypeResponse) FromJsonString(s string) error {
 
 // Predefined struct for user
 type ModifyInstancesDisasterRecoverGroupRequestParams struct {
-	// 一个或多个待操作的实例ID。可通过[ DescribeInstances ](https://cloud.tencent.com/document/api/213/15728)接口返回值中的`InstanceId`获取。每次请求批量实例的上限为100
+	// <p>一个或多个待操作的实例ID。可通过<a href="https://cloud.tencent.com/document/api/213/15728"> DescribeInstances </a>接口返回值中的<code>InstanceId</code>获取。每次请求批量实例的上限为100</p>
 	InstanceIds []*string `json:"InstanceIds,omitnil,omitempty" name:"InstanceIds"`
 
-	// 分散置放群组ID，可使用[DescribeDisasterRecoverGroups](https://cloud.tencent.com/document/api/213/17810)接口获取
+	// <p>分散置放群组ID，可使用<a href="https://cloud.tencent.com/document/api/213/17810">DescribeDisasterRecoverGroups</a>接口获取</p>
+	//
+	// Deprecated: DisasterRecoverGroupId is deprecated.
 	DisasterRecoverGroupId *string `json:"DisasterRecoverGroupId,omitnil,omitempty" name:"DisasterRecoverGroupId"`
 
-	// 是否强制更换实例宿主机。取值范围：<br><li>true：表示允许实例更换宿主机，允许重启实例。本地盘子机不支持指定此参数。</li><br><li>false：不允许实例更换宿主机，只在当前宿主机上加入置放群组。这可能导致更换置放群组失败。</li><br><br>默认取值：false
+	// <p>是否强制更换实例宿主机。取值范围：<br><li>true：表示允许实例更换宿主机，允许重启实例。本地盘子机不支持指定此参数。</li><br><li>false：不允许实例更换宿主机，只在当前宿主机上加入置放群组。这可能导致更换置放群组失败。</li><br><br>默认取值：false</p>
 	Force *bool `json:"Force,omitnil,omitempty" name:"Force"`
+
+	// <p>置放群组id列表(目前仅支持指定一个)</p>
+	DisasterRecoverGroupIds []*string `json:"DisasterRecoverGroupIds,omitnil,omitempty" name:"DisasterRecoverGroupIds"`
+
+	// <p>分区置放群组的分区Id，取值范围：1-10，具体取决于所选置放群组的分区数量，如果选中的置放群组是分区置放群组，该值不传默认随机(该功能灰度中)</p>
+	PartitionNumber *int64 `json:"PartitionNumber,omitnil,omitempty" name:"PartitionNumber"`
 }
 
 type ModifyInstancesDisasterRecoverGroupRequest struct {
 	*tchttp.BaseRequest
 	
-	// 一个或多个待操作的实例ID。可通过[ DescribeInstances ](https://cloud.tencent.com/document/api/213/15728)接口返回值中的`InstanceId`获取。每次请求批量实例的上限为100
+	// <p>一个或多个待操作的实例ID。可通过<a href="https://cloud.tencent.com/document/api/213/15728"> DescribeInstances </a>接口返回值中的<code>InstanceId</code>获取。每次请求批量实例的上限为100</p>
 	InstanceIds []*string `json:"InstanceIds,omitnil,omitempty" name:"InstanceIds"`
 
-	// 分散置放群组ID，可使用[DescribeDisasterRecoverGroups](https://cloud.tencent.com/document/api/213/17810)接口获取
+	// <p>分散置放群组ID，可使用<a href="https://cloud.tencent.com/document/api/213/17810">DescribeDisasterRecoverGroups</a>接口获取</p>
 	DisasterRecoverGroupId *string `json:"DisasterRecoverGroupId,omitnil,omitempty" name:"DisasterRecoverGroupId"`
 
-	// 是否强制更换实例宿主机。取值范围：<br><li>true：表示允许实例更换宿主机，允许重启实例。本地盘子机不支持指定此参数。</li><br><li>false：不允许实例更换宿主机，只在当前宿主机上加入置放群组。这可能导致更换置放群组失败。</li><br><br>默认取值：false
+	// <p>是否强制更换实例宿主机。取值范围：<br><li>true：表示允许实例更换宿主机，允许重启实例。本地盘子机不支持指定此参数。</li><br><li>false：不允许实例更换宿主机，只在当前宿主机上加入置放群组。这可能导致更换置放群组失败。</li><br><br>默认取值：false</p>
 	Force *bool `json:"Force,omitnil,omitempty" name:"Force"`
+
+	// <p>置放群组id列表(目前仅支持指定一个)</p>
+	DisasterRecoverGroupIds []*string `json:"DisasterRecoverGroupIds,omitnil,omitempty" name:"DisasterRecoverGroupIds"`
+
+	// <p>分区置放群组的分区Id，取值范围：1-10，具体取决于所选置放群组的分区数量，如果选中的置放群组是分区置放群组，该值不传默认随机(该功能灰度中)</p>
+	PartitionNumber *int64 `json:"PartitionNumber,omitnil,omitempty" name:"PartitionNumber"`
 }
 
 func (r *ModifyInstancesDisasterRecoverGroupRequest) ToJsonString() string {
@@ -8146,6 +8165,8 @@ func (r *ModifyInstancesDisasterRecoverGroupRequest) FromJsonString(s string) er
 	delete(f, "InstanceIds")
 	delete(f, "DisasterRecoverGroupId")
 	delete(f, "Force")
+	delete(f, "DisasterRecoverGroupIds")
+	delete(f, "PartitionNumber")
 	if len(f) > 0 {
 		return tcerr.NewTencentCloudSDKError("ClientError.BuildRequestError", "ModifyInstancesDisasterRecoverGroupRequest has unknown keys!", "")
 	}
@@ -10504,31 +10525,27 @@ func (r *SyncImagesResponse) FromJsonString(s string) error {
 }
 
 type SystemDisk struct {
-	// 系统盘类型。系统盘类型限制详见[存储概述](https://cloud.tencent.com/document/product/213/4952)。取值范围：<br>
-	// <li>LOCAL_BASIC：本地硬盘</li>
-	// <li>LOCAL_SSD：本地SSD硬盘</li>
-	// <li>CLOUD_BASIC：普通云硬盘</li>
-	// <li>CLOUD_SSD：SSD云硬盘</li>
-	// <li>CLOUD_PREMIUM：高性能云硬盘</li>
-	// <li>CLOUD_BSSD：通用型SSD云硬盘</li>
-	// <li>CLOUD_HSSD：增强型SSD云硬盘</li>
-	// <li>CLOUD_TSSD：极速型SSD云硬盘</li><br>
-	// 默认取值：当前有库存的硬盘类型。
+	// <p>系统盘类型。系统盘类型限制详见<a href="https://cloud.tencent.com/document/product/213/4952">存储概述</a>。取值范围：<br></p><li>LOCAL_BASIC：本地硬盘</li><li>LOCAL_SSD：本地SSD硬盘</li><li>CLOUD_BASIC：普通云硬盘</li><li>CLOUD_SSD：SSD云硬盘</li><li>CLOUD_PREMIUM：高性能云硬盘</li><li>CLOUD_BSSD：通用型SSD云硬盘</li><li>CLOUD_HSSD：增强型SSD云硬盘</li><li>CLOUD_TSSD：极速型SSD云硬盘</li><br>默认取值：当前有库存的硬盘类型。
 	DiskType *string `json:"DiskType,omitnil,omitempty" name:"DiskType"`
 
-	// 系统盘ID。
-	// 该参数目前仅用于 [DescribeInstances](https://cloud.tencent.com/document/product/213/15728) 等查询类接口的返回参数，不可用于 [RunInstances](https://cloud.tencent.com/document/product/213/15730) 等写接口的入参。
+	// <p>系统盘ID。<br>该参数目前仅用于 <a href="https://cloud.tencent.com/document/product/213/15728">DescribeInstances</a> 等查询类接口的返回参数，不可用于 <a href="https://cloud.tencent.com/document/product/213/15730">RunInstances</a> 等写接口的入参。</p>
 	DiskId *string `json:"DiskId,omitnil,omitempty" name:"DiskId"`
 
-	// 系统盘大小，单位：GiB。默认值为 50
+	// <p>系统盘大小，单位：GiB。默认值为 50</p>
 	DiskSize *int64 `json:"DiskSize,omitnil,omitempty" name:"DiskSize"`
 
-	// 所属的独享集群ID。
+	// <p>所属的独享集群ID。</p>
 	// 注意：此字段可能返回 null，表示取不到有效值。
 	CdcId *string `json:"CdcId,omitnil,omitempty" name:"CdcId"`
 
-	// 磁盘名称，长度不超过128 个字符。
+	// <p>磁盘名称，长度不超过128 个字符。</p>
 	DiskName *string `json:"DiskName,omitnil,omitempty" name:"DiskName"`
+
+	// <p>系统盘是否加密。取值范围：true：加密false：不加密默认取值：false该参数目前仅用于 RunInstances 接口。当前参数灰度中。</p>
+	Encrypt *bool `json:"Encrypt,omitnil,omitempty" name:"Encrypt"`
+
+	// <p>自定义CMK对应的ID，取值为UUID或者类似kms-abcd1234。用于加密云盘。该参数目前仅用于 RunInstances 接口。当前参数灰度中。</p>
+	KmsKeyId *string `json:"KmsKeyId,omitnil,omitempty" name:"KmsKeyId"`
 }
 
 type Tag struct {

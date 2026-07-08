@@ -71,6 +71,7 @@ resource "tencentcloud_instance" "example" {
   instance_type     = data.tencentcloud_instance_types.types.instance_types.0.instance_type
   system_disk_type  = "CLOUD_PREMIUM"
   system_disk_size  = 50
+  kms_key_id        = "kms-xxxxxxxx"
   hostname          = "user"
   project_id        = 0
   vpc_id            = tencentcloud_vpc.vpc.id
@@ -512,7 +513,9 @@ The following arguments are supported:
 * `stop_type` - (Optional, String) Instance shutdown mode. Valid values: SOFT_FIRST: perform a soft shutdown first, and force shut down the instance if the soft shutdown fails; HARD: force shut down the instance directly; SOFT: soft shutdown only. Default value: SOFT.
 * `stopped_mode` - (Optional, String) Billing method of a pay-as-you-go instance after shutdown. Available values: `KEEP_CHARGING`,`STOP_CHARGING`. Default `KEEP_CHARGING`.
 * `subnet_id` - (Optional, String) The ID of a VPC subnet. If you want to create instances in a VPC network, this parameter must be set.
+* `system_disk_encrypt` - (Optional, Bool, ForceNew) Whether the system disk is encrypted. Valid values: true (encrypted), false (not encrypted). Default value: false.
 * `system_disk_id` - (Optional, String) System disk snapshot ID used to initialize the system disk. When system disk type is `LOCAL_BASIC` and `LOCAL_SSD`, disk id is not supported.
+* `system_disk_kms_key_id` - (Optional, String, ForceNew) Custom KMS key ID for system disk encryption.
 * `system_disk_name` - (Optional, String) Name of the system disk.
 * `system_disk_resize_online` - (Optional, Bool) Resize online.
 * `system_disk_size` - (Optional, Int) Size of the system disk. unit is GB, Default is 50GB. If modified, the instance may force stop.
