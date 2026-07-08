@@ -475,9 +475,7 @@ func resourceTencentCloudAsScalingGroupRead(d *schema.ResourceData, meta interfa
 	_ = d.Set("retry_policy", scalingGroup.RetryPolicy)
 	_ = d.Set("health_check_type", scalingGroup.HealthCheckType)
 	_ = d.Set("lb_health_check_grace_period", scalingGroup.LoadBalancerHealthCheckGracePeriod)
-	if v, ok := d.GetOk("multi_zone_subnet_policy"); ok && v.(string) != "" {
-		_ = d.Set("multi_zone_subnet_policy", scalingGroup.MultiZoneSubnetPolicy)
-	}
+	_ = d.Set("multi_zone_subnet_policy", scalingGroup.MultiZoneSubnetPolicy)
 
 	if scalingGroup.ServiceSettings != nil {
 		_ = d.Set("replace_monitor_unhealthy", scalingGroup.ServiceSettings.ReplaceMonitorUnhealthy)
