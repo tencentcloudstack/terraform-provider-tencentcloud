@@ -86,6 +86,7 @@ func ResourceTencentCloudPostgresqlBackupPlan() *schema.Resource {
 				Description: "Backup method. Enumerated values: physical, logical, snapshot.",
 			},
 
+			// computed
 			"plan_id": {
 				Type:        schema.TypeString,
 				Computed:    true,
@@ -172,7 +173,7 @@ func resourceTencentCloudPostgresqlBackupPlanCreate(d *schema.ResourceData, meta
 
 	planId = *response.Response.PlanId
 	d.SetId(strings.Join([]string{dbInstanceId, planId}, tccommon.FILED_SP))
-	return resourceTencentCloudPostgresqlBackupPlanRead(d, meta)
+	return resourceTencentCloudPostgresqlBackupPlanUpdate(d, meta)
 }
 
 func resourceTencentCloudPostgresqlBackupPlanRead(d *schema.ResourceData, meta interface{}) error {
@@ -199,14 +200,12 @@ func resourceTencentCloudPostgresqlBackupPlanRead(d *schema.ResourceData, meta i
 	}
 
 	if backupPlan == nil {
-		log.Printf("[CRUD] postgresql backup_plan id=%s", d.Id())
+		log.Printf("[WARN]%s resource `tencentcloud_postgresql_backup_plan` [%s] not found, please check if it has been deleted.\n", logId, d.Id())
 		d.SetId("")
 		return nil
 	}
 
-	if backupPlan.PlanId != nil {
-		_ = d.Set("plan_id", backupPlan.PlanId)
-	}
+	_ = d.Set("db_instance_id", dbInstanceId)
 
 	if backupPlan.PlanName != nil {
 		_ = d.Set("plan_name", backupPlan.PlanName)
@@ -221,6 +220,7 @@ func resourceTencentCloudPostgresqlBackupPlanRead(d *schema.ResourceData, meta i
 		if err := json.Unmarshal([]byte(*backupPlan.BackupPeriod), &newJson); err != nil {
 			return fmt.Errorf("convert BackupPeriod from string to interface{} failed, reason:%+v", err)
 		}
+
 		_ = d.Set("backup_period", newJson)
 	}
 
@@ -244,7 +244,9 @@ func resourceTencentCloudPostgresqlBackupPlanRead(d *schema.ResourceData, meta i
 		_ = d.Set("backup_method", backupPlan.BackupMethod)
 	}
 
-	_ = d.Set("db_instance_id", dbInstanceId)
+	if backupPlan.PlanId != nil {
+		_ = d.Set("plan_id", backupPlan.PlanId)
+	}
 
 	return nil
 }
@@ -321,11 +323,12 @@ func resourceTencentCloudPostgresqlBackupPlanUpdate(d *schema.ResourceData, meta
 			} else {
 				log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), result.ToJsonString())
 			}
+
 			return nil
 		})
 
 		if reqErr != nil {
-			log.Printf("[CRITAL]%s update postgresql backup_plan failed, reason:%+v", logId, reqErr)
+			log.Printf("[CRITAL]%s update postgresql backup plan failed, reason:%+v", logId, reqErr)
 			return reqErr
 		}
 	}
@@ -365,7 +368,7 @@ func resourceTencentCloudPostgresqlBackupPlanDelete(d *schema.ResourceData, meta
 	})
 
 	if reqErr != nil {
-		log.Printf("[CRITAL]%s delete postgresql backup_plan failed, reason:%+v", logId, reqErr)
+		log.Printf("[CRITAL]%s delete postgresql backup plan failed, reason:%+v", logId, reqErr)
 		return reqErr
 	}
 
