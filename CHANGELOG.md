@@ -1,3 +1,19 @@
+## 1.83.8(July 3, 2026)
+
+FEATURES:
+
+* **New Resource:** `resource/tencentcloud_vod_aigc_quota` ([#4266](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/4266))
+* **New Resource:** `tencentcloud_dbdc_db_custom_cluster` ([#4262](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/4262))
+* **New Resource:** `tencentcloud_dbdc_db_custom_node` ([#4262](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/4262))
+* **New Resource:** `tencentcloud_dbdc_node_to_db_custom_cluster_attachment` ([#4262](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/4262))
+* **New Resource:** `tencentcloud_dnspod_package_domain` ([#4263](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/4263))
+
+ENHANCEMENTS:
+
+* resource/tencentcloud_emr_cluster_v2: support custom `software` ([#4265](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/4265))
+* resource/tencentcloud_scf_function: support instance_concurrency_config parameter for configuring single-instance multi-concurrency behavior ([#4264](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/4264))
+* resource/tencentcloud_ssm_ssh_key_pair_secret: expose ssh_key_id ([#4232](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/4232))
+
 ## 1.83.7(June 30, 2026)
 
 FEATURES:

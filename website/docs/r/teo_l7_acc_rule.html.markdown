@@ -396,7 +396,11 @@ The `actions` object of `branches` supports the following:
 - `Vary`: Vary feature configuration.
 - `ContentCompression`: Content compression configuration.
 - `OriginAuthentication`: Origin authentication configuration.
+- `AdvancedOriginRouting`: Advanced origin routing optimization.
+- `Shield`: Origin offload (Shield).
+- `SiteFailover`: Origin site failover.
 * `access_url_redirect_parameters` - (Optional, List) The access url redirection configuration parameter. this parameter is required when name is accessurlredirect.
+* `advanced_origin_routing_parameters` - (Optional, List) Advanced origin routing optimization configuration parameter. This parameter is required when Name is set to AdvancedOriginRouting.
 * `authentication_parameters` - (Optional, List) Token authentication configuration parameter. this parameter is required when name is authentication.
 * `cache_key_parameters` - (Optional, List) Custom cache key configuration parameter. when name is cachekey, this parameter is required.
 * `cache_parameters` - (Optional, List) Node cache ttl configuration parameter. when name is cache, this parameter is required.
@@ -425,6 +429,8 @@ The `actions` object of `branches` supports the following:
 * `range_origin_pull_parameters` - (Optional, List) Shard source retrieval configuration parameter. this parameter is required when name is set to rangeoriginpull.
 * `response_speed_limit_parameters` - (Optional, List) Single connection download speed limit configuration parameter. this parameter is required when name is responsespeedlimit.
 * `set_content_identifier_parameters` - (Optional, List) Content identification configuration parameter. this parameter is required when name is httpresponse.
+* `shield_parameters` - (Optional, List) Origin offload (Shield) configuration parameter. This parameter is required when Name is set to Shield.
+* `site_failover_parameters` - (Optional, List) Origin site failover configuration parameter. This parameter is required when Name is set to SiteFailover.
 * `smart_routing_parameters` - (Optional, List) Smart acceleration configuration parameter. this parameter is required when name is smartrouting.
 * `status_code_cache_parameters` - (Optional, List) Status code cache ttl configuration parameter. this parameter is required when name is statuscodecache.
 * `tls_config_parameters` - (Optional, List) SSL/TLS security configuration parameter. this parameter is required when the name is set to tlsconfig.
@@ -434,6 +440,10 @@ The `actions` object of `branches` supports the following:
 * `upstream_url_rewrite_parameters` - (Optional, List) The origin-pull url rewrite configuration parameter. this parameter is required when name is upstreamurlrewrite.
 * `vary_parameters` - (Optional, List) Vary configuration parameter. This parameter is required when Name is set to Vary.
 * `web_socket_parameters` - (Optional, List) The websocket configuration parameter. this parameter is required when name is websocket.
+
+The `advanced_origin_routing_parameters` object of `actions` supports the following:
+
+* `direction` - (Optional, String) Origin routing optimization direction. Values: MainlandChinaAndGlobalAdaptive: Adaptive. Domain must have SmartRouting enabled. EdgeOne will auto-match the optimal routing direction based on client/origin geography.
 
 The `authentication_parameters` object of `actions` supports the following:
 
@@ -517,6 +527,12 @@ The `cookie` object of `upstream_request_parameters` supports the following:
 * `action` - (Optional, String) Origin-Pull request parameter cookie mode. this parameter is required when switch is on. valid values are: full: retain all; ignore: ignore all; includeCustom: retain partial parameters; excludeCustom: ignore partial parameters.
 * `switch` - (Optional, String) Whether to enable the origin-pull request parameter cookie. valid values: on: enable; off: disable.
 * `values` - (Optional, List) Specifies parameter values. this parameter takes effect only when the query string mode action is includecustom or excludecustom, and is used to specify the parameters to be reserved or ignored. up to 10 parameters are supported.
+
+The `cookie` object of `upstream_request_parameters` supports the following:
+
+* `action` - (Optional, String) Origin-pull request parameter cookie mode. Required when switch is on. Values: full: retain all; ignore: ignore all; includeCustom: retain partial parameters; excludeCustom: ignore partial parameters.
+* `switch` - (Optional, String) Whether to enable the origin-pull request parameter cookie. Values: on: enable; off: disable.
+* `values` - (Optional, List) Specifies parameter values. Up to 10 parameters are supported.
 
 The `custom_time` object of `cache_parameters` supports the following:
 
@@ -647,6 +663,13 @@ The `private_parameters` object of `modify_origin_parameters` supports the follo
 * `signature_version` - (Required, String) Authentication version. values: v2: v2 version; v4: v4 version.
 * `region` - (Optional, String) Region of the bucket.
 
+The `private_parameters` object of `site_failover_params` supports the following:
+
+* `access_key_id` - (Required, String) Authentication parameter access key id.
+* `secret_access_key` - (Required, String) Authentication parameter secret access key.
+* `signature_version` - (Required, String) Authentication version. Values: v2: v2 version; v4: v4 version.
+* `region` - (Optional, String) Region of the bucket.
+
 The `query_string` object of `access_url_redirect_parameters` supports the following:
 
 * `action` - (Optional, String) Action to be executed. values: full: retain all; ignore: ignore all.
@@ -656,6 +679,12 @@ The `query_string` object of `cache_key_parameters` supports the following:
 * `action` - (Optional, String) Actions to retain/ignore specified parameters in the query string. values: `includeCustom`: retain partial parameters. `excludeCustom`: ignore partial parameters.note: this field is required when switch is on. when switch is off, this field is not required and will not take effect if filled.
 * `switch` - (Optional, String) Query string retain/ignore specified parameter switch. valid values are: on: enable; off: disable.
 * `values` - (Optional, List) A list of parameter names to keep/ignore in the query string.
+
+The `query_string` object of `upstream_request_parameters` supports the following:
+
+* `action` - (Optional, String) Query string mode. Required when switch is on. Values: full: retain all; ignore: ignore all; includeCustom: retain partial parameters; excludeCustom: ignore partial parameters.
+* `switch` - (Optional, String) Whether to enable origin-pull request parameter query string. Values: on: enable; off: disable.
+* `values` - (Optional, List) Specifies parameter values. Up to 10 parameters are supported.
 
 The `query_string` object of `upstream_request_parameters` supports the following:
 
@@ -694,6 +723,32 @@ The `set_content_identifier_parameters` object of `actions` supports the followi
 
 * `content_identifier` - (Optional, String) Content identifier id.
 
+The `shield_parameters` object of `actions` supports the following:
+
+* `shield_space_id` - (Optional, String) Origin offload space ID.
+
+The `site_failover_parameters` object of `actions` supports the following:
+
+* `site_failover_params` - (Optional, List) Origin failover configuration parameter list. Min length: 1, Max length: 2.
+* `site_failover_status_codes` - (Optional, List) Condition status codes for origin failover. When the origin returns a response status code matching this field, failover is triggered. Value: 4xx or 5xx.
+
+The `site_failover_params` object of `site_failover_parameters` supports the following:
+
+* `http_origin_port` - (Optional, Int) HTTP origin port. Value range: 1-65535. Required when OriginProtocol is http or follow.
+* `https_origin_port` - (Optional, Int) HTTPS origin port. Value range: 1-65535. Required when OriginProtocol is https or follow.
+* `mode` - (Optional, String) Origin failover type. Values: FailoverToHost: failover to specified IP/domain; FailoverToCOS: failover to Tencent Cloud COS; FailoverToS3CompatibleObjectStorage: failover to S3 compatible storage; FailoverRedirectToURL: redirect to specified URL; FailoverCustomResponsePage: use custom response page.
+* `origin_protocol` - (Optional, String) Origin protocol. Required when Mode=FailoverToHost. Values: http: HTTP; https: HTTPS; follow: follow the protocol.
+* `origin` - (Optional, String) Origin address, varies by Mode: When Mode=FailoverToHost, fill in IPV4/IPv6/domain; When Mode=FailoverToCOS, fill in COS bucket access domain; When Mode=FailoverToS3CompatibleObjectStorage, fill in S3 bucket access domain.
+* `private_access` - (Optional, String) Whether access to the private object storage origin server is allowed. Valid only when Mode=FailoverToCOS or FailoverToS3CompatibleObjectStorage. Values: on: enable private authentication; off: disable private authentication.
+* `private_parameters` - (Optional, List) Private authentication parameter. Valid only when Mode=FailoverToS3CompatibleObjectStorage and PrivateAccess=on.
+* `redirect_url` - (Optional, String) Redirect target URL. Required when Mode=FailoverRedirectToURL.
+* `response_page_id` - (Optional, String) Response page ID. Required when Mode=FailoverCustomResponsePage.
+* `status_code` - (Optional, Int) Response status code. Required when Mode=FailoverRedirectToURL (values: 301, 302, 303, 307, 308) or FailoverCustomResponsePage (values: 400, 403, 404, 405, 414, 416, 451, 500, 501, 502, 503, 504).
+* `upstream_host_header` - (Optional, List) Origin-pull host header rewrite configuration.
+* `upstream_http2_parameters` - (Optional, List) HTTP2 origin-pull configuration parameter.
+* `upstream_request_parameters` - (Optional, List) Origin-pull request parameters configuration.
+* `upstream_url_rewrite` - (Optional, List) Origin-pull URL rewrite configuration.
+
 The `smart_routing_parameters` object of `actions` supports the following:
 
 * `switch` - (Optional, String) Whether to enable smart acceleration. values: on: enable; off: disable.
@@ -722,14 +777,28 @@ The `upstream_follow_redirect_parameters` object of `actions` supports the follo
 * `max_times` - (Optional, Int) The maximum number of redirects. value range: 1-5. Note: this field is required when switch is on; when switch is off, this field is not required and will not take effect if filled.
 * `switch` - (Optional, String) Whether to enable origin-pull to follow the redirection configuration. values: on: enable; off: disable.
 
+The `upstream_host_header` object of `site_failover_params` supports the following:
+
+* `action` - (Optional, String) Action to be executed. Values: followOrigin: follow origin server domain name; custom: custom.
+* `server_name` - (Optional, String) Host header rewrite requires a complete domain name.
+
 The `upstream_http2_parameters` object of `actions` supports the following:
 
 * `switch` - (Optional, String) Whether to enable http2 origin-pull. valid values: on: enable; off: disable.
+
+The `upstream_http2_parameters` object of `site_failover_params` supports the following:
+
+* `switch` - (Optional, String) Whether to enable HTTP2 origin-pull. Values: on: enable; off: disable.
 
 The `upstream_request_parameters` object of `actions` supports the following:
 
 * `cookie` - (Optional, List) Cookie configuration. optional. if not provided, it will not be configured.
 * `query_string` - (Optional, List) Query string configuration. optional. if not provided, it will not be configured.
+
+The `upstream_request_parameters` object of `site_failover_params` supports the following:
+
+* `cookie` - (Optional, List) Cookie configuration. Optional. If not provided, it will not be configured.
+* `query_string` - (Optional, List) Query string configuration. Optional. If not provided, it will not be configured.
 
 The `upstream_url_rewrite_parameters` object of `actions` supports the following:
 
@@ -737,6 +806,13 @@ The `upstream_url_rewrite_parameters` object of `actions` supports the following
 * `regex` - (Optional, String) Origin URL Rewrite uses a regular expression for matching the complete path. It must conform to the Google RE2 specification and have a length range of 1 to 1024. This field is required when the Action is regexReplace; otherwise, it is optional.
 * `type` - (Optional, String) Origin-Pull url rewriting type, only path is supported.
 * `value` - (Optional, String) Origin-Pull url rewrite value, maximum length 1024, must start with /.note: when action is addprefix, it cannot end with /; when action is rmvprefix, * cannot be present.
+
+The `upstream_url_rewrite` object of `site_failover_params` supports the following:
+
+* `action` - (Optional, String) Origin-pull URL rewrite action. Values: replace: replace the path prefix; addPrefix: add the path prefix; rmvPrefix: remove the path prefix; regexReplace: regular expression replacement.
+* `regex` - (Optional, String) Origin URL Rewrite uses a regular expression for matching the complete path. It must conform to the Google RE2 specification and have a length range of 1 to 1024.
+* `type` - (Optional, String) Origin-pull URL rewriting type, only path is supported.
+* `value` - (Optional, String) Origin-pull URL rewrite value, maximum length 1024, must start with /.
 
 The `url_path` object of `access_url_redirect_parameters` supports the following:
 

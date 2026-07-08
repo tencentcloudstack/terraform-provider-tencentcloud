@@ -59,7 +59,9 @@ In addition to all arguments above, the following attributes are exported:
 
 * `id` - ID of the resource.
 * `create_time` - Credential creation time in UNIX timestamp format.
+* `resource_id` - The resource ID associated with the secret.
 * `secret_type` - `0`: user-defined secret. `1`: Tencent Cloud services secret. `2`: SSH key secret. `3`: Tencent Cloud API key secret. Note: this field may return `null`, indicating that no valid values can be obtained.
+* `ssh_key_id` - The key pair ID is the unique identifier of the key pair in the cloud server.
 
 
 ## Import

@@ -50,6 +50,16 @@ func ResourceTencentCloudMysqlReadonlyInstance() *schema.Resource {
 			Computed:    true,
 			Description: "Read only group id. If rogroupId is empty, a new ro group is created by default. If it is not empty, the existing ro group is used. Cross-region query requires master instance permission.",
 		},
+		"ro_vip": {
+			Type:        schema.TypeString,
+			Computed:    true,
+			Description: "VIP-only read access.",
+		},
+		"ro_vport": {
+			Type:        schema.TypeInt,
+			Computed:    true,
+			Description: "VIP port number (read-only).",
+		},
 	}
 
 	basic := TencentMsyqlBasicInfo()
@@ -427,6 +437,14 @@ func resourceTencentCloudMysqlReadonlyInstanceRead(d *schema.ResourceData, meta 
 
 	if roGroup != nil && roGroup.RoGroupId != nil {
 		_ = d.Set("ro_group_id", *roGroup.RoGroupId)
+	}
+
+	if mysqlInfo.RoVipInfo != nil && mysqlInfo.RoVipInfo.RoVip != nil {
+		_ = d.Set("ro_vip", *mysqlInfo.RoVipInfo.RoVip)
+	}
+
+	if mysqlInfo.RoVipInfo != nil && mysqlInfo.RoVipInfo.RoVport != nil {
+		_ = d.Set("ro_vport", *mysqlInfo.RoVipInfo.RoVport)
 	}
 
 	// set no used fields to default value to fix diff

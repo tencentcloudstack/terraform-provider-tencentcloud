@@ -1309,7 +1309,7 @@ github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/dcdb/v20180411
 # github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/dlc v1.1.35
 ## explicit; go 1.14
 github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/dlc/v20210125
-# github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/dnspod v1.0.1056
+# github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/dnspod v1.3.124
 ## explicit; go 1.14
 github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/dnspod/v20210323
 # github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/domain v1.0.414
@@ -1321,7 +1321,7 @@ github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/dts/v20211206
 # github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/eb v1.1.30
 ## explicit; go 1.14
 github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/eb/v20210416
-# github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/emr v1.3.94
+# github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/emr v1.3.125
 ## explicit; go 1.14
 github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/emr/v20190103
 # github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/es v1.1.13
@@ -1394,7 +1394,7 @@ github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/region/v20220627
 # github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/rum v1.0.744
 ## explicit; go 1.14
 github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/rum/v20210622
-# github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/scf v1.0.1034
+# github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/scf v1.3.101
 ## explicit; go 1.14
 github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/scf/v20180416
 # github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/ses v1.0.748
@@ -1467,7 +1467,7 @@ github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/vcube/v20220410
 # github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/vdb v1.3.27
 ## explicit; go 1.14
 github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/vdb/v20230616
-# github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/vod v1.3.90
+# github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/vod v1.3.127
 ## explicit; go 1.14
 github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/vod/v20180717
 # github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/vpc v1.3.62

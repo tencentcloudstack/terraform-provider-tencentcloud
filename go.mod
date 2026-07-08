@@ -56,11 +56,11 @@ require (
 	github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/dc v1.0.633
 	github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/dcdb v1.0.673
 	github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/dlc v1.1.35
-	github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/dnspod v1.0.1056
+	github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/dnspod v1.3.124
 	github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/domain v1.0.414
 	github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/dts v1.1.46
 	github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/eb v1.1.30
-	github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/emr v1.3.94
+	github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/emr v1.3.125
 	github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/es v1.1.13
 	github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/gaap v1.0.970
 	github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/gs v1.3.58
@@ -78,7 +78,7 @@ require (
 	github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/pts v1.0.762
 	github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/redis v1.3.73
 	github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/rum v1.0.744
-	github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/scf v1.0.1034
+	github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/scf v1.3.101
 	github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/ses v1.0.748
 	github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/sms v1.0.486
 	github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/sqlserver v1.3.68
@@ -98,7 +98,7 @@ require (
 	github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/trocket v1.1.0
 	github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/tse v1.0.857
 	github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/tsf v1.0.674
-	github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/vod v1.3.90
+	github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/vod v1.3.127
 	github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/vpc v1.3.62
 	github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/waf v1.3.113
 	github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/wedata v1.3.30

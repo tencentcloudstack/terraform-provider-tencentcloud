@@ -1,0 +1,3 @@
+```release-note:new-resource
+resource/tencentcloud_vod_aigc_quota
+```
