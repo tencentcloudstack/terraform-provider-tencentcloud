@@ -770,7 +770,8 @@ func resourceTencentCloudEmrClusterV2Create(d *schema.ResourceData, meta interfa
 		tmpList := []*string{}
 		for _, item := range serviceList {
 			if item != nil {
-				if strings.HasPrefix(*item, "RUNTIME") || strings.HasPrefix(*item, "FILEBEAT") {
+				// Temporary filtering
+				if strings.HasPrefix(*item, "RUNTIME") || strings.HasPrefix(*item, "FILEBEAT") || strings.HasPrefix(*item, "KRB5") {
 					continue
 				}
 			}
