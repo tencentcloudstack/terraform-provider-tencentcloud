@@ -63,13 +63,13 @@ func ResourceTencentCloudGa2EndpointGroup() *schema.Resource {
 							Type:        schema.TypeString,
 							Optional:    true,
 							Computed:    true,
-							Description: "Name. Maximum length is 60 bytes.",
+							Description: "Endpoint group name. Maximum length is 128 bytes. Must start with a letter (a-z, A-Z) or a Chinese character.",
 						},
 						"endpoint_group_region": {
 							Type:        schema.TypeString,
 							Optional:    true,
 							Computed:    true,
-							Description: "Region of the endpoint group.",
+							Description: "Region where the endpoint group resides.",
 						},
 						"endpoint_configurations": {
 							Type:        schema.TypeSet,
@@ -88,7 +88,7 @@ func ResourceTencentCloudGa2EndpointGroup() *schema.Resource {
 										Type:        schema.TypeString,
 										Optional:    true,
 										Computed:    true,
-										Description: "Endpoint domain or IP.",
+										Description: "Endpoint domain name or IP address.",
 									},
 									"weight": {
 										Type:        schema.TypeInt,
@@ -105,107 +105,115 @@ func ResourceTencentCloudGa2EndpointGroup() *schema.Resource {
 							},
 						},
 						"check_type": {
-							Type:        schema.TypeString,
-							Optional:    true,
-							Computed:    true,
-							Description: "Health check protocol. Valid values: `TCP`, `HTTP`, `HTTPS`, `PING`, `CUSTOM`.",
+							Type:     schema.TypeString,
+							Optional: true,
+							Computed: true,
+							Description: "Health check protocol. Valid values: `TCP` (only when the endpoint group's listener protocol " +
+								"is TCP), `HTTP` (only when the listener protocol is HTTP/HTTPS), `PING` (only when the listener protocol " +
+								"is UDP), `CUSTOM` (only when the listener protocol is TCP/UDP). Required when `enable_health_check` is `true`.",
 						},
 						"description": {
 							Type:        schema.TypeString,
 							Optional:    true,
 							Computed:    true,
-							Description: "Description. Maximum length is 100 bytes.",
+							Description: "Description. Default is empty (no description configured). Maximum length is 100 bytes.",
 						},
 						"check_port": {
 							Type:        schema.TypeString,
 							Optional:    true,
 							Computed:    true,
-							Description: "Health check port.",
+							Description: "Health check port. Valid range: [1, 65535]. Required when `check_type` is `CUSTOM`.",
 						},
 						"context_type": {
-							Type:        schema.TypeString,
-							Optional:    true,
-							Computed:    true,
-							Description: "Health check content type.",
+							Type:     schema.TypeString,
+							Optional: true,
+							Computed: true,
+							Description: "Health check content type. Valid values: `TEXT` (plain text content). Required when " +
+								"`check_type` is `CUSTOM`.",
 						},
 						"check_send_context": {
 							Type:        schema.TypeString,
 							Optional:    true,
 							Computed:    true,
-							Description: "Health check request payload.",
+							Description: "Health check request payload. Length must be between 1 and 500 bytes. Required when `check_type` is `CUSTOM`.",
 						},
 						"check_recv_context": {
 							Type:        schema.TypeString,
 							Optional:    true,
 							Computed:    true,
-							Description: "Health check expected response.",
+							Description: "Expected health check response content. Length must be between 1 and 500 bytes. Required when `check_type` is `CUSTOM`.",
 						},
 						"enable_health_check": {
 							Type:        schema.TypeBool,
 							Optional:    true,
 							Computed:    true,
-							Description: "Whether to enable health check.",
+							Description: "Whether to enable health check. Default: `false`.",
 						},
 						"connect_timeout": {
 							Type:        schema.TypeInt,
 							Optional:    true,
 							Computed:    true,
-							Description: "Response timeout in milliseconds.",
+							Description: "Response timeout in seconds. Valid range: [1, 100]. Default: `2`. Required when `enable_health_check` is `true`.",
 						},
 						"health_check_interval": {
 							Type:        schema.TypeInt,
 							Optional:    true,
 							Computed:    true,
-							Description: "Health check interval in seconds.",
+							Description: "Health check interval in seconds. Valid range: [5, 300]. Default: `30`. Required when `enable_health_check` is `true`.",
 						},
 						"unhealthy_threshold": {
 							Type:        schema.TypeInt,
 							Optional:    true,
 							Computed:    true,
-							Description: "Unhealthy threshold count.",
+							Description: "Unhealthy threshold count. Valid range: [1, 10]. Default: `3`. Required when `enable_health_check` is `true`.",
 						},
 						"healthy_threshold": {
 							Type:        schema.TypeInt,
 							Optional:    true,
 							Computed:    true,
-							Description: "Healthy threshold count.",
+							Description: "Healthy threshold count. Valid range: [1, 10]. Default: `3`. Required when `enable_health_check` is `true`.",
 						},
 						"forward_protocol": {
-							Type:        schema.TypeString,
-							Optional:    true,
-							Computed:    true,
-							Description: "Forward protocol back to origin.",
+							Type:     schema.TypeString,
+							Optional: true,
+							Computed: true,
+							Description: "Protocol used to forward traffic to the origin. Valid values: `HTTP` (available when the endpoint " +
+								"group's listener protocol is HTTP/HTTPS), `HTTPS` (available when the listener protocol is HTTPS). " +
+								"Required when the listener protocol is HTTP or HTTPS.",
 						},
 						"check_domain": {
 							Type:        schema.TypeString,
 							Optional:    true,
 							Computed:    true,
-							Description: "Health check domain.",
+							Description: "Health check domain. Length must be between 3 and 80 bytes. Required when `check_type` is `HTTP`.",
 						},
 						"check_path": {
-							Type:        schema.TypeString,
-							Optional:    true,
-							Computed:    true,
-							Description: "Health check URL path.",
+							Type:     schema.TypeString,
+							Optional: true,
+							Computed: true,
+							Description: "Health check URL path. Must match the regular expression `^[a-zA-Z0-9_.-/]{1,80}$`. Required " +
+								"when `check_type` is `HTTP`.",
 						},
 						"check_method": {
 							Type:        schema.TypeString,
 							Optional:    true,
 							Computed:    true,
-							Description: "Health check request method.",
+							Description: "Health check request method. Valid values: `GET`, `HEAD`. Required when `check_type` is `HTTP`.",
 						},
 						"status_mask": {
-							Type:        schema.TypeList,
-							Optional:    true,
-							Computed:    true,
-							Elem:        &schema.Schema{Type: schema.TypeString},
-							Description: "Status code masks for health check.",
+							Type:     schema.TypeList,
+							Optional: true,
+							Computed: true,
+							Elem:     &schema.Schema{Type: schema.TypeString},
+							Description: "Health check status code masks. Valid values: `http_2xx`, `http_3xx`, `http_4xx`, `http_5xx`. " +
+								"Required when `check_type` is `HTTP`.",
 						},
 						"port_overrides": {
-							Type:        schema.TypeList,
-							Optional:    true,
-							Computed:    true,
-							Description: "Port overrides for the endpoint group.",
+							Type:     schema.TypeList,
+							Optional: true,
+							Computed: true,
+							Description: "Port mapping rules for the endpoint group. Layer-7 endpoint groups support at most 1 port " +
+								"mapping; layer-4 endpoint groups support at most 30 port mappings.",
 							Elem: &schema.Resource{
 								Schema: map[string]*schema.Schema{
 									"listener_port": {
@@ -218,22 +226,30 @@ func ResourceTencentCloudGa2EndpointGroup() *schema.Resource {
 										Type:        schema.TypeInt,
 										Optional:    true,
 										Computed:    true,
-										Description: "Endpoint port.",
+										Description: "Mapped endpoint port.",
 									},
 								},
 							},
 						},
 						"isp_type": {
-							Type:        schema.TypeString,
-							Optional:    true,
-							Computed:    true,
-							Description: "ISP type.",
+							Type:     schema.TypeString,
+							Optional: true,
+							Computed: true,
+							Description: "ISP type. Valid values: `CMCC` (China Mobile), `CUCC` (China Unicom), `CTCC` (China Telecom). " +
+								"Required when the endpoint group region is a multi-ISP (three-network) region.",
 						},
 						"cipher_policy_id": {
+							Type:     schema.TypeString,
+							Optional: true,
+							Computed: true,
+							Description: "HTTPS cipher suite policy. Valid values: `tls_policy_1.0-2`, `tls_policy_1.1-2`, `tls_policy_1.2`, " +
+								"`tls_policy_1.2_strict`, `tls_policy_1.2_strict-1.3`. Required when `forward_protocol` is `HTTPS`.",
+						},
+						"http_version": {
 							Type:        schema.TypeString,
 							Optional:    true,
 							Computed:    true,
-							Description: "HTTPS cipher policy ID.",
+							Description: "Origin-pull protocol. Supports configuration of 'HTTP/1.1' or 'HTTP/2'. Enum values: HTTP/1.1: HTTP/1.1 version, HTTP/2: HTTP/2 version. This field is mandatory when the origin-pull protocol is HTTPS.",
 						},
 					},
 				},
@@ -565,6 +581,9 @@ func buildEndpointGroupConfiguration(rawList []interface{}) *ga2v20250115.Endpoi
 	if v, ok := m["cipher_policy_id"].(string); ok && v != "" {
 		cfg.CipherPolicyId = helper.String(v)
 	}
+	if v, ok := m["http_version"].(string); ok && v != "" {
+		cfg.HttpVersion = helper.String(v)
+	}
 	return cfg
 }
 
@@ -697,6 +716,9 @@ func applyConfigurationToModifyRequest(request *ga2v20250115.ModifyEndpointGroup
 		if v, ok := m["cipher_policy_id"].(string); ok && v != "" {
 			request.CipherPolicyId = helper.String(v)
 		}
+		if v, ok := m["http_version"].(string); ok && v != "" {
+			request.HttpVersion = helper.String(v)
+		}
 	}
 }
 
@@ -773,6 +795,9 @@ func flattenEndpointGroupConfigurationFromSet(set *ga2v20250115.EndpointGroupCon
 	}
 	if set.CipherPolicyId != nil {
 		m["cipher_policy_id"] = *set.CipherPolicyId
+	}
+	if set.HttpVersion != nil {
+		m["http_version"] = *set.HttpVersion
 	}
 	return m
 }

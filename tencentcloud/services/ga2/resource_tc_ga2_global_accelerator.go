@@ -57,16 +57,18 @@ func ResourceTencentCloudGa2GlobalAccelerator() *schema.Resource {
 				Description: "Global accelerator instance description. Maximum length is 100 bytes.",
 			},
 			"cross_border_type": {
-				Type:        schema.TypeString,
-				Optional:    true,
-				Computed:    true,
-				Description: "Cross-border type. Valid values: `HighQuality` (premium BGP-IP cross-border), `Unicom` (Unicom dedicated line cross-border).",
+				Type:     schema.TypeString,
+				Optional: true,
+				Computed: true,
+				Description: "Cross-border type. Valid values: `HighQuality` (premium BGP-IP cross-border), " +
+					"`Unicom` (China Unicom dedicated-line cross-border).",
 			},
 			"cross_border_promise_flag": {
-				Type:        schema.TypeBool,
-				Optional:    true,
-				Computed:    true,
-				Description: "Whether the cross-border service commitment letter is signed. `true` indicates signed. Required when `cross_border_type` is set.",
+				Type:     schema.TypeBool,
+				Optional: true,
+				Computed: true,
+				Description: "Whether the cross-border service commitment letter has been signed. Must be set to `true` " +
+					"when `cross_border_type` is specified.",
 			},
 			"tags": {
 				Type:        schema.TypeMap,
@@ -83,12 +85,12 @@ func ResourceTencentCloudGa2GlobalAccelerator() *schema.Resource {
 			"state": {
 				Type:        schema.TypeString,
 				Computed:    true,
-				Description: "Provisioning state of the global accelerator instance.",
+				Description: "Global accelerator instance state.",
 			},
 			"status": {
 				Type:        schema.TypeString,
 				Computed:    true,
-				Description: "Operational status of the global accelerator instance.",
+				Description: "Global accelerator instance status.",
 			},
 			"cname": {
 				Type:        schema.TypeString,
@@ -98,7 +100,7 @@ func ResourceTencentCloudGa2GlobalAccelerator() *schema.Resource {
 			"ddos_id": {
 				Type:        schema.TypeString,
 				Computed:    true,
-				Description: "Associated anti-DDoS instance ID.",
+				Description: "DDoS protection instance ID associated with the global accelerator instance.",
 			},
 			"create_time": {
 				Type:        schema.TypeString,
@@ -108,12 +110,12 @@ func ResourceTencentCloudGa2GlobalAccelerator() *schema.Resource {
 			"listener_counts": {
 				Type:        schema.TypeInt,
 				Computed:    true,
-				Description: "Number of listeners attached to this global accelerator instance.",
+				Description: "Number of listeners under this global accelerator instance.",
 			},
 			"accelerator_area_counts": {
 				Type:        schema.TypeInt,
 				Computed:    true,
-				Description: "Number of acceleration regions attached to this global accelerator instance.",
+				Description: "Number of acceleration regions under this global accelerator instance.",
 			},
 		},
 	}

@@ -9,6 +9,7 @@ import (
 
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
+	sdkErrors "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/common/errors"
 	ga2v20250115 "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/ga2/v20250115"
 
 	tccommon "github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/common"
@@ -43,9 +44,10 @@ func ResourceTencentCloudGa2ForwardingPolicy() *schema.Resource {
 				Description: "Listener ID this forwarding policy belongs to.",
 			},
 			"host": {
-				Type:        schema.TypeString,
-				Required:    true,
-				Description: "The domain/host for the forwarding policy.",
+				Type:     schema.TypeString,
+				Required: true,
+				Description: "Domain name. Must match the regular expression `^(?:[a-z0-9-]{0,61}[a-z0-9]?.)+[a-z]{2,}$`. " +
+					"Length must be between 1 and 80 characters.",
 			},
 
 			// Computed
@@ -57,7 +59,7 @@ func ResourceTencentCloudGa2ForwardingPolicy() *schema.Resource {
 			"default_host_flag": {
 				Type:        schema.TypeBool,
 				Computed:    true,
-				Description: "Whether this is the default host policy for the listener.",
+				Description: "Whether this is the default domain name for the listener.",
 			},
 		},
 	}
@@ -264,6 +266,12 @@ func resourceTencentCloudGa2ForwardingPolicyDelete(d *schema.ResourceData, meta 
 	reqErr := resource.Retry(tccommon.WriteRetryTimeout, func() *resource.RetryError {
 		result, e := meta.(tccommon.ProviderMeta).GetAPIV3Conn().UseGa2V20250115Client().DeleteForwardingPolicyWithContext(ctx, request)
 		if e != nil {
+			if sdkerr, ok := e.(*sdkErrors.TencentCloudSDKError); ok {
+				if sdkerr.Code == "ResourceNotFound" {
+					return nil
+				}
+			}
+
 			return tccommon.RetryError(e)
 		} else {
 			log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), result.ToJsonString())

@@ -163,38 +163,39 @@ The following arguments are supported:
 
 The `endpoint_configurations` object of `endpoint_group_configuration` supports the following:
 
-* `endpoint_service` - (Optional, String) Endpoint domain or IP.
+* `endpoint_service` - (Optional, String) Endpoint domain name or IP address.
 * `endpoint_type` - (Optional, String) Endpoint type. Valid values: `CustomDomain`, `CustomPublicIp`.
 * `weight` - (Optional, Int) Endpoint weight.
 
 The `endpoint_group_configuration` object supports the following:
 
-* `check_domain` - (Optional, String) Health check domain.
-* `check_method` - (Optional, String) Health check request method.
-* `check_path` - (Optional, String) Health check URL path.
-* `check_port` - (Optional, String) Health check port.
-* `check_recv_context` - (Optional, String) Health check expected response.
-* `check_send_context` - (Optional, String) Health check request payload.
-* `check_type` - (Optional, String) Health check protocol. Valid values: `TCP`, `HTTP`, `HTTPS`, `PING`, `CUSTOM`.
-* `cipher_policy_id` - (Optional, String) HTTPS cipher policy ID.
-* `connect_timeout` - (Optional, Int) Response timeout in milliseconds.
-* `context_type` - (Optional, String) Health check content type.
-* `description` - (Optional, String) Description. Maximum length is 100 bytes.
-* `enable_health_check` - (Optional, Bool) Whether to enable health check.
+* `check_domain` - (Optional, String) Health check domain. Length must be between 3 and 80 bytes. Required when `check_type` is `HTTP`.
+* `check_method` - (Optional, String) Health check request method. Valid values: `GET`, `HEAD`. Required when `check_type` is `HTTP`.
+* `check_path` - (Optional, String) Health check URL path. Must match the regular expression `^[a-zA-Z0-9_.-/]{1,80}$`. Required when `check_type` is `HTTP`.
+* `check_port` - (Optional, String) Health check port. Valid range: [1, 65535]. Required when `check_type` is `CUSTOM`.
+* `check_recv_context` - (Optional, String) Expected health check response content. Length must be between 1 and 500 bytes. Required when `check_type` is `CUSTOM`.
+* `check_send_context` - (Optional, String) Health check request payload. Length must be between 1 and 500 bytes. Required when `check_type` is `CUSTOM`.
+* `check_type` - (Optional, String) Health check protocol. Valid values: `TCP` (only when the endpoint group's listener protocol is TCP), `HTTP` (only when the listener protocol is HTTP/HTTPS), `PING` (only when the listener protocol is UDP), `CUSTOM` (only when the listener protocol is TCP/UDP). Required when `enable_health_check` is `true`.
+* `cipher_policy_id` - (Optional, String) HTTPS cipher suite policy. Valid values: `tls_policy_1.0-2`, `tls_policy_1.1-2`, `tls_policy_1.2`, `tls_policy_1.2_strict`, `tls_policy_1.2_strict-1.3`. Required when `forward_protocol` is `HTTPS`.
+* `connect_timeout` - (Optional, Int) Response timeout in seconds. Valid range: [1, 100]. Default: `2`. Required when `enable_health_check` is `true`.
+* `context_type` - (Optional, String) Health check content type. Valid values: `TEXT` (plain text content). Required when `check_type` is `CUSTOM`.
+* `description` - (Optional, String) Description. Default is empty (no description configured). Maximum length is 100 bytes.
+* `enable_health_check` - (Optional, Bool) Whether to enable health check. Default: `false`.
 * `endpoint_configurations` - (Optional, Set) Endpoint configurations under this group. This is an unordered set; element order in HCL has no semantic meaning.
-* `endpoint_group_region` - (Optional, String) Region of the endpoint group.
-* `forward_protocol` - (Optional, String) Forward protocol back to origin.
-* `health_check_interval` - (Optional, Int) Health check interval in seconds.
-* `healthy_threshold` - (Optional, Int) Healthy threshold count.
-* `isp_type` - (Optional, String) ISP type.
-* `name` - (Optional, String) Name. Maximum length is 60 bytes.
-* `port_overrides` - (Optional, List) Port overrides for the endpoint group.
-* `status_mask` - (Optional, List) Status code masks for health check.
-* `unhealthy_threshold` - (Optional, Int) Unhealthy threshold count.
+* `endpoint_group_region` - (Optional, String) Region where the endpoint group resides.
+* `forward_protocol` - (Optional, String) Protocol used to forward traffic to the origin. Valid values: `HTTP` (available when the endpoint group's listener protocol is HTTP/HTTPS), `HTTPS` (available when the listener protocol is HTTPS). Required when the listener protocol is HTTP or HTTPS.
+* `health_check_interval` - (Optional, Int) Health check interval in seconds. Valid range: [5, 300]. Default: `30`. Required when `enable_health_check` is `true`.
+* `healthy_threshold` - (Optional, Int) Healthy threshold count. Valid range: [1, 10]. Default: `3`. Required when `enable_health_check` is `true`.
+* `http_version` - (Optional, String) Origin-pull protocol. Supports configuration of 'HTTP/1.1' or 'HTTP/2'. Enum values: HTTP/1.1: HTTP/1.1 version, HTTP/2: HTTP/2 version. This field is mandatory when the origin-pull protocol is HTTPS.
+* `isp_type` - (Optional, String) ISP type. Valid values: `CMCC` (China Mobile), `CUCC` (China Unicom), `CTCC` (China Telecom). Required when the endpoint group region is a multi-ISP (three-network) region.
+* `name` - (Optional, String) Endpoint group name. Maximum length is 128 bytes. Must start with a letter (a-z, A-Z) or a Chinese character.
+* `port_overrides` - (Optional, List) Port mapping rules for the endpoint group. Layer-7 endpoint groups support at most 1 port mapping; layer-4 endpoint groups support at most 30 port mappings.
+* `status_mask` - (Optional, List) Health check status code masks. Valid values: `http_2xx`, `http_3xx`, `http_4xx`, `http_5xx`. Required when `check_type` is `HTTP`.
+* `unhealthy_threshold` - (Optional, Int) Unhealthy threshold count. Valid range: [1, 10]. Default: `3`. Required when `enable_health_check` is `true`.
 
 The `port_overrides` object of `endpoint_group_configuration` supports the following:
 
-* `endpoint_port` - (Optional, Int) Endpoint port.
+* `endpoint_port` - (Optional, Int) Mapped endpoint port.
 * `listener_port` - (Optional, Int) Listener port.
 
 ## Attributes Reference

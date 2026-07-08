@@ -150,26 +150,26 @@ The following arguments are supported:
 * `global_accelerator_id` - (Required, String, ForceNew) Global accelerator instance ID this forwarding rule belongs to.
 * `listener_id` - (Required, String, ForceNew) Listener ID this forwarding rule belongs to.
 * `rule_actions` - (Required, Set) Layer-7 forwarding rule action list. Treated as an unordered set; HCL element order has no semantic meaning.
-* `rule_conditions` - (Required, Set) Layer-7 forwarding rule condition list. Treated as an unordered set; HCL element order has no semantic meaning.
-* `enable_origin_sni` - (Optional, Bool) Whether to enable origin SNI.
-* `origin_headers` - (Optional, Set) Origin request header list. Treated as an unordered set; HCL element order has no semantic meaning.
-* `origin_host` - (Optional, String) Origin host value.
-* `origin_sni` - (Optional, String) Origin SNI value.
+* `rule_conditions` - (Required, Set) Layer-7 forwarding rule condition list. Maximum of 1 element. Treated as an unordered set; HCL element order has no semantic meaning.
+* `enable_origin_sni` - (Optional, Bool) Whether to enable origin SNI. Default: `false`. Required when `rule_actions.rule_action_type` is `ForwardGroup`.
+* `origin_headers` - (Optional, Set) Origin request header list. Maximum of 5 elements. Required when `rule_actions.rule_action_type` is `ForwardGroup`. Treated as an unordered set; HCL element order has no semantic meaning.
+* `origin_host` - (Optional, String) Origin host value. Maximum length is 80 characters. Required when `rule_actions.rule_action_type` is `ForwardGroup`.
+* `origin_sni` - (Optional, String) Origin SNI value. Maximum length is 80 characters. Required when `enable_origin_sni` is `true`, and also required when `rule_actions.rule_action_type` is `ForwardGroup`.
 
 The `origin_headers` object supports the following:
 
-* `key` - (Required, String) Origin request header key.
-* `value` - (Required, String) Origin request header value.
+* `key` - (Required, String) Origin request header key. Must contain only printable ASCII characters and must not contain `()<>@,;:\"/[ ]?={}`. Length must be between 1 and 40 characters.
+* `value` - (Required, String) Origin request header value. Maximum length is 128 characters. If the value contains `$`, only `$remote_addr` or `$remote_port` are supported.
 
 The `rule_actions` object supports the following:
 
-* `rule_action_type` - (Required, String) Layer-7 forwarding rule action type.
-* `rule_action_value` - (Required, String) Layer-7 forwarding rule action value.
+* `rule_action_type` - (Required, String) Layer-7 forwarding rule action type. Valid values: `ForwardGroup` (forward to an endpoint group), `Drop` (drop the request).
+* `rule_action_value` - (Required, String) Layer-7 forwarding rule action value. Not required when `rule_action_type` is `Drop`. Required when `rule_action_type` is `ForwardGroup`, in which case it must be a custom endpoint group ID (the default endpoint group is not supported).
 
 The `rule_conditions` object supports the following:
 
-* `rule_condition_type` - (Required, String) Layer-7 forwarding rule condition type.
-* `rule_condition_value` - (Required, Set) Layer-7 forwarding rule condition values. Treated as an unordered set.
+* `rule_condition_type` - (Required, String) Layer-7 forwarding rule condition type. Valid values: `Path`.
+* `rule_condition_value` - (Required, Set) Layer-7 forwarding rule condition values. Each value must match the regular expression `^[a-zA-Z0-9_.-/]{1,80}$`. Maximum of 1 element. Treated as an unordered set.
 
 ## Attributes Reference
 

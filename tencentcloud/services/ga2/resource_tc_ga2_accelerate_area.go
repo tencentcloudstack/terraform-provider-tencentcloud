@@ -57,10 +57,11 @@ func ResourceTencentCloudGa2AccelerateArea() *schema.Resource {
 				Description: "Acceleration bandwidth in Mbps.",
 			},
 			"isp_type": {
-				Type:        schema.TypeString,
-				Optional:    true,
-				Computed:    true,
-				Description: "ISP type. Default: `BGP`. Besides `BGP`, multi-line and premium BGP ISP types are also supported; refer to the CreateAccelerateAreas API for the exact enum values.",
+				Type:     schema.TypeString,
+				Optional: true,
+				Computed: true,
+				Description: "ISP type. Valid values: `BGP` (BGP), `STATIC_IP` (multi-ISP static IP), `QUALITY_BGP` (premium BGP). " +
+					"Default: `BGP`.",
 			},
 			"ip_version": {
 				Type:        schema.TypeString,
@@ -96,7 +97,7 @@ func ResourceTencentCloudGa2AccelerateArea() *schema.Resource {
 						"isp_type": {
 							Type:        schema.TypeString,
 							Computed:    true,
-							Description: "IP ISP type.",
+							Description: "ISP type of the IP address.",
 						},
 					},
 				},
@@ -129,7 +130,7 @@ func resourceTencentCloudGa2AccelerateAreaCreate(d *schema.ResourceData, meta in
 	}
 
 	// The resource manages a single acceleration region, so the request carries a one-element list.
-	request.AcceleratorAreas = []*ga2v20250115.AcceleratorAreas{buildGa2AcceleratorArea(d, "")}
+	request.AcceleratorAreas = []*ga2v20250115.AcceleratorAreas{buildGa2AcceleratorArea(d, "", "create")}
 
 	reqErr := resource.Retry(tccommon.WriteRetryTimeout, func() *resource.RetryError {
 		result, e := meta.(tccommon.ProviderMeta).GetAPIV3Conn().UseGa2V20250115Client().CreateAccelerateAreasWithContext(ctx, request)
@@ -245,7 +246,7 @@ func resourceTencentCloudGa2AccelerateAreaUpdate(d *schema.ResourceData, meta in
 		ctx   = tccommon.NewResourceLifeCycleHandleFuncContext(context.Background(), logId, d, meta)
 	)
 
-	gaId, areaId, err := parseGa2AccelerateAreaId(d.Id())
+	gaId, _, err := parseGa2AccelerateAreaId(d.Id())
 	if err != nil {
 		return err
 	}
@@ -266,7 +267,7 @@ func resourceTencentCloudGa2AccelerateAreaUpdate(d *schema.ResourceData, meta in
 
 	request := ga2v20250115.NewModifyAccelerateAreasRequest()
 	request.GlobalAcceleratorId = helper.String(gaId)
-	request.AcceleratorAreas = []*ga2v20250115.AcceleratorAreas{buildGa2AcceleratorArea(d, areaId)}
+	request.AcceleratorAreas = []*ga2v20250115.AcceleratorAreas{buildGa2AcceleratorArea(d, "", "update")}
 
 	var taskId string
 	reqErr := resource.Retry(tccommon.WriteRetryTimeout, func() *resource.RetryError {
@@ -363,31 +364,48 @@ func parseGa2AccelerateAreaId(id string) (gaId, areaId string, err error) {
 
 // buildGa2AcceleratorArea assembles the single AcceleratorAreas element from the schema. When areaId
 // is non-empty (Update path) it is set so the API can correlate the entry being modified.
-func buildGa2AcceleratorArea(d *schema.ResourceData, areaId string) *ga2v20250115.AcceleratorAreas {
+func buildGa2AcceleratorArea(d *schema.ResourceData, areaId, step string) *ga2v20250115.AcceleratorAreas {
 	area := &ga2v20250115.AcceleratorAreas{}
+	if step == "create" {
+		if areaId != "" {
+			area.AcceleratorAreaId = helper.String(areaId)
+		}
 
-	if areaId != "" {
-		area.AcceleratorAreaId = helper.String(areaId)
-	}
+		if v, ok := d.GetOk("accelerate_region"); ok {
+			area.AccelerateRegion = helper.String(v.(string))
+		}
 
-	if v, ok := d.GetOk("accelerate_region"); ok {
-		area.AccelerateRegion = helper.String(v.(string))
-	}
+		if v, ok := d.GetOk("bandwidth"); ok {
+			area.Bandwidth = helper.IntUint64(v.(int))
+		}
 
-	if v, ok := d.GetOk("bandwidth"); ok {
-		area.Bandwidth = helper.IntUint64(v.(int))
-	}
+		if v, ok := d.GetOk("isp_type"); ok {
+			area.IspType = helper.String(v.(string))
+		}
 
-	if v, ok := d.GetOk("isp_type"); ok {
-		area.IspType = helper.String(v.(string))
-	}
+		if v, ok := d.GetOk("ip_version"); ok {
+			area.IpVersion = helper.String(v.(string))
+		}
 
-	if v, ok := d.GetOk("ip_version"); ok {
-		area.IpVersion = helper.String(v.(string))
-	}
+		if v, ok := d.GetOk("ip_address"); ok {
+			area.IpAddress = buildGa2AccelerateAreaStringSet(v.(*schema.Set))
+		}
+	} else if step == "update" {
+		if v, ok := d.GetOk("accelerate_region"); ok {
+			area.AccelerateRegion = helper.String(v.(string))
+		}
 
-	if v, ok := d.GetOk("ip_address"); ok {
-		area.IpAddress = buildGa2AccelerateAreaStringSet(v.(*schema.Set))
+		if v, ok := d.GetOk("bandwidth"); ok {
+			area.Bandwidth = helper.IntUint64(v.(int))
+		}
+
+		if v, ok := d.GetOk("isp_type"); ok {
+			area.IspType = helper.String(v.(string))
+		}
+
+		if v, ok := d.GetOk("ip_version"); ok {
+			area.IpVersion = helper.String(v.(string))
+		}
 	}
 
 	return area
