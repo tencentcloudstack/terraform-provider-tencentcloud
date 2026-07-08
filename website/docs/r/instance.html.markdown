@@ -498,7 +498,6 @@ The following arguments are supported:
 * `keep_image_login` - (Optional, Bool) Whether to keep image login or not, default is `false`. When the image type is private or shared or imported, this parameter can be set `true`. Modifications may lead to the reinstallation of the instance's operating system..
 * `key_ids` - (Optional, Set: [`String`]) The key pair to use for the instance, it looks like `skey-16jig7tx`. Modifications may lead to the reinstallation of the instance's operating system.
 * `key_name` - (Optional, String, **Deprecated**) Please use `key_ids` instead. The key pair to use for the instance, it looks like `skey-16jig7tx`. Modifications may lead to the reinstallation of the instance's operating system.
-* `kms_key_id` - (Optional, String, ForceNew) Custom KMS key ID for system disk encryption. This parameter is used to specify a custom KMS key for encrypting the system disk during instance creation or reinstallation.
 * `launch_template_id` - (Optional, String, ForceNew) Instance launch template ID. This parameter allows you to create an instance using the preset parameters in the instance template.
 * `launch_template_version` - (Optional, Int, ForceNew) The instance launch template version number. If given, a new instance launch template will be created based on the given version number.
 * `orderly_security_groups` - (Optional, List: [`String`]) A list of orderly security group IDs to associate with.
@@ -514,7 +513,9 @@ The following arguments are supported:
 * `stop_type` - (Optional, String) Instance shutdown mode. Valid values: SOFT_FIRST: perform a soft shutdown first, and force shut down the instance if the soft shutdown fails; HARD: force shut down the instance directly; SOFT: soft shutdown only. Default value: SOFT.
 * `stopped_mode` - (Optional, String) Billing method of a pay-as-you-go instance after shutdown. Available values: `KEEP_CHARGING`,`STOP_CHARGING`. Default `KEEP_CHARGING`.
 * `subnet_id` - (Optional, String) The ID of a VPC subnet. If you want to create instances in a VPC network, this parameter must be set.
+* `system_disk_encrypt` - (Optional, Bool, ForceNew) Whether the system disk is encrypted. Valid values: true (encrypted), false (not encrypted). Default value: false.
 * `system_disk_id` - (Optional, String) System disk snapshot ID used to initialize the system disk. When system disk type is `LOCAL_BASIC` and `LOCAL_SSD`, disk id is not supported.
+* `system_disk_kms_key_id` - (Optional, String, ForceNew) Custom KMS key ID for system disk encryption.
 * `system_disk_name` - (Optional, String) Name of the system disk.
 * `system_disk_resize_online` - (Optional, Bool) Resize online.
 * `system_disk_size` - (Optional, Int) Size of the system disk. unit is GB, Default is 50GB. If modified, the instance may force stop.

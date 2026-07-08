@@ -327,11 +327,19 @@ func ResourceTencentCloudInstance() *schema.Resource {
 				Computed:    true,
 				Description: "Name of the system disk.",
 			},
-			"kms_key_id": {
+			"system_disk_encrypt": {
+				Type:        schema.TypeBool,
+				Optional:    true,
+				ForceNew:    true,
+				Computed:    true,
+				Description: "Whether the system disk is encrypted. Valid values: true (encrypted), false (not encrypted). Default value: false.",
+			},
+			"system_disk_kms_key_id": {
 				Type:        schema.TypeString,
 				Optional:    true,
 				ForceNew:    true,
-				Description: "Custom KMS key ID for system disk encryption. This parameter is used to specify a custom KMS key for encrypting the system disk during instance creation or reinstallation.",
+				Computed:    true,
+				Description: "Custom KMS key ID for system disk encryption.",
 			},
 			"system_disk_resize_online": {
 				Type:        schema.TypeBool,
@@ -899,7 +907,12 @@ func resourceTencentCloudInstanceCreate(d *schema.ResourceData, meta interface{}
 		systemDiskFlag = true
 	}
 
-	if v, ok := d.GetOk("kms_key_id"); ok {
+	if v, ok := d.GetOkExists("system_disk_encrypt"); ok {
+		systemDisk.Encrypt = helper.Bool(v.(bool))
+		systemDiskFlag = true
+	}
+
+	if v, ok := d.GetOk("system_disk_kms_key_id"); ok {
 		systemDisk.KmsKeyId = helper.String(v.(string))
 		systemDiskFlag = true
 	}
@@ -1344,6 +1357,14 @@ func resourceTencentCloudInstanceRead(d *schema.ResourceData, meta interface{}) 
 	_ = d.Set("system_disk_type", instance.SystemDisk.DiskType)
 	_ = d.Set("system_disk_size", instance.SystemDisk.DiskSize)
 	_ = d.Set("system_disk_id", instance.SystemDisk.DiskId)
+	if instance.SystemDisk.Encrypt != nil {
+		_ = d.Set("system_disk_encrypt", instance.SystemDisk.Encrypt)
+	}
+
+	if instance.SystemDisk.KmsKeyId != nil {
+		_ = d.Set("system_disk_kms_key_id", instance.SystemDisk.KmsKeyId)
+	}
+
 	_ = d.Set("instance_status", instance.InstanceState)
 	_ = d.Set("create_time", instance.CreatedTime)
 	_ = d.Set("expired_time", instance.ExpiredTime)
