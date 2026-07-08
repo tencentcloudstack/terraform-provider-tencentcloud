@@ -784,11 +784,15 @@ func (me *CvmService) BindKeyPair(ctx context.Context, keyIds []*string, instanc
 	return nil
 }
 
-func (me *CvmService) CreatePlacementGroup(ctx context.Context, placementName, placementType string, affinity int, partitionCount int, tags []*cvm.Tag) (placementId string, respPartitionCount int, errRet error) {
+func (me *CvmService) CreatePlacementGroup(ctx context.Context, placementName, placementType, strategy string, affinity int, partitionCount int, tags []*cvm.Tag) (response *cvm.CreateDisasterRecoverGroupResponse, errRet error) {
 	logId := tccommon.GetLogId(ctx)
 	request := cvm.NewCreateDisasterRecoverGroupRequest()
 	request.Name = &placementName
 	request.Type = &placementType
+
+	if strategy != "" {
+		request.Strategy = &strategy
+	}
 
 	if affinity != 0 {
 		request.Affinity = helper.IntInt64(affinity)
@@ -821,10 +825,7 @@ func (me *CvmService) CreatePlacementGroup(ctx context.Context, placementName, p
 		errRet = fmt.Errorf("placement group id is nil")
 		return
 	}
-	placementId = *response.Response.DisasterRecoverGroupId
-	if response.Response.PartitionCount != nil {
-		respPartitionCount = int(*response.Response.PartitionCount)
-	}
+
 	return
 }
 

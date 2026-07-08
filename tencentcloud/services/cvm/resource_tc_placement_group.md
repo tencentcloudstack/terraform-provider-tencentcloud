@@ -19,6 +19,7 @@ Create partition placement group
 resource "tencentcloud_placement_group" "bar" {
   name            = "test-partition"
   type            = "HOST"
+  strategy        = "PARTITION"
   partition_count = 5
 }
 ```
