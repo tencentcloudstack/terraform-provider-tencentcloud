@@ -1869,6 +1869,7 @@ func Provider() *schema.Provider {
 			"tencentcloud_postgresql_parameter_template_config":                                     postgresql.ResourceTencentCloudPostgresqlParameterTemplateConfig(),
 			"tencentcloud_postgresql_base_backup":                                                   postgresql.ResourceTencentCloudPostgresqlBaseBackup(),
 			"tencentcloud_postgresql_backup_plan_config":                                            postgresql.ResourceTencentCloudPostgresqlBackupPlanConfig(),
+			"tencentcloud_postgresql_backup_plan":                                                   postgresql.ResourceTencentCloudPostgresqlBackupPlan(),
 			"tencentcloud_postgresql_security_group_config":                                         postgresql.ResourceTencentCloudPostgresqlSecurityGroupConfig(),
 			"tencentcloud_postgresql_backup_download_restriction_config":                            postgresql.ResourceTencentCloudPostgresqlBackupDownloadRestrictionConfig(),
 			"tencentcloud_postgresql_restart_db_instance_operation":                                 postgresql.ResourceTencentCloudPostgresqlRestartDbInstanceOperation(),
