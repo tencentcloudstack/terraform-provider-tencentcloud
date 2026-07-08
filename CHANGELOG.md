@@ -1,3 +1,26 @@
+## 1.83.9(July 8, 2026)
+
+FEATURES:
+
+* **New Resource:** `tencentcloud_cynosdb_cluster_v2` ([#4267](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/4267))
+* **New Resource:** `tencentcloud_postgresql_backup_plan` ([#4275](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/4275))
+
+ENHANCEMENTS:
+
+* resource/tencentcloud_clb_instance: update internet_max_bandwidth_out description ([#4273](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/4273))
+* resource/tencentcloud_emr_cluster_v2: support `router_resource_spec` ([#4270](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/4270))
+* resource/tencentcloud_ga2_accelerate_area: update doc ([#4280](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/4280))
+* resource/tencentcloud_ga2_endpoint_group: update doc ([#4280](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/4280))
+* resource/tencentcloud_ga2_forwarding_policy: update doc ([#4280](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/4280))
+* resource/tencentcloud_ga2_forwarding_rule: update doc ([#4280](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/4280))
+* resource/tencentcloud_ga2_global_accelerator: update doc ([#4280](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/4280))
+* resource/tencentcloud_ga2_listener: update doc ([#4280](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/4280))
+* resource/tencentcloud_instance: add `system_disk_encrypt`, `system_disk_kms_key_id` parameter for system disk encryption ([#4268](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/4268))
+* resource/tencentcloud_mysql_readonly_instance: support `ro_vip` and `ro_vport`. ([#4271](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/4271))
+* resource/tencentcloud_postgresql_backup_plan_config: support `backup_method` ([#4272](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/4272))
+* resource/tencentcloud_redis_param: update doc ([#4278](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/4278))
+* resource/tencentcloud_teo_l7_acc_rule_v2: add `advanced_origin_routing_parameters`, `shield_parameters`, and `site_failover_parameters` parameters in branches.actions for AdvancedOriginRouting, Shield, and SiteFailover actions ([#4258](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/4258))
+
 ## 1.83.8(July 3, 2026)
 
 FEATURES:
