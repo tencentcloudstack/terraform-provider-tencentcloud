@@ -752,6 +752,7 @@ func Provider() *schema.Provider {
 			"tencentcloud_gaap_check_proxy_create":                                gaap.DataSourceTencentCloudGaapCheckProxyCreate(),
 			"tencentcloud_ssl_certificates":                                       ssl.DataSourceTencentCloudSslCertificates(),
 			"tencentcloud_ssl_describe_certificate":                               ssl.DataSourceTencentCloudSslDescribeCertificate(),
+			"tencentcloud_ssl_certificate_bind_resource_task_detail":              ssl.DataSourceTencentCloudSslCertificateBindResourceTaskDetail(),
 			"tencentcloud_ssl_describe_companies":                                 ssl.DataSourceTencentCloudSslDescribeCompanies(),
 			"tencentcloud_ssl_describe_host_api_gateway_instance_list":            ssl.DataSourceTencentCloudSslDescribeHostApiGatewayInstanceList(),
 			"tencentcloud_ssl_describe_host_cdn_instance_list":                    ssl.DataSourceTencentCloudSslDescribeHostCdnInstanceList(),
