@@ -2109,14 +2109,25 @@ func (me *CynosdbService) DescribeCynosdbAccountById(ctx context.Context, cluste
 		}
 	}()
 
-	ratelimit.Check(request.GetAction())
+	var response *cynosdb.DescribeAccountsResponse
+	errRet = resource.Retry(tccommon.ReadRetryTimeout, func() *resource.RetryError {
+		ratelimit.Check(request.GetAction())
+		result, e := me.client.UseCynosdbClient().DescribeAccounts(request)
+		if e != nil {
+			return tccommon.RetryError(e)
+		}
+		log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), result.ToJsonString())
 
-	response, err := me.client.UseCynosdbClient().DescribeAccounts(request)
-	if err != nil {
-		errRet = err
+		if result == nil || result.Response == nil || result.Response.AccountSet == nil {
+			return resource.NonRetryableError(fmt.Errorf("Descirbe account failed, response is nil"))
+		}
+
+		response = result
+		return nil
+	})
+	if errRet != nil {
 		return
 	}
-	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
 
 	if len(response.Response.AccountSet) < 1 {
 		return
@@ -2144,14 +2155,15 @@ func (me *CynosdbService) DeleteCynosdbAccountById(ctx context.Context, clusterI
 		}
 	}()
 
-	ratelimit.Check(request.GetAction())
-
-	response, err := me.client.UseCynosdbClient().DeleteAccounts(request)
-	if err != nil {
-		errRet = err
-		return
-	}
-	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+	errRet = resource.Retry(tccommon.WriteRetryTimeout, func() *resource.RetryError {
+		ratelimit.Check(request.GetAction())
+		result, e := me.client.UseCynosdbClient().DeleteAccounts(request)
+		if e != nil {
+			return tccommon.RetryError(e)
+		}
+		log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), result.ToJsonString())
+		return nil
+	})
 
 	return
 }
