@@ -2119,7 +2119,7 @@ func (me *CynosdbService) DescribeCynosdbAccountById(ctx context.Context, cluste
 		log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), result.ToJsonString())
 
 		if result == nil || result.Response == nil || result.Response.AccountSet == nil {
-			return resource.NonRetryableError(fmt.Errorf("Descirbe account failed, response is nil"))
+			return resource.NonRetryableError(fmt.Errorf("Describe account failed, response is nil"))
 		}
 
 		response = result
