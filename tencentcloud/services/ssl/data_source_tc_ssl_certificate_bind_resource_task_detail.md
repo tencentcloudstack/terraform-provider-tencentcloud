@@ -6,7 +6,7 @@ Query all resource types bind details by task id
 
 ```hcl
 data "tencentcloud_ssl_certificate_bind_resource_task_detail" "example" {
-  task_id = "task-12345"
+  task_id = "51403728"
 }
 ```
 
@@ -14,7 +14,7 @@ Query specific resource types bind details
 
 ```hcl
 data "tencentcloud_ssl_certificate_bind_resource_task_detail" "example" {
-  task_id        = "task-12345"
+  task_id        = "51403728"
   resource_types = ["clb", "cdn"]
 }
 ```
@@ -23,8 +23,8 @@ Query bind details with regions filter
 
 ```hcl
 data "tencentcloud_ssl_certificate_bind_resource_task_detail" "example" {
-  task_id        = "task-12345"
-  resource_types = ["clb"]
+  task_id        = "51403728"
+  resource_types = ["clb", "cdn"]
   regions        = ["ap-guangzhou", "ap-beijing"]
 }
 ```

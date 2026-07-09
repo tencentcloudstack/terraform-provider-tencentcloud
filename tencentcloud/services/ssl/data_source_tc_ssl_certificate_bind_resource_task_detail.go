@@ -145,7 +145,7 @@ func DataSourceTencentCloudSslCertificateBindResourceTaskDetail() *schema.Resour
 																Computed:    true,
 																Description: "Root certificate ID.",
 															},
-															"s_s_l_mode": {
+															"ssl_mode": {
 																Type:        schema.TypeString,
 																Computed:    true,
 																Description: "Certificate authentication mode: UNIDIRECTIONAL one-way authentication, MUTUAL two-way authentication.",
@@ -198,7 +198,7 @@ func DataSourceTencentCloudSslCertificateBindResourceTaskDetail() *schema.Resour
 																			Computed:    true,
 																			Description: "Root certificate ID.",
 																		},
-																		"s_s_l_mode": {
+																		"ssl_mode": {
 																			Type:        schema.TypeString,
 																			Computed:    true,
 																			Description: "Certificate authentication mode: UNIDIRECTIONAL one-way authentication, MUTUAL two-way authentication.",
@@ -1409,7 +1409,7 @@ func dataSourceTencentCloudSslCertificateBindResourceTaskDetailRead(d *schema.Re
 									certificateMap["cert_ca_id"] = listener.Certificate.CertCaId
 								}
 								if listener.Certificate.SSLMode != nil {
-									certificateMap["s_s_l_mode"] = listener.Certificate.SSLMode
+									certificateMap["ssl_mode"] = listener.Certificate.SSLMode
 								}
 								listenerMap["certificate"] = []interface{}{certificateMap}
 							}
@@ -1438,7 +1438,7 @@ func dataSourceTencentCloudSslCertificateBindResourceTaskDetailRead(d *schema.Re
 											certificateMap["cert_ca_id"] = rule.Certificate.CertCaId
 										}
 										if rule.Certificate.SSLMode != nil {
-											certificateMap["s_s_l_mode"] = rule.Certificate.SSLMode
+											certificateMap["ssl_mode"] = rule.Certificate.SSLMode
 										}
 										ruleMap["certificate"] = []interface{}{certificateMap}
 									}

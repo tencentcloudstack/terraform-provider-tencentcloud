@@ -17,7 +17,7 @@ Use this data source to query detailed information of SSL certificate bind resou
 
 ```hcl
 data "tencentcloud_ssl_certificate_bind_resource_task_detail" "example" {
-  task_id = "task-12345"
+  task_id = "51403728"
 }
 ```
 
@@ -25,7 +25,7 @@ data "tencentcloud_ssl_certificate_bind_resource_task_detail" "example" {
 
 ```hcl
 data "tencentcloud_ssl_certificate_bind_resource_task_detail" "example" {
-  task_id        = "task-12345"
+  task_id        = "51403728"
   resource_types = ["clb", "cdn"]
 }
 ```
@@ -34,8 +34,8 @@ data "tencentcloud_ssl_certificate_bind_resource_task_detail" "example" {
 
 ```hcl
 data "tencentcloud_ssl_certificate_bind_resource_task_detail" "example" {
-  task_id        = "task-12345"
-  resource_types = ["clb"]
+  task_id        = "51403728"
+  resource_types = ["clb", "cdn"]
   regions        = ["ap-guangzhou", "ap-beijing"]
 }
 ```
@@ -81,7 +81,7 @@ In addition to all arguments above, the following attributes are exported:
         * `cert_ca_id` - Root certificate ID.
         * `cert_id` - Certificate ID.
         * `dns_names` - Domain names bound to the certificate.
-        * `s_s_l_mode` - Certificate authentication mode: UNIDIRECTIONAL one-way authentication, MUTUAL two-way authentication.
+        * `ssl_mode` - Certificate authentication mode: UNIDIRECTIONAL one-way authentication, MUTUAL two-way authentication.
       * `listener_id` - Listener ID.
       * `listener_name` - Listener name.
       * `no_match_domains` - List of non-matching domains.
@@ -91,7 +91,7 @@ In addition to all arguments above, the following attributes are exported:
           * `cert_ca_id` - Root certificate ID.
           * `cert_id` - Certificate ID.
           * `dns_names` - Domain names bound to the certificate.
-          * `s_s_l_mode` - Certificate authentication mode: UNIDIRECTIONAL one-way authentication, MUTUAL two-way authentication.
+          * `ssl_mode` - Certificate authentication mode: UNIDIRECTIONAL one-way authentication, MUTUAL two-way authentication.
         * `domain` - Domain name bound to the rule.
         * `is_match` - Whether the rule matches the domain name of the certificate to be bound.
         * `location_id` - Rule ID.
