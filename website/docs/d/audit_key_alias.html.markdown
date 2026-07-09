@@ -1,5 +1,5 @@
 ---
-subcategory: "Cloud Audit(Cloudaudit)"
+subcategory: "Cloud Audit(CloudAudit)"
 layout: "tencentcloud"
 page_title: "TencentCloud: tencentcloud_audit_key_alias"
 sidebar_current: "docs-tencentcloud-datasource-audit_key_alias"
