@@ -155,7 +155,7 @@ tencentcloud_api_gateway_update_api_app_key
 tencentcloud_api_gateway_import_open_api
 tencentcloud_api_gateway_update_service
 
-Cloud Audit(Audit)
+Cloud Audit(Cloudaudit)
 Data Source
 tencentcloud_audit_cos_regions
 tencentcloud_audit_key_alias
