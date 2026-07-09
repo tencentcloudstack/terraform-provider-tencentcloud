@@ -19,6 +19,10 @@ resource "tencentcloud_cls_machine_group" "group" {
       "192.168.1.2",
     ]
   }
+
+  meta_tags = {
+    "k" = "v"
+  }
 }
 ```
 
