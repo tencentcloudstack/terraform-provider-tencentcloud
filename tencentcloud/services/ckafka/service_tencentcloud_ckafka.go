@@ -738,6 +738,37 @@ func (me *CkafkaService) AddCkafkaTopicPartition(ctx context.Context, instanceId
 	return nil
 }
 
+func (me *CkafkaService) RemoveCkafkaTopicIpWhiteList(ctx context.Context, instaneId string, topicName string, whiteIpList []*string) (errRet error) {
+	logId := tccommon.GetLogId(ctx)
+	request := ckafka.NewDeleteTopicIpWhiteListRequest()
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail,reason[%s]", logId, request.GetAction(), errRet.Error())
+		}
+	}()
+
+	request.TopicName = &topicName
+	request.InstanceId = &instaneId
+	request.IpWhiteList = whiteIpList
+	ratelimit.Check(request.GetAction())
+	var response *ckafka.DeleteTopicIpWhiteListResponse
+	errRet = resource.Retry(tccommon.ReadRetryTimeout, func() *resource.RetryError {
+		resp, e := me.client.UseCkafkaClient().DeleteTopicIpWhiteList(request)
+		if e != nil {
+			return tccommon.RetryError(e)
+		}
+		response = resp
+		return nil
+	})
+	if errRet != nil {
+		return
+	}
+	if response == nil || response.Response == nil || response.Response.Result == nil {
+		return fmt.Errorf("TencentCloud SDK return nil response, %s", request.GetAction())
+	}
+	return nil
+}
+
 func (me *CkafkaService) DescribeCkafkaById(ctx context.Context, instanceId string) (instance *ckafka.InstanceDetail, has bool, errRet error) {
 	logId := tccommon.GetLogId(ctx)
 	request := ckafka.NewDescribeInstancesDetailRequest()
