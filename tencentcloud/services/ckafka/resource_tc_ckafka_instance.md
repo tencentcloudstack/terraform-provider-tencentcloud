@@ -51,6 +51,8 @@ resource "tencentcloud_ckafka_instance" "example" {
   dynamic_retention_config {
     enable = 1
   }
+
+  delete_protection_enable = 1
 }
 ```
 
