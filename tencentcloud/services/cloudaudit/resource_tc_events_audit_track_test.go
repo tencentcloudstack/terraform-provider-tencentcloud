@@ -1,4 +1,4 @@
-package audit_test
+package cloudaudit_test
 
 import (
 	"testing"
