@@ -1125,7 +1125,7 @@ func (me *TkeService) DeleteClusterAsGroups(ctx context.Context, id, asGroupId s
 /*
 open internet access
 */
-func (me *TkeService) CreateClusterEndpoint(ctx context.Context, id string, subnetId, securityGroupId string, internet bool, domain string, extensiveParameters string) (errRet error) {
+func (me *TkeService) CreateClusterEndpoint(ctx context.Context, id string, subnetId, securityGroupId string, internet bool, domain string, extensiveParameters string, existedLoadBalancerId string) (errRet error) {
 	logId := tccommon.GetLogId(ctx)
 
 	request := tke.NewCreateClusterEndpointRequest()
@@ -1152,6 +1152,10 @@ func (me *TkeService) CreateClusterEndpoint(ctx context.Context, id string, subn
 
 	if extensiveParameters != "" {
 		request.ExtensiveParameters = helper.String(extensiveParameters)
+	}
+
+	if existedLoadBalancerId != "" {
+		request.ExistedLoadBalancerId = helper.String(existedLoadBalancerId)
 	}
 
 	ratelimit.Check(request.GetAction())
@@ -2646,7 +2650,7 @@ func ModifyClusterInternetOrIntranetAccess(ctx context.Context, d *schema.Resour
 	// open access
 	if enable {
 		err := resource.Retry(tccommon.WriteRetryTimeout, func() *resource.RetryError {
-			inErr := tkeSvc.CreateClusterEndpoint(ctx, id, subnetId, sg, isInternet, domain, "")
+			inErr := tkeSvc.CreateClusterEndpoint(ctx, id, subnetId, sg, isInternet, domain, "", "")
 			if inErr != nil {
 				return tccommon.RetryError(inErr)
 			}

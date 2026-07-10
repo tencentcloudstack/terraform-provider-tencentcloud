@@ -415,7 +415,7 @@ func resourceTencentCloudKubernetesClusterCreatePostHandleResponse0(ctx context.
 	//intranet
 	if clusterIntranet {
 		err = resource.Retry(tccommon.WriteRetryTimeout, func() *resource.RetryError {
-			inErr := service.CreateClusterEndpoint(ctx, id, intranetSubnetId, clusterInternetSecurityGroup, false, clusterIntranetDomain, "")
+			inErr := service.CreateClusterEndpoint(ctx, id, intranetSubnetId, clusterInternetSecurityGroup, false, clusterIntranetDomain, "", "")
 			if inErr != nil {
 				return tccommon.RetryError(inErr)
 			}
@@ -446,7 +446,7 @@ func resourceTencentCloudKubernetesClusterCreatePostHandleResponse0(ctx context.
 
 	if clusterInternet {
 		err = resource.Retry(tccommon.WriteRetryTimeout, func() *resource.RetryError {
-			inErr := service.CreateClusterEndpoint(ctx, id, "", clusterInternetSecurityGroup, true, clusterInternetDomain, "")
+			inErr := service.CreateClusterEndpoint(ctx, id, "", clusterInternetSecurityGroup, true, clusterInternetDomain, "", "")
 			if inErr != nil {
 				return tccommon.RetryError(inErr)
 			}
