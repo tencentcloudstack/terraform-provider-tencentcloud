@@ -1,3 +1,19 @@
+## 1.83.10(July 10, 2026)
+
+FEATURES:
+
+* **New Data Source:** `tencentcloud_ssl_certificate_bind_resource_task_detail` ([#4285](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/4285))
+
+ENHANCEMENTS:
+
+* resource/tencentcloud_as_scaling_group: Optimize import capabilities. ([#4277](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/4277))
+* resource/tencentcloud_cls_machine_group: support ostype & meta_tags parameter ([#4279](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/4279))
+* resource/tencentcloud_cos_bucket: optimize code logic for delete function ([#4284](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/4284))
+* resource/tencentcloud_cynosdb_account: optimize code logic ([#4282](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/4282))
+* resource/tencentcloud_elasticsearch_instance: support enable_destroy_protection parameter to manage cluster destroy protection ([#4287](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/4287))
+* resource/tencentcloud_kubernetes_cluster_endpoint: support `existed_load_balancer_id` ([#4289](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/4289))
+* resource/tencentcloud_postgresql_clone_db_instance: update resource ([#4288](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/4288))
+
 ## 1.83.9(July 8, 2026)
 
 FEATURES:
