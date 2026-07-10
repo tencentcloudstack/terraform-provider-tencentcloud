@@ -74,7 +74,50 @@ resource "tencentcloud_elasticsearch_instance" "example" {
 }
 ```
 
-### Create a basic version of elasticsearch instance for multi-availability zone deployment
+### Create a basic version of elasticsearch instance with destroy protection enabled
+
+```hcl
+data "tencentcloud_availability_zones_by_product" "availability_zone" {
+  product = "es"
+}
+
+resource "tencentcloud_vpc" "vpc" {
+  cidr_block = "10.0.0.0/16"
+  name       = "tf_es_vpc"
+}
+
+resource "tencentcloud_subnet" "subnet" {
+  vpc_id            = tencentcloud_vpc.vpc.id
+  availability_zone = data.tencentcloud_availability_zones_by_product.availability_zone.zones.0.name
+  name              = "tf_es_subnet"
+  cidr_block        = "10.0.1.0/24"
+}
+
+resource "tencentcloud_elasticsearch_instance" "example" {
+  instance_name             = "tf_example_es"
+  availability_zone         = data.tencentcloud_availability_zones_by_product.availability_zone.zones.0.name
+  version                   = "7.10.1"
+  vpc_id                    = tencentcloud_vpc.vpc.id
+  subnet_id                 = tencentcloud_subnet.subnet.id
+  password                  = "Test12345"
+  license_type              = "basic"
+  basic_security_type       = 2
+  enable_destroy_protection = "OPEN"
+
+  web_node_type_info {
+    node_num  = 1
+    node_type = "ES.S1.MEDIUM4"
+  }
+
+  node_info_list {
+    node_num  = 2
+    node_type = "ES.S1.MEDIUM8"
+    encrypt   = false
+  }
+}
+```
+
+
 
 ```hcl
 data "tencentcloud_availability_zones_by_product" "availability_zone" {
@@ -169,6 +212,7 @@ The following arguments are supported:
 * `charge_type` - (Optional, String, ForceNew) The charge type of instance. Valid values are `PREPAID` and `POSTPAID_BY_HOUR`.
 * `cos_backup` - (Optional, List) COS automatic backup information.
 * `deploy_mode` - (Optional, Int) Cluster deployment mode. Valid values are `0` and `1`. `0` is single-AZ deployment, and `1` is multi-AZ deployment. Default value is `0`.
+* `enable_destroy_protection` - (Optional, String) Cluster destroy protection status. Valid values are `OPEN` (enable protection) and `CLOSE` (disable protection). NOTE: when destroy protection is `OPEN`, `terraform destroy` will fail at the cloud API `DeleteInstance` call until this field is set to `CLOSE`.
 * `es_acl` - (Optional, List) Kibana Access Control Configuration.
 * `es_public_acl` - (Optional, List) Public network access control list.
 * `instance_name` - (Optional, String) Name of the instance, which can contain 1 to 50 English letters, Chinese characters, digits, dashes(-), or underscores(_).
