@@ -106,6 +106,8 @@ resource "tencentcloud_elasticsearch_instance" "example" {
 }
 ```
 
+Create a basic version of elasticsearch instance for multi-availability zone deployment
+
 ```hcl
 data "tencentcloud_availability_zones_by_product" "availability_zone" {
   product = "es"
