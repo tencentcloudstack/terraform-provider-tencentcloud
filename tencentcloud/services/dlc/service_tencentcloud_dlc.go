@@ -1522,3 +1522,41 @@ func (me *DlcService) DescribeDlcDatasourceHouseAttachmentById(ctx context.Conte
 	ret = response.Response.NetworkConnectionSet[0]
 	return
 }
+
+func (me *DlcService) DescribeDmsTableById(ctx context.Context, dbName, name string) (ret *dlc.DescribeDMSTableResponseParams, errRet error) {
+	logId := tccommon.GetLogId(ctx)
+
+	request := dlc.NewDescribeDMSTableRequest()
+	request.DbName = helper.String(dbName)
+	request.Name = helper.String(name)
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	errRet = resource.Retry(tccommon.ReadRetryTimeout, func() *resource.RetryError {
+		ratelimit.Check(request.GetAction())
+		result, e := me.client.UseDlcClient().DescribeDMSTableWithContext(ctx, request)
+		if e != nil {
+			return tccommon.RetryError(e)
+		} else {
+			log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), result.ToJsonString())
+		}
+
+		if result == nil || result.Response == nil {
+			return resource.NonRetryableError(fmt.Errorf("Describe dlc_dms_table failed, Response is nil."))
+		}
+
+		ret = result.Response
+		return nil
+	})
+
+	if errRet != nil {
+		log.Printf("[DATASOURCE] read empty, skip SetId")
+		return
+	}
+
+	return
+}
