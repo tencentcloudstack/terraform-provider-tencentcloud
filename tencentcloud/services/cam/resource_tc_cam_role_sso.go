@@ -50,6 +50,12 @@ func ResourceTencentCloudCamRoleSSO() *schema.Resource {
 				Optional:    true,
 				Description: "The description of resource.",
 			},
+			"auto_rotate_key": {
+				Type:        schema.TypeInt,
+				Optional:    true,
+				Default:     0,
+				Description: "OIDC public key auto-rotation switch. Enum values: 0 (disabled), 1 (enabled). Default value: 0.",
+			},
 		},
 	}
 }
@@ -65,6 +71,7 @@ func resourceTencentCloudCamRoleSSOCreate(d *schema.ResourceData, meta interface
 	request.IdentityKey = helper.String(d.Get("identity_key").(string))
 	request.Description = helper.String(d.Get("description").(string))
 	request.ClientId = helper.InterfacesStringsPoint(d.Get("client_ids").(*schema.Set).List())
+	request.AutoRotateKey = helper.IntUint64(d.Get("auto_rotate_key").(int))
 
 	err := resource.Retry(tccommon.WriteRetryTimeout, func() *resource.RetryError {
 		result, e := meta.(tccommon.ProviderMeta).GetAPIV3Conn().UseCamClient().CreateOIDCConfig(request)
@@ -120,6 +127,9 @@ func resourceTencentCloudCamRoleSSORead(d *schema.ResourceData, meta interface{}
 		clientIds = append(clientIds, *clientId)
 	}
 	_ = d.Set("client_ids", clientIds)
+	if response.Response.AutoRotateKey != nil {
+		_ = d.Set("auto_rotate_key", int(*response.Response.AutoRotateKey))
+	}
 
 	return nil
 }
@@ -132,11 +142,12 @@ func resourceTencentCloudCamRoleSSOUpdate(d *schema.ResourceData, meta interface
 		return fmt.Errorf("not support change name")
 	}
 	request.Name = helper.String(d.Id())
-	if d.HasChange("identity_url") || d.HasChange("identity_key") || d.HasChange("description") || d.HasChange("client_ids") {
+	if d.HasChange("identity_url") || d.HasChange("identity_key") || d.HasChange("description") || d.HasChange("client_ids") || d.HasChange("auto_rotate_key") {
 		request.IdentityKey = helper.String(d.Get("identity_key").(string))
 		request.IdentityUrl = helper.String(d.Get("identity_url").(string))
 		request.Description = helper.String(d.Get("description").(string))
 		request.ClientId = helper.InterfacesStringsPoint(d.Get("client_ids").(*schema.Set).List())
+		request.AutoRotateKey = helper.IntUint64(d.Get("auto_rotate_key").(int))
 	}
 
 	err := resource.Retry(tccommon.WriteRetryTimeout, func() *resource.RetryError {

@@ -9,6 +9,7 @@ resource "tencentcloud_cam_role_sso" "foo" {
 	identity_key="..."
 	client_ids=["..."]
 	description="this is a description"
+	auto_rotate_key=1
 }
 ```
 

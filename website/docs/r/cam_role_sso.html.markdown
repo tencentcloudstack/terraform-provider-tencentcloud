@@ -15,11 +15,12 @@ Provides a resource to create a CAM-ROLE-SSO (Only support OIDC).
 
 ```hcl
 resource "tencentcloud_cam_role_sso" "foo" {
-  name         = "tf_cam_role_sso"
-  identity_url = "https://login.microsoftonline.com/.../v2.0"
-  identity_key = "..."
-  client_ids   = ["..."]
-  description  = "this is a description"
+  name            = "tf_cam_role_sso"
+  identity_url    = "https://login.microsoftonline.com/.../v2.0"
+  identity_key    = "..."
+  client_ids      = ["..."]
+  description     = "this is a description"
+  auto_rotate_key = 1
 }
 ```
 
@@ -31,6 +32,7 @@ The following arguments are supported:
 * `identity_key` - (Required, String) Sign the public key.
 * `identity_url` - (Required, String) Identity provider URL.
 * `name` - (Required, String) The name of resource.
+* `auto_rotate_key` - (Optional, Int) OIDC public key auto-rotation switch. Enum values: 0 (disabled), 1 (enabled). Default value: 0.
 * `description` - (Optional, String) The description of resource.
 
 ## Attributes Reference
