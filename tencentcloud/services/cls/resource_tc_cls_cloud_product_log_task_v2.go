@@ -116,6 +116,15 @@ func ResourceTencentCloudClsCloudProductLogTaskV2() *schema.Resource {
 				Optional:    true,
 				Description: "Whether to delete the associated Logset when deleting the log collection task. This field only takes effect when `force_delete` is false. If the Logset has other Topics, it will not be deleted. Default is false.",
 			},
+
+			"tags": {
+				Type:     schema.TypeMap,
+				Optional: true,
+				Elem: &schema.Schema{
+					Type: schema.TypeString,
+				},
+				Description: "Tag description list. Up to 10 tag key-value pairs are supported and must be unique. Tags are bound to the associated logset and topic.",
+			},
 		},
 	}
 }
@@ -176,6 +185,17 @@ func resourceTencentCloudClsCloudProductLogTaskV2Create(d *schema.ResourceData, 
 
 	if v, ok := d.GetOk("topic_id"); ok {
 		request.TopicId = helper.String(v.(string))
+	}
+
+	if tags := helper.GetTags(d, "tags"); len(tags) > 0 {
+		for k, v := range tags {
+			key := k
+			value := v
+			request.Tags = append(request.Tags, &clsv20201016.Tag{
+				Key:   &key,
+				Value: &value,
+			})
+		}
 	}
 
 	err := resource.Retry(tccommon.WriteRetryTimeout, func() *resource.RetryError {
@@ -255,6 +275,25 @@ func resourceTencentCloudClsCloudProductLogTaskV2Read(d *schema.ResourceData, me
 		_ = d.Set("extend", respData.Tasks[0].Extend)
 	}
 
+	// Read tags back from the task info. The create/modify API binds the same
+	// tags to both the logset and topic, so prefer TopicTags and fall back to
+	// LogsetTags when TopicTags is empty.
+	var readTags []*clsv20201016.Tag
+	if len(respData.Tasks[0].TopicTags) > 0 {
+		readTags = respData.Tasks[0].TopicTags
+	} else if len(respData.Tasks[0].LogsetTags) > 0 {
+		readTags = respData.Tasks[0].LogsetTags
+	}
+	if len(readTags) > 0 {
+		tagsMap := make(map[string]string, len(readTags))
+		for _, tag := range readTags {
+			if tag.Key != nil && tag.Value != nil {
+				tagsMap[*tag.Key] = *tag.Value
+			}
+		}
+		_ = d.Set("tags", tagsMap)
+	}
+
 	if respData.Tasks[0].LogsetId != nil {
 		_ = d.Set("logset_id", respData.Tasks[0].LogsetId)
 		info, err := service.DescribeClsLogset(ctx, *respData.Tasks[0].LogsetId)
@@ -319,7 +358,7 @@ func resourceTencentCloudClsCloudProductLogTaskV2Update(d *schema.ResourceData, 
 	cloudProductRegion := idSplit[3]
 
 	needChange := false
-	mutableArgs := []string{"extend"}
+	mutableArgs := []string{"extend", "tags"}
 	for _, v := range mutableArgs {
 		if d.HasChange(v) {
 			needChange = true
@@ -335,6 +374,19 @@ func resourceTencentCloudClsCloudProductLogTaskV2Update(d *schema.ResourceData, 
 		request.CloudProductRegion = helper.String(cloudProductRegion)
 		if v, ok := d.GetOk("extend"); ok {
 			request.Extend = helper.String(v.(string))
+		}
+
+		if d.HasChange("tags") {
+			tags := helper.GetTags(d, "tags")
+			request.Tags = make([]*clsv20201016.Tag, 0, len(tags))
+			for k, v := range tags {
+				key := k
+				value := v
+				request.Tags = append(request.Tags, &clsv20201016.Tag{
+					Key:   &key,
+					Value: &value,
+				})
+			}
 		}
 
 		err := resource.Retry(tccommon.WriteRetryTimeout, func() *resource.RetryError {

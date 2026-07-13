@@ -45,6 +45,25 @@ resource "tencentcloud_cls_cloud_product_log_task_v2" "example" {
 }
 ```
 
+### Create log delivery with tags bound to the associated logset and topic
+
+```hcl
+resource "tencentcloud_cls_cloud_product_log_task_v2" "example" {
+  instance_id          = "postgres-0an6hpv3"
+  assumer_name         = "PostgreSQL"
+  log_type             = "PostgreSQL-SLOW"
+  cloud_product_region = "gz"
+  cls_region           = "ap-guangzhou"
+  logset_name          = "tf-example"
+  topic_name           = "tf-example"
+
+  tags = {
+    Environment = "production"
+    Team        = "backend"
+  }
+}
+```
+
 ## Argument Reference
 
 The following arguments are supported:
@@ -72,6 +91,7 @@ The following arguments are supported:
 * `is_delete_topic` - (Optional, Bool) Whether to delete the associated Topic when deleting the log collection task. This field only takes effect when `force_delete` is false. Default is false.
 * `logset_id` - (Optional, String, ForceNew) Log set ID.
 * `logset_name` - (Optional, String, ForceNew) Log set name, required if `logset_id` is not filled in. If the log set does not exist, it will be automatically created.
+* `tags` - (Optional, Map) Tag description list. Up to 10 tag key-value pairs are supported and must be unique. Tags are bound to the associated logset and topic.
 * `topic_id` - (Optional, String, ForceNew) Log theme ID.
 * `topic_name` - (Optional, String, ForceNew) The name of the log topic is required when `topic_id` is not filled in. If the log theme does not exist, it will be automatically created.
 

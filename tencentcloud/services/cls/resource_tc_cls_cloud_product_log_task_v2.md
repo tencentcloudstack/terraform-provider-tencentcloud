@@ -34,6 +34,25 @@ resource "tencentcloud_cls_cloud_product_log_task_v2" "example" {
 }
 ```
 
+Create log delivery with tags bound to the associated logset and topic
+
+```hcl
+resource "tencentcloud_cls_cloud_product_log_task_v2" "example" {
+  instance_id          = "postgres-0an6hpv3"
+  assumer_name         = "PostgreSQL"
+  log_type             = "PostgreSQL-SLOW"
+  cloud_product_region = "gz"
+  cls_region           = "ap-guangzhou"
+  logset_name          = "tf-example"
+  topic_name           = "tf-example"
+
+  tags = {
+    Environment = "production"
+    Team        = "backend"
+  }
+}
+```
+
 Import
 
 cls cloud product log task can be imported using the id, e.g.
