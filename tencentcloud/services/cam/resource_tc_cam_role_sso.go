@@ -53,7 +53,7 @@ func ResourceTencentCloudCamRoleSSO() *schema.Resource {
 			"auto_rotate_key": {
 				Type:        schema.TypeInt,
 				Optional:    true,
-				Default:     0,
+				Computed:    true,
 				Description: "OIDC public key auto-rotation switch. Enum values: 0 (disabled), 1 (enabled). Default value: 0.",
 			},
 		},
