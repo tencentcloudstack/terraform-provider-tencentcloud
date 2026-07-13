@@ -51,20 +51,6 @@ func ResourceTencentCloudDlcDmsDatabase() *schema.Resource {
 				Description: "Db storage path.",
 			},
 
-			"delete_data": {
-				Type:        schema.TypeBool,
-				Optional:    true,
-				Default:     false,
-				Description: "Whether to delete data when deleting the database.",
-			},
-
-			"cascade": {
-				Type:        schema.TypeBool,
-				Optional:    true,
-				Default:     false,
-				Description: "Whether to cascade delete when deleting the database.",
-			},
-
 			"asset": {
 				Type:        schema.TypeList,
 				MaxItems:    1,
