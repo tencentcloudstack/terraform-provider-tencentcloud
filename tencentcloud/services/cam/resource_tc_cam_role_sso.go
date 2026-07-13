@@ -37,7 +37,7 @@ func ResourceTencentCloudCamRoleSSO() *schema.Resource {
 			"identity_key": {
 				Type:        schema.TypeString,
 				Required:    true,
-				Description: "Sign the public key.",
+				Description: "Sign the public key. Base64 encryption is required.",
 			},
 			"client_ids": {
 				Type:        schema.TypeSet,
@@ -72,6 +72,9 @@ func resourceTencentCloudCamRoleSSOCreate(d *schema.ResourceData, meta interface
 	request.Description = helper.String(d.Get("description").(string))
 	request.ClientId = helper.InterfacesStringsPoint(d.Get("client_ids").(*schema.Set).List())
 	request.AutoRotateKey = helper.IntUint64(d.Get("auto_rotate_key").(int))
+	if v, ok := d.GetOkExists("auto_rotate_key"); ok {
+		request.AutoRotateKey = helper.IntUint64(v.(int))
+	}
 
 	err := resource.Retry(tccommon.WriteRetryTimeout, func() *resource.RetryError {
 		result, e := meta.(tccommon.ProviderMeta).GetAPIV3Conn().UseCamClient().CreateOIDCConfig(request)
@@ -105,6 +108,11 @@ func resourceTencentCloudCamRoleSSORead(d *schema.ResourceData, meta interface{}
 		if e != nil {
 			return tccommon.RetryError(e)
 		}
+
+		if result == nil || result.Response == nil {
+			return resource.NonRetryableError(fmt.Errorf("Describe OIDC config failed, Response is nil."))
+		}
+
 		response = result
 		return nil
 	})
@@ -137,29 +145,34 @@ func resourceTencentCloudCamRoleSSORead(d *schema.ResourceData, meta interface{}
 func resourceTencentCloudCamRoleSSOUpdate(d *schema.ResourceData, meta interface{}) error {
 	defer tccommon.LogElapsed("resource.tencentcloud_cam_role_sso.update")()
 	logId := tccommon.GetLogId(tccommon.ContextNil)
-	request := cam.NewUpdateOIDCConfigRequest()
+
 	if d.HasChange("name") {
 		return fmt.Errorf("not support change name")
 	}
-	request.Name = helper.String(d.Id())
+
 	if d.HasChange("identity_url") || d.HasChange("identity_key") || d.HasChange("description") || d.HasChange("client_ids") || d.HasChange("auto_rotate_key") {
+		request := cam.NewUpdateOIDCConfigRequest()
+		request.Name = helper.String(d.Id())
 		request.IdentityKey = helper.String(d.Get("identity_key").(string))
 		request.IdentityUrl = helper.String(d.Get("identity_url").(string))
 		request.Description = helper.String(d.Get("description").(string))
 		request.ClientId = helper.InterfacesStringsPoint(d.Get("client_ids").(*schema.Set).List())
-		request.AutoRotateKey = helper.IntUint64(d.Get("auto_rotate_key").(int))
-	}
-
-	err := resource.Retry(tccommon.WriteRetryTimeout, func() *resource.RetryError {
-		_, e := meta.(tccommon.ProviderMeta).GetAPIV3Conn().UseCamClient().UpdateOIDCConfig(request)
-		if e != nil {
-			return tccommon.RetryError(e)
+		if v, ok := d.GetOkExists("auto_rotate_key"); ok {
+			request.AutoRotateKey = helper.IntUint64(v.(int))
 		}
-		return nil
-	})
-	if err != nil {
-		log.Printf("[CRITAL]%s update CAM Role SSO failed, reason:%s\n", logId, err.Error())
-		return err
+
+		err := resource.Retry(tccommon.WriteRetryTimeout, func() *resource.RetryError {
+			_, e := meta.(tccommon.ProviderMeta).GetAPIV3Conn().UseCamClient().UpdateOIDCConfig(request)
+			if e != nil {
+				return tccommon.RetryError(e)
+			}
+			return nil
+		})
+
+		if err != nil {
+			log.Printf("[CRITAL]%s update CAM Role SSO failed, reason:%s\n", logId, err.Error())
+			return err
+		}
 	}
 
 	return resourceTencentCloudCamRoleSSORead(d, meta)
