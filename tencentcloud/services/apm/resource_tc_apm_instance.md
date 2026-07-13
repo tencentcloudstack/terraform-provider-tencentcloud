@@ -16,6 +16,19 @@ resource "tencentcloud_apm_instance" "example" {
 }
 ```
 
+CLS key-value index configuration example
+
+```hcl
+resource "tencentcloud_apm_instance" "example" {
+  name            = "tf-example"
+  description     = "desc."
+  is_related_log  = 1
+  log_index_type  = 1
+  log_trace_id_key = "traceId"
+  log_span_id_key  = "spanId"
+}
+```
+
 Import
 
 APM instance can be imported using the id, e.g.
