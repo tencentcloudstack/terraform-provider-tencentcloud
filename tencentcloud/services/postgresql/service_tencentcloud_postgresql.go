@@ -2138,30 +2138,54 @@ func (me *PostgresqlService) DescribePostgresqlAccountById(ctx context.Context, 
 	request := postgresql.NewDescribeAccountsRequest()
 	request.DBInstanceId = &dBInstanceId
 
+	// Set to max limit of 100 to reduce total API calls required
+	var limit int64 = 100
+	var offset int64 = 0
+	request.Limit = &limit
+
 	defer func() {
 		if errRet != nil {
 			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), errRet.Error())
 		}
 	}()
 
-	ratelimit.Check(request.GetAction())
+	for {
+		request.Offset = &offset
+		ratelimit.Check(request.GetAction())
 
-	response, err := me.client.UsePostgresqlClient().DescribeAccounts(request)
-	if err != nil {
-		errRet = err
-		return
-	}
-
-	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
-
-	if response == nil || len(response.Response.Details) < 1 {
-		return
-	}
-
-	for _, item := range response.Response.Details {
-		if *item.UserName == userName {
-			account = item
+		response, err := me.client.UsePostgresqlClient().DescribeAccounts(request)
+		if err != nil {
+			errRet = err
+			return
 		}
+
+		log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+		if response == nil || len(response.Response.Details) < 1 {
+			return
+		}
+
+		for _, item := range response.Response.Details {
+			if item.UserName != nil && *item.UserName == userName {
+				account = item
+				return
+			}
+		}
+
+		// Both condition checks if we hit the total count
+		// with additional fallback check if TotalCount somehow becomes nil
+		if response.Response.TotalCount != nil {
+			totalCount := *response.Response.TotalCount
+			if totalCount == 0 || offset+int64(len(response.Response.Details)) >= totalCount {
+				break
+			}
+		} else {
+			if int64(len(response.Response.Details)) < limit {
+				break
+			}
+		}
+
+		offset += limit
 	}
 
 	return
