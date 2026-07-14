@@ -2511,6 +2511,7 @@ func Provider() *schema.Provider {
 			"tencentcloud_dlc_attach_user_policy_operation":                                         dlc.ResourceTencentCloudDlcAttachUserPolicyOperation(),
 			"tencentcloud_dlc_detach_user_policy_operation":                                         dlc.ResourceTencentCloudDlcDetachUserPolicyOperation(),
 			"tencentcloud_dlc_attach_work_group_policy_operation":                                   dlc.ResourceTencentCloudDlcAttachWorkGroupPolicyOperation(),
+			"tencentcloud_dlc_attach_work_group_policy_attachment":                                  dlc.ResourceTencentCloudDlcAttachWorkGroupPolicyAttachment(),
 			"tencentcloud_dlc_detach_work_group_policy_operation":                                   dlc.ResourceTencentCloudDlcDetachWorkGroupPolicyOperation(),
 			"tencentcloud_dlc_switch_data_engine_image_operation":                                   dlc.ResourceTencentCloudDlcSwitchDataEngineImageOperation(),
 			"tencentcloud_dlc_update_data_engine_config_operation":                                  dlc.ResourceTencentCloudDlcUpdateDataEngineConfigOperation(),

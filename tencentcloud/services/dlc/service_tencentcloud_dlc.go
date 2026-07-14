@@ -1522,3 +1522,103 @@ func (me *DlcService) DescribeDlcDatasourceHouseAttachmentById(ctx context.Conte
 	ret = response.Response.NetworkConnectionSet[0]
 	return
 }
+
+func (me *DlcService) DescribeDlcWorkGroupPolicyAttachmentById(ctx context.Context, workGroupId, policyId string) (policy *dlc.Policy, errRet error) {
+	logId := tccommon.GetLogId(ctx)
+
+	var (
+		request = dlc.NewDescribeWorkGroupInfoRequest()
+		limit   = int64(100)
+		offset  = int64(0)
+	)
+
+	request.WorkGroupId = helper.StrToInt64Point(workGroupId)
+	request.Type = helper.String("DataAuth")
+	request.Limit = &limit
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	for {
+		request.Offset = &offset
+		var response *dlc.DescribeWorkGroupInfoResponse
+		errRet = resource.Retry(tccommon.ReadRetryTimeout, func() *resource.RetryError {
+			ratelimit.Check(request.GetAction())
+			result, e := me.client.UseDlcClient().DescribeWorkGroupInfo(request)
+			if e != nil {
+				return tccommon.RetryError(e)
+			} else {
+				log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), result.ToJsonString())
+			}
+
+			if result == nil || result.Response == nil || result.Response.WorkGroupInfo == nil {
+				return resource.NonRetryableError(fmt.Errorf("Describe dlc work group info failed, Response is nil."))
+			}
+
+			response = result
+			return nil
+		})
+
+		if errRet != nil {
+			log.Printf("[CRITAL]%s describe dlc work group policy attachment failed, reason:%+v", logId, errRet)
+			return
+		}
+
+		workGroupInfo := response.Response.WorkGroupInfo
+		if workGroupInfo.DataPolicyInfo == nil || len(workGroupInfo.DataPolicyInfo.PolicySet) == 0 {
+			return
+		}
+
+		for _, p := range workGroupInfo.DataPolicyInfo.PolicySet {
+			if p.PolicyId != nil && *p.PolicyId == policyId {
+				policy = p
+				return
+			}
+		}
+
+		if int64(len(workGroupInfo.DataPolicyInfo.PolicySet)) < limit {
+			return
+		}
+		offset += limit
+	}
+}
+
+func (me *DlcService) DeleteDlcAttachWorkGroupPolicyAttachmentByPolicyId(ctx context.Context, workGroupId, policyId string) (errRet error) {
+	logId := tccommon.GetLogId(ctx)
+
+	request := dlc.NewDetachWorkGroupPolicyRequest()
+	request.WorkGroupId = helper.StrToInt64Point(workGroupId)
+	request.PolicyIds = []*string{&policyId}
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	errRet = resource.Retry(tccommon.WriteRetryTimeout, func() *resource.RetryError {
+		ratelimit.Check(request.GetAction())
+		result, e := me.client.UseDlcClient().DetachWorkGroupPolicy(request)
+		if e != nil {
+			return tccommon.RetryError(e)
+		} else {
+			log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), result.ToJsonString())
+		}
+
+		if result == nil || result.Response == nil {
+			return resource.NonRetryableError(fmt.Errorf("Detach dlc work group policy failed, Response is nil."))
+		}
+
+		return nil
+	})
+
+	if errRet != nil {
+		log.Printf("[CRITAL]%s delete dlc attach work group policy attachment failed, reason:%+v", logId, errRet)
+		return
+	}
+
+	return
+}
