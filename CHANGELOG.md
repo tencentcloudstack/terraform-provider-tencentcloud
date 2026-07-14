@@ -1,3 +1,11 @@
+## 1.83.11(July 14, 2026)
+
+ENHANCEMENTS:
+
+* resource/tencentcloud_ckafka_instance: support `delete_protection_enable` parameter to manage instance delete-protection switch ([#4291](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/4291))
+* resource/tencentcloud_dnspod_record: modify the update logic for the `⁠remark`⁠ field ([#4302](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/4302))
+* resource/tencentcloud_vpc_route_policy_entries: Optimizing `gateway_id` caused issues with changes. ([#4306](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/4306))
+
 ## 1.83.10(July 10, 2026)
 
 FEATURES:
