@@ -15,9 +15,25 @@ The Terraform provider SHALL provide a resource `tencentcloud_dlc_attach_user_po
 
 #### Scenario: Read reflects the currently bound policy
 - **WHEN** the provider reads an existing `tencentcloud_dlc_attach_user_policy_attachment` resource
-- **THEN** the provider SHALL call the DLC `DescribeUserInfo` API with the `UserId` derived from the composite ID and the `AccountType` from state
-- **AND** the provider SHALL locate the policy in the response whose `PolicyId` matches the `policy_id` derived from the composite ID
+- **THEN** the provider SHALL call the DLC `DescribeUserInfo` API with the `UserId` derived from the composite ID, the `Type` derived from the `policy_id` (see the PolicyId Type-mapping requirement below), and the `AccountType` from state
+- **AND** the provider SHALL locate the policy in the response whose `PolicyId` matches the `policy_id` derived from the composite ID, using the response field that corresponds to the derived `Type` (`DataPolicyInfo` for `DataAuth`, `CatalogPolicyInfo` for `CatalogAuth`, `EnginePolicyInfo` for `EngineAuth`, `RowFilterInfo` for `RowFilter`, `ModelPolicyInfo` for `MODEL`)
 - **AND** if the matching policy is no longer present, the provider SHALL emit a `[CRUD]` log preserving the id and then set `d.SetId("")`
+
+### Requirement: PolicyId SHALL be parsed to derive the DescribeUserInfo Type parameter
+The `policy_id` (the second segment of the composite resource ID) is a `|`-separated string in the format
+`v1|{SubjectType}|{SubjectId}|{PolicyType}|{Mode}|{Catalog}|{Database}|{Table}|{View}|{Function}|{Column}|{DataEngine}|{Operation}`.
+Because `Type` is a required, non-constant parameter of the `DescribeUserInfo` API, the provider's Read handler
+SHALL parse the 4th segment (`PolicyType`) out of `policy_id` and map it to the `Type` value as follows:
+`ADMIN`, `DATABASE`, `TABLE`, `VIEW`, `FUNCTION`, `COLUMN` -> `DataAuth`; `DATASOURCE` -> `CatalogAuth`;
+`ENGINE` -> `EngineAuth`; `ROWFILTER` -> `RowFilter`; `MODEL` -> `MODEL`.
+
+#### Scenario: PolicyType segment maps to the correct DescribeUserInfo Type
+- **WHEN** the provider reads a resource whose `policy_id`'s 4th `|`-separated segment is one of `ADMIN`, `DATABASE`, `TABLE`, `VIEW`, `FUNCTION`, `COLUMN`, `DATASOURCE`, `ENGINE`, `ROWFILTER`, or `MODEL`
+- **THEN** the provider SHALL set the `DescribeUserInfo` request `Type` to `DataAuth`, `DataAuth`, `DataAuth`, `DataAuth`, `DataAuth`, `DataAuth`, `CatalogAuth`, `EngineAuth`, `RowFilter`, or `MODEL` respectively
+
+#### Scenario: Malformed policy_id fails Read with a clear error
+- **WHEN** the provider reads a resource whose `policy_id` has fewer than 4 `|`-separated segments, or whose 4th segment is not one of the recognized `PolicyType` values
+- **THEN** the provider SHALL return an error without calling the `DescribeUserInfo` API
 
 #### Scenario: Unbind the policy on delete
 - **WHEN** a user destroys a `tencentcloud_dlc_attach_user_policy_attachment` resource
@@ -51,6 +67,17 @@ The resource schema SHALL expose `user_id` (Required, ForceNew), `policy_set` (R
 #### Scenario: account_type is optional
 - **WHEN** a user does not specify `account_type`
 - **THEN** the provider SHALL not set `AccountType` in the API request, allowing the cloud API to apply its default
+
+### Requirement: policy_set.operation diff SHALL ignore comma-separated token order
+The `operation` field of `policy_set` accepts a comma-separated list of permission operations (e.g. `MONITOR,USE`). Because the cloud API may return this value with the same set of tokens but in a different order than what was configured, the schema SHALL apply a `DiffSuppressFunc` on `operation` that treats two values as equal when they contain the same comma-separated tokens regardless of order, preventing spurious drift/diffs.
+
+#### Scenario: Same tokens in different order produce no diff
+- **WHEN** the configured `operation` value and the value read back from the cloud API contain the same comma-separated tokens but in a different order (e.g. configured `MONITOR,USE` vs. API-returned `USE,MONITOR`)
+- **THEN** Terraform SHALL NOT report a diff for the `operation` field
+
+#### Scenario: Different token sets still produce a diff
+- **WHEN** the configured `operation` value and the value read back from the cloud API contain a different set or number of comma-separated tokens
+- **THEN** Terraform SHALL report a diff for the `operation` field
 
 ### Requirement: Cloud API calls SHALL use retry and proper error handling
 Create, Read, and Delete SHALL wrap their cloud API calls in `resource.Retry` using `tccommon.WriteRetryTimeout` (for Create/Delete) and `tccommon.ReadRetryTimeout` (for Read). Errors from the cloud API SHALL be wrapped with `tccommon.RetryError`. State mutations (setting the ID and fields) SHALL occur outside the retry block, after successful retry completion.

@@ -11,20 +11,56 @@ description: |-
 
 Provides a resource to create a DLC attach user policy attachment
 
-~> **NOTE:** `policy_set` only supports attaching exactly one policy per resource.
+~> **NOTE:** `policy_id` format: `v1|{SubjectType}|{SubjectId}|{PolicyType}|{Mode}|{Catalog}|{Database}|{Table}|{View}|{Function}|{Column}|{DataEngine}|{Operation}`
 
 ## Example Usage
 
+### If policy_type is ENGINE
+
 ```hcl
 resource "tencentcloud_dlc_attach_user_policy_attachment" "example" {
-  user_id      = "100032676511"
+  user_id      = "100010109702"
   account_type = "TencentAccount"
   policy_set {
-    database    = "tf_example_db"
+    policy_type = "ENGINE"
+    data_engine = "test_engine"
+    operation   = "USE,MONITOR"
+    source      = "USER"
+  }
+}
+```
+
+### If policy_type is DATABASE
+
+```hcl
+resource "tencentcloud_dlc_attach_user_policy_attachment" "example1" {
+  user_id      = "100010109702"
+  account_type = "TencentAccount"
+  policy_set {
+    policy_type = "DATABASE"
     catalog     = "DataLakeCatalog"
-    table       = "tf_example_table"
-    operation   = "SELECT"
-    policy_type = "TABLE"
+    database    = "test_database"
+    mode        = "COMMON"
+    operation   = "ASSAYER"
+    source      = "USER"
+  }
+}
+```
+
+### If policy_type is ROWFILTER
+
+```hcl
+resource "tencentcloud_dlc_attach_user_policy_attachment" "example2" {
+  user_id      = "100010109702"
+  account_type = "TencentAccount"
+  policy_set {
+    policy_type = "ROWFILTER"
+    catalog     = "DataLakeCatalog"
+    database    = "test_database"
+    table       = "test_table"
+    mode        = "SENIOR"
+    operation   = "year > 2026 and country == 'US'"
+    source      = "USER"
   }
 }
 ```
@@ -49,7 +85,6 @@ The `policy_set` object supports the following:
 * `model` - (Optional, String) The name of the target Model. `*` represents all tables in the current database. To grant admin permissions, it must be `*`; to grant data connection and database permissions, it must be null; to grant other permissions, it can be any table.
 * `operation` - (Optional, String) The target permissions, which vary by permission level. Admin: `ALL` (default); data connection: `CREATE`; database: `ALL`, `CREATE`, `ALTER`, and `DROP`; table: `ALL`, `SELECT`, `INSERT`, `ALTER`, `DELETE`, `DROP`, and `UPDATE`.
 * `policy_type` - (Optional, String) The permission type. Valid values: `ADMIN`, `DATASOURCE`, `DATABASE`, `TABLE`, `VIEW`, `FUNCTION`, `COLUMN`, and `ENGINE`. Note: If it is left empty, `ADMIN` is used.
-* `re_auth` - (Optional, Bool) Whether the grantee is allowed to further grant the permissions. Valid values: `false` (default) and `true` (the grantee can grant permissions gained here to other sub-users).
 * `source` - (Optional, String) The permission source, Valid values: `USER` (from the user) and `WORKGROUP` (from one or more associated work groups).
 * `table` - (Optional, String) The name of the target table. `*` represents all tables in the current database. To grant admin permissions, it must be `*`; to grant data connection and database permissions, it must be null; to grant other permissions, it can be any table.
 * `view` - (Optional, String) The name of the target view. `*` represents all views in the current database. To grant admin permissions, it must be `*`; to grant data connection and database permissions, it must be null; to grant other permissions, it can be any view.
@@ -67,6 +102,6 @@ In addition to all arguments above, the following attributes are exported:
 DLC attach user policy attachment can be imported using the composite id (`user_id#policy_id`), e.g.
 
 ```
-terraform import tencentcloud_dlc_attach_user_policy_attachment.example 100032676511#1400538864-1721880558-fh1lTgYD
+terraform import tencentcloud_dlc_attach_user_policy_attachment.example 100010109702#v1|USER|100010109702|DATABASE|COMMON|DataLakeCatalog|test_database||||||ASSAYER
 ```
 

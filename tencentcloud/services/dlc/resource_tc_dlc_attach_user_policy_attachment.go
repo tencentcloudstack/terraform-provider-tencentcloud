@@ -4,6 +4,7 @@ import (
 	"context"
 	"fmt"
 	"log"
+	"sort"
 	"strings"
 
 	tccommon "github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/common"
@@ -55,9 +56,10 @@ func ResourceTencentCloudDlcAttachUserPolicyAttachment() *schema.Resource {
 							Description: "The name of the target table. `*` represents all tables in the current database. To grant admin permissions, it must be `*`; to grant data connection and database permissions, it must be null; to grant other permissions, it can be any table.",
 						},
 						"operation": {
-							Type:        schema.TypeString,
-							Optional:    true,
-							Description: "The target permissions, which vary by permission level. Admin: `ALL` (default); data connection: `CREATE`; database: `ALL`, `CREATE`, `ALTER`, and `DROP`; table: `ALL`, `SELECT`, `INSERT`, `ALTER`, `DELETE`, `DROP`, and `UPDATE`.",
+							Type:             schema.TypeString,
+							Optional:         true,
+							DiffSuppressFunc: dlcAttachUserPolicyAttachmentOperationDiffSuppress,
+							Description:      "The target permissions, which vary by permission level. Admin: `ALL` (default); data connection: `CREATE`; database: `ALL`, `CREATE`, `ALTER`, and `DROP`; table: `ALL`, `SELECT`, `INSERT`, `ALTER`, `DELETE`, `DROP`, and `UPDATE`.",
 						},
 						"policy_type": {
 							Type:        schema.TypeString,
@@ -84,12 +86,6 @@ func ResourceTencentCloudDlcAttachUserPolicyAttachment() *schema.Resource {
 							Optional:    true,
 							Description: "The name of the target data engine. `*` represents all engines. To grant admin permissions, it must be `*`.",
 						},
-						"re_auth": {
-							Type:        schema.TypeBool,
-							Optional:    true,
-							Computed:    true,
-							Description: "Whether the grantee is allowed to further grant the permissions. Valid values: `false` (default) and `true` (the grantee can grant permissions gained here to other sub-users).",
-						},
 						"engine_generation": {
 							Type:        schema.TypeString,
 							Optional:    true,
@@ -103,11 +99,13 @@ func ResourceTencentCloudDlcAttachUserPolicyAttachment() *schema.Resource {
 						"source": {
 							Type:        schema.TypeString,
 							Optional:    true,
+							Computed:    true,
 							Description: "The permission source, Valid values: `USER` (from the user) and `WORKGROUP` (from one or more associated work groups).",
 						},
 						"mode": {
 							Type:        schema.TypeString,
 							Optional:    true,
+							Computed:    true,
 							Description: "The grant mode, Valid values: `COMMON` and `SENIOR`.",
 						},
 						// computed
@@ -145,6 +143,11 @@ func ResourceTencentCloudDlcAttachUserPolicyAttachment() *schema.Resource {
 							Type:        schema.TypeBool,
 							Computed:    true,
 							Description: "Whether the permission source is admin.",
+						},
+						"re_auth": {
+							Type:        schema.TypeBool,
+							Computed:    true,
+							Description: "Whether the grantee is allowed to further grant the permissions. Valid values: `false` (default) and `true` (the grantee can grant permissions gained here to other sub-users).",
 						},
 					},
 				},
@@ -220,10 +223,6 @@ func resourceTencentCloudDlcAttachUserPolicyAttachmentCreate(d *schema.ResourceD
 				policy.DataEngine = helper.String(v.(string))
 			}
 
-			if v, ok := dMap["re_auth"]; ok {
-				policy.ReAuth = helper.Bool(v.(bool))
-			}
-
 			if v, ok := dMap["engine_generation"]; ok {
 				policy.EngineGeneration = helper.String(v.(string))
 			}
@@ -242,6 +241,10 @@ func resourceTencentCloudDlcAttachUserPolicyAttachmentCreate(d *schema.ResourceD
 
 			request.PolicySet = append(request.PolicySet, &policy)
 		}
+	}
+
+	if len(request.PolicySet) != 1 {
+		return fmt.Errorf("Create dlc attach_user_policy_attachment failed, `policy_set` must contain exactly 1 element, got %d.", len(request.PolicySet))
 	}
 
 	var policyId string
@@ -296,12 +299,21 @@ func resourceTencentCloudDlcAttachUserPolicyAttachmentRead(d *schema.ResourceDat
 	userId := idSplit[0]
 	policyId := idSplit[1]
 
+	describeType, err := dlcAttachUserPolicyAttachmentParsePolicyIdType(policyId)
+	if err != nil {
+		log.Printf("[CRITAL]%s read dlc attach_user_policy_attachment failed, reason:%+v", logId, err)
+		return err
+	}
+
 	request := dlc.NewDescribeUserInfoRequest()
 	request.UserId = helper.String(userId)
 	request.PolicyId = helper.String(policyId)
-	request.Type = helper.String("DataAuth")
+	request.Type = helper.String(describeType)
 	request.Limit = helper.IntInt64(100)
 	request.Offset = helper.IntInt64(0)
+	if accountType, ok := d.GetOk("account_type"); ok {
+		request.AccountType = helper.String(accountType.(string))
+	}
 
 	var response *dlc.DescribeUserInfoResponse
 	if err := resource.Retry(tccommon.ReadRetryTimeout, func() *resource.RetryError {
@@ -330,14 +342,15 @@ func resourceTencentCloudDlcAttachUserPolicyAttachmentRead(d *schema.ResourceDat
 	}
 
 	userInfo := response.Response.UserInfo
-	if userInfo.DataPolicyInfo == nil || len(userInfo.DataPolicyInfo.PolicySet) == 0 {
-		log.Printf("[CRUD]%s dlc tencentcloud_dlc_attach_user_policy_attachment id=%s, DataPolicyInfo is empty.", logId, d.Id())
+	candidatePolicySet := dlcAttachUserPolicyAttachmentGetPolicySet(userInfo, describeType)
+	if len(candidatePolicySet) == 0 {
+		log.Printf("[CRUD]%s dlc tencentcloud_dlc_attach_user_policy_attachment id=%s, policy info of type %s is empty.", logId, d.Id(), describeType)
 		d.SetId("")
 		return nil
 	}
 
 	var matchedPolicy *dlc.Policy
-	for _, policy := range userInfo.DataPolicyInfo.PolicySet {
+	for _, policy := range candidatePolicySet {
 		if policy != nil && policy.PolicyId != nil && *policy.PolicyId == policyId {
 			matchedPolicy = policy
 			break
@@ -352,10 +365,6 @@ func resourceTencentCloudDlcAttachUserPolicyAttachmentRead(d *schema.ResourceDat
 
 	if userInfo.UserId != nil {
 		_ = d.Set("user_id", userInfo.UserId)
-	}
-
-	if userInfo.AccountType != nil {
-		_ = d.Set("account_type", userInfo.AccountType)
 	}
 
 	policySetList := flattenDlcAttachUserPolicyAttachmentPolicySet([]*dlc.Policy{matchedPolicy})
@@ -384,6 +393,10 @@ func resourceTencentCloudDlcAttachUserPolicyAttachmentDelete(d *schema.ResourceD
 	request := dlc.NewDetachUserPolicyRequest()
 	request.UserId = helper.String(userId)
 	request.PolicyIds = []*string{helper.String(policyId)}
+	if accountType, ok := d.GetOk("account_type"); ok {
+		request.AccountType = helper.String(accountType.(string))
+	}
+
 	if err := resource.Retry(tccommon.WriteRetryTimeout, func() *resource.RetryError {
 		result, e := meta.(tccommon.ProviderMeta).GetAPIV3Conn().UseDlcClient().DetachUserPolicyWithContext(ctx, request)
 		if e != nil {
@@ -403,6 +416,97 @@ func resourceTencentCloudDlcAttachUserPolicyAttachmentDelete(d *schema.ResourceD
 	}
 
 	return nil
+}
+
+// dlcAttachUserPolicyAttachmentOperationDiffSuppress suppresses diffs on `policy_set.0.operation` when the old
+// and new values contain the same comma-separated operation tokens but in a different order (e.g. the API may
+// return "USE,MONITOR" for a value that was configured as "MONITOR,USE").
+func dlcAttachUserPolicyAttachmentOperationDiffSuppress(k, old, new string, d *schema.ResourceData) bool {
+	if old == new {
+		return true
+	}
+
+	splitAndSort := func(s string) []string {
+		parts := strings.Split(s, ",")
+		for i := range parts {
+			parts[i] = strings.TrimSpace(parts[i])
+		}
+		sort.Strings(parts)
+		return parts
+	}
+
+	oldParts := splitAndSort(old)
+	newParts := splitAndSort(new)
+	if len(oldParts) != len(newParts) {
+		return false
+	}
+
+	for i := range oldParts {
+		if oldParts[i] != newParts[i] {
+			return false
+		}
+	}
+
+	return true
+}
+
+// dlcAttachUserPolicyAttachmentParsePolicyIdType parses the PolicyId to get the `Type` value required by the
+// DescribeUserInfo API.
+//
+// PolicyId format:
+// v1|{SubjectType}|{SubjectId}|{PolicyType}|{Mode}|{Catalog}|{Database}|{Table}|{View}|{Function}|{Column}|{DataEngine}|{Operation}
+//
+// The 4th segment (PolicyType) determines the `Type` value used by DescribeUserInfo:
+//   - ADMIN / DATABASE / TABLE / VIEW / FUNCTION / COLUMN -> DataAuth
+//   - DATASOURCE                                          -> CatalogAuth
+//   - ENGINE                                               -> EngineAuth
+//   - ROWFILTER                                            -> RowFilter
+//   - MODEL                                                -> MODEL
+func dlcAttachUserPolicyAttachmentParsePolicyIdType(policyId string) (string, error) {
+	segments := strings.Split(policyId, "|")
+	if len(segments) < 4 {
+		return "", fmt.Errorf("invalid policy_id format: %s", policyId)
+	}
+
+	policyType := segments[3]
+	switch policyType {
+	case "ADMIN", "DATABASE", "TABLE", "VIEW", "FUNCTION", "COLUMN":
+		return "DataAuth", nil
+	case "DATASOURCE":
+		return "CatalogAuth", nil
+	case "ENGINE":
+		return "EngineAuth", nil
+	case "ROWFILTER":
+		return "RowFilter", nil
+	case "MODEL":
+		return "MODEL", nil
+	default:
+		return "", fmt.Errorf("unsupported policy type `%s` parsed from policy_id: %s", policyType, policyId)
+	}
+}
+
+// dlcAttachUserPolicyAttachmentGetPolicySet returns the policy set from `UserDetailInfo` matching the given
+// DescribeUserInfo `Type` value.
+func dlcAttachUserPolicyAttachmentGetPolicySet(userInfo *dlc.UserDetailInfo, describeType string) []*dlc.Policy {
+	var policies *dlc.Policys
+	switch describeType {
+	case "DataAuth":
+		policies = userInfo.DataPolicyInfo
+	case "CatalogAuth":
+		policies = userInfo.CatalogPolicyInfo
+	case "EngineAuth":
+		policies = userInfo.EnginePolicyInfo
+	case "RowFilter":
+		policies = userInfo.RowFilterInfo
+	case "MODEL":
+		policies = userInfo.ModelPolicyInfo
+	}
+
+	if policies == nil {
+		return nil
+	}
+
+	return policies.PolicySet
 }
 
 func flattenDlcAttachUserPolicyAttachmentPolicySet(policySet []*dlc.Policy) []interface{} {
