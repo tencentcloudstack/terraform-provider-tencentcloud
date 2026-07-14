@@ -275,15 +275,16 @@ func resourceTencentCloudClsCloudProductLogTaskV2Read(d *schema.ResourceData, me
 		_ = d.Set("extend", respData.Tasks[0].Extend)
 	}
 
-	// Read tags back from the task info. The create/modify API binds the same
-	// tags to both the logset and topic, so prefer TopicTags and fall back to
-	// LogsetTags when TopicTags is empty.
+	// Use topic tags first, if not, use logset tags
 	var readTags []*clsv20201016.Tag
-	if len(respData.Tasks[0].TopicTags) > 0 {
-		readTags = respData.Tasks[0].TopicTags
-	} else if len(respData.Tasks[0].LogsetTags) > 0 {
+	if len(respData.Tasks[0].LogsetTags) > 0 {
 		readTags = respData.Tasks[0].LogsetTags
 	}
+
+	if len(respData.Tasks[0].TopicTags) > 0 {
+		readTags = respData.Tasks[0].TopicTags
+	}
+
 	if len(readTags) > 0 {
 		tagsMap := make(map[string]string, len(readTags))
 		for _, tag := range readTags {
@@ -291,6 +292,7 @@ func resourceTencentCloudClsCloudProductLogTaskV2Read(d *schema.ResourceData, me
 				tagsMap[*tag.Key] = *tag.Value
 			}
 		}
+
 		_ = d.Set("tags", tagsMap)
 	}
 
