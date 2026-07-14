@@ -416,12 +416,10 @@ func resourceTencentCloudClsCloudProductLogTaskV2Delete(d *schema.ResourceData, 
 	defer tccommon.InconsistentCheck(d, meta)()
 
 	var (
-		logId          = tccommon.GetLogId(tccommon.ContextNil)
-		ctx            = tccommon.NewResourceLifeCycleHandleFuncContext(context.Background(), logId, d, meta)
-		request        = clsv20201016.NewDeleteCloudProductLogCollectionRequest()
-		deleteForce    bool
-		isDeleteTopic  bool
-		isDeleteLogset bool
+		logId       = tccommon.GetLogId(tccommon.ContextNil)
+		ctx         = tccommon.NewResourceLifeCycleHandleFuncContext(context.Background(), logId, d, meta)
+		request     = clsv20201016.NewDeleteCloudProductLogCollectionRequest()
+		deleteForce bool
 	)
 
 	idSplit := strings.Split(d.Id(), tccommon.FILED_SP)
@@ -457,19 +455,11 @@ func resourceTencentCloudClsCloudProductLogTaskV2Delete(d *schema.ResourceData, 
 	// Read is_delete_* fields (only used when force_delete is false)
 	if !deleteForce {
 		if v, ok := d.GetOkExists("is_delete_topic"); ok {
-			isDeleteTopic = v.(bool)
+			request.IsDeleteTopic = helper.Bool(v.(bool))
 		}
 
 		if v, ok := d.GetOkExists("is_delete_logset"); ok {
-			isDeleteLogset = v.(bool)
-		}
-
-		// Set API parameters (only when force_delete is false)
-		if isDeleteTopic {
-			request.IsDeleteTopic = helper.Bool(true)
-		}
-		if isDeleteLogset {
-			request.IsDeleteLogset = helper.Bool(true)
+			request.IsDeleteLogset = helper.Bool(v.(bool))
 		}
 	}
 
