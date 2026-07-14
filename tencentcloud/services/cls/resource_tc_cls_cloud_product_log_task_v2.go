@@ -218,14 +218,14 @@ func resourceTencentCloudClsCloudProductLogTaskV2Create(d *schema.ResourceData, 
 		return err
 	}
 
+	d.SetId(strings.Join([]string{instanceId, assumerName, logType, cloudProductRegion}, tccommon.FILED_SP))
+
 	// wait
 	service := ClsService{client: meta.(tccommon.ProviderMeta).GetAPIV3Conn()}
 	conf := tccommon.BuildStateChangeConf([]string{}, []string{"1"}, 10*tccommon.ReadRetryTimeout, time.Second, service.ClsCloudProductLogTaskStateRefreshFunc(ctx, instanceId, assumerName, logType, []string{}))
 	if _, e := conf.WaitForState(); e != nil {
 		return e
 	}
-
-	d.SetId(strings.Join([]string{instanceId, assumerName, logType, cloudProductRegion}, tccommon.FILED_SP))
 
 	return resourceTencentCloudClsCloudProductLogTaskV2Read(d, meta)
 }
