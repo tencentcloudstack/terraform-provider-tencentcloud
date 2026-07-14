@@ -15,12 +15,11 @@ import (
 	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/internal/helper"
 )
 
-func ResourceTencentCloudDlcAttachUserPolicyrAttachment() *schema.Resource {
+func ResourceTencentCloudDlcAttachUserPolicyAttachment() *schema.Resource {
 	return &schema.Resource{
-		Create: resourceTencentCloudDlcAttachUserPolicyrAttachmentCreate,
-		Read:   resourceTencentCloudDlcAttachUserPolicyrAttachmentRead,
-		Update: resourceTencentCloudDlcAttachUserPolicyrAttachmentUpdate,
-		Delete: resourceTencentCloudDlcAttachUserPolicyrAttachmentDelete,
+		Create: resourceTencentCloudDlcAttachUserPolicyAttachmentCreate,
+		Read:   resourceTencentCloudDlcAttachUserPolicyAttachmentRead,
+		Delete: resourceTencentCloudDlcAttachUserPolicyAttachmentDelete,
 		Importer: &schema.ResourceImporter{
 			State: schema.ImportStatePassthrough,
 		},
@@ -36,7 +35,8 @@ func ResourceTencentCloudDlcAttachUserPolicyrAttachment() *schema.Resource {
 				Type:        schema.TypeList,
 				Required:    true,
 				ForceNew:    true,
-				Description: "Collection of authentication policies.",
+				MaxItems:    1,
+				Description: "Collection of authentication policies. Only one policy is allowed to be attached per resource.",
 				Elem: &schema.Resource{
 					Schema: map[string]*schema.Schema{
 						"database": {
@@ -87,6 +87,7 @@ func ResourceTencentCloudDlcAttachUserPolicyrAttachment() *schema.Resource {
 						"re_auth": {
 							Type:        schema.TypeBool,
 							Optional:    true,
+							Computed:    true,
 							Description: "Whether the grantee is allowed to further grant the permissions. Valid values: `false` (default) and `true` (the grantee can grant permissions gained here to other sub-users).",
 						},
 						"engine_generation": {
@@ -99,21 +100,21 @@ func ResourceTencentCloudDlcAttachUserPolicyrAttachment() *schema.Resource {
 							Optional:    true,
 							Description: "The name of the target Model. `*` represents all tables in the current database. To grant admin permissions, it must be `*`; to grant data connection and database permissions, it must be null; to grant other permissions, it can be any table.",
 						},
-						"policy_id": {
-							Type:        schema.TypeString,
-							Optional:    true,
-							Computed:    true,
-							Description: "The deterministic string PolicyId corresponding to the user and workgroup.",
-						},
 						"source": {
 							Type:        schema.TypeString,
-							Computed:    true,
-							Description: "The permission source, which is not required when input parameters are passed in. Valid values: `USER` (from the user) and `WORKGROUP` (from one or more associated work groups).",
+							Optional:    true,
+							Description: "The permission source, Valid values: `USER` (from the user) and `WORKGROUP` (from one or more associated work groups).",
 						},
 						"mode": {
 							Type:        schema.TypeString,
+							Optional:    true,
+							Description: "The grant mode, Valid values: `COMMON` and `SENIOR`.",
+						},
+						// computed
+						"policy_id": {
+							Type:        schema.TypeString,
 							Computed:    true,
-							Description: "The grant mode, which is not required as an input parameter. Valid values: `COMMON` and `SENIOR`.",
+							Description: "The deterministic string PolicyId corresponding to the user and workgroup.",
 						},
 						"operator": {
 							Type:        schema.TypeString,
@@ -159,8 +160,8 @@ func ResourceTencentCloudDlcAttachUserPolicyrAttachment() *schema.Resource {
 	}
 }
 
-func resourceTencentCloudDlcAttachUserPolicyrAttachmentCreate(d *schema.ResourceData, meta interface{}) error {
-	defer tccommon.LogElapsed("resource.tencentcloud_dlc_attach_user_policyr_attachment.create")()
+func resourceTencentCloudDlcAttachUserPolicyAttachmentCreate(d *schema.ResourceData, meta interface{}) error {
+	defer tccommon.LogElapsed("resource.tencentcloud_dlc_attach_user_policy_attachment.create")()
 	defer tccommon.InconsistentCheck(d, meta)()
 
 	var (
@@ -231,15 +232,19 @@ func resourceTencentCloudDlcAttachUserPolicyrAttachmentCreate(d *schema.Resource
 				policy.Model = helper.String(v.(string))
 			}
 
-			if v, ok := dMap["policy_id"]; ok {
-				policy.PolicyId = helper.String(v.(string))
+			if v, ok := dMap["source"]; ok {
+				policy.Source = helper.String(v.(string))
+			}
+
+			if v, ok := dMap["mode"]; ok {
+				policy.Mode = helper.String(v.(string))
 			}
 
 			request.PolicySet = append(request.PolicySet, &policy)
 		}
 	}
 
-	var response *dlc.AttachUserPolicyResponse
+	var policyId string
 	if err := resource.Retry(tccommon.WriteRetryTimeout, func() *resource.RetryError {
 		result, e := meta.(tccommon.ProviderMeta).GetAPIV3Conn().UseDlcClient().AttachUserPolicyWithContext(ctx, request)
 		if e != nil {
@@ -249,42 +254,33 @@ func resourceTencentCloudDlcAttachUserPolicyrAttachmentCreate(d *schema.Resource
 		}
 
 		if result == nil || result.Response == nil {
-			return resource.NonRetryableError(fmt.Errorf("Create dlc attach_user_policyr_attachment failed, Response is nil."))
+			return resource.NonRetryableError(fmt.Errorf("Create dlc attach_user_policy_attachment failed, Response is nil."))
 		}
 
-		if result.Response.PolicySet == nil {
-			log.Printf("[CRITAL]%s dlc attach_user_policyr_attachment id=%s, response PolicySet is nil.", logId, userId)
-			return resource.NonRetryableError(fmt.Errorf("Create dlc attach_user_policyr_attachment failed, PolicySet is nil."))
+		if len(result.Response.PolicySet) != 1 {
+			log.Printf("[CRITAL]%s dlc attach_user_policy_attachment user_id=%s, response PolicySet length is not 1.", logId, userId)
+			return resource.NonRetryableError(fmt.Errorf("Create dlc attach_user_policy_attachment failed, response PolicySet length is not 1."))
 		}
 
-		for _, policy := range result.Response.PolicySet {
-			if policy == nil {
-				continue
-			}
-			if policy.PolicyId == nil || *policy.PolicyId == "" {
-				log.Printf("[CRITAL]%s dlc attach_user_policyr_attachment user_id=%s, policy PolicyId is empty.", logId, userId)
-				return resource.NonRetryableError(fmt.Errorf("Create dlc attach_user_policyr_attachment failed, policy PolicyId is empty."))
-			}
+		policy := result.Response.PolicySet[0]
+		if policy == nil || policy.PolicyId == nil || *policy.PolicyId == "" {
+			log.Printf("[CRITAL]%s dlc attach_user_policy_attachment user_id=%s, policy PolicyId is empty.", logId, userId)
+			return resource.NonRetryableError(fmt.Errorf("Create dlc attach_user_policy_attachment failed, policy PolicyId is empty."))
 		}
 
-		response = result
+		policyId = *policy.PolicyId
 		return nil
 	}); err != nil {
-		log.Printf("[CRITAL]%s create dlc attach_user_policyr_attachment failed, reason:%+v", logId, err)
+		log.Printf("[CRITAL]%s create dlc attach_user_policy_attachment failed, reason:%+v", logId, err)
 		return err
 	}
 
-	if response != nil && response.Response != nil && response.Response.PolicySet != nil {
-		_ = d.Set("policy_set", flattenDlcAttachUserPolicyrAttachmentPolicySet(response.Response.PolicySet))
-	}
-
-	accountType := d.Get("account_type").(string)
-	d.SetId(strings.Join([]string{userId, accountType}, tccommon.FILED_SP))
-	return resourceTencentCloudDlcAttachUserPolicyrAttachmentRead(d, meta)
+	d.SetId(strings.Join([]string{userId, policyId}, tccommon.FILED_SP))
+	return resourceTencentCloudDlcAttachUserPolicyAttachmentRead(d, meta)
 }
 
-func resourceTencentCloudDlcAttachUserPolicyrAttachmentRead(d *schema.ResourceData, meta interface{}) error {
-	defer tccommon.LogElapsed("resource.tencentcloud_dlc_attach_user_policyr_attachment.read")()
+func resourceTencentCloudDlcAttachUserPolicyAttachmentRead(d *schema.ResourceData, meta interface{}) error {
+	defer tccommon.LogElapsed("resource.tencentcloud_dlc_attach_user_policy_attachment.read")()
 	defer tccommon.InconsistentCheck(d, meta)()
 
 	var (
@@ -298,15 +294,14 @@ func resourceTencentCloudDlcAttachUserPolicyrAttachmentRead(d *schema.ResourceDa
 	}
 
 	userId := idSplit[0]
-	accountType := idSplit[1]
+	policyId := idSplit[1]
 
 	request := dlc.NewDescribeUserInfoRequest()
 	request.UserId = helper.String(userId)
+	request.PolicyId = helper.String(policyId)
 	request.Type = helper.String("DataAuth")
-	if accountType != "" {
-		request.AccountType = helper.String(accountType)
-	}
 	request.Limit = helper.IntInt64(100)
+	request.Offset = helper.IntInt64(0)
 
 	var response *dlc.DescribeUserInfoResponse
 	if err := resource.Retry(tccommon.ReadRetryTimeout, func() *resource.RetryError {
@@ -318,56 +313,59 @@ func resourceTencentCloudDlcAttachUserPolicyrAttachmentRead(d *schema.ResourceDa
 		}
 
 		if result == nil || result.Response == nil {
-			return resource.NonRetryableError(fmt.Errorf("Describe dlc attach_user_policyr_attachment failed, Response is nil."))
+			return resource.NonRetryableError(fmt.Errorf("Describe dlc attach_user_policy_attachment failed, Response is nil."))
 		}
 
 		response = result
 		return nil
 	}); err != nil {
-		log.Printf("[CRITAL]%s read dlc attach_user_policyr_attachment failed, reason:%+v", logId, err)
+		log.Printf("[CRITAL]%s read dlc attach_user_policy_attachment failed, reason:%+v", logId, err)
 		return err
 	}
 
 	if response.Response.UserInfo == nil {
-		log.Printf("[CRUD]%s dlc attach_user_policyr_attachment id=%s, UserInfo is nil.", logId, d.Id())
+		log.Printf("[CRUD]%s dlc tencentcloud_dlc_attach_user_policy_attachment id=%s, UserInfo is nil.", logId, d.Id())
 		d.SetId("")
 		return nil
 	}
 
 	userInfo := response.Response.UserInfo
-	if userInfo.DataPolicyInfo == nil || userInfo.DataPolicyInfo.PolicySet == nil || len(userInfo.DataPolicyInfo.PolicySet) == 0 {
-		log.Printf("[CRUD]%s dlc attach_user_policyr_attachment id=%s, DataPolicyInfo is empty.", logId, d.Id())
+	if userInfo.DataPolicyInfo == nil || len(userInfo.DataPolicyInfo.PolicySet) == 0 {
+		log.Printf("[CRUD]%s dlc tencentcloud_dlc_attach_user_policy_attachment id=%s, DataPolicyInfo is empty.", logId, d.Id())
 		d.SetId("")
 		return nil
 	}
 
-	_ = d.Set("user_id", userId)
-	if accountType != "" {
-		_ = d.Set("account_type", accountType)
+	var matchedPolicy *dlc.Policy
+	for _, policy := range userInfo.DataPolicyInfo.PolicySet {
+		if policy != nil && policy.PolicyId != nil && *policy.PolicyId == policyId {
+			matchedPolicy = policy
+			break
+		}
 	}
 
-	policySetList := flattenDlcAttachUserPolicyrAttachmentPolicySet(userInfo.DataPolicyInfo.PolicySet)
+	if matchedPolicy == nil {
+		log.Printf("[CRUD]%s dlc tencentcloud_dlc_attach_user_policy_attachment id=%s, policy_id=%s not found, resource may have been deleted.", logId, d.Id(), policyId)
+		d.SetId("")
+		return nil
+	}
+
+	if userInfo.UserId != nil {
+		_ = d.Set("user_id", userInfo.UserId)
+	}
+
+	if userInfo.AccountType != nil {
+		_ = d.Set("account_type", userInfo.AccountType)
+	}
+
+	policySetList := flattenDlcAttachUserPolicyAttachmentPolicySet([]*dlc.Policy{matchedPolicy})
 	_ = d.Set("policy_set", policySetList)
 
 	return nil
 }
 
-func resourceTencentCloudDlcAttachUserPolicyrAttachmentUpdate(d *schema.ResourceData, meta interface{}) error {
-	defer tccommon.LogElapsed("resource.tencentcloud_dlc_attach_user_policyr_attachment.update")()
-	defer tccommon.InconsistentCheck(d, meta)()
-
-	immutableArgs := []string{"user_id", "policy_set", "account_type"}
-	for _, v := range immutableArgs {
-		if d.HasChange(v) {
-			return fmt.Errorf("the argument `%s` cannot be changed in-place for dlc attach_user_policyr_attachment, please recreate the resource.", v)
-		}
-	}
-
-	return nil
-}
-
-func resourceTencentCloudDlcAttachUserPolicyrAttachmentDelete(d *schema.ResourceData, meta interface{}) error {
-	defer tccommon.LogElapsed("resource.tencentcloud_dlc_attach_user_policyr_attachment.delete")()
+func resourceTencentCloudDlcAttachUserPolicyAttachmentDelete(d *schema.ResourceData, meta interface{}) error {
+	defer tccommon.LogElapsed("resource.tencentcloud_dlc_attach_user_policy_attachment.delete")()
 	defer tccommon.InconsistentCheck(d, meta)()
 
 	var (
@@ -381,74 +379,11 @@ func resourceTencentCloudDlcAttachUserPolicyrAttachmentDelete(d *schema.Resource
 	}
 
 	userId := idSplit[0]
-	accountType := idSplit[1]
+	policyId := idSplit[1]
 
 	request := dlc.NewDetachUserPolicyRequest()
 	request.UserId = helper.String(userId)
-	if accountType != "" {
-		request.AccountType = helper.String(accountType)
-	}
-
-	if v, ok := d.GetOk("policy_set"); ok {
-		for _, item := range v.([]interface{}) {
-			policy := dlc.Policy{}
-			dMap := item.(map[string]interface{})
-			if v, ok := dMap["database"]; ok {
-				policy.Database = helper.String(v.(string))
-			}
-
-			if v, ok := dMap["catalog"]; ok {
-				policy.Catalog = helper.String(v.(string))
-			}
-
-			if v, ok := dMap["table"]; ok {
-				policy.Table = helper.String(v.(string))
-			}
-
-			if v, ok := dMap["operation"]; ok {
-				policy.Operation = helper.String(v.(string))
-			}
-
-			if v, ok := dMap["policy_type"]; ok {
-				policy.PolicyType = helper.String(v.(string))
-			}
-
-			if v, ok := dMap["function"]; ok {
-				policy.Function = helper.String(v.(string))
-			}
-
-			if v, ok := dMap["view"]; ok {
-				policy.View = helper.String(v.(string))
-			}
-
-			if v, ok := dMap["column"]; ok {
-				policy.Column = helper.String(v.(string))
-			}
-
-			if v, ok := dMap["data_engine"]; ok {
-				policy.DataEngine = helper.String(v.(string))
-			}
-
-			if v, ok := dMap["re_auth"]; ok {
-				policy.ReAuth = helper.Bool(v.(bool))
-			}
-
-			if v, ok := dMap["engine_generation"]; ok {
-				policy.EngineGeneration = helper.String(v.(string))
-			}
-
-			if v, ok := dMap["model"]; ok {
-				policy.Model = helper.String(v.(string))
-			}
-
-			if v, ok := dMap["policy_id"]; ok {
-				policy.PolicyId = helper.String(v.(string))
-			}
-
-			request.PolicySet = append(request.PolicySet, &policy)
-		}
-	}
-
+	request.PolicyIds = []*string{helper.String(policyId)}
 	if err := resource.Retry(tccommon.WriteRetryTimeout, func() *resource.RetryError {
 		result, e := meta.(tccommon.ProviderMeta).GetAPIV3Conn().UseDlcClient().DetachUserPolicyWithContext(ctx, request)
 		if e != nil {
@@ -458,19 +393,19 @@ func resourceTencentCloudDlcAttachUserPolicyrAttachmentDelete(d *schema.Resource
 		}
 
 		if result == nil || result.Response == nil {
-			return resource.NonRetryableError(fmt.Errorf("Delete dlc attach_user_policyr_attachment failed, Response is nil."))
+			return resource.NonRetryableError(fmt.Errorf("Delete dlc attach_user_policy_attachment failed, Response is nil."))
 		}
 
 		return nil
 	}); err != nil {
-		log.Printf("[CRITAL]%s delete dlc attach_user_policyr_attachment failed, reason:%+v", logId, err)
+		log.Printf("[CRITAL]%s delete dlc attach_user_policy_attachment failed, reason:%+v", logId, err)
 		return err
 	}
 
 	return nil
 }
 
-func flattenDlcAttachUserPolicyrAttachmentPolicySet(policySet []*dlc.Policy) []interface{} {
+func flattenDlcAttachUserPolicyAttachmentPolicySet(policySet []*dlc.Policy) []interface{} {
 	policySetList := make([]interface{}, 0, len(policySet))
 	for _, policy := range policySet {
 		if policy == nil {
