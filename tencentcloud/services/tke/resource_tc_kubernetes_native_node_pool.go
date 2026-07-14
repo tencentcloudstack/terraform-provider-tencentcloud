@@ -1014,8 +1014,8 @@ func resourceTencentCloudKubernetesNativeNodePoolRead(d *schema.ResourceData, me
 	}
 
 	if respData == nil {
+		log.Printf("[WARN]%s resource `tencentcloud_kubernetes_native_node_pool` [%s] not found, please check if it has been deleted.\n", logId, d.Id())
 		d.SetId("")
-		log.Printf("[WARN]%s resource `kubernetes_native_node_pool` [%s] not found, please check if it has been deleted.\n", logId, d.Id())
 		return nil
 	}
 
@@ -1830,7 +1830,9 @@ func resourceTencentCloudKubernetesNativeNodePoolDelete(d *schema.ResourceData, 
 		return err
 	}
 
-	// wait for delete ok
+	_ = response
+
+	// wait node pool for delete ok
 	service := TkeService{client: meta.(tccommon.ProviderMeta).GetAPIV3Conn()}
 	err = resource.Retry(5*tccommon.ReadRetryTimeout, func() *resource.RetryError {
 		respData, errRet := service.DescribeKubernetesNativeNodePoolById(ctx, clusterId, nodePoolId)
@@ -1848,6 +1850,33 @@ func resourceTencentCloudKubernetesNativeNodePoolDelete(d *schema.ResourceData, 
 		return nil
 	})
 
-	_ = response
+	if err != nil {
+		log.Printf("[CRITAL]%s delete kubernetes native node pool failed, reason:%+v", logId, err)
+		return err
+	}
+
+	// wait node pool instances for delete ok
+	err = resource.Retry(5*tccommon.ReadRetryTimeout, func() *resource.RetryError {
+		respData, errRet := service.DescribeKubernetesClusteInstancesById(ctx, clusterId, nodePoolId)
+		if errRet != nil {
+			errCode := errRet.(*sdkErrors.TencentCloudSDKError).Code
+			if strings.Contains(errCode, "InternalError") {
+				return nil
+			}
+			return tccommon.RetryError(errRet, tccommon.InternalError)
+		}
+
+		if len(respData.InstanceSet) == 0 {
+			return nil
+		}
+
+		return resource.NonRetryableError(fmt.Errorf("native node pool instances still deleteing"))
+	})
+
+	if err != nil {
+		log.Printf("[CRITAL]%s delete kubernetes native node pool failed, reason:%+v", logId, err)
+		return err
+	}
+
 	return nil
 }
