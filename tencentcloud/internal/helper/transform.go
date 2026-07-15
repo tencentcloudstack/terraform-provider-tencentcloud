@@ -329,6 +329,21 @@ func StrListToStr(strList []*string) string {
 	return base64.StdEncoding.EncodeToString([]byte(res))
 }
 
+// TagsListToMap converts a tags schema value defined as TypeList (a list of
+// {key, value} objects) into a map[string]interface{} (key -> value), which is
+// the format expected by svctag.DiffTags.
+func TagsListToMap(tagsList []interface{}) map[string]interface{} {
+	tagsMap := make(map[string]interface{})
+	for _, item := range tagsList {
+		if m, ok := item.(map[string]interface{}); ok {
+			if key, ok := m["key"]; ok {
+				tagsMap[key.(string)] = m["value"]
+			}
+		}
+	}
+	return tagsMap
+}
+
 func StrListValToStr(strListVal []string) string {
 	res := ""
 	for i, v := range strListVal {
