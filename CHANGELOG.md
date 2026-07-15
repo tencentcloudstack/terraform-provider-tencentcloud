@@ -1,3 +1,23 @@
+## 1.83.12(July 15, 2026)
+
+FEATURES:
+
+* **New Resource:** `tencentcloud_dlc_attach_user_policyr_attachment` ([#4303](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/4303))
+* **New Resource:** `tencentcloud_dlc_attach_work_group_policy_attachment` ([#4304](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/4304))
+
+ENHANCEMENTS:
+
+* resource/tencentcloud_apm_instance: support `log_span_id_key` parameter to configure the CLS spanId index key ([#4299](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/4299))
+* resource/tencentcloud_cam_role_sso: support `auto_rotate_key` parameter for OIDC public key auto-rotation ([#4295](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/4295))
+* resource/tencentcloud_clb_listener: update idle_connect_timeout description to align with latest API documentation ([#4305](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/4305))
+* resource/tencentcloud_cls_cloud_product_log_task_v2: support tags parameter for binding tags to the associated logset and topic ([#4298](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/4298))
+* resource/tencentcloud_kubernetes_native_node_pool: update code logic ([#4307](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/4307))
+* resource/tencentcloud_mongodb_audit_service: update code logic ([#4301](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/4301))
+* resource/tencentcloud_monitor_tmp_alert_group: optimize code logic ([#4310](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/4310))
+* resource/tencentcloud_placement_group: add partition_count parameter for partition-type placement groups ([#4276](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/4276))
+* resource/tencentcloud_scf_function: update code logic ([#4300](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/4300))
+* resource/tencentcloud_tat_command: support update `tags` ([#4309](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/4309))
+
 ## 1.83.11(July 14, 2026)
 
 ENHANCEMENTS:
