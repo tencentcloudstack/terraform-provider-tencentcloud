@@ -4,12 +4,12 @@ layout: "tencentcloud"
 page_title: "TencentCloud: tencentcloud_monitor_tmp_alert_group"
 sidebar_current: "docs-tencentcloud-resource-monitor_tmp_alert_group"
 description: |-
-  Provides a resource to create a monitor tmp_alert_group
+  Provides a resource to create a monitor tmp alert group
 ---
 
 # tencentcloud_monitor_tmp_alert_group
 
-Provides a resource to create a monitor tmp_alert_group
+Provides a resource to create a monitor tmp alert group
 
 ## Example Usage
 
