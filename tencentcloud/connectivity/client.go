@@ -105,6 +105,7 @@ import (
 	tcr "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/tcr/v20190924"
 	tcss "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/tcss/v20201101"
 	tdcpg "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/tdcpg/v20211118"
+	tdmysqlv20211122 "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/tdmysql/v20211122"
 	tdmq "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/tdmq/v20200217"
 	tem "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/tem/v20210701"
 	teo "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/teo/v20220901"
@@ -268,6 +269,7 @@ type TencentCloudClient struct {
 	dbdcv20201029Conn           *dbdcv20201029.Client
 	vcubev20220410Conn          *vcubev20220410.Client
 	advisorv20200721Conn        *advisorv20200721.Client
+	tdmysqlv20211122Conn        *tdmysqlv20211122.Client
 }
 
 // NewClientProfile returns a new ClientProfile
@@ -2305,4 +2307,16 @@ func (me *TencentCloudClient) UseDbdcV20201029Client() *dbdcv20201029.Client {
 	me.dbdcv20201029Conn.WithHttpTransport(&LogRoundTripper{})
 
 	return me.dbdcv20201029Conn
+}
+
+// UseTdmysqlV20211122Client return TDSQL-C for MySQL client for service
+func (me *TencentCloudClient) UseTdmysqlV20211122Client() *tdmysqlv20211122.Client {
+	if me.tdmysqlv20211122Conn != nil {
+		return me.tdmysqlv20211122Conn
+	}
+	cpf := me.NewClientProfile(300)
+	me.tdmysqlv20211122Conn, _ = tdmysqlv20211122.NewClient(me.Credential, me.Region, cpf)
+	me.tdmysqlv20211122Conn.WithHttpTransport(&LogRoundTripper{})
+
+	return me.tdmysqlv20211122Conn
 }

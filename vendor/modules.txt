@@ -1281,7 +1281,6 @@ github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/controlcenter/v20230110
 github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/csip/v20221121
 # github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/cvm v1.3.130
 ## explicit; go 1.14
-github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/cvm
 github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/cvm/v20170312
 # github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/cwp v1.3.30
 ## explicit; go 1.14
@@ -1440,6 +1439,9 @@ github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/tdcpg/v20211118
 # github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/tdmq v1.3.113
 ## explicit; go 1.14
 github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/tdmq/v20200217
+# github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/tdmysql v1.3.132
+## explicit; go 1.14
+github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/tdmysql/v20211122
 # github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/tem v1.0.578
 ## explicit; go 1.14
 github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/tem/v20210701
