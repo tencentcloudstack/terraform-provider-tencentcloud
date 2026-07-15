@@ -179,8 +179,14 @@ const (
 	// 当前角色仅支持企业管理员操作，如需修改，请联系企业管理员。
 	INVALIDPARAMETER_ORGANIZATIONROLEOPERATEERROR = "InvalidParameter.OrganizationRoleOperateError"
 
+	// 无效的pageToken
+	INVALIDPARAMETER_PAGINATIONTOKENINVALID = "InvalidParameter.PaginationTokenInvalid"
+
 	// 非法入参。
 	INVALIDPARAMETER_PARAMERROR = "InvalidParameter.ParamError"
+
+	// 密码规则错误。
+	INVALIDPARAMETER_PASSWORDRULEERROR = "InvalidParameter.PasswordRuleError"
 
 	// 密码不符合用户安全设置。
 	INVALIDPARAMETER_PASSWORDVIOLATEDRULES = "InvalidParameter.PasswordViolatedRules"

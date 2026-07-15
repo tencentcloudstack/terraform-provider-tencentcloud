@@ -3948,6 +3948,37 @@ func (me *TkeService) DescribeKubernetesClusterMasterAttachmentByIds(ctx context
 	return
 }
 
+func (me *TkeService) DescribeKubernetesClusteInstancesById(ctx context.Context, clusterId, nodePoolId string) (ret *tke.DescribeClusterInstancesResponseParams, errRet error) {
+	logId := tccommon.GetLogId(ctx)
+
+	request := tke.NewDescribeClusterInstancesRequest()
+	request.ClusterId = helper.String(clusterId)
+	request.Filters = []*tke.Filter{
+		{
+			Name:   common.StringPtr("nodepool-id"),
+			Values: common.StringPtrs([]string{nodePoolId}),
+		},
+	}
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	ratelimit.Check(request.GetAction())
+	response, err := me.client.UseTkeV20180525Client().DescribeClusterInstances(request)
+	if err != nil {
+		errRet = err
+		return
+	}
+
+	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+	ret = response.Response
+	return
+}
+
 func (me *TkeService) DescribeKubernetesClusterPendingReleaseById(ctx context.Context, clusterId, clusterReleaseId string) (ret *tke.PendingRelease, errRet error) {
 	logId := tccommon.GetLogId(ctx)
 
