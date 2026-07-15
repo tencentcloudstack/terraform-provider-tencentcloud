@@ -71,274 +71,397 @@ type ApmAgentInfo struct {
 }
 
 type ApmAppConfig struct {
-	// 实例ID
+	// <p>实例ID</p>
 	InstanceKey *string `json:"InstanceKey,omitnil,omitempty" name:"InstanceKey"`
 
-	// 服务名
+	// <p>服务名</p>
 	ServiceName *string `json:"ServiceName,omitnil,omitempty" name:"ServiceName"`
 
-	// URL收敛开关
+	// <p>URL收敛开关</p>
 	UrlConvergenceSwitch *int64 `json:"UrlConvergenceSwitch,omitnil,omitempty" name:"UrlConvergenceSwitch"`
 
-	// URL收敛阈值
+	// <p>URL收敛阈值</p>
 	UrlConvergenceThreshold *int64 `json:"UrlConvergenceThreshold,omitnil,omitempty" name:"UrlConvergenceThreshold"`
 
-	// URL收敛正则
+	// <p>URL收敛正则</p>
 	UrlConvergence *string `json:"UrlConvergence,omitnil,omitempty" name:"UrlConvergence"`
 
-	// 异常过滤正则
+	// <p>异常过滤正则</p>
 	ExceptionFilter *string `json:"ExceptionFilter,omitnil,omitempty" name:"ExceptionFilter"`
 
-	// 错误码过滤
+	// <p>错误码过滤</p>
 	ErrorCodeFilter *string `json:"ErrorCodeFilter,omitnil,omitempty" name:"ErrorCodeFilter"`
 
-	// 服务组件类型
+	// <p>服务组件类型</p>
 	Components *string `json:"Components,omitnil,omitempty" name:"Components"`
 
-	// URL排除正则
+	// <p>URL排除正则</p>
 	UrlExclude *string `json:"UrlExclude,omitnil,omitempty" name:"UrlExclude"`
 
-	// 日志来源
+	// <p>日志来源</p>
 	LogSource *string `json:"LogSource,omitnil,omitempty" name:"LogSource"`
 
-	// 日志所在地域
+	// <p>日志所在地域</p>
 	LogRegion *string `json:"LogRegion,omitnil,omitempty" name:"LogRegion"`
 
-	// 是否开启日志 0 关 1 开
+	// <p>是否开启日志 0 关 1 开</p>
 	IsRelatedLog *int64 `json:"IsRelatedLog,omitnil,omitempty" name:"IsRelatedLog"`
 
-	// 日志主题ID
+	// <p>日志主题ID</p>
 	LogTopicID *string `json:"LogTopicID,omitnil,omitempty" name:"LogTopicID"`
 
-	// 需过滤的接口名
+	// <p>需过滤的接口名</p>
 	IgnoreOperationName *string `json:"IgnoreOperationName,omitnil,omitempty" name:"IgnoreOperationName"`
 
-	// CLS日志集 | ES集群ID
+	// <p>CLS日志集 | ES集群ID</p>
 	LogSet *string `json:"LogSet,omitnil,omitempty" name:"LogSet"`
 
-	// 探针每秒上报trace数
+	// <p>探针每秒上报trace数</p>
 	TraceRateLimit *int64 `json:"TraceRateLimit,omitnil,omitempty" name:"TraceRateLimit"`
 
-	// 是否开启线程剖析
+	// <p>是否开启线程剖析</p>
 	EnableSnapshot *bool `json:"EnableSnapshot,omitnil,omitempty" name:"EnableSnapshot"`
 
-	// 线程剖析超时阈值
+	// <p>线程剖析超时阈值</p>
 	SnapshotTimeout *int64 `json:"SnapshotTimeout,omitnil,omitempty" name:"SnapshotTimeout"`
 
-	// 是否开启agent
+	// <p>是否开启agent</p>
 	AgentEnable *bool `json:"AgentEnable,omitnil,omitempty" name:"AgentEnable"`
 
-	// 组件列表
+	// <p>组件列表</p>
 	// 注意：此字段可能返回 null，表示取不到有效值。
 	InstrumentList []*Instrument `json:"InstrumentList,omitnil,omitempty" name:"InstrumentList"`
 
-	// 是否开启链路压缩
+	// <p>是否开启链路压缩</p>
 	TraceSquash *bool `json:"TraceSquash,omitnil,omitempty" name:"TraceSquash"`
 
-	// 是否开启应用诊断开关
+	// <p>是否开启应用诊断开关</p>
 	EventEnable *bool `json:"EventEnable,omitnil,omitempty" name:"EventEnable"`
 
-	// 探针接口相关配置
+	// <p>探针接口相关配置</p>
 	// 注意：此字段可能返回 null，表示取不到有效值。
 	AgentOperationConfigView *AgentOperationConfigView `json:"AgentOperationConfigView,omitnil,omitempty" name:"AgentOperationConfigView"`
 
-	// 是否开启应用日志配置
+	// <p>是否开启应用日志配置</p>
 	EnableLogConfig *bool `json:"EnableLogConfig,omitnil,omitempty" name:"EnableLogConfig"`
 
-	// 应用ID
+	// <p>应用ID</p>
 	// 注意：此字段可能返回 null，表示取不到有效值。
 	ServiceID *string `json:"ServiceID,omitnil,omitempty" name:"ServiceID"`
 
-	// 应用是否开启dashboard配置： false 关（与业务系统保持一致）/true 开（应用级配置）
+	// <p>应用是否开启dashboard配置： false 关（与业务系统保持一致）/true 开（应用级配置）</p>
 	// 注意：此字段可能返回 null，表示取不到有效值。
 	EnableDashboardConfig *bool `json:"EnableDashboardConfig,omitnil,omitempty" name:"EnableDashboardConfig"`
 
-	// 是否关联dashboard： 0 关 1 开
+	// <p>是否关联dashboard： 0 关 1 开</p>
 	// 注意：此字段可能返回 null，表示取不到有效值。
 	IsRelatedDashboard *int64 `json:"IsRelatedDashboard,omitnil,omitempty" name:"IsRelatedDashboard"`
 
-	// dashboard ID
+	// <p>dashboard ID</p>
 	// 注意：此字段可能返回 null，表示取不到有效值。
 	DashboardTopicID *string `json:"DashboardTopicID,omitnil,omitempty" name:"DashboardTopicID"`
 
-	// 是否开启应用级别配置
+	// <p>是否开启应用级别配置</p>
 	// 注意：此字段可能返回 null，表示取不到有效值。
 	EnableSecurityConfig *bool `json:"EnableSecurityConfig,omitnil,omitempty" name:"EnableSecurityConfig"`
 
-	// 是否开启组件漏洞检测
+	// <p>是否开启组件漏洞检测</p>
 	// 注意：此字段可能返回 null，表示取不到有效值。
 	IsInstrumentationVulnerabilityScan *int64 `json:"IsInstrumentationVulnerabilityScan,omitnil,omitempty" name:"IsInstrumentationVulnerabilityScan"`
 
-	// 是否开启SQL注入分析
+	// <p>是否开启SQL注入分析</p>
 	// 注意：此字段可能返回 null，表示取不到有效值。
 	IsSqlInjectionAnalysis *int64 `json:"IsSqlInjectionAnalysis,omitnil,omitempty" name:"IsSqlInjectionAnalysis"`
 
-	// 是否开启远程命令执行分析
+	// <p>是否开启远程命令执行分析</p>
 	// 注意：此字段可能返回 null，表示取不到有效值。
 	IsRemoteCommandExecutionAnalysis *int64 `json:"IsRemoteCommandExecutionAnalysis,omitnil,omitempty" name:"IsRemoteCommandExecutionAnalysis"`
 
-	// 是否开启内存马检测分析
+	// <p>是否开启内存马检测分析</p>
 	// 注意：此字段可能返回 null，表示取不到有效值。
 	IsMemoryHijackingAnalysis *int64 `json:"IsMemoryHijackingAnalysis,omitnil,omitempty" name:"IsMemoryHijackingAnalysis"`
 
-	// CLS索引类型(0=全文索引，1=键值索引)
+	// <p>CLS索引类型(0=全文索引，1=键值索引)</p>
 	LogIndexType *int64 `json:"LogIndexType,omitnil,omitempty" name:"LogIndexType"`
 
-	// traceId的索引key: 当CLS索引类型为键值索引时生效
+	// <p>traceId的索引key: 当CLS索引类型为键值索引时生效</p>
 	LogTraceIdKey *string `json:"LogTraceIdKey,omitnil,omitempty" name:"LogTraceIdKey"`
 
-	// 是否开启删除任意文件检测（0-关闭，1-开启）
+	// <p>是否开启删除任意文件检测（0-关闭，1-开启）</p>
 	// 注意：此字段可能返回 null，表示取不到有效值。
 	IsDeleteAnyFileAnalysis *int64 `json:"IsDeleteAnyFileAnalysis,omitnil,omitempty" name:"IsDeleteAnyFileAnalysis"`
 
-	// 是否开启读取任意文件检测（0-关闭，1-开启）
+	// <p>是否开启读取任意文件检测（0-关闭，1-开启）</p>
 	// 注意：此字段可能返回 null，表示取不到有效值。
 	IsReadAnyFileAnalysis *int64 `json:"IsReadAnyFileAnalysis,omitnil,omitempty" name:"IsReadAnyFileAnalysis"`
 
-	// 是否开启上传任意文件检测（0-关闭，1-开启）
+	// <p>是否开启上传任意文件检测（0-关闭，1-开启）</p>
 	// 注意：此字段可能返回 null，表示取不到有效值。
 	IsUploadAnyFileAnalysis *int64 `json:"IsUploadAnyFileAnalysis,omitnil,omitempty" name:"IsUploadAnyFileAnalysis"`
 
-	// 是否开启包含任意文件检测（0-关闭，1-开启）
+	// <p>是否开启包含任意文件检测（0-关闭，1-开启）</p>
 	// 注意：此字段可能返回 null，表示取不到有效值。
 	IsIncludeAnyFileAnalysis *int64 `json:"IsIncludeAnyFileAnalysis,omitnil,omitempty" name:"IsIncludeAnyFileAnalysis"`
 
-	// 是否开启目录遍历检测（0-关闭，1-开启）
+	// <p>是否开启目录遍历检测（0-关闭，1-开启）</p>
 	// 注意：此字段可能返回 null，表示取不到有效值。
 	IsDirectoryTraversalAnalysis *int64 `json:"IsDirectoryTraversalAnalysis,omitnil,omitempty" name:"IsDirectoryTraversalAnalysis"`
 
-	// 是否开启模板引擎注入检测（0-关闭，1-开启）
+	// <p>是否开启模板引擎注入检测（0-关闭，1-开启）</p>
 	// 注意：此字段可能返回 null，表示取不到有效值。
 	IsTemplateEngineInjectionAnalysis *int64 `json:"IsTemplateEngineInjectionAnalysis,omitnil,omitempty" name:"IsTemplateEngineInjectionAnalysis"`
 
-	// 是否开启脚本引擎注入检测（0-关闭，1-开启）
+	// <p>是否开启脚本引擎注入检测（0-关闭，1-开启）</p>
 	// 注意：此字段可能返回 null，表示取不到有效值。
 	IsScriptEngineInjectionAnalysis *int64 `json:"IsScriptEngineInjectionAnalysis,omitnil,omitempty" name:"IsScriptEngineInjectionAnalysis"`
 
-	// 是否开启表达式注入检测（0-关闭，1-开启）
+	// <p>是否开启表达式注入检测（0-关闭，1-开启）</p>
 	// 注意：此字段可能返回 null，表示取不到有效值。
 	IsExpressionInjectionAnalysis *int64 `json:"IsExpressionInjectionAnalysis,omitnil,omitempty" name:"IsExpressionInjectionAnalysis"`
 
-	// 是否开启JNDI注入检测（0-关闭，1-开启）
+	// <p>是否开启JNDI注入检测（0-关闭，1-开启）</p>
 	// 注意：此字段可能返回 null，表示取不到有效值。
 	IsJNDIInjectionAnalysis *int64 `json:"IsJNDIInjectionAnalysis,omitnil,omitempty" name:"IsJNDIInjectionAnalysis"`
 
-	// 是否开启JNI注入检测（0-关闭，1-开启）
+	// <p>是否开启JNI注入检测（0-关闭，1-开启）</p>
 	// 注意：此字段可能返回 null，表示取不到有效值。
 	IsJNIInjectionAnalysis *int64 `json:"IsJNIInjectionAnalysis,omitnil,omitempty" name:"IsJNIInjectionAnalysis"`
 
-	// 是否开启Webshell后门检测（0-关闭，1-开启）
+	// <p>是否开启Webshell后门检测（0-关闭，1-开启）</p>
 	// 注意：此字段可能返回 null，表示取不到有效值。
 	IsWebshellBackdoorAnalysis *int64 `json:"IsWebshellBackdoorAnalysis,omitnil,omitempty" name:"IsWebshellBackdoorAnalysis"`
 
-	// 是否开启反序列化检测（0-关闭，1-开启）
+	// <p>是否开启反序列化检测（0-关闭，1-开启）</p>
 	// 注意：此字段可能返回 null，表示取不到有效值。
 	IsDeserializationAnalysis *int64 `json:"IsDeserializationAnalysis,omitnil,omitempty" name:"IsDeserializationAnalysis"`
 
-	// 接口名称自动收敛开关（0-关闭，1-开启）
+	// <p>接口名称自动收敛开关（0-关闭，1-开启）</p>
 	UrlAutoConvergenceEnable *bool `json:"UrlAutoConvergenceEnable,omitnil,omitempty" name:"UrlAutoConvergenceEnable"`
 
-	// URL长分段收敛阈值
+	// <p>URL长分段收敛阈值</p>
 	UrlLongSegmentThreshold *int64 `json:"UrlLongSegmentThreshold,omitnil,omitempty" name:"UrlLongSegmentThreshold"`
 
-	// URL数字分段收敛阈值
+	// <p>URL数字分段收敛阈值</p>
 	UrlNumberSegmentThreshold *int64 `json:"UrlNumberSegmentThreshold,omitnil,omitempty" name:"UrlNumberSegmentThreshold"`
 
-	// 探针熔断内存阈值
+	// <p>探针熔断内存阈值</p>
 	DisableMemoryUsed *int64 `json:"DisableMemoryUsed,omitnil,omitempty" name:"DisableMemoryUsed"`
 
-	// 探针熔断CPU阈值
+	// <p>探针熔断CPU阈值</p>
 	DisableCpuUsed *int64 `json:"DisableCpuUsed,omitnil,omitempty" name:"DisableCpuUsed"`
 
-	// 是否开启SQL参数获取
+	// <p>是否开启SQL参数获取</p>
 	DbStatementParametersEnabled *bool `json:"DbStatementParametersEnabled,omitnil,omitempty" name:"DbStatementParametersEnabled"`
 
-	// 慢SQL阈值
+	// <p>慢SQL阈值</p>
 	SlowSQLThresholds []*ApmTag `json:"SlowSQLThresholds,omitnil,omitempty" name:"SlowSQLThresholds"`
+
+	// <p>是否开启脱敏规则</p>
+	EnableDesensitizationRule *int64 `json:"EnableDesensitizationRule,omitnil,omitempty" name:"EnableDesensitizationRule"`
+
+	// <p>脱敏规则</p>
+	DesensitizationRule *string `json:"DesensitizationRule,omitnil,omitempty" name:"DesensitizationRule"`
+
+	// <p>spanId的索引key: 当CLS索引类型为键值索引时生效</p>
+	LogSpanIdKey *string `json:"LogSpanIdKey,omitnil,omitempty" name:"LogSpanIdKey"`
+
+	// <p>自动性能剖析配置</p>
+	AutoProfilingConfig *AutoProfilingConfig `json:"AutoProfilingConfig,omitnil,omitempty" name:"AutoProfilingConfig"`
+
+	// <p>阈值配置开关。true 表示使用应用级阈值；false 表示使用业务系统级阈值</p>
+	EnableThresholdConfig *bool `json:"EnableThresholdConfig,omitnil,omitempty" name:"EnableThresholdConfig"`
+
+	// <p>错误率阈值（%），用于判断应用健康状态为&quot;红色&quot;</p>
+	ErrRateThreshold *int64 `json:"ErrRateThreshold,omitnil,omitempty" name:"ErrRateThreshold"`
+
+	// <p>响应时间预警阈值（ms），用于判断应用健康状态为&quot;黄色&quot;</p>
+	ResponseDurationWarningThreshold *int64 `json:"ResponseDurationWarningThreshold,omitnil,omitempty" name:"ResponseDurationWarningThreshold"`
+
+	// <p>是否默认使用探针自带熔断阈值</p>
+	UseDefaultFuseConfig *bool `json:"UseDefaultFuseConfig,omitnil,omitempty" name:"UseDefaultFuseConfig"`
+
+	// <p>是否开启自动分析</p>
+	AnalysisAutoEnable *bool `json:"AnalysisAutoEnable,omitnil,omitempty" name:"AnalysisAutoEnable"`
+
+	// <p>头采样开关</p>
+	EnableHeadSampler *bool `json:"EnableHeadSampler,omitnil,omitempty" name:"EnableHeadSampler"`
+
+	// <p>头采样类型</p><p>枚举值：</p><ul><li>parentbased_traceidratio： 跟随父类型</li></ul>
+	HeadSamplerType *string `json:"HeadSamplerType,omitnil,omitempty" name:"HeadSamplerType"`
+
+	// <p>采样阈值，100等于关闭采样，0表示全采样</p>
+	HeadSamplerArg *int64 `json:"HeadSamplerArg,omitnil,omitempty" name:"HeadSamplerArg"`
 }
 
 type ApmApplicationConfigView struct {
-	// 业务系统 ID
+	// <p>业务系统 ID</p>
 	InstanceKey *string `json:"InstanceKey,omitnil,omitempty" name:"InstanceKey"`
 
-	// 应用名	
+	// <p>应用名</p>
 	ServiceName *string `json:"ServiceName,omitnil,omitempty" name:"ServiceName"`
 
-	// 接口过滤
+	// <p>接口过滤</p>
 	OperationNameFilter *string `json:"OperationNameFilter,omitnil,omitempty" name:"OperationNameFilter"`
 
-	// 错误类型过滤
+	// <p>错误类型过滤</p>
 	ExceptionFilter *string `json:"ExceptionFilter,omitnil,omitempty" name:"ExceptionFilter"`
 
-	// HTTP 状态码过滤
+	// <p>HTTP 状态码过滤</p>
 	ErrorCodeFilter *string `json:"ErrorCodeFilter,omitnil,omitempty" name:"ErrorCodeFilter"`
 
-	// 应用诊断开关（已废弃）
+	// <p>应用诊断开关（已废弃）</p>
 	EventEnable *bool `json:"EventEnable,omitnil,omitempty" name:"EventEnable"`
 
-	// URL 收敛开关 0 关 1 开
+	// <p>URL 收敛开关 0 关 1 开</p>
 	UrlConvergenceSwitch *int64 `json:"UrlConvergenceSwitch,omitnil,omitempty" name:"UrlConvergenceSwitch"`
 
-	// URL 收敛阈值	
+	// <p>URL 收敛阈值</p>
 	UrlConvergenceThreshold *int64 `json:"UrlConvergenceThreshold,omitnil,omitempty" name:"UrlConvergenceThreshold"`
 
-	// URL 收敛规则正则	
+	// <p>URL 收敛规则正则</p>
 	UrlConvergence *string `json:"UrlConvergence,omitnil,omitempty" name:"UrlConvergence"`
 
-	// URL 排除规则正则
+	// <p>URL 排除规则正则</p>
 	UrlExclude *string `json:"UrlExclude,omitnil,omitempty" name:"UrlExclude"`
 
-	// 是否开启日志 0 关 1 开
+	// <p>是否开启日志 0 关 1 开</p>
 	IsRelatedLog *int64 `json:"IsRelatedLog,omitnil,omitempty" name:"IsRelatedLog"`
 
-	// 日志源	
+	// <p>日志源</p>
 	LogSource *string `json:"LogSource,omitnil,omitempty" name:"LogSource"`
 
-	// 日志集 
+	// <p>日志集</p>
 	LogSet *string `json:"LogSet,omitnil,omitempty" name:"LogSet"`
 
-	// 日志主题
+	// <p>日志主题</p>
 	LogTopicID *string `json:"LogTopicID,omitnil,omitempty" name:"LogTopicID"`
 
-	// 方法栈快照开关 true 开启 false 关闭
+	// <p>方法栈快照开关 true 开启 false 关闭</p>
 	SnapshotEnable *bool `json:"SnapshotEnable,omitnil,omitempty" name:"SnapshotEnable"`
 
-	// 慢调用监听触发阈值
+	// <p>慢调用监听触发阈值</p>
 	SnapshotTimeout *int64 `json:"SnapshotTimeout,omitnil,omitempty" name:"SnapshotTimeout"`
 
-	// 探针总开关
+	// <p>探针总开关</p>
 	AgentEnable *bool `json:"AgentEnable,omitnil,omitempty" name:"AgentEnable"`
 
-	// 组件列表开关（已废弃）
+	// <p>组件列表开关（已废弃）</p>
 	InstrumentList []*Instrument `json:"InstrumentList,omitnil,omitempty" name:"InstrumentList"`
 
-	// 链路压缩开关（已废弃）
+	// <p>链路压缩开关（已废弃）</p>
 	TraceSquash *bool `json:"TraceSquash,omitnil,omitempty" name:"TraceSquash"`
 
-	// 探针熔断内存阈值
+	// <p>链路过滤配置</p>
+	AgentIgnoreOperation *string `json:"AgentIgnoreOperation,omitnil,omitempty" name:"AgentIgnoreOperation"`
+
+	// <p>开启应用安全开关</p>
+	EnableSecurityConfig *bool `json:"EnableSecurityConfig,omitnil,omitempty" name:"EnableSecurityConfig"`
+
+	// <p>是否开启SQL注入检测</p>
+	IsSqlInjectionAnalysis *int64 `json:"IsSqlInjectionAnalysis,omitnil,omitempty" name:"IsSqlInjectionAnalysis"`
+
+	// <p>是否开启组件漏洞检测</p>
+	IsInstrumentationVulnerabilityScan *int64 `json:"IsInstrumentationVulnerabilityScan,omitnil,omitempty" name:"IsInstrumentationVulnerabilityScan"`
+
+	// <p>是否开启远程命令执行检测</p>
+	IsRemoteCommandExecutionAnalysis *int64 `json:"IsRemoteCommandExecutionAnalysis,omitnil,omitempty" name:"IsRemoteCommandExecutionAnalysis"`
+
+	// <p>是否开启内存泄漏检测</p>
+	IsMemoryHijackingAnalysis *int64 `json:"IsMemoryHijackingAnalysis,omitnil,omitempty" name:"IsMemoryHijackingAnalysis"`
+
+	// <p>是否开启删除任意文件检测</p>
+	IsDeleteAnyFileAnalysis *int64 `json:"IsDeleteAnyFileAnalysis,omitnil,omitempty" name:"IsDeleteAnyFileAnalysis"`
+
+	// <p>是否开启读取任意文件检测</p>
+	IsReadAnyFileAnalysis *int64 `json:"IsReadAnyFileAnalysis,omitnil,omitempty" name:"IsReadAnyFileAnalysis"`
+
+	// <p>是否开启上传任意文件检测</p>
+	IsUploadAnyFileAnalysis *int64 `json:"IsUploadAnyFileAnalysis,omitnil,omitempty" name:"IsUploadAnyFileAnalysis"`
+
+	// <p>是否开启包含任意文件检测</p>
+	IsIncludeAnyFileAnalysis *int64 `json:"IsIncludeAnyFileAnalysis,omitnil,omitempty" name:"IsIncludeAnyFileAnalysis"`
+
+	// <p>是否开启目录遍历检测</p>
+	IsDirectoryTraversalAnalysis *int64 `json:"IsDirectoryTraversalAnalysis,omitnil,omitempty" name:"IsDirectoryTraversalAnalysis"`
+
+	// <p>是否开启模板引擎注入检测</p>
+	IsTemplateEngineInjectionAnalysis *int64 `json:"IsTemplateEngineInjectionAnalysis,omitnil,omitempty" name:"IsTemplateEngineInjectionAnalysis"`
+
+	// <p>是否开启脚本引擎注入检测</p>
+	IsScriptEngineInjectionAnalysis *int64 `json:"IsScriptEngineInjectionAnalysis,omitnil,omitempty" name:"IsScriptEngineInjectionAnalysis"`
+
+	// <p>是否开启表达式注入检测</p>
+	IsExpressionInjectionAnalysis *int64 `json:"IsExpressionInjectionAnalysis,omitnil,omitempty" name:"IsExpressionInjectionAnalysis"`
+
+	// <p>是否开启JNDI注入检测</p>
+	IsJndiInjectionAnalysis *int64 `json:"IsJndiInjectionAnalysis,omitnil,omitempty" name:"IsJndiInjectionAnalysis"`
+
+	// <p>是否开启JNI注入检测</p>
+	IsJniInjectionAnalysis *int64 `json:"IsJniInjectionAnalysis,omitnil,omitempty" name:"IsJniInjectionAnalysis"`
+
+	// <p>是否开启Webshell后门检测</p>
+	IsWebshellBackdoorAnalysis *int64 `json:"IsWebshellBackdoorAnalysis,omitnil,omitempty" name:"IsWebshellBackdoorAnalysis"`
+
+	// <p>是否开启反序列化检测</p>
+	IsDeserializationAnalysis *int64 `json:"IsDeserializationAnalysis,omitnil,omitempty" name:"IsDeserializationAnalysis"`
+
+	// <p>是否开启控制台开关</p>
+	EnableDashboardConfig *bool `json:"EnableDashboardConfig,omitnil,omitempty" name:"EnableDashboardConfig"`
+
+	// <p>是否关联Dashboard</p>
+	IsRelatedDashboard *int64 `json:"IsRelatedDashboard,omitnil,omitempty" name:"IsRelatedDashboard"`
+
+	// <p>Dashboard topic</p>
+	DashboardTopicID *string `json:"DashboardTopicID,omitnil,omitempty" name:"DashboardTopicID"`
+
+	// <p>探针熔断内存阈值</p>
 	DisableMemoryUsed *int64 `json:"DisableMemoryUsed,omitnil,omitempty" name:"DisableMemoryUsed"`
 
-	// 探针熔断CPU阈值
+	// <p>探针熔断CPU阈值</p>
 	DisableCpuUsed *int64 `json:"DisableCpuUsed,omitnil,omitempty" name:"DisableCpuUsed"`
 
-	// 是否开启SQL参数获取
+	// <p>是否开启SQL参数获取</p>
 	DbStatementParametersEnabled *bool `json:"DbStatementParametersEnabled,omitnil,omitempty" name:"DbStatementParametersEnabled"`
 
-	// 慢SQL阈值
+	// <p>慢SQL阈值</p>
 	SlowSQLThresholds []*ApmTag `json:"SlowSQLThresholds,omitnil,omitempty" name:"SlowSQLThresholds"`
+
+	// <p>是否开启脱敏规则</p>
+	EnableDesensitizationRule *int64 `json:"EnableDesensitizationRule,omitnil,omitempty" name:"EnableDesensitizationRule"`
+
+	// <p>脱敏规则</p>
+	DesensitizationRule *string `json:"DesensitizationRule,omitnil,omitempty" name:"DesensitizationRule"`
+
+	// <p>自动性能剖析任务配置</p>
+	AutoProfilingConfig *AutoProfilingConfig `json:"AutoProfilingConfig,omitnil,omitempty" name:"AutoProfilingConfig"`
+
+	// <p>阈值配置开关</p>
+	EnableThresholdConfig *bool `json:"EnableThresholdConfig,omitnil,omitempty" name:"EnableThresholdConfig"`
+
+	// <p>错误率阈值</p><p>单位：%</p>
+	ErrRateThreshold *int64 `json:"ErrRateThreshold,omitnil,omitempty" name:"ErrRateThreshold"`
+
+	// <p>响应时间预警阈值</p><p>单位：ms</p>
+	ResponseDurationWarningThreshold *int64 `json:"ResponseDurationWarningThreshold,omitnil,omitempty" name:"ResponseDurationWarningThreshold"`
+
+	// <p>是否使用探针默认熔断阈值</p>
+	UseDefaultFuseConfig *bool `json:"UseDefaultFuseConfig,omitnil,omitempty" name:"UseDefaultFuseConfig"`
 }
 
 type ApmAssociation struct {
-	// 关联产品的实例ID
+	// <p>关联产品的实例ID</p>
 	// 注意：此字段可能返回 null，表示取不到有效值。
 	PeerId *string `json:"PeerId,omitnil,omitempty" name:"PeerId"`
 
-	// 关联关系状态：1（启用）、2（不启用）、3（已失效）
+	// <p>关联关系状态：1（启用）、2（不启用）、3（已失效）</p>
 	// 注意：此字段可能返回 null，表示取不到有效值。
 	Status *int64 `json:"Status,omitnil,omitempty" name:"Status"`
 
-	// CKafka消息主题
+	// <p>CKafka消息主题</p>
 	Topic *string `json:"Topic,omitnil,omitempty" name:"Topic"`
+
+	// <p>Ckafka消费主题</p><p>用于Kafka指标投递</p>
+	MetricTopic *string `json:"MetricTopic,omitnil,omitempty" name:"MetricTopic"`
 }
 
 type ApmField struct {
@@ -370,179 +493,176 @@ type ApmField struct {
 }
 
 type ApmInstanceDetail struct {
-	// 业务系统 ID
+	// <p>业务系统 ID</p>
 	InstanceId *string `json:"InstanceId,omitnil,omitempty" name:"InstanceId"`
 
-	// 业务系统名
+	// <p>业务系统名</p>
 	Name *string `json:"Name,omitnil,omitempty" name:"Name"`
 
-	// 业务系统描述信息
+	// <p>业务系统描述信息</p>
 	Description *string `json:"Description,omitnil,omitempty" name:"Description"`
 
-	// 业务系统状态。{
-	// 1: 初始化中; 2: 运行中; 4: 限流}
+	// <p>业务系统状态。{<br>1: 初始化中; 2: 运行中; 4: 限流}</p>
 	Status *int64 `json:"Status,omitnil,omitempty" name:"Status"`
 
-	// 业务系统所属地域
+	// <p>业务系统所属地域</p>
 	Region *string `json:"Region,omitnil,omitempty" name:"Region"`
 
-	// 业务系统 Tag 列表
+	// <p>业务系统 Tag 列表</p>
 	Tags []*ApmTag `json:"Tags,omitnil,omitempty" name:"Tags"`
 
-	// AppID 信息
+	// <p>AppID 信息</p>
 	AppId *int64 `json:"AppId,omitnil,omitempty" name:"AppId"`
 
-	// 创建人 Uin
+	// <p>创建人 Uin</p>
 	CreateUin *string `json:"CreateUin,omitnil,omitempty" name:"CreateUin"`
 
-	// 存储使用量(单位：MB)
+	// <p>存储使用量(单位：MB)</p>
 	AmountOfUsedStorage *float64 `json:"AmountOfUsedStorage,omitnil,omitempty" name:"AmountOfUsedStorage"`
 
-	// 该业务系统服务端应用数量
+	// <p>该业务系统服务端应用数量</p>
 	ServiceCount *int64 `json:"ServiceCount,omitnil,omitempty" name:"ServiceCount"`
 
-	// 日均上报 Span 数
+	// <p>日均上报 Span 数</p>
 	CountOfReportSpanPerDay *int64 `json:"CountOfReportSpanPerDay,omitnil,omitempty" name:"CountOfReportSpanPerDay"`
 
-	// Trace 数据保存时长（单位：天）
+	// <p>Trace 数据保存时长（单位：天）</p>
 	TraceDuration *int64 `json:"TraceDuration,omitnil,omitempty" name:"TraceDuration"`
 
-	// 业务系统上报额度
+	// <p>业务系统上报额度</p>
 	SpanDailyCounters *int64 `json:"SpanDailyCounters,omitnil,omitempty" name:"SpanDailyCounters"`
 
-	// 业务系统是否已开通计费（0=未开通，1=已开通）
+	// <p>业务系统是否已开通计费（0=未开通，1=已开通）</p>
 	BillingInstance *int64 `json:"BillingInstance,omitnil,omitempty" name:"BillingInstance"`
 
-	// 错误警示线（单位：%）
+	// <p>错误警示线（单位：%）</p>
 	ErrRateThreshold *int64 `json:"ErrRateThreshold,omitnil,omitempty" name:"ErrRateThreshold"`
 
-	// 采样率（单位：%）
+	// <p>采样率（单位：%）</p>
 	SampleRate *int64 `json:"SampleRate,omitnil,omitempty" name:"SampleRate"`
 
-	// 是否开启错误采样（0=关, 1=开）
+	// <p>是否开启错误采样（0=关, 1=开）</p>
 	ErrorSample *int64 `json:"ErrorSample,omitnil,omitempty" name:"ErrorSample"`
 
-	// 采样慢调用保存阈值（单位：ms）
+	// <p>采样慢调用保存阈值（单位：ms）</p>
 	SlowRequestSavedThreshold *int64 `json:"SlowRequestSavedThreshold,omitnil,omitempty" name:"SlowRequestSavedThreshold"`
 
-	// CLS 日志所在地域
+	// <p>CLS 日志所在地域</p>
 	LogRegion *string `json:"LogRegion,omitnil,omitempty" name:"LogRegion"`
 
-	// 日志源
+	// <p>日志源</p>
 	LogSource *string `json:"LogSource,omitnil,omitempty" name:"LogSource"`
 
-	// 日志功能开关（0=关， 1=开）
+	// <p>日志功能开关（0=关， 1=开）</p>
 	IsRelatedLog *int64 `json:"IsRelatedLog,omitnil,omitempty" name:"IsRelatedLog"`
 
-	// 日志主题 ID
+	// <p>日志主题 ID</p>
 	LogTopicID *string `json:"LogTopicID,omitnil,omitempty" name:"LogTopicID"`
 
-	// 该业务系统客户端应用数量
+	// <p>该业务系统客户端应用数量</p>
 	ClientCount *int64 `json:"ClientCount,omitnil,omitempty" name:"ClientCount"`
 
-	// 该业务系统最近2天活跃应用数量
+	// <p>该业务系统最近2天活跃应用数量</p>
 	TotalCount *int64 `json:"TotalCount,omitnil,omitempty" name:"TotalCount"`
 
-	// CLS 日志集
+	// <p>CLS 日志集</p>
 	LogSet *string `json:"LogSet,omitnil,omitempty" name:"LogSet"`
 
-	// Metric 数据保存时长（单位：天）
+	// <p>Metric 数据保存时长（单位：天）</p>
 	MetricDuration *int64 `json:"MetricDuration,omitnil,omitempty" name:"MetricDuration"`
 
-	// 用户自定义展示标签列表
+	// <p>用户自定义展示标签列表</p>
 	CustomShowTags []*string `json:"CustomShowTags,omitnil,omitempty" name:"CustomShowTags"`
 
-	// 业务系统计费模式（1为预付费，0为按量付费）
+	// <p>业务系统计费模式（1为预付费，0为按量付费）</p>
 	PayMode *int64 `json:"PayMode,omitnil,omitempty" name:"PayMode"`
 
-	// 业务系统计费模式是否生效
+	// <p>业务系统计费模式是否生效</p>
 	PayModeEffective *bool `json:"PayModeEffective,omitnil,omitempty" name:"PayModeEffective"`
 
-	// 响应时间警示线（单位：ms）
+	// <p>响应时间警示线（单位：ms）</p>
 	ResponseDurationWarningThreshold *int64 `json:"ResponseDurationWarningThreshold,omitnil,omitempty" name:"ResponseDurationWarningThreshold"`
 
-	// 是否免费（0=否，1=限额免费，2=完全免费），默认0
+	// <p>是否免费（0=否，1=限额免费，2=完全免费），默认0</p>
 	Free *int64 `json:"Free,omitnil,omitempty" name:"Free"`
 
-	// 是否 TSF 默认业务系统（0=否，1=是）
+	// <p>是否 TSF 默认业务系统（0=否，1=是）</p>
 	DefaultTSF *int64 `json:"DefaultTSF,omitnil,omitempty" name:"DefaultTSF"`
 
-	// 是否关联 Dashboard（0=关, 1=开）
+	// <p>是否关联 Dashboard（0=关, 1=开）</p>
 	IsRelatedDashboard *int64 `json:"IsRelatedDashboard,omitnil,omitempty" name:"IsRelatedDashboard"`
 
-	// 关联的 Dashboard ID
+	// <p>关联的 Dashboard ID</p>
 	DashboardTopicID *string `json:"DashboardTopicID,omitnil,omitempty" name:"DashboardTopicID"`
 
-	// 是否开启组件漏洞检测（0=关， 1=开）
+	// <p>是否开启组件漏洞检测（0=关， 1=开）</p>
 	IsInstrumentationVulnerabilityScan *int64 `json:"IsInstrumentationVulnerabilityScan,omitnil,omitempty" name:"IsInstrumentationVulnerabilityScan"`
 
-	// 是否开启 SQL 注入分析（0=关， 1=开）
+	// <p>是否开启 SQL 注入分析（0=关， 1=开）</p>
 	IsSqlInjectionAnalysis *int64 `json:"IsSqlInjectionAnalysis,omitnil,omitempty" name:"IsSqlInjectionAnalysis"`
 
-	// 限流原因。{
-	// 1: 正式版限额;
-	// 2: 试用版限额;
-	// 4: 试用版到期;
-	// 8: 账号欠费
-	// }
+	// <p>限流原因。{<br>1: 正式版限额;<br>2: 试用版限额;<br>4: 试用版到期;<br>8: 账号欠费<br>}</p>
 	StopReason *int64 `json:"StopReason,omitnil,omitempty" name:"StopReason"`
 
-	// 是否开远程命令执行检测（0=关， 1=开）
+	// <p>是否开远程命令执行检测（0=关， 1=开）</p>
 	IsRemoteCommandExecutionAnalysis *int64 `json:"IsRemoteCommandExecutionAnalysis,omitnil,omitempty" name:"IsRemoteCommandExecutionAnalysis"`
 
-	// 是否开内存马执行检测（0=关， 1=开）
+	// <p>是否开内存马执行检测（0=关， 1=开）</p>
 	IsMemoryHijackingAnalysis *int64 `json:"IsMemoryHijackingAnalysis,omitnil,omitempty" name:"IsMemoryHijackingAnalysis"`
 
-	// CLS索引类型(0=全文索引，1=键值索引)
+	// <p>CLS索引类型(0=全文索引，1=键值索引)</p>
 	LogIndexType *int64 `json:"LogIndexType,omitnil,omitempty" name:"LogIndexType"`
 
-	// traceId的索引key: 当CLS索引类型为键值索引时生效
+	// <p>traceId的索引key: 当CLS索引类型为键值索引时生效</p>
 	LogTraceIdKey *string `json:"LogTraceIdKey,omitnil,omitempty" name:"LogTraceIdKey"`
 
-	// 是否开启删除任意文件检测（0-关闭，1-开启）
+	// <p>是否开启删除任意文件检测（0-关闭，1-开启）</p>
 	IsDeleteAnyFileAnalysis *int64 `json:"IsDeleteAnyFileAnalysis,omitnil,omitempty" name:"IsDeleteAnyFileAnalysis"`
 
-	// 是否开启读取任意文件检测（0-关闭，1-开启）
+	// <p>是否开启读取任意文件检测（0-关闭，1-开启）</p>
 	IsReadAnyFileAnalysis *int64 `json:"IsReadAnyFileAnalysis,omitnil,omitempty" name:"IsReadAnyFileAnalysis"`
 
-	// 是否开启上传任意文件检测（0-关闭，1-开启）
+	// <p>是否开启上传任意文件检测（0-关闭，1-开启）</p>
 	IsUploadAnyFileAnalysis *int64 `json:"IsUploadAnyFileAnalysis,omitnil,omitempty" name:"IsUploadAnyFileAnalysis"`
 
-	// 是否开启包含任意文件检测（0-关闭，1-开启）
+	// <p>是否开启包含任意文件检测（0-关闭，1-开启）</p>
 	IsIncludeAnyFileAnalysis *int64 `json:"IsIncludeAnyFileAnalysis,omitnil,omitempty" name:"IsIncludeAnyFileAnalysis"`
 
-	// 是否开启目录遍历检测（0-关闭，1-开启）
+	// <p>是否开启目录遍历检测（0-关闭，1-开启）</p>
 	IsDirectoryTraversalAnalysis *int64 `json:"IsDirectoryTraversalAnalysis,omitnil,omitempty" name:"IsDirectoryTraversalAnalysis"`
 
-	// 是否开启模板引擎注入检测（0-关闭，1-开启）
+	// <p>是否开启模板引擎注入检测（0-关闭，1-开启）</p>
 	IsTemplateEngineInjectionAnalysis *int64 `json:"IsTemplateEngineInjectionAnalysis,omitnil,omitempty" name:"IsTemplateEngineInjectionAnalysis"`
 
-	// 是否开启脚本引擎注入检测（0-关闭，1-开启）
+	// <p>是否开启脚本引擎注入检测（0-关闭，1-开启）</p>
 	IsScriptEngineInjectionAnalysis *int64 `json:"IsScriptEngineInjectionAnalysis,omitnil,omitempty" name:"IsScriptEngineInjectionAnalysis"`
 
-	// 是否开启表达式注入检测（0-关闭，1-开启）
+	// <p>是否开启表达式注入检测（0-关闭，1-开启）</p>
 	IsExpressionInjectionAnalysis *int64 `json:"IsExpressionInjectionAnalysis,omitnil,omitempty" name:"IsExpressionInjectionAnalysis"`
 
-	// 是否开启JNDI注入检测（0-关闭，1-开启）
+	// <p>是否开启JNDI注入检测（0-关闭，1-开启）</p>
 	IsJNDIInjectionAnalysis *int64 `json:"IsJNDIInjectionAnalysis,omitnil,omitempty" name:"IsJNDIInjectionAnalysis"`
 
-	// 是否开启JNI注入检测（0-关闭，1-开启）
+	// <p>是否开启JNI注入检测（0-关闭，1-开启）</p>
 	IsJNIInjectionAnalysis *int64 `json:"IsJNIInjectionAnalysis,omitnil,omitempty" name:"IsJNIInjectionAnalysis"`
 
-	// 是否开启Webshell后门检测（0-关闭，1-开启）
+	// <p>是否开启Webshell后门检测（0-关闭，1-开启）</p>
 	IsWebshellBackdoorAnalysis *int64 `json:"IsWebshellBackdoorAnalysis,omitnil,omitempty" name:"IsWebshellBackdoorAnalysis"`
 
-	// 是否开启反序列化检测（0-关闭，1-开启）
+	// <p>是否开启反序列化检测（0-关闭，1-开启）</p>
 	IsDeserializationAnalysis *int64 `json:"IsDeserializationAnalysis,omitnil,omitempty" name:"IsDeserializationAnalysis"`
 
-	// 业务系统鉴权 token
+	// <p>业务系统鉴权 token</p>
 	Token *string `json:"Token,omitnil,omitempty" name:"Token"`
 
-	// URL长分段收敛阈值
+	// <p>URL长分段收敛阈值</p>
 	UrlLongSegmentThreshold *int64 `json:"UrlLongSegmentThreshold,omitnil,omitempty" name:"UrlLongSegmentThreshold"`
 
-	// URL数字分段收敛阈值
+	// <p>URL数字分段收敛阈值</p>
 	UrlNumberSegmentThreshold *int64 `json:"UrlNumberSegmentThreshold,omitnil,omitempty" name:"UrlNumberSegmentThreshold"`
+
+	// <p>spanId的索引key: 当CLS索引类型为键值索引时生效</p>
+	LogSpanIdKey *string `json:"LogSpanIdKey,omitnil,omitempty" name:"LogSpanIdKey"`
 }
 
 type ApmMetricRecord struct {
@@ -554,28 +674,31 @@ type ApmMetricRecord struct {
 }
 
 type ApmPrometheusRules struct {
-	// 指标匹配规则ID
+	// <p>指标匹配规则ID</p>
 	Id *int64 `json:"Id,omitnil,omitempty" name:"Id"`
 
-	// 指标匹配规则名
+	// <p>指标匹配规则名</p>
 	// 注意：此字段可能返回 null，表示取不到有效值。
 	Name *string `json:"Name,omitnil,omitempty" name:"Name"`
 
-	// 规则生效的应用。生效于全部应用就传空字符串
+	// <p>规则生效的应用。生效于全部应用就传空字符串</p>
 	// 注意：此字段可能返回 null，表示取不到有效值。
 	ServiceName *string `json:"ServiceName,omitnil,omitempty" name:"ServiceName"`
 
-	// 指标匹配规则状态：1(启用)、2（不启用）
+	// <p>指标匹配规则状态：1(启用)、2（不启用）</p>
 	// 注意：此字段可能返回 null，表示取不到有效值。
 	Status *int64 `json:"Status,omitnil,omitempty" name:"Status"`
 
-	// 指标匹配规则
+	// <p>指标匹配规则</p>
 	// 注意：此字段可能返回 null，表示取不到有效值。
 	MetricNameRule *string `json:"MetricNameRule,omitnil,omitempty" name:"MetricNameRule"`
 
-	// 匹配类型：0精准匹配，1前缀匹配，2后缀匹配
+	// <p>匹配类型：0精准匹配，1前缀匹配，2后缀匹配</p>
 	// 注意：此字段可能返回 null，表示取不到有效值。
 	MetricMatchType *int64 `json:"MetricMatchType,omitnil,omitempty" name:"MetricMatchType"`
+
+	// <p>是否追加资源属性</p>
+	AppendResourceAttributes *bool `json:"AppendResourceAttributes,omitnil,omitempty" name:"AppendResourceAttributes"`
 }
 
 type ApmSampleConfig struct {
@@ -633,6 +756,64 @@ type ApmTag struct {
 
 	// 维度值（标签值）
 	Value *string `json:"Value,omitnil,omitempty" name:"Value"`
+}
+
+type ApmVulnerabilityServiceDetail struct {
+	// 应用实例
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	ServiceInstance *string `json:"ServiceInstance,omitnil,omitempty" name:"ServiceInstance"`
+
+	// 漏洞所在jar包路径
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	Path *string `json:"Path,omitnil,omitempty" name:"Path"`
+
+	// 最近发生时间
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	LastOccurTime *int64 `json:"LastOccurTime,omitnil,omitempty" name:"LastOccurTime"`
+}
+
+type AutoProfilingConfig struct {
+	// 自动CPU剖析任务开关
+	CpuProfilingEnable *bool `json:"CpuProfilingEnable,omitnil,omitempty" name:"CpuProfilingEnable"`
+
+	// 自动内存剖析任务开关
+	MemoryProfilingEnable *bool `json:"MemoryProfilingEnable,omitnil,omitempty" name:"MemoryProfilingEnable"`
+
+	// 自动CPU剖析任务阈值
+	CpuProfilingThreshold *int64 `json:"CpuProfilingThreshold,omitnil,omitempty" name:"CpuProfilingThreshold"`
+
+	// 自动内存剖析任务阈值
+	MemoryProfilingThreshold *int64 `json:"MemoryProfilingThreshold,omitnil,omitempty" name:"MemoryProfilingThreshold"`
+
+	// CPU自动剖析任务时长
+	CpuProfilingDuration *int64 `json:"CpuProfilingDuration,omitnil,omitempty" name:"CpuProfilingDuration"`
+
+	// 内存自动剖析任务时长
+	MemoryProfilingDuration *int64 `json:"MemoryProfilingDuration,omitnil,omitempty" name:"MemoryProfilingDuration"`
+}
+
+type CVMMeta struct {
+	// 地域
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	Region *string `json:"Region,omitnil,omitempty" name:"Region"`
+
+	// 实例ID
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	InstanceID *string `json:"InstanceID,omitnil,omitempty" name:"InstanceID"`
+}
+
+type ComponentTopologyView struct {
+	// 服务纬度的节点数量
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	Service *int64 `json:"Service,omitnil,omitempty" name:"Service"`
+
+	// 数据库节点数量
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	Database *int64 `json:"Database,omitnil,omitempty" name:"Database"`
+
+	// 消息队列节点数量
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	MQ *int64 `json:"MQ,omitnil,omitempty" name:"MQ"`
 }
 
 // Predefined struct for user
@@ -736,39 +917,45 @@ func (r *CreateApmInstanceResponse) FromJsonString(s string) error {
 
 // Predefined struct for user
 type CreateApmPrometheusRuleRequestParams struct {
-	// 指标匹配规则名
+	// <p>指标匹配规则名</p>
 	Name *string `json:"Name,omitnil,omitempty" name:"Name"`
 
-	// 规则生效的应用。作用全部应用就传空字符串
+	// <p>规则生效的应用。作用全部应用就传空字符串</p>
 	ServiceName *string `json:"ServiceName,omitnil,omitempty" name:"ServiceName"`
 
-	// 指标匹配类型：0精准匹配，1前缀匹配，2后缀匹配
+	// <p>指标匹配类型：0精准匹配，1前缀匹配，2后缀匹配</p>
 	MetricMatchType *int64 `json:"MetricMatchType,omitnil,omitempty" name:"MetricMatchType"`
 
-	// 客户定义的命中指标名规则。
+	// <p>客户定义的命中指标名规则。</p>
 	MetricNameRule *string `json:"MetricNameRule,omitnil,omitempty" name:"MetricNameRule"`
 
-	// 业务系统ID
+	// <p>业务系统ID</p>
 	InstanceId *string `json:"InstanceId,omitnil,omitempty" name:"InstanceId"`
+
+	// <p>是否追加资源属性</p>
+	AppendResourceAttributes *bool `json:"AppendResourceAttributes,omitnil,omitempty" name:"AppendResourceAttributes"`
 }
 
 type CreateApmPrometheusRuleRequest struct {
 	*tchttp.BaseRequest
 	
-	// 指标匹配规则名
+	// <p>指标匹配规则名</p>
 	Name *string `json:"Name,omitnil,omitempty" name:"Name"`
 
-	// 规则生效的应用。作用全部应用就传空字符串
+	// <p>规则生效的应用。作用全部应用就传空字符串</p>
 	ServiceName *string `json:"ServiceName,omitnil,omitempty" name:"ServiceName"`
 
-	// 指标匹配类型：0精准匹配，1前缀匹配，2后缀匹配
+	// <p>指标匹配类型：0精准匹配，1前缀匹配，2后缀匹配</p>
 	MetricMatchType *int64 `json:"MetricMatchType,omitnil,omitempty" name:"MetricMatchType"`
 
-	// 客户定义的命中指标名规则。
+	// <p>客户定义的命中指标名规则。</p>
 	MetricNameRule *string `json:"MetricNameRule,omitnil,omitempty" name:"MetricNameRule"`
 
-	// 业务系统ID
+	// <p>业务系统ID</p>
 	InstanceId *string `json:"InstanceId,omitnil,omitempty" name:"InstanceId"`
+
+	// <p>是否追加资源属性</p>
+	AppendResourceAttributes *bool `json:"AppendResourceAttributes,omitnil,omitempty" name:"AppendResourceAttributes"`
 }
 
 func (r *CreateApmPrometheusRuleRequest) ToJsonString() string {
@@ -788,6 +975,7 @@ func (r *CreateApmPrometheusRuleRequest) FromJsonString(s string) error {
 	delete(f, "MetricMatchType")
 	delete(f, "MetricNameRule")
 	delete(f, "InstanceId")
+	delete(f, "AppendResourceAttributes")
 	if len(f) > 0 {
 		return tcerr.NewTencentCloudSDKError("ClientError.BuildRequestError", "CreateApmPrometheusRuleRequest has unknown keys!", "")
 	}
@@ -796,7 +984,7 @@ func (r *CreateApmPrometheusRuleRequest) FromJsonString(s string) error {
 
 // Predefined struct for user
 type CreateApmPrometheusRuleResponseParams struct {
-	// 指标匹配规则的ID
+	// <p>指标匹配规则的ID</p>
 	RuleId *int64 `json:"RuleId,omitnil,omitempty" name:"RuleId"`
 
 	// 唯一请求 ID，由服务端生成，每次请求都会返回（若请求因其他原因未能抵达服务端，则该次请求不会获得 RequestId）。定位问题时需要提供该次请求的 RequestId。
@@ -1171,6 +1359,79 @@ func (r *DescribeApmAgentResponse) FromJsonString(s string) error {
 }
 
 // Predefined struct for user
+type DescribeApmAllVulCountRequestParams struct {
+	// 秒级时间戳
+	StartTime *int64 `json:"StartTime,omitnil,omitempty" name:"StartTime"`
+
+	// 秒级时间戳
+	EndTime *int64 `json:"EndTime,omitnil,omitempty" name:"EndTime"`
+}
+
+type DescribeApmAllVulCountRequest struct {
+	*tchttp.BaseRequest
+	
+	// 秒级时间戳
+	StartTime *int64 `json:"StartTime,omitnil,omitempty" name:"StartTime"`
+
+	// 秒级时间戳
+	EndTime *int64 `json:"EndTime,omitnil,omitempty" name:"EndTime"`
+}
+
+func (r *DescribeApmAllVulCountRequest) ToJsonString() string {
+    b, _ := json.Marshal(r)
+    return string(b)
+}
+
+// FromJsonString It is highly **NOT** recommended to use this function
+// because it has no param check, nor strict type check
+func (r *DescribeApmAllVulCountRequest) FromJsonString(s string) error {
+	f := make(map[string]interface{})
+	if err := json.Unmarshal([]byte(s), &f); err != nil {
+		return err
+	}
+	delete(f, "StartTime")
+	delete(f, "EndTime")
+	if len(f) > 0 {
+		return tcerr.NewTencentCloudSDKError("ClientError.BuildRequestError", "DescribeApmAllVulCountRequest has unknown keys!", "")
+	}
+	return json.Unmarshal([]byte(s), &r)
+}
+
+// Predefined struct for user
+type DescribeApmAllVulCountResponseParams struct {
+	// 包含漏洞指标以及业务系统个数	
+	VulnerabilityList []*ApmMetricRecord `json:"VulnerabilityList,omitnil,omitempty" name:"VulnerabilityList"`
+
+	// 总漏洞个数
+	VulnerabilityCount *int64 `json:"VulnerabilityCount,omitnil,omitempty" name:"VulnerabilityCount"`
+
+	// 严重漏洞个数
+	ImportantVulnerabilityCount *int64 `json:"ImportantVulnerabilityCount,omitnil,omitempty" name:"ImportantVulnerabilityCount"`
+
+	// 高危漏洞个数
+	CriticalVulnerabilityCount *int64 `json:"CriticalVulnerabilityCount,omitnil,omitempty" name:"CriticalVulnerabilityCount"`
+
+	// 唯一请求 ID，由服务端生成，每次请求都会返回（若请求因其他原因未能抵达服务端，则该次请求不会获得 RequestId）。定位问题时需要提供该次请求的 RequestId。
+	RequestId *string `json:"RequestId,omitnil,omitempty" name:"RequestId"`
+}
+
+type DescribeApmAllVulCountResponse struct {
+	*tchttp.BaseResponse
+	Response *DescribeApmAllVulCountResponseParams `json:"Response"`
+}
+
+func (r *DescribeApmAllVulCountResponse) ToJsonString() string {
+    b, _ := json.Marshal(r)
+    return string(b)
+}
+
+// FromJsonString It is highly **NOT** recommended to use this function
+// because it has no param check, nor strict type check
+func (r *DescribeApmAllVulCountResponse) FromJsonString(s string) error {
+	return json.Unmarshal([]byte(s), &r)
+}
+
+// Predefined struct for user
 type DescribeApmApplicationConfigRequestParams struct {
 	// 实例ID
 	InstanceId *string `json:"InstanceId,omitnil,omitempty" name:"InstanceId"`
@@ -1301,45 +1562,75 @@ func (r *DescribeApmAssociationResponse) FromJsonString(s string) error {
 
 // Predefined struct for user
 type DescribeApmInstancesRequestParams struct {
-	// Tag 列表
+	// <p>Tag 列表</p>
 	Tags []*ApmTag `json:"Tags,omitnil,omitempty" name:"Tags"`
 
-	// 按业务系统名过滤，支持模糊检索
+	// <p>按业务系统名过滤，支持模糊检索</p>
 	InstanceName *string `json:"InstanceName,omitnil,omitempty" name:"InstanceName"`
 
-	// 按业务系统 ID 过滤，支持模糊检索
+	// <p>按业务系统 ID 过滤，支持模糊检索</p>
 	InstanceId *string `json:"InstanceId,omitnil,omitempty" name:"InstanceId"`
 
-	// 按业务系统 ID 过滤
+	// <p>按业务系统 ID 过滤</p>
 	InstanceIds []*string `json:"InstanceIds,omitnil,omitempty" name:"InstanceIds"`
 
-	// 是否查询官方 Demo 业务系统（0=非 Demo 业务系统，1=Demo 业务系统，默认为0）
+	// <p>是否查询官方 Demo 业务系统（0=非 Demo 业务系统，1=Demo 业务系统，默认为0）</p>
 	DemoInstanceFlag *int64 `json:"DemoInstanceFlag,omitnil,omitempty" name:"DemoInstanceFlag"`
 
-	// 是否查询全地域业务系统（0=不查询全地域，1=查询全地域，默认为0）
+	// <p>是否查询全地域业务系统（0=不查询全地域，1=查询全地域，默认为0）</p>
 	AllRegionsFlag *int64 `json:"AllRegionsFlag,omitnil,omitempty" name:"AllRegionsFlag"`
+
+	// <p>页码，从1开始</p><p>单位：页</p>
+	PageIndex *int64 `json:"PageIndex,omitnil,omitempty" name:"PageIndex"`
+
+	// <p>每页数量，默认20，最大100</p><p>单位：个</p>
+	PageSize *int64 `json:"PageSize,omitnil,omitempty" name:"PageSize"`
+
+	// <p>搜索参数（OR 匹配 Name / InstanceKey）</p>
+	Keyword *string `json:"Keyword,omitnil,omitempty" name:"Keyword"`
+
+	// <p>排序类型：ASC | DESC</p>
+	OrderDirection *string `json:"OrderDirection,omitnil,omitempty" name:"OrderDirection"`
+
+	// <p>排序字段：ServiceCount / TotalCount</p>
+	OrderBy *string `json:"OrderBy,omitnil,omitempty" name:"OrderBy"`
 }
 
 type DescribeApmInstancesRequest struct {
 	*tchttp.BaseRequest
 	
-	// Tag 列表
+	// <p>Tag 列表</p>
 	Tags []*ApmTag `json:"Tags,omitnil,omitempty" name:"Tags"`
 
-	// 按业务系统名过滤，支持模糊检索
+	// <p>按业务系统名过滤，支持模糊检索</p>
 	InstanceName *string `json:"InstanceName,omitnil,omitempty" name:"InstanceName"`
 
-	// 按业务系统 ID 过滤，支持模糊检索
+	// <p>按业务系统 ID 过滤，支持模糊检索</p>
 	InstanceId *string `json:"InstanceId,omitnil,omitempty" name:"InstanceId"`
 
-	// 按业务系统 ID 过滤
+	// <p>按业务系统 ID 过滤</p>
 	InstanceIds []*string `json:"InstanceIds,omitnil,omitempty" name:"InstanceIds"`
 
-	// 是否查询官方 Demo 业务系统（0=非 Demo 业务系统，1=Demo 业务系统，默认为0）
+	// <p>是否查询官方 Demo 业务系统（0=非 Demo 业务系统，1=Demo 业务系统，默认为0）</p>
 	DemoInstanceFlag *int64 `json:"DemoInstanceFlag,omitnil,omitempty" name:"DemoInstanceFlag"`
 
-	// 是否查询全地域业务系统（0=不查询全地域，1=查询全地域，默认为0）
+	// <p>是否查询全地域业务系统（0=不查询全地域，1=查询全地域，默认为0）</p>
 	AllRegionsFlag *int64 `json:"AllRegionsFlag,omitnil,omitempty" name:"AllRegionsFlag"`
+
+	// <p>页码，从1开始</p><p>单位：页</p>
+	PageIndex *int64 `json:"PageIndex,omitnil,omitempty" name:"PageIndex"`
+
+	// <p>每页数量，默认20，最大100</p><p>单位：个</p>
+	PageSize *int64 `json:"PageSize,omitnil,omitempty" name:"PageSize"`
+
+	// <p>搜索参数（OR 匹配 Name / InstanceKey）</p>
+	Keyword *string `json:"Keyword,omitnil,omitempty" name:"Keyword"`
+
+	// <p>排序类型：ASC | DESC</p>
+	OrderDirection *string `json:"OrderDirection,omitnil,omitempty" name:"OrderDirection"`
+
+	// <p>排序字段：ServiceCount / TotalCount</p>
+	OrderBy *string `json:"OrderBy,omitnil,omitempty" name:"OrderBy"`
 }
 
 func (r *DescribeApmInstancesRequest) ToJsonString() string {
@@ -1360,6 +1651,11 @@ func (r *DescribeApmInstancesRequest) FromJsonString(s string) error {
 	delete(f, "InstanceIds")
 	delete(f, "DemoInstanceFlag")
 	delete(f, "AllRegionsFlag")
+	delete(f, "PageIndex")
+	delete(f, "PageSize")
+	delete(f, "Keyword")
+	delete(f, "OrderDirection")
+	delete(f, "OrderBy")
 	if len(f) > 0 {
 		return tcerr.NewTencentCloudSDKError("ClientError.BuildRequestError", "DescribeApmInstancesRequest has unknown keys!", "")
 	}
@@ -1368,8 +1664,17 @@ func (r *DescribeApmInstancesRequest) FromJsonString(s string) error {
 
 // Predefined struct for user
 type DescribeApmInstancesResponseParams struct {
-	// APM 业务系统列表
+	// <p>APM 业务系统列表</p>
 	Instances []*ApmInstanceDetail `json:"Instances,omitnil,omitempty" name:"Instances"`
+
+	// <p>总数</p><p>单位：个</p>
+	TotalCount *int64 `json:"TotalCount,omitnil,omitempty" name:"TotalCount"`
+
+	// <p>页码，从1开始 </p><p>单位：页</p>
+	PageIndex *int64 `json:"PageIndex,omitnil,omitempty" name:"PageIndex"`
+
+	// <p>每页数量，默认20，最大100</p><p>单位：个</p>
+	PageSize *int64 `json:"PageSize,omitnil,omitempty" name:"PageSize"`
 
 	// 唯一请求 ID，由服务端生成，每次请求都会返回（若请求因其他原因未能抵达服务端，则该次请求不会获得 RequestId）。定位问题时需要提供该次请求的 RequestId。
 	RequestId *string `json:"RequestId,omitnil,omitempty" name:"RequestId"`
@@ -1445,6 +1750,122 @@ func (r *DescribeApmPrometheusRuleResponse) ToJsonString() string {
 // FromJsonString It is highly **NOT** recommended to use this function
 // because it has no param check, nor strict type check
 func (r *DescribeApmPrometheusRuleResponse) FromJsonString(s string) error {
+	return json.Unmarshal([]byte(s), &r)
+}
+
+// Predefined struct for user
+type DescribeApmSQLInjectionDetailRequestParams struct {
+	// 业务系统 ID
+	InstanceId *string `json:"InstanceId,omitnil,omitempty" name:"InstanceId"`
+
+	// 限制
+	Limit *int64 `json:"Limit,omitnil,omitempty" name:"Limit"`
+
+	// 偏移量
+	Offset *int64 `json:"Offset,omitnil,omitempty" name:"Offset"`
+
+	// 秒级时间戳
+	StartTime *int64 `json:"StartTime,omitnil,omitempty" name:"StartTime"`
+
+	// 秒级时间戳
+	EndTime *int64 `json:"EndTime,omitnil,omitempty" name:"EndTime"`
+
+	// 排序
+	OrderBy *OrderBy `json:"OrderBy,omitnil,omitempty" name:"OrderBy"`
+
+	// 查询过滤条件
+	Filters []*Filter `json:"Filters,omitnil,omitempty" name:"Filters"`
+
+	// 聚合维度
+	GroupBy []*string `json:"GroupBy,omitnil,omitempty" name:"GroupBy"`
+
+	// 指标列表
+	Metrics []*QueryMetricItem `json:"Metrics,omitnil,omitempty" name:"Metrics"`
+}
+
+type DescribeApmSQLInjectionDetailRequest struct {
+	*tchttp.BaseRequest
+	
+	// 业务系统 ID
+	InstanceId *string `json:"InstanceId,omitnil,omitempty" name:"InstanceId"`
+
+	// 限制
+	Limit *int64 `json:"Limit,omitnil,omitempty" name:"Limit"`
+
+	// 偏移量
+	Offset *int64 `json:"Offset,omitnil,omitempty" name:"Offset"`
+
+	// 秒级时间戳
+	StartTime *int64 `json:"StartTime,omitnil,omitempty" name:"StartTime"`
+
+	// 秒级时间戳
+	EndTime *int64 `json:"EndTime,omitnil,omitempty" name:"EndTime"`
+
+	// 排序
+	OrderBy *OrderBy `json:"OrderBy,omitnil,omitempty" name:"OrderBy"`
+
+	// 查询过滤条件
+	Filters []*Filter `json:"Filters,omitnil,omitempty" name:"Filters"`
+
+	// 聚合维度
+	GroupBy []*string `json:"GroupBy,omitnil,omitempty" name:"GroupBy"`
+
+	// 指标列表
+	Metrics []*QueryMetricItem `json:"Metrics,omitnil,omitempty" name:"Metrics"`
+}
+
+func (r *DescribeApmSQLInjectionDetailRequest) ToJsonString() string {
+    b, _ := json.Marshal(r)
+    return string(b)
+}
+
+// FromJsonString It is highly **NOT** recommended to use this function
+// because it has no param check, nor strict type check
+func (r *DescribeApmSQLInjectionDetailRequest) FromJsonString(s string) error {
+	f := make(map[string]interface{})
+	if err := json.Unmarshal([]byte(s), &f); err != nil {
+		return err
+	}
+	delete(f, "InstanceId")
+	delete(f, "Limit")
+	delete(f, "Offset")
+	delete(f, "StartTime")
+	delete(f, "EndTime")
+	delete(f, "OrderBy")
+	delete(f, "Filters")
+	delete(f, "GroupBy")
+	delete(f, "Metrics")
+	if len(f) > 0 {
+		return tcerr.NewTencentCloudSDKError("ClientError.BuildRequestError", "DescribeApmSQLInjectionDetailRequest has unknown keys!", "")
+	}
+	return json.Unmarshal([]byte(s), &r)
+}
+
+// Predefined struct for user
+type DescribeApmSQLInjectionDetailResponseParams struct {
+	// SQL相关维度信息
+	Tags []*ApmTag `json:"Tags,omitnil,omitempty" name:"Tags"`
+
+	// 链路相关信息
+	Records []*ApmMetricRecord `json:"Records,omitnil,omitempty" name:"Records"`
+
+	// 唯一请求 ID，由服务端生成，每次请求都会返回（若请求因其他原因未能抵达服务端，则该次请求不会获得 RequestId）。定位问题时需要提供该次请求的 RequestId。
+	RequestId *string `json:"RequestId,omitnil,omitempty" name:"RequestId"`
+}
+
+type DescribeApmSQLInjectionDetailResponse struct {
+	*tchttp.BaseResponse
+	Response *DescribeApmSQLInjectionDetailResponseParams `json:"Response"`
+}
+
+func (r *DescribeApmSQLInjectionDetailResponse) ToJsonString() string {
+    b, _ := json.Marshal(r)
+    return string(b)
+}
+
+// FromJsonString It is highly **NOT** recommended to use this function
+// because it has no param check, nor strict type check
+func (r *DescribeApmSQLInjectionDetailResponse) FromJsonString(s string) error {
 	return json.Unmarshal([]byte(s), &r)
 }
 
@@ -1669,6 +2090,181 @@ func (r *DescribeApmServiceMetricResponse) FromJsonString(s string) error {
 }
 
 // Predefined struct for user
+type DescribeApmVulnerabilityCountRequestParams struct {
+	// APM业务系统ID
+	InstanceId *string `json:"InstanceId,omitnil,omitempty" name:"InstanceId"`
+
+	// APM应用名称
+	ServiceName *string `json:"ServiceName,omitnil,omitempty" name:"ServiceName"`
+
+	// 秒级时间戳
+	StartTime *int64 `json:"StartTime,omitnil,omitempty" name:"StartTime"`
+
+	// 秒级时间戳
+	EndTime *int64 `json:"EndTime,omitnil,omitempty" name:"EndTime"`
+
+	// 查询的数据类型，攻击检测为“attack_detect”
+	Type *string `json:"Type,omitnil,omitempty" name:"Type"`
+}
+
+type DescribeApmVulnerabilityCountRequest struct {
+	*tchttp.BaseRequest
+	
+	// APM业务系统ID
+	InstanceId *string `json:"InstanceId,omitnil,omitempty" name:"InstanceId"`
+
+	// APM应用名称
+	ServiceName *string `json:"ServiceName,omitnil,omitempty" name:"ServiceName"`
+
+	// 秒级时间戳
+	StartTime *int64 `json:"StartTime,omitnil,omitempty" name:"StartTime"`
+
+	// 秒级时间戳
+	EndTime *int64 `json:"EndTime,omitnil,omitempty" name:"EndTime"`
+
+	// 查询的数据类型，攻击检测为“attack_detect”
+	Type *string `json:"Type,omitnil,omitempty" name:"Type"`
+}
+
+func (r *DescribeApmVulnerabilityCountRequest) ToJsonString() string {
+    b, _ := json.Marshal(r)
+    return string(b)
+}
+
+// FromJsonString It is highly **NOT** recommended to use this function
+// because it has no param check, nor strict type check
+func (r *DescribeApmVulnerabilityCountRequest) FromJsonString(s string) error {
+	f := make(map[string]interface{})
+	if err := json.Unmarshal([]byte(s), &f); err != nil {
+		return err
+	}
+	delete(f, "InstanceId")
+	delete(f, "ServiceName")
+	delete(f, "StartTime")
+	delete(f, "EndTime")
+	delete(f, "Type")
+	if len(f) > 0 {
+		return tcerr.NewTencentCloudSDKError("ClientError.BuildRequestError", "DescribeApmVulnerabilityCountRequest has unknown keys!", "")
+	}
+	return json.Unmarshal([]byte(s), &r)
+}
+
+// Predefined struct for user
+type DescribeApmVulnerabilityCountResponseParams struct {
+	// 包含漏洞指标以及业务系统个数
+	VulnerabilityList []*ApmMetricRecord `json:"VulnerabilityList,omitnil,omitempty" name:"VulnerabilityList"`
+
+	// 总漏洞个数
+	VulnerabilityCount *int64 `json:"VulnerabilityCount,omitnil,omitempty" name:"VulnerabilityCount"`
+
+	// 严重漏洞个数
+	ImportantVulnerabilityCount *int64 `json:"ImportantVulnerabilityCount,omitnil,omitempty" name:"ImportantVulnerabilityCount"`
+
+	// 高危漏洞个数
+	CriticalVulnerabilityCount *int64 `json:"CriticalVulnerabilityCount,omitnil,omitempty" name:"CriticalVulnerabilityCount"`
+
+	// 唯一请求 ID，由服务端生成，每次请求都会返回（若请求因其他原因未能抵达服务端，则该次请求不会获得 RequestId）。定位问题时需要提供该次请求的 RequestId。
+	RequestId *string `json:"RequestId,omitnil,omitempty" name:"RequestId"`
+}
+
+type DescribeApmVulnerabilityCountResponse struct {
+	*tchttp.BaseResponse
+	Response *DescribeApmVulnerabilityCountResponseParams `json:"Response"`
+}
+
+func (r *DescribeApmVulnerabilityCountResponse) ToJsonString() string {
+    b, _ := json.Marshal(r)
+    return string(b)
+}
+
+// FromJsonString It is highly **NOT** recommended to use this function
+// because it has no param check, nor strict type check
+func (r *DescribeApmVulnerabilityCountResponse) FromJsonString(s string) error {
+	return json.Unmarshal([]byte(s), &r)
+}
+
+// Predefined struct for user
+type DescribeApmVulnerabilityDetailRequestParams struct {
+	// 秒级时间戳
+	StartTime *int64 `json:"StartTime,omitnil,omitempty" name:"StartTime"`
+
+	// 秒级时间戳
+	EndTime *int64 `json:"EndTime,omitnil,omitempty" name:"EndTime"`
+
+	// APM业务系统ID
+	InstanceId *string `json:"InstanceId,omitnil,omitempty" name:"InstanceId"`
+
+	// 条件过滤，必填service.name, instrumentation.name, version, vul.id
+	Filters []*Filter `json:"Filters,omitnil,omitempty" name:"Filters"`
+}
+
+type DescribeApmVulnerabilityDetailRequest struct {
+	*tchttp.BaseRequest
+	
+	// 秒级时间戳
+	StartTime *int64 `json:"StartTime,omitnil,omitempty" name:"StartTime"`
+
+	// 秒级时间戳
+	EndTime *int64 `json:"EndTime,omitnil,omitempty" name:"EndTime"`
+
+	// APM业务系统ID
+	InstanceId *string `json:"InstanceId,omitnil,omitempty" name:"InstanceId"`
+
+	// 条件过滤，必填service.name, instrumentation.name, version, vul.id
+	Filters []*Filter `json:"Filters,omitnil,omitempty" name:"Filters"`
+}
+
+func (r *DescribeApmVulnerabilityDetailRequest) ToJsonString() string {
+    b, _ := json.Marshal(r)
+    return string(b)
+}
+
+// FromJsonString It is highly **NOT** recommended to use this function
+// because it has no param check, nor strict type check
+func (r *DescribeApmVulnerabilityDetailRequest) FromJsonString(s string) error {
+	f := make(map[string]interface{})
+	if err := json.Unmarshal([]byte(s), &f); err != nil {
+		return err
+	}
+	delete(f, "StartTime")
+	delete(f, "EndTime")
+	delete(f, "InstanceId")
+	delete(f, "Filters")
+	if len(f) > 0 {
+		return tcerr.NewTencentCloudSDKError("ClientError.BuildRequestError", "DescribeApmVulnerabilityDetailRequest has unknown keys!", "")
+	}
+	return json.Unmarshal([]byte(s), &r)
+}
+
+// Predefined struct for user
+type DescribeApmVulnerabilityDetailResponseParams struct {
+	// 漏洞详情
+	Tags []*ApmTag `json:"Tags,omitnil,omitempty" name:"Tags"`
+
+	// 漏洞相关业务系统列表
+	ServiceInstanceList []*ApmVulnerabilityServiceDetail `json:"ServiceInstanceList,omitnil,omitempty" name:"ServiceInstanceList"`
+
+	// 唯一请求 ID，由服务端生成，每次请求都会返回（若请求因其他原因未能抵达服务端，则该次请求不会获得 RequestId）。定位问题时需要提供该次请求的 RequestId。
+	RequestId *string `json:"RequestId,omitnil,omitempty" name:"RequestId"`
+}
+
+type DescribeApmVulnerabilityDetailResponse struct {
+	*tchttp.BaseResponse
+	Response *DescribeApmVulnerabilityDetailResponseParams `json:"Response"`
+}
+
+func (r *DescribeApmVulnerabilityDetailResponse) ToJsonString() string {
+    b, _ := json.Marshal(r)
+    return string(b)
+}
+
+// FromJsonString It is highly **NOT** recommended to use this function
+// because it has no param check, nor strict type check
+func (r *DescribeApmVulnerabilityDetailResponse) FromJsonString(s string) error {
+	return json.Unmarshal([]byte(s), &r)
+}
+
+// Predefined struct for user
 type DescribeGeneralApmApplicationConfigRequestParams struct {
 	// 应用名
 	ServiceName *string `json:"ServiceName,omitnil,omitempty" name:"ServiceName"`
@@ -1872,76 +2468,56 @@ func (r *DescribeGeneralMetricDataResponse) FromJsonString(s string) error {
 
 // Predefined struct for user
 type DescribeGeneralOTSpanListRequestParams struct {
-	// 业务系统 ID
+	// <p>业务系统 ID</p>
 	InstanceId *string `json:"InstanceId,omitnil,omitempty" name:"InstanceId"`
 
-	// Span 查询开始时间戳（单位：秒）
+	// <p>Span 查询开始时间戳（单位：秒）</p>
 	StartTime *int64 `json:"StartTime,omitnil,omitempty" name:"StartTime"`
 
-	// Span 查询结束时间戳（单位：秒）
+	// <p>Span 查询结束时间戳（单位：秒）</p>
 	EndTime *int64 `json:"EndTime,omitnil,omitempty" name:"EndTime"`
 
-	// 通用过滤参数
+	// <p>通用过滤参数 支持的过滤key如service.name</p>
 	Filters []*Filter `json:"Filters,omitnil,omitempty" name:"Filters"`
 
-	// 排序
-	// 现支持的 Key 有：
-	// 
-	// - startTime(开始时间)
-	// - endTime(结束时间)
-	// - duration(响应时间)
-	// 
-	// 现支持的 Value 有：
-	// 
-	// - desc(降序排序)
-	// - asc(升序排序)
+	// <p>排序<br>现支持的 Key 有：</p><ul><li>startTime(开始时间)</li><li>endTime(结束时间)</li><li>duration(响应时间)</li></ul><p>现支持的 Value 有：</p><ul><li>desc(降序排序)</li><li>asc(升序排序)</li></ul>
 	OrderBy *OrderBy `json:"OrderBy,omitnil,omitempty" name:"OrderBy"`
 
-	// 业务自身服务名，控制台用户请填写taw
+	// <p>业务自身服务名，控制台用户请填写taw</p>
 	BusinessName *string `json:"BusinessName,omitnil,omitempty" name:"BusinessName"`
 
-	// 单页项目个数，默认为10000，合法取值范围为0～10000
+	// <p>单页项目个数，默认为10000，合法取值范围为0～10000</p>
 	Limit *int64 `json:"Limit,omitnil,omitempty" name:"Limit"`
 
-	// 分页
+	// <p>分页</p>
 	Offset *int64 `json:"Offset,omitnil,omitempty" name:"Offset"`
 }
 
 type DescribeGeneralOTSpanListRequest struct {
 	*tchttp.BaseRequest
 	
-	// 业务系统 ID
+	// <p>业务系统 ID</p>
 	InstanceId *string `json:"InstanceId,omitnil,omitempty" name:"InstanceId"`
 
-	// Span 查询开始时间戳（单位：秒）
+	// <p>Span 查询开始时间戳（单位：秒）</p>
 	StartTime *int64 `json:"StartTime,omitnil,omitempty" name:"StartTime"`
 
-	// Span 查询结束时间戳（单位：秒）
+	// <p>Span 查询结束时间戳（单位：秒）</p>
 	EndTime *int64 `json:"EndTime,omitnil,omitempty" name:"EndTime"`
 
-	// 通用过滤参数
+	// <p>通用过滤参数 支持的过滤key如service.name</p>
 	Filters []*Filter `json:"Filters,omitnil,omitempty" name:"Filters"`
 
-	// 排序
-	// 现支持的 Key 有：
-	// 
-	// - startTime(开始时间)
-	// - endTime(结束时间)
-	// - duration(响应时间)
-	// 
-	// 现支持的 Value 有：
-	// 
-	// - desc(降序排序)
-	// - asc(升序排序)
+	// <p>排序<br>现支持的 Key 有：</p><ul><li>startTime(开始时间)</li><li>endTime(结束时间)</li><li>duration(响应时间)</li></ul><p>现支持的 Value 有：</p><ul><li>desc(降序排序)</li><li>asc(升序排序)</li></ul>
 	OrderBy *OrderBy `json:"OrderBy,omitnil,omitempty" name:"OrderBy"`
 
-	// 业务自身服务名，控制台用户请填写taw
+	// <p>业务自身服务名，控制台用户请填写taw</p>
 	BusinessName *string `json:"BusinessName,omitnil,omitempty" name:"BusinessName"`
 
-	// 单页项目个数，默认为10000，合法取值范围为0～10000
+	// <p>单页项目个数，默认为10000，合法取值范围为0～10000</p>
 	Limit *int64 `json:"Limit,omitnil,omitempty" name:"Limit"`
 
-	// 分页
+	// <p>分页</p>
 	Offset *int64 `json:"Offset,omitnil,omitempty" name:"Offset"`
 }
 
@@ -1973,13 +2549,10 @@ func (r *DescribeGeneralOTSpanListRequest) FromJsonString(s string) error {
 
 // Predefined struct for user
 type DescribeGeneralOTSpanListResponseParams struct {
-	// 总数量
+	// <p>总数量</p>
 	TotalCount *int64 `json:"TotalCount,omitnil,omitempty" name:"TotalCount"`
 
-	// Spans字段中包含了链路数据的全部内容，由于数据经过了压缩，需要对结果进行如下三步转换，以还原始的文本。
-	// 1. 将Spans字段中的文本进行 Base64 解码，得到经过压缩后字节数组。
-	// 2. 使用 gzip 对压缩后的字节数组进行解压，得到压缩前的字节数组。
-	// 3. 使用 UTF-8 字符集，将压缩前的字节数组转换为文本。
+	// <p>Spans字段中包含了链路数据的全部内容，由于数据经过了压缩，需要对结果进行如下三步转换，以还原始的文本。</p><ol><li>将Spans字段中的文本进行 Base64 解码，得到经过压缩后字节数组。</li><li>使用 gzip 对压缩后的字节数组进行解压，得到压缩前的字节数组。</li><li>使用 UTF-8 字符集，将压缩前的字节数组转换为文本。</li></ol>
 	Spans *string `json:"Spans,omitnil,omitempty" name:"Spans"`
 
 	// 唯一请求 ID，由服务端生成，每次请求都会返回（若请求因其他原因未能抵达服务端，则该次请求不会获得 RequestId）。定位问题时需要提供该次请求的 RequestId。
@@ -2004,76 +2577,56 @@ func (r *DescribeGeneralOTSpanListResponse) FromJsonString(s string) error {
 
 // Predefined struct for user
 type DescribeGeneralSpanListRequestParams struct {
-	// 业务系统 ID
+	// <p>业务系统 ID</p>
 	InstanceId *string `json:"InstanceId,omitnil,omitempty" name:"InstanceId"`
 
-	// Span 查询开始时间戳（单位：秒）
+	// <p>Span 查询开始时间戳（单位：秒）</p>
 	StartTime *int64 `json:"StartTime,omitnil,omitempty" name:"StartTime"`
 
-	// Span 查询结束时间戳（单位：秒）
+	// <p>Span 查询结束时间戳（单位：秒）</p>
 	EndTime *int64 `json:"EndTime,omitnil,omitempty" name:"EndTime"`
 
-	// 通用过滤参数
+	// <p>通用过滤参数 支持的过滤key如service.name</p>
 	Filters []*Filter `json:"Filters,omitnil,omitempty" name:"Filters"`
 
-	// 排序
-	// 现支持的 Key 有：
-	// 
-	// - startTime(开始时间)
-	// - endTime(结束时间)
-	// - duration(响应时间)
-	// 
-	// 现支持的 Value 有：
-	// 
-	// - desc(降序排序)
-	// - asc(升序排序)
+	// <p>排序<br>现支持的 Key 有：</p><ul><li>startTime(开始时间)</li><li>endTime(结束时间)</li><li>duration(响应时间)</li></ul><p>现支持的 Value 有：</p><ul><li>desc(降序排序)</li><li>asc(升序排序)</li></ul>
 	OrderBy *OrderBy `json:"OrderBy,omitnil,omitempty" name:"OrderBy"`
 
-	// 业务自身服务名，控制台用户请填写taw
+	// <p>业务自身服务名，控制台用户请填写taw</p>
 	BusinessName *string `json:"BusinessName,omitnil,omitempty" name:"BusinessName"`
 
-	// 单页项目个数，默认为10000，合法取值范围为0～10000
+	// <p>单页项目个数，默认为1000，合法取值范围为1～1000</p>
 	Limit *int64 `json:"Limit,omitnil,omitempty" name:"Limit"`
 
-	// 分页
+	// <p>分页</p>
 	Offset *int64 `json:"Offset,omitnil,omitempty" name:"Offset"`
 }
 
 type DescribeGeneralSpanListRequest struct {
 	*tchttp.BaseRequest
 	
-	// 业务系统 ID
+	// <p>业务系统 ID</p>
 	InstanceId *string `json:"InstanceId,omitnil,omitempty" name:"InstanceId"`
 
-	// Span 查询开始时间戳（单位：秒）
+	// <p>Span 查询开始时间戳（单位：秒）</p>
 	StartTime *int64 `json:"StartTime,omitnil,omitempty" name:"StartTime"`
 
-	// Span 查询结束时间戳（单位：秒）
+	// <p>Span 查询结束时间戳（单位：秒）</p>
 	EndTime *int64 `json:"EndTime,omitnil,omitempty" name:"EndTime"`
 
-	// 通用过滤参数
+	// <p>通用过滤参数 支持的过滤key如service.name</p>
 	Filters []*Filter `json:"Filters,omitnil,omitempty" name:"Filters"`
 
-	// 排序
-	// 现支持的 Key 有：
-	// 
-	// - startTime(开始时间)
-	// - endTime(结束时间)
-	// - duration(响应时间)
-	// 
-	// 现支持的 Value 有：
-	// 
-	// - desc(降序排序)
-	// - asc(升序排序)
+	// <p>排序<br>现支持的 Key 有：</p><ul><li>startTime(开始时间)</li><li>endTime(结束时间)</li><li>duration(响应时间)</li></ul><p>现支持的 Value 有：</p><ul><li>desc(降序排序)</li><li>asc(升序排序)</li></ul>
 	OrderBy *OrderBy `json:"OrderBy,omitnil,omitempty" name:"OrderBy"`
 
-	// 业务自身服务名，控制台用户请填写taw
+	// <p>业务自身服务名，控制台用户请填写taw</p>
 	BusinessName *string `json:"BusinessName,omitnil,omitempty" name:"BusinessName"`
 
-	// 单页项目个数，默认为10000，合法取值范围为0～10000
+	// <p>单页项目个数，默认为1000，合法取值范围为1～1000</p>
 	Limit *int64 `json:"Limit,omitnil,omitempty" name:"Limit"`
 
-	// 分页
+	// <p>分页</p>
 	Offset *int64 `json:"Offset,omitnil,omitempty" name:"Offset"`
 }
 
@@ -2105,10 +2658,10 @@ func (r *DescribeGeneralSpanListRequest) FromJsonString(s string) error {
 
 // Predefined struct for user
 type DescribeGeneralSpanListResponseParams struct {
-	// 总数量
+	// <p>总数量</p>
 	TotalCount *int64 `json:"TotalCount,omitnil,omitempty" name:"TotalCount"`
 
-	// Span 分页列表
+	// <p>Span 分页列表</p>
 	Spans []*Span `json:"Spans,omitnil,omitempty" name:"Spans"`
 
 	// 唯一请求 ID，由服务端生成，每次请求都会返回（若请求因其他原因未能抵达服务端，则该次请求不会获得 RequestId）。定位问题时需要提供该次请求的 RequestId。
@@ -2133,113 +2686,99 @@ func (r *DescribeGeneralSpanListResponse) FromJsonString(s string) error {
 
 // Predefined struct for user
 type DescribeMetricRecordsRequestParams struct {
-	// 业务系统 ID
+	// <p>业务系统 ID</p>
 	InstanceId *string `json:"InstanceId,omitnil,omitempty" name:"InstanceId"`
 
-	// 指标列表
+	// <p>指标列表</p>
 	Metrics []*QueryMetricItem `json:"Metrics,omitnil,omitempty" name:"Metrics"`
 
-	// 开始时间（单位为秒）
+	// <p>开始时间（单位为秒）</p>
 	StartTime *uint64 `json:"StartTime,omitnil,omitempty" name:"StartTime"`
 
-	// 结束时间（单位为秒）
+	// <p>结束时间（单位为秒）</p>
 	EndTime *uint64 `json:"EndTime,omitnil,omitempty" name:"EndTime"`
 
-	// 聚合维度
+	// <p>聚合维度</p>
 	GroupBy []*string `json:"GroupBy,omitnil,omitempty" name:"GroupBy"`
 
-	// 过滤条件
+	// <p>过滤条件</p>
 	Filters []*Filter `json:"Filters,omitnil,omitempty" name:"Filters"`
 
-	// Or 过滤条件
+	// <p>Or 过滤条件</p>
 	OrFilters []*Filter `json:"OrFilters,omitnil,omitempty" name:"OrFilters"`
 
-	// 排序
-	// 现支持的 Key 有：
-	// 
-	// - startTime(开始时间)
-	// - endTime(结束时间)
-	// - duration(响应时间)
-	// 
-	// 现支持的 Value 有：
-	// 
-	// - desc(降序排序)
-	// - asc(升序排序)
+	// <p>排序<br>现支持的 Key 有：</p><ul><li>startTime(开始时间)</li><li>endTime(结束时间)</li><li>duration(响应时间)</li></ul><p>现支持的 Value 有：</p><ul><li>desc(降序排序)</li><li>asc(升序排序)</li></ul>
 	OrderBy *OrderBy `json:"OrderBy,omitnil,omitempty" name:"OrderBy"`
 
-	// 业务名称，控制台用户请填写taw。
+	// <p>业务名称，控制台用户请填写taw。</p>
 	BusinessName *string `json:"BusinessName,omitnil,omitempty" name:"BusinessName"`
 
-	// 特殊处理查询结果
+	// <p>特殊处理查询结果</p>
 	Type *string `json:"Type,omitnil,omitempty" name:"Type"`
 
-	// 每页大小，默认为1000，合法取值范围为0~1000
+	// <p>每页大小，默认为1000，合法取值范围为0~1000</p>
 	Limit *uint64 `json:"Limit,omitnil,omitempty" name:"Limit"`
 
-	// 分页起始点
+	// <p>分页起始点</p>
 	Offset *int64 `json:"Offset,omitnil,omitempty" name:"Offset"`
 
-	// 页码
+	// <p>页码</p>
 	PageIndex *int64 `json:"PageIndex,omitnil,omitempty" name:"PageIndex"`
 
-	// 页长
+	// <p>页长</p>
 	PageSize *int64 `json:"PageSize,omitnil,omitempty" name:"PageSize"`
+
+	// <p>应用Id</p>
+	ServiceID *string `json:"ServiceID,omitnil,omitempty" name:"ServiceID"`
 }
 
 type DescribeMetricRecordsRequest struct {
 	*tchttp.BaseRequest
 	
-	// 业务系统 ID
+	// <p>业务系统 ID</p>
 	InstanceId *string `json:"InstanceId,omitnil,omitempty" name:"InstanceId"`
 
-	// 指标列表
+	// <p>指标列表</p>
 	Metrics []*QueryMetricItem `json:"Metrics,omitnil,omitempty" name:"Metrics"`
 
-	// 开始时间（单位为秒）
+	// <p>开始时间（单位为秒）</p>
 	StartTime *uint64 `json:"StartTime,omitnil,omitempty" name:"StartTime"`
 
-	// 结束时间（单位为秒）
+	// <p>结束时间（单位为秒）</p>
 	EndTime *uint64 `json:"EndTime,omitnil,omitempty" name:"EndTime"`
 
-	// 聚合维度
+	// <p>聚合维度</p>
 	GroupBy []*string `json:"GroupBy,omitnil,omitempty" name:"GroupBy"`
 
-	// 过滤条件
+	// <p>过滤条件</p>
 	Filters []*Filter `json:"Filters,omitnil,omitempty" name:"Filters"`
 
-	// Or 过滤条件
+	// <p>Or 过滤条件</p>
 	OrFilters []*Filter `json:"OrFilters,omitnil,omitempty" name:"OrFilters"`
 
-	// 排序
-	// 现支持的 Key 有：
-	// 
-	// - startTime(开始时间)
-	// - endTime(结束时间)
-	// - duration(响应时间)
-	// 
-	// 现支持的 Value 有：
-	// 
-	// - desc(降序排序)
-	// - asc(升序排序)
+	// <p>排序<br>现支持的 Key 有：</p><ul><li>startTime(开始时间)</li><li>endTime(结束时间)</li><li>duration(响应时间)</li></ul><p>现支持的 Value 有：</p><ul><li>desc(降序排序)</li><li>asc(升序排序)</li></ul>
 	OrderBy *OrderBy `json:"OrderBy,omitnil,omitempty" name:"OrderBy"`
 
-	// 业务名称，控制台用户请填写taw。
+	// <p>业务名称，控制台用户请填写taw。</p>
 	BusinessName *string `json:"BusinessName,omitnil,omitempty" name:"BusinessName"`
 
-	// 特殊处理查询结果
+	// <p>特殊处理查询结果</p>
 	Type *string `json:"Type,omitnil,omitempty" name:"Type"`
 
-	// 每页大小，默认为1000，合法取值范围为0~1000
+	// <p>每页大小，默认为1000，合法取值范围为0~1000</p>
 	Limit *uint64 `json:"Limit,omitnil,omitempty" name:"Limit"`
 
-	// 分页起始点
+	// <p>分页起始点</p>
 	Offset *int64 `json:"Offset,omitnil,omitempty" name:"Offset"`
 
-	// 页码
+	// <p>页码</p>
 	PageIndex *int64 `json:"PageIndex,omitnil,omitempty" name:"PageIndex"`
 
-	// 页长
+	// <p>页长</p>
 	PageSize *int64 `json:"PageSize,omitnil,omitempty" name:"PageSize"`
+
+	// <p>应用Id</p>
+	ServiceID *string `json:"ServiceID,omitnil,omitempty" name:"ServiceID"`
 }
 
 func (r *DescribeMetricRecordsRequest) ToJsonString() string {
@@ -2268,6 +2807,7 @@ func (r *DescribeMetricRecordsRequest) FromJsonString(s string) error {
 	delete(f, "Offset")
 	delete(f, "PageIndex")
 	delete(f, "PageSize")
+	delete(f, "ServiceID")
 	if len(f) > 0 {
 		return tcerr.NewTencentCloudSDKError("ClientError.BuildRequestError", "DescribeMetricRecordsRequest has unknown keys!", "")
 	}
@@ -2276,10 +2816,10 @@ func (r *DescribeMetricRecordsRequest) FromJsonString(s string) error {
 
 // Predefined struct for user
 type DescribeMetricRecordsResponseParams struct {
-	// 指标结果集
+	// <p>指标结果集</p>
 	Records []*ApmMetricRecord `json:"Records,omitnil,omitempty" name:"Records"`
 
-	// 查询指标结果集条数
+	// <p>查询指标结果集条数</p>
 	TotalCount *int64 `json:"TotalCount,omitnil,omitempty" name:"TotalCount"`
 
 	// 唯一请求 ID，由服务端生成，每次请求都会返回（若请求因其他原因未能抵达服务端，则该次请求不会获得 RequestId）。定位问题时需要提供该次请求的 RequestId。
@@ -2299,6 +2839,79 @@ func (r *DescribeMetricRecordsResponse) ToJsonString() string {
 // FromJsonString It is highly **NOT** recommended to use this function
 // because it has no param check, nor strict type check
 func (r *DescribeMetricRecordsResponse) FromJsonString(s string) error {
+	return json.Unmarshal([]byte(s), &r)
+}
+
+// Predefined struct for user
+type DescribeOPRAllVulCountRequestParams struct {
+	// 秒级时间戳
+	StartTime *int64 `json:"StartTime,omitnil,omitempty" name:"StartTime"`
+
+	// 秒级时间戳
+	EndTime *int64 `json:"EndTime,omitnil,omitempty" name:"EndTime"`
+}
+
+type DescribeOPRAllVulCountRequest struct {
+	*tchttp.BaseRequest
+	
+	// 秒级时间戳
+	StartTime *int64 `json:"StartTime,omitnil,omitempty" name:"StartTime"`
+
+	// 秒级时间戳
+	EndTime *int64 `json:"EndTime,omitnil,omitempty" name:"EndTime"`
+}
+
+func (r *DescribeOPRAllVulCountRequest) ToJsonString() string {
+    b, _ := json.Marshal(r)
+    return string(b)
+}
+
+// FromJsonString It is highly **NOT** recommended to use this function
+// because it has no param check, nor strict type check
+func (r *DescribeOPRAllVulCountRequest) FromJsonString(s string) error {
+	f := make(map[string]interface{})
+	if err := json.Unmarshal([]byte(s), &f); err != nil {
+		return err
+	}
+	delete(f, "StartTime")
+	delete(f, "EndTime")
+	if len(f) > 0 {
+		return tcerr.NewTencentCloudSDKError("ClientError.BuildRequestError", "DescribeOPRAllVulCountRequest has unknown keys!", "")
+	}
+	return json.Unmarshal([]byte(s), &r)
+}
+
+// Predefined struct for user
+type DescribeOPRAllVulCountResponseParams struct {
+	// 包含漏洞指标以及业务系统个数	
+	VulnerabilityList []*ApmMetricRecord `json:"VulnerabilityList,omitnil,omitempty" name:"VulnerabilityList"`
+
+	// 总漏洞个数
+	VulnerabilityCount *int64 `json:"VulnerabilityCount,omitnil,omitempty" name:"VulnerabilityCount"`
+
+	// 严重漏洞个数
+	ImportantVulnerabilityCount *int64 `json:"ImportantVulnerabilityCount,omitnil,omitempty" name:"ImportantVulnerabilityCount"`
+
+	// 高危漏洞个数
+	CriticalVulnerabilityCount *int64 `json:"CriticalVulnerabilityCount,omitnil,omitempty" name:"CriticalVulnerabilityCount"`
+
+	// 唯一请求 ID，由服务端生成，每次请求都会返回（若请求因其他原因未能抵达服务端，则该次请求不会获得 RequestId）。定位问题时需要提供该次请求的 RequestId。
+	RequestId *string `json:"RequestId,omitnil,omitempty" name:"RequestId"`
+}
+
+type DescribeOPRAllVulCountResponse struct {
+	*tchttp.BaseResponse
+	Response *DescribeOPRAllVulCountResponseParams `json:"Response"`
+}
+
+func (r *DescribeOPRAllVulCountResponse) ToJsonString() string {
+    b, _ := json.Marshal(r)
+    return string(b)
+}
+
+// FromJsonString It is highly **NOT** recommended to use this function
+// because it has no param check, nor strict type check
+func (r *DescribeOPRAllVulCountResponse) FromJsonString(s string) error {
 	return json.Unmarshal([]byte(s), &r)
 }
 
@@ -2520,14 +3133,206 @@ func (r *DescribeTagValuesResponse) FromJsonString(s string) error {
 	return json.Unmarshal([]byte(s), &r)
 }
 
+// Predefined struct for user
+type DescribeTopologyNewRequestParams struct {
+	// <p>业务系统 ID</p>
+	InstanceId *string `json:"InstanceId,omitnil,omitempty" name:"InstanceId"`
+
+	// <p>查询开始时间</p>
+	StartTime *int64 `json:"StartTime,omitnil,omitempty" name:"StartTime"`
+
+	// <p>查询结束时间</p>
+	EndTime *int64 `json:"EndTime,omitnil,omitempty" name:"EndTime"`
+
+	// <p>应用名</p>
+	ServiceName *string `json:"ServiceName,omitnil,omitempty" name:"ServiceName"`
+
+	// <p>上游层级</p>
+	UpLevel *int64 `json:"UpLevel,omitnil,omitempty" name:"UpLevel"`
+
+	// <p>应用实例信息</p>
+	ServiceInstance *string `json:"ServiceInstance,omitnil,omitempty" name:"ServiceInstance"`
+
+	// <p>下游层级</p>
+	DownLevel *int64 `json:"DownLevel,omitnil,omitempty" name:"DownLevel"`
+
+	// <p>视角</p>
+	View *string `json:"View,omitnil,omitempty" name:"View"`
+
+	// <p>过滤器</p>
+	Filters []*Filter `json:"Filters,omitnil,omitempty" name:"Filters"`
+
+	// <p>表示Topic（MQ拓扑图用）</p>
+	Topic *string `json:"Topic,omitnil,omitempty" name:"Topic"`
+
+	// <p>视图筛选列表</p>
+	Selectors *Selectors `json:"Selectors,omitnil,omitempty" name:"Selectors"`
+
+	// <p>视图ID</p>
+	Id *string `json:"Id,omitnil,omitempty" name:"Id"`
+
+	// <p>TraceID</p>
+	TraceID *string `json:"TraceID,omitnil,omitempty" name:"TraceID"`
+
+	// <p>查询top5慢响应节点</p>
+	IsSlowTopFive *bool `json:"IsSlowTopFive,omitnil,omitempty" name:"IsSlowTopFive"`
+
+	// <p>是否获取资源层信息</p>
+	GetResource *bool `json:"GetResource,omitnil,omitempty" name:"GetResource"`
+
+	// <p>根据应用标签过滤</p>
+	Tags []*ApmTag `json:"Tags,omitnil,omitempty" name:"Tags"`
+
+	// <p>不显示的节点类型</p>
+	Hidden *Selectors `json:"Hidden,omitnil,omitempty" name:"Hidden"`
+
+	// <p>是否开启云资源关联</p>
+	EnableResourceLink *bool `json:"EnableResourceLink,omitnil,omitempty" name:"EnableResourceLink"`
+}
+
+type DescribeTopologyNewRequest struct {
+	*tchttp.BaseRequest
+	
+	// <p>业务系统 ID</p>
+	InstanceId *string `json:"InstanceId,omitnil,omitempty" name:"InstanceId"`
+
+	// <p>查询开始时间</p>
+	StartTime *int64 `json:"StartTime,omitnil,omitempty" name:"StartTime"`
+
+	// <p>查询结束时间</p>
+	EndTime *int64 `json:"EndTime,omitnil,omitempty" name:"EndTime"`
+
+	// <p>应用名</p>
+	ServiceName *string `json:"ServiceName,omitnil,omitempty" name:"ServiceName"`
+
+	// <p>上游层级</p>
+	UpLevel *int64 `json:"UpLevel,omitnil,omitempty" name:"UpLevel"`
+
+	// <p>应用实例信息</p>
+	ServiceInstance *string `json:"ServiceInstance,omitnil,omitempty" name:"ServiceInstance"`
+
+	// <p>下游层级</p>
+	DownLevel *int64 `json:"DownLevel,omitnil,omitempty" name:"DownLevel"`
+
+	// <p>视角</p>
+	View *string `json:"View,omitnil,omitempty" name:"View"`
+
+	// <p>过滤器</p>
+	Filters []*Filter `json:"Filters,omitnil,omitempty" name:"Filters"`
+
+	// <p>表示Topic（MQ拓扑图用）</p>
+	Topic *string `json:"Topic,omitnil,omitempty" name:"Topic"`
+
+	// <p>视图筛选列表</p>
+	Selectors *Selectors `json:"Selectors,omitnil,omitempty" name:"Selectors"`
+
+	// <p>视图ID</p>
+	Id *string `json:"Id,omitnil,omitempty" name:"Id"`
+
+	// <p>TraceID</p>
+	TraceID *string `json:"TraceID,omitnil,omitempty" name:"TraceID"`
+
+	// <p>查询top5慢响应节点</p>
+	IsSlowTopFive *bool `json:"IsSlowTopFive,omitnil,omitempty" name:"IsSlowTopFive"`
+
+	// <p>是否获取资源层信息</p>
+	GetResource *bool `json:"GetResource,omitnil,omitempty" name:"GetResource"`
+
+	// <p>根据应用标签过滤</p>
+	Tags []*ApmTag `json:"Tags,omitnil,omitempty" name:"Tags"`
+
+	// <p>不显示的节点类型</p>
+	Hidden *Selectors `json:"Hidden,omitnil,omitempty" name:"Hidden"`
+
+	// <p>是否开启云资源关联</p>
+	EnableResourceLink *bool `json:"EnableResourceLink,omitnil,omitempty" name:"EnableResourceLink"`
+}
+
+func (r *DescribeTopologyNewRequest) ToJsonString() string {
+    b, _ := json.Marshal(r)
+    return string(b)
+}
+
+// FromJsonString It is highly **NOT** recommended to use this function
+// because it has no param check, nor strict type check
+func (r *DescribeTopologyNewRequest) FromJsonString(s string) error {
+	f := make(map[string]interface{})
+	if err := json.Unmarshal([]byte(s), &f); err != nil {
+		return err
+	}
+	delete(f, "InstanceId")
+	delete(f, "StartTime")
+	delete(f, "EndTime")
+	delete(f, "ServiceName")
+	delete(f, "UpLevel")
+	delete(f, "ServiceInstance")
+	delete(f, "DownLevel")
+	delete(f, "View")
+	delete(f, "Filters")
+	delete(f, "Topic")
+	delete(f, "Selectors")
+	delete(f, "Id")
+	delete(f, "TraceID")
+	delete(f, "IsSlowTopFive")
+	delete(f, "GetResource")
+	delete(f, "Tags")
+	delete(f, "Hidden")
+	delete(f, "EnableResourceLink")
+	if len(f) > 0 {
+		return tcerr.NewTencentCloudSDKError("ClientError.BuildRequestError", "DescribeTopologyNewRequest has unknown keys!", "")
+	}
+	return json.Unmarshal([]byte(s), &r)
+}
+
+// Predefined struct for user
+type DescribeTopologyNewResponseParams struct {
+	// <p>节点集合</p>
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	Nodes []*TopologyNode `json:"Nodes,omitnil,omitempty" name:"Nodes"`
+
+	// <p>边集合</p>
+	Edges []*TopologyEdgeNew `json:"Edges,omitnil,omitempty" name:"Edges"`
+
+	// <p>拓扑图是否有修改</p>
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	TopologyModifyFlag *int64 `json:"TopologyModifyFlag,omitnil,omitempty" name:"TopologyModifyFlag"`
+
+	// <p>节点数量</p>
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	Selectors *SelectorView `json:"Selectors,omitnil,omitempty" name:"Selectors"`
+
+	// <p>节点状态</p>
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	OverviewStats *OverviewStats `json:"OverviewStats,omitnil,omitempty" name:"OverviewStats"`
+
+	// 唯一请求 ID，由服务端生成，每次请求都会返回（若请求因其他原因未能抵达服务端，则该次请求不会获得 RequestId）。定位问题时需要提供该次请求的 RequestId。
+	RequestId *string `json:"RequestId,omitnil,omitempty" name:"RequestId"`
+}
+
+type DescribeTopologyNewResponse struct {
+	*tchttp.BaseResponse
+	Response *DescribeTopologyNewResponseParams `json:"Response"`
+}
+
+func (r *DescribeTopologyNewResponse) ToJsonString() string {
+    b, _ := json.Marshal(r)
+    return string(b)
+}
+
+// FromJsonString It is highly **NOT** recommended to use this function
+// because it has no param check, nor strict type check
+func (r *DescribeTopologyNewResponse) FromJsonString(s string) error {
+	return json.Unmarshal([]byte(s), &r)
+}
+
 type Filter struct {
-	// 过滤方式（=, !=, in）
+	// <p>过滤方式（=, !=, in）</p>
 	Type *string `json:"Type,omitnil,omitempty" name:"Type"`
 
-	// 过滤维度名
+	// <p>过滤维度名</p><p>详情参考实际接口字段描述</p>
 	Key *string `json:"Key,omitnil,omitempty" name:"Key"`
 
-	// 过滤值，in过滤方式用逗号分割多个值
+	// <p>过滤值，in过滤方式用逗号分割多个值</p>
 	Value *string `json:"Value,omitnil,omitempty" name:"Value"`
 }
 
@@ -2569,315 +3374,381 @@ type Line struct {
 
 // Predefined struct for user
 type ModifyApmApplicationConfigRequestParams struct {
-	// 业务系统 ID
+	// <p>业务系统 ID</p>
 	InstanceId *string `json:"InstanceId,omitnil,omitempty" name:"InstanceId"`
 
-	// 应用名
+	// <p>应用名</p>
 	ServiceName *string `json:"ServiceName,omitnil,omitempty" name:"ServiceName"`
 
-	// URL收敛开关,0 关 | 1 开
+	// <p>URL收敛开关,0 关 | 1 开</p>
 	UrlConvergenceSwitch *int64 `json:"UrlConvergenceSwitch,omitnil,omitempty" name:"UrlConvergenceSwitch"`
 
-	// URL收敛阈值
+	// <p>URL收敛阈值</p>
 	UrlConvergenceThreshold *int64 `json:"UrlConvergenceThreshold,omitnil,omitempty" name:"UrlConvergenceThreshold"`
 
-	// 异常过滤正则规则，逗号分隔
+	// <p>异常过滤正则规则，逗号分隔</p>
 	ExceptionFilter *string `json:"ExceptionFilter,omitnil,omitempty" name:"ExceptionFilter"`
 
-	// URL收敛正则规则，逗号分隔
+	// <p>URL收敛正则规则，逗号分隔</p>
 	UrlConvergence *string `json:"UrlConvergence,omitnil,omitempty" name:"UrlConvergence"`
 
-	// 错误码过滤，逗号分隔
+	// <p>错误码过滤，逗号分隔</p>
 	ErrorCodeFilter *string `json:"ErrorCodeFilter,omitnil,omitempty" name:"ErrorCodeFilter"`
 
-	// URL排除正则规则，逗号分隔
+	// <p>URL排除正则规则，逗号分隔</p>
 	UrlExclude *string `json:"UrlExclude,omitnil,omitempty" name:"UrlExclude"`
 
-	// 日志开关 0 关 1 开
+	// <p>日志开关 0 关 1 开</p>
 	IsRelatedLog *int64 `json:"IsRelatedLog,omitnil,omitempty" name:"IsRelatedLog"`
 
-	// 日志地域
+	// <p>日志地域</p>
 	LogRegion *string `json:"LogRegion,omitnil,omitempty" name:"LogRegion"`
 
-	// 日志主题ID
+	// <p>日志主题ID</p>
 	LogTopicID *string `json:"LogTopicID,omitnil,omitempty" name:"LogTopicID"`
 
-	// CLS 日志集 | ES 集群ID
+	// <p>CLS 日志集 | ES 集群ID</p>
 	LogSet *string `json:"LogSet,omitnil,omitempty" name:"LogSet"`
 
-	// 日志来源 CLS | ES
+	// <p>日志来源 CLS | ES</p>
 	LogSource *string `json:"LogSource,omitnil,omitempty" name:"LogSource"`
 
-	// 需过滤的接口
+	// <p>需过滤的接口</p>
 	IgnoreOperationName *string `json:"IgnoreOperationName,omitnil,omitempty" name:"IgnoreOperationName"`
 
-	// 是否开启线程剖析
+	// <p>是否开启线程剖析</p>
 	EnableSnapshot *bool `json:"EnableSnapshot,omitnil,omitempty" name:"EnableSnapshot"`
 
-	// 线程剖析超时阈值
+	// <p>线程剖析超时阈值</p>
 	SnapshotTimeout *int64 `json:"SnapshotTimeout,omitnil,omitempty" name:"SnapshotTimeout"`
 
-	// 是否开启agent
+	// <p>是否开启agent</p>
 	AgentEnable *bool `json:"AgentEnable,omitnil,omitempty" name:"AgentEnable"`
 
-	// 是否开启链路压缩
+	// <p>是否开启链路压缩</p>
 	TraceSquash *bool `json:"TraceSquash,omitnil,omitempty" name:"TraceSquash"`
 
-	// 是否开启应用诊断的开关
+	// <p>是否开启应用诊断的开关</p>
 	EventEnable *bool `json:"EventEnable,omitnil,omitempty" name:"EventEnable"`
 
-	// 组件列表
+	// <p>组件列表</p>
 	InstrumentList []*Instrument `json:"InstrumentList,omitnil,omitempty" name:"InstrumentList"`
 
-	// 探针接口相关配置
+	// <p>探针接口相关配置</p>
 	AgentOperationConfigView *AgentOperationConfigView `json:"AgentOperationConfigView,omitnil,omitempty" name:"AgentOperationConfigView"`
 
-	// 是否开启应用日志配置
+	// <p>是否开启应用日志配置</p>
 	EnableLogConfig *bool `json:"EnableLogConfig,omitnil,omitempty" name:"EnableLogConfig"`
 
-	// 应用是否开启dashboard配置： false 关（与业务系统保持一致）/true 开（应用级配置）
+	// <p>应用是否开启dashboard配置： false 关（与业务系统保持一致）/true 开（应用级配置）</p>
 	EnableDashboardConfig *bool `json:"EnableDashboardConfig,omitnil,omitempty" name:"EnableDashboardConfig"`
 
-	// 是否关联dashboard： 0 关 1 开
+	// <p>是否关联dashboard： 0 关 1 开</p>
 	IsRelatedDashboard *int64 `json:"IsRelatedDashboard,omitnil,omitempty" name:"IsRelatedDashboard"`
 
-	// dashboard ID
+	// <p>dashboard ID</p>
 	DashboardTopicID *string `json:"DashboardTopicID,omitnil,omitempty" name:"DashboardTopicID"`
 
-	// CLS索引类型(0=全文索引，1=键值索引)
+	// <p>CLS索引类型(0=全文索引，1=键值索引)</p>
 	LogIndexType *int64 `json:"LogIndexType,omitnil,omitempty" name:"LogIndexType"`
 
-	// traceId的索引key: 当CLS索引类型为键值索引时生效
+	// <p>traceId的索引key: 当CLS索引类型为键值索引时生效</p>
 	LogTraceIdKey *string `json:"LogTraceIdKey,omitnil,omitempty" name:"LogTraceIdKey"`
 
-	// 是否开启应用安全配置
+	// <p>是否开启应用安全配置</p>
 	EnableSecurityConfig *bool `json:"EnableSecurityConfig,omitnil,omitempty" name:"EnableSecurityConfig"`
 
-	// 是否开启SQL注入分析
+	// <p>是否开启SQL注入分析</p>
 	IsSqlInjectionAnalysis *int64 `json:"IsSqlInjectionAnalysis,omitnil,omitempty" name:"IsSqlInjectionAnalysis"`
 
-	// 是否开启组件漏洞检测
+	// <p>是否开启组件漏洞检测</p>
 	IsInstrumentationVulnerabilityScan *int64 `json:"IsInstrumentationVulnerabilityScan,omitnil,omitempty" name:"IsInstrumentationVulnerabilityScan"`
 
-	// 是否开启远程命令检测
+	// <p>是否开启远程命令检测</p>
 	IsRemoteCommandExecutionAnalysis *int64 `json:"IsRemoteCommandExecutionAnalysis,omitnil,omitempty" name:"IsRemoteCommandExecutionAnalysis"`
 
-	// 是否开启内存马检测
+	// <p>是否开启内存马检测</p>
 	IsMemoryHijackingAnalysis *int64 `json:"IsMemoryHijackingAnalysis,omitnil,omitempty" name:"IsMemoryHijackingAnalysis"`
 
-	// 是否开启删除任意文件检测（0-关闭，1-开启）
+	// <p>是否开启删除任意文件检测（0-关闭，1-开启）</p>
 	IsDeleteAnyFileAnalysis *int64 `json:"IsDeleteAnyFileAnalysis,omitnil,omitempty" name:"IsDeleteAnyFileAnalysis"`
 
-	// 是否开启读取任意文件检测（0-关闭，1-开启）
+	// <p>是否开启读取任意文件检测（0-关闭，1-开启）</p>
 	IsReadAnyFileAnalysis *int64 `json:"IsReadAnyFileAnalysis,omitnil,omitempty" name:"IsReadAnyFileAnalysis"`
 
-	// 是否开启上传任意文件检测（0-关闭，1-开启）
+	// <p>是否开启上传任意文件检测（0-关闭，1-开启）</p>
 	IsUploadAnyFileAnalysis *int64 `json:"IsUploadAnyFileAnalysis,omitnil,omitempty" name:"IsUploadAnyFileAnalysis"`
 
-	// 是否开启包含任意文件检测（0-关闭，1-开启）
+	// <p>是否开启包含任意文件检测（0-关闭，1-开启）</p>
 	IsIncludeAnyFileAnalysis *int64 `json:"IsIncludeAnyFileAnalysis,omitnil,omitempty" name:"IsIncludeAnyFileAnalysis"`
 
-	// 是否开启目录遍历检测（0-关闭，1-开启）
+	// <p>是否开启目录遍历检测（0-关闭，1-开启）</p>
 	IsDirectoryTraversalAnalysis *int64 `json:"IsDirectoryTraversalAnalysis,omitnil,omitempty" name:"IsDirectoryTraversalAnalysis"`
 
-	// 是否开启模板引擎注入检测（0-关闭，1-开启）
+	// <p>是否开启模板引擎注入检测（0-关闭，1-开启）</p>
 	IsTemplateEngineInjectionAnalysis *int64 `json:"IsTemplateEngineInjectionAnalysis,omitnil,omitempty" name:"IsTemplateEngineInjectionAnalysis"`
 
-	// 是否开启脚本引擎注入检测（0-关闭，1-开启）
+	// <p>是否开启脚本引擎注入检测（0-关闭，1-开启）</p>
 	IsScriptEngineInjectionAnalysis *int64 `json:"IsScriptEngineInjectionAnalysis,omitnil,omitempty" name:"IsScriptEngineInjectionAnalysis"`
 
-	// 是否开启表达式注入检测（0-关闭，1-开启）
+	// <p>是否开启表达式注入检测（0-关闭，1-开启）</p>
 	IsExpressionInjectionAnalysis *int64 `json:"IsExpressionInjectionAnalysis,omitnil,omitempty" name:"IsExpressionInjectionAnalysis"`
 
-	// 是否开启JNDI注入检测（0-关闭，1-开启）
+	// <p>是否开启JNDI注入检测（0-关闭，1-开启）</p>
 	IsJNDIInjectionAnalysis *int64 `json:"IsJNDIInjectionAnalysis,omitnil,omitempty" name:"IsJNDIInjectionAnalysis"`
 
-	// 是否开启JNI注入检测（0-关闭，1-开启）
+	// <p>是否开启JNI注入检测（0-关闭，1-开启）</p>
 	IsJNIInjectionAnalysis *int64 `json:"IsJNIInjectionAnalysis,omitnil,omitempty" name:"IsJNIInjectionAnalysis"`
 
-	// 是否开启Webshell后门检测（0-关闭，1-开启）
+	// <p>是否开启Webshell后门检测（0-关闭，1-开启）</p>
 	IsWebshellBackdoorAnalysis *int64 `json:"IsWebshellBackdoorAnalysis,omitnil,omitempty" name:"IsWebshellBackdoorAnalysis"`
 
-	// 是否开启反序列化检测（0-关闭，1-开启）
+	// <p>是否开启反序列化检测（0-关闭，1-开启）</p>
 	IsDeserializationAnalysis *int64 `json:"IsDeserializationAnalysis,omitnil,omitempty" name:"IsDeserializationAnalysis"`
 
-	// 接口自动收敛开关,0 关 | 1 开
+	// <p>接口自动收敛开关,0 关 | 1 开</p>
 	UrlAutoConvergenceEnable *bool `json:"UrlAutoConvergenceEnable,omitnil,omitempty" name:"UrlAutoConvergenceEnable"`
 
-	// URL长分段收敛阈值
+	// <p>URL长分段收敛阈值</p>
 	UrlLongSegmentThreshold *int64 `json:"UrlLongSegmentThreshold,omitnil,omitempty" name:"UrlLongSegmentThreshold"`
 
-	// URL数字分段收敛阈值
+	// <p>URL数字分段收敛阈值</p>
 	UrlNumberSegmentThreshold *int64 `json:"UrlNumberSegmentThreshold,omitnil,omitempty" name:"UrlNumberSegmentThreshold"`
 
-	// 探针熔断内存阈值
+	// <p>探针熔断内存阈值</p>
 	DisableMemoryUsed *int64 `json:"DisableMemoryUsed,omitnil,omitempty" name:"DisableMemoryUsed"`
 
-	// 探针熔断CPU阈值
+	// <p>探针熔断CPU阈值</p>
 	DisableCpuUsed *int64 `json:"DisableCpuUsed,omitnil,omitempty" name:"DisableCpuUsed"`
 
-	// 是否开启SQL参数获取
+	// <p>是否开启SQL参数获取</p>
 	DbStatementParametersEnabled *bool `json:"DbStatementParametersEnabled,omitnil,omitempty" name:"DbStatementParametersEnabled"`
 
-	// 慢SQL阈值
+	// <p>慢SQL阈值</p>
 	SlowSQLThresholds []*ApmTag `json:"SlowSQLThresholds,omitnil,omitempty" name:"SlowSQLThresholds"`
+
+	// <p>是否开启脱敏规则</p>
+	EnableDesensitizationRule *int64 `json:"EnableDesensitizationRule,omitnil,omitempty" name:"EnableDesensitizationRule"`
+
+	// <p>脱敏规则</p>
+	DesensitizationRule *string `json:"DesensitizationRule,omitnil,omitempty" name:"DesensitizationRule"`
+
+	// <p>spanId的索引key: 当CLS索引类型为键值索引时生效</p>
+	LogSpanIdKey *string `json:"LogSpanIdKey,omitnil,omitempty" name:"LogSpanIdKey"`
+
+	// <p>自动性能剖析任务配置</p>
+	AutoProfilingConfig *AutoProfilingConfig `json:"AutoProfilingConfig,omitnil,omitempty" name:"AutoProfilingConfig"`
+
+	// <p>阈值配置开关。true 表示使用应用级阈值；false 表示使用业务系统级阈值</p>
+	EnableThresholdConfig *bool `json:"EnableThresholdConfig,omitnil,omitempty" name:"EnableThresholdConfig"`
+
+	// <p>错误率阈值（%），用于判断应用健康状态为&quot;红色&quot;</p>
+	ErrRateThreshold *int64 `json:"ErrRateThreshold,omitnil,omitempty" name:"ErrRateThreshold"`
+
+	// <p>响应时间预警阈值（ms），用于判断应用健康状态为&quot;黄色&quot;</p>
+	ResponseDurationWarningThreshold *int64 `json:"ResponseDurationWarningThreshold,omitnil,omitempty" name:"ResponseDurationWarningThreshold"`
+
+	// <p>是否使用探针默认熔断阈值</p>
+	UseDefaultFuseConfig *bool `json:"UseDefaultFuseConfig,omitnil,omitempty" name:"UseDefaultFuseConfig"`
+
+	// <p>是否开启探针头采样</p>
+	EnableHeadSampler *bool `json:"EnableHeadSampler,omitnil,omitempty" name:"EnableHeadSampler"`
+
+	// <p>头采样类型</p><p>枚举值：</p><ul><li>parentbased_traceidratio： 跟随parent</li></ul>
+	HeadSamplerType *string `json:"HeadSamplerType,omitnil,omitempty" name:"HeadSamplerType"`
+
+	// <p>采样率</p><p>取值范围：[0, 100]</p><p>默认值：100</p>
+	HeadSamplerArg *int64 `json:"HeadSamplerArg,omitnil,omitempty" name:"HeadSamplerArg"`
 }
 
 type ModifyApmApplicationConfigRequest struct {
 	*tchttp.BaseRequest
 	
-	// 业务系统 ID
+	// <p>业务系统 ID</p>
 	InstanceId *string `json:"InstanceId,omitnil,omitempty" name:"InstanceId"`
 
-	// 应用名
+	// <p>应用名</p>
 	ServiceName *string `json:"ServiceName,omitnil,omitempty" name:"ServiceName"`
 
-	// URL收敛开关,0 关 | 1 开
+	// <p>URL收敛开关,0 关 | 1 开</p>
 	UrlConvergenceSwitch *int64 `json:"UrlConvergenceSwitch,omitnil,omitempty" name:"UrlConvergenceSwitch"`
 
-	// URL收敛阈值
+	// <p>URL收敛阈值</p>
 	UrlConvergenceThreshold *int64 `json:"UrlConvergenceThreshold,omitnil,omitempty" name:"UrlConvergenceThreshold"`
 
-	// 异常过滤正则规则，逗号分隔
+	// <p>异常过滤正则规则，逗号分隔</p>
 	ExceptionFilter *string `json:"ExceptionFilter,omitnil,omitempty" name:"ExceptionFilter"`
 
-	// URL收敛正则规则，逗号分隔
+	// <p>URL收敛正则规则，逗号分隔</p>
 	UrlConvergence *string `json:"UrlConvergence,omitnil,omitempty" name:"UrlConvergence"`
 
-	// 错误码过滤，逗号分隔
+	// <p>错误码过滤，逗号分隔</p>
 	ErrorCodeFilter *string `json:"ErrorCodeFilter,omitnil,omitempty" name:"ErrorCodeFilter"`
 
-	// URL排除正则规则，逗号分隔
+	// <p>URL排除正则规则，逗号分隔</p>
 	UrlExclude *string `json:"UrlExclude,omitnil,omitempty" name:"UrlExclude"`
 
-	// 日志开关 0 关 1 开
+	// <p>日志开关 0 关 1 开</p>
 	IsRelatedLog *int64 `json:"IsRelatedLog,omitnil,omitempty" name:"IsRelatedLog"`
 
-	// 日志地域
+	// <p>日志地域</p>
 	LogRegion *string `json:"LogRegion,omitnil,omitempty" name:"LogRegion"`
 
-	// 日志主题ID
+	// <p>日志主题ID</p>
 	LogTopicID *string `json:"LogTopicID,omitnil,omitempty" name:"LogTopicID"`
 
-	// CLS 日志集 | ES 集群ID
+	// <p>CLS 日志集 | ES 集群ID</p>
 	LogSet *string `json:"LogSet,omitnil,omitempty" name:"LogSet"`
 
-	// 日志来源 CLS | ES
+	// <p>日志来源 CLS | ES</p>
 	LogSource *string `json:"LogSource,omitnil,omitempty" name:"LogSource"`
 
-	// 需过滤的接口
+	// <p>需过滤的接口</p>
 	IgnoreOperationName *string `json:"IgnoreOperationName,omitnil,omitempty" name:"IgnoreOperationName"`
 
-	// 是否开启线程剖析
+	// <p>是否开启线程剖析</p>
 	EnableSnapshot *bool `json:"EnableSnapshot,omitnil,omitempty" name:"EnableSnapshot"`
 
-	// 线程剖析超时阈值
+	// <p>线程剖析超时阈值</p>
 	SnapshotTimeout *int64 `json:"SnapshotTimeout,omitnil,omitempty" name:"SnapshotTimeout"`
 
-	// 是否开启agent
+	// <p>是否开启agent</p>
 	AgentEnable *bool `json:"AgentEnable,omitnil,omitempty" name:"AgentEnable"`
 
-	// 是否开启链路压缩
+	// <p>是否开启链路压缩</p>
 	TraceSquash *bool `json:"TraceSquash,omitnil,omitempty" name:"TraceSquash"`
 
-	// 是否开启应用诊断的开关
+	// <p>是否开启应用诊断的开关</p>
 	EventEnable *bool `json:"EventEnable,omitnil,omitempty" name:"EventEnable"`
 
-	// 组件列表
+	// <p>组件列表</p>
 	InstrumentList []*Instrument `json:"InstrumentList,omitnil,omitempty" name:"InstrumentList"`
 
-	// 探针接口相关配置
+	// <p>探针接口相关配置</p>
 	AgentOperationConfigView *AgentOperationConfigView `json:"AgentOperationConfigView,omitnil,omitempty" name:"AgentOperationConfigView"`
 
-	// 是否开启应用日志配置
+	// <p>是否开启应用日志配置</p>
 	EnableLogConfig *bool `json:"EnableLogConfig,omitnil,omitempty" name:"EnableLogConfig"`
 
-	// 应用是否开启dashboard配置： false 关（与业务系统保持一致）/true 开（应用级配置）
+	// <p>应用是否开启dashboard配置： false 关（与业务系统保持一致）/true 开（应用级配置）</p>
 	EnableDashboardConfig *bool `json:"EnableDashboardConfig,omitnil,omitempty" name:"EnableDashboardConfig"`
 
-	// 是否关联dashboard： 0 关 1 开
+	// <p>是否关联dashboard： 0 关 1 开</p>
 	IsRelatedDashboard *int64 `json:"IsRelatedDashboard,omitnil,omitempty" name:"IsRelatedDashboard"`
 
-	// dashboard ID
+	// <p>dashboard ID</p>
 	DashboardTopicID *string `json:"DashboardTopicID,omitnil,omitempty" name:"DashboardTopicID"`
 
-	// CLS索引类型(0=全文索引，1=键值索引)
+	// <p>CLS索引类型(0=全文索引，1=键值索引)</p>
 	LogIndexType *int64 `json:"LogIndexType,omitnil,omitempty" name:"LogIndexType"`
 
-	// traceId的索引key: 当CLS索引类型为键值索引时生效
+	// <p>traceId的索引key: 当CLS索引类型为键值索引时生效</p>
 	LogTraceIdKey *string `json:"LogTraceIdKey,omitnil,omitempty" name:"LogTraceIdKey"`
 
-	// 是否开启应用安全配置
+	// <p>是否开启应用安全配置</p>
 	EnableSecurityConfig *bool `json:"EnableSecurityConfig,omitnil,omitempty" name:"EnableSecurityConfig"`
 
-	// 是否开启SQL注入分析
+	// <p>是否开启SQL注入分析</p>
 	IsSqlInjectionAnalysis *int64 `json:"IsSqlInjectionAnalysis,omitnil,omitempty" name:"IsSqlInjectionAnalysis"`
 
-	// 是否开启组件漏洞检测
+	// <p>是否开启组件漏洞检测</p>
 	IsInstrumentationVulnerabilityScan *int64 `json:"IsInstrumentationVulnerabilityScan,omitnil,omitempty" name:"IsInstrumentationVulnerabilityScan"`
 
-	// 是否开启远程命令检测
+	// <p>是否开启远程命令检测</p>
 	IsRemoteCommandExecutionAnalysis *int64 `json:"IsRemoteCommandExecutionAnalysis,omitnil,omitempty" name:"IsRemoteCommandExecutionAnalysis"`
 
-	// 是否开启内存马检测
+	// <p>是否开启内存马检测</p>
 	IsMemoryHijackingAnalysis *int64 `json:"IsMemoryHijackingAnalysis,omitnil,omitempty" name:"IsMemoryHijackingAnalysis"`
 
-	// 是否开启删除任意文件检测（0-关闭，1-开启）
+	// <p>是否开启删除任意文件检测（0-关闭，1-开启）</p>
 	IsDeleteAnyFileAnalysis *int64 `json:"IsDeleteAnyFileAnalysis,omitnil,omitempty" name:"IsDeleteAnyFileAnalysis"`
 
-	// 是否开启读取任意文件检测（0-关闭，1-开启）
+	// <p>是否开启读取任意文件检测（0-关闭，1-开启）</p>
 	IsReadAnyFileAnalysis *int64 `json:"IsReadAnyFileAnalysis,omitnil,omitempty" name:"IsReadAnyFileAnalysis"`
 
-	// 是否开启上传任意文件检测（0-关闭，1-开启）
+	// <p>是否开启上传任意文件检测（0-关闭，1-开启）</p>
 	IsUploadAnyFileAnalysis *int64 `json:"IsUploadAnyFileAnalysis,omitnil,omitempty" name:"IsUploadAnyFileAnalysis"`
 
-	// 是否开启包含任意文件检测（0-关闭，1-开启）
+	// <p>是否开启包含任意文件检测（0-关闭，1-开启）</p>
 	IsIncludeAnyFileAnalysis *int64 `json:"IsIncludeAnyFileAnalysis,omitnil,omitempty" name:"IsIncludeAnyFileAnalysis"`
 
-	// 是否开启目录遍历检测（0-关闭，1-开启）
+	// <p>是否开启目录遍历检测（0-关闭，1-开启）</p>
 	IsDirectoryTraversalAnalysis *int64 `json:"IsDirectoryTraversalAnalysis,omitnil,omitempty" name:"IsDirectoryTraversalAnalysis"`
 
-	// 是否开启模板引擎注入检测（0-关闭，1-开启）
+	// <p>是否开启模板引擎注入检测（0-关闭，1-开启）</p>
 	IsTemplateEngineInjectionAnalysis *int64 `json:"IsTemplateEngineInjectionAnalysis,omitnil,omitempty" name:"IsTemplateEngineInjectionAnalysis"`
 
-	// 是否开启脚本引擎注入检测（0-关闭，1-开启）
+	// <p>是否开启脚本引擎注入检测（0-关闭，1-开启）</p>
 	IsScriptEngineInjectionAnalysis *int64 `json:"IsScriptEngineInjectionAnalysis,omitnil,omitempty" name:"IsScriptEngineInjectionAnalysis"`
 
-	// 是否开启表达式注入检测（0-关闭，1-开启）
+	// <p>是否开启表达式注入检测（0-关闭，1-开启）</p>
 	IsExpressionInjectionAnalysis *int64 `json:"IsExpressionInjectionAnalysis,omitnil,omitempty" name:"IsExpressionInjectionAnalysis"`
 
-	// 是否开启JNDI注入检测（0-关闭，1-开启）
+	// <p>是否开启JNDI注入检测（0-关闭，1-开启）</p>
 	IsJNDIInjectionAnalysis *int64 `json:"IsJNDIInjectionAnalysis,omitnil,omitempty" name:"IsJNDIInjectionAnalysis"`
 
-	// 是否开启JNI注入检测（0-关闭，1-开启）
+	// <p>是否开启JNI注入检测（0-关闭，1-开启）</p>
 	IsJNIInjectionAnalysis *int64 `json:"IsJNIInjectionAnalysis,omitnil,omitempty" name:"IsJNIInjectionAnalysis"`
 
-	// 是否开启Webshell后门检测（0-关闭，1-开启）
+	// <p>是否开启Webshell后门检测（0-关闭，1-开启）</p>
 	IsWebshellBackdoorAnalysis *int64 `json:"IsWebshellBackdoorAnalysis,omitnil,omitempty" name:"IsWebshellBackdoorAnalysis"`
 
-	// 是否开启反序列化检测（0-关闭，1-开启）
+	// <p>是否开启反序列化检测（0-关闭，1-开启）</p>
 	IsDeserializationAnalysis *int64 `json:"IsDeserializationAnalysis,omitnil,omitempty" name:"IsDeserializationAnalysis"`
 
-	// 接口自动收敛开关,0 关 | 1 开
+	// <p>接口自动收敛开关,0 关 | 1 开</p>
 	UrlAutoConvergenceEnable *bool `json:"UrlAutoConvergenceEnable,omitnil,omitempty" name:"UrlAutoConvergenceEnable"`
 
-	// URL长分段收敛阈值
+	// <p>URL长分段收敛阈值</p>
 	UrlLongSegmentThreshold *int64 `json:"UrlLongSegmentThreshold,omitnil,omitempty" name:"UrlLongSegmentThreshold"`
 
-	// URL数字分段收敛阈值
+	// <p>URL数字分段收敛阈值</p>
 	UrlNumberSegmentThreshold *int64 `json:"UrlNumberSegmentThreshold,omitnil,omitempty" name:"UrlNumberSegmentThreshold"`
 
-	// 探针熔断内存阈值
+	// <p>探针熔断内存阈值</p>
 	DisableMemoryUsed *int64 `json:"DisableMemoryUsed,omitnil,omitempty" name:"DisableMemoryUsed"`
 
-	// 探针熔断CPU阈值
+	// <p>探针熔断CPU阈值</p>
 	DisableCpuUsed *int64 `json:"DisableCpuUsed,omitnil,omitempty" name:"DisableCpuUsed"`
 
-	// 是否开启SQL参数获取
+	// <p>是否开启SQL参数获取</p>
 	DbStatementParametersEnabled *bool `json:"DbStatementParametersEnabled,omitnil,omitempty" name:"DbStatementParametersEnabled"`
 
-	// 慢SQL阈值
+	// <p>慢SQL阈值</p>
 	SlowSQLThresholds []*ApmTag `json:"SlowSQLThresholds,omitnil,omitempty" name:"SlowSQLThresholds"`
+
+	// <p>是否开启脱敏规则</p>
+	EnableDesensitizationRule *int64 `json:"EnableDesensitizationRule,omitnil,omitempty" name:"EnableDesensitizationRule"`
+
+	// <p>脱敏规则</p>
+	DesensitizationRule *string `json:"DesensitizationRule,omitnil,omitempty" name:"DesensitizationRule"`
+
+	// <p>spanId的索引key: 当CLS索引类型为键值索引时生效</p>
+	LogSpanIdKey *string `json:"LogSpanIdKey,omitnil,omitempty" name:"LogSpanIdKey"`
+
+	// <p>自动性能剖析任务配置</p>
+	AutoProfilingConfig *AutoProfilingConfig `json:"AutoProfilingConfig,omitnil,omitempty" name:"AutoProfilingConfig"`
+
+	// <p>阈值配置开关。true 表示使用应用级阈值；false 表示使用业务系统级阈值</p>
+	EnableThresholdConfig *bool `json:"EnableThresholdConfig,omitnil,omitempty" name:"EnableThresholdConfig"`
+
+	// <p>错误率阈值（%），用于判断应用健康状态为&quot;红色&quot;</p>
+	ErrRateThreshold *int64 `json:"ErrRateThreshold,omitnil,omitempty" name:"ErrRateThreshold"`
+
+	// <p>响应时间预警阈值（ms），用于判断应用健康状态为&quot;黄色&quot;</p>
+	ResponseDurationWarningThreshold *int64 `json:"ResponseDurationWarningThreshold,omitnil,omitempty" name:"ResponseDurationWarningThreshold"`
+
+	// <p>是否使用探针默认熔断阈值</p>
+	UseDefaultFuseConfig *bool `json:"UseDefaultFuseConfig,omitnil,omitempty" name:"UseDefaultFuseConfig"`
+
+	// <p>是否开启探针头采样</p>
+	EnableHeadSampler *bool `json:"EnableHeadSampler,omitnil,omitempty" name:"EnableHeadSampler"`
+
+	// <p>头采样类型</p><p>枚举值：</p><ul><li>parentbased_traceidratio： 跟随parent</li></ul>
+	HeadSamplerType *string `json:"HeadSamplerType,omitnil,omitempty" name:"HeadSamplerType"`
+
+	// <p>采样率</p><p>取值范围：[0, 100]</p><p>默认值：100</p>
+	HeadSamplerArg *int64 `json:"HeadSamplerArg,omitnil,omitempty" name:"HeadSamplerArg"`
 }
 
 func (r *ModifyApmApplicationConfigRequest) ToJsonString() string {
@@ -2943,6 +3814,17 @@ func (r *ModifyApmApplicationConfigRequest) FromJsonString(s string) error {
 	delete(f, "DisableCpuUsed")
 	delete(f, "DbStatementParametersEnabled")
 	delete(f, "SlowSQLThresholds")
+	delete(f, "EnableDesensitizationRule")
+	delete(f, "DesensitizationRule")
+	delete(f, "LogSpanIdKey")
+	delete(f, "AutoProfilingConfig")
+	delete(f, "EnableThresholdConfig")
+	delete(f, "ErrRateThreshold")
+	delete(f, "ResponseDurationWarningThreshold")
+	delete(f, "UseDefaultFuseConfig")
+	delete(f, "EnableHeadSampler")
+	delete(f, "HeadSamplerType")
+	delete(f, "HeadSamplerArg")
 	if len(f) > 0 {
 		return tcerr.NewTencentCloudSDKError("ClientError.BuildRequestError", "ModifyApmApplicationConfigRequest has unknown keys!", "")
 	}
@@ -2973,39 +3855,45 @@ func (r *ModifyApmApplicationConfigResponse) FromJsonString(s string) error {
 
 // Predefined struct for user
 type ModifyApmAssociationRequestParams struct {
-	// 关联的产品名，当前只支持Prometheus、CKafka
+	// <p>关联的产品名，当前只支持Prometheus、CKafka</p>
 	ProductName *string `json:"ProductName,omitnil,omitempty" name:"ProductName"`
 
-	// 关联关系的状态：// 关联关系状态：1（启用）、2（不启用）
+	// <p>关联关系的状态：// 关联关系状态：1（启用）、2（不启用）</p>
 	Status *uint64 `json:"Status,omitnil,omitempty" name:"Status"`
 
-	// 业务系统ID
+	// <p>业务系统ID</p>
 	InstanceId *string `json:"InstanceId,omitnil,omitempty" name:"InstanceId"`
 
-	// 关联的产品实例ID
+	// <p>关联的产品实例ID</p>
 	PeerId *string `json:"PeerId,omitnil,omitempty" name:"PeerId"`
 
-	// CKafka消息主题
+	// <p>CKafka消息主题</p>
 	Topic *string `json:"Topic,omitnil,omitempty" name:"Topic"`
+
+	// <p>Ckafka消息主题</p>
+	MetricTopic *string `json:"MetricTopic,omitnil,omitempty" name:"MetricTopic"`
 }
 
 type ModifyApmAssociationRequest struct {
 	*tchttp.BaseRequest
 	
-	// 关联的产品名，当前只支持Prometheus、CKafka
+	// <p>关联的产品名，当前只支持Prometheus、CKafka</p>
 	ProductName *string `json:"ProductName,omitnil,omitempty" name:"ProductName"`
 
-	// 关联关系的状态：// 关联关系状态：1（启用）、2（不启用）
+	// <p>关联关系的状态：// 关联关系状态：1（启用）、2（不启用）</p>
 	Status *uint64 `json:"Status,omitnil,omitempty" name:"Status"`
 
-	// 业务系统ID
+	// <p>业务系统ID</p>
 	InstanceId *string `json:"InstanceId,omitnil,omitempty" name:"InstanceId"`
 
-	// 关联的产品实例ID
+	// <p>关联的产品实例ID</p>
 	PeerId *string `json:"PeerId,omitnil,omitempty" name:"PeerId"`
 
-	// CKafka消息主题
+	// <p>CKafka消息主题</p>
 	Topic *string `json:"Topic,omitnil,omitempty" name:"Topic"`
+
+	// <p>Ckafka消息主题</p>
+	MetricTopic *string `json:"MetricTopic,omitnil,omitempty" name:"MetricTopic"`
 }
 
 func (r *ModifyApmAssociationRequest) ToJsonString() string {
@@ -3025,6 +3913,7 @@ func (r *ModifyApmAssociationRequest) FromJsonString(s string) error {
 	delete(f, "InstanceId")
 	delete(f, "PeerId")
 	delete(f, "Topic")
+	delete(f, "MetricTopic")
 	if len(f) > 0 {
 		return tcerr.NewTencentCloudSDKError("ClientError.BuildRequestError", "ModifyApmAssociationRequest has unknown keys!", "")
 	}
@@ -3180,6 +4069,9 @@ type ModifyApmInstanceRequestParams struct {
 
 	// URL数字分段收敛阈值
 	UrlNumberSegmentThreshold *int64 `json:"UrlNumberSegmentThreshold,omitnil,omitempty" name:"UrlNumberSegmentThreshold"`
+
+	// spanId的索引key: 当CLS索引类型为键值索引时生效
+	LogSpanIdKey *string `json:"LogSpanIdKey,omitnil,omitempty" name:"LogSpanIdKey"`
 }
 
 type ModifyApmInstanceRequest struct {
@@ -3310,6 +4202,9 @@ type ModifyApmInstanceRequest struct {
 
 	// URL数字分段收敛阈值
 	UrlNumberSegmentThreshold *int64 `json:"UrlNumberSegmentThreshold,omitnil,omitempty" name:"UrlNumberSegmentThreshold"`
+
+	// spanId的索引key: 当CLS索引类型为键值索引时生效
+	LogSpanIdKey *string `json:"LogSpanIdKey,omitnil,omitempty" name:"LogSpanIdKey"`
 }
 
 func (r *ModifyApmInstanceRequest) ToJsonString() string {
@@ -3366,6 +4261,7 @@ func (r *ModifyApmInstanceRequest) FromJsonString(s string) error {
 	delete(f, "IsDeserializationAnalysis")
 	delete(f, "UrlLongSegmentThreshold")
 	delete(f, "UrlNumberSegmentThreshold")
+	delete(f, "LogSpanIdKey")
 	if len(f) > 0 {
 		return tcerr.NewTencentCloudSDKError("ClientError.BuildRequestError", "ModifyApmInstanceRequest has unknown keys!", "")
 	}
@@ -3396,51 +4292,57 @@ func (r *ModifyApmInstanceResponse) FromJsonString(s string) error {
 
 // Predefined struct for user
 type ModifyApmPrometheusRuleRequestParams struct {
-	// 规则ID
+	// <p>规则ID</p>
 	Id *int64 `json:"Id,omitnil,omitempty" name:"Id"`
 
-	// 业务系统ID
+	// <p>业务系统ID</p>
 	InstanceId *string `json:"InstanceId,omitnil,omitempty" name:"InstanceId"`
 
-	// 所要修改的规则名
+	// <p>所要修改的规则名</p>
 	Name *string `json:"Name,omitnil,omitempty" name:"Name"`
 
-	// 规则状态：1(启用)、2（不启用）、3（删除）
+	// <p>规则状态：1(启用)、2（不启用）、3（删除）</p>
 	Status *uint64 `json:"Status,omitnil,omitempty" name:"Status"`
 
-	// 规则生效的应用。生效于全部应用就传空（这个如果不修改也要传旧的规则）
+	// <p>规则生效的应用。生效于全部应用就传空（这个如果不修改也要传旧的规则）</p>
 	ServiceName *string `json:"ServiceName,omitnil,omitempty" name:"ServiceName"`
 
-	// 匹配类型：0精准匹配，1前缀匹配，2后缀匹配（这个如果不修改也要传旧的规则）
+	// <p>匹配类型：0精准匹配，1前缀匹配，2后缀匹配（这个如果不修改也要传旧的规则）</p>
 	MetricMatchType *int64 `json:"MetricMatchType,omitnil,omitempty" name:"MetricMatchType"`
 
-	// 客户定义的命中指标名规则。
+	// <p>客户定义的命中指标名规则。</p>
 	MetricNameRule *string `json:"MetricNameRule,omitnil,omitempty" name:"MetricNameRule"`
+
+	// <p>是否追加资源属性</p>
+	AppendResourceAttributes *bool `json:"AppendResourceAttributes,omitnil,omitempty" name:"AppendResourceAttributes"`
 }
 
 type ModifyApmPrometheusRuleRequest struct {
 	*tchttp.BaseRequest
 	
-	// 规则ID
+	// <p>规则ID</p>
 	Id *int64 `json:"Id,omitnil,omitempty" name:"Id"`
 
-	// 业务系统ID
+	// <p>业务系统ID</p>
 	InstanceId *string `json:"InstanceId,omitnil,omitempty" name:"InstanceId"`
 
-	// 所要修改的规则名
+	// <p>所要修改的规则名</p>
 	Name *string `json:"Name,omitnil,omitempty" name:"Name"`
 
-	// 规则状态：1(启用)、2（不启用）、3（删除）
+	// <p>规则状态：1(启用)、2（不启用）、3（删除）</p>
 	Status *uint64 `json:"Status,omitnil,omitempty" name:"Status"`
 
-	// 规则生效的应用。生效于全部应用就传空（这个如果不修改也要传旧的规则）
+	// <p>规则生效的应用。生效于全部应用就传空（这个如果不修改也要传旧的规则）</p>
 	ServiceName *string `json:"ServiceName,omitnil,omitempty" name:"ServiceName"`
 
-	// 匹配类型：0精准匹配，1前缀匹配，2后缀匹配（这个如果不修改也要传旧的规则）
+	// <p>匹配类型：0精准匹配，1前缀匹配，2后缀匹配（这个如果不修改也要传旧的规则）</p>
 	MetricMatchType *int64 `json:"MetricMatchType,omitnil,omitempty" name:"MetricMatchType"`
 
-	// 客户定义的命中指标名规则。
+	// <p>客户定义的命中指标名规则。</p>
 	MetricNameRule *string `json:"MetricNameRule,omitnil,omitempty" name:"MetricNameRule"`
+
+	// <p>是否追加资源属性</p>
+	AppendResourceAttributes *bool `json:"AppendResourceAttributes,omitnil,omitempty" name:"AppendResourceAttributes"`
 }
 
 func (r *ModifyApmPrometheusRuleRequest) ToJsonString() string {
@@ -3462,6 +4364,7 @@ func (r *ModifyApmPrometheusRuleRequest) FromJsonString(s string) error {
 	delete(f, "ServiceName")
 	delete(f, "MetricMatchType")
 	delete(f, "MetricNameRule")
+	delete(f, "AppendResourceAttributes")
 	if len(f) > 0 {
 		return tcerr.NewTencentCloudSDKError("ClientError.BuildRequestError", "ModifyApmPrometheusRuleRequest has unknown keys!", "")
 	}
@@ -3601,6 +4504,74 @@ func (r *ModifyApmSampleConfigResponse) FromJsonString(s string) error {
 }
 
 // Predefined struct for user
+type ModifyApmServiceRequestParams struct {
+	// 应用ID
+	ServiceID *string `json:"ServiceID,omitnil,omitempty" name:"ServiceID"`
+
+	// 应用描述
+	ServiceDescription *string `json:"ServiceDescription,omitnil,omitempty" name:"ServiceDescription"`
+
+	// 标签列表
+	Tags []*ApmTag `json:"Tags,omitnil,omitempty" name:"Tags"`
+}
+
+type ModifyApmServiceRequest struct {
+	*tchttp.BaseRequest
+	
+	// 应用ID
+	ServiceID *string `json:"ServiceID,omitnil,omitempty" name:"ServiceID"`
+
+	// 应用描述
+	ServiceDescription *string `json:"ServiceDescription,omitnil,omitempty" name:"ServiceDescription"`
+
+	// 标签列表
+	Tags []*ApmTag `json:"Tags,omitnil,omitempty" name:"Tags"`
+}
+
+func (r *ModifyApmServiceRequest) ToJsonString() string {
+    b, _ := json.Marshal(r)
+    return string(b)
+}
+
+// FromJsonString It is highly **NOT** recommended to use this function
+// because it has no param check, nor strict type check
+func (r *ModifyApmServiceRequest) FromJsonString(s string) error {
+	f := make(map[string]interface{})
+	if err := json.Unmarshal([]byte(s), &f); err != nil {
+		return err
+	}
+	delete(f, "ServiceID")
+	delete(f, "ServiceDescription")
+	delete(f, "Tags")
+	if len(f) > 0 {
+		return tcerr.NewTencentCloudSDKError("ClientError.BuildRequestError", "ModifyApmServiceRequest has unknown keys!", "")
+	}
+	return json.Unmarshal([]byte(s), &r)
+}
+
+// Predefined struct for user
+type ModifyApmServiceResponseParams struct {
+	// 唯一请求 ID，由服务端生成，每次请求都会返回（若请求因其他原因未能抵达服务端，则该次请求不会获得 RequestId）。定位问题时需要提供该次请求的 RequestId。
+	RequestId *string `json:"RequestId,omitnil,omitempty" name:"RequestId"`
+}
+
+type ModifyApmServiceResponse struct {
+	*tchttp.BaseResponse
+	Response *ModifyApmServiceResponseParams `json:"Response"`
+}
+
+func (r *ModifyApmServiceResponse) ToJsonString() string {
+    b, _ := json.Marshal(r)
+    return string(b)
+}
+
+// FromJsonString It is highly **NOT** recommended to use this function
+// because it has no param check, nor strict type check
+func (r *ModifyApmServiceResponse) FromJsonString(s string) error {
+	return json.Unmarshal([]byte(s), &r)
+}
+
+// Predefined struct for user
 type ModifyGeneralApmApplicationConfigRequestParams struct {
 	// 业务系统Id
 	InstanceId *string `json:"InstanceId,omitnil,omitempty" name:"InstanceId"`
@@ -3681,6 +4652,39 @@ type OrderBy struct {
 	Value *string `json:"Value,omitnil,omitempty" name:"Value"`
 }
 
+type OverviewStats struct {
+	// 应用节点状态
+	ServiceStats *TopologyNodeStats `json:"ServiceStats,omitnil,omitempty" name:"ServiceStats"`
+
+	// 数据库节点状态
+	DatabaseStats *TopologyNodeStats `json:"DatabaseStats,omitnil,omitempty" name:"DatabaseStats"`
+
+	// 消息队列节点状态
+	MQStats *TopologyNodeStats `json:"MQStats,omitnil,omitempty" name:"MQStats"`
+
+	// 节点总数
+	TotalNodes *int64 `json:"TotalNodes,omitnil,omitempty" name:"TotalNodes"`
+
+	// 健康节点总数
+	HealthyNodes *int64 `json:"HealthyNodes,omitnil,omitempty" name:"HealthyNodes"`
+
+	// 警告节点总数
+	WarningNodes *int64 `json:"WarningNodes,omitnil,omitempty" name:"WarningNodes"`
+
+	// 错误节点总数
+	ErrorNodes *int64 `json:"ErrorNodes,omitnil,omitempty" name:"ErrorNodes"`
+}
+
+type Position struct {
+	// 节点位置横坐标
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	X *float64 `json:"X,omitnil,omitempty" name:"X"`
+
+	// 节点位置纵坐标
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	Y *float64 `json:"Y,omitnil,omitempty" name:"Y"`
+}
+
 type QueryMetricItem struct {
 	// 指标名
 	MetricName *string `json:"MetricName,omitnil,omitempty" name:"MetricName"`
@@ -3692,41 +4696,78 @@ type QueryMetricItem struct {
 	Compare *string `json:"Compare,omitnil,omitempty" name:"Compare"`
 }
 
+type Resource struct {
+	// 资源类型
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	Type []*string `json:"Type,omitnil,omitempty" name:"Type"`
+
+	// tke资源层信息
+	TKEMeta []*TkeMeta `json:"TKEMeta,omitnil,omitempty" name:"TKEMeta"`
+
+	// cvm资源信息
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	CVMMeta []*CVMMeta `json:"CVMMeta,omitnil,omitempty" name:"CVMMeta"`
+}
+
+type SelectorView struct {
+	// 组件数量
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	Component *ComponentTopologyView `json:"Component,omitnil,omitempty" name:"Component"`
+}
+
+type Selectors struct {
+	// 组件勾选情况
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	Component []*string `json:"Component,omitnil,omitempty" name:"Component"`
+}
+
 type ServiceDetail struct {
-	// 应用ID
+	// <p>应用ID</p>
 	// 注意：此字段可能返回 null，表示取不到有效值。
 	ServiceID *string `json:"ServiceID,omitnil,omitempty" name:"ServiceID"`
 
-	// 业务系统ID
+	// <p>业务系统ID</p>
 	// 注意：此字段可能返回 null，表示取不到有效值。
 	InstanceKey *string `json:"InstanceKey,omitnil,omitempty" name:"InstanceKey"`
 
-	// 用户appid
+	// <p>用户appid</p>
 	// 注意：此字段可能返回 null，表示取不到有效值。
 	AppID *int64 `json:"AppID,omitnil,omitempty" name:"AppID"`
 
-	// 主账号uin
+	// <p>主账号uin</p>
 	// 注意：此字段可能返回 null，表示取不到有效值。
 	CreateUIN *string `json:"CreateUIN,omitnil,omitempty" name:"CreateUIN"`
 
-	// 应用名
+	// <p>应用名</p>
 	// 注意：此字段可能返回 null，表示取不到有效值。
 	ServiceName *string `json:"ServiceName,omitnil,omitempty" name:"ServiceName"`
 
-	// 应用描述
+	// <p>应用描述</p>
 	// 注意：此字段可能返回 null，表示取不到有效值。
 	ServiceDescription *string `json:"ServiceDescription,omitnil,omitempty" name:"ServiceDescription"`
 
-	// 地域
+	// <p>地域</p>
 	// 注意：此字段可能返回 null，表示取不到有效值。
 	Region *string `json:"Region,omitnil,omitempty" name:"Region"`
 
-	// 标签
+	// <p>标签</p>
 	// 注意：此字段可能返回 null，表示取不到有效值。
 	Tags []*ApmTag `json:"Tags,omitnil,omitempty" name:"Tags"`
 
-	// 业务系统名称
+	// <p>业务系统名称</p>
 	InstanceName *string `json:"InstanceName,omitnil,omitempty" name:"InstanceName"`
+
+	// <p>阈值配置开关。true 表示使用应用级阈值；false 表示使用业务系统级阈值</p>
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	EnableThresholdConfig *bool `json:"EnableThresholdConfig,omitnil,omitempty" name:"EnableThresholdConfig"`
+
+	// <p>错误率阈值（%），用于判断应用健康状态为&quot;红色&quot;</p><p>单位：%</p>
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	ErrRateThreshold *int64 `json:"ErrRateThreshold,omitnil,omitempty" name:"ErrRateThreshold"`
+
+	// <p>响应时间预警阈值（ms），用于判断应用健康状态为&quot;黄色&quot;</p><p>单位：ms</p>
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	ResponseDurationWarningThreshold *int64 `json:"ResponseDurationWarningThreshold,omitnil,omitempty" name:"ResponseDurationWarningThreshold"`
 }
 
 type Span struct {
@@ -3859,4 +4900,174 @@ func (r *TerminateApmInstanceResponse) ToJsonString() string {
 // because it has no param check, nor strict type check
 func (r *TerminateApmInstanceResponse) FromJsonString(s string) error {
 	return json.Unmarshal([]byte(s), &r)
+}
+
+type TkeMeta struct {
+	// 地域
+	Region *string `json:"Region,omitnil,omitempty" name:"Region"`
+
+	// 集群ID
+	ClusterID *string `json:"ClusterID,omitnil,omitempty" name:"ClusterID"`
+
+	// pod name
+	PodName *string `json:"PodName,omitnil,omitempty" name:"PodName"`
+
+	// 命名空间
+	Namespace *string `json:"Namespace,omitnil,omitempty" name:"Namespace"`
+
+	// 工作负载
+	Deployment *string `json:"Deployment,omitnil,omitempty" name:"Deployment"`
+
+	// pod ip
+	PodIP *string `json:"PodIP,omitnil,omitempty" name:"PodIP"`
+
+	// node ip
+	NodeIP *string `json:"NodeIP,omitnil,omitempty" name:"NodeIP"`
+}
+
+type TopologyEdgeNew struct {
+	// 源节点
+	Source *string `json:"Source,omitnil,omitempty" name:"Source"`
+
+	// 边ID
+	Id *string `json:"Id,omitnil,omitempty" name:"Id"`
+
+	// 边权重
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	Weight *float64 `json:"Weight,omitnil,omitempty" name:"Weight"`
+
+	// 目标节点
+	Target *string `json:"Target,omitnil,omitempty" name:"Target"`
+
+	// 响应时间
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	Duration *float64 `json:"Duration,omitnil,omitempty" name:"Duration"`
+
+	// 错误率
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	ErrRate *float64 `json:"ErrRate,omitnil,omitempty" name:"ErrRate"`
+
+	// 吞吐量
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	Qps *float64 `json:"Qps,omitnil,omitempty" name:"Qps"`
+
+	// 边类型
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	Type *string `json:"Type,omitnil,omitempty" name:"Type"`
+
+	// 边颜色
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	Color *string `json:"Color,omitnil,omitempty" name:"Color"`
+
+	// Sql调用数
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	SqlRequestCount *float64 `json:"SqlRequestCount,omitnil,omitempty" name:"SqlRequestCount"`
+
+	// Sql调用错误数
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	SqlErrorRequestCount *float64 `json:"SqlErrorRequestCount,omitnil,omitempty" name:"SqlErrorRequestCount"`
+
+	// 边上源节点类型 应用/MQ/DB
+	SourceComp *string `json:"SourceComp,omitnil,omitempty" name:"SourceComp"`
+
+	// 边上目标节点类型 应用/MQ/DB
+	TargetComp *string `json:"TargetComp,omitnil,omitempty" name:"TargetComp"`
+
+	// 组件间调用次数
+	ReqCnt *int64 `json:"ReqCnt,omitnil,omitempty" name:"ReqCnt"`
+}
+
+type TopologyNode struct {
+	// 错误率
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	ErrRate *float64 `json:"ErrRate,omitnil,omitempty" name:"ErrRate"`
+
+	// 节点类型
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	Kind *string `json:"Kind,omitnil,omitempty" name:"Kind"`
+
+	// 节点名
+	Name *string `json:"Name,omitnil,omitempty" name:"Name"`
+
+	// 节点权重
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	Weight *float64 `json:"Weight,omitnil,omitempty" name:"Weight"`
+
+	// 节点颜色
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	Color *string `json:"Color,omitnil,omitempty" name:"Color"`
+
+	// 响应时间
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	Duration *float64 `json:"Duration,omitnil,omitempty" name:"Duration"`
+
+	// 吞吐量
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	Qps *float64 `json:"Qps,omitnil,omitempty" name:"Qps"`
+
+	// 节点类型
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	Type *string `json:"Type,omitnil,omitempty" name:"Type"`
+
+	// 节点ID
+	Id *string `json:"Id,omitnil,omitempty" name:"Id"`
+
+	// 节点大小
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	Size *string `json:"Size,omitnil,omitempty" name:"Size"`
+
+	// 节点是否为组件类型
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	IsModule *bool `json:"IsModule,omitnil,omitempty" name:"IsModule"`
+
+	// 节点位置信息
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	Position *Position `json:"Position,omitnil,omitempty" name:"Position"`
+
+	// 节点标签
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	Tags []*ApmTag `json:"Tags,omitnil,omitempty" name:"Tags"`
+
+	// 节点是否可以下钻
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	CanDrillDown *bool `json:"CanDrillDown,omitnil,omitempty" name:"CanDrillDown"`
+
+	// 资源层信息
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	Resource *Resource `json:"Resource,omitnil,omitempty" name:"Resource"`
+
+	// 拓扑节点视图名字
+	NodeView *string `json:"NodeView,omitnil,omitempty" name:"NodeView"`
+
+	// MQ 消费者视角的响应时间 ms
+	ConsumerDuration *float64 `json:"ConsumerDuration,omitnil,omitempty" name:"ConsumerDuration"`
+
+	// MQ 消费者视角的错误率 %
+	ConsumerErrRate *float64 `json:"ConsumerErrRate,omitnil,omitempty" name:"ConsumerErrRate"`
+
+	// MQ 消费者视角的吞吐量
+	ConsumerQps *float64 `json:"ConsumerQps,omitnil,omitempty" name:"ConsumerQps"`
+
+	// 应用 ID
+	ServiceId *string `json:"ServiceId,omitnil,omitempty" name:"ServiceId"`
+
+	// 调用次数
+	ReqCnt *int64 `json:"ReqCnt,omitnil,omitempty" name:"ReqCnt"`
+
+	// 消息队列消费者视角的调用次数
+	ConsumerReqCnt *int64 `json:"ConsumerReqCnt,omitnil,omitempty" name:"ConsumerReqCnt"`
+}
+
+type TopologyNodeStats struct {
+	// 节点总数
+	Total *int64 `json:"Total,omitnil,omitempty" name:"Total"`
+
+	// 健康节点数量
+	Healthy *int64 `json:"Healthy,omitnil,omitempty" name:"Healthy"`
+
+	// 警告节点数量
+	Warning *int64 `json:"Warning,omitnil,omitempty" name:"Warning"`
+
+	// 异常节点数量
+	Error *int64 `json:"Error,omitnil,omitempty" name:"Error"`
 }

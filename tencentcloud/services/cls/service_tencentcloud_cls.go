@@ -1424,6 +1424,7 @@ func (me *ClsService) DescribeClsCloudProductLogTaskById(ctx context.Context, in
 			Values: helper.Strings([]string{logType}),
 		},
 	}
+	request.WithTags = helper.Bool(true)
 
 	defer func() {
 		if errRet != nil {

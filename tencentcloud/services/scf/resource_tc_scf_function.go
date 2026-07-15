@@ -5,7 +5,7 @@ import (
 	"encoding/base64"
 	"encoding/json"
 	"fmt"
-	"io/ioutil"
+	"io"
 	"log"
 	"os"
 	"strings"
@@ -766,8 +766,12 @@ func resourceTencentCloudScfFunctionCreate(d *schema.ResourceData, m interface{}
 		if err != nil {
 			return fmt.Errorf("zip file (%s) open error: %s", path, err.Error())
 		}
-		defer file.Close()
-		body, err := ioutil.ReadAll(file)
+		defer func() {
+			if closeErr := file.Close(); closeErr != nil {
+				log.Printf("[CRITAL] zip file (%s) close error: %s", path, closeErr.Error())
+			}
+		}()
+		body, err := io.ReadAll(file)
 		if err != nil {
 			return fmt.Errorf("zip file (%s) read error: %s", path, err.Error())
 		}
@@ -1353,8 +1357,12 @@ func resourceTencentCloudScfFunctionUpdate(d *schema.ResourceData, m interface{}
 		if err != nil {
 			return fmt.Errorf("zip file (%s) open error: %s", path, err.Error())
 		}
-		defer file.Close()
-		body, err := ioutil.ReadAll(file)
+		defer func() {
+			if closeErr := file.Close(); closeErr != nil {
+				log.Printf("[CRITAL] zip file (%s) close error: %s", path, closeErr.Error())
+			}
+		}()
+		body, err := io.ReadAll(file)
 		if err != nil {
 			return fmt.Errorf("zip file (%s) read error: %s", path, err.Error())
 		}
@@ -1365,34 +1373,34 @@ func resourceTencentCloudScfFunctionUpdate(d *schema.ResourceData, m interface{}
 
 	if d.HasChange("image_config") {
 		updateAttrs = append(updateAttrs, "image_config")
-		if raw, ok := d.GetOk("image_config"); ok {
-			var imageConfigs = make([]*scf.ImageConfig, 0)
-			configs := raw.([]interface{})
-			for _, v := range configs {
-				value := v.(map[string]interface{})
-				imageType := value["image_type"].(string)
-				imageUri := value["image_uri"].(string)
-				registryId := value["registry_id"].(string)
-				entryPoint := value["entry_point"].(string)
-				command := value["command"].(string)
-				args := value["args"].(string)
-				containerImageAccelerate := value["container_image_accelerate"].(bool)
-				imagePort := int64(value["image_port"].(int))
+	}
+	if raw, ok := d.GetOk("image_config"); ok {
+		var imageConfigs = make([]*scf.ImageConfig, 0)
+		configs := raw.([]interface{})
+		for _, v := range configs {
+			value := v.(map[string]interface{})
+			imageType := value["image_type"].(string)
+			imageUri := value["image_uri"].(string)
+			registryId := value["registry_id"].(string)
+			entryPoint := value["entry_point"].(string)
+			command := value["command"].(string)
+			args := value["args"].(string)
+			containerImageAccelerate := value["container_image_accelerate"].(bool)
+			imagePort := int64(value["image_port"].(int))
 
-				config := &scf.ImageConfig{
-					ImageType:                &imageType,
-					ImageUri:                 &imageUri,
-					RegistryId:               &registryId,
-					EntryPoint:               &entryPoint,
-					Command:                  &command,
-					Args:                     &args,
-					ContainerImageAccelerate: &containerImageAccelerate,
-					ImagePort:                &imagePort,
-				}
-				imageConfigs = append(imageConfigs, config)
+			config := &scf.ImageConfig{
+				ImageType:                &imageType,
+				ImageUri:                 &imageUri,
+				RegistryId:               &registryId,
+				EntryPoint:               &entryPoint,
+				Command:                  &command,
+				Args:                     &args,
+				ContainerImageAccelerate: &containerImageAccelerate,
+				ImagePort:                &imagePort,
 			}
-			functionInfo.imageConfig = imageConfigs[0]
+			imageConfigs = append(imageConfigs, config)
 		}
+		functionInfo.imageConfig = imageConfigs[0]
 	}
 
 	if d.HasChange("cfs_config") {
