@@ -169,20 +169,23 @@ func resourceTencentCloudMongodbAuditServiceCreate(d *schema.ResourceData, meta 
 		}
 
 		var auditStatus string
+		var auditTask int64
 		for _, item := range result.Response.Items {
 			if item != nil && item.InstanceId != nil && *item.InstanceId == instanceId {
-				if item.AuditStatus != nil {
+				if item.AuditStatus != nil && item.AuditTask != nil {
 					auditStatus = *item.AuditStatus
+					auditTask = *item.AuditTask
 				}
+
 				break
 			}
 		}
 
-		if auditStatus != "ON" {
-			return resource.RetryableError(fmt.Errorf("mongodb audit service is still opening, current status: %s", auditStatus))
+		if auditStatus == "ON" && auditTask == 0 {
+			return nil
 		}
 
-		return nil
+		return resource.RetryableError(fmt.Errorf("mongodb audit service is still opening, current status: %s, task: %d", auditStatus, auditTask))
 	})
 
 	if err != nil {
@@ -356,20 +359,23 @@ func resourceTencentCloudMongodbAuditServiceDelete(d *schema.ResourceData, meta 
 		}
 
 		var auditStatus string
+		var auditTask int64
 		for _, item := range result.Response.Items {
 			if item != nil && item.InstanceId != nil && *item.InstanceId == instanceId {
-				if item.AuditStatus != nil {
+				if item.AuditStatus != nil && item.AuditTask != nil {
 					auditStatus = *item.AuditStatus
+					auditTask = *item.AuditTask
 				}
+
 				break
 			}
 		}
 
-		if auditStatus != "OFF" {
-			return resource.RetryableError(fmt.Errorf("mongodb audit service is still closing, current status: %s", auditStatus))
+		if auditStatus == "OFF" && auditTask == 0 {
+			return nil
 		}
 
-		return nil
+		return resource.RetryableError(fmt.Errorf("mongodb audit service is still closing, current status: %s, task: %d", auditStatus, auditTask))
 	})
 
 	if err != nil {
