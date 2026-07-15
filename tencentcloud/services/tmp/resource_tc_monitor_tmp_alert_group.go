@@ -6,7 +6,6 @@ import (
 	"log"
 	"strings"
 
-	sdkErrors "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/common/errors"
 	monitor "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/monitor/v20180724"
 	tccommon "github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/common"
 	svcmonitor "github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/services/monitor"
@@ -270,13 +269,7 @@ func resourceTencentCloudMonitorTmpAlertGroupCreate(d *schema.ResourceData, meta
 	err := resource.Retry(tccommon.WriteRetryTimeout, func() *resource.RetryError {
 		result, e := meta.(tccommon.ProviderMeta).GetAPIV3Conn().UseMonitorClient().CreatePrometheusAlertGroup(request)
 		if e != nil {
-			if sdkError, ok := e.(*sdkErrors.TencentCloudSDKError); ok {
-				if sdkError.Code == "FailedOperation.DbRecordCreateFailed" {
-					return nil
-				}
-			}
-
-			return tccommon.RetryError(e)
+			return tccommon.RetryError(e, "FailedOperation.DbRecordCreateFailed")
 		} else {
 			log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), result.ToJsonString())
 		}
@@ -571,13 +564,7 @@ func resourceTencentCloudMonitorTmpAlertGroupUpdate(d *schema.ResourceData, meta
 	err := resource.Retry(tccommon.WriteRetryTimeout, func() *resource.RetryError {
 		result, e := meta.(tccommon.ProviderMeta).GetAPIV3Conn().UseMonitorClient().UpdatePrometheusAlertGroup(request)
 		if e != nil {
-			if sdkError, ok := e.(*sdkErrors.TencentCloudSDKError); ok {
-				if sdkError.Code == "FailedOperation.DbRecordCreateFailed" {
-					return nil
-				}
-			}
-
-			return tccommon.RetryError(e)
+			return tccommon.RetryError(e, "FailedOperation.DbRecordCreateFailed")
 		} else {
 			log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), result.ToJsonString())
 		}
