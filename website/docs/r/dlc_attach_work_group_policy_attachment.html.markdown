@@ -11,19 +11,57 @@ description: |-
 
 Provides a resource to create a DLC attach work group policy attachment
 
+~> **NOTE:** `policy_id` format: `v1|{SubjectType}|{SubjectId}|{PolicyType}|{Mode}|{Catalog}|{Database}|{Table}|{View}|{Function}|{Column}|{DataEngine}|{Operation}`
+
 ## Example Usage
+
+### If policy_type is ENGINE
 
 ```hcl
 resource "tencentcloud_dlc_attach_work_group_policy_attachment" "example" {
-  work_group_id = 23184
+  work_group_id = 21420
   policy_set {
-    database    = "tf_example_db"
-    catalog     = "DataLakeCatalog"
-    table       = "tf_example_table"
-    operation   = "ASSAYER"
+    policy_type = "ENGINE"
+    catalog     = ""
+    database    = ""
+    table       = ""
+    data_engine = "test"
+    operation   = "USE,MONITOR,MODIFY"
+    source      = "WORKGROUP"
+  }
+}
+```
+
+### If policy_type is DATABASE
+
+```hcl
+resource "tencentcloud_dlc_attach_work_group_policy_attachment" "example1" {
+  work_group_id = 21420
+  policy_set {
     policy_type = "DATABASE"
-    source      = "USER"
+    catalog     = "DataLakeCatalog"
+    database    = "test_database"
+    table       = ""
+    operation   = "OWNER"
+    source      = "WORKGROUP"
     mode        = "COMMON"
+  }
+}
+```
+
+### If policy_type is ROWFILTER
+
+```hcl
+resource "tencentcloud_dlc_attach_work_group_policy_attachment" "example2" {
+  work_group_id = 21420
+  policy_set {
+    policy_type = "ROWFILTER"
+    catalog     = "DataLakeCatalog"
+    database    = "test_database"
+    table       = "test_table"
+    operation   = "year > 2026 and country == 'US'"
+    source      = "WORKGROUP"
+    mode        = "SENIOR"
   }
 }
 ```
@@ -42,16 +80,12 @@ The `policy_set` object supports the following:
 * `operation` - (Required, String) The target permissions, which vary by permission level. Admin: `ALL` (default); data connection: `CREATE`; database: `ALL`, `CREATE`, `ALTER`, and `DROP`; table: `ALL`, `SELECT`, `INSERT`, `ALTER`, `DELETE`, `DROP`, and `UPDATE`. Note: For table permissions, if a data source other than `COSDataCatalog` is specified, only the `SELECT` permission can be granted here.
 * `table` - (Required, String) The name of the target table. `*` represents all tables in the current database. To grant admin permissions, it must be `*`; to grant data connection and database permissions, it must be null; to grant other permissions, it can be any table.
 * `column` - (Optional, String) The name of the target column. `*` represents all columns. To grant admin permissions, it must be `*`.
-* `create_time` - (Optional, String) The permission policy creation time, which is not required as an input parameter.
 * `data_engine` - (Optional, String) The name of the target data engine. `*` represents all engines. To grant admin permissions, it must be `*`.
+* `engine_generation` - (Optional, String) The engine generation/type.
 * `function` - (Optional, String) The name of the target function. `*` represents all functions in the current catalog. To grant admin permissions, it must be `*`; to grant data connection permissions, it must be null; to grant other permissions, it can be any function.
-* `id` - (Optional, Int) The policy ID.
 * `mode` - (Optional, String) The grant mode, which is not required as an input parameter. Valid values: `COMMON` and `SENIOR`.
-* `operator` - (Optional, String) The operator, which is not required as an input parameter.
+* `model` - (Optional, String) The name of the target Model. `*` represents all models in the current database. To grant admin permissions, it must be `*`; to grant data connection and database permissions, it must be null; to grant other permissions, it can be any model.
 * `policy_type` - (Optional, String) The permission type. Valid values: `ADMIN`, `DATASOURCE`, `DATABASE`, `TABLE`, `VIEW`, `FUNCTION`, `COLUMN`, and `ENGINE`. Note: If it is left empty, `ADMIN` is used.
-* `re_auth` - (Optional, Bool) Whether the grantee is allowed to further grant the permissions. Valid values: `false` (default) and `true` (the grantee can grant permissions gained here to other sub-users).
-* `source_id` - (Optional, Int) The ID of the work group, which applies only when the value of the `Source` field is `WORKGROUP`.
-* `source_name` - (Optional, String) The name of the work group, which applies only when the value of the `Source` field is `WORKGROUP`.
 * `source` - (Optional, String) The permission source, which is not required when input parameters are passed in. Valid values: `USER` (from the user) and `WORKGROUP` (from one or more associated work groups).
 * `view` - (Optional, String) The name of the target view. `*` represents all views in the current database. To grant admin permissions, it must be `*`; to grant data connection and database permissions, it must be null; to grant other permissions, it can be any view.
 
@@ -68,6 +102,6 @@ In addition to all arguments above, the following attributes are exported:
 DLC attach work group policy attachment can be imported using the composite id, e.g. The composite id is `WorkGroupId#PolicyId`.
 
 ```
-terraform import tencentcloud_dlc_attach_work_group_policy_attachment.example 23184#policy-xxxx
+terraform import tencentcloud_dlc_attach_work_group_policy_attachment.example 21420#v1|WORKGROUP|21420|DATABASE|COMMON|DataLakeCatalog|test_database||||||OWNER
 ```
 

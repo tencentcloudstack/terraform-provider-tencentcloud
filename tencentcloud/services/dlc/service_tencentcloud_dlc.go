@@ -1523,18 +1523,21 @@ func (me *DlcService) DescribeDlcDatasourceHouseAttachmentById(ctx context.Conte
 	return
 }
 
-func (me *DlcService) DescribeDlcWorkGroupPolicyAttachmentById(ctx context.Context, workGroupId, policyId string) (policy *dlc.Policy, errRet error) {
+func (me *DlcService) DescribeDlcWorkGroupPolicyAttachmentById(ctx context.Context, workGroupId, policyId, describeType string) (workGroupInfo *dlc.WorkGroupDetailInfo, errRet error) {
 	logId := tccommon.GetLogId(ctx)
 
 	var (
-		request = dlc.NewDescribeWorkGroupInfoRequest()
-		limit   = int64(100)
-		offset  = int64(0)
+		request  = dlc.NewDescribeWorkGroupInfoRequest()
+		response = dlc.NewDescribeWorkGroupInfoResponse()
+		limit    = int64(100)
+		offset   = int64(0)
 	)
 
 	request.WorkGroupId = helper.StrToInt64Point(workGroupId)
-	request.Type = helper.String("DataAuth")
+	request.PolicyId = helper.String(policyId)
+	request.Type = helper.String(describeType)
 	request.Limit = &limit
+	request.Offset = &offset
 
 	defer func() {
 		if errRet != nil {
@@ -1542,48 +1545,30 @@ func (me *DlcService) DescribeDlcWorkGroupPolicyAttachmentById(ctx context.Conte
 		}
 	}()
 
-	for {
-		request.Offset = &offset
-		var response *dlc.DescribeWorkGroupInfoResponse
-		errRet = resource.Retry(tccommon.ReadRetryTimeout, func() *resource.RetryError {
-			ratelimit.Check(request.GetAction())
-			result, e := me.client.UseDlcClient().DescribeWorkGroupInfo(request)
-			if e != nil {
-				return tccommon.RetryError(e)
-			} else {
-				log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), result.ToJsonString())
-			}
-
-			if result == nil || result.Response == nil || result.Response.WorkGroupInfo == nil {
-				return resource.NonRetryableError(fmt.Errorf("Describe dlc work group info failed, Response is nil."))
-			}
-
-			response = result
-			return nil
-		})
-
-		if errRet != nil {
-			log.Printf("[CRITAL]%s describe dlc work group policy attachment failed, reason:%+v", logId, errRet)
-			return
+	errRet = resource.Retry(tccommon.ReadRetryTimeout, func() *resource.RetryError {
+		ratelimit.Check(request.GetAction())
+		result, e := me.client.UseDlcClient().DescribeWorkGroupInfo(request)
+		if e != nil {
+			return tccommon.RetryError(e)
+		} else {
+			log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), result.ToJsonString())
 		}
 
-		workGroupInfo := response.Response.WorkGroupInfo
-		if workGroupInfo.DataPolicyInfo == nil || len(workGroupInfo.DataPolicyInfo.PolicySet) == 0 {
-			return
+		if result == nil || result.Response == nil || result.Response.WorkGroupInfo == nil {
+			return resource.NonRetryableError(fmt.Errorf("Describe dlc work group info failed, Response is nil."))
 		}
 
-		for _, p := range workGroupInfo.DataPolicyInfo.PolicySet {
-			if p.PolicyId != nil && *p.PolicyId == policyId {
-				policy = p
-				return
-			}
-		}
+		response = result
+		return nil
+	})
 
-		if int64(len(workGroupInfo.DataPolicyInfo.PolicySet)) < limit {
-			return
-		}
-		offset += limit
+	if errRet != nil {
+		log.Printf("[CRITAL]%s describe dlc work group policy attachment failed, reason:%+v", logId, errRet)
+		return
 	}
+
+	workGroupInfo = response.Response.WorkGroupInfo
+	return
 }
 
 func (me *DlcService) DeleteDlcAttachWorkGroupPolicyAttachmentByPolicyId(ctx context.Context, workGroupId, policyId string) (errRet error) {

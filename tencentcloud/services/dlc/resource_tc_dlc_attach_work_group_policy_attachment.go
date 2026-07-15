@@ -4,6 +4,7 @@ import (
 	"context"
 	"fmt"
 	"log"
+	"sort"
 	"strings"
 
 	tccommon "github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/common"
@@ -55,9 +56,10 @@ func ResourceTencentCloudDlcAttachWorkGroupPolicyAttachment() *schema.Resource {
 							Description: "The name of the target table. `*` represents all tables in the current database. To grant admin permissions, it must be `*`; to grant data connection and database permissions, it must be null; to grant other permissions, it can be any table.",
 						},
 						"operation": {
-							Type:        schema.TypeString,
-							Required:    true,
-							Description: "The target permissions, which vary by permission level. Admin: `ALL` (default); data connection: `CREATE`; database: `ALL`, `CREATE`, `ALTER`, and `DROP`; table: `ALL`, `SELECT`, `INSERT`, `ALTER`, `DELETE`, `DROP`, and `UPDATE`. Note: For table permissions, if a data source other than `COSDataCatalog` is specified, only the `SELECT` permission can be granted here.",
+							Type:             schema.TypeString,
+							Required:         true,
+							DiffSuppressFunc: dlcAttachWorkGroupPolicyAttachmentOperationDiffSuppress,
+							Description:      "The target permissions, which vary by permission level. Admin: `ALL` (default); data connection: `CREATE`; database: `ALL`, `CREATE`, `ALTER`, and `DROP`; table: `ALL`, `SELECT`, `INSERT`, `ALTER`, `DELETE`, `DROP`, and `UPDATE`. Note: For table permissions, if a data source other than `COSDataCatalog` is specified, only the `SELECT` permission can be granted here.",
 						},
 						"policy_type": {
 							Type:        schema.TypeString,
@@ -84,44 +86,67 @@ func ResourceTencentCloudDlcAttachWorkGroupPolicyAttachment() *schema.Resource {
 							Optional:    true,
 							Description: "The name of the target data engine. `*` represents all engines. To grant admin permissions, it must be `*`.",
 						},
-						"re_auth": {
-							Type:        schema.TypeBool,
+						"engine_generation": {
+							Type:        schema.TypeString,
 							Optional:    true,
-							Description: "Whether the grantee is allowed to further grant the permissions. Valid values: `false` (default) and `true` (the grantee can grant permissions gained here to other sub-users).",
+							Description: "The engine generation/type.",
+						},
+						"model": {
+							Type:        schema.TypeString,
+							Optional:    true,
+							Description: "The name of the target Model. `*` represents all models in the current database. To grant admin permissions, it must be `*`; to grant data connection and database permissions, it must be null; to grant other permissions, it can be any model.",
 						},
 						"source": {
 							Type:        schema.TypeString,
 							Optional:    true,
+							Computed:    true,
 							Description: "The permission source, which is not required when input parameters are passed in. Valid values: `USER` (from the user) and `WORKGROUP` (from one or more associated work groups).",
 						},
 						"mode": {
 							Type:        schema.TypeString,
 							Optional:    true,
+							Computed:    true,
 							Description: "The grant mode, which is not required as an input parameter. Valid values: `COMMON` and `SENIOR`.",
 						},
-						"operator": {
-							Type:        schema.TypeString,
-							Optional:    true,
-							Description: "The operator, which is not required as an input parameter.",
-						},
-						"create_time": {
-							Type:        schema.TypeString,
-							Optional:    true,
-							Description: "The permission policy creation time, which is not required as an input parameter.",
-						},
+						// computed
 						"source_id": {
 							Type:        schema.TypeInt,
-							Optional:    true,
+							Computed:    true,
 							Description: "The ID of the work group, which applies only when the value of the `Source` field is `WORKGROUP`.",
 						},
 						"source_name": {
 							Type:        schema.TypeString,
-							Optional:    true,
+							Computed:    true,
 							Description: "The name of the work group, which applies only when the value of the `Source` field is `WORKGROUP`.",
+						},
+						"operator": {
+							Type:        schema.TypeString,
+							Computed:    true,
+							Description: "The operator, which is not required as an input parameter.",
+						},
+						"create_time": {
+							Type:        schema.TypeString,
+							Computed:    true,
+							Description: "The permission policy creation time, which is not required as an input parameter.",
+						},
+						"re_auth": {
+							Type:        schema.TypeBool,
+							Computed:    true,
+							Description: "Whether the grantee is allowed to further grant the permissions. Valid values: `false` (default) and `true` (the grantee can grant permissions gained here to other sub-users).",
+						},
+						"is_admin_policy": {
+							Type:        schema.TypeBool,
+							Computed:    true,
+							Description: "Whether the permission source is admin, which is not required as an input parameter.",
+						},
+						"policy_id": {
+							Type:        schema.TypeString,
+							Computed:    true,
+							Description: "The deterministic string PolicyId corresponding to user and workgroup, which is not required as an input parameter.",
 						},
 						"id": {
 							Type:        schema.TypeInt,
-							Optional:    true,
+							Computed:    true,
 							Description: "The policy ID.",
 						},
 					},
@@ -187,6 +212,14 @@ func resourceTencentCloudDlcAttachWorkGroupPolicyAttachmentCreate(d *schema.Reso
 				policy.DataEngine = helper.String(v.(string))
 			}
 
+			if v, ok := dMap["engine_generation"]; ok {
+				policy.EngineGeneration = helper.String(v.(string))
+			}
+
+			if v, ok := dMap["model"]; ok {
+				policy.Model = helper.String(v.(string))
+			}
+
 			if v, ok := dMap["re_auth"]; ok {
 				policy.ReAuth = helper.Bool(v.(bool))
 			}
@@ -197,26 +230,6 @@ func resourceTencentCloudDlcAttachWorkGroupPolicyAttachmentCreate(d *schema.Reso
 
 			if v, ok := dMap["mode"]; ok {
 				policy.Mode = helper.String(v.(string))
-			}
-
-			if v, ok := dMap["operator"]; ok {
-				policy.Operator = helper.String(v.(string))
-			}
-
-			if v, ok := dMap["create_time"]; ok {
-				policy.CreateTime = helper.String(v.(string))
-			}
-
-			if v, ok := dMap["source_id"]; ok {
-				policy.SourceId = helper.IntInt64(v.(int))
-			}
-
-			if v, ok := dMap["source_name"]; ok {
-				policy.SourceName = helper.String(v.(string))
-			}
-
-			if v, ok := dMap["id"]; ok {
-				policy.Id = helper.IntInt64(v.(int))
 			}
 
 			request.PolicySet = append(request.PolicySet, &policy)
@@ -271,91 +284,48 @@ func resourceTencentCloudDlcAttachWorkGroupPolicyAttachmentRead(d *schema.Resour
 	workGroupId := idSplit[0]
 	policyId := idSplit[1]
 
-	policy, err := service.DescribeDlcWorkGroupPolicyAttachmentById(ctx, workGroupId, policyId)
+	describeType, err := dlcAttachWorkGroupPolicyAttachmentParsePolicyIdType(policyId)
+	if err != nil {
+		log.Printf("[CRITAL]%s read dlc attach_user_policy_attachment failed, reason:%+v", logId, err)
+		return err
+	}
+
+	workGroupInfo, err := service.DescribeDlcWorkGroupPolicyAttachmentById(ctx, workGroupId, policyId, describeType)
 	if err != nil {
 		return err
 	}
 
-	if policy == nil {
-		log.Printf("[CRUD] dlc_attach_work_group_policy_attachment id=%s", d.Id())
+	if workGroupInfo == nil {
+		log.Printf("[CRUD] tencentcloud_dlc_attach_work_group_policy_attachment id=%s", d.Id())
+		d.SetId("")
+		return nil
+	}
+
+	candidatePolicySet := dlcAttachWorkGroupPolicyAttachmentGetPolicySet(workGroupInfo, describeType)
+	if len(candidatePolicySet) == 0 {
+		log.Printf("[CRUD]%s dlc tencentcloud_dlc_attach_work_group_policy_attachment id=%s, policy info of type %s is empty.", logId, d.Id(), describeType)
+		d.SetId("")
+		return nil
+	}
+
+	var matchedPolicy *dlc.Policy
+	for _, policy := range candidatePolicySet {
+		if policy != nil && policy.PolicyId != nil && *policy.PolicyId == policyId {
+			matchedPolicy = policy
+			break
+		}
+	}
+
+	if matchedPolicy == nil {
+		log.Printf("[CRUD]%s dlc tencentcloud_dlc_attach_work_group_policy_attachment id=%s, policy_id=%s not found, resource may have been deleted.", logId, d.Id(), policyId)
 		d.SetId("")
 		return nil
 	}
 
 	_ = d.Set("work_group_id", helper.StrToInt64(workGroupId))
 
-	if policy != nil {
-		policySetMap := map[string]interface{}{}
-		if policy.Database != nil {
-			policySetMap["database"] = *policy.Database
-		}
-
-		if policy.Catalog != nil {
-			policySetMap["catalog"] = *policy.Catalog
-		}
-
-		if policy.Table != nil {
-			policySetMap["table"] = *policy.Table
-		}
-
-		if policy.Operation != nil {
-			policySetMap["operation"] = *policy.Operation
-		}
-
-		if policy.PolicyType != nil {
-			policySetMap["policy_type"] = *policy.PolicyType
-		}
-
-		if policy.Function != nil {
-			policySetMap["function"] = *policy.Function
-		}
-
-		if policy.View != nil {
-			policySetMap["view"] = *policy.View
-		}
-
-		if policy.Column != nil {
-			policySetMap["column"] = *policy.Column
-		}
-
-		if policy.DataEngine != nil {
-			policySetMap["data_engine"] = *policy.DataEngine
-		}
-
-		if policy.ReAuth != nil {
-			policySetMap["re_auth"] = *policy.ReAuth
-		}
-
-		if policy.Source != nil {
-			policySetMap["source"] = *policy.Source
-		}
-
-		if policy.Mode != nil {
-			policySetMap["mode"] = *policy.Mode
-		}
-
-		if policy.Operator != nil {
-			policySetMap["operator"] = *policy.Operator
-		}
-
-		if policy.CreateTime != nil {
-			policySetMap["create_time"] = *policy.CreateTime
-		}
-
-		if policy.SourceId != nil {
-			policySetMap["source_id"] = *policy.SourceId
-		}
-
-		if policy.SourceName != nil {
-			policySetMap["source_name"] = *policy.SourceName
-		}
-
-		if policy.Id != nil {
-			policySetMap["id"] = *policy.Id
-		}
-
-		_ = d.Set("policy_set", []interface{}{policySetMap})
-	}
+	policySetList := flattenDlcAttachWorkGroupPolicyAttachmentPolicySet([]*dlc.Policy{matchedPolicy})
+	_ = d.Set("policy_set", policySetList)
 
 	return nil
 }
@@ -383,4 +353,192 @@ func resourceTencentCloudDlcAttachWorkGroupPolicyAttachmentDelete(d *schema.Reso
 	}
 
 	return nil
+}
+
+// dlcAttachWorkGroupPolicyAttachmentParsePolicyIdType parses the PolicyId to get the `Type` value required by the
+// DescribeUserInfo API.
+//
+// PolicyId format:
+// v1|{SubjectType}|{SubjectId}|{PolicyType}|{Mode}|{Catalog}|{Database}|{Table}|{View}|{Function}|{Column}|{DataEngine}|{Operation}
+//
+// The 4th segment (PolicyType) determines the `Type` value used by DescribeUserInfo:
+//   - ADMIN / DATABASE / TABLE / VIEW / FUNCTION / COLUMN -> DataAuth
+//   - DATASOURCE                                          -> CatalogAuth
+//   - ENGINE                                               -> EngineAuth
+//   - ROWFILTER                                            -> RowFilter
+//   - MODEL                                                -> MODEL
+func dlcAttachWorkGroupPolicyAttachmentParsePolicyIdType(policyId string) (string, error) {
+	segments := strings.Split(policyId, "|")
+	if len(segments) < 4 {
+		return "", fmt.Errorf("invalid policy_id format: %s", policyId)
+	}
+
+	policyType := segments[3]
+	switch policyType {
+	case "ADMIN", "DATABASE", "TABLE", "VIEW", "FUNCTION", "COLUMN":
+		return "DataAuth", nil
+	case "DATASOURCE":
+		return "CatalogAuth", nil
+	case "ENGINE":
+		return "EngineAuth", nil
+	case "ROWFILTER":
+		return "RowFilter", nil
+	case "MODEL":
+		return "MODEL", nil
+	default:
+		return "", fmt.Errorf("unsupported policy type `%s` parsed from policy_id: %s", policyType, policyId)
+	}
+}
+
+// dlcAttachWorkGroupPolicyAttachmentGetPolicySet returns the policy set from `WorkGroupDetailInfo` matching the given
+// DescribeWorkGroupInfo `Type` value.
+func dlcAttachWorkGroupPolicyAttachmentGetPolicySet(workGroupInfo *dlc.WorkGroupDetailInfo, describeType string) []*dlc.Policy {
+	var policies *dlc.Policys
+	switch describeType {
+	case "DataAuth":
+		policies = workGroupInfo.DataPolicyInfo
+	case "CatalogAuth":
+		policies = workGroupInfo.DataCatalogPolicyInfo
+	case "EngineAuth":
+		policies = workGroupInfo.EnginePolicyInfo
+	case "RowFilter":
+		policies = workGroupInfo.RowFilterInfo
+	case "MODEL":
+		policies = workGroupInfo.ModelPolicyInfo
+	}
+
+	if policies == nil {
+		return nil
+	}
+
+	return policies.PolicySet
+}
+
+func flattenDlcAttachWorkGroupPolicyAttachmentPolicySet(policySet []*dlc.Policy) []interface{} {
+	policySetList := make([]interface{}, 0, len(policySet))
+	for _, policy := range policySet {
+		if policy == nil {
+			continue
+		}
+		policyMap := map[string]interface{}{}
+		if policy.Database != nil {
+			policyMap["database"] = policy.Database
+		}
+
+		if policy.Catalog != nil {
+			policyMap["catalog"] = policy.Catalog
+		}
+
+		if policy.Table != nil {
+			policyMap["table"] = policy.Table
+		}
+
+		if policy.Operation != nil {
+			policyMap["operation"] = policy.Operation
+		}
+
+		if policy.PolicyType != nil {
+			policyMap["policy_type"] = policy.PolicyType
+		}
+
+		if policy.Function != nil {
+			policyMap["function"] = policy.Function
+		}
+
+		if policy.View != nil {
+			policyMap["view"] = policy.View
+		}
+
+		if policy.Column != nil {
+			policyMap["column"] = policy.Column
+		}
+
+		if policy.DataEngine != nil {
+			policyMap["data_engine"] = policy.DataEngine
+		}
+
+		if policy.ReAuth != nil {
+			policyMap["re_auth"] = policy.ReAuth
+		}
+
+		if policy.EngineGeneration != nil {
+			policyMap["engine_generation"] = policy.EngineGeneration
+		}
+
+		if policy.Model != nil {
+			policyMap["model"] = policy.Model
+		}
+
+		if policy.PolicyId != nil {
+			policyMap["policy_id"] = policy.PolicyId
+		}
+
+		if policy.Source != nil {
+			policyMap["source"] = policy.Source
+		}
+
+		if policy.Mode != nil {
+			policyMap["mode"] = policy.Mode
+		}
+
+		if policy.Operator != nil {
+			policyMap["operator"] = policy.Operator
+		}
+
+		if policy.CreateTime != nil {
+			policyMap["create_time"] = policy.CreateTime
+		}
+
+		if policy.SourceId != nil {
+			policyMap["source_id"] = policy.SourceId
+		}
+
+		if policy.SourceName != nil {
+			policyMap["source_name"] = policy.SourceName
+		}
+
+		if policy.Id != nil {
+			policyMap["id"] = policy.Id
+		}
+
+		if policy.IsAdminPolicy != nil {
+			policyMap["is_admin_policy"] = policy.IsAdminPolicy
+		}
+
+		policySetList = append(policySetList, policyMap)
+	}
+
+	return policySetList
+}
+
+// dlcAttachWorkGroupPolicyAttachmentOperationDiffSuppress suppresses diffs on `policy_set.0.operation` when the old
+// and new values contain the same comma-separated operation tokens but in a different order (e.g. the API may
+// return "USE,MONITOR" for a value that was configured as "MONITOR,USE").
+func dlcAttachWorkGroupPolicyAttachmentOperationDiffSuppress(k, old, new string, d *schema.ResourceData) bool {
+	if old == new {
+		return true
+	}
+
+	splitAndSort := func(s string) []string {
+		parts := strings.Split(s, ",")
+		for i := range parts {
+			parts[i] = strings.TrimSpace(parts[i])
+		}
+		sort.Strings(parts)
+		return parts
+	}
+
+	oldParts := splitAndSort(old)
+	newParts := splitAndSort(new)
+	if len(oldParts) != len(newParts) {
+		return false
+	}
+
+	for i := range oldParts {
+		if oldParts[i] != newParts[i] {
+			return false
+		}
+	}
+
+	return true
 }
