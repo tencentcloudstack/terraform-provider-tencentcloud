@@ -1,0 +1,3 @@
+```release-note:enhancement
+resource/tencentcloud_apm_instance: support `log_span_id_key` parameter to configure the CLS spanId index key
+```

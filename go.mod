@@ -29,7 +29,7 @@ require (
 	github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/antiddos v1.3.15
 	github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/api v1.0.285
 	github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/apigateway v1.0.763
-	github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/apm v1.3.8
+	github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/apm v1.3.124
 	github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/as v1.3.16
 	github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/bi v1.0.824
 	github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/cam v1.3.130
