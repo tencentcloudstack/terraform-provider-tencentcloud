@@ -311,9 +311,6 @@ func resourceTencentCloudDlcAttachUserPolicyAttachmentRead(d *schema.ResourceDat
 	request.Type = helper.String(describeType)
 	request.Limit = helper.IntInt64(100)
 	request.Offset = helper.IntInt64(0)
-	if accountType, ok := d.GetOk("account_type"); ok {
-		request.AccountType = helper.String(accountType.(string))
-	}
 
 	var response *dlc.DescribeUserInfoResponse
 	if err := resource.Retry(tccommon.ReadRetryTimeout, func() *resource.RetryError {
