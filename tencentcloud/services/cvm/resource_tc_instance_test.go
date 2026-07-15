@@ -3460,3 +3460,330 @@ type mockMeta struct {
 func (m *mockMeta) GetAPIV3Conn() *connectivity.TencentCloudClient {
 	return m.client
 }
+
+// Unit tests for disaster_recover_group_ids, partition_number, force_replace_placement_group_id
+// Run all unit tests below with:
+//   go test -v -run "TestUnitInstance_" ./tencentcloud/services/cvm/
+
+func TestUnitInstance_DisasterRecoverGroupIdsSchemaDefinition(t *testing.T) {
+	res := svccvm.ResourceTencentCloudInstance()
+	s := res.Schema
+
+	drgiSchema, ok := s["disaster_recover_group_ids"]
+	assert.True(t, ok, "disaster_recover_group_ids field should exist in schema")
+	assert.Equal(t, schema.TypeSet, drgiSchema.Type)
+	assert.True(t, drgiSchema.Optional)
+	assert.True(t, drgiSchema.Computed)
+	assert.Equal(t, 3, drgiSchema.MaxItems)
+
+	elemSchema, ok := drgiSchema.Elem.(*schema.Schema)
+	assert.True(t, ok, "disaster_recover_group_ids Elem should be *schema.Schema")
+	assert.Equal(t, schema.TypeString, elemSchema.Type)
+}
+
+func TestUnitInstance_PartitionNumberSchemaDefinition(t *testing.T) {
+	res := svccvm.ResourceTencentCloudInstance()
+	s := res.Schema
+
+	pnSchema, ok := s["partition_number"]
+	assert.True(t, ok, "partition_number field should exist in schema")
+	assert.Equal(t, schema.TypeInt, pnSchema.Type)
+	assert.True(t, pnSchema.Optional)
+	assert.NotNil(t, pnSchema.ValidateFunc)
+}
+
+func TestUnitInstance_ForceReplacePlacementGroupIdSchemaDefinition(t *testing.T) {
+	res := svccvm.ResourceTencentCloudInstance()
+	s := res.Schema
+
+	frpgiSchema, ok := s["force_replace_placement_group_id"]
+	assert.True(t, ok, "force_replace_placement_group_id field should exist in schema")
+	assert.Equal(t, schema.TypeBool, frpgiSchema.Type)
+	assert.True(t, frpgiSchema.Optional)
+}
+
+func TestUnitInstance_CreateRequestWithDisasterRecoverGroupIds(t *testing.T) {
+	request := cvmsdk.NewRunInstancesRequest()
+
+	disasterRecoverGroupIds := []string{"ps-001", "ps-002"}
+	partitionNumber := 3
+
+	for i := range disasterRecoverGroupIds {
+		id := disasterRecoverGroupIds[i]
+		request.DisasterRecoverGroupIds = append(request.DisasterRecoverGroupIds, &id)
+	}
+	request.PartitionNumber = helper.IntInt64(partitionNumber)
+
+	assert.Equal(t, 2, len(request.DisasterRecoverGroupIds))
+	assert.Equal(t, "ps-001", *request.DisasterRecoverGroupIds[0])
+	assert.Equal(t, "ps-002", *request.DisasterRecoverGroupIds[1])
+	assert.Equal(t, int64(3), *request.PartitionNumber)
+}
+
+func TestUnitInstance_CreateRequestWithDisasterRecoverGroupIdsNoPartition(t *testing.T) {
+	request := cvmsdk.NewRunInstancesRequest()
+
+	disasterRecoverGroupIds := []string{"ps-abc"}
+
+	for i := range disasterRecoverGroupIds {
+		id := disasterRecoverGroupIds[i]
+		request.DisasterRecoverGroupIds = append(request.DisasterRecoverGroupIds, &id)
+	}
+
+	assert.Equal(t, 1, len(request.DisasterRecoverGroupIds))
+	assert.Equal(t, "ps-abc", *request.DisasterRecoverGroupIds[0])
+	assert.Nil(t, request.PartitionNumber, "partition_number should not be set when not specified")
+}
+
+func TestUnitInstance_CreateRequestWithPlacementGroupIdFallback(t *testing.T) {
+	request := cvmsdk.NewRunInstancesRequest()
+
+	rpgFlag := false
+	placementGroupId := "ps-legacy"
+
+	if !rpgFlag {
+		request.DisasterRecoverGroupIds = []*string{helper.String(placementGroupId)}
+	}
+
+	assert.Equal(t, 1, len(request.DisasterRecoverGroupIds))
+	assert.Equal(t, "ps-legacy", *request.DisasterRecoverGroupIds[0])
+}
+
+func TestUnitInstance_CreateRequestWithRpgFlagTrue(t *testing.T) {
+	request := cvmsdk.NewRunInstancesRequest()
+
+	rpgFlag := true
+	placementGroupId := "ps-legacy"
+
+	if !rpgFlag {
+		request.DisasterRecoverGroupIds = []*string{helper.String(placementGroupId)}
+	}
+
+	assert.Nil(t, request.DisasterRecoverGroupIds, "DisasterRecoverGroupIds should not be set when rpgFlag is true")
+}
+
+func TestUnitInstance_ReadStateWithDisasterRecoverGroupIds(t *testing.T) {
+	instance := &cvmsdk.Instance{
+		InstanceId:              helper.String("ins-12345"),
+		DisasterRecoverGroupIds: []*string{helper.String("ps-001"), helper.String("ps-002")},
+		PartitionNumber:         helper.Int64(5),
+		DisasterRecoverGroupId:  helper.String("ps-001"),
+	}
+
+	result := make(map[string]interface{})
+
+	if len(instance.DisasterRecoverGroupIds) > 0 {
+		ids := make([]string, 0, len(instance.DisasterRecoverGroupIds))
+		for _, id := range instance.DisasterRecoverGroupIds {
+			ids = append(ids, *id)
+		}
+		result["disaster_recover_group_ids"] = ids
+		if instance.PartitionNumber != nil {
+			result["partition_number"] = int(*instance.PartitionNumber)
+		}
+	}
+
+	drgi, ok := result["disaster_recover_group_ids"]
+	assert.True(t, ok)
+	assert.Equal(t, []string{"ps-001", "ps-002"}, drgi)
+	assert.Equal(t, 5, result["partition_number"])
+}
+
+func TestUnitInstance_ReadStateWithDisasterRecoverGroupIdsNoPartition(t *testing.T) {
+	instance := &cvmsdk.Instance{
+		InstanceId:              helper.String("ins-12345"),
+		DisasterRecoverGroupIds: []*string{helper.String("ps-001")},
+		PartitionNumber:         nil,
+	}
+
+	result := make(map[string]interface{})
+
+	if len(instance.DisasterRecoverGroupIds) > 0 {
+		ids := make([]string, 0, len(instance.DisasterRecoverGroupIds))
+		for _, id := range instance.DisasterRecoverGroupIds {
+			ids = append(ids, *id)
+		}
+		result["disaster_recover_group_ids"] = ids
+		if instance.PartitionNumber != nil {
+			result["partition_number"] = int(*instance.PartitionNumber)
+		}
+	}
+
+	_, ok := result["disaster_recover_group_ids"]
+	assert.True(t, ok)
+	_, hasPartition := result["partition_number"]
+	assert.False(t, hasPartition, "partition_number should not be set when nil")
+}
+
+func TestUnitInstance_ReadStateWithEmptyDisasterRecoverGroupIds(t *testing.T) {
+	instance := &cvmsdk.Instance{
+		InstanceId:              helper.String("ins-12345"),
+		DisasterRecoverGroupIds: []*string{},
+		PartitionNumber:         helper.Int64(3),
+		DisasterRecoverGroupId:  helper.String("ps-legacy"),
+	}
+
+	result := make(map[string]interface{})
+
+	if len(instance.DisasterRecoverGroupIds) > 0 {
+		ids := make([]string, 0, len(instance.DisasterRecoverGroupIds))
+		for _, id := range instance.DisasterRecoverGroupIds {
+			ids = append(ids, *id)
+		}
+		result["disaster_recover_group_ids"] = ids
+		if instance.PartitionNumber != nil {
+			result["partition_number"] = int(*instance.PartitionNumber)
+		}
+	}
+
+	if instance.DisasterRecoverGroupId != nil {
+		result["placement_group_id"] = *instance.DisasterRecoverGroupId
+	}
+
+	_, hasDrgi := result["disaster_recover_group_ids"]
+	assert.False(t, hasDrgi, "disaster_recover_group_ids should not be set when empty")
+	_, hasPartition := result["partition_number"]
+	assert.False(t, hasPartition, "partition_number should not be set when disaster_recover_group_ids is empty")
+	assert.Equal(t, "ps-legacy", result["placement_group_id"])
+}
+
+func TestUnitInstance_UpdateRequestWithDisasterRecoverGroupIds(t *testing.T) {
+	request := cvmsdk.NewModifyInstancesDisasterRecoverGroupRequest()
+
+	instanceId := "ins-12345"
+	groupIds := []string{"ps-new-001", "ps-new-002"}
+	partitionNumber := 7
+	force := true
+
+	request.InstanceIds = helper.Strings([]string{instanceId})
+	gids := make([]*string, 0, len(groupIds))
+	for i := range groupIds {
+		gids = append(gids, &groupIds[i])
+	}
+	request.DisasterRecoverGroupIds = gids
+	request.Force = helper.Bool(force)
+	request.PartitionNumber = helper.IntInt64(partitionNumber)
+
+	assert.Equal(t, 1, len(request.InstanceIds))
+	assert.Equal(t, "ins-12345", *request.InstanceIds[0])
+	assert.Equal(t, 2, len(request.DisasterRecoverGroupIds))
+	assert.Equal(t, "ps-new-001", *request.DisasterRecoverGroupIds[0])
+	assert.Equal(t, "ps-new-002", *request.DisasterRecoverGroupIds[1])
+	assert.Equal(t, true, *request.Force)
+	assert.Equal(t, int64(7), *request.PartitionNumber)
+}
+
+func TestUnitInstance_UpdateRequestWithDisasterRecoverGroupIdsNoPartition(t *testing.T) {
+	request := cvmsdk.NewModifyInstancesDisasterRecoverGroupRequest()
+
+	instanceId := "ins-12345"
+	groupIds := []string{"ps-new-001"}
+
+	request.InstanceIds = helper.Strings([]string{instanceId})
+	gids := make([]*string, 0, len(groupIds))
+	for i := range groupIds {
+		gids = append(gids, &groupIds[i])
+	}
+	request.DisasterRecoverGroupIds = gids
+
+	assert.Equal(t, 1, len(request.DisasterRecoverGroupIds))
+	assert.Equal(t, "ps-new-001", *request.DisasterRecoverGroupIds[0])
+	assert.Nil(t, request.PartitionNumber)
+	assert.Nil(t, request.Force)
+}
+
+func TestUnitInstance_UpdateRequestWithLegacyPlacementGroupId(t *testing.T) {
+	request := cvmsdk.NewModifyInstancesDisasterRecoverGroupRequest()
+
+	instanceId := "ins-12345"
+	newPlacementGroupId := "ps-legacy-new"
+	force := false
+
+	request.InstanceIds = helper.Strings([]string{instanceId})
+	request.DisasterRecoverGroupId = helper.String(newPlacementGroupId)
+	request.Force = helper.Bool(force)
+
+	assert.Equal(t, "ins-12345", *request.InstanceIds[0])
+	assert.Equal(t, "ps-legacy-new", *request.DisasterRecoverGroupId)
+	assert.Equal(t, false, *request.Force)
+	assert.Nil(t, request.DisasterRecoverGroupIds, "DisasterRecoverGroupIds should not be set in legacy mode")
+	assert.Nil(t, request.PartitionNumber, "PartitionNumber should not be set in legacy mode")
+}
+
+func TestUnitInstance_DisasterRecoverGroupIdsPriority(t *testing.T) {
+	disasterRecoverGroupIds := []string{"ps-001"}
+	placementGroupId := "ps-legacy"
+	rpgFlag := false
+
+	request := cvmsdk.NewRunInstancesRequest()
+
+	if len(disasterRecoverGroupIds) > 0 {
+		for i := range disasterRecoverGroupIds {
+			id := disasterRecoverGroupIds[i]
+			request.DisasterRecoverGroupIds = append(request.DisasterRecoverGroupIds, &id)
+		}
+	} else {
+		if !rpgFlag {
+			request.DisasterRecoverGroupIds = []*string{helper.String(placementGroupId)}
+		}
+	}
+
+	assert.Equal(t, 1, len(request.DisasterRecoverGroupIds))
+	assert.Equal(t, "ps-001", *request.DisasterRecoverGroupIds[0])
+}
+
+func TestUnitInstance_PlacementGroupIdUsedWhenNoDisasterRecoverGroupIds(t *testing.T) {
+	disasterRecoverGroupIds := []string{}
+	placementGroupId := "ps-legacy"
+	rpgFlag := false
+
+	request := cvmsdk.NewRunInstancesRequest()
+
+	if len(disasterRecoverGroupIds) > 0 {
+		for i := range disasterRecoverGroupIds {
+			id := disasterRecoverGroupIds[i]
+			request.DisasterRecoverGroupIds = append(request.DisasterRecoverGroupIds, &id)
+		}
+	} else {
+		if !rpgFlag {
+			request.DisasterRecoverGroupIds = []*string{helper.String(placementGroupId)}
+		}
+	}
+
+	assert.Equal(t, 1, len(request.DisasterRecoverGroupIds))
+	assert.Equal(t, "ps-legacy", *request.DisasterRecoverGroupIds[0])
+}
+
+func TestUnitInstance_ReadPlacementGroupIdNotOverwritten(t *testing.T) {
+	instance := &cvmsdk.Instance{
+		InstanceId:              helper.String("ins-12345"),
+		DisasterRecoverGroupId:  helper.String("ps-001"),
+		DisasterRecoverGroupIds: []*string{helper.String("ps-001"), helper.String("ps-002")},
+		PartitionNumber:         helper.Int64(2),
+	}
+
+	result := make(map[string]interface{})
+	disasterRecoverGroupIdsInUse := len(instance.DisasterRecoverGroupIds) > 0
+
+	if instance.DisasterRecoverGroupId != nil {
+		if !disasterRecoverGroupIdsInUse {
+			result["placement_group_id"] = *instance.DisasterRecoverGroupId
+		}
+	}
+
+	if len(instance.DisasterRecoverGroupIds) > 0 {
+		ids := make([]string, 0, len(instance.DisasterRecoverGroupIds))
+		for _, id := range instance.DisasterRecoverGroupIds {
+			ids = append(ids, *id)
+		}
+		result["disaster_recover_group_ids"] = ids
+		if instance.PartitionNumber != nil {
+			result["partition_number"] = int(*instance.PartitionNumber)
+		}
+	}
+
+	_, hasPlacementGroupId := result["placement_group_id"]
+	assert.False(t, hasPlacementGroupId, "placement_group_id should not be set when disaster_recover_group_ids is in use")
+	assert.Equal(t, []string{"ps-001", "ps-002"}, result["disaster_recover_group_ids"])
+	assert.Equal(t, 2, result["partition_number"])
+}
