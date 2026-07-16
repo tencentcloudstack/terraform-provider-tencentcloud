@@ -3980,6 +3980,112 @@ func (r *CreateLoadBalancerResponse) FromJsonString(s string) error {
 }
 
 // Predefined struct for user
+type CreateLogAnalysisDownloadTaskRequestParams struct {
+	// <p>站点 ID。</p>
+	ZoneId *string `json:"ZoneId,omitnil,omitempty" name:"ZoneId"`
+
+	// <p>数据归属地区，可选值：<ul><li>mainland：中国大陆境内；</li><li>overseas：全球（不含中国大陆）。</li></ul>注意：若站点服务区域为“全球可用区”，获取全部数据需要分别查询 mainland 和 overseas 的数据。</p>
+	Area *string `json:"Area,omitnil,omitempty" name:"Area"`
+
+	// <p>开始时间，示例值：2020-04-29T00:00:00Z。套餐版本不同，支持的可查询开始时间至今的最大时间跨度不同，详情请见 <a href="https://cloud.tencent.com/document/product/1552/94165#45435466-9103-4ff6-be22-e31717044fb2">套餐选型对比</a>。</p>
+	StartTime *string `json:"StartTime,omitnil,omitempty" name:"StartTime"`
+
+	// <p>结束时间，示例值：2020-04-30T00:00:00Z。单次查询的开始时间到结束时间跨度最大为 31 天。</p>
+	EndTime *string `json:"EndTime,omitnil,omitempty" name:"EndTime"`
+
+	// <p>日志类型，可选值：<ul><li> l7-access-logs：七层访问日志；</li><li>web-attack：托管规则日志。</li></ul>默认为 l7-access-logs 。</p>
+	LogType *string `json:"LogType,omitnil,omitempty" name:"LogType"`
+
+	// <p><a href="https://cloud.tencent.com/document/product/1552/124662">日志匹配条件</a>，最大长度 12KB。</p>
+	Condition *string `json:"Condition,omitnil,omitempty" name:"Condition"`
+
+	// <p>文件格式，可选值：<ul><li>csv</li></ul>默认为 csv。</p>
+	Format *string `json:"Format,omitnil,omitempty" name:"Format"`
+
+	// <p>原始日志的时间排序，可选值：  <ul><li>asc：升序；</li>  <li>desc：降序。</li></ul>  默认为 desc。</p>
+	Sort *string `json:"Sort,omitnil,omitempty" name:"Sort"`
+}
+
+type CreateLogAnalysisDownloadTaskRequest struct {
+	*tchttp.BaseRequest
+	
+	// <p>站点 ID。</p>
+	ZoneId *string `json:"ZoneId,omitnil,omitempty" name:"ZoneId"`
+
+	// <p>数据归属地区，可选值：<ul><li>mainland：中国大陆境内；</li><li>overseas：全球（不含中国大陆）。</li></ul>注意：若站点服务区域为“全球可用区”，获取全部数据需要分别查询 mainland 和 overseas 的数据。</p>
+	Area *string `json:"Area,omitnil,omitempty" name:"Area"`
+
+	// <p>开始时间，示例值：2020-04-29T00:00:00Z。套餐版本不同，支持的可查询开始时间至今的最大时间跨度不同，详情请见 <a href="https://cloud.tencent.com/document/product/1552/94165#45435466-9103-4ff6-be22-e31717044fb2">套餐选型对比</a>。</p>
+	StartTime *string `json:"StartTime,omitnil,omitempty" name:"StartTime"`
+
+	// <p>结束时间，示例值：2020-04-30T00:00:00Z。单次查询的开始时间到结束时间跨度最大为 31 天。</p>
+	EndTime *string `json:"EndTime,omitnil,omitempty" name:"EndTime"`
+
+	// <p>日志类型，可选值：<ul><li> l7-access-logs：七层访问日志；</li><li>web-attack：托管规则日志。</li></ul>默认为 l7-access-logs 。</p>
+	LogType *string `json:"LogType,omitnil,omitempty" name:"LogType"`
+
+	// <p><a href="https://cloud.tencent.com/document/product/1552/124662">日志匹配条件</a>，最大长度 12KB。</p>
+	Condition *string `json:"Condition,omitnil,omitempty" name:"Condition"`
+
+	// <p>文件格式，可选值：<ul><li>csv</li></ul>默认为 csv。</p>
+	Format *string `json:"Format,omitnil,omitempty" name:"Format"`
+
+	// <p>原始日志的时间排序，可选值：  <ul><li>asc：升序；</li>  <li>desc：降序。</li></ul>  默认为 desc。</p>
+	Sort *string `json:"Sort,omitnil,omitempty" name:"Sort"`
+}
+
+func (r *CreateLogAnalysisDownloadTaskRequest) ToJsonString() string {
+    b, _ := json.Marshal(r)
+    return string(b)
+}
+
+// FromJsonString It is highly **NOT** recommended to use this function
+// because it has no param check, nor strict type check
+func (r *CreateLogAnalysisDownloadTaskRequest) FromJsonString(s string) error {
+	f := make(map[string]interface{})
+	if err := json.Unmarshal([]byte(s), &f); err != nil {
+		return err
+	}
+	delete(f, "ZoneId")
+	delete(f, "Area")
+	delete(f, "StartTime")
+	delete(f, "EndTime")
+	delete(f, "LogType")
+	delete(f, "Condition")
+	delete(f, "Format")
+	delete(f, "Sort")
+	if len(f) > 0 {
+		return tcerr.NewTencentCloudSDKError("ClientError.BuildRequestError", "CreateLogAnalysisDownloadTaskRequest has unknown keys!", "")
+	}
+	return json.Unmarshal([]byte(s), &r)
+}
+
+// Predefined struct for user
+type CreateLogAnalysisDownloadTaskResponseParams struct {
+	// <p>日志分析下载任务 ID。</p>
+	TaskId *string `json:"TaskId,omitnil,omitempty" name:"TaskId"`
+
+	// 唯一请求 ID，由服务端生成，每次请求都会返回（若请求因其他原因未能抵达服务端，则该次请求不会获得 RequestId）。定位问题时需要提供该次请求的 RequestId。
+	RequestId *string `json:"RequestId,omitnil,omitempty" name:"RequestId"`
+}
+
+type CreateLogAnalysisDownloadTaskResponse struct {
+	*tchttp.BaseResponse
+	Response *CreateLogAnalysisDownloadTaskResponseParams `json:"Response"`
+}
+
+func (r *CreateLogAnalysisDownloadTaskResponse) ToJsonString() string {
+    b, _ := json.Marshal(r)
+    return string(b)
+}
+
+// FromJsonString It is highly **NOT** recommended to use this function
+// because it has no param check, nor strict type check
+func (r *CreateLogAnalysisDownloadTaskResponse) FromJsonString(s string) error {
+	return json.Unmarshal([]byte(s), &r)
+}
+
+// Predefined struct for user
 type CreateMultiPathGatewayLineRequestParams struct {
 	// 站点 ID 。
 	ZoneId *string `json:"ZoneId,omitnil,omitempty" name:"ZoneId"`
@@ -4744,92 +4850,92 @@ func (r *CreatePurgeTaskResponse) FromJsonString(s string) error {
 
 // Predefined struct for user
 type CreateRealtimeLogDeliveryTaskRequestParams struct {
-	// 站点 ID。
+	// <p>站点 ID。</p>
 	ZoneId *string `json:"ZoneId,omitnil,omitempty" name:"ZoneId"`
 
-	// 数据投递区域，可选值：<ul><li>mainland：中国大陆境内；</li><li>overseas：全球（不含中国大陆）。</li></ul>
+	// <p>数据投递区域，可选值：<ul><li>mainland：中国大陆境内；</li><li>overseas：全球（不含中国大陆）。</li></ul></p>
 	Area *string `json:"Area,omitnil,omitempty" name:"Area"`
 
-	// 数据投递类型，可选值：<ul><li>domain：站点加速日志；</li><li>application：四层代理日志；</li><li>function：边缘函数运行日志；</li><li>web-rateLiming：速率限制和 CC 攻击防护日志；</li><li>web-attack：托管规则日志；</li><li>web-rule：自定义规则日志；</li><li>web-bot：Bot管理日志。</li></ul>
+	// <p>数据投递类型，可选值：<ul><li>l7-access-logs：七层访问日志；</li><li>application：四层代理日志；</li><li>function：边缘函数运行日志；</li><li>web-attack：托管规则日志；</li></ul>以下类型日志合并入 l7-access-logs，不再支持新增：</p><ul><li>domain：站点加速日志；</li><li>web-rateLiming：速率限制和 CC 攻击防护日志；</li><li>web-rule：自定义规则日志；</li><li>web-bot：Bot 管理日志。</li></ul>
 	LogType *string `json:"LogType,omitnil,omitempty" name:"LogType"`
 
-	// 实时日志投递任务的名称，格式为数字、英文、-和_组合，最多 200 个字符。
+	// <p>实时日志投递任务的名称，格式为数字、英文、-和_组合，最多 200 个字符。</p>
 	TaskName *string `json:"TaskName,omitnil,omitempty" name:"TaskName"`
 
-	// 实时日志投递任务类型，取值有：<ul><li>cls: 推送到腾讯云 CLS；</li><li>custom_endpoint：推送到自定义 HTTP(S) 地址；</li><li>s3：推送到 AWS S3 兼容存储桶地址；</li><li>log_analysis：推送到 EdgeOne 日志分析，仅当 LogType = domain 或 web-attack 时支持。</li></ul>
+	// <p>实时日志投递任务类型，取值有：<ul><li>cls: 推送到腾讯云 CLS；</li><li>custom_endpoint：推送到自定义 HTTP(S) 地址；</li><li>s3：推送到 AWS S3 兼容存储桶地址；</li><li>log_analysis：推送到 EdgeOne 日志分析，仅当 LogType = l7-access-logs 或 web-attack 时支持。</li></ul></p>
 	TaskType *string `json:"TaskType,omitnil,omitempty" name:"TaskType"`
 
-	// 实时日志投递任务对应的实体列表。取值示例如下：<ul><li>七层域名：domain.example.com</li><li>四层代理实例：sid-2s69eb5wcms7</li><li>边缘函数实例：test-zone-2mxigizoh9l9-1257626257</li></ul>
+	// <p>实时日志投递任务对应的实体列表。取值示例如下：<ul><li>七层域名：domain.example.com</li><li>四层代理实例：sid-2s69eb5wcms7</li><li>边缘函数实例：test-zone-2mxigizoh9l9-1257626257</li></ul></p><p>取值参考：<a href="https://cloud.tencent.com/document/api/1552/103413">DescribeL4Proxy</a></p>
 	EntityList []*string `json:"EntityList,omitnil,omitempty" name:"EntityList"`
 
-	// 投递的预设字段列表。取值参考：<ul><li>[站点加速日志（七层访问日志）](https://cloud.tencent.com/document/product/1552/105791)</li><li>[四层代理日志](https://cloud.tencent.com/document/product/1552/105792)</li><li>[边缘函数运行日志](https://cloud.tencent.com/document/product/1552/115585)</li></ul>
+	// <p>投递的预设字段列表。取值参考：<ul><li><a href="https://cloud.tencent.com/document/product/1552/105791">七层访问日志（站点加速日志）</a></li><li><a href="https://cloud.tencent.com/document/product/1552/105792">四层代理日志</a></li><li><a href="https://cloud.tencent.com/document/product/1552/115585">边缘函数运行日志</a></li></ul></p><p>取值参考：DescribeLogFields</p>
 	Fields []*string `json:"Fields,omitnil,omitempty" name:"Fields"`
 
-	// 投递的自定义字段列表，支持在 HTTP 请求头、响应头、Cookie、请求正文中提取指定内容。自定义字段名称不能重复，且最多不能超过 200 个字段。单个实时日志推送任务最多添加 5 个请求正文类型的自定义字段。目前仅站点加速日志（LogType=domain）支持添加自定义字段。
+	// <p>投递的自定义字段列表，支持在 HTTP 请求头、响应头、Cookie、请求正文中提取指定内容。<br>自定义字段名称不能重复，仅七层访问日志（LogType= l7-access-logs 或 domain）支持添加自定义字段。<br>允许配置的自定义字段个数有配额限制，如遇配额不足请 [联系我们](https://cloud.tencent.com/online-service?from=sales&amp;source=PRESALE)。</p>
 	CustomFields []*CustomField `json:"CustomFields,omitnil,omitempty" name:"CustomFields"`
 
-	// 日志投递的过滤条件，不填表示投递全量日志。
+	// <p>日志投递的过滤条件，不填表示投递全量日志。</p>
 	DeliveryConditions []*DeliveryCondition `json:"DeliveryConditions,omitnil,omitempty" name:"DeliveryConditions"`
 
-	// 采样比例，采用千分制，取值范围为1-1000，例如：填写 605 表示采样比例为 60.5%。不填表示采样比例为 100%。
+	// <p>采样比例，采用千分制，取值范围为1-1000，例如：填写 605 表示采样比例为 60.5%。不填表示采样比例为 100%。</p>
 	Sample *uint64 `json:"Sample,omitnil,omitempty" name:"Sample"`
 
-	// 日志投递的输出格式。不填表示为默认格式，默认格式逻辑如下：<ul><li>当 TaskType 取值为 custom_endpoint 时，默认格式为多个 JSON 对象组成的数组，每个 JSON 对象为一条日志；</li><li>当 TaskType 取值为 s3 时，默认格式为 JSON Lines；</li></ul>特别地，当 TaskType 取值为 cls 或 log_analysis 时，LogFormat.FormatType 的值只能为 json，且 LogFormat 中其他参数将被忽略，建议不传 LogFormat。
+	// <p>日志投递的输出格式，使用详情见 <a href="https://cloud.tencent.com/document/product/1552/110448">自定义日志输出格式</a>。不填表示为默认格式，默认格式逻辑如下：<ul><li>当 TaskType 取值为 custom_endpoint 时，默认格式为多个 JSON 对象组成的数组，每个 JSON 对象为一条日志；</li><li>当 TaskType 取值为 s3 时，默认格式为 JSON Lines；</li></ul>特别地，当 TaskType 取值为 cls 或 log_analysis 时，LogFormat.FormatType 的值只能为 json，且 LogFormat 中其他参数将被忽略，建议不传 LogFormat。</p>
 	LogFormat *LogFormat `json:"LogFormat,omitnil,omitempty" name:"LogFormat"`
 
-	// CLS 的配置信息。当 TaskType 取值为 cls 时，该参数必填。
+	// <p>CLS 的配置信息。当 TaskType 取值为 cls 时，该参数必填。</p>
 	CLS *CLSTopic `json:"CLS,omitnil,omitempty" name:"CLS"`
 
-	// 自定义 HTTP 服务的配置信息。当 TaskType 取值为 custom_endpoint 时，该参数必填。
+	// <p>自定义 HTTP 服务的配置信息。当 TaskType 取值为 custom_endpoint 时，该参数必填。</p>
 	CustomEndpoint *CustomEndpoint `json:"CustomEndpoint,omitnil,omitempty" name:"CustomEndpoint"`
 
-	// AWS S3 兼容存储桶的配置信息。当 TaskType 取值为 s3 时，该参数必填。
+	// <p>AWS S3 兼容存储桶的配置信息。当 TaskType 取值为 s3 时，该参数必填。</p>
 	S3 *S3 `json:"S3,omitnil,omitempty" name:"S3"`
 }
 
 type CreateRealtimeLogDeliveryTaskRequest struct {
 	*tchttp.BaseRequest
 	
-	// 站点 ID。
+	// <p>站点 ID。</p>
 	ZoneId *string `json:"ZoneId,omitnil,omitempty" name:"ZoneId"`
 
-	// 数据投递区域，可选值：<ul><li>mainland：中国大陆境内；</li><li>overseas：全球（不含中国大陆）。</li></ul>
+	// <p>数据投递区域，可选值：<ul><li>mainland：中国大陆境内；</li><li>overseas：全球（不含中国大陆）。</li></ul></p>
 	Area *string `json:"Area,omitnil,omitempty" name:"Area"`
 
-	// 数据投递类型，可选值：<ul><li>domain：站点加速日志；</li><li>application：四层代理日志；</li><li>function：边缘函数运行日志；</li><li>web-rateLiming：速率限制和 CC 攻击防护日志；</li><li>web-attack：托管规则日志；</li><li>web-rule：自定义规则日志；</li><li>web-bot：Bot管理日志。</li></ul>
+	// <p>数据投递类型，可选值：<ul><li>l7-access-logs：七层访问日志；</li><li>application：四层代理日志；</li><li>function：边缘函数运行日志；</li><li>web-attack：托管规则日志；</li></ul>以下类型日志合并入 l7-access-logs，不再支持新增：</p><ul><li>domain：站点加速日志；</li><li>web-rateLiming：速率限制和 CC 攻击防护日志；</li><li>web-rule：自定义规则日志；</li><li>web-bot：Bot 管理日志。</li></ul>
 	LogType *string `json:"LogType,omitnil,omitempty" name:"LogType"`
 
-	// 实时日志投递任务的名称，格式为数字、英文、-和_组合，最多 200 个字符。
+	// <p>实时日志投递任务的名称，格式为数字、英文、-和_组合，最多 200 个字符。</p>
 	TaskName *string `json:"TaskName,omitnil,omitempty" name:"TaskName"`
 
-	// 实时日志投递任务类型，取值有：<ul><li>cls: 推送到腾讯云 CLS；</li><li>custom_endpoint：推送到自定义 HTTP(S) 地址；</li><li>s3：推送到 AWS S3 兼容存储桶地址；</li><li>log_analysis：推送到 EdgeOne 日志分析，仅当 LogType = domain 或 web-attack 时支持。</li></ul>
+	// <p>实时日志投递任务类型，取值有：<ul><li>cls: 推送到腾讯云 CLS；</li><li>custom_endpoint：推送到自定义 HTTP(S) 地址；</li><li>s3：推送到 AWS S3 兼容存储桶地址；</li><li>log_analysis：推送到 EdgeOne 日志分析，仅当 LogType = l7-access-logs 或 web-attack 时支持。</li></ul></p>
 	TaskType *string `json:"TaskType,omitnil,omitempty" name:"TaskType"`
 
-	// 实时日志投递任务对应的实体列表。取值示例如下：<ul><li>七层域名：domain.example.com</li><li>四层代理实例：sid-2s69eb5wcms7</li><li>边缘函数实例：test-zone-2mxigizoh9l9-1257626257</li></ul>
+	// <p>实时日志投递任务对应的实体列表。取值示例如下：<ul><li>七层域名：domain.example.com</li><li>四层代理实例：sid-2s69eb5wcms7</li><li>边缘函数实例：test-zone-2mxigizoh9l9-1257626257</li></ul></p><p>取值参考：<a href="https://cloud.tencent.com/document/api/1552/103413">DescribeL4Proxy</a></p>
 	EntityList []*string `json:"EntityList,omitnil,omitempty" name:"EntityList"`
 
-	// 投递的预设字段列表。取值参考：<ul><li>[站点加速日志（七层访问日志）](https://cloud.tencent.com/document/product/1552/105791)</li><li>[四层代理日志](https://cloud.tencent.com/document/product/1552/105792)</li><li>[边缘函数运行日志](https://cloud.tencent.com/document/product/1552/115585)</li></ul>
+	// <p>投递的预设字段列表。取值参考：<ul><li><a href="https://cloud.tencent.com/document/product/1552/105791">七层访问日志（站点加速日志）</a></li><li><a href="https://cloud.tencent.com/document/product/1552/105792">四层代理日志</a></li><li><a href="https://cloud.tencent.com/document/product/1552/115585">边缘函数运行日志</a></li></ul></p><p>取值参考：DescribeLogFields</p>
 	Fields []*string `json:"Fields,omitnil,omitempty" name:"Fields"`
 
-	// 投递的自定义字段列表，支持在 HTTP 请求头、响应头、Cookie、请求正文中提取指定内容。自定义字段名称不能重复，且最多不能超过 200 个字段。单个实时日志推送任务最多添加 5 个请求正文类型的自定义字段。目前仅站点加速日志（LogType=domain）支持添加自定义字段。
+	// <p>投递的自定义字段列表，支持在 HTTP 请求头、响应头、Cookie、请求正文中提取指定内容。<br>自定义字段名称不能重复，仅七层访问日志（LogType= l7-access-logs 或 domain）支持添加自定义字段。<br>允许配置的自定义字段个数有配额限制，如遇配额不足请 [联系我们](https://cloud.tencent.com/online-service?from=sales&amp;source=PRESALE)。</p>
 	CustomFields []*CustomField `json:"CustomFields,omitnil,omitempty" name:"CustomFields"`
 
-	// 日志投递的过滤条件，不填表示投递全量日志。
+	// <p>日志投递的过滤条件，不填表示投递全量日志。</p>
 	DeliveryConditions []*DeliveryCondition `json:"DeliveryConditions,omitnil,omitempty" name:"DeliveryConditions"`
 
-	// 采样比例，采用千分制，取值范围为1-1000，例如：填写 605 表示采样比例为 60.5%。不填表示采样比例为 100%。
+	// <p>采样比例，采用千分制，取值范围为1-1000，例如：填写 605 表示采样比例为 60.5%。不填表示采样比例为 100%。</p>
 	Sample *uint64 `json:"Sample,omitnil,omitempty" name:"Sample"`
 
-	// 日志投递的输出格式。不填表示为默认格式，默认格式逻辑如下：<ul><li>当 TaskType 取值为 custom_endpoint 时，默认格式为多个 JSON 对象组成的数组，每个 JSON 对象为一条日志；</li><li>当 TaskType 取值为 s3 时，默认格式为 JSON Lines；</li></ul>特别地，当 TaskType 取值为 cls 或 log_analysis 时，LogFormat.FormatType 的值只能为 json，且 LogFormat 中其他参数将被忽略，建议不传 LogFormat。
+	// <p>日志投递的输出格式，使用详情见 <a href="https://cloud.tencent.com/document/product/1552/110448">自定义日志输出格式</a>。不填表示为默认格式，默认格式逻辑如下：<ul><li>当 TaskType 取值为 custom_endpoint 时，默认格式为多个 JSON 对象组成的数组，每个 JSON 对象为一条日志；</li><li>当 TaskType 取值为 s3 时，默认格式为 JSON Lines；</li></ul>特别地，当 TaskType 取值为 cls 或 log_analysis 时，LogFormat.FormatType 的值只能为 json，且 LogFormat 中其他参数将被忽略，建议不传 LogFormat。</p>
 	LogFormat *LogFormat `json:"LogFormat,omitnil,omitempty" name:"LogFormat"`
 
-	// CLS 的配置信息。当 TaskType 取值为 cls 时，该参数必填。
+	// <p>CLS 的配置信息。当 TaskType 取值为 cls 时，该参数必填。</p>
 	CLS *CLSTopic `json:"CLS,omitnil,omitempty" name:"CLS"`
 
-	// 自定义 HTTP 服务的配置信息。当 TaskType 取值为 custom_endpoint 时，该参数必填。
+	// <p>自定义 HTTP 服务的配置信息。当 TaskType 取值为 custom_endpoint 时，该参数必填。</p>
 	CustomEndpoint *CustomEndpoint `json:"CustomEndpoint,omitnil,omitempty" name:"CustomEndpoint"`
 
-	// AWS S3 兼容存储桶的配置信息。当 TaskType 取值为 s3 时，该参数必填。
+	// <p>AWS S3 兼容存储桶的配置信息。当 TaskType 取值为 s3 时，该参数必填。</p>
 	S3 *S3 `json:"S3,omitnil,omitempty" name:"S3"`
 }
 
@@ -4867,7 +4973,7 @@ func (r *CreateRealtimeLogDeliveryTaskRequest) FromJsonString(s string) error {
 
 // Predefined struct for user
 type CreateRealtimeLogDeliveryTaskResponseParams struct {
-	// 创建成功的任务ID。
+	// <p>创建成功的任务ID。</p>
 	TaskId *string `json:"TaskId,omitnil,omitempty" name:"TaskId"`
 
 	// 唯一请求 ID，由服务端生成，每次请求都会返回（若请求因其他原因未能抵达服务端，则该次请求不会获得 RequestId）。定位问题时需要提供该次请求的 RequestId。
@@ -10695,6 +10801,217 @@ func (r *DescribeLoadBalancerListResponse) FromJsonString(s string) error {
 }
 
 // Predefined struct for user
+type DescribeLogAnalysisDetailRequestParams struct {
+	// <p>站点 ID。</p>
+	ZoneId *string `json:"ZoneId,omitnil,omitempty" name:"ZoneId"`
+
+	// <p>数据归属地区，可选值：<ul><li>mainland：中国大陆境内；</li><li>overseas：全球（不含中国大陆）。</li></ul>注意：若站点服务区域为“全球可用区”，获取全部数据需要分别查询 mainland 和 overseas 的数据。</p>
+	Area *string `json:"Area,omitnil,omitempty" name:"Area"`
+
+	// <p>开始时间，示例值：2020-04-29T00:00:00Z。套餐版本不同，支持的可查询开始时间至今的最大时间跨度不同，详情请见 <a href="https://cloud.tencent.com/document/product/1552/94165#45435466-9103-4ff6-be22-e31717044fb2">套餐选型对比</a>。</p>
+	StartTime *string `json:"StartTime,omitnil,omitempty" name:"StartTime"`
+
+	// <p>结束时间，示例值：2020-04-30T00:00:00Z。单次查询的开始时间到结束时间跨度最大为 31 天。</p>
+	EndTime *string `json:"EndTime,omitnil,omitempty" name:"EndTime"`
+
+	// <p>日志类型，可选值：<ul><li> l7-access-logs：七层访问日志；</li><li>web-attack：托管规则日志。</li></ul>默认为 l7-access-logs 。</p>
+	LogType *string `json:"LogType,omitnil,omitempty" name:"LogType"`
+
+	// <p><a href="https://cloud.tencent.com/document/product/1552/124662">日志匹配条件</a>，最大长度 12KB。</p>
+	Condition *string `json:"Condition,omitnil,omitempty" name:"Condition"`
+
+	// <p>分页查询限制数目，默认值：20，最大值 100。</p>
+	Limit *int64 `json:"Limit,omitnil,omitempty" name:"Limit"`
+
+	// <p>分页查询偏移量，默认为 0。</p>
+	Offset *int64 `json:"Offset,omitnil,omitempty" name:"Offset"`
+
+	// <p>原始日志是否按时间排序返回；可选值：<ul><li>asc：升序；</li><li>desc：降序。</li></ul>默认为 desc。</p>
+	Sort *string `json:"Sort,omitnil,omitempty" name:"Sort"`
+}
+
+type DescribeLogAnalysisDetailRequest struct {
+	*tchttp.BaseRequest
+	
+	// <p>站点 ID。</p>
+	ZoneId *string `json:"ZoneId,omitnil,omitempty" name:"ZoneId"`
+
+	// <p>数据归属地区，可选值：<ul><li>mainland：中国大陆境内；</li><li>overseas：全球（不含中国大陆）。</li></ul>注意：若站点服务区域为“全球可用区”，获取全部数据需要分别查询 mainland 和 overseas 的数据。</p>
+	Area *string `json:"Area,omitnil,omitempty" name:"Area"`
+
+	// <p>开始时间，示例值：2020-04-29T00:00:00Z。套餐版本不同，支持的可查询开始时间至今的最大时间跨度不同，详情请见 <a href="https://cloud.tencent.com/document/product/1552/94165#45435466-9103-4ff6-be22-e31717044fb2">套餐选型对比</a>。</p>
+	StartTime *string `json:"StartTime,omitnil,omitempty" name:"StartTime"`
+
+	// <p>结束时间，示例值：2020-04-30T00:00:00Z。单次查询的开始时间到结束时间跨度最大为 31 天。</p>
+	EndTime *string `json:"EndTime,omitnil,omitempty" name:"EndTime"`
+
+	// <p>日志类型，可选值：<ul><li> l7-access-logs：七层访问日志；</li><li>web-attack：托管规则日志。</li></ul>默认为 l7-access-logs 。</p>
+	LogType *string `json:"LogType,omitnil,omitempty" name:"LogType"`
+
+	// <p><a href="https://cloud.tencent.com/document/product/1552/124662">日志匹配条件</a>，最大长度 12KB。</p>
+	Condition *string `json:"Condition,omitnil,omitempty" name:"Condition"`
+
+	// <p>分页查询限制数目，默认值：20，最大值 100。</p>
+	Limit *int64 `json:"Limit,omitnil,omitempty" name:"Limit"`
+
+	// <p>分页查询偏移量，默认为 0。</p>
+	Offset *int64 `json:"Offset,omitnil,omitempty" name:"Offset"`
+
+	// <p>原始日志是否按时间排序返回；可选值：<ul><li>asc：升序；</li><li>desc：降序。</li></ul>默认为 desc。</p>
+	Sort *string `json:"Sort,omitnil,omitempty" name:"Sort"`
+}
+
+func (r *DescribeLogAnalysisDetailRequest) ToJsonString() string {
+    b, _ := json.Marshal(r)
+    return string(b)
+}
+
+// FromJsonString It is highly **NOT** recommended to use this function
+// because it has no param check, nor strict type check
+func (r *DescribeLogAnalysisDetailRequest) FromJsonString(s string) error {
+	f := make(map[string]interface{})
+	if err := json.Unmarshal([]byte(s), &f); err != nil {
+		return err
+	}
+	delete(f, "ZoneId")
+	delete(f, "Area")
+	delete(f, "StartTime")
+	delete(f, "EndTime")
+	delete(f, "LogType")
+	delete(f, "Condition")
+	delete(f, "Limit")
+	delete(f, "Offset")
+	delete(f, "Sort")
+	if len(f) > 0 {
+		return tcerr.NewTencentCloudSDKError("ClientError.BuildRequestError", "DescribeLogAnalysisDetailRequest has unknown keys!", "")
+	}
+	return json.Unmarshal([]byte(s), &r)
+}
+
+// Predefined struct for user
+type DescribeLogAnalysisDetailResponseParams struct {
+	// <p>符合日志匹配条件的日志详情列表。</p>
+	LogDetail []*LogItem `json:"LogDetail,omitnil,omitempty" name:"LogDetail"`
+
+	// <p>符合日志匹配条件的日志总数。</p>
+	TotalCount *int64 `json:"TotalCount,omitnil,omitempty" name:"TotalCount"`
+
+	// 唯一请求 ID，由服务端生成，每次请求都会返回（若请求因其他原因未能抵达服务端，则该次请求不会获得 RequestId）。定位问题时需要提供该次请求的 RequestId。
+	RequestId *string `json:"RequestId,omitnil,omitempty" name:"RequestId"`
+}
+
+type DescribeLogAnalysisDetailResponse struct {
+	*tchttp.BaseResponse
+	Response *DescribeLogAnalysisDetailResponseParams `json:"Response"`
+}
+
+func (r *DescribeLogAnalysisDetailResponse) ToJsonString() string {
+    b, _ := json.Marshal(r)
+    return string(b)
+}
+
+// FromJsonString It is highly **NOT** recommended to use this function
+// because it has no param check, nor strict type check
+func (r *DescribeLogAnalysisDetailResponse) FromJsonString(s string) error {
+	return json.Unmarshal([]byte(s), &r)
+}
+
+// Predefined struct for user
+type DescribeLogAnalysisDownloadTasksRequestParams struct {
+	// <p>站点 ID。</p>
+	ZoneId *string `json:"ZoneId,omitnil,omitempty" name:"ZoneId"`
+
+	// <p>数据归属地区，可选值： <ul><li>mainland：中国大陆境内；</li> <li>overseas：全球（不含中国大陆）。</li></ul> 注意：若站点服务区域为“全球可用区”，获取全部数据需要分别查询 mainland 和 overseas 的数据。</p>
+	Area *string `json:"Area,omitnil,omitempty" name:"Area"`
+
+	// <p>日志类型，可选值：<ul><li> l7-access-logs：七层访问日志；</li><li>web-attack：托管规则日志。</li></ul>默认为 l7-access-logs 。</p>
+	LogType *string `json:"LogType,omitnil,omitempty" name:"LogType"`
+
+	// <p>过滤条件，Filters.Values 的上限为 20。详细的过滤条件如下：<ul><li>task-id：按照日志下载任务 ID进行过滤，可选值参考 CreateLogAnalysisDownloadTask 接口返回的 TaskId。</li></ul></p><p>取值参考：CreateLogAnalysisDownloadTask</p>
+	Filters []*AdvancedFilter `json:"Filters,omitnil,omitempty" name:"Filters"`
+
+	// <p>分页查询限制数目，默认值：20，最大值 100。</p>
+	Limit *int64 `json:"Limit,omitnil,omitempty" name:"Limit"`
+
+	// <p>分页查询偏移量，默认为 0。</p>
+	Offset *int64 `json:"Offset,omitnil,omitempty" name:"Offset"`
+}
+
+type DescribeLogAnalysisDownloadTasksRequest struct {
+	*tchttp.BaseRequest
+	
+	// <p>站点 ID。</p>
+	ZoneId *string `json:"ZoneId,omitnil,omitempty" name:"ZoneId"`
+
+	// <p>数据归属地区，可选值： <ul><li>mainland：中国大陆境内；</li> <li>overseas：全球（不含中国大陆）。</li></ul> 注意：若站点服务区域为“全球可用区”，获取全部数据需要分别查询 mainland 和 overseas 的数据。</p>
+	Area *string `json:"Area,omitnil,omitempty" name:"Area"`
+
+	// <p>日志类型，可选值：<ul><li> l7-access-logs：七层访问日志；</li><li>web-attack：托管规则日志。</li></ul>默认为 l7-access-logs 。</p>
+	LogType *string `json:"LogType,omitnil,omitempty" name:"LogType"`
+
+	// <p>过滤条件，Filters.Values 的上限为 20。详细的过滤条件如下：<ul><li>task-id：按照日志下载任务 ID进行过滤，可选值参考 CreateLogAnalysisDownloadTask 接口返回的 TaskId。</li></ul></p><p>取值参考：CreateLogAnalysisDownloadTask</p>
+	Filters []*AdvancedFilter `json:"Filters,omitnil,omitempty" name:"Filters"`
+
+	// <p>分页查询限制数目，默认值：20，最大值 100。</p>
+	Limit *int64 `json:"Limit,omitnil,omitempty" name:"Limit"`
+
+	// <p>分页查询偏移量，默认为 0。</p>
+	Offset *int64 `json:"Offset,omitnil,omitempty" name:"Offset"`
+}
+
+func (r *DescribeLogAnalysisDownloadTasksRequest) ToJsonString() string {
+    b, _ := json.Marshal(r)
+    return string(b)
+}
+
+// FromJsonString It is highly **NOT** recommended to use this function
+// because it has no param check, nor strict type check
+func (r *DescribeLogAnalysisDownloadTasksRequest) FromJsonString(s string) error {
+	f := make(map[string]interface{})
+	if err := json.Unmarshal([]byte(s), &f); err != nil {
+		return err
+	}
+	delete(f, "ZoneId")
+	delete(f, "Area")
+	delete(f, "LogType")
+	delete(f, "Filters")
+	delete(f, "Limit")
+	delete(f, "Offset")
+	if len(f) > 0 {
+		return tcerr.NewTencentCloudSDKError("ClientError.BuildRequestError", "DescribeLogAnalysisDownloadTasksRequest has unknown keys!", "")
+	}
+	return json.Unmarshal([]byte(s), &r)
+}
+
+// Predefined struct for user
+type DescribeLogAnalysisDownloadTasksResponseParams struct {
+	// <p>符合日志匹配条件的日志分析下载任务总条数。</p>
+	TotalCount *int64 `json:"TotalCount,omitnil,omitempty" name:"TotalCount"`
+
+	// <p>符合日志匹配条件的日志分析下载任务列表。</p>
+	Tasks []*LogAnalysisDownloadTask `json:"Tasks,omitnil,omitempty" name:"Tasks"`
+
+	// 唯一请求 ID，由服务端生成，每次请求都会返回（若请求因其他原因未能抵达服务端，则该次请求不会获得 RequestId）。定位问题时需要提供该次请求的 RequestId。
+	RequestId *string `json:"RequestId,omitnil,omitempty" name:"RequestId"`
+}
+
+type DescribeLogAnalysisDownloadTasksResponse struct {
+	*tchttp.BaseResponse
+	Response *DescribeLogAnalysisDownloadTasksResponseParams `json:"Response"`
+}
+
+func (r *DescribeLogAnalysisDownloadTasksResponse) ToJsonString() string {
+    b, _ := json.Marshal(r)
+    return string(b)
+}
+
+// FromJsonString It is highly **NOT** recommended to use this function
+// because it has no param check, nor strict type check
+func (r *DescribeLogAnalysisDownloadTasksResponse) FromJsonString(s string) error {
+	return json.Unmarshal([]byte(s), &r)
+}
+
+// Predefined struct for user
 type DescribeMultiPathGatewayLineRequestParams struct {
 	// 站点 ID。
 	ZoneId *string `json:"ZoneId,omitnil,omitempty" name:"ZoneId"`
@@ -13071,78 +13388,50 @@ func (r *DescribeTimingL4DataResponse) FromJsonString(s string) error {
 
 // Predefined struct for user
 type DescribeTimingL7AnalysisDataRequestParams struct {
-	// 开始时间。
+	// <p>开始时间。</p>
 	StartTime *string `json:"StartTime,omitnil,omitempty" name:"StartTime"`
 
-	// 结束时间。查询时间范围（`EndTime` - `StartTime`）需小于等于 31 天。
+	// <p>结束时间。查询时间范围（<code>EndTime</code> - <code>StartTime</code>）需小于等于 31 天。</p>
 	EndTime *string `json:"EndTime,omitnil,omitempty" name:"EndTime"`
 
-	// 指标列表，取值有:
-	// <li>l7Flow_outFlux: L7 EdgeOne 响应流量，单位：Byte；</li>
-	// <li>l7Flow_inFlux: L7 客户端请求流量，单位：Byte；</li>
-	// <li>l7Flow_flux: L7 访问总流量（EdgeOne 响应+客户端请求），单位：Byte；</li>
-	// <li>l7Flow_outBandwidth: L7 EdgeOne 响应带宽，单位：bps；</li>
-	// <li>l7Flow_inBandwidth：L7 客户端请求带宽，单位：bps；</li>
-	// <li>l7Flow_bandwidth：L7 访问总带宽（EdgeOne 响应+客户端请求），单位：bps；</li>
-	// <li>l7Flow_request: L7 访问请求数，单位：次；</li>
-	// <li> l7Flow_avgResponseTime: L7 访问平均响应耗时，单位：ms；</li>
-	// <li> l7Flow_avgFirstByteResponseTime: L7 访问平均首字节响应耗时，单位：ms。</li>
+	// <p>指标列表，取值有:</p><li>l7Flow_outFlux: L7 EdgeOne 响应流量，单位：Byte；</li><li>l7Flow_inFlux: L7 客户端请求流量，单位：Byte；</li><li>l7Flow_flux: L7 访问总流量（EdgeOne 响应+客户端请求），单位：Byte；</li><li>l7Flow_outBandwidth: L7 EdgeOne 响应带宽，单位：bps；</li><li>l7Flow_inBandwidth：L7 客户端请求带宽，单位：bps；</li><li>l7Flow_bandwidth：L7 访问总带宽（EdgeOne 响应+客户端请求），单位：bps；</li><li>l7Flow_request: L7 访问请求数，单位：次；</li><li> l7Flow_avgResponseTime: L7 访问平均响应耗时，单位：ms；</li><li> l7Flow_avgFirstByteResponseTime: L7 访问平均首字节响应耗时，单位：ms；</li><li>l7Flow_requestRate: L7 访问请求速率，单位：qps。</li>
 	MetricNames []*string `json:"MetricNames,omitnil,omitempty" name:"MetricNames"`
 
-	// 站点 ID 集合，此参数将于2024年05月30日后由可选改为必填，详见公告：[【腾讯云 EdgeOne】云 API 变更通知](https://cloud.tencent.com/document/product/1552/104902)。最多传入 100 个站点 ID。若需查询腾讯云主账号下所有站点数据，请用 `*` 代替，查询账号级别数据需具备本接口全部站点资源权限。
+	// <p>站点 ID 集合，此参数将于2024年05月30日后由可选改为必填，详见公告：<a href="https://cloud.tencent.com/document/product/1552/104902">【腾讯云 EdgeOne】云 API 变更通知</a>。最多传入 100 个站点 ID。若需查询腾讯云主账号下所有站点数据，请用 <code>*</code> 代替，查询账号级别数据需具备本接口全部站点资源权限。</p>
 	ZoneIds []*string `json:"ZoneIds,omitnil,omitempty" name:"ZoneIds"`
 
-	// 查询时间粒度，取值有：
-	// <li>min: 1分钟；</li>
-	// <li>5min: 5分钟；</li>
-	// <li>hour: 1小时；</li>
-	// <li>day: 1天。</li>不填将根据开始时间跟结束时间的间距自动推算粒度，具体为：2 小时范围内以 min 粒度查询，2 天范围内以 5min 粒度查询，7 天范围内以 hour 粒度查询，超过 7 天以 day 粒度查询。
+	// <p>查询时间粒度。</p><p>枚举值：</p><ul><li>min： 1分钟</li><li>5min： 5分钟</li><li>hour： 1小时</li><li>day： 1天</li></ul><p>不填将根据开始时间跟结束时间的间距自动推算粒度，具体为：2 小时范围内以 min 粒度查询，2 天范围内以 5min 粒度查询，7 天范围内以 hour 粒度查询，超过 7 天以 day 粒度查询。</p>
 	Interval *string `json:"Interval,omitnil,omitempty" name:"Interval"`
 
-	// 筛选数据时使用的过滤条件，取值参考 [指标分析筛选条件说明](https://cloud.tencent.com/document/product/1552/98219#1aaf1150-55a4-4b4d-b103-3a8317ac7945) 中针对 L7 访问流量、带宽、请求数的可用筛选项。
-	// 如需限定站点或内容标识符，请在 `ZoneIds.N` 参数中另行传入对应的值。
+	// <p>筛选数据时使用的过滤条件，取值参考 <a href="https://cloud.tencent.com/document/product/1552/98219#1aaf1150-55a4-4b4d-b103-3a8317ac7945">指标分析筛选条件说明</a> 中针对 L7 访问流量、带宽、请求数的可用筛选项。<br>如需限定站点或内容标识符，请在 <code>ZoneIds.N</code> 参数中另行传入对应的值。</p>
 	Filters []*QueryCondition `json:"Filters,omitnil,omitempty" name:"Filters"`
 
-	// 数据归属地区。该参数已废弃。请在 `Filters.country` 中按客户端地域过滤数据。
+	// <p>数据归属地区。该参数已废弃。请在 <code>Filters.country</code> 中按客户端地域过滤数据。</p>
 	Area *string `json:"Area,omitnil,omitempty" name:"Area"`
 }
 
 type DescribeTimingL7AnalysisDataRequest struct {
 	*tchttp.BaseRequest
 	
-	// 开始时间。
+	// <p>开始时间。</p>
 	StartTime *string `json:"StartTime,omitnil,omitempty" name:"StartTime"`
 
-	// 结束时间。查询时间范围（`EndTime` - `StartTime`）需小于等于 31 天。
+	// <p>结束时间。查询时间范围（<code>EndTime</code> - <code>StartTime</code>）需小于等于 31 天。</p>
 	EndTime *string `json:"EndTime,omitnil,omitempty" name:"EndTime"`
 
-	// 指标列表，取值有:
-	// <li>l7Flow_outFlux: L7 EdgeOne 响应流量，单位：Byte；</li>
-	// <li>l7Flow_inFlux: L7 客户端请求流量，单位：Byte；</li>
-	// <li>l7Flow_flux: L7 访问总流量（EdgeOne 响应+客户端请求），单位：Byte；</li>
-	// <li>l7Flow_outBandwidth: L7 EdgeOne 响应带宽，单位：bps；</li>
-	// <li>l7Flow_inBandwidth：L7 客户端请求带宽，单位：bps；</li>
-	// <li>l7Flow_bandwidth：L7 访问总带宽（EdgeOne 响应+客户端请求），单位：bps；</li>
-	// <li>l7Flow_request: L7 访问请求数，单位：次；</li>
-	// <li> l7Flow_avgResponseTime: L7 访问平均响应耗时，单位：ms；</li>
-	// <li> l7Flow_avgFirstByteResponseTime: L7 访问平均首字节响应耗时，单位：ms。</li>
+	// <p>指标列表，取值有:</p><li>l7Flow_outFlux: L7 EdgeOne 响应流量，单位：Byte；</li><li>l7Flow_inFlux: L7 客户端请求流量，单位：Byte；</li><li>l7Flow_flux: L7 访问总流量（EdgeOne 响应+客户端请求），单位：Byte；</li><li>l7Flow_outBandwidth: L7 EdgeOne 响应带宽，单位：bps；</li><li>l7Flow_inBandwidth：L7 客户端请求带宽，单位：bps；</li><li>l7Flow_bandwidth：L7 访问总带宽（EdgeOne 响应+客户端请求），单位：bps；</li><li>l7Flow_request: L7 访问请求数，单位：次；</li><li> l7Flow_avgResponseTime: L7 访问平均响应耗时，单位：ms；</li><li> l7Flow_avgFirstByteResponseTime: L7 访问平均首字节响应耗时，单位：ms；</li><li>l7Flow_requestRate: L7 访问请求速率，单位：qps。</li>
 	MetricNames []*string `json:"MetricNames,omitnil,omitempty" name:"MetricNames"`
 
-	// 站点 ID 集合，此参数将于2024年05月30日后由可选改为必填，详见公告：[【腾讯云 EdgeOne】云 API 变更通知](https://cloud.tencent.com/document/product/1552/104902)。最多传入 100 个站点 ID。若需查询腾讯云主账号下所有站点数据，请用 `*` 代替，查询账号级别数据需具备本接口全部站点资源权限。
+	// <p>站点 ID 集合，此参数将于2024年05月30日后由可选改为必填，详见公告：<a href="https://cloud.tencent.com/document/product/1552/104902">【腾讯云 EdgeOne】云 API 变更通知</a>。最多传入 100 个站点 ID。若需查询腾讯云主账号下所有站点数据，请用 <code>*</code> 代替，查询账号级别数据需具备本接口全部站点资源权限。</p>
 	ZoneIds []*string `json:"ZoneIds,omitnil,omitempty" name:"ZoneIds"`
 
-	// 查询时间粒度，取值有：
-	// <li>min: 1分钟；</li>
-	// <li>5min: 5分钟；</li>
-	// <li>hour: 1小时；</li>
-	// <li>day: 1天。</li>不填将根据开始时间跟结束时间的间距自动推算粒度，具体为：2 小时范围内以 min 粒度查询，2 天范围内以 5min 粒度查询，7 天范围内以 hour 粒度查询，超过 7 天以 day 粒度查询。
+	// <p>查询时间粒度。</p><p>枚举值：</p><ul><li>min： 1分钟</li><li>5min： 5分钟</li><li>hour： 1小时</li><li>day： 1天</li></ul><p>不填将根据开始时间跟结束时间的间距自动推算粒度，具体为：2 小时范围内以 min 粒度查询，2 天范围内以 5min 粒度查询，7 天范围内以 hour 粒度查询，超过 7 天以 day 粒度查询。</p>
 	Interval *string `json:"Interval,omitnil,omitempty" name:"Interval"`
 
-	// 筛选数据时使用的过滤条件，取值参考 [指标分析筛选条件说明](https://cloud.tencent.com/document/product/1552/98219#1aaf1150-55a4-4b4d-b103-3a8317ac7945) 中针对 L7 访问流量、带宽、请求数的可用筛选项。
-	// 如需限定站点或内容标识符，请在 `ZoneIds.N` 参数中另行传入对应的值。
+	// <p>筛选数据时使用的过滤条件，取值参考 <a href="https://cloud.tencent.com/document/product/1552/98219#1aaf1150-55a4-4b4d-b103-3a8317ac7945">指标分析筛选条件说明</a> 中针对 L7 访问流量、带宽、请求数的可用筛选项。<br>如需限定站点或内容标识符，请在 <code>ZoneIds.N</code> 参数中另行传入对应的值。</p>
 	Filters []*QueryCondition `json:"Filters,omitnil,omitempty" name:"Filters"`
 
-	// 数据归属地区。该参数已废弃。请在 `Filters.country` 中按客户端地域过滤数据。
+	// <p>数据归属地区。该参数已废弃。请在 <code>Filters.country</code> 中按客户端地域过滤数据。</p>
 	Area *string `json:"Area,omitnil,omitempty" name:"Area"`
 }
 
@@ -13173,10 +13462,10 @@ func (r *DescribeTimingL7AnalysisDataRequest) FromJsonString(s string) error {
 
 // Predefined struct for user
 type DescribeTimingL7AnalysisDataResponseParams struct {
-	// 查询结果的总条数。
+	// <p>查询结果的总条数。</p>
 	TotalCount *uint64 `json:"TotalCount,omitnil,omitempty" name:"TotalCount"`
 
-	// 时序流量数据列表。
+	// <p>七层时序流量数据列表。<br>对于不同的查询指标，根据指标值类型的不同，会从不同的参数返回时序数据。<br>目前存在的值类型有以下两种：</p><ul>  <li><strong>Integer</strong>：<code>Integer</code> 值类型的指标将从 <code>Data.N.TypeValue</code> 返回对应时序数据。<br>对应的查询指标 <code>MetricName</code> 有：    <ul>      <li><code>l7Flow_outFlux</code>：L7 EdgeOne 响应流量，单位：Byte；</li>      <li><code>l7Flow_inFlux</code>：L7 客户端请求流量，单位：Byte；</li>      <li><code>l7Flow_flux</code>：L7 访问总流量（EdgeOne 响应+客户端请求），单位：Byte；</li>      <li><code>l7Flow_outBandwidth</code>：L7 EdgeOne 响应带宽，单位：bps；</li>      <li><code>l7Flow_inBandwidth</code>：L7 客户端请求带宽，单位：bps；</li>      <li><code>l7Flow_bandwidth</code>：L7 访问总带宽（EdgeOne 响应+客户端请求），单位：bps；</li>      <li><code>l7Flow_request</code>：L7 访问请求数，单位：次；</li>      <li><code>l7Flow_avgResponseTime</code>：L7 访问平均响应耗时，单位：ms；</li>      <li><code>l7Flow_avgFirstByteResponseTime</code>：L7 访问平均首字节响应耗时，单位：ms。</li>    </ul>  </li>  <li><strong>Float</strong>：<code>Float</code> 值类型的指标将从 <code>Data.N.FloatTypeValue</code> 返回对应时序数据。<br>对应的查询指标 <code>MetricName</code> 有：    <ul>      <li><code>l7Flow_requestRate</code>：L7 访问请求速率，单位：qps。</li>    </ul>  </li></ul>
 	// 注意：此字段可能返回 null，表示取不到有效值。
 	Data []*TimingDataRecord `json:"Data,omitnil,omitempty" name:"Data"`
 
@@ -16729,6 +17018,47 @@ type LoadBalancer struct {
 	References []*OriginGroupReference `json:"References,omitnil,omitempty" name:"References"`
 }
 
+type LogAnalysisDownloadTask struct {
+	// <p>任务 ID。</p>
+	TaskId *string `json:"TaskId,omitnil,omitempty" name:"TaskId"`
+
+	// <p>站点 ID。</p>
+	ZoneId *string `json:"ZoneId,omitnil,omitempty" name:"ZoneId"`
+
+	// <p>数据归属地区，取值有：<ul><li>mainland：中国大陆境内；</li><li>overseas：全球（不含中国大陆）。</li></ul></p>
+	Area *string `json:"Area,omitnil,omitempty" name:"Area"`
+
+	// <p>开始时间，示例值：2020-04-29T00:00:00Z。</p>
+	StartTime *string `json:"StartTime,omitnil,omitempty" name:"StartTime"`
+
+	// <p>结束时间，示例值：2020-04-30T00:00:00Z。</p>
+	EndTime *string `json:"EndTime,omitnil,omitempty" name:"EndTime"`
+
+	// <p>日志类型，取值有：<ul><li> l7-access-logs：七层访问日志；</li><li>web-attack：托管规则日志。</li></ul></p>
+	LogType *string `json:"LogType,omitnil,omitempty" name:"LogType"`
+
+	// <p><a href="https://cloud.tencent.com/document/product/1552/124662">日志匹配条件</a>，长度上限 12KB。</p>
+	Condition *string `json:"Condition,omitnil,omitempty" name:"Condition"`
+
+	// <p>文件格式，取值有：</p><ul><li>csv 。</li></ul>
+	Format *string `json:"Format,omitnil,omitempty" name:"Format"`
+
+	// <p>原始日志是否按时间排序返回，取值有：<ul><li>asc：升序；</li><li>desc：降序。</li></ul></p>
+	Sort *string `json:"Sort,omitnil,omitempty" name:"Sort"`
+
+	// <p>任务状态，取值有：<ul><li>loading：处理中，等待生成下载链接；</li><li> failed: 处理失败，当前任务无法下载;</li><li>completed：已完成打包，可以下载。</li></ul></p>
+	Status *string `json:"Status,omitnil,omitempty" name:"Status"`
+
+	// <p>任务创建时间，任务创建成功后将保留3天。</p>
+	CreateTime *string `json:"CreateTime,omitnil,omitempty" name:"CreateTime"`
+
+	// <p>下载地址，仅当 Status = completed 时有返回值。</p>
+	Url *string `json:"Url,omitnil,omitempty" name:"Url"`
+
+	// <p>下载任务过期时间，过期后下载地址将不可用，请通过本接口获取新的下载地址。</p>
+	ExpireTime *string `json:"ExpireTime,omitnil,omitempty" name:"ExpireTime"`
+}
+
 type LogFormat struct {
 	// 日志投递的预设输出格式类型，取值有：
 	// <li>json：使用预设日志输出格式 JSON Lines，单条日志中的字段以键值对方式呈现；</li>
@@ -16758,6 +17088,14 @@ type LogFormat struct {
 	// <li>，：半角逗号；</li>
 	// <li>;：半角分号。</li>
 	FieldDelimiter *string `json:"FieldDelimiter,omitnil,omitempty" name:"FieldDelimiter"`
+}
+
+type LogItem struct {
+	// 日志产生的时间点，采用 unix 毫秒级时间戳。
+	Timestamp *int64 `json:"Timestamp,omitnil,omitempty" name:"Timestamp"`
+
+	// 日志的具体内容，采用JSON字符串格式。
+	LogJson *string `json:"LogJson,omitnil,omitempty" name:"LogJson"`
 }
 
 type ManagedRuleAction struct {
@@ -22243,61 +22581,59 @@ type RateLimitingRules struct {
 }
 
 type RealtimeLogDeliveryTask struct {
-	// 实时日志投递任务 ID。
+	// <p>实时日志投递任务 ID。</p>
 	TaskId *string `json:"TaskId,omitnil,omitempty" name:"TaskId"`
 
-	// 实时日志投递任务的名称。
+	// <p>实时日志投递任务的名称。</p>
 	TaskName *string `json:"TaskName,omitnil,omitempty" name:"TaskName"`
 
-	// 实时日志投递任务的状态，取值有： <li>enabled: 已启用；</li> <li>disabled: 已停用；</li><li>deleted: 异常删除状态，请检查目的地腾讯云 CLS 日志集/日志主题是否已被删除。</li>
+	// <p>实时日志投递任务的状态，取值有： <li>enabled: 已启用；</li> <li>disabled: 已停用；</li><li>deleted: 异常删除状态，请检查目的地腾讯云 CLS 日志集/日志主题是否已被删除。</li></p>
 	DeliveryStatus *string `json:"DeliveryStatus,omitnil,omitempty" name:"DeliveryStatus"`
 
-	// 实时日志投递任务类型，取值有： <li>cls: 推送到腾讯云 CLS；</li> <li>custom_endpoint：推送到自定义 HTTP(S) 地址；</li> <li>s3：推送到 AWS S3 兼容存储桶地址；</li><li>log_analysis：推送到 EdgeOne 日志分析。</li>
+	// <p>实时日志投递任务类型，取值有： <li>cls: 推送到腾讯云 CLS；</li> <li>custom_endpoint：推送到自定义 HTTP(S) 地址；</li> <li>s3：推送到 AWS S3 兼容存储桶地址；</li><li>log_analysis：推送到 EdgeOne 日志分析。</li></p>
 	TaskType *string `json:"TaskType,omitnil,omitempty" name:"TaskType"`
 
-	// 实时日志投递任务对应的实体（七层域名或者四层代理实例）列表。取值示例如下： <li>七层域名：domain.example.com；</li> <li>四层代理实例：sid-2s69eb5wcms7。</li>	
+	// <p>实时日志投递任务对应的实体（七层域名或者四层代理实例）列表。取值示例如下： <li>七层域名：domain.example.com；</li> <li>四层代理实例：sid-2s69eb5wcms7。</li></p>
 	EntityList []*string `json:"EntityList,omitnil,omitempty" name:"EntityList"`
 
-	// 数据投递类型，取值有： <li>domain：站点加速日志；</li> <li>application：四层代理日志；</li> <li>web-rateLiming：速率限制和 CC 攻击防护日志；</li> <li>web-attack：托管规则日志；</li> <li>web-rule：自定义规则日志；</li> <li>web-bot：Bot管理日志。</li>
+	// <p>数据投递类型，取值有： <li>l7-access-logs：七层访问日志；</li><li>application：四层代理日志；</li> <li>function：边缘函数运行日志；</li> <li>web-attack：托管规则日志；</li> <li>domain：站点加速日志；</li> <li>web-rateLiming：速率限制和 CC 攻击防护日志；</li><li>web-rule：自定义规则日志；</li> <li>web-bot：Bot 管理日志。</li></p>
 	LogType *string `json:"LogType,omitnil,omitempty" name:"LogType"`
 
-	// 数据投递区域，取值有： <li>mainland：中国大陆境内；</li> <li>overseas：全球（不含中国大陆）。</li>
+	// <p>数据投递区域，取值有： <li>mainland：中国大陆境内；</li> <li>overseas：全球（不含中国大陆）。</li></p>
 	Area *string `json:"Area,omitnil,omitempty" name:"Area"`
 
-	// 投递的预设字段列表。
+	// <p>投递的预设字段列表。</p>
 	Fields []*string `json:"Fields,omitnil,omitempty" name:"Fields"`
 
-	// 投递的自定义字段列表。
+	// <p>投递的自定义字段列表。</p>
 	CustomFields []*CustomField `json:"CustomFields,omitnil,omitempty" name:"CustomFields"`
 
-	// 日志投递的过滤条件。
+	// <p>日志投递的过滤条件。</p>
 	DeliveryConditions []*DeliveryCondition `json:"DeliveryConditions,omitnil,omitempty" name:"DeliveryConditions"`
 
-	// 采样比例，采用千分制，取值范围为1-1000，例如：605 表示采样比例为 60.5%。
+	// <p>采样比例，采用千分制，取值范围为1-1000，例如：605 表示采样比例为 60.5%。</p>
 	Sample *uint64 `json:"Sample,omitnil,omitempty" name:"Sample"`
 
-	// 日志投递的输出格式。出参为 null 时表示为默认格式，默认格式逻辑如下：
-	// <li>当 TaskType 取值为 custom_endpoint 时，默认格式为多个 JSON 对象组成的数组，每个 JSON 对象为一条日志；</li>
-	// <li>当 TaskType 取值为 s3 时，默认格式为 JSON Lines。</li>
+	// <p>日志投递的输出格式。出参为 null 时表示为默认格式，默认格式逻辑如下：</p><li>当 TaskType 取值为 custom_endpoint 时，默认格式为多个 JSON 对象组成的数组，每个 JSON 对象为一条日志；</li><li>当 TaskType 取值为 s3 时，默认格式为 JSON Lines。</li>
 	// 注意：此字段可能返回 null，表示取不到有效值。
 	LogFormat *LogFormat `json:"LogFormat,omitnil,omitempty" name:"LogFormat"`
 
-	// CLS 的配置信息。
+	// <p>CLS 的配置信息。</p>
 	// 注意：此字段可能返回 null，表示取不到有效值。
 	CLS *CLSTopic `json:"CLS,omitnil,omitempty" name:"CLS"`
 
-	// 自定义 HTTP 服务的配置信息。
+	// <p>自定义 HTTP 服务的配置信息。</p>
 	// 注意：此字段可能返回 null，表示取不到有效值。
 	CustomEndpoint *CustomEndpoint `json:"CustomEndpoint,omitnil,omitempty" name:"CustomEndpoint"`
 
-	// AWS S3 兼容存储桶的配置信息。
+	// <p>AWS S3 兼容存储桶的配置信息。</p>
 	// 注意：此字段可能返回 null，表示取不到有效值。
 	S3 *S3 `json:"S3,omitnil,omitempty" name:"S3"`
 
-	// 创建时间。
+	// <p>创建时间。</p>
 	CreateTime *string `json:"CreateTime,omitnil,omitempty" name:"CreateTime"`
 
-	// 更新时间。
+	// <p>更新时间。</p>
 	UpdateTime *string `json:"UpdateTime,omitnil,omitempty" name:"UpdateTime"`
 }
 

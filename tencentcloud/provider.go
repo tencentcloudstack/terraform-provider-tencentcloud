@@ -2162,6 +2162,7 @@ func Provider() *schema.Provider {
 			"tencentcloud_teo_security_js_injection_rule":                                           teo.ResourceTencentCloudTeoSecurityJSInjectionRule(),
 			"tencentcloud_teo_load_balancer":                                                        teo.ResourceTencentCloudTeoLoadBalancer(),
 			"tencentcloud_teo_prefetch_origin_limit":                                                teo.ResourceTencentCloudTeoPrefetchOriginLimit(),
+			"tencentcloud_teo_increase_plan_quota_operation":                                        teo.ResourceTencentCloudTeoIncreasePlanQuotaOperation(),
 			"tencentcloud_teo_purge_task":                                                           teo.ResourceTencentCloudTeoPurgeTaskOperation(),
 			"tencentcloud_teo_shared_cname":                                                         teo.ResourceTencentCloudTeoSharedCname(),
 			"tencentcloud_teo_domain_shared_cname_attachment":                                       teo.ResourceTencentCloudTeoDomainSharedCnameAttachment(),
