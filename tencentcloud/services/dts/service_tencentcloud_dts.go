@@ -136,6 +136,31 @@ func (me *DtsService) DescribeDtsSyncJobsByFilter(ctx context.Context, param map
 	return
 }
 
+func (me *DtsService) PauseDtsSyncJobById(ctx context.Context, jobId string) (errRet error) {
+	logId := tccommon.GetLogId(ctx)
+
+	request := dts.NewPauseSyncJobRequest()
+	request.JobId = helper.String(jobId)
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n",
+				logId, "pause object", request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	ratelimit.Check(request.GetAction())
+	response, err := me.client.UseDtsClient().PauseSyncJob(request)
+	if err != nil {
+		errRet = err
+		return err
+	}
+	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n",
+		logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+	return
+}
+
 func (me *DtsService) IsolateDtsSyncJobById(ctx context.Context, jobId string) (errRet error) {
 	logId := tccommon.GetLogId(ctx)
 
