@@ -28,7 +28,7 @@ func ResourceTencentCloudCynosdbReadonlyInstance() *schema.Resource {
 			Type:        schema.TypeString,
 			Required:    true,
 			ForceNew:    true,
-			Description: "Name of instance.",
+			Description: "Instance name.",
 		},
 		"force_delete": {
 			Type:        schema.TypeBool,

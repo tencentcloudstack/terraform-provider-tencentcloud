@@ -40,7 +40,7 @@ resource "tencentcloud_cynosdb_readonly_instance" "foo" {
 The following arguments are supported:
 
 * `cluster_id` - (Required, String, ForceNew) Cluster ID which the readonly instance belongs to.
-* `instance_name` - (Required, String, ForceNew) Name of instance.
+* `instance_name` - (Required, String, ForceNew) Instance name.
 * `force_delete` - (Optional, Bool) Indicate whether to delete readonly instance directly or not. Default is false. If set true, instance will be deleted instead of staying recycle bin. Note: works for both `PREPAID` and `POSTPAID_BY_HOUR` cluster.
 * `instance_cpu_core` - (Optional, Int) The number of CPU cores of read-write type instance in the CynosDB cluster. Required while creating normal cluster. Note: modification of this field will take effect immediately, if want to upgrade on maintenance window, please upgrade from console.
 * `instance_maintain_duration` - (Optional, Int) Duration time for maintenance, unit in second. `3600` by default.
