@@ -14,9 +14,8 @@ Provides a resource to create a mariadb parameters
 ## Example Usage
 
 ```hcl
-resource "tencentcloud_mariadb_parameters" "parameters" {
-  instance_id = "tdsql-4pzs5b67"
-
+resource "tencentcloud_mariadb_parameters" "example" {
+  instance_id = "tdsql-5n00ev40zl"
   params {
     param = "auto_increment_increment"
     value = "1"
@@ -28,6 +27,14 @@ resource "tencentcloud_mariadb_parameters" "parameters" {
   params {
     param = "autocommit"
     value = "ON"
+  }
+  params {
+    param = "binlog_transaction_dependency_history_size"
+    value = "25000"
+  }
+  params {
+    param = "binlog_write_threshold"
+    value = "1610612736"
   }
   params {
     param = "character_set_server"
@@ -51,7 +58,7 @@ resource "tencentcloud_mariadb_parameters" "parameters" {
   }
   params {
     param = "default_collation_for_utf8mb4"
-    value = "utf8mb4_general_ci"
+    value = "utf8mb4_0900_ai_ci"
   }
   params {
     param = "default_week_format"
@@ -82,12 +89,32 @@ resource "tencentcloud_mariadb_parameters" "parameters" {
     value = "ON"
   }
   params {
+    param = "explicit_defaults_for_timestamp"
+    value = "ON"
+  }
+  params {
     param = "group_concat_max_len"
     value = "1024"
   }
   params {
+    param = "innodb_autoinc_lock_mode"
+    value = "2"
+  }
+  params {
+    param = "innodb_backquery_enable"
+    value = "OFF"
+  }
+  params {
+    param = "innodb_backquery_window"
+    value = "86400"
+  }
+  params {
     param = "innodb_concurrency_tickets"
     value = "5000"
+  }
+  params {
+    param = "innodb_encryption_algorithm"
+    value = "AES"
   }
   params {
     param = "innodb_flush_log_at_trx_commit"
@@ -100,6 +127,10 @@ resource "tencentcloud_mariadb_parameters" "parameters" {
   params {
     param = "innodb_max_dirty_pages_pct"
     value = "70.000000"
+  }
+  params {
+    param = "innodb_max_undo_log_size"
+    value = "1073741824"
   }
   params {
     param = "innodb_old_blocks_pct"
@@ -127,7 +158,7 @@ resource "tencentcloud_mariadb_parameters" "parameters" {
   }
   params {
     param = "innodb_strict_mode"
-    value = "OFF"
+    value = "ON"
   }
   params {
     param = "innodb_table_locks"
@@ -140,6 +171,10 @@ resource "tencentcloud_mariadb_parameters" "parameters" {
   params {
     param = "interactive_timeout"
     value = "28800"
+  }
+  params {
+    param = "join_buffer_size"
+    value = "2097152"
   }
   params {
     param = "key_cache_age_threshold"
@@ -172,6 +207,10 @@ resource "tencentcloud_mariadb_parameters" "parameters" {
   params {
     param = "low_priority_updates"
     value = "OFF"
+  }
+  params {
+    param = "lower_case_table_names"
+    value = "1"
   }
   params {
     param = "max_allowed_packet"
@@ -218,12 +257,24 @@ resource "tencentcloud_mariadb_parameters" "parameters" {
     value = "300"
   }
   params {
+    param = "optimizer_switch"
+    value = "batched_key_access=off,block_nested_loop=on,condition_fanout_filter=on,csi_prefer_first_match_semi_join=on,csi_prefer_hash_group_by=on,csi_prefer_no_ref_access=on,csi_route_prefer=on,derived_condition_pushdown=on,derived_merge=on,duplicateweedout=on,engine_condition_pushdown=on,firstmatch=on,group_by_no_tmptable_for_csi=on,hash_join=on,hypergraph_optimizer=off,index_condition_pushdown=on,index_merge=on,index_merge_intersection=on,index_merge_sort_union=on,index_merge_union=on,loosescan=on,materialization=on,mrr=on,mrr_cost_based=on,prefer_ordering_index=on,semijoin=on,skip_scan=on,sort_merge_join=off,subquery_materialization_cost_based=on,subquery_to_derived=off,use_index_extensions=on,use_invisible_indexes=off,winmagic=off"
+  }
+  params {
+    param = "performance_schema"
+    value = "ON"
+  }
+  params {
     param = "query_alloc_block_size"
     value = "16384"
   }
   params {
     param = "query_prealloc_size"
     value = "24576"
+  }
+  params {
+    param = "reject_table_no_pk"
+    value = "1"
   }
   params {
     param = "slow_launch_time"
@@ -262,6 +313,14 @@ resource "tencentcloud_mariadb_parameters" "parameters" {
     value = "20480"
   }
   params {
+    param = "thread_pool_oversubscribe"
+    value = "30"
+  }
+  params {
+    param = "thread_pool_size"
+    value = "24"
+  }
+  params {
     param = "time_zone"
     value = "+08:00"
   }
@@ -285,7 +344,7 @@ resource "tencentcloud_mariadb_parameters" "parameters" {
 The following arguments are supported:
 
 * `instance_id` - (Required, String) instance id.
-* `params` - (Required, List) Number of days to keep, no more than 30.
+* `params` - (Required, Set) Number of days to keep, no more than 30.
 
 The `params` object supports the following:
 
@@ -304,6 +363,6 @@ In addition to all arguments above, the following attributes are exported:
 
 mariadb parameters can be imported using the id, e.g.
 ```
-$ terraform import tencentcloud_mariadb_parameters.parameters tdsql-4pzs5b67
+terraform import tencentcloud_mariadb_parameters.example tdsql-4pzs5b67
 ```
 
