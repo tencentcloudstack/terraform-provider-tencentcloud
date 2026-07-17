@@ -2592,6 +2592,28 @@ func (me *CynosdbService) ModifyClusterName(ctx context.Context, clusterId strin
 	return
 }
 
+func (me *CynosdbService) ModifyInstanceName(ctx context.Context, instanceId string, instanceName string) (errRet error) {
+	logId := tccommon.GetLogId(ctx)
+	request := cynosdb.NewModifyInstanceNameRequest()
+	request.InstanceId = &instanceId
+	request.InstanceName = &instanceName
+
+	errRet = resource.Retry(tccommon.WriteRetryTimeout, func() *resource.RetryError {
+		ratelimit.Check(request.GetAction())
+		_, errRet = me.client.UseCynosdbClient().ModifyInstanceName(request)
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, reason:%s", logId, request.GetAction(), errRet.Error())
+			return tccommon.RetryError(errRet)
+		}
+		return nil
+	})
+	if errRet != nil {
+		return
+	}
+
+	return
+}
+
 func (me *CynosdbService) ModifyClusterStorage(ctx context.Context, clusterId string, newStorageLimit int64, oldStorageLimit int64) (errRet error) {
 	logId := tccommon.GetLogId(ctx)
 	request := cynosdb.NewModifyClusterStorageRequest()

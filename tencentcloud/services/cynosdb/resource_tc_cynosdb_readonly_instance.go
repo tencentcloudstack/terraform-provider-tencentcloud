@@ -27,7 +27,6 @@ func ResourceTencentCloudCynosdbReadonlyInstance() *schema.Resource {
 		"instance_name": {
 			Type:        schema.TypeString,
 			Required:    true,
-			ForceNew:    true,
 			Description: "Instance name.",
 		},
 		"force_delete": {
@@ -222,6 +221,14 @@ func resourceTencentCloudCynosdbReadonlyInstanceUpdate(d *schema.ResourceData, m
 	)
 
 	d.Partial(true)
+
+	if d.HasChange("instance_name") {
+		instanceName := d.Get("instance_name").(string)
+		err := cynosdbService.ModifyInstanceName(ctx, instanceId, instanceName)
+		if err != nil {
+			return err
+		}
+	}
 
 	if d.HasChange("instance_cpu_core") || d.HasChange("instance_memory_size") {
 		cpu := int64(d.Get("instance_cpu_core").(int))
