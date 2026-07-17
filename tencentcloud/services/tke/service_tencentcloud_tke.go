@@ -2984,6 +2984,11 @@ func (me *TkeService) DescribeKubernetesAddonById(ctx context.Context, clusterId
 		ratelimit.Check(request.GetAction())
 		result, e := me.client.UseTkeClient().DescribeAddon(request)
 		if e != nil {
+			if sdkErr, ok := e.(*sdkErrors.TencentCloudSDKError); ok {
+				if strings.Contains(sdkErr.GetCode(), "ResourceNotFound") {
+					return nil
+				}
+			}
 			return tccommon.RetryError(e)
 		} else {
 			log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), result.ToJsonString())
@@ -3006,7 +3011,7 @@ func (me *TkeService) DescribeKubernetesAddonById(ctx context.Context, clusterId
 		return
 	}
 
-	if len(response.Response.Addons) < 1 {
+	if response == nil || response.Response == nil || len(response.Response.Addons) < 1 {
 		return
 	}
 
