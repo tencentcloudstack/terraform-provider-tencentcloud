@@ -33,14 +33,6 @@ func ptrTdmysqlString(s string) *string {
 	return &s
 }
 
-func ptrTdmysqlBool(b bool) *bool {
-	return &b
-}
-
-func ptrTdmysqlFloat64(f float64) *float64 {
-	return &f
-}
-
 // go test ./tencentcloud/services/tdmysql/ -run "TestTdmysqlDbInstanceCreate" -v -count=1 -gcflags="all=-l"
 
 func TestTdmysqlDbInstanceCreate(t *testing.T) {
@@ -76,19 +68,19 @@ func TestTdmysqlDbInstanceCreate(t *testing.T) {
 	patches.ApplyMethodFunc(tdmysqlClient, "DescribeDBInstanceDetailWithContext", func(_ context.Context, request *tdmysqlv20211122.DescribeDBInstanceDetailRequest) (*tdmysqlv20211122.DescribeDBInstanceDetailResponse, error) {
 		resp := tdmysqlv20211122.NewDescribeDBInstanceDetailResponse()
 		resp.Response = &tdmysqlv20211122.DescribeDBInstanceDetailResponseParams{
-			InstanceId:    ptrTdmysqlString("tdmysqldb-test-instance-id"),
-			InstanceName:  ptrTdmysqlString("tf-example"),
-			Zone:          ptrTdmysqlString("ap-guangzhou-3"),
-			VpcId:         ptrTdmysqlString("vpc-xxxxxxxx"),
-			SubnetId:      ptrTdmysqlString("subnet-xxxxxxxx"),
-			SpecCode:      ptrTdmysqlString("TDSQL-C-LS001"),
-			Disk:          ptrTdmysqlInt64(200),
+			InstanceId:     ptrTdmysqlString("tdmysqldb-test-instance-id"),
+			InstanceName:   ptrTdmysqlString("tf-example"),
+			Zone:           ptrTdmysqlString("ap-guangzhou-3"),
+			VpcId:          ptrTdmysqlString("vpc-xxxxxxxx"),
+			SubnetId:       ptrTdmysqlString("subnet-xxxxxxxx"),
+			SpecCode:       ptrTdmysqlString("TDSQL-C-LS001"),
+			Disk:           ptrTdmysqlInt64(200),
 			StorageNodeNum: ptrTdmysqlInt64(2),
-			Replications:  ptrTdmysqlInt64(3),
-			Status:        ptrTdmysqlString("running"),
-			Vip:           ptrTdmysqlString("10.0.1.10"),
-			Vport:         ptrTdmysqlInt64(3306),
-			RequestId:     ptrTdmysqlString("fake-request-id"),
+			Replications:   ptrTdmysqlInt64(3),
+			Status:         ptrTdmysqlString("running"),
+			Vip:            ptrTdmysqlString("10.0.1.10"),
+			Vport:          ptrTdmysqlInt64(3306),
+			RequestId:      ptrTdmysqlString("fake-request-id"),
 		}
 		return resp, nil
 	})
@@ -138,23 +130,23 @@ func TestTdmysqlDbInstanceRead(t *testing.T) {
 		assert.Equal(t, "tdmysqldb-test-instance-id", *request.InstanceId)
 		resp := tdmysqlv20211122.NewDescribeDBInstanceDetailResponse()
 		resp.Response = &tdmysqlv20211122.DescribeDBInstanceDetailResponseParams{
-			InstanceId:      ptrTdmysqlString("tdmysqldb-test-instance-id"),
-			InstanceName:    ptrTdmysqlString("tf-example"),
-			Zone:            ptrTdmysqlString("ap-guangzhou-3"),
-			VpcId:           ptrTdmysqlString("vpc-xxxxxxxx"),
-			SubnetId:        ptrTdmysqlString("subnet-xxxxxxxx"),
-			SpecCode:        ptrTdmysqlString("TDSQL-C-LS001"),
-			Disk:            ptrTdmysqlInt64(200),
-			StorageNodeNum:  ptrTdmysqlInt64(2),
-			Replications:    ptrTdmysqlInt64(3),
-			Status:          ptrTdmysqlString("running"),
-			Vip:             ptrTdmysqlString("10.0.1.10"),
-			Vport:           ptrTdmysqlInt64(3306),
-			CharSet:         ptrTdmysqlString("utf8"),
-			Region:          ptrTdmysqlString("ap-guangzhou"),
-			StatusDesc:      ptrTdmysqlString("运行中"),
+			InstanceId:       ptrTdmysqlString("tdmysqldb-test-instance-id"),
+			InstanceName:     ptrTdmysqlString("tf-example"),
+			Zone:             ptrTdmysqlString("ap-guangzhou-3"),
+			VpcId:            ptrTdmysqlString("vpc-xxxxxxxx"),
+			SubnetId:         ptrTdmysqlString("subnet-xxxxxxxx"),
+			SpecCode:         ptrTdmysqlString("TDSQL-C-LS001"),
+			Disk:             ptrTdmysqlInt64(200),
+			StorageNodeNum:   ptrTdmysqlInt64(2),
+			Replications:     ptrTdmysqlInt64(3),
+			Status:           ptrTdmysqlString("running"),
+			Vip:              ptrTdmysqlString("10.0.1.10"),
+			Vport:            ptrTdmysqlInt64(3306),
+			CharSet:          ptrTdmysqlString("utf8"),
+			Region:           ptrTdmysqlString("ap-guangzhou"),
+			StatusDesc:       ptrTdmysqlString("运行中"),
 			EncryptionEnable: ptrTdmysqlInt64(0),
-			RequestId:       ptrTdmysqlString("fake-request-id"),
+			RequestId:        ptrTdmysqlString("fake-request-id"),
 		}
 		return resp, nil
 	})
@@ -239,17 +231,17 @@ func TestTdmysqlDbInstanceUpdate(t *testing.T) {
 	patches.ApplyMethodFunc(tdmysqlClient, "DescribeDBInstanceDetailWithContext", func(_ context.Context, request *tdmysqlv20211122.DescribeDBInstanceDetailRequest) (*tdmysqlv20211122.DescribeDBInstanceDetailResponse, error) {
 		resp := tdmysqlv20211122.NewDescribeDBInstanceDetailResponse()
 		resp.Response = &tdmysqlv20211122.DescribeDBInstanceDetailResponseParams{
-			InstanceId:    ptrTdmysqlString("tdmysqldb-test-instance-id"),
-			InstanceName:  ptrTdmysqlString("tf-example-update"),
-			Zone:          ptrTdmysqlString("ap-guangzhou-3"),
-			VpcId:         ptrTdmysqlString("vpc-xxxxxxxx"),
-			SubnetId:      ptrTdmysqlString("subnet-xxxxxxxx"),
-			SpecCode:      ptrTdmysqlString("TDSQL-C-LS001"),
-			Disk:          ptrTdmysqlInt64(200),
+			InstanceId:     ptrTdmysqlString("tdmysqldb-test-instance-id"),
+			InstanceName:   ptrTdmysqlString("tf-example-update"),
+			Zone:           ptrTdmysqlString("ap-guangzhou-3"),
+			VpcId:          ptrTdmysqlString("vpc-xxxxxxxx"),
+			SubnetId:       ptrTdmysqlString("subnet-xxxxxxxx"),
+			SpecCode:       ptrTdmysqlString("TDSQL-C-LS001"),
+			Disk:           ptrTdmysqlInt64(200),
 			StorageNodeNum: ptrTdmysqlInt64(2),
-			Replications:  ptrTdmysqlInt64(3),
-			Status:        ptrTdmysqlString("running"),
-			RequestId:     ptrTdmysqlString("fake-request-id"),
+			Replications:   ptrTdmysqlInt64(3),
+			Status:         ptrTdmysqlString("running"),
+			RequestId:      ptrTdmysqlString("fake-request-id"),
 		}
 		return resp, nil
 	})

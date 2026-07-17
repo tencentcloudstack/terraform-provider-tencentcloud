@@ -2218,7 +2218,7 @@ func Provider() *schema.Provider {
 			"tencentcloud_mariadb_instance_config":                                                  mariadb.ResourceTencentCloudMariadbInstanceConfig(),
 			"tencentcloud_tdcpg_cluster":                                                            tdcpg.ResourceTencentCloudTdcpgCluster(),
 			"tencentcloud_tdcpg_instance":                                                           tdcpg.ResourceTencentCloudTdcpgInstance(),
-			"tencentcloud_tdmysql_db_instance":                                                     tdmysql.ResourceTencentCloudTdmysqlDbInstance(),
+			"tencentcloud_tdmysql_db_instance":                                                      tdmysql.ResourceTencentCloudTdmysqlDbInstance(),
 			"tencentcloud_css_watermark":                                                            css.ResourceTencentCloudCssWatermark(),
 			"tencentcloud_css_watermark_rule_attachment":                                            css.ResourceTencentCloudCssWatermarkRuleAttachment(),
 			"tencentcloud_css_pull_stream_task":                                                     css.ResourceTencentCloudCssPullStreamTask(),
