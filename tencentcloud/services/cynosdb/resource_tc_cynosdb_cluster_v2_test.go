@@ -17,8 +17,8 @@ import (
 )
 
 func init() {
-	resource.AddTestSweepers("tencentcloud_cynosdb", &resource.Sweeper{
-		Name: "tencentcloud_cynosdb",
+	resource.AddTestSweepers("tencentcloud_cynosdb_v2", &resource.Sweeper{
+		Name: "tencentcloud_cynosdb_v2",
 		F: func(r string) error {
 			logId := tccommon.GetLogId(tccommon.ContextNil)
 			ctx := context.WithValue(context.TODO(), tccommon.LogIdKey, logId)
