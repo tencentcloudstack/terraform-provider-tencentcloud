@@ -116,6 +116,9 @@ const (
 	// 实时日志认证失败
 	FAILEDOPERATION_REALTIMELOGAUTHFAILURE = "FailedOperation.RealtimeLogAuthFailure"
 
+	// 当前不支持创建 EdgeOne 日志分析类型的实时日志推送任务。
+	FAILEDOPERATION_REALTIMELOGLOGANALYSISNOTSUPPORT = "FailedOperation.RealtimeLogLogAnalysisNotSupport"
+
 	// 实时日志推送任务不存在
 	FAILEDOPERATION_REALTIMELOGNOTFOUND = "FailedOperation.RealtimeLogNotFound"
 
@@ -505,6 +508,9 @@ const (
 
 	// 无效的Ipv6开关配置。
 	INVALIDPARAMETER_INVALIDIPV6SWITCH = "InvalidParameter.InvalidIpv6Switch"
+
+	// 无效的日志分析匹配条件，查询语句解析失败。
+	INVALIDPARAMETER_INVALIDLOGANALYSISCONDITION = "InvalidParameter.InvalidLogAnalysisCondition"
 
 	// 日志输出格式的字段分隔符不正确
 	INVALIDPARAMETER_INVALIDLOGFORMATFIELDDELIMITER = "InvalidParameter.InvalidLogFormatFieldDelimiter"
@@ -971,6 +977,12 @@ const (
 	// 包含无效的值。
 	INVALIDPARAMETERVALUE_INCLUDEINVALIDVALUE = "InvalidParameterValue.IncludeInvalidValue"
 
+	// 推理服务名称格式错误。
+	INVALIDPARAMETERVALUE_INFERENCESERVICENAME = "InvalidParameterValue.InferenceServiceName"
+
+	// 推理服务名称重复。
+	INVALIDPARAMETERVALUE_INFERENCESERVICENAMEDUPLICATE = "InvalidParameterValue.InferenceServiceNameDuplicate"
+
 	// 别称域名名称不合法，别称域名应该由数字、英文字母、连词符组成，且连词符不能位于开头和结尾处。
 	INVALIDPARAMETERVALUE_INVALIDALIASDOMAINNAME = "InvalidParameterValue.InvalidAliasDomainName"
 
@@ -1099,6 +1111,9 @@ const (
 
 	// 函数数量达到限制。
 	LIMITEXCEEDED_FUNCTIONLIMITEXCEEDED = "LimitExceeded.FunctionLimitExceeded"
+
+	// 推理服务数量超限。
+	LIMITEXCEEDED_INFERENCESERVICE = "LimitExceeded.InferenceService"
 
 	// 负载均衡数量超过限制。
 	LIMITEXCEEDED_LOADBALANCINGCOUNTLIMITEXCEEDED = "LimitExceeded.LoadBalancingCountLimitExceeded"
@@ -1498,6 +1513,9 @@ const (
 
 	// DNSPod 未正常接入该域名，请在 DNSPod 接入后重试。
 	RESOURCENOTFOUND_DNSPODDOMAINNOTINACCOUNT = "ResourceNotFound.DNSPodDomainNotInAccount"
+
+	// 推理服务不存在。
+	RESOURCENOTFOUND_INFERENCESERVICE = "ResourceNotFound.InferenceService"
 
 	// 最大上传大小额度未配置
 	RESOURCENOTFOUND_POSTMAXSIZEQUOTANOTFOUND = "ResourceNotFound.PostMaxSizeQuotaNotFound"
