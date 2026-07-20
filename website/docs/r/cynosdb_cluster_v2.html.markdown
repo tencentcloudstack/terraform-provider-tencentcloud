@@ -135,7 +135,7 @@ In addition to all arguments above, the following attributes are exported:
 * `cluster_status` - Status of the Cynosdb cluster.
 * `create_time` - Creation time of the CynosDB cluster.
 * `instance_id` - ID of instance.
-* `instance_name` - Name of instance.
+* `instance_name` - Name of instance. Only supported when modifying.
 * `instance_status` - Status of the instance.
 * `instance_storage_size` - Storage size of the instance, unit in GB.
 * `ro_group_addr` - Readonly addresses. Each element contains the following attributes:

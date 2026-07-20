@@ -236,7 +236,7 @@ The following arguments are supported:
 * `prarm_template_id` - (Optional, Int, **Deprecated**) It will be deprecated. Use `param_template_id` instead. The ID of the parameter template.
 * `prepaid_period` - (Optional, Int, ForceNew) The tenancy (time unit is month) of the prepaid instance. Valid values are `1`, `2`, `3`, `4`, `5`, `6`, `7`, `8`, `9`, `10`, `11`, `12`, `24`, `36`. NOTE: it only works when charge_type is set to `PREPAID`.
 * `project_id` - (Optional, Int, ForceNew) ID of the project. `0` by default.
-* `ro_group_sg` - (Optional, List: [`String`]) IDs of security group for `ro_group`. If you need to configure `ro_group_sg` security group, please use Resource `tencentcloud_cynosdb_cluster_v2`.
+* `ro_group_sg` - (Optional, List: [`String`]) IDs of security group for `ro_group`.
 * `rw_group_sg` - (Optional, List: [`String`]) IDs of security group for `rw_group`.
 * `serverless_status_flag` - (Optional, String) Specify whether to pause or resume serverless cluster. values: `resume`, `pause`.
 * `slave_zone` - (Optional, String) Multi zone Addresses of the CynosDB Cluster.
@@ -271,7 +271,7 @@ In addition to all arguments above, the following attributes are exported:
 * `cluster_status` - Status of the Cynosdb cluster.
 * `create_time` - Creation time of the CynosDB cluster.
 * `instance_id` - ID of instance.
-* `instance_name` - Name of instance.
+* `instance_name` - Name of instance. Only supported when modifying.
 * `instance_status` - Status of the instance.
 * `instance_storage_size` - Storage size of the instance, unit in GB.
 * `ro_group_addr` - Readonly addresses. Each element contains the following attributes:
