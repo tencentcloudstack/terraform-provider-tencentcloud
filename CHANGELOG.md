@@ -1,3 +1,11 @@
+## 1.83.13(July 20, 2026)
+
+ENHANCEMENTS:
+
+* resource/tencentcloud_cynosdb_readonly_instance: support `instance_name` modification via `ModifyInstanceName` API ([#4319](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/4319))
+* resource/tencentcloud_kubernetes_addon: Fixed the error occurring when the query returned no results. ([#4317](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/4317))
+* resource/tencentcloud_mariadb_parameters: optimize code logic ([#4318](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/4318))
+
 ## 1.83.12(July 15, 2026)
 
 FEATURES:
