@@ -1896,7 +1896,7 @@ func (me *TeoService) DescribeTeoBindSecurityTemplateById(ctx context.Context, z
 				continue
 			}
 			for _, bindDomain := range template.BindDomains {
-				if bindDomain == nil || bindDomain.Domain == nil || *bindDomain.Domain != entity {
+				if bindDomain == nil || bindDomain.Domain == nil || *bindDomain.Domain != entity || *bindDomain.ZoneId != zoneId {
 					continue
 				}
 				status := ""
