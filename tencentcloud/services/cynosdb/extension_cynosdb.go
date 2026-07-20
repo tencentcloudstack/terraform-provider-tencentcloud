@@ -72,6 +72,7 @@ func TencentCynosdbInstanceBaseInfo() map[string]*schema.Schema {
 		},
 		"instance_name": {
 			Type:        schema.TypeString,
+			Optional:    true,
 			Computed:    true,
 			Description: "Name of instance. Only supported when modifying.",
 		},
