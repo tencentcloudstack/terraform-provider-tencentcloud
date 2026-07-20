@@ -72,8 +72,9 @@ func TencentCynosdbInstanceBaseInfo() map[string]*schema.Schema {
 		},
 		"instance_name": {
 			Type:        schema.TypeString,
+			Optional:    true,
 			Computed:    true,
-			Description: "Name of instance.",
+			Description: "Name of instance. Only supported when modifying.",
 		},
 		"instance_status": {
 			Type:        schema.TypeString,
@@ -326,7 +327,7 @@ func TencentCynosdbClusterBaseInfo() map[string]*schema.Schema {
 			Type:        schema.TypeList,
 			Optional:    true,
 			Elem:        &schema.Schema{Type: schema.TypeString},
-			Description: "IDs of security group for `ro_group`. If you need to configure `ro_group_sg` security group, please use Resource `tencentcloud_cynosdb_cluster_v2`.",
+			Description: "IDs of security group for `ro_group`.",
 		},
 		"ro_group_addr": {
 			Type:        schema.TypeList,
