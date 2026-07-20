@@ -2158,6 +2158,7 @@ func Provider() *schema.Provider {
 			"tencentcloud_teo_multi_path_gateway_line":                                              teo.ResourceTencentCloudTeoMultiPathGatewayLine(),
 			"tencentcloud_teo_security_api_service":                                                 teo.ResourceTencentCloudTeoSecurityAPIService(),
 			"tencentcloud_teo_confirm_origin_acl_update_operation":                                  teo.ResourceTencentCloudTeoConfirmOriginAclUpdateOperation(),
+			"tencentcloud_teo_bind_zone_to_plan":                                                    teo.ResourceTencentCloudTeoBindZoneToPlan(),
 			"tencentcloud_teo_alias_domain":                                                         teo.ResourceTencentCloudTeoAliasDomain(),
 			"tencentcloud_teo_security_js_injection_rule":                                           teo.ResourceTencentCloudTeoSecurityJSInjectionRule(),
 			"tencentcloud_teo_load_balancer":                                                        teo.ResourceTencentCloudTeoLoadBalancer(),
