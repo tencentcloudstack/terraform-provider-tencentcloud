@@ -672,7 +672,12 @@ func resourceTencentCloudScfFunctionCreate(d *schema.ResourceData, m interface{}
 		if err != nil {
 			return fmt.Errorf("zip file (%s) open error: %s", path, err.Error())
 		}
-		defer file.Close()
+		defer func() {
+			if cErr := file.Close(); cErr != nil && err == nil {
+				log.Printf("[DEBUG] Create zip file (%s) close error: %s", path, cErr.Error())
+			}
+		}()
+
 		body, err := ioutil.ReadAll(file)
 		if err != nil {
 			return fmt.Errorf("zip file (%s) read error: %s", path, err.Error())
@@ -1121,7 +1126,12 @@ func resourceTencentCloudScfFunctionUpdate(d *schema.ResourceData, m interface{}
 		if err != nil {
 			return fmt.Errorf("zip file (%s) open error: %s", path, err.Error())
 		}
-		defer file.Close()
+		defer func() {
+			if cErr := file.Close(); cErr != nil && err == nil {
+				log.Printf("[DEBUG] update zip file (%s) close error: %s", path, cErr.Error())
+			}
+		}()
+
 		body, err := ioutil.ReadAll(file)
 		if err != nil {
 			return fmt.Errorf("zip file (%s) read error: %s", path, err.Error())

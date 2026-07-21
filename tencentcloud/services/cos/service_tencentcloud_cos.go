@@ -1693,7 +1693,8 @@ func (me *CosService) DescribeCosBucketDomainCertificate(ctx context.Context, ce
 			}
 
 			resp, _ := json.Marshal(response.Response.Body)
-			log.Printf("[DEBUG]%s api[%s] success, request [%s], response body [%s], result [%s]\n", logId, "GetDomainCertificate", request, resp, result)
+			resByte, _ := json.Marshal(result)
+			log.Printf("[DEBUG]%s api[%s] success, request [%s], response body [%s], result [%s]\n", logId, "GetDomainCertificate", string(request), string(resp), string(resByte))
 			res = result
 		}
 
