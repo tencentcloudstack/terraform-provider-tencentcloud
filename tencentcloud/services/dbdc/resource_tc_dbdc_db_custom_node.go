@@ -24,9 +24,9 @@ func ResourceTencentCloudDbdcDbCustomNode() *schema.Resource {
 			State: schema.ImportStatePassthrough,
 		},
 		Timeouts: &schema.ResourceTimeout{
-			Create: schema.DefaultTimeout(30 * time.Minute),
-			Update: schema.DefaultTimeout(30 * time.Minute),
-			Delete: schema.DefaultTimeout(30 * time.Minute),
+			Create: schema.DefaultTimeout(60 * time.Minute),
+			Update: schema.DefaultTimeout(60 * time.Minute),
+			Delete: schema.DefaultTimeout(60 * time.Minute),
 		},
 		Schema: map[string]*schema.Schema{
 			"zone": {
@@ -67,7 +67,6 @@ func ResourceTencentCloudDbdcDbCustomNode() *schema.Resource {
 			"period": {
 				Type:        schema.TypeInt,
 				Optional:    true,
-				ForceNew:    true,
 				Default:     1,
 				Description: "Purchase duration in months. Valid values: 1/2/3/4/5/6/7/8/9/10/11/12/24/36. Default value is `1`.",
 			},
@@ -116,14 +115,12 @@ func ResourceTencentCloudDbdcDbCustomNode() *schema.Resource {
 			"auto_voucher": {
 				Type:        schema.TypeInt,
 				Optional:    true,
-				ForceNew:    true,
 				Description: "Whether to use voucher to deduct automatically. Valid values: `1` (use), `0` (not use). Default value is `0`.",
 			},
 
 			"voucher_ids": {
 				Type:        schema.TypeList,
 				Optional:    true,
-				ForceNew:    true,
 				Description: "Voucher ID list. Must be undeducted voucher IDs owned by the current account.",
 				Elem: &schema.Schema{
 					Type: schema.TypeString,
@@ -134,7 +131,7 @@ func ResourceTencentCloudDbdcDbCustomNode() *schema.Resource {
 				Type:        schema.TypeInt,
 				Optional:    true,
 				Computed:    true,
-				Description: "Auto-renew flag. Valid values: `1` (auto-renew), `0` (not auto-renew). Mutable via the renew API.",
+				Description: "Auto-renew flag. Valid values: `1` (auto-renew), `2` (not auto-renew). Mutable via the renew API.",
 			},
 
 			"tags": {
@@ -607,7 +604,7 @@ func resourceTencentCloudDbdcDbCustomNodeUpdate(d *schema.ResourceData, meta int
 		}
 	}
 
-	if d.HasChange("auto_renew") {
+	if d.HasChange("period") || d.HasChange("auto_renew") {
 		request := dbdcv20201029.NewRenewDBCustomNodeRequest()
 		request.NodeId = helper.String(nodeId)
 

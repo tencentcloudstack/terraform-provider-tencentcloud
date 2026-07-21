@@ -71,6 +71,7 @@ resource "tencentcloud_instance" "example" {
   instance_type     = data.tencentcloud_instance_types.types.instance_types.0.instance_type
   system_disk_type  = "CLOUD_PREMIUM"
   system_disk_size  = 50
+  kms_key_id        = "kms-xxxxxxxx"
   hostname          = "user"
   project_id        = 0
   vpc_id            = tencentcloud_vpc.vpc.id
@@ -477,9 +478,9 @@ The following arguments are supported:
 * `disable_automation_service` - (Optional, Bool) Disable enhance service for automation, it is enabled by default. When this options is set, monitor agent won't be installed. Modifications may lead to the reinstallation of the instance's operating system.
 * `disable_monitor_service` - (Optional, Bool) Disable enhance service for monitor, it is enabled by default. When this options is set, monitor agent won't be installed. Modifications may lead to the reinstallation of the instance's operating system.
 * `disable_security_service` - (Optional, Bool) Disable enhance service for security, it is enabled by default. When this options is set, security agent won't be installed. Modifications may lead to the reinstallation of the instance's operating system.
-* `disaster_recover_group_ids` - (Optional, Set: [`String`], ForceNew) Placement group ID.
+* `disaster_recover_group_ids` - (Optional, Set: [`String`]) Placement group ID list. Supports up to 3 group IDs. When set, `placement_group_id` will be ignored and this list will be used for CRUD operations.
 * `force_delete` - (Optional, Bool) Indicate whether to force delete the instance. Default is `false`. If set true, the instance will be permanently deleted instead of being moved into the recycle bin. Note: only works for `PREPAID` instance.
-* `force_replace_placement_group_id` - (Optional, Bool) Whether to force the instance host to be replaced. Value range: true: Allows the instance to change the host and restart the instance. Local disk machines do not support specifying this parameter; false: Does not allow the instance to change the host and only join the placement group on the current host. This may cause the placement group to fail to change. Only useful for change `placement_group_id`, Default is false.
+* `force_replace_placement_group_id` - (Optional, Bool) Whether to force the instance host to be replaced. Value range: true: Allows the instance to change the host and restart the instance. Local disk machines do not support specifying this parameter; false: Does not allow the instance to change the host and only join the placement group on the current host. This may cause the placement group to fail to change. Can be used with both `placement_group_id` and `disaster_recover_group_ids`. Default is false.
 * `force_stop` - (Optional, Bool) Whether to forcibly shut down a running instance. Default is false. Forcing a shutdown is equivalent to switching off the power button on a physical computer. Forcing a shutdown may result in data loss or file system corruption; therefore, please use this option only when the server cannot be shut down normally.
 * `hostname` - (Optional, String) The hostname of the instance. Windows instance: The name should be a combination of 2 to 15 characters comprised of letters (case insensitive), numbers, and hyphens (-). Period (.) is not supported, and the name cannot be a string of pure numbers. Other types (such as Linux) of instances: The name should be a combination of 2 to 60 characters, supporting multiple periods (.). The piece between two periods is composed of letters (case insensitive), numbers, and hyphens (-). Changing the `hostname` will cause the instance system to restart.
 * `hpc_cluster_id` - (Optional, String, ForceNew) High-performance computing cluster ID. If the instance created is a high-performance computing instance, you need to specify the cluster in which the instance is placed, otherwise it cannot be specified.
@@ -500,6 +501,7 @@ The following arguments are supported:
 * `launch_template_id` - (Optional, String, ForceNew) Instance launch template ID. This parameter allows you to create an instance using the preset parameters in the instance template.
 * `launch_template_version` - (Optional, Int, ForceNew) The instance launch template version number. If given, a new instance launch template will be created based on the given version number.
 * `orderly_security_groups` - (Optional, List: [`String`]) A list of orderly security group IDs to associate with.
+* `partition_number` - (Optional, Int) The partition number of the placement group. Valid values: 1-30. If not specified when creating an instance with a partition placement group, the partition number will be randomly assigned. Required when modifying `disaster_recover_group_ids` or `placement_group_id` in update operations.
 * `password` - (Optional, String) Password for the instance. In order for the new password to take effect, the instance will be restarted after the password change. Modifications may lead to the reinstallation of the instance's operating system.
 * `placement_group_id` - (Optional, String) The ID of a placement group.
 * `private_ip` - (Optional, String) The private IP to be assigned to this instance, must be in the provided subnet and available.
@@ -512,7 +514,9 @@ The following arguments are supported:
 * `stop_type` - (Optional, String) Instance shutdown mode. Valid values: SOFT_FIRST: perform a soft shutdown first, and force shut down the instance if the soft shutdown fails; HARD: force shut down the instance directly; SOFT: soft shutdown only. Default value: SOFT.
 * `stopped_mode` - (Optional, String) Billing method of a pay-as-you-go instance after shutdown. Available values: `KEEP_CHARGING`,`STOP_CHARGING`. Default `KEEP_CHARGING`.
 * `subnet_id` - (Optional, String) The ID of a VPC subnet. If you want to create instances in a VPC network, this parameter must be set.
+* `system_disk_encrypt` - (Optional, Bool, ForceNew) Whether the system disk is encrypted. Valid values: true (encrypted), false (not encrypted). Default value: false.
 * `system_disk_id` - (Optional, String) System disk snapshot ID used to initialize the system disk. When system disk type is `LOCAL_BASIC` and `LOCAL_SSD`, disk id is not supported.
+* `system_disk_kms_key_id` - (Optional, String, ForceNew) Custom KMS key ID for system disk encryption.
 * `system_disk_name` - (Optional, String) Name of the system disk.
 * `system_disk_resize_online` - (Optional, Bool) Resize online.
 * `system_disk_size` - (Optional, Int) Size of the system disk. unit is GB, Default is 50GB. If modified, the instance may force stop.

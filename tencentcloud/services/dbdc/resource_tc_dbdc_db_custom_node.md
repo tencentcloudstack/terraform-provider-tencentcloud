@@ -10,7 +10,7 @@ resource "tencentcloud_dbdc_db_custom_node" "example" {
   subnet_id  = "subnet-qd4upp83"
   node_type  = "DB.AT5.8XLARGE128"
   period     = 1
-  auto_renew = 0
+  auto_renew = 1
   node_name  = "tf-example"
 
   login_settings {

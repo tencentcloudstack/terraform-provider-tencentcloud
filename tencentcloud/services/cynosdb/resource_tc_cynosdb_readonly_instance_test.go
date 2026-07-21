@@ -3,15 +3,35 @@ package cynosdb_test
 import (
 	tcacctest "github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/acctest"
 	tccommon "github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/common"
+	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/connectivity"
 	svccynosdb "github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/services/cynosdb"
 
 	"context"
 	"fmt"
 	"testing"
 
+	"github.com/agiledragon/gomonkey/v2"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
+	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/terraform"
+	"github.com/stretchr/testify/assert"
+	cynosdb "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/cynosdb/v20190107"
+	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/internal/helper"
 )
+
+type mockMetaCynosdbReadonlyInstance struct {
+	client *connectivity.TencentCloudClient
+}
+
+func (m *mockMetaCynosdbReadonlyInstance) GetAPIV3Conn() *connectivity.TencentCloudClient {
+	return m.client
+}
+
+var _ tccommon.ProviderMeta = &mockMetaCynosdbReadonlyInstance{}
+
+func newMockMetaCynosdbReadonlyInstance() *mockMetaCynosdbReadonlyInstance {
+	return &mockMetaCynosdbReadonlyInstance{client: &connectivity.TencentCloudClient{Region: "ap-guangzhou"}}
+}
 
 func TestAccTencentCloudCynosdbReadonlyInstanceResource(t *testing.T) {
 	t.Parallel()
@@ -244,3 +264,118 @@ resource "tencentcloud_cynosdb_readonly_instance" "foo" {
   ]
 }
 `
+
+// go test ./tencentcloud/services/cynosdb/ -run "TestUnitCynosdbReadonlyInstance_UpdateInstanceName" -v -count=1 -gcflags="all=-l"
+func TestUnitCynosdbReadonlyInstance_UpdateInstanceName(t *testing.T) {
+	patches := gomonkey.NewPatches()
+	defer patches.Reset()
+
+	meta := newMockMetaCynosdbReadonlyInstance()
+	cynosdbClient := &cynosdb.Client{}
+	patches.ApplyMethodReturn(meta.client, "UseCynosdbClient", cynosdbClient)
+
+	modifyCalled := false
+	patches.ApplyMethodFunc(cynosdbClient, "ModifyInstanceName", func(request *cynosdb.ModifyInstanceNameRequest) (*cynosdb.ModifyInstanceNameResponse, error) {
+		assert.Equal(t, "cynosdbmysql-ins-abcdefgh", *request.InstanceId)
+		assert.Equal(t, "tf-cynosdb-readonly-instance-new", *request.InstanceName)
+		modifyCalled = true
+		resp := &cynosdb.ModifyInstanceNameResponse{}
+		resp.Response = &cynosdb.ModifyInstanceNameResponseParams{
+			RequestId: helper.String("fake-request-id"),
+		}
+		return resp, nil
+	})
+
+	// mock DescribeInstances used by DescribeInstanceById in Read
+	patches.ApplyMethodFunc(cynosdbClient, "DescribeInstances", func(request *cynosdb.DescribeInstancesRequest) (*cynosdb.DescribeInstancesResponse, error) {
+		resp := &cynosdb.DescribeInstancesResponse{}
+		resp.Response = &cynosdb.DescribeInstancesResponseParams{
+			TotalCount: helper.IntInt64(1),
+			InstanceSet: []*cynosdb.CynosdbInstance{
+				{
+					ClusterId:    helper.String("cynosdbmysql-12345678"),
+					InstanceId:   helper.String("cynosdbmysql-ins-abcdefgh"),
+					InstanceName: helper.String("tf-cynosdb-readonly-instance-new"),
+					Status:       helper.String("running"),
+					Cpu:          helper.IntInt64(2),
+					Memory:       helper.IntInt64(4),
+					VpcId:        helper.String("vpc-m0d2dbnn"),
+					SubnetId:     helper.String("subnet-j10lsueq"),
+				},
+			},
+			RequestId: helper.String("fake-request-id"),
+		}
+		return resp, nil
+	})
+
+	// mock DescribeInstanceDetail used by DescribeInstanceById in Read
+	patches.ApplyMethodFunc(cynosdbClient, "DescribeInstanceDetail", func(request *cynosdb.DescribeInstanceDetailRequest) (*cynosdb.DescribeInstanceDetailResponse, error) {
+		resp := &cynosdb.DescribeInstanceDetailResponse{}
+		resp.Response = &cynosdb.DescribeInstanceDetailResponseParams{
+			Detail: &cynosdb.CynosdbInstanceDetail{
+				ClusterId:    helper.String("cynosdbmysql-12345678"),
+				InstanceId:   helper.String("cynosdbmysql-ins-abcdefgh"),
+				InstanceName: helper.String("tf-cynosdb-readonly-instance-new"),
+				Status:       helper.String("running"),
+				Cpu:          helper.IntInt64(2),
+				Memory:       helper.IntInt64(4),
+				Storage:      helper.IntInt64(50),
+				VpcId:        helper.String("vpc-m0d2dbnn"),
+				SubnetId:     helper.String("subnet-j10lsueq"),
+			},
+			RequestId: helper.String("fake-request-id"),
+		}
+		return resp, nil
+	})
+
+	// mock DescribeMaintainPeriod used by Read
+	patches.ApplyMethodFunc(cynosdbClient, "DescribeMaintainPeriod", func(request *cynosdb.DescribeMaintainPeriodRequest) (*cynosdb.DescribeMaintainPeriodResponse, error) {
+		resp := &cynosdb.DescribeMaintainPeriodResponse{}
+		resp.Response = &cynosdb.DescribeMaintainPeriodResponseParams{
+			MaintainWeekDays:  []*string{helper.String("Mon"), helper.String("Tue")},
+			MaintainStartTime: helper.IntInt64(10800),
+			MaintainDuration:  helper.IntInt64(3600),
+			RequestId:         helper.String("fake-request-id"),
+		}
+		return resp, nil
+	})
+
+	res := svccynosdb.ResourceTencentCloudCynosdbReadonlyInstance()
+
+	// Build a prior state where instance_name is the old value, and a new config
+	// where only instance_name changes, so that d.HasChange("instance_name")
+	// returns true while other fields remain unchanged.
+	state := &terraform.InstanceState{
+		ID: "cynosdbmysql-ins-abcdefgh",
+		Attributes: map[string]string{
+			"id":                           "cynosdbmysql-ins-abcdefgh",
+			"cluster_id":                   "cynosdbmysql-12345678",
+			"instance_name":                "tf-cynosdb-readonly-instance-old",
+			"instance_cpu_core":            "2",
+			"instance_memory_size":         "4",
+			"instance_maintain_duration":   "3600",
+			"instance_maintain_start_time": "10800",
+		},
+	}
+
+	rawConfig := terraform.NewResourceConfigRaw(map[string]interface{}{
+		"cluster_id":                   "cynosdbmysql-12345678",
+		"instance_name":                "tf-cynosdb-readonly-instance-new",
+		"instance_cpu_core":            2,
+		"instance_memory_size":         4,
+		"instance_maintain_duration":   3600,
+		"instance_maintain_start_time": 10800,
+	})
+
+	diff, err := res.Diff(nil, state, rawConfig, meta)
+	assert.NoError(t, err)
+	assert.NotNil(t, diff)
+
+	d, err := schema.InternalMap(res.Schema).Data(state, diff)
+	assert.NoError(t, err)
+
+	err = res.Update(d, meta)
+	assert.NoError(t, err)
+	assert.True(t, modifyCalled)
+	assert.Equal(t, "tf-cynosdb-readonly-instance-new", d.Get("instance_name"))
+}

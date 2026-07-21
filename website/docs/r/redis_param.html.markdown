@@ -11,6 +11,8 @@ description: |-
 
 Provides a resource to create a redis param
 
+~> **NOTE:** This resource is applicable to modifying the parameters of Tencent Cloud Distributed Cache instances across three engine types(`Redis Edition`, `Valkey Edition`, `Memcached Edition`). For details on the engines, please refer to [Storage Engine](https://www.tencentcloud.com/document/product/239/31957)
+
 ## Example Usage
 
 ```hcl

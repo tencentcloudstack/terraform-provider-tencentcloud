@@ -322,7 +322,7 @@ The following arguments are supported:
 * `vpc_id` - (Required, String) ID of VPC.
 * `auto_renew_flag` - (Optional, Int) Auto renew flag, `1` for enabled. NOTES: Only support prepaid instance.
 * `auto_voucher` - (Optional, Int) Whether to use voucher, `1` for enabled.
-* `backup_plan` - (Optional, List) Specify DB backup plan.
+* `backup_plan` - (Optional, List, **Deprecated**) This field is deprecated from version 1.83.9. Use resource `tencentcloud_postgresql_backup_plan` to manage PG instance backup plan. Specify DB backup plan.
 * `charge_type` - (Optional, String) Pay type of the postgresql instance. Values `POSTPAID_BY_HOUR` (Default), `PREPAID`. It only support to update the type from `POSTPAID_BY_HOUR` to `PREPAID`.
 * `charset` - (Optional, String, ForceNew) Charset of the root account. Valid values are `UTF8`,`LATIN1`.
 * `cpu` - (Optional, Int) Number of CPU cores. Allowed value must be equal `cpu` that data source `tencentcloud_postgresql_specinfos` provides.

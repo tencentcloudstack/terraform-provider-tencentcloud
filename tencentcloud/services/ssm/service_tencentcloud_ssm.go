@@ -410,6 +410,43 @@ func (me *SsmService) DescribeSecretById(ctx context.Context, secretName string,
 	return
 }
 
+func (me *SsmService) DescribeSshKeyPairSecretValueBySecretName(ctx context.Context, secretName string) (sshKeyId string, errRet error) {
+	logId := tccommon.GetLogId(ctx)
+
+	request := ssm.NewGetSSHKeyPairValueRequest()
+	request.SecretName = &secretName
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	var response *ssm.GetSSHKeyPairValueResponse
+	err := resource.Retry(tccommon.ReadRetryTimeout, func() *resource.RetryError {
+		ratelimit.Check(request.GetAction())
+		result, e := me.client.UseSsmClient().GetSSHKeyPairValue(request)
+		if e != nil {
+			return tccommon.RetryError(e)
+		}
+
+		log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), result.ToJsonString())
+		response = result
+		return nil
+	})
+
+	if err != nil {
+		errRet = err
+		return
+	}
+
+	if response != nil && response.Response != nil && response.Response.SSHKeyID != nil {
+		sshKeyId = *response.Response.SSHKeyID
+	}
+
+	return
+}
+
 func (me *SsmService) DeleteSsmSshKeyPairSecretById(ctx context.Context, secretName string, cleanSSHKey *bool) (errRet error) {
 	logId := tccommon.GetLogId(ctx)
 

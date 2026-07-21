@@ -9,8 +9,16 @@ An AIGC API Token is an independent credential used when calling VOD AIGC-relate
 Example Usage
 
 ```hcl
+# create sub application
+resource "tencentcloud_vod_sub_application" "example" {
+  name        = "tf-example"
+  status      = "On"
+  description = "this is sub application"
+}
+
+# create api token
 resource "tencentcloud_vod_aigc_api_token" "example" {
-  sub_app_id = 251006666
+  sub_app_id = tencentcloud_vod_sub_application.example.sub_app_id
 }
 
 output "aigc_api_token" {
@@ -24,5 +32,5 @@ Import
 VOD AIGC API Token can be imported using the composite id `sub_app_id#api_token`, e.g.
 
 ```
-$ terraform import tencentcloud_vod_aigc_api_token.example 251006666#hGjH1dsBbjUbT9Cu
+terraform import tencentcloud_vod_aigc_api_token.example 1500066380#<YOUR TOKEN>
 ```

@@ -1125,7 +1125,7 @@ func (me *TkeService) DeleteClusterAsGroups(ctx context.Context, id, asGroupId s
 /*
 open internet access
 */
-func (me *TkeService) CreateClusterEndpoint(ctx context.Context, id string, subnetId, securityGroupId string, internet bool, domain string, extensiveParameters string) (errRet error) {
+func (me *TkeService) CreateClusterEndpoint(ctx context.Context, id string, subnetId, securityGroupId string, internet bool, domain string, extensiveParameters string, existedLoadBalancerId string) (errRet error) {
 	logId := tccommon.GetLogId(ctx)
 
 	request := tke.NewCreateClusterEndpointRequest()
@@ -1152,6 +1152,10 @@ func (me *TkeService) CreateClusterEndpoint(ctx context.Context, id string, subn
 
 	if extensiveParameters != "" {
 		request.ExtensiveParameters = helper.String(extensiveParameters)
+	}
+
+	if existedLoadBalancerId != "" {
+		request.ExistedLoadBalancerId = helper.String(existedLoadBalancerId)
 	}
 
 	ratelimit.Check(request.GetAction())
@@ -2646,7 +2650,7 @@ func ModifyClusterInternetOrIntranetAccess(ctx context.Context, d *schema.Resour
 	// open access
 	if enable {
 		err := resource.Retry(tccommon.WriteRetryTimeout, func() *resource.RetryError {
-			inErr := tkeSvc.CreateClusterEndpoint(ctx, id, subnetId, sg, isInternet, domain, "")
+			inErr := tkeSvc.CreateClusterEndpoint(ctx, id, subnetId, sg, isInternet, domain, "", "")
 			if inErr != nil {
 				return tccommon.RetryError(inErr)
 			}
@@ -2980,6 +2984,11 @@ func (me *TkeService) DescribeKubernetesAddonById(ctx context.Context, clusterId
 		ratelimit.Check(request.GetAction())
 		result, e := me.client.UseTkeClient().DescribeAddon(request)
 		if e != nil {
+			if sdkErr, ok := e.(*sdkErrors.TencentCloudSDKError); ok {
+				if strings.Contains(sdkErr.GetCode(), "ResourceNotFound") {
+					return nil
+				}
+			}
 			return tccommon.RetryError(e)
 		} else {
 			log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), result.ToJsonString())
@@ -3002,7 +3011,7 @@ func (me *TkeService) DescribeKubernetesAddonById(ctx context.Context, clusterId
 		return
 	}
 
-	if len(response.Response.Addons) < 1 {
+	if response == nil || response.Response == nil || len(response.Response.Addons) < 1 {
 		return
 	}
 
@@ -3924,6 +3933,37 @@ func (me *TkeService) DescribeKubernetesClusterMasterAttachmentByIds(ctx context
 	request.ClusterId = helper.String(clusterId)
 	request.InstanceIds = instanceIds
 	request.InstanceRole = nodeRole
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	ratelimit.Check(request.GetAction())
+	response, err := me.client.UseTkeV20180525Client().DescribeClusterInstances(request)
+	if err != nil {
+		errRet = err
+		return
+	}
+
+	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+	ret = response.Response
+	return
+}
+
+func (me *TkeService) DescribeKubernetesClusteInstancesById(ctx context.Context, clusterId, nodePoolId string) (ret *tke.DescribeClusterInstancesResponseParams, errRet error) {
+	logId := tccommon.GetLogId(ctx)
+
+	request := tke.NewDescribeClusterInstancesRequest()
+	request.ClusterId = helper.String(clusterId)
+	request.Filters = []*tke.Filter{
+		{
+			Name:   common.StringPtr("nodepool-id"),
+			Values: common.StringPtrs([]string{nodePoolId}),
+		},
+	}
 
 	defer func() {
 		if errRet != nil {

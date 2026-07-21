@@ -9,6 +9,7 @@ import (
 
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
+	sdkErrors "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/common/errors"
 	ga2v20250115 "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/ga2/v20250115"
 
 	tccommon "github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/common"
@@ -79,7 +80,7 @@ func ResourceTencentCloudGa2Listener() *schema.Resource {
 				Optional:    true,
 				Computed:    true,
 				ForceNew:    true,
-				Description: "Listener routing type. Defaults to smart routing. Cannot be modified after creation.",
+				Description: "Listener routing type. Valid values: `Standard` (smart routing). Default: `Standard`. Cannot be modified after creation; modifying it forces a new resource.",
 			},
 			"protocol": {
 				Type:        schema.TypeString,
@@ -89,68 +90,80 @@ func ResourceTencentCloudGa2Listener() *schema.Resource {
 				Description: "Listener protocol. Valid values: `TCP`, `UDP`, `HTTP`, `HTTPS`. Default: `TCP`. Cannot be modified after creation.",
 			},
 			"idle_timeout": {
-				Type:        schema.TypeInt,
-				Optional:    true,
-				Computed:    true,
-				Description: "Connection idle timeout in seconds.",
+				Type:     schema.TypeInt,
+				Optional: true,
+				Computed: true,
+				Description: "Connection idle timeout in seconds. Valid range and default value depend on the listener protocol: " +
+					"`1-60` for HTTP/HTTPS listeners (default `15`), `10-900` for TCP listeners (default `900`), " +
+					"`10-20` for UDP listeners (default `20`).",
 			},
 			"get_real_ip_type": {
-				Type:        schema.TypeString,
-				Optional:    true,
-				Computed:    true,
-				Description: "Layer-4 real-IP method. Valid values: `TOA`, `ProxyProtocol`.",
+				Type:     schema.TypeString,
+				Optional: true,
+				Computed: true,
+				Description: "Method used to retrieve the real client IP for layer-4 listeners. Valid values: `TOA`, `ProxyProtocol`, " +
+					"`ProxyProtocolV2`, `Close`. Only takes effect when the layer-4 real-IP feature is enabled. " +
+					"Only TCP listeners support modifying this field after creation.",
 			},
 			"client_affinity": {
-				Type:        schema.TypeString,
-				Optional:    true,
-				Computed:    true,
-				Description: "Whether to enable session stickiness.",
+				Type:     schema.TypeString,
+				Optional: true,
+				Computed: true,
+				Description: "Whether to enable session stickiness. Valid values: `Open`, `Close`. " +
+					"Only TCP/UDP listeners support modifying this field.",
 			},
 			"client_affinity_time": {
 				Type:     schema.TypeInt,
 				Optional: true,
 				Computed: true,
-				Description: "Session-stickiness duration in seconds. " +
+				Description: "Session-stickiness duration in seconds. Valid range: [60, 3600]. " +
 					"NOTE: this field is silently ignored on Create (the SDK CreateListener API has no equivalent slot) " +
 					"and forwarded only on Update via ModifyListener.",
 			},
 			"request_timeout": {
-				Type:        schema.TypeInt,
-				Optional:    true,
-				Computed:    true,
-				Description: "Request timeout in seconds.",
+				Type:     schema.TypeInt,
+				Optional: true,
+				Computed: true,
+				Description: "Request timeout in seconds. Valid range: [1, 180]. Default: `60`. " +
+					"Only applicable to HTTP/HTTPS listeners.",
 			},
 			"x_forwarded_for_real_ip": {
-				Type:        schema.TypeBool,
-				Optional:    true,
-				Computed:    true,
-				Description: "Whether to enable layer-7 real-IP forwarding.",
+				Type:     schema.TypeBool,
+				Optional: true,
+				Computed: true,
+				Description: "Whether to enable layer-7 real-IP forwarding (X-Forwarded-For). " +
+					"Only HTTP/HTTPS listeners support modifying this field.",
 			},
 			"certification_type": {
-				Type:        schema.TypeString,
-				Optional:    true,
-				Computed:    true,
-				Description: "SSL authentication mode. Valid values: `UNIDIRECTIONAL`, `MUTUAL`.",
+				Type:     schema.TypeString,
+				Optional: true,
+				Computed: true,
+				Description: "SSL authentication mode. Valid values: `UNIDIRECTIONAL` (one-way authentication, server certificate only), " +
+					"`MUTUAL` (mutual/two-way authentication, requires both server and client certificates). " +
+					"Required when the listener protocol is `HTTPS`. Only HTTP/HTTPS listeners support modifying this field.",
 			},
 			"cipher_policy_id": {
-				Type:        schema.TypeString,
-				Optional:    true,
-				Computed:    true,
-				Description: "TLS cipher policy ID.",
+				Type:     schema.TypeString,
+				Optional: true,
+				Computed: true,
+				Description: "TLS cipher suite policy. Valid values: `tls_policy_1.0-2`, `tls_policy_1.1-2`, `tls_policy_1.2`, " +
+					"`tls_policy_1.2_strict`, `tls_policy_1.2_strict-1.3`. Only HTTPS listeners support configuring/modifying this field.",
 			},
 			"server_certificates": {
-				Type:        schema.TypeSet,
-				Optional:    true,
-				Computed:    true,
-				Elem:        &schema.Schema{Type: schema.TypeString},
-				Description: "Server certificate ID list. Treated as an unordered set; HCL element order has no semantic meaning.",
+				Type:     schema.TypeSet,
+				Optional: true,
+				Computed: true,
+				Elem:     &schema.Schema{Type: schema.TypeString},
+				Description: "Server certificate ID list. Required when the listener protocol is `HTTPS`. " +
+					"Only HTTPS listeners support modifying this field. Treated as an unordered set; HCL element order has no semantic meaning.",
 			},
 			"client_ca_certificates": {
-				Type:        schema.TypeSet,
-				Optional:    true,
-				Computed:    true,
-				Elem:        &schema.Schema{Type: schema.TypeString},
-				Description: "Client CA certificate ID list. Treated as an unordered set; HCL element order has no semantic meaning.",
+				Type:     schema.TypeSet,
+				Optional: true,
+				Computed: true,
+				Elem:     &schema.Schema{Type: schema.TypeString},
+				Description: "Client CA certificate ID list. Required when the listener protocol is `HTTPS` and `certification_type` " +
+					"is `MUTUAL`. Only HTTPS listeners support modifying this field. Treated as an unordered set; HCL element order has no semantic meaning.",
 			},
 
 			// Computed
@@ -162,7 +175,7 @@ func ResourceTencentCloudGa2Listener() *schema.Resource {
 			"http_version": {
 				Type:        schema.TypeString,
 				Computed:    true,
-				Description: "HTTP version negotiated for this listener.",
+				Description: "HTTP version negotiated for this listener. Valid values: `HTTP/1.1`, `HTTP/2`. Only applicable to HTTPS listeners.",
 			},
 			"create_time": {
 				Type:        schema.TypeString,
@@ -607,6 +620,12 @@ func resourceTencentCloudGa2ListenerDelete(d *schema.ResourceData, meta interfac
 	reqErr := resource.Retry(tccommon.WriteRetryTimeout, func() *resource.RetryError {
 		result, e := meta.(tccommon.ProviderMeta).GetAPIV3Conn().UseGa2V20250115Client().DeleteListenerWithContext(ctx, request)
 		if e != nil {
+			if sdkerr, ok := e.(*sdkErrors.TencentCloudSDKError); ok {
+				if sdkerr.Code == "ResourceNotFound" {
+					return nil
+				}
+			}
+
 			return tccommon.RetryError(e, "UnsupportedOperation.InstanceNotRunning", "UnsupportedOperation.InstanceStateNotAllowedOperate")
 		} else {
 			log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), result.ToJsonString())

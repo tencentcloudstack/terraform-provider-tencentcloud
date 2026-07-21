@@ -135,10 +135,10 @@ func ResourceTencentCloudInstance() *schema.Resource {
 				Elem: &schema.Schema{
 					Type: schema.TypeString,
 				},
-				Optional:      true,
-				ForceNew:      true,
-				ConflictsWith: []string{"placement_group_id"},
-				Description:   "Placement group ID.",
+				Optional:    true,
+				Computed:    true,
+				MaxItems:    3,
+				Description: "Placement group ID list. Supports up to 3 group IDs. When set, `placement_group_id` will be ignored and this list will be used for CRUD operations.",
 			},
 			"placement_group_id": {
 				Type:        schema.TypeString,
@@ -147,10 +147,15 @@ func ResourceTencentCloudInstance() *schema.Resource {
 				Description: "The ID of a placement group.",
 			},
 			"force_replace_placement_group_id": {
-				Type:         schema.TypeBool,
+				Type:        schema.TypeBool,
+				Optional:    true,
+				Description: "Whether to force the instance host to be replaced. Value range: true: Allows the instance to change the host and restart the instance. Local disk machines do not support specifying this parameter; false: Does not allow the instance to change the host and only join the placement group on the current host. This may cause the placement group to fail to change. Can be used with both `placement_group_id` and `disaster_recover_group_ids`. Default is false.",
+			},
+			"partition_number": {
+				Type:         schema.TypeInt,
 				Optional:     true,
-				RequiredWith: []string{"placement_group_id"},
-				Description:  "Whether to force the instance host to be replaced. Value range: true: Allows the instance to change the host and restart the instance. Local disk machines do not support specifying this parameter; false: Does not allow the instance to change the host and only join the placement group on the current host. This may cause the placement group to fail to change. Only useful for change `placement_group_id`, Default is false.",
+				ValidateFunc: tccommon.ValidateIntegerInRange(1, 30),
+				Description:  "The partition number of the placement group. Valid values: 1-30. If not specified when creating an instance with a partition placement group, the partition number will be randomly assigned. Required when modifying `disaster_recover_group_ids` or `placement_group_id` in update operations.",
 			},
 			// payment
 			"instance_charge_type": {
@@ -326,6 +331,20 @@ func ResourceTencentCloudInstance() *schema.Resource {
 				Optional:    true,
 				Computed:    true,
 				Description: "Name of the system disk.",
+			},
+			"system_disk_encrypt": {
+				Type:        schema.TypeBool,
+				Optional:    true,
+				ForceNew:    true,
+				Computed:    true,
+				Description: "Whether the system disk is encrypted. Valid values: true (encrypted), false (not encrypted). Default value: false.",
+			},
+			"system_disk_kms_key_id": {
+				Type:        schema.TypeString,
+				Optional:    true,
+				ForceNew:    true,
+				Computed:    true,
+				Description: "Custom KMS key ID for system disk encryption.",
 			},
 			"system_disk_resize_online": {
 				Type:        schema.TypeBool,
@@ -766,23 +785,26 @@ func resourceTencentCloudInstanceCreate(d *schema.ResourceData, meta interface{}
 		}
 	}
 
-	// Check for disaster_recover_group_ids first (new field)
+	// Check for disaster_recover_group_ids first (takes priority over placement_group_id)
+	var rpgFlag bool
+	if v, ok := d.GetOkExists("force_replace_placement_group_id"); ok {
+		rpgFlag = v.(bool)
+	}
+
 	if v, ok := d.GetOk("disaster_recover_group_ids"); ok {
 		disasterRecoverGroupIdsSet := v.(*schema.Set).List()
 		for i := range disasterRecoverGroupIdsSet {
 			disasterRecoverGroupId := disasterRecoverGroupIdsSet[i].(string)
 			request.DisasterRecoverGroupIds = append(request.DisasterRecoverGroupIds, &disasterRecoverGroupId)
 		}
-	}
-
-	var rpgFlag bool
-	if v, ok := d.GetOkExists("force_replace_placement_group_id"); ok {
-		rpgFlag = v.(bool)
-	}
-
-	if !rpgFlag {
-		if v, ok := d.GetOk("placement_group_id"); ok {
-			request.DisasterRecoverGroupIds = []*string{helper.String(v.(string))}
+		if v, ok := d.GetOkExists("partition_number"); ok {
+			request.PartitionNumber = helper.IntInt64(v.(int))
+		}
+	} else {
+		if !rpgFlag {
+			if v, ok := d.GetOk("placement_group_id"); ok {
+				request.DisasterRecoverGroupIds = []*string{helper.String(v.(string))}
+			}
 		}
 	}
 
@@ -890,6 +912,16 @@ func resourceTencentCloudInstanceCreate(d *schema.ResourceData, meta interface{}
 
 	if v, ok := d.GetOk("system_disk_name"); ok {
 		systemDisk.DiskName = helper.String(v.(string))
+		systemDiskFlag = true
+	}
+
+	if v, ok := d.GetOkExists("system_disk_encrypt"); ok {
+		systemDisk.Encrypt = helper.Bool(v.(bool))
+		systemDiskFlag = true
+	}
+
+	if v, ok := d.GetOk("system_disk_kms_key_id"); ok {
+		systemDisk.KmsKeyId = helper.String(v.(string))
 		systemDiskFlag = true
 	}
 
@@ -1126,53 +1158,56 @@ func resourceTencentCloudInstanceCreate(d *schema.ResourceData, meta interface{}
 		return err
 	}
 
-	// set placement group id
+	// set placement group id (only for placement_group_id with force_replace, since disaster_recover_group_ids is already passed in RunInstances)
 	if rpgFlag {
 		if v, ok := d.GetOk("placement_group_id"); ok && v != "" {
-			request := cvm.NewModifyInstancesDisasterRecoverGroupRequest()
-			request.InstanceIds = helper.Strings([]string{instanceId})
-			request.DisasterRecoverGroupId = helper.String(v.(string))
-			request.Force = helper.Bool(rpgFlag)
-			err = resource.Retry(tccommon.WriteRetryTimeout, func() *resource.RetryError {
-				result, e := meta.(tccommon.ProviderMeta).GetAPIV3Conn().UseCvmClient().ModifyInstancesDisasterRecoverGroup(request)
-				if e != nil {
-					return tccommon.RetryError(e)
-				} else {
-					log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), result.ToJsonString())
-				}
-
-				return nil
-			})
-
-			if err != nil {
-				return err
-			}
-
-			// wait
-			err = resource.Retry(d.Timeout(schema.TimeoutCreate), func() *resource.RetryError {
-				instance, errRet := cvmService.DescribeInstanceById(ctx, instanceId)
-				if errRet != nil {
-					return tccommon.RetryError(errRet, tccommon.InternalError)
-				}
-
-				if instance != nil && *instance.InstanceState == CVM_STATUS_LAUNCH_FAILED {
-					//LatestOperationCodeMode
-					if instance.LatestOperationErrorMsg != nil {
-						return resource.NonRetryableError(fmt.Errorf("cvm instance %s launch failed. Error msg: %s.\n", *instance.InstanceId, *instance.LatestOperationErrorMsg))
+			// Only use ModifyInstancesDisasterRecoverGroup for placement_group_id when disaster_recover_group_ids is not set
+			if _, ok := d.GetOk("disaster_recover_group_ids"); !ok {
+				request := cvm.NewModifyInstancesDisasterRecoverGroupRequest()
+				request.InstanceIds = helper.Strings([]string{instanceId})
+				request.DisasterRecoverGroupId = helper.String(v.(string))
+				request.Force = helper.Bool(rpgFlag)
+				err = resource.Retry(tccommon.WriteRetryTimeout, func() *resource.RetryError {
+					result, e := meta.(tccommon.ProviderMeta).GetAPIV3Conn().UseCvmClient().ModifyInstancesDisasterRecoverGroup(request)
+					if e != nil {
+						return tccommon.RetryError(e)
+					} else {
+						log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), result.ToJsonString())
 					}
 
-					return resource.NonRetryableError(fmt.Errorf("cvm instance %s launch failed, this resource will not be stored to tfstate and will auto removed\n.", *instance.InstanceId))
-				}
-
-				if instance != nil && *instance.InstanceState == CVM_STATUS_RUNNING {
 					return nil
+				})
+
+				if err != nil {
+					return err
 				}
 
-				return resource.RetryableError(fmt.Errorf("cvm instance status is %s, retry...", *instance.InstanceState))
-			})
+				// wait
+				err = resource.Retry(d.Timeout(schema.TimeoutCreate), func() *resource.RetryError {
+					instance, errRet := cvmService.DescribeInstanceById(ctx, instanceId)
+					if errRet != nil {
+						return tccommon.RetryError(errRet, tccommon.InternalError)
+					}
 
-			if err != nil {
-				return err
+					if instance != nil && *instance.InstanceState == CVM_STATUS_LAUNCH_FAILED {
+						//LatestOperationCodeMode
+						if instance.LatestOperationErrorMsg != nil {
+							return resource.NonRetryableError(fmt.Errorf("cvm instance %s launch failed. Error msg: %s.\n", *instance.InstanceId, *instance.LatestOperationErrorMsg))
+						}
+
+						return resource.NonRetryableError(fmt.Errorf("cvm instance %s launch failed, this resource will not be stored to tfstate and will auto removed\n.", *instance.InstanceId))
+					}
+
+					if instance != nil && *instance.InstanceState == CVM_STATUS_RUNNING {
+						return nil
+					}
+
+					return resource.RetryableError(fmt.Errorf("cvm instance status is %s, retry...", *instance.InstanceState))
+				})
+
+				if err != nil {
+					return err
+				}
 			}
 		}
 	}
@@ -1333,6 +1368,14 @@ func resourceTencentCloudInstanceRead(d *schema.ResourceData, meta interface{}) 
 	_ = d.Set("system_disk_type", instance.SystemDisk.DiskType)
 	_ = d.Set("system_disk_size", instance.SystemDisk.DiskSize)
 	_ = d.Set("system_disk_id", instance.SystemDisk.DiskId)
+	if instance.SystemDisk.Encrypt != nil {
+		_ = d.Set("system_disk_encrypt", instance.SystemDisk.Encrypt)
+	}
+
+	if instance.SystemDisk.KmsKeyId != nil {
+		_ = d.Set("system_disk_kms_key_id", instance.SystemDisk.KmsKeyId)
+	}
+
 	_ = d.Set("instance_status", instance.InstanceState)
 	_ = d.Set("create_time", instance.CreatedTime)
 	_ = d.Set("expired_time", instance.ExpiredTime)
@@ -1361,7 +1404,19 @@ func resourceTencentCloudInstanceRead(d *schema.ResourceData, meta interface{}) 
 	}
 
 	if instance.DisasterRecoverGroupId != nil {
-		_ = d.Set("placement_group_id", instance.DisasterRecoverGroupId)
+		// Only set placement_group_id from API if disaster_recover_group_ids is NOT in use,
+		// to avoid overwriting the user's configured value and causing plan diffs.
+		if _, ok := d.GetOk("disaster_recover_group_ids"); !ok {
+			_ = d.Set("placement_group_id", instance.DisasterRecoverGroupId)
+		}
+	}
+
+	if len(instance.DisasterRecoverGroupIds) > 0 {
+		_ = d.Set("disaster_recover_group_ids", instance.DisasterRecoverGroupIds)
+		// partition_number is only valid when disaster_recover_group_ids is set and non-empty.
+		if instance.PartitionNumber != nil {
+			_ = d.Set("partition_number", instance.PartitionNumber)
+		}
 	}
 
 	if *instance.InstanceChargeType == CVM_CHARGE_TYPE_CDHPAID {
@@ -2093,6 +2148,13 @@ func resourceTencentCloudInstanceUpdate(d *schema.ResourceData, meta interface{}
 			request.ImageId = helper.String(v.(string))
 		}
 
+		// system disk
+		if v, ok := d.GetOk("kms_key_id"); ok {
+			request.SystemDisk = &cvm.SystemDisk{
+				KmsKeyId: helper.String(v.(string)),
+			}
+		}
+
 		// enhanced service
 		var (
 			enhancedService     cvm.EnhancedService
@@ -2471,25 +2533,26 @@ func resourceTencentCloudInstanceUpdate(d *schema.ResourceData, meta interface{}
 		}
 	}
 
-	if d.HasChange("placement_group_id") || d.HasChange("force_replace_placement_group_id") {
-		oldPGI, newPGI := d.GetChange("placement_group_id")
-		oldPGIStr := oldPGI.(string)
-		newPGIStr := newPGI.(string)
-		if newPGIStr == "" {
-			// wait cvm support delete DisasterRecoverGroupId
-			return fmt.Errorf("Deleting `placement_group_id` is not currently supported.")
-		} else {
-			if oldPGIStr == newPGIStr {
-				return fmt.Errorf("It is not possible to change only `force_replace_placement_group_id`, it needs to be modified together with `placement_group_id`.")
+	if d.HasChange("disaster_recover_group_ids") || d.HasChange("placement_group_id") || d.HasChange("force_replace_placement_group_id") || d.HasChange("partition_number") {
+		// Check if disaster_recover_group_ids is set - it takes priority.
+		// partition_number is only valid when disaster_recover_group_ids is set and non-empty.
+		disasterRecoverGroupIdsSet := d.Get("disaster_recover_group_ids").(*schema.Set).List()
+		if len(disasterRecoverGroupIdsSet) > 0 {
+			groupIds := make([]*string, 0, len(disasterRecoverGroupIdsSet))
+			for i := range disasterRecoverGroupIdsSet {
+				groupId := disasterRecoverGroupIdsSet[i].(string)
+				groupIds = append(groupIds, &groupId)
 			}
 
 			request := cvm.NewModifyInstancesDisasterRecoverGroupRequest()
+			request.InstanceIds = helper.Strings([]string{instanceId})
+			request.DisasterRecoverGroupIds = groupIds
 			if v, ok := d.GetOkExists("force_replace_placement_group_id"); ok {
 				request.Force = helper.Bool(v.(bool))
 			}
-
-			request.InstanceIds = helper.Strings([]string{instanceId})
-			request.DisasterRecoverGroupId = helper.String(newPGIStr)
+			if v, ok := d.GetOk("partition_number"); ok {
+				request.PartitionNumber = helper.IntInt64(v.(int))
+			}
 			err = resource.Retry(tccommon.WriteRetryTimeout, func() *resource.RetryError {
 				result, e := meta.(tccommon.ProviderMeta).GetAPIV3Conn().UseCvmClient().ModifyInstancesDisasterRecoverGroup(request)
 				if e != nil {
@@ -2504,33 +2567,47 @@ func resourceTencentCloudInstanceUpdate(d *schema.ResourceData, meta interface{}
 			if err != nil {
 				return err
 			}
-
-			// wait
-			err = resource.Retry(d.Timeout(schema.TimeoutCreate), func() *resource.RetryError {
-				instance, errRet := cvmService.DescribeInstanceById(ctx, instanceId)
-				if errRet != nil {
-					return tccommon.RetryError(errRet, tccommon.InternalError)
+		} else {
+			// Use placement_group_id (legacy behavior)
+			oldPGI, newPGI := d.GetChange("placement_group_id")
+			oldPGIStr := oldPGI.(string)
+			newPGIStr := newPGI.(string)
+			if newPGIStr == "" {
+				// wait cvm support delete DisasterRecoverGroupId
+				return fmt.Errorf("Deleting `placement_group_id` is not currently supported.")
+			} else {
+				if oldPGIStr == newPGIStr {
+					return fmt.Errorf("It is not possible to change only `force_replace_placement_group_id`, it needs to be modified together with `placement_group_id`.")
 				}
 
-				if instance != nil && *instance.InstanceState == CVM_STATUS_LAUNCH_FAILED {
-					//LatestOperationCodeMode
-					if instance.LatestOperationErrorMsg != nil {
-						return resource.NonRetryableError(fmt.Errorf("cvm instance %s launch failed. Error msg: %s.\n", *instance.InstanceId, *instance.LatestOperationErrorMsg))
+				request := cvm.NewModifyInstancesDisasterRecoverGroupRequest()
+				if v, ok := d.GetOkExists("force_replace_placement_group_id"); ok {
+					request.Force = helper.Bool(v.(bool))
+				}
+
+				request.InstanceIds = helper.Strings([]string{instanceId})
+				request.DisasterRecoverGroupId = helper.String(newPGIStr)
+				err = resource.Retry(tccommon.WriteRetryTimeout, func() *resource.RetryError {
+					result, e := meta.(tccommon.ProviderMeta).GetAPIV3Conn().UseCvmClient().ModifyInstancesDisasterRecoverGroup(request)
+					if e != nil {
+						return tccommon.RetryError(e)
+					} else {
+						log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), result.ToJsonString())
 					}
 
-					return resource.NonRetryableError(fmt.Errorf("cvm instance %s launch failed, this resource will not be stored to tfstate and will auto removed\n.", *instance.InstanceId))
-				}
-
-				if instance != nil && *instance.InstanceState == CVM_STATUS_RUNNING {
 					return nil
+				})
+
+				if err != nil {
+					return err
 				}
-
-				return resource.RetryableError(fmt.Errorf("cvm instance status is %s, retry...", *instance.InstanceState))
-			})
-
-			if err != nil {
-				return err
 			}
+		}
+
+		// Wait for operation to finish
+		err = waitForOperationFinished(d, meta, 2*tccommon.ReadRetryTimeout, CVM_LATEST_OPERATION_STATE_OPERATING, false)
+		if err != nil {
+			return err
 		}
 	}
 

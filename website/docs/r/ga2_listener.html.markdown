@@ -67,6 +67,28 @@ resource "tencentcloud_ga2_listener" "example2" {
 
   depends_on = [tencentcloud_ga2_listener.example1]
 }
+
+resource "tencentcloud_ga2_listener" "example3" {
+  global_accelerator_id = tencentcloud_ga2_accelerate_area.example.global_accelerator_id
+  name                  = "tf-example-https"
+  protocol              = "HTTPS"
+
+  port_ranges {
+    from_port = 9090
+    to_port   = 9090
+  }
+
+  listener_type           = "Standard"
+  idle_timeout            = 38
+  request_timeout         = 60
+  x_forwarded_for_real_ip = true
+  certification_type      = "MUTUAL"
+  cipher_policy_id        = "tls_policy_1.2_strict-1.3"
+  server_certificates     = ["Yj6CmODs"]
+  client_ca_certificates  = ["W6aH2tOc"]
+
+  depends_on = [tencentcloud_ga2_listener.example2]
+}
 ```
 
 ## Argument Reference
@@ -75,20 +97,20 @@ The following arguments are supported:
 
 * `global_accelerator_id` - (Required, String, ForceNew) Global accelerator instance ID this listener belongs to.
 * `port_ranges` - (Required, List, ForceNew) Listening port range. Cannot be modified after creation; modifying it forces a new resource.
-* `certification_type` - (Optional, String) SSL authentication mode. Valid values: `UNIDIRECTIONAL`, `MUTUAL`.
-* `cipher_policy_id` - (Optional, String) TLS cipher policy ID.
-* `client_affinity_time` - (Optional, Int) Session-stickiness duration in seconds. NOTE: this field is silently ignored on Create (the SDK CreateListener API has no equivalent slot) and forwarded only on Update via ModifyListener.
-* `client_affinity` - (Optional, String) Whether to enable session stickiness.
-* `client_ca_certificates` - (Optional, Set: [`String`]) Client CA certificate ID list. Treated as an unordered set; HCL element order has no semantic meaning.
+* `certification_type` - (Optional, String) SSL authentication mode. Valid values: `UNIDIRECTIONAL` (one-way authentication, server certificate only), `MUTUAL` (mutual/two-way authentication, requires both server and client certificates). Required when the listener protocol is `HTTPS`. Only HTTP/HTTPS listeners support modifying this field.
+* `cipher_policy_id` - (Optional, String) TLS cipher suite policy. Valid values: `tls_policy_1.0-2`, `tls_policy_1.1-2`, `tls_policy_1.2`, `tls_policy_1.2_strict`, `tls_policy_1.2_strict-1.3`. Only HTTPS listeners support configuring/modifying this field.
+* `client_affinity_time` - (Optional, Int) Session-stickiness duration in seconds. Valid range: [60, 3600]. NOTE: this field is silently ignored on Create (the SDK CreateListener API has no equivalent slot) and forwarded only on Update via ModifyListener.
+* `client_affinity` - (Optional, String) Whether to enable session stickiness. Valid values: `Open`, `Close`. Only TCP/UDP listeners support modifying this field.
+* `client_ca_certificates` - (Optional, Set: [`String`]) Client CA certificate ID list. Required when the listener protocol is `HTTPS` and `certification_type` is `MUTUAL`. Only HTTPS listeners support modifying this field. Treated as an unordered set; HCL element order has no semantic meaning.
 * `description` - (Optional, String) Listener description. Maximum length is 100 bytes.
-* `get_real_ip_type` - (Optional, String) Layer-4 real-IP method. Valid values: `TOA`, `ProxyProtocol`.
-* `idle_timeout` - (Optional, Int) Connection idle timeout in seconds.
-* `listener_type` - (Optional, String, ForceNew) Listener routing type. Defaults to smart routing. Cannot be modified after creation.
+* `get_real_ip_type` - (Optional, String) Method used to retrieve the real client IP for layer-4 listeners. Valid values: `TOA`, `ProxyProtocol`, `ProxyProtocolV2`, `Close`. Only takes effect when the layer-4 real-IP feature is enabled. Only TCP listeners support modifying this field after creation.
+* `idle_timeout` - (Optional, Int) Connection idle timeout in seconds. Valid range and default value depend on the listener protocol: `1-60` for HTTP/HTTPS listeners (default `15`), `10-900` for TCP listeners (default `900`), `10-20` for UDP listeners (default `20`).
+* `listener_type` - (Optional, String, ForceNew) Listener routing type. Valid values: `Standard` (smart routing). Default: `Standard`. Cannot be modified after creation; modifying it forces a new resource.
 * `name` - (Optional, String) Listener name. Maximum length is 60 bytes.
 * `protocol` - (Optional, String, ForceNew) Listener protocol. Valid values: `TCP`, `UDP`, `HTTP`, `HTTPS`. Default: `TCP`. Cannot be modified after creation.
-* `request_timeout` - (Optional, Int) Request timeout in seconds.
-* `server_certificates` - (Optional, Set: [`String`]) Server certificate ID list. Treated as an unordered set; HCL element order has no semantic meaning.
-* `x_forwarded_for_real_ip` - (Optional, Bool) Whether to enable layer-7 real-IP forwarding.
+* `request_timeout` - (Optional, Int) Request timeout in seconds. Valid range: [1, 180]. Default: `60`. Only applicable to HTTP/HTTPS listeners.
+* `server_certificates` - (Optional, Set: [`String`]) Server certificate ID list. Required when the listener protocol is `HTTPS`. Only HTTPS listeners support modifying this field. Treated as an unordered set; HCL element order has no semantic meaning.
+* `x_forwarded_for_real_ip` - (Optional, Bool) Whether to enable layer-7 real-IP forwarding (X-Forwarded-For). Only HTTP/HTTPS listeners support modifying this field.
 
 The `port_ranges` object supports the following:
 
@@ -102,7 +124,7 @@ In addition to all arguments above, the following attributes are exported:
 * `id` - ID of the resource.
 * `create_time` - Listener creation time.
 * `endpoint_group_counts` - Number of endpoint groups attached to this listener.
-* `http_version` - HTTP version negotiated for this listener.
+* `http_version` - HTTP version negotiated for this listener. Valid values: `HTTP/1.1`, `HTTP/2`. Only applicable to HTTPS listeners.
 * `listener_id` - Listener instance ID.
 * `status` - Listener operational status.
 

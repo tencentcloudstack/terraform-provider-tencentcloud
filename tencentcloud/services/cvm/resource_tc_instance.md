@@ -60,6 +60,7 @@ resource "tencentcloud_instance" "example" {
   instance_type        = data.tencentcloud_instance_types.types.instance_types.0.instance_type
   system_disk_type     = "CLOUD_PREMIUM"
   system_disk_size     = 50
+  kms_key_id           = "kms-xxxxxxxx"
   hostname             = "user"
   project_id           = 0
   vpc_id               = tencentcloud_vpc.vpc.id

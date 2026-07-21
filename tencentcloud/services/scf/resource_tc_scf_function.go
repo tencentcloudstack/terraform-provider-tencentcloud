@@ -5,7 +5,7 @@ import (
 	"encoding/base64"
 	"encoding/json"
 	"fmt"
-	"io/ioutil"
+	"io"
 	"log"
 	"os"
 	"strings"
@@ -531,6 +531,100 @@ func ResourceTencentCloudScfFunction() *schema.Resource {
 					},
 				},
 			},
+			"instance_concurrency_config": {
+				Type:        schema.TypeList,
+				Optional:    true,
+				MaxItems:    1,
+				Description: "Instance concurrency configuration for the function.",
+				Elem: &schema.Resource{
+					Schema: map[string]*schema.Schema{
+						"dynamic_enabled": {
+							Type:        schema.TypeString,
+							Optional:    true,
+							Description: "Whether to enable intelligent dynamic concurrency. Valid values: 'TRUE', 'FALSE'. 'FALSE' means static concurrency.",
+						},
+						"max_concurrency": {
+							Type:        schema.TypeInt,
+							Optional:    true,
+							Description: "Maximum single-instance concurrency, range: 1-100.",
+						},
+						"instance_isolation_enabled": {
+							Type:        schema.TypeString,
+							Optional:    true,
+							Description: "Security isolation switch. Valid values: 'TRUE', 'FALSE'.",
+						},
+						"type": {
+							Type:        schema.TypeString,
+							Optional:    true,
+							Description: "Concurrency mode, valid values: 'Session-Based' or 'Request-Based'.",
+						},
+						"mix_node_config": {
+							Type:        schema.TypeList,
+							Optional:    true,
+							Description: "Dynamic concurrency configuration parameters.",
+							Elem: &schema.Resource{
+								Schema: map[string]*schema.Schema{
+									"node_spec": {
+										Type:        schema.TypeString,
+										Optional:    true,
+										Description: "GPU model name.",
+									},
+									"num": {
+										Type:        schema.TypeInt,
+										Optional:    true,
+										Description: "Number of concurrent instances.",
+									},
+								},
+							},
+						},
+						"session_config": {
+							Type:        schema.TypeList,
+							Optional:    true,
+							MaxItems:    1,
+							Description: "Session configuration parameters.",
+							Elem: &schema.Resource{
+								Schema: map[string]*schema.Schema{
+									"session_source": {
+										Type:        schema.TypeString,
+										Optional:    true,
+										Description: "Session source. Valid values: 'HEADER', 'COOKIE', 'QUERY_STRING'.",
+									},
+									"session_name": {
+										Type:        schema.TypeString,
+										Optional:    true,
+										Description: "Session name, starts with a letter, length 5-40 characters, can contain letters, digits, underscores, and hyphens.",
+									},
+									"maximum_concurrency_session_per_instance": {
+										Type:        schema.TypeInt,
+										Optional:    true,
+										Description: "Maximum number of concurrent sessions per instance.",
+									},
+									"maximum_ttl_in_seconds": {
+										Type:        schema.TypeInt,
+										Optional:    true,
+										Description: "Session lifecycle in seconds.",
+									},
+									"maximum_idle_time_in_seconds": {
+										Type:        schema.TypeInt,
+										Optional:    true,
+										Description: "Session idle timeout in seconds.",
+									},
+									"session_path": {
+										Type:        schema.TypeString,
+										Optional:    true,
+										Description: "Session path information.",
+									},
+									"idle_timeout_strategy": {
+										Type:        schema.TypeString,
+										Optional:    true,
+										Description: "Idle timeout strategy. Valid values: 'FATAL' for auto destroy, 'PAUSE' for auto pause. Only available when security isolation is enabled.",
+									},
+								},
+							},
+						},
+					},
+				},
+			},
 			"function_id": {
 				Type:        schema.TypeString,
 				Computed:    true,
@@ -673,12 +767,11 @@ func resourceTencentCloudScfFunctionCreate(d *schema.ResourceData, m interface{}
 			return fmt.Errorf("zip file (%s) open error: %s", path, err.Error())
 		}
 		defer func() {
-			if cErr := file.Close(); cErr != nil && err == nil {
-				log.Printf("[DEBUG] Create zip file (%s) close error: %s", path, cErr.Error())
+			if closeErr := file.Close(); closeErr != nil {
+				log.Printf("[CRITAL] zip file (%s) close error: %s", path, closeErr.Error())
 			}
 		}()
-
-		body, err := ioutil.ReadAll(file)
+		body, err := io.ReadAll(file)
 		if err != nil {
 			return fmt.Errorf("zip file (%s) read error: %s", path, err.Error())
 		}
@@ -796,6 +889,77 @@ func resourceTencentCloudScfFunctionCreate(d *schema.ResourceData, m interface{}
 			intranetConfigs = append(intranetConfigs, config)
 		}
 		functionInfo.intranetConfig = intranetConfigs[0]
+	}
+	if raw, ok := d.GetOk("instance_concurrency_config"); ok {
+		configs := raw.([]interface{})
+		if len(configs) > 0 {
+			config := configs[0].(map[string]interface{})
+			instanceConcurrencyConfig := &scf.InstanceConcurrencyConfig{}
+
+			if v, ok := config["dynamic_enabled"]; ok && v.(string) != "" {
+				instanceConcurrencyConfig.DynamicEnabled = helper.String(v.(string))
+			}
+			if v, ok := config["max_concurrency"]; ok {
+				instanceConcurrencyConfig.MaxConcurrency = helper.IntUint64(v.(int))
+			}
+			if v, ok := config["instance_isolation_enabled"]; ok && v.(string) != "" {
+				instanceConcurrencyConfig.InstanceIsolationEnabled = helper.String(v.(string))
+			}
+			if v, ok := config["type"]; ok && v.(string) != "" {
+				instanceConcurrencyConfig.Type = helper.String(v.(string))
+			}
+
+			if mixNodeConfigs, ok := config["mix_node_config"]; ok {
+				mixNodeList := mixNodeConfigs.([]interface{})
+				mixNodes := make([]*scf.MixNodeConfig, 0, len(mixNodeList))
+				for _, v := range mixNodeList {
+					mixNode := v.(map[string]interface{})
+					mnc := &scf.MixNodeConfig{}
+					if nodeSpec, ok := mixNode["node_spec"]; ok && nodeSpec.(string) != "" {
+						mnc.NodeSpec = helper.String(nodeSpec.(string))
+					}
+					if num, ok := mixNode["num"]; ok {
+						mnc.Num = helper.IntUint64(num.(int))
+					}
+					mixNodes = append(mixNodes, mnc)
+				}
+				instanceConcurrencyConfig.MixNodeConfig = mixNodes
+			}
+
+			if sessionConfigs, ok := config["session_config"]; ok {
+				sessionList := sessionConfigs.([]interface{})
+				if len(sessionList) > 0 {
+					sessionConfig := sessionList[0].(map[string]interface{})
+					sc := &scf.SessionConfig{}
+
+					if v, ok := sessionConfig["session_source"]; ok && v.(string) != "" {
+						sc.SessionSource = helper.String(v.(string))
+					}
+					if v, ok := sessionConfig["session_name"]; ok && v.(string) != "" {
+						sc.SessionName = helper.String(v.(string))
+					}
+					if v, ok := sessionConfig["maximum_concurrency_session_per_instance"]; ok {
+						sc.MaximumConcurrencySessionPerInstance = helper.IntUint64(v.(int))
+					}
+					if v, ok := sessionConfig["maximum_ttl_in_seconds"]; ok {
+						sc.MaximumTTLInSeconds = helper.IntUint64(v.(int))
+					}
+					if v, ok := sessionConfig["maximum_idle_time_in_seconds"]; ok {
+						sc.MaximumIdleTimeInSeconds = helper.IntUint64(v.(int))
+					}
+					if v, ok := sessionConfig["session_path"]; ok && v.(string) != "" {
+						sc.SessionPath = helper.String(v.(string))
+					}
+					if v, ok := sessionConfig["idle_timeout_strategy"]; ok && v.(string) != "" {
+						sc.IdleTimeoutStrategy = helper.String(v.(string))
+					}
+
+					instanceConcurrencyConfig.SessionConfig = sc
+				}
+			}
+
+			functionInfo.instanceConcurrencyConfig = instanceConcurrencyConfig
+		}
 	}
 
 	if err := scfService.CreateFunction(ctx, functionInfo); err != nil {
@@ -1047,6 +1211,73 @@ func resourceTencentCloudScfFunctionRead(d *schema.ResourceData, m interface{}) 
 			return err
 		}
 	}
+	if resp.InstanceConcurrencyConfig != nil {
+		iccConfigs := make([]map[string]interface{}, 0, 1)
+		iccResp := resp.InstanceConcurrencyConfig
+
+		iccConfig := map[string]interface{}{}
+		if iccResp.DynamicEnabled != nil {
+			iccConfig["dynamic_enabled"] = iccResp.DynamicEnabled
+		}
+		if iccResp.MaxConcurrency != nil && *iccResp.MaxConcurrency != 0 {
+			iccConfig["max_concurrency"] = int(*iccResp.MaxConcurrency)
+		}
+		if iccResp.InstanceIsolationEnabled != nil {
+			iccConfig["instance_isolation_enabled"] = iccResp.InstanceIsolationEnabled
+		}
+		if iccResp.Type != nil {
+			iccConfig["type"] = iccResp.Type
+		}
+
+		if iccResp.MixNodeConfig != nil {
+			mixNodes := make([]map[string]interface{}, 0, len(iccResp.MixNodeConfig))
+			for _, mn := range iccResp.MixNodeConfig {
+				mixNode := map[string]interface{}{}
+				if mn.NodeSpec != nil {
+					mixNode["node_spec"] = mn.NodeSpec
+				}
+				if mn.Num != nil && *mn.Num != 0 {
+					mixNode["num"] = int(*mn.Num)
+				}
+				mixNodes = append(mixNodes, mixNode)
+			}
+			iccConfig["mix_node_config"] = mixNodes
+		}
+
+		if iccResp.SessionConfig != nil {
+			sessionConfigs := make([]map[string]interface{}, 0, 1)
+			scResp := iccResp.SessionConfig
+			sessionConfig := map[string]interface{}{}
+			if scResp.SessionSource != nil {
+				sessionConfig["session_source"] = scResp.SessionSource
+			}
+			if scResp.SessionName != nil {
+				sessionConfig["session_name"] = scResp.SessionName
+			}
+			if scResp.MaximumConcurrencySessionPerInstance != nil && *scResp.MaximumConcurrencySessionPerInstance != 0 {
+				sessionConfig["maximum_concurrency_session_per_instance"] = int(*scResp.MaximumConcurrencySessionPerInstance)
+			}
+			if scResp.MaximumTTLInSeconds != nil && *scResp.MaximumTTLInSeconds != 0 {
+				sessionConfig["maximum_ttl_in_seconds"] = int(*scResp.MaximumTTLInSeconds)
+			}
+			if scResp.MaximumIdleTimeInSeconds != nil && *scResp.MaximumIdleTimeInSeconds != 0 {
+				sessionConfig["maximum_idle_time_in_seconds"] = int(*scResp.MaximumIdleTimeInSeconds)
+			}
+			if scResp.SessionPath != nil {
+				sessionConfig["session_path"] = scResp.SessionPath
+			}
+			if scResp.IdleTimeoutStrategy != nil {
+				sessionConfig["idle_timeout_strategy"] = scResp.IdleTimeoutStrategy
+			}
+			sessionConfigs = append(sessionConfigs, sessionConfig)
+			iccConfig["session_config"] = sessionConfigs
+		}
+
+		iccConfigs = append(iccConfigs, iccConfig)
+		if err := d.Set("instance_concurrency_config", iccConfigs); err != nil {
+			return err
+		}
+	}
 
 	return nil
 }
@@ -1127,12 +1358,11 @@ func resourceTencentCloudScfFunctionUpdate(d *schema.ResourceData, m interface{}
 			return fmt.Errorf("zip file (%s) open error: %s", path, err.Error())
 		}
 		defer func() {
-			if cErr := file.Close(); cErr != nil && err == nil {
-				log.Printf("[DEBUG] update zip file (%s) close error: %s", path, cErr.Error())
+			if closeErr := file.Close(); closeErr != nil {
+				log.Printf("[CRITAL] zip file (%s) close error: %s", path, closeErr.Error())
 			}
 		}()
-
-		body, err := ioutil.ReadAll(file)
+		body, err := io.ReadAll(file)
 		if err != nil {
 			return fmt.Errorf("zip file (%s) read error: %s", path, err.Error())
 		}
@@ -1143,34 +1373,34 @@ func resourceTencentCloudScfFunctionUpdate(d *schema.ResourceData, m interface{}
 
 	if d.HasChange("image_config") {
 		updateAttrs = append(updateAttrs, "image_config")
-		if raw, ok := d.GetOk("image_config"); ok {
-			var imageConfigs = make([]*scf.ImageConfig, 0)
-			configs := raw.([]interface{})
-			for _, v := range configs {
-				value := v.(map[string]interface{})
-				imageType := value["image_type"].(string)
-				imageUri := value["image_uri"].(string)
-				registryId := value["registry_id"].(string)
-				entryPoint := value["entry_point"].(string)
-				command := value["command"].(string)
-				args := value["args"].(string)
-				containerImageAccelerate := value["container_image_accelerate"].(bool)
-				imagePort := int64(value["image_port"].(int))
+	}
+	if raw, ok := d.GetOk("image_config"); ok {
+		var imageConfigs = make([]*scf.ImageConfig, 0)
+		configs := raw.([]interface{})
+		for _, v := range configs {
+			value := v.(map[string]interface{})
+			imageType := value["image_type"].(string)
+			imageUri := value["image_uri"].(string)
+			registryId := value["registry_id"].(string)
+			entryPoint := value["entry_point"].(string)
+			command := value["command"].(string)
+			args := value["args"].(string)
+			containerImageAccelerate := value["container_image_accelerate"].(bool)
+			imagePort := int64(value["image_port"].(int))
 
-				config := &scf.ImageConfig{
-					ImageType:                &imageType,
-					ImageUri:                 &imageUri,
-					RegistryId:               &registryId,
-					EntryPoint:               &entryPoint,
-					Command:                  &command,
-					Args:                     &args,
-					ContainerImageAccelerate: &containerImageAccelerate,
-					ImagePort:                &imagePort,
-				}
-				imageConfigs = append(imageConfigs, config)
+			config := &scf.ImageConfig{
+				ImageType:                &imageType,
+				ImageUri:                 &imageUri,
+				RegistryId:               &registryId,
+				EntryPoint:               &entryPoint,
+				Command:                  &command,
+				Args:                     &args,
+				ContainerImageAccelerate: &containerImageAccelerate,
+				ImagePort:                &imagePort,
 			}
-			functionInfo.imageConfig = imageConfigs[0]
+			imageConfigs = append(imageConfigs, config)
 		}
+		functionInfo.imageConfig = imageConfigs[0]
 	}
 
 	if d.HasChange("cfs_config") {
@@ -1383,6 +1613,82 @@ func resourceTencentCloudScfFunctionUpdate(d *schema.ResourceData, m interface{}
 				intranetConfigs = append(intranetConfigs, config)
 			}
 			functionInfo.intranetConfig = intranetConfigs[0]
+		}
+	}
+	if d.HasChange("instance_concurrency_config") {
+		updateAttrs = append(updateAttrs, "instance_concurrency_config")
+		if raw, ok := d.GetOk("instance_concurrency_config"); ok {
+			configs := raw.([]interface{})
+			if len(configs) > 0 {
+				config := configs[0].(map[string]interface{})
+				instanceConcurrencyConfig := &scf.InstanceConcurrencyConfig{}
+
+				if v, ok := config["dynamic_enabled"]; ok && v.(string) != "" {
+					instanceConcurrencyConfig.DynamicEnabled = helper.String(v.(string))
+				}
+				if v, ok := config["max_concurrency"]; ok {
+					instanceConcurrencyConfig.MaxConcurrency = helper.IntUint64(v.(int))
+				}
+				if v, ok := config["instance_isolation_enabled"]; ok && v.(string) != "" {
+					instanceConcurrencyConfig.InstanceIsolationEnabled = helper.String(v.(string))
+				}
+				if v, ok := config["type"]; ok && v.(string) != "" {
+					instanceConcurrencyConfig.Type = helper.String(v.(string))
+				}
+
+				if mixNodeConfigs, ok := config["mix_node_config"]; ok {
+					mixNodeList := mixNodeConfigs.([]interface{})
+					mixNodes := make([]*scf.MixNodeConfig, 0, len(mixNodeList))
+					for _, v := range mixNodeList {
+						mixNode := v.(map[string]interface{})
+						mnc := &scf.MixNodeConfig{}
+						if nodeSpec, ok := mixNode["node_spec"]; ok && nodeSpec.(string) != "" {
+							mnc.NodeSpec = helper.String(nodeSpec.(string))
+						}
+						if num, ok := mixNode["num"]; ok {
+							mnc.Num = helper.IntUint64(num.(int))
+						}
+						mixNodes = append(mixNodes, mnc)
+					}
+					instanceConcurrencyConfig.MixNodeConfig = mixNodes
+				}
+
+				if sessionConfigs, ok := config["session_config"]; ok {
+					sessionList := sessionConfigs.([]interface{})
+					if len(sessionList) > 0 {
+						sessionConfig := sessionList[0].(map[string]interface{})
+						sc := &scf.SessionConfig{}
+
+						if v, ok := sessionConfig["session_source"]; ok && v.(string) != "" {
+							sc.SessionSource = helper.String(v.(string))
+						}
+						if v, ok := sessionConfig["session_name"]; ok && v.(string) != "" {
+							sc.SessionName = helper.String(v.(string))
+						}
+						if v, ok := sessionConfig["maximum_concurrency_session_per_instance"]; ok {
+							sc.MaximumConcurrencySessionPerInstance = helper.IntUint64(v.(int))
+						}
+						if v, ok := sessionConfig["maximum_ttl_in_seconds"]; ok {
+							sc.MaximumTTLInSeconds = helper.IntUint64(v.(int))
+						}
+						if v, ok := sessionConfig["maximum_idle_time_in_seconds"]; ok {
+							sc.MaximumIdleTimeInSeconds = helper.IntUint64(v.(int))
+						}
+						if v, ok := sessionConfig["session_path"]; ok && v.(string) != "" {
+							sc.SessionPath = helper.String(v.(string))
+						}
+						if v, ok := sessionConfig["idle_timeout_strategy"]; ok && v.(string) != "" {
+							sc.IdleTimeoutStrategy = helper.String(v.(string))
+						}
+
+						instanceConcurrencyConfig.SessionConfig = sc
+					}
+				}
+
+				functionInfo.instanceConcurrencyConfig = instanceConcurrencyConfig
+			}
+		} else {
+			functionInfo.instanceConcurrencyConfig = nil
 		}
 	}
 

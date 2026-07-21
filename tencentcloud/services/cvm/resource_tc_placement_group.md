@@ -13,6 +13,17 @@ resource "tencentcloud_placement_group" "foo" {
 }
 ```
 
+Create partition placement group
+
+```hcl
+resource "tencentcloud_placement_group" "bar" {
+  name            = "test-partition"
+  type            = "HOST"
+  strategy        = "PARTITION"
+  partition_count = 5
+}
+```
+
 Import
 
 Placement group can be imported using the id, e.g.
