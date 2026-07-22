@@ -1281,7 +1281,6 @@ github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/controlcenter/v20230110
 github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/csip/v20221121
 # github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/cvm v1.3.130
 ## explicit; go 1.14
-github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/cvm
 github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/cvm/v20170312
 # github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/cwp v1.3.30
 ## explicit; go 1.14
@@ -1422,7 +1421,7 @@ github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/tag/v20180813
 # github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/tat v1.0.634
 ## explicit; go 1.14
 github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/tat/v20201028
-# github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/tcaplusdb v1.0.199
+# github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/tcaplusdb v1.3.105
 ## explicit; go 1.14
 github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/tcaplusdb/v20190823
 # github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/tcm v1.0.547
