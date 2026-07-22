@@ -274,7 +274,7 @@ func (me *TcaplusService) DescribeTask(ctx context.Context, clusterId string, ta
 	return
 }
 
-func (me *TcaplusService) CreateGroup(ctx context.Context, id string, groupName string) (groupId string, errRet error) {
+func (me *TcaplusService) CreateGroup(ctx context.Context, id string, groupName string, tableGroupId string) (groupId string, errRet error) {
 	logId := tccommon.GetLogId(ctx)
 	request := tcaplusdb.NewCreateTableGroupRequest()
 	defer func() {
@@ -284,6 +284,9 @@ func (me *TcaplusService) CreateGroup(ctx context.Context, id string, groupName 
 	}()
 	request.TableGroupName = &groupName
 	request.ClusterId = &id
+	if tableGroupId != "" {
+		request.TableGroupId = &tableGroupId
+	}
 	ratelimit.Check(request.GetAction())
 	response, err := me.client.UseTcaplusClient().CreateTableGroup(request)
 	if err != nil {

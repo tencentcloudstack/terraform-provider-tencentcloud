@@ -4,6 +4,7 @@ import (
 	"context"
 	"errors"
 	"fmt"
+	"log"
 
 	tccommon "github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/common"
 
@@ -18,18 +19,23 @@ func ResourceTencentCloudTcaplusTableGroup() *schema.Resource {
 		Update: resourceTencentCloudTcaplusTableGroupUpdate,
 		Delete: resourceTencentCloudTcaplusTableGroupDelete,
 		Schema: map[string]*schema.Schema{
-			"cluster_id": {
-				Type:        schema.TypeString,
-				Required:    true,
-				ForceNew:    true,
-				Description: "ID of the TcaplusDB cluster to which the table group belongs.",
-			},
-			"tablegroup_name": {
-				Type:         schema.TypeString,
-				Required:     true,
-				ValidateFunc: tccommon.ValidateStringLengthInRange(1, 30),
-				Description:  "Name of the TcaplusDB table group. Name length should be between 1 and 30.",
-			},
+		"cluster_id": {
+			Type:        schema.TypeString,
+			Required:    true,
+			ForceNew:    true,
+			Description: "ID of the TcaplusDB cluster to which the table group belongs.",
+		},
+		"tablegroup_name": {
+			Type:         schema.TypeString,
+			Required:     true,
+			ValidateFunc: tccommon.ValidateStringLengthInRange(1, 30),
+			Description:  "Name of the TcaplusDB table group. Name length should be between 1 and 30.",
+		},
+		"table_group_id": {
+			Type:        schema.TypeString,
+			Optional:    true,
+			Description: "ID of the TcaplusDB table group, can be user-specified (must be unique within the cluster) or auto-incremented by the API when not set. Immutable after creation.",
+		},
 			// Computed values.
 			"table_count": {
 				Type:        schema.TypeInt,
@@ -59,13 +65,15 @@ func resourceTencentCloudTcaplusTableGroupCreate(d *schema.ResourceData, meta in
 	tcaplusService := TcaplusService{client: meta.(tccommon.ProviderMeta).GetAPIV3Conn()}
 
 	var (
-		clusterId = d.Get("cluster_id").(string)
-		groupName = d.Get("tablegroup_name").(string)
+		clusterId    = d.Get("cluster_id").(string)
+		groupName    = d.Get("tablegroup_name").(string)
+		tableGroupId = d.Get("table_group_id").(string)
 	)
-	groupId, err := tcaplusService.CreateGroup(ctx, clusterId, groupName)
+	groupId, err := tcaplusService.CreateGroup(ctx, clusterId, groupName, tableGroupId)
 	if err != nil {
 		return err
 	}
+	log.Printf("[CRUD] tcaplus_tablegroup create success, logId=%s, d.Id()=%s", logId, fmt.Sprintf("%s:%s", clusterId, groupId))
 	d.SetId(fmt.Sprintf("%s:%s", clusterId, groupId))
 	return resourceTencentCloudTcaplusTableGroupRead(d, meta)
 }
@@ -96,10 +104,14 @@ func resourceTencentCloudTcaplusTableGroupRead(d *schema.ResourceData, meta inte
 		return err
 	}
 	if !has {
+		log.Printf("[CRUD] tcaplus_tablegroup id=%s", d.Id())
 		d.SetId("")
 		return nil
 	}
 
+	if info.TableGroupId != nil {
+		_ = d.Set("table_group_id", info.TableGroupId)
+	}
 	_ = d.Set("tablegroup_name", info.TableGroupName)
 	_ = d.Set("table_count", int(*info.TableCount))
 	_ = d.Set("total_size", int(*info.TotalSize))
@@ -118,6 +130,13 @@ func resourceTencentCloudTcaplusTableGroupUpdate(d *schema.ResourceData, meta in
 
 	clusterId := d.Get("cluster_id").(string)
 	groupId := d.Id()
+
+	immutableArgs := []string{"table_group_id"}
+	for _, arg := range immutableArgs {
+		if d.HasChange(arg) {
+			return fmt.Errorf("tcaplus_tablegroup argument `%s` cannot be changed, it is immutable after creation. Please recreate the resource if you need a different value.", arg)
+		}
+	}
 
 	if d.HasChange("tablegroup_name") {
 		err := resource.Retry(tccommon.ReadRetryTimeout, func() *resource.RetryError {
