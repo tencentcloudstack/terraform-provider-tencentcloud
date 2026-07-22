@@ -11,6 +11,7 @@ import (
 
 	tccommon "github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/common"
 
+	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
 	"github.com/pkg/errors"
 	sdkError "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/common/errors"
 	tcaplusdb "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/tcaplusdb/v20190823"
@@ -274,7 +275,7 @@ func (me *TcaplusService) DescribeTask(ctx context.Context, clusterId string, ta
 	return
 }
 
-func (me *TcaplusService) CreateGroup(ctx context.Context, id string, groupName string, tableGroupId string) (groupId string, errRet error) {
+func (me *TcaplusService) CreateGroup(ctx context.Context, id string, groupName string, tableGroupId string, resourceTags []*tcaplusdb.TagInfoUnit) (groupId string, errRet error) {
 	logId := tccommon.GetLogId(ctx)
 	request := tcaplusdb.NewCreateTableGroupRequest()
 	defer func() {
@@ -287,8 +288,41 @@ func (me *TcaplusService) CreateGroup(ctx context.Context, id string, groupName 
 	if tableGroupId != "" {
 		request.TableGroupId = &tableGroupId
 	}
+
+	if len(resourceTags) > 0 {
+		request.ResourceTags = resourceTags
+	}
+
+	errRet = resource.Retry(tccommon.WriteRetryTimeout, func() *resource.RetryError {
+		ratelimit.Check(request.GetAction())
+		response, err := me.client.UseTcaplusClient().CreateTableGroup(request)
+		if err != nil {
+			return tccommon.RetryError(err)
+		}
+		if response == nil || response.Response == nil {
+			return resource.NonRetryableError(fmt.Errorf("TencentCloud SDK return nil response,%s", request.GetAction()))
+		}
+		if response.Response.TableGroupId == nil || *response.Response.TableGroupId == "" {
+			return resource.NonRetryableError(errors.New("TencentCloud SDK  return empty table group id"))
+		}
+		groupId = *response.Response.TableGroupId
+		return nil
+	})
+	return
+}
+
+func (me *TcaplusService) DescribeTableGroupTags(ctx context.Context, clusterId string, tableGroupId string) (tags []*tcaplusdb.TagInfoUnit, errRet error) {
+	logId := tccommon.GetLogId(ctx)
+	request := tcaplusdb.NewDescribeTableGroupTagsRequest()
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail,reason[%s]", logId, request.GetAction(), errRet.Error())
+		}
+	}()
+	request.ClusterId = &clusterId
+	request.TableGroupIds = []*string{&tableGroupId}
 	ratelimit.Check(request.GetAction())
-	response, err := me.client.UseTcaplusClient().CreateTableGroup(request)
+	response, err := me.client.UseTcaplusClient().DescribeTableGroupTagsWithContext(ctx, request)
 	if err != nil {
 		errRet = err
 		return
@@ -297,11 +331,42 @@ func (me *TcaplusService) CreateGroup(ctx context.Context, id string, groupName 
 		errRet = fmt.Errorf("TencentCloud SDK return nil response,%s", request.GetAction())
 		return
 	}
-	if response.Response.TableGroupId == nil || *response.Response.TableGroupId == "" {
-		errRet = errors.New("TencentCloud SDK  return empty table group id")
+	if len(response.Response.Rows) == 0 {
 		return
 	}
-	groupId = *response.Response.TableGroupId
+	tags = response.Response.Rows[0].Tags
+	return
+}
+
+func (me *TcaplusService) ModifyTableGroupTags(ctx context.Context, clusterId string, tableGroupId string, replaceTags []*tcaplusdb.TagInfoUnit, deleteTags []*tcaplusdb.TagInfoUnit) (taskId string, errRet error) {
+	logId := tccommon.GetLogId(ctx)
+	request := tcaplusdb.NewModifyTableGroupTagsRequest()
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail,reason[%s]", logId, request.GetAction(), errRet.Error())
+		}
+	}()
+	request.ClusterId = &clusterId
+	request.TableGroupId = &tableGroupId
+	if len(replaceTags) > 0 {
+		request.ReplaceTags = replaceTags
+	}
+	if len(deleteTags) > 0 {
+		request.DeleteTags = deleteTags
+	}
+	ratelimit.Check(request.GetAction())
+	response, err := me.client.UseTcaplusClient().ModifyTableGroupTagsWithContext(ctx, request)
+	if err != nil {
+		errRet = err
+		return
+	}
+	if response == nil || response.Response == nil {
+		errRet = fmt.Errorf("TencentCloud SDK return nil response,%s", request.GetAction())
+		return
+	}
+	if response.Response.TaskId != nil {
+		taskId = *response.Response.TaskId
+	}
 	return
 }
 
@@ -379,13 +444,6 @@ func (me *TcaplusService) DescribeGroup(ctx context.Context, id string, groupId 
 		}
 	}()
 
-	items := strings.Split(groupId, ":")
-	if len(items) != 2 {
-		errRet = fmt.Errorf("group id is broken,%s", groupId)
-		return
-	}
-	groupId = items[1]
-
 	request.ClusterId = &id
 	request.TableGroupIds = []*string{&groupId}
 	ratelimit.Check(request.GetAction())
@@ -428,13 +486,6 @@ func (me *TcaplusService) DeleteGroup(ctx context.Context, clusterId string, gro
 		}
 	}()
 
-	items := strings.Split(groupId, ":")
-	if len(items) != 2 {
-		errRet = fmt.Errorf("group id is broken,%s", groupId)
-		return
-	}
-	groupId = items[1]
-
 	request.ClusterId = &clusterId
 	request.TableGroupId = &groupId
 	ratelimit.Check(request.GetAction())
@@ -458,12 +509,6 @@ func (me *TcaplusService) ModifyGroupName(ctx context.Context, id string, groupI
 			log.Printf("[CRITAL]%s api[%s] fail,reason[%s]", logId, request.GetAction(), errRet.Error())
 		}
 	}()
-	items := strings.Split(groupId, ":")
-	if len(items) != 2 {
-		errRet = fmt.Errorf("group id is broken,%s", groupId)
-		return
-	}
-	groupId = items[1]
 
 	request.ClusterId = &id
 	request.TableGroupId = &groupId
