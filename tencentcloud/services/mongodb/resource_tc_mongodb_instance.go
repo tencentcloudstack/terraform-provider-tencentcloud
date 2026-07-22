@@ -171,6 +171,7 @@ func mongodbAllInstanceReqSet(requestInter interface{}, d *schema.ResourceData) 
 		nodeNum               = 3
 		goodsNum              = 1
 		clusterType           = MONGODB_CLUSTER_TYPE_REPLSET
+		cpu                   = d.Get("cpu").(int)
 		memoryInterface       = d.Get("memory").(int)
 		volumeInterface       = d.Get("volume").(int)
 		mongoVersionInterface = d.Get("engine_version").(string)
@@ -203,6 +204,7 @@ func mongodbAllInstanceReqSet(requestInter interface{}, d *schema.ResourceData) 
 		"NodeNum":         helper.IntUint64(nodeNum),
 		"GoodsNum":        helper.IntUint64(goodsNum),
 		"ClusterType":     &clusterType,
+		"CpuCore":         helper.IntUint64(cpu),
 		"Memory":          helper.IntUint64(memoryInterface),
 		"Volume":          helper.IntUint64(volumeInterface),
 		"MongoVersion":    &mongoVersionInterface,

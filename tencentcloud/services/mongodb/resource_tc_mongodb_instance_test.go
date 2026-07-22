@@ -804,7 +804,7 @@ func TestMongodbInstanceCpu_Update_TriggersUpgrade(t *testing.T) {
 	d.SetId("cmgo-cpu-test")
 
 	// Simulate a cpu-only change from 2 to 4.
-	d.Set("cpu", 4)
+	assert.NoError(t, d.Set("cpu", 4))
 
 	err := res.Update(d, meta)
 	assert.NoError(t, err)
