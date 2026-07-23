@@ -2,7 +2,7 @@ Provides a resource to create a CDWDoris instance
 
 Example Usage
 
-Create a POSTPAID instance
+Create a POSTPAID instance(SSC)
 
 ```hcl
 # availability zone
@@ -40,14 +40,14 @@ resource "tencentcloud_cdwdoris_instance" "example" {
   zone                  = var.availability_zone
   user_vpc_id           = tencentcloud_vpc.vpc.id
   user_subnet_id        = tencentcloud_subnet.subnet.id
-  product_version       = "2.1"
+  product_version       = "3.1"
   instance_name         = "tf-example"
   doris_user_pwd        = "Password@test"
   ha_flag               = true
   ha_type               = 1
   case_sensitive        = 0
   enable_multi_zones    = false
-  is_ssc                = false
+  is_ssc                = true
   workload_group_status = "open"
 
   security_group_ids = [
@@ -59,15 +59,15 @@ resource "tencentcloud_cdwdoris_instance" "example" {
   }
 
   fe_spec {
-    spec_name = "S_4_16_P"
-    count     = 3
+    spec_name = "S_8_32_H"
+    count     = 5
     disk_size = 200
   }
 
   be_spec {
-    spec_name = "S_4_16_P"
+    spec_name = "S_8_32_H"
     count     = 3
-    disk_size = 200
+    disk_size = 400
   }
 
   tags {
@@ -77,7 +77,7 @@ resource "tencentcloud_cdwdoris_instance" "example" {
 }
 ```
 
-Create a PREPAID instance
+Create a PREPAID instance(No SSC)
 
 ```hcl
 # availability zone

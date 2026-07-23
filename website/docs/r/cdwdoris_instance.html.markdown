@@ -13,7 +13,7 @@ Provides a resource to create a CDWDoris instance
 
 ## Example Usage
 
-### Create a POSTPAID instance
+### Create a POSTPAID instance(SSC)
 
 ```hcl
 # availability zone
@@ -51,13 +51,14 @@ resource "tencentcloud_cdwdoris_instance" "example" {
   zone                  = var.availability_zone
   user_vpc_id           = tencentcloud_vpc.vpc.id
   user_subnet_id        = tencentcloud_subnet.subnet.id
-  product_version       = "2.1"
+  product_version       = "3.1"
   instance_name         = "tf-example"
   doris_user_pwd        = "Password@test"
   ha_flag               = true
   ha_type               = 1
   case_sensitive        = 0
   enable_multi_zones    = false
+  is_ssc                = true
   workload_group_status = "open"
 
   security_group_ids = [
@@ -69,15 +70,15 @@ resource "tencentcloud_cdwdoris_instance" "example" {
   }
 
   fe_spec {
-    spec_name = "S_4_16_P"
-    count     = 3
+    spec_name = "S_8_32_H"
+    count     = 5
     disk_size = 200
   }
 
   be_spec {
-    spec_name = "S_4_16_P"
+    spec_name = "S_8_32_H"
     count     = 3
-    disk_size = 200
+    disk_size = 400
   }
 
   tags {
@@ -87,7 +88,7 @@ resource "tencentcloud_cdwdoris_instance" "example" {
 }
 ```
 
-### Create a PREPAID instance
+### Create a PREPAID instance(No SSC)
 
 ```hcl
 # availability zone
@@ -132,6 +133,7 @@ resource "tencentcloud_cdwdoris_instance" "example" {
   ha_type               = 1
   case_sensitive        = 0
   enable_multi_zones    = false
+  is_ssc                = false
   workload_group_status = "close"
 
   security_group_ids = [
@@ -181,6 +183,7 @@ The following arguments are supported:
 * `case_sensitive` - (Optional, Int) Whether the table name is case sensitive, 0 refers to sensitive, 1 refers to insensitive, compared in lowercase; 2 refers to insensitive, and the table name is changed to lowercase for storage.
 * `enable_multi_zones` - (Optional, Bool) Whether to enable multi-availability zone.
 * `ha_type` - (Optional, Int) High availability type: 0 indicates non-high availability (only one FE, FeSpec.CreateInstanceSpec.Count=1), 1 indicates read high availability (at least 3 FEs must be deployed, FeSpec.CreateInstanceSpec.Count>=3, and it must be an odd number), 2 indicates read and write high availability (at least 5 FEs must be deployed, FeSpec.CreateInstanceSpec.Count>=5, and it must be an odd number).
+* `is_ssc` - (Optional, Bool, ForceNew) Whether it is storage-compute separation. Default is false.
 * `security_group_ids` - (Optional, List: [`String`]) Security Group Id list.
 * `tags` - (Optional, List) Tag list.
 * `user_multi_zone_infos` - (Optional, List) After the Multi-AZ is enabled, all user's Availability Zones and Subnets information are shown.
@@ -222,4 +225,11 @@ In addition to all arguments above, the following attributes are exported:
 * `id` - ID of the resource.
 
 
+## Timeouts
+
+The `timeouts` block allows you to specify [timeouts](https://developer.hashicorp.com/terraform/language/resources/syntax#operation-timeouts) for certain actions:
+
+* `create` - (Defaults to `30m`) Used when creating the resource.
+* `update` - (Defaults to `30m`) Used when updating the resource.
+* `delete` - (Defaults to `30m`) Used when deleting the resource.
 
