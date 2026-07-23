@@ -1,5 +1,7 @@
 Provide a resource to create a Mongodb sharding instance.
 
+~> **NOTE:** The `add_node_list` and `remove_node_list` arguments are used to submit node change actions. When updating the resource, only newly added items in these lists will be sent to the API. If an existing item is removed from the Terraform configuration, Terraform only updates the local state and does not submit a repeated add or remove request. To add or remove another read-only node, append a new block instead of modifying an existing one. After the change is completed, obsolete action records can be removed from the configuration, and this cleanup does not trigger a new node operation when the remaining list is a subset of the previous list. In general, it is recommended to keep these action records in the configuration and avoid cleanup unless necessary.
+
 Example Usage
 
 ```hcl
