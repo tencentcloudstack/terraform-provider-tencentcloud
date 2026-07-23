@@ -47,6 +47,7 @@ resource "tencentcloud_cdwdoris_instance" "example" {
   ha_type               = 1
   case_sensitive        = 0
   enable_multi_zones    = false
+  is_ssc                = false
   workload_group_status = "open"
 
   security_group_ids = [
@@ -121,6 +122,7 @@ resource "tencentcloud_cdwdoris_instance" "example" {
   ha_type               = 1
   case_sensitive        = 0
   enable_multi_zones    = false
+  is_ssc                = false
   workload_group_status = "close"
 
   security_group_ids = [

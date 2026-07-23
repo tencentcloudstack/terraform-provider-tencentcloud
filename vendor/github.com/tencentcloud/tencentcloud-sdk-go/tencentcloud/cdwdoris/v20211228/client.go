@@ -1,4 +1,4 @@
-// Copyright (c) 2017-2018 THL A29 Limited, a Tencent company. All Rights Reserved.
+// Copyright (c) 2017-2025 Tencent. All Rights Reserved.
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -82,6 +82,7 @@ func (c *Client) ActionAlterUserWithContext(ctx context.Context, request *Action
     if request == nil {
         request = NewActionAlterUserRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "cdwdoris", APIVersion, "ActionAlterUser")
     
     if c.GetCredential() == nil {
         return nil, errors.New("ActionAlterUser require credential")
@@ -131,6 +132,7 @@ func (c *Client) CancelBackupJobWithContext(ctx context.Context, request *Cancel
     if request == nil {
         request = NewCancelBackupJobRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "cdwdoris", APIVersion, "CancelBackupJob")
     
     if c.GetCredential() == nil {
         return nil, errors.New("CancelBackupJob require credential")
@@ -180,6 +182,7 @@ func (c *Client) CheckCoolDownWorkingVariableConfigCorrectWithContext(ctx contex
     if request == nil {
         request = NewCheckCoolDownWorkingVariableConfigCorrectRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "cdwdoris", APIVersion, "CheckCoolDownWorkingVariableConfigCorrect")
     
     if c.GetCredential() == nil {
         return nil, errors.New("CheckCoolDownWorkingVariableConfigCorrect require credential")
@@ -215,7 +218,8 @@ func NewCreateBackUpScheduleResponse() (response *CreateBackUpScheduleResponse) 
 // 创建或者修改备份策略
 //
 // 可能返回的错误码:
-//  INTERNALERROR = "InternalError"
+//  INVALIDPARAMETER = "InvalidParameter"
+//  UNSUPPORTEDOPERATION = "UnsupportedOperation"
 func (c *Client) CreateBackUpSchedule(request *CreateBackUpScheduleRequest) (response *CreateBackUpScheduleResponse, err error) {
     return c.CreateBackUpScheduleWithContext(context.Background(), request)
 }
@@ -224,11 +228,13 @@ func (c *Client) CreateBackUpSchedule(request *CreateBackUpScheduleRequest) (res
 // 创建或者修改备份策略
 //
 // 可能返回的错误码:
-//  INTERNALERROR = "InternalError"
+//  INVALIDPARAMETER = "InvalidParameter"
+//  UNSUPPORTEDOPERATION = "UnsupportedOperation"
 func (c *Client) CreateBackUpScheduleWithContext(ctx context.Context, request *CreateBackUpScheduleRequest) (response *CreateBackUpScheduleResponse, err error) {
     if request == nil {
         request = NewCreateBackUpScheduleRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "cdwdoris", APIVersion, "CreateBackUpSchedule")
     
     if c.GetCredential() == nil {
         return nil, errors.New("CreateBackUpSchedule require credential")
@@ -264,7 +270,8 @@ func NewCreateCoolDownPolicyResponse() (response *CreateCoolDownPolicyResponse) 
 // 创建冷热分层策略
 //
 // 可能返回的错误码:
-//  INTERNALERROR = "InternalError"
+//  INVALIDPARAMETER = "InvalidParameter"
+//  UNSUPPORTEDOPERATION = "UnsupportedOperation"
 func (c *Client) CreateCoolDownPolicy(request *CreateCoolDownPolicyRequest) (response *CreateCoolDownPolicyResponse, err error) {
     return c.CreateCoolDownPolicyWithContext(context.Background(), request)
 }
@@ -273,11 +280,13 @@ func (c *Client) CreateCoolDownPolicy(request *CreateCoolDownPolicyRequest) (res
 // 创建冷热分层策略
 //
 // 可能返回的错误码:
-//  INTERNALERROR = "InternalError"
+//  INVALIDPARAMETER = "InvalidParameter"
+//  UNSUPPORTEDOPERATION = "UnsupportedOperation"
 func (c *Client) CreateCoolDownPolicyWithContext(ctx context.Context, request *CreateCoolDownPolicyRequest) (response *CreateCoolDownPolicyResponse, err error) {
     if request == nil {
         request = NewCreateCoolDownPolicyRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "cdwdoris", APIVersion, "CreateCoolDownPolicy")
     
     if c.GetCredential() == nil {
         return nil, errors.New("CreateCoolDownPolicy require credential")
@@ -313,7 +322,8 @@ func NewCreateInstanceNewResponse() (response *CreateInstanceNewResponse) {
 // 通过API创建集群
 //
 // 可能返回的错误码:
-//  INTERNALERROR = "InternalError"
+//  INVALIDPARAMETER = "InvalidParameter"
+//  UNSUPPORTEDOPERATION = "UnsupportedOperation"
 func (c *Client) CreateInstanceNew(request *CreateInstanceNewRequest) (response *CreateInstanceNewResponse, err error) {
     return c.CreateInstanceNewWithContext(context.Background(), request)
 }
@@ -322,11 +332,13 @@ func (c *Client) CreateInstanceNew(request *CreateInstanceNewRequest) (response 
 // 通过API创建集群
 //
 // 可能返回的错误码:
-//  INTERNALERROR = "InternalError"
+//  INVALIDPARAMETER = "InvalidParameter"
+//  UNSUPPORTEDOPERATION = "UnsupportedOperation"
 func (c *Client) CreateInstanceNewWithContext(ctx context.Context, request *CreateInstanceNewRequest) (response *CreateInstanceNewResponse, err error) {
     if request == nil {
         request = NewCreateInstanceNewRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "cdwdoris", APIVersion, "CreateInstanceNew")
     
     if c.GetCredential() == nil {
         return nil, errors.New("CreateInstanceNew require credential")
@@ -362,7 +374,8 @@ func NewCreateWorkloadGroupResponse() (response *CreateWorkloadGroupResponse) {
 // 创建资源组
 //
 // 可能返回的错误码:
-//  INTERNALERROR = "InternalError"
+//  INVALIDPARAMETER = "InvalidParameter"
+//  UNSUPPORTEDOPERATION = "UnsupportedOperation"
 func (c *Client) CreateWorkloadGroup(request *CreateWorkloadGroupRequest) (response *CreateWorkloadGroupResponse, err error) {
     return c.CreateWorkloadGroupWithContext(context.Background(), request)
 }
@@ -371,11 +384,13 @@ func (c *Client) CreateWorkloadGroup(request *CreateWorkloadGroupRequest) (respo
 // 创建资源组
 //
 // 可能返回的错误码:
-//  INTERNALERROR = "InternalError"
+//  INVALIDPARAMETER = "InvalidParameter"
+//  UNSUPPORTEDOPERATION = "UnsupportedOperation"
 func (c *Client) CreateWorkloadGroupWithContext(ctx context.Context, request *CreateWorkloadGroupRequest) (response *CreateWorkloadGroupResponse, err error) {
     if request == nil {
         request = NewCreateWorkloadGroupRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "cdwdoris", APIVersion, "CreateWorkloadGroup")
     
     if c.GetCredential() == nil {
         return nil, errors.New("CreateWorkloadGroup require credential")
@@ -411,7 +426,8 @@ func NewDeleteBackUpDataResponse() (response *DeleteBackUpDataResponse) {
 // 删除备份数据
 //
 // 可能返回的错误码:
-//  INTERNALERROR = "InternalError"
+//  INVALIDPARAMETER = "InvalidParameter"
+//  UNSUPPORTEDOPERATION = "UnsupportedOperation"
 func (c *Client) DeleteBackUpData(request *DeleteBackUpDataRequest) (response *DeleteBackUpDataResponse, err error) {
     return c.DeleteBackUpDataWithContext(context.Background(), request)
 }
@@ -420,11 +436,13 @@ func (c *Client) DeleteBackUpData(request *DeleteBackUpDataRequest) (response *D
 // 删除备份数据
 //
 // 可能返回的错误码:
-//  INTERNALERROR = "InternalError"
+//  INVALIDPARAMETER = "InvalidParameter"
+//  UNSUPPORTEDOPERATION = "UnsupportedOperation"
 func (c *Client) DeleteBackUpDataWithContext(ctx context.Context, request *DeleteBackUpDataRequest) (response *DeleteBackUpDataResponse, err error) {
     if request == nil {
         request = NewDeleteBackUpDataRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "cdwdoris", APIVersion, "DeleteBackUpData")
     
     if c.GetCredential() == nil {
         return nil, errors.New("DeleteBackUpData require credential")
@@ -460,7 +478,8 @@ func NewDeleteWorkloadGroupResponse() (response *DeleteWorkloadGroupResponse) {
 // 删除资源组
 //
 // 可能返回的错误码:
-//  INTERNALERROR = "InternalError"
+//  INVALIDPARAMETER = "InvalidParameter"
+//  UNSUPPORTEDOPERATION = "UnsupportedOperation"
 func (c *Client) DeleteWorkloadGroup(request *DeleteWorkloadGroupRequest) (response *DeleteWorkloadGroupResponse, err error) {
     return c.DeleteWorkloadGroupWithContext(context.Background(), request)
 }
@@ -469,11 +488,13 @@ func (c *Client) DeleteWorkloadGroup(request *DeleteWorkloadGroupRequest) (respo
 // 删除资源组
 //
 // 可能返回的错误码:
-//  INTERNALERROR = "InternalError"
+//  INVALIDPARAMETER = "InvalidParameter"
+//  UNSUPPORTEDOPERATION = "UnsupportedOperation"
 func (c *Client) DeleteWorkloadGroupWithContext(ctx context.Context, request *DeleteWorkloadGroupRequest) (response *DeleteWorkloadGroupResponse, err error) {
     if request == nil {
         request = NewDeleteWorkloadGroupRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "cdwdoris", APIVersion, "DeleteWorkloadGroup")
     
     if c.GetCredential() == nil {
         return nil, errors.New("DeleteWorkloadGroup require credential")
@@ -509,7 +530,8 @@ func NewDescribeAreaRegionResponse() (response *DescribeAreaRegionResponse) {
 // 集群列表页上显示地域信息及各个地域的集群总数
 //
 // 可能返回的错误码:
-//  INTERNALERROR = "InternalError"
+//  INVALIDPARAMETER = "InvalidParameter"
+//  UNSUPPORTEDOPERATION = "UnsupportedOperation"
 func (c *Client) DescribeAreaRegion(request *DescribeAreaRegionRequest) (response *DescribeAreaRegionResponse, err error) {
     return c.DescribeAreaRegionWithContext(context.Background(), request)
 }
@@ -518,11 +540,13 @@ func (c *Client) DescribeAreaRegion(request *DescribeAreaRegionRequest) (respons
 // 集群列表页上显示地域信息及各个地域的集群总数
 //
 // 可能返回的错误码:
-//  INTERNALERROR = "InternalError"
+//  INVALIDPARAMETER = "InvalidParameter"
+//  UNSUPPORTEDOPERATION = "UnsupportedOperation"
 func (c *Client) DescribeAreaRegionWithContext(ctx context.Context, request *DescribeAreaRegionRequest) (response *DescribeAreaRegionResponse, err error) {
     if request == nil {
         request = NewDescribeAreaRegionRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "cdwdoris", APIVersion, "DescribeAreaRegion")
     
     if c.GetCredential() == nil {
         return nil, errors.New("DescribeAreaRegion require credential")
@@ -558,7 +582,8 @@ func NewDescribeBackUpJobResponse() (response *DescribeBackUpJobResponse) {
 // 查询备份实例列表
 //
 // 可能返回的错误码:
-//  INTERNALERROR = "InternalError"
+//  INVALIDPARAMETER = "InvalidParameter"
+//  UNSUPPORTEDOPERATION = "UnsupportedOperation"
 func (c *Client) DescribeBackUpJob(request *DescribeBackUpJobRequest) (response *DescribeBackUpJobResponse, err error) {
     return c.DescribeBackUpJobWithContext(context.Background(), request)
 }
@@ -567,11 +592,13 @@ func (c *Client) DescribeBackUpJob(request *DescribeBackUpJobRequest) (response 
 // 查询备份实例列表
 //
 // 可能返回的错误码:
-//  INTERNALERROR = "InternalError"
+//  INVALIDPARAMETER = "InvalidParameter"
+//  UNSUPPORTEDOPERATION = "UnsupportedOperation"
 func (c *Client) DescribeBackUpJobWithContext(ctx context.Context, request *DescribeBackUpJobRequest) (response *DescribeBackUpJobResponse, err error) {
     if request == nil {
         request = NewDescribeBackUpJobRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "cdwdoris", APIVersion, "DescribeBackUpJob")
     
     if c.GetCredential() == nil {
         return nil, errors.New("DescribeBackUpJob require credential")
@@ -607,7 +634,8 @@ func NewDescribeBackUpJobDetailResponse() (response *DescribeBackUpJobDetailResp
 // 查询备份任务详情
 //
 // 可能返回的错误码:
-//  INTERNALERROR = "InternalError"
+//  INVALIDPARAMETER = "InvalidParameter"
+//  UNSUPPORTEDOPERATION = "UnsupportedOperation"
 func (c *Client) DescribeBackUpJobDetail(request *DescribeBackUpJobDetailRequest) (response *DescribeBackUpJobDetailResponse, err error) {
     return c.DescribeBackUpJobDetailWithContext(context.Background(), request)
 }
@@ -616,11 +644,13 @@ func (c *Client) DescribeBackUpJobDetail(request *DescribeBackUpJobDetailRequest
 // 查询备份任务详情
 //
 // 可能返回的错误码:
-//  INTERNALERROR = "InternalError"
+//  INVALIDPARAMETER = "InvalidParameter"
+//  UNSUPPORTEDOPERATION = "UnsupportedOperation"
 func (c *Client) DescribeBackUpJobDetailWithContext(ctx context.Context, request *DescribeBackUpJobDetailRequest) (response *DescribeBackUpJobDetailResponse, err error) {
     if request == nil {
         request = NewDescribeBackUpJobDetailRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "cdwdoris", APIVersion, "DescribeBackUpJobDetail")
     
     if c.GetCredential() == nil {
         return nil, errors.New("DescribeBackUpJobDetail require credential")
@@ -656,7 +686,8 @@ func NewDescribeBackUpSchedulesResponse() (response *DescribeBackUpSchedulesResp
 // 获取备份、迁移的调度任务信息
 //
 // 可能返回的错误码:
-//  INTERNALERROR = "InternalError"
+//  INVALIDPARAMETER = "InvalidParameter"
+//  UNSUPPORTEDOPERATION = "UnsupportedOperation"
 func (c *Client) DescribeBackUpSchedules(request *DescribeBackUpSchedulesRequest) (response *DescribeBackUpSchedulesResponse, err error) {
     return c.DescribeBackUpSchedulesWithContext(context.Background(), request)
 }
@@ -665,11 +696,13 @@ func (c *Client) DescribeBackUpSchedules(request *DescribeBackUpSchedulesRequest
 // 获取备份、迁移的调度任务信息
 //
 // 可能返回的错误码:
-//  INTERNALERROR = "InternalError"
+//  INVALIDPARAMETER = "InvalidParameter"
+//  UNSUPPORTEDOPERATION = "UnsupportedOperation"
 func (c *Client) DescribeBackUpSchedulesWithContext(ctx context.Context, request *DescribeBackUpSchedulesRequest) (response *DescribeBackUpSchedulesResponse, err error) {
     if request == nil {
         request = NewDescribeBackUpSchedulesRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "cdwdoris", APIVersion, "DescribeBackUpSchedules")
     
     if c.GetCredential() == nil {
         return nil, errors.New("DescribeBackUpSchedules require credential")
@@ -705,7 +738,8 @@ func NewDescribeBackUpTablesResponse() (response *DescribeBackUpTablesResponse) 
 // 获取可备份表信息
 //
 // 可能返回的错误码:
-//  INTERNALERROR = "InternalError"
+//  INVALIDPARAMETER = "InvalidParameter"
+//  UNSUPPORTEDOPERATION = "UnsupportedOperation"
 func (c *Client) DescribeBackUpTables(request *DescribeBackUpTablesRequest) (response *DescribeBackUpTablesResponse, err error) {
     return c.DescribeBackUpTablesWithContext(context.Background(), request)
 }
@@ -714,11 +748,13 @@ func (c *Client) DescribeBackUpTables(request *DescribeBackUpTablesRequest) (res
 // 获取可备份表信息
 //
 // 可能返回的错误码:
-//  INTERNALERROR = "InternalError"
+//  INVALIDPARAMETER = "InvalidParameter"
+//  UNSUPPORTEDOPERATION = "UnsupportedOperation"
 func (c *Client) DescribeBackUpTablesWithContext(ctx context.Context, request *DescribeBackUpTablesRequest) (response *DescribeBackUpTablesResponse, err error) {
     if request == nil {
         request = NewDescribeBackUpTablesRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "cdwdoris", APIVersion, "DescribeBackUpTables")
     
     if c.GetCredential() == nil {
         return nil, errors.New("DescribeBackUpTables require credential")
@@ -754,7 +790,8 @@ func NewDescribeBackUpTaskDetailResponse() (response *DescribeBackUpTaskDetailRe
 // 查询备份任务进度详情
 //
 // 可能返回的错误码:
-//  INTERNALERROR = "InternalError"
+//  INVALIDPARAMETER = "InvalidParameter"
+//  UNSUPPORTEDOPERATION = "UnsupportedOperation"
 func (c *Client) DescribeBackUpTaskDetail(request *DescribeBackUpTaskDetailRequest) (response *DescribeBackUpTaskDetailResponse, err error) {
     return c.DescribeBackUpTaskDetailWithContext(context.Background(), request)
 }
@@ -763,11 +800,13 @@ func (c *Client) DescribeBackUpTaskDetail(request *DescribeBackUpTaskDetailReque
 // 查询备份任务进度详情
 //
 // 可能返回的错误码:
-//  INTERNALERROR = "InternalError"
+//  INVALIDPARAMETER = "InvalidParameter"
+//  UNSUPPORTEDOPERATION = "UnsupportedOperation"
 func (c *Client) DescribeBackUpTaskDetailWithContext(ctx context.Context, request *DescribeBackUpTaskDetailRequest) (response *DescribeBackUpTaskDetailResponse, err error) {
     if request == nil {
         request = NewDescribeBackUpTaskDetailRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "cdwdoris", APIVersion, "DescribeBackUpTaskDetail")
     
     if c.GetCredential() == nil {
         return nil, errors.New("DescribeBackUpTaskDetail require credential")
@@ -803,7 +842,8 @@ func NewDescribeClusterConfigsResponse() (response *DescribeClusterConfigsRespon
 // 获取集群的最新的几个配置文件（config.xml、metrika.xml、user.xml）的内容，显示给用户
 //
 // 可能返回的错误码:
-//  INTERNALERROR = "InternalError"
+//  INVALIDPARAMETER = "InvalidParameter"
+//  UNSUPPORTEDOPERATION = "UnsupportedOperation"
 func (c *Client) DescribeClusterConfigs(request *DescribeClusterConfigsRequest) (response *DescribeClusterConfigsResponse, err error) {
     return c.DescribeClusterConfigsWithContext(context.Background(), request)
 }
@@ -812,11 +852,13 @@ func (c *Client) DescribeClusterConfigs(request *DescribeClusterConfigsRequest) 
 // 获取集群的最新的几个配置文件（config.xml、metrika.xml、user.xml）的内容，显示给用户
 //
 // 可能返回的错误码:
-//  INTERNALERROR = "InternalError"
+//  INVALIDPARAMETER = "InvalidParameter"
+//  UNSUPPORTEDOPERATION = "UnsupportedOperation"
 func (c *Client) DescribeClusterConfigsWithContext(ctx context.Context, request *DescribeClusterConfigsRequest) (response *DescribeClusterConfigsResponse, err error) {
     if request == nil {
         request = NewDescribeClusterConfigsRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "cdwdoris", APIVersion, "DescribeClusterConfigs")
     
     if c.GetCredential() == nil {
         return nil, errors.New("DescribeClusterConfigs require credential")
@@ -866,6 +908,7 @@ func (c *Client) DescribeClusterConfigsHistoryWithContext(ctx context.Context, r
     if request == nil {
         request = NewDescribeClusterConfigsHistoryRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "cdwdoris", APIVersion, "DescribeClusterConfigsHistory")
     
     if c.GetCredential() == nil {
         return nil, errors.New("DescribeClusterConfigsHistory require credential")
@@ -915,6 +958,7 @@ func (c *Client) DescribeCoolDownBackendsWithContext(ctx context.Context, reques
     if request == nil {
         request = NewDescribeCoolDownBackendsRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "cdwdoris", APIVersion, "DescribeCoolDownBackends")
     
     if c.GetCredential() == nil {
         return nil, errors.New("DescribeCoolDownBackends require credential")
@@ -964,6 +1008,7 @@ func (c *Client) DescribeCoolDownPoliciesWithContext(ctx context.Context, reques
     if request == nil {
         request = NewDescribeCoolDownPoliciesRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "cdwdoris", APIVersion, "DescribeCoolDownPolicies")
     
     if c.GetCredential() == nil {
         return nil, errors.New("DescribeCoolDownPolicies require credential")
@@ -1013,6 +1058,7 @@ func (c *Client) DescribeCoolDownTableDataWithContext(ctx context.Context, reque
     if request == nil {
         request = NewDescribeCoolDownTableDataRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "cdwdoris", APIVersion, "DescribeCoolDownTableData")
     
     if c.GetCredential() == nil {
         return nil, errors.New("DescribeCoolDownTableData require credential")
@@ -1062,6 +1108,7 @@ func (c *Client) DescribeDatabaseAuditDownloadWithContext(ctx context.Context, r
     if request == nil {
         request = NewDescribeDatabaseAuditDownloadRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "cdwdoris", APIVersion, "DescribeDatabaseAuditDownload")
     
     if c.GetCredential() == nil {
         return nil, errors.New("DescribeDatabaseAuditDownload require credential")
@@ -1111,6 +1158,7 @@ func (c *Client) DescribeDatabaseAuditRecordsWithContext(ctx context.Context, re
     if request == nil {
         request = NewDescribeDatabaseAuditRecordsRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "cdwdoris", APIVersion, "DescribeDatabaseAuditRecords")
     
     if c.GetCredential() == nil {
         return nil, errors.New("DescribeDatabaseAuditRecords require credential")
@@ -1160,6 +1208,7 @@ func (c *Client) DescribeInstanceWithContext(ctx context.Context, request *Descr
     if request == nil {
         request = NewDescribeInstanceRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "cdwdoris", APIVersion, "DescribeInstance")
     
     if c.GetCredential() == nil {
         return nil, errors.New("DescribeInstance require credential")
@@ -1209,6 +1258,7 @@ func (c *Client) DescribeInstanceNodesWithContext(ctx context.Context, request *
     if request == nil {
         request = NewDescribeInstanceNodesRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "cdwdoris", APIVersion, "DescribeInstanceNodes")
     
     if c.GetCredential() == nil {
         return nil, errors.New("DescribeInstanceNodes require credential")
@@ -1258,6 +1308,7 @@ func (c *Client) DescribeInstanceNodesInfoWithContext(ctx context.Context, reque
     if request == nil {
         request = NewDescribeInstanceNodesInfoRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "cdwdoris", APIVersion, "DescribeInstanceNodesInfo")
     
     if c.GetCredential() == nil {
         return nil, errors.New("DescribeInstanceNodesInfo require credential")
@@ -1307,6 +1358,7 @@ func (c *Client) DescribeInstanceNodesRoleWithContext(ctx context.Context, reque
     if request == nil {
         request = NewDescribeInstanceNodesRoleRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "cdwdoris", APIVersion, "DescribeInstanceNodesRole")
     
     if c.GetCredential() == nil {
         return nil, errors.New("DescribeInstanceNodesRole require credential")
@@ -1356,6 +1408,7 @@ func (c *Client) DescribeInstanceOperationsWithContext(ctx context.Context, requ
     if request == nil {
         request = NewDescribeInstanceOperationsRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "cdwdoris", APIVersion, "DescribeInstanceOperations")
     
     if c.GetCredential() == nil {
         return nil, errors.New("DescribeInstanceOperations require credential")
@@ -1405,6 +1458,7 @@ func (c *Client) DescribeInstanceStateWithContext(ctx context.Context, request *
     if request == nil {
         request = NewDescribeInstanceStateRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "cdwdoris", APIVersion, "DescribeInstanceState")
     
     if c.GetCredential() == nil {
         return nil, errors.New("DescribeInstanceState require credential")
@@ -1454,6 +1508,7 @@ func (c *Client) DescribeInstanceUsedSubnetsWithContext(ctx context.Context, req
     if request == nil {
         request = NewDescribeInstanceUsedSubnetsRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "cdwdoris", APIVersion, "DescribeInstanceUsedSubnets")
     
     if c.GetCredential() == nil {
         return nil, errors.New("DescribeInstanceUsedSubnets require credential")
@@ -1503,6 +1558,7 @@ func (c *Client) DescribeInstancesWithContext(ctx context.Context, request *Desc
     if request == nil {
         request = NewDescribeInstancesRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "cdwdoris", APIVersion, "DescribeInstances")
     
     if c.GetCredential() == nil {
         return nil, errors.New("DescribeInstances require credential")
@@ -1552,6 +1608,7 @@ func (c *Client) DescribeInstancesHealthStateWithContext(ctx context.Context, re
     if request == nil {
         request = NewDescribeInstancesHealthStateRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "cdwdoris", APIVersion, "DescribeInstancesHealthState")
     
     if c.GetCredential() == nil {
         return nil, errors.New("DescribeInstancesHealthState require credential")
@@ -1601,6 +1658,7 @@ func (c *Client) DescribeRestoreTaskDetailWithContext(ctx context.Context, reque
     if request == nil {
         request = NewDescribeRestoreTaskDetailRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "cdwdoris", APIVersion, "DescribeRestoreTaskDetail")
     
     if c.GetCredential() == nil {
         return nil, errors.New("DescribeRestoreTaskDetail require credential")
@@ -1650,6 +1708,7 @@ func (c *Client) DescribeSlowQueryRecordsWithContext(ctx context.Context, reques
     if request == nil {
         request = NewDescribeSlowQueryRecordsRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "cdwdoris", APIVersion, "DescribeSlowQueryRecords")
     
     if c.GetCredential() == nil {
         return nil, errors.New("DescribeSlowQueryRecords require credential")
@@ -1699,6 +1758,7 @@ func (c *Client) DescribeSlowQueryRecordsDownloadWithContext(ctx context.Context
     if request == nil {
         request = NewDescribeSlowQueryRecordsDownloadRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "cdwdoris", APIVersion, "DescribeSlowQueryRecordsDownload")
     
     if c.GetCredential() == nil {
         return nil, errors.New("DescribeSlowQueryRecordsDownload require credential")
@@ -1731,7 +1791,7 @@ func NewDescribeSpecResponse() (response *DescribeSpecResponse) {
 }
 
 // DescribeSpec
-// 购买页拉取集群的数据节点和zookeeper节点的规格列表
+// 拉取集群节点规格列表
 //
 // 可能返回的错误码:
 //  INTERNALERROR = "InternalError"
@@ -1740,7 +1800,7 @@ func (c *Client) DescribeSpec(request *DescribeSpecRequest) (response *DescribeS
 }
 
 // DescribeSpec
-// 购买页拉取集群的数据节点和zookeeper节点的规格列表
+// 拉取集群节点规格列表
 //
 // 可能返回的错误码:
 //  INTERNALERROR = "InternalError"
@@ -1748,6 +1808,7 @@ func (c *Client) DescribeSpecWithContext(ctx context.Context, request *DescribeS
     if request == nil {
         request = NewDescribeSpecRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "cdwdoris", APIVersion, "DescribeSpec")
     
     if c.GetCredential() == nil {
         return nil, errors.New("DescribeSpec require credential")
@@ -1797,6 +1858,7 @@ func (c *Client) DescribeSqlApisWithContext(ctx context.Context, request *Descri
     if request == nil {
         request = NewDescribeSqlApisRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "cdwdoris", APIVersion, "DescribeSqlApis")
     
     if c.GetCredential() == nil {
         return nil, errors.New("DescribeSqlApis require credential")
@@ -1846,6 +1908,7 @@ func (c *Client) DescribeTableListWithContext(ctx context.Context, request *Desc
     if request == nil {
         request = NewDescribeTableListRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "cdwdoris", APIVersion, "DescribeTableList")
     
     if c.GetCredential() == nil {
         return nil, errors.New("DescribeTableList require credential")
@@ -1895,6 +1958,7 @@ func (c *Client) DescribeUserBindWorkloadGroupWithContext(ctx context.Context, r
     if request == nil {
         request = NewDescribeUserBindWorkloadGroupRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "cdwdoris", APIVersion, "DescribeUserBindWorkloadGroup")
     
     if c.GetCredential() == nil {
         return nil, errors.New("DescribeUserBindWorkloadGroup require credential")
@@ -1944,6 +2008,7 @@ func (c *Client) DescribeWorkloadGroupWithContext(ctx context.Context, request *
     if request == nil {
         request = NewDescribeWorkloadGroupRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "cdwdoris", APIVersion, "DescribeWorkloadGroup")
     
     if c.GetCredential() == nil {
         return nil, errors.New("DescribeWorkloadGroup require credential")
@@ -1993,6 +2058,7 @@ func (c *Client) DestroyInstanceWithContext(ctx context.Context, request *Destro
     if request == nil {
         request = NewDestroyInstanceRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "cdwdoris", APIVersion, "DestroyInstance")
     
     if c.GetCredential() == nil {
         return nil, errors.New("DestroyInstance require credential")
@@ -2042,6 +2108,7 @@ func (c *Client) ModifyClusterConfigsWithContext(ctx context.Context, request *M
     if request == nil {
         request = NewModifyClusterConfigsRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "cdwdoris", APIVersion, "ModifyClusterConfigs")
     
     if c.GetCredential() == nil {
         return nil, errors.New("ModifyClusterConfigs require credential")
@@ -2091,6 +2158,7 @@ func (c *Client) ModifyCoolDownPolicyWithContext(ctx context.Context, request *M
     if request == nil {
         request = NewModifyCoolDownPolicyRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "cdwdoris", APIVersion, "ModifyCoolDownPolicy")
     
     if c.GetCredential() == nil {
         return nil, errors.New("ModifyCoolDownPolicy require credential")
@@ -2140,6 +2208,7 @@ func (c *Client) ModifyInstanceWithContext(ctx context.Context, request *ModifyI
     if request == nil {
         request = NewModifyInstanceRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "cdwdoris", APIVersion, "ModifyInstance")
     
     if c.GetCredential() == nil {
         return nil, errors.New("ModifyInstance require credential")
@@ -2189,6 +2258,7 @@ func (c *Client) ModifyInstanceKeyValConfigsWithContext(ctx context.Context, req
     if request == nil {
         request = NewModifyInstanceKeyValConfigsRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "cdwdoris", APIVersion, "ModifyInstanceKeyValConfigs")
     
     if c.GetCredential() == nil {
         return nil, errors.New("ModifyInstanceKeyValConfigs require credential")
@@ -2238,6 +2308,7 @@ func (c *Client) ModifyNodeStatusWithContext(ctx context.Context, request *Modif
     if request == nil {
         request = NewModifyNodeStatusRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "cdwdoris", APIVersion, "ModifyNodeStatus")
     
     if c.GetCredential() == nil {
         return nil, errors.New("ModifyNodeStatus require credential")
@@ -2287,6 +2358,7 @@ func (c *Client) ModifySecurityGroupsWithContext(ctx context.Context, request *M
     if request == nil {
         request = NewModifySecurityGroupsRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "cdwdoris", APIVersion, "ModifySecurityGroups")
     
     if c.GetCredential() == nil {
         return nil, errors.New("ModifySecurityGroups require credential")
@@ -2336,6 +2408,7 @@ func (c *Client) ModifyUserBindWorkloadGroupWithContext(ctx context.Context, req
     if request == nil {
         request = NewModifyUserBindWorkloadGroupRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "cdwdoris", APIVersion, "ModifyUserBindWorkloadGroup")
     
     if c.GetCredential() == nil {
         return nil, errors.New("ModifyUserBindWorkloadGroup require credential")
@@ -2385,6 +2458,7 @@ func (c *Client) ModifyUserPrivilegesV3WithContext(ctx context.Context, request 
     if request == nil {
         request = NewModifyUserPrivilegesV3Request()
     }
+    c.InitBaseRequest(&request.BaseRequest, "cdwdoris", APIVersion, "ModifyUserPrivilegesV3")
     
     if c.GetCredential() == nil {
         return nil, errors.New("ModifyUserPrivilegesV3 require credential")
@@ -2434,6 +2508,7 @@ func (c *Client) ModifyWorkloadGroupWithContext(ctx context.Context, request *Mo
     if request == nil {
         request = NewModifyWorkloadGroupRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "cdwdoris", APIVersion, "ModifyWorkloadGroup")
     
     if c.GetCredential() == nil {
         return nil, errors.New("ModifyWorkloadGroup require credential")
@@ -2483,6 +2558,7 @@ func (c *Client) ModifyWorkloadGroupStatusWithContext(ctx context.Context, reque
     if request == nil {
         request = NewModifyWorkloadGroupStatusRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "cdwdoris", APIVersion, "ModifyWorkloadGroupStatus")
     
     if c.GetCredential() == nil {
         return nil, errors.New("ModifyWorkloadGroupStatus require credential")
@@ -2532,6 +2608,7 @@ func (c *Client) OpenCoolDownWithContext(ctx context.Context, request *OpenCoolD
     if request == nil {
         request = NewOpenCoolDownRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "cdwdoris", APIVersion, "OpenCoolDown")
     
     if c.GetCredential() == nil {
         return nil, errors.New("OpenCoolDown require credential")
@@ -2581,6 +2658,7 @@ func (c *Client) OpenCoolDownPolicyWithContext(ctx context.Context, request *Ope
     if request == nil {
         request = NewOpenCoolDownPolicyRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "cdwdoris", APIVersion, "OpenCoolDownPolicy")
     
     if c.GetCredential() == nil {
         return nil, errors.New("OpenCoolDownPolicy require credential")
@@ -2630,6 +2708,7 @@ func (c *Client) RecoverBackUpJobWithContext(ctx context.Context, request *Recov
     if request == nil {
         request = NewRecoverBackUpJobRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "cdwdoris", APIVersion, "RecoverBackUpJob")
     
     if c.GetCredential() == nil {
         return nil, errors.New("RecoverBackUpJob require credential")
@@ -2679,6 +2758,7 @@ func (c *Client) ReduceInstanceWithContext(ctx context.Context, request *ReduceI
     if request == nil {
         request = NewReduceInstanceRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "cdwdoris", APIVersion, "ReduceInstance")
     
     if c.GetCredential() == nil {
         return nil, errors.New("ReduceInstance require credential")
@@ -2728,6 +2808,7 @@ func (c *Client) ResizeDiskWithContext(ctx context.Context, request *ResizeDiskR
     if request == nil {
         request = NewResizeDiskRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "cdwdoris", APIVersion, "ResizeDisk")
     
     if c.GetCredential() == nil {
         return nil, errors.New("ResizeDisk require credential")
@@ -2777,6 +2858,7 @@ func (c *Client) RestartClusterForConfigsWithContext(ctx context.Context, reques
     if request == nil {
         request = NewRestartClusterForConfigsRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "cdwdoris", APIVersion, "RestartClusterForConfigs")
     
     if c.GetCredential() == nil {
         return nil, errors.New("RestartClusterForConfigs require credential")
@@ -2826,6 +2908,7 @@ func (c *Client) RestartClusterForNodeWithContext(ctx context.Context, request *
     if request == nil {
         request = NewRestartClusterForNodeRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "cdwdoris", APIVersion, "RestartClusterForNode")
     
     if c.GetCredential() == nil {
         return nil, errors.New("RestartClusterForNode require credential")
@@ -2875,6 +2958,7 @@ func (c *Client) ScaleOutInstanceWithContext(ctx context.Context, request *Scale
     if request == nil {
         request = NewScaleOutInstanceRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "cdwdoris", APIVersion, "ScaleOutInstance")
     
     if c.GetCredential() == nil {
         return nil, errors.New("ScaleOutInstance require credential")
@@ -2924,6 +3008,7 @@ func (c *Client) ScaleUpInstanceWithContext(ctx context.Context, request *ScaleU
     if request == nil {
         request = NewScaleUpInstanceRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "cdwdoris", APIVersion, "ScaleUpInstance")
     
     if c.GetCredential() == nil {
         return nil, errors.New("ScaleUpInstance require credential")
@@ -2973,6 +3058,7 @@ func (c *Client) UpdateCoolDownWithContext(ctx context.Context, request *UpdateC
     if request == nil {
         request = NewUpdateCoolDownRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "cdwdoris", APIVersion, "UpdateCoolDown")
     
     if c.GetCredential() == nil {
         return nil, errors.New("UpdateCoolDown require credential")

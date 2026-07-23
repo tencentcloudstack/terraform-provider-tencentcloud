@@ -172,6 +172,12 @@ func ResourceTencentCloudCdwdorisInstance() *schema.Resource {
 				Optional:    true,
 				Description: "Whether to enable multi-availability zone.",
 			},
+			"is_ssc": {
+				Type:        schema.TypeBool,
+				Optional:    true,
+				ForceNew:    true,
+				Description: "Whether it is storage-compute separation.",
+			},
 			"user_multi_zone_infos": {
 				Type:        schema.TypeList,
 				Optional:    true,
@@ -335,6 +341,10 @@ func resourceTencentCloudCdwdorisInstanceCreate(d *schema.ResourceData, meta int
 
 	if v, ok := d.GetOkExists("enable_multi_zones"); ok {
 		request.EnableMultiZones = helper.Bool(v.(bool))
+	}
+
+	if v, ok := d.GetOkExists("is_ssc"); ok {
+		request.IsSSC = helper.Bool(v.(bool))
 	}
 
 	if userMultiZoneInfosMap, ok := helper.InterfacesHeadMap(d, "user_multi_zone_infos"); ok {
@@ -616,7 +626,7 @@ func resourceTencentCloudCdwdorisInstanceUpdate(d *schema.ResourceData, meta int
 		instanceId = d.Id()
 	)
 
-	immutableArgs := []string{"zone", "fe_spec", "be_spec", "ha_flag", "user_vpc_id", "user_subnet_id", "product_version", "charge_type", "charge_properties", "doris_user_pwd", "tags", "case_sensitive", "enable_multi_zones", "user_multi_zone_infos"}
+	immutableArgs := []string{"zone", "fe_spec", "be_spec", "ha_flag", "user_vpc_id", "user_subnet_id", "product_version", "charge_type", "charge_properties", "doris_user_pwd", "tags", "case_sensitive", "enable_multi_zones", "user_multi_zone_infos", "is_ssc"}
 	for _, v := range immutableArgs {
 		if d.HasChange(v) {
 			return fmt.Errorf("argument `%s` cannot be changed", v)
