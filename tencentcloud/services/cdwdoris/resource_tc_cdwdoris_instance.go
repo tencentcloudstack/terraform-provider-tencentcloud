@@ -392,7 +392,7 @@ func resourceTencentCloudCdwdorisInstanceCreate(d *schema.ResourceData, meta int
 		return err
 	}
 
-	if response.Response.InstanceId == nil {
+	if response.Response.InstanceId == nil || *response.Response.InstanceId == "" {
 		return fmt.Errorf("InstanceId is nil")
 	}
 
