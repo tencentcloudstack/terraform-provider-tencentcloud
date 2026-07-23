@@ -248,3 +248,44 @@ Alarm policy instance can be imported, e.g.
 ```
 $ terraform import tencentcloud_monitor_alarm_policy.policy policy-id
 ```
+
+alarm policy with hierarchical notices
+
+```hcl
+resource "tencentcloud_monitor_alarm_policy" "foo" {
+  policy_name  = "tf-policy"
+  monitor_type = "MT_QCE"
+  enable       = 1
+  project_id   = 0
+  namespace    = "cvm_device"
+
+  conditions {
+    is_union_rule = 1
+    rules {
+      metric_name      = "CpuUsage"
+      period           = 60
+      operator         = "ge"
+      value            = "89.9"
+      continue_period  = 1
+      notice_frequency = 3600
+      is_power_notice  = 0
+    }
+  }
+
+  event_conditions {
+    metric_name = "ping_unreachable"
+  }
+
+  notice_ids = [tencentcloud_monitor_alarm_notice.foo.id]
+
+  hierarchical_notices {
+    notice_id      = tencentcloud_monitor_alarm_notice.foo.id
+    classification = ["Remind", "Serious"]
+  }
+
+  notice_content_tmpl_bind_infos {
+    content_tmpl_id = "tmpl-xxxx"
+    notice_id       = tencentcloud_monitor_alarm_notice.foo.id
+  }
+}
+```

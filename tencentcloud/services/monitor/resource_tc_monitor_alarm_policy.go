@@ -267,6 +267,51 @@ func ResourceTencentCloudMonitorAlarmPolicy() *schema.Resource {
 				},
 			},
 
+			"hierarchical_notices": {
+				Type:        schema.TypeList,
+				Optional:    true,
+				Computed:    true,
+				Description: "Alarm hierarchical notice rules configuration.",
+				Elem: &schema.Resource{
+					Schema: map[string]*schema.Schema{
+						"notice_id": {
+							Type:        schema.TypeString,
+							Required:    true,
+							Description: "Notification template ID.",
+						},
+						"classification": {
+							Type:        schema.TypeSet,
+							Optional:    true,
+							Description: "Notification level list, e.g. [\"Remind\", \"Serious\"].",
+							Elem: &schema.Schema{
+								Type: schema.TypeString,
+							},
+						},
+					},
+				},
+			},
+
+			"notice_content_tmpl_bind_infos": {
+				Type:        schema.TypeList,
+				Optional:    true,
+				Computed:    true,
+				Description: "Notice content template binding info.",
+				Elem: &schema.Resource{
+					Schema: map[string]*schema.Schema{
+						"content_tmpl_id": {
+							Type:        schema.TypeString,
+							Required:    true,
+							Description: "Notification content template ID.",
+						},
+						"notice_id": {
+							Type:        schema.TypeString,
+							Required:    true,
+							Description: "Notification template ID.",
+						},
+					},
+				},
+			},
+
 			// compute
 			"create_time": {
 				Type:        schema.TypeString,
@@ -471,6 +516,36 @@ func resourceTencentMonitorAlarmPolicyCreate(d *schema.ResourceData, meta interf
 		request.Filter = &alarmPolicyFilter
 	}
 
+	if v, ok := d.GetOk("hierarchical_notices"); ok {
+		hierarchicalNotices := make([]*monitor.AlarmHierarchicalNotice, 0, 10)
+		for _, item := range v.([]interface{}) {
+			m := item.(map[string]interface{})
+			notice := monitor.AlarmHierarchicalNotice{}
+			notice.NoticeId = helper.String(m["notice_id"].(string))
+			if v, ok := m["classification"]; ok {
+				classSet := v.(*schema.Set).List()
+				for i := range classSet {
+					class := classSet[i].(string)
+					notice.Classification = append(notice.Classification, &class)
+				}
+			}
+			hierarchicalNotices = append(hierarchicalNotices, &notice)
+		}
+		request.HierarchicalNotices = hierarchicalNotices
+	}
+
+	if v, ok := d.GetOk("notice_content_tmpl_bind_infos"); ok {
+		noticeContentTmplBindInfos := make([]*monitor.NoticeContentTmplBindInfo, 0, 10)
+		for _, item := range v.([]interface{}) {
+			m := item.(map[string]interface{})
+			bindInfo := monitor.NoticeContentTmplBindInfo{}
+			bindInfo.ContentTmplID = helper.String(m["content_tmpl_id"].(string))
+			bindInfo.NoticeID = helper.String(m["notice_id"].(string))
+			noticeContentTmplBindInfos = append(noticeContentTmplBindInfos, &bindInfo)
+		}
+		request.NoticeContentTmplBindInfos = noticeContentTmplBindInfos
+	}
+
 	var groupId *string
 	var policyId *string
 	if err := resource.Retry(tccommon.WriteRetryTimeout, func() *resource.RetryError {
@@ -594,6 +669,40 @@ func resourceTencentMonitorAlarmPolicyRead(d *schema.ResourceData, meta interfac
 		}
 
 		_ = d.Set("filter", []interface{}{filterMap})
+	}
+
+	if policy.HierarchicalNotices != nil {
+		hierarchicalNotices := make([]interface{}, 0, len(policy.HierarchicalNotices))
+		for _, notice := range policy.HierarchicalNotices {
+			m := map[string]interface{}{}
+			if notice.NoticeId != nil {
+				m["notice_id"] = notice.NoticeId
+			}
+			if notice.Classification != nil {
+				classList := make([]string, 0, len(notice.Classification))
+				for _, class := range notice.Classification {
+					classList = append(classList, *class)
+				}
+				m["classification"] = classList
+			}
+			hierarchicalNotices = append(hierarchicalNotices, m)
+		}
+		_ = d.Set("hierarchical_notices", hierarchicalNotices)
+	}
+
+	if policy.NoticeContentTmplBindInfos != nil {
+		noticeContentTmplBindInfos := make([]interface{}, 0, len(policy.NoticeContentTmplBindInfos))
+		for _, bindInfo := range policy.NoticeContentTmplBindInfos {
+			m := map[string]interface{}{}
+			if bindInfo.ContentTmplID != nil {
+				m["content_tmpl_id"] = bindInfo.ContentTmplID
+			}
+			if bindInfo.NoticeID != nil {
+				m["notice_id"] = bindInfo.NoticeID
+			}
+			noticeContentTmplBindInfos = append(noticeContentTmplBindInfos, m)
+		}
+		_ = d.Set("notice_content_tmpl_bind_infos", noticeContentTmplBindInfos)
 	}
 
 	//nolint:misspell
@@ -935,7 +1044,7 @@ func resourceTencentMonitorAlarmPolicyUpdate(d *schema.ResourceData, meta interf
 		}
 	}
 
-	if d.HasChange("notice_ids") {
+	if d.HasChange("notice_ids") || d.HasChange("hierarchical_notices") || d.HasChange("notice_content_tmpl_bind_infos") {
 		request := monitor.NewModifyAlarmPolicyNoticeRequest()
 		request.Module = helper.String("monitor")
 		request.PolicyId = helper.String(d.Id())
@@ -946,6 +1055,36 @@ func resourceTencentMonitorAlarmPolicyUpdate(d *schema.ResourceData, meta interf
 				notice = append(notice, helper.String(item.(string)))
 			}
 			request.NoticeIds = notice
+		}
+
+		if v, ok := d.GetOk("hierarchical_notices"); ok {
+			hierarchicalNotices := make([]*monitor.AlarmHierarchicalNotice, 0, 10)
+			for _, item := range v.([]interface{}) {
+				m := item.(map[string]interface{})
+				notice := monitor.AlarmHierarchicalNotice{}
+				notice.NoticeId = helper.String(m["notice_id"].(string))
+				if v, ok := m["classification"]; ok {
+					classSet := v.(*schema.Set).List()
+					for i := range classSet {
+						class := classSet[i].(string)
+						notice.Classification = append(notice.Classification, &class)
+					}
+				}
+				hierarchicalNotices = append(hierarchicalNotices, &notice)
+			}
+			request.HierarchicalNotices = hierarchicalNotices
+		}
+
+		if v, ok := d.GetOk("notice_content_tmpl_bind_infos"); ok {
+			noticeContentTmplBindInfos := make([]*monitor.NoticeContentTmplBindInfo, 0, 10)
+			for _, item := range v.([]interface{}) {
+				m := item.(map[string]interface{})
+				bindInfo := monitor.NoticeContentTmplBindInfo{}
+				bindInfo.ContentTmplID = helper.String(m["content_tmpl_id"].(string))
+				bindInfo.NoticeID = helper.String(m["notice_id"].(string))
+				noticeContentTmplBindInfos = append(noticeContentTmplBindInfos, &bindInfo)
+			}
+			request.NoticeContentTmplBindInfos = noticeContentTmplBindInfos
 		}
 
 		if err := resource.Retry(tccommon.ReadRetryTimeout, func() *resource.RetryError {
