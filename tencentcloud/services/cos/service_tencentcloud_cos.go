@@ -384,104 +384,124 @@ func (me *CosService) DeleteBucket(ctx context.Context, bucket string, forced bo
 func (me *CosService) ForceCleanObject(ctx context.Context, bucket string, versioned bool, cdcId string, multiAz bool) error {
 	logId := tccommon.GetLogId(ctx)
 
-	// Get the object list of bucket with all versions
-	verOpt := cos.BucketGetObjectVersionsOptions{}
-	objList, resp, err := me.client.UseTencentCosClientNew(bucket, cdcId).Bucket.GetObjectVersions(ctx, &verOpt)
+	var (
+		keyMarker       string
+		versionIdMarker string
+		totalDeleted    int
+	)
 
-	if err != nil {
-		log.Printf("[CRITAL]%s api[%s] fail, resp body [%s], reason[%s]\n",
-			logId, "GetObjectVersions", resp.Body, err.Error())
-		return fmt.Errorf("cos force clean object error: %s, bucket: %s", err.Error(), bucket)
-	}
-	if objList.IsTruncated {
-		return fmt.Errorf("cos force clean object error: the list of objects is truncated and the bucket[%s] needs to be deleted manually!!!", bucket)
-	}
-
-	verCnt := len(objList.Version)
-	markerCnt := len(objList.DeleteMarker)
-	log.Printf("[DEBUG][ForceCleanObject]%s api[%s] success, get [%v] versions of object, get [%v] deleteMarker, versioned[%v].\n", logId, "GetObjectVersions", verCnt, markerCnt, versioned)
-
-	delCnt := verCnt + markerCnt
-	if delCnt == 0 {
-		return nil
-	}
-
-	delObjs := make([]cos.Object, 0, delCnt)
-	if versioned || multiAz {
-		//add the versions
-		for _, v := range objList.Version {
-			delObjs = append(delObjs, cos.Object{
-				Key:       v.Key,
-				VersionId: v.VersionId,
-			})
+	// Loop to paginate through all object versions until the list is no longer truncated,
+	// so that buckets with more than 1000 objects (or versions) can be fully cleaned before deletion.
+	for {
+		// Get the object list of bucket with all versions
+		verOpt := cos.BucketGetObjectVersionsOptions{
+			KeyMarker:       keyMarker,
+			VersionIdMarker: versionIdMarker,
 		}
-		// add the delete-marker
-		for _, m := range objList.DeleteMarker {
-			delObjs = append(delObjs, cos.Object{
-				Key:       m.Key,
-				VersionId: m.VersionId,
-			})
+		objList, resp, err := me.client.UseTencentCosClientNew(bucket, cdcId).Bucket.GetObjectVersions(ctx, &verOpt)
+
+		if err != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, resp body [%s], reason[%s]\n",
+				logId, "GetObjectVersions", resp.Body, err.Error())
+			return fmt.Errorf("cos force clean object error: %s, bucket: %s", err.Error(), bucket)
 		}
-	} else {
-		for _, v := range objList.Version {
-			delObjs = append(delObjs, cos.Object{
-				Key: v.Key,
-			})
-		}
-	}
 
-	opt := cos.ObjectDeleteMultiOptions{
-		Quiet:   true,
-		Objects: delObjs,
-	}
+		verCnt := len(objList.Version)
+		markerCnt := len(objList.DeleteMarker)
+		log.Printf("[DEBUG][ForceCleanObject]%s api[%s] success, get [%v] versions of object, get [%v] deleteMarker, versioned[%v], isTruncated[%v].\n",
+			logId, "GetObjectVersions", verCnt, markerCnt, versioned, objList.IsTruncated)
 
-	// Multi-delete by specified object.
-	result, resp, err := me.client.UseTencentCosClientNew(bucket, cdcId).Object.DeleteMulti(ctx, &opt)
-
-	if err != nil {
-		log.Printf("[CRITAL]%s api[%s] fail, resp body [%s], reason[%s], opt[%v]\n",
-			logId, "DeleteMulti", resp.Body, err.Error(), opt)
-		return fmt.Errorf("cos force clean object error: %s, bucket: %s", err.Error(), bucket)
-	}
-	log.Printf("[DEBUG][ForceCleanObject]%s api[%s] completed, removed [%v] versions of object. [%v] failed to remove.\n",
-		logId, "DeleteMulti", len(result.DeletedObjects), len(result.Errors))
-
-	// Clean the failed removal version.
-	if len(result.Errors) > 0 {
-		log.Printf("[CRITAL]%s api[%s] it still [%v] objects have not been removed, need try DeleteMulti again.\n",
-			logId, "DeleteMulti", len(result.Errors))
-
-		if err = resource.Retry(tccommon.ReadRetryTimeout, func() *resource.RetryError {
-			unDelObjs := make([]cos.Object, 0, len(result.Errors))
-			for _, v := range result.Errors {
-				unDelObjs = append(unDelObjs, cos.Object{
-					Key:       v.Key,
-					VersionId: v.VersionId,
-				})
+		delCnt := verCnt + markerCnt
+		if delCnt > 0 {
+			delObjs := make([]cos.Object, 0, delCnt)
+			if versioned || multiAz {
+				//add the versions
+				for _, v := range objList.Version {
+					delObjs = append(delObjs, cos.Object{
+						Key:       v.Key,
+						VersionId: v.VersionId,
+					})
+				}
+				// add the delete-marker
+				for _, m := range objList.DeleteMarker {
+					delObjs = append(delObjs, cos.Object{
+						Key:       m.Key,
+						VersionId: m.VersionId,
+					})
+				}
+			} else {
+				for _, v := range objList.Version {
+					delObjs = append(delObjs, cos.Object{
+						Key: v.Key,
+					})
+				}
 			}
-			unDelOpt := cos.ObjectDeleteMultiOptions{
+
+			opt := cos.ObjectDeleteMultiOptions{
 				Quiet:   true,
-				Objects: unDelObjs,
+				Objects: delObjs,
 			}
 
-			result, resp, err := me.client.UseTencentCosClientNew(bucket, cdcId).Object.DeleteMulti(ctx, &unDelOpt)
+			// Multi-delete by specified object.
+			result, resp, err := me.client.UseTencentCosClientNew(bucket, cdcId).Object.DeleteMulti(ctx, &opt)
+
 			if err != nil {
-				log.Printf("[CRITAL][retry]%s api[%s] fail, resp body [%s], reason[%s]\n",
-					logId, "DeleteMulti ", resp.Body, err.Error())
-				return tccommon.RetryError(err, tccommon.InternalError)
+				log.Printf("[CRITAL]%s api[%s] fail, resp body [%s], reason[%s], opt[%v]\n",
+					logId, "DeleteMulti", resp.Body, err.Error(), opt)
+				return fmt.Errorf("cos force clean object error: %s, bucket: %s", err.Error(), bucket)
 			}
+			log.Printf("[DEBUG][ForceCleanObject]%s api[%s] completed, removed [%v] versions of object. [%v] failed to remove.\n",
+				logId, "DeleteMulti", len(result.DeletedObjects), len(result.Errors))
+
+			// Clean the failed removal version.
 			if len(result.Errors) > 0 {
-				return resource.RetryableError(fmt.Errorf("[CRITAL][retry]%s api[%s] it still %v objects have not been removed, need try DeleteMulti again.\n",
-					logId, "DeleteMulti", len(result.Errors)))
+				log.Printf("[CRITAL]%s api[%s] it still [%v] objects have not been removed, need try DeleteMulti again.\n",
+					logId, "DeleteMulti", len(result.Errors))
+
+				if err = resource.Retry(tccommon.ReadRetryTimeout, func() *resource.RetryError {
+					unDelObjs := make([]cos.Object, 0, len(result.Errors))
+					for _, v := range result.Errors {
+						unDelObjs = append(unDelObjs, cos.Object{
+							Key:       v.Key,
+							VersionId: v.VersionId,
+						})
+					}
+					unDelOpt := cos.ObjectDeleteMultiOptions{
+						Quiet:   true,
+						Objects: unDelObjs,
+					}
+
+					result, resp, err := me.client.UseTencentCosClientNew(bucket, cdcId).Object.DeleteMulti(ctx, &unDelOpt)
+					if err != nil {
+						log.Printf("[CRITAL][retry]%s api[%s] fail, resp body [%s], reason[%s]\n",
+							logId, "DeleteMulti ", resp.Body, err.Error())
+						return tccommon.RetryError(err, tccommon.InternalError)
+					}
+					if len(result.Errors) > 0 {
+						return resource.RetryableError(fmt.Errorf("[CRITAL][retry]%s api[%s] it still %v objects have not been removed, need try DeleteMulti again.\n",
+							logId, "DeleteMulti", len(result.Errors)))
+					}
+					return nil
+				}); err != nil {
+					return err
+				}
 			}
-			return nil
-		}); err != nil {
-			return err
+
+			totalDeleted += len(result.DeletedObjects)
 		}
+
+		// No more pages left, stop polling.
+		if !objList.IsTruncated {
+			break
+		}
+
+		// Continue polling with the markers returned by the previous page.
+		keyMarker = objList.NextKeyMarker
+		versionIdMarker = objList.NextVersionIdMarker
 	}
 
 	log.Printf("[DEBUG][ForceCleanObject]%s api[%s] success, [%v] objects have been cleaned.\n",
-		logId, "ForceCleanObject", len(result.DeletedObjects))
+		logId, "ForceCleanObject", totalDeleted)
 	return nil
 }
 
@@ -1693,7 +1713,7 @@ func (me *CosService) DescribeCosBucketDomainCertificate(ctx context.Context, ce
 			}
 
 			resp, _ := json.Marshal(response.Response.Body)
-			log.Printf("[DEBUG]%s api[%s] success, request [%s], response body [%s], result [%s]\n", logId, "GetDomainCertificate", request, resp, result)
+			log.Printf("[DEBUG]%s api[%s] success, request [%s], response body [%s], result [%v]\n", logId, "GetDomainCertificate", request, resp, result)
 			res = result
 		}
 

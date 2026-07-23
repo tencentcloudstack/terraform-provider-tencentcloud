@@ -19,6 +19,33 @@ resource "tencentcloud_cls_machine_group" "group" {
       "192.168.1.2",
     ]
   }
+
+  meta_tags = {
+    "k" = "v"
+  }
+}
+```
+
+Example Usage with OSType (Windows)
+
+```hcl
+resource "tencentcloud_cls_machine_group" "group_ostype" {
+  group_name        = "group"
+  service_logging   = true
+  ostype            = 1
+  tags              = {
+    "test" = "test1"
+  }
+  update_end_time   = "19:05:40"
+  update_start_time = "17:05:40"
+
+  machine_group_type {
+    type   = "ip"
+    values = [
+      "192.168.1.1",
+      "192.168.1.2",
+    ]
+  }
 }
 ```
 

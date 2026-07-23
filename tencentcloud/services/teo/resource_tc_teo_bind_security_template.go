@@ -170,8 +170,9 @@ func resourceTencentCloudTeoBindSecurityTemplateRead(d *schema.ResourceData, met
 	}
 
 	if respData == nil {
+		log.Printf("[CRUD] teo_bind_security_template id=%s", d.Id())
 		d.SetId("")
-		log.Printf("[WARN]%s resource `teo_bind_security_template` [%s] not found, please check if it has been deleted.\n", logId, d.Id())
+		log.Printf("[WARN]%s resource `teo_bind_security_template` not found, please check if it has been deleted.\n", logId)
 		return nil
 	}
 

@@ -16,10 +16,14 @@ import (
 	"github.com/hashicorp/terraform-plugin-framework/function"
 	"github.com/hashicorp/terraform-plugin-framework/list"
 	"github.com/hashicorp/terraform-plugin-framework/resource"
+
+	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/services/ssm"
 )
 
 // resourceFactories lists every framework Resource factory.
-var resourceFactories = []func() resource.Resource{}
+var resourceFactories = []func() resource.Resource{
+	ssm.NewSsmSecretVersionV2Resource,
+}
 
 // dataSourceFactories lists every framework DataSource factory.
 var dataSourceFactories = []func() datasource.DataSource{}
@@ -28,7 +32,9 @@ var dataSourceFactories = []func() datasource.DataSource{}
 var functionFactories = []func() function.Function{}
 
 // ephemeralResourceFactories lists every framework EphemeralResource factory.
-var ephemeralResourceFactories = []func() ephemeral.EphemeralResource{}
+var ephemeralResourceFactories = []func() ephemeral.EphemeralResource{
+	ssm.NewSsmSecretVersionEphemeralResource,
+}
 
 // listResourceFactories lists every framework ListResource factory.
 var listResourceFactories = []func() list.ListResource{}

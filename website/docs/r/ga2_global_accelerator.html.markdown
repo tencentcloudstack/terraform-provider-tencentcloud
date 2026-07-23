@@ -45,8 +45,8 @@ resource "tencentcloud_ga2_global_accelerator" "example" {
 
 The following arguments are supported:
 
-* `cross_border_promise_flag` - (Optional, Bool) Whether the cross-border service commitment letter is signed. `true` indicates signed. Required when `cross_border_type` is set.
-* `cross_border_type` - (Optional, String) Cross-border type. Valid values: `HighQuality` (premium BGP-IP cross-border), `Unicom` (Unicom dedicated line cross-border).
+* `cross_border_promise_flag` - (Optional, Bool) Whether the cross-border service commitment letter has been signed. Must be set to `true` when `cross_border_type` is specified.
+* `cross_border_type` - (Optional, String) Cross-border type. Valid values: `HighQuality` (premium BGP-IP cross-border), `Unicom` (China Unicom dedicated-line cross-border).
 * `description` - (Optional, String) Global accelerator instance description. Maximum length is 100 bytes.
 * `instance_charge_type` - (Optional, String, ForceNew) Billing mode. `PREPAID` for monthly subscription, `POSTPAID` for pay-as-you-go. Default: `POSTPAID`. Currently only `POSTPAID` is supported. Cannot be changed after creation; modifying this attribute forces a new resource.
 * `name` - (Optional, String) Global accelerator instance name. Maximum length is 60 bytes.
@@ -57,14 +57,14 @@ The following arguments are supported:
 In addition to all arguments above, the following attributes are exported:
 
 * `id` - ID of the resource.
-* `accelerator_area_counts` - Number of acceleration regions attached to this global accelerator instance.
+* `accelerator_area_counts` - Number of acceleration regions under this global accelerator instance.
 * `cname` - Acceleration domain (CNAME) assigned to the instance.
 * `create_time` - Creation time of the global accelerator instance.
-* `ddos_id` - Associated anti-DDoS instance ID.
+* `ddos_id` - DDoS protection instance ID associated with the global accelerator instance.
 * `global_accelerator_id` - Global accelerator instance ID.
-* `listener_counts` - Number of listeners attached to this global accelerator instance.
-* `state` - Provisioning state of the global accelerator instance.
-* `status` - Operational status of the global accelerator instance.
+* `listener_counts` - Number of listeners under this global accelerator instance.
+* `state` - Global accelerator instance state.
+* `status` - Global accelerator instance status.
 
 ## Timeouts
 

@@ -72,8 +72,9 @@ func TencentCynosdbInstanceBaseInfo() map[string]*schema.Schema {
 		},
 		"instance_name": {
 			Type:        schema.TypeString,
+			Optional:    true,
 			Computed:    true,
-			Description: "Name of instance.",
+			Description: "Name of instance. Only supported when modifying.",
 		},
 		"instance_status": {
 			Type:        schema.TypeString,
@@ -346,6 +347,464 @@ func TencentCynosdbClusterBaseInfo() map[string]*schema.Schema {
 					},
 				},
 			},
+		},
+		"param_items": {
+			Type:        schema.TypeList,
+			Optional:    true,
+			Description: "Specify parameter list of database. It is valid when `param_template_id` is set in create cluster. Use `data.tencentcloud_mysql_default_params` to query available parameter details.",
+			Elem: &schema.Resource{
+				Schema: map[string]*schema.Schema{
+					"name": {
+						Type:        schema.TypeString,
+						Required:    true,
+						Description: "Name of param, e.g. `character_set_server`.",
+					},
+					"old_value": {
+						Type:        schema.TypeString,
+						Optional:    true,
+						Description: "Param old value, indicates the value which already set, this value is required when modifying current_value.",
+					},
+					"current_value": {
+						Type:        schema.TypeString,
+						Required:    true,
+						Description: "Param expected value to set.",
+					},
+				},
+			},
+		},
+		"prarm_template_id": {
+			Type:          schema.TypeInt,
+			Optional:      true,
+			Computed:      true,
+			ConflictsWith: []string{"param_template_id"},
+			Deprecated:    "It will be deprecated. Use `param_template_id` instead.",
+			Description:   "The ID of the parameter template.",
+		},
+		"param_template_id": {
+			Type:          schema.TypeInt,
+			Optional:      true,
+			Computed:      true,
+			ConflictsWith: []string{"prarm_template_id"},
+			Description:   "The ID of the parameter template.",
+		},
+		"instance_init_infos": {
+			Type:        schema.TypeList,
+			Optional:    true,
+			ForceNew:    true,
+			Description: "Instance initialization configuration information, mainly used to select instances of different specifications when purchasing a cluster.",
+			Elem: &schema.Resource{
+				Schema: map[string]*schema.Schema{
+					"cpu": {
+						Type:        schema.TypeInt,
+						Required:    true,
+						ForceNew:    true,
+						Description: "CPU of instance.",
+					},
+					"memory": {
+						Type:        schema.TypeInt,
+						Required:    true,
+						ForceNew:    true,
+						Description: "Memory of instance.",
+					},
+					"instance_type": {
+						Type:        schema.TypeString,
+						Required:    true,
+						ForceNew:    true,
+						Description: "Instance type. Value: `rw`, `ro`.",
+					},
+					"instance_count": {
+						Type:        schema.TypeInt,
+						Required:    true,
+						ForceNew:    true,
+						Description: "Instance count. Range: [1, 15].",
+					},
+					"min_ro_count": {
+						Type:        schema.TypeInt,
+						Optional:    true,
+						ForceNew:    true,
+						Description: "Minimum number of Serverless instances. Range [1,15].",
+					},
+					"max_ro_count": {
+						Type:        schema.TypeInt,
+						Optional:    true,
+						ForceNew:    true,
+						Description: "Maximum number of Serverless instances. Range [1,15].",
+					},
+					"min_ro_cpu": {
+						Type:        schema.TypeFloat,
+						Optional:    true,
+						ForceNew:    true,
+						Description: "Minimum Serverless Instance Specifications.",
+					},
+					"max_ro_cpu": {
+						Type:        schema.TypeFloat,
+						Optional:    true,
+						ForceNew:    true,
+						Description: "Maximum Serverless Instance Specifications.",
+					},
+					"device_type": {
+						Type:        schema.TypeString,
+						Optional:    true,
+						ForceNew:    true,
+						Description: "Instance machine type. Values: `common`, `exclusive`.",
+					},
+				},
+			},
+		},
+		"db_mode": {
+			Type:        schema.TypeString,
+			Optional:    true,
+			Computed:    true,
+			Description: "Specify DB mode, only available when `db_type` is `MYSQL`. Values: `NORMAL` (Default), `SERVERLESS`.",
+		},
+		"min_cpu": {
+			Optional:    true,
+			Type:        schema.TypeFloat,
+			Description: "Minimum CPU core count, required while `db_mode` is `SERVERLESS`, request DescribeServerlessInstanceSpecs for more reference.",
+		},
+		"max_cpu": {
+			Optional:    true,
+			Type:        schema.TypeFloat,
+			Description: "Maximum CPU core count, required while `db_mode` is `SERVERLESS`, request DescribeServerlessInstanceSpecs for more reference.",
+		},
+		"auto_pause": {
+			Type:        schema.TypeString,
+			Optional:    true,
+			Description: "Specify whether the cluster can auto-pause while `db_mode` is `SERVERLESS`. Values: `yes` (default), `no`.",
+		},
+		"auto_pause_delay": {
+			Type:        schema.TypeInt,
+			Optional:    true,
+			Description: "Specify auto-pause delay in second while `db_mode` is `SERVERLESS`. Value range: `[600, 691200]`. Default: `600`.",
+		},
+		"slave_zone": {
+			Type:        schema.TypeString,
+			Optional:    true,
+			Computed:    true,
+			Description: "Multi zone Addresses of the CynosDB Cluster.",
+		},
+		"serverless_status_flag": {
+			Type:         schema.TypeString,
+			Optional:     true,
+			ValidateFunc: tccommon.ValidateAllowedStringValue([]string{"resume", "pause"}),
+			Description:  "Specify whether to pause or resume serverless cluster. values: `resume`, `pause`.",
+		},
+		"serverless_status": {
+			Type:        schema.TypeString,
+			Computed:    true,
+			Description: "Serverless cluster status. NOTE: This is a readonly attribute, to modify, please set `serverless_status_flag`.",
+		},
+		"cynos_version": {
+			Type:        schema.TypeString,
+			Optional:    true,
+			Computed:    true,
+			Description: "Kernel minor version, like `3.1.16.002`.",
+		},
+	}
+
+	for k, v := range TencentCynosdbInstanceBaseInfo() {
+		cluster[k] = v
+	}
+
+	return cluster
+}
+
+func TencentCynosdbClusterBaseInfoV2() map[string]*schema.Schema {
+	cluster := map[string]*schema.Schema{
+		"project_id": {
+			Type:        schema.TypeInt,
+			Optional:    true,
+			ForceNew:    true,
+			Default:     0,
+			Description: "ID of the project. `0` by default.",
+		},
+		"available_zone": {
+			Type:        schema.TypeString,
+			Required:    true,
+			ForceNew:    true,
+			Description: "The available zone of the CynosDB Cluster.",
+		},
+		"vpc_id": {
+			Type:        schema.TypeString,
+			Required:    true,
+			Description: "ID of the VPC.",
+		},
+		"subnet_id": {
+			Type:        schema.TypeString,
+			Required:    true,
+			Description: "ID of the subnet within this VPC.",
+		},
+		"old_ip_reserve_hours": {
+			Type:        schema.TypeInt,
+			Optional:    true,
+			Description: "Recycling time of the old address, must be filled in when modifying the vpcRecycling time of the old address, must be filled in when modifying the vpc.",
+		},
+		"port": {
+			Type:        schema.TypeInt,
+			Optional:    true,
+			ForceNew:    true,
+			Default:     5432,
+			Description: "Port of CynosDB cluster.",
+		},
+		"db_type": {
+			Type:        schema.TypeString,
+			Required:    true,
+			ForceNew:    true,
+			Description: "Type of CynosDB, and available values include `MYSQL`.",
+		},
+		"db_version": {
+			Type:        schema.TypeString,
+			Required:    true,
+			ForceNew:    true,
+			Description: "Version of CynosDB, which is related to `db_type`. For `MYSQL`, available value is `5.7`, `8.0`.",
+		},
+		"storage_limit": {
+			Type:        schema.TypeInt,
+			Optional:    true,
+			Description: "Storage limit of CynosDB cluster instance, unit in GB. The maximum storage of a non-serverless instance in GB. NOTE: If db_type is `MYSQL` and charge_type is `PREPAID`, the value cannot exceed the maximum storage corresponding to the CPU and memory specifications, and the transaction mode is `order and pay`. when charge_type is `POSTPAID_BY_HOUR`, this argument is unnecessary.",
+		},
+		"storage_pay_mode": {
+			Type:        schema.TypeInt,
+			Optional:    true,
+			Computed:    true,
+			Description: "Cluster storage billing mode, pay-as-you-go: `0`-yearly/monthly: `1`-The default is pay-as-you-go. When the DbType is MYSQL, when the cluster computing billing mode is post-paid (including DbMode is SERVERLESS), the storage billing mode can only be billing by volume; rollback and cloning do not support yearly subscriptions monthly storage.",
+		},
+		"cluster_name": {
+			Type:        schema.TypeString,
+			Required:    true,
+			Description: "Name of CynosDB cluster.",
+		},
+		"password": {
+			Type:        schema.TypeString,
+			Required:    true,
+			Sensitive:   true,
+			Description: "Password of `root` account.",
+		},
+		"instance_count": {
+			Type:        schema.TypeInt,
+			Optional:    true,
+			ForceNew:    true,
+			Computed:    true,
+			Description: "The number of instances, the range is (0,16], the default value is 2 (i.e. one RW instance + one Ro instance), the passed n means 1 RW instance + n-1 Ro instances (with the same specifications), if you need a more accurate cluster composition, please use InstanceInitInfos.",
+		},
+		// payment
+		"charge_type": {
+			Type:         schema.TypeString,
+			Optional:     true,
+			ForceNew:     true,
+			Default:      CYNOSDB_CHARGE_TYPE_POSTPAID,
+			ValidateFunc: tccommon.ValidateAllowedStringValue([]string{CYNOSDB_CHARGE_TYPE_POSTPAID, CYNOSDB_CHARGE_TYPE_PREPAID}),
+			Description:  "The charge type of instance. Valid values are `PREPAID` and `POSTPAID_BY_HOUR`. Default value is `POSTPAID_BY_HOUR`.",
+		},
+		"prepaid_period": {
+			Type:         schema.TypeInt,
+			Optional:     true,
+			ForceNew:     true,
+			ValidateFunc: tccommon.ValidateAllowedIntValue(CYNOSDB_PREPAID_PERIOD),
+			Description:  "The tenancy (time unit is month) of the prepaid instance. Valid values are `1`, `2`, `3`, `4`, `5`, `6`, `7`, `8`, `9`, `10`, `11`, `12`, `24`, `36`. NOTE: it only works when charge_type is set to `PREPAID`.",
+		},
+		"auto_renew_flag": {
+			Type:        schema.TypeInt,
+			Optional:    true,
+			Default:     0,
+			Description: "Auto renew flag. Valid values are `0`(MANUAL_RENEW), `1`(AUTO_RENEW). Default value is `0`. Only works for PREPAID cluster.",
+		},
+		"force_delete": {
+			Type:        schema.TypeBool,
+			Optional:    true,
+			Default:     false,
+			Description: "Indicate whether to delete cluster instance directly or not. Default is false. If set true, the cluster and its `All RELATED INSTANCES` will be deleted instead of staying recycle bin. Note: works for both `PREPAID` and `POSTPAID_BY_HOUR` cluster.",
+		},
+		"tags": {
+			Type:        schema.TypeMap,
+			Optional:    true,
+			Description: "The tags of the CynosDB cluster.",
+		},
+		// Computed
+		"charset": {
+			Type:        schema.TypeString,
+			Computed:    true,
+			Description: "Charset used by CynosDB cluster.",
+		},
+		"cluster_status": {
+			Type:        schema.TypeString,
+			Computed:    true,
+			Description: "Status of the Cynosdb cluster.",
+		},
+		"create_time": {
+			Type:        schema.TypeString,
+			Computed:    true,
+			Description: "Creation time of the CynosDB cluster.",
+		},
+		"storage_used": {
+			Type:        schema.TypeInt,
+			Computed:    true,
+			Description: "Used storage of CynosDB cluster, unit in MB.",
+		},
+		// rw instance group infos
+		"rw_group_id": {
+			Type:        schema.TypeString,
+			Computed:    true,
+			Description: "ID of read-write instance group.",
+		},
+		"rw_group_instances": {
+			Type:        schema.TypeList,
+			Computed:    true,
+			Description: "List of instances in the read-write instance group.",
+			Elem: &schema.Resource{
+				Schema: map[string]*schema.Schema{
+					"instance_id": {
+						Type:        schema.TypeString,
+						Computed:    true,
+						Description: "ID of instance.",
+					},
+					"instance_name": {
+						Type:        schema.TypeString,
+						Computed:    true,
+						Description: "Name of instance.",
+					},
+				},
+			},
+		},
+		"rw_group_sg": {
+			Type:        schema.TypeList,
+			Optional:    true,
+			Elem:        &schema.Schema{Type: schema.TypeString},
+			Description: "IDs of security group for `rw_group`.",
+		},
+		"rw_group_addr": {
+			Type:        schema.TypeList,
+			Computed:    true,
+			Description: "Read-write addresses. Each element contains the following attributes:",
+			Elem: &schema.Resource{
+				Schema: map[string]*schema.Schema{
+					"ip": {
+						Type:        schema.TypeString,
+						Computed:    true,
+						Description: "IP address for read-write connection.",
+					},
+					"port": {
+						Type:        schema.TypeInt,
+						Computed:    true,
+						Description: "Port number for read-write connection.",
+					},
+				},
+			},
+		},
+		// ro instance group infos
+		"ro_group_id": {
+			Type:        schema.TypeString,
+			Computed:    true,
+			Description: "ID of read-only instance group.",
+		},
+		"ro_group_instances": {
+			Type:        schema.TypeList,
+			Computed:    true,
+			Description: "List of instances in the read-only instance group.",
+			Elem: &schema.Resource{
+				Schema: map[string]*schema.Schema{
+					"instance_id": {
+						Type:        schema.TypeString,
+						Computed:    true,
+						Description: "ID of instance.",
+					},
+					"instance_name": {
+						Type:        schema.TypeString,
+						Computed:    true,
+						Description: "Name of instance.",
+					},
+				},
+			},
+		},
+		"open_ro_group": {
+			Type:        schema.TypeBool,
+			Optional:    true,
+			Computed:    true,
+			Description: "Indicate whether to open read-only group or not. Once activated, it cannot be turned off. Default is false.",
+		},
+		"ro_group_sg": {
+			Type:        schema.TypeList,
+			Optional:    true,
+			Elem:        &schema.Schema{Type: schema.TypeString},
+			Description: "IDs of security group for `ro_group`. Only work for `open_ro_group` is true.",
+		},
+		"ro_group_addr": {
+			Type:        schema.TypeList,
+			Computed:    true,
+			Description: "Readonly addresses. Each element contains the following attributes:",
+			Elem: &schema.Resource{
+				Schema: map[string]*schema.Schema{
+					"ip": {
+						Type:        schema.TypeString,
+						Computed:    true,
+						Description: "IP address for readonly connection.",
+					},
+					"port": {
+						Type:        schema.TypeInt,
+						Computed:    true,
+						Description: "Port number for readonly connection.",
+					},
+				},
+			},
+		},
+		// single ro instance group infos
+		"single_ro_group_infos": {
+			Type:        schema.TypeSet,
+			Computed:    true,
+			Description: "List of single-read-only instance group.",
+			Elem: &schema.Resource{
+				Schema: map[string]*schema.Schema{
+					"single_ro_group_id": {
+						Type:        schema.TypeString,
+						Computed:    true,
+						Description: "ID list of single-read-only instance group.",
+					},
+					"single_ro_group_instance": {
+						Type:        schema.TypeList,
+						Computed:    true,
+						Description: "List of instances in the single-read-only instance group.",
+						Elem: &schema.Resource{
+							Schema: map[string]*schema.Schema{
+								"instance_id": {
+									Type:        schema.TypeString,
+									Computed:    true,
+									Description: "ID of instance.",
+								},
+								"instance_name": {
+									Type:        schema.TypeString,
+									Computed:    true,
+									Description: "Name of instance.",
+								},
+							},
+						},
+					},
+					"single_ro_group_addr": {
+						Type:        schema.TypeList,
+						Computed:    true,
+						Description: "Single-readonly addresses. Each element contains the following attributes:",
+						Elem: &schema.Resource{
+							Schema: map[string]*schema.Schema{
+								"ip": {
+									Type:        schema.TypeString,
+									Computed:    true,
+									Description: "IP address for single-readonly connection.",
+								},
+								"port": {
+									Type:        schema.TypeInt,
+									Computed:    true,
+									Description: "Port number for single-readonly connection.",
+								},
+							},
+						},
+					},
+				},
+			},
+		},
+		"single_ro_group_sg": {
+			Type:        schema.TypeList,
+			Optional:    true,
+			Elem:        &schema.Schema{Type: schema.TypeString},
+			Description: "IDs of security group for `single_ro_group`.",
 		},
 		"param_items": {
 			Type:        schema.TypeList,

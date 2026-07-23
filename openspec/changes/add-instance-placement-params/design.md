@@ -135,3 +135,47 @@ Not applicable - this is a backward-compatible addition. No migration needed.
 ## Open Questions
 
 None - design is straightforward and follows established patterns.
+
+---
+
+## Disaster Recover Group IDs Priority
+
+### Decision 6: `disaster_recover_group_ids` Takes Priority Over `placement_group_id`
+
+**Choice:** When `disaster_recover_group_ids` is set, ignore `placement_group_id` in Create, skip `placement_group_id` readback, and reject `placement_group_id` changes in Update.
+
+**Rationale:**
+- The `ModifyInstancesDisasterRecoverGroup` API now supports `DisasterRecoverGroupIds` for batch setting (up to 3 group IDs)
+- When both fields are configured, using both would lead to conflicting behaviors
+- Priority model ensures deterministic behavior: `disaster_recover_group_ids` always wins
+
+**Implementation:**
+- **Create**: `if disaster_recover_group_ids is set → use it; else → fallback to placement_group_id`
+- **Read**: `if disaster_recover_group_ids in state → skip placement_group_id readback` (avoids plan diffs)
+- **Update**: `if disaster_recover_group_ids is set → reject placement_group_id changes`
+
+### Decision 7: Remove `ConflictsWith`, Use Priority Model
+
+**Choice:** Remove `ConflictsWith: ["placement_group_id"]` from `disaster_recover_group_ids`, replace with runtime priority checks.
+
+**Rationale:**
+- `ConflictsWith` prevents both fields from being specified simultaneously at plan time
+- Priority model is more flexible: users can configure both and the provider handles the precedence
+- Allows gradual migration: users can add `disaster_recover_group_ids` while keeping `placement_group_id` as fallback
+
+### Decision 8: MaxItems: 3 for `disaster_recover_group_ids`
+
+**Choice:** Use `MaxItems: 3` on the `disaster_recover_group_ids` TypeSet field.
+
+**Rationale:**
+- The API restricts `DisasterRecoverGroupIds` to a maximum of 3 group IDs
+- Terraform SDK `MaxItems` provides plan-time validation before any API call
+
+### Decision 9: Conditional `placement_group_id` Readback
+
+**Choice:** Only read `placement_group_id` from API when `disaster_recover_group_ids` is NOT in state.
+
+**Rationale:**
+- When `disaster_recover_group_ids` is set, the API may return a single `DisasterRecoverGroupId` that differs from the user's configured `placement_group_id`
+- Unconditionally reading back would overwrite state and cause false plan diffs on subsequent `terraform plan`
+- Guarding the readback with `d.GetOk("disaster_recover_group_ids")` preserves state integrity

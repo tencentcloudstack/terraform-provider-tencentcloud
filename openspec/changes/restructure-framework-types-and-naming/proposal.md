@@ -17,13 +17,13 @@
 - **BREAKING**（仅内部包路径，不影响 Terraform 用户配置）：
   - `tencentcloud/internal/tcfwhelper/` → `tencentcloud/framework/internal/helper/`（中间经过一轮过渡名 `tencentcloud/internal/frameworkhelper/`，最终收敛到 framework 子树并受 Go `internal/` 可见性约束，包名由 `frameworkhelper` 改为 `helper`）
   - `tencentcloud/internal/tcfwprovider/` → `tencentcloud/internal/sharedmeta/`（双栈共享桥，**保留在 internal/**，需被 SDKv2 与 framework 两侧 import）
-  - `tencentcloud/services/tcprovider/`（业务实现） → 拆解后并入 `tencentcloud/framework/<product>/<type>/`
+  - `tencentcloud/services/tcprovider/`（业务实现） → 拆解后并入 `tencentcloud/framework/<product>/`（单层布局，文件名用类型前缀法）
   - `tencentcloud/provider/framework/`（provider 入口） → **下沉合并** 到 `tencentcloud/framework/`（与下方业务实现同目录，包名 `framework`）
   - `tencentcloud/acctest/framework_factories.go`（framework-only 测试工厂） → `tencentcloud/framework/acctest/factories.go`（包名 `frameworkacctest`；SDKv2 共用的 `AccPreCheck` / `test_util.go` 仍保留在 `tencentcloud/acctest/`）
   - import 别名 `fwprovider` → 直接使用包名 `framework`
 - 文件后缀 `_framework.go` 统一去掉（迁入 `tencentcloud/framework/` 后通过目录隔离已经表达"framework 风味"）
 
-### 目录布局（一次性合并 + 产品/类型双层）
+### 目录布局（一次性合并 + 产品单层布局）
 
 最终顶层布局：
 
@@ -35,7 +35,7 @@ tencentcloud/
 │   └── ...
 ├── framework/                         # plugin-framework 一切：入口 + 业务实现 + framework-only helper/acctest
 │   ├── provider.go                    # framework Provider Schema/Configure（包名 framework）
-│   ├── registry.go                    # 6 类型聚合器，直接 import 各产品子包工厂
+│   ├── registry.go                    # 6 类型聚合器，直接 import 各产品包工厂
 │   ├── provider_test.go               # 同包测试（从 tencentcloud/framework_provider_test.go 迁入）
 │   ├── testhelpers_test.go            # 同包测试 helper（从 tencentcloud/framework_provider_testhelpers_test.go 迁入）
 │   ├── README.md
@@ -43,26 +43,20 @@ tencentcloud/
 │   │   └── helper/                    # 包名 helper：types/retry/error/timeouts 工具
 │   ├── acctest/                       # 包名 frameworkacctest：framework 资源 acceptance test 用的 ProtoV5 工厂
 │   │   └── factories.go
-│   ├── cvm/                           # 产品：CVM
-│   │   └── actions/
-│   │       ├── reboot_instance_action.go
-│   │       └── reboot_instance_action_test.go
-│   └── meta/                          # 元产品：不归属任何具体云产品的 reference
-│       ├── resources/
-│       │   ├── local_note_resource.go
-│       │   └── local_note_resource_test.go
-│       ├── datasources/
-│       │   ├── provider_runtime_data_source.go        # 从 services/tcprovider 迁移
-│       │   └── provider_runtime_data_source_test.go
-│       ├── functions/
-│       │   ├── parse_resource_id_function.go
-│       │   └── parse_resource_id_function_test.go
-│       ├── ephemerals/
-│       │   ├── temp_credential_ephemeral_resource.go
-│       │   └── temp_credential_ephemeral_resource_test.go
-│       └── lists/
-│           ├── region_list_resource.go
-│           └── region_list_resource_test.go
+│   ├── cvm/                           # 产品：CVM（包名 cvm）
+│   │   ├── action_tc_cvm_reboot_instance.go
+│   │   └── action_tc_cvm_reboot_instance_test.go
+│   └── meta/                          # 元产品：不归属任何具体云产品的 reference（包名 meta）
+│       ├── resource_tc_meta_local_note.go
+│       ├── resource_tc_meta_local_note_test.go
+│       ├── data_source_tc_meta_provider_runtime.go        # 从 services/tcprovider 迁移
+│       ├── data_source_tc_meta_provider_runtime_test.go
+│       ├── function_tc_meta_parse_resource_id.go
+│       ├── function_tc_meta_parse_resource_id_test.go
+│       ├── ephemeral_tc_meta_temp_credential.go
+│       ├── ephemeral_tc_meta_temp_credential_test.go
+│       ├── list_tc_meta_region.go
+│       └── list_tc_meta_region_test.go
 ├── provider/
 │   └── sdkv2/                         # SDKv2 provider 入口（占位/既有）
 ├── acctest/                           # SDKv2 + 双栈共用 acceptance test helper（AccPreCheck 等）
@@ -74,15 +68,11 @@ tencentcloud/
 
 - `tencentcloud/framework/` 的 Go 包名为 **`framework`**（目录与包名一致）。
   - 调用方写法：`framework.NewProvider(primary)`（替代旧 `fwprovider.NewProvider(...)` 与 `tcprovider.FrameworkResources(...)` 两处）
-- 产品目录（`cvm/` / `meta/`）本身不放 `.go` 文件，仅作为命名空间容器；不需要包声明
-- 类型子目录的包名直接采用目录名，并以**产品前缀消歧**（避免不同产品下同名类型子包撞名）：
-  - `framework/cvm/actions/` → `package cvmactions`
-  - `framework/meta/resources/` → `package metaresources`
-  - `framework/meta/datasources/` → `package metadatasources`
-  - `framework/meta/functions/` → `package metafunctions`
-  - `framework/meta/ephemerals/` → `package metaephemerals`
-  - `framework/meta/lists/` → `package metalists`
-- 这样 `registry.go` 中可以同时 import 多个产品的同类子包而不需要 alias
+- 产品目录下的 Go 包名**直接采用产品名**（与 SDKv2 `services/<product>/` 完全一致，靠 import path 区分，无需 alias）：
+  - `framework/cvm/` → `package cvm`
+  - `framework/meta/` → `package meta`
+  - `framework/ssm/` → `package ssm`
+- 这样 `registry.go` 中可以同时 import 多个产品包而不需要 alias（不同 import path 天然唯一）
 
 ### 产品归属约定
 
@@ -97,7 +87,7 @@ tencentcloud/
 | `tencentcloud_temp_credential` | ephemeral | `meta/` | 跨产品共享凭证 |
 | `tencentcloud_region` | list | `meta/` | provider 级区域列表 |
 
-约定：**未来新增 framework 资源若能明确归属真实云产品，必须落到对应产品目录**（如 `framework/vpc/resources/...`）；**只有跨产品 / 不归属任何产品的资源**才允许进 `framework/meta/`。
+约定：**未来新增 framework 资源若能明确归属真实云产品，必须落到对应产品目录**（如 `framework/vpc/resource_tc_vpc_*`）；**只有跨产品 / 不归属任何产品的资源**才允许进 `framework/meta/`。
 
 ### `tencentcloud/framework/` 内部 registry 形式
 
@@ -107,41 +97,37 @@ tencentcloud/
 package framework
 
 import (
-    cvmactions     "github.com/.../tencentcloud/framework/cvm/actions"
-    metadatasources "github.com/.../tencentcloud/framework/meta/datasources"
-    metaresources   "github.com/.../tencentcloud/framework/meta/resources"
-    metafunctions   "github.com/.../tencentcloud/framework/meta/functions"
-    metaephemerals  "github.com/.../tencentcloud/framework/meta/ephemerals"
-    metalists       "github.com/.../tencentcloud/framework/meta/lists"
+    "github.com/.../tencentcloud/framework/cvm"
+    "github.com/.../tencentcloud/framework/meta"
 )
 
 func (p *Provider) Resources(_ context.Context) []func() resource.Resource {
-    return []func() resource.Resource{ metaresources.NewLocalNoteResource }
+    return []func() resource.Resource{ meta.NewLocalNoteResource }
 }
 func (p *Provider) DataSources(_ context.Context) []func() datasource.DataSource {
-    return []func() datasource.DataSource{ metadatasources.NewProviderRuntimeDataSource }
+    return []func() datasource.DataSource{ meta.NewProviderRuntimeDataSource }
 }
 func (p *Provider) Functions(_ context.Context) []func() function.Function {
-    return []func() function.Function{ metafunctions.NewParseResourceIDFunction }
+    return []func() function.Function{ meta.NewParseResourceIDFunction }
 }
 func (p *Provider) EphemeralResources(_ context.Context) []func() ephemeral.EphemeralResource {
-    return []func() ephemeral.EphemeralResource{ metaephemerals.NewTempCredentialEphemeralResource }
+    return []func() ephemeral.EphemeralResource{ meta.NewTempCredentialEphemeralResource }
 }
 func (p *Provider) ListResources(_ context.Context) []func() list.ListResource {
-    return []func() list.ListResource{ metalists.NewRegionListResource }
+    return []func() list.ListResource{ /* L0: meta list not registered */ }
 }
 func (p *Provider) Actions(_ context.Context) []func() action.Action {
-    return []func() action.Action{ cvmactions.NewRebootInstanceAction }
+    return []func() action.Action{ cvm.NewRebootInstanceAction }
 }
 ```
 
 ### 6 种类型各落地一份 reference 实现（按业务命名，不带 `example_` 前缀）
-- `framework/meta/datasources/provider_runtime_data_source.go`（**搬迁**已有实现）
-- `framework/meta/resources/local_note_resource.go`（轻量 stub：纯本地 in-memory 资源）
-- `framework/meta/functions/parse_resource_id_function.go`（演示 plugin-framework Function：拆 `instanceId#userId` → list）
-- `framework/meta/ephemerals/temp_credential_ephemeral_resource.go`（演示 EphemeralResource：本地构造短期凭证）
-- `framework/meta/lists/region_list_resource.go`（演示 ListResource：本地静态区域列表）
-- `framework/cvm/actions/reboot_instance_action.go`（演示 Action：仅 stub 校验，不调 CVM API）
+- `framework/meta/data_source_tc_meta_provider_runtime.go`（**搬迁**已有实现）
+- `framework/meta/resource_tc_meta_local_note.go`（轻量 stub：纯本地 in-memory 资源）
+- `framework/meta/function_tc_meta_parse_resource_id.go`（演示 plugin-framework Function：拆 `instanceId#userId` → list）
+- `framework/meta/ephemeral_tc_meta_temp_credential.go`（演示 EphemeralResource：本地构造短期凭证）
+- `framework/meta/list_tc_meta_region.go`（演示 ListResource：本地静态区域列表）
+- `framework/cvm/action_tc_cvm_reboot_instance.go`（演示 Action：仅 stub 校验，不调 CVM API）
 
 > 6 个 reference 都是 L2 级别：**接入 registry**，可以被 `terraform providers schema -json` 看到；但所有"业务副作用"或被替换为本地实现（local note / region list 静态返回），或被替换为只校验/打日志的 stub（reboot action），保证不会污染真实用户数据，也无需联网即可 unit test。
 
@@ -161,7 +147,7 @@ func (p *Provider) Actions(_ context.Context) []func() action.Action {
 - `vendor/` **不需重新刷新**（无依赖变动）。
 
 ### 文档
-- `tencentcloud/framework/README.md`：写明"产品/类型"双层布局、命名约定（包名前缀消歧）、"如何新增第 N 种类型资源"步骤
+- `tencentcloud/framework/README.md`：写明"产品单层布局"、命名约定（包名 = 产品名，文件名用类型前缀法）、"如何新增第 N 种类型资源"步骤
 - 旧 `tencentcloud/provider/framework/README.md`：删除（目录已不复存在）
 - `tencentcloud/provider/sdkv2/README.md`：目录树示意更新（framework 不再是 `provider/` 子目录）
 - `CONTRIBUTING.md`：所有 `tcfwhelper` / `tcfwprovider` / `services/tcprovider` / `provider/framework` 文案替换
@@ -170,7 +156,7 @@ func (p *Provider) Actions(_ context.Context) []func() action.Action {
 ## Capabilities
 
 ### New Capabilities
-- `framework-provider-types-and-naming`：定义 framework provider 侧的**包命名约定**（`framework/internal/helper`、`framework/acctest`、`internal/sharedmeta`、顶层 `tencentcloud/framework/`，Go 包名 `framework`）、**入口与业务实现合并**到同一目录、**产品/类型双层目录**的强制布局、**registry 直接聚合各产品工厂**的契约，以及**最低 plugin-framework 版本**约束（`>= v1.19.0`，且 vendor 中 MUST 包含 `action/` 包以支持 `action` 类型注册）。
+- `framework-provider-types-and-naming`：定义 framework provider 侧的**包命名约定**（`framework/internal/helper`、`framework/acctest`、`internal/sharedmeta`、顶层 `tencentcloud/framework/`，Go 包名 `framework`）、**入口与业务实现合并**到同一目录、**产品单层目录**的强制布局（`framework/<product>/`）、**类型前缀法文件命名**（`<type>_tc_<product>_<name>.go`）、**同名包策略**（`package <product>`，靠 import path 区分）、**registry 直接聚合各产品工厂**的契约，以及**最低 plugin-framework 版本**约束（`>= v1.19.0`，且 vendor 中 MUST 包含 `action/` 包以支持 `action` 类型注册）。
 
 ### Modified Capabilities
 *（无）* — 上一个 change `add-plugin-framework-muxing` 落地的 spec 尚未 archive 进 `openspec/specs/`，因此本次不存在需要 modify 的已存档 capability；若该 change 在本 change archive 之前先行 archive，本 change 会在 archive 阶段补充对其 spec 的 delta；否则两个 change 的 spec 各自独立。
@@ -187,8 +173,8 @@ func (p *Provider) Actions(_ context.Context) []func() action.Action {
   - `internal/tcfwhelper/` 下 `.go` 文件 → `tencentcloud/framework/internal/helper/`（两步完成：先 `package tcfwhelper` → `package frameworkhelper` 且迁至 `internal/frameworkhelper/`，再迁至 `framework/internal/helper/` 且包名改为 `helper`；最终只保留 `framework/internal/helper/` 一份）
   - `internal/tcfwprovider/` 下 `.go` 文件 → `internal/sharedmeta/`（同时 `package tcfwprovider` → `package sharedmeta`）
   - `services/tcprovider/framework.go`（registry 聚合点） → 内容合并进 `tencentcloud/framework/registry.go`，原文件**删除**
-  - `services/tcprovider/data_source_tc_provider_runtime_framework.go` → `tencentcloud/framework/meta/datasources/provider_runtime_data_source.go`（包名 `metadatasources`）
-  - `services/tcprovider/data_source_tc_provider_runtime_framework_test.go` → `tencentcloud/framework/meta/datasources/provider_runtime_data_source_test.go`
+  - `services/tcprovider/data_source_tc_provider_runtime_framework.go` → `tencentcloud/framework/meta/data_source_tc_meta_provider_runtime.go`（包名 `meta`）
+  - `services/tcprovider/data_source_tc_provider_runtime_framework_test.go` → `tencentcloud/framework/meta/data_source_tc_meta_provider_runtime_test.go`
   - `provider/framework/provider.go` → `tencentcloud/framework/provider.go`（包名仍 `framework`）
   - `provider/framework/registry.go` → `tencentcloud/framework/registry.go`（包名仍 `framework`，import 路径全改）
   - `tencentcloud/acctest/framework_factories.go` → `tencentcloud/framework/acctest/factories.go`（包名 `frameworkacctest`；SDKv2 共用的 `basic.go` / `test_util.go` 不动）
@@ -197,7 +183,7 @@ func (p *Provider) Actions(_ context.Context) []func() action.Action {
 
 ### API / 行为
 - **对 Terraform 终端用户：零影响**。所有改动都是 Go 包内部路径与文件组织；HCL 配置、provider schema、resource/datasource type name (`tencentcloud_*`)、state shape 全部保持不变。
-- **对仓内开发者**：重命名后的 import 路径必须更新；新增 framework 资源时直接在 `tencentcloud/framework/<product>/<type>/` 下落地，不再进 `tencentcloud/services/`，也不再进 `tencentcloud/provider/framework/`；提交 PR 时 `go build ./...` 必须 zero error，`go vet ./...` 必须不新增错误（以 baseline = 19 为上限，且本 change 触及的包中 0 error）。
+- **对仓内开发者**：重命名后的 import 路径必须更新；新增 framework 资源时直接在 `tencentcloud/framework/<product>/` 下落地，文件名用类型前缀法（`<type>_tc_<product>_<name>.go`），不再进 `tencentcloud/services/`，也不再进 `tencentcloud/provider/framework/`；提交 PR 时 `go build ./...` 必须 zero error，`go vet ./...` 必须不新增错误（以 baseline = 19 为上限，且本 change 触及的包中 0 error）。
 
 ### 依赖
 - `github.com/hashicorp/terraform-plugin-framework`：保持 `v1.19.0`（实测已包含完整 `action` 包，无需升级）

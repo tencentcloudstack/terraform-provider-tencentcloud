@@ -1338,16 +1338,23 @@ func (me *PostgresqlService) DescribePostgresqlBackupPlanConfigById(ctx context.
 		}
 	}()
 
-	ratelimit.Check(request.GetAction())
-
-	response, err := me.client.UsePostgresqlClient().DescribeBackupPlans(request)
+	var response *postgresql.DescribeBackupPlansResponse
+	err := resource.Retry(tccommon.ReadRetryTimeout, func() *resource.RetryError {
+		ratelimit.Check(request.GetAction())
+		result, e := me.client.UsePostgresqlClient().DescribeBackupPlans(request)
+		if e != nil {
+			return tccommon.RetryError(e)
+		}
+		response = result
+		return nil
+	})
 	if err != nil {
 		errRet = err
 		return
 	}
 	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
 
-	if len(response.Response.Plans) < 1 {
+	if response == nil || response.Response == nil || len(response.Response.Plans) < 1 {
 		return
 	}
 
@@ -2557,5 +2564,50 @@ func (me *PostgresqlService) CloseAuditService(ctx context.Context, request *pos
 	}
 
 	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+	return
+}
+
+func (me *PostgresqlService) DescribePostgresqlBackupPlanById(ctx context.Context, dBInstanceId, planId string) (backupPlan *postgresql.BackupPlan, errRet error) {
+	logId := tccommon.GetLogId(ctx)
+
+	request := postgresql.NewDescribeBackupPlansRequest()
+	request.DBInstanceId = &dBInstanceId
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	err := resource.Retry(tccommon.ReadRetryTimeout, func() *resource.RetryError {
+		ratelimit.Check(request.GetAction())
+		result, e := me.client.UsePostgresqlClient().DescribeBackupPlans(request)
+		if e != nil {
+			return tccommon.RetryError(e)
+		}
+
+		if result == nil || result.Response == nil {
+			return resource.NonRetryableError(fmt.Errorf("Describe postgresql backup_plan failed, Response is nil."))
+		}
+
+		if len(result.Response.Plans) == 0 {
+			return nil
+		}
+
+		for _, plan := range result.Response.Plans {
+			if plan.PlanId != nil && *plan.PlanId == planId {
+				backupPlan = plan
+				break
+			}
+		}
+		return nil
+	})
+
+	if err != nil {
+		errRet = err
+		return
+	}
+
+	log.Printf("[DEBUG]%s api[%s] success, request body [%s], planId[%s]\n", logId, request.GetAction(), request.ToJsonString(), planId)
 	return
 }

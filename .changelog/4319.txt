@@ -1,0 +1,3 @@
+```release-note:enhancement
+resource/tencentcloud_cynosdb_readonly_instance: support `instance_name` modification via `ModifyInstanceName` API
+```

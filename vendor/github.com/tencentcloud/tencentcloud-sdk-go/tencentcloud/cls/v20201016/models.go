@@ -1144,26 +1144,32 @@ func (r *CloseKafkaConsumerResponse) FromJsonString(s string) error {
 }
 
 type CloudProductLogTaskInfo struct {
-	// 日志服务地域
+	// <p>日志服务地域</p>
 	ClsRegion *string `json:"ClsRegion,omitnil,omitempty" name:"ClsRegion"`
 
-	// 实例ID
+	// <p>实例ID</p>
 	InstanceId *string `json:"InstanceId,omitnil,omitempty" name:"InstanceId"`
 
-	// 日志集ID
+	// <p>日志集ID</p>
 	LogsetId *string `json:"LogsetId,omitnil,omitempty" name:"LogsetId"`
 
-	// 日志主题ID
+	// <p>日志主题ID</p>
 	TopicId *string `json:"TopicId,omitnil,omitempty" name:"TopicId"`
 
-	// 日志配置拓展信息， 一般用于存储额外的日志投递配置
+	// <p>日志配置拓展信息， 一般用于存储额外的日志投递配置</p>
 	Extend *string `json:"Extend,omitnil,omitempty" name:"Extend"`
 
-	// 日志类型，支持枚举：CDS-AUDIT、CDS-RISK、CDB-AUDIT、TDSQL-C-AUDIT、MongoDB-AUDIT、MongoDB-SlowLog、MongoDB-ErrorLog、TDMYSQL-SLOW、DCDB-AUDIT、DCDB-SLOW、DCDB-ERROR、MariaDB-AUDIT、MariaDB-SLOW、MariaDB-ERROR、PostgreSQL-SLOW、PostgreSQL-ERROR、PostgreSQL-AUDIT、BH-FILELOG、BH-COMMANDLOG、APIS-ACCESS
+	// <p>日志类型，支持枚举：CDS-AUDIT、CDS-RISK、CDB-AUDIT、TDSQL-C-AUDIT、MongoDB-AUDIT、MongoDB-SlowLog、MongoDB-ErrorLog、TDMYSQL-SLOW、DCDB-AUDIT、DCDB-SLOW、DCDB-ERROR、MariaDB-AUDIT、MariaDB-SLOW、MariaDB-ERROR、PostgreSQL-SLOW、PostgreSQL-ERROR、PostgreSQL-AUDIT、BH-FILELOG、BH-COMMANDLOG、APIS-ACCESS</p>
 	LogType *string `json:"LogType,omitnil,omitempty" name:"LogType"`
 
-	// 任务状态， 0创建中 1创建完成 2 删除中 
+	// <p>任务状态， 0创建中 1创建完成 2 删除中</p>
 	Status *int64 `json:"Status,omitnil,omitempty" name:"Status"`
+
+	// <p>投递任务关联topic的标签信息</p>
+	TopicTags []*Tag `json:"TopicTags,omitnil,omitempty" name:"TopicTags"`
+
+	// <p>投递任务关联logset的标签信息</p>
+	LogsetTags []*Tag `json:"LogsetTags,omitnil,omitempty" name:"LogsetTags"`
 }
 
 type CollectConfig struct {
@@ -3903,6 +3909,15 @@ type CreateDlcDeliverRequestParams struct {
 
 	// <p>是否开启投递服务日志。1关闭，2开启。默认开启</p>
 	HasServicesLog *uint64 `json:"HasServicesLog,omitnil,omitempty" name:"HasServicesLog"`
+
+	// <p>自动创建dlc字段</p><p>默认值：false</p><p>当您的日志中有新增字段时，系统自动将其投递至DLC</p>
+	AutoCreateField *bool `json:"AutoCreateField,omitnil,omitempty" name:"AutoCreateField"`
+
+	// <p>将投递失败的日志存储至DLC表</p>
+	DlcFailHandle *DlcFailHandle `json:"DlcFailHandle,omitnil,omitempty" name:"DlcFailHandle"`
+
+	// <p>日志预过滤-数据写入 Splunk 的原始数据进行预过滤处理</p>
+	DSLFilter *string `json:"DSLFilter,omitnil,omitempty" name:"DSLFilter"`
 }
 
 type CreateDlcDeliverRequest struct {
@@ -3934,6 +3949,15 @@ type CreateDlcDeliverRequest struct {
 
 	// <p>是否开启投递服务日志。1关闭，2开启。默认开启</p>
 	HasServicesLog *uint64 `json:"HasServicesLog,omitnil,omitempty" name:"HasServicesLog"`
+
+	// <p>自动创建dlc字段</p><p>默认值：false</p><p>当您的日志中有新增字段时，系统自动将其投递至DLC</p>
+	AutoCreateField *bool `json:"AutoCreateField,omitnil,omitempty" name:"AutoCreateField"`
+
+	// <p>将投递失败的日志存储至DLC表</p>
+	DlcFailHandle *DlcFailHandle `json:"DlcFailHandle,omitnil,omitempty" name:"DlcFailHandle"`
+
+	// <p>日志预过滤-数据写入 Splunk 的原始数据进行预过滤处理</p>
+	DSLFilter *string `json:"DSLFilter,omitnil,omitempty" name:"DSLFilter"`
 }
 
 func (r *CreateDlcDeliverRequest) ToJsonString() string {
@@ -3957,6 +3981,9 @@ func (r *CreateDlcDeliverRequest) FromJsonString(s string) error {
 	delete(f, "Interval")
 	delete(f, "EndTime")
 	delete(f, "HasServicesLog")
+	delete(f, "AutoCreateField")
+	delete(f, "DlcFailHandle")
+	delete(f, "DSLFilter")
 	if len(f) > 0 {
 		return tcerr.NewTencentCloudSDKError("ClientError.BuildRequestError", "CreateDlcDeliverRequest has unknown keys!", "")
 	}
@@ -5510,87 +5537,99 @@ func (r *CreateRecordingRuleYamlTaskResponse) FromJsonString(s string) error {
 
 // Predefined struct for user
 type CreateScheduledSqlRequestParams struct {
-	// 源日志主题ID- 通过[获取日志主题列表](https://cloud.tencent.com/document/product/614/56454)获取日志主题Id。
+	// <p>源日志主题ID- 通过<a href="https://cloud.tencent.com/document/product/614/56454">获取日志主题列表</a>获取日志主题Id。</p>
 	SrcTopicId *string `json:"SrcTopicId,omitnil,omitempty" name:"SrcTopicId"`
 
-	// 任务名称，0~255字符
+	// <p>任务名称，0~255字符</p>
 	Name *string `json:"Name,omitnil,omitempty" name:"Name"`
 
-	// 任务启动状态.  1开启,  2关闭
+	// <p>任务启动状态.  1开启,  2关闭</p>
 	EnableFlag *int64 `json:"EnableFlag,omitnil,omitempty" name:"EnableFlag"`
 
-	// 定时SQL分析目标日志主题
+	// <p>定时SQL分析目标日志主题</p>
 	DstResource *ScheduledSqlResouceInfo `json:"DstResource,omitnil,omitempty" name:"DstResource"`
 
-	// 查询语句
+	// <p>查询语句</p>
 	ScheduledSqlContent *string `json:"ScheduledSqlContent,omitnil,omitempty" name:"ScheduledSqlContent"`
 
-	// 调度开始时间,Unix时间戳，单位ms
+	// <p>调度开始时间,Unix时间戳，单位ms</p>
 	ProcessStartTime *uint64 `json:"ProcessStartTime,omitnil,omitempty" name:"ProcessStartTime"`
 
-	// 调度类型，1:持续运行 2:指定时间范围
+	// <p>调度类型，1:持续运行 2:指定时间范围</p>
 	ProcessType *int64 `json:"ProcessType,omitnil,omitempty" name:"ProcessType"`
 
-	// 调度周期(分钟)，1~1440分钟
+	// <p>调度周期(分钟)，1~1440分钟</p>
 	ProcessPeriod *int64 `json:"ProcessPeriod,omitnil,omitempty" name:"ProcessPeriod"`
 
-	// 单次查询的时间窗口,如果您的目标主题为指标主题，建议该参数的大小不超过30分钟，否则可能转指标失败。 
+	// <p>单次查询的时间窗口,如果您的目标主题为指标主题，建议该参数的大小不超过30分钟，否则可能转指标失败。</p>
 	ProcessTimeWindow *string `json:"ProcessTimeWindow,omitnil,omitempty" name:"ProcessTimeWindow"`
 
-	// 执行延迟(秒)，0~120秒，默认60秒
+	// <p>执行延迟(秒)，0~120秒，默认60秒</p>
 	ProcessDelay *int64 `json:"ProcessDelay,omitnil,omitempty" name:"ProcessDelay"`
 
-	// 源topicId的地域信息,支持地域见 [地域列表](https://cloud.tencent.com/document/api/614/56474#.E5.9C.B0.E5.9F.9F.E5.88.97.E8.A1.A8) 文档
+	// <p>源topicId的地域信息,支持地域见 <a href="https://cloud.tencent.com/document/api/614/56474#.E5.9C.B0.E5.9F.9F.E5.88.97.E8.A1.A8">地域列表</a> 文档</p>
 	SrcTopicRegion *string `json:"SrcTopicRegion,omitnil,omitempty" name:"SrcTopicRegion"`
 
-	// 调度结束时间，当ProcessType=2时为必传字段, Unix时间戳，单位ms
+	// <p>调度结束时间，当ProcessType=2时为必传字段, Unix时间戳，单位ms</p>
 	ProcessEndTime *uint64 `json:"ProcessEndTime,omitnil,omitempty" name:"ProcessEndTime"`
 
-	// 查询语法规则。 默认值为0。0：Lucene语法，1：CQL语法  
+	// <p>查询语法规则。 默认值为0。0：Lucene语法，1：CQL语法</p>
 	SyntaxRule *uint64 `json:"SyntaxRule,omitnil,omitempty" name:"SyntaxRule"`
+
+	// <p>是否开启投递服务日志。1：关闭，2：开启。</p>
+	HasServicesLog *uint64 `json:"HasServicesLog,omitnil,omitempty" name:"HasServicesLog"`
+
+	// <p>全文检索标记。1：关闭，2：打开。默认：1</p>
+	FullQuery *uint64 `json:"FullQuery,omitnil,omitempty" name:"FullQuery"`
 }
 
 type CreateScheduledSqlRequest struct {
 	*tchttp.BaseRequest
 	
-	// 源日志主题ID- 通过[获取日志主题列表](https://cloud.tencent.com/document/product/614/56454)获取日志主题Id。
+	// <p>源日志主题ID- 通过<a href="https://cloud.tencent.com/document/product/614/56454">获取日志主题列表</a>获取日志主题Id。</p>
 	SrcTopicId *string `json:"SrcTopicId,omitnil,omitempty" name:"SrcTopicId"`
 
-	// 任务名称，0~255字符
+	// <p>任务名称，0~255字符</p>
 	Name *string `json:"Name,omitnil,omitempty" name:"Name"`
 
-	// 任务启动状态.  1开启,  2关闭
+	// <p>任务启动状态.  1开启,  2关闭</p>
 	EnableFlag *int64 `json:"EnableFlag,omitnil,omitempty" name:"EnableFlag"`
 
-	// 定时SQL分析目标日志主题
+	// <p>定时SQL分析目标日志主题</p>
 	DstResource *ScheduledSqlResouceInfo `json:"DstResource,omitnil,omitempty" name:"DstResource"`
 
-	// 查询语句
+	// <p>查询语句</p>
 	ScheduledSqlContent *string `json:"ScheduledSqlContent,omitnil,omitempty" name:"ScheduledSqlContent"`
 
-	// 调度开始时间,Unix时间戳，单位ms
+	// <p>调度开始时间,Unix时间戳，单位ms</p>
 	ProcessStartTime *uint64 `json:"ProcessStartTime,omitnil,omitempty" name:"ProcessStartTime"`
 
-	// 调度类型，1:持续运行 2:指定时间范围
+	// <p>调度类型，1:持续运行 2:指定时间范围</p>
 	ProcessType *int64 `json:"ProcessType,omitnil,omitempty" name:"ProcessType"`
 
-	// 调度周期(分钟)，1~1440分钟
+	// <p>调度周期(分钟)，1~1440分钟</p>
 	ProcessPeriod *int64 `json:"ProcessPeriod,omitnil,omitempty" name:"ProcessPeriod"`
 
-	// 单次查询的时间窗口,如果您的目标主题为指标主题，建议该参数的大小不超过30分钟，否则可能转指标失败。 
+	// <p>单次查询的时间窗口,如果您的目标主题为指标主题，建议该参数的大小不超过30分钟，否则可能转指标失败。</p>
 	ProcessTimeWindow *string `json:"ProcessTimeWindow,omitnil,omitempty" name:"ProcessTimeWindow"`
 
-	// 执行延迟(秒)，0~120秒，默认60秒
+	// <p>执行延迟(秒)，0~120秒，默认60秒</p>
 	ProcessDelay *int64 `json:"ProcessDelay,omitnil,omitempty" name:"ProcessDelay"`
 
-	// 源topicId的地域信息,支持地域见 [地域列表](https://cloud.tencent.com/document/api/614/56474#.E5.9C.B0.E5.9F.9F.E5.88.97.E8.A1.A8) 文档
+	// <p>源topicId的地域信息,支持地域见 <a href="https://cloud.tencent.com/document/api/614/56474#.E5.9C.B0.E5.9F.9F.E5.88.97.E8.A1.A8">地域列表</a> 文档</p>
 	SrcTopicRegion *string `json:"SrcTopicRegion,omitnil,omitempty" name:"SrcTopicRegion"`
 
-	// 调度结束时间，当ProcessType=2时为必传字段, Unix时间戳，单位ms
+	// <p>调度结束时间，当ProcessType=2时为必传字段, Unix时间戳，单位ms</p>
 	ProcessEndTime *uint64 `json:"ProcessEndTime,omitnil,omitempty" name:"ProcessEndTime"`
 
-	// 查询语法规则。 默认值为0。0：Lucene语法，1：CQL语法  
+	// <p>查询语法规则。 默认值为0。0：Lucene语法，1：CQL语法</p>
 	SyntaxRule *uint64 `json:"SyntaxRule,omitnil,omitempty" name:"SyntaxRule"`
+
+	// <p>是否开启投递服务日志。1：关闭，2：开启。</p>
+	HasServicesLog *uint64 `json:"HasServicesLog,omitnil,omitempty" name:"HasServicesLog"`
+
+	// <p>全文检索标记。1：关闭，2：打开。默认：1</p>
+	FullQuery *uint64 `json:"FullQuery,omitnil,omitempty" name:"FullQuery"`
 }
 
 func (r *CreateScheduledSqlRequest) ToJsonString() string {
@@ -5618,6 +5657,8 @@ func (r *CreateScheduledSqlRequest) FromJsonString(s string) error {
 	delete(f, "SrcTopicRegion")
 	delete(f, "ProcessEndTime")
 	delete(f, "SyntaxRule")
+	delete(f, "HasServicesLog")
+	delete(f, "FullQuery")
 	if len(f) > 0 {
 		return tcerr.NewTencentCloudSDKError("ClientError.BuildRequestError", "CreateScheduledSqlRequest has unknown keys!", "")
 	}
@@ -5626,7 +5667,7 @@ func (r *CreateScheduledSqlRequest) FromJsonString(s string) error {
 
 // Predefined struct for user
 type CreateScheduledSqlResponseParams struct {
-	// 任务id
+	// <p>任务id</p>
 	TaskId *string `json:"TaskId,omitnil,omitempty" name:"TaskId"`
 
 	// 唯一请求 ID，由服务端生成，每次请求都会返回（若请求因其他原因未能抵达服务端，则该次请求不会获得 RequestId）。定位问题时需要提供该次请求的 RequestId。
@@ -9302,6 +9343,9 @@ type DescribeCloudProductLogTasksRequestParams struct {
 
 	// <ul><li>assumerName<ul><li>按照【云产品标识】进行过滤。</li><li>类型：String</li><li>必选：否</li><li>枚举：CDS、CWP、CDB、TDSQL-C、MongoDB、TDStore、DCDB、MariaDB、PostgreSQL、BH、APIS</li></ul></li><li>logType<ul><li>按照【日志类型】进行过滤。</li><li>类型：String</li><li>必选：否</li><li>枚举：CDS-AUDIT、CDS-RISK、CDB-AUDIT、TDSQL-C-AUDIT、MongoDB-AUDIT、MongoDB-SlowLog、MongoDB-ErrorLog、TDMYSQL-SLOW、DCDB-AUDIT、DCDB-SLOW、DCDB-ERROR、MariaDB-AUDIT、MariaDB-SLOW、MariaDB-ERROR、PostgreSQL-SLOW、PostgreSQL-ERROR、PostgreSQL-AUDIT、BH-FILELOG、BH-COMMANDLOG、APIS-ACCESS</li></ul></li><li>instanceId<ul><li>按照【实例ID】进行过滤。</li><li>类型：String</li><li>必选：否</li></ul></li></ul>
 	Filters []*Filter `json:"Filters,omitnil,omitempty" name:"Filters"`
+
+	// <p>是否携带topic和logset的标签信息</p>
+	WithTags *bool `json:"WithTags,omitnil,omitempty" name:"WithTags"`
 }
 
 type DescribeCloudProductLogTasksRequest struct {
@@ -9315,6 +9359,9 @@ type DescribeCloudProductLogTasksRequest struct {
 
 	// <ul><li>assumerName<ul><li>按照【云产品标识】进行过滤。</li><li>类型：String</li><li>必选：否</li><li>枚举：CDS、CWP、CDB、TDSQL-C、MongoDB、TDStore、DCDB、MariaDB、PostgreSQL、BH、APIS</li></ul></li><li>logType<ul><li>按照【日志类型】进行过滤。</li><li>类型：String</li><li>必选：否</li><li>枚举：CDS-AUDIT、CDS-RISK、CDB-AUDIT、TDSQL-C-AUDIT、MongoDB-AUDIT、MongoDB-SlowLog、MongoDB-ErrorLog、TDMYSQL-SLOW、DCDB-AUDIT、DCDB-SLOW、DCDB-ERROR、MariaDB-AUDIT、MariaDB-SLOW、MariaDB-ERROR、PostgreSQL-SLOW、PostgreSQL-ERROR、PostgreSQL-AUDIT、BH-FILELOG、BH-COMMANDLOG、APIS-ACCESS</li></ul></li><li>instanceId<ul><li>按照【实例ID】进行过滤。</li><li>类型：String</li><li>必选：否</li></ul></li></ul>
 	Filters []*Filter `json:"Filters,omitnil,omitempty" name:"Filters"`
+
+	// <p>是否携带topic和logset的标签信息</p>
+	WithTags *bool `json:"WithTags,omitnil,omitempty" name:"WithTags"`
 }
 
 func (r *DescribeCloudProductLogTasksRequest) ToJsonString() string {
@@ -9332,6 +9379,7 @@ func (r *DescribeCloudProductLogTasksRequest) FromJsonString(s string) error {
 	delete(f, "Offset")
 	delete(f, "Limit")
 	delete(f, "Filters")
+	delete(f, "WithTags")
 	if len(f) > 0 {
 		return tcerr.NewTencentCloudSDKError("ClientError.BuildRequestError", "DescribeCloudProductLogTasksRequest has unknown keys!", "")
 	}
@@ -9345,6 +9393,9 @@ type DescribeCloudProductLogTasksResponseParams struct {
 
 	// <p>日志配置总数</p>
 	TotalCount *uint64 `json:"TotalCount,omitnil,omitempty" name:"TotalCount"`
+
+	// <p>额外信息。如查询topic、logset标签信息错误</p>
+	Message *string `json:"Message,omitnil,omitempty" name:"Message"`
 
 	// 唯一请求 ID，由服务端生成，每次请求都会返回（若请求因其他原因未能抵达服务端，则该次请求不会获得 RequestId）。定位问题时需要提供该次请求的 RequestId。
 	RequestId *string `json:"RequestId,omitnil,omitempty" name:"RequestId"`
@@ -14241,53 +14292,78 @@ type Dimension struct {
 }
 
 type DlcDeliverInfo struct {
-	// 任务id。
+	// <p>任务id。</p>
 	TaskId *string `json:"TaskId,omitnil,omitempty" name:"TaskId"`
 
-	// 账号id。
+	// <p>账号id。</p>
 	Uin *uint64 `json:"Uin,omitnil,omitempty" name:"Uin"`
 
-	// 日志主题id。
+	// <p>日志主题id。</p>
 	TopicId *string `json:"TopicId,omitnil,omitempty" name:"TopicId"`
 
-	// 任务名称。
+	// <p>任务名称。</p>
 	Name *string `json:"Name,omitnil,omitempty" name:"Name"`
 
-	// 投递类型，0：实时投递，1：历史投递
+	// <p>投递类型，0：实时投递，1：历史投递</p>
 	DeliverType *uint64 `json:"DeliverType,omitnil,omitempty" name:"DeliverType"`
 
-	// 投递文件大小，单位MB
+	// <p>投递文件大小，单位MB</p>
 	MaxSize *uint64 `json:"MaxSize,omitnil,omitempty" name:"MaxSize"`
 
-	// 投递间隔 单位秒
+	// <p>投递间隔 单位秒</p>
 	Interval *uint64 `json:"Interval,omitnil,omitempty" name:"Interval"`
 
-	// 投递时间范围的开始时间
+	// <p>投递时间范围的开始时间</p>
 	StartTime *uint64 `json:"StartTime,omitnil,omitempty" name:"StartTime"`
 
-	// 投递时间范围的结束时间
+	// <p>投递时间范围的结束时间</p>
 	EndTime *uint64 `json:"EndTime,omitnil,omitempty" name:"EndTime"`
 
-	// dlc配置信息
+	// <p>dlc配置信息</p>
 	DlcInfo *DlcInfo `json:"DlcInfo,omitnil,omitempty" name:"DlcInfo"`
 
-	// 是否开启投递服务日志。1关闭，2开启
+	// <p>是否开启投递服务日志。1关闭，2开启</p>
 	HasServicesLog *uint64 `json:"HasServicesLog,omitnil,omitempty" name:"HasServicesLog"`
 
-	// 任务状态。
+	// <p>任务状态。</p>
 	Status *uint64 `json:"Status,omitnil,omitempty" name:"Status"`
 
-	// 任务进度。历史投递任务生效。
+	// <p>任务进度。历史投递任务生效。</p>
 	Progress *uint64 `json:"Progress,omitnil,omitempty" name:"Progress"`
 
-	// 日志主题类型。0:标准主题，1:指标主题
+	// <p>日志主题类型。0:标准主题，1:指标主题</p>
 	BizType *uint64 `json:"BizType,omitnil,omitempty" name:"BizType"`
 
-	// 任务创建时间。
+	// <p>任务创建时间。</p>
 	CreateTime *uint64 `json:"CreateTime,omitnil,omitempty" name:"CreateTime"`
 
-	// 任务修改时间。
+	// <p>任务修改时间。</p>
 	UpdateTime *uint64 `json:"UpdateTime,omitnil,omitempty" name:"UpdateTime"`
+
+	// <p>自动创建dlc字段</p><p>默认值：false</p><p>当您的日志中有新增字段时，系统自动将其投递至DLC</p>
+	AutoCreateField *bool `json:"AutoCreateField,omitnil,omitempty" name:"AutoCreateField"`
+
+	// <p>将投递失败的日志存储至DLC表</p>
+	DlcFailHandle *DlcFailHandle `json:"DlcFailHandle,omitnil,omitempty" name:"DlcFailHandle"`
+
+	// <p>日志预过滤-数据写入 Splunk 的原始数据进行预过滤处理</p>
+	DSLFilter *string `json:"DSLFilter,omitnil,omitempty" name:"DSLFilter"`
+}
+
+type DlcFailHandle struct {
+	// <p>是否存储到DLC</p><p>默认值：false</p><p>用于控制是否开启投递失败的日志存储至DLC表</p>
+	StoreToDlc *bool `json:"StoreToDlc,omitnil,omitempty" name:"StoreToDlc"`
+
+	// <p>DLC表信息</p>
+	DlcFailTableInfo *DlcFailTableInfo `json:"DlcFailTableInfo,omitnil,omitempty" name:"DlcFailTableInfo"`
+}
+
+type DlcFailTableInfo struct {
+	// <p>DLC的表名称</p>
+	TableName *string `json:"TableName,omitnil,omitempty" name:"TableName"`
+
+	// <p>表中的字段名称</p><p>字段类型必须是String类型</p>
+	FieldName *string `json:"FieldName,omitnil,omitempty" name:"FieldName"`
 }
 
 type DlcFiledInfo struct {
@@ -15217,6 +15293,20 @@ type InstanceData struct {
 	ErrMsg *string `json:"ErrMsg,omitnil,omitempty" name:"ErrMsg"`
 }
 
+type JsonExpandInfo struct {
+	// <p>是否开启JSON嵌套展开功能。开启后将对指定JSON字段进行扁平化展开处理</p><p>默认值：无（必选参数）</p>
+	Switch *bool `json:"Switch,omitnil,omitempty" name:"Switch"`
+
+	// <p>待展开的JSON字段名列表，支持1~3个字段，字段名不可为空串且不可重复 </p><p>入参限制：1. 字段数量：1~3个2. 每个字段名长度不超过128个字符3. 字段名不可为空字符串4. 字段名之间不可重复</p><p>默认值：无（必选参数）</p><p>取值参考：取值：message；描述：示例字段名</p><p>示例：[&quot;message&quot;, &quot;data&quot;, &quot;content&quot;]</p>
+	Fields []*string `json:"Fields,omitnil,omitempty" name:"Fields"`
+
+	// <p>展开后是否丢弃原始的嵌套字段。true: 丢弃原始字段只保留展开后的平铺字段; false: 保留原始字段同时增加展开后的平铺字段</p><p>枚举值：</p><ul><li>true / false： 丢弃原字段 / 保留原字段</li></ul><p>默认值：true</p><p>非必选，不传时默认为true</p>
+	DropOriginal *bool `json:"DropOriginal,omitnil,omitempty" name:"DropOriginal"`
+
+	// <p>展开后的字段与已有字段发生冲突时的处理策略</p><p>枚举值：</p><ul><li>keep_outer / keep_inner： 保留外层(已存在)字段 / 保留内层(新展开)字段</li></ul><p>默认值：keep_outer</p><p>非必选，不传时默认为keep_outer</p>
+	ConflictPolicy *string `json:"ConflictPolicy,omitnil,omitempty" name:"ConflictPolicy"`
+}
+
 type JsonInfo struct {
 	// 启用标志
 	EnableTag *bool `json:"EnableTag,omitnil,omitempty" name:"EnableTag"`
@@ -15479,141 +15569,56 @@ type LogItems struct {
 }
 
 type LogRechargeRuleInfo struct {
-	// 导入类型，支持json_log：json格式日志，minimalist_log: 单行全文，fullregex_log: 单行完全正则
+	// <p>导入类型，支持json_log：json格式日志，minimalist_log: 单行全文，fullregex_log: 单行完全正则</p>
 	RechargeType *string `json:"RechargeType,omitnil,omitempty" name:"RechargeType"`
 
-	// 解析编码格式，0: UTF-8（默认值），1: GBK
+	// <p>解析编码格式，0: UTF-8（默认值），1: GBK</p>
 	EncodingFormat *uint64 `json:"EncodingFormat,omitnil,omitempty" name:"EncodingFormat"`
 
-	// 使用默认时间状态。true：开启后将使用系统当前时间或 Kafka 消息时间戳作为日志时间戳；false：关闭将使用日志中的时间字段作为日志时间戳。 默认：true
+	// <p>使用默认时间状态。true：开启后将使用系统当前时间或 Kafka 消息时间戳作为日志时间戳；false：关闭将使用日志中的时间字段作为日志时间戳。 默认：true</p>
 	DefaultTimeSwitch *bool `json:"DefaultTimeSwitch,omitnil,omitempty" name:"DefaultTimeSwitch"`
 
-	// 整条日志匹配规则，只有RechargeType为fullregex_log时有效
+	// <p>整条日志匹配规则，只有RechargeType为fullregex_log时有效</p>
 	LogRegex *string `json:"LogRegex,omitnil,omitempty" name:"LogRegex"`
 
-	// 解析失败日志是否上传，true表示上传，false表示不上传
+	// <p>解析失败日志是否上传，true表示上传，false表示不上传</p>
 	UnMatchLogSwitch *bool `json:"UnMatchLogSwitch,omitnil,omitempty" name:"UnMatchLogSwitch"`
 
-	// 解析失败日志的键名称
+	// <p>解析失败日志的键名称</p>
 	UnMatchLogKey *string `json:"UnMatchLogKey,omitnil,omitempty" name:"UnMatchLogKey"`
 
-	// 解析失败日志时间来源，0: 系统当前时间，1: Kafka消息时间戳
+	// <p>解析失败日志时间来源，0: 系统当前时间，1: Kafka消息时间戳</p>
 	UnMatchLogTimeSrc *uint64 `json:"UnMatchLogTimeSrc,omitnil,omitempty" name:"UnMatchLogTimeSrc"`
 
-	// 默认时间来源，0: 系统当前时间，1: Kafka消息时间戳
+	// <p>默认时间来源，0: 系统当前时间，1: Kafka消息时间戳</p>
 	DefaultTimeSrc *uint64 `json:"DefaultTimeSrc,omitnil,omitempty" name:"DefaultTimeSrc"`
 
-	// 时间字段，日志中代表时间的字段名。
-	// 
-	// - 当DefaultTimeSwitch为false，且RechargeType数据提取模式为 `json_log` JSON-文件日志 或 `fullregex_log` 单行完全正则-文件日志时， TimeKey不能为空。
+	// <p>时间字段，日志中代表时间的字段名。</p><ul><li>当DefaultTimeSwitch为false，且RechargeType数据提取模式为 <code>json_log</code> JSON-文件日志 或 <code>fullregex_log</code> 单行完全正则-文件日志时， TimeKey不能为空。</li></ul>
 	TimeKey *string `json:"TimeKey,omitnil,omitempty" name:"TimeKey"`
 
-	// 时间提取正则表达式。
-	// - 当DefaultTimeSwitch为false，且RechargeType数据提取模式为 `minimalist_log` 单行全文-文件日志时， TimeRegex不能为空。
-	// - 仅需输入日志中代表时间的字段的正则表达式即可；若匹配到多个字段，将使用第一个。
-	//    例：日志原文为：message with time 2022-08-08 14:20:20，则您可以设置提取时间正则为\d\d\d\d-\d\d-\d\d \d\d:\d\d:\d\d
+	// <p>时间提取正则表达式。</p><ul><li>当DefaultTimeSwitch为false，且RechargeType数据提取模式为 <code>minimalist_log</code> 单行全文-文件日志时， TimeRegex不能为空。</li><li>仅需输入日志中代表时间的字段的正则表达式即可；若匹配到多个字段，将使用第一个。<br> 例：日志原文为：message with time 2022-08-08 14:20:20，则您可以设置提取时间正则为\d\d\d\d-\d\d-\d\d \d\d:\d\d:\d\d</li></ul>
 	TimeRegex *string `json:"TimeRegex,omitnil,omitempty" name:"TimeRegex"`
 
-	// 时间字段格式。
-	// - 当DefaultTimeSwitch为false时， TimeFormat不能为空。
+	// <p>时间字段格式。</p><ul><li>当DefaultTimeSwitch为false时， TimeFormat不能为空。</li></ul>
 	TimeFormat *string `json:"TimeFormat,omitnil,omitempty" name:"TimeFormat"`
 
-	// 时间字段时区。
-	// - 当DefaultTimeSwitch为false时， TimeZone不能为空。
-	// - 时区格式规则
-	// ​前缀​：使用 GMT 或 UTC 作为时区基准
-	// ​偏移量​：
-	//     - `-` 表示西时区（比基准时间晚）
-	//     - `+` 表示东时区（比基准时间早）
-	//     -  格式为 ±HH:MM（小时:分钟）
-	// 
-	// - 当前支持：
-	// ```
-	// "GMT-12:00" 
-	// "GMT-11:00" 
-	// "GMT-10:00" 
-	// "GMT-09:30" 
-	// "GMT-09:00" 
-	// "GMT-08:00" 
-	// "GMT-07:00" 
-	// "GMT-06:00" 
-	// "GMT-05:00" 
-	// "GMT-04:00" 
-	// "GMT-03:30" 
-	// "GMT-03:00" 
-	// "GMT-02:00" 
-	// "GMT-01:00" 
-	// "GMT+00:00"
-	// "GMT+01:00"
-	// "GMT+02:00"
-	// "GMT+03:30"
-	// "GMT+04:00"
-	// "GMT+04:30"
-	// "GMT+05:00"
-	// "GMT+05:30"
-	// "GMT+05:45"
-	// "GMT+06:00"
-	// "GMT+06:30"
-	// "GMT+07:00"
-	// "GMT+08:00"
-	// "GMT+09:00"
-	// "GMT+09:30"
-	// "GMT+10:00"
-	// "GMT+10:30"
-	// "GMT+11:00"
-	// "GMT+11:30"
-	// "GMT+12:00"
-	// "GMT+12:45"
-	// "GMT+13:00"
-	// "GMT+14:00"
-	// "UTC-11:00"
-	// "UTC-10:00"
-	// "UTC-09:00"
-	// "UTC-08:00"
-	// "UTC-12:00"
-	// "UTC-07:00"
-	// "UTC-06:00"
-	// "UTC-05:00"
-	// "UTC-04:30"
-	// "UTC-04:00"
-	// "UTC-03:30"
-	// "UTC-03:00"
-	// "UTC-02:00"
-	// "UTC-01:00"
-	// "UTC+00:00"
-	// "UTC+01:00"
-	// "UTC+02:00"
-	// "UTC+03:00"
-	// "UTC+03:30"
-	// "UTC+04:00"
-	// "UTC+04:30"
-	// "UTC+05:00"
-	// "UTC+05:45"
-	// "UTC+06:00"
-	// "UTC+06:30"
-	// "UTC+07:00"
-	// "UTC+08:00"
-	// "UTC+09:00"
-	// "UTC+09:30"
-	// "UTC+10:00"
-	// "UTC+11:00"
-	// "UTC+12:00"
-	// "UTC+13:00"
-	// ```
+	// <p>时间字段时区。</p><ul><li><p>当DefaultTimeSwitch为false时， TimeZone不能为空。</p></li><li><p>时区格式规则<br>前缀：使用 GMT 或 UTC 作为时区基准<br>偏移量：</p><ul><li><code>-</code> 表示西时区（比基准时间晚）</li><li><code>+</code> 表示东时区（比基准时间早）</li><li>格式为 ±HH:MM（小时:分钟）</li></ul></li><li><p>当前支持：<br><pre><code>&quot;GMT-12:00&quot; &quot;GMT-11:00&quot; &quot;GMT-10:00&quot; &quot;GMT-09:30&quot; &quot;GMT-09:00&quot; &quot;GMT-08:00&quot; &quot;GMT-07:00&quot; &quot;GMT-06:00&quot; &quot;GMT-05:00&quot; &quot;GMT-04:00&quot; &quot;GMT-03:30&quot; &quot;GMT-03:00&quot; &quot;GMT-02:00&quot; &quot;GMT-01:00&quot; &quot;GMT+00:00&quot;&quot;GMT+01:00&quot;&quot;GMT+02:00&quot;&quot;GMT+03:30&quot;&quot;GMT+04:00&quot;&quot;GMT+04:30&quot;&quot;GMT+05:00&quot;&quot;GMT+05:30&quot;&quot;GMT+05:45&quot;&quot;GMT+06:00&quot;&quot;GMT+06:30&quot;&quot;GMT+07:00&quot;&quot;GMT+08:00&quot;&quot;GMT+09:00&quot;&quot;GMT+09:30&quot;&quot;GMT+10:00&quot;&quot;GMT+10:30&quot;&quot;GMT+11:00&quot;&quot;GMT+11:30&quot;&quot;GMT+12:00&quot;&quot;GMT+12:45&quot;&quot;GMT+13:00&quot;&quot;GMT+14:00&quot;&quot;UTC-11:00&quot;&quot;UTC-10:00&quot;&quot;UTC-09:00&quot;&quot;UTC-08:00&quot;&quot;UTC-12:00&quot;&quot;UTC-07:00&quot;&quot;UTC-06:00&quot;&quot;UTC-05:00&quot;&quot;UTC-04:30&quot;&quot;UTC-04:00&quot;&quot;UTC-03:30&quot;&quot;UTC-03:00&quot;&quot;UTC-02:00&quot;&quot;UTC-01:00&quot;&quot;UTC+00:00&quot;&quot;UTC+01:00&quot;&quot;UTC+02:00&quot;&quot;UTC+03:00&quot;&quot;UTC+03:30&quot;&quot;UTC+04:00&quot;&quot;UTC+04:30&quot;&quot;UTC+05:00&quot;&quot;UTC+05:45&quot;&quot;UTC+06:00&quot;&quot;UTC+06:30&quot;&quot;UTC+07:00&quot;&quot;UTC+08:00&quot;&quot;UTC+09:00&quot;&quot;UTC+09:30&quot;&quot;UTC+10:00&quot;&quot;UTC+11:00&quot;&quot;UTC+12:00&quot;&quot;UTC+13:00&quot;</code></pre></p></li></ul>
 	TimeZone *string `json:"TimeZone,omitnil,omitempty" name:"TimeZone"`
 
-	// 元数据信息，Kafka导入支持kafka_topic,kafka_partition,kafka_offset,kafka_timestamp
+	// <p>元数据信息，Kafka导入支持kafka_topic,kafka_partition,kafka_offset,kafka_timestamp</p>
 	Metadata []*string `json:"Metadata,omitnil,omitempty" name:"Metadata"`
 
-	// 日志Key列表，RechargeType为full_regex_log、delimiter_log时必填
+	// <p>日志Key列表，RechargeType为full_regex_log、delimiter_log时必填</p>
 	Keys []*string `json:"Keys,omitnil,omitempty" name:"Keys"`
 
-	// json解析模式，开启首层数据解析
+	// <p>json解析模式，开启首层数据解析</p>
 	ParseArray *bool `json:"ParseArray,omitnil,omitempty" name:"ParseArray"`
 
-	// 分隔符解析模式-分隔符
-	// 当解析格式为分隔符提取时，该字段必填
+	// <p>分隔符解析模式-分隔符<br>当解析格式为分隔符提取时，该字段必填</p>
 	Delimiter *string `json:"Delimiter,omitnil,omitempty" name:"Delimiter"`
+
+	// <p>JSON嵌套展开配置。仅RechargeType为json_log时生效，不传表示不开启。</p>
+	JsonExpand *JsonExpandInfo `json:"JsonExpand,omitnil,omitempty" name:"JsonExpand"`
 }
 
 type LogsetInfo struct {
@@ -16531,63 +16536,45 @@ func (r *ModifyAlarmShieldResponse) FromJsonString(s string) error {
 
 // Predefined struct for user
 type ModifyCloudProductLogCollectionRequestParams struct {
-	// 实例ID
+	// <p>实例ID</p>
 	InstanceId *string `json:"InstanceId,omitnil,omitempty" name:"InstanceId"`
 
-	// 云产品标识，支持枚举：CDS、CWP、CDB、TDSQL-C、MongoDB、TDStore、DCDB、MariaDB、PostgreSQL、BH、APIS
+	// <p>云产品标识，支持枚举：CDS、CWP、CDB、TDSQL-C、MongoDB、TDStore、DCDB、MariaDB、PostgreSQL、BH、APIS</p>
 	AssumerName *string `json:"AssumerName,omitnil,omitempty" name:"AssumerName"`
 
-	// 日志类型，支持枚举：CDS-AUDIT、CDS-RISK、CDB-AUDIT、TDSQL-C-AUDIT、MongoDB-AUDIT、MongoDB-SlowLog、MongoDB-ErrorLog、TDMYSQL-SLOW、DCDB-AUDIT、DCDB-SLOW、DCDB-ERROR、MariaDB-AUDIT、MariaDB-SLOW、MariaDB-ERROR、PostgreSQL-SLOW、PostgreSQL-ERROR、PostgreSQL-AUDIT、BH-FILELOG、BH-COMMANDLOG、APIS-ACCESS
+	// <p>日志类型，支持枚举：CDS-AUDIT、CDS-RISK、CDB-AUDIT、TDSQL-C-AUDIT、MongoDB-AUDIT、MongoDB-SlowLog、MongoDB-ErrorLog、TDMYSQL-SLOW、DCDB-AUDIT、DCDB-SLOW、DCDB-ERROR、MariaDB-AUDIT、MariaDB-SLOW、MariaDB-ERROR、PostgreSQL-SLOW、PostgreSQL-ERROR、PostgreSQL-AUDIT、BH-FILELOG、BH-COMMANDLOG、APIS-ACCESS</p>
 	LogType *string `json:"LogType,omitnil,omitempty" name:"LogType"`
 
-	// 云产品地域。 不同日志类型(LogType)地域入參格式存在差异， 请参考如下示例：
-	// - CDS所有日志类型：ap-guangzhou
-	// - CDB-AUDIT: gz
-	// - TDSQL-C-AUDIT: gz
-	// - MongoDB-AUDIT: gz
-	// - MongoDB-SlowLog：ap-guangzhou
-	// - MongoDB-ErrorLog：ap-guangzhou
-	// - TDMYSQL-SLOW：gz
-	// - DCDB所有日志类型：gz
-	// - MariaDB所有日志类型：gz
-	// - PostgreSQL所有日志类型：gz
-	// - BH所有日志类型：overseas-polaris(中国香港地区和其他)/fsi-polaris(金融区)/general-polaris(普通区)/intl-sg-prod(国际站)
-	// - APIS所有日志类型：gz
+	// <p>云产品地域。 不同日志类型(LogType)地域入參格式存在差异， 请参考如下示例：</p><ul><li>CDS所有日志类型：ap-guangzhou</li><li>CDB-AUDIT: gz</li><li>TDSQL-C-AUDIT: gz</li><li>MongoDB-AUDIT: gz</li><li>MongoDB-SlowLog：ap-guangzhou</li><li>MongoDB-ErrorLog：ap-guangzhou</li><li>TDMYSQL-SLOW：gz</li><li>DCDB所有日志类型：gz</li><li>MariaDB所有日志类型：gz</li><li>PostgreSQL所有日志类型：gz</li><li>BH所有日志类型：overseas-polaris(中国香港地区和其他)/fsi-polaris(金融区)/general-polaris(普通区)/intl-sg-prod(国际站)</li><li>APIS所有日志类型：gz</li></ul>
 	CloudProductRegion *string `json:"CloudProductRegion,omitnil,omitempty" name:"CloudProductRegion"`
 
-	// 日志配置拓展信息， 一般用于存储额外的日志投递配置
+	// <p>日志配置拓展信息， 一般用于存储额外的日志投递配置</p>
 	Extend *string `json:"Extend,omitnil,omitempty" name:"Extend"`
+
+	// <p>标签描述列表，通过指定该参数可以同时绑定标签到相应的logset和topic。最大支持10个标签键值对，同一个资源只能绑定到同一个标签键下。</p>
+	Tags []*Tag `json:"Tags,omitnil,omitempty" name:"Tags"`
 }
 
 type ModifyCloudProductLogCollectionRequest struct {
 	*tchttp.BaseRequest
 	
-	// 实例ID
+	// <p>实例ID</p>
 	InstanceId *string `json:"InstanceId,omitnil,omitempty" name:"InstanceId"`
 
-	// 云产品标识，支持枚举：CDS、CWP、CDB、TDSQL-C、MongoDB、TDStore、DCDB、MariaDB、PostgreSQL、BH、APIS
+	// <p>云产品标识，支持枚举：CDS、CWP、CDB、TDSQL-C、MongoDB、TDStore、DCDB、MariaDB、PostgreSQL、BH、APIS</p>
 	AssumerName *string `json:"AssumerName,omitnil,omitempty" name:"AssumerName"`
 
-	// 日志类型，支持枚举：CDS-AUDIT、CDS-RISK、CDB-AUDIT、TDSQL-C-AUDIT、MongoDB-AUDIT、MongoDB-SlowLog、MongoDB-ErrorLog、TDMYSQL-SLOW、DCDB-AUDIT、DCDB-SLOW、DCDB-ERROR、MariaDB-AUDIT、MariaDB-SLOW、MariaDB-ERROR、PostgreSQL-SLOW、PostgreSQL-ERROR、PostgreSQL-AUDIT、BH-FILELOG、BH-COMMANDLOG、APIS-ACCESS
+	// <p>日志类型，支持枚举：CDS-AUDIT、CDS-RISK、CDB-AUDIT、TDSQL-C-AUDIT、MongoDB-AUDIT、MongoDB-SlowLog、MongoDB-ErrorLog、TDMYSQL-SLOW、DCDB-AUDIT、DCDB-SLOW、DCDB-ERROR、MariaDB-AUDIT、MariaDB-SLOW、MariaDB-ERROR、PostgreSQL-SLOW、PostgreSQL-ERROR、PostgreSQL-AUDIT、BH-FILELOG、BH-COMMANDLOG、APIS-ACCESS</p>
 	LogType *string `json:"LogType,omitnil,omitempty" name:"LogType"`
 
-	// 云产品地域。 不同日志类型(LogType)地域入參格式存在差异， 请参考如下示例：
-	// - CDS所有日志类型：ap-guangzhou
-	// - CDB-AUDIT: gz
-	// - TDSQL-C-AUDIT: gz
-	// - MongoDB-AUDIT: gz
-	// - MongoDB-SlowLog：ap-guangzhou
-	// - MongoDB-ErrorLog：ap-guangzhou
-	// - TDMYSQL-SLOW：gz
-	// - DCDB所有日志类型：gz
-	// - MariaDB所有日志类型：gz
-	// - PostgreSQL所有日志类型：gz
-	// - BH所有日志类型：overseas-polaris(中国香港地区和其他)/fsi-polaris(金融区)/general-polaris(普通区)/intl-sg-prod(国际站)
-	// - APIS所有日志类型：gz
+	// <p>云产品地域。 不同日志类型(LogType)地域入參格式存在差异， 请参考如下示例：</p><ul><li>CDS所有日志类型：ap-guangzhou</li><li>CDB-AUDIT: gz</li><li>TDSQL-C-AUDIT: gz</li><li>MongoDB-AUDIT: gz</li><li>MongoDB-SlowLog：ap-guangzhou</li><li>MongoDB-ErrorLog：ap-guangzhou</li><li>TDMYSQL-SLOW：gz</li><li>DCDB所有日志类型：gz</li><li>MariaDB所有日志类型：gz</li><li>PostgreSQL所有日志类型：gz</li><li>BH所有日志类型：overseas-polaris(中国香港地区和其他)/fsi-polaris(金融区)/general-polaris(普通区)/intl-sg-prod(国际站)</li><li>APIS所有日志类型：gz</li></ul>
 	CloudProductRegion *string `json:"CloudProductRegion,omitnil,omitempty" name:"CloudProductRegion"`
 
-	// 日志配置拓展信息， 一般用于存储额外的日志投递配置
+	// <p>日志配置拓展信息， 一般用于存储额外的日志投递配置</p>
 	Extend *string `json:"Extend,omitnil,omitempty" name:"Extend"`
+
+	// <p>标签描述列表，通过指定该参数可以同时绑定标签到相应的logset和topic。最大支持10个标签键值对，同一个资源只能绑定到同一个标签键下。</p>
+	Tags []*Tag `json:"Tags,omitnil,omitempty" name:"Tags"`
 }
 
 func (r *ModifyCloudProductLogCollectionRequest) ToJsonString() string {
@@ -16607,6 +16594,7 @@ func (r *ModifyCloudProductLogCollectionRequest) FromJsonString(s string) error 
 	delete(f, "LogType")
 	delete(f, "CloudProductRegion")
 	delete(f, "Extend")
+	delete(f, "Tags")
 	if len(f) > 0 {
 		return tcerr.NewTencentCloudSDKError("ClientError.BuildRequestError", "ModifyCloudProductLogCollectionRequest has unknown keys!", "")
 	}
@@ -16615,6 +16603,9 @@ func (r *ModifyCloudProductLogCollectionRequest) FromJsonString(s string) error 
 
 // Predefined struct for user
 type ModifyCloudProductLogCollectionResponseParams struct {
+	// <p>额外信息。如修改topic、logset标签失败。</p>
+	Message *string `json:"Message,omitnil,omitempty" name:"Message"`
+
 	// 唯一请求 ID，由服务端生成，每次请求都会返回（若请求因其他原因未能抵达服务端，则该次请求不会获得 RequestId）。定位问题时需要提供该次请求的 RequestId。
 	RequestId *string `json:"RequestId,omitnil,omitempty" name:"RequestId"`
 }
@@ -17924,6 +17915,15 @@ type ModifyDlcDeliverRequestParams struct {
 
 	// <p>任务状态。</p><p>枚举值：</p><ul><li>1： 运行</li><li>2： 停止</li></ul>
 	Status *uint64 `json:"Status,omitnil,omitempty" name:"Status"`
+
+	// <p>自动创建dlc字段</p><p>默认值：false</p><p>当您的日志中有新增字段时，系统自动将其投递至DLC</p>
+	AutoCreateField *bool `json:"AutoCreateField,omitnil,omitempty" name:"AutoCreateField"`
+
+	// <p>将投递失败的日志存储至DLC表</p>
+	DlcFailHandle *DlcFailHandle `json:"DlcFailHandle,omitnil,omitempty" name:"DlcFailHandle"`
+
+	// <p>日志预过滤-数据写入 Splunk 的原始数据进行预过滤处理</p>
+	DSLFilter *string `json:"DSLFilter,omitnil,omitempty" name:"DSLFilter"`
 }
 
 type ModifyDlcDeliverRequest struct {
@@ -17961,6 +17961,15 @@ type ModifyDlcDeliverRequest struct {
 
 	// <p>任务状态。</p><p>枚举值：</p><ul><li>1： 运行</li><li>2： 停止</li></ul>
 	Status *uint64 `json:"Status,omitnil,omitempty" name:"Status"`
+
+	// <p>自动创建dlc字段</p><p>默认值：false</p><p>当您的日志中有新增字段时，系统自动将其投递至DLC</p>
+	AutoCreateField *bool `json:"AutoCreateField,omitnil,omitempty" name:"AutoCreateField"`
+
+	// <p>将投递失败的日志存储至DLC表</p>
+	DlcFailHandle *DlcFailHandle `json:"DlcFailHandle,omitnil,omitempty" name:"DlcFailHandle"`
+
+	// <p>日志预过滤-数据写入 Splunk 的原始数据进行预过滤处理</p>
+	DSLFilter *string `json:"DSLFilter,omitnil,omitempty" name:"DSLFilter"`
 }
 
 func (r *ModifyDlcDeliverRequest) ToJsonString() string {
@@ -17986,6 +17995,9 @@ func (r *ModifyDlcDeliverRequest) FromJsonString(s string) error {
 	delete(f, "DlcInfo")
 	delete(f, "HasServicesLog")
 	delete(f, "Status")
+	delete(f, "AutoCreateField")
+	delete(f, "DlcFailHandle")
+	delete(f, "DSLFilter")
 	if len(f) > 0 {
 		return tcerr.NewTencentCloudSDKError("ClientError.BuildRequestError", "ModifyDlcDeliverRequest has unknown keys!", "")
 	}
@@ -19487,75 +19499,87 @@ func (r *ModifyRecordingRuleYamlTaskResponse) FromJsonString(s string) error {
 
 // Predefined struct for user
 type ModifyScheduledSqlRequestParams struct {
-	// 任务ID，通过[获取定时SQL分析任务列表](https://cloud.tencent.com/document/product/614/95519)获取
+	// <p>任务ID，通过<a href="https://cloud.tencent.com/document/product/614/95519">获取定时SQL分析任务列表</a>获取</p>
 	TaskId *string `json:"TaskId,omitnil,omitempty" name:"TaskId"`
 
-	// 源日志主题，通过[获取定时SQL分析任务列表](https://cloud.tencent.com/document/product/614/95519)获取
+	// <p>源日志主题，通过<a href="https://cloud.tencent.com/document/product/614/95519">获取定时SQL分析任务列表</a>获取</p>
 	SrcTopicId *string `json:"SrcTopicId,omitnil,omitempty" name:"SrcTopicId"`
 
-	// 任务启动状态.   1开启,  2关闭
+	// <p>任务启动状态.   1开启,  2关闭</p>
 	EnableFlag *int64 `json:"EnableFlag,omitnil,omitempty" name:"EnableFlag"`
 
-	// 定时SQL分析的目标日志主题
+	// <p>定时SQL分析的目标日志主题</p>
 	DstResource *ScheduledSqlResouceInfo `json:"DstResource,omitnil,omitempty" name:"DstResource"`
 
-	// 查询语句
+	// <p>查询语句</p>
 	ScheduledSqlContent *string `json:"ScheduledSqlContent,omitnil,omitempty" name:"ScheduledSqlContent"`
 
-	// 调度周期(分钟)，1~1440分钟
+	// <p>调度周期(分钟)，1~1440分钟</p>
 	ProcessPeriod *int64 `json:"ProcessPeriod,omitnil,omitempty" name:"ProcessPeriod"`
 
-	// 单次查询的时间窗口. 例子中为近15分钟
+	// <p>单次查询的时间窗口. 例子中为近15分钟</p>
 	ProcessTimeWindow *string `json:"ProcessTimeWindow,omitnil,omitempty" name:"ProcessTimeWindow"`
 
-	// 执行延迟(秒)，0~120秒，默认60秒
+	// <p>执行延迟(秒)，0~120秒，默认60秒</p>
 	ProcessDelay *int64 `json:"ProcessDelay,omitnil,omitempty" name:"ProcessDelay"`
 
-	// 源topicId的地域信息,支持地域见 [地域列表](https://cloud.tencent.com/document/api/614/56474#.E5.9C.B0.E5.9F.9F.E5.88.97.E8.A1.A8) 文档
+	// <p>源topicId的地域信息,支持地域见 <a href="https://cloud.tencent.com/document/api/614/56474#.E5.9C.B0.E5.9F.9F.E5.88.97.E8.A1.A8">地域列表</a> 文档</p>
 	SrcTopicRegion *string `json:"SrcTopicRegion,omitnil,omitempty" name:"SrcTopicRegion"`
 
-	// 任务名称，0~255字符
+	// <p>任务名称，0~255字符</p>
 	Name *string `json:"Name,omitnil,omitempty" name:"Name"`
 
-	// 语法规则。 默认值为0。 0：Lucene语法，1：CQL语法
+	// <p>语法规则。 默认值为0。 0：Lucene语法，1：CQL语法</p>
 	SyntaxRule *uint64 `json:"SyntaxRule,omitnil,omitempty" name:"SyntaxRule"`
+
+	// <p>是否开启投递服务日志。1：关闭，2：开启。</p>
+	HasServicesLog *uint64 `json:"HasServicesLog,omitnil,omitempty" name:"HasServicesLog"`
+
+	// <p>全文检索查询标记。1：关闭，2：打开。</p>
+	FullQuery *uint64 `json:"FullQuery,omitnil,omitempty" name:"FullQuery"`
 }
 
 type ModifyScheduledSqlRequest struct {
 	*tchttp.BaseRequest
 	
-	// 任务ID，通过[获取定时SQL分析任务列表](https://cloud.tencent.com/document/product/614/95519)获取
+	// <p>任务ID，通过<a href="https://cloud.tencent.com/document/product/614/95519">获取定时SQL分析任务列表</a>获取</p>
 	TaskId *string `json:"TaskId,omitnil,omitempty" name:"TaskId"`
 
-	// 源日志主题，通过[获取定时SQL分析任务列表](https://cloud.tencent.com/document/product/614/95519)获取
+	// <p>源日志主题，通过<a href="https://cloud.tencent.com/document/product/614/95519">获取定时SQL分析任务列表</a>获取</p>
 	SrcTopicId *string `json:"SrcTopicId,omitnil,omitempty" name:"SrcTopicId"`
 
-	// 任务启动状态.   1开启,  2关闭
+	// <p>任务启动状态.   1开启,  2关闭</p>
 	EnableFlag *int64 `json:"EnableFlag,omitnil,omitempty" name:"EnableFlag"`
 
-	// 定时SQL分析的目标日志主题
+	// <p>定时SQL分析的目标日志主题</p>
 	DstResource *ScheduledSqlResouceInfo `json:"DstResource,omitnil,omitempty" name:"DstResource"`
 
-	// 查询语句
+	// <p>查询语句</p>
 	ScheduledSqlContent *string `json:"ScheduledSqlContent,omitnil,omitempty" name:"ScheduledSqlContent"`
 
-	// 调度周期(分钟)，1~1440分钟
+	// <p>调度周期(分钟)，1~1440分钟</p>
 	ProcessPeriod *int64 `json:"ProcessPeriod,omitnil,omitempty" name:"ProcessPeriod"`
 
-	// 单次查询的时间窗口. 例子中为近15分钟
+	// <p>单次查询的时间窗口. 例子中为近15分钟</p>
 	ProcessTimeWindow *string `json:"ProcessTimeWindow,omitnil,omitempty" name:"ProcessTimeWindow"`
 
-	// 执行延迟(秒)，0~120秒，默认60秒
+	// <p>执行延迟(秒)，0~120秒，默认60秒</p>
 	ProcessDelay *int64 `json:"ProcessDelay,omitnil,omitempty" name:"ProcessDelay"`
 
-	// 源topicId的地域信息,支持地域见 [地域列表](https://cloud.tencent.com/document/api/614/56474#.E5.9C.B0.E5.9F.9F.E5.88.97.E8.A1.A8) 文档
+	// <p>源topicId的地域信息,支持地域见 <a href="https://cloud.tencent.com/document/api/614/56474#.E5.9C.B0.E5.9F.9F.E5.88.97.E8.A1.A8">地域列表</a> 文档</p>
 	SrcTopicRegion *string `json:"SrcTopicRegion,omitnil,omitempty" name:"SrcTopicRegion"`
 
-	// 任务名称，0~255字符
+	// <p>任务名称，0~255字符</p>
 	Name *string `json:"Name,omitnil,omitempty" name:"Name"`
 
-	// 语法规则。 默认值为0。 0：Lucene语法，1：CQL语法
+	// <p>语法规则。 默认值为0。 0：Lucene语法，1：CQL语法</p>
 	SyntaxRule *uint64 `json:"SyntaxRule,omitnil,omitempty" name:"SyntaxRule"`
+
+	// <p>是否开启投递服务日志。1：关闭，2：开启。</p>
+	HasServicesLog *uint64 `json:"HasServicesLog,omitnil,omitempty" name:"HasServicesLog"`
+
+	// <p>全文检索查询标记。1：关闭，2：打开。</p>
+	FullQuery *uint64 `json:"FullQuery,omitnil,omitempty" name:"FullQuery"`
 }
 
 func (r *ModifyScheduledSqlRequest) ToJsonString() string {
@@ -19581,6 +19605,8 @@ func (r *ModifyScheduledSqlRequest) FromJsonString(s string) error {
 	delete(f, "SrcTopicRegion")
 	delete(f, "Name")
 	delete(f, "SyntaxRule")
+	delete(f, "HasServicesLog")
+	delete(f, "FullQuery")
 	if len(f) > 0 {
 		return tcerr.NewTencentCloudSDKError("ClientError.BuildRequestError", "ModifyScheduledSqlRequest has unknown keys!", "")
 	}

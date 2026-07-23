@@ -49,8 +49,8 @@ use and how to add new resources.
 
 ## Requirements
 
-* [Terraform](https://www.terraform.io/downloads.html) 0.13.x
-* [Go](https://golang.org/doc/install) 1.18.x (to build the provider plugin)
+* [Terraform](https://www.terraform.io/downloads.html) 1.10+
+* [Go](https://golang.org/doc/install) 1.25.8 (to build the provider plugin)
 
 ## Usage
 

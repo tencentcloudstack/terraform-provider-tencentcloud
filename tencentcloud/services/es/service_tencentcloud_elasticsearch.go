@@ -108,7 +108,7 @@ func (me *ElasticsearchService) DeleteInstance(ctx context.Context, instanceId s
 
 // UpdateInstance FIXME: use *Request instead of these suck params
 func (me *ElasticsearchService) UpdateInstance(ctx context.Context, instanceId, instanceName, password, kibanaPublicAccess, kibanaPrivateAccess, publicAccess, protocol string,
-	basicSecurityType int64, nodeList []*es.NodeInfo, nodeTypeInfo *es.WebNodeTypeInfo, esAcl *es.EsAcl, cosBackup *es.CosBackup, esPublicAcl *es.EsPublicAcl, multiZoneInfo []*es.ZoneDetail) error {
+	basicSecurityType int64, nodeList []*es.NodeInfo, nodeTypeInfo *es.WebNodeTypeInfo, esAcl *es.EsAcl, cosBackup *es.CosBackup, esPublicAcl *es.EsPublicAcl, multiZoneInfo []*es.ZoneDetail, enableDestroyProtection string) error {
 	logId := tccommon.GetLogId(ctx)
 	request := es.NewUpdateInstanceRequest()
 	request.InstanceId = &instanceId
@@ -150,6 +150,9 @@ func (me *ElasticsearchService) UpdateInstance(ctx context.Context, instanceId, 
 	}
 	if protocol != "" {
 		request.Protocol = helper.String(protocol)
+	}
+	if enableDestroyProtection != "" {
+		request.EnableDestroyProtection = &enableDestroyProtection
 	}
 	ratelimit.Check(request.GetAction())
 	_, err := me.client.UseEsClient().UpdateInstance(request)
