@@ -204,7 +204,7 @@ func mongodbAllInstanceReqSet(requestInter interface{}, d *schema.ResourceData) 
 		"NodeNum":         helper.IntUint64(nodeNum),
 		"GoodsNum":        helper.IntUint64(goodsNum),
 		"ClusterType":     &clusterType,
-		"CpuCore":         helper.IntUint64(cpu),
+		"CpuCore":         helper.IntInt64(cpu),
 		"Memory":          helper.IntUint64(memoryInterface),
 		"Volume":          helper.IntUint64(volumeInterface),
 		"MongoVersion":    &mongoVersionInterface,
