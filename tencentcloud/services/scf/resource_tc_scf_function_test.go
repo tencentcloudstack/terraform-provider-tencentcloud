@@ -73,7 +73,7 @@ func init() {
 					if tccommon.NeedProtect == 1 && int64(interval) < 30 {
 						continue
 					}
-					err := service.DeleteFunction(ctx, *fun.FunctionName, *nsName)
+					err := service.DeleteFunction(ctx, *fun.FunctionName, *nsName, "")
 					if err != nil {
 						continue
 					}
@@ -548,7 +548,7 @@ func testAccCheckScfFunctionExists(n string, id *string) resource.TestCheckFunc 
 
 		service := svcscf.NewScfService(tcacctest.AccProvider.Meta().(tccommon.ProviderMeta).GetAPIV3Conn())
 
-		fn, err := service.DescribeFunction(context.TODO(), name, namespace)
+		fn, err := service.DescribeFunction(context.TODO(), name, namespace, "")
 		if err != nil {
 			return err
 		}
@@ -574,7 +574,7 @@ func testAccCheckScfFunctionDestroy(id *string) resource.TestCheckFunc {
 		}
 		namespace, name := split[0], split[1]
 
-		fn, err := service.DescribeFunction(context.TODO(), name, namespace)
+		fn, err := service.DescribeFunction(context.TODO(), name, namespace, "")
 		if err != nil {
 			code := err.(*sdkErrors.TencentCloudSDKError).Code
 			if strings.HasPrefix(code, "ResourceNotFound") {
@@ -956,6 +956,40 @@ resource "tencentcloud_scf_function" "foo" {
       maximum_idle_time_in_seconds               = 1200
     }
   }
+
+  zip_file = "%s"
+}
+`
+
+func TestAccTencentCloudScfFunction_qualifier(t *testing.T) {
+	t.Parallel()
+	var fnId string
+
+	resource.Test(t, resource.TestCase{
+		PreCheck:     func() { tcacctest.AccPreCheck(t) },
+		Providers:    tcacctest.AccProviders,
+		CheckDestroy: testAccCheckScfFunctionDestroy(&fnId),
+		Steps: []resource.TestStep{
+			{
+				Config: scfFunctionCodeEmbed("first.zip", testAccScfFunctionQualifier),
+				Check: resource.ComposeTestCheckFunc(
+					testAccCheckScfFunctionExists("tencentcloud_scf_function.foo", &fnId),
+					resource.TestMatchResourceAttr("tencentcloud_scf_function.foo", "name", regexp.MustCompile(`ci-test-function`)),
+					resource.TestCheckResourceAttr("tencentcloud_scf_function.foo", "qualifier", "$LATEST"),
+					resource.TestCheckResourceAttrSet("tencentcloud_scf_function.foo", "function_id"),
+				),
+			},
+		},
+	})
+}
+
+const testAccScfFunctionQualifier = `
+resource "tencentcloud_scf_function" "foo" {
+  name      = "%s"
+  handler   = "first.do_it_first"
+  runtime   = "Python3.6"
+  qualifier = "$LATEST"
+  enable_public_net = true
 
   zip_file = "%s"
 }

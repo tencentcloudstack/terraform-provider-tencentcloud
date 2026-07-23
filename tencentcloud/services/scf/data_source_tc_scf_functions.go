@@ -384,7 +384,7 @@ func dataSourceTencentCloudScfFunctionsRead(d *schema.ResourceData, m interface{
 			"status_desc": fn.StatusDesc,
 		}
 
-		rawResp, err := service.DescribeFunction(ctx, *fn.FunctionName, *fn.Namespace)
+		rawResp, err := service.DescribeFunction(ctx, *fn.FunctionName, *fn.Namespace, "")
 		if err != nil {
 			log.Printf("[CRITAL]%s read function detail failed: %+v", logId, err)
 			return err

@@ -48,6 +48,21 @@ resource "tencentcloud_scf_function" "example" {
 }
 ```
 
+### Using qualifier to specify a function version
+
+```hcl
+resource "tencentcloud_scf_function" "example" {
+  name      = "ci-test-function"
+  handler   = "main.do_it"
+  runtime   = "Python3.6"
+  qualifier = "$LATEST"
+
+  cos_bucket_name   = "scf-code-1234567890"
+  cos_object_name   = "/path/to/code.zip"
+  cos_bucket_region = "ap-guangzhou"
+}
+```
+
 ### Using CFS config
 
 ```hcl
@@ -130,6 +145,7 @@ The following arguments are supported:
 * `layers` - (Optional, List) The list of association layers.
 * `mem_size` - (Optional, Int) Memory size of the SCF function, unit is MB. The default is `128`MB. The ladder is 128M.
 * `namespace` - (Optional, String, ForceNew) Namespace of the SCF function, default is `default`.
+* `qualifier` - (Optional, String) Qualifier of the SCF function, indicates the version or alias of the function. When specified, the GetFunction, DeleteFunction, CreateTrigger and DeleteTrigger APIs will operate on the specified version/alias. If not specified, the default `$LATEST` version will be used. Note: when `qualifier` is set to a specific version, `DeleteFunction` will only delete that version.
 * `role` - (Optional, String) Role of the SCF function.
 * `runtime` - (Optional, String) Runtime of the SCF function, only supports `Python2.7`, `Python3.6`, `Nodejs6.10`, `Nodejs8.9`, `Nodejs10.15`, `Nodejs12.16`, `Php5.2`, `Php7.4`, `Go1`, `Java8`, and `CustomRuntime`, default is `Python2.7`.
 * `subnet_id` - (Optional, String) Subnet ID of the SCF function.
