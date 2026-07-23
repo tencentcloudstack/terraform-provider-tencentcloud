@@ -3984,6 +3984,73 @@ func (me *TkeService) DescribeKubernetesClusteInstancesById(ctx context.Context,
 	return
 }
 
+func (me *TkeService) DescribeClusterMachinesById(ctx context.Context, clusterId, nodePoolId string) (ret []*tke2.Machine, errRet error) {
+	logId := tccommon.GetLogId(ctx)
+
+	request := tke2.NewDescribeClusterMachinesRequest()
+	response := tke2.NewDescribeClusterMachinesResponse()
+	request.ClusterId = helper.String(clusterId)
+	// error key NodePoolsId, wait tke fix
+	if nodePoolId != "" {
+		request.Filters = []*tke2.Filter{
+			{
+				Name:   common.StringPtr("NodePoolsId"),
+				Values: common.StringPtrs([]string{nodePoolId}),
+			},
+		}
+	}
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	var (
+		offset int64 = 0
+		limit  int64 = 100
+	)
+
+	for {
+		request.Offset = &offset
+		request.Limit = &limit
+		err := resource.Retry(tccommon.ReadRetryTimeout, func() *resource.RetryError {
+			ratelimit.Check(request.GetAction())
+			result, err := me.client.UseTkeV20220501Client().DescribeClusterMachines(request)
+			if err != nil {
+				return tccommon.RetryError(err)
+			} else {
+				log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+			}
+
+			if result == nil || result.Response == nil {
+				return resource.NonRetryableError(fmt.Errorf("Describe kubernetes cluster machines failed, Response is nil."))
+			}
+
+			response = result
+			return nil
+		})
+
+		if err != nil {
+			errRet = err
+			return
+		}
+
+		if len(response.Response.Machines) < 1 {
+			break
+		}
+
+		ret = append(ret, response.Response.Machines...)
+		if len(response.Response.Machines) < int(limit) {
+			break
+		}
+
+		offset += limit
+	}
+
+	return
+}
+
 func (me *TkeService) DescribeKubernetesClusterPendingReleaseById(ctx context.Context, clusterId, clusterReleaseId string) (ret *tke.PendingRelease, errRet error) {
 	logId := tccommon.GetLogId(ctx)
 
