@@ -472,7 +472,7 @@ func resourceTencentCloudMongodbInstanceRead(d *schema.ResourceData, meta interf
 	_ = d.Set("create_time", instance.CreateTime)
 	_ = d.Set("node_num", *instance.SecondaryNum+1)
 	if instance.CpuNum != nil {
-		_ = d.Set("cpu", int(*instance.CpuNum))
+		_ = d.Set("cpu", int(*instance.CpuNum/(*instance.ReplicationSetNum)))
 	}
 	if instance.MaintenanceStart != nil && len(*instance.MaintenanceStart) == 8 {
 		_ = d.Set("maintenance_start", (*instance.MaintenanceStart)[:5])

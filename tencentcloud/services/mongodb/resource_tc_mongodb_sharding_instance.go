@@ -475,7 +475,7 @@ func resourceMongodbShardingInstanceRead(d *schema.ResourceData, meta interface{
 	_ = d.Set("auto_renew_flag", instance.AutoRenewFlag)
 
 	if instance.CpuNum != nil {
-		_ = d.Set("cpu", int(*instance.CpuNum))
+		_ = d.Set("cpu", int(*instance.CpuNum/(*instance.ReplicationSetNum)))
 	}
 
 	groups, err := mongodbService.DescribeSecurityGroup(ctx, instanceId)
