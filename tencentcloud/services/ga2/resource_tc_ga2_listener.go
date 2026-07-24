@@ -349,6 +349,9 @@ func resourceTencentCloudGa2ListenerRead(d *schema.ResourceData, meta interface{
 
 	if respData == nil {
 		log.Printf("[WARN]%s resource `tencentcloud_ga2_listener` [%s] not found, please check if it has been deleted.\n", logId, d.Id())
+		if d.IsNewResource() {
+			return fmt.Errorf("resource `tencentcloud_ga2_listener` [%s] not found after creation", d.Id())
+		}
 		d.SetId("")
 		return nil
 	}
