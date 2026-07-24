@@ -1126,6 +1126,8 @@ github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/tdcpg v1.0.533 h1:r6HQh
 github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/tdcpg v1.0.533/go.mod h1:5sIIchyV9sXIVAqsD3UWts+qQJ0qoc55sL2WuiY8Ugs=
 github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/tdmq v1.3.113 h1:2sulWzw0W4IVvNi/Zjt4EtIrFAvR6zmHnoqDsFIAnl8=
 github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/tdmq v1.3.113/go.mod h1:uCUT6rfNap46k8JHzdPIz3WvYjiQPDkOBZ+b2GrIpUE=
+github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/tdmysql v1.3.132 h1:l/FJCg0rvsxXpdUiA9lrXqKoKZhBpFOR0xNFjUkenkk=
+github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/tdmysql v1.3.132/go.mod h1:k4bqpun/8VaDtdiEtII1zMSOTLB2430yP28XmlvGyxQ=
 github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/tem v1.0.578 h1:vBpQhUroO+FAslUmsDWGi8nvczsqZBWVgQwlnyT0Aj8=
 github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/tem v1.0.578/go.mod h1:UlojGQh/9wb7/uXPNi7PvMral1CNAskVDNgqJEV83l0=
 github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/teo v1.3.121 h1:SdW1CsEOUSABdz3YHXSw7nESExvD4fR43ZfBFYaD2OQ=
