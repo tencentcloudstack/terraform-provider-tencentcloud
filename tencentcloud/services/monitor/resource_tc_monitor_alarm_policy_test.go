@@ -104,3 +104,57 @@ resource "tencentcloud_monitor_alarm_policy" "policy" {
   }
 }
 `
+
+const testAccMonitorAlarmPolicyWithHierarchicalNotices string = `
+resource "tencentcloud_monitor_alarm_policy" "policy" {
+  enable       = 1
+  monitor_type = "MT_QCE"
+  namespace    = "cvm_device"
+  notice_ids   = [
+    "notice-f2svbu3w",
+  ]
+  policy_name  = "terraform-hn"
+  project_id   = 0
+
+  conditions {
+    is_union_rule = 0
+
+    rules {
+      continue_period  = 5
+      description      = "CPUUtilization"
+      is_power_notice  = 0
+      metric_name      = "CpuUsage"
+      notice_frequency = 7200
+      operator         = "gt"
+      period           = 60
+      rule_type        = "STATIC"
+      unit             = "%"
+      value            = "95"
+    }
+  }
+
+  event_conditions {
+    continue_period  = 0
+    description      = "DiskReadonly"
+    is_power_notice  = 0
+    metric_name      = "disk_readonly"
+    notice_frequency = 0
+    period           = 0
+  }
+
+  hierarchical_notices {
+    notice_id      = "notice-f2svbu3w"
+    classification = ["Remind", "Serious"]
+  }
+
+  notice_content_tmpl_bind_infos {
+    content_tmpl_id = "tmpl-xxxx"
+    notice_id       = "notice-f2svbu3w"
+  }
+
+  policy_tag {
+    key   = "test-tag"
+    value = "unit-test"
+  }
+}
+`
