@@ -91,7 +91,13 @@ resource "tencentcloud_kubernetes_native_node_pool" "example" {
       auto_format_and_mount = true
     }
 
-    key_ids = ["skey-9pcs2100"]
+    key_ids            = ["skey-9pcs2100"]
+    automation_service = true
+  }
+
+  annotations {
+    name  = "node.tke.cloud.tencent.com/automation-service"
+    value = "true"
   }
 
   annotations {
@@ -177,6 +183,7 @@ The `native` object supports the following:
 * `subnet_ids` - (Required, List) Subnet list.
 * `system_disk` - (Required, List, ForceNew) System disk configuration.
 * `auto_repair` - (Optional, Bool) Whether to enable self-healing ability.
+* `automation_service` - (Optional, Bool) Native Node Pool Node Automation Assistant Toggle.
 * `data_disks` - (Optional, List) Native node pool data disk list.
 * `enable_autoscaling` - (Optional, Bool) Whether to enable elastic scaling.
 * `health_check_policy_name` - (Optional, String) Fault self-healing rule name.
