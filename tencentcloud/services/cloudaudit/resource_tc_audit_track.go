@@ -97,6 +97,7 @@ func ResourceTencentCloudAuditTrack() *schema.Resource {
 						"compress": {
 							Type:        schema.TypeInt,
 							Optional:    true,
+							Computed:    true,
 							Description: "Whether to compress. `1`: compress, `2`: do not compress.",
 						},
 					},
