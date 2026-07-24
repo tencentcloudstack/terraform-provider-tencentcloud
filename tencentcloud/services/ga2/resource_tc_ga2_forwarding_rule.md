@@ -102,6 +102,16 @@ resource "tencentcloud_ga2_forwarding_rule" "example" {
     rule_action_type  = "ForwardGroup"
     rule_action_value = tencentcloud_ga2_endpoint_group.example.endpoint_group_id
   }
+
+  response_headers {
+    key   = "ShowKey"
+    value = "ShowValue"
+  }
+
+  hide_response_headers {
+    key   = "HideKey"
+    value = ""
+  }
 }
 ```
 

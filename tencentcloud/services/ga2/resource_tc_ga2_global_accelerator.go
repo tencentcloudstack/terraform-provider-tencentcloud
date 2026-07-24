@@ -325,7 +325,9 @@ func resourceTencentCloudGa2GlobalAcceleratorUpdate(d *schema.ResourceData, meta
 		}
 
 		if v, ok := d.GetOk("cross_border_type"); ok {
-			request.CrossBorderType = helper.String(v.(string))
+			if v.(string) != "NotAvailable" {
+				request.CrossBorderType = helper.String(v.(string))
+			}
 		}
 
 		//nolint:staticcheck

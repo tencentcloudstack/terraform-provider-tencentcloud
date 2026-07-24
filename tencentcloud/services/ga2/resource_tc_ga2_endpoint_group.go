@@ -668,8 +668,11 @@ func applyConfigurationToModifyRequest(request *ga2v20250115.ModifyEndpointGroup
 	}
 
 	if v, ok := m["forward_protocol"].(string); ok && v != "" {
-		request.ForwardProtocol = helper.String(v)
+		if v == "HTTP" || v == "HTTPS" {
+			request.ForwardProtocol = helper.String(v)
+		}
 	}
+
 	if v, ok := m["port_overrides"]; ok {
 		request.PortOverrides = buildPortOverrides(v.([]interface{}))
 	}

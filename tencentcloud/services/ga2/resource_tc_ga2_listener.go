@@ -165,17 +165,18 @@ func ResourceTencentCloudGa2Listener() *schema.Resource {
 				Description: "Client CA certificate ID list. Required when the listener protocol is `HTTPS` and `certification_type` " +
 					"is `MUTUAL`. Only HTTPS listeners support modifying this field. Treated as an unordered set; HCL element order has no semantic meaning.",
 			},
+			"http_version": {
+				Type:        schema.TypeString,
+				Optional:    true,
+				Computed:    true,
+				Description: "HTTP version negotiated for this listener. Valid values: `HTTP/1.1`, `HTTP/2`. Only applicable to HTTPS listeners.",
+			},
 
 			// Computed
 			"listener_id": {
 				Type:        schema.TypeString,
 				Computed:    true,
 				Description: "Listener instance ID.",
-			},
-			"http_version": {
-				Type:        schema.TypeString,
-				Computed:    true,
-				Description: "HTTP version negotiated for this listener. Valid values: `HTTP/1.1`, `HTTP/2`. Only applicable to HTTPS listeners.",
 			},
 			"create_time": {
 				Type:        schema.TypeString,
@@ -284,6 +285,10 @@ func resourceTencentCloudGa2ListenerCreate(d *schema.ResourceData, meta interfac
 
 		if v, ok := d.GetOk("client_ca_certificates"); ok {
 			request.ClientCaCertificates = expandGa2ListenerStringSet(v.(*schema.Set))
+		}
+
+		if v, ok := d.GetOk("http_version"); ok {
+			request.HttpVersion = helper.String(v.(string))
 		}
 	}
 

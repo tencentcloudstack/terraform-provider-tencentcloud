@@ -15,52 +15,51 @@
 package v20250115
 
 import (
-    "context"
-    "errors"
-    "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/common"
-    tchttp "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/common/http"
-    "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/common/profile"
+	"context"
+	"errors"
+
+	"github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/common"
+	tchttp "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/common/http"
+	"github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/common/profile"
 )
 
 const APIVersion = "2025-01-15"
 
 type Client struct {
-    common.Client
+	common.Client
 }
 
 // Deprecated
 func NewClientWithSecretId(secretId, secretKey, region string) (client *Client, err error) {
-    cpf := profile.NewClientProfile()
-    client = &Client{}
-    client.Init(region).WithSecretId(secretId, secretKey).WithProfile(cpf)
-    return
+	cpf := profile.NewClientProfile()
+	client = &Client{}
+	client.Init(region).WithSecretId(secretId, secretKey).WithProfile(cpf)
+	return
 }
 
 func NewClient(credential common.CredentialIface, region string, clientProfile *profile.ClientProfile) (client *Client, err error) {
-    client = &Client{}
-    client.Init(region).
-        WithCredential(credential).
-        WithProfile(clientProfile)
-    return
+	client = &Client{}
+	client.Init(region).
+		WithCredential(credential).
+		WithProfile(clientProfile)
+	return
 }
 
-
 func NewCreateAccelerateAreasRequest() (request *CreateAccelerateAreasRequest) {
-    request = &CreateAccelerateAreasRequest{
-        BaseRequest: &tchttp.BaseRequest{},
-    }
-    
-    request.Init().WithApiInfo("ga2", APIVersion, "CreateAccelerateAreas")
-    
-    
-    return
+	request = &CreateAccelerateAreasRequest{
+		BaseRequest: &tchttp.BaseRequest{},
+	}
+
+	request.Init().WithApiInfo("ga2", APIVersion, "CreateAccelerateAreas")
+
+	return
 }
 
 func NewCreateAccelerateAreasResponse() (response *CreateAccelerateAreasResponse) {
-    response = &CreateAccelerateAreasResponse{
-        BaseResponse: &tchttp.BaseResponse{},
-    } 
-    return
+	response = &CreateAccelerateAreasResponse{
+		BaseResponse: &tchttp.BaseResponse{},
+	}
+	return
 
 }
 
@@ -68,71 +67,72 @@ func NewCreateAccelerateAreasResponse() (response *CreateAccelerateAreasResponse
 // 创建加速地域
 //
 // 可能返回的错误码:
-//  INVALIDPARAMETER_INPUTREPEAT = "InvalidParameter.InputRepeat"
-//  INVALIDPARAMETERVALUE_RANGE = "InvalidParameterValue.Range"
-//  INVALIDPARAMETERVALUE_THIRDAREALISTENERPORTSEGMENT = "InvalidParameterValue.ThirdAreaListenerPortSegment"
-//  LIMITEXCEEDED = "LimitExceeded"
-//  UNSUPPORTEDOPERATION_ACCELERATEREGIONREPEAT = "UnsupportedOperation.AccelerateRegionRepeat"
-//  UNSUPPORTEDOPERATION_EXISTACCEPTACLPOLICY = "UnsupportedOperation.ExistAcceptAclPolicy"
-//  UNSUPPORTEDOPERATION_EXISTDROPACCEPTACLRULE = "UnsupportedOperation.ExistDropAcceptAclRule"
-//  UNSUPPORTEDOPERATION_INSTANCESTATENOTALLOWEDOPERATE = "UnsupportedOperation.InstanceStateNotAllowedOperate"
-//  UNSUPPORTEDOPERATION_NOTSETCROSSBORDERTYPE = "UnsupportedOperation.NotSetCrossBorderType"
-//  UNSUPPORTEDOPERATION_THREENETWORKSACCELERATEAREAS = "UnsupportedOperation.ThreeNetworksAccelerateAreas"
-//  UNSUPPORTEDOPERATION_UNABLECREATETHIRDPARTYNODES = "UnsupportedOperation.UnableCreateThirdPartyNodes"
-//  UNSUPPORTEDOPERATION_UNABLECROSSBORDER = "UnsupportedOperation.UnableCrossBorder"
+//
+//	INVALIDPARAMETER_INPUTREPEAT = "InvalidParameter.InputRepeat"
+//	INVALIDPARAMETERVALUE_RANGE = "InvalidParameterValue.Range"
+//	INVALIDPARAMETERVALUE_THIRDAREALISTENERPORTSEGMENT = "InvalidParameterValue.ThirdAreaListenerPortSegment"
+//	LIMITEXCEEDED = "LimitExceeded"
+//	UNSUPPORTEDOPERATION_ACCELERATEREGIONREPEAT = "UnsupportedOperation.AccelerateRegionRepeat"
+//	UNSUPPORTEDOPERATION_EXISTACCEPTACLPOLICY = "UnsupportedOperation.ExistAcceptAclPolicy"
+//	UNSUPPORTEDOPERATION_EXISTDROPACCEPTACLRULE = "UnsupportedOperation.ExistDropAcceptAclRule"
+//	UNSUPPORTEDOPERATION_INSTANCESTATENOTALLOWEDOPERATE = "UnsupportedOperation.InstanceStateNotAllowedOperate"
+//	UNSUPPORTEDOPERATION_NOTSETCROSSBORDERTYPE = "UnsupportedOperation.NotSetCrossBorderType"
+//	UNSUPPORTEDOPERATION_THREENETWORKSACCELERATEAREAS = "UnsupportedOperation.ThreeNetworksAccelerateAreas"
+//	UNSUPPORTEDOPERATION_UNABLECREATETHIRDPARTYNODES = "UnsupportedOperation.UnableCreateThirdPartyNodes"
+//	UNSUPPORTEDOPERATION_UNABLECROSSBORDER = "UnsupportedOperation.UnableCrossBorder"
 func (c *Client) CreateAccelerateAreas(request *CreateAccelerateAreasRequest) (response *CreateAccelerateAreasResponse, err error) {
-    return c.CreateAccelerateAreasWithContext(context.Background(), request)
+	return c.CreateAccelerateAreasWithContext(context.Background(), request)
 }
 
 // CreateAccelerateAreas
 // 创建加速地域
 //
 // 可能返回的错误码:
-//  INVALIDPARAMETER_INPUTREPEAT = "InvalidParameter.InputRepeat"
-//  INVALIDPARAMETERVALUE_RANGE = "InvalidParameterValue.Range"
-//  INVALIDPARAMETERVALUE_THIRDAREALISTENERPORTSEGMENT = "InvalidParameterValue.ThirdAreaListenerPortSegment"
-//  LIMITEXCEEDED = "LimitExceeded"
-//  UNSUPPORTEDOPERATION_ACCELERATEREGIONREPEAT = "UnsupportedOperation.AccelerateRegionRepeat"
-//  UNSUPPORTEDOPERATION_EXISTACCEPTACLPOLICY = "UnsupportedOperation.ExistAcceptAclPolicy"
-//  UNSUPPORTEDOPERATION_EXISTDROPACCEPTACLRULE = "UnsupportedOperation.ExistDropAcceptAclRule"
-//  UNSUPPORTEDOPERATION_INSTANCESTATENOTALLOWEDOPERATE = "UnsupportedOperation.InstanceStateNotAllowedOperate"
-//  UNSUPPORTEDOPERATION_NOTSETCROSSBORDERTYPE = "UnsupportedOperation.NotSetCrossBorderType"
-//  UNSUPPORTEDOPERATION_THREENETWORKSACCELERATEAREAS = "UnsupportedOperation.ThreeNetworksAccelerateAreas"
-//  UNSUPPORTEDOPERATION_UNABLECREATETHIRDPARTYNODES = "UnsupportedOperation.UnableCreateThirdPartyNodes"
-//  UNSUPPORTEDOPERATION_UNABLECROSSBORDER = "UnsupportedOperation.UnableCrossBorder"
+//
+//	INVALIDPARAMETER_INPUTREPEAT = "InvalidParameter.InputRepeat"
+//	INVALIDPARAMETERVALUE_RANGE = "InvalidParameterValue.Range"
+//	INVALIDPARAMETERVALUE_THIRDAREALISTENERPORTSEGMENT = "InvalidParameterValue.ThirdAreaListenerPortSegment"
+//	LIMITEXCEEDED = "LimitExceeded"
+//	UNSUPPORTEDOPERATION_ACCELERATEREGIONREPEAT = "UnsupportedOperation.AccelerateRegionRepeat"
+//	UNSUPPORTEDOPERATION_EXISTACCEPTACLPOLICY = "UnsupportedOperation.ExistAcceptAclPolicy"
+//	UNSUPPORTEDOPERATION_EXISTDROPACCEPTACLRULE = "UnsupportedOperation.ExistDropAcceptAclRule"
+//	UNSUPPORTEDOPERATION_INSTANCESTATENOTALLOWEDOPERATE = "UnsupportedOperation.InstanceStateNotAllowedOperate"
+//	UNSUPPORTEDOPERATION_NOTSETCROSSBORDERTYPE = "UnsupportedOperation.NotSetCrossBorderType"
+//	UNSUPPORTEDOPERATION_THREENETWORKSACCELERATEAREAS = "UnsupportedOperation.ThreeNetworksAccelerateAreas"
+//	UNSUPPORTEDOPERATION_UNABLECREATETHIRDPARTYNODES = "UnsupportedOperation.UnableCreateThirdPartyNodes"
+//	UNSUPPORTEDOPERATION_UNABLECROSSBORDER = "UnsupportedOperation.UnableCrossBorder"
 func (c *Client) CreateAccelerateAreasWithContext(ctx context.Context, request *CreateAccelerateAreasRequest) (response *CreateAccelerateAreasResponse, err error) {
-    if request == nil {
-        request = NewCreateAccelerateAreasRequest()
-    }
-    c.InitBaseRequest(&request.BaseRequest, "ga2", APIVersion, "CreateAccelerateAreas")
-    
-    if c.GetCredential() == nil {
-        return nil, errors.New("CreateAccelerateAreas require credential")
-    }
+	if request == nil {
+		request = NewCreateAccelerateAreasRequest()
+	}
+	c.InitBaseRequest(&request.BaseRequest, "ga2", APIVersion, "CreateAccelerateAreas")
 
-    request.SetContext(ctx)
-    
-    response = NewCreateAccelerateAreasResponse()
-    err = c.Send(request, response)
-    return
+	if c.GetCredential() == nil {
+		return nil, errors.New("CreateAccelerateAreas require credential")
+	}
+
+	request.SetContext(ctx)
+
+	response = NewCreateAccelerateAreasResponse()
+	err = c.Send(request, response)
+	return
 }
 
 func NewCreateEndpointGroupRequest() (request *CreateEndpointGroupRequest) {
-    request = &CreateEndpointGroupRequest{
-        BaseRequest: &tchttp.BaseRequest{},
-    }
-    
-    request.Init().WithApiInfo("ga2", APIVersion, "CreateEndpointGroup")
-    
-    
-    return
+	request = &CreateEndpointGroupRequest{
+		BaseRequest: &tchttp.BaseRequest{},
+	}
+
+	request.Init().WithApiInfo("ga2", APIVersion, "CreateEndpointGroup")
+
+	return
 }
 
 func NewCreateEndpointGroupResponse() (response *CreateEndpointGroupResponse) {
-    response = &CreateEndpointGroupResponse{
-        BaseResponse: &tchttp.BaseResponse{},
-    } 
-    return
+	response = &CreateEndpointGroupResponse{
+		BaseResponse: &tchttp.BaseResponse{},
+	}
+	return
 
 }
 
@@ -140,115 +140,116 @@ func NewCreateEndpointGroupResponse() (response *CreateEndpointGroupResponse) {
 // 创建终端节点组。
 //
 // 可能返回的错误码:
-//  INVALIDPARAMETER_DISABLEHEALTHCHECKNOTCARRYPARAMETERS = "InvalidParameter.DisableHealthCheckNotCarryParameters"
-//  INVALIDPARAMETER_ENABLEHEALTHCHECKNOTCARRYPARAMETERS = "InvalidParameter.EnableHealthCheckNotCarryParameters"
-//  INVALIDPARAMETER_ENDPOINTGROUPCHECKTYPEHTTPCARRYPARAMETERS = "InvalidParameter.EndpointGroupCheckTypeHttpCarryParameters"
-//  INVALIDPARAMETER_HTTPSORIGINSERVERPROTOCOLSUPPORTSPARAMETERS = "InvalidParameter.HttpsOriginServerProtocolSupportsParameters"
-//  INVALIDPARAMETER_INPUTOUTOFRANGE = "InvalidParameter.InputOutOfRange"
-//  INVALIDPARAMETER_INPUTREPEAT = "InvalidParameter.InputRepeat"
-//  INVALIDPARAMETER_ONLYENDPOINTGROUPCHECKTYPEHTTPCARRYPARAMETERS = "InvalidParameter.OnlyEndpointGroupCheckTypeHttpCarryParameters"
-//  INVALIDPARAMETER_TCPENDPOINTGROUPCANNOTCARRYPARAMETERS = "InvalidParameter.TcpEndpointGroupCannotCarryParameters"
-//  INVALIDPARAMETER_TRANSPORTLAYERENDPOINTGROUPCANNOTCARRYPARAMETERS = "InvalidParameter.TransportLayerEndpointGroupCannotCarryParameters"
-//  INVALIDPARAMETER_UDPENDPOINTGROUPCANNOTCARRYPARAMETERS = "InvalidParameter.UdpEndpointGroupCannotCarryParameters"
-//  INVALIDPARAMETERVALUE_INSTANCEMISMATCH = "InvalidParameterValue.InstanceMismatch"
-//  INVALIDPARAMETERVALUE_LISTENERPORTNOTEQUAL = "InvalidParameterValue.ListenerPortNotEqual"
-//  INVALIDPARAMETERVALUE_MALFORMED = "InvalidParameterValue.Malformed"
-//  INVALIDPARAMETERVALUE_NOTMAPPINGMANYPORT = "InvalidParameterValue.NotMappingManyPort"
-//  INVALIDPARAMETERVALUE_NOTWITHINPUBLICNETWORK = "InvalidParameterValue.NotWithinPublicNetwork"
-//  INVALIDPARAMETERVALUE_SPECIFICCHARACTERS = "InvalidParameterValue.SpecificCharacters"
-//  LIMITEXCEEDED = "LimitExceeded"
-//  MISSINGPARAMETER = "MissingParameter"
-//  MISSINGPARAMETER_APPLICATIONLAYERENDPOINTGROUPPARAMETER = "MissingParameter.ApplicationLayerEndpointGroupParameter"
-//  MISSINGPARAMETER_CUSTOMCHECKTYPEPARAMETER = "MissingParameter.CustomCheckTypeParameter"
-//  MISSINGPARAMETER_ENABLEHEALTHCHECKPARAMETER = "MissingParameter.EnableHealthCheckParameter"
-//  UNSUPPORTEDOPERATION_EXISTACCEPTACLPOLICY = "UnsupportedOperation.ExistAcceptAclPolicy"
-//  UNSUPPORTEDOPERATION_EXISTDROPACCEPTACLRULE = "UnsupportedOperation.ExistDropAcceptAclRule"
-//  UNSUPPORTEDOPERATION_HTTPVERSIONINCONSISTENT = "UnsupportedOperation.HttpVersionInconsistent"
-//  UNSUPPORTEDOPERATION_INSTANCENOTRUNNING = "UnsupportedOperation.InstanceNotRunning"
-//  UNSUPPORTEDOPERATION_INTERNALENDPOINTFEATURENOTENABLED = "UnsupportedOperation.InternalEndpointFeatureNotEnabled"
-//  UNSUPPORTEDOPERATION_IPV6NOTSUPPORT = "UnsupportedOperation.Ipv6NotSupport"
-//  UNSUPPORTEDOPERATION_NOTSETCROSSBORDERTYPE = "UnsupportedOperation.NotSetCrossBorderType"
-//  UNSUPPORTEDOPERATION_SAMEDOMAIN = "UnsupportedOperation.SameDomain"
-//  UNSUPPORTEDOPERATION_SAMEPUBLICIP = "UnsupportedOperation.SamePublicIp"
-//  UNSUPPORTEDOPERATION_THREENETWORKSENDPOINTGROUP = "UnsupportedOperation.ThreeNetworksEndpointGroup"
-//  UNSUPPORTEDOPERATION_UNABLECREATETHIRDPARTYNODES = "UnsupportedOperation.UnableCreateThirdPartyNodes"
-//  UNSUPPORTEDOPERATION_UNABLECROSSBORDER = "UnsupportedOperation.UnableCrossBorder"
-//  UNSUPPORTEDOPERATION_VIRTUALENDPOINTGROUPUNSUPPORTEDTCPANDUDP = "UnsupportedOperation.VirtualEndpointGroupUnsupportedTcpAndUdp"
+//
+//	INVALIDPARAMETER_DISABLEHEALTHCHECKNOTCARRYPARAMETERS = "InvalidParameter.DisableHealthCheckNotCarryParameters"
+//	INVALIDPARAMETER_ENABLEHEALTHCHECKNOTCARRYPARAMETERS = "InvalidParameter.EnableHealthCheckNotCarryParameters"
+//	INVALIDPARAMETER_ENDPOINTGROUPCHECKTYPEHTTPCARRYPARAMETERS = "InvalidParameter.EndpointGroupCheckTypeHttpCarryParameters"
+//	INVALIDPARAMETER_HTTPSORIGINSERVERPROTOCOLSUPPORTSPARAMETERS = "InvalidParameter.HttpsOriginServerProtocolSupportsParameters"
+//	INVALIDPARAMETER_INPUTOUTOFRANGE = "InvalidParameter.InputOutOfRange"
+//	INVALIDPARAMETER_INPUTREPEAT = "InvalidParameter.InputRepeat"
+//	INVALIDPARAMETER_ONLYENDPOINTGROUPCHECKTYPEHTTPCARRYPARAMETERS = "InvalidParameter.OnlyEndpointGroupCheckTypeHttpCarryParameters"
+//	INVALIDPARAMETER_TCPENDPOINTGROUPCANNOTCARRYPARAMETERS = "InvalidParameter.TcpEndpointGroupCannotCarryParameters"
+//	INVALIDPARAMETER_TRANSPORTLAYERENDPOINTGROUPCANNOTCARRYPARAMETERS = "InvalidParameter.TransportLayerEndpointGroupCannotCarryParameters"
+//	INVALIDPARAMETER_UDPENDPOINTGROUPCANNOTCARRYPARAMETERS = "InvalidParameter.UdpEndpointGroupCannotCarryParameters"
+//	INVALIDPARAMETERVALUE_INSTANCEMISMATCH = "InvalidParameterValue.InstanceMismatch"
+//	INVALIDPARAMETERVALUE_LISTENERPORTNOTEQUAL = "InvalidParameterValue.ListenerPortNotEqual"
+//	INVALIDPARAMETERVALUE_MALFORMED = "InvalidParameterValue.Malformed"
+//	INVALIDPARAMETERVALUE_NOTMAPPINGMANYPORT = "InvalidParameterValue.NotMappingManyPort"
+//	INVALIDPARAMETERVALUE_NOTWITHINPUBLICNETWORK = "InvalidParameterValue.NotWithinPublicNetwork"
+//	INVALIDPARAMETERVALUE_SPECIFICCHARACTERS = "InvalidParameterValue.SpecificCharacters"
+//	LIMITEXCEEDED = "LimitExceeded"
+//	MISSINGPARAMETER = "MissingParameter"
+//	MISSINGPARAMETER_APPLICATIONLAYERENDPOINTGROUPPARAMETER = "MissingParameter.ApplicationLayerEndpointGroupParameter"
+//	MISSINGPARAMETER_CUSTOMCHECKTYPEPARAMETER = "MissingParameter.CustomCheckTypeParameter"
+//	MISSINGPARAMETER_ENABLEHEALTHCHECKPARAMETER = "MissingParameter.EnableHealthCheckParameter"
+//	UNSUPPORTEDOPERATION_EXISTACCEPTACLPOLICY = "UnsupportedOperation.ExistAcceptAclPolicy"
+//	UNSUPPORTEDOPERATION_EXISTDROPACCEPTACLRULE = "UnsupportedOperation.ExistDropAcceptAclRule"
+//	UNSUPPORTEDOPERATION_HTTPVERSIONINCONSISTENT = "UnsupportedOperation.HttpVersionInconsistent"
+//	UNSUPPORTEDOPERATION_INSTANCENOTRUNNING = "UnsupportedOperation.InstanceNotRunning"
+//	UNSUPPORTEDOPERATION_INTERNALENDPOINTFEATURENOTENABLED = "UnsupportedOperation.InternalEndpointFeatureNotEnabled"
+//	UNSUPPORTEDOPERATION_IPV6NOTSUPPORT = "UnsupportedOperation.Ipv6NotSupport"
+//	UNSUPPORTEDOPERATION_NOTSETCROSSBORDERTYPE = "UnsupportedOperation.NotSetCrossBorderType"
+//	UNSUPPORTEDOPERATION_SAMEDOMAIN = "UnsupportedOperation.SameDomain"
+//	UNSUPPORTEDOPERATION_SAMEPUBLICIP = "UnsupportedOperation.SamePublicIp"
+//	UNSUPPORTEDOPERATION_THREENETWORKSENDPOINTGROUP = "UnsupportedOperation.ThreeNetworksEndpointGroup"
+//	UNSUPPORTEDOPERATION_UNABLECREATETHIRDPARTYNODES = "UnsupportedOperation.UnableCreateThirdPartyNodes"
+//	UNSUPPORTEDOPERATION_UNABLECROSSBORDER = "UnsupportedOperation.UnableCrossBorder"
+//	UNSUPPORTEDOPERATION_VIRTUALENDPOINTGROUPUNSUPPORTEDTCPANDUDP = "UnsupportedOperation.VirtualEndpointGroupUnsupportedTcpAndUdp"
 func (c *Client) CreateEndpointGroup(request *CreateEndpointGroupRequest) (response *CreateEndpointGroupResponse, err error) {
-    return c.CreateEndpointGroupWithContext(context.Background(), request)
+	return c.CreateEndpointGroupWithContext(context.Background(), request)
 }
 
 // CreateEndpointGroup
 // 创建终端节点组。
 //
 // 可能返回的错误码:
-//  INVALIDPARAMETER_DISABLEHEALTHCHECKNOTCARRYPARAMETERS = "InvalidParameter.DisableHealthCheckNotCarryParameters"
-//  INVALIDPARAMETER_ENABLEHEALTHCHECKNOTCARRYPARAMETERS = "InvalidParameter.EnableHealthCheckNotCarryParameters"
-//  INVALIDPARAMETER_ENDPOINTGROUPCHECKTYPEHTTPCARRYPARAMETERS = "InvalidParameter.EndpointGroupCheckTypeHttpCarryParameters"
-//  INVALIDPARAMETER_HTTPSORIGINSERVERPROTOCOLSUPPORTSPARAMETERS = "InvalidParameter.HttpsOriginServerProtocolSupportsParameters"
-//  INVALIDPARAMETER_INPUTOUTOFRANGE = "InvalidParameter.InputOutOfRange"
-//  INVALIDPARAMETER_INPUTREPEAT = "InvalidParameter.InputRepeat"
-//  INVALIDPARAMETER_ONLYENDPOINTGROUPCHECKTYPEHTTPCARRYPARAMETERS = "InvalidParameter.OnlyEndpointGroupCheckTypeHttpCarryParameters"
-//  INVALIDPARAMETER_TCPENDPOINTGROUPCANNOTCARRYPARAMETERS = "InvalidParameter.TcpEndpointGroupCannotCarryParameters"
-//  INVALIDPARAMETER_TRANSPORTLAYERENDPOINTGROUPCANNOTCARRYPARAMETERS = "InvalidParameter.TransportLayerEndpointGroupCannotCarryParameters"
-//  INVALIDPARAMETER_UDPENDPOINTGROUPCANNOTCARRYPARAMETERS = "InvalidParameter.UdpEndpointGroupCannotCarryParameters"
-//  INVALIDPARAMETERVALUE_INSTANCEMISMATCH = "InvalidParameterValue.InstanceMismatch"
-//  INVALIDPARAMETERVALUE_LISTENERPORTNOTEQUAL = "InvalidParameterValue.ListenerPortNotEqual"
-//  INVALIDPARAMETERVALUE_MALFORMED = "InvalidParameterValue.Malformed"
-//  INVALIDPARAMETERVALUE_NOTMAPPINGMANYPORT = "InvalidParameterValue.NotMappingManyPort"
-//  INVALIDPARAMETERVALUE_NOTWITHINPUBLICNETWORK = "InvalidParameterValue.NotWithinPublicNetwork"
-//  INVALIDPARAMETERVALUE_SPECIFICCHARACTERS = "InvalidParameterValue.SpecificCharacters"
-//  LIMITEXCEEDED = "LimitExceeded"
-//  MISSINGPARAMETER = "MissingParameter"
-//  MISSINGPARAMETER_APPLICATIONLAYERENDPOINTGROUPPARAMETER = "MissingParameter.ApplicationLayerEndpointGroupParameter"
-//  MISSINGPARAMETER_CUSTOMCHECKTYPEPARAMETER = "MissingParameter.CustomCheckTypeParameter"
-//  MISSINGPARAMETER_ENABLEHEALTHCHECKPARAMETER = "MissingParameter.EnableHealthCheckParameter"
-//  UNSUPPORTEDOPERATION_EXISTACCEPTACLPOLICY = "UnsupportedOperation.ExistAcceptAclPolicy"
-//  UNSUPPORTEDOPERATION_EXISTDROPACCEPTACLRULE = "UnsupportedOperation.ExistDropAcceptAclRule"
-//  UNSUPPORTEDOPERATION_HTTPVERSIONINCONSISTENT = "UnsupportedOperation.HttpVersionInconsistent"
-//  UNSUPPORTEDOPERATION_INSTANCENOTRUNNING = "UnsupportedOperation.InstanceNotRunning"
-//  UNSUPPORTEDOPERATION_INTERNALENDPOINTFEATURENOTENABLED = "UnsupportedOperation.InternalEndpointFeatureNotEnabled"
-//  UNSUPPORTEDOPERATION_IPV6NOTSUPPORT = "UnsupportedOperation.Ipv6NotSupport"
-//  UNSUPPORTEDOPERATION_NOTSETCROSSBORDERTYPE = "UnsupportedOperation.NotSetCrossBorderType"
-//  UNSUPPORTEDOPERATION_SAMEDOMAIN = "UnsupportedOperation.SameDomain"
-//  UNSUPPORTEDOPERATION_SAMEPUBLICIP = "UnsupportedOperation.SamePublicIp"
-//  UNSUPPORTEDOPERATION_THREENETWORKSENDPOINTGROUP = "UnsupportedOperation.ThreeNetworksEndpointGroup"
-//  UNSUPPORTEDOPERATION_UNABLECREATETHIRDPARTYNODES = "UnsupportedOperation.UnableCreateThirdPartyNodes"
-//  UNSUPPORTEDOPERATION_UNABLECROSSBORDER = "UnsupportedOperation.UnableCrossBorder"
-//  UNSUPPORTEDOPERATION_VIRTUALENDPOINTGROUPUNSUPPORTEDTCPANDUDP = "UnsupportedOperation.VirtualEndpointGroupUnsupportedTcpAndUdp"
+//
+//	INVALIDPARAMETER_DISABLEHEALTHCHECKNOTCARRYPARAMETERS = "InvalidParameter.DisableHealthCheckNotCarryParameters"
+//	INVALIDPARAMETER_ENABLEHEALTHCHECKNOTCARRYPARAMETERS = "InvalidParameter.EnableHealthCheckNotCarryParameters"
+//	INVALIDPARAMETER_ENDPOINTGROUPCHECKTYPEHTTPCARRYPARAMETERS = "InvalidParameter.EndpointGroupCheckTypeHttpCarryParameters"
+//	INVALIDPARAMETER_HTTPSORIGINSERVERPROTOCOLSUPPORTSPARAMETERS = "InvalidParameter.HttpsOriginServerProtocolSupportsParameters"
+//	INVALIDPARAMETER_INPUTOUTOFRANGE = "InvalidParameter.InputOutOfRange"
+//	INVALIDPARAMETER_INPUTREPEAT = "InvalidParameter.InputRepeat"
+//	INVALIDPARAMETER_ONLYENDPOINTGROUPCHECKTYPEHTTPCARRYPARAMETERS = "InvalidParameter.OnlyEndpointGroupCheckTypeHttpCarryParameters"
+//	INVALIDPARAMETER_TCPENDPOINTGROUPCANNOTCARRYPARAMETERS = "InvalidParameter.TcpEndpointGroupCannotCarryParameters"
+//	INVALIDPARAMETER_TRANSPORTLAYERENDPOINTGROUPCANNOTCARRYPARAMETERS = "InvalidParameter.TransportLayerEndpointGroupCannotCarryParameters"
+//	INVALIDPARAMETER_UDPENDPOINTGROUPCANNOTCARRYPARAMETERS = "InvalidParameter.UdpEndpointGroupCannotCarryParameters"
+//	INVALIDPARAMETERVALUE_INSTANCEMISMATCH = "InvalidParameterValue.InstanceMismatch"
+//	INVALIDPARAMETERVALUE_LISTENERPORTNOTEQUAL = "InvalidParameterValue.ListenerPortNotEqual"
+//	INVALIDPARAMETERVALUE_MALFORMED = "InvalidParameterValue.Malformed"
+//	INVALIDPARAMETERVALUE_NOTMAPPINGMANYPORT = "InvalidParameterValue.NotMappingManyPort"
+//	INVALIDPARAMETERVALUE_NOTWITHINPUBLICNETWORK = "InvalidParameterValue.NotWithinPublicNetwork"
+//	INVALIDPARAMETERVALUE_SPECIFICCHARACTERS = "InvalidParameterValue.SpecificCharacters"
+//	LIMITEXCEEDED = "LimitExceeded"
+//	MISSINGPARAMETER = "MissingParameter"
+//	MISSINGPARAMETER_APPLICATIONLAYERENDPOINTGROUPPARAMETER = "MissingParameter.ApplicationLayerEndpointGroupParameter"
+//	MISSINGPARAMETER_CUSTOMCHECKTYPEPARAMETER = "MissingParameter.CustomCheckTypeParameter"
+//	MISSINGPARAMETER_ENABLEHEALTHCHECKPARAMETER = "MissingParameter.EnableHealthCheckParameter"
+//	UNSUPPORTEDOPERATION_EXISTACCEPTACLPOLICY = "UnsupportedOperation.ExistAcceptAclPolicy"
+//	UNSUPPORTEDOPERATION_EXISTDROPACCEPTACLRULE = "UnsupportedOperation.ExistDropAcceptAclRule"
+//	UNSUPPORTEDOPERATION_HTTPVERSIONINCONSISTENT = "UnsupportedOperation.HttpVersionInconsistent"
+//	UNSUPPORTEDOPERATION_INSTANCENOTRUNNING = "UnsupportedOperation.InstanceNotRunning"
+//	UNSUPPORTEDOPERATION_INTERNALENDPOINTFEATURENOTENABLED = "UnsupportedOperation.InternalEndpointFeatureNotEnabled"
+//	UNSUPPORTEDOPERATION_IPV6NOTSUPPORT = "UnsupportedOperation.Ipv6NotSupport"
+//	UNSUPPORTEDOPERATION_NOTSETCROSSBORDERTYPE = "UnsupportedOperation.NotSetCrossBorderType"
+//	UNSUPPORTEDOPERATION_SAMEDOMAIN = "UnsupportedOperation.SameDomain"
+//	UNSUPPORTEDOPERATION_SAMEPUBLICIP = "UnsupportedOperation.SamePublicIp"
+//	UNSUPPORTEDOPERATION_THREENETWORKSENDPOINTGROUP = "UnsupportedOperation.ThreeNetworksEndpointGroup"
+//	UNSUPPORTEDOPERATION_UNABLECREATETHIRDPARTYNODES = "UnsupportedOperation.UnableCreateThirdPartyNodes"
+//	UNSUPPORTEDOPERATION_UNABLECROSSBORDER = "UnsupportedOperation.UnableCrossBorder"
+//	UNSUPPORTEDOPERATION_VIRTUALENDPOINTGROUPUNSUPPORTEDTCPANDUDP = "UnsupportedOperation.VirtualEndpointGroupUnsupportedTcpAndUdp"
 func (c *Client) CreateEndpointGroupWithContext(ctx context.Context, request *CreateEndpointGroupRequest) (response *CreateEndpointGroupResponse, err error) {
-    if request == nil {
-        request = NewCreateEndpointGroupRequest()
-    }
-    c.InitBaseRequest(&request.BaseRequest, "ga2", APIVersion, "CreateEndpointGroup")
-    
-    if c.GetCredential() == nil {
-        return nil, errors.New("CreateEndpointGroup require credential")
-    }
+	if request == nil {
+		request = NewCreateEndpointGroupRequest()
+	}
+	c.InitBaseRequest(&request.BaseRequest, "ga2", APIVersion, "CreateEndpointGroup")
 
-    request.SetContext(ctx)
-    
-    response = NewCreateEndpointGroupResponse()
-    err = c.Send(request, response)
-    return
+	if c.GetCredential() == nil {
+		return nil, errors.New("CreateEndpointGroup require credential")
+	}
+
+	request.SetContext(ctx)
+
+	response = NewCreateEndpointGroupResponse()
+	err = c.Send(request, response)
+	return
 }
 
 func NewCreateForwardingPolicyRequest() (request *CreateForwardingPolicyRequest) {
-    request = &CreateForwardingPolicyRequest{
-        BaseRequest: &tchttp.BaseRequest{},
-    }
-    
-    request.Init().WithApiInfo("ga2", APIVersion, "CreateForwardingPolicy")
-    
-    
-    return
+	request = &CreateForwardingPolicyRequest{
+		BaseRequest: &tchttp.BaseRequest{},
+	}
+
+	request.Init().WithApiInfo("ga2", APIVersion, "CreateForwardingPolicy")
+
+	return
 }
 
 func NewCreateForwardingPolicyResponse() (response *CreateForwardingPolicyResponse) {
-    response = &CreateForwardingPolicyResponse{
-        BaseResponse: &tchttp.BaseResponse{},
-    } 
-    return
+	response = &CreateForwardingPolicyResponse{
+		BaseResponse: &tchttp.BaseResponse{},
+	}
+	return
 
 }
 
@@ -256,57 +257,58 @@ func NewCreateForwardingPolicyResponse() (response *CreateForwardingPolicyRespon
 // 创建七层转发策略
 //
 // 可能返回的错误码:
-//  INVALIDPARAMETERVALUE_FORWARDINGPOLICYHOSTCONFLICT = "InvalidParameterValue.ForwardingPolicyHostConflict"
-//  INVALIDPARAMETERVALUE_INSTANCEMISMATCH = "InvalidParameterValue.InstanceMismatch"
-//  UNSUPPORTEDOPERATION_INSTANCENOTRUNNING = "UnsupportedOperation.InstanceNotRunning"
-//  UNSUPPORTEDOPERATION_INSTANCESTATENOTALLOWEDOPERATE = "UnsupportedOperation.InstanceStateNotAllowedOperate"
-//  UNSUPPORTEDOPERATION_TRANSPORTLAYERUNSUPPORTEDOPERATEFORWARDINGPOLICY = "UnsupportedOperation.TransportLayerUnsupportedOperateForwardingPolicy"
+//
+//	INVALIDPARAMETERVALUE_FORWARDINGPOLICYHOSTCONFLICT = "InvalidParameterValue.ForwardingPolicyHostConflict"
+//	INVALIDPARAMETERVALUE_INSTANCEMISMATCH = "InvalidParameterValue.InstanceMismatch"
+//	UNSUPPORTEDOPERATION_INSTANCENOTRUNNING = "UnsupportedOperation.InstanceNotRunning"
+//	UNSUPPORTEDOPERATION_INSTANCESTATENOTALLOWEDOPERATE = "UnsupportedOperation.InstanceStateNotAllowedOperate"
+//	UNSUPPORTEDOPERATION_TRANSPORTLAYERUNSUPPORTEDOPERATEFORWARDINGPOLICY = "UnsupportedOperation.TransportLayerUnsupportedOperateForwardingPolicy"
 func (c *Client) CreateForwardingPolicy(request *CreateForwardingPolicyRequest) (response *CreateForwardingPolicyResponse, err error) {
-    return c.CreateForwardingPolicyWithContext(context.Background(), request)
+	return c.CreateForwardingPolicyWithContext(context.Background(), request)
 }
 
 // CreateForwardingPolicy
 // 创建七层转发策略
 //
 // 可能返回的错误码:
-//  INVALIDPARAMETERVALUE_FORWARDINGPOLICYHOSTCONFLICT = "InvalidParameterValue.ForwardingPolicyHostConflict"
-//  INVALIDPARAMETERVALUE_INSTANCEMISMATCH = "InvalidParameterValue.InstanceMismatch"
-//  UNSUPPORTEDOPERATION_INSTANCENOTRUNNING = "UnsupportedOperation.InstanceNotRunning"
-//  UNSUPPORTEDOPERATION_INSTANCESTATENOTALLOWEDOPERATE = "UnsupportedOperation.InstanceStateNotAllowedOperate"
-//  UNSUPPORTEDOPERATION_TRANSPORTLAYERUNSUPPORTEDOPERATEFORWARDINGPOLICY = "UnsupportedOperation.TransportLayerUnsupportedOperateForwardingPolicy"
+//
+//	INVALIDPARAMETERVALUE_FORWARDINGPOLICYHOSTCONFLICT = "InvalidParameterValue.ForwardingPolicyHostConflict"
+//	INVALIDPARAMETERVALUE_INSTANCEMISMATCH = "InvalidParameterValue.InstanceMismatch"
+//	UNSUPPORTEDOPERATION_INSTANCENOTRUNNING = "UnsupportedOperation.InstanceNotRunning"
+//	UNSUPPORTEDOPERATION_INSTANCESTATENOTALLOWEDOPERATE = "UnsupportedOperation.InstanceStateNotAllowedOperate"
+//	UNSUPPORTEDOPERATION_TRANSPORTLAYERUNSUPPORTEDOPERATEFORWARDINGPOLICY = "UnsupportedOperation.TransportLayerUnsupportedOperateForwardingPolicy"
 func (c *Client) CreateForwardingPolicyWithContext(ctx context.Context, request *CreateForwardingPolicyRequest) (response *CreateForwardingPolicyResponse, err error) {
-    if request == nil {
-        request = NewCreateForwardingPolicyRequest()
-    }
-    c.InitBaseRequest(&request.BaseRequest, "ga2", APIVersion, "CreateForwardingPolicy")
-    
-    if c.GetCredential() == nil {
-        return nil, errors.New("CreateForwardingPolicy require credential")
-    }
+	if request == nil {
+		request = NewCreateForwardingPolicyRequest()
+	}
+	c.InitBaseRequest(&request.BaseRequest, "ga2", APIVersion, "CreateForwardingPolicy")
 
-    request.SetContext(ctx)
-    
-    response = NewCreateForwardingPolicyResponse()
-    err = c.Send(request, response)
-    return
+	if c.GetCredential() == nil {
+		return nil, errors.New("CreateForwardingPolicy require credential")
+	}
+
+	request.SetContext(ctx)
+
+	response = NewCreateForwardingPolicyResponse()
+	err = c.Send(request, response)
+	return
 }
 
 func NewCreateForwardingRuleRequest() (request *CreateForwardingRuleRequest) {
-    request = &CreateForwardingRuleRequest{
-        BaseRequest: &tchttp.BaseRequest{},
-    }
-    
-    request.Init().WithApiInfo("ga2", APIVersion, "CreateForwardingRule")
-    
-    
-    return
+	request = &CreateForwardingRuleRequest{
+		BaseRequest: &tchttp.BaseRequest{},
+	}
+
+	request.Init().WithApiInfo("ga2", APIVersion, "CreateForwardingRule")
+
+	return
 }
 
 func NewCreateForwardingRuleResponse() (response *CreateForwardingRuleResponse) {
-    response = &CreateForwardingRuleResponse{
-        BaseResponse: &tchttp.BaseResponse{},
-    } 
-    return
+	response = &CreateForwardingRuleResponse{
+		BaseResponse: &tchttp.BaseResponse{},
+	}
+	return
 
 }
 
@@ -314,57 +316,58 @@ func NewCreateForwardingRuleResponse() (response *CreateForwardingRuleResponse) 
 // 创建七层转发规则
 //
 // 可能返回的错误码:
-//  INVALIDPARAMETERVALUE_ASCIICHARACTERS = "InvalidParameterValue.AsciiCharacters"
-//  INVALIDPARAMETERVALUE_INSTANCEMISMATCH = "InvalidParameterValue.InstanceMismatch"
-//  INVALIDPARAMETERVALUE_SPECIALCHARACTERS = "InvalidParameterValue.SpecialCharacters"
-//  MISSINGPARAMETER = "MissingParameter"
-//  UNSUPPORTEDOPERATION_FORWARDGROUPFORWARDINGRULEUNSUPPORTEDDEFAULTENDPOINTGROUP = "UnsupportedOperation.ForwardGroupForwardingRuleUnsupportedDefaultEndpointGroup"
+//
+//	INVALIDPARAMETERVALUE_ASCIICHARACTERS = "InvalidParameterValue.AsciiCharacters"
+//	INVALIDPARAMETERVALUE_INSTANCEMISMATCH = "InvalidParameterValue.InstanceMismatch"
+//	INVALIDPARAMETERVALUE_SPECIALCHARACTERS = "InvalidParameterValue.SpecialCharacters"
+//	MISSINGPARAMETER = "MissingParameter"
+//	UNSUPPORTEDOPERATION_FORWARDGROUPFORWARDINGRULEUNSUPPORTEDDEFAULTENDPOINTGROUP = "UnsupportedOperation.ForwardGroupForwardingRuleUnsupportedDefaultEndpointGroup"
 func (c *Client) CreateForwardingRule(request *CreateForwardingRuleRequest) (response *CreateForwardingRuleResponse, err error) {
-    return c.CreateForwardingRuleWithContext(context.Background(), request)
+	return c.CreateForwardingRuleWithContext(context.Background(), request)
 }
 
 // CreateForwardingRule
 // 创建七层转发规则
 //
 // 可能返回的错误码:
-//  INVALIDPARAMETERVALUE_ASCIICHARACTERS = "InvalidParameterValue.AsciiCharacters"
-//  INVALIDPARAMETERVALUE_INSTANCEMISMATCH = "InvalidParameterValue.InstanceMismatch"
-//  INVALIDPARAMETERVALUE_SPECIALCHARACTERS = "InvalidParameterValue.SpecialCharacters"
-//  MISSINGPARAMETER = "MissingParameter"
-//  UNSUPPORTEDOPERATION_FORWARDGROUPFORWARDINGRULEUNSUPPORTEDDEFAULTENDPOINTGROUP = "UnsupportedOperation.ForwardGroupForwardingRuleUnsupportedDefaultEndpointGroup"
+//
+//	INVALIDPARAMETERVALUE_ASCIICHARACTERS = "InvalidParameterValue.AsciiCharacters"
+//	INVALIDPARAMETERVALUE_INSTANCEMISMATCH = "InvalidParameterValue.InstanceMismatch"
+//	INVALIDPARAMETERVALUE_SPECIALCHARACTERS = "InvalidParameterValue.SpecialCharacters"
+//	MISSINGPARAMETER = "MissingParameter"
+//	UNSUPPORTEDOPERATION_FORWARDGROUPFORWARDINGRULEUNSUPPORTEDDEFAULTENDPOINTGROUP = "UnsupportedOperation.ForwardGroupForwardingRuleUnsupportedDefaultEndpointGroup"
 func (c *Client) CreateForwardingRuleWithContext(ctx context.Context, request *CreateForwardingRuleRequest) (response *CreateForwardingRuleResponse, err error) {
-    if request == nil {
-        request = NewCreateForwardingRuleRequest()
-    }
-    c.InitBaseRequest(&request.BaseRequest, "ga2", APIVersion, "CreateForwardingRule")
-    
-    if c.GetCredential() == nil {
-        return nil, errors.New("CreateForwardingRule require credential")
-    }
+	if request == nil {
+		request = NewCreateForwardingRuleRequest()
+	}
+	c.InitBaseRequest(&request.BaseRequest, "ga2", APIVersion, "CreateForwardingRule")
 
-    request.SetContext(ctx)
-    
-    response = NewCreateForwardingRuleResponse()
-    err = c.Send(request, response)
-    return
+	if c.GetCredential() == nil {
+		return nil, errors.New("CreateForwardingRule require credential")
+	}
+
+	request.SetContext(ctx)
+
+	response = NewCreateForwardingRuleResponse()
+	err = c.Send(request, response)
+	return
 }
 
 func NewCreateGlobalAcceleratorRequest() (request *CreateGlobalAcceleratorRequest) {
-    request = &CreateGlobalAcceleratorRequest{
-        BaseRequest: &tchttp.BaseRequest{},
-    }
-    
-    request.Init().WithApiInfo("ga2", APIVersion, "CreateGlobalAccelerator")
-    
-    
-    return
+	request = &CreateGlobalAcceleratorRequest{
+		BaseRequest: &tchttp.BaseRequest{},
+	}
+
+	request.Init().WithApiInfo("ga2", APIVersion, "CreateGlobalAccelerator")
+
+	return
 }
 
 func NewCreateGlobalAcceleratorResponse() (response *CreateGlobalAcceleratorResponse) {
-    response = &CreateGlobalAcceleratorResponse{
-        BaseResponse: &tchttp.BaseResponse{},
-    } 
-    return
+	response = &CreateGlobalAcceleratorResponse{
+		BaseResponse: &tchttp.BaseResponse{},
+	}
+	return
 
 }
 
@@ -372,71 +375,251 @@ func NewCreateGlobalAcceleratorResponse() (response *CreateGlobalAcceleratorResp
 // 创建全球加速实例
 //
 // 可能返回的错误码:
-//  FAILEDOPERATION_CREATEGLOBALACCELERATORFAILED = "FailedOperation.CreateGlobalAcceleratorFailed"
-//  INVALIDPARAMETERVALUE = "InvalidParameterValue"
-//  INVALIDPARAMETERVALUE_INSTANCENAME = "InvalidParameterValue.InstanceName"
-//  INVALIDPARAMETERVALUE_TOOLONG = "InvalidParameterValue.TooLong"
-//  MISSINGPARAMETER = "MissingParameter"
-//  UNSUPPORTEDOPERATION_ACCOUNTFROZEN = "UnsupportedOperation.AccountFrozen"
-//  UNSUPPORTEDOPERATION_BILLINGFAILED = "UnsupportedOperation.BillingFailed"
-//  UNSUPPORTEDOPERATION_CROSSBORDERPROMISENOTSIGNED = "UnsupportedOperation.CrossBorderPromiseNotSigned"
-//  UNSUPPORTEDOPERATION_CURRENTACCOUNTNOTALLOWED = "UnsupportedOperation.CurrentAccountNotAllowed"
-//  UNSUPPORTEDOPERATION_ENABLECROSSBORDER = "UnsupportedOperation.EnableCrossBorder"
-//  UNSUPPORTEDOPERATION_INSUFFICIENTFUNDS = "UnsupportedOperation.InsufficientFunds"
-//  UNSUPPORTEDOPERATION_UNABLECROSSBORDER = "UnsupportedOperation.UnableCrossBorder"
+//
+//	FAILEDOPERATION_CREATEGLOBALACCELERATORFAILED = "FailedOperation.CreateGlobalAcceleratorFailed"
+//	INVALIDPARAMETERVALUE = "InvalidParameterValue"
+//	INVALIDPARAMETERVALUE_INSTANCENAME = "InvalidParameterValue.InstanceName"
+//	INVALIDPARAMETERVALUE_TOOLONG = "InvalidParameterValue.TooLong"
+//	MISSINGPARAMETER = "MissingParameter"
+//	UNSUPPORTEDOPERATION_ACCOUNTFROZEN = "UnsupportedOperation.AccountFrozen"
+//	UNSUPPORTEDOPERATION_BILLINGFAILED = "UnsupportedOperation.BillingFailed"
+//	UNSUPPORTEDOPERATION_CROSSBORDERPROMISENOTSIGNED = "UnsupportedOperation.CrossBorderPromiseNotSigned"
+//	UNSUPPORTEDOPERATION_CURRENTACCOUNTNOTALLOWED = "UnsupportedOperation.CurrentAccountNotAllowed"
+//	UNSUPPORTEDOPERATION_ENABLECROSSBORDER = "UnsupportedOperation.EnableCrossBorder"
+//	UNSUPPORTEDOPERATION_INSUFFICIENTFUNDS = "UnsupportedOperation.InsufficientFunds"
+//	UNSUPPORTEDOPERATION_UNABLECROSSBORDER = "UnsupportedOperation.UnableCrossBorder"
 func (c *Client) CreateGlobalAccelerator(request *CreateGlobalAcceleratorRequest) (response *CreateGlobalAcceleratorResponse, err error) {
-    return c.CreateGlobalAcceleratorWithContext(context.Background(), request)
+	return c.CreateGlobalAcceleratorWithContext(context.Background(), request)
 }
 
 // CreateGlobalAccelerator
 // 创建全球加速实例
 //
 // 可能返回的错误码:
-//  FAILEDOPERATION_CREATEGLOBALACCELERATORFAILED = "FailedOperation.CreateGlobalAcceleratorFailed"
-//  INVALIDPARAMETERVALUE = "InvalidParameterValue"
-//  INVALIDPARAMETERVALUE_INSTANCENAME = "InvalidParameterValue.InstanceName"
-//  INVALIDPARAMETERVALUE_TOOLONG = "InvalidParameterValue.TooLong"
-//  MISSINGPARAMETER = "MissingParameter"
-//  UNSUPPORTEDOPERATION_ACCOUNTFROZEN = "UnsupportedOperation.AccountFrozen"
-//  UNSUPPORTEDOPERATION_BILLINGFAILED = "UnsupportedOperation.BillingFailed"
-//  UNSUPPORTEDOPERATION_CROSSBORDERPROMISENOTSIGNED = "UnsupportedOperation.CrossBorderPromiseNotSigned"
-//  UNSUPPORTEDOPERATION_CURRENTACCOUNTNOTALLOWED = "UnsupportedOperation.CurrentAccountNotAllowed"
-//  UNSUPPORTEDOPERATION_ENABLECROSSBORDER = "UnsupportedOperation.EnableCrossBorder"
-//  UNSUPPORTEDOPERATION_INSUFFICIENTFUNDS = "UnsupportedOperation.InsufficientFunds"
-//  UNSUPPORTEDOPERATION_UNABLECROSSBORDER = "UnsupportedOperation.UnableCrossBorder"
+//
+//	FAILEDOPERATION_CREATEGLOBALACCELERATORFAILED = "FailedOperation.CreateGlobalAcceleratorFailed"
+//	INVALIDPARAMETERVALUE = "InvalidParameterValue"
+//	INVALIDPARAMETERVALUE_INSTANCENAME = "InvalidParameterValue.InstanceName"
+//	INVALIDPARAMETERVALUE_TOOLONG = "InvalidParameterValue.TooLong"
+//	MISSINGPARAMETER = "MissingParameter"
+//	UNSUPPORTEDOPERATION_ACCOUNTFROZEN = "UnsupportedOperation.AccountFrozen"
+//	UNSUPPORTEDOPERATION_BILLINGFAILED = "UnsupportedOperation.BillingFailed"
+//	UNSUPPORTEDOPERATION_CROSSBORDERPROMISENOTSIGNED = "UnsupportedOperation.CrossBorderPromiseNotSigned"
+//	UNSUPPORTEDOPERATION_CURRENTACCOUNTNOTALLOWED = "UnsupportedOperation.CurrentAccountNotAllowed"
+//	UNSUPPORTEDOPERATION_ENABLECROSSBORDER = "UnsupportedOperation.EnableCrossBorder"
+//	UNSUPPORTEDOPERATION_INSUFFICIENTFUNDS = "UnsupportedOperation.InsufficientFunds"
+//	UNSUPPORTEDOPERATION_UNABLECROSSBORDER = "UnsupportedOperation.UnableCrossBorder"
 func (c *Client) CreateGlobalAcceleratorWithContext(ctx context.Context, request *CreateGlobalAcceleratorRequest) (response *CreateGlobalAcceleratorResponse, err error) {
-    if request == nil {
-        request = NewCreateGlobalAcceleratorRequest()
-    }
-    c.InitBaseRequest(&request.BaseRequest, "ga2", APIVersion, "CreateGlobalAccelerator")
-    
-    if c.GetCredential() == nil {
-        return nil, errors.New("CreateGlobalAccelerator require credential")
-    }
+	if request == nil {
+		request = NewCreateGlobalAcceleratorRequest()
+	}
+	c.InitBaseRequest(&request.BaseRequest, "ga2", APIVersion, "CreateGlobalAccelerator")
 
-    request.SetContext(ctx)
-    
-    response = NewCreateGlobalAcceleratorResponse()
-    err = c.Send(request, response)
-    return
+	if c.GetCredential() == nil {
+		return nil, errors.New("CreateGlobalAccelerator require credential")
+	}
+
+	request.SetContext(ctx)
+
+	response = NewCreateGlobalAcceleratorResponse()
+	err = c.Send(request, response)
+	return
+}
+
+func NewCreateGlobalAcceleratorAccessLogRequest() (request *CreateGlobalAcceleratorAccessLogRequest) {
+	request = &CreateGlobalAcceleratorAccessLogRequest{
+		BaseRequest: &tchttp.BaseRequest{},
+	}
+
+	request.Init().WithApiInfo("ga2", APIVersion, "CreateGlobalAcceleratorAccessLog")
+
+	return
+}
+
+func NewCreateGlobalAcceleratorAccessLogResponse() (response *CreateGlobalAcceleratorAccessLogResponse) {
+	response = &CreateGlobalAcceleratorAccessLogResponse{
+		BaseResponse: &tchttp.BaseResponse{},
+	}
+	return
+
+}
+
+// CreateGlobalAcceleratorAccessLog
+// 创建GA访问日志
+//
+// 可能返回的错误码:
+//
+//	INVALIDPARAMETERVALUE_INSTANCEMISMATCH = "InvalidParameterValue.InstanceMismatch"
+//	INVALIDPARAMETERVALUE_LOGTASKLOCATEDERROR = "InvalidParameterValue.LogTaskLocatedError"
+//	INVALIDPARAMETERVALUE_LOGSETNOTEXIST = "InvalidParameterValue.LogsetNotExist"
+//	INVALIDPARAMETERVALUE_RANGE = "InvalidParameterValue.Range"
+//	UNSUPPORTEDOPERATION_ACCESSLOG = "UnsupportedOperation.AccessLog"
+//	UNSUPPORTEDOPERATION_EXISTACCESSLOG = "UnsupportedOperation.ExistAccessLog"
+//	UNSUPPORTEDOPERATION_INSTANCENOTRUNNING = "UnsupportedOperation.InstanceNotRunning"
+//	UNSUPPORTEDOPERATION_NOTAUTHORIZATION = "UnsupportedOperation.NotAuthorization"
+func (c *Client) CreateGlobalAcceleratorAccessLog(request *CreateGlobalAcceleratorAccessLogRequest) (response *CreateGlobalAcceleratorAccessLogResponse, err error) {
+	return c.CreateGlobalAcceleratorAccessLogWithContext(context.Background(), request)
+}
+
+// CreateGlobalAcceleratorAccessLog
+// 创建GA访问日志
+//
+// 可能返回的错误码:
+//
+//	INVALIDPARAMETERVALUE_INSTANCEMISMATCH = "InvalidParameterValue.InstanceMismatch"
+//	INVALIDPARAMETERVALUE_LOGTASKLOCATEDERROR = "InvalidParameterValue.LogTaskLocatedError"
+//	INVALIDPARAMETERVALUE_LOGSETNOTEXIST = "InvalidParameterValue.LogsetNotExist"
+//	INVALIDPARAMETERVALUE_RANGE = "InvalidParameterValue.Range"
+//	UNSUPPORTEDOPERATION_ACCESSLOG = "UnsupportedOperation.AccessLog"
+//	UNSUPPORTEDOPERATION_EXISTACCESSLOG = "UnsupportedOperation.ExistAccessLog"
+//	UNSUPPORTEDOPERATION_INSTANCENOTRUNNING = "UnsupportedOperation.InstanceNotRunning"
+//	UNSUPPORTEDOPERATION_NOTAUTHORIZATION = "UnsupportedOperation.NotAuthorization"
+func (c *Client) CreateGlobalAcceleratorAccessLogWithContext(ctx context.Context, request *CreateGlobalAcceleratorAccessLogRequest) (response *CreateGlobalAcceleratorAccessLogResponse, err error) {
+	if request == nil {
+		request = NewCreateGlobalAcceleratorAccessLogRequest()
+	}
+	c.InitBaseRequest(&request.BaseRequest, "ga2", APIVersion, "CreateGlobalAcceleratorAccessLog")
+
+	if c.GetCredential() == nil {
+		return nil, errors.New("CreateGlobalAcceleratorAccessLog require credential")
+	}
+
+	request.SetContext(ctx)
+
+	response = NewCreateGlobalAcceleratorAccessLogResponse()
+	err = c.Send(request, response)
+	return
+}
+
+func NewCreateGlobalAcceleratorAclPolicyRequest() (request *CreateGlobalAcceleratorAclPolicyRequest) {
+	request = &CreateGlobalAcceleratorAclPolicyRequest{
+		BaseRequest: &tchttp.BaseRequest{},
+	}
+
+	request.Init().WithApiInfo("ga2", APIVersion, "CreateGlobalAcceleratorAclPolicy")
+
+	return
+}
+
+func NewCreateGlobalAcceleratorAclPolicyResponse() (response *CreateGlobalAcceleratorAclPolicyResponse) {
+	response = &CreateGlobalAcceleratorAclPolicyResponse{
+		BaseResponse: &tchttp.BaseResponse{},
+	}
+	return
+
+}
+
+// CreateGlobalAcceleratorAclPolicy
+// 创建访问控制策略
+//
+// 可能返回的错误码:
+//
+//	UNSUPPORTEDOPERATION_EXISTTHIRDPARTYNODES = "UnsupportedOperation.ExistThirdPartyNodes"
+//	UNSUPPORTEDOPERATION_INSTANCESTATENOTALLOWEDOPERATE = "UnsupportedOperation.InstanceStateNotAllowedOperate"
+func (c *Client) CreateGlobalAcceleratorAclPolicy(request *CreateGlobalAcceleratorAclPolicyRequest) (response *CreateGlobalAcceleratorAclPolicyResponse, err error) {
+	return c.CreateGlobalAcceleratorAclPolicyWithContext(context.Background(), request)
+}
+
+// CreateGlobalAcceleratorAclPolicy
+// 创建访问控制策略
+//
+// 可能返回的错误码:
+//
+//	UNSUPPORTEDOPERATION_EXISTTHIRDPARTYNODES = "UnsupportedOperation.ExistThirdPartyNodes"
+//	UNSUPPORTEDOPERATION_INSTANCESTATENOTALLOWEDOPERATE = "UnsupportedOperation.InstanceStateNotAllowedOperate"
+func (c *Client) CreateGlobalAcceleratorAclPolicyWithContext(ctx context.Context, request *CreateGlobalAcceleratorAclPolicyRequest) (response *CreateGlobalAcceleratorAclPolicyResponse, err error) {
+	if request == nil {
+		request = NewCreateGlobalAcceleratorAclPolicyRequest()
+	}
+	c.InitBaseRequest(&request.BaseRequest, "ga2", APIVersion, "CreateGlobalAcceleratorAclPolicy")
+
+	if c.GetCredential() == nil {
+		return nil, errors.New("CreateGlobalAcceleratorAclPolicy require credential")
+	}
+
+	request.SetContext(ctx)
+
+	response = NewCreateGlobalAcceleratorAclPolicyResponse()
+	err = c.Send(request, response)
+	return
+}
+
+func NewCreateGlobalAcceleratorAclRuleRequest() (request *CreateGlobalAcceleratorAclRuleRequest) {
+	request = &CreateGlobalAcceleratorAclRuleRequest{
+		BaseRequest: &tchttp.BaseRequest{},
+	}
+
+	request.Init().WithApiInfo("ga2", APIVersion, "CreateGlobalAcceleratorAclRule")
+
+	return
+}
+
+func NewCreateGlobalAcceleratorAclRuleResponse() (response *CreateGlobalAcceleratorAclRuleResponse) {
+	response = &CreateGlobalAcceleratorAclRuleResponse{
+		BaseResponse: &tchttp.BaseResponse{},
+	}
+	return
+
+}
+
+// CreateGlobalAcceleratorAclRule
+// 创建ACL规则
+//
+// 可能返回的错误码:
+//
+//	INVALIDPARAMETER_INPUTREPEAT = "InvalidParameter.InputRepeat"
+//	INVALIDPARAMETERVALUE_INSTANCEMISMATCH = "InvalidParameterValue.InstanceMismatch"
+//	LIMITEXCEEDED = "LimitExceeded"
+//	UNSUPPORTEDOPERATION_INSTANCENOTRUNNING = "UnsupportedOperation.InstanceNotRunning"
+//	UNSUPPORTEDOPERATION_INSTANCESTATENOTALLOWEDOPERATE = "UnsupportedOperation.InstanceStateNotAllowedOperate"
+//	UNSUPPORTEDOPERATION_REQUESTPARAMETERSERROR = "UnsupportedOperation.RequestParametersError"
+func (c *Client) CreateGlobalAcceleratorAclRule(request *CreateGlobalAcceleratorAclRuleRequest) (response *CreateGlobalAcceleratorAclRuleResponse, err error) {
+	return c.CreateGlobalAcceleratorAclRuleWithContext(context.Background(), request)
+}
+
+// CreateGlobalAcceleratorAclRule
+// 创建ACL规则
+//
+// 可能返回的错误码:
+//
+//	INVALIDPARAMETER_INPUTREPEAT = "InvalidParameter.InputRepeat"
+//	INVALIDPARAMETERVALUE_INSTANCEMISMATCH = "InvalidParameterValue.InstanceMismatch"
+//	LIMITEXCEEDED = "LimitExceeded"
+//	UNSUPPORTEDOPERATION_INSTANCENOTRUNNING = "UnsupportedOperation.InstanceNotRunning"
+//	UNSUPPORTEDOPERATION_INSTANCESTATENOTALLOWEDOPERATE = "UnsupportedOperation.InstanceStateNotAllowedOperate"
+//	UNSUPPORTEDOPERATION_REQUESTPARAMETERSERROR = "UnsupportedOperation.RequestParametersError"
+func (c *Client) CreateGlobalAcceleratorAclRuleWithContext(ctx context.Context, request *CreateGlobalAcceleratorAclRuleRequest) (response *CreateGlobalAcceleratorAclRuleResponse, err error) {
+	if request == nil {
+		request = NewCreateGlobalAcceleratorAclRuleRequest()
+	}
+	c.InitBaseRequest(&request.BaseRequest, "ga2", APIVersion, "CreateGlobalAcceleratorAclRule")
+
+	if c.GetCredential() == nil {
+		return nil, errors.New("CreateGlobalAcceleratorAclRule require credential")
+	}
+
+	request.SetContext(ctx)
+
+	response = NewCreateGlobalAcceleratorAclRuleResponse()
+	err = c.Send(request, response)
+	return
 }
 
 func NewCreateListenerRequest() (request *CreateListenerRequest) {
-    request = &CreateListenerRequest{
-        BaseRequest: &tchttp.BaseRequest{},
-    }
-    
-    request.Init().WithApiInfo("ga2", APIVersion, "CreateListener")
-    
-    
-    return
+	request = &CreateListenerRequest{
+		BaseRequest: &tchttp.BaseRequest{},
+	}
+
+	request.Init().WithApiInfo("ga2", APIVersion, "CreateListener")
+
+	return
 }
 
 func NewCreateListenerResponse() (response *CreateListenerResponse) {
-    response = &CreateListenerResponse{
-        BaseResponse: &tchttp.BaseResponse{},
-    } 
-    return
+	response = &CreateListenerResponse{
+		BaseResponse: &tchttp.BaseResponse{},
+	}
+	return
 
 }
 
@@ -444,97 +627,155 @@ func NewCreateListenerResponse() (response *CreateListenerResponse) {
 // 创建监听器
 //
 // 可能返回的错误码:
-//  FAILEDOPERATION_INSUFFICIENTRESOURCES = "FailedOperation.InsufficientResources"
-//  INVALIDPARAMETER_APPLICATIONLAYERLISTENERCANNOTCARRYPARAMETERS = "InvalidParameter.ApplicationLayerListenerCannotCarryParameters"
-//  INVALIDPARAMETER_CLIENTAFFINITYCLOSE = "InvalidParameter.ClientAffinityCLose"
-//  INVALIDPARAMETER_HTTPLISTENERCANNOTCARRYPARAMETERS = "InvalidParameter.HttpListenerCannotCarryParameters"
-//  INVALIDPARAMETER_HTTPSLISTENERCANNOTCARRYPARAMETERS = "InvalidParameter.HttpsListenerCannotCarryParameters"
-//  INVALIDPARAMETER_SINGLEPORT = "InvalidParameter.SinglePort"
-//  INVALIDPARAMETER_TCPENDPOINTGROUPCARRYPARAMETERS = "InvalidParameter.TcpEndpointGroupCarryParameters"
-//  INVALIDPARAMETER_TRANSPORTLAYERLISTENERCANNOTCARRYPARAMETERS = "InvalidParameter.TransportLayerListenerCannotCarryParameters"
-//  INVALIDPARAMETERVALUE = "InvalidParameterValue"
-//  INVALIDPARAMETERVALUE_INSTANCENAME = "InvalidParameterValue.InstanceName"
-//  INVALIDPARAMETERVALUE_MALFORMED = "InvalidParameterValue.Malformed"
-//  INVALIDPARAMETERVALUE_RANGE = "InvalidParameterValue.Range"
-//  INVALIDPARAMETERVALUE_SEGMENTPORTRANGE = "InvalidParameterValue.SegmentPortRange"
-//  INVALIDPARAMETERVALUE_TCPSERIESLISTENERPORTEQUAL = "InvalidParameterValue.TcpSeriesListenerPortEqual"
-//  INVALIDPARAMETERVALUE_THIRDAREALISTENERPORTEQUAL = "InvalidParameterValue.ThirdAreaListenerPortEqual"
-//  INVALIDPARAMETERVALUE_THIRDAREALISTENERPORTSEGMENT = "InvalidParameterValue.ThirdAreaListenerPortSegment"
-//  INVALIDPARAMETERVALUE_TOOLONG = "InvalidParameterValue.TooLong"
-//  INVALIDPARAMETERVALUE_UDPSERIESLISTENERPORTEQUAL = "InvalidParameterValue.UdpSeriesListenerPortEqual"
-//  MISSINGPARAMETER = "MissingParameter"
-//  UNSUPPORTEDOPERATION_CERTIFICATEINVALIDSTATUS = "UnsupportedOperation.CertificateInvalidStatus"
-//  UNSUPPORTEDOPERATION_INSTANCENOTRUNNING = "UnsupportedOperation.InstanceNotRunning"
-//  UNSUPPORTEDOPERATION_INSTANCESTATENOTALLOWEDOPERATE = "UnsupportedOperation.InstanceStateNotAllowedOperate"
-//  UNSUPPORTEDOPERATION_LISTENERPORTSEGMENT = "UnsupportedOperation.ListenerPortSegment"
-//  UNSUPPORTEDOPERATION_ONLYTCPLISTENERSUPPORTTOA = "UnsupportedOperation.OnlyTcpListenerSupportToa"
-//  UNSUPPORTEDOPERATION_TOAFEATURENOTENABLED = "UnsupportedOperation.TOAFeatureNotEnabled"
+//
+//	FAILEDOPERATION_INSUFFICIENTRESOURCES = "FailedOperation.InsufficientResources"
+//	INVALIDPARAMETER_APPLICATIONLAYERLISTENERCANNOTCARRYPARAMETERS = "InvalidParameter.ApplicationLayerListenerCannotCarryParameters"
+//	INVALIDPARAMETER_CLIENTAFFINITYCLOSE = "InvalidParameter.ClientAffinityCLose"
+//	INVALIDPARAMETER_HTTPLISTENERCANNOTCARRYPARAMETERS = "InvalidParameter.HttpListenerCannotCarryParameters"
+//	INVALIDPARAMETER_HTTPSLISTENERCANNOTCARRYPARAMETERS = "InvalidParameter.HttpsListenerCannotCarryParameters"
+//	INVALIDPARAMETER_SINGLEPORT = "InvalidParameter.SinglePort"
+//	INVALIDPARAMETER_TCPENDPOINTGROUPCARRYPARAMETERS = "InvalidParameter.TcpEndpointGroupCarryParameters"
+//	INVALIDPARAMETER_TRANSPORTLAYERLISTENERCANNOTCARRYPARAMETERS = "InvalidParameter.TransportLayerListenerCannotCarryParameters"
+//	INVALIDPARAMETERVALUE = "InvalidParameterValue"
+//	INVALIDPARAMETERVALUE_INSTANCENAME = "InvalidParameterValue.InstanceName"
+//	INVALIDPARAMETERVALUE_MALFORMED = "InvalidParameterValue.Malformed"
+//	INVALIDPARAMETERVALUE_RANGE = "InvalidParameterValue.Range"
+//	INVALIDPARAMETERVALUE_SEGMENTPORTRANGE = "InvalidParameterValue.SegmentPortRange"
+//	INVALIDPARAMETERVALUE_TCPSERIESLISTENERPORTEQUAL = "InvalidParameterValue.TcpSeriesListenerPortEqual"
+//	INVALIDPARAMETERVALUE_THIRDAREALISTENERPORTEQUAL = "InvalidParameterValue.ThirdAreaListenerPortEqual"
+//	INVALIDPARAMETERVALUE_THIRDAREALISTENERPORTSEGMENT = "InvalidParameterValue.ThirdAreaListenerPortSegment"
+//	INVALIDPARAMETERVALUE_TOOLONG = "InvalidParameterValue.TooLong"
+//	INVALIDPARAMETERVALUE_UDPSERIESLISTENERPORTEQUAL = "InvalidParameterValue.UdpSeriesListenerPortEqual"
+//	MISSINGPARAMETER = "MissingParameter"
+//	UNSUPPORTEDOPERATION_CERTIFICATEINVALIDSTATUS = "UnsupportedOperation.CertificateInvalidStatus"
+//	UNSUPPORTEDOPERATION_INSTANCENOTRUNNING = "UnsupportedOperation.InstanceNotRunning"
+//	UNSUPPORTEDOPERATION_INSTANCESTATENOTALLOWEDOPERATE = "UnsupportedOperation.InstanceStateNotAllowedOperate"
+//	UNSUPPORTEDOPERATION_LISTENERPORTSEGMENT = "UnsupportedOperation.ListenerPortSegment"
+//	UNSUPPORTEDOPERATION_ONLYTCPLISTENERSUPPORTTOA = "UnsupportedOperation.OnlyTcpListenerSupportToa"
+//	UNSUPPORTEDOPERATION_TOAFEATURENOTENABLED = "UnsupportedOperation.TOAFeatureNotEnabled"
 func (c *Client) CreateListener(request *CreateListenerRequest) (response *CreateListenerResponse, err error) {
-    return c.CreateListenerWithContext(context.Background(), request)
+	return c.CreateListenerWithContext(context.Background(), request)
 }
 
 // CreateListener
 // 创建监听器
 //
 // 可能返回的错误码:
-//  FAILEDOPERATION_INSUFFICIENTRESOURCES = "FailedOperation.InsufficientResources"
-//  INVALIDPARAMETER_APPLICATIONLAYERLISTENERCANNOTCARRYPARAMETERS = "InvalidParameter.ApplicationLayerListenerCannotCarryParameters"
-//  INVALIDPARAMETER_CLIENTAFFINITYCLOSE = "InvalidParameter.ClientAffinityCLose"
-//  INVALIDPARAMETER_HTTPLISTENERCANNOTCARRYPARAMETERS = "InvalidParameter.HttpListenerCannotCarryParameters"
-//  INVALIDPARAMETER_HTTPSLISTENERCANNOTCARRYPARAMETERS = "InvalidParameter.HttpsListenerCannotCarryParameters"
-//  INVALIDPARAMETER_SINGLEPORT = "InvalidParameter.SinglePort"
-//  INVALIDPARAMETER_TCPENDPOINTGROUPCARRYPARAMETERS = "InvalidParameter.TcpEndpointGroupCarryParameters"
-//  INVALIDPARAMETER_TRANSPORTLAYERLISTENERCANNOTCARRYPARAMETERS = "InvalidParameter.TransportLayerListenerCannotCarryParameters"
-//  INVALIDPARAMETERVALUE = "InvalidParameterValue"
-//  INVALIDPARAMETERVALUE_INSTANCENAME = "InvalidParameterValue.InstanceName"
-//  INVALIDPARAMETERVALUE_MALFORMED = "InvalidParameterValue.Malformed"
-//  INVALIDPARAMETERVALUE_RANGE = "InvalidParameterValue.Range"
-//  INVALIDPARAMETERVALUE_SEGMENTPORTRANGE = "InvalidParameterValue.SegmentPortRange"
-//  INVALIDPARAMETERVALUE_TCPSERIESLISTENERPORTEQUAL = "InvalidParameterValue.TcpSeriesListenerPortEqual"
-//  INVALIDPARAMETERVALUE_THIRDAREALISTENERPORTEQUAL = "InvalidParameterValue.ThirdAreaListenerPortEqual"
-//  INVALIDPARAMETERVALUE_THIRDAREALISTENERPORTSEGMENT = "InvalidParameterValue.ThirdAreaListenerPortSegment"
-//  INVALIDPARAMETERVALUE_TOOLONG = "InvalidParameterValue.TooLong"
-//  INVALIDPARAMETERVALUE_UDPSERIESLISTENERPORTEQUAL = "InvalidParameterValue.UdpSeriesListenerPortEqual"
-//  MISSINGPARAMETER = "MissingParameter"
-//  UNSUPPORTEDOPERATION_CERTIFICATEINVALIDSTATUS = "UnsupportedOperation.CertificateInvalidStatus"
-//  UNSUPPORTEDOPERATION_INSTANCENOTRUNNING = "UnsupportedOperation.InstanceNotRunning"
-//  UNSUPPORTEDOPERATION_INSTANCESTATENOTALLOWEDOPERATE = "UnsupportedOperation.InstanceStateNotAllowedOperate"
-//  UNSUPPORTEDOPERATION_LISTENERPORTSEGMENT = "UnsupportedOperation.ListenerPortSegment"
-//  UNSUPPORTEDOPERATION_ONLYTCPLISTENERSUPPORTTOA = "UnsupportedOperation.OnlyTcpListenerSupportToa"
-//  UNSUPPORTEDOPERATION_TOAFEATURENOTENABLED = "UnsupportedOperation.TOAFeatureNotEnabled"
+//
+//	FAILEDOPERATION_INSUFFICIENTRESOURCES = "FailedOperation.InsufficientResources"
+//	INVALIDPARAMETER_APPLICATIONLAYERLISTENERCANNOTCARRYPARAMETERS = "InvalidParameter.ApplicationLayerListenerCannotCarryParameters"
+//	INVALIDPARAMETER_CLIENTAFFINITYCLOSE = "InvalidParameter.ClientAffinityCLose"
+//	INVALIDPARAMETER_HTTPLISTENERCANNOTCARRYPARAMETERS = "InvalidParameter.HttpListenerCannotCarryParameters"
+//	INVALIDPARAMETER_HTTPSLISTENERCANNOTCARRYPARAMETERS = "InvalidParameter.HttpsListenerCannotCarryParameters"
+//	INVALIDPARAMETER_SINGLEPORT = "InvalidParameter.SinglePort"
+//	INVALIDPARAMETER_TCPENDPOINTGROUPCARRYPARAMETERS = "InvalidParameter.TcpEndpointGroupCarryParameters"
+//	INVALIDPARAMETER_TRANSPORTLAYERLISTENERCANNOTCARRYPARAMETERS = "InvalidParameter.TransportLayerListenerCannotCarryParameters"
+//	INVALIDPARAMETERVALUE = "InvalidParameterValue"
+//	INVALIDPARAMETERVALUE_INSTANCENAME = "InvalidParameterValue.InstanceName"
+//	INVALIDPARAMETERVALUE_MALFORMED = "InvalidParameterValue.Malformed"
+//	INVALIDPARAMETERVALUE_RANGE = "InvalidParameterValue.Range"
+//	INVALIDPARAMETERVALUE_SEGMENTPORTRANGE = "InvalidParameterValue.SegmentPortRange"
+//	INVALIDPARAMETERVALUE_TCPSERIESLISTENERPORTEQUAL = "InvalidParameterValue.TcpSeriesListenerPortEqual"
+//	INVALIDPARAMETERVALUE_THIRDAREALISTENERPORTEQUAL = "InvalidParameterValue.ThirdAreaListenerPortEqual"
+//	INVALIDPARAMETERVALUE_THIRDAREALISTENERPORTSEGMENT = "InvalidParameterValue.ThirdAreaListenerPortSegment"
+//	INVALIDPARAMETERVALUE_TOOLONG = "InvalidParameterValue.TooLong"
+//	INVALIDPARAMETERVALUE_UDPSERIESLISTENERPORTEQUAL = "InvalidParameterValue.UdpSeriesListenerPortEqual"
+//	MISSINGPARAMETER = "MissingParameter"
+//	UNSUPPORTEDOPERATION_CERTIFICATEINVALIDSTATUS = "UnsupportedOperation.CertificateInvalidStatus"
+//	UNSUPPORTEDOPERATION_INSTANCENOTRUNNING = "UnsupportedOperation.InstanceNotRunning"
+//	UNSUPPORTEDOPERATION_INSTANCESTATENOTALLOWEDOPERATE = "UnsupportedOperation.InstanceStateNotAllowedOperate"
+//	UNSUPPORTEDOPERATION_LISTENERPORTSEGMENT = "UnsupportedOperation.ListenerPortSegment"
+//	UNSUPPORTEDOPERATION_ONLYTCPLISTENERSUPPORTTOA = "UnsupportedOperation.OnlyTcpListenerSupportToa"
+//	UNSUPPORTEDOPERATION_TOAFEATURENOTENABLED = "UnsupportedOperation.TOAFeatureNotEnabled"
 func (c *Client) CreateListenerWithContext(ctx context.Context, request *CreateListenerRequest) (response *CreateListenerResponse, err error) {
-    if request == nil {
-        request = NewCreateListenerRequest()
-    }
-    c.InitBaseRequest(&request.BaseRequest, "ga2", APIVersion, "CreateListener")
-    
-    if c.GetCredential() == nil {
-        return nil, errors.New("CreateListener require credential")
-    }
+	if request == nil {
+		request = NewCreateListenerRequest()
+	}
+	c.InitBaseRequest(&request.BaseRequest, "ga2", APIVersion, "CreateListener")
 
-    request.SetContext(ctx)
-    
-    response = NewCreateListenerResponse()
-    err = c.Send(request, response)
-    return
+	if c.GetCredential() == nil {
+		return nil, errors.New("CreateListener require credential")
+	}
+
+	request.SetContext(ctx)
+
+	response = NewCreateListenerResponse()
+	err = c.Send(request, response)
+	return
+}
+
+func NewCreateListenerAdditionalCertRequest() (request *CreateListenerAdditionalCertRequest) {
+	request = &CreateListenerAdditionalCertRequest{
+		BaseRequest: &tchttp.BaseRequest{},
+	}
+
+	request.Init().WithApiInfo("ga2", APIVersion, "CreateListenerAdditionalCert")
+
+	return
+}
+
+func NewCreateListenerAdditionalCertResponse() (response *CreateListenerAdditionalCertResponse) {
+	response = &CreateListenerAdditionalCertResponse{
+		BaseResponse: &tchttp.BaseResponse{},
+	}
+	return
+
+}
+
+// CreateListenerAdditionalCert
+// 添加扩展证书
+//
+// 可能返回的错误码:
+//
+//	INVALIDPARAMETERVALUE_CERTIFICATESCONFLICT = "InvalidParameterValue.CertificatesConflict"
+//	INVALIDPARAMETERVALUE_INSTANCEMISMATCH = "InvalidParameterValue.InstanceMismatch"
+//	UNSUPPORTEDOPERATION_CERTIFICATEINVALIDSTATUS = "UnsupportedOperation.CertificateInvalidStatus"
+//	UNSUPPORTEDOPERATION_INSTANCENOTRUNNING = "UnsupportedOperation.InstanceNotRunning"
+func (c *Client) CreateListenerAdditionalCert(request *CreateListenerAdditionalCertRequest) (response *CreateListenerAdditionalCertResponse, err error) {
+	return c.CreateListenerAdditionalCertWithContext(context.Background(), request)
+}
+
+// CreateListenerAdditionalCert
+// 添加扩展证书
+//
+// 可能返回的错误码:
+//
+//	INVALIDPARAMETERVALUE_CERTIFICATESCONFLICT = "InvalidParameterValue.CertificatesConflict"
+//	INVALIDPARAMETERVALUE_INSTANCEMISMATCH = "InvalidParameterValue.InstanceMismatch"
+//	UNSUPPORTEDOPERATION_CERTIFICATEINVALIDSTATUS = "UnsupportedOperation.CertificateInvalidStatus"
+//	UNSUPPORTEDOPERATION_INSTANCENOTRUNNING = "UnsupportedOperation.InstanceNotRunning"
+func (c *Client) CreateListenerAdditionalCertWithContext(ctx context.Context, request *CreateListenerAdditionalCertRequest) (response *CreateListenerAdditionalCertResponse, err error) {
+	if request == nil {
+		request = NewCreateListenerAdditionalCertRequest()
+	}
+	c.InitBaseRequest(&request.BaseRequest, "ga2", APIVersion, "CreateListenerAdditionalCert")
+
+	if c.GetCredential() == nil {
+		return nil, errors.New("CreateListenerAdditionalCert require credential")
+	}
+
+	request.SetContext(ctx)
+
+	response = NewCreateListenerAdditionalCertResponse()
+	err = c.Send(request, response)
+	return
 }
 
 func NewDeleteAccelerateAreasRequest() (request *DeleteAccelerateAreasRequest) {
-    request = &DeleteAccelerateAreasRequest{
-        BaseRequest: &tchttp.BaseRequest{},
-    }
-    
-    request.Init().WithApiInfo("ga2", APIVersion, "DeleteAccelerateAreas")
-    
-    
-    return
+	request = &DeleteAccelerateAreasRequest{
+		BaseRequest: &tchttp.BaseRequest{},
+	}
+
+	request.Init().WithApiInfo("ga2", APIVersion, "DeleteAccelerateAreas")
+
+	return
 }
 
 func NewDeleteAccelerateAreasResponse() (response *DeleteAccelerateAreasResponse) {
-    response = &DeleteAccelerateAreasResponse{
-        BaseResponse: &tchttp.BaseResponse{},
-    } 
-    return
+	response = &DeleteAccelerateAreasResponse{
+		BaseResponse: &tchttp.BaseResponse{},
+	}
+	return
 
 }
 
@@ -542,97 +783,56 @@ func NewDeleteAccelerateAreasResponse() (response *DeleteAccelerateAreasResponse
 // 删除加速地域
 //
 // 可能返回的错误码:
-//  FAILEDOPERATION_INSUFFICIENTRESOURCES = "FailedOperation.InsufficientResources"
-//  INVALIDPARAMETER_APPLICATIONLAYERLISTENERCANNOTCARRYPARAMETERS = "InvalidParameter.ApplicationLayerListenerCannotCarryParameters"
-//  INVALIDPARAMETER_CLIENTAFFINITYCLOSE = "InvalidParameter.ClientAffinityCLose"
-//  INVALIDPARAMETER_HTTPLISTENERCANNOTCARRYPARAMETERS = "InvalidParameter.HttpListenerCannotCarryParameters"
-//  INVALIDPARAMETER_HTTPSLISTENERCANNOTCARRYPARAMETERS = "InvalidParameter.HttpsListenerCannotCarryParameters"
-//  INVALIDPARAMETER_SINGLEPORT = "InvalidParameter.SinglePort"
-//  INVALIDPARAMETER_TCPENDPOINTGROUPCARRYPARAMETERS = "InvalidParameter.TcpEndpointGroupCarryParameters"
-//  INVALIDPARAMETER_TRANSPORTLAYERLISTENERCANNOTCARRYPARAMETERS = "InvalidParameter.TransportLayerListenerCannotCarryParameters"
-//  INVALIDPARAMETERVALUE = "InvalidParameterValue"
-//  INVALIDPARAMETERVALUE_INSTANCENAME = "InvalidParameterValue.InstanceName"
-//  INVALIDPARAMETERVALUE_MALFORMED = "InvalidParameterValue.Malformed"
-//  INVALIDPARAMETERVALUE_RANGE = "InvalidParameterValue.Range"
-//  INVALIDPARAMETERVALUE_SEGMENTPORTRANGE = "InvalidParameterValue.SegmentPortRange"
-//  INVALIDPARAMETERVALUE_TCPSERIESLISTENERPORTEQUAL = "InvalidParameterValue.TcpSeriesListenerPortEqual"
-//  INVALIDPARAMETERVALUE_THIRDAREALISTENERPORTEQUAL = "InvalidParameterValue.ThirdAreaListenerPortEqual"
-//  INVALIDPARAMETERVALUE_THIRDAREALISTENERPORTSEGMENT = "InvalidParameterValue.ThirdAreaListenerPortSegment"
-//  INVALIDPARAMETERVALUE_TOOLONG = "InvalidParameterValue.TooLong"
-//  INVALIDPARAMETERVALUE_UDPSERIESLISTENERPORTEQUAL = "InvalidParameterValue.UdpSeriesListenerPortEqual"
-//  MISSINGPARAMETER = "MissingParameter"
-//  UNSUPPORTEDOPERATION_CERTIFICATEINVALIDSTATUS = "UnsupportedOperation.CertificateInvalidStatus"
-//  UNSUPPORTEDOPERATION_INSTANCENOTRUNNING = "UnsupportedOperation.InstanceNotRunning"
-//  UNSUPPORTEDOPERATION_INSTANCESTATENOTALLOWEDOPERATE = "UnsupportedOperation.InstanceStateNotAllowedOperate"
-//  UNSUPPORTEDOPERATION_LISTENERPORTSEGMENT = "UnsupportedOperation.ListenerPortSegment"
-//  UNSUPPORTEDOPERATION_ONLYTCPLISTENERSUPPORTTOA = "UnsupportedOperation.OnlyTcpListenerSupportToa"
-//  UNSUPPORTEDOPERATION_TOAFEATURENOTENABLED = "UnsupportedOperation.TOAFeatureNotEnabled"
+//
+//	INVALIDPARAMETERVALUE_CERTIFICATESCONFLICT = "InvalidParameterValue.CertificatesConflict"
+//	INVALIDPARAMETERVALUE_INSTANCEMISMATCH = "InvalidParameterValue.InstanceMismatch"
+//	UNSUPPORTEDOPERATION_CERTIFICATEINVALIDSTATUS = "UnsupportedOperation.CertificateInvalidStatus"
+//	UNSUPPORTEDOPERATION_INSTANCENOTRUNNING = "UnsupportedOperation.InstanceNotRunning"
 func (c *Client) DeleteAccelerateAreas(request *DeleteAccelerateAreasRequest) (response *DeleteAccelerateAreasResponse, err error) {
-    return c.DeleteAccelerateAreasWithContext(context.Background(), request)
+	return c.DeleteAccelerateAreasWithContext(context.Background(), request)
 }
 
 // DeleteAccelerateAreas
 // 删除加速地域
 //
 // 可能返回的错误码:
-//  FAILEDOPERATION_INSUFFICIENTRESOURCES = "FailedOperation.InsufficientResources"
-//  INVALIDPARAMETER_APPLICATIONLAYERLISTENERCANNOTCARRYPARAMETERS = "InvalidParameter.ApplicationLayerListenerCannotCarryParameters"
-//  INVALIDPARAMETER_CLIENTAFFINITYCLOSE = "InvalidParameter.ClientAffinityCLose"
-//  INVALIDPARAMETER_HTTPLISTENERCANNOTCARRYPARAMETERS = "InvalidParameter.HttpListenerCannotCarryParameters"
-//  INVALIDPARAMETER_HTTPSLISTENERCANNOTCARRYPARAMETERS = "InvalidParameter.HttpsListenerCannotCarryParameters"
-//  INVALIDPARAMETER_SINGLEPORT = "InvalidParameter.SinglePort"
-//  INVALIDPARAMETER_TCPENDPOINTGROUPCARRYPARAMETERS = "InvalidParameter.TcpEndpointGroupCarryParameters"
-//  INVALIDPARAMETER_TRANSPORTLAYERLISTENERCANNOTCARRYPARAMETERS = "InvalidParameter.TransportLayerListenerCannotCarryParameters"
-//  INVALIDPARAMETERVALUE = "InvalidParameterValue"
-//  INVALIDPARAMETERVALUE_INSTANCENAME = "InvalidParameterValue.InstanceName"
-//  INVALIDPARAMETERVALUE_MALFORMED = "InvalidParameterValue.Malformed"
-//  INVALIDPARAMETERVALUE_RANGE = "InvalidParameterValue.Range"
-//  INVALIDPARAMETERVALUE_SEGMENTPORTRANGE = "InvalidParameterValue.SegmentPortRange"
-//  INVALIDPARAMETERVALUE_TCPSERIESLISTENERPORTEQUAL = "InvalidParameterValue.TcpSeriesListenerPortEqual"
-//  INVALIDPARAMETERVALUE_THIRDAREALISTENERPORTEQUAL = "InvalidParameterValue.ThirdAreaListenerPortEqual"
-//  INVALIDPARAMETERVALUE_THIRDAREALISTENERPORTSEGMENT = "InvalidParameterValue.ThirdAreaListenerPortSegment"
-//  INVALIDPARAMETERVALUE_TOOLONG = "InvalidParameterValue.TooLong"
-//  INVALIDPARAMETERVALUE_UDPSERIESLISTENERPORTEQUAL = "InvalidParameterValue.UdpSeriesListenerPortEqual"
-//  MISSINGPARAMETER = "MissingParameter"
-//  UNSUPPORTEDOPERATION_CERTIFICATEINVALIDSTATUS = "UnsupportedOperation.CertificateInvalidStatus"
-//  UNSUPPORTEDOPERATION_INSTANCENOTRUNNING = "UnsupportedOperation.InstanceNotRunning"
-//  UNSUPPORTEDOPERATION_INSTANCESTATENOTALLOWEDOPERATE = "UnsupportedOperation.InstanceStateNotAllowedOperate"
-//  UNSUPPORTEDOPERATION_LISTENERPORTSEGMENT = "UnsupportedOperation.ListenerPortSegment"
-//  UNSUPPORTEDOPERATION_ONLYTCPLISTENERSUPPORTTOA = "UnsupportedOperation.OnlyTcpListenerSupportToa"
-//  UNSUPPORTEDOPERATION_TOAFEATURENOTENABLED = "UnsupportedOperation.TOAFeatureNotEnabled"
+//
+//	INVALIDPARAMETERVALUE_CERTIFICATESCONFLICT = "InvalidParameterValue.CertificatesConflict"
+//	INVALIDPARAMETERVALUE_INSTANCEMISMATCH = "InvalidParameterValue.InstanceMismatch"
+//	UNSUPPORTEDOPERATION_CERTIFICATEINVALIDSTATUS = "UnsupportedOperation.CertificateInvalidStatus"
+//	UNSUPPORTEDOPERATION_INSTANCENOTRUNNING = "UnsupportedOperation.InstanceNotRunning"
 func (c *Client) DeleteAccelerateAreasWithContext(ctx context.Context, request *DeleteAccelerateAreasRequest) (response *DeleteAccelerateAreasResponse, err error) {
-    if request == nil {
-        request = NewDeleteAccelerateAreasRequest()
-    }
-    c.InitBaseRequest(&request.BaseRequest, "ga2", APIVersion, "DeleteAccelerateAreas")
-    
-    if c.GetCredential() == nil {
-        return nil, errors.New("DeleteAccelerateAreas require credential")
-    }
+	if request == nil {
+		request = NewDeleteAccelerateAreasRequest()
+	}
+	c.InitBaseRequest(&request.BaseRequest, "ga2", APIVersion, "DeleteAccelerateAreas")
 
-    request.SetContext(ctx)
-    
-    response = NewDeleteAccelerateAreasResponse()
-    err = c.Send(request, response)
-    return
+	if c.GetCredential() == nil {
+		return nil, errors.New("DeleteAccelerateAreas require credential")
+	}
+
+	request.SetContext(ctx)
+
+	response = NewDeleteAccelerateAreasResponse()
+	err = c.Send(request, response)
+	return
 }
 
 func NewDeleteEndpointGroupsRequest() (request *DeleteEndpointGroupsRequest) {
-    request = &DeleteEndpointGroupsRequest{
-        BaseRequest: &tchttp.BaseRequest{},
-    }
-    
-    request.Init().WithApiInfo("ga2", APIVersion, "DeleteEndpointGroups")
-    
-    
-    return
+	request = &DeleteEndpointGroupsRequest{
+		BaseRequest: &tchttp.BaseRequest{},
+	}
+
+	request.Init().WithApiInfo("ga2", APIVersion, "DeleteEndpointGroups")
+
+	return
 }
 
 func NewDeleteEndpointGroupsResponse() (response *DeleteEndpointGroupsResponse) {
-    response = &DeleteEndpointGroupsResponse{
-        BaseResponse: &tchttp.BaseResponse{},
-    } 
-    return
+	response = &DeleteEndpointGroupsResponse{
+		BaseResponse: &tchttp.BaseResponse{},
+	}
+	return
 
 }
 
@@ -640,55 +840,56 @@ func NewDeleteEndpointGroupsResponse() (response *DeleteEndpointGroupsResponse) 
 // 删除终端节点组。
 //
 // 可能返回的错误码:
-//  INVALIDPARAMETERVALUE_INSTANCEMISMATCH = "InvalidParameterValue.InstanceMismatch"
-//  UNSUPPORTEDOPERATION_APPLICATIONLAYERENDPOINTGROUPNOTDELETE = "UnsupportedOperation.ApplicationLayerEndpointGroupNotDelete"
-//  UNSUPPORTEDOPERATION_EXISTACCESSLOG = "UnsupportedOperation.ExistAccessLog"
-//  UNSUPPORTEDOPERATION_EXISTFORWARDINGRULE = "UnsupportedOperation.ExistForwardingRule"
+//
+//	INVALIDPARAMETERVALUE_INSTANCEMISMATCH = "InvalidParameterValue.InstanceMismatch"
+//	UNSUPPORTEDOPERATION_APPLICATIONLAYERENDPOINTGROUPNOTDELETE = "UnsupportedOperation.ApplicationLayerEndpointGroupNotDelete"
+//	UNSUPPORTEDOPERATION_EXISTACCESSLOG = "UnsupportedOperation.ExistAccessLog"
+//	UNSUPPORTEDOPERATION_EXISTFORWARDINGRULE = "UnsupportedOperation.ExistForwardingRule"
 func (c *Client) DeleteEndpointGroups(request *DeleteEndpointGroupsRequest) (response *DeleteEndpointGroupsResponse, err error) {
-    return c.DeleteEndpointGroupsWithContext(context.Background(), request)
+	return c.DeleteEndpointGroupsWithContext(context.Background(), request)
 }
 
 // DeleteEndpointGroups
 // 删除终端节点组。
 //
 // 可能返回的错误码:
-//  INVALIDPARAMETERVALUE_INSTANCEMISMATCH = "InvalidParameterValue.InstanceMismatch"
-//  UNSUPPORTEDOPERATION_APPLICATIONLAYERENDPOINTGROUPNOTDELETE = "UnsupportedOperation.ApplicationLayerEndpointGroupNotDelete"
-//  UNSUPPORTEDOPERATION_EXISTACCESSLOG = "UnsupportedOperation.ExistAccessLog"
-//  UNSUPPORTEDOPERATION_EXISTFORWARDINGRULE = "UnsupportedOperation.ExistForwardingRule"
+//
+//	INVALIDPARAMETERVALUE_INSTANCEMISMATCH = "InvalidParameterValue.InstanceMismatch"
+//	UNSUPPORTEDOPERATION_APPLICATIONLAYERENDPOINTGROUPNOTDELETE = "UnsupportedOperation.ApplicationLayerEndpointGroupNotDelete"
+//	UNSUPPORTEDOPERATION_EXISTACCESSLOG = "UnsupportedOperation.ExistAccessLog"
+//	UNSUPPORTEDOPERATION_EXISTFORWARDINGRULE = "UnsupportedOperation.ExistForwardingRule"
 func (c *Client) DeleteEndpointGroupsWithContext(ctx context.Context, request *DeleteEndpointGroupsRequest) (response *DeleteEndpointGroupsResponse, err error) {
-    if request == nil {
-        request = NewDeleteEndpointGroupsRequest()
-    }
-    c.InitBaseRequest(&request.BaseRequest, "ga2", APIVersion, "DeleteEndpointGroups")
-    
-    if c.GetCredential() == nil {
-        return nil, errors.New("DeleteEndpointGroups require credential")
-    }
+	if request == nil {
+		request = NewDeleteEndpointGroupsRequest()
+	}
+	c.InitBaseRequest(&request.BaseRequest, "ga2", APIVersion, "DeleteEndpointGroups")
 
-    request.SetContext(ctx)
-    
-    response = NewDeleteEndpointGroupsResponse()
-    err = c.Send(request, response)
-    return
+	if c.GetCredential() == nil {
+		return nil, errors.New("DeleteEndpointGroups require credential")
+	}
+
+	request.SetContext(ctx)
+
+	response = NewDeleteEndpointGroupsResponse()
+	err = c.Send(request, response)
+	return
 }
 
 func NewDeleteForwardingPolicyRequest() (request *DeleteForwardingPolicyRequest) {
-    request = &DeleteForwardingPolicyRequest{
-        BaseRequest: &tchttp.BaseRequest{},
-    }
-    
-    request.Init().WithApiInfo("ga2", APIVersion, "DeleteForwardingPolicy")
-    
-    
-    return
+	request = &DeleteForwardingPolicyRequest{
+		BaseRequest: &tchttp.BaseRequest{},
+	}
+
+	request.Init().WithApiInfo("ga2", APIVersion, "DeleteForwardingPolicy")
+
+	return
 }
 
 func NewDeleteForwardingPolicyResponse() (response *DeleteForwardingPolicyResponse) {
-    response = &DeleteForwardingPolicyResponse{
-        BaseResponse: &tchttp.BaseResponse{},
-    } 
-    return
+	response = &DeleteForwardingPolicyResponse{
+		BaseResponse: &tchttp.BaseResponse{},
+	}
+	return
 
 }
 
@@ -696,55 +897,56 @@ func NewDeleteForwardingPolicyResponse() (response *DeleteForwardingPolicyRespon
 // 删除七层转发策略
 //
 // 可能返回的错误码:
-//  INVALIDPARAMETERVALUE_INSTANCEMISMATCH = "InvalidParameterValue.InstanceMismatch"
-//  UNSUPPORTEDOPERATION_DEFAULTFORWARDINGPOLICYOPERATE = "UnsupportedOperation.DefaultForwardingPolicyOperate"
-//  UNSUPPORTEDOPERATION_INSTANCENOTRUNNING = "UnsupportedOperation.InstanceNotRunning"
-//  UNSUPPORTEDOPERATION_TRANSPORTLAYERUNSUPPORTEDOPERATEFORWARDINGPOLICY = "UnsupportedOperation.TransportLayerUnsupportedOperateForwardingPolicy"
+//
+//	INVALIDPARAMETERVALUE_INSTANCEMISMATCH = "InvalidParameterValue.InstanceMismatch"
+//	UNSUPPORTEDOPERATION_DEFAULTFORWARDINGPOLICYOPERATE = "UnsupportedOperation.DefaultForwardingPolicyOperate"
+//	UNSUPPORTEDOPERATION_INSTANCENOTRUNNING = "UnsupportedOperation.InstanceNotRunning"
+//	UNSUPPORTEDOPERATION_TRANSPORTLAYERUNSUPPORTEDOPERATEFORWARDINGPOLICY = "UnsupportedOperation.TransportLayerUnsupportedOperateForwardingPolicy"
 func (c *Client) DeleteForwardingPolicy(request *DeleteForwardingPolicyRequest) (response *DeleteForwardingPolicyResponse, err error) {
-    return c.DeleteForwardingPolicyWithContext(context.Background(), request)
+	return c.DeleteForwardingPolicyWithContext(context.Background(), request)
 }
 
 // DeleteForwardingPolicy
 // 删除七层转发策略
 //
 // 可能返回的错误码:
-//  INVALIDPARAMETERVALUE_INSTANCEMISMATCH = "InvalidParameterValue.InstanceMismatch"
-//  UNSUPPORTEDOPERATION_DEFAULTFORWARDINGPOLICYOPERATE = "UnsupportedOperation.DefaultForwardingPolicyOperate"
-//  UNSUPPORTEDOPERATION_INSTANCENOTRUNNING = "UnsupportedOperation.InstanceNotRunning"
-//  UNSUPPORTEDOPERATION_TRANSPORTLAYERUNSUPPORTEDOPERATEFORWARDINGPOLICY = "UnsupportedOperation.TransportLayerUnsupportedOperateForwardingPolicy"
+//
+//	INVALIDPARAMETERVALUE_INSTANCEMISMATCH = "InvalidParameterValue.InstanceMismatch"
+//	UNSUPPORTEDOPERATION_DEFAULTFORWARDINGPOLICYOPERATE = "UnsupportedOperation.DefaultForwardingPolicyOperate"
+//	UNSUPPORTEDOPERATION_INSTANCENOTRUNNING = "UnsupportedOperation.InstanceNotRunning"
+//	UNSUPPORTEDOPERATION_TRANSPORTLAYERUNSUPPORTEDOPERATEFORWARDINGPOLICY = "UnsupportedOperation.TransportLayerUnsupportedOperateForwardingPolicy"
 func (c *Client) DeleteForwardingPolicyWithContext(ctx context.Context, request *DeleteForwardingPolicyRequest) (response *DeleteForwardingPolicyResponse, err error) {
-    if request == nil {
-        request = NewDeleteForwardingPolicyRequest()
-    }
-    c.InitBaseRequest(&request.BaseRequest, "ga2", APIVersion, "DeleteForwardingPolicy")
-    
-    if c.GetCredential() == nil {
-        return nil, errors.New("DeleteForwardingPolicy require credential")
-    }
+	if request == nil {
+		request = NewDeleteForwardingPolicyRequest()
+	}
+	c.InitBaseRequest(&request.BaseRequest, "ga2", APIVersion, "DeleteForwardingPolicy")
 
-    request.SetContext(ctx)
-    
-    response = NewDeleteForwardingPolicyResponse()
-    err = c.Send(request, response)
-    return
+	if c.GetCredential() == nil {
+		return nil, errors.New("DeleteForwardingPolicy require credential")
+	}
+
+	request.SetContext(ctx)
+
+	response = NewDeleteForwardingPolicyResponse()
+	err = c.Send(request, response)
+	return
 }
 
 func NewDeleteForwardingRuleRequest() (request *DeleteForwardingRuleRequest) {
-    request = &DeleteForwardingRuleRequest{
-        BaseRequest: &tchttp.BaseRequest{},
-    }
-    
-    request.Init().WithApiInfo("ga2", APIVersion, "DeleteForwardingRule")
-    
-    
-    return
+	request = &DeleteForwardingRuleRequest{
+		BaseRequest: &tchttp.BaseRequest{},
+	}
+
+	request.Init().WithApiInfo("ga2", APIVersion, "DeleteForwardingRule")
+
+	return
 }
 
 func NewDeleteForwardingRuleResponse() (response *DeleteForwardingRuleResponse) {
-    response = &DeleteForwardingRuleResponse{
-        BaseResponse: &tchttp.BaseResponse{},
-    } 
-    return
+	response = &DeleteForwardingRuleResponse{
+		BaseResponse: &tchttp.BaseResponse{},
+	}
+	return
 
 }
 
@@ -752,55 +954,56 @@ func NewDeleteForwardingRuleResponse() (response *DeleteForwardingRuleResponse) 
 // 删除七层转发规则
 //
 // 可能返回的错误码:
-//  INVALIDPARAMETERVALUE_INSTANCEMISMATCH = "InvalidParameterValue.InstanceMismatch"
-//  UNSUPPORTEDOPERATION_DEFAULTFORWARDINGPOLICYOPERATE = "UnsupportedOperation.DefaultForwardingPolicyOperate"
-//  UNSUPPORTEDOPERATION_INSTANCENOTRUNNING = "UnsupportedOperation.InstanceNotRunning"
-//  UNSUPPORTEDOPERATION_TRANSPORTLAYERUNSUPPORTEDOPERATEFORWARDINGPOLICY = "UnsupportedOperation.TransportLayerUnsupportedOperateForwardingPolicy"
+//
+//	INVALIDPARAMETERVALUE_INSTANCEMISMATCH = "InvalidParameterValue.InstanceMismatch"
+//	UNSUPPORTEDOPERATION_DEFAULTFORWARDINGPOLICYOPERATE = "UnsupportedOperation.DefaultForwardingPolicyOperate"
+//	UNSUPPORTEDOPERATION_INSTANCENOTRUNNING = "UnsupportedOperation.InstanceNotRunning"
+//	UNSUPPORTEDOPERATION_TRANSPORTLAYERUNSUPPORTEDOPERATEFORWARDINGPOLICY = "UnsupportedOperation.TransportLayerUnsupportedOperateForwardingPolicy"
 func (c *Client) DeleteForwardingRule(request *DeleteForwardingRuleRequest) (response *DeleteForwardingRuleResponse, err error) {
-    return c.DeleteForwardingRuleWithContext(context.Background(), request)
+	return c.DeleteForwardingRuleWithContext(context.Background(), request)
 }
 
 // DeleteForwardingRule
 // 删除七层转发规则
 //
 // 可能返回的错误码:
-//  INVALIDPARAMETERVALUE_INSTANCEMISMATCH = "InvalidParameterValue.InstanceMismatch"
-//  UNSUPPORTEDOPERATION_DEFAULTFORWARDINGPOLICYOPERATE = "UnsupportedOperation.DefaultForwardingPolicyOperate"
-//  UNSUPPORTEDOPERATION_INSTANCENOTRUNNING = "UnsupportedOperation.InstanceNotRunning"
-//  UNSUPPORTEDOPERATION_TRANSPORTLAYERUNSUPPORTEDOPERATEFORWARDINGPOLICY = "UnsupportedOperation.TransportLayerUnsupportedOperateForwardingPolicy"
+//
+//	INVALIDPARAMETERVALUE_INSTANCEMISMATCH = "InvalidParameterValue.InstanceMismatch"
+//	UNSUPPORTEDOPERATION_DEFAULTFORWARDINGPOLICYOPERATE = "UnsupportedOperation.DefaultForwardingPolicyOperate"
+//	UNSUPPORTEDOPERATION_INSTANCENOTRUNNING = "UnsupportedOperation.InstanceNotRunning"
+//	UNSUPPORTEDOPERATION_TRANSPORTLAYERUNSUPPORTEDOPERATEFORWARDINGPOLICY = "UnsupportedOperation.TransportLayerUnsupportedOperateForwardingPolicy"
 func (c *Client) DeleteForwardingRuleWithContext(ctx context.Context, request *DeleteForwardingRuleRequest) (response *DeleteForwardingRuleResponse, err error) {
-    if request == nil {
-        request = NewDeleteForwardingRuleRequest()
-    }
-    c.InitBaseRequest(&request.BaseRequest, "ga2", APIVersion, "DeleteForwardingRule")
-    
-    if c.GetCredential() == nil {
-        return nil, errors.New("DeleteForwardingRule require credential")
-    }
+	if request == nil {
+		request = NewDeleteForwardingRuleRequest()
+	}
+	c.InitBaseRequest(&request.BaseRequest, "ga2", APIVersion, "DeleteForwardingRule")
 
-    request.SetContext(ctx)
-    
-    response = NewDeleteForwardingRuleResponse()
-    err = c.Send(request, response)
-    return
+	if c.GetCredential() == nil {
+		return nil, errors.New("DeleteForwardingRule require credential")
+	}
+
+	request.SetContext(ctx)
+
+	response = NewDeleteForwardingRuleResponse()
+	err = c.Send(request, response)
+	return
 }
 
 func NewDeleteGlobalAcceleratorRequest() (request *DeleteGlobalAcceleratorRequest) {
-    request = &DeleteGlobalAcceleratorRequest{
-        BaseRequest: &tchttp.BaseRequest{},
-    }
-    
-    request.Init().WithApiInfo("ga2", APIVersion, "DeleteGlobalAccelerator")
-    
-    
-    return
+	request = &DeleteGlobalAcceleratorRequest{
+		BaseRequest: &tchttp.BaseRequest{},
+	}
+
+	request.Init().WithApiInfo("ga2", APIVersion, "DeleteGlobalAccelerator")
+
+	return
 }
 
 func NewDeleteGlobalAcceleratorResponse() (response *DeleteGlobalAcceleratorResponse) {
-    response = &DeleteGlobalAcceleratorResponse{
-        BaseResponse: &tchttp.BaseResponse{},
-    } 
-    return
+	response = &DeleteGlobalAcceleratorResponse{
+		BaseResponse: &tchttp.BaseResponse{},
+	}
+	return
 
 }
 
@@ -808,55 +1011,225 @@ func NewDeleteGlobalAcceleratorResponse() (response *DeleteGlobalAcceleratorResp
 // 删除全球加速实例
 //
 // 可能返回的错误码:
-//  UNSUPPORTEDOPERATION_EXISTACCELERATORAREA = "UnsupportedOperation.ExistAcceleratorArea"
-//  UNSUPPORTEDOPERATION_EXISTGLOBALACCELERATORACLPOLICY = "UnsupportedOperation.ExistGlobalAcceleratorAclPolicy"
-//  UNSUPPORTEDOPERATION_EXISTLISTENER = "UnsupportedOperation.ExistListener"
-//  UNSUPPORTEDOPERATION_INSTANCESTATENOTALLOWEDOPERATE = "UnsupportedOperation.InstanceStateNotAllowedOperate"
+//
+//	UNSUPPORTEDOPERATION_EXISTACCELERATORAREA = "UnsupportedOperation.ExistAcceleratorArea"
+//	UNSUPPORTEDOPERATION_EXISTGLOBALACCELERATORACLPOLICY = "UnsupportedOperation.ExistGlobalAcceleratorAclPolicy"
+//	UNSUPPORTEDOPERATION_EXISTLISTENER = "UnsupportedOperation.ExistListener"
+//	UNSUPPORTEDOPERATION_INSTANCESTATENOTALLOWEDOPERATE = "UnsupportedOperation.InstanceStateNotAllowedOperate"
 func (c *Client) DeleteGlobalAccelerator(request *DeleteGlobalAcceleratorRequest) (response *DeleteGlobalAcceleratorResponse, err error) {
-    return c.DeleteGlobalAcceleratorWithContext(context.Background(), request)
+	return c.DeleteGlobalAcceleratorWithContext(context.Background(), request)
 }
 
 // DeleteGlobalAccelerator
 // 删除全球加速实例
 //
 // 可能返回的错误码:
-//  UNSUPPORTEDOPERATION_EXISTACCELERATORAREA = "UnsupportedOperation.ExistAcceleratorArea"
-//  UNSUPPORTEDOPERATION_EXISTGLOBALACCELERATORACLPOLICY = "UnsupportedOperation.ExistGlobalAcceleratorAclPolicy"
-//  UNSUPPORTEDOPERATION_EXISTLISTENER = "UnsupportedOperation.ExistListener"
-//  UNSUPPORTEDOPERATION_INSTANCESTATENOTALLOWEDOPERATE = "UnsupportedOperation.InstanceStateNotAllowedOperate"
+//
+//	UNSUPPORTEDOPERATION_EXISTACCELERATORAREA = "UnsupportedOperation.ExistAcceleratorArea"
+//	UNSUPPORTEDOPERATION_EXISTGLOBALACCELERATORACLPOLICY = "UnsupportedOperation.ExistGlobalAcceleratorAclPolicy"
+//	UNSUPPORTEDOPERATION_EXISTLISTENER = "UnsupportedOperation.ExistListener"
+//	UNSUPPORTEDOPERATION_INSTANCESTATENOTALLOWEDOPERATE = "UnsupportedOperation.InstanceStateNotAllowedOperate"
 func (c *Client) DeleteGlobalAcceleratorWithContext(ctx context.Context, request *DeleteGlobalAcceleratorRequest) (response *DeleteGlobalAcceleratorResponse, err error) {
-    if request == nil {
-        request = NewDeleteGlobalAcceleratorRequest()
-    }
-    c.InitBaseRequest(&request.BaseRequest, "ga2", APIVersion, "DeleteGlobalAccelerator")
-    
-    if c.GetCredential() == nil {
-        return nil, errors.New("DeleteGlobalAccelerator require credential")
-    }
+	if request == nil {
+		request = NewDeleteGlobalAcceleratorRequest()
+	}
+	c.InitBaseRequest(&request.BaseRequest, "ga2", APIVersion, "DeleteGlobalAccelerator")
 
-    request.SetContext(ctx)
-    
-    response = NewDeleteGlobalAcceleratorResponse()
-    err = c.Send(request, response)
-    return
+	if c.GetCredential() == nil {
+		return nil, errors.New("DeleteGlobalAccelerator require credential")
+	}
+
+	request.SetContext(ctx)
+
+	response = NewDeleteGlobalAcceleratorResponse()
+	err = c.Send(request, response)
+	return
+}
+
+func NewDeleteGlobalAcceleratorAccessLogRequest() (request *DeleteGlobalAcceleratorAccessLogRequest) {
+	request = &DeleteGlobalAcceleratorAccessLogRequest{
+		BaseRequest: &tchttp.BaseRequest{},
+	}
+
+	request.Init().WithApiInfo("ga2", APIVersion, "DeleteGlobalAcceleratorAccessLog")
+
+	return
+}
+
+func NewDeleteGlobalAcceleratorAccessLogResponse() (response *DeleteGlobalAcceleratorAccessLogResponse) {
+	response = &DeleteGlobalAcceleratorAccessLogResponse{
+		BaseResponse: &tchttp.BaseResponse{},
+	}
+	return
+
+}
+
+// DeleteGlobalAcceleratorAccessLog
+// 删除GA日志任务
+//
+// 可能返回的错误码:
+//
+//	UNSUPPORTEDOPERATION_EXISTACCELERATORAREA = "UnsupportedOperation.ExistAcceleratorArea"
+//	UNSUPPORTEDOPERATION_EXISTGLOBALACCELERATORACLPOLICY = "UnsupportedOperation.ExistGlobalAcceleratorAclPolicy"
+//	UNSUPPORTEDOPERATION_EXISTLISTENER = "UnsupportedOperation.ExistListener"
+//	UNSUPPORTEDOPERATION_INSTANCESTATENOTALLOWEDOPERATE = "UnsupportedOperation.InstanceStateNotAllowedOperate"
+func (c *Client) DeleteGlobalAcceleratorAccessLog(request *DeleteGlobalAcceleratorAccessLogRequest) (response *DeleteGlobalAcceleratorAccessLogResponse, err error) {
+	return c.DeleteGlobalAcceleratorAccessLogWithContext(context.Background(), request)
+}
+
+// DeleteGlobalAcceleratorAccessLog
+// 删除GA日志任务
+//
+// 可能返回的错误码:
+//
+//	UNSUPPORTEDOPERATION_EXISTACCELERATORAREA = "UnsupportedOperation.ExistAcceleratorArea"
+//	UNSUPPORTEDOPERATION_EXISTGLOBALACCELERATORACLPOLICY = "UnsupportedOperation.ExistGlobalAcceleratorAclPolicy"
+//	UNSUPPORTEDOPERATION_EXISTLISTENER = "UnsupportedOperation.ExistListener"
+//	UNSUPPORTEDOPERATION_INSTANCESTATENOTALLOWEDOPERATE = "UnsupportedOperation.InstanceStateNotAllowedOperate"
+func (c *Client) DeleteGlobalAcceleratorAccessLogWithContext(ctx context.Context, request *DeleteGlobalAcceleratorAccessLogRequest) (response *DeleteGlobalAcceleratorAccessLogResponse, err error) {
+	if request == nil {
+		request = NewDeleteGlobalAcceleratorAccessLogRequest()
+	}
+	c.InitBaseRequest(&request.BaseRequest, "ga2", APIVersion, "DeleteGlobalAcceleratorAccessLog")
+
+	if c.GetCredential() == nil {
+		return nil, errors.New("DeleteGlobalAcceleratorAccessLog require credential")
+	}
+
+	request.SetContext(ctx)
+
+	response = NewDeleteGlobalAcceleratorAccessLogResponse()
+	err = c.Send(request, response)
+	return
+}
+
+func NewDeleteGlobalAcceleratorAclPolicyRequest() (request *DeleteGlobalAcceleratorAclPolicyRequest) {
+	request = &DeleteGlobalAcceleratorAclPolicyRequest{
+		BaseRequest: &tchttp.BaseRequest{},
+	}
+
+	request.Init().WithApiInfo("ga2", APIVersion, "DeleteGlobalAcceleratorAclPolicy")
+
+	return
+}
+
+func NewDeleteGlobalAcceleratorAclPolicyResponse() (response *DeleteGlobalAcceleratorAclPolicyResponse) {
+	response = &DeleteGlobalAcceleratorAclPolicyResponse{
+		BaseResponse: &tchttp.BaseResponse{},
+	}
+	return
+
+}
+
+// DeleteGlobalAcceleratorAclPolicy
+// 删除访问控制策略
+//
+// 可能返回的错误码:
+//
+//	INVALIDPARAMETERVALUE_INSTANCEMISMATCH = "InvalidParameterValue.InstanceMismatch"
+//	UNSUPPORTEDOPERATION_DUPLICATEINSTANCESTATUS = "UnsupportedOperation.DuplicateInstanceStatus"
+//	UNSUPPORTEDOPERATION_INSTANCESTATENOTALLOWEDOPERATE = "UnsupportedOperation.InstanceStateNotAllowedOperate"
+func (c *Client) DeleteGlobalAcceleratorAclPolicy(request *DeleteGlobalAcceleratorAclPolicyRequest) (response *DeleteGlobalAcceleratorAclPolicyResponse, err error) {
+	return c.DeleteGlobalAcceleratorAclPolicyWithContext(context.Background(), request)
+}
+
+// DeleteGlobalAcceleratorAclPolicy
+// 删除访问控制策略
+//
+// 可能返回的错误码:
+//
+//	INVALIDPARAMETERVALUE_INSTANCEMISMATCH = "InvalidParameterValue.InstanceMismatch"
+//	UNSUPPORTEDOPERATION_DUPLICATEINSTANCESTATUS = "UnsupportedOperation.DuplicateInstanceStatus"
+//	UNSUPPORTEDOPERATION_INSTANCESTATENOTALLOWEDOPERATE = "UnsupportedOperation.InstanceStateNotAllowedOperate"
+func (c *Client) DeleteGlobalAcceleratorAclPolicyWithContext(ctx context.Context, request *DeleteGlobalAcceleratorAclPolicyRequest) (response *DeleteGlobalAcceleratorAclPolicyResponse, err error) {
+	if request == nil {
+		request = NewDeleteGlobalAcceleratorAclPolicyRequest()
+	}
+	c.InitBaseRequest(&request.BaseRequest, "ga2", APIVersion, "DeleteGlobalAcceleratorAclPolicy")
+
+	if c.GetCredential() == nil {
+		return nil, errors.New("DeleteGlobalAcceleratorAclPolicy require credential")
+	}
+
+	request.SetContext(ctx)
+
+	response = NewDeleteGlobalAcceleratorAclPolicyResponse()
+	err = c.Send(request, response)
+	return
+}
+
+func NewDeleteGlobalAcceleratorAclRuleRequest() (request *DeleteGlobalAcceleratorAclRuleRequest) {
+	request = &DeleteGlobalAcceleratorAclRuleRequest{
+		BaseRequest: &tchttp.BaseRequest{},
+	}
+
+	request.Init().WithApiInfo("ga2", APIVersion, "DeleteGlobalAcceleratorAclRule")
+
+	return
+}
+
+func NewDeleteGlobalAcceleratorAclRuleResponse() (response *DeleteGlobalAcceleratorAclRuleResponse) {
+	response = &DeleteGlobalAcceleratorAclRuleResponse{
+		BaseResponse: &tchttp.BaseResponse{},
+	}
+	return
+
+}
+
+// DeleteGlobalAcceleratorAclRule
+// 删除ACL规则
+//
+// 可能返回的错误码:
+//
+//	INVALIDPARAMETERVALUE_INSTANCEMISMATCH = "InvalidParameterValue.InstanceMismatch"
+//	INVALIDPARAMETERVALUE_LIMITEXCEEDED = "InvalidParameterValue.LimitExceeded"
+//	LIMITEXCEEDED = "LimitExceeded"
+//	UNSUPPORTEDOPERATION_INSTANCESTATENOTALLOWEDOPERATE = "UnsupportedOperation.InstanceStateNotAllowedOperate"
+func (c *Client) DeleteGlobalAcceleratorAclRule(request *DeleteGlobalAcceleratorAclRuleRequest) (response *DeleteGlobalAcceleratorAclRuleResponse, err error) {
+	return c.DeleteGlobalAcceleratorAclRuleWithContext(context.Background(), request)
+}
+
+// DeleteGlobalAcceleratorAclRule
+// 删除ACL规则
+//
+// 可能返回的错误码:
+//
+//	INVALIDPARAMETERVALUE_INSTANCEMISMATCH = "InvalidParameterValue.InstanceMismatch"
+//	INVALIDPARAMETERVALUE_LIMITEXCEEDED = "InvalidParameterValue.LimitExceeded"
+//	LIMITEXCEEDED = "LimitExceeded"
+//	UNSUPPORTEDOPERATION_INSTANCESTATENOTALLOWEDOPERATE = "UnsupportedOperation.InstanceStateNotAllowedOperate"
+func (c *Client) DeleteGlobalAcceleratorAclRuleWithContext(ctx context.Context, request *DeleteGlobalAcceleratorAclRuleRequest) (response *DeleteGlobalAcceleratorAclRuleResponse, err error) {
+	if request == nil {
+		request = NewDeleteGlobalAcceleratorAclRuleRequest()
+	}
+	c.InitBaseRequest(&request.BaseRequest, "ga2", APIVersion, "DeleteGlobalAcceleratorAclRule")
+
+	if c.GetCredential() == nil {
+		return nil, errors.New("DeleteGlobalAcceleratorAclRule require credential")
+	}
+
+	request.SetContext(ctx)
+
+	response = NewDeleteGlobalAcceleratorAclRuleResponse()
+	err = c.Send(request, response)
+	return
 }
 
 func NewDeleteListenerRequest() (request *DeleteListenerRequest) {
-    request = &DeleteListenerRequest{
-        BaseRequest: &tchttp.BaseRequest{},
-    }
-    
-    request.Init().WithApiInfo("ga2", APIVersion, "DeleteListener")
-    
-    
-    return
+	request = &DeleteListenerRequest{
+		BaseRequest: &tchttp.BaseRequest{},
+	}
+
+	request.Init().WithApiInfo("ga2", APIVersion, "DeleteListener")
+
+	return
 }
 
 func NewDeleteListenerResponse() (response *DeleteListenerResponse) {
-    response = &DeleteListenerResponse{
-        BaseResponse: &tchttp.BaseResponse{},
-    } 
-    return
+	response = &DeleteListenerResponse{
+		BaseResponse: &tchttp.BaseResponse{},
+	}
+	return
 
 }
 
@@ -864,53 +1237,111 @@ func NewDeleteListenerResponse() (response *DeleteListenerResponse) {
 // 删除监听器
 //
 // 可能返回的错误码:
-//  UNSUPPORTEDOPERATION_EXISTACCESSLOG = "UnsupportedOperation.ExistAccessLog"
-//  UNSUPPORTEDOPERATION_EXISTENDPOINTGROUP = "UnsupportedOperation.ExistEndpointGroup"
-//  UNSUPPORTEDOPERATION_INSTANCENOTRUNNING = "UnsupportedOperation.InstanceNotRunning"
+//
+//	UNSUPPORTEDOPERATION_EXISTACCESSLOG = "UnsupportedOperation.ExistAccessLog"
+//	UNSUPPORTEDOPERATION_EXISTENDPOINTGROUP = "UnsupportedOperation.ExistEndpointGroup"
+//	UNSUPPORTEDOPERATION_INSTANCENOTRUNNING = "UnsupportedOperation.InstanceNotRunning"
 func (c *Client) DeleteListener(request *DeleteListenerRequest) (response *DeleteListenerResponse, err error) {
-    return c.DeleteListenerWithContext(context.Background(), request)
+	return c.DeleteListenerWithContext(context.Background(), request)
 }
 
 // DeleteListener
 // 删除监听器
 //
 // 可能返回的错误码:
-//  UNSUPPORTEDOPERATION_EXISTACCESSLOG = "UnsupportedOperation.ExistAccessLog"
-//  UNSUPPORTEDOPERATION_EXISTENDPOINTGROUP = "UnsupportedOperation.ExistEndpointGroup"
-//  UNSUPPORTEDOPERATION_INSTANCENOTRUNNING = "UnsupportedOperation.InstanceNotRunning"
+//
+//	UNSUPPORTEDOPERATION_EXISTACCESSLOG = "UnsupportedOperation.ExistAccessLog"
+//	UNSUPPORTEDOPERATION_EXISTENDPOINTGROUP = "UnsupportedOperation.ExistEndpointGroup"
+//	UNSUPPORTEDOPERATION_INSTANCENOTRUNNING = "UnsupportedOperation.InstanceNotRunning"
 func (c *Client) DeleteListenerWithContext(ctx context.Context, request *DeleteListenerRequest) (response *DeleteListenerResponse, err error) {
-    if request == nil {
-        request = NewDeleteListenerRequest()
-    }
-    c.InitBaseRequest(&request.BaseRequest, "ga2", APIVersion, "DeleteListener")
-    
-    if c.GetCredential() == nil {
-        return nil, errors.New("DeleteListener require credential")
-    }
+	if request == nil {
+		request = NewDeleteListenerRequest()
+	}
+	c.InitBaseRequest(&request.BaseRequest, "ga2", APIVersion, "DeleteListener")
 
-    request.SetContext(ctx)
-    
-    response = NewDeleteListenerResponse()
-    err = c.Send(request, response)
-    return
+	if c.GetCredential() == nil {
+		return nil, errors.New("DeleteListener require credential")
+	}
+
+	request.SetContext(ctx)
+
+	response = NewDeleteListenerResponse()
+	err = c.Send(request, response)
+	return
+}
+
+func NewDeleteListenerAdditionalCertRequest() (request *DeleteListenerAdditionalCertRequest) {
+	request = &DeleteListenerAdditionalCertRequest{
+		BaseRequest: &tchttp.BaseRequest{},
+	}
+
+	request.Init().WithApiInfo("ga2", APIVersion, "DeleteListenerAdditionalCert")
+
+	return
+}
+
+func NewDeleteListenerAdditionalCertResponse() (response *DeleteListenerAdditionalCertResponse) {
+	response = &DeleteListenerAdditionalCertResponse{
+		BaseResponse: &tchttp.BaseResponse{},
+	}
+	return
+
+}
+
+// DeleteListenerAdditionalCert
+// 删除扩展证书
+//
+// 可能返回的错误码:
+//
+//	INVALIDPARAMETERVALUE_INSTANCEMISMATCH = "InvalidParameterValue.InstanceMismatch"
+//	UNSUPPORTEDOPERATION_CACERTIFICATESOPERATE = "UnsupportedOperation.CaCertificatesOperate"
+//	UNSUPPORTEDOPERATION_DEFAULTCERTIFICATESOPERATE = "UnsupportedOperation.DefaultCertificatesOperate"
+//	UNSUPPORTEDOPERATION_INSTANCENOTRUNNING = "UnsupportedOperation.InstanceNotRunning"
+func (c *Client) DeleteListenerAdditionalCert(request *DeleteListenerAdditionalCertRequest) (response *DeleteListenerAdditionalCertResponse, err error) {
+	return c.DeleteListenerAdditionalCertWithContext(context.Background(), request)
+}
+
+// DeleteListenerAdditionalCert
+// 删除扩展证书
+//
+// 可能返回的错误码:
+//
+//	INVALIDPARAMETERVALUE_INSTANCEMISMATCH = "InvalidParameterValue.InstanceMismatch"
+//	UNSUPPORTEDOPERATION_CACERTIFICATESOPERATE = "UnsupportedOperation.CaCertificatesOperate"
+//	UNSUPPORTEDOPERATION_DEFAULTCERTIFICATESOPERATE = "UnsupportedOperation.DefaultCertificatesOperate"
+//	UNSUPPORTEDOPERATION_INSTANCENOTRUNNING = "UnsupportedOperation.InstanceNotRunning"
+func (c *Client) DeleteListenerAdditionalCertWithContext(ctx context.Context, request *DeleteListenerAdditionalCertRequest) (response *DeleteListenerAdditionalCertResponse, err error) {
+	if request == nil {
+		request = NewDeleteListenerAdditionalCertRequest()
+	}
+	c.InitBaseRequest(&request.BaseRequest, "ga2", APIVersion, "DeleteListenerAdditionalCert")
+
+	if c.GetCredential() == nil {
+		return nil, errors.New("DeleteListenerAdditionalCert require credential")
+	}
+
+	request.SetContext(ctx)
+
+	response = NewDeleteListenerAdditionalCertResponse()
+	err = c.Send(request, response)
+	return
 }
 
 func NewDescribeAccelerateAreasRequest() (request *DescribeAccelerateAreasRequest) {
-    request = &DescribeAccelerateAreasRequest{
-        BaseRequest: &tchttp.BaseRequest{},
-    }
-    
-    request.Init().WithApiInfo("ga2", APIVersion, "DescribeAccelerateAreas")
-    
-    
-    return
+	request = &DescribeAccelerateAreasRequest{
+		BaseRequest: &tchttp.BaseRequest{},
+	}
+
+	request.Init().WithApiInfo("ga2", APIVersion, "DescribeAccelerateAreas")
+
+	return
 }
 
 func NewDescribeAccelerateAreasResponse() (response *DescribeAccelerateAreasResponse) {
-    response = &DescribeAccelerateAreasResponse{
-        BaseResponse: &tchttp.BaseResponse{},
-    } 
-    return
+	response = &DescribeAccelerateAreasResponse{
+		BaseResponse: &tchttp.BaseResponse{},
+	}
+	return
 
 }
 
@@ -918,53 +1349,56 @@ func NewDescribeAccelerateAreasResponse() (response *DescribeAccelerateAreasResp
 // 查询加速地域
 //
 // 可能返回的错误码:
-//  UNSUPPORTEDOPERATION_EXISTACCESSLOG = "UnsupportedOperation.ExistAccessLog"
-//  UNSUPPORTEDOPERATION_EXISTENDPOINTGROUP = "UnsupportedOperation.ExistEndpointGroup"
-//  UNSUPPORTEDOPERATION_INSTANCENOTRUNNING = "UnsupportedOperation.InstanceNotRunning"
+//
+//	INVALIDPARAMETERVALUE_INSTANCEMISMATCH = "InvalidParameterValue.InstanceMismatch"
+//	UNSUPPORTEDOPERATION_CACERTIFICATESOPERATE = "UnsupportedOperation.CaCertificatesOperate"
+//	UNSUPPORTEDOPERATION_DEFAULTCERTIFICATESOPERATE = "UnsupportedOperation.DefaultCertificatesOperate"
+//	UNSUPPORTEDOPERATION_INSTANCENOTRUNNING = "UnsupportedOperation.InstanceNotRunning"
 func (c *Client) DescribeAccelerateAreas(request *DescribeAccelerateAreasRequest) (response *DescribeAccelerateAreasResponse, err error) {
-    return c.DescribeAccelerateAreasWithContext(context.Background(), request)
+	return c.DescribeAccelerateAreasWithContext(context.Background(), request)
 }
 
 // DescribeAccelerateAreas
 // 查询加速地域
 //
 // 可能返回的错误码:
-//  UNSUPPORTEDOPERATION_EXISTACCESSLOG = "UnsupportedOperation.ExistAccessLog"
-//  UNSUPPORTEDOPERATION_EXISTENDPOINTGROUP = "UnsupportedOperation.ExistEndpointGroup"
-//  UNSUPPORTEDOPERATION_INSTANCENOTRUNNING = "UnsupportedOperation.InstanceNotRunning"
+//
+//	INVALIDPARAMETERVALUE_INSTANCEMISMATCH = "InvalidParameterValue.InstanceMismatch"
+//	UNSUPPORTEDOPERATION_CACERTIFICATESOPERATE = "UnsupportedOperation.CaCertificatesOperate"
+//	UNSUPPORTEDOPERATION_DEFAULTCERTIFICATESOPERATE = "UnsupportedOperation.DefaultCertificatesOperate"
+//	UNSUPPORTEDOPERATION_INSTANCENOTRUNNING = "UnsupportedOperation.InstanceNotRunning"
 func (c *Client) DescribeAccelerateAreasWithContext(ctx context.Context, request *DescribeAccelerateAreasRequest) (response *DescribeAccelerateAreasResponse, err error) {
-    if request == nil {
-        request = NewDescribeAccelerateAreasRequest()
-    }
-    c.InitBaseRequest(&request.BaseRequest, "ga2", APIVersion, "DescribeAccelerateAreas")
-    
-    if c.GetCredential() == nil {
-        return nil, errors.New("DescribeAccelerateAreas require credential")
-    }
+	if request == nil {
+		request = NewDescribeAccelerateAreasRequest()
+	}
+	c.InitBaseRequest(&request.BaseRequest, "ga2", APIVersion, "DescribeAccelerateAreas")
 
-    request.SetContext(ctx)
-    
-    response = NewDescribeAccelerateAreasResponse()
-    err = c.Send(request, response)
-    return
+	if c.GetCredential() == nil {
+		return nil, errors.New("DescribeAccelerateAreas require credential")
+	}
+
+	request.SetContext(ctx)
+
+	response = NewDescribeAccelerateAreasResponse()
+	err = c.Send(request, response)
+	return
 }
 
 func NewDescribeAccelerateRegionsRequest() (request *DescribeAccelerateRegionsRequest) {
-    request = &DescribeAccelerateRegionsRequest{
-        BaseRequest: &tchttp.BaseRequest{},
-    }
-    
-    request.Init().WithApiInfo("ga2", APIVersion, "DescribeAccelerateRegions")
-    
-    
-    return
+	request = &DescribeAccelerateRegionsRequest{
+		BaseRequest: &tchttp.BaseRequest{},
+	}
+
+	request.Init().WithApiInfo("ga2", APIVersion, "DescribeAccelerateRegions")
+
+	return
 }
 
 func NewDescribeAccelerateRegionsResponse() (response *DescribeAccelerateRegionsResponse) {
-    response = &DescribeAccelerateRegionsResponse{
-        BaseResponse: &tchttp.BaseResponse{},
-    } 
-    return
+	response = &DescribeAccelerateRegionsResponse{
+		BaseResponse: &tchttp.BaseResponse{},
+	}
+	return
 
 }
 
@@ -972,53 +1406,113 @@ func NewDescribeAccelerateRegionsResponse() (response *DescribeAccelerateRegions
 // 查询可选加速区域
 //
 // 可能返回的错误码:
-//  UNSUPPORTEDOPERATION_EXISTACCESSLOG = "UnsupportedOperation.ExistAccessLog"
-//  UNSUPPORTEDOPERATION_EXISTENDPOINTGROUP = "UnsupportedOperation.ExistEndpointGroup"
-//  UNSUPPORTEDOPERATION_INSTANCENOTRUNNING = "UnsupportedOperation.InstanceNotRunning"
+//
+//	INVALIDPARAMETERVALUE_INSTANCEMISMATCH = "InvalidParameterValue.InstanceMismatch"
+//	UNSUPPORTEDOPERATION_CACERTIFICATESOPERATE = "UnsupportedOperation.CaCertificatesOperate"
+//	UNSUPPORTEDOPERATION_DEFAULTCERTIFICATESOPERATE = "UnsupportedOperation.DefaultCertificatesOperate"
+//	UNSUPPORTEDOPERATION_INSTANCENOTRUNNING = "UnsupportedOperation.InstanceNotRunning"
 func (c *Client) DescribeAccelerateRegions(request *DescribeAccelerateRegionsRequest) (response *DescribeAccelerateRegionsResponse, err error) {
-    return c.DescribeAccelerateRegionsWithContext(context.Background(), request)
+	return c.DescribeAccelerateRegionsWithContext(context.Background(), request)
 }
 
 // DescribeAccelerateRegions
 // 查询可选加速区域
 //
 // 可能返回的错误码:
-//  UNSUPPORTEDOPERATION_EXISTACCESSLOG = "UnsupportedOperation.ExistAccessLog"
-//  UNSUPPORTEDOPERATION_EXISTENDPOINTGROUP = "UnsupportedOperation.ExistEndpointGroup"
-//  UNSUPPORTEDOPERATION_INSTANCENOTRUNNING = "UnsupportedOperation.InstanceNotRunning"
+//
+//	INVALIDPARAMETERVALUE_INSTANCEMISMATCH = "InvalidParameterValue.InstanceMismatch"
+//	UNSUPPORTEDOPERATION_CACERTIFICATESOPERATE = "UnsupportedOperation.CaCertificatesOperate"
+//	UNSUPPORTEDOPERATION_DEFAULTCERTIFICATESOPERATE = "UnsupportedOperation.DefaultCertificatesOperate"
+//	UNSUPPORTEDOPERATION_INSTANCENOTRUNNING = "UnsupportedOperation.InstanceNotRunning"
 func (c *Client) DescribeAccelerateRegionsWithContext(ctx context.Context, request *DescribeAccelerateRegionsRequest) (response *DescribeAccelerateRegionsResponse, err error) {
-    if request == nil {
-        request = NewDescribeAccelerateRegionsRequest()
-    }
-    c.InitBaseRequest(&request.BaseRequest, "ga2", APIVersion, "DescribeAccelerateRegions")
-    
-    if c.GetCredential() == nil {
-        return nil, errors.New("DescribeAccelerateRegions require credential")
-    }
+	if request == nil {
+		request = NewDescribeAccelerateRegionsRequest()
+	}
+	c.InitBaseRequest(&request.BaseRequest, "ga2", APIVersion, "DescribeAccelerateRegions")
 
-    request.SetContext(ctx)
-    
-    response = NewDescribeAccelerateRegionsResponse()
-    err = c.Send(request, response)
-    return
+	if c.GetCredential() == nil {
+		return nil, errors.New("DescribeAccelerateRegions require credential")
+	}
+
+	request.SetContext(ctx)
+
+	response = NewDescribeAccelerateRegionsResponse()
+	err = c.Send(request, response)
+	return
+}
+
+func NewDescribeAccessLogParamRequest() (request *DescribeAccessLogParamRequest) {
+	request = &DescribeAccessLogParamRequest{
+		BaseRequest: &tchttp.BaseRequest{},
+	}
+
+	request.Init().WithApiInfo("ga2", APIVersion, "DescribeAccessLogParam")
+
+	return
+}
+
+func NewDescribeAccessLogParamResponse() (response *DescribeAccessLogParamResponse) {
+	response = &DescribeAccessLogParamResponse{
+		BaseResponse: &tchttp.BaseResponse{},
+	}
+	return
+
+}
+
+// DescribeAccessLogParam
+// 查看访问日志上报参数
+//
+// 可能返回的错误码:
+//
+//	INVALIDPARAMETERVALUE_INSTANCEMISMATCH = "InvalidParameterValue.InstanceMismatch"
+//	UNSUPPORTEDOPERATION_CACERTIFICATESOPERATE = "UnsupportedOperation.CaCertificatesOperate"
+//	UNSUPPORTEDOPERATION_DEFAULTCERTIFICATESOPERATE = "UnsupportedOperation.DefaultCertificatesOperate"
+//	UNSUPPORTEDOPERATION_INSTANCENOTRUNNING = "UnsupportedOperation.InstanceNotRunning"
+func (c *Client) DescribeAccessLogParam(request *DescribeAccessLogParamRequest) (response *DescribeAccessLogParamResponse, err error) {
+	return c.DescribeAccessLogParamWithContext(context.Background(), request)
+}
+
+// DescribeAccessLogParam
+// 查看访问日志上报参数
+//
+// 可能返回的错误码:
+//
+//	INVALIDPARAMETERVALUE_INSTANCEMISMATCH = "InvalidParameterValue.InstanceMismatch"
+//	UNSUPPORTEDOPERATION_CACERTIFICATESOPERATE = "UnsupportedOperation.CaCertificatesOperate"
+//	UNSUPPORTEDOPERATION_DEFAULTCERTIFICATESOPERATE = "UnsupportedOperation.DefaultCertificatesOperate"
+//	UNSUPPORTEDOPERATION_INSTANCENOTRUNNING = "UnsupportedOperation.InstanceNotRunning"
+func (c *Client) DescribeAccessLogParamWithContext(ctx context.Context, request *DescribeAccessLogParamRequest) (response *DescribeAccessLogParamResponse, err error) {
+	if request == nil {
+		request = NewDescribeAccessLogParamRequest()
+	}
+	c.InitBaseRequest(&request.BaseRequest, "ga2", APIVersion, "DescribeAccessLogParam")
+
+	if c.GetCredential() == nil {
+		return nil, errors.New("DescribeAccessLogParam require credential")
+	}
+
+	request.SetContext(ctx)
+
+	response = NewDescribeAccessLogParamResponse()
+	err = c.Send(request, response)
+	return
 }
 
 func NewDescribeCrossBorderSettlementRequest() (request *DescribeCrossBorderSettlementRequest) {
-    request = &DescribeCrossBorderSettlementRequest{
-        BaseRequest: &tchttp.BaseRequest{},
-    }
-    
-    request.Init().WithApiInfo("ga2", APIVersion, "DescribeCrossBorderSettlement")
-    
-    
-    return
+	request = &DescribeCrossBorderSettlementRequest{
+		BaseRequest: &tchttp.BaseRequest{},
+	}
+
+	request.Init().WithApiInfo("ga2", APIVersion, "DescribeCrossBorderSettlement")
+
+	return
 }
 
 func NewDescribeCrossBorderSettlementResponse() (response *DescribeCrossBorderSettlementResponse) {
-    response = &DescribeCrossBorderSettlementResponse{
-        BaseResponse: &tchttp.BaseResponse{},
-    } 
-    return
+	response = &DescribeCrossBorderSettlementResponse{
+		BaseResponse: &tchttp.BaseResponse{},
+	}
+	return
 
 }
 
@@ -1026,51 +1520,52 @@ func NewDescribeCrossBorderSettlementResponse() (response *DescribeCrossBorderSe
 // 查询跨境账单
 //
 // 可能返回的错误码:
-//  INVALIDPARAMETER_INPUTOUTOFRANGE = "InvalidParameter.InputOutOfRange"
-//  INVALIDPARAMETERVALUE_MALFORMED = "InvalidParameterValue.Malformed"
+//
+//	INVALIDPARAMETER_INPUTOUTOFRANGE = "InvalidParameter.InputOutOfRange"
+//	INVALIDPARAMETERVALUE_MALFORMED = "InvalidParameterValue.Malformed"
 func (c *Client) DescribeCrossBorderSettlement(request *DescribeCrossBorderSettlementRequest) (response *DescribeCrossBorderSettlementResponse, err error) {
-    return c.DescribeCrossBorderSettlementWithContext(context.Background(), request)
+	return c.DescribeCrossBorderSettlementWithContext(context.Background(), request)
 }
 
 // DescribeCrossBorderSettlement
 // 查询跨境账单
 //
 // 可能返回的错误码:
-//  INVALIDPARAMETER_INPUTOUTOFRANGE = "InvalidParameter.InputOutOfRange"
-//  INVALIDPARAMETERVALUE_MALFORMED = "InvalidParameterValue.Malformed"
+//
+//	INVALIDPARAMETER_INPUTOUTOFRANGE = "InvalidParameter.InputOutOfRange"
+//	INVALIDPARAMETERVALUE_MALFORMED = "InvalidParameterValue.Malformed"
 func (c *Client) DescribeCrossBorderSettlementWithContext(ctx context.Context, request *DescribeCrossBorderSettlementRequest) (response *DescribeCrossBorderSettlementResponse, err error) {
-    if request == nil {
-        request = NewDescribeCrossBorderSettlementRequest()
-    }
-    c.InitBaseRequest(&request.BaseRequest, "ga2", APIVersion, "DescribeCrossBorderSettlement")
-    
-    if c.GetCredential() == nil {
-        return nil, errors.New("DescribeCrossBorderSettlement require credential")
-    }
+	if request == nil {
+		request = NewDescribeCrossBorderSettlementRequest()
+	}
+	c.InitBaseRequest(&request.BaseRequest, "ga2", APIVersion, "DescribeCrossBorderSettlement")
 
-    request.SetContext(ctx)
-    
-    response = NewDescribeCrossBorderSettlementResponse()
-    err = c.Send(request, response)
-    return
+	if c.GetCredential() == nil {
+		return nil, errors.New("DescribeCrossBorderSettlement require credential")
+	}
+
+	request.SetContext(ctx)
+
+	response = NewDescribeCrossBorderSettlementResponse()
+	err = c.Send(request, response)
+	return
 }
 
 func NewDescribeEndpointGroupsRequest() (request *DescribeEndpointGroupsRequest) {
-    request = &DescribeEndpointGroupsRequest{
-        BaseRequest: &tchttp.BaseRequest{},
-    }
-    
-    request.Init().WithApiInfo("ga2", APIVersion, "DescribeEndpointGroups")
-    
-    
-    return
+	request = &DescribeEndpointGroupsRequest{
+		BaseRequest: &tchttp.BaseRequest{},
+	}
+
+	request.Init().WithApiInfo("ga2", APIVersion, "DescribeEndpointGroups")
+
+	return
 }
 
 func NewDescribeEndpointGroupsResponse() (response *DescribeEndpointGroupsResponse) {
-    response = &DescribeEndpointGroupsResponse{
-        BaseResponse: &tchttp.BaseResponse{},
-    } 
-    return
+	response = &DescribeEndpointGroupsResponse{
+		BaseResponse: &tchttp.BaseResponse{},
+	}
+	return
 
 }
 
@@ -1078,51 +1573,52 @@ func NewDescribeEndpointGroupsResponse() (response *DescribeEndpointGroupsRespon
 // 查询终端节点组。
 //
 // 可能返回的错误码:
-//  INVALIDPARAMETER_INPUTOUTOFRANGE = "InvalidParameter.InputOutOfRange"
-//  INVALIDPARAMETERVALUE_MALFORMED = "InvalidParameterValue.Malformed"
+//
+//	INVALIDPARAMETER_INPUTOUTOFRANGE = "InvalidParameter.InputOutOfRange"
+//	INVALIDPARAMETERVALUE_MALFORMED = "InvalidParameterValue.Malformed"
 func (c *Client) DescribeEndpointGroups(request *DescribeEndpointGroupsRequest) (response *DescribeEndpointGroupsResponse, err error) {
-    return c.DescribeEndpointGroupsWithContext(context.Background(), request)
+	return c.DescribeEndpointGroupsWithContext(context.Background(), request)
 }
 
 // DescribeEndpointGroups
 // 查询终端节点组。
 //
 // 可能返回的错误码:
-//  INVALIDPARAMETER_INPUTOUTOFRANGE = "InvalidParameter.InputOutOfRange"
-//  INVALIDPARAMETERVALUE_MALFORMED = "InvalidParameterValue.Malformed"
+//
+//	INVALIDPARAMETER_INPUTOUTOFRANGE = "InvalidParameter.InputOutOfRange"
+//	INVALIDPARAMETERVALUE_MALFORMED = "InvalidParameterValue.Malformed"
 func (c *Client) DescribeEndpointGroupsWithContext(ctx context.Context, request *DescribeEndpointGroupsRequest) (response *DescribeEndpointGroupsResponse, err error) {
-    if request == nil {
-        request = NewDescribeEndpointGroupsRequest()
-    }
-    c.InitBaseRequest(&request.BaseRequest, "ga2", APIVersion, "DescribeEndpointGroups")
-    
-    if c.GetCredential() == nil {
-        return nil, errors.New("DescribeEndpointGroups require credential")
-    }
+	if request == nil {
+		request = NewDescribeEndpointGroupsRequest()
+	}
+	c.InitBaseRequest(&request.BaseRequest, "ga2", APIVersion, "DescribeEndpointGroups")
 
-    request.SetContext(ctx)
-    
-    response = NewDescribeEndpointGroupsResponse()
-    err = c.Send(request, response)
-    return
+	if c.GetCredential() == nil {
+		return nil, errors.New("DescribeEndpointGroups require credential")
+	}
+
+	request.SetContext(ctx)
+
+	response = NewDescribeEndpointGroupsResponse()
+	err = c.Send(request, response)
+	return
 }
 
 func NewDescribeForwardingPolicyRequest() (request *DescribeForwardingPolicyRequest) {
-    request = &DescribeForwardingPolicyRequest{
-        BaseRequest: &tchttp.BaseRequest{},
-    }
-    
-    request.Init().WithApiInfo("ga2", APIVersion, "DescribeForwardingPolicy")
-    
-    
-    return
+	request = &DescribeForwardingPolicyRequest{
+		BaseRequest: &tchttp.BaseRequest{},
+	}
+
+	request.Init().WithApiInfo("ga2", APIVersion, "DescribeForwardingPolicy")
+
+	return
 }
 
 func NewDescribeForwardingPolicyResponse() (response *DescribeForwardingPolicyResponse) {
-    response = &DescribeForwardingPolicyResponse{
-        BaseResponse: &tchttp.BaseResponse{},
-    } 
-    return
+	response = &DescribeForwardingPolicyResponse{
+		BaseResponse: &tchttp.BaseResponse{},
+	}
+	return
 
 }
 
@@ -1130,51 +1626,52 @@ func NewDescribeForwardingPolicyResponse() (response *DescribeForwardingPolicyRe
 // 查看七层转发策略
 //
 // 可能返回的错误码:
-//  INVALIDPARAMETER_INPUTOUTOFRANGE = "InvalidParameter.InputOutOfRange"
-//  INVALIDPARAMETERVALUE_MALFORMED = "InvalidParameterValue.Malformed"
+//
+//	INVALIDPARAMETER_INPUTOUTOFRANGE = "InvalidParameter.InputOutOfRange"
+//	INVALIDPARAMETERVALUE_MALFORMED = "InvalidParameterValue.Malformed"
 func (c *Client) DescribeForwardingPolicy(request *DescribeForwardingPolicyRequest) (response *DescribeForwardingPolicyResponse, err error) {
-    return c.DescribeForwardingPolicyWithContext(context.Background(), request)
+	return c.DescribeForwardingPolicyWithContext(context.Background(), request)
 }
 
 // DescribeForwardingPolicy
 // 查看七层转发策略
 //
 // 可能返回的错误码:
-//  INVALIDPARAMETER_INPUTOUTOFRANGE = "InvalidParameter.InputOutOfRange"
-//  INVALIDPARAMETERVALUE_MALFORMED = "InvalidParameterValue.Malformed"
+//
+//	INVALIDPARAMETER_INPUTOUTOFRANGE = "InvalidParameter.InputOutOfRange"
+//	INVALIDPARAMETERVALUE_MALFORMED = "InvalidParameterValue.Malformed"
 func (c *Client) DescribeForwardingPolicyWithContext(ctx context.Context, request *DescribeForwardingPolicyRequest) (response *DescribeForwardingPolicyResponse, err error) {
-    if request == nil {
-        request = NewDescribeForwardingPolicyRequest()
-    }
-    c.InitBaseRequest(&request.BaseRequest, "ga2", APIVersion, "DescribeForwardingPolicy")
-    
-    if c.GetCredential() == nil {
-        return nil, errors.New("DescribeForwardingPolicy require credential")
-    }
+	if request == nil {
+		request = NewDescribeForwardingPolicyRequest()
+	}
+	c.InitBaseRequest(&request.BaseRequest, "ga2", APIVersion, "DescribeForwardingPolicy")
 
-    request.SetContext(ctx)
-    
-    response = NewDescribeForwardingPolicyResponse()
-    err = c.Send(request, response)
-    return
+	if c.GetCredential() == nil {
+		return nil, errors.New("DescribeForwardingPolicy require credential")
+	}
+
+	request.SetContext(ctx)
+
+	response = NewDescribeForwardingPolicyResponse()
+	err = c.Send(request, response)
+	return
 }
 
 func NewDescribeForwardingRuleRequest() (request *DescribeForwardingRuleRequest) {
-    request = &DescribeForwardingRuleRequest{
-        BaseRequest: &tchttp.BaseRequest{},
-    }
-    
-    request.Init().WithApiInfo("ga2", APIVersion, "DescribeForwardingRule")
-    
-    
-    return
+	request = &DescribeForwardingRuleRequest{
+		BaseRequest: &tchttp.BaseRequest{},
+	}
+
+	request.Init().WithApiInfo("ga2", APIVersion, "DescribeForwardingRule")
+
+	return
 }
 
 func NewDescribeForwardingRuleResponse() (response *DescribeForwardingRuleResponse) {
-    response = &DescribeForwardingRuleResponse{
-        BaseResponse: &tchttp.BaseResponse{},
-    } 
-    return
+	response = &DescribeForwardingRuleResponse{
+		BaseResponse: &tchttp.BaseResponse{},
+	}
+	return
 
 }
 
@@ -1182,51 +1679,205 @@ func NewDescribeForwardingRuleResponse() (response *DescribeForwardingRuleRespon
 // 查看七层转发规则
 //
 // 可能返回的错误码:
-//  INVALIDPARAMETER_INPUTOUTOFRANGE = "InvalidParameter.InputOutOfRange"
-//  INVALIDPARAMETERVALUE_MALFORMED = "InvalidParameterValue.Malformed"
+//
+//	INVALIDPARAMETER_INPUTOUTOFRANGE = "InvalidParameter.InputOutOfRange"
+//	INVALIDPARAMETERVALUE_MALFORMED = "InvalidParameterValue.Malformed"
 func (c *Client) DescribeForwardingRule(request *DescribeForwardingRuleRequest) (response *DescribeForwardingRuleResponse, err error) {
-    return c.DescribeForwardingRuleWithContext(context.Background(), request)
+	return c.DescribeForwardingRuleWithContext(context.Background(), request)
 }
 
 // DescribeForwardingRule
 // 查看七层转发规则
 //
 // 可能返回的错误码:
-//  INVALIDPARAMETER_INPUTOUTOFRANGE = "InvalidParameter.InputOutOfRange"
-//  INVALIDPARAMETERVALUE_MALFORMED = "InvalidParameterValue.Malformed"
+//
+//	INVALIDPARAMETER_INPUTOUTOFRANGE = "InvalidParameter.InputOutOfRange"
+//	INVALIDPARAMETERVALUE_MALFORMED = "InvalidParameterValue.Malformed"
 func (c *Client) DescribeForwardingRuleWithContext(ctx context.Context, request *DescribeForwardingRuleRequest) (response *DescribeForwardingRuleResponse, err error) {
-    if request == nil {
-        request = NewDescribeForwardingRuleRequest()
-    }
-    c.InitBaseRequest(&request.BaseRequest, "ga2", APIVersion, "DescribeForwardingRule")
-    
-    if c.GetCredential() == nil {
-        return nil, errors.New("DescribeForwardingRule require credential")
-    }
+	if request == nil {
+		request = NewDescribeForwardingRuleRequest()
+	}
+	c.InitBaseRequest(&request.BaseRequest, "ga2", APIVersion, "DescribeForwardingRule")
 
-    request.SetContext(ctx)
-    
-    response = NewDescribeForwardingRuleResponse()
-    err = c.Send(request, response)
-    return
+	if c.GetCredential() == nil {
+		return nil, errors.New("DescribeForwardingRule require credential")
+	}
+
+	request.SetContext(ctx)
+
+	response = NewDescribeForwardingRuleResponse()
+	err = c.Send(request, response)
+	return
+}
+
+func NewDescribeGlobalAcceleratorAccessLogRequest() (request *DescribeGlobalAcceleratorAccessLogRequest) {
+	request = &DescribeGlobalAcceleratorAccessLogRequest{
+		BaseRequest: &tchttp.BaseRequest{},
+	}
+
+	request.Init().WithApiInfo("ga2", APIVersion, "DescribeGlobalAcceleratorAccessLog")
+
+	return
+}
+
+func NewDescribeGlobalAcceleratorAccessLogResponse() (response *DescribeGlobalAcceleratorAccessLogResponse) {
+	response = &DescribeGlobalAcceleratorAccessLogResponse{
+		BaseResponse: &tchttp.BaseResponse{},
+	}
+	return
+
+}
+
+// DescribeGlobalAcceleratorAccessLog
+// 查询日志任务
+//
+// 可能返回的错误码:
+//
+//	INVALIDPARAMETERVALUE_MALFORMED = "InvalidParameterValue.Malformed"
+func (c *Client) DescribeGlobalAcceleratorAccessLog(request *DescribeGlobalAcceleratorAccessLogRequest) (response *DescribeGlobalAcceleratorAccessLogResponse, err error) {
+	return c.DescribeGlobalAcceleratorAccessLogWithContext(context.Background(), request)
+}
+
+// DescribeGlobalAcceleratorAccessLog
+// 查询日志任务
+//
+// 可能返回的错误码:
+//
+//	INVALIDPARAMETERVALUE_MALFORMED = "InvalidParameterValue.Malformed"
+func (c *Client) DescribeGlobalAcceleratorAccessLogWithContext(ctx context.Context, request *DescribeGlobalAcceleratorAccessLogRequest) (response *DescribeGlobalAcceleratorAccessLogResponse, err error) {
+	if request == nil {
+		request = NewDescribeGlobalAcceleratorAccessLogRequest()
+	}
+	c.InitBaseRequest(&request.BaseRequest, "ga2", APIVersion, "DescribeGlobalAcceleratorAccessLog")
+
+	if c.GetCredential() == nil {
+		return nil, errors.New("DescribeGlobalAcceleratorAccessLog require credential")
+	}
+
+	request.SetContext(ctx)
+
+	response = NewDescribeGlobalAcceleratorAccessLogResponse()
+	err = c.Send(request, response)
+	return
+}
+
+func NewDescribeGlobalAcceleratorAclPoliciesRequest() (request *DescribeGlobalAcceleratorAclPoliciesRequest) {
+	request = &DescribeGlobalAcceleratorAclPoliciesRequest{
+		BaseRequest: &tchttp.BaseRequest{},
+	}
+
+	request.Init().WithApiInfo("ga2", APIVersion, "DescribeGlobalAcceleratorAclPolicies")
+
+	return
+}
+
+func NewDescribeGlobalAcceleratorAclPoliciesResponse() (response *DescribeGlobalAcceleratorAclPoliciesResponse) {
+	response = &DescribeGlobalAcceleratorAclPoliciesResponse{
+		BaseResponse: &tchttp.BaseResponse{},
+	}
+	return
+
+}
+
+// DescribeGlobalAcceleratorAclPolicies
+// 查看访问控制策略
+//
+// 可能返回的错误码:
+//
+//	INVALIDPARAMETERVALUE_MALFORMED = "InvalidParameterValue.Malformed"
+func (c *Client) DescribeGlobalAcceleratorAclPolicies(request *DescribeGlobalAcceleratorAclPoliciesRequest) (response *DescribeGlobalAcceleratorAclPoliciesResponse, err error) {
+	return c.DescribeGlobalAcceleratorAclPoliciesWithContext(context.Background(), request)
+}
+
+// DescribeGlobalAcceleratorAclPolicies
+// 查看访问控制策略
+//
+// 可能返回的错误码:
+//
+//	INVALIDPARAMETERVALUE_MALFORMED = "InvalidParameterValue.Malformed"
+func (c *Client) DescribeGlobalAcceleratorAclPoliciesWithContext(ctx context.Context, request *DescribeGlobalAcceleratorAclPoliciesRequest) (response *DescribeGlobalAcceleratorAclPoliciesResponse, err error) {
+	if request == nil {
+		request = NewDescribeGlobalAcceleratorAclPoliciesRequest()
+	}
+	c.InitBaseRequest(&request.BaseRequest, "ga2", APIVersion, "DescribeGlobalAcceleratorAclPolicies")
+
+	if c.GetCredential() == nil {
+		return nil, errors.New("DescribeGlobalAcceleratorAclPolicies require credential")
+	}
+
+	request.SetContext(ctx)
+
+	response = NewDescribeGlobalAcceleratorAclPoliciesResponse()
+	err = c.Send(request, response)
+	return
+}
+
+func NewDescribeGlobalAcceleratorAclRulesRequest() (request *DescribeGlobalAcceleratorAclRulesRequest) {
+	request = &DescribeGlobalAcceleratorAclRulesRequest{
+		BaseRequest: &tchttp.BaseRequest{},
+	}
+
+	request.Init().WithApiInfo("ga2", APIVersion, "DescribeGlobalAcceleratorAclRules")
+
+	return
+}
+
+func NewDescribeGlobalAcceleratorAclRulesResponse() (response *DescribeGlobalAcceleratorAclRulesResponse) {
+	response = &DescribeGlobalAcceleratorAclRulesResponse{
+		BaseResponse: &tchttp.BaseResponse{},
+	}
+	return
+
+}
+
+// DescribeGlobalAcceleratorAclRules
+// 查看ACL规则
+//
+// 可能返回的错误码:
+//
+//	INVALIDPARAMETERVALUE_MALFORMED = "InvalidParameterValue.Malformed"
+func (c *Client) DescribeGlobalAcceleratorAclRules(request *DescribeGlobalAcceleratorAclRulesRequest) (response *DescribeGlobalAcceleratorAclRulesResponse, err error) {
+	return c.DescribeGlobalAcceleratorAclRulesWithContext(context.Background(), request)
+}
+
+// DescribeGlobalAcceleratorAclRules
+// 查看ACL规则
+//
+// 可能返回的错误码:
+//
+//	INVALIDPARAMETERVALUE_MALFORMED = "InvalidParameterValue.Malformed"
+func (c *Client) DescribeGlobalAcceleratorAclRulesWithContext(ctx context.Context, request *DescribeGlobalAcceleratorAclRulesRequest) (response *DescribeGlobalAcceleratorAclRulesResponse, err error) {
+	if request == nil {
+		request = NewDescribeGlobalAcceleratorAclRulesRequest()
+	}
+	c.InitBaseRequest(&request.BaseRequest, "ga2", APIVersion, "DescribeGlobalAcceleratorAclRules")
+
+	if c.GetCredential() == nil {
+		return nil, errors.New("DescribeGlobalAcceleratorAclRules require credential")
+	}
+
+	request.SetContext(ctx)
+
+	response = NewDescribeGlobalAcceleratorAclRulesResponse()
+	err = c.Send(request, response)
+	return
 }
 
 func NewDescribeGlobalAcceleratorsRequest() (request *DescribeGlobalAcceleratorsRequest) {
-    request = &DescribeGlobalAcceleratorsRequest{
-        BaseRequest: &tchttp.BaseRequest{},
-    }
-    
-    request.Init().WithApiInfo("ga2", APIVersion, "DescribeGlobalAccelerators")
-    
-    
-    return
+	request = &DescribeGlobalAcceleratorsRequest{
+		BaseRequest: &tchttp.BaseRequest{},
+	}
+
+	request.Init().WithApiInfo("ga2", APIVersion, "DescribeGlobalAccelerators")
+
+	return
 }
 
 func NewDescribeGlobalAcceleratorsResponse() (response *DescribeGlobalAcceleratorsResponse) {
-    response = &DescribeGlobalAcceleratorsResponse{
-        BaseResponse: &tchttp.BaseResponse{},
-    } 
-    return
+	response = &DescribeGlobalAcceleratorsResponse{
+		BaseResponse: &tchttp.BaseResponse{},
+	}
+	return
 
 }
 
@@ -1234,51 +1885,50 @@ func NewDescribeGlobalAcceleratorsResponse() (response *DescribeGlobalAccelerato
 // 修改全球加速实例
 //
 // 可能返回的错误码:
-//  INVALIDPARAMETER_INPUTOUTOFRANGE = "InvalidParameter.InputOutOfRange"
-//  INVALIDPARAMETERVALUE_MALFORMED = "InvalidParameterValue.Malformed"
+//
+//	INVALIDPARAMETERVALUE_MALFORMED = "InvalidParameterValue.Malformed"
 func (c *Client) DescribeGlobalAccelerators(request *DescribeGlobalAcceleratorsRequest) (response *DescribeGlobalAcceleratorsResponse, err error) {
-    return c.DescribeGlobalAcceleratorsWithContext(context.Background(), request)
+	return c.DescribeGlobalAcceleratorsWithContext(context.Background(), request)
 }
 
 // DescribeGlobalAccelerators
 // 修改全球加速实例
 //
 // 可能返回的错误码:
-//  INVALIDPARAMETER_INPUTOUTOFRANGE = "InvalidParameter.InputOutOfRange"
-//  INVALIDPARAMETERVALUE_MALFORMED = "InvalidParameterValue.Malformed"
+//
+//	INVALIDPARAMETERVALUE_MALFORMED = "InvalidParameterValue.Malformed"
 func (c *Client) DescribeGlobalAcceleratorsWithContext(ctx context.Context, request *DescribeGlobalAcceleratorsRequest) (response *DescribeGlobalAcceleratorsResponse, err error) {
-    if request == nil {
-        request = NewDescribeGlobalAcceleratorsRequest()
-    }
-    c.InitBaseRequest(&request.BaseRequest, "ga2", APIVersion, "DescribeGlobalAccelerators")
-    
-    if c.GetCredential() == nil {
-        return nil, errors.New("DescribeGlobalAccelerators require credential")
-    }
+	if request == nil {
+		request = NewDescribeGlobalAcceleratorsRequest()
+	}
+	c.InitBaseRequest(&request.BaseRequest, "ga2", APIVersion, "DescribeGlobalAccelerators")
 
-    request.SetContext(ctx)
-    
-    response = NewDescribeGlobalAcceleratorsResponse()
-    err = c.Send(request, response)
-    return
+	if c.GetCredential() == nil {
+		return nil, errors.New("DescribeGlobalAccelerators require credential")
+	}
+
+	request.SetContext(ctx)
+
+	response = NewDescribeGlobalAcceleratorsResponse()
+	err = c.Send(request, response)
+	return
 }
 
 func NewDescribeListenersRequest() (request *DescribeListenersRequest) {
-    request = &DescribeListenersRequest{
-        BaseRequest: &tchttp.BaseRequest{},
-    }
-    
-    request.Init().WithApiInfo("ga2", APIVersion, "DescribeListeners")
-    
-    
-    return
+	request = &DescribeListenersRequest{
+		BaseRequest: &tchttp.BaseRequest{},
+	}
+
+	request.Init().WithApiInfo("ga2", APIVersion, "DescribeListeners")
+
+	return
 }
 
 func NewDescribeListenersResponse() (response *DescribeListenersResponse) {
-    response = &DescribeListenersResponse{
-        BaseResponse: &tchttp.BaseResponse{},
-    } 
-    return
+	response = &DescribeListenersResponse{
+		BaseResponse: &tchttp.BaseResponse{},
+	}
+	return
 
 }
 
@@ -1286,51 +1936,50 @@ func NewDescribeListenersResponse() (response *DescribeListenersResponse) {
 // 查询监听器
 //
 // 可能返回的错误码:
-//  INVALIDPARAMETER_INPUTOUTOFRANGE = "InvalidParameter.InputOutOfRange"
-//  INVALIDPARAMETERVALUE_MALFORMED = "InvalidParameterValue.Malformed"
+//
+//	INVALIDPARAMETERVALUE_MALFORMED = "InvalidParameterValue.Malformed"
 func (c *Client) DescribeListeners(request *DescribeListenersRequest) (response *DescribeListenersResponse, err error) {
-    return c.DescribeListenersWithContext(context.Background(), request)
+	return c.DescribeListenersWithContext(context.Background(), request)
 }
 
 // DescribeListeners
 // 查询监听器
 //
 // 可能返回的错误码:
-//  INVALIDPARAMETER_INPUTOUTOFRANGE = "InvalidParameter.InputOutOfRange"
-//  INVALIDPARAMETERVALUE_MALFORMED = "InvalidParameterValue.Malformed"
+//
+//	INVALIDPARAMETERVALUE_MALFORMED = "InvalidParameterValue.Malformed"
 func (c *Client) DescribeListenersWithContext(ctx context.Context, request *DescribeListenersRequest) (response *DescribeListenersResponse, err error) {
-    if request == nil {
-        request = NewDescribeListenersRequest()
-    }
-    c.InitBaseRequest(&request.BaseRequest, "ga2", APIVersion, "DescribeListeners")
-    
-    if c.GetCredential() == nil {
-        return nil, errors.New("DescribeListeners require credential")
-    }
+	if request == nil {
+		request = NewDescribeListenersRequest()
+	}
+	c.InitBaseRequest(&request.BaseRequest, "ga2", APIVersion, "DescribeListeners")
 
-    request.SetContext(ctx)
-    
-    response = NewDescribeListenersResponse()
-    err = c.Send(request, response)
-    return
+	if c.GetCredential() == nil {
+		return nil, errors.New("DescribeListeners require credential")
+	}
+
+	request.SetContext(ctx)
+
+	response = NewDescribeListenersResponse()
+	err = c.Send(request, response)
+	return
 }
 
 func NewDescribeTaskResultRequest() (request *DescribeTaskResultRequest) {
-    request = &DescribeTaskResultRequest{
-        BaseRequest: &tchttp.BaseRequest{},
-    }
-    
-    request.Init().WithApiInfo("ga2", APIVersion, "DescribeTaskResult")
-    
-    
-    return
+	request = &DescribeTaskResultRequest{
+		BaseRequest: &tchttp.BaseRequest{},
+	}
+
+	request.Init().WithApiInfo("ga2", APIVersion, "DescribeTaskResult")
+
+	return
 }
 
 func NewDescribeTaskResultResponse() (response *DescribeTaskResultResponse) {
-    response = &DescribeTaskResultResponse{
-        BaseResponse: &tchttp.BaseResponse{},
-    } 
-    return
+	response = &DescribeTaskResultResponse{
+		BaseResponse: &tchttp.BaseResponse{},
+	}
+	return
 
 }
 
@@ -1338,49 +1987,50 @@ func NewDescribeTaskResultResponse() (response *DescribeTaskResultResponse) {
 // 查询异步任务结果
 //
 // 可能返回的错误码:
-//  INVALIDPARAMETERVALUE_TASKNOTFOUND = "InvalidParameterValue.TaskNotFound"
+//
+//	INVALIDPARAMETERVALUE_TASKNOTFOUND = "InvalidParameterValue.TaskNotFound"
 func (c *Client) DescribeTaskResult(request *DescribeTaskResultRequest) (response *DescribeTaskResultResponse, err error) {
-    return c.DescribeTaskResultWithContext(context.Background(), request)
+	return c.DescribeTaskResultWithContext(context.Background(), request)
 }
 
 // DescribeTaskResult
 // 查询异步任务结果
 //
 // 可能返回的错误码:
-//  INVALIDPARAMETERVALUE_TASKNOTFOUND = "InvalidParameterValue.TaskNotFound"
+//
+//	INVALIDPARAMETERVALUE_TASKNOTFOUND = "InvalidParameterValue.TaskNotFound"
 func (c *Client) DescribeTaskResultWithContext(ctx context.Context, request *DescribeTaskResultRequest) (response *DescribeTaskResultResponse, err error) {
-    if request == nil {
-        request = NewDescribeTaskResultRequest()
-    }
-    c.InitBaseRequest(&request.BaseRequest, "ga2", APIVersion, "DescribeTaskResult")
-    
-    if c.GetCredential() == nil {
-        return nil, errors.New("DescribeTaskResult require credential")
-    }
+	if request == nil {
+		request = NewDescribeTaskResultRequest()
+	}
+	c.InitBaseRequest(&request.BaseRequest, "ga2", APIVersion, "DescribeTaskResult")
 
-    request.SetContext(ctx)
-    
-    response = NewDescribeTaskResultResponse()
-    err = c.Send(request, response)
-    return
+	if c.GetCredential() == nil {
+		return nil, errors.New("DescribeTaskResult require credential")
+	}
+
+	request.SetContext(ctx)
+
+	response = NewDescribeTaskResultResponse()
+	err = c.Send(request, response)
+	return
 }
 
 func NewModifyAccelerateAreasRequest() (request *ModifyAccelerateAreasRequest) {
-    request = &ModifyAccelerateAreasRequest{
-        BaseRequest: &tchttp.BaseRequest{},
-    }
-    
-    request.Init().WithApiInfo("ga2", APIVersion, "ModifyAccelerateAreas")
-    
-    
-    return
+	request = &ModifyAccelerateAreasRequest{
+		BaseRequest: &tchttp.BaseRequest{},
+	}
+
+	request.Init().WithApiInfo("ga2", APIVersion, "ModifyAccelerateAreas")
+
+	return
 }
 
 func NewModifyAccelerateAreasResponse() (response *ModifyAccelerateAreasResponse) {
-    response = &ModifyAccelerateAreasResponse{
-        BaseResponse: &tchttp.BaseResponse{},
-    } 
-    return
+	response = &ModifyAccelerateAreasResponse{
+		BaseResponse: &tchttp.BaseResponse{},
+	}
+	return
 
 }
 
@@ -1388,55 +2038,113 @@ func NewModifyAccelerateAreasResponse() (response *ModifyAccelerateAreasResponse
 // 修改加速地域
 //
 // 可能返回的错误码:
-//  INVALIDPARAMETER_INPUTDUPLICATEWITHEXISTINGDATA = "InvalidParameter.InputDuplicateWithExistingData"
-//  INVALIDPARAMETER_INPUTREPEAT = "InvalidParameter.InputRepeat"
-//  INVALIDPARAMETERVALUE_RANGE = "InvalidParameterValue.Range"
-//  UNSUPPORTEDOPERATION_INSTANCESTATENOTALLOWEDOPERATE = "UnsupportedOperation.InstanceStateNotAllowedOperate"
+//
+//	INVALIDPARAMETER_INPUTDUPLICATEWITHEXISTINGDATA = "InvalidParameter.InputDuplicateWithExistingData"
+//	INVALIDPARAMETER_INPUTREPEAT = "InvalidParameter.InputRepeat"
+//	INVALIDPARAMETERVALUE_RANGE = "InvalidParameterValue.Range"
+//	UNSUPPORTEDOPERATION_INSTANCESTATENOTALLOWEDOPERATE = "UnsupportedOperation.InstanceStateNotAllowedOperate"
 func (c *Client) ModifyAccelerateAreas(request *ModifyAccelerateAreasRequest) (response *ModifyAccelerateAreasResponse, err error) {
-    return c.ModifyAccelerateAreasWithContext(context.Background(), request)
+	return c.ModifyAccelerateAreasWithContext(context.Background(), request)
 }
 
 // ModifyAccelerateAreas
 // 修改加速地域
 //
 // 可能返回的错误码:
-//  INVALIDPARAMETER_INPUTDUPLICATEWITHEXISTINGDATA = "InvalidParameter.InputDuplicateWithExistingData"
-//  INVALIDPARAMETER_INPUTREPEAT = "InvalidParameter.InputRepeat"
-//  INVALIDPARAMETERVALUE_RANGE = "InvalidParameterValue.Range"
-//  UNSUPPORTEDOPERATION_INSTANCESTATENOTALLOWEDOPERATE = "UnsupportedOperation.InstanceStateNotAllowedOperate"
+//
+//	INVALIDPARAMETER_INPUTDUPLICATEWITHEXISTINGDATA = "InvalidParameter.InputDuplicateWithExistingData"
+//	INVALIDPARAMETER_INPUTREPEAT = "InvalidParameter.InputRepeat"
+//	INVALIDPARAMETERVALUE_RANGE = "InvalidParameterValue.Range"
+//	UNSUPPORTEDOPERATION_INSTANCESTATENOTALLOWEDOPERATE = "UnsupportedOperation.InstanceStateNotAllowedOperate"
 func (c *Client) ModifyAccelerateAreasWithContext(ctx context.Context, request *ModifyAccelerateAreasRequest) (response *ModifyAccelerateAreasResponse, err error) {
-    if request == nil {
-        request = NewModifyAccelerateAreasRequest()
-    }
-    c.InitBaseRequest(&request.BaseRequest, "ga2", APIVersion, "ModifyAccelerateAreas")
-    
-    if c.GetCredential() == nil {
-        return nil, errors.New("ModifyAccelerateAreas require credential")
-    }
+	if request == nil {
+		request = NewModifyAccelerateAreasRequest()
+	}
+	c.InitBaseRequest(&request.BaseRequest, "ga2", APIVersion, "ModifyAccelerateAreas")
 
-    request.SetContext(ctx)
-    
-    response = NewModifyAccelerateAreasResponse()
-    err = c.Send(request, response)
-    return
+	if c.GetCredential() == nil {
+		return nil, errors.New("ModifyAccelerateAreas require credential")
+	}
+
+	request.SetContext(ctx)
+
+	response = NewModifyAccelerateAreasResponse()
+	err = c.Send(request, response)
+	return
+}
+
+func NewModifyAccessLogStatusRequest() (request *ModifyAccessLogStatusRequest) {
+	request = &ModifyAccessLogStatusRequest{
+		BaseRequest: &tchttp.BaseRequest{},
+	}
+
+	request.Init().WithApiInfo("ga2", APIVersion, "ModifyAccessLogStatus")
+
+	return
+}
+
+func NewModifyAccessLogStatusResponse() (response *ModifyAccessLogStatusResponse) {
+	response = &ModifyAccessLogStatusResponse{
+		BaseResponse: &tchttp.BaseResponse{},
+	}
+	return
+
+}
+
+// ModifyAccessLogStatus
+// 修改日志任务状态
+//
+// 可能返回的错误码:
+//
+//	INVALIDPARAMETERVALUE_LOGSETNOTEXIST = "InvalidParameterValue.LogsetNotExist"
+//	RESOURCENOTFOUND = "ResourceNotFound"
+//	UNSUPPORTEDOPERATION_INSTANCESTATENOTALLOWEDOPERATE = "UnsupportedOperation.InstanceStateNotAllowedOperate"
+//	UNSUPPORTEDOPERATION_NOTAUTHORIZATION = "UnsupportedOperation.NotAuthorization"
+func (c *Client) ModifyAccessLogStatus(request *ModifyAccessLogStatusRequest) (response *ModifyAccessLogStatusResponse, err error) {
+	return c.ModifyAccessLogStatusWithContext(context.Background(), request)
+}
+
+// ModifyAccessLogStatus
+// 修改日志任务状态
+//
+// 可能返回的错误码:
+//
+//	INVALIDPARAMETERVALUE_LOGSETNOTEXIST = "InvalidParameterValue.LogsetNotExist"
+//	RESOURCENOTFOUND = "ResourceNotFound"
+//	UNSUPPORTEDOPERATION_INSTANCESTATENOTALLOWEDOPERATE = "UnsupportedOperation.InstanceStateNotAllowedOperate"
+//	UNSUPPORTEDOPERATION_NOTAUTHORIZATION = "UnsupportedOperation.NotAuthorization"
+func (c *Client) ModifyAccessLogStatusWithContext(ctx context.Context, request *ModifyAccessLogStatusRequest) (response *ModifyAccessLogStatusResponse, err error) {
+	if request == nil {
+		request = NewModifyAccessLogStatusRequest()
+	}
+	c.InitBaseRequest(&request.BaseRequest, "ga2", APIVersion, "ModifyAccessLogStatus")
+
+	if c.GetCredential() == nil {
+		return nil, errors.New("ModifyAccessLogStatus require credential")
+	}
+
+	request.SetContext(ctx)
+
+	response = NewModifyAccessLogStatusResponse()
+	err = c.Send(request, response)
+	return
 }
 
 func NewModifyEndpointGroupRequest() (request *ModifyEndpointGroupRequest) {
-    request = &ModifyEndpointGroupRequest{
-        BaseRequest: &tchttp.BaseRequest{},
-    }
-    
-    request.Init().WithApiInfo("ga2", APIVersion, "ModifyEndpointGroup")
-    
-    
-    return
+	request = &ModifyEndpointGroupRequest{
+		BaseRequest: &tchttp.BaseRequest{},
+	}
+
+	request.Init().WithApiInfo("ga2", APIVersion, "ModifyEndpointGroup")
+
+	return
 }
 
 func NewModifyEndpointGroupResponse() (response *ModifyEndpointGroupResponse) {
-    response = &ModifyEndpointGroupResponse{
-        BaseResponse: &tchttp.BaseResponse{},
-    } 
-    return
+	response = &ModifyEndpointGroupResponse{
+		BaseResponse: &tchttp.BaseResponse{},
+	}
+	return
 
 }
 
@@ -1444,87 +2152,88 @@ func NewModifyEndpointGroupResponse() (response *ModifyEndpointGroupResponse) {
 // 修改终端节点组。
 //
 // 可能返回的错误码:
-//  INVALIDPARAMETER_ENDPOINTGROUPCHECKTYPEHTTPCARRYPARAMETERS = "InvalidParameter.EndpointGroupCheckTypeHttpCarryParameters"
-//  INVALIDPARAMETER_HTTPSORIGINSERVERPROTOCOLSUPPORTSPARAMETERS = "InvalidParameter.HttpsOriginServerProtocolSupportsParameters"
-//  INVALIDPARAMETER_INPUTMUSTEXISTONE = "InvalidParameter.InputMustExistOne"
-//  INVALIDPARAMETER_INPUTOUTOFRANGE = "InvalidParameter.InputOutOfRange"
-//  INVALIDPARAMETER_INPUTREPEAT = "InvalidParameter.InputRepeat"
-//  INVALIDPARAMETER_ONLYENDPOINTGROUPCHECKTYPEHTTPCARRYPARAMETERS = "InvalidParameter.OnlyEndpointGroupCheckTypeHttpCarryParameters"
-//  INVALIDPARAMETER_TRANSPORTLAYERENDPOINTGROUPCANNOTCARRYPARAMETERS = "InvalidParameter.TransportLayerEndpointGroupCannotCarryParameters"
-//  INVALIDPARAMETERVALUE_INSTANCEMISMATCH = "InvalidParameterValue.InstanceMismatch"
-//  INVALIDPARAMETERVALUE_LISTENERPORTNOTEQUAL = "InvalidParameterValue.ListenerPortNotEqual"
-//  INVALIDPARAMETERVALUE_MALFORMED = "InvalidParameterValue.Malformed"
-//  INVALIDPARAMETERVALUE_NOTWITHINPUBLICNETWORK = "InvalidParameterValue.NotWithinPublicNetwork"
-//  INVALIDPARAMETERVALUE_SPECIFICCHARACTERS = "InvalidParameterValue.SpecificCharacters"
-//  MISSINGPARAMETER_CUSTOMCHECKTYPEPARAMETER = "MissingParameter.CustomCheckTypeParameter"
-//  UNSUPPORTEDOPERATION_DEFAULTENDPOINTGROUPMODIFY = "UnsupportedOperation.DefaultEndpointGroupModify"
-//  UNSUPPORTEDOPERATION_HTTPVERSIONINCONSISTENT = "UnsupportedOperation.HttpVersionInconsistent"
-//  UNSUPPORTEDOPERATION_INSTANCENOTRUNNING = "UnsupportedOperation.InstanceNotRunning"
-//  UNSUPPORTEDOPERATION_INTERNALENDPOINTFEATURENOTENABLED = "UnsupportedOperation.InternalEndpointFeatureNotEnabled"
-//  UNSUPPORTEDOPERATION_IPV6NOTSUPPORT = "UnsupportedOperation.Ipv6NotSupport"
-//  UNSUPPORTEDOPERATION_SAMEDOMAIN = "UnsupportedOperation.SameDomain"
-//  UNSUPPORTEDOPERATION_SAMEPUBLICIP = "UnsupportedOperation.SamePublicIp"
+//
+//	INVALIDPARAMETER_ENDPOINTGROUPCHECKTYPEHTTPCARRYPARAMETERS = "InvalidParameter.EndpointGroupCheckTypeHttpCarryParameters"
+//	INVALIDPARAMETER_HTTPSORIGINSERVERPROTOCOLSUPPORTSPARAMETERS = "InvalidParameter.HttpsOriginServerProtocolSupportsParameters"
+//	INVALIDPARAMETER_INPUTMUSTEXISTONE = "InvalidParameter.InputMustExistOne"
+//	INVALIDPARAMETER_INPUTOUTOFRANGE = "InvalidParameter.InputOutOfRange"
+//	INVALIDPARAMETER_INPUTREPEAT = "InvalidParameter.InputRepeat"
+//	INVALIDPARAMETER_ONLYENDPOINTGROUPCHECKTYPEHTTPCARRYPARAMETERS = "InvalidParameter.OnlyEndpointGroupCheckTypeHttpCarryParameters"
+//	INVALIDPARAMETER_TRANSPORTLAYERENDPOINTGROUPCANNOTCARRYPARAMETERS = "InvalidParameter.TransportLayerEndpointGroupCannotCarryParameters"
+//	INVALIDPARAMETERVALUE_INSTANCEMISMATCH = "InvalidParameterValue.InstanceMismatch"
+//	INVALIDPARAMETERVALUE_LISTENERPORTNOTEQUAL = "InvalidParameterValue.ListenerPortNotEqual"
+//	INVALIDPARAMETERVALUE_MALFORMED = "InvalidParameterValue.Malformed"
+//	INVALIDPARAMETERVALUE_NOTWITHINPUBLICNETWORK = "InvalidParameterValue.NotWithinPublicNetwork"
+//	INVALIDPARAMETERVALUE_SPECIFICCHARACTERS = "InvalidParameterValue.SpecificCharacters"
+//	MISSINGPARAMETER_CUSTOMCHECKTYPEPARAMETER = "MissingParameter.CustomCheckTypeParameter"
+//	UNSUPPORTEDOPERATION_DEFAULTENDPOINTGROUPMODIFY = "UnsupportedOperation.DefaultEndpointGroupModify"
+//	UNSUPPORTEDOPERATION_HTTPVERSIONINCONSISTENT = "UnsupportedOperation.HttpVersionInconsistent"
+//	UNSUPPORTEDOPERATION_INSTANCENOTRUNNING = "UnsupportedOperation.InstanceNotRunning"
+//	UNSUPPORTEDOPERATION_INTERNALENDPOINTFEATURENOTENABLED = "UnsupportedOperation.InternalEndpointFeatureNotEnabled"
+//	UNSUPPORTEDOPERATION_IPV6NOTSUPPORT = "UnsupportedOperation.Ipv6NotSupport"
+//	UNSUPPORTEDOPERATION_SAMEDOMAIN = "UnsupportedOperation.SameDomain"
+//	UNSUPPORTEDOPERATION_SAMEPUBLICIP = "UnsupportedOperation.SamePublicIp"
 func (c *Client) ModifyEndpointGroup(request *ModifyEndpointGroupRequest) (response *ModifyEndpointGroupResponse, err error) {
-    return c.ModifyEndpointGroupWithContext(context.Background(), request)
+	return c.ModifyEndpointGroupWithContext(context.Background(), request)
 }
 
 // ModifyEndpointGroup
 // 修改终端节点组。
 //
 // 可能返回的错误码:
-//  INVALIDPARAMETER_ENDPOINTGROUPCHECKTYPEHTTPCARRYPARAMETERS = "InvalidParameter.EndpointGroupCheckTypeHttpCarryParameters"
-//  INVALIDPARAMETER_HTTPSORIGINSERVERPROTOCOLSUPPORTSPARAMETERS = "InvalidParameter.HttpsOriginServerProtocolSupportsParameters"
-//  INVALIDPARAMETER_INPUTMUSTEXISTONE = "InvalidParameter.InputMustExistOne"
-//  INVALIDPARAMETER_INPUTOUTOFRANGE = "InvalidParameter.InputOutOfRange"
-//  INVALIDPARAMETER_INPUTREPEAT = "InvalidParameter.InputRepeat"
-//  INVALIDPARAMETER_ONLYENDPOINTGROUPCHECKTYPEHTTPCARRYPARAMETERS = "InvalidParameter.OnlyEndpointGroupCheckTypeHttpCarryParameters"
-//  INVALIDPARAMETER_TRANSPORTLAYERENDPOINTGROUPCANNOTCARRYPARAMETERS = "InvalidParameter.TransportLayerEndpointGroupCannotCarryParameters"
-//  INVALIDPARAMETERVALUE_INSTANCEMISMATCH = "InvalidParameterValue.InstanceMismatch"
-//  INVALIDPARAMETERVALUE_LISTENERPORTNOTEQUAL = "InvalidParameterValue.ListenerPortNotEqual"
-//  INVALIDPARAMETERVALUE_MALFORMED = "InvalidParameterValue.Malformed"
-//  INVALIDPARAMETERVALUE_NOTWITHINPUBLICNETWORK = "InvalidParameterValue.NotWithinPublicNetwork"
-//  INVALIDPARAMETERVALUE_SPECIFICCHARACTERS = "InvalidParameterValue.SpecificCharacters"
-//  MISSINGPARAMETER_CUSTOMCHECKTYPEPARAMETER = "MissingParameter.CustomCheckTypeParameter"
-//  UNSUPPORTEDOPERATION_DEFAULTENDPOINTGROUPMODIFY = "UnsupportedOperation.DefaultEndpointGroupModify"
-//  UNSUPPORTEDOPERATION_HTTPVERSIONINCONSISTENT = "UnsupportedOperation.HttpVersionInconsistent"
-//  UNSUPPORTEDOPERATION_INSTANCENOTRUNNING = "UnsupportedOperation.InstanceNotRunning"
-//  UNSUPPORTEDOPERATION_INTERNALENDPOINTFEATURENOTENABLED = "UnsupportedOperation.InternalEndpointFeatureNotEnabled"
-//  UNSUPPORTEDOPERATION_IPV6NOTSUPPORT = "UnsupportedOperation.Ipv6NotSupport"
-//  UNSUPPORTEDOPERATION_SAMEDOMAIN = "UnsupportedOperation.SameDomain"
-//  UNSUPPORTEDOPERATION_SAMEPUBLICIP = "UnsupportedOperation.SamePublicIp"
+//
+//	INVALIDPARAMETER_ENDPOINTGROUPCHECKTYPEHTTPCARRYPARAMETERS = "InvalidParameter.EndpointGroupCheckTypeHttpCarryParameters"
+//	INVALIDPARAMETER_HTTPSORIGINSERVERPROTOCOLSUPPORTSPARAMETERS = "InvalidParameter.HttpsOriginServerProtocolSupportsParameters"
+//	INVALIDPARAMETER_INPUTMUSTEXISTONE = "InvalidParameter.InputMustExistOne"
+//	INVALIDPARAMETER_INPUTOUTOFRANGE = "InvalidParameter.InputOutOfRange"
+//	INVALIDPARAMETER_INPUTREPEAT = "InvalidParameter.InputRepeat"
+//	INVALIDPARAMETER_ONLYENDPOINTGROUPCHECKTYPEHTTPCARRYPARAMETERS = "InvalidParameter.OnlyEndpointGroupCheckTypeHttpCarryParameters"
+//	INVALIDPARAMETER_TRANSPORTLAYERENDPOINTGROUPCANNOTCARRYPARAMETERS = "InvalidParameter.TransportLayerEndpointGroupCannotCarryParameters"
+//	INVALIDPARAMETERVALUE_INSTANCEMISMATCH = "InvalidParameterValue.InstanceMismatch"
+//	INVALIDPARAMETERVALUE_LISTENERPORTNOTEQUAL = "InvalidParameterValue.ListenerPortNotEqual"
+//	INVALIDPARAMETERVALUE_MALFORMED = "InvalidParameterValue.Malformed"
+//	INVALIDPARAMETERVALUE_NOTWITHINPUBLICNETWORK = "InvalidParameterValue.NotWithinPublicNetwork"
+//	INVALIDPARAMETERVALUE_SPECIFICCHARACTERS = "InvalidParameterValue.SpecificCharacters"
+//	MISSINGPARAMETER_CUSTOMCHECKTYPEPARAMETER = "MissingParameter.CustomCheckTypeParameter"
+//	UNSUPPORTEDOPERATION_DEFAULTENDPOINTGROUPMODIFY = "UnsupportedOperation.DefaultEndpointGroupModify"
+//	UNSUPPORTEDOPERATION_HTTPVERSIONINCONSISTENT = "UnsupportedOperation.HttpVersionInconsistent"
+//	UNSUPPORTEDOPERATION_INSTANCENOTRUNNING = "UnsupportedOperation.InstanceNotRunning"
+//	UNSUPPORTEDOPERATION_INTERNALENDPOINTFEATURENOTENABLED = "UnsupportedOperation.InternalEndpointFeatureNotEnabled"
+//	UNSUPPORTEDOPERATION_IPV6NOTSUPPORT = "UnsupportedOperation.Ipv6NotSupport"
+//	UNSUPPORTEDOPERATION_SAMEDOMAIN = "UnsupportedOperation.SameDomain"
+//	UNSUPPORTEDOPERATION_SAMEPUBLICIP = "UnsupportedOperation.SamePublicIp"
 func (c *Client) ModifyEndpointGroupWithContext(ctx context.Context, request *ModifyEndpointGroupRequest) (response *ModifyEndpointGroupResponse, err error) {
-    if request == nil {
-        request = NewModifyEndpointGroupRequest()
-    }
-    c.InitBaseRequest(&request.BaseRequest, "ga2", APIVersion, "ModifyEndpointGroup")
-    
-    if c.GetCredential() == nil {
-        return nil, errors.New("ModifyEndpointGroup require credential")
-    }
+	if request == nil {
+		request = NewModifyEndpointGroupRequest()
+	}
+	c.InitBaseRequest(&request.BaseRequest, "ga2", APIVersion, "ModifyEndpointGroup")
 
-    request.SetContext(ctx)
-    
-    response = NewModifyEndpointGroupResponse()
-    err = c.Send(request, response)
-    return
+	if c.GetCredential() == nil {
+		return nil, errors.New("ModifyEndpointGroup require credential")
+	}
+
+	request.SetContext(ctx)
+
+	response = NewModifyEndpointGroupResponse()
+	err = c.Send(request, response)
+	return
 }
 
 func NewModifyForwardingPolicyRequest() (request *ModifyForwardingPolicyRequest) {
-    request = &ModifyForwardingPolicyRequest{
-        BaseRequest: &tchttp.BaseRequest{},
-    }
-    
-    request.Init().WithApiInfo("ga2", APIVersion, "ModifyForwardingPolicy")
-    
-    
-    return
+	request = &ModifyForwardingPolicyRequest{
+		BaseRequest: &tchttp.BaseRequest{},
+	}
+
+	request.Init().WithApiInfo("ga2", APIVersion, "ModifyForwardingPolicy")
+
+	return
 }
 
 func NewModifyForwardingPolicyResponse() (response *ModifyForwardingPolicyResponse) {
-    response = &ModifyForwardingPolicyResponse{
-        BaseResponse: &tchttp.BaseResponse{},
-    } 
-    return
+	response = &ModifyForwardingPolicyResponse{
+		BaseResponse: &tchttp.BaseResponse{},
+	}
+	return
 
 }
 
@@ -1532,57 +2241,58 @@ func NewModifyForwardingPolicyResponse() (response *ModifyForwardingPolicyRespon
 // 修改七层转发策略
 //
 // 可能返回的错误码:
-//  INVALIDPARAMETERVALUE_INSTANCEMISMATCH = "InvalidParameterValue.InstanceMismatch"
-//  RESOURCENOTFOUND = "ResourceNotFound"
-//  UNSUPPORTEDOPERATION_DEFAULTFORWARDINGPOLICYOPERATE = "UnsupportedOperation.DefaultForwardingPolicyOperate"
-//  UNSUPPORTEDOPERATION_INSTANCENOTRUNNING = "UnsupportedOperation.InstanceNotRunning"
-//  UNSUPPORTEDOPERATION_TRANSPORTLAYERUNSUPPORTEDOPERATEFORWARDINGPOLICY = "UnsupportedOperation.TransportLayerUnsupportedOperateForwardingPolicy"
+//
+//	INVALIDPARAMETERVALUE_INSTANCEMISMATCH = "InvalidParameterValue.InstanceMismatch"
+//	RESOURCENOTFOUND = "ResourceNotFound"
+//	UNSUPPORTEDOPERATION_DEFAULTFORWARDINGPOLICYOPERATE = "UnsupportedOperation.DefaultForwardingPolicyOperate"
+//	UNSUPPORTEDOPERATION_INSTANCENOTRUNNING = "UnsupportedOperation.InstanceNotRunning"
+//	UNSUPPORTEDOPERATION_TRANSPORTLAYERUNSUPPORTEDOPERATEFORWARDINGPOLICY = "UnsupportedOperation.TransportLayerUnsupportedOperateForwardingPolicy"
 func (c *Client) ModifyForwardingPolicy(request *ModifyForwardingPolicyRequest) (response *ModifyForwardingPolicyResponse, err error) {
-    return c.ModifyForwardingPolicyWithContext(context.Background(), request)
+	return c.ModifyForwardingPolicyWithContext(context.Background(), request)
 }
 
 // ModifyForwardingPolicy
 // 修改七层转发策略
 //
 // 可能返回的错误码:
-//  INVALIDPARAMETERVALUE_INSTANCEMISMATCH = "InvalidParameterValue.InstanceMismatch"
-//  RESOURCENOTFOUND = "ResourceNotFound"
-//  UNSUPPORTEDOPERATION_DEFAULTFORWARDINGPOLICYOPERATE = "UnsupportedOperation.DefaultForwardingPolicyOperate"
-//  UNSUPPORTEDOPERATION_INSTANCENOTRUNNING = "UnsupportedOperation.InstanceNotRunning"
-//  UNSUPPORTEDOPERATION_TRANSPORTLAYERUNSUPPORTEDOPERATEFORWARDINGPOLICY = "UnsupportedOperation.TransportLayerUnsupportedOperateForwardingPolicy"
+//
+//	INVALIDPARAMETERVALUE_INSTANCEMISMATCH = "InvalidParameterValue.InstanceMismatch"
+//	RESOURCENOTFOUND = "ResourceNotFound"
+//	UNSUPPORTEDOPERATION_DEFAULTFORWARDINGPOLICYOPERATE = "UnsupportedOperation.DefaultForwardingPolicyOperate"
+//	UNSUPPORTEDOPERATION_INSTANCENOTRUNNING = "UnsupportedOperation.InstanceNotRunning"
+//	UNSUPPORTEDOPERATION_TRANSPORTLAYERUNSUPPORTEDOPERATEFORWARDINGPOLICY = "UnsupportedOperation.TransportLayerUnsupportedOperateForwardingPolicy"
 func (c *Client) ModifyForwardingPolicyWithContext(ctx context.Context, request *ModifyForwardingPolicyRequest) (response *ModifyForwardingPolicyResponse, err error) {
-    if request == nil {
-        request = NewModifyForwardingPolicyRequest()
-    }
-    c.InitBaseRequest(&request.BaseRequest, "ga2", APIVersion, "ModifyForwardingPolicy")
-    
-    if c.GetCredential() == nil {
-        return nil, errors.New("ModifyForwardingPolicy require credential")
-    }
+	if request == nil {
+		request = NewModifyForwardingPolicyRequest()
+	}
+	c.InitBaseRequest(&request.BaseRequest, "ga2", APIVersion, "ModifyForwardingPolicy")
 
-    request.SetContext(ctx)
-    
-    response = NewModifyForwardingPolicyResponse()
-    err = c.Send(request, response)
-    return
+	if c.GetCredential() == nil {
+		return nil, errors.New("ModifyForwardingPolicy require credential")
+	}
+
+	request.SetContext(ctx)
+
+	response = NewModifyForwardingPolicyResponse()
+	err = c.Send(request, response)
+	return
 }
 
 func NewModifyForwardingRuleRequest() (request *ModifyForwardingRuleRequest) {
-    request = &ModifyForwardingRuleRequest{
-        BaseRequest: &tchttp.BaseRequest{},
-    }
-    
-    request.Init().WithApiInfo("ga2", APIVersion, "ModifyForwardingRule")
-    
-    
-    return
+	request = &ModifyForwardingRuleRequest{
+		BaseRequest: &tchttp.BaseRequest{},
+	}
+
+	request.Init().WithApiInfo("ga2", APIVersion, "ModifyForwardingRule")
+
+	return
 }
 
 func NewModifyForwardingRuleResponse() (response *ModifyForwardingRuleResponse) {
-    response = &ModifyForwardingRuleResponse{
-        BaseResponse: &tchttp.BaseResponse{},
-    } 
-    return
+	response = &ModifyForwardingRuleResponse{
+		BaseResponse: &tchttp.BaseResponse{},
+	}
+	return
 
 }
 
@@ -1590,67 +2300,68 @@ func NewModifyForwardingRuleResponse() (response *ModifyForwardingRuleResponse) 
 // 修改七层转发规则
 //
 // 可能返回的错误码:
-//  INVALIDPARAMETERVALUE_ASCIICHARACTERS = "InvalidParameterValue.AsciiCharacters"
-//  INVALIDPARAMETERVALUE_FORWARDINGRULEPATHCONFLICT = "InvalidParameterValue.ForwardingRulePathConflict"
-//  INVALIDPARAMETERVALUE_INSTANCEMISMATCH = "InvalidParameterValue.InstanceMismatch"
-//  INVALIDPARAMETERVALUE_SPECIALCHARACTERS = "InvalidParameterValue.SpecialCharacters"
-//  LIMITEXCEEDED = "LimitExceeded"
-//  MISSINGPARAMETER = "MissingParameter"
-//  RESOURCENOTFOUND = "ResourceNotFound"
-//  UNSUPPORTEDOPERATION_DEFAULTFORWARDINGPOLICYOPERATE = "UnsupportedOperation.DefaultForwardingPolicyOperate"
-//  UNSUPPORTEDOPERATION_INSTANCENOTRUNNING = "UnsupportedOperation.InstanceNotRunning"
-//  UNSUPPORTEDOPERATION_TRANSPORTLAYERUNSUPPORTEDOPERATEFORWARDINGPOLICY = "UnsupportedOperation.TransportLayerUnsupportedOperateForwardingPolicy"
+//
+//	INVALIDPARAMETERVALUE_ASCIICHARACTERS = "InvalidParameterValue.AsciiCharacters"
+//	INVALIDPARAMETERVALUE_FORWARDINGRULEPATHCONFLICT = "InvalidParameterValue.ForwardingRulePathConflict"
+//	INVALIDPARAMETERVALUE_INSTANCEMISMATCH = "InvalidParameterValue.InstanceMismatch"
+//	INVALIDPARAMETERVALUE_SPECIALCHARACTERS = "InvalidParameterValue.SpecialCharacters"
+//	LIMITEXCEEDED = "LimitExceeded"
+//	MISSINGPARAMETER = "MissingParameter"
+//	RESOURCENOTFOUND = "ResourceNotFound"
+//	UNSUPPORTEDOPERATION_DEFAULTFORWARDINGPOLICYOPERATE = "UnsupportedOperation.DefaultForwardingPolicyOperate"
+//	UNSUPPORTEDOPERATION_INSTANCENOTRUNNING = "UnsupportedOperation.InstanceNotRunning"
+//	UNSUPPORTEDOPERATION_TRANSPORTLAYERUNSUPPORTEDOPERATEFORWARDINGPOLICY = "UnsupportedOperation.TransportLayerUnsupportedOperateForwardingPolicy"
 func (c *Client) ModifyForwardingRule(request *ModifyForwardingRuleRequest) (response *ModifyForwardingRuleResponse, err error) {
-    return c.ModifyForwardingRuleWithContext(context.Background(), request)
+	return c.ModifyForwardingRuleWithContext(context.Background(), request)
 }
 
 // ModifyForwardingRule
 // 修改七层转发规则
 //
 // 可能返回的错误码:
-//  INVALIDPARAMETERVALUE_ASCIICHARACTERS = "InvalidParameterValue.AsciiCharacters"
-//  INVALIDPARAMETERVALUE_FORWARDINGRULEPATHCONFLICT = "InvalidParameterValue.ForwardingRulePathConflict"
-//  INVALIDPARAMETERVALUE_INSTANCEMISMATCH = "InvalidParameterValue.InstanceMismatch"
-//  INVALIDPARAMETERVALUE_SPECIALCHARACTERS = "InvalidParameterValue.SpecialCharacters"
-//  LIMITEXCEEDED = "LimitExceeded"
-//  MISSINGPARAMETER = "MissingParameter"
-//  RESOURCENOTFOUND = "ResourceNotFound"
-//  UNSUPPORTEDOPERATION_DEFAULTFORWARDINGPOLICYOPERATE = "UnsupportedOperation.DefaultForwardingPolicyOperate"
-//  UNSUPPORTEDOPERATION_INSTANCENOTRUNNING = "UnsupportedOperation.InstanceNotRunning"
-//  UNSUPPORTEDOPERATION_TRANSPORTLAYERUNSUPPORTEDOPERATEFORWARDINGPOLICY = "UnsupportedOperation.TransportLayerUnsupportedOperateForwardingPolicy"
+//
+//	INVALIDPARAMETERVALUE_ASCIICHARACTERS = "InvalidParameterValue.AsciiCharacters"
+//	INVALIDPARAMETERVALUE_FORWARDINGRULEPATHCONFLICT = "InvalidParameterValue.ForwardingRulePathConflict"
+//	INVALIDPARAMETERVALUE_INSTANCEMISMATCH = "InvalidParameterValue.InstanceMismatch"
+//	INVALIDPARAMETERVALUE_SPECIALCHARACTERS = "InvalidParameterValue.SpecialCharacters"
+//	LIMITEXCEEDED = "LimitExceeded"
+//	MISSINGPARAMETER = "MissingParameter"
+//	RESOURCENOTFOUND = "ResourceNotFound"
+//	UNSUPPORTEDOPERATION_DEFAULTFORWARDINGPOLICYOPERATE = "UnsupportedOperation.DefaultForwardingPolicyOperate"
+//	UNSUPPORTEDOPERATION_INSTANCENOTRUNNING = "UnsupportedOperation.InstanceNotRunning"
+//	UNSUPPORTEDOPERATION_TRANSPORTLAYERUNSUPPORTEDOPERATEFORWARDINGPOLICY = "UnsupportedOperation.TransportLayerUnsupportedOperateForwardingPolicy"
 func (c *Client) ModifyForwardingRuleWithContext(ctx context.Context, request *ModifyForwardingRuleRequest) (response *ModifyForwardingRuleResponse, err error) {
-    if request == nil {
-        request = NewModifyForwardingRuleRequest()
-    }
-    c.InitBaseRequest(&request.BaseRequest, "ga2", APIVersion, "ModifyForwardingRule")
-    
-    if c.GetCredential() == nil {
-        return nil, errors.New("ModifyForwardingRule require credential")
-    }
+	if request == nil {
+		request = NewModifyForwardingRuleRequest()
+	}
+	c.InitBaseRequest(&request.BaseRequest, "ga2", APIVersion, "ModifyForwardingRule")
 
-    request.SetContext(ctx)
-    
-    response = NewModifyForwardingRuleResponse()
-    err = c.Send(request, response)
-    return
+	if c.GetCredential() == nil {
+		return nil, errors.New("ModifyForwardingRule require credential")
+	}
+
+	request.SetContext(ctx)
+
+	response = NewModifyForwardingRuleResponse()
+	err = c.Send(request, response)
+	return
 }
 
 func NewModifyGlobalAcceleratorRequest() (request *ModifyGlobalAcceleratorRequest) {
-    request = &ModifyGlobalAcceleratorRequest{
-        BaseRequest: &tchttp.BaseRequest{},
-    }
-    
-    request.Init().WithApiInfo("ga2", APIVersion, "ModifyGlobalAccelerator")
-    
-    
-    return
+	request = &ModifyGlobalAcceleratorRequest{
+		BaseRequest: &tchttp.BaseRequest{},
+	}
+
+	request.Init().WithApiInfo("ga2", APIVersion, "ModifyGlobalAccelerator")
+
+	return
 }
 
 func NewModifyGlobalAcceleratorResponse() (response *ModifyGlobalAcceleratorResponse) {
-    response = &ModifyGlobalAcceleratorResponse{
-        BaseResponse: &tchttp.BaseResponse{},
-    } 
-    return
+	response = &ModifyGlobalAcceleratorResponse{
+		BaseResponse: &tchttp.BaseResponse{},
+	}
+	return
 
 }
 
@@ -1658,57 +2369,231 @@ func NewModifyGlobalAcceleratorResponse() (response *ModifyGlobalAcceleratorResp
 // 修改全球加速实例
 //
 // 可能返回的错误码:
-//  INVALIDPARAMETER_INPUTMUSTEXISTONE = "InvalidParameter.InputMustExistOne"
-//  UNSUPPORTEDOPERATION_ALREADYENABLECROSSBORDER = "UnsupportedOperation.AlreadyEnableCrossBorder"
-//  UNSUPPORTEDOPERATION_CROSSBORDERPROMISENOTSIGNED = "UnsupportedOperation.CrossBorderPromiseNotSigned"
-//  UNSUPPORTEDOPERATION_ENABLECROSSBORDER = "UnsupportedOperation.EnableCrossBorder"
-//  UNSUPPORTEDOPERATION_INSTANCESTATENOTALLOWEDOPERATE = "UnsupportedOperation.InstanceStateNotAllowedOperate"
+//
+//	INVALIDPARAMETER_INPUTMUSTEXISTONE = "InvalidParameter.InputMustExistOne"
+//	UNSUPPORTEDOPERATION_ALREADYENABLECROSSBORDER = "UnsupportedOperation.AlreadyEnableCrossBorder"
+//	UNSUPPORTEDOPERATION_CROSSBORDERPROMISENOTSIGNED = "UnsupportedOperation.CrossBorderPromiseNotSigned"
+//	UNSUPPORTEDOPERATION_ENABLECROSSBORDER = "UnsupportedOperation.EnableCrossBorder"
+//	UNSUPPORTEDOPERATION_INSTANCESTATENOTALLOWEDOPERATE = "UnsupportedOperation.InstanceStateNotAllowedOperate"
 func (c *Client) ModifyGlobalAccelerator(request *ModifyGlobalAcceleratorRequest) (response *ModifyGlobalAcceleratorResponse, err error) {
-    return c.ModifyGlobalAcceleratorWithContext(context.Background(), request)
+	return c.ModifyGlobalAcceleratorWithContext(context.Background(), request)
 }
 
 // ModifyGlobalAccelerator
 // 修改全球加速实例
 //
 // 可能返回的错误码:
-//  INVALIDPARAMETER_INPUTMUSTEXISTONE = "InvalidParameter.InputMustExistOne"
-//  UNSUPPORTEDOPERATION_ALREADYENABLECROSSBORDER = "UnsupportedOperation.AlreadyEnableCrossBorder"
-//  UNSUPPORTEDOPERATION_CROSSBORDERPROMISENOTSIGNED = "UnsupportedOperation.CrossBorderPromiseNotSigned"
-//  UNSUPPORTEDOPERATION_ENABLECROSSBORDER = "UnsupportedOperation.EnableCrossBorder"
-//  UNSUPPORTEDOPERATION_INSTANCESTATENOTALLOWEDOPERATE = "UnsupportedOperation.InstanceStateNotAllowedOperate"
+//
+//	INVALIDPARAMETER_INPUTMUSTEXISTONE = "InvalidParameter.InputMustExistOne"
+//	UNSUPPORTEDOPERATION_ALREADYENABLECROSSBORDER = "UnsupportedOperation.AlreadyEnableCrossBorder"
+//	UNSUPPORTEDOPERATION_CROSSBORDERPROMISENOTSIGNED = "UnsupportedOperation.CrossBorderPromiseNotSigned"
+//	UNSUPPORTEDOPERATION_ENABLECROSSBORDER = "UnsupportedOperation.EnableCrossBorder"
+//	UNSUPPORTEDOPERATION_INSTANCESTATENOTALLOWEDOPERATE = "UnsupportedOperation.InstanceStateNotAllowedOperate"
 func (c *Client) ModifyGlobalAcceleratorWithContext(ctx context.Context, request *ModifyGlobalAcceleratorRequest) (response *ModifyGlobalAcceleratorResponse, err error) {
-    if request == nil {
-        request = NewModifyGlobalAcceleratorRequest()
-    }
-    c.InitBaseRequest(&request.BaseRequest, "ga2", APIVersion, "ModifyGlobalAccelerator")
-    
-    if c.GetCredential() == nil {
-        return nil, errors.New("ModifyGlobalAccelerator require credential")
-    }
+	if request == nil {
+		request = NewModifyGlobalAcceleratorRequest()
+	}
+	c.InitBaseRequest(&request.BaseRequest, "ga2", APIVersion, "ModifyGlobalAccelerator")
 
-    request.SetContext(ctx)
-    
-    response = NewModifyGlobalAcceleratorResponse()
-    err = c.Send(request, response)
-    return
+	if c.GetCredential() == nil {
+		return nil, errors.New("ModifyGlobalAccelerator require credential")
+	}
+
+	request.SetContext(ctx)
+
+	response = NewModifyGlobalAcceleratorResponse()
+	err = c.Send(request, response)
+	return
+}
+
+func NewModifyGlobalAcceleratorAccessLogRequest() (request *ModifyGlobalAcceleratorAccessLogRequest) {
+	request = &ModifyGlobalAcceleratorAccessLogRequest{
+		BaseRequest: &tchttp.BaseRequest{},
+	}
+
+	request.Init().WithApiInfo("ga2", APIVersion, "ModifyGlobalAcceleratorAccessLog")
+
+	return
+}
+
+func NewModifyGlobalAcceleratorAccessLogResponse() (response *ModifyGlobalAcceleratorAccessLogResponse) {
+	response = &ModifyGlobalAcceleratorAccessLogResponse{
+		BaseResponse: &tchttp.BaseResponse{},
+	}
+	return
+
+}
+
+// ModifyGlobalAcceleratorAccessLog
+// 修改GA访问日志
+//
+// 可能返回的错误码:
+//
+//	INVALIDPARAMETERVALUE_EMPTY = "InvalidParameterValue.Empty"
+//	INVALIDPARAMETERVALUE_LOGSETNOTEXIST = "InvalidParameterValue.LogsetNotExist"
+//	INVALIDPARAMETERVALUE_RANGE = "InvalidParameterValue.Range"
+//	UNSUPPORTEDOPERATION_INSTANCENOTRUNNING = "UnsupportedOperation.InstanceNotRunning"
+//	UNSUPPORTEDOPERATION_NOTAUTHORIZATION = "UnsupportedOperation.NotAuthorization"
+func (c *Client) ModifyGlobalAcceleratorAccessLog(request *ModifyGlobalAcceleratorAccessLogRequest) (response *ModifyGlobalAcceleratorAccessLogResponse, err error) {
+	return c.ModifyGlobalAcceleratorAccessLogWithContext(context.Background(), request)
+}
+
+// ModifyGlobalAcceleratorAccessLog
+// 修改GA访问日志
+//
+// 可能返回的错误码:
+//
+//	INVALIDPARAMETERVALUE_EMPTY = "InvalidParameterValue.Empty"
+//	INVALIDPARAMETERVALUE_LOGSETNOTEXIST = "InvalidParameterValue.LogsetNotExist"
+//	INVALIDPARAMETERVALUE_RANGE = "InvalidParameterValue.Range"
+//	UNSUPPORTEDOPERATION_INSTANCENOTRUNNING = "UnsupportedOperation.InstanceNotRunning"
+//	UNSUPPORTEDOPERATION_NOTAUTHORIZATION = "UnsupportedOperation.NotAuthorization"
+func (c *Client) ModifyGlobalAcceleratorAccessLogWithContext(ctx context.Context, request *ModifyGlobalAcceleratorAccessLogRequest) (response *ModifyGlobalAcceleratorAccessLogResponse, err error) {
+	if request == nil {
+		request = NewModifyGlobalAcceleratorAccessLogRequest()
+	}
+	c.InitBaseRequest(&request.BaseRequest, "ga2", APIVersion, "ModifyGlobalAcceleratorAccessLog")
+
+	if c.GetCredential() == nil {
+		return nil, errors.New("ModifyGlobalAcceleratorAccessLog require credential")
+	}
+
+	request.SetContext(ctx)
+
+	response = NewModifyGlobalAcceleratorAccessLogResponse()
+	err = c.Send(request, response)
+	return
+}
+
+func NewModifyGlobalAcceleratorAclPolicyRequest() (request *ModifyGlobalAcceleratorAclPolicyRequest) {
+	request = &ModifyGlobalAcceleratorAclPolicyRequest{
+		BaseRequest: &tchttp.BaseRequest{},
+	}
+
+	request.Init().WithApiInfo("ga2", APIVersion, "ModifyGlobalAcceleratorAclPolicy")
+
+	return
+}
+
+func NewModifyGlobalAcceleratorAclPolicyResponse() (response *ModifyGlobalAcceleratorAclPolicyResponse) {
+	response = &ModifyGlobalAcceleratorAclPolicyResponse{
+		BaseResponse: &tchttp.BaseResponse{},
+	}
+	return
+
+}
+
+// ModifyGlobalAcceleratorAclPolicy
+// 修改访问控制策略状态
+//
+// 可能返回的错误码:
+//
+//	INVALIDPARAMETERVALUE_INSTANCEMISMATCH = "InvalidParameterValue.InstanceMismatch"
+//	UNSUPPORTEDOPERATION_DUPLICATEINSTANCESTATUS = "UnsupportedOperation.DuplicateInstanceStatus"
+//	UNSUPPORTEDOPERATION_INSTANCESTATENOTALLOWEDOPERATE = "UnsupportedOperation.InstanceStateNotAllowedOperate"
+func (c *Client) ModifyGlobalAcceleratorAclPolicy(request *ModifyGlobalAcceleratorAclPolicyRequest) (response *ModifyGlobalAcceleratorAclPolicyResponse, err error) {
+	return c.ModifyGlobalAcceleratorAclPolicyWithContext(context.Background(), request)
+}
+
+// ModifyGlobalAcceleratorAclPolicy
+// 修改访问控制策略状态
+//
+// 可能返回的错误码:
+//
+//	INVALIDPARAMETERVALUE_INSTANCEMISMATCH = "InvalidParameterValue.InstanceMismatch"
+//	UNSUPPORTEDOPERATION_DUPLICATEINSTANCESTATUS = "UnsupportedOperation.DuplicateInstanceStatus"
+//	UNSUPPORTEDOPERATION_INSTANCESTATENOTALLOWEDOPERATE = "UnsupportedOperation.InstanceStateNotAllowedOperate"
+func (c *Client) ModifyGlobalAcceleratorAclPolicyWithContext(ctx context.Context, request *ModifyGlobalAcceleratorAclPolicyRequest) (response *ModifyGlobalAcceleratorAclPolicyResponse, err error) {
+	if request == nil {
+		request = NewModifyGlobalAcceleratorAclPolicyRequest()
+	}
+	c.InitBaseRequest(&request.BaseRequest, "ga2", APIVersion, "ModifyGlobalAcceleratorAclPolicy")
+
+	if c.GetCredential() == nil {
+		return nil, errors.New("ModifyGlobalAcceleratorAclPolicy require credential")
+	}
+
+	request.SetContext(ctx)
+
+	response = NewModifyGlobalAcceleratorAclPolicyResponse()
+	err = c.Send(request, response)
+	return
+}
+
+func NewModifyGlobalAcceleratorAclRuleRequest() (request *ModifyGlobalAcceleratorAclRuleRequest) {
+	request = &ModifyGlobalAcceleratorAclRuleRequest{
+		BaseRequest: &tchttp.BaseRequest{},
+	}
+
+	request.Init().WithApiInfo("ga2", APIVersion, "ModifyGlobalAcceleratorAclRule")
+
+	return
+}
+
+func NewModifyGlobalAcceleratorAclRuleResponse() (response *ModifyGlobalAcceleratorAclRuleResponse) {
+	response = &ModifyGlobalAcceleratorAclRuleResponse{
+		BaseResponse: &tchttp.BaseResponse{},
+	}
+	return
+
+}
+
+// ModifyGlobalAcceleratorAclRule
+// 修改ACL规则
+//
+// 可能返回的错误码:
+//
+//	INVALIDPARAMETER_INPUTDUPLICATEWITHEXISTINGDATA = "InvalidParameter.InputDuplicateWithExistingData"
+//	INVALIDPARAMETER_INPUTMUSTEXISTONE = "InvalidParameter.InputMustExistOne"
+//	INVALIDPARAMETERVALUE_INSTANCEMISMATCH = "InvalidParameterValue.InstanceMismatch"
+//	UNSUPPORTEDOPERATION_INSTANCESTATENOTALLOWEDOPERATE = "UnsupportedOperation.InstanceStateNotAllowedOperate"
+//	UNSUPPORTEDOPERATION_REQUESTPARAMETERSERROR = "UnsupportedOperation.RequestParametersError"
+func (c *Client) ModifyGlobalAcceleratorAclRule(request *ModifyGlobalAcceleratorAclRuleRequest) (response *ModifyGlobalAcceleratorAclRuleResponse, err error) {
+	return c.ModifyGlobalAcceleratorAclRuleWithContext(context.Background(), request)
+}
+
+// ModifyGlobalAcceleratorAclRule
+// 修改ACL规则
+//
+// 可能返回的错误码:
+//
+//	INVALIDPARAMETER_INPUTDUPLICATEWITHEXISTINGDATA = "InvalidParameter.InputDuplicateWithExistingData"
+//	INVALIDPARAMETER_INPUTMUSTEXISTONE = "InvalidParameter.InputMustExistOne"
+//	INVALIDPARAMETERVALUE_INSTANCEMISMATCH = "InvalidParameterValue.InstanceMismatch"
+//	UNSUPPORTEDOPERATION_INSTANCESTATENOTALLOWEDOPERATE = "UnsupportedOperation.InstanceStateNotAllowedOperate"
+//	UNSUPPORTEDOPERATION_REQUESTPARAMETERSERROR = "UnsupportedOperation.RequestParametersError"
+func (c *Client) ModifyGlobalAcceleratorAclRuleWithContext(ctx context.Context, request *ModifyGlobalAcceleratorAclRuleRequest) (response *ModifyGlobalAcceleratorAclRuleResponse, err error) {
+	if request == nil {
+		request = NewModifyGlobalAcceleratorAclRuleRequest()
+	}
+	c.InitBaseRequest(&request.BaseRequest, "ga2", APIVersion, "ModifyGlobalAcceleratorAclRule")
+
+	if c.GetCredential() == nil {
+		return nil, errors.New("ModifyGlobalAcceleratorAclRule require credential")
+	}
+
+	request.SetContext(ctx)
+
+	response = NewModifyGlobalAcceleratorAclRuleResponse()
+	err = c.Send(request, response)
+	return
 }
 
 func NewModifyListenerRequest() (request *ModifyListenerRequest) {
-    request = &ModifyListenerRequest{
-        BaseRequest: &tchttp.BaseRequest{},
-    }
-    
-    request.Init().WithApiInfo("ga2", APIVersion, "ModifyListener")
-    
-    
-    return
+	request = &ModifyListenerRequest{
+		BaseRequest: &tchttp.BaseRequest{},
+	}
+
+	request.Init().WithApiInfo("ga2", APIVersion, "ModifyListener")
+
+	return
 }
 
 func NewModifyListenerResponse() (response *ModifyListenerResponse) {
-    response = &ModifyListenerResponse{
-        BaseResponse: &tchttp.BaseResponse{},
-    } 
-    return
+	response = &ModifyListenerResponse{
+		BaseResponse: &tchttp.BaseResponse{},
+	}
+	return
 
 }
 
@@ -1716,51 +2601,112 @@ func NewModifyListenerResponse() (response *ModifyListenerResponse) {
 // 修改监听器
 //
 // 可能返回的错误码:
-//  INVALIDPARAMETER_APPLICATIONLAYERLISTENERCANNOTCARRYPARAMETERS = "InvalidParameter.ApplicationLayerListenerCannotCarryParameters"
-//  INVALIDPARAMETER_CLIENTAFFINITYCLOSE = "InvalidParameter.ClientAffinityCLose"
-//  INVALIDPARAMETER_HTTPLISTENERCANNOTCARRYPARAMETERS = "InvalidParameter.HttpListenerCannotCarryParameters"
-//  INVALIDPARAMETER_TRANSPORTLAYERLISTENERCANNOTCARRYPARAMETERS = "InvalidParameter.TransportLayerListenerCannotCarryParameters"
-//  INVALIDPARAMETERVALUE_INSTANCEMISMATCH = "InvalidParameterValue.InstanceMismatch"
-//  INVALIDPARAMETERVALUE_MALFORMED = "InvalidParameterValue.Malformed"
-//  MISSINGPARAMETER = "MissingParameter"
-//  UNSUPPORTEDOPERATION_DUPLICATEINSTANCESTATUS = "UnsupportedOperation.DuplicateInstanceStatus"
-//  UNSUPPORTEDOPERATION_HTTPVERSIONINCONSISTENT = "UnsupportedOperation.HttpVersionInconsistent"
-//  UNSUPPORTEDOPERATION_INSTANCENOTRUNNING = "UnsupportedOperation.InstanceNotRunning"
-//  UNSUPPORTEDOPERATION_ONLYTCPLISTENERSUPPORTTOA = "UnsupportedOperation.OnlyTcpListenerSupportToa"
-//  UNSUPPORTEDOPERATION_TOAFEATURENOTENABLED = "UnsupportedOperation.TOAFeatureNotEnabled"
+//
+//	INVALIDPARAMETER_APPLICATIONLAYERLISTENERCANNOTCARRYPARAMETERS = "InvalidParameter.ApplicationLayerListenerCannotCarryParameters"
+//	INVALIDPARAMETER_CLIENTAFFINITYCLOSE = "InvalidParameter.ClientAffinityCLose"
+//	INVALIDPARAMETER_HTTPLISTENERCANNOTCARRYPARAMETERS = "InvalidParameter.HttpListenerCannotCarryParameters"
+//	INVALIDPARAMETER_TRANSPORTLAYERLISTENERCANNOTCARRYPARAMETERS = "InvalidParameter.TransportLayerListenerCannotCarryParameters"
+//	INVALIDPARAMETERVALUE_INSTANCEMISMATCH = "InvalidParameterValue.InstanceMismatch"
+//	INVALIDPARAMETERVALUE_MALFORMED = "InvalidParameterValue.Malformed"
+//	MISSINGPARAMETER = "MissingParameter"
+//	UNSUPPORTEDOPERATION_DUPLICATEINSTANCESTATUS = "UnsupportedOperation.DuplicateInstanceStatus"
+//	UNSUPPORTEDOPERATION_HTTPVERSIONINCONSISTENT = "UnsupportedOperation.HttpVersionInconsistent"
+//	UNSUPPORTEDOPERATION_INSTANCENOTRUNNING = "UnsupportedOperation.InstanceNotRunning"
+//	UNSUPPORTEDOPERATION_ONLYTCPLISTENERSUPPORTTOA = "UnsupportedOperation.OnlyTcpListenerSupportToa"
+//	UNSUPPORTEDOPERATION_TOAFEATURENOTENABLED = "UnsupportedOperation.TOAFeatureNotEnabled"
 func (c *Client) ModifyListener(request *ModifyListenerRequest) (response *ModifyListenerResponse, err error) {
-    return c.ModifyListenerWithContext(context.Background(), request)
+	return c.ModifyListenerWithContext(context.Background(), request)
 }
 
 // ModifyListener
 // 修改监听器
 //
 // 可能返回的错误码:
-//  INVALIDPARAMETER_APPLICATIONLAYERLISTENERCANNOTCARRYPARAMETERS = "InvalidParameter.ApplicationLayerListenerCannotCarryParameters"
-//  INVALIDPARAMETER_CLIENTAFFINITYCLOSE = "InvalidParameter.ClientAffinityCLose"
-//  INVALIDPARAMETER_HTTPLISTENERCANNOTCARRYPARAMETERS = "InvalidParameter.HttpListenerCannotCarryParameters"
-//  INVALIDPARAMETER_TRANSPORTLAYERLISTENERCANNOTCARRYPARAMETERS = "InvalidParameter.TransportLayerListenerCannotCarryParameters"
-//  INVALIDPARAMETERVALUE_INSTANCEMISMATCH = "InvalidParameterValue.InstanceMismatch"
-//  INVALIDPARAMETERVALUE_MALFORMED = "InvalidParameterValue.Malformed"
-//  MISSINGPARAMETER = "MissingParameter"
-//  UNSUPPORTEDOPERATION_DUPLICATEINSTANCESTATUS = "UnsupportedOperation.DuplicateInstanceStatus"
-//  UNSUPPORTEDOPERATION_HTTPVERSIONINCONSISTENT = "UnsupportedOperation.HttpVersionInconsistent"
-//  UNSUPPORTEDOPERATION_INSTANCENOTRUNNING = "UnsupportedOperation.InstanceNotRunning"
-//  UNSUPPORTEDOPERATION_ONLYTCPLISTENERSUPPORTTOA = "UnsupportedOperation.OnlyTcpListenerSupportToa"
-//  UNSUPPORTEDOPERATION_TOAFEATURENOTENABLED = "UnsupportedOperation.TOAFeatureNotEnabled"
+//
+//	INVALIDPARAMETER_APPLICATIONLAYERLISTENERCANNOTCARRYPARAMETERS = "InvalidParameter.ApplicationLayerListenerCannotCarryParameters"
+//	INVALIDPARAMETER_CLIENTAFFINITYCLOSE = "InvalidParameter.ClientAffinityCLose"
+//	INVALIDPARAMETER_HTTPLISTENERCANNOTCARRYPARAMETERS = "InvalidParameter.HttpListenerCannotCarryParameters"
+//	INVALIDPARAMETER_TRANSPORTLAYERLISTENERCANNOTCARRYPARAMETERS = "InvalidParameter.TransportLayerListenerCannotCarryParameters"
+//	INVALIDPARAMETERVALUE_INSTANCEMISMATCH = "InvalidParameterValue.InstanceMismatch"
+//	INVALIDPARAMETERVALUE_MALFORMED = "InvalidParameterValue.Malformed"
+//	MISSINGPARAMETER = "MissingParameter"
+//	UNSUPPORTEDOPERATION_DUPLICATEINSTANCESTATUS = "UnsupportedOperation.DuplicateInstanceStatus"
+//	UNSUPPORTEDOPERATION_HTTPVERSIONINCONSISTENT = "UnsupportedOperation.HttpVersionInconsistent"
+//	UNSUPPORTEDOPERATION_INSTANCENOTRUNNING = "UnsupportedOperation.InstanceNotRunning"
+//	UNSUPPORTEDOPERATION_ONLYTCPLISTENERSUPPORTTOA = "UnsupportedOperation.OnlyTcpListenerSupportToa"
+//	UNSUPPORTEDOPERATION_TOAFEATURENOTENABLED = "UnsupportedOperation.TOAFeatureNotEnabled"
 func (c *Client) ModifyListenerWithContext(ctx context.Context, request *ModifyListenerRequest) (response *ModifyListenerResponse, err error) {
-    if request == nil {
-        request = NewModifyListenerRequest()
-    }
-    c.InitBaseRequest(&request.BaseRequest, "ga2", APIVersion, "ModifyListener")
-    
-    if c.GetCredential() == nil {
-        return nil, errors.New("ModifyListener require credential")
-    }
+	if request == nil {
+		request = NewModifyListenerRequest()
+	}
+	c.InitBaseRequest(&request.BaseRequest, "ga2", APIVersion, "ModifyListener")
 
-    request.SetContext(ctx)
-    
-    response = NewModifyListenerResponse()
-    err = c.Send(request, response)
-    return
+	if c.GetCredential() == nil {
+		return nil, errors.New("ModifyListener require credential")
+	}
+
+	request.SetContext(ctx)
+
+	response = NewModifyListenerResponse()
+	err = c.Send(request, response)
+	return
+}
+
+func NewReplaceListenerAdditionalCertRequest() (request *ReplaceListenerAdditionalCertRequest) {
+	request = &ReplaceListenerAdditionalCertRequest{
+		BaseRequest: &tchttp.BaseRequest{},
+	}
+
+	request.Init().WithApiInfo("ga2", APIVersion, "ReplaceListenerAdditionalCert")
+
+	return
+}
+
+func NewReplaceListenerAdditionalCertResponse() (response *ReplaceListenerAdditionalCertResponse) {
+	response = &ReplaceListenerAdditionalCertResponse{
+		BaseResponse: &tchttp.BaseResponse{},
+	}
+	return
+
+}
+
+// ReplaceListenerAdditionalCert
+// 替换扩展证书
+//
+// 可能返回的错误码:
+//
+//	INVALIDPARAMETER_INPUTREPEAT = "InvalidParameter.InputRepeat"
+//	INVALIDPARAMETERVALUE_CERTIFICATESCONFLICT = "InvalidParameterValue.CertificatesConflict"
+//	UNSUPPORTEDOPERATION_CERTIFICATEINVALIDSTATUS = "UnsupportedOperation.CertificateInvalidStatus"
+//	UNSUPPORTEDOPERATION_DOMAINMISMATCHED = "UnsupportedOperation.DomainMismatched"
+//	UNSUPPORTEDOPERATION_INSTANCENOTRUNNING = "UnsupportedOperation.InstanceNotRunning"
+func (c *Client) ReplaceListenerAdditionalCert(request *ReplaceListenerAdditionalCertRequest) (response *ReplaceListenerAdditionalCertResponse, err error) {
+	return c.ReplaceListenerAdditionalCertWithContext(context.Background(), request)
+}
+
+// ReplaceListenerAdditionalCert
+// 替换扩展证书
+//
+// 可能返回的错误码:
+//
+//	INVALIDPARAMETER_INPUTREPEAT = "InvalidParameter.InputRepeat"
+//	INVALIDPARAMETERVALUE_CERTIFICATESCONFLICT = "InvalidParameterValue.CertificatesConflict"
+//	UNSUPPORTEDOPERATION_CERTIFICATEINVALIDSTATUS = "UnsupportedOperation.CertificateInvalidStatus"
+//	UNSUPPORTEDOPERATION_DOMAINMISMATCHED = "UnsupportedOperation.DomainMismatched"
+//	UNSUPPORTEDOPERATION_INSTANCENOTRUNNING = "UnsupportedOperation.InstanceNotRunning"
+func (c *Client) ReplaceListenerAdditionalCertWithContext(ctx context.Context, request *ReplaceListenerAdditionalCertRequest) (response *ReplaceListenerAdditionalCertResponse, err error) {
+	if request == nil {
+		request = NewReplaceListenerAdditionalCertRequest()
+	}
+	c.InitBaseRequest(&request.BaseRequest, "ga2", APIVersion, "ReplaceListenerAdditionalCert")
+
+	if c.GetCredential() == nil {
+		return nil, errors.New("ReplaceListenerAdditionalCert require credential")
+	}
+
+	request.SetContext(ctx)
+
+	response = NewReplaceListenerAdditionalCertResponse()
+	err = c.Send(request, response)
+	return
 }

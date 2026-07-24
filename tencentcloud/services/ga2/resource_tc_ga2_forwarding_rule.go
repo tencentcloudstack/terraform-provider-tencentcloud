@@ -139,6 +139,48 @@ func ResourceTencentCloudGa2ForwardingRule() *schema.Resource {
 				Description: "Origin host value. Maximum length is 80 characters. Required when `rule_actions.rule_action_type` " +
 					"is `ForwardGroup`.",
 			},
+			"response_headers": {
+				Type:     schema.TypeSet,
+				Optional: true,
+				Computed: true,
+				Description: "Origin response header list. Maximum of 5 elements. An empty set means clearing the " +
+					"configuration. Treated as an unordered set; HCL element order has no semantic meaning.",
+				Elem: &schema.Resource{
+					Schema: map[string]*schema.Schema{
+						"key": {
+							Type:        schema.TypeString,
+							Required:    true,
+							Description: "Origin response header key. Must contain only printable ASCII characters and must not contain `()<>@,;:\\\"/[ ]?={}`. Length must be between 1 and 40 characters.",
+						},
+						"value": {
+							Type:        schema.TypeString,
+							Required:    true,
+							Description: "Origin response header value. Maximum length is 128 characters. If the value contains `$`, only `$remote_addr` or `$remote_port` are supported.",
+						},
+					},
+				},
+			},
+			"hide_response_headers": {
+				Type:     schema.TypeSet,
+				Optional: true,
+				Computed: true,
+				Description: "Hide origin response header list. Maximum of 5 elements. An empty set means clearing the " +
+					"configuration. Treated as an unordered set; HCL element order has no semantic meaning.",
+				Elem: &schema.Resource{
+					Schema: map[string]*schema.Schema{
+						"key": {
+							Type:        schema.TypeString,
+							Required:    true,
+							Description: "Hide origin response header key. Maximum length is 128 characters. If the value contains `$`, only `$remote_addr` or `$remote_port` are supported.",
+						},
+						"value": {
+							Type:        schema.TypeString,
+							Optional:    true,
+							Description: "Hide origin response header value. Currently only an empty string is accepted.",
+						},
+					},
+				},
+			},
 
 			// Computed
 			"forwarding_rule_id": {
@@ -204,6 +246,14 @@ func resourceTencentCloudGa2ForwardingRuleCreate(d *schema.ResourceData, meta in
 
 	if v, ok := d.GetOk("origin_host"); ok {
 		request.OriginHost = helper.String(v.(string))
+	}
+
+	if v, ok := d.GetOk("response_headers"); ok {
+		request.ResponseHeaders = buildGa2ForwardingRuleResponseHeaders(v.(*schema.Set).List())
+	}
+
+	if v, ok := d.GetOk("hide_response_headers"); ok {
+		request.HideResponseHeaders = buildGa2ForwardingRuleHideResponseHeaders(v.(*schema.Set).List())
 	}
 
 	reqErr := resource.Retry(tccommon.WriteRetryTimeout, func() *resource.RetryError {
@@ -314,6 +364,14 @@ func resourceTencentCloudGa2ForwardingRuleRead(d *schema.ResourceData, meta inte
 		_ = d.Set("origin_host", respData.OriginHost)
 	}
 
+	if len(respData.ResponseHeaders) > 0 {
+		_ = d.Set("response_headers", flattenGa2ForwardingRuleResponseHeaders(respData.ResponseHeaders))
+	}
+
+	if len(respData.HideResponseHeaders) > 0 {
+		_ = d.Set("hide_response_headers", flattenGa2ForwardingRuleHideResponseHeaders(respData.HideResponseHeaders))
+	}
+
 	return nil
 }
 
@@ -336,6 +394,7 @@ func resourceTencentCloudGa2ForwardingRuleUpdate(d *schema.ResourceData, meta in
 	bodyFields := []string{
 		"rule_conditions", "rule_actions", "origin_headers",
 		"enable_origin_sni", "origin_sni", "origin_host",
+		"response_headers", "hide_response_headers",
 	}
 	needModify := false
 	for _, f := range bodyFields {
@@ -378,6 +437,14 @@ func resourceTencentCloudGa2ForwardingRuleUpdate(d *schema.ResourceData, meta in
 
 	if v, ok := d.GetOk("origin_host"); ok {
 		request.OriginHost = helper.String(v.(string))
+	}
+
+	if v, ok := d.GetOk("response_headers"); ok {
+		request.ResponseHeaders = buildGa2ForwardingRuleResponseHeaders(v.(*schema.Set).List())
+	}
+
+	if v, ok := d.GetOk("hide_response_headers"); ok {
+		request.HideResponseHeaders = buildGa2ForwardingRuleHideResponseHeaders(v.(*schema.Set).List())
 	}
 
 	var taskId string
@@ -608,6 +675,88 @@ func flattenGa2ForwardingRuleActions(items []*ga2v20250115.RuleAction) []map[str
 
 // flattenGa2ForwardingRuleOriginHeaders maps SDK OriginHeader slice back into the schema set payload.
 func flattenGa2ForwardingRuleOriginHeaders(items []*ga2v20250115.OriginHeader) []map[string]interface{} {
+	result := make([]map[string]interface{}, 0, len(items))
+	for _, item := range items {
+		if item == nil {
+			continue
+		}
+		m := map[string]interface{}{}
+		if item.Key != nil {
+			m["key"] = *item.Key
+		}
+		if item.Value != nil {
+			m["value"] = *item.Value
+		}
+		result = append(result, m)
+	}
+	return result
+}
+
+// buildGa2ForwardingRuleResponseHeaders converts the schema set into the SDK ResponseHeaders slice.
+func buildGa2ForwardingRuleResponseHeaders(rawList []interface{}) []*ga2v20250115.ResponseHeaders {
+	result := make([]*ga2v20250115.ResponseHeaders, 0, len(rawList))
+	for _, item := range rawList {
+		if item == nil {
+			continue
+		}
+		m := item.(map[string]interface{})
+		rh := &ga2v20250115.ResponseHeaders{}
+
+		if v, ok := m["key"].(string); ok && v != "" {
+			rh.Key = helper.String(v)
+		}
+		if v, ok := m["value"].(string); ok {
+			rh.Value = helper.String(v)
+		}
+
+		result = append(result, rh)
+	}
+	return result
+}
+
+// buildGa2ForwardingRuleHideResponseHeaders converts the schema set into the SDK HideResponseHeaders slice.
+func buildGa2ForwardingRuleHideResponseHeaders(rawList []interface{}) []*ga2v20250115.HideResponseHeaders {
+	result := make([]*ga2v20250115.HideResponseHeaders, 0, len(rawList))
+	for _, item := range rawList {
+		if item == nil {
+			continue
+		}
+		m := item.(map[string]interface{})
+		hrh := &ga2v20250115.HideResponseHeaders{}
+
+		if v, ok := m["key"].(string); ok && v != "" {
+			hrh.Key = helper.String(v)
+		}
+		if v, ok := m["value"].(string); ok {
+			hrh.Value = helper.String(v)
+		}
+
+		result = append(result, hrh)
+	}
+	return result
+}
+
+// flattenGa2ForwardingRuleResponseHeaders maps SDK ResponseHeaders slice back into the schema set payload.
+func flattenGa2ForwardingRuleResponseHeaders(items []*ga2v20250115.ResponseHeaders) []map[string]interface{} {
+	result := make([]map[string]interface{}, 0, len(items))
+	for _, item := range items {
+		if item == nil {
+			continue
+		}
+		m := map[string]interface{}{}
+		if item.Key != nil {
+			m["key"] = *item.Key
+		}
+		if item.Value != nil {
+			m["value"] = *item.Value
+		}
+		result = append(result, m)
+	}
+	return result
+}
+
+// flattenGa2ForwardingRuleHideResponseHeaders maps SDK HideResponseHeaders slice back into the schema set payload.
+func flattenGa2ForwardingRuleHideResponseHeaders(items []*ga2v20250115.HideResponseHeaders) []map[string]interface{} {
 	result := make([]map[string]interface{}, 0, len(items))
 	for _, item := range items {
 		if item == nil {
