@@ -94,6 +94,11 @@ func ResourceTencentCloudAuditTrack() *schema.Resource {
 							Optional:    true,
 							Description: "Designated to store user appid.",
 						},
+						"compress": {
+							Type:        schema.TypeInt,
+							Optional:    true,
+							Description: "Whether to compress. `1`: compress, `2`: do not compress.",
+						},
 					},
 				},
 			},
@@ -168,6 +173,9 @@ func resourceTencentCloudAuditTrackCreate(d *schema.ResourceData, meta interface
 		}
 		if v, ok := dMap["storage_app_id"]; ok && v != "" {
 			storage.StorageAppId = helper.String(v.(string))
+		}
+		if v, ok := dMap["compress"]; ok && v != 0 {
+			storage.Compress = helper.IntUint64(v.(int))
 		}
 		request.Storage = &storage
 	}
@@ -261,6 +269,9 @@ func resourceTencentCloudAuditTrackRead(d *schema.ResourceData, meta interface{}
 		if track.Storage.StorageAppId != nil {
 			storageMap["storage_app_id"] = track.Storage.StorageAppId
 		}
+		if track.Storage.Compress != nil {
+			storageMap["compress"] = track.Storage.Compress
+		}
 		_ = d.Set("storage", []interface{}{storageMap})
 	}
 
@@ -341,6 +352,9 @@ func resourceTencentCloudAuditTrackUpdate(d *schema.ResourceData, meta interface
 			}
 			if v, ok := dMap["storage_app_id"]; ok && v != "" {
 				storage.StorageAppId = helper.String(v.(string))
+			}
+			if v, ok := dMap["compress"]; ok && v != 0 {
+				storage.Compress = helper.IntUint64(v.(int))
 			}
 			request.Storage = &storage
 		}
