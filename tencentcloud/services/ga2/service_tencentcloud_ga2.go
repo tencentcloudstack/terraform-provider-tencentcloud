@@ -7,6 +7,7 @@ import (
 	"time"
 
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
+	sdkErrors "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/common/errors"
 	ga2v20250115 "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/ga2/v20250115"
 
 	tccommon "github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/common"
@@ -25,6 +26,16 @@ type Ga2Service struct {
 // NewGa2Service constructs a Ga2Service.
 func NewGa2Service(client *connectivity.TencentCloudClient) Ga2Service {
 	return Ga2Service{client: client}
+}
+
+// isGa2ResourceNotFoundError checks whether the given error is an SDK error with
+// code "ResourceNotFound". This is used by describe/read functions to distinguish
+// "resource does not exist" from transient errors.
+func isGa2ResourceNotFoundError(err error) bool {
+	if sdkErr, ok := err.(*sdkErrors.TencentCloudSDKError); ok {
+		return sdkErr.Code == "ResourceNotFound"
+	}
+	return false
 }
 
 // DescribeGa2EndpointGroupById queries an endpoint group by its three identifying IDs.
@@ -54,6 +65,9 @@ func (me *Ga2Service) DescribeGa2EndpointGroupById(ctx context.Context, gaId, li
 		err := resource.Retry(tccommon.ReadRetryTimeout, func() *resource.RetryError {
 			result, e := me.client.UseGa2V20250115Client().DescribeEndpointGroupsWithContext(ctx, request)
 			if e != nil {
+				if isGa2ResourceNotFoundError(e) {
+					return resource.NonRetryableError(e)
+				}
 				return tccommon.RetryError(e)
 			}
 
@@ -66,6 +80,9 @@ func (me *Ga2Service) DescribeGa2EndpointGroupById(ctx context.Context, gaId, li
 		})
 
 		if err != nil {
+			if isGa2ResourceNotFoundError(err) {
+				return nil, nil
+			}
 			log.Printf("[CRITAL]%s describe ga2 endpoint groups failed, reason:%+v", logId, err)
 			return nil, err
 		}
@@ -126,6 +143,9 @@ func (me *Ga2Service) DescribeGa2GlobalAcceleratorById(ctx context.Context, gaId
 		err := resource.Retry(tccommon.ReadRetryTimeout, func() *resource.RetryError {
 			result, e := me.client.UseGa2V20250115Client().DescribeGlobalAcceleratorsWithContext(ctx, request)
 			if e != nil {
+				if isGa2ResourceNotFoundError(e) {
+					return resource.NonRetryableError(e)
+				}
 				return tccommon.RetryError(e)
 			}
 
@@ -138,6 +158,9 @@ func (me *Ga2Service) DescribeGa2GlobalAcceleratorById(ctx context.Context, gaId
 		})
 
 		if err != nil {
+			if isGa2ResourceNotFoundError(err) {
+				return nil, nil
+			}
 			log.Printf("[CRITAL]%s describe ga2 global accelerators failed, reason:%+v", logId, err)
 			return nil, err
 		}
@@ -194,6 +217,9 @@ func (me *Ga2Service) DescribeGa2ListenerById(ctx context.Context, gaId, listene
 		err := resource.Retry(tccommon.ReadRetryTimeout, func() *resource.RetryError {
 			result, e := me.client.UseGa2V20250115Client().DescribeListenersWithContext(ctx, request)
 			if e != nil {
+				if isGa2ResourceNotFoundError(e) {
+					return resource.NonRetryableError(e)
+				}
 				return tccommon.RetryError(e)
 			}
 
@@ -206,6 +232,9 @@ func (me *Ga2Service) DescribeGa2ListenerById(ctx context.Context, gaId, listene
 		})
 
 		if err != nil {
+			if isGa2ResourceNotFoundError(err) {
+				return nil, nil
+			}
 			log.Printf("[CRITAL]%s describe ga2 listeners failed, reason:%+v", logId, err)
 			return nil, err
 		}
@@ -262,6 +291,9 @@ func (me *Ga2Service) DescribeGa2ForwardingRuleById(ctx context.Context, gaId, l
 		err := resource.Retry(tccommon.ReadRetryTimeout, func() *resource.RetryError {
 			result, e := me.client.UseGa2V20250115Client().DescribeForwardingRuleWithContext(ctx, request)
 			if e != nil {
+				if isGa2ResourceNotFoundError(e) {
+					return resource.NonRetryableError(e)
+				}
 				return tccommon.RetryError(e)
 			}
 
@@ -274,6 +306,9 @@ func (me *Ga2Service) DescribeGa2ForwardingRuleById(ctx context.Context, gaId, l
 		})
 
 		if err != nil {
+			if isGa2ResourceNotFoundError(err) {
+				return nil, nil
+			}
 			log.Printf("[CRITAL]%s describe ga2 forwarding rule failed, reason:%+v", logId, err)
 			return nil, err
 		}
@@ -338,6 +373,9 @@ func (me *Ga2Service) describeGa2AccelerateAreas(ctx context.Context, gaId strin
 		err := resource.Retry(tccommon.ReadRetryTimeout, func() *resource.RetryError {
 			result, e := me.client.UseGa2V20250115Client().DescribeAccelerateAreasWithContext(ctx, request)
 			if e != nil {
+				if isGa2ResourceNotFoundError(e) {
+					return resource.NonRetryableError(e)
+				}
 				return tccommon.RetryError(e)
 			}
 
@@ -350,6 +388,9 @@ func (me *Ga2Service) describeGa2AccelerateAreas(ctx context.Context, gaId strin
 		})
 
 		if err != nil {
+			if isGa2ResourceNotFoundError(err) {
+				return nil, nil
+			}
 			log.Printf("[CRITAL]%s describe ga2 accelerate areas failed, reason:%+v", logId, err)
 			return nil, err
 		}
@@ -442,6 +483,9 @@ func (me *Ga2Service) DescribeGa2ForwardingPolicyById(ctx context.Context, gaId,
 		err := resource.Retry(tccommon.ReadRetryTimeout, func() *resource.RetryError {
 			result, e := me.client.UseGa2V20250115Client().DescribeForwardingPolicyWithContext(ctx, request)
 			if e != nil {
+				if isGa2ResourceNotFoundError(e) {
+					return resource.NonRetryableError(e)
+				}
 				return tccommon.RetryError(e)
 			}
 
@@ -454,6 +498,9 @@ func (me *Ga2Service) DescribeGa2ForwardingPolicyById(ctx context.Context, gaId,
 		})
 
 		if err != nil {
+			if isGa2ResourceNotFoundError(err) {
+				return nil, nil
+			}
 			log.Printf("[CRITAL]%s describe ga2 forwarding policy failed, reason:%+v", logId, err)
 			return nil, err
 		}

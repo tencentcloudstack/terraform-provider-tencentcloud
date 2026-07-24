@@ -219,6 +219,9 @@ func resourceTencentCloudGa2GlobalAcceleratorRead(d *schema.ResourceData, meta i
 
 	if respData == nil {
 		log.Printf("[WARN]%s resource `tencentcloud_ga2_global_accelerator` [%s] not found, please check if it has been deleted.\n", logId, gaId)
+		if d.IsNewResource() {
+			return fmt.Errorf("resource `tencentcloud_ga2_global_accelerator` [%s] not found after creation", gaId)
+		}
 		d.SetId("")
 		return nil
 	}
