@@ -54,6 +54,8 @@ type scfFunctionInfo struct {
 	intranetConfig *scf.IntranetConfigIn
 
 	instanceConcurrencyConfig *scf.InstanceConcurrencyConfig
+
+	qualifier *string
 }
 
 type scfTrigger struct {
@@ -151,11 +153,14 @@ func (me *ScfService) CreateFunction(ctx context.Context, info scfFunctionInfo) 
 	return nil
 }
 
-func (me *ScfService) DescribeFunction(ctx context.Context, name, namespace string, functionId ...string) (resp *scf.GetFunctionResponse, err error) {
+func (me *ScfService) DescribeFunction(ctx context.Context, name, namespace string, qualifier string, functionId ...string) (resp *scf.GetFunctionResponse, err error) {
 	request := scf.NewGetFunctionRequest()
 	response := scf.NewGetFunctionResponse()
 	request.FunctionName = &name
 	request.Namespace = &namespace
+	if qualifier != "" {
+		request.Qualifier = &qualifier
+	}
 	if err := resource.Retry(tccommon.ReadRetryTimeout, func() *resource.RetryError {
 		ratelimit.Check(request.GetAction())
 		if len(functionId) == 1 {
@@ -340,12 +345,15 @@ func (me *ScfService) ModifyFunctionConfig(ctx context.Context, info scfFunction
 	return waitScfFunctionReady(ctx, info.name, *info.namespace, client)
 }
 
-func (me *ScfService) DeleteFunction(ctx context.Context, name, namespace string) error {
+func (me *ScfService) DeleteFunction(ctx context.Context, name, namespace, qualifier string) error {
 	client := me.client.UseScfClient()
 
 	deleteRequest := scf.NewDeleteFunctionRequest()
 	deleteRequest.FunctionName = &name
 	deleteRequest.Namespace = &namespace
+	if qualifier != "" {
+		deleteRequest.Qualifier = &qualifier
+	}
 
 	if err := resource.Retry(tccommon.WriteRetryTimeout, func() *resource.RetryError {
 		ratelimit.Check(deleteRequest.GetAction())
@@ -369,6 +377,9 @@ func (me *ScfService) DeleteFunction(ctx context.Context, name, namespace string
 	descRequest := scf.NewGetFunctionRequest()
 	descRequest.FunctionName = &name
 	descRequest.Namespace = &namespace
+	if qualifier != "" {
+		descRequest.Qualifier = &qualifier
+	}
 
 	return resource.Retry(tccommon.ReadRetryTimeout, func() *resource.RetryError {
 		ratelimit.Check(descRequest.GetAction())
@@ -520,7 +531,7 @@ func (me *ScfService) DeleteNamespace(ctx context.Context, namespace string) err
 	})
 }
 
-func (me *ScfService) CreateTriggers(ctx context.Context, functionName, namespace string, triggers []scfTrigger) error {
+func (me *ScfService) CreateTriggers(ctx context.Context, functionName, namespace, qualifier string, triggers []scfTrigger) error {
 	client := me.client.UseScfClient()
 
 	for _, trigger := range triggers {
@@ -531,6 +542,9 @@ func (me *ScfService) CreateTriggers(ctx context.Context, functionName, namespac
 		request.TriggerDesc = &trigger.triggerDesc
 		request.Namespace = &namespace
 		request.Enable = helper.String("OPEN")
+		if qualifier != "" {
+			request.Qualifier = &qualifier
+		}
 
 		if err := resource.Retry(tccommon.WriteRetryTimeout, func() *resource.RetryError {
 			ratelimit.Check(request.GetAction())
@@ -547,7 +561,7 @@ func (me *ScfService) CreateTriggers(ctx context.Context, functionName, namespac
 	return nil
 }
 
-func (me *ScfService) DeleteTriggers(ctx context.Context, functionName, namespace string, triggers []scfTrigger) error {
+func (me *ScfService) DeleteTriggers(ctx context.Context, functionName, namespace, qualifier string, triggers []scfTrigger) error {
 	client := me.client.UseScfClient()
 
 	for _, trigger := range triggers {
@@ -557,6 +571,9 @@ func (me *ScfService) DeleteTriggers(ctx context.Context, functionName, namespac
 		request.TriggerName = &trigger.name
 		request.Type = &trigger.triggerType
 		request.TriggerDesc = &trigger.triggerDesc
+		if qualifier != "" {
+			request.Qualifier = &qualifier
+		}
 
 		if err := resource.Retry(tccommon.WriteRetryTimeout, func() *resource.RetryError {
 			ratelimit.Check(request.GetAction())

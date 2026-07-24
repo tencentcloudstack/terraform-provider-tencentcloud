@@ -141,6 +141,12 @@ func ResourceTencentCloudScfFunction() *schema.Resource {
 				ForceNew:    true,
 				Description: "Namespace of the SCF function, default is `default`.",
 			},
+			"qualifier": {
+				Type:        schema.TypeString,
+				Optional:    true,
+				Computed:    true,
+				Description: "Qualifier of the SCF function, indicates the version or alias of the function. When specified, the GetFunction, DeleteFunction, CreateTrigger and DeleteTrigger APIs will operate on the specified version/alias. If not specified, the default `$LATEST` version will be used. Note: when `qualifier` is set to a specific version, `DeleteFunction` will only delete that version.",
+			},
 			"role": {
 				Type:        schema.TypeString,
 				Optional:    true,
@@ -986,6 +992,8 @@ func resourceTencentCloudScfFunctionCreate(d *schema.ResourceData, m interface{}
 		}
 	}
 
+	qualifier := d.Get("qualifier").(string)
+
 	if raw, ok := d.GetOk("triggers"); ok {
 		set := raw.(*schema.Set)
 		triggers := make([]scfTrigger, 0, set.Len())
@@ -1008,13 +1016,13 @@ func resourceTencentCloudScfFunctionCreate(d *schema.ResourceData, m interface{}
 			})
 		}
 
-		if err := scfService.CreateTriggers(ctx, functionInfo.name, *functionInfo.namespace, triggers); err != nil {
+		if err := scfService.CreateTriggers(ctx, functionInfo.name, *functionInfo.namespace, qualifier, triggers); err != nil {
 			log.Printf("[CRITAL]%s create triggers failed: %+v", logId, err)
 			return err
 		}
 	}
 
-	funcResp, err := scfService.DescribeFunction(ctx, functionInfo.name, *functionInfo.namespace)
+	funcResp, err := scfService.DescribeFunction(ctx, functionInfo.name, *functionInfo.namespace, qualifier)
 	if err != nil {
 		log.Printf("[CRITAL]%s get function id failed: %+v", logId, err)
 		return err
@@ -1045,7 +1053,8 @@ func resourceTencentCloudScfFunctionRead(d *schema.ResourceData, m interface{}) 
 	namespace, name := split[0], split[1]
 
 	functionId := d.Get("function_id").(string)
-	response, err := service.DescribeFunction(ctx, name, namespace, functionId)
+	qualifier := d.Get("qualifier").(string)
+	response, err := service.DescribeFunction(ctx, name, namespace, qualifier, functionId)
 	if err != nil {
 		log.Printf("[CRITAL]%s read function failed: %+v", logId, err)
 	}
@@ -1079,6 +1088,9 @@ func resourceTencentCloudScfFunctionRead(d *schema.ResourceData, m interface{}) 
 	_ = d.Set("func_type", resp.Type)
 	_ = d.Set("l5_enable", *resp.L5Enable == "TRUE")
 	_ = d.Set("function_id", resp.FunctionId)
+	if resp.Qualifier != nil {
+		_ = d.Set("qualifier", resp.Qualifier)
+	}
 
 	tags := make(map[string]string, len(resp.Tags))
 	for _, tag := range resp.Tags {
@@ -1720,7 +1732,7 @@ func resourceTencentCloudScfFunctionUpdate(d *schema.ResourceData, m interface{}
 				triggerDesc: tg["trigger_desc"].(string),
 			})
 		}
-		if err := scfService.DeleteTriggers(ctx, name, namespace, oldTriggers); err != nil {
+		if err := scfService.DeleteTriggers(ctx, name, namespace, d.Get("qualifier").(string), oldTriggers); err != nil {
 			log.Printf("[CRITAL]%s delete old triggers failed: %+v", logId, err)
 			return err
 		}
@@ -1743,7 +1755,7 @@ func resourceTencentCloudScfFunctionUpdate(d *schema.ResourceData, m interface{}
 				triggerDesc: tg["trigger_desc"].(string),
 			})
 		}
-		if err := scfService.CreateTriggers(ctx, name, namespace, newTriggers); err != nil {
+		if err := scfService.CreateTriggers(ctx, name, namespace, d.Get("qualifier").(string), newTriggers); err != nil {
 			log.Printf("[CRITAL]%s create new triggers failed: %+v", logId, err)
 			return err
 		}
@@ -1751,7 +1763,7 @@ func resourceTencentCloudScfFunctionUpdate(d *schema.ResourceData, m interface{}
 	}
 
 	if d.HasChange("tags") {
-		resp, err := scfService.DescribeFunction(ctx, functionInfo.name, *functionInfo.namespace)
+		resp, err := scfService.DescribeFunction(ctx, functionInfo.name, *functionInfo.namespace, d.Get("qualifier").(string))
 		if err != nil {
 			log.Printf("[CRITAL]%s get function id failed: %+v", logId, err)
 			return err
@@ -1793,7 +1805,7 @@ func resourceTencentCloudScfFunctionDelete(d *schema.ResourceData, m interface{}
 	}
 	namespace, name := split[0], split[1]
 
-	return service.DeleteFunction(ctx, name, namespace)
+	return service.DeleteFunction(ctx, name, namespace, d.Get("qualifier").(string))
 }
 
 // normalizeImageUri aligns the API-returned image URI (always Format C: registry/repo:tag@sha256:digest)
