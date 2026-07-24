@@ -1,3 +1,23 @@
 ```release-note:enhancement
-resource/tencentcloud_ga2_forwarding_policy: handle ResourceNotFound error in Read function by logging warning and clearing resource ID
+resource/tencentcloud_ga2_accelerate_area: prevent SetId("") for newly created resources when not found in Read
+```
+
+```release-note:enhancement
+resource/tencentcloud_ga2_endpoint_group: prevent SetId("") for newly created resources when not found in Read
+```
+
+```release-note:enhancement
+resource/tencentcloud_ga2_forwarding_policy: prevent SetId("") for newly created resources when not found in Read
+```
+
+```release-note:enhancement
+resource/tencentcloud_ga2_forwarding_rule: prevent SetId("") for newly created resources when not found in Read
+```
+
+```release-note:enhancement
+resource/tencentcloud_ga2_global_accelerator: prevent SetId("") for newly created resources when not found in Read
+```
+
+```release-note:enhancement
+resource/tencentcloud_ga2_listener: prevent SetId("") for newly created resources when not found in Read
 ```
