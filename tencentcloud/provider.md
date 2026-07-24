@@ -1059,6 +1059,7 @@ tencentcloud_scf_namespace
 tencentcloud_scf_layer
 tencentcloud_scf_function_alias
 tencentcloud_scf_trigger_config
+tencentcloud_scf_trigger
 tencentcloud_scf_custom_domain
 
 SQLServer

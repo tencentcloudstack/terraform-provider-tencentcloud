@@ -1800,6 +1800,7 @@ func Provider() *schema.Provider {
 			"tencentcloud_scf_layer":                                                                scf.ResourceTencentCloudScfLayer(),
 			"tencentcloud_scf_function_alias":                                                       scf.ResourceTencentCloudScfFunctionAlias(),
 			"tencentcloud_scf_trigger_config":                                                       scf.ResourceTencentCloudScfTriggerConfig(),
+			"tencentcloud_scf_trigger":                                                              scf.ResourceTencentCloudScfTrigger(),
 			"tencentcloud_scf_custom_domain":                                                        scf.ResourceTencentCloudScfCustomDomain(),
 			"tencentcloud_tcaplus_cluster":                                                          tcaplusdb.ResourceTencentCloudTcaplusCluster(),
 			"tencentcloud_tcaplus_tablegroup":                                                       tcaplusdb.ResourceTencentCloudTcaplusTableGroup(),
