@@ -382,7 +382,7 @@ func buildGa2AcceleratorArea(d *schema.ResourceData, areaId, step string) *ga2v2
 			area.AccelerateRegion = helper.String(v.(string))
 		}
 
-		if v, ok := d.GetOk("bandwidth"); ok {
+		if v, ok := d.GetOkExists("bandwidth"); ok {
 			area.Bandwidth = helper.IntUint64(v.(int))
 		}
 
@@ -402,10 +402,8 @@ func buildGa2AcceleratorArea(d *schema.ResourceData, areaId, step string) *ga2v2
 			area.AccelerateRegion = helper.String(v.(string))
 		}
 
-		if d.HasChange("bandwidth") {
-			if v, ok := d.GetOk("bandwidth"); ok {
-				area.Bandwidth = helper.IntUint64(v.(int))
-			}
+		if v, ok := d.GetOkExists("bandwidth"); ok {
+			area.Bandwidth = helper.IntUint64(v.(int))
 		}
 
 		if v, ok := d.GetOk("isp_type"); ok {
