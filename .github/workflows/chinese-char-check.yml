@@ -1,0 +1,78 @@
+name: "Check Chinese Characters in PR Changes"
+
+on:
+  pull_request:
+    types: [opened, edited, synchronize]
+    paths:
+      - "tencentcloud/services/**"
+      - "website/**"
+
+permissions:
+  contents: read
+
+jobs:
+  chinese-check:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Get changed files (safe format)
+        id: changed
+        uses: yumemi-inc/changed-files@v3
+        with:
+          patterns: |
+            tencentcloud/services/**
+            website/**
+          format: json
+
+      - name: No relevant files - skip check
+        if: steps.changed.outputs.exists != 'true'
+        run: |
+          echo "ℹ️ No changed files in target directories (tencentcloud/services/ or website/)"
+          echo "Chinese character check skipped."
+
+      - name: Check for Chinese characters
+        if: steps.changed.outputs.exists == 'true'
+        run: |
+          files=$(echo '${{ steps.changed.outputs.files }}' | jq -r '.[]')
+          found=false
+          violations="chinese_violations.txt"
+          > "$violations"
+
+          export LC_ALL=en_US.UTF-8
+
+          for file in $files; do
+            [ -z "$file" ] && continue
+            [ ! -f "$file" ] && continue
+            if file --mime-type "$file" | grep -q 'binary/'; then
+              echo "⚠️ Skipping binary file: $file"
+              continue
+            fi
+
+            if grep -Pn -o "[\u4e00-\u9fff\u3400-\u4dbf\uf900-\ufaff\u3000-\u303f\uff00-\uffef]" "$file"; then
+              echo -e "\n❌ Chinese characters found in file: $file" | tee -a "$violations"
+              grep -Pn "[\u4e00-\u9fff\u3400-\u4dbf\uf900-\ufaff\u3000-\u303f\uff00-\uffef]" "$file" | tee -a "$violations"
+              echo -e "\n" | tee -a "$violations"
+              found=true
+            fi
+          done
+
+          if $found; then
+            echo -e "\n🚫 Validation failed: Chinese characters detected in PR!"
+            echo "=================================================="
+            cat "$violations"
+            echo "=================================================="
+            echo -e "\n📋 Action Required: Remove all Chinese characters from the listed files/lines."
+            exit 1
+          else
+            echo -e "\n✅ Validation passed: No Chinese characters found in changed files!"
+          fi
+
+      - name: Cleanup
+        if: always()
+        run: rm -f chinese_violations.txt
+  
