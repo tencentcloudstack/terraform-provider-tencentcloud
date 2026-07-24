@@ -1,3 +1,0 @@
-```release-note:enhancement
-ga2: add ResourceNotFound error handling in all describe API calls and improve Read method to skip SetId("") when IsNewResource() is true
-```

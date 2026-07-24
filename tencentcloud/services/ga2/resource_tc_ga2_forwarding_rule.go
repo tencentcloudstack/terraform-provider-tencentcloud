@@ -263,6 +263,11 @@ func resourceTencentCloudGa2ForwardingRuleRead(d *schema.ResourceData, meta inte
 
 	respData, err := service.DescribeGa2ForwardingRuleById(ctx, gaId, listenerId, policyId, ruleId)
 	if err != nil {
+		if !d.IsNewResource() && IsGa2ResourceNotFoundError(err) {
+			log.Printf("[WARN]%s resource `tencentcloud_ga2_forwarding_rule` [%s] not found, please check if it has been deleted.\n", logId, d.Id())
+			d.SetId("")
+			return nil
+		}
 		return err
 	}
 

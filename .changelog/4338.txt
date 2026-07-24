@@ -6,3 +6,7 @@ resource/tencentcloud_ga2_endpoint_group: handle ResourceNotFound error and empt
 resource/tencentcloud_ga2_accelerate_area: handle ResourceNotFound error and empty response in Read function with IsNewResource guard
 resource/tencentcloud_ga2_forwarding_rule: handle ResourceNotFound error and empty response in Read function with IsNewResource guard
 ```
+
+```release-note:enhancement
+ga2: add ResourceNotFound error handling in all describe API calls (service layer) and add HandleGa2ReadNotFound common helper for Read methods
+```

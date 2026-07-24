@@ -195,6 +195,11 @@ func resourceTencentCloudGa2AccelerateAreaRead(d *schema.ResourceData, meta inte
 
 	respData, err := service.DescribeGa2AccelerateAreaById(ctx, gaId, areaId)
 	if err != nil {
+		if !d.IsNewResource() && IsGa2ResourceNotFoundError(err) {
+			log.Printf("[WARN]%s resource `tencentcloud_ga2_accelerate_area` [%s] not found, please check if it has been deleted.\n", logId, d.Id())
+			d.SetId("")
+			return nil
+		}
 		return err
 	}
 
