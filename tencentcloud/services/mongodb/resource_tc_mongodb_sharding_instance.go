@@ -56,6 +56,49 @@ func ResourceTencentCloudMongodbShardingInstance() *schema.Resource {
 			Computed:    true,
 			Description: "The availability zone to which the Hidden node belongs. This parameter is required in cross-AZ instance deployment.",
 		},
+		"add_node_list": {
+			Type:        schema.TypeList,
+			Optional:    true,
+			Description: "Add node list. Node type and availability zone information.",
+			Elem: &schema.Resource{
+				Schema: map[string]*schema.Schema{
+					"role": {
+						Type:        schema.TypeString,
+						Required:    true,
+						Description: "Node role to add. Valid values: `SECONDARY` (Mongod node), `READONLY` (read-only node), `MONGOS` (Mongos node).",
+					},
+					"zone": {
+						Type:        schema.TypeString,
+						Required:    true,
+						Description: "The availability zone for the new node.",
+					},
+				},
+			},
+		},
+		"remove_node_list": {
+			Type:        schema.TypeList,
+			Optional:    true,
+			Description: "Remove node list. Node type, node name, and availability zone information. Note: Based on the consistency principle of each shard node in a sharding instance, when removing nodes, you only need to specify the node corresponding to shard 0, e.g., `cmgo-xxxx_0-node-readonly0` will remove the first readonly node of each shard.",
+			Elem: &schema.Resource{
+				Schema: map[string]*schema.Schema{
+					"role": {
+						Type:        schema.TypeString,
+						Required:    true,
+						Description: "Node role to remove. Valid values: `SECONDARY` (Mongod secondary node), `READONLY` (read-only node), `MONGOS` (Mongos node).",
+					},
+					"node_name": {
+						Type:        schema.TypeString,
+						Required:    true,
+						Description: "Node ID to remove. For sharding cluster, specify the node name corresponding to one shard group. For example: `cmgo-xxxx_0-node-readonly0`.",
+					},
+					"zone": {
+						Type:        schema.TypeString,
+						Required:    true,
+						Description: "The availability zone of the node to remove.",
+					},
+				},
+			},
+		},
 	}
 	basic := TencentMongodbBasicInfo()
 	for k, v := range basic {
@@ -166,6 +209,62 @@ func mongodbAllShardingInstanceReqSet(requestInter interface{}, d *schema.Resour
 		value.FieldByName("HiddenZone").Set(reflect.ValueOf(helper.String(v.(string))))
 	}
 	return nil
+}
+
+func mongodbShardingNodeListItemKey(node interface{}, fields ...string) string {
+	nodeMap, ok := node.(map[string]interface{})
+	if !ok {
+		return fmt.Sprintf("%v", node)
+	}
+
+	values := make([]string, 0, len(fields))
+	for _, field := range fields {
+		value, _ := nodeMap[field].(string)
+		values = append(values, value)
+	}
+	return strings.Join(values, "|")
+}
+
+func mongodbShardingAddNodeListItemKey(node interface{}) string {
+	return mongodbShardingNodeListItemKey(node, "role", "zone")
+}
+
+func mongodbShardingRemoveNodeListItemKey(node interface{}) string {
+	return mongodbShardingNodeListItemKey(node, "role", "node_name", "zone")
+}
+
+func mongodbShardingBuildNodeListCounter(nodeList []interface{}, itemKeyFunc func(interface{}) string) map[string]int {
+	counter := make(map[string]int, len(nodeList))
+	for _, item := range nodeList {
+		counter[itemKeyFunc(item)]++
+	}
+	return counter
+}
+
+func mongodbShardingIsNodeListSubset(subset, superset []interface{}, itemKeyFunc func(interface{}) string) bool {
+	supersetCounter := mongodbShardingBuildNodeListCounter(superset, itemKeyFunc)
+	for _, item := range subset {
+		itemKey := itemKeyFunc(item)
+		if supersetCounter[itemKey] <= 0 {
+			return false
+		}
+		supersetCounter[itemKey]--
+	}
+	return true
+}
+
+func mongodbShardingDiffNodeList(oldList, newList []interface{}, itemKeyFunc func(interface{}) string) []interface{} {
+	oldCounter := mongodbShardingBuildNodeListCounter(oldList, itemKeyFunc)
+	changedNodeList := make([]interface{}, 0)
+	for _, item := range newList {
+		itemKey := itemKeyFunc(item)
+		if oldCounter[itemKey] > 0 {
+			oldCounter[itemKey]--
+			continue
+		}
+		changedNodeList = append(changedNodeList, item)
+	}
+	return changedNodeList
 }
 
 func mongodbCreateShardingInstanceByUse(ctx context.Context, d *schema.ResourceData, meta interface{}) error {
@@ -428,7 +527,7 @@ func resourceMongodbShardingInstanceUpdate(d *schema.ResourceData, meta interfac
 	region := client.Region
 
 	d.Partial(true)
-	if d.HasChange("mongos_node_num") {
+	if d.HasChange("mongos_node_num") && !(d.HasChange("add_node_list") || d.HasChange("remove_node_list")) {
 		return fmt.Errorf("setting of the field[mongos_node_num] does not support update")
 	}
 	if d.HasChange("available_zone") || d.HasChange("availability_zone_list") || d.HasChange("hidden_zone") {
@@ -569,7 +668,7 @@ func resourceMongodbShardingInstanceUpdate(d *schema.ResourceData, meta interfac
 			}
 		}
 	}
-	if d.HasChange("memory") || d.HasChange("volume") {
+	if d.HasChange("memory") || d.HasChange("volume") || d.HasChange("add_node_list") || d.HasChange("remove_node_list") {
 		memory := d.Get("memory").(int)
 		volume := d.Get("volume").(int)
 		params := make(map[string]interface{})
@@ -579,31 +678,90 @@ func resourceMongodbShardingInstanceUpdate(d *schema.ResourceData, meta interfac
 			inMaintenance = v.(int)
 			params["in_maintenance"] = v.(int)
 		}
-		_, err := mongodbService.UpgradeInstance(ctx, instanceId, memory, volume, params)
-		if err != nil {
-			return err
+
+		if d.HasChange("add_node_list") {
+			oldAddNodeListInterface, newAddNodeListInterface := d.GetChange("add_node_list")
+			oldAddNodeList, _ := oldAddNodeListInterface.([]interface{})
+			newAddNodeList, _ := newAddNodeListInterface.([]interface{})
+
+			switch {
+			case len(oldAddNodeList) == len(newAddNodeList):
+				if len(newAddNodeList) > 0 {
+					params["add_node_list"] = newAddNodeList
+				}
+			case len(oldAddNodeList) > len(newAddNodeList):
+				if mongodbShardingIsNodeListSubset(newAddNodeList, oldAddNodeList, mongodbShardingAddNodeListItemKey) {
+					_ = d.Set("add_node_list", newAddNodeList)
+				} else if len(newAddNodeList) > 0 {
+					params["add_node_list"] = newAddNodeList
+				}
+			default:
+				changedAddNodeList := mongodbShardingDiffNodeList(oldAddNodeList, newAddNodeList, mongodbShardingAddNodeListItemKey)
+				if len(changedAddNodeList) > 0 {
+					params["add_node_list"] = changedAddNodeList
+				}
+			}
 		}
 
-		// it will take time to wait for memory and volume change even describe request succeeded even the status returned in describe response is running
-		if inMaintenance == 0 {
-			errUpdate := resource.Retry(20*tccommon.ReadRetryTimeout, func() *resource.RetryError {
-				infos, has, e := mongodbService.DescribeInstanceById(ctx, instanceId)
-				if e != nil {
-					return resource.NonRetryableError(e)
-				}
-				if !has {
-					return resource.NonRetryableError(fmt.Errorf("[CRITAL]%s updating mongodb sharding instance failed, instance doesn't exist", logId))
-				}
+		if d.HasChange("remove_node_list") {
+			oldRemoveNodeListInterface, newRemoveNodeListInterface := d.GetChange("remove_node_list")
+			oldRemoveNodeList, _ := oldRemoveNodeListInterface.([]interface{})
+			newRemoveNodeList, _ := newRemoveNodeListInterface.([]interface{})
 
-				memoryDes := *infos.Memory / 1024 / (*infos.ReplicationSetNum)
-				volumeDes := *infos.Volume / 1024 / (*infos.ReplicationSetNum)
-				if memory != int(memoryDes) || volume != int(volumeDes) {
-					return resource.RetryableError(fmt.Errorf("[CRITAL] updating mongodb sharding instance, current memory and volume values: %d, %d, waiting for them becoming new value: %d, %d", memoryDes, volumeDes, d.Get("memory").(int), d.Get("volume").(int)))
+			switch {
+			case len(oldRemoveNodeList) == len(newRemoveNodeList):
+				if len(newRemoveNodeList) > 0 {
+					params["remove_node_list"] = newRemoveNodeList
 				}
-				return nil
-			})
-			if errUpdate != nil {
-				return errUpdate
+			case len(oldRemoveNodeList) > len(newRemoveNodeList):
+				if mongodbShardingIsNodeListSubset(newRemoveNodeList, oldRemoveNodeList, mongodbShardingRemoveNodeListItemKey) {
+					_ = d.Set("remove_node_list", newRemoveNodeList)
+				} else if len(newRemoveNodeList) > 0 {
+					params["remove_node_list"] = newRemoveNodeList
+				}
+			default:
+				changedRemoveNodeList := mongodbShardingDiffNodeList(oldRemoveNodeList, newRemoveNodeList, mongodbShardingRemoveNodeListItemKey)
+				if len(changedRemoveNodeList) > 0 {
+					params["remove_node_list"] = changedRemoveNodeList
+				}
+			}
+		}
+
+		needUpgrade := d.HasChange("memory") || d.HasChange("volume")
+		if _, ok := params["add_node_list"]; ok {
+			needUpgrade = true
+		}
+		if _, ok := params["remove_node_list"]; ok {
+			needUpgrade = true
+		}
+
+		if needUpgrade {
+			_, err := mongodbService.UpgradeInstance(ctx, instanceId, memory, volume, params)
+			if err != nil {
+				return err
+			}
+
+			// it will take time to wait for memory and volume change even describe request succeeded even the status returned in describe response is running
+			if inMaintenance == 0 {
+				errUpdate := resource.Retry(20*tccommon.ReadRetryTimeout, func() *resource.RetryError {
+					infos, has, e := mongodbService.DescribeInstanceById(ctx, instanceId)
+					if e != nil {
+						return resource.NonRetryableError(e)
+					}
+					if !has {
+						return resource.NonRetryableError(fmt.Errorf("[CRITAL]%s updating mongodb sharding instance failed, instance doesn't exist", logId))
+					}
+
+					memoryDes := *infos.Memory / 1024 / (*infos.ReplicationSetNum)
+					volumeDes := *infos.Volume / 1024 / (*infos.ReplicationSetNum)
+					if memory != int(memoryDes) || volume != int(volumeDes) {
+						return resource.RetryableError(fmt.Errorf("[CRITAL] updating mongodb sharding instance, current memory and volume values: %d, %d, waiting for them becoming new value: %d, %d", memoryDes, volumeDes, d.Get("memory").(int), d.Get("volume").(int)))
+					}
+					return nil
+				})
+				if errUpdate != nil {
+					return errUpdate
+				}
 			}
 		}
 	}
