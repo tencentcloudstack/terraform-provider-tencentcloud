@@ -1,3 +1,14 @@
+## 1.83.14(July 24, 2026)
+
+ENHANCEMENTS:
+
+* resource/tencentcloud_cls_cloud_product_log_task_v2: update doc ([#4326](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/4326))
+* resource/tencentcloud_cynosdb_cluster: support `instance_name` modification via ModifyInstanceName API, update field descriptions for `instance_name` and `ro_group_sg` ([#4323](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/4323))
+* resource/tencentcloud_cynosdb_cluster_v2: support `instance_name` modification via ModifyInstanceName API ([#4323](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/4323))
+* resource/tencentcloud_mongodb_instance: support `cpu` parameter to manage the CPU core count during instance configuration changes ([#4325](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/4325))
+* resource/tencentcloud_mongodb_sharding_instance: support add_node_list and remove_node_list parameters for dynamic node topology management ([#4252](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/4252))
+* resource/tencentcloud_teo_bind_security_template: replace read API with DescribeWebSecurityTemplates and add unit tests ([#4261](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/4261))
+
 ## 1.83.13(July 20, 2026)
 
 ENHANCEMENTS:
