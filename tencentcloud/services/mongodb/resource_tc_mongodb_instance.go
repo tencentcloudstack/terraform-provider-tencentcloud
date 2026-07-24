@@ -50,6 +50,12 @@ func ResourceTencentCloudMongodbInstance() *schema.Resource {
 			Computed:    true,
 			Description: "The number of nodes in each replica set. Default value: 3.",
 		},
+		"cpu": {
+			Type:        schema.TypeInt,
+			Optional:    true,
+			Computed:    true,
+			Description: "The CPU core count of the MongoDB instance after the configuration change. Unit: C. When this parameter is empty, the current CPU size of the instance is used by default. The supported CPU specifications can be obtained through the DescribeSpecInfo API.",
+		},
 		"add_node_list": {
 			Type:        schema.TypeList,
 			Optional:    true,
@@ -165,6 +171,7 @@ func mongodbAllInstanceReqSet(requestInter interface{}, d *schema.ResourceData) 
 		nodeNum               = 3
 		goodsNum              = 1
 		clusterType           = MONGODB_CLUSTER_TYPE_REPLSET
+		cpu                   = d.Get("cpu").(int)
 		memoryInterface       = d.Get("memory").(int)
 		volumeInterface       = d.Get("volume").(int)
 		mongoVersionInterface = d.Get("engine_version").(string)
@@ -197,6 +204,7 @@ func mongodbAllInstanceReqSet(requestInter interface{}, d *schema.ResourceData) 
 		"NodeNum":         helper.IntUint64(nodeNum),
 		"GoodsNum":        helper.IntUint64(goodsNum),
 		"ClusterType":     &clusterType,
+		"CpuCore":         helper.IntInt64(cpu),
 		"Memory":          helper.IntUint64(memoryInterface),
 		"Volume":          helper.IntUint64(volumeInterface),
 		"MongoVersion":    &mongoVersionInterface,
@@ -463,6 +471,9 @@ func resourceTencentCloudMongodbInstanceRead(d *schema.ResourceData, meta interf
 	_ = d.Set("vport", instance.Vport)
 	_ = d.Set("create_time", instance.CreateTime)
 	_ = d.Set("node_num", *instance.SecondaryNum+1)
+	if instance.CpuNum != nil {
+		_ = d.Set("cpu", int(*instance.CpuNum/(*instance.ReplicationSetNum)))
+	}
 	if instance.MaintenanceStart != nil && len(*instance.MaintenanceStart) == 8 {
 		_ = d.Set("maintenance_start", (*instance.MaintenanceStart)[:5])
 	}
@@ -527,7 +538,7 @@ func resourceTencentCloudMongodbInstanceUpdate(d *schema.ResourceData, meta inte
 
 	d.Partial(true)
 
-	if d.HasChange("memory") || d.HasChange("volume") || d.HasChange("node_num") {
+	if d.HasChange("memory") || d.HasChange("volume") || d.HasChange("node_num") || d.HasChange("cpu") {
 		memory := d.Get("memory").(int)
 		volume := d.Get("volume").(int)
 		params := make(map[string]interface{})
@@ -548,6 +559,9 @@ func resourceTencentCloudMongodbInstanceUpdate(d *schema.ResourceData, meta inte
 		if v, ok := d.GetOkExists("in_maintenance"); ok {
 			inMaintenance = v.(int)
 			params["in_maintenance"] = v.(int)
+		}
+		if v, ok := d.GetOkExists("cpu"); ok {
+			params["cpu"] = v.(int)
 		}
 		dealId, err := mongodbService.UpgradeInstance(ctx, instanceId, memory, volume, params)
 		if err != nil {
