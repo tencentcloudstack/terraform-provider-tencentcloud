@@ -117,7 +117,6 @@ The following arguments are supported:
 * `annotations` - (Optional, Set) Node Annotation List.
 * `deletion_protection` - (Optional, Bool) Whether to enable deletion protection.
 * `labels` - (Optional, Set) Node Labels.
-* `node_pool_instance_delete_mode` - (Optional, String) Node pool instance deletion mode. Valid values: `terminate`, `retain`. Default is `terminate`.
 * `tags` - (Optional, Set) Node tags.
 * `taints` - (Optional, List) Node taint.
 * `unschedulable` - (Optional, Bool) Whether the node is not schedulable by default. The native node is not aware of it and passes false by default.

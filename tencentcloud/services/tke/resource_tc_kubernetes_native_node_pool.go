@@ -586,12 +586,6 @@ func ResourceTencentCloudKubernetesNativeNodePool() *schema.Resource {
 				},
 			},
 
-			"node_pool_instance_delete_mode": {
-				Type:        schema.TypeString,
-				Optional:    true,
-				Description: "Node pool instance deletion mode. Valid values: `terminate`, `retain`. Default is `terminate`.",
-			},
-
 			"life_state": {
 				Type:        schema.TypeString,
 				Computed:    true,
