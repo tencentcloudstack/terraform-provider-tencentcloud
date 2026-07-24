@@ -8,6 +8,7 @@ resource "tencentcloud_cls_config" "config" {
   output           = "4d07fba0-b93e-4e0b-9a7f-d58542560bbb"
   path             = "/var/log/kubernetes"
   log_type         = "json_log"
+  input_type       = "file"
   extract_rule {
     filter_key_regex {
       key   = "key1"

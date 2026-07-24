@@ -52,6 +52,36 @@ func TestAccTencentCloudClsConfig_FullRegex(t *testing.T) {
 	})
 }
 
+func TestAccTencentCloudClsConfig_InputType(t *testing.T) {
+	t.Parallel()
+
+	resource.Test(t, resource.TestCase{
+		PreCheck:  func() { tcacctest.AccPreCheck(t) },
+		Providers: tcacctest.AccProviders,
+		Steps: []resource.TestStep{
+			{
+				Config: testAccClsConfigInputType,
+				Check: resource.ComposeTestCheckFunc(
+					resource.TestCheckResourceAttr("tencentcloud_cls_config.config", "name", "tf-input-type-config-test"),
+					resource.TestCheckResourceAttr("tencentcloud_cls_config.config", "input_type", "file"),
+				),
+			},
+			{
+				Config: testAccClsConfigInputTypeUpdate,
+				Check: resource.ComposeTestCheckFunc(
+					resource.TestCheckResourceAttr("tencentcloud_cls_config.config", "name", "tf-input-type-config-test"),
+					resource.TestCheckResourceAttr("tencentcloud_cls_config.config", "input_type", "syslog"),
+				),
+			},
+			{
+				ResourceName:      "tencentcloud_cls_config.config",
+				ImportState:       true,
+				ImportStateVerify: true,
+			},
+		},
+	})
+}
+
 const testAccClsConfig = `
 resource "tencentcloud_cls_logset" "logset" {
   logset_name = "tf-config-test"
@@ -132,6 +162,72 @@ resource "tencentcloud_cls_config" "config" {
     begin_regex = "\\d+\\.\\d+\\.\\d+\\.\\d+\\s+-\\s+.*"
     log_regex = "\\d+\\.\\d+\\.\\d+\\.\\d+\\s+-\\s+(.*)"
     keys = ["acd", "edf"]
+  }
+}
+`
+
+const testAccClsConfigInputType = `
+resource "tencentcloud_cls_logset" "logset" {
+  logset_name = "tf-input-type-config-test"
+  tags        = {
+    "test" = "test"
+  }
+}
+
+resource "tencentcloud_cls_topic" "topic" {
+  auto_split           = true
+  logset_id            = tencentcloud_cls_logset.logset.id
+  max_split_partitions = 20
+  partition_count      = 1
+  period               = 10
+  storage_type         = "hot"
+  tags                 = {
+    "test" = "test"
+  }
+  topic_name           = "tf-input-type-config-test"
+}
+
+resource "tencentcloud_cls_config" "config" {
+  name       = "tf-input-type-config-test"
+  output     = tencentcloud_cls_topic.topic.id
+  path       = "/var/log/nginx/**/access.log"
+  log_type   = "minimalist_log"
+  input_type = "file"
+  extract_rule {
+    backtracking = -1
+  }
+}
+`
+
+const testAccClsConfigInputTypeUpdate = `
+resource "tencentcloud_cls_logset" "logset" {
+  logset_name = "tf-input-type-config-test"
+  tags        = {
+    "test" = "test"
+  }
+}
+
+resource "tencentcloud_cls_topic" "topic" {
+  auto_split           = true
+  logset_id            = tencentcloud_cls_logset.logset.id
+  max_split_partitions = 20
+  partition_count      = 1
+  period               = 10
+  storage_type         = "hot"
+  tags                 = {
+    "test" = "test"
+  }
+  topic_name           = "tf-input-type-config-test"
+}
+
+resource "tencentcloud_cls_config" "config" {
+  name       = "tf-input-type-config-test"
+  output     = tencentcloud_cls_topic.topic.id
+  path       = "/var/log/nginx/**/access.log"
+  log_type   = "minimalist_log"
+  input_type = "syslog"
+  extract_rule {
+    backtracking = -1
   }
 }
 `

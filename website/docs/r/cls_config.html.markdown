@@ -15,10 +15,11 @@ Provides a resource to create a cls config
 
 ```hcl
 resource "tencentcloud_cls_config" "config" {
-  name     = "config_hello"
-  output   = "4d07fba0-b93e-4e0b-9a7f-d58542560bbb"
-  path     = "/var/log/kubernetes"
-  log_type = "json_log"
+  name       = "config_hello"
+  output     = "4d07fba0-b93e-4e0b-9a7f-d58542560bbb"
+  path       = "/var/log/kubernetes"
+  log_type   = "json_log"
+  input_type = "file"
   extract_rule {
     filter_key_regex {
       key   = "key1"
@@ -51,6 +52,7 @@ The following arguments are supported:
 * `extract_rule` - (Required, List) Extraction rule. If ExtractRule is set, LogType must be set.
 * `name` - (Required, String) Collection configuration name.
 * `exclude_paths` - (Optional, List) Collection path blocklist.
+* `input_type` - (Optional, String) Log input type. Valid values: file: file type collection; windows_event: Windows event collection; syslog: system log collection.
 * `log_type` - (Optional, String) Type of the log to be collected. Valid values: json_log: log in JSON format; delimiter_log: log in delimited format; minimalist_log: minimalist log; multiline_log: log in multi-line format; fullregex_log: log in full regex format. Default value: minimalist_log.
 * `output` - (Optional, String) Log topic ID (TopicId) of collection configuration.
 * `path` - (Optional, String) Log collection path containing the filename. Required for document collection.
