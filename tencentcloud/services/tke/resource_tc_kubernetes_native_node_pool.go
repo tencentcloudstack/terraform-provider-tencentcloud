@@ -1798,13 +1798,47 @@ func resourceTencentCloudKubernetesNativeNodePoolDelete(d *schema.ResourceData, 
 
 	logId := tccommon.GetLogId(tccommon.ContextNil)
 	ctx := tccommon.NewResourceLifeCycleHandleFuncContext(context.Background(), logId, d, meta)
+	service := TkeService{client: meta.(tccommon.ProviderMeta).GetAPIV3Conn()}
 
 	idSplit := strings.Split(d.Id(), tccommon.FILED_SP)
 	if len(idSplit) != 2 {
 		return fmt.Errorf("id is broken,%s", d.Id())
 	}
+
 	clusterId := idSplit[0]
 	nodePoolId := idSplit[1]
+
+	var machineNames []*string
+	err := resource.Retry(tccommon.ReadRetryTimeout, func() *resource.RetryError {
+		respData, errRet := service.DescribeClusterMachinesById(ctx, clusterId, "")
+		if errRet != nil {
+			return tccommon.RetryError(errRet)
+		}
+
+		if respData == nil || len(respData) == 0 {
+			return nil
+		}
+
+		// temp code logic, wait tke fix
+		for _, item := range respData {
+			if item != nil && item.MachineName != nil {
+				if strings.HasPrefix(*item.MachineName, nodePoolId) {
+					machineNames = append(machineNames, item.MachineName)
+				}
+			}
+		}
+
+		return nil
+	})
+
+	if err != nil {
+		log.Printf("[CRITAL]%s describe kubernetes cluster machines failed, reason:%+v", logId, err)
+		return err
+	}
+
+	if len(machineNames) == 0 {
+		return nil
+	}
 
 	var (
 		request  = tke2.NewDeleteNodePoolRequest()
@@ -1812,10 +1846,8 @@ func resourceTencentCloudKubernetesNativeNodePoolDelete(d *schema.ResourceData, 
 	)
 
 	request.ClusterId = &clusterId
-
 	request.NodePoolId = &nodePoolId
-
-	err := resource.Retry(tccommon.WriteRetryTimeout, func() *resource.RetryError {
+	err = resource.Retry(tccommon.WriteRetryTimeout, func() *resource.RetryError {
 		result, e := meta.(tccommon.ProviderMeta).GetAPIV3Conn().UseTke2Client().DeleteNodePoolWithContext(ctx, request)
 		if e != nil {
 			return tccommon.RetryError(e)
@@ -1833,7 +1865,6 @@ func resourceTencentCloudKubernetesNativeNodePoolDelete(d *schema.ResourceData, 
 	_ = response
 
 	// wait node pool for delete ok
-	service := TkeService{client: meta.(tccommon.ProviderMeta).GetAPIV3Conn()}
 	err = resource.Retry(5*tccommon.ReadRetryTimeout, func() *resource.RetryError {
 		respData, errRet := service.DescribeKubernetesNativeNodePoolById(ctx, clusterId, nodePoolId)
 		if errRet != nil {
@@ -1855,26 +1886,36 @@ func resourceTencentCloudKubernetesNativeNodePoolDelete(d *schema.ResourceData, 
 		return err
 	}
 
-	// wait node pool instances for delete ok
+	// wait machines for delete ok
 	err = resource.Retry(5*tccommon.ReadRetryTimeout, func() *resource.RetryError {
-		respData, errRet := service.DescribeKubernetesClusteInstancesById(ctx, clusterId, nodePoolId)
+		respData, errRet := service.DescribeClusterMachinesById(ctx, clusterId, "")
 		if errRet != nil {
-			errCode := errRet.(*sdkErrors.TencentCloudSDKError).Code
-			if strings.Contains(errCode, "InternalError") {
-				return nil
-			}
-			return tccommon.RetryError(errRet, tccommon.InternalError)
+			return tccommon.RetryError(errRet)
 		}
 
-		if len(respData.InstanceSet) == 0 {
+		if respData == nil || len(respData) == 0 {
 			return nil
 		}
 
-		return resource.NonRetryableError(fmt.Errorf("native node pool instances still deleteing"))
+		machineNames = []*string{}
+		// temp code logic, wait tke fix
+		for _, item := range respData {
+			if item != nil && item.MachineName != nil {
+				if strings.HasPrefix(*item.MachineName, nodePoolId) {
+					machineNames = append(machineNames, item.MachineName)
+				}
+			}
+		}
+
+		if len(machineNames) == 0 {
+			return nil
+		}
+
+		return resource.RetryableError(fmt.Errorf("cluster machines still deleteting"))
 	})
 
 	if err != nil {
-		log.Printf("[CRITAL]%s delete kubernetes native node pool failed, reason:%+v", logId, err)
+		log.Printf("[CRITAL]%s describe kubernetes cluster machines failed, reason:%+v", logId, err)
 		return err
 	}
 

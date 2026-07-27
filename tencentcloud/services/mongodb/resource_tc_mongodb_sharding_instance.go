@@ -23,6 +23,12 @@ import (
 
 func ResourceTencentCloudMongodbShardingInstance() *schema.Resource {
 	mongodbShardingInstanceInfo := map[string]*schema.Schema{
+		"cpu": {
+			Type:        schema.TypeInt,
+			Optional:    true,
+			Computed:    true,
+			Description: "The CPU core count of the MongoDB instance after the configuration change. Unit: C. When this parameter is empty, the current CPU size of the instance is used by default. The supported CPU specifications can be obtained through the DescribeSpecInfo API.",
+		},
 		"shard_quantity": {
 			Type:         schema.TypeInt,
 			Required:     true,
@@ -124,6 +130,7 @@ func mongodbAllShardingInstanceReqSet(requestInter interface{}, d *schema.Resour
 		nodeNum               = d.Get("nodes_per_shard").(int)
 		goodsNum              = 1
 		clusterType           = MONGODB_CLUSTER_TYPE_SHARD
+		cpu                   = d.Get("cpu").(int)
 		memoryInterface       = d.Get("memory").(int)
 		volumeInterface       = d.Get("volume").(int)
 		mongoVersionInterface = d.Get("engine_version").(string)
@@ -154,6 +161,7 @@ func mongodbAllShardingInstanceReqSet(requestInter interface{}, d *schema.Resour
 		"NodeNum":         helper.IntUint64(nodeNum),
 		"GoodsNum":        helper.IntUint64(goodsNum),
 		"ClusterType":     &clusterType,
+		"CpuCore":         helper.IntInt64(cpu),
 		"Memory":          helper.IntUint64(memoryInterface),
 		"Volume":          helper.IntUint64(volumeInterface),
 		"MongoVersion":    &mongoVersionInterface,
@@ -466,6 +474,10 @@ func resourceMongodbShardingInstanceRead(d *schema.ResourceData, meta interface{
 	_ = d.Set("mongos_node_num", instance.MongosNodeNum)
 	_ = d.Set("auto_renew_flag", instance.AutoRenewFlag)
 
+	if instance.CpuNum != nil {
+		_ = d.Set("cpu", int(*instance.CpuNum/(*instance.ReplicationSetNum)))
+	}
+
 	groups, err := mongodbService.DescribeSecurityGroup(ctx, instanceId)
 	if err != nil {
 		return err
@@ -668,10 +680,14 @@ func resourceMongodbShardingInstanceUpdate(d *schema.ResourceData, meta interfac
 			}
 		}
 	}
-	if d.HasChange("memory") || d.HasChange("volume") || d.HasChange("add_node_list") || d.HasChange("remove_node_list") {
+	if d.HasChange("memory") || d.HasChange("volume") || d.HasChange("cpu") || d.HasChange("add_node_list") || d.HasChange("remove_node_list") {
 		memory := d.Get("memory").(int)
 		volume := d.Get("volume").(int)
 		params := make(map[string]interface{})
+
+		if v, ok := d.GetOkExists("cpu"); ok {
+			params["cpu"] = v.(int)
+		}
 
 		var inMaintenance int
 		if v, ok := d.GetOkExists("in_maintenance"); ok {

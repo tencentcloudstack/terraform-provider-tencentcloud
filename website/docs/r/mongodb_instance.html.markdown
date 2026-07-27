@@ -13,6 +13,8 @@ Provide a resource to create a Mongodb instance.
 
 ~> **NOTE:** If `availability_zone_list` needs to be changed, attention should be paid to cascading modifications of `available_zone` or `hidden_zone`.
 
+~> **NOTE:** The `cpu` parameter takes effect only when the configuration is changed. Changing the `cpu` triggers the `ModifyDBInstanceSpec` API to adjust the CPU specification of the running MongoDB instance in-place. The supported CPU specifications can be obtained through the `DescribeSpecInfo` API.
+
 ## Example Usage
 
 ```hcl
@@ -27,6 +29,24 @@ resource "tencentcloud_mongodb_instance" "example" {
   subnet_id      = "subnet-hhi88a58"
   project_id     = 0
   password       = "Password@123"
+}
+```
+
+### Update the CPU specification of the MongoDB instance.
+
+```hcl
+resource "tencentcloud_mongodb_instance" "example" {
+  instance_name  = "tf-example"
+  memory         = 4
+  volume         = 100
+  engine_version = "MONGO_40_WT"
+  machine_type   = "HIO10G"
+  available_zone = "ap-guangzhou-6"
+  vpc_id         = "vpc-i5yyodl9"
+  subnet_id      = "subnet-hhi88a58"
+  project_id     = 0
+  password       = "Password@123"
+  cpu            = 2
 }
 ```
 
@@ -77,6 +97,7 @@ The following arguments are supported:
 	- You can obtain availability zone information planned in different regions of the cloud database through the interface DescribeSpecInfo, so as to specify effective availability zones.
 	- Multiple availability zone deployment nodes can only be deployed in 3 different availability zones. Deploying most nodes of a cluster in the same availability zone is not supported. For example, a 3-node cluster does not support 2 nodes deployed in the same zone.
 * `charge_type` - (Optional, String, ForceNew) The charge type of instance. Valid values are `PREPAID` and `POSTPAID_BY_HOUR`. Default value is `POSTPAID_BY_HOUR`. Note: TencentCloud International only supports `POSTPAID_BY_HOUR`. Caution that update operation on this field will delete old instances and create new one with new charge type.
+* `cpu` - (Optional, Int) The CPU core count of the MongoDB instance after the configuration change. Unit: C. When this parameter is empty, the current CPU size of the instance is used by default. The supported CPU specifications can be obtained through the DescribeSpecInfo API.
 * `hidden_zone` - (Optional, String) The availability zone to which the Hidden node belongs. This parameter is required in cross-AZ instance deployment.
 * `in_maintenance` - (Optional, Int) Switch time for instance configuration changes.
 	- 0: When the adjustment is completed, perform the configuration task immediately. Default is 0.

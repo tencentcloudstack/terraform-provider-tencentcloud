@@ -53,6 +53,7 @@ resource "tencentcloud_audit_track" "example" {
     storage_type       = "cos"
     storage_account_id = "100037717137"
     storage_app_id     = "1309116520"
+    compress           = 1
   }
 }
 ```
@@ -75,6 +76,7 @@ The `storage` object supports the following:
 * `storage_prefix` - (Required, String) Storage path prefix.
 * `storage_region` - (Required, String) Storage region.
 * `storage_type` - (Required, String) Track Storage type, optional:- `cos`- `cls`- `ckafka`.
+* `compress` - (Optional, Int) Whether to compress. `1`: compress, `2`: do not compress.
 * `storage_account_id` - (Optional, String) Designated to store user ID.
 * `storage_app_id` - (Optional, String) Designated to store user appid.
 

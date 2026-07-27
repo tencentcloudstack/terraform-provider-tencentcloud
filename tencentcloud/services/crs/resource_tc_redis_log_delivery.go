@@ -4,6 +4,7 @@ import (
 	"context"
 	"log"
 
+	clsv20201016 "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/cls/v20201016"
 	svcCls "github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/services/cls"
 
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
@@ -81,6 +82,18 @@ func ResourceTencentCloudRedisLogDelivery() *schema.Resource {
 				Optional:    true,
 				Computed:    true,
 				Description: "Whether to create an index when creating a log topic.",
+			},
+
+			"is_delete_topic": {
+				Type:        schema.TypeBool,
+				Optional:    true,
+				Description: "Whether to delete the associated Topic when deleting the log delivery. Default is false.",
+			},
+
+			"is_delete_logset": {
+				Type:        schema.TypeBool,
+				Optional:    true,
+				Description: "Whether to delete the associated Logset when deleting the log delivery. Default is false.",
 			},
 		},
 	}
@@ -355,5 +368,65 @@ func resourceTencentCloudRedisLogDeliveryDelete(d *schema.ResourceData, meta int
 
 	_ = response
 	_ = instanceId
+
+	var (
+		isDeleteTopic  bool
+		isDeleteLogset bool
+	)
+
+	if v, ok := d.GetOkExists("is_delete_topic"); ok {
+		isDeleteTopic = v.(bool)
+	}
+
+	if v, ok := d.GetOkExists("is_delete_logset"); ok {
+		isDeleteLogset = v.(bool)
+	}
+
+	if isDeleteTopic {
+		request := clsv20201016.NewDeleteTopicRequest()
+		if v, ok := d.GetOk("topic_id"); ok {
+			request.TopicId = helper.String(v.(string))
+		}
+
+		err = resource.Retry(tccommon.WriteRetryTimeout, func() *resource.RetryError {
+			result, e := meta.(tccommon.ProviderMeta).GetAPIV3Conn().UseClsV20201016Client().DeleteTopicWithContext(ctx, request)
+			if e != nil {
+				return tccommon.RetryError(e)
+			} else {
+				log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), result.ToJsonString())
+			}
+
+			return nil
+		})
+
+		if err != nil {
+			log.Printf("[CRITAL]%s delete regis log delivery topic failed, reason:%+v", logId, err)
+			return err
+		}
+	}
+
+	if isDeleteLogset {
+		request := clsv20201016.NewDeleteLogsetRequest()
+		if v, ok := d.GetOk("logset_id"); ok {
+			request.LogsetId = helper.String(v.(string))
+		}
+
+		err = resource.Retry(tccommon.WriteRetryTimeout, func() *resource.RetryError {
+			result, e := meta.(tccommon.ProviderMeta).GetAPIV3Conn().UseClsV20201016Client().DeleteLogsetWithContext(ctx, request)
+			if e != nil {
+				return tccommon.RetryError(e)
+			} else {
+				log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), result.ToJsonString())
+			}
+
+			return nil
+		})
+
+		if err != nil {
+			log.Printf("[CRITAL]%s delete regis log delivery logset failed, reason:%+v", logId, err)
+			return err
+		}
+	}
+
 	return nil
 }
