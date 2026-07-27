@@ -149,6 +149,14 @@ func ResourceTencentCloudGa2Listener() *schema.Resource {
 				Description: "TLS cipher suite policy. Valid values: `tls_policy_1.0-2`, `tls_policy_1.1-2`, `tls_policy_1.2`, " +
 					"`tls_policy_1.2_strict`, `tls_policy_1.2_strict-1.3`. Only HTTPS listeners support configuring/modifying this field.",
 			},
+			"http_version": {
+				Type:     schema.TypeString,
+				Optional: true,
+				Computed: true,
+				ForceNew: true,
+				Description: "HTTP version for HTTPS listeners. Valid values: `HTTP/1.1`, `HTTP/2`. " +
+					"Only applicable to HTTPS listeners. Cannot be modified after creation; changing it forces a new resource.",
+			},
 			"server_certificates": {
 				Type:     schema.TypeSet,
 				Optional: true,

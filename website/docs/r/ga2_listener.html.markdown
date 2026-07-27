@@ -86,6 +86,7 @@ resource "tencentcloud_ga2_listener" "example3" {
   cipher_policy_id        = "tls_policy_1.2_strict-1.3"
   server_certificates     = ["Yj6CmODs"]
   client_ca_certificates  = ["W6aH2tOc"]
+  http_version            = "HTTP/2"
 
   depends_on = [tencentcloud_ga2_listener.example2]
 }
@@ -104,7 +105,11 @@ The following arguments are supported:
 * `client_ca_certificates` - (Optional, Set: [`String`]) Client CA certificate ID list. Required when the listener protocol is `HTTPS` and `certification_type` is `MUTUAL`. Only HTTPS listeners support modifying this field. Treated as an unordered set; HCL element order has no semantic meaning.
 * `description` - (Optional, String) Listener description. Maximum length is 100 bytes.
 * `get_real_ip_type` - (Optional, String) Method used to retrieve the real client IP for layer-4 listeners. Valid values: `TOA`, `ProxyProtocol`, `ProxyProtocolV2`, `Close`. Only takes effect when the layer-4 real-IP feature is enabled. Only TCP listeners support modifying this field after creation.
+<<<<<<< HEAD
 * `http_version` - (Optional, String) HTTP version negotiated for this listener. Valid values: `HTTP/1.1`, `HTTP/2`. Only applicable to HTTPS listeners.
+=======
+* `http_version` - (Optional, String, ForceNew) HTTP version for HTTPS listeners. Valid values: `HTTP/1.1`, `HTTP/2`. Only applicable to HTTPS listeners. Cannot be modified after creation; changing it forces a new resource.
+>>>>>>> 9ba2c5c63 (feat(ga2): add http_version parameter to ga2_listener resource)
 * `idle_timeout` - (Optional, Int) Connection idle timeout in seconds. Valid range and default value depend on the listener protocol: `1-60` for HTTP/HTTPS listeners (default `15`), `10-900` for TCP listeners (default `900`), `10-20` for UDP listeners (default `20`).
 * `listener_type` - (Optional, String, ForceNew) Listener routing type. Valid values: `Standard` (smart routing). Default: `Standard`. Cannot be modified after creation; modifying it forces a new resource.
 * `name` - (Optional, String) Listener name. Maximum length is 60 bytes.
