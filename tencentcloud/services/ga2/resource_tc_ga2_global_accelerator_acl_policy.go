@@ -284,6 +284,43 @@ func resourceTencentCloudGa2GlobalAcceleratorAclPolicyDelete(d *schema.ResourceD
 		return err
 	}
 
+	// close the policy first
+	if v, ok := d.GetOk("status"); ok {
+		if v.(string) == "OPEN" {
+			request := ga2v20250115.NewModifyGlobalAcceleratorAclPolicyRequest()
+			request.GlobalAcceleratorId = helper.String(gaId)
+			request.GlobalAcceleratorAclPolicyId = helper.String(policyId)
+			request.Status = helper.String("CLOSE")
+
+			var taskId string
+			reqErr := resource.Retry(tccommon.WriteRetryTimeout, func() *resource.RetryError {
+				result, e := meta.(tccommon.ProviderMeta).GetAPIV3Conn().UseGa2V20250115Client().ModifyGlobalAcceleratorAclPolicyWithContext(ctx, request)
+				if e != nil {
+					return tccommon.RetryError(e)
+				} else {
+					log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), result.ToJsonString())
+				}
+
+				if result == nil || result.Response == nil || result.Response.TaskId == nil {
+					return resource.NonRetryableError(fmt.Errorf("Modify ga2_global_accelerator_acl_policy failed, Response is nil."))
+				}
+
+				taskId = *result.Response.TaskId
+				return nil
+			})
+
+			if reqErr != nil {
+				log.Printf("[CRITAL]%s update ga2_global_accelerator_acl_policy failed, reason:%+v", logId, reqErr)
+				return reqErr
+			}
+
+			service := Ga2Service{client: meta.(tccommon.ProviderMeta).GetAPIV3Conn()}
+			if err := service.WaitForGa2TaskFinish(ctx, taskId, d.Timeout(schema.TimeoutUpdate)); err != nil {
+				return err
+			}
+		}
+	}
+
 	request.GlobalAcceleratorId = helper.String(gaId)
 	request.GlobalAcceleratorAclPolicyId = helper.String(policyId)
 
