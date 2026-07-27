@@ -241,14 +241,6 @@ resource "tencentcloud_monitor_alarm_policy" "policy" {
 }
 ```
 
-Import
-
-Alarm policy instance can be imported, e.g.
-
-```
-$ terraform import tencentcloud_monitor_alarm_policy.policy policy-id
-```
-
 alarm policy with hierarchical notices
 
 ```hcl
@@ -288,4 +280,12 @@ resource "tencentcloud_monitor_alarm_policy" "foo" {
     notice_id       = tencentcloud_monitor_alarm_notice.foo.id
   }
 }
+```
+
+Import
+
+Alarm policy instance can be imported, e.g.
+
+```
+$ terraform import tencentcloud_monitor_alarm_policy.policy policy-id
 ```

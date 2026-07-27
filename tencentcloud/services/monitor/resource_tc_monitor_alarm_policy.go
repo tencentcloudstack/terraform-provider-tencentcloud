@@ -190,6 +190,7 @@ func ResourceTencentCloudMonitorAlarmPolicy() *schema.Resource {
 			"notice_ids": {
 				Type:        schema.TypeList,
 				Optional:    true,
+				Computed:    true,
 				Description: "List of notification rule IDs.",
 				Elem: &schema.Schema{
 					Type:        schema.TypeString,
