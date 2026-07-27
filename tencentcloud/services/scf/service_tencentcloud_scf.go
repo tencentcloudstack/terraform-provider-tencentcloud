@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"log"
 	"strings"
+	"time"
 
 	tccommon "github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/common"
 
@@ -637,6 +638,7 @@ func waitScfFunctionReady(ctx context.Context, name, namespace string, client *s
 			return resource.RetryableError(errors.New("function is not ready"))
 
 		case SCF_FUNCTION_STATUS_ACTIVE:
+			time.Sleep(3 * time.Second)
 			return nil
 
 		default:

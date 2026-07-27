@@ -2,8 +2,10 @@ package scf
 
 import (
 	"context"
+	"encoding/json"
 	"fmt"
 	"log"
+	"regexp"
 	"strings"
 
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
@@ -13,6 +15,8 @@ import (
 	tccommon "github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/common"
 	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/internal/helper"
 )
+
+var scfCosTriggerNameRE = regexp.MustCompile(`^[^.]+\.cos\.[^.]+\.myqcloud\.com$`)
 
 func ResourceTencentCloudScfTrigger() *schema.Resource {
 	return &schema.Resource{
@@ -32,29 +36,34 @@ func ResourceTencentCloudScfTrigger() *schema.Resource {
 			},
 
 			"trigger_name": {
-				Required:    true,
-				ForceNew:    true,
+				Optional:    true,
+				Computed:    true,
 				Type:        schema.TypeString,
-				Description: "Name of the trigger.",
+				Description: "Name of the trigger. It must not be specified when `type` is `http`; it must be specified when `type` is not `http`; when `type` is `cos`, it must match `<bucket>.cos.<region>.myqcloud.com`.",
 			},
 
 			"type": {
 				Required:    true,
 				ForceNew:    true,
 				Type:        schema.TypeString,
-				Description: "Trigger type. Valid values: `cos`, `cls`, `timer`, `ckafka`, `http`.",
+				Description: "Trigger type. Valid values: `cos`, `timer`, `ckafka`, `http`.To create Function URL please refer to [Creating a Function URL](https://www.tencentcloud.com/document/product/583/69492?lang=en&pg=); To create a CLS trigger, please refer to [Create Deliver CloudFunction (SCF)](https://www.tencentcloud.com/zh/document/product/614/59903).",
 			},
 
 			"trigger_desc": {
 				Optional:    true,
 				Type:        schema.TypeString,
-				Description: "Trigger description parameter, see the trigger description documentation for details.",
+				Description: "Trigger description parameter, see the trigger description documentation for details: https://www.tencentcloud.com/document/product/583/34880.",
+			},
+
+			"trigger_attribute": {
+				Computed:    true,
+				Type:        schema.TypeString,
+				Description: "Trigger description parameter, see the trigger description documentation for details: https://www.tencentcloud.com/document/product/583/34880.",
 			},
 
 			"namespace": {
-				Optional:    true,
+				Required:    true,
 				ForceNew:    true,
-				Default:     "default",
 				Type:        schema.TypeString,
 				Description: "Function namespace. Defaults to `default`.",
 			},
@@ -104,6 +113,142 @@ func ResourceTencentCloudScfTrigger() *schema.Resource {
 	}
 }
 
+func cleanTriggerDescEmptyStringFields(triggerDesc, triggerType string) string {
+	var triggerDescMap map[string]interface{}
+	if err := json.Unmarshal([]byte(triggerDesc), &triggerDescMap); err != nil {
+		return triggerDesc
+	}
+
+	switch triggerType {
+	case SCF_TRIGGER_TYPE_TIMER:
+		if cron, ok := triggerDescMap["cron"].(string); ok {
+			return cron
+		}
+		return triggerDesc
+	default:
+		removeEmptyStringFields(triggerDescMap)
+	}
+
+	cleanTriggerDesc, err := json.Marshal(triggerDescMap)
+	if err != nil {
+		return triggerDesc
+	}
+
+	return string(cleanTriggerDesc)
+}
+
+func cleanTriggerDescFieldsByConfig(triggerDesc, configTriggerDesc, triggerType string) string {
+	var triggerDescMap map[string]interface{}
+	if err := json.Unmarshal([]byte(triggerDesc), &triggerDescMap); err != nil {
+		return triggerDesc
+	}
+
+	switch triggerType {
+	case SCF_TRIGGER_TYPE_TIMER:
+		if cron, ok := triggerDescMap["cron"].(string); ok {
+			return cron
+		}
+		return triggerDesc
+	}
+
+	var configTriggerDescMap map[string]interface{}
+	if err := json.Unmarshal([]byte(configTriggerDesc), &configTriggerDescMap); err != nil {
+		cleanTriggerDesc, marshalErr := json.Marshal(triggerDescMap)
+		if marshalErr != nil {
+			return triggerDesc
+		}
+		return string(cleanTriggerDesc)
+	}
+	keepTriggerDescFieldsByConfig(triggerDescMap, configTriggerDescMap)
+
+	cleanTriggerDesc, err := json.Marshal(triggerDescMap)
+	if err != nil {
+		return triggerDesc
+	}
+
+	return string(cleanTriggerDesc)
+}
+
+func keepTriggerDescFieldsByConfig(triggerDesc, configTriggerDesc map[string]interface{}) {
+	for key, value := range triggerDesc {
+		configValue, ok := configTriggerDesc[key]
+		if !ok {
+			delete(triggerDesc, key)
+			continue
+		}
+
+		triggerDescValueMap, triggerDescValueIsMap := value.(map[string]interface{})
+		configTriggerDescValueMap, configTriggerDescValueIsMap := configValue.(map[string]interface{})
+		if triggerDescValueIsMap && configTriggerDescValueIsMap {
+			keepTriggerDescFieldsByConfig(triggerDescValueMap, configTriggerDescValueMap)
+		}
+	}
+}
+
+func removeEmptyStringFields(data map[string]interface{}) {
+	for key, value := range data {
+		switch v := value.(type) {
+		case nil:
+			delete(data, key)
+		case string:
+			if v == "" {
+				delete(data, key)
+			}
+		case int:
+			if v == 0 {
+				delete(data, key)
+			}
+		case int32:
+			if v == 0 {
+				delete(data, key)
+			}
+		case int64:
+			if v == 0 {
+				delete(data, key)
+			}
+		case float32:
+			if v == 0 {
+				delete(data, key)
+			}
+		case float64:
+			if v == 0 {
+				delete(data, key)
+			}
+		case map[string]interface{}:
+			removeEmptyStringFields(v)
+		case []interface{}:
+			for _, item := range v {
+				if itemMap, ok := item.(map[string]interface{}); ok {
+					removeEmptyStringFields(itemMap)
+				}
+			}
+		}
+	}
+}
+
+func validateScfTriggerName(d *schema.ResourceData) error {
+	v, ok := d.GetOk("trigger_name")
+
+	triggerType := d.Get("type").(string)
+	if triggerType == SCF_TRIGGER_TYPE_API_HTTP {
+		if ok && v.(string) != "" {
+			return fmt.Errorf("trigger_name must not be specified when type is %s", SCF_TRIGGER_TYPE_API_HTTP)
+		}
+		return nil
+	}
+
+	if !ok || v.(string) == "" {
+		return fmt.Errorf("trigger_name must be specified when type is not %s, %s", SCF_TRIGGER_TYPE_API_HTTP, triggerType)
+	}
+
+	triggerName := v.(string)
+	if triggerType == SCF_TRIGGER_TYPE_COS && !scfCosTriggerNameRE.MatchString(triggerName) {
+		return fmt.Errorf("trigger_name must match <bucket>.cos.<region>.myqcloud.com when type is %s", SCF_TRIGGER_TYPE_COS)
+	}
+
+	return nil
+}
+
 func resourceTencentCloudScfTriggerCreate(d *schema.ResourceData, meta interface{}) error {
 	defer tccommon.LogElapsed("resource.tencentcloud_scf_trigger.create")()
 	defer tccommon.InconsistentCheck(d, meta)()
@@ -122,17 +267,19 @@ func resourceTencentCloudScfTriggerCreate(d *schema.ResourceData, meta interface
 		functionName = v.(string)
 	}
 
-	if v, ok := d.GetOk("trigger_name"); ok {
-		request.TriggerName = helper.String(v.(string))
-		triggerName = v.(string)
-	}
-
 	if v, ok := d.GetOk("type"); ok {
 		request.Type = helper.String(v.(string))
 	}
 
-	if v, ok := d.GetOk("trigger_desc"); ok {
-		request.TriggerDesc = helper.String(v.(string))
+	if err := validateScfTriggerName(d); err != nil {
+		return err
+	}
+
+	if v, ok := d.GetOk("trigger_name"); ok {
+		request.TriggerName = helper.String(v.(string))
+		triggerName = v.(string)
+	} else if v, ok := d.GetOk("type"); ok && v.(string) == SCF_TRIGGER_TYPE_API_HTTP {
+		request.TriggerName = helper.String("url-trigger")
 	}
 
 	if v, ok := d.GetOk("namespace"); ok {
@@ -142,6 +289,10 @@ func resourceTencentCloudScfTriggerCreate(d *schema.ResourceData, meta interface
 
 	if v, ok := d.GetOk("qualifier"); ok {
 		request.Qualifier = helper.String(v.(string))
+	}
+
+	if v, ok := d.GetOk("trigger_desc"); ok {
+		request.TriggerDesc = helper.String(v.(string))
 	}
 
 	if v, ok := d.GetOk("enable"); ok {
@@ -181,6 +332,12 @@ func resourceTencentCloudScfTriggerCreate(d *schema.ResourceData, meta interface
 	if response.Response.TriggerInfo == nil {
 		log.Printf("[CRITAL]%s create scf_trigger failed, TriggerInfo is nil, d.Id()=%s", logId, d.Id())
 		return fmt.Errorf("create scf_trigger failed, TriggerInfo is nil.")
+	}
+	if response.Response.TriggerInfo.TriggerName != nil {
+		triggerName = *response.Response.TriggerInfo.TriggerName
+	} else if request.Type == nil || *request.Type != SCF_TRIGGER_TYPE_API_HTTP {
+		log.Printf("[CRITAL]%s create scf_trigger failed, TriggerName is nil, d.Id()=%s", logId, d.Id())
+		return fmt.Errorf("create scf_trigger failed, TriggerName is nil.")
 	}
 
 	d.SetId(functionName + tccommon.FILED_SP + namespace + tccommon.FILED_SP + triggerName)
@@ -239,7 +396,17 @@ func resourceTencentCloudScfTriggerRead(d *schema.ResourceData, meta interface{}
 	}
 
 	if triggerInfo.TriggerDesc != nil {
-		_ = d.Set("trigger_desc", triggerInfo.TriggerDesc)
+		triggerType := ""
+		if triggerInfo.Type != nil {
+			triggerType = *triggerInfo.Type
+		}
+		if v, ok := d.GetOk("trigger_desc"); ok {
+			_ = d.Set("trigger_desc", cleanTriggerDescFieldsByConfig(*triggerInfo.TriggerDesc, v.(string), triggerType))
+		} else {
+			_ = d.Set("trigger_desc", cleanTriggerDescEmptyStringFields(*triggerInfo.TriggerDesc, triggerType))
+		}
+
+		_ = d.Set("trigger_attribute", *triggerInfo.TriggerDesc)
 	}
 
 	if triggerInfo.Qualifier != nil {

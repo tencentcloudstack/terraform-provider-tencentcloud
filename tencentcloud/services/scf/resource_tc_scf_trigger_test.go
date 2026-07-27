@@ -68,7 +68,7 @@ func TestScfTriggerCreate(t *testing.T) {
 			Triggers: []*scf.TriggerInfo{{
 				TriggerName:     ptrStringScfTrigger("tf-trigger"),
 				Type:            ptrStringScfTrigger("timer"),
-				TriggerDesc:     ptrStringScfTrigger(`{"cron":"*/5 * * * * * *"}`),
+				TriggerDesc:     ptrStringScfTrigger(`{"cron":"*/5 * * * * *","filter":{"Prefix":"","Suffix":"suffix","Key":null,"Count":0}}`),
 				Qualifier:       ptrStringScfTrigger("$DEFAULT"),
 				Enable:          ptrUint64ScfTrigger(1),
 				AvailableStatus: ptrStringScfTrigger("AVAILABLE"),
@@ -89,7 +89,7 @@ func TestScfTriggerCreate(t *testing.T) {
 		"trigger_name":    "tf-trigger",
 		"type":            "timer",
 		"namespace":       "default",
-		"trigger_desc":    `{"cron":"*/5 * * * * *"}`,
+		"trigger_desc":    `{"cron":"*/5 * * * * *","filter":{"Suffix":"suffix"}}`,
 		"qualifier":       "$DEFAULT",
 		"enable":          "OPEN",
 		"description":     "desc",
@@ -145,6 +145,91 @@ func TestScfTriggerCreate_NilResponse(t *testing.T) {
 	assert.Equal(t, "", d.Id())
 }
 
+// TestScfTriggerCreate_HttpWithoutTriggerName verifies http triggers do not require trigger_name.
+func TestScfTriggerCreate_HttpWithoutTriggerName(t *testing.T) {
+	patches := gomonkey.NewPatches()
+	defer patches.Reset()
+
+	scfClient := &scf.Client{}
+	patches.ApplyMethodReturn(newMockMetaScfTrigger().client, "UseScfClient", scfClient)
+
+	var capturedRequest *scf.CreateTriggerRequest
+	patches.ApplyMethodFunc(scfClient, "CreateTriggerWithContext", func(ctx interface{}, request *scf.CreateTriggerRequest) (*scf.CreateTriggerResponse, error) {
+		capturedRequest = request
+		resp := scf.NewCreateTriggerResponse()
+		resp.Response = &scf.CreateTriggerResponseParams{
+			TriggerInfo: &scf.Trigger{
+				Type: ptrStringScfTrigger("http"),
+			},
+			RequestId: ptrStringScfTrigger("fake-request-id"),
+		}
+		return resp, nil
+	})
+
+	patches.ApplyMethodFunc(scfClient, "ListTriggers", func(request *scf.ListTriggersRequest) (*scf.ListTriggersResponse, error) {
+		resp := scf.NewListTriggersResponse()
+		resp.Response = &scf.ListTriggersResponseParams{
+			TotalCount: ptrUint64ScfTrigger(1),
+			Triggers: []*scf.TriggerInfo{{
+				Type:            ptrStringScfTrigger("http"),
+				Qualifier:       ptrStringScfTrigger("$DEFAULT"),
+				Enable:          ptrUint64ScfTrigger(1),
+				AvailableStatus: ptrStringScfTrigger("AVAILABLE"),
+				AddTime:         ptrStringScfTrigger("2025-01-01 00:00:00"),
+				ModTime:         ptrStringScfTrigger("2025-01-01 00:00:00"),
+			}},
+			RequestId: ptrStringScfTrigger("fake-request-id"),
+		}
+		return resp, nil
+	})
+
+	meta := newMockMetaScfTrigger()
+	res := scfsvc.ResourceTencentCloudScfTrigger()
+	d := schema.TestResourceDataRaw(t, res.Schema, map[string]interface{}{
+		"function_name": "tf-function",
+		"type":          "http",
+		"namespace":     "default",
+		"qualifier":     "$DEFAULT",
+		"enable":        "OPEN",
+	})
+
+	err := res.Create(d, meta)
+	assert.NoError(t, err)
+	assert.Equal(t, "tf-function#default#", d.Id())
+	assert.NotNil(t, capturedRequest)
+	assert.Nil(t, capturedRequest.TriggerName)
+	assert.Equal(t, "http", *capturedRequest.Type)
+}
+
+// TestScfTriggerCreate_MissingTriggerNameForNonHttp verifies non-http triggers require trigger_name.
+func TestScfTriggerCreate_MissingTriggerNameForNonHttp(t *testing.T) {
+	res := scfsvc.ResourceTencentCloudScfTrigger()
+	d := schema.TestResourceDataRaw(t, res.Schema, map[string]interface{}{
+		"function_name": "tf-function",
+		"type":          "timer",
+		"namespace":     "default",
+	})
+
+	err := res.Create(d, newMockMetaScfTrigger())
+	assert.Error(t, err)
+	assert.Contains(t, err.Error(), "trigger_name must be specified when type is not http")
+}
+
+// TestScfTriggerCreate_InvalidCosTriggerName verifies cos triggers require trigger_name to be a COS bucket domain.
+func TestScfTriggerCreate_InvalidCosTriggerName(t *testing.T) {
+	res := scfsvc.ResourceTencentCloudScfTrigger()
+	d := schema.TestResourceDataRaw(t, res.Schema, map[string]interface{}{
+		"function_name": "tf-function",
+		"trigger_name":  "tf-trigger",
+		"type":          "cos",
+		"namespace":     "default",
+	})
+
+	err := res.Create(d, newMockMetaScfTrigger())
+	assert.Error(t, err)
+	assert.Contains(t, err.Error(), "trigger_name must match <bucket>.cos.<region>.myqcloud.com when type is cos")
+}
+
 // TestScfTriggerRead verifies the read path populates state from TriggerInfo.
 func TestScfTriggerRead(t *testing.T) {
 	patches := gomonkey.NewPatches()
@@ -160,7 +245,7 @@ func TestScfTriggerRead(t *testing.T) {
 			Triggers: []*scf.TriggerInfo{{
 				TriggerName:     ptrStringScfTrigger("tf-trigger"),
 				Type:            ptrStringScfTrigger("timer"),
-				TriggerDesc:     ptrStringScfTrigger(`{"cron":"*/5 * * * * *"}`),
+				TriggerDesc:     ptrStringScfTrigger(`{"cron":"*/5 * * * * *","filter":{"Prefix":"","Suffix":"suffix","Key":null,"Count":0}}`),
 				Qualifier:       ptrStringScfTrigger("$DEFAULT"),
 				Enable:          ptrUint64ScfTrigger(1),
 				AvailableStatus: ptrStringScfTrigger("AVAILABLE"),
@@ -186,6 +271,7 @@ func TestScfTriggerRead(t *testing.T) {
 	assert.Equal(t, "default", d.Get("namespace").(string))
 	assert.Equal(t, "tf-trigger", d.Get("trigger_name").(string))
 	assert.Equal(t, "timer", d.Get("type").(string))
+	assert.Equal(t, `{"cron":"*/5 * * * * *","filter":{"Suffix":"suffix"}}`, d.Get("trigger_desc").(string))
 	assert.Equal(t, "OPEN", d.Get("enable").(string))
 	assert.Equal(t, "AVAILABLE", d.Get("available_status").(string))
 	assert.Equal(t, "2025-01-01 00:00:00", d.Get("add_time").(string))
@@ -372,20 +458,25 @@ func TestScfTriggerSchema(t *testing.T) {
 
 	triggerName, ok := res.Schema["trigger_name"]
 	assert.True(t, ok, "trigger_name should exist in schema")
-	assert.True(t, triggerName.Required)
-	assert.True(t, triggerName.ForceNew)
+	assert.True(t, triggerName.Optional)
+	assert.True(t, triggerName.Computed)
+	assert.False(t, triggerName.ForceNew)
 
 	typeField, ok := res.Schema["type"]
 	assert.True(t, ok, "type should exist in schema")
 	assert.True(t, typeField.Required)
 	assert.True(t, typeField.ForceNew)
+	assert.NotNil(t, typeField.ValidateFunc)
+	_, errors := typeField.ValidateFunc("http", "type")
+	assert.Empty(t, errors)
+	_, errors = typeField.ValidateFunc("invalid", "type")
+	assert.NotEmpty(t, errors)
 
-	// Namespace defaults to default and is ForceNew.
+	// Namespace is required and ForceNew.
 	namespace, ok := res.Schema["namespace"]
 	assert.True(t, ok, "namespace should exist in schema")
-	assert.True(t, namespace.Optional)
+	assert.True(t, namespace.Required)
 	assert.True(t, namespace.ForceNew)
-	assert.Equal(t, "default", namespace.Default)
 
 	// Mutable fields are Optional and not ForceNew.
 	for _, field := range []string{"enable", "qualifier", "trigger_desc", "description", "custom_argument"} {
