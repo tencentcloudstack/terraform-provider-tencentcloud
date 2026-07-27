@@ -21,7 +21,7 @@ Provides a resource to create a TEO bind security template
 resource "tencentcloud_teo_bind_security_template" "example" {
   zone_id     = "zone-3skoch6ingbw"
   template_id = "temp-3s1pzyam2nxp"
-  entity      = "t2-zone-3skoch6ingbw-1310708577.edgeone-infer.com"
+  entity      = "tf.example.com"
   operate     = "unbind-use-default"
 }
 ```
@@ -64,6 +64,6 @@ The `timeouts` block allows you to specify [timeouts](https://developer.hashicor
 TEO bind security template can be imported using the zoneId#templateId#entity, e.g.
 
 ```
-terraform import tencentcloud_teo_bind_security_template.teo_bind_security_template zone-39quuimqg8r6#temp-7dr7dm78#aaa.makn.cn
+terraform import tencentcloud_teo_bind_security_template.teo_bind_security_template zone-3skoch6ingbw#temp-3s1pzyam2nxp#tf.example.com
 ```
 
