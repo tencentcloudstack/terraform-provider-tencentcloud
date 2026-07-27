@@ -4,20 +4,20 @@ layout: "tencentcloud"
 page_title: "TencentCloud: tencentcloud_cls_config"
 sidebar_current: "docs-tencentcloud-resource-cls_config"
 description: |-
-  Provides a resource to create a cls config
+  Provides a resource to create a CLS config
 ---
 
 # tencentcloud_cls_config
 
-Provides a resource to create a cls config
+Provides a resource to create a CLS config
 
 ## Example Usage
 
 ```hcl
-resource "tencentcloud_cls_config" "config" {
-  name       = "config_hello"
-  output     = "4d07fba0-b93e-4e0b-9a7f-d58542560bbb"
-  path       = "/var/log/kubernetes"
+resource "tencentcloud_cls_config" "example" {
+  name       = "tf-example"
+  output     = "734f50d1-d621-425c-8768-6f9a5f0412ee"
+  path       = "/data/log/**/error.log"
   log_type   = "json_log"
   input_type = "file"
   extract_rule {
@@ -25,23 +25,38 @@ resource "tencentcloud_cls_config" "config" {
       key   = "key1"
       regex = "value1"
     }
+
     filter_key_regex {
       key   = "key2"
       regex = "value2"
     }
+
+    is_gbk                  = 0
+    json_standard           = 1
     un_match_up_load_switch = true
-    un_match_log_key        = "config"
-    backtracking            = -1
+    un_match_log_key        = "LogParseFailure"
+    backtracking            = 0
+    metadata_type           = 2
+    meta_tags {
+      key   = "myKey"
+      value = "myValue"
+    }
+
+    filter_key_regex {
+      key   = "ErrorCode"
+      regex = "500"
+    }
   }
+
   exclude_paths {
     type  = "Path"
     value = "/data"
   }
+
   exclude_paths {
     type  = "File"
     value = "/file"
   }
-  #  user_define_rule = ""
 }
 ```
 
@@ -104,9 +119,9 @@ In addition to all arguments above, the following attributes are exported:
 
 ## Import
 
-cls config can be imported using the id, e.g.
+CLS config can be imported using the id, e.g.
 
 ```
-terraform import tencentcloud_cls_config.config config_id
+terraform import tencentcloud_cls_config.example 49611ec9-c5f2-4cc9-9e06-15dd7fa43982
 ```
 
