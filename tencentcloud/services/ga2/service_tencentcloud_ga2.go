@@ -7,6 +7,7 @@ import (
 	"time"
 
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
+	sdkErrors "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/common/errors"
 	ga2v20250115 "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/ga2/v20250115"
 
 	tccommon "github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/common"
@@ -16,6 +17,16 @@ import (
 
 // taskStatusSuccess is the terminal success status returned by DescribeTaskResult.
 const taskStatusSuccess = "SUCCESS"
+
+// IsGa2ResourceNotFoundError checks whether the given error is an SDK error with
+// code "ResourceNotFound". This is used by resource Read functions to distinguish
+// "resource does not exist" from other errors.
+func IsGa2ResourceNotFoundError(err error) bool {
+	if sdkErr, ok := err.(*sdkErrors.TencentCloudSDKError); ok {
+		return sdkErr.Code == "ResourceNotFound"
+	}
+	return false
+}
 
 // Ga2Service wraps the GA2 v20250115 SDK client for the provider.
 type Ga2Service struct {
