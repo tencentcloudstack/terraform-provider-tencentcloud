@@ -19,7 +19,7 @@ The resource schema SHALL expose every input parameter accepted by the `CreateLi
 - `cipher_policy_id` (string, optional+computed): TLS cipher pack ID.
 - `server_certificates` (set of string, optional+computed): server certificate IDs.
 - `client_ca_certificates` (set of string, optional+computed): client CA certificate IDs.
-- `http_version` (string, optional+computed, **ForceNew**): HTTP version for HTTPS listeners. Valid values: `HTTP/1.1`, `HTTP/2`. Only applicable to HTTPS listeners. Cannot be modified after creation; changing it forces a new resource.
+- `http_version` (string, optional+computed): HTTP version for HTTPS listeners. Valid values: `HTTP/1.1`, `HTTP/2`. Only applicable to HTTPS listeners. Cannot be modified after creation.
 
 The schema SHALL additionally expose the following Modify-only / Read-only attributes:
 - `client_affinity_time` (int, optional+computed): session-stickiness duration. **NOTE:** silently ignored on Create (the SDK `CreateListenerRequest` has no `ClientAffinityTime` field) and forwarded only on Update.
@@ -34,17 +34,17 @@ The resource SHALL additionally expose the following read-only attributes hydrat
 - **WHEN** a developer inspects the resource schema
 - **THEN** every field declared in `ga2v20250115.CreateListenerRequestParams` (GlobalAcceleratorId, Name, PortRanges, Description, ListenerType, Protocol, IdleTimeout, GetRealIpType, ClientAffinity, RequestTimeout, XForwardedForRealIp, CertificationType, CipherPolicyId, ServerCertificates, ClientCaCertificates, HttpVersion) appears in the schema with semantically equivalent typing.
 
-#### Scenario: HttpVersion is Optional+Computed+ForceNew
+#### Scenario: HttpVersion is Optional+Computed
 - **WHEN** a developer inspects the `http_version` schema field
-- **THEN** the field is declared as `Optional: true, Computed: true, ForceNew: true, Type: schema.TypeString` with a description mentioning valid values `HTTP/1.1` and `HTTP/2` and that it only applies to HTTPS listeners.
+- **THEN** the field is declared as `Optional: true, Computed: true, Type: schema.TypeString` with a description mentioning valid values `HTTP/1.1` and `HTTP/2` and that it only applies to HTTPS listeners.
 
 #### Scenario: HttpVersion defaults to computed value when unset
 - **WHEN** a user creates a listener without setting `http_version`
 - **THEN** the field is populated from the `DescribeListeners` response after Read, with no diff on subsequent plans.
 
-#### Scenario: HttpVersion change triggers ForceNew
-- **WHEN** a user changes `http_version` in their Terraform configuration
-- **THEN** Terraform plans a destroy/create operation rather than an in-place update.
+#### Scenario: HttpVersion change triggers immutable error
+- **WHEN** a user changes `http_version` in their Terraform configuration and applies the plan
+- **THEN** the Update function returns an error: `field "http_version" cannot be modified after creation; it requires a new resource to be created`.
 
 #### Scenario: No undocumented schema fields
 - **WHEN** a developer inspects the resource schema

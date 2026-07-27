@@ -12,20 +12,20 @@ This means users can now choose the HTTP version at listener creation time, but 
 ## Goals / Non-Goals
 
 **Goals:**
-- Promote `http_version` from Computed-only to Optional+Computed+ForceNew, allowing users to specify `HTTP/1.1` or `HTTP/2` when creating an HTTPS listener.
+- Promote `http_version` from Computed-only to Optional+Computed, allowing users to specify `HTTP/1.1` or `HTTP/2` when creating an HTTPS listener.
 - Forward the user-supplied value to `CreateListenerRequest.HttpVersion` in the Create function.
 - Maintain full backward compatibility: existing configurations that do not set `http_version` continue to work unchanged (the API default applies, and the value is read back as before).
 
 **Non-Goals:**
-- Adding support for modifying `http_version` after creation — the API does not support it, and ForceNew handles this correctly.
+- Adding support for modifying `http_version` after creation — the API does not support it, and the Update function's immutable args check handles this correctly.
 - Changing any other schema field or behavior of the `tencentcloud_ga2_listener` resource.
 - Adding a new data source or separate resource.
 
 ## Decisions
 
-### D1. Schema change: Computed → Optional+Computed+ForceNew
+### D1. Schema change: Computed → Optional+Computed
 
-**Why ForceNew:** `ModifyListenerRequest` has no `HttpVersion` field. The API does not allow changing the HTTP version after creation, so any change to this field requires destroying and recreating the listener. This matches the existing ForceNew pattern used for `port_ranges`, `listener_type`, `protocol`, and `global_accelerator_id`.
+**Why not ForceNew:** The `ModifyListener` API does not accept `HttpVersion`, so users cannot change it after creation. Instead of using `ForceNew: true` (which would silently destroy and recreate the listener), we add an explicit immutable args check in the Update function. This gives users a clear error message: `field "http_version" cannot be modified after creation; it requires a new resource to be created`. This approach is more user-friendly than a silent destroy/create.
 
 **Why Optional+Computed (not just Optional):** The field is only meaningful for HTTPS listeners. For other protocols (TCP, UDP, HTTP), the API ignores this value. Using Optional+Computed ensures that:
 - Users who don't set it get the API's default (computed from the response).
@@ -42,9 +42,9 @@ This follows the same pattern used for all other Optional+Computed fields in the
 
 The Read function already reads `HttpVersion` from `ListenerSet` and sets it via `_ = d.Set("http_version", respData.HttpVersion)`. No change required — the field will continue to be populated from the API response regardless of whether the user set it or not.
 
-### D4. Update function: no change needed
+### D4. Update function: immutable args check
 
-Since `http_version` is ForceNew, Terraform automatically triggers a destroy/create cycle if the user changes it. The Update function never sees a `HasChange("http_version")` event for in-place updates.
+Since `http_version` cannot be modified after creation, the Update function includes an `immutableArgs` slice (`[]string{"http_version"}`) that is checked at the top of the function. If any immutable field has changed (detected via `d.HasChange()`), the function returns an error: `field "http_version" cannot be modified after creation; it requires a new resource to be created`. This is more user-friendly than silently destroying the resource via ForceNew, as it clearly explains what went wrong and how to fix it.
 
 ## Risks / Trade-offs
 
@@ -52,4 +52,4 @@ Since `http_version` is ForceNew, Terraform automatically triggers a destroy/cre
 
 - **[Risk]** Promoting a Computed field to Optional+Computed could cause existing state to show a diff if the stored computed value differs from what the user might want to set. → **Mitigation**: Since the field was Computed-only before, existing states already have the correct API-returned value stored. No diff will appear for existing configurations because the user hasn't set the field explicitly, and Computed fields are not compared for changes unless the user adds an explicit value.
 
-- **[Trade-off]** ForceNew means changing `http_version` destroys and recreates the entire listener (including its endpoint groups). This is unavoidable because the API does not support in-place modification.
+- **[Trade-off]** Changing `http_version` requires explicit recreation of the listener (including its endpoint groups). The Update function returns a clear error message rather than silently triggering a destroy/create cycle. This is unavoidable because the API does not support in-place modification.
