@@ -631,6 +631,7 @@ tencentcloud_ga2_listener
 tencentcloud_ga2_endpoint_group
 tencentcloud_ga2_forwarding_policy
 tencentcloud_ga2_forwarding_rule
+tencentcloud_ga2_global_accelerator_acl_policy
 
 Global Application Acceleration(GAAP)
 Data Source

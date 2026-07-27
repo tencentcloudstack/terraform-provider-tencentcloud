@@ -1745,6 +1745,7 @@ func Provider() *schema.Provider {
 			"tencentcloud_ga2_endpoint_group":                                                       ga2.ResourceTencentCloudGa2EndpointGroup(),
 			"tencentcloud_ga2_forwarding_policy":                                                    ga2.ResourceTencentCloudGa2ForwardingPolicy(),
 			"tencentcloud_ga2_forwarding_rule":                                                      ga2.ResourceTencentCloudGa2ForwardingRule(),
+			"tencentcloud_ga2_global_accelerator_acl_policy":                                        ga2.ResourceTencentCloudGa2GlobalAcceleratorAclPolicy(),
 			"tencentcloud_gaap_proxy":                                                               gaap.ResourceTencentCloudGaapProxy(),
 			"tencentcloud_gaap_realserver":                                                          gaap.ResourceTencentCloudGaapRealserver(),
 			"tencentcloud_gaap_layer4_listener":                                                     gaap.ResourceTencentCloudGaapLayer4Listener(),
