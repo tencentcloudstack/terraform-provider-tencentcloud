@@ -47,7 +47,7 @@ func ResourceTencentCloudGa2GlobalAcceleratorAclPolicy() *schema.Resource {
 				Type:        schema.TypeString,
 				Optional:    true,
 				Computed:    true,
-				Description: "ACL policy state. Enumerated values: `OPEN` (enabled), `CLOSE` (disabled).",
+				Description: "ACL policy state. Enumerated values: `OPEN` (enabled), `CLOSE` (disabled). Default is `CLOSE`.",
 			},
 
 			// Computed
@@ -55,11 +55,6 @@ func ResourceTencentCloudGa2GlobalAcceleratorAclPolicy() *schema.Resource {
 				Type:        schema.TypeString,
 				Computed:    true,
 				Description: "ACL policy ID.",
-			},
-			"task_id": {
-				Type:        schema.TypeString,
-				Computed:    true,
-				Description: "Async task ID returned by the most recent write call (Create / Modify / Delete).",
 			},
 		},
 	}
@@ -76,7 +71,6 @@ func resourceTencentCloudGa2GlobalAcceleratorAclPolicyCreate(d *schema.ResourceD
 		response = ga2v20250115.NewCreateGlobalAcceleratorAclPolicyResponse()
 		gaId     string
 		policyId string
-		taskId   string
 	)
 
 	if v, ok := d.GetOk("global_accelerator_id"); ok {
@@ -113,20 +107,55 @@ func resourceTencentCloudGa2GlobalAcceleratorAclPolicyCreate(d *schema.ResourceD
 		log.Printf("[CRITAL]%s create ga2_global_accelerator_acl_policy failed, id=%s, GlobalAcceleratorAclPolicyId is nil or empty", logId, d.Id())
 		return fmt.Errorf("create ga2_global_accelerator_acl_policy failed, GlobalAcceleratorAclPolicyId is nil or empty")
 	}
+
 	policyId = *response.Response.GlobalAcceleratorAclPolicyId
+	d.SetId(gaId + tccommon.FILED_SP + policyId)
 
 	if response.Response.TaskId == nil {
 		return fmt.Errorf("create ga2_global_accelerator_acl_policy failed, TaskId is nil.")
 	}
-	taskId = *response.Response.TaskId
 
+	taskId := *response.Response.TaskId
 	service := Ga2Service{client: meta.(tccommon.ProviderMeta).GetAPIV3Conn()}
 	if err := service.WaitForGa2TaskFinish(ctx, taskId, d.Timeout(schema.TimeoutCreate)); err != nil {
 		return err
 	}
 
-	d.SetId(gaId + tccommon.FILED_SP + policyId)
-	_ = d.Set("task_id", taskId)
+	if v, ok := d.GetOk("status"); ok {
+		if v.(string) == "OPEN" {
+			request := ga2v20250115.NewModifyGlobalAcceleratorAclPolicyRequest()
+			request.GlobalAcceleratorId = helper.String(gaId)
+			request.GlobalAcceleratorAclPolicyId = helper.String(policyId)
+			request.Status = helper.String("OPEN")
+
+			var taskId string
+			reqErr := resource.Retry(tccommon.WriteRetryTimeout, func() *resource.RetryError {
+				result, e := meta.(tccommon.ProviderMeta).GetAPIV3Conn().UseGa2V20250115Client().ModifyGlobalAcceleratorAclPolicyWithContext(ctx, request)
+				if e != nil {
+					return tccommon.RetryError(e)
+				} else {
+					log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), result.ToJsonString())
+				}
+
+				if result == nil || result.Response == nil || result.Response.TaskId == nil {
+					return resource.NonRetryableError(fmt.Errorf("Modify ga2_global_accelerator_acl_policy failed, Response is nil."))
+				}
+
+				taskId = *result.Response.TaskId
+				return nil
+			})
+
+			if reqErr != nil {
+				log.Printf("[CRITAL]%s update ga2_global_accelerator_acl_policy failed, reason:%+v", logId, reqErr)
+				return reqErr
+			}
+
+			service := Ga2Service{client: meta.(tccommon.ProviderMeta).GetAPIV3Conn()}
+			if err := service.WaitForGa2TaskFinish(ctx, taskId, d.Timeout(schema.TimeoutCreate)); err != nil {
+				return err
+			}
+		}
+	}
 
 	return resourceTencentCloudGa2GlobalAcceleratorAclPolicyRead(d, meta)
 }
@@ -232,8 +261,6 @@ func resourceTencentCloudGa2GlobalAcceleratorAclPolicyUpdate(d *schema.ResourceD
 		return reqErr
 	}
 
-	_ = d.Set("task_id", taskId)
-
 	service := Ga2Service{client: meta.(tccommon.ProviderMeta).GetAPIV3Conn()}
 	if err := service.WaitForGa2TaskFinish(ctx, taskId, d.Timeout(schema.TimeoutUpdate)); err != nil {
 		return err
@@ -291,7 +318,6 @@ func resourceTencentCloudGa2GlobalAcceleratorAclPolicyDelete(d *schema.ResourceD
 	// ResourceNotFound short-circuit returned nil inside the retry block; when that happens
 	// taskId stays empty and there is no task to poll.
 	if taskId != "" {
-		_ = d.Set("task_id", taskId)
 		service := Ga2Service{client: meta.(tccommon.ProviderMeta).GetAPIV3Conn()}
 		if err := service.WaitForGa2TaskFinish(ctx, taskId, d.Timeout(schema.TimeoutDelete)); err != nil {
 			return err

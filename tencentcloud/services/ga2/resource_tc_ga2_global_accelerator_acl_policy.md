@@ -25,5 +25,5 @@ Import
 GA2 global accelerator ACL policy can be imported using the composite id `<global_accelerator_id>#<global_accelerator_acl_policy_id>`, e.g.
 
 ```
-terraform import tencentcloud_ga2_global_accelerator_acl_policy.example ga-jnyfyyss#gapolicy-xxx
+terraform import tencentcloud_ga2_global_accelerator_acl_policy.example ga-ntc1iaco#sp-nseaj82f
 ```

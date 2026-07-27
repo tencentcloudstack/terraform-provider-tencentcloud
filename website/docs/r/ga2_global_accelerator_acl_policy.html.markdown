@@ -37,7 +37,7 @@ The following arguments are supported:
 
 * `default_action` - (Required, String, ForceNew) Default traffic action. Enumerated values: `ACCEPT` (allow all traffic by default), `DROP` (deny all traffic by default).
 * `global_accelerator_id` - (Required, String, ForceNew) Global accelerator instance ID this ACL policy belongs to.
-* `status` - (Optional, String) ACL policy state. Enumerated values: `OPEN` (enabled), `CLOSE` (disabled).
+* `status` - (Optional, String) ACL policy state. Enumerated values: `OPEN` (enabled), `CLOSE` (disabled). Default is `CLOSE`.
 
 ## Attributes Reference
 
@@ -45,7 +45,6 @@ In addition to all arguments above, the following attributes are exported:
 
 * `id` - ID of the resource.
 * `global_accelerator_acl_policy_id` - ACL policy ID.
-* `task_id` - Async task ID returned by the most recent write call (Create / Modify / Delete).
 
 ## Timeouts
 
@@ -60,6 +59,6 @@ The `timeouts` block allows you to specify [timeouts](https://developer.hashicor
 GA2 global accelerator ACL policy can be imported using the composite id `<global_accelerator_id>#<global_accelerator_acl_policy_id>`, e.g.
 
 ```
-terraform import tencentcloud_ga2_global_accelerator_acl_policy.example ga-jnyfyyss#gapolicy-xxx
+terraform import tencentcloud_ga2_global_accelerator_acl_policy.example ga-ntc1iaco#sp-nseaj82f
 ```
 
