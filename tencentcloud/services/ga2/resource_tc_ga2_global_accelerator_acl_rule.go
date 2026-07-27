@@ -68,15 +68,11 @@ func ResourceTencentCloudGa2GlobalAcceleratorAclRule() *schema.Resource {
 				Optional:    true,
 				Description: "Description. Maximum length is 100 bytes.",
 			},
+			// computed
 			"global_accelerator_acl_rule_id": {
 				Type:        schema.TypeString,
 				Computed:    true,
 				Description: "ACL rule ID.",
-			},
-			"task_id": {
-				Type:        schema.TypeString,
-				Computed:    true,
-				Description: "Async task ID for the last operation on this resource.",
 			},
 		},
 	}
@@ -94,7 +90,6 @@ func resourceTencentCloudGa2GlobalAcceleratorAclRuleCreate(d *schema.ResourceDat
 		gaId     string
 		policyId string
 		ruleId   string
-		taskId   string
 	)
 
 	if v, ok := d.GetOk("global_accelerator_id"); ok {
@@ -143,21 +138,20 @@ func resourceTencentCloudGa2GlobalAcceleratorAclRuleCreate(d *schema.ResourceDat
 	if response.Response.GlobalAcceleratorAclRuleIds == nil || len(response.Response.GlobalAcceleratorAclRuleIds) == 0 {
 		return fmt.Errorf("GlobalAcceleratorAclRuleIds is nil or empty.")
 	}
+
 	ruleId = *response.Response.GlobalAcceleratorAclRuleIds[0]
+	d.SetId(strings.Join([]string{gaId, policyId, ruleId}, tccommon.FILED_SP))
 
 	if response.Response.TaskId == nil {
 		return fmt.Errorf("TaskId is nil.")
 	}
-	taskId = *response.Response.TaskId
 
-	_ = d.Set("task_id", taskId)
-
+	taskId := *response.Response.TaskId
 	service := Ga2Service{client: meta.(tccommon.ProviderMeta).GetAPIV3Conn()}
 	if err := service.WaitForGa2TaskFinish(ctx, taskId, d.Timeout(schema.TimeoutCreate)); err != nil {
 		return err
 	}
 
-	d.SetId(strings.Join([]string{gaId, policyId, ruleId}, tccommon.FILED_SP))
 	return resourceTencentCloudGa2GlobalAcceleratorAclRuleRead(d, meta)
 }
 
@@ -277,8 +271,6 @@ func resourceTencentCloudGa2GlobalAcceleratorAclRuleUpdate(d *schema.ResourceDat
 		log.Printf("[CRITAL]%s update ga2 global_accelerator_acl_rule failed, reason:%+v", logId, reqErr)
 		return reqErr
 	}
-
-	_ = d.Set("task_id", taskId)
 
 	service := Ga2Service{client: meta.(tccommon.ProviderMeta).GetAPIV3Conn()}
 	if err := service.WaitForGa2TaskFinish(ctx, taskId, d.Timeout(schema.TimeoutUpdate)); err != nil {

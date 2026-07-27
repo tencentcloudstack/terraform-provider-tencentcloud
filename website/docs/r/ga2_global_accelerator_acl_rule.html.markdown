@@ -18,11 +18,21 @@ resource "tencentcloud_ga2_global_accelerator" "example" {
   name                 = "tf-example"
   instance_charge_type = "POSTPAID"
   description          = "tf example global accelerator"
+
+  tags = {
+    createdBy = "Terraform"
+  }
+}
+
+resource "tencentcloud_ga2_global_accelerator_acl_policy" "example" {
+  global_accelerator_id = tencentcloud_ga2_global_accelerator.example.id
+  default_action        = "ACCEPT"
+  status                = "OPEN"
 }
 
 resource "tencentcloud_ga2_global_accelerator_acl_rule" "example" {
   global_accelerator_id            = tencentcloud_ga2_global_accelerator.example.id
-  global_accelerator_acl_policy_id = "aclpol-xxxxxxxx"
+  global_accelerator_acl_policy_id = tencentcloud_ga2_global_accelerator_acl_policy.example.global_accelerator_acl_policy_id
   protocol                         = "TCP"
   port                             = "80"
   source_cidr_block                = "10.0.0.0/24"
@@ -49,7 +59,6 @@ In addition to all arguments above, the following attributes are exported:
 
 * `id` - ID of the resource.
 * `global_accelerator_acl_rule_id` - ACL rule ID.
-* `task_id` - Async task ID for the last operation on this resource.
 
 ## Timeouts
 
@@ -64,6 +73,6 @@ The `timeouts` block allows you to specify [timeouts](https://developer.hashicor
 GA2 ACL rule can be imported using the composite id `<global_accelerator_id>#<global_accelerator_acl_policy_id>#<global_accelerator_acl_rule_id>`, e.g.
 
 ```
-terraform import tencentcloud_ga2_global_accelerator_acl_rule.example ga-xxxxxxxx#aclpol-xxxxxxxx#aclrule-xxxxxxxx
+terraform import tencentcloud_ga2_global_accelerator_acl_rule.example ga-5hlomx9m#sp-8oc0ohct#sr-asa55vy5
 ```
 
