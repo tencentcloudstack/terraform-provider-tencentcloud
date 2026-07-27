@@ -200,6 +200,7 @@ func ResourceTencentCloudClsConfig() *schema.Resource {
 			"input_type": {
 				Type:        schema.TypeString,
 				Optional:    true,
+				Computed:    true,
 				Description: "Log input type. Valid values: file: file type collection; windows_event: Windows event collection; syslog: system log collection.",
 			},
 		},
