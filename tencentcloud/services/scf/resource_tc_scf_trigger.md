@@ -1,5 +1,9 @@
 Provides a resource to create a SCF (Serverless Cloud Function) trigger.
 
+~> **NOTE:** Using it alongside `tencentcloud_scf_function.trigger` will cause a conflict.
+
+~> **NOTE:** Using it alongside `tencentcloud_scf_trigger_config` will cause a conflict.
+
 Example Usage
 
 Create an HTTP-type trigger
