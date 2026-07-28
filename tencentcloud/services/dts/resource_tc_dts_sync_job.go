@@ -332,14 +332,14 @@ func resourceTencentCloudDtsSyncJobUpdate(d *schema.ResourceData, meta interface
 			}
 
 			if result == nil || result.Response == nil {
-				return resource.NonRetryableError(fmt.Errorf("Create dts syncJob failed, Response is nil."))
+				return resource.NonRetryableError(fmt.Errorf("Resize syncJob failed, Response is nil."))
 			}
 
 			return nil
 		})
 
 		if err != nil {
-			log.Printf("[CRITAL]%s create dts syncJob failed, reason:%+v", logId, err)
+			log.Printf("[CRITAL]%s resize dts syncJob failed, reason:%+v", logId, err)
 			return err
 		}
 	}
