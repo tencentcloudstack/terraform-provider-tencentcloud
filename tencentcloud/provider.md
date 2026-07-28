@@ -631,6 +631,7 @@ tencentcloud_ga2_listener
 tencentcloud_ga2_endpoint_group
 tencentcloud_ga2_forwarding_policy
 tencentcloud_ga2_forwarding_rule
+tencentcloud_ga2_global_accelerator_acl_policy
 
 Global Application Acceleration(GAAP)
 Data Source
@@ -1059,6 +1060,7 @@ tencentcloud_scf_namespace
 tencentcloud_scf_layer
 tencentcloud_scf_function_alias
 tencentcloud_scf_trigger_config
+tencentcloud_scf_trigger
 tencentcloud_scf_custom_domain
 
 SQLServer

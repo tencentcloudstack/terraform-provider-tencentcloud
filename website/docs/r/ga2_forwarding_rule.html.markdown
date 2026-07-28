@@ -113,6 +113,16 @@ resource "tencentcloud_ga2_forwarding_rule" "example" {
     rule_action_type  = "ForwardGroup"
     rule_action_value = tencentcloud_ga2_endpoint_group.example.endpoint_group_id
   }
+
+  response_headers {
+    key   = "ShowKey"
+    value = "ShowValue"
+  }
+
+  hide_response_headers {
+    key   = "HideKey"
+    value = ""
+  }
 }
 ```
 
@@ -152,14 +162,26 @@ The following arguments are supported:
 * `rule_actions` - (Required, Set) Layer-7 forwarding rule action list. Treated as an unordered set; HCL element order has no semantic meaning.
 * `rule_conditions` - (Required, Set) Layer-7 forwarding rule condition list. Maximum of 1 element. Treated as an unordered set; HCL element order has no semantic meaning.
 * `enable_origin_sni` - (Optional, Bool) Whether to enable origin SNI. Default: `false`. Required when `rule_actions.rule_action_type` is `ForwardGroup`.
+* `hide_response_headers` - (Optional, Set) Hide origin response header list. Maximum of 5 elements. An empty set means clearing the configuration. Treated as an unordered set; HCL element order has no semantic meaning.
 * `origin_headers` - (Optional, Set) Origin request header list. Maximum of 5 elements. Required when `rule_actions.rule_action_type` is `ForwardGroup`. Treated as an unordered set; HCL element order has no semantic meaning.
 * `origin_host` - (Optional, String) Origin host value. Maximum length is 80 characters. Required when `rule_actions.rule_action_type` is `ForwardGroup`.
 * `origin_sni` - (Optional, String) Origin SNI value. Maximum length is 80 characters. Required when `enable_origin_sni` is `true`, and also required when `rule_actions.rule_action_type` is `ForwardGroup`.
+* `response_headers` - (Optional, Set) Origin response header list. Maximum of 5 elements. An empty set means clearing the configuration. Treated as an unordered set; HCL element order has no semantic meaning.
+
+The `hide_response_headers` object supports the following:
+
+* `key` - (Required, String) Hide origin response header key. Maximum length is 128 characters. If the value contains `$`, only `$remote_addr` or `$remote_port` are supported.
+* `value` - (Optional, String) Hide origin response header value. Currently only an empty string is accepted.
 
 The `origin_headers` object supports the following:
 
 * `key` - (Required, String) Origin request header key. Must contain only printable ASCII characters and must not contain `()<>@,;:\"/[ ]?={}`. Length must be between 1 and 40 characters.
 * `value` - (Required, String) Origin request header value. Maximum length is 128 characters. If the value contains `$`, only `$remote_addr` or `$remote_port` are supported.
+
+The `response_headers` object supports the following:
+
+* `key` - (Required, String) Origin response header key. Must contain only printable ASCII characters and must not contain `()<>@,;:\"/[ ]?={}`. Length must be between 1 and 40 characters.
+* `value` - (Required, String) Origin response header value. Maximum length is 128 characters. If the value contains `$`, only `$remote_addr` or `$remote_port` are supported.
 
 The `rule_actions` object supports the following:
 

@@ -1,3 +1,11 @@
+## 1.83.15(July 24, 2026)
+
+ENHANCEMENTS:
+
+* resource/tencentcloud_audit_track: support compress parameter in storage block ([#4337](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/4337))
+* resource/tencentcloud_kubernetes_native_node_pool: optimize code logic ([#4332](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/4332))
+* resource/tencentcloud_redis_log_delivery: support `is_delete_topic` and `is_delete_logset` ([#4333](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/4333))
+
 ## 1.83.14(July 24, 2026)
 
 ENHANCEMENTS:

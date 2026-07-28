@@ -61,6 +61,7 @@ func ResourceTencentCloudGa2AccelerateArea() *schema.Resource {
 				Type:     schema.TypeString,
 				Optional: true,
 				Computed: true,
+				ForceNew: true,
 				Description: "ISP type. Valid values: `BGP` (BGP), `STATIC_IP` (multi-ISP static IP), `QUALITY_BGP` (premium BGP). " +
 					"Default: `BGP`.",
 			},
@@ -68,12 +69,14 @@ func ResourceTencentCloudGa2AccelerateArea() *schema.Resource {
 				Type:        schema.TypeString,
 				Optional:    true,
 				Computed:    true,
+				ForceNew:    true,
 				Description: "IP version. Only `IPv4` is supported. Default: `IPv4`.",
 			},
 			"ip_address": {
 				Type:        schema.TypeSet,
 				Optional:    true,
 				Computed:    true,
+				ForceNew:    true,
 				Elem:        &schema.Schema{Type: schema.TypeString},
 				Description: "Bound IP address list. Treated as an unordered set; HCL element order has no semantic meaning.",
 			},
@@ -195,11 +198,19 @@ func resourceTencentCloudGa2AccelerateAreaRead(d *schema.ResourceData, meta inte
 
 	respData, err := service.DescribeGa2AccelerateAreaById(ctx, gaId, areaId)
 	if err != nil {
+		if !d.IsNewResource() && IsGa2ResourceNotFoundError(err) {
+			log.Printf("[WARN]%s resource `tencentcloud_ga2_accelerate_area` [%s] not found, please check if it has been deleted.\n", logId, d.Id())
+			d.SetId("")
+			return nil
+		}
 		return err
 	}
 
 	if respData == nil {
 		log.Printf("[WARN]%s resource `tencentcloud_ga2_accelerate_area` [%s] not found, please check if it has been deleted.\n", logId, d.Id())
+		if d.IsNewResource() {
+			return fmt.Errorf("resource `tencentcloud_ga2_accelerate_area` [%s] not found after creation", d.Id())
+		}
 		d.SetId("")
 		return nil
 	}
@@ -253,7 +264,7 @@ func resourceTencentCloudGa2AccelerateAreaUpdate(d *schema.ResourceData, meta in
 	}
 
 	// ModifyAccelerateAreas accepts the mutable area fields; accelerate_region is ForceNew.
-	modifyFields := []string{"bandwidth", "isp_type", "ip_version", "ip_address"}
+	modifyFields := []string{"bandwidth"}
 	needModify := false
 	for _, f := range modifyFields {
 		if d.HasChange(f) {
@@ -382,7 +393,7 @@ func buildGa2AcceleratorArea(d *schema.ResourceData, areaId, step string) *ga2v2
 			area.AccelerateRegion = helper.String(v.(string))
 		}
 
-		if v, ok := d.GetOk("bandwidth"); ok {
+		if v, ok := d.GetOkExists("bandwidth"); ok {
 			area.Bandwidth = helper.IntUint64(v.(int))
 		}
 
@@ -402,16 +413,8 @@ func buildGa2AcceleratorArea(d *schema.ResourceData, areaId, step string) *ga2v2
 			area.AccelerateRegion = helper.String(v.(string))
 		}
 
-		if v, ok := d.GetOk("bandwidth"); ok {
+		if v, ok := d.GetOkExists("bandwidth"); ok {
 			area.Bandwidth = helper.IntUint64(v.(int))
-		}
-
-		if v, ok := d.GetOk("isp_type"); ok {
-			area.IspType = helper.String(v.(string))
-		}
-
-		if v, ok := d.GetOk("ip_version"); ok {
-			area.IpVersion = helper.String(v.(string))
 		}
 	}
 
