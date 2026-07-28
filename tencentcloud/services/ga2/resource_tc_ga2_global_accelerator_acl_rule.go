@@ -46,7 +46,7 @@ func ResourceTencentCloudGa2GlobalAcceleratorAclRule() *schema.Resource {
 			"protocol": {
 				Type:        schema.TypeString,
 				Required:    true,
-				Description: "Protocol. Valid values: `TCP`, `UDP`, `ALL`.",
+				Description: "Protocol. Valid values: `TCP`, `UDP`.",
 			},
 			"port": {
 				Type:        schema.TypeString,

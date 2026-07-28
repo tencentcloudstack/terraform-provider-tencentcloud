@@ -49,7 +49,7 @@ The following arguments are supported:
 * `global_accelerator_id` - (Required, String, ForceNew) Global accelerator instance ID.
 * `policy` - (Required, String) Action. Valid values: `ACCEPT` (allow), `DROP` (deny).
 * `port` - (Required, String) Port.
-* `protocol` - (Required, String) Protocol. Valid values: `TCP`, `UDP`, `ALL`.
+* `protocol` - (Required, String) Protocol. Valid values: `TCP`, `UDP`.
 * `source_cidr_block` - (Required, String) Source CIDR block.
 * `description` - (Optional, String) Description. Maximum length is 100 bytes.
 
