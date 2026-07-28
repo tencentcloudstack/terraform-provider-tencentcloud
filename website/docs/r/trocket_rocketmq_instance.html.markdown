@@ -11,8 +11,6 @@ description: |-
 
 Provides a resource to create a Trocket rocketmq instance
 
-~> **NOTE:** It only supports create postpaid rocketmq 5.x instance.
-
 ## Example Usage
 
 ### Create Basic Instance
@@ -125,7 +123,7 @@ resource "tencentcloud_trocket_rocketmq_instance" "example" {
   renew_flag    = 1
   time_span     = 12
   max_topic_num = 1000
-  zone_ids      = [100003]
+  zone_ids      = [100006, 100007]
   tags = {
     tag_key   = "rocketmq"
     tag_value = "5.x"
@@ -137,28 +135,28 @@ resource "tencentcloud_trocket_rocketmq_instance" "example" {
 
 The following arguments are supported:
 
-* `instance_type` - (Required, String) Instance type. Valid values: `EXPERIMENT`, `BASIC`, `PRO`, `PLATINUM`.
-* `name` - (Required, String) Instance name.
-* `sku_code` - (Required, String) SKU code. Available specifications are as follows: experiment_500, basic_1k, basic_2k, basic_3k, basic_4k, basic_5k, basic_6k, basic_7k, basic_8k, basic_9k, basic_10k, pro_4k, pro_6k, pro_8k, pro_1w, pro_15k, pro_2w, pro_25k, pro_3w, pro_35k, pro_4w, pro_45k, pro_5w, pro_55k, pro_60k, pro_65k, pro_70k, pro_75k, pro_80k, pro_85k, pro_90k, pro_95k, pro_100k, platinum_1w, platinum_2w, platinum_3w, platinum_4w, platinum_5w, platinum_6w, platinum_7w, platinum_8w, platinum_9w, platinum_10w, platinum_12w, platinum_14w, platinum_16w, platinum_18w, platinum_20w, platinum_25w, platinum_30w, platinum_35w, platinum_40w, platinum_45w, platinum_50w, platinum_60w, platinum_70w, platinum_80w, platinum_90w, platinum_100w.
-* `subnet_id` - (Required, String) Subnet id.
-* `vpc_id` - (Required, String) VPC id.
-* `bandwidth` - (Optional, Int) Public network bandwidth. `bandwidth` must be greater than zero when `enable_public` equal true.
-* `enable_public` - (Optional, Bool) Whether to enable the public network. Must set `bandwidth` when `enable_public` equal true.
-* `ip_rules` - (Optional, List) Public network access whitelist.
-* `max_topic_num` - (Optional, Int) Maximum number of topics that can be created.
-* `message_retention` - (Optional, Int) Message retention time in hours.
-* `pay_mode` - (Optional, Int) Billing mode (0: pay-as-you-go; 1: subscription). Default value is 0.
-* `remark` - (Optional, String) Remark.
-* `renew_flag` - (Optional, Int) Whether to auto-renew a subscription instance (0: no auto-renewal; 1: auto-renewal). Default value is 0.
-* `tags` - (Optional, Map) Tag description list.
-* `time_span` - (Optional, Int) Purchase duration of a subscription instance in months. Value range: 1-60. Default value is 1.
-* `zone_ids` - (Optional, List: [`Int`]) List of deployment availability zones.
+* `instance_type` - (Required, String) Instance type. Valid values: `EXPERIMENT` (trial edition), `BASIC` (basic edition), `PRO` (professional edition), `PLATINUM` (platinum edition).
+* `name` - (Required, String) Instance (cluster) name, 3-64 characters, can only contain digits, letters, hyphen '-' and underscore '_'.
+* `sku_code` - (Required, String) SKU code, obtained from the ProductSKU output of the DescribeProductSKUs interface.
+* `subnet_id` - (Required, String) Subnet ID that the instance binds to.
+* `vpc_id` - (Required, String) VPC ID that the instance binds to.
+* `bandwidth` - (Optional, Int) Public network bandwidth in Mbps, default 0. Must be a positive integer greater than 0 when public network is enabled.
+* `enable_public` - (Optional, Bool) Whether to enable public network access, default false. When set to true, `bandwidth` must be set to a positive integer.
+* `ip_rules` - (Optional, List) Public network access whitelist. If left empty, all IP access is denied.
+* `max_topic_num` - (Optional, Int) Maximum number of topics that can be created. The default/minimum and maximum are obtained from the TopicNumLimit and TopicNumUpperLimit parameters in the ProductSKU output of the DescribeProductSKUs interface.
+* `message_retention` - (Optional, Int) Message retention time in hours. The value range and default are obtained from the DefaultRetention/RetentionLowerLimit/RetentionUpperLimit parameters in the ProductSKU output of the DescribeProductSKUs interface.
+* `pay_mode` - (Optional, Int) Billing mode. `0`: pay-as-you-go (postpaid), `1`: subscription (prepaid). Default is `0`.
+* `remark` - (Optional, String) Remark information.
+* `renew_flag` - (Optional, Int) Whether to auto-renew a prepaid instance. `0`: no auto-renewal, `1`: auto-renewal. Default is `0`.
+* `tags` - (Optional, Map) Tag list.
+* `time_span` - (Optional, Int) Purchase duration of a prepaid instance in months. Value range: 1-60. Default is `1`.
+* `zone_ids` - (Optional, List: [`Int`]) List of deployment availability zones, obtained from the ZoneInfo structure returned by the DescribeZones interface.
 
 The `ip_rules` object supports the following:
 
-* `allow` - (Required, Bool) Whether to allow release or not.
-* `ip` - (Required, String) IP.
-* `remark` - (Required, String) Remark.
+* `allow` - (Required, Bool) Whether to allow access from this IP.
+* `ip` - (Required, String) IP address.
+* `remark` - (Required, String) Remark information.
 
 ## Attributes Reference
 

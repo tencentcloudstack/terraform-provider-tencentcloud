@@ -1,7 +1,5 @@
 Provides a resource to create a Trocket rocketmq instance
 
-~> **NOTE:** It only supports create postpaid rocketmq 5.x instance.
-
 Example Usage
 
 Create Basic Instance
@@ -114,7 +112,7 @@ resource "tencentcloud_trocket_rocketmq_instance" "example" {
   renew_flag    = 1
   time_span     = 12
   max_topic_num = 1000
-  zone_ids      = [100003]
+  zone_ids      = [100006, 100007]
   tags = {
     tag_key   = "rocketmq"
     tag_value = "5.x"

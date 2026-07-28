@@ -30,81 +30,81 @@ func ResourceTencentCloudTrocketRocketmqInstance() *schema.Resource {
 			"instance_type": {
 				Required:    true,
 				Type:        schema.TypeString,
-				Description: "Instance type. Valid values: `EXPERIMENT`, `BASIC`, `PRO`, `PLATINUM`.",
+				Description: "Instance type. Valid values: `EXPERIMENT` (trial edition), `BASIC` (basic edition), `PRO` (professional edition), `PLATINUM` (platinum edition).",
 			},
 
 			"name": {
 				Required:    true,
 				Type:        schema.TypeString,
-				Description: "Instance name.",
+				Description: "Instance (cluster) name, 3-64 characters, can only contain digits, letters, hyphen '-' and underscore '_'.",
 			},
 
 			"sku_code": {
 				Required:    true,
 				Type:        schema.TypeString,
-				Description: "SKU code. Available specifications are as follows: experiment_500, basic_1k, basic_2k, basic_3k, basic_4k, basic_5k, basic_6k, basic_7k, basic_8k, basic_9k, basic_10k, pro_4k, pro_6k, pro_8k, pro_1w, pro_15k, pro_2w, pro_25k, pro_3w, pro_35k, pro_4w, pro_45k, pro_5w, pro_55k, pro_60k, pro_65k, pro_70k, pro_75k, pro_80k, pro_85k, pro_90k, pro_95k, pro_100k, platinum_1w, platinum_2w, platinum_3w, platinum_4w, platinum_5w, platinum_6w, platinum_7w, platinum_8w, platinum_9w, platinum_10w, platinum_12w, platinum_14w, platinum_16w, platinum_18w, platinum_20w, platinum_25w, platinum_30w, platinum_35w, platinum_40w, platinum_45w, platinum_50w, platinum_60w, platinum_70w, platinum_80w, platinum_90w, platinum_100w.",
+				Description: "SKU code, obtained from the ProductSKU output of the DescribeProductSKUs interface.",
 			},
 
 			"remark": {
 				Optional:    true,
 				Type:        schema.TypeString,
-				Description: "Remark.",
+				Description: "Remark information.",
 			},
 
 			"tags": {
 				Type:        schema.TypeMap,
 				Optional:    true,
 				Computed:    true,
-				Description: "Tag description list.",
+				Description: "Tag list.",
 			},
 
 			"vpc_id": {
 				Type:        schema.TypeString,
 				Required:    true,
-				Description: "VPC id.",
+				Description: "VPC ID that the instance binds to.",
 			},
 
 			"subnet_id": {
 				Type:        schema.TypeString,
 				Required:    true,
-				Description: "Subnet id.",
+				Description: "Subnet ID that the instance binds to.",
 			},
 
 			"enable_public": {
 				Optional:    true,
 				Computed:    true,
 				Type:        schema.TypeBool,
-				Description: "Whether to enable the public network. Must set `bandwidth` when `enable_public` equal true.",
+				Description: "Whether to enable public network access, default false. When set to true, `bandwidth` must be set to a positive integer.",
 			},
 
 			"bandwidth": {
 				Optional:    true,
 				Computed:    true,
 				Type:        schema.TypeInt,
-				Description: "Public network bandwidth. `bandwidth` must be greater than zero when `enable_public` equal true.",
+				Description: "Public network bandwidth in Mbps, default 0. Must be a positive integer greater than 0 when public network is enabled.",
 			},
 
 			"ip_rules": {
 				Optional:    true,
 				Computed:    true,
 				Type:        schema.TypeList,
-				Description: "Public network access whitelist.",
+				Description: "Public network access whitelist. If left empty, all IP access is denied.",
 				Elem: &schema.Resource{
 					Schema: map[string]*schema.Schema{
 						"ip": {
 							Type:        schema.TypeString,
 							Required:    true,
-							Description: "IP.",
+							Description: "IP address.",
 						},
 						"allow": {
 							Type:        schema.TypeBool,
 							Required:    true,
-							Description: "Whether to allow release or not.",
+							Description: "Whether to allow access from this IP.",
 						},
 						"remark": {
 							Type:        schema.TypeString,
 							Required:    true,
-							Description: "Remark.",
+							Description: "Remark information.",
 						},
 					},
 				},
@@ -114,42 +114,46 @@ func ResourceTencentCloudTrocketRocketmqInstance() *schema.Resource {
 				Optional:    true,
 				Computed:    true,
 				Type:        schema.TypeInt,
-				Description: "Message retention time in hours.",
+				Description: "Message retention time in hours. The value range and default are obtained from the DefaultRetention/RetentionLowerLimit/RetentionUpperLimit parameters in the ProductSKU output of the DescribeProductSKUs interface.",
 			},
 
 			"pay_mode": {
 				Optional:    true,
+				Computed:    true,
 				Type:        schema.TypeInt,
-				Description: "Billing mode (0: pay-as-you-go; 1: subscription). Default value is 0.",
+				Description: "Billing mode. `0`: pay-as-you-go (postpaid), `1`: subscription (prepaid). Default is `0`.",
 			},
 
 			"renew_flag": {
 				Optional:    true,
+				Computed:    true,
 				Type:        schema.TypeInt,
-				Description: "Whether to auto-renew a subscription instance (0: no auto-renewal; 1: auto-renewal). Default value is 0.",
+				Description: "Whether to auto-renew a prepaid instance. `0`: no auto-renewal, `1`: auto-renewal. Default is `0`.",
 			},
 
 			"time_span": {
 				Optional:    true,
 				Type:        schema.TypeInt,
-				Description: "Purchase duration of a subscription instance in months. Value range: 1-60. Default value is 1.",
+				Description: "Purchase duration of a prepaid instance in months. Value range: 1-60. Default is `1`.",
 			},
 
 			"max_topic_num": {
 				Optional:    true,
 				Type:        schema.TypeInt,
-				Description: "Maximum number of topics that can be created.",
+				Description: "Maximum number of topics that can be created. The default/minimum and maximum are obtained from the TopicNumLimit and TopicNumUpperLimit parameters in the ProductSKU output of the DescribeProductSKUs interface.",
 			},
 
 			"zone_ids": {
 				Optional:    true,
+				Computed:    true,
 				Type:        schema.TypeList,
-				Description: "List of deployment availability zones.",
+				Description: "List of deployment availability zones, obtained from the ZoneInfo structure returned by the DescribeZones interface.",
 				Elem: &schema.Schema{
 					Type: schema.TypeInt,
 				},
 			},
 
+			// computed
 			"public_end_point": {
 				Type:        schema.TypeString,
 				Computed:    true,
@@ -240,19 +244,19 @@ func resourceTencentCloudTrocketRocketmqInstanceCreate(d *schema.ResourceData, m
 		request.MessageRetention = helper.IntInt64(v.(int))
 	}
 
-	if v, ok := d.GetOk("pay_mode"); ok {
+	if v, ok := d.GetOkExists("pay_mode"); ok {
 		request.PayMode = helper.IntInt64(v.(int))
 	}
 
-	if v, ok := d.GetOk("renew_flag"); ok {
+	if v, ok := d.GetOkExists("renew_flag"); ok {
 		request.RenewFlag = helper.IntInt64(v.(int))
 	}
 
-	if v, ok := d.GetOk("time_span"); ok {
+	if v, ok := d.GetOkExists("time_span"); ok {
 		request.TimeSpan = helper.IntInt64(v.(int))
 	}
 
-	if v, ok := d.GetOk("max_topic_num"); ok {
+	if v, ok := d.GetOkExists("max_topic_num"); ok {
 		request.MaxTopicNum = helper.IntInt64(v.(int))
 	}
 
@@ -329,7 +333,7 @@ func resourceTencentCloudTrocketRocketmqInstanceRead(d *schema.ResourceData, met
 	}
 
 	if rocketmqInstance == nil {
-		log.Printf("[WARN]%s resource `TrocketRocketmqInstance` [%s] not found, please check if it has been deleted.\n", logId, d.Id())
+		log.Printf("[WARN]%s resource `tencentcloud_trocket_rocketmq_instance` [%s] not found, please check if it has been deleted.\n", logId, d.Id())
 		d.SetId("")
 		return nil
 	}
