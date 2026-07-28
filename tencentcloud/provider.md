@@ -6,7 +6,7 @@ Use the navigation on the left to read about the available resources.
 
 -> **Note:** From version 1.9.0 (June 18, 2019), the provider start to support Terraform 0.12.x.
 
--> **Note:** When managing tag fields such as [`tag`, `tags`, `tag_list`...] for all of the Tencent Cloud resources, avoid using system-reserved fields, such as: `project_`.
+-> **Note:** When managing tag fields such as [`tag`, `tags`, `tag_list`...] for all of the Tencent Cloud resources, avoid using system-reserved fields, such as: [`qcs:`, `project_`, `项目`]. for details, please refer to the [Use Limits](https://www.tencentcloud.com/document/product/651/13354?lang=en&pg=).
 
 Example Usage
 
