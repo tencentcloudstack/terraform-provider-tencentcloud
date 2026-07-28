@@ -13,6 +13,8 @@ Provides a resource to create a Tencent Cloud Global Accelerator V2 (GA2) accele
 
 ## Example Usage
 
+### Create accelerate area with BGP
+
 ```hcl
 resource "tencentcloud_ga2_global_accelerator" "example" {
   name                 = "tf-example"
@@ -30,6 +32,22 @@ resource "tencentcloud_ga2_accelerate_area" "example" {
   bandwidth             = 10
   isp_type              = "BGP"
   ip_version            = "IPv4"
+}
+```
+
+### Create accelerate area with QUALITY_BGP
+
+```hcl
+resource "tencentcloud_ga2_accelerate_area" "example" {
+  global_accelerator_id = "ga-jg9gepn0"
+  accelerate_region     = "ap-hongkong"
+  bandwidth             = 50
+  isp_type              = "QUALITY_BGP"
+  ip_version            = "IPv4"
+  timeouts {
+    create = "15m"
+    delete = "15m"
+  }
 }
 ```
 
