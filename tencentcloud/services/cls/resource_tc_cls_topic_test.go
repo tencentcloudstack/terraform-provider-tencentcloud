@@ -134,7 +134,7 @@ func testAccCheckClsTopicExists(n string) resource.TestCheckFunc {
 			return fmt.Errorf("[CHECK][CLS topic][Exists] check: CLB topic id is not set")
 		}
 		clsService := localcls.NewClsService(tcacctest.AccProvider.Meta().(tccommon.ProviderMeta).GetAPIV3Conn())
-		instance, err := clsService.DescribeClsTopicById(ctx, rs.Primary.ID)
+		instance, err := clsService.DescribeClsTopicById(ctx, rs.Primary.ID, nil)
 		if err != nil {
 			return err
 		}

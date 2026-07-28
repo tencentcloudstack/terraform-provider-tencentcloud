@@ -15,6 +15,11 @@ The `tencentcloud_cls_topic` resource SHALL support a `biz_type` parameter of ty
 - **WHEN** the Read method is called for a `tencentcloud_cls_topic` resource
 - **THEN** the `biz_type` field SHALL be set from `TopicInfo.BizType` in the DescribeTopics response, if the field is not nil
 
+#### Scenario: Pass BizType to DescribeTopics when biz_type is set in state
+- **WHEN** the Read method is called and `biz_type` exists in the resource state (via `d.GetOkExists`)
+- **THEN** the `DescribeClsTopicById` service method SHALL be called with `bizType` set, and the `DescribeTopicsRequest.BizType` SHALL be populated accordingly
+- **AND** when `biz_type` does NOT exist in the resource state, `DescribeClsTopicById` SHALL be called with `nil` for `bizType`, and `DescribeTopicsRequest.BizType` SHALL NOT be set
+
 #### Scenario: Attempt to update biz_type
 - **WHEN** a user attempts to change the `biz_type` value on an existing `tencentcloud_cls_topic` resource
 - **THEN** Terraform SHALL force resource recreation (ForceNew behavior), and the Update method SHALL reject the change via `immutableArgs` check

@@ -37,6 +37,12 @@ Cloud API details (from vendor):
 3. **Default value handling**
    - If `biz_type` is not specified by the user, the cloud API defaults to 0 (log topic). No explicit default is set in the Terraform schema; the Computed attribute handles reading back the actual value
 
+4. **Pass BizType to DescribeTopics via DescribeClsTopicById**
+   - The `DescribeClsTopicById` service method is modified to accept an optional `bizType *uint64` parameter
+   - When `bizType` is non-nil, it is set on the `DescribeTopicsRequest.BizType` field, enabling the API to filter results by topic type
+   - The Read method in `resource_tc_cls_topic.go` passes `biz_type` from state (via `d.GetOkExists`) to the service method
+   - All other callers of `DescribeClsTopicById` (CLB log topic, Redis log delivery, cloud product log task) pass `nil`, preserving existing behavior without BizType filtering
+
 ## Risks / Trade-offs
 
 - **[Backward compatibility]** → Adding an Optional+Computed+ForceNew parameter is backward compatible. Existing configurations without `biz_type` will continue to work unchanged. The ForceNew attribute only triggers recreation if the user explicitly changes the `biz_type` value after initial creation.

@@ -143,7 +143,6 @@ func ResourceTencentCloudClsTopic() *schema.Resource {
 				Type:        schema.TypeInt,
 				Optional:    true,
 				Computed:    true,
-				ForceNew:    true,
 				Description: "Topic type. 0: log topic (default), 1: metric topic.",
 			},
 			"encryption": {
@@ -316,7 +315,11 @@ func resourceTencentCloudClsTopicRead(d *schema.ResourceData, meta interface{}) 
 		id      = d.Id()
 	)
 
-	topic, err := service.DescribeClsTopicById(ctx, id)
+	var bizType *uint64
+	if v, ok := d.GetOkExists("biz_type"); ok {
+		bizType = helper.IntUint64(v.(int))
+	}
+	topic, err := service.DescribeClsTopicById(ctx, id, bizType)
 	if err != nil {
 		return err
 	}

@@ -113,7 +113,7 @@ The following arguments are supported:
 * `logset_id` - (Required, String) Logset ID.
 * `topic_name` - (Required, String) Log topic name.
 * `auto_split` - (Optional, Bool) Whether to enable automatic split. Default value: true.
-* `biz_type` - (Optional, Int, ForceNew) Topic type. 0: log topic (default), 1: metric topic.
+* `biz_type` - (Optional, Int) Topic type. 0: log topic (default), 1: metric topic.
 * `describes` - (Optional, String) Log Topic Description.
 * `encryption` - (Optional, Int) Encryption-related parameters. This parameter is supported for users with an open access list and from encrypted regions; it cannot be passed in other scenarios. 0 or not passed: No encryption. 1: KMS-CLS cloud product key encryption. Once enabled, it cannot be disabled.
 Supported regions: ap-beijing, ap-guangzhou, ap-shanghai, ap-singapore, ap-bangkok, ap-jakarta, eu-frankfurt, ap-seoul, ap-tokyo.

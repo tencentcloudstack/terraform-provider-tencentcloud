@@ -4,6 +4,8 @@
 - [x] 1.2 Add `biz_type` to the Create method: read `biz_type` from resource data and set `request.BizType = helper.IntUint64(v.(int))` before the API call
 - [x] 1.3 Add `biz_type` to the Read method: set `biz_type` from `topic.BizType` in the DescribeTopics response, with nil check before setting
 - [x] 1.4 Add `biz_type` to the `immutableArgs` array in the Update method to prevent update attempts
+- [x] 1.5 Modify `DescribeClsTopicById` in `service_tencentcloud_cls.go` to accept an optional `bizType *uint64` parameter; when non-nil, set `request.BizType`
+- [x] 1.6 Update the Read method to pass `biz_type` from state to `DescribeClsTopicById`; update all other callers to pass `nil`
 
 ## 2. Unit Tests
 
