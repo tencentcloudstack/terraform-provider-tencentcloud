@@ -1,3 +1,32 @@
+## 1.83.16(July 28, 2026)
+
+FEATURES:
+
+* **New Resource:** `tencentcloud_ga2_global_accelerator_acl_policy` ([#4348](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/4348))
+* **New Resource:** `tencentcloud_ga2_global_accelerator_acl_rule` ([#4341](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/4341))
+* **New Resource:** `tencentcloud_scf_trigger` ([#4343](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/4343))
+
+ENHANCEMENTS:
+
+* ga2: add ResourceNotFound error handling in all describe API calls (service layer) and add HandleGa2ReadNotFound common helper for Read methods ([#4338](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/4338))
+* resource/tencentcloud_cdn_domain: optimize code logic ([#4347](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/4347))
+* resource/tencentcloud_cls_config: support input_type parameter for configuring log input source type ([#4344](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/4344))
+* resource/tencentcloud_ga2_accelerate_area: optimize code logic ([#4340](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/4340))
+* resource/tencentcloud_ga2_endpoint_group: optimize code logic ([#4340](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/4340))
+* resource/tencentcloud_ga2_forwarding_policy: handle ResourceNotFound error and empty response in Read function with IsNewResource guard
+resource/tencentcloud_ga2_global_accelerator: handle ResourceNotFound error and empty response in Read function with IsNewResource guard
+resource/tencentcloud_ga2_listener: handle ResourceNotFound error and empty response in Read function with IsNewResource guard
+resource/tencentcloud_ga2_endpoint_group: handle ResourceNotFound error and empty response in Read function with IsNewResource guard
+resource/tencentcloud_ga2_accelerate_area: handle ResourceNotFound error and empty response in Read function with IsNewResource guard
+resource/tencentcloud_ga2_forwarding_rule: handle ResourceNotFound error and empty response in Read function with IsNewResource guard ([#4338](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/4338))
+* resource/tencentcloud_ga2_forwarding_rule: add new params ([#4340](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/4340))
+* resource/tencentcloud_ga2_global_accelerator: optimize code logic ([#4340](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/4340))
+* resource/tencentcloud_ga2_listener: add http_version parameter to support specifying HTTP version for HTTPS listeners ([#4346](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/4346))
+* resource/tencentcloud_ga2_listener: add new params ([#4340](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/4340))
+* resource/tencentcloud_kubernetes_cluster_attachment: add new filed `user_script` ([#4349](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/4349))
+* resource/tencentcloud_monitor_alarm_policy: add `hierarchical_notices` and `notice_content_tmpl_bind_infos` parameters ([#4336](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/4336))
+* resource/tencentcloud_teo_bind_security_template: optimize code logic ([#4345](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/4345))
+
 ## 1.83.15(July 24, 2026)
 
 ENHANCEMENTS:
