@@ -15,6 +15,8 @@ Use the navigation on the left to read about the available resources.
 
 -> **Note:** Terraform 0.12.x supported began with provider version 1.9.0 (June 18, 2019).
 
+-> **Note:** When managing tag fields such as [`tag`, `tags`, `tag_list`...] for all of the Tencent Cloud resources, avoid using system-reserved fields, such as: `project_`.
+
 ## Example Usage
 
 ```hcl
