@@ -502,6 +502,72 @@ func (me *Ga2Service) DescribeGa2ForwardingPolicyById(ctx context.Context, gaId,
 	return nil, nil
 }
 
+// DescribeGa2GlobalAcceleratorAclPolicyById queries an ACL policy by its (gaId, policyId) tuple.
+// Returns (nil, nil) when the policy does not exist.
+//
+// Note: DescribeGlobalAcceleratorAclPolicies is keyed by GlobalAcceleratorId and lacks a per-policy
+// filter slot. We paginate through every policy under the accelerator and match
+// `GlobalAcceleratorAclPolicyId` strictly client-side.
+func (me *Ga2Service) DescribeGa2GlobalAcceleratorAclPolicyById(ctx context.Context, gaId, policyId string) (*ga2v20250115.GlobalAcceleratorAclPolicies, error) {
+	logId := tccommon.GetLogId(ctx)
+
+	request := ga2v20250115.NewDescribeGlobalAcceleratorAclPoliciesRequest()
+	request.GlobalAcceleratorId = helper.String(gaId)
+
+	var (
+		offset uint64 = 0
+		// limit equals the API-documented maximum ("200") to minimize round-trips.
+		limit = "200"
+	)
+
+	for {
+		request.Offset = &offset
+		request.Limit = &limit
+
+		var response *ga2v20250115.DescribeGlobalAcceleratorAclPoliciesResponse
+		err := resource.Retry(tccommon.ReadRetryTimeout, func() *resource.RetryError {
+			result, e := me.client.UseGa2V20250115Client().DescribeGlobalAcceleratorAclPoliciesWithContext(ctx, request)
+			if e != nil {
+				return tccommon.RetryError(e)
+			}
+
+			if result == nil || result.Response == nil {
+				return resource.NonRetryableError(fmt.Errorf("Describe ga2 global accelerator acl policies failed, Response is nil."))
+			}
+
+			response = result
+			return nil
+		})
+
+		if err != nil {
+			log.Printf("[CRITAL]%s describe ga2 global accelerator acl policies failed, reason:%+v", logId, err)
+			return nil, err
+		}
+
+		set := response.Response.GlobalAcceleratorAclPolicySet
+		for i := range set {
+			item := set[i]
+			if item == nil || item.GlobalAcceleratorAclPolicyId == nil {
+				continue
+			}
+
+			// Strict equality check on the policy ID: the API has no per-policy filter, so we match client-side.
+			if *item.GlobalAcceleratorAclPolicyId == policyId {
+				return item, nil
+			}
+		}
+
+		// Stop when the current page is the last page.
+		if uint64(len(set)) < 200 {
+			break
+		}
+
+		offset += 200
+	}
+
+	return nil, nil
+}
+
 // WaitForGa2TaskFinish polls DescribeTaskResult until the task reaches "SUCCESS" or the given timeout elapses.
 // The timeout is supplied by the caller because different async operations (create/modify/delete on
 // different resource types) may require very different waiting budgets.
