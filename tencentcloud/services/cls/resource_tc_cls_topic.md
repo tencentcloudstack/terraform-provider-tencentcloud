@@ -69,6 +69,32 @@ resource "tencentcloud_cls_topic" "example" {
 }
 ```
 
+Create a cls metric topic
+
+```hcl
+resource "tencentcloud_cls_logset" "example" {
+  logset_name = "tf_example"
+  tags = {
+    tagKey = "tagValue"
+  }
+}
+
+resource "tencentcloud_cls_topic" "example" {
+  topic_name           = "tf_example"
+  logset_id            = tencentcloud_cls_logset.example.id
+  auto_split           = false
+  max_split_partitions = 20
+  partition_count      = 1
+  period               = 30
+  storage_type         = "hot"
+  describes            = "Test Demo."
+  biz_type             = 1
+  tags = {
+    tagKey = "tagValue"
+  }
+}
+```
+
 Import
 
 cls topic can be imported using the id, e.g.

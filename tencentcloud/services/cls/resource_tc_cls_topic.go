@@ -139,6 +139,13 @@ func ResourceTencentCloudClsTopic() *schema.Resource {
 					},
 				},
 			},
+			"biz_type": {
+				Type:        schema.TypeInt,
+				Optional:    true,
+				Computed:    true,
+				ForceNew:    true,
+				Description: "Topic type. 0: log topic (default), 1: metric topic.",
+			},
 			"encryption": {
 				Type:        schema.TypeInt,
 				Optional:    true,
@@ -260,6 +267,10 @@ func resourceTencentCloudClsTopicCreate(d *schema.ResourceData, meta interface{}
 		}
 	}
 
+	if v, ok := d.GetOkExists("biz_type"); ok {
+		request.BizType = helper.IntUint64(v.(int))
+	}
+
 	if v, ok := d.GetOkExists("encryption"); ok {
 		request.Encryption = helper.IntUint64(v.(int))
 	}
@@ -333,6 +344,10 @@ func resourceTencentCloudClsTopicRead(d *schema.ResourceData, meta interface{}) 
 	_ = d.Set("describes", topic.Describes)
 	_ = d.Set("is_web_tracking", topic.IsWebTracking)
 
+	if topic.BizType != nil {
+		_ = d.Set("biz_type", topic.BizType)
+	}
+
 	if *topic.IsWebTracking {
 		if topic.Extends != nil {
 			extendMap := map[string]interface{}{}
@@ -395,7 +410,7 @@ func resourceTencentCloudClsTopicUpdate(d *schema.ResourceData, meta interface{}
 		ctx           = context.WithValue(context.TODO(), tccommon.LogIdKey, logId)
 	)
 
-	immutableArgs := []string{"partition_count", "storage_type"}
+	immutableArgs := []string{"partition_count", "storage_type", "biz_type"}
 
 	for _, v := range immutableArgs {
 		if d.HasChange(v) {
