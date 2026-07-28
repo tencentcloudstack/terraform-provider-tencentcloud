@@ -1839,129 +1839,51 @@ func (me *TeoService) DescribeTeoBindSecurityTemplateById(ctx context.Context, z
 		}
 	}()
 
-	// Step 1: use DescribeZones to fetch all zone ids, because
-	// DescribeWebSecurityTemplates requires zone ids as input.
-	zoneIds, err := me.describeTeoAllZoneIds(ctx)
+	request := teov20220901.NewDescribeSecurityTemplateBindingsRequest()
+	request.ZoneId = &zoneId
+	request.TemplateId = []*string{&templateId}
+
+	ratelimit.Check(request.GetAction())
+
+	var response *teov20220901.DescribeSecurityTemplateBindingsResponse
+	err := resource.Retry(tccommon.ReadRetryTimeout, func() *resource.RetryError {
+		result, e := me.client.UseTeoV20220901Client().DescribeSecurityTemplateBindings(request)
+		if e != nil {
+			return tccommon.RetryError(e)
+		}
+		response = result
+		return nil
+	})
 	if err != nil {
 		errRet = err
 		return
 	}
 
-	if len(zoneIds) < 1 {
-		log.Printf("[DEBUG]%s no zone found when reading teo bind_security_template\n", logId)
+	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+	if response == nil || response.Response == nil || response.Response.SecurityTemplate == nil {
 		return
 	}
 
-	// Step 2: DescribeWebSecurityTemplates accepts at most 100 zone ids per
-	// request, so we query in batches.
-	const batchSize = 100
-	for i := 0; i < len(zoneIds); i += batchSize {
-		end := i + batchSize
-		if end > len(zoneIds) {
-			end = len(zoneIds)
-		}
-		batch := zoneIds[i:end]
-
-		request := teov20220901.NewDescribeWebSecurityTemplatesRequest()
-		request.ZoneIds = batch
-
-		ratelimit.Check(request.GetAction())
-
-		var response *teov20220901.DescribeWebSecurityTemplatesResponse
-		err := resource.Retry(tccommon.ReadRetryTimeout, func() *resource.RetryError {
-			result, e := me.client.UseTeoV20220901Client().DescribeWebSecurityTemplates(request)
-			if e != nil {
-				return tccommon.RetryError(e)
-			}
-			response = result
-			return nil
-		})
-		if err != nil {
-			errRet = err
-			return
-		}
-
-		log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
-
-		if response == nil || response.Response == nil || response.Response.SecurityPolicyTemplates == nil {
+	for _, securityTemplate := range response.Response.SecurityTemplate {
+		if securityTemplate == nil || securityTemplate.TemplateScope == nil {
 			continue
 		}
-
-		// Step 3: filter the matching template id and entity from the response.
-		for _, template := range response.Response.SecurityPolicyTemplates {
-			if template == nil || template.TemplateId == nil || *template.TemplateId != templateId {
+		for _, templateScope := range securityTemplate.TemplateScope {
+			if templateScope == nil || templateScope.ZoneId == nil || *templateScope.ZoneId != zoneId {
 				continue
 			}
-			if template.BindDomains == nil {
+			if templateScope.EntityStatus == nil {
 				continue
 			}
-			for _, bindDomain := range template.BindDomains {
-				if bindDomain == nil || bindDomain.Domain == nil || *bindDomain.Domain != entity || *bindDomain.ZoneId != zoneId {
+			for _, entityStatus := range templateScope.EntityStatus {
+				if entityStatus == nil || entityStatus.Entity == nil || *entityStatus.Entity != entity {
 					continue
 				}
-				status := ""
-				if bindDomain.Status != nil {
-					status = *bindDomain.Status
-				}
-				ret = &teov20220901.EntityStatus{
-					Entity: helper.String(entity),
-					Status: helper.String(status),
-				}
+				ret = entityStatus
 				return
 			}
 		}
-	}
-
-	return
-}
-
-// describeTeoAllZoneIds fetches all zone ids by paging through DescribeZones.
-func (me *TeoService) describeTeoAllZoneIds(ctx context.Context) (zoneIds []*string, errRet error) {
-	logId := tccommon.GetLogId(ctx)
-
-	request := teov20220901.NewDescribeZonesRequest()
-
-	defer func() {
-		if errRet != nil {
-			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), errRet.Error())
-		}
-	}()
-
-	var (
-		offset int64 = 0
-		limit  int64 = 100
-	)
-	for {
-		request.Offset = &offset
-		request.Limit = &limit
-		ratelimit.Check(request.GetAction())
-		response := teov20220901.NewDescribeZonesResponse()
-		err := resource.Retry(tccommon.ReadRetryTimeout, func() *resource.RetryError {
-			result, e := me.client.UseTeoV20220901Client().DescribeZones(request)
-			if e != nil {
-				return tccommon.RetryError(e)
-			}
-			response = result
-			return nil
-		})
-		if err != nil {
-			errRet = err
-			return
-		}
-		log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
-
-		if response == nil || response.Response == nil || len(response.Response.Zones) < 1 {
-			break
-		}
-		for _, zone := range response.Response.Zones {
-			if zone != nil && zone.ZoneId != nil {
-				zoneIds = append(zoneIds, zone.ZoneId)
-			}
-		}
-		if len(response.Response.Zones) < int(limit) {
-			break
-		}
-		offset += limit
 	}
 
 	return
