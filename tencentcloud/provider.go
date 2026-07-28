@@ -845,6 +845,7 @@ func Provider() *schema.Provider {
 			"tencentcloud_postgresql_account_privileges":                          postgresql.DataSourceTencentCloudPostgresqlAccountPrivileges(),
 			"tencentcloud_postgresql_dedicated_clusters":                          postgresql.DataSourceTencentCloudPostgresqlDedicatedClusters(),
 			"tencentcloud_postgresql_db_versions":                                 postgresql.DataSourceTencentCloudPostgresqlDbVersions(),
+			"tencentcloud_postgresql_db_instance_security_groups":                 postgresql.DataSourceTencentCloudPostgresqlDbInstanceSecurityGroups(),
 			"tencentcloud_sqlserver_zone_config":                                  sqlserver.DataSourceTencentCloudSqlserverZoneConfig(),
 			"tencentcloud_sqlserver_instances":                                    sqlserver.DataSourceTencentCloudSqlserverInstances(),
 			"tencentcloud_sqlserver_backups":                                      sqlserver.DataSourceTencentCloudSqlserverBackups(),
