@@ -627,6 +627,7 @@ Global Accelerator(GA2)
 Resource
 tencentcloud_ga2_global_accelerator
 tencentcloud_ga2_global_accelerator_acl_rule
+tencentcloud_ga2_global_accelerator_acl_policy
 tencentcloud_ga2_accelerate_area
 tencentcloud_ga2_listener
 tencentcloud_ga2_endpoint_group
@@ -1060,6 +1061,7 @@ tencentcloud_scf_namespace
 tencentcloud_scf_layer
 tencentcloud_scf_function_alias
 tencentcloud_scf_trigger_config
+tencentcloud_scf_trigger
 tencentcloud_scf_custom_domain
 
 SQLServer

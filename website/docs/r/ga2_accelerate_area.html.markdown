@@ -40,9 +40,9 @@ The following arguments are supported:
 * `accelerate_region` - (Required, String, ForceNew) Acceleration region. Serves as the natural key used to resolve the acceleration region ID after creation. Cannot be modified after creation; modifying it forces a new resource.
 * `global_accelerator_id` - (Required, String, ForceNew) Global accelerator instance ID this acceleration region belongs to.
 * `bandwidth` - (Optional, Int) Acceleration bandwidth in Mbps.
-* `ip_address` - (Optional, Set: [`String`]) Bound IP address list. Treated as an unordered set; HCL element order has no semantic meaning.
-* `ip_version` - (Optional, String) IP version. Only `IPv4` is supported. Default: `IPv4`.
-* `isp_type` - (Optional, String) ISP type. Valid values: `BGP` (BGP), `STATIC_IP` (multi-ISP static IP), `QUALITY_BGP` (premium BGP). Default: `BGP`.
+* `ip_address` - (Optional, Set: [`String`], ForceNew) Bound IP address list. Treated as an unordered set; HCL element order has no semantic meaning.
+* `ip_version` - (Optional, String, ForceNew) IP version. Only `IPv4` is supported. Default: `IPv4`.
+* `isp_type` - (Optional, String, ForceNew) ISP type. Valid values: `BGP` (BGP), `STATIC_IP` (multi-ISP static IP), `QUALITY_BGP` (premium BGP). Default: `BGP`.
 
 ## Attributes Reference
 

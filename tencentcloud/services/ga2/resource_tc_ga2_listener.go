@@ -165,17 +165,18 @@ func ResourceTencentCloudGa2Listener() *schema.Resource {
 				Description: "Client CA certificate ID list. Required when the listener protocol is `HTTPS` and `certification_type` " +
 					"is `MUTUAL`. Only HTTPS listeners support modifying this field. Treated as an unordered set; HCL element order has no semantic meaning.",
 			},
+			"http_version": {
+				Type:        schema.TypeString,
+				Optional:    true,
+				Computed:    true,
+				Description: "HTTP version negotiated for this listener. Valid values: `HTTP/1.1`, `HTTP/2`. Only applicable to HTTPS listeners.",
+			},
 
 			// Computed
 			"listener_id": {
 				Type:        schema.TypeString,
 				Computed:    true,
 				Description: "Listener instance ID.",
-			},
-			"http_version": {
-				Type:        schema.TypeString,
-				Computed:    true,
-				Description: "HTTP version negotiated for this listener. Valid values: `HTTP/1.1`, `HTTP/2`. Only applicable to HTTPS listeners.",
 			},
 			"create_time": {
 				Type:        schema.TypeString,
@@ -285,6 +286,10 @@ func resourceTencentCloudGa2ListenerCreate(d *schema.ResourceData, meta interfac
 		if v, ok := d.GetOk("client_ca_certificates"); ok {
 			request.ClientCaCertificates = expandGa2ListenerStringSet(v.(*schema.Set))
 		}
+
+		if v, ok := d.GetOk("http_version"); ok {
+			request.HttpVersion = helper.String(v.(string))
+		}
 	}
 
 	reqErr := resource.Retry(tccommon.WriteRetryTimeout, func() *resource.RetryError {
@@ -344,11 +349,19 @@ func resourceTencentCloudGa2ListenerRead(d *schema.ResourceData, meta interface{
 
 	respData, err := service.DescribeGa2ListenerById(ctx, gaId, listenerId)
 	if err != nil {
+		if !d.IsNewResource() && IsGa2ResourceNotFoundError(err) {
+			log.Printf("[WARN]%s resource `tencentcloud_ga2_listener` [%s] not found, please check if it has been deleted.\n", logId, d.Id())
+			d.SetId("")
+			return nil
+		}
 		return err
 	}
 
 	if respData == nil {
 		log.Printf("[WARN]%s resource `tencentcloud_ga2_listener` [%s] not found, please check if it has been deleted.\n", logId, d.Id())
+		if d.IsNewResource() {
+			return fmt.Errorf("resource `tencentcloud_ga2_listener` [%s] not found after creation", d.Id())
+		}
 		d.SetId("")
 		return nil
 	}

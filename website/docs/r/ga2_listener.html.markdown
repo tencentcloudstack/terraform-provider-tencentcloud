@@ -104,6 +104,7 @@ The following arguments are supported:
 * `client_ca_certificates` - (Optional, Set: [`String`]) Client CA certificate ID list. Required when the listener protocol is `HTTPS` and `certification_type` is `MUTUAL`. Only HTTPS listeners support modifying this field. Treated as an unordered set; HCL element order has no semantic meaning.
 * `description` - (Optional, String) Listener description. Maximum length is 100 bytes.
 * `get_real_ip_type` - (Optional, String) Method used to retrieve the real client IP for layer-4 listeners. Valid values: `TOA`, `ProxyProtocol`, `ProxyProtocolV2`, `Close`. Only takes effect when the layer-4 real-IP feature is enabled. Only TCP listeners support modifying this field after creation.
+* `http_version` - (Optional, String) HTTP version negotiated for this listener. Valid values: `HTTP/1.1`, `HTTP/2`. Only applicable to HTTPS listeners.
 * `idle_timeout` - (Optional, Int) Connection idle timeout in seconds. Valid range and default value depend on the listener protocol: `1-60` for HTTP/HTTPS listeners (default `15`), `10-900` for TCP listeners (default `900`), `10-20` for UDP listeners (default `20`).
 * `listener_type` - (Optional, String, ForceNew) Listener routing type. Valid values: `Standard` (smart routing). Default: `Standard`. Cannot be modified after creation; modifying it forces a new resource.
 * `name` - (Optional, String) Listener name. Maximum length is 60 bytes.
@@ -124,7 +125,6 @@ In addition to all arguments above, the following attributes are exported:
 * `id` - ID of the resource.
 * `create_time` - Listener creation time.
 * `endpoint_group_counts` - Number of endpoint groups attached to this listener.
-* `http_version` - HTTP version negotiated for this listener. Valid values: `HTTP/1.1`, `HTTP/2`. Only applicable to HTTPS listeners.
 * `listener_id` - Listener instance ID.
 * `status` - Listener operational status.
 
