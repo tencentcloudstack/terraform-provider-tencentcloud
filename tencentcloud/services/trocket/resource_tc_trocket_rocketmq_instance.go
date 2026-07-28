@@ -117,6 +117,39 @@ func ResourceTencentCloudTrocketRocketmqInstance() *schema.Resource {
 				Description: "Message retention time in hours.",
 			},
 
+			"pay_mode": {
+				Optional:    true,
+				Type:        schema.TypeInt,
+				Description: "Billing mode (0: pay-as-you-go; 1: subscription). Default value is 0.",
+			},
+
+			"renew_flag": {
+				Optional:    true,
+				Type:        schema.TypeInt,
+				Description: "Whether to auto-renew a subscription instance (0: no auto-renewal; 1: auto-renewal). Default value is 0.",
+			},
+
+			"time_span": {
+				Optional:    true,
+				Type:        schema.TypeInt,
+				Description: "Purchase duration of a subscription instance in months. Value range: 1-60. Default value is 1.",
+			},
+
+			"max_topic_num": {
+				Optional:    true,
+				Type:        schema.TypeInt,
+				Description: "Maximum number of topics that can be created.",
+			},
+
+			"zone_ids": {
+				Optional:    true,
+				Type:        schema.TypeList,
+				Description: "List of deployment availability zones.",
+				Elem: &schema.Schema{
+					Type: schema.TypeInt,
+				},
+			},
+
 			"public_end_point": {
 				Type:        schema.TypeString,
 				Computed:    true,
@@ -205,6 +238,31 @@ func resourceTencentCloudTrocketRocketmqInstanceCreate(d *schema.ResourceData, m
 
 	if v, ok := d.GetOkExists("message_retention"); ok {
 		request.MessageRetention = helper.IntInt64(v.(int))
+	}
+
+	if v, ok := d.GetOk("pay_mode"); ok {
+		request.PayMode = helper.IntInt64(v.(int))
+	}
+
+	if v, ok := d.GetOk("renew_flag"); ok {
+		request.RenewFlag = helper.IntInt64(v.(int))
+	}
+
+	if v, ok := d.GetOk("time_span"); ok {
+		request.TimeSpan = helper.IntInt64(v.(int))
+	}
+
+	if v, ok := d.GetOk("max_topic_num"); ok {
+		request.MaxTopicNum = helper.IntInt64(v.(int))
+	}
+
+	if v, ok := d.GetOk("zone_ids"); ok {
+		zoneIdsList := v.([]interface{})
+		zoneIds := make([]*int64, 0, len(zoneIdsList))
+		for _, zoneId := range zoneIdsList {
+			zoneIds = append(zoneIds, helper.IntInt64(zoneId.(int)))
+		}
+		request.ZoneIds = zoneIds
 	}
 
 	err := resource.Retry(tccommon.WriteRetryTimeout, func() *resource.RetryError {
@@ -341,6 +399,30 @@ func resourceTencentCloudTrocketRocketmqInstanceRead(d *schema.ResourceData, met
 		_ = d.Set("message_retention", rocketmqInstance.MessageRetention)
 	}
 
+	if rocketmqInstance.PayMode != nil {
+		var payMode int
+		if *rocketmqInstance.PayMode == "PREPAID" {
+			payMode = 1
+		} else {
+			payMode = 0
+		}
+		_ = d.Set("pay_mode", payMode)
+	}
+
+	if rocketmqInstance.RenewFlag != nil {
+		_ = d.Set("renew_flag", rocketmqInstance.RenewFlag)
+	}
+
+	if rocketmqInstance.ZoneIds != nil {
+		zoneIds := make([]interface{}, 0, len(rocketmqInstance.ZoneIds))
+		for _, zoneId := range rocketmqInstance.ZoneIds {
+			if zoneId != nil {
+				zoneIds = append(zoneIds, int(*zoneId))
+			}
+		}
+		_ = d.Set("zone_ids", zoneIds)
+	}
+
 	tcClient := meta.(tccommon.ProviderMeta).GetAPIV3Conn()
 	tagService := svctag.NewTagService(meta.(tccommon.ProviderMeta).GetAPIV3Conn())
 	tags, err := tagService.DescribeResourceTags(ctx, "trocket", "instance", tcClient.Region, instanceId)
@@ -367,7 +449,7 @@ func resourceTencentCloudTrocketRocketmqInstanceUpdate(d *schema.ResourceData, m
 		needModifyInstanceEndpoint bool
 	)
 
-	immutableArgs := []string{"instance_type", "vpc_id", "subnet_id", "enable_public"}
+	immutableArgs := []string{"instance_type", "vpc_id", "subnet_id", "enable_public", "pay_mode", "renew_flag", "time_span"}
 	for _, v := range immutableArgs {
 		if d.HasChange(v) {
 			return fmt.Errorf("argument `%s` cannot be changed", v)
@@ -401,6 +483,27 @@ func resourceTencentCloudTrocketRocketmqInstanceUpdate(d *schema.ResourceData, m
 	if d.HasChange("message_retention") {
 		if v, ok := d.GetOkExists("message_retention"); ok {
 			request1.MessageRetention = helper.IntInt64(v.(int))
+		}
+
+		needModifyInstance = true
+	}
+
+	if d.HasChange("max_topic_num") {
+		if v, ok := d.GetOk("max_topic_num"); ok {
+			request1.MaxTopicNum = helper.IntInt64(v.(int))
+		}
+
+		needModifyInstance = true
+	}
+
+	if d.HasChange("zone_ids") {
+		if v, ok := d.GetOk("zone_ids"); ok {
+			zoneIdsList := v.([]interface{})
+			zoneIds := make([]*string, 0, len(zoneIdsList))
+			for _, zoneId := range zoneIdsList {
+				zoneIds = append(zoneIds, helper.String(helper.IntToStr(zoneId.(int))))
+			}
+			request1.ZoneIds = zoneIds
 		}
 
 		needModifyInstance = true
