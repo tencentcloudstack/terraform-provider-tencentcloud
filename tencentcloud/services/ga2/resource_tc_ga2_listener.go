@@ -467,6 +467,14 @@ func resourceTencentCloudGa2ListenerUpdate(d *schema.ResourceData, meta interfac
 		return err
 	}
 
+	// Immutable fields check: these fields cannot be modified after creation.
+	immutableArgs := []string{"http_version"}
+	for _, field := range immutableArgs {
+		if d.HasChange(field) {
+			return fmt.Errorf("field `%s` cannot be modified after creation; it requires a new resource to be created", field)
+		}
+	}
+
 	// Modify-supported fields per the SDK ModifyListenerRequest definition.
 	// Layer-specific fields are tracked separately so we can both:
 	//   (1) skip ModifyListener entirely when only an inapplicable-layer field changed, and

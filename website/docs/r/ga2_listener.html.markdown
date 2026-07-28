@@ -86,6 +86,7 @@ resource "tencentcloud_ga2_listener" "example3" {
   cipher_policy_id        = "tls_policy_1.2_strict-1.3"
   server_certificates     = ["Yj6CmODs"]
   client_ca_certificates  = ["W6aH2tOc"]
+  http_version            = "HTTP/2"
 
   depends_on = [tencentcloud_ga2_listener.example2]
 }
