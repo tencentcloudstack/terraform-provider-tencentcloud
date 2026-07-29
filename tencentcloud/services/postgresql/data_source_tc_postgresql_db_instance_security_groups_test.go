@@ -1,6 +1,7 @@
 package postgresql_test
 
 import (
+	"log"
 	"os"
 	"testing"
 
@@ -276,6 +277,11 @@ func TestPostgresqlDbInstanceSecurityGroupsDS_ReadWithResultOutputFile(t *testin
 	res := svcpostgresql.DataSourceTencentCloudPostgresqlDbInstanceSecurityGroups()
 	outputFile := "./test_output_sg.json"
 	defer os.Remove(outputFile)
+	defer func() {
+		if err := os.Remove(outputFile); err != nil {
+			log.Printf("failed to remove %s: %v", outputFile, err)
+		}
+	}()
 	d := schema.TestResourceDataRaw(t, res.Schema, map[string]interface{}{
 		"db_instance_id":     "postgres-gzg9jb2n",
 		"result_output_file": outputFile,
