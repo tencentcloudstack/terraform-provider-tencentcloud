@@ -168,7 +168,7 @@ func dataSourceTencentCloudPostgresqlDbInstanceSecurityGroupsRead(d *schema.Reso
 			return tccommon.RetryError(e)
 		}
 
-		if result == nil || len(result) == 0 {
+		if result == nil {
 			return resource.NonRetryableError(fmt.Errorf("describe postgresql_db_instance_security_groups failed, response is nil or empty."))
 		}
 
