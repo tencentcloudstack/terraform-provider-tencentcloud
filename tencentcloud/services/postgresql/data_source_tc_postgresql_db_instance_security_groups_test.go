@@ -276,7 +276,6 @@ func TestPostgresqlDbInstanceSecurityGroupsDS_ReadWithResultOutputFile(t *testin
 	meta := newMockMetaDbInstanceSgDS()
 	res := svcpostgresql.DataSourceTencentCloudPostgresqlDbInstanceSecurityGroups()
 	outputFile := "./test_output_sg.json"
-	defer os.Remove(outputFile)
 	defer func() {
 		if err := os.Remove(outputFile); err != nil {
 			log.Printf("failed to remove %s: %v", outputFile, err)
