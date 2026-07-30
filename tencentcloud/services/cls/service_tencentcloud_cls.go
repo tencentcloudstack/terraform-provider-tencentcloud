@@ -1194,6 +1194,71 @@ func (me *ClsService) DescribeClsMachineGroupConfigsByFilter(ctx context.Context
 	return
 }
 
+func (me *ClsService) DescribeClsMachineGroupsByFilter(ctx context.Context, param map[string]interface{}) (machineGroups []*cls.MachineGroupInfo, totalCount int64, errRet error) {
+	var (
+		logId    = tccommon.GetLogId(ctx)
+		request  = cls.NewDescribeMachineGroupsRequest()
+		response = cls.NewDescribeMachineGroupsResponse()
+	)
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	for k, v := range param {
+		if k == "Filters" {
+			request.Filters = v.([]*cls.Filter)
+		}
+	}
+
+	var (
+		offset int64 = 0
+		limit  int64 = 100
+	)
+
+	machineGroups = make([]*cls.MachineGroupInfo, 0)
+	for {
+		request.Offset = &offset
+		request.Limit = &limit
+		err := resource.Retry(tccommon.ReadRetryTimeout, func() *resource.RetryError {
+			ratelimit.Check(request.GetAction())
+			result, e := me.client.UseClsClient().DescribeMachineGroups(request)
+			if e != nil {
+				return tccommon.RetryError(e)
+			} else {
+				log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), result.ToJsonString())
+			}
+
+			if result == nil || result.Response == nil {
+				return resource.NonRetryableError(fmt.Errorf("Describe cls machine_groups failed, Response is nil."))
+			}
+
+			response = result
+			return nil
+		})
+
+		if err != nil {
+			errRet = err
+			return
+		}
+
+		if response.Response.TotalCount != nil {
+			totalCount = *response.Response.TotalCount
+		}
+
+		machineGroups = append(machineGroups, response.Response.MachineGroups...)
+		if response.Response.MachineGroups == nil || len(response.Response.MachineGroups) < int(limit) {
+			break
+		}
+
+		offset += limit
+	}
+
+	return
+}
+
 func (me *ClsService) DescribeClsLogsetsByFilter(ctx context.Context, param map[string]interface{}) (Logsets []*cls.LogsetInfo, errRet error) {
 	var (
 		logId   = tccommon.GetLogId(ctx)

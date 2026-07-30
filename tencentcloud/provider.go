@@ -1209,6 +1209,7 @@ func Provider() *schema.Provider {
 			"tencentcloud_cls_machines":                                           cls.DataSourceTencentCloudClsMachines(),
 			"tencentcloud_cls_notice_contents":                                    cls.DataSourceTencentCloudClsNoticeContents(),
 			"tencentcloud_cls_machine_group_configs":                              cls.DataSourceTencentCloudClsMachineGroupConfigs(),
+			"tencentcloud_cls_machine_groups":                                     cls.DataSourceTencentCloudClsMachineGroups(),
 			"tencentcloud_cls_logsets":                                            cls.DataSourceTencentCloudClsLogsets(),
 			"tencentcloud_cls_topics":                                             cls.DataSourceTencentCloudClsTopics(),
 			"tencentcloud_cls_alarm_notices":                                      cls.DataSourceTencentCloudClsAlarmNotices(),
