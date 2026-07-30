@@ -1,3 +1,22 @@
+## 1.83.17(July 30, 2026)
+
+FEATURES:
+
+* **New Data Source:** `tencentcloud_cls_machine_groups` ([#4361](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/4361))
+* **New Data Source:** `tencentcloud_postgresql_db_instance_security_groups` ([#4358](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/4358))
+* **New Resource:** `tencentcloud_ga2_global_accelerator_acl_rule_set` ([#4360](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/4360))
+
+ENHANCEMENTS:
+
+* provider: Update the provider documentation regarding system-reserved tags fields ([#4355](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/4355))
+* resource/tencentcloud_clb_listener: optimize code logic ([#4357](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/4357))
+* resource/tencentcloud_cynosdb_cls_delivery: optimize code logic ([#4362](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/4362))
+* resource/tencentcloud_dts_sync_job: support modify `instance_class` ([#4353](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/4353))
+* resource/tencentcloud_ga2_accelerate_area: `ip_address` only support `computed` ([#4359](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/4359))
+* resource/tencentcloud_ga2_global_accelerator: optimize update code logic ([#4359](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/4359))
+* resource/tencentcloud_ga2_listener: add `forceNew` for `http_version` ([#4359](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/4359))
+* resource/tencentcloud_trocket_rocketmq_instance: support pay_mode, renew_flag, time_span, max_topic_num and zone_ids parameters ([#4356](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/4356))
+
 ## 1.83.16(July 28, 2026)
 
 FEATURES:
