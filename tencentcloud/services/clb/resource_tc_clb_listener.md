@@ -166,6 +166,24 @@ resource "tencentcloud_clb_listener" "example" {
 }
 ```
 
+TCP_SSL Listener with MaxConn, MaxCps, ProxyProtocol and DataCompressMode
+
+```hcl
+resource "tencentcloud_clb_listener" "example" {
+  clb_id              = "lb-0lh5au7v"
+  listener_name       = "tf-example"
+  port                = "443"
+  protocol            = "TCP_SSL"
+  certificate_ssl_mode = "UNIDIRECTIONAL"
+  certificate_id      = "VjANRdz8"
+  scheduler           = "WRR"
+  max_conn            = 1000
+  max_cps             = 100
+  proxy_protocol      = true
+  data_compress_mode  = "transparent"
+}
+```
+
 Port Range Listener
 
 ```hcl

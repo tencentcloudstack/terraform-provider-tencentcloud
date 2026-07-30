@@ -177,6 +177,24 @@ resource "tencentcloud_clb_listener" "example" {
 }
 ```
 
+### TCP_SSL Listener with MaxConn, MaxCps, ProxyProtocol and DataCompressMode
+
+```hcl
+resource "tencentcloud_clb_listener" "example" {
+  clb_id               = "lb-0lh5au7v"
+  listener_name        = "tf-example"
+  port                 = "443"
+  protocol             = "TCP_SSL"
+  certificate_ssl_mode = "UNIDIRECTIONAL"
+  certificate_id       = "VjANRdz8"
+  scheduler            = "WRR"
+  max_conn             = 1000
+  max_cps              = 100
+  proxy_protocol       = true
+  data_compress_mode   = "transparent"
+}
+```
+
 ### Port Range Listener
 
 ```hcl
@@ -207,6 +225,7 @@ The following arguments are supported:
 * `certificate_ca_id` - (Optional, String) ID of the client certificate. NOTES: Only supports listeners of `HTTPS` and `TCP_SSL` protocol and must be set when the ssl mode is `MUTUAL`.
 * `certificate_id` - (Optional, String) ID of the server certificate. NOTES: Only supports listeners of `HTTPS` and `TCP_SSL` protocol and must be set when it is available.
 * `certificate_ssl_mode` - (Optional, String) Type of certificate. Valid values: `UNIDIRECTIONAL`, `MUTUAL`. NOTES: Only supports listeners of `HTTPS` and `TCP_SSL` protocol and must be set when it is available.
+* `data_compress_mode` - (Optional, String) Data compression mode. Valid values: `transparent`, `compatibility`.
 * `deregister_target_rst` - (Optional, Bool) Reschedule function: the switch for unbinding backend services. When enabled, rescheduling is triggered when a backend service is unbound. Only supported by `TCP`/`UDP` listeners.
 * `end_port` - (Optional, Int, ForceNew) This parameter is used to specify the end port and is required when creating a port range listener. Only one member can be passed in when inputting the `Ports` parameter, which is used to specify the start port. If you want to try the port range feature, please [submit a ticket](https://console.cloud.tencent.com/workorder/category).
 * `h2c_switch` - (Optional, Bool, ForceNew) Whether to enable H2C for intranet `HTTP` listeners. `true`: enable, `false`: disable (default). When enabled, the listener only supports creating L7 rules with backend forwarding type `GRPC` or `GRPCS`; `GRPC` or `GRPCS` must be explicitly specified in the forwarding type when creating rules.
@@ -228,8 +247,11 @@ The following arguments are supported:
 * `health_source_ip_type` - (Optional, Int) Health check source IP type. `0`: use the CLB VIP as the source IP, `1`: use a 100.64 IP range as the source IP.
 * `idle_connect_timeout` - (Optional, Int) Idle connection timeout. This parameter is only available for TCP/UDP listeners, in seconds. Default: 900s for TCP listeners, 300s for UDP listeners. Value range: 10-900 for shared and dedicated instances; 10-1980 for LCU-supported CLB instances. To set a value beyond the range, please submit a ticket for application.
 * `keepalive_enable` - (Optional, Int) Whether to enable persistent connection (long connection). Only applicable to `HTTP`/`HTTPS` listeners. Valid values: `0` (disable, default), `1` (enable). This feature is currently in beta.
+* `max_conn` - (Optional, Int) Listener-level maximum concurrent connections. Currently only supported for performance capacity-type CLB instances with TCP/UDP/TCP_SSL/QUIC listeners. Pass -1 to indicate no limit at the listener level. Basic network instances do not support this parameter.
+* `max_cps` - (Optional, Int) Listener-level maximum new connections per second. Currently only supported for performance capacity-type CLB instances with TCP/UDP/TCP_SSL/QUIC listeners. Pass -1 to indicate no limit at the listener level. Basic network instances do not support this parameter.
 * `multi_cert_info` - (Optional, List) Certificate information, supporting multiple server certificates with different algorithm types at the same time. Only applicable to `TCP_SSL` listeners and `HTTPS` listeners with SNI disabled. When creating a `TCP_SSL` listener or an `HTTPS` listener with SNI disabled, at least one of `certificate`/`multi_cert_info` must be specified, but they cannot be specified at the same time.
 * `port` - (Optional, Int, ForceNew) Port of the CLB listener. Port range: [1 - 65535].
+* `proxy_protocol` - (Optional, Bool) Enable proxy protocol for TCP_SSL and QUIC listeners. Note: this field is not returned by the DescribeListeners API, so it will not be refreshed in state after creation.
 * `reschedule_expand_target` - (Optional, Bool) The rescheduling function, a switch for scaling backend services, triggers rescheduling when backend servers are added or removed. Only supported by TCP/UDP listeners.
 * `reschedule_interval` - (Optional, Int) Rescheduled trigger duration, ranging from 0 to 3600 seconds. Supported only by TCP/UDP listeners.
 * `reschedule_start_time` - (Optional, Int) Reschedule the trigger start time, with a value ranging from 0 to 3600 seconds. Only supported by TCP/UDP listeners.

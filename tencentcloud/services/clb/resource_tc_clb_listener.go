@@ -264,6 +264,29 @@ func ResourceTencentCloudClbListener() *schema.Resource {
 				Optional:    true,
 				Description: "Idle connection timeout. This parameter is only available for TCP/UDP listeners, in seconds. Default: 900s for TCP listeners, 300s for UDP listeners. Value range: 10-900 for shared and dedicated instances; 10-1980 for LCU-supported CLB instances. To set a value beyond the range, please submit a ticket for application.",
 			},
+			"max_conn": {
+				Type:        schema.TypeInt,
+				Optional:    true,
+				Computed:    true,
+				Description: "Listener-level maximum concurrent connections. Currently only supported for performance capacity-type CLB instances with TCP/UDP/TCP_SSL/QUIC listeners. Pass -1 to indicate no limit at the listener level. Basic network instances do not support this parameter.",
+			},
+			"max_cps": {
+				Type:        schema.TypeInt,
+				Optional:    true,
+				Computed:    true,
+				Description: "Listener-level maximum new connections per second. Currently only supported for performance capacity-type CLB instances with TCP/UDP/TCP_SSL/QUIC listeners. Pass -1 to indicate no limit at the listener level. Basic network instances do not support this parameter.",
+			},
+			"proxy_protocol": {
+				Type:        schema.TypeBool,
+				Optional:    true,
+				Description: "Enable proxy protocol for TCP_SSL and QUIC listeners. Note: this field is not returned by the DescribeListeners API, so it will not be refreshed in state after creation.",
+			},
+			"data_compress_mode": {
+				Type:        schema.TypeString,
+				Optional:    true,
+				Computed:    true,
+				Description: "Data compression mode. Valid values: `transparent`, `compatibility`.",
+			},
 			"reschedule_target_zero_weight": {
 				Type:        schema.TypeBool,
 				Computed:    true,
@@ -450,6 +473,22 @@ func resourceTencentCloudClbListenerCreate(d *schema.ResourceData, meta interfac
 
 	if v, ok := d.GetOkExists("reschedule_interval"); ok {
 		request.RescheduleInterval = helper.IntInt64(v.(int))
+	}
+
+	if v, ok := d.GetOkExists("max_conn"); ok {
+		request.MaxConn = helper.IntInt64(v.(int))
+	}
+
+	if v, ok := d.GetOkExists("max_cps"); ok {
+		request.MaxCps = helper.IntInt64(v.(int))
+	}
+
+	if v, ok := d.GetOkExists("proxy_protocol"); ok {
+		request.ProxyProtocol = helper.Bool(v.(bool))
+	}
+
+	if v, ok := d.GetOkExists("data_compress_mode"); ok {
+		request.DataCompressMode = helper.String(v.(string))
 	}
 
 	var response *clb.CreateListenerResponse
@@ -700,6 +739,18 @@ func resourceTencentCloudClbListenerRead(d *schema.ResourceData, meta interface{
 		_ = d.Set("reschedule_interval", instance.RescheduleInterval)
 	}
 
+	if instance.MaxConn != nil {
+		_ = d.Set("max_conn", instance.MaxConn)
+	}
+
+	if instance.MaxCps != nil {
+		_ = d.Set("max_cps", instance.MaxCps)
+	}
+
+	if instance.DataCompressMode != nil {
+		_ = d.Set("data_compress_mode", instance.DataCompressMode)
+	}
+
 	return nil
 }
 
@@ -857,6 +908,34 @@ func resourceTencentCloudClbListenerUpdate(d *schema.ResourceData, meta interfac
 		changed = true
 		if v, ok := d.GetOkExists("reschedule_interval"); ok {
 			request.RescheduleInterval = helper.IntInt64(v.(int))
+		}
+	}
+
+	if d.HasChange("max_conn") {
+		changed = true
+		if v, ok := d.GetOkExists("max_conn"); ok {
+			request.MaxConn = helper.IntInt64(v.(int))
+		}
+	}
+
+	if d.HasChange("max_cps") {
+		changed = true
+		if v, ok := d.GetOkExists("max_cps"); ok {
+			request.MaxCps = helper.IntInt64(v.(int))
+		}
+	}
+
+	if d.HasChange("proxy_protocol") {
+		changed = true
+		if v, ok := d.GetOkExists("proxy_protocol"); ok {
+			request.ProxyProtocol = helper.Bool(v.(bool))
+		}
+	}
+
+	if d.HasChange("data_compress_mode") {
+		changed = true
+		if v, ok := d.GetOkExists("data_compress_mode"); ok {
+			request.DataCompressMode = helper.String(v.(string))
 		}
 	}
 

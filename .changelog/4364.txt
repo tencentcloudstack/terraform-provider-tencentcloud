@@ -1,0 +1,3 @@
+```release-note:enhancement
+resource/tencentcloud_clb_listener: support max_conn, max_cps, proxy_protocol and data_compress_mode parameters
+```
