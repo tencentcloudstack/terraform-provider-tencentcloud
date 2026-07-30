@@ -92,3 +92,11 @@ In addition to all arguments above, the following attributes are exported:
 
 
 
+## Import
+
+AS schedule can be imported using the id, e.g.
+
+```
+terraform import tencentcloud_as_schedule.example asst-ezsey1r5
+```
+

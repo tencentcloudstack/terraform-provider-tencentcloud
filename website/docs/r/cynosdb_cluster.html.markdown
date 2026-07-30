@@ -11,6 +11,8 @@ description: |-
 
 Provide a resource to create a CynosDB cluster.
 
+~> **NOTE:** Compared to Resource `tencentcloud_cynosdb_cluster`, Resource `tencentcloud_cynosdb_cluster_v2` places greater emphasis on optimizing security group configurations for read-only groups and read-only instances, making them more precise and efficient. `rw_group_sg` represents the read-write instance security group, `ro_group_sg` represents the read-only group security group, and `single_ro_group_sg` represents the read-only instance security group. notably, to configure `ro_group_sg`, ``open_ro_group` must be set `true` first. If you need to configure `ro_group_sg` or `single_ro_group_sg` security group, please use Resource `tencentcloud_cynosdb_cluster_v2`.
+
 ~> **NOTE:** params `instance_count` and `instance_init_infos` only choose one. If neither parameter is set, the CynosDB cluster is created with parameter `instance_count` set to `2` by default(one RW instance + one Ro instance). If you only need to create a master instance, explicitly set the `instance_count` field to `1`, or configure the RW instance information in the `instance_init_infos` field.
 
 ## Example Usage
@@ -85,10 +87,6 @@ resource "tencentcloud_cynosdb_cluster" "example" {
   }
 
   rw_group_sg = [
-    tencentcloud_security_group.example.id,
-  ]
-
-  ro_group_sg = [
     tencentcloud_security_group.example.id,
   ]
 
@@ -198,10 +196,6 @@ resource "tencentcloud_cynosdb_cluster" "example" {
     tencentcloud_security_group.example.id,
   ]
 
-  ro_group_sg = [
-    tencentcloud_security_group.example.id,
-  ]
-
   tags = {
     createBy = "terraform"
   }
@@ -233,6 +227,7 @@ The following arguments are supported:
 * `instance_maintain_start_time` - (Optional, Int) Offset time from 00:00, unit in second. For example, 03:00am should be `10800`. `10800` by default.
 * `instance_maintain_weekdays` - (Optional, Set: [`String`]) Weekdays for maintenance. `["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"]` by default.
 * `instance_memory_size` - (Optional, Int) Memory capacity of read-write type instance, unit in GB. Required while creating normal cluster. Note: modification of this field will take effect immediately, if want to upgrade on maintenance window, please upgrade from console.
+* `instance_name` - (Optional, String) Name of instance. Only supported when modifying.
 * `max_cpu` - (Optional, Float64) Maximum CPU core count, required while `db_mode` is `SERVERLESS`, request DescribeServerlessInstanceSpecs for more reference.
 * `min_cpu` - (Optional, Float64) Minimum CPU core count, required while `db_mode` is `SERVERLESS`, request DescribeServerlessInstanceSpecs for more reference.
 * `old_ip_reserve_hours` - (Optional, Int) Recycling time of the old address, must be filled in when modifying the vpcRecycling time of the old address, must be filled in when modifying the vpc.
@@ -277,7 +272,6 @@ In addition to all arguments above, the following attributes are exported:
 * `cluster_status` - Status of the Cynosdb cluster.
 * `create_time` - Creation time of the CynosDB cluster.
 * `instance_id` - ID of instance.
-* `instance_name` - Name of instance.
 * `instance_status` - Status of the instance.
 * `instance_storage_size` - Storage size of the instance, unit in GB.
 * `ro_group_addr` - Readonly addresses. Each element contains the following attributes:

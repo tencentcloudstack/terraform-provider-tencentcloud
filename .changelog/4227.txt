@@ -1,0 +1,3 @@
+```release-note:enhancement
+resource/tencentcloud_tdmq_topic: add `tags` parameter to support setting tags on TDMQ topics at creation time
+```

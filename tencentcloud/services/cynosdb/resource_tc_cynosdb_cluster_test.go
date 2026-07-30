@@ -187,6 +187,37 @@ func TestAccTencentCloudCynosdbClusterResourceServerless(t *testing.T) {
 	})
 }
 
+func TestAccTencentCloudCynosdbClusterResourceUpdateInstanceName(t *testing.T) {
+	t.Parallel()
+	resource.Test(t, resource.TestCase{
+		PreCheck:     func() { tcacctest.AccPreCheck(t) },
+		Providers:    tcacctest.AccProviders,
+		CheckDestroy: testAccCheckCynosdbClusterDestroy,
+		Steps: []resource.TestStep{
+			{
+				Config: testAccCynosdbCluster,
+				Check: resource.ComposeTestCheckFunc(
+					testAccCheckCynosdbClusterExists("tencentcloud_cynosdb_cluster.foo"),
+					resource.TestCheckResourceAttrSet("tencentcloud_cynosdb_cluster.foo", "instance_name"),
+				),
+			},
+			{
+				Config: testAccCynosdbCluster_updateInstanceName,
+				Check: resource.ComposeTestCheckFunc(
+					testAccCheckCynosdbClusterExists("tencentcloud_cynosdb_cluster.foo"),
+					resource.TestCheckResourceAttr("tencentcloud_cynosdb_cluster.foo", "instance_name", "tf-cynosdb-instance-update"),
+				),
+			},
+			{
+				Config: testAccCynosdbCluster,
+				Check: resource.ComposeTestCheckFunc(
+					testAccCheckCynosdbClusterExists("tencentcloud_cynosdb_cluster.foo"),
+				),
+			},
+		},
+	})
+}
+
 func testAccCheckCynosdbClusterDestroy(s *terraform.State) error {
 	logId := tccommon.GetLogId(tccommon.ContextNil)
 	ctx := context.WithValue(context.TODO(), tccommon.LogIdKey, logId)
@@ -443,3 +474,52 @@ resource "tencentcloud_cynosdb_cluster" "foo" {
   serverless_status_flag       = "resume"
   force_delete = true
 }`
+
+const testAccCynosdbCluster_updateInstanceName = testAccCynosdbBasic + `
+resource "tencentcloud_cynosdb_cluster" "foo" {
+  available_zone               = var.availability_zone
+  vpc_id                       = var.my_vpc
+  subnet_id                    = var.my_subnet
+  db_type                      = "MYSQL"
+  db_version                   = "5.7"
+  storage_limit                = 1000
+  cluster_name                 = "tf-cynosdb"
+  instance_name                = "tf-cynosdb-instance-update"
+  password                     = "cynos@123"
+  instance_maintain_duration   = 3600
+  instance_maintain_start_time = 10800
+  instance_maintain_weekdays   = [
+    "Fri",
+    "Mon",
+    "Sat",
+    "Sun",
+    "Thu",
+    "Wed",
+    "Tue",
+  ]
+
+  instance_cpu_core    = 1
+  instance_memory_size = 2
+  param_items {
+    name = "character_set_server"
+    current_value = "utf8"
+  }
+  param_items {
+    name = "time_zone"
+    current_value = "+09:00"
+  }
+
+  tags = {
+    test = "test"
+  }
+
+  force_delete = true
+
+  rw_group_sg = [
+    var.rw_group_sg
+  ]
+  ro_group_sg = [
+    var.rw_group_sg
+  ]
+}
+`

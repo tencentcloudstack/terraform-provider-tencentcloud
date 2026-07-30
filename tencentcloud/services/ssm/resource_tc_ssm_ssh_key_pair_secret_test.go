@@ -26,6 +26,7 @@ func TestAccTencentCloudSsmSshKeyPairSecretResource_basic(t *testing.T) {
 				Config: fmt.Sprintf(testAccSsmSshKeyPairSecret, rName, rSshName),
 				Check: resource.ComposeTestCheckFunc(
 					resource.TestCheckResourceAttr("tencentcloud_ssm_ssh_key_pair_secret.example", "description", "desc."),
+					resource.TestCheckResourceAttrSet("tencentcloud_ssm_ssh_key_pair_secret.example", "ssh_key_id"),
 					resource.TestCheckResourceAttr("tencentcloud_ssm_ssh_key_pair_secret.example", "status", "Disabled"),
 				),
 			},
@@ -33,6 +34,7 @@ func TestAccTencentCloudSsmSshKeyPairSecretResource_basic(t *testing.T) {
 				Config: fmt.Sprintf(testAccSsmSshKeyPairSecretUpdate, rName, rSshName),
 				Check: resource.ComposeTestCheckFunc(
 					resource.TestCheckResourceAttr("tencentcloud_ssm_ssh_key_pair_secret.example", "description", "update desc."),
+					resource.TestCheckResourceAttrSet("tencentcloud_ssm_ssh_key_pair_secret.example", "ssh_key_id"),
 					resource.TestCheckResourceAttr("tencentcloud_ssm_ssh_key_pair_secret.example", "status", "Enabled"),
 				),
 			},
@@ -46,6 +48,7 @@ func TestAccTencentCloudSsmSshKeyPairSecretResource_basic(t *testing.T) {
 				Config: fmt.Sprintf(testAccSsmSshKeyPairSecretNoId, rSshName),
 				Check: resource.ComposeTestCheckFunc(
 					resource.TestCheckResourceAttr("tencentcloud_ssm_ssh_key_pair_secret.example1", "description", "desc."),
+					resource.TestCheckResourceAttrSet("tencentcloud_ssm_ssh_key_pair_secret.example1", "ssh_key_id"),
 					resource.TestCheckResourceAttr("tencentcloud_ssm_ssh_key_pair_secret.example1", "status", "Disabled"),
 				),
 			},
@@ -53,6 +56,7 @@ func TestAccTencentCloudSsmSshKeyPairSecretResource_basic(t *testing.T) {
 				Config: fmt.Sprintf(testAccSsmSshKeyPairSecretNoIdUpdate, rSshName),
 				Check: resource.ComposeTestCheckFunc(
 					resource.TestCheckResourceAttr("tencentcloud_ssm_ssh_key_pair_secret.example1", "description", "update desc."),
+					resource.TestCheckResourceAttrSet("tencentcloud_ssm_ssh_key_pair_secret.example1", "ssh_key_id"),
 					resource.TestCheckResourceAttr("tencentcloud_ssm_ssh_key_pair_secret.example1", "status", "Enabled"),
 				),
 			},
@@ -66,6 +70,7 @@ func TestAccTencentCloudSsmSshKeyPairSecretResource_basic(t *testing.T) {
 				Config: testAccSsmSshKeyPairSecretNoName,
 				Check: resource.ComposeTestCheckFunc(
 					resource.TestCheckResourceAttr("tencentcloud_ssm_ssh_key_pair_secret.example2", "description", "desc."),
+					resource.TestCheckResourceAttrSet("tencentcloud_ssm_ssh_key_pair_secret.example2", "ssh_key_id"),
 					resource.TestCheckResourceAttr("tencentcloud_ssm_ssh_key_pair_secret.example2", "status", "Disabled"),
 				),
 			},
@@ -73,6 +78,7 @@ func TestAccTencentCloudSsmSshKeyPairSecretResource_basic(t *testing.T) {
 				Config: testAccSsmSshKeyPairSecretNoNameUpdate,
 				Check: resource.ComposeTestCheckFunc(
 					resource.TestCheckResourceAttr("tencentcloud_ssm_ssh_key_pair_secret.example2", "description", "update desc."),
+					resource.TestCheckResourceAttrSet("tencentcloud_ssm_ssh_key_pair_secret.example2", "ssh_key_id"),
 					resource.TestCheckResourceAttr("tencentcloud_ssm_ssh_key_pair_secret.example2", "status", "Enabled"),
 				),
 			},

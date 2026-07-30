@@ -269,9 +269,13 @@ func resourceTencentCloudMonitorTmpAlertGroupCreate(d *schema.ResourceData, meta
 	err := resource.Retry(tccommon.WriteRetryTimeout, func() *resource.RetryError {
 		result, e := meta.(tccommon.ProviderMeta).GetAPIV3Conn().UseMonitorClient().CreatePrometheusAlertGroup(request)
 		if e != nil {
-			return tccommon.RetryError(e)
+			return tccommon.RetryError(e, "FailedOperation.DbRecordCreateFailed")
 		} else {
 			log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), result.ToJsonString())
+		}
+
+		if result == nil || result.Response == nil {
+			return resource.NonRetryableError(fmt.Errorf("Create monitor tmp Alert Group failed, Response is nil"))
 		}
 
 		response = result
@@ -281,6 +285,10 @@ func resourceTencentCloudMonitorTmpAlertGroupCreate(d *schema.ResourceData, meta
 	if err != nil {
 		log.Printf("[CRITAL]%s create monitor tmpAlertGroup failed, reason:%+v", logId, err)
 		return err
+	}
+
+	if response.Response.GroupId == nil {
+		return fmt.Errorf("GroupId is nil")
 	}
 
 	groupId = *response.Response.GroupId
@@ -322,8 +330,8 @@ func resourceTencentCloudMonitorTmpAlertGroupRead(d *schema.ResourceData, meta i
 	}
 
 	if tmpAlertGroup == nil {
+		log.Printf("[WARN]%s resource `tencentcloud_monitor_tmp_alert_group` [%s] not found, please check if it has been deleted.\n", logId, d.Id())
 		d.SetId("")
-		log.Printf("[WARN]%s resource `MonitorTmpAlertGroup` [%s] not found, please check if it has been deleted.\n", logId, d.Id())
 		return nil
 	}
 
@@ -556,7 +564,7 @@ func resourceTencentCloudMonitorTmpAlertGroupUpdate(d *schema.ResourceData, meta
 	err := resource.Retry(tccommon.WriteRetryTimeout, func() *resource.RetryError {
 		result, e := meta.(tccommon.ProviderMeta).GetAPIV3Conn().UseMonitorClient().UpdatePrometheusAlertGroup(request)
 		if e != nil {
-			return tccommon.RetryError(e)
+			return tccommon.RetryError(e, "FailedOperation.DbRecordCreateFailed")
 		} else {
 			log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), result.ToJsonString())
 		}

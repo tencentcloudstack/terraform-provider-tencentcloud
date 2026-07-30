@@ -114,6 +114,47 @@ resource "tencentcloud_teo_l7_acc_rule_v2" "example" {
 }
 ```
 
+Using AdvancedOriginRouting, Shield, and SiteFailover actions
+
+```hcl
+resource "tencentcloud_teo_l7_acc_rule_v2" "example_failover" {
+  zone_id     = "zone-3fkff38fyw8s"
+  description = ["description"]
+  rule_name   = "Web Acceleration Failover"
+  status      = "enable"
+  branches {
+    condition = "$${http.request.host} in ['www.example.com']"
+    actions {
+      name = "AdvancedOriginRouting"
+      advanced_origin_routing_parameters {
+        direction = "MainlandChinaAndGlobalAdaptive"
+      }
+    }
+
+    actions {
+      name = "Shield"
+      shield_parameters {
+        shield_space_id = "shield-space-abc123"
+      }
+    }
+
+    actions {
+      name = "SiteFailover"
+      site_failover_parameters {
+        site_failover_status_codes = [500]
+        site_failover_params {
+          mode           = "FailoverToHost"
+          origin         = "backup.example.com"
+          origin_protocol = "https"
+          https_origin_port = 443
+          status_code    = 302
+        }
+      }
+    }
+  }
+}
+```
+
 Import
 
 TEO l7 acc rule v2 can be imported using the {zone_id}#{rule_id}, e.g.

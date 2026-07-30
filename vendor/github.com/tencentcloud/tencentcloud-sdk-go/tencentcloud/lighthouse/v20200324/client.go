@@ -1,4 +1,4 @@
-// Copyright (c) 2017-2018 THL A29 Limited, a Tencent company. All Rights Reserved.
+// Copyright (c) 2017-2025 Tencent. All Rights Reserved.
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -59,8 +59,9 @@ func NewApplyDiskBackupRequest() (request *ApplyDiskBackupRequest) {
 func NewApplyDiskBackupResponse() (response *ApplyDiskBackupResponse) {
     response = &ApplyDiskBackupResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // ApplyDiskBackup
@@ -79,6 +80,7 @@ func NewApplyDiskBackupResponse() (response *ApplyDiskBackupResponse) {
 // * 如果云硬盘处于 ATTACHED状态，相关RUNNING 状态的实例会强制关机，然后回滚云硬盘备份点。
 //
 // 可能返回的错误码:
+//  FAILEDOPERATION_DESCRIBEINSTANCESTATUS = "FailedOperation.DescribeInstanceStatus"
 //  INVALIDPARAMETERVALUE_DISKBACKUPIDMALFORMED = "InvalidParameterValue.DiskBackupIdMalformed"
 //  INVALIDPARAMETERVALUE_INVALIDDISKIDMALFORMED = "InvalidParameterValue.InvalidDiskIdMalformed"
 //  OPERATIONDENIED_DISKBACKUPBUSY = "OperationDenied.DiskBackupBusy"
@@ -116,6 +118,7 @@ func (c *Client) ApplyDiskBackup(request *ApplyDiskBackupRequest) (response *App
 // * 如果云硬盘处于 ATTACHED状态，相关RUNNING 状态的实例会强制关机，然后回滚云硬盘备份点。
 //
 // 可能返回的错误码:
+//  FAILEDOPERATION_DESCRIBEINSTANCESTATUS = "FailedOperation.DescribeInstanceStatus"
 //  INVALIDPARAMETERVALUE_DISKBACKUPIDMALFORMED = "InvalidParameterValue.DiskBackupIdMalformed"
 //  INVALIDPARAMETERVALUE_INVALIDDISKIDMALFORMED = "InvalidParameterValue.InvalidDiskIdMalformed"
 //  OPERATIONDENIED_DISKBACKUPBUSY = "OperationDenied.DiskBackupBusy"
@@ -137,6 +140,7 @@ func (c *Client) ApplyDiskBackupWithContext(ctx context.Context, request *ApplyD
     if request == nil {
         request = NewApplyDiskBackupRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "lighthouse", APIVersion, "ApplyDiskBackup")
     
     if c.GetCredential() == nil {
         return nil, errors.New("ApplyDiskBackup require credential")
@@ -163,8 +167,9 @@ func NewApplyFirewallTemplateRequest() (request *ApplyFirewallTemplateRequest) {
 func NewApplyFirewallTemplateResponse() (response *ApplyFirewallTemplateResponse) {
     response = &ApplyFirewallTemplateResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // ApplyFirewallTemplate
@@ -172,7 +177,11 @@ func NewApplyFirewallTemplateResponse() (response *ApplyFirewallTemplateResponse
 //
 // 可能返回的错误码:
 //  FAILEDOPERATION = "FailedOperation"
+//  INVALIDPARAMETERVALUE_LENGTH = "InvalidParameterValue.Length"
+//  RESOURCENOTFOUND_FIREWALLTEMPLATENOTFOUND = "ResourceNotFound.FirewallTemplateNotFound"
 //  RESOURCEUNAVAILABLE_CANNOTAPPLYEMPTYFIREWALLTEMPLATE = "ResourceUnavailable.CannotApplyEmptyFirewallTemplate"
+//  RESOURCEUNAVAILABLE_FIREWALLTEMPLATEINUSE = "ResourceUnavailable.FirewallTemplateInUse"
+//  UNAUTHORIZEDOPERATION_NOPERMISSION = "UnauthorizedOperation.NoPermission"
 func (c *Client) ApplyFirewallTemplate(request *ApplyFirewallTemplateRequest) (response *ApplyFirewallTemplateResponse, err error) {
     return c.ApplyFirewallTemplateWithContext(context.Background(), request)
 }
@@ -182,11 +191,16 @@ func (c *Client) ApplyFirewallTemplate(request *ApplyFirewallTemplateRequest) (r
 //
 // 可能返回的错误码:
 //  FAILEDOPERATION = "FailedOperation"
+//  INVALIDPARAMETERVALUE_LENGTH = "InvalidParameterValue.Length"
+//  RESOURCENOTFOUND_FIREWALLTEMPLATENOTFOUND = "ResourceNotFound.FirewallTemplateNotFound"
 //  RESOURCEUNAVAILABLE_CANNOTAPPLYEMPTYFIREWALLTEMPLATE = "ResourceUnavailable.CannotApplyEmptyFirewallTemplate"
+//  RESOURCEUNAVAILABLE_FIREWALLTEMPLATEINUSE = "ResourceUnavailable.FirewallTemplateInUse"
+//  UNAUTHORIZEDOPERATION_NOPERMISSION = "UnauthorizedOperation.NoPermission"
 func (c *Client) ApplyFirewallTemplateWithContext(ctx context.Context, request *ApplyFirewallTemplateRequest) (response *ApplyFirewallTemplateResponse, err error) {
     if request == nil {
         request = NewApplyFirewallTemplateRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "lighthouse", APIVersion, "ApplyFirewallTemplate")
     
     if c.GetCredential() == nil {
         return nil, errors.New("ApplyFirewallTemplate require credential")
@@ -213,18 +227,19 @@ func NewApplyInstanceSnapshotRequest() (request *ApplyInstanceSnapshotRequest) {
 func NewApplyInstanceSnapshotResponse() (response *ApplyInstanceSnapshotResponse) {
     response = &ApplyInstanceSnapshotResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // ApplyInstanceSnapshot
 // 本接口（ApplyInstanceSnapshot）用于回滚指定实例的系统盘快照。
 //
-// <li>仅支持回滚到原系统盘。</li>
+// - 仅支持回滚到原系统盘。
 //
-// <li>用于回滚的快照必须处于 NORMAL 状态。快照状态可以通过 DescribeSnapshots 接口查询，见输出参数中 SnapshotState 字段解释。</li>
+// - 用于回滚的快照必须处于 NORMAL 状态。快照状态可以通过 [DescribeSnapshots](https://cloud.tencent.com/document/product/1207/54388) 接口查询，见输出参数中 SnapshotState 字段解释。
 //
-// <li>回滚快照时，实例的状态必须为 STOPPED 或 RUNNING，可通过 DescribeInstances 接口查询实例状态。处于 RUNNING 状态的实例会强制关机，然后回滚快照。</li>
+// - 回滚快照时，实例的状态必须为 STOPPED 或 RUNNING，可通过 [DescribeInstances](https://cloud.tencent.com/document/product/1207/47573) 接口查询实例状态。处于 RUNNING 状态的实例会强制关机，然后回滚快照。
 //
 // 可能返回的错误码:
 //  FAILEDOPERATION_DESCRIBEINSTANCESTATUS = "FailedOperation.DescribeInstanceStatus"
@@ -254,11 +269,11 @@ func (c *Client) ApplyInstanceSnapshot(request *ApplyInstanceSnapshotRequest) (r
 // ApplyInstanceSnapshot
 // 本接口（ApplyInstanceSnapshot）用于回滚指定实例的系统盘快照。
 //
-// <li>仅支持回滚到原系统盘。</li>
+// - 仅支持回滚到原系统盘。
 //
-// <li>用于回滚的快照必须处于 NORMAL 状态。快照状态可以通过 DescribeSnapshots 接口查询，见输出参数中 SnapshotState 字段解释。</li>
+// - 用于回滚的快照必须处于 NORMAL 状态。快照状态可以通过 [DescribeSnapshots](https://cloud.tencent.com/document/product/1207/54388) 接口查询，见输出参数中 SnapshotState 字段解释。
 //
-// <li>回滚快照时，实例的状态必须为 STOPPED 或 RUNNING，可通过 DescribeInstances 接口查询实例状态。处于 RUNNING 状态的实例会强制关机，然后回滚快照。</li>
+// - 回滚快照时，实例的状态必须为 STOPPED 或 RUNNING，可通过 [DescribeInstances](https://cloud.tencent.com/document/product/1207/47573) 接口查询实例状态。处于 RUNNING 状态的实例会强制关机，然后回滚快照。
 //
 // 可能返回的错误码:
 //  FAILEDOPERATION_DESCRIBEINSTANCESTATUS = "FailedOperation.DescribeInstanceStatus"
@@ -285,6 +300,7 @@ func (c *Client) ApplyInstanceSnapshotWithContext(ctx context.Context, request *
     if request == nil {
         request = NewApplyInstanceSnapshotRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "lighthouse", APIVersion, "ApplyInstanceSnapshot")
     
     if c.GetCredential() == nil {
         return nil, errors.New("ApplyInstanceSnapshot require credential")
@@ -311,8 +327,9 @@ func NewAssociateInstancesKeyPairsRequest() (request *AssociateInstancesKeyPairs
 func NewAssociateInstancesKeyPairsResponse() (response *AssociateInstancesKeyPairsResponse) {
     response = &AssociateInstancesKeyPairsResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // AssociateInstancesKeyPairs
@@ -328,7 +345,7 @@ func NewAssociateInstancesKeyPairsResponse() (response *AssociateInstancesKeyPai
 //
 // * 支持批量操作。每次请求批量实例的上限为 100。如果批量实例存在不允许操作的实例，操作会以特定错误码返回。
 //
-// * 本接口为异步接口，请求发送成功后会返回一个 RequestId，此时操作并未立即完成。实例操作结果可以通过调用 DescribeInstances 接口查询，如果实例的最新操作状态（LatestOperationState）为“SUCCESS”，则代表操作成功。
+// * 本接口为异步接口，请求发送成功后会返回一个 RequestId，此时操作并未立即完成。实例操作结果可以通过调用 <a href="https://cloud.tencent.com/document/product/1207/47573" target="_blank">DescribeInstances</a> 接口查询，如果实例的最新操作状态（LatestOperationState）为“SUCCESS”，则代表操作成功。
 //
 // 可能返回的错误码:
 //  FAILEDOPERATION_DESCRIBEINSTANCESTATUS = "FailedOperation.DescribeInstanceStatus"
@@ -348,6 +365,7 @@ func NewAssociateInstancesKeyPairsResponse() (response *AssociateInstancesKeyPai
 //  UNAUTHORIZEDOPERATION_MFAEXPIRED = "UnauthorizedOperation.MFAExpired"
 //  UNAUTHORIZEDOPERATION_MFANOTFOUND = "UnauthorizedOperation.MFANotFound"
 //  UNAUTHORIZEDOPERATION_NOPERMISSION = "UnauthorizedOperation.NoPermission"
+//  UNSUPPORTEDOPERATION_INSTANCEDISPLAYAREANOTSUPPORTOPERATION = "UnsupportedOperation.InstanceDisplayAreaNotSupportOperation"
 //  UNSUPPORTEDOPERATION_INVALIDINSTANCESTATE = "UnsupportedOperation.InvalidInstanceState"
 //  UNSUPPORTEDOPERATION_KEYPAIRBINDDUPLICATE = "UnsupportedOperation.KeyPairBindDuplicate"
 //  UNSUPPORTEDOPERATION_LATESTOPERATIONUNFINISHED = "UnsupportedOperation.LatestOperationUnfinished"
@@ -370,7 +388,7 @@ func (c *Client) AssociateInstancesKeyPairs(request *AssociateInstancesKeyPairsR
 //
 // * 支持批量操作。每次请求批量实例的上限为 100。如果批量实例存在不允许操作的实例，操作会以特定错误码返回。
 //
-// * 本接口为异步接口，请求发送成功后会返回一个 RequestId，此时操作并未立即完成。实例操作结果可以通过调用 DescribeInstances 接口查询，如果实例的最新操作状态（LatestOperationState）为“SUCCESS”，则代表操作成功。
+// * 本接口为异步接口，请求发送成功后会返回一个 RequestId，此时操作并未立即完成。实例操作结果可以通过调用 <a href="https://cloud.tencent.com/document/product/1207/47573" target="_blank">DescribeInstances</a> 接口查询，如果实例的最新操作状态（LatestOperationState）为“SUCCESS”，则代表操作成功。
 //
 // 可能返回的错误码:
 //  FAILEDOPERATION_DESCRIBEINSTANCESTATUS = "FailedOperation.DescribeInstanceStatus"
@@ -390,6 +408,7 @@ func (c *Client) AssociateInstancesKeyPairs(request *AssociateInstancesKeyPairsR
 //  UNAUTHORIZEDOPERATION_MFAEXPIRED = "UnauthorizedOperation.MFAExpired"
 //  UNAUTHORIZEDOPERATION_MFANOTFOUND = "UnauthorizedOperation.MFANotFound"
 //  UNAUTHORIZEDOPERATION_NOPERMISSION = "UnauthorizedOperation.NoPermission"
+//  UNSUPPORTEDOPERATION_INSTANCEDISPLAYAREANOTSUPPORTOPERATION = "UnsupportedOperation.InstanceDisplayAreaNotSupportOperation"
 //  UNSUPPORTEDOPERATION_INVALIDINSTANCESTATE = "UnsupportedOperation.InvalidInstanceState"
 //  UNSUPPORTEDOPERATION_KEYPAIRBINDDUPLICATE = "UnsupportedOperation.KeyPairBindDuplicate"
 //  UNSUPPORTEDOPERATION_LATESTOPERATIONUNFINISHED = "UnsupportedOperation.LatestOperationUnfinished"
@@ -399,6 +418,7 @@ func (c *Client) AssociateInstancesKeyPairsWithContext(ctx context.Context, requ
     if request == nil {
         request = NewAssociateInstancesKeyPairsRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "lighthouse", APIVersion, "AssociateInstancesKeyPairs")
     
     if c.GetCredential() == nil {
         return nil, errors.New("AssociateInstancesKeyPairs require credential")
@@ -425,8 +445,9 @@ func NewAttachCcnRequest() (request *AttachCcnRequest) {
 func NewAttachCcnResponse() (response *AttachCcnResponse) {
     response = &AttachCcnResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // AttachCcn
@@ -459,6 +480,7 @@ func (c *Client) AttachCcnWithContext(ctx context.Context, request *AttachCcnReq
     if request == nil {
         request = NewAttachCcnRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "lighthouse", APIVersion, "AttachCcn")
     
     if c.GetCredential() == nil {
         return nil, errors.New("AttachCcn require credential")
@@ -485,12 +507,15 @@ func NewAttachDisksRequest() (request *AttachDisksRequest) {
 func NewAttachDisksResponse() (response *AttachDisksResponse) {
     response = &AttachDisksResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // AttachDisks
 // 本接口（AttachDisks）用于挂载一个或多个云硬盘。
+//
+// <li>只能挂载磁盘状态（DiskState）处于待挂载（UNATTACHED）状态的云硬盘，磁盘状态可通过接口查询云硬盘（DescribeDisks）获取</li>
 //
 // 可能返回的错误码:
 //  FAILEDOPERATION_INVALIDCOMMANDNOTFOUND = "FailedOperation.InvalidCommandNotFound"
@@ -508,6 +533,7 @@ func NewAttachDisksResponse() (response *AttachDisksResponse) {
 //  RESOURCENOTFOUND_INSTANCEIDNOTFOUND = "ResourceNotFound.InstanceIdNotFound"
 //  RESOURCENOTFOUND_INSTANCENOTFOUND = "ResourceNotFound.InstanceNotFound"
 //  UNSUPPORTEDOPERATION_DISKLATESTOPERATIONUNFINISHED = "UnsupportedOperation.DiskLatestOperationUnfinished"
+//  UNSUPPORTEDOPERATION_INSTANCEDISPLAYAREANOTSUPPORTOPERATION = "UnsupportedOperation.InstanceDisplayAreaNotSupportOperation"
 //  UNSUPPORTEDOPERATION_INVALIDDISKSTATE = "UnsupportedOperation.InvalidDiskState"
 //  UNSUPPORTEDOPERATION_INVALIDINSTANCESTATE = "UnsupportedOperation.InvalidInstanceState"
 //  UNSUPPORTEDOPERATION_LATESTOPERATIONUNFINISHED = "UnsupportedOperation.LatestOperationUnfinished"
@@ -518,6 +544,8 @@ func (c *Client) AttachDisks(request *AttachDisksRequest) (response *AttachDisks
 // AttachDisks
 // 本接口（AttachDisks）用于挂载一个或多个云硬盘。
 //
+// <li>只能挂载磁盘状态（DiskState）处于待挂载（UNATTACHED）状态的云硬盘，磁盘状态可通过接口查询云硬盘（DescribeDisks）获取</li>
+//
 // 可能返回的错误码:
 //  FAILEDOPERATION_INVALIDCOMMANDNOTFOUND = "FailedOperation.InvalidCommandNotFound"
 //  INTERNALERROR_TRADECALLBILLINGGATEWAYFAILED = "InternalError.TradeCallBillingGatewayFailed"
@@ -534,6 +562,7 @@ func (c *Client) AttachDisks(request *AttachDisksRequest) (response *AttachDisks
 //  RESOURCENOTFOUND_INSTANCEIDNOTFOUND = "ResourceNotFound.InstanceIdNotFound"
 //  RESOURCENOTFOUND_INSTANCENOTFOUND = "ResourceNotFound.InstanceNotFound"
 //  UNSUPPORTEDOPERATION_DISKLATESTOPERATIONUNFINISHED = "UnsupportedOperation.DiskLatestOperationUnfinished"
+//  UNSUPPORTEDOPERATION_INSTANCEDISPLAYAREANOTSUPPORTOPERATION = "UnsupportedOperation.InstanceDisplayAreaNotSupportOperation"
 //  UNSUPPORTEDOPERATION_INVALIDDISKSTATE = "UnsupportedOperation.InvalidDiskState"
 //  UNSUPPORTEDOPERATION_INVALIDINSTANCESTATE = "UnsupportedOperation.InvalidInstanceState"
 //  UNSUPPORTEDOPERATION_LATESTOPERATIONUNFINISHED = "UnsupportedOperation.LatestOperationUnfinished"
@@ -541,6 +570,7 @@ func (c *Client) AttachDisksWithContext(ctx context.Context, request *AttachDisk
     if request == nil {
         request = NewAttachDisksRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "lighthouse", APIVersion, "AttachDisks")
     
     if c.GetCredential() == nil {
         return nil, errors.New("AttachDisks require credential")
@@ -549,6 +579,86 @@ func (c *Client) AttachDisksWithContext(ctx context.Context, request *AttachDisk
     request.SetContext(ctx)
     
     response = NewAttachDisksResponse()
+    err = c.Send(request, response)
+    return
+}
+
+func NewCancelShareBlueprintAcrossAccountsRequest() (request *CancelShareBlueprintAcrossAccountsRequest) {
+    request = &CancelShareBlueprintAcrossAccountsRequest{
+        BaseRequest: &tchttp.BaseRequest{},
+    }
+    
+    request.Init().WithApiInfo("lighthouse", APIVersion, "CancelShareBlueprintAcrossAccounts")
+    
+    
+    return
+}
+
+func NewCancelShareBlueprintAcrossAccountsResponse() (response *CancelShareBlueprintAcrossAccountsResponse) {
+    response = &CancelShareBlueprintAcrossAccountsResponse{
+        BaseResponse: &tchttp.BaseResponse{},
+    } 
+    return
+
+}
+
+// CancelShareBlueprintAcrossAccounts
+// 本接口（CancelShareBlueprintAcrossAccounts）用于取消镜像跨账号共享。
+//
+// 指定的镜像ID必须为自定义镜像，且指定账号ID必须已进行共享。
+//
+// 可能返回的错误码:
+//  INVALIDPARAMETERVALUE_BLUEPRINTIDMALFORMED = "InvalidParameterValue.BlueprintIdMalformed"
+//  INVALIDPARAMETERVALUE_INVALIDBLUEPRINTID = "InvalidParameterValue.InvalidBlueprintId"
+//  INVALIDPARAMETERVALUE_INVALIDBLUEPRINTSTATE = "InvalidParameterValue.InvalidBlueprintState"
+//  INVALIDPARAMETERVALUE_LIMITEXCEEDED = "InvalidParameterValue.LimitExceeded"
+//  OPERATIONDENIED_BLUEPRINTOPERATIONINPROGRESS = "OperationDenied.BlueprintOperationInProgress"
+//  RESOURCEINUSE_BLUEPRINTMODIFYINGSHAREPERMISSION = "ResourceInUse.BlueprintModifyingSharePermission"
+//  RESOURCENOTFOUND_BLUEPRINTIDNOTFOUND = "ResourceNotFound.BlueprintIdNotFound"
+//  RESOURCENOTFOUND_BLUEPRINTNOTFOUND = "ResourceNotFound.BlueprintNotFound"
+//  RESOURCENOTFOUND_PRIVATEBLUEPRINTNOTFOUND = "ResourceNotFound.PrivateBlueprintNotFound"
+//  UNAUTHORIZEDOPERATION_TOKENINVALID = "UnauthorizedOperation.TokenInvalid"
+//  UNSUPPORTEDOPERATION_BLUEPRINTCURSTATEINVALID = "UnsupportedOperation.BlueprintCurStateInvalid"
+//  UNSUPPORTEDOPERATION_BLUEPRINTHASNOTSHARED = "UnsupportedOperation.BlueprintHasNotShared"
+//  UNSUPPORTEDOPERATION_BLUEPRINTLATESTOPERATIONUNFINISHED = "UnsupportedOperation.BlueprintLatestOperationUnfinished"
+//  UNSUPPORTEDOPERATION_BLUEPRINTOCCUPIED = "UnsupportedOperation.BlueprintOccupied"
+func (c *Client) CancelShareBlueprintAcrossAccounts(request *CancelShareBlueprintAcrossAccountsRequest) (response *CancelShareBlueprintAcrossAccountsResponse, err error) {
+    return c.CancelShareBlueprintAcrossAccountsWithContext(context.Background(), request)
+}
+
+// CancelShareBlueprintAcrossAccounts
+// 本接口（CancelShareBlueprintAcrossAccounts）用于取消镜像跨账号共享。
+//
+// 指定的镜像ID必须为自定义镜像，且指定账号ID必须已进行共享。
+//
+// 可能返回的错误码:
+//  INVALIDPARAMETERVALUE_BLUEPRINTIDMALFORMED = "InvalidParameterValue.BlueprintIdMalformed"
+//  INVALIDPARAMETERVALUE_INVALIDBLUEPRINTID = "InvalidParameterValue.InvalidBlueprintId"
+//  INVALIDPARAMETERVALUE_INVALIDBLUEPRINTSTATE = "InvalidParameterValue.InvalidBlueprintState"
+//  INVALIDPARAMETERVALUE_LIMITEXCEEDED = "InvalidParameterValue.LimitExceeded"
+//  OPERATIONDENIED_BLUEPRINTOPERATIONINPROGRESS = "OperationDenied.BlueprintOperationInProgress"
+//  RESOURCEINUSE_BLUEPRINTMODIFYINGSHAREPERMISSION = "ResourceInUse.BlueprintModifyingSharePermission"
+//  RESOURCENOTFOUND_BLUEPRINTIDNOTFOUND = "ResourceNotFound.BlueprintIdNotFound"
+//  RESOURCENOTFOUND_BLUEPRINTNOTFOUND = "ResourceNotFound.BlueprintNotFound"
+//  RESOURCENOTFOUND_PRIVATEBLUEPRINTNOTFOUND = "ResourceNotFound.PrivateBlueprintNotFound"
+//  UNAUTHORIZEDOPERATION_TOKENINVALID = "UnauthorizedOperation.TokenInvalid"
+//  UNSUPPORTEDOPERATION_BLUEPRINTCURSTATEINVALID = "UnsupportedOperation.BlueprintCurStateInvalid"
+//  UNSUPPORTEDOPERATION_BLUEPRINTHASNOTSHARED = "UnsupportedOperation.BlueprintHasNotShared"
+//  UNSUPPORTEDOPERATION_BLUEPRINTLATESTOPERATIONUNFINISHED = "UnsupportedOperation.BlueprintLatestOperationUnfinished"
+//  UNSUPPORTEDOPERATION_BLUEPRINTOCCUPIED = "UnsupportedOperation.BlueprintOccupied"
+func (c *Client) CancelShareBlueprintAcrossAccountsWithContext(ctx context.Context, request *CancelShareBlueprintAcrossAccountsRequest) (response *CancelShareBlueprintAcrossAccountsResponse, err error) {
+    if request == nil {
+        request = NewCancelShareBlueprintAcrossAccountsRequest()
+    }
+    c.InitBaseRequest(&request.BaseRequest, "lighthouse", APIVersion, "CancelShareBlueprintAcrossAccounts")
+    
+    if c.GetCredential() == nil {
+        return nil, errors.New("CancelShareBlueprintAcrossAccounts require credential")
+    }
+
+    request.SetContext(ctx)
+    
+    response = NewCancelShareBlueprintAcrossAccountsResponse()
     err = c.Send(request, response)
     return
 }
@@ -567,14 +677,16 @@ func NewCreateBlueprintRequest() (request *CreateBlueprintRequest) {
 func NewCreateBlueprintResponse() (response *CreateBlueprintResponse) {
     response = &CreateBlueprintResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // CreateBlueprint
 // 本接口 (CreateBlueprint) 用于创建镜像。
 //
 // 可能返回的错误码:
+//  FAILEDOPERATION = "FailedOperation"
 //  FAILEDOPERATION_CREATEBLUEPRINTFAILED = "FailedOperation.CreateBlueprintFailed"
 //  FAILEDOPERATION_INSUFFICIENTBALANCE = "FailedOperation.InsufficientBalance"
 //  FAILEDOPERATION_UNABLETOCREATEBLUEPRINT = "FailedOperation.UnableToCreateBlueprint"
@@ -585,6 +697,7 @@ func NewCreateBlueprintResponse() (response *CreateBlueprintResponse) {
 //  LIMITEXCEEDED_BLUEPRINTQUOTALIMITEXCEEDED = "LimitExceeded.BlueprintQuotaLimitExceeded"
 //  RESOURCENOTFOUND_INSTANCEIDNOTFOUND = "ResourceNotFound.InstanceIdNotFound"
 //  UNAUTHORIZEDOPERATION_NOPERMISSION = "UnauthorizedOperation.NoPermission"
+//  UNSUPPORTEDOPERATION_INSTANCEDISPLAYAREANOTSUPPORTOPERATION = "UnsupportedOperation.InstanceDisplayAreaNotSupportOperation"
 //  UNSUPPORTEDOPERATION_INVALIDINSTANCESTATE = "UnsupportedOperation.InvalidInstanceState"
 //  UNSUPPORTEDOPERATION_LATESTOPERATIONUNFINISHED = "UnsupportedOperation.LatestOperationUnfinished"
 func (c *Client) CreateBlueprint(request *CreateBlueprintRequest) (response *CreateBlueprintResponse, err error) {
@@ -595,6 +708,7 @@ func (c *Client) CreateBlueprint(request *CreateBlueprintRequest) (response *Cre
 // 本接口 (CreateBlueprint) 用于创建镜像。
 //
 // 可能返回的错误码:
+//  FAILEDOPERATION = "FailedOperation"
 //  FAILEDOPERATION_CREATEBLUEPRINTFAILED = "FailedOperation.CreateBlueprintFailed"
 //  FAILEDOPERATION_INSUFFICIENTBALANCE = "FailedOperation.InsufficientBalance"
 //  FAILEDOPERATION_UNABLETOCREATEBLUEPRINT = "FailedOperation.UnableToCreateBlueprint"
@@ -605,12 +719,14 @@ func (c *Client) CreateBlueprint(request *CreateBlueprintRequest) (response *Cre
 //  LIMITEXCEEDED_BLUEPRINTQUOTALIMITEXCEEDED = "LimitExceeded.BlueprintQuotaLimitExceeded"
 //  RESOURCENOTFOUND_INSTANCEIDNOTFOUND = "ResourceNotFound.InstanceIdNotFound"
 //  UNAUTHORIZEDOPERATION_NOPERMISSION = "UnauthorizedOperation.NoPermission"
+//  UNSUPPORTEDOPERATION_INSTANCEDISPLAYAREANOTSUPPORTOPERATION = "UnsupportedOperation.InstanceDisplayAreaNotSupportOperation"
 //  UNSUPPORTEDOPERATION_INVALIDINSTANCESTATE = "UnsupportedOperation.InvalidInstanceState"
 //  UNSUPPORTEDOPERATION_LATESTOPERATIONUNFINISHED = "UnsupportedOperation.LatestOperationUnfinished"
 func (c *Client) CreateBlueprintWithContext(ctx context.Context, request *CreateBlueprintRequest) (response *CreateBlueprintResponse, err error) {
     if request == nil {
         request = NewCreateBlueprintRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "lighthouse", APIVersion, "CreateBlueprint")
     
     if c.GetCredential() == nil {
         return nil, errors.New("CreateBlueprint require credential")
@@ -637,8 +753,9 @@ func NewCreateDiskBackupRequest() (request *CreateDiskBackupRequest) {
 func NewCreateDiskBackupResponse() (response *CreateDiskBackupResponse) {
     response = &CreateDiskBackupResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // CreateDiskBackup
@@ -683,6 +800,7 @@ func (c *Client) CreateDiskBackupWithContext(ctx context.Context, request *Creat
     if request == nil {
         request = NewCreateDiskBackupRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "lighthouse", APIVersion, "CreateDiskBackup")
     
     if c.GetCredential() == nil {
         return nil, errors.New("CreateDiskBackup require credential")
@@ -709,14 +827,16 @@ func NewCreateDisksRequest() (request *CreateDisksRequest) {
 func NewCreateDisksResponse() (response *CreateDisksResponse) {
     response = &CreateDisksResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // CreateDisks
 // 本接口(CreateDisks)用于创建一个或多个云硬盘。
 //
 // 可能返回的错误码:
+//  FAILEDOPERATION = "FailedOperation"
 //  FAILEDOPERATION_CREATEDISKSFAILED = "FailedOperation.CreateDisksFailed"
 //  FAILEDOPERATION_INSUFFICIENTBALANCE = "FailedOperation.InsufficientBalance"
 //  INVALIDPARAMETERVALUE_DISKINSTANCEZONENOTMATCH = "InvalidParameterValue.DiskInstanceZoneNotMatch"
@@ -738,6 +858,7 @@ func (c *Client) CreateDisks(request *CreateDisksRequest) (response *CreateDisks
 // 本接口(CreateDisks)用于创建一个或多个云硬盘。
 //
 // 可能返回的错误码:
+//  FAILEDOPERATION = "FailedOperation"
 //  FAILEDOPERATION_CREATEDISKSFAILED = "FailedOperation.CreateDisksFailed"
 //  FAILEDOPERATION_INSUFFICIENTBALANCE = "FailedOperation.InsufficientBalance"
 //  INVALIDPARAMETERVALUE_DISKINSTANCEZONENOTMATCH = "InvalidParameterValue.DiskInstanceZoneNotMatch"
@@ -755,6 +876,7 @@ func (c *Client) CreateDisksWithContext(ctx context.Context, request *CreateDisk
     if request == nil {
         request = NewCreateDisksRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "lighthouse", APIVersion, "CreateDisks")
     
     if c.GetCredential() == nil {
         return nil, errors.New("CreateDisks require credential")
@@ -781,8 +903,9 @@ func NewCreateFirewallRulesRequest() (request *CreateFirewallRulesRequest) {
 func NewCreateFirewallRulesResponse() (response *CreateFirewallRulesResponse) {
     response = &CreateFirewallRulesResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // CreateFirewallRules
@@ -792,13 +915,13 @@ func NewCreateFirewallRulesResponse() (response *CreateFirewallRulesResponse) {
 //
 // 
 //
-// * FirewallVersion 为防火墙版本号，用户每次更新防火墙规则版本会自动加1，防止您更新的规则已过期，不填不考虑冲突。
+// * FirewallVersion 为防火墙版本号，用户每次更新防火墙规则版本会自动加1，防止您更新的规则已过期，不填不考虑冲突。FirewallVersion可通过[DescribeFirewallRules](https://cloud.tencent.com/document/api/1207/48252)接口返回值中的FirewallVersion获取。
 //
 // 
 //
 // 在 FirewallRules 参数中：
 //
-// * Protocol 字段支持输入 TCP，UDP，ICMP，ALL。
+// * Protocol 字段支持输入 TCP，UDP，ICMP，ICMPv6，ALL。
 //
 // * Port 字段允许输入 ALL，或者一个单独的端口号，或者用逗号分隔的离散端口号，或者用减号分隔的两个端口号代表的端口范围。当 Port 为范围时，减号分隔的第一个端口号小于第二个端口号。当 Protocol 字段不是 TCP 或 UDP 时，Port 字段只能为空或 ALL。Port 字段长度不得超过 64。
 //
@@ -810,11 +933,13 @@ func NewCreateFirewallRulesResponse() (response *CreateFirewallRulesResponse) {
 //
 // 可能返回的错误码:
 //  FAILEDOPERATION = "FailedOperation"
+//  FAILEDOPERATION_FIREWALLOPERATIONFAILED = "FailedOperation.FirewallOperationFailed"
 //  FAILEDOPERATION_FIREWALLRULESOPERATIONFAILED = "FailedOperation.FirewallRulesOperationFailed"
 //  FAILEDOPERATION_REQUESTERROR = "FailedOperation.RequestError"
 //  INTERNALERROR_REQUESTERROR = "InternalError.RequestError"
 //  INVALIDPARAMETER_FIREWALLRULESDUPLICATED = "InvalidParameter.FirewallRulesDuplicated"
 //  INVALIDPARAMETER_FIREWALLRULESEXIST = "InvalidParameter.FirewallRulesExist"
+//  INVALIDPARAMETER_PARAMETERCONFLICT = "InvalidParameter.ParameterConflict"
 //  INVALIDPARAMETERVALUE_DUPLICATED = "InvalidParameterValue.Duplicated"
 //  INVALIDPARAMETERVALUE_FIREWALLRULEDESCRIPTIONTOOLONG = "InvalidParameterValue.FirewallRuleDescriptionTooLong"
 //  INVALIDPARAMETERVALUE_INSTANCEIDMALFORMED = "InvalidParameterValue.InstanceIdMalformed"
@@ -836,13 +961,13 @@ func (c *Client) CreateFirewallRules(request *CreateFirewallRulesRequest) (respo
 //
 // 
 //
-// * FirewallVersion 为防火墙版本号，用户每次更新防火墙规则版本会自动加1，防止您更新的规则已过期，不填不考虑冲突。
+// * FirewallVersion 为防火墙版本号，用户每次更新防火墙规则版本会自动加1，防止您更新的规则已过期，不填不考虑冲突。FirewallVersion可通过[DescribeFirewallRules](https://cloud.tencent.com/document/api/1207/48252)接口返回值中的FirewallVersion获取。
 //
 // 
 //
 // 在 FirewallRules 参数中：
 //
-// * Protocol 字段支持输入 TCP，UDP，ICMP，ALL。
+// * Protocol 字段支持输入 TCP，UDP，ICMP，ICMPv6，ALL。
 //
 // * Port 字段允许输入 ALL，或者一个单独的端口号，或者用逗号分隔的离散端口号，或者用减号分隔的两个端口号代表的端口范围。当 Port 为范围时，减号分隔的第一个端口号小于第二个端口号。当 Protocol 字段不是 TCP 或 UDP 时，Port 字段只能为空或 ALL。Port 字段长度不得超过 64。
 //
@@ -854,11 +979,13 @@ func (c *Client) CreateFirewallRules(request *CreateFirewallRulesRequest) (respo
 //
 // 可能返回的错误码:
 //  FAILEDOPERATION = "FailedOperation"
+//  FAILEDOPERATION_FIREWALLOPERATIONFAILED = "FailedOperation.FirewallOperationFailed"
 //  FAILEDOPERATION_FIREWALLRULESOPERATIONFAILED = "FailedOperation.FirewallRulesOperationFailed"
 //  FAILEDOPERATION_REQUESTERROR = "FailedOperation.RequestError"
 //  INTERNALERROR_REQUESTERROR = "InternalError.RequestError"
 //  INVALIDPARAMETER_FIREWALLRULESDUPLICATED = "InvalidParameter.FirewallRulesDuplicated"
 //  INVALIDPARAMETER_FIREWALLRULESEXIST = "InvalidParameter.FirewallRulesExist"
+//  INVALIDPARAMETER_PARAMETERCONFLICT = "InvalidParameter.ParameterConflict"
 //  INVALIDPARAMETERVALUE_DUPLICATED = "InvalidParameterValue.Duplicated"
 //  INVALIDPARAMETERVALUE_FIREWALLRULEDESCRIPTIONTOOLONG = "InvalidParameterValue.FirewallRuleDescriptionTooLong"
 //  INVALIDPARAMETERVALUE_INSTANCEIDMALFORMED = "InvalidParameterValue.InstanceIdMalformed"
@@ -873,6 +1000,7 @@ func (c *Client) CreateFirewallRulesWithContext(ctx context.Context, request *Cr
     if request == nil {
         request = NewCreateFirewallRulesRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "lighthouse", APIVersion, "CreateFirewallRules")
     
     if c.GetCredential() == nil {
         return nil, errors.New("CreateFirewallRules require credential")
@@ -899,8 +1027,9 @@ func NewCreateFirewallTemplateRequest() (request *CreateFirewallTemplateRequest)
 func NewCreateFirewallTemplateResponse() (response *CreateFirewallTemplateResponse) {
     response = &CreateFirewallTemplateResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // CreateFirewallTemplate
@@ -927,6 +1056,7 @@ func (c *Client) CreateFirewallTemplateWithContext(ctx context.Context, request 
     if request == nil {
         request = NewCreateFirewallTemplateRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "lighthouse", APIVersion, "CreateFirewallTemplate")
     
     if c.GetCredential() == nil {
         return nil, errors.New("CreateFirewallTemplate require credential")
@@ -953,8 +1083,9 @@ func NewCreateFirewallTemplateRulesRequest() (request *CreateFirewallTemplateRul
 func NewCreateFirewallTemplateRulesResponse() (response *CreateFirewallTemplateRulesResponse) {
     response = &CreateFirewallTemplateRulesResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // CreateFirewallTemplateRules
@@ -962,8 +1093,12 @@ func NewCreateFirewallTemplateRulesResponse() (response *CreateFirewallTemplateR
 //
 // 可能返回的错误码:
 //  FAILEDOPERATION = "FailedOperation"
+//  INVALIDPARAMETER_PARAMETERCONFLICT = "InvalidParameter.ParameterConflict"
 //  INVALIDPARAMETERVALUE_DUPLICATEDFIREWALLTEMPLATERULE = "InvalidParameterValue.DuplicatedFirewallTemplateRule"
+//  INVALIDPARAMETERVALUE_TOOLARGE = "InvalidParameterValue.TooLarge"
 //  LIMITEXCEEDED_FIREWALLTEMPLATERULEQUOTALIMITEXCEEDED = "LimitExceeded.FirewallTemplateRuleQuotaLimitExceeded"
+//  RESOURCENOTFOUND_FIREWALLTEMPLATENOTFOUND = "ResourceNotFound.FirewallTemplateNotFound"
+//  UNAUTHORIZEDOPERATION_NOPERMISSION = "UnauthorizedOperation.NoPermission"
 func (c *Client) CreateFirewallTemplateRules(request *CreateFirewallTemplateRulesRequest) (response *CreateFirewallTemplateRulesResponse, err error) {
     return c.CreateFirewallTemplateRulesWithContext(context.Background(), request)
 }
@@ -973,12 +1108,17 @@ func (c *Client) CreateFirewallTemplateRules(request *CreateFirewallTemplateRule
 //
 // 可能返回的错误码:
 //  FAILEDOPERATION = "FailedOperation"
+//  INVALIDPARAMETER_PARAMETERCONFLICT = "InvalidParameter.ParameterConflict"
 //  INVALIDPARAMETERVALUE_DUPLICATEDFIREWALLTEMPLATERULE = "InvalidParameterValue.DuplicatedFirewallTemplateRule"
+//  INVALIDPARAMETERVALUE_TOOLARGE = "InvalidParameterValue.TooLarge"
 //  LIMITEXCEEDED_FIREWALLTEMPLATERULEQUOTALIMITEXCEEDED = "LimitExceeded.FirewallTemplateRuleQuotaLimitExceeded"
+//  RESOURCENOTFOUND_FIREWALLTEMPLATENOTFOUND = "ResourceNotFound.FirewallTemplateNotFound"
+//  UNAUTHORIZEDOPERATION_NOPERMISSION = "UnauthorizedOperation.NoPermission"
 func (c *Client) CreateFirewallTemplateRulesWithContext(ctx context.Context, request *CreateFirewallTemplateRulesRequest) (response *CreateFirewallTemplateRulesResponse, err error) {
     if request == nil {
         request = NewCreateFirewallTemplateRulesRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "lighthouse", APIVersion, "CreateFirewallTemplateRules")
     
     if c.GetCredential() == nil {
         return nil, errors.New("CreateFirewallTemplateRules require credential")
@@ -1005,8 +1145,9 @@ func NewCreateInstanceSnapshotRequest() (request *CreateInstanceSnapshotRequest)
 func NewCreateInstanceSnapshotResponse() (response *CreateInstanceSnapshotResponse) {
     response = &CreateInstanceSnapshotResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // CreateInstanceSnapshot
@@ -1027,6 +1168,7 @@ func NewCreateInstanceSnapshotResponse() (response *CreateInstanceSnapshotRespon
 //  UNAUTHORIZEDOPERATION_NOPERMISSION = "UnauthorizedOperation.NoPermission"
 //  UNSUPPORTEDOPERATION_DISKBUSY = "UnsupportedOperation.DiskBusy"
 //  UNSUPPORTEDOPERATION_DISKLATESTOPERATIONUNFINISHED = "UnsupportedOperation.DiskLatestOperationUnfinished"
+//  UNSUPPORTEDOPERATION_INSTANCEDISPLAYAREANOTSUPPORTOPERATION = "UnsupportedOperation.InstanceDisplayAreaNotSupportOperation"
 //  UNSUPPORTEDOPERATION_INVALIDINSTANCESTATE = "UnsupportedOperation.InvalidInstanceState"
 //  UNSUPPORTEDOPERATION_LATESTOPERATIONUNFINISHED = "UnsupportedOperation.LatestOperationUnfinished"
 func (c *Client) CreateInstanceSnapshot(request *CreateInstanceSnapshotRequest) (response *CreateInstanceSnapshotResponse, err error) {
@@ -1051,12 +1193,14 @@ func (c *Client) CreateInstanceSnapshot(request *CreateInstanceSnapshotRequest) 
 //  UNAUTHORIZEDOPERATION_NOPERMISSION = "UnauthorizedOperation.NoPermission"
 //  UNSUPPORTEDOPERATION_DISKBUSY = "UnsupportedOperation.DiskBusy"
 //  UNSUPPORTEDOPERATION_DISKLATESTOPERATIONUNFINISHED = "UnsupportedOperation.DiskLatestOperationUnfinished"
+//  UNSUPPORTEDOPERATION_INSTANCEDISPLAYAREANOTSUPPORTOPERATION = "UnsupportedOperation.InstanceDisplayAreaNotSupportOperation"
 //  UNSUPPORTEDOPERATION_INVALIDINSTANCESTATE = "UnsupportedOperation.InvalidInstanceState"
 //  UNSUPPORTEDOPERATION_LATESTOPERATIONUNFINISHED = "UnsupportedOperation.LatestOperationUnfinished"
 func (c *Client) CreateInstanceSnapshotWithContext(ctx context.Context, request *CreateInstanceSnapshotRequest) (response *CreateInstanceSnapshotResponse, err error) {
     if request == nil {
         request = NewCreateInstanceSnapshotRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "lighthouse", APIVersion, "CreateInstanceSnapshot")
     
     if c.GetCredential() == nil {
         return nil, errors.New("CreateInstanceSnapshot require credential")
@@ -1083,17 +1227,21 @@ func NewCreateInstancesRequest() (request *CreateInstancesRequest) {
 func NewCreateInstancesResponse() (response *CreateInstancesResponse) {
     response = &CreateInstancesResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // CreateInstances
 // 本接口(CreateInstances)用于创建一个或多个指定套餐的轻量应用服务器实例。
 //
+// *创建实例时，如指定实例访问域名信息时，本次创建请求，仅支持购买一台实例。
+//
 // 可能返回的错误码:
 //  AUTHFAILURE_INVALIDREGION = "AuthFailure.InvalidRegion"
 //  FAILEDOPERATION = "FailedOperation"
 //  FAILEDOPERATION_CREATEINSTANCESFAILED = "FailedOperation.CreateInstancesFailed"
+//  FAILEDOPERATION_INITCOMMANDCONTENTTOOLONG = "FailedOperation.InitCommandContentTooLong"
 //  FAILEDOPERATION_INSUFFICIENTBALANCE = "FailedOperation.InsufficientBalance"
 //  FAILEDOPERATION_UNABLETOCREATEINSTANCES = "FailedOperation.UnableToCreateInstances"
 //  INTERNALERROR = "InternalError"
@@ -1101,24 +1249,32 @@ func NewCreateInstancesResponse() (response *CreateInstancesResponse) {
 //  INVALIDPARAMETER = "InvalidParameter"
 //  INVALIDPARAMETER_BUNDLEANDBLUEPRINTNOTMATCH = "InvalidParameter.BundleAndBlueprintNotMatch"
 //  INVALIDPARAMETER_BUNDLEIDNOTFOUND = "InvalidParameter.BundleIdNotFound"
+//  INVALIDPARAMETER_CREATINGGAMEPORTALINSTANCENOTSUPPORTPARAMETER = "InvalidParameter.CreatingGamePortalInstanceNotSupportParameter"
 //  INVALIDPARAMETERVALUE_BLUEPRINTID = "InvalidParameterValue.BlueprintId"
 //  INVALIDPARAMETERVALUE_BLUEPRINTIDMALFORMED = "InvalidParameterValue.BlueprintIdMalformed"
 //  INVALIDPARAMETERVALUE_BUNDLEANDBLUEPRINTNOTMATCH = "InvalidParameterValue.BundleAndBlueprintNotMatch"
 //  INVALIDPARAMETERVALUE_BUNDLENOTSUPPORTBLUEPRINTPLATFORM = "InvalidParameterValue.BundleNotSupportBlueprintPlatform"
 //  INVALIDPARAMETERVALUE_CLIENTTOKENTOOLONG = "InvalidParameterValue.ClientTokenTooLong"
+//  INVALIDPARAMETERVALUE_FIREWALLTEMPLATEIDMALFORMED = "InvalidParameterValue.FirewallTemplateIdMalformed"
 //  INVALIDPARAMETERVALUE_INSTANCENAMETOOLONG = "InvalidParameterValue.InstanceNameTooLong"
 //  INVALIDPARAMETERVALUE_INVALIDBLUEPRINTID = "InvalidParameterValue.InvalidBlueprintId"
 //  INVALIDPARAMETERVALUE_INVALIDBUNDLE = "InvalidParameterValue.InvalidBundle"
+//  INVALIDPARAMETERVALUE_INVALIDBUNDLEBLUEPRINTCOMBINATION = "InvalidParameterValue.InvalidBundleBlueprintCombination"
 //  INVALIDPARAMETERVALUE_INVALIDPARAMETERCOMBINATION = "InvalidParameterValue.InvalidParameterCombination"
 //  INVALIDPARAMETERVALUE_INVALIDPASSWORD = "InvalidParameterValue.InvalidPassword"
 //  INVALIDPARAMETERVALUE_INVALIDZONE = "InvalidParameterValue.InvalidZone"
+//  INVALIDPARAMETERVALUE_KEYPAIRIDMALFORMED = "InvalidParameterValue.KeyPairIdMalformed"
 //  INVALIDPARAMETERVALUE_OUTOFRANGE = "InvalidParameterValue.OutOfRange"
 //  INVALIDPARAMETERVALUE_ZONEINVALID = "InvalidParameterValue.ZoneInvalid"
 //  LIMITEXCEEDED = "LimitExceeded"
 //  LIMITEXCEEDED_INSTANCEQUOTALIMITEXCEEDED = "LimitExceeded.InstanceQuotaLimitExceeded"
 //  RESOURCENOTFOUND_BLUEPRINTIDNOTFOUND = "ResourceNotFound.BlueprintIdNotFound"
 //  RESOURCENOTFOUND_BLUEPRINTNOTFOUND = "ResourceNotFound.BlueprintNotFound"
+//  RESOURCENOTFOUND_FIREWALLTEMPLATENOTFOUND = "ResourceNotFound.FirewallTemplateNotFound"
+//  RESOURCENOTFOUND_KEYPAIRNOTFOUND = "ResourceNotFound.KeyPairNotFound"
 //  RESOURCEUNAVAILABLE_BUNDLEUNAVAILABLE = "ResourceUnavailable.BundleUnavailable"
+//  RESOURCEUNAVAILABLE_INVALIDPURCHASEREQUESTSOURCE = "ResourceUnavailable.InvalidPurchaseRequestSource"
+//  RESOURCESSOLDOUT_BUNDLESOLDOUT = "ResourcesSoldOut.BundleSoldOut"
 //  RESOURCESSOLDOUT_PURCHASESOURCEHASNOBUNDLECONFIGS = "ResourcesSoldOut.PurchaseSourceHasNoBundleConfigs"
 //  RESOURCESSOLDOUT_ZONESHASNOBUNDLECONFIGS = "ResourcesSoldOut.ZonesHasNoBundleConfigs"
 //  UNAUTHORIZEDOPERATION_NOPERMISSION = "UnauthorizedOperation.NoPermission"
@@ -1130,10 +1286,13 @@ func (c *Client) CreateInstances(request *CreateInstancesRequest) (response *Cre
 // CreateInstances
 // 本接口(CreateInstances)用于创建一个或多个指定套餐的轻量应用服务器实例。
 //
+// *创建实例时，如指定实例访问域名信息时，本次创建请求，仅支持购买一台实例。
+//
 // 可能返回的错误码:
 //  AUTHFAILURE_INVALIDREGION = "AuthFailure.InvalidRegion"
 //  FAILEDOPERATION = "FailedOperation"
 //  FAILEDOPERATION_CREATEINSTANCESFAILED = "FailedOperation.CreateInstancesFailed"
+//  FAILEDOPERATION_INITCOMMANDCONTENTTOOLONG = "FailedOperation.InitCommandContentTooLong"
 //  FAILEDOPERATION_INSUFFICIENTBALANCE = "FailedOperation.InsufficientBalance"
 //  FAILEDOPERATION_UNABLETOCREATEINSTANCES = "FailedOperation.UnableToCreateInstances"
 //  INTERNALERROR = "InternalError"
@@ -1141,24 +1300,32 @@ func (c *Client) CreateInstances(request *CreateInstancesRequest) (response *Cre
 //  INVALIDPARAMETER = "InvalidParameter"
 //  INVALIDPARAMETER_BUNDLEANDBLUEPRINTNOTMATCH = "InvalidParameter.BundleAndBlueprintNotMatch"
 //  INVALIDPARAMETER_BUNDLEIDNOTFOUND = "InvalidParameter.BundleIdNotFound"
+//  INVALIDPARAMETER_CREATINGGAMEPORTALINSTANCENOTSUPPORTPARAMETER = "InvalidParameter.CreatingGamePortalInstanceNotSupportParameter"
 //  INVALIDPARAMETERVALUE_BLUEPRINTID = "InvalidParameterValue.BlueprintId"
 //  INVALIDPARAMETERVALUE_BLUEPRINTIDMALFORMED = "InvalidParameterValue.BlueprintIdMalformed"
 //  INVALIDPARAMETERVALUE_BUNDLEANDBLUEPRINTNOTMATCH = "InvalidParameterValue.BundleAndBlueprintNotMatch"
 //  INVALIDPARAMETERVALUE_BUNDLENOTSUPPORTBLUEPRINTPLATFORM = "InvalidParameterValue.BundleNotSupportBlueprintPlatform"
 //  INVALIDPARAMETERVALUE_CLIENTTOKENTOOLONG = "InvalidParameterValue.ClientTokenTooLong"
+//  INVALIDPARAMETERVALUE_FIREWALLTEMPLATEIDMALFORMED = "InvalidParameterValue.FirewallTemplateIdMalformed"
 //  INVALIDPARAMETERVALUE_INSTANCENAMETOOLONG = "InvalidParameterValue.InstanceNameTooLong"
 //  INVALIDPARAMETERVALUE_INVALIDBLUEPRINTID = "InvalidParameterValue.InvalidBlueprintId"
 //  INVALIDPARAMETERVALUE_INVALIDBUNDLE = "InvalidParameterValue.InvalidBundle"
+//  INVALIDPARAMETERVALUE_INVALIDBUNDLEBLUEPRINTCOMBINATION = "InvalidParameterValue.InvalidBundleBlueprintCombination"
 //  INVALIDPARAMETERVALUE_INVALIDPARAMETERCOMBINATION = "InvalidParameterValue.InvalidParameterCombination"
 //  INVALIDPARAMETERVALUE_INVALIDPASSWORD = "InvalidParameterValue.InvalidPassword"
 //  INVALIDPARAMETERVALUE_INVALIDZONE = "InvalidParameterValue.InvalidZone"
+//  INVALIDPARAMETERVALUE_KEYPAIRIDMALFORMED = "InvalidParameterValue.KeyPairIdMalformed"
 //  INVALIDPARAMETERVALUE_OUTOFRANGE = "InvalidParameterValue.OutOfRange"
 //  INVALIDPARAMETERVALUE_ZONEINVALID = "InvalidParameterValue.ZoneInvalid"
 //  LIMITEXCEEDED = "LimitExceeded"
 //  LIMITEXCEEDED_INSTANCEQUOTALIMITEXCEEDED = "LimitExceeded.InstanceQuotaLimitExceeded"
 //  RESOURCENOTFOUND_BLUEPRINTIDNOTFOUND = "ResourceNotFound.BlueprintIdNotFound"
 //  RESOURCENOTFOUND_BLUEPRINTNOTFOUND = "ResourceNotFound.BlueprintNotFound"
+//  RESOURCENOTFOUND_FIREWALLTEMPLATENOTFOUND = "ResourceNotFound.FirewallTemplateNotFound"
+//  RESOURCENOTFOUND_KEYPAIRNOTFOUND = "ResourceNotFound.KeyPairNotFound"
 //  RESOURCEUNAVAILABLE_BUNDLEUNAVAILABLE = "ResourceUnavailable.BundleUnavailable"
+//  RESOURCEUNAVAILABLE_INVALIDPURCHASEREQUESTSOURCE = "ResourceUnavailable.InvalidPurchaseRequestSource"
+//  RESOURCESSOLDOUT_BUNDLESOLDOUT = "ResourcesSoldOut.BundleSoldOut"
 //  RESOURCESSOLDOUT_PURCHASESOURCEHASNOBUNDLECONFIGS = "ResourcesSoldOut.PurchaseSourceHasNoBundleConfigs"
 //  RESOURCESSOLDOUT_ZONESHASNOBUNDLECONFIGS = "ResourcesSoldOut.ZonesHasNoBundleConfigs"
 //  UNAUTHORIZEDOPERATION_NOPERMISSION = "UnauthorizedOperation.NoPermission"
@@ -1167,6 +1334,7 @@ func (c *Client) CreateInstancesWithContext(ctx context.Context, request *Create
     if request == nil {
         request = NewCreateInstancesRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "lighthouse", APIVersion, "CreateInstances")
     
     if c.GetCredential() == nil {
         return nil, errors.New("CreateInstances require credential")
@@ -1193,8 +1361,9 @@ func NewCreateKeyPairRequest() (request *CreateKeyPairRequest) {
 func NewCreateKeyPairResponse() (response *CreateKeyPairResponse) {
     response = &CreateKeyPairResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // CreateKeyPair
@@ -1227,6 +1396,7 @@ func (c *Client) CreateKeyPairWithContext(ctx context.Context, request *CreateKe
     if request == nil {
         request = NewCreateKeyPairRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "lighthouse", APIVersion, "CreateKeyPair")
     
     if c.GetCredential() == nil {
         return nil, errors.New("CreateKeyPair require credential")
@@ -1235,6 +1405,74 @@ func (c *Client) CreateKeyPairWithContext(ctx context.Context, request *CreateKe
     request.SetContext(ctx)
     
     response = NewCreateKeyPairResponse()
+    err = c.Send(request, response)
+    return
+}
+
+func NewCreateMcpServerRequest() (request *CreateMcpServerRequest) {
+    request = &CreateMcpServerRequest{
+        BaseRequest: &tchttp.BaseRequest{},
+    }
+    
+    request.Init().WithApiInfo("lighthouse", APIVersion, "CreateMcpServer")
+    
+    
+    return
+}
+
+func NewCreateMcpServerResponse() (response *CreateMcpServerResponse) {
+    response = &CreateMcpServerResponse{
+        BaseResponse: &tchttp.BaseResponse{},
+    } 
+    return
+
+}
+
+// CreateMcpServer
+// 本接口（CreateMcpServer）用于创建MCP Server。
+//
+// - 本接口为异步接口，请求发送成功后会返回一个 McpServerId，此时操作并未立即完成。实例操作结果可以通过调用 DescribeMcpServers 接口查询。
+//
+// 可能返回的错误码:
+//  INVALIDPARAMETERVALUE_MCPSERVERLIMITEXCEEDED = "InvalidParameterValue.McpServerLimitExceeded"
+//  RESOURCENOTFOUND_INSTANCENOTFOUND = "ResourceNotFound.InstanceNotFound"
+//  RESOURCENOTFOUND_ROLENOTFOUND = "ResourceNotFound.RoleNotFound"
+//  RESOURCEUNAVAILABLE_BLUEPRINTINVALID = "ResourceUnavailable.BlueprintInvalid"
+//  RESOURCEUNAVAILABLE_TATAGENTUNAVAILABLE = "ResourceUnavailable.TATAgentUnavailable"
+//  RESOURCEUNAVAILABLE_TATSERVICEERROR = "ResourceUnavailable.TATServiceError"
+//  UNAUTHORIZEDOPERATION_NOPERMISSION = "UnauthorizedOperation.NoPermission"
+//  UNSUPPORTEDOPERATION_INVALIDINSTANCESTATE = "UnsupportedOperation.InvalidInstanceState"
+func (c *Client) CreateMcpServer(request *CreateMcpServerRequest) (response *CreateMcpServerResponse, err error) {
+    return c.CreateMcpServerWithContext(context.Background(), request)
+}
+
+// CreateMcpServer
+// 本接口（CreateMcpServer）用于创建MCP Server。
+//
+// - 本接口为异步接口，请求发送成功后会返回一个 McpServerId，此时操作并未立即完成。实例操作结果可以通过调用 DescribeMcpServers 接口查询。
+//
+// 可能返回的错误码:
+//  INVALIDPARAMETERVALUE_MCPSERVERLIMITEXCEEDED = "InvalidParameterValue.McpServerLimitExceeded"
+//  RESOURCENOTFOUND_INSTANCENOTFOUND = "ResourceNotFound.InstanceNotFound"
+//  RESOURCENOTFOUND_ROLENOTFOUND = "ResourceNotFound.RoleNotFound"
+//  RESOURCEUNAVAILABLE_BLUEPRINTINVALID = "ResourceUnavailable.BlueprintInvalid"
+//  RESOURCEUNAVAILABLE_TATAGENTUNAVAILABLE = "ResourceUnavailable.TATAgentUnavailable"
+//  RESOURCEUNAVAILABLE_TATSERVICEERROR = "ResourceUnavailable.TATServiceError"
+//  UNAUTHORIZEDOPERATION_NOPERMISSION = "UnauthorizedOperation.NoPermission"
+//  UNSUPPORTEDOPERATION_INVALIDINSTANCESTATE = "UnsupportedOperation.InvalidInstanceState"
+func (c *Client) CreateMcpServerWithContext(ctx context.Context, request *CreateMcpServerRequest) (response *CreateMcpServerResponse, err error) {
+    if request == nil {
+        request = NewCreateMcpServerRequest()
+    }
+    c.InitBaseRequest(&request.BaseRequest, "lighthouse", APIVersion, "CreateMcpServer")
+    
+    if c.GetCredential() == nil {
+        return nil, errors.New("CreateMcpServer require credential")
+    }
+
+    request.SetContext(ctx)
+    
+    response = NewCreateMcpServerResponse()
     err = c.Send(request, response)
     return
 }
@@ -1253,12 +1491,17 @@ func NewDeleteBlueprintsRequest() (request *DeleteBlueprintsRequest) {
 func NewDeleteBlueprintsResponse() (response *DeleteBlueprintsResponse) {
     response = &DeleteBlueprintsResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // DeleteBlueprints
-// 本接口 (DeleteBlueprints) 用于删除镜像。
+// 本接口 (DeleteBlueprints) 用于删除镜像。可删除的镜像应满足如下条件：
+//
+// 1、删除镜像接口需要镜像状态为NORMAL（正常）、ISOLATED（已隔离）、CREATEFAILED（创建失败）、SYNCING_FAILED（目的地域同步失败），其他状态下的镜像不支持删除操作。镜像状态，可通过[DescribeBlueprints](https://cloud.tencent.com/document/product/1207/47689)接口返回值中的BlueprintState获取。
+//
+// 2、仅支持删除自定义镜像。
 //
 // 可能返回的错误码:
 //  FAILEDOPERATION_DESTROYRESOURCESFAILED = "FailedOperation.DestroyResourcesFailed"
@@ -1281,7 +1524,11 @@ func (c *Client) DeleteBlueprints(request *DeleteBlueprintsRequest) (response *D
 }
 
 // DeleteBlueprints
-// 本接口 (DeleteBlueprints) 用于删除镜像。
+// 本接口 (DeleteBlueprints) 用于删除镜像。可删除的镜像应满足如下条件：
+//
+// 1、删除镜像接口需要镜像状态为NORMAL（正常）、ISOLATED（已隔离）、CREATEFAILED（创建失败）、SYNCING_FAILED（目的地域同步失败），其他状态下的镜像不支持删除操作。镜像状态，可通过[DescribeBlueprints](https://cloud.tencent.com/document/product/1207/47689)接口返回值中的BlueprintState获取。
+//
+// 2、仅支持删除自定义镜像。
 //
 // 可能返回的错误码:
 //  FAILEDOPERATION_DESTROYRESOURCESFAILED = "FailedOperation.DestroyResourcesFailed"
@@ -1303,6 +1550,7 @@ func (c *Client) DeleteBlueprintsWithContext(ctx context.Context, request *Delet
     if request == nil {
         request = NewDeleteBlueprintsRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "lighthouse", APIVersion, "DeleteBlueprints")
     
     if c.GetCredential() == nil {
         return nil, errors.New("DeleteBlueprints require credential")
@@ -1329,8 +1577,9 @@ func NewDeleteDiskBackupsRequest() (request *DeleteDiskBackupsRequest) {
 func NewDeleteDiskBackupsResponse() (response *DeleteDiskBackupsResponse) {
     response = &DeleteDiskBackupsResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // DeleteDiskBackups
@@ -1369,6 +1618,7 @@ func (c *Client) DeleteDiskBackupsWithContext(ctx context.Context, request *Dele
     if request == nil {
         request = NewDeleteDiskBackupsRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "lighthouse", APIVersion, "DeleteDiskBackups")
     
     if c.GetCredential() == nil {
         return nil, errors.New("DeleteDiskBackups require credential")
@@ -1395,8 +1645,9 @@ func NewDeleteFirewallRulesRequest() (request *DeleteFirewallRulesRequest) {
 func NewDeleteFirewallRulesResponse() (response *DeleteFirewallRulesResponse) {
     response = &DeleteFirewallRulesResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // DeleteFirewallRules
@@ -1404,13 +1655,13 @@ func NewDeleteFirewallRulesResponse() (response *DeleteFirewallRulesResponse) {
 //
 // 
 //
-// * FirewallVersion 用于指定要操作的防火墙的版本。传入 FirewallVersion 版本号若不等于当前防火墙的最新版本，将返回失败；若不传 FirewallVersion 则直接删除指定的规则。
+// * FirewallVersion 用于指定要操作的防火墙的版本。传入 FirewallVersion 版本号若不等于当前防火墙的最新版本，将返回失败；若不传 FirewallVersion 则直接删除指定的规则。FirewallVersion可通过[DescribeFirewallRules](https://cloud.tencent.com/document/api/1207/48252)接口返回值中的FirewallVersion获取。
 //
 // 
 //
 // 在 FirewallRules 参数中：
 //
-// * Protocol 字段支持输入 TCP，UDP，ICMP，ALL。
+// * Protocol 字段支持输入 TCP，UDP，ICMP，ICMPv6，ALL。
 //
 // * Port 字段允许输入 ALL，或者一个单独的端口号，或者用逗号分隔的离散端口号，或者用减号分隔的两个端口号代表的端口范围。当 Port 为范围时，减号分隔的第一个端口号小于第二个端口号。当 Protocol 字段不是 TCP 或 UDP 时，Port 字段只能为空或 ALL。Port 字段长度不得超过 64。
 //
@@ -1425,6 +1676,7 @@ func NewDeleteFirewallRulesResponse() (response *DeleteFirewallRulesResponse) {
 //  FAILEDOPERATION_REQUESTERROR = "FailedOperation.RequestError"
 //  INTERNALERROR_REQUESTERROR = "InternalError.RequestError"
 //  INVALIDPARAMETER_FIREWALLRULESDUPLICATED = "InvalidParameter.FirewallRulesDuplicated"
+//  INVALIDPARAMETER_PARAMETERCONFLICT = "InvalidParameter.ParameterConflict"
 //  INVALIDPARAMETERVALUE_DUPLICATED = "InvalidParameterValue.Duplicated"
 //  INVALIDPARAMETERVALUE_FIREWALLRULEDESCRIPTIONTOOLONG = "InvalidParameterValue.FirewallRuleDescriptionTooLong"
 //  INVALIDPARAMETERVALUE_INSTANCEIDMALFORMED = "InvalidParameterValue.InstanceIdMalformed"
@@ -1443,13 +1695,13 @@ func (c *Client) DeleteFirewallRules(request *DeleteFirewallRulesRequest) (respo
 //
 // 
 //
-// * FirewallVersion 用于指定要操作的防火墙的版本。传入 FirewallVersion 版本号若不等于当前防火墙的最新版本，将返回失败；若不传 FirewallVersion 则直接删除指定的规则。
+// * FirewallVersion 用于指定要操作的防火墙的版本。传入 FirewallVersion 版本号若不等于当前防火墙的最新版本，将返回失败；若不传 FirewallVersion 则直接删除指定的规则。FirewallVersion可通过[DescribeFirewallRules](https://cloud.tencent.com/document/api/1207/48252)接口返回值中的FirewallVersion获取。
 //
 // 
 //
 // 在 FirewallRules 参数中：
 //
-// * Protocol 字段支持输入 TCP，UDP，ICMP，ALL。
+// * Protocol 字段支持输入 TCP，UDP，ICMP，ICMPv6，ALL。
 //
 // * Port 字段允许输入 ALL，或者一个单独的端口号，或者用逗号分隔的离散端口号，或者用减号分隔的两个端口号代表的端口范围。当 Port 为范围时，减号分隔的第一个端口号小于第二个端口号。当 Protocol 字段不是 TCP 或 UDP 时，Port 字段只能为空或 ALL。Port 字段长度不得超过 64。
 //
@@ -1464,6 +1716,7 @@ func (c *Client) DeleteFirewallRules(request *DeleteFirewallRulesRequest) (respo
 //  FAILEDOPERATION_REQUESTERROR = "FailedOperation.RequestError"
 //  INTERNALERROR_REQUESTERROR = "InternalError.RequestError"
 //  INVALIDPARAMETER_FIREWALLRULESDUPLICATED = "InvalidParameter.FirewallRulesDuplicated"
+//  INVALIDPARAMETER_PARAMETERCONFLICT = "InvalidParameter.ParameterConflict"
 //  INVALIDPARAMETERVALUE_DUPLICATED = "InvalidParameterValue.Duplicated"
 //  INVALIDPARAMETERVALUE_FIREWALLRULEDESCRIPTIONTOOLONG = "InvalidParameterValue.FirewallRuleDescriptionTooLong"
 //  INVALIDPARAMETERVALUE_INSTANCEIDMALFORMED = "InvalidParameterValue.InstanceIdMalformed"
@@ -1477,6 +1730,7 @@ func (c *Client) DeleteFirewallRulesWithContext(ctx context.Context, request *De
     if request == nil {
         request = NewDeleteFirewallRulesRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "lighthouse", APIVersion, "DeleteFirewallRules")
     
     if c.GetCredential() == nil {
         return nil, errors.New("DeleteFirewallRules require credential")
@@ -1503,8 +1757,9 @@ func NewDeleteFirewallTemplateRequest() (request *DeleteFirewallTemplateRequest)
 func NewDeleteFirewallTemplateResponse() (response *DeleteFirewallTemplateResponse) {
     response = &DeleteFirewallTemplateResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // DeleteFirewallTemplate
@@ -1512,6 +1767,8 @@ func NewDeleteFirewallTemplateResponse() (response *DeleteFirewallTemplateRespon
 //
 // 可能返回的错误码:
 //  FAILEDOPERATION = "FailedOperation"
+//  RESOURCENOTFOUND_FIREWALLTEMPLATENOTFOUND = "ResourceNotFound.FirewallTemplateNotFound"
+//  UNAUTHORIZEDOPERATION_NOPERMISSION = "UnauthorizedOperation.NoPermission"
 func (c *Client) DeleteFirewallTemplate(request *DeleteFirewallTemplateRequest) (response *DeleteFirewallTemplateResponse, err error) {
     return c.DeleteFirewallTemplateWithContext(context.Background(), request)
 }
@@ -1521,10 +1778,13 @@ func (c *Client) DeleteFirewallTemplate(request *DeleteFirewallTemplateRequest) 
 //
 // 可能返回的错误码:
 //  FAILEDOPERATION = "FailedOperation"
+//  RESOURCENOTFOUND_FIREWALLTEMPLATENOTFOUND = "ResourceNotFound.FirewallTemplateNotFound"
+//  UNAUTHORIZEDOPERATION_NOPERMISSION = "UnauthorizedOperation.NoPermission"
 func (c *Client) DeleteFirewallTemplateWithContext(ctx context.Context, request *DeleteFirewallTemplateRequest) (response *DeleteFirewallTemplateResponse, err error) {
     if request == nil {
         request = NewDeleteFirewallTemplateRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "lighthouse", APIVersion, "DeleteFirewallTemplate")
     
     if c.GetCredential() == nil {
         return nil, errors.New("DeleteFirewallTemplate require credential")
@@ -1551,8 +1811,9 @@ func NewDeleteFirewallTemplateRulesRequest() (request *DeleteFirewallTemplateRul
 func NewDeleteFirewallTemplateRulesResponse() (response *DeleteFirewallTemplateRulesResponse) {
     response = &DeleteFirewallTemplateRulesResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // DeleteFirewallTemplateRules
@@ -1560,6 +1821,9 @@ func NewDeleteFirewallTemplateRulesResponse() (response *DeleteFirewallTemplateR
 //
 // 可能返回的错误码:
 //  FAILEDOPERATION = "FailedOperation"
+//  RESOURCENOTFOUND_FIREWALLTEMPLATENOTFOUND = "ResourceNotFound.FirewallTemplateNotFound"
+//  RESOURCENOTFOUND_FIREWALLTEMPLATERULENOTFOUND = "ResourceNotFound.FirewallTemplateRuleNotFound"
+//  UNAUTHORIZEDOPERATION_NOPERMISSION = "UnauthorizedOperation.NoPermission"
 func (c *Client) DeleteFirewallTemplateRules(request *DeleteFirewallTemplateRulesRequest) (response *DeleteFirewallTemplateRulesResponse, err error) {
     return c.DeleteFirewallTemplateRulesWithContext(context.Background(), request)
 }
@@ -1569,10 +1833,14 @@ func (c *Client) DeleteFirewallTemplateRules(request *DeleteFirewallTemplateRule
 //
 // 可能返回的错误码:
 //  FAILEDOPERATION = "FailedOperation"
+//  RESOURCENOTFOUND_FIREWALLTEMPLATENOTFOUND = "ResourceNotFound.FirewallTemplateNotFound"
+//  RESOURCENOTFOUND_FIREWALLTEMPLATERULENOTFOUND = "ResourceNotFound.FirewallTemplateRuleNotFound"
+//  UNAUTHORIZEDOPERATION_NOPERMISSION = "UnauthorizedOperation.NoPermission"
 func (c *Client) DeleteFirewallTemplateRulesWithContext(ctx context.Context, request *DeleteFirewallTemplateRulesRequest) (response *DeleteFirewallTemplateRulesResponse, err error) {
     if request == nil {
         request = NewDeleteFirewallTemplateRulesRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "lighthouse", APIVersion, "DeleteFirewallTemplateRules")
     
     if c.GetCredential() == nil {
         return nil, errors.New("DeleteFirewallTemplateRules require credential")
@@ -1599,12 +1867,15 @@ func NewDeleteKeyPairsRequest() (request *DeleteKeyPairsRequest) {
 func NewDeleteKeyPairsResponse() (response *DeleteKeyPairsResponse) {
     response = &DeleteKeyPairsResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // DeleteKeyPairs
 // 本接口（DeleteKeyPairs）用于删除密钥对。
+//
+// - 不能删除已被实例或镜像引用的密钥对，删除之前需要确保没有被任何实例和镜像引用。
 //
 // 可能返回的错误码:
 //  FAILEDOPERATION_DELETEKEYPAIRFAILED = "FailedOperation.DeleteKeyPairFailed"
@@ -1621,6 +1892,8 @@ func (c *Client) DeleteKeyPairs(request *DeleteKeyPairsRequest) (response *Delet
 // DeleteKeyPairs
 // 本接口（DeleteKeyPairs）用于删除密钥对。
 //
+// - 不能删除已被实例或镜像引用的密钥对，删除之前需要确保没有被任何实例和镜像引用。
+//
 // 可能返回的错误码:
 //  FAILEDOPERATION_DELETEKEYPAIRFAILED = "FailedOperation.DeleteKeyPairFailed"
 //  INVALIDPARAMETERVALUE_DUPLICATED = "InvalidParameterValue.Duplicated"
@@ -1633,6 +1906,7 @@ func (c *Client) DeleteKeyPairsWithContext(ctx context.Context, request *DeleteK
     if request == nil {
         request = NewDeleteKeyPairsRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "lighthouse", APIVersion, "DeleteKeyPairs")
     
     if c.GetCredential() == nil {
         return nil, errors.New("DeleteKeyPairs require credential")
@@ -1659,16 +1933,18 @@ func NewDeleteSnapshotsRequest() (request *DeleteSnapshotsRequest) {
 func NewDeleteSnapshotsResponse() (response *DeleteSnapshotsResponse) {
     response = &DeleteSnapshotsResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // DeleteSnapshots
 // 本接口（DeleteSnapshots）用于删除快照。
 //
-// 快照必须处于 NORMAL 状态，快照状态可以通过 DescribeSnapshots 接口查询，见输出参数中 SnapshotState 字段解释。
+// 快照必须处于 NORMAL 状态，快照状态可以通过 <a href="https://cloud.tencent.com/document/product/1207/54388" target="_blank">DescribeSnapshots</a> 接口查询，见输出参数中 SnapshotState 字段解释。
 //
 // 可能返回的错误码:
+//  FAILEDOPERATION_DELETERESOURCESFAILED = "FailedOperation.DeleteResourcesFailed"
 //  FAILEDOPERATION_REQUESTERROR = "FailedOperation.RequestError"
 //  FAILEDOPERATION_SNAPSHOTOPERATIONFAILED = "FailedOperation.SnapshotOperationFailed"
 //  INTERNALERROR_REQUESTERROR = "InternalError.RequestError"
@@ -1687,9 +1963,10 @@ func (c *Client) DeleteSnapshots(request *DeleteSnapshotsRequest) (response *Del
 // DeleteSnapshots
 // 本接口（DeleteSnapshots）用于删除快照。
 //
-// 快照必须处于 NORMAL 状态，快照状态可以通过 DescribeSnapshots 接口查询，见输出参数中 SnapshotState 字段解释。
+// 快照必须处于 NORMAL 状态，快照状态可以通过 <a href="https://cloud.tencent.com/document/product/1207/54388" target="_blank">DescribeSnapshots</a> 接口查询，见输出参数中 SnapshotState 字段解释。
 //
 // 可能返回的错误码:
+//  FAILEDOPERATION_DELETERESOURCESFAILED = "FailedOperation.DeleteResourcesFailed"
 //  FAILEDOPERATION_REQUESTERROR = "FailedOperation.RequestError"
 //  FAILEDOPERATION_SNAPSHOTOPERATIONFAILED = "FailedOperation.SnapshotOperationFailed"
 //  INTERNALERROR_REQUESTERROR = "InternalError.RequestError"
@@ -1705,6 +1982,7 @@ func (c *Client) DeleteSnapshotsWithContext(ctx context.Context, request *Delete
     if request == nil {
         request = NewDeleteSnapshotsRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "lighthouse", APIVersion, "DeleteSnapshots")
     
     if c.GetCredential() == nil {
         return nil, errors.New("DeleteSnapshots require credential")
@@ -1731,8 +2009,9 @@ func NewDescribeAllScenesRequest() (request *DescribeAllScenesRequest) {
 func NewDescribeAllScenesResponse() (response *DescribeAllScenesResponse) {
     response = &DescribeAllScenesResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // DescribeAllScenes
@@ -1755,6 +2034,7 @@ func (c *Client) DescribeAllScenesWithContext(ctx context.Context, request *Desc
     if request == nil {
         request = NewDescribeAllScenesRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "lighthouse", APIVersion, "DescribeAllScenes")
     
     if c.GetCredential() == nil {
         return nil, errors.New("DescribeAllScenes require credential")
@@ -1781,8 +2061,9 @@ func NewDescribeBlueprintInstancesRequest() (request *DescribeBlueprintInstances
 func NewDescribeBlueprintInstancesResponse() (response *DescribeBlueprintInstancesResponse) {
     response = &DescribeBlueprintInstancesResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // DescribeBlueprintInstances
@@ -1821,6 +2102,7 @@ func (c *Client) DescribeBlueprintInstancesWithContext(ctx context.Context, requ
     if request == nil {
         request = NewDescribeBlueprintInstancesRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "lighthouse", APIVersion, "DescribeBlueprintInstances")
     
     if c.GetCredential() == nil {
         return nil, errors.New("DescribeBlueprintInstances require credential")
@@ -1847,12 +2129,13 @@ func NewDescribeBlueprintsRequest() (request *DescribeBlueprintsRequest) {
 func NewDescribeBlueprintsResponse() (response *DescribeBlueprintsResponse) {
     response = &DescribeBlueprintsResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // DescribeBlueprints
-// 本接口（DescribeBlueprints）用于查询镜像信息。
+// 本接口（DescribeBlueprints）用于查询镜像信息。该接口返回的镜像类型有：自定义镜像、共享镜像、公共镜像。
 //
 // 可能返回的错误码:
 //  FAILEDOPERATION = "FailedOperation"
@@ -1877,12 +2160,13 @@ func NewDescribeBlueprintsResponse() (response *DescribeBlueprintsResponse) {
 //  RESOURCENOTFOUND_ROLENOTFOUND = "ResourceNotFound.RoleNotFound"
 //  RESOURCENOTFOUND_SCENEIDNOTFOUND = "ResourceNotFound.SceneIdNotFound"
 //  UNAUTHORIZEDOPERATION_NOPERMISSION = "UnauthorizedOperation.NoPermission"
+//  UNAUTHORIZEDOPERATION_TOKENINVALID = "UnauthorizedOperation.TokenInvalid"
 func (c *Client) DescribeBlueprints(request *DescribeBlueprintsRequest) (response *DescribeBlueprintsResponse, err error) {
     return c.DescribeBlueprintsWithContext(context.Background(), request)
 }
 
 // DescribeBlueprints
-// 本接口（DescribeBlueprints）用于查询镜像信息。
+// 本接口（DescribeBlueprints）用于查询镜像信息。该接口返回的镜像类型有：自定义镜像、共享镜像、公共镜像。
 //
 // 可能返回的错误码:
 //  FAILEDOPERATION = "FailedOperation"
@@ -1907,10 +2191,12 @@ func (c *Client) DescribeBlueprints(request *DescribeBlueprintsRequest) (respons
 //  RESOURCENOTFOUND_ROLENOTFOUND = "ResourceNotFound.RoleNotFound"
 //  RESOURCENOTFOUND_SCENEIDNOTFOUND = "ResourceNotFound.SceneIdNotFound"
 //  UNAUTHORIZEDOPERATION_NOPERMISSION = "UnauthorizedOperation.NoPermission"
+//  UNAUTHORIZEDOPERATION_TOKENINVALID = "UnauthorizedOperation.TokenInvalid"
 func (c *Client) DescribeBlueprintsWithContext(ctx context.Context, request *DescribeBlueprintsRequest) (response *DescribeBlueprintsResponse, err error) {
     if request == nil {
         request = NewDescribeBlueprintsRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "lighthouse", APIVersion, "DescribeBlueprints")
     
     if c.GetCredential() == nil {
         return nil, errors.New("DescribeBlueprints require credential")
@@ -1919,6 +2205,64 @@ func (c *Client) DescribeBlueprintsWithContext(ctx context.Context, request *Des
     request.SetContext(ctx)
     
     response = NewDescribeBlueprintsResponse()
+    err = c.Send(request, response)
+    return
+}
+
+func NewDescribeBlueprintsShareAcrossAccountInfosRequest() (request *DescribeBlueprintsShareAcrossAccountInfosRequest) {
+    request = &DescribeBlueprintsShareAcrossAccountInfosRequest{
+        BaseRequest: &tchttp.BaseRequest{},
+    }
+    
+    request.Init().WithApiInfo("lighthouse", APIVersion, "DescribeBlueprintsShareAcrossAccountInfos")
+    
+    
+    return
+}
+
+func NewDescribeBlueprintsShareAcrossAccountInfosResponse() (response *DescribeBlueprintsShareAcrossAccountInfosResponse) {
+    response = &DescribeBlueprintsShareAcrossAccountInfosResponse{
+        BaseResponse: &tchttp.BaseResponse{},
+    } 
+    return
+
+}
+
+// DescribeBlueprintsShareAcrossAccountInfos
+// 本接口（DescribeBlueprintsShareAcrossAccountInfos）用于查询一个或多个镜像的跨账号共享信息。
+//
+// 可能返回的错误码:
+//  INVALIDPARAMETERVALUE_BLUEPRINTIDMALFORMED = "InvalidParameterValue.BlueprintIdMalformed"
+//  INVALIDPARAMETERVALUE_NEGATIVE = "InvalidParameterValue.Negative"
+//  INVALIDPARAMETERVALUE_OUTOFRANGE = "InvalidParameterValue.OutOfRange"
+//  UNAUTHORIZEDOPERATION_NOPERMISSION = "UnauthorizedOperation.NoPermission"
+//  UNAUTHORIZEDOPERATION_TOKENINVALID = "UnauthorizedOperation.TokenInvalid"
+func (c *Client) DescribeBlueprintsShareAcrossAccountInfos(request *DescribeBlueprintsShareAcrossAccountInfosRequest) (response *DescribeBlueprintsShareAcrossAccountInfosResponse, err error) {
+    return c.DescribeBlueprintsShareAcrossAccountInfosWithContext(context.Background(), request)
+}
+
+// DescribeBlueprintsShareAcrossAccountInfos
+// 本接口（DescribeBlueprintsShareAcrossAccountInfos）用于查询一个或多个镜像的跨账号共享信息。
+//
+// 可能返回的错误码:
+//  INVALIDPARAMETERVALUE_BLUEPRINTIDMALFORMED = "InvalidParameterValue.BlueprintIdMalformed"
+//  INVALIDPARAMETERVALUE_NEGATIVE = "InvalidParameterValue.Negative"
+//  INVALIDPARAMETERVALUE_OUTOFRANGE = "InvalidParameterValue.OutOfRange"
+//  UNAUTHORIZEDOPERATION_NOPERMISSION = "UnauthorizedOperation.NoPermission"
+//  UNAUTHORIZEDOPERATION_TOKENINVALID = "UnauthorizedOperation.TokenInvalid"
+func (c *Client) DescribeBlueprintsShareAcrossAccountInfosWithContext(ctx context.Context, request *DescribeBlueprintsShareAcrossAccountInfosRequest) (response *DescribeBlueprintsShareAcrossAccountInfosResponse, err error) {
+    if request == nil {
+        request = NewDescribeBlueprintsShareAcrossAccountInfosRequest()
+    }
+    c.InitBaseRequest(&request.BaseRequest, "lighthouse", APIVersion, "DescribeBlueprintsShareAcrossAccountInfos")
+    
+    if c.GetCredential() == nil {
+        return nil, errors.New("DescribeBlueprintsShareAcrossAccountInfos require credential")
+    }
+
+    request.SetContext(ctx)
+    
+    response = NewDescribeBlueprintsShareAcrossAccountInfosResponse()
     err = c.Send(request, response)
     return
 }
@@ -1937,8 +2281,9 @@ func NewDescribeBundleDiscountRequest() (request *DescribeBundleDiscountRequest)
 func NewDescribeBundleDiscountResponse() (response *DescribeBundleDiscountResponse) {
     response = &DescribeBundleDiscountResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // DescribeBundleDiscount
@@ -1946,12 +2291,15 @@ func NewDescribeBundleDiscountResponse() (response *DescribeBundleDiscountRespon
 //
 // 可能返回的错误码:
 //  FAILEDOPERATION = "FailedOperation"
+//  FAILEDOPERATION_DESCRIBEBUNDLEDISCOUNTFAILED = "FailedOperation.DescribeBundleDiscountFailed"
 //  FAILEDOPERATION_REQUESTERROR = "FailedOperation.RequestError"
 //  FAILEDOPERATION_TRADEGETPRICEFAILED = "FailedOperation.TradeGetPriceFailed"
 //  INTERNALERROR_INVALIDCOMMANDNOTFOUND = "InternalError.InvalidCommandNotFound"
 //  INTERNALERROR_REQUESTERROR = "InternalError.RequestError"
 //  INTERNALERROR_TRADEGETPRICEFAILED = "InternalError.TradeGetPriceFailed"
 //  INVALIDPARAMETER_BUNDLEIDNOTFOUND = "InvalidParameter.BundleIdNotFound"
+//  INVALIDPARAMETERVALUE_INVALIDBUNDLEBLUEPRINTCOMBINATION = "InvalidParameterValue.InvalidBundleBlueprintCombination"
+//  MISSINGPARAMETER_BUNDLEMISSINGPARAMETERBLUEPRINTID = "MissingParameter.BundleMissingParameterBlueprintId"
 //  RESOURCEUNAVAILABLE_BUNDLEUNAVAILABLE = "ResourceUnavailable.BundleUnavailable"
 func (c *Client) DescribeBundleDiscount(request *DescribeBundleDiscountRequest) (response *DescribeBundleDiscountResponse, err error) {
     return c.DescribeBundleDiscountWithContext(context.Background(), request)
@@ -1962,17 +2310,21 @@ func (c *Client) DescribeBundleDiscount(request *DescribeBundleDiscountRequest) 
 //
 // 可能返回的错误码:
 //  FAILEDOPERATION = "FailedOperation"
+//  FAILEDOPERATION_DESCRIBEBUNDLEDISCOUNTFAILED = "FailedOperation.DescribeBundleDiscountFailed"
 //  FAILEDOPERATION_REQUESTERROR = "FailedOperation.RequestError"
 //  FAILEDOPERATION_TRADEGETPRICEFAILED = "FailedOperation.TradeGetPriceFailed"
 //  INTERNALERROR_INVALIDCOMMANDNOTFOUND = "InternalError.InvalidCommandNotFound"
 //  INTERNALERROR_REQUESTERROR = "InternalError.RequestError"
 //  INTERNALERROR_TRADEGETPRICEFAILED = "InternalError.TradeGetPriceFailed"
 //  INVALIDPARAMETER_BUNDLEIDNOTFOUND = "InvalidParameter.BundleIdNotFound"
+//  INVALIDPARAMETERVALUE_INVALIDBUNDLEBLUEPRINTCOMBINATION = "InvalidParameterValue.InvalidBundleBlueprintCombination"
+//  MISSINGPARAMETER_BUNDLEMISSINGPARAMETERBLUEPRINTID = "MissingParameter.BundleMissingParameterBlueprintId"
 //  RESOURCEUNAVAILABLE_BUNDLEUNAVAILABLE = "ResourceUnavailable.BundleUnavailable"
 func (c *Client) DescribeBundleDiscountWithContext(ctx context.Context, request *DescribeBundleDiscountRequest) (response *DescribeBundleDiscountResponse, err error) {
     if request == nil {
         request = NewDescribeBundleDiscountRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "lighthouse", APIVersion, "DescribeBundleDiscount")
     
     if c.GetCredential() == nil {
         return nil, errors.New("DescribeBundleDiscount require credential")
@@ -1999,8 +2351,9 @@ func NewDescribeBundlesRequest() (request *DescribeBundlesRequest) {
 func NewDescribeBundlesResponse() (response *DescribeBundlesResponse) {
     response = &DescribeBundlesResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // DescribeBundles
@@ -2008,6 +2361,7 @@ func NewDescribeBundlesResponse() (response *DescribeBundlesResponse) {
 //
 // 可能返回的错误码:
 //  FAILEDOPERATION = "FailedOperation"
+//  FAILEDOPERATION_DESCRIBEBUNDLESFAILED = "FailedOperation.DescribeBundlesFailed"
 //  FAILEDOPERATION_REQUESTERROR = "FailedOperation.RequestError"
 //  FAILEDOPERATION_TRADEGETPRICEFAILED = "FailedOperation.TradeGetPriceFailed"
 //  INTERNALERROR_INVALIDCOMMANDNOTFOUND = "InternalError.InvalidCommandNotFound"
@@ -2039,6 +2393,7 @@ func (c *Client) DescribeBundles(request *DescribeBundlesRequest) (response *Des
 //
 // 可能返回的错误码:
 //  FAILEDOPERATION = "FailedOperation"
+//  FAILEDOPERATION_DESCRIBEBUNDLESFAILED = "FailedOperation.DescribeBundlesFailed"
 //  FAILEDOPERATION_REQUESTERROR = "FailedOperation.RequestError"
 //  FAILEDOPERATION_TRADEGETPRICEFAILED = "FailedOperation.TradeGetPriceFailed"
 //  INTERNALERROR_INVALIDCOMMANDNOTFOUND = "InternalError.InvalidCommandNotFound"
@@ -2065,6 +2420,7 @@ func (c *Client) DescribeBundlesWithContext(ctx context.Context, request *Descri
     if request == nil {
         request = NewDescribeBundlesRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "lighthouse", APIVersion, "DescribeBundles")
     
     if c.GetCredential() == nil {
         return nil, errors.New("DescribeBundles require credential")
@@ -2091,8 +2447,9 @@ func NewDescribeCcnAttachedInstancesRequest() (request *DescribeCcnAttachedInsta
 func NewDescribeCcnAttachedInstancesResponse() (response *DescribeCcnAttachedInstancesResponse) {
     response = &DescribeCcnAttachedInstancesResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // DescribeCcnAttachedInstances
@@ -2127,6 +2484,7 @@ func (c *Client) DescribeCcnAttachedInstancesWithContext(ctx context.Context, re
     if request == nil {
         request = NewDescribeCcnAttachedInstancesRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "lighthouse", APIVersion, "DescribeCcnAttachedInstances")
     
     if c.GetCredential() == nil {
         return nil, errors.New("DescribeCcnAttachedInstances require credential")
@@ -2153,8 +2511,9 @@ func NewDescribeDiskBackupsRequest() (request *DescribeDiskBackupsRequest) {
 func NewDescribeDiskBackupsResponse() (response *DescribeDiskBackupsResponse) {
     response = &DescribeDiskBackupsResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // DescribeDiskBackups
@@ -2185,6 +2544,7 @@ func (c *Client) DescribeDiskBackupsWithContext(ctx context.Context, request *De
     if request == nil {
         request = NewDescribeDiskBackupsRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "lighthouse", APIVersion, "DescribeDiskBackups")
     
     if c.GetCredential() == nil {
         return nil, errors.New("DescribeDiskBackups require credential")
@@ -2211,14 +2571,16 @@ func NewDescribeDiskBackupsDeniedActionsRequest() (request *DescribeDiskBackupsD
 func NewDescribeDiskBackupsDeniedActionsResponse() (response *DescribeDiskBackupsDeniedActionsResponse) {
     response = &DescribeDiskBackupsDeniedActionsResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // DescribeDiskBackupsDeniedActions
 // 本接口（DescribeDiskBackupsDeniedActions）用于查询一个或多个云硬盘备份点的操作限制列表信息。
 //
 // 可能返回的错误码:
+//  FAILEDOPERATION_DESCRIBEINSTANCESTATUS = "FailedOperation.DescribeInstanceStatus"
 //  INVALIDPARAMETERVALUE_DISKBACKUPIDMALFORMED = "InvalidParameterValue.DiskBackupIdMalformed"
 //  UNAUTHORIZEDOPERATION_NOPERMISSION = "UnauthorizedOperation.NoPermission"
 func (c *Client) DescribeDiskBackupsDeniedActions(request *DescribeDiskBackupsDeniedActionsRequest) (response *DescribeDiskBackupsDeniedActionsResponse, err error) {
@@ -2229,12 +2591,14 @@ func (c *Client) DescribeDiskBackupsDeniedActions(request *DescribeDiskBackupsDe
 // 本接口（DescribeDiskBackupsDeniedActions）用于查询一个或多个云硬盘备份点的操作限制列表信息。
 //
 // 可能返回的错误码:
+//  FAILEDOPERATION_DESCRIBEINSTANCESTATUS = "FailedOperation.DescribeInstanceStatus"
 //  INVALIDPARAMETERVALUE_DISKBACKUPIDMALFORMED = "InvalidParameterValue.DiskBackupIdMalformed"
 //  UNAUTHORIZEDOPERATION_NOPERMISSION = "UnauthorizedOperation.NoPermission"
 func (c *Client) DescribeDiskBackupsDeniedActionsWithContext(ctx context.Context, request *DescribeDiskBackupsDeniedActionsRequest) (response *DescribeDiskBackupsDeniedActionsResponse, err error) {
     if request == nil {
         request = NewDescribeDiskBackupsDeniedActionsRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "lighthouse", APIVersion, "DescribeDiskBackupsDeniedActions")
     
     if c.GetCredential() == nil {
         return nil, errors.New("DescribeDiskBackupsDeniedActions require credential")
@@ -2261,20 +2625,23 @@ func NewDescribeDiskConfigsRequest() (request *DescribeDiskConfigsRequest) {
 func NewDescribeDiskConfigsResponse() (response *DescribeDiskConfigsResponse) {
     response = &DescribeDiskConfigsResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // DescribeDiskConfigs
 // 本接口（DescribeDiskConfigs）用于查询云硬盘配置。
 //
 // 可能返回的错误码:
+//  FAILEDOPERATION_DESCRIBEDISKCONFIGQUOTAFAILED = "FailedOperation.DescribeDiskConfigQuotaFailed"
 //  FAILEDOPERATION_REQUESTERROR = "FailedOperation.RequestError"
 //  INTERNALERROR_REQUESTERROR = "InternalError.RequestError"
 //  INVALIDPARAMETER_INVALIDFILTER = "InvalidParameter.InvalidFilter"
 //  INVALIDPARAMETERVALUE_INVALIDZONE = "InvalidParameterValue.InvalidZone"
 //  INVALIDPARAMETERVALUE_ZONEINVALID = "InvalidParameterValue.ZoneInvalid"
 //  UNAUTHORIZEDOPERATION_NOPERMISSION = "UnauthorizedOperation.NoPermission"
+//  UNSUPPORTEDOPERATION_SYSTEMBUSY = "UnsupportedOperation.SystemBusy"
 func (c *Client) DescribeDiskConfigs(request *DescribeDiskConfigsRequest) (response *DescribeDiskConfigsResponse, err error) {
     return c.DescribeDiskConfigsWithContext(context.Background(), request)
 }
@@ -2283,16 +2650,19 @@ func (c *Client) DescribeDiskConfigs(request *DescribeDiskConfigsRequest) (respo
 // 本接口（DescribeDiskConfigs）用于查询云硬盘配置。
 //
 // 可能返回的错误码:
+//  FAILEDOPERATION_DESCRIBEDISKCONFIGQUOTAFAILED = "FailedOperation.DescribeDiskConfigQuotaFailed"
 //  FAILEDOPERATION_REQUESTERROR = "FailedOperation.RequestError"
 //  INTERNALERROR_REQUESTERROR = "InternalError.RequestError"
 //  INVALIDPARAMETER_INVALIDFILTER = "InvalidParameter.InvalidFilter"
 //  INVALIDPARAMETERVALUE_INVALIDZONE = "InvalidParameterValue.InvalidZone"
 //  INVALIDPARAMETERVALUE_ZONEINVALID = "InvalidParameterValue.ZoneInvalid"
 //  UNAUTHORIZEDOPERATION_NOPERMISSION = "UnauthorizedOperation.NoPermission"
+//  UNSUPPORTEDOPERATION_SYSTEMBUSY = "UnsupportedOperation.SystemBusy"
 func (c *Client) DescribeDiskConfigsWithContext(ctx context.Context, request *DescribeDiskConfigsRequest) (response *DescribeDiskConfigsResponse, err error) {
     if request == nil {
         request = NewDescribeDiskConfigsRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "lighthouse", APIVersion, "DescribeDiskConfigs")
     
     if c.GetCredential() == nil {
         return nil, errors.New("DescribeDiskConfigs require credential")
@@ -2319,8 +2689,9 @@ func NewDescribeDiskDiscountRequest() (request *DescribeDiskDiscountRequest) {
 func NewDescribeDiskDiscountResponse() (response *DescribeDiskDiscountResponse) {
     response = &DescribeDiskDiscountResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // DescribeDiskDiscount
@@ -2353,6 +2724,7 @@ func (c *Client) DescribeDiskDiscountWithContext(ctx context.Context, request *D
     if request == nil {
         request = NewDescribeDiskDiscountRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "lighthouse", APIVersion, "DescribeDiskDiscount")
     
     if c.GetCredential() == nil {
         return nil, errors.New("DescribeDiskDiscount require credential")
@@ -2379,8 +2751,9 @@ func NewDescribeDisksRequest() (request *DescribeDisksRequest) {
 func NewDescribeDisksResponse() (response *DescribeDisksResponse) {
     response = &DescribeDisksResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // DescribeDisks
@@ -2443,6 +2816,7 @@ func (c *Client) DescribeDisksWithContext(ctx context.Context, request *Describe
     if request == nil {
         request = NewDescribeDisksRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "lighthouse", APIVersion, "DescribeDisks")
     
     if c.GetCredential() == nil {
         return nil, errors.New("DescribeDisks require credential")
@@ -2469,8 +2843,9 @@ func NewDescribeDisksDeniedActionsRequest() (request *DescribeDisksDeniedActions
 func NewDescribeDisksDeniedActionsResponse() (response *DescribeDisksDeniedActionsResponse) {
     response = &DescribeDisksDeniedActionsResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // DescribeDisksDeniedActions
@@ -2501,6 +2876,7 @@ func (c *Client) DescribeDisksDeniedActionsWithContext(ctx context.Context, requ
     if request == nil {
         request = NewDescribeDisksDeniedActionsRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "lighthouse", APIVersion, "DescribeDisksDeniedActions")
     
     if c.GetCredential() == nil {
         return nil, errors.New("DescribeDisksDeniedActions require credential")
@@ -2527,15 +2903,16 @@ func NewDescribeDisksReturnableRequest() (request *DescribeDisksReturnableReques
 func NewDescribeDisksReturnableResponse() (response *DescribeDisksReturnableResponse) {
     response = &DescribeDisksReturnableResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // DescribeDisksReturnable
 // 本接口（DescribeDisksReturnable）用于查询云硬盘是否可退还。
 //
 // 可能返回的错误码:
-//  INTERNALERROR_DESCRIBEDISKSRETURNABLEERROR = "InternalError.DescribeDisksReturnableError"
+//  FAILEDOPERATION_DESCRIBEDISKSRETURNABLEERROR = "FailedOperation.DescribeDisksReturnableError"
 //  INVALIDPARAMETERVALUE_INVALIDDISKIDMALFORMED = "InvalidParameterValue.InvalidDiskIdMalformed"
 //  INVALIDPARAMETERVALUE_OUTOFRANGE = "InvalidParameterValue.OutOfRange"
 //  UNAUTHORIZEDOPERATION_NOPERMISSION = "UnauthorizedOperation.NoPermission"
@@ -2547,7 +2924,7 @@ func (c *Client) DescribeDisksReturnable(request *DescribeDisksReturnableRequest
 // 本接口（DescribeDisksReturnable）用于查询云硬盘是否可退还。
 //
 // 可能返回的错误码:
-//  INTERNALERROR_DESCRIBEDISKSRETURNABLEERROR = "InternalError.DescribeDisksReturnableError"
+//  FAILEDOPERATION_DESCRIBEDISKSRETURNABLEERROR = "FailedOperation.DescribeDisksReturnableError"
 //  INVALIDPARAMETERVALUE_INVALIDDISKIDMALFORMED = "InvalidParameterValue.InvalidDiskIdMalformed"
 //  INVALIDPARAMETERVALUE_OUTOFRANGE = "InvalidParameterValue.OutOfRange"
 //  UNAUTHORIZEDOPERATION_NOPERMISSION = "UnauthorizedOperation.NoPermission"
@@ -2555,6 +2932,7 @@ func (c *Client) DescribeDisksReturnableWithContext(ctx context.Context, request
     if request == nil {
         request = NewDescribeDisksReturnableRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "lighthouse", APIVersion, "DescribeDisksReturnable")
     
     if c.GetCredential() == nil {
         return nil, errors.New("DescribeDisksReturnable require credential")
@@ -2581,8 +2959,9 @@ func NewDescribeDockerActivitiesRequest() (request *DescribeDockerActivitiesRequ
 func NewDescribeDockerActivitiesResponse() (response *DescribeDockerActivitiesResponse) {
     response = &DescribeDockerActivitiesResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // DescribeDockerActivities
@@ -2623,6 +3002,7 @@ func (c *Client) DescribeDockerActivitiesWithContext(ctx context.Context, reques
     if request == nil {
         request = NewDescribeDockerActivitiesRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "lighthouse", APIVersion, "DescribeDockerActivities")
     
     if c.GetCredential() == nil {
         return nil, errors.New("DescribeDockerActivities require credential")
@@ -2649,8 +3029,9 @@ func NewDescribeDockerContainerConfigurationRequest() (request *DescribeDockerCo
 func NewDescribeDockerContainerConfigurationResponse() (response *DescribeDockerContainerConfigurationResponse) {
     response = &DescribeDockerContainerConfigurationResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // DescribeDockerContainerConfiguration
@@ -2701,6 +3082,7 @@ func (c *Client) DescribeDockerContainerConfigurationWithContext(ctx context.Con
     if request == nil {
         request = NewDescribeDockerContainerConfigurationRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "lighthouse", APIVersion, "DescribeDockerContainerConfiguration")
     
     if c.GetCredential() == nil {
         return nil, errors.New("DescribeDockerContainerConfiguration require credential")
@@ -2727,8 +3109,9 @@ func NewDescribeDockerContainerDetailRequest() (request *DescribeDockerContainer
 func NewDescribeDockerContainerDetailResponse() (response *DescribeDockerContainerDetailResponse) {
     response = &DescribeDockerContainerDetailResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // DescribeDockerContainerDetail
@@ -2777,6 +3160,7 @@ func (c *Client) DescribeDockerContainerDetailWithContext(ctx context.Context, r
     if request == nil {
         request = NewDescribeDockerContainerDetailRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "lighthouse", APIVersion, "DescribeDockerContainerDetail")
     
     if c.GetCredential() == nil {
         return nil, errors.New("DescribeDockerContainerDetail require credential")
@@ -2803,8 +3187,9 @@ func NewDescribeDockerContainersRequest() (request *DescribeDockerContainersRequ
 func NewDescribeDockerContainersResponse() (response *DescribeDockerContainersResponse) {
     response = &DescribeDockerContainersResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // DescribeDockerContainers
@@ -2815,6 +3200,8 @@ func NewDescribeDockerContainersResponse() (response *DescribeDockerContainersRe
 //  FAILEDOPERATION_DOCKEROPERATIONFAILED = "FailedOperation.DockerOperationFailed"
 //  FAILEDOPERATION_TATINVOCATIONNOTFINISHED = "FailedOperation.TATInvocationNotFinished"
 //  INTERNALERROR = "InternalError"
+//  INVALIDPARAMETER_CONFLICTPARAMETER = "InvalidParameter.ConflictParameter"
+//  INVALIDPARAMETER_PARAMETERCONFLICT = "InvalidParameter.ParameterConflict"
 //  INVALIDPARAMETERVALUE = "InvalidParameterValue"
 //  INVALIDPARAMETERVALUE_LIMITEXCEEDED = "InvalidParameterValue.LimitExceeded"
 //  INVALIDPARAMETERVALUE_TOOLARGE = "InvalidParameterValue.TooLarge"
@@ -2841,6 +3228,8 @@ func (c *Client) DescribeDockerContainers(request *DescribeDockerContainersReque
 //  FAILEDOPERATION_DOCKEROPERATIONFAILED = "FailedOperation.DockerOperationFailed"
 //  FAILEDOPERATION_TATINVOCATIONNOTFINISHED = "FailedOperation.TATInvocationNotFinished"
 //  INTERNALERROR = "InternalError"
+//  INVALIDPARAMETER_CONFLICTPARAMETER = "InvalidParameter.ConflictParameter"
+//  INVALIDPARAMETER_PARAMETERCONFLICT = "InvalidParameter.ParameterConflict"
 //  INVALIDPARAMETERVALUE = "InvalidParameterValue"
 //  INVALIDPARAMETERVALUE_LIMITEXCEEDED = "InvalidParameterValue.LimitExceeded"
 //  INVALIDPARAMETERVALUE_TOOLARGE = "InvalidParameterValue.TooLarge"
@@ -2859,6 +3248,7 @@ func (c *Client) DescribeDockerContainersWithContext(ctx context.Context, reques
     if request == nil {
         request = NewDescribeDockerContainersRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "lighthouse", APIVersion, "DescribeDockerContainers")
     
     if c.GetCredential() == nil {
         return nil, errors.New("DescribeDockerContainers require credential")
@@ -2885,8 +3275,9 @@ func NewDescribeFirewallRulesRequest() (request *DescribeFirewallRulesRequest) {
 func NewDescribeFirewallRulesResponse() (response *DescribeFirewallRulesResponse) {
     response = &DescribeFirewallRulesResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // DescribeFirewallRules
@@ -2900,6 +3291,7 @@ func NewDescribeFirewallRulesResponse() (response *DescribeFirewallRulesResponse
 //  RESOURCENOTFOUND_FIREWALLNOTFOUND = "ResourceNotFound.FirewallNotFound"
 //  RESOURCENOTFOUND_INSTANCEIDNOTFOUND = "ResourceNotFound.InstanceIdNotFound"
 //  UNAUTHORIZEDOPERATION_NOPERMISSION = "UnauthorizedOperation.NoPermission"
+//  UNAUTHORIZEDOPERATION_TOKENINVALID = "UnauthorizedOperation.TokenInvalid"
 func (c *Client) DescribeFirewallRules(request *DescribeFirewallRulesRequest) (response *DescribeFirewallRulesResponse, err error) {
     return c.DescribeFirewallRulesWithContext(context.Background(), request)
 }
@@ -2915,10 +3307,12 @@ func (c *Client) DescribeFirewallRules(request *DescribeFirewallRulesRequest) (r
 //  RESOURCENOTFOUND_FIREWALLNOTFOUND = "ResourceNotFound.FirewallNotFound"
 //  RESOURCENOTFOUND_INSTANCEIDNOTFOUND = "ResourceNotFound.InstanceIdNotFound"
 //  UNAUTHORIZEDOPERATION_NOPERMISSION = "UnauthorizedOperation.NoPermission"
+//  UNAUTHORIZEDOPERATION_TOKENINVALID = "UnauthorizedOperation.TokenInvalid"
 func (c *Client) DescribeFirewallRulesWithContext(ctx context.Context, request *DescribeFirewallRulesRequest) (response *DescribeFirewallRulesResponse, err error) {
     if request == nil {
         request = NewDescribeFirewallRulesRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "lighthouse", APIVersion, "DescribeFirewallRules")
     
     if c.GetCredential() == nil {
         return nil, errors.New("DescribeFirewallRules require credential")
@@ -2945,14 +3339,16 @@ func NewDescribeFirewallRulesTemplateRequest() (request *DescribeFirewallRulesTe
 func NewDescribeFirewallRulesTemplateResponse() (response *DescribeFirewallRulesTemplateResponse) {
     response = &DescribeFirewallRulesTemplateResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // DescribeFirewallRulesTemplate
 // 本接口（DescribeFirewallRulesTemplate）用于查询防火墙规则模板。
 //
 // 可能返回的错误码:
+//  FAILEDOPERATION = "FailedOperation"
 //  UNAUTHORIZEDOPERATION_NOPERMISSION = "UnauthorizedOperation.NoPermission"
 func (c *Client) DescribeFirewallRulesTemplate(request *DescribeFirewallRulesTemplateRequest) (response *DescribeFirewallRulesTemplateResponse, err error) {
     return c.DescribeFirewallRulesTemplateWithContext(context.Background(), request)
@@ -2962,11 +3358,13 @@ func (c *Client) DescribeFirewallRulesTemplate(request *DescribeFirewallRulesTem
 // 本接口（DescribeFirewallRulesTemplate）用于查询防火墙规则模板。
 //
 // 可能返回的错误码:
+//  FAILEDOPERATION = "FailedOperation"
 //  UNAUTHORIZEDOPERATION_NOPERMISSION = "UnauthorizedOperation.NoPermission"
 func (c *Client) DescribeFirewallRulesTemplateWithContext(ctx context.Context, request *DescribeFirewallRulesTemplateRequest) (response *DescribeFirewallRulesTemplateResponse, err error) {
     if request == nil {
         request = NewDescribeFirewallRulesTemplateRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "lighthouse", APIVersion, "DescribeFirewallRulesTemplate")
     
     if c.GetCredential() == nil {
         return nil, errors.New("DescribeFirewallRulesTemplate require credential")
@@ -2993,8 +3391,9 @@ func NewDescribeFirewallTemplateApplyRecordsRequest() (request *DescribeFirewall
 func NewDescribeFirewallTemplateApplyRecordsResponse() (response *DescribeFirewallTemplateApplyRecordsResponse) {
     response = &DescribeFirewallTemplateApplyRecordsResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // DescribeFirewallTemplateApplyRecords
@@ -3002,6 +3401,8 @@ func NewDescribeFirewallTemplateApplyRecordsResponse() (response *DescribeFirewa
 //
 // 可能返回的错误码:
 //  FAILEDOPERATION = "FailedOperation"
+//  INVALIDPARAMETERVALUE_LENGTH = "InvalidParameterValue.Length"
+//  UNAUTHORIZEDOPERATION_NOPERMISSION = "UnauthorizedOperation.NoPermission"
 func (c *Client) DescribeFirewallTemplateApplyRecords(request *DescribeFirewallTemplateApplyRecordsRequest) (response *DescribeFirewallTemplateApplyRecordsResponse, err error) {
     return c.DescribeFirewallTemplateApplyRecordsWithContext(context.Background(), request)
 }
@@ -3011,10 +3412,13 @@ func (c *Client) DescribeFirewallTemplateApplyRecords(request *DescribeFirewallT
 //
 // 可能返回的错误码:
 //  FAILEDOPERATION = "FailedOperation"
+//  INVALIDPARAMETERVALUE_LENGTH = "InvalidParameterValue.Length"
+//  UNAUTHORIZEDOPERATION_NOPERMISSION = "UnauthorizedOperation.NoPermission"
 func (c *Client) DescribeFirewallTemplateApplyRecordsWithContext(ctx context.Context, request *DescribeFirewallTemplateApplyRecordsRequest) (response *DescribeFirewallTemplateApplyRecordsResponse, err error) {
     if request == nil {
         request = NewDescribeFirewallTemplateApplyRecordsRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "lighthouse", APIVersion, "DescribeFirewallTemplateApplyRecords")
     
     if c.GetCredential() == nil {
         return nil, errors.New("DescribeFirewallTemplateApplyRecords require credential")
@@ -3041,8 +3445,9 @@ func NewDescribeFirewallTemplateQuotaRequest() (request *DescribeFirewallTemplat
 func NewDescribeFirewallTemplateQuotaResponse() (response *DescribeFirewallTemplateQuotaResponse) {
     response = &DescribeFirewallTemplateQuotaResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // DescribeFirewallTemplateQuota
@@ -3065,6 +3470,7 @@ func (c *Client) DescribeFirewallTemplateQuotaWithContext(ctx context.Context, r
     if request == nil {
         request = NewDescribeFirewallTemplateQuotaRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "lighthouse", APIVersion, "DescribeFirewallTemplateQuota")
     
     if c.GetCredential() == nil {
         return nil, errors.New("DescribeFirewallTemplateQuota require credential")
@@ -3091,8 +3497,9 @@ func NewDescribeFirewallTemplateRuleQuotaRequest() (request *DescribeFirewallTem
 func NewDescribeFirewallTemplateRuleQuotaResponse() (response *DescribeFirewallTemplateRuleQuotaResponse) {
     response = &DescribeFirewallTemplateRuleQuotaResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // DescribeFirewallTemplateRuleQuota
@@ -3100,6 +3507,7 @@ func NewDescribeFirewallTemplateRuleQuotaResponse() (response *DescribeFirewallT
 //
 // 可能返回的错误码:
 //  FAILEDOPERATION = "FailedOperation"
+//  INVALIDPARAMETERVALUE_LENGTH = "InvalidParameterValue.Length"
 //  RESOURCENOTFOUND_FIREWALLTEMPLATENOTFOUND = "ResourceNotFound.FirewallTemplateNotFound"
 //  UNAUTHORIZEDOPERATION_NOPERMISSION = "UnauthorizedOperation.NoPermission"
 func (c *Client) DescribeFirewallTemplateRuleQuota(request *DescribeFirewallTemplateRuleQuotaRequest) (response *DescribeFirewallTemplateRuleQuotaResponse, err error) {
@@ -3111,12 +3519,14 @@ func (c *Client) DescribeFirewallTemplateRuleQuota(request *DescribeFirewallTemp
 //
 // 可能返回的错误码:
 //  FAILEDOPERATION = "FailedOperation"
+//  INVALIDPARAMETERVALUE_LENGTH = "InvalidParameterValue.Length"
 //  RESOURCENOTFOUND_FIREWALLTEMPLATENOTFOUND = "ResourceNotFound.FirewallTemplateNotFound"
 //  UNAUTHORIZEDOPERATION_NOPERMISSION = "UnauthorizedOperation.NoPermission"
 func (c *Client) DescribeFirewallTemplateRuleQuotaWithContext(ctx context.Context, request *DescribeFirewallTemplateRuleQuotaRequest) (response *DescribeFirewallTemplateRuleQuotaResponse, err error) {
     if request == nil {
         request = NewDescribeFirewallTemplateRuleQuotaRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "lighthouse", APIVersion, "DescribeFirewallTemplateRuleQuota")
     
     if c.GetCredential() == nil {
         return nil, errors.New("DescribeFirewallTemplateRuleQuota require credential")
@@ -3143,8 +3553,9 @@ func NewDescribeFirewallTemplateRulesRequest() (request *DescribeFirewallTemplat
 func NewDescribeFirewallTemplateRulesResponse() (response *DescribeFirewallTemplateRulesResponse) {
     response = &DescribeFirewallTemplateRulesResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // DescribeFirewallTemplateRules
@@ -3152,7 +3563,9 @@ func NewDescribeFirewallTemplateRulesResponse() (response *DescribeFirewallTempl
 //
 // 可能返回的错误码:
 //  FAILEDOPERATION = "FailedOperation"
+//  INVALIDPARAMETERVALUE_LENGTH = "InvalidParameterValue.Length"
 //  RESOURCENOTFOUND_FIREWALLTEMPLATENOTFOUND = "ResourceNotFound.FirewallTemplateNotFound"
+//  UNAUTHORIZEDOPERATION_NOPERMISSION = "UnauthorizedOperation.NoPermission"
 func (c *Client) DescribeFirewallTemplateRules(request *DescribeFirewallTemplateRulesRequest) (response *DescribeFirewallTemplateRulesResponse, err error) {
     return c.DescribeFirewallTemplateRulesWithContext(context.Background(), request)
 }
@@ -3162,11 +3575,14 @@ func (c *Client) DescribeFirewallTemplateRules(request *DescribeFirewallTemplate
 //
 // 可能返回的错误码:
 //  FAILEDOPERATION = "FailedOperation"
+//  INVALIDPARAMETERVALUE_LENGTH = "InvalidParameterValue.Length"
 //  RESOURCENOTFOUND_FIREWALLTEMPLATENOTFOUND = "ResourceNotFound.FirewallTemplateNotFound"
+//  UNAUTHORIZEDOPERATION_NOPERMISSION = "UnauthorizedOperation.NoPermission"
 func (c *Client) DescribeFirewallTemplateRulesWithContext(ctx context.Context, request *DescribeFirewallTemplateRulesRequest) (response *DescribeFirewallTemplateRulesResponse, err error) {
     if request == nil {
         request = NewDescribeFirewallTemplateRulesRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "lighthouse", APIVersion, "DescribeFirewallTemplateRules")
     
     if c.GetCredential() == nil {
         return nil, errors.New("DescribeFirewallTemplateRules require credential")
@@ -3193,8 +3609,9 @@ func NewDescribeFirewallTemplatesRequest() (request *DescribeFirewallTemplatesRe
 func NewDescribeFirewallTemplatesResponse() (response *DescribeFirewallTemplatesResponse) {
     response = &DescribeFirewallTemplatesResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // DescribeFirewallTemplates
@@ -3202,6 +3619,8 @@ func NewDescribeFirewallTemplatesResponse() (response *DescribeFirewallTemplates
 //
 // 可能返回的错误码:
 //  FAILEDOPERATION = "FailedOperation"
+//  INVALIDPARAMETER_INVALIDFILTERNAME = "InvalidParameter.InvalidFilterName"
+//  UNAUTHORIZEDOPERATION_NOPERMISSION = "UnauthorizedOperation.NoPermission"
 func (c *Client) DescribeFirewallTemplates(request *DescribeFirewallTemplatesRequest) (response *DescribeFirewallTemplatesResponse, err error) {
     return c.DescribeFirewallTemplatesWithContext(context.Background(), request)
 }
@@ -3211,10 +3630,13 @@ func (c *Client) DescribeFirewallTemplates(request *DescribeFirewallTemplatesReq
 //
 // 可能返回的错误码:
 //  FAILEDOPERATION = "FailedOperation"
+//  INVALIDPARAMETER_INVALIDFILTERNAME = "InvalidParameter.InvalidFilterName"
+//  UNAUTHORIZEDOPERATION_NOPERMISSION = "UnauthorizedOperation.NoPermission"
 func (c *Client) DescribeFirewallTemplatesWithContext(ctx context.Context, request *DescribeFirewallTemplatesRequest) (response *DescribeFirewallTemplatesResponse, err error) {
     if request == nil {
         request = NewDescribeFirewallTemplatesRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "lighthouse", APIVersion, "DescribeFirewallTemplates")
     
     if c.GetCredential() == nil {
         return nil, errors.New("DescribeFirewallTemplates require credential")
@@ -3241,8 +3663,9 @@ func NewDescribeGeneralResourceQuotasRequest() (request *DescribeGeneralResource
 func NewDescribeGeneralResourceQuotasResponse() (response *DescribeGeneralResourceQuotasResponse) {
     response = &DescribeGeneralResourceQuotasResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // DescribeGeneralResourceQuotas
@@ -3267,6 +3690,7 @@ func (c *Client) DescribeGeneralResourceQuotasWithContext(ctx context.Context, r
     if request == nil {
         request = NewDescribeGeneralResourceQuotasRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "lighthouse", APIVersion, "DescribeGeneralResourceQuotas")
     
     if c.GetCredential() == nil {
         return nil, errors.New("DescribeGeneralResourceQuotas require credential")
@@ -3279,54 +3703,76 @@ func (c *Client) DescribeGeneralResourceQuotasWithContext(ctx context.Context, r
     return
 }
 
-func NewDescribeInstanceLoginKeyPairAttributeRequest() (request *DescribeInstanceLoginKeyPairAttributeRequest) {
-    request = &DescribeInstanceLoginKeyPairAttributeRequest{
+func NewDescribeImagesToShareRequest() (request *DescribeImagesToShareRequest) {
+    request = &DescribeImagesToShareRequest{
         BaseRequest: &tchttp.BaseRequest{},
     }
     
-    request.Init().WithApiInfo("lighthouse", APIVersion, "DescribeInstanceLoginKeyPairAttribute")
+    request.Init().WithApiInfo("lighthouse", APIVersion, "DescribeImagesToShare")
     
     
     return
 }
 
-func NewDescribeInstanceLoginKeyPairAttributeResponse() (response *DescribeInstanceLoginKeyPairAttributeResponse) {
-    response = &DescribeInstanceLoginKeyPairAttributeResponse{
+func NewDescribeImagesToShareResponse() (response *DescribeImagesToShareResponse) {
+    response = &DescribeImagesToShareResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
-// DescribeInstanceLoginKeyPairAttribute
-// 本接口用于查询实例默认登录密钥属性。
+// DescribeImagesToShare
+// 本接口 (DescribeImagesToShare) 用于查询CVM的自定义镜像列表共享到轻量应用服务器。
 //
 // 可能返回的错误码:
-//  INVALIDPARAMETERVALUE_INSTANCEIDMALFORMED = "InvalidParameterValue.InstanceIdMalformed"
-//  RESOURCENOTFOUND_INSTANCEIDNOTFOUND = "ResourceNotFound.InstanceIdNotFound"
-//  UNSUPPORTEDOPERATION_OPERATIONOFFLINE = "UnsupportedOperation.OperationOffline"
-func (c *Client) DescribeInstanceLoginKeyPairAttribute(request *DescribeInstanceLoginKeyPairAttributeRequest) (response *DescribeInstanceLoginKeyPairAttributeResponse, err error) {
-    return c.DescribeInstanceLoginKeyPairAttributeWithContext(context.Background(), request)
+//  FAILEDOPERATION = "FailedOperation"
+//  FAILEDOPERATION_DESCRIBEIMAGESFAILED = "FailedOperation.DescribeImagesFailed"
+//  FAILEDOPERATION_REQUESTERROR = "FailedOperation.RequestError"
+//  INVALIDPARAMETER_INVALIDFILTER = "InvalidParameter.InvalidFilter"
+//  INVALIDPARAMETERVALUE_DUPLICATED = "InvalidParameterValue.Duplicated"
+//  INVALIDPARAMETERVALUE_INVALIDIMAGEIDMALFORMED = "InvalidParameterValue.InvalidImageIdMalformed"
+//  INVALIDPARAMETERVALUE_LIMITEXCEEDED = "InvalidParameterValue.LimitExceeded"
+//  INVALIDPARAMETERVALUE_NEGATIVE = "InvalidParameterValue.Negative"
+//  INVALIDPARAMETERVALUE_OUTOFRANGE = "InvalidParameterValue.OutOfRange"
+//  INVALIDPARAMETERVALUE_TOOLONG = "InvalidParameterValue.TooLong"
+//  RESOURCENOTFOUND_ROLENOTFOUND = "ResourceNotFound.RoleNotFound"
+//  UNAUTHORIZEDOPERATION_NOPERMISSION = "UnauthorizedOperation.NoPermission"
+//  UNSUPPORTEDOPERATION_ASSUMEROLEFAILED = "UnsupportedOperation.AssumeRoleFailed"
+func (c *Client) DescribeImagesToShare(request *DescribeImagesToShareRequest) (response *DescribeImagesToShareResponse, err error) {
+    return c.DescribeImagesToShareWithContext(context.Background(), request)
 }
 
-// DescribeInstanceLoginKeyPairAttribute
-// 本接口用于查询实例默认登录密钥属性。
+// DescribeImagesToShare
+// 本接口 (DescribeImagesToShare) 用于查询CVM的自定义镜像列表共享到轻量应用服务器。
 //
 // 可能返回的错误码:
-//  INVALIDPARAMETERVALUE_INSTANCEIDMALFORMED = "InvalidParameterValue.InstanceIdMalformed"
-//  RESOURCENOTFOUND_INSTANCEIDNOTFOUND = "ResourceNotFound.InstanceIdNotFound"
-//  UNSUPPORTEDOPERATION_OPERATIONOFFLINE = "UnsupportedOperation.OperationOffline"
-func (c *Client) DescribeInstanceLoginKeyPairAttributeWithContext(ctx context.Context, request *DescribeInstanceLoginKeyPairAttributeRequest) (response *DescribeInstanceLoginKeyPairAttributeResponse, err error) {
+//  FAILEDOPERATION = "FailedOperation"
+//  FAILEDOPERATION_DESCRIBEIMAGESFAILED = "FailedOperation.DescribeImagesFailed"
+//  FAILEDOPERATION_REQUESTERROR = "FailedOperation.RequestError"
+//  INVALIDPARAMETER_INVALIDFILTER = "InvalidParameter.InvalidFilter"
+//  INVALIDPARAMETERVALUE_DUPLICATED = "InvalidParameterValue.Duplicated"
+//  INVALIDPARAMETERVALUE_INVALIDIMAGEIDMALFORMED = "InvalidParameterValue.InvalidImageIdMalformed"
+//  INVALIDPARAMETERVALUE_LIMITEXCEEDED = "InvalidParameterValue.LimitExceeded"
+//  INVALIDPARAMETERVALUE_NEGATIVE = "InvalidParameterValue.Negative"
+//  INVALIDPARAMETERVALUE_OUTOFRANGE = "InvalidParameterValue.OutOfRange"
+//  INVALIDPARAMETERVALUE_TOOLONG = "InvalidParameterValue.TooLong"
+//  RESOURCENOTFOUND_ROLENOTFOUND = "ResourceNotFound.RoleNotFound"
+//  UNAUTHORIZEDOPERATION_NOPERMISSION = "UnauthorizedOperation.NoPermission"
+//  UNSUPPORTEDOPERATION_ASSUMEROLEFAILED = "UnsupportedOperation.AssumeRoleFailed"
+func (c *Client) DescribeImagesToShareWithContext(ctx context.Context, request *DescribeImagesToShareRequest) (response *DescribeImagesToShareResponse, err error) {
     if request == nil {
-        request = NewDescribeInstanceLoginKeyPairAttributeRequest()
+        request = NewDescribeImagesToShareRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "lighthouse", APIVersion, "DescribeImagesToShare")
     
     if c.GetCredential() == nil {
-        return nil, errors.New("DescribeInstanceLoginKeyPairAttribute require credential")
+        return nil, errors.New("DescribeImagesToShare require credential")
     }
 
     request.SetContext(ctx)
     
-    response = NewDescribeInstanceLoginKeyPairAttributeResponse()
+    response = NewDescribeImagesToShareResponse()
     err = c.Send(request, response)
     return
 }
@@ -3345,8 +3791,9 @@ func NewDescribeInstanceVncUrlRequest() (request *DescribeInstanceVncUrlRequest)
 func NewDescribeInstanceVncUrlResponse() (response *DescribeInstanceVncUrlResponse) {
     response = &DescribeInstanceVncUrlResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // DescribeInstanceVncUrl
@@ -3354,7 +3801,7 @@ func NewDescribeInstanceVncUrlResponse() (response *DescribeInstanceVncUrlRespon
 //
 // 
 //
-// * 处于 `STOPPED` 状态的机器无法使用此功能。
+// * 仅处于 `RUNNING`，`RESCUE_MODE` 状态的机器，且当前机器无变更中操作，才可使用此功能。
 //
 // * 管理终端地址的有效期为 15 秒，调用接口成功后如果 15 秒内不使用该链接进行访问，管理终端地址自动失效，您需要重新查询。
 //
@@ -3377,6 +3824,7 @@ func NewDescribeInstanceVncUrlResponse() (response *DescribeInstanceVncUrlRespon
 // ```
 //
 // 可能返回的错误码:
+//  FAILEDOPERATION = "FailedOperation"
 //  FAILEDOPERATION_DESCRIBEINSTANCESTATUS = "FailedOperation.DescribeInstanceStatus"
 //  FAILEDOPERATION_INSTANCEOPERATIONFAILED = "FailedOperation.InstanceOperationFailed"
 //  INTERNALERROR_DESCRIBEINSTANCESTATUS = "InternalError.DescribeInstanceStatus"
@@ -3397,7 +3845,7 @@ func (c *Client) DescribeInstanceVncUrl(request *DescribeInstanceVncUrlRequest) 
 //
 // 
 //
-// * 处于 `STOPPED` 状态的机器无法使用此功能。
+// * 仅处于 `RUNNING`，`RESCUE_MODE` 状态的机器，且当前机器无变更中操作，才可使用此功能。
 //
 // * 管理终端地址的有效期为 15 秒，调用接口成功后如果 15 秒内不使用该链接进行访问，管理终端地址自动失效，您需要重新查询。
 //
@@ -3420,6 +3868,7 @@ func (c *Client) DescribeInstanceVncUrl(request *DescribeInstanceVncUrlRequest) 
 // ```
 //
 // 可能返回的错误码:
+//  FAILEDOPERATION = "FailedOperation"
 //  FAILEDOPERATION_DESCRIBEINSTANCESTATUS = "FailedOperation.DescribeInstanceStatus"
 //  FAILEDOPERATION_INSTANCEOPERATIONFAILED = "FailedOperation.InstanceOperationFailed"
 //  INTERNALERROR_DESCRIBEINSTANCESTATUS = "InternalError.DescribeInstanceStatus"
@@ -3435,6 +3884,7 @@ func (c *Client) DescribeInstanceVncUrlWithContext(ctx context.Context, request 
     if request == nil {
         request = NewDescribeInstanceVncUrlRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "lighthouse", APIVersion, "DescribeInstanceVncUrl")
     
     if c.GetCredential() == nil {
         return nil, errors.New("DescribeInstanceVncUrl require credential")
@@ -3461,8 +3911,9 @@ func NewDescribeInstancesRequest() (request *DescribeInstancesRequest) {
 func NewDescribeInstancesResponse() (response *DescribeInstancesResponse) {
     response = &DescribeInstancesResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // DescribeInstances
@@ -3479,6 +3930,7 @@ func NewDescribeInstancesResponse() (response *DescribeInstancesResponse) {
 // * 支持查询实例的最新操作（LatestOperation）以及最新操作状态（LatestOperationState）。
 //
 // 可能返回的错误码:
+//  AUTHFAILURE_INVALIDHEADERUIN = "AuthFailure.InvalidHeaderUin"
 //  FAILEDOPERATION = "FailedOperation"
 //  FAILEDOPERATION_DESCRIBEINSTANCESTATUS = "FailedOperation.DescribeInstanceStatus"
 //  INTERNALERROR_DESCRIBEINSTANCESTATUS = "InternalError.DescribeInstanceStatus"
@@ -3499,6 +3951,7 @@ func NewDescribeInstancesResponse() (response *DescribeInstancesResponse) {
 //  INVALIDPARAMETERVALUE_LIMITEXCEEDED = "InvalidParameterValue.LimitExceeded"
 //  INVALIDPARAMETERVALUE_NEGATIVE = "InvalidParameterValue.Negative"
 //  INVALIDPARAMETERVALUE_OUTOFRANGE = "InvalidParameterValue.OutOfRange"
+//  MISSINGPARAMETER_ORDERFIELDREQUIRED = "MissingParameter.OrderFieldRequired"
 //  RESOURCENOTFOUND_INSTANCEIDNOTFOUND = "ResourceNotFound.InstanceIdNotFound"
 //  UNAUTHORIZEDOPERATION_NOPERMISSION = "UnauthorizedOperation.NoPermission"
 //  UNAUTHORIZEDOPERATION_TOKENINVALID = "UnauthorizedOperation.TokenInvalid"
@@ -3520,6 +3973,7 @@ func (c *Client) DescribeInstances(request *DescribeInstancesRequest) (response 
 // * 支持查询实例的最新操作（LatestOperation）以及最新操作状态（LatestOperationState）。
 //
 // 可能返回的错误码:
+//  AUTHFAILURE_INVALIDHEADERUIN = "AuthFailure.InvalidHeaderUin"
 //  FAILEDOPERATION = "FailedOperation"
 //  FAILEDOPERATION_DESCRIBEINSTANCESTATUS = "FailedOperation.DescribeInstanceStatus"
 //  INTERNALERROR_DESCRIBEINSTANCESTATUS = "InternalError.DescribeInstanceStatus"
@@ -3540,6 +3994,7 @@ func (c *Client) DescribeInstances(request *DescribeInstancesRequest) (response 
 //  INVALIDPARAMETERVALUE_LIMITEXCEEDED = "InvalidParameterValue.LimitExceeded"
 //  INVALIDPARAMETERVALUE_NEGATIVE = "InvalidParameterValue.Negative"
 //  INVALIDPARAMETERVALUE_OUTOFRANGE = "InvalidParameterValue.OutOfRange"
+//  MISSINGPARAMETER_ORDERFIELDREQUIRED = "MissingParameter.OrderFieldRequired"
 //  RESOURCENOTFOUND_INSTANCEIDNOTFOUND = "ResourceNotFound.InstanceIdNotFound"
 //  UNAUTHORIZEDOPERATION_NOPERMISSION = "UnauthorizedOperation.NoPermission"
 //  UNAUTHORIZEDOPERATION_TOKENINVALID = "UnauthorizedOperation.TokenInvalid"
@@ -3547,6 +4002,7 @@ func (c *Client) DescribeInstancesWithContext(ctx context.Context, request *Desc
     if request == nil {
         request = NewDescribeInstancesRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "lighthouse", APIVersion, "DescribeInstances")
     
     if c.GetCredential() == nil {
         return nil, errors.New("DescribeInstances require credential")
@@ -3573,8 +4029,9 @@ func NewDescribeInstancesDeniedActionsRequest() (request *DescribeInstancesDenie
 func NewDescribeInstancesDeniedActionsResponse() (response *DescribeInstancesDeniedActionsResponse) {
     response = &DescribeInstancesDeniedActionsResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // DescribeInstancesDeniedActions
@@ -3613,6 +4070,7 @@ func (c *Client) DescribeInstancesDeniedActionsWithContext(ctx context.Context, 
     if request == nil {
         request = NewDescribeInstancesDeniedActionsRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "lighthouse", APIVersion, "DescribeInstancesDeniedActions")
     
     if c.GetCredential() == nil {
         return nil, errors.New("DescribeInstancesDeniedActions require credential")
@@ -3639,8 +4097,9 @@ func NewDescribeInstancesDiskNumRequest() (request *DescribeInstancesDiskNumRequ
 func NewDescribeInstancesDiskNumResponse() (response *DescribeInstancesDiskNumResponse) {
     response = &DescribeInstancesDiskNumResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // DescribeInstancesDiskNum
@@ -3669,6 +4128,7 @@ func (c *Client) DescribeInstancesDiskNumWithContext(ctx context.Context, reques
     if request == nil {
         request = NewDescribeInstancesDiskNumRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "lighthouse", APIVersion, "DescribeInstancesDiskNum")
     
     if c.GetCredential() == nil {
         return nil, errors.New("DescribeInstancesDiskNum require credential")
@@ -3695,8 +4155,9 @@ func NewDescribeInstancesReturnableRequest() (request *DescribeInstancesReturnab
 func NewDescribeInstancesReturnableResponse() (response *DescribeInstancesReturnableResponse) {
     response = &DescribeInstancesReturnableResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // DescribeInstancesReturnable
@@ -3739,6 +4200,7 @@ func (c *Client) DescribeInstancesReturnableWithContext(ctx context.Context, req
     if request == nil {
         request = NewDescribeInstancesReturnableRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "lighthouse", APIVersion, "DescribeInstancesReturnable")
     
     if c.GetCredential() == nil {
         return nil, errors.New("DescribeInstancesReturnable require credential")
@@ -3765,8 +4227,9 @@ func NewDescribeInstancesTrafficPackagesRequest() (request *DescribeInstancesTra
 func NewDescribeInstancesTrafficPackagesResponse() (response *DescribeInstancesTrafficPackagesResponse) {
     response = &DescribeInstancesTrafficPackagesResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // DescribeInstancesTrafficPackages
@@ -3803,6 +4266,7 @@ func (c *Client) DescribeInstancesTrafficPackagesWithContext(ctx context.Context
     if request == nil {
         request = NewDescribeInstancesTrafficPackagesRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "lighthouse", APIVersion, "DescribeInstancesTrafficPackages")
     
     if c.GetCredential() == nil {
         return nil, errors.New("DescribeInstancesTrafficPackages require credential")
@@ -3829,8 +4293,9 @@ func NewDescribeKeyPairsRequest() (request *DescribeKeyPairsRequest) {
 func NewDescribeKeyPairsResponse() (response *DescribeKeyPairsResponse) {
     response = &DescribeKeyPairsResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // DescribeKeyPairs
@@ -3867,6 +4332,7 @@ func (c *Client) DescribeKeyPairsWithContext(ctx context.Context, request *Descr
     if request == nil {
         request = NewDescribeKeyPairsRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "lighthouse", APIVersion, "DescribeKeyPairs")
     
     if c.GetCredential() == nil {
         return nil, errors.New("DescribeKeyPairs require credential")
@@ -3875,6 +4341,126 @@ func (c *Client) DescribeKeyPairsWithContext(ctx context.Context, request *Descr
     request.SetContext(ctx)
     
     response = NewDescribeKeyPairsResponse()
+    err = c.Send(request, response)
+    return
+}
+
+func NewDescribeMcpServerTemplatesRequest() (request *DescribeMcpServerTemplatesRequest) {
+    request = &DescribeMcpServerTemplatesRequest{
+        BaseRequest: &tchttp.BaseRequest{},
+    }
+    
+    request.Init().WithApiInfo("lighthouse", APIVersion, "DescribeMcpServerTemplates")
+    
+    
+    return
+}
+
+func NewDescribeMcpServerTemplatesResponse() (response *DescribeMcpServerTemplatesResponse) {
+    response = &DescribeMcpServerTemplatesResponse{
+        BaseResponse: &tchttp.BaseResponse{},
+    } 
+    return
+
+}
+
+// DescribeMcpServerTemplates
+// 本接口（DescribeMcpServerTemplates）用于查询MCP Server模板列表。
+//
+// 可能返回的错误码:
+//  UNAUTHORIZEDOPERATION_NOPERMISSION = "UnauthorizedOperation.NoPermission"
+func (c *Client) DescribeMcpServerTemplates(request *DescribeMcpServerTemplatesRequest) (response *DescribeMcpServerTemplatesResponse, err error) {
+    return c.DescribeMcpServerTemplatesWithContext(context.Background(), request)
+}
+
+// DescribeMcpServerTemplates
+// 本接口（DescribeMcpServerTemplates）用于查询MCP Server模板列表。
+//
+// 可能返回的错误码:
+//  UNAUTHORIZEDOPERATION_NOPERMISSION = "UnauthorizedOperation.NoPermission"
+func (c *Client) DescribeMcpServerTemplatesWithContext(ctx context.Context, request *DescribeMcpServerTemplatesRequest) (response *DescribeMcpServerTemplatesResponse, err error) {
+    if request == nil {
+        request = NewDescribeMcpServerTemplatesRequest()
+    }
+    c.InitBaseRequest(&request.BaseRequest, "lighthouse", APIVersion, "DescribeMcpServerTemplates")
+    
+    if c.GetCredential() == nil {
+        return nil, errors.New("DescribeMcpServerTemplates require credential")
+    }
+
+    request.SetContext(ctx)
+    
+    response = NewDescribeMcpServerTemplatesResponse()
+    err = c.Send(request, response)
+    return
+}
+
+func NewDescribeMcpServersRequest() (request *DescribeMcpServersRequest) {
+    request = &DescribeMcpServersRequest{
+        BaseRequest: &tchttp.BaseRequest{},
+    }
+    
+    request.Init().WithApiInfo("lighthouse", APIVersion, "DescribeMcpServers")
+    
+    
+    return
+}
+
+func NewDescribeMcpServersResponse() (response *DescribeMcpServersResponse) {
+    response = &DescribeMcpServersResponse{
+        BaseResponse: &tchttp.BaseResponse{},
+    } 
+    return
+
+}
+
+// DescribeMcpServers
+// 本接口（DescribeMcpServers）用于查询MCP Server列表。
+//
+// 可能返回的错误码:
+//  INVALIDPARAMETERVALUE_MCPSERVERLISTTOOLARGE = "InvalidParameterValue.McpServerListTooLarge"
+//  RESOURCENOTFOUND_INSTANCENOTFOUND = "ResourceNotFound.InstanceNotFound"
+//  RESOURCENOTFOUND_MCPSERVERNOTFOUND = "ResourceNotFound.McpServerNotFound"
+//  RESOURCENOTFOUND_ROLENOTFOUND = "ResourceNotFound.RoleNotFound"
+//  RESOURCEUNAVAILABLE_BLUEPRINTINVALID = "ResourceUnavailable.BlueprintInvalid"
+//  RESOURCEUNAVAILABLE_TATAGENTUNAVAILABLE = "ResourceUnavailable.TATAgentUnavailable"
+//  RESOURCEUNAVAILABLE_TATSERVICEERROR = "ResourceUnavailable.TATServiceError"
+//  UNAUTHORIZEDOPERATION_NOPERMISSION = "UnauthorizedOperation.NoPermission"
+//  UNSUPPORTEDOPERATION_INVALIDINSTANCESTATE = "UnsupportedOperation.InvalidInstanceState"
+//  UNSUPPORTEDOPERATION_LATESTOPERATIONUNFINISHED = "UnsupportedOperation.LatestOperationUnfinished"
+//  UNSUPPORTEDOPERATION_SERVICEROLENOTEXIST = "UnsupportedOperation.ServiceRoleNotExist"
+func (c *Client) DescribeMcpServers(request *DescribeMcpServersRequest) (response *DescribeMcpServersResponse, err error) {
+    return c.DescribeMcpServersWithContext(context.Background(), request)
+}
+
+// DescribeMcpServers
+// 本接口（DescribeMcpServers）用于查询MCP Server列表。
+//
+// 可能返回的错误码:
+//  INVALIDPARAMETERVALUE_MCPSERVERLISTTOOLARGE = "InvalidParameterValue.McpServerListTooLarge"
+//  RESOURCENOTFOUND_INSTANCENOTFOUND = "ResourceNotFound.InstanceNotFound"
+//  RESOURCENOTFOUND_MCPSERVERNOTFOUND = "ResourceNotFound.McpServerNotFound"
+//  RESOURCENOTFOUND_ROLENOTFOUND = "ResourceNotFound.RoleNotFound"
+//  RESOURCEUNAVAILABLE_BLUEPRINTINVALID = "ResourceUnavailable.BlueprintInvalid"
+//  RESOURCEUNAVAILABLE_TATAGENTUNAVAILABLE = "ResourceUnavailable.TATAgentUnavailable"
+//  RESOURCEUNAVAILABLE_TATSERVICEERROR = "ResourceUnavailable.TATServiceError"
+//  UNAUTHORIZEDOPERATION_NOPERMISSION = "UnauthorizedOperation.NoPermission"
+//  UNSUPPORTEDOPERATION_INVALIDINSTANCESTATE = "UnsupportedOperation.InvalidInstanceState"
+//  UNSUPPORTEDOPERATION_LATESTOPERATIONUNFINISHED = "UnsupportedOperation.LatestOperationUnfinished"
+//  UNSUPPORTEDOPERATION_SERVICEROLENOTEXIST = "UnsupportedOperation.ServiceRoleNotExist"
+func (c *Client) DescribeMcpServersWithContext(ctx context.Context, request *DescribeMcpServersRequest) (response *DescribeMcpServersResponse, err error) {
+    if request == nil {
+        request = NewDescribeMcpServersRequest()
+    }
+    c.InitBaseRequest(&request.BaseRequest, "lighthouse", APIVersion, "DescribeMcpServers")
+    
+    if c.GetCredential() == nil {
+        return nil, errors.New("DescribeMcpServers require credential")
+    }
+
+    request.SetContext(ctx)
+    
+    response = NewDescribeMcpServersResponse()
     err = c.Send(request, response)
     return
 }
@@ -3893,14 +4479,16 @@ func NewDescribeModifyInstanceBundlesRequest() (request *DescribeModifyInstanceB
 func NewDescribeModifyInstanceBundlesResponse() (response *DescribeModifyInstanceBundlesResponse) {
     response = &DescribeModifyInstanceBundlesResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // DescribeModifyInstanceBundles
 // 本接口（DescribeModifyInstanceBundles）用于查询实例可变更套餐列表。
 //
 // 可能返回的错误码:
+//  FAILEDOPERATION = "FailedOperation"
 //  FAILEDOPERATION_DESCRIBEINSTANCESTATUS = "FailedOperation.DescribeInstanceStatus"
 //  FAILEDOPERATION_DESCRIBEINSTANCESMODIFICATIONERROR = "FailedOperation.DescribeInstancesModificationError"
 //  FAILEDOPERATION_REQUESTERROR = "FailedOperation.RequestError"
@@ -3914,19 +4502,24 @@ func NewDescribeModifyInstanceBundlesResponse() (response *DescribeModifyInstanc
 //  INTERNALERROR_TRADEGETPRICEFAILED = "InternalError.TradeGetPriceFailed"
 //  INVALIDPARAMETER_BUNDLEIDNOTFOUND = "InvalidParameter.BundleIdNotFound"
 //  INVALIDPARAMETER_FILTERVALUELIMITEXCEEDED = "InvalidParameter.FilterValueLimitExceeded"
+//  INVALIDPARAMETER_GAMEPORTALINSTANCEBLUEPRINTINVALID = "InvalidParameter.GamePortalInstanceBlueprintInvalid"
+//  INVALIDPARAMETER_INSTANCEOPERATIONUNSUPPORTEDPARAMETER = "InvalidParameter.InstanceOperationUnsupportedParameter"
 //  INVALIDPARAMETER_INVALIDFILTER = "InvalidParameter.InvalidFilter"
 //  INVALIDPARAMETER_INVALIDFILTERINVALIDKEY = "InvalidParameter.InvalidFilterInvalidKey"
 //  INVALIDPARAMETER_INVALIDFILTERINVALIDNAMENOTSTR = "InvalidParameter.InvalidFilterInvalidNameNotStr"
 //  INVALIDPARAMETER_INVALIDFILTERNOTDICT = "InvalidParameter.InvalidFilterNotDict"
 //  INVALIDPARAMETER_INVALIDFILTERNOTSUPPORTEDNAME = "InvalidParameter.InvalidFilterNotSupportedName"
 //  INVALIDPARAMETERVALUE_INSTANCEIDMALFORMED = "InvalidParameterValue.InstanceIdMalformed"
+//  INVALIDPARAMETERVALUE_INVALIDBLUEPRINTID = "InvalidParameterValue.InvalidBlueprintId"
 //  INVALIDPARAMETERVALUE_INVALIDBLUEPRINTPLATFORMTYPE = "InvalidParameterValue.InvalidBlueprintPlatformType"
 //  INVALIDPARAMETERVALUE_INVALIDCONSOLEDISPLAYTYPES = "InvalidParameterValue.InvalidConsoleDisplayTypes"
 //  INVALIDPARAMETERVALUE_LIMITEXCEEDED = "InvalidParameterValue.LimitExceeded"
 //  INVALIDPARAMETERVALUE_NEGATIVE = "InvalidParameterValue.Negative"
 //  INVALIDPARAMETERVALUE_OUTOFRANGE = "InvalidParameterValue.OutOfRange"
 //  OPERATIONDENIED_BUNDLENOTSUPPORTMODIFY = "OperationDenied.BundleNotSupportModify"
+//  RESOURCENOTFOUND_INSTANCEBLUEPRINTNOTFOUND = "ResourceNotFound.InstanceBlueprintNotFound"
 //  RESOURCENOTFOUND_INSTANCEIDNOTFOUND = "ResourceNotFound.InstanceIdNotFound"
+//  RESOURCEUNAVAILABLE_BLUEPRINTUNAVAILABLE = "ResourceUnavailable.BlueprintUnavailable"
 //  UNAUTHORIZEDOPERATION_NOPERMISSION = "UnauthorizedOperation.NoPermission"
 //  UNSUPPORTEDOPERATION_INSTANCEEXPIRED = "UnsupportedOperation.InstanceExpired"
 //  UNSUPPORTEDOPERATION_INVALIDINSTANCESTATE = "UnsupportedOperation.InvalidInstanceState"
@@ -3938,6 +4531,7 @@ func (c *Client) DescribeModifyInstanceBundles(request *DescribeModifyInstanceBu
 // 本接口（DescribeModifyInstanceBundles）用于查询实例可变更套餐列表。
 //
 // 可能返回的错误码:
+//  FAILEDOPERATION = "FailedOperation"
 //  FAILEDOPERATION_DESCRIBEINSTANCESTATUS = "FailedOperation.DescribeInstanceStatus"
 //  FAILEDOPERATION_DESCRIBEINSTANCESMODIFICATIONERROR = "FailedOperation.DescribeInstancesModificationError"
 //  FAILEDOPERATION_REQUESTERROR = "FailedOperation.RequestError"
@@ -3951,19 +4545,24 @@ func (c *Client) DescribeModifyInstanceBundles(request *DescribeModifyInstanceBu
 //  INTERNALERROR_TRADEGETPRICEFAILED = "InternalError.TradeGetPriceFailed"
 //  INVALIDPARAMETER_BUNDLEIDNOTFOUND = "InvalidParameter.BundleIdNotFound"
 //  INVALIDPARAMETER_FILTERVALUELIMITEXCEEDED = "InvalidParameter.FilterValueLimitExceeded"
+//  INVALIDPARAMETER_GAMEPORTALINSTANCEBLUEPRINTINVALID = "InvalidParameter.GamePortalInstanceBlueprintInvalid"
+//  INVALIDPARAMETER_INSTANCEOPERATIONUNSUPPORTEDPARAMETER = "InvalidParameter.InstanceOperationUnsupportedParameter"
 //  INVALIDPARAMETER_INVALIDFILTER = "InvalidParameter.InvalidFilter"
 //  INVALIDPARAMETER_INVALIDFILTERINVALIDKEY = "InvalidParameter.InvalidFilterInvalidKey"
 //  INVALIDPARAMETER_INVALIDFILTERINVALIDNAMENOTSTR = "InvalidParameter.InvalidFilterInvalidNameNotStr"
 //  INVALIDPARAMETER_INVALIDFILTERNOTDICT = "InvalidParameter.InvalidFilterNotDict"
 //  INVALIDPARAMETER_INVALIDFILTERNOTSUPPORTEDNAME = "InvalidParameter.InvalidFilterNotSupportedName"
 //  INVALIDPARAMETERVALUE_INSTANCEIDMALFORMED = "InvalidParameterValue.InstanceIdMalformed"
+//  INVALIDPARAMETERVALUE_INVALIDBLUEPRINTID = "InvalidParameterValue.InvalidBlueprintId"
 //  INVALIDPARAMETERVALUE_INVALIDBLUEPRINTPLATFORMTYPE = "InvalidParameterValue.InvalidBlueprintPlatformType"
 //  INVALIDPARAMETERVALUE_INVALIDCONSOLEDISPLAYTYPES = "InvalidParameterValue.InvalidConsoleDisplayTypes"
 //  INVALIDPARAMETERVALUE_LIMITEXCEEDED = "InvalidParameterValue.LimitExceeded"
 //  INVALIDPARAMETERVALUE_NEGATIVE = "InvalidParameterValue.Negative"
 //  INVALIDPARAMETERVALUE_OUTOFRANGE = "InvalidParameterValue.OutOfRange"
 //  OPERATIONDENIED_BUNDLENOTSUPPORTMODIFY = "OperationDenied.BundleNotSupportModify"
+//  RESOURCENOTFOUND_INSTANCEBLUEPRINTNOTFOUND = "ResourceNotFound.InstanceBlueprintNotFound"
 //  RESOURCENOTFOUND_INSTANCEIDNOTFOUND = "ResourceNotFound.InstanceIdNotFound"
+//  RESOURCEUNAVAILABLE_BLUEPRINTUNAVAILABLE = "ResourceUnavailable.BlueprintUnavailable"
 //  UNAUTHORIZEDOPERATION_NOPERMISSION = "UnauthorizedOperation.NoPermission"
 //  UNSUPPORTEDOPERATION_INSTANCEEXPIRED = "UnsupportedOperation.InstanceExpired"
 //  UNSUPPORTEDOPERATION_INVALIDINSTANCESTATE = "UnsupportedOperation.InvalidInstanceState"
@@ -3971,6 +4570,7 @@ func (c *Client) DescribeModifyInstanceBundlesWithContext(ctx context.Context, r
     if request == nil {
         request = NewDescribeModifyInstanceBundlesRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "lighthouse", APIVersion, "DescribeModifyInstanceBundles")
     
     if c.GetCredential() == nil {
         return nil, errors.New("DescribeModifyInstanceBundles require credential")
@@ -3997,8 +4597,9 @@ func NewDescribeRegionsRequest() (request *DescribeRegionsRequest) {
 func NewDescribeRegionsResponse() (response *DescribeRegionsResponse) {
     response = &DescribeRegionsResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // DescribeRegions
@@ -4019,6 +4620,7 @@ func (c *Client) DescribeRegionsWithContext(ctx context.Context, request *Descri
     if request == nil {
         request = NewDescribeRegionsRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "lighthouse", APIVersion, "DescribeRegions")
     
     if c.GetCredential() == nil {
         return nil, errors.New("DescribeRegions require credential")
@@ -4045,16 +4647,18 @@ func NewDescribeResetInstanceBlueprintsRequest() (request *DescribeResetInstance
 func NewDescribeResetInstanceBlueprintsResponse() (response *DescribeResetInstanceBlueprintsResponse) {
     response = &DescribeResetInstanceBlueprintsResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // DescribeResetInstanceBlueprints
-// 本接口（DescribeResetInstanceBlueprints）查询重置实例的镜像信息。
+// 本接口（DescribeResetInstanceBlueprints）查询重置实例的镜像信息。对于游戏专区实例，该接口只会返回当前镜像，且不支持 Filters 参数。
 //
 // 可能返回的错误码:
 //  FAILEDOPERATION = "FailedOperation"
 //  INVALIDPARAMETER_FILTERVALUELIMITEXCEEDED = "InvalidParameter.FilterValueLimitExceeded"
+//  INVALIDPARAMETER_INSTANCEDISPLAYAREANOTSUPPORTPARAMETER = "InvalidParameter.InstanceDisplayAreaNotSupportParameter"
 //  INVALIDPARAMETER_INVALIDFILTER = "InvalidParameter.InvalidFilter"
 //  INVALIDPARAMETER_INVALIDFILTERINVALIDKEY = "InvalidParameter.InvalidFilterInvalidKey"
 //  INVALIDPARAMETER_INVALIDFILTERINVALIDNAMENOTSTR = "InvalidParameter.InvalidFilterInvalidNameNotStr"
@@ -4077,11 +4681,12 @@ func (c *Client) DescribeResetInstanceBlueprints(request *DescribeResetInstanceB
 }
 
 // DescribeResetInstanceBlueprints
-// 本接口（DescribeResetInstanceBlueprints）查询重置实例的镜像信息。
+// 本接口（DescribeResetInstanceBlueprints）查询重置实例的镜像信息。对于游戏专区实例，该接口只会返回当前镜像，且不支持 Filters 参数。
 //
 // 可能返回的错误码:
 //  FAILEDOPERATION = "FailedOperation"
 //  INVALIDPARAMETER_FILTERVALUELIMITEXCEEDED = "InvalidParameter.FilterValueLimitExceeded"
+//  INVALIDPARAMETER_INSTANCEDISPLAYAREANOTSUPPORTPARAMETER = "InvalidParameter.InstanceDisplayAreaNotSupportParameter"
 //  INVALIDPARAMETER_INVALIDFILTER = "InvalidParameter.InvalidFilter"
 //  INVALIDPARAMETER_INVALIDFILTERINVALIDKEY = "InvalidParameter.InvalidFilterInvalidKey"
 //  INVALIDPARAMETER_INVALIDFILTERINVALIDNAMENOTSTR = "InvalidParameter.InvalidFilterInvalidNameNotStr"
@@ -4103,6 +4708,7 @@ func (c *Client) DescribeResetInstanceBlueprintsWithContext(ctx context.Context,
     if request == nil {
         request = NewDescribeResetInstanceBlueprintsRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "lighthouse", APIVersion, "DescribeResetInstanceBlueprints")
     
     if c.GetCredential() == nil {
         return nil, errors.New("DescribeResetInstanceBlueprints require credential")
@@ -4129,8 +4735,9 @@ func NewDescribeScenesRequest() (request *DescribeScenesRequest) {
 func NewDescribeScenesResponse() (response *DescribeScenesResponse) {
     response = &DescribeScenesResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // DescribeScenes
@@ -4163,6 +4770,7 @@ func (c *Client) DescribeScenesWithContext(ctx context.Context, request *Describ
     if request == nil {
         request = NewDescribeScenesRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "lighthouse", APIVersion, "DescribeScenes")
     
     if c.GetCredential() == nil {
         return nil, errors.New("DescribeScenes require credential")
@@ -4189,8 +4797,9 @@ func NewDescribeSnapshotsRequest() (request *DescribeSnapshotsRequest) {
 func NewDescribeSnapshotsResponse() (response *DescribeSnapshotsResponse) {
     response = &DescribeSnapshotsResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // DescribeSnapshots
@@ -4243,6 +4852,7 @@ func (c *Client) DescribeSnapshotsWithContext(ctx context.Context, request *Desc
     if request == nil {
         request = NewDescribeSnapshotsRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "lighthouse", APIVersion, "DescribeSnapshots")
     
     if c.GetCredential() == nil {
         return nil, errors.New("DescribeSnapshots require credential")
@@ -4269,8 +4879,9 @@ func NewDescribeSnapshotsDeniedActionsRequest() (request *DescribeSnapshotsDenie
 func NewDescribeSnapshotsDeniedActionsResponse() (response *DescribeSnapshotsDeniedActionsResponse) {
     response = &DescribeSnapshotsDeniedActionsResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // DescribeSnapshotsDeniedActions
@@ -4303,6 +4914,7 @@ func (c *Client) DescribeSnapshotsDeniedActionsWithContext(ctx context.Context, 
     if request == nil {
         request = NewDescribeSnapshotsDeniedActionsRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "lighthouse", APIVersion, "DescribeSnapshotsDeniedActions")
     
     if c.GetCredential() == nil {
         return nil, errors.New("DescribeSnapshotsDeniedActions require credential")
@@ -4329,8 +4941,9 @@ func NewDescribeZonesRequest() (request *DescribeZonesRequest) {
 func NewDescribeZonesResponse() (response *DescribeZonesResponse) {
     response = &DescribeZonesResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // DescribeZones
@@ -4357,6 +4970,7 @@ func (c *Client) DescribeZonesWithContext(ctx context.Context, request *Describe
     if request == nil {
         request = NewDescribeZonesRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "lighthouse", APIVersion, "DescribeZones")
     
     if c.GetCredential() == nil {
         return nil, errors.New("DescribeZones require credential")
@@ -4383,8 +4997,9 @@ func NewDetachCcnRequest() (request *DetachCcnRequest) {
 func NewDetachCcnResponse() (response *DetachCcnResponse) {
     response = &DetachCcnResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // DetachCcn
@@ -4413,6 +5028,7 @@ func (c *Client) DetachCcnWithContext(ctx context.Context, request *DetachCcnReq
     if request == nil {
         request = NewDetachCcnRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "lighthouse", APIVersion, "DetachCcn")
     
     if c.GetCredential() == nil {
         return nil, errors.New("DetachCcn require credential")
@@ -4439,12 +5055,17 @@ func NewDetachDisksRequest() (request *DetachDisksRequest) {
 func NewDetachDisksResponse() (response *DetachDisksResponse) {
     response = &DetachDisksResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // DetachDisks
-// 本接口（DetachDisks）用于卸载一个或多个云硬盘。
+// 本接口（DetachDisks）用于卸载一个或多个云硬盘。该操作目前仅支持云硬盘类型为数据盘的云硬盘。
+//
+// - 支持批量操作，卸载挂载在同一主机上的多块云硬盘。如果多块云硬盘中存在不允许卸载的云硬盘，则操作不执行，返回特定的错误码。
+//
+// - 本接口为异步接口，当请求成功返回时，云硬盘并未立即卸载，可通过接口[DescribeDisks](https://cloud.tencent.com/document/product/362/16315)来查询对应云硬盘的状态，如果云硬盘的状态由“ATTACHED”变为“UNATTACHED”，则为卸载成功。
 //
 // 可能返回的错误码:
 //  INVALIDPARAMETERVALUE_INVALIDDISKIDMALFORMED = "InvalidParameterValue.InvalidDiskIdMalformed"
@@ -4461,7 +5082,11 @@ func (c *Client) DetachDisks(request *DetachDisksRequest) (response *DetachDisks
 }
 
 // DetachDisks
-// 本接口（DetachDisks）用于卸载一个或多个云硬盘。
+// 本接口（DetachDisks）用于卸载一个或多个云硬盘。该操作目前仅支持云硬盘类型为数据盘的云硬盘。
+//
+// - 支持批量操作，卸载挂载在同一主机上的多块云硬盘。如果多块云硬盘中存在不允许卸载的云硬盘，则操作不执行，返回特定的错误码。
+//
+// - 本接口为异步接口，当请求成功返回时，云硬盘并未立即卸载，可通过接口[DescribeDisks](https://cloud.tencent.com/document/product/362/16315)来查询对应云硬盘的状态，如果云硬盘的状态由“ATTACHED”变为“UNATTACHED”，则为卸载成功。
 //
 // 可能返回的错误码:
 //  INVALIDPARAMETERVALUE_INVALIDDISKIDMALFORMED = "InvalidParameterValue.InvalidDiskIdMalformed"
@@ -4477,6 +5102,7 @@ func (c *Client) DetachDisksWithContext(ctx context.Context, request *DetachDisk
     if request == nil {
         request = NewDetachDisksRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "lighthouse", APIVersion, "DetachDisks")
     
     if c.GetCredential() == nil {
         return nil, errors.New("DetachDisks require credential")
@@ -4503,8 +5129,9 @@ func NewDisassociateInstancesKeyPairsRequest() (request *DisassociateInstancesKe
 func NewDisassociateInstancesKeyPairsResponse() (response *DisassociateInstancesKeyPairsResponse) {
     response = &DisassociateInstancesKeyPairsResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // DisassociateInstancesKeyPairs
@@ -4516,11 +5143,11 @@ func NewDisassociateInstancesKeyPairsResponse() (response *DisassociateInstances
 //
 // * 解绑密钥后，实例可以通过原来设置的密码登录。
 //
-// * 如果原来没有设置密码，解绑后将无法使用 SSH 登录。可以调用 ResetInstancesPassword 接口来设置登录密码。
+// * 如果原来没有设置密码，解绑后将无法使用 SSH 登录。可以调用 <a href="https://cloud.tencent.com/document/product/1207/55546" target="_blank">ResetInstancesPassword</a> 接口来设置登录密码。
 //
 // * 支持批量操作。每次请求批量实例的上限为 100。
 //
-// * 本接口为异步接口，请求发送成功后会返回一个 RequestId，此时操作并未立即完成。实例操作结果可以通过调用 DescribeInstances 接口查询，如果实例的最新操作状态（LatestOperationState）为“SUCCESS”，则代表操作成功。
+// * 本接口为异步接口，请求发送成功后会返回一个 RequestId，此时操作并未立即完成。实例操作结果可以通过调用 <a href="https://cloud.tencent.com/document/product/1207/47573" target="_blank">DescribeInstances</a> 接口查询，如果实例的最新操作状态（LatestOperationState）为“SUCCESS”，则代表操作成功。
 //
 // 可能返回的错误码:
 //  FAILEDOPERATION_INSTANCEOPERATIONFAILED = "FailedOperation.InstanceOperationFailed"
@@ -4538,6 +5165,7 @@ func NewDisassociateInstancesKeyPairsResponse() (response *DisassociateInstances
 //  UNAUTHORIZEDOPERATION_NOPERMISSION = "UnauthorizedOperation.NoPermission"
 //  UNSUPPORTEDOPERATION_INVALIDINSTANCESTATE = "UnsupportedOperation.InvalidInstanceState"
 //  UNSUPPORTEDOPERATION_KEYPAIRNOTBOUNDTOINSTANCE = "UnsupportedOperation.KeyPairNotBoundToInstance"
+//  UNSUPPORTEDOPERATION_KEYPAIRUNBINDUSERNAMEMISMATCH = "UnsupportedOperation.KeyPairUnbindUsernameMismatch"
 //  UNSUPPORTEDOPERATION_LATESTOPERATIONUNFINISHED = "UnsupportedOperation.LatestOperationUnfinished"
 func (c *Client) DisassociateInstancesKeyPairs(request *DisassociateInstancesKeyPairsRequest) (response *DisassociateInstancesKeyPairsResponse, err error) {
     return c.DisassociateInstancesKeyPairsWithContext(context.Background(), request)
@@ -4552,11 +5180,11 @@ func (c *Client) DisassociateInstancesKeyPairs(request *DisassociateInstancesKey
 //
 // * 解绑密钥后，实例可以通过原来设置的密码登录。
 //
-// * 如果原来没有设置密码，解绑后将无法使用 SSH 登录。可以调用 ResetInstancesPassword 接口来设置登录密码。
+// * 如果原来没有设置密码，解绑后将无法使用 SSH 登录。可以调用 <a href="https://cloud.tencent.com/document/product/1207/55546" target="_blank">ResetInstancesPassword</a> 接口来设置登录密码。
 //
 // * 支持批量操作。每次请求批量实例的上限为 100。
 //
-// * 本接口为异步接口，请求发送成功后会返回一个 RequestId，此时操作并未立即完成。实例操作结果可以通过调用 DescribeInstances 接口查询，如果实例的最新操作状态（LatestOperationState）为“SUCCESS”，则代表操作成功。
+// * 本接口为异步接口，请求发送成功后会返回一个 RequestId，此时操作并未立即完成。实例操作结果可以通过调用 <a href="https://cloud.tencent.com/document/product/1207/47573" target="_blank">DescribeInstances</a> 接口查询，如果实例的最新操作状态（LatestOperationState）为“SUCCESS”，则代表操作成功。
 //
 // 可能返回的错误码:
 //  FAILEDOPERATION_INSTANCEOPERATIONFAILED = "FailedOperation.InstanceOperationFailed"
@@ -4574,11 +5202,13 @@ func (c *Client) DisassociateInstancesKeyPairs(request *DisassociateInstancesKey
 //  UNAUTHORIZEDOPERATION_NOPERMISSION = "UnauthorizedOperation.NoPermission"
 //  UNSUPPORTEDOPERATION_INVALIDINSTANCESTATE = "UnsupportedOperation.InvalidInstanceState"
 //  UNSUPPORTEDOPERATION_KEYPAIRNOTBOUNDTOINSTANCE = "UnsupportedOperation.KeyPairNotBoundToInstance"
+//  UNSUPPORTEDOPERATION_KEYPAIRUNBINDUSERNAMEMISMATCH = "UnsupportedOperation.KeyPairUnbindUsernameMismatch"
 //  UNSUPPORTEDOPERATION_LATESTOPERATIONUNFINISHED = "UnsupportedOperation.LatestOperationUnfinished"
 func (c *Client) DisassociateInstancesKeyPairsWithContext(ctx context.Context, request *DisassociateInstancesKeyPairsRequest) (response *DisassociateInstancesKeyPairsResponse, err error) {
     if request == nil {
         request = NewDisassociateInstancesKeyPairsRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "lighthouse", APIVersion, "DisassociateInstancesKeyPairs")
     
     if c.GetCredential() == nil {
         return nil, errors.New("DisassociateInstancesKeyPairs require credential")
@@ -4605,8 +5235,9 @@ func NewImportKeyPairRequest() (request *ImportKeyPairRequest) {
 func NewImportKeyPairResponse() (response *ImportKeyPairResponse) {
     response = &ImportKeyPairResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // ImportKeyPair
@@ -4645,6 +5276,7 @@ func (c *Client) ImportKeyPairWithContext(ctx context.Context, request *ImportKe
     if request == nil {
         request = NewImportKeyPairRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "lighthouse", APIVersion, "ImportKeyPair")
     
     if c.GetCredential() == nil {
         return nil, errors.New("ImportKeyPair require credential")
@@ -4671,14 +5303,16 @@ func NewInquirePriceCreateBlueprintRequest() (request *InquirePriceCreateBluepri
 func NewInquirePriceCreateBlueprintResponse() (response *InquirePriceCreateBlueprintResponse) {
     response = &InquirePriceCreateBlueprintResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // InquirePriceCreateBlueprint
 // 本接口 (InquirePriceCreateBlueprint) 用于创建镜像询价。
 //
 // 可能返回的错误码:
+//  FAILEDOPERATION = "FailedOperation"
 //  FAILEDOPERATION_REQUESTERROR = "FailedOperation.RequestError"
 //  FAILEDOPERATION_TRADEGETPRICEFAILED = "FailedOperation.TradeGetPriceFailed"
 //  INTERNALERROR = "InternalError"
@@ -4693,6 +5327,7 @@ func (c *Client) InquirePriceCreateBlueprint(request *InquirePriceCreateBlueprin
 // 本接口 (InquirePriceCreateBlueprint) 用于创建镜像询价。
 //
 // 可能返回的错误码:
+//  FAILEDOPERATION = "FailedOperation"
 //  FAILEDOPERATION_REQUESTERROR = "FailedOperation.RequestError"
 //  FAILEDOPERATION_TRADEGETPRICEFAILED = "FailedOperation.TradeGetPriceFailed"
 //  INTERNALERROR = "InternalError"
@@ -4703,6 +5338,7 @@ func (c *Client) InquirePriceCreateBlueprintWithContext(ctx context.Context, req
     if request == nil {
         request = NewInquirePriceCreateBlueprintRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "lighthouse", APIVersion, "InquirePriceCreateBlueprint")
     
     if c.GetCredential() == nil {
         return nil, errors.New("InquirePriceCreateBlueprint require credential")
@@ -4729,8 +5365,9 @@ func NewInquirePriceCreateDisksRequest() (request *InquirePriceCreateDisksReques
 func NewInquirePriceCreateDisksResponse() (response *InquirePriceCreateDisksResponse) {
     response = &InquirePriceCreateDisksResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // InquirePriceCreateDisks
@@ -4763,6 +5400,7 @@ func (c *Client) InquirePriceCreateDisksWithContext(ctx context.Context, request
     if request == nil {
         request = NewInquirePriceCreateDisksRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "lighthouse", APIVersion, "InquirePriceCreateDisks")
     
     if c.GetCredential() == nil {
         return nil, errors.New("InquirePriceCreateDisks require credential")
@@ -4789,8 +5427,9 @@ func NewInquirePriceCreateInstancesRequest() (request *InquirePriceCreateInstanc
 func NewInquirePriceCreateInstancesResponse() (response *InquirePriceCreateInstancesResponse) {
     response = &InquirePriceCreateInstancesResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // InquirePriceCreateInstances
@@ -4806,6 +5445,8 @@ func NewInquirePriceCreateInstancesResponse() (response *InquirePriceCreateInsta
 //  INVALIDPARAMETER_BUNDLEIDNOTFOUND = "InvalidParameter.BundleIdNotFound"
 //  INVALIDPARAMETERVALUE_BLUEPRINTIDMALFORMED = "InvalidParameterValue.BlueprintIdMalformed"
 //  INVALIDPARAMETERVALUE_INVALIDBLUEPRINTID = "InvalidParameterValue.InvalidBlueprintId"
+//  INVALIDPARAMETERVALUE_INVALIDBUNDLEBLUEPRINTCOMBINATION = "InvalidParameterValue.InvalidBundleBlueprintCombination"
+//  MISSINGPARAMETER_BUNDLEMISSINGPARAMETERBLUEPRINTID = "MissingParameter.BundleMissingParameterBlueprintId"
 //  RESOURCENOTFOUND_BLUEPRINTIDNOTFOUND = "ResourceNotFound.BlueprintIdNotFound"
 //  RESOURCEUNAVAILABLE_BUNDLEUNAVAILABLE = "ResourceUnavailable.BundleUnavailable"
 //  UNAUTHORIZEDOPERATION_NOPERMISSION = "UnauthorizedOperation.NoPermission"
@@ -4826,6 +5467,8 @@ func (c *Client) InquirePriceCreateInstances(request *InquirePriceCreateInstance
 //  INVALIDPARAMETER_BUNDLEIDNOTFOUND = "InvalidParameter.BundleIdNotFound"
 //  INVALIDPARAMETERVALUE_BLUEPRINTIDMALFORMED = "InvalidParameterValue.BlueprintIdMalformed"
 //  INVALIDPARAMETERVALUE_INVALIDBLUEPRINTID = "InvalidParameterValue.InvalidBlueprintId"
+//  INVALIDPARAMETERVALUE_INVALIDBUNDLEBLUEPRINTCOMBINATION = "InvalidParameterValue.InvalidBundleBlueprintCombination"
+//  MISSINGPARAMETER_BUNDLEMISSINGPARAMETERBLUEPRINTID = "MissingParameter.BundleMissingParameterBlueprintId"
 //  RESOURCENOTFOUND_BLUEPRINTIDNOTFOUND = "ResourceNotFound.BlueprintIdNotFound"
 //  RESOURCEUNAVAILABLE_BUNDLEUNAVAILABLE = "ResourceUnavailable.BundleUnavailable"
 //  UNAUTHORIZEDOPERATION_NOPERMISSION = "UnauthorizedOperation.NoPermission"
@@ -4833,6 +5476,7 @@ func (c *Client) InquirePriceCreateInstancesWithContext(ctx context.Context, req
     if request == nil {
         request = NewInquirePriceCreateInstancesRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "lighthouse", APIVersion, "InquirePriceCreateInstances")
     
     if c.GetCredential() == nil {
         return nil, errors.New("InquirePriceCreateInstances require credential")
@@ -4859,8 +5503,9 @@ func NewInquirePriceRenewDisksRequest() (request *InquirePriceRenewDisksRequest)
 func NewInquirePriceRenewDisksResponse() (response *InquirePriceRenewDisksResponse) {
     response = &InquirePriceRenewDisksResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // InquirePriceRenewDisks
@@ -4893,6 +5538,7 @@ func (c *Client) InquirePriceRenewDisksWithContext(ctx context.Context, request 
     if request == nil {
         request = NewInquirePriceRenewDisksRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "lighthouse", APIVersion, "InquirePriceRenewDisks")
     
     if c.GetCredential() == nil {
         return nil, errors.New("InquirePriceRenewDisks require credential")
@@ -4919,8 +5565,9 @@ func NewInquirePriceRenewInstancesRequest() (request *InquirePriceRenewInstances
 func NewInquirePriceRenewInstancesResponse() (response *InquirePriceRenewInstancesResponse) {
     response = &InquirePriceRenewInstancesResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // InquirePriceRenewInstances
@@ -4959,6 +5606,7 @@ func (c *Client) InquirePriceRenewInstancesWithContext(ctx context.Context, requ
     if request == nil {
         request = NewInquirePriceRenewInstancesRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "lighthouse", APIVersion, "InquirePriceRenewInstances")
     
     if c.GetCredential() == nil {
         return nil, errors.New("InquirePriceRenewInstances require credential")
@@ -4985,8 +5633,9 @@ func NewIsolateDisksRequest() (request *IsolateDisksRequest) {
 func NewIsolateDisksResponse() (response *IsolateDisksResponse) {
     response = &IsolateDisksResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // IsolateDisks
@@ -5043,6 +5692,7 @@ func (c *Client) IsolateDisksWithContext(ctx context.Context, request *IsolateDi
     if request == nil {
         request = NewIsolateDisksRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "lighthouse", APIVersion, "IsolateDisks")
     
     if c.GetCredential() == nil {
         return nil, errors.New("IsolateDisks require credential")
@@ -5069,8 +5719,9 @@ func NewIsolateInstancesRequest() (request *IsolateInstancesRequest) {
 func NewIsolateInstancesResponse() (response *IsolateInstancesResponse) {
     response = &IsolateInstancesResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // IsolateInstances
@@ -5082,10 +5733,11 @@ func NewIsolateInstancesResponse() (response *IsolateInstancesResponse) {
 //
 // * 支持批量操作。每次请求批量资源（包括实例与数据盘）的上限为 20。
 //
-// * 本接口为异步接口，请求发送成功后会返回一个 RequestId，此时操作并未立即完成。实例操作结果可以通过调用 DescribeInstances 接口查询，如果实例的最新操作状态（LatestOperationState）为“SUCCESS”，则代表操作成功。
+// * 本接口为异步接口，请求发送成功后会返回一个 RequestId，此时操作并未立即完成。实例操作结果可以通过调用 <a href="https://cloud.tencent.com/document/product/1207/47573" target="_blank">DescribeInstances</a> 接口查询，如果实例的最新操作状态（LatestOperationState）为“SUCCESS”，则代表操作成功。
 //
 // 可能返回的错误码:
 //  AUTHFAILURE = "AuthFailure"
+//  FAILEDOPERATION = "FailedOperation"
 //  FAILEDOPERATION_DESCRIBERESOURCESRETURNABLEERROR = "FailedOperation.DescribeResourcesReturnableError"
 //  FAILEDOPERATION_ISOLATERESOURCESFAILED = "FailedOperation.IsolateResourcesFailed"
 //  INTERNALERROR_DESCRIBERESOURCESRETURNABLEERROR = "InternalError.DescribeResourcesReturnableError"
@@ -5113,10 +5765,11 @@ func (c *Client) IsolateInstances(request *IsolateInstancesRequest) (response *I
 //
 // * 支持批量操作。每次请求批量资源（包括实例与数据盘）的上限为 20。
 //
-// * 本接口为异步接口，请求发送成功后会返回一个 RequestId，此时操作并未立即完成。实例操作结果可以通过调用 DescribeInstances 接口查询，如果实例的最新操作状态（LatestOperationState）为“SUCCESS”，则代表操作成功。
+// * 本接口为异步接口，请求发送成功后会返回一个 RequestId，此时操作并未立即完成。实例操作结果可以通过调用 <a href="https://cloud.tencent.com/document/product/1207/47573" target="_blank">DescribeInstances</a> 接口查询，如果实例的最新操作状态（LatestOperationState）为“SUCCESS”，则代表操作成功。
 //
 // 可能返回的错误码:
 //  AUTHFAILURE = "AuthFailure"
+//  FAILEDOPERATION = "FailedOperation"
 //  FAILEDOPERATION_DESCRIBERESOURCESRETURNABLEERROR = "FailedOperation.DescribeResourcesReturnableError"
 //  FAILEDOPERATION_ISOLATERESOURCESFAILED = "FailedOperation.IsolateResourcesFailed"
 //  INTERNALERROR_DESCRIBERESOURCESRETURNABLEERROR = "InternalError.DescribeResourcesReturnableError"
@@ -5135,6 +5788,7 @@ func (c *Client) IsolateInstancesWithContext(ctx context.Context, request *Isola
     if request == nil {
         request = NewIsolateInstancesRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "lighthouse", APIVersion, "IsolateInstances")
     
     if c.GetCredential() == nil {
         return nil, errors.New("IsolateInstances require credential")
@@ -5161,8 +5815,9 @@ func NewModifyBlueprintAttributeRequest() (request *ModifyBlueprintAttributeRequ
 func NewModifyBlueprintAttributeResponse() (response *ModifyBlueprintAttributeResponse) {
     response = &ModifyBlueprintAttributeResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // ModifyBlueprintAttribute
@@ -5203,6 +5858,7 @@ func (c *Client) ModifyBlueprintAttributeWithContext(ctx context.Context, reques
     if request == nil {
         request = NewModifyBlueprintAttributeRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "lighthouse", APIVersion, "ModifyBlueprintAttribute")
     
     if c.GetCredential() == nil {
         return nil, errors.New("ModifyBlueprintAttribute require credential")
@@ -5229,8 +5885,9 @@ func NewModifyDiskBackupsAttributeRequest() (request *ModifyDiskBackupsAttribute
 func NewModifyDiskBackupsAttributeResponse() (response *ModifyDiskBackupsAttributeResponse) {
     response = &ModifyDiskBackupsAttributeResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // ModifyDiskBackupsAttribute
@@ -5259,6 +5916,7 @@ func (c *Client) ModifyDiskBackupsAttributeWithContext(ctx context.Context, requ
     if request == nil {
         request = NewModifyDiskBackupsAttributeRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "lighthouse", APIVersion, "ModifyDiskBackupsAttribute")
     
     if c.GetCredential() == nil {
         return nil, errors.New("ModifyDiskBackupsAttribute require credential")
@@ -5285,12 +5943,19 @@ func NewModifyDisksAttributeRequest() (request *ModifyDisksAttributeRequest) {
 func NewModifyDisksAttributeResponse() (response *ModifyDisksAttributeResponse) {
     response = &ModifyDisksAttributeResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // ModifyDisksAttribute
 // 本接口(ModifyDisksAttribute)用于修改云硬盘属性。
+//
+// 云硬盘必须处于以下状态:
+//
+// <li> ATTACHED（已挂载）</li>
+//
+// <li> UNATTACHED（待挂载）</li>
 //
 // 可能返回的错误码:
 //  FAILEDOPERATION_MODIFYRESOURCESATTRIBUTEFAILED = "FailedOperation.ModifyResourcesAttributeFailed"
@@ -5309,6 +5974,12 @@ func (c *Client) ModifyDisksAttribute(request *ModifyDisksAttributeRequest) (res
 // ModifyDisksAttribute
 // 本接口(ModifyDisksAttribute)用于修改云硬盘属性。
 //
+// 云硬盘必须处于以下状态:
+//
+// <li> ATTACHED（已挂载）</li>
+//
+// <li> UNATTACHED（待挂载）</li>
+//
 // 可能返回的错误码:
 //  FAILEDOPERATION_MODIFYRESOURCESATTRIBUTEFAILED = "FailedOperation.ModifyResourcesAttributeFailed"
 //  INTERNALERROR_TRADECALLBILLINGGATEWAYFAILED = "InternalError.TradeCallBillingGatewayFailed"
@@ -5323,6 +5994,7 @@ func (c *Client) ModifyDisksAttributeWithContext(ctx context.Context, request *M
     if request == nil {
         request = NewModifyDisksAttributeRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "lighthouse", APIVersion, "ModifyDisksAttribute")
     
     if c.GetCredential() == nil {
         return nil, errors.New("ModifyDisksAttribute require credential")
@@ -5331,6 +6003,90 @@ func (c *Client) ModifyDisksAttributeWithContext(ctx context.Context, request *M
     request.SetContext(ctx)
     
     response = NewModifyDisksAttributeResponse()
+    err = c.Send(request, response)
+    return
+}
+
+func NewModifyDisksBackupQuotaRequest() (request *ModifyDisksBackupQuotaRequest) {
+    request = &ModifyDisksBackupQuotaRequest{
+        BaseRequest: &tchttp.BaseRequest{},
+    }
+    
+    request.Init().WithApiInfo("lighthouse", APIVersion, "ModifyDisksBackupQuota")
+    
+    
+    return
+}
+
+func NewModifyDisksBackupQuotaResponse() (response *ModifyDisksBackupQuotaResponse) {
+    response = &ModifyDisksBackupQuotaResponse{
+        BaseResponse: &tchttp.BaseResponse{},
+    } 
+    return
+
+}
+
+// ModifyDisksBackupQuota
+// 本接口(ModifyDisksBackupQuota)用于调整云硬盘备份点配额。
+//
+// 该操作目前仅支持状态是ATTACHED（已挂载）或 UNATTACHED（待挂载）的云硬盘。
+//
+// 支持批量操作。每次批量请求云硬盘数量上限为15个。
+//
+// 可能返回的错误码:
+//  FAILEDOPERATION_INSUFFICIENTBALANCE = "FailedOperation.InsufficientBalance"
+//  INVALIDPARAMETERVALUE_DISKBACKUPQUOTALESSTHANCURRENTDISKBACKUPNUM = "InvalidParameterValue.DiskBackupQuotaLessThanCurrentDiskBackupNum"
+//  INVALIDPARAMETERVALUE_DISKBACKUPQUOTALESSTHENCURRENTDISKBACKUPNUM = "InvalidParameterValue.DiskBackupQuotaLessThenCurrentDiskBackupNum"
+//  INVALIDPARAMETERVALUE_DUPLICATED = "InvalidParameterValue.Duplicated"
+//  INVALIDPARAMETERVALUE_INVALIDDISKIDMALFORMED = "InvalidParameterValue.InvalidDiskIdMalformed"
+//  INVALIDPARAMETERVALUE_INVALIDDISKTYPE = "InvalidParameterValue.InvalidDiskType"
+//  OPERATIONDENIED_DISKUSAGENOTSUPPORTOPERATION = "OperationDenied.DiskUsageNotSupportOperation"
+//  RESOURCENOTFOUND_DISKIDNOTFOUND = "ResourceNotFound.DiskIdNotFound"
+//  RESOURCENOTFOUND_DISKNOTEXISTS = "ResourceNotFound.DiskNotExists"
+//  RESOURCENOTFOUND_DISKNOTFOUND = "ResourceNotFound.DiskNotFound"
+//  UNAUTHORIZEDOPERATION_NOPERMISSION = "UnauthorizedOperation.NoPermission"
+//  UNSUPPORTEDOPERATION_DISKLATESTOPERATIONUNFINISHED = "UnsupportedOperation.DiskLatestOperationUnfinished"
+//  UNSUPPORTEDOPERATION_OPERATIONNOTSUPPORTEDININTLSITE = "UnsupportedOperation.OperationNotSupportedInIntlSite"
+//  UNSUPPORTEDOPERATION_SAMEWITHOLDCONFIG = "UnsupportedOperation.SameWithOldConfig"
+func (c *Client) ModifyDisksBackupQuota(request *ModifyDisksBackupQuotaRequest) (response *ModifyDisksBackupQuotaResponse, err error) {
+    return c.ModifyDisksBackupQuotaWithContext(context.Background(), request)
+}
+
+// ModifyDisksBackupQuota
+// 本接口(ModifyDisksBackupQuota)用于调整云硬盘备份点配额。
+//
+// 该操作目前仅支持状态是ATTACHED（已挂载）或 UNATTACHED（待挂载）的云硬盘。
+//
+// 支持批量操作。每次批量请求云硬盘数量上限为15个。
+//
+// 可能返回的错误码:
+//  FAILEDOPERATION_INSUFFICIENTBALANCE = "FailedOperation.InsufficientBalance"
+//  INVALIDPARAMETERVALUE_DISKBACKUPQUOTALESSTHANCURRENTDISKBACKUPNUM = "InvalidParameterValue.DiskBackupQuotaLessThanCurrentDiskBackupNum"
+//  INVALIDPARAMETERVALUE_DISKBACKUPQUOTALESSTHENCURRENTDISKBACKUPNUM = "InvalidParameterValue.DiskBackupQuotaLessThenCurrentDiskBackupNum"
+//  INVALIDPARAMETERVALUE_DUPLICATED = "InvalidParameterValue.Duplicated"
+//  INVALIDPARAMETERVALUE_INVALIDDISKIDMALFORMED = "InvalidParameterValue.InvalidDiskIdMalformed"
+//  INVALIDPARAMETERVALUE_INVALIDDISKTYPE = "InvalidParameterValue.InvalidDiskType"
+//  OPERATIONDENIED_DISKUSAGENOTSUPPORTOPERATION = "OperationDenied.DiskUsageNotSupportOperation"
+//  RESOURCENOTFOUND_DISKIDNOTFOUND = "ResourceNotFound.DiskIdNotFound"
+//  RESOURCENOTFOUND_DISKNOTEXISTS = "ResourceNotFound.DiskNotExists"
+//  RESOURCENOTFOUND_DISKNOTFOUND = "ResourceNotFound.DiskNotFound"
+//  UNAUTHORIZEDOPERATION_NOPERMISSION = "UnauthorizedOperation.NoPermission"
+//  UNSUPPORTEDOPERATION_DISKLATESTOPERATIONUNFINISHED = "UnsupportedOperation.DiskLatestOperationUnfinished"
+//  UNSUPPORTEDOPERATION_OPERATIONNOTSUPPORTEDININTLSITE = "UnsupportedOperation.OperationNotSupportedInIntlSite"
+//  UNSUPPORTEDOPERATION_SAMEWITHOLDCONFIG = "UnsupportedOperation.SameWithOldConfig"
+func (c *Client) ModifyDisksBackupQuotaWithContext(ctx context.Context, request *ModifyDisksBackupQuotaRequest) (response *ModifyDisksBackupQuotaResponse, err error) {
+    if request == nil {
+        request = NewModifyDisksBackupQuotaRequest()
+    }
+    c.InitBaseRequest(&request.BaseRequest, "lighthouse", APIVersion, "ModifyDisksBackupQuota")
+    
+    if c.GetCredential() == nil {
+        return nil, errors.New("ModifyDisksBackupQuota require credential")
+    }
+
+    request.SetContext(ctx)
+    
+    response = NewModifyDisksBackupQuotaResponse()
     err = c.Send(request, response)
     return
 }
@@ -5349,12 +6105,23 @@ func NewModifyDisksRenewFlagRequest() (request *ModifyDisksRenewFlagRequest) {
 func NewModifyDisksRenewFlagResponse() (response *ModifyDisksRenewFlagResponse) {
     response = &ModifyDisksRenewFlagResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // ModifyDisksRenewFlag
 // 本接口（ModifyDisksRenewFlag）用于修改云硬盘续费标识。
+//
+// 云硬盘需要处于以下状态：
+//
+// <li> ATTACHED （已挂载）</li>
+//
+// <li> UNATTACHED （待挂载）</li>
+//
+// <li> ATTACHING （挂载中） </li>
+//
+// <li> DETACHING （卸载中）</li>
 //
 // 可能返回的错误码:
 //  INVALIDPARAMETER = "InvalidParameter"
@@ -5371,6 +6138,16 @@ func (c *Client) ModifyDisksRenewFlag(request *ModifyDisksRenewFlagRequest) (res
 // ModifyDisksRenewFlag
 // 本接口（ModifyDisksRenewFlag）用于修改云硬盘续费标识。
 //
+// 云硬盘需要处于以下状态：
+//
+// <li> ATTACHED （已挂载）</li>
+//
+// <li> UNATTACHED （待挂载）</li>
+//
+// <li> ATTACHING （挂载中） </li>
+//
+// <li> DETACHING （卸载中）</li>
+//
 // 可能返回的错误码:
 //  INVALIDPARAMETER = "InvalidParameter"
 //  INVALIDPARAMETERVALUE_INVALIDDISKIDMALFORMED = "InvalidParameterValue.InvalidDiskIdMalformed"
@@ -5383,6 +6160,7 @@ func (c *Client) ModifyDisksRenewFlagWithContext(ctx context.Context, request *M
     if request == nil {
         request = NewModifyDisksRenewFlagRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "lighthouse", APIVersion, "ModifyDisksRenewFlag")
     
     if c.GetCredential() == nil {
         return nil, errors.New("ModifyDisksRenewFlag require credential")
@@ -5409,12 +6187,13 @@ func NewModifyDockerContainerRequest() (request *ModifyDockerContainerRequest) {
 func NewModifyDockerContainerResponse() (response *ModifyDockerContainerResponse) {
     response = &ModifyDockerContainerResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // ModifyDockerContainer
-// 修改实例内的Docker容器，之后可以通过返回的ActivityId调用DescribeDockerActivities接口查询重建情况。
+// 修改实例内的Docker容器，之后可以通过返回的ActivityId调用<a href="https://cloud.tencent.com/document/product/1207/95476" target="_blank">DescribeDockerActivities</a>接口查询重建情况。
 //
 // 请注意：本接口会重新创建并运行实例内的Docker容器。
 //
@@ -5439,7 +6218,7 @@ func (c *Client) ModifyDockerContainer(request *ModifyDockerContainerRequest) (r
 }
 
 // ModifyDockerContainer
-// 修改实例内的Docker容器，之后可以通过返回的ActivityId调用DescribeDockerActivities接口查询重建情况。
+// 修改实例内的Docker容器，之后可以通过返回的ActivityId调用<a href="https://cloud.tencent.com/document/product/1207/95476" target="_blank">DescribeDockerActivities</a>接口查询重建情况。
 //
 // 请注意：本接口会重新创建并运行实例内的Docker容器。
 //
@@ -5463,6 +6242,7 @@ func (c *Client) ModifyDockerContainerWithContext(ctx context.Context, request *
     if request == nil {
         request = NewModifyDockerContainerRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "lighthouse", APIVersion, "ModifyDockerContainer")
     
     if c.GetCredential() == nil {
         return nil, errors.New("ModifyDockerContainer require credential")
@@ -5489,8 +6269,9 @@ func NewModifyFirewallRuleDescriptionRequest() (request *ModifyFirewallRuleDescr
 func NewModifyFirewallRuleDescriptionResponse() (response *ModifyFirewallRuleDescriptionResponse) {
     response = &ModifyFirewallRuleDescriptionResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // ModifyFirewallRuleDescription
@@ -5498,13 +6279,17 @@ func NewModifyFirewallRuleDescriptionResponse() (response *ModifyFirewallRuleDes
 //
 // 
 //
-// * FirewallVersion 用于指定要操作的防火墙的版本。传入 FirewallVersion 版本号若不等于当前防火墙的最新版本，将返回失败；若不传 FirewallVersion 则直接修改防火墙规则备注。
+// * FirewallVersion 用于指定要操作的防火墙的版本。传入 FirewallVersion 版本号若不等于当前防火墙的最新版本，将返回失败；若不传 FirewallVersion 则直接修改防火墙规则备注。FirewallVersion可通过[DescribeFirewallRules](https://cloud.tencent.com/document/api/1207/48252)接口返回值中的FirewallVersion获取。
+//
+// 
+//
+// 用FirewallRule参数来指定要修改的防火墙规则，使用其中的Protocol， Port， CidrBlock，Action字段来匹配要修改的防火墙规则。
 //
 // 
 //
 // 在 FirewallRule 参数中：
 //
-// * Protocol 字段支持输入 TCP，UDP，ICMP，ALL。
+// * Protocol 字段支持输入 TCP，UDP，ICMP，ICMPv6，ALL。
 //
 // * Port 字段允许输入 ALL，或者一个单独的端口号，或者用逗号分隔的离散端口号，或者用减号分隔的两个端口号代表的端口范围。当 Port 为范围时，减号分隔的第一个端口号小于第二个端口号。当 Protocol 字段不是 TCP 或 UDP 时，Port 字段只能为空或 ALL。Port 字段长度不得超过 64。
 //
@@ -5515,6 +6300,7 @@ func NewModifyFirewallRuleDescriptionResponse() (response *ModifyFirewallRuleDes
 // * FirewallRuleDescription 字段长度不得超过 64。
 //
 // 可能返回的错误码:
+//  INVALIDPARAMETER_PARAMETERCONFLICT = "InvalidParameter.ParameterConflict"
 //  INVALIDPARAMETERVALUE_FIREWALLRULEDESCRIPTIONTOOLONG = "InvalidParameterValue.FirewallRuleDescriptionTooLong"
 //  INVALIDPARAMETERVALUE_INSTANCEIDMALFORMED = "InvalidParameterValue.InstanceIdMalformed"
 //  RESOURCENOTFOUND_FIREWALLNOTFOUND = "ResourceNotFound.FirewallNotFound"
@@ -5532,13 +6318,17 @@ func (c *Client) ModifyFirewallRuleDescription(request *ModifyFirewallRuleDescri
 //
 // 
 //
-// * FirewallVersion 用于指定要操作的防火墙的版本。传入 FirewallVersion 版本号若不等于当前防火墙的最新版本，将返回失败；若不传 FirewallVersion 则直接修改防火墙规则备注。
+// * FirewallVersion 用于指定要操作的防火墙的版本。传入 FirewallVersion 版本号若不等于当前防火墙的最新版本，将返回失败；若不传 FirewallVersion 则直接修改防火墙规则备注。FirewallVersion可通过[DescribeFirewallRules](https://cloud.tencent.com/document/api/1207/48252)接口返回值中的FirewallVersion获取。
+//
+// 
+//
+// 用FirewallRule参数来指定要修改的防火墙规则，使用其中的Protocol， Port， CidrBlock，Action字段来匹配要修改的防火墙规则。
 //
 // 
 //
 // 在 FirewallRule 参数中：
 //
-// * Protocol 字段支持输入 TCP，UDP，ICMP，ALL。
+// * Protocol 字段支持输入 TCP，UDP，ICMP，ICMPv6，ALL。
 //
 // * Port 字段允许输入 ALL，或者一个单独的端口号，或者用逗号分隔的离散端口号，或者用减号分隔的两个端口号代表的端口范围。当 Port 为范围时，减号分隔的第一个端口号小于第二个端口号。当 Protocol 字段不是 TCP 或 UDP 时，Port 字段只能为空或 ALL。Port 字段长度不得超过 64。
 //
@@ -5549,6 +6339,7 @@ func (c *Client) ModifyFirewallRuleDescription(request *ModifyFirewallRuleDescri
 // * FirewallRuleDescription 字段长度不得超过 64。
 //
 // 可能返回的错误码:
+//  INVALIDPARAMETER_PARAMETERCONFLICT = "InvalidParameter.ParameterConflict"
 //  INVALIDPARAMETERVALUE_FIREWALLRULEDESCRIPTIONTOOLONG = "InvalidParameterValue.FirewallRuleDescriptionTooLong"
 //  INVALIDPARAMETERVALUE_INSTANCEIDMALFORMED = "InvalidParameterValue.InstanceIdMalformed"
 //  RESOURCENOTFOUND_FIREWALLNOTFOUND = "ResourceNotFound.FirewallNotFound"
@@ -5561,6 +6352,7 @@ func (c *Client) ModifyFirewallRuleDescriptionWithContext(ctx context.Context, r
     if request == nil {
         request = NewModifyFirewallRuleDescriptionRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "lighthouse", APIVersion, "ModifyFirewallRuleDescription")
     
     if c.GetCredential() == nil {
         return nil, errors.New("ModifyFirewallRuleDescription require credential")
@@ -5587,8 +6379,9 @@ func NewModifyFirewallRulesRequest() (request *ModifyFirewallRulesRequest) {
 func NewModifyFirewallRulesResponse() (response *ModifyFirewallRulesResponse) {
     response = &ModifyFirewallRulesResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // ModifyFirewallRules
@@ -5600,13 +6393,13 @@ func NewModifyFirewallRulesResponse() (response *ModifyFirewallRulesResponse) {
 //
 // 
 //
-// * FirewallVersion 用于指定要操作的防火墙的版本。传入 FirewallVersion 版本号若不等于当前防火墙的最新版本，将返回失败；若不传 FirewallVersion 则直接重置防火墙规则。
+// * FirewallVersion 用于指定要操作的防火墙的版本。传入 FirewallVersion 版本号若不等于当前防火墙的最新版本，将返回失败；若不传 FirewallVersion 则直接重置防火墙规则。可通过[DescribeFirewallRules](https://cloud.tencent.com/document/api/1207/48252)接口返回值中的FirewallVersion获取。
 //
 // 
 //
 // 在 FirewallRules 参数中：
 //
-// * Protocol 字段支持输入 TCP，UDP，ICMP，ALL。
+// * Protocol 字段支持输入 TCP，UDP，ICMP，ICMPv6，ALL。
 //
 // * Port 字段允许输入 ALL，或者一个单独的端口号，或者用逗号分隔的离散端口号，或者用减号分隔的两个端口号代表的端口范围。当 Port 为范围时，减号分隔的第一个端口号小于第二个端口号。当 Protocol 字段不是 TCP 或 UDP 时，Port 字段只能为空或 ALL。Port 字段长度不得超过 64。
 //
@@ -5618,10 +6411,12 @@ func NewModifyFirewallRulesResponse() (response *ModifyFirewallRulesResponse) {
 //
 // 可能返回的错误码:
 //  FAILEDOPERATION = "FailedOperation"
+//  FAILEDOPERATION_FIREWALLOPERATIONFAILED = "FailedOperation.FirewallOperationFailed"
 //  FAILEDOPERATION_FIREWALLRULESOPERATIONFAILED = "FailedOperation.FirewallRulesOperationFailed"
 //  FAILEDOPERATION_REQUESTERROR = "FailedOperation.RequestError"
 //  INTERNALERROR_REQUESTERROR = "InternalError.RequestError"
 //  INVALIDPARAMETER_FIREWALLRULESDUPLICATED = "InvalidParameter.FirewallRulesDuplicated"
+//  INVALIDPARAMETER_PARAMETERCONFLICT = "InvalidParameter.ParameterConflict"
 //  INVALIDPARAMETERVALUE_DUPLICATED = "InvalidParameterValue.Duplicated"
 //  INVALIDPARAMETERVALUE_FIREWALLRULEDESCRIPTIONTOOLONG = "InvalidParameterValue.FirewallRuleDescriptionTooLong"
 //  INVALIDPARAMETERVALUE_INSTANCEIDMALFORMED = "InvalidParameterValue.InstanceIdMalformed"
@@ -5644,13 +6439,13 @@ func (c *Client) ModifyFirewallRules(request *ModifyFirewallRulesRequest) (respo
 //
 // 
 //
-// * FirewallVersion 用于指定要操作的防火墙的版本。传入 FirewallVersion 版本号若不等于当前防火墙的最新版本，将返回失败；若不传 FirewallVersion 则直接重置防火墙规则。
+// * FirewallVersion 用于指定要操作的防火墙的版本。传入 FirewallVersion 版本号若不等于当前防火墙的最新版本，将返回失败；若不传 FirewallVersion 则直接重置防火墙规则。可通过[DescribeFirewallRules](https://cloud.tencent.com/document/api/1207/48252)接口返回值中的FirewallVersion获取。
 //
 // 
 //
 // 在 FirewallRules 参数中：
 //
-// * Protocol 字段支持输入 TCP，UDP，ICMP，ALL。
+// * Protocol 字段支持输入 TCP，UDP，ICMP，ICMPv6，ALL。
 //
 // * Port 字段允许输入 ALL，或者一个单独的端口号，或者用逗号分隔的离散端口号，或者用减号分隔的两个端口号代表的端口范围。当 Port 为范围时，减号分隔的第一个端口号小于第二个端口号。当 Protocol 字段不是 TCP 或 UDP 时，Port 字段只能为空或 ALL。Port 字段长度不得超过 64。
 //
@@ -5662,10 +6457,12 @@ func (c *Client) ModifyFirewallRules(request *ModifyFirewallRulesRequest) (respo
 //
 // 可能返回的错误码:
 //  FAILEDOPERATION = "FailedOperation"
+//  FAILEDOPERATION_FIREWALLOPERATIONFAILED = "FailedOperation.FirewallOperationFailed"
 //  FAILEDOPERATION_FIREWALLRULESOPERATIONFAILED = "FailedOperation.FirewallRulesOperationFailed"
 //  FAILEDOPERATION_REQUESTERROR = "FailedOperation.RequestError"
 //  INTERNALERROR_REQUESTERROR = "InternalError.RequestError"
 //  INVALIDPARAMETER_FIREWALLRULESDUPLICATED = "InvalidParameter.FirewallRulesDuplicated"
+//  INVALIDPARAMETER_PARAMETERCONFLICT = "InvalidParameter.ParameterConflict"
 //  INVALIDPARAMETERVALUE_DUPLICATED = "InvalidParameterValue.Duplicated"
 //  INVALIDPARAMETERVALUE_FIREWALLRULEDESCRIPTIONTOOLONG = "InvalidParameterValue.FirewallRuleDescriptionTooLong"
 //  INVALIDPARAMETERVALUE_INSTANCEIDMALFORMED = "InvalidParameterValue.InstanceIdMalformed"
@@ -5679,6 +6476,7 @@ func (c *Client) ModifyFirewallRulesWithContext(ctx context.Context, request *Mo
     if request == nil {
         request = NewModifyFirewallRulesRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "lighthouse", APIVersion, "ModifyFirewallRules")
     
     if c.GetCredential() == nil {
         return nil, errors.New("ModifyFirewallRules require credential")
@@ -5705,8 +6503,9 @@ func NewModifyFirewallTemplateRequest() (request *ModifyFirewallTemplateRequest)
 func NewModifyFirewallTemplateResponse() (response *ModifyFirewallTemplateResponse) {
     response = &ModifyFirewallTemplateResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // ModifyFirewallTemplate
@@ -5714,6 +6513,7 @@ func NewModifyFirewallTemplateResponse() (response *ModifyFirewallTemplateRespon
 //
 // 可能返回的错误码:
 //  FAILEDOPERATION = "FailedOperation"
+//  INVALIDPARAMETERVALUE_LENGTH = "InvalidParameterValue.Length"
 func (c *Client) ModifyFirewallTemplate(request *ModifyFirewallTemplateRequest) (response *ModifyFirewallTemplateResponse, err error) {
     return c.ModifyFirewallTemplateWithContext(context.Background(), request)
 }
@@ -5723,10 +6523,12 @@ func (c *Client) ModifyFirewallTemplate(request *ModifyFirewallTemplateRequest) 
 //
 // 可能返回的错误码:
 //  FAILEDOPERATION = "FailedOperation"
+//  INVALIDPARAMETERVALUE_LENGTH = "InvalidParameterValue.Length"
 func (c *Client) ModifyFirewallTemplateWithContext(ctx context.Context, request *ModifyFirewallTemplateRequest) (response *ModifyFirewallTemplateResponse, err error) {
     if request == nil {
         request = NewModifyFirewallTemplateRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "lighthouse", APIVersion, "ModifyFirewallTemplate")
     
     if c.GetCredential() == nil {
         return nil, errors.New("ModifyFirewallTemplate require credential")
@@ -5735,6 +6537,106 @@ func (c *Client) ModifyFirewallTemplateWithContext(ctx context.Context, request 
     request.SetContext(ctx)
     
     response = NewModifyFirewallTemplateResponse()
+    err = c.Send(request, response)
+    return
+}
+
+func NewModifyImageSharePermissionRequest() (request *ModifyImageSharePermissionRequest) {
+    request = &ModifyImageSharePermissionRequest{
+        BaseRequest: &tchttp.BaseRequest{},
+    }
+    
+    request.Init().WithApiInfo("lighthouse", APIVersion, "ModifyImageSharePermission")
+    
+    
+    return
+}
+
+func NewModifyImageSharePermissionResponse() (response *ModifyImageSharePermissionResponse) {
+    response = &ModifyImageSharePermissionResponse{
+        BaseResponse: &tchttp.BaseResponse{},
+    } 
+    return
+
+}
+
+// ModifyImageSharePermission
+// 本接口 (ModifyImageSharePermission) 用于共享和取消共享CVM自定义镜像到轻量应用服务器服务。
+//
+// CVM镜像共享到轻量应用服务器镜像需要满足如下条件：
+//
+// 1.已共享过的镜像不支持再次共享。
+//
+// 2.外部导入的镜像不支持共享。
+//
+// 3.整机镜像不支持共享。
+//
+// 4.镜像要支持Cloudinit才支持共享。
+//
+// 5.镜像的Platform和OsName要满足。
+//
+// 6.NORMAL状态的镜像才支持共享。
+//
+// 可能返回的错误码:
+//  FAILEDOPERATION_IMAGEOPERATIONFAILED = "FailedOperation.ImageOperationFailed"
+//  FAILEDOPERATION_REQUESTERROR = "FailedOperation.RequestError"
+//  INTERNALERROR_REQUESTERROR = "InternalError.RequestError"
+//  INVALIDPARAMETERVALUE_INVALIDIMAGEIDMALFORMED = "InvalidParameterValue.InvalidImageIdMalformed"
+//  RESOURCEINUSE_IMAGEINUSE = "ResourceInUse.ImageInUse"
+//  RESOURCENOTFOUND_IMAGEIDNOTFOUND = "ResourceNotFound.ImageIdNotFound"
+//  RESOURCENOTFOUND_ROLENOTFOUND = "ResourceNotFound.RoleNotFound"
+//  UNAUTHORIZEDOPERATION_NOPERMISSION = "UnauthorizedOperation.NoPermission"
+//  UNSUPPORTEDOPERATION_ASSUMEROLEFAILED = "UnsupportedOperation.AssumeRoleFailed"
+//  UNSUPPORTEDOPERATION_IMAGEALREADYSHARED = "UnsupportedOperation.ImageAlreadyShared"
+//  UNSUPPORTEDOPERATION_IMAGEOCCUPIED = "UnsupportedOperation.ImageOccupied"
+//  UNSUPPORTEDOPERATION_IMAGEUNABLETOSHARE = "UnsupportedOperation.ImageUnableToShare"
+func (c *Client) ModifyImageSharePermission(request *ModifyImageSharePermissionRequest) (response *ModifyImageSharePermissionResponse, err error) {
+    return c.ModifyImageSharePermissionWithContext(context.Background(), request)
+}
+
+// ModifyImageSharePermission
+// 本接口 (ModifyImageSharePermission) 用于共享和取消共享CVM自定义镜像到轻量应用服务器服务。
+//
+// CVM镜像共享到轻量应用服务器镜像需要满足如下条件：
+//
+// 1.已共享过的镜像不支持再次共享。
+//
+// 2.外部导入的镜像不支持共享。
+//
+// 3.整机镜像不支持共享。
+//
+// 4.镜像要支持Cloudinit才支持共享。
+//
+// 5.镜像的Platform和OsName要满足。
+//
+// 6.NORMAL状态的镜像才支持共享。
+//
+// 可能返回的错误码:
+//  FAILEDOPERATION_IMAGEOPERATIONFAILED = "FailedOperation.ImageOperationFailed"
+//  FAILEDOPERATION_REQUESTERROR = "FailedOperation.RequestError"
+//  INTERNALERROR_REQUESTERROR = "InternalError.RequestError"
+//  INVALIDPARAMETERVALUE_INVALIDIMAGEIDMALFORMED = "InvalidParameterValue.InvalidImageIdMalformed"
+//  RESOURCEINUSE_IMAGEINUSE = "ResourceInUse.ImageInUse"
+//  RESOURCENOTFOUND_IMAGEIDNOTFOUND = "ResourceNotFound.ImageIdNotFound"
+//  RESOURCENOTFOUND_ROLENOTFOUND = "ResourceNotFound.RoleNotFound"
+//  UNAUTHORIZEDOPERATION_NOPERMISSION = "UnauthorizedOperation.NoPermission"
+//  UNSUPPORTEDOPERATION_ASSUMEROLEFAILED = "UnsupportedOperation.AssumeRoleFailed"
+//  UNSUPPORTEDOPERATION_IMAGEALREADYSHARED = "UnsupportedOperation.ImageAlreadyShared"
+//  UNSUPPORTEDOPERATION_IMAGEOCCUPIED = "UnsupportedOperation.ImageOccupied"
+//  UNSUPPORTEDOPERATION_IMAGEUNABLETOSHARE = "UnsupportedOperation.ImageUnableToShare"
+func (c *Client) ModifyImageSharePermissionWithContext(ctx context.Context, request *ModifyImageSharePermissionRequest) (response *ModifyImageSharePermissionResponse, err error) {
+    if request == nil {
+        request = NewModifyImageSharePermissionRequest()
+    }
+    c.InitBaseRequest(&request.BaseRequest, "lighthouse", APIVersion, "ModifyImageSharePermission")
+    
+    if c.GetCredential() == nil {
+        return nil, errors.New("ModifyImageSharePermission require credential")
+    }
+
+    request.SetContext(ctx)
+    
+    response = NewModifyImageSharePermissionResponse()
     err = c.Send(request, response)
     return
 }
@@ -5753,8 +6655,9 @@ func NewModifyInstancesAttributeRequest() (request *ModifyInstancesAttributeRequ
 func NewModifyInstancesAttributeResponse() (response *ModifyInstancesAttributeResponse) {
     response = &ModifyInstancesAttributeResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // ModifyInstancesAttribute
@@ -5819,6 +6722,7 @@ func (c *Client) ModifyInstancesAttributeWithContext(ctx context.Context, reques
     if request == nil {
         request = NewModifyInstancesAttributeRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "lighthouse", APIVersion, "ModifyInstancesAttribute")
     
     if c.GetCredential() == nil {
         return nil, errors.New("ModifyInstancesAttribute require credential")
@@ -5845,8 +6749,9 @@ func NewModifyInstancesBundleRequest() (request *ModifyInstancesBundleRequest) {
 func NewModifyInstancesBundleResponse() (response *ModifyInstancesBundleResponse) {
     response = &ModifyInstancesBundleResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // ModifyInstancesBundle
@@ -5856,7 +6761,7 @@ func NewModifyInstancesBundleResponse() (response *ModifyInstancesBundleResponse
 //
 // * 支持批量操作。每次请求批量实例的上限为 30。
 //
-// * 本接口为异步接口，请求发送成功后会返回一个 RequestId，此时操作并未立即完成。实例操作结果可以通过调用 DescribeInstances 接口查询，如果实例的最新操作状态（LatestOperationState）为“SUCCESS”，则代表操作成功。
+// * 本接口为异步接口，请求发送成功后会返回一个 RequestId，此时操作并未立即完成。实例操作结果可以通过调用 <a href="https://cloud.tencent.com/document/product/1207/47573" target="_blank">DescribeInstances</a> 接口查询，如果实例的最新操作状态（LatestOperationState）为“SUCCESS”，则代表操作成功。
 //
 // 可能返回的错误码:
 //  AUTHFAILURE = "AuthFailure"
@@ -5865,9 +6770,11 @@ func NewModifyInstancesBundleResponse() (response *ModifyInstancesBundleResponse
 //  FAILEDOPERATION_INSUFFICIENTBALANCE = "FailedOperation.InsufficientBalance"
 //  FAILEDOPERATION_MODIFYINSTANCESBUNDLEFAILED = "FailedOperation.ModifyInstancesBundleFailed"
 //  INTERNALERROR = "InternalError"
+//  INVALIDPARAMETER_BUNDLEIDNOTFOUND = "InvalidParameter.BundleIdNotFound"
 //  INVALIDPARAMETERVALUE_DUPLICATED = "InvalidParameterValue.Duplicated"
 //  INVALIDPARAMETERVALUE_INSTANCEIDMALFORMED = "InvalidParameterValue.InstanceIdMalformed"
 //  INVALIDPARAMETERVALUE_LIMITEXCEEDED = "InvalidParameterValue.LimitExceeded"
+//  INVALIDPARAMETERVALUE_NOTSUPPORTMODIFYINSTANCEBUNDLETYPE = "InvalidParameterValue.NotSupportModifyInstanceBundleType"
 //  MISSINGPARAMETER = "MissingParameter"
 //  OPERATIONDENIED_BUNDLENOTSUPPORTMODIFY = "OperationDenied.BundleNotSupportModify"
 //  OPERATIONDENIED_INSTANCECREATING = "OperationDenied.InstanceCreating"
@@ -5886,7 +6793,7 @@ func (c *Client) ModifyInstancesBundle(request *ModifyInstancesBundleRequest) (r
 //
 // * 支持批量操作。每次请求批量实例的上限为 30。
 //
-// * 本接口为异步接口，请求发送成功后会返回一个 RequestId，此时操作并未立即完成。实例操作结果可以通过调用 DescribeInstances 接口查询，如果实例的最新操作状态（LatestOperationState）为“SUCCESS”，则代表操作成功。
+// * 本接口为异步接口，请求发送成功后会返回一个 RequestId，此时操作并未立即完成。实例操作结果可以通过调用 <a href="https://cloud.tencent.com/document/product/1207/47573" target="_blank">DescribeInstances</a> 接口查询，如果实例的最新操作状态（LatestOperationState）为“SUCCESS”，则代表操作成功。
 //
 // 可能返回的错误码:
 //  AUTHFAILURE = "AuthFailure"
@@ -5895,9 +6802,11 @@ func (c *Client) ModifyInstancesBundle(request *ModifyInstancesBundleRequest) (r
 //  FAILEDOPERATION_INSUFFICIENTBALANCE = "FailedOperation.InsufficientBalance"
 //  FAILEDOPERATION_MODIFYINSTANCESBUNDLEFAILED = "FailedOperation.ModifyInstancesBundleFailed"
 //  INTERNALERROR = "InternalError"
+//  INVALIDPARAMETER_BUNDLEIDNOTFOUND = "InvalidParameter.BundleIdNotFound"
 //  INVALIDPARAMETERVALUE_DUPLICATED = "InvalidParameterValue.Duplicated"
 //  INVALIDPARAMETERVALUE_INSTANCEIDMALFORMED = "InvalidParameterValue.InstanceIdMalformed"
 //  INVALIDPARAMETERVALUE_LIMITEXCEEDED = "InvalidParameterValue.LimitExceeded"
+//  INVALIDPARAMETERVALUE_NOTSUPPORTMODIFYINSTANCEBUNDLETYPE = "InvalidParameterValue.NotSupportModifyInstanceBundleType"
 //  MISSINGPARAMETER = "MissingParameter"
 //  OPERATIONDENIED_BUNDLENOTSUPPORTMODIFY = "OperationDenied.BundleNotSupportModify"
 //  OPERATIONDENIED_INSTANCECREATING = "OperationDenied.InstanceCreating"
@@ -5909,6 +6818,7 @@ func (c *Client) ModifyInstancesBundleWithContext(ctx context.Context, request *
     if request == nil {
         request = NewModifyInstancesBundleRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "lighthouse", APIVersion, "ModifyInstancesBundle")
     
     if c.GetCredential() == nil {
         return nil, errors.New("ModifyInstancesBundle require credential")
@@ -5917,78 +6827,6 @@ func (c *Client) ModifyInstancesBundleWithContext(ctx context.Context, request *
     request.SetContext(ctx)
     
     response = NewModifyInstancesBundleResponse()
-    err = c.Send(request, response)
-    return
-}
-
-func NewModifyInstancesLoginKeyPairAttributeRequest() (request *ModifyInstancesLoginKeyPairAttributeRequest) {
-    request = &ModifyInstancesLoginKeyPairAttributeRequest{
-        BaseRequest: &tchttp.BaseRequest{},
-    }
-    
-    request.Init().WithApiInfo("lighthouse", APIVersion, "ModifyInstancesLoginKeyPairAttribute")
-    
-    
-    return
-}
-
-func NewModifyInstancesLoginKeyPairAttributeResponse() (response *ModifyInstancesLoginKeyPairAttributeResponse) {
-    response = &ModifyInstancesLoginKeyPairAttributeResponse{
-        BaseResponse: &tchttp.BaseResponse{},
-    }
-    return
-}
-
-// ModifyInstancesLoginKeyPairAttribute
-// 本接口用于设置实例默认登录密钥对属性。
-//
-// 
-//
-// 可能返回的错误码:
-//  FAILEDOPERATION_DESCRIBEINSTANCESTATUS = "FailedOperation.DescribeInstanceStatus"
-//  INVALIDPARAMETERVALUE_DUPLICATED = "InvalidParameterValue.Duplicated"
-//  INVALIDPARAMETERVALUE_INSTANCEIDMALFORMED = "InvalidParameterValue.InstanceIdMalformed"
-//  INVALIDPARAMETERVALUE_INVALIDINSTANCELOGINKEYPAIRPERMITLOGIN = "InvalidParameterValue.InvalidInstanceLoginKeyPairPermitLogin"
-//  INVALIDPARAMETERVALUE_LIMITEXCEEDED = "InvalidParameterValue.LimitExceeded"
-//  RESOURCENOTFOUND_INSTANCEIDNOTFOUND = "ResourceNotFound.InstanceIdNotFound"
-//  RESOURCENOTFOUND_INSTANCENOTFOUND = "ResourceNotFound.InstanceNotFound"
-//  UNAUTHORIZEDOPERATION_NOPERMISSION = "UnauthorizedOperation.NoPermission"
-//  UNSUPPORTEDOPERATION_INVALIDINSTANCESTATE = "UnsupportedOperation.InvalidInstanceState"
-//  UNSUPPORTEDOPERATION_LATESTOPERATIONUNFINISHED = "UnsupportedOperation.LatestOperationUnfinished"
-//  UNSUPPORTEDOPERATION_OPERATIONOFFLINE = "UnsupportedOperation.OperationOffline"
-func (c *Client) ModifyInstancesLoginKeyPairAttribute(request *ModifyInstancesLoginKeyPairAttributeRequest) (response *ModifyInstancesLoginKeyPairAttributeResponse, err error) {
-    return c.ModifyInstancesLoginKeyPairAttributeWithContext(context.Background(), request)
-}
-
-// ModifyInstancesLoginKeyPairAttribute
-// 本接口用于设置实例默认登录密钥对属性。
-//
-// 
-//
-// 可能返回的错误码:
-//  FAILEDOPERATION_DESCRIBEINSTANCESTATUS = "FailedOperation.DescribeInstanceStatus"
-//  INVALIDPARAMETERVALUE_DUPLICATED = "InvalidParameterValue.Duplicated"
-//  INVALIDPARAMETERVALUE_INSTANCEIDMALFORMED = "InvalidParameterValue.InstanceIdMalformed"
-//  INVALIDPARAMETERVALUE_INVALIDINSTANCELOGINKEYPAIRPERMITLOGIN = "InvalidParameterValue.InvalidInstanceLoginKeyPairPermitLogin"
-//  INVALIDPARAMETERVALUE_LIMITEXCEEDED = "InvalidParameterValue.LimitExceeded"
-//  RESOURCENOTFOUND_INSTANCEIDNOTFOUND = "ResourceNotFound.InstanceIdNotFound"
-//  RESOURCENOTFOUND_INSTANCENOTFOUND = "ResourceNotFound.InstanceNotFound"
-//  UNAUTHORIZEDOPERATION_NOPERMISSION = "UnauthorizedOperation.NoPermission"
-//  UNSUPPORTEDOPERATION_INVALIDINSTANCESTATE = "UnsupportedOperation.InvalidInstanceState"
-//  UNSUPPORTEDOPERATION_LATESTOPERATIONUNFINISHED = "UnsupportedOperation.LatestOperationUnfinished"
-//  UNSUPPORTEDOPERATION_OPERATIONOFFLINE = "UnsupportedOperation.OperationOffline"
-func (c *Client) ModifyInstancesLoginKeyPairAttributeWithContext(ctx context.Context, request *ModifyInstancesLoginKeyPairAttributeRequest) (response *ModifyInstancesLoginKeyPairAttributeResponse, err error) {
-    if request == nil {
-        request = NewModifyInstancesLoginKeyPairAttributeRequest()
-    }
-    
-    if c.GetCredential() == nil {
-        return nil, errors.New("ModifyInstancesLoginKeyPairAttribute require credential")
-    }
-
-    request.SetContext(ctx)
-    
-    response = NewModifyInstancesLoginKeyPairAttributeResponse()
     err = c.Send(request, response)
     return
 }
@@ -6007,8 +6845,9 @@ func NewModifyInstancesRenewFlagRequest() (request *ModifyInstancesRenewFlagRequ
 func NewModifyInstancesRenewFlagResponse() (response *ModifyInstancesRenewFlagResponse) {
     response = &ModifyInstancesRenewFlagResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // ModifyInstancesRenewFlag
@@ -6022,6 +6861,7 @@ func NewModifyInstancesRenewFlagResponse() (response *ModifyInstancesRenewFlagRe
 //
 // 可能返回的错误码:
 //  FAILEDOPERATION_DESCRIBEINSTANCESTATUS = "FailedOperation.DescribeInstanceStatus"
+//  FAILEDOPERATION_MODIFYRESOURCESRENEWFLAGFAILED = "FailedOperation.ModifyResourcesRenewFlagFailed"
 //  FAILEDOPERATION_REQUESTERROR = "FailedOperation.RequestError"
 //  FAILEDOPERATION_TRADECALLBILLINGGATEWAYFAILED = "FailedOperation.TradeCallBillingGatewayFailed"
 //  INTERNALERROR_TRADECALLBILLINGGATEWAYFAILED = "InternalError.TradeCallBillingGatewayFailed"
@@ -6049,6 +6889,7 @@ func (c *Client) ModifyInstancesRenewFlag(request *ModifyInstancesRenewFlagReque
 //
 // 可能返回的错误码:
 //  FAILEDOPERATION_DESCRIBEINSTANCESTATUS = "FailedOperation.DescribeInstanceStatus"
+//  FAILEDOPERATION_MODIFYRESOURCESRENEWFLAGFAILED = "FailedOperation.ModifyResourcesRenewFlagFailed"
 //  FAILEDOPERATION_REQUESTERROR = "FailedOperation.RequestError"
 //  FAILEDOPERATION_TRADECALLBILLINGGATEWAYFAILED = "FailedOperation.TradeCallBillingGatewayFailed"
 //  INTERNALERROR_TRADECALLBILLINGGATEWAYFAILED = "InternalError.TradeCallBillingGatewayFailed"
@@ -6065,6 +6906,7 @@ func (c *Client) ModifyInstancesRenewFlagWithContext(ctx context.Context, reques
     if request == nil {
         request = NewModifyInstancesRenewFlagRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "lighthouse", APIVersion, "ModifyInstancesRenewFlag")
     
     if c.GetCredential() == nil {
         return nil, errors.New("ModifyInstancesRenewFlag require credential")
@@ -6073,6 +6915,80 @@ func (c *Client) ModifyInstancesRenewFlagWithContext(ctx context.Context, reques
     request.SetContext(ctx)
     
     response = NewModifyInstancesRenewFlagResponse()
+    err = c.Send(request, response)
+    return
+}
+
+func NewModifyMcpServerRequest() (request *ModifyMcpServerRequest) {
+    request = &ModifyMcpServerRequest{
+        BaseRequest: &tchttp.BaseRequest{},
+    }
+    
+    request.Init().WithApiInfo("lighthouse", APIVersion, "ModifyMcpServer")
+    
+    
+    return
+}
+
+func NewModifyMcpServerResponse() (response *ModifyMcpServerResponse) {
+    response = &ModifyMcpServerResponse{
+        BaseResponse: &tchttp.BaseResponse{},
+    } 
+    return
+
+}
+
+// ModifyMcpServer
+// 本接口（ModifyMcpServer）用于修改实例的MCP Server信息。
+//
+// - 本接口为异步接口，API返回时修改操作并未立即完成。MCP Server的修改结果可以通过调用 DescribeMcpServers 接口查询。
+//
+// 可能返回的错误码:
+//  FAILEDOPERATION_MCPSERVEROPERATIONFAILED = "FailedOperation.McpServerOperationFailed"
+//  INVALIDPARAMETER_CONFLICTPARAMETER = "InvalidParameter.ConflictParameter"
+//  INVALIDPARAMETERVALUE_MCPSERVERENVINVALID = "InvalidParameterValue.McpServerEnvInvalid"
+//  RESOURCENOTFOUND_INSTANCENOTFOUND = "ResourceNotFound.InstanceNotFound"
+//  RESOURCENOTFOUND_MCPSERVERNOTFOUND = "ResourceNotFound.McpServerNotFound"
+//  RESOURCENOTFOUND_ROLENOTFOUND = "ResourceNotFound.RoleNotFound"
+//  RESOURCEUNAVAILABLE_TATAGENTUNAVAILABLE = "ResourceUnavailable.TATAgentUnavailable"
+//  RESOURCEUNAVAILABLE_TATSERVICEERROR = "ResourceUnavailable.TATServiceError"
+//  UNAUTHORIZEDOPERATION_NOPERMISSION = "UnauthorizedOperation.NoPermission"
+//  UNSUPPORTEDOPERATION_INVALIDINSTANCESTATE = "UnsupportedOperation.InvalidInstanceState"
+//  UNSUPPORTEDOPERATION_LATESTOPERATIONUNFINISHED = "UnsupportedOperation.LatestOperationUnfinished"
+func (c *Client) ModifyMcpServer(request *ModifyMcpServerRequest) (response *ModifyMcpServerResponse, err error) {
+    return c.ModifyMcpServerWithContext(context.Background(), request)
+}
+
+// ModifyMcpServer
+// 本接口（ModifyMcpServer）用于修改实例的MCP Server信息。
+//
+// - 本接口为异步接口，API返回时修改操作并未立即完成。MCP Server的修改结果可以通过调用 DescribeMcpServers 接口查询。
+//
+// 可能返回的错误码:
+//  FAILEDOPERATION_MCPSERVEROPERATIONFAILED = "FailedOperation.McpServerOperationFailed"
+//  INVALIDPARAMETER_CONFLICTPARAMETER = "InvalidParameter.ConflictParameter"
+//  INVALIDPARAMETERVALUE_MCPSERVERENVINVALID = "InvalidParameterValue.McpServerEnvInvalid"
+//  RESOURCENOTFOUND_INSTANCENOTFOUND = "ResourceNotFound.InstanceNotFound"
+//  RESOURCENOTFOUND_MCPSERVERNOTFOUND = "ResourceNotFound.McpServerNotFound"
+//  RESOURCENOTFOUND_ROLENOTFOUND = "ResourceNotFound.RoleNotFound"
+//  RESOURCEUNAVAILABLE_TATAGENTUNAVAILABLE = "ResourceUnavailable.TATAgentUnavailable"
+//  RESOURCEUNAVAILABLE_TATSERVICEERROR = "ResourceUnavailable.TATServiceError"
+//  UNAUTHORIZEDOPERATION_NOPERMISSION = "UnauthorizedOperation.NoPermission"
+//  UNSUPPORTEDOPERATION_INVALIDINSTANCESTATE = "UnsupportedOperation.InvalidInstanceState"
+//  UNSUPPORTEDOPERATION_LATESTOPERATIONUNFINISHED = "UnsupportedOperation.LatestOperationUnfinished"
+func (c *Client) ModifyMcpServerWithContext(ctx context.Context, request *ModifyMcpServerRequest) (response *ModifyMcpServerResponse, err error) {
+    if request == nil {
+        request = NewModifyMcpServerRequest()
+    }
+    c.InitBaseRequest(&request.BaseRequest, "lighthouse", APIVersion, "ModifyMcpServer")
+    
+    if c.GetCredential() == nil {
+        return nil, errors.New("ModifyMcpServer require credential")
+    }
+
+    request.SetContext(ctx)
+    
+    response = NewModifyMcpServerResponse()
     err = c.Send(request, response)
     return
 }
@@ -6091,8 +7007,9 @@ func NewModifySnapshotAttributeRequest() (request *ModifySnapshotAttributeReques
 func NewModifySnapshotAttributeResponse() (response *ModifySnapshotAttributeResponse) {
     response = &ModifySnapshotAttributeResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // ModifySnapshotAttribute
@@ -6121,6 +7038,7 @@ func (c *Client) ModifySnapshotAttributeWithContext(ctx context.Context, request
     if request == nil {
         request = NewModifySnapshotAttributeRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "lighthouse", APIVersion, "ModifySnapshotAttribute")
     
     if c.GetCredential() == nil {
         return nil, errors.New("ModifySnapshotAttribute require credential")
@@ -6147,8 +7065,9 @@ func NewRebootInstancesRequest() (request *RebootInstancesRequest) {
 func NewRebootInstancesResponse() (response *RebootInstancesResponse) {
     response = &RebootInstancesResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // RebootInstances
@@ -6162,9 +7081,10 @@ func NewRebootInstancesResponse() (response *RebootInstancesResponse) {
 //
 // * 支持批量操作，每次请求批量实例的上限为 100。
 //
-// * 本接口为异步接口，请求发送成功后会返回一个 RequestId，此时操作并未立即完成。实例操作结果可以通过调用 DescribeInstances 接口查询，如果实例的最新操作状态（LatestOperationState）为“SUCCESS”，则代表操作成功。
+// * 本接口为异步接口，请求发送成功后会返回一个 RequestId，此时操作并未立即完成。实例操作结果可以通过调用 <a href="https://cloud.tencent.com/document/product/1207/47573" target="_blank">DescribeInstances</a> 接口查询，如果实例的最新操作状态（LatestOperationState）为“SUCCESS”，则代表操作成功。
 //
 // 可能返回的错误码:
+//  FAILEDOPERATION = "FailedOperation"
 //  FAILEDOPERATION_DESCRIBEINSTANCESTATUS = "FailedOperation.DescribeInstanceStatus"
 //  FAILEDOPERATION_INSTANCEOPERATIONFAILED = "FailedOperation.InstanceOperationFailed"
 //  INTERNALERROR_DESCRIBEINSTANCESTATUS = "InternalError.DescribeInstanceStatus"
@@ -6195,9 +7115,10 @@ func (c *Client) RebootInstances(request *RebootInstancesRequest) (response *Reb
 //
 // * 支持批量操作，每次请求批量实例的上限为 100。
 //
-// * 本接口为异步接口，请求发送成功后会返回一个 RequestId，此时操作并未立即完成。实例操作结果可以通过调用 DescribeInstances 接口查询，如果实例的最新操作状态（LatestOperationState）为“SUCCESS”，则代表操作成功。
+// * 本接口为异步接口，请求发送成功后会返回一个 RequestId，此时操作并未立即完成。实例操作结果可以通过调用 <a href="https://cloud.tencent.com/document/product/1207/47573" target="_blank">DescribeInstances</a> 接口查询，如果实例的最新操作状态（LatestOperationState）为“SUCCESS”，则代表操作成功。
 //
 // 可能返回的错误码:
+//  FAILEDOPERATION = "FailedOperation"
 //  FAILEDOPERATION_DESCRIBEINSTANCESTATUS = "FailedOperation.DescribeInstanceStatus"
 //  FAILEDOPERATION_INSTANCEOPERATIONFAILED = "FailedOperation.InstanceOperationFailed"
 //  INTERNALERROR_DESCRIBEINSTANCESTATUS = "InternalError.DescribeInstanceStatus"
@@ -6217,6 +7138,7 @@ func (c *Client) RebootInstancesWithContext(ctx context.Context, request *Reboot
     if request == nil {
         request = NewRebootInstancesRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "lighthouse", APIVersion, "RebootInstances")
     
     if c.GetCredential() == nil {
         return nil, errors.New("RebootInstances require credential")
@@ -6243,12 +7165,13 @@ func NewRemoveDockerContainersRequest() (request *RemoveDockerContainersRequest)
 func NewRemoveDockerContainersResponse() (response *RemoveDockerContainersResponse) {
     response = &RemoveDockerContainersResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // RemoveDockerContainers
-// 删除实例内的Docker容器，之后可以通过返回的ActivityId调用DescribeDockerActivities接口查询删除情况。
+// 删除实例内的Docker容器，之后可以通过返回的ActivityId调用[DescribeDockerActivities](https://cloud.tencent.com/document/product/1207/95476)接口查询删除情况。
 //
 // 可能返回的错误码:
 //  INTERNALERROR = "InternalError"
@@ -6270,7 +7193,7 @@ func (c *Client) RemoveDockerContainers(request *RemoveDockerContainersRequest) 
 }
 
 // RemoveDockerContainers
-// 删除实例内的Docker容器，之后可以通过返回的ActivityId调用DescribeDockerActivities接口查询删除情况。
+// 删除实例内的Docker容器，之后可以通过返回的ActivityId调用[DescribeDockerActivities](https://cloud.tencent.com/document/product/1207/95476)接口查询删除情况。
 //
 // 可能返回的错误码:
 //  INTERNALERROR = "InternalError"
@@ -6291,6 +7214,7 @@ func (c *Client) RemoveDockerContainersWithContext(ctx context.Context, request 
     if request == nil {
         request = NewRemoveDockerContainersRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "lighthouse", APIVersion, "RemoveDockerContainers")
     
     if c.GetCredential() == nil {
         return nil, errors.New("RemoveDockerContainers require credential")
@@ -6299,6 +7223,80 @@ func (c *Client) RemoveDockerContainersWithContext(ctx context.Context, request 
     request.SetContext(ctx)
     
     response = NewRemoveDockerContainersResponse()
+    err = c.Send(request, response)
+    return
+}
+
+func NewRemoveMcpServersRequest() (request *RemoveMcpServersRequest) {
+    request = &RemoveMcpServersRequest{
+        BaseRequest: &tchttp.BaseRequest{},
+    }
+    
+    request.Init().WithApiInfo("lighthouse", APIVersion, "RemoveMcpServers")
+    
+    
+    return
+}
+
+func NewRemoveMcpServersResponse() (response *RemoveMcpServersResponse) {
+    response = &RemoveMcpServersResponse{
+        BaseResponse: &tchttp.BaseResponse{},
+    } 
+    return
+
+}
+
+// RemoveMcpServers
+// 本接口（RemoveMcpServers）用于删除MCP Server。
+//
+// - 本接口为异步接口，API返回时操作并未立即完成。MCP Server的操作结果可以通过调用 DescribeMcpServers 接口查询。
+//
+// - 本接口在操作多个MCP Server时，不会因为某一个失败而停止。您需要通过调用 DescribeMcpServers 接口查询最终操作结果，如无法查询到，代表删除成功。
+//
+// 可能返回的错误码:
+//  RESOURCENOTFOUND_INSTANCENOTFOUND = "ResourceNotFound.InstanceNotFound"
+//  RESOURCENOTFOUND_MCPSERVERSPARTIALNOTFOUND = "ResourceNotFound.McpServersPartialNotFound"
+//  RESOURCENOTFOUND_ROLENOTFOUND = "ResourceNotFound.RoleNotFound"
+//  RESOURCEUNAVAILABLE_TATAGENTUNAVAILABLE = "ResourceUnavailable.TATAgentUnavailable"
+//  RESOURCEUNAVAILABLE_TATSERVICEERROR = "ResourceUnavailable.TATServiceError"
+//  UNAUTHORIZEDOPERATION_NOPERMISSION = "UnauthorizedOperation.NoPermission"
+//  UNSUPPORTEDOPERATION_INVALIDINSTANCESTATE = "UnsupportedOperation.InvalidInstanceState"
+//  UNSUPPORTEDOPERATION_LATESTOPERATIONUNFINISHED = "UnsupportedOperation.LatestOperationUnfinished"
+//  UNSUPPORTEDOPERATION_MCPSERVERLATESTOPERATIONUNFINISHED = "UnsupportedOperation.McpServerLatestOperationUnfinished"
+func (c *Client) RemoveMcpServers(request *RemoveMcpServersRequest) (response *RemoveMcpServersResponse, err error) {
+    return c.RemoveMcpServersWithContext(context.Background(), request)
+}
+
+// RemoveMcpServers
+// 本接口（RemoveMcpServers）用于删除MCP Server。
+//
+// - 本接口为异步接口，API返回时操作并未立即完成。MCP Server的操作结果可以通过调用 DescribeMcpServers 接口查询。
+//
+// - 本接口在操作多个MCP Server时，不会因为某一个失败而停止。您需要通过调用 DescribeMcpServers 接口查询最终操作结果，如无法查询到，代表删除成功。
+//
+// 可能返回的错误码:
+//  RESOURCENOTFOUND_INSTANCENOTFOUND = "ResourceNotFound.InstanceNotFound"
+//  RESOURCENOTFOUND_MCPSERVERSPARTIALNOTFOUND = "ResourceNotFound.McpServersPartialNotFound"
+//  RESOURCENOTFOUND_ROLENOTFOUND = "ResourceNotFound.RoleNotFound"
+//  RESOURCEUNAVAILABLE_TATAGENTUNAVAILABLE = "ResourceUnavailable.TATAgentUnavailable"
+//  RESOURCEUNAVAILABLE_TATSERVICEERROR = "ResourceUnavailable.TATServiceError"
+//  UNAUTHORIZEDOPERATION_NOPERMISSION = "UnauthorizedOperation.NoPermission"
+//  UNSUPPORTEDOPERATION_INVALIDINSTANCESTATE = "UnsupportedOperation.InvalidInstanceState"
+//  UNSUPPORTEDOPERATION_LATESTOPERATIONUNFINISHED = "UnsupportedOperation.LatestOperationUnfinished"
+//  UNSUPPORTEDOPERATION_MCPSERVERLATESTOPERATIONUNFINISHED = "UnsupportedOperation.McpServerLatestOperationUnfinished"
+func (c *Client) RemoveMcpServersWithContext(ctx context.Context, request *RemoveMcpServersRequest) (response *RemoveMcpServersResponse, err error) {
+    if request == nil {
+        request = NewRemoveMcpServersRequest()
+    }
+    c.InitBaseRequest(&request.BaseRequest, "lighthouse", APIVersion, "RemoveMcpServers")
+    
+    if c.GetCredential() == nil {
+        return nil, errors.New("RemoveMcpServers require credential")
+    }
+
+    request.SetContext(ctx)
+    
+    response = NewRemoveMcpServersResponse()
     err = c.Send(request, response)
     return
 }
@@ -6317,12 +7315,13 @@ func NewRenameDockerContainerRequest() (request *RenameDockerContainerRequest) {
 func NewRenameDockerContainerResponse() (response *RenameDockerContainerResponse) {
     response = &RenameDockerContainerResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // RenameDockerContainer
-// 重命名实例内的Docker容器，之后可以通过返回的ActivityId调用DescribeDockerActivities接口查询重命名情况。
+// 重命名实例内的Docker容器，之后可以通过返回的ActivityId调用[DescribeDockerActivities](https://cloud.tencent.com/document/product/1207/95476)接口查询重命名情况。
 //
 // 可能返回的错误码:
 //  INTERNALERROR = "InternalError"
@@ -6341,7 +7340,7 @@ func (c *Client) RenameDockerContainer(request *RenameDockerContainerRequest) (r
 }
 
 // RenameDockerContainer
-// 重命名实例内的Docker容器，之后可以通过返回的ActivityId调用DescribeDockerActivities接口查询重命名情况。
+// 重命名实例内的Docker容器，之后可以通过返回的ActivityId调用[DescribeDockerActivities](https://cloud.tencent.com/document/product/1207/95476)接口查询重命名情况。
 //
 // 可能返回的错误码:
 //  INTERNALERROR = "InternalError"
@@ -6359,6 +7358,7 @@ func (c *Client) RenameDockerContainerWithContext(ctx context.Context, request *
     if request == nil {
         request = NewRenameDockerContainerRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "lighthouse", APIVersion, "RenameDockerContainer")
     
     if c.GetCredential() == nil {
         return nil, errors.New("RenameDockerContainer require credential")
@@ -6385,8 +7385,9 @@ func NewRenewDisksRequest() (request *RenewDisksRequest) {
 func NewRenewDisksResponse() (response *RenewDisksResponse) {
     response = &RenewDisksResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // RenewDisks
@@ -6441,6 +7442,7 @@ func (c *Client) RenewDisksWithContext(ctx context.Context, request *RenewDisksR
     if request == nil {
         request = NewRenewDisksRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "lighthouse", APIVersion, "RenewDisks")
     
     if c.GetCredential() == nil {
         return nil, errors.New("RenewDisks require credential")
@@ -6467,8 +7469,9 @@ func NewRenewInstancesRequest() (request *RenewInstancesRequest) {
 func NewRenewInstancesResponse() (response *RenewInstancesResponse) {
     response = &RenewInstancesResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // RenewInstances
@@ -6478,10 +7481,11 @@ func NewRenewInstancesResponse() (response *RenewInstancesResponse) {
 //
 // * 支持批量操作。每次请求批量实例的上限为 100。
 //
-// * 本接口为异步接口，请求发送成功后会返回一个 RequestId，此时操作并未立即完成。实例操作结果可以通过调用 DescribeInstances 接口查询，如果实例的最新操作状态（LatestOperationState）为“SUCCESS”，则代表操作成功。
+// * 本接口为异步接口，请求发送成功后会返回一个 RequestId，此时操作并未立即完成。实例操作结果可以通过调用 <a href="https://cloud.tencent.com/document/product/1207/47573" target="_blank">DescribeInstances</a> 接口查询，如果实例的最新操作状态（LatestOperationState）为“SUCCESS”，则代表操作成功。
 //
 // 可能返回的错误码:
 //  AUTHFAILURE = "AuthFailure"
+//  FAILEDOPERATION = "FailedOperation"
 //  FAILEDOPERATION_INSUFFICIENTBALANCE = "FailedOperation.InsufficientBalance"
 //  FAILEDOPERATION_RENEWRESOURCESFAILED = "FailedOperation.RenewResourcesFailed"
 //  INVALIDPARAMETER_INVALIDFILTER = "InvalidParameter.InvalidFilter"
@@ -6512,10 +7516,11 @@ func (c *Client) RenewInstances(request *RenewInstancesRequest) (response *Renew
 //
 // * 支持批量操作。每次请求批量实例的上限为 100。
 //
-// * 本接口为异步接口，请求发送成功后会返回一个 RequestId，此时操作并未立即完成。实例操作结果可以通过调用 DescribeInstances 接口查询，如果实例的最新操作状态（LatestOperationState）为“SUCCESS”，则代表操作成功。
+// * 本接口为异步接口，请求发送成功后会返回一个 RequestId，此时操作并未立即完成。实例操作结果可以通过调用 <a href="https://cloud.tencent.com/document/product/1207/47573" target="_blank">DescribeInstances</a> 接口查询，如果实例的最新操作状态（LatestOperationState）为“SUCCESS”，则代表操作成功。
 //
 // 可能返回的错误码:
 //  AUTHFAILURE = "AuthFailure"
+//  FAILEDOPERATION = "FailedOperation"
 //  FAILEDOPERATION_INSUFFICIENTBALANCE = "FailedOperation.InsufficientBalance"
 //  FAILEDOPERATION_RENEWRESOURCESFAILED = "FailedOperation.RenewResourcesFailed"
 //  INVALIDPARAMETER_INVALIDFILTER = "InvalidParameter.InvalidFilter"
@@ -6539,6 +7544,7 @@ func (c *Client) RenewInstancesWithContext(ctx context.Context, request *RenewIn
     if request == nil {
         request = NewRenewInstancesRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "lighthouse", APIVersion, "RenewInstances")
     
     if c.GetCredential() == nil {
         return nil, errors.New("RenewInstances require credential")
@@ -6565,8 +7571,9 @@ func NewReplaceFirewallTemplateRuleRequest() (request *ReplaceFirewallTemplateRu
 func NewReplaceFirewallTemplateRuleResponse() (response *ReplaceFirewallTemplateRuleResponse) {
     response = &ReplaceFirewallTemplateRuleResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // ReplaceFirewallTemplateRule
@@ -6574,7 +7581,11 @@ func NewReplaceFirewallTemplateRuleResponse() (response *ReplaceFirewallTemplate
 //
 // 可能返回的错误码:
 //  FAILEDOPERATION = "FailedOperation"
+//  INVALIDPARAMETER_PARAMETERCONFLICT = "InvalidParameter.ParameterConflict"
 //  INVALIDPARAMETERVALUE_DUPLICATEDFIREWALLTEMPLATERULE = "InvalidParameterValue.DuplicatedFirewallTemplateRule"
+//  INVALIDPARAMETERVALUE_LENGTH = "InvalidParameterValue.Length"
+//  RESOURCENOTFOUND_FIREWALLTEMPLATENOTFOUND = "ResourceNotFound.FirewallTemplateNotFound"
+//  UNAUTHORIZEDOPERATION_NOPERMISSION = "UnauthorizedOperation.NoPermission"
 func (c *Client) ReplaceFirewallTemplateRule(request *ReplaceFirewallTemplateRuleRequest) (response *ReplaceFirewallTemplateRuleResponse, err error) {
     return c.ReplaceFirewallTemplateRuleWithContext(context.Background(), request)
 }
@@ -6584,11 +7595,16 @@ func (c *Client) ReplaceFirewallTemplateRule(request *ReplaceFirewallTemplateRul
 //
 // 可能返回的错误码:
 //  FAILEDOPERATION = "FailedOperation"
+//  INVALIDPARAMETER_PARAMETERCONFLICT = "InvalidParameter.ParameterConflict"
 //  INVALIDPARAMETERVALUE_DUPLICATEDFIREWALLTEMPLATERULE = "InvalidParameterValue.DuplicatedFirewallTemplateRule"
+//  INVALIDPARAMETERVALUE_LENGTH = "InvalidParameterValue.Length"
+//  RESOURCENOTFOUND_FIREWALLTEMPLATENOTFOUND = "ResourceNotFound.FirewallTemplateNotFound"
+//  UNAUTHORIZEDOPERATION_NOPERMISSION = "UnauthorizedOperation.NoPermission"
 func (c *Client) ReplaceFirewallTemplateRuleWithContext(ctx context.Context, request *ReplaceFirewallTemplateRuleRequest) (response *ReplaceFirewallTemplateRuleResponse, err error) {
     if request == nil {
         request = NewReplaceFirewallTemplateRuleRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "lighthouse", APIVersion, "ReplaceFirewallTemplateRule")
     
     if c.GetCredential() == nil {
         return nil, errors.New("ReplaceFirewallTemplateRule require credential")
@@ -6615,12 +7631,13 @@ func NewRerunDockerContainerRequest() (request *RerunDockerContainerRequest) {
 func NewRerunDockerContainerResponse() (response *RerunDockerContainerResponse) {
     response = &RerunDockerContainerResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // RerunDockerContainer
-// 重新创建并运行实例内的Docker容器，之后可以通过返回的ActivityId调用DescribeDockerActivities接口查询重建情况。
+// 重新创建并运行实例内的Docker容器，之后可以通过返回的ActivityId调用[DescribeDockerActivities](https://cloud.tencent.com/document/product/1207/95476)接口查询重建情况。
 //
 // 可能返回的错误码:
 //  INTERNALERROR = "InternalError"
@@ -6638,7 +7655,7 @@ func (c *Client) RerunDockerContainer(request *RerunDockerContainerRequest) (res
 }
 
 // RerunDockerContainer
-// 重新创建并运行实例内的Docker容器，之后可以通过返回的ActivityId调用DescribeDockerActivities接口查询重建情况。
+// 重新创建并运行实例内的Docker容器，之后可以通过返回的ActivityId调用[DescribeDockerActivities](https://cloud.tencent.com/document/product/1207/95476)接口查询重建情况。
 //
 // 可能返回的错误码:
 //  INTERNALERROR = "InternalError"
@@ -6655,6 +7672,7 @@ func (c *Client) RerunDockerContainerWithContext(ctx context.Context, request *R
     if request == nil {
         request = NewRerunDockerContainerRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "lighthouse", APIVersion, "RerunDockerContainer")
     
     if c.GetCredential() == nil {
         return nil, errors.New("RerunDockerContainer require credential")
@@ -6681,8 +7699,9 @@ func NewResetAttachCcnRequest() (request *ResetAttachCcnRequest) {
 func NewResetAttachCcnResponse() (response *ResetAttachCcnResponse) {
     response = &ResetAttachCcnResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // ResetAttachCcn
@@ -6715,6 +7734,7 @@ func (c *Client) ResetAttachCcnWithContext(ctx context.Context, request *ResetAt
     if request == nil {
         request = NewResetAttachCcnRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "lighthouse", APIVersion, "ResetAttachCcn")
     
     if c.GetCredential() == nil {
         return nil, errors.New("ResetAttachCcn require credential")
@@ -6741,8 +7761,9 @@ func NewResetFirewallTemplateRulesRequest() (request *ResetFirewallTemplateRules
 func NewResetFirewallTemplateRulesResponse() (response *ResetFirewallTemplateRulesResponse) {
     response = &ResetFirewallTemplateRulesResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // ResetFirewallTemplateRules
@@ -6750,6 +7771,13 @@ func NewResetFirewallTemplateRulesResponse() (response *ResetFirewallTemplateRul
 //
 // 可能返回的错误码:
 //  FAILEDOPERATION = "FailedOperation"
+//  INVALIDPARAMETER_PARAMETERCONFLICT = "InvalidParameter.ParameterConflict"
+//  INVALIDPARAMETERVALUE_DUPLICATEDFIREWALLTEMPLATERULE = "InvalidParameterValue.DuplicatedFirewallTemplateRule"
+//  INVALIDPARAMETERVALUE_LENGTH = "InvalidParameterValue.Length"
+//  INVALIDPARAMETERVALUE_TOOLARGE = "InvalidParameterValue.TooLarge"
+//  INVALIDPARAMETERVALUE_TOOSMALL = "InvalidParameterValue.TooSmall"
+//  RESOURCENOTFOUND_FIREWALLTEMPLATENOTFOUND = "ResourceNotFound.FirewallTemplateNotFound"
+//  UNAUTHORIZEDOPERATION_NOPERMISSION = "UnauthorizedOperation.NoPermission"
 func (c *Client) ResetFirewallTemplateRules(request *ResetFirewallTemplateRulesRequest) (response *ResetFirewallTemplateRulesResponse, err error) {
     return c.ResetFirewallTemplateRulesWithContext(context.Background(), request)
 }
@@ -6759,10 +7787,18 @@ func (c *Client) ResetFirewallTemplateRules(request *ResetFirewallTemplateRulesR
 //
 // 可能返回的错误码:
 //  FAILEDOPERATION = "FailedOperation"
+//  INVALIDPARAMETER_PARAMETERCONFLICT = "InvalidParameter.ParameterConflict"
+//  INVALIDPARAMETERVALUE_DUPLICATEDFIREWALLTEMPLATERULE = "InvalidParameterValue.DuplicatedFirewallTemplateRule"
+//  INVALIDPARAMETERVALUE_LENGTH = "InvalidParameterValue.Length"
+//  INVALIDPARAMETERVALUE_TOOLARGE = "InvalidParameterValue.TooLarge"
+//  INVALIDPARAMETERVALUE_TOOSMALL = "InvalidParameterValue.TooSmall"
+//  RESOURCENOTFOUND_FIREWALLTEMPLATENOTFOUND = "ResourceNotFound.FirewallTemplateNotFound"
+//  UNAUTHORIZEDOPERATION_NOPERMISSION = "UnauthorizedOperation.NoPermission"
 func (c *Client) ResetFirewallTemplateRulesWithContext(ctx context.Context, request *ResetFirewallTemplateRulesRequest) (response *ResetFirewallTemplateRulesResponse, err error) {
     if request == nil {
         request = NewResetFirewallTemplateRulesRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "lighthouse", APIVersion, "ResetFirewallTemplateRules")
     
     if c.GetCredential() == nil {
         return nil, errors.New("ResetFirewallTemplateRules require credential")
@@ -6789,8 +7825,9 @@ func NewResetInstanceRequest() (request *ResetInstanceRequest) {
 func NewResetInstanceResponse() (response *ResetInstanceResponse) {
     response = &ResetInstanceResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // ResetInstance
@@ -6798,19 +7835,25 @@ func NewResetInstanceResponse() (response *ResetInstanceResponse) {
 //
 // 
 //
-// * 如果指定了 BlueprintId 参数，则使用指定的镜像重装；否则按照当前实例使用的镜像进行重装。
+// * 仅`RUNNING`，`STOPPED`状态的机器，且当前机器无变更中的操作，才支持重装系统。
 //
-// * 系统盘将会被格式化，并重置；请确保系统盘中无重要文件。
+// * 如果指定了 BlueprintId 参数，则使用指定的镜像重装，否则按照当前实例使用的镜像进行重装。
 //
-// * 目前不支持实例使用该接口实现 LINUX_UNIX 和 WINDOWS 操作系统切换。
+// * 非中国大陆地域的实例不支持使用该接口实现LIUNX_UNIX和WINDOWS操作系统切换。
 //
-// * 本接口为异步接口，请求发送成功后会返回一个 RequestId，此时操作并未立即完成。实例操作结果可以通过调用 DescribeInstances 接口查询，如果实例的最新操作状态（LatestOperationState）为“SUCCESS”，则代表操作成功。
+// * 系统盘将会被格式化，并重置，请确保系统盘中无重要文件。
+//
+// * 本接口为异步接口，请求发送成功后会返回一个 RequestId，此时操作并未立即完成。实例操作结果可以通过调用 <a href="https://cloud.tencent.com/document/product/1207/47573" target="_blank">DescribeInstances</a> 接口查询，如果实例的最新操作状态（LatestOperationState）为“SUCCESS”，则代表操作成功。
+//
+// * 对于游戏专区实例，仅支持重装当前镜像。
 //
 // 可能返回的错误码:
+//  FAILEDOPERATION = "FailedOperation"
 //  FAILEDOPERATION_DESCRIBEINSTANCESTATUS = "FailedOperation.DescribeInstanceStatus"
 //  FAILEDOPERATION_INSTANCEOPERATIONFAILED = "FailedOperation.InstanceOperationFailed"
 //  INTERNALERROR_DESCRIBEINSTANCESTATUS = "InternalError.DescribeInstanceStatus"
 //  INTERNALERROR_INVALIDCOMMANDNOTFOUND = "InternalError.InvalidCommandNotFound"
+//  INVALIDPARAMETER_GAMEPORTALINSTANCEONLYSUPPORTCURRENTBLUEPRINT = "InvalidParameter.GamePortalInstanceOnlySupportCurrentBlueprint"
 //  INVALIDPARAMETERVALUE_BLUEPRINTCONFIGNOTMATCH = "InvalidParameterValue.BlueprintConfigNotMatch"
 //  INVALIDPARAMETERVALUE_BLUEPRINTID = "InvalidParameterValue.BlueprintId"
 //  INVALIDPARAMETERVALUE_BLUEPRINTIDMALFORMED = "InvalidParameterValue.BlueprintIdMalformed"
@@ -6831,8 +7874,11 @@ func NewResetInstanceResponse() (response *ResetInstanceResponse) {
 //  RESOURCEUNAVAILABLE_BLUEPRINTUNAVAILABLE = "ResourceUnavailable.BlueprintUnavailable"
 //  UNAUTHORIZEDOPERATION_MFANOTFOUND = "UnauthorizedOperation.MFANotFound"
 //  UNAUTHORIZEDOPERATION_NOPERMISSION = "UnauthorizedOperation.NoPermission"
+//  UNSUPPORTEDOPERATION_BLUEPRINTTYPENOTSUPPORTOPERATION = "UnsupportedOperation.BlueprintTypeNotSupportOperation"
+//  UNSUPPORTEDOPERATION_INSTANCEDISPLAYAREANOTSUPPORTOPERATION = "UnsupportedOperation.InstanceDisplayAreaNotSupportOperation"
 //  UNSUPPORTEDOPERATION_INVALIDINSTANCESTATE = "UnsupportedOperation.InvalidInstanceState"
 //  UNSUPPORTEDOPERATION_LATESTOPERATIONUNFINISHED = "UnsupportedOperation.LatestOperationUnfinished"
+//  UNSUPPORTEDOPERATION_OPERATIONNOTSUPPORTAUTOGENERATEPASSWORD = "UnsupportedOperation.OperationNotSupportAutoGeneratePassword"
 //  UNSUPPORTEDOPERATION_SYSTEMBUSY = "UnsupportedOperation.SystemBusy"
 func (c *Client) ResetInstance(request *ResetInstanceRequest) (response *ResetInstanceResponse, err error) {
     return c.ResetInstanceWithContext(context.Background(), request)
@@ -6843,19 +7889,25 @@ func (c *Client) ResetInstance(request *ResetInstanceRequest) (response *ResetIn
 //
 // 
 //
-// * 如果指定了 BlueprintId 参数，则使用指定的镜像重装；否则按照当前实例使用的镜像进行重装。
+// * 仅`RUNNING`，`STOPPED`状态的机器，且当前机器无变更中的操作，才支持重装系统。
 //
-// * 系统盘将会被格式化，并重置；请确保系统盘中无重要文件。
+// * 如果指定了 BlueprintId 参数，则使用指定的镜像重装，否则按照当前实例使用的镜像进行重装。
 //
-// * 目前不支持实例使用该接口实现 LINUX_UNIX 和 WINDOWS 操作系统切换。
+// * 非中国大陆地域的实例不支持使用该接口实现LIUNX_UNIX和WINDOWS操作系统切换。
 //
-// * 本接口为异步接口，请求发送成功后会返回一个 RequestId，此时操作并未立即完成。实例操作结果可以通过调用 DescribeInstances 接口查询，如果实例的最新操作状态（LatestOperationState）为“SUCCESS”，则代表操作成功。
+// * 系统盘将会被格式化，并重置，请确保系统盘中无重要文件。
+//
+// * 本接口为异步接口，请求发送成功后会返回一个 RequestId，此时操作并未立即完成。实例操作结果可以通过调用 <a href="https://cloud.tencent.com/document/product/1207/47573" target="_blank">DescribeInstances</a> 接口查询，如果实例的最新操作状态（LatestOperationState）为“SUCCESS”，则代表操作成功。
+//
+// * 对于游戏专区实例，仅支持重装当前镜像。
 //
 // 可能返回的错误码:
+//  FAILEDOPERATION = "FailedOperation"
 //  FAILEDOPERATION_DESCRIBEINSTANCESTATUS = "FailedOperation.DescribeInstanceStatus"
 //  FAILEDOPERATION_INSTANCEOPERATIONFAILED = "FailedOperation.InstanceOperationFailed"
 //  INTERNALERROR_DESCRIBEINSTANCESTATUS = "InternalError.DescribeInstanceStatus"
 //  INTERNALERROR_INVALIDCOMMANDNOTFOUND = "InternalError.InvalidCommandNotFound"
+//  INVALIDPARAMETER_GAMEPORTALINSTANCEONLYSUPPORTCURRENTBLUEPRINT = "InvalidParameter.GamePortalInstanceOnlySupportCurrentBlueprint"
 //  INVALIDPARAMETERVALUE_BLUEPRINTCONFIGNOTMATCH = "InvalidParameterValue.BlueprintConfigNotMatch"
 //  INVALIDPARAMETERVALUE_BLUEPRINTID = "InvalidParameterValue.BlueprintId"
 //  INVALIDPARAMETERVALUE_BLUEPRINTIDMALFORMED = "InvalidParameterValue.BlueprintIdMalformed"
@@ -6876,13 +7928,17 @@ func (c *Client) ResetInstance(request *ResetInstanceRequest) (response *ResetIn
 //  RESOURCEUNAVAILABLE_BLUEPRINTUNAVAILABLE = "ResourceUnavailable.BlueprintUnavailable"
 //  UNAUTHORIZEDOPERATION_MFANOTFOUND = "UnauthorizedOperation.MFANotFound"
 //  UNAUTHORIZEDOPERATION_NOPERMISSION = "UnauthorizedOperation.NoPermission"
+//  UNSUPPORTEDOPERATION_BLUEPRINTTYPENOTSUPPORTOPERATION = "UnsupportedOperation.BlueprintTypeNotSupportOperation"
+//  UNSUPPORTEDOPERATION_INSTANCEDISPLAYAREANOTSUPPORTOPERATION = "UnsupportedOperation.InstanceDisplayAreaNotSupportOperation"
 //  UNSUPPORTEDOPERATION_INVALIDINSTANCESTATE = "UnsupportedOperation.InvalidInstanceState"
 //  UNSUPPORTEDOPERATION_LATESTOPERATIONUNFINISHED = "UnsupportedOperation.LatestOperationUnfinished"
+//  UNSUPPORTEDOPERATION_OPERATIONNOTSUPPORTAUTOGENERATEPASSWORD = "UnsupportedOperation.OperationNotSupportAutoGeneratePassword"
 //  UNSUPPORTEDOPERATION_SYSTEMBUSY = "UnsupportedOperation.SystemBusy"
 func (c *Client) ResetInstanceWithContext(ctx context.Context, request *ResetInstanceRequest) (response *ResetInstanceResponse, err error) {
     if request == nil {
         request = NewResetInstanceRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "lighthouse", APIVersion, "ResetInstance")
     
     if c.GetCredential() == nil {
         return nil, errors.New("ResetInstance require credential")
@@ -6909,20 +7965,21 @@ func NewResetInstancesPasswordRequest() (request *ResetInstancesPasswordRequest)
 func NewResetInstancesPasswordResponse() (response *ResetInstancesPasswordResponse) {
     response = &ResetInstancesPasswordResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // ResetInstancesPassword
 // 本接口（ResetInstancesPassword）用于将实例操作系统的密码重置为用户指定的密码。
 //
-// * 只修改管理员帐号的密码。实例的操作系统不同，管理员帐号也会不一样（Windows 为 Administrator，Ubuntu 为 ubuntu ，其它系统为 root）。
+// * 只修改管理员账号的密码。实例的操作系统不同，管理员账号也会不一样（Windows 为 Administrator，Ubuntu 为 ubuntu ，其它系统为 root）。
 //
 // * 支持批量操作。将多个实例操作系统的密码重置为相同的密码。每次请求批量实例的上限为 100。
 //
 // * 建议对运行中的实例先手动关机，然后再进行密码重置。如实例处于运行中状态，本接口操作过程中会对实例进行关机操作，尝试正常关机失败后进行强制关机。
 //
-// * 本接口为异步接口，请求发送成功后会返回一个 RequestId，此时操作并未立即完成。实例操作结果可以通过调用 DescribeInstances 接口查询，如果实例的最新操作状态（LatestOperationState）为“SUCCESS”，则代表操作成功。
+// * 本接口为异步接口，请求发送成功后会返回一个 RequestId，此时操作并未立即完成。实例操作结果可以通过调用 <a href="https://cloud.tencent.com/document/product/1207/47573" target="_blank">DescribeInstances</a> 接口查询，如果实例的最新操作状态（LatestOperationState）为“SUCCESS”，则代表操作成功。
 //
 // 注意：强制关机的效果等同于关闭物理计算机的电源开关。强制关机可能会导致数据丢失或文件系统损坏。
 //
@@ -6954,13 +8011,13 @@ func (c *Client) ResetInstancesPassword(request *ResetInstancesPasswordRequest) 
 // ResetInstancesPassword
 // 本接口（ResetInstancesPassword）用于将实例操作系统的密码重置为用户指定的密码。
 //
-// * 只修改管理员帐号的密码。实例的操作系统不同，管理员帐号也会不一样（Windows 为 Administrator，Ubuntu 为 ubuntu ，其它系统为 root）。
+// * 只修改管理员账号的密码。实例的操作系统不同，管理员账号也会不一样（Windows 为 Administrator，Ubuntu 为 ubuntu ，其它系统为 root）。
 //
 // * 支持批量操作。将多个实例操作系统的密码重置为相同的密码。每次请求批量实例的上限为 100。
 //
 // * 建议对运行中的实例先手动关机，然后再进行密码重置。如实例处于运行中状态，本接口操作过程中会对实例进行关机操作，尝试正常关机失败后进行强制关机。
 //
-// * 本接口为异步接口，请求发送成功后会返回一个 RequestId，此时操作并未立即完成。实例操作结果可以通过调用 DescribeInstances 接口查询，如果实例的最新操作状态（LatestOperationState）为“SUCCESS”，则代表操作成功。
+// * 本接口为异步接口，请求发送成功后会返回一个 RequestId，此时操作并未立即完成。实例操作结果可以通过调用 <a href="https://cloud.tencent.com/document/product/1207/47573" target="_blank">DescribeInstances</a> 接口查询，如果实例的最新操作状态（LatestOperationState）为“SUCCESS”，则代表操作成功。
 //
 // 注意：强制关机的效果等同于关闭物理计算机的电源开关。强制关机可能会导致数据丢失或文件系统损坏。
 //
@@ -6989,6 +8046,7 @@ func (c *Client) ResetInstancesPasswordWithContext(ctx context.Context, request 
     if request == nil {
         request = NewResetInstancesPasswordRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "lighthouse", APIVersion, "ResetInstancesPassword")
     
     if c.GetCredential() == nil {
         return nil, errors.New("ResetInstancesPassword require credential")
@@ -6997,6 +8055,82 @@ func (c *Client) ResetInstancesPasswordWithContext(ctx context.Context, request 
     request.SetContext(ctx)
     
     response = NewResetInstancesPasswordResponse()
+    err = c.Send(request, response)
+    return
+}
+
+func NewResizeDisksRequest() (request *ResizeDisksRequest) {
+    request = &ResizeDisksRequest{
+        BaseRequest: &tchttp.BaseRequest{},
+    }
+    
+    request.Init().WithApiInfo("lighthouse", APIVersion, "ResizeDisks")
+    
+    
+    return
+}
+
+func NewResizeDisksResponse() (response *ResizeDisksResponse) {
+    response = &ResizeDisksResponse{
+        BaseResponse: &tchttp.BaseResponse{},
+    } 
+    return
+
+}
+
+// ResizeDisks
+// 本接口(ResizeDisks)用于扩容云硬盘。该操作目前仅支持云硬盘类型为数据盘且状态处于ATTACHED（已挂载）或 UNATTACHED（待挂载）的云硬盘。
+//
+// 可能返回的错误码:
+//  FAILEDOPERATION_INSUFFICIENTBALANCE = "FailedOperation.InsufficientBalance"
+//  FAILEDOPERATION_RESIZEDISKSFAILED = "FailedOperation.ResizeDisksFailed"
+//  INVALIDPARAMETERVALUE_DISKSIZESMALLERTHANCURRENTDISKSIZE = "InvalidParameterValue.DiskSizeSmallerThanCurrentDiskSize"
+//  INVALIDPARAMETERVALUE_DUPLICATED = "InvalidParameterValue.Duplicated"
+//  INVALIDPARAMETERVALUE_INVALIDDISKIDMALFORMED = "InvalidParameterValue.InvalidDiskIdMalformed"
+//  INVALIDPARAMETERVALUE_INVALIDDISKSIZE = "InvalidParameterValue.InvalidDiskSize"
+//  INVALIDPARAMETERVALUE_INVALIDDISKTYPE = "InvalidParameterValue.InvalidDiskType"
+//  OPERATIONDENIED_DISKUSAGENOTSUPPORTOPERATION = "OperationDenied.DiskUsageNotSupportOperation"
+//  RESOURCENOTFOUND_DISKIDNOTFOUND = "ResourceNotFound.DiskIdNotFound"
+//  RESOURCENOTFOUND_DISKNOTEXISTS = "ResourceNotFound.DiskNotExists"
+//  RESOURCENOTFOUND_DISKNOTFOUND = "ResourceNotFound.DiskNotFound"
+//  UNAUTHORIZEDOPERATION_NOPERMISSION = "UnauthorizedOperation.NoPermission"
+//  UNSUPPORTEDOPERATION_DISKLATESTOPERATIONUNFINISHED = "UnsupportedOperation.DiskLatestOperationUnfinished"
+//  UNSUPPORTEDOPERATION_SAMEWITHOLDCONFIG = "UnsupportedOperation.SameWithOldConfig"
+func (c *Client) ResizeDisks(request *ResizeDisksRequest) (response *ResizeDisksResponse, err error) {
+    return c.ResizeDisksWithContext(context.Background(), request)
+}
+
+// ResizeDisks
+// 本接口(ResizeDisks)用于扩容云硬盘。该操作目前仅支持云硬盘类型为数据盘且状态处于ATTACHED（已挂载）或 UNATTACHED（待挂载）的云硬盘。
+//
+// 可能返回的错误码:
+//  FAILEDOPERATION_INSUFFICIENTBALANCE = "FailedOperation.InsufficientBalance"
+//  FAILEDOPERATION_RESIZEDISKSFAILED = "FailedOperation.ResizeDisksFailed"
+//  INVALIDPARAMETERVALUE_DISKSIZESMALLERTHANCURRENTDISKSIZE = "InvalidParameterValue.DiskSizeSmallerThanCurrentDiskSize"
+//  INVALIDPARAMETERVALUE_DUPLICATED = "InvalidParameterValue.Duplicated"
+//  INVALIDPARAMETERVALUE_INVALIDDISKIDMALFORMED = "InvalidParameterValue.InvalidDiskIdMalformed"
+//  INVALIDPARAMETERVALUE_INVALIDDISKSIZE = "InvalidParameterValue.InvalidDiskSize"
+//  INVALIDPARAMETERVALUE_INVALIDDISKTYPE = "InvalidParameterValue.InvalidDiskType"
+//  OPERATIONDENIED_DISKUSAGENOTSUPPORTOPERATION = "OperationDenied.DiskUsageNotSupportOperation"
+//  RESOURCENOTFOUND_DISKIDNOTFOUND = "ResourceNotFound.DiskIdNotFound"
+//  RESOURCENOTFOUND_DISKNOTEXISTS = "ResourceNotFound.DiskNotExists"
+//  RESOURCENOTFOUND_DISKNOTFOUND = "ResourceNotFound.DiskNotFound"
+//  UNAUTHORIZEDOPERATION_NOPERMISSION = "UnauthorizedOperation.NoPermission"
+//  UNSUPPORTEDOPERATION_DISKLATESTOPERATIONUNFINISHED = "UnsupportedOperation.DiskLatestOperationUnfinished"
+//  UNSUPPORTEDOPERATION_SAMEWITHOLDCONFIG = "UnsupportedOperation.SameWithOldConfig"
+func (c *Client) ResizeDisksWithContext(ctx context.Context, request *ResizeDisksRequest) (response *ResizeDisksResponse, err error) {
+    if request == nil {
+        request = NewResizeDisksRequest()
+    }
+    c.InitBaseRequest(&request.BaseRequest, "lighthouse", APIVersion, "ResizeDisks")
+    
+    if c.GetCredential() == nil {
+        return nil, errors.New("ResizeDisks require credential")
+    }
+
+    request.SetContext(ctx)
+    
+    response = NewResizeDisksResponse()
     err = c.Send(request, response)
     return
 }
@@ -7015,12 +8149,13 @@ func NewRestartDockerContainersRequest() (request *RestartDockerContainersReques
 func NewRestartDockerContainersResponse() (response *RestartDockerContainersResponse) {
     response = &RestartDockerContainersResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // RestartDockerContainers
-// 重启实例内的Docker容器，之后可以通过返回的ActivityId调用DescribeDockerActivities接口查询重启情况。
+// 重启实例内的Docker容器，之后可以通过返回的ActivityId调用[DescribeDockerActivities](https://cloud.tencent.com/document/product/1207/95476)接口查询重启情况。
 //
 // 可能返回的错误码:
 //  INTERNALERROR = "InternalError"
@@ -7041,7 +8176,7 @@ func (c *Client) RestartDockerContainers(request *RestartDockerContainersRequest
 }
 
 // RestartDockerContainers
-// 重启实例内的Docker容器，之后可以通过返回的ActivityId调用DescribeDockerActivities接口查询重启情况。
+// 重启实例内的Docker容器，之后可以通过返回的ActivityId调用[DescribeDockerActivities](https://cloud.tencent.com/document/product/1207/95476)接口查询重启情况。
 //
 // 可能返回的错误码:
 //  INTERNALERROR = "InternalError"
@@ -7061,6 +8196,7 @@ func (c *Client) RestartDockerContainersWithContext(ctx context.Context, request
     if request == nil {
         request = NewRestartDockerContainersRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "lighthouse", APIVersion, "RestartDockerContainers")
     
     if c.GetCredential() == nil {
         return nil, errors.New("RestartDockerContainers require credential")
@@ -7069,6 +8205,82 @@ func (c *Client) RestartDockerContainersWithContext(ctx context.Context, request
     request.SetContext(ctx)
     
     response = NewRestartDockerContainersResponse()
+    err = c.Send(request, response)
+    return
+}
+
+func NewRestartMcpServersRequest() (request *RestartMcpServersRequest) {
+    request = &RestartMcpServersRequest{
+        BaseRequest: &tchttp.BaseRequest{},
+    }
+    
+    request.Init().WithApiInfo("lighthouse", APIVersion, "RestartMcpServers")
+    
+    
+    return
+}
+
+func NewRestartMcpServersResponse() (response *RestartMcpServersResponse) {
+    response = &RestartMcpServersResponse{
+        BaseResponse: &tchttp.BaseResponse{},
+    } 
+    return
+
+}
+
+// RestartMcpServers
+// 本接口（RestartMcpServers）用于重启实例中的MCP Server。
+//
+// - 本接口为异步接口，API返回时操作并未立即完成。MCP Server的操作结果可以通过调用 DescribeMcpServers 接口查询。
+//
+// - 本接口在操作多个MCP Server时，不会因为某一个失败而停止。您需要通过调用 DescribeMcpServers 接口查询最终操作结果。
+//
+// 可能返回的错误码:
+//  INVALIDPARAMETERVALUE_TOOLARGE = "InvalidParameterValue.TooLarge"
+//  RESOURCENOTFOUND_INSTANCENOTFOUND = "ResourceNotFound.InstanceNotFound"
+//  RESOURCENOTFOUND_MCPSERVERSPARTIALNOTFOUND = "ResourceNotFound.McpServersPartialNotFound"
+//  RESOURCENOTFOUND_ROLENOTFOUND = "ResourceNotFound.RoleNotFound"
+//  RESOURCEUNAVAILABLE_TATAGENTUNAVAILABLE = "ResourceUnavailable.TATAgentUnavailable"
+//  RESOURCEUNAVAILABLE_TATSERVICEERROR = "ResourceUnavailable.TATServiceError"
+//  UNAUTHORIZEDOPERATION_NOPERMISSION = "UnauthorizedOperation.NoPermission"
+//  UNSUPPORTEDOPERATION_INVALIDINSTANCESTATE = "UnsupportedOperation.InvalidInstanceState"
+//  UNSUPPORTEDOPERATION_LATESTOPERATIONUNFINISHED = "UnsupportedOperation.LatestOperationUnfinished"
+//  UNSUPPORTEDOPERATION_MCPSERVERLATESTOPERATIONUNFINISHED = "UnsupportedOperation.McpServerLatestOperationUnfinished"
+func (c *Client) RestartMcpServers(request *RestartMcpServersRequest) (response *RestartMcpServersResponse, err error) {
+    return c.RestartMcpServersWithContext(context.Background(), request)
+}
+
+// RestartMcpServers
+// 本接口（RestartMcpServers）用于重启实例中的MCP Server。
+//
+// - 本接口为异步接口，API返回时操作并未立即完成。MCP Server的操作结果可以通过调用 DescribeMcpServers 接口查询。
+//
+// - 本接口在操作多个MCP Server时，不会因为某一个失败而停止。您需要通过调用 DescribeMcpServers 接口查询最终操作结果。
+//
+// 可能返回的错误码:
+//  INVALIDPARAMETERVALUE_TOOLARGE = "InvalidParameterValue.TooLarge"
+//  RESOURCENOTFOUND_INSTANCENOTFOUND = "ResourceNotFound.InstanceNotFound"
+//  RESOURCENOTFOUND_MCPSERVERSPARTIALNOTFOUND = "ResourceNotFound.McpServersPartialNotFound"
+//  RESOURCENOTFOUND_ROLENOTFOUND = "ResourceNotFound.RoleNotFound"
+//  RESOURCEUNAVAILABLE_TATAGENTUNAVAILABLE = "ResourceUnavailable.TATAgentUnavailable"
+//  RESOURCEUNAVAILABLE_TATSERVICEERROR = "ResourceUnavailable.TATServiceError"
+//  UNAUTHORIZEDOPERATION_NOPERMISSION = "UnauthorizedOperation.NoPermission"
+//  UNSUPPORTEDOPERATION_INVALIDINSTANCESTATE = "UnsupportedOperation.InvalidInstanceState"
+//  UNSUPPORTEDOPERATION_LATESTOPERATIONUNFINISHED = "UnsupportedOperation.LatestOperationUnfinished"
+//  UNSUPPORTEDOPERATION_MCPSERVERLATESTOPERATIONUNFINISHED = "UnsupportedOperation.McpServerLatestOperationUnfinished"
+func (c *Client) RestartMcpServersWithContext(ctx context.Context, request *RestartMcpServersRequest) (response *RestartMcpServersResponse, err error) {
+    if request == nil {
+        request = NewRestartMcpServersRequest()
+    }
+    c.InitBaseRequest(&request.BaseRequest, "lighthouse", APIVersion, "RestartMcpServers")
+    
+    if c.GetCredential() == nil {
+        return nil, errors.New("RestartMcpServers require credential")
+    }
+
+    request.SetContext(ctx)
+    
+    response = NewRestartMcpServersResponse()
     err = c.Send(request, response)
     return
 }
@@ -7087,12 +8299,13 @@ func NewRunDockerContainersRequest() (request *RunDockerContainersRequest) {
 func NewRunDockerContainersResponse() (response *RunDockerContainersResponse) {
     response = &RunDockerContainersResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // RunDockerContainers
-// 创建并运行多个Docker容器，之后可以通过返回的ActivityIds调用DescribeDockerActivities接口查询创建情况。
+// 创建并运行多个Docker容器，之后可以通过返回的ActivityIds调用<a href="https://cloud.tencent.com/document/product/1207/95476" target="_blank">DescribeDockerActivities</a>接口查询创建情况。
 //
 // 可能返回的错误码:
 //  INTERNALERROR = "InternalError"
@@ -7112,7 +8325,7 @@ func (c *Client) RunDockerContainers(request *RunDockerContainersRequest) (respo
 }
 
 // RunDockerContainers
-// 创建并运行多个Docker容器，之后可以通过返回的ActivityIds调用DescribeDockerActivities接口查询创建情况。
+// 创建并运行多个Docker容器，之后可以通过返回的ActivityIds调用<a href="https://cloud.tencent.com/document/product/1207/95476" target="_blank">DescribeDockerActivities</a>接口查询创建情况。
 //
 // 可能返回的错误码:
 //  INTERNALERROR = "InternalError"
@@ -7131,6 +8344,7 @@ func (c *Client) RunDockerContainersWithContext(ctx context.Context, request *Ru
     if request == nil {
         request = NewRunDockerContainersRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "lighthouse", APIVersion, "RunDockerContainers")
     
     if c.GetCredential() == nil {
         return nil, errors.New("RunDockerContainers require credential")
@@ -7139,6 +8353,102 @@ func (c *Client) RunDockerContainersWithContext(ctx context.Context, request *Ru
     request.SetContext(ctx)
     
     response = NewRunDockerContainersResponse()
+    err = c.Send(request, response)
+    return
+}
+
+func NewShareBlueprintAcrossAccountsRequest() (request *ShareBlueprintAcrossAccountsRequest) {
+    request = &ShareBlueprintAcrossAccountsRequest{
+        BaseRequest: &tchttp.BaseRequest{},
+    }
+    
+    request.Init().WithApiInfo("lighthouse", APIVersion, "ShareBlueprintAcrossAccounts")
+    
+    
+    return
+}
+
+func NewShareBlueprintAcrossAccountsResponse() (response *ShareBlueprintAcrossAccountsResponse) {
+    response = &ShareBlueprintAcrossAccountsResponse{
+        BaseResponse: &tchttp.BaseResponse{},
+    } 
+    return
+
+}
+
+// ShareBlueprintAcrossAccounts
+// 本接口（ShareBlueprintAcrossAccounts）用于跨账号共享镜像。
+//
+// 仅支持共享自定义镜像， 且用于共享的镜像状态必须为NORMAL。
+//
+// 共享的账号必须为主账号。
+//
+// 可能返回的错误码:
+//  FAILEDOPERATION = "FailedOperation"
+//  FAILEDOPERATION_SHAREBLUEPRINTACROSSACCOUNTFAILED = "FailedOperation.ShareBlueprintAcrossAccountFailed"
+//  INVALIDPARAMETERVALUE_ACCOUNTIDINVALIDACCOUNTAREA = "InvalidParameterValue.AccountIdInvalidAccountArea"
+//  INVALIDPARAMETERVALUE_ACCOUNTIDSAMEWITHUIN = "InvalidParameterValue.AccountIdSameWithUin"
+//  INVALIDPARAMETERVALUE_ACCOUNTIDSNOTEXIST = "InvalidParameterValue.AccountIdsNotExist"
+//  INVALIDPARAMETERVALUE_ACCOUNTIDSNOTOWNERACCOUNT = "InvalidParameterValue.AccountIdsNotOwnerAccount"
+//  INVALIDPARAMETERVALUE_BLUEPRINTIDMALFORMED = "InvalidParameterValue.BlueprintIdMalformed"
+//  INVALIDPARAMETERVALUE_INVALIDBLUEPRINTID = "InvalidParameterValue.InvalidBlueprintId"
+//  INVALIDPARAMETERVALUE_INVALIDBLUEPRINTSTATE = "InvalidParameterValue.InvalidBlueprintState"
+//  LIMITEXCEEDED_SHAREBLUEPRINTACROSSACCOUNTQUOTALIMITEXCEEDED = "LimitExceeded.ShareBlueprintAcrossAccountQuotaLimitExceeded"
+//  OPERATIONDENIED_BLUEPRINTOPERATIONINPROGRESS = "OperationDenied.BlueprintOperationInProgress"
+//  RESOURCEINUSE_BLUEPRINTMODIFYINGSHAREPERMISSION = "ResourceInUse.BlueprintModifyingSharePermission"
+//  RESOURCENOTFOUND_BLUEPRINTIDNOTFOUND = "ResourceNotFound.BlueprintIdNotFound"
+//  RESOURCENOTFOUND_PRIVATEBLUEPRINTNOTFOUND = "ResourceNotFound.PrivateBlueprintNotFound"
+//  UNAUTHORIZEDOPERATION_NOPERMISSION = "UnauthorizedOperation.NoPermission"
+//  UNAUTHORIZEDOPERATION_TOKENINVALID = "UnauthorizedOperation.TokenInvalid"
+//  UNSUPPORTEDOPERATION_BLUEPRINTALREADYSHARED = "UnsupportedOperation.BlueprintAlreadyShared"
+//  UNSUPPORTEDOPERATION_BLUEPRINTCURSTATEINVALID = "UnsupportedOperation.BlueprintCurStateInvalid"
+//  UNSUPPORTEDOPERATION_BLUEPRINTLATESTOPERATIONUNFINISHED = "UnsupportedOperation.BlueprintLatestOperationUnfinished"
+//  UNSUPPORTEDOPERATION_BLUEPRINTOCCUPIED = "UnsupportedOperation.BlueprintOccupied"
+func (c *Client) ShareBlueprintAcrossAccounts(request *ShareBlueprintAcrossAccountsRequest) (response *ShareBlueprintAcrossAccountsResponse, err error) {
+    return c.ShareBlueprintAcrossAccountsWithContext(context.Background(), request)
+}
+
+// ShareBlueprintAcrossAccounts
+// 本接口（ShareBlueprintAcrossAccounts）用于跨账号共享镜像。
+//
+// 仅支持共享自定义镜像， 且用于共享的镜像状态必须为NORMAL。
+//
+// 共享的账号必须为主账号。
+//
+// 可能返回的错误码:
+//  FAILEDOPERATION = "FailedOperation"
+//  FAILEDOPERATION_SHAREBLUEPRINTACROSSACCOUNTFAILED = "FailedOperation.ShareBlueprintAcrossAccountFailed"
+//  INVALIDPARAMETERVALUE_ACCOUNTIDINVALIDACCOUNTAREA = "InvalidParameterValue.AccountIdInvalidAccountArea"
+//  INVALIDPARAMETERVALUE_ACCOUNTIDSAMEWITHUIN = "InvalidParameterValue.AccountIdSameWithUin"
+//  INVALIDPARAMETERVALUE_ACCOUNTIDSNOTEXIST = "InvalidParameterValue.AccountIdsNotExist"
+//  INVALIDPARAMETERVALUE_ACCOUNTIDSNOTOWNERACCOUNT = "InvalidParameterValue.AccountIdsNotOwnerAccount"
+//  INVALIDPARAMETERVALUE_BLUEPRINTIDMALFORMED = "InvalidParameterValue.BlueprintIdMalformed"
+//  INVALIDPARAMETERVALUE_INVALIDBLUEPRINTID = "InvalidParameterValue.InvalidBlueprintId"
+//  INVALIDPARAMETERVALUE_INVALIDBLUEPRINTSTATE = "InvalidParameterValue.InvalidBlueprintState"
+//  LIMITEXCEEDED_SHAREBLUEPRINTACROSSACCOUNTQUOTALIMITEXCEEDED = "LimitExceeded.ShareBlueprintAcrossAccountQuotaLimitExceeded"
+//  OPERATIONDENIED_BLUEPRINTOPERATIONINPROGRESS = "OperationDenied.BlueprintOperationInProgress"
+//  RESOURCEINUSE_BLUEPRINTMODIFYINGSHAREPERMISSION = "ResourceInUse.BlueprintModifyingSharePermission"
+//  RESOURCENOTFOUND_BLUEPRINTIDNOTFOUND = "ResourceNotFound.BlueprintIdNotFound"
+//  RESOURCENOTFOUND_PRIVATEBLUEPRINTNOTFOUND = "ResourceNotFound.PrivateBlueprintNotFound"
+//  UNAUTHORIZEDOPERATION_NOPERMISSION = "UnauthorizedOperation.NoPermission"
+//  UNAUTHORIZEDOPERATION_TOKENINVALID = "UnauthorizedOperation.TokenInvalid"
+//  UNSUPPORTEDOPERATION_BLUEPRINTALREADYSHARED = "UnsupportedOperation.BlueprintAlreadyShared"
+//  UNSUPPORTEDOPERATION_BLUEPRINTCURSTATEINVALID = "UnsupportedOperation.BlueprintCurStateInvalid"
+//  UNSUPPORTEDOPERATION_BLUEPRINTLATESTOPERATIONUNFINISHED = "UnsupportedOperation.BlueprintLatestOperationUnfinished"
+//  UNSUPPORTEDOPERATION_BLUEPRINTOCCUPIED = "UnsupportedOperation.BlueprintOccupied"
+func (c *Client) ShareBlueprintAcrossAccountsWithContext(ctx context.Context, request *ShareBlueprintAcrossAccountsRequest) (response *ShareBlueprintAcrossAccountsResponse, err error) {
+    if request == nil {
+        request = NewShareBlueprintAcrossAccountsRequest()
+    }
+    c.InitBaseRequest(&request.BaseRequest, "lighthouse", APIVersion, "ShareBlueprintAcrossAccounts")
+    
+    if c.GetCredential() == nil {
+        return nil, errors.New("ShareBlueprintAcrossAccounts require credential")
+    }
+
+    request.SetContext(ctx)
+    
+    response = NewShareBlueprintAcrossAccountsResponse()
     err = c.Send(request, response)
     return
 }
@@ -7157,12 +8467,13 @@ func NewStartDockerContainersRequest() (request *StartDockerContainersRequest) {
 func NewStartDockerContainersResponse() (response *StartDockerContainersResponse) {
     response = &StartDockerContainersResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // StartDockerContainers
-// 启动实例内的Docker容器，之后可以通过返回的ActivityId调用DescribeDockerActivities接口查询启动情况。
+// 启动实例内的Docker容器，之后可以通过返回的ActivityId调用[DescribeDockerActivities](https://cloud.tencent.com/document/product/1207/95476)接口查询启动情况。
 //
 // 可能返回的错误码:
 //  INTERNALERROR = "InternalError"
@@ -7183,7 +8494,7 @@ func (c *Client) StartDockerContainers(request *StartDockerContainersRequest) (r
 }
 
 // StartDockerContainers
-// 启动实例内的Docker容器，之后可以通过返回的ActivityId调用DescribeDockerActivities接口查询启动情况。
+// 启动实例内的Docker容器，之后可以通过返回的ActivityId调用[DescribeDockerActivities](https://cloud.tencent.com/document/product/1207/95476)接口查询启动情况。
 //
 // 可能返回的错误码:
 //  INTERNALERROR = "InternalError"
@@ -7203,6 +8514,7 @@ func (c *Client) StartDockerContainersWithContext(ctx context.Context, request *
     if request == nil {
         request = NewStartDockerContainersRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "lighthouse", APIVersion, "StartDockerContainers")
     
     if c.GetCredential() == nil {
         return nil, errors.New("StartDockerContainers require credential")
@@ -7229,8 +8541,9 @@ func NewStartInstancesRequest() (request *StartInstancesRequest) {
 func NewStartInstancesResponse() (response *StartInstancesResponse) {
     response = &StartInstancesResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // StartInstances
@@ -7244,7 +8557,7 @@ func NewStartInstancesResponse() (response *StartInstancesResponse) {
 //
 // * 支持批量操作。每次请求批量实例的上限为 100。
 //
-// * 本接口为异步接口，请求发送成功后会返回一个 RequestId，此时操作并未立即完成。实例操作结果可以通过调用 DescribeInstances 接口查询，如果实例的最新操作状态（LatestOperationState）为“SUCCESS”，则代表操作成功。
+// * 本接口为异步接口，请求发送成功后会返回一个 RequestId，此时操作并未立即完成。实例操作结果可以通过调用 <a href="https://cloud.tencent.com/document/product/1207/47573" target="_blank">DescribeInstances</a> 接口查询，如果实例的最新操作状态（LatestOperationState）为“SUCCESS”，则代表操作成功。
 //
 // 可能返回的错误码:
 //  FAILEDOPERATION_DESCRIBEINSTANCESTATUS = "FailedOperation.DescribeInstanceStatus"
@@ -7276,7 +8589,7 @@ func (c *Client) StartInstances(request *StartInstancesRequest) (response *Start
 //
 // * 支持批量操作。每次请求批量实例的上限为 100。
 //
-// * 本接口为异步接口，请求发送成功后会返回一个 RequestId，此时操作并未立即完成。实例操作结果可以通过调用 DescribeInstances 接口查询，如果实例的最新操作状态（LatestOperationState）为“SUCCESS”，则代表操作成功。
+// * 本接口为异步接口，请求发送成功后会返回一个 RequestId，此时操作并未立即完成。实例操作结果可以通过调用 <a href="https://cloud.tencent.com/document/product/1207/47573" target="_blank">DescribeInstances</a> 接口查询，如果实例的最新操作状态（LatestOperationState）为“SUCCESS”，则代表操作成功。
 //
 // 可能返回的错误码:
 //  FAILEDOPERATION_DESCRIBEINSTANCESTATUS = "FailedOperation.DescribeInstanceStatus"
@@ -7297,6 +8610,7 @@ func (c *Client) StartInstancesWithContext(ctx context.Context, request *StartIn
     if request == nil {
         request = NewStartInstancesRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "lighthouse", APIVersion, "StartInstances")
     
     if c.GetCredential() == nil {
         return nil, errors.New("StartInstances require credential")
@@ -7305,6 +8619,82 @@ func (c *Client) StartInstancesWithContext(ctx context.Context, request *StartIn
     request.SetContext(ctx)
     
     response = NewStartInstancesResponse()
+    err = c.Send(request, response)
+    return
+}
+
+func NewStartMcpServersRequest() (request *StartMcpServersRequest) {
+    request = &StartMcpServersRequest{
+        BaseRequest: &tchttp.BaseRequest{},
+    }
+    
+    request.Init().WithApiInfo("lighthouse", APIVersion, "StartMcpServers")
+    
+    
+    return
+}
+
+func NewStartMcpServersResponse() (response *StartMcpServersResponse) {
+    response = &StartMcpServersResponse{
+        BaseResponse: &tchttp.BaseResponse{},
+    } 
+    return
+
+}
+
+// StartMcpServers
+// 本接口（StartMcpServers）用于开启实例中的MCP Server。
+//
+// - 本接口为异步接口，API返回时操作并未立即完成。MCP Server的操作结果可以通过调用 DescribeMcpServers 接口查询。
+//
+// - 本接口在操作多个MCP Server时，不会因为某一个失败而停止。您需要通过调用 DescribeMcpServers 接口查询最终操作结果。
+//
+// 可能返回的错误码:
+//  INVALIDPARAMETERVALUE_TOOLARGE = "InvalidParameterValue.TooLarge"
+//  RESOURCENOTFOUND_INSTANCENOTFOUND = "ResourceNotFound.InstanceNotFound"
+//  RESOURCENOTFOUND_MCPSERVERSPARTIALNOTFOUND = "ResourceNotFound.McpServersPartialNotFound"
+//  RESOURCENOTFOUND_ROLENOTFOUND = "ResourceNotFound.RoleNotFound"
+//  RESOURCEUNAVAILABLE_TATAGENTUNAVAILABLE = "ResourceUnavailable.TATAgentUnavailable"
+//  RESOURCEUNAVAILABLE_TATSERVICEERROR = "ResourceUnavailable.TATServiceError"
+//  UNAUTHORIZEDOPERATION_NOPERMISSION = "UnauthorizedOperation.NoPermission"
+//  UNSUPPORTEDOPERATION_INVALIDINSTANCESTATE = "UnsupportedOperation.InvalidInstanceState"
+//  UNSUPPORTEDOPERATION_LATESTOPERATIONUNFINISHED = "UnsupportedOperation.LatestOperationUnfinished"
+//  UNSUPPORTEDOPERATION_MCPSERVERLATESTOPERATIONUNFINISHED = "UnsupportedOperation.McpServerLatestOperationUnfinished"
+func (c *Client) StartMcpServers(request *StartMcpServersRequest) (response *StartMcpServersResponse, err error) {
+    return c.StartMcpServersWithContext(context.Background(), request)
+}
+
+// StartMcpServers
+// 本接口（StartMcpServers）用于开启实例中的MCP Server。
+//
+// - 本接口为异步接口，API返回时操作并未立即完成。MCP Server的操作结果可以通过调用 DescribeMcpServers 接口查询。
+//
+// - 本接口在操作多个MCP Server时，不会因为某一个失败而停止。您需要通过调用 DescribeMcpServers 接口查询最终操作结果。
+//
+// 可能返回的错误码:
+//  INVALIDPARAMETERVALUE_TOOLARGE = "InvalidParameterValue.TooLarge"
+//  RESOURCENOTFOUND_INSTANCENOTFOUND = "ResourceNotFound.InstanceNotFound"
+//  RESOURCENOTFOUND_MCPSERVERSPARTIALNOTFOUND = "ResourceNotFound.McpServersPartialNotFound"
+//  RESOURCENOTFOUND_ROLENOTFOUND = "ResourceNotFound.RoleNotFound"
+//  RESOURCEUNAVAILABLE_TATAGENTUNAVAILABLE = "ResourceUnavailable.TATAgentUnavailable"
+//  RESOURCEUNAVAILABLE_TATSERVICEERROR = "ResourceUnavailable.TATServiceError"
+//  UNAUTHORIZEDOPERATION_NOPERMISSION = "UnauthorizedOperation.NoPermission"
+//  UNSUPPORTEDOPERATION_INVALIDINSTANCESTATE = "UnsupportedOperation.InvalidInstanceState"
+//  UNSUPPORTEDOPERATION_LATESTOPERATIONUNFINISHED = "UnsupportedOperation.LatestOperationUnfinished"
+//  UNSUPPORTEDOPERATION_MCPSERVERLATESTOPERATIONUNFINISHED = "UnsupportedOperation.McpServerLatestOperationUnfinished"
+func (c *Client) StartMcpServersWithContext(ctx context.Context, request *StartMcpServersRequest) (response *StartMcpServersResponse, err error) {
+    if request == nil {
+        request = NewStartMcpServersRequest()
+    }
+    c.InitBaseRequest(&request.BaseRequest, "lighthouse", APIVersion, "StartMcpServers")
+    
+    if c.GetCredential() == nil {
+        return nil, errors.New("StartMcpServers require credential")
+    }
+
+    request.SetContext(ctx)
+    
+    response = NewStartMcpServersResponse()
     err = c.Send(request, response)
     return
 }
@@ -7323,12 +8713,13 @@ func NewStopDockerContainersRequest() (request *StopDockerContainersRequest) {
 func NewStopDockerContainersResponse() (response *StopDockerContainersResponse) {
     response = &StopDockerContainersResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // StopDockerContainers
-// 停止实例内的Docker容器，之后可以通过返回的ActivityId调用DescribeDockerActivities接口查询停止情况。
+// 停止实例内的Docker容器，之后可以通过返回的ActivityId调用[DescribeDockerActivities](https://cloud.tencent.com/document/product/1207/95476)接口查询停止情况。
 //
 // 可能返回的错误码:
 //  INTERNALERROR = "InternalError"
@@ -7349,7 +8740,7 @@ func (c *Client) StopDockerContainers(request *StopDockerContainersRequest) (res
 }
 
 // StopDockerContainers
-// 停止实例内的Docker容器，之后可以通过返回的ActivityId调用DescribeDockerActivities接口查询停止情况。
+// 停止实例内的Docker容器，之后可以通过返回的ActivityId调用[DescribeDockerActivities](https://cloud.tencent.com/document/product/1207/95476)接口查询停止情况。
 //
 // 可能返回的错误码:
 //  INTERNALERROR = "InternalError"
@@ -7369,6 +8760,7 @@ func (c *Client) StopDockerContainersWithContext(ctx context.Context, request *S
     if request == nil {
         request = NewStopDockerContainersRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "lighthouse", APIVersion, "StopDockerContainers")
     
     if c.GetCredential() == nil {
         return nil, errors.New("StopDockerContainers require credential")
@@ -7395,8 +8787,9 @@ func NewStopInstancesRequest() (request *StopInstancesRequest) {
 func NewStopInstancesResponse() (response *StopInstancesResponse) {
     response = &StopInstancesResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // StopInstances
@@ -7408,9 +8801,10 @@ func NewStopInstancesResponse() (response *StopInstancesResponse) {
 //
 // * 支持批量操作。每次请求批量实例的上限为 100。
 //
-// * 本接口为异步接口，请求发送成功后会返回一个 RequestId，此时操作并未立即完成。实例操作结果可以通过调用 DescribeInstances 接口查询，如果实例的最新操作状态（LatestOperationState）为“SUCCESS”，则代表操作成功。
+// * 本接口为异步接口，请求发送成功后会返回一个 RequestId，此时操作并未立即完成。实例操作结果可以通过调用 <a href="https://cloud.tencent.com/document/product/1207/47573" target="_blank">DescribeInstances</a> 接口查询，如果实例的最新操作状态（LatestOperationState）为“SUCCESS”，则代表操作成功。
 //
 // 可能返回的错误码:
+//  FAILEDOPERATION = "FailedOperation"
 //  FAILEDOPERATION_DESCRIBEINSTANCESTATUS = "FailedOperation.DescribeInstanceStatus"
 //  FAILEDOPERATION_INSTANCEOPERATIONFAILED = "FailedOperation.InstanceOperationFailed"
 //  INTERNALERROR_DESCRIBEINSTANCESTATUS = "InternalError.DescribeInstanceStatus"
@@ -7438,9 +8832,10 @@ func (c *Client) StopInstances(request *StopInstancesRequest) (response *StopIns
 //
 // * 支持批量操作。每次请求批量实例的上限为 100。
 //
-// * 本接口为异步接口，请求发送成功后会返回一个 RequestId，此时操作并未立即完成。实例操作结果可以通过调用 DescribeInstances 接口查询，如果实例的最新操作状态（LatestOperationState）为“SUCCESS”，则代表操作成功。
+// * 本接口为异步接口，请求发送成功后会返回一个 RequestId，此时操作并未立即完成。实例操作结果可以通过调用 <a href="https://cloud.tencent.com/document/product/1207/47573" target="_blank">DescribeInstances</a> 接口查询，如果实例的最新操作状态（LatestOperationState）为“SUCCESS”，则代表操作成功。
 //
 // 可能返回的错误码:
+//  FAILEDOPERATION = "FailedOperation"
 //  FAILEDOPERATION_DESCRIBEINSTANCESTATUS = "FailedOperation.DescribeInstanceStatus"
 //  FAILEDOPERATION_INSTANCEOPERATIONFAILED = "FailedOperation.InstanceOperationFailed"
 //  INTERNALERROR_DESCRIBEINSTANCESTATUS = "InternalError.DescribeInstanceStatus"
@@ -7459,6 +8854,7 @@ func (c *Client) StopInstancesWithContext(ctx context.Context, request *StopInst
     if request == nil {
         request = NewStopInstancesRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "lighthouse", APIVersion, "StopInstances")
     
     if c.GetCredential() == nil {
         return nil, errors.New("StopInstances require credential")
@@ -7467,6 +8863,196 @@ func (c *Client) StopInstancesWithContext(ctx context.Context, request *StopInst
     request.SetContext(ctx)
     
     response = NewStopInstancesResponse()
+    err = c.Send(request, response)
+    return
+}
+
+func NewStopMcpServersRequest() (request *StopMcpServersRequest) {
+    request = &StopMcpServersRequest{
+        BaseRequest: &tchttp.BaseRequest{},
+    }
+    
+    request.Init().WithApiInfo("lighthouse", APIVersion, "StopMcpServers")
+    
+    
+    return
+}
+
+func NewStopMcpServersResponse() (response *StopMcpServersResponse) {
+    response = &StopMcpServersResponse{
+        BaseResponse: &tchttp.BaseResponse{},
+    } 
+    return
+
+}
+
+// StopMcpServers
+// 本接口（StopMcpServers）用于关闭实例中的MCP Server。
+//
+// - 本接口为异步接口，API返回时操作并未立即完成。MCP Server的操作结果可以通过调用 DescribeMcpServers 接口查询。
+//
+// - 本接口在操作多个MCP Server时，不会因为某一个失败而停止。您需要通过调用 DescribeMcpServers 接口查询最终操作结果。
+//
+// 可能返回的错误码:
+//  INVALIDPARAMETERVALUE_TOOLARGE = "InvalidParameterValue.TooLarge"
+//  RESOURCENOTFOUND_INSTANCENOTFOUND = "ResourceNotFound.InstanceNotFound"
+//  RESOURCENOTFOUND_MCPSERVERSPARTIALNOTFOUND = "ResourceNotFound.McpServersPartialNotFound"
+//  RESOURCENOTFOUND_ROLENOTFOUND = "ResourceNotFound.RoleNotFound"
+//  RESOURCEUNAVAILABLE_TATAGENTUNAVAILABLE = "ResourceUnavailable.TATAgentUnavailable"
+//  RESOURCEUNAVAILABLE_TATSERVICEERROR = "ResourceUnavailable.TATServiceError"
+//  UNAUTHORIZEDOPERATION_NOPERMISSION = "UnauthorizedOperation.NoPermission"
+//  UNSUPPORTEDOPERATION_INVALIDINSTANCESTATE = "UnsupportedOperation.InvalidInstanceState"
+//  UNSUPPORTEDOPERATION_LATESTOPERATIONUNFINISHED = "UnsupportedOperation.LatestOperationUnfinished"
+//  UNSUPPORTEDOPERATION_MCPSERVERLATESTOPERATIONUNFINISHED = "UnsupportedOperation.McpServerLatestOperationUnfinished"
+func (c *Client) StopMcpServers(request *StopMcpServersRequest) (response *StopMcpServersResponse, err error) {
+    return c.StopMcpServersWithContext(context.Background(), request)
+}
+
+// StopMcpServers
+// 本接口（StopMcpServers）用于关闭实例中的MCP Server。
+//
+// - 本接口为异步接口，API返回时操作并未立即完成。MCP Server的操作结果可以通过调用 DescribeMcpServers 接口查询。
+//
+// - 本接口在操作多个MCP Server时，不会因为某一个失败而停止。您需要通过调用 DescribeMcpServers 接口查询最终操作结果。
+//
+// 可能返回的错误码:
+//  INVALIDPARAMETERVALUE_TOOLARGE = "InvalidParameterValue.TooLarge"
+//  RESOURCENOTFOUND_INSTANCENOTFOUND = "ResourceNotFound.InstanceNotFound"
+//  RESOURCENOTFOUND_MCPSERVERSPARTIALNOTFOUND = "ResourceNotFound.McpServersPartialNotFound"
+//  RESOURCENOTFOUND_ROLENOTFOUND = "ResourceNotFound.RoleNotFound"
+//  RESOURCEUNAVAILABLE_TATAGENTUNAVAILABLE = "ResourceUnavailable.TATAgentUnavailable"
+//  RESOURCEUNAVAILABLE_TATSERVICEERROR = "ResourceUnavailable.TATServiceError"
+//  UNAUTHORIZEDOPERATION_NOPERMISSION = "UnauthorizedOperation.NoPermission"
+//  UNSUPPORTEDOPERATION_INVALIDINSTANCESTATE = "UnsupportedOperation.InvalidInstanceState"
+//  UNSUPPORTEDOPERATION_LATESTOPERATIONUNFINISHED = "UnsupportedOperation.LatestOperationUnfinished"
+//  UNSUPPORTEDOPERATION_MCPSERVERLATESTOPERATIONUNFINISHED = "UnsupportedOperation.McpServerLatestOperationUnfinished"
+func (c *Client) StopMcpServersWithContext(ctx context.Context, request *StopMcpServersRequest) (response *StopMcpServersResponse, err error) {
+    if request == nil {
+        request = NewStopMcpServersRequest()
+    }
+    c.InitBaseRequest(&request.BaseRequest, "lighthouse", APIVersion, "StopMcpServers")
+    
+    if c.GetCredential() == nil {
+        return nil, errors.New("StopMcpServers require credential")
+    }
+
+    request.SetContext(ctx)
+    
+    response = NewStopMcpServersResponse()
+    err = c.Send(request, response)
+    return
+}
+
+func NewSyncBlueprintRequest() (request *SyncBlueprintRequest) {
+    request = &SyncBlueprintRequest{
+        BaseRequest: &tchttp.BaseRequest{},
+    }
+    
+    request.Init().WithApiInfo("lighthouse", APIVersion, "SyncBlueprint")
+    
+    
+    return
+}
+
+func NewSyncBlueprintResponse() (response *SyncBlueprintResponse) {
+    response = &SyncBlueprintResponse{
+        BaseResponse: &tchttp.BaseResponse{},
+    } 
+    return
+
+}
+
+// SyncBlueprint
+// 本接口 (SyncBlueprint) 用于将自定义镜像同步到其它地域。
+//
+// 
+//
+// * 支持向多个地域同步。最多10个地域。
+//
+// * 不支持向源地域同步。
+//
+// * 只支持NORMAL状态的镜像进行同步。
+//
+// * 不支持中国大陆地域和非中国大陆地域之间同步。
+//
+// * 可以通过[DescribeBlueprints](https://cloud.tencent.com/document/api/1207/47689)查询镜像状态，当镜像状态为NORMAL时表示源地域同步结束。
+//
+// 可能返回的错误码:
+//  AUTHFAILURE = "AuthFailure"
+//  FAILEDOPERATION_BALANCEINSUFFICIENT = "FailedOperation.BalanceInsufficient"
+//  FAILEDOPERATION_DESCRIBEBLUEPRINTQUOTAFAILED = "FailedOperation.DescribeBlueprintQuotaFailed"
+//  FAILEDOPERATION_NUMLIMITERROR = "FailedOperation.NumLimitError"
+//  FAILEDOPERATION_REQUESTERROR = "FailedOperation.RequestError"
+//  FAILEDOPERATION_UNABLETOSYNCBLUEPRINT = "FailedOperation.UnableToSyncBlueprint"
+//  INTERNALERROR = "InternalError"
+//  INVALIDPARAMETERVALUE_BLUEPRINTIDMALFORMED = "InvalidParameterValue.BlueprintIdMalformed"
+//  INVALIDPARAMETERVALUE_DESTINATIONREGIONSAMEASSOURCEREGION = "InvalidParameterValue.DestinationRegionSameAsSourceRegion"
+//  INVALIDPARAMETERVALUE_DUPLICATED = "InvalidParameterValue.Duplicated"
+//  INVALIDPARAMETERVALUE_NOTSUPPORTCROSSBORDERSYNCBLUEPRINT = "InvalidParameterValue.NotSupportCrossBorderSyncBlueprint"
+//  INVALIDPARAMETERVALUE_UNAVAILABLEREGION = "InvalidParameterValue.UnavailableRegion"
+//  LIMITEXCEEDED = "LimitExceeded"
+//  LIMITEXCEEDED_SYNCBLUEPRINTQUOTALIMITEXCEEDED = "LimitExceeded.SyncBlueprintQuotaLimitExceeded"
+//  OPERATIONDENIED_BLUEPRINTOPERATIONINPROGRESS = "OperationDenied.BlueprintOperationInProgress"
+//  RESOURCENOTFOUND_PRIVATEBLUEPRINTNOTFOUND = "ResourceNotFound.PrivateBlueprintNotFound"
+//  UNAUTHORIZEDOPERATION_CERTIFICATIONNEEDUPGRADE = "UnauthorizedOperation.CertificationNeedUpgrade"
+//  UNAUTHORIZEDOPERATION_NOPERMISSION = "UnauthorizedOperation.NoPermission"
+//  UNAUTHORIZEDOPERATION_NOTCERTIFICATION = "UnauthorizedOperation.NotCertification"
+//  UNSUPPORTEDOPERATION_BLUEPRINTCURSTATEINVALID = "UnsupportedOperation.BlueprintCurStateInvalid"
+//  UNSUPPORTEDOPERATION_BLUEPRINTLATESTOPERATIONUNFINISHED = "UnsupportedOperation.BlueprintLatestOperationUnfinished"
+func (c *Client) SyncBlueprint(request *SyncBlueprintRequest) (response *SyncBlueprintResponse, err error) {
+    return c.SyncBlueprintWithContext(context.Background(), request)
+}
+
+// SyncBlueprint
+// 本接口 (SyncBlueprint) 用于将自定义镜像同步到其它地域。
+//
+// 
+//
+// * 支持向多个地域同步。最多10个地域。
+//
+// * 不支持向源地域同步。
+//
+// * 只支持NORMAL状态的镜像进行同步。
+//
+// * 不支持中国大陆地域和非中国大陆地域之间同步。
+//
+// * 可以通过[DescribeBlueprints](https://cloud.tencent.com/document/api/1207/47689)查询镜像状态，当镜像状态为NORMAL时表示源地域同步结束。
+//
+// 可能返回的错误码:
+//  AUTHFAILURE = "AuthFailure"
+//  FAILEDOPERATION_BALANCEINSUFFICIENT = "FailedOperation.BalanceInsufficient"
+//  FAILEDOPERATION_DESCRIBEBLUEPRINTQUOTAFAILED = "FailedOperation.DescribeBlueprintQuotaFailed"
+//  FAILEDOPERATION_NUMLIMITERROR = "FailedOperation.NumLimitError"
+//  FAILEDOPERATION_REQUESTERROR = "FailedOperation.RequestError"
+//  FAILEDOPERATION_UNABLETOSYNCBLUEPRINT = "FailedOperation.UnableToSyncBlueprint"
+//  INTERNALERROR = "InternalError"
+//  INVALIDPARAMETERVALUE_BLUEPRINTIDMALFORMED = "InvalidParameterValue.BlueprintIdMalformed"
+//  INVALIDPARAMETERVALUE_DESTINATIONREGIONSAMEASSOURCEREGION = "InvalidParameterValue.DestinationRegionSameAsSourceRegion"
+//  INVALIDPARAMETERVALUE_DUPLICATED = "InvalidParameterValue.Duplicated"
+//  INVALIDPARAMETERVALUE_NOTSUPPORTCROSSBORDERSYNCBLUEPRINT = "InvalidParameterValue.NotSupportCrossBorderSyncBlueprint"
+//  INVALIDPARAMETERVALUE_UNAVAILABLEREGION = "InvalidParameterValue.UnavailableRegion"
+//  LIMITEXCEEDED = "LimitExceeded"
+//  LIMITEXCEEDED_SYNCBLUEPRINTQUOTALIMITEXCEEDED = "LimitExceeded.SyncBlueprintQuotaLimitExceeded"
+//  OPERATIONDENIED_BLUEPRINTOPERATIONINPROGRESS = "OperationDenied.BlueprintOperationInProgress"
+//  RESOURCENOTFOUND_PRIVATEBLUEPRINTNOTFOUND = "ResourceNotFound.PrivateBlueprintNotFound"
+//  UNAUTHORIZEDOPERATION_CERTIFICATIONNEEDUPGRADE = "UnauthorizedOperation.CertificationNeedUpgrade"
+//  UNAUTHORIZEDOPERATION_NOPERMISSION = "UnauthorizedOperation.NoPermission"
+//  UNAUTHORIZEDOPERATION_NOTCERTIFICATION = "UnauthorizedOperation.NotCertification"
+//  UNSUPPORTEDOPERATION_BLUEPRINTCURSTATEINVALID = "UnsupportedOperation.BlueprintCurStateInvalid"
+//  UNSUPPORTEDOPERATION_BLUEPRINTLATESTOPERATIONUNFINISHED = "UnsupportedOperation.BlueprintLatestOperationUnfinished"
+func (c *Client) SyncBlueprintWithContext(ctx context.Context, request *SyncBlueprintRequest) (response *SyncBlueprintResponse, err error) {
+    if request == nil {
+        request = NewSyncBlueprintRequest()
+    }
+    c.InitBaseRequest(&request.BaseRequest, "lighthouse", APIVersion, "SyncBlueprint")
+    
+    if c.GetCredential() == nil {
+        return nil, errors.New("SyncBlueprint require credential")
+    }
+
+    request.SetContext(ctx)
+    
+    response = NewSyncBlueprintResponse()
     err = c.Send(request, response)
     return
 }
@@ -7485,12 +9071,15 @@ func NewTerminateDisksRequest() (request *TerminateDisksRequest) {
 func NewTerminateDisksResponse() (response *TerminateDisksResponse) {
     response = &TerminateDisksResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // TerminateDisks
 // 本接口（TerminateDisks）用于销毁一个或多个云硬盘。
+//
+// 云硬盘状态必须处于SHUTDOWN（已隔离）状态。
 //
 // 可能返回的错误码:
 //  FAILEDOPERATION_DESTROYRESOURCESFAILED = "FailedOperation.DestroyResourcesFailed"
@@ -7507,6 +9096,8 @@ func (c *Client) TerminateDisks(request *TerminateDisksRequest) (response *Termi
 // TerminateDisks
 // 本接口（TerminateDisks）用于销毁一个或多个云硬盘。
 //
+// 云硬盘状态必须处于SHUTDOWN（已隔离）状态。
+//
 // 可能返回的错误码:
 //  FAILEDOPERATION_DESTROYRESOURCESFAILED = "FailedOperation.DestroyResourcesFailed"
 //  INVALIDPARAMETERVALUE = "InvalidParameterValue"
@@ -7519,6 +9110,7 @@ func (c *Client) TerminateDisksWithContext(ctx context.Context, request *Termina
     if request == nil {
         request = NewTerminateDisksRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "lighthouse", APIVersion, "TerminateDisks")
     
     if c.GetCredential() == nil {
         return nil, errors.New("TerminateDisks require credential")
@@ -7545,8 +9137,9 @@ func NewTerminateInstancesRequest() (request *TerminateInstancesRequest) {
 func NewTerminateInstancesResponse() (response *TerminateInstancesResponse) {
     response = &TerminateInstancesResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // TerminateInstances
@@ -7558,7 +9151,7 @@ func NewTerminateInstancesResponse() (response *TerminateInstancesResponse) {
 //
 // * 支持批量操作，每次请求批量实例的上限为100。
 //
-// * 本接口为异步接口，请求发送成功后会返回一个 RequestId，此时操作并未立即完成。实例操作结果可以通过调用 DescribeInstances 接口查询，如果实例的最新操作状态 (LatestOperationState) 为“SUCCESS”，则代表操作成功。
+// * 本接口为异步接口，请求发送成功后会返回一个 RequestId，此时操作并未立即完成。实例操作结果可以通过调用 <a href="https://cloud.tencent.com/document/product/1207/47573" target="_blank">DescribeInstances</a> 接口查询，如果返回列表中不存在该实例，则代表操作成功。
 //
 // 可能返回的错误码:
 //  FAILEDOPERATION_DESTROYRESOURCESFAILED = "FailedOperation.DestroyResourcesFailed"
@@ -7587,7 +9180,7 @@ func (c *Client) TerminateInstances(request *TerminateInstancesRequest) (respons
 //
 // * 支持批量操作，每次请求批量实例的上限为100。
 //
-// * 本接口为异步接口，请求发送成功后会返回一个 RequestId，此时操作并未立即完成。实例操作结果可以通过调用 DescribeInstances 接口查询，如果实例的最新操作状态 (LatestOperationState) 为“SUCCESS”，则代表操作成功。
+// * 本接口为异步接口，请求发送成功后会返回一个 RequestId，此时操作并未立即完成。实例操作结果可以通过调用 <a href="https://cloud.tencent.com/document/product/1207/47573" target="_blank">DescribeInstances</a> 接口查询，如果返回列表中不存在该实例，则代表操作成功。
 //
 // 可能返回的错误码:
 //  FAILEDOPERATION_DESTROYRESOURCESFAILED = "FailedOperation.DestroyResourcesFailed"
@@ -7607,6 +9200,7 @@ func (c *Client) TerminateInstancesWithContext(ctx context.Context, request *Ter
     if request == nil {
         request = NewTerminateInstancesRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "lighthouse", APIVersion, "TerminateInstances")
     
     if c.GetCredential() == nil {
         return nil, errors.New("TerminateInstances require credential")

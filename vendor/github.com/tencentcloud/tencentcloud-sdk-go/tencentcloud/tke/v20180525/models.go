@@ -472,6 +472,36 @@ type Addon struct {
 	CreateTime *string `json:"CreateTime,omitnil,omitempty" name:"CreateTime"`
 }
 
+type AgentPluginConfig struct {
+	// Helm Chart 版本，一般无需指定
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	ChartVersion *string `json:"ChartVersion,omitnil,omitempty" name:"ChartVersion"`
+
+	// 外部 PostgreSQL 内网地址；配置后跳过内置 PostgreSQL
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	Host *string `json:"Host,omitnil,omitempty" name:"Host"`
+
+	// 外部 PostgreSQL 密码，配置 Host 时必填
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	Password *string `json:"Password,omitnil,omitempty" name:"Password"`
+
+	// 外部 PostgreSQL 端口
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	Port *int64 `json:"Port,omitnil,omitempty" name:"Port"`
+
+	// SSL 模式，取值：disable / require / verify-full
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	SSLMode *string `json:"SSLMode,omitnil,omitempty" name:"SSLMode"`
+
+	// Agent 实例访问域名，不填则不创建域名路由
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	ServiceDomain *string `json:"ServiceDomain,omitnil,omitempty" name:"ServiceDomain"`
+
+	// 外部 PostgreSQL 用户名，配置 Host 时必填
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	Username *string `json:"Username,omitnil,omitempty" name:"Username"`
+}
+
 type AnnotationValue struct {
 	// 注释键
 	Name *string `json:"Name,omitnil,omitempty" name:"Name"`
@@ -1009,6 +1039,10 @@ type Cluster struct {
 
 	// <p>集群是否启用高可用模式。用于指导跨可用区资源打散等高可用策略的执行</p>
 	IsHighAvailability *bool `json:"IsHighAvailability,omitnil,omitempty" name:"IsHighAvailability"`
+
+	// <p>集群分类：tke=标准TKE集群，agent=Agent集群</p><p>默认值：tke</p>
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	ClusterCategory *string `json:"ClusterCategory,omitnil,omitempty" name:"ClusterCategory"`
 
 	// <p>开启后会下发Gatekeeper和网络策略</p>
 	SecurityModeConfig *SecurityModeConfig `json:"SecurityModeConfig,omitnil,omitempty" name:"SecurityModeConfig"`
@@ -2696,67 +2730,75 @@ func (r *CreateClusterRouteTableResponse) FromJsonString(s string) error {
 
 // Predefined struct for user
 type CreateClusterVirtualNodePoolRequestParams struct {
-	// 集群ID，通过DescribeClusters接口获取
+	// <p>集群ID，通过DescribeClusters接口获取</p>
 	ClusterId *string `json:"ClusterId,omitnil,omitempty" name:"ClusterId"`
 
-	// 节点池名称
+	// <p>节点池名称</p>
 	Name *string `json:"Name,omitnil,omitempty" name:"Name"`
 
-	// 安全组ID列表
+	// <p>安全组ID列表</p>
 	SecurityGroupIds []*string `json:"SecurityGroupIds,omitnil,omitempty" name:"SecurityGroupIds"`
 
-	// 子网ID列表
+	// <p>子网ID列表</p>
 	SubnetIds []*string `json:"SubnetIds,omitnil,omitempty" name:"SubnetIds"`
 
-	// 虚拟节点label
+	// <p>虚拟节点label</p>
 	Labels []*Label `json:"Labels,omitnil,omitempty" name:"Labels"`
 
-	// 虚拟节点taint
+	// <p>虚拟节点taint</p>
 	Taints []*Taint `json:"Taints,omitnil,omitempty" name:"Taints"`
 
-	// 节点列表
+	// <p>节点列表</p>
 	VirtualNodes []*VirtualNodeSpec `json:"VirtualNodes,omitnil,omitempty" name:"VirtualNodes"`
 
-	// 删除保护开关，默认关闭
+	// <p>删除保护开关，默认关闭</p>
 	DeletionProtection *bool `json:"DeletionProtection,omitnil,omitempty" name:"DeletionProtection"`
 
-	// 节点池操作系统：
-	// - linux（默认）
-	// - windows
+	// <p>节点池操作系统：</p><ul><li>linux（默认）</li><li>windows</li></ul>
 	OS *string `json:"OS,omitnil,omitempty" name:"OS"`
+
+	// <p>子网资源分配策略，精确控制各子网之间的资源分配比例。</p>
+	SubnetAllocationPolicy *SubnetAllocationPolicy `json:"SubnetAllocationPolicy,omitnil,omitempty" name:"SubnetAllocationPolicy"`
+
+	// <p>AgentPlugin 安装配置。传入即表示需要安装（即使是空对象 {}）</p>
+	AgentPlugin *AgentPluginConfig `json:"AgentPlugin,omitnil,omitempty" name:"AgentPlugin"`
 }
 
 type CreateClusterVirtualNodePoolRequest struct {
 	*tchttp.BaseRequest
 	
-	// 集群ID，通过DescribeClusters接口获取
+	// <p>集群ID，通过DescribeClusters接口获取</p>
 	ClusterId *string `json:"ClusterId,omitnil,omitempty" name:"ClusterId"`
 
-	// 节点池名称
+	// <p>节点池名称</p>
 	Name *string `json:"Name,omitnil,omitempty" name:"Name"`
 
-	// 安全组ID列表
+	// <p>安全组ID列表</p>
 	SecurityGroupIds []*string `json:"SecurityGroupIds,omitnil,omitempty" name:"SecurityGroupIds"`
 
-	// 子网ID列表
+	// <p>子网ID列表</p>
 	SubnetIds []*string `json:"SubnetIds,omitnil,omitempty" name:"SubnetIds"`
 
-	// 虚拟节点label
+	// <p>虚拟节点label</p>
 	Labels []*Label `json:"Labels,omitnil,omitempty" name:"Labels"`
 
-	// 虚拟节点taint
+	// <p>虚拟节点taint</p>
 	Taints []*Taint `json:"Taints,omitnil,omitempty" name:"Taints"`
 
-	// 节点列表
+	// <p>节点列表</p>
 	VirtualNodes []*VirtualNodeSpec `json:"VirtualNodes,omitnil,omitempty" name:"VirtualNodes"`
 
-	// 删除保护开关，默认关闭
+	// <p>删除保护开关，默认关闭</p>
 	DeletionProtection *bool `json:"DeletionProtection,omitnil,omitempty" name:"DeletionProtection"`
 
-	// 节点池操作系统：
-	// - linux（默认）
-	// - windows
+	// <p>节点池操作系统：</p><ul><li>linux（默认）</li><li>windows</li></ul>
 	OS *string `json:"OS,omitnil,omitempty" name:"OS"`
+
+	// <p>子网资源分配策略，精确控制各子网之间的资源分配比例。</p>
+	SubnetAllocationPolicy *SubnetAllocationPolicy `json:"SubnetAllocationPolicy,omitnil,omitempty" name:"SubnetAllocationPolicy"`
+
+	// <p>AgentPlugin 安装配置。传入即表示需要安装（即使是空对象 {}）</p>
+	AgentPlugin *AgentPluginConfig `json:"AgentPlugin,omitnil,omitempty" name:"AgentPlugin"`
 }
 
 func (r *CreateClusterVirtualNodePoolRequest) ToJsonString() string {
@@ -2780,6 +2822,8 @@ func (r *CreateClusterVirtualNodePoolRequest) FromJsonString(s string) error {
 	delete(f, "VirtualNodes")
 	delete(f, "DeletionProtection")
 	delete(f, "OS")
+	delete(f, "SubnetAllocationPolicy")
+	delete(f, "AgentPlugin")
 	if len(f) > 0 {
 		return tcerr.NewTencentCloudSDKError("ClientError.BuildRequestError", "CreateClusterVirtualNodePoolRequest has unknown keys!", "")
 	}
@@ -2788,7 +2832,7 @@ func (r *CreateClusterVirtualNodePoolRequest) FromJsonString(s string) error {
 
 // Predefined struct for user
 type CreateClusterVirtualNodePoolResponseParams struct {
-	// 节点池ID
+	// <p>节点池ID</p>
 	NodePoolId *string `json:"NodePoolId,omitnil,omitempty" name:"NodePoolId"`
 
 	// 唯一请求 ID，由服务端生成，每次请求都会返回（若请求因其他原因未能抵达服务端，则该次请求不会获得 RequestId）。定位问题时需要提供该次请求的 RequestId。
@@ -19576,51 +19620,57 @@ func (r *ModifyClusterTagsResponse) FromJsonString(s string) error {
 
 // Predefined struct for user
 type ModifyClusterVirtualNodePoolRequestParams struct {
-	// 集群ID，通过DescribeClusters接口获取
+	// <p>集群ID，通过DescribeClusters接口获取</p>
 	ClusterId *string `json:"ClusterId,omitnil,omitempty" name:"ClusterId"`
 
-	// 节点池ID，通过DescribeNodePools接口获取
+	// <p>节点池ID，通过DescribeNodePools接口获取</p>
 	NodePoolId *string `json:"NodePoolId,omitnil,omitempty" name:"NodePoolId"`
 
-	// 节点池名称，必须修改至少一个参数
+	// <p>节点池名称，必须修改至少一个参数</p>
 	Name *string `json:"Name,omitnil,omitempty" name:"Name"`
 
-	// 安全组ID列表，必须修改至少一个参数
+	// <p>安全组ID列表，必须修改至少一个参数</p>
 	SecurityGroupIds []*string `json:"SecurityGroupIds,omitnil,omitempty" name:"SecurityGroupIds"`
 
-	// 虚拟节点label，必须修改至少一个参数
+	// <p>虚拟节点label，必须修改至少一个参数</p>
 	Labels []*Label `json:"Labels,omitnil,omitempty" name:"Labels"`
 
-	// 虚拟节点taint，必须修改至少一个参数
+	// <p>虚拟节点taint，必须修改至少一个参数</p>
 	Taints []*Taint `json:"Taints,omitnil,omitempty" name:"Taints"`
 
-	// 删除保护开关，必须修改至少一个参数
+	// <p>删除保护开关，必须修改至少一个参数</p>
 	DeletionProtection *bool `json:"DeletionProtection,omitnil,omitempty" name:"DeletionProtection"`
+
+	// <p>子网分配策略</p>
+	SubnetAllocationPolicy *SubnetAllocationPolicy `json:"SubnetAllocationPolicy,omitnil,omitempty" name:"SubnetAllocationPolicy"`
 }
 
 type ModifyClusterVirtualNodePoolRequest struct {
 	*tchttp.BaseRequest
 	
-	// 集群ID，通过DescribeClusters接口获取
+	// <p>集群ID，通过DescribeClusters接口获取</p>
 	ClusterId *string `json:"ClusterId,omitnil,omitempty" name:"ClusterId"`
 
-	// 节点池ID，通过DescribeNodePools接口获取
+	// <p>节点池ID，通过DescribeNodePools接口获取</p>
 	NodePoolId *string `json:"NodePoolId,omitnil,omitempty" name:"NodePoolId"`
 
-	// 节点池名称，必须修改至少一个参数
+	// <p>节点池名称，必须修改至少一个参数</p>
 	Name *string `json:"Name,omitnil,omitempty" name:"Name"`
 
-	// 安全组ID列表，必须修改至少一个参数
+	// <p>安全组ID列表，必须修改至少一个参数</p>
 	SecurityGroupIds []*string `json:"SecurityGroupIds,omitnil,omitempty" name:"SecurityGroupIds"`
 
-	// 虚拟节点label，必须修改至少一个参数
+	// <p>虚拟节点label，必须修改至少一个参数</p>
 	Labels []*Label `json:"Labels,omitnil,omitempty" name:"Labels"`
 
-	// 虚拟节点taint，必须修改至少一个参数
+	// <p>虚拟节点taint，必须修改至少一个参数</p>
 	Taints []*Taint `json:"Taints,omitnil,omitempty" name:"Taints"`
 
-	// 删除保护开关，必须修改至少一个参数
+	// <p>删除保护开关，必须修改至少一个参数</p>
 	DeletionProtection *bool `json:"DeletionProtection,omitnil,omitempty" name:"DeletionProtection"`
+
+	// <p>子网分配策略</p>
+	SubnetAllocationPolicy *SubnetAllocationPolicy `json:"SubnetAllocationPolicy,omitnil,omitempty" name:"SubnetAllocationPolicy"`
 }
 
 func (r *ModifyClusterVirtualNodePoolRequest) ToJsonString() string {
@@ -19642,6 +19692,7 @@ func (r *ModifyClusterVirtualNodePoolRequest) FromJsonString(s string) error {
 	delete(f, "Labels")
 	delete(f, "Taints")
 	delete(f, "DeletionProtection")
+	delete(f, "SubnetAllocationPolicy")
 	if len(f) > 0 {
 		return tcerr.NewTencentCloudSDKError("ClientError.BuildRequestError", "ModifyClusterVirtualNodePoolRequest has unknown keys!", "")
 	}
@@ -23256,6 +23307,19 @@ type Step struct {
 	Detail *string `json:"Detail,omitnil,omitempty" name:"Detail"`
 }
 
+type SubnetAllocation struct {
+	// <p>子网 ID</p>
+	SubnetId *string `json:"SubnetId,omitnil,omitempty" name:"SubnetId"`
+
+	// <p>分配比例（百分比），所有 Ratio 之和必须等于 100</p>
+	Ratio *uint64 `json:"Ratio,omitnil,omitempty" name:"Ratio"`
+}
+
+type SubnetAllocationPolicy struct {
+	// <p>子网分配列表</p>
+	Allocations []*SubnetAllocation `json:"Allocations,omitnil,omitempty" name:"Allocations"`
+}
+
 type SubnetInfos struct {
 	// 子网id
 	SubnetId *string `json:"SubnetId,omitnil,omitempty" name:"SubnetId"`
@@ -24989,29 +25053,29 @@ type VirtualNode struct {
 }
 
 type VirtualNodePool struct {
-	// 节点池ID
+	// <p>节点池ID</p>
 	NodePoolId *string `json:"NodePoolId,omitnil,omitempty" name:"NodePoolId"`
 
-	// 子网列表
+	// <p>子网列表</p>
 	// 注意：此字段可能返回 null，表示取不到有效值。
 	SubnetIds []*string `json:"SubnetIds,omitnil,omitempty" name:"SubnetIds"`
 
-	// 节点池名称
+	// <p>节点池名称</p>
 	Name *string `json:"Name,omitnil,omitempty" name:"Name"`
 
-	// 节点池生命周期
-	// - creating：创建中
-	// - normal：正常
-	// - updating：更新中
+	// <p>节点池生命周期</p><ul><li>creating：创建中</li><li>normal：正常</li><li>updating：更新中</li></ul>
 	LifeState *string `json:"LifeState,omitnil,omitempty" name:"LifeState"`
 
-	// 虚拟节点label
+	// <p>虚拟节点label</p>
 	// 注意：此字段可能返回 null，表示取不到有效值。
 	Labels []*Label `json:"Labels,omitnil,omitempty" name:"Labels"`
 
-	// 虚拟节点taint
+	// <p>虚拟节点taint</p>
 	// 注意：此字段可能返回 null，表示取不到有效值。
 	Taints []*Taint `json:"Taints,omitnil,omitempty" name:"Taints"`
+
+	// <p>子网分配策略</p>
+	SubnetAllocationPolicy *SubnetAllocationPolicy `json:"SubnetAllocationPolicy,omitnil,omitempty" name:"SubnetAllocationPolicy"`
 }
 
 type VirtualNodeSpec struct {

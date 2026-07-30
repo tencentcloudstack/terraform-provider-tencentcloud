@@ -4,12 +4,12 @@ layout: "tencentcloud"
 page_title: "TencentCloud: tencentcloud_monitor_tmp_alert_group"
 sidebar_current: "docs-tencentcloud-resource-monitor_tmp_alert_group"
 description: |-
-  Provides a resource to create a monitor tmp_alert_group
+  Provides a resource to create a monitor tmp alert group
 ---
 
 # tencentcloud_monitor_tmp_alert_group
 
-Provides a resource to create a monitor tmp_alert_group
+Provides a resource to create a monitor tmp alert group
 
 ## Example Usage
 
@@ -111,7 +111,7 @@ In addition to all arguments above, the following attributes are exported:
 
 ## Import
 
-monitor tmp_alert_group can be imported using the id, e.g.
+monitor tmp alert group can be imported using the id, e.g.
 
 ```
 terraform import tencentcloud_monitor_tmp_alert_group.example prom-34qkzwvs#alert-rfkkr6cw

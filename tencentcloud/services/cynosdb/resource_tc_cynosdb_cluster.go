@@ -960,6 +960,15 @@ func resourceTencentCloudCynosdbClusterUpdate(d *schema.ResourceData, meta inter
 		}
 	}
 
+	// update instance_name
+	if d.HasChange("instance_name") {
+		instanceName := d.Get("instance_name").(string)
+		err := cynosdbService.ModifyInstanceName(ctx, instanceId, instanceName)
+		if err != nil {
+			return err
+		}
+	}
+
 	// update storage_limit
 	if d.HasChange("storage_limit") {
 		oldStorageLimit, newStorageLimit := d.GetChange("storage_limit")

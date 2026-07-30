@@ -217,78 +217,6 @@ func (c *Client) ClearCmqSubscriptionFilterTagsWithContext(ctx context.Context, 
     return
 }
 
-func NewCreateClusterRequest() (request *CreateClusterRequest) {
-    request = &CreateClusterRequest{
-        BaseRequest: &tchttp.BaseRequest{},
-    }
-    
-    request.Init().WithApiInfo("tdmq", APIVersion, "CreateCluster")
-    
-    
-    return
-}
-
-func NewCreateClusterResponse() (response *CreateClusterResponse) {
-    response = &CreateClusterResponse{
-        BaseResponse: &tchttp.BaseResponse{},
-    } 
-    return
-
-}
-
-// CreateCluster
-// 创建用户的集群
-//
-// 可能返回的错误码:
-//  AUTHFAILURE_UNAUTHORIZEDOPERATION = "AuthFailure.UnauthorizedOperation"
-//  FAILEDOPERATION = "FailedOperation"
-//  FAILEDOPERATION_CREATECLUSTER = "FailedOperation.CreateCluster"
-//  INTERNALERROR = "InternalError"
-//  INTERNALERROR_SYSTEMERROR = "InternalError.SystemError"
-//  LIMITEXCEEDED_CLUSTERS = "LimitExceeded.Clusters"
-//  MISSINGPARAMETER = "MissingParameter"
-//  MISSINGPARAMETER_NEEDMOREPARAMS = "MissingParameter.NeedMoreParams"
-//  RESOURCEINUSE_CLUSTER = "ResourceInUse.Cluster"
-//  RESOURCEUNAVAILABLE = "ResourceUnavailable"
-//  RESOURCEUNAVAILABLE_CREATEFAILED = "ResourceUnavailable.CreateFailed"
-//  RESOURCEUNAVAILABLE_FUNDREQUIRED = "ResourceUnavailable.FundRequired"
-func (c *Client) CreateCluster(request *CreateClusterRequest) (response *CreateClusterResponse, err error) {
-    return c.CreateClusterWithContext(context.Background(), request)
-}
-
-// CreateCluster
-// 创建用户的集群
-//
-// 可能返回的错误码:
-//  AUTHFAILURE_UNAUTHORIZEDOPERATION = "AuthFailure.UnauthorizedOperation"
-//  FAILEDOPERATION = "FailedOperation"
-//  FAILEDOPERATION_CREATECLUSTER = "FailedOperation.CreateCluster"
-//  INTERNALERROR = "InternalError"
-//  INTERNALERROR_SYSTEMERROR = "InternalError.SystemError"
-//  LIMITEXCEEDED_CLUSTERS = "LimitExceeded.Clusters"
-//  MISSINGPARAMETER = "MissingParameter"
-//  MISSINGPARAMETER_NEEDMOREPARAMS = "MissingParameter.NeedMoreParams"
-//  RESOURCEINUSE_CLUSTER = "ResourceInUse.Cluster"
-//  RESOURCEUNAVAILABLE = "ResourceUnavailable"
-//  RESOURCEUNAVAILABLE_CREATEFAILED = "ResourceUnavailable.CreateFailed"
-//  RESOURCEUNAVAILABLE_FUNDREQUIRED = "ResourceUnavailable.FundRequired"
-func (c *Client) CreateClusterWithContext(ctx context.Context, request *CreateClusterRequest) (response *CreateClusterResponse, err error) {
-    if request == nil {
-        request = NewCreateClusterRequest()
-    }
-    c.InitBaseRequest(&request.BaseRequest, "tdmq", APIVersion, "CreateCluster")
-    
-    if c.GetCredential() == nil {
-        return nil, errors.New("CreateCluster require credential")
-    }
-
-    request.SetContext(ctx)
-    
-    response = NewCreateClusterResponse()
-    err = c.Send(request, response)
-    return
-}
-
 func NewCreateCmqQueueRequest() (request *CreateCmqQueueRequest) {
     request = &CreateCmqQueueRequest{
         BaseRequest: &tchttp.BaseRequest{},
@@ -690,6 +618,7 @@ func NewCreateProClusterResponse() (response *CreateProClusterResponse) {
 //  FAILEDOPERATION_OPERATELATER = "FailedOperation.OperateLater"
 //  FAILEDOPERATION_PRODUCTNOTEXIST = "FailedOperation.ProductNotExist"
 //  FAILEDOPERATION_STORAGESIZEERROR = "FailedOperation.StorageSizeError"
+//  INVALIDPARAMETER_INSTANCEVERSION = "InvalidParameter.InstanceVersion"
 //  INVALIDPARAMETER_VPC = "InvalidParameter.Vpc"
 //  MISSINGPARAMETER_TAG = "MissingParameter.Tag"
 func (c *Client) CreateProCluster(request *CreateProClusterRequest) (response *CreateProClusterResponse, err error) {
@@ -706,6 +635,7 @@ func (c *Client) CreateProCluster(request *CreateProClusterRequest) (response *C
 //  FAILEDOPERATION_OPERATELATER = "FailedOperation.OperateLater"
 //  FAILEDOPERATION_PRODUCTNOTEXIST = "FailedOperation.ProductNotExist"
 //  FAILEDOPERATION_STORAGESIZEERROR = "FailedOperation.StorageSizeError"
+//  INVALIDPARAMETER_INSTANCEVERSION = "InvalidParameter.InstanceVersion"
 //  INVALIDPARAMETER_VPC = "InvalidParameter.Vpc"
 //  MISSINGPARAMETER_TAG = "MissingParameter.Tag"
 func (c *Client) CreateProClusterWithContext(ctx context.Context, request *CreateProClusterRequest) (response *CreateProClusterResponse, err error) {
@@ -805,6 +735,7 @@ func NewCreateRabbitMQUserResponse() (response *CreateRabbitMQUserResponse) {
 //  FAILEDOPERATION = "FailedOperation"
 //  INTERNALERROR = "InternalError"
 //  INVALIDPARAMETER = "InvalidParameter"
+//  LIMITEXCEEDED = "LimitExceeded"
 func (c *Client) CreateRabbitMQUser(request *CreateRabbitMQUserRequest) (response *CreateRabbitMQUserResponse, err error) {
     return c.CreateRabbitMQUserWithContext(context.Background(), request)
 }
@@ -816,6 +747,7 @@ func (c *Client) CreateRabbitMQUser(request *CreateRabbitMQUserRequest) (respons
 //  FAILEDOPERATION = "FailedOperation"
 //  INTERNALERROR = "InternalError"
 //  INVALIDPARAMETER = "InvalidParameter"
+//  LIMITEXCEEDED = "LimitExceeded"
 func (c *Client) CreateRabbitMQUserWithContext(ctx context.Context, request *CreateRabbitMQUserRequest) (response *CreateRabbitMQUserResponse, err error) {
     if request == nil {
         request = NewCreateRabbitMQUserRequest()
@@ -1225,6 +1157,56 @@ func (c *Client) CreateRocketMQGroupV2WithContext(ctx context.Context, request *
     return
 }
 
+func NewCreateRocketMQMigrationTaskRequest() (request *CreateRocketMQMigrationTaskRequest) {
+    request = &CreateRocketMQMigrationTaskRequest{
+        BaseRequest: &tchttp.BaseRequest{},
+    }
+    
+    request.Init().WithApiInfo("tdmq", APIVersion, "CreateRocketMQMigrationTask")
+    
+    
+    return
+}
+
+func NewCreateRocketMQMigrationTaskResponse() (response *CreateRocketMQMigrationTaskResponse) {
+    response = &CreateRocketMQMigrationTaskResponse{
+        BaseResponse: &tchttp.BaseResponse{},
+    } 
+    return
+
+}
+
+// CreateRocketMQMigrationTask
+// 创建RocketMQ元数据迁移任务，用于批量创建主题和消费组数据
+//
+// 可能返回的错误码:
+//  FAILEDOPERATION = "FailedOperation"
+func (c *Client) CreateRocketMQMigrationTask(request *CreateRocketMQMigrationTaskRequest) (response *CreateRocketMQMigrationTaskResponse, err error) {
+    return c.CreateRocketMQMigrationTaskWithContext(context.Background(), request)
+}
+
+// CreateRocketMQMigrationTask
+// 创建RocketMQ元数据迁移任务，用于批量创建主题和消费组数据
+//
+// 可能返回的错误码:
+//  FAILEDOPERATION = "FailedOperation"
+func (c *Client) CreateRocketMQMigrationTaskWithContext(ctx context.Context, request *CreateRocketMQMigrationTaskRequest) (response *CreateRocketMQMigrationTaskResponse, err error) {
+    if request == nil {
+        request = NewCreateRocketMQMigrationTaskRequest()
+    }
+    c.InitBaseRequest(&request.BaseRequest, "tdmq", APIVersion, "CreateRocketMQMigrationTask")
+    
+    if c.GetCredential() == nil {
+        return nil, errors.New("CreateRocketMQMigrationTask require credential")
+    }
+
+    request.SetContext(ctx)
+    
+    response = NewCreateRocketMQMigrationTaskResponse()
+    err = c.Send(request, response)
+    return
+}
+
 func NewCreateRocketMQNamespaceRequest() (request *CreateRocketMQNamespaceRequest) {
     request = &CreateRocketMQNamespaceRequest{
         BaseRequest: &tchttp.BaseRequest{},
@@ -1373,6 +1355,58 @@ func (c *Client) CreateRocketMQRoleWithContext(ctx context.Context, request *Cre
     request.SetContext(ctx)
     
     response = NewCreateRocketMQRoleResponse()
+    err = c.Send(request, response)
+    return
+}
+
+func NewCreateRocketMQRouterRuleRequest() (request *CreateRocketMQRouterRuleRequest) {
+    request = &CreateRocketMQRouterRuleRequest{
+        BaseRequest: &tchttp.BaseRequest{},
+    }
+    
+    request.Init().WithApiInfo("tdmq", APIVersion, "CreateRocketMQRouterRule")
+    
+    
+    return
+}
+
+func NewCreateRocketMQRouterRuleResponse() (response *CreateRocketMQRouterRuleResponse) {
+    response = &CreateRocketMQRouterRuleResponse{
+        BaseResponse: &tchttp.BaseResponse{},
+    } 
+    return
+
+}
+
+// CreateRocketMQRouterRule
+// 创建RocketMQ Router规则
+//
+// 可能返回的错误码:
+//  FAILEDOPERATION_ROLENOSYNCPERMISSION = "FailedOperation.RoleNoSyncPermission"
+//  FAILEDOPERATION_ROUTERRULE = "FailedOperation.RouterRule"
+func (c *Client) CreateRocketMQRouterRule(request *CreateRocketMQRouterRuleRequest) (response *CreateRocketMQRouterRuleResponse, err error) {
+    return c.CreateRocketMQRouterRuleWithContext(context.Background(), request)
+}
+
+// CreateRocketMQRouterRule
+// 创建RocketMQ Router规则
+//
+// 可能返回的错误码:
+//  FAILEDOPERATION_ROLENOSYNCPERMISSION = "FailedOperation.RoleNoSyncPermission"
+//  FAILEDOPERATION_ROUTERRULE = "FailedOperation.RouterRule"
+func (c *Client) CreateRocketMQRouterRuleWithContext(ctx context.Context, request *CreateRocketMQRouterRuleRequest) (response *CreateRocketMQRouterRuleResponse, err error) {
+    if request == nil {
+        request = NewCreateRocketMQRouterRuleRequest()
+    }
+    c.InitBaseRequest(&request.BaseRequest, "tdmq", APIVersion, "CreateRocketMQRouterRule")
+    
+    if c.GetCredential() == nil {
+        return nil, errors.New("CreateRocketMQRouterRule require credential")
+    }
+
+    request.SetContext(ctx)
+    
+    response = NewCreateRocketMQRouterRuleResponse()
     err = c.Send(request, response)
     return
 }
@@ -4962,11 +4996,7 @@ func NewDescribeRabbitMQVipInstancesResponse() (response *DescribeRabbitMQVipIns
 // 查询用户已购的 RabbitMQ 托管版实例列表
 //
 // 可能返回的错误码:
-//  FAILEDOPERATION = "FailedOperation"
-//  INTERNALERROR_ILLEGALMESSAGE = "InternalError.IllegalMessage"
-//  INVALIDPARAMETER = "InvalidParameter"
-//  RESOURCENOTFOUND = "ResourceNotFound"
-//  RESOURCENOTFOUND_CLUSTER = "ResourceNotFound.Cluster"
+//  FAILEDOPERATION_GETTAGS = "FailedOperation.GetTags"
 func (c *Client) DescribeRabbitMQVipInstances(request *DescribeRabbitMQVipInstancesRequest) (response *DescribeRabbitMQVipInstancesResponse, err error) {
     return c.DescribeRabbitMQVipInstancesWithContext(context.Background(), request)
 }
@@ -4975,11 +5005,7 @@ func (c *Client) DescribeRabbitMQVipInstances(request *DescribeRabbitMQVipInstan
 // 查询用户已购的 RabbitMQ 托管版实例列表
 //
 // 可能返回的错误码:
-//  FAILEDOPERATION = "FailedOperation"
-//  INTERNALERROR_ILLEGALMESSAGE = "InternalError.IllegalMessage"
-//  INVALIDPARAMETER = "InvalidParameter"
-//  RESOURCENOTFOUND = "ResourceNotFound"
-//  RESOURCENOTFOUND_CLUSTER = "ResourceNotFound.Cluster"
+//  FAILEDOPERATION_GETTAGS = "FailedOperation.GetTags"
 func (c *Client) DescribeRabbitMQVipInstancesWithContext(ctx context.Context, request *DescribeRabbitMQVipInstancesRequest) (response *DescribeRabbitMQVipInstancesResponse, err error) {
     if request == nil {
         request = NewDescribeRabbitMQVipInstancesRequest()
@@ -7757,6 +7783,7 @@ func NewModifyRabbitMQVipInstanceResponse() (response *ModifyRabbitMQVipInstance
 //
 // 可能返回的错误码:
 //  FAILEDOPERATION = "FailedOperation"
+//  FAILEDOPERATION_GETTAGS = "FailedOperation.GetTags"
 //  INTERNALERROR = "InternalError"
 //  INVALIDPARAMETER = "InvalidParameter"
 func (c *Client) ModifyRabbitMQVipInstance(request *ModifyRabbitMQVipInstanceRequest) (response *ModifyRabbitMQVipInstanceResponse, err error) {
@@ -7768,6 +7795,7 @@ func (c *Client) ModifyRabbitMQVipInstance(request *ModifyRabbitMQVipInstanceReq
 //
 // 可能返回的错误码:
 //  FAILEDOPERATION = "FailedOperation"
+//  FAILEDOPERATION_GETTAGS = "FailedOperation.GetTags"
 //  INTERNALERROR = "InternalError"
 //  INVALIDPARAMETER = "InvalidParameter"
 func (c *Client) ModifyRabbitMQVipInstanceWithContext(ctx context.Context, request *ModifyRabbitMQVipInstanceRequest) (response *ModifyRabbitMQVipInstanceResponse, err error) {

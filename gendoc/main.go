@@ -41,23 +41,46 @@ func main() {
 	filePath := filepath.Dir(filename)
 	message("generating doc from: %s\n", filePath)
 
-	// document for Index
+	// 1) Parse the unified provider.md once. The same product list now
+	//    feeds both the SDKv2 renderer and the framework renderer; which
+	//    pipeline owns each entry is decided by SDKv2 / framework
+	//    registries (see step 2 + step 3).
 	products := genIdx(filePath)
 
+	// 2) sdkv2 phase: emit r/<...> + d/<...> for every entry that the
+	//    SDKv2 provider knows about. Anything that is *not* present in
+	//    provider.ResourcesMap / provider.DataSourcesMap is silently
+	//    skipped here — those are framework references and step 3 will
+	//    pick them up.
 	for _, product := range products {
-		// document for DataSources
 		for _, dataSource := range product.DataSources {
+			if _, ok := provider.DataSourcesMap[dataSource]; !ok {
+				continue
+			}
 			genDoc(product.Name, "data_source", filePath, dataSource, provider.DataSourcesMap[dataSource])
 		}
 
-		// document for Resources
 		for _, resource := range product.Resources {
+			if _, ok := provider.ResourcesMap[resource]; !ok {
+				continue
+			}
 			genDoc(product.Name, "resource", filePath, resource, provider.ResourcesMap[resource])
 		}
 	}
+
+	// 3) framework phase: render r / d / f / e / l / a / ... documents
+	//    for every framework reference type registered in
+	//    tencentcloud/framework/registry.go. The unified product list is
+	//    consulted to derive the sidebar product label for each entry.
+	genFrameworkDocs(filePath, products)
+
+	// 4) Re-render the sidebar .erb from the same unified product list.
+	writeIdxErb(filePath, products)
 }
 
-// genIdx generating index for resource
+// genIdx parses the sdkv2 provider.md "Resources List" section into the
+// per-product Product slice. Writing of the sidebar .erb is deferred to
+// writeIdxErb so the final output can also include the framework stack.
 func genIdx(filePath string) (prods []Product) {
 	filename := "provider.md"
 
@@ -83,14 +106,19 @@ func genIdx(filePath string) (prods []Product) {
 	}
 
 	doc := strings.TrimSpace(description[pos+16:])
-	// description = strings.TrimSpace(description[:pos])
 
 	prods, err = GetIndex(doc)
 	if err != nil {
 		message("[FAIL!]: %s", err)
 		os.Exit(1)
 	}
+	return
+}
 
+// writeIdxErb renders the sidebar .erb from the unified Product list.
+// Both SDKv2 and framework references contribute to the same Product
+// nodes — the rendering is purely a function of the parsed provider.md.
+func writeIdxErb(filePath string, prods []Product) {
 	data := map[string]interface{}{
 		"cloud_mark":  cloudMark,
 		"cloud_title": cloudTitle,
@@ -98,24 +126,21 @@ func genIdx(filePath string) (prods []Product) {
 		"Products":    prods,
 	}
 
-	filename = filepath.Join(docRoot, "..", fmt.Sprintf("%s.erb", cloudMark))
+	filename := filepath.Join(docRoot, "..", fmt.Sprintf("%s.erb", cloudMark))
 	fd, err := os.OpenFile(filename, os.O_WRONLY|os.O_CREATE|os.O_TRUNC, 0644)
 	if err != nil {
 		message("[FAIL!]open file %s failed: %s", filename, err)
 		os.Exit(1)
 	}
-
 	defer fd.Close()
 
 	tmpl := template.Must(template.New("t").Funcs(template.FuncMap{"replace": replace}).Parse(idxTPL))
-
 	if err := tmpl.Execute(fd, data); err != nil {
 		message("[FAIL!]write file %s failed: %s", filename, err)
 		os.Exit(1)
 	}
-
+	_ = filePath // currently unused; kept for parity with genIdx and for forward extensions.
 	message("[SUCC.]write doc to file success: %s", filename)
-	return
 }
 
 // genDoc generating doc for data source and resource

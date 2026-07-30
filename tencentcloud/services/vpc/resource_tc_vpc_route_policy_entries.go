@@ -65,6 +65,7 @@ func ResourceTencentCloudVpcRoutePolicyEntries() *schema.Resource {
 						"gateway_id": {
 							Type:        schema.TypeString,
 							Optional:    true,
+							Computed:    true,
 							Description: "Gateway unique ID.\nNote: This field may return null, indicating that no valid value was found.",
 						},
 						"priority": {

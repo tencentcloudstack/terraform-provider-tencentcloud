@@ -3417,6 +3417,7 @@ func NewDescribeAuditLogsResponse() (response *DescribeAuditLogsResponse) {
 //
 // 可能返回的错误码:
 //  FAILEDOPERATION_QUERYAUDITTASKFAILERROR = "FailedOperation.QueryAuditTaskFailError"
+//  FAILEDOPERATION_SERVICEACCESSERROR = "FailedOperation.ServiceAccessError"
 //  INTERNALERROR_AUDITDESCRIBELOGERROR = "InternalError.AuditDescribeLogError"
 //  INTERNALERROR_AUDITERROR = "InternalError.AuditError"
 //  INTERNALERROR_DBERROR = "InternalError.DBError"
@@ -3442,6 +3443,7 @@ func (c *Client) DescribeAuditLogs(request *DescribeAuditLogsRequest) (response 
 //
 // 可能返回的错误码:
 //  FAILEDOPERATION_QUERYAUDITTASKFAILERROR = "FailedOperation.QueryAuditTaskFailError"
+//  FAILEDOPERATION_SERVICEACCESSERROR = "FailedOperation.ServiceAccessError"
 //  INTERNALERROR_AUDITDESCRIBELOGERROR = "InternalError.AuditDescribeLogError"
 //  INTERNALERROR_AUDITERROR = "InternalError.AuditError"
 //  INTERNALERROR_DBERROR = "InternalError.DBError"
@@ -5143,6 +5145,8 @@ func NewDescribeDBInstancesResponse() (response *DescribeDBInstancesResponse) {
 // DescribeDBInstances
 // 本接口（DescribeDBInstances）用于查询云数据库实例列表，支持通过项目 ID、实例 ID、访问地址、实例状态等过滤条件来筛选实例。支持查询主实例、灾备实例和只读实例信息列表。
 //
+// 说明：通过本接口返回的可用区情况为购买时的情况，不随主动 HA 切换变化。如需了解实时可用区情况，请通过 [DescribeDBInstanceConfig](https://cloud.tencent.com/document/product/236/17491) 接口进行查询。
+//
 // 可能返回的错误码:
 //  AUTHFAILURE = "AuthFailure"
 //  CDBERROR = "CdbError"
@@ -5168,6 +5172,8 @@ func (c *Client) DescribeDBInstances(request *DescribeDBInstancesRequest) (respo
 
 // DescribeDBInstances
 // 本接口（DescribeDBInstances）用于查询云数据库实例列表，支持通过项目 ID、实例 ID、访问地址、实例状态等过滤条件来筛选实例。支持查询主实例、灾备实例和只读实例信息列表。
+//
+// 说明：通过本接口返回的可用区情况为购买时的情况，不随主动 HA 切换变化。如需了解实时可用区情况，请通过 [DescribeDBInstanceConfig](https://cloud.tencent.com/document/product/236/17491) 接口进行查询。
 //
 // 可能返回的错误码:
 //  AUTHFAILURE = "AuthFailure"
@@ -5705,7 +5711,7 @@ func NewDescribeDeviceMonitorInfoResponse() (response *DescribeDeviceMonitorInfo
 //  OPERATIONDENIED_ACTIONNOTSUPPORT = "OperationDenied.ActionNotSupport"
 //  OPERATIONDENIED_FUNCTIONDENIED = "OperationDenied.FunctionDenied"
 //  OPERATIONDENIED_INSTANCESTATUSERROR = "OperationDenied.InstanceStatusError"
-//  RESOURCENOTFOUND_INSTANCENOTFUNDERROR = "ResourceNotFound.InstanceNotFundError"
+//  RESOURCENOTFOUND_INSTANCENOTFOUNDERROR = "ResourceNotFound.InstanceNotFoundError"
 func (c *Client) DescribeDeviceMonitorInfo(request *DescribeDeviceMonitorInfoRequest) (response *DescribeDeviceMonitorInfoResponse, err error) {
     return c.DescribeDeviceMonitorInfoWithContext(context.Background(), request)
 }
@@ -5725,7 +5731,7 @@ func (c *Client) DescribeDeviceMonitorInfo(request *DescribeDeviceMonitorInfoReq
 //  OPERATIONDENIED_ACTIONNOTSUPPORT = "OperationDenied.ActionNotSupport"
 //  OPERATIONDENIED_FUNCTIONDENIED = "OperationDenied.FunctionDenied"
 //  OPERATIONDENIED_INSTANCESTATUSERROR = "OperationDenied.InstanceStatusError"
-//  RESOURCENOTFOUND_INSTANCENOTFUNDERROR = "ResourceNotFound.InstanceNotFundError"
+//  RESOURCENOTFOUND_INSTANCENOTFOUNDERROR = "ResourceNotFound.InstanceNotFoundError"
 func (c *Client) DescribeDeviceMonitorInfoWithContext(ctx context.Context, request *DescribeDeviceMonitorInfoRequest) (response *DescribeDeviceMonitorInfoResponse, err error) {
     if request == nil {
         request = NewDescribeDeviceMonitorInfoRequest()
@@ -6027,6 +6033,76 @@ func (c *Client) DescribeInstanceParamsWithContext(ctx context.Context, request 
     request.SetContext(ctx)
     
     response = NewDescribeInstanceParamsResponse()
+    err = c.Send(request, response)
+    return
+}
+
+func NewDescribeInstancePasswordComplexityRequest() (request *DescribeInstancePasswordComplexityRequest) {
+    request = &DescribeInstancePasswordComplexityRequest{
+        BaseRequest: &tchttp.BaseRequest{},
+    }
+    
+    request.Init().WithApiInfo("cdb", APIVersion, "DescribeInstancePasswordComplexity")
+    
+    
+    return
+}
+
+func NewDescribeInstancePasswordComplexityResponse() (response *DescribeInstancePasswordComplexityResponse) {
+    response = &DescribeInstancePasswordComplexityResponse{
+        BaseResponse: &tchttp.BaseResponse{},
+    } 
+    return
+
+}
+
+// DescribeInstancePasswordComplexity
+// 该接口（DescribeInstancePasswordComplexity）用于查询实例的密码复杂度参数列表。
+//
+// 可能返回的错误码:
+//  AUTHFAILURE = "AuthFailure"
+//  CDBERROR = "CdbError"
+//  INTERNALERROR_CDBERROR = "InternalError.CdbError"
+//  INTERNALERROR_DATABASEACCESSERROR = "InternalError.DatabaseAccessError"
+//  INTERNALERROR_INTERNALHTTPSERVERERROR = "InternalError.InternalHttpServerError"
+//  INTERNALERROR_PARAMERROR = "InternalError.ParamError"
+//  INTERNALERROR_UNKNOWNERROR = "InternalError.UnknownError"
+//  INVALIDPARAMETER = "InvalidParameter"
+//  INVALIDPARAMETER_CONTROLLERNOTFOUNDERROR = "InvalidParameter.ControllerNotFoundError"
+//  INVALIDPARAMETER_INSTANCENOTFOUND = "InvalidParameter.InstanceNotFound"
+//  OPERATIONDENIED = "OperationDenied"
+func (c *Client) DescribeInstancePasswordComplexity(request *DescribeInstancePasswordComplexityRequest) (response *DescribeInstancePasswordComplexityResponse, err error) {
+    return c.DescribeInstancePasswordComplexityWithContext(context.Background(), request)
+}
+
+// DescribeInstancePasswordComplexity
+// 该接口（DescribeInstancePasswordComplexity）用于查询实例的密码复杂度参数列表。
+//
+// 可能返回的错误码:
+//  AUTHFAILURE = "AuthFailure"
+//  CDBERROR = "CdbError"
+//  INTERNALERROR_CDBERROR = "InternalError.CdbError"
+//  INTERNALERROR_DATABASEACCESSERROR = "InternalError.DatabaseAccessError"
+//  INTERNALERROR_INTERNALHTTPSERVERERROR = "InternalError.InternalHttpServerError"
+//  INTERNALERROR_PARAMERROR = "InternalError.ParamError"
+//  INTERNALERROR_UNKNOWNERROR = "InternalError.UnknownError"
+//  INVALIDPARAMETER = "InvalidParameter"
+//  INVALIDPARAMETER_CONTROLLERNOTFOUNDERROR = "InvalidParameter.ControllerNotFoundError"
+//  INVALIDPARAMETER_INSTANCENOTFOUND = "InvalidParameter.InstanceNotFound"
+//  OPERATIONDENIED = "OperationDenied"
+func (c *Client) DescribeInstancePasswordComplexityWithContext(ctx context.Context, request *DescribeInstancePasswordComplexityRequest) (response *DescribeInstancePasswordComplexityResponse, err error) {
+    if request == nil {
+        request = NewDescribeInstancePasswordComplexityRequest()
+    }
+    c.InitBaseRequest(&request.BaseRequest, "cdb", APIVersion, "DescribeInstancePasswordComplexity")
+    
+    if c.GetCredential() == nil {
+        return nil, errors.New("DescribeInstancePasswordComplexity require credential")
+    }
+
+    request.SetContext(ctx)
+    
+    response = NewDescribeInstancePasswordComplexityResponse()
     err = c.Send(request, response)
     return
 }
@@ -8949,6 +9025,70 @@ func (c *Client) ModifyDBInstanceLogToCLSWithContext(ctx context.Context, reques
     request.SetContext(ctx)
     
     response = NewModifyDBInstanceLogToCLSResponse()
+    err = c.Send(request, response)
+    return
+}
+
+func NewModifyDBInstanceModesRequest() (request *ModifyDBInstanceModesRequest) {
+    request = &ModifyDBInstanceModesRequest{
+        BaseRequest: &tchttp.BaseRequest{},
+    }
+    
+    request.Init().WithApiInfo("cdb", APIVersion, "ModifyDBInstanceModes")
+    
+    
+    return
+}
+
+func NewModifyDBInstanceModesResponse() (response *ModifyDBInstanceModesResponse) {
+    response = &ModifyDBInstanceModesResponse{
+        BaseResponse: &tchttp.BaseResponse{},
+    } 
+    return
+
+}
+
+// ModifyDBInstanceModes
+// 该接口（ModifyDBInstanceModes）用于更改云数据库的模式。
+//
+// 可能返回的错误码:
+//  FAILEDOPERATION_STATUSCONFLICT = "FailedOperation.StatusConflict"
+//  INTERNALERROR_CDBERROR = "InternalError.CdbError"
+//  INTERNALERROR_TRADEERROR = "InternalError.TradeError"
+//  INVALIDPARAMETER = "InvalidParameter"
+//  INVALIDPARAMETER_INSTANCENOTFOUND = "InvalidParameter.InstanceNotFound"
+//  OPERATIONDENIED = "OperationDenied"
+//  OPERATIONDENIED_FLOWCONFLICT = "OperationDenied.FlowConflict"
+//  OPERATIONDENIED_USERHASNOSTRATEGY = "OperationDenied.UserHasNoStrategy"
+func (c *Client) ModifyDBInstanceModes(request *ModifyDBInstanceModesRequest) (response *ModifyDBInstanceModesResponse, err error) {
+    return c.ModifyDBInstanceModesWithContext(context.Background(), request)
+}
+
+// ModifyDBInstanceModes
+// 该接口（ModifyDBInstanceModes）用于更改云数据库的模式。
+//
+// 可能返回的错误码:
+//  FAILEDOPERATION_STATUSCONFLICT = "FailedOperation.StatusConflict"
+//  INTERNALERROR_CDBERROR = "InternalError.CdbError"
+//  INTERNALERROR_TRADEERROR = "InternalError.TradeError"
+//  INVALIDPARAMETER = "InvalidParameter"
+//  INVALIDPARAMETER_INSTANCENOTFOUND = "InvalidParameter.InstanceNotFound"
+//  OPERATIONDENIED = "OperationDenied"
+//  OPERATIONDENIED_FLOWCONFLICT = "OperationDenied.FlowConflict"
+//  OPERATIONDENIED_USERHASNOSTRATEGY = "OperationDenied.UserHasNoStrategy"
+func (c *Client) ModifyDBInstanceModesWithContext(ctx context.Context, request *ModifyDBInstanceModesRequest) (response *ModifyDBInstanceModesResponse, err error) {
+    if request == nil {
+        request = NewModifyDBInstanceModesRequest()
+    }
+    c.InitBaseRequest(&request.BaseRequest, "cdb", APIVersion, "ModifyDBInstanceModes")
+    
+    if c.GetCredential() == nil {
+        return nil, errors.New("ModifyDBInstanceModes require credential")
+    }
+
+    request.SetContext(ctx)
+    
+    response = NewModifyDBInstanceModesResponse()
     err = c.Send(request, response)
     return
 }

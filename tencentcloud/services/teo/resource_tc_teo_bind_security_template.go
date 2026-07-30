@@ -24,27 +24,28 @@ func ResourceTencentCloudTeoBindSecurityTemplate() *schema.Resource {
 		},
 		Timeouts: &schema.ResourceTimeout{
 			Create: schema.DefaultTimeout(3 * time.Minute),
+			Delete: schema.DefaultTimeout(3 * time.Minute),
 		},
 		Schema: map[string]*schema.Schema{
 			"zone_id": {
 				Type:        schema.TypeString,
 				Required:    true,
 				ForceNew:    true,
-				Description: "Site ID of the policy template to be bound to or unbound from.",
+				Description: "The site ID to which the policy template to be bound or unbound belongs.",
 			},
 
 			"entity": {
 				Type:        schema.TypeString,
 				Required:    true,
 				ForceNew:    true,
-				Description: "List of domain names to bind to/unbind from a policy template.",
+				Description: "The domain name to be bound to the policy template (or unbound from the policy template).",
 			},
 
 			"template_id": {
 				Type:        schema.TypeString,
 				Required:    true,
 				ForceNew:    true,
-				Description: "Specifies the ID of the policy template or the site global policy to be bound or unbound.\n<li>To bind to a policy template, or unbind from it, specify the policy template ID.</li>.\n<li>To bind to the site's global policy, or unbind from it, use the @ZoneLevel@domain parameter value.</li>.\n\nNote: After unbinding, the domain name will use an independent policy and rule quota will be calculated separately. Please make sure there is sufficient rule quota before unbinding.",
+				Description: "Specifies the ID of the policy template or the site global policy to be bound or unbound.\n<li>To bind to a policy template, or unbind from it, specify the policy template ID.</li>\n<li>To bind to the site global policy, or unbind from it, use the `@ZoneLevel@domain` parameter value.</li>\nNote: After unbinding, the domain name will use an independent policy and the rule quota will be calculated separately. Please make sure the plan rule quota is sufficient before unbinding.",
 			},
 
 			"operate": {
@@ -52,7 +53,7 @@ func ResourceTencentCloudTeoBindSecurityTemplate() *schema.Resource {
 				ForceNew:    true,
 				Optional:    true,
 				Computed:    true,
-				Description: "Unbind operation option. valid values: `unbind-keep-policy`: unbind a domain name from the policy template while retaining the current policy. `unbind-use-default`: unbind a domain name from the policy template and use the default blank policy. default value: `unbind-keep-policy`.",
+				Description: "Bind or unbind operation option. Valid values:\n<li>`unbind-keep-policy`: unbind the domain name from the policy template while retaining the current policy.</li>\n<li>`unbind-use-default`: unbind the domain name from the policy template and use the default blank policy.</li>\nDefault value: `unbind-keep-policy`. Note: The unbind operation currently only supports unbinding a single domain name. That is, when the value of `operate` is `unbind-keep-policy` or `unbind-use-default`, only one domain name can be unbound.",
 			},
 
 			"over_write": {
@@ -60,7 +61,7 @@ func ResourceTencentCloudTeoBindSecurityTemplate() *schema.Resource {
 				ForceNew:    true,
 				Optional:    true,
 				Computed:    true,
-				Description: "If the passed-in domain is already bound to a policy template (including site-level protection policies), setting this parameter indicates whether to replace that template. The default value is true. Supported values are: `true`: Replace the currently bound template for the domain. `false`: Do not replace the currently bound template for the domain. Note: When set to false, if the passed-in domain is already bound to a policy template, the API will return an error; site-level protection policies are also a type of policy template.",
+				Description: "If the passed-in domain name is already bound to a policy template (including site-level protection policies), this parameter indicates whether to replace the template. Default value is `true`. Supported values:\n<li>`true`: replace the template currently bound to the domain name.</li>\n<li>`false`: do not replace the template currently bound to the domain name.</li>\nNote: When set to `false`, if the passed-in domain name is already bound to a policy template, the API will return an error; the site-level protection policy is also a type of policy template.",
 			},
 
 			"status": {
@@ -76,16 +77,14 @@ func resourceTencentCloudTeoBindSecurityTemplateCreate(d *schema.ResourceData, m
 	defer tccommon.LogElapsed("resource.tencentcloud_teo_bind_security_template.create")()
 	defer tccommon.InconsistentCheck(d, meta)()
 
-	logId := tccommon.GetLogId(tccommon.ContextNil)
-
-	ctx := tccommon.NewResourceLifeCycleHandleFuncContext(context.Background(), logId, d, meta)
 	var (
+		logId      = tccommon.GetLogId(tccommon.ContextNil)
+		ctx        = tccommon.NewResourceLifeCycleHandleFuncContext(context.Background(), logId, d, meta)
+		request    = teov20220901.NewBindSecurityTemplateToEntityRequest()
 		zoneId     string
 		templateId string
 		entity     string
 	)
-
-	request := teov20220901.NewBindSecurityTemplateToEntityRequest()
 
 	if v, ok := d.GetOk("zone_id"); ok {
 		zoneId = v.(string)
@@ -109,7 +108,6 @@ func resourceTencentCloudTeoBindSecurityTemplateCreate(d *schema.ResourceData, m
 	}
 
 	request.Operate = helper.String("bind")
-
 	reqErr := resource.Retry(tccommon.WriteRetryTimeout, func() *resource.RetryError {
 		result, e := meta.(tccommon.ProviderMeta).GetAPIV3Conn().UseTeoV20220901Client().BindSecurityTemplateToEntityWithContext(ctx, request)
 		if e != nil {
@@ -117,8 +115,10 @@ func resourceTencentCloudTeoBindSecurityTemplateCreate(d *schema.ResourceData, m
 		} else {
 			log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), result.ToJsonString())
 		}
+
 		return nil
 	})
+
 	if reqErr != nil {
 		log.Printf("[CRITAL]%s create teo bind security template failed, reason:%+v", logId, reqErr)
 		return reqErr
@@ -145,15 +145,14 @@ func resourceTencentCloudTeoBindSecurityTemplateRead(d *schema.ResourceData, met
 	defer tccommon.InconsistentCheck(d, meta)()
 
 	logId := tccommon.GetLogId(tccommon.ContextNil)
-
 	ctx := tccommon.NewResourceLifeCycleHandleFuncContext(context.Background(), logId, d, meta)
-
 	service := TeoService{client: meta.(tccommon.ProviderMeta).GetAPIV3Conn()}
 
 	idSplit := strings.Split(d.Id(), tccommon.FILED_SP)
 	if len(idSplit) != 3 {
 		return fmt.Errorf("id is broken,%s", d.Id())
 	}
+
 	zoneId := idSplit[0]
 	templateId := idSplit[1]
 	entity := idSplit[2]
@@ -170,8 +169,9 @@ func resourceTencentCloudTeoBindSecurityTemplateRead(d *schema.ResourceData, met
 	}
 
 	if respData == nil {
+		log.Printf("[CRUD] teo_bind_security_template id=%s", d.Id())
 		d.SetId("")
-		log.Printf("[WARN]%s resource `teo_bind_security_template` [%s] not found, please check if it has been deleted.\n", logId, d.Id())
+		log.Printf("[WARN]%s resource `teo_bind_security_template` not found, please check if it has been deleted.\n", logId)
 		return nil
 	}
 
@@ -206,6 +206,7 @@ func resourceTencentCloudTeoBindSecurityTemplateDelete(d *schema.ResourceData, m
 	if len(idSplit) != 3 {
 		return fmt.Errorf("id is broken,%s", d.Id())
 	}
+
 	zoneId := idSplit[0]
 	templateId := idSplit[1]
 	entity := idSplit[2]
@@ -236,9 +237,21 @@ func resourceTencentCloudTeoBindSecurityTemplateDelete(d *schema.ResourceData, m
 		}
 		return nil
 	})
+
 	if reqErr != nil {
 		log.Printf("[CRITAL]%s update teo bind security template failed, reason:%+v", logId, reqErr)
 		return reqErr
+	}
+
+	if _, err := (&resource.StateChangeConf{
+		Delay:      10 * time.Second,
+		MinTimeout: 3 * time.Second,
+		Pending:    []string{},
+		Refresh:    resourceTeoBindSecurityTemplateDeleteStateRefreshFunc_0_0(ctx, zoneId, templateId, entity),
+		Target:     []string{"deleted"},
+		Timeout:    d.Timeout(schema.TimeoutDelete),
+	}).WaitForStateContext(ctx); err != nil {
+		return err
 	}
 
 	return nil

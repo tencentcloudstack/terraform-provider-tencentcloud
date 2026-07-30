@@ -16,32 +16,45 @@ Use this resource to create TcaplusDB table group.
 ### Create a tcaplusdb table group
 
 ```hcl
-locals {
-  vpc_id    = data.tencentcloud_vpc_subnets.vpc.instance_list.0.vpc_id
-  subnet_id = data.tencentcloud_vpc_subnets.vpc.instance_list.0.subnet_id
-}
-
-variable "availability_zone" {
-  default = "ap-guangzhou-3"
-}
-
-data "tencentcloud_vpc_subnets" "vpc" {
-  is_default        = true
-  availability_zone = var.availability_zone
-}
-
 resource "tencentcloud_tcaplus_cluster" "example" {
   idl_type                 = "PROTO"
   cluster_name             = "tf_example_tcaplus_cluster"
-  vpc_id                   = local.vpc_id
-  subnet_id                = local.subnet_id
-  password                 = "your_pw_123111"
+  vpc_id                   = "vpc-i5yyodl9"
+  subnet_id                = "subnet-hhi88a58"
+  password                 = "Password@2026"
   old_password_expire_last = 3600
 }
 
 resource "tencentcloud_tcaplus_tablegroup" "example" {
   cluster_id      = tencentcloud_tcaplus_cluster.example.id
   tablegroup_name = "tf_example_group_name"
+  resource_tags {
+    tag_key   = "CreatedBy"
+    tag_value = "Terraform"
+  }
+}
+```
+
+### Create a tcaplusdb table group with user-specified table group id
+
+```hcl
+resource "tencentcloud_tcaplus_cluster" "example" {
+  idl_type                 = "PROTO"
+  cluster_name             = "tf_example_tcaplus_cluster"
+  vpc_id                   = "vpc-i5yyodl9"
+  subnet_id                = "subnet-hhi88a58"
+  password                 = "Password@2026"
+  old_password_expire_last = 3600
+}
+
+resource "tencentcloud_tcaplus_tablegroup" "example" {
+  cluster_id      = tencentcloud_tcaplus_cluster.example.id
+  tablegroup_name = "tf_example_group_name"
+  table_group_id  = "109"
+  resource_tags {
+    tag_key   = "CreatedBy"
+    tag_value = "Terraform"
+  }
 }
 ```
 
@@ -50,7 +63,14 @@ resource "tencentcloud_tcaplus_tablegroup" "example" {
 The following arguments are supported:
 
 * `cluster_id` - (Required, String, ForceNew) ID of the TcaplusDB cluster to which the table group belongs.
-* `tablegroup_name` - (Required, String) Name of the TcaplusDB table group. Name length should be between 1 and 30.
+* `tablegroup_name` - (Required, String) Table group name; may consist of Chinese characters, English letters, or numeric characters, with a maximum length of 32 characters.
+* `resource_tags` - (Optional, Set) Set of table group tags.
+* `table_group_id` - (Optional, String, ForceNew) ID of the TcaplusDB table group, can be user-specified (must be unique within the cluster) or auto-incremented by the API when not set. Immutable after creation.
+
+The `resource_tags` object supports the following:
+
+* `tag_key` - (Required, String) Tag key.
+* `tag_value` - (Required, String) Tag value.
 
 ## Attributes Reference
 
@@ -61,4 +81,12 @@ In addition to all arguments above, the following attributes are exported:
 * `table_count` - Number of tables.
 * `total_size` - Total storage size (MB).
 
+
+## Import
+
+TcaplusDB table group can be imported using the clusterId:tableGroupId, e.g.
+
+```
+terraform import tencentcloud_tcaplus_tablegroup.example 5516511420:52
+```
 

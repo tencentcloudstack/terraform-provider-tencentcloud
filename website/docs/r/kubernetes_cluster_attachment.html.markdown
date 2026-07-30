@@ -187,7 +187,8 @@ The `worker_config` object supports the following:
 * `mount_target` - (Optional, String, ForceNew) Mount target. Default is not mounting.
 * `pre_start_user_script` - (Optional, String, ForceNew) Base64-encoded user script, executed before initializing the node, currently only effective for adding existing nodes.
 * `taints` - (Optional, List, ForceNew) Node taint.
-* `user_data` - (Optional, String, ForceNew) Base64-encoded User Data text, the length limit is 16KB.
+* `user_data` - (Optional, String, ForceNew, **Deprecated**) It has been deprecated from version 1.83.16. Use `user_script` instead. Base64-encoded User Data text, the length limit is 16KB.
+* `user_script` - (Optional, String, ForceNew) A Base64-encoded user script that executes after Kubernetes components start. Users must ensure the script supports re-entrancy and retry logic. The script and its generated log files can be found in the `/data/ccs_userscript/` directory on the node. If the node should only join the scheduling pool after initialization is complete, the `unschedulable` parameter can be used; in this case, add the command `kubectl uncordon nodename --kubeconfig=/root/.kube/config` at the end of the user script to enable scheduling on the node. Note: This field may return null, indicating that no valid value is available. Example value: `#!/bin/sh echo "hello world"`.
 
 ## Attributes Reference
 

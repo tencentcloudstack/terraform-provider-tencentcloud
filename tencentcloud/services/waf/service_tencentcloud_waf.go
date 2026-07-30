@@ -2444,3 +2444,41 @@ func (me *WafService) DescribeWafBotIdRuleById(ctx context.Context, domain, scen
 	ret = response.Response
 	return
 }
+
+// DescribeWafApiSecSensitiveRuleListByFilter queries the API security sensitive rule list via the
+// DescribeApiSecSensitiveRuleList API. The caller is responsible for setting Domain, RuleName and
+// the relevant IsQuery* flag on the request. It returns the full response params so that each
+// resource can locate its target rule by RuleName from the corresponding list.
+func (me *WafService) DescribeWafApiSecSensitiveRuleListByFilter(ctx context.Context, request *waf.DescribeApiSecSensitiveRuleListRequest) (ret *waf.DescribeApiSecSensitiveRuleListResponseParams, errRet error) {
+	logId := tccommon.GetLogId(ctx)
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	err := resource.Retry(tccommon.ReadRetryTimeout, func() *resource.RetryError {
+		ratelimit.Check(request.GetAction())
+		result, e := me.client.UseWafV20180125Client().DescribeApiSecSensitiveRuleList(request)
+		if e != nil {
+			return tccommon.RetryError(e)
+		} else {
+			log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), result.ToJsonString())
+		}
+
+		if result == nil || result.Response == nil {
+			return resource.NonRetryableError(fmt.Errorf("Describe api sec sensitive rule list failed, Response is nil."))
+		}
+
+		ret = result.Response
+		return nil
+	})
+
+	if err != nil {
+		errRet = err
+		return
+	}
+
+	return
+}

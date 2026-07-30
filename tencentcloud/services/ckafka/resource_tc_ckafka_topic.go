@@ -45,7 +45,7 @@ func ResourceTencentCloudCkafkaTopic() *schema.Resource {
 			"replica_num": {
 				Type:        schema.TypeInt,
 				Required:    true,
-				Description: "The number of replica.",
+				Description: "The number of replica. Maximum is 3.",
 			},
 			"enable_white_list": {
 				Type:        schema.TypeBool,
@@ -69,7 +69,7 @@ func ResourceTencentCloudCkafkaTopic() *schema.Resource {
 				Optional:     true,
 				Default:      60000,
 				ValidateFunc: tccommon.ValidateIntegerMin(60000),
-				Description:  "Message can be selected. Retention time, unit is ms, the current minimum value is 60000ms.",
+				Description:  "Optional parameter: Message retention time. Value range: [60000, 7776000000]. Unit: milliseconds. Default value: 7200000.",
 			},
 			"sync_replica_min_num": {
 				Type:        schema.TypeInt,
@@ -236,6 +236,8 @@ func resourceTencentCloudCkafkaTopicCreate(d *schema.ResourceData, meta interfac
 		return fmt.Errorf("this Topic %s Create Failed", topicName)
 	}
 
+	d.SetId(strings.Join([]string{instanceId, topicName}, tccommon.FILED_SP))
+
 	if len(request.IpWhiteList) > 0 && whiteListSwitch {
 		err = ckafkcService.AddCkafkaTopicIpWhiteList(ctx, instanceId, topicName, request.IpWhiteList)
 		if err != nil {
@@ -243,8 +245,6 @@ func resourceTencentCloudCkafkaTopicCreate(d *schema.ResourceData, meta interfac
 		}
 	}
 
-	resourceId := instanceId + tccommon.FILED_SP + topicName
-	d.SetId(resourceId)
 	return resourceTencentCloudCkafkaTopicRead(d, meta)
 }
 

@@ -564,57 +564,59 @@ func (r *AlterDMSTableResponse) FromJsonString(s string) error {
 }
 
 type AnalysisTaskResults struct {
-	// 任务Id
+	// <p>任务Id</p>
 	Id *string `json:"Id,omitnil,omitempty" name:"Id"`
 
-	// 任务创建时间，毫秒时间戳
+	// <p>任务创建时间，毫秒时间戳</p>
 	InstanceStartTime *int64 `json:"InstanceStartTime,omitnil,omitempty" name:"InstanceStartTime"`
 
-	// 任务结束时间，毫秒时间戳
+	// <p>任务结束时间，毫秒时间戳</p>
 	InstanceCompleteTime *int64 `json:"InstanceCompleteTime,omitnil,omitempty" name:"InstanceCompleteTime"`
 
-	// 任务状态：0 初始化， 1 执行中， 2 执行成功，3 数据写入中，4 排队中。-1 执行失败，-3 已取消。
+	// <p>任务状态：0 初始化， 1 执行中， 2 执行成功，3 数据写入中，4 排队中。-1 执行失败，-3 已取消。</p>
 	State *int64 `json:"State,omitnil,omitempty" name:"State"`
 
-	// 任务SQL语句
+	// <p>任务SQL语句</p>
 	SQL *string `json:"SQL,omitnil,omitempty" name:"SQL"`
 
-	// 计算资源名字
+	// <p>计算资源名字</p>
 	DataEngineName *string `json:"DataEngineName,omitnil,omitempty" name:"DataEngineName"`
 
-	// 单位毫秒，引擎内执行耗时, 反映真正用于计算所需的耗时，即从  Spark 任务第一个 Task  开始执行到任务结束之间的耗时。
-	// 具体的：会统计任务的每个 Spark Stage 第一个 Task 到最后一个 Task 完成时长之和，不包含任务开始的排队耗时（即剔除从任务提交到 Spark Task 开始执行之间的调度等其他耗时），也不包含任务执行过程中多个 Spark Stage 之间因 executor 资源不足而等待执行 Task 所消耗的时间。
+	// <p>单位毫秒，引擎内执行耗时, 反映真正用于计算所需的耗时，即从  Spark 任务第一个 Task  开始执行到任务结束之间的耗时。<br>具体的：会统计任务的每个 Spark Stage 第一个 Task 到最后一个 Task 完成时长之和，不包含任务开始的排队耗时（即剔除从任务提交到 Spark Task 开始执行之间的调度等其他耗时），也不包含任务执行过程中多个 Spark Stage 之间因 executor 资源不足而等待执行 Task 所消耗的时间。</p>
 	JobTimeSum *int64 `json:"JobTimeSum,omitnil,omitempty" name:"JobTimeSum"`
 
-	// 单位秒，累计 CPU* 秒 ( 累计 CPU * 时 = 累计 CPU* 秒/ 3600)，统计参与计算所用 Spark Executor 每个 core 的 CPU 执行时长总和
+	// <p>单位秒，累计 CPU* 秒 ( 累计 CPU * 时 = 累计 CPU* 秒/ 3600)，统计参与计算所用 Spark Executor 每个 core 的 CPU 执行时长总和</p>
 	TaskTimeSum *int64 `json:"TaskTimeSum,omitnil,omitempty" name:"TaskTimeSum"`
 
-	// 数据扫描总行数
+	// <p>数据扫描总行数</p>
 	InputRecordsSum *int64 `json:"InputRecordsSum,omitnil,omitempty" name:"InputRecordsSum"`
 
-	// 数据扫描总 bytes
+	// <p>数据扫描总 bytes</p>
 	InputBytesSum *int64 `json:"InputBytesSum,omitnil,omitempty" name:"InputBytesSum"`
 
-	// 输出总行数
+	// <p>输出总行数</p>
 	OutputRecordsSum *int64 `json:"OutputRecordsSum,omitnil,omitempty" name:"OutputRecordsSum"`
 
-	// 输出总 bytes
+	// <p>输出总 bytes</p>
 	OutputBytesSum *int64 `json:"OutputBytesSum,omitnil,omitempty" name:"OutputBytesSum"`
 
-	// shuffle read 总 bytes
+	// <p>shuffle read 总 bytes</p>
 	ShuffleReadBytesSum *int64 `json:"ShuffleReadBytesSum,omitnil,omitempty" name:"ShuffleReadBytesSum"`
 
-	// shuffle read 总行数
+	// <p>shuffle read 总行数</p>
 	ShuffleReadRecordsSum *int64 `json:"ShuffleReadRecordsSum,omitnil,omitempty" name:"ShuffleReadRecordsSum"`
 
-	// 洞察结果类型分类，一个 json 数组，有如下几种类型：SPARK-StageScheduleDelay（资源抢占）, SPARK-ShuffleFailure（Shuffle异常）, SPARK-SlowTask（慢task）, SPARK-DataSkew（数据倾斜）, SPARK-InsufficientResource（磁盘或内存不足）
+	// <p>洞察结果类型分类，一个 json 数组，有如下几种类型：SPARK-StageScheduleDelay（资源抢占）, SPARK-ShuffleFailure（Shuffle异常）, SPARK-SlowTask（慢task）, SPARK-DataSkew（数据倾斜）, SPARK-InsufficientResource（磁盘或内存不足）</p>
 	AnalysisStatus *string `json:"AnalysisStatus,omitnil,omitempty" name:"AnalysisStatus"`
 
-	// 任务输出文件总数
+	// <p>任务输出文件总数</p>
 	OutputFilesNum *int64 `json:"OutputFilesNum,omitnil,omitempty" name:"OutputFilesNum"`
 
-	// 任务输出小文件总数
+	// <p>任务输出小文件总数</p>
 	OutputSmallFilesNum *int64 `json:"OutputSmallFilesNum,omitnil,omitempty" name:"OutputSmallFilesNum"`
+
+	// <p>shuffle write 总 Bytes 大小</p><p>单位：Bytes</p><p>默认值：无</p>
+	ShuffleWriteBytesSum *int64 `json:"ShuffleWriteBytesSum,omitnil,omitempty" name:"ShuffleWriteBytesSum"`
 }
 
 type Asset struct {
@@ -895,21 +897,27 @@ func (r *AttachDataMaskPolicyResponse) FromJsonString(s string) error {
 
 // Predefined struct for user
 type AttachUserPolicyRequestParams struct {
-	// 用户Id，和子用户uin相同，需要先使用CreateUser接口创建用户。可以使用DescribeUsers接口查看。
+	// <p>用户Id，和子用户uin相同，需要先使用CreateUser接口创建用户。可以使用DescribeUsers接口查看。</p>
 	UserId *string `json:"UserId,omitnil,omitempty" name:"UserId"`
 
-	// 鉴权策略集合
+	// <p>鉴权策略集合</p>
 	PolicySet []*Policy `json:"PolicySet,omitnil,omitempty" name:"PolicySet"`
+
+	// <p>用户来源类型TencentAccount（普通腾讯云用户） / EntraAccount（微软用户）</p>
+	AccountType *string `json:"AccountType,omitnil,omitempty" name:"AccountType"`
 }
 
 type AttachUserPolicyRequest struct {
 	*tchttp.BaseRequest
 	
-	// 用户Id，和子用户uin相同，需要先使用CreateUser接口创建用户。可以使用DescribeUsers接口查看。
+	// <p>用户Id，和子用户uin相同，需要先使用CreateUser接口创建用户。可以使用DescribeUsers接口查看。</p>
 	UserId *string `json:"UserId,omitnil,omitempty" name:"UserId"`
 
-	// 鉴权策略集合
+	// <p>鉴权策略集合</p>
 	PolicySet []*Policy `json:"PolicySet,omitnil,omitempty" name:"PolicySet"`
+
+	// <p>用户来源类型TencentAccount（普通腾讯云用户） / EntraAccount（微软用户）</p>
+	AccountType *string `json:"AccountType,omitnil,omitempty" name:"AccountType"`
 }
 
 func (r *AttachUserPolicyRequest) ToJsonString() string {
@@ -926,6 +934,7 @@ func (r *AttachUserPolicyRequest) FromJsonString(s string) error {
 	}
 	delete(f, "UserId")
 	delete(f, "PolicySet")
+	delete(f, "AccountType")
 	if len(f) > 0 {
 		return tcerr.NewTencentCloudSDKError("ClientError.BuildRequestError", "AttachUserPolicyRequest has unknown keys!", "")
 	}
@@ -934,6 +943,9 @@ func (r *AttachUserPolicyRequest) FromJsonString(s string) error {
 
 // Predefined struct for user
 type AttachUserPolicyResponseParams struct {
+	// <p>要授权的策略列表</p>
+	PolicySet []*Policy `json:"PolicySet,omitnil,omitempty" name:"PolicySet"`
+
 	// 唯一请求 ID，由服务端生成，每次请求都会返回（若请求因其他原因未能抵达服务端，则该次请求不会获得 RequestId）。定位问题时需要提供该次请求的 RequestId。
 	RequestId *string `json:"RequestId,omitnil,omitempty" name:"RequestId"`
 }
@@ -956,20 +968,20 @@ func (r *AttachUserPolicyResponse) FromJsonString(s string) error {
 
 // Predefined struct for user
 type AttachWorkGroupPolicyRequestParams struct {
-	// 工作组Id
+	// <p>工作组Id</p>
 	WorkGroupId *int64 `json:"WorkGroupId,omitnil,omitempty" name:"WorkGroupId"`
 
-	// 要绑定的策略集合
+	// <p>要绑定的策略集合</p>
 	PolicySet []*Policy `json:"PolicySet,omitnil,omitempty" name:"PolicySet"`
 }
 
 type AttachWorkGroupPolicyRequest struct {
 	*tchttp.BaseRequest
 	
-	// 工作组Id
+	// <p>工作组Id</p>
 	WorkGroupId *int64 `json:"WorkGroupId,omitnil,omitempty" name:"WorkGroupId"`
 
-	// 要绑定的策略集合
+	// <p>要绑定的策略集合</p>
 	PolicySet []*Policy `json:"PolicySet,omitnil,omitempty" name:"PolicySet"`
 }
 
@@ -995,6 +1007,9 @@ func (r *AttachWorkGroupPolicyRequest) FromJsonString(s string) error {
 
 // Predefined struct for user
 type AttachWorkGroupPolicyResponseParams struct {
+	// <p>要授权的策略列表</p>
+	PolicySet []*Policy `json:"PolicySet,omitnil,omitempty" name:"PolicySet"`
+
 	// 唯一请求 ID，由服务端生成，每次请求都会返回（若请求因其他原因未能抵达服务端，则该次请求不会获得 RequestId）。定位问题时需要提供该次请求的 RequestId。
 	RequestId *string `json:"RequestId,omitnil,omitempty" name:"RequestId"`
 }
@@ -1719,40 +1734,43 @@ func (r *CheckLockMetaDataResponse) FromJsonString(s string) error {
 }
 
 type Column struct {
-	// 列名称，不区分大小写，最大支持25个字符。
+	// <p>列名称，不区分大小写，最大支持25个字符。</p>
 	Name *string `json:"Name,omitnil,omitempty" name:"Name"`
 
-	// string|tinyint|smallint|int|bigint|boolean|float|double|decimal|timestamp|date|binary|array|map|struct|uniontype
+	// <p>string|tinyint|smallint|int|bigint|boolean|float|double|decimal|timestamp|date|binary|array|map|struct|uniontype</p>
 	Type *string `json:"Type,omitnil,omitempty" name:"Type"`
 
-	// 对该类的注释。
+	// <p>对该类的注释。</p>
 	// 注意：此字段可能返回 null，表示取不到有效值。
 	Comment *string `json:"Comment,omitnil,omitempty" name:"Comment"`
 
-	// 表示整个 numeric 的长度
+	// <p>表示整个 numeric 的长度</p>
 	Precision *int64 `json:"Precision,omitnil,omitempty" name:"Precision"`
 
-	// 表示小数部分的长度
+	// <p>表示小数部分的长度</p>
 	Scale *int64 `json:"Scale,omitnil,omitempty" name:"Scale"`
 
-	// 是否为null
+	// <p>是否为null</p>
 	Nullable *string `json:"Nullable,omitnil,omitempty" name:"Nullable"`
 
-	// 字段位置，小的在前
+	// <p>字段位置，小的在前</p>
 	Position *int64 `json:"Position,omitnil,omitempty" name:"Position"`
 
-	// 字段创建时间
+	// <p>字段创建时间</p><p>参数格式：YYYY-MM-DD hh:mm:ss</p>
 	CreateTime *string `json:"CreateTime,omitnil,omitempty" name:"CreateTime"`
 
-	// 字段修改时间
+	// <p>字段修改时间</p><p>参数格式：YYYY-MM-DD hh:mm:ss</p>
 	ModifiedTime *string `json:"ModifiedTime,omitnil,omitempty" name:"ModifiedTime"`
 
-	// 是否为分区字段
+	// <p>是否为分区字段</p>
 	IsPartition *bool `json:"IsPartition,omitnil,omitempty" name:"IsPartition"`
 
-	// 数据脱敏策略信息
+	// <p>数据脱敏策略信息</p>
 	// 注意：此字段可能返回 null，表示取不到有效值。
 	DataMaskStrategyInfo *DataMaskStrategyInfo `json:"DataMaskStrategyInfo,omitnil,omitempty" name:"DataMaskStrategyInfo"`
+
+	// <p>数据字段说明</p>
+	TypeText *string `json:"TypeText,omitnil,omitempty" name:"TypeText"`
 }
 
 type CommonMetrics struct {
@@ -2553,6 +2571,126 @@ func (r *CreateDatabaseResponse) ToJsonString() string {
 // FromJsonString It is highly **NOT** recommended to use this function
 // because it has no param check, nor strict type check
 func (r *CreateDatabaseResponse) FromJsonString(s string) error {
+	return json.Unmarshal([]byte(s), &r)
+}
+
+// Predefined struct for user
+type CreateDatasourceConnectionRequestParams struct {
+	// 数据连接名称
+	DatasourceConnectionName *string `json:"DatasourceConnectionName,omitnil,omitempty" name:"DatasourceConnectionName"`
+
+	// 数据连接类型
+	DatasourceConnectionType *string `json:"DatasourceConnectionType,omitnil,omitempty" name:"DatasourceConnectionType"`
+
+	// 数据连接属性
+	DatasourceConnectionConfig *DatasourceConnectionConfig `json:"DatasourceConnectionConfig,omitnil,omitempty" name:"DatasourceConnectionConfig"`
+
+	// 数据连接所属服务
+	ServiceType *string `json:"ServiceType,omitnil,omitempty" name:"ServiceType"`
+
+	// 数据连接描述
+	DatasourceConnectionDesc *string `json:"DatasourceConnectionDesc,omitnil,omitempty" name:"DatasourceConnectionDesc"`
+
+	// 数据引擎名称数组
+	DataEngineNames []*string `json:"DataEngineNames,omitnil,omitempty" name:"DataEngineNames"`
+
+	// 网络连接名称
+	NetworkConnectionName *string `json:"NetworkConnectionName,omitnil,omitempty" name:"NetworkConnectionName"`
+
+	// 网络连接描述
+	NetworkConnectionDesc *string `json:"NetworkConnectionDesc,omitnil,omitempty" name:"NetworkConnectionDesc"`
+
+	// 网络连接类型 （2-夸源型，4-增强型）
+	NetworkConnectionType *int64 `json:"NetworkConnectionType,omitnil,omitempty" name:"NetworkConnectionType"`
+
+	// 自定义配置
+	CustomConfig []*CustomConfig `json:"CustomConfig,omitnil,omitempty" name:"CustomConfig"`
+}
+
+type CreateDatasourceConnectionRequest struct {
+	*tchttp.BaseRequest
+	
+	// 数据连接名称
+	DatasourceConnectionName *string `json:"DatasourceConnectionName,omitnil,omitempty" name:"DatasourceConnectionName"`
+
+	// 数据连接类型
+	DatasourceConnectionType *string `json:"DatasourceConnectionType,omitnil,omitempty" name:"DatasourceConnectionType"`
+
+	// 数据连接属性
+	DatasourceConnectionConfig *DatasourceConnectionConfig `json:"DatasourceConnectionConfig,omitnil,omitempty" name:"DatasourceConnectionConfig"`
+
+	// 数据连接所属服务
+	ServiceType *string `json:"ServiceType,omitnil,omitempty" name:"ServiceType"`
+
+	// 数据连接描述
+	DatasourceConnectionDesc *string `json:"DatasourceConnectionDesc,omitnil,omitempty" name:"DatasourceConnectionDesc"`
+
+	// 数据引擎名称数组
+	DataEngineNames []*string `json:"DataEngineNames,omitnil,omitempty" name:"DataEngineNames"`
+
+	// 网络连接名称
+	NetworkConnectionName *string `json:"NetworkConnectionName,omitnil,omitempty" name:"NetworkConnectionName"`
+
+	// 网络连接描述
+	NetworkConnectionDesc *string `json:"NetworkConnectionDesc,omitnil,omitempty" name:"NetworkConnectionDesc"`
+
+	// 网络连接类型 （2-夸源型，4-增强型）
+	NetworkConnectionType *int64 `json:"NetworkConnectionType,omitnil,omitempty" name:"NetworkConnectionType"`
+
+	// 自定义配置
+	CustomConfig []*CustomConfig `json:"CustomConfig,omitnil,omitempty" name:"CustomConfig"`
+}
+
+func (r *CreateDatasourceConnectionRequest) ToJsonString() string {
+    b, _ := json.Marshal(r)
+    return string(b)
+}
+
+// FromJsonString It is highly **NOT** recommended to use this function
+// because it has no param check, nor strict type check
+func (r *CreateDatasourceConnectionRequest) FromJsonString(s string) error {
+	f := make(map[string]interface{})
+	if err := json.Unmarshal([]byte(s), &f); err != nil {
+		return err
+	}
+	delete(f, "DatasourceConnectionName")
+	delete(f, "DatasourceConnectionType")
+	delete(f, "DatasourceConnectionConfig")
+	delete(f, "ServiceType")
+	delete(f, "DatasourceConnectionDesc")
+	delete(f, "DataEngineNames")
+	delete(f, "NetworkConnectionName")
+	delete(f, "NetworkConnectionDesc")
+	delete(f, "NetworkConnectionType")
+	delete(f, "CustomConfig")
+	if len(f) > 0 {
+		return tcerr.NewTencentCloudSDKError("ClientError.BuildRequestError", "CreateDatasourceConnectionRequest has unknown keys!", "")
+	}
+	return json.Unmarshal([]byte(s), &r)
+}
+
+// Predefined struct for user
+type CreateDatasourceConnectionResponseParams struct {
+	// 数据连接Id
+	DatasourceConnectionId *string `json:"DatasourceConnectionId,omitnil,omitempty" name:"DatasourceConnectionId"`
+
+	// 唯一请求 ID，由服务端生成，每次请求都会返回（若请求因其他原因未能抵达服务端，则该次请求不会获得 RequestId）。定位问题时需要提供该次请求的 RequestId。
+	RequestId *string `json:"RequestId,omitnil,omitempty" name:"RequestId"`
+}
+
+type CreateDatasourceConnectionResponse struct {
+	*tchttp.BaseResponse
+	Response *CreateDatasourceConnectionResponseParams `json:"Response"`
+}
+
+func (r *CreateDatasourceConnectionResponse) ToJsonString() string {
+    b, _ := json.Marshal(r)
+    return string(b)
+}
+
+// FromJsonString It is highly **NOT** recommended to use this function
+// because it has no param check, nor strict type check
+func (r *CreateDatasourceConnectionResponse) FromJsonString(s string) error {
 	return json.Unmarshal([]byte(s), &r)
 }
 
@@ -4650,6 +4788,9 @@ type CreateUserRequestParams struct {
 
 	// 用户别名，字符长度小50
 	UserAlias *string `json:"UserAlias,omitnil,omitempty" name:"UserAlias"`
+
+	// 账号类型，UserAccount：用户账号 RoleAccount：角色账号，默认为用户账号
+	AccountType *string `json:"AccountType,omitnil,omitempty" name:"AccountType"`
 }
 
 type CreateUserRequest struct {
@@ -4672,6 +4813,9 @@ type CreateUserRequest struct {
 
 	// 用户别名，字符长度小50
 	UserAlias *string `json:"UserAlias,omitnil,omitempty" name:"UserAlias"`
+
+	// 账号类型，UserAccount：用户账号 RoleAccount：角色账号，默认为用户账号
+	AccountType *string `json:"AccountType,omitnil,omitempty" name:"AccountType"`
 }
 
 func (r *CreateUserRequest) ToJsonString() string {
@@ -4692,6 +4836,7 @@ func (r *CreateUserRequest) FromJsonString(s string) error {
 	delete(f, "UserType")
 	delete(f, "WorkGroupIds")
 	delete(f, "UserAlias")
+	delete(f, "AccountType")
 	if len(f) > 0 {
 		return tcerr.NewTencentCloudSDKError("ClientError.BuildRequestError", "CreateUserRequest has unknown keys!", "")
 	}
@@ -4717,6 +4862,95 @@ func (r *CreateUserResponse) ToJsonString() string {
 // FromJsonString It is highly **NOT** recommended to use this function
 // because it has no param check, nor strict type check
 func (r *CreateUserResponse) FromJsonString(s string) error {
+	return json.Unmarshal([]byte(s), &r)
+}
+
+// Predefined struct for user
+type CreateUserRoleRequestParams struct {
+	// 角色Arn信息
+	Arn *string `json:"Arn,omitnil,omitempty" name:"Arn"`
+
+	// 角色描述信息
+	Desc *string `json:"Desc,omitnil,omitempty" name:"Desc"`
+
+	// 角色名称
+	Name *string `json:"Name,omitnil,omitempty" name:"Name"`
+
+	// cos授权路径列表
+	CosPermissionList []*CosPermission `json:"CosPermissionList,omitnil,omitempty" name:"CosPermissionList"`
+
+	// cam策略json
+	PermissionJson *string `json:"PermissionJson,omitnil,omitempty" name:"PermissionJson"`
+
+	// 是否设置为常驻：1非常驻（默认）、2常驻（仅能设置一个常驻）
+	IsDefault *int64 `json:"IsDefault,omitnil,omitempty" name:"IsDefault"`
+}
+
+type CreateUserRoleRequest struct {
+	*tchttp.BaseRequest
+	
+	// 角色Arn信息
+	Arn *string `json:"Arn,omitnil,omitempty" name:"Arn"`
+
+	// 角色描述信息
+	Desc *string `json:"Desc,omitnil,omitempty" name:"Desc"`
+
+	// 角色名称
+	Name *string `json:"Name,omitnil,omitempty" name:"Name"`
+
+	// cos授权路径列表
+	CosPermissionList []*CosPermission `json:"CosPermissionList,omitnil,omitempty" name:"CosPermissionList"`
+
+	// cam策略json
+	PermissionJson *string `json:"PermissionJson,omitnil,omitempty" name:"PermissionJson"`
+
+	// 是否设置为常驻：1非常驻（默认）、2常驻（仅能设置一个常驻）
+	IsDefault *int64 `json:"IsDefault,omitnil,omitempty" name:"IsDefault"`
+}
+
+func (r *CreateUserRoleRequest) ToJsonString() string {
+    b, _ := json.Marshal(r)
+    return string(b)
+}
+
+// FromJsonString It is highly **NOT** recommended to use this function
+// because it has no param check, nor strict type check
+func (r *CreateUserRoleRequest) FromJsonString(s string) error {
+	f := make(map[string]interface{})
+	if err := json.Unmarshal([]byte(s), &f); err != nil {
+		return err
+	}
+	delete(f, "Arn")
+	delete(f, "Desc")
+	delete(f, "Name")
+	delete(f, "CosPermissionList")
+	delete(f, "PermissionJson")
+	delete(f, "IsDefault")
+	if len(f) > 0 {
+		return tcerr.NewTencentCloudSDKError("ClientError.BuildRequestError", "CreateUserRoleRequest has unknown keys!", "")
+	}
+	return json.Unmarshal([]byte(s), &r)
+}
+
+// Predefined struct for user
+type CreateUserRoleResponseParams struct {
+	// 唯一请求 ID，由服务端生成，每次请求都会返回（若请求因其他原因未能抵达服务端，则该次请求不会获得 RequestId）。定位问题时需要提供该次请求的 RequestId。
+	RequestId *string `json:"RequestId,omitnil,omitempty" name:"RequestId"`
+}
+
+type CreateUserRoleResponse struct {
+	*tchttp.BaseResponse
+	Response *CreateUserRoleResponseParams `json:"Response"`
+}
+
+func (r *CreateUserRoleResponse) ToJsonString() string {
+    b, _ := json.Marshal(r)
+    return string(b)
+}
+
+// FromJsonString It is highly **NOT** recommended to use this function
+// because it has no param check, nor strict type check
+func (r *CreateUserRoleResponse) FromJsonString(s string) error {
 	return json.Unmarshal([]byte(s), &r)
 }
 
@@ -5493,6 +5727,27 @@ type DataEngineInfo struct {
 
 	// 引擎资源弹性伸缩策略
 	ScheduleElasticityConf *ScheduleElasticityConf `json:"ScheduleElasticityConf,omitnil,omitempty" name:"ScheduleElasticityConf"`
+
+	// GPU 信息
+	GPUInfo *GPUInfo `json:"GPUInfo,omitnil,omitempty" name:"GPUInfo"`
+
+	// GPU 使用量
+	EngineResourceUsedGPU *int64 `json:"EngineResourceUsedGPU,omitnil,omitempty" name:"EngineResourceUsedGPU"`
+
+	// GPU 总规格
+	GPUTotalSize *int64 `json:"GPUTotalSize,omitnil,omitempty" name:"GPUTotalSize"`
+
+	// GPU 机型
+	InstanceModel *string `json:"InstanceModel,omitnil,omitempty" name:"InstanceModel"`
+
+	// 节点数量
+	NodeNum *int64 `json:"NodeNum,omitnil,omitempty" name:"NodeNum"`
+
+	// 引擎规格，包含负载弹性或分时弹性
+	SizeWithElastic *uint64 `json:"SizeWithElastic,omitnil,omitempty" name:"SizeWithElastic"`
+
+	// 最大弹性值，包含负载弹性或分时弹性
+	MaxElasticSize *uint64 `json:"MaxElasticSize,omitnil,omitempty" name:"MaxElasticSize"`
 }
 
 type DataEngineScaleInfo struct {
@@ -5716,6 +5971,18 @@ type DatabaseResponseInfo struct {
 
 	// 数据库ID（无效字段）
 	DatabaseId *string `json:"DatabaseId,omitnil,omitempty" name:"DatabaseId"`
+
+	// 所属catalog名称
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	CatalogName *string `json:"CatalogName,omitnil,omitempty" name:"CatalogName"`
+
+	// 所属catalog 类型
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	CatalogType *string `json:"CatalogType,omitnil,omitempty" name:"CatalogType"`
+
+	// 是否InformationSchema
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	IsInformationSchema *bool `json:"IsInformationSchema,omitnil,omitempty" name:"IsInformationSchema"`
 }
 
 type DatasourceConnectionConfig struct {
@@ -5761,6 +6028,9 @@ type DatasourceConnectionConfig struct {
 
 	// TccHive数据目录连接信息
 	TccHive *TccHive `json:"TccHive,omitnil,omitempty" name:"TccHive"`
+
+	// MongoDB 数据源
+	MongoDB *DataSourceInfo `json:"MongoDB,omitnil,omitempty" name:"MongoDB"`
 }
 
 type DatasourceConnectionInfo struct {
@@ -5923,14 +6193,14 @@ func (r *DeleteCHDFSBindingProductResponse) FromJsonString(s string) error {
 
 // Predefined struct for user
 type DeleteDataEngineRequestParams struct {
-	// 删除虚拟集群的名称数组
+	// <p>删除虚拟集群的名称数组</p>
 	DataEngineNames []*string `json:"DataEngineNames,omitnil,omitempty" name:"DataEngineNames"`
 }
 
 type DeleteDataEngineRequest struct {
 	*tchttp.BaseRequest
 	
-	// 删除虚拟集群的名称数组
+	// <p>删除虚拟集群的名称数组</p>
 	DataEngineNames []*string `json:"DataEngineNames,omitnil,omitempty" name:"DataEngineNames"`
 }
 
@@ -6425,6 +6695,9 @@ func (r *DeleteThirdPartyAccessUserResponse) FromJsonString(s string) error {
 type DeleteUserRequestParams struct {
 	// 需要删除的用户的Id
 	UserIds []*string `json:"UserIds,omitnil,omitempty" name:"UserIds"`
+
+	// 用户来源类型TencentAccount（普通腾讯云用户） / EntraAccount（微软用户）
+	AccountType *string `json:"AccountType,omitnil,omitempty" name:"AccountType"`
 }
 
 type DeleteUserRequest struct {
@@ -6432,6 +6705,9 @@ type DeleteUserRequest struct {
 	
 	// 需要删除的用户的Id
 	UserIds []*string `json:"UserIds,omitnil,omitempty" name:"UserIds"`
+
+	// 用户来源类型TencentAccount（普通腾讯云用户） / EntraAccount（微软用户）
+	AccountType *string `json:"AccountType,omitnil,omitempty" name:"AccountType"`
 }
 
 func (r *DeleteUserRequest) ToJsonString() string {
@@ -6447,6 +6723,7 @@ func (r *DeleteUserRequest) FromJsonString(s string) error {
 		return err
 	}
 	delete(f, "UserIds")
+	delete(f, "AccountType")
 	if len(f) > 0 {
 		return tcerr.NewTencentCloudSDKError("ClientError.BuildRequestError", "DeleteUserRequest has unknown keys!", "")
 	}
@@ -7441,33 +7718,45 @@ func (r *DescribeDMSTablesResponse) FromJsonString(s string) error {
 
 // Predefined struct for user
 type DescribeDataEngineEventsRequestParams struct {
-	// 虚拟集群名称
+	// <p>虚拟集群名称</p>
 	DataEngineName *string `json:"DataEngineName,omitnil,omitempty" name:"DataEngineName"`
 
-	// 返回数量，默认为10，最大为100
+	// <p>返回数量，默认为10，最大为100</p>
 	Limit *int64 `json:"Limit,omitnil,omitempty" name:"Limit"`
 
-	// 偏移量，默认为0
+	// <p>偏移量，默认为0</p>
 	Offset *int64 `json:"Offset,omitnil,omitempty" name:"Offset"`
 
-	// 资源组id
+	// <p>资源组id</p>
 	SessionId *string `json:"SessionId,omitnil,omitempty" name:"SessionId"`
+
+	// <p>查询开始时间，用于筛选资源组启停事件的时间范围，不传则不限制开始时间</p><p>参数格式：YYYY-mm-dd HH:MM:SS</p>
+	StartTime *string `json:"StartTime,omitnil,omitempty" name:"StartTime"`
+
+	// <p>查询结束时间，用于筛选资源组启停事件的时间范围，不传则不限制结束时间。需大于等于 StartTime</p><p>参数格式：YYYY-mm-dd HH:MM:SS</p>
+	EndTime *string `json:"EndTime,omitnil,omitempty" name:"EndTime"`
 }
 
 type DescribeDataEngineEventsRequest struct {
 	*tchttp.BaseRequest
 	
-	// 虚拟集群名称
+	// <p>虚拟集群名称</p>
 	DataEngineName *string `json:"DataEngineName,omitnil,omitempty" name:"DataEngineName"`
 
-	// 返回数量，默认为10，最大为100
+	// <p>返回数量，默认为10，最大为100</p>
 	Limit *int64 `json:"Limit,omitnil,omitempty" name:"Limit"`
 
-	// 偏移量，默认为0
+	// <p>偏移量，默认为0</p>
 	Offset *int64 `json:"Offset,omitnil,omitempty" name:"Offset"`
 
-	// 资源组id
+	// <p>资源组id</p>
 	SessionId *string `json:"SessionId,omitnil,omitempty" name:"SessionId"`
+
+	// <p>查询开始时间，用于筛选资源组启停事件的时间范围，不传则不限制开始时间</p><p>参数格式：YYYY-mm-dd HH:MM:SS</p>
+	StartTime *string `json:"StartTime,omitnil,omitempty" name:"StartTime"`
+
+	// <p>查询结束时间，用于筛选资源组启停事件的时间范围，不传则不限制结束时间。需大于等于 StartTime</p><p>参数格式：YYYY-mm-dd HH:MM:SS</p>
+	EndTime *string `json:"EndTime,omitnil,omitempty" name:"EndTime"`
 }
 
 func (r *DescribeDataEngineEventsRequest) ToJsonString() string {
@@ -7486,6 +7775,8 @@ func (r *DescribeDataEngineEventsRequest) FromJsonString(s string) error {
 	delete(f, "Limit")
 	delete(f, "Offset")
 	delete(f, "SessionId")
+	delete(f, "StartTime")
+	delete(f, "EndTime")
 	if len(f) > 0 {
 		return tcerr.NewTencentCloudSDKError("ClientError.BuildRequestError", "DescribeDataEngineEventsRequest has unknown keys!", "")
 	}
@@ -7494,20 +7785,20 @@ func (r *DescribeDataEngineEventsRequest) FromJsonString(s string) error {
 
 // Predefined struct for user
 type DescribeDataEngineEventsResponseParams struct {
-	// 事件详细信息
+	// <p>事件详细信息</p>
 	// 注意：此字段可能返回 null，表示取不到有效值。
 	Events []*HouseEventsInfo `json:"Events,omitnil,omitempty" name:"Events"`
 
-	// 分页号
+	// <p>分页号</p>
 	Page *int64 `json:"Page,omitnil,omitempty" name:"Page"`
 
-	// 分页大小
+	// <p>分页大小</p>
 	Size *int64 `json:"Size,omitnil,omitempty" name:"Size"`
 
-	// 总页数
+	// <p>总页数</p>
 	TotalPages *int64 `json:"TotalPages,omitnil,omitempty" name:"TotalPages"`
 
-	// 总条数
+	// <p>总条数</p>
 	TotalCount *int64 `json:"TotalCount,omitnil,omitempty" name:"TotalCount"`
 
 	// 唯一请求 ID，由服务端生成，每次请求都会返回（若请求因其他原因未能抵达服务端，则该次请求不会获得 RequestId）。定位问题时需要提供该次请求的 RequestId。
@@ -8753,6 +9044,12 @@ type DescribeNativeSparkSessionsRequestParams struct {
 
 	// 资源组ID
 	ResourceGroupId *string `json:"ResourceGroupId,omitnil,omitempty" name:"ResourceGroupId"`
+
+	// 项目ID
+	ProjectId *string `json:"ProjectId,omitnil,omitempty" name:"ProjectId"`
+
+	// 用户Uin
+	UserUin *string `json:"UserUin,omitnil,omitempty" name:"UserUin"`
 }
 
 type DescribeNativeSparkSessionsRequest struct {
@@ -8763,6 +9060,12 @@ type DescribeNativeSparkSessionsRequest struct {
 
 	// 资源组ID
 	ResourceGroupId *string `json:"ResourceGroupId,omitnil,omitempty" name:"ResourceGroupId"`
+
+	// 项目ID
+	ProjectId *string `json:"ProjectId,omitnil,omitempty" name:"ProjectId"`
+
+	// 用户Uin
+	UserUin *string `json:"UserUin,omitnil,omitempty" name:"UserUin"`
 }
 
 func (r *DescribeNativeSparkSessionsRequest) ToJsonString() string {
@@ -8779,6 +9082,8 @@ func (r *DescribeNativeSparkSessionsRequest) FromJsonString(s string) error {
 	}
 	delete(f, "DataEngineId")
 	delete(f, "ResourceGroupId")
+	delete(f, "ProjectId")
+	delete(f, "UserUin")
 	if len(f) > 0 {
 		return tcerr.NewTencentCloudSDKError("ClientError.BuildRequestError", "DescribeNativeSparkSessionsRequest has unknown keys!", "")
 	}
@@ -8789,6 +9094,12 @@ func (r *DescribeNativeSparkSessionsRequest) FromJsonString(s string) error {
 type DescribeNativeSparkSessionsResponseParams struct {
 	// spark session列表
 	SparkSessionsList []*SparkSessionInfo `json:"SparkSessionsList,omitnil,omitempty" name:"SparkSessionsList"`
+
+	// 资源组总规格
+	TotalSpec *int64 `json:"TotalSpec,omitnil,omitempty" name:"TotalSpec"`
+
+	// 资源组当前可用规格
+	TotalAvailable *int64 `json:"TotalAvailable,omitnil,omitempty" name:"TotalAvailable"`
 
 	// 唯一请求 ID，由服务端生成，每次请求都会返回（若请求因其他原因未能抵达服务端，则该次请求不会获得 RequestId）。定位问题时需要提供该次请求的 RequestId。
 	RequestId *string `json:"RequestId,omitnil,omitempty" name:"RequestId"`
@@ -9451,6 +9762,69 @@ func (r *DescribeOtherCHDFSBindingListResponse) ToJsonString() string {
 // FromJsonString It is highly **NOT** recommended to use this function
 // because it has no param check, nor strict type check
 func (r *DescribeOtherCHDFSBindingListResponse) FromJsonString(s string) error {
+	return json.Unmarshal([]byte(s), &r)
+}
+
+// Predefined struct for user
+type DescribeResourceGroupUsageInfoRequestParams struct {
+	// 资源组ID
+	SessionId *string `json:"SessionId,omitnil,omitempty" name:"SessionId"`
+}
+
+type DescribeResourceGroupUsageInfoRequest struct {
+	*tchttp.BaseRequest
+	
+	// 资源组ID
+	SessionId *string `json:"SessionId,omitnil,omitempty" name:"SessionId"`
+}
+
+func (r *DescribeResourceGroupUsageInfoRequest) ToJsonString() string {
+    b, _ := json.Marshal(r)
+    return string(b)
+}
+
+// FromJsonString It is highly **NOT** recommended to use this function
+// because it has no param check, nor strict type check
+func (r *DescribeResourceGroupUsageInfoRequest) FromJsonString(s string) error {
+	f := make(map[string]interface{})
+	if err := json.Unmarshal([]byte(s), &f); err != nil {
+		return err
+	}
+	delete(f, "SessionId")
+	if len(f) > 0 {
+		return tcerr.NewTencentCloudSDKError("ClientError.BuildRequestError", "DescribeResourceGroupUsageInfoRequest has unknown keys!", "")
+	}
+	return json.Unmarshal([]byte(s), &r)
+}
+
+// Predefined struct for user
+type DescribeResourceGroupUsageInfoResponseParams struct {
+	// 资源上限
+	Total *int64 `json:"Total,omitnil,omitempty" name:"Total"`
+
+	// 已占用资源
+	Used *int64 `json:"Used,omitnil,omitempty" name:"Used"`
+
+	// 剩余可用资源
+	Available *int64 `json:"Available,omitnil,omitempty" name:"Available"`
+
+	// 唯一请求 ID，由服务端生成，每次请求都会返回（若请求因其他原因未能抵达服务端，则该次请求不会获得 RequestId）。定位问题时需要提供该次请求的 RequestId。
+	RequestId *string `json:"RequestId,omitnil,omitempty" name:"RequestId"`
+}
+
+type DescribeResourceGroupUsageInfoResponse struct {
+	*tchttp.BaseResponse
+	Response *DescribeResourceGroupUsageInfoResponseParams `json:"Response"`
+}
+
+func (r *DescribeResourceGroupUsageInfoResponse) ToJsonString() string {
+    b, _ := json.Marshal(r)
+    return string(b)
+}
+
+// FromJsonString It is highly **NOT** recommended to use this function
+// because it has no param check, nor strict type check
+func (r *DescribeResourceGroupUsageInfoResponse) FromJsonString(s string) error {
 	return json.Unmarshal([]byte(s), &r)
 }
 
@@ -10443,6 +10817,60 @@ func (r *DescribeSubUserAccessPolicyResponse) FromJsonString(s string) error {
 }
 
 // Predefined struct for user
+type DescribeTCLakeMetaInstanceRequestParams struct {
+
+}
+
+type DescribeTCLakeMetaInstanceRequest struct {
+	*tchttp.BaseRequest
+	
+}
+
+func (r *DescribeTCLakeMetaInstanceRequest) ToJsonString() string {
+    b, _ := json.Marshal(r)
+    return string(b)
+}
+
+// FromJsonString It is highly **NOT** recommended to use this function
+// because it has no param check, nor strict type check
+func (r *DescribeTCLakeMetaInstanceRequest) FromJsonString(s string) error {
+	f := make(map[string]interface{})
+	if err := json.Unmarshal([]byte(s), &f); err != nil {
+		return err
+	}
+	
+	if len(f) > 0 {
+		return tcerr.NewTencentCloudSDKError("ClientError.BuildRequestError", "DescribeTCLakeMetaInstanceRequest has unknown keys!", "")
+	}
+	return json.Unmarshal([]byte(s), &r)
+}
+
+// Predefined struct for user
+type DescribeTCLakeMetaInstanceResponseParams struct {
+	// <p>开通状态</p><p>枚举值：</p><ul><li>Running： 开通成功</li></ul>
+	Status *string `json:"Status,omitnil,omitempty" name:"Status"`
+
+	// 唯一请求 ID，由服务端生成，每次请求都会返回（若请求因其他原因未能抵达服务端，则该次请求不会获得 RequestId）。定位问题时需要提供该次请求的 RequestId。
+	RequestId *string `json:"RequestId,omitnil,omitempty" name:"RequestId"`
+}
+
+type DescribeTCLakeMetaInstanceResponse struct {
+	*tchttp.BaseResponse
+	Response *DescribeTCLakeMetaInstanceResponseParams `json:"Response"`
+}
+
+func (r *DescribeTCLakeMetaInstanceResponse) ToJsonString() string {
+    b, _ := json.Marshal(r)
+    return string(b)
+}
+
+// FromJsonString It is highly **NOT** recommended to use this function
+// because it has no param check, nor strict type check
+func (r *DescribeTCLakeMetaInstanceResponse) FromJsonString(s string) error {
+	return json.Unmarshal([]byte(s), &r)
+}
+
+// Predefined struct for user
 type DescribeTablePartitionsRequestParams struct {
 	// 数据目录名称
 	Catalog *string `json:"Catalog,omitnil,omitempty" name:"Catalog"`
@@ -10893,6 +11321,196 @@ func (r *DescribeTablesResponse) ToJsonString() string {
 // FromJsonString It is highly **NOT** recommended to use this function
 // because it has no param check, nor strict type check
 func (r *DescribeTablesResponse) FromJsonString(s string) error {
+	return json.Unmarshal([]byte(s), &r)
+}
+
+// Predefined struct for user
+type DescribeTaskDetailRequestParams struct {
+	// 任务id
+	TaskInstanceId *string `json:"TaskInstanceId,omitnil,omitempty" name:"TaskInstanceId"`
+}
+
+type DescribeTaskDetailRequest struct {
+	*tchttp.BaseRequest
+	
+	// 任务id
+	TaskInstanceId *string `json:"TaskInstanceId,omitnil,omitempty" name:"TaskInstanceId"`
+}
+
+func (r *DescribeTaskDetailRequest) ToJsonString() string {
+    b, _ := json.Marshal(r)
+    return string(b)
+}
+
+// FromJsonString It is highly **NOT** recommended to use this function
+// because it has no param check, nor strict type check
+func (r *DescribeTaskDetailRequest) FromJsonString(s string) error {
+	f := make(map[string]interface{})
+	if err := json.Unmarshal([]byte(s), &f); err != nil {
+		return err
+	}
+	delete(f, "TaskInstanceId")
+	if len(f) > 0 {
+		return tcerr.NewTencentCloudSDKError("ClientError.BuildRequestError", "DescribeTaskDetailRequest has unknown keys!", "")
+	}
+	return json.Unmarshal([]byte(s), &r)
+}
+
+// Predefined struct for user
+type DescribeTaskDetailResponseParams struct {
+	// 任务详情信息
+	TaskDetail *TaskFullRespInfo `json:"TaskDetail,omitnil,omitempty" name:"TaskDetail"`
+
+	// 唯一请求 ID，由服务端生成，每次请求都会返回（若请求因其他原因未能抵达服务端，则该次请求不会获得 RequestId）。定位问题时需要提供该次请求的 RequestId。
+	RequestId *string `json:"RequestId,omitnil,omitempty" name:"RequestId"`
+}
+
+type DescribeTaskDetailResponse struct {
+	*tchttp.BaseResponse
+	Response *DescribeTaskDetailResponseParams `json:"Response"`
+}
+
+func (r *DescribeTaskDetailResponse) ToJsonString() string {
+    b, _ := json.Marshal(r)
+    return string(b)
+}
+
+// FromJsonString It is highly **NOT** recommended to use this function
+// because it has no param check, nor strict type check
+func (r *DescribeTaskDetailResponse) FromJsonString(s string) error {
+	return json.Unmarshal([]byte(s), &r)
+}
+
+// Predefined struct for user
+type DescribeTaskListRequestParams struct {
+	// 返回数量，默认为10，最大值为100。
+	Limit *int64 `json:"Limit,omitnil,omitempty" name:"Limit"`
+
+	// 偏移量，默认为0。
+	Offset *int64 `json:"Offset,omitnil,omitempty" name:"Offset"`
+
+	// 过滤条件，如下支持的过滤类型，传参Name应为以下其中一个,其中task-id支持最大50个过滤个数，其他过滤参数支持的总数不超过5个。
+	// task-id - String - （任务ID准确过滤）task-id取值形如：e386471f-139a-4e59-877f-50ece8135b99。
+	// task-state - String - （任务状态过滤）取值范围 0(初始化)， 1(运行中)， 2(成功)， -1(失败)。
+	// task-sql-keyword - String - （SQL语句关键字模糊过滤）取值形如：DROP TABLE。
+	// task-operator- string （子uin过滤）
+	// task-kind - string （任务类型过滤）
+	Filters []*Filter `json:"Filters,omitnil,omitempty" name:"Filters"`
+
+	// 排序字段，支持如下字段类型，create-time（创建时间，默认）、update-time（更新时间）
+	SortBy *string `json:"SortBy,omitnil,omitempty" name:"SortBy"`
+
+	// 排序方式，desc表示正序，asc表示反序， 默认为asc。
+	Sorting *string `json:"Sorting,omitnil,omitempty" name:"Sorting"`
+
+	// 起始时间点，格式为yyyy-mm-dd HH:MM:SS。默认为45天前的当前时刻
+	StartTime *string `json:"StartTime,omitnil,omitempty" name:"StartTime"`
+
+	// 结束时间点，格式为yyyy-mm-dd HH:MM:SS时间跨度在(0,30天]，支持最近45天数据查询。默认为当前时刻
+	EndTime *string `json:"EndTime,omitnil,omitempty" name:"EndTime"`
+
+	// 数据引擎名称，用于筛选
+	DataEngineName *string `json:"DataEngineName,omitnil,omitempty" name:"DataEngineName"`
+
+	// spark引擎资源组名称
+	ResourceGroupName *string `json:"ResourceGroupName,omitnil,omitempty" name:"ResourceGroupName"`
+
+	// 引擎id列表
+	HouseIds []*string `json:"HouseIds,omitnil,omitempty" name:"HouseIds"`
+}
+
+type DescribeTaskListRequest struct {
+	*tchttp.BaseRequest
+	
+	// 返回数量，默认为10，最大值为100。
+	Limit *int64 `json:"Limit,omitnil,omitempty" name:"Limit"`
+
+	// 偏移量，默认为0。
+	Offset *int64 `json:"Offset,omitnil,omitempty" name:"Offset"`
+
+	// 过滤条件，如下支持的过滤类型，传参Name应为以下其中一个,其中task-id支持最大50个过滤个数，其他过滤参数支持的总数不超过5个。
+	// task-id - String - （任务ID准确过滤）task-id取值形如：e386471f-139a-4e59-877f-50ece8135b99。
+	// task-state - String - （任务状态过滤）取值范围 0(初始化)， 1(运行中)， 2(成功)， -1(失败)。
+	// task-sql-keyword - String - （SQL语句关键字模糊过滤）取值形如：DROP TABLE。
+	// task-operator- string （子uin过滤）
+	// task-kind - string （任务类型过滤）
+	Filters []*Filter `json:"Filters,omitnil,omitempty" name:"Filters"`
+
+	// 排序字段，支持如下字段类型，create-time（创建时间，默认）、update-time（更新时间）
+	SortBy *string `json:"SortBy,omitnil,omitempty" name:"SortBy"`
+
+	// 排序方式，desc表示正序，asc表示反序， 默认为asc。
+	Sorting *string `json:"Sorting,omitnil,omitempty" name:"Sorting"`
+
+	// 起始时间点，格式为yyyy-mm-dd HH:MM:SS。默认为45天前的当前时刻
+	StartTime *string `json:"StartTime,omitnil,omitempty" name:"StartTime"`
+
+	// 结束时间点，格式为yyyy-mm-dd HH:MM:SS时间跨度在(0,30天]，支持最近45天数据查询。默认为当前时刻
+	EndTime *string `json:"EndTime,omitnil,omitempty" name:"EndTime"`
+
+	// 数据引擎名称，用于筛选
+	DataEngineName *string `json:"DataEngineName,omitnil,omitempty" name:"DataEngineName"`
+
+	// spark引擎资源组名称
+	ResourceGroupName *string `json:"ResourceGroupName,omitnil,omitempty" name:"ResourceGroupName"`
+
+	// 引擎id列表
+	HouseIds []*string `json:"HouseIds,omitnil,omitempty" name:"HouseIds"`
+}
+
+func (r *DescribeTaskListRequest) ToJsonString() string {
+    b, _ := json.Marshal(r)
+    return string(b)
+}
+
+// FromJsonString It is highly **NOT** recommended to use this function
+// because it has no param check, nor strict type check
+func (r *DescribeTaskListRequest) FromJsonString(s string) error {
+	f := make(map[string]interface{})
+	if err := json.Unmarshal([]byte(s), &f); err != nil {
+		return err
+	}
+	delete(f, "Limit")
+	delete(f, "Offset")
+	delete(f, "Filters")
+	delete(f, "SortBy")
+	delete(f, "Sorting")
+	delete(f, "StartTime")
+	delete(f, "EndTime")
+	delete(f, "DataEngineName")
+	delete(f, "ResourceGroupName")
+	delete(f, "HouseIds")
+	if len(f) > 0 {
+		return tcerr.NewTencentCloudSDKError("ClientError.BuildRequestError", "DescribeTaskListRequest has unknown keys!", "")
+	}
+	return json.Unmarshal([]byte(s), &r)
+}
+
+// Predefined struct for user
+type DescribeTaskListResponseParams struct {
+	// 任务对象列表。
+	TaskList []*TaskFullRespInfo `json:"TaskList,omitnil,omitempty" name:"TaskList"`
+
+	// 实例总数。
+	TotalCount *uint64 `json:"TotalCount,omitnil,omitempty" name:"TotalCount"`
+
+	// 唯一请求 ID，由服务端生成，每次请求都会返回（若请求因其他原因未能抵达服务端，则该次请求不会获得 RequestId）。定位问题时需要提供该次请求的 RequestId。
+	RequestId *string `json:"RequestId,omitnil,omitempty" name:"RequestId"`
+}
+
+type DescribeTaskListResponse struct {
+	*tchttp.BaseResponse
+	Response *DescribeTaskListResponseParams `json:"Response"`
+}
+
+func (r *DescribeTaskListResponse) ToJsonString() string {
+    b, _ := json.Marshal(r)
+    return string(b)
+}
+
+// FromJsonString It is highly **NOT** recommended to use this function
+// because it has no param check, nor strict type check
+func (r *DescribeTaskListResponse) FromJsonString(s string) error {
 	return json.Unmarshal([]byte(s), &r)
 }
 
@@ -11548,72 +12166,62 @@ func (r *DescribeTasksOverviewResponse) FromJsonString(s string) error {
 
 // Predefined struct for user
 type DescribeTasksRequestParams struct {
-	// 返回数量，默认为10，最大值为100。
+	// <p>返回数量，默认为10，最大值为100。</p>
 	Limit *int64 `json:"Limit,omitnil,omitempty" name:"Limit"`
 
-	// 偏移量，默认为0。
+	// <p>偏移量，默认为0。</p>
 	Offset *int64 `json:"Offset,omitnil,omitempty" name:"Offset"`
 
-	// 过滤条件，如下支持的过滤类型，传参Name应为以下其中一个,其中task-id支持最大50个过滤个数，其他过滤参数支持的总数不超过5个。
-	// task-id - String - （任务ID准确过滤）task-id取值形如：e386471f-139a-4e59-877f-50ece8135b99。
-	// task-state - String - （任务状态过滤）取值范围 0(初始化)， 1(运行中)， 2(成功)， -1(失败)。
-	// task-sql-keyword - String - （SQL语句关键字模糊过滤）取值形如：DROP TABLE。
-	// task-operator- string （子uin过滤）
-	// task-kind - string （任务类型过滤）
+	// <p>过滤条件，如下支持的过滤类型，传参Name应为以下其中一个,其中task-id支持最大50个过滤个数，其他过滤参数支持的总数不超过5个。<br>task-id - String - （任务ID准确过滤）task-id取值形如：e386471f-139a-4e59-877f-50ece8135b99。<br>task-state - String - （任务状态过滤）取值范围 0(初始化)， 1(运行中)， 2(成功)， -1(失败)。<br>task-sql-keyword - String - （SQL语句关键字模糊过滤）取值形如：DROP TABLE。<br>task-operator- string （子uin过滤）<br>task-kind - string （任务类型过滤）</p>
 	Filters []*Filter `json:"Filters,omitnil,omitempty" name:"Filters"`
 
-	// 排序字段，支持如下字段类型，create-time（创建时间，默认）、update-time（更新时间）
+	// <p>排序字段，支持如下字段类型，create-time（创建时间，默认）、update-time（更新时间）</p>
 	SortBy *string `json:"SortBy,omitnil,omitempty" name:"SortBy"`
 
-	// 排序方式，desc表示正序，asc表示反序， 默认为asc。
+	// <p>排序方式，desc表示正序，asc表示反序， 默认为asc。</p>
 	Sorting *string `json:"Sorting,omitnil,omitempty" name:"Sorting"`
 
-	// 起始时间点，格式为yyyy-mm-dd HH:MM:SS。默认为45天前的当前时刻
+	// <p>起始时间点，格式为yyyy-mm-dd HH:MM:SS。默认为45天前的当前时刻</p>
 	StartTime *string `json:"StartTime,omitnil,omitempty" name:"StartTime"`
 
-	// 结束时间点，格式为yyyy-mm-dd HH:MM:SS时间跨度在(0,30天]，支持最近45天数据查询。默认为当前时刻
+	// <p>结束时间点，格式为yyyy-mm-dd HH:MM:SS时间跨度在(0,30天]，支持最近45天数据查询。默认为当前时刻</p>
 	EndTime *string `json:"EndTime,omitnil,omitempty" name:"EndTime"`
 
-	// 数据引擎名称，用于筛选
+	// <p>数据引擎名称，用于筛选</p>
 	DataEngineName *string `json:"DataEngineName,omitnil,omitempty" name:"DataEngineName"`
 
-	// spark引擎资源组名称
+	// <p>spark引擎资源组名称</p>
 	ResourceGroupName *string `json:"ResourceGroupName,omitnil,omitempty" name:"ResourceGroupName"`
 }
 
 type DescribeTasksRequest struct {
 	*tchttp.BaseRequest
 	
-	// 返回数量，默认为10，最大值为100。
+	// <p>返回数量，默认为10，最大值为100。</p>
 	Limit *int64 `json:"Limit,omitnil,omitempty" name:"Limit"`
 
-	// 偏移量，默认为0。
+	// <p>偏移量，默认为0。</p>
 	Offset *int64 `json:"Offset,omitnil,omitempty" name:"Offset"`
 
-	// 过滤条件，如下支持的过滤类型，传参Name应为以下其中一个,其中task-id支持最大50个过滤个数，其他过滤参数支持的总数不超过5个。
-	// task-id - String - （任务ID准确过滤）task-id取值形如：e386471f-139a-4e59-877f-50ece8135b99。
-	// task-state - String - （任务状态过滤）取值范围 0(初始化)， 1(运行中)， 2(成功)， -1(失败)。
-	// task-sql-keyword - String - （SQL语句关键字模糊过滤）取值形如：DROP TABLE。
-	// task-operator- string （子uin过滤）
-	// task-kind - string （任务类型过滤）
+	// <p>过滤条件，如下支持的过滤类型，传参Name应为以下其中一个,其中task-id支持最大50个过滤个数，其他过滤参数支持的总数不超过5个。<br>task-id - String - （任务ID准确过滤）task-id取值形如：e386471f-139a-4e59-877f-50ece8135b99。<br>task-state - String - （任务状态过滤）取值范围 0(初始化)， 1(运行中)， 2(成功)， -1(失败)。<br>task-sql-keyword - String - （SQL语句关键字模糊过滤）取值形如：DROP TABLE。<br>task-operator- string （子uin过滤）<br>task-kind - string （任务类型过滤）</p>
 	Filters []*Filter `json:"Filters,omitnil,omitempty" name:"Filters"`
 
-	// 排序字段，支持如下字段类型，create-time（创建时间，默认）、update-time（更新时间）
+	// <p>排序字段，支持如下字段类型，create-time（创建时间，默认）、update-time（更新时间）</p>
 	SortBy *string `json:"SortBy,omitnil,omitempty" name:"SortBy"`
 
-	// 排序方式，desc表示正序，asc表示反序， 默认为asc。
+	// <p>排序方式，desc表示正序，asc表示反序， 默认为asc。</p>
 	Sorting *string `json:"Sorting,omitnil,omitempty" name:"Sorting"`
 
-	// 起始时间点，格式为yyyy-mm-dd HH:MM:SS。默认为45天前的当前时刻
+	// <p>起始时间点，格式为yyyy-mm-dd HH:MM:SS。默认为45天前的当前时刻</p>
 	StartTime *string `json:"StartTime,omitnil,omitempty" name:"StartTime"`
 
-	// 结束时间点，格式为yyyy-mm-dd HH:MM:SS时间跨度在(0,30天]，支持最近45天数据查询。默认为当前时刻
+	// <p>结束时间点，格式为yyyy-mm-dd HH:MM:SS时间跨度在(0,30天]，支持最近45天数据查询。默认为当前时刻</p>
 	EndTime *string `json:"EndTime,omitnil,omitempty" name:"EndTime"`
 
-	// 数据引擎名称，用于筛选
+	// <p>数据引擎名称，用于筛选</p>
 	DataEngineName *string `json:"DataEngineName,omitnil,omitempty" name:"DataEngineName"`
 
-	// spark引擎资源组名称
+	// <p>spark引擎资源组名称</p>
 	ResourceGroupName *string `json:"ResourceGroupName,omitnil,omitempty" name:"ResourceGroupName"`
 }
 
@@ -11646,13 +12254,13 @@ func (r *DescribeTasksRequest) FromJsonString(s string) error {
 
 // Predefined struct for user
 type DescribeTasksResponseParams struct {
-	// 任务对象列表。
+	// <p>任务对象列表。</p>
 	TaskList []*TaskResponseInfo `json:"TaskList,omitnil,omitempty" name:"TaskList"`
 
-	// 实例总数。
+	// <p>实例总数。</p>
 	TotalCount *uint64 `json:"TotalCount,omitnil,omitempty" name:"TotalCount"`
 
-	// 任务概览信息
+	// <p>任务概览信息</p>
 	// 注意：此字段可能返回 null，表示取不到有效值。
 	TasksOverview *TasksOverview `json:"TasksOverview,omitnil,omitempty" name:"TasksOverview"`
 
@@ -11969,99 +12577,63 @@ func (r *DescribeUserDataEngineConfigResponse) FromJsonString(s string) error {
 
 // Predefined struct for user
 type DescribeUserInfoRequestParams struct {
-	// 用户Id
+	// <p>用户Id</p>
 	UserId *string `json:"UserId,omitnil,omitempty" name:"UserId"`
 
-	// 必传字段，查询的信息类型，Group：工作组 DataAuth：数据权限 EngineAuth:引擎权限 RowFilter：行级别权限
+	// <p>必传字段，查询的信息类型，Group：工作组 DataAuth：数据权限 EngineAuth:引擎权限 RowFilter：行级别权限</p>
 	Type *string `json:"Type,omitnil,omitempty" name:"Type"`
 
-	// 查询的过滤条件。
-	// 
-	// 当Type为Group时，支持Key为workgroup-name的模糊搜索；
-	// 
-	// 当Type为DataAuth时，支持key：
-	// 
-	// policy-type：权限类型。
-	// 
-	// policy-source：数据来源。
-	// 
-	// data-name：库表的模糊搜索。
-	// 
-	// 当Type为EngineAuth时，支持key：
-	// 
-	// policy-type：权限类型。
-	// 
-	// policy-source：数据来源。
-	// 
-	// engine-name：库表的模糊搜索。
+	// <p>查询的过滤条件。</p><p>当Type为Group时，支持Key为workgroup-name的模糊搜索；</p><p>当Type为DataAuth时，支持key：</p><p>policy-type：权限类型。</p><p>policy-source：数据来源。</p><p>data-name：库表的模糊搜索。</p><p>当Type为EngineAuth时，支持key：</p><p>policy-type：权限类型。</p><p>policy-source：数据来源。</p><p>engine-name：库表的模糊搜索。</p>
 	Filters []*Filter `json:"Filters,omitnil,omitempty" name:"Filters"`
 
-	// 排序字段。
-	// 
-	// 当Type为Group时，支持create-time、group-name
-	// 
-	// 当Type为DataAuth时，支持create-time
-	// 
-	// 当Type为EngineAuth时，支持create-time
+	// <p>排序字段。</p><p>当Type为Group时，支持create-time、group-name</p><p>当Type为DataAuth时，支持create-time</p><p>当Type为EngineAuth时，支持create-time</p>
 	SortBy *string `json:"SortBy,omitnil,omitempty" name:"SortBy"`
 
-	// 排序方式，desc表示正序，asc表示反序， 默认为asc
+	// <p>排序方式，desc表示正序，asc表示反序， 默认为asc</p>
 	Sorting *string `json:"Sorting,omitnil,omitempty" name:"Sorting"`
 
-	// 返回数量，默认20，最大值100
+	// <p>返回数量，默认20，最大值100</p>
 	Limit *int64 `json:"Limit,omitnil,omitempty" name:"Limit"`
 
-	// 偏移量，默认为0
+	// <p>偏移量，默认为0</p>
 	Offset *int64 `json:"Offset,omitnil,omitempty" name:"Offset"`
+
+	// <p>用户来源类型TencentAccount（普通腾讯云用户） / EntraAccount（微软用户）</p>
+	AccountType *string `json:"AccountType,omitnil,omitempty" name:"AccountType"`
+
+	// <p>TF 资源 ID</p>
+	PolicyId *string `json:"PolicyId,omitnil,omitempty" name:"PolicyId"`
 }
 
 type DescribeUserInfoRequest struct {
 	*tchttp.BaseRequest
 	
-	// 用户Id
+	// <p>用户Id</p>
 	UserId *string `json:"UserId,omitnil,omitempty" name:"UserId"`
 
-	// 必传字段，查询的信息类型，Group：工作组 DataAuth：数据权限 EngineAuth:引擎权限 RowFilter：行级别权限
+	// <p>必传字段，查询的信息类型，Group：工作组 DataAuth：数据权限 EngineAuth:引擎权限 RowFilter：行级别权限</p>
 	Type *string `json:"Type,omitnil,omitempty" name:"Type"`
 
-	// 查询的过滤条件。
-	// 
-	// 当Type为Group时，支持Key为workgroup-name的模糊搜索；
-	// 
-	// 当Type为DataAuth时，支持key：
-	// 
-	// policy-type：权限类型。
-	// 
-	// policy-source：数据来源。
-	// 
-	// data-name：库表的模糊搜索。
-	// 
-	// 当Type为EngineAuth时，支持key：
-	// 
-	// policy-type：权限类型。
-	// 
-	// policy-source：数据来源。
-	// 
-	// engine-name：库表的模糊搜索。
+	// <p>查询的过滤条件。</p><p>当Type为Group时，支持Key为workgroup-name的模糊搜索；</p><p>当Type为DataAuth时，支持key：</p><p>policy-type：权限类型。</p><p>policy-source：数据来源。</p><p>data-name：库表的模糊搜索。</p><p>当Type为EngineAuth时，支持key：</p><p>policy-type：权限类型。</p><p>policy-source：数据来源。</p><p>engine-name：库表的模糊搜索。</p>
 	Filters []*Filter `json:"Filters,omitnil,omitempty" name:"Filters"`
 
-	// 排序字段。
-	// 
-	// 当Type为Group时，支持create-time、group-name
-	// 
-	// 当Type为DataAuth时，支持create-time
-	// 
-	// 当Type为EngineAuth时，支持create-time
+	// <p>排序字段。</p><p>当Type为Group时，支持create-time、group-name</p><p>当Type为DataAuth时，支持create-time</p><p>当Type为EngineAuth时，支持create-time</p>
 	SortBy *string `json:"SortBy,omitnil,omitempty" name:"SortBy"`
 
-	// 排序方式，desc表示正序，asc表示反序， 默认为asc
+	// <p>排序方式，desc表示正序，asc表示反序， 默认为asc</p>
 	Sorting *string `json:"Sorting,omitnil,omitempty" name:"Sorting"`
 
-	// 返回数量，默认20，最大值100
+	// <p>返回数量，默认20，最大值100</p>
 	Limit *int64 `json:"Limit,omitnil,omitempty" name:"Limit"`
 
-	// 偏移量，默认为0
+	// <p>偏移量，默认为0</p>
 	Offset *int64 `json:"Offset,omitnil,omitempty" name:"Offset"`
+
+	// <p>用户来源类型TencentAccount（普通腾讯云用户） / EntraAccount（微软用户）</p>
+	AccountType *string `json:"AccountType,omitnil,omitempty" name:"AccountType"`
+
+	// <p>TF 资源 ID</p>
+	PolicyId *string `json:"PolicyId,omitnil,omitempty" name:"PolicyId"`
 }
 
 func (r *DescribeUserInfoRequest) ToJsonString() string {
@@ -12083,6 +12655,8 @@ func (r *DescribeUserInfoRequest) FromJsonString(s string) error {
 	delete(f, "Sorting")
 	delete(f, "Limit")
 	delete(f, "Offset")
+	delete(f, "AccountType")
+	delete(f, "PolicyId")
 	if len(f) > 0 {
 		return tcerr.NewTencentCloudSDKError("ClientError.BuildRequestError", "DescribeUserInfoRequest has unknown keys!", "")
 	}
@@ -12091,7 +12665,7 @@ func (r *DescribeUserInfoRequest) FromJsonString(s string) error {
 
 // Predefined struct for user
 type DescribeUserInfoResponseParams struct {
-	// 用户详细信息
+	// <p>用户详细信息</p>
 	// 注意：此字段可能返回 null，表示取不到有效值。
 	UserInfo *UserDetailInfo `json:"UserInfo,omitnil,omitempty" name:"UserInfo"`
 
@@ -12271,6 +12845,9 @@ func (r *DescribeUserRolesResponse) FromJsonString(s string) error {
 type DescribeUserTypeRequestParams struct {
 	// 用户ID（UIN），如果不填默认为调用方的子UIN
 	UserId *string `json:"UserId,omitnil,omitempty" name:"UserId"`
+
+	// 用户来源类型TencentAccount（普通腾讯云用户） / EntraAccount（微软用户）
+	AccountType *string `json:"AccountType,omitnil,omitempty" name:"AccountType"`
 }
 
 type DescribeUserTypeRequest struct {
@@ -12278,6 +12855,9 @@ type DescribeUserTypeRequest struct {
 	
 	// 用户ID（UIN），如果不填默认为调用方的子UIN
 	UserId *string `json:"UserId,omitnil,omitempty" name:"UserId"`
+
+	// 用户来源类型TencentAccount（普通腾讯云用户） / EntraAccount（微软用户）
+	AccountType *string `json:"AccountType,omitnil,omitempty" name:"AccountType"`
 }
 
 func (r *DescribeUserTypeRequest) ToJsonString() string {
@@ -12293,6 +12873,7 @@ func (r *DescribeUserTypeRequest) FromJsonString(s string) error {
 		return err
 	}
 	delete(f, "UserId")
+	delete(f, "AccountType")
 	if len(f) > 0 {
 		return tcerr.NewTencentCloudSDKError("ClientError.BuildRequestError", "DescribeUserTypeRequest has unknown keys!", "")
 	}
@@ -12415,6 +12996,9 @@ type DescribeUsersRequestParams struct {
 
 	// 过滤条件，支持如下字段类型，user-type：根据用户类型过滤。user-keyword：根据用户名称过滤
 	Filters []*Filter `json:"Filters,omitnil,omitempty" name:"Filters"`
+
+	// 用户来源类型TencentAccount（普通腾讯云用户） / EntraAccount（微软用户）
+	AccountType *string `json:"AccountType,omitnil,omitempty" name:"AccountType"`
 }
 
 type DescribeUsersRequest struct {
@@ -12437,6 +13021,9 @@ type DescribeUsersRequest struct {
 
 	// 过滤条件，支持如下字段类型，user-type：根据用户类型过滤。user-keyword：根据用户名称过滤
 	Filters []*Filter `json:"Filters,omitnil,omitempty" name:"Filters"`
+
+	// 用户来源类型TencentAccount（普通腾讯云用户） / EntraAccount（微软用户）
+	AccountType *string `json:"AccountType,omitnil,omitempty" name:"AccountType"`
 }
 
 func (r *DescribeUsersRequest) ToJsonString() string {
@@ -12457,6 +13044,7 @@ func (r *DescribeUsersRequest) FromJsonString(s string) error {
 	delete(f, "SortBy")
 	delete(f, "Sorting")
 	delete(f, "Filters")
+	delete(f, "AccountType")
 	if len(f) > 0 {
 		return tcerr.NewTencentCloudSDKError("ClientError.BuildRequestError", "DescribeUsersRequest has unknown keys!", "")
 	}
@@ -12622,99 +13210,57 @@ func (r *DescribeViewsResponse) FromJsonString(s string) error {
 
 // Predefined struct for user
 type DescribeWorkGroupInfoRequestParams struct {
-	// 工作组Id
+	// <p>工作组Id</p>
 	WorkGroupId *int64 `json:"WorkGroupId,omitnil,omitempty" name:"WorkGroupId"`
 
-	// 查询信息类型：User：用户信息 DataAuth：数据权限 EngineAuth：引擎权限
+	// <p>查询信息类型：User：用户信息 DataAuth：数据权限 EngineAuth：引擎权限</p>
 	Type *string `json:"Type,omitnil,omitempty" name:"Type"`
 
-	// 查询的过滤条件。
-	// 
-	// 当Type为User时，支持Key为user-name的模糊搜索；
-	// 
-	// 当Type为DataAuth时，支持key：
-	// 
-	// policy-type：权限类型。
-	// 
-	// policy-source：数据来源。
-	// 
-	// data-name：库表的模糊搜索。
-	// 
-	// 当Type为EngineAuth时，支持key：
-	// 
-	// policy-type：权限类型。
-	// 
-	// policy-source：数据来源。
-	// 
-	// engine-name：库表的模糊搜索。
+	// <p>查询的过滤条件。</p><p>当Type为User时，支持Key为user-name的模糊搜索；</p><p>当Type为DataAuth时，支持key：</p><p>policy-type：权限类型。</p><p>policy-source：数据来源。</p><p>data-name：库表的模糊搜索。</p><p>当Type为EngineAuth时，支持key：</p><p>policy-type：权限类型。</p><p>policy-source：数据来源。</p><p>engine-name：库表的模糊搜索。</p>
 	Filters []*Filter `json:"Filters,omitnil,omitempty" name:"Filters"`
 
-	// 排序字段。
-	// 
-	// 当Type为User时，支持create-time、user-name
-	// 
-	// 当Type为DataAuth时，支持create-time
-	// 
-	// 当Type为EngineAuth时，支持create-time
+	// <p>排序字段。</p><p>当Type为User时，支持create-time、user-name</p><p>当Type为DataAuth时，支持create-time</p><p>当Type为EngineAuth时，支持create-time</p>
 	SortBy *string `json:"SortBy,omitnil,omitempty" name:"SortBy"`
 
-	// 排序方式，desc表示正序，asc表示反序， 默认为asc
+	// <p>排序方式，desc表示正序，asc表示反序， 默认为asc</p>
 	Sorting *string `json:"Sorting,omitnil,omitempty" name:"Sorting"`
 
-	// 返回数量，默认20，最大值100
+	// <p>返回数量，默认20，最大值100</p>
 	Limit *int64 `json:"Limit,omitnil,omitempty" name:"Limit"`
 
-	// 偏移量，默认为0
+	// <p>偏移量，默认为0</p>
 	Offset *int64 `json:"Offset,omitnil,omitempty" name:"Offset"`
+
+	// <p>要授权的策略列表</p>
+	PolicyId *string `json:"PolicyId,omitnil,omitempty" name:"PolicyId"`
 }
 
 type DescribeWorkGroupInfoRequest struct {
 	*tchttp.BaseRequest
 	
-	// 工作组Id
+	// <p>工作组Id</p>
 	WorkGroupId *int64 `json:"WorkGroupId,omitnil,omitempty" name:"WorkGroupId"`
 
-	// 查询信息类型：User：用户信息 DataAuth：数据权限 EngineAuth：引擎权限
+	// <p>查询信息类型：User：用户信息 DataAuth：数据权限 EngineAuth：引擎权限</p>
 	Type *string `json:"Type,omitnil,omitempty" name:"Type"`
 
-	// 查询的过滤条件。
-	// 
-	// 当Type为User时，支持Key为user-name的模糊搜索；
-	// 
-	// 当Type为DataAuth时，支持key：
-	// 
-	// policy-type：权限类型。
-	// 
-	// policy-source：数据来源。
-	// 
-	// data-name：库表的模糊搜索。
-	// 
-	// 当Type为EngineAuth时，支持key：
-	// 
-	// policy-type：权限类型。
-	// 
-	// policy-source：数据来源。
-	// 
-	// engine-name：库表的模糊搜索。
+	// <p>查询的过滤条件。</p><p>当Type为User时，支持Key为user-name的模糊搜索；</p><p>当Type为DataAuth时，支持key：</p><p>policy-type：权限类型。</p><p>policy-source：数据来源。</p><p>data-name：库表的模糊搜索。</p><p>当Type为EngineAuth时，支持key：</p><p>policy-type：权限类型。</p><p>policy-source：数据来源。</p><p>engine-name：库表的模糊搜索。</p>
 	Filters []*Filter `json:"Filters,omitnil,omitempty" name:"Filters"`
 
-	// 排序字段。
-	// 
-	// 当Type为User时，支持create-time、user-name
-	// 
-	// 当Type为DataAuth时，支持create-time
-	// 
-	// 当Type为EngineAuth时，支持create-time
+	// <p>排序字段。</p><p>当Type为User时，支持create-time、user-name</p><p>当Type为DataAuth时，支持create-time</p><p>当Type为EngineAuth时，支持create-time</p>
 	SortBy *string `json:"SortBy,omitnil,omitempty" name:"SortBy"`
 
-	// 排序方式，desc表示正序，asc表示反序， 默认为asc
+	// <p>排序方式，desc表示正序，asc表示反序， 默认为asc</p>
 	Sorting *string `json:"Sorting,omitnil,omitempty" name:"Sorting"`
 
-	// 返回数量，默认20，最大值100
+	// <p>返回数量，默认20，最大值100</p>
 	Limit *int64 `json:"Limit,omitnil,omitempty" name:"Limit"`
 
-	// 偏移量，默认为0
+	// <p>偏移量，默认为0</p>
 	Offset *int64 `json:"Offset,omitnil,omitempty" name:"Offset"`
+
+	// <p>要授权的策略列表</p>
+	PolicyId *string `json:"PolicyId,omitnil,omitempty" name:"PolicyId"`
 }
 
 func (r *DescribeWorkGroupInfoRequest) ToJsonString() string {
@@ -12736,6 +13282,7 @@ func (r *DescribeWorkGroupInfoRequest) FromJsonString(s string) error {
 	delete(f, "Sorting")
 	delete(f, "Limit")
 	delete(f, "Offset")
+	delete(f, "PolicyId")
 	if len(f) > 0 {
 		return tcerr.NewTencentCloudSDKError("ClientError.BuildRequestError", "DescribeWorkGroupInfoRequest has unknown keys!", "")
 	}
@@ -12744,7 +13291,7 @@ func (r *DescribeWorkGroupInfoRequest) FromJsonString(s string) error {
 
 // Predefined struct for user
 type DescribeWorkGroupInfoResponseParams struct {
-	// 工作组详细信息
+	// <p>工作组详细信息</p>
 	// 注意：此字段可能返回 null，表示取不到有效值。
 	WorkGroupInfo *WorkGroupDetailInfo `json:"WorkGroupInfo,omitnil,omitempty" name:"WorkGroupInfo"`
 
@@ -12865,21 +13412,33 @@ func (r *DescribeWorkGroupsResponse) FromJsonString(s string) error {
 
 // Predefined struct for user
 type DetachUserPolicyRequestParams struct {
-	// 用户Id，和CAM侧Uin匹配
+	// <p>用户Id，和CAM侧Uin匹配</p>
 	UserId *string `json:"UserId,omitnil,omitempty" name:"UserId"`
 
-	// 解绑的权限集合
+	// <p>解绑的权限集合</p>
 	PolicySet []*Policy `json:"PolicySet,omitnil,omitempty" name:"PolicySet"`
+
+	// <p>用户来源类型TencentAccount（普通腾讯云用户） / EntraAccount（微软用户）</p>
+	AccountType *string `json:"AccountType,omitnil,omitempty" name:"AccountType"`
+
+	// <p>要授权的策略列表</p>
+	PolicyIds []*string `json:"PolicyIds,omitnil,omitempty" name:"PolicyIds"`
 }
 
 type DetachUserPolicyRequest struct {
 	*tchttp.BaseRequest
 	
-	// 用户Id，和CAM侧Uin匹配
+	// <p>用户Id，和CAM侧Uin匹配</p>
 	UserId *string `json:"UserId,omitnil,omitempty" name:"UserId"`
 
-	// 解绑的权限集合
+	// <p>解绑的权限集合</p>
 	PolicySet []*Policy `json:"PolicySet,omitnil,omitempty" name:"PolicySet"`
+
+	// <p>用户来源类型TencentAccount（普通腾讯云用户） / EntraAccount（微软用户）</p>
+	AccountType *string `json:"AccountType,omitnil,omitempty" name:"AccountType"`
+
+	// <p>要授权的策略列表</p>
+	PolicyIds []*string `json:"PolicyIds,omitnil,omitempty" name:"PolicyIds"`
 }
 
 func (r *DetachUserPolicyRequest) ToJsonString() string {
@@ -12896,6 +13455,8 @@ func (r *DetachUserPolicyRequest) FromJsonString(s string) error {
 	}
 	delete(f, "UserId")
 	delete(f, "PolicySet")
+	delete(f, "AccountType")
+	delete(f, "PolicyIds")
 	if len(f) > 0 {
 		return tcerr.NewTencentCloudSDKError("ClientError.BuildRequestError", "DetachUserPolicyRequest has unknown keys!", "")
 	}
@@ -12926,21 +13487,27 @@ func (r *DetachUserPolicyResponse) FromJsonString(s string) error {
 
 // Predefined struct for user
 type DetachWorkGroupPolicyRequestParams struct {
-	// 工作组Id
+	// <p>工作组Id</p>
 	WorkGroupId *int64 `json:"WorkGroupId,omitnil,omitempty" name:"WorkGroupId"`
 
-	// 解绑的权限集合
+	// <p>解绑的权限集合</p>
 	PolicySet []*Policy `json:"PolicySet,omitnil,omitempty" name:"PolicySet"`
+
+	// <p>要授权的策略列表</p>
+	PolicyIds []*string `json:"PolicyIds,omitnil,omitempty" name:"PolicyIds"`
 }
 
 type DetachWorkGroupPolicyRequest struct {
 	*tchttp.BaseRequest
 	
-	// 工作组Id
+	// <p>工作组Id</p>
 	WorkGroupId *int64 `json:"WorkGroupId,omitnil,omitempty" name:"WorkGroupId"`
 
-	// 解绑的权限集合
+	// <p>解绑的权限集合</p>
 	PolicySet []*Policy `json:"PolicySet,omitnil,omitempty" name:"PolicySet"`
+
+	// <p>要授权的策略列表</p>
+	PolicyIds []*string `json:"PolicyIds,omitnil,omitempty" name:"PolicyIds"`
 }
 
 func (r *DetachWorkGroupPolicyRequest) ToJsonString() string {
@@ -12957,6 +13524,7 @@ func (r *DetachWorkGroupPolicyRequest) FromJsonString(s string) error {
 	}
 	delete(f, "WorkGroupId")
 	delete(f, "PolicySet")
+	delete(f, "PolicyIds")
 	if len(f) > 0 {
 		return tcerr.NewTencentCloudSDKError("ClientError.BuildRequestError", "DetachWorkGroupPolicyRequest has unknown keys!", "")
 	}
@@ -13256,6 +13824,9 @@ type ElasticPlan struct {
 
 	// 结束时间，Once格式：yyyy-MM-dd HH:mm:ss; 非Once格式： HH:mm:ss
 	EndTime *string `json:"EndTime,omitnil,omitempty" name:"EndTime"`
+
+	// 分时弹性上限
+	ElasticLimit *int64 `json:"ElasticLimit,omitnil,omitempty" name:"ElasticLimit"`
 }
 
 type ElasticsearchInfo struct {
@@ -13375,11 +13946,40 @@ type FavorInfo struct {
 }
 
 type Filter struct {
-	// 属性名称, 若存在多个Filter时，Filter间的关系为逻辑或（OR）关系。
+	// 筛选字段名，对应实体属性名（驼峰命名）
 	Name *string `json:"Name,omitnil,omitempty" name:"Name"`
 
-	// 属性值, 若同一个Filter存在多个Values，同一Filter下Values间的关系为逻辑或（OR）关系。
+	// 筛选操作符：EQ/NE/GT/GE/LT/LE/LIKE/IN，默认EQ
+	Operator *string `json:"Operator,omitnil,omitempty" name:"Operator"`
+
+	// 筛选值列表，EQ/NE/GT/GE/LT/LE/LIKE取第一个值，IN使用完整列表
 	Values []*string `json:"Values,omitnil,omitempty" name:"Values"`
+}
+
+type GPUInfo struct {
+	// 计费项
+	BillingItem *string `json:"BillingItem,omitnil,omitempty" name:"BillingItem"`
+
+	// 机型
+	Model *string `json:"Model,omitnil,omitempty" name:"Model"`
+
+	// cu
+	CU *int64 `json:"CU,omitnil,omitempty" name:"CU"`
+
+	// gpu 机型
+	Type *string `json:"Type,omitnil,omitempty" name:"Type"`
+
+	// 数量
+	Num *int64 `json:"Num,omitnil,omitempty" name:"Num"`
+
+	// 显存
+	GPUMemory *int64 `json:"GPUMemory,omitnil,omitempty" name:"GPUMemory"`
+
+	// 机型
+	InstanceType *string `json:"InstanceType,omitnil,omitempty" name:"InstanceType"`
+
+	// 售卖情况（1-缺货，2-低库存，3-充足）
+	SaleStatus *int64 `json:"SaleStatus,omitnil,omitempty" name:"SaleStatus"`
 }
 
 type GatewayInfo struct {
@@ -13746,6 +14346,63 @@ type IcebergTablePartition struct {
 	Location *LocationInfo `json:"Location,omitnil,omitempty" name:"Location"`
 }
 
+// Predefined struct for user
+type InitializeTCLakeRequestParams struct {
+
+}
+
+type InitializeTCLakeRequest struct {
+	*tchttp.BaseRequest
+	
+}
+
+func (r *InitializeTCLakeRequest) ToJsonString() string {
+    b, _ := json.Marshal(r)
+    return string(b)
+}
+
+// FromJsonString It is highly **NOT** recommended to use this function
+// because it has no param check, nor strict type check
+func (r *InitializeTCLakeRequest) FromJsonString(s string) error {
+	f := make(map[string]interface{})
+	if err := json.Unmarshal([]byte(s), &f); err != nil {
+		return err
+	}
+	
+	if len(f) > 0 {
+		return tcerr.NewTencentCloudSDKError("ClientError.BuildRequestError", "InitializeTCLakeRequest has unknown keys!", "")
+	}
+	return json.Unmarshal([]byte(s), &r)
+}
+
+// Predefined struct for user
+type InitializeTCLakeResponseParams struct {
+	// <p>实例Id</p>
+	InstanceId *string `json:"InstanceId,omitnil,omitempty" name:"InstanceId"`
+
+	// <p>是否成功</p>
+	IsSuccess *bool `json:"IsSuccess,omitnil,omitempty" name:"IsSuccess"`
+
+	// 唯一请求 ID，由服务端生成，每次请求都会返回（若请求因其他原因未能抵达服务端，则该次请求不会获得 RequestId）。定位问题时需要提供该次请求的 RequestId。
+	RequestId *string `json:"RequestId,omitnil,omitempty" name:"RequestId"`
+}
+
+type InitializeTCLakeResponse struct {
+	*tchttp.BaseResponse
+	Response *InitializeTCLakeResponseParams `json:"Response"`
+}
+
+func (r *InitializeTCLakeResponse) ToJsonString() string {
+    b, _ := json.Marshal(r)
+    return string(b)
+}
+
+// FromJsonString It is highly **NOT** recommended to use this function
+// because it has no param check, nor strict type check
+func (r *InitializeTCLakeResponse) FromJsonString(s string) error {
+	return json.Unmarshal([]byte(s), &r)
+}
+
 type IpPortPair struct {
 	// ip信息
 	// 注意：此字段可能返回 null，表示取不到有效值。
@@ -13779,10 +14436,10 @@ type JobLogResult struct {
 }
 
 type KVPair struct {
-	// 配置的key值
+	// <p>配置的key值</p>
 	Key *string `json:"Key,omitnil,omitempty" name:"Key"`
 
-	// 配置的value值
+	// <p>配置的value值</p>
 	Value *string `json:"Value,omitnil,omitempty" name:"Value"`
 }
 
@@ -13829,7 +14486,7 @@ type LakeFsInfo struct {
 	// 托管存储类型
 	Type *string `json:"Type,omitnil,omitempty" name:"Type"`
 
-	// 容量
+	// 存储用量
 	SpaceUsedSize *float64 `json:"SpaceUsedSize,omitnil,omitempty" name:"SpaceUsedSize"`
 
 	// 创建时候的时间戳
@@ -13846,6 +14503,9 @@ type LakeFsInfo struct {
 
 	// 托管桶状态，当前取值为：creating、bind、readOnly、isolate
 	Status *string `json:"Status,omitnil,omitempty" name:"Status"`
+
+	// 托管存储桶标签列表
+	TagList []*TagInfo `json:"TagList,omitnil,omitempty" name:"TagList"`
 }
 
 // Predefined struct for user
@@ -14778,6 +15438,9 @@ type ModifyUserRequestParams struct {
 
 	// 用户描述
 	UserDescription *string `json:"UserDescription,omitnil,omitempty" name:"UserDescription"`
+
+	// 用户来源类型TencentAccount（普通腾讯云用户） / EntraAccount（微软用户）
+	AccountType *string `json:"AccountType,omitnil,omitempty" name:"AccountType"`
 }
 
 type ModifyUserRequest struct {
@@ -14788,6 +15451,9 @@ type ModifyUserRequest struct {
 
 	// 用户描述
 	UserDescription *string `json:"UserDescription,omitnil,omitempty" name:"UserDescription"`
+
+	// 用户来源类型TencentAccount（普通腾讯云用户） / EntraAccount（微软用户）
+	AccountType *string `json:"AccountType,omitnil,omitempty" name:"AccountType"`
 }
 
 func (r *ModifyUserRequest) ToJsonString() string {
@@ -14804,6 +15470,7 @@ func (r *ModifyUserRequest) FromJsonString(s string) error {
 	}
 	delete(f, "UserId")
 	delete(f, "UserDescription")
+	delete(f, "AccountType")
 	if len(f) > 0 {
 		return tcerr.NewTencentCloudSDKError("ClientError.BuildRequestError", "ModifyUserRequest has unknown keys!", "")
 	}
@@ -14839,6 +15506,9 @@ type ModifyUserTypeRequestParams struct {
 
 	// 用户要修改到的类型，ADMIN：管理员，COMMON：一般用户。
 	UserType *string `json:"UserType,omitnil,omitempty" name:"UserType"`
+
+	// 用户来源类型TencentAccount（普通腾讯云用户） / EntraAccount（微软用户）
+	AccountType *string `json:"AccountType,omitnil,omitempty" name:"AccountType"`
 }
 
 type ModifyUserTypeRequest struct {
@@ -14849,6 +15519,9 @@ type ModifyUserTypeRequest struct {
 
 	// 用户要修改到的类型，ADMIN：管理员，COMMON：一般用户。
 	UserType *string `json:"UserType,omitnil,omitempty" name:"UserType"`
+
+	// 用户来源类型TencentAccount（普通腾讯云用户） / EntraAccount（微软用户）
+	AccountType *string `json:"AccountType,omitnil,omitempty" name:"AccountType"`
 }
 
 func (r *ModifyUserTypeRequest) ToJsonString() string {
@@ -14865,6 +15538,7 @@ func (r *ModifyUserTypeRequest) FromJsonString(s string) error {
 	}
 	delete(f, "UserId")
 	delete(f, "UserType")
+	delete(f, "AccountType")
 	if len(f) > 0 {
 		return tcerr.NewTencentCloudSDKError("ClientError.BuildRequestError", "ModifyUserTypeRequest has unknown keys!", "")
 	}
@@ -15170,6 +15844,9 @@ type NotebookSessionInfo struct {
 
 	// pod数量
 	PodNumbers *int64 `json:"PodNumbers,omitnil,omitempty" name:"PodNumbers"`
+
+	// spark app名称
+	SparkAppName *string `json:"SparkAppName,omitnil,omitempty" name:"SparkAppName"`
 }
 
 type NotebookSessionStatementBatchInformation struct {
@@ -15263,6 +15940,12 @@ type NotebookSessions struct {
 
 	// 资源组名字
 	ResourceGroupName *string `json:"ResourceGroupName,omitnil,omitempty" name:"ResourceGroupName"`
+
+	// Kernel id
+	KernelId *string `json:"KernelId,omitnil,omitempty" name:"KernelId"`
+
+	// spark app名称
+	SparkAppName *string `json:"SparkAppName,omitnil,omitempty" name:"SparkAppName"`
 }
 
 type OpendThirdAccessUserInfo struct {
@@ -15414,71 +16097,80 @@ func (r *PauseStandardEngineResourceGroupsResponse) FromJsonString(s string) err
 }
 
 type Policy struct {
-	// 需要授权的数据库名，填 * 代表当前Catalog下所有数据库。当授权类型为管理员级别时，只允许填 “*”，当授权类型为数据连接级别时只允许填空，其他类型下可以任意指定数据库。
+	// <p>需要授权的数据库名，填 * 代表当前Catalog下所有数据库。当授权类型为管理员级别时，只允许填 “*”，当授权类型为数据连接级别时只允许填空，其他类型下可以任意指定数据库。</p>
 	Database *string `json:"Database,omitnil,omitempty" name:"Database"`
 
-	// 需要授权的数据源名称，管理员级别下只支持填  * （代表该级别全部资源）；数据源级别和数据库级别鉴权的情况下，只支持填COSDataCatalog或者*；在数据表级别鉴权下可以填写用户自定义数据源。不填情况下默认为DataLakeCatalog。注意：如果是对用户自定义数据源进行鉴权，DLC能够管理的权限是用户接入数据源的时候提供的账户的子集。
+	// <p>需要授权的数据源名称，管理员级别下只支持填  * （代表该级别全部资源）；数据源级别和数据库级别鉴权的情况下，只支持填COSDataCatalog或者*；在数据表级别鉴权下可以填写用户自定义数据源。不填情况下默认为DataLakeCatalog。注意：如果是对用户自定义数据源进行鉴权，DLC能够管理的权限是用户接入数据源的时候提供的账户的子集。</p>
 	Catalog *string `json:"Catalog,omitnil,omitempty" name:"Catalog"`
 
-	// 需要授权的表名，填 * 代表当前Database下所有表。当授权类型为管理员级别时，只允许填“*”，当授权类型为数据连接级别、数据库级别时只允许填空，其他类型下可以任意指定数据表。
+	// <p>需要授权的表名，填 * 代表当前Database下所有表。当授权类型为管理员级别时，只允许填“*”，当授权类型为数据连接级别、数据库级别时只允许填空，其他类型下可以任意指定数据表。</p>
 	Table *string `json:"Table,omitnil,omitempty" name:"Table"`
 
-	// 授权的权限操作，对于不同级别的鉴权提供不同操作。管理员权限：ALL，不填默认为ALL；数据连接级鉴权：CREATE；数据库级别鉴权：ALL、CREATE、ALTER、DROP；数据表权限：ALL、SELECT、INSERT、ALTER、DELETE、DROP、UPDATE。注意：在数据表权限下，指定的数据源不为COSDataCatalog的时候，只支持SELECT操作。
+	// <p>授权的权限操作，对于不同级别的鉴权提供不同操作。管理员权限：ALL，不填默认为ALL；数据连接级鉴权：CREATE；数据库级别鉴权：ALL、CREATE、ALTER、DROP；数据表权限：ALL、SELECT、INSERT、ALTER、DELETE、DROP、UPDATE。注意：在数据表权限下，指定的数据源不为COSDataCatalog的时候，只支持SELECT操作。</p>
 	Operation *string `json:"Operation,omitnil,omitempty" name:"Operation"`
 
-	// 授权类型，现在支持八种授权类型：ADMIN:管理员级别鉴权 DATASOURCE：数据连接级别鉴权 DATABASE：数据库级别鉴权 TABLE：表级别鉴权 VIEW：视图级别鉴权 FUNCTION：函数级别鉴权 COLUMN：列级别鉴权 ENGINE：数据引擎鉴权。不填默认为管理员级别鉴权。
+	// <p>授权类型，现在支持八种授权类型：ADMIN:管理员级别鉴权 DATASOURCE：数据连接级别鉴权 DATABASE：数据库级别鉴权 TABLE：表级别鉴权 VIEW：视图级别鉴权 FUNCTION：函数级别鉴权 COLUMN：列级别鉴权 ENGINE：数据引擎鉴权。不填默认为管理员级别鉴权。</p>
 	PolicyType *string `json:"PolicyType,omitnil,omitempty" name:"PolicyType"`
 
-	// 需要授权的函数名，填 * 代表当前Catalog下所有函数。当授权类型为管理员级别时，只允许填“*”，当授权类型为数据连接级别时只允许填空，其他类型下可以任意指定函数。
+	// <p>需要授权的函数名，填 * 代表当前Catalog下所有函数。当授权类型为管理员级别时，只允许填“*”，当授权类型为数据连接级别时只允许填空，其他类型下可以任意指定函数。</p>
 	// 注意：此字段可能返回 null，表示取不到有效值。
 	Function *string `json:"Function,omitnil,omitempty" name:"Function"`
 
-	// 需要授权的视图，填 * 代表当前Database下所有视图。当授权类型为管理员级别时，只允许填“*”，当授权类型为数据连接级别、数据库级别时只允许填空，其他类型下可以任意指定视图。
+	// <p>需要授权的视图，填 * 代表当前Database下所有视图。当授权类型为管理员级别时，只允许填“*”，当授权类型为数据连接级别、数据库级别时只允许填空，其他类型下可以任意指定视图。</p>
 	// 注意：此字段可能返回 null，表示取不到有效值。
 	View *string `json:"View,omitnil,omitempty" name:"View"`
 
-	// 需要授权的列，填 * 代表当前所有列。当授权类型为管理员级别时，只允许填“*”
+	// <p>需要授权的列，填 * 代表当前所有列。当授权类型为管理员级别时，只允许填“*”</p>
 	// 注意：此字段可能返回 null，表示取不到有效值。
 	Column *string `json:"Column,omitnil,omitempty" name:"Column"`
 
-	// 需要授权的数据引擎，填 * 代表当前所有引擎。当授权类型为管理员级别时，只允许填“*”
+	// <p>需要授权的数据引擎，填 * 代表当前所有引擎。当授权类型为管理员级别时，只允许填“*”</p>
 	// 注意：此字段可能返回 null，表示取不到有效值。
 	DataEngine *string `json:"DataEngine,omitnil,omitempty" name:"DataEngine"`
 
-	// 用户是否可以进行二次授权。当为true的时候，被授权的用户可以将本次获取的权限再次授权给其他子用户。默认为false
+	// <p>用户是否可以进行二次授权。当为true的时候，被授权的用户可以将本次获取的权限再次授权给其他子用户。默认为false</p>
 	// 注意：此字段可能返回 null，表示取不到有效值。
 	ReAuth *bool `json:"ReAuth,omitnil,omitempty" name:"ReAuth"`
 
-	// 权限来源，入参不填。USER：权限来自用户本身；WORKGROUP：权限来自绑定的工作组
+	// <p>权限来源，入参不填。USER：权限来自用户本身；WORKGROUP：权限来自绑定的工作组</p>
 	// 注意：此字段可能返回 null，表示取不到有效值。
 	Source *string `json:"Source,omitnil,omitempty" name:"Source"`
 
-	// 授权模式，入参不填。COMMON：普通模式；SENIOR：高级模式。
+	// <p>授权模式，入参不填。COMMON：普通模式；SENIOR：高级模式。</p>
 	// 注意：此字段可能返回 null，表示取不到有效值。
 	Mode *string `json:"Mode,omitnil,omitempty" name:"Mode"`
 
-	// 操作者，入参不填。
+	// <p>操作者，入参不填。</p>
 	// 注意：此字段可能返回 null，表示取不到有效值。
 	Operator *string `json:"Operator,omitnil,omitempty" name:"Operator"`
 
-	// 权限创建的时间，入参不填
+	// <p>权限创建的时间，入参不填</p>
 	// 注意：此字段可能返回 null，表示取不到有效值。
 	CreateTime *string `json:"CreateTime,omitnil,omitempty" name:"CreateTime"`
 
-	// 权限所属工作组的ID，只有当该权限的来源为工作组时才会有值。即仅当Source字段的值为WORKGROUP时该字段才有值。
+	// <p>权限所属工作组的ID，只有当该权限的来源为工作组时才会有值。即仅当Source字段的值为WORKGROUP时该字段才有值。</p>
 	// 注意：此字段可能返回 null，表示取不到有效值。
 	SourceId *int64 `json:"SourceId,omitnil,omitempty" name:"SourceId"`
 
-	// 权限所属工作组的名称，只有当该权限的来源为工作组时才会有值。即仅当Source字段的值为WORKGROUP时该字段才有值。
+	// <p>权限所属工作组的名称，只有当该权限的来源为工作组时才会有值。即仅当Source字段的值为WORKGROUP时该字段才有值。</p>
 	// 注意：此字段可能返回 null，表示取不到有效值。
 	SourceName *string `json:"SourceName,omitnil,omitempty" name:"SourceName"`
 
-	// 策略ID
+	// <p>策略ID</p>
 	// 注意：此字段可能返回 null，表示取不到有效值。
 	Id *int64 `json:"Id,omitnil,omitempty" name:"Id"`
 
-	// 引擎类型
+	// <p>引擎类型</p>
 	EngineGeneration *string `json:"EngineGeneration,omitnil,omitempty" name:"EngineGeneration"`
+
+	// <p>需要授权的Model名，填 * 代表当前Database下所有表。当授权类型为管理员级别时，只允许填“*”，当授权类型为数据连接级别、数据库级别时只允许填空，其他类型下可以任意指定数据表。</p>
+	Model *string `json:"Model,omitnil,omitempty" name:"Model"`
+
+	// <p>权限来源是否为管理员</p>
+	IsAdminPolicy *bool `json:"IsAdminPolicy,omitnil,omitempty" name:"IsAdminPolicy"`
+
+	// <p>user和workgroup对应的确定性字符串PolicyId</p>
+	PolicyId *string `json:"PolicyId,omitnil,omitempty" name:"PolicyId"`
 }
 
 type Policys struct {
@@ -15535,6 +16227,9 @@ type QueryInternalTableWarehouseRequestParams struct {
 
 	// 表名
 	TableName *string `json:"TableName,omitnil,omitempty" name:"TableName"`
+
+	// catalog名称
+	DatasourceConnectionName *string `json:"DatasourceConnectionName,omitnil,omitempty" name:"DatasourceConnectionName"`
 }
 
 type QueryInternalTableWarehouseRequest struct {
@@ -15545,6 +16240,9 @@ type QueryInternalTableWarehouseRequest struct {
 
 	// 表名
 	TableName *string `json:"TableName,omitnil,omitempty" name:"TableName"`
+
+	// catalog名称
+	DatasourceConnectionName *string `json:"DatasourceConnectionName,omitnil,omitempty" name:"DatasourceConnectionName"`
 }
 
 func (r *QueryInternalTableWarehouseRequest) ToJsonString() string {
@@ -15561,6 +16259,7 @@ func (r *QueryInternalTableWarehouseRequest) FromJsonString(s string) error {
 	}
 	delete(f, "DatabaseName")
 	delete(f, "TableName")
+	delete(f, "DatasourceConnectionName")
 	if len(f) > 0 {
 		return tcerr.NewTencentCloudSDKError("ClientError.BuildRequestError", "QueryInternalTableWarehouseRequest has unknown keys!", "")
 	}
@@ -15969,6 +16668,11 @@ func (r *ReportHeartbeatMetaDataResponse) FromJsonString(s string) error {
 	return json.Unmarshal([]byte(s), &r)
 }
 
+type ResourceConf struct {
+	// 当为TCLake优化资源时，优化任务的并行度
+	Parallelism *int64 `json:"Parallelism,omitnil,omitempty" name:"Parallelism"`
+}
+
 type ResourceInfo struct {
 	// 归属类型
 	AttributionType *string `json:"AttributionType,omitnil,omitempty" name:"AttributionType"`
@@ -15991,6 +16695,9 @@ type ResourceInfo struct {
 
 	// 标准引擎资源组信息
 	ResourceGroupName *string `json:"ResourceGroupName,omitnil,omitempty" name:"ResourceGroupName"`
+
+	// 资源配置信息
+	ResourceConf *ResourceConf `json:"ResourceConf,omitnil,omitempty" name:"ResourceConf"`
 }
 
 // Predefined struct for user
@@ -16240,6 +16947,60 @@ type SessionResourceTemplate struct {
 	RunningTimeParameters []*DataEngineConfigPair `json:"RunningTimeParameters,omitnil,omitempty" name:"RunningTimeParameters"`
 }
 
+// Predefined struct for user
+type SetOptimizerPolicyRequestParams struct {
+	// 优化策略
+	SmartPolicy *SmartPolicy `json:"SmartPolicy,omitnil,omitempty" name:"SmartPolicy"`
+}
+
+type SetOptimizerPolicyRequest struct {
+	*tchttp.BaseRequest
+	
+	// 优化策略
+	SmartPolicy *SmartPolicy `json:"SmartPolicy,omitnil,omitempty" name:"SmartPolicy"`
+}
+
+func (r *SetOptimizerPolicyRequest) ToJsonString() string {
+    b, _ := json.Marshal(r)
+    return string(b)
+}
+
+// FromJsonString It is highly **NOT** recommended to use this function
+// because it has no param check, nor strict type check
+func (r *SetOptimizerPolicyRequest) FromJsonString(s string) error {
+	f := make(map[string]interface{})
+	if err := json.Unmarshal([]byte(s), &f); err != nil {
+		return err
+	}
+	delete(f, "SmartPolicy")
+	if len(f) > 0 {
+		return tcerr.NewTencentCloudSDKError("ClientError.BuildRequestError", "SetOptimizerPolicyRequest has unknown keys!", "")
+	}
+	return json.Unmarshal([]byte(s), &r)
+}
+
+// Predefined struct for user
+type SetOptimizerPolicyResponseParams struct {
+	// 唯一请求 ID，由服务端生成，每次请求都会返回（若请求因其他原因未能抵达服务端，则该次请求不会获得 RequestId）。定位问题时需要提供该次请求的 RequestId。
+	RequestId *string `json:"RequestId,omitnil,omitempty" name:"RequestId"`
+}
+
+type SetOptimizerPolicyResponse struct {
+	*tchttp.BaseResponse
+	Response *SetOptimizerPolicyResponseParams `json:"Response"`
+}
+
+func (r *SetOptimizerPolicyResponse) ToJsonString() string {
+    b, _ := json.Marshal(r)
+    return string(b)
+}
+
+// FromJsonString It is highly **NOT** recommended to use this function
+// because it has no param check, nor strict type check
+func (r *SetOptimizerPolicyResponse) FromJsonString(s string) error {
+	return json.Unmarshal([]byte(s), &r)
+}
+
 type SmartOptimizerChangeTablePolicy struct {
 	// change表的数据保存时间，单位为天
 	DataRetentionTime *int64 `json:"DataRetentionTime,omitnil,omitempty" name:"DataRetentionTime"`
@@ -16257,7 +17018,9 @@ type SmartOptimizerLifecyclePolicy struct {
 	// 过期时间
 	Expiration *int64 `json:"Expiration,omitnil,omitempty" name:"Expiration"`
 
-	// 是否删表
+	// 是否删表，该字段废弃已使用，用TableExpiration策略替代
+	//
+	// Deprecated: DropTable is deprecated.
 	DropTable *bool `json:"DropTable,omitnil,omitempty" name:"DropTable"`
 
 	// 过期字段
@@ -16271,15 +17034,15 @@ type SmartOptimizerPolicy struct {
 	// 是否继承
 	Inherit *string `json:"Inherit,omitnil,omitempty" name:"Inherit"`
 
-	// ResourceInfo
+	// 数据治理资源
 	// 注意：此字段可能返回 null，表示取不到有效值。
 	Resources []*ResourceInfo `json:"Resources,omitnil,omitempty" name:"Resources"`
 
-	// SmartOptimizerWrittenPolicy
+	// 数据重写策略
 	// 注意：此字段可能返回 null，表示取不到有效值。
 	Written *SmartOptimizerWrittenPolicy `json:"Written,omitnil,omitempty" name:"Written"`
 
-	// SmartOptimizerLifecyclePolicy
+	// 数据过期策略
 	// 注意：此字段可能返回 null，表示取不到有效值。
 	Lifecycle *SmartOptimizerLifecyclePolicy `json:"Lifecycle,omitnil,omitempty" name:"Lifecycle"`
 
@@ -16290,11 +17053,18 @@ type SmartOptimizerPolicy struct {
 	// SmartOptimizerChangeTablePolicy
 	// 注意：此字段可能返回 null，表示取不到有效值。
 	ChangeTable *SmartOptimizerChangeTablePolicy `json:"ChangeTable,omitnil,omitempty" name:"ChangeTable"`
+
+	// 表过期策略
+	TableExpiration *TableExpirationPolicy `json:"TableExpiration,omitnil,omitempty" name:"TableExpiration"`
 }
 
 type SmartOptimizerWrittenPolicy struct {
 	// none/enable/disable/default
 	WrittenEnable *string `json:"WrittenEnable,omitnil,omitempty" name:"WrittenEnable"`
+
+	// 用户自定义高级参数
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	AdvancePolicy *WrittenAdvancePolicy `json:"AdvancePolicy,omitnil,omitempty" name:"AdvancePolicy"`
 }
 
 type SmartPolicy struct {
@@ -16333,6 +17103,17 @@ type Sort struct {
 
 	// 是否按照ASC排序，否则DESC排序
 	Asc *bool `json:"Asc,omitnil,omitempty" name:"Asc"`
+}
+
+type SortOrder struct {
+	// sort的数据表列名称
+	Column *string `json:"Column,omitnil,omitempty" name:"Column"`
+
+	// 按照升序或者降序进行排序
+	SortDirection *string `json:"SortDirection,omitnil,omitempty" name:"SortDirection"`
+
+	// null值放在开头或者末尾
+	NullOrder *string `json:"NullOrder,omitnil,omitempty" name:"NullOrder"`
 }
 
 type SparkJobInfo struct {
@@ -16555,6 +17336,9 @@ type SparkSessionInfo struct {
 
 	// 总规格最大
 	TotalSpecMax *int64 `json:"TotalSpecMax,omitnil,omitempty" name:"TotalSpecMax"`
+
+	// 状态，STARTING、RUNNING、TERMINATED
+	State *string `json:"State,omitnil,omitempty" name:"State"`
 }
 
 type SpecInfo struct {
@@ -17119,6 +17903,14 @@ type TableBaseInfo struct {
 	PrimaryKeys []*string `json:"PrimaryKeys,omitnil,omitempty" name:"PrimaryKeys"`
 }
 
+type TableExpirationPolicy struct {
+	// 是否启用策略
+	Enabled *bool `json:"Enabled,omitnil,omitempty" name:"Enabled"`
+
+	// 表过期时间，单位：天
+	Expiration *uint64 `json:"Expiration,omitnil,omitempty" name:"Expiration"`
+}
+
 type TableInfo struct {
 	// 数据表配置信息。
 	TableBaseInfo *TableBaseInfo `json:"TableBaseInfo,omitnil,omitempty" name:"TableBaseInfo"`
@@ -17194,6 +17986,249 @@ type Task struct {
 
 	// Spark SQL查询任务
 	SparkSQLTask *SQLTask `json:"SparkSQLTask,omitnil,omitempty" name:"SparkSQLTask"`
+}
+
+type TaskFullRespInfo struct {
+	// <p>任务所属Database的名称。</p>
+	DatabaseName *string `json:"DatabaseName,omitnil,omitempty" name:"DatabaseName"`
+
+	// <p>任务数据量。</p>
+	DataAmount *int64 `json:"DataAmount,omitnil,omitempty" name:"DataAmount"`
+
+	// <p>任务Id。</p>
+	Id *string `json:"Id,omitnil,omitempty" name:"Id"`
+
+	// <p>计算耗时，单位： ms</p>
+	UsedTime *int64 `json:"UsedTime,omitnil,omitempty" name:"UsedTime"`
+
+	// <p>任务输出路径。</p>
+	OutputPath *string `json:"OutputPath,omitnil,omitempty" name:"OutputPath"`
+
+	// <p>任务创建时间。</p>
+	CreateTime *string `json:"CreateTime,omitnil,omitempty" name:"CreateTime"`
+
+	// <p>任务状态：0 初始化， 1 执行中， 2 执行成功，3 数据写入中，4 排队中。-1 执行失败，-3 已取消。</p>
+	State *int64 `json:"State,omitnil,omitempty" name:"State"`
+
+	// <p>任务SQL类型，DDL|DML等</p>
+	SQLType *string `json:"SQLType,omitnil,omitempty" name:"SQLType"`
+
+	// <p>任务SQL语句</p>
+	SQL *string `json:"SQL,omitnil,omitempty" name:"SQL"`
+
+	// <p>结果是否过期。</p>
+	ResultExpired *bool `json:"ResultExpired,omitnil,omitempty" name:"ResultExpired"`
+
+	// <p>数据影响统计信息。</p>
+	RowAffectInfo *string `json:"RowAffectInfo,omitnil,omitempty" name:"RowAffectInfo"`
+
+	// <p>任务结果数据表。</p>
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	DataSet *string `json:"DataSet,omitnil,omitempty" name:"DataSet"`
+
+	// <p>失败信息, 例如：errorMessage。该字段已废弃。</p>
+	Error *string `json:"Error,omitnil,omitempty" name:"Error"`
+
+	// <p>任务执行进度num/100(%)</p>
+	Percentage *int64 `json:"Percentage,omitnil,omitempty" name:"Percentage"`
+
+	// <p>任务执行输出信息。</p>
+	OutputMessage *string `json:"OutputMessage,omitnil,omitempty" name:"OutputMessage"`
+
+	// <p>执行SQL的引擎类型</p>
+	TaskType *string `json:"TaskType,omitnil,omitempty" name:"TaskType"`
+
+	// <p>任务进度明细</p>
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	ProgressDetail *string `json:"ProgressDetail,omitnil,omitempty" name:"ProgressDetail"`
+
+	// <p>任务结束时间</p>
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	UpdateTime *string `json:"UpdateTime,omitnil,omitempty" name:"UpdateTime"`
+
+	// <p>计算资源id</p>
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	DataEngineId *string `json:"DataEngineId,omitnil,omitempty" name:"DataEngineId"`
+
+	// <p>执行sql的子uin</p>
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	OperateUin *string `json:"OperateUin,omitnil,omitempty" name:"OperateUin"`
+
+	// <p>计算资源名字</p>
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	DataEngineName *string `json:"DataEngineName,omitnil,omitempty" name:"DataEngineName"`
+
+	// <p>导入类型是本地导入还是cos</p>
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	InputType *string `json:"InputType,omitnil,omitempty" name:"InputType"`
+
+	// <p>导入配置</p>
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	InputConf *string `json:"InputConf,omitnil,omitempty" name:"InputConf"`
+
+	// <p>数据条数</p>
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	DataNumber *int64 `json:"DataNumber,omitnil,omitempty" name:"DataNumber"`
+
+	// <p>查询数据能不能下载</p>
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	CanDownload *bool `json:"CanDownload,omitnil,omitempty" name:"CanDownload"`
+
+	// <p>用户别名</p>
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	UserAlias *string `json:"UserAlias,omitnil,omitempty" name:"UserAlias"`
+
+	// <p>spark应用作业名</p>
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	SparkJobName *string `json:"SparkJobName,omitnil,omitempty" name:"SparkJobName"`
+
+	// <p>spark应用作业Id</p>
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	SparkJobId *string `json:"SparkJobId,omitnil,omitempty" name:"SparkJobId"`
+
+	// <p>spark应用入口jar文件</p>
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	SparkJobFile *string `json:"SparkJobFile,omitnil,omitempty" name:"SparkJobFile"`
+
+	// <p>spark ui url</p>
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	UiUrl *string `json:"UiUrl,omitnil,omitempty" name:"UiUrl"`
+
+	// <p>任务耗时，单位： ms</p>
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	TotalTime *int64 `json:"TotalTime,omitnil,omitempty" name:"TotalTime"`
+
+	// <p>spark app job执行task的程序入口参数</p>
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	CmdArgs *string `json:"CmdArgs,omitnil,omitempty" name:"CmdArgs"`
+
+	// <p>集群镜像大版本名称</p>
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	ImageVersion *string `json:"ImageVersion,omitnil,omitempty" name:"ImageVersion"`
+
+	// <p>driver规格：small,medium,large,xlarge；内存型(引擎类型)：m.small,m.medium,m.large,m.xlarge</p>
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	DriverSize *string `json:"DriverSize,omitnil,omitempty" name:"DriverSize"`
+
+	// <p>executor规格：small,medium,large,xlarge；内存型(引擎类型)：m.small,m.medium,m.large,m.xlarge</p>
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	ExecutorSize *string `json:"ExecutorSize,omitnil,omitempty" name:"ExecutorSize"`
+
+	// <p>指定executor数量，最小值为1，最大值小于集群规格</p>
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	ExecutorNums *uint64 `json:"ExecutorNums,omitnil,omitempty" name:"ExecutorNums"`
+
+	// <p>指定executor max数量（动态配置场景下），最小值为1，最大值小于集群规格（当ExecutorMaxNumbers小于ExecutorNums时，改值设定为ExecutorNums）</p>
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	ExecutorMaxNumbers *uint64 `json:"ExecutorMaxNumbers,omitnil,omitempty" name:"ExecutorMaxNumbers"`
+
+	// <p>任务公共指标数据</p>
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	CommonMetrics *CommonMetrics `json:"CommonMetrics,omitnil,omitempty" name:"CommonMetrics"`
+
+	// <p>spark任务指标数据</p>
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	SparkMonitorMetrics *SparkMonitorMetrics `json:"SparkMonitorMetrics,omitnil,omitempty" name:"SparkMonitorMetrics"`
+
+	// <p>presto任务指标数据</p>
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	PrestoMonitorMetrics *PrestoMonitorMetrics `json:"PrestoMonitorMetrics,omitnil,omitempty" name:"PrestoMonitorMetrics"`
+
+	// <p>结果文件格式：默认为csv</p>
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	ResultFormat *string `json:"ResultFormat,omitnil,omitempty" name:"ResultFormat"`
+
+	// <p>引擎类型，SparkSQL：SparkSQL 引擎；SparkBatch：Spark作业引擎；PrestoSQL：Presto引擎</p>
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	EngineTypeDetail *string `json:"EngineTypeDetail,omitnil,omitempty" name:"EngineTypeDetail"`
+
+	// <p>spark引擎资源组名称</p>
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	ResourceGroupName *string `json:"ResourceGroupName,omitnil,omitempty" name:"ResourceGroupName"`
+
+	// <p>任务来源信息,如thirdPartyApi,dataExploration, sparkAppTask等</p>
+	Source *string `json:"Source,omitnil,omitempty" name:"Source"`
+
+	// <p>子渠道信息，一般由第三方调用定义</p>
+	SourceExtra *string `json:"SourceExtra,omitnil,omitempty" name:"SourceExtra"`
+
+	// <p>创建人uin</p>
+	CreatorUin *string `json:"CreatorUin,omitnil,omitempty" name:"CreatorUin"`
+
+	// <p>创建人名字</p>
+	CreatorAlias *string `json:"CreatorAlias,omitnil,omitempty" name:"CreatorAlias"`
+
+	// <p>引擎参数</p>
+	CustomizedConf *string `json:"CustomizedConf,omitnil,omitempty" name:"CustomizedConf"`
+
+	// <p>单位秒，累计 CPU* 秒 ( 累计 CPU * 时 = 累计 CPU* 秒/ 3600)，统计参与计算所用 Spark Executor 每个 core 的 CPU 执行时长总和<br>示例值：4329</p>
+	TaskTimeSum *int64 `json:"TaskTimeSum,omitnil,omitempty" name:"TaskTimeSum"`
+
+	// <p>引擎执行时间</p>
+	StageStartTime *int64 `json:"StageStartTime,omitnil,omitempty" name:"StageStartTime"`
+
+	// <p>数据扫描条数</p>
+	InputRecordsSum *int64 `json:"InputRecordsSum,omitnil,omitempty" name:"InputRecordsSum"`
+
+	// <p>健康状态</p>
+	AnalysisStatusType *int64 `json:"AnalysisStatusType,omitnil,omitempty" name:"AnalysisStatusType"`
+
+	// <p>输出总行数</p>
+	OutputRecordsSum *int64 `json:"OutputRecordsSum,omitnil,omitempty" name:"OutputRecordsSum"`
+
+	// <p>输出总大小</p>
+	OutputBytesSum *int64 `json:"OutputBytesSum,omitnil,omitempty" name:"OutputBytesSum"`
+
+	// <p>输出文件个数</p>
+	OutputFilesNum *int64 `json:"OutputFilesNum,omitnil,omitempty" name:"OutputFilesNum"`
+
+	// <p>输出小文件个数</p>
+	OutputSmallFilesNum *int64 `json:"OutputSmallFilesNum,omitnil,omitempty" name:"OutputSmallFilesNum"`
+
+	// <p>数据shuffle行数</p>
+	ShuffleReadRecordsSum *int64 `json:"ShuffleReadRecordsSum,omitnil,omitempty" name:"ShuffleReadRecordsSum"`
+
+	// <p>数据shuffle大小</p>
+	ShuffleReadBytesSum *int64 `json:"ShuffleReadBytesSum,omitnil,omitempty" name:"ShuffleReadBytesSum"`
+
+	// <p>spark作业id</p>
+	SparkAppId *string `json:"SparkAppId,omitnil,omitempty" name:"SparkAppId"`
+
+	// <p>任务大类，DLC2.0中任务区分为两大类，sql任务和作业任务</p>
+	TaskCategory *string `json:"TaskCategory,omitnil,omitempty" name:"TaskCategory"`
+
+	// <p>任务名称</p>
+	TaskName *string `json:"TaskName,omitnil,omitempty" name:"TaskName"`
+
+	// <p>引擎类型，用做任务详情页跳转引擎tab</p>
+	EngineType *string `json:"EngineType,omitnil,omitempty" name:"EngineType"`
+
+	// <p>引擎是否支持洞察数据采集</p>
+	EngineHasListenerConfig *bool `json:"EngineHasListenerConfig,omitnil,omitempty" name:"EngineHasListenerConfig"`
+
+	// <p>spark引擎资源组id</p>
+	ResourceGroupId *string `json:"ResourceGroupId,omitnil,omitempty" name:"ResourceGroupId"`
+
+	// <p>任务计算耗时</p>
+	JobTimeSum *int64 `json:"JobTimeSum,omitnil,omitempty" name:"JobTimeSum"`
+
+	// <p>任务启动耗时</p>
+	LaunchTime *string `json:"LaunchTime,omitnil,omitempty" name:"LaunchTime"`
+
+	// <p>Gpu Driver 规格</p>
+	GpuDriverSize *int64 `json:"GpuDriverSize,omitnil,omitempty" name:"GpuDriverSize"`
+
+	// <p>Gpu Executor 规格</p>
+	GpuExecutorSize *int64 `json:"GpuExecutorSize,omitnil,omitempty" name:"GpuExecutorSize"`
+
+	// <p>ShuffleWrite数据量</p>
+	ShuffleWriteBytesSum *int64 `json:"ShuffleWriteBytesSum,omitnil,omitempty" name:"ShuffleWriteBytesSum"`
+
+	// <p>活跃core</p>
+	ActiveCore *int64 `json:"ActiveCore,omitnil,omitempty" name:"ActiveCore"`
+
+	// <p>排队时间</p><p>单位：毫秒</p>
+	QueueTime *int64 `json:"QueueTime,omitnil,omitempty" name:"QueueTime"`
 }
 
 type TaskMonitorInfo struct {
@@ -18744,6 +19779,9 @@ type UserDetailInfo struct {
 	// 数据源权限集合
 	// 注意：此字段可能返回 null，表示取不到有效值。
 	CatalogPolicyInfo *Policys `json:"CatalogPolicyInfo,omitnil,omitempty" name:"CatalogPolicyInfo"`
+
+	// 模型权限集合
+	ModelPolicyInfo *Policys `json:"ModelPolicyInfo,omitnil,omitempty" name:"ModelPolicyInfo"`
 }
 
 type UserIdSetOfWorkGroupId struct {
@@ -18804,6 +19842,9 @@ type UserMessage struct {
 
 	// 用户别名
 	UserAlias *string `json:"UserAlias,omitnil,omitempty" name:"UserAlias"`
+
+	// 用户来源类型TencentAccount（普通腾讯云用户） / EntraAccount（微软用户）
+	AccountType *string `json:"AccountType,omitnil,omitempty" name:"AccountType"`
 }
 
 type UserRole struct {
@@ -18955,6 +19996,12 @@ type WorkGroupDetailInfo struct {
 	// 数据目录权限集
 	// 注意：此字段可能返回 null，表示取不到有效值。
 	CatalogPolicyInfo *Policy `json:"CatalogPolicyInfo,omitnil,omitempty" name:"CatalogPolicyInfo"`
+
+	// 数据目录权限
+	DataCatalogPolicyInfo *Policys `json:"DataCatalogPolicyInfo,omitnil,omitempty" name:"DataCatalogPolicyInfo"`
+
+	// 模型权限
+	ModelPolicyInfo *Policys `json:"ModelPolicyInfo,omitnil,omitempty" name:"ModelPolicyInfo"`
 }
 
 type WorkGroupIdSetOfUserId struct {
@@ -19017,4 +20064,40 @@ type WorkGroups struct {
 
 	// 工作组总数
 	TotalCount *int64 `json:"TotalCount,omitnil,omitempty" name:"TotalCount"`
+}
+
+type WrittenAdvancePolicy struct {
+	// 是否启用合并
+	CompactEnable *string `json:"CompactEnable,omitnil,omitempty" name:"CompactEnable"`
+
+	// 是否启用历史数据清理
+	DeleteEnable *string `json:"DeleteEnable,omitnil,omitempty" name:"DeleteEnable"`
+
+	// 合并最新文件数量
+	MinInputFiles *int64 `json:"MinInputFiles,omitnil,omitempty" name:"MinInputFiles"`
+
+	// 合并文件目录文件大小
+	TargetFileSizeBytes *int64 `json:"TargetFileSizeBytes,omitnil,omitempty" name:"TargetFileSizeBytes"`
+
+	// 保留过期时间的快照数量
+	RetainLast *int64 `json:"RetainLast,omitnil,omitempty" name:"RetainLast"`
+
+	// 快照过期时间
+	BeforeDays *int64 `json:"BeforeDays,omitnil,omitempty" name:"BeforeDays"`
+
+	// 快照过期执行周期
+	ExpiredSnapshotsIntervalMin *int64 `json:"ExpiredSnapshotsIntervalMin,omitnil,omitempty" name:"ExpiredSnapshotsIntervalMin"`
+
+	// 移除孤立文件执行周期
+	RemoveOrphanIntervalMin *int64 `json:"RemoveOrphanIntervalMin,omitnil,omitempty" name:"RemoveOrphanIntervalMin"`
+
+	// 是否开启COW表合并
+	CowCompactEnable *string `json:"CowCompactEnable,omitnil,omitempty" name:"CowCompactEnable"`
+
+	// 文件合并策略
+	CompactStrategy *string `json:"CompactStrategy,omitnil,omitempty" name:"CompactStrategy"`
+
+	// sort合并策略的规则定义
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	SortOrders []*SortOrder `json:"SortOrders,omitnil,omitempty" name:"SortOrders"`
 }

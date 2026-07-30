@@ -223,6 +223,7 @@ The following arguments are supported:
 * `data_disks` - (Optional, List) Workspace data disk information.
 * `disaster_recover_group_id` - (Optional, String) Placement Group ID.
 * `enhanced_service` - (Optional, List) Enhanced Services.
+* `force_stop` - (Optional, Bool) Whether to forcibly shut down a running instance. Default is false. Forcing a shutdown is equivalent to switching off the power button on a physical computer. Forcing a shutdown may result in data loss or file system corruption; therefore, please use this option only when the server cannot be shut down normally.
 * `host_name` - (Optional, String) The hostname of the instance. Windows instance: The name should be a combination of 2 to 15 characters comprised of letters (case insensitive), numbers, and hyphens (-). Period (.) is not supported, and the name cannot be a string of pure numbers. Other types (such as Linux) of instances: The name should be a combination of 2 to 60 characters, supporting multiple periods (.). The piece between two periods is composed of letters (case insensitive), numbers, and hyphens (-). Modifying will cause the instance reset.
 * `hpc_cluster_id` - (Optional, String) Hyper Computing Cluster ID.
 * `image_id` - (Optional, String) Image ID.

@@ -1,26 +1,4 @@
-issues:
-  exclude-rules:
-    # Exclude issues bypassing staticcheck.conf
-    - linters:
-        - staticcheck
-      text: "SA1019:"
-  max-per-linter: 0
-  max-same-issues: 0
-
-linters:
-  disable-all: true
-  enable:
-    - errcheck
-    - gofmt
-    - ineffassign
-    - misspell
-    - unconvert
-    - unused
-    - vet
-
-linters-settings:
-  errcheck:
-    exclude-functions: github.com/hashicorp/terraform-plugin-sdk/helper/schema:ForceNew|Set,fmt:.*,io:Close
+version: "2"
 
 run:
   modules-download-mode: vendor
@@ -30,3 +8,34 @@ run:
   # Allow multiple parallel golangci-lint instances running.
   # If false (default) - golangci-lint acquires file lock on start.
   allow-parallel-runners: true
+
+output:
+  show-stats: true
+
+linters:
+  default: none
+  enable:
+    - errcheck
+    - ineffassign
+    - misspell
+    - unconvert
+    - unused
+    - govet
+  settings:
+    errcheck:
+      exclude-functions:
+        - github.com/hashicorp/terraform-plugin-sdk/helper/schema:ForceNew
+        - github.com/hashicorp/terraform-plugin-sdk/helper/schema:Set
+        - fmt:.*
+        - io:Close
+  exclusions:
+    rules:
+      # Mirror the historical SA1019 bypass: deprecated API references are
+      # tracked separately and should not block lint runs here.
+      - linters:
+          - staticcheck
+        text: "SA1019:"
+
+formatters:
+  enable:
+    - gofmt

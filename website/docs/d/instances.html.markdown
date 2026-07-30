@@ -76,6 +76,10 @@ In addition to all arguments above, the following attributes are exported:
     * `delete_with_instance` - Indicates whether the data disk is destroyed with the instance.
   * `dedicated_cluster_id` - Exclusive cluster id.
   * `expired_time` - Expired time of the instance.
+  * `gpu_info` - Instance GPU info.
+    * `gpu_count` - Number of instance GPUs. A value less than 1 indicates a VGPU type, and a value greater than 1 indicates a GPU passthrough type.
+    * `gpu_id` - Instance GPU address.
+    * `gpu_type` - Instance GPU type.
   * `image_id` - ID of the image.
   * `instance_charge_type_prepaid_renew_flag` - The way that CVM instance will be renew automatically or not when it reach the end of the prepaid tenancy.
   * `instance_charge_type` - The charge type of the instance.
