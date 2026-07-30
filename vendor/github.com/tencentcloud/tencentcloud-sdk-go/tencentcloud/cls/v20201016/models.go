@@ -15,9 +15,9 @@
 package v20201016
 
 import (
-	tcerr "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/common/errors"
-	tchttp "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/common/http"
-	"github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/common/json"
+    tcerr "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/common/errors"
+    tchttp "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/common/http"
+    "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/common/json"
 )
 
 type AccessControlRule struct {
@@ -47,7 +47,7 @@ type AddMachineGroupInfoRequestParams struct {
 
 type AddMachineGroupInfoRequest struct {
 	*tchttp.BaseRequest
-
+	
 	// 机器组Id
 	// - 通过[获取机器组列表](https://cloud.tencent.com/document/product/614/56438)获取机器组Id。
 	GroupId *string `json:"GroupId,omitnil,omitempty" name:"GroupId"`
@@ -58,8 +58,8 @@ type AddMachineGroupInfoRequest struct {
 }
 
 func (r *AddMachineGroupInfoRequest) ToJsonString() string {
-	b, _ := json.Marshal(r)
-	return string(b)
+    b, _ := json.Marshal(r)
+    return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -89,8 +89,8 @@ type AddMachineGroupInfoResponse struct {
 }
 
 func (r *AddMachineGroupInfoResponse) ToJsonString() string {
-	b, _ := json.Marshal(r)
-	return string(b)
+    b, _ := json.Marshal(r)
+    return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -112,7 +112,7 @@ type AdvanceFilterRuleInfo struct {
 
 type AdvancedConsumerConfiguration struct {
 	// Ckafka分区hash状态。 默认 false
-	//
+	// 
 	// - true：开启根据字段 Hash 值结果相等的信息投递到统一 ckafka 分区
 	// - false：关闭根据字段 Hash 值结果相等的信息投递到统一 ckafka 分区
 	PartitionHashStatus *bool `json:"PartitionHashStatus,omitnil,omitempty" name:"PartitionHashStatus"`
@@ -237,7 +237,7 @@ type AlarmInfo struct {
 	// 告警策略绑定的标签信息。
 	Tags []*Tag `json:"Tags,omitnil,omitempty" name:"Tags"`
 
-	// 监控对象类型。0:执行语句共用监控对象;1:每个执行语句单独选择监控对象。
+	// 监控对象类型。0:执行语句共用监控对象;1:每个执行语句单独选择监控对象。 
 	MonitorObjectType *uint64 `json:"MonitorObjectType,omitnil,omitempty" name:"MonitorObjectType"`
 
 	// 告警级别。0:警告(Warn);1:提醒(Info);2:紧急 (Critical)。
@@ -297,22 +297,22 @@ type AlarmNotice struct {
 	UpdateTime *string `json:"UpdateTime,omitnil,omitempty" name:"UpdateTime"`
 
 	// 投递日志开关。
-	//
+	// 
 	// 参数值：
-	//
+	// 
 	// 1：关闭
-	//
-	// 2：开启
+	// 
+	// 2：开启 
 	DeliverStatus *uint64 `json:"DeliverStatus,omitnil,omitempty" name:"DeliverStatus"`
 
 	// 投递日志标识。
-	//
+	// 
 	// 参数值：
-	//
+	// 
 	// 1：未启用
-	//
+	// 
 	// 2：已启用
-	//
+	// 
 	// 3：投递异常
 	DeliverFlag *uint64 `json:"DeliverFlag,omitnil,omitempty" name:"DeliverFlag"`
 
@@ -503,7 +503,7 @@ type AlertHistoryRecord struct {
 	AlarmLevel *uint64 `json:"AlarmLevel,omitnil,omitempty" name:"AlarmLevel"`
 
 	// 监控对象类型。
-	// 0:执行语句共用监控对象; 1:每个执行语句单独选择监控对象。
+	// 0:执行语句共用监控对象; 1:每个执行语句单独选择监控对象。 
 	MonitorObjectType *uint64 `json:"MonitorObjectType,omitnil,omitempty" name:"MonitorObjectType"`
 
 	// 通知渠道类型，0默认代表cls内部通知渠道，1代表腾讯云可观测平台通知渠道
@@ -521,13 +521,13 @@ type AnalysisDimensional struct {
 	Content *string `json:"Content,omitnil,omitempty" name:"Content"`
 
 	// 多维分析配置。
-	//
+	// 
 	// 当Analysis的Type字段为query（自定义）时，支持
 	// {
 	// "Key": "SyntaxRule",  // 语法规则
 	// "Value": "1"  //0：Lucene语法 ，1： CQL语法
 	// }
-	//
+	// 
 	// 当Analysis的Type字段为field（top5）时,  支持
 	//  {
 	//     "Key": "QueryIndex",
@@ -538,8 +538,8 @@ type AnalysisDimensional struct {
 	// },{
 	//     "Key": "SyntaxRule", // 查不到这个字段也是老语法（Lucene）
 	//     "Value": "0"//0:Lucene, 1:CQL
-	// }
-	//
+	// }       
+	// 
 	// 当Analysis的Type字段为original（原始日志）时,  支持
 	// {
 	//     "Key": "Fields",
@@ -595,7 +595,7 @@ type ApplyConfigToMachineGroupRequestParams struct {
 
 type ApplyConfigToMachineGroupRequest struct {
 	*tchttp.BaseRequest
-
+	
 	// 采集配置ID
 	//  - 通过[获取采集规则配置](https://cloud.tencent.com/document/product/614/58616)获取采集配置Id。
 	ConfigId *string `json:"ConfigId,omitnil,omitempty" name:"ConfigId"`
@@ -606,8 +606,8 @@ type ApplyConfigToMachineGroupRequest struct {
 }
 
 func (r *ApplyConfigToMachineGroupRequest) ToJsonString() string {
-	b, _ := json.Marshal(r)
-	return string(b)
+    b, _ := json.Marshal(r)
+    return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -637,8 +637,8 @@ type ApplyConfigToMachineGroupResponse struct {
 }
 
 func (r *ApplyConfigToMachineGroupResponse) ToJsonString() string {
-	b, _ := json.Marshal(r)
-	return string(b)
+    b, _ := json.Marshal(r)
+    return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -649,14 +649,14 @@ func (r *ApplyConfigToMachineGroupResponse) FromJsonString(s string) error {
 
 type AppointLabel struct {
 	// 指定标签类型。
-	//
+	// 
 	// - 0：所有Pod label，Keys字段无效
 	// - 1：指定Pod label，Keys字段不能为空
 	// 注意：此字段可能返回 null，表示取不到有效值。
 	Type *uint64 `json:"Type,omitnil,omitempty" name:"Type"`
 
 	// 元数据Pod标签的键。有效标签键有两个部分：可选前缀和名称，以斜杠 (/) 分隔。名称部分是必需的，并且必须不超过 63 个字符，以字母数字字符 ([a-z0-9A-Z]) 开头和结尾，中间有破折号(-)、下划线(_)、点(.) 和字母数字。前缀是可选的。如果指定，前缀必须是 DNS 子域：一系列以点 (.) 分隔的 DNS 标签，总长度不超过 253 个字符，后跟斜杠 ( /)。
-	//
+	// 
 	// -  prefix 格式  `[a-z0-9]([-a-z0-9]*[a-z0-9])?(\.[a-z0-9]([-a-z0-9]*[a-z0-9])?)*`
 	// -  name 格式 `([A-Za-z0-9][-A-Za-z0-9_.]*)?[A-Za-z0-9]`
 	// - key不能重复
@@ -690,7 +690,7 @@ type CallBackInfo struct {
 	// 回调时的Body。
 	// 可将各类告警变量放在请求内容中，详见[帮助文档](https://cloud.tencent.com/document/product/614/74718)。
 	// 如下示例：
-	//
+	// 
 	// ```
 	// {
 	// "TopicId": "{{ .QueryLog[0][0].topicId }}",
@@ -721,7 +721,7 @@ type CancelRebuildIndexTaskRequestParams struct {
 
 type CancelRebuildIndexTaskRequest struct {
 	*tchttp.BaseRequest
-
+	
 	// 日志主题ID
 	TopicId *string `json:"TopicId,omitnil,omitempty" name:"TopicId"`
 
@@ -730,8 +730,8 @@ type CancelRebuildIndexTaskRequest struct {
 }
 
 func (r *CancelRebuildIndexTaskRequest) ToJsonString() string {
-	b, _ := json.Marshal(r)
-	return string(b)
+    b, _ := json.Marshal(r)
+    return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -761,8 +761,8 @@ type CancelRebuildIndexTaskResponse struct {
 }
 
 func (r *CancelRebuildIndexTaskResponse) ToJsonString() string {
-	b, _ := json.Marshal(r)
-	return string(b)
+    b, _ := json.Marshal(r)
+    return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -788,7 +788,7 @@ type ChatCompletionsRequestParams struct {
 
 type ChatCompletionsRequest struct {
 	*tchttp.BaseRequest
-
+	
 	// <p>功能名称</p><p>枚举值：</p><ul><li>text2sql： 智能生成检索分析语句</li><li>text2sql-reasoning： 智能生成检索分析语句-深度思考</li></ul>
 	Model *string `json:"Model,omitnil,omitempty" name:"Model"`
 
@@ -803,8 +803,8 @@ type ChatCompletionsRequest struct {
 }
 
 func (r *ChatCompletionsRequest) ToJsonString() string {
-	b, _ := json.Marshal(r)
-	return string(b)
+    b, _ := json.Marshal(r)
+    return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -847,12 +847,12 @@ type ChatCompletionsResponseParams struct {
 
 type ChatCompletionsResponse struct {
 	tchttp.BaseSSEResponse `json:"-"`
-	Response               *ChatCompletionsResponseParams `json:"Response"`
+	Response *ChatCompletionsResponseParams `json:"Response"`
 }
 
 func (r *ChatCompletionsResponse) ToJsonString() string {
-	b, _ := json.Marshal(r)
-	return string(b)
+    b, _ := json.Marshal(r)
+    return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -874,11 +874,11 @@ type ChatUsage struct {
 
 // Predefined struct for user
 type CheckFunctionRequestParams struct {
-	// 加工语句。 当FuncType为2时，EtlContent必须使用[log_auto_output](https://cloud.tencent.com/document/product/614/70733#b3c58797-4825-4807-bef4-68106e25024f)
-	//
+	// 加工语句。 当FuncType为2时，EtlContent必须使用[log_auto_output](https://cloud.tencent.com/document/product/614/70733#b3c58797-4825-4807-bef4-68106e25024f) 
+	// 
 	// 其他参考文档：
-	//
-	// - [创建加工任务](https://cloud.tencent.com/document/product/614/63940)
+	// 
+	// - [创建加工任务](https://cloud.tencent.com/document/product/614/63940) 
 	// -  [函数总览](https://cloud.tencent.com/document/product/614/70395)
 	EtlContent *string `json:"EtlContent,omitnil,omitempty" name:"EtlContent"`
 
@@ -892,12 +892,12 @@ type CheckFunctionRequestParams struct {
 
 type CheckFunctionRequest struct {
 	*tchttp.BaseRequest
-
-	// 加工语句。 当FuncType为2时，EtlContent必须使用[log_auto_output](https://cloud.tencent.com/document/product/614/70733#b3c58797-4825-4807-bef4-68106e25024f)
-	//
+	
+	// 加工语句。 当FuncType为2时，EtlContent必须使用[log_auto_output](https://cloud.tencent.com/document/product/614/70733#b3c58797-4825-4807-bef4-68106e25024f) 
+	// 
 	// 其他参考文档：
-	//
-	// - [创建加工任务](https://cloud.tencent.com/document/product/614/63940)
+	// 
+	// - [创建加工任务](https://cloud.tencent.com/document/product/614/63940) 
 	// -  [函数总览](https://cloud.tencent.com/document/product/614/70395)
 	EtlContent *string `json:"EtlContent,omitnil,omitempty" name:"EtlContent"`
 
@@ -910,8 +910,8 @@ type CheckFunctionRequest struct {
 }
 
 func (r *CheckFunctionRequest) ToJsonString() string {
-	b, _ := json.Marshal(r)
-	return string(b)
+    b, _ := json.Marshal(r)
+    return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -948,8 +948,8 @@ type CheckFunctionResponse struct {
 }
 
 func (r *CheckFunctionResponse) ToJsonString() string {
-	b, _ := json.Marshal(r)
-	return string(b)
+    b, _ := json.Marshal(r)
+    return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -965,7 +965,7 @@ type CheckRechargeKafkaServerRequestParams struct {
 
 	// 腾讯云CKafka实例ID。
 	// KafkaType为0时，KafkaInstance必填
-	//
+	// 
 	// - 通过 [获取实例列表信息](https://cloud.tencent.com/document/product/597/40835) 获取实例id。
 	KafkaInstance *string `json:"KafkaInstance,omitnil,omitempty" name:"KafkaInstance"`
 
@@ -985,13 +985,13 @@ type CheckRechargeKafkaServerRequestParams struct {
 
 type CheckRechargeKafkaServerRequest struct {
 	*tchttp.BaseRequest
-
+	
 	// 导入Kafka类型，0: 腾讯云CKafka；1: 用户自建Kafka。
 	KafkaType *uint64 `json:"KafkaType,omitnil,omitempty" name:"KafkaType"`
 
 	// 腾讯云CKafka实例ID。
 	// KafkaType为0时，KafkaInstance必填
-	//
+	// 
 	// - 通过 [获取实例列表信息](https://cloud.tencent.com/document/product/597/40835) 获取实例id。
 	KafkaInstance *string `json:"KafkaInstance,omitnil,omitempty" name:"KafkaInstance"`
 
@@ -1010,8 +1010,8 @@ type CheckRechargeKafkaServerRequest struct {
 }
 
 func (r *CheckRechargeKafkaServerRequest) ToJsonString() string {
-	b, _ := json.Marshal(r)
-	return string(b)
+    b, _ := json.Marshal(r)
+    return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -1036,8 +1036,8 @@ func (r *CheckRechargeKafkaServerRequest) FromJsonString(s string) error {
 // Predefined struct for user
 type CheckRechargeKafkaServerResponseParams struct {
 	// Kafka集群可访问状态。
-	//
-	// - 0：可正常访问
+	// 
+	// - 0：可正常访问 
 	// - -1：broker 连接失败
 	// - -2：sasl 鉴权失败
 	// - -3：ckafka 角色未授权
@@ -1061,8 +1061,8 @@ type CheckRechargeKafkaServerResponse struct {
 }
 
 func (r *CheckRechargeKafkaServerResponse) ToJsonString() string {
-	b, _ := json.Marshal(r)
-	return string(b)
+    b, _ := json.Marshal(r)
+    return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -1129,7 +1129,7 @@ type CloseKafkaConsumerRequestParams struct {
 
 type CloseKafkaConsumerRequest struct {
 	*tchttp.BaseRequest
-
+	
 	// 日志主题Id。
 	// - 通过 [获取日志主题列表](https://cloud.tencent.com/document/product/614/56454) 获取日志主题Id。
 	// - 通过 [创建日志主题](https://cloud.tencent.com/document/product/614/56456) 获取日志主题Id。
@@ -1137,8 +1137,8 @@ type CloseKafkaConsumerRequest struct {
 }
 
 func (r *CloseKafkaConsumerRequest) ToJsonString() string {
-	b, _ := json.Marshal(r)
-	return string(b)
+    b, _ := json.Marshal(r)
+    return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -1167,8 +1167,8 @@ type CloseKafkaConsumerResponse struct {
 }
 
 func (r *CloseKafkaConsumerResponse) ToJsonString() string {
-	b, _ := json.Marshal(r)
-	return string(b)
+    b, _ := json.Marshal(r)
+    return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -1252,7 +1252,7 @@ type CommitConsumerOffsetsRequestParams struct {
 
 type CommitConsumerOffsetsRequest struct {
 	*tchttp.BaseRequest
-
+	
 	// 消费组标识
 	ConsumerGroup *string `json:"ConsumerGroup,omitnil,omitempty" name:"ConsumerGroup"`
 
@@ -1267,8 +1267,8 @@ type CommitConsumerOffsetsRequest struct {
 }
 
 func (r *CommitConsumerOffsetsRequest) ToJsonString() string {
-	b, _ := json.Marshal(r)
-	return string(b)
+    b, _ := json.Marshal(r)
+    return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -1300,8 +1300,8 @@ type CommitConsumerOffsetsResponse struct {
 }
 
 func (r *CommitConsumerOffsetsResponse) ToJsonString() string {
-	b, _ := json.Marshal(r)
-	return string(b)
+    b, _ := json.Marshal(r)
+    return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -1455,7 +1455,7 @@ type ConfigInfo struct {
 	// - ClsAgentParseFailMerge(合并解析失败日志)，取值范围: true或false
 	// 样例：
 	// `{\"ClsAgentFileTimeout\":0,\"ClsAgentMaxDepth\":10,\"ClsAgentParseFailMerge\":true}`
-	//
+	// 
 	// 控制台默认占位值：`{\"ClsAgentDefault\":0}`
 	AdvancedConfig *string `json:"AdvancedConfig,omitnil,omitempty" name:"AdvancedConfig"`
 
@@ -1629,7 +1629,7 @@ type ConsoleSharingInfo struct {
 	UpdateTime *uint64 `json:"UpdateTime,omitnil,omitempty" name:"UpdateTime"`
 
 	// 分享链接状态
-	// 1: 正常
+	// 1: 正常 
 	// -1: 因内容安全审查异常导致被封禁(存在于使用公网域名分享时)
 	// 注意：此字段可能返回 null，表示取不到有效值。
 	Status *uint64 `json:"Status,omitnil,omitempty" name:"Status"`
@@ -1672,7 +1672,7 @@ type ConsumerGroup struct {
 	Group *string `json:"Group,omitnil,omitempty" name:"Group"`
 
 	// 状态。
-	//
+	// 
 	// - Empty：组内没有成员，但存在已提交的偏移量。所有消费者都离开但保留了偏移量
 	// - Dead：组内没有成员，且没有已提交的偏移量。组被删除或长时间无活动
 	// - Stable：组内成员正常消费，分区分配平衡。正常运行状态
@@ -1681,7 +1681,7 @@ type ConsumerGroup struct {
 	State *string `json:"State,omitnil,omitempty" name:"State"`
 
 	// 分区分配策略均衡算法名称。
-	//
+	// 
 	// - 常见均衡算法如下：
 	//     - range:按分区范围分配
 	//     - roundrobin:轮询式分配
@@ -1728,7 +1728,7 @@ type ConsumerInfo struct {
 	// 注意：此字段可能返回 null，表示取不到有效值。
 	CreateTime *uint64 `json:"CreateTime,omitnil,omitempty" name:"CreateTime"`
 
-	// 角色访问描述名 [创建角色](https://cloud.tencent.com/document/product/598/19381)
+	// 角色访问描述名 [创建角色](https://cloud.tencent.com/document/product/598/19381)	
 	// 注意：此字段可能返回 null，表示取不到有效值。
 	RoleArn *string `json:"RoleArn,omitnil,omitempty" name:"RoleArn"`
 
@@ -1736,7 +1736,7 @@ type ConsumerInfo struct {
 	// 注意：此字段可能返回 null，表示取不到有效值。
 	ExternalId *string `json:"ExternalId,omitnil,omitempty" name:"ExternalId"`
 
-	// 任务运行状态。支持`0`,`1`,`2` - `0`: 停止 - `1`: 运行中 - `2`: 异常
+	// 任务运行状态。支持`0`,`1`,`2` - `0`: 停止 - `1`: 运行中 - `2`: 异常	
 	// 注意：此字段可能返回 null，表示取不到有效值。
 	TaskStatus *uint64 `json:"TaskStatus,omitnil,omitempty" name:"TaskStatus"`
 
@@ -1812,13 +1812,13 @@ type ContainerStdoutInfo struct {
 type ContainerWorkLoadInfo struct {
 	// 工作负载的类型，支持的取值如下：
 	// - deployment：无状态应用部署控制器。可管理无状态应用的多副本 Pod；支持滚动更新和回滚，实现无缝发布；通过 ReplicaSet 确保指定数量的 Pod 副本持续运行。适合 Web 服务、API 服务、微服务等不需要持久化存储或唯一标识的应用。
-	//
+	// 
 	// - statefulset：用于管理有状态应用的控制器。可以为每个 Pod 提供稳定的、唯一的标识（有序的主机名和网络标识）；能提供稳定的持久化存储（PVC 随 Pod 的迁移而保留）；Pod 的创建、扩展、删除和更新都遵循确定的顺序。适合数据库（MySQL、MongoDB）、消息队列（Kafka、RabbitMQ）、集群应用等需要稳定网络标识和持久化存储的应用。
-	//
+	// 
 	// - daemonset：确保所有（或特定）节点上都运行一个 Pod 副本的控制器。会在每个符合条件的 Node 上自动部署并运行一个 Pod；当新节点加入集群时，会自动在新节点上创建 Pod；适合运行节点级别的后台任务或服务，例如日志收集（Fluentd、Filebeat）、节点监控（Node Exporter）、网络插件（Calico、Weave Net）等场景。
-	//
+	// 
 	// - job：用于运行一次性任务的控制器。可创建一个或多个 Pod 来执行任务，直到成功完成；当任务完成后，Pod 不会重启（除非配置了重启策略）；可以指定任务的并行度和重试次数。适合数据处理、批量任务、数据库迁移、离线计算等一次性执行完成后就退出的任务。
-	//
+	// 
 	// - cronjob：基于时间调度的 Job 控制器。类似于 Linux 的 cron，按照预定的时间表周期性地创建并运行 Job。每个调度周期都会创建一个新的 Job 来执行任务。适合定期备份、发送报告、数据清理、定时同步等需要周期性执行的任务。
 	Kind *string `json:"Kind,omitnil,omitempty" name:"Kind"`
 
@@ -1866,7 +1866,7 @@ type CosRechargeInfo struct {
 	Bucket *string `json:"Bucket,omitnil,omitempty" name:"Bucket"`
 
 	// COS存储桶所在地域。
-	//
+	// 
 	// - 通过[地域和访问域名](https://cloud.tencent.com/document/product/436/6224)获取地域信息。
 	BucketRegion *string `json:"BucketRegion,omitnil,omitempty" name:"BucketRegion"`
 
@@ -1919,7 +1919,7 @@ type CreateAgentApplicationRequestParams struct {
 
 type CreateAgentApplicationRequest struct {
 	*tchttp.BaseRequest
-
+	
 	// <p>应用名称</p><p>入参限制：</p><ul><li>不能为空字符串</li><li>不能包含字符<code>|</code></li><li>不能超过64字符</li></ul>
 	ApplicationName *string `json:"ApplicationName,omitnil,omitempty" name:"ApplicationName"`
 
@@ -1931,8 +1931,8 @@ type CreateAgentApplicationRequest struct {
 }
 
 func (r *CreateAgentApplicationRequest) ToJsonString() string {
-	b, _ := json.Marshal(r)
-	return string(b)
+    b, _ := json.Marshal(r)
+    return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -1972,8 +1972,8 @@ type CreateAgentApplicationResponse struct {
 }
 
 func (r *CreateAgentApplicationResponse) ToJsonString() string {
-	b, _ := json.Marshal(r)
-	return string(b)
+    b, _ := json.Marshal(r)
+    return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -2014,7 +2014,7 @@ type CreateAlarmNoticeRequestParams struct {
 
 	// 投递日志开关。可取值如下：
 	// 1：关闭（默认值）；
-	// 2：开启
+	// 2：开启 
 	// 投递日志开关开启时， DeliverConfig参数必填。
 	DeliverStatus *uint64 `json:"DeliverStatus,omitnil,omitempty" name:"DeliverStatus"`
 
@@ -2034,7 +2034,7 @@ type CreateAlarmNoticeRequestParams struct {
 
 type CreateAlarmNoticeRequest struct {
 	*tchttp.BaseRequest
-
+	
 	// 通知渠道组名称。最大支持255个字节。 不支持 '|'。
 	Name *string `json:"Name,omitnil,omitempty" name:"Name"`
 
@@ -2065,7 +2065,7 @@ type CreateAlarmNoticeRequest struct {
 
 	// 投递日志开关。可取值如下：
 	// 1：关闭（默认值）；
-	// 2：开启
+	// 2：开启 
 	// 投递日志开关开启时， DeliverConfig参数必填。
 	DeliverStatus *uint64 `json:"DeliverStatus,omitnil,omitempty" name:"DeliverStatus"`
 
@@ -2084,8 +2084,8 @@ type CreateAlarmNoticeRequest struct {
 }
 
 func (r *CreateAlarmNoticeRequest) ToJsonString() string {
-	b, _ := json.Marshal(r)
-	return string(b)
+    b, _ := json.Marshal(r)
+    return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -2127,8 +2127,8 @@ type CreateAlarmNoticeResponse struct {
 }
 
 func (r *CreateAlarmNoticeResponse) ToJsonString() string {
-	b, _ := json.Marshal(r)
-	return string(b)
+    b, _ := json.Marshal(r)
+    return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -2204,7 +2204,7 @@ type CreateAlarmRequestParams struct {
 
 type CreateAlarmRequest struct {
 	*tchttp.BaseRequest
-
+	
 	// <p>告警策略名称。最大支持255个字节。 不支持 &#39;|&#39;。</p>
 	Name *string `json:"Name,omitnil,omitempty" name:"Name"`
 
@@ -2267,8 +2267,8 @@ type CreateAlarmRequest struct {
 }
 
 func (r *CreateAlarmRequest) ToJsonString() string {
-	b, _ := json.Marshal(r)
-	return string(b)
+    b, _ := json.Marshal(r)
+    return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -2319,8 +2319,8 @@ type CreateAlarmResponse struct {
 }
 
 func (r *CreateAlarmResponse) ToJsonString() string {
-	b, _ := json.Marshal(r)
-	return string(b)
+    b, _ := json.Marshal(r)
+    return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -2352,7 +2352,7 @@ type CreateAlarmShieldRequestParams struct {
 
 type CreateAlarmShieldRequest struct {
 	*tchttp.BaseRequest
-
+	
 	// 通知渠道组id。-通过[获取通知渠道组列表](https://cloud.tencent.com/document/product/614/56462)获取通知渠道组id
 	AlarmNoticeId *string `json:"AlarmNoticeId,omitnil,omitempty" name:"AlarmNoticeId"`
 
@@ -2373,8 +2373,8 @@ type CreateAlarmShieldRequest struct {
 }
 
 func (r *CreateAlarmShieldRequest) ToJsonString() string {
-	b, _ := json.Marshal(r)
-	return string(b)
+    b, _ := json.Marshal(r)
+    return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -2411,8 +2411,8 @@ type CreateAlarmShieldResponse struct {
 }
 
 func (r *CreateAlarmShieldResponse) ToJsonString() string {
-	b, _ := json.Marshal(r)
-	return string(b)
+    b, _ := json.Marshal(r)
+    return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -2459,7 +2459,7 @@ type CreateCloudProductLogCollectionRequestParams struct {
 
 type CreateCloudProductLogCollectionRequest struct {
 	*tchttp.BaseRequest
-
+	
 	// <p>实例ID</p><ul><li>通过各个接入云产品官方文档获取</li></ul>
 	InstanceId *string `json:"InstanceId,omitnil,omitempty" name:"InstanceId"`
 
@@ -2495,8 +2495,8 @@ type CreateCloudProductLogCollectionRequest struct {
 }
 
 func (r *CreateCloudProductLogCollectionRequest) ToJsonString() string {
-	b, _ := json.Marshal(r)
-	return string(b)
+    b, _ := json.Marshal(r)
+    return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -2550,8 +2550,8 @@ type CreateCloudProductLogCollectionResponse struct {
 }
 
 func (r *CreateCloudProductLogCollectionResponse) ToJsonString() string {
-	b, _ := json.Marshal(r)
-	return string(b)
+    b, _ := json.Marshal(r)
+    return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -2599,7 +2599,7 @@ type CreateConfigExtraRequestParams struct {
 	TopicName *string `json:"TopicName,omitnil,omitempty" name:"TopicName"`
 
 	// 自建k8s-节点文件配置信息,包括文件路径、名称及元数据相关信息。
-	//
+	// 
 	// - 详细参考 [HostFileInfo](https://cloud.tencent.com/document/api/614/56471#HostFileInfo) 信息。
 	HostFile *HostFileInfo `json:"HostFile,omitnil,omitempty" name:"HostFile"`
 
@@ -2607,7 +2607,7 @@ type CreateConfigExtraRequestParams struct {
 	ContainerFile *ContainerFileInfo `json:"ContainerFile,omitnil,omitempty" name:"ContainerFile"`
 
 	// 自建k8s-容器标准输出信息，包括容器、命名空间等。
-	//
+	// 
 	// - 详细参考 [ContainerStdoutInfo](https://cloud.tencent.com/document/api/614/56471#ContainerStdoutInfo) 信息。
 	ContainerStdout *ContainerStdoutInfo `json:"ContainerStdout,omitnil,omitempty" name:"ContainerStdout"`
 
@@ -2652,7 +2652,7 @@ type CreateConfigExtraRequestParams struct {
 
 type CreateConfigExtraRequest struct {
 	*tchttp.BaseRequest
-
+	
 	// 采集配置规程名称，最长63个字符，只能包含小写字符、数字及分隔符（“-”），且必须以小写字符开头，数字或小写字符结尾
 	Name *string `json:"Name,omitnil,omitempty" name:"Name"`
 
@@ -2690,7 +2690,7 @@ type CreateConfigExtraRequest struct {
 	TopicName *string `json:"TopicName,omitnil,omitempty" name:"TopicName"`
 
 	// 自建k8s-节点文件配置信息,包括文件路径、名称及元数据相关信息。
-	//
+	// 
 	// - 详细参考 [HostFileInfo](https://cloud.tencent.com/document/api/614/56471#HostFileInfo) 信息。
 	HostFile *HostFileInfo `json:"HostFile,omitnil,omitempty" name:"HostFile"`
 
@@ -2698,7 +2698,7 @@ type CreateConfigExtraRequest struct {
 	ContainerFile *ContainerFileInfo `json:"ContainerFile,omitnil,omitempty" name:"ContainerFile"`
 
 	// 自建k8s-容器标准输出信息，包括容器、命名空间等。
-	//
+	// 
 	// - 详细参考 [ContainerStdoutInfo](https://cloud.tencent.com/document/api/614/56471#ContainerStdoutInfo) 信息。
 	ContainerStdout *ContainerStdoutInfo `json:"ContainerStdout,omitnil,omitempty" name:"ContainerStdout"`
 
@@ -2740,8 +2740,8 @@ type CreateConfigExtraRequest struct {
 }
 
 func (r *CreateConfigExtraRequest) ToJsonString() string {
-	b, _ := json.Marshal(r)
-	return string(b)
+    b, _ := json.Marshal(r)
+    return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -2791,8 +2791,8 @@ type CreateConfigExtraResponse struct {
 }
 
 func (r *CreateConfigExtraResponse) ToJsonString() string {
-	b, _ := json.Marshal(r)
-	return string(b)
+    b, _ := json.Marshal(r)
+    return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -2842,7 +2842,7 @@ type CreateConfigRequestParams struct {
 	// - ClsAgentParseFailMerge(合并解析失败日志)，取值范围: true或false
 	// 样例：
 	// `{\"ClsAgentFileTimeout\":0,\"ClsAgentMaxDepth\":10,\"ClsAgentParseFailMerge\":true}`
-	//
+	// 
 	// 控制台默认占位值：`{\"ClsAgentDefault\":0}`
 	AdvancedConfig *string `json:"AdvancedConfig,omitnil,omitempty" name:"AdvancedConfig"`
 
@@ -2855,7 +2855,7 @@ type CreateConfigRequestParams struct {
 
 type CreateConfigRequest struct {
 	*tchttp.BaseRequest
-
+	
 	// 采集配置名称
 	// - 名称种不得包含特殊字符｜
 	// - 名称最长255字符，超过截断
@@ -2895,7 +2895,7 @@ type CreateConfigRequest struct {
 	// - ClsAgentParseFailMerge(合并解析失败日志)，取值范围: true或false
 	// 样例：
 	// `{\"ClsAgentFileTimeout\":0,\"ClsAgentMaxDepth\":10,\"ClsAgentParseFailMerge\":true}`
-	//
+	// 
 	// 控制台默认占位值：`{\"ClsAgentDefault\":0}`
 	AdvancedConfig *string `json:"AdvancedConfig,omitnil,omitempty" name:"AdvancedConfig"`
 
@@ -2907,8 +2907,8 @@ type CreateConfigRequest struct {
 }
 
 func (r *CreateConfigRequest) ToJsonString() string {
-	b, _ := json.Marshal(r)
-	return string(b)
+    b, _ := json.Marshal(r)
+    return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -2948,8 +2948,8 @@ type CreateConfigResponse struct {
 }
 
 func (r *CreateConfigResponse) ToJsonString() string {
-	b, _ := json.Marshal(r)
-	return string(b)
+    b, _ := json.Marshal(r)
+    return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -3008,7 +3008,7 @@ type CreateConsoleRequestParams struct {
 
 type CreateConsoleRequest struct {
 	*tchttp.BaseRequest
-
+	
 	// <p>访问方式：public - 公网，internal - 内网</p>
 	AccessMode []*string `json:"AccessMode,omitnil,omitempty" name:"AccessMode"`
 
@@ -3056,8 +3056,8 @@ type CreateConsoleRequest struct {
 }
 
 func (r *CreateConsoleRequest) ToJsonString() string {
-	b, _ := json.Marshal(r)
-	return string(b)
+    b, _ := json.Marshal(r)
+    return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -3103,8 +3103,8 @@ type CreateConsoleResponse struct {
 }
 
 func (r *CreateConsoleResponse) ToJsonString() string {
-	b, _ := json.Marshal(r)
-	return string(b)
+    b, _ := json.Marshal(r)
+    return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -3121,14 +3121,14 @@ type CreateConsoleSharingRequestParams struct {
 
 type CreateConsoleSharingRequest struct {
 	*tchttp.BaseRequest
-
+	
 	// 免密分享配置
 	SharingConfig *ConsoleSharingConfig `json:"SharingConfig,omitnil,omitempty" name:"SharingConfig"`
 }
 
 func (r *CreateConsoleSharingRequest) ToJsonString() string {
-	b, _ := json.Marshal(r)
-	return string(b)
+    b, _ := json.Marshal(r)
+    return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -3163,8 +3163,8 @@ type CreateConsoleSharingResponse struct {
 }
 
 func (r *CreateConsoleSharingResponse) ToJsonString() string {
-	b, _ := json.Marshal(r)
-	return string(b)
+    b, _ := json.Marshal(r)
+    return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -3191,7 +3191,7 @@ type CreateConsumerGroupRequestParams struct {
 
 type CreateConsumerGroupRequest struct {
 	*tchttp.BaseRequest
-
+	
 	// 创建的消费者组标识
 	// 限制： 字母数字下划线，不允许数字开头，长度限制256
 	ConsumerGroup *string `json:"ConsumerGroup,omitnil,omitempty" name:"ConsumerGroup"`
@@ -3207,8 +3207,8 @@ type CreateConsumerGroupRequest struct {
 }
 
 func (r *CreateConsumerGroupRequest) ToJsonString() string {
-	b, _ := json.Marshal(r)
-	return string(b)
+    b, _ := json.Marshal(r)
+    return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -3243,8 +3243,8 @@ type CreateConsumerGroupResponse struct {
 }
 
 func (r *CreateConsumerGroupResponse) ToJsonString() string {
-	b, _ := json.Marshal(r)
-	return string(b)
+    b, _ := json.Marshal(r)
+    return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -3286,7 +3286,7 @@ type CreateConsumerRequestParams struct {
 
 type CreateConsumerRequest struct {
 	*tchttp.BaseRequest
-
+	
 	// 投递任务绑定的日志主题Id。
 	// - 通过 [获取日志主题列表](https://cloud.tencent.com/document/product/614/56454) 获取日志主题Id。
 	// - 通过 [创建日志主题](https://cloud.tencent.com/document/product/614/56456) 获取日志主题Id。
@@ -3317,8 +3317,8 @@ type CreateConsumerRequest struct {
 }
 
 func (r *CreateConsumerRequest) ToJsonString() string {
-	b, _ := json.Marshal(r)
-	return string(b)
+    b, _ := json.Marshal(r)
+    return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -3354,8 +3354,8 @@ type CreateConsumerResponse struct {
 }
 
 func (r *CreateConsumerResponse) ToJsonString() string {
-	b, _ := json.Marshal(r)
-	return string(b)
+    b, _ := json.Marshal(r)
+    return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -3367,20 +3367,20 @@ func (r *CreateConsumerResponse) FromJsonString(s string) error {
 // Predefined struct for user
 type CreateCosRechargeRequestParams struct {
 	// 日志主题Id。
-	//
+	// 
 	// - 通过[获取日志主题列表](https://cloud.tencent.com/document/product/614/56454)获取日志主题Id。
 	TopicId *string `json:"TopicId,omitnil,omitempty" name:"TopicId"`
 
 	// 日志集Id。
-	//
+	// 
 	// - 通过[获取日志集列表](https://cloud.tencent.com/document/product/614/58624)获取日志集Id。
 	LogsetId *string `json:"LogsetId,omitnil,omitempty" name:"LogsetId"`
 
 	// COS导入任务名称,最大支持128个字节。
 	Name *string `json:"Name,omitnil,omitempty" name:"Name"`
 
-	// COS存储桶，详见产品支持的[存储桶命名规范](https://cloud.tencent.com/document/product/436/13312)。
-	//
+	// COS存储桶，详见产品支持的[存储桶命名规范](https://cloud.tencent.com/document/product/436/13312)。	
+	// 
 	// - 通过[GET Service（List Buckets）](https://cloud.tencent.com/document/product/436/8291)获取COS存储桶。
 	Bucket *string `json:"Bucket,omitnil,omitempty" name:"Bucket"`
 
@@ -3409,22 +3409,22 @@ type CreateCosRechargeRequestParams struct {
 
 type CreateCosRechargeRequest struct {
 	*tchttp.BaseRequest
-
+	
 	// 日志主题Id。
-	//
+	// 
 	// - 通过[获取日志主题列表](https://cloud.tencent.com/document/product/614/56454)获取日志主题Id。
 	TopicId *string `json:"TopicId,omitnil,omitempty" name:"TopicId"`
 
 	// 日志集Id。
-	//
+	// 
 	// - 通过[获取日志集列表](https://cloud.tencent.com/document/product/614/58624)获取日志集Id。
 	LogsetId *string `json:"LogsetId,omitnil,omitempty" name:"LogsetId"`
 
 	// COS导入任务名称,最大支持128个字节。
 	Name *string `json:"Name,omitnil,omitempty" name:"Name"`
 
-	// COS存储桶，详见产品支持的[存储桶命名规范](https://cloud.tencent.com/document/product/436/13312)。
-	//
+	// COS存储桶，详见产品支持的[存储桶命名规范](https://cloud.tencent.com/document/product/436/13312)。	
+	// 
 	// - 通过[GET Service（List Buckets）](https://cloud.tencent.com/document/product/436/8291)获取COS存储桶。
 	Bucket *string `json:"Bucket,omitnil,omitempty" name:"Bucket"`
 
@@ -3452,8 +3452,8 @@ type CreateCosRechargeRequest struct {
 }
 
 func (r *CreateCosRechargeRequest) ToJsonString() string {
-	b, _ := json.Marshal(r)
-	return string(b)
+    b, _ := json.Marshal(r)
+    return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -3495,8 +3495,8 @@ type CreateCosRechargeResponse struct {
 }
 
 func (r *CreateCosRechargeResponse) ToJsonString() string {
-	b, _ := json.Marshal(r)
-	return string(b)
+    b, _ := json.Marshal(r)
+    return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -3519,7 +3519,7 @@ type CreateDashboardRequestParams struct {
 
 type CreateDashboardRequest struct {
 	*tchttp.BaseRequest
-
+	
 	// 仪表盘名称
 	DashboardName *string `json:"DashboardName,omitnil,omitempty" name:"DashboardName"`
 
@@ -3531,8 +3531,8 @@ type CreateDashboardRequest struct {
 }
 
 func (r *CreateDashboardRequest) ToJsonString() string {
-	b, _ := json.Marshal(r)
-	return string(b)
+    b, _ := json.Marshal(r)
+    return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -3566,8 +3566,8 @@ type CreateDashboardResponse struct {
 }
 
 func (r *CreateDashboardResponse) ToJsonString() string {
-	b, _ := json.Marshal(r)
-	return string(b)
+    b, _ := json.Marshal(r)
+    return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -3590,11 +3590,11 @@ type CreateDashboardSubscribeRequestParams struct {
 	DashboardId *string `json:"DashboardId,omitnil,omitempty" name:"DashboardId"`
 
 	// 订阅时间cron表达式，格式为：{秒数} {分钟} {小时} {日期} {月份} {星期}；（有效数据为：{分钟} {小时} {日期} {月份} {星期}）。
-	// - {秒数} 取值范围： 0 ~ 59
-	// - {分钟} 取值范围： 0 ~ 59
-	// - {小时} 取值范围： 0 ~ 23
-	// - {日期} 取值范围： 1 ~ 31 AND (dayOfMonth最后一天： L)
-	// - {月份} 取值范围： 1 ~ 12
+	// - {秒数} 取值范围： 0 ~ 59 
+	// - {分钟} 取值范围： 0 ~ 59 
+	// - {小时} 取值范围： 0 ~ 23 
+	// - {日期} 取值范围： 1 ~ 31 AND (dayOfMonth最后一天： L) 
+	// - {月份} 取值范围： 1 ~ 12 
 	// - {星期} 取值范围： 0 ~ 6 【0:星期日， 6星期六】
 	Cron *string `json:"Cron,omitnil,omitempty" name:"Cron"`
 
@@ -3604,7 +3604,7 @@ type CreateDashboardSubscribeRequestParams struct {
 
 type CreateDashboardSubscribeRequest struct {
 	*tchttp.BaseRequest
-
+	
 	// 仪表盘订阅名称。
 	// 输入限制：
 	// - 不能为空
@@ -3617,11 +3617,11 @@ type CreateDashboardSubscribeRequest struct {
 	DashboardId *string `json:"DashboardId,omitnil,omitempty" name:"DashboardId"`
 
 	// 订阅时间cron表达式，格式为：{秒数} {分钟} {小时} {日期} {月份} {星期}；（有效数据为：{分钟} {小时} {日期} {月份} {星期}）。
-	// - {秒数} 取值范围： 0 ~ 59
-	// - {分钟} 取值范围： 0 ~ 59
-	// - {小时} 取值范围： 0 ~ 23
-	// - {日期} 取值范围： 1 ~ 31 AND (dayOfMonth最后一天： L)
-	// - {月份} 取值范围： 1 ~ 12
+	// - {秒数} 取值范围： 0 ~ 59 
+	// - {分钟} 取值范围： 0 ~ 59 
+	// - {小时} 取值范围： 0 ~ 23 
+	// - {日期} 取值范围： 1 ~ 31 AND (dayOfMonth最后一天： L) 
+	// - {月份} 取值范围： 1 ~ 12 
 	// - {星期} 取值范围： 0 ~ 6 【0:星期日， 6星期六】
 	Cron *string `json:"Cron,omitnil,omitempty" name:"Cron"`
 
@@ -3630,8 +3630,8 @@ type CreateDashboardSubscribeRequest struct {
 }
 
 func (r *CreateDashboardSubscribeRequest) ToJsonString() string {
-	b, _ := json.Marshal(r)
-	return string(b)
+    b, _ := json.Marshal(r)
+    return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -3663,8 +3663,8 @@ type CreateDashboardSubscribeResponse struct {
 }
 
 func (r *CreateDashboardSubscribeResponse) ToJsonString() string {
-	b, _ := json.Marshal(r)
-	return string(b)
+    b, _ := json.Marshal(r)
+    return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -3689,11 +3689,11 @@ type CreateDataTransformRequestParams struct {
 	// - 最长128 个字符
 	Name *string `json:"Name,omitnil,omitempty" name:"Name"`
 
-	// 加工语句。 当FuncType为2时，EtlContent必须使用[log_auto_output](https://cloud.tencent.com/document/product/614/70733#b3c58797-4825-4807-bef4-68106e25024f)
-	//
+	// 加工语句。 当FuncType为2时，EtlContent必须使用[log_auto_output](https://cloud.tencent.com/document/product/614/70733#b3c58797-4825-4807-bef4-68106e25024f) 
+	// 
 	// 其他参考文档：
-	//
-	// - [创建加工任务](https://cloud.tencent.com/document/product/614/63940)
+	// 
+	// - [创建加工任务](https://cloud.tencent.com/document/product/614/63940) 
 	// -  [函数总览](https://cloud.tencent.com/document/product/614/70395)
 	EtlContent *string `json:"EtlContent,omitnil,omitempty" name:"EtlContent"`
 
@@ -3714,7 +3714,7 @@ type CreateDataTransformRequestParams struct {
 	PreviewLogStatistics []*PreviewLogStatistic `json:"PreviewLogStatistics,omitnil,omitempty" name:"PreviewLogStatistics"`
 
 	// 当FuncType为2时，动态创建的日志集、日志主题的个数超出产品规格限制是否丢弃数据， 默认为false。
-	//
+	// 
 	// false：创建兜底日志集、日志主题并将日志写入兜底主题；
 	// true：丢弃日志数据。
 	BackupGiveUpData *bool `json:"BackupGiveUpData,omitnil,omitempty" name:"BackupGiveUpData"`
@@ -3736,7 +3736,7 @@ type CreateDataTransformRequestParams struct {
 	ProcessFromTimestamp *uint64 `json:"ProcessFromTimestamp,omitnil,omitempty" name:"ProcessFromTimestamp"`
 
 	// 指定加工数据的结束时间，秒级时间戳。
-	//
+	// 
 	// -  不可指定未来的时间
 	// -  不填则表示持续执行
 	ProcessToTimestamp *uint64 `json:"ProcessToTimestamp,omitnil,omitempty" name:"ProcessToTimestamp"`
@@ -3754,7 +3754,7 @@ type CreateDataTransformRequestParams struct {
 
 type CreateDataTransformRequest struct {
 	*tchttp.BaseRequest
-
+	
 	// 任务类型. 1: 指定主题；2:动态创建。详情请参考[创建加工任务文档](https://cloud.tencent.com/document/product/614/63940)。
 	FuncType *int64 `json:"FuncType,omitnil,omitempty" name:"FuncType"`
 
@@ -3769,11 +3769,11 @@ type CreateDataTransformRequest struct {
 	// - 最长128 个字符
 	Name *string `json:"Name,omitnil,omitempty" name:"Name"`
 
-	// 加工语句。 当FuncType为2时，EtlContent必须使用[log_auto_output](https://cloud.tencent.com/document/product/614/70733#b3c58797-4825-4807-bef4-68106e25024f)
-	//
+	// 加工语句。 当FuncType为2时，EtlContent必须使用[log_auto_output](https://cloud.tencent.com/document/product/614/70733#b3c58797-4825-4807-bef4-68106e25024f) 
+	// 
 	// 其他参考文档：
-	//
-	// - [创建加工任务](https://cloud.tencent.com/document/product/614/63940)
+	// 
+	// - [创建加工任务](https://cloud.tencent.com/document/product/614/63940) 
 	// -  [函数总览](https://cloud.tencent.com/document/product/614/70395)
 	EtlContent *string `json:"EtlContent,omitnil,omitempty" name:"EtlContent"`
 
@@ -3794,7 +3794,7 @@ type CreateDataTransformRequest struct {
 	PreviewLogStatistics []*PreviewLogStatistic `json:"PreviewLogStatistics,omitnil,omitempty" name:"PreviewLogStatistics"`
 
 	// 当FuncType为2时，动态创建的日志集、日志主题的个数超出产品规格限制是否丢弃数据， 默认为false。
-	//
+	// 
 	// false：创建兜底日志集、日志主题并将日志写入兜底主题；
 	// true：丢弃日志数据。
 	BackupGiveUpData *bool `json:"BackupGiveUpData,omitnil,omitempty" name:"BackupGiveUpData"`
@@ -3816,7 +3816,7 @@ type CreateDataTransformRequest struct {
 	ProcessFromTimestamp *uint64 `json:"ProcessFromTimestamp,omitnil,omitempty" name:"ProcessFromTimestamp"`
 
 	// 指定加工数据的结束时间，秒级时间戳。
-	//
+	// 
 	// -  不可指定未来的时间
 	// -  不填则表示持续执行
 	ProcessToTimestamp *uint64 `json:"ProcessToTimestamp,omitnil,omitempty" name:"ProcessToTimestamp"`
@@ -3833,8 +3833,8 @@ type CreateDataTransformRequest struct {
 }
 
 func (r *CreateDataTransformRequest) ToJsonString() string {
-	b, _ := json.Marshal(r)
-	return string(b)
+    b, _ := json.Marshal(r)
+    return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -3883,8 +3883,8 @@ type CreateDataTransformResponse struct {
 }
 
 func (r *CreateDataTransformResponse) ToJsonString() string {
-	b, _ := json.Marshal(r)
-	return string(b)
+    b, _ := json.Marshal(r)
+    return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -3921,7 +3921,7 @@ type CreateDeliverCloudFunctionRequestParams struct {
 
 type CreateDeliverCloudFunctionRequest struct {
 	*tchttp.BaseRequest
-
+	
 	// 投递规则属于的TopicId。
 	// - 通过 [获取日志主题列表](https://cloud.tencent.com/document/product/614/56454) 获取日志主题Id。
 	// - 通过 [创建日志主题](https://cloud.tencent.com/document/product/614/56456) 获取日志主题Id。
@@ -3947,8 +3947,8 @@ type CreateDeliverCloudFunctionRequest struct {
 }
 
 func (r *CreateDeliverCloudFunctionRequest) ToJsonString() string {
-	b, _ := json.Marshal(r)
-	return string(b)
+    b, _ := json.Marshal(r)
+    return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -3982,8 +3982,8 @@ type CreateDeliverCloudFunctionResponse struct {
 }
 
 func (r *CreateDeliverCloudFunctionResponse) ToJsonString() string {
-	b, _ := json.Marshal(r)
-	return string(b)
+    b, _ := json.Marshal(r)
+    return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -4033,7 +4033,7 @@ type CreateDlcDeliverRequestParams struct {
 
 type CreateDlcDeliverRequest struct {
 	*tchttp.BaseRequest
-
+	
 	// <p>日志主题id。</p><ul><li>通过<a href="https://cloud.tencent.com/document/product/614/56454">获取日志主题列表</a>获取日志主题Id。</li></ul>
 	TopicId *string `json:"TopicId,omitnil,omitempty" name:"TopicId"`
 
@@ -4072,8 +4072,8 @@ type CreateDlcDeliverRequest struct {
 }
 
 func (r *CreateDlcDeliverRequest) ToJsonString() string {
-	b, _ := json.Marshal(r)
-	return string(b)
+    b, _ := json.Marshal(r)
+    return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -4116,8 +4116,8 @@ type CreateDlcDeliverResponse struct {
 }
 
 func (r *CreateDlcDeliverResponse) ToJsonString() string {
-	b, _ := json.Marshal(r)
-	return string(b)
+    b, _ := json.Marshal(r)
+    return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -4157,7 +4157,7 @@ type CreateEsRechargeRequestParams struct {
 
 type CreateEsRechargeRequest struct {
 	*tchttp.BaseRequest
-
+	
 	// 日志主题id。
 	// - 通过 [获取日志主题列表](https://cloud.tencent.com/document/product/614/56454) 获取日志主题Id。
 	// - 通过 [创建日志主题](https://cloud.tencent.com/document/product/614/56456) 获取日志主题Id。
@@ -4186,8 +4186,8 @@ type CreateEsRechargeRequest struct {
 }
 
 func (r *CreateEsRechargeRequest) ToJsonString() string {
-	b, _ := json.Marshal(r)
-	return string(b)
+    b, _ := json.Marshal(r)
+    return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -4226,8 +4226,8 @@ type CreateEsRechargeResponse struct {
 }
 
 func (r *CreateEsRechargeResponse) ToJsonString() string {
-	b, _ := json.Marshal(r)
-	return string(b)
+    b, _ := json.Marshal(r)
+    return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -4270,7 +4270,7 @@ type CreateExportRequestParams struct {
 
 type CreateExportRequest struct {
 	*tchttp.BaseRequest
-
+	
 	// 日志主题Id
 	// - 通过[获取日志主题列表](https://cloud.tencent.com/document/product/614/56454)获取日志主题Id。
 	TopicId *string `json:"TopicId,omitnil,omitempty" name:"TopicId"`
@@ -4302,8 +4302,8 @@ type CreateExportRequest struct {
 }
 
 func (r *CreateExportRequest) ToJsonString() string {
-	b, _ := json.Marshal(r)
-	return string(b)
+    b, _ := json.Marshal(r)
+    return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -4343,8 +4343,8 @@ type CreateExportResponse struct {
 }
 
 func (r *CreateExportResponse) ToJsonString() string {
-	b, _ := json.Marshal(r)
-	return string(b)
+    b, _ := json.Marshal(r)
+    return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -4361,7 +4361,7 @@ type CreateHostMetricConfigRequestParams struct {
 	TopicId *string `json:"TopicId,omitnil,omitempty" name:"TopicId"`
 
 	// 名称。
-	//
+	// 
 	// - 长度不超过 64字符。
 	Name *string `json:"Name,omitnil,omitempty" name:"Name"`
 
@@ -4382,14 +4382,14 @@ type CreateHostMetricConfigRequestParams struct {
 
 type CreateHostMetricConfigRequest struct {
 	*tchttp.BaseRequest
-
+	
 	// 指标日志主题id。
 	// - 通过 [获取日志主题列表](https://cloud.tencent.com/document/product/614/56454) 获取日志主题Id。注意BizType 0:日志主题（默认值）， 1:指标主题
 	// - 通过 [创建日志主题](https://cloud.tencent.com/document/product/614/56456) 获取日志主题Id。注意BizType 0:日志主题（默认值）， 1:指标主题
 	TopicId *string `json:"TopicId,omitnil,omitempty" name:"TopicId"`
 
 	// 名称。
-	//
+	// 
 	// - 长度不超过 64字符。
 	Name *string `json:"Name,omitnil,omitempty" name:"Name"`
 
@@ -4409,8 +4409,8 @@ type CreateHostMetricConfigRequest struct {
 }
 
 func (r *CreateHostMetricConfigRequest) ToJsonString() string {
-	b, _ := json.Marshal(r)
-	return string(b)
+    b, _ := json.Marshal(r)
+    return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -4446,8 +4446,8 @@ type CreateHostMetricConfigResponse struct {
 }
 
 func (r *CreateHostMetricConfigResponse) ToJsonString() string {
-	b, _ := json.Marshal(r)
-	return string(b)
+    b, _ := json.Marshal(r)
+    return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -4485,7 +4485,7 @@ type CreateIndexRequestParams struct {
 
 type CreateIndexRequest struct {
 	*tchttp.BaseRequest
-
+	
 	// 日志主题Id。
 	// - 通过[获取日志主题列表](https://cloud.tencent.com/document/product/614/56454)获取日志主题Id。
 	TopicId *string `json:"TopicId,omitnil,omitempty" name:"TopicId"`
@@ -4512,8 +4512,8 @@ type CreateIndexRequest struct {
 }
 
 func (r *CreateIndexRequest) ToJsonString() string {
-	b, _ := json.Marshal(r)
-	return string(b)
+    b, _ := json.Marshal(r)
+    return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -4547,8 +4547,8 @@ type CreateIndexResponse struct {
 }
 
 func (r *CreateIndexResponse) ToJsonString() string {
-	b, _ := json.Marshal(r)
-	return string(b)
+    b, _ := json.Marshal(r)
+    return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -4603,7 +4603,7 @@ type CreateKafkaRechargeRequestParams struct {
 
 type CreateKafkaRechargeRequest struct {
 	*tchttp.BaseRequest
-
+	
 	// 导入CLS目标TopicId。
 	// - 通过 [获取日志主题列表](https://cloud.tencent.com/document/product/614/56454) 获取日志主题Id。
 	// - 通过 [创建日志主题](https://cloud.tencent.com/document/product/614/56456) 获取日志主题Id。
@@ -4647,8 +4647,8 @@ type CreateKafkaRechargeRequest struct {
 }
 
 func (r *CreateKafkaRechargeRequest) ToJsonString() string {
-	b, _ := json.Marshal(r)
-	return string(b)
+    b, _ := json.Marshal(r)
+    return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -4691,8 +4691,8 @@ type CreateKafkaRechargeResponse struct {
 }
 
 func (r *CreateKafkaRechargeResponse) ToJsonString() string {
-	b, _ := json.Marshal(r)
-	return string(b)
+    b, _ := json.Marshal(r)
+    return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -4704,7 +4704,7 @@ func (r *CreateKafkaRechargeResponse) FromJsonString(s string) error {
 // Predefined struct for user
 type CreateLogsetRequestParams struct {
 	// 日志集名字。
-	//
+	// 
 	// - 最大支持255个字符。不支持`|`字符。
 	LogsetName *string `json:"LogsetName,omitnil,omitempty" name:"LogsetName"`
 
@@ -4712,7 +4712,7 @@ type CreateLogsetRequestParams struct {
 	Tags []*Tag `json:"Tags,omitnil,omitempty" name:"Tags"`
 
 	// 日志集ID，格式为：用户自定义部分-用户APPID。未填写该参数时将自动生成ID。
-	//
+	// 
 	// - 用户自定义部分仅支持小写字母、数字和-，且不能以-开头和结尾，长度为3至40字符。
 	// - 尾部需要使用-拼接用户APPID，APPID可在https://console.cloud.tencent.com/developer页面查询。
 	// - 如果指定该字段，需保证全地域唯一
@@ -4721,9 +4721,9 @@ type CreateLogsetRequestParams struct {
 
 type CreateLogsetRequest struct {
 	*tchttp.BaseRequest
-
+	
 	// 日志集名字。
-	//
+	// 
 	// - 最大支持255个字符。不支持`|`字符。
 	LogsetName *string `json:"LogsetName,omitnil,omitempty" name:"LogsetName"`
 
@@ -4731,7 +4731,7 @@ type CreateLogsetRequest struct {
 	Tags []*Tag `json:"Tags,omitnil,omitempty" name:"Tags"`
 
 	// 日志集ID，格式为：用户自定义部分-用户APPID。未填写该参数时将自动生成ID。
-	//
+	// 
 	// - 用户自定义部分仅支持小写字母、数字和-，且不能以-开头和结尾，长度为3至40字符。
 	// - 尾部需要使用-拼接用户APPID，APPID可在https://console.cloud.tencent.com/developer页面查询。
 	// - 如果指定该字段，需保证全地域唯一
@@ -4739,8 +4739,8 @@ type CreateLogsetRequest struct {
 }
 
 func (r *CreateLogsetRequest) ToJsonString() string {
-	b, _ := json.Marshal(r)
-	return string(b)
+    b, _ := json.Marshal(r)
+    return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -4774,8 +4774,8 @@ type CreateLogsetResponse struct {
 }
 
 func (r *CreateLogsetResponse) ToJsonString() string {
-	b, _ := json.Marshal(r)
-	return string(b)
+    b, _ := json.Marshal(r)
+    return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -4815,7 +4815,7 @@ type CreateMachineGroupRequestParams struct {
 	ServiceLogging *bool `json:"ServiceLogging,omitnil,omitempty" name:"ServiceLogging"`
 
 	// 机器组中机器离线清理时间。单位：天
-	//
+	// 
 	// - 大于0时生效。
 	DelayCleanupTime *int64 `json:"DelayCleanupTime,omitnil,omitempty" name:"DelayCleanupTime"`
 
@@ -4830,7 +4830,7 @@ type CreateMachineGroupRequestParams struct {
 
 type CreateMachineGroupRequest struct {
 	*tchttp.BaseRequest
-
+	
 	// 机器组名字。
 	// 输入限制：
 	// - 最大支持255个字符，不能为空字符串
@@ -4860,7 +4860,7 @@ type CreateMachineGroupRequest struct {
 	ServiceLogging *bool `json:"ServiceLogging,omitnil,omitempty" name:"ServiceLogging"`
 
 	// 机器组中机器离线清理时间。单位：天
-	//
+	// 
 	// - 大于0时生效。
 	DelayCleanupTime *int64 `json:"DelayCleanupTime,omitnil,omitempty" name:"DelayCleanupTime"`
 
@@ -4874,8 +4874,8 @@ type CreateMachineGroupRequest struct {
 }
 
 func (r *CreateMachineGroupRequest) ToJsonString() string {
-	b, _ := json.Marshal(r)
-	return string(b)
+    b, _ := json.Marshal(r)
+    return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -4916,8 +4916,8 @@ type CreateMachineGroupResponse struct {
 }
 
 func (r *CreateMachineGroupResponse) ToJsonString() string {
-	b, _ := json.Marshal(r)
-	return string(b)
+    b, _ := json.Marshal(r)
+    return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -4943,7 +4943,7 @@ type CreateMetricConfigRequestParams struct {
 
 	// 监控类型。支持 ：`0`、`1`，不支持修改
 	// - 0:基础监控
-	// - 1:自定义监控,
+	// - 1:自定义监控, 
 	Type *uint64 `json:"Type,omitnil,omitempty" name:"Type"`
 
 	// 采集配置方式。支持 ：`0`、`1`，不支持修改
@@ -4987,7 +4987,7 @@ type CreateMetricConfigRequestParams struct {
 
 type CreateMetricConfigRequest struct {
 	*tchttp.BaseRequest
-
+	
 	// 指标日志主题id。
 	// - 通过 [获取日志主题列表](https://cloud.tencent.com/document/product/614/56454) 获取日志主题Id。注意BizType 0:日志主题（默认值）， 1:指标主题
 	// - 通过 [创建日志主题](https://cloud.tencent.com/document/product/614/56456) 获取日志主题Id。注意BizType 0:日志主题（默认值）， 1:指标主题
@@ -5003,7 +5003,7 @@ type CreateMetricConfigRequest struct {
 
 	// 监控类型。支持 ：`0`、`1`，不支持修改
 	// - 0:基础监控
-	// - 1:自定义监控,
+	// - 1:自定义监控, 
 	Type *uint64 `json:"Type,omitnil,omitempty" name:"Type"`
 
 	// 采集配置方式。支持 ：`0`、`1`，不支持修改
@@ -5046,8 +5046,8 @@ type CreateMetricConfigRequest struct {
 }
 
 func (r *CreateMetricConfigRequest) ToJsonString() string {
-	b, _ := json.Marshal(r)
-	return string(b)
+    b, _ := json.Marshal(r)
+    return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -5092,8 +5092,8 @@ type CreateMetricConfigResponse struct {
 }
 
 func (r *CreateMetricConfigResponse) ToJsonString() string {
-	b, _ := json.Marshal(r)
-	return string(b)
+    b, _ := json.Marshal(r)
+    return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -5122,7 +5122,7 @@ type CreateMetricSubscribeRequestParams struct {
 
 type CreateMetricSubscribeRequest struct {
 	*tchttp.BaseRequest
-
+	
 	// 名称：长度不超过64字符，以字母开头，接受0-9,a-z,A-Z, _,-,中文字符。
 	Name *string `json:"Name,omitnil,omitempty" name:"Name"`
 
@@ -5140,8 +5140,8 @@ type CreateMetricSubscribeRequest struct {
 }
 
 func (r *CreateMetricSubscribeRequest) ToJsonString() string {
-	b, _ := json.Marshal(r)
-	return string(b)
+    b, _ := json.Marshal(r)
+    return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -5177,8 +5177,8 @@ type CreateMetricSubscribeResponse struct {
 }
 
 func (r *CreateMetricSubscribeResponse) ToJsonString() string {
-	b, _ := json.Marshal(r)
-	return string(b)
+    b, _ := json.Marshal(r)
+    return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -5201,7 +5201,7 @@ type CreateNetworkApplicationRequestParams struct {
 
 type CreateNetworkApplicationRequest struct {
 	*tchttp.BaseRequest
-
+	
 	// <p>网络应用名称：长度不超过64字符，名称不能重复。</p><ul><li>只能包含以下字符：<ul><li>英文字母（大小写）</li><li>数字</li><li>下划线</li><li>连字符（减号）</li><li>汉字</li></ul></li><li>至少包含一个字符</li><li>不能包含空格</li><li>不能包含其他特殊字符（如 @、#、$、% 等）</li></ul>
 	Name *string `json:"Name,omitnil,omitempty" name:"Name"`
 
@@ -5213,8 +5213,8 @@ type CreateNetworkApplicationRequest struct {
 }
 
 func (r *CreateNetworkApplicationRequest) ToJsonString() string {
-	b, _ := json.Marshal(r)
-	return string(b)
+    b, _ := json.Marshal(r)
+    return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -5248,8 +5248,8 @@ type CreateNetworkApplicationResponse struct {
 }
 
 func (r *CreateNetworkApplicationResponse) ToJsonString() string {
-	b, _ := json.Marshal(r)
-	return string(b)
+    b, _ := json.Marshal(r)
+    return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -5272,7 +5272,7 @@ type CreateNoticeContentRequestParams struct {
 
 type CreateNoticeContentRequest struct {
 	*tchttp.BaseRequest
-
+	
 	// 模板名称。最大支持255个字节
 	Name *string `json:"Name,omitnil,omitempty" name:"Name"`
 
@@ -5284,8 +5284,8 @@ type CreateNoticeContentRequest struct {
 }
 
 func (r *CreateNoticeContentRequest) ToJsonString() string {
-	b, _ := json.Marshal(r)
-	return string(b)
+    b, _ := json.Marshal(r)
+    return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -5319,8 +5319,8 @@ type CreateNoticeContentResponse struct {
 }
 
 func (r *CreateNoticeContentResponse) ToJsonString() string {
-	b, _ := json.Marshal(r)
-	return string(b)
+    b, _ := json.Marshal(r)
+    return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -5346,7 +5346,7 @@ type CreateRebuildIndexTaskRequestParams struct {
 
 type CreateRebuildIndexTaskRequest struct {
 	*tchttp.BaseRequest
-
+	
 	// 日志主题ID
 	TopicId *string `json:"TopicId,omitnil,omitempty" name:"TopicId"`
 
@@ -5361,8 +5361,8 @@ type CreateRebuildIndexTaskRequest struct {
 }
 
 func (r *CreateRebuildIndexTaskRequest) ToJsonString() string {
-	b, _ := json.Marshal(r)
-	return string(b)
+    b, _ := json.Marshal(r)
+    return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -5396,8 +5396,8 @@ type CreateRebuildIndexTaskResponse struct {
 }
 
 func (r *CreateRebuildIndexTaskResponse) ToJsonString() string {
-	b, _ := json.Marshal(r)
-	return string(b)
+    b, _ := json.Marshal(r)
+    return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -5444,7 +5444,7 @@ type CreateRecordingRuleTaskRequestParams struct {
 
 type CreateRecordingRuleTaskRequest struct {
 	*tchttp.BaseRequest
-
+	
 	// <p>源指标主题id</p><p>取值参考：</p><ul><li><a href="https://cloud.tencent.com/document/api/614/56454">DescribeTopics</a></li><li><a href="https://console.cloud.tencent.com/cls/metric">指标主题</a></li></ul>
 	TopicId *string `json:"TopicId,omitnil,omitempty" name:"TopicId"`
 
@@ -5480,8 +5480,8 @@ type CreateRecordingRuleTaskRequest struct {
 }
 
 func (r *CreateRecordingRuleTaskRequest) ToJsonString() string {
-	b, _ := json.Marshal(r)
-	return string(b)
+    b, _ := json.Marshal(r)
+    return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -5523,8 +5523,8 @@ type CreateRecordingRuleTaskResponse struct {
 }
 
 func (r *CreateRecordingRuleTaskResponse) ToJsonString() string {
-	b, _ := json.Marshal(r)
-	return string(b)
+    b, _ := json.Marshal(r)
+    return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -5565,7 +5565,7 @@ type CreateRecordingRuleYamlTaskRequestParams struct {
 
 type CreateRecordingRuleYamlTaskRequest struct {
 	*tchttp.BaseRequest
-
+	
 	// <p>源指标主题id</p><p>取值参考：</p><ul><li><a href="https://cloud.tencent.com/document/api/614/56454">DescribeTopics</a></li><li><a href="https://console.cloud.tencent.com/cls/metric">指标主题</a></li></ul>
 	TopicId *string `json:"TopicId,omitnil,omitempty" name:"TopicId"`
 
@@ -5595,8 +5595,8 @@ type CreateRecordingRuleYamlTaskRequest struct {
 }
 
 func (r *CreateRecordingRuleYamlTaskRequest) ToJsonString() string {
-	b, _ := json.Marshal(r)
-	return string(b)
+    b, _ := json.Marshal(r)
+    return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -5636,8 +5636,8 @@ type CreateRecordingRuleYamlTaskResponse struct {
 }
 
 func (r *CreateRecordingRuleYamlTaskResponse) ToJsonString() string {
-	b, _ := json.Marshal(r)
-	return string(b)
+    b, _ := json.Marshal(r)
+    return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -5662,7 +5662,7 @@ type CreateRemoteWriteTaskRequestParams struct {
 
 	// 鉴权类型
 	// 0: 无鉴权
-	// 1: basic_auth
+	// 1: basic_auth 
 	// 2: token
 	AuthType *uint64 `json:"AuthType,omitnil,omitempty" name:"AuthType"`
 
@@ -5683,7 +5683,7 @@ type CreateRemoteWriteTaskRequestParams struct {
 
 type CreateRemoteWriteTaskRequest struct {
 	*tchttp.BaseRequest
-
+	
 	// 日志主题 ID
 	TopicId *string `json:"TopicId,omitnil,omitempty" name:"TopicId"`
 
@@ -5698,7 +5698,7 @@ type CreateRemoteWriteTaskRequest struct {
 
 	// 鉴权类型
 	// 0: 无鉴权
-	// 1: basic_auth
+	// 1: basic_auth 
 	// 2: token
 	AuthType *uint64 `json:"AuthType,omitnil,omitempty" name:"AuthType"`
 
@@ -5718,8 +5718,8 @@ type CreateRemoteWriteTaskRequest struct {
 }
 
 func (r *CreateRemoteWriteTaskRequest) ToJsonString() string {
-	b, _ := json.Marshal(r)
-	return string(b)
+    b, _ := json.Marshal(r)
+    return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -5760,8 +5760,8 @@ type CreateRemoteWriteTaskResponse struct {
 }
 
 func (r *CreateRemoteWriteTaskResponse) ToJsonString() string {
-	b, _ := json.Marshal(r)
-	return string(b)
+    b, _ := json.Marshal(r)
+    return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -5811,7 +5811,7 @@ type CreateS3RechargeRequestParams struct {
 
 type CreateS3RechargeRequest struct {
 	*tchttp.BaseRequest
-
+	
 	// <p>日志主题Id。</p><ul><li>通过<a href="https://cloud.tencent.com/document/product/614/56454">获取日志主题列表</a>获取日志主题Id。</li></ul>
 	TopicId *string `json:"TopicId,omitnil,omitempty" name:"TopicId"`
 
@@ -5850,8 +5850,8 @@ type CreateS3RechargeRequest struct {
 }
 
 func (r *CreateS3RechargeRequest) ToJsonString() string {
-	b, _ := json.Marshal(r)
-	return string(b)
+    b, _ := json.Marshal(r)
+    return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -5894,8 +5894,8 @@ type CreateS3RechargeResponse struct {
 }
 
 func (r *CreateS3RechargeResponse) ToJsonString() string {
-	b, _ := json.Marshal(r)
-	return string(b)
+    b, _ := json.Marshal(r)
+    return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -5957,7 +5957,7 @@ type CreateScheduledSqlRequestParams struct {
 
 type CreateScheduledSqlRequest struct {
 	*tchttp.BaseRequest
-
+	
 	// <p>源日志主题ID- 通过<a href="https://cloud.tencent.com/document/product/614/56454">获取日志主题列表</a>获取日志主题Id。</p>
 	SrcTopicId *string `json:"SrcTopicId,omitnil,omitempty" name:"SrcTopicId"`
 
@@ -6008,8 +6008,8 @@ type CreateScheduledSqlRequest struct {
 }
 
 func (r *CreateScheduledSqlRequest) ToJsonString() string {
-	b, _ := json.Marshal(r)
-	return string(b)
+    b, _ := json.Marshal(r)
+    return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -6056,8 +6056,8 @@ type CreateScheduledSqlResponse struct {
 }
 
 func (r *CreateScheduledSqlResponse) ToJsonString() string {
-	b, _ := json.Marshal(r)
-	return string(b)
+    b, _ := json.Marshal(r)
+    return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -6092,7 +6092,7 @@ type CreateSearchViewRequestParams struct {
 
 type CreateSearchViewRequest struct {
 	*tchttp.BaseRequest
-
+	
 	// <p>日志集id</p><p>查询视图所属的日志集，仅用于管理查询视图，查询视图中包含的主题可与该日志集无关</p>
 	LogsetId *string `json:"LogsetId,omitnil,omitempty" name:"LogsetId"`
 
@@ -6116,8 +6116,8 @@ type CreateSearchViewRequest struct {
 }
 
 func (r *CreateSearchViewRequest) ToJsonString() string {
-	b, _ := json.Marshal(r)
-	return string(b)
+    b, _ := json.Marshal(r)
+    return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -6155,8 +6155,8 @@ type CreateSearchViewResponse struct {
 }
 
 func (r *CreateSearchViewResponse) ToJsonString() string {
-	b, _ := json.Marshal(r)
-	return string(b)
+    b, _ := json.Marshal(r)
+    return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -6224,7 +6224,7 @@ type CreateShipperRequestParams struct {
 
 type CreateShipperRequest struct {
 	*tchttp.BaseRequest
-
+	
 	// <p>创建的投递规则所属的日志主题Id。</p><ul><li>通过<a href="https://cloud.tencent.com/document/product/614/56454">获取日志主题列表</a>获取日志主题Id。</li></ul>
 	TopicId *string `json:"TopicId,omitnil,omitempty" name:"TopicId"`
 
@@ -6281,8 +6281,8 @@ type CreateShipperRequest struct {
 }
 
 func (r *CreateShipperRequest) ToJsonString() string {
-	b, _ := json.Marshal(r)
-	return string(b)
+    b, _ := json.Marshal(r)
+    return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -6331,8 +6331,8 @@ type CreateShipperResponse struct {
 }
 
 func (r *CreateShipperResponse) ToJsonString() string {
-	b, _ := json.Marshal(r)
-	return string(b)
+    b, _ := json.Marshal(r)
+    return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -6382,7 +6382,7 @@ type CreateSplunkDeliverRequestParams struct {
 
 type CreateSplunkDeliverRequest struct {
 	*tchttp.BaseRequest
-
+	
 	// <p>日志主题id</p><ul><li>通过<a href="https://cloud.tencent.com/document/product/614/56454">获取日志主题列表</a>获取日志主题Id。</li></ul>
 	TopicId *string `json:"TopicId,omitnil,omitempty" name:"TopicId"`
 
@@ -6421,8 +6421,8 @@ type CreateSplunkDeliverRequest struct {
 }
 
 func (r *CreateSplunkDeliverRequest) ToJsonString() string {
-	b, _ := json.Marshal(r)
-	return string(b)
+    b, _ := json.Marshal(r)
+    return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -6465,8 +6465,8 @@ type CreateSplunkDeliverResponse struct {
 }
 
 func (r *CreateSplunkDeliverResponse) ToJsonString() string {
-	b, _ := json.Marshal(r)
-	return string(b)
+    b, _ := json.Marshal(r)
+    return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -6534,7 +6534,7 @@ type CreateTopicRequestParams struct {
 
 type CreateTopicRequest struct {
 	*tchttp.BaseRequest
-
+	
 	// <p>日志集ID</p><ul><li>通过<a href="https://cloud.tencent.com/document/product/614/58624">获取日志集列表</a>获取日志集Id。</li></ul>
 	LogsetId *string `json:"LogsetId,omitnil,omitempty" name:"LogsetId"`
 
@@ -6591,8 +6591,8 @@ type CreateTopicRequest struct {
 }
 
 func (r *CreateTopicRequest) ToJsonString() string {
-	b, _ := json.Marshal(r)
-	return string(b)
+    b, _ := json.Marshal(r)
+    return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -6641,8 +6641,8 @@ type CreateTopicResponse struct {
 }
 
 func (r *CreateTopicResponse) ToJsonString() string {
-	b, _ := json.Marshal(r)
-	return string(b)
+    b, _ := json.Marshal(r)
+    return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -6657,7 +6657,7 @@ type CreateWebCallbackRequestParams struct {
 	Name *string `json:"Name,omitnil,omitempty" name:"Name"`
 
 	// 渠道类型。
-	//
+	// 
 	// WeCom:企业微信;DingTalk:钉钉;Lark:飞书;Http:自定义回调。
 	Type *string `json:"Type,omitnil,omitempty" name:"Type"`
 
@@ -6665,7 +6665,7 @@ type CreateWebCallbackRequestParams struct {
 	Webhook *string `json:"Webhook,omitnil,omitempty" name:"Webhook"`
 
 	// 请求方式。 支持POST、PUT。
-	//
+	// 
 	// 当Type为Http时，必填。
 	Method *string `json:"Method,omitnil,omitempty" name:"Method"`
 
@@ -6675,12 +6675,12 @@ type CreateWebCallbackRequestParams struct {
 
 type CreateWebCallbackRequest struct {
 	*tchttp.BaseRequest
-
+	
 	// 通知内容名称。最大支持255个字节
 	Name *string `json:"Name,omitnil,omitempty" name:"Name"`
 
 	// 渠道类型。
-	//
+	// 
 	// WeCom:企业微信;DingTalk:钉钉;Lark:飞书;Http:自定义回调。
 	Type *string `json:"Type,omitnil,omitempty" name:"Type"`
 
@@ -6688,7 +6688,7 @@ type CreateWebCallbackRequest struct {
 	Webhook *string `json:"Webhook,omitnil,omitempty" name:"Webhook"`
 
 	// 请求方式。 支持POST、PUT。
-	//
+	// 
 	// 当Type为Http时，必填。
 	Method *string `json:"Method,omitnil,omitempty" name:"Method"`
 
@@ -6697,8 +6697,8 @@ type CreateWebCallbackRequest struct {
 }
 
 func (r *CreateWebCallbackRequest) ToJsonString() string {
-	b, _ := json.Marshal(r)
-	return string(b)
+    b, _ := json.Marshal(r)
+    return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -6734,8 +6734,8 @@ type CreateWebCallbackResponse struct {
 }
 
 func (r *CreateWebCallbackResponse) ToJsonString() string {
-	b, _ := json.Marshal(r)
-	return string(b)
+    b, _ := json.Marshal(r)
+    return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -6802,7 +6802,7 @@ type CustomMetricSpec struct {
 
 	// Pod标签。
 	// - 最大支持100个
-	//
+	// 
 	// 注意：此字段可能返回 null，表示取不到有效值。
 	PodLabel []*Label `json:"PodLabel,omitnil,omitempty" name:"PodLabel"`
 }
@@ -6844,7 +6844,7 @@ type DashboardInfo struct {
 
 type DashboardNoticeMode struct {
 	// 仪表盘通知方式。
-	//
+	// 
 	// - Uin：腾讯云用户
 	// - Group：腾讯云用户组
 	// - WeCom：企业微信回调
@@ -6862,7 +6862,7 @@ type DashboardNoticeMode struct {
 	Values []*string `json:"Values,omitnil,omitempty" name:"Values"`
 
 	// 仪表盘通知渠道。
-	//
+	// 
 	// -  支持：["Email","Sms","WeChat","Phone"]。
 	// -  当ReceiverType为 `Email` 或 `WeCom` 时，ReceiverChannels无效。
 	// 注意：此字段可能返回 null，表示取不到有效值。
@@ -7110,7 +7110,7 @@ type DeleteAgentApplicationRequestParams struct {
 
 type DeleteAgentApplicationRequest struct {
 	*tchttp.BaseRequest
-
+	
 	// <p>应用id</p>
 	ApplicationId *string `json:"ApplicationId,omitnil,omitempty" name:"ApplicationId"`
 
@@ -7119,8 +7119,8 @@ type DeleteAgentApplicationRequest struct {
 }
 
 func (r *DeleteAgentApplicationRequest) ToJsonString() string {
-	b, _ := json.Marshal(r)
-	return string(b)
+    b, _ := json.Marshal(r)
+    return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -7150,8 +7150,8 @@ type DeleteAgentApplicationResponse struct {
 }
 
 func (r *DeleteAgentApplicationResponse) ToJsonString() string {
-	b, _ := json.Marshal(r)
-	return string(b)
+    b, _ := json.Marshal(r)
+    return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -7168,14 +7168,14 @@ type DeleteAlarmNoticeRequestParams struct {
 
 type DeleteAlarmNoticeRequest struct {
 	*tchttp.BaseRequest
-
+	
 	// 通知渠道组ID。-通过[获取通知渠道组列表](https://cloud.tencent.com/document/api/614/56462)获取通知渠道组ID
 	AlarmNoticeId *string `json:"AlarmNoticeId,omitnil,omitempty" name:"AlarmNoticeId"`
 }
 
 func (r *DeleteAlarmNoticeRequest) ToJsonString() string {
-	b, _ := json.Marshal(r)
-	return string(b)
+    b, _ := json.Marshal(r)
+    return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -7204,8 +7204,8 @@ type DeleteAlarmNoticeResponse struct {
 }
 
 func (r *DeleteAlarmNoticeResponse) ToJsonString() string {
-	b, _ := json.Marshal(r)
-	return string(b)
+    b, _ := json.Marshal(r)
+    return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -7222,14 +7222,14 @@ type DeleteAlarmRequestParams struct {
 
 type DeleteAlarmRequest struct {
 	*tchttp.BaseRequest
-
+	
 	// 告警策略ID。
 	AlarmId *string `json:"AlarmId,omitnil,omitempty" name:"AlarmId"`
 }
 
 func (r *DeleteAlarmRequest) ToJsonString() string {
-	b, _ := json.Marshal(r)
-	return string(b)
+    b, _ := json.Marshal(r)
+    return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -7258,8 +7258,8 @@ type DeleteAlarmResponse struct {
 }
 
 func (r *DeleteAlarmResponse) ToJsonString() string {
-	b, _ := json.Marshal(r)
-	return string(b)
+    b, _ := json.Marshal(r)
+    return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -7279,7 +7279,7 @@ type DeleteAlarmShieldRequestParams struct {
 
 type DeleteAlarmShieldRequest struct {
 	*tchttp.BaseRequest
-
+	
 	// 屏蔽规则id。通过[获取告警屏蔽配置规则](https://cloud.tencent.com/document/api/614/103650)获取屏蔽规则ID
 	TaskId *string `json:"TaskId,omitnil,omitempty" name:"TaskId"`
 
@@ -7288,8 +7288,8 @@ type DeleteAlarmShieldRequest struct {
 }
 
 func (r *DeleteAlarmShieldRequest) ToJsonString() string {
-	b, _ := json.Marshal(r)
-	return string(b)
+    b, _ := json.Marshal(r)
+    return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -7319,8 +7319,8 @@ type DeleteAlarmShieldResponse struct {
 }
 
 func (r *DeleteAlarmShieldResponse) ToJsonString() string {
-	b, _ := json.Marshal(r)
-	return string(b)
+    b, _ := json.Marshal(r)
+    return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -7352,7 +7352,7 @@ type DeleteCloudProductLogCollectionRequestParams struct {
 
 type DeleteCloudProductLogCollectionRequest struct {
 	*tchttp.BaseRequest
-
+	
 	// <p>实例ID</p>
 	InstanceId *string `json:"InstanceId,omitnil,omitempty" name:"InstanceId"`
 
@@ -7373,8 +7373,8 @@ type DeleteCloudProductLogCollectionRequest struct {
 }
 
 func (r *DeleteCloudProductLogCollectionRequest) ToJsonString() string {
-	b, _ := json.Marshal(r)
-	return string(b)
+    b, _ := json.Marshal(r)
+    return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -7411,8 +7411,8 @@ type DeleteCloudProductLogCollectionResponse struct {
 }
 
 func (r *DeleteCloudProductLogCollectionResponse) ToJsonString() string {
-	b, _ := json.Marshal(r)
-	return string(b)
+    b, _ := json.Marshal(r)
+    return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -7430,15 +7430,15 @@ type DeleteConfigExtraRequestParams struct {
 
 type DeleteConfigExtraRequest struct {
 	*tchttp.BaseRequest
-
+	
 	// 特殊采集规则扩展配置ID
 	// - 通过[获取特殊采集配置](https://cloud.tencent.com/document/api/614/71164)特殊采集规则扩展配置ID。
 	ConfigExtraId *string `json:"ConfigExtraId,omitnil,omitempty" name:"ConfigExtraId"`
 }
 
 func (r *DeleteConfigExtraRequest) ToJsonString() string {
-	b, _ := json.Marshal(r)
-	return string(b)
+    b, _ := json.Marshal(r)
+    return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -7467,8 +7467,8 @@ type DeleteConfigExtraResponse struct {
 }
 
 func (r *DeleteConfigExtraResponse) ToJsonString() string {
-	b, _ := json.Marshal(r)
-	return string(b)
+    b, _ := json.Marshal(r)
+    return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -7490,7 +7490,7 @@ type DeleteConfigFromMachineGroupRequestParams struct {
 
 type DeleteConfigFromMachineGroupRequest struct {
 	*tchttp.BaseRequest
-
+	
 	// 机器组ID
 	// - 通过[获取机器组列表](https://cloud.tencent.com/document/api/614/56438)获取机器组Id。
 	GroupId *string `json:"GroupId,omitnil,omitempty" name:"GroupId"`
@@ -7501,8 +7501,8 @@ type DeleteConfigFromMachineGroupRequest struct {
 }
 
 func (r *DeleteConfigFromMachineGroupRequest) ToJsonString() string {
-	b, _ := json.Marshal(r)
-	return string(b)
+    b, _ := json.Marshal(r)
+    return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -7532,8 +7532,8 @@ type DeleteConfigFromMachineGroupResponse struct {
 }
 
 func (r *DeleteConfigFromMachineGroupResponse) ToJsonString() string {
-	b, _ := json.Marshal(r)
-	return string(b)
+    b, _ := json.Marshal(r)
+    return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -7551,15 +7551,15 @@ type DeleteConfigRequestParams struct {
 
 type DeleteConfigRequest struct {
 	*tchttp.BaseRequest
-
+	
 	// 采集配置ID
 	//  - 通过[获取采集规则配置](https://cloud.tencent.com/document/product/614/58616)获取采集配置Id。
 	ConfigId *string `json:"ConfigId,omitnil,omitempty" name:"ConfigId"`
 }
 
 func (r *DeleteConfigRequest) ToJsonString() string {
-	b, _ := json.Marshal(r)
-	return string(b)
+    b, _ := json.Marshal(r)
+    return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -7588,8 +7588,8 @@ type DeleteConfigResponse struct {
 }
 
 func (r *DeleteConfigResponse) ToJsonString() string {
-	b, _ := json.Marshal(r)
-	return string(b)
+    b, _ := json.Marshal(r)
+    return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -7606,14 +7606,14 @@ type DeleteConsoleRequestParams struct {
 
 type DeleteConsoleRequest struct {
 	*tchttp.BaseRequest
-
+	
 	// <p>DataSight控制台Id</p>
 	ConsoleId *string `json:"ConsoleId,omitnil,omitempty" name:"ConsoleId"`
 }
 
 func (r *DeleteConsoleRequest) ToJsonString() string {
-	b, _ := json.Marshal(r)
-	return string(b)
+    b, _ := json.Marshal(r)
+    return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -7642,8 +7642,8 @@ type DeleteConsoleResponse struct {
 }
 
 func (r *DeleteConsoleResponse) ToJsonString() string {
-	b, _ := json.Marshal(r)
-	return string(b)
+    b, _ := json.Marshal(r)
+    return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -7655,23 +7655,23 @@ func (r *DeleteConsoleResponse) FromJsonString(s string) error {
 // Predefined struct for user
 type DeleteConsoleSharingRequestParams struct {
 	// 免密分享Id。
-	// - 通过 [获取免密分享列表](https://cloud.tencent.com/document/product/614/109798) 获取免密分享Id。
+	// - 通过 [获取免密分享列表](https://cloud.tencent.com/document/product/614/109798) 获取免密分享Id。 
 	// - 通过 [创建免密分享](https://cloud.tencent.com/document/product/614/109800) 获取免密分享Id。
 	SharingId *string `json:"SharingId,omitnil,omitempty" name:"SharingId"`
 }
 
 type DeleteConsoleSharingRequest struct {
 	*tchttp.BaseRequest
-
+	
 	// 免密分享Id。
-	// - 通过 [获取免密分享列表](https://cloud.tencent.com/document/product/614/109798) 获取免密分享Id。
+	// - 通过 [获取免密分享列表](https://cloud.tencent.com/document/product/614/109798) 获取免密分享Id。 
 	// - 通过 [创建免密分享](https://cloud.tencent.com/document/product/614/109800) 获取免密分享Id。
 	SharingId *string `json:"SharingId,omitnil,omitempty" name:"SharingId"`
 }
 
 func (r *DeleteConsoleSharingRequest) ToJsonString() string {
-	b, _ := json.Marshal(r)
-	return string(b)
+    b, _ := json.Marshal(r)
+    return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -7700,8 +7700,8 @@ type DeleteConsoleSharingResponse struct {
 }
 
 func (r *DeleteConsoleSharingResponse) ToJsonString() string {
-	b, _ := json.Marshal(r)
-	return string(b)
+    b, _ := json.Marshal(r)
+    return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -7721,7 +7721,7 @@ type DeleteConsumerGroupRequestParams struct {
 
 type DeleteConsumerGroupRequest struct {
 	*tchttp.BaseRequest
-
+	
 	// 需要删除的消费者组标识
 	ConsumerGroup *string `json:"ConsumerGroup,omitnil,omitempty" name:"ConsumerGroup"`
 
@@ -7730,8 +7730,8 @@ type DeleteConsumerGroupRequest struct {
 }
 
 func (r *DeleteConsumerGroupRequest) ToJsonString() string {
-	b, _ := json.Marshal(r)
-	return string(b)
+    b, _ := json.Marshal(r)
+    return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -7761,8 +7761,8 @@ type DeleteConsumerGroupResponse struct {
 }
 
 func (r *DeleteConsumerGroupResponse) ToJsonString() string {
-	b, _ := json.Marshal(r)
-	return string(b)
+    b, _ := json.Marshal(r)
+    return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -7781,7 +7781,7 @@ type DeleteConsumerRequestParams struct {
 
 type DeleteConsumerRequest struct {
 	*tchttp.BaseRequest
-
+	
 	// 投递任务绑定的日志主题Id。
 	// - 通过 [获取日志主题列表](https://cloud.tencent.com/document/product/614/56454) 获取日志主题Id。
 	// - 通过 [创建日志主题](https://cloud.tencent.com/document/product/614/56456) 获取日志主题Id。
@@ -7789,8 +7789,8 @@ type DeleteConsumerRequest struct {
 }
 
 func (r *DeleteConsumerRequest) ToJsonString() string {
-	b, _ := json.Marshal(r)
-	return string(b)
+    b, _ := json.Marshal(r)
+    return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -7819,8 +7819,8 @@ type DeleteConsumerResponse struct {
 }
 
 func (r *DeleteConsumerResponse) ToJsonString() string {
-	b, _ := json.Marshal(r)
-	return string(b)
+    b, _ := json.Marshal(r)
+    return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -7842,7 +7842,7 @@ type DeleteCosRechargeRequestParams struct {
 
 type DeleteCosRechargeRequest struct {
 	*tchttp.BaseRequest
-
+	
 	// COS导入配置Id。
 	// - 通过 [获取cos导入配置](https://cloud.tencent.com/document/product/614/88099) 获取COS导入配置Id。
 	Id *string `json:"Id,omitnil,omitempty" name:"Id"`
@@ -7853,8 +7853,8 @@ type DeleteCosRechargeRequest struct {
 }
 
 func (r *DeleteCosRechargeRequest) ToJsonString() string {
-	b, _ := json.Marshal(r)
-	return string(b)
+    b, _ := json.Marshal(r)
+    return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -7884,8 +7884,8 @@ type DeleteCosRechargeResponse struct {
 }
 
 func (r *DeleteCosRechargeResponse) ToJsonString() string {
-	b, _ := json.Marshal(r)
-	return string(b)
+    b, _ := json.Marshal(r)
+    return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -7902,14 +7902,14 @@ type DeleteDashboardRequestParams struct {
 
 type DeleteDashboardRequest struct {
 	*tchttp.BaseRequest
-
+	
 	// 仪表盘id
 	DashboardId *string `json:"DashboardId,omitnil,omitempty" name:"DashboardId"`
 }
 
 func (r *DeleteDashboardRequest) ToJsonString() string {
-	b, _ := json.Marshal(r)
-	return string(b)
+    b, _ := json.Marshal(r)
+    return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -7938,8 +7938,8 @@ type DeleteDashboardResponse struct {
 }
 
 func (r *DeleteDashboardResponse) ToJsonString() string {
-	b, _ := json.Marshal(r)
-	return string(b)
+    b, _ := json.Marshal(r)
+    return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -7956,14 +7956,14 @@ type DeleteDashboardSubscribeRequestParams struct {
 
 type DeleteDashboardSubscribeRequest struct {
 	*tchttp.BaseRequest
-
+	
 	// 仪表盘订阅记录id。通过 [获取仪表盘订阅列表](https://cloud.tencent.com/document/api/614/105779)接口获取Id。
 	Id *uint64 `json:"Id,omitnil,omitempty" name:"Id"`
 }
 
 func (r *DeleteDashboardSubscribeRequest) ToJsonString() string {
-	b, _ := json.Marshal(r)
-	return string(b)
+    b, _ := json.Marshal(r)
+    return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -7992,8 +7992,8 @@ type DeleteDashboardSubscribeResponse struct {
 }
 
 func (r *DeleteDashboardSubscribeResponse) ToJsonString() string {
-	b, _ := json.Marshal(r)
-	return string(b)
+    b, _ := json.Marshal(r)
+    return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -8010,14 +8010,14 @@ type DeleteDataTransformRequestParams struct {
 
 type DeleteDataTransformRequest struct {
 	*tchttp.BaseRequest
-
+	
 	// 数据加工任务ID- 通过[获取数据加工任务列表基本信息](https://cloud.tencent.com/document/product/614/72182)获取数据加工任务Id。
 	TaskId *string `json:"TaskId,omitnil,omitempty" name:"TaskId"`
 }
 
 func (r *DeleteDataTransformRequest) ToJsonString() string {
-	b, _ := json.Marshal(r)
-	return string(b)
+    b, _ := json.Marshal(r)
+    return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -8046,8 +8046,8 @@ type DeleteDataTransformResponse struct {
 }
 
 func (r *DeleteDataTransformResponse) ToJsonString() string {
-	b, _ := json.Marshal(r)
-	return string(b)
+    b, _ := json.Marshal(r)
+    return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -8068,7 +8068,7 @@ type DeleteDlcDeliverRequestParams struct {
 
 type DeleteDlcDeliverRequest struct {
 	*tchttp.BaseRequest
-
+	
 	// 日志主题id。
 	// - 通过[获取日志主题列表](https://cloud.tencent.com/document/product/614/56454)获取日志主题Id。
 	TopicId *string `json:"TopicId,omitnil,omitempty" name:"TopicId"`
@@ -8078,8 +8078,8 @@ type DeleteDlcDeliverRequest struct {
 }
 
 func (r *DeleteDlcDeliverRequest) ToJsonString() string {
-	b, _ := json.Marshal(r)
-	return string(b)
+    b, _ := json.Marshal(r)
+    return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -8109,8 +8109,8 @@ type DeleteDlcDeliverResponse struct {
 }
 
 func (r *DeleteDlcDeliverResponse) ToJsonString() string {
-	b, _ := json.Marshal(r)
-	return string(b)
+    b, _ := json.Marshal(r)
+    return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -8132,7 +8132,7 @@ type DeleteEsRechargeRequestParams struct {
 
 type DeleteEsRechargeRequest struct {
 	*tchttp.BaseRequest
-
+	
 	// 任务id
 	TaskId *string `json:"TaskId,omitnil,omitempty" name:"TaskId"`
 
@@ -8143,8 +8143,8 @@ type DeleteEsRechargeRequest struct {
 }
 
 func (r *DeleteEsRechargeRequest) ToJsonString() string {
-	b, _ := json.Marshal(r)
-	return string(b)
+    b, _ := json.Marshal(r)
+    return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -8174,8 +8174,8 @@ type DeleteEsRechargeResponse struct {
 }
 
 func (r *DeleteEsRechargeResponse) ToJsonString() string {
-	b, _ := json.Marshal(r)
-	return string(b)
+    b, _ := json.Marshal(r)
+    return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -8193,15 +8193,15 @@ type DeleteExportRequestParams struct {
 
 type DeleteExportRequest struct {
 	*tchttp.BaseRequest
-
+	
 	// 日志导出任务Id
 	// - 通过[获取日志下载任务列表](https://cloud.tencent.com/document/product/614/56449)获取日志导出任务Id。
 	ExportId *string `json:"ExportId,omitnil,omitempty" name:"ExportId"`
 }
 
 func (r *DeleteExportRequest) ToJsonString() string {
-	b, _ := json.Marshal(r)
-	return string(b)
+    b, _ := json.Marshal(r)
+    return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -8230,8 +8230,8 @@ type DeleteExportResponse struct {
 }
 
 func (r *DeleteExportResponse) ToJsonString() string {
-	b, _ := json.Marshal(r)
-	return string(b)
+    b, _ := json.Marshal(r)
+    return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -8253,7 +8253,7 @@ type DeleteHostMetricConfigRequestParams struct {
 
 type DeleteHostMetricConfigRequest struct {
 	*tchttp.BaseRequest
-
+	
 	// 指标日志主题id。
 	// - 通过 [获取日志主题列表](https://cloud.tencent.com/document/product/614/56454) 获取日志主题Id。注意BizType 0:日志主题（默认值）， 1:指标主题
 	// - 通过 [创建日志主题](https://cloud.tencent.com/document/product/614/56456) 获取日志主题Id。注意BizType 0:日志主题（默认值）， 1:指标主题
@@ -8264,8 +8264,8 @@ type DeleteHostMetricConfigRequest struct {
 }
 
 func (r *DeleteHostMetricConfigRequest) ToJsonString() string {
-	b, _ := json.Marshal(r)
-	return string(b)
+    b, _ := json.Marshal(r)
+    return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -8295,8 +8295,8 @@ type DeleteHostMetricConfigResponse struct {
 }
 
 func (r *DeleteHostMetricConfigResponse) ToJsonString() string {
-	b, _ := json.Marshal(r)
-	return string(b)
+    b, _ := json.Marshal(r)
+    return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -8314,15 +8314,15 @@ type DeleteIndexRequestParams struct {
 
 type DeleteIndexRequest struct {
 	*tchttp.BaseRequest
-
+	
 	// 日志主题Id。
 	// - 通过[获取日志主题列表](https://cloud.tencent.com/document/product/614/56454)获取日志主题Id。
 	TopicId *string `json:"TopicId,omitnil,omitempty" name:"TopicId"`
 }
 
 func (r *DeleteIndexRequest) ToJsonString() string {
-	b, _ := json.Marshal(r)
-	return string(b)
+    b, _ := json.Marshal(r)
+    return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -8351,8 +8351,8 @@ type DeleteIndexResponse struct {
 }
 
 func (r *DeleteIndexResponse) ToJsonString() string {
-	b, _ := json.Marshal(r)
-	return string(b)
+    b, _ := json.Marshal(r)
+    return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -8364,7 +8364,7 @@ func (r *DeleteIndexResponse) FromJsonString(s string) error {
 // Predefined struct for user
 type DeleteKafkaRechargeRequestParams struct {
 	// Kafka导入配置Id。
-	//
+	// 
 	// - 通过 [创建Kafka数据订阅任务](https://cloud.tencent.com/document/product/614/94448)获取Kafka导入配置Id。
 	// - 通过 [获取Kafka数据订阅任务列表](https://cloud.tencent.com/document/product/614/94446)获取Kafka导入配置Id。
 	Id *string `json:"Id,omitnil,omitempty" name:"Id"`
@@ -8376,9 +8376,9 @@ type DeleteKafkaRechargeRequestParams struct {
 
 type DeleteKafkaRechargeRequest struct {
 	*tchttp.BaseRequest
-
+	
 	// Kafka导入配置Id。
-	//
+	// 
 	// - 通过 [创建Kafka数据订阅任务](https://cloud.tencent.com/document/product/614/94448)获取Kafka导入配置Id。
 	// - 通过 [获取Kafka数据订阅任务列表](https://cloud.tencent.com/document/product/614/94446)获取Kafka导入配置Id。
 	Id *string `json:"Id,omitnil,omitempty" name:"Id"`
@@ -8389,8 +8389,8 @@ type DeleteKafkaRechargeRequest struct {
 }
 
 func (r *DeleteKafkaRechargeRequest) ToJsonString() string {
-	b, _ := json.Marshal(r)
-	return string(b)
+    b, _ := json.Marshal(r)
+    return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -8420,8 +8420,8 @@ type DeleteKafkaRechargeResponse struct {
 }
 
 func (r *DeleteKafkaRechargeResponse) ToJsonString() string {
-	b, _ := json.Marshal(r)
-	return string(b)
+    b, _ := json.Marshal(r)
+    return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -8438,14 +8438,14 @@ type DeleteLogsetRequestParams struct {
 
 type DeleteLogsetRequest struct {
 	*tchttp.BaseRequest
-
+	
 	// 日志集Id。通过 [获取日志集列表](https://cloud.tencent.com/document/product/614/58624)获取日志集Id。
 	LogsetId *string `json:"LogsetId,omitnil,omitempty" name:"LogsetId"`
 }
 
 func (r *DeleteLogsetRequest) ToJsonString() string {
-	b, _ := json.Marshal(r)
-	return string(b)
+    b, _ := json.Marshal(r)
+    return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -8474,8 +8474,8 @@ type DeleteLogsetResponse struct {
 }
 
 func (r *DeleteLogsetResponse) ToJsonString() string {
-	b, _ := json.Marshal(r)
-	return string(b)
+    b, _ := json.Marshal(r)
+    return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -8497,7 +8497,7 @@ type DeleteMachineGroupInfoRequestParams struct {
 
 type DeleteMachineGroupInfoRequest struct {
 	*tchttp.BaseRequest
-
+	
 	// 机器组Id
 	// - 通过[获取机器组列表](https://cloud.tencent.com/document/product/614/56438)获取机器组Id。
 	GroupId *string `json:"GroupId,omitnil,omitempty" name:"GroupId"`
@@ -8508,8 +8508,8 @@ type DeleteMachineGroupInfoRequest struct {
 }
 
 func (r *DeleteMachineGroupInfoRequest) ToJsonString() string {
-	b, _ := json.Marshal(r)
-	return string(b)
+    b, _ := json.Marshal(r)
+    return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -8539,8 +8539,8 @@ type DeleteMachineGroupInfoResponse struct {
 }
 
 func (r *DeleteMachineGroupInfoResponse) ToJsonString() string {
-	b, _ := json.Marshal(r)
-	return string(b)
+    b, _ := json.Marshal(r)
+    return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -8558,15 +8558,15 @@ type DeleteMachineGroupRequestParams struct {
 
 type DeleteMachineGroupRequest struct {
 	*tchttp.BaseRequest
-
+	
 	// 机器组Id
 	// - 通过[获取机器组列表](https://cloud.tencent.com/document/product/614/56438)获取机器组Id。
 	GroupId *string `json:"GroupId,omitnil,omitempty" name:"GroupId"`
 }
 
 func (r *DeleteMachineGroupRequest) ToJsonString() string {
-	b, _ := json.Marshal(r)
-	return string(b)
+    b, _ := json.Marshal(r)
+    return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -8595,8 +8595,8 @@ type DeleteMachineGroupResponse struct {
 }
 
 func (r *DeleteMachineGroupResponse) ToJsonString() string {
-	b, _ := json.Marshal(r)
-	return string(b)
+    b, _ := json.Marshal(r)
+    return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -8618,7 +8618,7 @@ type DeleteMetricConfigRequestParams struct {
 
 type DeleteMetricConfigRequest struct {
 	*tchttp.BaseRequest
-
+	
 	// 指标日志主题id。
 	// - 通过 [获取日志主题列表](https://cloud.tencent.com/document/product/614/56454) 获取日志主题Id。注意BizType 0:日志主题（默认值）， 1:指标主题
 	// - 通过 [创建日志主题](https://cloud.tencent.com/document/product/614/56456) 获取日志主题Id。注意BizType 0:日志主题（默认值）， 1:指标主题
@@ -8629,8 +8629,8 @@ type DeleteMetricConfigRequest struct {
 }
 
 func (r *DeleteMetricConfigRequest) ToJsonString() string {
-	b, _ := json.Marshal(r)
-	return string(b)
+    b, _ := json.Marshal(r)
+    return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -8660,8 +8660,8 @@ type DeleteMetricConfigResponse struct {
 }
 
 func (r *DeleteMetricConfigResponse) ToJsonString() string {
-	b, _ := json.Marshal(r)
-	return string(b)
+    b, _ := json.Marshal(r)
+    return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -8681,7 +8681,7 @@ type DeleteMetricSubscribeRequestParams struct {
 
 type DeleteMetricSubscribeRequest struct {
 	*tchttp.BaseRequest
-
+	
 	// 指标采集任务id
 	TaskId *string `json:"TaskId,omitnil,omitempty" name:"TaskId"`
 
@@ -8690,8 +8690,8 @@ type DeleteMetricSubscribeRequest struct {
 }
 
 func (r *DeleteMetricSubscribeRequest) ToJsonString() string {
-	b, _ := json.Marshal(r)
-	return string(b)
+    b, _ := json.Marshal(r)
+    return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -8721,8 +8721,8 @@ type DeleteMetricSubscribeResponse struct {
 }
 
 func (r *DeleteMetricSubscribeResponse) ToJsonString() string {
-	b, _ := json.Marshal(r)
-	return string(b)
+    b, _ := json.Marshal(r)
+    return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -8739,14 +8739,14 @@ type DeleteNetworkApplicationRequestParams struct {
 
 type DeleteNetworkApplicationRequest struct {
 	*tchttp.BaseRequest
-
+	
 	// <p>网络应用id。</p>
 	NetworkAppId *string `json:"NetworkAppId,omitnil,omitempty" name:"NetworkAppId"`
 }
 
 func (r *DeleteNetworkApplicationRequest) ToJsonString() string {
-	b, _ := json.Marshal(r)
-	return string(b)
+    b, _ := json.Marshal(r)
+    return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -8775,8 +8775,8 @@ type DeleteNetworkApplicationResponse struct {
 }
 
 func (r *DeleteNetworkApplicationResponse) ToJsonString() string {
-	b, _ := json.Marshal(r)
-	return string(b)
+    b, _ := json.Marshal(r)
+    return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -8793,14 +8793,14 @@ type DeleteNoticeContentRequestParams struct {
 
 type DeleteNoticeContentRequest struct {
 	*tchttp.BaseRequest
-
+	
 	// 通知内容模板ID。-通过[获取通知内容模板](https://cloud.tencent.com/document/api/614/111714)获取通知内容模版ID
 	NoticeContentId *string `json:"NoticeContentId,omitnil,omitempty" name:"NoticeContentId"`
 }
 
 func (r *DeleteNoticeContentRequest) ToJsonString() string {
-	b, _ := json.Marshal(r)
-	return string(b)
+    b, _ := json.Marshal(r)
+    return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -8829,8 +8829,8 @@ type DeleteNoticeContentResponse struct {
 }
 
 func (r *DeleteNoticeContentResponse) ToJsonString() string {
-	b, _ := json.Marshal(r)
-	return string(b)
+    b, _ := json.Marshal(r)
+    return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -8850,7 +8850,7 @@ type DeleteRecordingRuleTaskRequestParams struct {
 
 type DeleteRecordingRuleTaskRequest struct {
 	*tchttp.BaseRequest
-
+	
 	// <p>任务ID</p>
 	TaskId *string `json:"TaskId,omitnil,omitempty" name:"TaskId"`
 
@@ -8859,8 +8859,8 @@ type DeleteRecordingRuleTaskRequest struct {
 }
 
 func (r *DeleteRecordingRuleTaskRequest) ToJsonString() string {
-	b, _ := json.Marshal(r)
-	return string(b)
+    b, _ := json.Marshal(r)
+    return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -8890,8 +8890,8 @@ type DeleteRecordingRuleTaskResponse struct {
 }
 
 func (r *DeleteRecordingRuleTaskResponse) ToJsonString() string {
-	b, _ := json.Marshal(r)
-	return string(b)
+    b, _ := json.Marshal(r)
+    return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -8911,7 +8911,7 @@ type DeleteRecordingRuleYamlTaskRequestParams struct {
 
 type DeleteRecordingRuleYamlTaskRequest struct {
 	*tchttp.BaseRequest
-
+	
 	// <p>任务ID</p>
 	YamlId *string `json:"YamlId,omitnil,omitempty" name:"YamlId"`
 
@@ -8920,8 +8920,8 @@ type DeleteRecordingRuleYamlTaskRequest struct {
 }
 
 func (r *DeleteRecordingRuleYamlTaskRequest) ToJsonString() string {
-	b, _ := json.Marshal(r)
-	return string(b)
+    b, _ := json.Marshal(r)
+    return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -8951,8 +8951,8 @@ type DeleteRecordingRuleYamlTaskResponse struct {
 }
 
 func (r *DeleteRecordingRuleYamlTaskResponse) ToJsonString() string {
-	b, _ := json.Marshal(r)
-	return string(b)
+    b, _ := json.Marshal(r)
+    return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -8972,7 +8972,7 @@ type DeleteRemoteWriteTaskRequestParams struct {
 
 type DeleteRemoteWriteTaskRequest struct {
 	*tchttp.BaseRequest
-
+	
 	// RemoteWrite导入任务ID
 	TaskId *string `json:"TaskId,omitnil,omitempty" name:"TaskId"`
 
@@ -8981,8 +8981,8 @@ type DeleteRemoteWriteTaskRequest struct {
 }
 
 func (r *DeleteRemoteWriteTaskRequest) ToJsonString() string {
-	b, _ := json.Marshal(r)
-	return string(b)
+    b, _ := json.Marshal(r)
+    return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -9012,8 +9012,8 @@ type DeleteRemoteWriteTaskResponse struct {
 }
 
 func (r *DeleteRemoteWriteTaskResponse) ToJsonString() string {
-	b, _ := json.Marshal(r)
-	return string(b)
+    b, _ := json.Marshal(r)
+    return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -9033,7 +9033,7 @@ type DeleteS3RechargeRequestParams struct {
 
 type DeleteS3RechargeRequest struct {
 	*tchttp.BaseRequest
-
+	
 	// <p>导入任务Id</p>
 	TaskId *string `json:"TaskId,omitnil,omitempty" name:"TaskId"`
 
@@ -9042,8 +9042,8 @@ type DeleteS3RechargeRequest struct {
 }
 
 func (r *DeleteS3RechargeRequest) ToJsonString() string {
-	b, _ := json.Marshal(r)
-	return string(b)
+    b, _ := json.Marshal(r)
+    return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -9073,8 +9073,8 @@ type DeleteS3RechargeResponse struct {
 }
 
 func (r *DeleteS3RechargeResponse) ToJsonString() string {
-	b, _ := json.Marshal(r)
-	return string(b)
+    b, _ := json.Marshal(r)
+    return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -9094,7 +9094,7 @@ type DeleteScheduledSqlRequestParams struct {
 
 type DeleteScheduledSqlRequest struct {
 	*tchttp.BaseRequest
-
+	
 	// 任务ID，通过[获取定时SQL分析任务列表](https://cloud.tencent.com/document/product/614/95519)获取
 	TaskId *string `json:"TaskId,omitnil,omitempty" name:"TaskId"`
 
@@ -9103,8 +9103,8 @@ type DeleteScheduledSqlRequest struct {
 }
 
 func (r *DeleteScheduledSqlRequest) ToJsonString() string {
-	b, _ := json.Marshal(r)
-	return string(b)
+    b, _ := json.Marshal(r)
+    return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -9134,8 +9134,8 @@ type DeleteScheduledSqlResponse struct {
 }
 
 func (r *DeleteScheduledSqlResponse) ToJsonString() string {
-	b, _ := json.Marshal(r)
-	return string(b)
+    b, _ := json.Marshal(r)
+    return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -9152,14 +9152,14 @@ type DeleteSearchViewRequestParams struct {
 
 type DeleteSearchViewRequest struct {
 	*tchttp.BaseRequest
-
+	
 	// <p>视图ID</p>
 	ViewId *string `json:"ViewId,omitnil,omitempty" name:"ViewId"`
 }
 
 func (r *DeleteSearchViewRequest) ToJsonString() string {
-	b, _ := json.Marshal(r)
-	return string(b)
+    b, _ := json.Marshal(r)
+    return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -9188,8 +9188,8 @@ type DeleteSearchViewResponse struct {
 }
 
 func (r *DeleteSearchViewResponse) ToJsonString() string {
-	b, _ := json.Marshal(r)
-	return string(b)
+    b, _ := json.Marshal(r)
+    return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -9207,15 +9207,15 @@ type DeleteShipperRequestParams struct {
 
 type DeleteShipperRequest struct {
 	*tchttp.BaseRequest
-
+	
 	// 投递规则Id。
 	// - 通过 [获取投递任务列表](https://cloud.tencent.com/document/product/614/58745)获取ShipperId。
 	ShipperId *string `json:"ShipperId,omitnil,omitempty" name:"ShipperId"`
 }
 
 func (r *DeleteShipperRequest) ToJsonString() string {
-	b, _ := json.Marshal(r)
-	return string(b)
+    b, _ := json.Marshal(r)
+    return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -9244,8 +9244,8 @@ type DeleteShipperResponse struct {
 }
 
 func (r *DeleteShipperResponse) ToJsonString() string {
-	b, _ := json.Marshal(r)
-	return string(b)
+    b, _ := json.Marshal(r)
+    return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -9266,7 +9266,7 @@ type DeleteSplunkDeliverRequestParams struct {
 
 type DeleteSplunkDeliverRequest struct {
 	*tchttp.BaseRequest
-
+	
 	// 任务id
 	TaskId *string `json:"TaskId,omitnil,omitempty" name:"TaskId"`
 
@@ -9276,8 +9276,8 @@ type DeleteSplunkDeliverRequest struct {
 }
 
 func (r *DeleteSplunkDeliverRequest) ToJsonString() string {
-	b, _ := json.Marshal(r)
-	return string(b)
+    b, _ := json.Marshal(r)
+    return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -9307,8 +9307,8 @@ type DeleteSplunkDeliverResponse struct {
 }
 
 func (r *DeleteSplunkDeliverResponse) ToJsonString() string {
-	b, _ := json.Marshal(r)
-	return string(b)
+    b, _ := json.Marshal(r)
+    return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -9325,14 +9325,14 @@ type DeleteTopicRequestParams struct {
 
 type DeleteTopicRequest struct {
 	*tchttp.BaseRequest
-
+	
 	// 主题ID- 通过[获取日志主题列表](https://cloud.tencent.com/document/product/614/56454)获取日志主题Id。
 	TopicId *string `json:"TopicId,omitnil,omitempty" name:"TopicId"`
 }
 
 func (r *DeleteTopicRequest) ToJsonString() string {
-	b, _ := json.Marshal(r)
-	return string(b)
+    b, _ := json.Marshal(r)
+    return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -9361,8 +9361,8 @@ type DeleteTopicResponse struct {
 }
 
 func (r *DeleteTopicResponse) ToJsonString() string {
-	b, _ := json.Marshal(r)
-	return string(b)
+    b, _ := json.Marshal(r)
+    return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -9379,14 +9379,14 @@ type DeleteWebCallbackRequestParams struct {
 
 type DeleteWebCallbackRequest struct {
 	*tchttp.BaseRequest
-
+	
 	// 告警渠道回调配置ID。-通过[获取告警渠道回调配置列表](https://cloud.tencent.com/document/api/614/115229)获取告警渠道回调配置ID
 	WebCallbackId *string `json:"WebCallbackId,omitnil,omitempty" name:"WebCallbackId"`
 }
 
 func (r *DeleteWebCallbackRequest) ToJsonString() string {
-	b, _ := json.Marshal(r)
-	return string(b)
+    b, _ := json.Marshal(r)
+    return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -9415,8 +9415,8 @@ type DeleteWebCallbackResponse struct {
 }
 
 func (r *DeleteWebCallbackResponse) ToJsonString() string {
-	b, _ := json.Marshal(r)
-	return string(b)
+    b, _ := json.Marshal(r)
+    return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -9427,22 +9427,22 @@ func (r *DeleteWebCallbackResponse) FromJsonString(s string) error {
 
 type DeliverConfig struct {
 	// 地域信息。
-	//
+	// 
 	// 示例：
 	//  ap-guangzhou  广州地域；
 	// ap-nanjing 南京地域。
-	//
+	// 
 	// 详细信息请查看官网[地域和访问域名](https://cloud.tencent.com/document/product/614/18940)
-	//
+	// 
 	Region *string `json:"Region,omitnil,omitempty" name:"Region"`
 
 	// 日志主题ID。-通过[获取日志主题列表](https://cloud.tencent.com/document/product/614/56454)获取日志主题ID
 	TopicId *string `json:"TopicId,omitnil,omitempty" name:"TopicId"`
 
 	// 投递数据范围。
-	//
+	// 
 	// 0: 全部日志, 包括告警策略日常周期执行的所有日志，也包括告警策略变更产生的日志，默认值
-	//
+	// 
 	// 1:仅告警触发及恢复日志
 	Scope *uint64 `json:"Scope,omitnil,omitempty" name:"Scope"`
 }
@@ -9475,7 +9475,7 @@ type DescribeAgentApplicationsRequestParams struct {
 
 type DescribeAgentApplicationsRequest struct {
 	*tchttp.BaseRequest
-
+	
 	// <p>过滤项</p><ul><li><p>applicationName<br>按照【应用名称】进行过滤。模糊匹配方式查询。<br>类型：String<br>必选：否</p></li><li><p>applicationId<br>按照【应用id】进行过滤。<br>类型：String<br>必选：否</p></li><li><p>accessType<br>按照【接入类型】进行过滤。<br>类型：String<br>支持：<code>Langfuse</code><br>必选：否</p></li></ul><p>每次请求的Filters的上限为10，Filter.Values的上限为10。</p>
 	Filters []*Filter `json:"Filters,omitnil,omitempty" name:"Filters"`
 
@@ -9487,8 +9487,8 @@ type DescribeAgentApplicationsRequest struct {
 }
 
 func (r *DescribeAgentApplicationsRequest) ToJsonString() string {
-	b, _ := json.Marshal(r)
-	return string(b)
+    b, _ := json.Marshal(r)
+    return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -9525,8 +9525,8 @@ type DescribeAgentApplicationsResponse struct {
 }
 
 func (r *DescribeAgentApplicationsResponse) ToJsonString() string {
-	b, _ := json.Marshal(r)
-	return string(b)
+    b, _ := json.Marshal(r)
+    return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -9552,7 +9552,7 @@ type DescribeAgentConfigsRequestParams struct {
 
 type DescribeAgentConfigsRequest struct {
 	*tchttp.BaseRequest
-
+	
 	// agent的版本号
 	AgentVersion *string `json:"AgentVersion,omitnil,omitempty" name:"AgentVersion"`
 
@@ -9567,8 +9567,8 @@ type DescribeAgentConfigsRequest struct {
 }
 
 func (r *DescribeAgentConfigsRequest) ToJsonString() string {
-	b, _ := json.Marshal(r)
-	return string(b)
+    b, _ := json.Marshal(r)
+    return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -9624,8 +9624,8 @@ type DescribeAgentConfigsResponse struct {
 }
 
 func (r *DescribeAgentConfigsResponse) ToJsonString() string {
-	b, _ := json.Marshal(r)
-	return string(b)
+    b, _ := json.Marshal(r)
+    return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -9656,7 +9656,7 @@ type DescribeAlarmNoticesRequestParams struct {
 	// 类型：String
 	// 示例："Filters": [{Key: "groupId", Values: ["344098"]}]
 	// 必选：否
-	//
+	// 
 	// deliverFlag
 	// 按照【投递状态】进行过滤。
 	// 类型：String
@@ -9680,7 +9680,7 @@ type DescribeAlarmNoticesRequestParams struct {
 
 type DescribeAlarmNoticesRequest struct {
 	*tchttp.BaseRequest
-
+	
 	// name
 	// 按照【通知渠道组名称】进行过滤。
 	// 类型：String
@@ -9701,7 +9701,7 @@ type DescribeAlarmNoticesRequest struct {
 	// 类型：String
 	// 示例："Filters": [{Key: "groupId", Values: ["344098"]}]
 	// 必选：否
-	//
+	// 
 	// deliverFlag
 	// 按照【投递状态】进行过滤。
 	// 类型：String
@@ -9724,8 +9724,8 @@ type DescribeAlarmNoticesRequest struct {
 }
 
 func (r *DescribeAlarmNoticesRequest) ToJsonString() string {
-	b, _ := json.Marshal(r)
-	return string(b)
+    b, _ := json.Marshal(r)
+    return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -9763,8 +9763,8 @@ type DescribeAlarmNoticesResponse struct {
 }
 
 func (r *DescribeAlarmNoticesResponse) ToJsonString() string {
-	b, _ := json.Marshal(r)
-	return string(b)
+    b, _ := json.Marshal(r)
+    return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -9792,7 +9792,7 @@ type DescribeAlarmShieldsRequestParams struct {
 
 type DescribeAlarmShieldsRequest struct {
 	*tchttp.BaseRequest
-
+	
 	// 通知渠道组id。-通过[获取通知渠道组列表](https://cloud.tencent.com/document/api/614/56462)获取通知渠道组id
 	AlarmNoticeId *string `json:"AlarmNoticeId,omitnil,omitempty" name:"AlarmNoticeId"`
 
@@ -9809,8 +9809,8 @@ type DescribeAlarmShieldsRequest struct {
 }
 
 func (r *DescribeAlarmShieldsRequest) ToJsonString() string {
-	b, _ := json.Marshal(r)
-	return string(b)
+    b, _ := json.Marshal(r)
+    return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -9848,8 +9848,8 @@ type DescribeAlarmShieldsResponse struct {
 }
 
 func (r *DescribeAlarmShieldsResponse) ToJsonString() string {
-	b, _ := json.Marshal(r)
-	return string(b)
+    b, _ := json.Marshal(r)
+    return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -9865,26 +9865,26 @@ type DescribeAlarmsRequestParams struct {
 	// - 类型：String
 	// - 必选：否
 	// - 示例：test-alarm
-	//
+	// 
 	// alarmId
 	// - 按照【告警策略ID】进行过滤。
 	// - 类型：String
 	// - 必选：否
 	// - 示例：alarm-b60cf034-c3d6-4b01-xxxx-4e877ebb4751
-	//
+	// 
 	// topicId
 	// - 按照【监控对象的日志主题ID】进行过滤。
 	// - 类型：String
 	// - 必选：否
 	// - 示例：6766f83d-659e-xxxx-a8f7-9104a1012743
-	//
+	// 
 	// enable
 	// - 按照【启用状态】进行过滤。
 	// - 类型：String
 	// - 备注：enable参数值范围: 1, t, T, TRUE, true, True, 0, f, F, FALSE, false, False。 其它值将返回参数错误信息.
 	// - 必选：否
 	// - 示例：true
-	//
+	// 
 	// 每次请求的Filters的上限为10，Filter.Values的上限为5。
 	Filters []*Filter `json:"Filters,omitnil,omitempty" name:"Filters"`
 
@@ -9897,32 +9897,32 @@ type DescribeAlarmsRequestParams struct {
 
 type DescribeAlarmsRequest struct {
 	*tchttp.BaseRequest
-
+	
 	// name
 	// - 按照【告警策略名称】进行过滤。
 	// - 类型：String
 	// - 必选：否
 	// - 示例：test-alarm
-	//
+	// 
 	// alarmId
 	// - 按照【告警策略ID】进行过滤。
 	// - 类型：String
 	// - 必选：否
 	// - 示例：alarm-b60cf034-c3d6-4b01-xxxx-4e877ebb4751
-	//
+	// 
 	// topicId
 	// - 按照【监控对象的日志主题ID】进行过滤。
 	// - 类型：String
 	// - 必选：否
 	// - 示例：6766f83d-659e-xxxx-a8f7-9104a1012743
-	//
+	// 
 	// enable
 	// - 按照【启用状态】进行过滤。
 	// - 类型：String
 	// - 备注：enable参数值范围: 1, t, T, TRUE, true, True, 0, f, F, FALSE, false, False。 其它值将返回参数错误信息.
 	// - 必选：否
 	// - 示例：true
-	//
+	// 
 	// 每次请求的Filters的上限为10，Filter.Values的上限为5。
 	Filters []*Filter `json:"Filters,omitnil,omitempty" name:"Filters"`
 
@@ -9934,8 +9934,8 @@ type DescribeAlarmsRequest struct {
 }
 
 func (r *DescribeAlarmsRequest) ToJsonString() string {
-	b, _ := json.Marshal(r)
-	return string(b)
+    b, _ := json.Marshal(r)
+    return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -9972,8 +9972,8 @@ type DescribeAlarmsResponse struct {
 }
 
 func (r *DescribeAlarmsResponse) ToJsonString() string {
-	b, _ := json.Marshal(r)
-	return string(b)
+    b, _ := json.Marshal(r)
+    return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -10000,14 +10000,14 @@ type DescribeAlertRecordHistoryRequestParams struct {
 	// - topicId：按照监控对象ID进行过滤。类型：String 必选：否
 	// - status：按照告警状态进行过滤。类型：String 必选：否，0代表未恢复，1代表已恢复，2代表已失效
 	// - alarmLevel：按照告警等级进行过滤。类型：String 必选：否，0代表警告，1代表提醒，2代表紧急
-	//
+	// 
 	// 每次请求的Filters的上限为10，Filter.Values的上限为100。
 	Filters []*Filter `json:"Filters,omitnil,omitempty" name:"Filters"`
 }
 
 type DescribeAlertRecordHistoryRequest struct {
 	*tchttp.BaseRequest
-
+	
 	// 查询时间范围启始时间，毫秒级unix时间戳(ms)
 	From *uint64 `json:"From,omitnil,omitempty" name:"From"`
 
@@ -10024,14 +10024,14 @@ type DescribeAlertRecordHistoryRequest struct {
 	// - topicId：按照监控对象ID进行过滤。类型：String 必选：否
 	// - status：按照告警状态进行过滤。类型：String 必选：否，0代表未恢复，1代表已恢复，2代表已失效
 	// - alarmLevel：按照告警等级进行过滤。类型：String 必选：否，0代表警告，1代表提醒，2代表紧急
-	//
+	// 
 	// 每次请求的Filters的上限为10，Filter.Values的上限为100。
 	Filters []*Filter `json:"Filters,omitnil,omitempty" name:"Filters"`
 }
 
 func (r *DescribeAlertRecordHistoryRequest) ToJsonString() string {
-	b, _ := json.Marshal(r)
-	return string(b)
+    b, _ := json.Marshal(r)
+    return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -10070,8 +10070,8 @@ type DescribeAlertRecordHistoryResponse struct {
 }
 
 func (r *DescribeAlertRecordHistoryResponse) ToJsonString() string {
-	b, _ := json.Marshal(r)
-	return string(b)
+    b, _ := json.Marshal(r)
+    return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -10097,7 +10097,7 @@ type DescribeCloudProductLogTasksRequestParams struct {
 
 type DescribeCloudProductLogTasksRequest struct {
 	*tchttp.BaseRequest
-
+	
 	// <p>分页的偏移量，默认值为0。</p>
 	Offset *int64 `json:"Offset,omitnil,omitempty" name:"Offset"`
 
@@ -10112,8 +10112,8 @@ type DescribeCloudProductLogTasksRequest struct {
 }
 
 func (r *DescribeCloudProductLogTasksRequest) ToJsonString() string {
-	b, _ := json.Marshal(r)
-	return string(b)
+    b, _ := json.Marshal(r)
+    return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -10154,8 +10154,8 @@ type DescribeCloudProductLogTasksResponse struct {
 }
 
 func (r *DescribeCloudProductLogTasksResponse) ToJsonString() string {
-	b, _ := json.Marshal(r)
-	return string(b)
+    b, _ := json.Marshal(r)
+    return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -10182,7 +10182,7 @@ type DescribeClusterBaseMetricConfigsRequestParams struct {
 
 type DescribeClusterBaseMetricConfigsRequest struct {
 	*tchttp.BaseRequest
-
+	
 	// 机器组id
 	GroupId *string `json:"GroupId,omitnil,omitempty" name:"GroupId"`
 
@@ -10198,8 +10198,8 @@ type DescribeClusterBaseMetricConfigsRequest struct {
 }
 
 func (r *DescribeClusterBaseMetricConfigsRequest) ToJsonString() string {
-	b, _ := json.Marshal(r)
-	return string(b)
+    b, _ := json.Marshal(r)
+    return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -10238,8 +10238,8 @@ type DescribeClusterBaseMetricConfigsResponse struct {
 }
 
 func (r *DescribeClusterBaseMetricConfigsResponse) ToJsonString() string {
-	b, _ := json.Marshal(r)
-	return string(b)
+    b, _ := json.Marshal(r)
+    return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -10267,7 +10267,7 @@ type DescribeClusterMetricConfigsRequestParams struct {
 
 type DescribeClusterMetricConfigsRequest struct {
 	*tchttp.BaseRequest
-
+	
 	// 机器组id
 	GroupId *string `json:"GroupId,omitnil,omitempty" name:"GroupId"`
 
@@ -10284,8 +10284,8 @@ type DescribeClusterMetricConfigsRequest struct {
 }
 
 func (r *DescribeClusterMetricConfigsRequest) ToJsonString() string {
-	b, _ := json.Marshal(r)
-	return string(b)
+    b, _ := json.Marshal(r)
+    return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -10324,8 +10324,8 @@ type DescribeClusterMetricConfigsResponse struct {
 }
 
 func (r *DescribeClusterMetricConfigsResponse) ToJsonString() string {
-	b, _ := json.Marshal(r)
-	return string(b)
+    b, _ := json.Marshal(r)
+    return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -10341,22 +10341,22 @@ type DescribeConfigExtrasRequestParams struct {
 	// - 按照【特殊采集配置名称】进行模糊匹配过滤。
 	// - 类型：String
 	// - 示例：test-config
-	//
+	// 
 	// configExtraId
 	// - 按照【特殊采集配置ID】进行过滤。
 	// - 类型：String
 	// - 示例：3b83f9d6-3a4d-47f9-9b7f-285c868b2f9a
-	//
+	// 
 	// topicId
 	// - 按照【日志主题】进行过滤。
 	// - 类型：String
 	// - 示例：3581a3be-aa41-423b-995a-54ec84da6264
-	//
+	// 
 	// machineGroupId
 	// - 按照【机器组ID】进行过滤。
 	// - 类型：String
 	// - 示例：f948972f-a063-408c-a59f-8c3230bddaf6
-	//
+	// 
 	// 每次请求的Filters的上限为10，Filter.Values的上限为5。
 	Filters []*Filter `json:"Filters,omitnil,omitempty" name:"Filters"`
 
@@ -10369,28 +10369,28 @@ type DescribeConfigExtrasRequestParams struct {
 
 type DescribeConfigExtrasRequest struct {
 	*tchttp.BaseRequest
-
+	
 	// 过滤器，支持如下选项：
 	// name
 	// - 按照【特殊采集配置名称】进行模糊匹配过滤。
 	// - 类型：String
 	// - 示例：test-config
-	//
+	// 
 	// configExtraId
 	// - 按照【特殊采集配置ID】进行过滤。
 	// - 类型：String
 	// - 示例：3b83f9d6-3a4d-47f9-9b7f-285c868b2f9a
-	//
+	// 
 	// topicId
 	// - 按照【日志主题】进行过滤。
 	// - 类型：String
 	// - 示例：3581a3be-aa41-423b-995a-54ec84da6264
-	//
+	// 
 	// machineGroupId
 	// - 按照【机器组ID】进行过滤。
 	// - 类型：String
 	// - 示例：f948972f-a063-408c-a59f-8c3230bddaf6
-	//
+	// 
 	// 每次请求的Filters的上限为10，Filter.Values的上限为5。
 	Filters []*Filter `json:"Filters,omitnil,omitempty" name:"Filters"`
 
@@ -10402,8 +10402,8 @@ type DescribeConfigExtrasRequest struct {
 }
 
 func (r *DescribeConfigExtrasRequest) ToJsonString() string {
-	b, _ := json.Marshal(r)
-	return string(b)
+    b, _ := json.Marshal(r)
+    return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -10441,8 +10441,8 @@ type DescribeConfigExtrasResponse struct {
 }
 
 func (r *DescribeConfigExtrasResponse) ToJsonString() string {
-	b, _ := json.Marshal(r)
-	return string(b)
+    b, _ := json.Marshal(r)
+    return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -10460,15 +10460,15 @@ type DescribeConfigMachineGroupsRequestParams struct {
 
 type DescribeConfigMachineGroupsRequest struct {
 	*tchttp.BaseRequest
-
+	
 	// 采集配置ID
 	// - 通过[获取采集规则配置](https://cloud.tencent.com/document/product/614/58616)获取采集配置Id。
 	ConfigId *string `json:"ConfigId,omitnil,omitempty" name:"ConfigId"`
 }
 
 func (r *DescribeConfigMachineGroupsRequest) ToJsonString() string {
-	b, _ := json.Marshal(r)
-	return string(b)
+    b, _ := json.Marshal(r)
+    return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -10501,8 +10501,8 @@ type DescribeConfigMachineGroupsResponse struct {
 }
 
 func (r *DescribeConfigMachineGroupsResponse) ToJsonString() string {
-	b, _ := json.Marshal(r)
-	return string(b)
+    b, _ := json.Marshal(r)
+    return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -10518,20 +10518,20 @@ type DescribeConfigsRequestParams struct {
 	// - 类型：String
 	// - 必选：否
 	// - 示例：test-config
-	//
+	// 
 	// configId
 	// - 按照【采集配置ID】进行过滤。
 	// - 类型：String
 	// - 必选：否
 	// - 示例：3581a3be-aa41-423b-995a-54ec84da6264
-	//
+	// 
 	// topicId
 	// - 按照【日志主题】进行过滤。
 	// - 类型：String
 	// - 必选：否
 	// - 示例：3b83f9d6-3a4d-47f9-9b7f-285c868b2f9a
 	// - 通过[获取日志主题列表](https://cloud.tencent.com/document/product/614/56454)获取日志主题Id。
-	//
+	// 
 	// 每次请求的Filters的上限为10，Filter.Values的上限为5。
 	Filters []*Filter `json:"Filters,omitnil,omitempty" name:"Filters"`
 
@@ -10544,26 +10544,26 @@ type DescribeConfigsRequestParams struct {
 
 type DescribeConfigsRequest struct {
 	*tchttp.BaseRequest
-
+	
 	// configName
 	// - 按照【采集配置名称】进行模糊匹配过滤。
 	// - 类型：String
 	// - 必选：否
 	// - 示例：test-config
-	//
+	// 
 	// configId
 	// - 按照【采集配置ID】进行过滤。
 	// - 类型：String
 	// - 必选：否
 	// - 示例：3581a3be-aa41-423b-995a-54ec84da6264
-	//
+	// 
 	// topicId
 	// - 按照【日志主题】进行过滤。
 	// - 类型：String
 	// - 必选：否
 	// - 示例：3b83f9d6-3a4d-47f9-9b7f-285c868b2f9a
 	// - 通过[获取日志主题列表](https://cloud.tencent.com/document/product/614/56454)获取日志主题Id。
-	//
+	// 
 	// 每次请求的Filters的上限为10，Filter.Values的上限为5。
 	Filters []*Filter `json:"Filters,omitnil,omitempty" name:"Filters"`
 
@@ -10575,8 +10575,8 @@ type DescribeConfigsRequest struct {
 }
 
 func (r *DescribeConfigsRequest) ToJsonString() string {
-	b, _ := json.Marshal(r)
-	return string(b)
+    b, _ := json.Marshal(r)
+    return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -10614,8 +10614,8 @@ type DescribeConfigsResponse struct {
 }
 
 func (r *DescribeConfigsResponse) ToJsonString() string {
-	b, _ := json.Marshal(r)
-	return string(b)
+    b, _ := json.Marshal(r)
+    return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -10626,15 +10626,17 @@ func (r *DescribeConfigsResponse) FromJsonString(s string) error {
 
 // Predefined struct for user
 type DescribeConsoleSharingListRequestParams struct {
+
 }
 
 type DescribeConsoleSharingListRequest struct {
 	*tchttp.BaseRequest
+	
 }
 
 func (r *DescribeConsoleSharingListRequest) ToJsonString() string {
-	b, _ := json.Marshal(r)
-	return string(b)
+    b, _ := json.Marshal(r)
+    return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -10644,7 +10646,7 @@ func (r *DescribeConsoleSharingListRequest) FromJsonString(s string) error {
 	if err := json.Unmarshal([]byte(s), &f); err != nil {
 		return err
 	}
-
+	
 	if len(f) > 0 {
 		return tcerr.NewTencentCloudSDKError("ClientError.BuildRequestError", "DescribeConsoleSharingListRequest has unknown keys!", "")
 	}
@@ -10669,8 +10671,8 @@ type DescribeConsoleSharingListResponse struct {
 }
 
 func (r *DescribeConsoleSharingListResponse) ToJsonString() string {
-	b, _ := json.Marshal(r)
-	return string(b)
+    b, _ := json.Marshal(r)
+    return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -10693,7 +10695,7 @@ type DescribeConsolesRequestParams struct {
 
 type DescribeConsolesRequest struct {
 	*tchttp.BaseRequest
-
+	
 	// <p>分页的偏移量，默认值为0。</p>
 	Offset *int64 `json:"Offset,omitnil,omitempty" name:"Offset"`
 
@@ -10705,8 +10707,8 @@ type DescribeConsolesRequest struct {
 }
 
 func (r *DescribeConsolesRequest) ToJsonString() string {
-	b, _ := json.Marshal(r)
-	return string(b)
+    b, _ := json.Marshal(r)
+    return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -10743,8 +10745,8 @@ type DescribeConsolesResponse struct {
 }
 
 func (r *DescribeConsolesResponse) ToJsonString() string {
-	b, _ := json.Marshal(r)
-	return string(b)
+    b, _ := json.Marshal(r)
+    return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -10764,7 +10766,7 @@ type DescribeConsumerGroupsRequestParams struct {
 
 type DescribeConsumerGroupsRequest struct {
 	*tchttp.BaseRequest
-
+	
 	// 日志集Id（日志主题所属的日志集）
 	LogsetId *string `json:"LogsetId,omitnil,omitempty" name:"LogsetId"`
 
@@ -10773,8 +10775,8 @@ type DescribeConsumerGroupsRequest struct {
 }
 
 func (r *DescribeConsumerGroupsRequest) ToJsonString() string {
-	b, _ := json.Marshal(r)
-	return string(b)
+    b, _ := json.Marshal(r)
+    return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -10807,8 +10809,8 @@ type DescribeConsumerGroupsResponse struct {
 }
 
 func (r *DescribeConsumerGroupsResponse) ToJsonString() string {
-	b, _ := json.Marshal(r)
-	return string(b)
+    b, _ := json.Marshal(r)
+    return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -10837,7 +10839,7 @@ type DescribeConsumerOffsetsRequestParams struct {
 
 type DescribeConsumerOffsetsRequest struct {
 	*tchttp.BaseRequest
-
+	
 	// 日志主题对应的消费组标识
 	ConsumerGroup *string `json:"ConsumerGroup,omitnil,omitempty" name:"ConsumerGroup"`
 
@@ -10855,8 +10857,8 @@ type DescribeConsumerOffsetsRequest struct {
 }
 
 func (r *DescribeConsumerOffsetsRequest) ToJsonString() string {
-	b, _ := json.Marshal(r)
-	return string(b)
+    b, _ := json.Marshal(r)
+    return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -10895,8 +10897,8 @@ type DescribeConsumerOffsetsResponse struct {
 }
 
 func (r *DescribeConsumerOffsetsResponse) ToJsonString() string {
-	b, _ := json.Marshal(r)
-	return string(b)
+    b, _ := json.Marshal(r)
+    return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -10907,15 +10909,17 @@ func (r *DescribeConsumerOffsetsResponse) FromJsonString(s string) error {
 
 // Predefined struct for user
 type DescribeConsumerPreviewRequestParams struct {
+
 }
 
 type DescribeConsumerPreviewRequest struct {
 	*tchttp.BaseRequest
+	
 }
 
 func (r *DescribeConsumerPreviewRequest) ToJsonString() string {
-	b, _ := json.Marshal(r)
-	return string(b)
+    b, _ := json.Marshal(r)
+    return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -10925,7 +10929,7 @@ func (r *DescribeConsumerPreviewRequest) FromJsonString(s string) error {
 	if err := json.Unmarshal([]byte(s), &f); err != nil {
 		return err
 	}
-
+	
 	if len(f) > 0 {
 		return tcerr.NewTencentCloudSDKError("ClientError.BuildRequestError", "DescribeConsumerPreviewRequest has unknown keys!", "")
 	}
@@ -10944,8 +10948,8 @@ type DescribeConsumerPreviewResponse struct {
 }
 
 func (r *DescribeConsumerPreviewResponse) ToJsonString() string {
-	b, _ := json.Marshal(r)
-	return string(b)
+    b, _ := json.Marshal(r)
+    return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -10964,7 +10968,7 @@ type DescribeConsumerRequestParams struct {
 
 type DescribeConsumerRequest struct {
 	*tchttp.BaseRequest
-
+	
 	// 投递任务绑定的日志主题Id。
 	// - 通过 [获取日志主题列表](https://cloud.tencent.com/document/product/614/56454) 获取日志主题Id。
 	// - 通过 [创建日志主题](https://cloud.tencent.com/document/product/614/56456) 获取日志主题Id。
@@ -10972,8 +10976,8 @@ type DescribeConsumerRequest struct {
 }
 
 func (r *DescribeConsumerRequest) ToJsonString() string {
-	b, _ := json.Marshal(r)
-	return string(b)
+    b, _ := json.Marshal(r)
+    return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -11018,8 +11022,8 @@ type DescribeConsumerResponse struct {
 }
 
 func (r *DescribeConsumerResponse) ToJsonString() string {
-	b, _ := json.Marshal(r)
-	return string(b)
+    b, _ := json.Marshal(r)
+    return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -11034,18 +11038,18 @@ type DescribeConsumersRequestParams struct {
 	// 按照【投递规则ID】进行过滤。
 	// 类型：String
 	// 必选：否
-	//
+	// 
 	// - topicId
 	// 按照【日志主题】进行过滤。
 	// 类型：String
 	// 必选：否
-	//
+	// 
 	// - taskStatus
 	// 按照【任务运行状态】进行过滤。 支持`0`：停止，`1`：运行中，`2`：异常
 	// 类型：String
 	// 必选：否
-	//
-	//
+	// 
+	// 
 	// 每次请求的Filters的上限为10，Filter.Values的上限为10。
 	Filters []*Filter `json:"Filters,omitnil,omitempty" name:"Filters"`
 
@@ -11058,23 +11062,23 @@ type DescribeConsumersRequestParams struct {
 
 type DescribeConsumersRequest struct {
 	*tchttp.BaseRequest
-
+	
 	// - consumerId
 	// 按照【投递规则ID】进行过滤。
 	// 类型：String
 	// 必选：否
-	//
+	// 
 	// - topicId
 	// 按照【日志主题】进行过滤。
 	// 类型：String
 	// 必选：否
-	//
+	// 
 	// - taskStatus
 	// 按照【任务运行状态】进行过滤。 支持`0`：停止，`1`：运行中，`2`：异常
 	// 类型：String
 	// 必选：否
-	//
-	//
+	// 
+	// 
 	// 每次请求的Filters的上限为10，Filter.Values的上限为10。
 	Filters []*Filter `json:"Filters,omitnil,omitempty" name:"Filters"`
 
@@ -11086,8 +11090,8 @@ type DescribeConsumersRequest struct {
 }
 
 func (r *DescribeConsumersRequest) ToJsonString() string {
-	b, _ := json.Marshal(r)
-	return string(b)
+    b, _ := json.Marshal(r)
+    return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -11125,8 +11129,8 @@ type DescribeConsumersResponse struct {
 }
 
 func (r *DescribeConsumersResponse) ToJsonString() string {
-	b, _ := json.Marshal(r)
-	return string(b)
+    b, _ := json.Marshal(r)
+    return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -11150,7 +11154,7 @@ type DescribeCosRechargesRequestParams struct {
 
 type DescribeCosRechargesRequest struct {
 	*tchttp.BaseRequest
-
+	
 	// 日志主题Id。
 	// -  通过[获取日志主题列表](https://cloud.tencent.com/document/api/614/56454)获取日志主题Id。
 	TopicId *string `json:"TopicId,omitnil,omitempty" name:"TopicId"`
@@ -11163,8 +11167,8 @@ type DescribeCosRechargesRequest struct {
 }
 
 func (r *DescribeCosRechargesRequest) ToJsonString() string {
-	b, _ := json.Marshal(r)
-	return string(b)
+    b, _ := json.Marshal(r)
+    return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -11198,8 +11202,8 @@ type DescribeCosRechargesResponse struct {
 }
 
 func (r *DescribeCosRechargesResponse) ToJsonString() string {
-	b, _ := json.Marshal(r)
-	return string(b)
+    b, _ := json.Marshal(r)
+    return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -11211,10 +11215,10 @@ func (r *DescribeCosRechargesResponse) FromJsonString(s string) error {
 // Predefined struct for user
 type DescribeDashboardSubscribesRequestParams struct {
 	// dashboardId：按照【仪表盘id】进行过滤。类型：String必选：否
-	//
+	// 
 	// - 仪表盘id。通过 [获取仪表盘](https://cloud.tencent.com/document/api/614/95636)接口获取DashboardId。
 	// - 入参示例：dashboard-522a5609-1f41-4b11-8086-5afd1d7574f5
-	//
+	// 
 	// 每次请求的Filters的上限为10，Filter.Values的上限为100。
 	Filters []*Filter `json:"Filters,omitnil,omitempty" name:"Filters"`
 
@@ -11227,12 +11231,12 @@ type DescribeDashboardSubscribesRequestParams struct {
 
 type DescribeDashboardSubscribesRequest struct {
 	*tchttp.BaseRequest
-
+	
 	// dashboardId：按照【仪表盘id】进行过滤。类型：String必选：否
-	//
+	// 
 	// - 仪表盘id。通过 [获取仪表盘](https://cloud.tencent.com/document/api/614/95636)接口获取DashboardId。
 	// - 入参示例：dashboard-522a5609-1f41-4b11-8086-5afd1d7574f5
-	//
+	// 
 	// 每次请求的Filters的上限为10，Filter.Values的上限为100。
 	Filters []*Filter `json:"Filters,omitnil,omitempty" name:"Filters"`
 
@@ -11244,8 +11248,8 @@ type DescribeDashboardSubscribesRequest struct {
 }
 
 func (r *DescribeDashboardSubscribesRequest) ToJsonString() string {
-	b, _ := json.Marshal(r)
-	return string(b)
+    b, _ := json.Marshal(r)
+    return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -11282,8 +11286,8 @@ type DescribeDashboardSubscribesResponse struct {
 }
 
 func (r *DescribeDashboardSubscribesResponse) ToJsonString() string {
-	b, _ := json.Marshal(r)
-	return string(b)
+    b, _ := json.Marshal(r)
+    return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -11319,7 +11323,7 @@ type DescribeDashboardsRequestParams struct {
 	//         }
 	//     ]
 	//     ```
-	//
+	// 
 	// - tag:tagKey 按照【标签键值对】进行过滤。tagKey使用具体的标签键进行替换，类型：String，必选：否，
 	//     - 参考 [示例1](https://cloud.tencent.com/document/api/614/95636#4.-.E7.A4.BA.E4.BE.8B) 使用。
 	//     ```
@@ -11332,7 +11336,7 @@ type DescribeDashboardsRequestParams struct {
 	//         }
 	//     ]
 	//     ```
-	//
+	// 
 	// 每次请求的Filters的上限为10，Filter.Values的上限为100。
 	Filters []*Filter `json:"Filters,omitnil,omitempty" name:"Filters"`
 
@@ -11368,7 +11372,7 @@ type DescribeDashboardsRequestParams struct {
 
 type DescribeDashboardsRequest struct {
 	*tchttp.BaseRequest
-
+	
 	// 分页的偏移量，默认值为0。
 	Offset *int64 `json:"Offset,omitnil,omitempty" name:"Offset"`
 
@@ -11394,7 +11398,7 @@ type DescribeDashboardsRequest struct {
 	//         }
 	//     ]
 	//     ```
-	//
+	// 
 	// - tag:tagKey 按照【标签键值对】进行过滤。tagKey使用具体的标签键进行替换，类型：String，必选：否，
 	//     - 参考 [示例1](https://cloud.tencent.com/document/api/614/95636#4.-.E7.A4.BA.E4.BE.8B) 使用。
 	//     ```
@@ -11407,7 +11411,7 @@ type DescribeDashboardsRequest struct {
 	//         }
 	//     ]
 	//     ```
-	//
+	// 
 	// 每次请求的Filters的上限为10，Filter.Values的上限为100。
 	Filters []*Filter `json:"Filters,omitnil,omitempty" name:"Filters"`
 
@@ -11442,8 +11446,8 @@ type DescribeDashboardsRequest struct {
 }
 
 func (r *DescribeDashboardsRequest) ToJsonString() string {
-	b, _ := json.Marshal(r)
-	return string(b)
+    b, _ := json.Marshal(r)
+    return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -11481,8 +11485,8 @@ type DescribeDashboardsResponse struct {
 }
 
 func (r *DescribeDashboardsResponse) ToJsonString() string {
-	b, _ := json.Marshal(r)
-	return string(b)
+    b, _ := json.Marshal(r)
+    return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -11498,14 +11502,14 @@ type DescribeDataTransformInfoRequestParams struct {
 	// 类型：String
 	// 必选：否
 	// 示例：test-task
-	//
+	// 
 	// - taskId
 	// 按照【加工任务id】进行过滤。
 	// 类型：String
 	// 必选：否
 	// 示例：a3622556-6402-4942-b4ff-5ae32ec29810
 	// 数据加工任务ID- 通过[获取数据加工任务列表基本信息](https://cloud.tencent.com/document/product/614/72182)获取数据加工任务Id。
-	//
+	// 
 	// - topicId
 	// 按照【源topicId】进行过滤。
 	// 类型：String
@@ -11513,25 +11517,25 @@ type DescribeDataTransformInfoRequestParams struct {
 	// 示例：756cec3e-a0a5-44c3-85a8-090870582000
 	// 日志主题ID
 	// 通过[获取日志主题列表](https://cloud.tencent.com/document/product/614/56454)获取日志主题Id。
-	//
+	// 
 	// - status
 	// 按照【 任务运行状态】进行过滤。 1：准备中，2：运行中，3：停止中，4：已停止
 	// 类型：String
 	// 必选：否
 	// 示例：1
-	//
+	// 
 	// - hasServiceLog
 	// 按照【是否开启服务日志】进行过滤。 1：未开启，2：已开启
 	// 类型：String
 	// 必选：否
 	// 示例：1
-	//
+	// 
 	// - dstTopicType
 	// 按照【目标topic类型】进行过滤。  1：固定，2：动态
 	// 类型：String
 	// 必选：否
 	// 示例：1
-	//
+	// 
 	// 每次请求的Filters的上限为10，Filter.Values的上限为100。
 	Filters []*Filter `json:"Filters,omitnil,omitempty" name:"Filters"`
 
@@ -11551,20 +11555,20 @@ type DescribeDataTransformInfoRequestParams struct {
 
 type DescribeDataTransformInfoRequest struct {
 	*tchttp.BaseRequest
-
+	
 	// - taskName
 	// 按照【加工任务名称】进行过滤。
 	// 类型：String
 	// 必选：否
 	// 示例：test-task
-	//
+	// 
 	// - taskId
 	// 按照【加工任务id】进行过滤。
 	// 类型：String
 	// 必选：否
 	// 示例：a3622556-6402-4942-b4ff-5ae32ec29810
 	// 数据加工任务ID- 通过[获取数据加工任务列表基本信息](https://cloud.tencent.com/document/product/614/72182)获取数据加工任务Id。
-	//
+	// 
 	// - topicId
 	// 按照【源topicId】进行过滤。
 	// 类型：String
@@ -11572,25 +11576,25 @@ type DescribeDataTransformInfoRequest struct {
 	// 示例：756cec3e-a0a5-44c3-85a8-090870582000
 	// 日志主题ID
 	// 通过[获取日志主题列表](https://cloud.tencent.com/document/product/614/56454)获取日志主题Id。
-	//
+	// 
 	// - status
 	// 按照【 任务运行状态】进行过滤。 1：准备中，2：运行中，3：停止中，4：已停止
 	// 类型：String
 	// 必选：否
 	// 示例：1
-	//
+	// 
 	// - hasServiceLog
 	// 按照【是否开启服务日志】进行过滤。 1：未开启，2：已开启
 	// 类型：String
 	// 必选：否
 	// 示例：1
-	//
+	// 
 	// - dstTopicType
 	// 按照【目标topic类型】进行过滤。  1：固定，2：动态
 	// 类型：String
 	// 必选：否
 	// 示例：1
-	//
+	// 
 	// 每次请求的Filters的上限为10，Filter.Values的上限为100。
 	Filters []*Filter `json:"Filters,omitnil,omitempty" name:"Filters"`
 
@@ -11609,8 +11613,8 @@ type DescribeDataTransformInfoRequest struct {
 }
 
 func (r *DescribeDataTransformInfoRequest) ToJsonString() string {
-	b, _ := json.Marshal(r)
-	return string(b)
+    b, _ := json.Marshal(r)
+    return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -11649,8 +11653,8 @@ type DescribeDataTransformInfoResponse struct {
 }
 
 func (r *DescribeDataTransformInfoResponse) ToJsonString() string {
-	b, _ := json.Marshal(r)
-	return string(b)
+    b, _ := json.Marshal(r)
+    return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -11669,22 +11673,22 @@ type DescribeDlcDeliversRequestParams struct {
 	// 按照【任务id】进行过滤。
 	// 类型：String
 	// 必选：否
-	//
+	// 
 	// - name
 	// 按照【任务名称】进行过滤。
 	// 类型：String
 	// 必选：否
-	//
+	// 
 	// - tableName
 	// 按照【数据表】进行过滤。
 	// 类型：String
 	// 必选：否
-	//
+	// 
 	// - statusFlag
 	// 按照【状态】进行过滤。支持："1","2","3","4"。含义：1：RUNNING，2：STOPPED，3：FINISHED，4：FAILED
 	// 类型：String
 	// 必选：否
-	//
+	// 
 	// 每次请求的Filters的上限为10，Filter.Values的上限为10。
 	Filters []*Filter `json:"Filters,omitnil,omitempty" name:"Filters"`
 
@@ -11697,7 +11701,7 @@ type DescribeDlcDeliversRequestParams struct {
 
 type DescribeDlcDeliversRequest struct {
 	*tchttp.BaseRequest
-
+	
 	// 日志主题id。
 	// - 通过[获取日志主题列表](https://cloud.tencent.com/document/product/614/56454)获取日志主题Id。
 	TopicId *string `json:"TopicId,omitnil,omitempty" name:"TopicId"`
@@ -11706,22 +11710,22 @@ type DescribeDlcDeliversRequest struct {
 	// 按照【任务id】进行过滤。
 	// 类型：String
 	// 必选：否
-	//
+	// 
 	// - name
 	// 按照【任务名称】进行过滤。
 	// 类型：String
 	// 必选：否
-	//
+	// 
 	// - tableName
 	// 按照【数据表】进行过滤。
 	// 类型：String
 	// 必选：否
-	//
+	// 
 	// - statusFlag
 	// 按照【状态】进行过滤。支持："1","2","3","4"。含义：1：RUNNING，2：STOPPED，3：FINISHED，4：FAILED
 	// 类型：String
 	// 必选：否
-	//
+	// 
 	// 每次请求的Filters的上限为10，Filter.Values的上限为10。
 	Filters []*Filter `json:"Filters,omitnil,omitempty" name:"Filters"`
 
@@ -11733,8 +11737,8 @@ type DescribeDlcDeliversRequest struct {
 }
 
 func (r *DescribeDlcDeliversRequest) ToJsonString() string {
-	b, _ := json.Marshal(r)
-	return string(b)
+    b, _ := json.Marshal(r)
+    return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -11772,8 +11776,8 @@ type DescribeDlcDeliversResponse struct {
 }
 
 func (r *DescribeDlcDeliversResponse) ToJsonString() string {
-	b, _ := json.Marshal(r)
-	return string(b)
+    b, _ := json.Marshal(r)
+    return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -11810,7 +11814,7 @@ type DescribeEsRechargePreviewRequestParams struct {
 
 type DescribeEsRechargePreviewRequest struct {
 	*tchttp.BaseRequest
-
+	
 	// 名称：长度不超过64字符。
 	Name *string `json:"Name,omitnil,omitempty" name:"Name"`
 
@@ -11836,8 +11840,8 @@ type DescribeEsRechargePreviewRequest struct {
 }
 
 func (r *DescribeEsRechargePreviewRequest) ToJsonString() string {
-	b, _ := json.Marshal(r)
-	return string(b)
+    b, _ := json.Marshal(r)
+    return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -11875,8 +11879,8 @@ type DescribeEsRechargePreviewResponse struct {
 }
 
 func (r *DescribeEsRechargePreviewResponse) ToJsonString() string {
-	b, _ := json.Marshal(r)
-	return string(b)
+    b, _ := json.Marshal(r)
+    return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -11907,7 +11911,7 @@ type DescribeEsRechargesRequestParams struct {
 
 type DescribeEsRechargesRequest struct {
 	*tchttp.BaseRequest
-
+	
 	// 日志主题id。
 	// - 通过 [获取日志主题列表](https://cloud.tencent.com/document/product/614/56454) 获取日志主题Id。
 	// - 通过 [创建日志主题](https://cloud.tencent.com/document/product/614/56456) 获取日志主题Id。
@@ -11927,8 +11931,8 @@ type DescribeEsRechargesRequest struct {
 }
 
 func (r *DescribeEsRechargesRequest) ToJsonString() string {
-	b, _ := json.Marshal(r)
-	return string(b)
+    b, _ := json.Marshal(r)
+    return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -11966,8 +11970,8 @@ type DescribeEsRechargesResponse struct {
 }
 
 func (r *DescribeEsRechargesResponse) ToJsonString() string {
-	b, _ := json.Marshal(r)
-	return string(b)
+    b, _ := json.Marshal(r)
+    return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -11991,7 +11995,7 @@ type DescribeExportsRequestParams struct {
 
 type DescribeExportsRequest struct {
 	*tchttp.BaseRequest
-
+	
 	// 日志主题Id
 	// - 通过[获取日志主题列表](https://cloud.tencent.com/document/product/614/56454)获取日志主题Id。
 	TopicId *string `json:"TopicId,omitnil,omitempty" name:"TopicId"`
@@ -12004,8 +12008,8 @@ type DescribeExportsRequest struct {
 }
 
 func (r *DescribeExportsRequest) ToJsonString() string {
-	b, _ := json.Marshal(r)
-	return string(b)
+    b, _ := json.Marshal(r)
+    return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -12042,8 +12046,8 @@ type DescribeExportsResponse struct {
 }
 
 func (r *DescribeExportsResponse) ToJsonString() string {
-	b, _ := json.Marshal(r)
-	return string(b)
+    b, _ := json.Marshal(r)
+    return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -12061,7 +12065,7 @@ type DescribeHostMetricConfigsRequestParams struct {
 
 	// - configId按照【配置id】进行过滤。类型：String  必选：否
 	// - name按照【配置名称】进行过滤。类型：String 必选：否
-	//
+	// 
 	// 每次请求的Filters的上限为10，Filter.Values的上限为10。
 	Filters []*Filter `json:"Filters,omitnil,omitempty" name:"Filters"`
 
@@ -12074,7 +12078,7 @@ type DescribeHostMetricConfigsRequestParams struct {
 
 type DescribeHostMetricConfigsRequest struct {
 	*tchttp.BaseRequest
-
+	
 	// 指标日志主题id。
 	// - 通过 [获取日志主题列表](https://cloud.tencent.com/document/product/614/56454) 获取日志主题Id。注意BizType 0:日志主题（默认值）， 1:指标主题
 	// - 通过 [创建日志主题](https://cloud.tencent.com/document/product/614/56456) 获取日志主题Id。注意BizType 0:日志主题（默认值）， 1:指标主题
@@ -12082,7 +12086,7 @@ type DescribeHostMetricConfigsRequest struct {
 
 	// - configId按照【配置id】进行过滤。类型：String  必选：否
 	// - name按照【配置名称】进行过滤。类型：String 必选：否
-	//
+	// 
 	// 每次请求的Filters的上限为10，Filter.Values的上限为10。
 	Filters []*Filter `json:"Filters,omitnil,omitempty" name:"Filters"`
 
@@ -12094,8 +12098,8 @@ type DescribeHostMetricConfigsRequest struct {
 }
 
 func (r *DescribeHostMetricConfigsRequest) ToJsonString() string {
-	b, _ := json.Marshal(r)
-	return string(b)
+    b, _ := json.Marshal(r)
+    return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -12133,8 +12137,8 @@ type DescribeHostMetricConfigsResponse struct {
 }
 
 func (r *DescribeHostMetricConfigsResponse) ToJsonString() string {
-	b, _ := json.Marshal(r)
-	return string(b)
+    b, _ := json.Marshal(r)
+    return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -12151,14 +12155,14 @@ type DescribeIndexRequestParams struct {
 
 type DescribeIndexRequest struct {
 	*tchttp.BaseRequest
-
+	
 	// <p>日志主题Id。</p><ul><li>通过<a href="https://cloud.tencent.com/document/product/614/56454">获取日志主题列表</a>获取日志主题Id。</li></ul>
 	TopicId *string `json:"TopicId,omitnil,omitempty" name:"TopicId"`
 }
 
 func (r *DescribeIndexRequest) ToJsonString() string {
-	b, _ := json.Marshal(r)
-	return string(b)
+    b, _ := json.Marshal(r)
+    return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -12209,8 +12213,8 @@ type DescribeIndexResponse struct {
 }
 
 func (r *DescribeIndexResponse) ToJsonString() string {
-	b, _ := json.Marshal(r)
-	return string(b)
+    b, _ := json.Marshal(r)
+    return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -12231,7 +12235,7 @@ type DescribeKafkaConsumerGroupDetailRequestParams struct {
 
 type DescribeKafkaConsumerGroupDetailRequest struct {
 	*tchttp.BaseRequest
-
+	
 	// 日志主题id。
 	// - 通过[获取日志主题列表](https://cloud.tencent.com/document/product/614/56454)获取日志主题Id。
 	TopicId *string `json:"TopicId,omitnil,omitempty" name:"TopicId"`
@@ -12241,8 +12245,8 @@ type DescribeKafkaConsumerGroupDetailRequest struct {
 }
 
 func (r *DescribeKafkaConsumerGroupDetailRequest) ToJsonString() string {
-	b, _ := json.Marshal(r)
-	return string(b)
+    b, _ := json.Marshal(r)
+    return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -12288,8 +12292,8 @@ type DescribeKafkaConsumerGroupDetailResponse struct {
 }
 
 func (r *DescribeKafkaConsumerGroupDetailResponse) ToJsonString() string {
-	b, _ := json.Marshal(r)
-	return string(b)
+    b, _ := json.Marshal(r)
+    return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -12309,7 +12313,7 @@ type DescribeKafkaConsumerGroupListRequestParams struct {
 	// 类型：String
 	// 必选：否
 	// 示例：消费组1
-	//
+	// 
 	// 每次请求的Filters的上限为10，Filter.Values的上限为10。
 	Filters []*Filter `json:"Filters,omitnil,omitempty" name:"Filters"`
 
@@ -12322,7 +12326,7 @@ type DescribeKafkaConsumerGroupListRequestParams struct {
 
 type DescribeKafkaConsumerGroupListRequest struct {
 	*tchttp.BaseRequest
-
+	
 	// 日志主题id。
 	// - 通过[获取日志主题列表](https://cloud.tencent.com/document/product/614/56454)获取日志主题Id。
 	TopicId *string `json:"TopicId,omitnil,omitempty" name:"TopicId"`
@@ -12332,7 +12336,7 @@ type DescribeKafkaConsumerGroupListRequest struct {
 	// 类型：String
 	// 必选：否
 	// 示例：消费组1
-	//
+	// 
 	// 每次请求的Filters的上限为10，Filter.Values的上限为10。
 	Filters []*Filter `json:"Filters,omitnil,omitempty" name:"Filters"`
 
@@ -12344,8 +12348,8 @@ type DescribeKafkaConsumerGroupListRequest struct {
 }
 
 func (r *DescribeKafkaConsumerGroupListRequest) ToJsonString() string {
-	b, _ := json.Marshal(r)
-	return string(b)
+    b, _ := json.Marshal(r)
+    return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -12389,8 +12393,8 @@ type DescribeKafkaConsumerGroupListResponse struct {
 }
 
 func (r *DescribeKafkaConsumerGroupListResponse) ToJsonString() string {
-	b, _ := json.Marshal(r)
-	return string(b)
+    b, _ := json.Marshal(r)
+    return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -12401,15 +12405,17 @@ func (r *DescribeKafkaConsumerGroupListResponse) FromJsonString(s string) error 
 
 // Predefined struct for user
 type DescribeKafkaConsumerPreviewRequestParams struct {
+
 }
 
 type DescribeKafkaConsumerPreviewRequest struct {
 	*tchttp.BaseRequest
+	
 }
 
 func (r *DescribeKafkaConsumerPreviewRequest) ToJsonString() string {
-	b, _ := json.Marshal(r)
-	return string(b)
+    b, _ := json.Marshal(r)
+    return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -12419,7 +12425,7 @@ func (r *DescribeKafkaConsumerPreviewRequest) FromJsonString(s string) error {
 	if err := json.Unmarshal([]byte(s), &f); err != nil {
 		return err
 	}
-
+	
 	if len(f) > 0 {
 		return tcerr.NewTencentCloudSDKError("ClientError.BuildRequestError", "DescribeKafkaConsumerPreviewRequest has unknown keys!", "")
 	}
@@ -12438,8 +12444,8 @@ type DescribeKafkaConsumerPreviewResponse struct {
 }
 
 func (r *DescribeKafkaConsumerPreviewResponse) ToJsonString() string {
-	b, _ := json.Marshal(r)
-	return string(b)
+    b, _ := json.Marshal(r)
+    return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -12456,14 +12462,14 @@ type DescribeKafkaConsumerRequestParams struct {
 
 type DescribeKafkaConsumerRequest struct {
 	*tchttp.BaseRequest
-
+	
 	// <p>日志主题Id。</p><ul><li>通过 <a href="https://cloud.tencent.com/document/product/614/56454">获取日志主题列表</a> 获取日志主题Id。</li><li>通过 <a href="https://cloud.tencent.com/document/product/614/56456">创建日志主题</a> 获取日志主题Id。</li></ul>
 	FromTopicId *string `json:"FromTopicId,omitnil,omitempty" name:"FromTopicId"`
 }
 
 func (r *DescribeKafkaConsumerRequest) ToJsonString() string {
-	b, _ := json.Marshal(r)
-	return string(b)
+    b, _ := json.Marshal(r)
+    return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -12510,8 +12516,8 @@ type DescribeKafkaConsumerResponse struct {
 }
 
 func (r *DescribeKafkaConsumerResponse) ToJsonString() string {
-	b, _ := json.Marshal(r)
-	return string(b)
+    b, _ := json.Marshal(r)
+    return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -12522,15 +12528,17 @@ func (r *DescribeKafkaConsumerResponse) FromJsonString(s string) error {
 
 // Predefined struct for user
 type DescribeKafkaConsumerTopicsRequestParams struct {
+
 }
 
 type DescribeKafkaConsumerTopicsRequest struct {
 	*tchttp.BaseRequest
+	
 }
 
 func (r *DescribeKafkaConsumerTopicsRequest) ToJsonString() string {
-	b, _ := json.Marshal(r)
-	return string(b)
+    b, _ := json.Marshal(r)
+    return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -12540,7 +12548,7 @@ func (r *DescribeKafkaConsumerTopicsRequest) FromJsonString(s string) error {
 	if err := json.Unmarshal([]byte(s), &f); err != nil {
 		return err
 	}
-
+	
 	if len(f) > 0 {
 		return tcerr.NewTencentCloudSDKError("ClientError.BuildRequestError", "DescribeKafkaConsumerTopicsRequest has unknown keys!", "")
 	}
@@ -12559,8 +12567,8 @@ type DescribeKafkaConsumerTopicsResponse struct {
 }
 
 func (r *DescribeKafkaConsumerTopicsResponse) ToJsonString() string {
-	b, _ := json.Marshal(r)
-	return string(b)
+    b, _ := json.Marshal(r)
+    return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -12586,7 +12594,7 @@ type DescribeKafkaRechargesRequestParams struct {
 
 type DescribeKafkaRechargesRequest struct {
 	*tchttp.BaseRequest
-
+	
 	// 日志主题Id。
 	// - 通过[获取日志主题列表](https://cloud.tencent.com/document/product/614/56454)获取日志主题Id。
 	TopicId *string `json:"TopicId,omitnil,omitempty" name:"TopicId"`
@@ -12601,8 +12609,8 @@ type DescribeKafkaRechargesRequest struct {
 }
 
 func (r *DescribeKafkaRechargesRequest) ToJsonString() string {
-	b, _ := json.Marshal(r)
-	return string(b)
+    b, _ := json.Marshal(r)
+    return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -12639,8 +12647,8 @@ type DescribeKafkaRechargesResponse struct {
 }
 
 func (r *DescribeKafkaRechargesResponse) ToJsonString() string {
-	b, _ := json.Marshal(r)
-	return string(b)
+    b, _ := json.Marshal(r)
+    return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -12692,7 +12700,7 @@ type DescribeLogContextRequestParams struct {
 
 type DescribeLogContextRequest struct {
 	*tchttp.BaseRequest
-
+	
 	// 要查询的日志主题Id。
 	// - 通过 [获取日志主题列表](https://cloud.tencent.com/document/product/614/56454) 获取日志主题Id。
 	// - 通过 [创建日志主题](https://cloud.tencent.com/document/product/614/56456) 获取日志主题Id。
@@ -12733,8 +12741,8 @@ type DescribeLogContextRequest struct {
 }
 
 func (r *DescribeLogContextRequest) ToJsonString() string {
-	b, _ := json.Marshal(r)
-	return string(b)
+    b, _ := json.Marshal(r)
+    return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -12780,8 +12788,8 @@ type DescribeLogContextResponse struct {
 }
 
 func (r *DescribeLogContextResponse) ToJsonString() string {
-	b, _ := json.Marshal(r)
-	return string(b)
+    b, _ := json.Marshal(r)
+    return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -12818,7 +12826,7 @@ type DescribeLogHistogramRequestParams struct {
 
 type DescribeLogHistogramRequest struct {
 	*tchttp.BaseRequest
-
+	
 	// 要查询的日志的起始时间，Unix时间戳，单位ms
 	From *int64 `json:"From,omitnil,omitempty" name:"From"`
 
@@ -12844,8 +12852,8 @@ type DescribeLogHistogramRequest struct {
 }
 
 func (r *DescribeLogHistogramRequest) ToJsonString() string {
-	b, _ := json.Marshal(r)
-	return string(b)
+    b, _ := json.Marshal(r)
+    return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -12888,8 +12896,8 @@ type DescribeLogHistogramResponse struct {
 }
 
 func (r *DescribeLogHistogramResponse) ToJsonString() string {
-	b, _ := json.Marshal(r)
-	return string(b)
+    b, _ := json.Marshal(r)
+    return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -12910,17 +12918,17 @@ type DescribeLogsetsRequestParams struct {
 	// - 类型：String
 	// - 必选：否
 	// - 通过 [获取日志集列表](https://cloud.tencent.com/document/product/614/58624)获取日志集Id。
-	//
+	// 
 	// tagKey
 	// - 按照【标签键】进行过滤。
 	// - 类型：String
 	// - 必选：否
-	//
+	// 
 	// tag:tagKey
 	// - 按照【标签键值对】进行过滤。tagKey使用具体的标签键进行替换。
 	// - 类型：String
 	// - 必选：否
-	//
+	// 
 	// 每次请求的Filters的上限为10，Filter.Values的上限为5。
 	Filters []*Filter `json:"Filters,omitnil,omitempty" name:"Filters"`
 
@@ -12933,7 +12941,7 @@ type DescribeLogsetsRequestParams struct {
 
 type DescribeLogsetsRequest struct {
 	*tchttp.BaseRequest
-
+	
 	// logsetName
 	// - 按照【日志集名称】进行过滤。
 	// - 类型：String
@@ -12944,17 +12952,17 @@ type DescribeLogsetsRequest struct {
 	// - 类型：String
 	// - 必选：否
 	// - 通过 [获取日志集列表](https://cloud.tencent.com/document/product/614/58624)获取日志集Id。
-	//
+	// 
 	// tagKey
 	// - 按照【标签键】进行过滤。
 	// - 类型：String
 	// - 必选：否
-	//
+	// 
 	// tag:tagKey
 	// - 按照【标签键值对】进行过滤。tagKey使用具体的标签键进行替换。
 	// - 类型：String
 	// - 必选：否
-	//
+	// 
 	// 每次请求的Filters的上限为10，Filter.Values的上限为5。
 	Filters []*Filter `json:"Filters,omitnil,omitempty" name:"Filters"`
 
@@ -12966,8 +12974,8 @@ type DescribeLogsetsRequest struct {
 }
 
 func (r *DescribeLogsetsRequest) ToJsonString() string {
-	b, _ := json.Marshal(r)
-	return string(b)
+    b, _ := json.Marshal(r)
+    return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -13004,8 +13012,8 @@ type DescribeLogsetsResponse struct {
 }
 
 func (r *DescribeLogsetsResponse) ToJsonString() string {
-	b, _ := json.Marshal(r)
-	return string(b)
+    b, _ := json.Marshal(r)
+    return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -13023,15 +13031,15 @@ type DescribeMachineGroupConfigsRequestParams struct {
 
 type DescribeMachineGroupConfigsRequest struct {
 	*tchttp.BaseRequest
-
+	
 	// 机器组ID
 	// - 通过[获取机器组列表](https://cloud.tencent.com/document/api/614/56438)获取机器组Id。
 	GroupId *string `json:"GroupId,omitnil,omitempty" name:"GroupId"`
 }
 
 func (r *DescribeMachineGroupConfigsRequest) ToJsonString() string {
-	b, _ := json.Marshal(r)
-	return string(b)
+    b, _ := json.Marshal(r)
+    return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -13064,8 +13072,8 @@ type DescribeMachineGroupConfigsResponse struct {
 }
 
 func (r *DescribeMachineGroupConfigsResponse) ToJsonString() string {
-	b, _ := json.Marshal(r)
-	return string(b)
+    b, _ := json.Marshal(r)
+    return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -13081,27 +13089,27 @@ type DescribeMachineGroupsRequestParams struct {
 	// - 按照【机器组名称】进行过滤。
 	// - 类型：String
 	// - 必选：否
-	//
+	// 
 	// machineGroupId
 	// - 按照【机器组ID】进行过滤。
 	// - 类型：String
 	// - 必选：否
-	//
+	// 
 	// osType
 	// - 按照【操作系统类型】进行过滤。0： Linux；1： Windows
 	// - 类型：Int
 	// - 必选：否
-	//
+	// 
 	// tagKey
 	// - 按照【标签键】进行过滤。
 	// - 类型：String
 	// - 必选：否
-	//
+	// 
 	// tag:tagKey
 	// - 按照【标签键值对】进行过滤。tagKey使用具体的标签键进行替换。
 	// - 类型：String
 	// - 必选：否
-	//
+	// 
 	// 每次请求的Filters的上限为10，Filter.Values的上限为5。
 	Filters []*Filter `json:"Filters,omitnil,omitempty" name:"Filters"`
 
@@ -13114,33 +13122,33 @@ type DescribeMachineGroupsRequestParams struct {
 
 type DescribeMachineGroupsRequest struct {
 	*tchttp.BaseRequest
-
+	
 	// 过滤条件
 	// machineGroupName
 	// - 按照【机器组名称】进行过滤。
 	// - 类型：String
 	// - 必选：否
-	//
+	// 
 	// machineGroupId
 	// - 按照【机器组ID】进行过滤。
 	// - 类型：String
 	// - 必选：否
-	//
+	// 
 	// osType
 	// - 按照【操作系统类型】进行过滤。0： Linux；1： Windows
 	// - 类型：Int
 	// - 必选：否
-	//
+	// 
 	// tagKey
 	// - 按照【标签键】进行过滤。
 	// - 类型：String
 	// - 必选：否
-	//
+	// 
 	// tag:tagKey
 	// - 按照【标签键值对】进行过滤。tagKey使用具体的标签键进行替换。
 	// - 类型：String
 	// - 必选：否
-	//
+	// 
 	// 每次请求的Filters的上限为10，Filter.Values的上限为5。
 	Filters []*Filter `json:"Filters,omitnil,omitempty" name:"Filters"`
 
@@ -13152,8 +13160,8 @@ type DescribeMachineGroupsRequest struct {
 }
 
 func (r *DescribeMachineGroupsRequest) ToJsonString() string {
-	b, _ := json.Marshal(r)
-	return string(b)
+    b, _ := json.Marshal(r)
+    return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -13190,8 +13198,8 @@ type DescribeMachineGroupsResponse struct {
 }
 
 func (r *DescribeMachineGroupsResponse) ToJsonString() string {
-	b, _ := json.Marshal(r)
-	return string(b)
+    b, _ := json.Marshal(r)
+    return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -13203,7 +13211,7 @@ func (r *DescribeMachineGroupsResponse) FromJsonString(s string) error {
 // Predefined struct for user
 type DescribeMachinesRequestParams struct {
 	// 查询的机器组ID。
-	//
+	// 
 	// - 通过[获取机器组列表](https://cloud.tencent.com/document/api/614/56438)获取机器组ID。
 	GroupId *string `json:"GroupId,omitnil,omitempty" name:"GroupId"`
 
@@ -13211,29 +13219,29 @@ type DescribeMachinesRequestParams struct {
 	// - 按照ip进行过滤。
 	// - 类型：String
 	// - 必选：否
-	//
+	// 
 	// instance
 	// - 按照实例id进行过滤。
 	// - 类型：String
 	// - 必选：否
-	//
+	// 
 	// version
 	// - 按照LogListener版本进行过滤。
 	// - 类型：String
 	// - 必选：否
-	//
+	// 
 	// status
 	// - 按照机器状态进行过滤。
 	// - 类型：String
 	// - 必选：否
 	// - 可选值：0：离线，1：正常
-	//
+	// 
 	// offlineTime
 	// - 按照机器离线时间进行过滤。
 	// - 类型：String
 	// - 必选：否
 	// - -可选值：0：无离线时间，12：12小时内，24：一天内，48：两天内，99：两天前
-	//
+	// 
 	// 每次请求的Filters的上限为10，Filter.Values的上限为100。
 	Filters []*Filter `json:"Filters,omitnil,omitempty" name:"Filters"`
 
@@ -13246,9 +13254,9 @@ type DescribeMachinesRequestParams struct {
 
 type DescribeMachinesRequest struct {
 	*tchttp.BaseRequest
-
+	
 	// 查询的机器组ID。
-	//
+	// 
 	// - 通过[获取机器组列表](https://cloud.tencent.com/document/api/614/56438)获取机器组ID。
 	GroupId *string `json:"GroupId,omitnil,omitempty" name:"GroupId"`
 
@@ -13256,29 +13264,29 @@ type DescribeMachinesRequest struct {
 	// - 按照ip进行过滤。
 	// - 类型：String
 	// - 必选：否
-	//
+	// 
 	// instance
 	// - 按照实例id进行过滤。
 	// - 类型：String
 	// - 必选：否
-	//
+	// 
 	// version
 	// - 按照LogListener版本进行过滤。
 	// - 类型：String
 	// - 必选：否
-	//
+	// 
 	// status
 	// - 按照机器状态进行过滤。
 	// - 类型：String
 	// - 必选：否
 	// - 可选值：0：离线，1：正常
-	//
+	// 
 	// offlineTime
 	// - 按照机器离线时间进行过滤。
 	// - 类型：String
 	// - 必选：否
 	// - -可选值：0：无离线时间，12：12小时内，24：一天内，48：两天内，99：两天前
-	//
+	// 
 	// 每次请求的Filters的上限为10，Filter.Values的上限为100。
 	Filters []*Filter `json:"Filters,omitnil,omitempty" name:"Filters"`
 
@@ -13290,8 +13298,8 @@ type DescribeMachinesRequest struct {
 }
 
 func (r *DescribeMachinesRequest) ToJsonString() string {
-	b, _ := json.Marshal(r)
-	return string(b)
+    b, _ := json.Marshal(r)
+    return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -13344,8 +13352,8 @@ type DescribeMachinesResponse struct {
 }
 
 func (r *DescribeMachinesResponse) ToJsonString() string {
-	b, _ := json.Marshal(r)
-	return string(b)
+    b, _ := json.Marshal(r)
+    return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -13356,15 +13364,17 @@ func (r *DescribeMachinesResponse) FromJsonString(s string) error {
 
 // Predefined struct for user
 type DescribeMetricCorrectDimensionRequestParams struct {
+
 }
 
 type DescribeMetricCorrectDimensionRequest struct {
 	*tchttp.BaseRequest
+	
 }
 
 func (r *DescribeMetricCorrectDimensionRequest) ToJsonString() string {
-	b, _ := json.Marshal(r)
-	return string(b)
+    b, _ := json.Marshal(r)
+    return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -13374,7 +13384,7 @@ func (r *DescribeMetricCorrectDimensionRequest) FromJsonString(s string) error {
 	if err := json.Unmarshal([]byte(s), &f); err != nil {
 		return err
 	}
-
+	
 	if len(f) > 0 {
 		return tcerr.NewTencentCloudSDKError("ClientError.BuildRequestError", "DescribeMetricCorrectDimensionRequest has unknown keys!", "")
 	}
@@ -13393,8 +13403,8 @@ type DescribeMetricCorrectDimensionResponse struct {
 }
 
 func (r *DescribeMetricCorrectDimensionResponse) ToJsonString() string {
-	b, _ := json.Marshal(r)
-	return string(b)
+    b, _ := json.Marshal(r)
+    return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -13417,7 +13427,7 @@ type DescribeMetricSubscribePreviewRequestParams struct {
 
 type DescribeMetricSubscribePreviewRequest struct {
 	*tchttp.BaseRequest
-
+	
 	// 云产品命名空间。
 	Namespace *string `json:"Namespace,omitnil,omitempty" name:"Namespace"`
 
@@ -13429,8 +13439,8 @@ type DescribeMetricSubscribePreviewRequest struct {
 }
 
 func (r *DescribeMetricSubscribePreviewRequest) ToJsonString() string {
-	b, _ := json.Marshal(r)
-	return string(b)
+    b, _ := json.Marshal(r)
+    return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -13476,8 +13486,8 @@ type DescribeMetricSubscribePreviewResponse struct {
 }
 
 func (r *DescribeMetricSubscribePreviewResponse) ToJsonString() string {
-	b, _ := json.Marshal(r)
-	return string(b)
+    b, _ := json.Marshal(r)
+    return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -13506,7 +13516,7 @@ type DescribeMetricSubscribesRequestParams struct {
 
 type DescribeMetricSubscribesRequest struct {
 	*tchttp.BaseRequest
-
+	
 	// 日志主题id
 	TopicId *string `json:"TopicId,omitnil,omitempty" name:"TopicId"`
 
@@ -13524,8 +13534,8 @@ type DescribeMetricSubscribesRequest struct {
 }
 
 func (r *DescribeMetricSubscribesRequest) ToJsonString() string {
-	b, _ := json.Marshal(r)
-	return string(b)
+    b, _ := json.Marshal(r)
+    return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -13563,8 +13573,8 @@ type DescribeMetricSubscribesResponse struct {
 }
 
 func (r *DescribeMetricSubscribesResponse) ToJsonString() string {
-	b, _ := json.Marshal(r)
-	return string(b)
+    b, _ := json.Marshal(r)
+    return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -13581,14 +13591,14 @@ type DescribeNetworkApplicationDetailRequestParams struct {
 
 type DescribeNetworkApplicationDetailRequest struct {
 	*tchttp.BaseRequest
-
+	
 	// <p>网络应用id</p>
 	NetworkAppId *string `json:"NetworkAppId,omitnil,omitempty" name:"NetworkAppId"`
 }
 
 func (r *DescribeNetworkApplicationDetailRequest) ToJsonString() string {
-	b, _ := json.Marshal(r)
-	return string(b)
+    b, _ := json.Marshal(r)
+    return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -13620,8 +13630,8 @@ type DescribeNetworkApplicationDetailResponse struct {
 }
 
 func (r *DescribeNetworkApplicationDetailResponse) ToJsonString() string {
-	b, _ := json.Marshal(r)
-	return string(b)
+    b, _ := json.Marshal(r)
+    return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -13644,7 +13654,7 @@ type DescribeNetworkApplicationsRequestParams struct {
 
 type DescribeNetworkApplicationsRequest struct {
 	*tchttp.BaseRequest
-
+	
 	// <p>过滤项</p><ul><li><p>name<br>按照【任务名称】进行过滤。模糊匹配方式查询。<br>类型：String<br>必选：否</p></li><li><p>networkAppId<br>按照【网络应用id】进行过滤。<br>类型：String<br>必选：否</p></li></ul><p>每次请求的Filters的上限为10，Filter.Values的上限为10。</p>
 	Filters []*Filter `json:"Filters,omitnil,omitempty" name:"Filters"`
 
@@ -13656,8 +13666,8 @@ type DescribeNetworkApplicationsRequest struct {
 }
 
 func (r *DescribeNetworkApplicationsRequest) ToJsonString() string {
-	b, _ := json.Marshal(r)
-	return string(b)
+    b, _ := json.Marshal(r)
+    return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -13694,8 +13704,8 @@ type DescribeNetworkApplicationsResponse struct {
 }
 
 func (r *DescribeNetworkApplicationsResponse) ToJsonString() string {
-	b, _ := json.Marshal(r)
-	return string(b)
+    b, _ := json.Marshal(r)
+    return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -13728,7 +13738,7 @@ type DescribeNoticeContentsRequestParams struct {
 
 type DescribeNoticeContentsRequest struct {
 	*tchttp.BaseRequest
-
+	
 	// <li> name
 	// 按照【通知内容模板名称】进行过滤。
 	// 类型：String
@@ -13750,8 +13760,8 @@ type DescribeNoticeContentsRequest struct {
 }
 
 func (r *DescribeNoticeContentsRequest) ToJsonString() string {
-	b, _ := json.Marshal(r)
-	return string(b)
+    b, _ := json.Marshal(r)
+    return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -13788,8 +13798,8 @@ type DescribeNoticeContentsResponse struct {
 }
 
 func (r *DescribeNoticeContentsResponse) ToJsonString() string {
-	b, _ := json.Marshal(r)
-	return string(b)
+    b, _ := json.Marshal(r)
+    return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -13807,15 +13817,15 @@ type DescribePartitionsRequestParams struct {
 
 type DescribePartitionsRequest struct {
 	*tchttp.BaseRequest
-
+	
 	// 日志主题Id
 	// - 通过[获取日志主题列表](https://cloud.tencent.com/document/product/614/56454)获取日志主题Id。
 	TopicId *string `json:"TopicId,omitnil,omitempty" name:"TopicId"`
 }
 
 func (r *DescribePartitionsRequest) ToJsonString() string {
-	b, _ := json.Marshal(r)
-	return string(b)
+    b, _ := json.Marshal(r)
+    return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -13847,8 +13857,8 @@ type DescribePartitionsResponse struct {
 }
 
 func (r *DescribePartitionsResponse) ToJsonString() string {
-	b, _ := json.Marshal(r)
-	return string(b)
+    b, _ := json.Marshal(r)
+    return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -13877,7 +13887,7 @@ type DescribeRebuildIndexTasksRequestParams struct {
 
 type DescribeRebuildIndexTasksRequest struct {
 	*tchttp.BaseRequest
-
+	
 	// <p>日志主题ID</p>
 	TopicId *string `json:"TopicId,omitnil,omitempty" name:"TopicId"`
 
@@ -13895,8 +13905,8 @@ type DescribeRebuildIndexTasksRequest struct {
 }
 
 func (r *DescribeRebuildIndexTasksRequest) ToJsonString() string {
-	b, _ := json.Marshal(r)
-	return string(b)
+    b, _ := json.Marshal(r)
+    return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -13932,8 +13942,8 @@ type DescribeRebuildIndexTasksResponse struct {
 }
 
 func (r *DescribeRebuildIndexTasksResponse) ToJsonString() string {
-	b, _ := json.Marshal(r)
-	return string(b)
+    b, _ := json.Marshal(r)
+    return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -13959,7 +13969,7 @@ type DescribeRecordingRuleTaskRequestParams struct {
 
 type DescribeRecordingRuleTaskRequest struct {
 	*tchttp.BaseRequest
-
+	
 	// <p>源指标主题id</p>
 	TopicId *string `json:"TopicId,omitnil,omitempty" name:"TopicId"`
 
@@ -13974,8 +13984,8 @@ type DescribeRecordingRuleTaskRequest struct {
 }
 
 func (r *DescribeRecordingRuleTaskRequest) ToJsonString() string {
-	b, _ := json.Marshal(r)
-	return string(b)
+    b, _ := json.Marshal(r)
+    return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -14013,8 +14023,8 @@ type DescribeRecordingRuleTaskResponse struct {
 }
 
 func (r *DescribeRecordingRuleTaskResponse) ToJsonString() string {
-	b, _ := json.Marshal(r)
-	return string(b)
+    b, _ := json.Marshal(r)
+    return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -14040,7 +14050,7 @@ type DescribeRecordingRuleYamlTaskRequestParams struct {
 
 type DescribeRecordingRuleYamlTaskRequest struct {
 	*tchttp.BaseRequest
-
+	
 	// <p>源指标主题id</p>
 	TopicId *string `json:"TopicId,omitnil,omitempty" name:"TopicId"`
 
@@ -14055,8 +14065,8 @@ type DescribeRecordingRuleYamlTaskRequest struct {
 }
 
 func (r *DescribeRecordingRuleYamlTaskRequest) ToJsonString() string {
-	b, _ := json.Marshal(r)
-	return string(b)
+    b, _ := json.Marshal(r)
+    return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -14094,8 +14104,8 @@ type DescribeRecordingRuleYamlTaskResponse struct {
 }
 
 func (r *DescribeRecordingRuleYamlTaskResponse) ToJsonString() string {
-	b, _ := json.Marshal(r)
-	return string(b)
+    b, _ := json.Marshal(r)
+    return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -14110,70 +14120,70 @@ type DescribeRemoteWriteTasksRequestParams struct {
 	// 按照【任务ID】进行过滤。
 	// 类型：String
 	// 必选：否
-	//
+	// 
 	// - topicId
 	// 按照【日志主题】进行过滤。
 	// 类型：String
 	// 必选：否
-	//
+	// 
 	// - taskStatus
 	// 按照【任务运行状态】进行过滤。 支持`1`：运行中，`2`：停止，`3`：异常
 	// 类型：String
 	// 必选：否
-	//
+	// 
 	// - name
-	// 按照【任务名称】进行模糊过滤。
+	// 按照【任务名称】进行模糊过滤。 
 	// 类型：String
 	// 必选：否
-	//
-	//
+	// 
+	// 
 	// 每次请求的Filters的上限为10，Filter.Values的上限为10。
 	Filters []*Filter `json:"Filters,omitnil,omitempty" name:"Filters"`
 
 	// 分页的偏移量，默认值为0。
 	Offset *uint64 `json:"Offset,omitnil,omitempty" name:"Offset"`
 
-	// 分页单页限制数目，默认值为20，最大值100。
+	// 分页单页限制数目，默认值为20，最大值100。	
 	Limit *uint64 `json:"Limit,omitnil,omitempty" name:"Limit"`
 }
 
 type DescribeRemoteWriteTasksRequest struct {
 	*tchttp.BaseRequest
-
+	
 	// - taskId
 	// 按照【任务ID】进行过滤。
 	// 类型：String
 	// 必选：否
-	//
+	// 
 	// - topicId
 	// 按照【日志主题】进行过滤。
 	// 类型：String
 	// 必选：否
-	//
+	// 
 	// - taskStatus
 	// 按照【任务运行状态】进行过滤。 支持`1`：运行中，`2`：停止，`3`：异常
 	// 类型：String
 	// 必选：否
-	//
+	// 
 	// - name
-	// 按照【任务名称】进行模糊过滤。
+	// 按照【任务名称】进行模糊过滤。 
 	// 类型：String
 	// 必选：否
-	//
-	//
+	// 
+	// 
 	// 每次请求的Filters的上限为10，Filter.Values的上限为10。
 	Filters []*Filter `json:"Filters,omitnil,omitempty" name:"Filters"`
 
 	// 分页的偏移量，默认值为0。
 	Offset *uint64 `json:"Offset,omitnil,omitempty" name:"Offset"`
 
-	// 分页单页限制数目，默认值为20，最大值100。
+	// 分页单页限制数目，默认值为20，最大值100。	
 	Limit *uint64 `json:"Limit,omitnil,omitempty" name:"Limit"`
 }
 
 func (r *DescribeRemoteWriteTasksRequest) ToJsonString() string {
-	b, _ := json.Marshal(r)
-	return string(b)
+    b, _ := json.Marshal(r)
+    return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -14210,8 +14220,8 @@ type DescribeRemoteWriteTasksResponse struct {
 }
 
 func (r *DescribeRemoteWriteTasksResponse) ToJsonString() string {
-	b, _ := json.Marshal(r)
-	return string(b)
+    b, _ := json.Marshal(r)
+    return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -14237,7 +14247,7 @@ type DescribeS3RechargesRequestParams struct {
 
 type DescribeS3RechargesRequest struct {
 	*tchttp.BaseRequest
-
+	
 	// <p>日志主题Id。</p><ul><li>通过<a href="https://cloud.tencent.com/document/api/614/56454">获取日志主题列表</a>获取日志主题Id。</li></ul>
 	TopicId *string `json:"TopicId,omitnil,omitempty" name:"TopicId"`
 
@@ -14252,8 +14262,8 @@ type DescribeS3RechargesRequest struct {
 }
 
 func (r *DescribeS3RechargesRequest) ToJsonString() string {
-	b, _ := json.Marshal(r)
-	return string(b)
+    b, _ := json.Marshal(r)
+    return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -14291,8 +14301,8 @@ type DescribeS3RechargesResponse struct {
 }
 
 func (r *DescribeS3RechargesResponse) ToJsonString() string {
-	b, _ := json.Marshal(r)
-	return string(b)
+    b, _ := json.Marshal(r)
+    return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -14328,7 +14338,7 @@ type DescribeScheduledSqlInfoRequestParams struct {
 
 type DescribeScheduledSqlInfoRequest struct {
 	*tchttp.BaseRequest
-
+	
 	// 分页的偏移量，默认值为0。
 	Offset *uint64 `json:"Offset,omitnil,omitempty" name:"Offset"`
 
@@ -14353,8 +14363,8 @@ type DescribeScheduledSqlInfoRequest struct {
 }
 
 func (r *DescribeScheduledSqlInfoRequest) ToJsonString() string {
-	b, _ := json.Marshal(r)
-	return string(b)
+    b, _ := json.Marshal(r)
+    return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -14393,8 +14403,8 @@ type DescribeScheduledSqlInfoResponse struct {
 }
 
 func (r *DescribeScheduledSqlInfoResponse) ToJsonString() string {
-	b, _ := json.Marshal(r)
-	return string(b)
+    b, _ := json.Marshal(r)
+    return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -14417,7 +14427,7 @@ type DescribeSearchViewsRequestParams struct {
 
 type DescribeSearchViewsRequest struct {
 	*tchttp.BaseRequest
-
+	
 	// <ul><li>viewId 按照【视图ID】进行过滤。 类型：String 必选：否  </li><li>viewName 按照【视图名称】进行过滤。 类型：String 必选：否  </li><li>logsetId 按照【日志集ID】进行过滤。 类型：String 必选：否<br>每次请求的Filters的上限为10，Filter.Values的上限为10。</li></ul>
 	Filters []*Filter `json:"Filters,omitnil,omitempty" name:"Filters"`
 
@@ -14429,8 +14439,8 @@ type DescribeSearchViewsRequest struct {
 }
 
 func (r *DescribeSearchViewsRequest) ToJsonString() string {
-	b, _ := json.Marshal(r)
-	return string(b)
+    b, _ := json.Marshal(r)
+    return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -14467,8 +14477,8 @@ type DescribeSearchViewsResponse struct {
 }
 
 func (r *DescribeSearchViewsResponse) ToJsonString() string {
-	b, _ := json.Marshal(r)
-	return string(b)
+    b, _ := json.Marshal(r)
+    return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -14480,7 +14490,7 @@ func (r *DescribeSearchViewsResponse) FromJsonString(s string) error {
 // Predefined struct for user
 type DescribeShipperTasksRequestParams struct {
 	// 投递规则Id。
-	//
+	// 
 	// - 通过 [获取投递任务列表](https://cloud.tencent.com/document/product/614/58745)获取ShipperId。
 	ShipperId *string `json:"ShipperId,omitnil,omitempty" name:"ShipperId"`
 
@@ -14495,9 +14505,9 @@ type DescribeShipperTasksRequestParams struct {
 
 type DescribeShipperTasksRequest struct {
 	*tchttp.BaseRequest
-
+	
 	// 投递规则Id。
-	//
+	// 
 	// - 通过 [获取投递任务列表](https://cloud.tencent.com/document/product/614/58745)获取ShipperId。
 	ShipperId *string `json:"ShipperId,omitnil,omitempty" name:"ShipperId"`
 
@@ -14511,8 +14521,8 @@ type DescribeShipperTasksRequest struct {
 }
 
 func (r *DescribeShipperTasksRequest) ToJsonString() string {
-	b, _ := json.Marshal(r)
-	return string(b)
+    b, _ := json.Marshal(r)
+    return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -14547,8 +14557,8 @@ type DescribeShipperTasksResponse struct {
 }
 
 func (r *DescribeShipperTasksResponse) ToJsonString() string {
-	b, _ := json.Marshal(r)
-	return string(b)
+    b, _ := json.Marshal(r)
+    return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -14571,7 +14581,7 @@ type DescribeShippersRequestParams struct {
 	// - taskStatus：按照【任务运行状态】进行过滤。 支持`0`：停止，`1`：运行中，`2`：异常
 	//     类型：String
 	//     必选：否
-	//
+	// 
 	// 每次请求的Filters的上限为10，Filter.Values的上限为10。
 	Filters []*Filter `json:"Filters,omitnil,omitempty" name:"Filters"`
 
@@ -14587,7 +14597,7 @@ type DescribeShippersRequestParams struct {
 
 type DescribeShippersRequest struct {
 	*tchttp.BaseRequest
-
+	
 	// - shipperName：按照【投递规则名称】进行过滤。
 	//     类型：String。
 	//     必选：否
@@ -14600,7 +14610,7 @@ type DescribeShippersRequest struct {
 	// - taskStatus：按照【任务运行状态】进行过滤。 支持`0`：停止，`1`：运行中，`2`：异常
 	//     类型：String
 	//     必选：否
-	//
+	// 
 	// 每次请求的Filters的上限为10，Filter.Values的上限为10。
 	Filters []*Filter `json:"Filters,omitnil,omitempty" name:"Filters"`
 
@@ -14615,8 +14625,8 @@ type DescribeShippersRequest struct {
 }
 
 func (r *DescribeShippersRequest) ToJsonString() string {
-	b, _ := json.Marshal(r)
-	return string(b)
+    b, _ := json.Marshal(r)
+    return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -14654,8 +14664,8 @@ type DescribeShippersResponse struct {
 }
 
 func (r *DescribeShippersResponse) ToJsonString() string {
-	b, _ := json.Marshal(r)
-	return string(b)
+    b, _ := json.Marshal(r)
+    return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -14681,7 +14691,7 @@ type DescribeSplunkDeliversRequestParams struct {
 
 type DescribeSplunkDeliversRequest struct {
 	*tchttp.BaseRequest
-
+	
 	// <p>日志主题Id</p><ul><li>通过<a href="https://cloud.tencent.com/document/product/614/56454">获取日志主题列表</a>获取日志主题Id。</li></ul>
 	TopicId *string `json:"TopicId,omitnil,omitempty" name:"TopicId"`
 
@@ -14696,8 +14706,8 @@ type DescribeSplunkDeliversRequest struct {
 }
 
 func (r *DescribeSplunkDeliversRequest) ToJsonString() string {
-	b, _ := json.Marshal(r)
-	return string(b)
+    b, _ := json.Marshal(r)
+    return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -14735,8 +14745,8 @@ type DescribeSplunkDeliversResponse struct {
 }
 
 func (r *DescribeSplunkDeliversResponse) ToJsonString() string {
-	b, _ := json.Marshal(r)
-	return string(b)
+    b, _ := json.Marshal(r)
+    return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -14759,7 +14769,7 @@ type DescribeSplunkPreviewRequestParams struct {
 
 type DescribeSplunkPreviewRequest struct {
 	*tchttp.BaseRequest
-
+	
 	// <p>日志主题id。- 通过<a href="https://cloud.tencent.com/document/product/614/56454">获取日志主题列表</a>获取日志主题Id。</p>
 	TopicId *string `json:"TopicId,omitnil,omitempty" name:"TopicId"`
 
@@ -14771,8 +14781,8 @@ type DescribeSplunkPreviewRequest struct {
 }
 
 func (r *DescribeSplunkPreviewRequest) ToJsonString() string {
-	b, _ := json.Marshal(r)
-	return string(b)
+    b, _ := json.Marshal(r)
+    return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -14809,8 +14819,8 @@ type DescribeSplunkPreviewResponse struct {
 }
 
 func (r *DescribeSplunkPreviewResponse) ToJsonString() string {
-	b, _ := json.Marshal(r)
-	return string(b)
+    b, _ := json.Marshal(r)
+    return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -14839,7 +14849,7 @@ type DescribeTopicBaseMetricConfigsRequestParams struct {
 
 type DescribeTopicBaseMetricConfigsRequest struct {
 	*tchttp.BaseRequest
-
+	
 	// 指标日志主题id。
 	// - 通过 [获取日志主题列表](https://cloud.tencent.com/document/product/614/56454) 获取日志主题Id。注意BizType 0:日志主题（默认值）， 1:指标主题
 	// - 通过 [创建日志主题](https://cloud.tencent.com/document/product/614/56456) 获取日志主题Id。注意BizType 0:日志主题（默认值）， 1:指标主题
@@ -14857,8 +14867,8 @@ type DescribeTopicBaseMetricConfigsRequest struct {
 }
 
 func (r *DescribeTopicBaseMetricConfigsRequest) ToJsonString() string {
-	b, _ := json.Marshal(r)
-	return string(b)
+    b, _ := json.Marshal(r)
+    return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -14897,8 +14907,8 @@ type DescribeTopicBaseMetricConfigsResponse struct {
 }
 
 func (r *DescribeTopicBaseMetricConfigsResponse) ToJsonString() string {
-	b, _ := json.Marshal(r)
-	return string(b)
+    b, _ := json.Marshal(r)
+    return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -14928,7 +14938,7 @@ type DescribeTopicMetricConfigsRequestParams struct {
 
 type DescribeTopicMetricConfigsRequest struct {
 	*tchttp.BaseRequest
-
+	
 	// 指标日志主题id。
 	// - 通过 [获取日志主题列表](https://cloud.tencent.com/document/product/614/56454) 获取日志主题Id。注意BizType 0:日志主题（默认值）， 1:指标主题
 	// - 通过 [创建日志主题](https://cloud.tencent.com/document/product/614/56456) 获取日志主题Id。注意BizType 0:日志主题（默认值）， 1:指标主题
@@ -14947,8 +14957,8 @@ type DescribeTopicMetricConfigsRequest struct {
 }
 
 func (r *DescribeTopicMetricConfigsRequest) ToJsonString() string {
-	b, _ := json.Marshal(r)
-	return string(b)
+    b, _ := json.Marshal(r)
+    return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -14987,8 +14997,8 @@ type DescribeTopicMetricConfigsResponse struct {
 }
 
 func (r *DescribeTopicMetricConfigsResponse) ToJsonString() string {
-	b, _ := json.Marshal(r)
-	return string(b)
+    b, _ := json.Marshal(r)
+    return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -15017,7 +15027,7 @@ type DescribeTopicsRequestParams struct {
 
 type DescribeTopicsRequest struct {
 	*tchttp.BaseRequest
-
+	
 	// <ul><li>topicName 按照【主题名称】进行过滤，默认为模糊匹配，可使用 PreciseSearch 参数设置为精确匹配。类型：String。必选：否</li><li>logsetName 按照【日志集名称】进行过滤，默认为模糊匹配，可使用 PreciseSearch 参数设置为精确匹配。类型：String。必选：否</li><li>topicId 按照【主题ID】进行过滤。类型：String。必选：否</li><li>logsetId 按照【日志集ID】进行过滤，可通过调用 <a href="https://cloud.tencent.com/document/product/614/58624">DescribeLogsets</a> 查询已创建的日志集列表或登录控制台进行查看；也可以调用<a href="https://cloud.tencent.com/document/product/614/58626">CreateLogset</a> 创建新的日志集。类型：String。必选：否</li><li>tagKey 按照【标签键】进行过滤。类型：String。必选：否</li><li>tag:tagKey 按照【标签键值对】进行过滤。tagKey 使用具体的标签键进行替换，例如 tag:exampleKey。类型：String。必选：否</li><li>storageType 按照【主题的存储类型】进行过滤。可选值 hot（标准存储），cold（低频存储）类型：String。必选：否</li></ul>注意：每次请求的 Filters 的上限为10，Filter.Values 的上限为100。
 	Filters []*Filter `json:"Filters,omitnil,omitempty" name:"Filters"`
 
@@ -15035,8 +15045,8 @@ type DescribeTopicsRequest struct {
 }
 
 func (r *DescribeTopicsRequest) ToJsonString() string {
-	b, _ := json.Marshal(r)
-	return string(b)
+    b, _ := json.Marshal(r)
+    return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -15075,8 +15085,8 @@ type DescribeTopicsResponse struct {
 }
 
 func (r *DescribeTopicsResponse) ToJsonString() string {
-	b, _ := json.Marshal(r)
-	return string(b)
+    b, _ := json.Marshal(r)
+    return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -15091,12 +15101,12 @@ type DescribeWebCallbacksRequestParams struct {
 	// 按照【告警渠道回调配置名称】进行过滤。
 	// 类型：String
 	// 必选：否
-	//
+	// 
 	// - webCallbackId
 	// 按照【告警渠道回调配置ID】进行过滤。
 	// 类型：String
 	// 必选：否
-	//
+	// 
 	// - type
 	// 按照【告警渠道回调配置渠道类型】进行过滤。
 	// 类型：String
@@ -15114,17 +15124,17 @@ type DescribeWebCallbacksRequestParams struct {
 
 type DescribeWebCallbacksRequest struct {
 	*tchttp.BaseRequest
-
+	
 	// - name
 	// 按照【告警渠道回调配置名称】进行过滤。
 	// 类型：String
 	// 必选：否
-	//
+	// 
 	// - webCallbackId
 	// 按照【告警渠道回调配置ID】进行过滤。
 	// 类型：String
 	// 必选：否
-	//
+	// 
 	// - type
 	// 按照【告警渠道回调配置渠道类型】进行过滤。
 	// 类型：String
@@ -15141,8 +15151,8 @@ type DescribeWebCallbacksRequest struct {
 }
 
 func (r *DescribeWebCallbacksRequest) ToJsonString() string {
-	b, _ := json.Marshal(r)
-	return string(b)
+    b, _ := json.Marshal(r)
+    return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -15179,8 +15189,8 @@ type DescribeWebCallbacksResponse struct {
 }
 
 func (r *DescribeWebCallbacksResponse) ToJsonString() string {
-	b, _ := json.Marshal(r)
-	return string(b)
+    b, _ := json.Marshal(r)
+    return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -15361,12 +15371,12 @@ type EsImportInfo struct {
 	EndTime *uint64 `json:"EndTime,omitnil,omitempty" name:"EndTime"`
 
 	// 最大延迟时间。单位：s
-	//
+	// 
 	// 导入模式为 2: 导入实时数据时必填
 	MaxDelay *uint64 `json:"MaxDelay,omitnil,omitempty" name:"MaxDelay"`
 
 	// 检查间隔。单位：s
-	//
+	// 
 	// 导入模式为 2: 导入实时数据时必填
 	CheckInterval *uint64 `json:"CheckInterval,omitnil,omitempty" name:"CheckInterval"`
 }
@@ -15459,17 +15469,17 @@ type EsTimeInfo struct {
 	Type *uint64 `json:"Type,omitnil,omitempty" name:"Type"`
 
 	// 日志时间字段。
-	//
+	// 
 	// 时间类型为 2: 指定日志字段时必填
 	TimeKey *string `json:"TimeKey,omitnil,omitempty" name:"TimeKey"`
 
 	// 日志时间格式。
-	//
+	// 
 	// 时间类型为 2: 指定日志字段时必填
 	TimeFormat *string `json:"TimeFormat,omitnil,omitempty" name:"TimeFormat"`
 
 	// 时间字段时区。
-	//
+	// 
 	// 时间类型为 2: 指定日志字段时必填
 	TimeZone *string `json:"TimeZone,omitnil,omitempty" name:"TimeZone"`
 }
@@ -15510,7 +15520,7 @@ type EstimateRebuildIndexTaskRequestParams struct {
 
 type EstimateRebuildIndexTaskRequest struct {
 	*tchttp.BaseRequest
-
+	
 	// 日志主题ID
 	TopicId *string `json:"TopicId,omitnil,omitempty" name:"TopicId"`
 
@@ -15522,8 +15532,8 @@ type EstimateRebuildIndexTaskRequest struct {
 }
 
 func (r *EstimateRebuildIndexTaskRequest) ToJsonString() string {
-	b, _ := json.Marshal(r)
-	return string(b)
+    b, _ := json.Marshal(r)
+    return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -15560,8 +15570,8 @@ type EstimateRebuildIndexTaskResponse struct {
 }
 
 func (r *EstimateRebuildIndexTaskResponse) ToJsonString() string {
-	b, _ := json.Marshal(r)
-	return string(b)
+    b, _ := json.Marshal(r)
+    return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -15589,7 +15599,7 @@ type EventLog struct {
 	Timestamp *uint64 `json:"Timestamp,omitnil,omitempty" name:"Timestamp"`
 
 	// 事件ID过滤列表
-	//
+	// 	
 	// 选填，为空表示不做过滤
 	// 支持正向过滤单个值（例：20）或范围（例：0-20），也支持反向过滤单个值(例：-20)
 	// 多个过滤项之间可由逗号隔开，例：1-200,-100表示采集1-200范围内除了100以外的事件日志
@@ -15821,7 +15831,7 @@ type GetAlarmLogRequestParams struct {
 
 type GetAlarmLogRequest struct {
 	*tchttp.BaseRequest
-
+	
 	// 要查询的执行详情的起始时间，Unix时间戳，单位ms。
 	From *int64 `json:"From,omitnil,omitempty" name:"From"`
 
@@ -15859,8 +15869,8 @@ type GetAlarmLogRequest struct {
 }
 
 func (r *GetAlarmLogRequest) ToJsonString() string {
-	b, _ := json.Marshal(r)
-	return string(b)
+    b, _ := json.Marshal(r)
+    return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -15906,7 +15916,7 @@ type GetAlarmLogResponseParams struct {
 	Results []*LogInfo `json:"Results,omitnil,omitempty" name:"Results"`
 
 	// 执行详情统计分析结果。当Query字段有SQL语句时，返回SQL统计结果，否则可能返回null。
-	//
+	// 
 	// 注意：此字段可能返回 null，表示取不到有效值。
 	AnalysisResults []*LogItems `json:"AnalysisResults,omitnil,omitempty" name:"AnalysisResults"`
 
@@ -15928,8 +15938,8 @@ type GetAlarmLogResponse struct {
 }
 
 func (r *GetAlarmLogResponse) ToJsonString() string {
-	b, _ := json.Marshal(r)
-	return string(b)
+    b, _ := json.Marshal(r)
+    return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -15940,15 +15950,17 @@ func (r *GetAlarmLogResponse) FromJsonString(s string) error {
 
 // Predefined struct for user
 type GetClsServiceRequestParams struct {
+
 }
 
 type GetClsServiceRequest struct {
 	*tchttp.BaseRequest
+	
 }
 
 func (r *GetClsServiceRequest) ToJsonString() string {
-	b, _ := json.Marshal(r)
-	return string(b)
+    b, _ := json.Marshal(r)
+    return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -15958,7 +15970,7 @@ func (r *GetClsServiceRequest) FromJsonString(s string) error {
 	if err := json.Unmarshal([]byte(s), &f); err != nil {
 		return err
 	}
-
+	
 	if len(f) > 0 {
 		return tcerr.NewTencentCloudSDKError("ClientError.BuildRequestError", "GetClsServiceRequest has unknown keys!", "")
 	}
@@ -15980,8 +15992,8 @@ type GetClsServiceResponse struct {
 }
 
 func (r *GetClsServiceResponse) ToJsonString() string {
-	b, _ := json.Marshal(r)
-	return string(b)
+    b, _ := json.Marshal(r)
+    return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -16010,7 +16022,7 @@ type GetMetricLabelValuesRequestParams struct {
 
 type GetMetricLabelValuesRequest struct {
 	*tchttp.BaseRequest
-
+	
 	// <p>时序主题id</p>
 	TopicId *string `json:"TopicId,omitnil,omitempty" name:"TopicId"`
 
@@ -16028,8 +16040,8 @@ type GetMetricLabelValuesRequest struct {
 }
 
 func (r *GetMetricLabelValuesRequest) ToJsonString() string {
-	b, _ := json.Marshal(r)
-	return string(b)
+    b, _ := json.Marshal(r)
+    return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -16065,8 +16077,8 @@ type GetMetricLabelValuesResponse struct {
 }
 
 func (r *GetMetricLabelValuesResponse) ToJsonString() string {
-	b, _ := json.Marshal(r)
-	return string(b)
+    b, _ := json.Marshal(r)
+    return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -16147,7 +16159,7 @@ type HostMetricConfig struct {
 
 type HostMetricItem struct {
 	// 主机指标采集项类型。支持"cpu"，"mem"，"net"，"disk"，"system"。
-	//
+	// 
 	// - cpu：CPU
 	// - mem：内存
 	// - net：网络
@@ -16218,7 +16230,7 @@ type JsonInfo struct {
 	EnableTag *bool `json:"EnableTag,omitnil,omitempty" name:"EnableTag"`
 
 	// 元数据信息列表, 可选值为 __SOURCE__、__FILENAME__、__TIMESTAMP__、__HOSTNAME__。
-	//
+	// 
 	// - __SOURCE__：日志采集的源 IP，示例：10.0.1.2
 	// - __FILENAME__：日志采集的文件名，示例：/data/log/nginx/access.log
 	// - __TIMESTAMP__：日志时间戳（毫秒级别 Unix 时间戳），按时间范围检索日志时，将自动使用该时间对日志进行检索，在控制台显示为“日志时间”，示例：1640005601188
@@ -16244,11 +16256,11 @@ type KafkaConsumerContent struct {
 	MetaFields []*string `json:"MetaFields,omitnil,omitempty" name:"MetaFields"`
 
 	// tag数据处理方式：1:不平铺（默认值）；2:平铺。
-	//
+	// 
 	// 不平铺示例：
 	// TAG信息：`{"__TAG__":{"fieldA":200,"fieldB":"text"}}`
 	// 不平铺：`{"__TAG__":{"fieldA":200,"fieldB":"text"}}`
-	//
+	// 
 	// 平铺示例：
 	// TAG信息：`{"__TAG__":{"fieldA":200,"fieldB":"text"}}`
 	// 平铺：`{"__TAG__.fieldA":200,"__TAG__.fieldB":"text"}`
@@ -16257,12 +16269,12 @@ type KafkaConsumerContent struct {
 	// 消费数据Json格式：
 	// 1：不转义（默认格式）
 	// 2：转义
-	//
+	// 
 	// 投递Json格式。
 	// JsonType为1：和原始日志一致，不转义。示例：
 	// 日志原文：`{"a":"aa", "b":{"b1":"b1b1", "c1":"c1c1"}}`
 	// 投递到Ckafka：`{"a":"aa", "b":{"b1":"b1b1", "c1":"c1c1"}}`
-	//
+	// 
 	// JsonType为2：转义。示例：
 	// 日志原文：`{"a":"aa", "b":{"b1":"b1b1", "c1":"c1c1"}}`
 	// 投递到Ckafka：`{"a":"aa","b":"{\"b1\":\"b1b1\", \"c1\":\"c1c1\"}"}`
@@ -16271,7 +16283,7 @@ type KafkaConsumerContent struct {
 
 type KafkaProtocolInfo struct {
 	// 协议类型，支持的协议类型包括 plaintext、sasl_plaintext 或 sasl_ssl。建议使用 sasl_ssl，此协议会进行连接加密同时需要用户认证。
-	//
+	// 
 	// - 当IsEncryptionAddr为true时，Protocol必填。
 	// - 支持的协议类型如下：
 	//     - plaintext：纯文本无加密协议
@@ -16281,7 +16293,7 @@ type KafkaProtocolInfo struct {
 	Protocol *string `json:"Protocol,omitnil,omitempty" name:"Protocol"`
 
 	// 加密类型，支持 PLAIN、SCRAM-SHA-256 或 SCRAM-SHA-512。
-	//
+	// 
 	// - 当Protocol为  `sasl_plaintext` 或 `sasl_ssl` 时 Mechanism 必填。
 	// - 支持加密类型如下
 	//     -  PLAIN：明文认证
@@ -16317,7 +16329,7 @@ type KafkaRechargeInfo struct {
 	// 服务地址
 	ServerAddr *string `json:"ServerAddr,omitnil,omitempty" name:"ServerAddr"`
 
-	// ServerAddr是否为加密连接
+	// ServerAddr是否为加密连接	
 	IsEncryptionAddr *bool `json:"IsEncryptionAddr,omitnil,omitempty" name:"IsEncryptionAddr"`
 
 	// 加密访问协议，IsEncryptionAddr参数为true时必填
@@ -16326,7 +16338,7 @@ type KafkaRechargeInfo struct {
 	// 用户需要导入的Kafka相关topic列表，多个topic之间使用半角逗号隔开
 	UserKafkaTopics *string `json:"UserKafkaTopics,omitnil,omitempty" name:"UserKafkaTopics"`
 
-	// 用户Kafka消费组名称
+	// 用户Kafka消费组名称	
 	ConsumerGroupName *string `json:"ConsumerGroupName,omitnil,omitempty" name:"ConsumerGroupName"`
 
 	// 状态 ，1：运行中；2：暂停。
@@ -16358,7 +16370,7 @@ type KeyRegexInfo struct {
 
 type KeyValueInfo struct {
 	// 需要配置键值或者元字段索引的字段名称，仅支持字母、数字、下划线和-./@，且不能以下划线开头
-	//
+	// 
 	// 注意：
 	// 1，元字段（tag）的Key无需额外添加`__TAG__.`前缀，与上传日志时对应的字段Key一致即可，腾讯云控制台展示时将自动添加`__TAG__.`前缀
 	// 2，键值索引（KeyValue）及元字段索引（Tag）中的Key总数不能超过300
@@ -16372,7 +16384,7 @@ type KeyValueInfo struct {
 
 type Label struct {
 	// 标签的键。有效标签键有两个部分：可选前缀和名称，以斜杠 (/) 分隔。名称部分是必需的，并且必须不超过 63 个字符，以字母数字字符 ([a-z0-9A-Z]) 开头和结尾，中间有破折号(-)、下划线(_)、点(.) 和字母数字。前缀是可选的。如果指定，前缀必须是 DNS 子域：一系列以点 (.) 分隔的 DNS 标签，总长度不超过 253 个字符，后跟斜杠 ( /)。
-	//
+	// 
 	// -  prefix 格式  `[a-z0-9]([-a-z0-9]*[a-z0-9])?(\.[a-z0-9]([-a-z0-9]*[a-z0-9])?)*`
 	// -  name 格式 `([A-Za-z0-9][-A-Za-z0-9_.]*)?[A-Za-z0-9]`
 	// - key不能重复
@@ -16482,7 +16494,7 @@ type LogInfo struct {
 	// 请求包内日志的ID
 	PkgLogId *string `json:"PkgLogId,omitnil,omitempty" name:"PkgLogId"`
 
-	// 符合检索条件的关键词，一般用于高亮显示。仅支持键值检索，不支持全文检索
+	// 符合检索条件的关键词，一般用于高亮显示。仅支持键值检索，不支持全文检索	
 	HighLights []*HighLightItem `json:"HighLights,omitnil,omitempty" name:"HighLights"`
 
 	// 日志内容的Json序列化字符串
@@ -16682,7 +16694,7 @@ type MergePartitionRequestParams struct {
 	TopicId *string `json:"TopicId,omitnil,omitempty" name:"TopicId"`
 
 	// 合并的PartitionId（找到下一个分区InclusiveBeginKey与入参PartitionId对应的ExclusiveEndKey相等，且找到的分区必须是读写分区（Status:readwrite），入参PartitionId与找到的PartitionId设置为只读分区（Status:readonly）,再新建一个新的读写分区） 。[获取分区列表](https://cloud.tencent.com/document/product/614/56470)
-	//
+	// 
 	// 1. 入参PartitionId只能是读写分区（Status的值有readonly，readwrite），且能找到入参PartitionId的下一个可读写分区（找到下一个分区InclusiveBeginKey与入参PartitionId对应的ExclusiveEndKey相等）；
 	// 2. 入参PartitionId不能是最后一个分区（PartitionId的ExclusiveEndKey不能是ffffffffffffffffffffffffffffffff）；
 	// 3. topic的分区数量是有限制的（默认50个），合并之后不能超过最大分区，否则不能合并。
@@ -16691,13 +16703,13 @@ type MergePartitionRequestParams struct {
 
 type MergePartitionRequest struct {
 	*tchttp.BaseRequest
-
+	
 	// 日志主题Id
 	// - 通过[获取日志主题列表](https://cloud.tencent.com/document/product/614/56454)获取日志主题Id。
 	TopicId *string `json:"TopicId,omitnil,omitempty" name:"TopicId"`
 
 	// 合并的PartitionId（找到下一个分区InclusiveBeginKey与入参PartitionId对应的ExclusiveEndKey相等，且找到的分区必须是读写分区（Status:readwrite），入参PartitionId与找到的PartitionId设置为只读分区（Status:readonly）,再新建一个新的读写分区） 。[获取分区列表](https://cloud.tencent.com/document/product/614/56470)
-	//
+	// 
 	// 1. 入参PartitionId只能是读写分区（Status的值有readonly，readwrite），且能找到入参PartitionId的下一个可读写分区（找到下一个分区InclusiveBeginKey与入参PartitionId对应的ExclusiveEndKey相等）；
 	// 2. 入参PartitionId不能是最后一个分区（PartitionId的ExclusiveEndKey不能是ffffffffffffffffffffffffffffffff）；
 	// 3. topic的分区数量是有限制的（默认50个），合并之后不能超过最大分区，否则不能合并。
@@ -16705,8 +16717,8 @@ type MergePartitionRequest struct {
 }
 
 func (r *MergePartitionRequest) ToJsonString() string {
-	b, _ := json.Marshal(r)
-	return string(b)
+    b, _ := json.Marshal(r)
+    return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -16739,8 +16751,8 @@ type MergePartitionResponse struct {
 }
 
 func (r *MergePartitionResponse) ToJsonString() string {
-	b, _ := json.Marshal(r)
-	return string(b)
+    b, _ := json.Marshal(r)
+    return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -16810,9 +16822,9 @@ type MetricCollectConfig struct {
 	GroupIds []*string `json:"GroupIds,omitnil,omitempty" name:"GroupIds"`
 
 	// 监控类型。支持 ：`0`、`1`，不支持修改
-	//
+	// 
 	// - 0:基础监控
-	// - 1:自定义监控,
+	// - 1:自定义监控, 
 	Type *uint64 `json:"Type,omitnil,omitempty" name:"Type"`
 
 	// 采集配置方式。支持 ：`0`、`1`，不支持修改
@@ -16847,12 +16859,12 @@ type MetricCollectConfig struct {
 
 	// 采集超时时间。  Flag=0 && Type=1时生效
 	// - format:`^(((\d+)y)?((\d+)w)?((\d+)d)?((\d+)h)?((\d+)m)?((\d+)s)?((\d+)ms)?|0)$`
-	//
+	// 
 	// 注意：此字段可能返回 null，表示取不到有效值。
 	ScrapeTimeout *string `json:"ScrapeTimeout,omitnil,omitempty" name:"ScrapeTimeout"`
 
 	// Prometheus如何处理标签之间的冲突。当Flag=0生效，支持`true`,`false`
-	//
+	// 
 	// - `false`:配置数据中冲突的标签重命名
 	// - `true`:忽略冲突的服务器端标签
 	// 注意：此字段可能返回 null，表示取不到有效值。
@@ -16967,7 +16979,7 @@ type MetricYamlSpec struct {
 	// - ServiceMonitor
 	// - ScrapeConfig
 	// - ScrapeConfig-prometheus
-	//
+	// 
 	// `PodMonitor `,`ServiceMonitor `,`ScrapeConfig ` 属于prometheus-operator
 	// `ScrapeConfig-prometheus` 属于prometheus
 	// 注意：此字段可能返回 null，表示取不到有效值。
@@ -16975,8 +16987,8 @@ type MetricYamlSpec struct {
 
 	// 配置yaml格式。
 	// 例如：Type: ServiceMonitor
-	//
-	//
+	// 
+	// 
 	// ```
 	// apiVersion: monitoring.coreos.com/v1
 	// kind: ServiceMonitor
@@ -17018,7 +17030,7 @@ type ModifyAgentApplicationRequestParams struct {
 
 type ModifyAgentApplicationRequest struct {
 	*tchttp.BaseRequest
-
+	
 	// <p>应用id</p>
 	ApplicationId *string `json:"ApplicationId,omitnil,omitempty" name:"ApplicationId"`
 
@@ -17027,8 +17039,8 @@ type ModifyAgentApplicationRequest struct {
 }
 
 func (r *ModifyAgentApplicationRequest) ToJsonString() string {
-	b, _ := json.Marshal(r)
-	return string(b)
+    b, _ := json.Marshal(r)
+    return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -17058,8 +17070,8 @@ type ModifyAgentApplicationResponse struct {
 }
 
 func (r *ModifyAgentApplicationResponse) ToJsonString() string {
-	b, _ := json.Marshal(r)
-	return string(b)
+    b, _ := json.Marshal(r)
+    return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -17092,9 +17104,9 @@ type ModifyAlarmNoticeRequestParams struct {
 	WebCallbacks []*WebCallback `json:"WebCallbacks,omitnil,omitempty" name:"WebCallbacks"`
 
 	// 通知规则。
-	//
-	// 注意:
-	//
+	// 
+	// 注意: 
+	// 
 	// - Type、NoticeReceivers和WebCallbacks是一组配置，NoticeRules是另一组配置，2组配置互斥。
 	// - 传其中一组数据，则另一组数据置空。
 	NoticeRules []*NoticeRule `json:"NoticeRules,omitnil,omitempty" name:"NoticeRules"`
@@ -17103,19 +17115,19 @@ type ModifyAlarmNoticeRequestParams struct {
 	JumpDomain *string `json:"JumpDomain,omitnil,omitempty" name:"JumpDomain"`
 
 	// 投递日志开关。
-	//
+	// 
 	// 参数值：
 	// 1：关闭；
-	//
-	// 2：开启
+	// 
+	// 2：开启 
 	DeliverStatus *uint64 `json:"DeliverStatus,omitnil,omitempty" name:"DeliverStatus"`
 
 	// 投递日志配置。
 	DeliverConfig *DeliverConfig `json:"DeliverConfig,omitnil,omitempty" name:"DeliverConfig"`
 
 	// 免登录操作告警开关。
-	//
-	// 参数值：
+	// 
+	// 参数值： 
 	//         1：关闭
 	//         2：开启（默认开启）
 	AlarmShieldStatus *uint64 `json:"AlarmShieldStatus,omitnil,omitempty" name:"AlarmShieldStatus"`
@@ -17128,7 +17140,7 @@ type ModifyAlarmNoticeRequestParams struct {
 
 type ModifyAlarmNoticeRequest struct {
 	*tchttp.BaseRequest
-
+	
 	// 通知渠道组ID。-通过[获取通知渠道组列表](https://cloud.tencent.com/document/api/614/56462)获取通知渠道组ID
 	AlarmNoticeId *string `json:"AlarmNoticeId,omitnil,omitempty" name:"AlarmNoticeId"`
 
@@ -17151,9 +17163,9 @@ type ModifyAlarmNoticeRequest struct {
 	WebCallbacks []*WebCallback `json:"WebCallbacks,omitnil,omitempty" name:"WebCallbacks"`
 
 	// 通知规则。
-	//
-	// 注意:
-	//
+	// 
+	// 注意: 
+	// 
 	// - Type、NoticeReceivers和WebCallbacks是一组配置，NoticeRules是另一组配置，2组配置互斥。
 	// - 传其中一组数据，则另一组数据置空。
 	NoticeRules []*NoticeRule `json:"NoticeRules,omitnil,omitempty" name:"NoticeRules"`
@@ -17162,19 +17174,19 @@ type ModifyAlarmNoticeRequest struct {
 	JumpDomain *string `json:"JumpDomain,omitnil,omitempty" name:"JumpDomain"`
 
 	// 投递日志开关。
-	//
+	// 
 	// 参数值：
 	// 1：关闭；
-	//
-	// 2：开启
+	// 
+	// 2：开启 
 	DeliverStatus *uint64 `json:"DeliverStatus,omitnil,omitempty" name:"DeliverStatus"`
 
 	// 投递日志配置。
 	DeliverConfig *DeliverConfig `json:"DeliverConfig,omitnil,omitempty" name:"DeliverConfig"`
 
 	// 免登录操作告警开关。
-	//
-	// 参数值：
+	// 
+	// 参数值： 
 	//         1：关闭
 	//         2：开启（默认开启）
 	AlarmShieldStatus *uint64 `json:"AlarmShieldStatus,omitnil,omitempty" name:"AlarmShieldStatus"`
@@ -17186,8 +17198,8 @@ type ModifyAlarmNoticeRequest struct {
 }
 
 func (r *ModifyAlarmNoticeRequest) ToJsonString() string {
-	b, _ := json.Marshal(r)
-	return string(b)
+    b, _ := json.Marshal(r)
+    return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -17227,8 +17239,8 @@ type ModifyAlarmNoticeResponse struct {
 }
 
 func (r *ModifyAlarmNoticeResponse) ToJsonString() string {
-	b, _ := json.Marshal(r)
-	return string(b)
+    b, _ := json.Marshal(r)
+    return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -17307,7 +17319,7 @@ type ModifyAlarmRequestParams struct {
 
 type ModifyAlarmRequest struct {
 	*tchttp.BaseRequest
-
+	
 	// <p>告警策略ID。-通过<a href="https://cloud.tencent.com/document/product/614/56461">获取告警策略列表</a>获取告警策略ID</p>
 	AlarmId *string `json:"AlarmId,omitnil,omitempty" name:"AlarmId"`
 
@@ -17373,8 +17385,8 @@ type ModifyAlarmRequest struct {
 }
 
 func (r *ModifyAlarmRequest) ToJsonString() string {
-	b, _ := json.Marshal(r)
-	return string(b)
+    b, _ := json.Marshal(r)
+    return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -17423,8 +17435,8 @@ type ModifyAlarmResponse struct {
 }
 
 func (r *ModifyAlarmResponse) ToJsonString() string {
-	b, _ := json.Marshal(r)
-	return string(b)
+    b, _ := json.Marshal(r)
+    return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -17463,7 +17475,7 @@ type ModifyAlarmShieldRequestParams struct {
 
 type ModifyAlarmShieldRequest struct {
 	*tchttp.BaseRequest
-
+	
 	// 屏蔽规则ID。-通过[获取告警屏蔽配置规则](https://cloud.tencent.com/document/api/614/103650)获取屏蔽规则ID
 	TaskId *string `json:"TaskId,omitnil,omitempty" name:"TaskId"`
 
@@ -17491,8 +17503,8 @@ type ModifyAlarmShieldRequest struct {
 }
 
 func (r *ModifyAlarmShieldRequest) ToJsonString() string {
-	b, _ := json.Marshal(r)
-	return string(b)
+    b, _ := json.Marshal(r)
+    return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -17528,8 +17540,8 @@ type ModifyAlarmShieldResponse struct {
 }
 
 func (r *ModifyAlarmShieldResponse) ToJsonString() string {
-	b, _ := json.Marshal(r)
-	return string(b)
+    b, _ := json.Marshal(r)
+    return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -17561,7 +17573,7 @@ type ModifyCloudProductLogCollectionRequestParams struct {
 
 type ModifyCloudProductLogCollectionRequest struct {
 	*tchttp.BaseRequest
-
+	
 	// <p>实例ID</p>
 	InstanceId *string `json:"InstanceId,omitnil,omitempty" name:"InstanceId"`
 
@@ -17582,8 +17594,8 @@ type ModifyCloudProductLogCollectionRequest struct {
 }
 
 func (r *ModifyCloudProductLogCollectionRequest) ToJsonString() string {
-	b, _ := json.Marshal(r)
-	return string(b)
+    b, _ := json.Marshal(r)
+    return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -17620,8 +17632,8 @@ type ModifyCloudProductLogCollectionResponse struct {
 }
 
 func (r *ModifyCloudProductLogCollectionResponse) ToJsonString() string {
-	b, _ := json.Marshal(r)
-	return string(b)
+    b, _ := json.Marshal(r)
+    return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -17644,7 +17656,7 @@ type ModifyConfigExtraRequestParams struct {
 	TopicId *string `json:"TopicId,omitnil,omitempty" name:"TopicId"`
 
 	// 自建k8s-节点文件配置信息,包括文件路径、名称及元数据相关信息。
-	//
+	// 
 	// - 详情参考  [HostFileInfo](https://cloud.tencent.com/document/api/614/56471#HostFileInfo) 文档。
 	HostFile *HostFileInfo `json:"HostFile,omitnil,omitempty" name:"HostFile"`
 
@@ -17654,7 +17666,7 @@ type ModifyConfigExtraRequestParams struct {
 	ContainerFile *ContainerFileInfo `json:"ContainerFile,omitnil,omitempty" name:"ContainerFile"`
 
 	// 自建k8s-容器标准输出信息，包括容器、命名空间等，
-	//
+	// 
 	// - 详情参考 [ContainerStdoutInfo]( https://cloud.tencent.com/document/api/614/56471#ContainerStdoutInfo) 文档
 	ContainerStdout *ContainerStdoutInfo `json:"ContainerStdout,omitnil,omitempty" name:"ContainerStdout"`
 
@@ -17721,7 +17733,7 @@ type ModifyConfigExtraRequestParams struct {
 
 type ModifyConfigExtraRequest struct {
 	*tchttp.BaseRequest
-
+	
 	// 采集配置扩展信息id
 	// - 通过[获取特殊采集配置](https://cloud.tencent.com/document/api/614/71164)获取采集配置扩展信息id。
 	ConfigExtraId *string `json:"ConfigExtraId,omitnil,omitempty" name:"ConfigExtraId"`
@@ -17734,7 +17746,7 @@ type ModifyConfigExtraRequest struct {
 	TopicId *string `json:"TopicId,omitnil,omitempty" name:"TopicId"`
 
 	// 自建k8s-节点文件配置信息,包括文件路径、名称及元数据相关信息。
-	//
+	// 
 	// - 详情参考  [HostFileInfo](https://cloud.tencent.com/document/api/614/56471#HostFileInfo) 文档。
 	HostFile *HostFileInfo `json:"HostFile,omitnil,omitempty" name:"HostFile"`
 
@@ -17744,7 +17756,7 @@ type ModifyConfigExtraRequest struct {
 	ContainerFile *ContainerFileInfo `json:"ContainerFile,omitnil,omitempty" name:"ContainerFile"`
 
 	// 自建k8s-容器标准输出信息，包括容器、命名空间等，
-	//
+	// 
 	// - 详情参考 [ContainerStdoutInfo]( https://cloud.tencent.com/document/api/614/56471#ContainerStdoutInfo) 文档
 	ContainerStdout *ContainerStdoutInfo `json:"ContainerStdout,omitnil,omitempty" name:"ContainerStdout"`
 
@@ -17808,8 +17820,8 @@ type ModifyConfigExtraRequest struct {
 }
 
 func (r *ModifyConfigExtraRequest) ToJsonString() string {
-	b, _ := json.Marshal(r)
-	return string(b)
+    b, _ := json.Marshal(r)
+    return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -17855,8 +17867,8 @@ type ModifyConfigExtraResponse struct {
 }
 
 func (r *ModifyConfigExtraResponse) ToJsonString() string {
-	b, _ := json.Marshal(r)
-	return string(b)
+    b, _ := json.Marshal(r)
+    return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -17888,7 +17900,7 @@ type ModifyConfigRequestParams struct {
 	// - user_define_log代表：组合解析（适用于多格式嵌套的日志，详见[使用组合解析提取模式采集日志](https://cloud.tencent.com/document/product/614/61310)）；
 	// - service_syslog代表：syslog 采集（详见[采集 Syslog](https://cloud.tencent.com/document/product/614/81454)）；
 	// - windows_event_log代表：Windows事件日志（详见[采集 Windows 事件日志](https://cloud.tencent.com/document/product/614/96678)）。
-	//
+	// 
 	LogType *string `json:"LogType,omitnil,omitempty" name:"LogType"`
 
 	// 提取规则，如果设置了ExtractRule，则必须设置LogType
@@ -17921,7 +17933,7 @@ type ModifyConfigRequestParams struct {
 
 type ModifyConfigRequest struct {
 	*tchttp.BaseRequest
-
+	
 	// 采集规则配置ID，通过[获取采集规则配置](https://cloud.tencent.com/document/product/614/58616)返回信息获取。
 	ConfigId *string `json:"ConfigId,omitnil,omitempty" name:"ConfigId"`
 
@@ -17943,7 +17955,7 @@ type ModifyConfigRequest struct {
 	// - user_define_log代表：组合解析（适用于多格式嵌套的日志，详见[使用组合解析提取模式采集日志](https://cloud.tencent.com/document/product/614/61310)）；
 	// - service_syslog代表：syslog 采集（详见[采集 Syslog](https://cloud.tencent.com/document/product/614/81454)）；
 	// - windows_event_log代表：Windows事件日志（详见[采集 Windows 事件日志](https://cloud.tencent.com/document/product/614/96678)）。
-	//
+	// 
 	LogType *string `json:"LogType,omitnil,omitempty" name:"LogType"`
 
 	// 提取规则，如果设置了ExtractRule，则必须设置LogType
@@ -17975,8 +17987,8 @@ type ModifyConfigRequest struct {
 }
 
 func (r *ModifyConfigRequest) ToJsonString() string {
-	b, _ := json.Marshal(r)
-	return string(b)
+    b, _ := json.Marshal(r)
+    return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -18014,8 +18026,8 @@ type ModifyConfigResponse struct {
 }
 
 func (r *ModifyConfigResponse) ToJsonString() string {
-	b, _ := json.Marshal(r)
-	return string(b)
+    b, _ := json.Marshal(r)
+    return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -18074,7 +18086,7 @@ type ModifyConsoleRequestParams struct {
 
 type ModifyConsoleRequest struct {
 	*tchttp.BaseRequest
-
+	
 	// <p>DataSight控制台ConsoleId</p>
 	ConsoleId *string `json:"ConsoleId,omitnil,omitempty" name:"ConsoleId"`
 
@@ -18122,8 +18134,8 @@ type ModifyConsoleRequest struct {
 }
 
 func (r *ModifyConsoleRequest) ToJsonString() string {
-	b, _ := json.Marshal(r)
-	return string(b)
+    b, _ := json.Marshal(r)
+    return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -18169,8 +18181,8 @@ type ModifyConsoleResponse struct {
 }
 
 func (r *ModifyConsoleResponse) ToJsonString() string {
-	b, _ := json.Marshal(r)
-	return string(b)
+    b, _ := json.Marshal(r)
+    return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -18182,7 +18194,7 @@ func (r *ModifyConsoleResponse) FromJsonString(s string) error {
 // Predefined struct for user
 type ModifyConsoleSharingRequestParams struct {
 	// 免密分享Id。
-	// - 通过 [获取免密分享列表](https://cloud.tencent.com/document/product/614/109798) 获取免密分享Id。
+	// - 通过 [获取免密分享列表](https://cloud.tencent.com/document/product/614/109798) 获取免密分享Id。 
 	// - 通过 [创建免密分享](https://cloud.tencent.com/document/product/614/109800) 获取免密分享Id。
 	SharingId *string `json:"SharingId,omitnil,omitempty" name:"SharingId"`
 
@@ -18192,9 +18204,9 @@ type ModifyConsoleSharingRequestParams struct {
 
 type ModifyConsoleSharingRequest struct {
 	*tchttp.BaseRequest
-
+	
 	// 免密分享Id。
-	// - 通过 [获取免密分享列表](https://cloud.tencent.com/document/product/614/109798) 获取免密分享Id。
+	// - 通过 [获取免密分享列表](https://cloud.tencent.com/document/product/614/109798) 获取免密分享Id。 
 	// - 通过 [创建免密分享](https://cloud.tencent.com/document/product/614/109800) 获取免密分享Id。
 	SharingId *string `json:"SharingId,omitnil,omitempty" name:"SharingId"`
 
@@ -18203,8 +18215,8 @@ type ModifyConsoleSharingRequest struct {
 }
 
 func (r *ModifyConsoleSharingRequest) ToJsonString() string {
-	b, _ := json.Marshal(r)
-	return string(b)
+    b, _ := json.Marshal(r)
+    return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -18234,8 +18246,8 @@ type ModifyConsoleSharingResponse struct {
 }
 
 func (r *ModifyConsoleSharingResponse) ToJsonString() string {
-	b, _ := json.Marshal(r)
-	return string(b)
+    b, _ := json.Marshal(r)
+    return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -18261,7 +18273,7 @@ type ModifyConsumerGroupRequestParams struct {
 
 type ModifyConsumerGroupRequest struct {
 	*tchttp.BaseRequest
-
+	
 	// 更新的目标消费者组标识
 	ConsumerGroup *string `json:"ConsumerGroup,omitnil,omitempty" name:"ConsumerGroup"`
 
@@ -18276,8 +18288,8 @@ type ModifyConsumerGroupRequest struct {
 }
 
 func (r *ModifyConsumerGroupRequest) ToJsonString() string {
-	b, _ := json.Marshal(r)
-	return string(b)
+    b, _ := json.Marshal(r)
+    return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -18309,8 +18321,8 @@ type ModifyConsumerGroupResponse struct {
 }
 
 func (r *ModifyConsumerGroupResponse) ToJsonString() string {
-	b, _ := json.Marshal(r)
-	return string(b)
+    b, _ := json.Marshal(r)
+    return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -18355,7 +18367,7 @@ type ModifyConsumerRequestParams struct {
 
 type ModifyConsumerRequest struct {
 	*tchttp.BaseRequest
-
+	
 	// 投递任务绑定的日志主题Id。
 	// - 通过 [获取日志主题列表](https://cloud.tencent.com/document/product/614/56454) 获取日志主题Id。
 	// - 通过 [创建日志主题](https://cloud.tencent.com/document/product/614/56456) 获取日志主题Id。
@@ -18389,8 +18401,8 @@ type ModifyConsumerRequest struct {
 }
 
 func (r *ModifyConsumerRequest) ToJsonString() string {
-	b, _ := json.Marshal(r)
-	return string(b)
+    b, _ := json.Marshal(r)
+    return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -18427,8 +18439,8 @@ type ModifyConsumerResponse struct {
 }
 
 func (r *ModifyConsumerResponse) ToJsonString() string {
-	b, _ := json.Marshal(r)
-	return string(b)
+    b, _ := json.Marshal(r)
+    return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -18440,12 +18452,12 @@ func (r *ModifyConsumerResponse) FromJsonString(s string) error {
 // Predefined struct for user
 type ModifyCosRechargeRequestParams struct {
 	// COS导入配置Id。
-	//
+	// 
 	// - 通过[获取cos导入配置](https://cloud.tencent.com/document/product/614/88099)接口获取COS导入配置Id。
 	Id *string `json:"Id,omitnil,omitempty" name:"Id"`
 
 	// 日志主题Id。
-	//
+	// 
 	// - 通过[获取日志主题列表](https://cloud.tencent.com/document/product/614/56454)获取日志主题Id。
 	TopicId *string `json:"TopicId,omitnil,omitempty" name:"TopicId"`
 
@@ -18455,8 +18467,8 @@ type ModifyCosRechargeRequestParams struct {
 	// 任务状态   0： 停用 ， 1：启用
 	Enable *uint64 `json:"Enable,omitnil,omitempty" name:"Enable"`
 
-	// COS存储桶，详见产品支持的[存储桶命名规范](https://cloud.tencent.com/document/product/436/13312)。
-	//
+	// COS存储桶，详见产品支持的[存储桶命名规范](https://cloud.tencent.com/document/product/436/13312)。	
+	// 
 	// - 通过[GET Service（List Buckets）](https://cloud.tencent.com/document/product/436/8291)获取COS存储桶。
 	Bucket *string `json:"Bucket,omitnil,omitempty" name:"Bucket"`
 
@@ -18484,14 +18496,14 @@ type ModifyCosRechargeRequestParams struct {
 
 type ModifyCosRechargeRequest struct {
 	*tchttp.BaseRequest
-
+	
 	// COS导入配置Id。
-	//
+	// 
 	// - 通过[获取cos导入配置](https://cloud.tencent.com/document/product/614/88099)接口获取COS导入配置Id。
 	Id *string `json:"Id,omitnil,omitempty" name:"Id"`
 
 	// 日志主题Id。
-	//
+	// 
 	// - 通过[获取日志主题列表](https://cloud.tencent.com/document/product/614/56454)获取日志主题Id。
 	TopicId *string `json:"TopicId,omitnil,omitempty" name:"TopicId"`
 
@@ -18501,8 +18513,8 @@ type ModifyCosRechargeRequest struct {
 	// 任务状态   0： 停用 ， 1：启用
 	Enable *uint64 `json:"Enable,omitnil,omitempty" name:"Enable"`
 
-	// COS存储桶，详见产品支持的[存储桶命名规范](https://cloud.tencent.com/document/product/436/13312)。
-	//
+	// COS存储桶，详见产品支持的[存储桶命名规范](https://cloud.tencent.com/document/product/436/13312)。	
+	// 
 	// - 通过[GET Service（List Buckets）](https://cloud.tencent.com/document/product/436/8291)获取COS存储桶。
 	Bucket *string `json:"Bucket,omitnil,omitempty" name:"Bucket"`
 
@@ -18529,8 +18541,8 @@ type ModifyCosRechargeRequest struct {
 }
 
 func (r *ModifyCosRechargeRequest) ToJsonString() string {
-	b, _ := json.Marshal(r)
-	return string(b)
+    b, _ := json.Marshal(r)
+    return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -18570,8 +18582,8 @@ type ModifyCosRechargeResponse struct {
 }
 
 func (r *ModifyCosRechargeResponse) ToJsonString() string {
-	b, _ := json.Marshal(r)
-	return string(b)
+    b, _ := json.Marshal(r)
+    return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -18597,7 +18609,7 @@ type ModifyDashboardRequestParams struct {
 
 type ModifyDashboardRequest struct {
 	*tchttp.BaseRequest
-
+	
 	// 仪表盘id。通过 [获取仪表盘](https://cloud.tencent.com/document/api/614/95636)接口获取DashboardId。
 	DashboardId *string `json:"DashboardId,omitnil,omitempty" name:"DashboardId"`
 
@@ -18612,8 +18624,8 @@ type ModifyDashboardRequest struct {
 }
 
 func (r *ModifyDashboardRequest) ToJsonString() string {
-	b, _ := json.Marshal(r)
-	return string(b)
+    b, _ := json.Marshal(r)
+    return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -18645,8 +18657,8 @@ type ModifyDashboardResponse struct {
 }
 
 func (r *ModifyDashboardResponse) ToJsonString() string {
-	b, _ := json.Marshal(r)
-	return string(b)
+    b, _ := json.Marshal(r)
+    return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -18675,7 +18687,7 @@ type ModifyDashboardSubscribeRequestParams struct {
 
 type ModifyDashboardSubscribeRequest struct {
 	*tchttp.BaseRequest
-
+	
 	// 仪表盘订阅id。通过 [获取仪表盘订阅列表](https://cloud.tencent.com/document/api/614/105779)接口获取Id。
 	Id *uint64 `json:"Id,omitnil,omitempty" name:"Id"`
 
@@ -18693,8 +18705,8 @@ type ModifyDashboardSubscribeRequest struct {
 }
 
 func (r *ModifyDashboardSubscribeRequest) ToJsonString() string {
-	b, _ := json.Marshal(r)
-	return string(b)
+    b, _ := json.Marshal(r)
+    return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -18727,8 +18739,8 @@ type ModifyDashboardSubscribeResponse struct {
 }
 
 func (r *ModifyDashboardSubscribeResponse) ToJsonString() string {
-	b, _ := json.Marshal(r)
-	return string(b)
+    b, _ := json.Marshal(r)
+    return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -18745,18 +18757,18 @@ type ModifyDataTransformRequestParams struct {
 
 	// 加工任务名称
 	// - 通过[获取数据加工任务列表基本信息](https://cloud.tencent.com/document/product/614/72182)获取数据加工任务名称。
-	//
+	// 
 	// 名称限制
 	// - 不能为空字符串
 	// - 不能包含字符'|'
 	// - 最长 255 个字符
 	Name *string `json:"Name,omitnil,omitempty" name:"Name"`
 
-	// 加工语句。 当FuncType为2时，EtlContent必须使用[log_auto_output](https://cloud.tencent.com/document/product/614/70733#b3c58797-4825-4807-bef4-68106e25024f)
-	//
+	// 加工语句。 当FuncType为2时，EtlContent必须使用[log_auto_output](https://cloud.tencent.com/document/product/614/70733#b3c58797-4825-4807-bef4-68106e25024f) 
+	// 
 	// 其他参考文档：
-	//
-	// - [创建加工任务](https://cloud.tencent.com/document/product/614/63940)
+	// 
+	// - [创建加工任务](https://cloud.tencent.com/document/product/614/63940) 
 	// -  [函数总览](https://cloud.tencent.com/document/product/614/70395)
 	EtlContent *string `json:"EtlContent,omitnil,omitempty" name:"EtlContent"`
 
@@ -18787,25 +18799,25 @@ type ModifyDataTransformRequestParams struct {
 
 type ModifyDataTransformRequest struct {
 	*tchttp.BaseRequest
-
+	
 	// 数据加工任务ID
 	// - 通过[获取数据加工任务列表基本信息](https://cloud.tencent.com/document/product/614/72182)获取数据加工任务Id。
 	TaskId *string `json:"TaskId,omitnil,omitempty" name:"TaskId"`
 
 	// 加工任务名称
 	// - 通过[获取数据加工任务列表基本信息](https://cloud.tencent.com/document/product/614/72182)获取数据加工任务名称。
-	//
+	// 
 	// 名称限制
 	// - 不能为空字符串
 	// - 不能包含字符'|'
 	// - 最长 255 个字符
 	Name *string `json:"Name,omitnil,omitempty" name:"Name"`
 
-	// 加工语句。 当FuncType为2时，EtlContent必须使用[log_auto_output](https://cloud.tencent.com/document/product/614/70733#b3c58797-4825-4807-bef4-68106e25024f)
-	//
+	// 加工语句。 当FuncType为2时，EtlContent必须使用[log_auto_output](https://cloud.tencent.com/document/product/614/70733#b3c58797-4825-4807-bef4-68106e25024f) 
+	// 
 	// 其他参考文档：
-	//
-	// - [创建加工任务](https://cloud.tencent.com/document/product/614/63940)
+	// 
+	// - [创建加工任务](https://cloud.tencent.com/document/product/614/63940) 
 	// -  [函数总览](https://cloud.tencent.com/document/product/614/70395)
 	EtlContent *string `json:"EtlContent,omitnil,omitempty" name:"EtlContent"`
 
@@ -18835,8 +18847,8 @@ type ModifyDataTransformRequest struct {
 }
 
 func (r *ModifyDataTransformRequest) ToJsonString() string {
-	b, _ := json.Marshal(r)
-	return string(b)
+    b, _ := json.Marshal(r)
+    return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -18875,8 +18887,8 @@ type ModifyDataTransformResponse struct {
 }
 
 func (r *ModifyDataTransformResponse) ToJsonString() string {
-	b, _ := json.Marshal(r)
-	return string(b)
+    b, _ := json.Marshal(r)
+    return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -18932,7 +18944,7 @@ type ModifyDlcDeliverRequestParams struct {
 
 type ModifyDlcDeliverRequest struct {
 	*tchttp.BaseRequest
-
+	
 	// <p>日志主题id。</p><ul><li>通过<a href="https://cloud.tencent.com/document/product/614/56454">获取日志主题列表</a>获取日志主题Id。</li></ul>
 	TopicId *string `json:"TopicId,omitnil,omitempty" name:"TopicId"`
 
@@ -18977,8 +18989,8 @@ type ModifyDlcDeliverRequest struct {
 }
 
 func (r *ModifyDlcDeliverRequest) ToJsonString() string {
-	b, _ := json.Marshal(r)
-	return string(b)
+    b, _ := json.Marshal(r)
+    return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -19020,8 +19032,8 @@ type ModifyDlcDeliverResponse struct {
 }
 
 func (r *ModifyDlcDeliverResponse) ToJsonString() string {
-	b, _ := json.Marshal(r)
-	return string(b)
+    b, _ := json.Marshal(r)
+    return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -19067,7 +19079,7 @@ type ModifyEsRechargeRequestParams struct {
 
 type ModifyEsRechargeRequest struct {
 	*tchttp.BaseRequest
-
+	
 	// 导入任务id。
 	TaskId *string `json:"TaskId,omitnil,omitempty" name:"TaskId"`
 
@@ -19102,8 +19114,8 @@ type ModifyEsRechargeRequest struct {
 }
 
 func (r *ModifyEsRechargeRequest) ToJsonString() string {
-	b, _ := json.Marshal(r)
-	return string(b)
+    b, _ := json.Marshal(r)
+    return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -19141,8 +19153,8 @@ type ModifyEsRechargeResponse struct {
 }
 
 func (r *ModifyEsRechargeResponse) ToJsonString() string {
-	b, _ := json.Marshal(r)
-	return string(b)
+    b, _ := json.Marshal(r)
+    return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -19162,7 +19174,7 @@ type ModifyHostMetricConfigRequestParams struct {
 	ConfigId *string `json:"ConfigId,omitnil,omitempty" name:"ConfigId"`
 
 	// 名称。
-	//
+	// 
 	// - 长度不超过 64字符。
 	Name *string `json:"Name,omitnil,omitempty" name:"Name"`
 
@@ -19183,7 +19195,7 @@ type ModifyHostMetricConfigRequestParams struct {
 
 type ModifyHostMetricConfigRequest struct {
 	*tchttp.BaseRequest
-
+	
 	// 指标日志主题id。
 	// - 通过 [获取日志主题列表](https://cloud.tencent.com/document/product/614/56454) 获取日志主题Id。注意BizType 0:日志主题（默认值）， 1:指标主题
 	// - 通过 [创建日志主题](https://cloud.tencent.com/document/product/614/56456) 获取日志主题Id。注意BizType 0:日志主题（默认值）， 1:指标主题
@@ -19193,7 +19205,7 @@ type ModifyHostMetricConfigRequest struct {
 	ConfigId *string `json:"ConfigId,omitnil,omitempty" name:"ConfigId"`
 
 	// 名称。
-	//
+	// 
 	// - 长度不超过 64字符。
 	Name *string `json:"Name,omitnil,omitempty" name:"Name"`
 
@@ -19213,8 +19225,8 @@ type ModifyHostMetricConfigRequest struct {
 }
 
 func (r *ModifyHostMetricConfigRequest) ToJsonString() string {
-	b, _ := json.Marshal(r)
-	return string(b)
+    b, _ := json.Marshal(r)
+    return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -19248,8 +19260,8 @@ type ModifyHostMetricConfigResponse struct {
 }
 
 func (r *ModifyHostMetricConfigResponse) ToJsonString() string {
-	b, _ := json.Marshal(r)
-	return string(b)
+    b, _ := json.Marshal(r)
+    return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -19288,7 +19300,7 @@ type ModifyIndexRequestParams struct {
 
 type ModifyIndexRequest struct {
 	*tchttp.BaseRequest
-
+	
 	// 日志主题Id。
 	// - 通过[获取日志主题列表](https://cloud.tencent.com/document/product/614/56454)获取日志主题Id。
 	TopicId *string `json:"TopicId,omitnil,omitempty" name:"TopicId"`
@@ -19316,8 +19328,8 @@ type ModifyIndexRequest struct {
 }
 
 func (r *ModifyIndexRequest) ToJsonString() string {
-	b, _ := json.Marshal(r)
-	return string(b)
+    b, _ := json.Marshal(r)
+    return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -19351,8 +19363,8 @@ type ModifyIndexResponse struct {
 }
 
 func (r *ModifyIndexResponse) ToJsonString() string {
-	b, _ := json.Marshal(r)
-	return string(b)
+    b, _ := json.Marshal(r)
+    return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -19363,15 +19375,17 @@ func (r *ModifyIndexResponse) FromJsonString(s string) error {
 
 // Predefined struct for user
 type ModifyKafkaConsumerGroupOffsetRequestParams struct {
+
 }
 
 type ModifyKafkaConsumerGroupOffsetRequest struct {
 	*tchttp.BaseRequest
+	
 }
 
 func (r *ModifyKafkaConsumerGroupOffsetRequest) ToJsonString() string {
-	b, _ := json.Marshal(r)
-	return string(b)
+    b, _ := json.Marshal(r)
+    return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -19381,7 +19395,7 @@ func (r *ModifyKafkaConsumerGroupOffsetRequest) FromJsonString(s string) error {
 	if err := json.Unmarshal([]byte(s), &f); err != nil {
 		return err
 	}
-
+	
 	if len(f) > 0 {
 		return tcerr.NewTencentCloudSDKError("ClientError.BuildRequestError", "ModifyKafkaConsumerGroupOffsetRequest has unknown keys!", "")
 	}
@@ -19403,8 +19417,8 @@ type ModifyKafkaConsumerGroupOffsetResponse struct {
 }
 
 func (r *ModifyKafkaConsumerGroupOffsetResponse) ToJsonString() string {
-	b, _ := json.Marshal(r)
-	return string(b)
+    b, _ := json.Marshal(r)
+    return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -19433,7 +19447,7 @@ type ModifyKafkaConsumerRequestParams struct {
 
 type ModifyKafkaConsumerRequest struct {
 	*tchttp.BaseRequest
-
+	
 	// <p>日志主题Id。</p><ul><li>通过 <a href="https://cloud.tencent.com/document/product/614/56454">获取日志主题列表</a> 获取日志主题Id。</li><li>通过 <a href="https://cloud.tencent.com/document/product/614/56456">创建日志主题</a> 获取日志主题Id。</li></ul>
 	FromTopicId *string `json:"FromTopicId,omitnil,omitempty" name:"FromTopicId"`
 
@@ -19451,8 +19465,8 @@ type ModifyKafkaConsumerRequest struct {
 }
 
 func (r *ModifyKafkaConsumerRequest) ToJsonString() string {
-	b, _ := json.Marshal(r)
-	return string(b)
+    b, _ := json.Marshal(r)
+    return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -19485,8 +19499,8 @@ type ModifyKafkaConsumerResponse struct {
 }
 
 func (r *ModifyKafkaConsumerResponse) ToJsonString() string {
-	b, _ := json.Marshal(r)
-	return string(b)
+    b, _ := json.Marshal(r)
+    return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -19527,7 +19541,7 @@ type ModifyKafkaRechargeRequestParams struct {
 	Protocol *KafkaProtocolInfo `json:"Protocol,omitnil,omitempty" name:"Protocol"`
 
 	// 用户需要导入的Kafka相关topic列表，多个topic之间使用半角逗号隔开。
-	//
+	// 
 	// - Kafka类型为腾讯云CKafka时：通过 [获取主题列表](https://cloud.tencent.com/document/product/597/40847) 获取TopicName。
 	UserKafkaTopics *string `json:"UserKafkaTopics,omitnil,omitempty" name:"UserKafkaTopics"`
 
@@ -19546,7 +19560,7 @@ type ModifyKafkaRechargeRequestParams struct {
 
 type ModifyKafkaRechargeRequest struct {
 	*tchttp.BaseRequest
-
+	
 	// 导入配置Id。
 	// - 通过 [创建Kafka数据订阅任务](https://cloud.tencent.com/document/product/614/94448)获取Kafka导入配置Id。
 	// - 通过 [获取Kafka数据订阅任务列表](https://cloud.tencent.com/document/product/614/94446)获取Kafka导入配置Id。
@@ -19577,7 +19591,7 @@ type ModifyKafkaRechargeRequest struct {
 	Protocol *KafkaProtocolInfo `json:"Protocol,omitnil,omitempty" name:"Protocol"`
 
 	// 用户需要导入的Kafka相关topic列表，多个topic之间使用半角逗号隔开。
-	//
+	// 
 	// - Kafka类型为腾讯云CKafka时：通过 [获取主题列表](https://cloud.tencent.com/document/product/597/40847) 获取TopicName。
 	UserKafkaTopics *string `json:"UserKafkaTopics,omitnil,omitempty" name:"UserKafkaTopics"`
 
@@ -19595,8 +19609,8 @@ type ModifyKafkaRechargeRequest struct {
 }
 
 func (r *ModifyKafkaRechargeRequest) ToJsonString() string {
-	b, _ := json.Marshal(r)
-	return string(b)
+    b, _ := json.Marshal(r)
+    return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -19637,8 +19651,8 @@ type ModifyKafkaRechargeResponse struct {
 }
 
 func (r *ModifyKafkaRechargeResponse) ToJsonString() string {
-	b, _ := json.Marshal(r)
-	return string(b)
+    b, _ := json.Marshal(r)
+    return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -19661,7 +19675,7 @@ type ModifyLogsetRequestParams struct {
 
 type ModifyLogsetRequest struct {
 	*tchttp.BaseRequest
-
+	
 	// 日志集Id。通过 [获取日志集列表](https://cloud.tencent.com/document/product/614/58624)获取日志集Id。
 	LogsetId *string `json:"LogsetId,omitnil,omitempty" name:"LogsetId"`
 
@@ -19673,8 +19687,8 @@ type ModifyLogsetRequest struct {
 }
 
 func (r *ModifyLogsetRequest) ToJsonString() string {
-	b, _ := json.Marshal(r)
-	return string(b)
+    b, _ := json.Marshal(r)
+    return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -19705,8 +19719,8 @@ type ModifyLogsetResponse struct {
 }
 
 func (r *ModifyLogsetResponse) ToJsonString() string {
-	b, _ := json.Marshal(r)
-	return string(b)
+    b, _ := json.Marshal(r)
+    return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -19727,7 +19741,7 @@ type ModifyMachineGroupRequestParams struct {
 	// - 不能包含字符'|'
 	GroupName *string `json:"GroupName,omitnil,omitempty" name:"GroupName"`
 
-	// 机器组类型。
+	// 机器组类型。 
 	// Type：ip，Values中为ip字符串列表机器组；
 	// Type：label，Values中为标签字符串列表机器组。
 	MachineGroupType *MachineGroupTypeInfo `json:"MachineGroupType,omitnil,omitempty" name:"MachineGroupType"`
@@ -19758,7 +19772,7 @@ type ModifyMachineGroupRequestParams struct {
 
 type ModifyMachineGroupRequest struct {
 	*tchttp.BaseRequest
-
+	
 	// 机器组Id
 	// - 通过[获取机器组列表](https://cloud.tencent.com/document/product/614/56438)获取机器组Id。
 	GroupId *string `json:"GroupId,omitnil,omitempty" name:"GroupId"`
@@ -19769,7 +19783,7 @@ type ModifyMachineGroupRequest struct {
 	// - 不能包含字符'|'
 	GroupName *string `json:"GroupName,omitnil,omitempty" name:"GroupName"`
 
-	// 机器组类型。
+	// 机器组类型。 
 	// Type：ip，Values中为ip字符串列表机器组；
 	// Type：label，Values中为标签字符串列表机器组。
 	MachineGroupType *MachineGroupTypeInfo `json:"MachineGroupType,omitnil,omitempty" name:"MachineGroupType"`
@@ -19799,8 +19813,8 @@ type ModifyMachineGroupRequest struct {
 }
 
 func (r *ModifyMachineGroupRequest) ToJsonString() string {
-	b, _ := json.Marshal(r)
-	return string(b)
+    b, _ := json.Marshal(r)
+    return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -19838,8 +19852,8 @@ type ModifyMachineGroupResponse struct {
 }
 
 func (r *ModifyMachineGroupResponse) ToJsonString() string {
-	b, _ := json.Marshal(r)
-	return string(b)
+    b, _ := json.Marshal(r)
+    return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -19901,7 +19915,7 @@ type ModifyMetricConfigRequestParams struct {
 
 type ModifyMetricConfigRequest struct {
 	*tchttp.BaseRequest
-
+	
 	// 指标日志主题id。
 	// - 通过 [获取日志主题列表](https://cloud.tencent.com/document/product/614/56454) 获取日志主题Id。注意BizType 0:日志主题（默认值）， 1:指标主题
 	// - 通过 [创建日志主题](https://cloud.tencent.com/document/product/614/56456) 获取日志主题Id。注意BizType 0:日志主题（默认值）， 1:指标主题
@@ -19952,8 +19966,8 @@ type ModifyMetricConfigRequest struct {
 }
 
 func (r *ModifyMetricConfigRequest) ToJsonString() string {
-	b, _ := json.Marshal(r)
-	return string(b)
+    b, _ := json.Marshal(r)
+    return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -19994,8 +20008,8 @@ type ModifyMetricConfigResponse struct {
 }
 
 func (r *ModifyMetricConfigResponse) ToJsonString() string {
-	b, _ := json.Marshal(r)
-	return string(b)
+    b, _ := json.Marshal(r)
+    return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -20025,16 +20039,16 @@ type ModifyMetricSubscribeRequestParams struct {
 	InstanceInfo *InstanceConfig `json:"InstanceInfo,omitnil,omitempty" name:"InstanceInfo"`
 
 	// 任务状态。
-	//
+	// 
 	// 1： 未启用
-	//
+	// 
 	// 2： 启用
 	Enable *uint64 `json:"Enable,omitnil,omitempty" name:"Enable"`
 }
 
 type ModifyMetricSubscribeRequest struct {
 	*tchttp.BaseRequest
-
+	
 	// 指标采集任务的日志主题id。必填字段
 	TopicId *string `json:"TopicId,omitnil,omitempty" name:"TopicId"`
 
@@ -20054,16 +20068,16 @@ type ModifyMetricSubscribeRequest struct {
 	InstanceInfo *InstanceConfig `json:"InstanceInfo,omitnil,omitempty" name:"InstanceInfo"`
 
 	// 任务状态。
-	//
+	// 
 	// 1： 未启用
-	//
+	// 
 	// 2： 启用
 	Enable *uint64 `json:"Enable,omitnil,omitempty" name:"Enable"`
 }
 
 func (r *ModifyMetricSubscribeRequest) ToJsonString() string {
-	b, _ := json.Marshal(r)
-	return string(b)
+    b, _ := json.Marshal(r)
+    return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -20098,8 +20112,8 @@ type ModifyMetricSubscribeResponse struct {
 }
 
 func (r *ModifyMetricSubscribeResponse) ToJsonString() string {
-	b, _ := json.Marshal(r)
-	return string(b)
+    b, _ := json.Marshal(r)
+    return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -20119,7 +20133,7 @@ type ModifyNetworkApplicationRequestParams struct {
 
 type ModifyNetworkApplicationRequest struct {
 	*tchttp.BaseRequest
-
+	
 	// <p>网络应用id</p>
 	NetworkAppId *string `json:"NetworkAppId,omitnil,omitempty" name:"NetworkAppId"`
 
@@ -20128,8 +20142,8 @@ type ModifyNetworkApplicationRequest struct {
 }
 
 func (r *ModifyNetworkApplicationRequest) ToJsonString() string {
-	b, _ := json.Marshal(r)
-	return string(b)
+    b, _ := json.Marshal(r)
+    return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -20159,8 +20173,8 @@ type ModifyNetworkApplicationResponse struct {
 }
 
 func (r *ModifyNetworkApplicationResponse) ToJsonString() string {
-	b, _ := json.Marshal(r)
-	return string(b)
+    b, _ := json.Marshal(r)
+    return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -20178,7 +20192,7 @@ type ModifyNoticeContentRequestParams struct {
 	Name *string `json:"Name,omitnil,omitempty" name:"Name"`
 
 	// 通知内容语言。
-	//
+	// 
 	// 0：中文 1：英文
 	Type *uint64 `json:"Type,omitnil,omitempty" name:"Type"`
 
@@ -20188,7 +20202,7 @@ type ModifyNoticeContentRequestParams struct {
 
 type ModifyNoticeContentRequest struct {
 	*tchttp.BaseRequest
-
+	
 	// 通知内容模板ID。-通过[获取通知内容模板](https://cloud.tencent.com/document/api/614/111714)获取通知内容模板ID
 	NoticeContentId *string `json:"NoticeContentId,omitnil,omitempty" name:"NoticeContentId"`
 
@@ -20196,7 +20210,7 @@ type ModifyNoticeContentRequest struct {
 	Name *string `json:"Name,omitnil,omitempty" name:"Name"`
 
 	// 通知内容语言。
-	//
+	// 
 	// 0：中文 1：英文
 	Type *uint64 `json:"Type,omitnil,omitempty" name:"Type"`
 
@@ -20205,8 +20219,8 @@ type ModifyNoticeContentRequest struct {
 }
 
 func (r *ModifyNoticeContentRequest) ToJsonString() string {
-	b, _ := json.Marshal(r)
-	return string(b)
+    b, _ := json.Marshal(r)
+    return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -20238,8 +20252,8 @@ type ModifyNoticeContentResponse struct {
 }
 
 func (r *ModifyNoticeContentResponse) ToJsonString() string {
-	b, _ := json.Marshal(r)
-	return string(b)
+    b, _ := json.Marshal(r)
+    return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -20289,7 +20303,7 @@ type ModifyRecordingRuleTaskRequestParams struct {
 
 type ModifyRecordingRuleTaskRequest struct {
 	*tchttp.BaseRequest
-
+	
 	// <p>任务ID</p>
 	TaskId *string `json:"TaskId,omitnil,omitempty" name:"TaskId"`
 
@@ -20328,8 +20342,8 @@ type ModifyRecordingRuleTaskRequest struct {
 }
 
 func (r *ModifyRecordingRuleTaskRequest) ToJsonString() string {
-	b, _ := json.Marshal(r)
-	return string(b)
+    b, _ := json.Marshal(r)
+    return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -20372,8 +20386,8 @@ type ModifyRecordingRuleTaskResponse struct {
 }
 
 func (r *ModifyRecordingRuleTaskResponse) ToJsonString() string {
-	b, _ := json.Marshal(r)
-	return string(b)
+    b, _ := json.Marshal(r)
+    return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -20417,7 +20431,7 @@ type ModifyRecordingRuleYamlTaskRequestParams struct {
 
 type ModifyRecordingRuleYamlTaskRequest struct {
 	*tchttp.BaseRequest
-
+	
 	// <p>Yaml配置id</p>
 	YamlID *string `json:"YamlID,omitnil,omitempty" name:"YamlID"`
 
@@ -20450,8 +20464,8 @@ type ModifyRecordingRuleYamlTaskRequest struct {
 }
 
 func (r *ModifyRecordingRuleYamlTaskRequest) ToJsonString() string {
-	b, _ := json.Marshal(r)
-	return string(b)
+    b, _ := json.Marshal(r)
+    return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -20489,8 +20503,8 @@ type ModifyRecordingRuleYamlTaskResponse struct {
 }
 
 func (r *ModifyRecordingRuleYamlTaskResponse) ToJsonString() string {
-	b, _ := json.Marshal(r)
-	return string(b)
+    b, _ := json.Marshal(r)
+    return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -20526,7 +20540,7 @@ type ModifyRemoteWriteTaskRequestParams struct {
 	// 目标地址
 	RemoteWriteURL *string `json:"RemoteWriteURL,omitnil,omitempty" name:"RemoteWriteURL"`
 
-	// 0: 无鉴权 1: basic_auth 2: token
+	// 0: 无鉴权 1: basic_auth 2: token	
 	AuthType *uint64 `json:"AuthType,omitnil,omitempty" name:"AuthType"`
 
 	// 鉴权信息
@@ -20541,7 +20555,7 @@ type ModifyRemoteWriteTaskRequestParams struct {
 
 type ModifyRemoteWriteTaskRequest struct {
 	*tchttp.BaseRequest
-
+	
 	// 任务id
 	TaskId *string `json:"TaskId,omitnil,omitempty" name:"TaskId"`
 
@@ -20567,7 +20581,7 @@ type ModifyRemoteWriteTaskRequest struct {
 	// 目标地址
 	RemoteWriteURL *string `json:"RemoteWriteURL,omitnil,omitempty" name:"RemoteWriteURL"`
 
-	// 0: 无鉴权 1: basic_auth 2: token
+	// 0: 无鉴权 1: basic_auth 2: token	
 	AuthType *uint64 `json:"AuthType,omitnil,omitempty" name:"AuthType"`
 
 	// 鉴权信息
@@ -20581,8 +20595,8 @@ type ModifyRemoteWriteTaskRequest struct {
 }
 
 func (r *ModifyRemoteWriteTaskRequest) ToJsonString() string {
-	b, _ := json.Marshal(r)
-	return string(b)
+    b, _ := json.Marshal(r)
+    return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -20621,8 +20635,8 @@ type ModifyRemoteWriteTaskResponse struct {
 }
 
 func (r *ModifyRemoteWriteTaskResponse) ToJsonString() string {
-	b, _ := json.Marshal(r)
-	return string(b)
+    b, _ := json.Marshal(r)
+    return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -20678,7 +20692,7 @@ type ModifyS3RechargeRequestParams struct {
 
 type ModifyS3RechargeRequest struct {
 	*tchttp.BaseRequest
-
+	
 	// <p>导入任务Id</p>
 	TaskId *string `json:"TaskId,omitnil,omitempty" name:"TaskId"`
 
@@ -20723,8 +20737,8 @@ type ModifyS3RechargeRequest struct {
 }
 
 func (r *ModifyS3RechargeRequest) ToJsonString() string {
-	b, _ := json.Marshal(r)
-	return string(b)
+    b, _ := json.Marshal(r)
+    return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -20766,8 +20780,8 @@ type ModifyS3RechargeResponse struct {
 }
 
 func (r *ModifyS3RechargeResponse) ToJsonString() string {
-	b, _ := json.Marshal(r)
-	return string(b)
+    b, _ := json.Marshal(r)
+    return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -20823,7 +20837,7 @@ type ModifyScheduledSqlRequestParams struct {
 
 type ModifyScheduledSqlRequest struct {
 	*tchttp.BaseRequest
-
+	
 	// <p>任务ID，通过<a href="https://cloud.tencent.com/document/product/614/95519">获取定时SQL分析任务列表</a>获取</p>
 	TaskId *string `json:"TaskId,omitnil,omitempty" name:"TaskId"`
 
@@ -20868,8 +20882,8 @@ type ModifyScheduledSqlRequest struct {
 }
 
 func (r *ModifyScheduledSqlRequest) ToJsonString() string {
-	b, _ := json.Marshal(r)
-	return string(b)
+    b, _ := json.Marshal(r)
+    return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -20911,8 +20925,8 @@ type ModifyScheduledSqlResponse struct {
 }
 
 func (r *ModifyScheduledSqlResponse) ToJsonString() string {
-	b, _ := json.Marshal(r)
-	return string(b)
+    b, _ := json.Marshal(r)
+    return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -20941,7 +20955,7 @@ type ModifySearchViewRequestParams struct {
 
 type ModifySearchViewRequest struct {
 	*tchttp.BaseRequest
-
+	
 	// <p>视图ID</p>
 	ViewId *string `json:"ViewId,omitnil,omitempty" name:"ViewId"`
 
@@ -20959,8 +20973,8 @@ type ModifySearchViewRequest struct {
 }
 
 func (r *ModifySearchViewRequest) ToJsonString() string {
-	b, _ := json.Marshal(r)
-	return string(b)
+    b, _ := json.Marshal(r)
+    return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -20993,8 +21007,8 @@ type ModifySearchViewResponse struct {
 }
 
 func (r *ModifySearchViewResponse) ToJsonString() string {
-	b, _ := json.Marshal(r)
-	return string(b)
+    b, _ := json.Marshal(r)
+    return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -21059,7 +21073,7 @@ type ModifyShipperRequestParams struct {
 
 type ModifyShipperRequest struct {
 	*tchttp.BaseRequest
-
+	
 	// <p>投递规则Id。</p><ul><li>通过 <a href="https://cloud.tencent.com/document/product/614/58745">获取投递任务列表</a>获取ShipperId。</li></ul>
 	ShipperId *string `json:"ShipperId,omitnil,omitempty" name:"ShipperId"`
 
@@ -21113,8 +21127,8 @@ type ModifyShipperRequest struct {
 }
 
 func (r *ModifyShipperRequest) ToJsonString() string {
-	b, _ := json.Marshal(r)
-	return string(b)
+    b, _ := json.Marshal(r)
+    return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -21159,8 +21173,8 @@ type ModifyShipperResponse struct {
 }
 
 func (r *ModifyShipperResponse) ToJsonString() string {
-	b, _ := json.Marshal(r)
-	return string(b)
+    b, _ := json.Marshal(r)
+    return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -21216,7 +21230,7 @@ type ModifySplunkDeliverRequestParams struct {
 
 type ModifySplunkDeliverRequest struct {
 	*tchttp.BaseRequest
-
+	
 	// <p>任务id</p>
 	TaskId *string `json:"TaskId,omitnil,omitempty" name:"TaskId"`
 
@@ -21261,8 +21275,8 @@ type ModifySplunkDeliverRequest struct {
 }
 
 func (r *ModifySplunkDeliverRequest) ToJsonString() string {
-	b, _ := json.Marshal(r)
-	return string(b)
+    b, _ := json.Marshal(r)
+    return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -21304,8 +21318,8 @@ type ModifySplunkDeliverResponse struct {
 }
 
 func (r *ModifySplunkDeliverResponse) ToJsonString() string {
-	b, _ := json.Marshal(r)
-	return string(b)
+    b, _ := json.Marshal(r)
+    return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -21373,7 +21387,7 @@ type ModifyTopicRequestParams struct {
 
 type ModifyTopicRequest struct {
 	*tchttp.BaseRequest
-
+	
 	// <p>主题ID- 通过<a href="https://cloud.tencent.com/document/product/614/56454">获取主题列表</a>获取主题Id。</p>
 	TopicId *string `json:"TopicId,omitnil,omitempty" name:"TopicId"`
 
@@ -21430,8 +21444,8 @@ type ModifyTopicRequest struct {
 }
 
 func (r *ModifyTopicRequest) ToJsonString() string {
-	b, _ := json.Marshal(r)
-	return string(b)
+    b, _ := json.Marshal(r)
+    return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -21477,8 +21491,8 @@ type ModifyTopicResponse struct {
 }
 
 func (r *ModifyTopicResponse) ToJsonString() string {
-	b, _ := json.Marshal(r)
-	return string(b)
+    b, _ := json.Marshal(r)
+    return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -21496,7 +21510,7 @@ type ModifyWebCallbackRequestParams struct {
 	Name *string `json:"Name,omitnil,omitempty" name:"Name"`
 
 	// 渠道类型
-	//
+	// 
 	// WeCom:企业微信;DingTalk:钉钉;Lark:飞书;Http:自定义回调;
 	Type *string `json:"Type,omitnil,omitempty" name:"Type"`
 
@@ -21504,9 +21518,9 @@ type ModifyWebCallbackRequestParams struct {
 	Webhook *string `json:"Webhook,omitnil,omitempty" name:"Webhook"`
 
 	// 请求方式。
-	//
+	// 
 	// 支持POST、PUT。
-	//
+	// 
 	// 注意：当Type为Http时，必填。
 	Method *string `json:"Method,omitnil,omitempty" name:"Method"`
 
@@ -21516,7 +21530,7 @@ type ModifyWebCallbackRequestParams struct {
 
 type ModifyWebCallbackRequest struct {
 	*tchttp.BaseRequest
-
+	
 	// 告警渠道回调配置ID。-通过[获取告警渠道回调配置列表](https://cloud.tencent.com/document/api/614/115229)获取告警渠道回调配置ID
 	WebCallbackId *string `json:"WebCallbackId,omitnil,omitempty" name:"WebCallbackId"`
 
@@ -21524,7 +21538,7 @@ type ModifyWebCallbackRequest struct {
 	Name *string `json:"Name,omitnil,omitempty" name:"Name"`
 
 	// 渠道类型
-	//
+	// 
 	// WeCom:企业微信;DingTalk:钉钉;Lark:飞书;Http:自定义回调;
 	Type *string `json:"Type,omitnil,omitempty" name:"Type"`
 
@@ -21532,9 +21546,9 @@ type ModifyWebCallbackRequest struct {
 	Webhook *string `json:"Webhook,omitnil,omitempty" name:"Webhook"`
 
 	// 请求方式。
-	//
+	// 
 	// 支持POST、PUT。
-	//
+	// 
 	// 注意：当Type为Http时，必填。
 	Method *string `json:"Method,omitnil,omitempty" name:"Method"`
 
@@ -21543,8 +21557,8 @@ type ModifyWebCallbackRequest struct {
 }
 
 func (r *ModifyWebCallbackRequest) ToJsonString() string {
-	b, _ := json.Marshal(r)
-	return string(b)
+    b, _ := json.Marshal(r)
+    return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -21578,8 +21592,8 @@ type ModifyWebCallbackResponse struct {
 }
 
 func (r *ModifyWebCallbackResponse) ToJsonString() string {
-	b, _ := json.Marshal(r)
-	return string(b)
+    b, _ := json.Marshal(r)
+    return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -21621,7 +21635,7 @@ type MultiCondition struct {
 	Condition *string `json:"Condition,omitnil,omitempty" name:"Condition"`
 
 	// 告警级别。0:警告(Warn); 1:提醒(Info); 2:紧急 (Critical)。
-	//
+	// 
 	// - 不填则默认为0。
 	AlarmLevel *uint64 `json:"AlarmLevel,omitnil,omitempty" name:"AlarmLevel"`
 }
@@ -21724,7 +21738,7 @@ type NetworkApplicationInfo struct {
 
 type NoticeContent struct {
 	// 渠道类型
-	//
+	// 
 	// Email:邮件;Sms:短信;WeChat:微信;Phone:电话;WeCom:企业微信;DingTalk:钉钉;Lark:飞书;Http:自定义回调;
 	Type *string `json:"Type,omitnil,omitempty" name:"Type"`
 
@@ -21756,7 +21770,7 @@ type NoticeContentTemplate struct {
 	Name *string `json:"Name,omitnil,omitempty" name:"Name"`
 
 	// 语言类型。
-	//
+	// 
 	// 0： 中文
 	// 1： 英文
 	Type *uint64 `json:"Type,omitnil,omitempty" name:"Type"`
@@ -21765,7 +21779,7 @@ type NoticeContentTemplate struct {
 	NoticeContents []*NoticeContent `json:"NoticeContents,omitnil,omitempty" name:"NoticeContents"`
 
 	// 通知内容模板标记。
-	//
+	// 
 	// 0： 用户自定义
 	// 1： 系统内置
 	Flag *uint64 `json:"Flag,omitnil,omitempty" name:"Flag"`
@@ -21812,7 +21826,7 @@ type NoticeReceiver struct {
 	EndTime *string `json:"EndTime,omitnil,omitempty" name:"EndTime"`
 
 	// 位序。
-	//
+	// 
 	// - 入参时无效。
 	// - 出参时有效。
 	Index *int64 `json:"Index,omitnil,omitempty" name:"Index"`
@@ -21822,7 +21836,7 @@ type NoticeRule struct {
 	// 匹配规则 JSON串。
 	// **rule规则树格式为嵌套结构体JSON字符串**
 	// `{"Value":"AND","Type":"Operation","Children":[{"Value":"OR","Type":"Operation","Children":[{"Type":"Condition","Value":"Level","Children":[{"Value":"In","Type":"Compare"},{"Value":"[1,0]","Type":"Value"}]},{"Type":"Condition","Value":"Level","Children":[{"Value":"NotIn","Type":"Compare"},{"Value":"[2]","Type":"Value"}]}]}]}`
-	//
+	// 
 	// **rule规则树限制规则如下**：
 	// - 顶层rule中Type可取值：`Condition`，`Operation`
 	// - Type为`Operation`的子节点支持的Type可取值：`Condition`，`Operation`
@@ -21834,44 +21848,44 @@ type NoticeRule struct {
 	//     - value为`Between`，`NotBetween`时，下一个子节点value必须是长度为2的数组
 	//     - value为`=~`，`!=~`时，下一个子节点value必须是一个正则表达式
 	//     - value为`In`，`NotIn`时， 下一个子节点value必须是一个数组
-	//
+	// 
 	// **业务参数含义**：
 	// - Type：Condition 表示是规则条件，Value：Level 表示告警等级
 	//     - 子节点Type支持`Compare`，Value支持`In`，`NotIn`
 	//     - 下一个子节点value支持的值：0（警告），1（提醒），2 （紧急）
 	// 以下示例表示：告警等级属于提醒
 	// `{\"Value\":\"AND\",\"Type\":\"Operation\",\"Children\":[{\"Type\":\"Condition\",\"Value\":\"Level\",\"Children\":[{\"Value\":\"In\",\"Type\":\"Compare\"},{\"Value\":\"[1]\",\"Type\":\"Value\"}]}]}`
-	//
+	// 
 	// - Type：Condition 表示是规则条件，Value：NotifyType 表示通知类型
 	//     - 子节点Type支持`Compare`，Value支持`In`，`NotIn`
 	//     - 下一个子节点value支持的值：1（告警通知），2 （恢复通知）
 	// 以下示例表示：通知类型属于告警通知或通知类型不属于恢复通知
 	// `{\"Value\":\"AND\",\"Type\":\"Operation\",\"Children\":[{\"Value\":\"OR\",\"Type\":\"Operation\",\"Children\":[{\"Type\":\"Condition\",\"Value\":\"NotifyType\",\"Children\":[{\"Value\":\"In\",\"Type\":\"Compare\"},{\"Value\":\"[1]\",\"Type\":\"Value\"}]},{\"Type\":\"Condition\",\"Value\":\"NotifyType\",\"Children\":[{\"Value\":\"NotIn\",\"Type\":\"Compare\"},{\"Value\":\"[2]\",\"Type\":\"Value\"}]}]}]}`
-	//
+	// 
 	// - Type：Condition 表示是规则条件，Value：AlarmID 表示告警策略
 	//     - 子节点Type支持`Compare`，Value支持`In`，`NotIn`
 	//     - 下一个子节点value支持的值：告警策略id数组
 	// 以下示例表示：告警策略属于alarm-53af048c-254b-4c73-bb48-xxx,alarm-6dfa8bc5-08da-4d64-b6cb-xxx或告警策略不属于alarm-1036314c-1e49-4cee-a8fb-xxx
 	// `"{\"Value\":\"AND\",\"Type\":\"Operation\",\"Children\":[{\"Value\":\"OR\",\"Type\":\"Operation\",\"Children\":[{\"Type\":\"Condition\",\"Value\":\"AlarmID\",\"Children\":[{\"Value\":\"In\",\"Type\":\"Compare\"},{\"Value\":\"[\\\"alarm-53af048c-254b-4c73-bb48-xxx\\\",\\\"alarm-6dfa8bc5-08da-4d64-b6cb-xxx\\\"]\",\"Type\":\"Value\"}]},{\"Type\":\"Condition\",\"Value\":\"AlarmID\",\"Children\":[{\"Value\":\"NotIn\",\"Type\":\"Compare\"},{\"Value\":\"[\\\"alarm-1036314c-1e49-4cee-a8fb-xxx\\\"]\",\"Type\":\"Value\"}]}]}]}"`
-	//
+	// 
 	// - Type：Condition 表示是规则条件，Value：AlarmName 表示告警策略名称
 	//     - 子节点Type支持`Compare`，Value支持`=~`，`!=~`
 	//     - 下一个子节点value支持的值：必须是正则表达式
 	// 以下示例表示：告警策略名称正则匹配^test$或告警策略名称正则不匹配^hahaha$
 	// `{\"Value\":\"AND\",\"Type\":\"Operation\",\"Children\":[{\"Value\":\"OR\",\"Type\":\"Operation\",\"Children\":[{\"Type\":\"Condition\",\"Value\":\"AlarmName\",\"Children\":[{\"Value\":\"=~\",\"Type\":\"Compare\"},{\"Value\":\"^test$\",\"Type\":\"Value\"}]},{\"Type\":\"Condition\",\"Value\":\"AlarmName\",\"Children\":[{\"Value\":\"!=~\",\"Type\":\"Compare\"},{\"Value\":\"^hahaha$\",\"Type\":\"Value\"}]}]}]}`
-	//
+	// 
 	// - Type：Condition 表示是规则条件，Value：Label 表示告警分类字段
 	//     - 子节点Type支持`Compare`，Value支持`In`，`NotIn`，`=~`，`!=~`
 	//     - 下一个子节点value支持的值：`In`，`NotIn` 时value是数组，`=~`，`!=~`时value是正则表达式
 	// 以下示例表示：告警分类字段key1属于v1或告警分类字段key2不属于v2或告警分类字段key3正则匹配^test$或告警分类字段key4正则不匹配^hahaha$
 	// `{\"Value\":\"AND\",\"Type\":\"Operation\",\"Children\":[{\"Value\":\"OR\",\"Type\":\"Operation\",\"Children\":[{\"Type\":\"Condition\",\"Value\":\"Label\",\"Children\":[{\"Value\":\"key1\",\"Type\":\"Key\"},{\"Value\":\"In\",\"Type\":\"Compare\"},{\"Value\":\"[\\\"v1\\\"]\",\"Type\":\"Value\"}]},{\"Type\":\"Condition\",\"Value\":\"Label\",\"Children\":[{\"Value\":\"key2\",\"Type\":\"Key\"},{\"Value\":\"NotIn\",\"Type\":\"Compare\"},{\"Value\":\"[\\\"v2\\\"]\",\"Type\":\"Value\"}]},{\"Type\":\"Condition\",\"Value\":\"Label\",\"Children\":[{\"Value\":\"key3\",\"Type\":\"Key\"},{\"Value\":\"=~\",\"Type\":\"Compare\"},{\"Value\":\"^test$\",\"Type\":\"Value\"}]},{\"Type\":\"Condition\",\"Value\":\"Label\",\"Children\":[{\"Value\":\"key4\",\"Type\":\"Key\"},{\"Value\":\"!=~\",\"Type\":\"Compare\"},{\"Value\":\"^hahaha$\",\"Type\":\"Value\"}]}]}]}`
-	//
+	// 
 	// - Type：Condition 表示是规则条件，Value：NotifyTime 表示通知时间
 	//     - 子节点Type支持`Compare`，Value支持`Between `，`NotBetween `
 	//     - 下一个子节点value支持的值：长度为2，格式为`14:20:36`的字符串数组
 	// 以下示例表示：通知时间在指定范围内14:18:36至14:33:36或通知时间不在指定范围内14:20:36至14:30:36
 	// `{\"Value\":\"AND\",\"Type\":\"Operation\",\"Children\":[{\"Value\":\"OR\",\"Type\":\"Operation\",\"Children\":[{\"Type\":\"Condition\",\"Value\":\"NotifyTime\",\"Children\":[{\"Value\":\"Between\",\"Type\":\"Compare\"},{\"Value\":\"[\\\"14:18:36\\\",\\\"14:33:36\\\"]\",\"Type\":\"Value\"}]},{\"Type\":\"Condition\",\"Value\":\"NotifyTime\",\"Children\":[{\"Value\":\"NotBetween\",\"Type\":\"Compare\"},{\"Value\":\"[\\\"14:20:36\\\",\\\"14:30:36\\\"]\",\"Type\":\"Value\"}]}]}]}`
-	//
+	// 
 	// - Type：Condition 表示是规则条件，Value：Duration 表示告警持续时间
 	//     - 子节点Type支持`Compare`，Value支持`>`，`<`，`>=`，`<=`
 	//     - 下一个子节点value支持的值：整型值单位分钟
@@ -21911,7 +21925,7 @@ type OpenClawServiceRequestParams struct {
 
 type OpenClawServiceRequest struct {
 	*tchttp.BaseRequest
-
+	
 	// <p>标签类型</p><p>枚举值：</p><ul><li>OpenClaw： OpenClaw类型</li><li>ClawPro： ClawPro类型</li></ul>
 	Tag *string `json:"Tag,omitnil,omitempty" name:"Tag"`
 
@@ -21920,8 +21934,8 @@ type OpenClawServiceRequest struct {
 }
 
 func (r *OpenClawServiceRequest) ToJsonString() string {
-	b, _ := json.Marshal(r)
-	return string(b)
+    b, _ := json.Marshal(r)
+    return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -21993,8 +22007,8 @@ type OpenClawServiceResponse struct {
 }
 
 func (r *OpenClawServiceResponse) ToJsonString() string {
-	b, _ := json.Marshal(r)
-	return string(b)
+    b, _ := json.Marshal(r)
+    return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -22005,15 +22019,17 @@ func (r *OpenClawServiceResponse) FromJsonString(s string) error {
 
 // Predefined struct for user
 type OpenClsServiceRequestParams struct {
+
 }
 
 type OpenClsServiceRequest struct {
 	*tchttp.BaseRequest
+	
 }
 
 func (r *OpenClsServiceRequest) ToJsonString() string {
-	b, _ := json.Marshal(r)
-	return string(b)
+    b, _ := json.Marshal(r)
+    return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -22023,7 +22039,7 @@ func (r *OpenClsServiceRequest) FromJsonString(s string) error {
 	if err := json.Unmarshal([]byte(s), &f); err != nil {
 		return err
 	}
-
+	
 	if len(f) > 0 {
 		return tcerr.NewTencentCloudSDKError("ClientError.BuildRequestError", "OpenClsServiceRequest has unknown keys!", "")
 	}
@@ -22042,8 +22058,8 @@ type OpenClsServiceResponse struct {
 }
 
 func (r *OpenClsServiceResponse) ToJsonString() string {
-	b, _ := json.Marshal(r)
-	return string(b)
+    b, _ := json.Marshal(r)
+    return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -22072,7 +22088,7 @@ type OpenKafkaConsumerRequestParams struct {
 
 type OpenKafkaConsumerRequest struct {
 	*tchttp.BaseRequest
-
+	
 	// <p>日志主题Id。</p><ul><li>通过 <a href="https://cloud.tencent.com/document/product/614/56454">获取日志主题列表</a> 获取日志主题Id。</li><li>通过 <a href="https://cloud.tencent.com/document/product/614/56456">创建日志主题</a> 获取日志主题Id。</li></ul>
 	FromTopicId *string `json:"FromTopicId,omitnil,omitempty" name:"FromTopicId"`
 
@@ -22090,8 +22106,8 @@ type OpenKafkaConsumerRequest struct {
 }
 
 func (r *OpenKafkaConsumerRequest) ToJsonString() string {
-	b, _ := json.Marshal(r)
-	return string(b)
+    b, _ := json.Marshal(r)
+    return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -22127,8 +22143,8 @@ type OpenKafkaConsumerResponse struct {
 }
 
 func (r *OpenKafkaConsumerResponse) ToJsonString() string {
-	b, _ := json.Marshal(r)
-	return string(b)
+    b, _ := json.Marshal(r)
+    return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -22218,7 +22234,7 @@ type PreviewKafkaRechargeRequestParams struct {
 	Protocol *KafkaProtocolInfo `json:"Protocol,omitnil,omitempty" name:"Protocol"`
 
 	// 用户Kafka消费组。
-	//
+	// 
 	// - 消费组是 Kafka 提供的可扩展且具有容错性的消费者机制，一个消费组中存在多个消费者，组内的所有消费者共同消费订阅 Topic 中的消息。一个消费者可同时消费多个 Partition，但一个 Partition 只能被消费组内的一个消费者消费。
 	ConsumerGroupName *string `json:"ConsumerGroupName,omitnil,omitempty" name:"ConsumerGroupName"`
 
@@ -22231,7 +22247,7 @@ type PreviewKafkaRechargeRequestParams struct {
 
 type PreviewKafkaRechargeRequest struct {
 	*tchttp.BaseRequest
-
+	
 	// 预览类型，1：源数据预览；2：导出结果预览。
 	PreviewType *uint64 `json:"PreviewType,omitnil,omitempty" name:"PreviewType"`
 
@@ -22262,7 +22278,7 @@ type PreviewKafkaRechargeRequest struct {
 	Protocol *KafkaProtocolInfo `json:"Protocol,omitnil,omitempty" name:"Protocol"`
 
 	// 用户Kafka消费组。
-	//
+	// 
 	// - 消费组是 Kafka 提供的可扩展且具有容错性的消费者机制，一个消费组中存在多个消费者，组内的所有消费者共同消费订阅 Topic 中的消息。一个消费者可同时消费多个 Partition，但一个 Partition 只能被消费组内的一个消费者消费。
 	ConsumerGroupName *string `json:"ConsumerGroupName,omitnil,omitempty" name:"ConsumerGroupName"`
 
@@ -22274,8 +22290,8 @@ type PreviewKafkaRechargeRequest struct {
 }
 
 func (r *PreviewKafkaRechargeRequest) ToJsonString() string {
-	b, _ := json.Marshal(r)
-	return string(b)
+    b, _ := json.Marshal(r)
+    return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -22320,8 +22336,8 @@ type PreviewKafkaRechargeResponse struct {
 }
 
 func (r *PreviewKafkaRechargeResponse) ToJsonString() string {
-	b, _ := json.Marshal(r)
-	return string(b)
+    b, _ := json.Marshal(r)
+    return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -22345,7 +22361,7 @@ type PreviewLogStatistic struct {
 	FailReason *string `json:"FailReason,omitnil,omitempty" name:"FailReason"`
 
 	// 日志时间，格式：`2024-05-07 17:13:17.105`
-	//
+	// 
 	// - 入参时无效
 	// - 出参时有效，为日志中的时间格式
 	Time *string `json:"Time,omitnil,omitempty" name:"Time"`
@@ -22359,7 +22375,7 @@ type PreviewLogStatistic struct {
 
 // Predefined struct for user
 type QueryMetricRequestParams struct {
-	// 查询语句，使用PromQL语法
+	// 查询语句，使用PromQL语法	
 	// - 参考 [语法规则](https://cloud.tencent.com/document/product/614/90334) 文档
 	Query *string `json:"Query,omitnil,omitempty" name:"Query"`
 
@@ -22373,8 +22389,8 @@ type QueryMetricRequestParams struct {
 
 type QueryMetricRequest struct {
 	*tchttp.BaseRequest
-
-	// 查询语句，使用PromQL语法
+	
+	// 查询语句，使用PromQL语法	
 	// - 参考 [语法规则](https://cloud.tencent.com/document/product/614/90334) 文档
 	Query *string `json:"Query,omitnil,omitempty" name:"Query"`
 
@@ -22387,8 +22403,8 @@ type QueryMetricRequest struct {
 }
 
 func (r *QueryMetricRequest) ToJsonString() string {
-	b, _ := json.Marshal(r)
-	return string(b)
+    b, _ := json.Marshal(r)
+    return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -22429,8 +22445,8 @@ type QueryMetricResponse struct {
 }
 
 func (r *QueryMetricResponse) ToJsonString() string {
-	b, _ := json.Marshal(r)
-	return string(b)
+    b, _ := json.Marshal(r)
+    return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -22461,7 +22477,7 @@ type QueryRangeMetricRequestParams struct {
 
 type QueryRangeMetricRequest struct {
 	*tchttp.BaseRequest
-
+	
 	// 指标主题ID
 	// - 通过[获取日志主题列表](https://cloud.tencent.com/document/product/614/56454)获取日志主题Id。
 	TopicId *string `json:"TopicId,omitnil,omitempty" name:"TopicId"`
@@ -22481,8 +22497,8 @@ type QueryRangeMetricRequest struct {
 }
 
 func (r *QueryRangeMetricRequest) ToJsonString() string {
-	b, _ := json.Marshal(r)
-	return string(b)
+    b, _ := json.Marshal(r)
+    return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -22525,8 +22541,8 @@ type QueryRangeMetricResponse struct {
 }
 
 func (r *QueryRangeMetricResponse) ToJsonString() string {
-	b, _ := json.Marshal(r)
-	return string(b)
+    b, _ := json.Marshal(r)
+    return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -22581,7 +22597,7 @@ type RecordingRuleTaskInfo struct {
 	UpdateTime *string `json:"UpdateTime,omitnil,omitempty" name:"UpdateTime"`
 
 	// 任务状态，1:运行 2:停止 3:异常-找不到源日志主题 4:异常-找不到目标主题
-	//
+	// 
 	// 5: 访问权限问题 6:内部故障 7:其他故障
 	Status *int64 `json:"Status,omitnil,omitempty" name:"Status"`
 
@@ -22636,7 +22652,7 @@ type RecordingRuleYamlTaskInfo struct {
 	UpdateTime *string `json:"UpdateTime,omitnil,omitempty" name:"UpdateTime"`
 
 	// 任务状态，1:运行 2:停止 3:异常-找不到源日志主题 4:异常-找不到目标主题
-	//
+	// 
 	// 5: 访问权限问题 6:内部故障 7:其他故障
 	Status *int64 `json:"Status,omitnil,omitempty" name:"Status"`
 
@@ -22699,7 +22715,7 @@ type Relabeling struct {
 	// 注意：此字段可能返回 null，表示取不到有效值。
 	Replacement *string `json:"Replacement,omitnil,omitempty" name:"Replacement"`
 
-	// 正则表达式。提取与之匹配值。必填时不能为空串，校验必须是一个合法的 RE2
+	// 正则表达式。提取与之匹配值。必填时不能为空串，校验必须是一个合法的 RE2 
 	// 注意：此字段可能返回 null，表示取不到有效值。
 	Regex *string `json:"Regex,omitnil,omitempty" name:"Regex"`
 
@@ -22793,33 +22809,33 @@ type RemoteWriteInfo struct {
 // Predefined struct for user
 type RetryShipperTaskRequestParams struct {
 	// 投递规则Id。
-	//
+	// 
 	// - 通过 [获取投递任务列表](https://cloud.tencent.com/document/product/614/58745)获取ShipperId。
 	ShipperId *string `json:"ShipperId,omitnil,omitempty" name:"ShipperId"`
 
 	// 投递任务Id。
-	//
+	// 
 	// - 通过 [获取投递任务列表](https://cloud.tencent.com/document/product/614/58745) 获取TaskId。
 	TaskId *string `json:"TaskId,omitnil,omitempty" name:"TaskId"`
 }
 
 type RetryShipperTaskRequest struct {
 	*tchttp.BaseRequest
-
+	
 	// 投递规则Id。
-	//
+	// 
 	// - 通过 [获取投递任务列表](https://cloud.tencent.com/document/product/614/58745)获取ShipperId。
 	ShipperId *string `json:"ShipperId,omitnil,omitempty" name:"ShipperId"`
 
 	// 投递任务Id。
-	//
+	// 
 	// - 通过 [获取投递任务列表](https://cloud.tencent.com/document/product/614/58745) 获取TaskId。
 	TaskId *string `json:"TaskId,omitnil,omitempty" name:"TaskId"`
 }
 
 func (r *RetryShipperTaskRequest) ToJsonString() string {
-	b, _ := json.Marshal(r)
-	return string(b)
+    b, _ := json.Marshal(r)
+    return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -22849,8 +22865,8 @@ type RetryShipperTaskResponse struct {
 }
 
 func (r *RetryShipperTaskResponse) ToJsonString() string {
-	b, _ := json.Marshal(r)
-	return string(b)
+    b, _ := json.Marshal(r)
+    return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -23053,15 +23069,15 @@ type SearchCosRechargeInfoRequestParams struct {
 	TopicId *string `json:"TopicId,omitnil,omitempty" name:"TopicId"`
 
 	// 日志集Id。
-	//
+	// 
 	// - 通过[获取日志集列表](https://cloud.tencent.com/document/product/614/58624)获取日志集Id。
 	LogsetId *string `json:"LogsetId,omitnil,omitempty" name:"LogsetId"`
 
 	// COS导入任务名称,最大支持128个字节。
 	Name *string `json:"Name,omitnil,omitempty" name:"Name"`
 
-	// COS存储桶，详见产品支持的[存储桶命名规范](https://cloud.tencent.com/document/product/436/13312)。
-	//
+	// COS存储桶，详见产品支持的[存储桶命名规范](https://cloud.tencent.com/document/product/436/13312)。	
+	// 
 	// - 通过[GET Service（List Buckets）](https://cloud.tencent.com/document/product/436/8291)获取COS存储桶。
 	Bucket *string `json:"Bucket,omitnil,omitempty" name:"Bucket"`
 
@@ -23077,21 +23093,21 @@ type SearchCosRechargeInfoRequestParams struct {
 
 type SearchCosRechargeInfoRequest struct {
 	*tchttp.BaseRequest
-
+	
 	// 日志主题Id。
 	// - 通过[获取日志主题列表](https://cloud.tencent.com/document/product/614/56454)获取日志主题Id。
 	TopicId *string `json:"TopicId,omitnil,omitempty" name:"TopicId"`
 
 	// 日志集Id。
-	//
+	// 
 	// - 通过[获取日志集列表](https://cloud.tencent.com/document/product/614/58624)获取日志集Id。
 	LogsetId *string `json:"LogsetId,omitnil,omitempty" name:"LogsetId"`
 
 	// COS导入任务名称,最大支持128个字节。
 	Name *string `json:"Name,omitnil,omitempty" name:"Name"`
 
-	// COS存储桶，详见产品支持的[存储桶命名规范](https://cloud.tencent.com/document/product/436/13312)。
-	//
+	// COS存储桶，详见产品支持的[存储桶命名规范](https://cloud.tencent.com/document/product/436/13312)。	
+	// 
 	// - 通过[GET Service（List Buckets）](https://cloud.tencent.com/document/product/436/8291)获取COS存储桶。
 	Bucket *string `json:"Bucket,omitnil,omitempty" name:"Bucket"`
 
@@ -23106,8 +23122,8 @@ type SearchCosRechargeInfoRequest struct {
 }
 
 func (r *SearchCosRechargeInfoRequest) ToJsonString() string {
-	b, _ := json.Marshal(r)
-	return string(b)
+    b, _ := json.Marshal(r)
+    return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -23166,8 +23182,8 @@ type SearchCosRechargeInfoResponse struct {
 }
 
 func (r *SearchCosRechargeInfoResponse) ToJsonString() string {
-	b, _ := json.Marshal(r)
-	return string(b)
+    b, _ := json.Marshal(r)
+    return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -23193,7 +23209,7 @@ type SearchDashboardSubscribeRequestParams struct {
 
 type SearchDashboardSubscribeRequest struct {
 	*tchttp.BaseRequest
-
+	
 	// 仪表盘id。通过 [获取仪表盘](https://cloud.tencent.com/document/api/614/95636)接口获取DashboardId。
 	DashboardId *string `json:"DashboardId,omitnil,omitempty" name:"DashboardId"`
 
@@ -23208,8 +23224,8 @@ type SearchDashboardSubscribeRequest struct {
 }
 
 func (r *SearchDashboardSubscribeRequest) ToJsonString() string {
-	b, _ := json.Marshal(r)
-	return string(b)
+    b, _ := json.Marshal(r)
+    return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -23241,8 +23257,8 @@ type SearchDashboardSubscribeResponse struct {
 }
 
 func (r *SearchDashboardSubscribeResponse) ToJsonString() string {
-	b, _ := json.Marshal(r)
-	return string(b)
+    b, _ := json.Marshal(r)
+    return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -23327,7 +23343,7 @@ type SearchLogRequestParams struct {
 
 type SearchLogRequest struct {
 	*tchttp.BaseRequest
-
+	
 	// <p>要检索分析的日志的起始时间，<strong>Unix时间戳（毫秒）</strong></p>
 	From *int64 `json:"From,omitnil,omitempty" name:"From"`
 
@@ -23375,8 +23391,8 @@ type SearchLogRequest struct {
 }
 
 func (r *SearchLogRequest) ToJsonString() string {
-	b, _ := json.Marshal(r)
-	return string(b)
+    b, _ := json.Marshal(r)
+    return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -23455,8 +23471,8 @@ type SearchLogResponse struct {
 }
 
 func (r *SearchLogResponse) ToJsonString() string {
-	b, _ := json.Marshal(r)
-	return string(b)
+    b, _ := json.Marshal(r)
+    return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -23505,7 +23521,7 @@ type SearchS3RechargeInfoRequestParams struct {
 
 type SearchS3RechargeInfoRequest struct {
 	*tchttp.BaseRequest
-
+	
 	// <p>日志主题Id。</p><ul><li>通过<a href="https://cloud.tencent.com/document/product/614/56454">获取日志主题列表</a>获取日志主题Id。</li></ul>
 	TopicId *string `json:"TopicId,omitnil,omitempty" name:"TopicId"`
 
@@ -23535,8 +23551,8 @@ type SearchS3RechargeInfoRequest struct {
 }
 
 func (r *SearchS3RechargeInfoRequest) ToJsonString() string {
-	b, _ := json.Marshal(r)
-	return string(b)
+    b, _ := json.Marshal(r)
+    return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -23588,8 +23604,8 @@ type SearchS3RechargeInfoResponse struct {
 }
 
 func (r *SearchS3RechargeInfoResponse) ToJsonString() string {
-	b, _ := json.Marshal(r)
-	return string(b)
+    b, _ := json.Marshal(r)
+    return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -23645,7 +23661,7 @@ type SendConsumerHeartbeatRequestParams struct {
 
 type SendConsumerHeartbeatRequest struct {
 	*tchttp.BaseRequest
-
+	
 	// 上报心跳的消费组标识
 	ConsumerGroup *string `json:"ConsumerGroup,omitnil,omitempty" name:"ConsumerGroup"`
 
@@ -23661,8 +23677,8 @@ type SendConsumerHeartbeatRequest struct {
 }
 
 func (r *SendConsumerHeartbeatRequest) ToJsonString() string {
-	b, _ := json.Marshal(r)
-	return string(b)
+    b, _ := json.Marshal(r)
+    return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -23700,8 +23716,8 @@ type SendConsumerHeartbeatResponse struct {
 }
 
 func (r *SendConsumerHeartbeatResponse) ToJsonString() string {
-	b, _ := json.Marshal(r)
-	return string(b)
+    b, _ := json.Marshal(r)
+    return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -23711,6 +23727,7 @@ func (r *SendConsumerHeartbeatResponse) FromJsonString(s string) error {
 }
 
 type ServiceLogConfigInfo struct {
+
 }
 
 type ShipperInfo struct {
@@ -23813,7 +23830,7 @@ type ShipperTaskInfo struct {
 	EndTime *int64 `json:"EndTime,omitnil,omitempty" name:"EndTime"`
 
 	// 本次投递的结果。"success"，"running"，"failed"
-	//
+	// 
 	// - success：任务成功。
 	// - running：任务处理中。
 	// - failed：任务失败。
@@ -23842,7 +23859,7 @@ type SplitPartitionRequestParams struct {
 
 type SplitPartitionRequest struct {
 	*tchttp.BaseRequest
-
+	
 	// 日志主题Id
 	// - 通过[获取日志主题列表](https://cloud.tencent.com/document/product/614/56454)获取日志主题Id。
 	TopicId *string `json:"TopicId,omitnil,omitempty" name:"TopicId"`
@@ -23859,8 +23876,8 @@ type SplitPartitionRequest struct {
 }
 
 func (r *SplitPartitionRequest) ToJsonString() string {
-	b, _ := json.Marshal(r)
-	return string(b)
+    b, _ := json.Marshal(r)
+    return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -23895,8 +23912,8 @@ type SplitPartitionResponse struct {
 }
 
 func (r *SplitPartitionResponse) ToJsonString() string {
-	b, _ := json.Marshal(r)
-	return string(b)
+    b, _ := json.Marshal(r)
+    return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -24002,7 +24019,7 @@ type TopicIdAndRegion struct {
 	TopicId *string `json:"TopicId,omitnil,omitempty" name:"TopicId"`
 
 	// 日志主题id所在的地域id。
-	//
+	// 
 	// id,地域,简称信息如下：
 	// - 1,   广州,ap-guangzhou
 	// - 4,   上海,ap-shanghai
@@ -24154,7 +24171,7 @@ type UploadLogRequestParams struct {
 
 type UploadLogRequest struct {
 	*tchttp.BaseRequest
-
+	
 	// 日志主题id
 	// - 通过[获取日志主题列表](https://cloud.tencent.com/document/product/614/56454)获取日志主题Id。
 	TopicId *string `json:"TopicId,omitnil,omitempty" name:"TopicId"`
@@ -24169,8 +24186,8 @@ type UploadLogRequest struct {
 }
 
 func (r *UploadLogRequest) ToJsonString() string {
-	b, _ := json.Marshal(r)
-	return string(b)
+    b, _ := json.Marshal(r)
+    return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -24201,8 +24218,8 @@ type UploadLogResponse struct {
 }
 
 func (r *UploadLogResponse) ToJsonString() string {
-	b, _ := json.Marshal(r)
-	return string(b)
+    b, _ := json.Marshal(r)
+    return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -24285,7 +24302,7 @@ type WebCallback struct {
 	// 回调方法。可选值：
 	// - POST（默认值）
 	// - PUT
-	//
+	// 
 	// 注意：
 	// - 参数CallbackType为Http时为必选，其它回调方式无需填写。
 	Method *string `json:"Method,omitnil,omitempty" name:"Method"`
@@ -24294,7 +24311,7 @@ type WebCallback struct {
 	NoticeContentId *string `json:"NoticeContentId,omitnil,omitempty" name:"NoticeContentId"`
 
 	// 提醒类型。
-	//
+	// 
 	// 0：不提醒；1：指定人；2：所有人
 	RemindType *uint64 `json:"RemindType,omitnil,omitempty" name:"RemindType"`
 
@@ -24329,7 +24346,7 @@ type WebCallbackInfo struct {
 	Name *string `json:"Name,omitnil,omitempty" name:"Name"`
 
 	// 渠道类型
-	//
+	// 
 	// WeCom:企业微信;DingTalk:钉钉;Lark:飞书;Http:自定义回调;
 	Type *string `json:"Type,omitnil,omitempty" name:"Type"`
 
