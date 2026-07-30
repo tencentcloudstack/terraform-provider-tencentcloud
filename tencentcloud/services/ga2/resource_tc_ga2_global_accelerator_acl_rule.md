@@ -1,5 +1,7 @@
 Provides a resource to create a Tencent Cloud Global Accelerator V2 (GA2) ACL rule.
 
+~> **NOTE:** If batch operations on `acl_rule` are required, it is recommended to use resource `tencentcloud_ga2_global_accelerator_acl_rule_set`.
+
 Example Usage
 
 ```hcl

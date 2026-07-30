@@ -1,5 +1,9 @@
 Provides a resource to create a Tencent Cloud Global Accelerator V2 (GA2) ACL rule set that manages the full collection of ACL rules under one ACL policy.
 
+~> **NOTE:** This resource must exclusive in one acl policy, do not declare additional acl rule resources of this acl policy elsewhere.
+
+~> **NOTE:** The field length for `acl_entries` is subject to account resource quotas.
+
 Example Usage
 
 ```hcl
@@ -46,5 +50,5 @@ Import
 GA2 ACL rule set can be imported using the composite id `<global_accelerator_id>#<global_accelerator_acl_policy_id>`, e.g.
 
 ```
-terraform import tencentcloud_ga2_global_accelerator_acl_rule_set.example ga-5hlomx9m#sp-8oc0ohct
+terraform import tencentcloud_ga2_global_accelerator_acl_rule_set.example ga-cmbzp36q#sp-jz94sb2t
 ```
