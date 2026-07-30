@@ -634,6 +634,61 @@ func (me *Ga2Service) DescribeGa2GlobalAcceleratorAclRuleById(ctx context.Contex
 	return nil, nil
 }
 
+// DescribeGa2GlobalAcceleratorAclRulesByPolicyId returns the full set of ACL rules under the given ACL policy id.
+// It paginates DescribeGlobalAcceleratorAclRules with Limit=200 (the documented maximum) and aggregates every
+// GlobalAcceleratorAclRuleSet item across pages. If response.Response is nil on any page it returns an error
+// rather than silently returning an empty slice, so that real API failures are surfaced to the caller.
+func (me *Ga2Service) DescribeGa2GlobalAcceleratorAclRulesByPolicyId(ctx context.Context, policyId string) ([]*ga2v20250115.GlobalAcceleratorAclRuleSet, error) {
+	logId := tccommon.GetLogId(ctx)
+
+	request := ga2v20250115.NewDescribeGlobalAcceleratorAclRulesRequest()
+	request.GlobalAcceleratorAclPolicyId = helper.String(policyId)
+
+	var (
+		offset uint64 = 0
+		// limit equals the API-documented maximum to minimize round-trips.
+		limit  uint64 = 200
+		result []*ga2v20250115.GlobalAcceleratorAclRuleSet
+	)
+
+	for {
+		request.Offset = &offset
+		request.Limit = &limit
+
+		var response *ga2v20250115.DescribeGlobalAcceleratorAclRulesResponse
+		err := resource.Retry(tccommon.ReadRetryTimeout, func() *resource.RetryError {
+			ret, e := me.client.UseGa2V20250115Client().DescribeGlobalAcceleratorAclRulesWithContext(ctx, request)
+			if e != nil {
+				return tccommon.RetryError(e)
+			}
+
+			if ret == nil || ret.Response == nil {
+				return resource.NonRetryableError(fmt.Errorf("Describe ga2 global_accelerator_acl_rule_set failed, Response is nil."))
+			}
+
+			response = ret
+			return nil
+		})
+
+		if err != nil {
+			log.Printf("[CRITAL]%s describe ga2 global_accelerator_acl_rule_set failed, reason:%+v", logId, err)
+			return nil, err
+		}
+
+		set := response.Response.GlobalAcceleratorAclRuleSet
+		result = append(result, set...)
+
+		// Stop when the current page is the last page.
+		if uint64(len(set)) < limit {
+			break
+		}
+
+		offset += limit
+	}
+
+	return result, nil
+}
+
 // WaitForGa2TaskFinish polls DescribeTaskResult until the task reaches "SUCCESS" or the given timeout elapses.
 // The timeout is supplied by the caller because different async operations (create/modify/delete on
 // different resource types) may require very different waiting budgets.

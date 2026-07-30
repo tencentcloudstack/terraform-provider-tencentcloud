@@ -1744,6 +1744,7 @@ func Provider() *schema.Provider {
 			"tencentcloud_ga2_global_accelerator":                                                   ga2.ResourceTencentCloudGa2GlobalAccelerator(),
 			"tencentcloud_ga2_global_accelerator_acl_policy":                                        ga2.ResourceTencentCloudGa2GlobalAcceleratorAclPolicy(),
 			"tencentcloud_ga2_global_accelerator_acl_rule":                                          ga2.ResourceTencentCloudGa2GlobalAcceleratorAclRule(),
+			"tencentcloud_ga2_global_accelerator_acl_rule_set":                                      ga2.ResourceTencentCloudGa2GlobalAcceleratorAclRuleSet(),
 			"tencentcloud_ga2_accelerate_area":                                                      ga2.ResourceTencentCloudGa2AccelerateArea(),
 			"tencentcloud_ga2_listener":                                                             ga2.ResourceTencentCloudGa2Listener(),
 			"tencentcloud_ga2_endpoint_group":                                                       ga2.ResourceTencentCloudGa2EndpointGroup(),
