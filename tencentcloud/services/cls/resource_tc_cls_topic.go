@@ -4,16 +4,32 @@ import (
 	"context"
 	"fmt"
 	"log"
-
-	tccommon "github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/common"
-	svctag "github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/services/tag"
+	"strconv"
+	"strings"
 
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 	cls "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/cls/v20201016"
+	tccommon "github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/common"
+	svctag "github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/services/tag"
 
 	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/internal/helper"
 )
+
+func parseClsTopicId(id string) (topicId string, bizType int, err error) {
+	if strings.Contains(id, tccommon.FILED_SP) {
+		parts := strings.Split(id, tccommon.FILED_SP)
+		if len(parts) != 2 {
+			return "", 0, fmt.Errorf("invalid CLS topic ID format: %s", id)
+		}
+		bizType, err = strconv.Atoi(parts[1])
+		if err != nil {
+			return "", 0, fmt.Errorf("invalid CLS topic biz_type: %s", parts[1])
+		}
+		return parts[0], bizType, nil
+	}
+	return id, 0, nil
+}
 
 func ResourceTencentCloudClsTopic() *schema.Resource {
 	return &schema.Resource{
@@ -140,10 +156,11 @@ func ResourceTencentCloudClsTopic() *schema.Resource {
 				},
 			},
 			"biz_type": {
-				Type:        schema.TypeInt,
-				Optional:    true,
-				Computed:    true,
-				Description: "Topic type. 0: log topic (default), 1: metric topic.",
+				Type:         schema.TypeInt,
+				Optional:     true,
+				Computed:     true,
+				Description:  "Topic type. 0: log topic (default), 1: metric topic.",
+				ValidateFunc: tccommon.ValidateAllowedIntValue([]int{0, 1}),
 			},
 			"encryption": {
 				Type:        schema.TypeInt,
@@ -300,7 +317,12 @@ func resourceTencentCloudClsTopicCreate(d *schema.ResourceData, meta interface{}
 		return fmt.Errorf("TopicId is nil.")
 	}
 
-	d.SetId(*response.Response.TopicId)
+	topicId := *response.Response.TopicId
+	if v, ok := d.GetOkExists("biz_type"); ok && v.(int) == 1 {
+		d.SetId(topicId + tccommon.FILED_SP + fmt.Sprintf("%d", v.(int)))
+	} else {
+		d.SetId(topicId)
+	}
 	return resourceTencentCloudClsTopicRead(d, meta)
 }
 
@@ -315,11 +337,16 @@ func resourceTencentCloudClsTopicRead(d *schema.ResourceData, meta interface{}) 
 		id      = d.Id()
 	)
 
-	var bizType *uint64
-	if v, ok := d.GetOkExists("biz_type"); ok {
-		bizType = helper.IntUint64(v.(int))
+	topicId, bizType, err := parseClsTopicId(id)
+	if err != nil {
+		return err
 	}
-	topic, err := service.DescribeClsTopicById(ctx, id, bizType)
+
+	var bizTypeParam *uint64
+	if bizType > 0 {
+		bizTypeParam = helper.IntUint64(bizType)
+	}
+	topic, err := service.DescribeClsTopicById(ctx, topicId, bizTypeParam)
 	if err != nil {
 		return err
 	}
@@ -413,6 +440,11 @@ func resourceTencentCloudClsTopicUpdate(d *schema.ResourceData, meta interface{}
 		ctx           = context.WithValue(context.TODO(), tccommon.LogIdKey, logId)
 	)
 
+	topicId, _, err := parseClsTopicId(id)
+	if err != nil {
+		return err
+	}
+
 	immutableArgs := []string{"partition_count", "storage_type", "biz_type"}
 
 	for _, v := range immutableArgs {
@@ -433,7 +465,7 @@ func resourceTencentCloudClsTopicUpdate(d *schema.ResourceData, meta interface{}
 	}
 
 	var hasChange bool
-	request.TopicId = helper.String(id)
+	request.TopicId = helper.String(topicId)
 
 	if d.HasChange("topic_name") {
 		request.TopicName = helper.String(d.Get("topic_name").(string))
@@ -560,7 +592,12 @@ func resourceTencentCloudClsTopicDelete(d *schema.ResourceData, meta interface{}
 		id      = d.Id()
 	)
 
-	if err := service.DeleteClsTopic(ctx, id); err != nil {
+	topicId, _, err := parseClsTopicId(id)
+	if err != nil {
+		return err
+	}
+
+	if err := service.DeleteClsTopic(ctx, topicId); err != nil {
 		return err
 	}
 

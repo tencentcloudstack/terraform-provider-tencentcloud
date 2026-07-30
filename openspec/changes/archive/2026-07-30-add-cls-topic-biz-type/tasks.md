@@ -6,6 +6,11 @@
 - [x] 1.4 Add `biz_type` to the `immutableArgs` array in the Update method to prevent update attempts
 - [x] 1.5 Modify `DescribeClsTopicById` in `service_tencentcloud_cls.go` to accept an optional `bizType *uint64` parameter; when non-nil, set `request.BizType`
 - [x] 1.6 Update the Read method to pass `biz_type` from state to `DescribeClsTopicById`; update all other callers to pass `nil`
+- [x] 1.7 Add `parseClsTopicId` helper function to extract `topicId` and `bizType` from the resource ID
+- [x] 1.8 Update Create method: set resource ID to `"topic_id#1"` when `biz_type=1`, plain `topic_id` otherwise
+- [x] 1.9 Update Read method: parse `d.Id()` using `parseClsTopicId` to get `topicId` and `bizType`, pass to `DescribeClsTopicById`
+- [x] 1.10 Update Update method: parse `d.Id()` using `parseClsTopicId` to get `topicId` for `ModifyTopicRequest.TopicId`
+- [x] 1.11 Update Delete method: parse `d.Id()` using `parseClsTopicId` to get `topicId` for `DeleteTopic` API call
 
 ## 2. Unit Tests
 
@@ -15,3 +20,4 @@
 ## 3. Documentation
 
 - [x] 3.1 Update `tencentcloud/services/cls/resource_tc_cls_topic.md` to include `biz_type` parameter in the example usage
+- [x] 3.2 Add import example for metric topic (biz_type=1) using `"topic_id#1"` format

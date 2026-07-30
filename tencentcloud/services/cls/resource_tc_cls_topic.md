@@ -69,7 +69,7 @@ resource "tencentcloud_cls_topic" "example" {
 }
 ```
 
-Create a cls metric topic
+Create a cls metric topic(biz_type=1)
 
 ```hcl
 resource "tencentcloud_cls_logset" "example" {
@@ -101,4 +101,10 @@ cls topic can be imported using the id, e.g.
 
 ```
 $ terraform import tencentcloud_cls_topic.example 2f5764c1-c833-44c5-84c7-950979b2a278
+```
+
+cls metric topic (biz_type=1) can be imported using the id with "#1" suffix, e.g.
+
+```
+$ terraform import tencentcloud_cls_topic.example 2f5764c1-c833-44c5-84c7-950979b2a278#1
 ```

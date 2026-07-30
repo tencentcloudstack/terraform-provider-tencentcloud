@@ -10,7 +10,10 @@ The `tencentcloud_cls_topic` resource currently does not support the `BizType` p
 - Add `biz_type` to the `immutableArgs` array in the Update method to prevent update attempts
 - Set `biz_type` in the Read method from the DescribeTopics response
 - Modify `DescribeClsTopicById` service method to accept an optional `bizType *uint64` parameter; when non-nil, set `BizType` on the `DescribeTopicsRequest` for targeted API filtering
-- Update the Read method to pass `biz_type` from state to `DescribeClsTopicById`; other callers pass `nil` (no BizType filter)
+- **Resource ID format**: When `biz_type=0` or not specified, the resource ID is the plain `topic_id`. When `biz_type=1`, the resource ID is `"topic_id#1"` to encode the topic type in the ID
+- **ID parsing**: Add a `parseClsTopicId` helper function to extract `topic_id` and `biz_type` from the resource ID. Used in Read, Update, and Delete methods
+- **Read method**: Parse the resource ID to extract `topicId` and `bizType`, then pass them to `DescribeClsTopicById`. The API response's `BizType` is also set in state for validation
+- **Import support**: When importing a metric topic (biz_type=1), use the `"topic_id#1"` format. Standard log topics use the plain `topic_id`
 
 ## Capabilities
 
@@ -22,10 +25,10 @@ The `tencentcloud_cls_topic` resource currently does not support the `BizType` p
 
 ## Impact
 
-- **Resource file**: `tencentcloud/services/cls/resource_tc_cls_topic.go` — schema definition, Create, Read, Update methods
+- **Resource file**: `tencentcloud/services/cls/resource_tc_cls_topic.go` — schema definition, Create, Read, Update, Delete methods; added `parseClsTopicId` helper
 - **Service file**: `tencentcloud/services/cls/service_tencentcloud_cls.go` — `DescribeClsTopicById` modified to accept optional `bizType` parameter
 - **Test file**: `tencentcloud/services/cls/resource_tc_cls_topic_test.go` — unit tests for the new parameter
-- **Documentation**: `tencentcloud/services/cls/resource_tc_cls_topic.md` — example usage update
+- **Documentation**: `tencentcloud/services/cls/resource_tc_cls_topic.md` — example usage and import examples for both log and metric topics
 - **Other callers updated**: `resource_tc_clb_log_topic.go`, `resource_tc_clb_log_topic_test.go`, `resource_tc_redis_log_delivery.go`, `resource_tc_cls_cloud_product_log_task_v2.go` — pass `nil` for new `bizType` parameter
 - **Cloud API**: CreateTopic (input: BizType), DescribeTopics (input: BizType filter, output: TopicInfo.BizType)
-- **No breaking changes**: The new parameter is Optional with Computed default, existing configurations remain valid
+- **No breaking changes**: The new parameter is Optional with Computed default, existing configurations remain valid. Plain `topic_id` format for log topics is fully backward compatible
