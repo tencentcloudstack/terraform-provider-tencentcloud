@@ -336,8 +336,10 @@ func resourceTencentCloudGa2GlobalAcceleratorUpdate(d *schema.ResourceData, meta
 		}
 
 		//nolint:staticcheck
-		if v, ok := d.GetOkExists("cross_border_promise_flag"); ok {
-			request.CrossBorderPromiseFlag = helper.Bool(v.(bool))
+		if d.HasChange("cross_border_promise_flag") {
+			if v, ok := d.GetOkExists("cross_border_promise_flag"); ok {
+				request.CrossBorderPromiseFlag = helper.Bool(v.(bool))
+			}
 		}
 
 		var taskId string
