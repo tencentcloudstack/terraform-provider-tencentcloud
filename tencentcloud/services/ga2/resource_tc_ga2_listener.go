@@ -169,6 +169,7 @@ func ResourceTencentCloudGa2Listener() *schema.Resource {
 				Type:        schema.TypeString,
 				Optional:    true,
 				Computed:    true,
+				ForceNew:    true,
 				Description: "HTTP version negotiated for this listener. Valid values: `HTTP/1.1`, `HTTP/2`. Only applicable to HTTPS listeners.",
 			},
 
@@ -465,14 +466,6 @@ func resourceTencentCloudGa2ListenerUpdate(d *schema.ResourceData, meta interfac
 	gaId, listenerId, err := parseGa2ListenerId(d.Id())
 	if err != nil {
 		return err
-	}
-
-	// Immutable fields check: these fields cannot be modified after creation.
-	immutableArgs := []string{"http_version"}
-	for _, field := range immutableArgs {
-		if d.HasChange(field) {
-			return fmt.Errorf("field `%s` cannot be modified after creation; it requires a new resource to be created", field)
-		}
 	}
 
 	// Modify-supported fields per the SDK ModifyListenerRequest definition.
