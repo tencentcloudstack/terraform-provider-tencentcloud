@@ -72,20 +72,18 @@ func ResourceTencentCloudGa2AccelerateArea() *schema.Resource {
 				ForceNew:    true,
 				Description: "IP version. Only `IPv4` is supported. Default: `IPv4`.",
 			},
-			"ip_address": {
-				Type:        schema.TypeSet,
-				Optional:    true,
-				Computed:    true,
-				ForceNew:    true,
-				Elem:        &schema.Schema{Type: schema.TypeString},
-				Description: "Bound IP address list. Treated as an unordered set; HCL element order has no semantic meaning.",
-			},
 
 			// Computed
 			"accelerator_area_id": {
 				Type:        schema.TypeString,
 				Computed:    true,
 				Description: "Acceleration region ID.",
+			},
+			"ip_address": {
+				Type:        schema.TypeSet,
+				Computed:    true,
+				Elem:        &schema.Schema{Type: schema.TypeString},
+				Description: "Bound IP address list. Treated as an unordered set; HCL element order has no semantic meaning.",
 			},
 			"ip_address_info_set": {
 				Type:        schema.TypeList,
@@ -404,10 +402,6 @@ func buildGa2AcceleratorArea(d *schema.ResourceData, areaId, step string) *ga2v2
 		if v, ok := d.GetOk("ip_version"); ok {
 			area.IpVersion = helper.String(v.(string))
 		}
-
-		if v, ok := d.GetOk("ip_address"); ok {
-			area.IpAddress = buildGa2AccelerateAreaStringSet(v.(*schema.Set))
-		}
 	} else if step == "update" {
 		if v, ok := d.GetOk("accelerate_region"); ok {
 			area.AccelerateRegion = helper.String(v.(string))
@@ -419,23 +413,6 @@ func buildGa2AcceleratorArea(d *schema.ResourceData, areaId, step string) *ga2v2
 	}
 
 	return area
-}
-
-// buildGa2AccelerateAreaStringSet converts a TypeSet of strings into a []*string suitable for the SDK.
-func buildGa2AccelerateAreaStringSet(set *schema.Set) []*string {
-	if set == nil || set.Len() == 0 {
-		return nil
-	}
-	result := make([]*string, 0, set.Len())
-	for _, item := range set.List() {
-		s, ok := item.(string)
-		if !ok || s == "" {
-			continue
-		}
-		v := s
-		result = append(result, &v)
-	}
-	return result
 }
 
 // flattenGa2IpAddressInfoSet maps the SDK IpAddressInfoSet slice into the computed nested block payload.

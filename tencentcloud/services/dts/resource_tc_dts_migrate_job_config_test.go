@@ -77,7 +77,7 @@ func testAccDtsMigrateJobConfig_basic() string {
 }
 
 func testAccDtsMigrateJobConfig_pause() string {
-	ret := fmt.Sprintf(testAccDtsMigrateJobConfig_basic() + `
+	ret := fmt.Sprintf("%s", testAccDtsMigrateJobConfig_basic()+`
 	
 resource "tencentcloud_dts_migrate_job_config" "config" {
   job_id = tencentcloud_dts_migrate_job_start_operation.start.id
@@ -89,7 +89,7 @@ resource "tencentcloud_dts_migrate_job_config" "config" {
 }
 
 func testAccDtsMigrateJobConfig_continue() string {
-	ret := fmt.Sprintf(testAccDtsMigrateJobConfig_basic() + `
+	ret := fmt.Sprintf("%s", testAccDtsMigrateJobConfig_basic()+`
 
 resource "tencentcloud_dts_migrate_job_config" "config" {
   job_id = tencentcloud_dts_migrate_job_start_operation.start.id
@@ -101,7 +101,7 @@ resource "tencentcloud_dts_migrate_job_config" "config" {
 }
 
 func testAccDtsMigrateJobConfig_stop() string {
-	ret := fmt.Sprintf(testAccDtsMigrateJobConfig_basic() + `
+	ret := fmt.Sprintf("%s", testAccDtsMigrateJobConfig_basic()+`
 
 resource "tencentcloud_dts_migrate_job_config" "config" {
   job_id = tencentcloud_dts_migrate_job_start_operation.start.id
@@ -114,7 +114,7 @@ resource "tencentcloud_dts_migrate_job_config" "config" {
 }
 
 func testAccDtsMigrateJobConfig_isolate() string {
-	ret := fmt.Sprintf(testAccDtsMigrateJobConfig_basic() + `
+	ret := fmt.Sprintf("%s", testAccDtsMigrateJobConfig_basic()+`
 
 resource "tencentcloud_dts_migrate_job_config" "config" {
   job_id = tencentcloud_dts_migrate_job_start_operation.start.id
@@ -127,7 +127,7 @@ resource "tencentcloud_dts_migrate_job_config" "config" {
 }
 
 func testAccDtsMigrateJobConfig_recover() string {
-	ret := fmt.Sprintf(testAccDtsMigrateJobConfig_basic() + `
+	ret := fmt.Sprintf("%s", testAccDtsMigrateJobConfig_basic()+`
 
 resource "tencentcloud_dts_migrate_job_config" "config" {
   job_id = tencentcloud_dts_migrate_job_start_operation.start.id
