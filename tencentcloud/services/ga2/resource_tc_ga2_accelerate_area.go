@@ -415,23 +415,6 @@ func buildGa2AcceleratorArea(d *schema.ResourceData, areaId, step string) *ga2v2
 	return area
 }
 
-// buildGa2AccelerateAreaStringSet converts a TypeSet of strings into a []*string suitable for the SDK.
-func buildGa2AccelerateAreaStringSet(set *schema.Set) []*string {
-	if set == nil || set.Len() == 0 {
-		return nil
-	}
-	result := make([]*string, 0, set.Len())
-	for _, item := range set.List() {
-		s, ok := item.(string)
-		if !ok || s == "" {
-			continue
-		}
-		v := s
-		result = append(result, &v)
-	}
-	return result
-}
-
 // flattenGa2IpAddressInfoSet maps the SDK IpAddressInfoSet slice into the computed nested block payload.
 func flattenGa2IpAddressInfoSet(infoSet []*ga2v20250115.IpAddressInfoSet) []map[string]interface{} {
 	result := make([]map[string]interface{}, 0, len(infoSet))
