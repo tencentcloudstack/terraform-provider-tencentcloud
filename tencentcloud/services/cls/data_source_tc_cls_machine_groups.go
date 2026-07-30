@@ -154,12 +154,6 @@ func DataSourceTencentCloudClsMachineGroups() *schema.Resource {
 				},
 			},
 
-			"total_count": {
-				Type:        schema.TypeInt,
-				Computed:    true,
-				Description: "Total count of cls machine groups.",
-			},
-
 			"result_output_file": {
 				Type:        schema.TypeString,
 				Optional:    true,
@@ -203,19 +197,14 @@ func dataSourceTencentCloudClsMachineGroupsRead(d *schema.ResourceData, meta int
 		paramMap["Filters"] = tmpSet
 	}
 
-	var (
-		respData  []*cls.MachineGroupInfo
-		respTotal int64
-	)
-
+	var respData []*cls.MachineGroupInfo
 	reqErr := resource.Retry(tccommon.ReadRetryTimeout, func() *resource.RetryError {
-		result, total, e := service.DescribeClsMachineGroupsByFilter(ctx, paramMap)
+		result, e := service.DescribeClsMachineGroupsByFilter(ctx, paramMap)
 		if e != nil {
 			return tccommon.RetryError(e)
 		}
 
 		respData = result
-		respTotal = total
 		return nil
 	})
 
@@ -328,8 +317,6 @@ func dataSourceTencentCloudClsMachineGroupsRead(d *schema.ResourceData, meta int
 
 		_ = d.Set("machine_groups", tmpList)
 	}
-
-	_ = d.Set("total_count", respTotal)
 
 	d.SetId(helper.DataResourceIdsHash(ids))
 	output, ok := d.GetOk("result_output_file")

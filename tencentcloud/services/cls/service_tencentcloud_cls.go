@@ -1194,7 +1194,7 @@ func (me *ClsService) DescribeClsMachineGroupConfigsByFilter(ctx context.Context
 	return
 }
 
-func (me *ClsService) DescribeClsMachineGroupsByFilter(ctx context.Context, param map[string]interface{}) (machineGroups []*cls.MachineGroupInfo, totalCount int64, errRet error) {
+func (me *ClsService) DescribeClsMachineGroupsByFilter(ctx context.Context, param map[string]interface{}) (machineGroups []*cls.MachineGroupInfo, errRet error) {
 	var (
 		logId    = tccommon.GetLogId(ctx)
 		request  = cls.NewDescribeMachineGroupsRequest()
@@ -1242,10 +1242,6 @@ func (me *ClsService) DescribeClsMachineGroupsByFilter(ctx context.Context, para
 		if err != nil {
 			errRet = err
 			return
-		}
-
-		if response.Response.TotalCount != nil {
-			totalCount = *response.Response.TotalCount
 		}
 
 		machineGroups = append(machineGroups, response.Response.MachineGroups...)
