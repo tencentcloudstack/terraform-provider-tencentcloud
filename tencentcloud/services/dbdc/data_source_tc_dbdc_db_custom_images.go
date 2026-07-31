@@ -15,23 +15,25 @@ func DataSourceTencentCloudDbdcDbCustomImages() *schema.Resource {
 	return &schema.Resource{
 		Read: dataSourceTencentCloudDbdcDbCustomImagesRead,
 		Schema: map[string]*schema.Schema{
-			"result_output_file": {
-				Type:        schema.TypeString,
-				Optional:    true,
-				Description: "Used to save results.",
-			},
-
-			"name": {
-				Type:        schema.TypeString,
-				Optional:    true,
-				Description: "Filter name of the DescribeDBCustomImages API. Values: image-id, os-type, image-type, architecture.",
-			},
-
-			"values": {
+			"filters": {
 				Type:        schema.TypeList,
 				Optional:    true,
-				Elem:        &schema.Schema{Type: schema.TypeString},
-				Description: "Filter values corresponding to the filter name.",
+				Description: "Filter conditions of the DescribeDBCustomImages API. Each filter combines a name with one or more values, and multiple filters are combined with AND logic.",
+				Elem: &schema.Resource{
+					Schema: map[string]*schema.Schema{
+						"name": {
+							Type:        schema.TypeString,
+							Required:    true,
+							Description: "Filter name. Valid values: `image-id`, `os-type`, `image-type`, `architecture`.",
+						},
+						"values": {
+							Type:        schema.TypeList,
+							Required:    true,
+							Elem:        &schema.Schema{Type: schema.TypeString},
+							Description: "Filter values corresponding to the filter name.",
+						},
+					},
+				},
 			},
 
 			"image_set": {
@@ -68,6 +70,11 @@ func DataSourceTencentCloudDbdcDbCustomImages() *schema.Resource {
 					},
 				},
 			},
+			"result_output_file": {
+				Type:        schema.TypeString,
+				Optional:    true,
+				Description: "Used to save results.",
+			},
 		},
 	}
 }
@@ -84,15 +91,28 @@ func dataSourceTencentCloudDbdcDbCustomImagesRead(d *schema.ResourceData, meta i
 
 	paramMap := make(map[string]interface{})
 
-	if name, ok := d.GetOk("name"); ok && name.(string) != "" {
-		paramMap["name"] = name.(string)
-		values := d.Get("values").([]interface{})
-		if len(values) > 0 {
+	filters := d.Get("filters").([]interface{})
+	if len(filters) > 0 {
+		filterList := make([]*dbdcv20201029.Filter, 0, len(filters))
+		for _, f := range filters {
+			filterMap := f.(map[string]interface{})
+			name := filterMap["name"].(string)
+			if name == "" {
+				continue
+			}
+			filter := &dbdcv20201029.Filter{
+				Name: helper.String(name),
+			}
+			values := filterMap["values"].([]interface{})
 			valueList := make([]*string, 0, len(values))
 			for _, v := range values {
 				valueList = append(valueList, helper.String(v.(string)))
 			}
-			paramMap["values"] = valueList
+			filter.Values = valueList
+			filterList = append(filterList, filter)
+		}
+		if len(filterList) > 0 {
+			paramMap["filters"] = filterList
 		}
 	}
 

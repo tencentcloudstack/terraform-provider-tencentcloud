@@ -8,11 +8,18 @@ Query all dbdc db custom images
 data "tencentcloud_dbdc_db_custom_images" "example" {}
 ```
 
-Query dbdc db custom images by os-type filter
+Query dbdc db custom images by filters
 
 ```hcl
 data "tencentcloud_dbdc_db_custom_images" "example" {
-  name   = "os-type"
-  values = ["linux"]
+  filters {
+    name   = "image-id"
+    values = ["img-rm13akp3"]
+  }
+
+  filters {
+    name   = "os-type"
+    values = ["linux"]
+  }
 }
 ```
