@@ -312,7 +312,7 @@ func resourceTencentCloudClsCloudProductLogTaskV2Read(d *schema.ResourceData, me
 
 	if respData.Tasks[0].TopicId != nil {
 		_ = d.Set("topic_id", respData.Tasks[0].TopicId)
-		info, err := service.DescribeClsTopicById(ctx, *respData.Tasks[0].TopicId)
+		info, err := service.DescribeClsTopicById(ctx, *respData.Tasks[0].TopicId, nil)
 		if err != nil {
 			return err
 		}
