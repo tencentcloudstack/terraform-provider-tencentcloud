@@ -230,7 +230,7 @@ func (me *ClsService) DescribeClsTopicByFilter(ctx context.Context, filters map[
 	return
 }
 
-func (me *ClsService) DescribeClsTopicById(ctx context.Context, topicId string) (topic *cls.TopicInfo, errRet error) {
+func (me *ClsService) DescribeClsTopicById(ctx context.Context, topicId string, bizType *uint64) (topic *cls.TopicInfo, errRet error) {
 	var (
 		logId   = tccommon.GetLogId(ctx)
 		request = cls.NewDescribeTopicsRequest()
@@ -248,6 +248,10 @@ func (me *ClsService) DescribeClsTopicById(ctx context.Context, topicId string) 
 			Key:    common.StringPtr("topicId"),
 			Values: []*string{&topicId},
 		},
+	}
+
+	if bizType != nil {
+		request.BizType = bizType
 	}
 
 	var iacExtInfo connectivity.IacExtInfo

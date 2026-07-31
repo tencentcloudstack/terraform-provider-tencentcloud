@@ -125,7 +125,7 @@ func resourceTencentCloudClbInstanceTopicRead(d *schema.ResourceData, meta inter
 
 	id := d.Id()
 	clsService := svccls.NewClsService(meta.(tccommon.ProviderMeta).GetAPIV3Conn())
-	res, err := clsService.DescribeClsTopicById(ctx, id)
+	res, err := clsService.DescribeClsTopicById(ctx, id, nil)
 	if err != nil {
 		return err
 	}
