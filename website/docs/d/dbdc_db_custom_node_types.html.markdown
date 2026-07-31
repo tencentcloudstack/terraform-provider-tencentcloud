@@ -25,17 +25,13 @@ data "tencentcloud_dbdc_db_custom_node_types" "example" {}
 data "tencentcloud_dbdc_db_custom_node_types" "example" {
   filters {
     name   = "zone"
-    values = ["ap-guangzhou-6"]
+    values = ["ap-shanghai-5"]
   }
 
   filters {
     name   = "node-family"
-    values = ["DB.SA5"]
+    values = ["DB.AT5"]
   }
-}
-
-output "node_type_set" {
-  value = data.tencentcloud_dbdc_db_custom_node_types.example.node_type_set
 }
 ```
 
