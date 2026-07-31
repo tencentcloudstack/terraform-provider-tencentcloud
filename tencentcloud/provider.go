@@ -1401,6 +1401,7 @@ func Provider() *schema.Provider {
 			"tencentcloud_dbdc_db_custom_node_security_groups":                    dbdc.DataSourceTencentCloudDbdcDbCustomNodeSecurityGroups(),
 			"tencentcloud_dbdc_db_custom_cluster_resources":                       dbdc.DataSourceTencentCloudDbdcDbCustomClusterResources(),
 			"tencentcloud_dbdc_db_custom_zones":                                   dbdc.DataSourceTencentCloudDbdcDbCustomZones(),
+			"tencentcloud_dbdc_db_custom_regions":                                 dbdc.DataSourceTencentCloudDbdcDbCustomRegions(),
 			"tencentcloud_gs_android_instances":                                   gs.DataSourceTencentCloudGsAndroidInstances(),
 			"tencentcloud_keewidb_instances":                                      keewidb.DataSourceTencentCloudKeewidbInstances(),
 			"tencentcloud_config_compliance_packs":                                config.DataSourceTencentCloudConfigCompliancePacks(),
