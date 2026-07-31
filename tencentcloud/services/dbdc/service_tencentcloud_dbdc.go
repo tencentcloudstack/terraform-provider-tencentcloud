@@ -466,3 +466,41 @@ func (me *DbdcService) DescribeDBCustomClusterNodeById(ctx context.Context, clus
 
 	return
 }
+
+func (me *DbdcService) DescribeDBCustomNodeTypesByFilter(ctx context.Context, param map[string]interface{}) (ret []*dbdcv20201029.DBCustomNodeTypeInfo, totalCount int64, errRet error) {
+	var (
+		logId   = tccommon.GetLogId(ctx)
+		request = dbdcv20201029.NewDescribeDBCustomNodeTypesRequest()
+	)
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	for k, v := range param {
+		if k == "Filters" {
+			request.Filters = v.([]*dbdcv20201029.Filter)
+		}
+	}
+
+	ratelimit.Check(request.GetAction())
+	result, e := me.client.UseDbdcV20201029Client().DescribeDBCustomNodeTypes(request)
+	if e != nil {
+		log.Printf("[DEBUG]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), e.Error())
+		errRet = e
+		return
+	} else {
+		log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), result.ToJsonString())
+	}
+
+	if result == nil || result.Response == nil || result.Response.NodeTypeSet == nil {
+		log.Printf("[DATASOURCE] read empty, skip SetId")
+		errRet = fmt.Errorf("Describe dbdc_db_custom_node_types failed, Response is nil.")
+		return
+	}
+
+	ret = result.Response.NodeTypeSet
+	return
+}

@@ -2697,6 +2697,7 @@ tencentcloud_dbdc_db_custom_clusters
 tencentcloud_dbdc_db_custom_nodes
 tencentcloud_dbdc_db_custom_cluster_nodes
 tencentcloud_dbdc_db_custom_images
+tencentcloud_dbdc_db_custom_node_types
 
 Resource
 tencentcloud_dbdc_db_custom_cluster
