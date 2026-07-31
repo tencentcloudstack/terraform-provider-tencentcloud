@@ -65,7 +65,7 @@ func NewAddNodesToDBCustomClusterResponse() (response *AddNodesToDBCustomCluster
 }
 
 // AddNodesToDBCustomCluster
-// 该接口（AddNodesToDBCustomCluster）用于为 DB Custom 集群上架节点。
+// 该接口（AddNodesToDBCustomCluster）用于为 DB Custom 集群添加已存在的节点。
 //
 // 可能返回的错误码:
 //  AUTHFAILURE = "AuthFailure"
@@ -77,7 +77,7 @@ func (c *Client) AddNodesToDBCustomCluster(request *AddNodesToDBCustomClusterReq
 }
 
 // AddNodesToDBCustomCluster
-// 该接口（AddNodesToDBCustomCluster）用于为 DB Custom 集群上架节点。
+// 该接口（AddNodesToDBCustomCluster）用于为 DB Custom 集群添加已存在的节点。
 //
 // 可能返回的错误码:
 //  AUTHFAILURE = "AuthFailure"
@@ -381,6 +381,118 @@ func (c *Client) DescribeDBCustomClusterKubeconfigWithContext(ctx context.Contex
     return
 }
 
+func NewDescribeDBCustomClusterNodeConfigRequest() (request *DescribeDBCustomClusterNodeConfigRequest) {
+    request = &DescribeDBCustomClusterNodeConfigRequest{
+        BaseRequest: &tchttp.BaseRequest{},
+    }
+    
+    request.Init().WithApiInfo("dbdc", APIVersion, "DescribeDBCustomClusterNodeConfig")
+    
+    
+    return
+}
+
+func NewDescribeDBCustomClusterNodeConfigResponse() (response *DescribeDBCustomClusterNodeConfigResponse) {
+    response = &DescribeDBCustomClusterNodeConfigResponse{
+        BaseResponse: &tchttp.BaseResponse{},
+    } 
+    return
+
+}
+
+// DescribeDBCustomClusterNodeConfig
+// 该接口（DescribeDBCustomClusterNodeConfig）用于查询 DB Custom 集群内节点的配置信息。
+//
+// 可能返回的错误码:
+//  AUTHFAILURE = "AuthFailure"
+//  AUTHFAILURE_UNAUTHORIZEDOPERATION = "AuthFailure.UnauthorizedOperation"
+//  FAILEDOPERATION = "FailedOperation"
+//  INVALIDPARAMETERVALUE = "InvalidParameterValue"
+func (c *Client) DescribeDBCustomClusterNodeConfig(request *DescribeDBCustomClusterNodeConfigRequest) (response *DescribeDBCustomClusterNodeConfigResponse, err error) {
+    return c.DescribeDBCustomClusterNodeConfigWithContext(context.Background(), request)
+}
+
+// DescribeDBCustomClusterNodeConfig
+// 该接口（DescribeDBCustomClusterNodeConfig）用于查询 DB Custom 集群内节点的配置信息。
+//
+// 可能返回的错误码:
+//  AUTHFAILURE = "AuthFailure"
+//  AUTHFAILURE_UNAUTHORIZEDOPERATION = "AuthFailure.UnauthorizedOperation"
+//  FAILEDOPERATION = "FailedOperation"
+//  INVALIDPARAMETERVALUE = "InvalidParameterValue"
+func (c *Client) DescribeDBCustomClusterNodeConfigWithContext(ctx context.Context, request *DescribeDBCustomClusterNodeConfigRequest) (response *DescribeDBCustomClusterNodeConfigResponse, err error) {
+    if request == nil {
+        request = NewDescribeDBCustomClusterNodeConfigRequest()
+    }
+    c.InitBaseRequest(&request.BaseRequest, "dbdc", APIVersion, "DescribeDBCustomClusterNodeConfig")
+    
+    if c.GetCredential() == nil {
+        return nil, errors.New("DescribeDBCustomClusterNodeConfig require credential")
+    }
+
+    request.SetContext(ctx)
+    
+    response = NewDescribeDBCustomClusterNodeConfigResponse()
+    err = c.Send(request, response)
+    return
+}
+
+func NewDescribeDBCustomClusterNodeResourcesRequest() (request *DescribeDBCustomClusterNodeResourcesRequest) {
+    request = &DescribeDBCustomClusterNodeResourcesRequest{
+        BaseRequest: &tchttp.BaseRequest{},
+    }
+    
+    request.Init().WithApiInfo("dbdc", APIVersion, "DescribeDBCustomClusterNodeResources")
+    
+    
+    return
+}
+
+func NewDescribeDBCustomClusterNodeResourcesResponse() (response *DescribeDBCustomClusterNodeResourcesResponse) {
+    response = &DescribeDBCustomClusterNodeResourcesResponse{
+        BaseResponse: &tchttp.BaseResponse{},
+    } 
+    return
+
+}
+
+// DescribeDBCustomClusterNodeResources
+// 该接口（DescribeDBCustomClusterNodeResources）用于查询 DB Custom 集群内节点的资源信息。
+//
+// 可能返回的错误码:
+//  AUTHFAILURE = "AuthFailure"
+//  AUTHFAILURE_UNAUTHORIZEDOPERATION = "AuthFailure.UnauthorizedOperation"
+//  FAILEDOPERATION = "FailedOperation"
+//  INVALIDPARAMETERVALUE = "InvalidParameterValue"
+func (c *Client) DescribeDBCustomClusterNodeResources(request *DescribeDBCustomClusterNodeResourcesRequest) (response *DescribeDBCustomClusterNodeResourcesResponse, err error) {
+    return c.DescribeDBCustomClusterNodeResourcesWithContext(context.Background(), request)
+}
+
+// DescribeDBCustomClusterNodeResources
+// 该接口（DescribeDBCustomClusterNodeResources）用于查询 DB Custom 集群内节点的资源信息。
+//
+// 可能返回的错误码:
+//  AUTHFAILURE = "AuthFailure"
+//  AUTHFAILURE_UNAUTHORIZEDOPERATION = "AuthFailure.UnauthorizedOperation"
+//  FAILEDOPERATION = "FailedOperation"
+//  INVALIDPARAMETERVALUE = "InvalidParameterValue"
+func (c *Client) DescribeDBCustomClusterNodeResourcesWithContext(ctx context.Context, request *DescribeDBCustomClusterNodeResourcesRequest) (response *DescribeDBCustomClusterNodeResourcesResponse, err error) {
+    if request == nil {
+        request = NewDescribeDBCustomClusterNodeResourcesRequest()
+    }
+    c.InitBaseRequest(&request.BaseRequest, "dbdc", APIVersion, "DescribeDBCustomClusterNodeResources")
+    
+    if c.GetCredential() == nil {
+        return nil, errors.New("DescribeDBCustomClusterNodeResources require credential")
+    }
+
+    request.SetContext(ctx)
+    
+    response = NewDescribeDBCustomClusterNodeResourcesResponse()
+    err = c.Send(request, response)
+    return
+}
+
 func NewDescribeDBCustomClusterNodesRequest() (request *DescribeDBCustomClusterNodesRequest) {
     request = &DescribeDBCustomClusterNodesRequest{
         BaseRequest: &tchttp.BaseRequest{},
@@ -437,6 +549,62 @@ func (c *Client) DescribeDBCustomClusterNodesWithContext(ctx context.Context, re
     return
 }
 
+func NewDescribeDBCustomClusterResourcesRequest() (request *DescribeDBCustomClusterResourcesRequest) {
+    request = &DescribeDBCustomClusterResourcesRequest{
+        BaseRequest: &tchttp.BaseRequest{},
+    }
+    
+    request.Init().WithApiInfo("dbdc", APIVersion, "DescribeDBCustomClusterResources")
+    
+    
+    return
+}
+
+func NewDescribeDBCustomClusterResourcesResponse() (response *DescribeDBCustomClusterResourcesResponse) {
+    response = &DescribeDBCustomClusterResourcesResponse{
+        BaseResponse: &tchttp.BaseResponse{},
+    } 
+    return
+
+}
+
+// DescribeDBCustomClusterResources
+// 该接口（DescribeDBCustomClusterResources）用于查询 DB Custom 集群的资源信息。
+//
+// 可能返回的错误码:
+//  AUTHFAILURE = "AuthFailure"
+//  AUTHFAILURE_UNAUTHORIZEDOPERATION = "AuthFailure.UnauthorizedOperation"
+//  FAILEDOPERATION = "FailedOperation"
+//  INVALIDPARAMETERVALUE = "InvalidParameterValue"
+func (c *Client) DescribeDBCustomClusterResources(request *DescribeDBCustomClusterResourcesRequest) (response *DescribeDBCustomClusterResourcesResponse, err error) {
+    return c.DescribeDBCustomClusterResourcesWithContext(context.Background(), request)
+}
+
+// DescribeDBCustomClusterResources
+// 该接口（DescribeDBCustomClusterResources）用于查询 DB Custom 集群的资源信息。
+//
+// 可能返回的错误码:
+//  AUTHFAILURE = "AuthFailure"
+//  AUTHFAILURE_UNAUTHORIZEDOPERATION = "AuthFailure.UnauthorizedOperation"
+//  FAILEDOPERATION = "FailedOperation"
+//  INVALIDPARAMETERVALUE = "InvalidParameterValue"
+func (c *Client) DescribeDBCustomClusterResourcesWithContext(ctx context.Context, request *DescribeDBCustomClusterResourcesRequest) (response *DescribeDBCustomClusterResourcesResponse, err error) {
+    if request == nil {
+        request = NewDescribeDBCustomClusterResourcesRequest()
+    }
+    c.InitBaseRequest(&request.BaseRequest, "dbdc", APIVersion, "DescribeDBCustomClusterResources")
+    
+    if c.GetCredential() == nil {
+        return nil, errors.New("DescribeDBCustomClusterResources require credential")
+    }
+
+    request.SetContext(ctx)
+    
+    response = NewDescribeDBCustomClusterResourcesResponse()
+    err = c.Send(request, response)
+    return
+}
+
 func NewDescribeDBCustomClustersRequest() (request *DescribeDBCustomClustersRequest) {
     request = &DescribeDBCustomClustersRequest{
         BaseRequest: &tchttp.BaseRequest{},
@@ -457,7 +625,7 @@ func NewDescribeDBCustomClustersResponse() (response *DescribeDBCustomClustersRe
 }
 
 // DescribeDBCustomClusters
-// 该接口（DescribeDBCustomClusters）为DB Custom 集群列表查询接口。
+// 该接口（DescribeDBCustomClusters）为 DB Custom 集群列表查询接口。
 //
 // 可能返回的错误码:
 //  AUTHFAILURE = "AuthFailure"
@@ -469,7 +637,7 @@ func (c *Client) DescribeDBCustomClusters(request *DescribeDBCustomClustersReque
 }
 
 // DescribeDBCustomClusters
-// 该接口（DescribeDBCustomClusters）为DB Custom 集群列表查询接口。
+// 该接口（DescribeDBCustomClusters）为 DB Custom 集群列表查询接口。
 //
 // 可能返回的错误码:
 //  AUTHFAILURE = "AuthFailure"
@@ -549,6 +717,118 @@ func (c *Client) DescribeDBCustomImagesWithContext(ctx context.Context, request 
     return
 }
 
+func NewDescribeDBCustomNodeSecurityGroupsRequest() (request *DescribeDBCustomNodeSecurityGroupsRequest) {
+    request = &DescribeDBCustomNodeSecurityGroupsRequest{
+        BaseRequest: &tchttp.BaseRequest{},
+    }
+    
+    request.Init().WithApiInfo("dbdc", APIVersion, "DescribeDBCustomNodeSecurityGroups")
+    
+    
+    return
+}
+
+func NewDescribeDBCustomNodeSecurityGroupsResponse() (response *DescribeDBCustomNodeSecurityGroupsResponse) {
+    response = &DescribeDBCustomNodeSecurityGroupsResponse{
+        BaseResponse: &tchttp.BaseResponse{},
+    } 
+    return
+
+}
+
+// DescribeDBCustomNodeSecurityGroups
+// 该接口（DescribeDBCustomNodeSecurityGroups）用于查询 DB Custom 节点安全组信息。
+//
+// 可能返回的错误码:
+//  AUTHFAILURE = "AuthFailure"
+//  AUTHFAILURE_UNAUTHORIZEDOPERATION = "AuthFailure.UnauthorizedOperation"
+//  FAILEDOPERATION = "FailedOperation"
+//  INVALIDPARAMETERVALUE = "InvalidParameterValue"
+func (c *Client) DescribeDBCustomNodeSecurityGroups(request *DescribeDBCustomNodeSecurityGroupsRequest) (response *DescribeDBCustomNodeSecurityGroupsResponse, err error) {
+    return c.DescribeDBCustomNodeSecurityGroupsWithContext(context.Background(), request)
+}
+
+// DescribeDBCustomNodeSecurityGroups
+// 该接口（DescribeDBCustomNodeSecurityGroups）用于查询 DB Custom 节点安全组信息。
+//
+// 可能返回的错误码:
+//  AUTHFAILURE = "AuthFailure"
+//  AUTHFAILURE_UNAUTHORIZEDOPERATION = "AuthFailure.UnauthorizedOperation"
+//  FAILEDOPERATION = "FailedOperation"
+//  INVALIDPARAMETERVALUE = "InvalidParameterValue"
+func (c *Client) DescribeDBCustomNodeSecurityGroupsWithContext(ctx context.Context, request *DescribeDBCustomNodeSecurityGroupsRequest) (response *DescribeDBCustomNodeSecurityGroupsResponse, err error) {
+    if request == nil {
+        request = NewDescribeDBCustomNodeSecurityGroupsRequest()
+    }
+    c.InitBaseRequest(&request.BaseRequest, "dbdc", APIVersion, "DescribeDBCustomNodeSecurityGroups")
+    
+    if c.GetCredential() == nil {
+        return nil, errors.New("DescribeDBCustomNodeSecurityGroups require credential")
+    }
+
+    request.SetContext(ctx)
+    
+    response = NewDescribeDBCustomNodeSecurityGroupsResponse()
+    err = c.Send(request, response)
+    return
+}
+
+func NewDescribeDBCustomNodeTypesRequest() (request *DescribeDBCustomNodeTypesRequest) {
+    request = &DescribeDBCustomNodeTypesRequest{
+        BaseRequest: &tchttp.BaseRequest{},
+    }
+    
+    request.Init().WithApiInfo("dbdc", APIVersion, "DescribeDBCustomNodeTypes")
+    
+    
+    return
+}
+
+func NewDescribeDBCustomNodeTypesResponse() (response *DescribeDBCustomNodeTypesResponse) {
+    response = &DescribeDBCustomNodeTypesResponse{
+        BaseResponse: &tchttp.BaseResponse{},
+    } 
+    return
+
+}
+
+// DescribeDBCustomNodeTypes
+// 该接口(DescribeDBCustomNodeTypes) 用于查询 DB Custom 节点支持的机型信息。
+//
+// 可能返回的错误码:
+//  AUTHFAILURE = "AuthFailure"
+//  AUTHFAILURE_UNAUTHORIZEDOPERATION = "AuthFailure.UnauthorizedOperation"
+//  FAILEDOPERATION = "FailedOperation"
+//  INVALIDPARAMETERVALUE = "InvalidParameterValue"
+func (c *Client) DescribeDBCustomNodeTypes(request *DescribeDBCustomNodeTypesRequest) (response *DescribeDBCustomNodeTypesResponse, err error) {
+    return c.DescribeDBCustomNodeTypesWithContext(context.Background(), request)
+}
+
+// DescribeDBCustomNodeTypes
+// 该接口(DescribeDBCustomNodeTypes) 用于查询 DB Custom 节点支持的机型信息。
+//
+// 可能返回的错误码:
+//  AUTHFAILURE = "AuthFailure"
+//  AUTHFAILURE_UNAUTHORIZEDOPERATION = "AuthFailure.UnauthorizedOperation"
+//  FAILEDOPERATION = "FailedOperation"
+//  INVALIDPARAMETERVALUE = "InvalidParameterValue"
+func (c *Client) DescribeDBCustomNodeTypesWithContext(ctx context.Context, request *DescribeDBCustomNodeTypesRequest) (response *DescribeDBCustomNodeTypesResponse, err error) {
+    if request == nil {
+        request = NewDescribeDBCustomNodeTypesRequest()
+    }
+    c.InitBaseRequest(&request.BaseRequest, "dbdc", APIVersion, "DescribeDBCustomNodeTypes")
+    
+    if c.GetCredential() == nil {
+        return nil, errors.New("DescribeDBCustomNodeTypes require credential")
+    }
+
+    request.SetContext(ctx)
+    
+    response = NewDescribeDBCustomNodeTypesResponse()
+    err = c.Send(request, response)
+    return
+}
+
 func NewDescribeDBCustomNodesRequest() (request *DescribeDBCustomNodesRequest) {
     request = &DescribeDBCustomNodesRequest{
         BaseRequest: &tchttp.BaseRequest{},
@@ -605,6 +885,62 @@ func (c *Client) DescribeDBCustomNodesWithContext(ctx context.Context, request *
     return
 }
 
+func NewDescribeDBCustomRegionsRequest() (request *DescribeDBCustomRegionsRequest) {
+    request = &DescribeDBCustomRegionsRequest{
+        BaseRequest: &tchttp.BaseRequest{},
+    }
+    
+    request.Init().WithApiInfo("dbdc", APIVersion, "DescribeDBCustomRegions")
+    
+    
+    return
+}
+
+func NewDescribeDBCustomRegionsResponse() (response *DescribeDBCustomRegionsResponse) {
+    response = &DescribeDBCustomRegionsResponse{
+        BaseResponse: &tchttp.BaseResponse{},
+    } 
+    return
+
+}
+
+// DescribeDBCustomRegions
+// 该接口(DescribeDBCustomRegions) 用于查询 DB Custom 支持的地域列表。
+//
+// 可能返回的错误码:
+//  AUTHFAILURE = "AuthFailure"
+//  AUTHFAILURE_UNAUTHORIZEDOPERATION = "AuthFailure.UnauthorizedOperation"
+//  FAILEDOPERATION = "FailedOperation"
+//  INVALIDPARAMETERVALUE = "InvalidParameterValue"
+func (c *Client) DescribeDBCustomRegions(request *DescribeDBCustomRegionsRequest) (response *DescribeDBCustomRegionsResponse, err error) {
+    return c.DescribeDBCustomRegionsWithContext(context.Background(), request)
+}
+
+// DescribeDBCustomRegions
+// 该接口(DescribeDBCustomRegions) 用于查询 DB Custom 支持的地域列表。
+//
+// 可能返回的错误码:
+//  AUTHFAILURE = "AuthFailure"
+//  AUTHFAILURE_UNAUTHORIZEDOPERATION = "AuthFailure.UnauthorizedOperation"
+//  FAILEDOPERATION = "FailedOperation"
+//  INVALIDPARAMETERVALUE = "InvalidParameterValue"
+func (c *Client) DescribeDBCustomRegionsWithContext(ctx context.Context, request *DescribeDBCustomRegionsRequest) (response *DescribeDBCustomRegionsResponse, err error) {
+    if request == nil {
+        request = NewDescribeDBCustomRegionsRequest()
+    }
+    c.InitBaseRequest(&request.BaseRequest, "dbdc", APIVersion, "DescribeDBCustomRegions")
+    
+    if c.GetCredential() == nil {
+        return nil, errors.New("DescribeDBCustomRegions require credential")
+    }
+
+    request.SetContext(ctx)
+    
+    response = NewDescribeDBCustomRegionsResponse()
+    err = c.Send(request, response)
+    return
+}
+
 func NewDescribeDBCustomTaskStatusRequest() (request *DescribeDBCustomTaskStatusRequest) {
     request = &DescribeDBCustomTaskStatusRequest{
         BaseRequest: &tchttp.BaseRequest{},
@@ -657,6 +993,62 @@ func (c *Client) DescribeDBCustomTaskStatusWithContext(ctx context.Context, requ
     request.SetContext(ctx)
     
     response = NewDescribeDBCustomTaskStatusResponse()
+    err = c.Send(request, response)
+    return
+}
+
+func NewDescribeDBCustomZonesRequest() (request *DescribeDBCustomZonesRequest) {
+    request = &DescribeDBCustomZonesRequest{
+        BaseRequest: &tchttp.BaseRequest{},
+    }
+    
+    request.Init().WithApiInfo("dbdc", APIVersion, "DescribeDBCustomZones")
+    
+    
+    return
+}
+
+func NewDescribeDBCustomZonesResponse() (response *DescribeDBCustomZonesResponse) {
+    response = &DescribeDBCustomZonesResponse{
+        BaseResponse: &tchttp.BaseResponse{},
+    } 
+    return
+
+}
+
+// DescribeDBCustomZones
+// 该接口(DescribeDBCustomZones) 用于查询指定地域的 DB Custom 可用区列表。
+//
+// 可能返回的错误码:
+//  AUTHFAILURE = "AuthFailure"
+//  AUTHFAILURE_UNAUTHORIZEDOPERATION = "AuthFailure.UnauthorizedOperation"
+//  FAILEDOPERATION = "FailedOperation"
+//  INVALIDPARAMETERVALUE = "InvalidParameterValue"
+func (c *Client) DescribeDBCustomZones(request *DescribeDBCustomZonesRequest) (response *DescribeDBCustomZonesResponse, err error) {
+    return c.DescribeDBCustomZonesWithContext(context.Background(), request)
+}
+
+// DescribeDBCustomZones
+// 该接口(DescribeDBCustomZones) 用于查询指定地域的 DB Custom 可用区列表。
+//
+// 可能返回的错误码:
+//  AUTHFAILURE = "AuthFailure"
+//  AUTHFAILURE_UNAUTHORIZEDOPERATION = "AuthFailure.UnauthorizedOperation"
+//  FAILEDOPERATION = "FailedOperation"
+//  INVALIDPARAMETERVALUE = "InvalidParameterValue"
+func (c *Client) DescribeDBCustomZonesWithContext(ctx context.Context, request *DescribeDBCustomZonesRequest) (response *DescribeDBCustomZonesResponse, err error) {
+    if request == nil {
+        request = NewDescribeDBCustomZonesRequest()
+    }
+    c.InitBaseRequest(&request.BaseRequest, "dbdc", APIVersion, "DescribeDBCustomZones")
+    
+    if c.GetCredential() == nil {
+        return nil, errors.New("DescribeDBCustomZones require credential")
+    }
+
+    request.SetContext(ctx)
+    
+    response = NewDescribeDBCustomZonesResponse()
     err = c.Send(request, response)
     return
 }
@@ -1123,6 +1515,62 @@ func (c *Client) IsolateDBCustomNodeWithContext(ctx context.Context, request *Is
     return
 }
 
+func NewModifyDBCustomClusterNodeConfigRequest() (request *ModifyDBCustomClusterNodeConfigRequest) {
+    request = &ModifyDBCustomClusterNodeConfigRequest{
+        BaseRequest: &tchttp.BaseRequest{},
+    }
+    
+    request.Init().WithApiInfo("dbdc", APIVersion, "ModifyDBCustomClusterNodeConfig")
+    
+    
+    return
+}
+
+func NewModifyDBCustomClusterNodeConfigResponse() (response *ModifyDBCustomClusterNodeConfigResponse) {
+    response = &ModifyDBCustomClusterNodeConfigResponse{
+        BaseResponse: &tchttp.BaseResponse{},
+    } 
+    return
+
+}
+
+// ModifyDBCustomClusterNodeConfig
+// 该接口（ModifyDBCustomClusterNodeConfig）用于修改 DB Custom 集群中节点的配置。
+//
+// 可能返回的错误码:
+//  AUTHFAILURE = "AuthFailure"
+//  AUTHFAILURE_UNAUTHORIZEDOPERATION = "AuthFailure.UnauthorizedOperation"
+//  FAILEDOPERATION = "FailedOperation"
+//  INVALIDPARAMETERVALUE = "InvalidParameterValue"
+func (c *Client) ModifyDBCustomClusterNodeConfig(request *ModifyDBCustomClusterNodeConfigRequest) (response *ModifyDBCustomClusterNodeConfigResponse, err error) {
+    return c.ModifyDBCustomClusterNodeConfigWithContext(context.Background(), request)
+}
+
+// ModifyDBCustomClusterNodeConfig
+// 该接口（ModifyDBCustomClusterNodeConfig）用于修改 DB Custom 集群中节点的配置。
+//
+// 可能返回的错误码:
+//  AUTHFAILURE = "AuthFailure"
+//  AUTHFAILURE_UNAUTHORIZEDOPERATION = "AuthFailure.UnauthorizedOperation"
+//  FAILEDOPERATION = "FailedOperation"
+//  INVALIDPARAMETERVALUE = "InvalidParameterValue"
+func (c *Client) ModifyDBCustomClusterNodeConfigWithContext(ctx context.Context, request *ModifyDBCustomClusterNodeConfigRequest) (response *ModifyDBCustomClusterNodeConfigResponse, err error) {
+    if request == nil {
+        request = NewModifyDBCustomClusterNodeConfigRequest()
+    }
+    c.InitBaseRequest(&request.BaseRequest, "dbdc", APIVersion, "ModifyDBCustomClusterNodeConfig")
+    
+    if c.GetCredential() == nil {
+        return nil, errors.New("ModifyDBCustomClusterNodeConfig require credential")
+    }
+
+    request.SetContext(ctx)
+    
+    response = NewModifyDBCustomClusterNodeConfigResponse()
+    err = c.Send(request, response)
+    return
+}
+
 func NewModifyDBCustomClusterTagsRequest() (request *ModifyDBCustomClusterTagsRequest) {
     request = &ModifyDBCustomClusterTagsRequest{
         BaseRequest: &tchttp.BaseRequest{},
@@ -1143,7 +1591,7 @@ func NewModifyDBCustomClusterTagsResponse() (response *ModifyDBCustomClusterTags
 }
 
 // ModifyDBCustomClusterTags
-// 该接口（ModifyDBCustomClusterTags）用于修改 DB Custom 集群的标签配置。
+// 该接口（ModifyDBCustomClusterTags）用于修改 DB Custom 集群绑定的标签。
 //
 // 可能返回的错误码:
 //  AUTHFAILURE = "AuthFailure"
@@ -1155,7 +1603,7 @@ func (c *Client) ModifyDBCustomClusterTags(request *ModifyDBCustomClusterTagsReq
 }
 
 // ModifyDBCustomClusterTags
-// 该接口（ModifyDBCustomClusterTags）用于修改 DB Custom 集群的标签配置。
+// 该接口（ModifyDBCustomClusterTags）用于修改 DB Custom 集群绑定的标签。
 //
 // 可能返回的错误码:
 //  AUTHFAILURE = "AuthFailure"
@@ -1175,6 +1623,62 @@ func (c *Client) ModifyDBCustomClusterTagsWithContext(ctx context.Context, reque
     request.SetContext(ctx)
     
     response = NewModifyDBCustomClusterTagsResponse()
+    err = c.Send(request, response)
+    return
+}
+
+func NewModifyDBCustomNodeSecurityGroupsRequest() (request *ModifyDBCustomNodeSecurityGroupsRequest) {
+    request = &ModifyDBCustomNodeSecurityGroupsRequest{
+        BaseRequest: &tchttp.BaseRequest{},
+    }
+    
+    request.Init().WithApiInfo("dbdc", APIVersion, "ModifyDBCustomNodeSecurityGroups")
+    
+    
+    return
+}
+
+func NewModifyDBCustomNodeSecurityGroupsResponse() (response *ModifyDBCustomNodeSecurityGroupsResponse) {
+    response = &ModifyDBCustomNodeSecurityGroupsResponse{
+        BaseResponse: &tchttp.BaseResponse{},
+    } 
+    return
+
+}
+
+// ModifyDBCustomNodeSecurityGroups
+// 该接口（ModifyDBCustomNodeSecurityGroups）用于修改 DB Custom 节点安全组。
+//
+// 可能返回的错误码:
+//  AUTHFAILURE = "AuthFailure"
+//  AUTHFAILURE_UNAUTHORIZEDOPERATION = "AuthFailure.UnauthorizedOperation"
+//  FAILEDOPERATION = "FailedOperation"
+//  INVALIDPARAMETERVALUE = "InvalidParameterValue"
+func (c *Client) ModifyDBCustomNodeSecurityGroups(request *ModifyDBCustomNodeSecurityGroupsRequest) (response *ModifyDBCustomNodeSecurityGroupsResponse, err error) {
+    return c.ModifyDBCustomNodeSecurityGroupsWithContext(context.Background(), request)
+}
+
+// ModifyDBCustomNodeSecurityGroups
+// 该接口（ModifyDBCustomNodeSecurityGroups）用于修改 DB Custom 节点安全组。
+//
+// 可能返回的错误码:
+//  AUTHFAILURE = "AuthFailure"
+//  AUTHFAILURE_UNAUTHORIZEDOPERATION = "AuthFailure.UnauthorizedOperation"
+//  FAILEDOPERATION = "FailedOperation"
+//  INVALIDPARAMETERVALUE = "InvalidParameterValue"
+func (c *Client) ModifyDBCustomNodeSecurityGroupsWithContext(ctx context.Context, request *ModifyDBCustomNodeSecurityGroupsRequest) (response *ModifyDBCustomNodeSecurityGroupsResponse, err error) {
+    if request == nil {
+        request = NewModifyDBCustomNodeSecurityGroupsRequest()
+    }
+    c.InitBaseRequest(&request.BaseRequest, "dbdc", APIVersion, "ModifyDBCustomNodeSecurityGroups")
+    
+    if c.GetCredential() == nil {
+        return nil, errors.New("ModifyDBCustomNodeSecurityGroups require credential")
+    }
+
+    request.SetContext(ctx)
+    
+    response = NewModifyDBCustomNodeSecurityGroupsResponse()
     err = c.Send(request, response)
     return
 }
@@ -1199,7 +1703,7 @@ func NewModifyDBCustomNodeTagsResponse() (response *ModifyDBCustomNodeTagsRespon
 }
 
 // ModifyDBCustomNodeTags
-// 该接口（ModifyDBCustomNodeTags）用于修改 DB Custom 节点的标签配置。
+// 该接口（ModifyDBCustomNodeTags）用于修改 DB Custom 节点绑定的标签。
 //
 // 可能返回的错误码:
 //  AUTHFAILURE = "AuthFailure"
@@ -1211,7 +1715,7 @@ func (c *Client) ModifyDBCustomNodeTags(request *ModifyDBCustomNodeTagsRequest) 
 }
 
 // ModifyDBCustomNodeTags
-// 该接口（ModifyDBCustomNodeTags）用于修改 DB Custom 节点的标签配置。
+// 该接口（ModifyDBCustomNodeTags）用于修改 DB Custom 节点绑定的标签。
 //
 // 可能返回的错误码:
 //  AUTHFAILURE = "AuthFailure"
@@ -1313,7 +1817,7 @@ func NewRemoveNodesFromDBCustomClusterResponse() (response *RemoveNodesFromDBCus
 }
 
 // RemoveNodesFromDBCustomCluster
-// 该接口（RemoveNodesFromDBCustomCluster）用于从 DB Custom 集群移除节点。
+// 该接口（RemoveNodesFromDBCustomCluster）用于从 DB Custom 集群移出节点。
 //
 // 可能返回的错误码:
 //  AUTHFAILURE = "AuthFailure"
@@ -1325,7 +1829,7 @@ func (c *Client) RemoveNodesFromDBCustomCluster(request *RemoveNodesFromDBCustom
 }
 
 // RemoveNodesFromDBCustomCluster
-// 该接口（RemoveNodesFromDBCustomCluster）用于从 DB Custom 集群移除节点。
+// 该接口（RemoveNodesFromDBCustomCluster）用于从 DB Custom 集群移出节点。
 //
 // 可能返回的错误码:
 //  AUTHFAILURE = "AuthFailure"
@@ -1369,7 +1873,7 @@ func NewRenewDBCustomNodeResponse() (response *RenewDBCustomNodeResponse) {
 }
 
 // RenewDBCustomNode
-// 该接口（RenewDBCustomNode）用于给 DB Custom 节点续费。
+// 该接口（RenewDBCustomNode）用于给 DB Custom 节点续费，或者给已经隔离的实例解除隔离。
 //
 // 可能返回的错误码:
 //  AUTHFAILURE = "AuthFailure"
@@ -1381,7 +1885,7 @@ func (c *Client) RenewDBCustomNode(request *RenewDBCustomNodeRequest) (response 
 }
 
 // RenewDBCustomNode
-// 该接口（RenewDBCustomNode）用于给 DB Custom 节点续费。
+// 该接口（RenewDBCustomNode）用于给 DB Custom 节点续费，或者给已经隔离的实例解除隔离。
 //
 // 可能返回的错误码:
 //  AUTHFAILURE = "AuthFailure"
