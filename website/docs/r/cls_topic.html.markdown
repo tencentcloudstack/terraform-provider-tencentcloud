@@ -80,6 +80,32 @@ resource "tencentcloud_cls_topic" "example" {
 }
 ```
 
+### Create a cls metric topic(biz_type=1)
+
+```hcl
+resource "tencentcloud_cls_logset" "example" {
+  logset_name = "tf_example"
+  tags = {
+    tagKey = "tagValue"
+  }
+}
+
+resource "tencentcloud_cls_topic" "example" {
+  topic_name           = "tf_example"
+  logset_id            = tencentcloud_cls_logset.example.id
+  auto_split           = false
+  max_split_partitions = 20
+  partition_count      = 1
+  period               = 30
+  storage_type         = "hot"
+  describes            = "Test Demo."
+  biz_type             = 1
+  tags = {
+    tagKey = "tagValue"
+  }
+}
+```
+
 ## Argument Reference
 
 The following arguments are supported:
@@ -87,6 +113,7 @@ The following arguments are supported:
 * `logset_id` - (Required, String) Logset ID.
 * `topic_name` - (Required, String) Log topic name.
 * `auto_split` - (Optional, Bool) Whether to enable automatic split. Default value: true.
+* `biz_type` - (Optional, Int) Topic type. 0: log topic (default), 1: metric topic.
 * `describes` - (Optional, String) Log Topic Description.
 * `encryption` - (Optional, Int) Encryption-related parameters. This parameter is supported for users with an open access list and from encrypted regions; it cannot be passed in other scenarios. 0 or not passed: No encryption. 1: KMS-CLS cloud product key encryption. Once enabled, it cannot be disabled.
 Supported regions: ap-beijing, ap-guangzhou, ap-shanghai, ap-singapore, ap-bangkok, ap-jakarta, eu-frankfurt, ap-seoul, ap-tokyo.
@@ -128,5 +155,11 @@ cls topic can be imported using the id, e.g.
 
 ```
 $ terraform import tencentcloud_cls_topic.example 2f5764c1-c833-44c5-84c7-950979b2a278
+```
+
+cls metric topic (biz_type=1) can be imported using the id with "#1" suffix, e.g.
+
+```
+$ terraform import tencentcloud_cls_topic.example 2f5764c1-c833-44c5-84c7-950979b2a278#1
 ```
 
