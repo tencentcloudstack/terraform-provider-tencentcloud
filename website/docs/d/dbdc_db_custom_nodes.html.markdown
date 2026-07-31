@@ -90,12 +90,14 @@ In addition to all arguments above, the following attributes are exported:
     * `disk_name` - Disk name.
     * `disk_size` - Disk size in GiB.
     * `disk_type` - Disk type.
+  * `eni_ip` - The node access IP address when the network mode is `NetworkModeCrossTenantENI`. Note: This field may return null, indicating that no valid value can be obtained.
   * `expire_time` - Node expiration time.
   * `host_ip` - Host IP.
   * `image_id` - Node OS image ID.
   * `isolated_time` - Node isolation time.
   * `lan_ip` - Internal network IP address of the node.
   * `memory` - Node memory size in GiB.
+  * `network_mode` - Network mode. Enumerated values: `NetworkModePrivateLink` (four-layer SSH service access mode), `NetworkModeCrossTenantENI` (three-layer dual-NIC access mode).
   * `node_id` - Node ID.
   * `node_name` - Node name.
   * `node_type` - Node type/spec.
