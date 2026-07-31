@@ -1398,6 +1398,7 @@ func Provider() *schema.Provider {
 			"tencentcloud_dbdc_db_custom_cluster_node_resources":                  dbdc.DataSourceTencentCloudDbdcDbCustomClusterNodeResources(),
 			"tencentcloud_dbdc_db_custom_cluster_node_config_list":                dbdc.DataSourceTencentCloudDbdcDbCustomClusterNodeConfigList(),
 			"tencentcloud_dbdc_db_custom_images":                                  dbdc.DataSourceTencentCloudDbdcDbCustomImages(),
+			"tencentcloud_dbdc_db_custom_node_security_groups":                    dbdc.DataSourceTencentCloudDbdcDbCustomNodeSecurityGroups(),
 			"tencentcloud_dbdc_db_custom_cluster_resources":                       dbdc.DataSourceTencentCloudDbdcDbCustomClusterResources(),
 			"tencentcloud_dbdc_db_custom_zones":                                   dbdc.DataSourceTencentCloudDbdcDbCustomZones(),
 			"tencentcloud_gs_android_instances":                                   gs.DataSourceTencentCloudGsAndroidInstances(),
