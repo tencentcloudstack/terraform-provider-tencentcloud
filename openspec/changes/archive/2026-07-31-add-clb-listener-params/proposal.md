@@ -6,7 +6,7 @@ The CLB Listener resource (`tencentcloud_clb_listener`) is missing several param
 
 - Add `MaxConn` parameter (TypeInt, Optional/Computed) - listener-level maximum concurrent connections. Supported by CreateListener, DescribeListeners, and ModifyListener APIs.
 - Add `MaxCps` parameter (TypeInt, Optional/Computed) - listener-level maximum new connections per second. Supported by CreateListener, DescribeListeners, and ModifyListener APIs.
-- Add `ProxyProtocol` parameter (TypeBool, Optional) - enable proxy protocol for TCP_SSL and QUIC listeners. Supported by CreateListener and ModifyListener APIs. Note: this field is not returned by DescribeListeners API, so it is write-only (not set in Read).
+- Add `ProxyProtocol` parameter (TypeBool, Optional) - enable proxy protocol for TCP_SSL and QUIC listeners. Supported by CreateListener and ModifyListener APIs. Read from DescribeListeners API via AttrFlags (checking for "ProxyProtocol" flag).
 - Add `DataCompressMode` parameter (TypeString, Optional/Computed) - data compression mode. Valid values: `transparent`, `compatibility`. Supported by CreateListener, DescribeListeners, and ModifyListener APIs.
 
 ## Capabilities

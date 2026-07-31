@@ -279,6 +279,7 @@ func ResourceTencentCloudClbListener() *schema.Resource {
 			"proxy_protocol": {
 				Type:        schema.TypeBool,
 				Optional:    true,
+				Computed:    true,
 				Description: "Enable proxy protocol for TCP_SSL and QUIC listeners. Note: this field is not returned by the DescribeListeners API, so it will not be refreshed in state after creation.",
 			},
 			"data_compress_mode": {
@@ -358,16 +359,11 @@ func resourceTencentCloudClbListenerCreate(d *schema.ResourceData, meta interfac
 	}
 
 	certificateSetFlag, certificateInput, certErr := checkCertificateInputPara(ctx, d, meta)
-
 	if certErr != nil {
 		return certErr
 	}
 	if certificateSetFlag {
 		request.Certificate = certificateInput
-	} else {
-		if protocol == CLB_LISTENER_PROTOCOL_TCPSSL {
-			return fmt.Errorf("[CHECK][CLB listener][Create] check: certificated need to be set when protocol is TCPSSL")
-		}
 	}
 
 	multiCertificateSetFlag, multiCertInput, certErr := checkMultiCertificateInputPara(ctx, d, meta)
@@ -377,9 +373,11 @@ func resourceTencentCloudClbListenerCreate(d *schema.ResourceData, meta interfac
 
 	if multiCertificateSetFlag {
 		request.MultiCertInfo = multiCertInput
-	} else {
-		if protocol == CLB_LISTENER_PROTOCOL_TCPSSL {
-			return fmt.Errorf("[CHECK][CLB listener][Create] check: certificated need to be set when protocol is TCPSSL")
+	}
+
+	if protocol == CLB_LISTENER_PROTOCOL_TCPSSL {
+		if (certificateSetFlag && multiCertificateSetFlag) || (!certificateSetFlag && !multiCertificateSetFlag) {
+			return fmt.Errorf("[CHECK][CLB listener][Create] check: certificate and multi certificate can not be set at the same time when protocol is TCPSSL, must set one of them")
 		}
 	}
 
@@ -687,7 +685,7 @@ func resourceTencentCloudClbListenerRead(d *schema.ResourceData, meta interface{
 		_ = d.Set("end_port", instance.EndPort)
 	}
 
-	if instance.AttrFlags != nil && len(instance.AttrFlags) > 0 {
+	if len(instance.AttrFlags) > 0 {
 		if tccommon.IsContains(helper.PStrings(instance.AttrFlags), "H2cSwitch") {
 			_ = d.Set("h2c_switch", true)
 		} else {
@@ -699,9 +697,15 @@ func resourceTencentCloudClbListenerRead(d *schema.ResourceData, meta interface{
 		} else {
 			_ = d.Set("snat_enable", false)
 		}
+		if tccommon.IsContains(helper.PStrings(instance.AttrFlags), "ProxyProtocol") {
+			_ = d.Set("proxy_protocol", true)
+		} else {
+			_ = d.Set("proxy_protocol", false)
+		}
 	} else {
 		_ = d.Set("h2c_switch", false)
 		_ = d.Set("snat_enable", false)
+		_ = d.Set("proxy_protocol", false)
 	}
 
 	if instance.DeregisterTargetRst != nil {

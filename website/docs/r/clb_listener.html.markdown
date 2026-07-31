@@ -24,6 +24,18 @@ resource "tencentcloud_clb_listener" "example" {
 }
 ```
 
+### HTTP Listener with specific data compress mode
+
+```hcl
+resource "tencentcloud_clb_listener" "example" {
+  clb_id             = "lb-qck8thny"
+  listener_name      = "tf-example"
+  port               = 80
+  protocol           = "HTTP"
+  data_compress_mode = "transparent"
+}
+```
+
 ### TCP/UDP Listener
 
 ```hcl
@@ -177,7 +189,7 @@ resource "tencentcloud_clb_listener" "example" {
 }
 ```
 
-### TCP_SSL Listener with MaxConn, MaxCps, ProxyProtocol and DataCompressMode
+### TCP_SSL Listener with MaxConn, MaxCps, ProxyProtocol
 
 ```hcl
 resource "tencentcloud_clb_listener" "example" {
@@ -191,7 +203,6 @@ resource "tencentcloud_clb_listener" "example" {
   max_conn             = 1000
   max_cps              = 100
   proxy_protocol       = true
-  data_compress_mode   = "transparent"
 }
 ```
 

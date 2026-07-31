@@ -33,12 +33,20 @@ The `tencentcloud_clb_listener` resource SHALL support a `max_cps` parameter of 
 - **THEN** the ModifyListener API is called with `MaxCps = 50`
 
 ### Requirement: CLB listener supports ProxyProtocol parameter
-The `tencentcloud_clb_listener` resource SHALL support a `proxy_protocol` parameter of type `TypeBool`, Optional (not Computed). The parameter SHALL be passed to the CreateListener and ModifyListener APIs as `request.ProxyProtocol`. Since the DescribeListeners API does not return this field, the Terraform Read function SHALL NOT set `proxy_protocol` in state.
+The `tencentcloud_clb_listener` resource SHALL support a `proxy_protocol` parameter of type `TypeBool`, Optional (not Computed). The parameter SHALL be passed to the CreateListener and ModifyListener APIs as `request.ProxyProtocol`. In the Read function, the parameter SHALL be set based on whether the `AttrFlags` array in the DescribeListeners response contains the string "ProxyProtocol".
 
 #### Scenario: Create TCP_SSL listener with ProxyProtocol
 - **WHEN** user specifies `proxy_protocol = true` for a TCP_SSL listener
 - **THEN** the CreateListener API is called with `ProxyProtocol = true`
 - **AND** the value is persisted in Terraform state as provided
+
+#### Scenario: Read listener with ProxyProtocol enabled
+- **WHEN** the DescribeListeners API returns a listener with `AttrFlags` containing "ProxyProtocol"
+- **THEN** the `proxy_protocol` attribute in Terraform state is set to `true`
+
+#### Scenario: Read listener with ProxyProtocol disabled
+- **WHEN** the DescribeListeners API returns a listener with `AttrFlags` not containing "ProxyProtocol"
+- **THEN** the `proxy_protocol` attribute in Terraform state is set to `false`
 
 #### Scenario: Update listener ProxyProtocol
 - **WHEN** user changes `proxy_protocol` from `false` to `true`

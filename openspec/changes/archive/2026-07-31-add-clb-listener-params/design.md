@@ -31,7 +31,7 @@ These parameters are validated against the vendor SDK (`vendor/github.com/tencen
 |-------|------|----------|----------|-------|
 | `max_conn` | TypeInt | Yes | Yes | -1 means unlimited |
 | `max_cps` | TypeInt | Yes | Yes | -1 means unlimited |
-| `proxy_protocol` | TypeBool | Yes | No | Write-only: not in Listener struct |
+| `proxy_protocol` | TypeBool | Yes | No | Read from AttrFlags "ProxyProtocol" |
 | `data_compress_mode` | TypeString | Yes | Yes | `transparent` or `compatibility` |
 
 **Rationale**: `MaxConn`, `MaxCps`, `DataCompressMode` are marked Computed because they are returned by DescribeListeners. `ProxyProtocol` is NOT Computed because it is absent from the `Listener` struct in the DescribeListeners response — it is a write-only parameter used in Create/Update only.
@@ -56,7 +56,19 @@ if instance.MaxConn != nil {
 }
 ```
 
-`ProxyProtocol` is NOT set in Read because the `Listener` struct does not have this field.
+`ProxyProtocol` is set in Read by checking `AttrFlags` for "ProxyProtocol" string. If present, set to `true`; otherwise `false`.
+
+```go
+if instance.AttrFlags != nil && len(instance.AttrFlags) > 0 {
+    if tccommon.IsContains(helper.PStrings(instance.AttrFlags), "ProxyProtocol") {
+        _ = d.Set("proxy_protocol", true)
+    } else {
+        _ = d.Set("proxy_protocol", false)
+    }
+} else {
+    _ = d.Set("proxy_protocol", false)
+}
+```
 
 ### Update Implementation
 
@@ -71,5 +83,5 @@ if d.HasChange("max_conn") {
 
 ## Risks / Trade-offs
 
-- **ProxyProtocol is write-only**: If a user sets `proxy_protocol = true` and later runs `terraform apply` again, Terraform will see the state contains `proxy_protocol = true` but the Read will not set it, potentially flagging a drift. This is an inherent limitation of the API (DescribeListeners does not return this field). Users should be aware via documentation.
+- **ProxyProtocol read via AttrFlags**: The DescribeListeners API does not return `ProxyProtocol` as a direct field on the `Listener` struct, but the value can be inferred from the `AttrFlags` field. If the `AttrFlags` array contains "ProxyProtocol", the feature is enabled. This follows the same pattern used for `H2cSwitch`, `SnatEnable`, and reschedule flags in the existing code.
 - **No protocol validation**: The Terraform code does not validate that these parameters are only set for compatible protocols (e.g., MaxConn/MaxCps only for performance capacity-type instances with TCP/UDP/TCP_SSL/QUIC listeners). Invalid configurations will be rejected by the API at apply time.

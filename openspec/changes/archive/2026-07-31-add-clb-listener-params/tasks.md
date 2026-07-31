@@ -12,7 +12,7 @@
 ## 3. Read Implementation
 
 - [x] 3.1 Add `MaxConn`, `MaxCps`, `DataCompressMode` to `resourceTencentCloudClbListenerRead` function with nil-check before `d.Set`
-- [x] 3.2 Note: `ProxyProtocol` is NOT set in Read (absent from Listener struct in DescribeListeners response)
+- [x] 3.2 Add `ProxyProtocol` to `resourceTencentCloudClbListenerRead` function: set to `true` if `AttrFlags` contains "ProxyProtocol", otherwise `false`
 
 ## 4. Update Implementation
 
