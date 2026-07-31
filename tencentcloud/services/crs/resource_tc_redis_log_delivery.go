@@ -215,7 +215,7 @@ func resourceTencentCloudRedisLogDeliveryRead(d *schema.ResourceData, meta inter
 		topicId := respData.TopicId
 		_ = d.Set("topic_id", topicId)
 
-		topic, err := clsService.DescribeClsTopicById(ctx, *topicId)
+		topic, err := clsService.DescribeClsTopicById(ctx, *topicId, nil)
 		if err != nil {
 			return err
 		}

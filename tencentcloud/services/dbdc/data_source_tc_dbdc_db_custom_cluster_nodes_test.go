@@ -57,6 +57,8 @@ func TestDbdcDbCustomClusterNodesDS_ReadBasic(t *testing.T) {
 					Status:      ptrStrCN("Running"),
 					Zone:        ptrStrCN("ap-guangzhou-3"),
 					NodeType:    ptrStrCN("DB.AT5.32XLARGE512"),
+					NetworkMode: ptrStrCN("privatelink"),
+					EniIP:       ptrStrCN("10.0.0.11"),
 				},
 				{
 					NodeId:      ptrStrCN("node-def456"),
@@ -66,6 +68,8 @@ func TestDbdcDbCustomClusterNodesDS_ReadBasic(t *testing.T) {
 					Status:      ptrStrCN("Creating"),
 					Zone:        ptrStrCN("ap-guangzhou-3"),
 					NodeType:    ptrStrCN("DB.AT5.64XLARGE1152"),
+					NetworkMode: ptrStrCN("cross_tenant_eni"),
+					EniIP:       ptrStrCN("10.0.0.22"),
 				},
 			},
 		}
@@ -93,6 +97,8 @@ func TestDbdcDbCustomClusterNodesDS_ReadBasic(t *testing.T) {
 	assert.Equal(t, "Running", node0["status"].(string))
 	assert.Equal(t, "ap-guangzhou-3", node0["zone"].(string))
 	assert.Equal(t, "DB.AT5.32XLARGE512", node0["node_type"].(string))
+	assert.Equal(t, "privatelink", node0["network_mode"].(string))
+	assert.Equal(t, "10.0.0.11", node0["eni_ip"].(string))
 
 	node1 := nodeSet[1].(map[string]interface{})
 	assert.Equal(t, "node-def456", node1["node_id"].(string))
@@ -102,6 +108,8 @@ func TestDbdcDbCustomClusterNodesDS_ReadBasic(t *testing.T) {
 	assert.Equal(t, "Creating", node1["status"].(string))
 	assert.Equal(t, "ap-guangzhou-3", node1["zone"].(string))
 	assert.Equal(t, "DB.AT5.64XLARGE1152", node1["node_type"].(string))
+	assert.Equal(t, "cross_tenant_eni", node1["network_mode"].(string))
+	assert.Equal(t, "10.0.0.22", node1["eni_ip"].(string))
 
 	totalCount := d.Get("total_count").(int)
 	assert.Equal(t, 2, totalCount)
@@ -137,6 +145,16 @@ func TestDbdcDbCustomClusterNodesDS_Schema(t *testing.T) {
 	assert.Contains(t, elemRes.Schema, "status")
 	assert.Contains(t, elemRes.Schema, "zone")
 	assert.Contains(t, elemRes.Schema, "node_type")
+	assert.Contains(t, elemRes.Schema, "network_mode")
+	assert.Contains(t, elemRes.Schema, "eni_ip")
+
+	networkModeSchema := elemRes.Schema["network_mode"]
+	assert.Equal(t, schema.TypeString, networkModeSchema.Type)
+	assert.True(t, networkModeSchema.Computed)
+
+	eniIpSchema := elemRes.Schema["eni_ip"]
+	assert.Equal(t, schema.TypeString, eniIpSchema.Type)
+	assert.True(t, eniIpSchema.Computed)
 
 	totalCountSchema := res.Schema["total_count"]
 	assert.Equal(t, schema.TypeInt, totalCountSchema.Type)
