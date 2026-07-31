@@ -324,6 +324,45 @@ func (me *DbdcService) DescribeDBCustomClusterById(ctx context.Context, clusterI
 	return
 }
 
+func (me *DbdcService) DescribeDBCustomClusterResources(ctx context.Context, clusterId string) (ret *dbdcv20201029.DescribeDBCustomClusterResourcesResponseParams, errRet error) {
+	var (
+		logId   = tccommon.GetLogId(ctx)
+		request = dbdcv20201029.NewDescribeDBCustomClusterResourcesRequest()
+	)
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	request.ClusterId = &clusterId
+
+	err := resource.Retry(tccommon.ReadRetryTimeout, func() *resource.RetryError {
+		ratelimit.Check(request.GetAction())
+		result, e := me.client.UseDbdcV20201029Client().DescribeDBCustomClusterResourcesWithContext(ctx, request)
+		if e != nil {
+			return tccommon.RetryError(e)
+		} else {
+			log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), result.ToJsonString())
+		}
+
+		if result == nil || result.Response == nil {
+			return resource.NonRetryableError(fmt.Errorf("Describe dbdc_db_custom_cluster_resources failed, Response is nil."))
+		}
+
+		ret = result.Response
+		return nil
+	})
+
+	if err != nil {
+		errRet = err
+		return
+	}
+
+	return
+}
+
 func (me *DbdcService) DescribeDBCustomTaskStatusById(ctx context.Context, taskId uint64) (status string, errRet error) {
 	var (
 		logId   = tccommon.GetLogId(ctx)
@@ -510,6 +549,56 @@ func (me *DbdcService) DescribeDBCustomClusterNodeResourcesByFilter(ctx context.
 		errRet = err
 		return
 	}
+
+	return
+}
+
+func (me *DbdcService) DescribeDBCustomClusterNodeConfigByFilter(ctx context.Context, param map[string]interface{}) (ret []*dbdcv20201029.DBCustomClusterNodeConfig, errRet error) {
+	var (
+		logId    = tccommon.GetLogId(ctx)
+		request  = dbdcv20201029.NewDescribeDBCustomClusterNodeConfigRequest()
+		response = dbdcv20201029.NewDescribeDBCustomClusterNodeConfigResponse()
+	)
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	for k, v := range param {
+		if k == "ClusterId" {
+			request.ClusterId = v.(*string)
+		}
+		if k == "NodeIds" {
+			request.NodeIds = v.([]*string)
+		}
+	}
+
+	err := resource.Retry(tccommon.ReadRetryTimeout, func() *resource.RetryError {
+		ratelimit.Check(request.GetAction())
+		result, e := me.client.UseDbdcV20201029Client().DescribeDBCustomClusterNodeConfigWithContext(ctx, request)
+		if e != nil {
+			return tccommon.RetryError(e)
+		} else {
+			log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), result.ToJsonString())
+		}
+
+		if result == nil || result.Response == nil || len(result.Response.NodeSet) == 0 {
+			log.Printf("[DATASOURCE] read empty, skip SetId")
+			return resource.NonRetryableError(fmt.Errorf("Describe dbdc_db_custom_cluster_node_config_list failed, Response is nil or empty."))
+		}
+
+		response = result
+		return nil
+	})
+
+	if err != nil {
+		errRet = err
+		return
+	}
+
+	ret = response.Response.NodeSet
 
 	return
 }
