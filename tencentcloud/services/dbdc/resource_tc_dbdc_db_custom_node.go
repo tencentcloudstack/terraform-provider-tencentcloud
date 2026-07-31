@@ -216,6 +216,18 @@ func ResourceTencentCloudDbdcDbCustomNode() *schema.Resource {
 				Description: "Node isolation time.",
 			},
 
+			"network_mode": {
+				Type:        schema.TypeString,
+				Computed:    true,
+				Description: "Node network mode. Valid values: `NetworkModePrivateLink` (four-layer SSH service connectivity mode), `NetworkModeCrossTenantENI` (three-layer dual-NIC access mode). Refreshed from the `DescribeDBCustomNodes` API response.",
+			},
+
+			"eni_ip": {
+				Type:        schema.TypeString,
+				Computed:    true,
+				Description: "Node access IP address when the `NetworkModeCrossTenantENI` network mode is selected. Refreshed from the `DescribeDBCustomNodes` API response.",
+			},
+
 			"system_disk": {
 				Type:        schema.TypeList,
 				Computed:    true,
@@ -506,6 +518,14 @@ func resourceTencentCloudDbdcDbCustomNodeRead(d *schema.ResourceData, meta inter
 
 	if respData.IsolatedTime != nil {
 		_ = d.Set("isolated_time", respData.IsolatedTime)
+	}
+
+	if respData.NetworkMode != nil {
+		_ = d.Set("network_mode", respData.NetworkMode)
+	}
+
+	if respData.EniIP != nil {
+		_ = d.Set("eni_ip", respData.EniIP)
 	}
 
 	if respData.SystemDisk != nil {

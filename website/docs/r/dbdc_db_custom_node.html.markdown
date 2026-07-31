@@ -70,10 +70,12 @@ In addition to all arguments above, the following attributes are exported:
   * `disk_name` - Disk name.
   * `disk_size` - Disk size, unit: GiB.
   * `disk_type` - Disk type.
+* `eni_ip` - Node access IP address when the `NetworkModeCrossTenantENI` network mode is selected. Refreshed from the `DescribeDBCustomNodes` API response.
 * `expire_time` - Node expiration time.
 * `isolated_time` - Node isolation time.
 * `lan_ip` - Intranet communication IP address of the node.
 * `memory` - Node memory, unit: GiB.
+* `network_mode` - Node network mode. Valid values: `NetworkModePrivateLink` (four-layer SSH service connectivity mode), `NetworkModeCrossTenantENI` (three-layer dual-NIC access mode). Refreshed from the `DescribeDBCustomNodes` API response.
 * `node_id` - Node ID.
 * `os_name` - Operating system name of the node.
 * `ssh_endpoint` - SSH endpoint to access this node, in the format `IP:Port`.
