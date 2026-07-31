@@ -23,7 +23,7 @@ func DataSourceTencentCloudDbdcDbCustomClusterNodeResources() *schema.Resource {
 
 			"node_ids": {
 				Type:        schema.TypeList,
-				Optional:    true,
+				Required:    true,
 				Description: "Node ID list. Up to 50 node IDs per request (enforced by the cloud API).",
 				Elem: &schema.Schema{
 					Type: schema.TypeString,
@@ -49,7 +49,6 @@ func DataSourceTencentCloudDbdcDbCustomClusterNodeResources() *schema.Resource {
 						},
 						"capacity": {
 							Type:        schema.TypeList,
-							MaxItems:    1,
 							Computed:    true,
 							Description: "Node physical resource total capacity.",
 							Elem: &schema.Resource{
@@ -74,7 +73,6 @@ func DataSourceTencentCloudDbdcDbCustomClusterNodeResources() *schema.Resource {
 						},
 						"allocatable": {
 							Type:        schema.TypeList,
-							MaxItems:    1,
 							Computed:    true,
 							Description: "Node allocatable capacity = Capacity - system reserved.",
 							Elem: &schema.Resource{
@@ -99,7 +97,6 @@ func DataSourceTencentCloudDbdcDbCustomClusterNodeResources() *schema.Resource {
 						},
 						"requests": {
 							Type:        schema.TypeList,
-							MaxItems:    1,
 							Computed:    true,
 							Description: "Sum of requests of all non-terminal pods on the node (including system pods).",
 							Elem: &schema.Resource{
@@ -124,7 +121,6 @@ func DataSourceTencentCloudDbdcDbCustomClusterNodeResources() *schema.Resource {
 						},
 						"limits": {
 							Type:        schema.TypeList,
-							MaxItems:    1,
 							Computed:    true,
 							Description: "Sum of limits of all non-terminal pods on the node (including system pods).",
 							Elem: &schema.Resource{
@@ -149,7 +145,6 @@ func DataSourceTencentCloudDbdcDbCustomClusterNodeResources() *schema.Resource {
 						},
 						"available": {
 							Type:        schema.TypeList,
-							MaxItems:    1,
 							Computed:    true,
 							Description: "Node schedulable remainder = max(0, Allocatable - Requests).",
 							Elem: &schema.Resource{
