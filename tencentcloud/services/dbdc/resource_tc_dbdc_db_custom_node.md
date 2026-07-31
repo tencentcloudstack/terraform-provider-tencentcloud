@@ -8,10 +8,26 @@ resource "tencentcloud_dbdc_db_custom_node" "example" {
   image_id   = "img-rm13akp3"
   vpc_id     = "vpc-py7mlxqm"
   subnet_id  = "subnet-qd4upp83"
-  node_type  = "DB.AT5.8XLARGE128"
+  node_type  = "DB.SA5.8XLARGE128"
   period     = 1
   auto_renew = 1
   node_name  = "tf-example"
+
+  charge_type   = "PREPAID"
+  network_mode  = "privatelink"
+  host_name     = "tf-example-node"
+  security_group_ids = ["sg-xxxxxxxx"]
+
+  system_disk {
+    disk_type = "CLOUD_HSSD"
+    disk_size = 100
+  }
+
+  data_disks {
+    disk_type = "CLOUD_HSSD"
+    disk_size = 500
+    disk_name = "tf-example-data"
+  }
 
   login_settings {
     password = "Password@2026"
