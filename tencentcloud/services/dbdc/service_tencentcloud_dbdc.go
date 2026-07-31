@@ -285,6 +285,48 @@ func (me *DbdcService) DescribeDBCustomImagesByFilter(ctx context.Context, param
 	return
 }
 
+func (me *DbdcService) DescribeDBCustomZonesByFilter(ctx context.Context, param map[string]interface{}) (ret []*dbdcv20201029.ZoneInfo, totalCount int64, errRet error) {
+	var (
+		logId    = tccommon.GetLogId(ctx)
+		request  = dbdcv20201029.NewDescribeDBCustomZonesRequest()
+		response = dbdcv20201029.NewDescribeDBCustomZonesResponse()
+	)
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	err := resource.Retry(tccommon.ReadRetryTimeout, func() *resource.RetryError {
+		ratelimit.Check(request.GetAction())
+		result, e := me.client.UseDbdcV20201029Client().DescribeDBCustomZones(request)
+		if e != nil {
+			return tccommon.RetryError(e)
+		} else {
+			log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), result.ToJsonString())
+		}
+
+		if result == nil || result.Response == nil || result.Response.ZoneSet == nil || len(result.Response.ZoneSet) == 0 {
+			log.Printf("[DATASOURCE] read empty, skip SetId")
+			return resource.NonRetryableError(fmt.Errorf("Describe dbdc_db_custom_zones failed, Response is nil or empty."))
+		}
+
+		response = result
+		return nil
+	})
+
+	if err != nil {
+		errRet = err
+		return
+	}
+
+	ret = response.Response.ZoneSet
+	totalCount = int64(len(ret))
+
+	return
+}
+
 func (me *DbdcService) DescribeDBCustomClusterById(ctx context.Context, clusterId string) (ret *dbdcv20201029.DescribeDBCustomClusterDetailResponseParams, errRet error) {
 	var (
 		logId   = tccommon.GetLogId(ctx)
