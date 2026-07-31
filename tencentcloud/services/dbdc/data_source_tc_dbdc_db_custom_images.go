@@ -21,6 +21,19 @@ func DataSourceTencentCloudDbdcDbCustomImages() *schema.Resource {
 				Description: "Used to save results.",
 			},
 
+			"name": {
+				Type:        schema.TypeString,
+				Optional:    true,
+				Description: "Filter name of the DescribeDBCustomImages API. Values: image-id, os-type, image-type, architecture.",
+			},
+
+			"values": {
+				Type:        schema.TypeList,
+				Optional:    true,
+				Elem:        &schema.Schema{Type: schema.TypeString},
+				Description: "Filter values corresponding to the filter name.",
+			},
+
 			"image_set": {
 				Type:        schema.TypeList,
 				Computed:    true,
@@ -47,6 +60,11 @@ func DataSourceTencentCloudDbdcDbCustomImages() *schema.Resource {
 							Computed:    true,
 							Description: "OS architecture. Values: x86_64, arm64.",
 						},
+						"os_type": {
+							Type:        schema.TypeString,
+							Computed:    true,
+							Description: "OS type. Values: windows, linux.",
+						},
 					},
 				},
 			},
@@ -65,6 +83,18 @@ func dataSourceTencentCloudDbdcDbCustomImagesRead(d *schema.ResourceData, meta i
 	)
 
 	paramMap := make(map[string]interface{})
+
+	if name, ok := d.GetOk("name"); ok && name.(string) != "" {
+		paramMap["name"] = name.(string)
+		values := d.Get("values").([]interface{})
+		if len(values) > 0 {
+			valueList := make([]*string, 0, len(values))
+			for _, v := range values {
+				valueList = append(valueList, helper.String(v.(string)))
+			}
+			paramMap["values"] = valueList
+		}
+	}
 
 	var respData []*dbdcv20201029.DBCustomImage
 	reqErr := resource.Retry(tccommon.ReadRetryTimeout, func() *resource.RetryError {
@@ -99,6 +129,10 @@ func dataSourceTencentCloudDbdcDbCustomImagesRead(d *schema.ResourceData, meta i
 
 			if image.Architecture != nil {
 				imageMap["architecture"] = image.Architecture
+			}
+
+			if image.OsType != nil {
+				imageMap["os_type"] = image.OsType
 			}
 
 			imageSetList = append(imageSetList, imageMap)
