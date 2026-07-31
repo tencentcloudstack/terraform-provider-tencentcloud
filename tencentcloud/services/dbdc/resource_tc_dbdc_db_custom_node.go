@@ -194,8 +194,17 @@ func ResourceTencentCloudDbdcDbCustomNode() *schema.Resource {
 
 			"charge_type": {
 				Type:        schema.TypeString,
+				Optional:    true,
 				Computed:    true,
-				Description: "Charge type. Valid values: `PREPAID`.",
+				ForceNew:    true,
+				Description: "Charge type. Valid values: `PREPAID`, `POSTPAID`.",
+			},
+
+			"network_mode": {
+				Type:        schema.TypeString,
+				Optional:    true,
+				ForceNew:    true,
+				Description: "Network mode of the node. Valid values: `privatelink`, `cross_tenant_eni`. Default value is `privatelink`.",
 			},
 
 			"expire_time": {
@@ -218,17 +227,22 @@ func ResourceTencentCloudDbdcDbCustomNode() *schema.Resource {
 
 			"system_disk": {
 				Type:        schema.TypeList,
+				Optional:    true,
 				Computed:    true,
+				ForceNew:    true,
+				MaxItems:    1,
 				Description: "System disk information.",
 				Elem: &schema.Resource{
 					Schema: map[string]*schema.Schema{
 						"disk_type": {
 							Type:        schema.TypeString,
+							Optional:    true,
 							Computed:    true,
-							Description: "Disk type.",
+							Description: "Disk type. Valid values: `CLOUD_HSSD`.",
 						},
 						"disk_size": {
 							Type:        schema.TypeInt,
+							Optional:    true,
 							Computed:    true,
 							Description: "Disk size, unit: GiB.",
 						},
@@ -238,26 +252,47 @@ func ResourceTencentCloudDbdcDbCustomNode() *schema.Resource {
 
 			"data_disks": {
 				Type:        schema.TypeList,
+				Optional:    true,
 				Computed:    true,
+				ForceNew:    true,
 				Description: "Data disk information.",
 				Elem: &schema.Resource{
 					Schema: map[string]*schema.Schema{
 						"disk_type": {
 							Type:        schema.TypeString,
+							Optional:    true,
 							Computed:    true,
-							Description: "Disk type.",
+							Description: "Disk type. Valid values: `CLOUD_HSSD`, `LOCAL_NVME`.",
 						},
 						"disk_size": {
 							Type:        schema.TypeInt,
+							Optional:    true,
 							Computed:    true,
 							Description: "Disk size, unit: GiB.",
 						},
 						"disk_name": {
 							Type:        schema.TypeString,
+							Optional:    true,
 							Computed:    true,
 							Description: "Disk name.",
 						},
 					},
+				},
+			},
+
+			"host_name": {
+				Type:        schema.TypeString,
+				Optional:    true,
+				ForceNew:    true,
+				Description: "Host name of the node. Write-only: the API does not return it, so the configured value is retained in state and cannot be refreshed on import.",
+			},
+
+			"security_group_ids": {
+				Type:        schema.TypeList,
+				Optional:    true,
+				Description: "Security group IDs bound to the node. Mutable: updating this list calls the ModifyDBCustomNodeSecurityGroups API.",
+				Elem: &schema.Schema{
+					Type: schema.TypeString,
 				},
 			},
 		},
@@ -352,6 +387,60 @@ func resourceTencentCloudDbdcDbCustomNodeCreate(d *schema.ResourceData, meta int
 			}
 
 			request.Tags = append(request.Tags, &tag)
+		}
+	}
+
+	if v, ok := d.GetOk("charge_type"); ok {
+		request.ChargeType = helper.String(v.(string))
+	}
+
+	if v, ok := d.GetOk("network_mode"); ok {
+		request.NetworkMode = helper.String(v.(string))
+	}
+
+	if dMap, ok := helper.InterfacesHeadMap(d, "system_disk"); ok {
+		systemDisk := dbdcv20201029.SystemDisk{}
+		if v, ok := dMap["disk_type"]; ok && v.(string) != "" {
+			systemDisk.DiskType = helper.String(v.(string))
+		}
+
+		if v, ok := dMap["disk_size"]; ok {
+			systemDisk.DiskSize = helper.IntInt64(v.(int))
+		}
+
+		request.SystemDisk = &systemDisk
+	}
+
+	if v, ok := d.GetOk("data_disks"); ok {
+		dataDisksList := v.([]interface{})
+		for i := range dataDisksList {
+			dataDiskMap := dataDisksList[i].(map[string]interface{})
+			dataDisk := dbdcv20201029.DataDisk{}
+			if v, ok := dataDiskMap["disk_type"]; ok && v.(string) != "" {
+				dataDisk.DiskType = helper.String(v.(string))
+			}
+
+			if v, ok := dataDiskMap["disk_size"]; ok {
+				dataDisk.DiskSize = helper.IntInt64(v.(int))
+			}
+
+			if v, ok := dataDiskMap["disk_name"]; ok && v.(string) != "" {
+				dataDisk.DiskName = helper.String(v.(string))
+			}
+
+			request.DataDisks = append(request.DataDisks, &dataDisk)
+		}
+	}
+
+	if v, ok := d.GetOk("host_name"); ok {
+		request.HostName = helper.String(v.(string))
+	}
+
+	if v, ok := d.GetOk("security_group_ids"); ok {
+		securityGroupIdsList := v.([]interface{})
+		for i := range securityGroupIdsList {
+			securityGroupId := securityGroupIdsList[i].(string)
+			request.SecurityGroupIds = append(request.SecurityGroupIds, &securityGroupId)
 		}
 	}
 
@@ -496,6 +585,10 @@ func resourceTencentCloudDbdcDbCustomNodeRead(d *schema.ResourceData, meta inter
 		_ = d.Set("charge_type", respData.ChargeType)
 	}
 
+	if respData.NetworkMode != nil {
+		_ = d.Set("network_mode", respData.NetworkMode)
+	}
+
 	if respData.ExpireTime != nil {
 		_ = d.Set("expire_time", respData.ExpireTime)
 	}
@@ -546,6 +639,13 @@ func resourceTencentCloudDbdcDbCustomNodeRead(d *schema.ResourceData, meta inter
 
 		_ = d.Set("data_disks", dataDisksList)
 	}
+
+	securityGroupIds, err := service.DescribeDBCustomNodeSecurityGroupsById(ctx, nodeId)
+	if err != nil {
+		return err
+	}
+
+	_ = d.Set("security_group_ids", securityGroupIds)
 
 	return nil
 }
@@ -600,6 +700,39 @@ func resourceTencentCloudDbdcDbCustomNodeUpdate(d *schema.ResourceData, meta int
 
 		if reqErr != nil {
 			log.Printf("[CRITAL]%s update dbdc db custom node tags failed, reason:%+v", logId, reqErr)
+			return reqErr
+		}
+	}
+
+	if d.HasChange("security_group_ids") {
+		request := dbdcv20201029.NewModifyDBCustomNodeSecurityGroupsRequest()
+		request.NodeId = helper.String(nodeId)
+
+		if v, ok := d.GetOk("security_group_ids"); ok {
+			securityGroupIdsList := v.([]interface{})
+			for i := range securityGroupIdsList {
+				securityGroupId := securityGroupIdsList[i].(string)
+				request.SecurityGroupIds = append(request.SecurityGroupIds, &securityGroupId)
+			}
+		}
+
+		reqErr := resource.Retry(tccommon.WriteRetryTimeout, func() *resource.RetryError {
+			result, e := meta.(tccommon.ProviderMeta).GetAPIV3Conn().UseDbdcV20201029Client().ModifyDBCustomNodeSecurityGroupsWithContext(ctx, request)
+			if e != nil {
+				return tccommon.RetryError(e)
+			} else {
+				log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), result.ToJsonString())
+			}
+
+			if result == nil || result.Response == nil {
+				return resource.NonRetryableError(fmt.Errorf("Modify dbdc db custom node security groups failed, Response is nil."))
+			}
+
+			return nil
+		})
+
+		if reqErr != nil {
+			log.Printf("[CRITAL]%s update dbdc db custom node security group ids failed, reason:%+v", logId, reqErr)
 			return reqErr
 		}
 	}

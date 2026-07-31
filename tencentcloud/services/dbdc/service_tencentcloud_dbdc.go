@@ -406,6 +406,53 @@ func (me *DbdcService) DescribeDBCustomNodeById(ctx context.Context, nodeId stri
 	return
 }
 
+func (me *DbdcService) DescribeDBCustomNodeSecurityGroupsById(ctx context.Context, nodeId string) (sgIds []string, errRet error) {
+	var (
+		logId   = tccommon.GetLogId(ctx)
+		request = dbdcv20201029.NewDescribeDBCustomNodeSecurityGroupsRequest()
+	)
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	request.NodeId = &nodeId
+
+	err := resource.Retry(tccommon.ReadRetryTimeout, func() *resource.RetryError {
+		ratelimit.Check(request.GetAction())
+		result, e := me.client.UseDbdcV20201029Client().DescribeDBCustomNodeSecurityGroupsWithContext(ctx, request)
+		if e != nil {
+			return tccommon.RetryError(e)
+		} else {
+			log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), result.ToJsonString())
+		}
+
+		if result == nil || result.Response == nil {
+			return resource.NonRetryableError(fmt.Errorf("Describe dbdc db custom node security groups failed, Response is nil."))
+		}
+
+		if result.Response.Groups != nil {
+			for _, group := range result.Response.Groups {
+				if group == nil || group.SecurityGroupId == nil {
+					continue
+				}
+				sgIds = append(sgIds, *group.SecurityGroupId)
+			}
+		}
+
+		return nil
+	})
+
+	if err != nil {
+		errRet = err
+		return
+	}
+
+	return
+}
+
 func (me *DbdcService) DescribeDBCustomClusterNodeById(ctx context.Context, clusterId, nodeId string) (ret *dbdcv20201029.DBCustomClusterNode, errRet error) {
 	var (
 		logId   = tccommon.GetLogId(ctx)
