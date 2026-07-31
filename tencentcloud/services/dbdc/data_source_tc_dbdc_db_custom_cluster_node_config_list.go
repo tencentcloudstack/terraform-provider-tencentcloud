@@ -22,7 +22,7 @@ func DataSourceTencentCloudDbdcDbCustomClusterNodeConfigList() *schema.Resource 
 
 			"node_ids": {
 				Type:        schema.TypeList,
-				Optional:    true,
+				Required:    true,
 				Description: "Specifies the NodeId list to query. Up to 100 NodeIds per request.",
 				Elem: &schema.Schema{
 					Type: schema.TypeString,

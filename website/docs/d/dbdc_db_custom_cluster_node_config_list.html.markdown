@@ -13,20 +13,12 @@ Use this data source to query the Kubernetes scheduling configuration (labels an
 
 ## Example Usage
 
-### Query dbdc db custom cluster node config list by cluster_id
+### Query dbdc db custom cluster node config list by cluster id and node ids
 
 ```hcl
 data "tencentcloud_dbdc_db_custom_cluster_node_config_list" "example" {
-  cluster_id = "dbcc-nmtmsew8"
-}
-```
-
-### Query dbdc db custom cluster node config list by node_ids
-
-```hcl
-data "tencentcloud_dbdc_db_custom_cluster_node_config_list" "example" {
-  cluster_id = "dbcc-nmtmsew8"
-  node_ids   = ["node-abc123", "node-def456"]
+  cluster_id = "dbcc-b2arjlee"
+  node_ids   = ["dbcn-vvkg2xls"]
 }
 ```
 
@@ -35,7 +27,7 @@ data "tencentcloud_dbdc_db_custom_cluster_node_config_list" "example" {
 The following arguments are supported:
 
 * `cluster_id` - (Required, String) DB Custom cluster ID.
-* `node_ids` - (Optional, List: [`String`]) Specifies the NodeId list to query. Up to 100 NodeIds per request.
+* `node_ids` - (Required, List: [`String`]) Specifies the NodeId list to query. Up to 100 NodeIds per request.
 * `result_output_file` - (Optional, String) Used to save results.
 
 ## Attributes Reference
