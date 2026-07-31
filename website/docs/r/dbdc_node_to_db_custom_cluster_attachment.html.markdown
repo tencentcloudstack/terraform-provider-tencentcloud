@@ -61,6 +61,20 @@ resource "tencentcloud_dbdc_node_to_db_custom_cluster_attachment" "example" {
   login_settings {
     password = "Passw0rd@2026"
   }
+
+  labels {
+    key   = "env"
+    value = "prod"
+  }
+
+  taints {
+    key    = "dedicated"
+    effect = "NoSchedule"
+    value  = "true"
+  }
+
+  host_name      = "node-{R:1}"
+  host_name_type = 1
 }
 ```
 
@@ -70,8 +84,17 @@ The following arguments are supported:
 
 * `cluster_id` - (Required, String, ForceNew) DB Custom cluster ID.
 * `node_id` - (Required, String, ForceNew) DB Custom node ID to add to the cluster.
+* `host_name_type` - (Optional, Int, ForceNew) Hostname source type. Valid values: `0` (reuse hostname set at node creation), `1` (re-specify HostName, must pass `host_name`), `2` (system auto-assign using NodeId).
+* `host_name` - (Optional, String, ForceNew) Hostname of the node. Required when `host_name_type` is 1. Supports pattern strings such as `{R:x}`, `{R:x,F:y}`, `{IP}`.
 * `image_id` - (Optional, String, ForceNew) OS image ID to reset the node to after it is added to the cluster.
+* `labels` - (Optional, List, ForceNew) Custom labels initialized after the node is added to the cluster. Up to 20 key-value pairs.
 * `login_settings` - (Optional, List, ForceNew) Instance login settings. You can set the login method to password, key, or keep the original image login settings. Only one method can be set.
+* `taints` - (Optional, List, ForceNew) Taints initialized after the node is added to the cluster. Up to 5 key-value pairs.
+
+The `labels` object supports the following:
+
+* `key` - (Required, String, ForceNew) Label key.
+* `value` - (Optional, String, ForceNew) Label value.
 
 The `login_settings` object supports the following:
 
@@ -79,12 +102,20 @@ The `login_settings` object supports the following:
 * `key_ids` - (Optional, List, ForceNew) Key pair ID list. Only a single ID is supported currently. Password and key cannot be specified at the same time.
 * `password` - (Optional, String, ForceNew) Instance login password. Password complexity limits vary by operating system type.
 
+The `taints` object supports the following:
+
+* `effect` - (Required, String, ForceNew) Taint effect. Valid values: `NoSchedule`, `PreferNoSchedule`, `NoExecute`.
+* `key` - (Required, String, ForceNew) Taint key.
+* `value` - (Optional, String, ForceNew) Taint value.
+
 ## Attributes Reference
 
 In addition to all arguments above, the following attributes are exported:
 
 * `id` - ID of the resource.
+* `eni_ip` - When the network mode is `cross_tenant_eni`, this IP address is the user-accessible address.
 * `lan_ip` - Intranet IP address of the node.
+* `network_mode` - Network mode. Valid values: `privatelink` (four-layer network connectivity), `cross_tenant_eni` (three-layer network connectivity, dual-NIC mode).
 * `node_name` - Node name.
 * `node_type` - Node spec.
 * `ssh_endpoint` - SSH endpoint to access the node, in the format `IP:Port`.

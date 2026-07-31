@@ -33,6 +33,21 @@ type AddNodesToDBCustomClusterRequestParams struct {
 
 	// <p>实例登录设置。通过该参数可以设置实例的登录方式密码、密钥或保持镜像的原始登录设置。</p><p>入参限制：若选择密钥方式，KeyIds 仅支持单个 ID。三种方式必须且仅可以设置其中一种。</p>
 	LoginSettings *LoginSettings `json:"LoginSettings,omitnil,omitempty" name:"LoginSettings"`
+
+	// <p>节点上架成功后初始化新增的自定义 Label</p><p>入参限制：单次 ≤ 20 对</p>
+	Labels []*Label `json:"Labels,omitnil,omitempty" name:"Labels"`
+
+	// <p>节点上架成功后初始化下发的Taint</p><p>入参限制：单次 ≤ 5 对</p>
+	Taints []*Taint `json:"Taints,omitnil,omitempty" name:"Taints"`
+
+	// <p>主机hostname ，仅 HostNameType=1 时必填，其余情况忽略；不支持大写字母</p><p>入参限制：- 点号（.）和短横线（-）不能作为 HostName 的首尾字符，不能连续使用。不允许使用下划线(_)。</p><ul><li>Windows 节点：主机名名字符长度为[2, 15]，允许字母（不限制大小写）、数字和短横线（-）组成，不支持点号（.），不能全是数字。</li><li>其他类型（Linux 等）节点：主机名字符长度为[2, 60]，允许支持多个点号，点之间为一段，每段允许字母（不限制大小写）、数字和短横线（-）组成。</li><li>上架多台节点时：</li><li>指定模式串 {R:x}：表示生成数字序列 [x, x+n-1]，其中 n为购买节点的数量。例如：输入 server_{R:3}，购买1台时，节点主机名为 server_3；购买2台时，主机名分别为 server_3、server_4。</li><li>指定模式串 {R:x,F:y}：y表示固定位数（可选），取值范围为 [0,8]，默认值 0表示不固定位数（等效于 {R:x}）。不足位时自动补零，例如：输入server_{R:3,F:3}，购买2台时，节点主机名为 server_003、server_004。若数字位数超过 y（如 {R:99,F:2}），以实际位数为准，例如：app_{R:99,F:2}，购买2台时，节点主机名为 app_99、app_100。</li><li>指定模式串 {IP}：自动替换为节点的内网IP地址。例如：输入 node-{IP}，节点主机名为 node-10.0.12.8；支持与序号模式串混合使用，例如：输入 web-{IP}-{R:1}，购买2台时，节点主机名分别为 web-10.0.12.8-1、web-10.0.12.9-2。</li><li>模式串需严格遵循 {R:x,F:y}、{R:x} 或 {IP} 格式，无效格式（如 {}）视为普通文本。支持多个模式串。</li><li>未指定模式串：节点主机名添加后缀 1、2...n，其中n表示购买节点的数量，例如 server_购买2台时生成 server_1、server_2。</li></ul>
+	HostName *string `json:"HostName,omitnil,omitempty" name:"HostName"`
+
+	// <p>HostName 来源类型</p><p>枚举值：</p><ul><li>0： 复用节点创建时设置的 hostname，为空则报错</li><li>1： 重新指定 HostName，需同时传 HostName 字段（支持模式串 {R:x}、{R:x,F:y}、{IP}）</li><li>2： 系统自动分配，用 NodeId 作为 HostName</li></ul>
+	HostNameType *int64 `json:"HostNameType,omitnil,omitempty" name:"HostNameType"`
+
+	// <p>试运行开关，true 时只执行参数校验，不发起上架流程</p><p>默认值：false</p>
+	DryRun *bool `json:"DryRun,omitnil,omitempty" name:"DryRun"`
 }
 
 type AddNodesToDBCustomClusterRequest struct {
@@ -49,6 +64,21 @@ type AddNodesToDBCustomClusterRequest struct {
 
 	// <p>实例登录设置。通过该参数可以设置实例的登录方式密码、密钥或保持镜像的原始登录设置。</p><p>入参限制：若选择密钥方式，KeyIds 仅支持单个 ID。三种方式必须且仅可以设置其中一种。</p>
 	LoginSettings *LoginSettings `json:"LoginSettings,omitnil,omitempty" name:"LoginSettings"`
+
+	// <p>节点上架成功后初始化新增的自定义 Label</p><p>入参限制：单次 ≤ 20 对</p>
+	Labels []*Label `json:"Labels,omitnil,omitempty" name:"Labels"`
+
+	// <p>节点上架成功后初始化下发的Taint</p><p>入参限制：单次 ≤ 5 对</p>
+	Taints []*Taint `json:"Taints,omitnil,omitempty" name:"Taints"`
+
+	// <p>主机hostname ，仅 HostNameType=1 时必填，其余情况忽略；不支持大写字母</p><p>入参限制：- 点号（.）和短横线（-）不能作为 HostName 的首尾字符，不能连续使用。不允许使用下划线(_)。</p><ul><li>Windows 节点：主机名名字符长度为[2, 15]，允许字母（不限制大小写）、数字和短横线（-）组成，不支持点号（.），不能全是数字。</li><li>其他类型（Linux 等）节点：主机名字符长度为[2, 60]，允许支持多个点号，点之间为一段，每段允许字母（不限制大小写）、数字和短横线（-）组成。</li><li>上架多台节点时：</li><li>指定模式串 {R:x}：表示生成数字序列 [x, x+n-1]，其中 n为购买节点的数量。例如：输入 server_{R:3}，购买1台时，节点主机名为 server_3；购买2台时，主机名分别为 server_3、server_4。</li><li>指定模式串 {R:x,F:y}：y表示固定位数（可选），取值范围为 [0,8]，默认值 0表示不固定位数（等效于 {R:x}）。不足位时自动补零，例如：输入server_{R:3,F:3}，购买2台时，节点主机名为 server_003、server_004。若数字位数超过 y（如 {R:99,F:2}），以实际位数为准，例如：app_{R:99,F:2}，购买2台时，节点主机名为 app_99、app_100。</li><li>指定模式串 {IP}：自动替换为节点的内网IP地址。例如：输入 node-{IP}，节点主机名为 node-10.0.12.8；支持与序号模式串混合使用，例如：输入 web-{IP}-{R:1}，购买2台时，节点主机名分别为 web-10.0.12.8-1、web-10.0.12.9-2。</li><li>模式串需严格遵循 {R:x,F:y}、{R:x} 或 {IP} 格式，无效格式（如 {}）视为普通文本。支持多个模式串。</li><li>未指定模式串：节点主机名添加后缀 1、2...n，其中n表示购买节点的数量，例如 server_购买2台时生成 server_1、server_2。</li></ul>
+	HostName *string `json:"HostName,omitnil,omitempty" name:"HostName"`
+
+	// <p>HostName 来源类型</p><p>枚举值：</p><ul><li>0： 复用节点创建时设置的 hostname，为空则报错</li><li>1： 重新指定 HostName，需同时传 HostName 字段（支持模式串 {R:x}、{R:x,F:y}、{IP}）</li><li>2： 系统自动分配，用 NodeId 作为 HostName</li></ul>
+	HostNameType *int64 `json:"HostNameType,omitnil,omitempty" name:"HostNameType"`
+
+	// <p>试运行开关，true 时只执行参数校验，不发起上架流程</p><p>默认值：false</p>
+	DryRun *bool `json:"DryRun,omitnil,omitempty" name:"DryRun"`
 }
 
 func (r *AddNodesToDBCustomClusterRequest) ToJsonString() string {
@@ -67,6 +97,11 @@ func (r *AddNodesToDBCustomClusterRequest) FromJsonString(s string) error {
 	delete(f, "NodeIds")
 	delete(f, "ImageId")
 	delete(f, "LoginSettings")
+	delete(f, "Labels")
+	delete(f, "Taints")
+	delete(f, "HostName")
+	delete(f, "HostNameType")
+	delete(f, "DryRun")
 	if len(f) > 0 {
 		return tcerr.NewTencentCloudSDKError("ClientError.BuildRequestError", "AddNodesToDBCustomClusterRequest has unknown keys!", "")
 	}
@@ -179,7 +214,7 @@ type CreateDBCustomClusterRequestParams struct {
 	// <p>容器网络，在此集群的所有 POD 与此网络连通</p>
 	ContainerNetwork *ContainerNetwork `json:"ContainerNetwork,omitnil,omitempty" name:"ContainerNetwork"`
 
-	// <p>集群名称</p><p>入参限制：最长128个字符，只能为中文，英文，下划线。</p>
+	// <p>集群名称</p><p>入参限制：最长128个字符。</p>
 	ClusterName *string `json:"ClusterName,omitnil,omitempty" name:"ClusterName"`
 
 	// <p>集群的API Server的网络信息</p><p>入参限制：必须为此账号下拥有的网络地址，可以与容器网络保持一致。</p>
@@ -193,6 +228,9 @@ type CreateDBCustomClusterRequestParams struct {
 
 	// <p>客户端Token</p>
 	ClientToken *string `json:"ClientToken,omitnil,omitempty" name:"ClientToken"`
+
+	// <p>试运行开关，true 时只执行参数校验，不发起创建流程，默认 false</p>
+	DryRun *bool `json:"DryRun,omitnil,omitempty" name:"DryRun"`
 }
 
 type CreateDBCustomClusterRequest struct {
@@ -201,7 +239,7 @@ type CreateDBCustomClusterRequest struct {
 	// <p>容器网络，在此集群的所有 POD 与此网络连通</p>
 	ContainerNetwork *ContainerNetwork `json:"ContainerNetwork,omitnil,omitempty" name:"ContainerNetwork"`
 
-	// <p>集群名称</p><p>入参限制：最长128个字符，只能为中文，英文，下划线。</p>
+	// <p>集群名称</p><p>入参限制：最长128个字符。</p>
 	ClusterName *string `json:"ClusterName,omitnil,omitempty" name:"ClusterName"`
 
 	// <p>集群的API Server的网络信息</p><p>入参限制：必须为此账号下拥有的网络地址，可以与容器网络保持一致。</p>
@@ -215,6 +253,9 @@ type CreateDBCustomClusterRequest struct {
 
 	// <p>客户端Token</p>
 	ClientToken *string `json:"ClientToken,omitnil,omitempty" name:"ClientToken"`
+
+	// <p>试运行开关，true 时只执行参数校验，不发起创建流程，默认 false</p>
+	DryRun *bool `json:"DryRun,omitnil,omitempty" name:"DryRun"`
 }
 
 func (r *CreateDBCustomClusterRequest) ToJsonString() string {
@@ -235,6 +276,7 @@ func (r *CreateDBCustomClusterRequest) FromJsonString(s string) error {
 	delete(f, "ClusterDescription")
 	delete(f, "Tags")
 	delete(f, "ClientToken")
+	delete(f, "DryRun")
 	if len(f) > 0 {
 		return tcerr.NewTencentCloudSDKError("ClientError.BuildRequestError", "CreateDBCustomClusterRequest has unknown keys!", "")
 	}
@@ -283,17 +325,17 @@ type CreateDBCustomNodesRequestParams struct {
 	// <p>为节点打通SSH连接的VPC 子网 ID。 </p><p>参数格式：subnet-t13dtest</p><p>入参限制：必须是VPC之下的子网，子网必须与可用区对应。</p><p>取值参考：可通过【查询子网列表】接口获取：https://cloud.tencent.com/document/product/215/15784</p>
 	SubnetId *string `json:"SubnetId,omitnil,omitempty" name:"SubnetId"`
 
-	// <p>购买时长(月): 1/2/3/4/5/6/7/8/9/10/11/12/24/36</p><p>取值范围：[1, 36]</p><p>单位：月</p><p>默认值：1</p>
-	Period *int64 `json:"Period,omitnil,omitempty" name:"Period"`
-
 	// <p>节点机型</p><p>枚举值：</p><ul><li>DB.AT5.32XLARGE512： 高IO型服务器：128核心512GB内存，8*7180GB本地NvME SSDB。</li><li>DB.AT5.64XLARGE1152： 高IO型服务器：256核心1152GB内存，12*7180GB本地NvME SSDB。</li><li>DB.AT5.128XLARGE2304： 高IO型服务器：512核心2304GB内存，24*7180GB本地NvME SSDB。</li><li>DB.AT5.16XLARGE256： 高IO型服务器：64核心256GB内存，4*7180GB本地NvME SSDB。</li><li>DB.AT5.8XLARGE128： 高IO型服务器：32核心128GB内存，2*7180GB本地NvME SSDB。</li></ul>
 	NodeType *string `json:"NodeType,omitnil,omitempty" name:"NodeType"`
 
 	// <p>购买的节点数量</p><p>取值范围：[1, 20]</p>
 	NodeCount *int64 `json:"NodeCount,omitnil,omitempty" name:"NodeCount"`
 
-	// <p>实例登录设置。通过该参数可以设置实例的登录方式密码、密钥或保持镜像的原始登录设置。</p><p>入参限制：若选择密钥方式，KeyIds 仅支持单个 ID。三种方式必须且仅可以设置其中一种。</p>
+	// <p>节点登录设置。通过该参数可以设置节点的登录方式密码、密钥或保持镜像的原始登录设置。</p><p>入参限制：若选择密钥方式，KeyIds 仅支持单个 ID。三种方式必须且仅可以设置其中一种。</p>
 	LoginSettings *LoginSettings `json:"LoginSettings,omitnil,omitempty" name:"LoginSettings"`
+
+	// <p>购买时长(月): 1/2/3/4/5/6/7/8/9/10/11/12/24/36</p><p>取值范围：[1, 36]</p><p>单位：月</p><p>默认值：1</p>
+	Period *int64 `json:"Period,omitnil,omitempty" name:"Period"`
 
 	// <p>自动续费配置</p><p>枚举值：</p><ul><li>1： 自动续费</li><li>2： 不自动续费</li></ul><p>默认值：不自动续费</p>
 	AutoRenew *int64 `json:"AutoRenew,omitnil,omitempty" name:"AutoRenew"`
@@ -312,6 +354,27 @@ type CreateDBCustomNodesRequestParams struct {
 
 	// <p>用于保证请求幂等性的字符串。该字符串由客户生成，需保证不同请求之间唯一，最大值不超过64个ASCII字符。若不指定该参数，则无法保证请求的幂等性。</p>
 	ClientToken *string `json:"ClientToken,omitnil,omitempty" name:"ClientToken"`
+
+	// <p>计费模式</p><p>枚举值：</p><ul><li>PREPAID： 包年包月</li><li>POSTPAID： 按量付费</li></ul><p>默认值：默认为包年包月(PREPAID)</p>
+	ChargeType *string `json:"ChargeType,omitnil,omitempty" name:"ChargeType"`
+
+	// <p>访问主机的网络模式</p><p>枚举值：</p><ul><li>privatelink： 四层网络联通，放通SSH 通路</li><li>cross_tenant_eni： 三层网络联通，双网卡模式</li></ul><p>默认值：默认值为：privatelink</p>
+	NetworkMode *string `json:"NetworkMode,omitnil,omitempty" name:"NetworkMode"`
+
+	// <p>系统盘配置</p><p>入参限制：仅云盘版机型支持，如DB.SA5机型。本地盘机型DB.AT5机型不支持设置</p>
+	SystemDisk *SystemDisk `json:"SystemDisk,omitnil,omitempty" name:"SystemDisk"`
+
+	// <p>数据库盘配置</p><p>入参限制：仅云盘版机型支持，如DB.SA5机型。本地盘机型DB.AT5机型不支持设置</p>
+	DataDisks []*DataDisk `json:"DataDisks,omitnil,omitempty" name:"DataDisks"`
+
+	// <p>主机的hostname。</p><p>参数格式：字符串或者指定模式串</p><p>入参限制：- 点号（.）和短横线（-）不能作为 HostName 的首尾字符，不能连续使用。不允许使用下划线(_)。</p><ul><li>Windows 节点：主机名名字符长度为[2, 15]，允许字母（不限制大小写）、数字和短横线（-）组成，不支持点号（.），不能全是数字。</li><li>其他类型（Linux 等）节点：主机名字符长度为[2, 60]，允许支持多个点号，点之间为一段，每段允许字母（不限制大小写）、数字和短横线（-）组成。</li><li>购买多台节点时：</li><li>指定模式串 {R:x}：表示生成数字序列 [x, x+n-1]，其中 n为购买节点的数量。例如：输入 server_{R:3}，购买1台时，节点主机名为 server_3；购买2台时，主机名分别为 server_3、server_4。</li><li>指定模式串 {R:x,F:y}：y表示固定位数（可选），取值范围为 [0,8]，默认值 0表示不固定位数（等效于 {R:x}）。不足位时自动补零，例如：输入server_{R:3,F:3}，购买2台时，节点主机名为 server_003、server_004。若数字位数超过 y（如 {R:99,F:2}），以实际位数为准，例如：app_{R:99,F:2}，购买2台时，节点主机名为 app_99、app_100。</li><li>指定模式串 {IP}：自动替换为节点的内网IP地址。例如：输入 node-{IP}，节点主机名为 node-10.0.12.8；支持与序号模式串混合使用，例如：输入 web-{IP}-{R:1}，购买2台时，节点主机名分别为 web-10.0.12.8-1、web-10.0.12.9-2。</li><li>模式串需严格遵循 {R:x,F:y}、{R:x} 或 {IP} 格式，无效格式（如 {}）视为普通文本。支持多个模式串。</li><li>未指定模式串：节点主机名添加后缀 1、2...n，其中n表示购买节点的数量，例如 server_购买2台时生成 server_1、server_2。</li></ul>
+	HostName *string `json:"HostName,omitnil,omitempty" name:"HostName"`
+
+	// <p>试运行开关。</p><p>枚举值：</p><ul><li>true： 为 true 时接口只执行参数校验与资源申请检查（库存、配额、网络等），完成后立即返回空响应，不会真正下单，也不会创建节点记录。用于调用方在真正下单前做一次可行性预检。</li><li>false： 不预检查</li></ul><p>默认值：false</p>
+	DryRun *bool `json:"DryRun,omitnil,omitempty" name:"DryRun"`
+
+	// <p>设置节点安全组</p><p>参数格式：设置需要与节点绑定的多个安全组ID，以数组形式配置。</p>
+	SecurityGroupIds []*string `json:"SecurityGroupIds,omitnil,omitempty" name:"SecurityGroupIds"`
 }
 
 type CreateDBCustomNodesRequest struct {
@@ -329,17 +392,17 @@ type CreateDBCustomNodesRequest struct {
 	// <p>为节点打通SSH连接的VPC 子网 ID。 </p><p>参数格式：subnet-t13dtest</p><p>入参限制：必须是VPC之下的子网，子网必须与可用区对应。</p><p>取值参考：可通过【查询子网列表】接口获取：https://cloud.tencent.com/document/product/215/15784</p>
 	SubnetId *string `json:"SubnetId,omitnil,omitempty" name:"SubnetId"`
 
-	// <p>购买时长(月): 1/2/3/4/5/6/7/8/9/10/11/12/24/36</p><p>取值范围：[1, 36]</p><p>单位：月</p><p>默认值：1</p>
-	Period *int64 `json:"Period,omitnil,omitempty" name:"Period"`
-
 	// <p>节点机型</p><p>枚举值：</p><ul><li>DB.AT5.32XLARGE512： 高IO型服务器：128核心512GB内存，8*7180GB本地NvME SSDB。</li><li>DB.AT5.64XLARGE1152： 高IO型服务器：256核心1152GB内存，12*7180GB本地NvME SSDB。</li><li>DB.AT5.128XLARGE2304： 高IO型服务器：512核心2304GB内存，24*7180GB本地NvME SSDB。</li><li>DB.AT5.16XLARGE256： 高IO型服务器：64核心256GB内存，4*7180GB本地NvME SSDB。</li><li>DB.AT5.8XLARGE128： 高IO型服务器：32核心128GB内存，2*7180GB本地NvME SSDB。</li></ul>
 	NodeType *string `json:"NodeType,omitnil,omitempty" name:"NodeType"`
 
 	// <p>购买的节点数量</p><p>取值范围：[1, 20]</p>
 	NodeCount *int64 `json:"NodeCount,omitnil,omitempty" name:"NodeCount"`
 
-	// <p>实例登录设置。通过该参数可以设置实例的登录方式密码、密钥或保持镜像的原始登录设置。</p><p>入参限制：若选择密钥方式，KeyIds 仅支持单个 ID。三种方式必须且仅可以设置其中一种。</p>
+	// <p>节点登录设置。通过该参数可以设置节点的登录方式密码、密钥或保持镜像的原始登录设置。</p><p>入参限制：若选择密钥方式，KeyIds 仅支持单个 ID。三种方式必须且仅可以设置其中一种。</p>
 	LoginSettings *LoginSettings `json:"LoginSettings,omitnil,omitempty" name:"LoginSettings"`
+
+	// <p>购买时长(月): 1/2/3/4/5/6/7/8/9/10/11/12/24/36</p><p>取值范围：[1, 36]</p><p>单位：月</p><p>默认值：1</p>
+	Period *int64 `json:"Period,omitnil,omitempty" name:"Period"`
 
 	// <p>自动续费配置</p><p>枚举值：</p><ul><li>1： 自动续费</li><li>2： 不自动续费</li></ul><p>默认值：不自动续费</p>
 	AutoRenew *int64 `json:"AutoRenew,omitnil,omitempty" name:"AutoRenew"`
@@ -358,6 +421,27 @@ type CreateDBCustomNodesRequest struct {
 
 	// <p>用于保证请求幂等性的字符串。该字符串由客户生成，需保证不同请求之间唯一，最大值不超过64个ASCII字符。若不指定该参数，则无法保证请求的幂等性。</p>
 	ClientToken *string `json:"ClientToken,omitnil,omitempty" name:"ClientToken"`
+
+	// <p>计费模式</p><p>枚举值：</p><ul><li>PREPAID： 包年包月</li><li>POSTPAID： 按量付费</li></ul><p>默认值：默认为包年包月(PREPAID)</p>
+	ChargeType *string `json:"ChargeType,omitnil,omitempty" name:"ChargeType"`
+
+	// <p>访问主机的网络模式</p><p>枚举值：</p><ul><li>privatelink： 四层网络联通，放通SSH 通路</li><li>cross_tenant_eni： 三层网络联通，双网卡模式</li></ul><p>默认值：默认值为：privatelink</p>
+	NetworkMode *string `json:"NetworkMode,omitnil,omitempty" name:"NetworkMode"`
+
+	// <p>系统盘配置</p><p>入参限制：仅云盘版机型支持，如DB.SA5机型。本地盘机型DB.AT5机型不支持设置</p>
+	SystemDisk *SystemDisk `json:"SystemDisk,omitnil,omitempty" name:"SystemDisk"`
+
+	// <p>数据库盘配置</p><p>入参限制：仅云盘版机型支持，如DB.SA5机型。本地盘机型DB.AT5机型不支持设置</p>
+	DataDisks []*DataDisk `json:"DataDisks,omitnil,omitempty" name:"DataDisks"`
+
+	// <p>主机的hostname。</p><p>参数格式：字符串或者指定模式串</p><p>入参限制：- 点号（.）和短横线（-）不能作为 HostName 的首尾字符，不能连续使用。不允许使用下划线(_)。</p><ul><li>Windows 节点：主机名名字符长度为[2, 15]，允许字母（不限制大小写）、数字和短横线（-）组成，不支持点号（.），不能全是数字。</li><li>其他类型（Linux 等）节点：主机名字符长度为[2, 60]，允许支持多个点号，点之间为一段，每段允许字母（不限制大小写）、数字和短横线（-）组成。</li><li>购买多台节点时：</li><li>指定模式串 {R:x}：表示生成数字序列 [x, x+n-1]，其中 n为购买节点的数量。例如：输入 server_{R:3}，购买1台时，节点主机名为 server_3；购买2台时，主机名分别为 server_3、server_4。</li><li>指定模式串 {R:x,F:y}：y表示固定位数（可选），取值范围为 [0,8]，默认值 0表示不固定位数（等效于 {R:x}）。不足位时自动补零，例如：输入server_{R:3,F:3}，购买2台时，节点主机名为 server_003、server_004。若数字位数超过 y（如 {R:99,F:2}），以实际位数为准，例如：app_{R:99,F:2}，购买2台时，节点主机名为 app_99、app_100。</li><li>指定模式串 {IP}：自动替换为节点的内网IP地址。例如：输入 node-{IP}，节点主机名为 node-10.0.12.8；支持与序号模式串混合使用，例如：输入 web-{IP}-{R:1}，购买2台时，节点主机名分别为 web-10.0.12.8-1、web-10.0.12.9-2。</li><li>模式串需严格遵循 {R:x,F:y}、{R:x} 或 {IP} 格式，无效格式（如 {}）视为普通文本。支持多个模式串。</li><li>未指定模式串：节点主机名添加后缀 1、2...n，其中n表示购买节点的数量，例如 server_购买2台时生成 server_1、server_2。</li></ul>
+	HostName *string `json:"HostName,omitnil,omitempty" name:"HostName"`
+
+	// <p>试运行开关。</p><p>枚举值：</p><ul><li>true： 为 true 时接口只执行参数校验与资源申请检查（库存、配额、网络等），完成后立即返回空响应，不会真正下单，也不会创建节点记录。用于调用方在真正下单前做一次可行性预检。</li><li>false： 不预检查</li></ul><p>默认值：false</p>
+	DryRun *bool `json:"DryRun,omitnil,omitempty" name:"DryRun"`
+
+	// <p>设置节点安全组</p><p>参数格式：设置需要与节点绑定的多个安全组ID，以数组形式配置。</p>
+	SecurityGroupIds []*string `json:"SecurityGroupIds,omitnil,omitempty" name:"SecurityGroupIds"`
 }
 
 func (r *CreateDBCustomNodesRequest) ToJsonString() string {
@@ -376,16 +460,23 @@ func (r *CreateDBCustomNodesRequest) FromJsonString(s string) error {
 	delete(f, "ImageId")
 	delete(f, "VpcId")
 	delete(f, "SubnetId")
-	delete(f, "Period")
 	delete(f, "NodeType")
 	delete(f, "NodeCount")
 	delete(f, "LoginSettings")
+	delete(f, "Period")
 	delete(f, "AutoRenew")
 	delete(f, "NodeName")
 	delete(f, "AutoVoucher")
 	delete(f, "VoucherIds")
 	delete(f, "Tags")
 	delete(f, "ClientToken")
+	delete(f, "ChargeType")
+	delete(f, "NetworkMode")
+	delete(f, "SystemDisk")
+	delete(f, "DataDisks")
+	delete(f, "HostName")
+	delete(f, "DryRun")
+	delete(f, "SecurityGroupIds")
 	if len(f) > 0 {
 		return tcerr.NewTencentCloudSDKError("ClientError.BuildRequestError", "CreateDBCustomNodesRequest has unknown keys!", "")
 	}
@@ -474,6 +565,52 @@ type DBCustomClusterNode struct {
 
 	// <p>节点类型</p><p>枚举值：</p><ul><li>DB.AT5.32XLARGE512： 高IO型服务器：128核心512GB内存，8*7180GB本地NvME SSDB。</li><li>DB.AT5.64XLARGE1152： 高IO型服务器：256核心1152GB内存，12*7180GB本地NvME SSDB。</li><li>DB.AT5.128XLARGE2304： 高IO型服务器：512核心2304GB内存，24*7180GB本地NvME SSDB。</li><li>DB.AT5.16XLARGE256： 高IO型服务器：64核心256GB内存，4*7180GB本地NvME SSDB。</li><li>DB.AT5.8XLARGE128： 高IO型服务器：32核心128GB内存，2*7180GB本地NvME SSDB。</li></ul>
 	NodeType *string `json:"NodeType,omitnil,omitempty" name:"NodeType"`
+
+	// <p>网络模式</p><p>枚举值：</p><ul><li>privatelink： 四层网络联通，放通SSH 通路</li><li>cross_tenant_eni： 三层网络联通，双网卡模式</li></ul>
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	NetworkMode *string `json:"NetworkMode,omitnil,omitempty" name:"NetworkMode"`
+
+	// <p>当选择网络模式为三层网络联通模式时，此处的IP地址则为用户可访问的地址。</p>
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	EniIP *string `json:"EniIP,omitnil,omitempty" name:"EniIP"`
+}
+
+type DBCustomClusterNodeConfig struct {
+	// <p>节点ID</p>
+	NodeId *string `json:"NodeId,omitnil,omitempty" name:"NodeId"`
+
+	// <p>节点的标签信息</p>
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	Labels []*Label `json:"Labels,omitnil,omitempty" name:"Labels"`
+
+	// <p>节点的污点信息</p>
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	Taints []*Taint `json:"Taints,omitnil,omitempty" name:"Taints"`
+}
+
+type DBCustomClusterNodeResource struct {
+	// <p>节点ID</p>
+	NodeId *string `json:"NodeId,omitnil,omitempty" name:"NodeId"`
+
+	// <p>节点物理资源总容量</p>
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	Capacity *MetaResource `json:"Capacity,omitnil,omitempty" name:"Capacity"`
+
+	// <p>节点可分配容量= Capacity - 系统预留</p>
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	Allocatable *MetaResource `json:"Allocatable,omitnil,omitempty" name:"Allocatable"`
+
+	// <p>节点上所有非终态 Pod 的 requests 申请量之和（含系统 Pod）</p>
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	Requests *MetaResource `json:"Requests,omitnil,omitempty" name:"Requests"`
+
+	// <p>节点上所有非终态 Pod 的 limits 上限之和（含系统 Pod）</p>
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	Limits *MetaResource `json:"Limits,omitnil,omitempty" name:"Limits"`
+
+	// <p>节点可再调度余量 = max(0, Allocatable - Requests)</p>
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	Available *MetaResource `json:"Available,omitnil,omitempty" name:"Available"`
 }
 
 type DBCustomImage struct {
@@ -488,6 +625,9 @@ type DBCustomImage struct {
 
 	// <p>操作系统架构</p><p>枚举值：</p><ul><li>x86_64： X86 64位架构</li><li>arm64： ARM 64位机构</li></ul>
 	Architecture *string `json:"Architecture,omitnil,omitempty" name:"Architecture"`
+
+	// <p>操作系统类型</p><p>枚举值：</p><ul><li>windows： windows</li><li>linux： linux</li></ul>
+	OsType *string `json:"OsType,omitnil,omitempty" name:"OsType"`
 }
 
 type DBCustomNode struct {
@@ -557,7 +697,7 @@ type DBCustomNode struct {
 	// 注意：此字段可能返回 null，表示取不到有效值。
 	Tags []*Tag `json:"Tags,omitnil,omitempty" name:"Tags"`
 
-	// <p>节点是否自动续费标记</p><p>枚举值：</p><ul><li>1： 自动续费</li><li>0： 不自动续费</li></ul>
+	// <p>节点是否自动续费标记</p><p>枚举值：</p><ul><li>1： 自动续费</li><li>2： 不自动续费</li></ul>
 	AutoRenew *int64 `json:"AutoRenew,omitnil,omitempty" name:"AutoRenew"`
 
 	// <p>交换机ID（已加密）</p>
@@ -568,6 +708,38 @@ type DBCustomNode struct {
 
 	// <p>底层物理机IP（已加密）</p>
 	HostIp *string `json:"HostIp,omitnil,omitempty" name:"HostIp"`
+
+	// <p>网络模式</p><p>枚举值：</p><ul><li>NetworkModePrivateLink： 四层 SSH 服务联通模式</li><li>NetworkModeCrossTenantENI：  三层双网卡访问方式</li></ul>
+	NetworkMode *string `json:"NetworkMode,omitnil,omitempty" name:"NetworkMode"`
+
+	// <p>当选择NetworkModeCrossTenantENI模式时，节点的访问IP地址</p>
+	EniIP *string `json:"EniIP,omitnil,omitempty" name:"EniIP"`
+}
+
+type DBCustomNodeTypeInfo struct {
+	// <p>可用区标识，如 ap-guangzhou-6</p>
+	Zone *string `json:"Zone,omitnil,omitempty" name:"Zone"`
+
+	// <p>机型标识</p><p>枚举值：</p><ul><li>DB.SA5.2XLARGE32： DB.SA5机型</li><li>DB.AT5.8XLARGE128： DB.AT5机型</li></ul>
+	NodeType *string `json:"NodeType,omitnil,omitempty" name:"NodeType"`
+
+	// <p>机型系列，如 DB.AT5、DB.SA5</p>
+	NodeFamily *string `json:"NodeFamily,omitnil,omitempty" name:"NodeFamily"`
+
+	// <p>CPU 核数</p><p>单位：核</p>
+	CPU *uint64 `json:"CPU,omitnil,omitempty" name:"CPU"`
+
+	// <p>内存大小</p><p>单位：GiB</p>
+	Memory *uint64 `json:"Memory,omitnil,omitempty" name:"Memory"`
+
+	// <p>机型售卖状态</p><p>枚举值：</p><ul><li>SELL： 正常售卖</li><li>SOLD_OUT： 售罄</li></ul>
+	Status *string `json:"Status,omitnil,omitempty" name:"Status"`
+
+	// <p>该机型允许的系统盘类型列表（如 CLOUD_BSSD、CLOUD_HSSD）；</p>
+	SystemDiskTypes []*string `json:"SystemDiskTypes,omitnil,omitempty" name:"SystemDiskTypes"`
+
+	// <p>该机型允许的数据盘类型列表（如 CLOUD_BSSD、CLOUD_HSSD）；</p>
+	DataDiskTypes []*string `json:"DataDiskTypes,omitnil,omitempty" name:"DataDiskTypes"`
 }
 
 type DBInstanceDetail struct {
@@ -645,7 +817,7 @@ type DataDisk struct {
 	// <p>磁盘大小</p><p>单位：GiB</p>
 	DiskSize *int64 `json:"DiskSize,omitnil,omitempty" name:"DiskSize"`
 
-	// <p>磁盘名称</p>
+	// <p>磁盘名称</p><p>DataDisk 作为输入参数时，DiskName 无效。</p>
 	DiskName *string `json:"DiskName,omitnil,omitempty" name:"DiskName"`
 }
 
@@ -695,7 +867,7 @@ type DescribeDBCustomClusterDetailResponseParams struct {
 	// <p>集群所属地域</p><p>枚举值：</p><ul><li>ap-shanghai： 上海地域</li><li>ap-nanjing： 南京地域</li></ul>
 	Region *string `json:"Region,omitnil,omitempty" name:"Region"`
 
-	// <p>DB Custom 集群状态</p><p>枚举值：</p><ul><li>Creating： 创建中</li><li>Running： 运行中</li><li>Destroying： 销毁中</li></ul>
+	// <p>DB Custom 集群状态</p><p>枚举值：</p><ul><li>Creating： 创建中</li><li>Running： 运行中</li><li>Destroying： 销毁中</li><li>Initializing： 初始化中</li></ul>
 	ClusterStatus *string `json:"ClusterStatus,omitnil,omitempty" name:"ClusterStatus"`
 
 	// <p>集群版本</p><p>枚举值：</p><ul><li>1.34.1： 集群版本1.34.1</li></ul><p>默认值：1.34.1</p>
@@ -800,6 +972,135 @@ func (r *DescribeDBCustomClusterKubeconfigResponse) FromJsonString(s string) err
 }
 
 // Predefined struct for user
+type DescribeDBCustomClusterNodeConfigRequestParams struct {
+	// <p>集群ID</p>
+	ClusterId *string `json:"ClusterId,omitnil,omitempty" name:"ClusterId"`
+
+	// <p>按照一个或者多个 NodeId 查询。</p><p>入参限制：每次请求的数量上限为100</p>
+	NodeIds []*string `json:"NodeIds,omitnil,omitempty" name:"NodeIds"`
+}
+
+type DescribeDBCustomClusterNodeConfigRequest struct {
+	*tchttp.BaseRequest
+	
+	// <p>集群ID</p>
+	ClusterId *string `json:"ClusterId,omitnil,omitempty" name:"ClusterId"`
+
+	// <p>按照一个或者多个 NodeId 查询。</p><p>入参限制：每次请求的数量上限为100</p>
+	NodeIds []*string `json:"NodeIds,omitnil,omitempty" name:"NodeIds"`
+}
+
+func (r *DescribeDBCustomClusterNodeConfigRequest) ToJsonString() string {
+    b, _ := json.Marshal(r)
+    return string(b)
+}
+
+// FromJsonString It is highly **NOT** recommended to use this function
+// because it has no param check, nor strict type check
+func (r *DescribeDBCustomClusterNodeConfigRequest) FromJsonString(s string) error {
+	f := make(map[string]interface{})
+	if err := json.Unmarshal([]byte(s), &f); err != nil {
+		return err
+	}
+	delete(f, "ClusterId")
+	delete(f, "NodeIds")
+	if len(f) > 0 {
+		return tcerr.NewTencentCloudSDKError("ClientError.BuildRequestError", "DescribeDBCustomClusterNodeConfigRequest has unknown keys!", "")
+	}
+	return json.Unmarshal([]byte(s), &r)
+}
+
+// Predefined struct for user
+type DescribeDBCustomClusterNodeConfigResponseParams struct {
+	// <p>当前账号下拥有的DB Custom 节点列表信息</p>
+	NodeSet []*DBCustomClusterNodeConfig `json:"NodeSet,omitnil,omitempty" name:"NodeSet"`
+
+	// 唯一请求 ID，由服务端生成，每次请求都会返回（若请求因其他原因未能抵达服务端，则该次请求不会获得 RequestId）。定位问题时需要提供该次请求的 RequestId。
+	RequestId *string `json:"RequestId,omitnil,omitempty" name:"RequestId"`
+}
+
+type DescribeDBCustomClusterNodeConfigResponse struct {
+	*tchttp.BaseResponse
+	Response *DescribeDBCustomClusterNodeConfigResponseParams `json:"Response"`
+}
+
+func (r *DescribeDBCustomClusterNodeConfigResponse) ToJsonString() string {
+    b, _ := json.Marshal(r)
+    return string(b)
+}
+
+// FromJsonString It is highly **NOT** recommended to use this function
+// because it has no param check, nor strict type check
+func (r *DescribeDBCustomClusterNodeConfigResponse) FromJsonString(s string) error {
+	return json.Unmarshal([]byte(s), &r)
+}
+
+// Predefined struct for user
+type DescribeDBCustomClusterNodeResourcesRequestParams struct {
+	// <p>集群ID</p>
+	ClusterId *string `json:"ClusterId,omitnil,omitempty" name:"ClusterId"`
+
+	// <p>按照一个或者多个 NodeId 查询。</p><p>入参限制：每次请求的数量上限为50</p>
+	NodeIds []*string `json:"NodeIds,omitnil,omitempty" name:"NodeIds"`
+}
+
+type DescribeDBCustomClusterNodeResourcesRequest struct {
+	*tchttp.BaseRequest
+	
+	// <p>集群ID</p>
+	ClusterId *string `json:"ClusterId,omitnil,omitempty" name:"ClusterId"`
+
+	// <p>按照一个或者多个 NodeId 查询。</p><p>入参限制：每次请求的数量上限为50</p>
+	NodeIds []*string `json:"NodeIds,omitnil,omitempty" name:"NodeIds"`
+}
+
+func (r *DescribeDBCustomClusterNodeResourcesRequest) ToJsonString() string {
+    b, _ := json.Marshal(r)
+    return string(b)
+}
+
+// FromJsonString It is highly **NOT** recommended to use this function
+// because it has no param check, nor strict type check
+func (r *DescribeDBCustomClusterNodeResourcesRequest) FromJsonString(s string) error {
+	f := make(map[string]interface{})
+	if err := json.Unmarshal([]byte(s), &f); err != nil {
+		return err
+	}
+	delete(f, "ClusterId")
+	delete(f, "NodeIds")
+	if len(f) > 0 {
+		return tcerr.NewTencentCloudSDKError("ClientError.BuildRequestError", "DescribeDBCustomClusterNodeResourcesRequest has unknown keys!", "")
+	}
+	return json.Unmarshal([]byte(s), &r)
+}
+
+// Predefined struct for user
+type DescribeDBCustomClusterNodeResourcesResponseParams struct {
+	// <p>当前账号下拥有的DB Custom 节点列表信息</p>
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	NodeSet []*DBCustomClusterNodeResource `json:"NodeSet,omitnil,omitempty" name:"NodeSet"`
+
+	// 唯一请求 ID，由服务端生成，每次请求都会返回（若请求因其他原因未能抵达服务端，则该次请求不会获得 RequestId）。定位问题时需要提供该次请求的 RequestId。
+	RequestId *string `json:"RequestId,omitnil,omitempty" name:"RequestId"`
+}
+
+type DescribeDBCustomClusterNodeResourcesResponse struct {
+	*tchttp.BaseResponse
+	Response *DescribeDBCustomClusterNodeResourcesResponseParams `json:"Response"`
+}
+
+func (r *DescribeDBCustomClusterNodeResourcesResponse) ToJsonString() string {
+    b, _ := json.Marshal(r)
+    return string(b)
+}
+
+// FromJsonString It is highly **NOT** recommended to use this function
+// because it has no param check, nor strict type check
+func (r *DescribeDBCustomClusterNodeResourcesResponse) FromJsonString(s string) error {
+	return json.Unmarshal([]byte(s), &r)
+}
+
+// Predefined struct for user
 type DescribeDBCustomClusterNodesRequestParams struct {
 	// <p>DB Custom 集群ID</p>
 	ClusterId *string `json:"ClusterId,omitnil,omitempty" name:"ClusterId"`
@@ -877,6 +1178,78 @@ func (r *DescribeDBCustomClusterNodesResponse) ToJsonString() string {
 // FromJsonString It is highly **NOT** recommended to use this function
 // because it has no param check, nor strict type check
 func (r *DescribeDBCustomClusterNodesResponse) FromJsonString(s string) error {
+	return json.Unmarshal([]byte(s), &r)
+}
+
+// Predefined struct for user
+type DescribeDBCustomClusterResourcesRequestParams struct {
+	// <p>集群ID</p>
+	ClusterId *string `json:"ClusterId,omitnil,omitempty" name:"ClusterId"`
+}
+
+type DescribeDBCustomClusterResourcesRequest struct {
+	*tchttp.BaseRequest
+	
+	// <p>集群ID</p>
+	ClusterId *string `json:"ClusterId,omitnil,omitempty" name:"ClusterId"`
+}
+
+func (r *DescribeDBCustomClusterResourcesRequest) ToJsonString() string {
+    b, _ := json.Marshal(r)
+    return string(b)
+}
+
+// FromJsonString It is highly **NOT** recommended to use this function
+// because it has no param check, nor strict type check
+func (r *DescribeDBCustomClusterResourcesRequest) FromJsonString(s string) error {
+	f := make(map[string]interface{})
+	if err := json.Unmarshal([]byte(s), &f); err != nil {
+		return err
+	}
+	delete(f, "ClusterId")
+	if len(f) > 0 {
+		return tcerr.NewTencentCloudSDKError("ClientError.BuildRequestError", "DescribeDBCustomClusterResourcesRequest has unknown keys!", "")
+	}
+	return json.Unmarshal([]byte(s), &r)
+}
+
+// Predefined struct for user
+type DescribeDBCustomClusterResourcesResponseParams struct {
+	// <p>参与汇总的工作节点总数（不含控制面节点）</p><p>单位：台</p>
+	NodeCount *uint64 `json:"NodeCount,omitnil,omitempty" name:"NodeCount"`
+
+	// <p>集群所有节点的资源物理总容量之和</p>
+	Capacity *MetaResource `json:"Capacity,omitnil,omitempty" name:"Capacity"`
+
+	// <p>集群所有节点的可分配容量之和（= Capacity - 系统预留）</p>
+	Allocatable *MetaResource `json:"Allocatable,omitnil,omitempty" name:"Allocatable"`
+
+	// <p>集群所有非终态 Pod 的 requests 申请量之和（含系统 Pod）</p>
+	Requests *MetaResource `json:"Requests,omitnil,omitempty" name:"Requests"`
+
+	// <p>集群所有非终态 Pod 的 limits 上限之和（含系统 Pod，Pods 字段无语义，固定为 0）</p>
+	Limits *MetaResource `json:"Limits,omitnil,omitempty" name:"Limits"`
+
+	// <p>集群可再调度余量（所有节点 max(0, Allocatable - Requests) 累加求和）</p>
+	Available *MetaResource `json:"Available,omitnil,omitempty" name:"Available"`
+
+	// 唯一请求 ID，由服务端生成，每次请求都会返回（若请求因其他原因未能抵达服务端，则该次请求不会获得 RequestId）。定位问题时需要提供该次请求的 RequestId。
+	RequestId *string `json:"RequestId,omitnil,omitempty" name:"RequestId"`
+}
+
+type DescribeDBCustomClusterResourcesResponse struct {
+	*tchttp.BaseResponse
+	Response *DescribeDBCustomClusterResourcesResponseParams `json:"Response"`
+}
+
+func (r *DescribeDBCustomClusterResourcesResponse) ToJsonString() string {
+    b, _ := json.Marshal(r)
+    return string(b)
+}
+
+// FromJsonString It is highly **NOT** recommended to use this function
+// because it has no param check, nor strict type check
+func (r *DescribeDBCustomClusterResourcesResponse) FromJsonString(s string) error {
 	return json.Unmarshal([]byte(s), &r)
 }
 
@@ -970,6 +1343,9 @@ func (r *DescribeDBCustomClustersResponse) FromJsonString(s string) error {
 
 // Predefined struct for user
 type DescribeDBCustomImagesRequestParams struct {
+	// <p>支持镜像过滤的选项</p><p>取值参考：</p><ul><li>image-id,按镜像 ID 过滤    </li><li>os-type,按操作系统类型过滤(linux / windows)</li><li>image-type，按镜像类型过滤（PUBLIC_IMAGE（公共镜像）/ PRIVATE_IMAGE（私有镜像））</li><li>architecture，按架构过滤（x86_64 / arm64）</li></ul>
+	Filters []*Filter `json:"Filters,omitnil,omitempty" name:"Filters"`
+
 	// <p>偏移量</p><p>默认值：0</p>
 	Offset *int64 `json:"Offset,omitnil,omitempty" name:"Offset"`
 
@@ -980,6 +1356,9 @@ type DescribeDBCustomImagesRequestParams struct {
 type DescribeDBCustomImagesRequest struct {
 	*tchttp.BaseRequest
 	
+	// <p>支持镜像过滤的选项</p><p>取值参考：</p><ul><li>image-id,按镜像 ID 过滤    </li><li>os-type,按操作系统类型过滤(linux / windows)</li><li>image-type，按镜像类型过滤（PUBLIC_IMAGE（公共镜像）/ PRIVATE_IMAGE（私有镜像））</li><li>architecture，按架构过滤（x86_64 / arm64）</li></ul>
+	Filters []*Filter `json:"Filters,omitnil,omitempty" name:"Filters"`
+
 	// <p>偏移量</p><p>默认值：0</p>
 	Offset *int64 `json:"Offset,omitnil,omitempty" name:"Offset"`
 
@@ -999,6 +1378,7 @@ func (r *DescribeDBCustomImagesRequest) FromJsonString(s string) error {
 	if err := json.Unmarshal([]byte(s), &f); err != nil {
 		return err
 	}
+	delete(f, "Filters")
 	delete(f, "Offset")
 	delete(f, "Limit")
 	if len(f) > 0 {
@@ -1032,6 +1412,122 @@ func (r *DescribeDBCustomImagesResponse) ToJsonString() string {
 // FromJsonString It is highly **NOT** recommended to use this function
 // because it has no param check, nor strict type check
 func (r *DescribeDBCustomImagesResponse) FromJsonString(s string) error {
+	return json.Unmarshal([]byte(s), &r)
+}
+
+// Predefined struct for user
+type DescribeDBCustomNodeSecurityGroupsRequestParams struct {
+	// <p>节点id</p>
+	NodeId *string `json:"NodeId,omitnil,omitempty" name:"NodeId"`
+}
+
+type DescribeDBCustomNodeSecurityGroupsRequest struct {
+	*tchttp.BaseRequest
+	
+	// <p>节点id</p>
+	NodeId *string `json:"NodeId,omitnil,omitempty" name:"NodeId"`
+}
+
+func (r *DescribeDBCustomNodeSecurityGroupsRequest) ToJsonString() string {
+    b, _ := json.Marshal(r)
+    return string(b)
+}
+
+// FromJsonString It is highly **NOT** recommended to use this function
+// because it has no param check, nor strict type check
+func (r *DescribeDBCustomNodeSecurityGroupsRequest) FromJsonString(s string) error {
+	f := make(map[string]interface{})
+	if err := json.Unmarshal([]byte(s), &f); err != nil {
+		return err
+	}
+	delete(f, "NodeId")
+	if len(f) > 0 {
+		return tcerr.NewTencentCloudSDKError("ClientError.BuildRequestError", "DescribeDBCustomNodeSecurityGroupsRequest has unknown keys!", "")
+	}
+	return json.Unmarshal([]byte(s), &r)
+}
+
+// Predefined struct for user
+type DescribeDBCustomNodeSecurityGroupsResponseParams struct {
+	// <p>与节点绑定的安全组id，数组格式，根据内部安全组ID的顺序来确认优先级。</p>
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	Groups []*SecurityGroup `json:"Groups,omitnil,omitempty" name:"Groups"`
+
+	// 唯一请求 ID，由服务端生成，每次请求都会返回（若请求因其他原因未能抵达服务端，则该次请求不会获得 RequestId）。定位问题时需要提供该次请求的 RequestId。
+	RequestId *string `json:"RequestId,omitnil,omitempty" name:"RequestId"`
+}
+
+type DescribeDBCustomNodeSecurityGroupsResponse struct {
+	*tchttp.BaseResponse
+	Response *DescribeDBCustomNodeSecurityGroupsResponseParams `json:"Response"`
+}
+
+func (r *DescribeDBCustomNodeSecurityGroupsResponse) ToJsonString() string {
+    b, _ := json.Marshal(r)
+    return string(b)
+}
+
+// FromJsonString It is highly **NOT** recommended to use this function
+// because it has no param check, nor strict type check
+func (r *DescribeDBCustomNodeSecurityGroupsResponse) FromJsonString(s string) error {
+	return json.Unmarshal([]byte(s), &r)
+}
+
+// Predefined struct for user
+type DescribeDBCustomNodeTypesRequestParams struct {
+	// <p>支持通过地域，可用区，机型系列，机型标识进行过滤</p><p>入参限制：region、zone、node-family、node-type</p>
+	Filters []*Filter `json:"Filters,omitnil,omitempty" name:"Filters"`
+}
+
+type DescribeDBCustomNodeTypesRequest struct {
+	*tchttp.BaseRequest
+	
+	// <p>支持通过地域，可用区，机型系列，机型标识进行过滤</p><p>入参限制：region、zone、node-family、node-type</p>
+	Filters []*Filter `json:"Filters,omitnil,omitempty" name:"Filters"`
+}
+
+func (r *DescribeDBCustomNodeTypesRequest) ToJsonString() string {
+    b, _ := json.Marshal(r)
+    return string(b)
+}
+
+// FromJsonString It is highly **NOT** recommended to use this function
+// because it has no param check, nor strict type check
+func (r *DescribeDBCustomNodeTypesRequest) FromJsonString(s string) error {
+	f := make(map[string]interface{})
+	if err := json.Unmarshal([]byte(s), &f); err != nil {
+		return err
+	}
+	delete(f, "Filters")
+	if len(f) > 0 {
+		return tcerr.NewTencentCloudSDKError("ClientError.BuildRequestError", "DescribeDBCustomNodeTypesRequest has unknown keys!", "")
+	}
+	return json.Unmarshal([]byte(s), &r)
+}
+
+// Predefined struct for user
+type DescribeDBCustomNodeTypesResponseParams struct {
+	// <p>节点机型详细信息</p>
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	NodeTypeSet []*DBCustomNodeTypeInfo `json:"NodeTypeSet,omitnil,omitempty" name:"NodeTypeSet"`
+
+	// 唯一请求 ID，由服务端生成，每次请求都会返回（若请求因其他原因未能抵达服务端，则该次请求不会获得 RequestId）。定位问题时需要提供该次请求的 RequestId。
+	RequestId *string `json:"RequestId,omitnil,omitempty" name:"RequestId"`
+}
+
+type DescribeDBCustomNodeTypesResponse struct {
+	*tchttp.BaseResponse
+	Response *DescribeDBCustomNodeTypesResponseParams `json:"Response"`
+}
+
+func (r *DescribeDBCustomNodeTypesResponse) ToJsonString() string {
+    b, _ := json.Marshal(r)
+    return string(b)
+}
+
+// FromJsonString It is highly **NOT** recommended to use this function
+// because it has no param check, nor strict type check
+func (r *DescribeDBCustomNodeTypesResponse) FromJsonString(s string) error {
 	return json.Unmarshal([]byte(s), &r)
 }
 
@@ -1124,6 +1620,61 @@ func (r *DescribeDBCustomNodesResponse) FromJsonString(s string) error {
 }
 
 // Predefined struct for user
+type DescribeDBCustomRegionsRequestParams struct {
+
+}
+
+type DescribeDBCustomRegionsRequest struct {
+	*tchttp.BaseRequest
+	
+}
+
+func (r *DescribeDBCustomRegionsRequest) ToJsonString() string {
+    b, _ := json.Marshal(r)
+    return string(b)
+}
+
+// FromJsonString It is highly **NOT** recommended to use this function
+// because it has no param check, nor strict type check
+func (r *DescribeDBCustomRegionsRequest) FromJsonString(s string) error {
+	f := make(map[string]interface{})
+	if err := json.Unmarshal([]byte(s), &f); err != nil {
+		return err
+	}
+	
+	if len(f) > 0 {
+		return tcerr.NewTencentCloudSDKError("ClientError.BuildRequestError", "DescribeDBCustomRegionsRequest has unknown keys!", "")
+	}
+	return json.Unmarshal([]byte(s), &r)
+}
+
+// Predefined struct for user
+type DescribeDBCustomRegionsResponseParams struct {
+	// <p>支持售卖的地域列表信息</p>
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	RegionSet []*RegionInfo `json:"RegionSet,omitnil,omitempty" name:"RegionSet"`
+
+	// 唯一请求 ID，由服务端生成，每次请求都会返回（若请求因其他原因未能抵达服务端，则该次请求不会获得 RequestId）。定位问题时需要提供该次请求的 RequestId。
+	RequestId *string `json:"RequestId,omitnil,omitempty" name:"RequestId"`
+}
+
+type DescribeDBCustomRegionsResponse struct {
+	*tchttp.BaseResponse
+	Response *DescribeDBCustomRegionsResponseParams `json:"Response"`
+}
+
+func (r *DescribeDBCustomRegionsResponse) ToJsonString() string {
+    b, _ := json.Marshal(r)
+    return string(b)
+}
+
+// FromJsonString It is highly **NOT** recommended to use this function
+// because it has no param check, nor strict type check
+func (r *DescribeDBCustomRegionsResponse) FromJsonString(s string) error {
+	return json.Unmarshal([]byte(s), &r)
+}
+
+// Predefined struct for user
 type DescribeDBCustomTaskStatusRequestParams struct {
 	// <p>DB Custom 任务ID</p>
 	TaskId *uint64 `json:"TaskId,omitnil,omitempty" name:"TaskId"`
@@ -1177,6 +1728,61 @@ func (r *DescribeDBCustomTaskStatusResponse) ToJsonString() string {
 // FromJsonString It is highly **NOT** recommended to use this function
 // because it has no param check, nor strict type check
 func (r *DescribeDBCustomTaskStatusResponse) FromJsonString(s string) error {
+	return json.Unmarshal([]byte(s), &r)
+}
+
+// Predefined struct for user
+type DescribeDBCustomZonesRequestParams struct {
+
+}
+
+type DescribeDBCustomZonesRequest struct {
+	*tchttp.BaseRequest
+	
+}
+
+func (r *DescribeDBCustomZonesRequest) ToJsonString() string {
+    b, _ := json.Marshal(r)
+    return string(b)
+}
+
+// FromJsonString It is highly **NOT** recommended to use this function
+// because it has no param check, nor strict type check
+func (r *DescribeDBCustomZonesRequest) FromJsonString(s string) error {
+	f := make(map[string]interface{})
+	if err := json.Unmarshal([]byte(s), &f); err != nil {
+		return err
+	}
+	
+	if len(f) > 0 {
+		return tcerr.NewTencentCloudSDKError("ClientError.BuildRequestError", "DescribeDBCustomZonesRequest has unknown keys!", "")
+	}
+	return json.Unmarshal([]byte(s), &r)
+}
+
+// Predefined struct for user
+type DescribeDBCustomZonesResponseParams struct {
+	// <p>查询支持售卖的地域对应的可用区，State字段值如为SELL则代表正常售卖。</p>
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	ZoneSet []*ZoneInfo `json:"ZoneSet,omitnil,omitempty" name:"ZoneSet"`
+
+	// 唯一请求 ID，由服务端生成，每次请求都会返回（若请求因其他原因未能抵达服务端，则该次请求不会获得 RequestId）。定位问题时需要提供该次请求的 RequestId。
+	RequestId *string `json:"RequestId,omitnil,omitempty" name:"RequestId"`
+}
+
+type DescribeDBCustomZonesResponse struct {
+	*tchttp.BaseResponse
+	Response *DescribeDBCustomZonesResponseParams `json:"Response"`
+}
+
+func (r *DescribeDBCustomZonesResponse) ToJsonString() string {
+    b, _ := json.Marshal(r)
+    return string(b)
+}
+
+// FromJsonString It is highly **NOT** recommended to use this function
+// because it has no param check, nor strict type check
+func (r *DescribeDBCustomZonesResponse) FromJsonString(s string) error {
 	return json.Unmarshal([]byte(s), &r)
 }
 
@@ -2194,6 +2800,14 @@ func (r *IsolateDBCustomNodeResponse) FromJsonString(s string) error {
 	return json.Unmarshal([]byte(s), &r)
 }
 
+type Label struct {
+	// <p>在集群内的节点Label键</p>
+	Key *string `json:"Key,omitnil,omitempty" name:"Key"`
+
+	// <p>在集群内的节点Label键值</p>
+	Value *string `json:"Value,omitnil,omitempty" name:"Value"`
+}
+
 type LoginSettings struct {
 	// <p>实例登录密码。不同操作系统类型密码复杂度限制不一样，具体如下： Linux实例密码必须8到30位，至少包括两项[a-z]，[A-Z]、[0-9] 和 [( ) <code>~ ! @ # $ % ^ &amp; * - + = | { } [ ] : ; &#39; , . ? / ]中的特殊符号。 Windows实例密码必须12到30位，至少包括三项[a-z]，[A-Z]，[0-9] 和 [( )</code> ~ ! @ # $ % ^ &amp; * - + = | { } [ ] : ; &#39; , . ? /]中的特殊符号。</p>
 	Password *string `json:"Password,omitnil,omitempty" name:"Password"`
@@ -2203,6 +2817,109 @@ type LoginSettings struct {
 
 	// <p>保持镜像的原始设置。该参数与Password或KeyIds.N不能同时指定。只有使用自定义镜像、共享镜像或外部导入镜像创建实例时才能指定该参数为true。</p><p>枚举值：</p><ul><li>true： 表示保持镜像的登录设置</li><li>false： 表示不保持镜像的登录设置</li></ul>
 	KeepImageLogin *string `json:"KeepImageLogin,omitnil,omitempty" name:"KeepImageLogin"`
+}
+
+type MetaResource struct {
+	// <p>CPU核心</p><p>单位：核</p>
+	Cpu *float64 `json:"Cpu,omitnil,omitempty" name:"Cpu"`
+
+	// <p>内存</p><p>单位：GiB</p>
+	Memory *float64 `json:"Memory,omitnil,omitempty" name:"Memory"`
+
+	// <p>POD数量</p><p>单位：个</p>
+	Pods *uint64 `json:"Pods,omitnil,omitempty" name:"Pods"`
+}
+
+// Predefined struct for user
+type ModifyDBCustomClusterNodeConfigRequestParams struct {
+	// <p>目标集群 ID</p>
+	ClusterId *string `json:"ClusterId,omitnil,omitempty" name:"ClusterId"`
+
+	// <p>要修改的节点 ID 列表</p><p>入参限制：数量范围 1~50 个</p>
+	NodeIds []*string `json:"NodeIds,omitnil,omitempty" name:"NodeIds"`
+
+	// <p>新增或覆盖的集群 Label</p><p>入参限制：- 单次 ≤ 20 对；合并后节点总量不超过 20</p><ul><li>Key 格式对齐 K8s 原生（两段式，prefix DNS 子域 ≤ 253 字符，name ≤ 63 字符）</li><li>Value ≤ 63 字符，可为空</li><li>不可操作系统保留前缀</li></ul>
+	UpsertLabels []*Label `json:"UpsertLabels,omitnil,omitempty" name:"UpsertLabels"`
+
+	// <p>要删除的 Label key 列表，按 key 精确匹配，key 不存在时幂等放行。</p><p>入参限制：- Key 格式对齐 K8s 原生（两段式，prefix DNS 子域 ≤ 253 字符，name ≤ 63 字符）</p><ul><li>Value ≤ 63 字符，可为空</li><li>不可操作系统保留前缀</li></ul>
+	DeleteLabelKeys []*string `json:"DeleteLabelKeys,omitnil,omitempty" name:"DeleteLabelKeys"`
+
+	// <p>新增或覆盖的 Taint。</p><p>入参限制：- 单次 ≤ 5 对；合并后节点总量不超过 5。</p><ul><li>唯一性键为 (Key, Effect)，匹配到已有 (Key, Effect) 时覆盖 Value，否则新增</li><li>Effect 合法值：NoSchedule / PreferNoSchedule / NoExecute</li><li>同一 Key 允许多个不同 Effect 的 Taint 并存</li></ul>
+	UpsertTaints []*Taint `json:"UpsertTaints,omitnil,omitempty" name:"UpsertTaints"`
+
+	// <p>要删除的 Taint 过滤器列表</p><p>入参限制：- 唯一性键为 (Key, Effect)，匹配到已有 (Key, Effect) 时覆盖 Value，否则新增</p><ul><li>Effect 合法值：NoSchedule / PreferNoSchedule / NoExecute</li><li>同一 Key 允许多个不同 Effect 的 Taint 并存</li></ul>
+	DeleteTaints []*Taint `json:"DeleteTaints,omitnil,omitempty" name:"DeleteTaints"`
+}
+
+type ModifyDBCustomClusterNodeConfigRequest struct {
+	*tchttp.BaseRequest
+	
+	// <p>目标集群 ID</p>
+	ClusterId *string `json:"ClusterId,omitnil,omitempty" name:"ClusterId"`
+
+	// <p>要修改的节点 ID 列表</p><p>入参限制：数量范围 1~50 个</p>
+	NodeIds []*string `json:"NodeIds,omitnil,omitempty" name:"NodeIds"`
+
+	// <p>新增或覆盖的集群 Label</p><p>入参限制：- 单次 ≤ 20 对；合并后节点总量不超过 20</p><ul><li>Key 格式对齐 K8s 原生（两段式，prefix DNS 子域 ≤ 253 字符，name ≤ 63 字符）</li><li>Value ≤ 63 字符，可为空</li><li>不可操作系统保留前缀</li></ul>
+	UpsertLabels []*Label `json:"UpsertLabels,omitnil,omitempty" name:"UpsertLabels"`
+
+	// <p>要删除的 Label key 列表，按 key 精确匹配，key 不存在时幂等放行。</p><p>入参限制：- Key 格式对齐 K8s 原生（两段式，prefix DNS 子域 ≤ 253 字符，name ≤ 63 字符）</p><ul><li>Value ≤ 63 字符，可为空</li><li>不可操作系统保留前缀</li></ul>
+	DeleteLabelKeys []*string `json:"DeleteLabelKeys,omitnil,omitempty" name:"DeleteLabelKeys"`
+
+	// <p>新增或覆盖的 Taint。</p><p>入参限制：- 单次 ≤ 5 对；合并后节点总量不超过 5。</p><ul><li>唯一性键为 (Key, Effect)，匹配到已有 (Key, Effect) 时覆盖 Value，否则新增</li><li>Effect 合法值：NoSchedule / PreferNoSchedule / NoExecute</li><li>同一 Key 允许多个不同 Effect 的 Taint 并存</li></ul>
+	UpsertTaints []*Taint `json:"UpsertTaints,omitnil,omitempty" name:"UpsertTaints"`
+
+	// <p>要删除的 Taint 过滤器列表</p><p>入参限制：- 唯一性键为 (Key, Effect)，匹配到已有 (Key, Effect) 时覆盖 Value，否则新增</p><ul><li>Effect 合法值：NoSchedule / PreferNoSchedule / NoExecute</li><li>同一 Key 允许多个不同 Effect 的 Taint 并存</li></ul>
+	DeleteTaints []*Taint `json:"DeleteTaints,omitnil,omitempty" name:"DeleteTaints"`
+}
+
+func (r *ModifyDBCustomClusterNodeConfigRequest) ToJsonString() string {
+    b, _ := json.Marshal(r)
+    return string(b)
+}
+
+// FromJsonString It is highly **NOT** recommended to use this function
+// because it has no param check, nor strict type check
+func (r *ModifyDBCustomClusterNodeConfigRequest) FromJsonString(s string) error {
+	f := make(map[string]interface{})
+	if err := json.Unmarshal([]byte(s), &f); err != nil {
+		return err
+	}
+	delete(f, "ClusterId")
+	delete(f, "NodeIds")
+	delete(f, "UpsertLabels")
+	delete(f, "DeleteLabelKeys")
+	delete(f, "UpsertTaints")
+	delete(f, "DeleteTaints")
+	if len(f) > 0 {
+		return tcerr.NewTencentCloudSDKError("ClientError.BuildRequestError", "ModifyDBCustomClusterNodeConfigRequest has unknown keys!", "")
+	}
+	return json.Unmarshal([]byte(s), &r)
+}
+
+// Predefined struct for user
+type ModifyDBCustomClusterNodeConfigResponseParams struct {
+	// <p>任务ID</p>
+	TaskId *uint64 `json:"TaskId,omitnil,omitempty" name:"TaskId"`
+
+	// 唯一请求 ID，由服务端生成，每次请求都会返回（若请求因其他原因未能抵达服务端，则该次请求不会获得 RequestId）。定位问题时需要提供该次请求的 RequestId。
+	RequestId *string `json:"RequestId,omitnil,omitempty" name:"RequestId"`
+}
+
+type ModifyDBCustomClusterNodeConfigResponse struct {
+	*tchttp.BaseResponse
+	Response *ModifyDBCustomClusterNodeConfigResponseParams `json:"Response"`
+}
+
+func (r *ModifyDBCustomClusterNodeConfigResponse) ToJsonString() string {
+    b, _ := json.Marshal(r)
+    return string(b)
+}
+
+// FromJsonString It is highly **NOT** recommended to use this function
+// because it has no param check, nor strict type check
+func (r *ModifyDBCustomClusterNodeConfigResponse) FromJsonString(s string) error {
+	return json.Unmarshal([]byte(s), &r)
 }
 
 // Predefined struct for user
@@ -2270,6 +2987,67 @@ func (r *ModifyDBCustomClusterTagsResponse) ToJsonString() string {
 // FromJsonString It is highly **NOT** recommended to use this function
 // because it has no param check, nor strict type check
 func (r *ModifyDBCustomClusterTagsResponse) FromJsonString(s string) error {
+	return json.Unmarshal([]byte(s), &r)
+}
+
+// Predefined struct for user
+type ModifyDBCustomNodeSecurityGroupsRequestParams struct {
+	// <p>节点id</p>
+	NodeId *string `json:"NodeId,omitnil,omitempty" name:"NodeId"`
+
+	// <p>安全组id，数组格式，根据内部安全组ID的顺序来确认优先级。</p>
+	SecurityGroupIds []*string `json:"SecurityGroupIds,omitnil,omitempty" name:"SecurityGroupIds"`
+}
+
+type ModifyDBCustomNodeSecurityGroupsRequest struct {
+	*tchttp.BaseRequest
+	
+	// <p>节点id</p>
+	NodeId *string `json:"NodeId,omitnil,omitempty" name:"NodeId"`
+
+	// <p>安全组id，数组格式，根据内部安全组ID的顺序来确认优先级。</p>
+	SecurityGroupIds []*string `json:"SecurityGroupIds,omitnil,omitempty" name:"SecurityGroupIds"`
+}
+
+func (r *ModifyDBCustomNodeSecurityGroupsRequest) ToJsonString() string {
+    b, _ := json.Marshal(r)
+    return string(b)
+}
+
+// FromJsonString It is highly **NOT** recommended to use this function
+// because it has no param check, nor strict type check
+func (r *ModifyDBCustomNodeSecurityGroupsRequest) FromJsonString(s string) error {
+	f := make(map[string]interface{})
+	if err := json.Unmarshal([]byte(s), &f); err != nil {
+		return err
+	}
+	delete(f, "NodeId")
+	delete(f, "SecurityGroupIds")
+	if len(f) > 0 {
+		return tcerr.NewTencentCloudSDKError("ClientError.BuildRequestError", "ModifyDBCustomNodeSecurityGroupsRequest has unknown keys!", "")
+	}
+	return json.Unmarshal([]byte(s), &r)
+}
+
+// Predefined struct for user
+type ModifyDBCustomNodeSecurityGroupsResponseParams struct {
+	// 唯一请求 ID，由服务端生成，每次请求都会返回（若请求因其他原因未能抵达服务端，则该次请求不会获得 RequestId）。定位问题时需要提供该次请求的 RequestId。
+	RequestId *string `json:"RequestId,omitnil,omitempty" name:"RequestId"`
+}
+
+type ModifyDBCustomNodeSecurityGroupsResponse struct {
+	*tchttp.BaseResponse
+	Response *ModifyDBCustomNodeSecurityGroupsResponseParams `json:"Response"`
+}
+
+func (r *ModifyDBCustomNodeSecurityGroupsResponse) ToJsonString() string {
+    b, _ := json.Marshal(r)
+    return string(b)
+}
+
+// FromJsonString It is highly **NOT** recommended to use this function
+// because it has no param check, nor strict type check
+func (r *ModifyDBCustomNodeSecurityGroupsResponse) FromJsonString(s string) error {
 	return json.Unmarshal([]byte(s), &r)
 }
 
@@ -2402,6 +3180,40 @@ func (r *ModifyInstanceNameResponse) FromJsonString(s string) error {
 	return json.Unmarshal([]byte(s), &r)
 }
 
+type PolicyRule struct {
+	// <p>规则动作，</p><p>枚举值：</p><ul><li>ACCEPT： 允许</li><li>DROP： 拒绝</li></ul>
+	Action *string `json:"Action,omitnil,omitempty" name:"Action"`
+
+	// <p>来源/目标 IP 或 CIDR，如 0.0.0.0/0</p>
+	CidrIp *string `json:"CidrIp,omitnil,omitempty" name:"CidrIp"`
+
+	// <p>端口范围，如 80、8080-8090、ALL</p>
+	PortRange *string `json:"PortRange,omitnil,omitempty" name:"PortRange"`
+
+	// <p>协议类型，如 tcp、udp、icmp、ALL</p>
+	IpProtocol *string `json:"IpProtocol,omitnil,omitempty" name:"IpProtocol"`
+
+	// <p>协议端口模板 ID</p>
+	ServiceModule *string `json:"ServiceModule,omitnil,omitempty" name:"ServiceModule"`
+
+	// <p>IP 地址模板 ID</p>
+	AddressModule *string `json:"AddressModule,omitnil,omitempty" name:"AddressModule"`
+
+	// <p>规则 ID</p>
+	Id *string `json:"Id,omitnil,omitempty" name:"Id"`
+
+	// <p>规则备注描述</p>
+	Desc *string `json:"Desc,omitnil,omitempty" name:"Desc"`
+}
+
+type RegionInfo struct {
+	// <p>地域</p>
+	Region *string `json:"Region,omitnil,omitempty" name:"Region"`
+
+	// <p>售卖状态</p><p>枚举值：</p><ul><li>SELL： 正常售卖</li><li>SOLD_OUT： 售罄</li></ul>
+	RegionState *string `json:"RegionState,omitnil,omitempty" name:"RegionState"`
+}
+
 // Predefined struct for user
 type RemoveNodesFromDBCustomClusterRequestParams struct {
 	// <p>DB Custom 集群ID</p>
@@ -2409,6 +3221,9 @@ type RemoveNodesFromDBCustomClusterRequestParams struct {
 
 	// <p>要下架的 DB Custom 节点ID列表</p>
 	NodeIds []*string `json:"NodeIds,omitnil,omitempty" name:"NodeIds"`
+
+	// <p>节点的登录参数</p>
+	LoginSettings *LoginSettings `json:"LoginSettings,omitnil,omitempty" name:"LoginSettings"`
 }
 
 type RemoveNodesFromDBCustomClusterRequest struct {
@@ -2419,6 +3234,9 @@ type RemoveNodesFromDBCustomClusterRequest struct {
 
 	// <p>要下架的 DB Custom 节点ID列表</p>
 	NodeIds []*string `json:"NodeIds,omitnil,omitempty" name:"NodeIds"`
+
+	// <p>节点的登录参数</p>
+	LoginSettings *LoginSettings `json:"LoginSettings,omitnil,omitempty" name:"LoginSettings"`
 }
 
 func (r *RemoveNodesFromDBCustomClusterRequest) ToJsonString() string {
@@ -2435,6 +3253,7 @@ func (r *RemoveNodesFromDBCustomClusterRequest) FromJsonString(s string) error {
 	}
 	delete(f, "ClusterId")
 	delete(f, "NodeIds")
+	delete(f, "LoginSettings")
 	if len(f) > 0 {
 		return tcerr.NewTencentCloudSDKError("ClientError.BuildRequestError", "RemoveNodesFromDBCustomClusterRequest has unknown keys!", "")
 	}
@@ -2556,6 +3375,29 @@ type ResourceTag struct {
 	TagValue *string `json:"TagValue,omitnil,omitempty" name:"TagValue"`
 }
 
+type SecurityGroup struct {
+	// <p>安全组ID</p>
+	SecurityGroupId *string `json:"SecurityGroupId,omitnil,omitempty" name:"SecurityGroupId"`
+
+	// <p>所属项目 ID</p>
+	ProjectId *int64 `json:"ProjectId,omitnil,omitempty" name:"ProjectId"`
+
+	// <p>安全组创建时间</p>
+	CreateTime *string `json:"CreateTime,omitnil,omitempty" name:"CreateTime"`
+
+	// <p>安全组入方向规则列表</p>
+	Inbound []*PolicyRule `json:"Inbound,omitnil,omitempty" name:"Inbound"`
+
+	// <p>安全组出方向规则列表</p>
+	Outbound []*PolicyRule `json:"Outbound,omitnil,omitempty" name:"Outbound"`
+
+	// <p>安全组名称</p>
+	SecurityGroupName *string `json:"SecurityGroupName,omitnil,omitempty" name:"SecurityGroupName"`
+
+	// <p>安全组备注说明</p>
+	SecurityGroupRemark *string `json:"SecurityGroupRemark,omitnil,omitempty" name:"SecurityGroupRemark"`
+}
+
 type SystemDisk struct {
 	// <p>磁盘类型</p><p>枚举值：</p><ul><li>CLOUD_HSSD： 增强型云硬盘</li></ul>
 	DiskType *string `json:"DiskType,omitnil,omitempty" name:"DiskType"`
@@ -2570,4 +3412,23 @@ type Tag struct {
 
 	// <p>标签值</p>
 	Value *string `json:"Value,omitnil,omitempty" name:"Value"`
+}
+
+type Taint struct {
+	// <p>Taint 的键，格式对齐 K8s 原生约束（prefix DNS 子域 ≤ 253 字符，name ≤ 63 字符），不可使用系统保留前缀</p>
+	Key *string `json:"Key,omitnil,omitempty" name:"Key"`
+
+	// <p>污点效果</p><p>枚举值：</p><ul><li>NoSchedule： 不允许新 Pod 调度到该节点（已运行 Pod 不受影响）</li><li>PreferNoSchedule： 尽量不调度，无法满足时仍可调度</li><li>NoExecute： 不允许调度，且会驱逐已在节点上运行的不容忍该 Taint 的 Pod</li></ul>
+	Effect *string `json:"Effect,omitnil,omitempty" name:"Effect"`
+
+	// <p>Taint 的值，≤ 63 字符，可为空</p>
+	Value *string `json:"Value,omitnil,omitempty" name:"Value"`
+}
+
+type ZoneInfo struct {
+	// <p>支持的可用区</p>
+	Zone *string `json:"Zone,omitnil,omitempty" name:"Zone"`
+
+	// <p>可用区状态</p><p>枚举值：</p><ul><li>SELL： 正常售卖</li><li>SOLD_OUT： 售罄</li></ul>
+	ZoneState *string `json:"ZoneState,omitnil,omitempty" name:"ZoneState"`
 }

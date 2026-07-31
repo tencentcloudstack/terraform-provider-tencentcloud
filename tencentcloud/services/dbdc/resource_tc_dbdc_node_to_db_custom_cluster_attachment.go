@@ -83,6 +83,74 @@ func ResourceTencentCloudDbdcNodeToDbCustomClusterAttachment() *schema.Resource 
 				},
 			},
 
+			"labels": {
+				Type:        schema.TypeList,
+				Optional:    true,
+				ForceNew:    true,
+				MaxItems:    20,
+				Description: "Custom labels initialized after the node is added to the cluster. Up to 20 key-value pairs.",
+				Elem: &schema.Resource{
+					Schema: map[string]*schema.Schema{
+						"key": {
+							Type:        schema.TypeString,
+							Required:    true,
+							ForceNew:    true,
+							Description: "Label key.",
+						},
+						"value": {
+							Type:        schema.TypeString,
+							Optional:    true,
+							ForceNew:    true,
+							Description: "Label value.",
+						},
+					},
+				},
+			},
+
+			"taints": {
+				Type:        schema.TypeList,
+				Optional:    true,
+				ForceNew:    true,
+				MaxItems:    5,
+				Description: "Taints initialized after the node is added to the cluster. Up to 5 key-value pairs.",
+				Elem: &schema.Resource{
+					Schema: map[string]*schema.Schema{
+						"key": {
+							Type:        schema.TypeString,
+							Required:    true,
+							ForceNew:    true,
+							Description: "Taint key.",
+						},
+						"effect": {
+							Type:        schema.TypeString,
+							Required:    true,
+							ForceNew:    true,
+							Description: "Taint effect. Valid values: `NoSchedule`, `PreferNoSchedule`, `NoExecute`.",
+						},
+						"value": {
+							Type:        schema.TypeString,
+							Optional:    true,
+							ForceNew:    true,
+							Description: "Taint value.",
+						},
+					},
+				},
+			},
+
+			"host_name": {
+				Type:        schema.TypeString,
+				Optional:    true,
+				ForceNew:    true,
+				Description: "Hostname of the node. Required when `host_name_type` is 1. Supports pattern strings such as `{R:x}`, `{R:x,F:y}`, `{IP}`.",
+			},
+
+			"host_name_type": {
+				Type:        schema.TypeInt,
+				Optional:    true,
+				ForceNew:    true,
+				Description: "Hostname source type. Valid values: `0` (reuse hostname set at node creation), `1` (re-specify HostName, must pass `host_name`), `2` (system auto-assign using NodeId).",
+			},
+
 			// computed
 			"node_name": {
 				Type:        schema.TypeString,
@@ -118,6 +186,18 @@ func ResourceTencentCloudDbdcNodeToDbCustomClusterAttachment() *schema.Resource 
 				Type:        schema.TypeString,
 				Computed:    true,
 				Description: "Node spec.",
+			},
+
+			"network_mode": {
+				Type:        schema.TypeString,
+				Computed:    true,
+				Description: "Network mode. Valid values: `privatelink` (four-layer network connectivity), `cross_tenant_eni` (three-layer network connectivity, dual-NIC mode).",
+			},
+
+			"eni_ip": {
+				Type:        schema.TypeString,
+				Computed:    true,
+				Description: "When the network mode is `cross_tenant_eni`, this IP address is the user-accessible address.",
 			},
 		},
 	}
@@ -170,6 +250,47 @@ func resourceTencentCloudDbdcNodeToDbCustomClusterAttachmentCreate(d *schema.Res
 		}
 
 		request.LoginSettings = &loginSettings
+	}
+
+	if v, ok := d.GetOk("labels"); ok {
+		labelsList := v.([]interface{})
+		for i := range labelsList {
+			labelMap := labelsList[i].(map[string]interface{})
+			label := dbdcv20201029.Label{}
+			if key, ok := labelMap["key"]; ok {
+				label.Key = helper.String(key.(string))
+			}
+			if value, ok := labelMap["value"]; ok && value.(string) != "" {
+				label.Value = helper.String(value.(string))
+			}
+			request.Labels = append(request.Labels, &label)
+		}
+	}
+
+	if v, ok := d.GetOk("taints"); ok {
+		taintsList := v.([]interface{})
+		for i := range taintsList {
+			taintMap := taintsList[i].(map[string]interface{})
+			taint := dbdcv20201029.Taint{}
+			if key, ok := taintMap["key"]; ok {
+				taint.Key = helper.String(key.(string))
+			}
+			if effect, ok := taintMap["effect"]; ok {
+				taint.Effect = helper.String(effect.(string))
+			}
+			if value, ok := taintMap["value"]; ok && value.(string) != "" {
+				taint.Value = helper.String(value.(string))
+			}
+			request.Taints = append(request.Taints, &taint)
+		}
+	}
+
+	if v, ok := d.GetOk("host_name"); ok {
+		request.HostName = helper.String(v.(string))
+	}
+
+	if v, ok := d.GetOkExists("host_name_type"); ok {
+		request.HostNameType = helper.Int64(int64(v.(int)))
 	}
 
 	reqErr := resource.Retry(tccommon.WriteRetryTimeout, func() *resource.RetryError {
@@ -260,6 +381,14 @@ func resourceTencentCloudDbdcNodeToDbCustomClusterAttachmentRead(d *schema.Resou
 		_ = d.Set("node_type", respData.NodeType)
 	}
 
+	if respData.NetworkMode != nil {
+		_ = d.Set("network_mode", respData.NetworkMode)
+	}
+
+	if respData.EniIP != nil {
+		_ = d.Set("eni_ip", respData.EniIP)
+	}
+
 	return nil
 }
 
@@ -285,6 +414,28 @@ func resourceTencentCloudDbdcNodeToDbCustomClusterAttachmentDelete(d *schema.Res
 
 	request.ClusterId = helper.String(clusterId)
 	request.NodeIds = []*string{helper.String(nodeId)}
+
+	if dMap, ok := helper.InterfacesHeadMap(d, "login_settings"); ok {
+		loginSettings := dbdcv20201029.LoginSettings{}
+		if v, ok := dMap["password"]; ok && v.(string) != "" {
+			loginSettings.Password = helper.String(v.(string))
+		}
+
+		if v, ok := dMap["key_ids"]; ok {
+			keyIdsList := v.([]interface{})
+			for i := range keyIdsList {
+				keyId := keyIdsList[i].(string)
+				loginSettings.KeyIds = append(loginSettings.KeyIds, &keyId)
+			}
+		}
+
+		if v, ok := dMap["keep_image_login"]; ok && v.(string) != "" {
+			loginSettings.KeepImageLogin = helper.String(v.(string))
+		}
+
+		request.LoginSettings = &loginSettings
+	}
+
 	reqErr := resource.Retry(tccommon.WriteRetryTimeout, func() *resource.RetryError {
 		result, e := meta.(tccommon.ProviderMeta).GetAPIV3Conn().UseDbdcV20201029Client().RemoveNodesFromDBCustomClusterWithContext(ctx, request)
 		if e != nil {
