@@ -36,7 +36,6 @@ func DataSourceTencentCloudDbdcDbCustomClusterResources() *schema.Resource {
 			"capacity": {
 				Type:        schema.TypeList,
 				Computed:    true,
-				MaxItems:    1,
 				Description: "The sum of the physical total resource capacity of all nodes in the cluster.",
 				Elem: &schema.Resource{
 					Schema: map[string]*schema.Schema{
@@ -62,7 +61,6 @@ func DataSourceTencentCloudDbdcDbCustomClusterResources() *schema.Resource {
 			"allocatable": {
 				Type:        schema.TypeList,
 				Computed:    true,
-				MaxItems:    1,
 				Description: "The sum of the allocatable capacity of all nodes in the cluster (= Capacity - system reservation).",
 				Elem: &schema.Resource{
 					Schema: map[string]*schema.Schema{
@@ -88,7 +86,6 @@ func DataSourceTencentCloudDbdcDbCustomClusterResources() *schema.Resource {
 			"requests": {
 				Type:        schema.TypeList,
 				Computed:    true,
-				MaxItems:    1,
 				Description: "The sum of the requests of all non-terminal pods in the cluster (including system pods).",
 				Elem: &schema.Resource{
 					Schema: map[string]*schema.Schema{
@@ -114,7 +111,6 @@ func DataSourceTencentCloudDbdcDbCustomClusterResources() *schema.Resource {
 			"limits": {
 				Type:        schema.TypeList,
 				Computed:    true,
-				MaxItems:    1,
 				Description: "The sum of the limits of all non-terminal pods in the cluster (including system pods, the Pods field has no semantics and is fixed to 0).",
 				Elem: &schema.Resource{
 					Schema: map[string]*schema.Schema{
@@ -140,7 +136,6 @@ func DataSourceTencentCloudDbdcDbCustomClusterResources() *schema.Resource {
 			"available": {
 				Type:        schema.TypeList,
 				Computed:    true,
-				MaxItems:    1,
 				Description: "Cluster schedulable remaining capacity (the sum of max(0, Allocatable - Requests) for all nodes).",
 				Elem: &schema.Resource{
 					Schema: map[string]*schema.Schema{

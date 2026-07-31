@@ -17,7 +17,7 @@ Use this data source to query DB Custom cluster resource summary info from Tence
 
 ```hcl
 data "tencentcloud_dbdc_db_custom_cluster_resources" "example" {
-  cluster_id = "dbcc-nmtmsew8"
+  cluster_id = "dbcc-b2arjlee"
 }
 ```
 
