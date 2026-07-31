@@ -684,3 +684,41 @@ func (me *DbdcService) DescribeDBCustomClusterNodeConfigByFilter(ctx context.Con
 
 	return
 }
+
+func (me *DbdcService) DescribeDBCustomRegions(ctx context.Context) (ret []*dbdcv20201029.RegionInfo, errRet error) {
+	var (
+		logId   = tccommon.GetLogId(ctx)
+		request = dbdcv20201029.NewDescribeDBCustomRegionsRequest()
+	)
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	err := resource.Retry(tccommon.ReadRetryTimeout, func() *resource.RetryError {
+		ratelimit.Check(request.GetAction())
+		result, e := me.client.UseDbdcV20201029Client().DescribeDBCustomRegions(request)
+		if e != nil {
+			return tccommon.RetryError(e)
+		} else {
+			log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), result.ToJsonString())
+		}
+
+		if result == nil || result.Response == nil || result.Response.RegionSet == nil {
+			log.Printf("[DATASOURCE] read empty, skip SetId")
+			return resource.NonRetryableError(fmt.Errorf("Describe dbdc_db_custom_regions failed, Response is nil or empty."))
+		}
+
+		ret = result.Response.RegionSet
+		return nil
+	})
+
+	if err != nil {
+		errRet = err
+		return
+	}
+
+	return
+}
