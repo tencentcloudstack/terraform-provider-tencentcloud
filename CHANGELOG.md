@@ -1,3 +1,22 @@
+## 1.83.18(July 31, 2026)
+
+FEATURES:
+
+* **New Data Source:** `tencentcloud_dbdc_db_custom_cluster_node_config_list` ([#4377](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/4377))
+* **New Data Source:** `tencentcloud_dbdc_db_custom_cluster_node_resources` ([#4369](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/4369))
+* **New Data Source:** `tencentcloud_dbdc_db_custom_cluster_resources` ([#4367](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/4367))
+* **New Data Source:** `tencentcloud_dbdc_db_custom_node_security_groups` ([#4374](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/4374))
+* **New Data Source:** `tencentcloud_dbdc_db_custom_node_types` ([#4376](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/4376))
+* **New Data Source:** `tencentcloud_dbdc_db_custom_regions` ([#4375](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/4375))
+* **New Data Source:** `tencentcloud_dbdc_db_custom_zones` ([#4378](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/4378))
+
+ENHANCEMENTS:
+
+* data-source/tencentcloud_dbdc_db_custom_cluster_nodes: add `network_mode` and `eni_ip` fields to node_set ([#4365](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/4365))
+* resource/tencentcloud_clb_listener: support max_conn, max_cps, proxy_protocol and data_compress_mode parameters ([#4364](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/4364))
+* resource/tencentcloud_cls_topic: add biz_type parameter to support metric topic type ([#4350](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/4350))
+* resource/tencentcloud_dts_sync_job: optimize code logic ([#4368](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/4368))
+
 ## 1.83.17(July 30, 2026)
 
 FEATURES:
