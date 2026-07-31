@@ -7,6 +7,7 @@ import (
 	"strings"
 	"time"
 
+	sdkErrors "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/common/errors"
 	tccommon "github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/common"
 
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
@@ -28,6 +29,13 @@ func NewDtsService(client *connectivity.TencentCloudClient) DtsService {
 
 type DtsService struct {
 	client *connectivity.TencentCloudClient
+}
+
+func IsDTSResourceNotFoundError(err error) bool {
+	if sdkErr, ok := err.(*sdkErrors.TencentCloudSDKError); ok {
+		return sdkErr.Code == "ResourceNotFound"
+	}
+	return false
 }
 
 // sync job
