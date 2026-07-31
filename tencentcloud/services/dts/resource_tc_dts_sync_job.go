@@ -239,12 +239,21 @@ func resourceTencentCloudDtsSyncJobRead(d *schema.ResourceData, meta interface{}
 
 	syncJob, err := service.DescribeDtsSyncJob(ctx, helper.String(syncJobId))
 	if err != nil {
+		if !d.IsNewResource() && IsDTSResourceNotFoundError(err) {
+			log.Printf("[CRUD] tencentcloud_dts_sync_job id=%s", d.Id())
+			d.SetId("")
+			return nil
+		}
 		return err
 	}
 
 	if syncJob == nil {
+		log.Printf("[CRUD] tencentcloud_dts_sync_job id=%s", d.Id())
+		if d.IsNewResource() {
+			return fmt.Errorf("tencentcloud_dts_sync_job [%s] not found after creation", d.Id())
+		}
 		d.SetId("")
-		return fmt.Errorf("resource `tencentcloud_dts_sync_job` %s does not exist", syncJobId)
+		return nil
 	}
 
 	if syncJob.PayMode != nil {
