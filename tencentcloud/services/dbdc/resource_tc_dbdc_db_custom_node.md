@@ -2,6 +2,8 @@ Provides a resource to create a DBDC db custom node.
 
 Example Usage
 
+Create a PREPAID DBDC db custom node
+
 ```hcl
 resource "tencentcloud_dbdc_db_custom_node" "example" {
   zone       = "ap-shanghai-5"

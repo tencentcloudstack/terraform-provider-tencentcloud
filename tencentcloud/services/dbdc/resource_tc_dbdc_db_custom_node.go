@@ -8,6 +8,7 @@ import (
 
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
+	sdkErrors "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/common/errors"
 	dbdcv20201029 "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/dbdc/v20201029"
 
 	tccommon "github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/common"
@@ -64,20 +65,6 @@ func ResourceTencentCloudDbdcDbCustomNode() *schema.Resource {
 				Description: "Node spec, e.g. `DB.AT5.8XLARGE128`, `DB.AT5.16XLARGE256`, `DB.AT5.32XLARGE512`, `DB.AT5.64XLARGE1152`, `DB.AT5.128XLARGE2304`.",
 			},
 
-			"period": {
-				Type:        schema.TypeInt,
-				Optional:    true,
-				Default:     1,
-				Description: "Purchase duration in months. Valid values: 1/2/3/4/5/6/7/8/9/10/11/12/24/36. Default value is `1`.",
-			},
-
-			"node_name": {
-				Type:        schema.TypeString,
-				Optional:    true,
-				ForceNew:    true,
-				Description: "Node name. Up to 128 characters.",
-			},
-
 			"login_settings": {
 				Type:        schema.TypeList,
 				Optional:    true,
@@ -112,6 +99,27 @@ func ResourceTencentCloudDbdcDbCustomNode() *schema.Resource {
 				},
 			},
 
+			"period": {
+				Type:        schema.TypeInt,
+				Optional:    true,
+				Default:     1,
+				Description: "Purchase duration in months. Valid values: 1/2/3/4/5/6/7/8/9/10/11/12/24/36. Default value is `1`.",
+			},
+
+			"auto_renew": {
+				Type:        schema.TypeInt,
+				Optional:    true,
+				Computed:    true,
+				Description: "Auto-renew flag. Valid values: `1` (auto-renew), `2` (not auto-renew). Mutable via the renew API.",
+			},
+
+			"node_name": {
+				Type:        schema.TypeString,
+				Optional:    true,
+				ForceNew:    true,
+				Description: "Node name. Up to 128 characters.",
+			},
+
 			"auto_voucher": {
 				Type:        schema.TypeInt,
 				Optional:    true,
@@ -127,17 +135,100 @@ func ResourceTencentCloudDbdcDbCustomNode() *schema.Resource {
 				},
 			},
 
-			"auto_renew": {
-				Type:        schema.TypeInt,
-				Optional:    true,
-				Computed:    true,
-				Description: "Auto-renew flag. Valid values: `1` (auto-renew), `2` (not auto-renew). Mutable via the renew API.",
-			},
-
 			"tags": {
 				Type:        schema.TypeMap,
 				Optional:    true,
 				Description: "Node tags.",
+				Elem: &schema.Schema{
+					Type: schema.TypeString,
+				},
+			},
+
+			"charge_type": {
+				Type:        schema.TypeString,
+				Optional:    true,
+				Computed:    true,
+				ForceNew:    true,
+				Description: "Charge type. Valid values: `PREPAID` (subscription, default), `POSTPAID` (pay-as-you-go).",
+			},
+
+			"network_mode": {
+				Type:        schema.TypeString,
+				Optional:    true,
+				Computed:    true,
+				ForceNew:    true,
+				Description: "Node network mode. Valid values: `privatelink` (four-layer SSH connectivity), `cross_tenant_eni` (three-layer dual-NIC access). Default is `privatelink`. Refreshed from the `DescribeDBCustomNodes` API response.",
+			},
+
+			"system_disk": {
+				Type:        schema.TypeList,
+				Optional:    true,
+				Computed:    true,
+				ForceNew:    true,
+				MaxItems:    1,
+				Description: "System disk configuration. Only cloud-disk node types (e.g. `DB.SA5`) support setting this; local-disk types (e.g. `DB.AT5`) do not. Refreshed from the `DescribeDBCustomNodes` API response.",
+				Elem: &schema.Resource{
+					Schema: map[string]*schema.Schema{
+						"disk_type": {
+							Type:        schema.TypeString,
+							Optional:    true,
+							Computed:    true,
+							ForceNew:    true,
+							Description: "Disk type. Valid values: `CLOUD_HSSD` (enhanced cloud disk).",
+						},
+						"disk_size": {
+							Type:        schema.TypeInt,
+							Optional:    true,
+							Computed:    true,
+							ForceNew:    true,
+							Description: "Disk size, unit: GiB.",
+						},
+					},
+				},
+			},
+
+			"data_disks": {
+				Type:        schema.TypeList,
+				Optional:    true,
+				Computed:    true,
+				ForceNew:    true,
+				Description: "Data disk configuration. Only cloud-disk node types (e.g. `DB.SA5`) support setting this; local-disk types (e.g. `DB.AT5`) do not. Refreshed from the `DescribeDBCustomNodes` API response. Note: `disk_name` is read-only and ignored as a create input.",
+				Elem: &schema.Resource{
+					Schema: map[string]*schema.Schema{
+						"disk_type": {
+							Type:        schema.TypeString,
+							Optional:    true,
+							Computed:    true,
+							ForceNew:    true,
+							Description: "Disk type. Valid values: `CLOUD_HSSD` (enhanced cloud disk), `LOCAL_NVME` (local disk).",
+						},
+						"disk_size": {
+							Type:        schema.TypeInt,
+							Optional:    true,
+							Computed:    true,
+							ForceNew:    true,
+							Description: "Disk size, unit: GiB.",
+						},
+						"disk_name": {
+							Type:        schema.TypeString,
+							Computed:    true,
+							Description: "Disk name. Read-only; ignored as a create input (per API).",
+						},
+					},
+				},
+			},
+
+			"host_name": {
+				Type:        schema.TypeString,
+				Optional:    true,
+				ForceNew:    true,
+				Description: "Hostname of the node. Dots (`.`) and hyphens (`-`) cannot be the first/last character or be used consecutively; underscores (`_`) are not allowed. Windows: 2-15 chars (letters, digits, `-`, no `.`); Linux/others: 2-60 chars (supports multiple dot-separated segments). Write-only: not returned by `DescribeDBCustomNodes`, so the configured value is preserved in state.",
+			},
+
+			"security_group_ids": {
+				Type:        schema.TypeSet,
+				Optional:    true,
+				Description: "Set of security group IDs to bind to the node. Treated as an unordered set; HCL element order has no semantic meaning. Mutable via the `ModifyDBCustomNodeSecurityGroups` API; refreshed from the `DescribeDBCustomNodeSecurityGroups` API.",
 				Elem: &schema.Schema{
 					Type: schema.TypeString,
 				},
@@ -192,12 +283,6 @@ func ResourceTencentCloudDbdcDbCustomNode() *schema.Resource {
 				Description: "Node status. Valid values: `Creating`, `Running`, `Isolating`, `Isolated`, `Activating`, `Destroying`.",
 			},
 
-			"charge_type": {
-				Type:        schema.TypeString,
-				Computed:    true,
-				Description: "Charge type. Valid values: `PREPAID`.",
-			},
-
 			"expire_time": {
 				Type:        schema.TypeString,
 				Computed:    true,
@@ -216,61 +301,10 @@ func ResourceTencentCloudDbdcDbCustomNode() *schema.Resource {
 				Description: "Node isolation time.",
 			},
 
-			"network_mode": {
-				Type:        schema.TypeString,
-				Computed:    true,
-				Description: "Node network mode. Valid values: `NetworkModePrivateLink` (four-layer SSH service connectivity mode), `NetworkModeCrossTenantENI` (three-layer dual-NIC access mode). Refreshed from the `DescribeDBCustomNodes` API response.",
-			},
-
 			"eni_ip": {
 				Type:        schema.TypeString,
 				Computed:    true,
 				Description: "Node access IP address when the `NetworkModeCrossTenantENI` network mode is selected. Refreshed from the `DescribeDBCustomNodes` API response.",
-			},
-
-			"system_disk": {
-				Type:        schema.TypeList,
-				Computed:    true,
-				Description: "System disk information.",
-				Elem: &schema.Resource{
-					Schema: map[string]*schema.Schema{
-						"disk_type": {
-							Type:        schema.TypeString,
-							Computed:    true,
-							Description: "Disk type.",
-						},
-						"disk_size": {
-							Type:        schema.TypeInt,
-							Computed:    true,
-							Description: "Disk size, unit: GiB.",
-						},
-					},
-				},
-			},
-
-			"data_disks": {
-				Type:        schema.TypeList,
-				Computed:    true,
-				Description: "Data disk information.",
-				Elem: &schema.Resource{
-					Schema: map[string]*schema.Schema{
-						"disk_type": {
-							Type:        schema.TypeString,
-							Computed:    true,
-							Description: "Disk type.",
-						},
-						"disk_size": {
-							Type:        schema.TypeInt,
-							Computed:    true,
-							Description: "Disk size, unit: GiB.",
-						},
-						"disk_name": {
-							Type:        schema.TypeString,
-							Computed:    true,
-							Description: "Disk name.",
-						},
-					},
-				},
 			},
 		},
 	}
@@ -364,6 +398,53 @@ func resourceTencentCloudDbdcDbCustomNodeCreate(d *schema.ResourceData, meta int
 			}
 
 			request.Tags = append(request.Tags, &tag)
+		}
+	}
+
+	if v, ok := d.GetOk("charge_type"); ok {
+		request.ChargeType = helper.String(v.(string))
+	}
+
+	if v, ok := d.GetOk("network_mode"); ok {
+		request.NetworkMode = helper.String(v.(string))
+	}
+
+	if systemDiskList, ok := d.GetOk("system_disk"); ok && len(systemDiskList.([]interface{})) > 0 {
+		diskMap := systemDiskList.([]interface{})[0].(map[string]interface{})
+		systemDisk := dbdcv20201029.SystemDisk{}
+		if v := diskMap["disk_type"].(string); v != "" {
+			systemDisk.DiskType = helper.String(v)
+		}
+		if v := diskMap["disk_size"].(int); v > 0 {
+			systemDisk.DiskSize = helper.IntInt64(v)
+		}
+		request.SystemDisk = &systemDisk
+	}
+
+	if dataDisks, ok := d.GetOk("data_disks"); ok && len(dataDisks.([]interface{})) > 0 {
+		diskList := dataDisks.([]interface{})
+		for _, disk := range diskList {
+			diskMap := disk.(map[string]interface{})
+			dataDisk := dbdcv20201029.DataDisk{}
+			if v := diskMap["disk_type"].(string); v != "" {
+				dataDisk.DiskType = helper.String(v)
+			}
+			if v := diskMap["disk_size"].(int); v > 0 {
+				dataDisk.DiskSize = helper.IntInt64(v)
+			}
+			request.DataDisks = append(request.DataDisks, &dataDisk)
+		}
+	}
+
+	if v, ok := d.GetOk("host_name"); ok {
+		request.HostName = helper.String(v.(string))
+	}
+
+	if v, ok := d.GetOk("security_group_ids"); ok {
+		securityGroupIdsSet := v.(*schema.Set).List()
+		for i := range securityGroupIdsSet {
+			securityGroupId := securityGroupIdsSet[i].(string)
+			request.SecurityGroupIds = append(request.SecurityGroupIds, &securityGroupId)
 		}
 	}
 
@@ -567,6 +648,49 @@ func resourceTencentCloudDbdcDbCustomNodeRead(d *schema.ResourceData, meta inter
 		_ = d.Set("data_disks", dataDisksList)
 	}
 
+	// Security group IDs are not returned by DescribeDBCustomNodes; query them
+	// via the dedicated DescribeDBCustomNodeSecurityGroups API.
+	sgRequest := dbdcv20201029.NewDescribeDBCustomNodeSecurityGroupsRequest()
+	sgResponse := dbdcv20201029.NewDescribeDBCustomNodeSecurityGroupsResponse()
+	sgRequest.NodeId = helper.String(nodeId)
+	sgReqErr := resource.Retry(tccommon.ReadRetryTimeout, func() *resource.RetryError {
+		result, e := meta.(tccommon.ProviderMeta).GetAPIV3Conn().UseDbdcV20201029Client().DescribeDBCustomNodeSecurityGroupsWithContext(ctx, sgRequest)
+		if e != nil {
+			// security group query is not supported for NetworkMode=privatelink yet
+			if sdkerr, ok := e.(*sdkErrors.TencentCloudSDKError); ok {
+				if sdkerr.Code == "FailedOperation" {
+					return nil
+				}
+			}
+
+			return tccommon.RetryError(e)
+		}
+
+		if result == nil || result.Response == nil {
+			return resource.NonRetryableError(fmt.Errorf("Describe dbdc db custom node security groups failed, Response is nil."))
+		}
+
+		sgResponse = result
+		return nil
+	})
+
+	if sgReqErr != nil {
+		log.Printf("[CRITAL]%s describe dbdc db custom node security groups failed, reason:%+v", logId, sgReqErr)
+		return sgReqErr
+	}
+
+	if sgResponse != nil && sgResponse.Response != nil && sgResponse.Response.Groups != nil {
+		securityGroupIds := make([]interface{}, 0, len(sgResponse.Response.Groups))
+		for _, group := range sgResponse.Response.Groups {
+			if group == nil || group.SecurityGroupId == nil {
+				continue
+			}
+			securityGroupIds = append(securityGroupIds, *group.SecurityGroupId)
+		}
+
+		_ = d.Set("security_group_ids", securityGroupIds)
+	}
+
 	return nil
 }
 
@@ -665,6 +789,36 @@ func resourceTencentCloudDbdcDbCustomNodeUpdate(d *schema.ResourceData, meta int
 
 		if reqErr != nil {
 			log.Printf("[CRITAL]%s renew dbdc db custom node failed, reason:%+v", logId, reqErr)
+			return reqErr
+		}
+	}
+
+	if d.HasChange("security_group_ids") {
+		_, newRaw := d.GetChange("security_group_ids")
+		newIds := newRaw.(*schema.Set).List()
+
+		request := dbdcv20201029.NewModifyDBCustomNodeSecurityGroupsRequest()
+		request.NodeId = helper.String(nodeId)
+		for i := range newIds {
+			securityGroupId := newIds[i].(string)
+			request.SecurityGroupIds = append(request.SecurityGroupIds, &securityGroupId)
+		}
+
+		reqErr := resource.Retry(tccommon.WriteRetryTimeout, func() *resource.RetryError {
+			result, e := meta.(tccommon.ProviderMeta).GetAPIV3Conn().UseDbdcV20201029Client().ModifyDBCustomNodeSecurityGroupsWithContext(ctx, request)
+			if e != nil {
+				return tccommon.RetryError(e)
+			}
+
+			if result == nil || result.Response == nil {
+				return resource.NonRetryableError(fmt.Errorf("Modify dbdc db custom node security groups failed, Response is nil."))
+			}
+
+			return nil
+		})
+
+		if reqErr != nil {
+			log.Printf("[CRITAL]%s modify dbdc db custom node security groups failed, reason:%+v", logId, reqErr)
 			return reqErr
 		}
 	}
