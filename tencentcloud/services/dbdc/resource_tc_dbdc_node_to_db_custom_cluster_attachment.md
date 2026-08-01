@@ -57,12 +57,12 @@ resource "tencentcloud_dbdc_node_to_db_custom_cluster_attachment" "example" {
   }
 
   taints {
-    key    = "dedicated"
+    key    = "key"
     effect = "NoSchedule"
-    value  = "true"
+    value  = "value"
   }
 
-  host_name      = "node-{R:1}"
+  host_name      = "host-name"
   host_name_type = 1
 }
 ```

@@ -19,12 +19,14 @@ func ResourceTencentCloudDbdcNodeToDbCustomClusterAttachment() *schema.Resource 
 	return &schema.Resource{
 		Create: resourceTencentCloudDbdcNodeToDbCustomClusterAttachmentCreate,
 		Read:   resourceTencentCloudDbdcNodeToDbCustomClusterAttachmentRead,
+		Update: resourceTencentCloudDbdcNodeToDbCustomClusterAttachmentUpdate,
 		Delete: resourceTencentCloudDbdcNodeToDbCustomClusterAttachmentDelete,
 		Importer: &schema.ResourceImporter{
 			State: schema.ImportStatePassthrough,
 		},
 		Timeouts: &schema.ResourceTimeout{
 			Create: schema.DefaultTimeout(60 * time.Minute),
+			Update: schema.DefaultTimeout(60 * time.Minute),
 			Delete: schema.DefaultTimeout(60 * time.Minute),
 		},
 		Schema: map[string]*schema.Schema{
@@ -46,7 +48,7 @@ func ResourceTencentCloudDbdcNodeToDbCustomClusterAttachment() *schema.Resource 
 				Type:        schema.TypeString,
 				Optional:    true,
 				ForceNew:    true,
-				Description: "OS image ID to reset the node to after it is added to the cluster.",
+				Description: "OS image ID to reset the node to after it is added to the cluster. Obtainable via the `DescribeDBCustomImages` API.",
 			},
 
 			"login_settings": {
@@ -54,7 +56,7 @@ func ResourceTencentCloudDbdcNodeToDbCustomClusterAttachment() *schema.Resource 
 				Optional:    true,
 				ForceNew:    true,
 				MaxItems:    1,
-				Description: "Instance login settings. You can set the login method to password, key, or keep the original image login settings. Only one method can be set.",
+				Description: "Instance login settings. You can set the login method to password, key, or keep the original image login settings. Only one method can be set; for the key method, only a single key ID is supported.",
 				Elem: &schema.Resource{
 					Schema: map[string]*schema.Schema{
 						"password": {
@@ -86,21 +88,19 @@ func ResourceTencentCloudDbdcNodeToDbCustomClusterAttachment() *schema.Resource 
 			"labels": {
 				Type:        schema.TypeList,
 				Optional:    true,
-				ForceNew:    true,
+				Computed:    true,
 				MaxItems:    20,
-				Description: "Custom labels initialized after the node is added to the cluster. Up to 20 key-value pairs.",
+				Description: "Custom labels (Kubernetes labels) initialized after the node is added to the cluster. Up to 20 key-value pairs. Mutable via the `ModifyDBCustomClusterNodeConfig` API.",
 				Elem: &schema.Resource{
 					Schema: map[string]*schema.Schema{
 						"key": {
 							Type:        schema.TypeString,
-							Required:    true,
-							ForceNew:    true,
+							Optional:    true,
 							Description: "Label key.",
 						},
 						"value": {
 							Type:        schema.TypeString,
 							Optional:    true,
-							ForceNew:    true,
 							Description: "Label value.",
 						},
 					},
@@ -110,27 +110,24 @@ func ResourceTencentCloudDbdcNodeToDbCustomClusterAttachment() *schema.Resource 
 			"taints": {
 				Type:        schema.TypeList,
 				Optional:    true,
-				ForceNew:    true,
+				Computed:    true,
 				MaxItems:    5,
-				Description: "Taints initialized after the node is added to the cluster. Up to 5 key-value pairs.",
+				Description: "Taints (Kubernetes taints) initialized after the node is added to the cluster. Up to 5 taints. Uniqueness key is (key, effect). Mutable via the `ModifyDBCustomClusterNodeConfig` API.",
 				Elem: &schema.Resource{
 					Schema: map[string]*schema.Schema{
 						"key": {
 							Type:        schema.TypeString,
 							Required:    true,
-							ForceNew:    true,
 							Description: "Taint key.",
 						},
 						"effect": {
 							Type:        schema.TypeString,
-							Required:    true,
-							ForceNew:    true,
+							Optional:    true,
 							Description: "Taint effect. Valid values: `NoSchedule`, `PreferNoSchedule`, `NoExecute`.",
 						},
 						"value": {
 							Type:        schema.TypeString,
 							Optional:    true,
-							ForceNew:    true,
 							Description: "Taint value.",
 						},
 					},
@@ -141,7 +138,7 @@ func ResourceTencentCloudDbdcNodeToDbCustomClusterAttachment() *schema.Resource 
 				Type:        schema.TypeString,
 				Optional:    true,
 				ForceNew:    true,
-				Description: "Hostname of the node. Required when `host_name_type` is 1. Supports pattern strings such as `{R:x}`, `{R:x,F:y}`, `{IP}`.",
+				Description: "Hostname of the node. Required when `host_name_type` is `1`; ignored otherwise. Uppercase letters and underscores (`_`) are not allowed; dots (`.`) and hyphens (`-`) cannot be the first/last character or used consecutively. Windows: 2-15 chars (letters, digits, `-`, no `.`); Linux/others: 2-60 chars (dot-separated segments). Supports pattern strings `{R:x}`, `{R:x,F:y}`, `{IP}`.",
 			},
 
 			"host_name_type": {
@@ -389,7 +386,210 @@ func resourceTencentCloudDbdcNodeToDbCustomClusterAttachmentRead(d *schema.Resou
 		_ = d.Set("eni_ip", respData.EniIP)
 	}
 
+	// Labels and taints are not part of DescribeDBCustomClusterNodes; query
+	// them via the dedicated DescribeDBCustomClusterNodeConfig API.
+	configRequest := dbdcv20201029.NewDescribeDBCustomClusterNodeConfigRequest()
+	configRequest.ClusterId = helper.String(clusterId)
+	configRequest.NodeIds = []*string{helper.String(nodeId)}
+	configReqErr := resource.Retry(tccommon.ReadRetryTimeout, func() *resource.RetryError {
+		result, e := meta.(tccommon.ProviderMeta).GetAPIV3Conn().UseDbdcV20201029Client().DescribeDBCustomClusterNodeConfigWithContext(ctx, configRequest)
+		if e != nil {
+			return tccommon.RetryError(e)
+		}
+		if result == nil || result.Response == nil || len(result.Response.NodeSet) == 0 {
+			return nil
+		}
+
+		for _, nodeConfig := range result.Response.NodeSet {
+			if nodeConfig == nil || nodeConfig.NodeId == nil || *nodeConfig.NodeId != nodeId {
+				continue
+			}
+
+			labelsList := make([]interface{}, 0, len(nodeConfig.Labels))
+			for _, label := range nodeConfig.Labels {
+				if label == nil {
+					continue
+				}
+				labelMap := map[string]interface{}{}
+				if label.Key != nil {
+					labelMap["key"] = *label.Key
+				}
+				if label.Value != nil {
+					labelMap["value"] = *label.Value
+				}
+				labelsList = append(labelsList, labelMap)
+			}
+			_ = d.Set("labels", labelsList)
+
+			taintsList := make([]interface{}, 0, len(nodeConfig.Taints))
+			for _, taint := range nodeConfig.Taints {
+				if taint == nil {
+					continue
+				}
+				taintMap := map[string]interface{}{}
+				if taint.Key != nil {
+					taintMap["key"] = *taint.Key
+				}
+				if taint.Effect != nil {
+					taintMap["effect"] = *taint.Effect
+				}
+				if taint.Value != nil {
+					taintMap["value"] = *taint.Value
+				}
+				taintsList = append(taintsList, taintMap)
+			}
+			_ = d.Set("taints", taintsList)
+			break
+		}
+		return nil
+	})
+	if configReqErr != nil {
+		log.Printf("[CRITAL]%s describe dbdc db custom cluster node config failed, reason:%+v", logId, configReqErr)
+		return configReqErr
+	}
+
 	return nil
+}
+
+func resourceTencentCloudDbdcNodeToDbCustomClusterAttachmentUpdate(d *schema.ResourceData, meta interface{}) error {
+	defer tccommon.LogElapsed("resource.tencentcloud_dbdc_node_to_db_custom_cluster_attachment.update")()
+	defer tccommon.InconsistentCheck(d, meta)()
+
+	var (
+		logId   = tccommon.GetLogId(tccommon.ContextNil)
+		ctx     = tccommon.NewResourceLifeCycleHandleFuncContext(context.Background(), logId, d, meta)
+		service = DbdcService{client: meta.(tccommon.ProviderMeta).GetAPIV3Conn()}
+	)
+
+	idSplit := strings.Split(d.Id(), tccommon.FILED_SP)
+	if len(idSplit) != 2 {
+		return fmt.Errorf("id is broken, id is %s", d.Id())
+	}
+
+	clusterId := idSplit[0]
+	nodeId := idSplit[1]
+
+	// Only labels and taints are mutable; other fields are ForceNew.
+	if d.HasChange("labels") || d.HasChange("taints") {
+		request := dbdcv20201029.NewModifyDBCustomClusterNodeConfigRequest()
+		request.ClusterId = helper.String(clusterId)
+		request.NodeIds = []*string{helper.String(nodeId)}
+
+		// Reconcile labels to the desired full set: upsert all new labels,
+		// delete old label keys absent from the new set.
+		if d.HasChange("labels") {
+			oldLabelsRaw, newLabelsRaw := d.GetChange("labels")
+			newLabels := newLabelsRaw.([]interface{})
+			oldLabels := oldLabelsRaw.([]interface{})
+
+			newLabelKeys := make(map[string]bool)
+			for _, l := range newLabels {
+				lm := l.(map[string]interface{})
+				label := dbdcv20201029.Label{}
+				if k, ok := lm["key"]; ok && k.(string) != "" {
+					label.Key = helper.String(k.(string))
+					newLabelKeys[k.(string)] = true
+				}
+				if v, ok := lm["value"]; ok && v.(string) != "" {
+					label.Value = helper.String(v.(string))
+				}
+				request.UpsertLabels = append(request.UpsertLabels, &label)
+			}
+
+			for _, l := range oldLabels {
+				lm := l.(map[string]interface{})
+				if k, ok := lm["key"]; ok && k.(string) != "" {
+					if !newLabelKeys[k.(string)] {
+						key := k.(string)
+						request.DeleteLabelKeys = append(request.DeleteLabelKeys, &key)
+					}
+				}
+			}
+		}
+
+		// Reconcile taints to the desired full set: upsert all new taints
+		// (uniqueness key is (Key, Effect)), delete old taints absent from
+		// the new set.
+		if d.HasChange("taints") {
+			oldTaintsRaw, newTaintsRaw := d.GetChange("taints")
+			newTaints := newTaintsRaw.([]interface{})
+			oldTaints := oldTaintsRaw.([]interface{})
+
+			newTaintKeys := make(map[string]bool)
+			for _, t := range newTaints {
+				tm := t.(map[string]interface{})
+				taint := dbdcv20201029.Taint{}
+				key := ""
+				effect := ""
+				if k, ok := tm["key"]; ok && k.(string) != "" {
+					taint.Key = helper.String(k.(string))
+					key = k.(string)
+				}
+				if e, ok := tm["effect"]; ok && e.(string) != "" {
+					taint.Effect = helper.String(e.(string))
+					effect = e.(string)
+				}
+				if v, ok := tm["value"]; ok && v.(string) != "" {
+					taint.Value = helper.String(v.(string))
+				}
+				request.UpsertTaints = append(request.UpsertTaints, &taint)
+				newTaintKeys[key+"|"+effect] = true
+			}
+
+			for _, t := range oldTaints {
+				tm := t.(map[string]interface{})
+				key := ""
+				effect := ""
+				if k, ok := tm["key"]; ok {
+					key = k.(string)
+				}
+				if e, ok := tm["effect"]; ok {
+					effect = e.(string)
+				}
+				if key == "" {
+					continue
+				}
+				if !newTaintKeys[key+"|"+effect] {
+					taint := dbdcv20201029.Taint{
+						Key:    helper.String(key),
+						Effect: helper.String(effect),
+					}
+					request.DeleteTaints = append(request.DeleteTaints, &taint)
+				}
+			}
+		}
+
+		var taskId *uint64
+		reqErr := resource.Retry(tccommon.WriteRetryTimeout, func() *resource.RetryError {
+			result, e := meta.(tccommon.ProviderMeta).GetAPIV3Conn().UseDbdcV20201029Client().ModifyDBCustomClusterNodeConfigWithContext(ctx, request)
+			if e != nil {
+				return tccommon.RetryError(e)
+			} else {
+				log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), result.ToJsonString())
+			}
+
+			if result == nil || result.Response == nil {
+				return resource.NonRetryableError(fmt.Errorf("Modify dbdc db custom cluster node config failed, Response is nil."))
+			}
+
+			taskId = result.Response.TaskId
+			return nil
+		})
+
+		if reqErr != nil {
+			log.Printf("[CRITAL]%s modify dbdc db custom cluster node config failed, reason:%+v", logId, reqErr)
+			return reqErr
+		}
+
+		// Modify is async, wait for the task to succeed.
+		if taskId != nil {
+			if err := waitDBCustomTaskSucceeded(ctx, &service, *taskId, d.Timeout(schema.TimeoutUpdate)); err != nil {
+				return err
+			}
+		}
+	}
+
+	return resourceTencentCloudDbdcNodeToDbCustomClusterAttachmentRead(d, meta)
 }
 
 func resourceTencentCloudDbdcNodeToDbCustomClusterAttachmentDelete(d *schema.ResourceData, meta interface{}) error {
