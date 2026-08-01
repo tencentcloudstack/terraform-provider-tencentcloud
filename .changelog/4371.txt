@@ -1,3 +1,3 @@
 ```release-note:enhancement
-resource/tencentcloud_dbdc_db_custom_node: add `network_mode` and `eni_ip` computed parameters
+resource/tencentcloud_dbdc_db_custom_node: support more parameters
 ```
