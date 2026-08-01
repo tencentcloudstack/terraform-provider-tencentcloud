@@ -1,3 +1,12 @@
+## 1.83.19(August 1, 2026)
+
+ENHANCEMENTS:
+
+* data-source/tencentcloud_dbdc_db_custom_images: support `name`/`values` filter input parameters and `os_type` output parameter ([#4372](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/4372))
+* data-source/tencentcloud_dbdc_db_custom_nodes: add `network_mode` and `eni_ip` computed output fields to `node_set` ([#4370](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/4370))
+* resource/tencentcloud_dbdc_db_custom_node: support more parameters ([#4371](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/4371))
+* resource/tencentcloud_dbdc_node_to_db_custom_cluster_attachment: support labels, taints, host_name, host_name_type arguments and network_mode, eni_ip computed fields ([#4373](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/4373))
+
 ## 1.83.18(July 31, 2026)
 
 FEATURES:
