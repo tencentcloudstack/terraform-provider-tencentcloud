@@ -405,21 +405,57 @@ func resourceTencentCloudDbdcNodeToDbCustomClusterAttachmentRead(d *schema.Resou
 				continue
 			}
 
-			labelsList := make([]interface{}, 0, len(nodeConfig.Labels))
-			for _, label := range nodeConfig.Labels {
-				if label == nil {
-					continue
+			// Labels: the API may return default/system labels. When the user
+			// has configured labels, only surface the user-managed keys (in
+			// config order, using the API value) so non-user labels do not
+			// cause perpetual drift; user keys absent from the API are left
+			// out of state to surface a normal diff. When the user has not
+			// configured labels, return the full API list (Computed).
+			if userLabels, ok := d.GetOk("labels"); ok && len(userLabels.([]interface{})) > 0 {
+				apiLabelByKey := make(map[string]*dbdcv20201029.Label, len(nodeConfig.Labels))
+				for _, label := range nodeConfig.Labels {
+					if label == nil || label.Key == nil {
+						continue
+					}
+					apiLabelByKey[*label.Key] = label
 				}
-				labelMap := map[string]interface{}{}
-				if label.Key != nil {
-					labelMap["key"] = *label.Key
+				labelsList := make([]interface{}, 0, len(userLabels.([]interface{})))
+				for _, ul := range userLabels.([]interface{}) {
+					um, ok := ul.(map[string]interface{})
+					if !ok {
+						continue
+					}
+					ukey, _ := um["key"].(string)
+					if ukey == "" {
+						continue
+					}
+					if apiLabel, matched := apiLabelByKey[ukey]; matched {
+						labelMap := map[string]interface{}{}
+						labelMap["key"] = *apiLabel.Key
+						if apiLabel.Value != nil {
+							labelMap["value"] = *apiLabel.Value
+						}
+						labelsList = append(labelsList, labelMap)
+					}
 				}
-				if label.Value != nil {
-					labelMap["value"] = *label.Value
+				_ = d.Set("labels", labelsList)
+			} else {
+				labelsList := make([]interface{}, 0, len(nodeConfig.Labels))
+				for _, label := range nodeConfig.Labels {
+					if label == nil {
+						continue
+					}
+					labelMap := map[string]interface{}{}
+					if label.Key != nil {
+						labelMap["key"] = *label.Key
+					}
+					if label.Value != nil {
+						labelMap["value"] = *label.Value
+					}
+					labelsList = append(labelsList, labelMap)
 				}
-				labelsList = append(labelsList, labelMap)
+				_ = d.Set("labels", labelsList)
 			}
-			_ = d.Set("labels", labelsList)
 
 			taintsList := make([]interface{}, 0, len(nodeConfig.Taints))
 			for _, taint := range nodeConfig.Taints {
@@ -443,6 +479,7 @@ func resourceTencentCloudDbdcNodeToDbCustomClusterAttachmentRead(d *schema.Resou
 		}
 		return nil
 	})
+
 	if configReqErr != nil {
 		log.Printf("[CRITAL]%s describe dbdc db custom cluster node config failed, reason:%+v", logId, configReqErr)
 		return configReqErr

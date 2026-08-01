@@ -8,14 +8,15 @@ Create a PREPAID DBDC db custom node
 
 ```hcl
 resource "tencentcloud_dbdc_db_custom_node" "example" {
-  zone       = "ap-shanghai-5"
-  image_id   = "img-rm13akp3"
-  vpc_id     = "vpc-py7mlxqm"
-  subnet_id  = "subnet-qd4upp83"
-  node_type  = "DB.AT5.8XLARGE128"
-  period     = 1
-  auto_renew = 1
-  node_name  = "tf-example"
+  zone        = "ap-shanghai-5"
+  image_id    = "img-rm13akp3"
+  vpc_id      = "vpc-cseo7req"
+  subnet_id   = "subnet-huka6qhj"
+  node_type   = "DB.AT5.8XLARGE128"
+  period      = 1
+  auto_renew  = 1
+  charge_type = "PREPAID"
+  node_name   = "tf-example"
 
   login_settings {
     password = "Password@2026"
@@ -32,7 +33,7 @@ Create a POSTPAID DBDC db custom node
 ```hcl
 resource "tencentcloud_dbdc_db_custom_node" "example" {
   zone         = "ap-bangkok-2"
-  image_id     = "img-rm13akp3"
+  image_id     = "img-7rqxtnh9"
   vpc_id       = "vpc-doprnsrq"
   subnet_id    = "subnet-kzp25bun"
   node_type    = "DB.SA5.8XLARGE128"
