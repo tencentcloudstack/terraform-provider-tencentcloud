@@ -240,6 +240,10 @@ func (me *DbdcService) DescribeDBCustomImagesByFilter(ctx context.Context, param
 		}
 	}()
 
+	if filters, ok := param["filters"]; ok && filters != nil {
+		request.Filters = filters.([]*dbdcv20201029.Filter)
+	}
+
 	var (
 		offset int64 = 0
 		limit  int64 = 100
