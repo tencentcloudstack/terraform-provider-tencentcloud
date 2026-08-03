@@ -6,6 +6,7 @@ import (
 	"log"
 	"strconv"
 	"strings"
+	"time"
 
 	tccommon "github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/common"
 
@@ -341,13 +342,31 @@ func (me *CkafkaService) CreateAcl(ctx context.Context, instanceId, resourceType
 
 	var response *ckafka.CreateAclResponse
 	var err error
-	err = resource.Retry(tccommon.WriteRetryTimeout, func() *resource.RetryError {
-		response, err = me.client.UseCkafkaClient().CreateAcl(request)
-		if err != nil {
-			return tccommon.RetryError(err)
+
+	// 首次调用 + FailedOperation 时最多重试 3 次，每次间隔 5s
+	for i := 0; i <= CKAFKA_CREATE_ACL_FAILED_OPERATION_RETRY_TIMES; i++ {
+		err = resource.Retry(tccommon.WriteRetryTimeout, func() *resource.RetryError {
+			response, err = me.client.UseCkafkaClient().CreateAcl(request)
+			if err != nil {
+				return tccommon.RetryError(err)
+			}
+			return nil
+		})
+		if err == nil {
+			break
 		}
-		return nil
-	})
+		sdkErr, ok := err.(*errors.TencentCloudSDKError)
+		if !ok || sdkErr.Code != CkafkaFailedOperation {
+			break
+		}
+		if i == CKAFKA_CREATE_ACL_FAILED_OPERATION_RETRY_TIMES {
+			break
+		}
+		log.Printf("[CRITAL]%s api[%s] fail with Code=FailedOperation, retry %d/%d after %s, reason[%s]",
+			logId, request.GetAction(), i+1, CKAFKA_CREATE_ACL_FAILED_OPERATION_RETRY_TIMES,
+			CKAFKA_CREATE_ACL_FAILED_OPERATION_RETRY_INTERVAL, err.Error())
+		time.Sleep(CKAFKA_CREATE_ACL_FAILED_OPERATION_RETRY_INTERVAL)
+	}
 
 	if err != nil {
 		return err

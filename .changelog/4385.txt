@@ -1,0 +1,3 @@
+```release-note:enhancement
+resource/tencentcloud_ckafka_acl: retry CreateAcl up to 3 times with a 5-second interval when the cloud API returns a FailedOperation error
+```

@@ -1,12 +1,19 @@
 package ckafka
 
 import (
+	"time"
+
 	svcpostgresql "github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/services/postgresql"
 )
 
 const (
 	CKAFKA_DESCRIBE_LIMIT    = 50
 	CKAFKA_ACL_PRINCIPAL_STR = "User:"
+)
+
+const (
+	CKAFKA_CREATE_ACL_FAILED_OPERATION_RETRY_TIMES    = 3
+	CKAFKA_CREATE_ACL_FAILED_OPERATION_RETRY_INTERVAL = 5 * time.Second
 )
 
 var CKAFKA_INSTANCE_TYPE = map[string]int64{

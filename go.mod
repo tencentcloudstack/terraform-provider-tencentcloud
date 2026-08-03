@@ -42,7 +42,7 @@ require (
 	github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/cfw v1.3.112
 	github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/chdfs v1.0.600
 	github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/ciam v1.0.695
-	github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/ckafka v1.3.122
+	github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/ckafka v1.3.133
 	github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/clb v1.3.142
 	github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/cloudaudit v1.3.40
 	github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/cls v1.3.144

@@ -1,5 +1,7 @@
 Provides a resource to create a Ckafka Acl.
 
+-> **Note:** When creating the ACL, if the cloud API `CreateAcl` returns a `FailedOperation` error (e.g. the instance is being modified or the cluster is busy), the provider will retry up to 3 times with a fixed 5-second interval between each attempt to improve the eventual success rate of ACL creation.
+
 Example Usage
 
 Ckafka Acl
