@@ -106,6 +106,9 @@ resource "tencentcloud_cynosdb_cluster" "example" {
     device_type    = "exclusive"
   }
 
+  SyncWay         = "async"
+  SemiSyncTimeout = 10000
+
   cynos_version = "2.1.14.001"
 
   tags = {
@@ -114,7 +117,9 @@ resource "tencentcloud_cynosdb_cluster" "example" {
 }
 ```
 
-### Create a multiple availability zone SERVERLESS CynosDB cluster
+### API.
+
+Create a multiple availability zone SERVERLESS CynosDB cluster
 
 ```hcl
 variable "availability_zone" {
@@ -213,6 +218,8 @@ The following arguments are supported:
 * `password` - (Required, String) Password of `root` account.
 * `subnet_id` - (Required, String) ID of the subnet within this VPC.
 * `vpc_id` - (Required, String) ID of the VPC.
+* `SemiSyncTimeout` - (Optional, Int) Semi-sync timeout in ms. Value range: `[1000, 4294967295]`, default `10000`.
+* `SyncWay` - (Optional, String) Synchronization way. Valid values: `async`, `semisync`, `sync`.
 * `auto_pause_delay` - (Optional, Int) Specify auto-pause delay in second while `db_mode` is `SERVERLESS`. Value range: `[600, 691200]`. Default: `600`.
 * `auto_pause` - (Optional, String) Specify whether the cluster can auto-pause while `db_mode` is `SERVERLESS`. Values: `yes` (default), `no`.
 * `auto_renew_flag` - (Optional, Int) Auto renew flag. Valid values are `0`(MANUAL_RENEW), `1`(AUTO_RENEW). Default value is `0`. Only works for PREPAID cluster.
@@ -268,6 +275,7 @@ The `param_items` object supports the following:
 In addition to all arguments above, the following attributes are exported:
 
 * `id` - ID of the resource.
+* `BinlogSyncWay` - Binlog sync way of the slave zone. Valid values: `sync`, `semisync`, `async`.
 * `charset` - Charset used by CynosDB cluster.
 * `cluster_status` - Status of the Cynosdb cluster.
 * `create_time` - Creation time of the CynosDB cluster.

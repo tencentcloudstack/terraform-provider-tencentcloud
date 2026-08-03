@@ -95,6 +95,9 @@ resource "tencentcloud_cynosdb_cluster" "example" {
     device_type    = "exclusive"
   }
 
+  SyncWay          = "async"
+  SemiSyncTimeout  = 10000
+
   cynos_version = "2.1.14.001"
 
   tags = {
@@ -102,6 +105,8 @@ resource "tencentcloud_cynosdb_cluster" "example" {
   }
 }
 ```
+
+The `SyncWay` argument specifies the cluster synchronization way, valid values are `async`, `semisync` and `sync`. The `SemiSyncTimeout` argument specifies the semi-sync timeout in ms, value range `[1000, 4294967295]`, and it works when `SyncWay` is `semisync` or `sync`. Both arguments are only configurable during creation and cannot be modified after creation. The `BinlogSyncWay` attribute is computed and reflects the binlog sync way of the slave zone read from the `DescribeClusterDetail` API.
 
 Create a multiple availability zone SERVERLESS CynosDB cluster
 

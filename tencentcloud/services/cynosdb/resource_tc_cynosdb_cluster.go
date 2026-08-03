@@ -94,6 +94,14 @@ func resourceTencentCloudCynosdbClusterCreate(d *schema.ResourceData, meta inter
 		request.SlaveZone = helper.String(v.(string))
 	}
 
+	if v, ok := d.GetOk("SyncWay"); ok {
+		request.SyncWay = helper.String(v.(string))
+	}
+
+	if v, ok := d.GetOk("SemiSyncTimeout"); ok {
+		request.SemiSyncTimeout = helper.IntInt64(v.(int))
+	}
+
 	if v, ok := d.GetOkExists("instance_count"); ok {
 		request.InstanceCount = helper.IntInt64(v.(int))
 	}
@@ -430,6 +438,16 @@ func resourceTencentCloudCynosdbClusterRead(d *schema.ResourceData, meta interfa
 		_ = d.Set("slave_zone", cluster.SlaveZones[0])
 	}
 
+	if cluster.SlaveZoneAttr != nil && len(cluster.SlaveZoneAttr) > 0 {
+		if cluster.SlaveZoneAttr[0].BinlogSyncWay != nil {
+			_ = d.Set("BinlogSyncWay", cluster.SlaveZoneAttr[0].BinlogSyncWay)
+		}
+
+		if cluster.SlaveZoneAttr[0].SemiSyncTimeout != nil {
+			_ = d.Set("SemiSyncTimeout", cluster.SlaveZoneAttr[0].SemiSyncTimeout)
+		}
+	}
+
 	if _, ok := d.GetOk("serverless_status_flag"); ok && *item.DbMode == CYNOSDB_SERVERLESS {
 		status := *item.ServerlessStatus
 		_ = d.Set("serverless_status_flag", status)
@@ -635,6 +653,8 @@ func resourceTencentCloudCynosdbClusterUpdate(d *schema.ResourceData, meta inter
 		"storage_pay_mode",
 		"prarm_template_id",
 		"param_template_id",
+		"SyncWay",
+		"SemiSyncTimeout",
 	}
 
 	for _, a := range immutableArgs {
