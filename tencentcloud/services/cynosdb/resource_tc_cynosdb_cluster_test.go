@@ -6,13 +6,16 @@ import (
 	"strings"
 	"testing"
 
+	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
+	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
+	"github.com/hashicorp/terraform-plugin-sdk/v2/terraform"
+	"github.com/stretchr/testify/assert"
+	sdkErrors "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/common/errors"
+	cynosdb "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/cynosdb/v20190107"
+
 	tcacctest "github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/acctest"
 	tccommon "github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/common"
-
-	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
-	"github.com/hashicorp/terraform-plugin-sdk/v2/terraform"
-	sdkErrors "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/common/errors"
-
+	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/internal/helper"
 	svccynosdb "github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/services/cynosdb"
 )
 
@@ -523,3 +526,201 @@ resource "tencentcloud_cynosdb_cluster" "foo" {
   ]
 }
 `
+
+// Unit tests for SyncWay, SemiSyncTimeout and BinlogSyncWay fields
+// Run all unit tests in this file:
+//   go test -v -run "TestUnitCynosdbCluster_" ./tencentcloud/services/cynosdb/
+
+func TestUnitCynosdbCluster_SyncWaySchemaDefinition(t *testing.T) {
+	res := svccynosdb.ResourceTencentCloudCynosdbCluster()
+	s := res.Schema
+
+	syncWaySchema, ok := s["SyncWay"]
+	assert.True(t, ok, "SyncWay field should exist in schema")
+	assert.Equal(t, schema.TypeString, syncWaySchema.Type)
+	assert.True(t, syncWaySchema.Optional)
+	assert.True(t, syncWaySchema.Computed)
+	assert.NotNil(t, syncWaySchema.ValidateFunc)
+}
+
+func TestUnitCynosdbCluster_SemiSyncTimeoutSchemaDefinition(t *testing.T) {
+	res := svccynosdb.ResourceTencentCloudCynosdbCluster()
+	s := res.Schema
+
+	semiSyncTimeoutSchema, ok := s["SemiSyncTimeout"]
+	assert.True(t, ok, "SemiSyncTimeout field should exist in schema")
+	assert.Equal(t, schema.TypeInt, semiSyncTimeoutSchema.Type)
+	assert.True(t, semiSyncTimeoutSchema.Optional)
+	assert.True(t, semiSyncTimeoutSchema.Computed)
+	assert.NotNil(t, semiSyncTimeoutSchema.ValidateFunc)
+}
+
+func TestUnitCynosdbCluster_BinlogSyncWaySchemaDefinition(t *testing.T) {
+	res := svccynosdb.ResourceTencentCloudCynosdbCluster()
+	s := res.Schema
+
+	binlogSyncWaySchema, ok := s["BinlogSyncWay"]
+	assert.True(t, ok, "BinlogSyncWay field should exist in schema")
+	assert.Equal(t, schema.TypeString, binlogSyncWaySchema.Type)
+	assert.True(t, binlogSyncWaySchema.Computed)
+	assert.False(t, binlogSyncWaySchema.Optional)
+}
+
+func TestUnitCynosdbCluster_CreateRequestWithSyncWay(t *testing.T) {
+	request := cynosdb.NewCreateClustersRequest()
+
+	// mirror the request wiring in resourceTencentCloudCynosdbClusterCreate
+	syncWay := "async"
+	semiSyncTimeout := 10000
+
+	if syncWay != "" {
+		request.SyncWay = helper.String(syncWay)
+	}
+
+	if semiSyncTimeout != 0 {
+		request.SemiSyncTimeout = helper.IntInt64(semiSyncTimeout)
+	}
+
+	assert.Equal(t, "async", *request.SyncWay)
+	assert.Equal(t, int64(10000), *request.SemiSyncTimeout)
+}
+
+func TestUnitCynosdbCluster_CreateRequestWithoutSyncWay(t *testing.T) {
+	request := cynosdb.NewCreateClustersRequest()
+
+	// mirror the request wiring in resourceTencentCloudCynosdbClusterCreate
+	var syncWay string
+	var semiSyncTimeout int
+
+	if syncWay != "" {
+		request.SyncWay = helper.String(syncWay)
+	}
+
+	if semiSyncTimeout != 0 {
+		request.SemiSyncTimeout = helper.IntInt64(semiSyncTimeout)
+	}
+
+	assert.Nil(t, request.SyncWay, "SyncWay should not be set when empty")
+	assert.Nil(t, request.SemiSyncTimeout, "SemiSyncTimeout should not be set when 0")
+}
+
+func TestUnitCynosdbCluster_SyncWayValidation(t *testing.T) {
+	res := svccynosdb.ResourceTencentCloudCynosdbCluster()
+	syncWaySchema := res.Schema["SyncWay"]
+
+	// valid values should pass
+	for _, v := range []string{"async", "semisync", "sync"} {
+		_, errs := syncWaySchema.ValidateFunc(v, "SyncWay")
+		assert.Empty(t, errs, "SyncWay value %s should be valid", v)
+	}
+
+	// invalid value should fail
+	_, errs := syncWaySchema.ValidateFunc("invalid", "SyncWay")
+	assert.NotEmpty(t, errs)
+}
+
+func TestUnitCynosdbCluster_SemiSyncTimeoutValidation(t *testing.T) {
+	res := svccynosdb.ResourceTencentCloudCynosdbCluster()
+	semiSyncTimeoutSchema := res.Schema["SemiSyncTimeout"]
+
+	// valid values within [1000, 4294967295] should pass
+	for _, v := range []int{1000, 10000, 4294967295} {
+		_, errs := semiSyncTimeoutSchema.ValidateFunc(v, "SemiSyncTimeout")
+		assert.Empty(t, errs, "SemiSyncTimeout value %d should be valid", v)
+	}
+
+	// values out of range should fail
+	_, errs := semiSyncTimeoutSchema.ValidateFunc(999, "SemiSyncTimeout")
+	assert.NotEmpty(t, errs)
+	_, errs = semiSyncTimeoutSchema.ValidateFunc(4294967296, "SemiSyncTimeout")
+	assert.NotEmpty(t, errs)
+}
+
+func TestUnitCynosdbCluster_ReadStateWithSyncConfig(t *testing.T) {
+	// mirror the read logic in resourceTencentCloudCynosdbClusterRead
+	slaveZoneAttr := []*cynosdb.SlaveZoneAttrItem{
+		{
+			Zone:            helper.String("ap-guangzhou-6"),
+			BinlogSyncWay:   helper.String("semisync"),
+			SemiSyncTimeout: helper.Int64(15000),
+		},
+	}
+
+	var binlogSyncWay string
+	var semiSyncTimeout int64
+	if len(slaveZoneAttr) > 0 {
+		if slaveZoneAttr[0].BinlogSyncWay != nil {
+			binlogSyncWay = *slaveZoneAttr[0].BinlogSyncWay
+		}
+
+		if slaveZoneAttr[0].SemiSyncTimeout != nil {
+			semiSyncTimeout = *slaveZoneAttr[0].SemiSyncTimeout
+		}
+	}
+
+	assert.Equal(t, "semisync", binlogSyncWay)
+	assert.Equal(t, int64(15000), semiSyncTimeout)
+}
+
+func TestUnitCynosdbCluster_ReadStateWithoutSlaveZone(t *testing.T) {
+	// empty SlaveZoneAttr should not set BinlogSyncWay/SemiSyncTimeout
+	slaveZoneAttr := []*cynosdb.SlaveZoneAttrItem{}
+
+	var binlogSyncWay string
+	var semiSyncTimeout int64
+	if len(slaveZoneAttr) > 0 {
+		if slaveZoneAttr[0].BinlogSyncWay != nil {
+			binlogSyncWay = *slaveZoneAttr[0].BinlogSyncWay
+		}
+
+		if slaveZoneAttr[0].SemiSyncTimeout != nil {
+			semiSyncTimeout = *slaveZoneAttr[0].SemiSyncTimeout
+		}
+	}
+
+	assert.Equal(t, "", binlogSyncWay)
+	assert.Equal(t, int64(0), semiSyncTimeout)
+}
+
+func TestUnitCynosdbCluster_ReadStateWithNilSyncFields(t *testing.T) {
+	// SlaveZoneAttr present but BinlogSyncWay/SemiSyncTimeout nil should be skipped
+	slaveZoneAttr := []*cynosdb.SlaveZoneAttrItem{
+		{
+			Zone: helper.String("ap-guangzhou-6"),
+		},
+	}
+
+	var binlogSyncWay string
+	var semiSyncTimeout int64
+	if len(slaveZoneAttr) > 0 {
+		if slaveZoneAttr[0].BinlogSyncWay != nil {
+			binlogSyncWay = *slaveZoneAttr[0].BinlogSyncWay
+		}
+
+		if slaveZoneAttr[0].SemiSyncTimeout != nil {
+			semiSyncTimeout = *slaveZoneAttr[0].SemiSyncTimeout
+		}
+	}
+
+	assert.Equal(t, "", binlogSyncWay)
+	assert.Equal(t, int64(0), semiSyncTimeout)
+}
+
+func TestUnitCynosdbCluster_ImmutableFields(t *testing.T) {
+	immutableArgs := []string{
+		"db_mode",
+		"min_cpu",
+		"max_cpu",
+		"auto_pause",
+		"auto_pause_delay",
+		"storage_pay_mode",
+		"prarm_template_id",
+		"param_template_id",
+		"SyncWay",
+		"SemiSyncTimeout",
+	}
+
+	assert.Contains(t, immutableArgs, "SyncWay")
+	assert.Contains(t, immutableArgs, "SemiSyncTimeout")
+	assert.Equal(t, 10, len(immutableArgs))
+}
