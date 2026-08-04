@@ -176,6 +176,8 @@ resource "tencentcloud_cynosdb_cluster" "example" {
   max_cpu                      = 4
   param_template_id            = tencentcloud_cynosdb_param_template.example.template_id
   force_delete                 = false
+  sync_way                     = "async"
+  semi_sync_timeout            = 10000
   instance_maintain_weekdays   = [
     "Fri",
     "Mon",
