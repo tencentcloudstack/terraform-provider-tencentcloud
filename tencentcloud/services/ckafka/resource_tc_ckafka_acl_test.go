@@ -128,7 +128,8 @@ resource "tencentcloud_ckafka_acl" foo {
 `
 
 // -----------------------------------------------------------------------------
-// Mock-based tests for CreateAcl FailedOperation retry
+// Mock-based tests for CreateAcl FailedOperation retry via resource.Retry
+// with a max of 5 FailedOperation attempts before giving up.
 //
 // go test ./tencentcloud/services/ckafka/ -run "TestCkafkaAclCreateAclFailedOperation" -v -count=1 -gcflags="all=-l"
 // -----------------------------------------------------------------------------
@@ -149,7 +150,8 @@ func newMockMetaCkafkaAclFailedOperationRetry() *mockMetaCkafkaAclFailedOperatio
 
 // TestCkafkaAclCreateAclFailedOperationRetryThenSuccess verifies that when the
 // CreateAcl API returns FailedOperation for the first 3 calls and succeeds on the
-// 4th call, CkafkaService.CreateAcl returns nil and the API is invoked 4 times.
+// 4th call, CkafkaService.CreateAcl returns nil and the API is invoked 4 times
+// (within the 5 FailedOperation retry limit).
 func TestCkafkaAclCreateAclFailedOperationRetryThenSuccess(t *testing.T) {
 	patches := gomonkey.NewPatches()
 	defer patches.Reset()
@@ -180,9 +182,9 @@ func TestCkafkaAclCreateAclFailedOperationRetryThenSuccess(t *testing.T) {
 }
 
 // TestCkafkaAclCreateAclFailedOperationAlwaysFails verifies that when the
-// CreateAcl API always returns FailedOperation, CkafkaService.CreateAcl returns
-// the FailedOperation error and the API is invoked exactly 4 times
-// (1 initial call + 3 retries).
+// CreateAcl API always returns FailedOperation, CkafkaService.CreateAcl gives up
+// after 5 FailedOperation errors (the max retry limit) and returns the
+// FailedOperation error without further retries.
 func TestCkafkaAclCreateAclFailedOperationAlwaysFails(t *testing.T) {
 	patches := gomonkey.NewPatches()
 	defer patches.Reset()
@@ -202,12 +204,12 @@ func TestCkafkaAclCreateAclFailedOperationAlwaysFails(t *testing.T) {
 	sdkErr, ok := err.(*sdkErrors.TencentCloudSDKError)
 	assert.True(t, ok)
 	assert.Equal(t, "FailedOperation", sdkErr.Code)
-	assert.Equal(t, 4, callCount)
+	assert.Equal(t, 5, callCount)
 }
 
 // TestCkafkaAclCreateAclNonFailedOperationError verifies that when the CreateAcl
 // API returns a non-FailedOperation error, CkafkaService.CreateAcl returns the
-// error immediately and the API is invoked only once (no fixed-count retry).
+// error immediately via NonRetryableError and the API is invoked only once.
 func TestCkafkaAclCreateAclNonFailedOperationError(t *testing.T) {
 	patches := gomonkey.NewPatches()
 	defer patches.Reset()

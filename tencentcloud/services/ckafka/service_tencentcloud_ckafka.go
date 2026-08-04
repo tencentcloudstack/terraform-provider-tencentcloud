@@ -6,13 +6,11 @@ import (
 	"log"
 	"strconv"
 	"strings"
-	"time"
-
-	tccommon "github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/common"
 
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
 	ckafka "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/ckafka/v20190819"
 	"github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/common/errors"
+	tccommon "github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/common"
 
 	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/connectivity"
 	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/internal/helper"
@@ -341,32 +339,24 @@ func (me *CkafkaService) CreateAcl(ctx context.Context, instanceId, resourceType
 	request.Principal = helper.String(CKAFKA_ACL_PRINCIPAL_STR + principal)
 
 	var response *ckafka.CreateAclResponse
-	var err error
 
-	// 首次调用 + FailedOperation 时最多重试 3 次，每次间隔 5s
-	for i := 0; i <= CKAFKA_CREATE_ACL_FAILED_OPERATION_RETRY_TIMES; i++ {
-		err = resource.Retry(tccommon.WriteRetryTimeout, func() *resource.RetryError {
-			response, err = me.client.UseCkafkaClient().CreateAcl(request)
-			if err != nil {
-				return tccommon.RetryError(err)
+	failedOperationCount := 0
+	err := resource.Retry(tccommon.WriteRetryTimeout, func() *resource.RetryError {
+		var apiErr error
+		response, apiErr = me.client.UseCkafkaClient().CreateAcl(request)
+		if apiErr != nil {
+			sdkErr, ok := apiErr.(*errors.TencentCloudSDKError)
+			if ok && sdkErr.Code == CkafkaFailedOperation {
+				failedOperationCount++
+				if failedOperationCount >= 5 {
+					return resource.NonRetryableError(apiErr)
+				}
+				return resource.RetryableError(apiErr)
 			}
-			return nil
-		})
-		if err == nil {
-			break
+			return resource.NonRetryableError(apiErr)
 		}
-		sdkErr, ok := err.(*errors.TencentCloudSDKError)
-		if !ok || sdkErr.Code != CkafkaFailedOperation {
-			break
-		}
-		if i == CKAFKA_CREATE_ACL_FAILED_OPERATION_RETRY_TIMES {
-			break
-		}
-		log.Printf("[CRITAL]%s api[%s] fail with Code=FailedOperation, retry %d/%d after %s, reason[%s]",
-			logId, request.GetAction(), i+1, CKAFKA_CREATE_ACL_FAILED_OPERATION_RETRY_TIMES,
-			CKAFKA_CREATE_ACL_FAILED_OPERATION_RETRY_INTERVAL, err.Error())
-		time.Sleep(CKAFKA_CREATE_ACL_FAILED_OPERATION_RETRY_INTERVAL)
-	}
+		return nil
+	})
 
 	if err != nil {
 		return err
