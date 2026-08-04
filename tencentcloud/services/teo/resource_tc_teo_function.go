@@ -183,7 +183,8 @@ func resourceTencentCloudTeoFunctionRead(d *schema.ResourceData, meta interface{
 	}
 
 	if respData.Name != nil {
-		_ = d.Set("name", respData.Name)
+		originalName := ParseTeoFunctionOriginalName(*respData.Name)
+		_ = d.Set("name", originalName)
 	}
 
 	if respData.Remark != nil {
