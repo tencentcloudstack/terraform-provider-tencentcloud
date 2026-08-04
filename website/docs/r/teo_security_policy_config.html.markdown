@@ -285,6 +285,48 @@ resource "tencentcloud_teo_security_policy_config" "example" {
         }
       }
     }
+
+    bot_management {
+      client_attestation_rules {
+        name        = "client-attestation-rule"
+        enabled     = "on"
+        priority    = 10
+        condition   = "$${http.request.host} contain ['abc']"
+        attester_id = "attester-xxxx"
+        invalid_attestation_action {
+          name = "Monitor"
+        }
+        device_profiles {
+          client_type         = "iOS"
+          high_risk_min_score = 60
+          high_risk_request_action {
+            name = "Deny"
+            deny_action_parameters {
+              block_ip          = "on"
+              block_ip_duration = "120s"
+            }
+          }
+          medium_risk_min_score = 20
+          medium_risk_request_action {
+            name = "Monitor"
+          }
+        }
+        device_profiles {
+          client_type         = "Android"
+          high_risk_min_score = 50
+          high_risk_request_action {
+            name = "Challenge"
+            challenge_action_parameters {
+              challenge_option = "JSChallenge"
+            }
+          }
+          medium_risk_min_score = 15
+          medium_risk_request_action {
+            name = "Monitor"
+          }
+        }
+      }
+    }
   }
 }
 ```
@@ -993,6 +1035,11 @@ The `allow_action_parameters` object of `high_risk_bot_requests_action` supports
 * `max_delay_time` - (Optional, String) Maximum delay response time. Supported unit: seconds, range 5-10.
 * `min_delay_time` - (Optional, String) Minimum delay response time. Supported unit: seconds, range 0-5.
 
+The `allow_action_parameters` object of `high_risk_request_action` supports the following:
+
+* `max_delay_time` - (Optional, String) Maximum delay response time. Supported unit: seconds, range 5-10.
+* `min_delay_time` - (Optional, String) Minimum delay response time. Supported unit: seconds, range 0-5.
+
 The `allow_action_parameters` object of `human_requests_action` supports the following:
 
 * `max_delay_time` - (Optional, String) Maximum delay response time. Supported unit: seconds, range 5-10.
@@ -1009,6 +1056,11 @@ The `allow_action_parameters` object of `likely_bot_requests_action` supports th
 * `min_delay_time` - (Optional, String) Minimum delay response time. Supported unit: seconds, range 0-5.
 
 The `allow_action_parameters` object of `low_rate_session_action` supports the following:
+
+* `max_delay_time` - (Optional, String) Maximum delay response time. Supported unit: seconds, range 5-10.
+* `min_delay_time` - (Optional, String) Minimum delay response time. Supported unit: seconds, range 0-5.
+
+The `allow_action_parameters` object of `medium_risk_request_action` supports the following:
 
 * `max_delay_time` - (Optional, String) Maximum delay response time. Supported unit: seconds, range 5-10.
 * `min_delay_time` - (Optional, String) Minimum delay response time. Supported unit: seconds, range 0-5.
@@ -1247,6 +1299,12 @@ The `challenge_action_parameters` object of `high_risk_bot_requests_action` supp
 * `attester_id` - (Optional, String) Client authentication method ID.
 * `interval` - (Optional, String) The time interval for repeating the challenge.
 
+The `challenge_action_parameters` object of `high_risk_request_action` supports the following:
+
+* `challenge_option` - (Required, String) The specific challenge action to be executed safely. Valid values: `InterstitialChallenge`, `InlineChallenge`, `JSChallenge`, `ManagedChallenge`.
+* `attester_id` - (Optional, String) Client authentication method ID.
+* `interval` - (Optional, String) The time interval for repeating the challenge.
+
 The `challenge_action_parameters` object of `human_requests_action` supports the following:
 
 * `challenge_option` - (Required, String) The specific challenge action to be executed safely. Valid values: `InterstitialChallenge`, `InlineChallenge`, `JSChallenge`, `ManagedChallenge`.
@@ -1266,6 +1324,12 @@ The `challenge_action_parameters` object of `likely_bot_requests_action` support
 * `interval` - (Optional, String) The time interval for repeating the challenge.
 
 The `challenge_action_parameters` object of `low_rate_session_action` supports the following:
+
+* `challenge_option` - (Required, String) The specific challenge action to be executed safely. Valid values: `InterstitialChallenge`, `InlineChallenge`, `JSChallenge`, `ManagedChallenge`.
+* `attester_id` - (Optional, String) Client authentication method ID.
+* `interval` - (Optional, String) The time interval for repeating the challenge.
+
+The `challenge_action_parameters` object of `medium_risk_request_action` supports the following:
 
 * `challenge_option` - (Required, String) The specific challenge action to be executed safely. Valid values: `InterstitialChallenge`, `InlineChallenge`, `JSChallenge`, `ManagedChallenge`.
 * `attester_id` - (Optional, String) Client authentication method ID.
@@ -1317,6 +1381,7 @@ The `client_attestation_rules` object of `bot_management` supports the following
 * `enabled` - (Required, String) Whether the rule is enabled. Valid values: `on`, `off`.
 * `name` - (Required, String) Rule name.
 * `attester_id` - (Optional, String) Client authentication method ID.
+* `device_profiles` - (Optional, List) Client device configurations. One profile per client type.
 * `id` - (Optional, String) Rule ID.
 * `invalid_attestation_action` - (Optional, List) Action when attestation is invalid.
 * `priority` - (Optional, Int) Rule priority (0-100).
@@ -1482,6 +1547,15 @@ The `deny_action_parameters` object of `high_risk_bot_requests_action` supports 
 * `return_custom_page` - (Optional, String) Whether to use custom pages. Valid values: `on`, `off`.
 * `stall` - (Optional, String) Whether to ignore the request source suspension. Valid values: `on`, `off`.
 
+The `deny_action_parameters` object of `high_risk_request_action` supports the following:
+
+* `block_ip_duration` - (Optional, String) IP blocking duration when BlockIP is on.
+* `block_ip` - (Optional, String) Whether to extend the blocking of source IP. Valid values: `on`, `off`.
+* `error_page_id` - (Optional, String) The PageId of the custom page.
+* `response_code` - (Optional, String) Customize the status code of the page.
+* `return_custom_page` - (Optional, String) Whether to use custom pages. Valid values: `on`, `off`.
+* `stall` - (Optional, String) Whether to ignore the request source suspension. Valid values: `on`, `off`.
+
 The `deny_action_parameters` object of `human_requests_action` supports the following:
 
 * `block_ip_duration` - (Optional, String) IP blocking duration when BlockIP is on.
@@ -1510,6 +1584,15 @@ The `deny_action_parameters` object of `likely_bot_requests_action` supports the
 * `stall` - (Optional, String) Whether to ignore the request source suspension. Valid values: `on`, `off`.
 
 The `deny_action_parameters` object of `low_rate_session_action` supports the following:
+
+* `block_ip_duration` - (Optional, String) IP blocking duration when BlockIP is on.
+* `block_ip` - (Optional, String) Whether to extend the blocking of source IP. Valid values: `on`, `off`.
+* `error_page_id` - (Optional, String) The PageId of the custom page.
+* `response_code` - (Optional, String) Customize the status code of the page.
+* `return_custom_page` - (Optional, String) Whether to use custom pages. Valid values: `on`, `off`.
+* `stall` - (Optional, String) Whether to ignore the request source suspension. Valid values: `on`, `off`.
+
+The `deny_action_parameters` object of `medium_risk_request_action` supports the following:
 
 * `block_ip_duration` - (Optional, String) IP blocking duration when BlockIP is on.
 * `block_ip` - (Optional, String) Whether to extend the blocking of source IP. Valid values: `on`, `off`.
@@ -1559,6 +1642,14 @@ The `detect_length_limit_config` object of `security_config` supports the follow
 
 The `detect_length_limit_rules` object of `detect_length_limit_config` supports the following:
 
+
+The `device_profiles` object of `client_attestation_rules` supports the following:
+
+* `client_type` - (Required, String) Client device type. Valid values: `iOS`, `Android`, `WebView`, `WeChatMiniProgram`.
+* `high_risk_min_score` - (Optional, Int) Minimum score (1-99) for judging a request as high risk. Default 50.
+* `high_risk_request_action` - (Optional, List) Action for high-risk requests, using the shared SecurityAction schema (Name supports `Deny`, `Monitor`, `Redirect`, `Challenge`; default `Monitor`).
+* `medium_risk_min_score` - (Optional, Int) Minimum score (1-99) for judging a request as medium risk. Default 15.
+* `medium_risk_request_action` - (Optional, List) Action for medium-risk requests, using the shared SecurityAction schema (default `Monitor`).
 
 The `drop_page_config` object of `security_config` supports the following:
 
@@ -1622,6 +1713,14 @@ The `high_rate_session_action` object of `session_rate_control` supports the fol
 * `redirect_action_parameters` - (Optional, List) Additional parameters when Name is Redirect.
 
 The `high_risk_bot_requests_action` object of `bot_ratings` supports the following:
+
+* `allow_action_parameters` - (Optional, List) Additional parameters when Name is Allow.
+* `challenge_action_parameters` - (Optional, List) Additional parameters when Name is Challenge.
+* `deny_action_parameters` - (Optional, List) Additional parameters when Name is Deny.
+* `name` - (Optional, String) Action name. Valid values: `Deny`, `Monitor`, `Allow`, `Challenge`, `Disabled`.
+* `redirect_action_parameters` - (Optional, List) Additional parameters when Name is Redirect.
+
+The `high_risk_request_action` object of `device_profiles` supports the following:
 
 * `allow_action_parameters` - (Optional, List) Additional parameters when Name is Allow.
 * `challenge_action_parameters` - (Optional, List) Additional parameters when Name is Challenge.
@@ -1735,6 +1834,14 @@ The `max_new_session_trigger_config` object of `bot_session_validation` supports
 
 * `max_new_session_count_interval` - (Optional, String) Statistics time window for trigger threshold. Valid values: `5s`, `10s`, `15s`, `30s`, `60s`, `5m`, `10m`, `30m`, `60m`.
 * `max_new_session_count_threshold` - (Optional, Int) Cumulative count for trigger threshold. Range: 1-100000000.
+
+The `medium_risk_request_action` object of `device_profiles` supports the following:
+
+* `allow_action_parameters` - (Optional, List) Additional parameters when Name is Allow.
+* `challenge_action_parameters` - (Optional, List) Additional parameters when Name is Challenge.
+* `deny_action_parameters` - (Optional, List) Additional parameters when Name is Deny.
+* `name` - (Optional, String) Action name. Valid values: `Deny`, `Monitor`, `Allow`, `Challenge`, `Disabled`.
+* `redirect_action_parameters` - (Optional, List) Additional parameters when Name is Redirect.
 
 The `meta_data` object of `managed_rule_groups` supports the following:
 
@@ -1868,6 +1975,10 @@ The `redirect_action_parameters` object of `high_risk_bot_requests_action` suppo
 
 * `url` - (Required, String) The URL to redirect.
 
+The `redirect_action_parameters` object of `high_risk_request_action` supports the following:
+
+* `url` - (Required, String) The URL to redirect.
+
 The `redirect_action_parameters` object of `human_requests_action` supports the following:
 
 * `url` - (Required, String) The URL to redirect.
@@ -1881,6 +1992,10 @@ The `redirect_action_parameters` object of `likely_bot_requests_action` supports
 * `url` - (Required, String) The URL to redirect.
 
 The `redirect_action_parameters` object of `low_rate_session_action` supports the following:
+
+* `url` - (Required, String) The URL to redirect.
+
+The `redirect_action_parameters` object of `medium_risk_request_action` supports the following:
 
 * `url` - (Required, String) The URL to redirect.
 

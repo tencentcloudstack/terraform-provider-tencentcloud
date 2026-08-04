@@ -274,6 +274,48 @@ resource "tencentcloud_teo_security_policy_config" "example" {
         }
       }
     }
+
+    bot_management {
+      client_attestation_rules {
+        name         = "client-attestation-rule"
+        enabled      = "on"
+        priority     = 10
+        condition    = "$${http.request.host} contain ['abc']"
+        attester_id  = "attester-xxxx"
+        invalid_attestation_action {
+          name = "Monitor"
+        }
+        device_profiles {
+          client_type          = "iOS"
+          high_risk_min_score  = 60
+          high_risk_request_action {
+            name = "Deny"
+            deny_action_parameters {
+              block_ip          = "on"
+              block_ip_duration = "120s"
+            }
+          }
+          medium_risk_min_score = 20
+          medium_risk_request_action {
+            name = "Monitor"
+          }
+        }
+        device_profiles {
+          client_type          = "Android"
+          high_risk_min_score  = 50
+          high_risk_request_action {
+            name = "Challenge"
+            challenge_action_parameters {
+              challenge_option = "JSChallenge"
+            }
+          }
+          medium_risk_min_score = 15
+          medium_risk_request_action {
+            name = "Monitor"
+          }
+        }
+      }
+    }
   }
 }
 ```
