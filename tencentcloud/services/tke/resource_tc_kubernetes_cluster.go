@@ -1284,12 +1284,14 @@ func ResourceTencentCloudKubernetesCluster() *schema.Resource {
 						"jwks_uri": {
 							Type:        schema.TypeString,
 							Optional:    true,
-							Description: "Specify service-account-jwks-uri. If use_tke_default is set to `true`, please do not set this field, it will be ignored anyway.",
+							Computed:    true,
+							Description: "Specify service-account-jwks-uri. If use_tke_default is set to `true`, please do not set this field, it will be ignored anyway. This field is also computed: when use_tke_default is `true`, TKE will auto-generate the value and it will be read back into state.",
 						},
 						"issuer": {
 							Type:        schema.TypeString,
 							Optional:    true,
-							Description: "Specify service-account-issuer. If use_tke_default is set to `true`, please do not set this field, it will be ignored anyway.",
+							Computed:    true,
+							Description: "Specify service-account-issuer. If use_tke_default is set to `true`, please do not set this field, it will be ignored anyway. This field is also computed: when use_tke_default is `true`, TKE will auto-generate the value and it will be read back into state.",
 						},
 						"auto_create_discovery_anonymous_auth": {
 							Type:        schema.TypeBool,

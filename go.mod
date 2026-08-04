@@ -42,15 +42,15 @@ require (
 	github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/cfw v1.3.112
 	github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/chdfs v1.0.600
 	github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/ciam v1.0.695
-	github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/ckafka v1.3.122
-	github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/clb v1.3.105
+	github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/ckafka v1.3.133
+	github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/clb v1.3.142
 	github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/cloudaudit v1.3.40
-	github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/cls v1.3.142
-	github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/common v1.3.142
+	github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/cls v1.3.144
+	github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/common v1.3.150
 	github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/config v1.3.80
 	github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/cvm v1.3.130
 	github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/cwp v1.3.30
-	github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/cynosdb v1.3.110
+	github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/cynosdb v1.3.150
 	github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/dayu v1.0.335
 	github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/dbbrain v1.3.26
 	github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/dc v1.0.633
@@ -123,8 +123,8 @@ require (
 	github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/controlcenter v1.1.51
 	github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/csip v1.0.860
 	github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/dasb v1.0.970
-	github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/dbdc v1.3.118
-	github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/ga2 v1.3.142
+	github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/dbdc v1.3.149
+	github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/ga2 v1.3.144
 	github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/gwlb v1.0.1127
 	github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/igtm v1.3.29
 	github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/mqtt v1.3.104

@@ -931,10 +931,12 @@ func resourceTencentCloudKubernetesClusterReadPostHandleResponse0(ctx context.Co
 				authOptions := make(map[string]interface{}, 0)
 				if helper.PBool(options.UseTKEDefault) {
 					authOptions["use_tke_default"] = helper.PBool(options.UseTKEDefault)
-				} else {
-					authOptions["jwks_uri"] = helper.PString(options.JWKSURI)
-					authOptions["issuer"] = helper.PString(options.Issuer)
 				}
+				// Always read back issuer and jwks_uri from the API so that users can
+				// see the auto-generated values when use_tke_default=true. These fields
+				// are Optional+Computed, so reading them back does not produce drift.
+				authOptions["jwks_uri"] = helper.PString(options.JWKSURI)
+				authOptions["issuer"] = helper.PString(options.Issuer)
 				authOptions["auto_create_discovery_anonymous_auth"] = helper.PBool(options.AutoCreateDiscoveryAnonymousAuth)
 				_ = d.Set("auth_options", []map[string]interface{}{authOptions})
 			}

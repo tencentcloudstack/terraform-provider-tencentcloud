@@ -327,15 +327,19 @@ func resourceTencentCloudGa2GlobalAcceleratorUpdate(d *schema.ResourceData, meta
 			request.Description = helper.String(v.(string))
 		}
 
-		if v, ok := d.GetOk("cross_border_type"); ok {
-			if v.(string) != "NotAvailable" {
-				request.CrossBorderType = helper.String(v.(string))
+		if d.HasChange("cross_border_type") {
+			if v, ok := d.GetOk("cross_border_type"); ok {
+				if v.(string) != "NotAvailable" {
+					request.CrossBorderType = helper.String(v.(string))
+				}
 			}
 		}
 
 		//nolint:staticcheck
-		if v, ok := d.GetOkExists("cross_border_promise_flag"); ok {
-			request.CrossBorderPromiseFlag = helper.Bool(v.(bool))
+		if d.HasChange("cross_border_promise_flag") {
+			if v, ok := d.GetOkExists("cross_border_promise_flag"); ok {
+				request.CrossBorderPromiseFlag = helper.Bool(v.(bool))
+			}
 		}
 
 		var taskId string

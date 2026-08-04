@@ -106,6 +106,9 @@ resource "tencentcloud_cynosdb_cluster" "example" {
     device_type    = "exclusive"
   }
 
+  SyncWay         = "async"
+  SemiSyncTimeout = 10000
+
   cynos_version = "2.1.14.001"
 
   tags = {
@@ -114,7 +117,9 @@ resource "tencentcloud_cynosdb_cluster" "example" {
 }
 ```
 
-### Create a multiple availability zone SERVERLESS CynosDB cluster
+### API.
+
+Create a multiple availability zone SERVERLESS CynosDB cluster
 
 ```hcl
 variable "availability_zone" {
@@ -182,6 +187,8 @@ resource "tencentcloud_cynosdb_cluster" "example" {
   max_cpu                      = 4
   param_template_id            = tencentcloud_cynosdb_param_template.example.template_id
   force_delete                 = false
+  sync_way                     = "async"
+  semi_sync_timeout            = 10000
   instance_maintain_weekdays = [
     "Fri",
     "Mon",
@@ -239,10 +246,12 @@ The following arguments are supported:
 * `project_id` - (Optional, Int, ForceNew) ID of the project. `0` by default.
 * `ro_group_sg` - (Optional, List: [`String`]) IDs of security group for `ro_group`.
 * `rw_group_sg` - (Optional, List: [`String`]) IDs of security group for `rw_group`.
+* `semi_sync_timeout` - (Optional, Int) Semi-sync timeout in ms. Value range: `[1000, 4294967295]`, default `10000`.
 * `serverless_status_flag` - (Optional, String) Specify whether to pause or resume serverless cluster. values: `resume`, `pause`.
 * `slave_zone` - (Optional, String) Multi zone Addresses of the CynosDB Cluster.
 * `storage_limit` - (Optional, Int) Storage limit of CynosDB cluster instance, unit in GB. The maximum storage of a non-serverless instance in GB. NOTE: If db_type is `MYSQL` and charge_type is `PREPAID`, the value cannot exceed the maximum storage corresponding to the CPU and memory specifications, and the transaction mode is `order and pay`. when charge_type is `POSTPAID_BY_HOUR`, this argument is unnecessary.
 * `storage_pay_mode` - (Optional, Int) Cluster storage billing mode, pay-as-you-go: `0`-yearly/monthly: `1`-The default is pay-as-you-go. When the DbType is MYSQL, when the cluster computing billing mode is post-paid (including DbMode is SERVERLESS), the storage billing mode can only be billing by volume; rollback and cloning do not support yearly subscriptions monthly storage.
+* `sync_way` - (Optional, String) Synchronization way. Valid values: `async`, `semisync`, `sync`.
 * `tags` - (Optional, Map) The tags of the CynosDB cluster.
 
 The `instance_init_infos` object supports the following:

@@ -409,6 +409,7 @@ func ResourceTencentCloudMysqlInstance() *schema.Resource {
 		},
 		Timeouts: &schema.ResourceTimeout{
 			Create: schema.DefaultTimeout(20 * time.Minute),
+			Update: schema.DefaultTimeout(6 * time.Hour),
 			Delete: schema.DefaultTimeout(20 * time.Minute),
 		},
 	}
@@ -1263,7 +1264,7 @@ func mysqlAllInstanceRoleUpdate(ctx context.Context, d *schema.ResourceData, met
 			}
 
 			if waitSwitch != InWindow {
-				err = resource.Retry(6*time.Hour, func() *resource.RetryError {
+				err = resource.Retry(d.Timeout(schema.TimeoutUpdate), func() *resource.RetryError {
 					taskStatus, message, err := mysqlService.DescribeAsyncRequestInfo(ctx, asyncRequestId)
 
 					if err != nil {
@@ -1372,7 +1373,7 @@ func mysqlAllInstanceRoleUpdate(ctx context.Context, d *schema.ResourceData, met
 			}
 
 			if waitSwitch != InWindow {
-				err = resource.Retry(6*time.Hour, func() *resource.RetryError {
+				err = resource.Retry(d.Timeout(schema.TimeoutUpdate), func() *resource.RetryError {
 					taskStatus, message, err := mysqlService.DescribeAsyncRequestInfo(ctx, asyncRequestId)
 
 					if err != nil {
@@ -1479,7 +1480,7 @@ func mysqlAllInstanceRoleUpdate(ctx context.Context, d *schema.ResourceData, met
 		}
 
 		if waitSwitch != InWindow {
-			err = resource.Retry(6*time.Hour, func() *resource.RetryError {
+			err = resource.Retry(d.Timeout(schema.TimeoutUpdate), func() *resource.RetryError {
 				taskStatus, message, err := mysqlService.DescribeAsyncRequestInfo(ctx, asyncRequestId)
 
 				if err != nil {
@@ -1626,7 +1627,7 @@ func mysqlAllInstanceRoleUpdate(ctx context.Context, d *schema.ResourceData, met
 
 		asyncRequestId = *response.Response.AsyncRequestId
 		if waitSwitch != InWindow {
-			err = resource.Retry(6*time.Hour, func() *resource.RetryError {
+			err = resource.Retry(d.Timeout(schema.TimeoutUpdate), func() *resource.RetryError {
 				taskStatus, message, err := mysqlService.DescribeAsyncRequestInfo(ctx, asyncRequestId)
 				if err != nil {
 					if _, ok := err.(*errors.TencentCloudSDKError); !ok {

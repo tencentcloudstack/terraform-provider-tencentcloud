@@ -1,3 +1,50 @@
+## 1.83.19(August 1, 2026)
+
+ENHANCEMENTS:
+
+* data-source/tencentcloud_dbdc_db_custom_images: support `name`/`values` filter input parameters and `os_type` output parameter ([#4372](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/4372))
+* data-source/tencentcloud_dbdc_db_custom_nodes: add `network_mode` and `eni_ip` computed output fields to `node_set` ([#4370](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/4370))
+* resource/tencentcloud_dbdc_db_custom_node: support more parameters ([#4371](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/4371))
+* resource/tencentcloud_dbdc_node_to_db_custom_cluster_attachment: support labels, taints, host_name, host_name_type arguments and network_mode, eni_ip computed fields ([#4373](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/4373))
+
+## 1.83.18(July 31, 2026)
+
+FEATURES:
+
+* **New Data Source:** `tencentcloud_dbdc_db_custom_cluster_node_config_list` ([#4377](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/4377))
+* **New Data Source:** `tencentcloud_dbdc_db_custom_cluster_node_resources` ([#4369](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/4369))
+* **New Data Source:** `tencentcloud_dbdc_db_custom_cluster_resources` ([#4367](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/4367))
+* **New Data Source:** `tencentcloud_dbdc_db_custom_node_security_groups` ([#4374](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/4374))
+* **New Data Source:** `tencentcloud_dbdc_db_custom_node_types` ([#4376](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/4376))
+* **New Data Source:** `tencentcloud_dbdc_db_custom_regions` ([#4375](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/4375))
+* **New Data Source:** `tencentcloud_dbdc_db_custom_zones` ([#4378](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/4378))
+
+ENHANCEMENTS:
+
+* data-source/tencentcloud_dbdc_db_custom_cluster_nodes: add `network_mode` and `eni_ip` fields to node_set ([#4365](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/4365))
+* resource/tencentcloud_clb_listener: support max_conn, max_cps, proxy_protocol and data_compress_mode parameters ([#4364](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/4364))
+* resource/tencentcloud_cls_topic: add biz_type parameter to support metric topic type ([#4350](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/4350))
+* resource/tencentcloud_dts_sync_job: optimize code logic ([#4368](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/4368))
+
+## 1.83.17(July 30, 2026)
+
+FEATURES:
+
+* **New Data Source:** `tencentcloud_cls_machine_groups` ([#4361](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/4361))
+* **New Data Source:** `tencentcloud_postgresql_db_instance_security_groups` ([#4358](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/4358))
+* **New Resource:** `tencentcloud_ga2_global_accelerator_acl_rule_set` ([#4360](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/4360))
+
+ENHANCEMENTS:
+
+* provider: Update the provider documentation regarding system-reserved tags fields ([#4355](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/4355))
+* resource/tencentcloud_clb_listener: optimize code logic ([#4357](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/4357))
+* resource/tencentcloud_cynosdb_cls_delivery: optimize code logic ([#4362](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/4362))
+* resource/tencentcloud_dts_sync_job: support modify `instance_class` ([#4353](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/4353))
+* resource/tencentcloud_ga2_accelerate_area: `ip_address` only support `computed` ([#4359](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/4359))
+* resource/tencentcloud_ga2_global_accelerator: optimize update code logic ([#4359](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/4359))
+* resource/tencentcloud_ga2_listener: add `forceNew` for `http_version` ([#4359](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/4359))
+* resource/tencentcloud_trocket_rocketmq_instance: support pay_mode, renew_flag, time_span, max_topic_num and zone_ids parameters ([#4356](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/4356))
+
 ## 1.83.16(July 28, 2026)
 
 FEATURES:
