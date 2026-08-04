@@ -142,6 +142,11 @@ func (p *Provider) Schema(_ context.Context, _ provider.SchemaRequest, resp *pro
 				Optional:    true,
 				Description: "The root domain of the API request, Default is `tencentcloudapi.com`.",
 			},
+			"custom_headers": schema.MapAttribute{
+				Optional:    true,
+				ElementType: types.StringType,
+				Description: "Custom HTTP headers to add to all API requests.",
+			},
 			"cos_domain": schema.StringAttribute{
 				Optional:    true,
 				Description: "The cos domain of the API request, Default is `https://cos.{region}.myqcloud.com`, Other Examples: `https://cluster-123456.cos-cdc.ap-guangzhou.myqcloud.com`.",
