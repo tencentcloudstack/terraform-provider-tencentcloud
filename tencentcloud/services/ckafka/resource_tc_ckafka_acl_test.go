@@ -1,16 +1,20 @@
 package ckafka_test
 
 import (
-	tcacctest "github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/acctest"
-	tccommon "github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/common"
-	localckafka "github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/services/ckafka"
-
 	"context"
 	"fmt"
 	"testing"
 
+	"github.com/agiledragon/gomonkey/v2"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/terraform"
+	"github.com/stretchr/testify/assert"
+	ckafka "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/ckafka/v20190819"
+	sdkErrors "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/common/errors"
+	tcacctest "github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/acctest"
+	tccommon "github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/common"
+	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/connectivity"
+	localckafka "github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/services/ckafka"
 )
 
 func TestAccTencentCloudCkafkaAclResource(t *testing.T) {
@@ -122,3 +126,108 @@ resource "tencentcloud_ckafka_acl" foo {
   principal       = tencentcloud_ckafka_user.foo.account_name
 }
 `
+
+// -----------------------------------------------------------------------------
+// Mock-based tests for CreateAcl FailedOperation retry via resource.Retry
+// with a max of 5 FailedOperation attempts before giving up.
+//
+// go test ./tencentcloud/services/ckafka/ -run "TestCkafkaAclCreateAclFailedOperation" -v -count=1 -gcflags="all=-l"
+// -----------------------------------------------------------------------------
+
+type mockMetaCkafkaAclFailedOperationRetry struct {
+	client *connectivity.TencentCloudClient
+}
+
+func (m *mockMetaCkafkaAclFailedOperationRetry) GetAPIV3Conn() *connectivity.TencentCloudClient {
+	return m.client
+}
+
+var _ tccommon.ProviderMeta = &mockMetaCkafkaAclFailedOperationRetry{}
+
+func newMockMetaCkafkaAclFailedOperationRetry() *mockMetaCkafkaAclFailedOperationRetry {
+	return &mockMetaCkafkaAclFailedOperationRetry{client: &connectivity.TencentCloudClient{}}
+}
+
+// TestCkafkaAclCreateAclFailedOperationRetryThenSuccess verifies that when the
+// CreateAcl API returns FailedOperation for the first 3 calls and succeeds on the
+// 4th call, CkafkaService.CreateAcl returns nil and the API is invoked 4 times
+// (within the 5 FailedOperation retry limit).
+func TestCkafkaAclCreateAclFailedOperationRetryThenSuccess(t *testing.T) {
+	patches := gomonkey.NewPatches()
+	defer patches.Reset()
+
+	ckafkaClient := &ckafka.Client{}
+	patches.ApplyMethodReturn(newMockMetaCkafkaAclFailedOperationRetry().client, "UseCkafkaClient", ckafkaClient)
+
+	var callCount int
+	patches.ApplyMethodFunc(ckafkaClient, "CreateAcl", func(request *ckafka.CreateAclRequest) (*ckafka.CreateAclResponse, error) {
+		callCount++
+		if callCount <= 3 {
+			return nil, &sdkErrors.TencentCloudSDKError{Code: "FailedOperation", Message: "operation failed"}
+		}
+		resp := ckafka.NewCreateAclResponse()
+		resp.Response = &ckafka.CreateAclResponseParams{
+			Result: &ckafka.JgwOperateResponse{
+				ReturnCode: dpPtrString("0"),
+			},
+			RequestId: dpPtrString("fake-request-id"),
+		}
+		return resp, nil
+	})
+
+	service := localckafka.NewCkafkaService(newMockMetaCkafkaAclFailedOperationRetry().client)
+	err := service.CreateAcl(context.TODO(), "ckafka-instance-retry", "TOPIC", "topic-acl-retry", "WRITE", "ALLOW", "*", "root")
+	assert.NoError(t, err)
+	assert.Equal(t, 4, callCount)
+}
+
+// TestCkafkaAclCreateAclFailedOperationAlwaysFails verifies that when the
+// CreateAcl API always returns FailedOperation, CkafkaService.CreateAcl gives up
+// after 5 FailedOperation errors (the max retry limit) and returns the
+// FailedOperation error without further retries.
+func TestCkafkaAclCreateAclFailedOperationAlwaysFails(t *testing.T) {
+	patches := gomonkey.NewPatches()
+	defer patches.Reset()
+
+	ckafkaClient := &ckafka.Client{}
+	patches.ApplyMethodReturn(newMockMetaCkafkaAclFailedOperationRetry().client, "UseCkafkaClient", ckafkaClient)
+
+	var callCount int
+	patches.ApplyMethodFunc(ckafkaClient, "CreateAcl", func(request *ckafka.CreateAclRequest) (*ckafka.CreateAclResponse, error) {
+		callCount++
+		return nil, &sdkErrors.TencentCloudSDKError{Code: "FailedOperation", Message: "operation failed"}
+	})
+
+	service := localckafka.NewCkafkaService(newMockMetaCkafkaAclFailedOperationRetry().client)
+	err := service.CreateAcl(context.TODO(), "ckafka-instance-retry", "TOPIC", "topic-acl-retry", "WRITE", "ALLOW", "*", "root")
+	assert.Error(t, err)
+	sdkErr, ok := err.(*sdkErrors.TencentCloudSDKError)
+	assert.True(t, ok)
+	assert.Equal(t, "FailedOperation", sdkErr.Code)
+	assert.Equal(t, 5, callCount)
+}
+
+// TestCkafkaAclCreateAclNonFailedOperationError verifies that when the CreateAcl
+// API returns a non-FailedOperation error, CkafkaService.CreateAcl returns the
+// error immediately via NonRetryableError and the API is invoked only once.
+func TestCkafkaAclCreateAclNonFailedOperationError(t *testing.T) {
+	patches := gomonkey.NewPatches()
+	defer patches.Reset()
+
+	ckafkaClient := &ckafka.Client{}
+	patches.ApplyMethodReturn(newMockMetaCkafkaAclFailedOperationRetry().client, "UseCkafkaClient", ckafkaClient)
+
+	var callCount int
+	patches.ApplyMethodFunc(ckafkaClient, "CreateAcl", func(request *ckafka.CreateAclRequest) (*ckafka.CreateAclResponse, error) {
+		callCount++
+		return nil, &sdkErrors.TencentCloudSDKError{Code: "InvalidParameter", Message: "invalid parameter"}
+	})
+
+	service := localckafka.NewCkafkaService(newMockMetaCkafkaAclFailedOperationRetry().client)
+	err := service.CreateAcl(context.TODO(), "ckafka-instance-retry", "TOPIC", "topic-acl-retry", "WRITE", "ALLOW", "*", "root")
+	assert.Error(t, err)
+	sdkErr, ok := err.(*sdkErrors.TencentCloudSDKError)
+	assert.True(t, ok)
+	assert.Equal(t, "InvalidParameter", sdkErr.Code)
+	assert.Equal(t, 1, callCount)
+}
