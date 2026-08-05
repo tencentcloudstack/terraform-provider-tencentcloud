@@ -73,6 +73,7 @@ resource "tencentcloud_dts_sync_config" "example" {
       db_name     = "tf_ci_test"
       new_db_name = "tf_ci_test_new"
       db_mode     = "Partial"
+      schema_mode = "Partial"
       table_mode  = "All"
       tables {
         table_name     = "test"
@@ -154,6 +155,7 @@ resource "tencentcloud_dts_sync_config" "example" {
       db_name     = "tf_ci_test"
       new_db_name = "tf_ci_test_new"
       db_mode     = "Partial"
+      schema_mode = "Partial"
       table_mode  = "All"
       tables {
         table_name     = "test"

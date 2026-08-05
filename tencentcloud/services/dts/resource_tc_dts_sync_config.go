@@ -243,6 +243,11 @@ func ResourceTencentCloudDtsSyncConfig() *schema.Resource {
 										Optional:    true,
 										Description: "Schema name after migration or synchronization. Note: This field may return null, indicating that no valid value can be obtained.",
 									},
+									"schema_mode": {
+										Type:        schema.TypeString,
+										Optional:    true,
+										Description: "Schema selection mode, used by PostgreSQL and SQL Server sync links. Valid values: `All` (all objects under the current object), `Partial` (some objects). Note: This field may return null, indicating that no valid value can be obtained.",
+									},
 									"table_mode": {
 										Type:        schema.TypeString,
 										Optional:    true,
@@ -369,13 +374,15 @@ func ResourceTencentCloudDtsSyncConfig() *schema.Resource {
 							MaxItems:    1,
 							Optional:    true,
 							Computed:    true,
+							Deprecated:  "It has been deprecated from version 1.83.20.",
 							Description: "OnlineDDL type. Note: This field may return null, indicating that no valid value can be obtained.",
 							Elem: &schema.Resource{
 								Schema: map[string]*schema.Schema{
 									"status": {
 										Type:        schema.TypeString,
 										Optional:    true,
-										Description: "status.",
+										Deprecated:  "It has been deprecated from version 1.83.20.",
+										Description: "Status: ON - Enabled, OFF - Disabled.",
 									},
 								},
 							},
@@ -897,6 +904,10 @@ func resourceTencentCloudDtsSyncConfigRead(d *schema.ResourceData, meta interfac
 					databasesMap["new_schema_name"] = databases.NewSchemaName
 				}
 
+				if databases.SchemaMode != nil {
+					databasesMap["schema_mode"] = databases.SchemaMode
+				}
+
 				if databases.TableMode != nil {
 					databasesMap["table_mode"] = databases.TableMode
 				}
@@ -1405,6 +1416,9 @@ func resourceTencentCloudDtsSyncConfigUpdate(d *schema.ResourceData, meta interf
 				}
 				if v, ok := databasesMap["new_schema_name"]; ok {
 					database.NewSchemaName = helper.String(v.(string))
+				}
+				if v, ok := databasesMap["schema_mode"]; ok {
+					database.SchemaMode = helper.String(v.(string))
 				}
 				if v, ok := databasesMap["table_mode"]; ok {
 					database.TableMode = helper.String(v.(string))
