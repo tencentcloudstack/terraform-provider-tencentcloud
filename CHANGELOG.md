@@ -1,3 +1,19 @@
+## 1.83.20(August 5, 2026)
+
+ENHANCEMENTS:
+
+* resource/tencentcloud_cdn_domain: Fixed the change issue caused by the masked secret returned by the API. ([#4386](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/4386))
+* resource/tencentcloud_ckafka_acl: retry CreateAcl using resource.Retry with WriteRetryTimeout, giving up after 5 FailedOperation errors ([#4385](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/4385))
+* resource/tencentcloud_clb_instance: support force param when updating sla_type via ModifyLoadBalancerSla ([#4391](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/4391))
+* resource/tencentcloud_cynosdb_cluster: support sync way and semi sync timeout parameters ([#4384](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/4384))
+* resource/tencentcloud_dts_sync_config: support schema_mode field in objects.databases block for PostgreSQL and SQL Server sync scenarios ([#4392](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/4392))
+* resource/tencentcloud_kubernetes_cluster: update code logic for `auth_options` ([#4383](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/4383))
+* resource/tencentcloud_mysql_instance: support timeouts for update ([#4382](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/4382))
+
+BUG FIXES:
+
+* resource/tencentcloud_teo_function: fix false plan drift caused by concatenated name returned by DescribeFunctions API - parse original name by stripping zone_id and app_id suffix ([#4389](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/4389))
+
 ## 1.83.19(August 1, 2026)
 
 ENHANCEMENTS:
