@@ -181,8 +181,7 @@ func ResourceTencentCloudClbInstance() *schema.Resource {
 				Optional: true,
 				Default:  false,
 				Description: "Whether to forcibly upgrade the CLB instance, default is `false`. " +
-					"This parameter only takes effect when `sla_type` changes and `ModifyLoadBalancerSla` is called. " +
-					"Note: after a shared CLB instance is upgraded to an LCU-supported instance, it cannot be rolled back to a shared instance.",
+					"This parameter only takes effect when `sla_type` changes.",
 			},
 			"vip_isp": {
 				Type:        schema.TypeString,

@@ -176,7 +176,7 @@ resource "tencentcloud_clb_instance" "example" {
 }
 ```
 
-### API is called. Note: after a shared CLB instance is upgraded to an LCU-supported instance, it cannot be rolled back to a shared instance.
+### changes.
 
 ```hcl
 variable "availability_zone" {
@@ -594,7 +594,7 @@ The following arguments are supported:
 * `dynamic_vip` - (Optional, Bool) If create dynamic vip CLB instance, `true` or `false`.
 * `eip_address_id` - (Optional, String) The unique ID of the EIP, such as eip-1v2rmbwk, is only applicable to the intranet load balancing binding EIP. During the EIP change, there may be a brief network interruption.
 * `exclusive_cluster` - (Optional, List, ForceNew) Information about the dedicated CLB instance. You must specify this parameter when you create a dedicated CLB instance in a private network.
-* `force` - (Optional, Bool) Whether to forcibly upgrade the CLB instance, default is `false`. This parameter only takes effect when `sla_type` changes and `ModifyLoadBalancerSla` is called. Note: after a shared CLB instance is upgraded to an LCU-supported instance, it cannot be rolled back to a shared instance.
+* `force` - (Optional, Bool) Whether to forcibly upgrade the CLB instance, default is `false`. This parameter only takes effect when `sla_type` changes.
 * `internet_bandwidth_max_out` - (Optional, Int) Maximum outbound bandwidth, in Mbps. This parameter is valid only for public network shared, LCU-supported, and exclusive CLB instances and private network LCU-supported CLB instances.
 - The range of the maximum outbound bandwidth for public network shared and exclusive CLB instances is 1-2,048 Mbps.
 - The range of the maximum outbound bandwidth for public network and private network LCU-supported CLB instances is 1-61,440 Mbps.

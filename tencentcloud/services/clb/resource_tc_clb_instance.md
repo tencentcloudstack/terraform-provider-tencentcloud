@@ -167,7 +167,7 @@ resource "tencentcloud_clb_instance" "example" {
 
 Forcibly upgrade CLB SLA type
 
-The `force` parameter is used to forcibly upgrade the CLB instance when changing `sla_type`. It only takes effect when `sla_type` changes and the `ModifyLoadBalancerSla` API is called. Note: after a shared CLB instance is upgraded to an LCU-supported instance, it cannot be rolled back to a shared instance.
+The `force` parameter is used to forcibly upgrade the CLB instance when changing `sla_type`. It only takes effect when `sla_type` changes.
 
 ```hcl
 variable "availability_zone" {
