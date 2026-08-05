@@ -165,6 +165,46 @@ resource "tencentcloud_clb_instance" "example" {
 }
 ```
 
+Forcibly upgrade CLB SLA type
+
+The `force` parameter is used to forcibly upgrade the CLB instance when changing `sla_type`. It only takes effect when `sla_type` changes and the `ModifyLoadBalancerSla` API is called. Note: after a shared CLB instance is upgraded to an LCU-supported instance, it cannot be rolled back to a shared instance.
+
+```hcl
+variable "availability_zone" {
+  default = "ap-guangzhou-4"
+}
+
+// create vpc
+resource "tencentcloud_vpc" "vpc" {
+  cidr_block = "10.0.0.0/16"
+  name       = "vpc"
+}
+
+// create subnet
+resource "tencentcloud_subnet" "subnet" {
+  vpc_id            = tencentcloud_vpc.vpc.id
+  availability_zone = var.availability_zone
+  name              = "subnet"
+  cidr_block        = "10.0.1.0/24"
+  is_multicast      = false
+}
+
+// create clb and forcibly upgrade sla_type
+resource "tencentcloud_clb_instance" "example" {
+  network_type = "INTERNAL"
+  clb_name     = "tf-example"
+  project_id   = 0
+  sla_type     = "clb.c3.medium"
+  force        = true
+  vpc_id       = tencentcloud_vpc.vpc.id
+  subnet_id    = tencentcloud_subnet.subnet.id
+
+  tags = {
+    tagKey = "tagValue"
+  }
+}
+```
+
 Create OPEN CLB
 
 ```hcl
