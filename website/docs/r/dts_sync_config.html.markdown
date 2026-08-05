@@ -281,11 +281,11 @@ The `objects` object supports the following:
 * `advanced_objects` - (Optional, Set) For advanced object types, such as function and procedure, when an advanced object needs to be synchronized, the initialization type must include the structure initialization type, that is, the value of the Options.InitType field is Structure or Full. Note: This field may return null, indicating that no valid value can be obtained.
 * `databases` - (Optional, List) Synchronization object, not null when Mode is Partial. Note: This field may return null, indicating that no valid value can be obtained.
 * `mode` - (Optional, String) Migration object type Partial (partial object). Note: This field may return null, indicating that no valid value can be obtained.
-* `online_ddl` - (Optional, List) OnlineDDL type. Note: This field may return null, indicating that no valid value can be obtained.
+* `online_ddl` - (Optional, List, **Deprecated**) It has been deprecated from version 1.83.20. OnlineDDL type. Note: This field may return null, indicating that no valid value can be obtained.
 
 The `online_ddl` object of `objects` supports the following:
 
-* `status` - (Optional, String) status.
+* `status` - (Optional, String, **Deprecated**) It has been deprecated from version 1.83.20. Status: ON - Enabled, OFF - Disabled.
 
 The `options` object supports the following:
 

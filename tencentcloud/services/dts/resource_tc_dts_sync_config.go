@@ -374,13 +374,15 @@ func ResourceTencentCloudDtsSyncConfig() *schema.Resource {
 							MaxItems:    1,
 							Optional:    true,
 							Computed:    true,
+							Deprecated:  "It has been deprecated from version 1.83.20.",
 							Description: "OnlineDDL type. Note: This field may return null, indicating that no valid value can be obtained.",
 							Elem: &schema.Resource{
 								Schema: map[string]*schema.Schema{
 									"status": {
 										Type:        schema.TypeString,
 										Optional:    true,
-										Description: "status.",
+										Deprecated:  "It has been deprecated from version 1.83.20.",
+										Description: "Status: ON - Enabled, OFF - Disabled.",
 									},
 								},
 							},
