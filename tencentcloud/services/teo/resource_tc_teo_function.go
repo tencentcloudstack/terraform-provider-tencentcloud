@@ -148,6 +148,15 @@ func resourceTencentCloudTeoFunctionCreate(d *schema.ResourceData, meta interfac
 	return resourceTencentCloudTeoFunctionRead(d, meta)
 }
 
+func ParseTeoFunctionOriginalName(name string, zoneId string) string {
+	suffix := "-" + zoneId
+	idx := strings.LastIndex(name, suffix)
+	if idx < 0 {
+		return name
+	}
+	return name[:idx]
+}
+
 func resourceTencentCloudTeoFunctionRead(d *schema.ResourceData, meta interface{}) error {
 	defer tccommon.LogElapsed("resource.tencentcloud_teo_function.read")()
 	defer tccommon.InconsistentCheck(d, meta)()
@@ -183,7 +192,7 @@ func resourceTencentCloudTeoFunctionRead(d *schema.ResourceData, meta interface{
 	}
 
 	if respData.Name != nil {
-		originalName := ParseTeoFunctionOriginalName(*respData.Name)
+		originalName := ParseTeoFunctionOriginalName(*respData.Name, zoneId)
 		_ = d.Set("name", originalName)
 	}
 

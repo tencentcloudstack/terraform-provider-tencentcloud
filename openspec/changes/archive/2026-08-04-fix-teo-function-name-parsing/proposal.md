@@ -4,8 +4,8 @@
 
 ## What Changes
 
-- 修改 `resourceTencentCloudTeoFunctionRead` 方法，在从DescribeFunctions返回的name设置到state之前，按照"原始name + '-' + zone_id + '-' + app_id"的固定格式进行拆分，仅将原始name部分设置到state中
-- 添加辅助函数 `parseTeoFunctionOriginalName`，根据zone_id格式（"zone-xxxxxxx"，xxxxxxx为数字加字母）和app_id格式（纯数字字符串）从拼接后的name中提取原始name
+- 修改 `resourceTencentCloudTeoFunctionRead` 方法，在从DescribeFunctions返回的name设置到state之前，利用已知的zone_id进行精确拆分，仅将原始name部分设置到state中
+- 修改辅助函数 `ParseTeoFunctionOriginalName`，接收 `name` 和 `zoneId` 两个参数，通过查找 `-zoneId` 后缀（即 `-zone-xxxxxxx`）在拼接name中的位置来提取原始name。这种方法避免了因原始name中包含 `-zone-` 字符串而导致的错误截断
 - 修改 `resource_tc_teo_function_test.go` 中的单元测试，验证name拆分逻辑的正确性
 - 修改 `resource_tc_teo_function.md` 文档中的示例，使用原始name而非拼接后的完整函数名
 
@@ -19,7 +19,6 @@
 
 ## Impact
 
-- `tencentcloud/services/teo/resource_tc_teo_function.go`: Read方法中name字段的处理逻辑
-- `tencentcloud/services/teo/resource_tc_teo_function_extension.go`: 可能需要在此文件中添加name拆分辅助函数
+- `tencentcloud/services/teo/resource_tc_teo_function.go`: Read方法中name字段的处理逻辑，`ParseTeoFunctionOriginalName` 函数签名从单参数改为双参数（增加 zoneId）
 - `tencentcloud/services/teo/resource_tc_teo_function_test.go`: 补充name拆分逻辑的单元测试
 - `tencentcloud/services/teo/resource_tc_teo_function.md`: 更新示例中的name值

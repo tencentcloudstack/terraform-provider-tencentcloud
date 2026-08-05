@@ -88,48 +88,56 @@ func TestParseTeoFunctionOriginalName(t *testing.T) {
 	tests := []struct {
 		name     string
 		input    string
+		zoneId   string
 		expected string
 	}{
 		{
 			name:     "standard concatenated name",
 			input:    "my-func-zone-2qtuhspy7cr6-1310708577",
+			zoneId:   "zone-2qtuhspy7cr6-1310708577",
 			expected: "my-func",
 		},
 		{
 			name:     "original name without hyphens",
 			input:    "myfunc-zone-2qtuhspy7cr6-1310708577",
+			zoneId:   "zone-2qtuhspy7cr6-1310708577",
 			expected: "myfunc",
 		},
 		{
 			name:     "original name with multiple hyphens",
 			input:    "my-test-func-v2-zone-2qtuhspy7cr6-1310708577",
+			zoneId:   "zone-2qtuhspy7cr6-1310708577",
 			expected: "my-test-func-v2",
 		},
 		{
 			name:     "name without -zone- substring",
 			input:    "myfunc",
+			zoneId:   "zone-2qtuhspy7cr6-1310708577",
 			expected: "myfunc",
 		},
 		{
 			name:     "empty string",
 			input:    "",
+			zoneId:   "zone-2qtuhspy7cr6-1310708577",
 			expected: "",
 		},
 		{
 			name:     "name starts with zone",
 			input:    "zone-2qtuhspy7cr6-1310708577",
-			expected: "",
+			zoneId:   "zone-2qtuhspy7cr6-1310708577",
+			expected: "zone-2qtuhspy7cr6-1310708577",
 		},
 		{
 			name:     "name with zone appearing before -zone-",
 			input:    "zone-proxy-zone-2qtuhspy7cr6-1310708577",
+			zoneId:   "zone-2qtuhspy7cr6-1310708577",
 			expected: "zone-proxy",
 		},
 	}
 
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			result := teo.ParseTeoFunctionOriginalName(tt.input)
+			result := teo.ParseTeoFunctionOriginalName(tt.input, tt.zoneId)
 			assert.Equal(t, tt.expected, result)
 		})
 	}

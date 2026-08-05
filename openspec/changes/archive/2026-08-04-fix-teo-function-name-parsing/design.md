@@ -27,21 +27,22 @@
 
 ## Decisions
 
-### Decision 1: name 拆分算法 —— 基于 zone_id 前缀的逆向匹配
+### Decision 1: name 拆分算法 —— 基于 zone_id 参数的精确后缀匹配
 
-**选择**: 从拼接后的 name 中，查找 `-zone-` 子串的位置，以该位置为分割点，左侧即为原始 name。
+**选择**: 从拼接后的 name 中，查找 `-zoneId`（即 `-` + zone_id 参数值，如 `-zone-2qtuhspy7cr6`）子串的位置，以该位置为分割点，左侧即为原始 name。
 
-**理由**: zone_id 的格式固定为 `zone-xxxxxxx`（以 `zone-` 开头），因此拼接后的 name 中必然存在 `-zone-` 这个子串。由于原始 name 中可能包含 `-`，但不会包含 `-zone-` 这样的子串（因为 zone_id 的格式是固定的），因此查找 `-zone-` 是最可靠的拆分方式。
+**理由**: 拼接后的 name 格式为 `original_name + "-" + zone_id + "-" + app_id`，其中 zone_id 在 Read 方法中是已知的（从 resource ID 中解析得到）。使用完整的 `-zoneId` 作为匹配后缀，无论原始 name 中是否包含 `-zone-` 子串，都能准确找到分割点。例如，当原始 name 为 `my-zone-func`、zone_id 为 `zone-2qtuhspy7cr6` 时，拼接后的 name 为 `my-zone-func-zone-2qtuhspy7cr6-1310708577`，查找 `-zone-2qtuhspy7cr6` 可正确定位，避免将 `my-zone-func` 错误截断为 `my`。
 
 **算法**:
-1. 获取 DescribeFunctions 返回的 name（如 `my-func-zone-2qtuhspy7cr6-1310708577`）
-2. 查找字符串中 `-zone-` 子串的位置
-3. 取该位置之前的部分作为原始 name（如 `my-func`）
-4. 如果未找到 `-zone-`，则保留原始返回值（兼容性保护）
+1. 获取 DescribeFunctions 返回的 name（如 `my-zone-func-zone-2qtuhspy7cr6-1310708577`）
+2. 构造匹配后缀 `-` + zoneId（如 `-zone-2qtuhspy7cr6`）
+3. 查找该后缀在 name 中的位置
+4. 取该位置之前的部分作为原始 name（如 `my-zone-func`）
+5. 如果未找到匹配后缀，则保留原始返回值（兼容性保护）
 
 **替代方案**:
-- 按 `-` 分割后从末尾逆向拼接：复杂且不可靠，因为原始 name 中 `-` 的数量不确定
-- 使用正则表达式匹配：可行但不如字符串查找直观
+- 查找 `-zone-` 子串：简单但在原始 name 包含 `-zone-` 时（如 `my-zone-func`）会错误截断
+- 使用正则表达式匹配：可行但不如字符串查找直观，且同样存在边界问题
 
 ### Decision 2: 拆分函数的放置位置
 
@@ -57,5 +58,5 @@
 
 ## Risks / Trade-offs
 
-- [Risk] 如果云API未来改变 name 的拼接格式，拆分逻辑可能失效 → Mitigation: 在未找到 `-zone-` 时保留原始返回值，避免破坏性影响
+- [Risk] 如果云API未来改变 name 的拼接格式，拆分逻辑可能失效 → Mitigation: 在未找到 `-zoneId` 后缀时保留原始返回值，避免破坏性影响
 - [Risk] 已存在的 state 中 name 为拼接后的完整函数名，下次 Read 后会变为原始 name → Mitigation: 这是预期行为，state 会被自动修正，不会影响资源本身
