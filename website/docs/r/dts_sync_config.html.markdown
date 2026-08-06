@@ -84,6 +84,7 @@ resource "tencentcloud_dts_sync_config" "example" {
       db_name     = "tf_ci_test"
       new_db_name = "tf_ci_test_new"
       db_mode     = "Partial"
+      schema_mode = "Partial"
       table_mode  = "All"
       tables {
         table_name     = "test"
@@ -165,6 +166,7 @@ resource "tencentcloud_dts_sync_config" "example" {
       db_name     = "tf_ci_test"
       new_db_name = "tf_ci_test_new"
       db_mode     = "Partial"
+      schema_mode = "Partial"
       table_mode  = "All"
       tables {
         table_name     = "test"
@@ -231,6 +233,7 @@ The `databases` object of `objects` supports the following:
 * `new_schema_name` - (Optional, String) Schema name after migration or synchronization. Note: This field may return null, indicating that no valid value can be obtained.
 * `procedure_mode` - (Optional, String) Select the mode to be synchronized, Partial is part, All is the whole selection. Note: This field may return null, indicating that no valid value can be obtained.
 * `procedures` - (Optional, Set) Required when the value of ProcedureMode is Partial. Note: This field may return null, indicating that no valid value can be obtained.
+* `schema_mode` - (Optional, String) Schema selection mode, used by PostgreSQL and SQL Server sync links. Valid values: `All` (all objects under the current object), `Partial` (some objects). Note: This field may return null, indicating that no valid value can be obtained.
 * `schema_name` - (Optional, String) Migrated or synchronized schemaNote: This field may return null, indicating that no valid value can be obtained.
 * `table_mode` - (Optional, String) Table selection mode: All (for all objects under the current object), Partial (for some objects), this item is required when the DBMode is Partial. Note: This field may return null, indicating that no valid value can be obtained.
 * `tables` - (Optional, List) A collection of table graph objects, when TableMode is Partial, this item needs to be filled in. Note: This field may return null, indicating that no valid value can be obtained.
@@ -278,11 +281,11 @@ The `objects` object supports the following:
 * `advanced_objects` - (Optional, Set) For advanced object types, such as function and procedure, when an advanced object needs to be synchronized, the initialization type must include the structure initialization type, that is, the value of the Options.InitType field is Structure or Full. Note: This field may return null, indicating that no valid value can be obtained.
 * `databases` - (Optional, List) Synchronization object, not null when Mode is Partial. Note: This field may return null, indicating that no valid value can be obtained.
 * `mode` - (Optional, String) Migration object type Partial (partial object). Note: This field may return null, indicating that no valid value can be obtained.
-* `online_ddl` - (Optional, List) OnlineDDL type. Note: This field may return null, indicating that no valid value can be obtained.
+* `online_ddl` - (Optional, List, **Deprecated**) It has been deprecated from version 1.83.20. OnlineDDL type. Note: This field may return null, indicating that no valid value can be obtained.
 
 The `online_ddl` object of `objects` supports the following:
 
-* `status` - (Optional, String) status.
+* `status` - (Optional, String, **Deprecated**) It has been deprecated from version 1.83.20. Status: ON - Enabled, OFF - Disabled.
 
 The `options` object supports the following:
 

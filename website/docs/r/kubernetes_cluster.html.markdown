@@ -855,8 +855,8 @@ The following arguments are supported:
 The `auth_options` object supports the following:
 
 * `auto_create_discovery_anonymous_auth` - (Optional, Bool) If set to `true`, the rbac rule will be created automatically which allow anonymous user to access '/.well-known/openid-configuration' and '/openid/v1/jwks'.
-* `issuer` - (Optional, String) Specify service-account-issuer. If use_tke_default is set to `true`, please do not set this field, it will be ignored anyway.
-* `jwks_uri` - (Optional, String) Specify service-account-jwks-uri. If use_tke_default is set to `true`, please do not set this field, it will be ignored anyway.
+* `issuer` - (Optional, String) Specify service-account-issuer. If use_tke_default is set to `true`, please do not set this field, it will be ignored anyway. This field is also computed: when use_tke_default is `true`, TKE will auto-generate the value and it will be read back into state.
+* `jwks_uri` - (Optional, String) Specify service-account-jwks-uri. If use_tke_default is set to `true`, please do not set this field, it will be ignored anyway. This field is also computed: when use_tke_default is `true`, TKE will auto-generate the value and it will be read back into state.
 * `use_tke_default` - (Optional, Bool) If set to `true`, the issuer and jwks_uri will be generated automatically by tke, please do not set issuer and jwks_uri, and they will be ignored.
 
 The `cluster_audit` object supports the following:
