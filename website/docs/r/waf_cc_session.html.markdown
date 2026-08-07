@@ -24,6 +24,7 @@ resource "tencentcloud_waf_cc_session" "example" {
   end_offset       = "-1"
   edition          = "sparta-waf"
   session_name     = "terraformDemo"
+  key              = "sessionId"
 }
 ```
 
@@ -40,6 +41,7 @@ The following arguments are supported:
 * `session_name` - (Required, String) Session Name.
 * `source` - (Required, String) Session matching position, Optional locations are get, post, header, cookie.
 * `start_offset` - (Required, String) Starting offset position, when Category is location.
+* `key` - (Optional, String) Precise-match session key, configured when Category is precise matching.
 
 ## Attributes Reference
 
