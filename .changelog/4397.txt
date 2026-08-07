@@ -1,3 +1,4 @@
 ```release-note:enhancement
 resource/tencentcloud_cos_bucket: support status and tag filters in lifecycle rules
+data-source/tencentcloud_cos_buckets: return lifecycle rule status and tag filters
 ```

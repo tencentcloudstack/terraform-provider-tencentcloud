@@ -2,6 +2,7 @@ package cos
 
 import (
 	"reflect"
+	"strings"
 	"testing"
 
 	"github.com/aws/aws-sdk-go/aws"
@@ -20,6 +21,83 @@ func TestCosBucketLifecycleRuleSchema(t *testing.T) {
 	}
 	if got := rules["filter_tags"].Type; got != schema.TypeMap {
 		t.Fatalf("filter_tags type = %v, want TypeMap", got)
+	}
+}
+
+func TestCosBucketLifecycleDataSourceRuleSchema(t *testing.T) {
+	bucketList := DataSourceTencentCloudCosBuckets().Schema["bucket_list"].Elem.(*schema.Resource).Schema
+	rules := bucketList["lifecycle_rules"].Elem.(*schema.Resource).Schema
+
+	if !rules["status"].Computed || rules["status"].Type != schema.TypeString {
+		t.Fatalf("status schema = %#v, want computed string", rules["status"])
+	}
+	if !rules["filter_tags"].Computed || rules["filter_tags"].Type != schema.TypeMap {
+		t.Fatalf("filter_tags schema = %#v, want computed map", rules["filter_tags"])
+	}
+}
+
+func TestValidateCosBucketLifecycleFilterTags(t *testing.T) {
+	tenTags := map[string]interface{}{
+		"tag0": "0", "tag1": "1", "tag2": "2", "tag3": "3", "tag4": "4",
+		"tag5": "5", "tag6": "6", "tag7": "7", "tag8": "8", "tag9": "9",
+	}
+	elevenTags := make(map[string]interface{}, len(tenTags)+1)
+	for key, value := range tenTags {
+		elevenTags[key] = value
+	}
+	elevenTags["tag10"] = "10"
+
+	tests := map[string]struct {
+		tags    map[string]interface{}
+		wantErr bool
+	}{
+		"ten tags":         {tags: tenTags},
+		"eleven tags":      {tags: elevenTags, wantErr: true},
+		"128 byte key":     {tags: map[string]interface{}{strings.Repeat("k", 128): "value"}},
+		"129 byte key":     {tags: map[string]interface{}{strings.Repeat("k", 129): "value"}, wantErr: true},
+		"256 byte value":   {tags: map[string]interface{}{"key": strings.Repeat("v", 256)}},
+		"257 byte value":   {tags: map[string]interface{}{"key": strings.Repeat("v", 257)}, wantErr: true},
+		"empty key":        {tags: map[string]interface{}{"": "value"}, wantErr: true},
+		"non-string value": {tags: map[string]interface{}{"key": 1}, wantErr: true},
+	}
+
+	for name, test := range tests {
+		t.Run(name, func(t *testing.T) {
+			_, errors := validateCosBucketLifecycleFilterTags(test.tags, "filter_tags")
+			if gotErr := len(errors) > 0; gotErr != test.wantErr {
+				t.Fatalf("validateCosBucketLifecycleFilterTags() errors = %v, wantErr %t", errors, test.wantErr)
+			}
+		})
+	}
+}
+
+func TestValidateCosBucketLifecycleRules(t *testing.T) {
+	abortUploads := schema.NewSet(schema.HashString, []interface{}{"configured"})
+	tests := map[string]struct {
+		rules   []interface{}
+		wantErr bool
+	}{
+		"tags only": {
+			rules: []interface{}{map[string]interface{}{"filter_tags": map[string]interface{}{"env": "prod"}}},
+		},
+		"abort only": {
+			rules: []interface{}{map[string]interface{}{"abort_incomplete_multipart_upload": abortUploads}},
+		},
+		"tags and abort": {
+			rules: []interface{}{map[string]interface{}{
+				"filter_tags":                       map[string]interface{}{"env": "prod"},
+				"abort_incomplete_multipart_upload": abortUploads,
+			}},
+			wantErr: true,
+		},
+	}
+
+	for name, test := range tests {
+		t.Run(name, func(t *testing.T) {
+			if gotErr := validateCosBucketLifecycleRules(test.rules) != nil; gotErr != test.wantErr {
+				t.Fatalf("validateCosBucketLifecycleRules() error = %t, wantErr %t", gotErr, test.wantErr)
+			}
+		})
 	}
 }
 

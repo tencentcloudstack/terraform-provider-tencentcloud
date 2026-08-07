@@ -271,7 +271,7 @@ func TestAccTencentCloudCosBucketResource_lifecycle(t *testing.T) {
 				Config: testAccBucket_lifecycleUpdate(),
 				Check: resource.ComposeAggregateTestCheckFunc(
 					testAccCheckCosBucketExists("tencentcloud_cos_bucket.bucket_lifecycle"),
-					resource.TestCheckResourceAttr("tencentcloud_cos_bucket.bucket_lifecycle", "lifecycle_rules.#", "1"),
+					resource.TestCheckResourceAttr("tencentcloud_cos_bucket.bucket_lifecycle", "lifecycle_rules.#", "2"),
 					resource.TestCheckResourceAttr("tencentcloud_cos_bucket.bucket_lifecycle", "lifecycle_rules.0.status", "Enabled"),
 					resource.TestCheckResourceAttr("tencentcloud_cos_bucket.bucket_lifecycle", "lifecycle_rules.0.filter_prefix", "test/"),
 					resource.TestCheckResourceAttr("tencentcloud_cos_bucket.bucket_lifecycle", "lifecycle_rules.0.filter_tags.env", "prod"),
@@ -293,8 +293,9 @@ func TestAccTencentCloudCosBucketResource_lifecycle(t *testing.T) {
 						}),
 					resource.TestCheckResourceAttr("tencentcloud_cos_bucket.bucket_lifecycle", "lifecycle_rules.0.non_current_expiration.#", "1"),
 					resource.TestCheckResourceAttr("tencentcloud_cos_bucket.bucket_lifecycle", "lifecycle_rules.0.non_current_transition.#", "2"),
-					resource.TestCheckResourceAttr("tencentcloud_cos_bucket.bucket_lifecycle", "lifecycle_rules.0.abort_incomplete_multipart_upload.#", "1"),
-					resource.TestCheckResourceAttr("tencentcloud_cos_bucket.bucket_lifecycle", "lifecycle_rules.0.abort_incomplete_multipart_upload.0.days_after_initiation", "1"),
+					resource.TestCheckResourceAttr("tencentcloud_cos_bucket.bucket_lifecycle", "lifecycle_rules.1.status", "Enabled"),
+					resource.TestCheckResourceAttr("tencentcloud_cos_bucket.bucket_lifecycle", "lifecycle_rules.1.abort_incomplete_multipart_upload.#", "1"),
+					resource.TestCheckResourceAttr("tencentcloud_cos_bucket.bucket_lifecycle", "lifecycle_rules.1.abort_incomplete_multipart_upload.0.days_after_initiation", "1"),
 				),
 			},
 			{
@@ -817,6 +818,12 @@ resource "tencentcloud_cos_bucket" "bucket_lifecycle" {
       non_current_days = 180
       storage_class = "ARCHIVE"
     }
+
+  }
+
+  lifecycle_rules {
+    id     = "abort-multipart"
+    status = "Enabled"
 
     abort_incomplete_multipart_upload {
       days_after_initiation = 1
