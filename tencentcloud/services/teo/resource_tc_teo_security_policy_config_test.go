@@ -702,3 +702,301 @@ func TestBotManagementLite_Schema(t *testing.T) {
 	assert.Contains(t, challengeRes.Schema, "interval")
 	assert.Contains(t, challengeRes.Schema, "attester_id")
 }
+
+// go test ./tencentcloud/services/teo/ -run "TestExceptionRuleSubmodules" -v -count=1 -gcflags="all=-l"
+
+// TestExceptionRuleSubmodules_UpdateExpand tests that Update expands
+// web_security_submodules_for_exception into the ModifySecurityPolicy request.
+func TestExceptionRuleSubmodules_UpdateExpand(t *testing.T) {
+	patches := gomonkey.NewPatches()
+	defer patches.Reset()
+
+	teoClient := &teov20220901.Client{}
+	patches.ApplyMethodReturn(newMockMetaSecurityPolicy().client, "UseTeoV20220901Client", teoClient)
+
+	var capturedRequest *teov20220901.ModifySecurityPolicyRequest
+	patches.ApplyMethodFunc(teoClient, "ModifySecurityPolicyWithContext", func(_ context.Context, request *teov20220901.ModifySecurityPolicyRequest) (*teov20220901.ModifySecurityPolicyResponse, error) {
+		capturedRequest = request
+		resp := teov20220901.NewModifySecurityPolicyResponse()
+		resp.Response = &teov20220901.ModifySecurityPolicyResponseParams{
+			RequestId: ptrStringSecurityPolicy("fake-request-id"),
+		}
+		return resp, nil
+	})
+
+	// Also mock DescribeSecurityPolicy for the Read call after Update
+	patches.ApplyMethodFunc(teoClient, "DescribeSecurityPolicy", func(request *teov20220901.DescribeSecurityPolicyRequest) (*teov20220901.DescribeSecurityPolicyResponse, error) {
+		resp := teov20220901.NewDescribeSecurityPolicyResponse()
+		resp.Response = &teov20220901.DescribeSecurityPolicyResponseParams{
+			SecurityPolicy: &teov20220901.SecurityPolicy{
+				ExceptionRules: &teov20220901.ExceptionRules{
+					Rules: []*teov20220901.ExceptionRule{
+						{
+							Name:      ptrStringSecurityPolicy("exception-rule-1"),
+							Condition: ptrStringSecurityPolicy("$${http.request.host} contain ['abc']"),
+							SkipScope: ptrStringSecurityPolicy("WebSecuritySubmodules"),
+							WebSecuritySubmodulesForException: []*string{
+								ptrStringSecurityPolicy("websec-mod-managed-rules/managed-rule-groups"),
+								ptrStringSecurityPolicy("websec-mod-rate-limiting-rules"),
+							},
+							Enabled: ptrStringSecurityPolicy("on"),
+						},
+					},
+				},
+			},
+			RequestId: ptrStringSecurityPolicy("fake-request-id"),
+		}
+		return resp, nil
+	})
+
+	meta := newMockMetaSecurityPolicy()
+	res := teo.ResourceTencentCloudTeoSecurityPolicyConfig()
+	d := schema.TestResourceDataRaw(t, res.Schema, map[string]interface{}{
+		"zone_id": "zone-12345678",
+		"entity":  "ZoneDefaultPolicy",
+		"security_policy": []interface{}{
+			map[string]interface{}{
+				"exception_rules": []interface{}{
+					map[string]interface{}{
+						"rules": []interface{}{
+							map[string]interface{}{
+								"name":       "exception-rule-1",
+								"condition":  "$${http.request.host} contain ['abc']",
+								"skip_scope": "WebSecuritySubmodules",
+								"web_security_submodules_for_exception": schema.NewSet(schema.HashString, []interface{}{
+									"websec-mod-managed-rules/managed-rule-groups",
+									"websec-mod-rate-limiting-rules",
+								}),
+								"enabled": "on",
+							},
+						},
+					},
+				},
+			},
+		},
+	})
+	d.SetId("zone-12345678#ZoneDefaultPolicy")
+
+	err := res.Update(d, meta)
+	assert.NoError(t, err)
+	assert.NotNil(t, capturedRequest)
+	assert.NotNil(t, capturedRequest.SecurityPolicy)
+	assert.NotNil(t, capturedRequest.SecurityPolicy.ExceptionRules)
+	assert.Len(t, capturedRequest.SecurityPolicy.ExceptionRules.Rules, 1)
+	rule := capturedRequest.SecurityPolicy.ExceptionRules.Rules[0]
+	assert.NotNil(t, rule.WebSecuritySubmodulesForException)
+	assert.Len(t, rule.WebSecuritySubmodulesForException, 2)
+	// TypeSet is order-insensitive, so collect values into a map for comparison
+	got := map[string]bool{}
+	for _, v := range rule.WebSecuritySubmodulesForException {
+		if v != nil {
+			got[*v] = true
+		}
+	}
+	assert.True(t, got["websec-mod-managed-rules/managed-rule-groups"])
+	assert.True(t, got["websec-mod-rate-limiting-rules"])
+}
+
+// TestExceptionRuleSubmodules_ReadWithSubmodules tests that Read flattens
+// WebSecuritySubmodulesForException from the DescribeSecurityPolicy response.
+func TestExceptionRuleSubmodules_ReadWithSubmodules(t *testing.T) {
+	patches := gomonkey.NewPatches()
+	defer patches.Reset()
+
+	teoClient := &teov20220901.Client{}
+	patches.ApplyMethodReturn(newMockMetaSecurityPolicy().client, "UseTeoV20220901Client", teoClient)
+
+	patches.ApplyMethodFunc(teoClient, "DescribeSecurityPolicy", func(request *teov20220901.DescribeSecurityPolicyRequest) (*teov20220901.DescribeSecurityPolicyResponse, error) {
+		resp := teov20220901.NewDescribeSecurityPolicyResponse()
+		resp.Response = &teov20220901.DescribeSecurityPolicyResponseParams{
+			SecurityPolicy: &teov20220901.SecurityPolicy{
+				ExceptionRules: &teov20220901.ExceptionRules{
+					Rules: []*teov20220901.ExceptionRule{
+						{
+							Name:      ptrStringSecurityPolicy("exception-rule-1"),
+							Condition: ptrStringSecurityPolicy("$${http.request.host} contain ['abc']"),
+							SkipScope: ptrStringSecurityPolicy("WebSecuritySubmodules"),
+							WebSecuritySubmodulesForException: []*string{
+								ptrStringSecurityPolicy("websec-mod-managed-rules/managed-rule-groups"),
+								ptrStringSecurityPolicy("websec-mod-rate-limiting-rules"),
+							},
+							Enabled: ptrStringSecurityPolicy("on"),
+						},
+					},
+				},
+			},
+			RequestId: ptrStringSecurityPolicy("fake-request-id"),
+		}
+		return resp, nil
+	})
+
+	meta := newMockMetaSecurityPolicy()
+	res := teo.ResourceTencentCloudTeoSecurityPolicyConfig()
+	d := schema.TestResourceDataRaw(t, res.Schema, map[string]interface{}{
+		"zone_id": "zone-12345678",
+		"entity":  "ZoneDefaultPolicy",
+	})
+	d.SetId("zone-12345678#ZoneDefaultPolicy")
+
+	err := res.Read(d, meta)
+	assert.NoError(t, err)
+
+	securityPolicy := d.Get("security_policy").([]interface{})
+	assert.Len(t, securityPolicy, 1)
+	spMap := securityPolicy[0].(map[string]interface{})
+
+	exceptionRules := spMap["exception_rules"].([]interface{})
+	assert.Len(t, exceptionRules, 1)
+	erMap := exceptionRules[0].(map[string]interface{})
+
+	rules := erMap["rules"].([]interface{})
+	assert.Len(t, rules, 1)
+	ruleMap := rules[0].(map[string]interface{})
+
+	submodulesSet := ruleMap["web_security_submodules_for_exception"].(*schema.Set)
+	assert.Equal(t, 2, submodulesSet.Len())
+	got := map[string]bool{}
+	for _, v := range submodulesSet.List() {
+		got[v.(string)] = true
+	}
+	assert.True(t, got["websec-mod-managed-rules/managed-rule-groups"])
+	assert.True(t, got["websec-mod-rate-limiting-rules"])
+}
+
+// TestExceptionRuleSubmodules_ReadWithNilSubmodules tests that Read does not
+// populate web_security_submodules_for_exception when the API returns nil.
+func TestExceptionRuleSubmodules_ReadWithNilSubmodules(t *testing.T) {
+	patches := gomonkey.NewPatches()
+	defer patches.Reset()
+
+	teoClient := &teov20220901.Client{}
+	patches.ApplyMethodReturn(newMockMetaSecurityPolicy().client, "UseTeoV20220901Client", teoClient)
+
+	patches.ApplyMethodFunc(teoClient, "DescribeSecurityPolicy", func(request *teov20220901.DescribeSecurityPolicyRequest) (*teov20220901.DescribeSecurityPolicyResponse, error) {
+		resp := teov20220901.NewDescribeSecurityPolicyResponse()
+		resp.Response = &teov20220901.DescribeSecurityPolicyResponseParams{
+			SecurityPolicy: &teov20220901.SecurityPolicy{
+				ExceptionRules: &teov20220901.ExceptionRules{
+					Rules: []*teov20220901.ExceptionRule{
+						{
+							Name:      ptrStringSecurityPolicy("exception-rule-1"),
+							Condition: ptrStringSecurityPolicy("$${http.request.host} contain ['abc']"),
+							SkipScope: ptrStringSecurityPolicy("WebSecuritySubmodules"),
+							Enabled:   ptrStringSecurityPolicy("on"),
+						},
+					},
+				},
+			},
+			RequestId: ptrStringSecurityPolicy("fake-request-id"),
+		}
+		return resp, nil
+	})
+
+	meta := newMockMetaSecurityPolicy()
+	res := teo.ResourceTencentCloudTeoSecurityPolicyConfig()
+	d := schema.TestResourceDataRaw(t, res.Schema, map[string]interface{}{
+		"zone_id": "zone-12345678",
+		"entity":  "ZoneDefaultPolicy",
+	})
+	d.SetId("zone-12345678#ZoneDefaultPolicy")
+
+	err := res.Read(d, meta)
+	assert.NoError(t, err)
+
+	securityPolicy := d.Get("security_policy").([]interface{})
+	assert.Len(t, securityPolicy, 1)
+	spMap := securityPolicy[0].(map[string]interface{})
+
+	exceptionRules := spMap["exception_rules"].([]interface{})
+	assert.Len(t, exceptionRules, 1)
+	erMap := exceptionRules[0].(map[string]interface{})
+
+	rules := erMap["rules"].([]interface{})
+	assert.Len(t, rules, 1)
+	ruleMap := rules[0].(map[string]interface{})
+
+	submodulesSet := ruleMap["web_security_submodules_for_exception"].(*schema.Set)
+	assert.Equal(t, 0, submodulesSet.Len())
+}
+
+// TestExceptionRuleSubmodules_UpdateChange tests that Update reflects changes
+// to web_security_submodules_for_exception in the ModifySecurityPolicy request.
+func TestExceptionRuleSubmodules_UpdateChange(t *testing.T) {
+	patches := gomonkey.NewPatches()
+	defer patches.Reset()
+
+	teoClient := &teov20220901.Client{}
+	patches.ApplyMethodReturn(newMockMetaSecurityPolicy().client, "UseTeoV20220901Client", teoClient)
+
+	var capturedRequest *teov20220901.ModifySecurityPolicyRequest
+	patches.ApplyMethodFunc(teoClient, "ModifySecurityPolicyWithContext", func(_ context.Context, request *teov20220901.ModifySecurityPolicyRequest) (*teov20220901.ModifySecurityPolicyResponse, error) {
+		capturedRequest = request
+		resp := teov20220901.NewModifySecurityPolicyResponse()
+		resp.Response = &teov20220901.ModifySecurityPolicyResponseParams{
+			RequestId: ptrStringSecurityPolicy("fake-request-id"),
+		}
+		return resp, nil
+	})
+
+	// Also mock DescribeSecurityPolicy for the Read call after Update
+	patches.ApplyMethodFunc(teoClient, "DescribeSecurityPolicy", func(request *teov20220901.DescribeSecurityPolicyRequest) (*teov20220901.DescribeSecurityPolicyResponse, error) {
+		resp := teov20220901.NewDescribeSecurityPolicyResponse()
+		resp.Response = &teov20220901.DescribeSecurityPolicyResponseParams{
+			SecurityPolicy: &teov20220901.SecurityPolicy{
+				ExceptionRules: &teov20220901.ExceptionRules{
+					Rules: []*teov20220901.ExceptionRule{
+						{
+							Name:      ptrStringSecurityPolicy("exception-rule-1"),
+							Condition: ptrStringSecurityPolicy("$${http.request.host} contain ['abc']"),
+							SkipScope: ptrStringSecurityPolicy("WebSecuritySubmodules"),
+							WebSecuritySubmodulesForException: []*string{
+								ptrStringSecurityPolicy("websec-mod-custom-rules"),
+							},
+							Enabled: ptrStringSecurityPolicy("on"),
+						},
+					},
+				},
+			},
+			RequestId: ptrStringSecurityPolicy("fake-request-id"),
+		}
+		return resp, nil
+	})
+
+	meta := newMockMetaSecurityPolicy()
+	res := teo.ResourceTencentCloudTeoSecurityPolicyConfig()
+	d := schema.TestResourceDataRaw(t, res.Schema, map[string]interface{}{
+		"zone_id": "zone-12345678",
+		"entity":  "ZoneDefaultPolicy",
+		"security_policy": []interface{}{
+			map[string]interface{}{
+				"exception_rules": []interface{}{
+					map[string]interface{}{
+						"rules": []interface{}{
+							map[string]interface{}{
+								"name":       "exception-rule-1",
+								"condition":  "$${http.request.host} contain ['abc']",
+								"skip_scope": "WebSecuritySubmodules",
+								"web_security_submodules_for_exception": schema.NewSet(schema.HashString, []interface{}{
+									"websec-mod-custom-rules",
+								}),
+								"enabled": "on",
+							},
+						},
+					},
+				},
+			},
+		},
+	})
+	d.SetId("zone-12345678#ZoneDefaultPolicy")
+
+	err := res.Update(d, meta)
+	assert.NoError(t, err)
+	assert.NotNil(t, capturedRequest)
+	assert.NotNil(t, capturedRequest.SecurityPolicy)
+	assert.NotNil(t, capturedRequest.SecurityPolicy.ExceptionRules)
+	assert.Len(t, capturedRequest.SecurityPolicy.ExceptionRules.Rules, 1)
+	rule := capturedRequest.SecurityPolicy.ExceptionRules.Rules[0]
+	assert.NotNil(t, rule.WebSecuritySubmodulesForException)
+	assert.Len(t, rule.WebSecuritySubmodulesForException, 1)
+	assert.Equal(t, "websec-mod-custom-rules", *rule.WebSecuritySubmodulesForException[0])
+}
