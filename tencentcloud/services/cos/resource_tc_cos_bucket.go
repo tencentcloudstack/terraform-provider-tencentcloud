@@ -9,6 +9,7 @@ import (
 	"io/ioutil"
 	"log"
 	"net/url"
+	"sort"
 	"strings"
 	"time"
 
@@ -468,10 +469,23 @@ func ResourceTencentCloudCosBucket() *schema.Resource {
 							Optional:    true,
 							Description: "A unique identifier for the rule. It can be up to 255 characters.",
 						},
+						"status": {
+							Type:         schema.TypeString,
+							Optional:     true,
+							Default:      s3.ExpirationStatusEnabled,
+							ValidateFunc: tccommon.ValidateAllowedStringValue([]string{s3.ExpirationStatusEnabled, s3.ExpirationStatusDisabled}),
+							Description:  "Whether the lifecycle rule is enabled. Valid values are `Enabled` and `Disabled`.",
+						},
 						"filter_prefix": {
 							Type:        schema.TypeString,
 							Optional:    true,
 							Description: "Object key prefix identifying one or more objects to which the rule applies.",
+						},
+						"filter_tags": {
+							Type:        schema.TypeMap,
+							Optional:    true,
+							Elem:        &schema.Schema{Type: schema.TypeString},
+							Description: "Object tags identifying objects to which the rule applies. All tags and `filter_prefix`, when set, are combined with a logical AND. COS supports up to 10 tags.",
 						},
 						"transition": {
 							Type:        schema.TypeSet,
@@ -1876,11 +1890,17 @@ func resourceTencentCloudCosBucketLifecycleUpdate(ctx context.Context, meta inte
 			if ok {
 				rule.ID = &id
 			}
-			rule.Status = helper.String(s3.ExpirationStatusEnabled)
-			prefix := r["filter_prefix"].(string)
-			rule.Filter = &s3.LifecycleRuleFilter{
-				Prefix: &prefix,
+			status := s3.ExpirationStatusEnabled
+			if value, ok := r["status"].(string); ok && value != "" {
+				status = value
 			}
+			rule.Status = helper.String(status)
+			prefix := r["filter_prefix"].(string)
+			filterTags := map[string]interface{}{}
+			if value, ok := r["filter_tags"].(map[string]interface{}); ok {
+				filterTags = value
+			}
+			rule.Filter = expandCosBucketLifecycleRuleFilter(prefix, filterTags)
 
 			// Transitions
 			transitions := d.Get(fmt.Sprintf("lifecycle_rules.%d.transition", i)).(*schema.Set).List()
@@ -1993,6 +2013,36 @@ func resourceTencentCloudCosBucketLifecycleUpdate(ctx context.Context, meta inte
 	}
 
 	return nil
+}
+
+func expandCosBucketLifecycleRuleFilter(prefix string, rawTags map[string]interface{}) *s3.LifecycleRuleFilter {
+	if len(rawTags) == 0 {
+		return &s3.LifecycleRuleFilter{Prefix: helper.String(prefix)}
+	}
+
+	keys := make([]string, 0, len(rawTags))
+	for key := range rawTags {
+		keys = append(keys, key)
+	}
+	sort.Strings(keys)
+
+	tags := make([]*s3.Tag, 0, len(keys))
+	for _, key := range keys {
+		tags = append(tags, &s3.Tag{
+			Key:   helper.String(key),
+			Value: helper.String(rawTags[key].(string)),
+		})
+	}
+
+	if prefix == "" && len(tags) == 1 {
+		return &s3.LifecycleRuleFilter{Tag: tags[0]}
+	}
+
+	and := &s3.LifecycleRuleAndOperator{Tags: tags}
+	if prefix != "" {
+		and.Prefix = helper.String(prefix)
+	}
+	return &s3.LifecycleRuleFilter{And: and}
 }
 
 func resourceTencentCloudCosBucketWebsiteUpdate(ctx context.Context, meta interface{}, d *schema.ResourceData) error {

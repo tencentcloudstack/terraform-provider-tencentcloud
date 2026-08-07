@@ -244,7 +244,10 @@ func TestAccTencentCloudCosBucketResource_lifecycle(t *testing.T) {
 					testAccCheckCosBucketExists("tencentcloud_cos_bucket.bucket_lifecycle"),
 					resource.TestCheckResourceAttr("tencentcloud_cos_bucket.bucket_lifecycle", "lifecycle_rules.#", "1"),
 					resource.TestCheckResourceAttr("tencentcloud_cos_bucket.bucket_lifecycle", "lifecycle_rules.0.id", "rule1"),
+					resource.TestCheckResourceAttr("tencentcloud_cos_bucket.bucket_lifecycle", "lifecycle_rules.0.status", "Disabled"),
 					resource.TestCheckResourceAttr("tencentcloud_cos_bucket.bucket_lifecycle", "lifecycle_rules.0.filter_prefix", "test/"),
+					resource.TestCheckResourceAttr("tencentcloud_cos_bucket.bucket_lifecycle", "lifecycle_rules.0.filter_tags.env", "test"),
+					resource.TestCheckResourceAttr("tencentcloud_cos_bucket.bucket_lifecycle", "lifecycle_rules.0.filter_tags.team", "storage"),
 					resource.TestCheckResourceAttr("tencentcloud_cos_bucket.bucket_lifecycle", "lifecycle_rules.0.expiration.#", "1"),
 					resource.TestCheckTypeSetElemNestedAttrs("tencentcloud_cos_bucket.bucket_lifecycle", "lifecycle_rules.0.expiration.*",
 						map[string]string{
@@ -269,7 +272,9 @@ func TestAccTencentCloudCosBucketResource_lifecycle(t *testing.T) {
 				Check: resource.ComposeAggregateTestCheckFunc(
 					testAccCheckCosBucketExists("tencentcloud_cos_bucket.bucket_lifecycle"),
 					resource.TestCheckResourceAttr("tencentcloud_cos_bucket.bucket_lifecycle", "lifecycle_rules.#", "1"),
+					resource.TestCheckResourceAttr("tencentcloud_cos_bucket.bucket_lifecycle", "lifecycle_rules.0.status", "Enabled"),
 					resource.TestCheckResourceAttr("tencentcloud_cos_bucket.bucket_lifecycle", "lifecycle_rules.0.filter_prefix", "test/"),
+					resource.TestCheckResourceAttr("tencentcloud_cos_bucket.bucket_lifecycle", "lifecycle_rules.0.filter_tags.env", "prod"),
 					resource.TestCheckResourceAttr("tencentcloud_cos_bucket.bucket_lifecycle", "lifecycle_rules.0.expiration.#", "1"),
 					resource.TestCheckTypeSetElemNestedAttrs("tencentcloud_cos_bucket.bucket_lifecycle", "lifecycle_rules.0.expiration.*",
 						map[string]string{
@@ -749,8 +754,13 @@ resource "tencentcloud_cos_bucket" "bucket_lifecycle" {
   acl    = "public-read"
   versioning_enable = true
   lifecycle_rules {
-    id = "rule1"
+    id            = "rule1"
+    status        = "Disabled"
     filter_prefix = "test/"
+    filter_tags = {
+      env  = "test"
+      team = "storage"
+    }
     expiration {
       days = 365
     }
@@ -776,8 +786,12 @@ resource "tencentcloud_cos_bucket" "bucket_lifecycle" {
   acl    = "public-read"
   versioning_enable = true
   lifecycle_rules {
-    id = "rule1"
+    id            = "rule1"
+    status        = "Enabled"
     filter_prefix = "test/"
+    filter_tags = {
+      env = "prod"
+    }
     expiration {
       days = 300
     }
