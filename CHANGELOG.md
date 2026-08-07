@@ -1,3 +1,10 @@
+## 1.83.21(August 7, 2026)
+
+ENHANCEMENTS:
+
+* resource/tencentcloud_cls_cos_shipper: add timezone parameter support ([#4159](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/4159))
+* resource/tencentcloud_waf_cc_session: support the `key` parameter for precise-match session key ([#4396](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/4396))
+
 ## 1.83.20(August 5, 2026)
 
 ENHANCEMENTS:
