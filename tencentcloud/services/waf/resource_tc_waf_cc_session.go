@@ -74,6 +74,7 @@ func ResourceTencentCloudWafCcSession() *schema.Resource {
 			},
 			"key": {
 				Optional:    true,
+				Computed:    true,
 				Type:        schema.TypeString,
 				Description: "Precise-match session key, configured when Category is precise matching.",
 			},
