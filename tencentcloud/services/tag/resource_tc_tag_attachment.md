@@ -19,3 +19,5 @@ tag attachment can be imported using the id, e.g.
 ```
 terraform import tencentcloud_tag_attachment.attachment attachment_id
 ```
+
+Note: `tag_value` can be updated in place; changing `tag_key` or `resource` will recreate the resource.
