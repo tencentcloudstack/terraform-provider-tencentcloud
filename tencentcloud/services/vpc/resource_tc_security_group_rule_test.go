@@ -14,6 +14,30 @@ import (
 	"github.com/hashicorp/terraform-plugin-sdk/v2/terraform"
 )
 
+func TestUnitTencentCloudSecurityGroupRulePortRangeValidation(t *testing.T) {
+	validate := svcvpc.ResourceTencentCloudSecurityGroupRule().Schema["port_range"].ValidateFunc
+	testCases := []struct {
+		name    string
+		value   string
+		wantErr bool
+	}{
+		{name: "all ports", value: "ALL"},
+		{name: "single port", value: "53"},
+		{name: "multiple ports", value: "80,443"},
+		{name: "port range", value: "80-90"},
+		{name: "invalid value", value: "invalid", wantErr: true},
+	}
+
+	for _, testCase := range testCases {
+		t.Run(testCase.name, func(t *testing.T) {
+			_, errs := validate(testCase.value, "port_range")
+			if gotErr := len(errs) > 0; gotErr != testCase.wantErr {
+				t.Fatalf("validate(%q) returned errors %v, wantErr %t", testCase.value, errs, testCase.wantErr)
+			}
+		})
+	}
+}
+
 func TestAccTencentCloudSecurityGroupRuleResource_basic(t *testing.T) {
 	t.Parallel()
 	var sgrId string
@@ -404,6 +428,8 @@ resource "tencentcloud_security_group_rule" "egress-drop" {
   security_group_id = tencentcloud_security_group.foo.id
   cidr_ip           = "0.0.0.0/0"
   type              = "ingress"
+  ip_protocol       = "ALL"
+  port_range        = "ALL"
   policy            = "DROP"
 }
 `
