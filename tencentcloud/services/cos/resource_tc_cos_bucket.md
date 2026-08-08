@@ -356,7 +356,11 @@ resource "tencentcloud_cos_bucket" "bucket_with_lifecycle" {
   acl    = "public-read-write"
 
   lifecycle_rules {
+    status        = "Enabled"
     filter_prefix = "path1/"
+    filter_tags = {
+      env = "prod"
+    }
 
     transition {
       days          = 30
@@ -394,6 +398,7 @@ resource "tencentcloud_cos_bucket" "bucket_with_lifecycle" {
   acl    = "private"
 
   lifecycle_rules {
+    status        = "Enabled"
     filter_prefix = "path1/"
 
     expiration {
