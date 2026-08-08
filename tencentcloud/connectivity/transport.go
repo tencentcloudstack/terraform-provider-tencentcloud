@@ -25,6 +25,16 @@ func SetReqClient(name string) {
 	ReqClient = name
 }
 
+var customHeaders = map[string]string{}
+
+func SetCustomHeaders(headers map[string]string) {
+	if headers == nil {
+		return
+	}
+
+	customHeaders = headers
+}
+
 type LogRoundTripper struct {
 	InstanceId    string
 	Authorization string
@@ -68,6 +78,10 @@ func (me *LogRoundTripper) RoundTrip(request *http.Request) (response *http.Resp
 
 	if me.Authorization != "" {
 		request.Header.Set("Authorization", me.Authorization)
+	}
+
+	for k, v := range customHeaders {
+		request.Header.Set(k, v)
 	}
 
 	request.Header.Set("X-TC-RequestClient", reqClientFormat)

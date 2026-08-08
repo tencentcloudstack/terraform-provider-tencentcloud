@@ -498,6 +498,8 @@ In addition to generic provider arguments (e.g. alias and version), the followin
 * `assume_role_with_web_identity` - (Optional, Available in 1.81.111+) An `assume_role_with_web_identity` block (documented below). If provided, terraform will attempt to assume this role using the supplied credentials. Only one `assume_role_with_web_identity` block may be in the configuration.
 * `protocol` - (Optional, Available in 1.37.0+) The protocol of the API request. Valid values: `HTTP` and `HTTPS`. Default is `HTTPS`.
 * `domain` - (Optional, Available in 1.37.0+) The root domain of the API request, Default is `tencentcloudapi.com`. 
+* `custom_headers` - (Optional, Available in 1.37.0+) Custom HTTP headers to add to all API requests. 
+* `cos_domain` - (Optional, Available in 1.37.0+) The cos domain of the API request, Default is `https://cos.{region}.myqcloud.com`, Other Examples: `https://cluster-123456.cos-cdc.ap-guangzhou.myqcloud.com`. 
 * `cam_role_name` - (Optional, Available in 1.81.117+) The name of the CVM instance CAM role. It can be sourced from the `TENCENTCLOUD_CAM_ROLE_NAME` environment variable. 
 * `allowed_account_ids` - (Optional) List of allowed TencentCloud account IDs to prevent you from mistakenly using the wrong one (and potentially end up destroying a live environment). Conflicts with `forbidden_account_ids`, If use `assume_role_with_saml` or `assume_role_with_web_identity`, it is not supported.
 * `forbidden_account_ids` - (Optional) List of forbidden TencentCloud account IDs to prevent you from mistakenly using the wrong one (and potentially end up destroying a live environment). Conflicts with `allowed_account_ids`, If use `assume_role_with_saml` or `assume_role_with_web_identity`, it is not supported.
