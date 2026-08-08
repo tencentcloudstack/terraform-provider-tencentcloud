@@ -109,15 +109,28 @@ func ResourceTencentCloudTeoL7AccRuleV2Create(d *schema.ResourceData, meta inter
 		} else {
 			log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), result.ToJsonString())
 		}
-		if result.Response != nil && len(result.Response.RuleIds) > 0 && result.Response.RuleIds[0] != nil {
-			ruleId = *result.Response.RuleIds[0]
+
+		if result == nil || result.Response == nil {
+			return resource.NonRetryableError(fmt.Errorf("Create teo_l7_acc_rule failed, Response is nil."))
 		}
+
+		if len(result.Response.RuleIds) == 0 || result.Response.RuleIds[0] == nil {
+			return resource.NonRetryableError(fmt.Errorf("Create teo_l7_acc_rule failed, RuleIds is empty."))
+		}
+
+		ruleId = *result.Response.RuleIds[0]
 		return nil
 	})
 	if err != nil {
+		log.Printf("[CRITAL]%s create teo_l7_acc_rule failed, reason:%+v", logId, err)
 		return err
 	}
 
+	if ruleId == "" {
+		return fmt.Errorf("Create teo_l7_acc_rule failed, ruleId is empty.")
+	}
+
+	log.Printf("[DEBUG]%s create teo_l7_acc_rule success, zoneId=%s, ruleId=%s", logId, zoneId, ruleId)
 	d.SetId(zoneId + tccommon.FILED_SP + ruleId)
 
 	return ResourceTencentCloudTeoL7AccRuleV2Read(d, meta)
@@ -149,8 +162,8 @@ func ResourceTencentCloudTeoL7AccRuleV2Read(d *schema.ResourceData, meta interfa
 	}
 
 	if respData == nil || len(respData.Rules) == 0 {
-		d.SetId("")
 		log.Printf("[WARN]%s resource `teo_l7_acc_rule` [%s] not found, please check if it has been deleted.\n", logId, d.Id())
+		d.SetId("")
 		return nil
 	}
 	if len(respData.Rules) > 0 {
@@ -210,9 +223,15 @@ func ResourceTencentCloudTeoL7AccRuleV2Update(d *schema.ResourceData, meta inter
 			} else {
 				log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), result.ToJsonString())
 			}
+
+			if result == nil || result.Response == nil {
+				return resource.NonRetryableError(fmt.Errorf("Modify teo_l7_acc_rule failed, Response is nil."))
+			}
+
 			return nil
 		})
 		if err != nil {
+			log.Printf("[CRITAL]%s update teo_l7_acc_rule failed, reason:%+v", logId, err)
 			return err
 		}
 	}
@@ -244,9 +263,15 @@ func ResourceTencentCloudTeoL7AccRuleV2Delete(d *schema.ResourceData, meta inter
 		} else {
 			log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), result.ToJsonString())
 		}
+
+		if result == nil || result.Response == nil {
+			return resource.NonRetryableError(fmt.Errorf("Delete teo_l7_acc_rule failed, Response is nil."))
+		}
+
 		return nil
 	})
 	if err != nil {
+		log.Printf("[CRITAL]%s delete teo_l7_acc_rule failed, reason:%+v", logId, err)
 		return err
 	}
 

@@ -120,8 +120,8 @@ func resourceTencentCloudTeoL7AccRuleRead(d *schema.ResourceData, meta interface
 	}
 
 	if respData == nil {
-		d.SetId("")
 		log.Printf("[WARN]%s resource `teo_l7_acc_rule` [%s] not found, please check if it has been deleted.\n", logId, d.Id())
+		d.SetId("")
 		return nil
 	}
 	rulesList := make([]map[string]interface{}, 0, len(respData.Rules))
