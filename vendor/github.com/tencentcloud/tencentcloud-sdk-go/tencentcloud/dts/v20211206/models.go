@@ -129,20 +129,32 @@ type CompareColumnItem struct {
 }
 
 type CompareDetailInfo struct {
-	// 数据不一致的表详情
+	// <p>数据不一致的表详情</p>
 	Difference *DifferenceDetail `json:"Difference,omitnil,omitempty" name:"Difference"`
 
-	// 跳过校验的表详情
+	// <p>跳过校验的表详情</p>
 	Skipped *SkippedDetail `json:"Skipped,omitnil,omitempty" name:"Skipped"`
 
-	// 数据库不一致的详情，mongodb业务用到
+	// <p>数据库不一致的详情，mongodb业务用到</p>
 	DifferenceAdvancedObjects *DifferenceAdvancedObjectsDetail `json:"DifferenceAdvancedObjects,omitnil,omitempty" name:"DifferenceAdvancedObjects"`
 
-	// 数据不一致的详情，mongodb业务用到
+	// <p>数据不一致的详情，mongodb业务用到</p>
 	DifferenceData *DifferenceDataDetail `json:"DifferenceData,omitnil,omitempty" name:"DifferenceData"`
 
-	// 数据行不一致的详情，mongodb业务用到
+	// <p>数据行不一致的详情，mongodb业务用到</p>
 	DifferenceRow *DifferenceRowDetail `json:"DifferenceRow,omitnil,omitempty" name:"DifferenceRow"`
+
+	// <p>表结构不一致详情，pg用</p>
+	DifferenceSchema *DifferenceSchemaDetail `json:"DifferenceSchema,omitnil,omitempty" name:"DifferenceSchema"`
+
+	// <p>对象owner不一致详情，pg用</p>
+	DifferenceOwner *DifferenceOwnerDetail `json:"DifferenceOwner,omitnil,omitempty" name:"DifferenceOwner"`
+
+	// <p>全量阶段表的校验进度。该字段后续逐步取代Difference</p>
+	FullProgress *CompareTableInfo `json:"FullProgress,omitnil,omitempty" name:"FullProgress"`
+
+	// <p>增量阶段表的校验进度</p>
+	IncDifference *CompareTableInfo `json:"IncDifference,omitnil,omitempty" name:"IncDifference"`
 }
 
 type CompareObject struct {
@@ -195,6 +207,7 @@ type CompareOptions struct {
 	Type *string `json:"Type,omitnil,omitempty" name:"Type"`
 
 	// 校验类型，枚举值：structureCheck-结构校验(目前仅postgresql支持)、full-全量校验、increment-增量校验(如果勾选了增量校验，Method只能选dataCheck)、advanceObject-数据库信息校验(目前仅mongodb支持) 
+	// 注意：此字段可能返回 null，表示取不到有效值。
 	CompareMode []*string `json:"CompareMode,omitnil,omitempty" name:"CompareMode"`
 
 	// 复检次数
@@ -202,6 +215,15 @@ type CompareOptions struct {
 
 	// 复检时间间隔，单位为分钟，取值 1-60
 	ReCheckInterval *int64 `json:"ReCheckInterval,omitnil,omitempty" name:"ReCheckInterval"`
+}
+
+type CompareTableInfo struct {
+	// 不一致表的数量
+	TotalCount *uint64 `json:"TotalCount,omitnil,omitempty" name:"TotalCount"`
+
+	// 不一致的表的校验结果详情
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	Items []*CompareTableResult `json:"Items,omitnil,omitempty" name:"Items"`
 }
 
 type CompareTableItem struct {
@@ -213,6 +235,50 @@ type CompareTableItem struct {
 
 	// 当 ColumnMode 为 partial 时必填(该参数仅对数据同步任务有效)
 	Columns []*CompareColumnItem `json:"Columns,omitnil,omitempty" name:"Columns"`
+
+	// 过滤条件
+	FilterCondition *string `json:"FilterCondition,omitnil,omitempty" name:"FilterCondition"`
+
+	// 时区选择。如 "+08:00", "-08:00", "+00:00"（空值等价于"+00:00"）	
+	FilterTimeZone *string `json:"FilterTimeZone,omitnil,omitempty" name:"FilterTimeZone"`
+}
+
+type CompareTableResult struct {
+	// 库名
+	Db *string `json:"Db,omitnil,omitempty" name:"Db"`
+
+	// schema名
+	Schema *string `json:"Schema,omitnil,omitempty" name:"Schema"`
+
+	// 表名
+	Table *string `json:"Table,omitnil,omitempty" name:"Table"`
+
+	// 校验结果
+	Conclusion *string `json:"Conclusion,omitnil,omitempty" name:"Conclusion"`
+
+	// 校验状态。仅全量阶段有意义
+	Status *string `json:"Status,omitnil,omitempty" name:"Status"`
+
+	// 校验进度。仅全量阶段有意义
+	Progress *int64 `json:"Progress,omitnil,omitempty" name:"Progress"`
+
+	// 不一致行数
+	RowCount *int64 `json:"RowCount,omitnil,omitempty" name:"RowCount"`
+
+	// 该表开始校验的时间
+	StartedAt *string `json:"StartedAt,omitnil,omitempty" name:"StartedAt"`
+
+	// 该表校验结束的时间
+	FinishedAt *string `json:"FinishedAt,omitnil,omitempty" name:"FinishedAt"`
+
+	// 预计该表校验结束的时间
+	ExpectedAt *string `json:"ExpectedAt,omitnil,omitempty" name:"ExpectedAt"`
+
+	// 源端行数，如果是行数校验此值有意义
+	SrcItem *string `json:"SrcItem,omitnil,omitempty" name:"SrcItem"`
+
+	// 目标端行数，如果是行数校验此值有意义
+	DstItem *string `json:"DstItem,omitnil,omitempty" name:"DstItem"`
 }
 
 type CompareTaskInfo struct {
@@ -465,110 +531,110 @@ func (r *ConfigureSubscribeJobResponse) FromJsonString(s string) error {
 
 // Predefined struct for user
 type ConfigureSyncJobRequestParams struct {
-	// 同步实例id（即标识一个同步作业），形如sync-werwfs23，可通过[DescribeSyncJobs](https://cloud.tencent.com/document/product/571/82103)接口获取。
+	// <p>同步实例id（即标识一个同步作业），形如sync-werwfs23，可通过<a href="https://cloud.tencent.com/document/product/571/82103">DescribeSyncJobs</a>接口获取。</p>
 	JobId *string `json:"JobId,omitnil,omitempty" name:"JobId"`
 
-	// 源端接入类型，cdb(云数据库)、cvm(云服务器自建)、vpc(私有网络)、extranet(外网)、vpncloud(vpn接入)、dcg(专线接入)、ccn(云联网)、intranet(自研上云),注意具体可选值依赖当前链路
+	// <p>源端接入类型，cdb(云数据库)、cvm(云服务器自建)、vpc(私有网络)、extranet(外网)、vpncloud(vpn接入)、dcg(专线接入)、ccn(云联网)、intranet(自研上云),注意具体可选值依赖当前链路</p>
 	SrcAccessType *string `json:"SrcAccessType,omitnil,omitempty" name:"SrcAccessType"`
 
-	// 目标端接入类型，cdb(云数据库)、cvm(云服务器自建)、vpc(私有网络)、extranet(外网)、vpncloud(vpn接入)、dcg(专线接入)、ccn(云联网)、intranet(自研上云)、ckafka(CKafka实例),注意具体可选值依赖当前链路
+	// <p>目标端接入类型，cdb(云数据库)、cvm(云服务器自建)、vpc(私有网络)、extranet(外网)、vpncloud(vpn接入)、dcg(专线接入)、ccn(云联网)、intranet(自研上云)、ckafka(CKafka实例),注意具体可选值依赖当前链路</p>
 	DstAccessType *string `json:"DstAccessType,omitnil,omitempty" name:"DstAccessType"`
 
-	// 同步库表对象信息
+	// <p>同步库表对象信息</p>
 	Objects *Objects `json:"Objects,omitnil,omitempty" name:"Objects"`
 
-	// 同步任务名称
+	// <p>同步任务名称</p>
 	JobName *string `json:"JobName,omitnil,omitempty" name:"JobName"`
 
-	// 枚举值是 liteMode 和 fullMode ，分别对应精简模式或正常模式
+	// <p>配置任务模式，默认值为fullMode</p><p>枚举值：</p><ul><li>fullMode： 正常模式</li></ul>
 	JobMode *string `json:"JobMode,omitnil,omitempty" name:"JobMode"`
 
-	// 运行模式，取值如：Immediate(表示立即运行，默认为此项值)、Timed(表示定时运行)
+	// <p>运行模式，取值如：Immediate(表示立即运行，默认为此项值)、Timed(表示定时运行)</p>
 	RunMode *string `json:"RunMode,omitnil,omitempty" name:"RunMode"`
 
-	// 期待启动时间，当RunMode取值为Timed时，此值必填，形如："2006-01-02 15:04:05"
+	// <p>期待启动时间，当RunMode取值为Timed时，此值必填，形如：&quot;2006-01-02 15:04:05&quot;</p>
 	ExpectRunTime *string `json:"ExpectRunTime,omitnil,omitempty" name:"ExpectRunTime"`
 
-	// 源端tdsql连接方式：proxy-通过tdsql proxy主机访问各个set节点，注意只有在自研上云的网络环境下才能通过这种方式连接，SrcInfos中只需要提供proxy主机信息。set-直连set节点，如选择直连set方式，需要正确填写proxy主机信息及所有set节点信息。源端是tdsqlmysql类型必填。
+	// <p>源端tdsql连接方式：proxy-通过tdsql proxy主机访问各个set节点，注意只有在自研上云的网络环境下才能通过这种方式连接，SrcInfos中只需要提供proxy主机信息。set-直连set节点，如选择直连set方式，需要正确填写proxy主机信息及所有set节点信息。源端是tdsqlmysql类型必填。</p>
 	SrcConnectType *string `json:"SrcConnectType,omitnil,omitempty" name:"SrcConnectType"`
 
-	// 源端信息，单机版类型数据库配置使用，且SrcNodeType传single。例如mysql、percona、mariadb等。
+	// <p>源端信息，单机版类型数据库配置使用，且SrcNodeType传single。例如mysql、percona、mariadb等。</p>
 	SrcInfo *Endpoint `json:"SrcInfo,omitnil,omitempty" name:"SrcInfo"`
 
-	// 源端信息，分布式类型数据库配置使用，且SrcNodeType传cluster。例如分布式数据库tdsqlmysql等，mongodb使用此参数透传。
+	// <p>源端信息，分布式类型数据库配置使用，且SrcNodeType传cluster。例如分布式数据库tdsqlmysql等，mongodb使用此参数透传。</p>
 	SrcInfos *SyncDBEndpointInfos `json:"SrcInfos,omitnil,omitempty" name:"SrcInfos"`
 
-	// 枚举值：cluster、single。源库为单节点数据库使用single，多节点使用cluster
+	// <p>枚举值：cluster、single。源库为单节点数据库使用single，多节点使用cluster</p>
 	SrcNodeType *string `json:"SrcNodeType,omitnil,omitempty" name:"SrcNodeType"`
 
-	// 目标端信息，单机版类型数据库配置使用，且SrcNodeType传single。例如mysql、percona、mariadb等。
+	// <p>目标端信息，单机版类型数据库配置使用，且SrcNodeType传single。例如mysql、percona、mariadb等。</p>
 	DstInfo *Endpoint `json:"DstInfo,omitnil,omitempty" name:"DstInfo"`
 
-	// 目标端信息，分布式类型数据库配置使用，且SrcNodeType传cluster。例如分布式数据库tdsqlmysql等，mongodb使用此参数透传。
+	// <p>目标端信息，分布式类型数据库配置使用，且SrcNodeType传cluster。例如分布式数据库tdsqlmysql等，mongodb使用此参数透传。</p>
 	DstInfos *SyncDBEndpointInfos `json:"DstInfos,omitnil,omitempty" name:"DstInfos"`
 
-	// 枚举值：cluster、single。目标库为单节点数据库使用single，多节点使用cluster
+	// <p>枚举值：cluster、single。目标库为单节点数据库使用single，多节点使用cluster</p>
 	DstNodeType *string `json:"DstNodeType,omitnil,omitempty" name:"DstNodeType"`
 
-	// 同步任务选项；该字段下的RateLimitOption暂时无法生效、如果需要修改限速、可通过ModifySyncRateLimit接口完成限速
+	// <p>同步任务选项；该字段下的RateLimitOption暂时无法生效、如果需要修改限速、可通过ModifySyncRateLimit接口完成限速</p>
 	Options *Options `json:"Options,omitnil,omitempty" name:"Options"`
 
-	// 自动重试的时间段、可设置5至720分钟、0表示不重试
+	// <p>自动重试的时间段、可设置5至720分钟、0表示不重试</p>
 	AutoRetryTimeRangeMinutes *int64 `json:"AutoRetryTimeRangeMinutes,omitnil,omitempty" name:"AutoRetryTimeRangeMinutes"`
 }
 
 type ConfigureSyncJobRequest struct {
 	*tchttp.BaseRequest
 	
-	// 同步实例id（即标识一个同步作业），形如sync-werwfs23，可通过[DescribeSyncJobs](https://cloud.tencent.com/document/product/571/82103)接口获取。
+	// <p>同步实例id（即标识一个同步作业），形如sync-werwfs23，可通过<a href="https://cloud.tencent.com/document/product/571/82103">DescribeSyncJobs</a>接口获取。</p>
 	JobId *string `json:"JobId,omitnil,omitempty" name:"JobId"`
 
-	// 源端接入类型，cdb(云数据库)、cvm(云服务器自建)、vpc(私有网络)、extranet(外网)、vpncloud(vpn接入)、dcg(专线接入)、ccn(云联网)、intranet(自研上云),注意具体可选值依赖当前链路
+	// <p>源端接入类型，cdb(云数据库)、cvm(云服务器自建)、vpc(私有网络)、extranet(外网)、vpncloud(vpn接入)、dcg(专线接入)、ccn(云联网)、intranet(自研上云),注意具体可选值依赖当前链路</p>
 	SrcAccessType *string `json:"SrcAccessType,omitnil,omitempty" name:"SrcAccessType"`
 
-	// 目标端接入类型，cdb(云数据库)、cvm(云服务器自建)、vpc(私有网络)、extranet(外网)、vpncloud(vpn接入)、dcg(专线接入)、ccn(云联网)、intranet(自研上云)、ckafka(CKafka实例),注意具体可选值依赖当前链路
+	// <p>目标端接入类型，cdb(云数据库)、cvm(云服务器自建)、vpc(私有网络)、extranet(外网)、vpncloud(vpn接入)、dcg(专线接入)、ccn(云联网)、intranet(自研上云)、ckafka(CKafka实例),注意具体可选值依赖当前链路</p>
 	DstAccessType *string `json:"DstAccessType,omitnil,omitempty" name:"DstAccessType"`
 
-	// 同步库表对象信息
+	// <p>同步库表对象信息</p>
 	Objects *Objects `json:"Objects,omitnil,omitempty" name:"Objects"`
 
-	// 同步任务名称
+	// <p>同步任务名称</p>
 	JobName *string `json:"JobName,omitnil,omitempty" name:"JobName"`
 
-	// 枚举值是 liteMode 和 fullMode ，分别对应精简模式或正常模式
+	// <p>配置任务模式，默认值为fullMode</p><p>枚举值：</p><ul><li>fullMode： 正常模式</li></ul>
 	JobMode *string `json:"JobMode,omitnil,omitempty" name:"JobMode"`
 
-	// 运行模式，取值如：Immediate(表示立即运行，默认为此项值)、Timed(表示定时运行)
+	// <p>运行模式，取值如：Immediate(表示立即运行，默认为此项值)、Timed(表示定时运行)</p>
 	RunMode *string `json:"RunMode,omitnil,omitempty" name:"RunMode"`
 
-	// 期待启动时间，当RunMode取值为Timed时，此值必填，形如："2006-01-02 15:04:05"
+	// <p>期待启动时间，当RunMode取值为Timed时，此值必填，形如：&quot;2006-01-02 15:04:05&quot;</p>
 	ExpectRunTime *string `json:"ExpectRunTime,omitnil,omitempty" name:"ExpectRunTime"`
 
-	// 源端tdsql连接方式：proxy-通过tdsql proxy主机访问各个set节点，注意只有在自研上云的网络环境下才能通过这种方式连接，SrcInfos中只需要提供proxy主机信息。set-直连set节点，如选择直连set方式，需要正确填写proxy主机信息及所有set节点信息。源端是tdsqlmysql类型必填。
+	// <p>源端tdsql连接方式：proxy-通过tdsql proxy主机访问各个set节点，注意只有在自研上云的网络环境下才能通过这种方式连接，SrcInfos中只需要提供proxy主机信息。set-直连set节点，如选择直连set方式，需要正确填写proxy主机信息及所有set节点信息。源端是tdsqlmysql类型必填。</p>
 	SrcConnectType *string `json:"SrcConnectType,omitnil,omitempty" name:"SrcConnectType"`
 
-	// 源端信息，单机版类型数据库配置使用，且SrcNodeType传single。例如mysql、percona、mariadb等。
+	// <p>源端信息，单机版类型数据库配置使用，且SrcNodeType传single。例如mysql、percona、mariadb等。</p>
 	SrcInfo *Endpoint `json:"SrcInfo,omitnil,omitempty" name:"SrcInfo"`
 
-	// 源端信息，分布式类型数据库配置使用，且SrcNodeType传cluster。例如分布式数据库tdsqlmysql等，mongodb使用此参数透传。
+	// <p>源端信息，分布式类型数据库配置使用，且SrcNodeType传cluster。例如分布式数据库tdsqlmysql等，mongodb使用此参数透传。</p>
 	SrcInfos *SyncDBEndpointInfos `json:"SrcInfos,omitnil,omitempty" name:"SrcInfos"`
 
-	// 枚举值：cluster、single。源库为单节点数据库使用single，多节点使用cluster
+	// <p>枚举值：cluster、single。源库为单节点数据库使用single，多节点使用cluster</p>
 	SrcNodeType *string `json:"SrcNodeType,omitnil,omitempty" name:"SrcNodeType"`
 
-	// 目标端信息，单机版类型数据库配置使用，且SrcNodeType传single。例如mysql、percona、mariadb等。
+	// <p>目标端信息，单机版类型数据库配置使用，且SrcNodeType传single。例如mysql、percona、mariadb等。</p>
 	DstInfo *Endpoint `json:"DstInfo,omitnil,omitempty" name:"DstInfo"`
 
-	// 目标端信息，分布式类型数据库配置使用，且SrcNodeType传cluster。例如分布式数据库tdsqlmysql等，mongodb使用此参数透传。
+	// <p>目标端信息，分布式类型数据库配置使用，且SrcNodeType传cluster。例如分布式数据库tdsqlmysql等，mongodb使用此参数透传。</p>
 	DstInfos *SyncDBEndpointInfos `json:"DstInfos,omitnil,omitempty" name:"DstInfos"`
 
-	// 枚举值：cluster、single。目标库为单节点数据库使用single，多节点使用cluster
+	// <p>枚举值：cluster、single。目标库为单节点数据库使用single，多节点使用cluster</p>
 	DstNodeType *string `json:"DstNodeType,omitnil,omitempty" name:"DstNodeType"`
 
-	// 同步任务选项；该字段下的RateLimitOption暂时无法生效、如果需要修改限速、可通过ModifySyncRateLimit接口完成限速
+	// <p>同步任务选项；该字段下的RateLimitOption暂时无法生效、如果需要修改限速、可通过ModifySyncRateLimit接口完成限速</p>
 	Options *Options `json:"Options,omitnil,omitempty" name:"Options"`
 
-	// 自动重试的时间段、可设置5至720分钟、0表示不重试
+	// <p>自动重试的时间段、可设置5至720分钟、0表示不重试</p>
 	AutoRetryTimeRangeMinutes *int64 `json:"AutoRetryTimeRangeMinutes,omitnil,omitempty" name:"AutoRetryTimeRangeMinutes"`
 }
 
@@ -1040,56 +1106,56 @@ func (r *CreateMigrateCheckJobResponse) FromJsonString(s string) error {
 
 // Predefined struct for user
 type CreateMigrationServiceRequestParams struct {
-	// 源实例数据库类型，如mysql,redis,percona,mongodb,postgresql,sqlserver,mariadb,cynosdbmysql(表示TDSQL-C MySQL数据库)
+	// <p>源实例数据库类型，如mysql,redis,percona,mongodb,postgresql,sqlserver,mariadb,cynosdbmysql(表示TDSQL-C MySQL数据库)tdsqlmysql,keewidb,tdstore</p><p>枚举值：</p><ul><li>mysql： MySQL数据库</li></ul>
 	SrcDatabaseType *string `json:"SrcDatabaseType,omitnil,omitempty" name:"SrcDatabaseType"`
 
-	// 目标实例数据库类型，如mysql,redis,percona,mongodb,postgresql,sqlserver,mariadb,cynosdbmysql(表示TDSQL-C MySQL数据库)
+	// <p>目标实例数据库类型，如mysql,redis,percona,mongodb,postgresql,sqlserver,mariadb,cynosdbmysql(表示TDSQL-C MySQL数据库)tdsqlmysql,keewidb,tdstore,tendis</p><p>枚举值：</p><ul><li>mysql： MySQL数据库</li></ul>
 	DstDatabaseType *string `json:"DstDatabaseType,omitnil,omitempty" name:"DstDatabaseType"`
 
-	// 源实例地域，如：ap-guangzhou
+	// <p>源实例地域，如：ap-guangzhou</p>
 	SrcRegion *string `json:"SrcRegion,omitnil,omitempty" name:"SrcRegion"`
 
-	// 目标实例地域，如：ap-guangzhou。注意，目标地域必须和API请求地域保持一致。
+	// <p>目标实例地域，如：ap-guangzhou。注意，目标地域必须和API请求地域保持一致。</p>
 	DstRegion *string `json:"DstRegion,omitnil,omitempty" name:"DstRegion"`
 
-	// 实例规格，包括：small、medium、large、xlarge、2xlarge。当前未计费链路仅支持medium字段值。不同规格类型参考[计费概述](https://cloud.tencent.com/document/product/571/18736)
+	// <p>实例规格，包括：small、medium、large、xlarge、2xlarge。当前未计费链路仅支持medium字段值。不同规格类型参考<a href="https://cloud.tencent.com/document/product/571/18736">计费概述</a></p>
 	InstanceClass *string `json:"InstanceClass,omitnil,omitempty" name:"InstanceClass"`
 
-	// 购买数量，范围为[1,15]，默认为1
+	// <p>购买数量，范围为[1,15]，默认为1</p>
 	Count *uint64 `json:"Count,omitnil,omitempty" name:"Count"`
 
-	// 迁移服务名称，最大长度128
+	// <p>迁移服务名称，最大长度128</p>
 	JobName *string `json:"JobName,omitnil,omitempty" name:"JobName"`
 
-	// 标签信息
+	// <p>标签信息</p>
 	Tags []*TagItem `json:"Tags,omitnil,omitempty" name:"Tags"`
 }
 
 type CreateMigrationServiceRequest struct {
 	*tchttp.BaseRequest
 	
-	// 源实例数据库类型，如mysql,redis,percona,mongodb,postgresql,sqlserver,mariadb,cynosdbmysql(表示TDSQL-C MySQL数据库)
+	// <p>源实例数据库类型，如mysql,redis,percona,mongodb,postgresql,sqlserver,mariadb,cynosdbmysql(表示TDSQL-C MySQL数据库)tdsqlmysql,keewidb,tdstore</p><p>枚举值：</p><ul><li>mysql： MySQL数据库</li></ul>
 	SrcDatabaseType *string `json:"SrcDatabaseType,omitnil,omitempty" name:"SrcDatabaseType"`
 
-	// 目标实例数据库类型，如mysql,redis,percona,mongodb,postgresql,sqlserver,mariadb,cynosdbmysql(表示TDSQL-C MySQL数据库)
+	// <p>目标实例数据库类型，如mysql,redis,percona,mongodb,postgresql,sqlserver,mariadb,cynosdbmysql(表示TDSQL-C MySQL数据库)tdsqlmysql,keewidb,tdstore,tendis</p><p>枚举值：</p><ul><li>mysql： MySQL数据库</li></ul>
 	DstDatabaseType *string `json:"DstDatabaseType,omitnil,omitempty" name:"DstDatabaseType"`
 
-	// 源实例地域，如：ap-guangzhou
+	// <p>源实例地域，如：ap-guangzhou</p>
 	SrcRegion *string `json:"SrcRegion,omitnil,omitempty" name:"SrcRegion"`
 
-	// 目标实例地域，如：ap-guangzhou。注意，目标地域必须和API请求地域保持一致。
+	// <p>目标实例地域，如：ap-guangzhou。注意，目标地域必须和API请求地域保持一致。</p>
 	DstRegion *string `json:"DstRegion,omitnil,omitempty" name:"DstRegion"`
 
-	// 实例规格，包括：small、medium、large、xlarge、2xlarge。当前未计费链路仅支持medium字段值。不同规格类型参考[计费概述](https://cloud.tencent.com/document/product/571/18736)
+	// <p>实例规格，包括：small、medium、large、xlarge、2xlarge。当前未计费链路仅支持medium字段值。不同规格类型参考<a href="https://cloud.tencent.com/document/product/571/18736">计费概述</a></p>
 	InstanceClass *string `json:"InstanceClass,omitnil,omitempty" name:"InstanceClass"`
 
-	// 购买数量，范围为[1,15]，默认为1
+	// <p>购买数量，范围为[1,15]，默认为1</p>
 	Count *uint64 `json:"Count,omitnil,omitempty" name:"Count"`
 
-	// 迁移服务名称，最大长度128
+	// <p>迁移服务名称，最大长度128</p>
 	JobName *string `json:"JobName,omitnil,omitempty" name:"JobName"`
 
-	// 标签信息
+	// <p>标签信息</p>
 	Tags []*TagItem `json:"Tags,omitnil,omitempty" name:"Tags"`
 }
 
@@ -1121,7 +1187,7 @@ func (r *CreateMigrationServiceRequest) FromJsonString(s string) error {
 
 // Predefined struct for user
 type CreateMigrationServiceResponseParams struct {
-	// 下单成功随机生成的迁移任务id列表，形如：dts-c1f6rs21
+	// <p>下单成功随机生成的迁移任务id列表，形如：dts-c1f6rs21</p>
 	// 注意：此字段可能返回 null，表示取不到有效值。
 	JobIds []*string `json:"JobIds,omitnil,omitempty" name:"JobIds"`
 
@@ -1255,56 +1321,62 @@ func (r *CreateSubscribeCheckJobResponse) FromJsonString(s string) error {
 
 // Predefined struct for user
 type CreateSubscribeRequestParams struct {
-	// 订阅的数据库类型，目前支持 cynosdbmysql(tdsql-c mysql版),mariadb,mongodb,mysql,percona,tdpg(tdsql postgresql版),tdsqlpercona(tdsql mysql版)
+	// <p>订阅的数据库类型，目前支持 cynosdbmysql(tdsql-c mysql版),mariadb,mongodb,mysql,percona,tdpg(tdsql postgresql版),tdsqlpercona(tdsql mysql版)</p>
 	Product *string `json:"Product,omitnil,omitempty" name:"Product"`
 
-	// 付费方式，枚举值：0-包年包月，1-按量计费
+	// <p>付费方式，枚举值：0-包年包月，1-按量计费</p>
 	PayType *int64 `json:"PayType,omitnil,omitempty" name:"PayType"`
 
-	// 购买时长。当 payType 为包年包月时，该项需要填，单位为月，最小值为 1，最大值为 120。不填默认1
+	// <p>购买时长。当 payType 为包年包月时，该项需要填，单位为月，最小值为 1，最大值为 120。不填默认1</p>
 	Duration *int64 `json:"Duration,omitnil,omitempty" name:"Duration"`
 
-	// 是否自动续费。当 payType 为包年包月时，该项需要填。枚举值：0-不自动续费，1-自动续费。默认不自动续费。按量计费设置该标识无效。
+	// <p>是否自动续费。当 payType 为包年包月时，该项需要填。枚举值：0-不自动续费，1-自动续费。默认不自动续费。按量计费设置该标识无效。</p>
 	AutoRenew *int64 `json:"AutoRenew,omitnil,omitempty" name:"AutoRenew"`
 
-	// 购买数量,默认为1，最大为10
+	// <p>购买数量,默认为1，最大为10</p>
 	Count *int64 `json:"Count,omitnil,omitempty" name:"Count"`
 
-	// 实例资源标签
+	// <p>实例资源标签</p>
 	Tags []*TagItem `json:"Tags,omitnil,omitempty" name:"Tags"`
 
-	// 任务名，自定义
+	// <p>任务名，自定义</p>
 	Name *string `json:"Name,omitnil,omitempty" name:"Name"`
 
-	// 订阅实例规格，当前仅支持small、medium、large
+	// <p>数据订阅版本，目前支持kafka和kafkaPro（专业版），如果不填，默认kafkaPro</p>
+	SubscribeVersion *string `json:"SubscribeVersion,omitnil,omitempty" name:"SubscribeVersion"`
+
+	// <p>订阅实例规格，当前仅支持small、medium、large</p>
 	InstanceClass *string `json:"InstanceClass,omitnil,omitempty" name:"InstanceClass"`
 }
 
 type CreateSubscribeRequest struct {
 	*tchttp.BaseRequest
 	
-	// 订阅的数据库类型，目前支持 cynosdbmysql(tdsql-c mysql版),mariadb,mongodb,mysql,percona,tdpg(tdsql postgresql版),tdsqlpercona(tdsql mysql版)
+	// <p>订阅的数据库类型，目前支持 cynosdbmysql(tdsql-c mysql版),mariadb,mongodb,mysql,percona,tdpg(tdsql postgresql版),tdsqlpercona(tdsql mysql版)</p>
 	Product *string `json:"Product,omitnil,omitempty" name:"Product"`
 
-	// 付费方式，枚举值：0-包年包月，1-按量计费
+	// <p>付费方式，枚举值：0-包年包月，1-按量计费</p>
 	PayType *int64 `json:"PayType,omitnil,omitempty" name:"PayType"`
 
-	// 购买时长。当 payType 为包年包月时，该项需要填，单位为月，最小值为 1，最大值为 120。不填默认1
+	// <p>购买时长。当 payType 为包年包月时，该项需要填，单位为月，最小值为 1，最大值为 120。不填默认1</p>
 	Duration *int64 `json:"Duration,omitnil,omitempty" name:"Duration"`
 
-	// 是否自动续费。当 payType 为包年包月时，该项需要填。枚举值：0-不自动续费，1-自动续费。默认不自动续费。按量计费设置该标识无效。
+	// <p>是否自动续费。当 payType 为包年包月时，该项需要填。枚举值：0-不自动续费，1-自动续费。默认不自动续费。按量计费设置该标识无效。</p>
 	AutoRenew *int64 `json:"AutoRenew,omitnil,omitempty" name:"AutoRenew"`
 
-	// 购买数量,默认为1，最大为10
+	// <p>购买数量,默认为1，最大为10</p>
 	Count *int64 `json:"Count,omitnil,omitempty" name:"Count"`
 
-	// 实例资源标签
+	// <p>实例资源标签</p>
 	Tags []*TagItem `json:"Tags,omitnil,omitempty" name:"Tags"`
 
-	// 任务名，自定义
+	// <p>任务名，自定义</p>
 	Name *string `json:"Name,omitnil,omitempty" name:"Name"`
 
-	// 订阅实例规格，当前仅支持small、medium、large
+	// <p>数据订阅版本，目前支持kafka和kafkaPro（专业版），如果不填，默认kafkaPro</p>
+	SubscribeVersion *string `json:"SubscribeVersion,omitnil,omitempty" name:"SubscribeVersion"`
+
+	// <p>订阅实例规格，当前仅支持small、medium、large</p>
 	InstanceClass *string `json:"InstanceClass,omitnil,omitempty" name:"InstanceClass"`
 }
 
@@ -1327,6 +1399,7 @@ func (r *CreateSubscribeRequest) FromJsonString(s string) error {
 	delete(f, "Count")
 	delete(f, "Tags")
 	delete(f, "Name")
+	delete(f, "SubscribeVersion")
 	delete(f, "InstanceClass")
 	if len(f) > 0 {
 		return tcerr.NewTencentCloudSDKError("ClientError.BuildRequestError", "CreateSubscribeRequest has unknown keys!", "")
@@ -1336,7 +1409,7 @@ func (r *CreateSubscribeRequest) FromJsonString(s string) error {
 
 // Predefined struct for user
 type CreateSubscribeResponseParams struct {
-	// 数据订阅实例的ID数组
+	// <p>数据订阅实例的ID数组</p>
 	SubscribeIds []*string `json:"SubscribeIds,omitnil,omitempty" name:"SubscribeIds"`
 
 	// 唯一请求 ID，由服务端生成，每次请求都会返回（若请求因其他原因未能抵达服务端，则该次请求不会获得 RequestId）。定位问题时需要提供该次请求的 RequestId。
@@ -1356,6 +1429,92 @@ func (r *CreateSubscribeResponse) ToJsonString() string {
 // FromJsonString It is highly **NOT** recommended to use this function
 // because it has no param check, nor strict type check
 func (r *CreateSubscribeResponse) FromJsonString(s string) error {
+	return json.Unmarshal([]byte(s), &r)
+}
+
+// Predefined struct for user
+type CreateSyncCompareTaskRequestParams struct {
+	// 任务 Id
+	JobId *string `json:"JobId,omitnil,omitempty" name:"JobId"`
+
+	// 数据对比任务名称，若为空则默认给CompareTaskId相同值
+	TaskName *string `json:"TaskName,omitnil,omitempty" name:"TaskName"`
+
+	// 数据对比对象模式，sameAsMigrate(全部迁移对象， 默认为此项配置)，custom(自定义模式)
+	ObjectMode *string `json:"ObjectMode,omitnil,omitempty" name:"ObjectMode"`
+
+	// 对比对象，当ObjectMode值为custom时，此项需要填写
+	Objects *CompareObject `json:"Objects,omitnil,omitempty" name:"Objects"`
+
+	// 一致性校验选项
+	Options *CompareOptions `json:"Options,omitnil,omitempty" name:"Options"`
+}
+
+type CreateSyncCompareTaskRequest struct {
+	*tchttp.BaseRequest
+	
+	// 任务 Id
+	JobId *string `json:"JobId,omitnil,omitempty" name:"JobId"`
+
+	// 数据对比任务名称，若为空则默认给CompareTaskId相同值
+	TaskName *string `json:"TaskName,omitnil,omitempty" name:"TaskName"`
+
+	// 数据对比对象模式，sameAsMigrate(全部迁移对象， 默认为此项配置)，custom(自定义模式)
+	ObjectMode *string `json:"ObjectMode,omitnil,omitempty" name:"ObjectMode"`
+
+	// 对比对象，当ObjectMode值为custom时，此项需要填写
+	Objects *CompareObject `json:"Objects,omitnil,omitempty" name:"Objects"`
+
+	// 一致性校验选项
+	Options *CompareOptions `json:"Options,omitnil,omitempty" name:"Options"`
+}
+
+func (r *CreateSyncCompareTaskRequest) ToJsonString() string {
+    b, _ := json.Marshal(r)
+    return string(b)
+}
+
+// FromJsonString It is highly **NOT** recommended to use this function
+// because it has no param check, nor strict type check
+func (r *CreateSyncCompareTaskRequest) FromJsonString(s string) error {
+	f := make(map[string]interface{})
+	if err := json.Unmarshal([]byte(s), &f); err != nil {
+		return err
+	}
+	delete(f, "JobId")
+	delete(f, "TaskName")
+	delete(f, "ObjectMode")
+	delete(f, "Objects")
+	delete(f, "Options")
+	if len(f) > 0 {
+		return tcerr.NewTencentCloudSDKError("ClientError.BuildRequestError", "CreateSyncCompareTaskRequest has unknown keys!", "")
+	}
+	return json.Unmarshal([]byte(s), &r)
+}
+
+// Predefined struct for user
+type CreateSyncCompareTaskResponseParams struct {
+	// 数据对比任务 ID，形如：sync-8yv4w2i1-cmp-37skmii9
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	CompareTaskId *string `json:"CompareTaskId,omitnil,omitempty" name:"CompareTaskId"`
+
+	// 唯一请求 ID，由服务端生成，每次请求都会返回（若请求因其他原因未能抵达服务端，则该次请求不会获得 RequestId）。定位问题时需要提供该次请求的 RequestId。
+	RequestId *string `json:"RequestId,omitnil,omitempty" name:"RequestId"`
+}
+
+type CreateSyncCompareTaskResponse struct {
+	*tchttp.BaseResponse
+	Response *CreateSyncCompareTaskResponseParams `json:"Response"`
+}
+
+func (r *CreateSyncCompareTaskResponse) ToJsonString() string {
+    b, _ := json.Marshal(r)
+    return string(b)
+}
+
+// FromJsonString It is highly **NOT** recommended to use this function
+// because it has no param check, nor strict type check
+func (r *CreateSyncCompareTaskResponse) FromJsonString(s string) error {
 	return json.Unmarshal([]byte(s), &r)
 }
 
@@ -1518,7 +1677,7 @@ type DBEndpointInfo struct {
 	// 实例具体的连接信息，如ip、port、接入方式等
 	Info []*DBInfo `json:"Info,omitnil,omitempty" name:"Info"`
 
-	// 实例服务提供商，如:"aliyun","others"
+	// 实例服务提供商，如:"others","aliyun","aws"
 	Supplier *string `json:"Supplier,omitnil,omitempty" name:"Supplier"`
 
 	// 此参数为数组类型，可以传多个键值对结构对象。
@@ -1543,70 +1702,70 @@ type DBEndpointInfo struct {
 }
 
 type DBInfo struct {
-	// 表示节点角色，针对分布式数据库，如mongodb中的mongos节点。tdsqlmysql的可选项：proxy表示节点类型为主机，set表示节点类型为节点。proxy类型必须填在数组第一项。tdsqlmysql类型的源/目标配置必填。
+	// <p>表示节点角色，针对分布式数据库，如mongodb中的mongos节点。tdsqlmysql的可选项：proxy表示节点类型为主机，set表示节点类型为节点。proxy类型必须填在数组第一项。tdsqlmysql类型的源/目标配置必填。</p>
 	Role *string `json:"Role,omitnil,omitempty" name:"Role"`
 
-	// 内核版本，针对mariadb的不同内核版本等
+	// <p>内核版本，针对mariadb的不同内核版本等</p>
 	DbKernel *string `json:"DbKernel,omitnil,omitempty" name:"DbKernel"`
 
-	// 实例的IP地址，对于公网、专线、VPN、云联网、自研上云、VPC等接入方式此项必填
+	// <p>实例的IP地址，对于公网、专线、VPN、云联网、自研上云、VPC等接入方式此项必填</p>
 	Host *string `json:"Host,omitnil,omitempty" name:"Host"`
 
-	// 实例的端口，对于公网、云主机自建、专线、VPN、云联网、自研上云、VPC等接入方式此项必填
+	// <p>实例的端口，对于公网、云主机自建、专线、VPN、云联网、自研上云、VPC等接入方式此项必填</p>
 	Port *uint64 `json:"Port,omitnil,omitempty" name:"Port"`
 
-	// 实例的用户名
+	// <p>实例的用户名</p>
 	User *string `json:"User,omitnil,omitempty" name:"User"`
 
-	// 实例的密码
+	// <p>实例的密码</p>
 	Password *string `json:"Password,omitnil,omitempty" name:"Password"`
 
-	// CVM实例短ID，格式如：ins-olgl39y8；与云服务器控制台页面显示的实例ID相同；如果接入类型为云主机自建的方式，此项必填
+	// <p>CVM实例短ID，格式如：ins-olgl39y8；与云服务器控制台页面显示的实例ID相同；如果接入类型为云主机自建的方式，此项必填</p>
 	CvmInstanceId *string `json:"CvmInstanceId,omitnil,omitempty" name:"CvmInstanceId"`
 
-	// VPN网关ID，格式如：vpngw-9ghexg7q；如果接入类型为vpncloud的方式，此项必填
+	// <p>VPN网关ID，格式如：vpngw-9ghexg7q；如果接入类型为vpncloud的方式，此项必填</p>
 	UniqVpnGwId *string `json:"UniqVpnGwId,omitnil,omitempty" name:"UniqVpnGwId"`
 
-	// 专线网关ID，格式如：dcg-0rxtqqxb；如果接入类型为专线接入的方式，此项必填
+	// <p>专线网关ID，格式如：dcg-0rxtqqxb；如果接入类型为专线接入的方式，此项必填</p>
 	UniqDcgId *string `json:"UniqDcgId,omitnil,omitempty" name:"UniqDcgId"`
 
-	// 数据库实例ID，格式如：cdb-powiqx8q；如果接入类型为云数据库的方式，此项必填
+	// <p>数据库实例ID，格式如：cdb-powiqx8q；如果接入类型为云数据库的方式，此项必填</p>
 	InstanceId *string `json:"InstanceId,omitnil,omitempty" name:"InstanceId"`
 
-	// 云联网ID，如：ccn-afp6kltc 注意：此字段可能返回 null，表示取不到有效值。
+	// <p>云联网ID，如：ccn-afp6kltc 注意：此字段可能返回 null，表示取不到有效值。</p>
 	CcnGwId *string `json:"CcnGwId,omitnil,omitempty" name:"CcnGwId"`
 
-	// 私有网络ID，格式如：vpc-92jblxto；如果接入类型为vpc、vpncloud、ccn、dcg的方式，此项必填
+	// <p>私有网络ID，格式如：vpc-92jblxto；如果接入类型为vpc、vpncloud、ccn、dcg的方式，此项必填</p>
 	VpcId *string `json:"VpcId,omitnil,omitempty" name:"VpcId"`
 
-	// 私有网络下的子网ID，格式如：subnet-3paxmkdz；如果接入类型为vpc、vpncloud、ccn、dcg的方式，此项必填
+	// <p>私有网络下的子网ID，格式如：subnet-3paxmkdz；如果接入类型为vpc、vpncloud、ccn、dcg的方式，此项必填</p>
 	SubnetId *string `json:"SubnetId,omitnil,omitempty" name:"SubnetId"`
 
-	// 数据库版本，当实例为RDS实例时才有效，格式如：5.6或者5.7，默认为5.6
+	// <p>数据库版本，当实例为RDS实例时才有效，格式如：5.6或者5.7，默认为5.6</p>
 	EngineVersion *string `json:"EngineVersion,omitnil,omitempty" name:"EngineVersion"`
 
-	// 实例所属账号
+	// <p>实例所属账号</p>
 	Account *string `json:"Account,omitnil,omitempty" name:"Account"`
 
-	// 跨账号迁移时的角色,只允许[a-zA-Z0-9\-\_]+
+	// <p>跨账号迁移时的角色,只允许[a-zA-Z0-9-_]+</p>
 	AccountRole *string `json:"AccountRole,omitnil,omitempty" name:"AccountRole"`
 
-	// 资源所属账号 为空或self(表示本账号内资源)、other(表示其他账户资源)
+	// <p>资源所属账号 为空或self(表示本账号内资源)、other(表示其他账户资源)</p>
 	AccountMode *string `json:"AccountMode,omitnil,omitempty" name:"AccountMode"`
 
-	// 临时密钥Id，可通过申请扮演角色临时访问凭证获取临时密钥https://cloud.tencent.com/document/product/1312/48197，其中角色资源RoleArn的定义可参考DTS跨账号迁移文档(https://cloud.tencent.com/document/product/571/54117)第4节中关于角色的定义。
+	// <p>临时密钥Id，可通过申请扮演角色临时访问凭证获取临时密钥https://cloud.tencent.com/document/product/1312/48197，其中角色资源RoleArn的定义可参考DTS跨账号迁移文档(https://cloud.tencent.com/document/product/571/54117)第4节中关于角色的定义。</p>
 	TmpSecretId *string `json:"TmpSecretId,omitnil,omitempty" name:"TmpSecretId"`
 
-	// 临时密钥Id，可通过申请扮演角色临时访问凭证获取临时密钥https://cloud.tencent.com/document/product/1312/48197，其中角色资源RoleArn的定义可参考DTS跨账号迁移文档(https://cloud.tencent.com/document/product/571/54117)第4节中关于角色的定义。
+	// <p>临时密钥Id，可通过申请扮演角色临时访问凭证获取临时密钥https://cloud.tencent.com/document/product/1312/48197，其中角色资源RoleArn的定义可参考DTS跨账号迁移文档(https://cloud.tencent.com/document/product/571/54117)第4节中关于角色的定义。</p>
 	TmpSecretKey *string `json:"TmpSecretKey,omitnil,omitempty" name:"TmpSecretKey"`
 
-	// 临时密钥Id，可通过申请扮演角色临时访问凭证获取临时密钥https://cloud.tencent.com/document/product/1312/48197，其中角色资源RoleArn的定义可参考DTS跨账号迁移文档(https://cloud.tencent.com/document/product/571/54117)第4节中关于角色的定义。
+	// <p>临时密钥Id，可通过申请扮演角色临时访问凭证获取临时密钥https://cloud.tencent.com/document/product/1312/48197，其中角色资源RoleArn的定义可参考DTS跨账号迁移文档(https://cloud.tencent.com/document/product/571/54117)第4节中关于角色的定义。</p>
 	TmpToken *string `json:"TmpToken,omitnil,omitempty" name:"TmpToken"`
 
-	// 是否走加密传输、UnEncrypted表示不走加密传输，Encrypted表示走加密传输，默认UnEncrypted
+	// <p>是否走加密传输、UnEncrypted表示不走加密传输，Encrypted表示走加密传输，默认UnEncrypted</p>
 	EncryptConn *string `json:"EncryptConn,omitnil,omitempty" name:"EncryptConn"`
 
-	// tdsql的分片id。如节点类型为set必填。
+	// <p>tdsql的分片id。如节点类型为set必填。</p>
 	SetId *string `json:"SetId,omitnil,omitempty" name:"SetId"`
 }
 
@@ -1672,56 +1831,73 @@ type DBItem struct {
 	Triggers []*string `json:"Triggers,omitnil,omitempty" name:"Triggers"`
 }
 
-type Database struct {
-	// 需要迁移或同步的库名，当ObjectMode为Partial时，此项必填
+type DBOpFilter struct {
+	// 规则生效的库名
 	DbName *string `json:"DbName,omitnil,omitempty" name:"DbName"`
 
-	// 迁移或同步后的库名，默认与源库相同
+	// 库级 DDL/DML 过滤规则
+	OpFilter *OpFilter `json:"OpFilter,omitnil,omitempty" name:"OpFilter"`
+
+	// 表级 DDL/DML 过滤信息
+	Tables []*TableFilter `json:"Tables,omitnil,omitempty" name:"Tables"`
+
+	// 视图级 DDL/DML 过滤信息
+	Views []*ViewFilter `json:"Views,omitnil,omitempty" name:"Views"`
+}
+
+type Database struct {
+	// <p>需要迁移或同步的库名，当ObjectMode为Partial时，此项必填</p>
+	DbName *string `json:"DbName,omitnil,omitempty" name:"DbName"`
+
+	// <p>迁移或同步后的库名，默认与源库相同</p>
 	NewDbName *string `json:"NewDbName,omitnil,omitempty" name:"NewDbName"`
 
-	// DB选择模式: All(为当前对象下的所有对象)，Partial(部分对象)，当Mode为Partial时，此项必填。注意，高级对象的同步不依赖此值，如果整库同步此处应该为All。
+	// <p>DB选择模式: All(为当前对象下的所有对象)，Partial(部分对象)，当Mode为Partial时，此项必填。注意，高级对象的同步不依赖此值，如果整库同步此处应该为All。</p>
 	DbMode *string `json:"DbMode,omitnil,omitempty" name:"DbMode"`
 
-	// 迁移或同步的 schema
+	// <p>迁移或同步的 schema</p>
 	SchemaName *string `json:"SchemaName,omitnil,omitempty" name:"SchemaName"`
 
-	// 迁移或同步后的 schema name
+	// <p>迁移或同步后的 schema name</p>
 	NewSchemaName *string `json:"NewSchemaName,omitnil,omitempty" name:"NewSchemaName"`
 
-	// 表选择模式: All(为当前对象下的所有对象)，Partial(部分对象)，当DBMode为Partial时此项必填，如果整库同步此处应该为All。
+	// <p>schema选择模式，pg和sqlserver需要使用</p><p>枚举值：</p><ul><li>All： 当前对象下的所有对象</li><li>Partial： 部分对象</li></ul>
+	SchemaMode *string `json:"SchemaMode,omitnil,omitempty" name:"SchemaMode"`
+
+	// <p>表选择模式: All(为当前对象下的所有对象)，Partial(部分对象)，当DBMode为Partial时此项必填，如果整库同步此处应该为All。</p>
 	TableMode *string `json:"TableMode,omitnil,omitempty" name:"TableMode"`
 
-	// 表图对象集合，当 TableMode 为 Partial 时，此项需要填写
+	// <p>表图对象集合，当 TableMode 为 Partial 时，此项需要填写</p>
 	Tables []*Table `json:"Tables,omitnil,omitempty" name:"Tables"`
 
-	// 视图选择模式: All 为当前对象下的所有视图对象,Partial 为部分视图对象，如果整库同步此处应该为All。
+	// <p>视图选择模式: All 为当前对象下的所有视图对象,Partial 为部分视图对象，如果整库同步此处应该为All。</p>
 	ViewMode *string `json:"ViewMode,omitnil,omitempty" name:"ViewMode"`
 
-	// 视图对象集合，当 ViewMode 为 Partial 时， 此项需要填写
+	// <p>视图对象集合，当 ViewMode 为 Partial 时， 此项需要填写</p>
 	Views []*View `json:"Views,omitnil,omitempty" name:"Views"`
 
-	// 选择要同步的模式，Partial为部分，All为整选，如果整库同步此处应该为All。
+	// <p>选择要同步的模式，Partial为部分，All为整选，如果整库同步此处应该为All。</p>
 	FunctionMode *string `json:"FunctionMode,omitnil,omitempty" name:"FunctionMode"`
 
-	// FunctionMode取值为Partial时需要填写
+	// <p>FunctionMode取值为Partial时需要填写</p>
 	Functions []*string `json:"Functions,omitnil,omitempty" name:"Functions"`
 
-	// 选择要同步的模式，Partial为部分，All为整选，如果整库同步此处应该为All。
+	// <p>选择要同步的模式，Partial为部分，All为整选，如果整库同步此处应该为All。</p>
 	ProcedureMode *string `json:"ProcedureMode,omitnil,omitempty" name:"ProcedureMode"`
 
-	// ProcedureMode取值为Partial时需要填写
+	// <p>ProcedureMode取值为Partial时需要填写</p>
 	Procedures []*string `json:"Procedures,omitnil,omitempty" name:"Procedures"`
 
-	// 触发器迁移模式，All(为当前对象下的所有对象)，Partial(部分对象)，如果整库同步此处应该为All。数据同步暂不支持此高级对象。
+	// <p>触发器迁移模式，All(为当前对象下的所有对象)，Partial(部分对象)，如果整库同步此处应该为All。数据同步暂不支持此高级对象。</p>
 	TriggerMode *string `json:"TriggerMode,omitnil,omitempty" name:"TriggerMode"`
 
-	// 当TriggerMode为partial，指定要迁移的触发器名称
+	// <p>当TriggerMode为partial，指定要迁移的触发器名称</p>
 	Triggers []*string `json:"Triggers,omitnil,omitempty" name:"Triggers"`
 
-	// 事件迁移模式，All(为当前对象下的所有对象)，Partial(部分对象)，如果整库同步此处应该为All。数据同步暂不支持此高级对象。
+	// <p>事件迁移模式，All(为当前对象下的所有对象)，Partial(部分对象)，如果整库同步此处应该为All。数据同步暂不支持此高级对象。</p>
 	EventMode *string `json:"EventMode,omitnil,omitempty" name:"EventMode"`
 
-	// 当EventMode为partial，指定要迁移的事件名称
+	// <p>当EventMode为partial，指定要迁移的事件名称</p>
 	Events []*string `json:"Events,omitnil,omitempty" name:"Events"`
 }
 
@@ -1882,6 +2058,67 @@ func (r *DeleteConsumerGroupResponse) FromJsonString(s string) error {
 }
 
 // Predefined struct for user
+type DeleteSyncCompareTaskRequestParams struct {
+	// 任务 Id
+	JobId *string `json:"JobId,omitnil,omitempty" name:"JobId"`
+
+	// 对比任务 ID，形如：sync-8yv4w2i1-cmp-37skmii9
+	CompareTaskId *string `json:"CompareTaskId,omitnil,omitempty" name:"CompareTaskId"`
+}
+
+type DeleteSyncCompareTaskRequest struct {
+	*tchttp.BaseRequest
+	
+	// 任务 Id
+	JobId *string `json:"JobId,omitnil,omitempty" name:"JobId"`
+
+	// 对比任务 ID，形如：sync-8yv4w2i1-cmp-37skmii9
+	CompareTaskId *string `json:"CompareTaskId,omitnil,omitempty" name:"CompareTaskId"`
+}
+
+func (r *DeleteSyncCompareTaskRequest) ToJsonString() string {
+    b, _ := json.Marshal(r)
+    return string(b)
+}
+
+// FromJsonString It is highly **NOT** recommended to use this function
+// because it has no param check, nor strict type check
+func (r *DeleteSyncCompareTaskRequest) FromJsonString(s string) error {
+	f := make(map[string]interface{})
+	if err := json.Unmarshal([]byte(s), &f); err != nil {
+		return err
+	}
+	delete(f, "JobId")
+	delete(f, "CompareTaskId")
+	if len(f) > 0 {
+		return tcerr.NewTencentCloudSDKError("ClientError.BuildRequestError", "DeleteSyncCompareTaskRequest has unknown keys!", "")
+	}
+	return json.Unmarshal([]byte(s), &r)
+}
+
+// Predefined struct for user
+type DeleteSyncCompareTaskResponseParams struct {
+	// 唯一请求 ID，由服务端生成，每次请求都会返回（若请求因其他原因未能抵达服务端，则该次请求不会获得 RequestId）。定位问题时需要提供该次请求的 RequestId。
+	RequestId *string `json:"RequestId,omitnil,omitempty" name:"RequestId"`
+}
+
+type DeleteSyncCompareTaskResponse struct {
+	*tchttp.BaseResponse
+	Response *DeleteSyncCompareTaskResponseParams `json:"Response"`
+}
+
+func (r *DeleteSyncCompareTaskResponse) ToJsonString() string {
+    b, _ := json.Marshal(r)
+    return string(b)
+}
+
+// FromJsonString It is highly **NOT** recommended to use this function
+// because it has no param check, nor strict type check
+func (r *DeleteSyncCompareTaskResponse) FromJsonString(s string) error {
+	return json.Unmarshal([]byte(s), &r)
+}
+
+// Predefined struct for user
 type DescribeCheckSyncJobResultRequestParams struct {
 	// 同步实例id（即标识一个同步作业），形如sync-werwfs23，此值必填，可通过[DescribeSyncJobs](https://cloud.tencent.com/document/product/571/82103)接口获取。
 	JobId *string `json:"JobId,omitnil,omitempty" name:"JobId"`
@@ -1952,69 +2189,179 @@ func (r *DescribeCheckSyncJobResultResponse) FromJsonString(s string) error {
 }
 
 // Predefined struct for user
-type DescribeCompareReportRequestParams struct {
-	// 迁移任务 Id，可通过[DescribeMigrationJobs](https://cloud.tencent.com/document/product/571/82084)接口获取。
+type DescribeCompareDiffItemsRequestParams struct {
+	// 迁移任务 Id
 	JobId *string `json:"JobId,omitnil,omitempty" name:"JobId"`
 
-	// 校验任务 Id，可通过[DescribeMigrationJobs](https://cloud.tencent.com/document/product/571/82084)接口获取。
+	// 校验任务 Id
 	CompareTaskId *string `json:"CompareTaskId,omitnil,omitempty" name:"CompareTaskId"`
 
-	// 校验不一致结果的 limit
+	// 数据库名
+	DBName *string `json:"DBName,omitnil,omitempty" name:"DBName"`
+
+	// schema名
+	SchemaName *string `json:"SchemaName,omitnil,omitempty" name:"SchemaName"`
+
+	// 数据表名
+	TableName *string `json:"TableName,omitnil,omitempty" name:"TableName"`
+
+	// 数据分块号
+	ChunkId *int64 `json:"ChunkId,omitnil,omitempty" name:"ChunkId"`
+
+	// 分页条件，查询结果返回条数
+	Limit *int64 `json:"Limit,omitnil,omitempty" name:"Limit"`
+
+	// 分页条件，查询的起始位置
+	Offset *int64 `json:"Offset,omitnil,omitempty" name:"Offset"`
+}
+
+type DescribeCompareDiffItemsRequest struct {
+	*tchttp.BaseRequest
+	
+	// 迁移任务 Id
+	JobId *string `json:"JobId,omitnil,omitempty" name:"JobId"`
+
+	// 校验任务 Id
+	CompareTaskId *string `json:"CompareTaskId,omitnil,omitempty" name:"CompareTaskId"`
+
+	// 数据库名
+	DBName *string `json:"DBName,omitnil,omitempty" name:"DBName"`
+
+	// schema名
+	SchemaName *string `json:"SchemaName,omitnil,omitempty" name:"SchemaName"`
+
+	// 数据表名
+	TableName *string `json:"TableName,omitnil,omitempty" name:"TableName"`
+
+	// 数据分块号
+	ChunkId *int64 `json:"ChunkId,omitnil,omitempty" name:"ChunkId"`
+
+	// 分页条件，查询结果返回条数
+	Limit *int64 `json:"Limit,omitnil,omitempty" name:"Limit"`
+
+	// 分页条件，查询的起始位置
+	Offset *int64 `json:"Offset,omitnil,omitempty" name:"Offset"`
+}
+
+func (r *DescribeCompareDiffItemsRequest) ToJsonString() string {
+    b, _ := json.Marshal(r)
+    return string(b)
+}
+
+// FromJsonString It is highly **NOT** recommended to use this function
+// because it has no param check, nor strict type check
+func (r *DescribeCompareDiffItemsRequest) FromJsonString(s string) error {
+	f := make(map[string]interface{})
+	if err := json.Unmarshal([]byte(s), &f); err != nil {
+		return err
+	}
+	delete(f, "JobId")
+	delete(f, "CompareTaskId")
+	delete(f, "DBName")
+	delete(f, "SchemaName")
+	delete(f, "TableName")
+	delete(f, "ChunkId")
+	delete(f, "Limit")
+	delete(f, "Offset")
+	if len(f) > 0 {
+		return tcerr.NewTencentCloudSDKError("ClientError.BuildRequestError", "DescribeCompareDiffItemsRequest has unknown keys!", "")
+	}
+	return json.Unmarshal([]byte(s), &r)
+}
+
+// Predefined struct for user
+type DescribeCompareDiffItemsResponseParams struct {
+	// 查询结果的数量
+	TotalCount *int64 `json:"TotalCount,omitnil,omitempty" name:"TotalCount"`
+
+	// 查询结果详情
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	Items []*DiffChunkItem `json:"Items,omitnil,omitempty" name:"Items"`
+
+	// 唯一请求 ID，由服务端生成，每次请求都会返回（若请求因其他原因未能抵达服务端，则该次请求不会获得 RequestId）。定位问题时需要提供该次请求的 RequestId。
+	RequestId *string `json:"RequestId,omitnil,omitempty" name:"RequestId"`
+}
+
+type DescribeCompareDiffItemsResponse struct {
+	*tchttp.BaseResponse
+	Response *DescribeCompareDiffItemsResponseParams `json:"Response"`
+}
+
+func (r *DescribeCompareDiffItemsResponse) ToJsonString() string {
+    b, _ := json.Marshal(r)
+    return string(b)
+}
+
+// FromJsonString It is highly **NOT** recommended to use this function
+// because it has no param check, nor strict type check
+func (r *DescribeCompareDiffItemsResponse) FromJsonString(s string) error {
+	return json.Unmarshal([]byte(s), &r)
+}
+
+// Predefined struct for user
+type DescribeCompareReportRequestParams struct {
+	// <p>迁移任务 Id，可通过<a href="https://cloud.tencent.com/document/product/571/82084">DescribeMigrationJobs</a>接口获取。</p>
+	JobId *string `json:"JobId,omitnil,omitempty" name:"JobId"`
+
+	// <p>校验任务 Id，可通过<a href="https://cloud.tencent.com/document/product/571/82084">DescribeMigrationJobs</a>接口获取。</p>
+	CompareTaskId *string `json:"CompareTaskId,omitnil,omitempty" name:"CompareTaskId"`
+
+	// <p>校验不一致结果的 limit</p>
 	DifferenceLimit *uint64 `json:"DifferenceLimit,omitnil,omitempty" name:"DifferenceLimit"`
 
-	// 不一致的 Offset
+	// <p>不一致的 Offset</p>
 	DifferenceOffset *uint64 `json:"DifferenceOffset,omitnil,omitempty" name:"DifferenceOffset"`
 
-	// 搜索条件，不一致的库名
+	// <p>搜索条件，不一致的库名</p>
 	DifferenceDB *string `json:"DifferenceDB,omitnil,omitempty" name:"DifferenceDB"`
 
-	// 搜索条件，不一致的表名
+	// <p>搜索条件，不一致的表名</p>
 	DifferenceTable *string `json:"DifferenceTable,omitnil,omitempty" name:"DifferenceTable"`
 
-	// 未校验的 Limit
+	// <p>未校验的 Limit</p>
 	SkippedLimit *uint64 `json:"SkippedLimit,omitnil,omitempty" name:"SkippedLimit"`
 
-	// 未校验的 Offset
+	// <p>未校验的 Offset</p>
 	SkippedOffset *uint64 `json:"SkippedOffset,omitnil,omitempty" name:"SkippedOffset"`
 
-	// 搜索条件，未校验的库名
+	// <p>搜索条件，未校验的库名</p>
 	SkippedDB *string `json:"SkippedDB,omitnil,omitempty" name:"SkippedDB"`
 
-	// 搜索条件，未校验的表名
+	// <p>搜索条件，未校验的表名</p>
 	SkippedTable *string `json:"SkippedTable,omitnil,omitempty" name:"SkippedTable"`
 }
 
 type DescribeCompareReportRequest struct {
 	*tchttp.BaseRequest
 	
-	// 迁移任务 Id，可通过[DescribeMigrationJobs](https://cloud.tencent.com/document/product/571/82084)接口获取。
+	// <p>迁移任务 Id，可通过<a href="https://cloud.tencent.com/document/product/571/82084">DescribeMigrationJobs</a>接口获取。</p>
 	JobId *string `json:"JobId,omitnil,omitempty" name:"JobId"`
 
-	// 校验任务 Id，可通过[DescribeMigrationJobs](https://cloud.tencent.com/document/product/571/82084)接口获取。
+	// <p>校验任务 Id，可通过<a href="https://cloud.tencent.com/document/product/571/82084">DescribeMigrationJobs</a>接口获取。</p>
 	CompareTaskId *string `json:"CompareTaskId,omitnil,omitempty" name:"CompareTaskId"`
 
-	// 校验不一致结果的 limit
+	// <p>校验不一致结果的 limit</p>
 	DifferenceLimit *uint64 `json:"DifferenceLimit,omitnil,omitempty" name:"DifferenceLimit"`
 
-	// 不一致的 Offset
+	// <p>不一致的 Offset</p>
 	DifferenceOffset *uint64 `json:"DifferenceOffset,omitnil,omitempty" name:"DifferenceOffset"`
 
-	// 搜索条件，不一致的库名
+	// <p>搜索条件，不一致的库名</p>
 	DifferenceDB *string `json:"DifferenceDB,omitnil,omitempty" name:"DifferenceDB"`
 
-	// 搜索条件，不一致的表名
+	// <p>搜索条件，不一致的表名</p>
 	DifferenceTable *string `json:"DifferenceTable,omitnil,omitempty" name:"DifferenceTable"`
 
-	// 未校验的 Limit
+	// <p>未校验的 Limit</p>
 	SkippedLimit *uint64 `json:"SkippedLimit,omitnil,omitempty" name:"SkippedLimit"`
 
-	// 未校验的 Offset
+	// <p>未校验的 Offset</p>
 	SkippedOffset *uint64 `json:"SkippedOffset,omitnil,omitempty" name:"SkippedOffset"`
 
-	// 搜索条件，未校验的库名
+	// <p>搜索条件，未校验的库名</p>
 	SkippedDB *string `json:"SkippedDB,omitnil,omitempty" name:"SkippedDB"`
 
-	// 搜索条件，未校验的表名
+	// <p>搜索条件，未校验的表名</p>
 	SkippedTable *string `json:"SkippedTable,omitnil,omitempty" name:"SkippedTable"`
 }
 
@@ -2048,10 +2395,10 @@ func (r *DescribeCompareReportRequest) FromJsonString(s string) error {
 
 // Predefined struct for user
 type DescribeCompareReportResponseParams struct {
-	// 一致性校验摘要信息
+	// <p>一致性校验摘要信息</p>
 	Abstract *CompareAbstractInfo `json:"Abstract,omitnil,omitempty" name:"Abstract"`
 
-	// 一致性校验详细信息
+	// <p>一致性校验详细信息</p>
 	Detail *CompareDetailInfo `json:"Detail,omitnil,omitempty" name:"Detail"`
 
 	// 唯一请求 ID，由服务端生成，每次请求都会返回（若请求因其他原因未能抵达服务端，则该次请求不会获得 RequestId）。定位问题时需要提供该次请求的 RequestId。
@@ -2238,68 +2585,68 @@ func (r *DescribeConsumerGroupsResponse) FromJsonString(s string) error {
 
 // Predefined struct for user
 type DescribeMigrateDBInstancesRequestParams struct {
-	// 数据库类型，如mysql,percona,mariadb,tdsqlmysql,mariadb,postgresql,cynosdbmysql,redis,tendis,keewidb,tdstore,mongodb,clickhouse,sqlserver等。
+	// <p>数据库类型，如mysql,percona,mariadb,tdsqlmysql,mariadb,postgresql,cynosdbmysql,redis,tendis,keewidb,tdstore,mongodb,clickhouse,sqlserver等。</p>
 	DatabaseType *string `json:"DatabaseType,omitnil,omitempty" name:"DatabaseType"`
 
-	// 实例作为迁移的源还是目标,src(表示源)，dst(表示目标)
+	// <p>实例作为迁移的源还是目标,src(表示源)，dst(表示目标)</p>
 	MigrateRole *string `json:"MigrateRole,omitnil,omitempty" name:"MigrateRole"`
 
-	// 云数据库实例ID，可通过对应业务实例列表获取实例信息。
+	// <p>云数据库实例ID，可通过对应业务实例列表获取实例信息。</p>
 	InstanceId *string `json:"InstanceId,omitnil,omitempty" name:"InstanceId"`
 
-	// 云数据库名称，可通过对应业务实例列表获取实例信息。
+	// <p>云数据库名称，可通过对应业务实例列表获取实例信息。</p>
 	InstanceName *string `json:"InstanceName,omitnil,omitempty" name:"InstanceName"`
 
-	// 返回数量限制
+	// <p>返回数量限制</p>
 	Limit *int64 `json:"Limit,omitnil,omitempty" name:"Limit"`
 
-	// 偏移量
+	// <p>偏移量</p>
 	Offset *int64 `json:"Offset,omitnil,omitempty" name:"Offset"`
 
-	// 资源所属账号 为空值或self(表示本账号内资源)、other(表示其他账户资源)
+	// <p>资源所属账号 为空值或self(表示本账号内资源)、other(表示其他账户资源)</p>
 	AccountMode *string `json:"AccountMode,omitnil,omitempty" name:"AccountMode"`
 
-	// 临时密钥Id，可通过申请扮演角色临时访问凭证获取临时密钥https://cloud.tencent.com/document/product/1312/48197，其中角色资源RoleArn的定义可参考DTS跨账号迁移文档(https://cloud.tencent.com/document/product/571/54117)第4节中关于角色的定义。
+	// <p>临时密钥Id，可通过申请扮演角色临时访问凭证获取临时密钥https://cloud.tencent.com/document/product/1312/48197，其中角色资源RoleArn的定义可参考DTS跨账号迁移文档(https://cloud.tencent.com/document/product/571/54117)第4节中关于角色的定义。</p>
 	TmpSecretId *string `json:"TmpSecretId,omitnil,omitempty" name:"TmpSecretId"`
 
-	// 临时密钥Id，可通过申请扮演角色临时访问凭证获取临时密钥https://cloud.tencent.com/document/product/1312/48197，其中角色资源RoleArn的定义可参考DTS跨账号迁移文档(https://cloud.tencent.com/document/product/571/54117)第4节中关于角色的定义。
+	// <p>临时密钥Id，可通过申请扮演角色临时访问凭证获取临时密钥https://cloud.tencent.com/document/product/1312/48197，其中角色资源RoleArn的定义可参考DTS跨账号迁移文档(https://cloud.tencent.com/document/product/571/54117)第4节中关于角色的定义。</p>
 	TmpSecretKey *string `json:"TmpSecretKey,omitnil,omitempty" name:"TmpSecretKey"`
 
-	// 临时密钥Id，可通过申请扮演角色临时访问凭证获取临时密钥https://cloud.tencent.com/document/product/1312/48197，其中角色资源RoleArn的定义可参考DTS跨账号迁移文档(https://cloud.tencent.com/document/product/571/54117)第4节中关于角色的定义。
+	// <p>临时密钥Id，可通过申请扮演角色临时访问凭证获取临时密钥https://cloud.tencent.com/document/product/1312/48197，其中角色资源RoleArn的定义可参考DTS跨账号迁移文档(https://cloud.tencent.com/document/product/571/54117)第4节中关于角色的定义。</p>
 	TmpToken *string `json:"TmpToken,omitnil,omitempty" name:"TmpToken"`
 }
 
 type DescribeMigrateDBInstancesRequest struct {
 	*tchttp.BaseRequest
 	
-	// 数据库类型，如mysql,percona,mariadb,tdsqlmysql,mariadb,postgresql,cynosdbmysql,redis,tendis,keewidb,tdstore,mongodb,clickhouse,sqlserver等。
+	// <p>数据库类型，如mysql,percona,mariadb,tdsqlmysql,mariadb,postgresql,cynosdbmysql,redis,tendis,keewidb,tdstore,mongodb,clickhouse,sqlserver等。</p>
 	DatabaseType *string `json:"DatabaseType,omitnil,omitempty" name:"DatabaseType"`
 
-	// 实例作为迁移的源还是目标,src(表示源)，dst(表示目标)
+	// <p>实例作为迁移的源还是目标,src(表示源)，dst(表示目标)</p>
 	MigrateRole *string `json:"MigrateRole,omitnil,omitempty" name:"MigrateRole"`
 
-	// 云数据库实例ID，可通过对应业务实例列表获取实例信息。
+	// <p>云数据库实例ID，可通过对应业务实例列表获取实例信息。</p>
 	InstanceId *string `json:"InstanceId,omitnil,omitempty" name:"InstanceId"`
 
-	// 云数据库名称，可通过对应业务实例列表获取实例信息。
+	// <p>云数据库名称，可通过对应业务实例列表获取实例信息。</p>
 	InstanceName *string `json:"InstanceName,omitnil,omitempty" name:"InstanceName"`
 
-	// 返回数量限制
+	// <p>返回数量限制</p>
 	Limit *int64 `json:"Limit,omitnil,omitempty" name:"Limit"`
 
-	// 偏移量
+	// <p>偏移量</p>
 	Offset *int64 `json:"Offset,omitnil,omitempty" name:"Offset"`
 
-	// 资源所属账号 为空值或self(表示本账号内资源)、other(表示其他账户资源)
+	// <p>资源所属账号 为空值或self(表示本账号内资源)、other(表示其他账户资源)</p>
 	AccountMode *string `json:"AccountMode,omitnil,omitempty" name:"AccountMode"`
 
-	// 临时密钥Id，可通过申请扮演角色临时访问凭证获取临时密钥https://cloud.tencent.com/document/product/1312/48197，其中角色资源RoleArn的定义可参考DTS跨账号迁移文档(https://cloud.tencent.com/document/product/571/54117)第4节中关于角色的定义。
+	// <p>临时密钥Id，可通过申请扮演角色临时访问凭证获取临时密钥https://cloud.tencent.com/document/product/1312/48197，其中角色资源RoleArn的定义可参考DTS跨账号迁移文档(https://cloud.tencent.com/document/product/571/54117)第4节中关于角色的定义。</p>
 	TmpSecretId *string `json:"TmpSecretId,omitnil,omitempty" name:"TmpSecretId"`
 
-	// 临时密钥Id，可通过申请扮演角色临时访问凭证获取临时密钥https://cloud.tencent.com/document/product/1312/48197，其中角色资源RoleArn的定义可参考DTS跨账号迁移文档(https://cloud.tencent.com/document/product/571/54117)第4节中关于角色的定义。
+	// <p>临时密钥Id，可通过申请扮演角色临时访问凭证获取临时密钥https://cloud.tencent.com/document/product/1312/48197，其中角色资源RoleArn的定义可参考DTS跨账号迁移文档(https://cloud.tencent.com/document/product/571/54117)第4节中关于角色的定义。</p>
 	TmpSecretKey *string `json:"TmpSecretKey,omitnil,omitempty" name:"TmpSecretKey"`
 
-	// 临时密钥Id，可通过申请扮演角色临时访问凭证获取临时密钥https://cloud.tencent.com/document/product/1312/48197，其中角色资源RoleArn的定义可参考DTS跨账号迁移文档(https://cloud.tencent.com/document/product/571/54117)第4节中关于角色的定义。
+	// <p>临时密钥Id，可通过申请扮演角色临时访问凭证获取临时密钥https://cloud.tencent.com/document/product/1312/48197，其中角色资源RoleArn的定义可参考DTS跨账号迁移文档(https://cloud.tencent.com/document/product/571/54117)第4节中关于角色的定义。</p>
 	TmpToken *string `json:"TmpToken,omitnil,omitempty" name:"TmpToken"`
 }
 
@@ -2333,10 +2680,10 @@ func (r *DescribeMigrateDBInstancesRequest) FromJsonString(s string) error {
 
 // Predefined struct for user
 type DescribeMigrateDBInstancesResponseParams struct {
-	// 符合筛选条件的数量
+	// <p>符合筛选条件的数量</p>
 	TotalCount *int64 `json:"TotalCount,omitnil,omitempty" name:"TotalCount"`
 
-	// 实例列表
+	// <p>实例列表</p>
 	Instances []*MigrateDBItem `json:"Instances,omitnil,omitempty" name:"Instances"`
 
 	// 唯一请求 ID，由服务端生成，每次请求都会返回（若请求因其他原因未能抵达服务端，则该次请求不会获得 RequestId）。定位问题时需要提供该次请求的 RequestId。
@@ -2356,6 +2703,86 @@ func (r *DescribeMigrateDBInstancesResponse) ToJsonString() string {
 // FromJsonString It is highly **NOT** recommended to use this function
 // because it has no param check, nor strict type check
 func (r *DescribeMigrateDBInstancesResponse) FromJsonString(s string) error {
+	return json.Unmarshal([]byte(s), &r)
+}
+
+// Predefined struct for user
+type DescribeMigrateGtidCompareReportRequestParams struct {
+	// 任务id
+	JobId *string `json:"JobId,omitnil,omitempty" name:"JobId"`
+
+	// 创建的校验任务id
+	CompareTaskId *string `json:"CompareTaskId,omitnil,omitempty" name:"CompareTaskId"`
+
+	// 是否需要展示不一致详情
+	NeedDiffDetail *bool `json:"NeedDiffDetail,omitnil,omitempty" name:"NeedDiffDetail"`
+}
+
+type DescribeMigrateGtidCompareReportRequest struct {
+	*tchttp.BaseRequest
+	
+	// 任务id
+	JobId *string `json:"JobId,omitnil,omitempty" name:"JobId"`
+
+	// 创建的校验任务id
+	CompareTaskId *string `json:"CompareTaskId,omitnil,omitempty" name:"CompareTaskId"`
+
+	// 是否需要展示不一致详情
+	NeedDiffDetail *bool `json:"NeedDiffDetail,omitnil,omitempty" name:"NeedDiffDetail"`
+}
+
+func (r *DescribeMigrateGtidCompareReportRequest) ToJsonString() string {
+    b, _ := json.Marshal(r)
+    return string(b)
+}
+
+// FromJsonString It is highly **NOT** recommended to use this function
+// because it has no param check, nor strict type check
+func (r *DescribeMigrateGtidCompareReportRequest) FromJsonString(s string) error {
+	f := make(map[string]interface{})
+	if err := json.Unmarshal([]byte(s), &f); err != nil {
+		return err
+	}
+	delete(f, "JobId")
+	delete(f, "CompareTaskId")
+	delete(f, "NeedDiffDetail")
+	if len(f) > 0 {
+		return tcerr.NewTencentCloudSDKError("ClientError.BuildRequestError", "DescribeMigrateGtidCompareReportRequest has unknown keys!", "")
+	}
+	return json.Unmarshal([]byte(s), &r)
+}
+
+// Predefined struct for user
+type DescribeMigrateGtidCompareReportResponseParams struct {
+	// 校验结论
+	Conclusion *string `json:"Conclusion,omitnil,omitempty" name:"Conclusion"`
+
+	// 校验状态
+	Status *string `json:"Status,omitnil,omitempty" name:"Status"`
+
+	// 校验类型
+	Type *string `json:"Type,omitnil,omitempty" name:"Type"`
+
+	// 不一致详情
+	Detail []*DifferenceDetails `json:"Detail,omitnil,omitempty" name:"Detail"`
+
+	// 唯一请求 ID，由服务端生成，每次请求都会返回（若请求因其他原因未能抵达服务端，则该次请求不会获得 RequestId）。定位问题时需要提供该次请求的 RequestId。
+	RequestId *string `json:"RequestId,omitnil,omitempty" name:"RequestId"`
+}
+
+type DescribeMigrateGtidCompareReportResponse struct {
+	*tchttp.BaseResponse
+	Response *DescribeMigrateGtidCompareReportResponseParams `json:"Response"`
+}
+
+func (r *DescribeMigrateGtidCompareReportResponse) ToJsonString() string {
+    b, _ := json.Marshal(r)
+    return string(b)
+}
+
+// FromJsonString It is highly **NOT** recommended to use this function
+// because it has no param check, nor strict type check
+func (r *DescribeMigrateGtidCompareReportResponse) FromJsonString(s string) error {
 	return json.Unmarshal([]byte(s), &r)
 }
 
@@ -2549,104 +2976,104 @@ func (r *DescribeMigrationDetailResponse) FromJsonString(s string) error {
 
 // Predefined struct for user
 type DescribeMigrationJobsRequestParams struct {
-	// 数据迁移任务ID，如：dts-amm1jw5q
+	// <p>数据迁移任务ID，如：dts-amm1jw5q</p>
 	JobId *string `json:"JobId,omitnil,omitempty" name:"JobId"`
 
-	// 数据迁移任务名称
+	// <p>数据迁移任务名称</p>
 	JobName *string `json:"JobName,omitnil,omitempty" name:"JobName"`
 
-	// 数据迁移任务状态，可取值包括：created(创建完成)、checking(校验中)、checkPass(校验通过)、checkNotPass(校验不通过)、readyRun(准备运行)、running(任务运行中)、readyComplete(准备完成)、success(任务成功)、failed(任务失败)、stopping(中止中)、completing(完成中)
+	// <p>数据迁移任务状态，可取值包括：created(创建完成)、checking(校验中)、checkPass(校验通过)、checkNotPass(校验不通过)、readyRun(准备运行)、running(任务运行中)、readyComplete(准备完成)、success(任务成功)、failed(任务失败)、stopping(中止中)、completing(完成中)</p>
 	Status []*string `json:"Status,omitnil,omitempty" name:"Status"`
 
-	// 源实例ID，格式如：cdb-c1nl9rpv
+	// <p>源实例ID，格式如：cdb-c1nl9rpv</p>
 	SrcInstanceId *string `json:"SrcInstanceId,omitnil,omitempty" name:"SrcInstanceId"`
 
-	// 源实例地域，如：ap-guangzhou
+	// <p>源实例地域，如：ap-guangzhou</p>
 	SrcRegion *string `json:"SrcRegion,omitnil,omitempty" name:"SrcRegion"`
 
-	// 源实例数据库类型，如：sqlserver,mysql,mongodb,redis,tendis,keewidb,clickhouse,cynosdbmysql,percona,tdsqlpercona,mariadb,tdsqlmysql,postgresql
+	// <p>源实例数据库类型，如：sqlserver,mysql,mongodb,redis,tendis,keewidb,clickhouse,cynosdbmysql,percona,tdsqlpercona,mariadb,tdsqlmysql,postgresql</p>
 	SrcDatabaseType []*string `json:"SrcDatabaseType,omitnil,omitempty" name:"SrcDatabaseType"`
 
-	// 源实例接入类型，值包括：extranet(外网)、vpncloud(云vpn接入的实例)、dcg(专线接入的实例)、ccn(云联网接入的实例)、cdb(云上cdb实例)、cvm(cvm自建实例)
+	// <p>源实例接入类型，值包括：extranet(外网)、vpncloud(云vpn接入的实例)、dcg(专线接入的实例)、ccn(云联网接入的实例)、cdb(云上cdb实例)、cvm(cvm自建实例)</p>
 	SrcAccessType []*string `json:"SrcAccessType,omitnil,omitempty" name:"SrcAccessType"`
 
-	// 目标实例ID，格式如：cdb-c1nl9rpv
+	// <p>目标实例ID，格式如：cdb-c1nl9rpv</p>
 	DstInstanceId *string `json:"DstInstanceId,omitnil,omitempty" name:"DstInstanceId"`
 
-	// 目标实例地域，如：ap-guangzhou
+	// <p>目标实例地域，如：ap-guangzhou</p>
 	DstRegion *string `json:"DstRegion,omitnil,omitempty" name:"DstRegion"`
 
-	// 目标源实例数据库类型，如：sqlserver,mysql,mongodb,redis,tendis,keewidb,clickhouse,cynosdbmysql,percona,tdsqlpercona,mariadb,tdsqlmysql,postgresql
+	// <p>目标源实例数据库类型，如：sqlserver,mysql,mongodb,redis,tendis,keewidb,clickhouse,cynosdbmysql,percona,tdsqlpercona,mariadb,tdsqlmysql,postgresql</p>
 	DstDatabaseType []*string `json:"DstDatabaseType,omitnil,omitempty" name:"DstDatabaseType"`
 
-	// 目标实例接入类型，值包括：extranet(外网)、vpncloud(云vpn接入的实例)、dcg(专线接入的实例)、ccn(云联网接入的实例)、cdb(云上cdb实例)、cvm(cvm自建实例)
+	// <p>目标实例接入类型，值包括：extranet(外网)、vpncloud(云vpn接入的实例)、dcg(专线接入的实例)、ccn(云联网接入的实例)、cdb(云上cdb实例)、cvm(cvm自建实例)</p>
 	DstAccessType []*string `json:"DstAccessType,omitnil,omitempty" name:"DstAccessType"`
 
-	// 任务运行模式，值包括：immediate(立即运行)，timed(定时运行)
+	// <p>任务运行模式，值包括：immediate(立即运行)，timed(定时运行)</p>
 	RunMode *string `json:"RunMode,omitnil,omitempty" name:"RunMode"`
 
-	// 排序方式，可能取值为asc、desc，默认按照创建时间倒序
+	// <p>排序方式，可能取值为asc、desc，默认按照创建时间倒序</p>
 	OrderSeq *string `json:"OrderSeq,omitnil,omitempty" name:"OrderSeq"`
 
-	// 返回实例数量，默认20，有效区间[1,100]
+	// <p>返回实例数量，默认20，有效区间[1,100]</p>
 	Limit *uint64 `json:"Limit,omitnil,omitempty" name:"Limit"`
 
-	// 偏移量，默认为0
+	// <p>偏移量，默认为0</p>
 	Offset *uint64 `json:"Offset,omitnil,omitempty" name:"Offset"`
 
-	// 标签过滤
+	// <p>标签过滤</p>
 	TagFilters []*TagFilter `json:"TagFilters,omitnil,omitempty" name:"TagFilters"`
 }
 
 type DescribeMigrationJobsRequest struct {
 	*tchttp.BaseRequest
 	
-	// 数据迁移任务ID，如：dts-amm1jw5q
+	// <p>数据迁移任务ID，如：dts-amm1jw5q</p>
 	JobId *string `json:"JobId,omitnil,omitempty" name:"JobId"`
 
-	// 数据迁移任务名称
+	// <p>数据迁移任务名称</p>
 	JobName *string `json:"JobName,omitnil,omitempty" name:"JobName"`
 
-	// 数据迁移任务状态，可取值包括：created(创建完成)、checking(校验中)、checkPass(校验通过)、checkNotPass(校验不通过)、readyRun(准备运行)、running(任务运行中)、readyComplete(准备完成)、success(任务成功)、failed(任务失败)、stopping(中止中)、completing(完成中)
+	// <p>数据迁移任务状态，可取值包括：created(创建完成)、checking(校验中)、checkPass(校验通过)、checkNotPass(校验不通过)、readyRun(准备运行)、running(任务运行中)、readyComplete(准备完成)、success(任务成功)、failed(任务失败)、stopping(中止中)、completing(完成中)</p>
 	Status []*string `json:"Status,omitnil,omitempty" name:"Status"`
 
-	// 源实例ID，格式如：cdb-c1nl9rpv
+	// <p>源实例ID，格式如：cdb-c1nl9rpv</p>
 	SrcInstanceId *string `json:"SrcInstanceId,omitnil,omitempty" name:"SrcInstanceId"`
 
-	// 源实例地域，如：ap-guangzhou
+	// <p>源实例地域，如：ap-guangzhou</p>
 	SrcRegion *string `json:"SrcRegion,omitnil,omitempty" name:"SrcRegion"`
 
-	// 源实例数据库类型，如：sqlserver,mysql,mongodb,redis,tendis,keewidb,clickhouse,cynosdbmysql,percona,tdsqlpercona,mariadb,tdsqlmysql,postgresql
+	// <p>源实例数据库类型，如：sqlserver,mysql,mongodb,redis,tendis,keewidb,clickhouse,cynosdbmysql,percona,tdsqlpercona,mariadb,tdsqlmysql,postgresql</p>
 	SrcDatabaseType []*string `json:"SrcDatabaseType,omitnil,omitempty" name:"SrcDatabaseType"`
 
-	// 源实例接入类型，值包括：extranet(外网)、vpncloud(云vpn接入的实例)、dcg(专线接入的实例)、ccn(云联网接入的实例)、cdb(云上cdb实例)、cvm(cvm自建实例)
+	// <p>源实例接入类型，值包括：extranet(外网)、vpncloud(云vpn接入的实例)、dcg(专线接入的实例)、ccn(云联网接入的实例)、cdb(云上cdb实例)、cvm(cvm自建实例)</p>
 	SrcAccessType []*string `json:"SrcAccessType,omitnil,omitempty" name:"SrcAccessType"`
 
-	// 目标实例ID，格式如：cdb-c1nl9rpv
+	// <p>目标实例ID，格式如：cdb-c1nl9rpv</p>
 	DstInstanceId *string `json:"DstInstanceId,omitnil,omitempty" name:"DstInstanceId"`
 
-	// 目标实例地域，如：ap-guangzhou
+	// <p>目标实例地域，如：ap-guangzhou</p>
 	DstRegion *string `json:"DstRegion,omitnil,omitempty" name:"DstRegion"`
 
-	// 目标源实例数据库类型，如：sqlserver,mysql,mongodb,redis,tendis,keewidb,clickhouse,cynosdbmysql,percona,tdsqlpercona,mariadb,tdsqlmysql,postgresql
+	// <p>目标源实例数据库类型，如：sqlserver,mysql,mongodb,redis,tendis,keewidb,clickhouse,cynosdbmysql,percona,tdsqlpercona,mariadb,tdsqlmysql,postgresql</p>
 	DstDatabaseType []*string `json:"DstDatabaseType,omitnil,omitempty" name:"DstDatabaseType"`
 
-	// 目标实例接入类型，值包括：extranet(外网)、vpncloud(云vpn接入的实例)、dcg(专线接入的实例)、ccn(云联网接入的实例)、cdb(云上cdb实例)、cvm(cvm自建实例)
+	// <p>目标实例接入类型，值包括：extranet(外网)、vpncloud(云vpn接入的实例)、dcg(专线接入的实例)、ccn(云联网接入的实例)、cdb(云上cdb实例)、cvm(cvm自建实例)</p>
 	DstAccessType []*string `json:"DstAccessType,omitnil,omitempty" name:"DstAccessType"`
 
-	// 任务运行模式，值包括：immediate(立即运行)，timed(定时运行)
+	// <p>任务运行模式，值包括：immediate(立即运行)，timed(定时运行)</p>
 	RunMode *string `json:"RunMode,omitnil,omitempty" name:"RunMode"`
 
-	// 排序方式，可能取值为asc、desc，默认按照创建时间倒序
+	// <p>排序方式，可能取值为asc、desc，默认按照创建时间倒序</p>
 	OrderSeq *string `json:"OrderSeq,omitnil,omitempty" name:"OrderSeq"`
 
-	// 返回实例数量，默认20，有效区间[1,100]
+	// <p>返回实例数量，默认20，有效区间[1,100]</p>
 	Limit *uint64 `json:"Limit,omitnil,omitempty" name:"Limit"`
 
-	// 偏移量，默认为0
+	// <p>偏移量，默认为0</p>
 	Offset *uint64 `json:"Offset,omitnil,omitempty" name:"Offset"`
 
-	// 标签过滤
+	// <p>标签过滤</p>
 	TagFilters []*TagFilter `json:"TagFilters,omitnil,omitempty" name:"TagFilters"`
 }
 
@@ -2686,10 +3113,10 @@ func (r *DescribeMigrationJobsRequest) FromJsonString(s string) error {
 
 // Predefined struct for user
 type DescribeMigrationJobsResponseParams struct {
-	// 迁移任务数量
+	// <p>迁移任务数量</p>
 	TotalCount *uint64 `json:"TotalCount,omitnil,omitempty" name:"TotalCount"`
 
-	// 迁移任务列表
+	// <p>迁移任务列表</p>
 	JobList []*JobItem `json:"JobList,omitnil,omitempty" name:"JobList"`
 
 	// 唯一请求 ID，由服务端生成，每次请求都会返回（若请求因其他原因未能抵达服务端，则该次请求不会获得 RequestId）。定位问题时需要提供该次请求的 RequestId。
@@ -3279,6 +3706,414 @@ func (r *DescribeSubscribeReturnableResponse) FromJsonString(s string) error {
 }
 
 // Predefined struct for user
+type DescribeSyncCompareDiffItemsRequestParams struct {
+	// 迁移任务 Id
+	JobId *string `json:"JobId,omitnil,omitempty" name:"JobId"`
+
+	// 校验任务 Id
+	CompareTaskId *string `json:"CompareTaskId,omitnil,omitempty" name:"CompareTaskId"`
+
+	// 数据库名
+	DBName *string `json:"DBName,omitnil,omitempty" name:"DBName"`
+
+	// schema名
+	SchemaName *string `json:"SchemaName,omitnil,omitempty" name:"SchemaName"`
+
+	// 数据表名
+	TableName *string `json:"TableName,omitnil,omitempty" name:"TableName"`
+
+	// 数据分块号
+	ChunkId *int64 `json:"ChunkId,omitnil,omitempty" name:"ChunkId"`
+
+	// 分页条件，查询结果返回条数
+	Limit *int64 `json:"Limit,omitnil,omitempty" name:"Limit"`
+
+	// 分页条件，查询的起始位置
+	Offset *int64 `json:"Offset,omitnil,omitempty" name:"Offset"`
+}
+
+type DescribeSyncCompareDiffItemsRequest struct {
+	*tchttp.BaseRequest
+	
+	// 迁移任务 Id
+	JobId *string `json:"JobId,omitnil,omitempty" name:"JobId"`
+
+	// 校验任务 Id
+	CompareTaskId *string `json:"CompareTaskId,omitnil,omitempty" name:"CompareTaskId"`
+
+	// 数据库名
+	DBName *string `json:"DBName,omitnil,omitempty" name:"DBName"`
+
+	// schema名
+	SchemaName *string `json:"SchemaName,omitnil,omitempty" name:"SchemaName"`
+
+	// 数据表名
+	TableName *string `json:"TableName,omitnil,omitempty" name:"TableName"`
+
+	// 数据分块号
+	ChunkId *int64 `json:"ChunkId,omitnil,omitempty" name:"ChunkId"`
+
+	// 分页条件，查询结果返回条数
+	Limit *int64 `json:"Limit,omitnil,omitempty" name:"Limit"`
+
+	// 分页条件，查询的起始位置
+	Offset *int64 `json:"Offset,omitnil,omitempty" name:"Offset"`
+}
+
+func (r *DescribeSyncCompareDiffItemsRequest) ToJsonString() string {
+    b, _ := json.Marshal(r)
+    return string(b)
+}
+
+// FromJsonString It is highly **NOT** recommended to use this function
+// because it has no param check, nor strict type check
+func (r *DescribeSyncCompareDiffItemsRequest) FromJsonString(s string) error {
+	f := make(map[string]interface{})
+	if err := json.Unmarshal([]byte(s), &f); err != nil {
+		return err
+	}
+	delete(f, "JobId")
+	delete(f, "CompareTaskId")
+	delete(f, "DBName")
+	delete(f, "SchemaName")
+	delete(f, "TableName")
+	delete(f, "ChunkId")
+	delete(f, "Limit")
+	delete(f, "Offset")
+	if len(f) > 0 {
+		return tcerr.NewTencentCloudSDKError("ClientError.BuildRequestError", "DescribeSyncCompareDiffItemsRequest has unknown keys!", "")
+	}
+	return json.Unmarshal([]byte(s), &r)
+}
+
+// Predefined struct for user
+type DescribeSyncCompareDiffItemsResponseParams struct {
+	// 查询结果的数量
+	TotalCount *int64 `json:"TotalCount,omitnil,omitempty" name:"TotalCount"`
+
+	// 查询结果详情
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	Items []*DiffChunkItem `json:"Items,omitnil,omitempty" name:"Items"`
+
+	// 唯一请求 ID，由服务端生成，每次请求都会返回（若请求因其他原因未能抵达服务端，则该次请求不会获得 RequestId）。定位问题时需要提供该次请求的 RequestId。
+	RequestId *string `json:"RequestId,omitnil,omitempty" name:"RequestId"`
+}
+
+type DescribeSyncCompareDiffItemsResponse struct {
+	*tchttp.BaseResponse
+	Response *DescribeSyncCompareDiffItemsResponseParams `json:"Response"`
+}
+
+func (r *DescribeSyncCompareDiffItemsResponse) ToJsonString() string {
+    b, _ := json.Marshal(r)
+    return string(b)
+}
+
+// FromJsonString It is highly **NOT** recommended to use this function
+// because it has no param check, nor strict type check
+func (r *DescribeSyncCompareDiffItemsResponse) FromJsonString(s string) error {
+	return json.Unmarshal([]byte(s), &r)
+}
+
+// Predefined struct for user
+type DescribeSyncCompareReportRequestParams struct {
+	// <p>任务 Id</p>
+	JobId *string `json:"JobId,omitnil,omitempty" name:"JobId"`
+
+	// <p>校验任务 Id</p>
+	CompareTaskId *string `json:"CompareTaskId,omitnil,omitempty" name:"CompareTaskId"`
+
+	// <p>校验不一致结果的 limit</p>
+	DifferenceLimit *uint64 `json:"DifferenceLimit,omitnil,omitempty" name:"DifferenceLimit"`
+
+	// <p>不一致的 Offset</p>
+	DifferenceOffset *uint64 `json:"DifferenceOffset,omitnil,omitempty" name:"DifferenceOffset"`
+
+	// <p>搜索条件，不一致的库名</p>
+	DifferenceDB *string `json:"DifferenceDB,omitnil,omitempty" name:"DifferenceDB"`
+
+	// <p>搜索条件，不一致的表名</p>
+	DifferenceTable *string `json:"DifferenceTable,omitnil,omitempty" name:"DifferenceTable"`
+
+	// <p>未校验的 Limit</p>
+	SkippedLimit *uint64 `json:"SkippedLimit,omitnil,omitempty" name:"SkippedLimit"`
+
+	// <p>未校验的 Offset</p>
+	SkippedOffset *uint64 `json:"SkippedOffset,omitnil,omitempty" name:"SkippedOffset"`
+
+	// <p>搜索条件，未校验的库名</p>
+	SkippedDB *string `json:"SkippedDB,omitnil,omitempty" name:"SkippedDB"`
+
+	// <p>搜索条件，未校验的表名</p>
+	SkippedTable *string `json:"SkippedTable,omitnil,omitempty" name:"SkippedTable"`
+}
+
+type DescribeSyncCompareReportRequest struct {
+	*tchttp.BaseRequest
+	
+	// <p>任务 Id</p>
+	JobId *string `json:"JobId,omitnil,omitempty" name:"JobId"`
+
+	// <p>校验任务 Id</p>
+	CompareTaskId *string `json:"CompareTaskId,omitnil,omitempty" name:"CompareTaskId"`
+
+	// <p>校验不一致结果的 limit</p>
+	DifferenceLimit *uint64 `json:"DifferenceLimit,omitnil,omitempty" name:"DifferenceLimit"`
+
+	// <p>不一致的 Offset</p>
+	DifferenceOffset *uint64 `json:"DifferenceOffset,omitnil,omitempty" name:"DifferenceOffset"`
+
+	// <p>搜索条件，不一致的库名</p>
+	DifferenceDB *string `json:"DifferenceDB,omitnil,omitempty" name:"DifferenceDB"`
+
+	// <p>搜索条件，不一致的表名</p>
+	DifferenceTable *string `json:"DifferenceTable,omitnil,omitempty" name:"DifferenceTable"`
+
+	// <p>未校验的 Limit</p>
+	SkippedLimit *uint64 `json:"SkippedLimit,omitnil,omitempty" name:"SkippedLimit"`
+
+	// <p>未校验的 Offset</p>
+	SkippedOffset *uint64 `json:"SkippedOffset,omitnil,omitempty" name:"SkippedOffset"`
+
+	// <p>搜索条件，未校验的库名</p>
+	SkippedDB *string `json:"SkippedDB,omitnil,omitempty" name:"SkippedDB"`
+
+	// <p>搜索条件，未校验的表名</p>
+	SkippedTable *string `json:"SkippedTable,omitnil,omitempty" name:"SkippedTable"`
+}
+
+func (r *DescribeSyncCompareReportRequest) ToJsonString() string {
+    b, _ := json.Marshal(r)
+    return string(b)
+}
+
+// FromJsonString It is highly **NOT** recommended to use this function
+// because it has no param check, nor strict type check
+func (r *DescribeSyncCompareReportRequest) FromJsonString(s string) error {
+	f := make(map[string]interface{})
+	if err := json.Unmarshal([]byte(s), &f); err != nil {
+		return err
+	}
+	delete(f, "JobId")
+	delete(f, "CompareTaskId")
+	delete(f, "DifferenceLimit")
+	delete(f, "DifferenceOffset")
+	delete(f, "DifferenceDB")
+	delete(f, "DifferenceTable")
+	delete(f, "SkippedLimit")
+	delete(f, "SkippedOffset")
+	delete(f, "SkippedDB")
+	delete(f, "SkippedTable")
+	if len(f) > 0 {
+		return tcerr.NewTencentCloudSDKError("ClientError.BuildRequestError", "DescribeSyncCompareReportRequest has unknown keys!", "")
+	}
+	return json.Unmarshal([]byte(s), &r)
+}
+
+// Predefined struct for user
+type DescribeSyncCompareReportResponseParams struct {
+	// <p>一致性校验摘要信息</p>
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	Abstract *CompareAbstractInfo `json:"Abstract,omitnil,omitempty" name:"Abstract"`
+
+	// <p>一致性校验详细信息</p>
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	Detail *CompareDetailInfo `json:"Detail,omitnil,omitempty" name:"Detail"`
+
+	// <p>增量校验阶段的摘要</p>
+	IncAbstract *IncCompareAbstractInfo `json:"IncAbstract,omitnil,omitempty" name:"IncAbstract"`
+
+	// 唯一请求 ID，由服务端生成，每次请求都会返回（若请求因其他原因未能抵达服务端，则该次请求不会获得 RequestId）。定位问题时需要提供该次请求的 RequestId。
+	RequestId *string `json:"RequestId,omitnil,omitempty" name:"RequestId"`
+}
+
+type DescribeSyncCompareReportResponse struct {
+	*tchttp.BaseResponse
+	Response *DescribeSyncCompareReportResponseParams `json:"Response"`
+}
+
+func (r *DescribeSyncCompareReportResponse) ToJsonString() string {
+    b, _ := json.Marshal(r)
+    return string(b)
+}
+
+// FromJsonString It is highly **NOT** recommended to use this function
+// because it has no param check, nor strict type check
+func (r *DescribeSyncCompareReportResponse) FromJsonString(s string) error {
+	return json.Unmarshal([]byte(s), &r)
+}
+
+// Predefined struct for user
+type DescribeSyncCompareTasksRequestParams struct {
+	// 任务 Id
+	JobId *string `json:"JobId,omitnil,omitempty" name:"JobId"`
+
+	// 分页设置，表示每页显示多少条任务，默认为 20
+	Limit *uint64 `json:"Limit,omitnil,omitempty" name:"Limit"`
+
+	// 分页偏移量
+	Offset *uint64 `json:"Offset,omitnil,omitempty" name:"Offset"`
+
+	// 校验任务 ID
+	CompareTaskId *string `json:"CompareTaskId,omitnil,omitempty" name:"CompareTaskId"`
+
+	// 任务状态过滤，可能的值：created - 创建完成；readyRun - 等待运行；running - 运行中；success - 成功；stopping - 结束中；failed - 失败；canceled - 已终止
+	Status []*string `json:"Status,omitnil,omitempty" name:"Status"`
+}
+
+type DescribeSyncCompareTasksRequest struct {
+	*tchttp.BaseRequest
+	
+	// 任务 Id
+	JobId *string `json:"JobId,omitnil,omitempty" name:"JobId"`
+
+	// 分页设置，表示每页显示多少条任务，默认为 20
+	Limit *uint64 `json:"Limit,omitnil,omitempty" name:"Limit"`
+
+	// 分页偏移量
+	Offset *uint64 `json:"Offset,omitnil,omitempty" name:"Offset"`
+
+	// 校验任务 ID
+	CompareTaskId *string `json:"CompareTaskId,omitnil,omitempty" name:"CompareTaskId"`
+
+	// 任务状态过滤，可能的值：created - 创建完成；readyRun - 等待运行；running - 运行中；success - 成功；stopping - 结束中；failed - 失败；canceled - 已终止
+	Status []*string `json:"Status,omitnil,omitempty" name:"Status"`
+}
+
+func (r *DescribeSyncCompareTasksRequest) ToJsonString() string {
+    b, _ := json.Marshal(r)
+    return string(b)
+}
+
+// FromJsonString It is highly **NOT** recommended to use this function
+// because it has no param check, nor strict type check
+func (r *DescribeSyncCompareTasksRequest) FromJsonString(s string) error {
+	f := make(map[string]interface{})
+	if err := json.Unmarshal([]byte(s), &f); err != nil {
+		return err
+	}
+	delete(f, "JobId")
+	delete(f, "Limit")
+	delete(f, "Offset")
+	delete(f, "CompareTaskId")
+	delete(f, "Status")
+	if len(f) > 0 {
+		return tcerr.NewTencentCloudSDKError("ClientError.BuildRequestError", "DescribeSyncCompareTasksRequest has unknown keys!", "")
+	}
+	return json.Unmarshal([]byte(s), &r)
+}
+
+// Predefined struct for user
+type DescribeSyncCompareTasksResponseParams struct {
+	// 数量
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	TotalCount *uint64 `json:"TotalCount,omitnil,omitempty" name:"TotalCount"`
+
+	// 一致性校验任务列表
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	Items []*CompareTaskItem `json:"Items,omitnil,omitempty" name:"Items"`
+
+	// 唯一请求 ID，由服务端生成，每次请求都会返回（若请求因其他原因未能抵达服务端，则该次请求不会获得 RequestId）。定位问题时需要提供该次请求的 RequestId。
+	RequestId *string `json:"RequestId,omitnil,omitempty" name:"RequestId"`
+}
+
+type DescribeSyncCompareTasksResponse struct {
+	*tchttp.BaseResponse
+	Response *DescribeSyncCompareTasksResponseParams `json:"Response"`
+}
+
+func (r *DescribeSyncCompareTasksResponse) ToJsonString() string {
+    b, _ := json.Marshal(r)
+    return string(b)
+}
+
+// FromJsonString It is highly **NOT** recommended to use this function
+// because it has no param check, nor strict type check
+func (r *DescribeSyncCompareTasksResponse) FromJsonString(s string) error {
+	return json.Unmarshal([]byte(s), &r)
+}
+
+// Predefined struct for user
+type DescribeSyncGtidCompareReportRequestParams struct {
+	// 任务id
+	JobId *string `json:"JobId,omitnil,omitempty" name:"JobId"`
+
+	// 创建的校验任务id
+	CompareTaskId *string `json:"CompareTaskId,omitnil,omitempty" name:"CompareTaskId"`
+
+	// 是否需要展示不一致详情
+	NeedDiffDetail *bool `json:"NeedDiffDetail,omitnil,omitempty" name:"NeedDiffDetail"`
+}
+
+type DescribeSyncGtidCompareReportRequest struct {
+	*tchttp.BaseRequest
+	
+	// 任务id
+	JobId *string `json:"JobId,omitnil,omitempty" name:"JobId"`
+
+	// 创建的校验任务id
+	CompareTaskId *string `json:"CompareTaskId,omitnil,omitempty" name:"CompareTaskId"`
+
+	// 是否需要展示不一致详情
+	NeedDiffDetail *bool `json:"NeedDiffDetail,omitnil,omitempty" name:"NeedDiffDetail"`
+}
+
+func (r *DescribeSyncGtidCompareReportRequest) ToJsonString() string {
+    b, _ := json.Marshal(r)
+    return string(b)
+}
+
+// FromJsonString It is highly **NOT** recommended to use this function
+// because it has no param check, nor strict type check
+func (r *DescribeSyncGtidCompareReportRequest) FromJsonString(s string) error {
+	f := make(map[string]interface{})
+	if err := json.Unmarshal([]byte(s), &f); err != nil {
+		return err
+	}
+	delete(f, "JobId")
+	delete(f, "CompareTaskId")
+	delete(f, "NeedDiffDetail")
+	if len(f) > 0 {
+		return tcerr.NewTencentCloudSDKError("ClientError.BuildRequestError", "DescribeSyncGtidCompareReportRequest has unknown keys!", "")
+	}
+	return json.Unmarshal([]byte(s), &r)
+}
+
+// Predefined struct for user
+type DescribeSyncGtidCompareReportResponseParams struct {
+	// 校验结论
+	Conclusion *string `json:"Conclusion,omitnil,omitempty" name:"Conclusion"`
+
+	// 校验状态
+	Status *string `json:"Status,omitnil,omitempty" name:"Status"`
+
+	// 校验类型
+	Type *string `json:"Type,omitnil,omitempty" name:"Type"`
+
+	// 不一致详情
+	Detail []*DifferenceDetails `json:"Detail,omitnil,omitempty" name:"Detail"`
+
+	// 唯一请求 ID，由服务端生成，每次请求都会返回（若请求因其他原因未能抵达服务端，则该次请求不会获得 RequestId）。定位问题时需要提供该次请求的 RequestId。
+	RequestId *string `json:"RequestId,omitnil,omitempty" name:"RequestId"`
+}
+
+type DescribeSyncGtidCompareReportResponse struct {
+	*tchttp.BaseResponse
+	Response *DescribeSyncGtidCompareReportResponseParams `json:"Response"`
+}
+
+func (r *DescribeSyncGtidCompareReportResponse) ToJsonString() string {
+    b, _ := json.Marshal(r)
+    return string(b)
+}
+
+// FromJsonString It is highly **NOT** recommended to use this function
+// because it has no param check, nor strict type check
+func (r *DescribeSyncGtidCompareReportResponse) FromJsonString(s string) error {
+	return json.Unmarshal([]byte(s), &r)
+}
+
+// Predefined struct for user
 type DescribeSyncJobsRequestParams struct {
 	// 同步任务id，如sync-werwfs23，可通过[DescribeSyncJobs](https://cloud.tencent.com/document/product/571/82103)接口获取。
 	JobId *string `json:"JobId,omitnil,omitempty" name:"JobId"`
@@ -3617,6 +4452,47 @@ type DetailCheckItem struct {
 	SkipInfo *string `json:"SkipInfo,omitnil,omitempty" name:"SkipInfo"`
 }
 
+type DiffChunkItem struct {
+	// 数据库名
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	DBName *string `json:"DBName,omitnil,omitempty" name:"DBName"`
+
+	// schema名
+	SchemaName *string `json:"SchemaName,omitnil,omitempty" name:"SchemaName"`
+
+	// 数据表名
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	TableName *string `json:"TableName,omitnil,omitempty" name:"TableName"`
+
+	// 分块号
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	ChunkId *int64 `json:"ChunkId,omitnil,omitempty" name:"ChunkId"`
+
+	// 数据标识符，比如主键信息等
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	Identifier *string `json:"Identifier,omitnil,omitempty" name:"Identifier"`
+
+	// 不一致类型，可能的取值为：data - 两边数据不一致；srcLack - 源缺失；dstLack - 目标缺失
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	DiffType *string `json:"DiffType,omitnil,omitempty" name:"DiffType"`
+
+	// 表结构信息
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	SchemaInfo []*string `json:"SchemaInfo,omitnil,omitempty" name:"SchemaInfo"`
+
+	// 源端数据
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	SrcItem []*string `json:"SrcItem,omitnil,omitempty" name:"SrcItem"`
+
+	// 目标端数据
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	DstItem []*string `json:"DstItem,omitnil,omitempty" name:"DstItem"`
+
+	// 完成时间
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	FinishedAt *string `json:"FinishedAt,omitnil,omitempty" name:"FinishedAt"`
+}
+
 type DifferenceAdvancedObjectsDetail struct {
 	// 总数
 	TotalCount *int64 `json:"TotalCount,omitnil,omitempty" name:"TotalCount"`
@@ -3670,6 +4546,35 @@ type DifferenceDetail struct {
 	Items []*DifferenceItem `json:"Items,omitnil,omitempty" name:"Items"`
 }
 
+type DifferenceDetails struct {
+	// 校验结果
+	Result *string `json:"Result,omitnil,omitempty" name:"Result"`
+
+	// 源库gtid set
+	SrcGtidSets *string `json:"SrcGtidSets,omitnil,omitempty" name:"SrcGtidSets"`
+
+	// 目标库gtid set
+	DstGtidSets *string `json:"DstGtidSets,omitnil,omitempty" name:"DstGtidSets"`
+
+	// 源库差异的gtid set
+	DiffSrc *string `json:"DiffSrc,omitnil,omitempty" name:"DiffSrc"`
+
+	// 源库中不一致的表
+	DiffSrcTables []*string `json:"DiffSrcTables,omitnil,omitempty" name:"DiffSrcTables"`
+
+	// 目标库差异的gtid set
+	DiffDst *string `json:"DiffDst,omitnil,omitempty" name:"DiffDst"`
+
+	// 校验结束时间
+	CompareTimestamp *string `json:"CompareTimestamp,omitnil,omitempty" name:"CompareTimestamp"`
+
+	// 同步范围内的不一致表
+	DiffSrcTablesNeedSync []*string `json:"DiffSrcTablesNeedSync,omitnil,omitempty" name:"DiffSrcTablesNeedSync"`
+
+	// 同步范围内是否存在不一致的表
+	DiffSrcIsNeedSync *bool `json:"DiffSrcIsNeedSync,omitnil,omitempty" name:"DiffSrcIsNeedSync"`
+}
+
 type DifferenceItem struct {
 	// 数据库名
 	Db *string `json:"Db,omitnil,omitempty" name:"Db"`
@@ -3705,6 +4610,15 @@ type DifferenceItem struct {
 	FinishedAt *string `json:"FinishedAt,omitnil,omitempty" name:"FinishedAt"`
 }
 
+type DifferenceOwnerDetail struct {
+	// owner不一致总数
+	TotalCount *int64 `json:"TotalCount,omitnil,omitempty" name:"TotalCount"`
+
+	// owner不一致详情
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	Items []*OwnerDifference `json:"Items,omitnil,omitempty" name:"Items"`
+}
+
 type DifferenceRowDetail struct {
 	// 不一致总数
 	TotalCount *int64 `json:"TotalCount,omitnil,omitempty" name:"TotalCount"`
@@ -3712,6 +4626,15 @@ type DifferenceRowDetail struct {
 	// 不一致列表
 	// 注意：此字段可能返回 null，表示取不到有效值。
 	Items []*RowsCountDifference `json:"Items,omitnil,omitempty" name:"Items"`
+}
+
+type DifferenceSchemaDetail struct {
+	// 表结构不一致的数量
+	TotalCount *int64 `json:"TotalCount,omitnil,omitempty" name:"TotalCount"`
+
+	// 表结构不一致信息
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	Items []*SchemaDifference `json:"Items,omitnil,omitempty" name:"Items"`
 }
 
 type DistributeRule struct {
@@ -3758,94 +4681,94 @@ type DynamicOptions struct {
 }
 
 type Endpoint struct {
-	// 地域英文名，如：ap-guangzhou
+	// <p>地域英文名，如：ap-guangzhou</p>
 	Region *string `json:"Region,omitnil,omitempty" name:"Region"`
 
-	// 节点类型，proxy表示节点类型为主机，set表示节点类型为节点。proxy类型必须填在数组第一项。tdsqlmysql类型的源/目标配置必填
+	// <p>节点类型，proxy表示节点类型为主机，set表示节点类型为节点。proxy类型必须填在数组第一项。tdsqlmysql类型的源/目标配置必填</p>
 	Role *string `json:"Role,omitnil,omitempty" name:"Role"`
 
-	// 数据库内核类型，tdsql中用于区分不同内核：percona,mariadb,mysql。注意TDSQL-C MySQL、TDSQL PostgreSQL无需填写此项值。
+	// <p>数据库内核类型，tdsql中用于区分不同内核：percona,mariadb,mysql。注意TDSQL-C MySQL、TDSQL PostgreSQL无需填写此项值。</p>
 	DbKernel *string `json:"DbKernel,omitnil,omitempty" name:"DbKernel"`
 
-	// 数据库实例ID，格式如：cdb-powiqx8q
+	// <p>数据库实例ID，格式如：cdb-powiqx8q</p>
 	InstanceId *string `json:"InstanceId,omitnil,omitempty" name:"InstanceId"`
 
-	// 实例的IP地址，接入类型为非cdb时此项必填
+	// <p>实例的IP地址，接入类型为非cdb时此项必填</p>
 	Ip *string `json:"Ip,omitnil,omitempty" name:"Ip"`
 
-	// 实例端口，接入类型为非cdb时此项必填
+	// <p>实例端口，接入类型为非cdb时此项必填</p>
 	Port *uint64 `json:"Port,omitnil,omitempty" name:"Port"`
 
-	// 用户名，对于访问需要用户名密码认证的实例必填
+	// <p>用户名，对于访问需要用户名密码认证的实例必填</p>
 	User *string `json:"User,omitnil,omitempty" name:"User"`
 
-	// 密码，对于访问需要用户名密码认证的实例必填
+	// <p>密码，对于访问需要用户名密码认证的实例必填</p>
 	Password *string `json:"Password,omitnil,omitempty" name:"Password"`
 
-	// 数据库名，数据库为cdwpg时，需要提供
+	// <p>数据库名，数据库为cdwpg时，需要提供</p>
 	DbName *string `json:"DbName,omitnil,omitempty" name:"DbName"`
 
-	// 私有网络ID，对于私有网络、专线、VPN的接入方式此项必填，格式如：vpc-92jblxto
+	// <p>私有网络ID，对于私有网络、专线、VPN的接入方式此项必填，格式如：vpc-92jblxto</p>
 	VpcId *string `json:"VpcId,omitnil,omitempty" name:"VpcId"`
 
-	// 私有网络下的子网ID，对于私有网络、专线、VPN的接入方式此项必填，格式如：subnet-3paxmkdz
+	// <p>私有网络下的子网ID，对于私有网络、专线、VPN的接入方式此项必填，格式如：subnet-3paxmkdz</p>
 	SubnetId *string `json:"SubnetId,omitnil,omitempty" name:"SubnetId"`
 
-	// CVM实例短ID，格式如：ins-olgl39y8，与云服务器控制台页面显示的实例ID相同。如果是CVM自建实例，需要传递此字段
+	// <p>CVM实例短ID，格式如：ins-olgl39y8，与云服务器控制台页面显示的实例ID相同。如果是CVM自建实例，需要传递此字段</p>
 	CvmInstanceId *string `json:"CvmInstanceId,omitnil,omitempty" name:"CvmInstanceId"`
 
-	// 专线网关ID，对于专线接入类型此项必填，格式如：dcg-0rxtqqxb
+	// <p>专线网关ID，对于专线接入类型此项必填，格式如：dcg-0rxtqqxb</p>
 	UniqDcgId *string `json:"UniqDcgId,omitnil,omitempty" name:"UniqDcgId"`
 
-	// VPN网关ID，对于vpn接入类型此项必填，格式如：vpngw-9ghexg7q
+	// <p>VPN网关ID，对于vpn接入类型此项必填，格式如：vpngw-9ghexg7q</p>
 	UniqVpnGwId *string `json:"UniqVpnGwId,omitnil,omitempty" name:"UniqVpnGwId"`
 
-	// 云联网ID，对于云联网接入类型此项必填，如：ccn-afp6kltc
+	// <p>云联网ID，对于云联网接入类型此项必填，如：ccn-afp6kltc</p>
 	CcnId *string `json:"CcnId,omitnil,omitempty" name:"CcnId"`
 
-	// 云厂商类型，当实例为RDS实例时，填写为aliyun, 其他情况均填写others，默认为others
+	// <p>云厂商类型，当实例为RDS实例时，填写为aliyun, 其他情况均填写others，默认为others</p>
 	Supplier *string `json:"Supplier,omitnil,omitempty" name:"Supplier"`
 
-	// 数据库版本，当实例为RDS实例时才有效，其他实例忽略，格式如：5.6或者5.7，默认为5.6
+	// <p>数据库版本，当实例为RDS实例时才有效，其他实例忽略，格式如：5.6或者5.7，默认为5.6</p>
 	EngineVersion *string `json:"EngineVersion,omitnil,omitempty" name:"EngineVersion"`
 
-	// 实例所属账号，如果为跨账号实例此项必填
+	// <p>实例所属账号，如果为跨账号实例此项必填</p>
 	Account *string `json:"Account,omitnil,omitempty" name:"Account"`
 
-	// 资源所属账号 为空或self(表示本账号内资源)、other(表示跨账号资源)
+	// <p>资源所属账号 为空或self(表示本账号内资源)、other(表示跨账号资源)</p>
 	AccountMode *string `json:"AccountMode,omitnil,omitempty" name:"AccountMode"`
 
-	// 跨账号同步时的角色，只允许[a-zA-Z0-9\-\_]+，如果为跨账号实例此项必填
+	// <p>跨账号同步时的角色，只允许[a-zA-Z0-9-_]+，如果为跨账号实例此项必填</p>
 	AccountRole *string `json:"AccountRole,omitnil,omitempty" name:"AccountRole"`
 
-	// 外部角色id
+	// <p>外部角色id</p>
 	RoleExternalId *string `json:"RoleExternalId,omitnil,omitempty" name:"RoleExternalId"`
 
-	// 临时密钥Id，可通过申请扮演角色临时访问凭证获取临时密钥https://cloud.tencent.com/document/product/1312/48197，其中角色资源RoleArn的定义可参考DTS跨账号同步文档(https://cloud.tencent.com/document/product/571/68729)第4节中关于角色的定义。
+	// <p>临时密钥Id，可通过申请扮演角色临时访问凭证获取临时密钥https://cloud.tencent.com/document/product/1312/48197，其中角色资源RoleArn的定义可参考DTS跨账号同步文档(https://cloud.tencent.com/document/product/571/68729)第4节中关于角色的定义。</p>
 	TmpSecretId *string `json:"TmpSecretId,omitnil,omitempty" name:"TmpSecretId"`
 
-	// 临时密钥Id，可通过申请扮演角色临时访问凭证获取临时密钥https://cloud.tencent.com/document/product/1312/48197，其中角色资源RoleArn的定义可参考DTS跨账号同步文档(https://cloud.tencent.com/document/product/571/68729)第4节中关于角色的定义。
+	// <p>临时密钥Id，可通过申请扮演角色临时访问凭证获取临时密钥https://cloud.tencent.com/document/product/1312/48197，其中角色资源RoleArn的定义可参考DTS跨账号同步文档(https://cloud.tencent.com/document/product/571/68729)第4节中关于角色的定义。</p>
 	TmpSecretKey *string `json:"TmpSecretKey,omitnil,omitempty" name:"TmpSecretKey"`
 
-	// 临时密钥Id，可通过申请扮演角色临时访问凭证获取临时密钥https://cloud.tencent.com/document/product/1312/48197，其中角色资源RoleArn的定义可参考DTS跨账号同步文档(https://cloud.tencent.com/document/product/571/68729)第4节中关于角色的定义。
+	// <p>临时密钥Id，可通过申请扮演角色临时访问凭证获取临时密钥https://cloud.tencent.com/document/product/1312/48197，其中角色资源RoleArn的定义可参考DTS跨账号同步文档(https://cloud.tencent.com/document/product/571/68729)第4节中关于角色的定义。</p>
 	TmpToken *string `json:"TmpToken,omitnil,omitempty" name:"TmpToken"`
 
-	// 是否走加密传输、UnEncrypted表示不走加密传输，Encrypted表示走加密传输，默认UnEncrypted
+	// <p>是否走加密传输、UnEncrypted表示不走加密传输，Encrypted表示走加密传输，默认UnEncrypted</p>
 	EncryptConn *string `json:"EncryptConn,omitnil,omitempty" name:"EncryptConn"`
 
-	// 数据库所属网络环境，AccessType为云联网(ccn)时必填， UserIDC表示用户IDC、TencentVPC表示腾讯云VPC；
+	// <p>数据库所属网络环境，AccessType为云联网(ccn)时必填， UserIDC表示用户IDC、TencentVPC表示腾讯云VPC；</p>
 	DatabaseNetEnv *string `json:"DatabaseNetEnv,omitnil,omitempty" name:"DatabaseNetEnv"`
 
-	// 数据库为跨账号云联网下的实例时、表示云联网所属主账号
+	// <p>数据库为跨账号云联网下的实例时、表示云联网所属主账号</p>
 	CcnOwnerUin *string `json:"CcnOwnerUin,omitnil,omitempty" name:"CcnOwnerUin"`
 
-	// 数据库为cynos、且是cynos集群内的一个子数据库实例时、该参数为该子实例的ID
+	// <p>数据库为cynos、且是cynos集群内的一个子数据库实例时、该参数为该子实例的ID</p>
 	ChildInstanceId *string `json:"ChildInstanceId,omitnil,omitempty" name:"ChildInstanceId"`
 
-	// 数据库为cynos、且是cynos集群内的一个子数据库实例时、该参数为该子实例的类型、例如：只读实例传ro、读写实例传rw
+	// <p>数据库为cynos、且是cynos集群内的一个子数据库实例时、该参数为该子实例的类型、例如：只读实例传ro、读写实例传rw</p>
 	ChildInstanceType *string `json:"ChildInstanceType,omitnil,omitempty" name:"ChildInstanceType"`
 
-	// tdsql的分片id。如节点类型为set必填。
+	// <p>tdsql的分片id。如节点类型为set必填。</p>
 	SetId *string `json:"SetId,omitnil,omitempty" name:"SetId"`
 }
 
@@ -3966,6 +4889,23 @@ type GroupInfo struct {
 
 	// 每个消费者正在消费的分区
 	PartitionAssignment []*PartitionAssignment `json:"PartitionAssignment,omitnil,omitempty" name:"PartitionAssignment"`
+}
+
+type IncCompareAbstractInfo struct {
+	// 增量起始位点
+	StartPosition *string `json:"StartPosition,omitnil,omitempty" name:"StartPosition"`
+
+	// 增量当前位点
+	CurrentPosition *string `json:"CurrentPosition,omitnil,omitempty" name:"CurrentPosition"`
+
+	// 已校验行数
+	CheckedRecord *uint64 `json:"CheckedRecord,omitnil,omitempty" name:"CheckedRecord"`
+
+	// 不一致行数
+	DiffRecord *uint64 `json:"DiffRecord,omitnil,omitempty" name:"DiffRecord"`
+
+	// 不一致表的数量
+	DiffTable *uint64 `json:"DiffTable,omitnil,omitempty" name:"DiffTable"`
 }
 
 // Predefined struct for user
@@ -4152,9 +5092,7 @@ type JobItem struct {
 	// 迁移任务错误信息
 	BriefMsg *string `json:"BriefMsg,omitnil,omitempty" name:"BriefMsg"`
 
-	// 任务状态，取值为：creating(创建中)、created(创建完成)、checking(校验中)、checkPass(校验通过)、checkNotPass(校验不通过)、readyRun(准备运行)、running(任务运行)、readyComplete(准备完成)、success(任务成功)、failed(任务失败)、stopping(中止中)、completing(完成中)、
-	// pausing(暂停中)、
-	// manualPaused(已暂停)
+	// 任务状态，取值为：creating(创建中)、created(创建完成)、checking(校验中)、checkPass(校验通过)、checkNotPass(校验不通过)、readyRun(准备运行)、running(任务运行)、readyComplete(准备完成)、success(任务成功)、failed(任务失败)、stopping(终止中)、completing(完成中)、pausing(暂停中)、manualPaused(已暂停)、resumableErr(可重试错误)、resuming(重试中)、unknown(未知状态)、error(任务错误)、canceled(已取消)
 	Status *string `json:"Status,omitnil,omitempty" name:"Status"`
 
 	// 任务运行模式，值包括：immediate(立即运行)，timed(定时运行)
@@ -4192,17 +5130,20 @@ type JobItem struct {
 }
 
 type KafkaOption struct {
-	// 投递到kafka的数据类型，如Avro,Json,canal-pb,canal-json,debezium
+	// <p>投递到kafka的数据类型，如Avro,Json,canal-pb,canal-json,debezium</p>
 	DataType *string `json:"DataType,omitnil,omitempty" name:"DataType"`
 
-	// 同步topic策略，如Single（集中投递到单topic）,Multi (自定义topic名称)
+	// <p>同步topic策略，如Single（集中投递到单topic）,Multi (自定义topic名称)</p>
 	TopicType *string `json:"TopicType,omitnil,omitempty" name:"TopicType"`
 
-	// 用于存储ddl的topic
+	// <p>用于存储ddl的topic</p>
 	DDLTopicName *string `json:"DDLTopicName,omitnil,omitempty" name:"DDLTopicName"`
 
-	// 单topic和自定义topic的描述
+	// <p>单topic和自定义topic的描述</p>
 	TopicRules []*TopicRule `json:"TopicRules,omitnil,omitempty" name:"TopicRules"`
+
+	// <p>其他附加信息，对于特定数据类型可设置额外参数。比如针对Canal兼容的功能支持：&quot;canalOfficialFormat&quot;:&quot;on&quot;表示打开Canal兼容功能，默认不带。针对大消息跳过的功能支持：&quot;skipLargeMessage&quot;:&quot;on&quot;表示开启跳过大消息，默认不带；开启时需同时设置&quot;maxMessageSizeMB&quot;为1~100的正整数字符串，表示最大消息大小阈值（MB），超过该大小的消息将被跳过，默认不带。</p>
+	DataOption []*KeyValuePairOption `json:"DataOption,omitnil,omitempty" name:"DataOption"`
 }
 
 type KeyValuePairOption struct {
@@ -4242,48 +5183,50 @@ type MigrateDBItem struct {
 }
 
 type MigrateDetailInfo struct {
-	// 总步骤数
+	// <p>总步骤数</p>
 	StepAll *uint64 `json:"StepAll,omitnil,omitempty" name:"StepAll"`
 
-	// 当前步骤
+	// <p>当前步骤</p>
 	StepNow *uint64 `json:"StepNow,omitnil,omitempty" name:"StepNow"`
 
-	// 主从差距，MB；只在任务正常，迁移或者同步的最后一步（追Binlog的阶段才有校），如果是非法值，返回-1
+	// <p>主从差距，MB；只在任务正常，迁移或者同步的最后一步（追Binlog的阶段才有校），如果是非法值，返回-1</p>
 	MasterSlaveDistance *int64 `json:"MasterSlaveDistance,omitnil,omitempty" name:"MasterSlaveDistance"`
 
-	// 主从差距，秒；只在任务正常，迁移或者同步的最后一步（追Binlog的阶段才有校），如果是非法值，返回-1
+	// <p>主从差距，秒；只在任务正常，迁移或者同步的最后一步（追Binlog的阶段才有校），如果是非法值，返回-1</p>
 	SecondsBehindMaster *int64 `json:"SecondsBehindMaster,omitnil,omitempty" name:"SecondsBehindMaster"`
 
-	// 步骤信息
+	// <p>步骤信息</p>
 	StepInfo []*StepDetailInfo `json:"StepInfo,omitnil,omitempty" name:"StepInfo"`
 }
 
 type MigrateOption struct {
-	// 迁移对象选项，需要告知迁移服务迁移哪些库表对象
+	// <p>迁移对象选项，需要告知迁移服务迁移哪些库表对象</p>
 	DatabaseTable *DatabaseTableObject `json:"DatabaseTable,omitnil,omitempty" name:"DatabaseTable"`
 
-	// 迁移类型，full(全量迁移)，structure(结构迁移)，fullAndIncrement(全量加增量迁移)， 默认为fullAndIncrement;注意redis,keewidb产品只支持fullAndIncrement类型。
+	// <p>迁移类型，full(全量迁移)，structure(结构迁移)，fullAndIncrement(全量加增量迁移)， 默认为fullAndIncrement;注意redis,keewidb产品只支持fullAndIncrement类型。</p>
 	MigrateType *string `json:"MigrateType,omitnil,omitempty" name:"MigrateType"`
 
-	// 数据一致性校验选项， 默认为不开启一致性校验
+	// <p>数据一致性校验选项， 默认为不开启一致性校验</p>
 	// 注意：此字段可能返回 null，表示取不到有效值。
 	Consistency *ConsistencyOption `json:"Consistency,omitnil,omitempty" name:"Consistency"`
 
-	// 是否迁移账号，true(迁移账号)，false(不迁移账号)
+	// <p>是否迁移账号，true(迁移账号)，false(不迁移账号)</p>
 	IsMigrateAccount *bool `json:"IsMigrateAccount,omitnil,omitempty" name:"IsMigrateAccount"`
 
-	// 是否用源库Root账户覆盖目标库，值包括：false-不覆盖，true-覆盖，选择库表或者结构迁移时应该为false，注意只对旧版迁移有效
+	// <p>是否用源库Root账户覆盖目标库，值包括：false-不覆盖，true-覆盖，选择库表或者结构迁移时应该为false，注意只对旧版迁移有效</p>
 	IsOverrideRoot *bool `json:"IsOverrideRoot,omitnil,omitempty" name:"IsOverrideRoot"`
 
-	// 是否在迁移时设置目标库只读(仅对mysql有效)，true(设置只读)、false(不设置只读，默认此值)
+	// <p>是否在迁移时设置目标库只读(仅对mysql有效)，true(设置只读)、false(不设置只读，默认此值)</p>
 	IsDstReadOnly *bool `json:"IsDstReadOnly,omitnil,omitempty" name:"IsDstReadOnly"`
 
-	// 其他附加信息，对于特定库可设置额外参数，Redis可定义如下的参数: 
-	// ["DstWriteMode":normal, 	目标库写入模式,可取值clearData(清空目标实例数据)、overwrite(以覆盖写的方式执行任务)、normal(要求目标端为空，否则校验不通过) ，不显示指定默认以覆盖写的方式执行任务	"IsDstReadOnly":true, 	是否在迁移时设置目标库只读,true(设置只读)、false(不设置只读) 	"ClientOutputBufferHardLimit":512, 	从机缓冲区的硬性容量限制(MB) 	"ClientOutputBufferSoftLimit":512, 	从机缓冲区的软性容量限制(MB) 	"ClientOutputBufferPersistTime":60, 从机缓冲区的软性限制持续时间(秒) 	"ReplBacklogSize":512, 	环形缓冲区容量限制(MB) 	"ReplTimeout":120，		复制超时时间(秒) 	"IsExpireKey":"true",过期key自动淘汰]
+	// <p>其他附加信息，对于特定库可设置额外参数，Redis可定义如下的参数:<br>[&quot;DstWriteMode&quot;:normal,     目标库写入模式,可取值clearData(清空目标实例数据)、overwrite(以覆盖写的方式执行任务)、normal(要求目标端为空，否则校验不通过) ，不显示指定默认以覆盖写的方式执行任务    &quot;IsDstReadOnly&quot;:true,     是否在迁移时设置目标库只读,true(设置只读)、false(不设置只读)     &quot;ClientOutputBufferHardLimit&quot;:512,     从机缓冲区的硬性容量限制(MB)     &quot;ClientOutputBufferSoftLimit&quot;:512,     从机缓冲区的软性容量限制(MB)     &quot;ClientOutputBufferPersistTime&quot;:60, 从机缓冲区的软性限制持续时间(秒)     &quot;ReplBacklogSize&quot;:512,     环形缓冲区容量限制(MB)     &quot;ReplTimeout&quot;:120，        复制超时时间(秒)     &quot;IsExpireKey&quot;:&quot;true&quot;,过期key自动淘汰]</p>
 	ExtraAttr []*KeyValuePairOption `json:"ExtraAttr,omitnil,omitempty" name:"ExtraAttr"`
 
-	// pgsql迁移分类：logical(逻辑迁移)、physical(物理迁移)
+	// <p>pgsql迁移分类：logical(逻辑迁移)、physical(物理迁移)</p>
 	MigrateWay *string `json:"MigrateWay,omitnil,omitempty" name:"MigrateWay"`
+
+	// <p>迁移配置阶段限速相关参数</p>
+	RateLimit *RateLimit `json:"RateLimit,omitnil,omitempty" name:"RateLimit"`
 }
 
 type ModifiedSubscribeObject struct {
@@ -4883,62 +5826,62 @@ func (r *ModifyMigrateRuntimeAttributeResponse) FromJsonString(s string) error {
 
 // Predefined struct for user
 type ModifyMigrationJobRequestParams struct {
-	// 任务id，可通过[DescribeMigrationJobs](https://cloud.tencent.com/document/product/571/82084)接口获取。
+	// <p>任务id，可通过<a href="https://cloud.tencent.com/document/product/571/82084">DescribeMigrationJobs</a>接口获取。</p>
 	JobId *string `json:"JobId,omitnil,omitempty" name:"JobId"`
 
-	// 运行模式，取值如：immediate(表示立即运行)、timed(表示定时运行)
+	// <p>运行模式，取值如：immediate(表示立即运行)、timed(表示定时运行)</p>
 	RunMode *string `json:"RunMode,omitnil,omitempty" name:"RunMode"`
 
-	// 迁移任务配置选项，描述任务如何执行迁移等一系列配置信息；字段下的RateLimitOption不可配置、如果需要修改任务的限速信息、请在任务运行后通过ModifyMigrateRateLimit接口修改
+	// <p>迁移任务配置选项，描述任务如何执行迁移等一系列配置信息；字段下的RateLimitOption不可配置、如果需要修改任务的限速信息、请在任务运行后通过ModifyMigrateRateLimit接口修改</p>
 	MigrateOption *MigrateOption `json:"MigrateOption,omitnil,omitempty" name:"MigrateOption"`
 
-	// 源实例信息
+	// <p>源实例信息</p>
 	SrcInfo *DBEndpointInfo `json:"SrcInfo,omitnil,omitempty" name:"SrcInfo"`
 
-	// 目标实例信息
+	// <p>目标实例信息</p>
 	DstInfo *DBEndpointInfo `json:"DstInfo,omitnil,omitempty" name:"DstInfo"`
 
-	// 迁移任务名称，最大长度128
+	// <p>迁移任务名称，最大长度128</p>
 	JobName *string `json:"JobName,omitnil,omitempty" name:"JobName"`
 
-	// 期待启动时间，当RunMode取值为timed时，此值必填，形如："2006-01-02 15:04:05"
+	// <p>期待启动时间，当RunMode取值为timed时，此值必填，形如：&quot;2006-01-02 15:04:05&quot;</p>
 	ExpectRunTime *string `json:"ExpectRunTime,omitnil,omitempty" name:"ExpectRunTime"`
 
-	// 标签信息
+	// <p>标签信息</p>
 	Tags []*TagItem `json:"Tags,omitnil,omitempty" name:"Tags"`
 
-	// 自动重试的时间段、可设置5至720分钟、0表示不重试
+	// <p>自动重试的时间段、可设置5至720分钟、0表示不重试</p>
 	AutoRetryTimeRangeMinutes *int64 `json:"AutoRetryTimeRangeMinutes,omitnil,omitempty" name:"AutoRetryTimeRangeMinutes"`
 }
 
 type ModifyMigrationJobRequest struct {
 	*tchttp.BaseRequest
 	
-	// 任务id，可通过[DescribeMigrationJobs](https://cloud.tencent.com/document/product/571/82084)接口获取。
+	// <p>任务id，可通过<a href="https://cloud.tencent.com/document/product/571/82084">DescribeMigrationJobs</a>接口获取。</p>
 	JobId *string `json:"JobId,omitnil,omitempty" name:"JobId"`
 
-	// 运行模式，取值如：immediate(表示立即运行)、timed(表示定时运行)
+	// <p>运行模式，取值如：immediate(表示立即运行)、timed(表示定时运行)</p>
 	RunMode *string `json:"RunMode,omitnil,omitempty" name:"RunMode"`
 
-	// 迁移任务配置选项，描述任务如何执行迁移等一系列配置信息；字段下的RateLimitOption不可配置、如果需要修改任务的限速信息、请在任务运行后通过ModifyMigrateRateLimit接口修改
+	// <p>迁移任务配置选项，描述任务如何执行迁移等一系列配置信息；字段下的RateLimitOption不可配置、如果需要修改任务的限速信息、请在任务运行后通过ModifyMigrateRateLimit接口修改</p>
 	MigrateOption *MigrateOption `json:"MigrateOption,omitnil,omitempty" name:"MigrateOption"`
 
-	// 源实例信息
+	// <p>源实例信息</p>
 	SrcInfo *DBEndpointInfo `json:"SrcInfo,omitnil,omitempty" name:"SrcInfo"`
 
-	// 目标实例信息
+	// <p>目标实例信息</p>
 	DstInfo *DBEndpointInfo `json:"DstInfo,omitnil,omitempty" name:"DstInfo"`
 
-	// 迁移任务名称，最大长度128
+	// <p>迁移任务名称，最大长度128</p>
 	JobName *string `json:"JobName,omitnil,omitempty" name:"JobName"`
 
-	// 期待启动时间，当RunMode取值为timed时，此值必填，形如："2006-01-02 15:04:05"
+	// <p>期待启动时间，当RunMode取值为timed时，此值必填，形如：&quot;2006-01-02 15:04:05&quot;</p>
 	ExpectRunTime *string `json:"ExpectRunTime,omitnil,omitempty" name:"ExpectRunTime"`
 
-	// 标签信息
+	// <p>标签信息</p>
 	Tags []*TagItem `json:"Tags,omitnil,omitempty" name:"Tags"`
 
-	// 自动重试的时间段、可设置5至720分钟、0表示不重试
+	// <p>自动重试的时间段、可设置5至720分钟、0表示不重试</p>
 	AutoRetryTimeRangeMinutes *int64 `json:"AutoRetryTimeRangeMinutes,omitnil,omitempty" name:"AutoRetryTimeRangeMinutes"`
 }
 
@@ -5207,6 +6150,163 @@ func (r *ModifySubscribeObjectsResponse) FromJsonString(s string) error {
 }
 
 // Predefined struct for user
+type ModifySyncCompareTaskNameRequestParams struct {
+	// 任务 Id
+	JobId *string `json:"JobId,omitnil,omitempty" name:"JobId"`
+
+	// 对比任务 ID，形如：sync-8yv4w2i1-cmp-37skmii9
+	CompareTaskId *string `json:"CompareTaskId,omitnil,omitempty" name:"CompareTaskId"`
+
+	// 一致性校验任务名称
+	TaskName *string `json:"TaskName,omitnil,omitempty" name:"TaskName"`
+}
+
+type ModifySyncCompareTaskNameRequest struct {
+	*tchttp.BaseRequest
+	
+	// 任务 Id
+	JobId *string `json:"JobId,omitnil,omitempty" name:"JobId"`
+
+	// 对比任务 ID，形如：sync-8yv4w2i1-cmp-37skmii9
+	CompareTaskId *string `json:"CompareTaskId,omitnil,omitempty" name:"CompareTaskId"`
+
+	// 一致性校验任务名称
+	TaskName *string `json:"TaskName,omitnil,omitempty" name:"TaskName"`
+}
+
+func (r *ModifySyncCompareTaskNameRequest) ToJsonString() string {
+    b, _ := json.Marshal(r)
+    return string(b)
+}
+
+// FromJsonString It is highly **NOT** recommended to use this function
+// because it has no param check, nor strict type check
+func (r *ModifySyncCompareTaskNameRequest) FromJsonString(s string) error {
+	f := make(map[string]interface{})
+	if err := json.Unmarshal([]byte(s), &f); err != nil {
+		return err
+	}
+	delete(f, "JobId")
+	delete(f, "CompareTaskId")
+	delete(f, "TaskName")
+	if len(f) > 0 {
+		return tcerr.NewTencentCloudSDKError("ClientError.BuildRequestError", "ModifySyncCompareTaskNameRequest has unknown keys!", "")
+	}
+	return json.Unmarshal([]byte(s), &r)
+}
+
+// Predefined struct for user
+type ModifySyncCompareTaskNameResponseParams struct {
+	// 唯一请求 ID，由服务端生成，每次请求都会返回（若请求因其他原因未能抵达服务端，则该次请求不会获得 RequestId）。定位问题时需要提供该次请求的 RequestId。
+	RequestId *string `json:"RequestId,omitnil,omitempty" name:"RequestId"`
+}
+
+type ModifySyncCompareTaskNameResponse struct {
+	*tchttp.BaseResponse
+	Response *ModifySyncCompareTaskNameResponseParams `json:"Response"`
+}
+
+func (r *ModifySyncCompareTaskNameResponse) ToJsonString() string {
+    b, _ := json.Marshal(r)
+    return string(b)
+}
+
+// FromJsonString It is highly **NOT** recommended to use this function
+// because it has no param check, nor strict type check
+func (r *ModifySyncCompareTaskNameResponse) FromJsonString(s string) error {
+	return json.Unmarshal([]byte(s), &r)
+}
+
+// Predefined struct for user
+type ModifySyncCompareTaskRequestParams struct {
+	// 任务 Id
+	JobId *string `json:"JobId,omitnil,omitempty" name:"JobId"`
+
+	// 对比任务 ID，形如：sync-8yv4w2i1-cmp-37skmii9
+	CompareTaskId *string `json:"CompareTaskId,omitnil,omitempty" name:"CompareTaskId"`
+
+	// 任务名称
+	TaskName *string `json:"TaskName,omitnil,omitempty" name:"TaskName"`
+
+	// 数据对比对象模式，sameAsMigrate(全部迁移对象， 默认为此项配置)、custom(自定义)，注意自定义对比对象必须是迁移对象的子集
+	ObjectMode *string `json:"ObjectMode,omitnil,omitempty" name:"ObjectMode"`
+
+	// 对比对象，若CompareObjectMode取值为custom，则此项必填
+	Objects *CompareObject `json:"Objects,omitnil,omitempty" name:"Objects"`
+
+	// 一致性校验选项
+	Options *CompareOptions `json:"Options,omitnil,omitempty" name:"Options"`
+}
+
+type ModifySyncCompareTaskRequest struct {
+	*tchttp.BaseRequest
+	
+	// 任务 Id
+	JobId *string `json:"JobId,omitnil,omitempty" name:"JobId"`
+
+	// 对比任务 ID，形如：sync-8yv4w2i1-cmp-37skmii9
+	CompareTaskId *string `json:"CompareTaskId,omitnil,omitempty" name:"CompareTaskId"`
+
+	// 任务名称
+	TaskName *string `json:"TaskName,omitnil,omitempty" name:"TaskName"`
+
+	// 数据对比对象模式，sameAsMigrate(全部迁移对象， 默认为此项配置)、custom(自定义)，注意自定义对比对象必须是迁移对象的子集
+	ObjectMode *string `json:"ObjectMode,omitnil,omitempty" name:"ObjectMode"`
+
+	// 对比对象，若CompareObjectMode取值为custom，则此项必填
+	Objects *CompareObject `json:"Objects,omitnil,omitempty" name:"Objects"`
+
+	// 一致性校验选项
+	Options *CompareOptions `json:"Options,omitnil,omitempty" name:"Options"`
+}
+
+func (r *ModifySyncCompareTaskRequest) ToJsonString() string {
+    b, _ := json.Marshal(r)
+    return string(b)
+}
+
+// FromJsonString It is highly **NOT** recommended to use this function
+// because it has no param check, nor strict type check
+func (r *ModifySyncCompareTaskRequest) FromJsonString(s string) error {
+	f := make(map[string]interface{})
+	if err := json.Unmarshal([]byte(s), &f); err != nil {
+		return err
+	}
+	delete(f, "JobId")
+	delete(f, "CompareTaskId")
+	delete(f, "TaskName")
+	delete(f, "ObjectMode")
+	delete(f, "Objects")
+	delete(f, "Options")
+	if len(f) > 0 {
+		return tcerr.NewTencentCloudSDKError("ClientError.BuildRequestError", "ModifySyncCompareTaskRequest has unknown keys!", "")
+	}
+	return json.Unmarshal([]byte(s), &r)
+}
+
+// Predefined struct for user
+type ModifySyncCompareTaskResponseParams struct {
+	// 唯一请求 ID，由服务端生成，每次请求都会返回（若请求因其他原因未能抵达服务端，则该次请求不会获得 RequestId）。定位问题时需要提供该次请求的 RequestId。
+	RequestId *string `json:"RequestId,omitnil,omitempty" name:"RequestId"`
+}
+
+type ModifySyncCompareTaskResponse struct {
+	*tchttp.BaseResponse
+	Response *ModifySyncCompareTaskResponseParams `json:"Response"`
+}
+
+func (r *ModifySyncCompareTaskResponse) ToJsonString() string {
+    b, _ := json.Marshal(r)
+    return string(b)
+}
+
+// FromJsonString It is highly **NOT** recommended to use this function
+// because it has no param check, nor strict type check
+func (r *ModifySyncCompareTaskResponse) FromJsonString(s string) error {
+	return json.Unmarshal([]byte(s), &r)
+}
+
+// Predefined struct for user
 type ModifySyncJobConfigRequestParams struct {
 	// 同步任务ID，可通过[DescribeSyncJobs](https://cloud.tencent.com/document/product/571/82103)接口获取。
 	JobId *string `json:"JobId,omitnil,omitempty" name:"JobId"`
@@ -5378,18 +6478,21 @@ type MonitorInfo struct {
 }
 
 type Objects struct {
-	// 同步对象类型 Partial(部分对象)
+	// <p>同步对象类型 Partial(部分对象)</p>
 	Mode *string `json:"Mode,omitnil,omitempty" name:"Mode"`
 
-	// 同步对象，当 Mode 为 Partial 时，不为空
+	// <p>同步对象，当 Mode 为 Partial 时，不为空</p>
 	// 注意：此字段可能返回 null，表示取不到有效值。
 	Databases []*Database `json:"Databases,omitnil,omitempty" name:"Databases"`
 
-	// 高级对象类型，如function、procedure。注意：如果要迁移同步高级对象，此配置中应该包含对应的高级对象类型。当需要同步高级对象时，初始化类型必须包含结构初始化类型，即任务的Options.InitType字段值为Structure或Full
+	// <p>高级对象类型，如function、procedure。注意：如果要迁移同步高级对象，此配置中应该包含对应的高级对象类型。当需要同步高级对象时，初始化类型必须包含结构初始化类型，即任务的Options.InitType字段值为Structure或Full</p>
 	AdvancedObjects []*string `json:"AdvancedObjects,omitnil,omitempty" name:"AdvancedObjects"`
 
-	// OnlineDDL类型，冗余字段不做配置用途
+	// <p>此字段已废弃。对于临时表的同步应该使用Objects.Databases[n].Tables[n].TmpTables传入。</p>
 	OnlineDDL *OnlineDDL `json:"OnlineDDL,omitnil,omitempty" name:"OnlineDDL"`
+
+	// <p>库/表/视图级 DML/DDL 白名单</p>
+	DatabasesOpFilter []*DBOpFilter `json:"DatabasesOpFilter,omitnil,omitempty" name:"DatabasesOpFilter"`
 }
 
 type OffsetTimeMap struct {
@@ -5405,47 +6508,75 @@ type OnlineDDL struct {
 	Status *string `json:"Status,omitnil,omitempty" name:"Status"`
 }
 
+type OpFilter struct {
+	// DML 白名单
+	OpTypes []*string `json:"OpTypes,omitnil,omitempty" name:"OpTypes"`
+
+	// DDL 白名单
+	DdlOptions []*DdlOption `json:"DdlOptions,omitnil,omitempty" name:"DdlOptions"`
+}
+
 type Options struct {
-	// 同步初始化选项，Data(全量数据初始化)、Structure(结构初始化)、Full(全量数据且结构初始化，默认)、None(仅增量)；mongodb链路只支持全量数据初始化或仅增量。
+	// <p>同步初始化选项，Data(全量数据初始化)、Structure(结构初始化)、Full(全量数据且结构初始化，默认)、None(仅增量)；mongodb链路只支持全量数据初始化或仅增量。</p>
 	InitType *string `json:"InitType,omitnil,omitempty" name:"InitType"`
 
-	// 同名表的处理，ReportErrorAfterCheck(前置校验并报错，默认)、ExecuteAfterIgnore(忽略并继续执行)
+	// <p>同名表的处理，ReportErrorAfterCheck(前置校验并报错，默认)、ExecuteAfterIgnore(忽略并继续执行)</p>
 	DealOfExistSameTable *string `json:"DealOfExistSameTable,omitnil,omitempty" name:"DealOfExistSameTable"`
 
-	// 冲突处理选项，ReportError(报错，默认为该值)、Ignore(忽略)、Cover(覆盖)、ConditionCover(条件覆盖)
+	// <p>冲突处理选项，ReportError(报错，默认为该值)、Ignore(忽略)、Cover(覆盖)、ConditionCover(条件覆盖)</p>
 	ConflictHandleType *string `json:"ConflictHandleType,omitnil,omitempty" name:"ConflictHandleType"`
 
-	// 是否添加附加列
+	// <p>是否添加附加列</p>
 	AddAdditionalColumn *bool `json:"AddAdditionalColumn,omitnil,omitempty" name:"AddAdditionalColumn"`
 
-	// 所要同步的DML和DDL的选项，Insert(插入操作)、Update(更新操作)、Delete(删除操作)、DDL(结构同步)， PartialDDL(自定义,和DdlOptions一起配合使用)。注意，这里至少需要包含DML中的一种。
+	// <p>所要同步的DML和DDL的选项，Insert(插入操作)、Update(更新操作)、Delete(删除操作)、DDL(结构同步)， PartialDDL(自定义,和DdlOptions一起配合使用)。注意，这里至少需要包含DML中的一种。</p>
 	// 注意：此字段可能返回 null，表示取不到有效值。
 	OpTypes []*string `json:"OpTypes,omitnil,omitempty" name:"OpTypes"`
 
-	// 冲突处理的详细选项，如条件覆盖中的条件行和条件操作
+	// <p>冲突处理的详细选项，如条件覆盖中的条件行和条件操作</p>
 	ConflictHandleOption *ConflictHandleOption `json:"ConflictHandleOption,omitnil,omitempty" name:"ConflictHandleOption"`
 
-	// DDL同步选项，具体描述要同步哪些DDL
+	// <p>DDL同步选项，具体描述要同步哪些DDL</p>
 	// 注意：此字段可能返回 null，表示取不到有效值。
 	DdlOptions []*DdlOption `json:"DdlOptions,omitnil,omitempty" name:"DdlOptions"`
 
-	// kafka同步选项
+	// <p>kafka同步选项</p>
 	KafkaOption *KafkaOption `json:"KafkaOption,omitnil,omitempty" name:"KafkaOption"`
 
-	// 任务限速信息
+	// <p>任务限速信息</p>
 	RateLimitOption *RateLimitOption `json:"RateLimitOption,omitnil,omitempty" name:"RateLimitOption"`
 
-	// 自动重试的时间窗口设置
+	// <p>自动重试的时间窗口设置</p>
 	AutoRetryTimeRangeMinutes *int64 `json:"AutoRetryTimeRangeMinutes,omitnil,omitempty" name:"AutoRetryTimeRangeMinutes"`
 
-	// 同步到kafka链路指定位点。目前只支持时间格式：2023-12-20T19:24:23+08:00。如果没有指定位点，为空。
+	// <p>同步到kafka链路指定位点。目前只支持时间格式：2023-12-20T19:24:23+08:00。如果没有指定位点，为空。</p>
 	StartPosition *string `json:"StartPosition,omitnil,omitempty" name:"StartPosition"`
 
-	// 同步到kafka链路是否过滤掉begin和commit消息。目前仅mysql2kafka链路支持
+	// <p>同步到kafka链路是否过滤掉begin和commit消息。目前仅mysql2kafka链路支持</p>
 	FilterBeginCommit *bool `json:"FilterBeginCommit,omitnil,omitempty" name:"FilterBeginCommit"`
 
-	// 同步到kafka链路是否过滤掉checkpoint消息。目前仅mysql2kafka链路支持
+	// <p>同步到kafka链路是否过滤掉checkpoint消息。目前仅mysql2kafka链路支持</p>
 	FilterCheckpoint *bool `json:"FilterCheckpoint,omitnil,omitempty" name:"FilterCheckpoint"`
+}
+
+type OwnerDifference struct {
+	// owner不一致的pg对象所在库
+	Db *string `json:"Db,omitnil,omitempty" name:"Db"`
+
+	// owner不一致的pg对象所在schema
+	Schema *string `json:"Schema,omitnil,omitempty" name:"Schema"`
+
+	// owner不一致的pg对象名
+	ObjectName *string `json:"ObjectName,omitnil,omitempty" name:"ObjectName"`
+
+	// owner不一致的pg对象类型
+	ObjectType *string `json:"ObjectType,omitnil,omitempty" name:"ObjectType"`
+
+	// 源库对象owner
+	SrcOwner *string `json:"SrcOwner,omitnil,omitempty" name:"SrcOwner"`
+
+	// 目标库对象owner
+	DstOwner *string `json:"DstOwner,omitnil,omitempty" name:"DstOwner"`
 }
 
 type PartitionAssignment struct {
@@ -5594,14 +6725,31 @@ type ProcessProgress struct {
 }
 
 type ProcessStepTip struct {
-	// 提示信息
+	// <p>提示信息</p>
 	Message *string `json:"Message,omitnil,omitempty" name:"Message"`
 
-	// 解决方案
+	// <p>解决方案</p>
 	Solution *string `json:"Solution,omitnil,omitempty" name:"Solution"`
 
-	// 文档提示
+	// <p>文档提示</p>
 	HelpDoc *string `json:"HelpDoc,omitnil,omitempty" name:"HelpDoc"`
+}
+
+type RateLimit struct {
+	// <p>全量导出线程数，如果不设置或设置为0则表示保持当前值，最大值为16</p>
+	DumpThread *int64 `json:"DumpThread,omitnil,omitempty" name:"DumpThread"`
+
+	// <p>全量导出Rps，如果不设置或设置为0则表示保持当前值，最大值为50000000</p>
+	DumpRps *int64 `json:"DumpRps,omitnil,omitempty" name:"DumpRps"`
+
+	// <p>全量导入线程数，如果不设置或设置为0则表示保持当前值，最大值为16</p>
+	LoadThread *int64 `json:"LoadThread,omitnil,omitempty" name:"LoadThread"`
+
+	// <p>全量导入Rps，如果不设置或设置为0则表示保持当前值，最大值为50000000</p>
+	LoadRps *int64 `json:"LoadRps,omitnil,omitempty" name:"LoadRps"`
+
+	// <p>增量导入线程数，如果不设置或设置为0则表示保持当前值，最大值为128</p>
+	SinkerThread *int64 `json:"SinkerThread,omitnil,omitempty" name:"SinkerThread"`
 }
 
 type RateLimitOption struct {
@@ -6196,6 +7344,23 @@ type RowsCountDifference struct {
 	DstCount *int64 `json:"DstCount,omitnil,omitempty" name:"DstCount"`
 }
 
+type SchemaDifference struct {
+	// 结构不一致的表所在库
+	Db *string `json:"Db,omitnil,omitempty" name:"Db"`
+
+	// 结构不一致的表所在schema
+	Schema *string `json:"Schema,omitnil,omitempty" name:"Schema"`
+
+	// 结构不一致的表
+	Table *string `json:"Table,omitnil,omitempty" name:"Table"`
+
+	// 源库表结构
+	SrcSchema *string `json:"SrcSchema,omitnil,omitempty" name:"SrcSchema"`
+
+	// 目标库表结构
+	DstSchema *string `json:"DstSchema,omitnil,omitempty" name:"DstSchema"`
+}
+
 // Predefined struct for user
 type SkipCheckItemRequestParams struct {
 	// 数据迁移任务ID，可通过[DescribeMigrationJobs](https://cloud.tencent.com/document/product/571/82084)接口获取。
@@ -6574,6 +7739,67 @@ func (r *StartSubscribeResponse) FromJsonString(s string) error {
 }
 
 // Predefined struct for user
+type StartSyncCompareRequestParams struct {
+	// 任务 Id
+	JobId *string `json:"JobId,omitnil,omitempty" name:"JobId"`
+
+	// 对比任务 ID，形如：sync-8yv4w2i1-cmp-37skmii9
+	CompareTaskId *string `json:"CompareTaskId,omitnil,omitempty" name:"CompareTaskId"`
+}
+
+type StartSyncCompareRequest struct {
+	*tchttp.BaseRequest
+	
+	// 任务 Id
+	JobId *string `json:"JobId,omitnil,omitempty" name:"JobId"`
+
+	// 对比任务 ID，形如：sync-8yv4w2i1-cmp-37skmii9
+	CompareTaskId *string `json:"CompareTaskId,omitnil,omitempty" name:"CompareTaskId"`
+}
+
+func (r *StartSyncCompareRequest) ToJsonString() string {
+    b, _ := json.Marshal(r)
+    return string(b)
+}
+
+// FromJsonString It is highly **NOT** recommended to use this function
+// because it has no param check, nor strict type check
+func (r *StartSyncCompareRequest) FromJsonString(s string) error {
+	f := make(map[string]interface{})
+	if err := json.Unmarshal([]byte(s), &f); err != nil {
+		return err
+	}
+	delete(f, "JobId")
+	delete(f, "CompareTaskId")
+	if len(f) > 0 {
+		return tcerr.NewTencentCloudSDKError("ClientError.BuildRequestError", "StartSyncCompareRequest has unknown keys!", "")
+	}
+	return json.Unmarshal([]byte(s), &r)
+}
+
+// Predefined struct for user
+type StartSyncCompareResponseParams struct {
+	// 唯一请求 ID，由服务端生成，每次请求都会返回（若请求因其他原因未能抵达服务端，则该次请求不会获得 RequestId）。定位问题时需要提供该次请求的 RequestId。
+	RequestId *string `json:"RequestId,omitnil,omitempty" name:"RequestId"`
+}
+
+type StartSyncCompareResponse struct {
+	*tchttp.BaseResponse
+	Response *StartSyncCompareResponseParams `json:"Response"`
+}
+
+func (r *StartSyncCompareResponse) ToJsonString() string {
+    b, _ := json.Marshal(r)
+    return string(b)
+}
+
+// FromJsonString It is highly **NOT** recommended to use this function
+// because it has no param check, nor strict type check
+func (r *StartSyncCompareResponse) FromJsonString(s string) error {
+	return json.Unmarshal([]byte(s), &r)
+}
+
+// Predefined struct for user
 type StartSyncJobRequestParams struct {
 	// 同步任务id，可通过[DescribeSyncJobs](https://cloud.tencent.com/document/product/571/82103)接口获取。
 	JobId *string `json:"JobId,omitnil,omitempty" name:"JobId"`
@@ -6628,59 +7854,65 @@ func (r *StartSyncJobResponse) FromJsonString(s string) error {
 }
 
 type StepDetailInfo struct {
-	// 步骤序列
+	// <p>步骤序列</p>
 	StepNo *uint64 `json:"StepNo,omitnil,omitempty" name:"StepNo"`
 
-	// 步骤展现名称
+	// <p>步骤展现名称</p>
 	StepName *string `json:"StepName,omitnil,omitempty" name:"StepName"`
 
-	// 步骤英文标识
+	// <p>步骤英文标识</p>
 	StepId *string `json:"StepId,omitnil,omitempty" name:"StepId"`
 
-	// 步骤状态:success(成功)、failed(失败)、running(执行中)、notStarted(未执行)、默认为notStarted
+	// <p>步骤状态:success(成功)、failed(失败)、running(执行中)、notStarted(未执行)、默认为notStarted</p>
 	Status *string `json:"Status,omitnil,omitempty" name:"Status"`
 
-	// 当前步骤开始的时间，格式为"yyyy-mm-dd hh:mm:ss"，该字段不存在或者为空是无意义 注意：此字段可能返回 null，表示取不到有效值。
+	// <p>当前步骤开始的时间，格式为&quot;yyyy-mm-dd hh:mm:ss&quot;，该字段不存在或者为空是无意义 注意：此字段可能返回 null，表示取不到有效值。</p>
 	StartTime *string `json:"StartTime,omitnil,omitempty" name:"StartTime"`
 
-	// 步骤错误信息
+	// <p>完成时间</p>
+	FinishTime *string `json:"FinishTime,omitnil,omitempty" name:"FinishTime"`
+
+	// <p>步骤错误信息</p>
 	StepMessage *string `json:"StepMessage,omitnil,omitempty" name:"StepMessage"`
 
-	// 执行进度
+	// <p>执行进度</p>
 	Percent *uint64 `json:"Percent,omitnil,omitempty" name:"Percent"`
 
-	// 错误信息
+	// <p>错误信息</p>
 	Errors []*ProcessStepTip `json:"Errors,omitnil,omitempty" name:"Errors"`
 
-	// 告警提示
+	// <p>告警提示</p>
 	Warnings []*ProcessStepTip `json:"Warnings,omitnil,omitempty" name:"Warnings"`
 }
 
 type StepInfo struct {
-	// 步骤编号
+	// <p>步骤编号</p>
 	StepNo *uint64 `json:"StepNo,omitnil,omitempty" name:"StepNo"`
 
-	// 步骤名
+	// <p>步骤名</p>
 	StepName *string `json:"StepName,omitnil,omitempty" name:"StepName"`
 
-	// 步骤标号
+	// <p>步骤标号</p>
 	StepId *string `json:"StepId,omitnil,omitempty" name:"StepId"`
 
-	// 当前步骤状态,可能返回有 notStarted(未开始)、running(校验中)、failed(校验任务失败)、finished(完成)、skipped(跳过)、paused(暂停)
+	// <p>当前步骤状态,可能返回有 notStarted(未开始)、running(校验中)、failed(校验任务失败)、finished(完成)、skipped(跳过)、paused(暂停)</p>
 	Status *string `json:"Status,omitnil,omitempty" name:"Status"`
 
-	// 步骤开始时间，可能为空
+	// <p>步骤开始时间，可能为空</p>
 	StartTime *string `json:"StartTime,omitnil,omitempty" name:"StartTime"`
 
-	// 错误信息
+	// <p>完成时间</p>
+	FinishTime *string `json:"FinishTime,omitnil,omitempty" name:"FinishTime"`
+
+	// <p>错误信息</p>
 	// 注意：此字段可能返回 null，表示取不到有效值。
 	Errors []*StepTip `json:"Errors,omitnil,omitempty" name:"Errors"`
 
-	// 警告信息
+	// <p>警告信息</p>
 	// 注意：此字段可能返回 null，表示取不到有效值。
 	Warnings []*StepTip `json:"Warnings,omitnil,omitempty" name:"Warnings"`
 
-	// 当前步骤进度，范围为[0-100]，若为-1表示当前步骤不支持查看进度
+	// <p>当前步骤进度，范围为[0-100]，若为-1表示当前步骤不支持查看进度</p>
 	Progress *int64 `json:"Progress,omitnil,omitempty" name:"Progress"`
 }
 
@@ -6820,6 +8052,74 @@ func (r *StopMigrateJobResponse) ToJsonString() string {
 // FromJsonString It is highly **NOT** recommended to use this function
 // because it has no param check, nor strict type check
 func (r *StopMigrateJobResponse) FromJsonString(s string) error {
+	return json.Unmarshal([]byte(s), &r)
+}
+
+// Predefined struct for user
+type StopSyncCompareRequestParams struct {
+	// 任务 Id
+	JobId *string `json:"JobId,omitnil,omitempty" name:"JobId"`
+
+	// 对比任务 ID，形如：sync-8yv4w2i1-cmp-37skmii9
+	CompareTaskId *string `json:"CompareTaskId,omitnil,omitempty" name:"CompareTaskId"`
+
+	// 是否强制停止。如果填true，迁移任务增量阶段会跳过一致性校验产生的binlog，达到快速恢复任务的效果
+	ForceStop *bool `json:"ForceStop,omitnil,omitempty" name:"ForceStop"`
+}
+
+type StopSyncCompareRequest struct {
+	*tchttp.BaseRequest
+	
+	// 任务 Id
+	JobId *string `json:"JobId,omitnil,omitempty" name:"JobId"`
+
+	// 对比任务 ID，形如：sync-8yv4w2i1-cmp-37skmii9
+	CompareTaskId *string `json:"CompareTaskId,omitnil,omitempty" name:"CompareTaskId"`
+
+	// 是否强制停止。如果填true，迁移任务增量阶段会跳过一致性校验产生的binlog，达到快速恢复任务的效果
+	ForceStop *bool `json:"ForceStop,omitnil,omitempty" name:"ForceStop"`
+}
+
+func (r *StopSyncCompareRequest) ToJsonString() string {
+    b, _ := json.Marshal(r)
+    return string(b)
+}
+
+// FromJsonString It is highly **NOT** recommended to use this function
+// because it has no param check, nor strict type check
+func (r *StopSyncCompareRequest) FromJsonString(s string) error {
+	f := make(map[string]interface{})
+	if err := json.Unmarshal([]byte(s), &f); err != nil {
+		return err
+	}
+	delete(f, "JobId")
+	delete(f, "CompareTaskId")
+	delete(f, "ForceStop")
+	if len(f) > 0 {
+		return tcerr.NewTencentCloudSDKError("ClientError.BuildRequestError", "StopSyncCompareRequest has unknown keys!", "")
+	}
+	return json.Unmarshal([]byte(s), &r)
+}
+
+// Predefined struct for user
+type StopSyncCompareResponseParams struct {
+	// 唯一请求 ID，由服务端生成，每次请求都会返回（若请求因其他原因未能抵达服务端，则该次请求不会获得 RequestId）。定位问题时需要提供该次请求的 RequestId。
+	RequestId *string `json:"RequestId,omitnil,omitempty" name:"RequestId"`
+}
+
+type StopSyncCompareResponse struct {
+	*tchttp.BaseResponse
+	Response *StopSyncCompareResponseParams `json:"Response"`
+}
+
+func (r *StopSyncCompareResponse) ToJsonString() string {
+    b, _ := json.Marshal(r)
+    return string(b)
+}
+
+// FromJsonString It is highly **NOT** recommended to use this function
+// because it has no param check, nor strict type check
+func (r *StopSyncCompareResponse) FromJsonString(s string) error {
 	return json.Unmarshal([]byte(s), &r)
 }
 
@@ -7030,35 +8330,35 @@ type SyncDBEndpointInfos struct {
 }
 
 type SyncDetailInfo struct {
-	// 总步骤数
+	// <p>总步骤数</p>
 	StepAll *uint64 `json:"StepAll,omitnil,omitempty" name:"StepAll"`
 
-	// 当前步骤
+	// <p>当前步骤</p>
 	StepNow *uint64 `json:"StepNow,omitnil,omitempty" name:"StepNow"`
 
-	// 总体进度
+	// <p>总体进度</p>
 	Progress *int64 `json:"Progress,omitnil,omitempty" name:"Progress"`
 
-	// 当前步骤进度，范围为[0-100]，若为-1表示当前步骤不支持查看进度
+	// <p>当前步骤进度，范围为[0-100]，若为-1表示当前步骤不支持查看进度</p>
 	CurrentStepProgress *int64 `json:"CurrentStepProgress,omitnil,omitempty" name:"CurrentStepProgress"`
 
-	// 同步两端数据量差距
+	// <p>同步两端数据量差距</p>
 	MasterSlaveDistance *int64 `json:"MasterSlaveDistance,omitnil,omitempty" name:"MasterSlaveDistance"`
 
-	// 同步两端时间差距
+	// <p>同步两端时间差距</p>
 	SecondsBehindMaster *int64 `json:"SecondsBehindMaster,omitnil,omitempty" name:"SecondsBehindMaster"`
 
-	// 总体描述信息
+	// <p>总体描述信息</p>
 	Message *string `json:"Message,omitnil,omitempty" name:"Message"`
 
-	// 详细步骤信息
+	// <p>详细步骤信息</p>
 	// 注意：此字段可能返回 null，表示取不到有效值。
 	StepInfos []*StepInfo `json:"StepInfos,omitnil,omitempty" name:"StepInfos"`
 
-	// 不能发起内置校验的原因
+	// <p>不能发起内置校验的原因</p>
 	CauseOfCompareDisable *string `json:"CauseOfCompareDisable,omitnil,omitempty" name:"CauseOfCompareDisable"`
 
-	// 任务的错误和解决方案信息
+	// <p>任务的错误和解决方案信息</p>
 	ErrInfo *ErrInfo `json:"ErrInfo,omitnil,omitempty" name:"ErrInfo"`
 }
 
@@ -7196,6 +8496,14 @@ type Table struct {
 	TableEditMode *string `json:"TableEditMode,omitnil,omitempty" name:"TableEditMode"`
 }
 
+type TableFilter struct {
+	// 规则生效的表名
+	TableName *string `json:"TableName,omitnil,omitempty" name:"TableName"`
+
+	// 表级 DDL/DML 过滤规则
+	OpFilter *OpFilter `json:"OpFilter,omitnil,omitempty" name:"OpFilter"`
+}
+
 type TableItem struct {
 	// 迁移的表名，大小写敏感
 	TableName *string `json:"TableName,omitnil,omitempty" name:"TableName"`
@@ -7291,6 +8599,14 @@ type View struct {
 
 	// 预留字段、目前暂时不支持view的重命名
 	NewViewName *string `json:"NewViewName,omitnil,omitempty" name:"NewViewName"`
+}
+
+type ViewFilter struct {
+	// 规则生效的视图名
+	ViewName *string `json:"ViewName,omitnil,omitempty" name:"ViewName"`
+
+	// 视图级 DDL/DML 过滤规则
+	OpFilter *OpFilter `json:"OpFilter,omitnil,omitempty" name:"OpFilter"`
 }
 
 type ViewItem struct {

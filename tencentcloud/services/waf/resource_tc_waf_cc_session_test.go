@@ -30,6 +30,7 @@ func TestAccTencentCloudWafCcSessionResource_basic(t *testing.T) {
 					resource.TestCheckResourceAttr("tencentcloud_waf_cc_session.example", "end_offset", "-1"),
 					resource.TestCheckResourceAttr("tencentcloud_waf_cc_session.example", "edition", "sparta-waf"),
 					resource.TestCheckResourceAttr("tencentcloud_waf_cc_session.example", "session_name", "terraformDemo"),
+					resource.TestCheckResourceAttr("tencentcloud_waf_cc_session.example", "key", "sessionId"),
 				),
 			},
 			{
@@ -50,6 +51,7 @@ func TestAccTencentCloudWafCcSessionResource_basic(t *testing.T) {
 					resource.TestCheckResourceAttr("tencentcloud_waf_cc_session.example", "end_offset", "-1"),
 					resource.TestCheckResourceAttr("tencentcloud_waf_cc_session.example", "edition", "sparta-waf"),
 					resource.TestCheckResourceAttr("tencentcloud_waf_cc_session.example", "session_name", "terraformDemo"),
+					resource.TestCheckResourceAttr("tencentcloud_waf_cc_session.example", "key", "sessionIdUpdated"),
 				),
 			},
 		},
@@ -67,6 +69,7 @@ resource "tencentcloud_waf_cc_session" "example" {
   end_offset       = "-1"
   edition          = "sparta-waf"
   session_name     = "terraformDemo"
+  key              = "sessionId"
 }
 `
 
@@ -81,5 +84,6 @@ resource "tencentcloud_waf_cc_session" "example" {
   end_offset       = "-1"
   edition          = "sparta-waf"
   session_name     = "terraformDemo"
+  key              = "sessionIdUpdated"
 }
 `

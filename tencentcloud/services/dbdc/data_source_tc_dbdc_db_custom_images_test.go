@@ -30,12 +30,14 @@ func TestDbdcDbCustomImagesDS_ReadBasic(t *testing.T) {
 					OsName:       ptrStr("CentOS 7.6"),
 					ImageType:    ptrStr("PUBLIC_IMAGE"),
 					Architecture: ptrStr("x86_64"),
+					OsType:       ptrStr("linux"),
 				},
 				{
 					ImageId:      ptrStr("img-def456"),
 					OsName:       ptrStr("Ubuntu 20.04"),
 					ImageType:    ptrStr("PRIVATE_IMAGE"),
 					Architecture: ptrStr("arm64"),
+					OsType:       ptrStr("linux"),
 				},
 			},
 		}
@@ -58,12 +60,14 @@ func TestDbdcDbCustomImagesDS_ReadBasic(t *testing.T) {
 	assert.Equal(t, "CentOS 7.6", image0["os_name"].(string))
 	assert.Equal(t, "PUBLIC_IMAGE", image0["image_type"].(string))
 	assert.Equal(t, "x86_64", image0["architecture"].(string))
+	assert.Equal(t, "linux", image0["os_type"].(string))
 
 	image1 := imageSet[1].(map[string]interface{})
 	assert.Equal(t, "img-def456", image1["image_id"].(string))
 	assert.Equal(t, "Ubuntu 20.04", image1["os_name"].(string))
 	assert.Equal(t, "PRIVATE_IMAGE", image1["image_type"].(string))
 	assert.Equal(t, "arm64", image1["architecture"].(string))
+	assert.Equal(t, "linux", image1["os_type"].(string))
 }
 
 func TestDbdcDbCustomImagesDS_ReadWithNilFields(t *testing.T) {
@@ -100,9 +104,10 @@ func TestDbdcDbCustomImagesDS_ReadWithNilFields(t *testing.T) {
 	image0 := imageSet[0].(map[string]interface{})
 	assert.Equal(t, "img-nil-fields", image0["image_id"].(string))
 	assert.Equal(t, "PUBLIC_IMAGE", image0["image_type"].(string))
-	// OsName and Architecture are nil in the API response, Terraform SDK defaults them to empty strings
+	// OsName, Architecture and OsType are nil in the API response, Terraform SDK defaults them to empty strings
 	assert.Equal(t, "", image0["os_name"].(string))
 	assert.Equal(t, "", image0["architecture"].(string))
+	assert.Equal(t, "", image0["os_type"].(string))
 }
 
 func TestDbdcDbCustomImagesDS_ReadWithEmptyResponse(t *testing.T) {
@@ -130,12 +135,73 @@ func TestDbdcDbCustomImagesDS_ReadWithEmptyResponse(t *testing.T) {
 	assert.Error(t, err)
 }
 
+func TestDbdcDbCustomImagesDS_ReadWithFilters(t *testing.T) {
+	patches := gomonkey.NewPatches()
+	defer patches.Reset()
+
+	dbdcClient := &dbdcv20201029.Client{}
+	patches.ApplyMethodReturn(newMockMetaDbdcDS().client, "UseDbdcV20201029Client", dbdcClient)
+
+	var capturedRequest *dbdcv20201029.DescribeDBCustomImagesRequest
+	patches.ApplyMethodFunc(dbdcClient, "DescribeDBCustomImages", func(request *dbdcv20201029.DescribeDBCustomImagesRequest) (*dbdcv20201029.DescribeDBCustomImagesResponse, error) {
+		capturedRequest = request
+		resp := dbdcv20201029.NewDescribeDBCustomImagesResponse()
+		resp.Response = &dbdcv20201029.DescribeDBCustomImagesResponseParams{
+			TotalCount: ptrInt64(1),
+			ImageSet: []*dbdcv20201029.DBCustomImage{
+				{
+					ImageId:      ptrStr("img-filtered"),
+					OsName:       ptrStr("CentOS 7.6"),
+					ImageType:    ptrStr("PUBLIC_IMAGE"),
+					Architecture: ptrStr("x86_64"),
+					OsType:       ptrStr("linux"),
+				},
+			},
+		}
+		return resp, nil
+	})
+
+	meta := newMockMetaDbdcDS()
+	res := dbdc.DataSourceTencentCloudDbdcDbCustomImages()
+	d := schema.TestResourceDataRaw(t, res.Schema, map[string]interface{}{
+		"name":   "os-type",
+		"values": []interface{}{"linux"},
+	})
+
+	err := res.Read(d, meta)
+	assert.NoError(t, err)
+	assert.NotEmpty(t, d.Id())
+
+	// Assert that the Filters were correctly constructed on the request
+	assert.NotNil(t, capturedRequest)
+	assert.Len(t, capturedRequest.Filters, 1)
+	assert.NotNil(t, capturedRequest.Filters[0].Name)
+	assert.Equal(t, "os-type", *capturedRequest.Filters[0].Name)
+	assert.Len(t, capturedRequest.Filters[0].Values, 1)
+	assert.Equal(t, "linux", *capturedRequest.Filters[0].Values[0])
+
+	imageSet := d.Get("image_set").([]interface{})
+	assert.Len(t, imageSet, 1)
+	image0 := imageSet[0].(map[string]interface{})
+	assert.Equal(t, "linux", image0["os_type"].(string))
+}
+
 func TestDbdcDbCustomImagesDS_Schema(t *testing.T) {
 	res := dbdc.DataSourceTencentCloudDbdcDbCustomImages()
 
 	assert.NotNil(t, res)
 	assert.Contains(t, res.Schema, "image_set")
 	assert.Contains(t, res.Schema, "result_output_file")
+	assert.Contains(t, res.Schema, "name")
+	assert.Contains(t, res.Schema, "values")
+
+	nameSchema := res.Schema["name"]
+	assert.Equal(t, schema.TypeString, nameSchema.Type)
+	assert.True(t, nameSchema.Optional)
+
+	valuesSchema := res.Schema["values"]
+	assert.Equal(t, schema.TypeList, valuesSchema.Type)
+	assert.True(t, valuesSchema.Optional)
 
 	imageSetSchema := res.Schema["image_set"]
 	assert.Equal(t, schema.TypeList, imageSetSchema.Type)
@@ -146,6 +212,7 @@ func TestDbdcDbCustomImagesDS_Schema(t *testing.T) {
 	assert.Contains(t, elemRes.Schema, "os_name")
 	assert.Contains(t, elemRes.Schema, "image_type")
 	assert.Contains(t, elemRes.Schema, "architecture")
+	assert.Contains(t, elemRes.Schema, "os_type")
 
 	imageIdSchema := elemRes.Schema["image_id"]
 	assert.Equal(t, schema.TypeString, imageIdSchema.Type)
@@ -162,4 +229,8 @@ func TestDbdcDbCustomImagesDS_Schema(t *testing.T) {
 	architectureSchema := elemRes.Schema["architecture"]
 	assert.Equal(t, schema.TypeString, architectureSchema.Type)
 	assert.True(t, architectureSchema.Computed)
+
+	osTypeSchema := elemRes.Schema["os_type"]
+	assert.Equal(t, schema.TypeString, osTypeSchema.Type)
+	assert.True(t, osTypeSchema.Computed)
 }

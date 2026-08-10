@@ -9,7 +9,7 @@ The system SHALL define a Terraform datasource schema for `tencentcloud_dbdc_db_
 
 The system SHALL define computed output parameters:
 - `node_set`: Computed, TypeList of schema.Resource containing flattened node attributes
-- Each node element SHALL contain: `node_id`, `node_name`, `ssh_endpoint`, `lan_ip`, `cluster_id`, `zone`, `node_type`, `cpu`, `memory`, `system_disk` (TypeList of schema.Resource with `disk_type`, `disk_size`), `data_disks` (TypeList of schema.Resource with `disk_type`, `disk_size`, `disk_name`), `os_name`, `image_id`, `vpc_id`, `subnet_id`, `status`, `charge_type`, `expire_time`, `created_time`, `isolated_time`, `tags` (TypeList of schema.Resource with `key`, `value`), `auto_renew`, `switch_id`, `rack_id`, `host_ip`
+- Each node element SHALL contain: `node_id`, `node_name`, `ssh_endpoint`, `lan_ip`, `cluster_id`, `zone`, `node_type`, `cpu`, `memory`, `system_disk` (TypeList of schema.Resource with `disk_type`, `disk_size`), `data_disks` (TypeList of schema.Resource with `disk_type`, `disk_size`, `disk_name`), `os_name`, `image_id`, `vpc_id`, `subnet_id`, `status`, `charge_type`, `expire_time`, `created_time`, `isolated_time`, `tags` (TypeList of schema.Resource with `key`, `value`), `auto_renew`, `switch_id`, `rack_id`, `host_ip`, `network_mode`, `eni_ip`
 
 #### Scenario: Datasource with filters input
 - **WHEN** a user provides `filters` with `name` = "cluster-id" and `values` = ["cluster-123"]
@@ -43,7 +43,7 @@ The system SHALL implement a Read function that calls `DescribeDBCustomNodes` AP
 - **THEN** the system SHALL return `NonRetryableError` instead of clearing `d.SetId("")`, and SHALL log `log.Printf("[DATASOURCE] read empty, skip SetId")`
 
 ### Requirement: Nil field handling in response
-The system SHALL check each response field for nil before calling `d.Set()` or adding it to the output map. Fields that may be nil according to API documentation (`SystemDisk`, `DataDisks`, `Tags` in DBCustomNode) SHALL be skipped when nil rather than set to empty values.
+The system SHALL check each response field for nil before calling `d.Set()` or adding it to the output map. Fields that may be nil according to API documentation (`SystemDisk`, `DataDisks`, `Tags`, `NetworkMode`, `EniIP` in DBCustomNode) SHALL be skipped when nil rather than set to empty values.
 
 #### Scenario: Node with nil SystemDisk
 - **WHEN** a DBCustomNode has nil `SystemDisk` field
@@ -52,6 +52,27 @@ The system SHALL check each response field for nil before calling `d.Set()` or a
 #### Scenario: Node with nil DataDisks
 - **WHEN** a DBCustomNode has nil `DataDisks` field
 - **THEN** the system SHALL skip setting `data_disks` for that node element
+
+#### Scenario: Node with nil NetworkMode
+- **WHEN** a DBCustomNode has nil `NetworkMode` field
+- **THEN** the system SHALL skip setting `network_mode` for that node element
+
+#### Scenario: Node with nil EniIP
+- **WHEN** a DBCustomNode has nil `EniIP` field
+- **THEN** the system SHALL skip setting `eni_ip` for that node element
+
+### Requirement: Network mode and ENI IP output fields
+The system SHALL expose two additional computed string fields inside each `node_set` element:
+- `network_mode`: mapped from `DBCustomNode.NetworkMode`, representing the network mode enum (`NetworkModePrivateLink` or `NetworkModeCrossTenantENI`)
+- `eni_ip`: mapped from `DBCustomNode.EniIP`, representing the node access IP address when the network mode is `NetworkModeCrossTenantENI`
+
+#### Scenario: Node with NetworkModeCrossTenantENI
+- **WHEN** the DescribeDBCustomNodes API returns a DBCustomNode with `NetworkMode` = "NetworkModeCrossTenantENI" and `EniIP` = "10.0.0.5"
+- **THEN** the system SHALL set `network_mode` = "NetworkModeCrossTenantENI" and `eni_ip` = "10.0.0.5" for that node element in `node_set`
+
+#### Scenario: Node with NetworkModePrivateLink and nil EniIP
+- **WHEN** the DescribeDBCustomNodes API returns a DBCustomNode with `NetworkMode` = "NetworkModePrivateLink" and `EniIP` = nil
+- **THEN** the system SHALL set `network_mode` = "NetworkModePrivateLink" and SHALL skip setting `eni_ip` for that node element
 
 ### Requirement: Datasource ID generation
 The system SHALL use `helper.BuildToken()` as the datasource ID after successful read, following the standard pattern for list-type datasources.

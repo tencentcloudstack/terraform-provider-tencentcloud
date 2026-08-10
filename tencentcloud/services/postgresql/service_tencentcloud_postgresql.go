@@ -562,6 +562,39 @@ func (me *PostgresqlService) DescribeDBInstanceSecurityGroupsById(ctx context.Co
 	return
 }
 
+func (me *PostgresqlService) DescribePostgresqlDbInstanceSecurityGroups(ctx context.Context, dbInstanceId string, readOnlyGroupId string) (securityGroups []*postgresql.SecurityGroup, errRet error) {
+	logId := tccommon.GetLogId(ctx)
+	request := postgresql.NewDescribeDBInstanceSecurityGroupsRequest()
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	if dbInstanceId != "" {
+		request.DBInstanceId = &dbInstanceId
+	}
+	if readOnlyGroupId != "" {
+		request.ReadOnlyGroupId = &readOnlyGroupId
+	}
+
+	ratelimit.Check(request.GetAction())
+	response, err := me.client.UsePostgresqlClient().DescribeDBInstanceSecurityGroups(request)
+	if err != nil {
+		errRet = err
+		return
+	}
+	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+	if response == nil || response.Response == nil {
+		errRet = fmt.Errorf("TencentCloud SDK return nil response, %s", request.GetAction())
+		return
+	}
+
+	securityGroups = response.Response.SecurityGroupSet
+	return
+}
+
 func (me *PostgresqlService) ModifyDBInstanceSecurityGroupsByGroupId(ctx context.Context, readOnlyGroupId string, securityGroupIds []*string) (errRet error) {
 	logId := tccommon.GetLogId(ctx)
 	request := postgresql.NewModifyDBInstanceSecurityGroupsRequest()

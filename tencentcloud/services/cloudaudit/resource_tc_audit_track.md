@@ -42,6 +42,7 @@ resource "tencentcloud_audit_track" "example" {
     storage_type       = "cos"
     storage_account_id = "100037717137"
     storage_app_id     = "1309116520"
+    compress           = 1
   }
 }
 ```

@@ -50,6 +50,20 @@ resource "tencentcloud_dbdc_node_to_db_custom_cluster_attachment" "example" {
   login_settings {
     password = "Passw0rd@2026"
   }
+
+  labels {
+    key   = "env"
+    value = "prod"
+  }
+
+  taints {
+    key    = "key"
+    effect = "NoSchedule"
+    value  = "value"
+  }
+
+  host_name      = "host-name"
+  host_name_type = 1
 }
 ```
 
