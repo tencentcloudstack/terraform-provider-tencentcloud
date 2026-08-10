@@ -19,6 +19,7 @@ func ResourceTencentCloudTagAttachment() *schema.Resource {
 	return &schema.Resource{
 		Create: resourceTencentCloudTagAttachmentCreate,
 		Read:   resourceTencentCloudTagAttachmentRead,
+		Update: resourceTencentCloudTagAttachmentUpdate,
 		Delete: resourceTencentCloudTagAttachmentDelete,
 		Importer: &schema.ResourceImporter{
 			State: schema.ImportStatePassthrough,
@@ -33,7 +34,6 @@ func ResourceTencentCloudTagAttachment() *schema.Resource {
 
 			"tag_value": {
 				Required:    true,
-				ForceNew:    true,
 				Type:        schema.TypeString,
 				Description: "tag value.",
 			},
@@ -90,6 +90,38 @@ func resourceTencentCloudTagAttachmentCreate(d *schema.ResourceData, meta interf
 	}
 
 	d.SetId(tagKey + tccommon.FILED_SP + tagValue + tccommon.FILED_SP + resourceId)
+
+	return resourceTencentCloudTagAttachmentRead(d, meta)
+}
+
+func resourceTencentCloudTagAttachmentUpdate(d *schema.ResourceData, meta interface{}) error {
+	defer tccommon.LogElapsed("resource.tencentcloud_tag_attachment.update")()
+	defer tccommon.InconsistentCheck(d, meta)()
+
+	logId := tccommon.GetLogId(tccommon.ContextNil)
+	ctx := context.WithValue(context.TODO(), tccommon.LogIdKey, logId)
+
+	service := TagService{client: meta.(tccommon.ProviderMeta).GetAPIV3Conn()}
+
+	idSplit := strings.Split(d.Id(), tccommon.FILED_SP)
+	if len(idSplit) != 3 {
+		return fmt.Errorf("id is broken,%s", d.Id())
+	}
+	tagKey := idSplit[0]
+	resourceId := idSplit[2]
+
+	_, newValue := d.GetChange("tag_value")
+
+	replaceTags := map[string]string{
+		tagKey: newValue.(string),
+	}
+
+	if err := service.ModifyTags(ctx, resourceId, replaceTags, nil); err != nil {
+		log.Printf("[CRITAL]%s update tag_attachment failed, reason:%+v", logId, err)
+		return err
+	}
+
+	d.SetId(tagKey + tccommon.FILED_SP + newValue.(string) + tccommon.FILED_SP + resourceId)
 
 	return resourceTencentCloudTagAttachmentRead(d, meta)
 }

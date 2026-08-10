@@ -12,6 +12,18 @@ resource "tencentcloud_tag_attachment" "attachment" {
 
 ```
 
+The `tag_value` can be updated in-place without recreating the attachment:
+
+```hcl
+
+resource "tencentcloud_tag_attachment" "attachment" {
+  tag_key = "test3"
+  tag_value = "Terraform3-updated"
+  resource = "qcs::cvm:ap-guangzhou:uin/100020512675:instance/ins-kfrlvcp4"
+}
+
+```
+
 Import
 
 tag attachment can be imported using the id, e.g.
