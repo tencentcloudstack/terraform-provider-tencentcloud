@@ -12,6 +12,8 @@ resource "tencentcloud_tag_attachment" "attachment" {
 
 ```
 
+The `tag_value` field can be updated in place; changing it calls the `UpdateResourceTagValue` cloud API to modify the tag value without destroying and recreating the attachment.
+
 Import
 
 tag attachment can be imported using the id, e.g.
