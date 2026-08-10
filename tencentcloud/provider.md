@@ -1961,6 +1961,10 @@ Resource
 tencentcloud_tdcpg_cluster
 tencentcloud_tdcpg_instance
 
+TDSQL-C for MySQL(tdmysql)
+Resource
+tencentcloud_tdmysql_db_instance
+
 TencentDB for DBbrain(dbbrain)
 Data Source
 tencentcloud_dbbrain_sql_filters
