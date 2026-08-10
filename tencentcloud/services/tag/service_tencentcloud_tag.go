@@ -442,6 +442,39 @@ func (me *TagService) DeleteTagTagAttachmentById(ctx context.Context, tagKey str
 	return
 }
 
+func (me *TagService) UpdateTagAttachmentTagValue(ctx context.Context, tagKey string, tagValue string, resource string) (errRet error) {
+	logId := tccommon.GetLogId(ctx)
+
+	request := tag.NewUpdateResourceTagValueRequest()
+	request.TagKey = helper.String(tagKey)
+	request.TagValue = helper.String(tagValue)
+	request.Resource = helper.String(resource)
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	err := resource.Retry(tccommon.WriteRetryTimeout, func() *resource.RetryError {
+		ratelimit.Check(request.GetAction())
+		result, e := me.client.UseTagClient().UpdateResourceTagValue(request)
+		if e != nil {
+			return tccommon.RetryError(e)
+		} else {
+			log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), result.ToJsonString())
+		}
+
+		return nil
+	})
+	if err != nil {
+		errRet = err
+		return
+	}
+
+	return
+}
+
 func (me *TagService) DescribeTagKeysByFilter(ctx context.Context, param map[string]interface{}) (ret []*string, errRet error) {
 	var (
 		logId   = tccommon.GetLogId(ctx)

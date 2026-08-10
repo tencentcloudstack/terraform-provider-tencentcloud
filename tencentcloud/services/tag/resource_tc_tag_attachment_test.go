@@ -39,6 +39,41 @@ func TestAccTencentCloudTagAttachmentResource_basic(t *testing.T) {
 		},
 	})
 }
+
+// go test -i; go test -test.run TestAccTencentCloudTagAttachmentResource_tagValueUpdate -v
+func TestAccTencentCloudTagAttachmentResource_tagValueUpdate(t *testing.T) {
+	t.Parallel()
+	resource.Test(t, resource.TestCase{
+		PreCheck: func() {
+			tcacctest.AccPreCheck(t)
+		},
+		Providers:    tcacctest.AccProviders,
+		CheckDestroy: testAccCheckTagAttachmentDestroy,
+		Steps: []resource.TestStep{
+			{
+				Config: testAccTagResourceTag,
+				Check: resource.ComposeTestCheckFunc(
+					testAccCheckTagAttachmentExists("tencentcloud_tag_attachment.tag_attachment"),
+					resource.TestCheckResourceAttr("tencentcloud_tag_attachment.tag_attachment", "tag_key", "test_terraform_tagAttachment_key"),
+					resource.TestCheckResourceAttr("tencentcloud_tag_attachment.tag_attachment", "tag_value", "Terraform_tagAttachment_value"),
+					resource.TestCheckResourceAttrSet("tencentcloud_tag_attachment.tag_attachment", "resource")),
+			},
+			{
+				Config: testAccTagResourceTagValueUpdate,
+				Check: resource.ComposeTestCheckFunc(
+					testAccCheckTagAttachmentExists("tencentcloud_tag_attachment.tag_attachment"),
+					resource.TestCheckResourceAttr("tencentcloud_tag_attachment.tag_attachment", "tag_key", "test_terraform_tagAttachment_key"),
+					resource.TestCheckResourceAttr("tencentcloud_tag_attachment.tag_attachment", "tag_value", "Terraform_tagAttachment_value_updated"),
+					resource.TestCheckResourceAttrSet("tencentcloud_tag_attachment.tag_attachment", "resource")),
+			},
+			{
+				ResourceName:      "tencentcloud_tag_attachment.tag_attachment",
+				ImportState:       true,
+				ImportStateVerify: true,
+			},
+		},
+	})
+}
 func testAccCheckTagAttachmentDestroy(s *terraform.State) error {
 	for _, rs := range s.RootModule().Resources {
 		if rs.Type != "tencentcloud_tag_attachment" {
@@ -95,6 +130,21 @@ locals {
 resource "tencentcloud_tag_attachment" "tag_attachment" {
   tag_key = "test_terraform_tagAttachment_key"
   tag_value = "Terraform_tagAttachment_value"
+  resource = "qcs::cvm:ap-guangzhou:uin/${local.uin}:instance/${var.cvm_id}"
+}
+
+`
+
+const testAccTagResourceTagValueUpdate = tcacctest.DefaultCvmModificationVariable + `
+data "tencentcloud_user_info" "info" {}
+
+locals {
+  uin = data.tencentcloud_user_info.info.uin
+}
+
+resource "tencentcloud_tag_attachment" "tag_attachment" {
+  tag_key = "test_terraform_tagAttachment_key"
+  tag_value = "Terraform_tagAttachment_value_updated"
   resource = "qcs::cvm:ap-guangzhou:uin/${local.uin}:instance/${var.cvm_id}"
 }
 
