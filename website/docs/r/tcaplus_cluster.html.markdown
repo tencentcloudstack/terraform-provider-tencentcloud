@@ -42,6 +42,53 @@ resource "tencentcloud_tcaplus_cluster" "example" {
 }
 ```
 
+### Create a dedicated tcaplus cluster instance with resource tags, server list and proxy list
+
+```hcl
+locals {
+  vpc_id    = data.tencentcloud_vpc_subnets.vpc.instance_list.0.vpc_id
+  subnet_id = data.tencentcloud_vpc_subnets.vpc.instance_list.0.subnet_id
+}
+
+variable "availability_zone" {
+  default = "ap-guangzhou-3"
+}
+
+data "tencentcloud_vpc_subnets" "vpc" {
+  is_default        = true
+  availability_zone = var.availability_zone
+}
+
+resource "tencentcloud_tcaplus_cluster" "dedicated_example" {
+  idl_type     = "PROTO"
+  cluster_name = "tf_example_dedicated_cluster"
+  vpc_id       = local.vpc_id
+  subnet_id    = local.subnet_id
+  password     = "your_pw_123111"
+  cluster_type = 2
+
+  resource_tags {
+    tag_key   = "env"
+    tag_value = "prod"
+  }
+
+  resource_tags {
+    tag_key   = "owner"
+    tag_value = "terraform"
+  }
+
+  server_list {
+    machine_type = "S5.LARGE8"
+    machine_num  = 2
+  }
+
+  proxy_list {
+    machine_type = "S5.LARGE8"
+    machine_num  = 1
+  }
+}
+```
+
 ## Argument Reference
 
 The following arguments are supported:
@@ -51,7 +98,26 @@ The following arguments are supported:
 * `password` - (Required, String) Password of the TcaplusDB cluster. Password length should be between 12 and 16. The password must be a *mix* of uppercase letters (A-Z), lowercase *letters* (a-z) and *numbers* (0-9).
 * `subnet_id` - (Required, String, ForceNew) Subnet id of the TcaplusDB cluster.
 * `vpc_id` - (Required, String, ForceNew) VPC id of the TcaplusDB cluster.
+* `cluster_type` - (Optional, Int) Cluster type of the TcaplusDB cluster. `1`: shared cluster, `2`: dedicated cluster. This parameter is only valid for CreateCluster API and cannot be modified once set.
 * `old_password_expire_last` - (Optional, Int) Expiration time of old password after password update, unit: second.
+* `proxy_list` - (Optional, List) Dedicated proxy machine list of the TcaplusDB cluster. Only valid when `cluster_type` is `2` (dedicated cluster). For creation, each element exposes `machine_type` and `machine_num`. This parameter is only valid for CreateCluster API and cannot be modified once set.
+* `resource_tags` - (Optional, List) Resource tags of the TcaplusDB cluster. This parameter is only valid for CreateCluster API and cannot be modified once set. Note: This field is write-only and will not be refreshed on Read because the DescribeClusters API does not return cluster-level tags.
+* `server_list` - (Optional, List) Dedicated server machine list of the TcaplusDB cluster. Only valid when `cluster_type` is `2` (dedicated cluster). For creation, each element exposes `machine_type` and `machine_num`. This parameter is only valid for CreateCluster API and cannot be modified once set.
+
+The `proxy_list` object supports the following:
+
+* `machine_num` - (Optional, Int) 
+* `machine_type` - (Optional, String) 
+
+The `resource_tags` object supports the following:
+
+* `tag_key` - (Required, String) 
+* `tag_value` - (Optional, String) 
+
+The `server_list` object supports the following:
+
+* `machine_num` - (Optional, Int) 
+* `machine_type` - (Optional, String) 
 
 ## Attributes Reference
 

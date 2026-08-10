@@ -29,7 +29,7 @@ type TcaplusService struct {
 	client *connectivity.TencentCloudClient
 }
 
-func (me *TcaplusService) CreateCluster(ctx context.Context, idlType, clusterName, vpcId, subnetId, password string) (id string, errRet error) {
+func (me *TcaplusService) CreateCluster(ctx context.Context, idlType, clusterName, vpcId, subnetId, password string, resourceTags []*tcaplusdb.TagInfoUnit, serverList []*tcaplusdb.MachineInfo, proxyList []*tcaplusdb.MachineInfo, clusterType int64) (id string, errRet error) {
 	logId := tccommon.GetLogId(ctx)
 	request := tcaplusdb.NewCreateClusterRequest()
 	defer func() {
@@ -42,6 +42,18 @@ func (me *TcaplusService) CreateCluster(ctx context.Context, idlType, clusterNam
 	request.SubnetId = &subnetId
 	request.IdlType = &idlType
 	request.ClusterName = &clusterName
+	if len(resourceTags) > 0 {
+		request.ResourceTags = resourceTags
+	}
+	if len(serverList) > 0 {
+		request.ServerList = serverList
+	}
+	if len(proxyList) > 0 {
+		request.ProxyList = proxyList
+	}
+	if clusterType > 0 {
+		request.ClusterType = &clusterType
+	}
 	ratelimit.Check(request.GetAction())
 	response, err := me.client.UseTcaplusClient().CreateCluster(request)
 	if err != nil {

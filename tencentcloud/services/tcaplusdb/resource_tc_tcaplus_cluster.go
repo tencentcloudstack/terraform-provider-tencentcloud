@@ -4,6 +4,7 @@ import (
 	"context"
 	"errors"
 	"fmt"
+	"log"
 	"time"
 
 	tccommon "github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/common"
@@ -11,6 +12,7 @@ import (
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 	sdkErrors "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/common/errors"
+	tcaplusdb "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/tcaplusdb/v20190823"
 )
 
 func ResourceTencentCloudTcaplusCluster() *schema.Resource {
@@ -91,6 +93,109 @@ func ResourceTencentCloudTcaplusCluster() *schema.Resource {
 				ValidateFunc: tccommon.ValidateIntegerMin(300),
 				Description:  "Expiration time of old password after password update, unit: second.",
 			},
+			"cluster_type": {
+				Type:        schema.TypeInt,
+				Optional:    true,
+				Computed:    true,
+				Description: "Cluster type of the TcaplusDB cluster. `1`: shared cluster, `2`: dedicated cluster. This parameter is only valid for CreateCluster API and cannot be modified once set.",
+			},
+			"resource_tags": {
+				Type:     schema.TypeList,
+				Optional: true,
+				Elem: &schema.Resource{
+					Schema: map[string]*schema.Schema{
+						"tag_key": {
+							Type:     schema.TypeString,
+							Required: true,
+						},
+						"tag_value": {
+							Type:     schema.TypeString,
+							Optional: true,
+						},
+					},
+				},
+				Description: "Resource tags of the TcaplusDB cluster. This parameter is only valid for CreateCluster API and cannot be modified once set. Note: This field is write-only and will not be refreshed on Read because the DescribeClusters API does not return cluster-level tags.",
+			},
+			"server_list": {
+				Type:     schema.TypeList,
+				Optional: true,
+				Computed: true,
+				Elem: &schema.Resource{
+					Schema: map[string]*schema.Schema{
+						"machine_type": {
+							Type:     schema.TypeString,
+							Optional: true,
+						},
+						"machine_num": {
+							Type:     schema.TypeInt,
+							Optional: true,
+						},
+						"server_uid": {
+							Type:     schema.TypeString,
+							Computed: true,
+						},
+						"memory_rate": {
+							Type:     schema.TypeInt,
+							Computed: true,
+						},
+						"disk_rate": {
+							Type:     schema.TypeInt,
+							Computed: true,
+						},
+						"read_num": {
+							Type:     schema.TypeInt,
+							Computed: true,
+						},
+						"write_num": {
+							Type:     schema.TypeInt,
+							Computed: true,
+						},
+						"version": {
+							Type:     schema.TypeString,
+							Computed: true,
+						},
+					},
+				},
+				Description: "Dedicated server machine list of the TcaplusDB cluster. Only valid when `cluster_type` is `2` (dedicated cluster). For creation, each element exposes `machine_type` and `machine_num`. This parameter is only valid for CreateCluster API and cannot be modified once set.",
+			},
+			"proxy_list": {
+				Type:     schema.TypeList,
+				Optional: true,
+				Computed: true,
+				Elem: &schema.Resource{
+					Schema: map[string]*schema.Schema{
+						"machine_type": {
+							Type:     schema.TypeString,
+							Optional: true,
+						},
+						"machine_num": {
+							Type:     schema.TypeInt,
+							Optional: true,
+						},
+						"proxy_uid": {
+							Type:     schema.TypeString,
+							Computed: true,
+						},
+						"process_speed": {
+							Type:     schema.TypeInt,
+							Computed: true,
+						},
+						"average_process_delay": {
+							Type:     schema.TypeInt,
+							Computed: true,
+						},
+						"slow_process_speed": {
+							Type:     schema.TypeInt,
+							Computed: true,
+						},
+						"version": {
+							Type:     schema.TypeString,
+							Computed: true,
+						},
+					},
+				},
+				Description: "Dedicated proxy machine list of the TcaplusDB cluster. Only valid when `cluster_type` is `2` (dedicated cluster). For creation, each element exposes `machine_type` and `machine_num`. This parameter is only valid for CreateCluster API and cannot be modified once set.",
+			},
 
 			// Computed values.
 			"network_type": {
@@ -147,13 +252,53 @@ func resourceTencentCloudTcaplusClusterCreate(d *schema.ResourceData, meta inter
 		vpcId       = d.Get("vpc_id").(string)
 		subnetId    = d.Get("subnet_id").(string)
 		password    = d.Get("password").(string)
+		clusterType = int64(d.Get("cluster_type").(int))
 	)
+
+	var resourceTags []*tcaplusdb.TagInfoUnit
+	if tags, ok := d.Get("resource_tags").([]interface{}); ok && len(tags) > 0 {
+		for _, tag := range tags {
+			tagMap := tag.(map[string]interface{})
+			tagKey := tagMap["tag_key"].(string)
+			tagValue := tagMap["tag_value"].(string)
+			resourceTags = append(resourceTags, &tcaplusdb.TagInfoUnit{
+				TagKey:   &tagKey,
+				TagValue: &tagValue,
+			})
+		}
+	}
+
+	var serverList []*tcaplusdb.MachineInfo
+	if servers, ok := d.Get("server_list").([]interface{}); ok && len(servers) > 0 {
+		for _, server := range servers {
+			serverMap := server.(map[string]interface{})
+			machineType := serverMap["machine_type"].(string)
+			machineNum := int64(serverMap["machine_num"].(int))
+			serverList = append(serverList, &tcaplusdb.MachineInfo{
+				MachineType: &machineType,
+				MachineNum:  &machineNum,
+			})
+		}
+	}
+
+	var proxyList []*tcaplusdb.MachineInfo
+	if proxies, ok := d.Get("proxy_list").([]interface{}); ok && len(proxies) > 0 {
+		for _, proxy := range proxies {
+			proxyMap := proxy.(map[string]interface{})
+			machineType := proxyMap["machine_type"].(string)
+			machineNum := int64(proxyMap["machine_num"].(int))
+			proxyList = append(proxyList, &tcaplusdb.MachineInfo{
+				MachineType: &machineType,
+				MachineNum:  &machineNum,
+			})
+		}
+	}
 
 	var clusterId string
 	var inErr, outErr error
 
 	outErr = resource.Retry(tccommon.WriteRetryTimeout, func() *resource.RetryError {
-		clusterId, inErr = tcaplusService.CreateCluster(ctx, idlType, clusterName, vpcId, subnetId, password)
+		clusterId, inErr = tcaplusService.CreateCluster(ctx, idlType, clusterName, vpcId, subnetId, password, resourceTags, serverList, proxyList, clusterType)
 		if inErr != nil {
 			return tccommon.RetryError(inErr)
 		}
@@ -162,6 +307,7 @@ func resourceTencentCloudTcaplusClusterCreate(d *schema.ResourceData, meta inter
 	if outErr != nil {
 		return outErr
 	}
+	log.Printf("[CRITAL]%s tcaplus_cluster clusterId=%s", logId, clusterId)
 	d.SetId(clusterId)
 	time.Sleep(3 * time.Second)
 	return resourceTencentCloudTcaplusClusterRead(d, meta)
@@ -210,11 +356,72 @@ func resourceTencentCloudTcaplusClusterRead(d *schema.ResourceData, meta interfa
 		_ = d.Set("old_password_expire_time", clusterInfo.OldPasswordExpireTime)
 	}
 
+	if clusterInfo.ClusterType != nil {
+		_ = d.Set("cluster_type", clusterInfo.ClusterType)
+	}
+
+	if clusterInfo.ServerList != nil {
+		serverList := make([]map[string]interface{}, 0, len(clusterInfo.ServerList))
+		for _, server := range clusterInfo.ServerList {
+			serverMap := map[string]interface{}{}
+			if server.ServerUid != nil {
+				serverMap["server_uid"] = *server.ServerUid
+			}
+			if server.MachineType != nil {
+				serverMap["machine_type"] = *server.MachineType
+			}
+			if server.MemoryRate != nil {
+				serverMap["memory_rate"] = *server.MemoryRate
+			}
+			if server.DiskRate != nil {
+				serverMap["disk_rate"] = *server.DiskRate
+			}
+			if server.ReadNum != nil {
+				serverMap["read_num"] = *server.ReadNum
+			}
+			if server.WriteNum != nil {
+				serverMap["write_num"] = *server.WriteNum
+			}
+			if server.Version != nil {
+				serverMap["version"] = *server.Version
+			}
+			serverList = append(serverList, serverMap)
+		}
+		_ = d.Set("server_list", serverList)
+	}
+
+	if clusterInfo.ProxyList != nil {
+		proxyList := make([]map[string]interface{}, 0, len(clusterInfo.ProxyList))
+		for _, proxy := range clusterInfo.ProxyList {
+			proxyMap := map[string]interface{}{}
+			if proxy.ProxyUid != nil {
+				proxyMap["proxy_uid"] = *proxy.ProxyUid
+			}
+			if proxy.MachineType != nil {
+				proxyMap["machine_type"] = *proxy.MachineType
+			}
+			if proxy.ProcessSpeed != nil {
+				proxyMap["process_speed"] = *proxy.ProcessSpeed
+			}
+			if proxy.AverageProcessDelay != nil {
+				proxyMap["average_process_delay"] = *proxy.AverageProcessDelay
+			}
+			if proxy.SlowProcessSpeed != nil {
+				proxyMap["slow_process_speed"] = *proxy.SlowProcessSpeed
+			}
+			if proxy.Version != nil {
+				proxyMap["version"] = *proxy.Version
+			}
+			proxyList = append(proxyList, proxyMap)
+		}
+		_ = d.Set("proxy_list", proxyList)
+	}
+
 	return nil
 }
 
 func resourceTencentCloudTcaplusClusterUpdate(d *schema.ResourceData, meta interface{}) error {
-	defer tccommon.LogElapsed("resource.tencentcloud_tcaplus_clusterupdate")()
+	defer tccommon.LogElapsed("resource.tencentcloud_tcaplus_cluster.update")()
 
 	logId := tccommon.GetLogId(tccommon.ContextNil)
 	ctx := context.WithValue(context.TODO(), tccommon.LogIdKey, logId)
@@ -222,6 +429,13 @@ func resourceTencentCloudTcaplusClusterUpdate(d *schema.ResourceData, meta inter
 	tcaplusService := TcaplusService{client: meta.(tccommon.ProviderMeta).GetAPIV3Conn()}
 
 	d.Partial(true)
+
+	immutableArgs := []string{"cluster_type", "resource_tags", "server_list", "proxy_list"}
+	for _, v := range immutableArgs {
+		if d.HasChange(v) {
+			return fmt.Errorf("tcaplus_cluster argument `%s` cannot be changed", v)
+		}
+	}
 
 	if d.HasChange("cluster_name") {
 		err := resource.Retry(tccommon.ReadRetryTimeout, func() *resource.RetryError {
