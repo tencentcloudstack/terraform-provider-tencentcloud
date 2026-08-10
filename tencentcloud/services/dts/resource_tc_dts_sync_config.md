@@ -76,8 +76,16 @@ resource "tencentcloud_dts_sync_config" "example" {
       schema_mode = "Partial"
       table_mode  = "All"
       tables {
-        table_name     = "test"
-        new_table_name = "test_new"
+        table_name       = "test"
+        new_table_name   = "test_new"
+        column_mode      = "Partial"
+        columns {
+          column_name     = "c1"
+          new_column_name = "c1_new"
+        }
+        columns {
+          column_name = "c2"
+        }
       }
     }
   }
@@ -158,8 +166,9 @@ resource "tencentcloud_dts_sync_config" "example" {
       schema_mode = "Partial"
       table_mode  = "All"
       tables {
-        table_name     = "test"
-        new_table_name = "test_new"
+        table_name      = "test"
+        table_edit_mode = "pt"
+        tmp_tables      = ["_test_new", "_test_old"]
       }
     }
   }
