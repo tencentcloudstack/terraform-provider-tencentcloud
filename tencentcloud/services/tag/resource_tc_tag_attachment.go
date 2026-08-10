@@ -154,15 +154,15 @@ func resourceTencentCloudTagAttachmentUpdate(d *schema.ResourceData, meta interf
 		return fmt.Errorf("id is broken,%s", d.Id())
 	}
 	tagKey := idSplit[0]
-	resource := idSplit[2]
+	resourceId := idSplit[2]
 
 	if d.HasChange("tag_value") {
 		newTagValue := d.Get("tag_value").(string)
-		if err := service.UpdateTagAttachmentTagValue(ctx, tagKey, newTagValue, resource); err != nil {
+		if err := service.UpdateTagAttachmentTagValue(ctx, tagKey, newTagValue, resourceId); err != nil {
 			log.Printf("[CRITAL]%s update tag_attachment failed, reason:%+v", logId, err)
 			return err
 		}
-		d.SetId(tagKey + tccommon.FILED_SP + newTagValue + tccommon.FILED_SP + resource)
+		d.SetId(tagKey + tccommon.FILED_SP + newTagValue + tccommon.FILED_SP + resourceId)
 	}
 
 	return resourceTencentCloudTagAttachmentRead(d, meta)

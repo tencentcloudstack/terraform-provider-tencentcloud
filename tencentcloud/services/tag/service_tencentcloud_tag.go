@@ -442,13 +442,13 @@ func (me *TagService) DeleteTagTagAttachmentById(ctx context.Context, tagKey str
 	return
 }
 
-func (me *TagService) UpdateTagAttachmentTagValue(ctx context.Context, tagKey string, tagValue string, resource string) (errRet error) {
+func (me *TagService) UpdateTagAttachmentTagValue(ctx context.Context, tagKey string, tagValue string, resourceId string) (errRet error) {
 	logId := tccommon.GetLogId(ctx)
 
 	request := tag.NewUpdateResourceTagValueRequest()
 	request.TagKey = helper.String(tagKey)
 	request.TagValue = helper.String(tagValue)
-	request.Resource = helper.String(resource)
+	request.Resource = helper.String(resourceId)
 
 	defer func() {
 		if errRet != nil {
