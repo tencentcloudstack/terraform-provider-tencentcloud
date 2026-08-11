@@ -21,13 +21,23 @@ resource "tencentcloud_tag_attachment" "attachment" {
 }
 ```
 
+### Update tag_value in-place
+
+```hcl
+resource "tencentcloud_tag_attachment" "attachment" {
+  tag_key   = "test3"
+  tag_value = "Terraform_updated"
+  resource  = "qcs::cvm:ap-guangzhou:uin/100020512675:instance/ins-kfrlvcp4"
+}
+```
+
 ## Argument Reference
 
 The following arguments are supported:
 
 * `resource` - (Required, String, ForceNew) [Six-segment description of resources](https://cloud.tencent.com/document/product/598/10606).
 * `tag_key` - (Required, String, ForceNew) tag key.
-* `tag_value` - (Required, String, ForceNew) tag value.
+* `tag_value` - (Required, String) tag value.
 
 ## Attributes Reference
 
