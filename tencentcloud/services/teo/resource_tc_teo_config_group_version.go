@@ -52,6 +52,13 @@ func ResourceTencentCloudTeoConfigGroupVersion() *schema.Resource {
 				DiffSuppressFunc: helper.DiffSupressJSON,
 			},
 
+			"source_version": {
+				Type:        schema.TypeString,
+				Optional:    true,
+				ForceNew:    true,
+				Description: "Source version ID. The new version will be derived from the configuration of this source version. If not specified, the currently active production version is used as the source version by default.",
+			},
+
 			"version_id": {
 				Type:        schema.TypeString,
 				Computed:    true,
@@ -121,6 +128,10 @@ func resourceTencentCloudTeoConfigGroupVersionCreate(d *schema.ResourceData, met
 		request.Content = helper.String(v.(string))
 	}
 
+	if v, ok := d.GetOk("source_version"); ok {
+		request.SourceVersion = helper.String(v.(string))
+	}
+
 	reqErr := resource.Retry(tccommon.WriteRetryTimeout, func() *resource.RetryError {
 		result, e := meta.(tccommon.ProviderMeta).GetAPIV3Conn().UseTeoV20220901Client().CreateConfigGroupVersionWithContext(ctx, request)
 		if e != nil {
@@ -134,6 +145,11 @@ func resourceTencentCloudTeoConfigGroupVersionCreate(d *schema.ResourceData, met
 	if reqErr != nil {
 		log.Printf("[CRITAL]%s create teo config group version failed, reason:%+v", logId, reqErr)
 		return reqErr
+	}
+
+	if response.Response == nil || response.Response.VersionId == nil || *response.Response.VersionId == "" {
+		log.Printf("[CRITAL]%s create teo_config_group_version failed, response=%+v, id=%s", logId, response, d.Id())
+		return fmt.Errorf("create teo_config_group_version failed: VersionId is empty")
 	}
 
 	if response.Response.VersionId != nil {
@@ -168,7 +184,8 @@ func resourceTencentCloudTeoConfigGroupVersionRead(d *schema.ResourceData, meta 
 		return err
 	}
 
-	if respData == nil {
+	if respData == nil || respData.ConfigGroupVersionInfo == nil {
+		log.Printf("[CRUD] teo_config_group_version id=%s", d.Id())
 		d.SetId("")
 		log.Printf("[WARN]%s resource `teo_config_group_version` [%s] not found, please check if it has been deleted.\n", logId, d.Id())
 		return nil
@@ -193,6 +210,10 @@ func resourceTencentCloudTeoConfigGroupVersionRead(d *schema.ResourceData, meta 
 
 		if respData.ConfigGroupVersionInfo.Description != nil {
 			_ = d.Set("description", respData.ConfigGroupVersionInfo.Description)
+		}
+
+		if respData.ConfigGroupVersionInfo.SourceVersion != nil {
+			_ = d.Set("source_version", respData.ConfigGroupVersionInfo.SourceVersion)
 		}
 
 		if respData.ConfigGroupVersionInfo.Status != nil {
