@@ -75,7 +75,7 @@ The following arguments are supported:
 * `resource_type` - (Optional, String) The resource type. Valid values: `Standard_CU` (standard) and `Memory_CU` (memory).
 * `session_resource_template` - (Optional, List) The session resource configuration template for a Spark job cluster.
 * `size` - (Optional, Int) Cluster size. Required when updating.
-* `tags` - (Optional, List, ForceNew) Tag list. Each tag contains a key-value pair. Changing this parameter will trigger a new resource since the DLC `UpdateDataEngine` API does not support modifying tags.
+* `tags` - (Optional, Set) Tag list. Each tag contains a key-value pair. Changing this parameter will trigger a new resource since the DLC `UpdateDataEngine` API does not support modifying tags.
 * `time_span` - (Optional, Int) The usage duration of the resource. Postpaid: Fill in 3,600 as a fixed figure; prepaid: fill in a figure equal to or bigger than 1 which means purchasing resources for one month. The maximum figure is not bigger than 120. The default value is 1.
 * `time_unit` - (Optional, String) The unit of the resource period. Valid values: `s` (default) for the postpaid mode and `m` for the prepaid mode.
 * `tolerable_queue_time` - (Optional, Int) The task queue time limit, which defaults to 0. When the actual queue time exceeds the value set here, scale-out may be triggered. Setting this parameter to 0 represents that scale-out may be triggered immediately after a task queues up.

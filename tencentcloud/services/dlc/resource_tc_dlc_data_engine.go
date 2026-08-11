@@ -308,9 +308,9 @@ func ResourceTencentCloudDlcDataEngine() *schema.Resource {
 			},
 
 			"tags": {
-				Type:        schema.TypeList,
+				Type:        schema.TypeSet,
 				Optional:    true,
-				ForceNew:    true,
+				Computed:    true,
 				Description: "Tag list. Each tag contains a key-value pair. Changing this parameter will trigger a new resource since the DLC `UpdateDataEngine` API does not support modifying tags.",
 				Elem: &schema.Resource{
 					Schema: map[string]*schema.Schema{
@@ -537,7 +537,7 @@ func resourceTencentCloudDlcDataEngineCreate(d *schema.ResourceData, meta interf
 	}
 
 	if v, ok := d.GetOk("tags"); ok {
-		for _, item := range v.([]interface{}) {
+		for _, item := range v.(*schema.Set).List() {
 			dMap := item.(map[string]interface{})
 			tagInfo := dlc.TagInfo{}
 			if v, ok := dMap["tag_key"]; ok {
