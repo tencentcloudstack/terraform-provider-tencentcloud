@@ -118,7 +118,7 @@ require (
 	github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/bh v1.3.93
 	github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/billing v1.3.39
 	github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/cdc v1.0.1149
-	github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/cdwdoris v1.0.993
+	github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/cdwdoris v1.3.139
 	github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/cdwpg v1.0.1126
 	github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/controlcenter v1.1.51
 	github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/csip v1.0.860

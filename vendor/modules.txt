@@ -1232,7 +1232,7 @@ github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/cdn/v20180606
 # github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/cdwch v1.1.7
 ## explicit; go 1.14
 github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/cdwch/v20200915
-# github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/cdwdoris v1.0.993
+# github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/cdwdoris v1.3.139
 ## explicit; go 1.14
 github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/cdwdoris/v20211228
 # github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/cdwpg v1.0.1126
