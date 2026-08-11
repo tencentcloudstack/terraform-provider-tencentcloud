@@ -25,8 +25,8 @@ resource "tencentcloud_dlc_data_engine" "example" {
   }
 
   tags {
-    tag_key   = "owner"
-    tag_value = "tf-example"
+    tag_key   = "createBy"
+    tag_value = "Terraform"
   }
 }
 ```
