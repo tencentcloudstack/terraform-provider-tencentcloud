@@ -1,0 +1,3 @@
+```release-note:enhancement
+resource/tencentcloud_teo_deploy_config_group_version: add env info params
+```

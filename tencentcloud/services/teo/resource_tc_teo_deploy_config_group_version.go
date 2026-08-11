@@ -115,6 +115,87 @@ func ResourceTencentCloudTeoDeployConfigGroupVersion() *schema.Resource {
 				Computed:    true,
 				Description: "Deploy result message.",
 			},
+
+			"total_count": {
+				Type:        schema.TypeInt,
+				Computed:    true,
+				Description: "Total number of environments under the zone, returned by DescribeEnvironments.",
+			},
+
+			"env_type": {
+				Type:        schema.TypeString,
+				Computed:    true,
+				Description: "Environment type. Valid values: production, staging.",
+			},
+
+			"scope": {
+				Type:        schema.TypeList,
+				Computed:    true,
+				Elem:        &schema.Schema{Type: schema.TypeString},
+				Description: "Current environment config effective scope. For production environment it is [\"ALL\"], for staging environment it returns test node IPs.",
+			},
+
+			"current_config_group_version_infos": {
+				Type:        schema.TypeSet,
+				Computed:    true,
+				Description: "Currently effective config group version infos of the target environment, returned by DescribeEnvironments.",
+				Elem: &schema.Resource{
+					Schema: map[string]*schema.Schema{
+						"version_id": {
+							Type:        schema.TypeString,
+							Computed:    true,
+							Description: "Config group version ID.",
+						},
+						"version_number": {
+							Type:        schema.TypeString,
+							Computed:    true,
+							Description: "Config group version number.",
+						},
+						"source_version": {
+							Type:        schema.TypeString,
+							Computed:    true,
+							Description: "Source version ID that the config group version is based on.",
+						},
+						"group_type": {
+							Type:        schema.TypeString,
+							Computed:    true,
+							Description: "Config group type.",
+						},
+						"group_id": {
+							Type:        schema.TypeString,
+							Computed:    true,
+							Description: "Config group ID.",
+						},
+						"description": {
+							Type:        schema.TypeString,
+							Computed:    true,
+							Description: "Version description.",
+						},
+						"status": {
+							Type:        schema.TypeString,
+							Computed:    true,
+							Description: "Version status.",
+						},
+						"create_time": {
+							Type:        schema.TypeString,
+							Computed:    true,
+							Description: "Version creation time.",
+						},
+					},
+				},
+			},
+
+			"env_create_time": {
+				Type:        schema.TypeString,
+				Computed:    true,
+				Description: "Environment creation time.",
+			},
+
+			"env_update_time": {
+				Type:        schema.TypeString,
+				Computed:    true,
+				Description: "Environment update time.",
+			},
 		},
 	}
 }
@@ -318,6 +399,107 @@ func resourceTencentCloudTeoDeployConfigGroupVersionRead(d *schema.ResourceData,
 
 	_ = d.Set("zone_id", zoneId)
 	_ = d.Set("env_id", envId)
+
+	// Read environment-level info via DescribeEnvironments to populate the
+	// env-related computed fields (total_count/env_type/scope/current_config_group_version_infos/env_create_time/env_update_time).
+	var (
+		totalCount uint64
+		envInfos   []*teov20220901.EnvInfo
+	)
+	retryErr := resource.Retry(tccommon.ReadRetryTimeout, func() *resource.RetryError {
+		tc, ei, e := service.DescribeTeoEnvironmentsWithTotalCount(ctx, zoneId)
+		if e != nil {
+			return tccommon.RetryError(e)
+		}
+		totalCount = tc
+		envInfos = ei
+		return nil
+	})
+	if retryErr != nil {
+		log.Printf("[CRITAL]%s read teo deploy config group version env info failed, reason:%+v", logId, retryErr)
+		return retryErr
+	}
+
+	if totalCount != 0 {
+		_ = d.Set("total_count", totalCount)
+	}
+
+	var targetEnv *teov20220901.EnvInfo
+	for _, item := range envInfos {
+		if item.EnvId != nil && *item.EnvId == envId {
+			targetEnv = item
+			break
+		}
+	}
+
+	if targetEnv == nil {
+		log.Printf("[CRUD] teo deploy config group version env not found, zone_id=%s env_id=%s", zoneId, envId)
+		return nil
+	}
+
+	if targetEnv.EnvType != nil {
+		_ = d.Set("env_type", targetEnv.EnvType)
+	}
+
+	if targetEnv.Scope != nil {
+		scopeList := make([]interface{}, 0, len(targetEnv.Scope))
+		for _, s := range targetEnv.Scope {
+			if s != nil {
+				scopeList = append(scopeList, *s)
+			}
+		}
+		_ = d.Set("scope", scopeList)
+	}
+
+	if targetEnv.CreateTime != nil {
+		_ = d.Set("env_create_time", targetEnv.CreateTime)
+	}
+
+	if targetEnv.UpdateTime != nil {
+		_ = d.Set("env_update_time", targetEnv.UpdateTime)
+	}
+
+	if targetEnv.CurrentConfigGroupVersionInfos != nil {
+		currentConfigGroupVersionInfosList := make([]map[string]interface{}, 0, len(targetEnv.CurrentConfigGroupVersionInfos))
+		for _, currentConfigGroupVersionInfo := range targetEnv.CurrentConfigGroupVersionInfos {
+			currentConfigGroupVersionInfoMap := map[string]interface{}{}
+
+			if currentConfigGroupVersionInfo.VersionId != nil {
+				currentConfigGroupVersionInfoMap["version_id"] = currentConfigGroupVersionInfo.VersionId
+			}
+
+			if currentConfigGroupVersionInfo.VersionNumber != nil {
+				currentConfigGroupVersionInfoMap["version_number"] = currentConfigGroupVersionInfo.VersionNumber
+			}
+
+			if currentConfigGroupVersionInfo.SourceVersion != nil {
+				currentConfigGroupVersionInfoMap["source_version"] = currentConfigGroupVersionInfo.SourceVersion
+			}
+
+			if currentConfigGroupVersionInfo.GroupType != nil {
+				currentConfigGroupVersionInfoMap["group_type"] = currentConfigGroupVersionInfo.GroupType
+			}
+
+			if currentConfigGroupVersionInfo.GroupId != nil {
+				currentConfigGroupVersionInfoMap["group_id"] = currentConfigGroupVersionInfo.GroupId
+			}
+
+			if currentConfigGroupVersionInfo.Description != nil {
+				currentConfigGroupVersionInfoMap["description"] = currentConfigGroupVersionInfo.Description
+			}
+
+			if currentConfigGroupVersionInfo.Status != nil {
+				currentConfigGroupVersionInfoMap["status"] = currentConfigGroupVersionInfo.Status
+			}
+
+			if currentConfigGroupVersionInfo.CreateTime != nil {
+				currentConfigGroupVersionInfoMap["create_time"] = currentConfigGroupVersionInfo.CreateTime
+			}
+
+			currentConfigGroupVersionInfosList = append(currentConfigGroupVersionInfosList, currentConfigGroupVersionInfoMap)
+		}
+		_ = d.Set("current_config_group_version_infos", currentConfigGroupVersionInfosList)
+	}
 
 	return nil
 }

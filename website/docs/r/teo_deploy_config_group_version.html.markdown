@@ -47,10 +47,24 @@ The `config_group_version_infos` object supports the following:
 In addition to all arguments above, the following attributes are exported:
 
 * `id` - ID of the resource.
+* `current_config_group_version_infos` - Currently effective config group version infos of the target environment, returned by DescribeEnvironments.
+  * `create_time` - Version creation time.
+  * `description` - Version description.
+  * `group_id` - Config group ID.
+  * `group_type` - Config group type.
+  * `source_version` - Source version ID that the config group version is based on.
+  * `status` - Version status.
+  * `version_id` - Config group version ID.
+  * `version_number` - Config group version number.
 * `deploy_time` - Deploy time. The time follows the ISO 8601 standard in the date and time format.
+* `env_create_time` - Environment creation time.
+* `env_type` - Environment type. Valid values: production, staging.
+* `env_update_time` - Environment update time.
 * `message` - Deploy result message.
 * `record_id` - Deploy record ID.
+* `scope` - Current environment config effective scope. For production environment it is ["ALL"], for staging environment it returns test node IPs.
 * `status` - Deploy status. Valid values: deploying (Deploying), failure (Deploy failed), success (Deploy successful).
+* `total_count` - Total number of environments under the zone, returned by DescribeEnvironments.
 
 ## Timeouts
 
