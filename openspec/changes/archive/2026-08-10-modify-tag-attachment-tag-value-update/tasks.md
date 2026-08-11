@@ -7,7 +7,7 @@
 
 **文件**: `tencentcloud/services/tag/service_tencentcloud_tag.go`
 
-- [x] 2.1 新增 `UpdateTagAttachmentTagValue(ctx context.Context, tagKey string, tagValue string, resource string) (errRet error)` 方法
+- [x] 2.1 新增 `UpdateTagAttachmentTagValue(ctx context.Context, tagKey string, tagValue string, resourceId string) (errRet error)` 方法（参数命名 `resourceId`，避免遮蔽 `helper/resource` 包名）
 - [x] 2.2 构造 `tag.NewUpdateResourceTagValueRequest()`，设置 `TagKey`、`TagValue`（新值）、`Resource` 参数
 - [x] 2.3 使用 `resource.Retry(tccommon.WriteRetryTimeout, ...)` 包裹 API 调用，失败时用 `tccommon.RetryError(e)` 包装错误
 - [x] 2.4 添加 request/response body 日志记录（`log.Printf("[DEBUG]..."）和错误处理 defer 日志
