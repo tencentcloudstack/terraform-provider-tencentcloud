@@ -45,7 +45,7 @@ require (
 	github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/ckafka v1.3.133
 	github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/clb v1.3.150
 	github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/cloudaudit v1.3.40
-	github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/cls v1.3.144
+	github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/cls v1.3.156
 	github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/common v1.3.156
 	github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/config v1.3.80
 	github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/cvm v1.3.130
