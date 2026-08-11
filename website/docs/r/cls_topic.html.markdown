@@ -13,6 +13,8 @@ Provides a resource to create a cls topic.
 
 ~> **NOTE:** Field `encryption` can only be enabled, not disabled.
 
+~> **NOTE:** Fields `kms_region` and `kms_key_id` are only effective when `encryption` is set to 1. If not set, the CLS default key (alias KMS-CLS) is used.
+
 ## Example Usage
 
 ### Create a standard cls topic
@@ -106,6 +108,34 @@ resource "tencentcloud_cls_topic" "example" {
 }
 ```
 
+### Create a cls topic with custom KMS key (encryption=1)
+
+```hcl
+resource "tencentcloud_cls_logset" "example" {
+  logset_name = "tf_example"
+  tags = {
+    tagKey = "tagValue"
+  }
+}
+
+resource "tencentcloud_cls_topic" "example" {
+  topic_name           = "tf_example"
+  logset_id            = tencentcloud_cls_logset.example.id
+  auto_split           = false
+  max_split_partitions = 20
+  partition_count      = 1
+  period               = 30
+  storage_type         = "hot"
+  describes            = "Test Demo."
+  encryption           = 1
+  kms_region           = "ap-guangzhou"
+  kms_key_id           = "xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx"
+  tags = {
+    tagKey = "tagValue"
+  }
+}
+```
+
 ## Argument Reference
 
 The following arguments are supported:
@@ -120,6 +150,8 @@ Supported regions: ap-beijing, ap-guangzhou, ap-shanghai, ap-singapore, ap-bangk
 * `extends` - (Optional, List) Log Subject Extension Information.
 * `hot_period` - (Optional, Int) 0: Turn off log sinking. Non 0: The number of days of standard storage after enabling log settling. HotPeriod needs to be greater than or equal to 7 and less than Period. Only effective when StorageType is hot.
 * `is_web_tracking` - (Optional, Bool) No authentication switch. False: closed; True: Enable. The default is false. After activation, anonymous access to the log topic will be supported for specified operations.
+* `kms_key_id` - (Optional, String) KMS key ID for the custom KMS key. Only effective when `encryption` is set to 1. If not set, the CLS default key (alias KMS-CLS) is used.
+* `kms_region` - (Optional, String) KMS region for the custom KMS key. Only effective when `encryption` is set to 1. If not set, the CLS default key (alias KMS-CLS) is used.
 * `max_split_partitions` - (Optional, Int) Maximum number of partitions to split into for this topic if automatic split is enabled. Default value: 50.
 * `partition_count` - (Optional, Int) Number of log topic partitions. Default value: 1. Maximum value: 10.
 * `period` - (Optional, Int) lifetime. Unit: days. Standard storage value range: 1 to 3600. Infrequent storage value range: 7 to 3600 days. A value of 3640 indicates permanent retention.If this value is not input, it defaults to the Period value of the log set corresponding to the accessed log topic (defaults to 30 days in case of access failure).

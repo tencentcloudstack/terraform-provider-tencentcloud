@@ -168,6 +168,18 @@ func ResourceTencentCloudClsTopic() *schema.Resource {
 				Computed:    true,
 				Description: "Encryption-related parameters. This parameter is supported for users with an open access list and from encrypted regions; it cannot be passed in other scenarios. 0 or not passed: No encryption. 1: KMS-CLS cloud product key encryption. Once enabled, it cannot be disabled.\nSupported regions: ap-beijing, ap-guangzhou, ap-shanghai, ap-singapore, ap-bangkok, ap-jakarta, eu-frankfurt, ap-seoul, ap-tokyo.",
 			},
+			"kms_region": {
+				Type:        schema.TypeString,
+				Optional:    true,
+				Computed:    true,
+				Description: "KMS region for the custom KMS key. Only effective when `encryption` is set to 1. If not set, the CLS default key (alias KMS-CLS) is used.",
+			},
+			"kms_key_id": {
+				Type:        schema.TypeString,
+				Optional:    true,
+				Computed:    true,
+				Description: "KMS key ID for the custom KMS key. Only effective when `encryption` is set to 1. If not set, the CLS default key (alias KMS-CLS) is used.",
+			},
 		},
 	}
 }
@@ -289,6 +301,21 @@ func resourceTencentCloudClsTopicCreate(d *schema.ResourceData, meta interface{}
 
 	if v, ok := d.GetOkExists("encryption"); ok {
 		request.Encryption = helper.IntUint64(v.(int))
+	}
+
+	if v, ok := d.GetOkExists("encryption"); ok && v.(int) == 1 {
+		kmsRegion := d.Get("kms_region").(string)
+		kmsKeyId := d.Get("kms_key_id").(string)
+		if kmsRegion != "" || kmsKeyId != "" {
+			customKmsInfo := &cls.CustomKmsInfo{}
+			if kmsRegion != "" {
+				customKmsInfo.KmsRegion = helper.String(kmsRegion)
+			}
+			if kmsKeyId != "" {
+				customKmsInfo.KmsKeyId = helper.String(kmsKeyId)
+			}
+			request.CustomKmsInfo = customKmsInfo
+		}
 	}
 
 	err := resource.Retry(tccommon.WriteRetryTimeout, func() *resource.RetryError {
@@ -426,6 +453,15 @@ func resourceTencentCloudClsTopicRead(d *schema.ResourceData, meta interface{}) 
 		_ = d.Set("encryption", 1)
 	}
 
+	if topic.CustomKmsInfo != nil {
+		if topic.CustomKmsInfo.KmsRegion != nil {
+			_ = d.Set("kms_region", topic.CustomKmsInfo.KmsRegion)
+		}
+		if topic.CustomKmsInfo.KmsKeyId != nil {
+			_ = d.Set("kms_key_id", topic.CustomKmsInfo.KmsKeyId)
+		}
+	}
+
 	return nil
 }
 
@@ -559,6 +595,25 @@ func resourceTencentCloudClsTopicUpdate(d *schema.ResourceData, meta interface{}
 		}
 
 		hasChange = true
+	}
+
+	if d.HasChange("kms_region") || d.HasChange("kms_key_id") {
+		hasChange = true
+	}
+
+	if encryptionVal, ok := d.GetOkExists("encryption"); ok && encryptionVal.(int) == 1 {
+		kmsRegion := d.Get("kms_region").(string)
+		kmsKeyId := d.Get("kms_key_id").(string)
+		if kmsRegion != "" || kmsKeyId != "" {
+			customKmsInfo := &cls.CustomKmsInfo{}
+			if kmsRegion != "" {
+				customKmsInfo.KmsRegion = helper.String(kmsRegion)
+			}
+			if kmsKeyId != "" {
+				customKmsInfo.KmsKeyId = helper.String(kmsKeyId)
+			}
+			request.CustomKmsInfo = customKmsInfo
+		}
 	}
 
 	if hasChange {
