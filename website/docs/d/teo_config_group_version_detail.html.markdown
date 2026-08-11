@@ -33,6 +33,7 @@ The following arguments are supported:
 In addition to all arguments above, the following attributes are exported:
 
 * `config_group_version_info` - Version information.
+  * `source_version` - The source version ID that the config group version was derived from.
 * `content` - Version file content. It is returned in JSON format.
 
 
