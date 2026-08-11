@@ -2,7 +2,7 @@ Provides a resource to create a cls topic.
 
 ~> **NOTE:** Field `encryption` can only be enabled, not disabled.
 
-~> **NOTE:** Fields `kms_region` and `kms_key_id` are only effective when `encryption` is set to 1. If not set, the CLS default key (alias KMS-CLS) is used.
+~> **NOTE:** Field `custom_kms_info` is for user-defined KMS key. If not set, the CLS default key (alias KMS-CLS) is used.
 
 Example Usage
 
@@ -117,8 +117,12 @@ resource "tencentcloud_cls_topic" "example" {
   storage_type         = "hot"
   describes            = "Test Demo."
   encryption           = 1
-  kms_region           = "ap-guangzhou"
-  kms_key_id           = "xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx"
+
+  custom_kms_info {
+    kms_region = "ap-guangzhou"
+    kms_key_id = "xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx"
+  }
+
   tags = {
     tagKey = "tagValue"
   }

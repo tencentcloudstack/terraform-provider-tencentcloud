@@ -250,7 +250,7 @@ func TestClsTopic_Create_WithBizType(t *testing.T) {
 			{Key: ptrStringCT("test"), Value: ptrStringCT("test")},
 		},
 	}
-	patches.ApplyMethodFunc(&localcls.ClsService{}, "DescribeClsTopicById", func(_ context.Context, _ string) (*clsv20201016.TopicInfo, error) {
+	patches.ApplyMethodFunc(&localcls.ClsService{}, "DescribeClsTopicById", func(_ context.Context, _ string, _ *uint64) (*clsv20201016.TopicInfo, error) {
 		return topicInfo, nil
 	})
 
@@ -317,7 +317,7 @@ func TestClsTopic_Create_WithoutBizType(t *testing.T) {
 		IsWebTracking:      ptrBoolCT(false),
 		BizType:            ptrUint64CT(0),
 	}
-	patches.ApplyMethodFunc(&localcls.ClsService{}, "DescribeClsTopicById", func(_ context.Context, _ string) (*clsv20201016.TopicInfo, error) {
+	patches.ApplyMethodFunc(&localcls.ClsService{}, "DescribeClsTopicById", func(_ context.Context, _ string, _ *uint64) (*clsv20201016.TopicInfo, error) {
 		return topicInfo, nil
 	})
 
@@ -370,7 +370,7 @@ func TestClsTopic_Read_BizType(t *testing.T) {
 		IsWebTracking:      ptrBoolCT(false),
 		BizType:            ptrUint64CT(1),
 	}
-	patches.ApplyMethodFunc(&localcls.ClsService{}, "DescribeClsTopicById", func(_ context.Context, _ string) (*clsv20201016.TopicInfo, error) {
+	patches.ApplyMethodFunc(&localcls.ClsService{}, "DescribeClsTopicById", func(_ context.Context, _ string, _ *uint64) (*clsv20201016.TopicInfo, error) {
 		return topicInfo, nil
 	})
 
@@ -421,7 +421,7 @@ func TestClsTopic_Read_BizTypeNil(t *testing.T) {
 		IsWebTracking:      ptrBoolCT(false),
 		BizType:            nil,
 	}
-	patches.ApplyMethodFunc(&localcls.ClsService{}, "DescribeClsTopicById", func(_ context.Context, _ string) (*clsv20201016.TopicInfo, error) {
+	patches.ApplyMethodFunc(&localcls.ClsService{}, "DescribeClsTopicById", func(_ context.Context, _ string, _ *uint64) (*clsv20201016.TopicInfo, error) {
 		return topicInfo, nil
 	})
 
@@ -480,10 +480,10 @@ func TestClsTopic_Update_BizTypeImmutable(t *testing.T) {
 	assert.Contains(t, err.Error(), "biz_type")
 }
 
-// --- gomonkey mock unit tests for kms_region / kms_key_id parameters ---
+// --- gomonkey mock unit tests for custom_kms_info parameters ---
 
 // TestClsTopic_Create_WithKmsInfo verifies that when encryption=1 and
-// kms_region / kms_key_id are set, the CreateTopic request contains a
+// custom_kms_info is set, the CreateTopic request contains a
 // non-nil CustomKmsInfo with the correct KmsRegion and KmsKeyId values.
 func TestClsTopic_Create_WithKmsInfo(t *testing.T) {
 	patches := gomonkey.NewPatches()
@@ -523,7 +523,7 @@ func TestClsTopic_Create_WithKmsInfo(t *testing.T) {
 			KmsKeyId:  ptrStringCT("fake-kms-key-id"),
 		},
 	}
-	patches.ApplyMethodFunc(&localcls.ClsService{}, "DescribeClsTopicById", func(_ context.Context, _ string) (*clsv20201016.TopicInfo, error) {
+	patches.ApplyMethodFunc(&localcls.ClsService{}, "DescribeClsTopicById", func(_ context.Context, _ string, _ *uint64) (*clsv20201016.TopicInfo, error) {
 		return topicInfo, nil
 	})
 
@@ -540,8 +540,12 @@ func TestClsTopic_Create_WithKmsInfo(t *testing.T) {
 		"describes":            "Test Demo.",
 		"hot_period":           10,
 		"encryption":           1,
-		"kms_region":           "ap-guangzhou",
-		"kms_key_id":           "fake-kms-key-id",
+		"custom_kms_info": []interface{}{
+			map[string]interface{}{
+				"kms_region": "ap-guangzhou",
+				"kms_key_id": "fake-kms-key-id",
+			},
+		},
 	})
 
 	err := res.Create(d, meta)
@@ -553,12 +557,15 @@ func TestClsTopic_Create_WithKmsInfo(t *testing.T) {
 	assert.Equal(t, "ap-guangzhou", *capturedRequest.CustomKmsInfo.KmsRegion)
 	assert.Equal(t, "fake-kms-key-id", *capturedRequest.CustomKmsInfo.KmsKeyId)
 
-	// Verify kms_region and kms_key_id are read back into state
-	assert.Equal(t, "ap-guangzhou", d.Get("kms_region"))
-	assert.Equal(t, "fake-kms-key-id", d.Get("kms_key_id"))
+	// Verify custom_kms_info is read back into state
+	customKmsInfo := d.Get("custom_kms_info").([]interface{})
+	assert.Len(t, customKmsInfo, 1)
+	infoMap := customKmsInfo[0].(map[string]interface{})
+	assert.Equal(t, "ap-guangzhou", infoMap["kms_region"])
+	assert.Equal(t, "fake-kms-key-id", infoMap["kms_key_id"])
 }
 
-// TestClsTopic_Create_WithoutKmsInfo verifies that when encryption is not 1,
+// TestClsTopic_Create_WithoutKmsInfo verifies that when custom_kms_info is not set,
 // the CreateTopic request does NOT contain a CustomKmsInfo struct.
 func TestClsTopic_Create_WithoutKmsInfo(t *testing.T) {
 	patches := gomonkey.NewPatches()
@@ -593,7 +600,7 @@ func TestClsTopic_Create_WithoutKmsInfo(t *testing.T) {
 		IsWebTracking:      ptrBoolCT(false),
 		BizType:            ptrUint64CT(0),
 	}
-	patches.ApplyMethodFunc(&localcls.ClsService{}, "DescribeClsTopicById", func(_ context.Context, _ string) (*clsv20201016.TopicInfo, error) {
+	patches.ApplyMethodFunc(&localcls.ClsService{}, "DescribeClsTopicById", func(_ context.Context, _ string, _ *uint64) (*clsv20201016.TopicInfo, error) {
 		return topicInfo, nil
 	})
 
@@ -619,7 +626,7 @@ func TestClsTopic_Create_WithoutKmsInfo(t *testing.T) {
 	assert.Nil(t, capturedRequest.CustomKmsInfo)
 }
 
-// TestClsTopic_Read_KmsInfo verifies that kms_region and kms_key_id are
+// TestClsTopic_Read_KmsInfo verifies that custom_kms_info is
 // correctly read from a TopicInfo response with a non-nil CustomKmsInfo.
 func TestClsTopic_Read_KmsInfo(t *testing.T) {
 	patches := gomonkey.NewPatches()
@@ -648,7 +655,7 @@ func TestClsTopic_Read_KmsInfo(t *testing.T) {
 			KmsKeyId:  ptrStringCT("read-kms-key-id"),
 		},
 	}
-	patches.ApplyMethodFunc(&localcls.ClsService{}, "DescribeClsTopicById", func(_ context.Context, _ string) (*clsv20201016.TopicInfo, error) {
+	patches.ApplyMethodFunc(&localcls.ClsService{}, "DescribeClsTopicById", func(_ context.Context, _ string, _ *uint64) (*clsv20201016.TopicInfo, error) {
 		return topicInfo, nil
 	})
 
@@ -671,9 +678,12 @@ func TestClsTopic_Read_KmsInfo(t *testing.T) {
 	assert.NoError(t, err)
 	assert.Equal(t, "fake-topic-id-read-kms", d.Id())
 
-	// Verify kms_region and kms_key_id are correctly read from the API response
-	assert.Equal(t, "ap-shanghai", d.Get("kms_region"))
-	assert.Equal(t, "read-kms-key-id", d.Get("kms_key_id"))
+	// Verify custom_kms_info is correctly read from the API response
+	customKmsInfo := d.Get("custom_kms_info").([]interface{})
+	assert.Len(t, customKmsInfo, 1)
+	infoMap := customKmsInfo[0].(map[string]interface{})
+	assert.Equal(t, "ap-shanghai", infoMap["kms_region"])
+	assert.Equal(t, "read-kms-key-id", infoMap["kms_key_id"])
 }
 
 // TestClsTopic_Read_KmsInfoNil verifies that the Read method does not panic
@@ -701,7 +711,7 @@ func TestClsTopic_Read_KmsInfoNil(t *testing.T) {
 		BizType:            ptrUint64CT(0),
 		CustomKmsInfo:      nil,
 	}
-	patches.ApplyMethodFunc(&localcls.ClsService{}, "DescribeClsTopicById", func(_ context.Context, _ string) (*clsv20201016.TopicInfo, error) {
+	patches.ApplyMethodFunc(&localcls.ClsService{}, "DescribeClsTopicById", func(_ context.Context, _ string, _ *uint64) (*clsv20201016.TopicInfo, error) {
 		return topicInfo, nil
 	})
 
