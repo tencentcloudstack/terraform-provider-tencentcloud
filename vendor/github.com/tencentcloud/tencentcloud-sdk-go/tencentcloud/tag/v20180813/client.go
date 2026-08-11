@@ -1,4 +1,4 @@
-// Copyright (c) 2017-2025 Tencent. All Rights Reserved.
+// Copyright (c) 2017-2018 THL A29 Limited, a Tencent company. All Rights Reserved.
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -88,7 +88,6 @@ func (c *Client) AddProjectWithContext(ctx context.Context, request *AddProjectR
     if request == nil {
         request = NewAddProjectRequest()
     }
-    c.InitBaseRequest(&request.BaseRequest, "tag", APIVersion, "AddProject")
     
     if c.GetCredential() == nil {
         return nil, errors.New("AddProject require credential")
@@ -162,7 +161,6 @@ func (c *Client) AddResourceTagWithContext(ctx context.Context, request *AddReso
     if request == nil {
         request = NewAddResourceTagRequest()
     }
-    c.InitBaseRequest(&request.BaseRequest, "tag", APIVersion, "AddResourceTag")
     
     if c.GetCredential() == nil {
         return nil, errors.New("AddResourceTag require credential")
@@ -252,7 +250,6 @@ func (c *Client) AttachResourcesTagWithContext(ctx context.Context, request *Att
     if request == nil {
         request = NewAttachResourcesTagRequest()
     }
-    c.InitBaseRequest(&request.BaseRequest, "tag", APIVersion, "AttachResourcesTag")
     
     if c.GetCredential() == nil {
         return nil, errors.New("AttachResourcesTag require credential")
@@ -326,7 +323,6 @@ func (c *Client) CreateTagWithContext(ctx context.Context, request *CreateTagReq
     if request == nil {
         request = NewCreateTagRequest()
     }
-    c.InitBaseRequest(&request.BaseRequest, "tag", APIVersion, "CreateTag")
     
     if c.GetCredential() == nil {
         return nil, errors.New("CreateTag require credential")
@@ -402,7 +398,6 @@ func (c *Client) CreateTagsWithContext(ctx context.Context, request *CreateTagsR
     if request == nil {
         request = NewCreateTagsRequest()
     }
-    c.InitBaseRequest(&request.BaseRequest, "tag", APIVersion, "CreateTags")
     
     if c.GetCredential() == nil {
         return nil, errors.New("CreateTags require credential")
@@ -466,7 +461,6 @@ func (c *Client) DeleteResourceTagWithContext(ctx context.Context, request *Dele
     if request == nil {
         request = NewDeleteResourceTagRequest()
     }
-    c.InitBaseRequest(&request.BaseRequest, "tag", APIVersion, "DeleteResourceTag")
     
     if c.GetCredential() == nil {
         return nil, errors.New("DeleteResourceTag require credential")
@@ -534,7 +528,6 @@ func (c *Client) DeleteTagWithContext(ctx context.Context, request *DeleteTagReq
     if request == nil {
         request = NewDeleteTagRequest()
     }
-    c.InitBaseRequest(&request.BaseRequest, "tag", APIVersion, "DeleteTag")
     
     if c.GetCredential() == nil {
         return nil, errors.New("DeleteTag require credential")
@@ -606,7 +599,6 @@ func (c *Client) DeleteTagsWithContext(ctx context.Context, request *DeleteTagsR
     if request == nil {
         request = NewDeleteTagsRequest()
     }
-    c.InitBaseRequest(&request.BaseRequest, "tag", APIVersion, "DeleteTags")
     
     if c.GetCredential() == nil {
         return nil, errors.New("DeleteTags require credential")
@@ -662,7 +654,6 @@ func (c *Client) DescribeProjectsWithContext(ctx context.Context, request *Descr
     if request == nil {
         request = NewDescribeProjectsRequest()
     }
-    c.InitBaseRequest(&request.BaseRequest, "tag", APIVersion, "DescribeProjects")
     
     if c.GetCredential() == nil {
         return nil, errors.New("DescribeProjects require credential")
@@ -712,7 +703,6 @@ func (c *Client) DescribeResourceTagsWithContext(ctx context.Context, request *D
     if request == nil {
         request = NewDescribeResourceTagsRequest()
     }
-    c.InitBaseRequest(&request.BaseRequest, "tag", APIVersion, "DescribeResourceTags")
     
     if c.GetCredential() == nil {
         return nil, errors.New("DescribeResourceTags require credential")
@@ -774,7 +764,6 @@ func (c *Client) DescribeResourceTagsByResourceIdsWithContext(ctx context.Contex
     if request == nil {
         request = NewDescribeResourceTagsByResourceIdsRequest()
     }
-    c.InitBaseRequest(&request.BaseRequest, "tag", APIVersion, "DescribeResourceTagsByResourceIds")
     
     if c.GetCredential() == nil {
         return nil, errors.New("DescribeResourceTagsByResourceIds require credential")
@@ -834,7 +823,6 @@ func (c *Client) DescribeResourceTagsByResourceIdsSeqWithContext(ctx context.Con
     if request == nil {
         request = NewDescribeResourceTagsByResourceIdsSeqRequest()
     }
-    c.InitBaseRequest(&request.BaseRequest, "tag", APIVersion, "DescribeResourceTagsByResourceIdsSeq")
     
     if c.GetCredential() == nil {
         return nil, errors.New("DescribeResourceTagsByResourceIdsSeq require credential")
@@ -867,7 +855,7 @@ func NewDescribeResourceTagsByTagKeysResponse() (response *DescribeResourceTagsB
 }
 
 // DescribeResourceTagsByTagKeys
-// 根据标签键获取指定资源上的标签值
+// 根据标签键获取资源标签
 //
 // 可能返回的错误码:
 //  FAILEDOPERATION = "FailedOperation"
@@ -883,7 +871,7 @@ func (c *Client) DescribeResourceTagsByTagKeys(request *DescribeResourceTagsByTa
 }
 
 // DescribeResourceTagsByTagKeys
-// 根据标签键获取指定资源上的标签值
+// 根据标签键获取资源标签
 //
 // 可能返回的错误码:
 //  FAILEDOPERATION = "FailedOperation"
@@ -898,7 +886,6 @@ func (c *Client) DescribeResourceTagsByTagKeysWithContext(ctx context.Context, r
     if request == nil {
         request = NewDescribeResourceTagsByTagKeysRequest()
     }
-    c.InitBaseRequest(&request.BaseRequest, "tag", APIVersion, "DescribeResourceTagsByTagKeys")
     
     if c.GetCredential() == nil {
         return nil, errors.New("DescribeResourceTagsByTagKeys require credential")
@@ -931,9 +918,7 @@ func NewDescribeResourcesByTagsResponse() (response *DescribeResourcesByTagsResp
 }
 
 // DescribeResourcesByTags
-// 通过标签查询资源列表，按TagKey取交集。
-//
-// 举例：TagFilters 为 [ {"TagKey": "k1", "TagValue":["v1","v2"]}, {"TagKey": "k2", "TagValue":["v3","v4"]} ]。交集查询逻辑：找出资源，其包含标签TagKey=k1且TagValue in (v1, v2)，同时包含标签TagKey=k2且TagValue in (v3, v4)
+// 通过标签查询资源列表
 //
 // 可能返回的错误码:
 //  FAILEDOPERATION = "FailedOperation"
@@ -946,9 +931,7 @@ func (c *Client) DescribeResourcesByTags(request *DescribeResourcesByTagsRequest
 }
 
 // DescribeResourcesByTags
-// 通过标签查询资源列表，按TagKey取交集。
-//
-// 举例：TagFilters 为 [ {"TagKey": "k1", "TagValue":["v1","v2"]}, {"TagKey": "k2", "TagValue":["v3","v4"]} ]。交集查询逻辑：找出资源，其包含标签TagKey=k1且TagValue in (v1, v2)，同时包含标签TagKey=k2且TagValue in (v3, v4)
+// 通过标签查询资源列表
 //
 // 可能返回的错误码:
 //  FAILEDOPERATION = "FailedOperation"
@@ -960,7 +943,6 @@ func (c *Client) DescribeResourcesByTagsWithContext(ctx context.Context, request
     if request == nil {
         request = NewDescribeResourcesByTagsRequest()
     }
-    c.InitBaseRequest(&request.BaseRequest, "tag", APIVersion, "DescribeResourcesByTags")
     
     if c.GetCredential() == nil {
         return nil, errors.New("DescribeResourcesByTags require credential")
@@ -993,9 +975,7 @@ func NewDescribeResourcesByTagsUnionResponse() (response *DescribeResourcesByTag
 }
 
 // DescribeResourcesByTagsUnion
-// 通过标签查询资源列表，按TagKey取并集。
-//
-// 举例：TagFilters 为 [ {"TagKey": "k1", "TagValue":["v1","v2"]}, {"TagKey": "k2", "TagValue":["v3","v4"]} ]。并集查询逻辑：找出资源，其包含标签TagKey=k1且TagValue in (v1, v2)，或者包含标签TagKey=k2且TagValue in (v3, v4)
+// 通过标签查询资源列表并集
 //
 // 可能返回的错误码:
 //  FAILEDOPERATION = "FailedOperation"
@@ -1007,9 +987,7 @@ func (c *Client) DescribeResourcesByTagsUnion(request *DescribeResourcesByTagsUn
 }
 
 // DescribeResourcesByTagsUnion
-// 通过标签查询资源列表，按TagKey取并集。
-//
-// 举例：TagFilters 为 [ {"TagKey": "k1", "TagValue":["v1","v2"]}, {"TagKey": "k2", "TagValue":["v3","v4"]} ]。并集查询逻辑：找出资源，其包含标签TagKey=k1且TagValue in (v1, v2)，或者包含标签TagKey=k2且TagValue in (v3, v4)
+// 通过标签查询资源列表并集
 //
 // 可能返回的错误码:
 //  FAILEDOPERATION = "FailedOperation"
@@ -1020,7 +998,6 @@ func (c *Client) DescribeResourcesByTagsUnionWithContext(ctx context.Context, re
     if request == nil {
         request = NewDescribeResourcesByTagsUnionRequest()
     }
-    c.InitBaseRequest(&request.BaseRequest, "tag", APIVersion, "DescribeResourcesByTagsUnion")
     
     if c.GetCredential() == nil {
         return nil, errors.New("DescribeResourcesByTagsUnion require credential")
@@ -1072,7 +1049,6 @@ func (c *Client) DescribeTagKeysWithContext(ctx context.Context, request *Descri
     if request == nil {
         request = NewDescribeTagKeysRequest()
     }
-    c.InitBaseRequest(&request.BaseRequest, "tag", APIVersion, "DescribeTagKeys")
     
     if c.GetCredential() == nil {
         return nil, errors.New("DescribeTagKeys require credential")
@@ -1126,7 +1102,6 @@ func (c *Client) DescribeTagValuesWithContext(ctx context.Context, request *Desc
     if request == nil {
         request = NewDescribeTagValuesRequest()
     }
-    c.InitBaseRequest(&request.BaseRequest, "tag", APIVersion, "DescribeTagValues")
     
     if c.GetCredential() == nil {
         return nil, errors.New("DescribeTagValues require credential")
@@ -1178,7 +1153,6 @@ func (c *Client) DescribeTagValuesSeqWithContext(ctx context.Context, request *D
     if request == nil {
         request = NewDescribeTagValuesSeqRequest()
     }
-    c.InitBaseRequest(&request.BaseRequest, "tag", APIVersion, "DescribeTagValuesSeq")
     
     if c.GetCredential() == nil {
         return nil, errors.New("DescribeTagValuesSeq require credential")
@@ -1211,9 +1185,7 @@ func NewDescribeTagsResponse() (response *DescribeTagsResponse) {
 }
 
 // DescribeTags
-// 用于获取已建立的标签列表。
-//
-// 举例：TagKeys为["k1","k2"], TagValues为["v3","v4"], 查出标签，其标签键tagKey in (k1, k2)，同时标签值tagValue in (v3, v4)
+// 用于查询已建立的标签列表。
 //
 // 可能返回的错误码:
 //  FAILEDOPERATION = "FailedOperation"
@@ -1223,9 +1195,7 @@ func (c *Client) DescribeTags(request *DescribeTagsRequest) (response *DescribeT
 }
 
 // DescribeTags
-// 用于获取已建立的标签列表。
-//
-// 举例：TagKeys为["k1","k2"], TagValues为["v3","v4"], 查出标签，其标签键tagKey in (k1, k2)，同时标签值tagValue in (v3, v4)
+// 用于查询已建立的标签列表。
 //
 // 可能返回的错误码:
 //  FAILEDOPERATION = "FailedOperation"
@@ -1234,7 +1204,6 @@ func (c *Client) DescribeTagsWithContext(ctx context.Context, request *DescribeT
     if request == nil {
         request = NewDescribeTagsRequest()
     }
-    c.InitBaseRequest(&request.BaseRequest, "tag", APIVersion, "DescribeTags")
     
     if c.GetCredential() == nil {
         return nil, errors.New("DescribeTags require credential")
@@ -1267,9 +1236,7 @@ func NewDescribeTagsSeqResponse() (response *DescribeTagsSeqResponse) {
 }
 
 // DescribeTagsSeq
-// 用于获取已建立的标签列表。
-//
-// 举例：TagKeys为["k1","k2"], TagValues为["v3","v4"], 查出标签，其标签键tagKey in (k1, k2)，同时标签值tagValue in (v3, v4)
+// 用于查询已建立的标签列表。
 //
 // 可能返回的错误码:
 //  FAILEDOPERATION = "FailedOperation"
@@ -1280,9 +1247,7 @@ func (c *Client) DescribeTagsSeq(request *DescribeTagsSeqRequest) (response *Des
 }
 
 // DescribeTagsSeq
-// 用于获取已建立的标签列表。
-//
-// 举例：TagKeys为["k1","k2"], TagValues为["v3","v4"], 查出标签，其标签键tagKey in (k1, k2)，同时标签值tagValue in (v3, v4)
+// 用于查询已建立的标签列表。
 //
 // 可能返回的错误码:
 //  FAILEDOPERATION = "FailedOperation"
@@ -1292,7 +1257,6 @@ func (c *Client) DescribeTagsSeqWithContext(ctx context.Context, request *Descri
     if request == nil {
         request = NewDescribeTagsSeqRequest()
     }
-    c.InitBaseRequest(&request.BaseRequest, "tag", APIVersion, "DescribeTagsSeq")
     
     if c.GetCredential() == nil {
         return nil, errors.New("DescribeTagsSeq require credential")
@@ -1372,7 +1336,6 @@ func (c *Client) DetachResourcesTagWithContext(ctx context.Context, request *Det
     if request == nil {
         request = NewDetachResourcesTagRequest()
     }
-    c.InitBaseRequest(&request.BaseRequest, "tag", APIVersion, "DetachResourcesTag")
     
     if c.GetCredential() == nil {
         return nil, errors.New("DetachResourcesTag require credential")
@@ -1405,7 +1368,7 @@ func NewGetResourcesResponse() (response *GetResourcesResponse) {
 }
 
 // GetResources
-// 查询资源标签列表。
+// 查询绑定了标签的资源列表。
 //
 // 可能返回的错误码:
 //  AUTHFAILURE_UNAUTHORIZEDOPERATION = "AuthFailure.UnauthorizedOperation"
@@ -1429,7 +1392,7 @@ func (c *Client) GetResources(request *GetResourcesRequest) (response *GetResour
 }
 
 // GetResources
-// 查询资源标签列表。
+// 查询绑定了标签的资源列表。
 //
 // 可能返回的错误码:
 //  AUTHFAILURE_UNAUTHORIZEDOPERATION = "AuthFailure.UnauthorizedOperation"
@@ -1452,7 +1415,6 @@ func (c *Client) GetResourcesWithContext(ctx context.Context, request *GetResour
     if request == nil {
         request = NewGetResourcesRequest()
     }
-    c.InitBaseRequest(&request.BaseRequest, "tag", APIVersion, "GetResources")
     
     if c.GetCredential() == nil {
         return nil, errors.New("GetResources require credential")
@@ -1510,7 +1472,6 @@ func (c *Client) GetTagKeysWithContext(ctx context.Context, request *GetTagKeysR
     if request == nil {
         request = NewGetTagKeysRequest()
     }
-    c.InitBaseRequest(&request.BaseRequest, "tag", APIVersion, "GetTagKeys")
     
     if c.GetCredential() == nil {
         return nil, errors.New("GetTagKeys require credential")
@@ -1570,7 +1531,6 @@ func (c *Client) GetTagValuesWithContext(ctx context.Context, request *GetTagVal
     if request == nil {
         request = NewGetTagValuesRequest()
     }
-    c.InitBaseRequest(&request.BaseRequest, "tag", APIVersion, "GetTagValues")
     
     if c.GetCredential() == nil {
         return nil, errors.New("GetTagValues require credential")
@@ -1605,8 +1565,6 @@ func NewGetTagsResponse() (response *GetTagsResponse) {
 // GetTags
 // 用于获取已建立的标签列表。
 //
-// 举例：TagKeys 为["k1","k2"], TagValues为["v3","v4"], 查出标签，其标签键tagKey in (k1, k2)，同时标签值tagValue in (v3, v4)
-//
 // 可能返回的错误码:
 //  FAILEDOPERATION = "FailedOperation"
 //  INVALIDPARAMETER = "InvalidParameter"
@@ -1621,8 +1579,6 @@ func (c *Client) GetTags(request *GetTagsRequest) (response *GetTagsResponse, er
 // GetTags
 // 用于获取已建立的标签列表。
 //
-// 举例：TagKeys 为["k1","k2"], TagValues为["v3","v4"], 查出标签，其标签键tagKey in (k1, k2)，同时标签值tagValue in (v3, v4)
-//
 // 可能返回的错误码:
 //  FAILEDOPERATION = "FailedOperation"
 //  INVALIDPARAMETER = "InvalidParameter"
@@ -1634,7 +1590,6 @@ func (c *Client) GetTagsWithContext(ctx context.Context, request *GetTagsRequest
     if request == nil {
         request = NewGetTagsRequest()
     }
-    c.InitBaseRequest(&request.BaseRequest, "tag", APIVersion, "GetTags")
     
     if c.GetCredential() == nil {
         return nil, errors.New("GetTags require credential")
@@ -1712,7 +1667,6 @@ func (c *Client) ModifyResourceTagsWithContext(ctx context.Context, request *Mod
     if request == nil {
         request = NewModifyResourceTagsRequest()
     }
-    c.InitBaseRequest(&request.BaseRequest, "tag", APIVersion, "ModifyResourceTags")
     
     if c.GetCredential() == nil {
         return nil, errors.New("ModifyResourceTags require credential")
@@ -1796,7 +1750,6 @@ func (c *Client) ModifyResourcesTagValueWithContext(ctx context.Context, request
     if request == nil {
         request = NewModifyResourcesTagValueRequest()
     }
-    c.InitBaseRequest(&request.BaseRequest, "tag", APIVersion, "ModifyResourcesTagValue")
     
     if c.GetCredential() == nil {
         return nil, errors.New("ModifyResourcesTagValue require credential")
@@ -1882,7 +1835,6 @@ func (c *Client) TagResourcesWithContext(ctx context.Context, request *TagResour
     if request == nil {
         request = NewTagResourcesRequest()
     }
-    c.InitBaseRequest(&request.BaseRequest, "tag", APIVersion, "TagResources")
     
     if c.GetCredential() == nil {
         return nil, errors.New("TagResources require credential")
@@ -1960,7 +1912,6 @@ func (c *Client) UnTagResourcesWithContext(ctx context.Context, request *UnTagRe
     if request == nil {
         request = NewUnTagResourcesRequest()
     }
-    c.InitBaseRequest(&request.BaseRequest, "tag", APIVersion, "UnTagResources")
     
     if c.GetCredential() == nil {
         return nil, errors.New("UnTagResources require credential")
@@ -2018,7 +1969,6 @@ func (c *Client) UpdateProjectWithContext(ctx context.Context, request *UpdatePr
     if request == nil {
         request = NewUpdateProjectRequest()
     }
-    c.InitBaseRequest(&request.BaseRequest, "tag", APIVersion, "UpdateProject")
     
     if c.GetCredential() == nil {
         return nil, errors.New("UpdateProject require credential")
@@ -2084,7 +2034,6 @@ func (c *Client) UpdateResourceTagValueWithContext(ctx context.Context, request 
     if request == nil {
         request = NewUpdateResourceTagValueRequest()
     }
-    c.InitBaseRequest(&request.BaseRequest, "tag", APIVersion, "UpdateResourceTagValue")
     
     if c.GetCredential() == nil {
         return nil, errors.New("UpdateResourceTagValue require credential")
