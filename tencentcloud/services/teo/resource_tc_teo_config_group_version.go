@@ -55,7 +55,7 @@ func ResourceTencentCloudTeoConfigGroupVersion() *schema.Resource {
 			"version_id": {
 				Type:        schema.TypeString,
 				Computed:    true,
-				Description: "Version ID.",
+				Description: "Config group version ID, allocated by EdgeOne when creating the version. Sourced from the `Response.ConfigGroupVersionInfo.VersionId` field of the `DescribeConfigGroupVersionDetail` API.",
 			},
 
 			"version_number": {
@@ -169,8 +169,9 @@ func resourceTencentCloudTeoConfigGroupVersionRead(d *schema.ResourceData, meta 
 	}
 
 	if respData == nil {
+		log.Printf("[CRUD] teo_config_group_version id=%s", d.Id())
 		d.SetId("")
-		log.Printf("[WARN]%s resource `teo_config_group_version` [%s] not found, please check if it has been deleted.\n", logId, d.Id())
+		log.Printf("[WARN]%s resource `teo_config_group_version` not found, please check if it has been deleted.\n", logId)
 		return nil
 	}
 

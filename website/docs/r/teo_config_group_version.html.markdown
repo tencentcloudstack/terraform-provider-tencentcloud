@@ -4,12 +4,12 @@ layout: "tencentcloud"
 page_title: "TencentCloud: tencentcloud_teo_config_group_version"
 sidebar_current: "docs-tencentcloud-resource-teo_config_group_version"
 description: |-
-  Provides a resource to create a teo config group version
+  Provides a resource to create a TEO (EdgeOne) config group version.
 ---
 
 # tencentcloud_teo_config_group_version
 
-Provides a resource to create a teo config group version
+Provides a resource to create a TEO (EdgeOne) config group version.
 
 ## Example Usage
 
@@ -367,7 +367,14 @@ In addition to all arguments above, the following attributes are exported:
 * `create_time` - Version creation time. The time follows the ISO 8601 standard in the date and time format.
 * `group_type` - Configuration group type. Valid values: l7_acceleration (Layer 7 acceleration configuration group), edge_functions (Edge function configuration group).
 * `status` - Version status. Valid values: creating (Creating), inactive (Inactive), active (Active).
-* `version_id` - Version ID.
+* `version_id` - Config group version ID, allocated by EdgeOne when creating the version. Sourced from the `Response.ConfigGroupVersionInfo.VersionId` field of the `DescribeConfigGroupVersionDetail` API.
 * `version_number` - Version number.
 
+
+## Import
+
+teo config_group_version can be imported using the composite id (zoneId#groupId#versionId), e.g.
+```
+terraform import tencentcloud_teo_config_group_version.teo_config_group_version zone-2kazzl8yf6k#cg-3lchxitnb5pb#ver-2kplomhisdcb
+```
 
