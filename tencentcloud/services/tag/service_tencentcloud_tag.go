@@ -498,3 +498,47 @@ func (me *TagService) DescribeTagKeysByFilter(ctx context.Context, param map[str
 
 	return
 }
+
+// DescribeTagResourceTagById queries the tag binding of a single tag key on a single resource
+// via GetResources, the same query path used by tag_attachment. The resource six-segment is
+// passed to GetResources as-is, so no field decomposition is needed. It returns the *tag.Tag
+// whose TagKey equals tagKey, or nil if the resource or the tag key is not found.
+func (me *TagService) DescribeTagResourceTagById(ctx context.Context, tagKey string, resourceName string) (tagRes *tag.Tag, errRet error) {
+	logId := tccommon.GetLogId(ctx)
+
+	request := tag.NewGetResourcesRequest()
+	request.ResourceList = []*string{&resourceName}
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	ratelimit.Check(request.GetAction())
+
+	response, err := me.client.UseTagClient().GetResources(request)
+	if err != nil {
+		errRet = err
+		return
+	}
+	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+	if response == nil || response.Response == nil || len(response.Response.ResourceTagMappingList) < 1 {
+		return
+	}
+
+	for _, resourceTagMap := range response.Response.ResourceTagMappingList {
+		if resourceTagMap == nil || resourceTagMap.Resource == nil || *resourceTagMap.Resource != resourceName {
+			continue
+		}
+		for _, v := range resourceTagMap.Tags {
+			if v != nil && v.TagKey != nil && *v.TagKey == tagKey {
+				tagRes = v
+				return
+			}
+		}
+	}
+
+	return
+}
