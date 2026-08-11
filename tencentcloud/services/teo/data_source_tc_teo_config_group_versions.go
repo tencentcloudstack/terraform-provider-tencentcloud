@@ -71,6 +71,11 @@ func DataSourceTencentCloudTeoConfigGroupVersions() *schema.Resource {
 							Optional:    true,
 							Description: "Version No.",
 						},
+						"source_version": {
+							Type:        schema.TypeString,
+							Optional:    true,
+							Description: "Source version ID that the configuration group version was derived from. Format: ver-xxxxxxxx.",
+						},
 						"group_id": {
 							Type:        schema.TypeString,
 							Optional:    true,
@@ -177,6 +182,10 @@ func dataSourceTencentCloudTeoConfigGroupVersionsRead(d *schema.ResourceData, me
 
 			if configGroupVersionInfos.VersionNumber != nil {
 				configGroupVersionInfosMap["version_number"] = configGroupVersionInfos.VersionNumber
+			}
+
+			if configGroupVersionInfos.SourceVersion != nil {
+				configGroupVersionInfosMap["source_version"] = configGroupVersionInfos.SourceVersion
 			}
 
 			if configGroupVersionInfos.GroupId != nil {
