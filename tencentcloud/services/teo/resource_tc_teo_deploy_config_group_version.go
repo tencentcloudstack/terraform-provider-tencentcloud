@@ -186,7 +186,7 @@ func resourceTencentCloudTeoDeployConfigGroupVersionCreate(d *schema.ResourceDat
 	paramMap := make(map[string]interface{})
 	paramMap["ZoneId"] = &zoneId
 	err := resource.Retry(d.Timeout(schema.TimeoutCreate), func() *resource.RetryError {
-		respData, e := service.DescribeTeoEnvironmentsByFilter(ctx, paramMap)
+		respData, _, e := service.DescribeTeoEnvironmentsByFilter(ctx, paramMap)
 		if e != nil {
 			return tccommon.RetryError(e)
 		}

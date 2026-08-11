@@ -3,6 +3,8 @@ package teo
 
 import (
 	"context"
+	"fmt"
+	"log"
 
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
@@ -86,6 +88,11 @@ func DataSourceTencentCloudTeoEnvironments() *schema.Resource {
 										Optional:    true,
 										Description: "Version status. Valid values: creating (Being created), inactive (Not effective), active (Effective).",
 									},
+									"source_version": {
+										Type:        schema.TypeString,
+										Computed:    true,
+										Description: "The source version ID that the config group version was derived from.",
+									},
 									"create_time": {
 										Type:        schema.TypeString,
 										Optional:    true,
@@ -106,6 +113,12 @@ func DataSourceTencentCloudTeoEnvironments() *schema.Resource {
 						},
 					},
 				},
+			},
+
+			"total_count": {
+				Type:        schema.TypeInt,
+				Computed:    true,
+				Description: "Total number of environments for the zone.",
 			},
 
 			"result_output_file": {
@@ -131,17 +144,30 @@ func dataSourceTencentCloudTeoEnvironmentsRead(d *schema.ResourceData, meta inte
 		paramMap["ZoneId"] = helper.String(v.(string))
 	}
 
-	var respData []*teov20220901.EnvInfo
+	var (
+		respData   []*teov20220901.EnvInfo
+		totalCount *uint64
+	)
 	reqErr := resource.Retry(tccommon.ReadRetryTimeout, func() *resource.RetryError {
-		result, e := service.DescribeTeoEnvironmentsByFilter(ctx, paramMap)
+		result, count, e := service.DescribeTeoEnvironmentsByFilter(ctx, paramMap)
 		if e != nil {
 			return tccommon.RetryError(e)
 		}
+		if result == nil {
+			log.Printf("[DATASOURCE] read empty, skip SetId, teo_environments paramMap=%v", paramMap)
+			return resource.NonRetryableError(fmt.Errorf("teo environments read returned empty"))
+		}
 		respData = result
+		totalCount = count
 		return nil
 	})
 	if reqErr != nil {
+		log.Printf("[CRUD] teo_environments read empty, paramMap=%v", paramMap)
 		return reqErr
+	}
+
+	if totalCount != nil {
+		_ = d.Set("total_count", *totalCount)
 	}
 
 	ids := make([]string, 0, len(respData))
@@ -194,6 +220,10 @@ func dataSourceTencentCloudTeoEnvironmentsRead(d *schema.ResourceData, meta inte
 
 					if currentConfigGroupVersionInfos.Status != nil {
 						currentConfigGroupVersionInfosMap["status"] = currentConfigGroupVersionInfos.Status
+					}
+
+					if currentConfigGroupVersionInfos.SourceVersion != nil {
+						currentConfigGroupVersionInfosMap["source_version"] = currentConfigGroupVersionInfos.SourceVersion
 					}
 
 					if currentConfigGroupVersionInfos.CreateTime != nil {
