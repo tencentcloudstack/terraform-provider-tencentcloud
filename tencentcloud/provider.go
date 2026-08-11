@@ -1877,6 +1877,7 @@ func Provider() *schema.Provider {
 			"tencentcloud_elasticsearch_update_plugins_operation":                                   es.ResourceTencentCloudElasticsearchUpdatePluginsOperation(),
 			"tencentcloud_postgresql_instance":                                                      postgresql.ResourceTencentCloudPostgresqlInstance(),
 			"tencentcloud_postgresql_readonly_instance":                                             postgresql.ResourceTencentCloudPostgresqlReadonlyInstance(),
+			"tencentcloud_postgresql_readonly_instance_v2":                                          postgresql.ResourceTencentCloudPostgresqlReadonlyInstanceV2(),
 			"tencentcloud_postgresql_readonly_group":                                                postgresql.ResourceTencentCloudPostgresqlReadonlyGroup(),
 			"tencentcloud_postgresql_readonly_attachment":                                           postgresql.ResourceTencentCloudPostgresqlReadonlyAttachment(),
 			"tencentcloud_postgresql_parameter_template":                                            postgresql.ResourceTencentCloudPostgresqlParameterTemplate(),

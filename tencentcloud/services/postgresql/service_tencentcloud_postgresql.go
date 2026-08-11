@@ -2644,3 +2644,81 @@ func (me *PostgresqlService) DescribePostgresqlBackupPlanById(ctx context.Contex
 	log.Printf("[DEBUG]%s api[%s] success, request body [%s], planId[%s]\n", logId, request.GetAction(), request.ToJsonString(), planId)
 	return
 }
+
+func (me *PostgresqlService) DescribePostgresqlReadonlyInstanceV2ById(ctx context.Context, instanceId string) (instance *postgresql.DBInstance, has bool, errRet error) {
+	logId := tccommon.GetLogId(ctx)
+	request := postgresql.NewDescribeDBInstanceAttributeRequest()
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail,reason[%s]", logId, request.GetAction(), errRet.Error())
+		}
+	}()
+	request.DBInstanceId = &instanceId
+
+	ratelimit.Check(request.GetAction())
+	var iacExtInfo connectivity.IacExtInfo
+	iacExtInfo.InstanceId = instanceId
+	response, err := me.client.UsePostgresqlClient(iacExtInfo).DescribeDBInstanceAttribute(request)
+	if err != nil {
+		errRet = err
+		return
+	}
+	if response == nil || response.Response == nil {
+		errRet = fmt.Errorf("TencentCloud SDK return nil response, %s", request.GetAction())
+		return
+	}
+	instance = response.Response.DBInstance
+	if instance != nil {
+		has = true
+	}
+	return
+}
+
+func (me *PostgresqlService) CreatePostgresqlReadonlyInstanceV2(ctx context.Context, request *postgresql.CreateReadOnlyDBInstanceRequest) (response *postgresql.CreateReadOnlyDBInstanceResponse, errRet error) {
+	logId := tccommon.GetLogId(ctx)
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail,reason[%s]", logId, request.GetAction(), errRet.Error())
+		}
+	}()
+	ratelimit.Check(request.GetAction())
+	err := resource.Retry(tccommon.WriteRetryTimeout, func() *resource.RetryError {
+		result, e := me.client.UsePostgresqlClient().CreateReadOnlyDBInstance(request)
+		if e != nil {
+			return tccommon.RetryError(e)
+		}
+		response = result
+		return nil
+	})
+	if err != nil {
+		errRet = err
+		return
+	}
+	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n",
+		logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+	return
+}
+
+func (me *PostgresqlService) IsolatePostgresqlReadonlyInstanceV2(ctx context.Context, instanceId string) (errRet error) {
+	logId := tccommon.GetLogId(ctx)
+	request := postgresql.NewIsolateDBInstancesRequest()
+	request.DBInstanceIdSet = []*string{&instanceId}
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail,reason[%s]", logId, request.GetAction(), errRet.Error())
+		}
+	}()
+	ratelimit.Check(request.GetAction())
+	err := resource.Retry(tccommon.WriteRetryTimeout, func() *resource.RetryError {
+		_, e := me.client.UsePostgresqlClient().IsolateDBInstances(request)
+		if e != nil {
+			return tccommon.RetryError(e)
+		}
+		return nil
+	})
+	if err != nil {
+		errRet = err
+		return
+	}
+	return
+}
