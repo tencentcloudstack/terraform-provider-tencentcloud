@@ -3,9 +3,37 @@ package teo_test
 import (
 	"testing"
 
+	"github.com/agiledragon/gomonkey/v2"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
+	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
+	"github.com/stretchr/testify/assert"
+	teov20220901 "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/teo/v20220901"
+
+	tccommon "github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/common"
+	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/connectivity"
+	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/services/teo"
+
 	tcacctest "github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/acctest"
 )
+
+// mockMetaForConfigGroupVersion implements tccommon.ProviderMeta
+type mockMetaForConfigGroupVersion struct {
+	client *connectivity.TencentCloudClient
+}
+
+func (m *mockMetaForConfigGroupVersion) GetAPIV3Conn() *connectivity.TencentCloudClient {
+	return m.client
+}
+
+var _ tccommon.ProviderMeta = &mockMetaForConfigGroupVersion{}
+
+func newMockMetaForConfigGroupVersion() *mockMetaForConfigGroupVersion {
+	return &mockMetaForConfigGroupVersion{client: &connectivity.TencentCloudClient{}}
+}
+
+func ptrStrConfigGroupVersion(s string) *string {
+	return &s
+}
 
 func TestAccTencentCloudTeoConfigGroupVersionResource_basic(t *testing.T) {
 	t.Parallel()
@@ -353,3 +381,143 @@ EOT
   zone_id     = "zone-2xkazzl8yf6k"
 }
 `
+
+// go test ./tencentcloud/services/teo/ -run "TestTeoConfigGroupVersion" -v -count=1 -gcflags="all=-l"
+
+// TestTeoConfigGroupVersion_Read_Success tests Read populates version_id and other computed output fields
+func TestTeoConfigGroupVersion_Read_Success(t *testing.T) {
+	patches := gomonkey.NewPatches()
+	defer patches.Reset()
+
+	teoClient := &teov20220901.Client{}
+	patches.ApplyMethodReturn(newMockMetaForConfigGroupVersion().client, "UseTeoV20220901Client", teoClient)
+
+	patches.ApplyMethodFunc(teoClient, "DescribeConfigGroupVersionDetail", func(request *teov20220901.DescribeConfigGroupVersionDetailRequest) (*teov20220901.DescribeConfigGroupVersionDetailResponse, error) {
+		resp := teov20220901.NewDescribeConfigGroupVersionDetailResponse()
+		resp.Response = &teov20220901.DescribeConfigGroupVersionDetailResponseParams{
+			ConfigGroupVersionInfo: &teov20220901.ConfigGroupVersionInfo{
+				VersionId:     ptrStrConfigGroupVersion("ver-2kplomhisdcb"),
+				VersionNumber: ptrStrConfigGroupVersion("1"),
+				GroupId:       ptrStrConfigGroupVersion("cg-3lchxitnb5pb"),
+				GroupType:     ptrStrConfigGroupVersion("l7_acceleration"),
+				Description:   ptrStrConfigGroupVersion("test version"),
+				Status:        ptrStrConfigGroupVersion("inactive"),
+				CreateTime:    ptrStrConfigGroupVersion("2025-01-01T00:00:00Z"),
+			},
+			Content:   ptrStrConfigGroupVersion(`{"FormatVersion":"1.0"}`),
+			RequestId: ptrStrConfigGroupVersion("fake-request-id"),
+		}
+		return resp, nil
+	})
+
+	meta := newMockMetaForConfigGroupVersion()
+	res := teo.ResourceTencentCloudTeoConfigGroupVersion()
+	d := schema.TestResourceDataRaw(t, res.Schema, map[string]interface{}{
+		"zone_id":  "zone-2kazzl8yf6k",
+		"group_id": "cg-3lchxitnb5pb",
+		"content":  `{"FormatVersion":"1.0"}`,
+	})
+	compositeId := "zone-2kazzl8yf6k" + tccommon.FILED_SP + "cg-3lchxitnb5pb" + tccommon.FILED_SP + "ver-2kplomhisdcb"
+	d.SetId(compositeId)
+
+	err := res.Read(d, meta)
+	assert.NoError(t, err)
+	assert.Equal(t, compositeId, d.Id())
+	assert.Equal(t, "ver-2kplomhisdcb", d.Get("version_id"))
+	assert.Equal(t, "1", d.Get("version_number"))
+	assert.Equal(t, "cg-3lchxitnb5pb", d.Get("group_id"))
+	assert.Equal(t, "l7_acceleration", d.Get("group_type"))
+	assert.Equal(t, "test version", d.Get("description"))
+	assert.Equal(t, "inactive", d.Get("status"))
+	assert.Equal(t, "2025-01-01T00:00:00Z", d.Get("create_time"))
+	assert.Equal(t, `{"FormatVersion":"1.0"}`, d.Get("content"))
+	assert.Equal(t, "zone-2kazzl8yf6k", d.Get("zone_id"))
+}
+
+// TestTeoConfigGroupVersion_Read_NilConfigGroupVersionInfo tests Read handles nil ConfigGroupVersionInfo without panic
+func TestTeoConfigGroupVersion_Read_NilConfigGroupVersionInfo(t *testing.T) {
+	patches := gomonkey.NewPatches()
+	defer patches.Reset()
+
+	teoClient := &teov20220901.Client{}
+	patches.ApplyMethodReturn(newMockMetaForConfigGroupVersion().client, "UseTeoV20220901Client", teoClient)
+
+	patches.ApplyMethodFunc(teoClient, "DescribeConfigGroupVersionDetail", func(request *teov20220901.DescribeConfigGroupVersionDetailRequest) (*teov20220901.DescribeConfigGroupVersionDetailResponse, error) {
+		resp := teov20220901.NewDescribeConfigGroupVersionDetailResponse()
+		resp.Response = &teov20220901.DescribeConfigGroupVersionDetailResponseParams{
+			ConfigGroupVersionInfo: nil,
+			Content:                nil,
+			RequestId:              ptrStrConfigGroupVersion("fake-request-id"),
+		}
+		return resp, nil
+	})
+
+	meta := newMockMetaForConfigGroupVersion()
+	res := teo.ResourceTencentCloudTeoConfigGroupVersion()
+	d := schema.TestResourceDataRaw(t, res.Schema, map[string]interface{}{
+		"zone_id":  "zone-2kazzl8yf6k",
+		"group_id": "cg-3lchxitnb5pb",
+		"content":  `{"FormatVersion":"1.0"}`,
+	})
+	compositeId := "zone-2kazzl8yf6k" + tccommon.FILED_SP + "cg-3lchxitnb5pb" + tccommon.FILED_SP + "ver-2kplomhisdcb"
+	d.SetId(compositeId)
+
+	err := res.Read(d, meta)
+	assert.NoError(t, err)
+	// id is preserved because respData != nil (only ConfigGroupVersionInfo is nil)
+	assert.Equal(t, compositeId, d.Id())
+	// version_id is not set (empty string default)
+	assert.Equal(t, "", d.Get("version_id"))
+}
+
+// TestTeoConfigGroupVersion_Read_EmptyResponse tests Read clears id after [CRUD] logging when API returns nil response
+func TestTeoConfigGroupVersion_Read_EmptyResponse(t *testing.T) {
+	patches := gomonkey.NewPatches()
+	defer patches.Reset()
+
+	teoClient := &teov20220901.Client{}
+	patches.ApplyMethodReturn(newMockMetaForConfigGroupVersion().client, "UseTeoV20220901Client", teoClient)
+
+	patches.ApplyMethodFunc(teoClient, "DescribeConfigGroupVersionDetail", func(request *teov20220901.DescribeConfigGroupVersionDetailRequest) (*teov20220901.DescribeConfigGroupVersionDetailResponse, error) {
+		// Return a response whose Response is nil, so service.DescribeTeoConfigGroupVersionById returns nil
+		resp := &teov20220901.DescribeConfigGroupVersionDetailResponse{}
+		return resp, nil
+	})
+
+	meta := newMockMetaForConfigGroupVersion()
+	res := teo.ResourceTencentCloudTeoConfigGroupVersion()
+	d := schema.TestResourceDataRaw(t, res.Schema, map[string]interface{}{
+		"zone_id":  "zone-2kazzl8yf6k",
+		"group_id": "cg-3lchxitnb5pb",
+		"content":  `{"FormatVersion":"1.0"}`,
+	})
+	compositeId := "zone-2kazzl8yf6k" + tccommon.FILED_SP + "cg-3lchxitnb5pb" + tccommon.FILED_SP + "ver-2kplomhisdcb"
+	d.SetId(compositeId)
+
+	err := res.Read(d, meta)
+	assert.NoError(t, err)
+	// id is cleared because respData == nil, after [CRUD] log preserves the scene
+	assert.Equal(t, "", d.Id())
+}
+
+// TestTeoConfigGroupVersion_Read_BrokenId tests Read returns error when composite id is broken
+func TestTeoConfigGroupVersion_Read_BrokenId(t *testing.T) {
+	patches := gomonkey.NewPatches()
+	defer patches.Reset()
+
+	teoClient := &teov20220901.Client{}
+	patches.ApplyMethodReturn(newMockMetaForConfigGroupVersion().client, "UseTeoV20220901Client", teoClient)
+
+	meta := newMockMetaForConfigGroupVersion()
+	res := teo.ResourceTencentCloudTeoConfigGroupVersion()
+	d := schema.TestResourceDataRaw(t, res.Schema, map[string]interface{}{
+		"zone_id":  "zone-2kazzl8yf6k",
+		"group_id": "cg-3lchxitnb5pb",
+		"content":  `{"FormatVersion":"1.0"}`,
+	})
+	d.SetId("zone-2kazzl8yf6k" + tccommon.FILED_SP + "cg-3lchxitnb5pb")
+
+	err := res.Read(d, meta)
+	assert.Error(t, err)
+	assert.Contains(t, err.Error(), "id is broken")
+}

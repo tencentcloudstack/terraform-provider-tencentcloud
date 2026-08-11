@@ -1,4 +1,4 @@
-Provides a resource to create a teo config group version
+Provides a resource to create a TEO (EdgeOne) config group version.
 
 Example Usage
 
@@ -337,4 +337,11 @@ resource "tencentcloud_teo_config_group_version" "teo_config_group_version" {
   group_id    = "cg-3lchxitnb5pb"
   zone_id     = "zone-2xkazzl8yf6k"
 }
+```
+
+Import
+
+teo config_group_version can be imported using the composite id (zoneId#groupId#versionId), e.g.
+```
+terraform import tencentcloud_teo_config_group_version.teo_config_group_version zone-2kazzl8yf6k#cg-3lchxitnb5pb#ver-2kplomhisdcb
 ```
