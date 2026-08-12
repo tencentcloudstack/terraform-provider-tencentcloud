@@ -8,6 +8,7 @@ import (
 
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
+	postgres "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/postgres/v20170312"
 	postgresql "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/postgres/v20170312"
 
 	tccommon "github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/common"
@@ -24,12 +25,11 @@ func ResourceTencentCloudPostgresqlReadonlyInstanceV2() *schema.Resource {
 		Importer: &schema.ResourceImporter{
 			State: schema.ImportStatePassthrough,
 		},
-
 		Timeouts: &schema.ResourceTimeout{
-			Create: schema.DefaultTimeout(60 * time.Minute),
-			Delete: schema.DefaultTimeout(60 * time.Minute),
+			Create: schema.DefaultTimeout(20 * time.Minute),
+			Update: schema.DefaultTimeout(20 * time.Minute),
+			Delete: schema.DefaultTimeout(20 * time.Minute),
 		},
-
 		Schema: map[string]*schema.Schema{
 			"zone": {
 				Type:        schema.TypeString,
@@ -37,164 +37,146 @@ func ResourceTencentCloudPostgresqlReadonlyInstanceV2() *schema.Resource {
 				ForceNew:    true,
 				Description: "Availability zone ID, such as ap-guangzhou-3.",
 			},
+
 			"master_db_instance_id": {
 				Type:        schema.TypeString,
 				Required:    true,
 				ForceNew:    true,
 				Description: "ID of the primary instance to which the read-only replica belongs.",
 			},
+
 			"spec_code": {
 				Type:        schema.TypeString,
 				Required:    true,
 				ForceNew:    true,
 				Description: "Specification code, which can be obtained via DescribeClasses.",
 			},
+
 			"storage": {
 				Type:        schema.TypeInt,
 				Required:    true,
-				ForceNew:    true,
 				Description: "Instance storage capacity in GB, the step is 10.",
 			},
-			"instance_count": {
-				Type:        schema.TypeInt,
-				Required:    true,
-				ForceNew:    true,
-				Description: "Number of instances to purchase, value range: [1-6]. Only the first instance ID is managed by this resource.",
-			},
+
 			"period": {
 				Type:        schema.TypeInt,
-				Required:    true,
+				Optional:    true,
 				ForceNew:    true,
 				Description: "Purchase duration in months. PREPAID supports 1,2,3,4,5,6,7,8,9,10,11,12,24,36; POSTPAID only supports 1.",
 			},
+
 			"vpc_id": {
 				Type:        schema.TypeString,
 				Optional:    true,
+				ForceNew:    true,
 				Description: "VPC ID, such as vpc-xxxxxxxx.",
 			},
+
 			"subnet_id": {
 				Type:        schema.TypeString,
 				Optional:    true,
+				ForceNew:    true,
 				Description: "VPC subnet ID, such as subnet-xxxxxxxx.",
 			},
+
 			"instance_charge_type": {
 				Type:        schema.TypeString,
 				Optional:    true,
+				ForceNew:    true,
 				Description: "Instance billing mode. Valid values: PREPAID, POSTPAID_BY_HOUR. Default: PREPAID.",
 			},
+
 			"auto_voucher": {
 				Type:        schema.TypeInt,
 				Optional:    true,
 				Description: "Whether to use voucher automatically, 1 for yes, 0 for no. Default: 0.",
 			},
+
 			"voucher_ids": {
 				Type:        schema.TypeList,
 				Optional:    true,
 				Elem:        &schema.Schema{Type: schema.TypeString},
 				Description: "Voucher ID list, currently only one voucher is supported.",
 			},
+
 			"auto_renew_flag": {
 				Type:        schema.TypeInt,
 				Optional:    true,
+				ForceNew:    true,
+				Computed:    true,
 				Description: "Auto renew flag, 0 for manual renew, 1 for auto renew. Default: 0. Only supports PREPAID.",
 			},
+
 			"project_id": {
 				Type:        schema.TypeInt,
 				Optional:    true,
+				Computed:    true,
 				Description: "Project ID. Default: 0, means default project.",
 			},
-			"activity_id": {
-				Type:        schema.TypeInt,
-				Optional:    true,
-				Description: "Activity ID.",
-			},
+
 			"read_only_group_id": {
 				Type:        schema.TypeString,
 				Optional:    true,
 				Description: "Read-only group ID.",
 			},
-			"tag_list": {
-				Type:     schema.TypeList,
-				Optional: true,
-				MaxItems: 1,
-				Elem: &schema.Resource{
-					Schema: map[string]*schema.Schema{
-						"tag_key": {
-							Type:        schema.TypeString,
-							Required:    true,
-							Description: "Tag key.",
-						},
-						"tag_value": {
-							Type:        schema.TypeString,
-							Optional:    true,
-							Description: "Tag value.",
-						},
-					},
-				},
-				Description: "Instance tag info (legacy, single tag). It is recommended to use the new field `tags`.",
-			},
+
 			"security_group_ids": {
 				Type:        schema.TypeList,
 				Optional:    true,
 				Elem:        &schema.Schema{Type: schema.TypeString},
 				Description: "Security group IDs bound to the instance.",
 			},
+
 			"need_support_ipv6": {
 				Type:        schema.TypeInt,
 				Optional:    true,
+				ForceNew:    true,
+				Computed:    true,
 				Description: "Whether to support IPv6 access, 1 for yes, 0 for no. Default: 0.",
 			},
+
 			"name": {
 				Type:        schema.TypeString,
 				Optional:    true,
+				Computed:    true,
 				Description: "Instance name, only supports chinese/english/numbers/_/- with length less than 60.",
 			},
-			"db_version": {
-				Type:        schema.TypeString,
-				Optional:    true,
-				Description: "PostgreSQL kernel version, no longer needed, it will keep the same as the primary instance.",
-			},
+
 			"dedicated_cluster_id": {
 				Type:        schema.TypeString,
 				Optional:    true,
+				ForceNew:    true,
 				Description: "Dedicated cluster ID.",
 			},
+
 			"deletion_protection": {
 				Type:        schema.TypeBool,
 				Optional:    true,
+				Computed:    true,
 				Description: "Whether to enable deletion protection, true for enable, false for disable.",
 			},
+
 			"tags": {
 				Type:        schema.TypeMap,
 				Optional:    true,
 				Description: "Instance tags.",
 			},
-			"deal_names": {
-				Type:        schema.TypeList,
-				Computed:    true,
-				Elem:        &schema.Schema{Type: schema.TypeString},
-				Description: "Order number list, each instance corresponds to one order.",
-			},
-			"bill_id": {
-				Type:        schema.TypeString,
-				Computed:    true,
-				Description: "Frozen flow number.",
-			},
-			"db_instance_id_set": {
-				Type:        schema.TypeList,
-				Computed:    true,
-				Elem:        &schema.Schema{Type: schema.TypeString},
-				Description: "Created instance ID set, only returned in POSTPAID scenario.",
-			},
-			"billing_parameters": {
-				Type:        schema.TypeString,
-				Computed:    true,
-				Description: "Billing parameters for order placement, only returned when the input parameter BillingParameters has a value.",
-			},
+
+			// computed
 			"db_instance_id": {
 				Type:        schema.TypeString,
 				Computed:    true,
 				Description: "Instance ID managed by this resource.",
+			},
+			"cpu": {
+				Type:        schema.TypeInt,
+				Computed:    true,
+				Description: "DB instance CPU.",
+			},
+			"memory": {
+				Type:        schema.TypeInt,
+				Computed:    true,
+				Description: "DB instance memory.",
 			},
 		},
 	}
@@ -202,155 +184,196 @@ func ResourceTencentCloudPostgresqlReadonlyInstanceV2() *schema.Resource {
 
 func resourceTencentCloudPostgresqlReadonlyInstanceV2Create(d *schema.ResourceData, meta interface{}) error {
 	defer tccommon.LogElapsed("resource.tencentcloud_postgresql_readonly_instance_v2.create")()
+	defer tccommon.InconsistentCheck(d, meta)()
 
-	logId := tccommon.GetLogId(tccommon.ContextNil)
-	ctx := context.WithValue(context.TODO(), tccommon.LogIdKey, logId)
+	var (
+		logId      = tccommon.GetLogId(tccommon.ContextNil)
+		ctx        = tccommon.NewResourceLifeCycleHandleFuncContext(context.Background(), logId, d, meta)
+		request    = postgresql.NewCreateReadOnlyDBInstanceRequest()
+		response   = postgresql.NewCreateReadOnlyDBInstanceResponse()
+		instanceId string
+	)
 
-	request := postgresql.NewCreateReadOnlyDBInstanceRequest()
 	if v, ok := d.GetOk("zone"); ok {
 		request.Zone = helper.String(v.(string))
 	}
+
 	if v, ok := d.GetOk("master_db_instance_id"); ok {
 		request.MasterDBInstanceId = helper.String(v.(string))
 	}
+
 	if v, ok := d.GetOk("spec_code"); ok {
 		request.SpecCode = helper.String(v.(string))
 	}
-	if v, ok := d.GetOk("storage"); ok {
+
+	if v, ok := d.GetOkExists("storage"); ok {
 		request.Storage = helper.IntUint64(v.(int))
 	}
-	if v, ok := d.GetOk("instance_count"); ok {
-		request.InstanceCount = helper.IntUint64(v.(int))
-	}
-	if v, ok := d.GetOk("period"); ok {
+
+	// set default period 1.
+	request.Period = helper.IntUint64(1)
+	if v, ok := d.GetOkExists("period"); ok {
 		request.Period = helper.IntUint64(v.(int))
 	}
+
 	if v, ok := d.GetOk("vpc_id"); ok {
 		request.VpcId = helper.String(v.(string))
 	}
+
 	if v, ok := d.GetOk("subnet_id"); ok {
 		request.SubnetId = helper.String(v.(string))
 	}
+
 	if v, ok := d.GetOk("instance_charge_type"); ok {
 		request.InstanceChargeType = helper.String(v.(string))
 	}
-	if v, ok := d.GetOk("auto_voucher"); ok {
+
+	if v, ok := d.GetOkExists("auto_voucher"); ok {
 		request.AutoVoucher = helper.IntUint64(v.(int))
 	}
+
 	if v, ok := d.GetOk("voucher_ids"); ok {
 		request.VoucherIds = helper.InterfacesStringsPoint(v.([]interface{}))
 	}
-	if v, ok := d.GetOk("auto_renew_flag"); ok {
+
+	if v, ok := d.GetOkExists("auto_renew_flag"); ok {
 		request.AutoRenewFlag = helper.IntInt64(v.(int))
 	}
-	if v, ok := d.GetOk("project_id"); ok {
+
+	if v, ok := d.GetOkExists("project_id"); ok {
 		request.ProjectId = helper.IntUint64(v.(int))
 	}
-	if v, ok := d.GetOk("activity_id"); ok {
-		request.ActivityId = helper.IntInt64(v.(int))
-	}
+
 	if v, ok := d.GetOk("read_only_group_id"); ok {
 		request.ReadOnlyGroupId = helper.String(v.(string))
 	}
-	if v, ok := d.GetOk("tag_list"); ok {
-		tagList := v.([]interface{})
-		if len(tagList) > 0 {
-			tagMap := tagList[0].(map[string]interface{})
-			tag := &postgresql.Tag{}
-			if key, ok := tagMap["tag_key"]; ok {
-				tag.TagKey = helper.String(key.(string))
-			}
-			if value, ok := tagMap["tag_value"]; ok {
-				tag.TagValue = helper.String(value.(string))
-			}
-			request.TagList = tag
-		}
-	}
+
 	if v, ok := d.GetOk("security_group_ids"); ok {
 		securityGroupIds := v.([]interface{})
 		request.SecurityGroupIds = make([]*string, 0, len(securityGroupIds))
 		for _, item := range securityGroupIds {
-			request.SecurityGroupIds = append(request.SecurityGroupIds, helper.String(item.(string)))
+			if sgId, ok := item.(string); ok {
+				request.SecurityGroupIds = append(request.SecurityGroupIds, helper.String(sgId))
+			}
 		}
 	}
-	if v, ok := d.GetOk("need_support_ipv6"); ok {
+
+	if v, ok := d.GetOkExists("need_support_ipv6"); ok {
 		request.NeedSupportIpv6 = helper.IntUint64(v.(int))
 	}
+
 	if v, ok := d.GetOk("name"); ok {
 		request.Name = helper.String(v.(string))
 	}
-	if v, ok := d.GetOk("db_version"); ok {
-		request.DBVersion = helper.String(v.(string))
-	}
+
 	if v, ok := d.GetOk("dedicated_cluster_id"); ok {
 		request.DedicatedClusterId = helper.String(v.(string))
 	}
-	if v, ok := d.GetOk("deletion_protection"); ok {
+
+	if v, ok := d.GetOkExists("deletion_protection"); ok {
 		request.DeletionProtection = helper.Bool(v.(bool))
 	}
 
-	postgresqlService := PostgresqlService{client: meta.(tccommon.ProviderMeta).GetAPIV3Conn()}
-	response, err := postgresqlService.CreatePostgresqlReadonlyInstanceV2(ctx, request)
-	if err != nil {
-		return err
-	}
-	if response == nil || response.Response == nil {
-		return fmt.Errorf("TencentCloud SDK return nil response, %s", request.GetAction())
-	}
-	if len(response.Response.DBInstanceIdSet) == 0 {
-		log.Printf("[CRITAL]%s create postgresql_readonly_instance_v2 id=%s, DBInstanceIdSet is empty", logId, d.Id())
-		return fmt.Errorf("create postgresql_readonly_instance_v2 failed, DBInstanceIdSet is empty")
-	}
-	instanceId := *response.Response.DBInstanceIdSet[0]
-	d.SetId(instanceId)
-
-	// wait for instance running
-	err = resource.Retry(d.Timeout(schema.TimeoutCreate), func() *resource.RetryError {
-		instance, has, e := postgresqlService.DescribePostgresqlReadonlyInstanceV2ById(ctx, instanceId)
+	request.InstanceCount = helper.Uint64(1)
+	err := resource.Retry(tccommon.WriteRetryTimeout, func() *resource.RetryError {
+		result, e := meta.(tccommon.ProviderMeta).GetAPIV3Conn().UsePostgresqlClient().CreateReadOnlyDBInstance(request)
 		if e != nil {
 			return tccommon.RetryError(e)
+		} else {
+			log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), result.ToJsonString())
 		}
-		if !has {
-			return resource.RetryableError(fmt.Errorf("creating postgresql_readonly_instance_v2 %s, instance not found", instanceId))
+
+		if result == nil || result.Response == nil {
+			return resource.NonRetryableError(fmt.Errorf("Create postgresql readonly instance v2 failed, Response is nil."))
 		}
-		if instance == nil || instance.DBInstanceStatus == nil {
-			return resource.RetryableError(fmt.Errorf("creating postgresql_readonly_instance_v2 %s, status is nil", instanceId))
-		}
-		if *instance.DBInstanceStatus == POSTGRESQL_STAUTS_RUNNING {
-			return nil
-		}
-		return resource.RetryableError(fmt.Errorf("creating postgresql_readonly_instance_v2 %s, status %s", instanceId, *instance.DBInstanceStatus))
+
+		response = result
+		return nil
 	})
+
 	if err != nil {
+		log.Printf("[CRITAL]%s create postgresql readonly instance v2 failed, reason:%+v", logId, err)
 		return err
 	}
 
-	// set computed fields from create response
-	if len(response.Response.DealNames) > 0 {
-		dealNames := make([]interface{}, 0, len(response.Response.DealNames))
-		for _, deal := range response.Response.DealNames {
-			if deal != nil {
-				dealNames = append(dealNames, *deal)
+	if len(response.Response.DBInstanceIdSet) == 0 {
+		if len(response.Response.DealNames) == 0 {
+			return fmt.Errorf("TencentCloud SDK returns empty postgresql ID and Deals")
+		}
+
+		// get instance id from deal
+		orderReq := postgresql.NewDescribeOrdersRequest()
+		orderResp := postgresql.NewDescribeOrdersResponse()
+		dealId := response.Response.DealNames[0]
+		orderReq.DealNames = []*string{dealId}
+		err := resource.Retry(d.Timeout(schema.TimeoutCreate), func() *resource.RetryError {
+			result, err := meta.(tccommon.ProviderMeta).GetAPIV3Conn().UsePostgresqlClient().DescribeOrders(orderReq)
+			if err != nil {
+				return tccommon.RetryError(err)
+			}
+
+			if result == nil || result.Response == nil {
+				return resource.NonRetryableError(fmt.Errorf("Describe orders failed, Response is nil."))
+			}
+
+			if len(result.Response.Deals) == 0 {
+				return resource.RetryableError(fmt.Errorf("waiting for deal return instance id"))
+			}
+
+			orderResp = result
+			return nil
+		})
+
+		if err != nil {
+			return err
+		}
+
+		deals := orderResp.Response.Deals
+		if len(deals) > 0 && len(deals[0].DBInstanceIdSet) > 0 {
+			if deals[0].DBInstanceIdSet[0] != nil {
+				instanceId = *deals[0].DBInstanceIdSet[0]
 			}
 		}
-		_ = d.Set("deal_names", dealNames)
-	}
-	if response.Response.BillId != nil {
-		_ = d.Set("bill_id", *response.Response.BillId)
-	}
-	if len(response.Response.DBInstanceIdSet) > 0 {
-		dbInstanceIdSet := make([]interface{}, 0, len(response.Response.DBInstanceIdSet))
-		for _, id := range response.Response.DBInstanceIdSet {
-			if id != nil {
-				dbInstanceIdSet = append(dbInstanceIdSet, *id)
-			}
+	} else {
+		if response.Response.DBInstanceIdSet[0] != nil {
+			instanceId = *response.Response.DBInstanceIdSet[0]
 		}
-		_ = d.Set("db_instance_id_set", dbInstanceIdSet)
 	}
-	if response.Response.BillingParameters != nil {
-		_ = d.Set("billing_parameters", *response.Response.BillingParameters)
+
+	if instanceId == "" {
+		return fmt.Errorf("TencentCloud SDK returns empty postgresql ID")
 	}
-	_ = d.Set("db_instance_id", instanceId)
+
+	d.SetId(instanceId)
+
+	// wait
+	waitReq := postgresql.NewDescribeDBInstanceAttributeRequest()
+	waitReq.DBInstanceId = &instanceId
+	err = resource.Retry(d.Timeout(schema.TimeoutCreate), func() *resource.RetryError {
+		result, err := meta.(tccommon.ProviderMeta).GetAPIV3Conn().UsePostgresqlClient().DescribeDBInstanceAttribute(waitReq)
+		if err != nil {
+			return tccommon.RetryError(err)
+		}
+
+		if result == nil || result.Response == nil || result.Response.DBInstance == nil {
+			return resource.NonRetryableError(fmt.Errorf("Describe db instance attribute failed, Response is nil."))
+		}
+
+		instance := result.Response.DBInstance
+		if instance.DBInstanceStatus == nil {
+			return resource.NonRetryableError(fmt.Errorf("Describe db instance attribute failed, DBInstanceStatus is nil."))
+		}
+
+		if *instance.DBInstanceStatus == "running" {
+			return nil
+		}
+
+		return resource.RetryableError(fmt.Errorf("Postgresql readonly instance v2 %s is still creating, status is %s.", instanceId, *instance.DBInstanceStatus))
+	})
+
+	if err != nil {
+		return err
+	}
 
 	// handle tags via tag service if provided
 	if tags := helper.GetTags(d, "tags"); len(tags) > 0 {
@@ -367,72 +390,90 @@ func resourceTencentCloudPostgresqlReadonlyInstanceV2Create(d *schema.ResourceDa
 
 func resourceTencentCloudPostgresqlReadonlyInstanceV2Read(d *schema.ResourceData, meta interface{}) error {
 	defer tccommon.LogElapsed("resource.tencentcloud_postgresql_readonly_instance_v2.read")()
+	defer tccommon.InconsistentCheck(d, meta)()
 
-	logId := tccommon.GetLogId(tccommon.ContextNil)
-	ctx := context.WithValue(context.TODO(), tccommon.LogIdKey, logId)
+	var (
+		logId   = tccommon.GetLogId(tccommon.ContextNil)
+		ctx     = tccommon.NewResourceLifeCycleHandleFuncContext(context.Background(), logId, d, meta)
+		service = PostgresqlService{client: meta.(tccommon.ProviderMeta).GetAPIV3Conn()}
+	)
 
 	instanceId := d.Id()
-	postgresqlService := PostgresqlService{client: meta.(tccommon.ProviderMeta).GetAPIV3Conn()}
-	var instance *postgresql.DBInstance
-	var has bool
-	err := resource.Retry(tccommon.ReadRetryTimeout, func() *resource.RetryError {
-		inst, h, e := postgresqlService.DescribePostgresqlReadonlyInstanceV2ById(ctx, instanceId)
-		if e != nil {
-			return tccommon.RetryError(e)
-		}
-		instance = inst
-		has = h
-		return nil
-	})
+	instance, err := service.DescribePostgresqlReadonlyInstanceV2ById(ctx, instanceId)
 	if err != nil {
 		return err
 	}
-	if !has || instance == nil {
-		log.Printf("[CRUD] postgresql_readonly_instance_v2 id=%s", d.Id())
+
+	if instance == nil {
+		log.Printf("[WARN]%s resource `tencentcloud_postgresql_readonly_instance_v2` [%s] not found, please check if it has been deleted.\n", logId, d.Id())
 		d.SetId("")
 		return nil
+	}
+
+	if instance.DBInstanceId != nil {
+		_ = d.Set("db_instance_id", *instance.DBInstanceId)
 	}
 
 	if instance.Zone != nil {
 		_ = d.Set("zone", *instance.Zone)
 	}
-	if instance.VpcId != nil {
-		_ = d.Set("vpc_id", *instance.VpcId)
-	}
-	if instance.SubnetId != nil {
-		_ = d.Set("subnet_id", *instance.SubnetId)
-	}
-	if instance.DBVersion != nil {
-		_ = d.Set("db_version", *instance.DBVersion)
-	}
-	if instance.DBInstanceStorage != nil {
-		_ = d.Set("storage", *instance.DBInstanceStorage)
-	}
-	if instance.DBInstanceName != nil {
-		_ = d.Set("name", *instance.DBInstanceName)
-	}
-	if instance.ProjectId != nil {
-		_ = d.Set("project_id", *instance.ProjectId)
-	}
-	if instance.SupportIpv6 != nil {
-		_ = d.Set("need_support_ipv6", *instance.SupportIpv6)
-	}
-	if instance.DeletionProtection != nil {
-		_ = d.Set("deletion_protection", *instance.DeletionProtection)
-	}
+
 	if instance.MasterDBInstanceId != nil {
 		_ = d.Set("master_db_instance_id", *instance.MasterDBInstanceId)
 	}
-	if instance.AutoRenew != nil {
-		_ = d.Set("auto_renew_flag", *instance.AutoRenew)
+
+	if instance.DBInstanceClass != nil {
+		_ = d.Set("spec_code", *instance.DBInstanceClass)
 	}
+
+	if instance.DBInstanceStorage != nil {
+		_ = d.Set("storage", *instance.DBInstanceStorage)
+	}
+
+	if instance.VpcId != nil {
+		_ = d.Set("vpc_id", *instance.VpcId)
+	}
+
+	if instance.SubnetId != nil {
+		_ = d.Set("subnet_id", *instance.SubnetId)
+	}
+
 	if instance.PayType != nil {
 		if *instance.PayType == "prepaid" {
 			_ = d.Set("instance_charge_type", "PREPAID")
-		} else {
+		} else if *instance.PayType == "postpaid" {
 			_ = d.Set("instance_charge_type", "POSTPAID_BY_HOUR")
 		}
 	}
+
+	if instance.AutoRenew != nil {
+		_ = d.Set("auto_renew_flag", *instance.AutoRenew)
+	}
+
+	if instance.ProjectId != nil {
+		_ = d.Set("project_id", *instance.ProjectId)
+	}
+
+	if instance.SupportIpv6 != nil {
+		_ = d.Set("need_support_ipv6", *instance.SupportIpv6)
+	}
+
+	if instance.DBInstanceName != nil {
+		_ = d.Set("name", *instance.DBInstanceName)
+	}
+
+	if instance.DeletionProtection != nil {
+		_ = d.Set("deletion_protection", *instance.DeletionProtection)
+	}
+
+	if instance.DBInstanceCpu != nil {
+		_ = d.Set("cpu", *instance.DBInstanceCpu)
+	}
+
+	if instance.DBInstanceMemory != nil {
+		_ = d.Set("memory", *instance.DBInstanceMemory)
+	}
+
 	if len(instance.DBNodeSet) > 0 {
 		for _, node := range instance.DBNodeSet {
 			if node != nil && node.DedicatedClusterId != nil {
@@ -444,20 +485,22 @@ func resourceTencentCloudPostgresqlReadonlyInstanceV2Read(d *schema.ResourceData
 
 	// read only group
 	if instance.MasterDBInstanceId != nil {
-		readOnlyGroupId, roErr := postgresqlService.DescribeReadOnlyGroupsById(ctx, *instance.MasterDBInstanceId, d.Id())
+		readOnlyGroupId, roErr := service.DescribeReadOnlyGroupsById(ctx, *instance.MasterDBInstanceId, instanceId)
 		if roErr != nil {
 			return roErr
 		}
+
 		if readOnlyGroupId != nil {
 			_ = d.Set("read_only_group_id", *readOnlyGroupId)
 		}
 	}
 
 	// security groups
-	sg, sgErr := postgresqlService.DescribeDBInstanceSecurityGroupsById(ctx, d.Id())
+	sg, sgErr := service.DescribeDBInstanceSecurityGroupsById(ctx, instanceId)
 	if sgErr != nil {
 		return sgErr
 	}
+
 	if len(sg) > 0 {
 		_ = d.Set("security_group_ids", sg)
 	}
@@ -465,39 +508,207 @@ func resourceTencentCloudPostgresqlReadonlyInstanceV2Read(d *schema.ResourceData
 	// tags via tag service
 	tcClient := meta.(tccommon.ProviderMeta).GetAPIV3Conn()
 	tagService := svctag.NewTagService(tcClient)
-	tags, tagErr := tagService.DescribeResourceTags(ctx, "postgres", "DBInstanceId", tcClient.Region, d.Id())
+	tags, tagErr := tagService.DescribeResourceTags(ctx, "postgres", "DBInstanceId", tcClient.Region, instanceId)
 	if tagErr != nil {
 		return tagErr
 	}
+
 	_ = d.Set("tags", tags)
 
-	_ = d.Set("db_instance_id", d.Id())
 	return nil
 }
 
 func resourceTencentCloudPostgresqlReadonlyInstanceV2Update(d *schema.ResourceData, meta interface{}) error {
 	defer tccommon.LogElapsed("resource.tencentcloud_postgresql_readonly_instance_v2.update")()
+	defer tccommon.InconsistentCheck(d, meta)()
 
-	if err := helper.ImmutableArgsChek(d,
-		"vpc_id",
-		"subnet_id",
-		"instance_charge_type",
-		"auto_voucher",
-		"voucher_ids",
-		"auto_renew_flag",
-		"project_id",
-		"activity_id",
-		"read_only_group_id",
-		"tag_list",
-		"security_group_ids",
-		"need_support_ipv6",
-		"name",
-		"db_version",
-		"dedicated_cluster_id",
-		"deletion_protection",
-		"tags",
-	); err != nil {
-		return err
+	var (
+		logId                   = tccommon.GetLogId(tccommon.ContextNil)
+		ctx                     = tccommon.NewResourceLifeCycleHandleFuncContext(context.Background(), logId, d, meta)
+		service                 = PostgresqlService{client: meta.(tccommon.ProviderMeta).GetAPIV3Conn()}
+		instanceId              = d.Id()
+		outErr, inErr, checkErr error
+	)
+
+	// wait sync time
+	waitTime := 5 * time.Second
+
+	if d.HasChange("read_only_group_id") {
+		var (
+			request          = postgresql.NewModifyDBInstanceReadOnlyGroupRequest()
+			masterInstanceId string
+			roGroupIdOld     string
+			roGroupIdNew     string
+		)
+
+		masterInstanceId = d.Get("master_db_instance_id").(string)
+		old, new := d.GetChange("read_only_group_id")
+		if old != nil {
+			roGroupIdOld = old.(string)
+		}
+
+		if new != nil {
+			roGroupIdNew = new.(string)
+		}
+
+		request.DBInstanceId = &instanceId
+		request.ReadOnlyGroupId = &roGroupIdOld
+		request.NewReadOnlyGroupId = &roGroupIdNew
+		err := resource.Retry(tccommon.WriteRetryTimeout, func() *resource.RetryError {
+			result, e := meta.(tccommon.ProviderMeta).GetAPIV3Conn().UsePostgresqlClient().ModifyDBInstanceReadOnlyGroup(request)
+			if e != nil {
+				return tccommon.RetryError(e)
+			} else {
+				log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), result.ToJsonString())
+			}
+
+			return nil
+		})
+
+		if err != nil {
+			log.Printf("[CRITAL]%s operate postgresql ChangeDbInstanceReadOnlyGroupOperation failed, reason:%+v", logId, err)
+			return err
+		}
+
+		// need wait sync
+		time.Sleep(waitTime)
+
+		conf := tccommon.BuildStateChangeConf([]string{}, []string{"ok"}, d.Timeout(schema.TimeoutUpdate), time.Second, service.PostgresqlReadonlyGroupStateRefreshFunc(masterInstanceId, roGroupIdNew, []string{}))
+		if _, e := conf.WaitForState(); e != nil {
+			return e
+		}
+	}
+
+	if d.HasChange("name") {
+		name := d.Get("name").(string)
+		outErr = resource.Retry(tccommon.WriteRetryTimeout, func() *resource.RetryError {
+			inErr = service.ModifyPostgresqlInstanceName(ctx, instanceId, name)
+			if inErr != nil {
+				return tccommon.RetryError(inErr)
+			}
+
+			return nil
+		})
+
+		if outErr != nil {
+			return outErr
+		}
+
+		// need wait sync
+		time.Sleep(waitTime)
+
+		// check update name done
+		timeoutMinutes := int(d.Timeout(schema.TimeoutUpdate).Minutes())
+		checkErr = service.CheckDBInstanceStatus(ctx, instanceId, timeoutMinutes)
+		if checkErr != nil {
+			return checkErr
+		}
+
+	}
+
+	if d.HasChange("storage") {
+		storage := d.Get("storage").(int)
+		cpu := d.Get("cpu").(int)
+		memory := d.Get("memory").(int)
+		outErr = resource.Retry(tccommon.WriteRetryTimeout, func() *resource.RetryError {
+			inErr = service.UpgradePostgresqlInstance(ctx, instanceId, memory, storage, cpu, 0)
+			if inErr != nil {
+				return tccommon.RetryError(inErr)
+			}
+
+			return nil
+		})
+
+		if outErr != nil {
+			return outErr
+		}
+
+		// need wait sync
+		time.Sleep(waitTime)
+
+		// check update storage and memory done
+		timeoutMinutes := int(d.Timeout(schema.TimeoutUpdate).Minutes())
+		checkErr = service.CheckDBInstanceStatus(ctx, instanceId, timeoutMinutes)
+		if checkErr != nil {
+			return checkErr
+		}
+	}
+
+	if d.HasChange("project_id") {
+		projectId := d.Get("project_id").(int)
+		outErr = resource.Retry(tccommon.WriteRetryTimeout, func() *resource.RetryError {
+			inErr = service.ModifyPostgresqlInstanceProjectId(ctx, instanceId, projectId)
+			if inErr != nil {
+				return tccommon.RetryError(inErr)
+			}
+
+			return nil
+		})
+
+		if outErr != nil {
+			return outErr
+		}
+
+		// need wait sync
+		time.Sleep(waitTime)
+
+		// check update project id done
+		timeoutMinutes := int(d.Timeout(schema.TimeoutUpdate).Minutes())
+		checkErr = service.CheckDBInstanceStatus(ctx, instanceId, timeoutMinutes)
+		if checkErr != nil {
+			return checkErr
+		}
+
+	}
+
+	if d.HasChange("security_group_ids") {
+		ids := d.Get("security_group_ids").([]interface{})
+		var sgIds []*string
+		for _, id := range ids {
+			sgIds = append(sgIds, helper.String(id.(string)))
+		}
+
+		err := service.ModifyDBInstanceSecurityGroupsById(ctx, instanceId, sgIds)
+		if err != nil {
+			return err
+		}
+	}
+
+	if d.HasChange("deletion_protection") {
+		request := postgres.NewModifyDBInstanceDeletionProtectionRequest()
+		if v, ok := d.GetOkExists("deletion_protection"); ok {
+			request.DeletionProtection = helper.Bool(v.(bool))
+		}
+
+		request.DBInstanceId = &instanceId
+		err := resource.Retry(tccommon.WriteRetryTimeout, func() *resource.RetryError {
+			result, e := meta.(tccommon.ProviderMeta).GetAPIV3Conn().UsePostgresqlClient().ModifyDBInstanceDeletionProtection(request)
+			if e != nil {
+				return tccommon.RetryError(e)
+			} else {
+				log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), result.ToJsonString())
+			}
+
+			return nil
+		})
+
+		if err != nil {
+			log.Printf("[CRITAL]%s modify postgresql db instance deletion protection failed, reason:%+v", logId, err)
+			return err
+		}
+	}
+
+	if d.HasChange("tags") {
+		oldValue, newValue := d.GetChange("tags")
+		replaceTags, deleteTags := svctag.DiffTags(oldValue.(map[string]interface{}), newValue.(map[string]interface{}))
+
+		tcClient := meta.(tccommon.ProviderMeta).GetAPIV3Conn()
+		tagService := svctag.NewTagService(tcClient)
+		resourceName := tccommon.BuildTagResourceName("postgres", "DBInstanceId", tcClient.Region, d.Id())
+		err := tagService.ModifyTags(ctx, resourceName, replaceTags, deleteTags)
+		if err != nil {
+			return err
+		}
 	}
 
 	return resourceTencentCloudPostgresqlReadonlyInstanceV2Read(d, meta)
@@ -505,32 +716,46 @@ func resourceTencentCloudPostgresqlReadonlyInstanceV2Update(d *schema.ResourceDa
 
 func resourceTencentCloudPostgresqlReadonlyInstanceV2Delete(d *schema.ResourceData, meta interface{}) error {
 	defer tccommon.LogElapsed("resource.tencentcloud_postgresql_readonly_instance_v2.delete")()
+	defer tccommon.InconsistentCheck(d, meta)()
 
-	logId := tccommon.GetLogId(tccommon.ContextNil)
-	ctx := context.WithValue(context.TODO(), tccommon.LogIdKey, logId)
+	var (
+		logId      = tccommon.GetLogId(tccommon.ContextNil)
+		ctx        = tccommon.NewResourceLifeCycleHandleFuncContext(context.Background(), logId, d, meta)
+		instanceId = d.Id()
+		service    = PostgresqlService{client: meta.(tccommon.ProviderMeta).GetAPIV3Conn()}
+	)
 
-	instanceId := d.Id()
-	postgresqlService := PostgresqlService{client: meta.(tccommon.ProviderMeta).GetAPIV3Conn()}
-	if err := postgresqlService.IsolatePostgresqlReadonlyInstanceV2(ctx, instanceId); err != nil {
+	if err := service.IsolatePostgresqlReadonlyInstanceV2(ctx, instanceId); err != nil {
 		return err
 	}
 
+	// wait for isolating
 	err := resource.Retry(d.Timeout(schema.TimeoutDelete), func() *resource.RetryError {
-		instance, has, e := postgresqlService.DescribePostgresqlReadonlyInstanceV2ById(ctx, instanceId)
+		instance, e := service.DescribePostgresqlReadonlyInstanceV2ById(ctx, instanceId)
 		if e != nil {
 			return tccommon.RetryError(e)
 		}
-		if !has || instance == nil {
+
+		if instance == nil {
 			return nil
 		}
+
 		if instance.DBInstanceStatus != nil && *instance.DBInstanceStatus == POSTGRESQL_STAUTS_ISOLATED {
 			return nil
 		}
+
 		return resource.RetryableError(fmt.Errorf("waiting for postgresql_readonly_instance_v2 %s isolating", instanceId))
 	})
+
 	if err != nil {
-		log.Printf("[CRITAL]%s wait postgresql_readonly_instance_v2 id=%s isolated fail, reason: %v", logId, instanceId, err)
+		log.Printf("[CRITAL]%s delete postgresql_readonly_instance_v2 id=%s fail, reason:%+v", logId, instanceId, err)
 		return err
 	}
+
+	// delete
+	if err := service.DeletePostgresqlInstanceV2(ctx, instanceId); err != nil {
+		return err
+	}
+
 	return nil
 }
