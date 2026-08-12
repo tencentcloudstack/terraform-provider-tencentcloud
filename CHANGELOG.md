@@ -1,3 +1,13 @@
+## 1.83.22(August 12, 2026)
+
+ENHANCEMENTS:
+
+* resource/tencentcloud_cls_topic: support custom KMS key (kms_region, kms_key_id) for encryption ([#4420](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/4420))
+* resource/tencentcloud_dlc_data_engine: support binding tags to data engine at creation time ([#4421](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/4421))
+* resource/tencentcloud_dts_sync_config: support table column_mode, columns, tmp_tables and table_edit_mode parameters ([#4407](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/4407))
+* resource/tencentcloud_kubernetes_native_node_pool: optimize code logic ([#4422](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/4422))
+* resource/tencentcloud_tcaplus_cluster: add `cluster_type`, `resource_tags`, `server_list` and `proxy_list` parameters to support creating dedicated clusters with tags ([#4408](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/4408))
+
 ## 1.83.21(August 7, 2026)
 
 ENHANCEMENTS:
