@@ -15,18 +15,18 @@ import (
 	svctag "github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/services/tag"
 )
 
-type mockMetaTagResourceTag struct {
+type mockMetaTagAttachmentV2 struct {
 	client *connectivity.TencentCloudClient
 }
 
-func (m *mockMetaTagResourceTag) GetAPIV3Conn() *connectivity.TencentCloudClient {
+func (m *mockMetaTagAttachmentV2) GetAPIV3Conn() *connectivity.TencentCloudClient {
 	return m.client
 }
 
-var _ tccommon.ProviderMeta = &mockMetaTagResourceTag{}
+var _ tccommon.ProviderMeta = &mockMetaTagAttachmentV2{}
 
-func newMockMetaTagResourceTag() *mockMetaTagResourceTag {
-	return &mockMetaTagResourceTag{client: &connectivity.TencentCloudClient{}}
+func newMockMetaTagAttachmentV2() *mockMetaTagAttachmentV2 {
+	return &mockMetaTagAttachmentV2{client: &connectivity.TencentCloudClient{}}
 }
 
 func ptrStringTRT(s string) *string {
@@ -41,15 +41,15 @@ const (
 	testCompositeIDTRT = "env#qcs::cvm:ap-guangzhou:uin/100020512675:instance/ins-kfrlvcp4"
 )
 
-// go test ./tencentcloud/services/tag/ -run "TestTagResourceTag" -v -count=1 -gcflags="all=-l"
+// go test ./tencentcloud/services/tag/ -run "TestTagAttachmentV2" -v -count=1 -gcflags="all=-l"
 
-// TestTagResourceTag_Create_Success tests Create with required parameters.
-func TestTagResourceTag_Create_Success(t *testing.T) {
+// TestTagAttachmentV2_Create_Success tests Create with required parameters.
+func TestTagAttachmentV2_Create_Success(t *testing.T) {
 	patches := gomonkey.NewPatches()
 	defer patches.Reset()
 
 	tagClient := &tag.Client{}
-	patches.ApplyMethodReturn(newMockMetaTagResourceTag().client, "UseTagClient", tagClient)
+	patches.ApplyMethodReturn(newMockMetaTagAttachmentV2().client, "UseTagClient", tagClient)
 
 	// mock AddResourceTagWithContext
 	patches.ApplyMethodFunc(tagClient, "AddResourceTagWithContext", func(_ context.Context, request *tag.AddResourceTagRequest) (*tag.AddResourceTagResponse, error) {
@@ -91,8 +91,8 @@ func TestTagResourceTag_Create_Success(t *testing.T) {
 		return resp, nil
 	})
 
-	meta := newMockMetaTagResourceTag()
-	res := svctag.ResourceTencentCloudTagResourceTag()
+	meta := newMockMetaTagAttachmentV2()
+	res := svctag.ResourceTencentCloudTagAttachmentV2()
 	d := schema.TestResourceDataRaw(t, res.Schema, map[string]interface{}{
 		"tag_key":   testTagKeyTRT,
 		"tag_value": testTagValueTRT,
@@ -108,13 +108,13 @@ func TestTagResourceTag_Create_Success(t *testing.T) {
 	assert.Equal(t, testResourceSixTRT, d.Get("resource"))
 }
 
-// TestTagResourceTag_Create_EmptyResponse tests Create when API returns empty response.
-func TestTagResourceTag_Create_EmptyResponse(t *testing.T) {
+// TestTagAttachmentV2_Create_EmptyResponse tests Create when API returns empty response.
+func TestTagAttachmentV2_Create_EmptyResponse(t *testing.T) {
 	patches := gomonkey.NewPatches()
 	defer patches.Reset()
 
 	tagClient := &tag.Client{}
-	patches.ApplyMethodReturn(newMockMetaTagResourceTag().client, "UseTagClient", tagClient)
+	patches.ApplyMethodReturn(newMockMetaTagAttachmentV2().client, "UseTagClient", tagClient)
 
 	// mock AddResourceTagWithContext returns nil Response
 	patches.ApplyMethodFunc(tagClient, "AddResourceTagWithContext", func(_ context.Context, request *tag.AddResourceTagRequest) (*tag.AddResourceTagResponse, error) {
@@ -123,8 +123,8 @@ func TestTagResourceTag_Create_EmptyResponse(t *testing.T) {
 		return resp, nil
 	})
 
-	meta := newMockMetaTagResourceTag()
-	res := svctag.ResourceTencentCloudTagResourceTag()
+	meta := newMockMetaTagAttachmentV2()
+	res := svctag.ResourceTencentCloudTagAttachmentV2()
 	d := schema.TestResourceDataRaw(t, res.Schema, map[string]interface{}{
 		"tag_key":   testTagKeyTRT,
 		"tag_value": testTagValueTRT,
@@ -137,20 +137,20 @@ func TestTagResourceTag_Create_EmptyResponse(t *testing.T) {
 	assert.Empty(t, d.Id())
 }
 
-// TestTagResourceTag_Create_APIError tests Create when API returns an error.
-func TestTagResourceTag_Create_APIError(t *testing.T) {
+// TestTagAttachmentV2_Create_APIError tests Create when API returns an error.
+func TestTagAttachmentV2_Create_APIError(t *testing.T) {
 	patches := gomonkey.NewPatches()
 	defer patches.Reset()
 
 	tagClient := &tag.Client{}
-	patches.ApplyMethodReturn(newMockMetaTagResourceTag().client, "UseTagClient", tagClient)
+	patches.ApplyMethodReturn(newMockMetaTagAttachmentV2().client, "UseTagClient", tagClient)
 
 	patches.ApplyMethodFunc(tagClient, "AddResourceTagWithContext", func(_ context.Context, request *tag.AddResourceTagRequest) (*tag.AddResourceTagResponse, error) {
 		return nil, fmt.Errorf("[TencentCloudSDKError] Code=ResourceInUse.TagDuplicate, Message=tag already bound")
 	})
 
-	meta := newMockMetaTagResourceTag()
-	res := svctag.ResourceTencentCloudTagResourceTag()
+	meta := newMockMetaTagAttachmentV2()
+	res := svctag.ResourceTencentCloudTagAttachmentV2()
 	d := schema.TestResourceDataRaw(t, res.Schema, map[string]interface{}{
 		"tag_key":   testTagKeyTRT,
 		"tag_value": testTagValueTRT,
@@ -162,13 +162,13 @@ func TestTagResourceTag_Create_APIError(t *testing.T) {
 	assert.Contains(t, err.Error(), "TagDuplicate")
 }
 
-// TestTagResourceTag_Read_Found tests Read when the binding exists.
-func TestTagResourceTag_Read_Found(t *testing.T) {
+// TestTagAttachmentV2_Read_Found tests Read when the binding exists.
+func TestTagAttachmentV2_Read_Found(t *testing.T) {
 	patches := gomonkey.NewPatches()
 	defer patches.Reset()
 
 	tagClient := &tag.Client{}
-	patches.ApplyMethodReturn(newMockMetaTagResourceTag().client, "UseTagClient", tagClient)
+	patches.ApplyMethodReturn(newMockMetaTagAttachmentV2().client, "UseTagClient", tagClient)
 
 	patches.ApplyMethodFunc(tagClient, "GetResources", func(request *tag.GetResourcesRequest) (*tag.GetResourcesResponse, error) {
 		resp := tag.NewGetResourcesResponse()
@@ -190,8 +190,8 @@ func TestTagResourceTag_Read_Found(t *testing.T) {
 		return resp, nil
 	})
 
-	meta := newMockMetaTagResourceTag()
-	res := svctag.ResourceTencentCloudTagResourceTag()
+	meta := newMockMetaTagAttachmentV2()
+	res := svctag.ResourceTencentCloudTagAttachmentV2()
 	d := schema.TestResourceDataRaw(t, res.Schema, map[string]interface{}{
 		"tag_key":   testTagKeyTRT,
 		"tag_value": testTagValueTRT,
@@ -207,13 +207,13 @@ func TestTagResourceTag_Read_Found(t *testing.T) {
 	assert.Equal(t, testResourceSixTRT, d.Get("resource"))
 }
 
-// TestTagResourceTag_Read_NotFound tests Read when the binding does not exist.
-func TestTagResourceTag_Read_NotFound(t *testing.T) {
+// TestTagAttachmentV2_Read_NotFound tests Read when the binding does not exist.
+func TestTagAttachmentV2_Read_NotFound(t *testing.T) {
 	patches := gomonkey.NewPatches()
 	defer patches.Reset()
 
 	tagClient := &tag.Client{}
-	patches.ApplyMethodReturn(newMockMetaTagResourceTag().client, "UseTagClient", tagClient)
+	patches.ApplyMethodReturn(newMockMetaTagAttachmentV2().client, "UseTagClient", tagClient)
 
 	patches.ApplyMethodFunc(tagClient, "GetResources", func(request *tag.GetResourcesRequest) (*tag.GetResourcesResponse, error) {
 		resp := tag.NewGetResourcesResponse()
@@ -224,8 +224,8 @@ func TestTagResourceTag_Read_NotFound(t *testing.T) {
 		return resp, nil
 	})
 
-	meta := newMockMetaTagResourceTag()
-	res := svctag.ResourceTencentCloudTagResourceTag()
+	meta := newMockMetaTagAttachmentV2()
+	res := svctag.ResourceTencentCloudTagAttachmentV2()
 	d := schema.TestResourceDataRaw(t, res.Schema, map[string]interface{}{
 		"tag_key":   testTagKeyTRT,
 		"tag_value": testTagValueTRT,
@@ -238,13 +238,13 @@ func TestTagResourceTag_Read_NotFound(t *testing.T) {
 	assert.Empty(t, d.Id())
 }
 
-// TestTagResourceTag_Read_NilTagValue tests Read when the matched row has nil TagValue.
-func TestTagResourceTag_Read_NilTagValue(t *testing.T) {
+// TestTagAttachmentV2_Read_NilTagValue tests Read when the matched row has nil TagValue.
+func TestTagAttachmentV2_Read_NilTagValue(t *testing.T) {
 	patches := gomonkey.NewPatches()
 	defer patches.Reset()
 
 	tagClient := &tag.Client{}
-	patches.ApplyMethodReturn(newMockMetaTagResourceTag().client, "UseTagClient", tagClient)
+	patches.ApplyMethodReturn(newMockMetaTagAttachmentV2().client, "UseTagClient", tagClient)
 
 	patches.ApplyMethodFunc(tagClient, "GetResources", func(request *tag.GetResourcesRequest) (*tag.GetResourcesResponse, error) {
 		resp := tag.NewGetResourcesResponse()
@@ -266,8 +266,8 @@ func TestTagResourceTag_Read_NilTagValue(t *testing.T) {
 		return resp, nil
 	})
 
-	meta := newMockMetaTagResourceTag()
-	res := svctag.ResourceTencentCloudTagResourceTag()
+	meta := newMockMetaTagAttachmentV2()
+	res := svctag.ResourceTencentCloudTagAttachmentV2()
 	d := schema.TestResourceDataRaw(t, res.Schema, map[string]interface{}{
 		"tag_key":   testTagKeyTRT,
 		"tag_value": testTagValueTRT,
@@ -283,13 +283,13 @@ func TestTagResourceTag_Read_NilTagValue(t *testing.T) {
 	assert.Equal(t, testTagValueTRT, d.Get("tag_value"))
 }
 
-// TestTagResourceTag_Update_TagValueChange tests Update when tag_value changes.
-func TestTagResourceTag_Update_TagValueChange(t *testing.T) {
+// TestTagAttachmentV2_Update_TagValueChange tests Update when tag_value changes.
+func TestTagAttachmentV2_Update_TagValueChange(t *testing.T) {
 	patches := gomonkey.NewPatches()
 	defer patches.Reset()
 
 	tagClient := &tag.Client{}
-	patches.ApplyMethodReturn(newMockMetaTagResourceTag().client, "UseTagClient", tagClient)
+	patches.ApplyMethodReturn(newMockMetaTagAttachmentV2().client, "UseTagClient", tagClient)
 
 	// mock UpdateResourceTagValueWithContext
 	patches.ApplyMethodFunc(tagClient, "UpdateResourceTagValueWithContext", func(_ context.Context, request *tag.UpdateResourceTagValueRequest) (*tag.UpdateResourceTagValueResponse, error) {
@@ -328,8 +328,8 @@ func TestTagResourceTag_Update_TagValueChange(t *testing.T) {
 		return resp, nil
 	})
 
-	meta := newMockMetaTagResourceTag()
-	res := svctag.ResourceTencentCloudTagResourceTag()
+	meta := newMockMetaTagAttachmentV2()
+	res := svctag.ResourceTencentCloudTagAttachmentV2()
 	d := schema.TestResourceDataRaw(t, res.Schema, map[string]interface{}{
 		"tag_key":   testTagKeyTRT,
 		"tag_value": testTagValueNewTRT,
@@ -343,13 +343,13 @@ func TestTagResourceTag_Update_TagValueChange(t *testing.T) {
 	assert.Equal(t, testTagValueNewTRT, d.Get("tag_value"))
 }
 
-// TestTagResourceTag_Update_EmptyResponse tests Update when API returns empty response.
-func TestTagResourceTag_Update_EmptyResponse(t *testing.T) {
+// TestTagAttachmentV2_Update_EmptyResponse tests Update when API returns empty response.
+func TestTagAttachmentV2_Update_EmptyResponse(t *testing.T) {
 	patches := gomonkey.NewPatches()
 	defer patches.Reset()
 
 	tagClient := &tag.Client{}
-	patches.ApplyMethodReturn(newMockMetaTagResourceTag().client, "UseTagClient", tagClient)
+	patches.ApplyMethodReturn(newMockMetaTagAttachmentV2().client, "UseTagClient", tagClient)
 
 	patches.ApplyMethodFunc(tagClient, "UpdateResourceTagValueWithContext", func(_ context.Context, request *tag.UpdateResourceTagValueRequest) (*tag.UpdateResourceTagValueResponse, error) {
 		resp := tag.NewUpdateResourceTagValueResponse()
@@ -357,8 +357,8 @@ func TestTagResourceTag_Update_EmptyResponse(t *testing.T) {
 		return resp, nil
 	})
 
-	meta := newMockMetaTagResourceTag()
-	res := svctag.ResourceTencentCloudTagResourceTag()
+	meta := newMockMetaTagAttachmentV2()
+	res := svctag.ResourceTencentCloudTagAttachmentV2()
 	d := schema.TestResourceDataRaw(t, res.Schema, map[string]interface{}{
 		"tag_key":   testTagKeyTRT,
 		"tag_value": testTagValueNewTRT,
@@ -371,13 +371,13 @@ func TestTagResourceTag_Update_EmptyResponse(t *testing.T) {
 	assert.Contains(t, err.Error(), "Response is nil")
 }
 
-// TestTagResourceTag_Delete_Success tests Delete success.
-func TestTagResourceTag_Delete_Success(t *testing.T) {
+// TestTagAttachmentV2_Delete_Success tests Delete success.
+func TestTagAttachmentV2_Delete_Success(t *testing.T) {
 	patches := gomonkey.NewPatches()
 	defer patches.Reset()
 
 	tagClient := &tag.Client{}
-	patches.ApplyMethodReturn(newMockMetaTagResourceTag().client, "UseTagClient", tagClient)
+	patches.ApplyMethodReturn(newMockMetaTagAttachmentV2().client, "UseTagClient", tagClient)
 
 	patches.ApplyMethodFunc(tagClient, "DeleteResourceTagWithContext", func(_ context.Context, request *tag.DeleteResourceTagRequest) (*tag.DeleteResourceTagResponse, error) {
 		assert.NotNil(t, request.TagKey)
@@ -392,8 +392,8 @@ func TestTagResourceTag_Delete_Success(t *testing.T) {
 		return resp, nil
 	})
 
-	meta := newMockMetaTagResourceTag()
-	res := svctag.ResourceTencentCloudTagResourceTag()
+	meta := newMockMetaTagAttachmentV2()
+	res := svctag.ResourceTencentCloudTagAttachmentV2()
 	d := schema.TestResourceDataRaw(t, res.Schema, map[string]interface{}{
 		"tag_key":   testTagKeyTRT,
 		"tag_value": testTagValueTRT,
@@ -405,13 +405,13 @@ func TestTagResourceTag_Delete_Success(t *testing.T) {
 	assert.NoError(t, err)
 }
 
-// TestTagResourceTag_Delete_EmptyResponse tests Delete when API returns empty response.
-func TestTagResourceTag_Delete_EmptyResponse(t *testing.T) {
+// TestTagAttachmentV2_Delete_EmptyResponse tests Delete when API returns empty response.
+func TestTagAttachmentV2_Delete_EmptyResponse(t *testing.T) {
 	patches := gomonkey.NewPatches()
 	defer patches.Reset()
 
 	tagClient := &tag.Client{}
-	patches.ApplyMethodReturn(newMockMetaTagResourceTag().client, "UseTagClient", tagClient)
+	patches.ApplyMethodReturn(newMockMetaTagAttachmentV2().client, "UseTagClient", tagClient)
 
 	patches.ApplyMethodFunc(tagClient, "DeleteResourceTagWithContext", func(_ context.Context, request *tag.DeleteResourceTagRequest) (*tag.DeleteResourceTagResponse, error) {
 		resp := tag.NewDeleteResourceTagResponse()
@@ -419,8 +419,8 @@ func TestTagResourceTag_Delete_EmptyResponse(t *testing.T) {
 		return resp, nil
 	})
 
-	meta := newMockMetaTagResourceTag()
-	res := svctag.ResourceTencentCloudTagResourceTag()
+	meta := newMockMetaTagAttachmentV2()
+	res := svctag.ResourceTencentCloudTagAttachmentV2()
 	d := schema.TestResourceDataRaw(t, res.Schema, map[string]interface{}{
 		"tag_key":   testTagKeyTRT,
 		"tag_value": testTagValueTRT,
@@ -433,9 +433,9 @@ func TestTagResourceTag_Delete_EmptyResponse(t *testing.T) {
 	assert.Contains(t, err.Error(), "Response is nil")
 }
 
-// TestTagResourceTag_Schema validates the schema definition.
-func TestTagResourceTag_Schema(t *testing.T) {
-	res := svctag.ResourceTencentCloudTagResourceTag()
+// TestTagAttachmentV2_Schema validates the schema definition.
+func TestTagAttachmentV2_Schema(t *testing.T) {
+	res := svctag.ResourceTencentCloudTagAttachmentV2()
 
 	assert.NotNil(t, res)
 	assert.NotNil(t, res.Create)

@@ -1535,7 +1535,7 @@ func Provider() *schema.Provider {
 			"tencentcloud_oceanus_folder":                                                           oceanus.ResourceTencentCloudOceanusFolder(),
 			"tencentcloud_tag":                                                                      tag.ResourceTencentCloudTag(),
 			"tencentcloud_tag_attachment":                                                           tag.ResourceTencentCloudTagAttachment(),
-			"tencentcloud_tag_resource_tag":                                                         tag.ResourceTencentCloudTagResourceTag(),
+			"tencentcloud_tag_attachment_v2":                                                        tag.ResourceTencentCloudTagAttachmentV2(),
 			"tencentcloud_ccn":                                                                      ccn.ResourceTencentCloudCcn(),
 			"tencentcloud_ccn_attachment":                                                           ccn.ResourceTencentCloudCcnAttachment(),
 			"tencentcloud_ccn_attachment_v2":                                                        ccn.ResourceTencentCloudCcnAttachmentV2(),

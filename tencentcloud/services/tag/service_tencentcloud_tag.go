@@ -499,11 +499,11 @@ func (me *TagService) DescribeTagKeysByFilter(ctx context.Context, param map[str
 	return
 }
 
-// DescribeTagResourceTagById queries the tag binding of a single tag key on a single resource
+// DescribeTagAttachmentV2ById queries the tag binding of a single tag key on a single resource
 // via GetResources, the same query path used by tag_attachment. The resource six-segment is
 // passed to GetResources as-is, so no field decomposition is needed. It returns the *tag.Tag
 // whose TagKey equals tagKey, or nil if the resource or the tag key is not found.
-func (me *TagService) DescribeTagResourceTagById(ctx context.Context, tagKey string, resourceName string) (tagRes *tag.Tag, errRet error) {
+func (me *TagService) DescribeTagAttachmentV2ById(ctx context.Context, tagKey string, resourceName string) (tagRes *tag.Tag, errRet error) {
 	logId := tccommon.GetLogId(ctx)
 
 	request := tag.NewGetResourcesRequest()

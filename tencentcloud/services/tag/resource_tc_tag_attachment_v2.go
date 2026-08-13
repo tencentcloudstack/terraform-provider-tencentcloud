@@ -15,12 +15,12 @@ import (
 	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/internal/helper"
 )
 
-func ResourceTencentCloudTagResourceTag() *schema.Resource {
+func ResourceTencentCloudTagAttachmentV2() *schema.Resource {
 	return &schema.Resource{
-		Create: resourceTencentCloudTagResourceTagCreate,
-		Read:   resourceTencentCloudTagResourceTagRead,
-		Update: resourceTencentCloudTagResourceTagUpdate,
-		Delete: resourceTencentCloudTagResourceTagDelete,
+		Create: resourceTencentCloudTagAttachmentV2Create,
+		Read:   resourceTencentCloudTagAttachmentV2Read,
+		Update: resourceTencentCloudTagAttachmentV2Update,
+		Delete: resourceTencentCloudTagAttachmentV2Delete,
 		Importer: &schema.ResourceImporter{
 			State: schema.ImportStatePassthrough,
 		},
@@ -48,8 +48,8 @@ func ResourceTencentCloudTagResourceTag() *schema.Resource {
 	}
 }
 
-func resourceTencentCloudTagResourceTagCreate(d *schema.ResourceData, meta interface{}) error {
-	defer tccommon.LogElapsed("resource.tencentcloud_tag_resource_tag.create")()
+func resourceTencentCloudTagAttachmentV2Create(d *schema.ResourceData, meta interface{}) error {
+	defer tccommon.LogElapsed("resource.tencentcloud_tag_attachment_v2.create")()
 	defer tccommon.InconsistentCheck(d, meta)()
 
 	var (
@@ -83,23 +83,23 @@ func resourceTencentCloudTagResourceTagCreate(d *schema.ResourceData, meta inter
 		}
 
 		if result == nil || result.Response == nil {
-			return resource.NonRetryableError(fmt.Errorf("Create tag_resource_tag failed, Response is nil."))
+			return resource.NonRetryableError(fmt.Errorf("Create tag_attachment_v2 failed, Response is nil."))
 		}
 
 		return nil
 	})
 
 	if err != nil {
-		log.Printf("[CRITAL]%s create tag_resource_tag failed, reason:%+v", logId, err)
+		log.Printf("[CRITAL]%s create tag_attachment_v2 failed, reason:%+v", logId, err)
 		return err
 	}
 
 	d.SetId(strings.Join([]string{tagKey, resourceName}, tccommon.FILED_SP))
-	return resourceTencentCloudTagResourceTagRead(d, meta)
+	return resourceTencentCloudTagAttachmentV2Read(d, meta)
 }
 
-func resourceTencentCloudTagResourceTagRead(d *schema.ResourceData, meta interface{}) error {
-	defer tccommon.LogElapsed("resource.tencentcloud_tag_resource_tag.read")()
+func resourceTencentCloudTagAttachmentV2Read(d *schema.ResourceData, meta interface{}) error {
+	defer tccommon.LogElapsed("resource.tencentcloud_tag_attachment_v2.read")()
 	defer tccommon.InconsistentCheck(d, meta)()
 
 	var (
@@ -116,13 +116,13 @@ func resourceTencentCloudTagResourceTagRead(d *schema.ResourceData, meta interfa
 	tagKey := idSplit[0]
 	resourceName := idSplit[1]
 
-	tagRes, err := service.DescribeTagResourceTagById(ctx, tagKey, resourceName)
+	tagRes, err := service.DescribeTagAttachmentV2ById(ctx, tagKey, resourceName)
 	if err != nil {
 		return err
 	}
 
 	if tagRes == nil {
-		log.Printf("[CRUD] tag_resource_tag id=%s", d.Id())
+		log.Printf("[CRUD] tag_attachment_v2 id=%s", d.Id())
 		d.SetId("")
 		return nil
 	}
@@ -140,8 +140,8 @@ func resourceTencentCloudTagResourceTagRead(d *schema.ResourceData, meta interfa
 	return nil
 }
 
-func resourceTencentCloudTagResourceTagUpdate(d *schema.ResourceData, meta interface{}) error {
-	defer tccommon.LogElapsed("resource.tencentcloud_tag_resource_tag.update")()
+func resourceTencentCloudTagAttachmentV2Update(d *schema.ResourceData, meta interface{}) error {
+	defer tccommon.LogElapsed("resource.tencentcloud_tag_attachment_v2.update")()
 	defer tccommon.InconsistentCheck(d, meta)()
 
 	var (
@@ -174,23 +174,23 @@ func resourceTencentCloudTagResourceTagUpdate(d *schema.ResourceData, meta inter
 			}
 
 			if result == nil || result.Response == nil {
-				return resource.NonRetryableError(fmt.Errorf("Update tag_resource_tag failed, Response is nil."))
+				return resource.NonRetryableError(fmt.Errorf("Update tag_attachment_v2 failed, Response is nil."))
 			}
 
 			return nil
 		})
 
 		if err != nil {
-			log.Printf("[CRITAL]%s update tag_resource_tag failed, reason:%+v", logId, err)
+			log.Printf("[CRITAL]%s update tag_attachment_v2 failed, reason:%+v", logId, err)
 			return err
 		}
 	}
 
-	return resourceTencentCloudTagResourceTagRead(d, meta)
+	return resourceTencentCloudTagAttachmentV2Read(d, meta)
 }
 
-func resourceTencentCloudTagResourceTagDelete(d *schema.ResourceData, meta interface{}) error {
-	defer tccommon.LogElapsed("resource.tencentcloud_tag_resource_tag.delete")()
+func resourceTencentCloudTagAttachmentV2Delete(d *schema.ResourceData, meta interface{}) error {
+	defer tccommon.LogElapsed("resource.tencentcloud_tag_attachment_v2.delete")()
 	defer tccommon.InconsistentCheck(d, meta)()
 
 	var (
@@ -219,14 +219,14 @@ func resourceTencentCloudTagResourceTagDelete(d *schema.ResourceData, meta inter
 		}
 
 		if result == nil || result.Response == nil {
-			return resource.NonRetryableError(fmt.Errorf("Delete tag_resource_tag failed, Response is nil."))
+			return resource.NonRetryableError(fmt.Errorf("Delete tag_attachment_v2 failed, Response is nil."))
 		}
 
 		return nil
 	})
 
 	if err != nil {
-		log.Printf("[CRITAL]%s delete tag_resource_tag failed, reason:%+v", logId, err)
+		log.Printf("[CRITAL]%s delete tag_attachment_v2 failed, reason:%+v", logId, err)
 		return err
 	}
 
