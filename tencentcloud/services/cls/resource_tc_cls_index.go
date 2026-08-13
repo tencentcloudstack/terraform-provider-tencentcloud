@@ -113,6 +113,17 @@ func ResourceTencentCloudClsIndex() *schema.Resource {
 																Optional:    true,
 																Description: "Whether Chinese characters are contained.",
 															},
+															"alias": {
+																Type:        schema.TypeString,
+																Optional:    true,
+																Description: "Field alias.",
+															},
+															"open_index_for_child_only": {
+																Type:        schema.TypeBool,
+																Optional:    true,
+																Description: "Only enable index for child nodes, this field itself is not enabled. Note: only json type fields can configure this parameter.",
+															},
+															"child_node": clsIndexChildNodeSchema(clsIndexChildNodeMaxDepth),
 														},
 													},
 												},
@@ -173,6 +184,17 @@ func ResourceTencentCloudClsIndex() *schema.Resource {
 																Optional:    true,
 																Description: "Whether Chinese characters are contained.",
 															},
+															"alias": {
+																Type:        schema.TypeString,
+																Optional:    true,
+																Description: "Field alias.",
+															},
+															"open_index_for_child_only": {
+																Type:        schema.TypeBool,
+																Optional:    true,
+																Description: "Only enable index for child nodes, this field itself is not enabled. Note: only json type fields can configure this parameter.",
+															},
+															"child_node": clsIndexChildNodeSchema(clsIndexChildNodeMaxDepth),
 														},
 													},
 												},
@@ -269,24 +291,7 @@ func resourceTencentCloudClsIndexCreate(d *schema.ResourceData, meta interface{}
 					}
 
 					if valueMap, ok := helper.InterfaceToMap(keyValueMap, "value"); ok {
-						valueInfo := cls.ValueInfo{}
-						if v, ok := valueMap["type"]; ok {
-							valueInfo.Type = helper.String(v.(string))
-						}
-
-						if v, ok := valueMap["tokenizer"]; ok {
-							valueInfo.Tokenizer = helper.String(v.(string))
-						}
-
-						if v, ok := valueMap["sql_flag"]; ok {
-							valueInfo.SqlFlag = helper.Bool(v.(bool))
-						}
-
-						if v, ok := valueMap["contain_z_h"]; ok {
-							valueInfo.ContainZH = helper.Bool(v.(bool))
-						}
-
-						keyValueInfo.Value = &valueInfo
+						keyValueInfo.Value = buildClsIndexValueInfo(valueMap)
 					}
 
 					ruleKeyValueInfo.KeyValues = append(ruleKeyValueInfo.KeyValues, &keyValueInfo)
@@ -311,24 +316,7 @@ func resourceTencentCloudClsIndexCreate(d *schema.ResourceData, meta interface{}
 					}
 
 					if valueMap, ok := helper.InterfaceToMap(keyValueMap, "value"); ok {
-						valueInfo := cls.ValueInfo{}
-						if v, ok := valueMap["type"]; ok {
-							valueInfo.Type = helper.String(v.(string))
-						}
-
-						if v, ok := valueMap["tokenizer"]; ok {
-							valueInfo.Tokenizer = helper.String(v.(string))
-						}
-
-						if v, ok := valueMap["sql_flag"]; ok {
-							valueInfo.SqlFlag = helper.Bool(v.(bool))
-						}
-
-						if v, ok := valueMap["contain_z_h"]; ok {
-							valueInfo.ContainZH = helper.Bool(v.(bool))
-						}
-
-						keyValueInfo.Value = &valueInfo
+						keyValueInfo.Value = buildClsIndexValueInfo(valueMap)
 					}
 
 					ruleTagInfo.KeyValues = append(ruleTagInfo.KeyValues, &keyValueInfo)
@@ -451,24 +439,7 @@ func resourceTencentCloudClsIndexRead(d *schema.ResourceData, meta interface{}) 
 					}
 
 					if keyValueInfo.Value != nil {
-						valueInfoMap := map[string]interface{}{}
-						if keyValueInfo.Value.Type != nil {
-							valueInfoMap["type"] = keyValueInfo.Value.Type
-						}
-
-						if keyValueInfo.Value.Tokenizer != nil {
-							valueInfoMap["tokenizer"] = keyValueInfo.Value.Tokenizer
-						}
-
-						if keyValueInfo.Value.SqlFlag != nil {
-							valueInfoMap["sql_flag"] = keyValueInfo.Value.SqlFlag
-						}
-
-						if keyValueInfo.Value.ContainZH != nil {
-							valueInfoMap["contain_z_h"] = keyValueInfo.Value.ContainZH
-						}
-
-						keyValueInfoMap["value"] = []interface{}{valueInfoMap}
+						keyValueInfoMap["value"] = []interface{}{flattenClsIndexValueInfo(keyValueInfo.Value, clsIndexChildNodeMaxDepth)}
 					}
 
 					keyValuesList = append(keyValuesList, keyValueInfoMap)
@@ -492,14 +463,7 @@ func resourceTencentCloudClsIndexRead(d *schema.ResourceData, meta interface{}) 
 					}
 
 					if keyValueInfo.Value != nil {
-						valueInfoMap := map[string]interface{}{
-							"type":        keyValueInfo.Value.Type,
-							"tokenizer":   keyValueInfo.Value.Tokenizer,
-							"sql_flag":    keyValueInfo.Value.SqlFlag,
-							"contain_z_h": keyValueInfo.Value.ContainZH,
-						}
-
-						keyValueInfoMap["value"] = []interface{}{valueInfoMap}
+						keyValueInfoMap["value"] = []interface{}{flattenClsIndexValueInfo(keyValueInfo.Value, clsIndexChildNodeMaxDepth)}
 					}
 
 					keyValuesList = append(keyValuesList, keyValueInfoMap)
@@ -589,26 +553,8 @@ func resourceTencentCloudClsIndexUpdate(d *schema.ResourceData, meta interface{}
 						keyValueInfo.Key = helper.String(v.(string))
 					}
 
-					if v, ok := keyValueMap["value"]; ok {
-						valueMap := v.([]interface{})[0].(map[string]interface{})
-						valueInfo := cls.ValueInfo{}
-						if v, ok := valueMap["type"]; ok {
-							valueInfo.Type = helper.String(v.(string))
-						}
-
-						if v, ok := valueMap["tokenizer"]; ok {
-							valueInfo.Tokenizer = helper.String(v.(string))
-						}
-
-						if v, ok := valueMap["sql_flag"]; ok {
-							valueInfo.SqlFlag = helper.Bool(v.(bool))
-						}
-
-						if v, ok := valueMap["contain_z_h"]; ok {
-							valueInfo.ContainZH = helper.Bool(v.(bool))
-						}
-
-						keyValueInfo.Value = &valueInfo
+					if valueMap, ok := helper.InterfaceToMap(keyValueMap, "value"); ok {
+						keyValueInfo.Value = buildClsIndexValueInfo(valueMap)
 					}
 
 					ruleKeyValueInfo.KeyValues = append(ruleKeyValueInfo.KeyValues, &keyValueInfo)
@@ -632,26 +578,8 @@ func resourceTencentCloudClsIndexUpdate(d *schema.ResourceData, meta interface{}
 						keyValueInfo.Key = helper.String(v.(string))
 					}
 
-					if v, ok := keyValueMap["value"]; ok {
-						valueMap := v.([]interface{})[0].(map[string]interface{})
-						valueInfo := cls.ValueInfo{}
-						if v, ok := valueMap["type"]; ok {
-							valueInfo.Type = helper.String(v.(string))
-						}
-
-						if v, ok := valueMap["tokenizer"]; ok {
-							valueInfo.Tokenizer = helper.String(v.(string))
-						}
-
-						if v, ok := valueMap["sql_flag"]; ok {
-							valueInfo.SqlFlag = helper.Bool(v.(bool))
-						}
-
-						if v, ok := valueMap["contain_z_h"]; ok {
-							valueInfo.ContainZH = helper.Bool(v.(bool))
-						}
-
-						keyValueInfo.Value = &valueInfo
+					if valueMap, ok := helper.InterfaceToMap(keyValueMap, "value"); ok {
+						keyValueInfo.Value = buildClsIndexValueInfo(valueMap)
 					}
 
 					ruleTagInfo.KeyValues = append(ruleTagInfo.KeyValues, &keyValueInfo)
@@ -720,4 +648,180 @@ func resourceTencentCloudClsIndexDelete(d *schema.ResourceData, meta interface{}
 	}
 
 	return nil
+}
+
+// clsIndexChildNodeMaxDepth limits the maximum recursion level of the json child node (ChildNode).
+// Although the SDK allows unlimited recursion, the Terraform schema must be bounded.
+const clsIndexChildNodeMaxDepth = 5
+
+// clsIndexChildNodeSchema returns the recursive `child_node` schema (corresponding to the SDK
+// ChildNode []*KeyValueInfo). Each element is a key-value pair whose `value` (ValueInfo) again
+// contains `child_node` until the depth is exhausted, so the json child node can be nested up to
+// clsIndexChildNodeMaxDepth levels.
+func clsIndexChildNodeSchema(depth int) *schema.Schema {
+	valueSchema := map[string]*schema.Schema{
+		"type": {
+			Type:        schema.TypeString,
+			Required:    true,
+			Description: "Field type. Valid values: long, text, double.",
+		},
+		"tokenizer": {
+			Type:        schema.TypeString,
+			Optional:    true,
+			Description: "Field delimiter, which is meaningful only if the field type is text. Each character in the entered string represents a delimiter.",
+		},
+		"sql_flag": {
+			Type:        schema.TypeBool,
+			Optional:    true,
+			Description: "Whether the analysis feature is enabled for the field.",
+		},
+		"contain_z_h": {
+			Type:        schema.TypeBool,
+			Optional:    true,
+			Description: "Whether Chinese characters are contained.",
+		},
+		"alias": {
+			Type:        schema.TypeString,
+			Optional:    true,
+			Description: "Field alias.",
+		},
+		"open_index_for_child_only": {
+			Type:        schema.TypeBool,
+			Optional:    true,
+			Description: "Only enable index for child nodes, this field itself is not enabled. Note: only json type fields can configure this parameter.",
+		},
+	}
+
+	// Append the next level of child_node until the maximum depth is reached.
+	if depth > 1 {
+		valueSchema["child_node"] = clsIndexChildNodeSchema(depth - 1)
+	}
+
+	return &schema.Schema{
+		Type:        schema.TypeList,
+		Optional:    true,
+		Description: "Json child node list (recursive, up to 5 levels). Note: only json type fields can configure this parameter.",
+		Elem: &schema.Resource{
+			Schema: map[string]*schema.Schema{
+				"key": {
+					Type:        schema.TypeString,
+					Optional:    true,
+					Description: "Field name of the json child node.",
+				},
+				"value": {
+					Type:        schema.TypeList,
+					MaxItems:    1,
+					Optional:    true,
+					Description: "Field index description information of the json child node.",
+					Elem: &schema.Resource{
+						Schema: valueSchema,
+					},
+				},
+			},
+		},
+	}
+}
+
+// buildClsIndexValueInfo builds the SDK ValueInfo (including the recursive ChildNode) from the
+// schema value map.
+func buildClsIndexValueInfo(valueMap map[string]interface{}) *cls.ValueInfo {
+	valueInfo := cls.ValueInfo{}
+	if v, ok := valueMap["type"]; ok {
+		valueInfo.Type = helper.String(v.(string))
+	}
+
+	if v, ok := valueMap["tokenizer"]; ok {
+		valueInfo.Tokenizer = helper.String(v.(string))
+	}
+
+	if v, ok := valueMap["sql_flag"]; ok {
+		valueInfo.SqlFlag = helper.Bool(v.(bool))
+	}
+
+	if v, ok := valueMap["contain_z_h"]; ok {
+		valueInfo.ContainZH = helper.Bool(v.(bool))
+	}
+
+	if v, ok := valueMap["alias"]; ok {
+		valueInfo.Alias = helper.String(v.(string))
+	}
+
+	if v, ok := valueMap["open_index_for_child_only"]; ok {
+		valueInfo.OpenIndexForChildOnly = helper.Bool(v.(bool))
+	}
+
+	if v, ok := valueMap["child_node"]; ok {
+		for _, childNode := range v.([]interface{}) {
+			childNodeMap := childNode.(map[string]interface{})
+			childKeyValueInfo := cls.KeyValueInfo{}
+			if vv, ok := childNodeMap["key"]; ok {
+				childKeyValueInfo.Key = helper.String(vv.(string))
+			}
+
+			if childValueMap, ok := helper.InterfaceToMap(childNodeMap, "value"); ok {
+				childKeyValueInfo.Value = buildClsIndexValueInfo(childValueMap)
+			}
+
+			valueInfo.ChildNode = append(valueInfo.ChildNode, &childKeyValueInfo)
+		}
+	}
+
+	return &valueInfo
+}
+
+// flattenClsIndexValueInfo flattens the SDK ValueInfo (including the recursive ChildNode) into a
+// schema value map. `depth` limits the recursion level to match the schema (max 5).
+func flattenClsIndexValueInfo(valueInfo *cls.ValueInfo, depth int) map[string]interface{} {
+	if valueInfo == nil {
+		return nil
+	}
+
+	valueInfoMap := map[string]interface{}{}
+	if valueInfo.Type != nil {
+		valueInfoMap["type"] = valueInfo.Type
+	}
+
+	if valueInfo.Tokenizer != nil {
+		valueInfoMap["tokenizer"] = valueInfo.Tokenizer
+	}
+
+	if valueInfo.SqlFlag != nil {
+		valueInfoMap["sql_flag"] = valueInfo.SqlFlag
+	}
+
+	if valueInfo.ContainZH != nil {
+		valueInfoMap["contain_z_h"] = valueInfo.ContainZH
+	}
+
+	if valueInfo.Alias != nil {
+		valueInfoMap["alias"] = valueInfo.Alias
+	}
+
+	if valueInfo.OpenIndexForChildOnly != nil {
+		valueInfoMap["open_index_for_child_only"] = valueInfo.OpenIndexForChildOnly
+	}
+
+	if depth > 0 && valueInfo.ChildNode != nil {
+		childNodeList := make([]interface{}, 0, len(valueInfo.ChildNode))
+		for _, childNode := range valueInfo.ChildNode {
+			if childNode == nil {
+				continue
+			}
+
+			childNodeMap := map[string]interface{}{}
+			if childNode.Key != nil {
+				childNodeMap["key"] = childNode.Key
+			}
+
+			if childNode.Value != nil {
+				childNodeMap["value"] = []interface{}{flattenClsIndexValueInfo(childNode.Value, depth-1)}
+			}
+
+			childNodeList = append(childNodeList, childNodeMap)
+		}
+
+		valueInfoMap["child_node"] = childNodeList
+	}
+
+	return valueInfoMap
 }

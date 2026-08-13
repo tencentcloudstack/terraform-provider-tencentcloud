@@ -1,5 +1,10 @@
 Provides a resource to create a Waf clb domain
 
+~> **NOTE:** There are two modes for the `flow_made` field:
+##### `Cleaning mode`: Business traffic is forwarded to the WAF cluster, which performs bypass detection and alerting, synchronizes requests for trusted status, and the gateway cluster intercepts or releases requests based on the status. (Recommended)
+##### `Mirror mode`: Mirror traffic to WAF cluster, WAF performs bypass detection and alarm, and does not return request trusted status.
+The default value for creating resources in TF is mirror mode. If WAF needs to handle traffic, please set it to clean mode.
+
 Example Usage
 
 Create a basic waf clb domain

@@ -1,0 +1,11 @@
+```release-note:new-resource
+tencentcloud_dbdc_db_custom_cluster
+```
+
+```release-note:new-resource
+tencentcloud_dbdc_db_custom_node
+```
+
+```release-note:new-resource
+tencentcloud_dbdc_node_to_db_custom_cluster_attachment
+```

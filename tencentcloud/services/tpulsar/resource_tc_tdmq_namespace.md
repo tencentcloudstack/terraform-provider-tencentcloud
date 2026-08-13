@@ -20,6 +20,10 @@ resource "tencentcloud_tdmq_namespace" "example" {
     size_in_mb      = 10
   }
   remark = "remark."
+  tags {
+    tag_key   = "createdBy"
+    tag_value = "terraform"
+  }
 }
 ```
 

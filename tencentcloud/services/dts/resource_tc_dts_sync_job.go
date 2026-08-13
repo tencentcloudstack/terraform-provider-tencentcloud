@@ -17,8 +17,9 @@ import (
 
 func ResourceTencentCloudDtsSyncJob() *schema.Resource {
 	return &schema.Resource{
-		Read:   resourceTencentCloudDtsSyncJobRead,
 		Create: resourceTencentCloudDtsSyncJobCreate,
+		Read:   resourceTencentCloudDtsSyncJobRead,
+		Update: resourceTencentCloudDtsSyncJobUpdate,
 		Delete: resourceTencentCloudDtsSyncJobDelete,
 		Importer: &schema.ResourceImporter{
 			State: schema.ImportStatePassthrough,
@@ -28,35 +29,35 @@ func ResourceTencentCloudDtsSyncJob() *schema.Resource {
 				Type:        schema.TypeString,
 				Required:    true,
 				ForceNew:    true,
-				Description: "pay mode, optional value is PrePay or PostPay.",
+				Description: "Billing type. Valid values: `PrePay` (subscription, monthly/yearly billing), `PostPay` (pay-as-you-go).",
 			},
 
 			"src_database_type": {
 				Type:        schema.TypeString,
 				Required:    true,
 				ForceNew:    true,
-				Description: "source database type.",
+				Description: "Source database type, such as `mysql`, `mariadb`, `percona`, `postgresql`, `cynosdbmysql` (TDSQL-C MySQL), `tdpg` (TDSQL for PostgreSQL), `tdsqlmysql`, `tdstore` (TDSQL TDStore), etc.",
 			},
 
 			"src_region": {
 				Type:        schema.TypeString,
 				Required:    true,
 				ForceNew:    true,
-				Description: "source region.",
+				Description: "The region where the source database resides, such as `ap-guangzhou`.",
 			},
 
 			"dst_database_type": {
 				Type:        schema.TypeString,
 				Required:    true,
 				ForceNew:    true,
-				Description: "destination database type.",
+				Description: "Destination database type, such as `mysql`, `mariadb`, `percona`, `cynosdbmysql` (TDSQL-C MySQL), `tdpg` (TDSQL for PostgreSQL), `tdsqlmysql`, `kafka`, `tdstore` (TDSQL TDStore), etc.",
 			},
 
 			"dst_region": {
 				Type:        schema.TypeString,
 				Required:    true,
 				ForceNew:    true,
-				Description: "destination region.",
+				Description: "The region where the destination database resides, such as `ap-guangzhou`.",
 			},
 
 			"specification": {
@@ -64,7 +65,7 @@ func ResourceTencentCloudDtsSyncJob() *schema.Resource {
 				Optional:    true,
 				Computed:    true,
 				ForceNew:    true,
-				Description: "specification.",
+				Description: "Sync job specification. `Standard` indicates the standard edition; currently only `Standard` is supported.",
 			},
 
 			"tags": {
@@ -72,18 +73,18 @@ func ResourceTencentCloudDtsSyncJob() *schema.Resource {
 				Optional:    true,
 				Computed:    true,
 				ForceNew:    true,
-				Description: "tags.",
+				Description: "Tag information.",
 				Elem: &schema.Resource{
 					Schema: map[string]*schema.Schema{
 						"tag_key": {
 							Type:        schema.TypeString,
 							Optional:    true,
-							Description: "tag key.",
+							Description: "Tag key.",
 						},
 						"tag_value": {
 							Type:        schema.TypeString,
 							Optional:    true,
-							Description: "tag value.",
+							Description: "Tag value.",
 						},
 					},
 				},
@@ -94,15 +95,14 @@ func ResourceTencentCloudDtsSyncJob() *schema.Resource {
 				Optional:    true,
 				Computed:    true,
 				ForceNew:    true,
-				Description: "auto renew.",
+				Description: "Auto-renewal flag. Only takes effect when `pay_mode` is `PrePay`. Valid values: `1` (enable auto-renewal), `0` (disable auto-renewal, default).",
 			},
 
 			"instance_class": {
 				Type:        schema.TypeString,
 				Optional:    true,
 				Computed:    true,
-				ForceNew:    true,
-				Description: "instance class.",
+				Description: "Sync link specification, such as `micro`, `small`, `medium`, `large`. Default is `medium`.",
 			},
 
 			"job_name": {
@@ -110,7 +110,7 @@ func ResourceTencentCloudDtsSyncJob() *schema.Resource {
 				Optional:    true,
 				Computed:    true,
 				ForceNew:    true,
-				Description: "job name.",
+				Description: "Sync job name.",
 			},
 
 			"existed_job_id": {
@@ -118,13 +118,13 @@ func ResourceTencentCloudDtsSyncJob() *schema.Resource {
 				Optional:    true,
 				Computed:    true,
 				ForceNew:    true,
-				Description: "existed job id.",
+				Description: "The existing sync job ID used to create a similar job.",
 			},
 
 			"job_id": {
 				Type:        schema.TypeString,
 				Computed:    true,
-				Description: "job id.",
+				Description: "Sync job ID.",
 			},
 		},
 	}
@@ -134,9 +134,8 @@ func resourceTencentCloudDtsSyncJobCreate(d *schema.ResourceData, meta interface
 	defer tccommon.LogElapsed("resource.tencentcloud_dts_sync_job.create")()
 	defer tccommon.InconsistentCheck(d, meta)()
 
-	logId := tccommon.GetLogId(tccommon.ContextNil)
-
 	var (
+		logId    = tccommon.GetLogId(tccommon.ContextNil)
 		request  = dts.NewCreateSyncJobRequest()
 		response *dts.CreateSyncJobResponse
 		jobId    string
@@ -180,7 +179,7 @@ func resourceTencentCloudDtsSyncJobCreate(d *schema.ResourceData, meta interface
 		}
 	}
 
-	if v, ok := d.GetOk("auto_renew"); ok {
+	if v, ok := d.GetOkExists("auto_renew"); ok {
 		request.AutoRenew = helper.IntUint64(v.(int))
 	}
 
@@ -204,6 +203,11 @@ func resourceTencentCloudDtsSyncJobCreate(d *schema.ResourceData, meta interface
 			log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n",
 				logId, request.GetAction(), request.ToJsonString(), result.ToJsonString())
 		}
+
+		if result == nil || result.Response == nil {
+			return resource.NonRetryableError(fmt.Errorf("Create dts syncJob failed, Response is nil."))
+		}
+
 		response = result
 		return nil
 	})
@@ -213,8 +217,11 @@ func resourceTencentCloudDtsSyncJobCreate(d *schema.ResourceData, meta interface
 		return err
 	}
 
-	jobId = *response.Response.JobIds[0]
+	if response.Response.JobIds == nil || len(response.Response.JobIds) == 0 {
+		return fmt.Errorf("JobIds is nil.")
+	}
 
+	jobId = *response.Response.JobIds[0]
 	d.SetId(jobId)
 	return resourceTencentCloudDtsSyncJobRead(d, meta)
 }
@@ -223,22 +230,30 @@ func resourceTencentCloudDtsSyncJobRead(d *schema.ResourceData, meta interface{}
 	defer tccommon.LogElapsed("resource.tencentcloud_dts_sync_job.read")()
 	defer tccommon.InconsistentCheck(d, meta)()
 
-	logId := tccommon.GetLogId(tccommon.ContextNil)
-	ctx := context.WithValue(context.TODO(), tccommon.LogIdKey, logId)
-
-	service := DtsService{client: meta.(tccommon.ProviderMeta).GetAPIV3Conn()}
-
-	syncJobId := d.Id()
+	var (
+		logId     = tccommon.GetLogId(tccommon.ContextNil)
+		ctx       = context.WithValue(context.TODO(), tccommon.LogIdKey, logId)
+		service   = DtsService{client: meta.(tccommon.ProviderMeta).GetAPIV3Conn()}
+		syncJobId = d.Id()
+	)
 
 	syncJob, err := service.DescribeDtsSyncJob(ctx, helper.String(syncJobId))
-
 	if err != nil {
+		if !d.IsNewResource() && IsDTSResourceNotFoundError(err) {
+			log.Printf("[CRUD] tencentcloud_dts_sync_job id=%s", d.Id())
+			d.SetId("")
+			return nil
+		}
 		return err
 	}
 
 	if syncJob == nil {
+		log.Printf("[CRUD] tencentcloud_dts_sync_job id=%s", d.Id())
+		if d.IsNewResource() {
+			return fmt.Errorf("tencentcloud_dts_sync_job [%s] not found after creation", d.Id())
+		}
 		d.SetId("")
-		return fmt.Errorf("resource `syncJob` %s does not exist", syncJobId)
+		return nil
 	}
 
 	if syncJob.PayMode != nil {
@@ -300,23 +315,63 @@ func resourceTencentCloudDtsSyncJobRead(d *schema.ResourceData, meta interface{}
 	return nil
 }
 
+func resourceTencentCloudDtsSyncJobUpdate(d *schema.ResourceData, meta interface{}) error {
+	defer tccommon.LogElapsed("resource.tencentcloud_dts_sync_job.update")()
+	defer tccommon.InconsistentCheck(d, meta)()
+
+	var (
+		logId     = tccommon.GetLogId(tccommon.ContextNil)
+		syncJobId = d.Id()
+	)
+
+	if d.HasChange("instance_class") {
+		request := dts.NewResizeSyncJobRequest()
+		if v, ok := d.GetOk("instance_class"); ok {
+			request.NewInstanceClass = helper.String(v.(string))
+		}
+
+		request.JobId = &syncJobId
+		err := resource.Retry(tccommon.WriteRetryTimeout, func() *resource.RetryError {
+			result, e := meta.(tccommon.ProviderMeta).GetAPIV3Conn().UseDtsClient().ResizeSyncJob(request)
+			if e != nil {
+				return tccommon.RetryError(e)
+			} else {
+				log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n",
+					logId, request.GetAction(), request.ToJsonString(), result.ToJsonString())
+			}
+
+			if result == nil || result.Response == nil {
+				return resource.NonRetryableError(fmt.Errorf("Resize syncJob failed, Response is nil."))
+			}
+
+			return nil
+		})
+
+		if err != nil {
+			log.Printf("[CRITAL]%s resize dts syncJob failed, reason:%+v", logId, err)
+			return err
+		}
+	}
+
+	return resourceTencentCloudDtsSyncJobRead(d, meta)
+}
+
 func resourceTencentCloudDtsSyncJobDelete(d *schema.ResourceData, meta interface{}) error {
 	defer tccommon.LogElapsed("resource.tencentcloud_dts_sync_job.delete")()
 	defer tccommon.InconsistentCheck(d, meta)()
 
-	logId := tccommon.GetLogId(tccommon.ContextNil)
-	ctx := context.WithValue(context.TODO(), tccommon.LogIdKey, logId)
-
-	service := DtsService{client: meta.(tccommon.ProviderMeta).GetAPIV3Conn()}
-
-	syncJobId := d.Id()
+	var (
+		logId     = tccommon.GetLogId(tccommon.ContextNil)
+		ctx       = context.WithValue(context.TODO(), tccommon.LogIdKey, logId)
+		service   = DtsService{client: meta.(tccommon.ProviderMeta).GetAPIV3Conn()}
+		syncJobId = d.Id()
+	)
 
 	if err := service.IsolateDtsSyncJobById(ctx, syncJobId); err != nil {
 		return err
 	}
 
 	conf := tccommon.BuildStateChangeConf([]string{}, []string{"Isolated", "Stopped", "NotBilledByInternational", "NotBilled"}, 2*tccommon.ReadRetryTimeout, time.Second, service.DtsSyncJobConfigIsolateStateRefreshFunc(d.Id(), []string{}))
-
 	if _, e := conf.WaitForState(); e != nil {
 		return e
 	}

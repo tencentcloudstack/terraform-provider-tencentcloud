@@ -27,6 +27,19 @@ resource "tencentcloud_apm_instance" "example" {
 }
 ```
 
+### CLS key-value index configuration example
+
+```hcl
+resource "tencentcloud_apm_instance" "example" {
+  name             = "tf-example"
+  description      = "desc."
+  is_related_log   = 1
+  log_index_type   = 1
+  log_trace_id_key = "traceId"
+  log_span_id_key  = "spanId"
+}
+```
+
 ## Argument Reference
 
 The following arguments are supported:
@@ -60,6 +73,7 @@ The following arguments are supported:
 * `log_region` - (Optional, String) Log region, which takes effect after the log feature is enabled.
 * `log_set` - (Optional, String) Logset, which takes effect only after the log feature is enabled.
 * `log_source` - (Optional, String) Log source, which takes effect only after the log feature is enabled.
+* `log_span_id_key` - (Optional, String) Index key of spanId. It is valid when the CLS index type is key-value index.
 * `log_topic_id` - (Optional, String) CLS log topic id, which takes effect after the log feature is enabled.
 * `log_trace_id_key` - (Optional, String) Index key of traceId. It is valid when the CLS index type is key-value index.
 * `open_billing` - (Optional, Bool) Billing switch.

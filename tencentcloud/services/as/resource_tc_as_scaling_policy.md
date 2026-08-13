@@ -109,3 +109,11 @@ resource "tencentcloud_as_scaling_policy" "example" {
   target_value           = 80
 }
 ```
+
+Import
+
+AS scaling policy can be imported using the id, e.g.
+
+```
+terraform import tencentcloud_as_scaling_policy.example asp-519acdug
+```

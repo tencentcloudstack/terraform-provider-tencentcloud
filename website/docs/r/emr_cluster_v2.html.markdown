@@ -11,7 +11,7 @@ description: |-
 
 Provides a resource to create a EMR cluster (v2).
 
-~> **NOTE:** At create time, every block of the same role within a zone (i.e. all `master_resource_spec` blocks, all `core_resource_spec` blocks, etc.) must declare an identical configuration — including `instance_type`, `system_disk`, `data_disk`, and `software`. The EMR `CreateCluster` API only accepts a single resource template per role and provisions the requested count of identical nodes from it. To run heterogeneous configurations within the same role, first create the cluster with uniform blocks, then customize individual nodes via subsequent `terraform apply` updates (resize disks, change `instance_type`, add data disks, etc.).
+~> **NOTE:** At create time, every block of the same role within a zone (i.e. all `master_resource_spec` blocks, all `core_resource_spec` blocks, etc. —excluding the `router_resource_spec`) must declare an identical configuration — including `instance_type`, `system_disk`, `data_disk`, and `software`. The EMR `CreateCluster` API only accepts a single resource template per role and provisions the requested count of identical nodes from it. To run heterogeneous configurations within the same role, first create the cluster with uniform blocks, then customize individual nodes via subsequent `terraform apply` updates (resize disks, change `instance_type`, add data disks, etc.).
 
 ## Example Usage
 
@@ -497,6 +497,7 @@ The `all_node_resource_spec` object of `zone_resource_configuration` supports th
 * `common_resource_spec` - (Optional, Set) Common node resource specifications. Number of blocks = `CommonCount`. All blocks must have identical configuration; the first block is the single resource template sent to the API. This field is a `TypeSet` keyed by `_node_index` only  block order in HCL is irrelevant.
 * `core_resource_spec` - (Optional, Set) Core node resource specifications. Number of blocks = `CoreCount`. All blocks must have identical configuration; the first block is the single resource template sent to the API. This field is a `TypeSet` keyed by `_node_index` only  block order in HCL is irrelevant.
 * `master_resource_spec` - (Optional, Set) Master node resource specifications. Number of blocks = `MasterCount`. All blocks must have identical configuration; the first block is the single resource template sent to the API. This field is a `TypeSet` keyed by `_node_index` only  block order in HCL is irrelevant.
+* `router_resource_spec` - (Optional, Set) Router node resource specifications. Router nodes are NOT created by `CreateCluster`; instead they are added via `ScaleOutCluster` (NodeFlag=ROUTER) after the cluster becomes running. Unlike the other roles, router blocks are NOT required to be identical to each other. This field is a `TypeSet` keyed by `_node_index` only  block order in HCL is irrelevant.
 * `task_resource_spec` - (Optional, Set) Task node resource specifications. Number of blocks = `TaskCount`. All blocks must have identical configuration; the first block is the single resource template sent to the API. This field is a `TypeSet` keyed by `_node_index` only  block order in HCL is irrelevant.
 
 The `common_resource_spec` object of `all_node_resource_spec` supports the following:
@@ -528,6 +529,12 @@ The `data_disk` object of `core_resource_spec` supports the following:
 * `disk_type` - (Optional, String) Disk type. Valid values: `CLOUD_SSD`, `CLOUD_PREMIUM`, `CLOUD_BASIC`, `LOCAL_BASIC`, `LOCAL_SSD`, `CLOUD_HSSD`, `CLOUD_THROUGHPUT`, `CLOUD_TSSD`, `CLOUD_BIGDATA`, `CLOUD_HIGHIO`, `CLOUD_BSSD`, `REMOTE_SSD`. Immutable after creation.
 
 The `data_disk` object of `master_resource_spec` supports the following:
+
+* `_disk_index` - (Required, String) **Required** stable identity key for this `data_disk` block. Must be unique within the same node's `data_disk` set, and must remain stable across plan/apply once written to state. Renaming an existing `_disk_index` is rejected (treated as remove+add, which violates the no-shrink rule).
+* `disk_size` - (Optional, Int) Disk size in GB. Can only be increased after creation; shrinking is rejected at plan time.
+* `disk_type` - (Optional, String) Disk type. Valid values: `CLOUD_SSD`, `CLOUD_PREMIUM`, `CLOUD_BASIC`, `LOCAL_BASIC`, `LOCAL_SSD`, `CLOUD_HSSD`, `CLOUD_THROUGHPUT`, `CLOUD_TSSD`, `CLOUD_BIGDATA`, `CLOUD_HIGHIO`, `CLOUD_BSSD`, `REMOTE_SSD`. Immutable after creation.
+
+The `data_disk` object of `router_resource_spec` supports the following:
 
 * `_disk_index` - (Required, String) **Required** stable identity key for this `data_disk` block. Must be unique within the same node's `data_disk` set, and must remain stable across plan/apply once written to state. Renaming an existing `_disk_index` is rejected (treated as remove+add, which violates the no-shrink rule).
 * `disk_size` - (Optional, Int) Disk size in GB. Can only be increased after creation; shrinking is rejected at plan time.
@@ -575,6 +582,14 @@ The `placement` object of `zone_resource_configuration` supports the following:
 * `project_id` - (Optional, Int, ForceNew) Project ID. Defaults to default project if omitted.
 * `zone` - (Optional, String, ForceNew) Availability zone, e.g., `ap-guangzhou-7`.
 
+The `router_resource_spec` object of `all_node_resource_spec` supports the following:
+
+* `_node_index` - (Required, String) **Required** stable identity key for this node spec block. Must be unique within the same role's set, and must remain stable across plan/apply. Used by the Update handler to pair old/new blocks for in-place modification. Renaming an existing `_node_index` is rejected by CustomizeDiff for master/common (length immutable); for core/task it is interpreted as scale-in old + scale-out new.
+* `software` - (Required, Set) Per-role software components (with their role/process lists) deployed on this node role. Must be identical across every block of the same role at create time. Aggregated across all four roles (deduped by `services`) and passed to `CreateCluster` as `SceneSoftwareConfig.Software`. Immutable after create modification is rejected at plan time by CustomizeDiff.
+* `data_disk` - (Optional, Set) Cloud data disk specifications. `TypeSet` keyed by full content (including `_disk_index`); block order in HCL is irrelevant.
+* `instance_type` - (Optional, String) CVM instance type, e.g., `S6.2XLARGE32`, `SA4.8XLARGE64`.
+* `system_disk` - (Optional, List) System disk specifications.
+
 The `scene_software_config` object supports the following:
 
 * `scene_name` - (Optional, String, ForceNew) Scenario name, e.g., `Hadoop-Default`, `Hadoop-Kudu`, `Hadoop-Zookeeper`, `Hadoop-Presto`, `Hadoop-Hbase`.
@@ -602,6 +617,11 @@ The `software` object of `master_resource_spec` supports the following:
 * `roles` - (Required, Set) Process list for this component on this role, e.g., `["NameNode", "ZKFailoverController"]` for hdfs.
 * `services` - (Required, String) Component name with version, e.g., `hdfs-3.2.2`.
 
+The `software` object of `router_resource_spec` supports the following:
+
+* `roles` - (Required, Set) Process list for this component on this role, e.g., `["NameNode", "ZKFailoverController"]` for hdfs.
+* `services` - (Required, String) Component name with version, e.g., `hdfs-3.2.2`.
+
 The `software` object of `task_resource_spec` supports the following:
 
 * `roles` - (Required, Set) Process list for this component on this role, e.g., `["NameNode", "ZKFailoverController"]` for hdfs.
@@ -618,6 +638,11 @@ The `system_disk` object of `core_resource_spec` supports the following:
 * `disk_type` - (Optional, String) Disk type. Valid values: `CLOUD_SSD`, `CLOUD_PREMIUM`, `CLOUD_BASIC`, `LOCAL_BASIC`, `LOCAL_SSD`.
 
 The `system_disk` object of `master_resource_spec` supports the following:
+
+* `disk_size` - (Optional, Int) Disk size in GB.
+* `disk_type` - (Optional, String) Disk type. Valid values: `CLOUD_SSD`, `CLOUD_PREMIUM`, `CLOUD_BASIC`, `LOCAL_BASIC`, `LOCAL_SSD`.
+
+The `system_disk` object of `router_resource_spec` supports the following:
 
 * `disk_size` - (Optional, Int) Disk size in GB.
 * `disk_type` - (Optional, String) Disk type. Valid values: `CLOUD_SSD`, `CLOUD_PREMIUM`, `CLOUD_BASIC`, `LOCAL_BASIC`, `LOCAL_SSD`.

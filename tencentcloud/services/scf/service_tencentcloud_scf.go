@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"log"
 	"strings"
+	"time"
 
 	tccommon "github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/common"
 
@@ -52,6 +53,8 @@ type scfFunctionInfo struct {
 	asyncRunEnable *string
 	dnsCache       *string
 	intranetConfig *scf.IntranetConfigIn
+
+	instanceConcurrencyConfig *scf.InstanceConcurrencyConfig
 }
 
 type scfTrigger struct {
@@ -129,6 +132,7 @@ func (me *ScfService) CreateFunction(ctx context.Context, info scfFunctionInfo) 
 	request.AsyncRunEnable = info.asyncRunEnable
 	request.DnsCache = info.dnsCache
 	request.IntranetConfig = info.intranetConfig
+	request.InstanceConcurrencyConfig = info.instanceConcurrencyConfig
 
 	if err := resource.Retry(tccommon.WriteRetryTimeout, func() *resource.RetryError {
 		ratelimit.Check(request.GetAction())
@@ -321,6 +325,7 @@ func (me *ScfService) ModifyFunctionConfig(ctx context.Context, info scfFunction
 
 	request.DnsCache = info.dnsCache
 	request.IntranetConfig = info.intranetConfig
+	request.InstanceConcurrencyConfig = info.instanceConcurrencyConfig
 
 	if err := resource.Retry(tccommon.WriteRetryTimeout, func() *resource.RetryError {
 		ratelimit.Check(request.GetAction())
@@ -633,6 +638,7 @@ func waitScfFunctionReady(ctx context.Context, name, namespace string, client *s
 			return resource.RetryableError(errors.New("function is not ready"))
 
 		case SCF_FUNCTION_STATUS_ACTIVE:
+			time.Sleep(3 * time.Second)
 			return nil
 
 		default:
@@ -1427,5 +1433,60 @@ func (me *ScfService) DescribeScfCustomDomainById(ctx context.Context, domain st
 	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
 
 	ret = response.Response
+	return
+}
+
+func (me *ScfService) DescribeScfTriggerById(ctx context.Context, functionName string, namespace string, triggerName string) (trigger *scf.TriggerInfo, errRet error) {
+	logId := tccommon.GetLogId(ctx)
+
+	request := scf.NewListTriggersRequest()
+	request.FunctionName = &functionName
+	request.Namespace = &namespace
+
+	filter := scf.Filter{
+		Name:   helper.String("TriggerName"),
+		Values: []*string{&triggerName},
+	}
+
+	request.Filters = append(request.Filters, &filter)
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	ratelimit.Check(request.GetAction())
+
+	var (
+		offset uint64 = 0
+		limit  uint64 = 20
+	)
+	instances := make([]*scf.TriggerInfo, 0)
+	for {
+		request.Offset = &offset
+		request.Limit = &limit
+		response, err := me.client.UseScfClient().ListTriggers(request)
+		if err != nil {
+			errRet = err
+			return
+		}
+		log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+		if response == nil || len(response.Response.Triggers) < 1 {
+			break
+		}
+		instances = append(instances, response.Response.Triggers...)
+		if len(response.Response.Triggers) < int(limit) {
+			break
+		}
+
+		offset += limit
+	}
+
+	if len(instances) < 1 {
+		return
+	}
+	trigger = instances[0]
 	return
 }

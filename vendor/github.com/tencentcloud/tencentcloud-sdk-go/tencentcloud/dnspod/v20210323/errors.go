@@ -1,4 +1,4 @@
-// Copyright (c) 2017-2018 THL A29 Limited, a Tencent company. All Rights Reserved.
+// Copyright (c) 2017-2025 Tencent. All Rights Reserved.
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -29,6 +29,9 @@ const (
 	// 抱歉，该账户已经被锁定。
 	FAILEDOPERATION_ACCOUNTISLOCKED = "FailedOperation.AccountIsLocked"
 
+	// 当前套餐版本不支持流量分析，请先升级为尊享版或企业版套餐
+	FAILEDOPERATION_AUTHLOGUNSUPPORT = "FailedOperation.AuthLogUnsupport"
+
 	// 您的账户下包含个人豪华域名，不能直接升级，请联系销售。
 	FAILEDOPERATION_CONTAINSPERSONALVIP = "FailedOperation.ContainsPersonalVip"
 
@@ -49,6 +52,9 @@ const (
 
 	// 该域名属于企业邮用户
 	FAILEDOPERATION_DOMAININENTERPRISEMAILACCOUNT = "FailedOperation.DomainInEnterpriseMailAccount"
+
+	// 域名已升级为企业套餐，但目前位于个人账号，请与销售联系。
+	FAILEDOPERATION_DOMAINISENTERPRISETYPE = "FailedOperation.DomainIsEnterpriseType"
 
 	// 该域名为腾讯云 DNSPod 重点保护资源，为了避免误操作造成的业务影响，域名禁止自行操作删除。如果您确认需要删除域名，请先联系您的客户经理，我们将竭诚为您提供技术支持。
 	FAILEDOPERATION_DOMAINISKEYDOMAIN = "FailedOperation.DomainIsKeyDomain"
@@ -73,6 +79,12 @@ const (
 
 	// 校验公网 IP 发生异常。
 	FAILEDOPERATION_EIPCHECKFAILED = "FailedOperation.EipCheckFailed"
+
+	// 文件不存在或文件还未生成
+	FAILEDOPERATION_FILENOTEXIST = "FailedOperation.FileNotExist"
+
+	// 不能绑定到免费账号。
+	FAILEDOPERATION_FREEFORUMUIDNOTALLOWED = "FailedOperation.FreeForumUidNotAllowed"
 
 	// 您操作过于频繁，请稍后重试
 	FAILEDOPERATION_FREQUENCYLIMIT = "FailedOperation.FrequencyLimit"
@@ -125,14 +137,23 @@ const (
 	// 请求量统计数据暂时不可用，请稍后再试。
 	FAILEDOPERATION_TEMPORARYERROR = "FailedOperation.TemporaryError"
 
+	// 按腾讯云域名新规范，tencentyun.com不允许新增子域名和修改存量解析
+	FAILEDOPERATION_TENCENTCLOUDFORBID = "FailedOperation.TencentCloudForbid"
+
 	// 不能转移到企业账号。
 	FAILEDOPERATION_TRANSFERTOENTERPRISEDENIED = "FailedOperation.TransferToEnterpriseDenied"
 
 	// 不能转移到个人账号。
 	FAILEDOPERATION_TRANSFERTOPERSONDENIED = "FailedOperation.TransferToPersonDenied"
 
+	// 没有开启D令牌。
+	FAILEDOPERATION_TWOSTEPNOTON = "FailedOperation.TwoStepNotOn"
+
 	// 操作未响应，请稍后重试。
 	FAILEDOPERATION_UNKNOWERROR = "FailedOperation.UnknowError"
+
+	// 目标用户不允许转入域名
+	FAILEDOPERATION_USERNOTALLOWTRANSFER = "FailedOperation.UserNotAllowTransfer"
 
 	// 域名已经提交过订单并且正在审核中，请稍候。
 	FAILEDOPERATION_VERIFYINGBILLEXISTS = "FailedOperation.VerifyingBillExists"
@@ -146,6 +167,9 @@ const (
 	// 您的账号已被系统封禁，如果您有任何疑问请与我们联系。
 	INVALIDPARAMETER_ACCOUNTISBANNED = "InvalidParameter.AccountIsBanned"
 
+	// 域名正在取回，请勿重复操作。
+	INVALIDPARAMETER_ACQUIREHASHEXISTS = "InvalidParameter.AcquireHashExists"
+
 	// 无效的操作。
 	INVALIDPARAMETER_ACTIONINVALID = "InvalidParameter.ActionInvalid"
 
@@ -158,8 +182,20 @@ const (
 	// 该域名已在您的域名列表中，请删除后再添加到别名列表
 	INVALIDPARAMETER_ALIASISMYDOMAIN = "InvalidParameter.AliasIsMyDomain"
 
+	// 解析状态不正确
+	INVALIDPARAMETER_AUTHLOGINVALIDRETCODE = "InvalidParameter.AuthLogInvalidRetCode"
+
+	// 地域不正确
+	INVALIDPARAMETER_AUTHLOGINVALIDSCOPE = "InvalidParameter.AuthLogInvalidScope"
+
 	// 创建批量域名任务失败，原因：内部错误。
 	INVALIDPARAMETER_BATCHDOMAINCREATEACTIONERROR = "InvalidParameter.BatchDomainCreateActionError"
+
+	// 列表中存在您没有权限的域名
+	INVALIDPARAMETER_BATCHDOMAINNOTAUTH = "InvalidParameter.BatchDomainNotAuth"
+
+	// 您有批量任务未执行完成，请等待完成后继续添加。
+	INVALIDPARAMETER_BATCHLIMITUNDO = "InvalidParameter.BatchLimitUndo"
 
 	// 创建批量记录任务失败，原因：内部错误。
 	INVALIDPARAMETER_BATCHRECORDCREATEACTIONERROR = "InvalidParameter.BatchRecordCreateActionError"
@@ -188,6 +224,9 @@ const (
 	// 浏览器字段为空。
 	INVALIDPARAMETER_BROWSERNULL = "InvalidParameter.BrowserNull"
 
+	// Client token 参数过长
+	INVALIDPARAMETER_CLIENTTOKENTOOLONG = "InvalidParameter.ClientTokenTooLong"
+
 	// 您操作过于频繁，请稍后重试。
 	INVALIDPARAMETER_COMMON = "InvalidParameter.Common"
 
@@ -196,6 +235,9 @@ const (
 
 	// 自定义错误信息。
 	INVALIDPARAMETER_CUSTOMMESSAGE = "InvalidParameter.CustomMessage"
+
+	// 您的账户下没有 企业II 或 企业III 的VIP套餐，不能开启D令牌。
+	INVALIDPARAMETER_DTOKENNOTSUPPORT = "InvalidParameter.DTokenNotSupport"
 
 	// 数据过期,请重新提交。
 	INVALIDPARAMETER_DATAEXPIRED = "InvalidParameter.DataExpired"
@@ -226,6 +268,12 @@ const (
 
 	// 别名编号错误。
 	INVALIDPARAMETER_DOMAINALIASIDINVALID = "InvalidParameter.DomainAliasIdInvalid"
+
+	// 目标域名已经是VIP域名，无法替换。
+	INVALIDPARAMETER_DOMAINALREADYVIP = "InvalidParameter.DomainAlreadyVip"
+
+	// 一个任务里不能存在相同的域名。
+	INVALIDPARAMETER_DOMAINDUPLICATED = "InvalidParameter.DomainDuplicated"
 
 	// 域名编号不正确。
 	INVALIDPARAMETER_DOMAINIDINVALID = "InvalidParameter.DomainIdInvalid"
@@ -260,6 +308,9 @@ const (
 	// 该域名未备案，无法添加 URL 记录。
 	INVALIDPARAMETER_DOMAINNOTBEIAN = "InvalidParameter.DomainNotBeian"
 
+	// 域名未生效。
+	INVALIDPARAMETER_DOMAINNOTEFFECTIVE = "InvalidParameter.DomainNotEffective"
+
 	// 域名还没有注册，无法添加。
 	INVALIDPARAMETER_DOMAINNOTREGED = "InvalidParameter.DomainNotReged"
 
@@ -271,6 +322,9 @@ const (
 
 	// 域名自己无需进行复制。
 	INVALIDPARAMETER_DOMAINSELFNOCOPY = "InvalidParameter.DomainSelfNoCopy"
+
+	// 存在进行中的任务，请稍后提交。
+	INVALIDPARAMETER_DOMAINTASKNOTFINISHED = "InvalidParameter.DomainTaskNotFinished"
 
 	// 域名过长。
 	INVALIDPARAMETER_DOMAINTOOLONG = "InvalidParameter.DomainTooLong"
@@ -292,6 +346,12 @@ const (
 
 	// 域名已经在该账号下。
 	INVALIDPARAMETER_EMAILSAME = "InvalidParameter.EmailSame"
+
+	// 结束时间超出范围
+	INVALIDPARAMETER_ENDDATEBEYONDRANGE = "InvalidParameter.EndDateBeyondRange"
+
+	// 无法查询 DNS 地址，请确认域名是否正确。
+	INVALIDPARAMETER_GETNSFAIL = "InvalidParameter.GetNsFail"
 
 	// 商品子类型无效。
 	INVALIDPARAMETER_GOODSCHILDTYPEINVALID = "InvalidParameter.GoodsChildTypeInvalid"
@@ -335,6 +395,9 @@ const (
 	// 请输入正确的订单号。
 	INVALIDPARAMETER_INVALIDDEALNAME = "InvalidParameter.InvalidDealName"
 
+	// 无效的结束时间
+	INVALIDPARAMETER_INVALIDENDDATE = "InvalidParameter.InvalidEndDate"
+
 	// 不是合法的IP段。
 	INVALIDPARAMETER_INVALIDIP = "InvalidParameter.InvalidIp"
 
@@ -346,6 +409,9 @@ const (
 
 	// 源域名ID格式不正确。
 	INVALIDPARAMETER_INVALIDSRCDOMAINID = "InvalidParameter.InvalidSrcDomainId"
+
+	// 无效的开始时间
+	INVALIDPARAMETER_INVALIDSTARTDATE = "InvalidParameter.InvalidStartDate"
 
 	// 无效的时间。
 	INVALIDPARAMETER_INVALIDTIME = "InvalidParameter.InvalidTime"
@@ -461,6 +527,12 @@ const (
 	// 鉴权失败。
 	INVALIDPARAMETER_PERMISSIONDENIED = "InvalidParameter.PermissionDenied"
 
+	// 无效的 IP 地址。
+	INVALIDPARAMETER_PTRINVALIDPUBLICIP = "InvalidParameter.PtrInvalidPublicIp"
+
+	// 您不是该 IP 的所有者，无法进行此操作。
+	INVALIDPARAMETER_PTRIPNOTOWNER = "InvalidParameter.PtrIpNotOwner"
+
 	// 用户UIN无效。
 	INVALIDPARAMETER_QCLOUDUININVALID = "InvalidParameter.QcloudUinInvalid"
 
@@ -503,14 +575,26 @@ const (
 	// 搜索结果大于500条，请增加关键字。
 	INVALIDPARAMETER_RESULTMORETHAN500 = "InvalidParameter.ResultMoreThan500"
 
+	// 已经存在此共享记录。
+	INVALIDPARAMETER_SHAREUSEREXISTS = "InvalidParameter.ShareUserExists"
+
 	// 共享用户中包含未实名认证用户。
 	INVALIDPARAMETER_SHAREDUSERSUNREALNAME = "InvalidParameter.SharedUsersUnrealName"
+
+	// 开始时间超出范围
+	INVALIDPARAMETER_STARTDATEBEYONDRANGE = "InvalidParameter.StartDateBeyondRange"
+
+	// 开始时间不能大于结束时间。
+	INVALIDPARAMETER_STARTTIMEGREATERTHANENDTIME = "InvalidParameter.StarttimeGreaterThanEndtime"
 
 	// 状态代码不正确。
 	INVALIDPARAMETER_STATUSCODEINVALID = "InvalidParameter.StatusCodeInvalid"
 
 	// 子域名不正确。
 	INVALIDPARAMETER_SUBDOMAININVALID = "InvalidParameter.SubdomainInvalid"
+
+	// 子域名个数超过允许的范围
+	INVALIDPARAMETER_SUBSBEYONDRANGE = "InvalidParameter.SubsBeyondRange"
 
 	// 任务未完成。
 	INVALIDPARAMETER_TASKNOTCOMPLETED = "InvalidParameter.TaskNotCompleted"
@@ -527,6 +611,12 @@ const (
 	// 域名无效。
 	INVALIDPARAMETER_TOOLSDOMAININVALID = "InvalidParameter.ToolsDomainInvalid"
 
+	// 域名未注册。
+	INVALIDPARAMETER_TOOLSDOMAINNOTREGED = "InvalidParameter.ToolsDomainNotReged"
+
+	// 您要过户到的账号已被系统封禁，如果您有任何疑问请与我们联系。
+	INVALIDPARAMETER_TRANSFERACCOUNTISBANNED = "InvalidParameter.TransferAccountIsBanned"
+
 	// 解锁代码已失效。
 	INVALIDPARAMETER_UNLOCKCODEEXPIRED = "InvalidParameter.UnLockCodeExpired"
 
@@ -535,6 +625,15 @@ const (
 
 	// 未实名认证用户，请先完成实名认证再操作。
 	INVALIDPARAMETER_UNREALNAMEUSER = "InvalidParameter.UnrealNameUser"
+
+	// 不支持的筛选类型
+	INVALIDPARAMETER_UNSUPPORTEDFILTERTYPE = "InvalidParameter.UnsupportedFilterType"
+
+	// 更新新域名等级失败。
+	INVALIDPARAMETER_UPDATENEWGRADEFAILED = "InvalidParameter.UpdateNewGradeFailed"
+
+	// 更新旧域名等级失败。
+	INVALIDPARAMETER_UPDATEOLDGRADEFAILED = "InvalidParameter.UpdateOldGradeFailed"
 
 	// 很抱歉，您要添加的URL的内容不符合DNSPod解析服务条款，URL添加/启用失败，如需帮助请联系技术支持。
 	INVALIDPARAMETER_URLVALUEILLEGAL = "InvalidParameter.UrlValueIllegal"
@@ -685,6 +784,9 @@ const (
 
 	// 只支持 POST 方法提交数据。
 	OPERATIONDENIED_POSTREQUESTACCEPTONLY = "OperationDenied.PostRequestAcceptOnly"
+
+	// 资源已经绑定
+	OPERATIONDENIED_RESOURCEALREADYBIND = "OperationDenied.ResourceAlreadyBind"
 
 	// 该资源不允许续费。
 	OPERATIONDENIED_RESOURCENOTALLOWRENEW = "OperationDenied.ResourceNotAllowRenew"

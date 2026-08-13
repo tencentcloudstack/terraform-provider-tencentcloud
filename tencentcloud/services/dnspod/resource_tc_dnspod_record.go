@@ -120,7 +120,6 @@ func resourceTencentCloudDnspodRecordCreate(d *schema.ResourceData, meta interfa
 		recordId uint64
 	)
 	request := dnspod.NewCreateRecordRequest()
-	requestRemark := dnspod.NewModifyRecordRemarkRequest()
 
 	domain := d.Get("domain").(string)
 	recordType := d.Get("record_type").(string)
@@ -143,6 +142,10 @@ func resourceTencentCloudDnspodRecordCreate(d *schema.ResourceData, meta interfa
 	}
 	request.Status = &status
 
+	if v, ok := d.GetOk("remark"); ok {
+		request.Remark = helper.String(v.(string))
+	}
+
 	err := resource.Retry(tccommon.ReadRetryTimeout, func() *resource.RetryError {
 		response, e := meta.(tccommon.ProviderMeta).GetAPIV3Conn().UseDnsPodClient().CreateRecord(request)
 		if e != nil {
@@ -156,23 +159,6 @@ func resourceTencentCloudDnspodRecordCreate(d *schema.ResourceData, meta interfa
 	if err != nil {
 		log.Printf("[CRITAL]%s create DnsPod record failed, reason:%s\n", logId, err.Error())
 		return err
-	}
-
-	if v, ok := d.GetOk("remark"); ok {
-		requestRemark.Domain = helper.String(domain)
-		requestRemark.RecordId = helper.Uint64(recordId)
-		requestRemark.Remark = helper.String(v.(string))
-		err := resource.Retry(tccommon.ReadRetryTimeout, func() *resource.RetryError {
-			_, e := meta.(tccommon.ProviderMeta).GetAPIV3Conn().UseDnsPodClient().ModifyRecordRemark(requestRemark)
-			if e != nil {
-				return tccommon.RetryError(e)
-			}
-			return nil
-		})
-		if err != nil {
-			log.Printf("[CRITAL]%s create DnsPod record, modify remark failed, reason:%s\n", logId, err.Error())
-			return err
-		}
 	}
 
 	return resourceTencentCloudDnspodRecordRead(d, meta)
@@ -259,7 +245,6 @@ func resourceTencentCloudDnspodRecordRead(d *schema.ResourceData, meta interface
 func resourceTencentCloudDnspodRecordUpdate(d *schema.ResourceData, meta interface{}) error {
 	defer tccommon.LogElapsed("resource.tencentcloud_dnspod_record.update")()
 
-	logId := tccommon.GetLogId(tccommon.ContextNil)
 	id := d.Id()
 	items := strings.Split(id, tccommon.FILED_SP)
 	if len(items) < 2 {
@@ -271,7 +256,6 @@ func resourceTencentCloudDnspodRecordUpdate(d *schema.ResourceData, meta interfa
 		return err
 	}
 	request := dnspod.NewModifyRecordRequest()
-	requestRemark := dnspod.NewModifyRecordRemarkRequest()
 	request.Domain = &domain
 	request.RecordId = helper.IntUint64(recordId)
 	recordType := d.Get("record_type").(string)
@@ -298,6 +282,10 @@ func resourceTencentCloudDnspodRecordUpdate(d *schema.ResourceData, meta interfa
 		weight := v.(int)
 		request.Weight = helper.IntUint64(weight)
 	}
+	if v, ok := d.GetOk("remark"); ok {
+		remark := v.(string)
+		request.Remark = &remark
+	}
 	d.Partial(true)
 	err = resource.Retry(tccommon.ReadRetryTimeout, func() *resource.RetryError {
 		_, e := meta.(tccommon.ProviderMeta).GetAPIV3Conn().UseDnsPodClient().ModifyRecord(request)
@@ -309,24 +297,6 @@ func resourceTencentCloudDnspodRecordUpdate(d *schema.ResourceData, meta interfa
 
 	if err != nil {
 		return err
-	}
-
-	if d.HasChange("remark") {
-		remark := d.Get("remark").(string)
-		requestRemark.Domain = helper.String(domain)
-		requestRemark.Remark = helper.String(remark)
-		requestRemark.RecordId = helper.IntUint64(recordId)
-		err := resource.Retry(tccommon.ReadRetryTimeout, func() *resource.RetryError {
-			_, e := meta.(tccommon.ProviderMeta).GetAPIV3Conn().UseDnsPodClient().ModifyRecordRemark(requestRemark)
-			if e != nil {
-				return tccommon.RetryError(e)
-			}
-			return nil
-		})
-		if err != nil {
-			log.Printf("[CRITAL]%s mdofify DnsPod record remark failed, reason:%s\n", logId, err.Error())
-			return err
-		}
 	}
 
 	d.Partial(false)

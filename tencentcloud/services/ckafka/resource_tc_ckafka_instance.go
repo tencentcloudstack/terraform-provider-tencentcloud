@@ -279,6 +279,12 @@ func ResourceTencentCloudCkafkaInstance() *schema.Resource {
 				Optional:    true,
 				Description: "Custom certificate ID, only effective when `specifications_type` is set to `profession`, supports custom certificate capabilities.",
 			},
+			"delete_protection_enable": {
+				Type:        schema.TypeInt,
+				Optional:    true,
+				Computed:    true,
+				Description: "Instance delete protection switch of ckafka instance: `1` enable, `0` disable.",
+			},
 			"vip": {
 				Type:        schema.TypeString,
 				Computed:    true,
@@ -559,6 +565,11 @@ func resourceTencentCloudCkafkaInstanceCreate(d *schema.ResourceData, meta inter
 		modifyRequest.MaxMessageByte = helper.Uint64(uint64(v.(int)))
 	}
 
+	if v, ok := d.GetOkExists("delete_protection_enable"); ok {
+		needModify = true
+		modifyRequest.DeleteProtectionEnable = helper.Int64(int64(v.(int)))
+	}
+
 	if needModify {
 		err := service.ModifyCkafkaInstanceAttributes(ctx, modifyRequest)
 		if err != nil {
@@ -710,6 +721,10 @@ func resourceTencentCloudCkafkaInstanceRead(d *schema.ResourceData, meta interfa
 		_ = d.Set("dynamic_retention_config", dynamicConfig)
 		_ = d.Set("public_network", attr.PublicNetwork)
 
+		if attr.DeleteProtectionEnable != nil {
+			_ = d.Set("delete_protection_enable", attr.DeleteProtectionEnable)
+		}
+
 		//dynamicDiskConfig := make([]map[string]interface{}, 0)
 		//dynamicDiskConfig = append(dynamicDiskConfig, map[string]interface{}{
 		//	"enable":                  attr.DynamicDiskConfig.Enable,
@@ -826,6 +841,13 @@ func resourceTencentCloudCkafkaInstanceUpdate(d *schema.ResourceData, meta inter
 	if d.HasChange("max_message_byte") {
 		if v, ok := d.GetOkExists("max_message_byte"); ok {
 			request.MaxMessageByte = helper.Uint64(uint64(v.(int)))
+			modifyInstanceAttributesFlag = true
+		}
+	}
+
+	if d.HasChange("delete_protection_enable") {
+		if v, ok := d.GetOkExists("delete_protection_enable"); ok {
+			request.DeleteProtectionEnable = helper.Int64(int64(v.(int)))
 			modifyInstanceAttributesFlag = true
 		}
 	}

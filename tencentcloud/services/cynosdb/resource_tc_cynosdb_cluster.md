@@ -1,5 +1,7 @@
 Provide a resource to create a CynosDB cluster.
 
+~> **NOTE:** Compared to Resource `tencentcloud_cynosdb_cluster`, Resource `tencentcloud_cynosdb_cluster_v2` places greater emphasis on optimizing security group configurations for read-only groups and read-only instances, making them more precise and efficient. `rw_group_sg` represents the read-write instance security group, `ro_group_sg` represents the read-only group security group, and `single_ro_group_sg` represents the read-only instance security group. notably, to configure `ro_group_sg`, ``open_ro_group` must be set `true` first. If you need to configure `ro_group_sg` or `single_ro_group_sg` security group, please use Resource `tencentcloud_cynosdb_cluster_v2`.
+
 ~> **NOTE:** params `instance_count` and `instance_init_infos` only choose one. If neither parameter is set, the CynosDB cluster is created with parameter `instance_count` set to `2` by default(one RW instance + one Ro instance). If you only need to create a master instance, explicitly set the `instance_count` field to `1`, or configure the RW instance information in the `instance_init_infos` field.
 
 Example Usage
@@ -77,10 +79,6 @@ resource "tencentcloud_cynosdb_cluster" "example" {
     tencentcloud_security_group.example.id,
   ]
 
-  ro_group_sg = [
-    tencentcloud_security_group.example.id,
-  ]
-
   instance_init_infos {
     cpu            = 2
     memory         = 4
@@ -97,6 +95,9 @@ resource "tencentcloud_cynosdb_cluster" "example" {
     device_type    = "exclusive"
   }
 
+  SyncWay          = "async"
+  SemiSyncTimeout  = 10000
+
   cynos_version = "2.1.14.001"
 
   tags = {
@@ -104,6 +105,8 @@ resource "tencentcloud_cynosdb_cluster" "example" {
   }
 }
 ```
+
+The `SyncWay` argument specifies the cluster synchronization way, valid values are `async`, `semisync` and `sync`. The `SemiSyncTimeout` argument specifies the semi-sync timeout in ms, value range `[1000, 4294967295]`, and it works when `SyncWay` is `semisync` or `sync`. Both arguments are only configurable during creation and cannot be modified after creation. The `BinlogSyncWay` attribute is computed and reflects the binlog sync way of the slave zone read from the `DescribeClusterDetail` API.
 
 Create a multiple availability zone SERVERLESS CynosDB cluster
 
@@ -173,6 +176,8 @@ resource "tencentcloud_cynosdb_cluster" "example" {
   max_cpu                      = 4
   param_template_id            = tencentcloud_cynosdb_param_template.example.template_id
   force_delete                 = false
+  sync_way                     = "async"
+  semi_sync_timeout            = 10000
   instance_maintain_weekdays   = [
     "Fri",
     "Mon",
@@ -184,10 +189,6 @@ resource "tencentcloud_cynosdb_cluster" "example" {
   ]
 
   rw_group_sg = [
-    tencentcloud_security_group.example.id,
-  ]
-
-  ro_group_sg = [
     tencentcloud_security_group.example.id,
   ]
 

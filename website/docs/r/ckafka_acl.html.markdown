@@ -11,6 +11,8 @@ description: |-
 
 Provides a resource to create a Ckafka Acl.
 
+-> **Note:** When creating the ACL, if the cloud API `CreateAcl` returns a `FailedOperation` error (e.g. the instance is being modified or the cluster is busy), the provider will automatically retry the request using `resource.Retry` with `WriteRetryTimeout` as the timeout. A maximum of 5 `FailedOperation` errors are tolerated before giving up to avoid indefinite retries.
+
 ## Example Usage
 
 ### Ckafka Acl

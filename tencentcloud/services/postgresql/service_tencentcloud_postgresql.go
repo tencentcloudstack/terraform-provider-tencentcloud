@@ -501,29 +501,39 @@ func (me *PostgresqlService) DescribeReadOnlyGroupsById(ctx context.Context, mas
 		},
 	}
 
-	response, err := me.client.UsePostgresqlClient().DescribeReadOnlyGroups(request)
-	if err != nil {
-		errRet = err
-		return
-	}
-
-	if response == nil || response.Response == nil {
-		errRet = fmt.Errorf("TencentCloud SDK return nil response, %s", request.GetAction())
-		return
-	}
-
-	roGroupList := response.Response.ReadOnlyGroupList
-	if len(roGroupList) > 0 {
-		for _, roGroup := range roGroupList {
-			roDBInstanceList := roGroup.ReadOnlyDBInstanceList
-			for _, roDBInstance := range roDBInstanceList {
-				roDBInstanceId := *roDBInstance.DBInstanceId
-				if roDBInstanceId == instanceId {
-					readOnlyGroupId = roGroup.ReadOnlyGroupId
-					return
+	ratelimit.Check(request.GetAction())
+	err := resource.Retry(tccommon.ReadRetryTimeout, func() *resource.RetryError {
+		result, e := me.client.UsePostgresqlClient().DescribeReadOnlyGroups(request)
+		if e != nil {
+			return tccommon.RetryError(e)
+		}
+		if result == nil || result.Response == nil {
+			return resource.NonRetryableError(fmt.Errorf("TencentCloud SDK return nil response, %s", request.GetAction()))
+		}
+		roGroupList := result.Response.ReadOnlyGroupList
+		if len(roGroupList) > 0 {
+			for _, roGroup := range roGroupList {
+				if roGroup == nil {
+					continue
+				}
+				roDBInstanceList := roGroup.ReadOnlyDBInstanceList
+				for _, roDBInstance := range roDBInstanceList {
+					if roDBInstance == nil || roDBInstance.DBInstanceId == nil {
+						continue
+					}
+					if *roDBInstance.DBInstanceId == instanceId {
+						readOnlyGroupId = roGroup.ReadOnlyGroupId
+						return nil
+					}
 				}
 			}
 		}
+		return nil
+	})
+
+	if err != nil {
+		errRet = err
+		return
 	}
 
 	return
@@ -542,23 +552,62 @@ func (me *PostgresqlService) DescribeDBInstanceSecurityGroupsById(ctx context.Co
 	ratelimit.Check(request.GetAction())
 	var iacExtInfo connectivity.IacExtInfo
 	iacExtInfo.InstanceId = instanceId
-	response, err := me.client.UsePostgresqlClient(iacExtInfo).DescribeDBInstanceSecurityGroups(request)
+	err := resource.Retry(tccommon.ReadRetryTimeout, func() *resource.RetryError {
+		result, e := me.client.UsePostgresqlClient(iacExtInfo).DescribeDBInstanceSecurityGroups(request)
+		if e != nil {
+			return tccommon.RetryError(e)
+		}
+		if result == nil || result.Response == nil {
+			return resource.NonRetryableError(fmt.Errorf("TencentCloud SDK return nil response, %s", request.GetAction()))
+		}
+		groups := result.Response.SecurityGroupSet
+		if len(groups) > 0 {
+			for i := range groups {
+				if groups[i] != nil && groups[i].SecurityGroupId != nil {
+					sg = append(sg, *groups[i].SecurityGroupId)
+				}
+			}
+		}
+		return nil
+	})
 	if err != nil {
 		errRet = err
 		return
 	}
+
+	return
+}
+
+func (me *PostgresqlService) DescribePostgresqlDbInstanceSecurityGroups(ctx context.Context, dbInstanceId string, readOnlyGroupId string) (securityGroups []*postgresql.SecurityGroup, errRet error) {
+	logId := tccommon.GetLogId(ctx)
+	request := postgresql.NewDescribeDBInstanceSecurityGroupsRequest()
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	if dbInstanceId != "" {
+		request.DBInstanceId = &dbInstanceId
+	}
+	if readOnlyGroupId != "" {
+		request.ReadOnlyGroupId = &readOnlyGroupId
+	}
+
+	ratelimit.Check(request.GetAction())
+	response, err := me.client.UsePostgresqlClient().DescribeDBInstanceSecurityGroups(request)
+	if err != nil {
+		errRet = err
+		return
+	}
+	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
 
 	if response == nil || response.Response == nil {
 		errRet = fmt.Errorf("TencentCloud SDK return nil response, %s", request.GetAction())
 		return
 	}
 
-	groups := response.Response.SecurityGroupSet
-	if len(groups) > 0 {
-		for i := range groups {
-			sg = append(sg, *groups[i].SecurityGroupId)
-		}
-	}
+	securityGroups = response.Response.SecurityGroupSet
 	return
 }
 
@@ -714,7 +763,9 @@ func (me *PostgresqlService) UpgradePostgresqlInstance(ctx context.Context, inst
 	}()
 	request.DBInstanceId = &instanceId
 	request.Storage = helper.IntUint64(storage)
-	request.Memory = helper.IntUint64(memory)
+	if memory != 0 {
+		request.Memory = helper.IntUint64(memory)
+	}
 	if cpu != 0 {
 		request.Cpu = helper.IntUint64(cpu)
 	}
@@ -793,6 +844,36 @@ func (me *PostgresqlService) DeletePostgresqlInstance(ctx context.Context, insta
 	ratelimit.Check(request.GetAction())
 	_, err := me.client.UsePostgresqlClient().DestroyDBInstance(request)
 	return err
+}
+
+func (me *PostgresqlService) DeletePostgresqlInstanceV2(ctx context.Context, instanceId string) (errRet error) {
+	logId := tccommon.GetLogId(ctx)
+	request := postgresql.NewDestroyDBInstanceRequest()
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail,reason[%s]", logId, request.GetAction(), errRet.Error())
+		}
+	}()
+
+	request.DBInstanceId = &instanceId
+	err := resource.Retry(tccommon.WriteRetryTimeout, func() *resource.RetryError {
+		result, e := me.client.UsePostgresqlClient().DestroyDBInstanceWithContext(ctx, request)
+		if e != nil {
+			return tccommon.RetryError(e)
+		} else {
+			log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), result.ToJsonString())
+		}
+
+		return nil
+	})
+
+	if err != nil {
+		log.Printf("[CRITAL]%s destroy db instance failed, reason:%+v", logId, err)
+		errRet = err
+		return
+	}
+
+	return
 }
 
 func (me *PostgresqlService) SetPostgresqlInstanceRootPassword(ctx context.Context, instanceId string, user string, password string) (errRet error) {
@@ -1338,16 +1419,23 @@ func (me *PostgresqlService) DescribePostgresqlBackupPlanConfigById(ctx context.
 		}
 	}()
 
-	ratelimit.Check(request.GetAction())
-
-	response, err := me.client.UsePostgresqlClient().DescribeBackupPlans(request)
+	var response *postgresql.DescribeBackupPlansResponse
+	err := resource.Retry(tccommon.ReadRetryTimeout, func() *resource.RetryError {
+		ratelimit.Check(request.GetAction())
+		result, e := me.client.UsePostgresqlClient().DescribeBackupPlans(request)
+		if e != nil {
+			return tccommon.RetryError(e)
+		}
+		response = result
+		return nil
+	})
 	if err != nil {
 		errRet = err
 		return
 	}
 	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
 
-	if len(response.Response.Plans) < 1 {
+	if response == nil || response.Response == nil || len(response.Response.Plans) < 1 {
 		return
 	}
 
@@ -2484,5 +2572,213 @@ func (me *PostgresqlService) DescribePostgresqlParameterTemplateConfigById(ctx c
 	}
 
 	ret = response.Response
+	return
+}
+
+func (me *PostgresqlService) OpenAuditService(ctx context.Context, request *postgresql.OpenAuditServiceRequest) (errRet error) {
+	logId := tccommon.GetLogId(ctx)
+	ratelimit.Check(request.GetAction())
+	response, err := me.client.UsePostgresqlClient().OpenAuditService(request)
+	if err != nil {
+		errRet = err
+		return
+	}
+
+	if response == nil || response.Response == nil {
+		errRet = fmt.Errorf("OpenAuditService response is nil")
+		return
+	}
+
+	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+	return
+}
+
+func (me *PostgresqlService) DescribeAuditInstanceList(ctx context.Context, request *postgresql.DescribeAuditInstanceListRequest) (items []*postgresql.AuditInstanceInfo, errRet error) {
+	logId := tccommon.GetLogId(ctx)
+	ratelimit.Check(request.GetAction())
+	response, err := me.client.UsePostgresqlClient().DescribeAuditInstanceList(request)
+	if err != nil {
+		errRet = err
+		return
+	}
+
+	if response == nil || response.Response == nil {
+		errRet = fmt.Errorf("DescribeAuditInstanceList response is nil")
+		return
+	}
+
+	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+	items = response.Response.Items
+	return
+}
+
+func (me *PostgresqlService) ModifyAuditService(ctx context.Context, request *postgresql.ModifyAuditServiceRequest) (errRet error) {
+	logId := tccommon.GetLogId(ctx)
+	ratelimit.Check(request.GetAction())
+	response, err := me.client.UsePostgresqlClient().ModifyAuditService(request)
+	if err != nil {
+		errRet = err
+		return
+	}
+
+	if response == nil || response.Response == nil {
+		errRet = fmt.Errorf("ModifyAuditService response is nil")
+		return
+	}
+
+	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+	return
+}
+
+func (me *PostgresqlService) CloseAuditService(ctx context.Context, request *postgresql.CloseAuditServiceRequest) (errRet error) {
+	logId := tccommon.GetLogId(ctx)
+	ratelimit.Check(request.GetAction())
+	response, err := me.client.UsePostgresqlClient().CloseAuditService(request)
+	if err != nil {
+		errRet = err
+		return
+	}
+
+	if response == nil || response.Response == nil {
+		errRet = fmt.Errorf("CloseAuditService response is nil")
+		return
+	}
+
+	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+	return
+}
+
+func (me *PostgresqlService) DescribePostgresqlBackupPlanById(ctx context.Context, dBInstanceId, planId string) (backupPlan *postgresql.BackupPlan, errRet error) {
+	logId := tccommon.GetLogId(ctx)
+
+	request := postgresql.NewDescribeBackupPlansRequest()
+	request.DBInstanceId = &dBInstanceId
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	err := resource.Retry(tccommon.ReadRetryTimeout, func() *resource.RetryError {
+		ratelimit.Check(request.GetAction())
+		result, e := me.client.UsePostgresqlClient().DescribeBackupPlans(request)
+		if e != nil {
+			return tccommon.RetryError(e)
+		}
+
+		if result == nil || result.Response == nil {
+			return resource.NonRetryableError(fmt.Errorf("Describe postgresql backup_plan failed, Response is nil."))
+		}
+
+		if len(result.Response.Plans) == 0 {
+			return nil
+		}
+
+		for _, plan := range result.Response.Plans {
+			if plan.PlanId != nil && *plan.PlanId == planId {
+				backupPlan = plan
+				break
+			}
+		}
+		return nil
+	})
+
+	if err != nil {
+		errRet = err
+		return
+	}
+
+	log.Printf("[DEBUG]%s api[%s] success, request body [%s], planId[%s]\n", logId, request.GetAction(), request.ToJsonString(), planId)
+	return
+}
+
+func (me *PostgresqlService) DescribePostgresqlReadonlyInstanceV2ById(ctx context.Context, instanceId string) (instance *postgresql.DBInstance, errRet error) {
+	logId := tccommon.GetLogId(ctx)
+	request := postgresql.NewDescribeDBInstanceAttributeRequest()
+	response := postgresql.NewDescribeDBInstanceAttributeResponse()
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail,reason[%s]", logId, request.GetAction(), errRet.Error())
+		}
+	}()
+
+	request.DBInstanceId = &instanceId
+	err := resource.Retry(tccommon.ReadRetryTimeout, func() *resource.RetryError {
+		result, err := me.client.UsePostgresqlClient().DescribeDBInstanceAttribute(request)
+		if err != nil {
+			return tccommon.RetryError(err)
+		}
+
+		if result == nil || result.Response == nil || result.Response.DBInstance == nil {
+			return resource.NonRetryableError(fmt.Errorf("Describe db instance attribute failed, Response is nil."))
+		}
+
+		response = result
+		return nil
+	})
+
+	if err != nil {
+		errRet = err
+		return
+	}
+
+	instance = response.Response.DBInstance
+	return
+}
+
+func (me *PostgresqlService) CreatePostgresqlReadonlyInstanceV2(ctx context.Context, request *postgresql.CreateReadOnlyDBInstanceRequest) (response *postgresql.CreateReadOnlyDBInstanceResponse, errRet error) {
+	logId := tccommon.GetLogId(ctx)
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail,reason[%s]", logId, request.GetAction(), errRet.Error())
+		}
+	}()
+	ratelimit.Check(request.GetAction())
+	err := resource.Retry(tccommon.WriteRetryTimeout, func() *resource.RetryError {
+		result, e := me.client.UsePostgresqlClient().CreateReadOnlyDBInstance(request)
+		if e != nil {
+			return tccommon.RetryError(e)
+		}
+		response = result
+		return nil
+	})
+	if err != nil {
+		errRet = err
+		return
+	}
+	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n",
+		logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+	return
+}
+
+func (me *PostgresqlService) IsolatePostgresqlReadonlyInstanceV2(ctx context.Context, instanceId string) (errRet error) {
+	logId := tccommon.GetLogId(ctx)
+	request := postgresql.NewIsolateDBInstancesRequest()
+	request.DBInstanceIdSet = []*string{&instanceId}
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail,reason[%s]", logId, request.GetAction(), errRet.Error())
+		}
+	}()
+
+	ratelimit.Check(request.GetAction())
+	err := resource.Retry(tccommon.WriteRetryTimeout, func() *resource.RetryError {
+		result, e := me.client.UsePostgresqlClient().IsolateDBInstances(request)
+		if e != nil {
+			return tccommon.RetryError(e)
+		} else {
+			log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), result.ToJsonString())
+		}
+
+		return nil
+	})
+
+	if err != nil {
+		errRet = err
+		return
+	}
+
 	return
 }

@@ -50,10 +50,10 @@ resource "tencentcloud_ssm_secret_version" "v2" {
 
 The following arguments are supported:
 
-* `secret_name` - (Required, String, ForceNew) Name of secret which cannot be repeated in the same region. The maximum length is 128 bytes. The name can only contain English letters, numbers, underscore and hyphen '-'. The first character must be a letter or number.
-* `version_id` - (Required, String, ForceNew) Version of secret. The maximum length is 64 bytes. The version_id can only contain English letters, numbers, underscore and hyphen '-'. The first character must be a letter or number.
-* `secret_binary` - (Optional, String) The base64-encoded binary secret. secret_binary and secret_string must be set only one, and the maximum support is 4096 bytes. When secret status is `Disabled`, this field will not update anymore.
-* `secret_string` - (Optional, String) The string text of secret. secret_binary and secret_string must be set only one, and the maximum support is 4096 bytes. When secret status is `Disabled`, this field will not update anymore.
+* `secret_name` - (Required, String, ForceNew) Specifies the name of the credential to which the new version is to be added.
+* `version_id` - (Required, String, ForceNew) Specifies the version ID for the newly added version. It can be up to 64 bytes in length and must consist of a combination of letters, numbers, and the characters `-`, `_`, or `.`, starting with a letter or a number.
+* `secret_binary` - (Optional, String) Binary credential information, encoded using Base64. You must set exactly one of SecretBinary or SecretString.
+* `secret_string` - (Optional, String) Text-based credential information in plaintext (Base64 encoding is not required). You must set exactly one of SecretBinary or SecretString.
 
 ## Attributes Reference
 

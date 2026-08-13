@@ -35,6 +35,9 @@ const (
 	// 鉴权失败，请稍后重试。如果持续不成功，请联系客服进行处理。
 	FAILEDOPERATION_CAMSIGANDAUTHERROR = "FailedOperation.CamSigAndAuthError"
 
+	// 创建审计失败
+	FAILEDOPERATION_CREATEAUDITFAILERROR = "FailedOperation.CreateAuditFailError"
+
 	// 创建并支付订单失败。
 	FAILEDOPERATION_CREATEORDER = "FailedOperation.CreateOrder"
 
@@ -91,6 +94,9 @@ const (
 
 	// 修改策略失败。
 	FAILEDOPERATION_SERVERLESSSETSTRATEGYERROR = "FailedOperation.ServerlessSetStrategyError"
+
+	// 日志查询失败，请缩小查询范围。如果持续不成功，请联系客服进行处理。
+	FAILEDOPERATION_SERVICEACCESSERROR = "FailedOperation.ServiceAccessError"
 
 	// 规格信息{{1}}搜索失败
 	FAILEDOPERATION_SPECNOTFOUNDERROR = "FailedOperation.SpecNotFoundError"
@@ -305,6 +311,9 @@ const (
 	// 创建任务失败。{{1}}
 	OPERATIONDENIED_CREATETASKANDFLOWERROR = "OperationDenied.CreateTaskAndFlowError"
 
+	// 实例内核版本不支持{{1}}
+	OPERATIONDENIED_CYNOSDBVERSIONNOTSUPPORTERROR = "OperationDenied.CynosdbVersionNotSupportError"
+
 	// 新存储架构多可用区部署功能暂未开放
 	OPERATIONDENIED_DISABLENEWSTORAGEMULTIZONEDEPLOYMENTERROR = "OperationDenied.DisableNewStorageMultiZoneDeploymentError"
 
@@ -433,4 +442,7 @@ const (
 
 	// CAM鉴权不通过。
 	UNAUTHORIZEDOPERATION_PERMISSIONDENIED = "UnauthorizedOperation.PermissionDenied"
+
+	// 授权失败或已取消授权
+	UNAUTHORIZEDOPERATION_ROLEUNAUTHORIZED = "UnauthorizedOperation.RoleUnauthorized"
 )

@@ -1,4 +1,4 @@
-// Copyright (c) 2017-2018 THL A29 Limited, a Tencent company. All Rights Reserved.
+// Copyright (c) 2017-2025 Tencent. All Rights Reserved.
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -65,6 +65,12 @@ const (
 	// 实例退费失败。
 	FAILEDOPERATION_INSTANCERETURNFAILED = "FailedOperation.InstanceReturnFailed"
 
+	// 日志不存在。
+	FAILEDOPERATION_LOGNOTEXISTED = "FailedOperation.LogNotExisted"
+
+	// 修改备份设置失败
+	FAILEDOPERATION_MODIFYBACKUPCONFIGSFAILED = "FailedOperation.ModifyBackupConfigsFailed"
+
 	// 修改账号权限失败。
 	FAILEDOPERATION_MODIFYRIGHTFAILED = "FailedOperation.ModifyRightFailed"
 
@@ -83,17 +89,26 @@ const (
 	// 更新安全组失败。
 	FAILEDOPERATION_SGCHANGEVIP = "FailedOperation.SGChangeVip"
 
+	// 安全组操作失败
+	FAILEDOPERATION_SGOPERATIONFAILED = "FailedOperation.SGOperationFailed"
+
 	// 设置规则失败。
 	FAILEDOPERATION_SETRULELOCATIONFAILED = "FailedOperation.SetRuleLocationFailed"
 
 	// 安全组规则下发失败。
 	FAILEDOPERATION_SETSVCLOCATIONFAILED = "FailedOperation.SetSvcLocationFailed"
 
+	// SSL状态异常。
+	FAILEDOPERATION_SSLSTATUSABNORMAL = "FailedOperation.SslStatusAbnormal"
+
 	// 标签键值校验或鉴权失败。
 	FAILEDOPERATION_TAGDRYRUNERROR = "FailedOperation.TagDryRunError"
 
 	// 标签配额不足。
 	FAILEDOPERATION_TAGQUOTAEXCEEDLIMIT = "FailedOperation.TagQuotaExceedLimit"
+
+	// 计费配置查询失败
+	FAILEDOPERATION_TRADECONFIGNOTFOUND = "FailedOperation.TradeConfigNotFound"
 
 	// 实例安全组信息更新失败。
 	FAILEDOPERATION_UPDATEINSTANCEINFOFAILED = "FailedOperation.UpdateInstanceInfoFailed"
@@ -407,11 +422,17 @@ const (
 	// 安全组校验失败。
 	RESOURCEUNAVAILABLE_SGCHECKFAIL = "ResourceUnavailable.SGCheckFail"
 
+	// SSL状态异常。
+	RESOURCEUNAVAILABLE_SSLSTATUSABNORMAL = "ResourceUnavailable.SSLStatusAbnormal"
+
 	// 未授权操作。
 	UNAUTHORIZEDOPERATION = "UnauthorizedOperation"
 
 	// 没有权限操作该接口或资源。
 	UNAUTHORIZEDOPERATION_PERMISSIONDENIED = "UnauthorizedOperation.PermissionDenied"
+
+	// 不支持该数据库版本。
+	UNSUPPORTEDOPERATION_DBVERSIONNOTSUPPORTED = "UnsupportedOperation.DbVersionNotSupported"
 
 	// 不支持的无效操作。
 	UNSUPPORTEDOPERATION_INVALIDOPERATION = "UnsupportedOperation.InvalidOperation"
@@ -421,4 +442,7 @@ const (
 
 	// 不适用的操作。
 	UNSUPPORTEDOPERATION_OPERATIONNOTAPPLICABLE = "UnsupportedOperation.OperationNotApplicable"
+
+	// 当前版本不支持SSL认证，请联系客服升级到新版本后再试。
+	UNSUPPORTEDOPERATION_SSLNOTSUPPORTED = "UnsupportedOperation.SSLNotSupported"
 )

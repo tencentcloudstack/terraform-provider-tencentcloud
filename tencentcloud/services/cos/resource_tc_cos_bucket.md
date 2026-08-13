@@ -270,17 +270,19 @@ locals {
 }
 
 resource "tencentcloud_cos_bucket" "bucket_with_cors" {
-  bucket = "bucket-with-cors-${local.app_id}"
-  acl    = "public-read-write"
+  bucket             = "bucket-with-cors-${local.app_id}"
+  acl                = "public-read-write"
+  cors_response_vary = true
 
   cors_rules {
-    allowed_origins = ["http://*.abc.com"]
+    allowed_origins = ["http://*.example.com"]
     allowed_methods = ["PUT", "POST"]
     allowed_headers = ["*"]
     max_age_seconds = 300
     expose_headers  = ["Etag"]
   }
 }
+
 ```
 
 Using Origin pull

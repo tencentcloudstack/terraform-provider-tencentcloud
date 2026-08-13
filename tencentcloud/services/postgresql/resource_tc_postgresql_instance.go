@@ -248,6 +248,7 @@ func ResourceTencentCloudPostgresqlInstance() *schema.Resource {
 				Optional:    true,
 				Computed:    true,
 				Description: "Specify DB backup plan.",
+				Deprecated:  "This field is deprecated from version 1.83.9. Use resource `tencentcloud_postgresql_backup_plan` to manage PG instance backup plan.",
 				MaxItems:    1,
 				Elem: &schema.Resource{
 					Schema: map[string]*schema.Schema{

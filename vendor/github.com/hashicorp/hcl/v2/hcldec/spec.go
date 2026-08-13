@@ -1,3 +1,6 @@
+// Copyright (c) HashiCorp, Inc.
+// SPDX-License-Identifier: MPL-2.0
+
 package hcldec
 
 import (
@@ -68,6 +71,12 @@ type specNeedingVariables interface {
 // be entirely unknown.
 type UnknownBody interface {
 	Unknown() bool
+}
+
+// MarkedBody can be optionally implemented by an hcl.Body instance to
+// indicate that a value created from it ought to be marked.
+type MarkedBody interface {
+	BodyValueMarks() cty.ValueMarks
 }
 
 func (s ObjectSpec) visitSameBodyChildren(cb visitFunc) {
@@ -197,13 +206,13 @@ func (s *AttrSpec) decode(content *hcl.BodyContent, blockLabels []blockLabel, ct
 	if !exists {
 		// We don't need to check required and emit a diagnostic here, because
 		// that would already have happened when building "content".
-		return cty.NullVal(s.Type), nil
+		return cty.NullVal(s.Type.WithoutOptionalAttributesDeep()), nil
 	}
 
 	if decodeFn := customdecode.CustomExpressionDecoderForType(s.Type); decodeFn != nil {
 		v, diags := decodeFn(attr.Expr, ctx)
 		if v == cty.NilVal {
-			v = cty.UnknownVal(s.Type)
+			v = cty.UnknownVal(s.Type.WithoutOptionalAttributesDeep())
 		}
 		return v, diags
 	}
@@ -226,7 +235,7 @@ func (s *AttrSpec) decode(content *hcl.BodyContent, blockLabels []blockLabel, ct
 		})
 		// We'll return an unknown value of the _correct_ type so that the
 		// incomplete result can still be used for some analysis use-cases.
-		val = cty.UnknownVal(s.Type)
+		val = cty.UnknownVal(s.Type.WithoutOptionalAttributesDeep())
 	} else {
 		val = convVal
 	}
@@ -378,7 +387,7 @@ func (s *BlockSpec) decode(content *hcl.BodyContent, blockLabels []blockLabel, c
 				Subject: &content.MissingItemRange,
 			})
 		}
-		return cty.NullVal(s.Nested.impliedType()), diags
+		return cty.NullVal(s.Nested.impliedType().WithoutOptionalAttributesDeep()), diags
 	}
 
 	if s.Nested == nil {
@@ -470,12 +479,13 @@ func (s *BlockListSpec) decode(content *hcl.BodyContent, blockLabels []blockLabe
 
 		val, _, childDiags := decode(childBlock.Body, labelsForBlock(childBlock), ctx, s.Nested, false)
 		diags = append(diags, childDiags...)
+		val = prepareBodyVal(val, childBlock.Body)
 
 		if u, ok := childBlock.Body.(UnknownBody); ok {
 			if u.Unknown() {
 				// If any block Body is unknown, then the entire block value
 				// must be unknown
-				return cty.UnknownVal(s.impliedType()), diags
+				return cty.UnknownVal(s.impliedType().WithoutOptionalAttributesDeep()), diags
 			}
 		}
 
@@ -632,12 +642,13 @@ func (s *BlockTupleSpec) decode(content *hcl.BodyContent, blockLabels []blockLab
 
 		val, _, childDiags := decode(childBlock.Body, labelsForBlock(childBlock), ctx, s.Nested, false)
 		diags = append(diags, childDiags...)
+		val = prepareBodyVal(val, childBlock.Body)
 
 		if u, ok := childBlock.Body.(UnknownBody); ok {
 			if u.Unknown() {
 				// If any block Body is unknown, then the entire block value
 				// must be unknown
-				return cty.UnknownVal(s.impliedType()), diags
+				return cty.UnknownVal(s.impliedType().WithoutOptionalAttributesDeep()), diags
 			}
 		}
 
@@ -755,12 +766,13 @@ func (s *BlockSetSpec) decode(content *hcl.BodyContent, blockLabels []blockLabel
 
 		val, _, childDiags := decode(childBlock.Body, labelsForBlock(childBlock), ctx, s.Nested, false)
 		diags = append(diags, childDiags...)
+		val = prepareBodyVal(val, childBlock.Body)
 
 		if u, ok := childBlock.Body.(UnknownBody); ok {
 			if u.Unknown() {
 				// If any block Body is unknown, then the entire block value
 				// must be unknown
-				return cty.UnknownVal(s.impliedType()), diags
+				return cty.UnknownVal(s.impliedType().WithoutOptionalAttributesDeep()), diags
 			}
 		}
 
@@ -919,12 +931,13 @@ func (s *BlockMapSpec) decode(content *hcl.BodyContent, blockLabels []blockLabel
 			if u.Unknown() {
 				// If any block Body is unknown, then the entire block value
 				// must be unknown
-				return cty.UnknownVal(s.impliedType()), diags
+				return cty.UnknownVal(s.impliedType().WithoutOptionalAttributesDeep()), diags
 			}
 		}
 
 		childLabels := labelsForBlock(childBlock)
 		val, _, childDiags := decode(childBlock.Body, childLabels[len(s.LabelNames):], ctx, s.Nested, false)
+		val = prepareBodyVal(val, childBlock.Body)
 		targetMap := elems
 		for _, key := range childBlock.Labels[:len(s.LabelNames)-1] {
 			if _, exists := targetMap[key]; !exists {
@@ -980,7 +993,7 @@ func (s *BlockMapSpec) decode(content *hcl.BodyContent, blockLabels []blockLabel
 
 func (s *BlockMapSpec) impliedType() cty.Type {
 	ret := s.Nested.impliedType()
-	for _ = range s.LabelNames {
+	for range s.LabelNames {
 		ret = cty.Map(ret)
 	}
 	return ret
@@ -1073,12 +1086,13 @@ func (s *BlockObjectSpec) decode(content *hcl.BodyContent, blockLabels []blockLa
 			if u.Unknown() {
 				// If any block Body is unknown, then the entire block value
 				// must be unknown
-				return cty.UnknownVal(s.impliedType()), diags
+				return cty.UnknownVal(s.impliedType().WithoutOptionalAttributesDeep()), diags
 			}
 		}
 
 		childLabels := labelsForBlock(childBlock)
 		val, _, childDiags := decode(childBlock.Body, childLabels[len(s.LabelNames):], ctx, s.Nested, false)
+		val = prepareBodyVal(val, childBlock.Body)
 		targetMap := elems
 		for _, key := range childBlock.Labels[:len(s.LabelNames)-1] {
 			if _, exists := targetMap[key]; !exists {
@@ -1247,7 +1261,7 @@ func (s *BlockAttrsSpec) decode(content *hcl.BodyContent, blockLabels []blockLab
 				Subject: &content.MissingItemRange,
 			})
 		}
-		return cty.NullVal(cty.Map(s.ElementType)), diags
+		return cty.NullVal(cty.Map(s.ElementType).WithoutOptionalAttributesDeep()), diags
 	}
 	if other != nil {
 		diags = append(diags, &hcl.Diagnostic{
@@ -1510,7 +1524,7 @@ func (s *TransformExprSpec) decode(content *hcl.BodyContent, blockLabels []block
 		// We won't try to run our function in this case, because it'll probably
 		// generate confusing additional errors that will distract from the
 		// root cause.
-		return cty.UnknownVal(s.impliedType()), diags
+		return cty.UnknownVal(s.impliedType().WithoutOptionalAttributesDeep()), diags
 	}
 
 	chiCtx := s.TransformCtx.NewChild()
@@ -1566,7 +1580,7 @@ func (s *TransformFuncSpec) decode(content *hcl.BodyContent, blockLabels []block
 		// We won't try to run our function in this case, because it'll probably
 		// generate confusing additional errors that will distract from the
 		// root cause.
-		return cty.UnknownVal(s.impliedType()), diags
+		return cty.UnknownVal(s.impliedType().WithoutOptionalAttributesDeep()), diags
 	}
 
 	resultVal, err := s.Func.Call([]cty.Value{wrappedVal})
@@ -1580,7 +1594,7 @@ func (s *TransformFuncSpec) decode(content *hcl.BodyContent, blockLabels []block
 			Detail:   fmt.Sprintf("Decoder transform returned an error: %s", err),
 			Subject:  s.sourceRange(content, blockLabels).Ptr(),
 		})
-		return cty.UnknownVal(s.impliedType()), diags
+		return cty.UnknownVal(s.impliedType().WithoutOptionalAttributesDeep()), diags
 	}
 
 	return resultVal, diags
@@ -1603,14 +1617,58 @@ func (s *TransformFuncSpec) sourceRange(content *hcl.BodyContent, blockLabels []
 	return s.Wrapped.sourceRange(content, blockLabels)
 }
 
-// ValidateFuncSpec is a spec that allows for extended
+// RefineValueSpec is a spec that wraps another and applies a fixed set of [cty]
+// value refinements to whatever value it produces.
+//
+// Refinements serve to constrain the range of any unknown values, and act as
+// assertions for known values by panicking if the final value does not meet
+// the refinement. Therefore applications using this spec must guarantee that
+// any value passing through the RefineValueSpec will always be consistent with
+// the refinements; if not then that is a bug in the application.
+//
+// The wrapped spec should typically be a [ValidateSpec], a [TransformFuncSpec],
+// or some other adapter that guarantees that the inner result cannot possibly
+// violate the refinements.
+type RefineValueSpec struct {
+	Wrapped Spec
+
+	// Refine is a function which accepts a builder for a refinement in
+	// progress and uses the builder pattern to add extra refinements to it,
+	// finally returning the same builder with those modifications applied.
+	Refine func(*cty.RefinementBuilder) *cty.RefinementBuilder
+}
+
+func (s *RefineValueSpec) visitSameBodyChildren(cb visitFunc) {
+	cb(s.Wrapped)
+}
+
+func (s *RefineValueSpec) decode(content *hcl.BodyContent, blockLabels []blockLabel, ctx *hcl.EvalContext) (cty.Value, hcl.Diagnostics) {
+	wrappedVal, diags := s.Wrapped.decode(content, blockLabels, ctx)
+	if diags.HasErrors() {
+		// We won't try to run our function in this case, because it'll probably
+		// generate confusing additional errors that will distract from the
+		// root cause.
+		return cty.UnknownVal(s.impliedType().WithoutOptionalAttributesDeep()), diags
+	}
+
+	return wrappedVal.RefineWith(s.Refine), diags
+}
+
+func (s *RefineValueSpec) impliedType() cty.Type {
+	return s.Wrapped.impliedType()
+}
+
+func (s *RefineValueSpec) sourceRange(content *hcl.BodyContent, blockLabels []blockLabel) hcl.Range {
+	return s.Wrapped.sourceRange(content, blockLabels)
+}
+
+// ValidateSpec is a spec that allows for extended
 // developer-defined validation. The validation function receives the
 // result of the wrapped spec.
 //
 // The Subject field of the returned Diagnostic is optional. If not
 // specified, it is automatically populated with the range covered by
 // the wrapped spec.
-//
 type ValidateSpec struct {
 	Wrapped Spec
 	Func    func(value cty.Value) hcl.Diagnostics
@@ -1626,7 +1684,7 @@ func (s *ValidateSpec) decode(content *hcl.BodyContent, blockLabels []blockLabel
 		// We won't try to run our function in this case, because it'll probably
 		// generate confusing additional errors that will distract from the
 		// root cause.
-		return cty.UnknownVal(s.impliedType()), diags
+		return cty.UnknownVal(s.impliedType().WithoutOptionalAttributesDeep()), diags
 	}
 
 	validateDiags := s.Func(wrappedVal)
@@ -1672,4 +1730,12 @@ func (s noopSpec) sourceRange(content *hcl.BodyContent, blockLabels []blockLabel
 	return hcl.Range{
 		Filename: "noopSpec",
 	}
+}
+
+func prepareBodyVal(decodeResult cty.Value, body hcl.Body) cty.Value {
+	if m, ok := body.(MarkedBody); ok {
+		marks := m.BodyValueMarks()
+		return decodeResult.WithMarks(marks)
+	}
+	return decodeResult
 }

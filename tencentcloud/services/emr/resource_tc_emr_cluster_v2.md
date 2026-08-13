@@ -1,6 +1,6 @@
 Provides a resource to create a EMR cluster (v2).
 
-~> **NOTE:** At create time, every block of the same role within a zone (i.e. all `master_resource_spec` blocks, all `core_resource_spec` blocks, etc.) must declare an identical configuration — including `instance_type`, `system_disk`, `data_disk`, and `software`. The EMR `CreateCluster` API only accepts a single resource template per role and provisions the requested count of identical nodes from it. To run heterogeneous configurations within the same role, first create the cluster with uniform blocks, then customize individual nodes via subsequent `terraform apply` updates (resize disks, change `instance_type`, add data disks, etc.).
+~> **NOTE:** At create time, every block of the same role within a zone (i.e. all `master_resource_spec` blocks, all `core_resource_spec` blocks, etc. —excluding the `router_resource_spec`) must declare an identical configuration — including `instance_type`, `system_disk`, `data_disk`, and `software`. The EMR `CreateCluster` API only accepts a single resource template per role and provisions the requested count of identical nodes from it. To run heterogeneous configurations within the same role, first create the cluster with uniform blocks, then customize individual nodes via subsequent `terraform apply` updates (resize disks, change `instance_type`, add data disks, etc.).
 
 Example Usage
 
