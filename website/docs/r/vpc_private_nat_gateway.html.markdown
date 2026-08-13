@@ -20,6 +20,19 @@ resource "tencentcloud_vpc_private_nat_gateway" "private_nat_gateway" {
 }
 ```
 
+### Create a private nat gateway with tags.
+
+```hcl
+resource "tencentcloud_vpc_private_nat_gateway" "private_nat_gateway" {
+  nat_gateway_name = "xxx"
+  vpc_id           = "xxx"
+  tags = {
+    "key1" = "value1"
+    "key2" = "value2"
+  }
+}
+```
+
 ## Argument Reference
 
 The following arguments are supported:
@@ -27,6 +40,7 @@ The following arguments are supported:
 * `nat_gateway_name` - (Required, String) Private network gateway name.
 * `ccn_id` - (Optional, String) Cloud Connect Network type The Cloud Connect Network instance ID required to be bound to the private network NAT gateway.
 * `cross_domain` - (Optional, Bool) Cross-domain parameters. Cross-domain binding of VPCs is supported only when the value is True.
+* `tags` - (Optional, Map) Tag description of the instance.
 * `vpc_id` - (Optional, String) Private Cloud instance ID. This parameter is required when creating a VPC type private network NAT gateway or a private network NAT gateway of private network gateway.
 * `vpc_type` - (Optional, Bool) VPC type private network NAT gateway. Only when the value is True will a VPC type private network NAT gateway be created.
 

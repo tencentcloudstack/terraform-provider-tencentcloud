@@ -55,6 +55,12 @@ func ResourceTencentCloudVpcPrivateNatGateway() *schema.Resource {
 				Type:        schema.TypeString,
 				Description: "Cloud Connect Network type The Cloud Connect Network instance ID required to be bound to the private network NAT gateway.",
 			},
+
+			"tags": {
+				Optional:    true,
+				Type:        schema.TypeMap,
+				Description: "Tag description of the instance.",
+			},
 		},
 	}
 }
@@ -89,6 +95,16 @@ func resourceTencentCloudVpcPrivateNatGatewayCreate(d *schema.ResourceData, meta
 
 	if v, ok := d.GetOk("ccn_id"); ok {
 		request.CcnId = helper.String(v.(string))
+	}
+
+	if tags := helper.GetTags(d, "tags"); len(tags) > 0 {
+		for tagKey, tagValue := range tags {
+			tag := vpc.Tag{
+				Key:   helper.String(tagKey),
+				Value: helper.String(tagValue),
+			}
+			request.Tags = append(request.Tags, &tag)
+		}
 	}
 
 	err := resource.Retry(tccommon.WriteRetryTimeout, func() *resource.RetryError {
@@ -182,6 +198,19 @@ func resourceTencentCloudVpcPrivateNatGatewayRead(d *schema.ResourceData, meta i
 		_ = d.Set("ccn_id", privateNatGateway.CcnId)
 	}
 
+	if privateNatGateway.TagSet != nil && len(privateNatGateway.TagSet) > 0 {
+		tagsMap := make(map[string]string)
+		for _, tag := range privateNatGateway.TagSet {
+			if tag.Key != nil {
+				tagsMap[*tag.Key] = ""
+				if tag.Value != nil {
+					tagsMap[*tag.Key] = *tag.Value
+				}
+			}
+		}
+		_ = d.Set("tags", tagsMap)
+	}
+
 	return nil
 }
 
@@ -198,7 +227,7 @@ func resourceTencentCloudVpcPrivateNatGatewayUpdate(d *schema.ResourceData, meta
 
 	request.NatGatewayId = &instanceId
 
-	immutableArgs := []string{"vpc_id", "cross_domain", "vpc_type", "ccn_id"}
+	immutableArgs := []string{"vpc_id", "cross_domain", "vpc_type", "ccn_id", "tags"}
 
 	for _, v := range immutableArgs {
 		if d.HasChange(v) {
