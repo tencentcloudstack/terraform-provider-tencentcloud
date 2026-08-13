@@ -4,31 +4,21 @@ layout: "tencentcloud"
 page_title: "TencentCloud: tencentcloud_vpc_private_nat_gateway"
 sidebar_current: "docs-tencentcloud-resource-vpc_private_nat_gateway"
 description: |-
-  Provides a resource to create a vpc private nat gateway
+  Provides a resource to create a VPC private nat gateway
 ---
 
 # tencentcloud_vpc_private_nat_gateway
 
-Provides a resource to create a vpc private nat gateway
+Provides a resource to create a VPC private nat gateway
 
 ## Example Usage
 
 ```hcl
-resource "tencentcloud_vpc_private_nat_gateway" "private_nat_gateway" {
-  nat_gateway_name = "xxx"
-  vpc_id           = "xxx"
-}
-```
-
-### Create a private nat gateway with tags.
-
-```hcl
-resource "tencentcloud_vpc_private_nat_gateway" "private_nat_gateway" {
-  nat_gateway_name = "xxx"
-  vpc_id           = "xxx"
+resource "tencentcloud_vpc_private_nat_gateway" "example" {
+  nat_gateway_name = "tf-example"
+  vpc_id           = "vpc-i5yyodl9"
   tags = {
-    "key1" = "value1"
-    "key2" = "value2"
+    createBy = "Terraform"
   }
 }
 ```
@@ -49,14 +39,14 @@ The following arguments are supported:
 In addition to all arguments above, the following attributes are exported:
 
 * `id` - ID of the resource.
-
+* `nat_gateway_id` - Private network NAT gateway instance ID.
 
 
 ## Import
 
-vpc private_nat_gateway can be imported using the id, e.g.
+VPC private nat gateway can be imported using the id, e.g.
 
 ```
-terraform import tencentcloud_vpc_private_nat_gateway.private_nat_gateway private_nat_gateway_id
+terraform import tencentcloud_vpc_private_nat_gateway.example intranat-ljdy849x
 ```
 

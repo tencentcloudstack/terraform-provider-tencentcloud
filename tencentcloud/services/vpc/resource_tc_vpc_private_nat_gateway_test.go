@@ -92,7 +92,6 @@ func newMockMetaForVpcPrivateNatGateway() *mockMetaForVpcPrivateNatGateway {
 }
 
 func ptrStrPNG(s string) *string    { return &s }
-func ptrBoolPNG(v bool) *bool       { return &v }
 func ptrUint64PNG(v uint64) *uint64 { return &v }
 
 // TestVpcPrivateNatGateway_Create_WithTags verifies that when tags is set,

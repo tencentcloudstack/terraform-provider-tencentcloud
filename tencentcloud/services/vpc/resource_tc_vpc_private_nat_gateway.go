@@ -61,6 +61,13 @@ func ResourceTencentCloudVpcPrivateNatGateway() *schema.Resource {
 				Type:        schema.TypeMap,
 				Description: "Tag description of the instance.",
 			},
+
+			// computed
+			"nat_gateway_id": {
+				Computed:    true,
+				Type:        schema.TypeString,
+				Description: "Private network NAT gateway instance ID.",
+			},
 		},
 	}
 }
@@ -173,9 +180,13 @@ func resourceTencentCloudVpcPrivateNatGatewayRead(d *schema.ResourceData, meta i
 	}
 
 	if privateNatGateway == nil {
+		log.Printf("[WARN]%s resource `tencentcloud_vpc_private_nat_gateway` [%s] not found, please check if it has been deleted.\n", logId, d.Id())
 		d.SetId("")
-		log.Printf("[WARN]%s resource `VpcPrivateNatGateway` [%s] not found, please check if it has been deleted.\n", logId, d.Id())
 		return nil
+	}
+
+	if privateNatGateway.NatGatewayId != nil {
+		_ = d.Set("nat_gateway_id", privateNatGateway.NatGatewayId)
 	}
 
 	if privateNatGateway.NatGatewayName != nil {
@@ -220,15 +231,9 @@ func resourceTencentCloudVpcPrivateNatGatewayUpdate(d *schema.ResourceData, meta
 
 	logId := tccommon.GetLogId(tccommon.ContextNil)
 	ctx := context.WithValue(context.TODO(), tccommon.LogIdKey, logId)
-
-	request := vpc.NewModifyPrivateNatGatewayAttributeRequest()
-
 	instanceId := d.Id()
 
-	request.NatGatewayId = &instanceId
-
 	immutableArgs := []string{"vpc_id", "cross_domain", "vpc_type", "ccn_id", "tags"}
-
 	for _, v := range immutableArgs {
 		if d.HasChange(v) {
 			return fmt.Errorf("argument `%s` cannot be changed", v)
@@ -236,42 +241,51 @@ func resourceTencentCloudVpcPrivateNatGatewayUpdate(d *schema.ResourceData, meta
 	}
 
 	if d.HasChange("nat_gateway_name") {
+		request := vpc.NewModifyPrivateNatGatewayAttributeRequest()
 		if v, ok := d.GetOk("nat_gateway_name"); ok {
 			request.NatGatewayName = helper.String(v.(string))
 		}
+
+		request.NatGatewayId = &instanceId
+		err := resource.Retry(tccommon.WriteRetryTimeout, func() *resource.RetryError {
+			result, e := meta.(tccommon.ProviderMeta).GetAPIV3Conn().UseVpcClient().ModifyPrivateNatGatewayAttribute(request)
+			if e != nil {
+				return tccommon.RetryError(e)
+			} else {
+				log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), result.ToJsonString())
+			}
+
+			return nil
+		})
+
+		if err != nil {
+			log.Printf("[CRITAL]%s update vpc privateNatGateway failed, reason:%+v", logId, err)
+			return err
+		}
+
+		service := VpcService{client: meta.(tccommon.ProviderMeta).GetAPIV3Conn()}
+		err = resource.Retry(5*tccommon.ReadRetryTimeout, func() *resource.RetryError {
+			privateNatGateway, errRet := service.DescribeVpcPrivateNatGatewayById(ctx, instanceId)
+			if errRet != nil {
+				return tccommon.RetryError(errRet)
+			}
+
+			if privateNatGateway.Status == nil {
+				return resource.RetryableError(fmt.Errorf("waiting for instance update"))
+			}
+
+			if *privateNatGateway.Status != "AVAILABLE" {
+				return resource.RetryableError(fmt.Errorf("waiting for instance update"))
+			}
+
+			return nil
+		})
+
+		if err != nil {
+			return err
+		}
 	}
 
-	err := resource.Retry(tccommon.WriteRetryTimeout, func() *resource.RetryError {
-		result, e := meta.(tccommon.ProviderMeta).GetAPIV3Conn().UseVpcClient().ModifyPrivateNatGatewayAttribute(request)
-		if e != nil {
-			return tccommon.RetryError(e)
-		} else {
-			log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), result.ToJsonString())
-		}
-		return nil
-	})
-	if err != nil {
-		log.Printf("[CRITAL]%s update vpc privateNatGateway failed, reason:%+v", logId, err)
-		return err
-	}
-
-	service := VpcService{client: meta.(tccommon.ProviderMeta).GetAPIV3Conn()}
-	err = resource.Retry(5*tccommon.ReadRetryTimeout, func() *resource.RetryError {
-		privateNatGateway, errRet := service.DescribeVpcPrivateNatGatewayById(ctx, instanceId)
-		if errRet != nil {
-			return tccommon.RetryError(errRet)
-		}
-		if privateNatGateway.Status == nil {
-			return resource.RetryableError(fmt.Errorf("waiting for instance update"))
-		}
-		if *privateNatGateway.Status != "AVAILABLE" {
-			return resource.RetryableError(fmt.Errorf("waiting for instance update"))
-		}
-		return nil
-	})
-	if err != nil {
-		return err
-	}
 	return resourceTencentCloudVpcPrivateNatGatewayRead(d, meta)
 }
 
