@@ -73,10 +73,14 @@ func resourceTencentCloudPostgresqlDatabaseCreate(d *schema.ResourceData, meta i
 	defer tccommon.InconsistentCheck(d, meta)()
 
 	var (
-		logId        = tccommon.GetLogId(tccommon.ContextNil)
-		ctx          = context.WithValue(context.TODO(), tccommon.LogIdKey, logId)
-		dbInstanceId string
-		databaseName string
+		logId         = tccommon.GetLogId(tccommon.ContextNil)
+		ctx           = context.WithValue(context.TODO(), tccommon.LogIdKey, logId)
+		dbInstanceId  string
+		databaseName  string
+		databaseOwner string
+		encoding      string
+		collate       string
+		ctype         string
 	)
 
 	if v, ok := d.GetOk("db_instance_id"); ok {
@@ -87,12 +91,28 @@ func resourceTencentCloudPostgresqlDatabaseCreate(d *schema.ResourceData, meta i
 		databaseName = v.(string)
 	}
 
+	if v, ok := d.GetOk("database_owner"); ok {
+		databaseOwner = v.(string)
+	}
+
+	if v, ok := d.GetOk("encoding"); ok {
+		encoding = v.(string)
+	}
+
+	if v, ok := d.GetOk("collate"); ok {
+		collate = v.(string)
+	}
+
+	if v, ok := d.GetOk("ctype"); ok {
+		ctype = v.(string)
+	}
+
 	if dbInstanceId == "" || databaseName == "" {
 		return fmt.Errorf("db_instance_id or database_name is empty, dbInstanceId=%s, databaseName=%s", dbInstanceId, databaseName)
 	}
 
 	service := PostgresqlService{client: meta.(tccommon.ProviderMeta).GetAPIV3Conn()}
-	if err := service.CreatePostgresqlDatabase(ctx, dbInstanceId, databaseName, d.Get("database_owner").(string), d.Get("encoding").(string), d.Get("collate").(string), d.Get("ctype").(string)); err != nil {
+	if err := service.CreatePostgresqlDatabase(ctx, dbInstanceId, databaseName, databaseOwner, encoding, collate, ctype); err != nil {
 		log.Printf("[CRITAL]%s create postgresql database failed, reason:%+v", logId, err)
 		return err
 	}
@@ -161,9 +181,14 @@ func resourceTencentCloudPostgresqlDatabaseUpdate(d *schema.ResourceData, meta i
 	defer tccommon.InconsistentCheck(d, meta)()
 
 	var (
-		logId = tccommon.GetLogId(tccommon.ContextNil)
-		ctx   = context.WithValue(context.TODO(), tccommon.LogIdKey, logId)
+		logId         = tccommon.GetLogId(tccommon.ContextNil)
+		ctx           = context.WithValue(context.TODO(), tccommon.LogIdKey, logId)
+		databaseOwner string
 	)
+
+	if v, ok := d.GetOk("database_owner"); ok {
+		databaseOwner = v.(string)
+	}
 
 	idSplit := strings.Split(d.Id(), tccommon.FILED_SP)
 	if len(idSplit) != 2 {
@@ -175,7 +200,7 @@ func resourceTencentCloudPostgresqlDatabaseUpdate(d *schema.ResourceData, meta i
 
 	if d.HasChange("database_owner") {
 		service := PostgresqlService{client: meta.(tccommon.ProviderMeta).GetAPIV3Conn()}
-		if err := service.ModifyPostgresqlDatabaseOwner(ctx, dbInstanceId, databaseName, d.Get("database_owner").(string)); err != nil {
+		if err := service.ModifyPostgresqlDatabaseOwner(ctx, dbInstanceId, databaseName, databaseOwner); err != nil {
 			log.Printf("[CRITAL]%s update postgresql database owner failed, reason:%+v", logId, err)
 			return err
 		}
