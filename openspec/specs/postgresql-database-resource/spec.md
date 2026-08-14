@@ -1,7 +1,7 @@
 # postgresql-database-resource Specification
 
 ## Purpose
-TBD - created by archiving change add-postgresql-database-resource. Update Purpose after archive.
+Defines the behavior of the `tencentcloud_postgresql_database` resource, which manages the lifecycle of a PostgreSQL database within a DB instance.
 ## Requirements
 ### Requirement: Resource schema for tencentcloud_postgresql_database
 The system SHALL provide a Terraform resource named `tencentcloud_postgresql_database` that manages a PostgreSQL database within a DB instance. The resource SHALL support the following schema fields:
@@ -26,10 +26,21 @@ The resource SHALL support import via a composite ID of format `db_instance_id#d
 - **WHEN** a user imports `tencentcloud_postgresql_database` using a composite ID `db_instance_id#database_name`
 - **THEN** the system SHALL split the ID and populate the state with the database details
 
-### Requirement: Create database
-The system SHALL create a PostgreSQL database by calling the `CreateDatabase` API with `DBInstanceId`, `DatabaseName`, `DatabaseOwner`, and optionally `Encoding`, `Collate`, `Ctype`. After successful creation, the system SHALL set the resource ID to `db_instance_id#database_name` (using `FILED_SP` separator) and call the Read function to populate state.
+### Requirement: Service-layer encapsulation
+The system SHALL encapsulate all PostgreSQL database SDK calls as reusable methods on the `PostgresqlService` (in `tencentcloud/services/postgresql/service_tencentcloud_postgresql.go`): `CreatePostgresqlDatabase`, `DescribePostgresqlDatabaseById`, `ModifyPostgresqlDatabaseOwner`, and `DeletePostgresqlDatabaseById`. Each write method SHALL apply `ratelimit.Check(request.GetAction())` and `resource.Retry(tccommon.WriteRetryTimeout, ...)`, returning `tccommon.RetryError` on SDK failure and a `NonRetryableError` on a nil response. The read method SHALL apply `ratelimit.Check(request.GetAction())` and return `nil` (no database) when the database is not found. The resource CRUD functions SHALL invoke these service methods rather than calling the SDK client directly.
 
-The system SHALL verify that the API response is not nil before proceeding. If the API call fails, the system SHALL wrap the error using `tccommon.RetryError`.
+#### Scenario: Write operations go through the service layer
+- **WHEN** the resource creates, updates, or deletes a database
+- **THEN** the resource SHALL call the corresponding `PostgresqlService` method instead of constructing an SDK request directly
+
+#### Scenario: Read operation goes through the service layer
+- **WHEN** the resource reads a database
+- **THEN** the resource SHALL call `DescribePostgresqlDatabaseById` and treat a `nil` return value as "not found"
+
+### Requirement: Create database
+The system SHALL create a PostgreSQL database by calling the `CreatePostgresqlDatabase` service method, which invokes the `CreateDatabase` API with `DBInstanceId`, `DatabaseName`, `DatabaseOwner`, and optionally `Encoding`, `Collate`, `Ctype`. After successful creation, the system SHALL set the resource ID to `db_instance_id#database_name` (using `FILED_SP` separator) and call the Read function to populate state.
+
+The service method SHALL verify that the API response is not nil before proceeding. If the API call fails, the service method SHALL wrap the error using `tccommon.RetryError`.
 
 #### Scenario: Successful database creation
 - **WHEN** the user creates a `tencentcloud_postgresql_database` with valid parameters
@@ -44,7 +55,7 @@ The system SHALL verify that the API response is not nil before proceeding. If t
 - **THEN** the system SHALL return a `NonRetryableError`
 
 ### Requirement: Read database
-The system SHALL read a PostgreSQL database by calling the `DescribeDatabases` API with `DBInstanceId` and a `database-name` filter. The system SHALL iterate the returned `Databases` array and match the exact `DatabaseName`. If the database is found, the system SHALL set `database_name`, `database_owner`, `encoding`, `collate`, and `ctype` from the `Database` struct fields. If the database is not found, the system SHALL set the resource ID to empty string after printing a log with the current ID.
+The system SHALL read a PostgreSQL database by calling the `DescribePostgresqlDatabaseById` service method, which invokes the `DescribeDatabases` API with `DBInstanceId` and a `database-name` filter. The service method SHALL iterate the returned `Databases` array and match the exact `DatabaseName`, returning `nil` if no exact match is found. If the database is found, the system SHALL set `database_name`, `database_owner`, `encoding`, `collate`, and `ctype` from the `Database` struct fields. If the database is not found, the system SHALL set the resource ID to empty string after printing a log with the current ID.
 
 #### Scenario: Database found
 - **WHEN** the system reads a database that exists
@@ -59,7 +70,7 @@ The system SHALL read a PostgreSQL database by calling the `DescribeDatabases` A
 - **THEN** the system SHALL skip calling `d.Set()` for those nil fields
 
 ### Requirement: Update database owner
-The system SHALL update the database owner by calling the `ModifyDatabaseOwner` API when the `database_owner` field changes. The system SHALL pass `DBInstanceId`, `DatabaseName`, and `DatabaseOwner` to the API. If `encoding`, `collate`, or `ctype` change, the Terraform SDK SHALL trigger recreation (ForceNew) rather than an in-place update.
+The system SHALL update the database owner by calling the `ModifyPostgresqlDatabaseOwner` service method, which invokes the `ModifyDatabaseOwner` API with `DBInstanceId`, `DatabaseName`, and `DatabaseOwner`, when the `database_owner` field changes. If `encoding`, `collate`, or `ctype` change, the Terraform SDK SHALL trigger recreation (ForceNew) rather than an in-place update.
 
 #### Scenario: Update database owner
 - **WHEN** the user changes the `database_owner` field
@@ -70,11 +81,11 @@ The system SHALL update the database owner by calling the `ModifyDatabaseOwner` 
 - **THEN** the Terraform SDK SHALL trigger resource recreation (ForceNew)
 
 ### Requirement: Delete database
-The system SHALL delete a PostgreSQL database by calling the `DeleteDatabase` API with `DBInstanceId` and `DatabaseName`. The system SHALL parse the composite ID to extract these values.
+The system SHALL delete a PostgreSQL database by calling the `DeletePostgresqlDatabaseById` service method, which invokes the `DeleteDatabase` API with `DBInstanceId` and `DatabaseName`. The system SHALL parse the composite ID to extract these values.
 
 #### Scenario: Successful database deletion
 - **WHEN** the user deletes a `tencentcloud_postgresql_database` resource
-- **THEN** the system SHALL call `DeleteDatabase` with `DBInstanceId` and `DatabaseName` parsed from the composite ID
+- **THEN** the system SHALL call `DeletePostgresqlDatabaseById` with `DBInstanceId` and `DatabaseName` parsed from the composite ID
 
 ### Requirement: Provider registration
 The system SHALL register the `tencentcloud_postgresql_database` resource in `tencentcloud/provider.go` and add the resource name to `tencentcloud/provider.md` in the PostgreSQL section.
@@ -89,4 +100,3 @@ The system SHALL provide a documentation file `resource_tc_postgresql_database.m
 #### Scenario: Documentation file exists
 - **WHEN** the resource is implemented
 - **THEN** a `resource_tc_postgresql_database.md` file SHALL exist with description, example usage, and import section
-

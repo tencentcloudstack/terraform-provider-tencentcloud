@@ -1,10 +1,11 @@
 ## 1. Resource Schema & CRUD Implementation
 
 - [x] 1.1 Create `tencentcloud/services/postgresql/resource_tc_postgresql_database.go` with `ResourceTencentCloudPostgresqlDatabase()` function defining the schema: `db_instance_id` (Required, ForceNew), `database_name` (Required, ForceNew), `database_owner` (Required), `encoding` (Optional, ForceNew), `collate` (Optional, ForceNew), `ctype` (Optional, ForceNew), and Importer support
-- [x] 1.2 Implement `resourceTencentCloudPostgresqlDatabaseCreate()` — build `CreateDatabaseRequest` from schema, call `CreateDatabaseWithContext` inside `resource.Retry(tccommon.WriteRetryTimeout, ...)`, verify response is not nil, set composite ID `db_instance_id#database_name` using `tccommon.FILED_SP`, then call Read
-- [x] 1.3 Implement `resourceTencentCloudPostgresqlDatabaseRead()` — split composite ID to get `db_instance_id` and `database_name`, call `DescribeDatabasesWithContext` with `DBInstanceId` and `database-name` filter inside `resource.Retry(tccommon.ReadRetryTimeout, ...)`, iterate `Databases` array to find exact match by name, set schema fields from `Database` struct (skip nil fields), handle not-found by printing log with ID then `d.SetId("")`
-- [x] 1.4 Implement `resourceTencentCloudPostgresqlDatabaseUpdate()` — split composite ID, check if `database_owner` changed, call `ModifyDatabaseOwnerWithContext` inside `resource.Retry(tccommon.WriteRetryTimeout, ...)`, then call Read
-- [x] 1.5 Implement `resourceTencentCloudPostgresqlDatabaseDelete()` — split composite ID, call `DeleteDatabaseWithContext` with `DBInstanceId` and `DatabaseName` inside `resource.Retry(tccommon.WriteRetryTimeout, ...)`
+- [x] 1.2 Implement `resourceTencentCloudPostgresqlDatabaseCreate()` — construct a `PostgresqlService`, call `service.CreatePostgresqlDatabase(...)`, set composite ID `db_instance_id#database_name` using `tccommon.FILED_SP`, then call Read
+- [x] 1.3 Implement `resourceTencentCloudPostgresqlDatabaseRead()` — split composite ID to get `db_instance_id` and `database_name`, call `service.DescribePostgresqlDatabaseById(...)`, set schema fields from the returned `Database` struct (skip nil fields), handle not-found by printing log with ID then `d.SetId("")`
+- [x] 1.4 Implement `resourceTencentCloudPostgresqlDatabaseUpdate()` — split composite ID, check if `database_owner` changed, call `service.ModifyPostgresqlDatabaseOwner(...)`, then call Read
+- [x] 1.5 Implement `resourceTencentCloudPostgresqlDatabaseDelete()` — split composite ID, call `service.DeletePostgresqlDatabaseById(...)`
+- [x] 1.6 Implement service-layer methods in `tencentcloud/services/postgresql/service_tencentcloud_postgresql.go`: `CreatePostgresqlDatabase`, `DescribePostgresqlDatabaseById`, `ModifyPostgresqlDatabaseOwner`, `DeletePostgresqlDatabaseById` — each write method wraps the SDK call with `ratelimit.Check(request.GetAction())` and `resource.Retry(tccommon.WriteRetryTimeout, ...)`; the read method applies `ratelimit.Check(request.GetAction())` and returns `nil` when not found
 
 ## 2. Provider Registration
 
@@ -17,7 +18,7 @@
 
 ## 4. Unit Tests
 
-- [x] 4.1 Create `tencentcloud/services/postgresql/resource_tc_postgresql_database_test.go` using gomonkey mock to mock the postgres API client methods (`CreateDatabaseWithContext`, `DescribeDatabasesWithContext`, `ModifyDatabaseOwnerWithContext`, `DeleteDatabaseWithContext`) and test the CRUD business logic — no terraform test suite, no `go test` execution
+- [x] 4.1 Create `tencentcloud/services/postgresql/resource_tc_postgresql_database_test.go` using gomonkey mock to mock the `PostgresqlService` methods (`CreatePostgresqlDatabase`, `DescribePostgresqlDatabaseById`, `ModifyPostgresqlDatabaseOwner`, `DeletePostgresqlDatabaseById`) and test the CRUD business logic — no terraform test suite, no `go test` execution
 
 ## 5. Verification (performed by separate process)
 

@@ -32,10 +32,6 @@ func ptrStringPgDb(s string) *string {
 	return &s
 }
 
-func ptrUint64PgDb(i uint64) *uint64 {
-	return &i
-}
-
 // go test ./tencentcloud/services/postgresql/ -run "TestPostgresqlDatabase" -v -count=1 -gcflags="all=-l"
 
 // TestPostgresqlDatabase_Create tests the Create function
@@ -43,52 +39,27 @@ func TestPostgresqlDatabase_Create(t *testing.T) {
 	patches := gomonkey.NewPatches()
 	defer patches.Reset()
 
-	pgClient := &postgresql.Client{}
-	patches.ApplyMethodReturn(newMockMetaPostgresqlDatabase().client, "UsePostgresqlClient", pgClient)
-
-	patches.ApplyMethodFunc(pgClient, "CreateDatabaseWithContext", func(_ context.Context, request *postgresql.CreateDatabaseRequest) (*postgresql.CreateDatabaseResponse, error) {
-		assert.NotNil(t, request.DBInstanceId)
-		assert.Equal(t, "postgres-6fego161", *request.DBInstanceId)
-		assert.NotNil(t, request.DatabaseName)
-		assert.Equal(t, "test_db", *request.DatabaseName)
-		assert.NotNil(t, request.DatabaseOwner)
-		assert.Equal(t, "tcuser", *request.DatabaseOwner)
-		assert.NotNil(t, request.Encoding)
-		assert.Equal(t, "UTF8", *request.Encoding)
-		assert.NotNil(t, request.Collate)
-		assert.Equal(t, "C", *request.Collate)
-		assert.NotNil(t, request.Ctype)
-		assert.Equal(t, "C", *request.Ctype)
-
-		resp := postgresql.NewCreateDatabaseResponse()
-		resp.Response = &postgresql.CreateDatabaseResponseParams{
-			RequestId: ptrStringPgDb("fake-request-id"),
-		}
-		return resp, nil
+	service := &svcpostgresql.PostgresqlService{}
+	patches.ApplyMethodFunc(service, "CreatePostgresqlDatabase", func(_ context.Context, dbInstanceId, databaseName, databaseOwner, encoding, collate, ctype string) error {
+		assert.Equal(t, "postgres-6fego161", dbInstanceId)
+		assert.Equal(t, "test_db", databaseName)
+		assert.Equal(t, "tcuser", databaseOwner)
+		assert.Equal(t, "UTF8", encoding)
+		assert.Equal(t, "C", collate)
+		assert.Equal(t, "C", ctype)
+		return nil
 	})
 
-	patches.ApplyMethodFunc(pgClient, "DescribeDatabasesWithContext", func(_ context.Context, request *postgresql.DescribeDatabasesRequest) (*postgresql.DescribeDatabasesResponse, error) {
-		assert.NotNil(t, request.DBInstanceId)
-		assert.Equal(t, "postgres-6fego161", *request.DBInstanceId)
-		assert.NotNil(t, request.Filters)
-		assert.Len(t, request.Filters, 1)
-		assert.Equal(t, "database-name", *request.Filters[0].Name)
-
-		resp := postgresql.NewDescribeDatabasesResponse()
-		resp.Response = &postgresql.DescribeDatabasesResponseParams{
-			TotalCount: ptrUint64PgDb(1),
-			Databases: []*postgresql.Database{
-				{
-					DatabaseName:  ptrStringPgDb("test_db"),
-					DatabaseOwner: ptrStringPgDb("tcuser"),
-					Encoding:      ptrStringPgDb("UTF8"),
-					Collate:       ptrStringPgDb("C"),
-					Ctype:         ptrStringPgDb("C"),
-				},
-			},
-			RequestId: ptrStringPgDb("fake-request-id"),
-		}
-		return resp, nil
+	patches.ApplyMethodFunc(service, "DescribePostgresqlDatabaseById", func(_ context.Context, dbInstanceId, databaseName string) (*postgresql.Database, error) {
+		assert.Equal(t, "postgres-6fego161", dbInstanceId)
+		assert.Equal(t, "test_db", databaseName)
+		return &postgresql.Database{
+			DatabaseName:  ptrStringPgDb("test_db"),
+			DatabaseOwner: ptrStringPgDb("tcuser"),
+			Encoding:      ptrStringPgDb("UTF8"),
+			Collate:       ptrStringPgDb("C"),
+			Ctype:         ptrStringPgDb("C"),
+		}, nil
 	})
 
 	meta := newMockMetaPostgresqlDatabase()
@@ -118,32 +89,17 @@ func TestPostgresqlDatabase_Read(t *testing.T) {
 	patches := gomonkey.NewPatches()
 	defer patches.Reset()
 
-	pgClient := &postgresql.Client{}
-	patches.ApplyMethodReturn(newMockMetaPostgresqlDatabase().client, "UsePostgresqlClient", pgClient)
-
-	patches.ApplyMethodFunc(pgClient, "DescribeDatabasesWithContext", func(_ context.Context, request *postgresql.DescribeDatabasesRequest) (*postgresql.DescribeDatabasesResponse, error) {
-		assert.NotNil(t, request.DBInstanceId)
-		assert.Equal(t, "postgres-6fego161", *request.DBInstanceId)
-		assert.NotNil(t, request.Limit)
-		assert.Equal(t, uint64(100), *request.Limit)
-		assert.NotNil(t, request.Offset)
-		assert.Equal(t, uint64(0), *request.Offset)
-
-		resp := postgresql.NewDescribeDatabasesResponse()
-		resp.Response = &postgresql.DescribeDatabasesResponseParams{
-			TotalCount: ptrUint64PgDb(1),
-			Databases: []*postgresql.Database{
-				{
-					DatabaseName:  ptrStringPgDb("test_db"),
-					DatabaseOwner: ptrStringPgDb("tcuser"),
-					Encoding:      ptrStringPgDb("UTF8"),
-					Collate:       ptrStringPgDb("C"),
-					Ctype:         ptrStringPgDb("C"),
-				},
-			},
-			RequestId: ptrStringPgDb("fake-request-id"),
-		}
-		return resp, nil
+	service := &svcpostgresql.PostgresqlService{}
+	patches.ApplyMethodFunc(service, "DescribePostgresqlDatabaseById", func(_ context.Context, dbInstanceId, databaseName string) (*postgresql.Database, error) {
+		assert.Equal(t, "postgres-6fego161", dbInstanceId)
+		assert.Equal(t, "test_db", databaseName)
+		return &postgresql.Database{
+			DatabaseName:  ptrStringPgDb("test_db"),
+			DatabaseOwner: ptrStringPgDb("tcuser"),
+			Encoding:      ptrStringPgDb("UTF8"),
+			Collate:       ptrStringPgDb("C"),
+			Ctype:         ptrStringPgDb("C"),
+		}, nil
 	})
 
 	meta := newMockMetaPostgresqlDatabase()
@@ -173,17 +129,9 @@ func TestPostgresqlDatabase_Read_NotFound(t *testing.T) {
 	patches := gomonkey.NewPatches()
 	defer patches.Reset()
 
-	pgClient := &postgresql.Client{}
-	patches.ApplyMethodReturn(newMockMetaPostgresqlDatabase().client, "UsePostgresqlClient", pgClient)
-
-	patches.ApplyMethodFunc(pgClient, "DescribeDatabasesWithContext", func(_ context.Context, request *postgresql.DescribeDatabasesRequest) (*postgresql.DescribeDatabasesResponse, error) {
-		resp := postgresql.NewDescribeDatabasesResponse()
-		resp.Response = &postgresql.DescribeDatabasesResponseParams{
-			TotalCount: ptrUint64PgDb(0),
-			Databases:  []*postgresql.Database{},
-			RequestId:  ptrStringPgDb("fake-request-id"),
-		}
-		return resp, nil
+	service := &svcpostgresql.PostgresqlService{}
+	patches.ApplyMethodFunc(service, "DescribePostgresqlDatabaseById", func(_ context.Context, dbInstanceId, databaseName string) (*postgresql.Database, error) {
+		return nil, nil
 	})
 
 	meta := newMockMetaPostgresqlDatabase()
@@ -205,40 +153,22 @@ func TestPostgresqlDatabase_Update(t *testing.T) {
 	patches := gomonkey.NewPatches()
 	defer patches.Reset()
 
-	pgClient := &postgresql.Client{}
-	patches.ApplyMethodReturn(newMockMetaPostgresqlDatabase().client, "UsePostgresqlClient", pgClient)
-
-	patches.ApplyMethodFunc(pgClient, "ModifyDatabaseOwnerWithContext", func(_ context.Context, request *postgresql.ModifyDatabaseOwnerRequest) (*postgresql.ModifyDatabaseOwnerResponse, error) {
-		assert.NotNil(t, request.DBInstanceId)
-		assert.Equal(t, "postgres-6fego161", *request.DBInstanceId)
-		assert.NotNil(t, request.DatabaseName)
-		assert.Equal(t, "test_db", *request.DatabaseName)
-		assert.NotNil(t, request.DatabaseOwner)
-		assert.Equal(t, "newuser", *request.DatabaseOwner)
-
-		resp := postgresql.NewModifyDatabaseOwnerResponse()
-		resp.Response = &postgresql.ModifyDatabaseOwnerResponseParams{
-			RequestId: ptrStringPgDb("fake-request-id"),
-		}
-		return resp, nil
+	service := &svcpostgresql.PostgresqlService{}
+	patches.ApplyMethodFunc(service, "ModifyPostgresqlDatabaseOwner", func(_ context.Context, dbInstanceId, databaseName, databaseOwner string) error {
+		assert.Equal(t, "postgres-6fego161", dbInstanceId)
+		assert.Equal(t, "test_db", databaseName)
+		assert.Equal(t, "newuser", databaseOwner)
+		return nil
 	})
 
-	patches.ApplyMethodFunc(pgClient, "DescribeDatabasesWithContext", func(_ context.Context, request *postgresql.DescribeDatabasesRequest) (*postgresql.DescribeDatabasesResponse, error) {
-		resp := postgresql.NewDescribeDatabasesResponse()
-		resp.Response = &postgresql.DescribeDatabasesResponseParams{
-			TotalCount: ptrUint64PgDb(1),
-			Databases: []*postgresql.Database{
-				{
-					DatabaseName:  ptrStringPgDb("test_db"),
-					DatabaseOwner: ptrStringPgDb("newuser"),
-					Encoding:      ptrStringPgDb("UTF8"),
-					Collate:       ptrStringPgDb("C"),
-					Ctype:         ptrStringPgDb("C"),
-				},
-			},
-			RequestId: ptrStringPgDb("fake-request-id"),
-		}
-		return resp, nil
+	patches.ApplyMethodFunc(service, "DescribePostgresqlDatabaseById", func(_ context.Context, dbInstanceId, databaseName string) (*postgresql.Database, error) {
+		return &postgresql.Database{
+			DatabaseName:  ptrStringPgDb("test_db"),
+			DatabaseOwner: ptrStringPgDb("newuser"),
+			Encoding:      ptrStringPgDb("UTF8"),
+			Collate:       ptrStringPgDb("C"),
+			Ctype:         ptrStringPgDb("C"),
+		}, nil
 	})
 
 	meta := newMockMetaPostgresqlDatabase()
@@ -264,20 +194,11 @@ func TestPostgresqlDatabase_Delete(t *testing.T) {
 	patches := gomonkey.NewPatches()
 	defer patches.Reset()
 
-	pgClient := &postgresql.Client{}
-	patches.ApplyMethodReturn(newMockMetaPostgresqlDatabase().client, "UsePostgresqlClient", pgClient)
-
-	patches.ApplyMethodFunc(pgClient, "DeleteDatabaseWithContext", func(_ context.Context, request *postgresql.DeleteDatabaseRequest) (*postgresql.DeleteDatabaseResponse, error) {
-		assert.NotNil(t, request.DBInstanceId)
-		assert.Equal(t, "postgres-6fego161", *request.DBInstanceId)
-		assert.NotNil(t, request.DatabaseName)
-		assert.Equal(t, "test_db", *request.DatabaseName)
-
-		resp := postgresql.NewDeleteDatabaseResponse()
-		resp.Response = &postgresql.DeleteDatabaseResponseParams{
-			RequestId: ptrStringPgDb("fake-request-id"),
-		}
-		return resp, nil
+	service := &svcpostgresql.PostgresqlService{}
+	patches.ApplyMethodFunc(service, "DeletePostgresqlDatabaseById", func(_ context.Context, dbInstanceId, databaseName string) error {
+		assert.Equal(t, "postgres-6fego161", dbInstanceId)
+		assert.Equal(t, "test_db", databaseName)
+		return nil
 	})
 
 	meta := newMockMetaPostgresqlDatabase()

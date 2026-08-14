@@ -5,7 +5,7 @@ Terraform Provider for TencentCloud currently lacks the ability to manage Postgr
 ## What Changes
 
 - Add new resource `tencentcloud_postgresql_database` (RESOURCE_KIND_GENERAL) that manages the full lifecycle of a PostgreSQL database within a DB instance.
-- Implement Create via `CreateDatabase` API, Read via `DescribeDatabases` API, Update via `ModifyDatabaseOwner` API, and Delete via `DeleteDatabase` API.
+- Implement Create via `CreateDatabase` API, Read via `DescribeDatabases` API, Update via `ModifyDatabaseOwner` API, and Delete via `DeleteDatabase` API, encapsulated as reusable `PostgresqlService` methods (service-layer pattern) so the resource does not call the SDK client directly.
 - Use composite ID `db_instance_id#database_name` since `CreateDatabase` does not return an ID.
 - Register the resource in `tencentcloud/provider.go` and `tencentcloud/provider.md`.
 - Add documentation file `resource_tc_postgresql_database.md`.
@@ -26,6 +26,7 @@ Terraform Provider for TencentCloud currently lacks the ability to manage Postgr
   - `tencentcloud/services/postgresql/resource_tc_postgresql_database_test.go` — unit tests with gomonkey mock
   - `tencentcloud/services/postgresql/resource_tc_postgresql_database.md` — documentation
 - **Modified files**:
+  - `tencentcloud/services/postgresql/service_tencentcloud_postgresql.go` — add `PostgresqlService` methods for database CRUD
   - `tencentcloud/provider.go` — register `tencentcloud_postgresql_database` resource
   - `tencentcloud/provider.md` — add resource to provider documentation
 - **Cloud APIs**: `CreateDatabase`, `DescribeDatabases`, `ModifyDatabaseOwner`, `DeleteDatabase` from `postgres/v20170312` SDK package (already vendored).
