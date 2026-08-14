@@ -47,20 +47,23 @@ func ResourceTencentCloudTseCloudNativeAPIGatewayIPRestriction() *schema.Resourc
 			},
 
 			"enabled": {
-				Required:    true,
+				Optional:    true,
+				Computed:    true,
 				Type:        schema.TypeBool,
 				Description: "Whether to enable the plugin.",
 			},
 
 			"restriction_type": {
-				Required:    true,
+				Optional:    true,
+				Computed:    true,
 				Type:        schema.TypeString,
 				Description: "IP restriction type: whiteList|blackList.",
 			},
 
 			"address_list": {
-				Required: true,
-				Type:     schema.TypeList,
+				Optional: true,
+				Computed: true,
+				Type:     schema.TypeSet,
 				Elem: &schema.Schema{
 					Type: schema.TypeString,
 				},
@@ -139,7 +142,10 @@ func resourceTencentCloudTseCloudNativeAPIGatewayIPRestrictionRead(d *schema.Res
 	}
 
 	if result.Response.Result == nil {
-		log.Printf("[CRUD] tse_cloud_native_api_gateway_ip_restriction id=%s", d.Id())
+		log.Printf("[WARN] read tse_cloud_native_api_gateway_ip_restriction id=%s empty result", d.Id())
+		if d.IsNewResource() {
+			return fmt.Errorf("tse_cloud_native_api_gateway_ip_restriction [%s] not found after creation", d.Id())
+		}
 		d.SetId("")
 		return nil
 	}
@@ -177,17 +183,13 @@ func resourceTencentCloudTseCloudNativeAPIGatewayIPRestrictionUpdate(d *schema.R
 
 	request := tse.NewCreateOrModifyCloudNativeAPIGatewayIPRestrictionRequest()
 
-	if v, ok := d.GetOk("gateway_id"); ok {
-		request.GatewayId = helper.String(v.(string))
+	idSplit := strings.Split(d.Id(), tccommon.FILED_SP)
+	if len(idSplit) != 3 {
+		return fmt.Errorf("id is broken,%s", d.Id())
 	}
-
-	if v, ok := d.GetOk("source_type"); ok {
-		request.SourceType = helper.String(v.(string))
-	}
-
-	if v, ok := d.GetOk("source_id"); ok {
-		request.SourceId = helper.String(v.(string))
-	}
+	request.GatewayId = helper.String(idSplit[0])
+	request.SourceType = helper.String(idSplit[1])
+	request.SourceId = helper.String(idSplit[2])
 
 	if v, ok := d.GetOkExists("enabled"); ok {
 		request.Enabled = helper.Bool(v.(bool))
@@ -198,7 +200,7 @@ func resourceTencentCloudTseCloudNativeAPIGatewayIPRestrictionUpdate(d *schema.R
 	}
 
 	if v, ok := d.GetOk("address_list"); ok {
-		addressList := v.([]interface{})
+		addressList := v.(*schema.Set).List()
 		for i := range addressList {
 			address := addressList[i].(string)
 			request.AddressList = append(request.AddressList, &address)

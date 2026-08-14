@@ -11,9 +11,9 @@
   - `gateway_id`（TypeString, Required, ForceNew）：网关 ID。
   - `source_type`（TypeString, Required, ForceNew）：访问控制绑定的资源类型，route|service。
   - `source_id`（TypeString, Required, ForceNew）：路由或服务 ID。
-  - `enabled`（TypeBool, Required）：是否启用插件。
-  - `restriction_type`（TypeString, Required）：访问控制类型，whiteList|blackList。
-  - `address_list`（TypeList of TypeString, Required）：IP/CIDR 列表。
+  - `enabled`（TypeBool, Optional, Computed）：是否启用插件。
+  - `restriction_type`（TypeString, Optional, Computed）：访问控制类型，whiteList|blackList。
+  - `address_list`（TypeSet of TypeString, Optional, Computed）：IP/CIDR 列表（顺序不敏感）。
 - 资源 ID 为复合 ID：`gateway_id#source_type#source_id`，使用 `tccommon.FILED_SP`（"#"）作为分隔符。这三个字段均为 ForceNew，改变任意一个即重建资源。
 - Create 与 Update 共用 `CreateOrModifyCloudNativeAPIGatewayIPRestriction` 接口（API 为 upsert 语义）。
 - Read 调用 `DescribeCloudNativeAPIGatewayIPRestriction` 查询当前配置，刷新 state。

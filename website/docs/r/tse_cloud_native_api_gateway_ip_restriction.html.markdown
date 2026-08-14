@@ -28,12 +28,12 @@ resource "tencentcloud_tse_cloud_native_api_gateway_ip_restriction" "example" {
 
 The following arguments are supported:
 
-* `address_list` - (Required, List: [`String`]) IP/CIDR address list.
-* `enabled` - (Required, Bool) Whether to enable the plugin.
 * `gateway_id` - (Required, String, ForceNew) Gateway ID.
-* `restriction_type` - (Required, String) IP restriction type: whiteList|blackList.
 * `source_id` - (Required, String, ForceNew) Route or service ID.
 * `source_type` - (Required, String, ForceNew) Resource type bound to the IP restriction plugin: route|service.
+* `address_list` - (Optional, Set: [`String`]) IP/CIDR address list.
+* `enabled` - (Optional, Bool) Whether to enable the plugin.
+* `restriction_type` - (Optional, String) IP restriction type: whiteList|blackList.
 
 ## Attributes Reference
 

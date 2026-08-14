@@ -8,9 +8,9 @@
   - `gateway_id` (TypeString, Required, ForceNew, Description: "Gateway ID.")
   - `source_type` (TypeString, Required, ForceNew, Description: "Resource type bound to the IP restriction plugin: route|service.")
   - `source_id` (TypeString, Required, ForceNew, Description: "Route or service ID.")
-  - `enabled` (TypeBool, Required, Description: "Whether to enable the plugin.")
-  - `restriction_type` (TypeString, Required, Description: "IP restriction type: whiteList|blackList.")
-  - `address_list` (TypeList of TypeString, Required, Description: "IP/CIDR address list.")
+  - `enabled` (TypeBool, Optional, Computed, Description: "Whether to enable the plugin.")
+  - `restriction_type` (TypeString, Optional, Computed, Description: "IP restriction type: whiteList|blackList.")
+  - `address_list` (TypeSet of TypeString, Optional, Computed, Description: "IP/CIDR address list.")
 - [x] 1.4 Implement `resourceTencentCloudTseCloudNativeAPIGatewayIPRestrictionCreate`:
   - `defer tccommon.LogElapsed("resource.tencentcloud_tse_cloud_native_api_gateway_ip_restriction.create")()` and `defer tccommon.InconsistentCheck(d, meta)()`.
   - Build `var (logId, ctx)` block: `logId = tccommon.GetLogId(tccommon.ContextNil)`, `ctx = context.WithValue(context.TODO(), tccommon.LogIdKey, logId)`.
@@ -29,7 +29,7 @@
   - `defer tccommon.LogElapsed(...)` and `defer tccommon.InconsistentCheck(d, meta)()`.
   - Build `var (logId, ctx)`.
   - Build `request := tse.NewCreateOrModifyCloudNativeAPIGatewayIPRestrictionRequest()`.
-  - Populate `request.GatewayId` from `d.GetOk("gateway_id")`, `request.SourceType` from `d.GetOk("source_type")`, `request.SourceId` from `d.GetOk("source_id")`, `request.Enabled` from `d.GetOk("enabled")` (as `*bool`), `request.RestrictionType` from `d.GetOk("restriction_type")`, `request.AddressList` from `d.Get("address_list").([]interface{})` converting each element to `*string`.
+  - Populate `request.GatewayId` from `d.GetOk("gateway_id")`, `request.SourceType` from `d.GetOk("source_type")`, `request.SourceId` from `d.GetOk("source_id")`, `request.Enabled` from `d.GetOkExists("enabled")` (as `*bool`), `request.RestrictionType` from `d.GetOk("restriction_type")`, `request.AddressList` from `d.GetOk("address_list").(*schema.Set).List()` converting each element to `*string`.
   - Wrap `UseTseClient().CreateOrModifyCloudNativeAPIGatewayIPRestrictionWithContext(ctx, request)` in `resource.Retry(tccommon.WriteRetryTimeout, ...)`. Inside retry: on error `tccommon.RetryError(e)`; on success log `[DEBUG]`. Guard `result == nil || result.Response == nil` → `resource.NonRetryableError`.
   - On retry failure, log `[CRITAL]` and return the error.
   - End with `return resourceTencentCloudTseCloudNativeAPIGatewayIPRestrictionRead(d, meta)`.

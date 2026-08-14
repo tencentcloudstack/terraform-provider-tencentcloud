@@ -18,21 +18,33 @@ The provider SHALL register a new general-type resource named `tencentcloud_tse_
 
 The resource schema SHALL declare exactly these top-level argument keys, with semantics matching the SDK request fields of `CreateOrModifyCloudNativeAPIGatewayIPRestrictionRequest`:
 
-| HCL key | SDK field | Type | Required | ForceNew |
-|---|---|---|---|---|
-| `gateway_id` | `GatewayId` | TypeString | Yes | **Yes** |
-| `source_type` | `SourceType` | TypeString | Yes | **Yes** |
-| `source_id` | `SourceId` | TypeString | Yes | **Yes** |
-| `enabled` | `Enabled` | TypeBool | Yes | No |
-| `restriction_type` | `RestrictionType` | TypeString | Yes | No |
-| `address_list` | `AddressList` | TypeList of TypeString | Yes | No |
+| HCL key | SDK field | Type | Required | ForceNew | Computed |
+|---|---|---|---|---|---|
+| `gateway_id` | `GatewayId` | TypeString | Yes | **Yes** | No |
+| `source_type` | `SourceType` | TypeString | Yes | **Yes** | No |
+| `source_id` | `SourceId` | TypeString | Yes | **Yes** | No |
+| `enabled` | `Enabled` | TypeBool | No | No | Yes |
+| `restriction_type` | `RestrictionType` | TypeString | No | No | Yes |
+| `address_list` | `AddressList` | TypeSet of TypeString | No | No | Yes |
 
-The schema MUST NOT declare any additional Computed-only fields.
+The schema MUST NOT declare any additional fields. `enabled`, `restriction_type`, and `address_list` are `Optional: true, Computed: true` (configurable by the user and refreshed from the Describe API), while `gateway_id`, `source_type`, and `source_id` are `Required`. `address_list` is a `TypeSet` so that element ordering is not significant.
 
-#### Scenario: Required fields enforce on plan
+#### Scenario: Required identity fields enforce on plan
 
-- **WHEN** the user writes a config that omits any of `gateway_id`, `source_type`, `source_id`, `enabled`, `restriction_type`, or `address_list`
+- **WHEN** the user writes a config that omits any of `gateway_id`, `source_type`, or `source_id`
 - **THEN** `terraform plan` SHALL fail validation pointing at the missing required attribute.
+
+#### Scenario: Configurable fields are optional and computed
+
+- **GIVEN** the user omits `enabled`, `restriction_type`, or `address_list` from the config
+- **WHEN** `terraform plan` and `terraform apply` run
+- **THEN** the omitted fields are populated from the Describe API response and are not treated as missing required attributes.
+
+#### Scenario: address_list is order-insensitive
+
+- **GIVEN** state holds `address_list` with a set of IP/CIDR entries
+- **WHEN** the user reorders those entries in HCL, or the Describe API returns them in a different order
+- **THEN** `terraform plan` reports no diff for `address_list` because it is a `TypeSet`.
 
 #### Scenario: Changing identity triplet forces replacement
 

@@ -41,14 +41,14 @@ TSE（微服务引擎）云原生 API 网关支持对路由或服务绑定 IP �
 | `gateway_id` | `GatewayId` | TypeString | Required | **Yes** | No |
 | `source_type` | `SourceType` | TypeString | Required | **Yes** | No |
 | `source_id` | `SourceId` | TypeString | Required | **Yes** | No |
-| `enabled` | `Enabled` | TypeBool | Required | No | No |
-| `restriction_type` | `RestrictionType` | TypeString | Required | No | No |
-| `address_list` | `AddressList` | TypeList of TypeString | Required | No | No |
+| `enabled` | `Enabled` | TypeBool | Optional | No | Yes |
+| `restriction_type` | `RestrictionType` | TypeString | Optional | No | Yes |
+| `address_list` | `AddressList` | TypeSet of TypeString | Optional | No | Yes |
 
 **理由**：
 - `gateway_id`/`source_type`/`source_id` 三者共同唯一确定一个访问控制目标；改变任一即等于"换一个目标绑定 IP 限制"，必须 ForceNew（重建）。
-- `enabled`/`restriction_type`/`address_list` 为同一目标上的可变配置，走 Update 覆盖式更新，No-ForceNew。
-- `address_list` 用 `TypeList`（有序）而非 `TypeSet`（无序），因为 IP 白/黑名单顺序对用户有可读性意义，且 API 返回数组顺序应与配置一致。元素为 `TypeString`（cidr 或 ip）。
+- `enabled`/`restriction_type`/`address_list` 为同一目标上的可变配置，走 Update 覆盖式更新，No-ForceNew。三者均可被 Describe 回传，同时创建/修改接口要求携带，故设为 `Optional: true, Computed: true`（不强制必填，可由用户配置，也由 Read 回填）。
+- `address_list` 用 `TypeSet`（无序）而非 `TypeList`（有序），因为 IP 白/黑名单是集合语义：HCL 中元素顺序变化不应视为配置变更，且 Describe 接口返回的数组顺序可能与 HCL 配置不一致。元素为 `TypeString`（cidr 或 ip）。
 
 ### D2 — 复合 ID
 
@@ -103,4 +103,4 @@ Delete 调用 `DeleteCloudNativeAPIGatewayIPRestrictionWithContext`，入参 Gat
 
 - **Risk**: `source_type` 的取值当前为 `route`/`service`，未来可能扩展 → 不做强枚举校验，避免破坏向前兼容。文档中以描述说明合法值。
 - **Risk**: 并发管理同一复合 ID 的资源会发生 upsert 覆盖竞争 → 文档说明"同一网关的同一路由/服务同时只能由一份 HCL 管理 IP 限制"。
-- **Trade-off**: `address_list` 用 TypeList 而非 TypeSet，顺序敏感；若用户在 HCL 中打乱顺序会触发不必要的 diff。但对白/黑名单场景，可读性优先，且 API 返回顺序可预期，可接受。
+- **Trade-off**: `address_list` 用 TypeSet 而非 TypeList，顺序不敏感，避免用户打乱 HCL 顺序或 API 返回顺序不一致时产生不必要的 diff；TypeSet 会去重，对 IP/CIDR 集合语义可接受。
