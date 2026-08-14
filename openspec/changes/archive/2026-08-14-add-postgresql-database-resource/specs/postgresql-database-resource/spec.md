@@ -5,9 +5,9 @@ The system SHALL provide a Terraform resource named `tencentcloud_postgresql_dat
 - `db_instance_id` (string, Required, ForceNew) — the DB instance ID.
 - `database_name` (string, Required, ForceNew) — the database name.
 - `database_owner` (string, Required) — the database owner account.
-- `encoding` (string, Optional, ForceNew) — the database character encoding (default UTF8).
-- `collate` (string, Optional, ForceNew) — the database collation rule.
-- `ctype` (string, Optional, ForceNew) — the database character classification.
+- `encoding` (string, Optional, Computed, ForceNew) — the database character encoding (default UTF8).
+- `collate` (string, Optional, Computed, ForceNew) — the database collation rule.
+- `ctype` (string, Optional, Computed, ForceNew) — the database character classification.
 
 The resource SHALL support import via a composite ID of format `db_instance_id#database_name`.
 
@@ -17,7 +17,7 @@ The resource SHALL support import via a composite ID of format `db_instance_id#d
 
 #### Scenario: Resource with optional encoding fields
 - **WHEN** a user defines a `tencentcloud_postgresql_database` resource with `encoding`, `collate`, and `ctype` set
-- **THEN** the resource SHALL accept these optional fields and mark them as ForceNew
+- **THEN** the resource SHALL accept these optional fields and mark them as ForceNew and Computed so that server-defaulted values (e.g. `collate`/`ctype` defaulting to `C`) do not trigger a replacement diff when omitted from configuration
 
 #### Scenario: Import existing database
 - **WHEN** a user imports `tencentcloud_postgresql_database` using a composite ID `db_instance_id#database_name`

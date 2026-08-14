@@ -44,6 +44,7 @@ func ResourceTencentCloudPostgresqlDatabase() *schema.Resource {
 			"encoding": {
 				Type:        schema.TypeString,
 				Optional:    true,
+				Computed:    true,
 				ForceNew:    true,
 				Description: "Database character encoding, such as UTF8, LATIN1, LATIN2, WIN1250, WIN1251, WIN1252, KOI8R, EUC_JP, EUC_KR. Default: UTF8.",
 			},
@@ -51,6 +52,7 @@ func ResourceTencentCloudPostgresqlDatabase() *schema.Resource {
 			"collate": {
 				Type:        schema.TypeString,
 				Optional:    true,
+				Computed:    true,
 				ForceNew:    true,
 				Description: "Database collation rule.",
 			},
@@ -58,6 +60,7 @@ func ResourceTencentCloudPostgresqlDatabase() *schema.Resource {
 			"ctype": {
 				Type:        schema.TypeString,
 				Optional:    true,
+				Computed:    true,
 				ForceNew:    true,
 				Description: "Database character classification.",
 			},
