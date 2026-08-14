@@ -2242,6 +2242,7 @@ tencentcloud_tse_cngw_network
 tencentcloud_tse_cngw_strategy
 tencentcloud_tse_cngw_strategy_bind_group
 tencentcloud_tse_cngw_network_access_control
+tencentcloud_tse_cloud_native_api_gateway_ip_restriction
 
 ClickHouse(CDWCH)
 Data Source

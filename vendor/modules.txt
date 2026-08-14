@@ -1455,7 +1455,7 @@ github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/tke/v20220501
 # github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/trocket v1.3.129
 ## explicit; go 1.14
 github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/trocket/v20230308
-# github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/tse v1.0.857
+# github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/tse v1.3.157
 ## explicit; go 1.14
 github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/tse/v20201207
 # github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/tsf v1.0.674
