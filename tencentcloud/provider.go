@@ -1906,7 +1906,7 @@ func Provider() *schema.Provider {
 			"tencentcloud_postgresql_restore_db_instance_objects_operation":                         postgresql.ResourceTencentCloudPostgresqlRestoreDbInstanceObjectsOperation(),
 			"tencentcloud_postgresql_time_window":                                                   postgresql.ResourceTencentCloudPostgresqlTimeWindow(),
 			"tencentcloud_postgres_audit_service":                                                   postgresql.ResourceTencentCloudPostgresAuditService(),
-			"tencentcloud_postgres_database":                                                        postgresql.ResourceTencentCloudPostgresDatabase(),
+			"tencentcloud_postgresql_database":                                                        postgresql.ResourceTencentCloudPostgresqlDatabase(),
 			"tencentcloud_sqlserver_instance":                                                       sqlserver.ResourceTencentCloudSqlserverInstance(),
 			"tencentcloud_sqlserver_db":                                                             sqlserver.ResourceTencentCloudSqlserverDB(),
 			"tencentcloud_sqlserver_account":                                                        sqlserver.ResourceTencentCloudSqlserverAccount(),

@@ -12,7 +12,7 @@ The TencentCloud postgres SDK (`github.com/tencentcloud/tencentcloud-sdk-go/tenc
 ## Goals / Non-Goals
 
 **Goals:**
-- Provide `tencentcloud_postgres_database` resource (RESOURCE_KIND_GENERAL) with full CRUD lifecycle.
+- Provide `tencentcloud_postgresql_database` resource (RESOURCE_KIND_GENERAL) with full CRUD lifecycle.
 - Allow users to create, read, update (owner), and delete a PostgreSQL database within a DB instance.
 - Support import via composite ID.
 - Follow the established provider patterns: retry logic via `tccommon.ReadRetryTimeout` / `tccommon.WriteRetryTimeout`, `tccommon.RetryError`, `tccommon.FILED_SP` separator for composite IDs.
@@ -53,14 +53,14 @@ The TencentCloud postgres SDK (`github.com/tencentcloud/tencentcloud-sdk-go/tenc
 **Decision**: In the Delete function, call `DeleteDatabase` with `DBInstanceId` and `DatabaseName`. Use `tccommon.WriteRetryTimeout` for retries.
 
 ### 6. API client
-**Decision**: Use `meta.(tccommon.ProviderMeta).GetAPIV3Conn().UsePostgresqlV20170312Client()` to access the postgres client.
+**Decision**: Use `meta.(tccommon.ProviderMeta).GetAPIV3Conn().UsePostgresqlClient()` to access the postgres client.
 
-**Rationale**: This is the established pattern in the `postgresql` service package (see `resource_tc_postgres_audit_service.go`). The postgres SDK package is `github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/postgres/v20170312`.
+**Rationale**: `UsePostgresqlClient()` returns the postgres client (`*postgre.Client`) for the `postgres/v20170312` SDK package (`github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/postgres/v20170312`), which is already vendored.
 
 ### 7. File location
-**Decision**: Place the resource in `tencentcloud/services/postgresql/resource_tc_postgres_database.go` following the naming convention `resource_tc_<service>_<name>.go`.
+**Decision**: Place the resource in `tencentcloud/services/postgresql/resource_tc_postgresql_database.go` following the naming convention `resource_tc_<service>_<name>.go`.
 
-**Rationale**: Existing postgres resources are in the `postgresql` service directory. The resource is named `tencentcloud_postgres_database` (using the `postgres` prefix as seen in `tencentcloud_postgres_audit_service`).
+**Rationale**: Existing postgres resources are in the `postgresql` service directory. The resource is named `tencentcloud_postgresql_database` (using the `postgresql` prefix consistent with the other resources in the `postgresql` service directory).
 
 ### 8. Testing
 **Decision**: Use gomonkey mock for unit tests (no TF_ACC test suite). Mock the cloud API client methods to test business logic in CRUD functions.

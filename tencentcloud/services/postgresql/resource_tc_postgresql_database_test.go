@@ -14,18 +14,18 @@ import (
 	svcpostgresql "github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/services/postgresql"
 )
 
-type mockMetaPostgresDatabase struct {
+type mockMetaPostgresqlDatabase struct {
 	client *connectivity.TencentCloudClient
 }
 
-func (m *mockMetaPostgresDatabase) GetAPIV3Conn() *connectivity.TencentCloudClient {
+func (m *mockMetaPostgresqlDatabase) GetAPIV3Conn() *connectivity.TencentCloudClient {
 	return m.client
 }
 
-var _ tccommon.ProviderMeta = &mockMetaPostgresDatabase{}
+var _ tccommon.ProviderMeta = &mockMetaPostgresqlDatabase{}
 
-func newMockMetaPostgresDatabase() *mockMetaPostgresDatabase {
-	return &mockMetaPostgresDatabase{client: &connectivity.TencentCloudClient{}}
+func newMockMetaPostgresqlDatabase() *mockMetaPostgresqlDatabase {
+	return &mockMetaPostgresqlDatabase{client: &connectivity.TencentCloudClient{}}
 }
 
 func ptrStringPgDb(s string) *string {
@@ -36,15 +36,15 @@ func ptrUint64PgDb(i uint64) *uint64 {
 	return &i
 }
 
-// go test ./tencentcloud/services/postgresql/ -run "TestPostgresDatabase" -v -count=1 -gcflags="all=-l"
+// go test ./tencentcloud/services/postgresql/ -run "TestPostgresqlDatabase" -v -count=1 -gcflags="all=-l"
 
-// TestPostgresDatabase_Create tests the Create function
-func TestPostgresDatabase_Create(t *testing.T) {
+// TestPostgresqlDatabase_Create tests the Create function
+func TestPostgresqlDatabase_Create(t *testing.T) {
 	patches := gomonkey.NewPatches()
 	defer patches.Reset()
 
 	pgClient := &postgresql.Client{}
-	patches.ApplyMethodReturn(newMockMetaPostgresDatabase().client, "UsePostgresqlClient", pgClient)
+	patches.ApplyMethodReturn(newMockMetaPostgresqlDatabase().client, "UsePostgresqlClient", pgClient)
 
 	patches.ApplyMethodFunc(pgClient, "CreateDatabaseWithContext", func(_ context.Context, request *postgresql.CreateDatabaseRequest) (*postgresql.CreateDatabaseResponse, error) {
 		assert.NotNil(t, request.DBInstanceId)
@@ -91,8 +91,8 @@ func TestPostgresDatabase_Create(t *testing.T) {
 		return resp, nil
 	})
 
-	meta := newMockMetaPostgresDatabase()
-	res := svcpostgresql.ResourceTencentCloudPostgresDatabase()
+	meta := newMockMetaPostgresqlDatabase()
+	res := svcpostgresql.ResourceTencentCloudPostgresqlDatabase()
 	d := schema.TestResourceDataRaw(t, res.Schema, map[string]interface{}{
 		"db_instance_id": "postgres-6fego161",
 		"database_name":  "test_db",
@@ -113,13 +113,13 @@ func TestPostgresDatabase_Create(t *testing.T) {
 	assert.Equal(t, "C", d.Get("ctype"))
 }
 
-// TestPostgresDatabase_Read tests the Read function
-func TestPostgresDatabase_Read(t *testing.T) {
+// TestPostgresqlDatabase_Read tests the Read function
+func TestPostgresqlDatabase_Read(t *testing.T) {
 	patches := gomonkey.NewPatches()
 	defer patches.Reset()
 
 	pgClient := &postgresql.Client{}
-	patches.ApplyMethodReturn(newMockMetaPostgresDatabase().client, "UsePostgresqlClient", pgClient)
+	patches.ApplyMethodReturn(newMockMetaPostgresqlDatabase().client, "UsePostgresqlClient", pgClient)
 
 	patches.ApplyMethodFunc(pgClient, "DescribeDatabasesWithContext", func(_ context.Context, request *postgresql.DescribeDatabasesRequest) (*postgresql.DescribeDatabasesResponse, error) {
 		assert.NotNil(t, request.DBInstanceId)
@@ -146,8 +146,8 @@ func TestPostgresDatabase_Read(t *testing.T) {
 		return resp, nil
 	})
 
-	meta := newMockMetaPostgresDatabase()
-	res := svcpostgresql.ResourceTencentCloudPostgresDatabase()
+	meta := newMockMetaPostgresqlDatabase()
+	res := svcpostgresql.ResourceTencentCloudPostgresqlDatabase()
 	d := schema.TestResourceDataRaw(t, res.Schema, map[string]interface{}{
 		"db_instance_id": "postgres-6fego161",
 		"database_name":  "test_db",
@@ -168,13 +168,13 @@ func TestPostgresDatabase_Read(t *testing.T) {
 	assert.Equal(t, "C", d.Get("ctype"))
 }
 
-// TestPostgresDatabase_Read_NotFound tests the Read function when the database is not found
-func TestPostgresDatabase_Read_NotFound(t *testing.T) {
+// TestPostgresqlDatabase_Read_NotFound tests the Read function when the database is not found
+func TestPostgresqlDatabase_Read_NotFound(t *testing.T) {
 	patches := gomonkey.NewPatches()
 	defer patches.Reset()
 
 	pgClient := &postgresql.Client{}
-	patches.ApplyMethodReturn(newMockMetaPostgresDatabase().client, "UsePostgresqlClient", pgClient)
+	patches.ApplyMethodReturn(newMockMetaPostgresqlDatabase().client, "UsePostgresqlClient", pgClient)
 
 	patches.ApplyMethodFunc(pgClient, "DescribeDatabasesWithContext", func(_ context.Context, request *postgresql.DescribeDatabasesRequest) (*postgresql.DescribeDatabasesResponse, error) {
 		resp := postgresql.NewDescribeDatabasesResponse()
@@ -186,8 +186,8 @@ func TestPostgresDatabase_Read_NotFound(t *testing.T) {
 		return resp, nil
 	})
 
-	meta := newMockMetaPostgresDatabase()
-	res := svcpostgresql.ResourceTencentCloudPostgresDatabase()
+	meta := newMockMetaPostgresqlDatabase()
+	res := svcpostgresql.ResourceTencentCloudPostgresqlDatabase()
 	d := schema.TestResourceDataRaw(t, res.Schema, map[string]interface{}{
 		"db_instance_id": "postgres-6fego161",
 		"database_name":  "test_db",
@@ -200,13 +200,13 @@ func TestPostgresDatabase_Read_NotFound(t *testing.T) {
 	assert.Equal(t, "", d.Id())
 }
 
-// TestPostgresDatabase_Update tests the Update function
-func TestPostgresDatabase_Update(t *testing.T) {
+// TestPostgresqlDatabase_Update tests the Update function
+func TestPostgresqlDatabase_Update(t *testing.T) {
 	patches := gomonkey.NewPatches()
 	defer patches.Reset()
 
 	pgClient := &postgresql.Client{}
-	patches.ApplyMethodReturn(newMockMetaPostgresDatabase().client, "UsePostgresqlClient", pgClient)
+	patches.ApplyMethodReturn(newMockMetaPostgresqlDatabase().client, "UsePostgresqlClient", pgClient)
 
 	patches.ApplyMethodFunc(pgClient, "ModifyDatabaseOwnerWithContext", func(_ context.Context, request *postgresql.ModifyDatabaseOwnerRequest) (*postgresql.ModifyDatabaseOwnerResponse, error) {
 		assert.NotNil(t, request.DBInstanceId)
@@ -241,8 +241,8 @@ func TestPostgresDatabase_Update(t *testing.T) {
 		return resp, nil
 	})
 
-	meta := newMockMetaPostgresDatabase()
-	res := svcpostgresql.ResourceTencentCloudPostgresDatabase()
+	meta := newMockMetaPostgresqlDatabase()
+	res := svcpostgresql.ResourceTencentCloudPostgresqlDatabase()
 	d := schema.TestResourceDataRaw(t, res.Schema, map[string]interface{}{
 		"db_instance_id": "postgres-6fego161",
 		"database_name":  "test_db",
@@ -259,13 +259,13 @@ func TestPostgresDatabase_Update(t *testing.T) {
 	assert.Equal(t, "newuser", d.Get("database_owner"))
 }
 
-// TestPostgresDatabase_Delete tests the Delete function
-func TestPostgresDatabase_Delete(t *testing.T) {
+// TestPostgresqlDatabase_Delete tests the Delete function
+func TestPostgresqlDatabase_Delete(t *testing.T) {
 	patches := gomonkey.NewPatches()
 	defer patches.Reset()
 
 	pgClient := &postgresql.Client{}
-	patches.ApplyMethodReturn(newMockMetaPostgresDatabase().client, "UsePostgresqlClient", pgClient)
+	patches.ApplyMethodReturn(newMockMetaPostgresqlDatabase().client, "UsePostgresqlClient", pgClient)
 
 	patches.ApplyMethodFunc(pgClient, "DeleteDatabaseWithContext", func(_ context.Context, request *postgresql.DeleteDatabaseRequest) (*postgresql.DeleteDatabaseResponse, error) {
 		assert.NotNil(t, request.DBInstanceId)
@@ -280,8 +280,8 @@ func TestPostgresDatabase_Delete(t *testing.T) {
 		return resp, nil
 	})
 
-	meta := newMockMetaPostgresDatabase()
-	res := svcpostgresql.ResourceTencentCloudPostgresDatabase()
+	meta := newMockMetaPostgresqlDatabase()
+	res := svcpostgresql.ResourceTencentCloudPostgresqlDatabase()
 	d := schema.TestResourceDataRaw(t, res.Schema, map[string]interface{}{
 		"db_instance_id": "postgres-6fego161",
 		"database_name":  "test_db",

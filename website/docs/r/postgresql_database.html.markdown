@@ -1,20 +1,20 @@
 ---
 subcategory: "TencentDB for PostgreSQL(PostgreSQL)"
 layout: "tencentcloud"
-page_title: "TencentCloud: tencentcloud_postgres_database"
-sidebar_current: "docs-tencentcloud-resource-postgres_database"
+page_title: "TencentCloud: tencentcloud_postgresql_database"
+sidebar_current: "docs-tencentcloud-resource-postgresql_database"
 description: |-
   Provides a resource to manage a TencentDB for PostgreSQL database within a DB instance.
 ---
 
-# tencentcloud_postgres_database
+# tencentcloud_postgresql_database
 
 Provides a resource to manage a TencentDB for PostgreSQL database within a DB instance.
 
 ## Example Usage
 
 ```hcl
-resource "tencentcloud_postgres_database" "example" {
+resource "tencentcloud_postgresql_database" "example" {
   db_instance_id = "postgres-6fego161"
   database_name  = "test_db"
   database_owner = "tcuser"
@@ -48,6 +48,6 @@ In addition to all arguments above, the following attributes are exported:
 PostgreSQL database can be imported using the composite ID `db_instance_id#database_name`, e.g.
 
 ```
-terraform import tencentcloud_postgres_database.example postgres-6fego161#test_db
+terraform import tencentcloud_postgresql_database.example postgres-6fego161#test_db
 ```
 

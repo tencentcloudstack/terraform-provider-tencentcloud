@@ -14,12 +14,12 @@ import (
 	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/internal/helper"
 )
 
-func ResourceTencentCloudPostgresDatabase() *schema.Resource {
+func ResourceTencentCloudPostgresqlDatabase() *schema.Resource {
 	return &schema.Resource{
-		Create: resourceTencentCloudPostgresDatabaseCreate,
-		Read:   resourceTencentCloudPostgresDatabaseRead,
-		Update: resourceTencentCloudPostgresDatabaseUpdate,
-		Delete: resourceTencentCloudPostgresDatabaseDelete,
+		Create: resourceTencentCloudPostgresqlDatabaseCreate,
+		Read:   resourceTencentCloudPostgresqlDatabaseRead,
+		Update: resourceTencentCloudPostgresqlDatabaseUpdate,
+		Delete: resourceTencentCloudPostgresqlDatabaseDelete,
 		Importer: &schema.ResourceImporter{
 			State: schema.ImportStatePassthrough,
 		},
@@ -68,8 +68,8 @@ func ResourceTencentCloudPostgresDatabase() *schema.Resource {
 	}
 }
 
-func resourceTencentCloudPostgresDatabaseCreate(d *schema.ResourceData, meta interface{}) error {
-	defer tccommon.LogElapsed("resource.tencentcloud_postgres_database.create")()
+func resourceTencentCloudPostgresqlDatabaseCreate(d *schema.ResourceData, meta interface{}) error {
+	defer tccommon.LogElapsed("resource.tencentcloud_postgresql_database.create")()
 	defer tccommon.InconsistentCheck(d, meta)()
 
 	var (
@@ -132,11 +132,11 @@ func resourceTencentCloudPostgresDatabaseCreate(d *schema.ResourceData, meta int
 	}
 
 	d.SetId(strings.Join([]string{dbInstanceId, databaseName}, tccommon.FILED_SP))
-	return resourceTencentCloudPostgresDatabaseRead(d, meta)
+	return resourceTencentCloudPostgresqlDatabaseRead(d, meta)
 }
 
-func resourceTencentCloudPostgresDatabaseRead(d *schema.ResourceData, meta interface{}) error {
-	defer tccommon.LogElapsed("resource.tencentcloud_postgres_database.read")()
+func resourceTencentCloudPostgresqlDatabaseRead(d *schema.ResourceData, meta interface{}) error {
+	defer tccommon.LogElapsed("resource.tencentcloud_postgresql_database.read")()
 	defer tccommon.InconsistentCheck(d, meta)()
 
 	var (
@@ -193,7 +193,7 @@ func resourceTencentCloudPostgresDatabaseRead(d *schema.ResourceData, meta inter
 
 	if databaseInfo == nil {
 		log.Printf("[CRUD] postgres database id=%s", d.Id())
-		log.Printf("[WARN]%s resource `tencentcloud_postgres_database` [%s] not found, please check if it has been deleted.\n", logId, d.Id())
+		log.Printf("[WARN]%s resource `tencentcloud_postgresql_database` [%s] not found, please check if it has been deleted.\n", logId, d.Id())
 		d.SetId("")
 		return nil
 	}
@@ -223,8 +223,8 @@ func resourceTencentCloudPostgresDatabaseRead(d *schema.ResourceData, meta inter
 	return nil
 }
 
-func resourceTencentCloudPostgresDatabaseUpdate(d *schema.ResourceData, meta interface{}) error {
-	defer tccommon.LogElapsed("resource.tencentcloud_postgres_database.update")()
+func resourceTencentCloudPostgresqlDatabaseUpdate(d *schema.ResourceData, meta interface{}) error {
+	defer tccommon.LogElapsed("resource.tencentcloud_postgresql_database.update")()
 	defer tccommon.InconsistentCheck(d, meta)()
 
 	var (
@@ -279,11 +279,11 @@ func resourceTencentCloudPostgresDatabaseUpdate(d *schema.ResourceData, meta int
 		}
 	}
 
-	return resourceTencentCloudPostgresDatabaseRead(d, meta)
+	return resourceTencentCloudPostgresqlDatabaseRead(d, meta)
 }
 
-func resourceTencentCloudPostgresDatabaseDelete(d *schema.ResourceData, meta interface{}) error {
-	defer tccommon.LogElapsed("resource.tencentcloud_postgres_database.delete")()
+func resourceTencentCloudPostgresqlDatabaseDelete(d *schema.ResourceData, meta interface{}) error {
+	defer tccommon.LogElapsed("resource.tencentcloud_postgresql_database.delete")()
 	defer tccommon.InconsistentCheck(d, meta)()
 
 	var (
