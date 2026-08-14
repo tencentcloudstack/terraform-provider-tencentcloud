@@ -2504,6 +2504,7 @@ func Provider() *schema.Provider {
 			"tencentcloud_tse_cngw_network_access_control":                                          tse.ResourceTencentCloudTseCngwNetworkAccessControl(),
 			"tencentcloud_tse_cngw_strategy":                                                        tse.ResourceTencentCloudTseCngwStrategy(),
 			"tencentcloud_tse_cngw_strategy_bind_group":                                             tse.ResourceTencentCloudTseCngwStrategyBindGroup(),
+			"tencentcloud_tse_cloud_native_api_gateway_ip_restriction":                              tse.ResourceTencentCloudTseCloudNativeAPIGatewayIPRestriction(),
 			"tencentcloud_clickhouse_instance":                                                      cdwch.ResourceTencentCloudClickhouseInstance(),
 			"tencentcloud_eb_event_transform":                                                       eb.ResourceTencentCloudEbEventTransform(),
 			"tencentcloud_eb_event_bus":                                                             eb.ResourceTencentCloudEbEventBus(),
