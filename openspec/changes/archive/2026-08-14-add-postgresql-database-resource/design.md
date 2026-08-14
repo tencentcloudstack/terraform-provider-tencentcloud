@@ -33,11 +33,11 @@ The TencentCloud postgres SDK (`github.com/tencentcloud/tencentcloud-sdk-go/tenc
 - `db_instance_id` (Required, ForceNew) — maps to `request.DBInstanceId`.
 - `database_name` (Required, ForceNew) — maps to `request.DatabaseName`.
 - `database_owner` (Required) — maps to `request.DatabaseOwner`; updatable via `ModifyDatabaseOwner`.
-- `encoding` (Optional, ForceNew) — maps to `request.Encoding`.
-- `collate` (Optional, ForceNew) — maps to `request.Collate`.
-- `ctype` (Optional, ForceNew) — maps to `request.Ctype`.
+- `encoding` (Optional, Computed, ForceNew) — maps to `request.Encoding`.
+- `collate` (Optional, Computed, ForceNew) — maps to `request.Collate`.
+- `ctype` (Optional, Computed, ForceNew) — maps to `request.Ctype`.
 
-**Rationale**: The cloud API only supports modifying `DatabaseOwner` via `ModifyDatabaseOwner`. The `encoding`, `collate`, and `ctype` fields are set at creation time and cannot be modified afterward, so they are marked `ForceNew`. The `db_instance_id` and `database_name` form the composite ID and are also `ForceNew`.
+**Rationale**: The cloud API only supports modifying `DatabaseOwner` via `ModifyDatabaseOwner`. The `encoding`, `collate`, and `ctype` fields are set at creation time and cannot be modified afterward, so they are marked `ForceNew`. The `db_instance_id` and `database_name` form the composite ID and are also `ForceNew`. The `encoding`, `collate`, and `ctype` fields are additionally marked `Computed` because the backend applies defaults when they are omitted (e.g. `collate`/`ctype` default to `C`); without `Computed`, Terraform would diff the server-defaulted value against `null` and force an unnecessary destroy-and-recreate replacement.
 
 ### 3. Read strategy
 **Decision**: Encapsulate the read in a `PostgresqlService` method `DescribePostgresqlDatabaseById`, which calls `DescribeDatabases` with `DBInstanceId` and a `database-name` filter, iterates the returned `Databases` array to find the exact match by name, and returns the matched `Database` (or `nil` when not found). The Read function then sets schema fields from the returned `Database` struct.

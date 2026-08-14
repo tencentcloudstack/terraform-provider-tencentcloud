@@ -92,8 +92,8 @@ The system SHALL register the `tencentcloud_postgresql_database` resource in `te
 - **THEN** the `tencentcloud_postgresql_database` resource SHALL be registered and available for use
 
 ### Requirement: Documentation
-The system SHALL provide a documentation file `resource_tc_postgresql_database.md` that includes a one-line description referencing TencentDB for PostgreSQL, example usage with HCL, and import instructions using the composite ID.
+The system SHALL provide a documentation file `resource_tc_postgresql_database.md` that includes a one-line description referencing TencentDB for PostgreSQL, a Note documenting the `database_owner` dependency on an existing account, example usage with HCL showing the full dependency chain (vpc → subnet → instance → account → database), and import instructions using the composite ID.
 
 #### Scenario: Documentation file exists
 - **WHEN** the resource is implemented
-- **THEN** a `resource_tc_postgresql_database.md` file SHALL exist with description, example usage, and import section
+- **THEN** a `resource_tc_postgresql_database.md` file SHALL exist with description, Note, example usage, and import section

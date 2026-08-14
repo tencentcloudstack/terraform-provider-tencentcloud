@@ -1,6 +1,6 @@
 ## 1. Resource Schema & CRUD Implementation
 
-- [x] 1.1 Create `tencentcloud/services/postgresql/resource_tc_postgresql_database.go` with `ResourceTencentCloudPostgresqlDatabase()` function defining the schema: `db_instance_id` (Required, ForceNew), `database_name` (Required, ForceNew), `database_owner` (Required), `encoding` (Optional, ForceNew), `collate` (Optional, ForceNew), `ctype` (Optional, ForceNew), and Importer support
+- [x] 1.1 Create `tencentcloud/services/postgresql/resource_tc_postgresql_database.go` with `ResourceTencentCloudPostgresqlDatabase()` function defining the schema: `db_instance_id` (Required, ForceNew), `database_name` (Required, ForceNew), `database_owner` (Required), `encoding` (Optional, Computed, ForceNew), `collate` (Optional, Computed, ForceNew), `ctype` (Optional, Computed, ForceNew), and Importer support
 - [x] 1.2 Implement `resourceTencentCloudPostgresqlDatabaseCreate()` — construct a `PostgresqlService`, call `service.CreatePostgresqlDatabase(...)`, set composite ID `db_instance_id#database_name` using `tccommon.FILED_SP`, then call Read
 - [x] 1.3 Implement `resourceTencentCloudPostgresqlDatabaseRead()` — split composite ID to get `db_instance_id` and `database_name`, call `service.DescribePostgresqlDatabaseById(...)`, set schema fields from the returned `Database` struct (skip nil fields), handle not-found by printing log with ID then `d.SetId("")`
 - [x] 1.4 Implement `resourceTencentCloudPostgresqlDatabaseUpdate()` — split composite ID, check if `database_owner` changed, call `service.ModifyPostgresqlDatabaseOwner(...)`, then call Read
@@ -14,7 +14,7 @@
 
 ## 3. Documentation
 
-- [x] 3.1 Create `tencentcloud/services/postgresql/resource_tc_postgresql_database.md` with one-line description referencing TencentDB for PostgreSQL, Example Usage section (HCL), and Import section documenting the composite ID format `db_instance_id#database_name`
+- [x] 3.1 Create `tencentcloud/services/postgresql/resource_tc_postgresql_database.md` with one-line description referencing TencentDB for PostgreSQL, a Note documenting the `database_owner` dependency on an existing account, an Example Usage section (HCL) showing the full dependency chain (vpc → subnet → instance → account → database), and Import section documenting the composite ID format `db_instance_id#database_name`
 
 ## 4. Unit Tests
 
