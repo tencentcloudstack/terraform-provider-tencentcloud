@@ -135,14 +135,18 @@ The following arguments are supported:
 * `min_size` - (Required, Int) Minimum number of CVM instances. Valid value ranges: (0~2000).
 * `scaling_group_name` - (Required, String) Name of a scaling group.
 * `vpc_id` - (Required, String) ID of VPC network.
+* `concurrent_scale_out_for_desired_capacity` - (Optional, Bool) The concurrent expansion function that matches the expected number cannot be set when `instance_allocation_policy` is in bidding `SPOT_MIXED` mode, nor can it be set when `scaling_mode` is in expansion priority boot mode(`WAKE_UP_STOPPED_SCALING`). At present, only two matching expected expansion activities are supported concurrently, and other types of activities such as specified quantity expansion and contraction are not supported. The default value is False, indicating that it is not turned on.
 * `default_cooldown` - (Optional, Int) Default cooldown time in second, and default value is `300`.
 * `desired_capacity_sync_with_max_min_size` - (Optional, Bool) The expected number of instances is synchronized with the maximum and minimum values. The default value is `False`. This parameter is effective only in the scenario where the expected number is not passed in when modifying the scaling group interface. True: When modifying the maximum or minimum value, if there is a conflict with the current expected number, the expected number is adjusted synchronously. For example, when modifying, if the minimum value 2 is passed in and the current expected number is 1, the expected number is adjusted synchronously to 2; False: When modifying the maximum or minimum value, if there is a conflict with the current expected number, an error message is displayed indicating that the modification is not allowed.
 * `desired_capacity` - (Optional, Int) Desired volume of CVM instances, which is between `max_size` and `min_size`.
 * `forward_balancer_ids` - (Optional, Set) List of application load balancers, which can't be specified with `load_balancer_ids` together.
 * `health_check_type` - (Optional, String) Health check type of instances in a scaling group.<br><li>CVM: confirm whether an instance is healthy based on the network status. If the pinged instance is unreachable, the instance will be considered unhealthy. For more information, see [Instance Health Check](https://intl.cloud.tencent.com/document/product/377/8553?from_cn_redirect=1)<br><li>CLB: confirm whether an instance is healthy based on the CLB health check status. For more information, see [Health Check Overview](https://intl.cloud.tencent.com/document/product/214/6097?from_cn_redirect=1).<br>If the parameter is set to `CLB`, the scaling group will check both the network status and the CLB health check status. If the network check indicates unhealthy, the `HealthStatus` field will return `UNHEALTHY`. If the CLB health check indicates unhealthy, the `HealthStatus` field will return `CLB_UNHEALTHY`. If both checks indicate unhealthy, the `HealthStatus` field will return `UNHEALTHY|CLB_UNHEALTHY`. Default value: `CLB`.
+* `instance_allocation_policy` - (Optional, String) Instance allocation strategy, with values including `LAUNCH_CONFIGURATION` and `SPOT_MIXED`, defaults to `LAUNCH_CONFIGURATION`.
+`LAUNCH_CONFIGURATION`: Represents the traditional startup configuration mode;
+`SPOT_MIXED`: Representing the bidding mixed mode. At present, only hybrid mode is supported when the startup configuration is set to pay by volume mode. In hybrid mode, the scaling group will expand according to the set pay by volume or bidding models. When using hybrid mode, the billing type of the associated startup configuration cannot be modified.
 * `lb_health_check_grace_period` - (Optional, Int) Grace period of the CLB health check during which the `IN_SERVICE` instances added will not be marked as `CLB_UNHEALTHY`.<br>Valid range: 0-7200, in seconds. Default value: `0`.
 * `load_balancer_ids` - (Optional, List: [`String`]) ID list of traditional load balancers.
-* `multi_zone_subnet_policy` - (Optional, String) Multi zone or subnet strategy, Valid values: PRIORITY and EQUALITY.
+* `multi_zone_subnet_policy` - (Optional, String) Multi zone or subnet strategy, Valid values: `PRIORITY` and `EQUALITY`.
 * `priority_scale_in_unhealthy` - (Optional, Bool) Whether to enable priority for unhealthy instances during scale-in operations. If set to `true`, unhealthy instances will be removed first when scaling in.
 * `project_id` - (Optional, Int) Specifies to which project the scaling group belongs.
 * `replace_load_balancer_unhealthy` - (Optional, Bool) Enable unhealthy instance replacement. If set to `true`, AS will replace instances that are found unhealthy in the CLB health check.
@@ -172,6 +176,7 @@ The `target_attribute` object of `forward_balancer_ids` supports the following:
 In addition to all arguments above, the following attributes are exported:
 
 * `id` - ID of the resource.
+* `auto_scaling_group_id` - ID of a scaling group.
 * `create_time` - The time when the AS group was created.
 * `instance_count` - Instance number of a scaling group.
 * `status` - Current status of a scaling group.
@@ -179,9 +184,9 @@ In addition to all arguments above, the following attributes are exported:
 
 ## Import
 
-AutoScaling Groups can be imported using the id, e.g.
+Auto scaling Group can be imported using the id, e.g.
 
 ```
-$ terraform import tencentcloud_as_scaling_group.example asg-n32ymck2
+terraform import tencentcloud_as_scaling_group.example asg-n32ymck2
 ```
 
