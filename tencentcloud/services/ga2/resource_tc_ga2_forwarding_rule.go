@@ -240,7 +240,7 @@ func resourceTencentCloudGa2ForwardingRuleCreate(d *schema.ResourceData, meta in
 		request.EnableOriginSni = helper.Bool(v.(bool))
 	}
 
-	if v, ok := d.GetOk("origin_sni"); ok {
+	if v, ok := d.GetOk("origin_sni"); ok && v.(string) != "" {
 		request.OriginSni = helper.String(v.(string))
 	}
 
@@ -439,7 +439,7 @@ func resourceTencentCloudGa2ForwardingRuleUpdate(d *schema.ResourceData, meta in
 		request.EnableOriginSni = helper.Bool(v.(bool))
 	}
 
-	if v, ok := d.GetOk("origin_sni"); ok {
+	if v, ok := d.GetOk("origin_sni"); ok && v.(string) != "" {
 		request.OriginSni = helper.String(v.(string))
 	}
 
