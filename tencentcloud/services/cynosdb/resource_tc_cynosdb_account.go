@@ -151,26 +151,16 @@ func resourceTencentCloudCynosdbAccountRead(d *schema.ResourceData, meta interfa
 	accountName := idSplit[1]
 	host := idSplit[2]
 
-	var account *cynosdb.Account
-	err := resource.Retry(tccommon.ReadRetryTimeout, func() *resource.RetryError {
-		acc, e := service.DescribeCynosdbAccountById(ctx, clusterId, accountName, host)
-		if e != nil {
-			return tccommon.RetryError(e)
-		}
-		if acc == nil {
-			return resource.RetryableError(fmt.Errorf("cynosdb_account not found, retrying"))
-		}
-		account = acc
-		return nil
-	})
+	account, err := service.DescribeCynosdbAccountById(ctx, clusterId, accountName, host)
 	if err != nil {
-		log.Printf("[CRUD] cynosdb_account id=%s", d.Id())
-		d.SetId("")
-		return nil
+		return err
 	}
 
 	if account == nil {
-		log.Printf("[CRUD] cynosdb_account id=%s", d.Id())
+		if d.IsNewResource() {
+			return fmt.Errorf("cynosdb_account id=%s not found", d.Id())
+		}
+		log.Printf("[WARN]%s resource `tencentcloud_cynosdb_account` [%s] not found, please check if it has been deleted.\n", logId, d.Id())
 		d.SetId("")
 		return nil
 	}
