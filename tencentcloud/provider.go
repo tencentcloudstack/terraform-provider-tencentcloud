@@ -2115,6 +2115,7 @@ func Provider() *schema.Provider {
 			"tencentcloud_cls_scheduled_sql":                                                        cls.ResourceTencentCloudClsScheduledSql(),
 			"tencentcloud_cls_dlc_deliver":                                                          cls.ResourceTencentCloudClsDlcDeliver(),
 			"tencentcloud_cls_console":                                                              cls.ResourceTencentCloudClsConsole(),
+			"tencentcloud_cls_metric_subscribe":                                                     cls.ResourceTencentCloudClsMetricSubscribe(),
 			"tencentcloud_lighthouse_instance":                                                      lighthouse.ResourceTencentCloudLighthouseInstance(),
 			"tencentcloud_lighthouse_firewall_template":                                             lighthouse.ResourceTencentCloudLighthouseFirewallTemplate(),
 			"tencentcloud_tem_environment":                                                          tem.ResourceTencentCloudTemEnvironment(),
