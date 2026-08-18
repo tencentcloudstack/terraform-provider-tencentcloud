@@ -56,7 +56,7 @@ func ResourceTencentCloudClsMetricSubscribe() *schema.Resource {
 						},
 						"periods": {
 							Type:        schema.TypeList,
-							Optional:    true,
+							Required:    true,
 							Elem:        &schema.Schema{Type: schema.TypeInt},
 							Description: "Statistical period, unit: second(s).",
 						},
@@ -92,19 +92,19 @@ func ResourceTencentCloudClsMetricSubscribe() *schema.Resource {
 					Schema: map[string]*schema.Schema{
 						"instance_dimension": {
 							Type:        schema.TypeList,
-							Optional:    true,
+							Required:    true,
 							Elem:        &schema.Schema{Type: schema.TypeString},
 							Description: "Instance dimension.",
 						},
 						"instances": {
 							Type:        schema.TypeList,
-							Optional:    true,
+							Required:    true,
 							Description: "Instance value list.",
 							Elem: &schema.Resource{
 								Schema: map[string]*schema.Schema{
 									"values": {
 										Type:        schema.TypeList,
-										Optional:    true,
+										Required:    true,
 										Elem:        &schema.Schema{Type: schema.TypeString},
 										Description: "Instance info value list.",
 									},
@@ -118,6 +118,7 @@ func ResourceTencentCloudClsMetricSubscribe() *schema.Resource {
 			"enable": {
 				Type:        schema.TypeInt,
 				Optional:    true,
+				Computed:    true,
 				Description: "Task switch, 1: pause, 2: enable.",
 			},
 
@@ -132,18 +133,6 @@ func ResourceTencentCloudClsMetricSubscribe() *schema.Resource {
 				Type:        schema.TypeInt,
 				Computed:    true,
 				Description: "Subscribe task running status. 0: creating, 1: paused, 2: running, 3: abnormal.",
-			},
-
-			"create_time": {
-				Type:        schema.TypeInt,
-				Computed:    true,
-				Description: "Creation time (second-level timestamp).",
-			},
-
-			"update_time": {
-				Type:        schema.TypeInt,
-				Computed:    true,
-				Description: "Update time (second-level timestamp).",
 			},
 		},
 	}
@@ -234,7 +223,6 @@ func resourceTencentCloudClsMetricSubscribeCreate(d *schema.ResourceData, meta i
 			}
 
 			request.InstanceInfo = &instanceConfig
-			break
 		}
 	}
 
@@ -267,6 +255,39 @@ func resourceTencentCloudClsMetricSubscribeCreate(d *schema.ResourceData, meta i
 
 	taskId = *response.Response.TaskId
 	d.SetId(strings.Join([]string{topicId, taskId}, tccommon.FILED_SP))
+
+	//
+	if v, ok := d.GetOkExists("enable"); ok {
+		if v.(int) == 1 {
+			request := clsv20201016.NewModifyMetricSubscribeRequest()
+			request.TopicId = helper.String(topicId)
+			request.TaskId = helper.String(taskId)
+			if v, ok := d.GetOkExists("enable"); ok {
+				request.Enable = helper.IntUint64(v.(int))
+			}
+
+			reqErr := resource.Retry(tccommon.WriteRetryTimeout, func() *resource.RetryError {
+				result, e := meta.(tccommon.ProviderMeta).GetAPIV3Conn().UseClsV20201016Client().ModifyMetricSubscribeWithContext(ctx, request)
+				if e != nil {
+					return tccommon.RetryError(e)
+				} else {
+					log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), result.ToJsonString())
+				}
+
+				if result == nil || result.Response == nil {
+					return resource.NonRetryableError(fmt.Errorf("Modify cls metric subscribe failed, Response is nil."))
+				}
+
+				return nil
+			})
+
+			if reqErr != nil {
+				log.Printf("[CRITAL]%s update cls metric subscribe failed, reason:%+v", logId, reqErr)
+				return reqErr
+			}
+		}
+	}
+
 	return resourceTencentCloudClsMetricSubscribeRead(d, meta)
 }
 
@@ -294,7 +315,7 @@ func resourceTencentCloudClsMetricSubscribeRead(d *schema.ResourceData, meta int
 	}
 
 	if respData == nil {
-		log.Printf("[CRUD] cls_metric_subscribe id=%s", d.Id())
+		log.Printf("[CRUD] tencentcloud_cls_metric_subscribe id=%s", d.Id())
 		d.SetId("")
 		return nil
 	}
@@ -406,14 +427,6 @@ func resourceTencentCloudClsMetricSubscribeRead(d *schema.ResourceData, meta int
 		_ = d.Set("status", int(*respData.Status))
 	}
 
-	if respData.CreateTime != nil {
-		_ = d.Set("create_time", int(*respData.CreateTime))
-	}
-
-	if respData.UpdateTime != nil {
-		_ = d.Set("update_time", int(*respData.UpdateTime))
-	}
-
 	return nil
 }
 
@@ -515,11 +528,10 @@ func resourceTencentCloudClsMetricSubscribeUpdate(d *schema.ResourceData, meta i
 				}
 
 				request.InstanceInfo = &instanceConfig
-				break
 			}
 		}
 
-		if v, ok := d.GetOk("enable"); ok {
+		if v, ok := d.GetOkExists("enable"); ok {
 			request.Enable = helper.IntUint64(v.(int))
 		}
 
