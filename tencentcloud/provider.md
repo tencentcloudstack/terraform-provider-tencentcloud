@@ -1526,6 +1526,7 @@ tencentcloud_cls_cloud_product_log_task_v2
 tencentcloud_cls_open_service_operation
 tencentcloud_cls_dlc_deliver
 tencentcloud_cls_console
+tencentcloud_cls_metric_subscribe
 
 Data Source
 tencentcloud_cls_shipper_tasks
