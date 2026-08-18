@@ -251,7 +251,7 @@ func TencentMsyqlBasicInfo() map[string]*schema.Schema {
 			Type:        schema.TypeString,
 			Optional:    true,
 			Computed:    true,
-			Description: "Instance destroy protection status. Valid values: `on` (enable destroy protection), `off` (disable destroy protection). Only takes effect during instance creation.",
+			Description: "Instance destroy protection status. Valid values: `on` (enable destroy protection), `off` (disable destroy protection).",
 		},
 		// Computed values
 		"intranet_ip": {
@@ -1228,6 +1228,13 @@ func mysqlAllInstanceRoleUpdate(ctx context.Context, d *schema.ResourceData, met
 			return err
 		}
 
+	}
+
+	if d.HasChange("destroy_protect") {
+		destroyProtect := d.Get("destroy_protect").(string)
+		if err := mysqlService.ModifyInstanceDestroyProtect(ctx, d.Id(), destroyProtect); err != nil {
+			return err
+		}
 	}
 
 	if d.HasChange("intranet_port") || d.HasChange("vpc_id") || d.HasChange("subnet_id") {

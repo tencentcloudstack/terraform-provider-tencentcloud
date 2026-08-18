@@ -25,10 +25,10 @@ The `tencentcloud_mysql_instance` resource manages CDB MySQL instances. The reso
 - Add `destroy_protect` (Optional, Computed, TypeString) parameter to `tencentcloud_mysql_instance` with valid values `on` and `off`
 - Pass `DestroyProtect` to both `CreateDBInstance` and `CreateDBInstanceHour` API requests when specified by user
 - Read `DestroyProtect` from `DescribeDBInstances` API response (`InstanceInfo.DestroyProtect`) to support state refresh and import
+- Modify `DestroyProtect` via `ModifyInstanceDestroyProtect` API during Update when `destroy_protect` changes
 - Maintain full backward compatibility — existing configurations continue to work unchanged
 
 **Non-Goals:**
-- Adding `destroy_protect` update support via `ModifyInstanceDestroyProtect` API (out of scope; the parameter is only set during create and read back during refresh)
 - Adding `destroy_protect` to the `tencentcloud_mysql_instance` datasource (out of scope)
 
 ## Decisions
@@ -47,12 +47,12 @@ The `tencentcloud_mysql_instance` resource manages CDB MySQL instances. The reso
 
 ### Decision 4: `destroy_protect` is NOT ForceNew and NOT in immutableArgs
 
-**Rationale:** The requirement only specifies adding the parameter to create and read operations. Since the scope is limited to create-time configuration and read-back, and there is no indication that the parameter should trigger recreation when changed, we treat it as a standard Optional+Computed field. If a user changes it after creation, the Update function will not have special handling for it (no `d.HasChange("destroy_protect")` block), which means the diff will be reconciled on next refresh when Read populates the actual API value. This is the safest approach for a single-parameter addition without expanding scope to update logic.
+**Rationale:** The parameter is a standard Optional+Computed field, so it does not trigger recreation when changed. When a user changes `destroy_protect` after creation, the Update flow calls the `ModifyInstanceDestroyProtect` API via the `mysqlAllInstanceRoleUpdate` function to toggle the protection status without recreating the instance. The field is therefore NOT added to the `immutableArgs` list.
 
 ## Risks / Trade-offs
 
 - **[Risk] API returns empty string instead of nil for `DestroyProtect`**: The `DescribeDBInstances` response may return an empty string for instances where destroy protection was never set.
   - **Mitigation:** Use `d.Set("destroy_protect", ...)` which handles empty strings gracefully; only skip setting if the pointer itself is nil.
 
-- **[Risk] Users may expect update support via `ModifyInstanceDestroyProtect`**: The `ModifyInstanceDestroyProtect` API exists but is out of scope for this change.
-  - **Mitigation:** The parameter is Computed, so on refresh the actual API value overwrites any local diff. Users who need to change destroy protection after creation can use the console/API or a future enhancement.
+- **[Risk] `ModifyInstanceDestroyProtect` API may fail on transitional instance states**: The API may reject the request when the instance is in a transitional state (e.g., creating, isolating).
+  - **Mitigation:** The service method returns the raw API error to the user, who can retry the apply. This is consistent with other update operations in the resource.

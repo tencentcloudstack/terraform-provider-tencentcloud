@@ -245,7 +245,7 @@ The following arguments are supported:
 * `charge_type` - (Optional, String, ForceNew) Pay type of instance. Valid values:`PREPAID`, `POSTPAID`. Default is `POSTPAID`.
 * `cluster_topology` - (Optional, List) Cluster Edition node topology configuration. Note: If you purchased a cluster edition instance, this parameter is required. You need to set the RW and RO node topology of the cluster edition instance. The RO node range is 1-5. Please set at least 1 RO node.
 * `cpu` - (Optional, Int) CPU cores.
-* `destroy_protect` - (Optional, String) Instance destroy protection status. Valid values: `on` (enable destroy protection), `off` (disable destroy protection). Only takes effect during instance creation.
+* `destroy_protect` - (Optional, String) Instance destroy protection status. Valid values: `on` (enable destroy protection), `off` (disable destroy protection).
 * `device_type` - (Optional, String) Specify device type, available values:
 	- `UNIVERSAL` (default): universal instance,
 	- `EXCLUSIVE`: exclusive instance,

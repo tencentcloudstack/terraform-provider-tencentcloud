@@ -30,6 +30,21 @@ The provider SHALL read `DestroyProtect` from the `DescribeDBInstances` API resp
 - **WHEN** the `DescribeDBInstances` API response returns `nil` for `InstanceInfo.DestroyProtect`
 - **THEN** the provider SHALL skip setting `destroy_protect` in state (no panic, no error)
 
+### Requirement: Update destroy_protect via ModifyInstanceDestroyProtect
+The provider SHALL support modifying `destroy_protect` after instance creation by calling the `ModifyInstanceDestroyProtect` API when the user changes the `destroy_protect` field.
+
+#### Scenario: Update destroy_protect from off to on
+- **WHEN** a user changes `destroy_protect` from `"off"` to `"on"` in the `tencentcloud_mysql_instance` resource configuration
+- **THEN** the provider SHALL call the `ModifyInstanceDestroyProtect` API with `DestroyProtect=on`
+
+#### Scenario: Update destroy_protect from on to off
+- **WHEN** a user changes `destroy_protect` from `"on"` to `"off"` in the `tencentcloud_mysql_instance` resource configuration
+- **THEN** the provider SHALL call the `ModifyInstanceDestroyProtect` API with `DestroyProtect=off`
+
+#### Scenario: No change to destroy_protect
+- **WHEN** the `destroy_protect` field is unchanged during an update
+- **THEN** the provider SHALL NOT call the `ModifyInstanceDestroyProtect` API
+
 ### Requirement: destroy_protect schema definition
 The `destroy_protect` schema field SHALL be defined in the `TencentMsyqlBasicInfo()` function with the following properties: TypeString, Optional, Computed.
 
