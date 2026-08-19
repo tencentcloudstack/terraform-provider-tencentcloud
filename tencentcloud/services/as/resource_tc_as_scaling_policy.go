@@ -20,7 +20,9 @@ func ResourceTencentCloudAsScalingPolicy() *schema.Resource {
 		Read:   resourceTencentCloudAsScalingPolicyRead,
 		Update: resourceTencentCloudAsScalingPolicyUpdate,
 		Delete: resourceTencentCloudAsScalingPolicyDelete,
-
+		Importer: &schema.ResourceImporter{
+			State: schema.ImportStatePassthrough,
+		},
 		Schema: map[string]*schema.Schema{
 			"scaling_group_id": {
 				Type:        schema.TypeString,

@@ -44,6 +44,9 @@ const (
 	// 绑定的标签数量超出限制。
 	FAILEDOPERATION_BINDTOOMANYTAGS = "FailedOperation.BindTooManyTags"
 
+	// 集群组不存在
+	FAILEDOPERATION_CLUSTERGROUPNOTFOUND = "FailedOperation.ClusterGroupNotFound"
+
 	// 创建引擎失败。
 	FAILEDOPERATION_CREATEDATAENGINEFAILED = "FailedOperation.CreateDataEngineFailed"
 
@@ -56,8 +59,14 @@ const (
 	// 重复的标签键。
 	FAILEDOPERATION_DUPLICATETAGKEY = "FailedOperation.DuplicateTagKey"
 
-	// 当前已有资源组正在使用该配置项，无法一键删除（一键删除会导致引擎重启）您可前往资源组列表页点击详情删除
-	FAILEDOPERATION_FAILEDOPERATIONCODE_NETWORKCONNECTIONINUSED = "FailedOperation.FailedOperationCode_NetworkConnectionInUsed"
+	// 案例服务请求失败
+	FAILEDOPERATION_EXAMPLE = "FailedOperation.Example"
+
+	// 案例不存在
+	FAILEDOPERATION_EXAMPLENOTFOUND = "FailedOperation.ExampleNotFound"
+
+	// 外部服务异常
+	FAILEDOPERATION_EXTERNALSERVICE = "FailedOperation.ExternalService"
 
 	// 扣费失败。
 	FAILEDOPERATION_FEEDEDUCTIONFAILED = "FailedOperation.FeeDeductionFailed"
@@ -98,6 +107,21 @@ const (
 	// Invalid NetworkConnectionType
 	FAILEDOPERATION_INVALIDNETWORKCONNECTIONTYPE = "FailedOperation.InvalidNetworkConnectionType"
 
+	// 数据实验室正处于过渡状态：数据实验室正在状态转换中（启动中/停止中/删除中），请稍后重试
+	FAILEDOPERATION_LABINTRANSITION = "FailedOperation.LabInTransition"
+
+	// 数据实验室不存在：数据实验室不存在，请检查数据实验室标识
+	FAILEDOPERATION_LABNOTFOUND = "FailedOperation.LabNotFound"
+
+	// 实验室未运行
+	FAILEDOPERATION_LABNOTRUNNING = "FailedOperation.LabNotRunning"
+
+	// 数据实验室当前状态不允许修改：仅在停止或异常状态下可修改配置，请先停止数据实验室后重试
+	FAILEDOPERATION_LABNOTUPDATABLE = "FailedOperation.LabNotUpdatable"
+
+	// 数据实验室正在运行中：数据实验室正在运行中，请稍后重试
+	FAILEDOPERATION_LABRUNNING = "FailedOperation.LabRunning"
+
 	// 元数据错误，请重试，或者提交工单联系我们
 	FAILEDOPERATION_METASTOREERROR = "FailedOperation.MetastoreError"
 
@@ -106,6 +130,9 @@ const (
 
 	// The  datasource vpc has been bound to the engine
 	FAILEDOPERATION_NETWORKCONNECTIONEXIST = "FailedOperation.NetworkConnectionExist"
+
+	// 当前已有资源组正在使用该配置项，无法一键删除（一键删除会导致引擎重启）您可前往资源组列表页点击详情删除
+	FAILEDOPERATION_NETWORKCONNECTIONINUSED = "FailedOperation.NetworkConnectionInUsed"
 
 	// 没有操作权限。
 	FAILEDOPERATION_NOPERMISSION = "FailedOperation.NoPermission"
@@ -118,6 +145,9 @@ const (
 
 	// 采购数量超过限制。
 	FAILEDOPERATION_NUMBEREXCEEDLIMIT = "FailedOperation.NumberExceedLimit"
+
+	// 其他异常：服务遇到未知问题，请稍后再试。
+	FAILEDOPERATION_OTHEREXCEPTION = "FailedOperation.OtherException"
 
 	// 参数校验失败。
 	FAILEDOPERATION_PARAMETERVALIDATIONFAILED = "FailedOperation.ParameterValidationFailed"
@@ -134,6 +164,9 @@ const (
 	// 语法解析失败，请校验后重试
 	FAILEDOPERATION_SQLTASKPARSEFAILED = "FailedOperation.SQLTaskParseFailed"
 
+	// SQL任务结果超出限制
+	FAILEDOPERATION_SQLTASKRESULTOVERSIZE = "FailedOperation.SQLTaskResultOversize"
+
 	// 资源已经绑定了同名标签键。
 	FAILEDOPERATION_TAGALREADYATTACHED = "FailedOperation.TagAlreadyAttached"
 
@@ -145,6 +178,9 @@ const (
 
 	// 标签值长度超过限制。
 	FAILEDOPERATION_TAGVALUETOOLONG = "FailedOperation.TagValueTooLong"
+
+	// 获取结果超时
+	FAILEDOPERATION_TASKOVERTIMEFETCHRESULT = "FailedOperation.TaskOvertimeFetchResult"
 
 	// 资源数量超出限制。
 	FAILEDOPERATION_TOOMANYRESOURCES = "FailedOperation.TooManyResources"
@@ -221,6 +257,9 @@ const (
 	// 重复的引擎名称。
 	INVALIDPARAMETER_DUPLICATEDATAENGINENAME = "InvalidParameter.DuplicateDataEngineName"
 
+	// 数据源名称重复。
+	INVALIDPARAMETER_DUPLICATEDATASOURCENAME = "InvalidParameter.DuplicateDatasourceName"
+
 	// 重复的工作组名称。
 	INVALIDPARAMETER_DUPLICATEGROUPNAME = "InvalidParameter.DuplicateGroupName"
 
@@ -268,6 +307,9 @@ const (
 
 	// 指定的Spark任务程序包文件格式不匹配，当前仅支持.jar或.py
 	INVALIDPARAMETER_INVALIDAPPFILEFORMAT = "InvalidParameter.InvalidAppFileFormat"
+
+	// 指定的桶不存在
+	INVALIDPARAMETER_INVALIDBUCKETNAME = "InvalidParameter.InvalidBucketName"
 
 	// 字段名称设置错误，字段名称必须小于等于128字节
 	INVALIDPARAMETER_INVALIDCOLUMNNAMELENGTH = "InvalidParameter.InvalidColumnNameLength"
@@ -356,6 +398,9 @@ const (
 	// 无效的工作组Id。
 	INVALIDPARAMETER_INVALIDGROUPID = "InvalidParameter.InvalidGroupId"
 
+	// 不支持的Hive版本。
+	INVALIDPARAMETER_INVALIDHIVEVERSION = "InvalidParameter.InvalidHiveVersion"
+
 	// 请求的消息类型无效。
 	INVALIDPARAMETER_INVALIDINFOTYPE = "InvalidParameter.InvalidInfoType"
 
@@ -371,6 +416,9 @@ const (
 	// 无效的Offset值。
 	INVALIDPARAMETER_INVALIDOFFSET = "InvalidParameter.InvalidOffset"
 
+	// 列上执行的操作与该列的数据类型不兼容
+	INVALIDPARAMETER_INVALIDPARAMETER_COLUMNTYPENOTCOMPATIBLE = "InvalidParameter.InvalidParameter_ColumnTypeNotCompatible"
+
 	// 排序列不合法
 	INVALIDPARAMETER_INVALIDPARAMETER_SQLTASKANALYSISSORTBYTYPENOTMATCH = "InvalidParameter.InvalidParameter_SQLTaskAnalysisSortByTypeNotMatch"
 
@@ -383,6 +431,9 @@ const (
 	// SQL解析失败。
 	INVALIDPARAMETER_INVALIDSQL = "InvalidParameter.InvalidSQL"
 
+	// 传入的 SQL 配置参数不合法
+	INVALIDPARAMETER_INVALIDSQLCONFIG = "InvalidParameter.InvalidSQLConfig"
+
 	// 参数校验失败，请调整参数，或者提交工单联系我们
 	INVALIDPARAMETER_INVALIDSQLCONFIGSQL = "InvalidParameter.InvalidSQLConfigSQL"
 
@@ -391,6 +442,9 @@ const (
 
 	// 单次获取SQL任务结果数量需大于0条，小于1000条
 	INVALIDPARAMETER_INVALIDSQLTASKMAXRESULTS = "InvalidParameter.InvalidSQLTaskMaxResults"
+
+	// 指定的弹性范围不合规范
+	INVALIDPARAMETER_INVALIDSCHEDULEDELASTICITYMINELASTICCLUSTERS = "InvalidParameter.InvalidScheduledElasticityMinElasticClusters"
 
 	// 当前Session仅支持: spark/pyspark/sparkr/sql类型
 	INVALIDPARAMETER_INVALIDSESSIONKINDTYPE = "InvalidParameter.InvalidSessionKindType"
@@ -479,6 +533,12 @@ const (
 	// 找不到参数或参数为空
 	INVALIDPARAMETER_PARAMETERNOTFOUNDORBENONE = "InvalidParameter.ParameterNotFoundOrBeNone"
 
+	// 权限类型冲突。
+	INVALIDPARAMETER_POLICYTYPECONFLICT = "InvalidParameter.PolicyTypeConflict"
+
+	// 参数错误：资源规格组不存在
+	INVALIDPARAMETER_RESOURCESPECNOTFOUND = "InvalidParameter.ResourceSpecNotFound"
+
 	// SQL脚本Base64解析失败
 	INVALIDPARAMETER_SQLBASE64DECODEFAIL = "InvalidParameter.SQLBase64DecodeFail"
 
@@ -521,11 +581,20 @@ const (
 	// 任务已经结束，不能取消。
 	INVALIDPARAMETER_TASKALREADYFINISHED = "InvalidParameter.TaskAlreadyFinished"
 
+	// 筛选参数不匹配
+	INVALIDPARAMETER_TASKLISTFILTERSKEYTYPENOTMATH = "InvalidParameter.TaskListFiltersKeyTypeNotMath"
+
+	// 过滤字段类型不匹配，当前仅支持： task-id/task-sql-keyword/task-kind/task-operator/batch-id/session-id/task-state/task-time-sum/stage-start-time/input-records-sum/output-records-sum/output-bytes-sum/output-files-num/output-small-files-num/shuffle-read-records-sum/shuffle-read-bytes-sum
+	INVALIDPARAMETER_TASKLISTSORTBYTYPENOTMATCH = "InvalidParameter.TaskListSortByTypeNotMatch"
+
 	// 任务不存在。
 	INVALIDPARAMETER_TASKNOTFOUND = "InvalidParameter.TaskNotFound"
 
 	// 指定的任务状态不匹配，当前仅支持: 0:初始化, 1:运行中, 2:成功, 3:数据写入中, 4:排队中, -1:失败, -3:删除
 	INVALIDPARAMETER_TASKSTATETYPENOTMATH = "InvalidParameter.TaskStateTypeNotMath"
+
+	// Url格式错误。
+	INVALIDPARAMETER_URLFORMATERROR = "InvalidParameter.UrlFormatError"
 
 	// Vpc cidr格式错误。
 	INVALIDPARAMETER_VPCCIDRFORMATERROR = "InvalidParameter.VpcCidrFormatError"
@@ -533,8 +602,20 @@ const (
 	// Vpc cidr重叠。
 	INVALIDPARAMETER_VPCCIDROVERLAP = "InvalidParameter.VpcCidrOverlap"
 
+	// 无效参数组合
+	INVALIDPARAMETERCOMBINATION = "InvalidParameterCombination"
+
 	// 参数取值错误。
 	INVALIDPARAMETERVALUE = "InvalidParameterValue"
+
+	// 队列 Id 与 PartitionCode/QueueName 不一致
+	INVALIDPARAMETERVALUE_QUEUEIDMISMATCH = "InvalidParameterValue.QueueIdMismatch"
+
+	// 队列名称格式不合法
+	INVALIDPARAMETERVALUE_QUEUENAME = "InvalidParameterValue.QueueName"
+
+	// 申请资源配额超过分区可用额度
+	INVALIDPARAMETERVALUE_QUOTAEXCEEDED = "InvalidParameterValue.QuotaExceeded"
 
 	// 超过配额限制。
 	LIMITEXCEEDED = "LimitExceeded"
@@ -545,11 +626,20 @@ const (
 	// 操作被拒绝。
 	OPERATIONDENIED = "OperationDenied"
 
+	// 默认队列不允许删除
+	OPERATIONDENIED_DEFAULTQUEUEDELETEFORBIDDEN = "OperationDenied.DefaultQueueDeleteForbidden"
+
+	// 资源分区当前状态不允许该操作
+	OPERATIONDENIED_PARTITIONNOTREADY = "OperationDenied.PartitionNotReady"
+
 	// 地域错误
 	REGIONERROR = "RegionError"
 
 	// 资源被占用。
 	RESOURCEINUSE = "ResourceInUse"
+
+	// 同一分区下队列名称已存在
+	RESOURCEINUSE_QUEUENAME = "ResourceInUse.QueueName"
 
 	// 有SQL任务尚未执行完成。
 	RESOURCEINUSE_UNFINISHEDSQLS = "ResourceInUse.UnfinishedSQLs"
@@ -599,6 +689,9 @@ const (
 	// Eks计算集群初始化或迁移中，请稍后再试。
 	RESOURCENOTFOUND_EKSRESOURCENOTFOUND = "ResourceNotFound.EksResourceNotFound"
 
+	// 网关不存在
+	RESOURCENOTFOUND_GATEWAYNOTFOUND = "ResourceNotFound.GatewayNotFound"
+
 	// 指定集群镜像Session配置不存在
 	RESOURCENOTFOUND_IMAGESESSIONCONFIGNOTFOUND = "ResourceNotFound.ImageSessionConfigNotFound"
 
@@ -616,6 +709,12 @@ const (
 
 	// 该网络连接不存在
 	RESOURCENOTFOUND_NETWORKCONNECTIONNOTFOUND = "ResourceNotFound.NetworkConnectionNotFound"
+
+	// 资源包Partition不存在
+	RESOURCENOTFOUND_PARTITION = "ResourceNotFound.Partition"
+
+	// 资源组不存在
+	RESOURCENOTFOUND_PARTITIONQUEUE = "ResourceNotFound.PartitionQueue"
 
 	// 网关不存在
 	RESOURCENOTFOUND_RESOURCENOTFOUNDCODE_GATEWAYNOTFOUND = "ResourceNotFound.ResourceNotFoundCode_GatewayNotFound"
@@ -650,6 +749,9 @@ const (
 	// 任务资源不足，请调整driver或executor指定规格大小
 	RESOURCENOTFOUND_SPARKJOBINSUFFICIENTRESOURCES = "ResourceNotFound.SparkJobInsufficientResources"
 
+	// 系统文件错误，请重试，或者提交工单联系我们
+	RESOURCENOTFOUND_SYSTEMCONFIGNOTFOUND = "ResourceNotFound.SystemConfigNotFound"
+
 	// 表不存在，请重试，或者提交工单联系我们
 	RESOURCENOTFOUND_TABLENOTFOUND = "ResourceNotFound.TableNotFound"
 
@@ -659,6 +761,12 @@ const (
 	// 任务已经完成
 	RESOURCENOTFOUND_TASKALREADYFINISHED = "ResourceNotFound.TaskAlreadyFinished"
 
+	// 任务详情查询，任务不存在。
+	RESOURCENOTFOUND_TASKINFONOTFOUND = "ResourceNotFound.TaskInfoNotFound"
+
+	// 用户不存在
+	RESOURCENOTFOUND_USERNOTEXIST = "ResourceNotFound.UserNotExist"
+
 	// 找不到Warehouse存储路径，请到控制台->数据探索页面->存储配置中设置
 	RESOURCENOTFOUND_WAREHOUSEDIRNOTFOUND = "ResourceNotFound.WarehouseDirNotFound"
 
@@ -667,6 +775,9 @@ const (
 
 	// 账号余额不足，无法执行SQL任务。
 	RESOURCEUNAVAILABLE_BALANCEINSUFFICIENT = "ResourceUnavailable.BalanceInsufficient"
+
+	// 网关不处于运行中
+	RESOURCEUNAVAILABLE_GATEWAYNOTRUNNING = "ResourceUnavailable.GatewayNotRunning"
 
 	// 网关未运行
 	RESOURCEUNAVAILABLE_RESOURCEUNAVAILABLECODE_GATEWAYNOTRUNNING = "ResourceUnavailable.ResourceUnavailableCode_GatewayNotRunning"
@@ -694,6 +805,12 @@ const (
 
 	// 子用户不是管理员，无权绑定工作组到用户。
 	UNAUTHORIZEDOPERATION_BINDWORKGROUPSTOUSER = "UnauthorizedOperation.BindWorkgroupsToUser"
+
+	// 用户无权限创建管理员
+	UNAUTHORIZEDOPERATION_CREATEADMINISTRATOR = "UnauthorizedOperation.CreateAdministrator"
+
+	// 子用户无权创建联邦查询数据源。
+	UNAUTHORIZEDOPERATION_CREATECATALOG = "UnauthorizedOperation.CreateCatalog"
 
 	// 子用户不是管理员，无权创建工作组。
 	UNAUTHORIZEDOPERATION_CREATEWORKGROUP = "UnauthorizedOperation.CreateWorkgroup"
@@ -742,6 +859,9 @@ const (
 
 	// 子用户无权取消特定权限。
 	UNAUTHORIZEDOPERATION_REVOKEPOLICY = "UnauthorizedOperation.RevokePolicy"
+
+	// 用户没有操作权限
+	UNAUTHORIZEDOPERATION_UNAUTHORIZEDOPERATION = "UnauthorizedOperation.UnauthorizedOperation"
 
 	// 无引擎cam权限
 	UNAUTHORIZEDOPERATION_UNAUTHORIZEDOPERATIONCODE_NOENGINECAMPERMISSIONS = "UnauthorizedOperation.UnauthorizedOperationCode_NoEngineCamPermissions"

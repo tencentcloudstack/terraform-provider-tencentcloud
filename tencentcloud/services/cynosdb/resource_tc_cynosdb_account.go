@@ -141,8 +141,8 @@ func resourceTencentCloudCynosdbAccountRead(d *schema.ResourceData, meta interfa
 	}
 
 	if account == nil {
+		log.Printf("[WARN]%s resource `tencentcloud_cynosdb_account` [%s] not found, please check if it has been deleted.\n", logId, d.Id())
 		d.SetId("")
-		log.Printf("[WARN]%s resource `CynosdbAccount` [%s] not found, please check if it has been deleted.\n", logId, d.Id())
 		return nil
 	}
 

@@ -1,4 +1,4 @@
-Provide a resource to create a TDMQ topic.
+Provides a resource to create a TDMQ topic.
 
 Example Usage
 
@@ -29,5 +29,9 @@ resource "tencentcloud_tdmq_topic" "example" {
   partitions        = 6
   pulsar_topic_type = 3
   remark            = "remark."
+  tags              = {
+    "env"  = "test"
+    "team" = "backend"
+  }
 }
 ```

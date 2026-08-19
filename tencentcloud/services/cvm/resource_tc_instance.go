@@ -135,10 +135,10 @@ func ResourceTencentCloudInstance() *schema.Resource {
 				Elem: &schema.Schema{
 					Type: schema.TypeString,
 				},
-				Optional:      true,
-				ForceNew:      true,
-				ConflictsWith: []string{"placement_group_id"},
-				Description:   "Placement group ID.",
+				Optional:    true,
+				Computed:    true,
+				MaxItems:    3,
+				Description: "Placement group ID list. Supports up to 3 group IDs. When set, `placement_group_id` will be ignored and this list will be used for CRUD operations.",
 			},
 			"placement_group_id": {
 				Type:        schema.TypeString,
@@ -147,10 +147,15 @@ func ResourceTencentCloudInstance() *schema.Resource {
 				Description: "The ID of a placement group.",
 			},
 			"force_replace_placement_group_id": {
-				Type:         schema.TypeBool,
+				Type:        schema.TypeBool,
+				Optional:    true,
+				Description: "Whether to force the instance host to be replaced. Value range: true: Allows the instance to change the host and restart the instance. Local disk machines do not support specifying this parameter; false: Does not allow the instance to change the host and only join the placement group on the current host. This may cause the placement group to fail to change. Can be used with both `placement_group_id` and `disaster_recover_group_ids`. Default is false.",
+			},
+			"partition_number": {
+				Type:         schema.TypeInt,
 				Optional:     true,
-				RequiredWith: []string{"placement_group_id"},
-				Description:  "Whether to force the instance host to be replaced. Value range: true: Allows the instance to change the host and restart the instance. Local disk machines do not support specifying this parameter; false: Does not allow the instance to change the host and only join the placement group on the current host. This may cause the placement group to fail to change. Only useful for change `placement_group_id`, Default is false.",
+				ValidateFunc: tccommon.ValidateIntegerInRange(1, 30),
+				Description:  "The partition number of the placement group. Valid values: 1-30. If not specified when creating an instance with a partition placement group, the partition number will be randomly assigned. Required when modifying `disaster_recover_group_ids` or `placement_group_id` in update operations.",
 			},
 			// payment
 			"instance_charge_type": {
@@ -327,6 +332,20 @@ func ResourceTencentCloudInstance() *schema.Resource {
 				Computed:    true,
 				Description: "Name of the system disk.",
 			},
+			"system_disk_encrypt": {
+				Type:        schema.TypeBool,
+				Optional:    true,
+				ForceNew:    true,
+				Computed:    true,
+				Description: "Whether the system disk is encrypted. Valid values: true (encrypted), false (not encrypted). Default value: false.",
+			},
+			"system_disk_kms_key_id": {
+				Type:        schema.TypeString,
+				Optional:    true,
+				ForceNew:    true,
+				Computed:    true,
+				Description: "Custom KMS key ID for system disk encryption.",
+			},
 			"system_disk_resize_online": {
 				Type:        schema.TypeBool,
 				Optional:    true,
@@ -496,6 +515,12 @@ func ResourceTencentCloudInstance() *schema.Resource {
 				Default:     false,
 				Description: "Indicate whether to force delete the instance. Default is `false`. If set true, the instance will be permanently deleted instead of being moved into the recycle bin. Note: only works for `PREPAID` instance.",
 			},
+			"force_stop": {
+				Type:        schema.TypeBool,
+				Optional:    true,
+				Computed:    true,
+				Description: "Whether to forcibly shut down a running instance. Default is false. Forcing a shutdown is equivalent to switching off the power button on a physical computer. Forcing a shutdown may result in data loss or file system corruption; therefore, please use this option only when the server cannot be shut down normally.",
+			},
 			"disable_api_termination": {
 				Type:        schema.TypeBool,
 				Optional:    true,
@@ -515,6 +540,32 @@ func ResourceTencentCloudInstance() *schema.Resource {
 				Computed:    true,
 				ForceNew:    true,
 				Description: "High-performance computing cluster ID. If the instance created is a high-performance computing instance, you need to specify the cluster in which the instance is placed, otherwise it cannot be specified.",
+			},
+			"cpu_topology": {
+				Type:        schema.TypeList,
+				Optional:    true,
+				Computed:    true,
+				ForceNew:    true,
+				MaxItems:    1,
+				Description: "CPU topology configuration. Only supported when creating instances.",
+				Elem: &schema.Resource{
+					Schema: map[string]*schema.Schema{
+						"core_count": {
+							Type:        schema.TypeInt,
+							Optional:    true,
+							Computed:    true,
+							ForceNew:    true,
+							Description: "Number of enabled CPU physical cores.",
+						},
+						"thread_per_core": {
+							Type:        schema.TypeInt,
+							Optional:    true,
+							Computed:    true,
+							ForceNew:    true,
+							Description: "Threads per core. 1 means hyper-threading is off, 2 means hyper-threading is on.",
+						},
+					},
+				},
 			},
 			// template
 			"launch_template_id": {
@@ -656,6 +707,21 @@ func resourceTencentCloudInstanceCreate(d *schema.ResourceData, meta interface{}
 		request.HpcClusterId = helper.String(v.(string))
 	}
 
+	if v, ok := d.GetOk("cpu_topology"); ok {
+		cpuTopologyList := v.([]interface{})
+		if len(cpuTopologyList) > 0 {
+			cpuTopologyMap := cpuTopologyList[0].(map[string]interface{})
+			cpuTopology := &cvm.CpuTopology{}
+			if coreCount, ok := cpuTopologyMap["core_count"]; ok && coreCount.(int) > 0 {
+				cpuTopology.CoreCount = helper.IntInt64(coreCount.(int))
+			}
+			if threadPerCore, ok := cpuTopologyMap["thread_per_core"]; ok && threadPerCore.(int) > 0 {
+				cpuTopology.ThreadPerCore = helper.IntInt64(threadPerCore.(int))
+			}
+			request.CpuTopology = cpuTopology
+		}
+	}
+
 	if v, ok := d.GetOk("instance_charge_type"); ok {
 		instanceChargeType = v.(string)
 		request.InstanceChargeType = &instanceChargeType
@@ -719,23 +785,26 @@ func resourceTencentCloudInstanceCreate(d *schema.ResourceData, meta interface{}
 		}
 	}
 
-	// Check for disaster_recover_group_ids first (new field)
+	// Check for disaster_recover_group_ids first (takes priority over placement_group_id)
+	var rpgFlag bool
+	if v, ok := d.GetOkExists("force_replace_placement_group_id"); ok {
+		rpgFlag = v.(bool)
+	}
+
 	if v, ok := d.GetOk("disaster_recover_group_ids"); ok {
 		disasterRecoverGroupIdsSet := v.(*schema.Set).List()
 		for i := range disasterRecoverGroupIdsSet {
 			disasterRecoverGroupId := disasterRecoverGroupIdsSet[i].(string)
 			request.DisasterRecoverGroupIds = append(request.DisasterRecoverGroupIds, &disasterRecoverGroupId)
 		}
-	}
-
-	var rpgFlag bool
-	if v, ok := d.GetOkExists("force_replace_placement_group_id"); ok {
-		rpgFlag = v.(bool)
-	}
-
-	if !rpgFlag {
-		if v, ok := d.GetOk("placement_group_id"); ok {
-			request.DisasterRecoverGroupIds = []*string{helper.String(v.(string))}
+		if v, ok := d.GetOkExists("partition_number"); ok {
+			request.PartitionNumber = helper.IntInt64(v.(int))
+		}
+	} else {
+		if !rpgFlag {
+			if v, ok := d.GetOk("placement_group_id"); ok {
+				request.DisasterRecoverGroupIds = []*string{helper.String(v.(string))}
+			}
 		}
 	}
 
@@ -843,6 +912,16 @@ func resourceTencentCloudInstanceCreate(d *schema.ResourceData, meta interface{}
 
 	if v, ok := d.GetOk("system_disk_name"); ok {
 		systemDisk.DiskName = helper.String(v.(string))
+		systemDiskFlag = true
+	}
+
+	if v, ok := d.GetOkExists("system_disk_encrypt"); ok {
+		systemDisk.Encrypt = helper.Bool(v.(bool))
+		systemDiskFlag = true
+	}
+
+	if v, ok := d.GetOk("system_disk_kms_key_id"); ok {
+		systemDisk.KmsKeyId = helper.String(v.(string))
 		systemDiskFlag = true
 	}
 
@@ -1079,53 +1158,56 @@ func resourceTencentCloudInstanceCreate(d *schema.ResourceData, meta interface{}
 		return err
 	}
 
-	// set placement group id
+	// set placement group id (only for placement_group_id with force_replace, since disaster_recover_group_ids is already passed in RunInstances)
 	if rpgFlag {
 		if v, ok := d.GetOk("placement_group_id"); ok && v != "" {
-			request := cvm.NewModifyInstancesDisasterRecoverGroupRequest()
-			request.InstanceIds = helper.Strings([]string{instanceId})
-			request.DisasterRecoverGroupId = helper.String(v.(string))
-			request.Force = helper.Bool(rpgFlag)
-			err = resource.Retry(tccommon.WriteRetryTimeout, func() *resource.RetryError {
-				result, e := meta.(tccommon.ProviderMeta).GetAPIV3Conn().UseCvmClient().ModifyInstancesDisasterRecoverGroup(request)
-				if e != nil {
-					return tccommon.RetryError(e)
-				} else {
-					log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), result.ToJsonString())
-				}
-
-				return nil
-			})
-
-			if err != nil {
-				return err
-			}
-
-			// wait
-			err = resource.Retry(d.Timeout(schema.TimeoutCreate), func() *resource.RetryError {
-				instance, errRet := cvmService.DescribeInstanceById(ctx, instanceId)
-				if errRet != nil {
-					return tccommon.RetryError(errRet, tccommon.InternalError)
-				}
-
-				if instance != nil && *instance.InstanceState == CVM_STATUS_LAUNCH_FAILED {
-					//LatestOperationCodeMode
-					if instance.LatestOperationErrorMsg != nil {
-						return resource.NonRetryableError(fmt.Errorf("cvm instance %s launch failed. Error msg: %s.\n", *instance.InstanceId, *instance.LatestOperationErrorMsg))
+			// Only use ModifyInstancesDisasterRecoverGroup for placement_group_id when disaster_recover_group_ids is not set
+			if _, ok := d.GetOk("disaster_recover_group_ids"); !ok {
+				request := cvm.NewModifyInstancesDisasterRecoverGroupRequest()
+				request.InstanceIds = helper.Strings([]string{instanceId})
+				request.DisasterRecoverGroupId = helper.String(v.(string))
+				request.Force = helper.Bool(rpgFlag)
+				err = resource.Retry(tccommon.WriteRetryTimeout, func() *resource.RetryError {
+					result, e := meta.(tccommon.ProviderMeta).GetAPIV3Conn().UseCvmClient().ModifyInstancesDisasterRecoverGroup(request)
+					if e != nil {
+						return tccommon.RetryError(e)
+					} else {
+						log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), result.ToJsonString())
 					}
 
-					return resource.NonRetryableError(fmt.Errorf("cvm instance %s launch failed, this resource will not be stored to tfstate and will auto removed\n.", *instance.InstanceId))
-				}
-
-				if instance != nil && *instance.InstanceState == CVM_STATUS_RUNNING {
 					return nil
+				})
+
+				if err != nil {
+					return err
 				}
 
-				return resource.RetryableError(fmt.Errorf("cvm instance status is %s, retry...", *instance.InstanceState))
-			})
+				// wait
+				err = resource.Retry(d.Timeout(schema.TimeoutCreate), func() *resource.RetryError {
+					instance, errRet := cvmService.DescribeInstanceById(ctx, instanceId)
+					if errRet != nil {
+						return tccommon.RetryError(errRet, tccommon.InternalError)
+					}
 
-			if err != nil {
-				return err
+					if instance != nil && *instance.InstanceState == CVM_STATUS_LAUNCH_FAILED {
+						//LatestOperationCodeMode
+						if instance.LatestOperationErrorMsg != nil {
+							return resource.NonRetryableError(fmt.Errorf("cvm instance %s launch failed. Error msg: %s.\n", *instance.InstanceId, *instance.LatestOperationErrorMsg))
+						}
+
+						return resource.NonRetryableError(fmt.Errorf("cvm instance %s launch failed, this resource will not be stored to tfstate and will auto removed\n.", *instance.InstanceId))
+					}
+
+					if instance != nil && *instance.InstanceState == CVM_STATUS_RUNNING {
+						return nil
+					}
+
+					return resource.RetryableError(fmt.Errorf("cvm instance status is %s, retry...", *instance.InstanceState))
+				})
+
+				if err != nil {
+					return err
+				}
 			}
 		}
 	}
@@ -1286,6 +1368,14 @@ func resourceTencentCloudInstanceRead(d *schema.ResourceData, meta interface{}) 
 	_ = d.Set("system_disk_type", instance.SystemDisk.DiskType)
 	_ = d.Set("system_disk_size", instance.SystemDisk.DiskSize)
 	_ = d.Set("system_disk_id", instance.SystemDisk.DiskId)
+	if instance.SystemDisk.Encrypt != nil {
+		_ = d.Set("system_disk_encrypt", instance.SystemDisk.Encrypt)
+	}
+
+	if instance.SystemDisk.KmsKeyId != nil {
+		_ = d.Set("system_disk_kms_key_id", instance.SystemDisk.KmsKeyId)
+	}
+
 	_ = d.Set("instance_status", instance.InstanceState)
 	_ = d.Set("create_time", instance.CreatedTime)
 	_ = d.Set("expired_time", instance.ExpiredTime)
@@ -1298,12 +1388,35 @@ func resourceTencentCloudInstanceRead(d *schema.ResourceData, meta interface{}) 
 	_ = d.Set("ipv6_addresses", instance.IPv6Addresses)
 	_ = d.Set("public_ipv6_addresses", instance.PublicIPv6Addresses)
 
+	if instance.CpuTopology != nil {
+		cpuTopologyMap := map[string]interface{}{}
+		if instance.CpuTopology.CoreCount != nil {
+			cpuTopologyMap["core_count"] = *instance.CpuTopology.CoreCount
+		}
+		if instance.CpuTopology.ThreadPerCore != nil {
+			cpuTopologyMap["thread_per_core"] = *instance.CpuTopology.ThreadPerCore
+		}
+		_ = d.Set("cpu_topology", []interface{}{cpuTopologyMap})
+	}
+
 	if instance.Uuid != nil {
 		_ = d.Set("uuid", instance.Uuid)
 	}
 
 	if instance.DisasterRecoverGroupId != nil {
-		_ = d.Set("placement_group_id", instance.DisasterRecoverGroupId)
+		// Only set placement_group_id from API if disaster_recover_group_ids is NOT in use,
+		// to avoid overwriting the user's configured value and causing plan diffs.
+		if _, ok := d.GetOk("disaster_recover_group_ids"); !ok {
+			_ = d.Set("placement_group_id", instance.DisasterRecoverGroupId)
+		}
+	}
+
+	if len(instance.DisasterRecoverGroupIds) > 0 {
+		_ = d.Set("disaster_recover_group_ids", instance.DisasterRecoverGroupIds)
+		// partition_number is only valid when disaster_recover_group_ids is set and non-empty.
+		if instance.PartitionNumber != nil {
+			_ = d.Set("partition_number", instance.PartitionNumber)
+		}
 	}
 
 	if *instance.InstanceChargeType == CVM_CHARGE_TYPE_CDHPAID {
@@ -1878,6 +1991,11 @@ func resourceTencentCloudInstanceUpdate(d *schema.ResourceData, meta interface{}
 		expectChargeType = chargeType.(string)
 	}
 
+	var forceStop bool
+	if v, ok := d.GetOkExists("force_stop"); ok {
+		forceStop = v.(bool)
+	}
+
 	if d.HasChange("instance_charge_type") && expectChargeType != currentChargeType {
 		var (
 			period    = -1
@@ -2030,6 +2148,13 @@ func resourceTencentCloudInstanceUpdate(d *schema.ResourceData, meta interface{}
 			request.ImageId = helper.String(v.(string))
 		}
 
+		// system disk
+		if v, ok := d.GetOk("kms_key_id"); ok {
+			request.SystemDisk = &cvm.SystemDisk{
+				KmsKeyId: helper.String(v.(string)),
+			}
+		}
+
 		// enhanced service
 		var (
 			enhancedService     cvm.EnhancedService
@@ -2108,7 +2233,7 @@ func resourceTencentCloudInstanceUpdate(d *schema.ResourceData, meta interface{}
 		// Modify Login Info Directly
 	} else {
 		if d.HasChange("password") {
-			err := cvmService.ModifyPassword(ctx, instanceId, d.Get("password").(string))
+			err := cvmService.ModifyPassword(ctx, instanceId, d.Get("password").(string), forceStop)
 			if err != nil {
 				return err
 			}
@@ -2125,7 +2250,7 @@ func resourceTencentCloudInstanceUpdate(d *schema.ResourceData, meta interface{}
 			keyId := n.(string)
 
 			if oldKeyId != "" {
-				err := cvmService.UnbindKeyPair(ctx, []*string{&oldKeyId}, []*string{&instanceId})
+				err := cvmService.UnbindKeyPair(ctx, []*string{&oldKeyId}, []*string{&instanceId}, forceStop)
 				if err != nil {
 					return err
 				}
@@ -2137,7 +2262,7 @@ func resourceTencentCloudInstanceUpdate(d *schema.ResourceData, meta interface{}
 			}
 
 			if keyId != "" {
-				err = cvmService.BindKeyPair(ctx, []*string{&keyId}, instanceId)
+				err = cvmService.BindKeyPair(ctx, []*string{&keyId}, instanceId, forceStop)
 				if err != nil {
 					return err
 				}
@@ -2160,7 +2285,7 @@ func resourceTencentCloudInstanceUpdate(d *schema.ResourceData, meta interface{}
 			removes.Remove("")
 
 			if removes.Len() > 0 {
-				err := cvmService.UnbindKeyPair(ctx, helper.InterfacesStringsPoint(removes.List()), []*string{&instanceId})
+				err := cvmService.UnbindKeyPair(ctx, helper.InterfacesStringsPoint(removes.List()), []*string{&instanceId}, forceStop)
 				if err != nil {
 					return err
 				}
@@ -2172,7 +2297,7 @@ func resourceTencentCloudInstanceUpdate(d *schema.ResourceData, meta interface{}
 			}
 
 			if adds.Len() > 0 {
-				err = cvmService.BindKeyPair(ctx, helper.InterfacesStringsPoint(adds.List()), instanceId)
+				err = cvmService.BindKeyPair(ctx, helper.InterfacesStringsPoint(adds.List()), instanceId, forceStop)
 				if err != nil {
 					return err
 				}
@@ -2233,7 +2358,7 @@ func resourceTencentCloudInstanceUpdate(d *schema.ResourceData, meta interface{}
 		//diskId := d.Get("system_disk_id").(string)
 		req := cvm.NewResizeInstanceDisksRequest()
 		req.InstanceId = &instanceId
-		req.ForceStop = helper.Bool(true)
+
 		req.SystemDisk = &cvm.SystemDisk{
 			DiskSize: helper.IntInt64(size),
 			DiskType: &diskType,
@@ -2242,6 +2367,7 @@ func resourceTencentCloudInstanceUpdate(d *schema.ResourceData, meta interface{}
 			req.ResizeOnline = helper.Bool(v.(bool))
 		}
 
+		req.ForceStop = helper.Bool(forceStop)
 		err := cvmService.ResizeInstanceDisks(ctx, req)
 		if err != nil {
 			return fmt.Errorf("an error occurred when modifying system_disk, reason: %s", err.Error())
@@ -2293,7 +2419,7 @@ func resourceTencentCloudInstanceUpdate(d *schema.ResourceData, meta interface{}
 	}
 
 	if d.HasChange("instance_type") {
-		err := cvmService.ModifyInstanceType(ctx, instanceId, d.Get("instance_type").(string))
+		err := cvmService.ModifyInstanceType(ctx, instanceId, d.Get("instance_type").(string), forceStop)
 		if err != nil {
 			return err
 		}
@@ -2305,7 +2431,7 @@ func resourceTencentCloudInstanceUpdate(d *schema.ResourceData, meta interface{}
 	}
 
 	if d.HasChange("cdh_instance_type") {
-		err := cvmService.ModifyInstanceType(ctx, instanceId, d.Get("cdh_instance_type").(string))
+		err := cvmService.ModifyInstanceType(ctx, instanceId, d.Get("cdh_instance_type").(string), forceStop)
 		if err != nil {
 			return err
 		}
@@ -2407,25 +2533,26 @@ func resourceTencentCloudInstanceUpdate(d *schema.ResourceData, meta interface{}
 		}
 	}
 
-	if d.HasChange("placement_group_id") || d.HasChange("force_replace_placement_group_id") {
-		oldPGI, newPGI := d.GetChange("placement_group_id")
-		oldPGIStr := oldPGI.(string)
-		newPGIStr := newPGI.(string)
-		if newPGIStr == "" {
-			// wait cvm support delete DisasterRecoverGroupId
-			return fmt.Errorf("Deleting `placement_group_id` is not currently supported.")
-		} else {
-			if oldPGIStr == newPGIStr {
-				return fmt.Errorf("It is not possible to change only `force_replace_placement_group_id`, it needs to be modified together with `placement_group_id`.")
+	if d.HasChange("disaster_recover_group_ids") || d.HasChange("placement_group_id") || d.HasChange("force_replace_placement_group_id") || d.HasChange("partition_number") {
+		// Check if disaster_recover_group_ids is set - it takes priority.
+		// partition_number is only valid when disaster_recover_group_ids is set and non-empty.
+		disasterRecoverGroupIdsSet := d.Get("disaster_recover_group_ids").(*schema.Set).List()
+		if len(disasterRecoverGroupIdsSet) > 0 {
+			groupIds := make([]*string, 0, len(disasterRecoverGroupIdsSet))
+			for i := range disasterRecoverGroupIdsSet {
+				groupId := disasterRecoverGroupIdsSet[i].(string)
+				groupIds = append(groupIds, &groupId)
 			}
 
 			request := cvm.NewModifyInstancesDisasterRecoverGroupRequest()
+			request.InstanceIds = helper.Strings([]string{instanceId})
+			request.DisasterRecoverGroupIds = groupIds
 			if v, ok := d.GetOkExists("force_replace_placement_group_id"); ok {
 				request.Force = helper.Bool(v.(bool))
 			}
-
-			request.InstanceIds = helper.Strings([]string{instanceId})
-			request.DisasterRecoverGroupId = helper.String(newPGIStr)
+			if v, ok := d.GetOk("partition_number"); ok {
+				request.PartitionNumber = helper.IntInt64(v.(int))
+			}
 			err = resource.Retry(tccommon.WriteRetryTimeout, func() *resource.RetryError {
 				result, e := meta.(tccommon.ProviderMeta).GetAPIV3Conn().UseCvmClient().ModifyInstancesDisasterRecoverGroup(request)
 				if e != nil {
@@ -2440,33 +2567,47 @@ func resourceTencentCloudInstanceUpdate(d *schema.ResourceData, meta interface{}
 			if err != nil {
 				return err
 			}
-
-			// wait
-			err = resource.Retry(d.Timeout(schema.TimeoutCreate), func() *resource.RetryError {
-				instance, errRet := cvmService.DescribeInstanceById(ctx, instanceId)
-				if errRet != nil {
-					return tccommon.RetryError(errRet, tccommon.InternalError)
+		} else {
+			// Use placement_group_id (legacy behavior)
+			oldPGI, newPGI := d.GetChange("placement_group_id")
+			oldPGIStr := oldPGI.(string)
+			newPGIStr := newPGI.(string)
+			if newPGIStr == "" {
+				// wait cvm support delete DisasterRecoverGroupId
+				return fmt.Errorf("Deleting `placement_group_id` is not currently supported.")
+			} else {
+				if oldPGIStr == newPGIStr {
+					return fmt.Errorf("It is not possible to change only `force_replace_placement_group_id`, it needs to be modified together with `placement_group_id`.")
 				}
 
-				if instance != nil && *instance.InstanceState == CVM_STATUS_LAUNCH_FAILED {
-					//LatestOperationCodeMode
-					if instance.LatestOperationErrorMsg != nil {
-						return resource.NonRetryableError(fmt.Errorf("cvm instance %s launch failed. Error msg: %s.\n", *instance.InstanceId, *instance.LatestOperationErrorMsg))
+				request := cvm.NewModifyInstancesDisasterRecoverGroupRequest()
+				if v, ok := d.GetOkExists("force_replace_placement_group_id"); ok {
+					request.Force = helper.Bool(v.(bool))
+				}
+
+				request.InstanceIds = helper.Strings([]string{instanceId})
+				request.DisasterRecoverGroupId = helper.String(newPGIStr)
+				err = resource.Retry(tccommon.WriteRetryTimeout, func() *resource.RetryError {
+					result, e := meta.(tccommon.ProviderMeta).GetAPIV3Conn().UseCvmClient().ModifyInstancesDisasterRecoverGroup(request)
+					if e != nil {
+						return tccommon.RetryError(e)
+					} else {
+						log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), result.ToJsonString())
 					}
 
-					return resource.NonRetryableError(fmt.Errorf("cvm instance %s launch failed, this resource will not be stored to tfstate and will auto removed\n.", *instance.InstanceId))
-				}
-
-				if instance != nil && *instance.InstanceState == CVM_STATUS_RUNNING {
 					return nil
+				})
+
+				if err != nil {
+					return err
 				}
-
-				return resource.RetryableError(fmt.Errorf("cvm instance status is %s, retry...", *instance.InstanceState))
-			})
-
-			if err != nil {
-				return err
 			}
+		}
+
+		// Wait for operation to finish
+		err = waitForOperationFinished(d, meta, 2*tccommon.ReadRetryTimeout, CVM_LATEST_OPERATION_STATE_OPERATING, false)
+		if err != nil {
+			return err
 		}
 	}
 

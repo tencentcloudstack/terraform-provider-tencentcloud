@@ -21,13 +21,10 @@ import (
 )
 
 type Account struct {
-	// 账号名，可输入1 - 32个字符。
+	// <p>账号名，可输入1 - 32个字符。</p>
 	User *string `json:"User,omitnil,omitempty" name:"User"`
 
-	// 账号的主机。
-	// 说明：
-	// 1. IP 形式，支持填入%。
-	// 2. 多个主机以分隔符分隔，分隔符支持;,|换行符和空格。
+	// <p>账号的主机。</p><p>IP 形式，支持填入%。</p>
 	Host *string `json:"Host,omitnil,omitempty" name:"Host"`
 }
 
@@ -194,111 +191,105 @@ type AddressInfo struct {
 
 // Predefined struct for user
 type AdjustCdbProxyAddressRequestParams struct {
-	// 代理组 ID。可通过 [DescribeCdbProxyInfo](https://cloud.tencent.com/document/api/236/90585) 接口获取。
+	// <p>代理组 ID。可通过 <a href="https://cloud.tencent.com/document/api/236/90585">DescribeCdbProxyInfo</a> 接口获取。</p>
 	ProxyGroupId *string `json:"ProxyGroupId,omitnil,omitempty" name:"ProxyGroupId"`
 
-	// 权重分配模式，
-	// 系统自动分配："system"， 自定义："custom"
+	// <p>权重分配模式，<br>系统自动分配：&quot;system&quot;， 自定义：&quot;custom&quot;</p>
 	WeightMode *string `json:"WeightMode,omitnil,omitempty" name:"WeightMode"`
 
-	// 是否开启延迟剔除，取值："true" | "false"
+	// <p>是否开启延迟剔除，取值：&quot;true&quot; | &quot;false&quot;</p>
 	IsKickOut *bool `json:"IsKickOut,omitnil,omitempty" name:"IsKickOut"`
 
-	// 最小保留数量，最小取值：0。
-	// 说明：当 IsKickOut 为 true 时才有效。
+	// <p>最小保留数量，最小取值：0。<br>说明：当 IsKickOut 为 true 时才有效。</p>
 	MinCount *uint64 `json:"MinCount,omitnil,omitempty" name:"MinCount"`
 
-	// 延迟剔除阈值，最小取值：1，取值范围：[1,10000]，整数。
+	// <p>延迟剔除阈值，最小取值：1，取值范围：[1,10000]，整数。</p>
 	MaxDelay *uint64 `json:"MaxDelay,omitnil,omitempty" name:"MaxDelay"`
 
-	// 是否开启故障转移，取值："true" | "false"
+	// <p>是否开启故障转移，取值：&quot;true&quot; | &quot;false&quot;</p>
 	FailOver *bool `json:"FailOver,omitnil,omitempty" name:"FailOver"`
 
-	// 是否自动添加RO，取值："true" | "false"
+	// <p>是否自动添加RO，取值：&quot;true&quot; | &quot;false&quot;</p>
 	AutoAddRo *bool `json:"AutoAddRo,omitnil,omitempty" name:"AutoAddRo"`
 
-	// 是否是只读，取值："true" | "false"
+	// <p>是否是只读，取值：&quot;true&quot; | &quot;false&quot;</p>
 	ReadOnly *bool `json:"ReadOnly,omitnil,omitempty" name:"ReadOnly"`
 
-	// 代理组地址 ID。可通过 [DescribeCdbProxyInfo](https://cloud.tencent.com/document/api/236/90585) 接口获取。
+	// <p>代理组地址 ID。可通过 <a href="https://cloud.tencent.com/document/api/236/90585">DescribeCdbProxyInfo</a> 接口获取。</p>
 	ProxyAddressId *string `json:"ProxyAddressId,omitnil,omitempty" name:"ProxyAddressId"`
 
-	// 是否开启事务分离，取值："true" | "false"，默认值 false。
+	// <p>是否开启事务分离，取值：&quot;true&quot; | &quot;false&quot;，默认值 false。</p>
 	TransSplit *bool `json:"TransSplit,omitnil,omitempty" name:"TransSplit"`
 
-	// 是否开启连接池。默认关闭。
-	// 注意：如需使用数据库代理连接池能力，MySQL 8.0 主实例的内核小版本要大于等于 MySQL 8.0 20230630。
+	// <p>是否开启连接池。默认关闭。<br>注意：如需使用数据库代理连接池能力，MySQL 8.0 主实例的内核小版本要大于等于 MySQL 8.0 20230630。</p>
 	ConnectionPool *bool `json:"ConnectionPool,omitnil,omitempty" name:"ConnectionPool"`
 
-	// 读写权重分配。如果 WeightMode 传的是 system ，则传入的权重不生效，由系统分配默认权重。
+	// <p>读写权重分配。如果 WeightMode 传的是 system ，则传入的权重不生效，由系统分配默认权重。</p>
 	ProxyAllocation []*ProxyAllocation `json:"ProxyAllocation,omitnil,omitempty" name:"ProxyAllocation"`
 
-	// 是否开启自适应负载均衡。默认关闭。
+	// <p>是否开启自适应负载均衡。默认关闭。</p>
 	AutoLoadBalance *bool `json:"AutoLoadBalance,omitnil,omitempty" name:"AutoLoadBalance"`
 
-	// 访问模式：nearby - 就近访问，balance - 均衡分配，默认就近访问。
+	// <p>访问模式：nearby - 就近访问，balance - 均衡分配，默认就近访问。</p>
 	AccessMode *string `json:"AccessMode,omitnil,omitempty" name:"AccessMode"`
 
-	// 是否将libra节点当作普通RO节点
-	ApNodeAsRoNode *string `json:"ApNodeAsRoNode,omitnil,omitempty" name:"ApNodeAsRoNode"`
+	// <p>是否将libra节点当作普通RO节点</p>
+	ApNodeAsRoNode *bool `json:"ApNodeAsRoNode,omitnil,omitempty" name:"ApNodeAsRoNode"`
 
-	// libra节点故障，是否转发给其他节点
-	ApQueryToOtherNode *string `json:"ApQueryToOtherNode,omitnil,omitempty" name:"ApQueryToOtherNode"`
+	// <p>libra节点故障，是否转发给其他节点</p>
+	ApQueryToOtherNode *bool `json:"ApQueryToOtherNode,omitnil,omitempty" name:"ApQueryToOtherNode"`
 }
 
 type AdjustCdbProxyAddressRequest struct {
 	*tchttp.BaseRequest
 	
-	// 代理组 ID。可通过 [DescribeCdbProxyInfo](https://cloud.tencent.com/document/api/236/90585) 接口获取。
+	// <p>代理组 ID。可通过 <a href="https://cloud.tencent.com/document/api/236/90585">DescribeCdbProxyInfo</a> 接口获取。</p>
 	ProxyGroupId *string `json:"ProxyGroupId,omitnil,omitempty" name:"ProxyGroupId"`
 
-	// 权重分配模式，
-	// 系统自动分配："system"， 自定义："custom"
+	// <p>权重分配模式，<br>系统自动分配：&quot;system&quot;， 自定义：&quot;custom&quot;</p>
 	WeightMode *string `json:"WeightMode,omitnil,omitempty" name:"WeightMode"`
 
-	// 是否开启延迟剔除，取值："true" | "false"
+	// <p>是否开启延迟剔除，取值：&quot;true&quot; | &quot;false&quot;</p>
 	IsKickOut *bool `json:"IsKickOut,omitnil,omitempty" name:"IsKickOut"`
 
-	// 最小保留数量，最小取值：0。
-	// 说明：当 IsKickOut 为 true 时才有效。
+	// <p>最小保留数量，最小取值：0。<br>说明：当 IsKickOut 为 true 时才有效。</p>
 	MinCount *uint64 `json:"MinCount,omitnil,omitempty" name:"MinCount"`
 
-	// 延迟剔除阈值，最小取值：1，取值范围：[1,10000]，整数。
+	// <p>延迟剔除阈值，最小取值：1，取值范围：[1,10000]，整数。</p>
 	MaxDelay *uint64 `json:"MaxDelay,omitnil,omitempty" name:"MaxDelay"`
 
-	// 是否开启故障转移，取值："true" | "false"
+	// <p>是否开启故障转移，取值：&quot;true&quot; | &quot;false&quot;</p>
 	FailOver *bool `json:"FailOver,omitnil,omitempty" name:"FailOver"`
 
-	// 是否自动添加RO，取值："true" | "false"
+	// <p>是否自动添加RO，取值：&quot;true&quot; | &quot;false&quot;</p>
 	AutoAddRo *bool `json:"AutoAddRo,omitnil,omitempty" name:"AutoAddRo"`
 
-	// 是否是只读，取值："true" | "false"
+	// <p>是否是只读，取值：&quot;true&quot; | &quot;false&quot;</p>
 	ReadOnly *bool `json:"ReadOnly,omitnil,omitempty" name:"ReadOnly"`
 
-	// 代理组地址 ID。可通过 [DescribeCdbProxyInfo](https://cloud.tencent.com/document/api/236/90585) 接口获取。
+	// <p>代理组地址 ID。可通过 <a href="https://cloud.tencent.com/document/api/236/90585">DescribeCdbProxyInfo</a> 接口获取。</p>
 	ProxyAddressId *string `json:"ProxyAddressId,omitnil,omitempty" name:"ProxyAddressId"`
 
-	// 是否开启事务分离，取值："true" | "false"，默认值 false。
+	// <p>是否开启事务分离，取值：&quot;true&quot; | &quot;false&quot;，默认值 false。</p>
 	TransSplit *bool `json:"TransSplit,omitnil,omitempty" name:"TransSplit"`
 
-	// 是否开启连接池。默认关闭。
-	// 注意：如需使用数据库代理连接池能力，MySQL 8.0 主实例的内核小版本要大于等于 MySQL 8.0 20230630。
+	// <p>是否开启连接池。默认关闭。<br>注意：如需使用数据库代理连接池能力，MySQL 8.0 主实例的内核小版本要大于等于 MySQL 8.0 20230630。</p>
 	ConnectionPool *bool `json:"ConnectionPool,omitnil,omitempty" name:"ConnectionPool"`
 
-	// 读写权重分配。如果 WeightMode 传的是 system ，则传入的权重不生效，由系统分配默认权重。
+	// <p>读写权重分配。如果 WeightMode 传的是 system ，则传入的权重不生效，由系统分配默认权重。</p>
 	ProxyAllocation []*ProxyAllocation `json:"ProxyAllocation,omitnil,omitempty" name:"ProxyAllocation"`
 
-	// 是否开启自适应负载均衡。默认关闭。
+	// <p>是否开启自适应负载均衡。默认关闭。</p>
 	AutoLoadBalance *bool `json:"AutoLoadBalance,omitnil,omitempty" name:"AutoLoadBalance"`
 
-	// 访问模式：nearby - 就近访问，balance - 均衡分配，默认就近访问。
+	// <p>访问模式：nearby - 就近访问，balance - 均衡分配，默认就近访问。</p>
 	AccessMode *string `json:"AccessMode,omitnil,omitempty" name:"AccessMode"`
 
-	// 是否将libra节点当作普通RO节点
-	ApNodeAsRoNode *string `json:"ApNodeAsRoNode,omitnil,omitempty" name:"ApNodeAsRoNode"`
+	// <p>是否将libra节点当作普通RO节点</p>
+	ApNodeAsRoNode *bool `json:"ApNodeAsRoNode,omitnil,omitempty" name:"ApNodeAsRoNode"`
 
-	// libra节点故障，是否转发给其他节点
-	ApQueryToOtherNode *string `json:"ApQueryToOtherNode,omitnil,omitempty" name:"ApQueryToOtherNode"`
+	// <p>libra节点故障，是否转发给其他节点</p>
+	ApQueryToOtherNode *bool `json:"ApQueryToOtherNode,omitnil,omitempty" name:"ApQueryToOtherNode"`
 }
 
 func (r *AdjustCdbProxyAddressRequest) ToJsonString() string {
@@ -337,7 +328,7 @@ func (r *AdjustCdbProxyAddressRequest) FromJsonString(s string) error {
 
 // Predefined struct for user
 type AdjustCdbProxyAddressResponseParams struct {
-	// 异步任务ID
+	// <p>异步任务ID</p>
 	AsyncRequestId *string `json:"AsyncRequestId,omitnil,omitempty" name:"AsyncRequestId"`
 
 	// 唯一请求 ID，由服务端生成，每次请求都会返回（若请求因其他原因未能抵达服务端，则该次请求不会获得 RequestId）。定位问题时需要提供该次请求的 RequestId。
@@ -764,6 +755,10 @@ type AuditLog struct {
 
 	//  事务ID
 	TrxId *int64 `json:"TrxId,omitnil,omitempty" name:"TrxId"`
+
+	// 端口
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	ClientPort *int64 `json:"ClientPort,omitnil,omitempty" name:"ClientPort"`
 }
 
 type AuditLogAggregationResult struct {
@@ -985,7 +980,7 @@ type BackupConfig struct {
 	// 第二个从库复制方式，可能的返回值：async-异步，semisync-半同步
 	ReplicationMode *string `json:"ReplicationMode,omitnil,omitempty" name:"ReplicationMode"`
 
-	// 第二个从库可用区的正式名称，如ap-shanghai-1
+	// 第二个从库可用区的正式名称，如 ap-shanghai-2
 	Zone *string `json:"Zone,omitnil,omitempty" name:"Zone"`
 
 	// 第二个从库内网IP地址
@@ -996,70 +991,73 @@ type BackupConfig struct {
 }
 
 type BackupInfo struct {
-	// 备份文件名
+	// <p>备份文件名</p>
 	Name *string `json:"Name,omitnil,omitempty" name:"Name"`
 
-	// 备份文件大小，单位：Byte
+	// <p>备份文件大小，单位：Byte</p>
 	Size *int64 `json:"Size,omitnil,omitempty" name:"Size"`
 
-	// 备份快照时间，时间格式：2016-03-17 02:10:37
+	// <p>备份快照时间，时间格式：2016-03-17 02:10:37</p>
 	Date *string `json:"Date,omitnil,omitempty" name:"Date"`
 
-	// 下载地址
+	// <p>下载地址</p>
 	IntranetUrl *string `json:"IntranetUrl,omitnil,omitempty" name:"IntranetUrl"`
 
-	// 下载地址
+	// <p>下载地址</p>
 	InternetUrl *string `json:"InternetUrl,omitnil,omitempty" name:"InternetUrl"`
 
-	// 日志具体类型。可能的值有 "logical": 逻辑冷备， "physical": 物理冷备。
+	// <p>日志具体类型。可能的值有 &quot;logical&quot;: 逻辑冷备， &quot;physical&quot;: 物理冷备。</p>
 	Type *string `json:"Type,omitnil,omitempty" name:"Type"`
 
-	// 备份子任务的ID，删除备份文件时使用
+	// <p>备份子任务的ID，删除备份文件时使用</p>
 	BackupId *int64 `json:"BackupId,omitnil,omitempty" name:"BackupId"`
 
-	// 备份任务状态。可能的值有 "SUCCESS": 备份成功， "FAILED": 备份失败， "RUNNING": 备份进行中。
+	// <p>备份任务状态。可能的值有 &quot;SUCCESS&quot;: 备份成功， &quot;FAILED&quot;: 备份失败， &quot;RUNNING&quot;: 备份进行中。</p>
 	Status *string `json:"Status,omitnil,omitempty" name:"Status"`
 
-	// 备份任务的完成时间
+	// <p>备份任务的完成时间</p>
 	FinishTime *string `json:"FinishTime,omitnil,omitempty" name:"FinishTime"`
 
-	// （该值将废弃，不建议使用）备份的创建者，可能的值：SYSTEM - 系统创建，Uin - 发起者Uin值。
+	// <p>（该值将废弃，不建议使用）备份的创建者，可能的值：SYSTEM - 系统创建，Uin - 发起者Uin值。</p>
 	Creator *string `json:"Creator,omitnil,omitempty" name:"Creator"`
 
-	// 备份任务的开始时间
+	// <p>备份任务的开始时间</p>
 	StartTime *string `json:"StartTime,omitnil,omitempty" name:"StartTime"`
 
-	// 备份方法。可能的值有 "full": 全量备份， "partial": 部分备份。
+	// <p>备份方法。可能的值有 &quot;full&quot;: 全量备份， &quot;partial&quot;: 部分备份。</p>
 	Method *string `json:"Method,omitnil,omitempty" name:"Method"`
 
-	// 备份方式。可能的值有 "manual": 手动备份， "automatic": 自动备份。
+	// <p>备份方式。可能的值有 &quot;manual&quot;: 手动备份， &quot;automatic&quot;: 自动备份。</p>
 	Way *string `json:"Way,omitnil,omitempty" name:"Way"`
 
-	// 手动备份别名
+	// <p>手动备份别名</p>
 	ManualBackupName *string `json:"ManualBackupName,omitnil,omitempty" name:"ManualBackupName"`
 
-	// 备份保留类型，save_mode_regular - 常规保存备份，save_mode_period - 定期保存备份
+	// <p>备份保留类型，save_mode_regular - 常规保存备份，save_mode_period - 定期保存备份</p>
 	SaveMode *string `json:"SaveMode,omitnil,omitempty" name:"SaveMode"`
 
-	// 本地备份所在地域
+	// <p>本地备份所在地域</p>
 	Region *string `json:"Region,omitnil,omitempty" name:"Region"`
 
-	// 异地备份详细信息
+	// <p>异地备份详细信息</p>
 	RemoteInfo []*RemoteBackupInfo `json:"RemoteInfo,omitnil,omitempty" name:"RemoteInfo"`
 
-	// 存储方式，0-常规存储，1-归档存储，2-标准存储，默认为0
+	// <p>存储方式，0-常规存储，1-归档存储，2-标准存储，默认为0</p>
 	CosStorageType *int64 `json:"CosStorageType,omitnil,omitempty" name:"CosStorageType"`
 
-	// 实例 ID，格式如：cdb-c1nl9rpv。与云数据库控制台页面中显示的实例 ID 相同。
+	// <p>实例 ID，格式如：cdb-c1nl9rpv。与云数据库控制台页面中显示的实例 ID 相同。</p>
 	InstanceId *string `json:"InstanceId,omitnil,omitempty" name:"InstanceId"`
 
-	// 备份文件是否加密， on-加密， off-未加密
+	// <p>备份完成进度</p>
+	Progress *int64 `json:"Progress,omitnil,omitempty" name:"Progress"`
+
+	// <p>备份文件是否加密， on-加密， off-未加密</p>
 	EncryptionFlag *string `json:"EncryptionFlag,omitnil,omitempty" name:"EncryptionFlag"`
 
-	// 备份GTID点位
+	// <p>备份GTID点位</p>
 	ExecutedGTIDSet *string `json:"ExecutedGTIDSet,omitnil,omitempty" name:"ExecutedGTIDSet"`
 
-	// 备份文件MD5值
+	// <p>备份文件MD5值</p>
 	MD5 *string `json:"MD5,omitnil,omitempty" name:"MD5"`
 }
 
@@ -1166,48 +1164,49 @@ func (r *BalanceRoGroupLoadResponse) FromJsonString(s string) error {
 }
 
 type BinlogInfo struct {
-	// binlog 日志备份文件名
+	// <p>binlog 日志备份文件名</p>
 	Name *string `json:"Name,omitnil,omitempty" name:"Name"`
 
-	// 备份文件大小，单位：Byte
+	// <p>备份文件大小，单位：Byte</p>
 	Size *int64 `json:"Size,omitnil,omitempty" name:"Size"`
 
-	// 文件存储时间，时间格式：2016-03-17 02:10:37
+	// <p>文件存储时间，时间格式：2016-03-17 02:10:37</p>
 	Date *string `json:"Date,omitnil,omitempty" name:"Date"`
 
-	// 下载地址
-	// 说明：此下载地址和参数 InternetUrl 的下载地址一样。
+	// <p>下载地址<br>说明：此下载地址和参数 InternetUrl 的下载地址一样。</p>
 	IntranetUrl *string `json:"IntranetUrl,omitnil,omitempty" name:"IntranetUrl"`
 
-	// 下载地址
-	// 说明：此下载地址和参数 IntranetUrl 的下载地址一样。
+	// <p>下载地址<br>说明：此下载地址和参数 IntranetUrl 的下载地址一样。</p>
 	InternetUrl *string `json:"InternetUrl,omitnil,omitempty" name:"InternetUrl"`
 
-	// 日志具体类型，可能的值有：binlog - 二进制日志
+	// <p>日志具体类型，可能的值有：binlog - 二进制日志</p>
 	Type *string `json:"Type,omitnil,omitempty" name:"Type"`
 
-	// binlog 文件起始时间
+	// <p>binlog 文件起始时间</p>
 	BinlogStartTime *string `json:"BinlogStartTime,omitnil,omitempty" name:"BinlogStartTime"`
 
-	// binlog 文件截止时间
+	// <p>binlog 文件截止时间</p>
 	BinlogFinishTime *string `json:"BinlogFinishTime,omitnil,omitempty" name:"BinlogFinishTime"`
 
-	// 本地binlog文件所在地域
+	// <p>本地binlog文件所在地域</p>
 	Region *string `json:"Region,omitnil,omitempty" name:"Region"`
 
-	// 备份任务状态。可能的值有 "SUCCESS": 备份成功， "FAILED": 备份失败， "RUNNING": 备份进行中。
+	// <p>备份任务状态。可能的值有 &quot;SUCCESS&quot;: 备份成功， &quot;FAILED&quot;: 备份失败， &quot;RUNNING&quot;: 备份进行中。</p>
 	Status *string `json:"Status,omitnil,omitempty" name:"Status"`
 
-	// binlog异地备份详细信息
+	// <p>binlog异地备份详细信息</p>
 	RemoteInfo []*RemoteBackupInfo `json:"RemoteInfo,omitnil,omitempty" name:"RemoteInfo"`
 
-	// 存储方式，0-常规存储，1-归档存储，2-标准存储，默认为0
+	// <p>存储方式，0-常规存储，1-归档存储，2-标准存储，默认为0</p>
 	CosStorageType *int64 `json:"CosStorageType,omitnil,omitempty" name:"CosStorageType"`
 
-	// 实例 ID，格式如：cdb-c1nl9rpv。与云数据库控制台页面中显示的实例 ID 相同。
+	// <p>实例 ID，格式如：cdb-c1nl9rpv。与云数据库控制台页面中显示的实例 ID 相同。</p>
 	//
 	// Deprecated: InstanceId is deprecated.
 	InstanceId *string `json:"InstanceId,omitnil,omitempty" name:"InstanceId"`
+
+	// <p>备份完成进度</p>
+	Progress *int64 `json:"Progress,omitnil,omitempty" name:"Progress"`
 }
 
 type Bucket struct {
@@ -1271,7 +1270,13 @@ type CdbSellConfig struct {
 }
 
 type CdbSellType struct {
-	// 售卖实例名称。Z3是高可用类型对应规格中的DeviceType包含UNIVERSAL,EXCLUSIVE；CVM是基础版类型对应规格中的DeviceType是BASIC；TKE是基础型v2类型对应规格中的DeviceType是BASIC_V2。
+	// 售卖实例名称。
+	// Z3：是高可用类型，对应规格中的 DeviceType，包含 UNIVERSAL，EXCLUSIVE。
+	// CVM：是基础版类型，对应规格中的 DeviceType 是 BASIC（已下线）。
+	// TKE：是基础版v2类型，对应规格中的 DeviceType 是 BASIC_V2。
+	// CLOUD_NATIVE_CLUSTER：表示云盘版标准型。
+	// CLOUD_NATIVE_CLUSTER_EXCLUSIVE：表示云盘版加强型。
+	// ECONOMICAL：表示经济型。
 	TypeName *string `json:"TypeName,omitnil,omitempty" name:"TypeName"`
 
 	// 引擎版本号
@@ -1356,10 +1361,10 @@ type CdbZoneSellConf struct {
 	// 可支持的售卖数据库引擎类型
 	EngineType []*string `json:"EngineType,omitnil,omitempty" name:"EngineType"`
 
-	// 集群版实例在当前可用区的售卖状态。可能的返回值为：1-上线；3-停售；4-不展示
+	// 云盘版实例在当前可用区的售卖状态。可能的返回值为：1-上线；3-停售；4-不展示
 	CloudNativeClusterStatus *int64 `json:"CloudNativeClusterStatus,omitnil,omitempty" name:"CloudNativeClusterStatus"`
 
-	// 集群版或者单节点基础型支持的磁盘类型。
+	// 云盘版或者单节点基础型支持的磁盘类型。
 	DiskTypeConf []*DiskTypeConfigItem `json:"DiskTypeConf,omitnil,omitempty" name:"DiskTypeConf"`
 }
 
@@ -1912,46 +1917,38 @@ type CommonTimeWindow struct {
 
 // Predefined struct for user
 type CreateAccountsRequestParams struct {
-	// 实例 ID，格式如：cdb-c1nl9rpv，与云数据库控制台页面中显示的实例 ID 相同。
+	// <p>实例 ID，格式如：cdb-c1nl9rpv，与云数据库控制台页面中显示的实例 ID 相同。</p>
 	InstanceId *string `json:"InstanceId,omitnil,omitempty" name:"InstanceId"`
 
-	// 云数据库账号。
+	// <p>云数据库账号。</p>
 	Accounts []*Account `json:"Accounts,omitnil,omitempty" name:"Accounts"`
 
-	// 新账户的密码。
-	// 说明：
-	// 1. 在8 ～ 64位字符数以内（推荐12位以上）。
-	// 2. 至少包含其中两项：小写字母 a ~ z 或 大写字母 A ～ Z。数字0 ～ 9。_+-,&=!@#$%^*().|。
-	// 3. 不能包含非法字符。
+	// <p>新账户的密码。<br>说明：</p><ol><li>在8 ～ 64位字符数以内（推荐12位以上）。</li><li>至少包含其中两项：小写字母 a ~ z 或 大写字母 A ～ Z。数字0 ～ 9。_+-,&amp;=!@#$%^*().|。</li><li>不能包含非法字符。</li></ol>
 	Password *string `json:"Password,omitnil,omitempty" name:"Password"`
 
-	// 备注信息。最多支持输入255个字符。
+	// <p>备注信息。最多支持输入255个字符。</p>
 	Description *string `json:"Description,omitnil,omitempty" name:"Description"`
 
-	// 新账户最大可用连接数，默认值为10240，最大可设置值为10240。
+	// <p>新账户最大可用连接数，默认值为10240，最大可设置值为10240。</p>
 	MaxUserConnections *int64 `json:"MaxUserConnections,omitnil,omitempty" name:"MaxUserConnections"`
 }
 
 type CreateAccountsRequest struct {
 	*tchttp.BaseRequest
 	
-	// 实例 ID，格式如：cdb-c1nl9rpv，与云数据库控制台页面中显示的实例 ID 相同。
+	// <p>实例 ID，格式如：cdb-c1nl9rpv，与云数据库控制台页面中显示的实例 ID 相同。</p>
 	InstanceId *string `json:"InstanceId,omitnil,omitempty" name:"InstanceId"`
 
-	// 云数据库账号。
+	// <p>云数据库账号。</p>
 	Accounts []*Account `json:"Accounts,omitnil,omitempty" name:"Accounts"`
 
-	// 新账户的密码。
-	// 说明：
-	// 1. 在8 ～ 64位字符数以内（推荐12位以上）。
-	// 2. 至少包含其中两项：小写字母 a ~ z 或 大写字母 A ～ Z。数字0 ～ 9。_+-,&=!@#$%^*().|。
-	// 3. 不能包含非法字符。
+	// <p>新账户的密码。<br>说明：</p><ol><li>在8 ～ 64位字符数以内（推荐12位以上）。</li><li>至少包含其中两项：小写字母 a ~ z 或 大写字母 A ～ Z。数字0 ～ 9。_+-,&amp;=!@#$%^*().|。</li><li>不能包含非法字符。</li></ol>
 	Password *string `json:"Password,omitnil,omitempty" name:"Password"`
 
-	// 备注信息。最多支持输入255个字符。
+	// <p>备注信息。最多支持输入255个字符。</p>
 	Description *string `json:"Description,omitnil,omitempty" name:"Description"`
 
-	// 新账户最大可用连接数，默认值为10240，最大可设置值为10240。
+	// <p>新账户最大可用连接数，默认值为10240，最大可设置值为10240。</p>
 	MaxUserConnections *int64 `json:"MaxUserConnections,omitnil,omitempty" name:"MaxUserConnections"`
 }
 
@@ -1980,7 +1977,7 @@ func (r *CreateAccountsRequest) FromJsonString(s string) error {
 
 // Predefined struct for user
 type CreateAccountsResponseParams struct {
-	// 异步任务的请求 ID，可使用此 ID 查询异步任务的执行结果。
+	// <p>异步任务的请求 ID，可使用此 ID 查询异步任务的执行结果。</p>
 	AsyncRequestId *string `json:"AsyncRequestId,omitnil,omitempty" name:"AsyncRequestId"`
 
 	// 唯一请求 ID，由服务端生成，每次请求都会返回（若请求因其他原因未能抵达服务端，则该次请求不会获得 RequestId）。定位问题时需要提供该次请求的 RequestId。
@@ -2455,132 +2452,128 @@ func (r *CreateBackupResponse) FromJsonString(s string) error {
 
 // Predefined struct for user
 type CreateCdbProxyAddressRequestParams struct {
-	// 代理组 ID。可通过 [DescribeCdbProxyInfo](https://cloud.tencent.com/document/api/236/90585) 接口获取。
+	// <p>代理组 ID。可通过 <a href="https://cloud.tencent.com/document/api/236/90585">DescribeCdbProxyInfo</a> 接口获取。</p>
 	ProxyGroupId *string `json:"ProxyGroupId,omitnil,omitempty" name:"ProxyGroupId"`
 
-	// 权重分配模式，
-	// 系统自动分配："system"， 自定义："custom"
+	// <p>权重分配模式，<br>系统自动分配：&quot;system&quot;， 自定义：&quot;custom&quot;</p>
 	WeightMode *string `json:"WeightMode,omitnil,omitempty" name:"WeightMode"`
 
-	// 是否开启延迟剔除，取值："true" | "false"
+	// <p>是否开启延迟剔除，取值：&quot;true&quot; | &quot;false&quot;</p>
 	IsKickOut *bool `json:"IsKickOut,omitnil,omitempty" name:"IsKickOut"`
 
-	// 最小保留数量，最小取值：0
+	// <p>最小保留数量，最小取值：0</p>
 	MinCount *uint64 `json:"MinCount,omitnil,omitempty" name:"MinCount"`
 
-	// 延迟剔除阈值，最小取值：1，范围：1 - 10000，整数。
+	// <p>延迟剔除阈值，最小取值：1，范围：1 - 10000，整数。</p>
 	MaxDelay *uint64 `json:"MaxDelay,omitnil,omitempty" name:"MaxDelay"`
 
-	// 是否开启故障转移，取值："true" | "false"
+	// <p>是否开启故障转移，取值：&quot;true&quot; | &quot;false&quot;</p>
 	FailOver *bool `json:"FailOver,omitnil,omitempty" name:"FailOver"`
 
-	// 是否自动添加RO，取值："true" | "false"
+	// <p>是否自动添加RO，取值：&quot;true&quot; | &quot;false&quot;</p>
 	AutoAddRo *bool `json:"AutoAddRo,omitnil,omitempty" name:"AutoAddRo"`
 
-	// 是否是只读，取值："true" | "false"
+	// <p>是否是只读，取值：&quot;true&quot; | &quot;false&quot;</p>
 	ReadOnly *bool `json:"ReadOnly,omitnil,omitempty" name:"ReadOnly"`
 
-	// 是否开启事务分离，取值："true" | "false"
+	// <p>是否开启事务分离，取值：&quot;true&quot; | &quot;false&quot;</p>
 	TransSplit *bool `json:"TransSplit,omitnil,omitempty" name:"TransSplit"`
 
-	// 读写权重分配
+	// <p>读写权重分配</p>
 	ProxyAllocation []*ProxyAllocation `json:"ProxyAllocation,omitnil,omitempty" name:"ProxyAllocation"`
 
-	// 私有网络 ID。可通过 [DescribeDBInstances](https://cloud.tencent.com/document/product/236/15872) 接口获取。
+	// <p>私有网络 ID。可通过 <a href="https://cloud.tencent.com/document/product/236/15872">DescribeDBInstances</a> 接口获取。</p>
 	UniqVpcId *string `json:"UniqVpcId,omitnil,omitempty" name:"UniqVpcId"`
 
-	// 私有子网 ID。可通过 [DescribeDBInstances](https://cloud.tencent.com/document/product/236/15872) 接口获取。
+	// <p>私有子网 ID。可通过 <a href="https://cloud.tencent.com/document/product/236/15872">DescribeDBInstances</a> 接口获取。</p>
 	UniqSubnetId *string `json:"UniqSubnetId,omitnil,omitempty" name:"UniqSubnetId"`
 
-	// 是否开启连接池。默认关闭。
-	// 注意：如需使用数据库代理连接池能力，MySQL 8.0 主实例的内核小版本要大于等于 MySQL 8.0 20230630。
+	// <p>是否开启连接池。默认关闭。<br>注意：如需使用数据库代理连接池能力，MySQL 8.0 主实例的内核小版本要大于等于 MySQL 8.0 20230630。</p>
 	ConnectionPool *bool `json:"ConnectionPool,omitnil,omitempty" name:"ConnectionPool"`
 
-	// 描述
+	// <p>描述</p>
 	Desc *string `json:"Desc,omitnil,omitempty" name:"Desc"`
 
-	// IP 地址。不填则默认为所选 VPC 下支持的随机一个 IP。
+	// <p>IP 地址。不填则默认为所选 VPC 下支持的随机一个 IP。</p>
 	Vip *string `json:"Vip,omitnil,omitempty" name:"Vip"`
 
-	// 端口。默认值3306。
+	// <p>端口。默认值3306。</p>
 	VPort *uint64 `json:"VPort,omitnil,omitempty" name:"VPort"`
 
-	// 安全组
+	// <p>安全组</p>
 	SecurityGroup []*string `json:"SecurityGroup,omitnil,omitempty" name:"SecurityGroup"`
 
-	// 连接池类型。可选值 transaction（事务级别连接池），connection（会话级别连接池），ConnectionPool 为 true 时生效。默认值：connection。
+	// <p>连接池类型。可选值 transaction（事务级别连接池），connection（会话级别连接池），ConnectionPool 为 true 时生效。默认值：connection。</p>
 	ConnectionPoolType *string `json:"ConnectionPoolType,omitnil,omitempty" name:"ConnectionPoolType"`
 
-	// 是否开启自适应负载均衡。默认关闭。
+	// <p>是否开启自适应负载均衡。默认关闭。</p>
 	AutoLoadBalance *bool `json:"AutoLoadBalance,omitnil,omitempty" name:"AutoLoadBalance"`
 
-	// 接入模式。nearBy - 就近访问，balance - 均衡分配，默认值：nearBy。
+	// <p>接入模式。nearBy - 就近访问，balance - 均衡分配，默认值：nearBy。</p>
 	AccessMode *string `json:"AccessMode,omitnil,omitempty" name:"AccessMode"`
 }
 
 type CreateCdbProxyAddressRequest struct {
 	*tchttp.BaseRequest
 	
-	// 代理组 ID。可通过 [DescribeCdbProxyInfo](https://cloud.tencent.com/document/api/236/90585) 接口获取。
+	// <p>代理组 ID。可通过 <a href="https://cloud.tencent.com/document/api/236/90585">DescribeCdbProxyInfo</a> 接口获取。</p>
 	ProxyGroupId *string `json:"ProxyGroupId,omitnil,omitempty" name:"ProxyGroupId"`
 
-	// 权重分配模式，
-	// 系统自动分配："system"， 自定义："custom"
+	// <p>权重分配模式，<br>系统自动分配：&quot;system&quot;， 自定义：&quot;custom&quot;</p>
 	WeightMode *string `json:"WeightMode,omitnil,omitempty" name:"WeightMode"`
 
-	// 是否开启延迟剔除，取值："true" | "false"
+	// <p>是否开启延迟剔除，取值：&quot;true&quot; | &quot;false&quot;</p>
 	IsKickOut *bool `json:"IsKickOut,omitnil,omitempty" name:"IsKickOut"`
 
-	// 最小保留数量，最小取值：0
+	// <p>最小保留数量，最小取值：0</p>
 	MinCount *uint64 `json:"MinCount,omitnil,omitempty" name:"MinCount"`
 
-	// 延迟剔除阈值，最小取值：1，范围：1 - 10000，整数。
+	// <p>延迟剔除阈值，最小取值：1，范围：1 - 10000，整数。</p>
 	MaxDelay *uint64 `json:"MaxDelay,omitnil,omitempty" name:"MaxDelay"`
 
-	// 是否开启故障转移，取值："true" | "false"
+	// <p>是否开启故障转移，取值：&quot;true&quot; | &quot;false&quot;</p>
 	FailOver *bool `json:"FailOver,omitnil,omitempty" name:"FailOver"`
 
-	// 是否自动添加RO，取值："true" | "false"
+	// <p>是否自动添加RO，取值：&quot;true&quot; | &quot;false&quot;</p>
 	AutoAddRo *bool `json:"AutoAddRo,omitnil,omitempty" name:"AutoAddRo"`
 
-	// 是否是只读，取值："true" | "false"
+	// <p>是否是只读，取值：&quot;true&quot; | &quot;false&quot;</p>
 	ReadOnly *bool `json:"ReadOnly,omitnil,omitempty" name:"ReadOnly"`
 
-	// 是否开启事务分离，取值："true" | "false"
+	// <p>是否开启事务分离，取值：&quot;true&quot; | &quot;false&quot;</p>
 	TransSplit *bool `json:"TransSplit,omitnil,omitempty" name:"TransSplit"`
 
-	// 读写权重分配
+	// <p>读写权重分配</p>
 	ProxyAllocation []*ProxyAllocation `json:"ProxyAllocation,omitnil,omitempty" name:"ProxyAllocation"`
 
-	// 私有网络 ID。可通过 [DescribeDBInstances](https://cloud.tencent.com/document/product/236/15872) 接口获取。
+	// <p>私有网络 ID。可通过 <a href="https://cloud.tencent.com/document/product/236/15872">DescribeDBInstances</a> 接口获取。</p>
 	UniqVpcId *string `json:"UniqVpcId,omitnil,omitempty" name:"UniqVpcId"`
 
-	// 私有子网 ID。可通过 [DescribeDBInstances](https://cloud.tencent.com/document/product/236/15872) 接口获取。
+	// <p>私有子网 ID。可通过 <a href="https://cloud.tencent.com/document/product/236/15872">DescribeDBInstances</a> 接口获取。</p>
 	UniqSubnetId *string `json:"UniqSubnetId,omitnil,omitempty" name:"UniqSubnetId"`
 
-	// 是否开启连接池。默认关闭。
-	// 注意：如需使用数据库代理连接池能力，MySQL 8.0 主实例的内核小版本要大于等于 MySQL 8.0 20230630。
+	// <p>是否开启连接池。默认关闭。<br>注意：如需使用数据库代理连接池能力，MySQL 8.0 主实例的内核小版本要大于等于 MySQL 8.0 20230630。</p>
 	ConnectionPool *bool `json:"ConnectionPool,omitnil,omitempty" name:"ConnectionPool"`
 
-	// 描述
+	// <p>描述</p>
 	Desc *string `json:"Desc,omitnil,omitempty" name:"Desc"`
 
-	// IP 地址。不填则默认为所选 VPC 下支持的随机一个 IP。
+	// <p>IP 地址。不填则默认为所选 VPC 下支持的随机一个 IP。</p>
 	Vip *string `json:"Vip,omitnil,omitempty" name:"Vip"`
 
-	// 端口。默认值3306。
+	// <p>端口。默认值3306。</p>
 	VPort *uint64 `json:"VPort,omitnil,omitempty" name:"VPort"`
 
-	// 安全组
+	// <p>安全组</p>
 	SecurityGroup []*string `json:"SecurityGroup,omitnil,omitempty" name:"SecurityGroup"`
 
-	// 连接池类型。可选值 transaction（事务级别连接池），connection（会话级别连接池），ConnectionPool 为 true 时生效。默认值：connection。
+	// <p>连接池类型。可选值 transaction（事务级别连接池），connection（会话级别连接池），ConnectionPool 为 true 时生效。默认值：connection。</p>
 	ConnectionPoolType *string `json:"ConnectionPoolType,omitnil,omitempty" name:"ConnectionPoolType"`
 
-	// 是否开启自适应负载均衡。默认关闭。
+	// <p>是否开启自适应负载均衡。默认关闭。</p>
 	AutoLoadBalance *bool `json:"AutoLoadBalance,omitnil,omitempty" name:"AutoLoadBalance"`
 
-	// 接入模式。nearBy - 就近访问，balance - 均衡分配，默认值：nearBy。
+	// <p>接入模式。nearBy - 就近访问，balance - 均衡分配，默认值：nearBy。</p>
 	AccessMode *string `json:"AccessMode,omitnil,omitempty" name:"AccessMode"`
 }
 
@@ -2624,7 +2617,7 @@ func (r *CreateCdbProxyAddressRequest) FromJsonString(s string) error {
 
 // Predefined struct for user
 type CreateCdbProxyAddressResponseParams struct {
-	// 异步任务ID
+	// <p>异步任务ID</p>
 	AsyncRequestId *string `json:"AsyncRequestId,omitnil,omitempty" name:"AsyncRequestId"`
 
 	// 唯一请求 ID，由服务端生成，每次请求都会返回（若请求因其他原因未能抵达服务端，则该次请求不会获得 RequestId）。定位问题时需要提供该次请求的 RequestId。
@@ -2775,169 +2768,185 @@ func (r *CreateCdbProxyResponse) FromJsonString(s string) error {
 
 // Predefined struct for user
 type CreateCloneInstanceRequestParams struct {
-	// 克隆源实例 ID。可通过 [DescribeDBInstances](https://cloud.tencent.com/document/api/236/15872) 接口获取。
+	// <p>克隆源实例 ID。可通过 <a href="https://cloud.tencent.com/document/api/236/15872">DescribeDBInstances</a> 接口获取。</p>
 	InstanceId *string `json:"InstanceId,omitnil,omitempty" name:"InstanceId"`
 
-	// 如果需要克隆实例回档到指定时间，则指定该值。时间格式为：yyyy-mm-dd hh:mm:ss。
-	// 说明：此参数和 SpecifiedBackupId 参数需要2选1进行设置。
+	// <p>如果需要克隆实例回档到指定时间，则指定该值。时间格式为：yyyy-mm-dd hh:mm:ss。<br>说明：此参数和 SpecifiedBackupId 参数需要2选1进行设置。</p>
 	SpecifiedRollbackTime *string `json:"SpecifiedRollbackTime,omitnil,omitempty" name:"SpecifiedRollbackTime"`
 
-	// 如果需要克隆实例回档到指定备份集，则指定该值为备份文件的 Id。请使用 [查询数据备份文件列表](/document/api/236/15842)。
-	// 说明：如果是克隆双节点、三节点实例，备份文件为物理备份，如果是克隆单节点、集群版实例，备份文件为快照备份。
+	// <p>如果需要克隆实例回档到指定备份集，则指定该值为备份文件的 Id。请使用 <a href="/document/api/236/15842">查询数据备份文件列表</a>。</p><p>如果是克隆双节点、三节点、四节点实例，备份文件为物理备份，如果是克隆单节点、云盘版实例，备份文件为快照备份。</p>
 	SpecifiedBackupId *int64 `json:"SpecifiedBackupId,omitnil,omitempty" name:"SpecifiedBackupId"`
 
-	// 私有网络 ID，请使用 [查询私有网络列表](/document/api/215/15778)。
+	// <p>私有网络 ID，请使用 <a href="/document/api/215/15778">查询私有网络列表</a>。</p>
 	UniqVpcId *string `json:"UniqVpcId,omitnil,omitempty" name:"UniqVpcId"`
 
-	// 私有网络下的子网 ID，如果设置了 UniqVpcId，则 UniqSubnetId 必填，请使用 [查询子网列表](/document/api/215/15784)。
+	// <p>私有网络下的子网 ID，如果设置了 UniqVpcId，则 UniqSubnetId 必填，请使用 <a href="/document/api/215/15784">查询子网列表</a>。</p>
 	UniqSubnetId *string `json:"UniqSubnetId,omitnil,omitempty" name:"UniqSubnetId"`
 
-	// 实例内存大小，单位：MB，需要不低于克隆源实例，默认和源实例相同。
+	// <p>实例内存大小，单位：MB，需要不低于克隆源实例，默认和源实例相同。</p>
 	Memory *int64 `json:"Memory,omitnil,omitempty" name:"Memory"`
 
-	// 实例硬盘大小，单位：GB，需要不低于克隆源实例，默认和源实例相同。
+	// <p>实例硬盘大小，单位：GB，需要不低于克隆源实例，默认和源实例相同。</p>
 	Volume *int64 `json:"Volume,omitnil,omitempty" name:"Volume"`
 
-	// 新产生的克隆实例名称。支持输入最大60个字符。
+	// <p>新产生的克隆实例名称。支持输入最大60个字符。</p>
 	InstanceName *string `json:"InstanceName,omitnil,omitempty" name:"InstanceName"`
 
-	// 安全组参数，可使用 [查询项目安全组信息](https://cloud.tencent.com/document/api/236/15850) 接口查询某个项目的安全组详情。
+	// <p>安全组参数，可使用 <a href="https://cloud.tencent.com/document/api/236/15850">查询项目安全组信息</a> 接口查询某个项目的安全组详情。</p>
 	SecurityGroup []*string `json:"SecurityGroup,omitnil,omitempty" name:"SecurityGroup"`
 
-	// 实例标签信息。
+	// <p>实例标签信息。</p>
 	ResourceTags []*TagInfo `json:"ResourceTags,omitnil,omitempty" name:"ResourceTags"`
 
-	// 实例Cpu核数，需要不低于克隆源实例，默认和源实例相同。
+	// <p>实例Cpu核数，需要不低于克隆源实例，默认和源实例相同。</p>
 	Cpu *int64 `json:"Cpu,omitnil,omitempty" name:"Cpu"`
 
-	// 数据复制方式，默认为 0，支持值包括：0 - 表示异步复制，1 - 表示半同步复制，2 - 表示强同步复制。
+	// <p>数据复制方式，默认为 0，支持值包括：0 - 表示异步复制，1 - 表示半同步复制，2 - 表示强同步复制。</p>
 	ProtectMode *int64 `json:"ProtectMode,omitnil,omitempty" name:"ProtectMode"`
 
-	// 多可用区域，默认为 0，支持值包括：0 - 表示单可用区，1 - 表示多可用区。
+	// <p>多可用区域，默认为 0，支持值包括：0 - 表示单可用区，1 - 表示多可用区。</p>
 	DeployMode *int64 `json:"DeployMode,omitnil,omitempty" name:"DeployMode"`
 
-	// 新产生的克隆实例备库 1 的可用区信息，默认同源实例 Zone 的值。
+	// <p>新产生的克隆实例备库 1 的可用区信息，默认同源实例 Zone 的值。</p>
 	SlaveZone *string `json:"SlaveZone,omitnil,omitempty" name:"SlaveZone"`
 
-	// 备库 2 的可用区信息，默认为空，克隆强同步主实例时可指定该参数。
+	// <p>备库 2 的可用区信息，默认为空，克隆强同步主实例时可指定该参数。</p>
 	BackupZone *string `json:"BackupZone,omitnil,omitempty" name:"BackupZone"`
 
-	// 克隆实例类型。支持值包括："UNIVERSAL" - 通用型实例，"EXCLUSIVE" - 独享型实例，"CLOUD_NATIVE_CLUSTER" - 集群版标准型，"CLOUD_NATIVE_CLUSTER_EXCLUSIVE" - 集群版加强型。不指定则默认为通用型。
+	// <p>克隆实例类型。支持值包括：&quot;UNIVERSAL&quot; - 通用型实例，&quot;EXCLUSIVE&quot; - 独享型实例，&quot;CLOUD_NATIVE_CLUSTER&quot; - 云盘版标准型，&quot;CLOUD_NATIVE_CLUSTER_EXCLUSIVE&quot; - 云盘版加强型。不指定则默认为通用型。</p>
 	DeviceType *string `json:"DeviceType,omitnil,omitempty" name:"DeviceType"`
 
-	// 新克隆实例节点数。如果需要克隆出三节点实例， 请将该值设置为3 或指定 BackupZone 参数。如果需要克隆出两节点实例，请将该值设置为2。默认克隆出两节点实例。
+	// <p>新克隆实例节点数。</p><p>如果需要克隆出三节点实例，请将该值设置为3，或指定 BackupZone 参数；如果需要克隆出双节点实例，请将该值设置为2，默认克隆出双节点实例；如果需要克隆出四节点实例，请将该值设置为4，或指定 FourthZone 参数。</p>
 	InstanceNodes *int64 `json:"InstanceNodes,omitnil,omitempty" name:"InstanceNodes"`
 
-	// 置放群组 ID。
+	// <p>置放群组 ID。</p>
 	DeployGroupId *string `json:"DeployGroupId,omitnil,omitempty" name:"DeployGroupId"`
 
-	// 是否只预检此次请求。true：发送检查请求，不会创建实例。检查项包括是否填写了必需参数，请求格式，业务限制等。如果检查不通过，则返回对应错误码；如果检查通过，则返回RequestId.默认为false：发送正常请求，通过检查后直接创建实例。
+	// <p>是否只预检此次请求。true：发送检查请求，不会创建实例。检查项包括是否填写了必需参数，请求格式，业务限制等。如果检查不通过，则返回对应错误码；如果检查通过，则返回RequestId.默认为false：发送正常请求，通过检查后直接创建实例。</p>
 	DryRun *bool `json:"DryRun,omitnil,omitempty" name:"DryRun"`
 
-	// 金融围拢 ID 。
+	// <p>金融围拢 ID 。</p>
 	CageId *string `json:"CageId,omitnil,omitempty" name:"CageId"`
 
-	// 项目ID，默认项目ID0
+	// <p>项目ID，默认项目ID0</p>
 	ProjectId *uint64 `json:"ProjectId,omitnil,omitempty" name:"ProjectId"`
 
-	// 付费类型，PRE_PAID：包年包月，USED_PAID：按量计费。默认为按量计费
+	// <p>付费类型，PRE_PAID：包年包月，USED_PAID：按量计费。默认为按量计费</p>
 	PayType *string `json:"PayType,omitnil,omitempty" name:"PayType"`
 
-	// 实例时长，PayType为PRE_PAID时必传，单位：月，可选值包括 [1,2,3,4,5,6,7,8,9,10,11,12,24,36]。
+	// <p>实例时长，PayType为PRE_PAID时必传，单位：月，可选值包括 [1,2,3,4,5,6,7,8,9,10,11,12,24,36]。</p>
 	Period *int64 `json:"Period,omitnil,omitempty" name:"Period"`
 
-	// 集群版节点拓扑配置。
+	// <p>云盘版节点拓扑配置。</p>
 	ClusterTopology *ClusterTopology `json:"ClusterTopology,omitnil,omitempty" name:"ClusterTopology"`
 
-	// 原实例所在地域名，当传入异地备份时为必选项，例：ap-guangzhou
+	// <p>原实例所在地域名，当传入异地备份时为必选项，例：ap-guangzhou</p>
 	SrcRegion *string `json:"SrcRegion,omitnil,omitempty" name:"SrcRegion"`
 
-	// 异地数据备份id
+	// <p>异地数据备份id</p>
 	SpecifiedSubBackupId *int64 `json:"SpecifiedSubBackupId,omitnil,omitempty" name:"SpecifiedSubBackupId"`
+
+	// <p>新产生的克隆实例主库的可用区信息，默认同源实例 Zone 的值。</p>
+	//
+	// Deprecated: MasterZone is deprecated.
+	MasterZone *string `json:"MasterZone,omitnil,omitempty" name:"MasterZone"`
+
+	// <p>新产生的克隆实例主库的可用区信息，默认同源实例 Zone 的值。</p>
+	Zone *string `json:"Zone,omitnil,omitempty" name:"Zone"`
+
+	// <p>备库 3 的可用区信息，默认为空，购买四节点主实例时可指定该参数。</p>
+	FourthZone *string `json:"FourthZone,omitnil,omitempty" name:"FourthZone"`
 }
 
 type CreateCloneInstanceRequest struct {
 	*tchttp.BaseRequest
 	
-	// 克隆源实例 ID。可通过 [DescribeDBInstances](https://cloud.tencent.com/document/api/236/15872) 接口获取。
+	// <p>克隆源实例 ID。可通过 <a href="https://cloud.tencent.com/document/api/236/15872">DescribeDBInstances</a> 接口获取。</p>
 	InstanceId *string `json:"InstanceId,omitnil,omitempty" name:"InstanceId"`
 
-	// 如果需要克隆实例回档到指定时间，则指定该值。时间格式为：yyyy-mm-dd hh:mm:ss。
-	// 说明：此参数和 SpecifiedBackupId 参数需要2选1进行设置。
+	// <p>如果需要克隆实例回档到指定时间，则指定该值。时间格式为：yyyy-mm-dd hh:mm:ss。<br>说明：此参数和 SpecifiedBackupId 参数需要2选1进行设置。</p>
 	SpecifiedRollbackTime *string `json:"SpecifiedRollbackTime,omitnil,omitempty" name:"SpecifiedRollbackTime"`
 
-	// 如果需要克隆实例回档到指定备份集，则指定该值为备份文件的 Id。请使用 [查询数据备份文件列表](/document/api/236/15842)。
-	// 说明：如果是克隆双节点、三节点实例，备份文件为物理备份，如果是克隆单节点、集群版实例，备份文件为快照备份。
+	// <p>如果需要克隆实例回档到指定备份集，则指定该值为备份文件的 Id。请使用 <a href="/document/api/236/15842">查询数据备份文件列表</a>。</p><p>如果是克隆双节点、三节点、四节点实例，备份文件为物理备份，如果是克隆单节点、云盘版实例，备份文件为快照备份。</p>
 	SpecifiedBackupId *int64 `json:"SpecifiedBackupId,omitnil,omitempty" name:"SpecifiedBackupId"`
 
-	// 私有网络 ID，请使用 [查询私有网络列表](/document/api/215/15778)。
+	// <p>私有网络 ID，请使用 <a href="/document/api/215/15778">查询私有网络列表</a>。</p>
 	UniqVpcId *string `json:"UniqVpcId,omitnil,omitempty" name:"UniqVpcId"`
 
-	// 私有网络下的子网 ID，如果设置了 UniqVpcId，则 UniqSubnetId 必填，请使用 [查询子网列表](/document/api/215/15784)。
+	// <p>私有网络下的子网 ID，如果设置了 UniqVpcId，则 UniqSubnetId 必填，请使用 <a href="/document/api/215/15784">查询子网列表</a>。</p>
 	UniqSubnetId *string `json:"UniqSubnetId,omitnil,omitempty" name:"UniqSubnetId"`
 
-	// 实例内存大小，单位：MB，需要不低于克隆源实例，默认和源实例相同。
+	// <p>实例内存大小，单位：MB，需要不低于克隆源实例，默认和源实例相同。</p>
 	Memory *int64 `json:"Memory,omitnil,omitempty" name:"Memory"`
 
-	// 实例硬盘大小，单位：GB，需要不低于克隆源实例，默认和源实例相同。
+	// <p>实例硬盘大小，单位：GB，需要不低于克隆源实例，默认和源实例相同。</p>
 	Volume *int64 `json:"Volume,omitnil,omitempty" name:"Volume"`
 
-	// 新产生的克隆实例名称。支持输入最大60个字符。
+	// <p>新产生的克隆实例名称。支持输入最大60个字符。</p>
 	InstanceName *string `json:"InstanceName,omitnil,omitempty" name:"InstanceName"`
 
-	// 安全组参数，可使用 [查询项目安全组信息](https://cloud.tencent.com/document/api/236/15850) 接口查询某个项目的安全组详情。
+	// <p>安全组参数，可使用 <a href="https://cloud.tencent.com/document/api/236/15850">查询项目安全组信息</a> 接口查询某个项目的安全组详情。</p>
 	SecurityGroup []*string `json:"SecurityGroup,omitnil,omitempty" name:"SecurityGroup"`
 
-	// 实例标签信息。
+	// <p>实例标签信息。</p>
 	ResourceTags []*TagInfo `json:"ResourceTags,omitnil,omitempty" name:"ResourceTags"`
 
-	// 实例Cpu核数，需要不低于克隆源实例，默认和源实例相同。
+	// <p>实例Cpu核数，需要不低于克隆源实例，默认和源实例相同。</p>
 	Cpu *int64 `json:"Cpu,omitnil,omitempty" name:"Cpu"`
 
-	// 数据复制方式，默认为 0，支持值包括：0 - 表示异步复制，1 - 表示半同步复制，2 - 表示强同步复制。
+	// <p>数据复制方式，默认为 0，支持值包括：0 - 表示异步复制，1 - 表示半同步复制，2 - 表示强同步复制。</p>
 	ProtectMode *int64 `json:"ProtectMode,omitnil,omitempty" name:"ProtectMode"`
 
-	// 多可用区域，默认为 0，支持值包括：0 - 表示单可用区，1 - 表示多可用区。
+	// <p>多可用区域，默认为 0，支持值包括：0 - 表示单可用区，1 - 表示多可用区。</p>
 	DeployMode *int64 `json:"DeployMode,omitnil,omitempty" name:"DeployMode"`
 
-	// 新产生的克隆实例备库 1 的可用区信息，默认同源实例 Zone 的值。
+	// <p>新产生的克隆实例备库 1 的可用区信息，默认同源实例 Zone 的值。</p>
 	SlaveZone *string `json:"SlaveZone,omitnil,omitempty" name:"SlaveZone"`
 
-	// 备库 2 的可用区信息，默认为空，克隆强同步主实例时可指定该参数。
+	// <p>备库 2 的可用区信息，默认为空，克隆强同步主实例时可指定该参数。</p>
 	BackupZone *string `json:"BackupZone,omitnil,omitempty" name:"BackupZone"`
 
-	// 克隆实例类型。支持值包括："UNIVERSAL" - 通用型实例，"EXCLUSIVE" - 独享型实例，"CLOUD_NATIVE_CLUSTER" - 集群版标准型，"CLOUD_NATIVE_CLUSTER_EXCLUSIVE" - 集群版加强型。不指定则默认为通用型。
+	// <p>克隆实例类型。支持值包括：&quot;UNIVERSAL&quot; - 通用型实例，&quot;EXCLUSIVE&quot; - 独享型实例，&quot;CLOUD_NATIVE_CLUSTER&quot; - 云盘版标准型，&quot;CLOUD_NATIVE_CLUSTER_EXCLUSIVE&quot; - 云盘版加强型。不指定则默认为通用型。</p>
 	DeviceType *string `json:"DeviceType,omitnil,omitempty" name:"DeviceType"`
 
-	// 新克隆实例节点数。如果需要克隆出三节点实例， 请将该值设置为3 或指定 BackupZone 参数。如果需要克隆出两节点实例，请将该值设置为2。默认克隆出两节点实例。
+	// <p>新克隆实例节点数。</p><p>如果需要克隆出三节点实例，请将该值设置为3，或指定 BackupZone 参数；如果需要克隆出双节点实例，请将该值设置为2，默认克隆出双节点实例；如果需要克隆出四节点实例，请将该值设置为4，或指定 FourthZone 参数。</p>
 	InstanceNodes *int64 `json:"InstanceNodes,omitnil,omitempty" name:"InstanceNodes"`
 
-	// 置放群组 ID。
+	// <p>置放群组 ID。</p>
 	DeployGroupId *string `json:"DeployGroupId,omitnil,omitempty" name:"DeployGroupId"`
 
-	// 是否只预检此次请求。true：发送检查请求，不会创建实例。检查项包括是否填写了必需参数，请求格式，业务限制等。如果检查不通过，则返回对应错误码；如果检查通过，则返回RequestId.默认为false：发送正常请求，通过检查后直接创建实例。
+	// <p>是否只预检此次请求。true：发送检查请求，不会创建实例。检查项包括是否填写了必需参数，请求格式，业务限制等。如果检查不通过，则返回对应错误码；如果检查通过，则返回RequestId.默认为false：发送正常请求，通过检查后直接创建实例。</p>
 	DryRun *bool `json:"DryRun,omitnil,omitempty" name:"DryRun"`
 
-	// 金融围拢 ID 。
+	// <p>金融围拢 ID 。</p>
 	CageId *string `json:"CageId,omitnil,omitempty" name:"CageId"`
 
-	// 项目ID，默认项目ID0
+	// <p>项目ID，默认项目ID0</p>
 	ProjectId *uint64 `json:"ProjectId,omitnil,omitempty" name:"ProjectId"`
 
-	// 付费类型，PRE_PAID：包年包月，USED_PAID：按量计费。默认为按量计费
+	// <p>付费类型，PRE_PAID：包年包月，USED_PAID：按量计费。默认为按量计费</p>
 	PayType *string `json:"PayType,omitnil,omitempty" name:"PayType"`
 
-	// 实例时长，PayType为PRE_PAID时必传，单位：月，可选值包括 [1,2,3,4,5,6,7,8,9,10,11,12,24,36]。
+	// <p>实例时长，PayType为PRE_PAID时必传，单位：月，可选值包括 [1,2,3,4,5,6,7,8,9,10,11,12,24,36]。</p>
 	Period *int64 `json:"Period,omitnil,omitempty" name:"Period"`
 
-	// 集群版节点拓扑配置。
+	// <p>云盘版节点拓扑配置。</p>
 	ClusterTopology *ClusterTopology `json:"ClusterTopology,omitnil,omitempty" name:"ClusterTopology"`
 
-	// 原实例所在地域名，当传入异地备份时为必选项，例：ap-guangzhou
+	// <p>原实例所在地域名，当传入异地备份时为必选项，例：ap-guangzhou</p>
 	SrcRegion *string `json:"SrcRegion,omitnil,omitempty" name:"SrcRegion"`
 
-	// 异地数据备份id
+	// <p>异地数据备份id</p>
 	SpecifiedSubBackupId *int64 `json:"SpecifiedSubBackupId,omitnil,omitempty" name:"SpecifiedSubBackupId"`
+
+	// <p>新产生的克隆实例主库的可用区信息，默认同源实例 Zone 的值。</p>
+	MasterZone *string `json:"MasterZone,omitnil,omitempty" name:"MasterZone"`
+
+	// <p>新产生的克隆实例主库的可用区信息，默认同源实例 Zone 的值。</p>
+	Zone *string `json:"Zone,omitnil,omitempty" name:"Zone"`
+
+	// <p>备库 3 的可用区信息，默认为空，购买四节点主实例时可指定该参数。</p>
+	FourthZone *string `json:"FourthZone,omitnil,omitempty" name:"FourthZone"`
 }
 
 func (r *CreateCloneInstanceRequest) ToJsonString() string {
@@ -2978,6 +2987,9 @@ func (r *CreateCloneInstanceRequest) FromJsonString(s string) error {
 	delete(f, "ClusterTopology")
 	delete(f, "SrcRegion")
 	delete(f, "SpecifiedSubBackupId")
+	delete(f, "MasterZone")
+	delete(f, "Zone")
+	delete(f, "FourthZone")
 	if len(f) > 0 {
 		return tcerr.NewTencentCloudSDKError("ClientError.BuildRequestError", "CreateCloneInstanceRequest has unknown keys!", "")
 	}
@@ -2986,7 +2998,7 @@ func (r *CreateCloneInstanceRequest) FromJsonString(s string) error {
 
 // Predefined struct for user
 type CreateCloneInstanceResponseParams struct {
-	// 异步任务的请求ID，可使用此 ID 查询异步任务的执行结果。
+	// <p>异步任务的请求ID，可使用此 ID 查询异步任务的执行结果。</p>
 	AsyncRequestId *string `json:"AsyncRequestId,omitnil,omitempty" name:"AsyncRequestId"`
 
 	// 唯一请求 ID，由服务端生成，每次请求都会返回（若请求因其他原因未能抵达服务端，则该次请求不会获得 RequestId）。定位问题时需要提供该次请求的 RequestId。
@@ -3103,281 +3115,267 @@ func (r *CreateDBImportJobResponse) FromJsonString(s string) error {
 
 // Predefined struct for user
 type CreateDBInstanceHourRequestParams struct {
-	// 实例数量，默认值为 1，最小值 1，最大值为 100。
+	// <p>实例数量，默认值为 1，最小值 1，最大值为 100。</p>
 	GoodsNum *int64 `json:"GoodsNum,omitnil,omitempty" name:"GoodsNum"`
 
-	// 实例内存大小，单位：MB，请使用 [获取云数据库可售卖规格](https://cloud.tencent.com/document/api/236/17229) 接口获取可创建的内存规格。
+	// <p>实例内存大小，单位：MB，请使用 <a href="https://cloud.tencent.com/document/api/236/17229">获取云数据库可售卖规格</a> 接口获取可创建的内存规格。</p>
 	Memory *int64 `json:"Memory,omitnil,omitempty" name:"Memory"`
 
-	// 实例硬盘大小，单位：GB，请使用 [获取云数据库可售卖规格](https://cloud.tencent.com/document/api/236/17229) 接口获取可创建的硬盘范围。
+	// <p>实例硬盘大小，单位：GB，请使用 <a href="https://cloud.tencent.com/document/api/236/17229">获取云数据库可售卖规格</a> 接口获取可创建的硬盘范围。</p>
 	Volume *int64 `json:"Volume,omitnil,omitempty" name:"Volume"`
 
-	// MySQL 版本，值包括：5.5、5.6、5.7和8.0，请使用 [获取云数据库可售卖规格](https://cloud.tencent.com/document/api/236/17229) 接口获取可创建的实例版本。
-	// 说明：创建非集群版实例时，请根据需要指定实例版本（推荐5.7或8.0），若此参数不填，则默认值为5.6；若创建的是集群版实例，则此参数仅能指定为5.7或8.0。
+	// <p>MySQL 版本，值包括：5.5、5.6、5.7和8.0，请使用 <a href="https://cloud.tencent.com/document/api/236/17229">获取云数据库可售卖规格</a> 接口获取可创建的实例版本。<br>说明：创建非云盘版实例时，请根据需要指定实例版本（推荐5.7或8.0），若此参数不填，则默认值为8.0；若创建的是云盘版实例，则此参数仅能指定为5.7或8.0。</p>
 	EngineVersion *string `json:"EngineVersion,omitnil,omitempty" name:"EngineVersion"`
 
-	// 私有网络 ID，请使用 [查询私有网络列表](/document/api/215/15778)。
-	// 说明：如果创建的是集群版实例，此参数为必填且为私有网络类型。若此项不填，则系统会选择默认的 VPC。
+	// <p>私有网络 ID，请使用 <a href="/document/api/215/15778">查询私有网络列表</a>。<br>说明：如果创建的是云盘版实例，此参数为必填且为私有网络类型。若此项不填，则系统会选择默认的 VPC。</p>
 	UniqVpcId *string `json:"UniqVpcId,omitnil,omitempty" name:"UniqVpcId"`
 
-	// 私有网络下的子网 ID，如果设置了 UniqVpcId，则 UniqSubnetId 必填，请使用 [查询子网列表](/document/api/215/15784)。
-	// 说明：若此项不填，则系统会选择默认 VPC 下的默认子网。
+	// <p>私有网络下的子网 ID，如果设置了 UniqVpcId，则 UniqSubnetId 必填，请使用 <a href="/document/api/215/15784">查询子网列表</a>。<br>说明：若此项不填，则系统会选择默认 VPC 下的默认子网。</p>
 	UniqSubnetId *string `json:"UniqSubnetId,omitnil,omitempty" name:"UniqSubnetId"`
 
-	// 项目 ID，不填为默认项目。
+	// <p>项目 ID，不填为默认项目。</p>
 	ProjectId *int64 `json:"ProjectId,omitnil,omitempty" name:"ProjectId"`
 
-	// 可用区信息，请使用 [获取云数据库可售卖规格](https://cloud.tencent.com/document/api/236/17229) 接口获取可创建的可用区。
-	// 说明：若您创建单节点、双节点、三节点实例，此参数为必填项，请指定可用区，若不指定可用区，则系统会自动选择一个可用区（可能不是您希望部署的可用区）；若您创建集群版实例，此参数不填，请通过参数 ClusterTopology 进行读写节点和只读节点的可用区配置。
+	// <p>可用区信息，请使用 <a href="https://cloud.tencent.com/document/api/236/17229">获取云数据库可售卖规格</a> 接口获取可创建的可用区。</p><p>若您创建单节点、双节点、三节点、四节点实例，此参数为必填项，请指定可用区，若不指定可用区，则系统会自动选择一个可用区（可能不是您希望部署的可用区）；若您创建云盘版集群实例，此参数不填，请通过参数 ClusterTopology 进行读写节点和只读节点的可用区配置。</p>
 	Zone *string `json:"Zone,omitnil,omitempty" name:"Zone"`
 
-	// 实例 ID，购买只读实例或者灾备实例时必填，该字段表示只读实例或者灾备实例的主实例 ID，请使用 [查询实例列表](https://cloud.tencent.com/document/api/236/15872) 接口查询云数据库实例 ID。
+	// <p>实例 ID，购买只读实例或者灾备实例时必填，该字段表示只读实例或者灾备实例的主实例 ID，请使用 <a href="https://cloud.tencent.com/document/api/236/15872">查询实例列表</a> 接口查询云数据库实例 ID。</p>
 	MasterInstanceId *string `json:"MasterInstanceId,omitnil,omitempty" name:"MasterInstanceId"`
 
-	// 实例类型，支持值包括：master - 表示主实例，dr - 表示灾备实例，ro - 表示只读实例。
-	// 说明：请选择实例类型，不填会默认选择 master。
+	// <p>实例类型，支持值包括：master - 表示主实例，dr - 表示灾备实例，ro - 表示只读实例。<br>说明：请选择实例类型，不填会默认选择 master。</p>
 	InstanceRole *string `json:"InstanceRole,omitnil,omitempty" name:"InstanceRole"`
 
-	// 主实例地域信息，购买灾备、RO实例时，该字段必填。
+	// <p>主实例地域信息，购买灾备、RO实例时，该字段必填。</p>
 	MasterRegion *string `json:"MasterRegion,omitnil,omitempty" name:"MasterRegion"`
 
-	// 自定义端口，端口支持范围：[1024 - 65535]。
-	// 说明：不填则默认为3306。
+	// <p>自定义端口，端口支持范围：[1024 - 65535]。<br>说明：不填则默认为3306。</p>
 	Port *int64 `json:"Port,omitnil,omitempty" name:"Port"`
 
-	// 设置 root 账号密码，密码规则：8 - 64 个字符，至少包含字母、数字、字符（支持的字符：_+-&=!@#$%^*()）中的两种，购买主实例时可指定该参数，购买只读实例或者灾备实例时指定该参数无意义。
+	// <p>设置 root 账号密码，密码规则：8 - 64 个字符，至少包含字母、数字、字符（支持的字符：_+-&amp;=!@#$%^*()）中的两种，购买主实例时可指定该参数，购买只读实例或者灾备实例时指定该参数无意义。</p>
 	Password *string `json:"Password,omitnil,omitempty" name:"Password"`
 
-	// 参数列表，参数格式如 ParamList.0.Name=auto_increment&ParamList.0.Value=1。可通过 [查询默认的可设置参数列表](https://cloud.tencent.com/document/api/236/32662) 查询支持设置的参数。
-	// 说明：表名大小写敏感的开启和关闭可通过参数 lower_case_table_names 进行设置，参数值为0表示开启，参数值为1表示关闭，若不设置则此参数默认值为0。若您创建的是 MySQL 8.0 版本的实例，则需要在创建实例时通过设置 lower_case_table_names 参数来开启或关闭表名大小写敏感，创建实例后无法修改参数，即创建后无法修改表名大小写敏感。其他数据库版本的实例支持在创建实例后修改 lower_case_table_names 参数。创建实例时设置表名大小写敏感的 API 调用方法请参见本文中的示例2。
+	// <p>参数列表，参数格式如 ParamList.0.Name=auto_increment&amp;ParamList.0.Value=1。</p><p>可通过 <a href="https://cloud.tencent.com/document/api/236/32662">查询默认的可设置参数列表</a> 查询支持设置的参数。<br>说明：表名大小写敏感的开启和关闭可通过参数 lower_case_table_names 进行设置，参数值为0表示开启，参数值为1表示关闭，若不设置则此参数默认值为0。若您创建的是 MySQL 8.0 版本的实例，则需要在创建实例时通过设置 lower_case_table_names 参数来开启或关闭表名大小写敏感，创建实例后无法修改参数，即创建后无法修改表名大小写敏感。其他数据库版本的实例支持在创建实例后修改 lower_case_table_names 参数。创建实例时设置表名大小写敏感的 API 调用方法请参见本文中的示例。</p>
 	ParamList []*ParamInfo `json:"ParamList,omitnil,omitempty" name:"ParamList"`
 
-	// 数据复制方式，默认为 0，支持值包括：0 - 表示异步复制，1 - 表示半同步复制，2 - 表示强同步复制，购买主实例时可指定该参数，购买只读实例或者灾备实例时指定该参数无意义。
+	// <p>数据复制方式，默认为 0，支持值包括：0 - 表示异步复制，1 - 表示半同步复制，2 - 表示强同步复制，购买主实例时可指定该参数，购买只读实例或者灾备实例时指定该参数无意义。</p>
 	ProtectMode *int64 `json:"ProtectMode,omitnil,omitempty" name:"ProtectMode"`
 
-	// 多可用区域，默认为 0，支持值包括：0 - 表示单可用区，1 - 表示多可用区，购买主实例时可指定该参数，购买只读实例或者灾备实例时指定该参数无意义。
+	// <p>多可用区域，默认为 0，支持值包括：0 - 表示单可用区，1 - 表示多可用区，购买主实例时可指定该参数，购买只读实例或者灾备实例时指定该参数无意义。</p>
 	DeployMode *int64 `json:"DeployMode,omitnil,omitempty" name:"DeployMode"`
 
-	// 备库 1 的可用区信息。
-	// 说明：双节点、三节点实例请指定此参数值，若不指定，则默认为 Zone 的值；集群版实例此参数可不填，请通过参数 ClusterTopology 进行读写节点和只读节点的可用区配置；单节点实例为单可用区，无需指定此参数。
+	// <p>备库 1 的可用区信息。</p><p>双节点、三节点、四节点实例请指定此参数值，若不指定，则默认为 Zone 的值；云盘版实例此参数可不填，请通过参数 ClusterTopology 进行读写节点和只读节点的可用区配置；单节点实例为单可用区，无需指定此参数。</p>
 	SlaveZone *string `json:"SlaveZone,omitnil,omitempty" name:"SlaveZone"`
 
-	// 备库 2 的可用区信息，默认为空，购买三节点主实例时可指定该参数。
+	// <p>备库 2 的可用区信息，默认为空。</p><p>购买三节点主实例、四节点主实例时可指定该参数。</p>
 	BackupZone *string `json:"BackupZone,omitnil,omitempty" name:"BackupZone"`
 
-	// 安全组参数，可使用 [查询项目安全组信息](https://cloud.tencent.com/document/api/236/15850) 接口查询某个项目的安全组详情。
+	// <p>安全组参数，可使用 <a href="https://cloud.tencent.com/document/api/236/15850">查询项目安全组信息</a> 接口查询某个项目的安全组详情。</p>
 	SecurityGroup []*string `json:"SecurityGroup,omitnil,omitempty" name:"SecurityGroup"`
 
-	// 只读实例信息。购买只读实例时，该参数必传。
+	// <p>只读实例信息。购买只读实例时，该参数必传。</p>
 	RoGroup *RoGroup `json:"RoGroup,omitnil,omitempty" name:"RoGroup"`
 
-	// 购买按量计费实例该字段无意义。
+	// <p>购买按量计费实例该字段无意义。</p>
 	AutoRenewFlag *int64 `json:"AutoRenewFlag,omitnil,omitempty" name:"AutoRenewFlag"`
 
-	// 实例名称。一次购买多个实例命名会用后缀数字区分，例instanceName=db，goodsNum=3，实例命名分别为db1，db2，db3。
+	// <p>实例名称。一次购买多个实例命名会用后缀数字区分，例instanceName=db，goodsNum=3，实例命名分别为db1，db2，db3。</p>
 	InstanceName *string `json:"InstanceName,omitnil,omitempty" name:"InstanceName"`
 
-	// 实例标签信息。
+	// <p>实例标签信息。</p>
 	ResourceTags []*TagInfo `json:"ResourceTags,omitnil,omitempty" name:"ResourceTags"`
 
-	// 置放群组 ID。
+	// <p>置放群组 ID。</p>
 	DeployGroupId *string `json:"DeployGroupId,omitnil,omitempty" name:"DeployGroupId"`
 
-	// 用于保证请求幂等性的字符串。该字符串由客户生成，需保证不同请求之间在48小时内唯一，最大值不超过64个ASCII字符。若不指定该参数，则无法保证请求的幂等性。
+	// <p>用于保证请求幂等性的字符串。该字符串由客户生成，需保证不同请求之间在48小时内唯一，最大值不超过64个ASCII字符。若不指定该参数，则无法保证请求的幂等性。</p>
 	ClientToken *string `json:"ClientToken,omitnil,omitempty" name:"ClientToken"`
 
-	// 实例隔离类型。支持值包括："UNIVERSAL" - 通用型实例，"EXCLUSIVE" - 独享型实例，"BASIC_V2" - ONTKE 单节点实例，"CLOUD_NATIVE_CLUSTER" - 集群版标准型，"CLOUD_NATIVE_CLUSTER_EXCLUSIVE" - 集群版加强型。不指定则默认为通用型实例。
-	// 说明：如果创建的是集群版实例，此参数为必填。
+	// <p>实例隔离类型。</p><p>枚举值：</p><ul><li><p>UNIVERSAL： 通用型实例</p></li><li><p>EXCLUSIVE： 独享型实例</p></li><li><p>CLOUD_NATIVE_CLUSTER： 云盘版标准型</p></li><li><p>CLOUD_NATIVE_CLUSTER_EXCLUSIVE： 云盘版加强型</p></li><li><p>CLOUD_NATIVE_CLUSTER_ULTRA： 云盘版旗舰型</p></li><li><p>若此参数不指定，则默认为通用型实例。</p></li><li><p>如果创建的是云盘版实例，此参数为必填。</p></li><li><p>如果创建的是单节点实例，此参数请填写为：CLOUD_NATIVE_CLUSTER，并指定参数 InstanceNodes 等于1。</p></li></ul>
 	DeviceType *string `json:"DeviceType,omitnil,omitempty" name:"DeviceType"`
 
-	// 参数模板 id。
-	// 备注：如您使用自定义参数模板 id，可传入自定义参数模板 id；如您计划使用默认参数模板，该参数模板 id 传入 id 无效，需设置 ParamTemplateType。
+	// <p>参数模板 id。<br>备注：如您使用自定义参数模板 id，可传入自定义参数模板 id；如您计划使用默认参数模板，该参数模板 id 传入 id 无效，需设置 ParamTemplateType。</p>
 	ParamTemplateId *int64 `json:"ParamTemplateId,omitnil,omitempty" name:"ParamTemplateId"`
 
-	// 告警策略id数组。腾讯云可观测平台DescribeAlarmPolicy接口返回的OriginId。
+	// <p>告警策略id数组。腾讯云可观测平台DescribeAlarmPolicy接口返回的OriginId。</p>
 	AlarmPolicyList []*int64 `json:"AlarmPolicyList,omitnil,omitempty" name:"AlarmPolicyList"`
 
-	// 实例节点数。对于 RO 和 基础版实例， 该值默认为1。 如果需要购买三节点实例， 请将该值设置为3 或指定 BackupZone 参数。当购买主实例，且未指定该参数和 BackupZone 参数时，该值默认是 2， 即购买两节点实例。
+	// <p>实例节点数。</p><p>对于 RO 和单节点实例，该值默认为1。如果需要购买三节点实例，请将该值设置为3，或指定 BackupZone 参数；当购买主实例，且未指定该参数和 BackupZone 参数时，该值默认是2，即购买双节点实例；如果需要购买四节点实例，请将该值设置为4，或指定 FourthZone 参数。</p>
 	InstanceNodes *int64 `json:"InstanceNodes,omitnil,omitempty" name:"InstanceNodes"`
 
-	// 实例cpu核数， 如果不传将根据memory指定的内存值自动填充对应的cpu值。
+	// <p>实例 Cpu 核数。</p><p>当内存规格 Memory 存在多种 Cpu 配置时（如 64000MB 内存对应 8核/16核/32核），必须传入 Cpu 参数。</p>
 	Cpu *int64 `json:"Cpu,omitnil,omitempty" name:"Cpu"`
 
-	// 是否自动发起灾备同步功能。该参数仅对购买灾备实例生效。 可选值为：0 - 不自动发起灾备同步；1 - 自动发起灾备同步。该值默认为0。
+	// <p>是否自动发起灾备同步功能。该参数仅对购买灾备实例生效。 可选值为：0 - 不自动发起灾备同步；1 - 自动发起灾备同步。该值默认为0。</p>
 	AutoSyncFlag *int64 `json:"AutoSyncFlag,omitnil,omitempty" name:"AutoSyncFlag"`
 
-	// 金融围拢 ID 。
+	// <p>金融围拢 ID 。</p>
 	CageId *string `json:"CageId,omitnil,omitempty" name:"CageId"`
 
-	// 默认参数模板类型。支持值包括："HIGH_STABILITY" - 高稳定模板，"HIGH_PERFORMANCE" - 高性能模板，默认值是："HIGH_STABILITY"。
-	// 备注：如您需使用云数据库 MySQL 默认参数模板，请设置 ParamTemplateType。
+	// <p>默认参数模板类型。支持值包括：&quot;HIGH_STABILITY&quot; - 高稳定模板，&quot;HIGH_PERFORMANCE&quot; - 高性能模板，默认值是：&quot;HIGH_STABILITY&quot;。<br>备注：如您需使用云数据库 MySQL 默认参数模板，请设置 ParamTemplateType。</p>
 	ParamTemplateType *string `json:"ParamTemplateType,omitnil,omitempty" name:"ParamTemplateType"`
 
-	// 告警策略名数组，例如:["policy-uyoee9wg"]，AlarmPolicyList不为空时该参数无效。
+	// <p>告警策略名数组，例如:[&quot;policy-uyoee9wg&quot;]，AlarmPolicyList不为空时该参数无效。</p>
 	AlarmPolicyIdList []*string `json:"AlarmPolicyIdList,omitnil,omitempty" name:"AlarmPolicyIdList"`
 
-	// 是否只预检此次请求。true：发送检查请求，不会创建实例。检查项包括是否填写了必需参数，请求格式，业务限制等。如果检查不通过，则返回对应错误码；如果检查通过，则返回RequestId.默认为false：发送正常请求，通过检查后直接创建实例。
+	// <p>是否只预检此次请求。true：发送检查请求，不会创建实例。检查项包括是否填写了必需参数，请求格式，业务限制等。如果检查不通过，则返回对应错误码；如果检查通过，则返回RequestId.默认为false：发送正常请求，通过检查后直接创建实例。</p>
 	DryRun *bool `json:"DryRun,omitnil,omitempty" name:"DryRun"`
 
-	// 实例引擎类型，默认为"InnoDB"，支持值包括："InnoDB"，"RocksDB"。
+	// <p>实例引擎类型，默认为&quot;InnoDB&quot;，支持值包括：&quot;InnoDB&quot;，&quot;RocksDB&quot;。</p>
 	EngineType *string `json:"EngineType,omitnil,omitempty" name:"EngineType"`
 
-	// 指定实例的IP列表。仅支持主实例指定，按实例顺序，不足则按未指定处理。
+	// <p>指定实例的IP列表。仅支持主实例指定，按实例顺序，不足则按未指定处理。</p>
 	Vips []*string `json:"Vips,omitnil,omitempty" name:"Vips"`
 
-	// 集群版实例的数据保护空间大小，单位 GB，设置范围1 - 10。
+	// <p>云盘版实例的数据保护空间大小，单位 GB，设置范围1 - 10。</p>
 	DataProtectVolume *int64 `json:"DataProtectVolume,omitnil,omitempty" name:"DataProtectVolume"`
 
-	// 集群版节点拓扑配置。
-	// 说明：若购买的是集群版实例，此参数为必填，需设置集群版实例的 RW 和 RO 节点拓扑，RO 节点范围是1 - 5个，请至少设置1个 RO 节点。
+	// <p>云盘版节点拓扑配置。<br>说明：若购买的是云盘版实例，此参数为必填，需设置云盘版实例的 RW 和 RO 节点拓扑，RO 节点范围是1 - 5个，请至少设置1个 RO 节点。</p>
 	ClusterTopology *ClusterTopology `json:"ClusterTopology,omitnil,omitempty" name:"ClusterTopology"`
 
-	// 硬盘类型，单节点（云盘版）或者集群版实例可以指定此参数。CLOUD_SSD 表示 SSD 云硬盘，CLOUD_HSSD 表示增强型 SSD 云硬盘。
-	// 说明：单节点（云盘版）、集群版实例硬盘类型所支持的地域略有不同，具体支持情况请参考 [地域和可用区](https://cloud.tencent.com/document/product/236/8458)。
+	// <p>硬盘类型，单节点（云盘）或者云盘版实例可以指定此参数。CLOUD_SSD 表示 SSD 云硬盘，CLOUD_HSSD 表示增强型 SSD 云硬盘，CLOUD_PREMIUM 表示高性能云硬盘。<br>说明：单节点（云盘）、云盘版实例硬盘类型所支持的地域略有不同，具体支持情况请参考 <a href="https://cloud.tencent.com/document/product/236/8458">地域和可用区</a>。</p>
 	DiskType *string `json:"DiskType,omitnil,omitempty" name:"DiskType"`
 
-	// 集群类型:cage——金融围拢，cdc——CDB ON CDC；dedicate——独享集群
+	// <p>集群类型:cage——金融围拢，cdc——CDB ON CDC；dedicate——独享集群</p>
 	ClusterType *string `json:"ClusterType,omitnil,omitempty" name:"ClusterType"`
+
+	// <p>开启或关闭实例销毁保护。on-开启，off-关闭</p>
+	DestroyProtect *string `json:"DestroyProtect,omitnil,omitempty" name:"DestroyProtect"`
+
+	// <p>备库 3 的可用区信息，默认为空，购买四节点主实例时可指定该参数。</p>
+	FourthZone *string `json:"FourthZone,omitnil,omitempty" name:"FourthZone"`
 }
 
 type CreateDBInstanceHourRequest struct {
 	*tchttp.BaseRequest
 	
-	// 实例数量，默认值为 1，最小值 1，最大值为 100。
+	// <p>实例数量，默认值为 1，最小值 1，最大值为 100。</p>
 	GoodsNum *int64 `json:"GoodsNum,omitnil,omitempty" name:"GoodsNum"`
 
-	// 实例内存大小，单位：MB，请使用 [获取云数据库可售卖规格](https://cloud.tencent.com/document/api/236/17229) 接口获取可创建的内存规格。
+	// <p>实例内存大小，单位：MB，请使用 <a href="https://cloud.tencent.com/document/api/236/17229">获取云数据库可售卖规格</a> 接口获取可创建的内存规格。</p>
 	Memory *int64 `json:"Memory,omitnil,omitempty" name:"Memory"`
 
-	// 实例硬盘大小，单位：GB，请使用 [获取云数据库可售卖规格](https://cloud.tencent.com/document/api/236/17229) 接口获取可创建的硬盘范围。
+	// <p>实例硬盘大小，单位：GB，请使用 <a href="https://cloud.tencent.com/document/api/236/17229">获取云数据库可售卖规格</a> 接口获取可创建的硬盘范围。</p>
 	Volume *int64 `json:"Volume,omitnil,omitempty" name:"Volume"`
 
-	// MySQL 版本，值包括：5.5、5.6、5.7和8.0，请使用 [获取云数据库可售卖规格](https://cloud.tencent.com/document/api/236/17229) 接口获取可创建的实例版本。
-	// 说明：创建非集群版实例时，请根据需要指定实例版本（推荐5.7或8.0），若此参数不填，则默认值为5.6；若创建的是集群版实例，则此参数仅能指定为5.7或8.0。
+	// <p>MySQL 版本，值包括：5.5、5.6、5.7和8.0，请使用 <a href="https://cloud.tencent.com/document/api/236/17229">获取云数据库可售卖规格</a> 接口获取可创建的实例版本。<br>说明：创建非云盘版实例时，请根据需要指定实例版本（推荐5.7或8.0），若此参数不填，则默认值为8.0；若创建的是云盘版实例，则此参数仅能指定为5.7或8.0。</p>
 	EngineVersion *string `json:"EngineVersion,omitnil,omitempty" name:"EngineVersion"`
 
-	// 私有网络 ID，请使用 [查询私有网络列表](/document/api/215/15778)。
-	// 说明：如果创建的是集群版实例，此参数为必填且为私有网络类型。若此项不填，则系统会选择默认的 VPC。
+	// <p>私有网络 ID，请使用 <a href="/document/api/215/15778">查询私有网络列表</a>。<br>说明：如果创建的是云盘版实例，此参数为必填且为私有网络类型。若此项不填，则系统会选择默认的 VPC。</p>
 	UniqVpcId *string `json:"UniqVpcId,omitnil,omitempty" name:"UniqVpcId"`
 
-	// 私有网络下的子网 ID，如果设置了 UniqVpcId，则 UniqSubnetId 必填，请使用 [查询子网列表](/document/api/215/15784)。
-	// 说明：若此项不填，则系统会选择默认 VPC 下的默认子网。
+	// <p>私有网络下的子网 ID，如果设置了 UniqVpcId，则 UniqSubnetId 必填，请使用 <a href="/document/api/215/15784">查询子网列表</a>。<br>说明：若此项不填，则系统会选择默认 VPC 下的默认子网。</p>
 	UniqSubnetId *string `json:"UniqSubnetId,omitnil,omitempty" name:"UniqSubnetId"`
 
-	// 项目 ID，不填为默认项目。
+	// <p>项目 ID，不填为默认项目。</p>
 	ProjectId *int64 `json:"ProjectId,omitnil,omitempty" name:"ProjectId"`
 
-	// 可用区信息，请使用 [获取云数据库可售卖规格](https://cloud.tencent.com/document/api/236/17229) 接口获取可创建的可用区。
-	// 说明：若您创建单节点、双节点、三节点实例，此参数为必填项，请指定可用区，若不指定可用区，则系统会自动选择一个可用区（可能不是您希望部署的可用区）；若您创建集群版实例，此参数不填，请通过参数 ClusterTopology 进行读写节点和只读节点的可用区配置。
+	// <p>可用区信息，请使用 <a href="https://cloud.tencent.com/document/api/236/17229">获取云数据库可售卖规格</a> 接口获取可创建的可用区。</p><p>若您创建单节点、双节点、三节点、四节点实例，此参数为必填项，请指定可用区，若不指定可用区，则系统会自动选择一个可用区（可能不是您希望部署的可用区）；若您创建云盘版集群实例，此参数不填，请通过参数 ClusterTopology 进行读写节点和只读节点的可用区配置。</p>
 	Zone *string `json:"Zone,omitnil,omitempty" name:"Zone"`
 
-	// 实例 ID，购买只读实例或者灾备实例时必填，该字段表示只读实例或者灾备实例的主实例 ID，请使用 [查询实例列表](https://cloud.tencent.com/document/api/236/15872) 接口查询云数据库实例 ID。
+	// <p>实例 ID，购买只读实例或者灾备实例时必填，该字段表示只读实例或者灾备实例的主实例 ID，请使用 <a href="https://cloud.tencent.com/document/api/236/15872">查询实例列表</a> 接口查询云数据库实例 ID。</p>
 	MasterInstanceId *string `json:"MasterInstanceId,omitnil,omitempty" name:"MasterInstanceId"`
 
-	// 实例类型，支持值包括：master - 表示主实例，dr - 表示灾备实例，ro - 表示只读实例。
-	// 说明：请选择实例类型，不填会默认选择 master。
+	// <p>实例类型，支持值包括：master - 表示主实例，dr - 表示灾备实例，ro - 表示只读实例。<br>说明：请选择实例类型，不填会默认选择 master。</p>
 	InstanceRole *string `json:"InstanceRole,omitnil,omitempty" name:"InstanceRole"`
 
-	// 主实例地域信息，购买灾备、RO实例时，该字段必填。
+	// <p>主实例地域信息，购买灾备、RO实例时，该字段必填。</p>
 	MasterRegion *string `json:"MasterRegion,omitnil,omitempty" name:"MasterRegion"`
 
-	// 自定义端口，端口支持范围：[1024 - 65535]。
-	// 说明：不填则默认为3306。
+	// <p>自定义端口，端口支持范围：[1024 - 65535]。<br>说明：不填则默认为3306。</p>
 	Port *int64 `json:"Port,omitnil,omitempty" name:"Port"`
 
-	// 设置 root 账号密码，密码规则：8 - 64 个字符，至少包含字母、数字、字符（支持的字符：_+-&=!@#$%^*()）中的两种，购买主实例时可指定该参数，购买只读实例或者灾备实例时指定该参数无意义。
+	// <p>设置 root 账号密码，密码规则：8 - 64 个字符，至少包含字母、数字、字符（支持的字符：_+-&amp;=!@#$%^*()）中的两种，购买主实例时可指定该参数，购买只读实例或者灾备实例时指定该参数无意义。</p>
 	Password *string `json:"Password,omitnil,omitempty" name:"Password"`
 
-	// 参数列表，参数格式如 ParamList.0.Name=auto_increment&ParamList.0.Value=1。可通过 [查询默认的可设置参数列表](https://cloud.tencent.com/document/api/236/32662) 查询支持设置的参数。
-	// 说明：表名大小写敏感的开启和关闭可通过参数 lower_case_table_names 进行设置，参数值为0表示开启，参数值为1表示关闭，若不设置则此参数默认值为0。若您创建的是 MySQL 8.0 版本的实例，则需要在创建实例时通过设置 lower_case_table_names 参数来开启或关闭表名大小写敏感，创建实例后无法修改参数，即创建后无法修改表名大小写敏感。其他数据库版本的实例支持在创建实例后修改 lower_case_table_names 参数。创建实例时设置表名大小写敏感的 API 调用方法请参见本文中的示例2。
+	// <p>参数列表，参数格式如 ParamList.0.Name=auto_increment&amp;ParamList.0.Value=1。</p><p>可通过 <a href="https://cloud.tencent.com/document/api/236/32662">查询默认的可设置参数列表</a> 查询支持设置的参数。<br>说明：表名大小写敏感的开启和关闭可通过参数 lower_case_table_names 进行设置，参数值为0表示开启，参数值为1表示关闭，若不设置则此参数默认值为0。若您创建的是 MySQL 8.0 版本的实例，则需要在创建实例时通过设置 lower_case_table_names 参数来开启或关闭表名大小写敏感，创建实例后无法修改参数，即创建后无法修改表名大小写敏感。其他数据库版本的实例支持在创建实例后修改 lower_case_table_names 参数。创建实例时设置表名大小写敏感的 API 调用方法请参见本文中的示例。</p>
 	ParamList []*ParamInfo `json:"ParamList,omitnil,omitempty" name:"ParamList"`
 
-	// 数据复制方式，默认为 0，支持值包括：0 - 表示异步复制，1 - 表示半同步复制，2 - 表示强同步复制，购买主实例时可指定该参数，购买只读实例或者灾备实例时指定该参数无意义。
+	// <p>数据复制方式，默认为 0，支持值包括：0 - 表示异步复制，1 - 表示半同步复制，2 - 表示强同步复制，购买主实例时可指定该参数，购买只读实例或者灾备实例时指定该参数无意义。</p>
 	ProtectMode *int64 `json:"ProtectMode,omitnil,omitempty" name:"ProtectMode"`
 
-	// 多可用区域，默认为 0，支持值包括：0 - 表示单可用区，1 - 表示多可用区，购买主实例时可指定该参数，购买只读实例或者灾备实例时指定该参数无意义。
+	// <p>多可用区域，默认为 0，支持值包括：0 - 表示单可用区，1 - 表示多可用区，购买主实例时可指定该参数，购买只读实例或者灾备实例时指定该参数无意义。</p>
 	DeployMode *int64 `json:"DeployMode,omitnil,omitempty" name:"DeployMode"`
 
-	// 备库 1 的可用区信息。
-	// 说明：双节点、三节点实例请指定此参数值，若不指定，则默认为 Zone 的值；集群版实例此参数可不填，请通过参数 ClusterTopology 进行读写节点和只读节点的可用区配置；单节点实例为单可用区，无需指定此参数。
+	// <p>备库 1 的可用区信息。</p><p>双节点、三节点、四节点实例请指定此参数值，若不指定，则默认为 Zone 的值；云盘版实例此参数可不填，请通过参数 ClusterTopology 进行读写节点和只读节点的可用区配置；单节点实例为单可用区，无需指定此参数。</p>
 	SlaveZone *string `json:"SlaveZone,omitnil,omitempty" name:"SlaveZone"`
 
-	// 备库 2 的可用区信息，默认为空，购买三节点主实例时可指定该参数。
+	// <p>备库 2 的可用区信息，默认为空。</p><p>购买三节点主实例、四节点主实例时可指定该参数。</p>
 	BackupZone *string `json:"BackupZone,omitnil,omitempty" name:"BackupZone"`
 
-	// 安全组参数，可使用 [查询项目安全组信息](https://cloud.tencent.com/document/api/236/15850) 接口查询某个项目的安全组详情。
+	// <p>安全组参数，可使用 <a href="https://cloud.tencent.com/document/api/236/15850">查询项目安全组信息</a> 接口查询某个项目的安全组详情。</p>
 	SecurityGroup []*string `json:"SecurityGroup,omitnil,omitempty" name:"SecurityGroup"`
 
-	// 只读实例信息。购买只读实例时，该参数必传。
+	// <p>只读实例信息。购买只读实例时，该参数必传。</p>
 	RoGroup *RoGroup `json:"RoGroup,omitnil,omitempty" name:"RoGroup"`
 
-	// 购买按量计费实例该字段无意义。
+	// <p>购买按量计费实例该字段无意义。</p>
 	AutoRenewFlag *int64 `json:"AutoRenewFlag,omitnil,omitempty" name:"AutoRenewFlag"`
 
-	// 实例名称。一次购买多个实例命名会用后缀数字区分，例instanceName=db，goodsNum=3，实例命名分别为db1，db2，db3。
+	// <p>实例名称。一次购买多个实例命名会用后缀数字区分，例instanceName=db，goodsNum=3，实例命名分别为db1，db2，db3。</p>
 	InstanceName *string `json:"InstanceName,omitnil,omitempty" name:"InstanceName"`
 
-	// 实例标签信息。
+	// <p>实例标签信息。</p>
 	ResourceTags []*TagInfo `json:"ResourceTags,omitnil,omitempty" name:"ResourceTags"`
 
-	// 置放群组 ID。
+	// <p>置放群组 ID。</p>
 	DeployGroupId *string `json:"DeployGroupId,omitnil,omitempty" name:"DeployGroupId"`
 
-	// 用于保证请求幂等性的字符串。该字符串由客户生成，需保证不同请求之间在48小时内唯一，最大值不超过64个ASCII字符。若不指定该参数，则无法保证请求的幂等性。
+	// <p>用于保证请求幂等性的字符串。该字符串由客户生成，需保证不同请求之间在48小时内唯一，最大值不超过64个ASCII字符。若不指定该参数，则无法保证请求的幂等性。</p>
 	ClientToken *string `json:"ClientToken,omitnil,omitempty" name:"ClientToken"`
 
-	// 实例隔离类型。支持值包括："UNIVERSAL" - 通用型实例，"EXCLUSIVE" - 独享型实例，"BASIC_V2" - ONTKE 单节点实例，"CLOUD_NATIVE_CLUSTER" - 集群版标准型，"CLOUD_NATIVE_CLUSTER_EXCLUSIVE" - 集群版加强型。不指定则默认为通用型实例。
-	// 说明：如果创建的是集群版实例，此参数为必填。
+	// <p>实例隔离类型。</p><p>枚举值：</p><ul><li><p>UNIVERSAL： 通用型实例</p></li><li><p>EXCLUSIVE： 独享型实例</p></li><li><p>CLOUD_NATIVE_CLUSTER： 云盘版标准型</p></li><li><p>CLOUD_NATIVE_CLUSTER_EXCLUSIVE： 云盘版加强型</p></li><li><p>CLOUD_NATIVE_CLUSTER_ULTRA： 云盘版旗舰型</p></li><li><p>若此参数不指定，则默认为通用型实例。</p></li><li><p>如果创建的是云盘版实例，此参数为必填。</p></li><li><p>如果创建的是单节点实例，此参数请填写为：CLOUD_NATIVE_CLUSTER，并指定参数 InstanceNodes 等于1。</p></li></ul>
 	DeviceType *string `json:"DeviceType,omitnil,omitempty" name:"DeviceType"`
 
-	// 参数模板 id。
-	// 备注：如您使用自定义参数模板 id，可传入自定义参数模板 id；如您计划使用默认参数模板，该参数模板 id 传入 id 无效，需设置 ParamTemplateType。
+	// <p>参数模板 id。<br>备注：如您使用自定义参数模板 id，可传入自定义参数模板 id；如您计划使用默认参数模板，该参数模板 id 传入 id 无效，需设置 ParamTemplateType。</p>
 	ParamTemplateId *int64 `json:"ParamTemplateId,omitnil,omitempty" name:"ParamTemplateId"`
 
-	// 告警策略id数组。腾讯云可观测平台DescribeAlarmPolicy接口返回的OriginId。
+	// <p>告警策略id数组。腾讯云可观测平台DescribeAlarmPolicy接口返回的OriginId。</p>
 	AlarmPolicyList []*int64 `json:"AlarmPolicyList,omitnil,omitempty" name:"AlarmPolicyList"`
 
-	// 实例节点数。对于 RO 和 基础版实例， 该值默认为1。 如果需要购买三节点实例， 请将该值设置为3 或指定 BackupZone 参数。当购买主实例，且未指定该参数和 BackupZone 参数时，该值默认是 2， 即购买两节点实例。
+	// <p>实例节点数。</p><p>对于 RO 和单节点实例，该值默认为1。如果需要购买三节点实例，请将该值设置为3，或指定 BackupZone 参数；当购买主实例，且未指定该参数和 BackupZone 参数时，该值默认是2，即购买双节点实例；如果需要购买四节点实例，请将该值设置为4，或指定 FourthZone 参数。</p>
 	InstanceNodes *int64 `json:"InstanceNodes,omitnil,omitempty" name:"InstanceNodes"`
 
-	// 实例cpu核数， 如果不传将根据memory指定的内存值自动填充对应的cpu值。
+	// <p>实例 Cpu 核数。</p><p>当内存规格 Memory 存在多种 Cpu 配置时（如 64000MB 内存对应 8核/16核/32核），必须传入 Cpu 参数。</p>
 	Cpu *int64 `json:"Cpu,omitnil,omitempty" name:"Cpu"`
 
-	// 是否自动发起灾备同步功能。该参数仅对购买灾备实例生效。 可选值为：0 - 不自动发起灾备同步；1 - 自动发起灾备同步。该值默认为0。
+	// <p>是否自动发起灾备同步功能。该参数仅对购买灾备实例生效。 可选值为：0 - 不自动发起灾备同步；1 - 自动发起灾备同步。该值默认为0。</p>
 	AutoSyncFlag *int64 `json:"AutoSyncFlag,omitnil,omitempty" name:"AutoSyncFlag"`
 
-	// 金融围拢 ID 。
+	// <p>金融围拢 ID 。</p>
 	CageId *string `json:"CageId,omitnil,omitempty" name:"CageId"`
 
-	// 默认参数模板类型。支持值包括："HIGH_STABILITY" - 高稳定模板，"HIGH_PERFORMANCE" - 高性能模板，默认值是："HIGH_STABILITY"。
-	// 备注：如您需使用云数据库 MySQL 默认参数模板，请设置 ParamTemplateType。
+	// <p>默认参数模板类型。支持值包括：&quot;HIGH_STABILITY&quot; - 高稳定模板，&quot;HIGH_PERFORMANCE&quot; - 高性能模板，默认值是：&quot;HIGH_STABILITY&quot;。<br>备注：如您需使用云数据库 MySQL 默认参数模板，请设置 ParamTemplateType。</p>
 	ParamTemplateType *string `json:"ParamTemplateType,omitnil,omitempty" name:"ParamTemplateType"`
 
-	// 告警策略名数组，例如:["policy-uyoee9wg"]，AlarmPolicyList不为空时该参数无效。
+	// <p>告警策略名数组，例如:[&quot;policy-uyoee9wg&quot;]，AlarmPolicyList不为空时该参数无效。</p>
 	AlarmPolicyIdList []*string `json:"AlarmPolicyIdList,omitnil,omitempty" name:"AlarmPolicyIdList"`
 
-	// 是否只预检此次请求。true：发送检查请求，不会创建实例。检查项包括是否填写了必需参数，请求格式，业务限制等。如果检查不通过，则返回对应错误码；如果检查通过，则返回RequestId.默认为false：发送正常请求，通过检查后直接创建实例。
+	// <p>是否只预检此次请求。true：发送检查请求，不会创建实例。检查项包括是否填写了必需参数，请求格式，业务限制等。如果检查不通过，则返回对应错误码；如果检查通过，则返回RequestId.默认为false：发送正常请求，通过检查后直接创建实例。</p>
 	DryRun *bool `json:"DryRun,omitnil,omitempty" name:"DryRun"`
 
-	// 实例引擎类型，默认为"InnoDB"，支持值包括："InnoDB"，"RocksDB"。
+	// <p>实例引擎类型，默认为&quot;InnoDB&quot;，支持值包括：&quot;InnoDB&quot;，&quot;RocksDB&quot;。</p>
 	EngineType *string `json:"EngineType,omitnil,omitempty" name:"EngineType"`
 
-	// 指定实例的IP列表。仅支持主实例指定，按实例顺序，不足则按未指定处理。
+	// <p>指定实例的IP列表。仅支持主实例指定，按实例顺序，不足则按未指定处理。</p>
 	Vips []*string `json:"Vips,omitnil,omitempty" name:"Vips"`
 
-	// 集群版实例的数据保护空间大小，单位 GB，设置范围1 - 10。
+	// <p>云盘版实例的数据保护空间大小，单位 GB，设置范围1 - 10。</p>
 	DataProtectVolume *int64 `json:"DataProtectVolume,omitnil,omitempty" name:"DataProtectVolume"`
 
-	// 集群版节点拓扑配置。
-	// 说明：若购买的是集群版实例，此参数为必填，需设置集群版实例的 RW 和 RO 节点拓扑，RO 节点范围是1 - 5个，请至少设置1个 RO 节点。
+	// <p>云盘版节点拓扑配置。<br>说明：若购买的是云盘版实例，此参数为必填，需设置云盘版实例的 RW 和 RO 节点拓扑，RO 节点范围是1 - 5个，请至少设置1个 RO 节点。</p>
 	ClusterTopology *ClusterTopology `json:"ClusterTopology,omitnil,omitempty" name:"ClusterTopology"`
 
-	// 硬盘类型，单节点（云盘版）或者集群版实例可以指定此参数。CLOUD_SSD 表示 SSD 云硬盘，CLOUD_HSSD 表示增强型 SSD 云硬盘。
-	// 说明：单节点（云盘版）、集群版实例硬盘类型所支持的地域略有不同，具体支持情况请参考 [地域和可用区](https://cloud.tencent.com/document/product/236/8458)。
+	// <p>硬盘类型，单节点（云盘）或者云盘版实例可以指定此参数。CLOUD_SSD 表示 SSD 云硬盘，CLOUD_HSSD 表示增强型 SSD 云硬盘，CLOUD_PREMIUM 表示高性能云硬盘。<br>说明：单节点（云盘）、云盘版实例硬盘类型所支持的地域略有不同，具体支持情况请参考 <a href="https://cloud.tencent.com/document/product/236/8458">地域和可用区</a>。</p>
 	DiskType *string `json:"DiskType,omitnil,omitempty" name:"DiskType"`
 
-	// 集群类型:cage——金融围拢，cdc——CDB ON CDC；dedicate——独享集群
+	// <p>集群类型:cage——金融围拢，cdc——CDB ON CDC；dedicate——独享集群</p>
 	ClusterType *string `json:"ClusterType,omitnil,omitempty" name:"ClusterType"`
+
+	// <p>开启或关闭实例销毁保护。on-开启，off-关闭</p>
+	DestroyProtect *string `json:"DestroyProtect,omitnil,omitempty" name:"DestroyProtect"`
+
+	// <p>备库 3 的可用区信息，默认为空，购买四节点主实例时可指定该参数。</p>
+	FourthZone *string `json:"FourthZone,omitnil,omitempty" name:"FourthZone"`
 }
 
 func (r *CreateDBInstanceHourRequest) ToJsonString() string {
@@ -3433,6 +3431,8 @@ func (r *CreateDBInstanceHourRequest) FromJsonString(s string) error {
 	delete(f, "ClusterTopology")
 	delete(f, "DiskType")
 	delete(f, "ClusterType")
+	delete(f, "DestroyProtect")
+	delete(f, "FourthZone")
 	if len(f) > 0 {
 		return tcerr.NewTencentCloudSDKError("ClientError.BuildRequestError", "CreateDBInstanceHourRequest has unknown keys!", "")
 	}
@@ -3441,10 +3441,10 @@ func (r *CreateDBInstanceHourRequest) FromJsonString(s string) error {
 
 // Predefined struct for user
 type CreateDBInstanceHourResponseParams struct {
-	// 短订单 ID。
+	// <p>短订单 ID。</p>
 	DealIds []*string `json:"DealIds,omitnil,omitempty" name:"DealIds"`
 
-	// 实例 ID 列表。
+	// <p>实例 ID 列表。</p>
 	InstanceIds []*string `json:"InstanceIds,omitnil,omitempty" name:"InstanceIds"`
 
 	// 唯一请求 ID，由服务端生成，每次请求都会返回（若请求因其他原因未能抵达服务端，则该次请求不会获得 RequestId）。定位问题时需要提供该次请求的 RequestId。
@@ -3469,283 +3469,267 @@ func (r *CreateDBInstanceHourResponse) FromJsonString(s string) error {
 
 // Predefined struct for user
 type CreateDBInstanceRequestParams struct {
-	// 实例内存大小，单位：MB，请使用 [获取云数据库可售卖规格](https://cloud.tencent.com/document/api/236/17229) 接口获取可创建的内存规格。
+	// <p>实例内存大小，单位：MB，请使用 <a href="https://cloud.tencent.com/document/api/236/17229">获取云数据库可售卖规格</a> 接口获取可创建的内存规格。</p>
 	Memory *int64 `json:"Memory,omitnil,omitempty" name:"Memory"`
 
-	// 实例硬盘大小，单位：GB，请使用 [获取云数据库可售卖规格](https://cloud.tencent.com/document/api/236/17229) 接口获取可创建的硬盘范围。
+	// <p>实例硬盘大小，单位：GB，请使用 <a href="https://cloud.tencent.com/document/api/236/17229">获取云数据库可售卖规格</a> 接口获取可创建的硬盘范围。</p>
 	Volume *int64 `json:"Volume,omitnil,omitempty" name:"Volume"`
 
-	// 实例时长，单位：月，可选值包括 [1,2,3,4,5,6,7,8,9,10,11,12,24,36]。
+	// <p>实例时长，单位：月，可选值包括 [1,2,3,4,5,6,7,8,9,10,11,12,24,36]。</p>
 	Period *int64 `json:"Period,omitnil,omitempty" name:"Period"`
 
-	// 实例数量，默认值为1, 最小值1，最大值为100。
+	// <p>实例数量，默认值为1, 最小值1，最大值为100。</p>
 	GoodsNum *int64 `json:"GoodsNum,omitnil,omitempty" name:"GoodsNum"`
 
-	// 可用区信息，请使用 [获取云数据库可售卖规格](https://cloud.tencent.com/document/api/236/17229) 接口获取可创建的可用区。
-	// 说明：若您创建单节点、双节点、三节点实例，此参数为必填项，请指定可用区，若不指定可用区，则系统会自动选择一个可用区（可能不是您希望部署的可用区）；若您创建集群版实例，此参数不填，请通过参数 ClusterTopology 进行读写节点和只读节点的可用区配置。
+	// <p>可用区信息，请使用 <a href="https://cloud.tencent.com/document/api/236/17229">获取云数据库可售卖规格</a> 接口获取可创建的可用区。</p><p>若您创建单节点、双节点、三节点、四节点实例，此参数为必填项，请指定可用区，若不指定可用区，则系统会自动选择一个可用区（可能不是您希望部署的可用区）；若您创建云盘版集群实例，此参数不填，请通过参数 ClusterTopology 进行读写节点和只读节点的可用区配置。</p>
 	Zone *string `json:"Zone,omitnil,omitempty" name:"Zone"`
 
-	// 私有网络 ID，请使用 [查询私有网络列表](/document/api/215/15778)。
-	// 说明：如果创建的是集群版实例，此参数为必填且为私有网络类型。若此项不填，则系统会选择默认的 VPC。
+	// <p>私有网络 ID，请使用 <a href="/document/api/215/15778">查询私有网络列表</a>。<br>说明：如果创建的是云盘版实例，此参数为必填且为私有网络类型。若此项不填，则系统会选择默认的 VPC。</p>
 	UniqVpcId *string `json:"UniqVpcId,omitnil,omitempty" name:"UniqVpcId"`
 
-	// 私有网络下的子网 ID，如果设置了 UniqVpcId，则 UniqSubnetId 必填，请使用 [查询子网列表](/document/api/215/15784)。
-	// 说明：若此项不填，则系统会选择默认 VPC 下的默认子网。
+	// <p>私有网络下的子网 ID，如果设置了 UniqVpcId，则 UniqSubnetId 必填，请使用 <a href="/document/api/215/15784">查询子网列表</a>。<br>说明：若此项不填，则系统会选择默认 VPC 下的默认子网。</p>
 	UniqSubnetId *string `json:"UniqSubnetId,omitnil,omitempty" name:"UniqSubnetId"`
 
-	// 项目 ID，不填为默认项目。购买只读实例和灾备实例时，项目 ID 默认和主实例保持一致。
+	// <p>项目 ID，不填为默认项目。购买只读实例和灾备实例时，项目 ID 默认和主实例保持一致。</p>
 	ProjectId *int64 `json:"ProjectId,omitnil,omitempty" name:"ProjectId"`
 
-	// 自定义端口，端口支持范围：[ 1024-65535 ]。
-	// 说明：若此项不填，则默认为3306。
+	// <p>自定义端口，端口支持范围：[ 1024-65535 ]。<br>说明：若此项不填，则默认为3306。</p>
 	Port *int64 `json:"Port,omitnil,omitempty" name:"Port"`
 
-	// 实例类型，支持值包括：master - 表示主实例，dr - 表示灾备实例，ro - 表示只读实例。
-	// 说明：请选择实例类型，不填会默认选择 master。
+	// <p>实例类型，支持值包括：master - 表示主实例，dr - 表示灾备实例，ro - 表示只读实例。<br>说明：请选择实例类型，不填会默认选择 master。</p>
 	InstanceRole *string `json:"InstanceRole,omitnil,omitempty" name:"InstanceRole"`
 
-	// 实例 ID，购买只读实例或灾备实例时必填，该字段表示只读实例或灾备实例的主实例 ID，请使用 [查询实例列表](https://cloud.tencent.com/document/api/236/15872) 接口查询云数据库实例 ID。
+	// <p>实例 ID，购买只读实例或灾备实例时必填，该字段表示只读实例或灾备实例的主实例 ID，请使用 <a href="https://cloud.tencent.com/document/api/236/15872">查询实例列表</a> 接口查询云数据库实例 ID。</p>
 	MasterInstanceId *string `json:"MasterInstanceId,omitnil,omitempty" name:"MasterInstanceId"`
 
-	// MySQL 版本，值包括：5.5、5.6、5.7和8.0，请使用 [获取云数据库可售卖规格](https://cloud.tencent.com/document/api/236/17229) 接口获取可创建的实例版本。
-	// 说明：创建非集群版实例时，请根据需要指定实例版本（推荐5.7或8.0），若此参数不填，则默认值为5.6；若创建的是集群版实例，则此参数仅能指定为5.7或8.0。
+	// <p>MySQL 版本，值包括：5.5、5.6、5.7和8.0，请使用 <a href="https://cloud.tencent.com/document/api/236/17229">获取云数据库可售卖规格</a> 接口获取可创建的实例版本。<br>说明：创建非云盘版实例时，请根据需要指定实例版本（推荐5.7或8.0），若此参数不填，则默认值为8.0；若创建的是云盘版实例，则此参数仅能指定为5.7或8.0。</p>
 	EngineVersion *string `json:"EngineVersion,omitnil,omitempty" name:"EngineVersion"`
 
-	// 设置 root 账号密码，密码规则：8 - 64 个字符，至少包含字母、数字、字符（支持的字符：_+-&=!@#$%^*()）中的两种，购买主实例时可指定该参数，购买只读实例或者灾备实例时指定该参数无意义。
+	// <p>设置 root 账号密码，密码规则：8 - 64 个字符，至少包含字母、数字、字符（支持的字符：_+-&amp;=!@#$%^*()）中的两种，购买主实例时可指定该参数，购买只读实例或者灾备实例时指定该参数无意义。</p>
 	Password *string `json:"Password,omitnil,omitempty" name:"Password"`
 
-	// 数据复制方式，默认为 0，支持值包括：0 - 表示异步复制，1 - 表示半同步复制，2 - 表示强同步复制。
+	// <p>数据复制方式，默认为 0，支持值包括：0 - 表示异步复制，1 - 表示半同步复制，2 - 表示强同步复制。</p>
 	ProtectMode *int64 `json:"ProtectMode,omitnil,omitempty" name:"ProtectMode"`
 
-	// 多可用区域，默认为 0，支持值包括：0 - 表示单可用区，1 - 表示多可用区。
+	// <p>多可用区域，默认为 0，支持值包括：0 - 表示单可用区，1 - 表示多可用区。</p>
 	DeployMode *int64 `json:"DeployMode,omitnil,omitempty" name:"DeployMode"`
 
-	// 备库 1 的可用区信息。
-	// 说明：双节点、三节点实例请指定此参数值，若不指定，则默认为 Zone 的值；集群版实例此参数可不填，请通过参数 ClusterTopology 进行读写节点和只读节点的可用区配置；单节点实例为单可用区，无需指定此参数。
+	// <p>备库 1 的可用区信息。</p><p>双节点、三节点、四节点实例请指定此参数值，若不指定，则默认为 Zone 的值；云盘版实例此参数可不填，请通过参数 ClusterTopology 进行读写节点和只读节点的可用区配置；单节点实例为单可用区，无需指定此参数。</p>
 	SlaveZone *string `json:"SlaveZone,omitnil,omitempty" name:"SlaveZone"`
 
-	// 参数列表，参数格式如 ParamList.0.Name=auto_increment&ParamList.0.Value=1。可通过 [查询默认的可设置参数列表](https://cloud.tencent.com/document/api/236/32662) 查询支持设置的参数。
-	// 说明：表名大小写敏感的开启和关闭可通过参数 lower_case_table_names 进行设置，参数值为0表示开启，参数值为1表示关闭，若不设置则此参数默认值为0。若您创建的是 MySQL 8.0 版本的实例，则需要在创建实例时通过设置 lower_case_table_names 参数来开启或关闭表名大小写敏感，创建实例后无法修改参数，即创建后无法修改表名大小写敏感。其他数据库版本的实例支持在创建实例后修改 lower_case_table_names 参数。创建实例时设置表名大小写敏感的 API 调用方法请参见本文中的示例3。
+	// <p>参数列表，参数格式如 ParamList.0.Name=auto_increment&amp;ParamList.0.Value=1。可通过 <a href="https://cloud.tencent.com/document/api/236/32662">查询默认的可设置参数列表</a> 查询支持设置的参数。<br>说明：表名大小写敏感的开启和关闭可通过参数 lower_case_table_names 进行设置，参数值为0表示开启，参数值为1表示关闭，若不设置则此参数默认值为0。若您创建的是 MySQL 8.0 版本的实例，则需要在创建实例时通过设置 lower_case_table_names 参数来开启或关闭表名大小写敏感，创建实例后无法修改参数，即创建后无法修改表名大小写敏感。其他数据库版本的实例支持在创建实例后修改 lower_case_table_names 参数。创建实例时设置表名大小写敏感的 API 调用方法请参见本文中的示例3。</p>
 	ParamList []*ParamInfo `json:"ParamList,omitnil,omitempty" name:"ParamList"`
 
-	// 备库 2 的可用区信息，默认为空，购买三节点主实例时可指定该参数。
+	// <p>备库 2 的可用区信息，默认为空。</p><p>购买三节点主实例、四节点主实例时可指定该参数。</p>
 	BackupZone *string `json:"BackupZone,omitnil,omitempty" name:"BackupZone"`
 
-	// 自动续费标记，可选值为：0 - 不自动续费；1 - 自动续费。默认为0。
+	// <p>自动续费标记，可选值为：0 - 不自动续费；1 - 自动续费。默认为0。</p>
 	AutoRenewFlag *int64 `json:"AutoRenewFlag,omitnil,omitempty" name:"AutoRenewFlag"`
 
-	// 主实例地域信息，购买灾备、RO实例时，该字段必填。
+	// <p>主实例地域信息，购买灾备、RO实例时，该字段必填。</p>
 	MasterRegion *string `json:"MasterRegion,omitnil,omitempty" name:"MasterRegion"`
 
-	// 安全组参数，可使用 [查询项目安全组信息](https://cloud.tencent.com/document/api/236/15850) 接口查询某个项目的安全组详情。
+	// <p>安全组参数，可使用 <a href="https://cloud.tencent.com/document/api/236/15850">查询项目安全组信息</a> 接口查询某个项目的安全组详情。</p>
 	SecurityGroup []*string `json:"SecurityGroup,omitnil,omitempty" name:"SecurityGroup"`
 
-	// 只读实例参数。购买只读实例时，该参数必传。
+	// <p>只读实例参数。购买只读实例时，该参数必传。</p>
 	RoGroup *RoGroup `json:"RoGroup,omitnil,omitempty" name:"RoGroup"`
 
-	// 实例名称。一次购买多个实例命名会用后缀数字区分，例instnaceName=db，goodsNum=3，实例命名分别为db1，db2，db3。
+	// <p>实例名称。一次购买多个实例命名会用后缀数字区分，例instnaceName=db，goodsNum=3，实例命名分别为db1，db2，db3。</p>
 	InstanceName *string `json:"InstanceName,omitnil,omitempty" name:"InstanceName"`
 
-	// 实例标签信息。
+	// <p>实例标签信息。</p>
 	ResourceTags []*TagInfo `json:"ResourceTags,omitnil,omitempty" name:"ResourceTags"`
 
-	// 置放群组 ID。
+	// <p>置放群组 ID。</p>
 	DeployGroupId *string `json:"DeployGroupId,omitnil,omitempty" name:"DeployGroupId"`
 
-	// 用于保证请求幂等性的字符串。该字符串由客户生成，需保证不同请求之间在48小时内唯一，最大值不超过64个ASCII字符。若不指定该参数，则无法保证请求的幂等性。
+	// <p>用于保证请求幂等性的字符串。该字符串由客户生成，需保证不同请求之间在48小时内唯一，最大值不超过64个ASCII字符。若不指定该参数，则无法保证请求的幂等性。</p>
 	ClientToken *string `json:"ClientToken,omitnil,omitempty" name:"ClientToken"`
 
-	// 实例隔离类型。支持值包括："UNIVERSAL" - 通用型实例，"EXCLUSIVE" - 独享型实例，"BASIC_V2" - ONTKE 单节点实例，"CLOUD_NATIVE_CLUSTER" - 集群版标准型，"CLOUD_NATIVE_CLUSTER_EXCLUSIVE" - 集群版加强型。不指定则默认为通用型实例。
-	// 说明：如果创建的是集群版实例，此参数为必填。
+	// <p>实例隔离类型。</p><p>枚举值：</p><ul><li><p>UNIVERSAL： 通用型实例</p></li><li><p>EXCLUSIVE： 独享型实例</p></li><li><p>CLOUD_NATIVE_CLUSTER： 云盘版标准型</p></li><li><p>CLOUD_NATIVE_CLUSTER_EXCLUSIVE： 云盘版加强型</p></li><li><p>CLOUD_NATIVE_CLUSTER_ULTRA： 云盘版旗舰型</p></li><li><p>若此参数不指定，则默认为通用型实例。</p></li><li><p>如果创建的是云盘版实例，此参数为必填。</p></li><li><p>如果创建的是单节点实例，此参数请填写为：CLOUD_NATIVE_CLUSTER，并指定参数 InstanceNodes 等于1。</p></li></ul>
 	DeviceType *string `json:"DeviceType,omitnil,omitempty" name:"DeviceType"`
 
-	// 参数模板 id。
-	// 备注：如您使用自定义参数模板 id，可传入自定义参数模板 id；如您计划使用默认参数模板，该参数模板 id 传入 id 无效，需设置 ParamTemplateType。
+	// <p>参数模板 id。<br>备注：如您使用自定义参数模板 id，可传入自定义参数模板 id；如您计划使用默认参数模板，该参数模板 id 传入 id 无效，需设置 ParamTemplateType。</p>
 	ParamTemplateId *int64 `json:"ParamTemplateId,omitnil,omitempty" name:"ParamTemplateId"`
 
-	// 告警策略id数组。腾讯云可观测平台DescribeAlarmPolicy接口返回的OriginId。
+	// <p>告警策略id数组。腾讯云可观测平台DescribeAlarmPolicy接口返回的OriginId。</p>
 	AlarmPolicyList []*int64 `json:"AlarmPolicyList,omitnil,omitempty" name:"AlarmPolicyList"`
 
-	// 实例节点数。对于 RO 和 基础版实例， 该值默认为1。 如果需要购买三节点实例， 请将该值设置为3 或指定 BackupZone 参数。当购买主实例，且未指定该参数和 BackupZone 参数时，该值默认是 2， 即购买两节点实例。
+	// <p>实例节点数。</p><p>对于 RO 和单节点实例，该值默认为1。如果需要购买三节点实例，请将该值设置为3，或指定 BackupZone 参数；当购买主实例，且未指定该参数和 BackupZone 参数时，该值默认是2，即购买双节点实例；如果需要购买四节点实例，请将该值设置为4，或指定 FourthZone 参数。</p>
 	InstanceNodes *int64 `json:"InstanceNodes,omitnil,omitempty" name:"InstanceNodes"`
 
-	// 实例cpu核数， 如果不传将根据memory指定的内存值自动填充对应的cpu值。
+	// <p>实例 Cpu 核数。</p><p>当内存规格 Memory 存在多种 CPU 配置时（如 64000MB 内存对应 8核/16核/32核），必须传入 Cpu 参数。</p>
 	Cpu *int64 `json:"Cpu,omitnil,omitempty" name:"Cpu"`
 
-	// 是否自动发起灾备同步功能。该参数仅对购买灾备实例生效。 可选值为：0 - 不自动发起灾备同步；1 - 自动发起灾备同步。该值默认为0。
+	// <p>是否自动发起灾备同步功能。该参数仅对购买灾备实例生效。 可选值为：0 - 不自动发起灾备同步；1 - 自动发起灾备同步。该值默认为0。</p>
 	AutoSyncFlag *int64 `json:"AutoSyncFlag,omitnil,omitempty" name:"AutoSyncFlag"`
 
-	// 金融围拢 ID。
+	// <p>金融围拢 ID。</p>
 	CageId *string `json:"CageId,omitnil,omitempty" name:"CageId"`
 
-	// 默认参数模板类型。支持值包括："HIGH_STABILITY" - 高稳定模板，"HIGH_PERFORMANCE" - 高性能模板。
-	// 备注：如您需使用云数据库 MySQL 默认参数模板，请设置 ParamTemplateType。
+	// <p>默认参数模板类型。支持值包括：&quot;HIGH_STABILITY&quot; - 高稳定模板，&quot;HIGH_PERFORMANCE&quot; - 高性能模板。<br>备注：如您需使用云数据库 MySQL 默认参数模板，请设置 ParamTemplateType。</p>
 	ParamTemplateType *string `json:"ParamTemplateType,omitnil,omitempty" name:"ParamTemplateType"`
 
-	// 告警策略名数组，例如:["policy-uyoee9wg"]，AlarmPolicyList不为空时该参数无效。
+	// <p>告警策略名数组，例如:[&quot;policy-uyoee9wg&quot;]，AlarmPolicyList不为空时该参数无效。</p>
 	AlarmPolicyIdList []*string `json:"AlarmPolicyIdList,omitnil,omitempty" name:"AlarmPolicyIdList"`
 
-	// 是否只预检此次请求。true：发送检查请求，不会创建实例。检查项包括是否填写了必需参数，请求格式，业务限制等。如果检查不通过，则返回对应错误码；如果检查通过，则返回 RequestId。false：发送正常请求，通过检查后直接创建实例。
-	// 默认为 false。
+	// <p>是否只预检此次请求。true：发送检查请求，不会创建实例。检查项包括是否填写了必需参数，请求格式，业务限制等。如果检查不通过，则返回对应错误码；如果检查通过，则返回 RequestId。false：发送正常请求，通过检查后直接创建实例。<br>默认为 false。</p>
 	DryRun *bool `json:"DryRun,omitnil,omitempty" name:"DryRun"`
 
-	// 实例引擎类型，默认为"InnoDB"，支持值包括："InnoDB"，"RocksDB"。
+	// <p>实例引擎类型，默认为&quot;InnoDB&quot;，支持值包括：&quot;InnoDB&quot;，&quot;RocksDB&quot;。</p>
 	EngineType *string `json:"EngineType,omitnil,omitempty" name:"EngineType"`
 
-	// 指定实例的IP列表。仅支持主实例指定，按实例顺序，不足则按未指定处理。
+	// <p>指定实例的IP列表。仅支持主实例指定，按实例顺序，不足则按未指定处理。</p>
 	Vips []*string `json:"Vips,omitnil,omitempty" name:"Vips"`
 
-	// 集群版实例的数据保护空间大小，单位 GB，设置范围1 - 10。
+	// <p>云盘版实例的数据保护空间大小，单位 GB，设置范围1 - 10。</p>
 	DataProtectVolume *int64 `json:"DataProtectVolume,omitnil,omitempty" name:"DataProtectVolume"`
 
-	// 集群版节点拓扑配置。
-	// 说明：若购买的是集群版实例，此参数为必填，需设置集群版实例的 RW 和 RO 节点拓扑，RO 节点范围是1 - 5个，请至少设置1个 RO 节点。
+	// <p>云盘版实例的节点拓扑配置。</p><p>若购买的是云盘版实例，此参数为必填，需设置云盘版实例的 RW 和 RO 节点拓扑，RO 节点范围是1 - 5个，请至少设置1个 RO 节点。</p>
 	ClusterTopology *ClusterTopology `json:"ClusterTopology,omitnil,omitempty" name:"ClusterTopology"`
 
-	// 磁盘类型，单节点（云盘版）或者集群版实例可以指定此参数。CLOUD_SSD 表示 SSD 云硬盘，CLOUD_HSSD 表示增强型 SSD 云硬盘。
-	// 说明：单节点（云盘版）、集群版实例硬盘类型所支持的地域略有不同，具体支持情况请参考 [地域和可用区](https://cloud.tencent.com/document/product/236/8458)。
+	// <p>磁盘类型，单节点（云盘版）或者云盘版实例可以指定此参数。CLOUD_SSD 表示 SSD 云硬盘，CLOUD_HSSD 表示增强型 SSD 云硬盘，CLOUD_PREMIUM 表示高性能云硬盘。<br>说明：单节点（云盘版）、云盘版实例硬盘类型所支持的地域略有不同，具体支持情况请参考 <a href="https://cloud.tencent.com/document/product/236/8458">地域和可用区</a>。</p>
 	DiskType *string `json:"DiskType,omitnil,omitempty" name:"DiskType"`
+
+	// <p>开启或关闭实例销毁保护。on-开启，off-关闭</p>
+	DestroyProtect *string `json:"DestroyProtect,omitnil,omitempty" name:"DestroyProtect"`
+
+	// <p>备库 3 的可用区信息，默认为空，购买四节点主实例时可指定该参数。</p>
+	FourthZone *string `json:"FourthZone,omitnil,omitempty" name:"FourthZone"`
 }
 
 type CreateDBInstanceRequest struct {
 	*tchttp.BaseRequest
 	
-	// 实例内存大小，单位：MB，请使用 [获取云数据库可售卖规格](https://cloud.tencent.com/document/api/236/17229) 接口获取可创建的内存规格。
+	// <p>实例内存大小，单位：MB，请使用 <a href="https://cloud.tencent.com/document/api/236/17229">获取云数据库可售卖规格</a> 接口获取可创建的内存规格。</p>
 	Memory *int64 `json:"Memory,omitnil,omitempty" name:"Memory"`
 
-	// 实例硬盘大小，单位：GB，请使用 [获取云数据库可售卖规格](https://cloud.tencent.com/document/api/236/17229) 接口获取可创建的硬盘范围。
+	// <p>实例硬盘大小，单位：GB，请使用 <a href="https://cloud.tencent.com/document/api/236/17229">获取云数据库可售卖规格</a> 接口获取可创建的硬盘范围。</p>
 	Volume *int64 `json:"Volume,omitnil,omitempty" name:"Volume"`
 
-	// 实例时长，单位：月，可选值包括 [1,2,3,4,5,6,7,8,9,10,11,12,24,36]。
+	// <p>实例时长，单位：月，可选值包括 [1,2,3,4,5,6,7,8,9,10,11,12,24,36]。</p>
 	Period *int64 `json:"Period,omitnil,omitempty" name:"Period"`
 
-	// 实例数量，默认值为1, 最小值1，最大值为100。
+	// <p>实例数量，默认值为1, 最小值1，最大值为100。</p>
 	GoodsNum *int64 `json:"GoodsNum,omitnil,omitempty" name:"GoodsNum"`
 
-	// 可用区信息，请使用 [获取云数据库可售卖规格](https://cloud.tencent.com/document/api/236/17229) 接口获取可创建的可用区。
-	// 说明：若您创建单节点、双节点、三节点实例，此参数为必填项，请指定可用区，若不指定可用区，则系统会自动选择一个可用区（可能不是您希望部署的可用区）；若您创建集群版实例，此参数不填，请通过参数 ClusterTopology 进行读写节点和只读节点的可用区配置。
+	// <p>可用区信息，请使用 <a href="https://cloud.tencent.com/document/api/236/17229">获取云数据库可售卖规格</a> 接口获取可创建的可用区。</p><p>若您创建单节点、双节点、三节点、四节点实例，此参数为必填项，请指定可用区，若不指定可用区，则系统会自动选择一个可用区（可能不是您希望部署的可用区）；若您创建云盘版集群实例，此参数不填，请通过参数 ClusterTopology 进行读写节点和只读节点的可用区配置。</p>
 	Zone *string `json:"Zone,omitnil,omitempty" name:"Zone"`
 
-	// 私有网络 ID，请使用 [查询私有网络列表](/document/api/215/15778)。
-	// 说明：如果创建的是集群版实例，此参数为必填且为私有网络类型。若此项不填，则系统会选择默认的 VPC。
+	// <p>私有网络 ID，请使用 <a href="/document/api/215/15778">查询私有网络列表</a>。<br>说明：如果创建的是云盘版实例，此参数为必填且为私有网络类型。若此项不填，则系统会选择默认的 VPC。</p>
 	UniqVpcId *string `json:"UniqVpcId,omitnil,omitempty" name:"UniqVpcId"`
 
-	// 私有网络下的子网 ID，如果设置了 UniqVpcId，则 UniqSubnetId 必填，请使用 [查询子网列表](/document/api/215/15784)。
-	// 说明：若此项不填，则系统会选择默认 VPC 下的默认子网。
+	// <p>私有网络下的子网 ID，如果设置了 UniqVpcId，则 UniqSubnetId 必填，请使用 <a href="/document/api/215/15784">查询子网列表</a>。<br>说明：若此项不填，则系统会选择默认 VPC 下的默认子网。</p>
 	UniqSubnetId *string `json:"UniqSubnetId,omitnil,omitempty" name:"UniqSubnetId"`
 
-	// 项目 ID，不填为默认项目。购买只读实例和灾备实例时，项目 ID 默认和主实例保持一致。
+	// <p>项目 ID，不填为默认项目。购买只读实例和灾备实例时，项目 ID 默认和主实例保持一致。</p>
 	ProjectId *int64 `json:"ProjectId,omitnil,omitempty" name:"ProjectId"`
 
-	// 自定义端口，端口支持范围：[ 1024-65535 ]。
-	// 说明：若此项不填，则默认为3306。
+	// <p>自定义端口，端口支持范围：[ 1024-65535 ]。<br>说明：若此项不填，则默认为3306。</p>
 	Port *int64 `json:"Port,omitnil,omitempty" name:"Port"`
 
-	// 实例类型，支持值包括：master - 表示主实例，dr - 表示灾备实例，ro - 表示只读实例。
-	// 说明：请选择实例类型，不填会默认选择 master。
+	// <p>实例类型，支持值包括：master - 表示主实例，dr - 表示灾备实例，ro - 表示只读实例。<br>说明：请选择实例类型，不填会默认选择 master。</p>
 	InstanceRole *string `json:"InstanceRole,omitnil,omitempty" name:"InstanceRole"`
 
-	// 实例 ID，购买只读实例或灾备实例时必填，该字段表示只读实例或灾备实例的主实例 ID，请使用 [查询实例列表](https://cloud.tencent.com/document/api/236/15872) 接口查询云数据库实例 ID。
+	// <p>实例 ID，购买只读实例或灾备实例时必填，该字段表示只读实例或灾备实例的主实例 ID，请使用 <a href="https://cloud.tencent.com/document/api/236/15872">查询实例列表</a> 接口查询云数据库实例 ID。</p>
 	MasterInstanceId *string `json:"MasterInstanceId,omitnil,omitempty" name:"MasterInstanceId"`
 
-	// MySQL 版本，值包括：5.5、5.6、5.7和8.0，请使用 [获取云数据库可售卖规格](https://cloud.tencent.com/document/api/236/17229) 接口获取可创建的实例版本。
-	// 说明：创建非集群版实例时，请根据需要指定实例版本（推荐5.7或8.0），若此参数不填，则默认值为5.6；若创建的是集群版实例，则此参数仅能指定为5.7或8.0。
+	// <p>MySQL 版本，值包括：5.5、5.6、5.7和8.0，请使用 <a href="https://cloud.tencent.com/document/api/236/17229">获取云数据库可售卖规格</a> 接口获取可创建的实例版本。<br>说明：创建非云盘版实例时，请根据需要指定实例版本（推荐5.7或8.0），若此参数不填，则默认值为8.0；若创建的是云盘版实例，则此参数仅能指定为5.7或8.0。</p>
 	EngineVersion *string `json:"EngineVersion,omitnil,omitempty" name:"EngineVersion"`
 
-	// 设置 root 账号密码，密码规则：8 - 64 个字符，至少包含字母、数字、字符（支持的字符：_+-&=!@#$%^*()）中的两种，购买主实例时可指定该参数，购买只读实例或者灾备实例时指定该参数无意义。
+	// <p>设置 root 账号密码，密码规则：8 - 64 个字符，至少包含字母、数字、字符（支持的字符：_+-&amp;=!@#$%^*()）中的两种，购买主实例时可指定该参数，购买只读实例或者灾备实例时指定该参数无意义。</p>
 	Password *string `json:"Password,omitnil,omitempty" name:"Password"`
 
-	// 数据复制方式，默认为 0，支持值包括：0 - 表示异步复制，1 - 表示半同步复制，2 - 表示强同步复制。
+	// <p>数据复制方式，默认为 0，支持值包括：0 - 表示异步复制，1 - 表示半同步复制，2 - 表示强同步复制。</p>
 	ProtectMode *int64 `json:"ProtectMode,omitnil,omitempty" name:"ProtectMode"`
 
-	// 多可用区域，默认为 0，支持值包括：0 - 表示单可用区，1 - 表示多可用区。
+	// <p>多可用区域，默认为 0，支持值包括：0 - 表示单可用区，1 - 表示多可用区。</p>
 	DeployMode *int64 `json:"DeployMode,omitnil,omitempty" name:"DeployMode"`
 
-	// 备库 1 的可用区信息。
-	// 说明：双节点、三节点实例请指定此参数值，若不指定，则默认为 Zone 的值；集群版实例此参数可不填，请通过参数 ClusterTopology 进行读写节点和只读节点的可用区配置；单节点实例为单可用区，无需指定此参数。
+	// <p>备库 1 的可用区信息。</p><p>双节点、三节点、四节点实例请指定此参数值，若不指定，则默认为 Zone 的值；云盘版实例此参数可不填，请通过参数 ClusterTopology 进行读写节点和只读节点的可用区配置；单节点实例为单可用区，无需指定此参数。</p>
 	SlaveZone *string `json:"SlaveZone,omitnil,omitempty" name:"SlaveZone"`
 
-	// 参数列表，参数格式如 ParamList.0.Name=auto_increment&ParamList.0.Value=1。可通过 [查询默认的可设置参数列表](https://cloud.tencent.com/document/api/236/32662) 查询支持设置的参数。
-	// 说明：表名大小写敏感的开启和关闭可通过参数 lower_case_table_names 进行设置，参数值为0表示开启，参数值为1表示关闭，若不设置则此参数默认值为0。若您创建的是 MySQL 8.0 版本的实例，则需要在创建实例时通过设置 lower_case_table_names 参数来开启或关闭表名大小写敏感，创建实例后无法修改参数，即创建后无法修改表名大小写敏感。其他数据库版本的实例支持在创建实例后修改 lower_case_table_names 参数。创建实例时设置表名大小写敏感的 API 调用方法请参见本文中的示例3。
+	// <p>参数列表，参数格式如 ParamList.0.Name=auto_increment&amp;ParamList.0.Value=1。可通过 <a href="https://cloud.tencent.com/document/api/236/32662">查询默认的可设置参数列表</a> 查询支持设置的参数。<br>说明：表名大小写敏感的开启和关闭可通过参数 lower_case_table_names 进行设置，参数值为0表示开启，参数值为1表示关闭，若不设置则此参数默认值为0。若您创建的是 MySQL 8.0 版本的实例，则需要在创建实例时通过设置 lower_case_table_names 参数来开启或关闭表名大小写敏感，创建实例后无法修改参数，即创建后无法修改表名大小写敏感。其他数据库版本的实例支持在创建实例后修改 lower_case_table_names 参数。创建实例时设置表名大小写敏感的 API 调用方法请参见本文中的示例3。</p>
 	ParamList []*ParamInfo `json:"ParamList,omitnil,omitempty" name:"ParamList"`
 
-	// 备库 2 的可用区信息，默认为空，购买三节点主实例时可指定该参数。
+	// <p>备库 2 的可用区信息，默认为空。</p><p>购买三节点主实例、四节点主实例时可指定该参数。</p>
 	BackupZone *string `json:"BackupZone,omitnil,omitempty" name:"BackupZone"`
 
-	// 自动续费标记，可选值为：0 - 不自动续费；1 - 自动续费。默认为0。
+	// <p>自动续费标记，可选值为：0 - 不自动续费；1 - 自动续费。默认为0。</p>
 	AutoRenewFlag *int64 `json:"AutoRenewFlag,omitnil,omitempty" name:"AutoRenewFlag"`
 
-	// 主实例地域信息，购买灾备、RO实例时，该字段必填。
+	// <p>主实例地域信息，购买灾备、RO实例时，该字段必填。</p>
 	MasterRegion *string `json:"MasterRegion,omitnil,omitempty" name:"MasterRegion"`
 
-	// 安全组参数，可使用 [查询项目安全组信息](https://cloud.tencent.com/document/api/236/15850) 接口查询某个项目的安全组详情。
+	// <p>安全组参数，可使用 <a href="https://cloud.tencent.com/document/api/236/15850">查询项目安全组信息</a> 接口查询某个项目的安全组详情。</p>
 	SecurityGroup []*string `json:"SecurityGroup,omitnil,omitempty" name:"SecurityGroup"`
 
-	// 只读实例参数。购买只读实例时，该参数必传。
+	// <p>只读实例参数。购买只读实例时，该参数必传。</p>
 	RoGroup *RoGroup `json:"RoGroup,omitnil,omitempty" name:"RoGroup"`
 
-	// 实例名称。一次购买多个实例命名会用后缀数字区分，例instnaceName=db，goodsNum=3，实例命名分别为db1，db2，db3。
+	// <p>实例名称。一次购买多个实例命名会用后缀数字区分，例instnaceName=db，goodsNum=3，实例命名分别为db1，db2，db3。</p>
 	InstanceName *string `json:"InstanceName,omitnil,omitempty" name:"InstanceName"`
 
-	// 实例标签信息。
+	// <p>实例标签信息。</p>
 	ResourceTags []*TagInfo `json:"ResourceTags,omitnil,omitempty" name:"ResourceTags"`
 
-	// 置放群组 ID。
+	// <p>置放群组 ID。</p>
 	DeployGroupId *string `json:"DeployGroupId,omitnil,omitempty" name:"DeployGroupId"`
 
-	// 用于保证请求幂等性的字符串。该字符串由客户生成，需保证不同请求之间在48小时内唯一，最大值不超过64个ASCII字符。若不指定该参数，则无法保证请求的幂等性。
+	// <p>用于保证请求幂等性的字符串。该字符串由客户生成，需保证不同请求之间在48小时内唯一，最大值不超过64个ASCII字符。若不指定该参数，则无法保证请求的幂等性。</p>
 	ClientToken *string `json:"ClientToken,omitnil,omitempty" name:"ClientToken"`
 
-	// 实例隔离类型。支持值包括："UNIVERSAL" - 通用型实例，"EXCLUSIVE" - 独享型实例，"BASIC_V2" - ONTKE 单节点实例，"CLOUD_NATIVE_CLUSTER" - 集群版标准型，"CLOUD_NATIVE_CLUSTER_EXCLUSIVE" - 集群版加强型。不指定则默认为通用型实例。
-	// 说明：如果创建的是集群版实例，此参数为必填。
+	// <p>实例隔离类型。</p><p>枚举值：</p><ul><li><p>UNIVERSAL： 通用型实例</p></li><li><p>EXCLUSIVE： 独享型实例</p></li><li><p>CLOUD_NATIVE_CLUSTER： 云盘版标准型</p></li><li><p>CLOUD_NATIVE_CLUSTER_EXCLUSIVE： 云盘版加强型</p></li><li><p>CLOUD_NATIVE_CLUSTER_ULTRA： 云盘版旗舰型</p></li><li><p>若此参数不指定，则默认为通用型实例。</p></li><li><p>如果创建的是云盘版实例，此参数为必填。</p></li><li><p>如果创建的是单节点实例，此参数请填写为：CLOUD_NATIVE_CLUSTER，并指定参数 InstanceNodes 等于1。</p></li></ul>
 	DeviceType *string `json:"DeviceType,omitnil,omitempty" name:"DeviceType"`
 
-	// 参数模板 id。
-	// 备注：如您使用自定义参数模板 id，可传入自定义参数模板 id；如您计划使用默认参数模板，该参数模板 id 传入 id 无效，需设置 ParamTemplateType。
+	// <p>参数模板 id。<br>备注：如您使用自定义参数模板 id，可传入自定义参数模板 id；如您计划使用默认参数模板，该参数模板 id 传入 id 无效，需设置 ParamTemplateType。</p>
 	ParamTemplateId *int64 `json:"ParamTemplateId,omitnil,omitempty" name:"ParamTemplateId"`
 
-	// 告警策略id数组。腾讯云可观测平台DescribeAlarmPolicy接口返回的OriginId。
+	// <p>告警策略id数组。腾讯云可观测平台DescribeAlarmPolicy接口返回的OriginId。</p>
 	AlarmPolicyList []*int64 `json:"AlarmPolicyList,omitnil,omitempty" name:"AlarmPolicyList"`
 
-	// 实例节点数。对于 RO 和 基础版实例， 该值默认为1。 如果需要购买三节点实例， 请将该值设置为3 或指定 BackupZone 参数。当购买主实例，且未指定该参数和 BackupZone 参数时，该值默认是 2， 即购买两节点实例。
+	// <p>实例节点数。</p><p>对于 RO 和单节点实例，该值默认为1。如果需要购买三节点实例，请将该值设置为3，或指定 BackupZone 参数；当购买主实例，且未指定该参数和 BackupZone 参数时，该值默认是2，即购买双节点实例；如果需要购买四节点实例，请将该值设置为4，或指定 FourthZone 参数。</p>
 	InstanceNodes *int64 `json:"InstanceNodes,omitnil,omitempty" name:"InstanceNodes"`
 
-	// 实例cpu核数， 如果不传将根据memory指定的内存值自动填充对应的cpu值。
+	// <p>实例 Cpu 核数。</p><p>当内存规格 Memory 存在多种 CPU 配置时（如 64000MB 内存对应 8核/16核/32核），必须传入 Cpu 参数。</p>
 	Cpu *int64 `json:"Cpu,omitnil,omitempty" name:"Cpu"`
 
-	// 是否自动发起灾备同步功能。该参数仅对购买灾备实例生效。 可选值为：0 - 不自动发起灾备同步；1 - 自动发起灾备同步。该值默认为0。
+	// <p>是否自动发起灾备同步功能。该参数仅对购买灾备实例生效。 可选值为：0 - 不自动发起灾备同步；1 - 自动发起灾备同步。该值默认为0。</p>
 	AutoSyncFlag *int64 `json:"AutoSyncFlag,omitnil,omitempty" name:"AutoSyncFlag"`
 
-	// 金融围拢 ID。
+	// <p>金融围拢 ID。</p>
 	CageId *string `json:"CageId,omitnil,omitempty" name:"CageId"`
 
-	// 默认参数模板类型。支持值包括："HIGH_STABILITY" - 高稳定模板，"HIGH_PERFORMANCE" - 高性能模板。
-	// 备注：如您需使用云数据库 MySQL 默认参数模板，请设置 ParamTemplateType。
+	// <p>默认参数模板类型。支持值包括：&quot;HIGH_STABILITY&quot; - 高稳定模板，&quot;HIGH_PERFORMANCE&quot; - 高性能模板。<br>备注：如您需使用云数据库 MySQL 默认参数模板，请设置 ParamTemplateType。</p>
 	ParamTemplateType *string `json:"ParamTemplateType,omitnil,omitempty" name:"ParamTemplateType"`
 
-	// 告警策略名数组，例如:["policy-uyoee9wg"]，AlarmPolicyList不为空时该参数无效。
+	// <p>告警策略名数组，例如:[&quot;policy-uyoee9wg&quot;]，AlarmPolicyList不为空时该参数无效。</p>
 	AlarmPolicyIdList []*string `json:"AlarmPolicyIdList,omitnil,omitempty" name:"AlarmPolicyIdList"`
 
-	// 是否只预检此次请求。true：发送检查请求，不会创建实例。检查项包括是否填写了必需参数，请求格式，业务限制等。如果检查不通过，则返回对应错误码；如果检查通过，则返回 RequestId。false：发送正常请求，通过检查后直接创建实例。
-	// 默认为 false。
+	// <p>是否只预检此次请求。true：发送检查请求，不会创建实例。检查项包括是否填写了必需参数，请求格式，业务限制等。如果检查不通过，则返回对应错误码；如果检查通过，则返回 RequestId。false：发送正常请求，通过检查后直接创建实例。<br>默认为 false。</p>
 	DryRun *bool `json:"DryRun,omitnil,omitempty" name:"DryRun"`
 
-	// 实例引擎类型，默认为"InnoDB"，支持值包括："InnoDB"，"RocksDB"。
+	// <p>实例引擎类型，默认为&quot;InnoDB&quot;，支持值包括：&quot;InnoDB&quot;，&quot;RocksDB&quot;。</p>
 	EngineType *string `json:"EngineType,omitnil,omitempty" name:"EngineType"`
 
-	// 指定实例的IP列表。仅支持主实例指定，按实例顺序，不足则按未指定处理。
+	// <p>指定实例的IP列表。仅支持主实例指定，按实例顺序，不足则按未指定处理。</p>
 	Vips []*string `json:"Vips,omitnil,omitempty" name:"Vips"`
 
-	// 集群版实例的数据保护空间大小，单位 GB，设置范围1 - 10。
+	// <p>云盘版实例的数据保护空间大小，单位 GB，设置范围1 - 10。</p>
 	DataProtectVolume *int64 `json:"DataProtectVolume,omitnil,omitempty" name:"DataProtectVolume"`
 
-	// 集群版节点拓扑配置。
-	// 说明：若购买的是集群版实例，此参数为必填，需设置集群版实例的 RW 和 RO 节点拓扑，RO 节点范围是1 - 5个，请至少设置1个 RO 节点。
+	// <p>云盘版实例的节点拓扑配置。</p><p>若购买的是云盘版实例，此参数为必填，需设置云盘版实例的 RW 和 RO 节点拓扑，RO 节点范围是1 - 5个，请至少设置1个 RO 节点。</p>
 	ClusterTopology *ClusterTopology `json:"ClusterTopology,omitnil,omitempty" name:"ClusterTopology"`
 
-	// 磁盘类型，单节点（云盘版）或者集群版实例可以指定此参数。CLOUD_SSD 表示 SSD 云硬盘，CLOUD_HSSD 表示增强型 SSD 云硬盘。
-	// 说明：单节点（云盘版）、集群版实例硬盘类型所支持的地域略有不同，具体支持情况请参考 [地域和可用区](https://cloud.tencent.com/document/product/236/8458)。
+	// <p>磁盘类型，单节点（云盘版）或者云盘版实例可以指定此参数。CLOUD_SSD 表示 SSD 云硬盘，CLOUD_HSSD 表示增强型 SSD 云硬盘，CLOUD_PREMIUM 表示高性能云硬盘。<br>说明：单节点（云盘版）、云盘版实例硬盘类型所支持的地域略有不同，具体支持情况请参考 <a href="https://cloud.tencent.com/document/product/236/8458">地域和可用区</a>。</p>
 	DiskType *string `json:"DiskType,omitnil,omitempty" name:"DiskType"`
+
+	// <p>开启或关闭实例销毁保护。on-开启，off-关闭</p>
+	DestroyProtect *string `json:"DestroyProtect,omitnil,omitempty" name:"DestroyProtect"`
+
+	// <p>备库 3 的可用区信息，默认为空，购买四节点主实例时可指定该参数。</p>
+	FourthZone *string `json:"FourthZone,omitnil,omitempty" name:"FourthZone"`
 }
 
 func (r *CreateDBInstanceRequest) ToJsonString() string {
@@ -3801,6 +3785,8 @@ func (r *CreateDBInstanceRequest) FromJsonString(s string) error {
 	delete(f, "DataProtectVolume")
 	delete(f, "ClusterTopology")
 	delete(f, "DiskType")
+	delete(f, "DestroyProtect")
+	delete(f, "FourthZone")
 	if len(f) > 0 {
 		return tcerr.NewTencentCloudSDKError("ClientError.BuildRequestError", "CreateDBInstanceRequest has unknown keys!", "")
 	}
@@ -3809,10 +3795,10 @@ func (r *CreateDBInstanceRequest) FromJsonString(s string) error {
 
 // Predefined struct for user
 type CreateDBInstanceResponseParams struct {
-	// 计费子订单 ID。
+	// <p>计费子订单 ID。</p>
 	DealIds []*string `json:"DealIds,omitnil,omitempty" name:"DealIds"`
 
-	// 实例 ID 列表。
+	// <p>实例 ID 列表。</p>
 	InstanceIds []*string `json:"InstanceIds,omitnil,omitempty" name:"InstanceIds"`
 
 	// 唯一请求 ID，由服务端生成，每次请求都会返回（若请求因其他原因未能抵达服务端，则该次请求不会获得 RequestId）。定位问题时需要提供该次请求的 RequestId。
@@ -5050,6 +5036,15 @@ type DescribeAccountsRequestParams struct {
 
 	// 匹配账号名的正则表达式，规则同 MySQL 官网。
 	AccountRegexp *string `json:"AccountRegexp,omitnil,omitempty" name:"AccountRegexp"`
+
+	// 默认无排序，支持：ASC、DESC、asc、desc
+	SortBy *string `json:"SortBy,omitnil,omitempty" name:"SortBy"`
+
+	// 待排序的时间字段，可选：CreateTime(账号创建时间)、ModifyTime(账号更新时间)、ModifyPasswordTime(密码修改时间)
+	OrderBy *string `json:"OrderBy,omitnil,omitempty" name:"OrderBy"`
+
+	// 匹配账号主机地址（Host）的正则表达式，规则同 MySQL 官网
+	HostRegexp *string `json:"HostRegexp,omitnil,omitempty" name:"HostRegexp"`
 }
 
 type DescribeAccountsRequest struct {
@@ -5066,6 +5061,15 @@ type DescribeAccountsRequest struct {
 
 	// 匹配账号名的正则表达式，规则同 MySQL 官网。
 	AccountRegexp *string `json:"AccountRegexp,omitnil,omitempty" name:"AccountRegexp"`
+
+	// 默认无排序，支持：ASC、DESC、asc、desc
+	SortBy *string `json:"SortBy,omitnil,omitempty" name:"SortBy"`
+
+	// 待排序的时间字段，可选：CreateTime(账号创建时间)、ModifyTime(账号更新时间)、ModifyPasswordTime(密码修改时间)
+	OrderBy *string `json:"OrderBy,omitnil,omitempty" name:"OrderBy"`
+
+	// 匹配账号主机地址（Host）的正则表达式，规则同 MySQL 官网
+	HostRegexp *string `json:"HostRegexp,omitnil,omitempty" name:"HostRegexp"`
 }
 
 func (r *DescribeAccountsRequest) ToJsonString() string {
@@ -5084,6 +5088,9 @@ func (r *DescribeAccountsRequest) FromJsonString(s string) error {
 	delete(f, "Offset")
 	delete(f, "Limit")
 	delete(f, "AccountRegexp")
+	delete(f, "SortBy")
+	delete(f, "OrderBy")
+	delete(f, "HostRegexp")
 	if len(f) > 0 {
 		return tcerr.NewTencentCloudSDKError("ClientError.BuildRequestError", "DescribeAccountsRequest has unknown keys!", "")
 	}
@@ -5223,6 +5230,9 @@ type DescribeAuditConfigResponseParams struct {
 
 	// 是否正在关闭审计。目前支持的值包括："false"-否，"true"-是
 	IsClosing *string `json:"IsClosing,omitnil,omitempty" name:"IsClosing"`
+
+	// 是否正在开启审计。目前支持的值包括："false"-否，"true"-是
+	IsOpening *string `json:"IsOpening,omitnil,omitempty" name:"IsOpening"`
 
 	// 审计服务开通时间。
 	CreateTime *string `json:"CreateTime,omitnil,omitempty" name:"CreateTime"`
@@ -6220,14 +6230,14 @@ func (r *DescribeBackupEncryptionStatusResponse) FromJsonString(s string) error 
 
 // Predefined struct for user
 type DescribeBackupOverviewRequestParams struct {
-	// 需要查询备份概览的云数据库产品类型。可取值为：mysql 指双节点/三节点的高可用实例，mysql-basic 指单节点云盘版实例，mysql-cluster 指云盘版（原集群版）实例。
+	// 需要查询备份概览的云数据库产品类型。可取值为：mysql 指双节点/三节点的高可用实例，mysql-basic 指单节点（云盘）实例，mysql-cluster 指云盘版实例。
 	Product *string `json:"Product,omitnil,omitempty" name:"Product"`
 }
 
 type DescribeBackupOverviewRequest struct {
 	*tchttp.BaseRequest
 	
-	// 需要查询备份概览的云数据库产品类型。可取值为：mysql 指双节点/三节点的高可用实例，mysql-basic 指单节点云盘版实例，mysql-cluster 指云盘版（原集群版）实例。
+	// 需要查询备份概览的云数据库产品类型。可取值为：mysql 指双节点/三节点的高可用实例，mysql-basic 指单节点（云盘）实例，mysql-cluster 指云盘版实例。
 	Product *string `json:"Product,omitnil,omitempty" name:"Product"`
 }
 
@@ -6295,7 +6305,7 @@ func (r *DescribeBackupOverviewResponse) FromJsonString(s string) error {
 
 // Predefined struct for user
 type DescribeBackupSummariesRequestParams struct {
-	// 需要查询备份实时统计的云数据库产品类型。可取值为：mysql 指双节点/三节点的高可用实例，mysql-basic 指单节点云盘版实例，mysql-cluster 指云盘版（原集群版）实例。
+	// 需要查询备份实时统计的云数据库产品类型。可取值为：mysql 指双节点/三节点的高可用实例，mysql-basic 指单节点（云盘）实例，mysql-cluster 指云盘版实例。
 	Product *string `json:"Product,omitnil,omitempty" name:"Product"`
 
 	// 分页查询数据的偏移量，默认为0。
@@ -6314,7 +6324,7 @@ type DescribeBackupSummariesRequestParams struct {
 type DescribeBackupSummariesRequest struct {
 	*tchttp.BaseRequest
 	
-	// 需要查询备份实时统计的云数据库产品类型。可取值为：mysql 指双节点/三节点的高可用实例，mysql-basic 指单节点云盘版实例，mysql-cluster 指云盘版（原集群版）实例。
+	// 需要查询备份实时统计的云数据库产品类型。可取值为：mysql 指双节点/三节点的高可用实例，mysql-basic 指单节点（云盘）实例，mysql-cluster 指云盘版实例。
 	Product *string `json:"Product,omitnil,omitempty" name:"Product"`
 
 	// 分页查询数据的偏移量，默认为0。
@@ -6457,14 +6467,14 @@ func (r *DescribeBackupsResponse) FromJsonString(s string) error {
 
 // Predefined struct for user
 type DescribeBinlogBackupOverviewRequestParams struct {
-	// 需要查询日志备份概览的云数据库产品类型。可取值为：mysql 指双节点/三节点的高可用实例，mysql-basic 指单节点云盘版实例，mysql-cluster 指云盘版（原集群版）实例。
+	// 需要查询日志备份概览的云数据库产品类型。可取值为：mysql 指双节点/三节点的高可用实例，mysql-basic 指单节点（云盘）实例，mysql-cluster 指云盘版实例。
 	Product *string `json:"Product,omitnil,omitempty" name:"Product"`
 }
 
 type DescribeBinlogBackupOverviewRequest struct {
 	*tchttp.BaseRequest
 	
-	// 需要查询日志备份概览的云数据库产品类型。可取值为：mysql 指双节点/三节点的高可用实例，mysql-basic 指单节点云盘版实例，mysql-cluster 指云盘版（原集群版）实例。
+	// 需要查询日志备份概览的云数据库产品类型。可取值为：mysql 指双节点/三节点的高可用实例，mysql-basic 指单节点（云盘）实例，mysql-cluster 指云盘版实例。
 	Product *string `json:"Product,omitnil,omitempty" name:"Product"`
 }
 
@@ -6984,13 +6994,13 @@ type DescribeCpuExpandHistoryRequestParams struct {
 	// 查询的开始时间。只能查看30天内的扩容历史，格式为 Integer 的时间戳（秒级）。
 	StartTime *int64 `json:"StartTime,omitnil,omitempty" name:"StartTime"`
 
-	// 查询的结束时间。只能查看30天内的扩容历史，格式为 Integer 的时间戳（秒级）。
+	// 查询的结束时间，默认为当前时间。只能查看30天内的扩容历史，格式为 Integer 的时间戳（秒级）。
 	EndTime *int64 `json:"EndTime,omitnil,omitempty" name:"EndTime"`
 
 	// 分页入参
 	Offset *uint64 `json:"Offset,omitnil,omitempty" name:"Offset"`
 
-	// 分页入参
+	// 分页入参，默认20
 	Limit *uint64 `json:"Limit,omitnil,omitempty" name:"Limit"`
 }
 
@@ -7009,13 +7019,13 @@ type DescribeCpuExpandHistoryRequest struct {
 	// 查询的开始时间。只能查看30天内的扩容历史，格式为 Integer 的时间戳（秒级）。
 	StartTime *int64 `json:"StartTime,omitnil,omitempty" name:"StartTime"`
 
-	// 查询的结束时间。只能查看30天内的扩容历史，格式为 Integer 的时间戳（秒级）。
+	// 查询的结束时间，默认为当前时间。只能查看30天内的扩容历史，格式为 Integer 的时间戳（秒级）。
 	EndTime *int64 `json:"EndTime,omitnil,omitempty" name:"EndTime"`
 
 	// 分页入参
 	Offset *uint64 `json:"Offset,omitnil,omitempty" name:"Offset"`
 
-	// 分页入参
+	// 分页入参，默认20
 	Limit *uint64 `json:"Limit,omitnil,omitempty" name:"Limit"`
 }
 
@@ -7301,14 +7311,14 @@ func (r *DescribeDBInstanceCharsetResponse) FromJsonString(s string) error {
 
 // Predefined struct for user
 type DescribeDBInstanceConfigRequestParams struct {
-	// 实例 ID，格式如：cdb-c1nl9rpv，与云数据库控制台页面中显示的实例 ID 相同。
+	// <p>实例 ID，格式如：cdb-c1nl9rpv，与云数据库控制台页面中显示的实例 ID 相同。</p>
 	InstanceId *string `json:"InstanceId,omitnil,omitempty" name:"InstanceId"`
 }
 
 type DescribeDBInstanceConfigRequest struct {
 	*tchttp.BaseRequest
 	
-	// 实例 ID，格式如：cdb-c1nl9rpv，与云数据库控制台页面中显示的实例 ID 相同。
+	// <p>实例 ID，格式如：cdb-c1nl9rpv，与云数据库控制台页面中显示的实例 ID 相同。</p>
 	InstanceId *string `json:"InstanceId,omitnil,omitempty" name:"InstanceId"`
 }
 
@@ -7333,25 +7343,28 @@ func (r *DescribeDBInstanceConfigRequest) FromJsonString(s string) error {
 
 // Predefined struct for user
 type DescribeDBInstanceConfigResponseParams struct {
-	// 主实例数据保护方式，可能的返回值：0 - 异步复制方式，1 - 半同步复制方式，2 - 强同步复制方式。
+	// <p>主实例数据保护方式，可能的返回值：0 - 异步复制方式，1 - 半同步复制方式，2 - 强同步复制方式。</p>
 	ProtectMode *int64 `json:"ProtectMode,omitnil,omitempty" name:"ProtectMode"`
 
-	// 主实例部署方式，可能的返回值：0 - 单可用部署，1 - 多可用区部署。
+	// <p>主实例部署方式，可能的返回值：0 - 单可用部署，1 - 多可用区部署。</p>
 	DeployMode *int64 `json:"DeployMode,omitnil,omitempty" name:"DeployMode"`
 
-	// 实例可用区信息，格式如 "ap-shanghai-1"。
+	// <p>实例主可用区信息，格式如 &quot;ap-shanghai-2&quot;。</p>
 	Zone *string `json:"Zone,omitnil,omitempty" name:"Zone"`
 
-	// 备库的配置信息。
+	// <p>双节点、三节点、四节点实例第一备库的配置信息。</p><p>查询双节点时，此参数返回为双节点的备库信息；查询三节点、四节点时，此参数返回为实例的第一备库信息。</p>
 	// 注意：此字段可能返回 null，表示取不到有效值。
 	SlaveConfig *SlaveConfig `json:"SlaveConfig,omitnil,omitempty" name:"SlaveConfig"`
 
-	// 强同步实例第二备库的配置信息。
+	// <p>三节点、四节点实例第二备库的配置信息。</p><p>查询三节点、四节点时，此参数返回为第二备库的信息。</p>
 	// 注意：此字段可能返回 null，表示取不到有效值。
 	BackupConfig *BackupConfig `json:"BackupConfig,omitnil,omitempty" name:"BackupConfig"`
 
-	// 是否切换备库。
+	// <p>是否切换备库。</p>
 	Switched *bool `json:"Switched,omitnil,omitempty" name:"Switched"`
+
+	// <p>四节点实例第三备库的配置信息。</p><p>查询四节点时，此参数返回为第三备库的信息。</p>
+	FourthConfig *BackupConfig `json:"FourthConfig,omitnil,omitempty" name:"FourthConfig"`
 
 	// 唯一请求 ID，由服务端生成，每次请求都会返回（若请求因其他原因未能抵达服务端，则该次请求不会获得 RequestId）。定位问题时需要提供该次请求的 RequestId。
 	RequestId *string `json:"RequestId,omitnil,omitempty" name:"RequestId"`
@@ -7643,228 +7656,224 @@ func (r *DescribeDBInstanceRebootTimeResponse) FromJsonString(s string) error {
 
 // Predefined struct for user
 type DescribeDBInstancesRequestParams struct {
-	// 项目 ID。
+	// <p>项目 ID。</p>
 	ProjectId *int64 `json:"ProjectId,omitnil,omitempty" name:"ProjectId"`
 
-	// 实例类型，可取值：1 - 主实例，2 - 灾备实例，3 - 只读实例。
+	// <p>实例类型，可取值：1 - 主实例，2 - 灾备实例，3 - 只读实例。</p>
 	InstanceTypes []*uint64 `json:"InstanceTypes,omitnil,omitempty" name:"InstanceTypes"`
 
-	// 实例的内网 IP 地址。
+	// <p>实例的内网 IP 地址。</p>
 	Vips []*string `json:"Vips,omitnil,omitempty" name:"Vips"`
 
-	// 实例状态，可取值：<br>0 - 创建中<br>1 - 运行中<br>4 - 正在进行隔离操作<br>5 - 已隔离（可在回收站恢复开机）
+	// <p>实例状态，可取值：<br>0 - 创建中<br>1 - 运行中<br>4 - 正在进行隔离操作<br>5 - 已隔离（可在回收站恢复开机）</p>
 	Status []*uint64 `json:"Status,omitnil,omitempty" name:"Status"`
 
-	// 偏移量，默认值为 0。
+	// <p>偏移量，默认值为 0。</p>
 	Offset *uint64 `json:"Offset,omitnil,omitempty" name:"Offset"`
 
-	// 单次请求返回的数量，默认值为 20，最大值为 2000。
+	// <p>单次请求返回的数量，默认值为 20，最大值为 2000。</p>
 	Limit *uint64 `json:"Limit,omitnil,omitempty" name:"Limit"`
 
-	// 安全组 ID。当使用安全组 ID 为过滤条件时，需指定 WithSecurityGroup 参数为 1。
+	// <p>安全组 ID。当使用安全组 ID 为过滤条件时，需指定 WithSecurityGroup 参数为 1。</p>
 	SecurityGroupId *string `json:"SecurityGroupId,omitnil,omitempty" name:"SecurityGroupId"`
 
-	// 付费类型，可取值：0 - 包年包月，1 - 小时计费。
+	// <p>付费类型，可取值：0 - 包年包月，1 - 小时计费。</p>
 	PayTypes []*uint64 `json:"PayTypes,omitnil,omitempty" name:"PayTypes"`
 
-	// 实例名称。
+	// <p>实例名称。</p>
 	InstanceNames []*string `json:"InstanceNames,omitnil,omitempty" name:"InstanceNames"`
 
-	// 实例任务状态，可能取值：<br>0 - 没有任务<br>1 - 升级中<br>2 - 数据导入中<br>3 - 开放Slave中<br>4 - 外网访问开通中<br>5 - 批量操作执行中<br>6 - 回档中<br>7 - 外网访问关闭中<br>8 - 密码修改中<br>9 - 实例名修改中<br>10 - 重启中<br>12 - 自建迁移中<br>13 - 删除库表中<br>14 - 灾备实例创建同步中<br>15 - 升级待切换<br>16 - 升级切换中<br>17 - 升级切换完成<br>19 - 参数设置待执行<br>34 - 原地升级待执行
+	// <p>实例任务状态，可能取值：<br>0 - 没有任务<br>1 - 升级中<br>2 - 数据导入中<br>3 - 开放Slave中<br>4 - 外网访问开通中<br>5 - 批量操作执行中<br>6 - 回档中<br>7 - 外网访问关闭中<br>8 - 密码修改中<br>9 - 实例名修改中<br>10 - 重启中<br>12 - 自建迁移中<br>13 - 删除库表中<br>14 - 灾备实例创建同步中<br>15 - 升级待切换<br>16 - 升级切换中<br>17 - 升级切换完成<br>19 - 参数设置待执行<br>34 - 原地升级待执行</p>
 	TaskStatus []*uint64 `json:"TaskStatus,omitnil,omitempty" name:"TaskStatus"`
 
-	// 实例数据库引擎版本，可能取值：5.1、5.5、5.6 和 5.7。
+	// <p>实例数据库引擎版本，可能取值：5.1、5.5、5.6 和 5.7。</p>
 	EngineVersions []*string `json:"EngineVersions,omitnil,omitempty" name:"EngineVersions"`
 
-	// 私有网络的 ID。
+	// <p>私有网络的 ID。</p>
 	VpcIds []*uint64 `json:"VpcIds,omitnil,omitempty" name:"VpcIds"`
 
-	// 可用区的 ID。
+	// <p>可用区的 ID。</p>
 	ZoneIds []*uint64 `json:"ZoneIds,omitnil,omitempty" name:"ZoneIds"`
 
-	// 子网 ID。
+	// <p>子网 ID。</p>
 	SubnetIds []*uint64 `json:"SubnetIds,omitnil,omitempty" name:"SubnetIds"`
 
-	// 是否锁定标记，可选值：0 - 不锁定，1 - 锁定，默认为0。
+	// <p>是否锁定标记，可选值：0 - 不锁定，1 - 锁定，默认为0。</p>
 	CdbErrors []*int64 `json:"CdbErrors,omitnil,omitempty" name:"CdbErrors"`
 
-	// 返回结果集排序的字段，目前支持："InstanceId"，"InstanceName"，"CreateTime"，"DeadlineTime"。
+	// <p>返回结果集排序的字段，目前支持：&quot;instanceId&quot;，&quot;instanceName&quot;，&quot;createTime&quot;，&quot;deadlineTime&quot;。</p>
 	OrderBy *string `json:"OrderBy,omitnil,omitempty" name:"OrderBy"`
 
-	// 返回结果集排序方式。目前支持值："ASC" - 表示升序，"DESC" - 表示降序，默认为 "DESC"。
+	// <p>返回结果集排序方式。目前支持值：&quot;ASC&quot; - 表示升序，&quot;DESC&quot; - 表示降序，默认为 &quot;DESC&quot;。</p>
 	OrderDirection *string `json:"OrderDirection,omitnil,omitempty" name:"OrderDirection"`
 
-	// 是否以安全组 ID 为过滤条件。
-	// 说明：0表示否，1表示是。
+	// <p>是否以安全组 ID 为过滤条件。<br>说明：0表示否，1表示是。</p>
 	WithSecurityGroup *int64 `json:"WithSecurityGroup,omitnil,omitempty" name:"WithSecurityGroup"`
 
-	// 是否包含独享集群详细信息，可取值：0 - 不包含，1 - 包含。
+	// <p>是否包含独享集群详细信息，可取值：0 - 不包含，1 - 包含。</p>
 	WithExCluster *int64 `json:"WithExCluster,omitnil,omitempty" name:"WithExCluster"`
 
-	// 独享集群 ID。
+	// <p>独享集群 ID。</p>
 	ExClusterId *string `json:"ExClusterId,omitnil,omitempty" name:"ExClusterId"`
 
-	// 实例 ID。
+	// <p>实例 ID。</p>
 	InstanceIds []*string `json:"InstanceIds,omitnil,omitempty" name:"InstanceIds"`
 
-	// 初始化标记，可取值：0 - 未初始化，1 - 初始化。
+	// <p>初始化标记，可取值：0 - 未初始化，1 - 初始化。</p>
 	InitFlag *int64 `json:"InitFlag,omitnil,omitempty" name:"InitFlag"`
 
-	// 是否包含灾备关系对应的实例，可取值：0 - 不包含，1 - 包含。默认取值为1。如果拉取主实例，则灾备关系的数据在DrInfo字段中， 如果拉取灾备实例， 则灾备关系的数据在MasterInfo字段中。灾备关系中只包含部分基本的数据，详细的数据需要自行调接口拉取。
+	// <p>是否包含灾备关系对应的实例，可取值：0 - 不包含，1 - 包含。默认取值为1。如果拉取主实例，则灾备关系的数据在DrInfo字段中， 如果拉取灾备实例， 则灾备关系的数据在MasterInfo字段中。灾备关系中只包含部分基本的数据，详细的数据需要自行调接口拉取。</p>
 	WithDr *int64 `json:"WithDr,omitnil,omitempty" name:"WithDr"`
 
-	// 是否包含只读实例，可取值：0 - 不包含，1 - 包含。默认取值为1。
+	// <p>是否包含只读实例，可取值：0 - 不包含，1 - 包含。默认取值为1。</p>
 	WithRo *int64 `json:"WithRo,omitnil,omitempty" name:"WithRo"`
 
-	// 是否包含主实例，可取值：0 - 不包含，1 - 包含。默认取值为1。
+	// <p>是否包含主实例，可取值：0 - 不包含，1 - 包含。默认取值为1。</p>
 	WithMaster *int64 `json:"WithMaster,omitnil,omitempty" name:"WithMaster"`
 
-	// 置放群组ID列表。
+	// <p>置放群组ID列表。</p>
 	DeployGroupIds []*string `json:"DeployGroupIds,omitnil,omitempty" name:"DeployGroupIds"`
 
-	// 是否以标签键为过滤条件。
+	// <p>是否以标签键为过滤条件。</p>
 	TagKeysForSearch []*string `json:"TagKeysForSearch,omitnil,omitempty" name:"TagKeysForSearch"`
 
-	// 金融围拢 ID 。
+	// <p>金融围拢 ID 。</p>
 	CageIds []*string `json:"CageIds,omitnil,omitempty" name:"CageIds"`
 
-	// 标签值
+	// <p>标签值</p>
 	TagValues []*string `json:"TagValues,omitnil,omitempty" name:"TagValues"`
 
-	// 私有网络字符型vpcId
+	// <p>私有网络字符型vpcId</p>
 	UniqueVpcIds []*string `json:"UniqueVpcIds,omitnil,omitempty" name:"UniqueVpcIds"`
 
-	// 私有网络字符型subnetId
+	// <p>私有网络字符型subnetId</p>
 	UniqSubnetIds []*string `json:"UniqSubnetIds,omitnil,omitempty" name:"UniqSubnetIds"`
 
-	// 标签键值
-	// 请注意，创建中的实例无法查询到标签。
+	// <p>标签键值<br>请注意，创建中的实例无法查询到标签。</p>
 	Tags []*Tag `json:"Tags,omitnil,omitempty" name:"Tags"`
 
-	// 数据库代理 IP 。
+	// <p>数据库代理 IP 。</p>
 	ProxyVips []*string `json:"ProxyVips,omitnil,omitempty" name:"ProxyVips"`
 
-	// 数据库代理 ID 。
+	// <p>数据库代理 ID 。</p>
 	ProxyIds []*string `json:"ProxyIds,omitnil,omitempty" name:"ProxyIds"`
 
-	// 数据库引擎类型。可选值为：InnoDB、RocksDB。
+	// <p>数据库引擎类型。可选值为：InnoDB、RocksDB。</p>
 	EngineTypes []*string `json:"EngineTypes,omitnil,omitempty" name:"EngineTypes"`
 
-	// 是否获取集群版实例节点信息，可填：true 或 false。默认为 false。
+	// <p>是否获取云盘版实例节点信息，可填：true 或 false。默认为 false。</p>
 	QueryClusterInfo *bool `json:"QueryClusterInfo,omitnil,omitempty" name:"QueryClusterInfo"`
 }
 
 type DescribeDBInstancesRequest struct {
 	*tchttp.BaseRequest
 	
-	// 项目 ID。
+	// <p>项目 ID。</p>
 	ProjectId *int64 `json:"ProjectId,omitnil,omitempty" name:"ProjectId"`
 
-	// 实例类型，可取值：1 - 主实例，2 - 灾备实例，3 - 只读实例。
+	// <p>实例类型，可取值：1 - 主实例，2 - 灾备实例，3 - 只读实例。</p>
 	InstanceTypes []*uint64 `json:"InstanceTypes,omitnil,omitempty" name:"InstanceTypes"`
 
-	// 实例的内网 IP 地址。
+	// <p>实例的内网 IP 地址。</p>
 	Vips []*string `json:"Vips,omitnil,omitempty" name:"Vips"`
 
-	// 实例状态，可取值：<br>0 - 创建中<br>1 - 运行中<br>4 - 正在进行隔离操作<br>5 - 已隔离（可在回收站恢复开机）
+	// <p>实例状态，可取值：<br>0 - 创建中<br>1 - 运行中<br>4 - 正在进行隔离操作<br>5 - 已隔离（可在回收站恢复开机）</p>
 	Status []*uint64 `json:"Status,omitnil,omitempty" name:"Status"`
 
-	// 偏移量，默认值为 0。
+	// <p>偏移量，默认值为 0。</p>
 	Offset *uint64 `json:"Offset,omitnil,omitempty" name:"Offset"`
 
-	// 单次请求返回的数量，默认值为 20，最大值为 2000。
+	// <p>单次请求返回的数量，默认值为 20，最大值为 2000。</p>
 	Limit *uint64 `json:"Limit,omitnil,omitempty" name:"Limit"`
 
-	// 安全组 ID。当使用安全组 ID 为过滤条件时，需指定 WithSecurityGroup 参数为 1。
+	// <p>安全组 ID。当使用安全组 ID 为过滤条件时，需指定 WithSecurityGroup 参数为 1。</p>
 	SecurityGroupId *string `json:"SecurityGroupId,omitnil,omitempty" name:"SecurityGroupId"`
 
-	// 付费类型，可取值：0 - 包年包月，1 - 小时计费。
+	// <p>付费类型，可取值：0 - 包年包月，1 - 小时计费。</p>
 	PayTypes []*uint64 `json:"PayTypes,omitnil,omitempty" name:"PayTypes"`
 
-	// 实例名称。
+	// <p>实例名称。</p>
 	InstanceNames []*string `json:"InstanceNames,omitnil,omitempty" name:"InstanceNames"`
 
-	// 实例任务状态，可能取值：<br>0 - 没有任务<br>1 - 升级中<br>2 - 数据导入中<br>3 - 开放Slave中<br>4 - 外网访问开通中<br>5 - 批量操作执行中<br>6 - 回档中<br>7 - 外网访问关闭中<br>8 - 密码修改中<br>9 - 实例名修改中<br>10 - 重启中<br>12 - 自建迁移中<br>13 - 删除库表中<br>14 - 灾备实例创建同步中<br>15 - 升级待切换<br>16 - 升级切换中<br>17 - 升级切换完成<br>19 - 参数设置待执行<br>34 - 原地升级待执行
+	// <p>实例任务状态，可能取值：<br>0 - 没有任务<br>1 - 升级中<br>2 - 数据导入中<br>3 - 开放Slave中<br>4 - 外网访问开通中<br>5 - 批量操作执行中<br>6 - 回档中<br>7 - 外网访问关闭中<br>8 - 密码修改中<br>9 - 实例名修改中<br>10 - 重启中<br>12 - 自建迁移中<br>13 - 删除库表中<br>14 - 灾备实例创建同步中<br>15 - 升级待切换<br>16 - 升级切换中<br>17 - 升级切换完成<br>19 - 参数设置待执行<br>34 - 原地升级待执行</p>
 	TaskStatus []*uint64 `json:"TaskStatus,omitnil,omitempty" name:"TaskStatus"`
 
-	// 实例数据库引擎版本，可能取值：5.1、5.5、5.6 和 5.7。
+	// <p>实例数据库引擎版本，可能取值：5.1、5.5、5.6 和 5.7。</p>
 	EngineVersions []*string `json:"EngineVersions,omitnil,omitempty" name:"EngineVersions"`
 
-	// 私有网络的 ID。
+	// <p>私有网络的 ID。</p>
 	VpcIds []*uint64 `json:"VpcIds,omitnil,omitempty" name:"VpcIds"`
 
-	// 可用区的 ID。
+	// <p>可用区的 ID。</p>
 	ZoneIds []*uint64 `json:"ZoneIds,omitnil,omitempty" name:"ZoneIds"`
 
-	// 子网 ID。
+	// <p>子网 ID。</p>
 	SubnetIds []*uint64 `json:"SubnetIds,omitnil,omitempty" name:"SubnetIds"`
 
-	// 是否锁定标记，可选值：0 - 不锁定，1 - 锁定，默认为0。
+	// <p>是否锁定标记，可选值：0 - 不锁定，1 - 锁定，默认为0。</p>
 	CdbErrors []*int64 `json:"CdbErrors,omitnil,omitempty" name:"CdbErrors"`
 
-	// 返回结果集排序的字段，目前支持："InstanceId"，"InstanceName"，"CreateTime"，"DeadlineTime"。
+	// <p>返回结果集排序的字段，目前支持：&quot;instanceId&quot;，&quot;instanceName&quot;，&quot;createTime&quot;，&quot;deadlineTime&quot;。</p>
 	OrderBy *string `json:"OrderBy,omitnil,omitempty" name:"OrderBy"`
 
-	// 返回结果集排序方式。目前支持值："ASC" - 表示升序，"DESC" - 表示降序，默认为 "DESC"。
+	// <p>返回结果集排序方式。目前支持值：&quot;ASC&quot; - 表示升序，&quot;DESC&quot; - 表示降序，默认为 &quot;DESC&quot;。</p>
 	OrderDirection *string `json:"OrderDirection,omitnil,omitempty" name:"OrderDirection"`
 
-	// 是否以安全组 ID 为过滤条件。
-	// 说明：0表示否，1表示是。
+	// <p>是否以安全组 ID 为过滤条件。<br>说明：0表示否，1表示是。</p>
 	WithSecurityGroup *int64 `json:"WithSecurityGroup,omitnil,omitempty" name:"WithSecurityGroup"`
 
-	// 是否包含独享集群详细信息，可取值：0 - 不包含，1 - 包含。
+	// <p>是否包含独享集群详细信息，可取值：0 - 不包含，1 - 包含。</p>
 	WithExCluster *int64 `json:"WithExCluster,omitnil,omitempty" name:"WithExCluster"`
 
-	// 独享集群 ID。
+	// <p>独享集群 ID。</p>
 	ExClusterId *string `json:"ExClusterId,omitnil,omitempty" name:"ExClusterId"`
 
-	// 实例 ID。
+	// <p>实例 ID。</p>
 	InstanceIds []*string `json:"InstanceIds,omitnil,omitempty" name:"InstanceIds"`
 
-	// 初始化标记，可取值：0 - 未初始化，1 - 初始化。
+	// <p>初始化标记，可取值：0 - 未初始化，1 - 初始化。</p>
 	InitFlag *int64 `json:"InitFlag,omitnil,omitempty" name:"InitFlag"`
 
-	// 是否包含灾备关系对应的实例，可取值：0 - 不包含，1 - 包含。默认取值为1。如果拉取主实例，则灾备关系的数据在DrInfo字段中， 如果拉取灾备实例， 则灾备关系的数据在MasterInfo字段中。灾备关系中只包含部分基本的数据，详细的数据需要自行调接口拉取。
+	// <p>是否包含灾备关系对应的实例，可取值：0 - 不包含，1 - 包含。默认取值为1。如果拉取主实例，则灾备关系的数据在DrInfo字段中， 如果拉取灾备实例， 则灾备关系的数据在MasterInfo字段中。灾备关系中只包含部分基本的数据，详细的数据需要自行调接口拉取。</p>
 	WithDr *int64 `json:"WithDr,omitnil,omitempty" name:"WithDr"`
 
-	// 是否包含只读实例，可取值：0 - 不包含，1 - 包含。默认取值为1。
+	// <p>是否包含只读实例，可取值：0 - 不包含，1 - 包含。默认取值为1。</p>
 	WithRo *int64 `json:"WithRo,omitnil,omitempty" name:"WithRo"`
 
-	// 是否包含主实例，可取值：0 - 不包含，1 - 包含。默认取值为1。
+	// <p>是否包含主实例，可取值：0 - 不包含，1 - 包含。默认取值为1。</p>
 	WithMaster *int64 `json:"WithMaster,omitnil,omitempty" name:"WithMaster"`
 
-	// 置放群组ID列表。
+	// <p>置放群组ID列表。</p>
 	DeployGroupIds []*string `json:"DeployGroupIds,omitnil,omitempty" name:"DeployGroupIds"`
 
-	// 是否以标签键为过滤条件。
+	// <p>是否以标签键为过滤条件。</p>
 	TagKeysForSearch []*string `json:"TagKeysForSearch,omitnil,omitempty" name:"TagKeysForSearch"`
 
-	// 金融围拢 ID 。
+	// <p>金融围拢 ID 。</p>
 	CageIds []*string `json:"CageIds,omitnil,omitempty" name:"CageIds"`
 
-	// 标签值
+	// <p>标签值</p>
 	TagValues []*string `json:"TagValues,omitnil,omitempty" name:"TagValues"`
 
-	// 私有网络字符型vpcId
+	// <p>私有网络字符型vpcId</p>
 	UniqueVpcIds []*string `json:"UniqueVpcIds,omitnil,omitempty" name:"UniqueVpcIds"`
 
-	// 私有网络字符型subnetId
+	// <p>私有网络字符型subnetId</p>
 	UniqSubnetIds []*string `json:"UniqSubnetIds,omitnil,omitempty" name:"UniqSubnetIds"`
 
-	// 标签键值
-	// 请注意，创建中的实例无法查询到标签。
+	// <p>标签键值<br>请注意，创建中的实例无法查询到标签。</p>
 	Tags []*Tag `json:"Tags,omitnil,omitempty" name:"Tags"`
 
-	// 数据库代理 IP 。
+	// <p>数据库代理 IP 。</p>
 	ProxyVips []*string `json:"ProxyVips,omitnil,omitempty" name:"ProxyVips"`
 
-	// 数据库代理 ID 。
+	// <p>数据库代理 ID 。</p>
 	ProxyIds []*string `json:"ProxyIds,omitnil,omitempty" name:"ProxyIds"`
 
-	// 数据库引擎类型。可选值为：InnoDB、RocksDB。
+	// <p>数据库引擎类型。可选值为：InnoDB、RocksDB。</p>
 	EngineTypes []*string `json:"EngineTypes,omitnil,omitempty" name:"EngineTypes"`
 
-	// 是否获取集群版实例节点信息，可填：true 或 false。默认为 false。
+	// <p>是否获取云盘版实例节点信息，可填：true 或 false。默认为 false。</p>
 	QueryClusterInfo *bool `json:"QueryClusterInfo,omitnil,omitempty" name:"QueryClusterInfo"`
 }
 
@@ -7924,10 +7933,10 @@ func (r *DescribeDBInstancesRequest) FromJsonString(s string) error {
 
 // Predefined struct for user
 type DescribeDBInstancesResponseParams struct {
-	// 符合查询条件的实例总数。
+	// <p>符合查询条件的实例总数。</p>
 	TotalCount *int64 `json:"TotalCount,omitnil,omitempty" name:"TotalCount"`
 
-	// 实例详细信息列表。
+	// <p>实例详细信息列表。</p>
 	Items []*InstanceInfo `json:"Items,omitnil,omitempty" name:"Items"`
 
 	// 唯一请求 ID，由服务端生成，每次请求都会返回（若请求因其他原因未能抵达服务端，则该次请求不会获得 RequestId）。定位问题时需要提供该次请求的 RequestId。
@@ -7952,92 +7961,92 @@ func (r *DescribeDBInstancesResponse) FromJsonString(s string) error {
 
 // Predefined struct for user
 type DescribeDBPriceRequestParams struct {
-	// 实例时长，单位：月，最小值 1，最大值为 36；查询按量计费价格时，该字段无效。
+	// <p>实例时长，单位：月，最小值 1，最大值为 36；查询按量计费价格时，该字段无效。</p>
 	Period *int64 `json:"Period,omitnil,omitempty" name:"Period"`
 
-	// 可用区信息，格式如 "ap-guangzhou-2"。具体能设置的值请通过 <a href="https://cloud.tencent.com/document/api/236/17229">DescribeDBZoneConfig</a> 接口查询。InstanceId为空时该参数为必填项。
+	// <p>可用区信息，格式如 &quot;ap-guangzhou-2&quot;。具体能设置的值请通过 <a href="https://cloud.tencent.com/document/api/236/17229">DescribeDBZoneConfig</a> 接口查询。InstanceId为空时该参数为必填项。</p>
 	Zone *string `json:"Zone,omitnil,omitempty" name:"Zone"`
 
-	// 实例数量，默认值为 1，最小值 1，最大值为 100。InstanceId为空时该参数为必填项。
+	// <p>实例数量，默认值为 1，最小值 1，最大值为 100。InstanceId为空时该参数为必填项。</p>
 	GoodsNum *int64 `json:"GoodsNum,omitnil,omitempty" name:"GoodsNum"`
 
-	// 实例内存大小，单位：MB。InstanceId 为空时该参数为必填项。为保证传入值有效，请使用 [获取云数据库可售卖规格](https://cloud.tencent.com/document/product/236/17229) 接口获取可售卖的实例内存大小范围。
+	// <p>实例内存大小，单位：MB。InstanceId 为空时该参数为必填项。为保证传入值有效，请使用 <a href="https://cloud.tencent.com/document/product/236/17229">获取云数据库可售卖规格</a> 接口获取可售卖的实例内存大小范围。</p>
 	Memory *int64 `json:"Memory,omitnil,omitempty" name:"Memory"`
 
-	// 实例硬盘大小，单位：GB。InstanceId 为空时该参数为必填项。为保证传入值有效，请使用 [获取云数据库可售卖规格](https://cloud.tencent.com/document/product/236/17229) 接口获取可售卖的硬盘大小范围。
+	// <p>实例硬盘大小，单位：GB。InstanceId 为空时该参数为必填项。为保证传入值有效，请使用 <a href="https://cloud.tencent.com/document/product/236/17229">获取云数据库可售卖规格</a> 接口获取可售卖的硬盘大小范围。</p>
 	Volume *int64 `json:"Volume,omitnil,omitempty" name:"Volume"`
 
-	// 实例类型，默认为 master，支持值包括：master - 表示主实例，ro - 表示只读实例，dr - 表示灾备实例。InstanceId为空时该参数为必填项。
+	// <p>实例类型，默认为 master，支持值包括：master - 表示主实例，ro - 表示只读实例，dr - 表示灾备实例。InstanceId为空时该参数为必填项。</p>
 	InstanceRole *string `json:"InstanceRole,omitnil,omitempty" name:"InstanceRole"`
 
-	// 付费类型，支持值包括：PRE_PAID - 包年包月，HOUR_PAID - 按量计费。InstanceId为空时该参数为必填项。
+	// <p>付费类型，支持值包括：PRE_PAID - 包年包月，HOUR_PAID - 按量计费。InstanceId为空时该参数为必填项。</p>
 	PayType *string `json:"PayType,omitnil,omitempty" name:"PayType"`
 
-	// 数据复制方式，默认为 0，支持值包括：0 - 表示异步复制，1 - 表示半同步复制，2 - 表示强同步复制。
+	// <p>数据复制方式，默认为 0，支持值包括：0 - 表示异步复制，1 - 表示半同步复制，2 - 表示强同步复制。</p>
 	ProtectMode *int64 `json:"ProtectMode,omitnil,omitempty" name:"ProtectMode"`
 
-	// 实例隔离类型。支持值包括： "UNIVERSAL" - 通用型实例， "EXCLUSIVE" - 独享型实例， "BASIC_V2" - 单节点云盘版实例。 "CLOUD_NATIVE_CLUSTER" - 集群版标准型， "CLOUD_NATIVE_CLUSTER_EXCLUSIVE" - 集群版加强型。   不指定则默认为通用型实例。
+	// <p>实例隔离类型。</p><p>枚举值：</p><ul><li>UNIVERSAL： 通用型实例</li><li>EXCLUSIVE： 独享型实例</li><li>CLOUD_NATIVE_CLUSTER： 云盘版标准型</li><li>CLOUD_NATIVE_CLUSTER_EXCLUSIVE： 云盘版加强型</li><li>CLOUD_NATIVE_CLUSTER_ULTRA： 云盘版旗舰型</li></ul><p>默认值：UNIVERSAL</p><p>如需查询单节点云盘版实例的价格，请设置此参数为 CLOUD_NATIVE_CLUSTER，并且指定参数 InstanceNodes 为1。</p>
 	DeviceType *string `json:"DeviceType,omitnil,omitempty" name:"DeviceType"`
 
-	// 实例节点数。对于 RO 和 基础版实例， 该值默认为1。 如果需要询价三节点实例， 请将该值设置为3。其余主实例该值默认为2。
+	// <p>实例节点数。<br>1.查询 RO 实例或者单节点实例价格时，此字段值为1。<br>2.查询双节点实例价格时，此字段值为2。<br>3.查询三节点实例价格时，此字段值为3。<br>4.查询云盘版实例价格时，此字段值范围可输入2 - 6，取值为2表示云盘版实例下对应有1个读写节点 + 1个只读节点；取值为6表示云盘版实例下对应有1个读写节点 + 5个只读节点；其余取值（3 - 5）按1个读写节点 +（取值数 - 1）个只读节点规则类推。</p>
 	InstanceNodes *int64 `json:"InstanceNodes,omitnil,omitempty" name:"InstanceNodes"`
 
-	// 询价实例的CPU核心数目，单位：核，为保证传入 CPU 值有效，请使用 [获取云数据库可售卖规格](https://cloud.tencent.com/document/product/236/17229) 接口获取可售卖的核心数目，当未指定该值时，将按照 Memory 大小补全一个默认值。
+	// <p>询价实例的CPU核心数目，单位：核，为保证传入 CPU 值有效，请使用 <a href="https://cloud.tencent.com/document/product/236/17229">获取云数据库可售卖规格</a> 接口获取可售卖的核心数目，当未指定该值时，将按照 Memory 大小补全一个默认值。</p>
 	Cpu *int64 `json:"Cpu,omitnil,omitempty" name:"Cpu"`
 
-	// 询价续费实例ID。如需查询实例续费价格，填写InstanceId和Period即可。
+	// <p>询价续费实例ID。如需查询实例续费价格，填写InstanceId和Period即可。</p>
 	InstanceId *string `json:"InstanceId,omitnil,omitempty" name:"InstanceId"`
 
-	// 按量计费阶梯。仅PayType=HOUR_PAID有效，支持值包括：1，2，3。阶梯时长见https://cloud.tencent.com/document/product/236/18335。
+	// <p>按量计费阶梯。仅PayType=HOUR_PAID有效，支持值包括：1，2，3。阶梯时长见https://cloud.tencent.com/document/product/236/18335。</p>
 	Ladder *uint64 `json:"Ladder,omitnil,omitempty" name:"Ladder"`
 
-	// 磁盘类型，查询集群版、单节点云盘版实例价格可以指定该参数。支持值包括： "CLOUD_SSD" - SSD云硬盘， "CLOUD_HSSD" - 增强型SSD云硬盘。  默认为 SSD云硬盘。
+	// <p>磁盘类型，查询云盘版、单节点云盘版实例价格可以指定该参数。默认值为 SSD 云硬盘。<br>支持值包括：<br>&quot;CLOUD_SSD&quot; - SSD 云硬盘。<br>&quot;CLOUD_HSSD&quot; - 增强型 SSD 云硬盘。<br>&quot;CLOUD_PREMIUM&quot; - 高性能云硬盘。</p>
 	DiskType *string `json:"DiskType,omitnil,omitempty" name:"DiskType"`
 }
 
 type DescribeDBPriceRequest struct {
 	*tchttp.BaseRequest
 	
-	// 实例时长，单位：月，最小值 1，最大值为 36；查询按量计费价格时，该字段无效。
+	// <p>实例时长，单位：月，最小值 1，最大值为 36；查询按量计费价格时，该字段无效。</p>
 	Period *int64 `json:"Period,omitnil,omitempty" name:"Period"`
 
-	// 可用区信息，格式如 "ap-guangzhou-2"。具体能设置的值请通过 <a href="https://cloud.tencent.com/document/api/236/17229">DescribeDBZoneConfig</a> 接口查询。InstanceId为空时该参数为必填项。
+	// <p>可用区信息，格式如 &quot;ap-guangzhou-2&quot;。具体能设置的值请通过 <a href="https://cloud.tencent.com/document/api/236/17229">DescribeDBZoneConfig</a> 接口查询。InstanceId为空时该参数为必填项。</p>
 	Zone *string `json:"Zone,omitnil,omitempty" name:"Zone"`
 
-	// 实例数量，默认值为 1，最小值 1，最大值为 100。InstanceId为空时该参数为必填项。
+	// <p>实例数量，默认值为 1，最小值 1，最大值为 100。InstanceId为空时该参数为必填项。</p>
 	GoodsNum *int64 `json:"GoodsNum,omitnil,omitempty" name:"GoodsNum"`
 
-	// 实例内存大小，单位：MB。InstanceId 为空时该参数为必填项。为保证传入值有效，请使用 [获取云数据库可售卖规格](https://cloud.tencent.com/document/product/236/17229) 接口获取可售卖的实例内存大小范围。
+	// <p>实例内存大小，单位：MB。InstanceId 为空时该参数为必填项。为保证传入值有效，请使用 <a href="https://cloud.tencent.com/document/product/236/17229">获取云数据库可售卖规格</a> 接口获取可售卖的实例内存大小范围。</p>
 	Memory *int64 `json:"Memory,omitnil,omitempty" name:"Memory"`
 
-	// 实例硬盘大小，单位：GB。InstanceId 为空时该参数为必填项。为保证传入值有效，请使用 [获取云数据库可售卖规格](https://cloud.tencent.com/document/product/236/17229) 接口获取可售卖的硬盘大小范围。
+	// <p>实例硬盘大小，单位：GB。InstanceId 为空时该参数为必填项。为保证传入值有效，请使用 <a href="https://cloud.tencent.com/document/product/236/17229">获取云数据库可售卖规格</a> 接口获取可售卖的硬盘大小范围。</p>
 	Volume *int64 `json:"Volume,omitnil,omitempty" name:"Volume"`
 
-	// 实例类型，默认为 master，支持值包括：master - 表示主实例，ro - 表示只读实例，dr - 表示灾备实例。InstanceId为空时该参数为必填项。
+	// <p>实例类型，默认为 master，支持值包括：master - 表示主实例，ro - 表示只读实例，dr - 表示灾备实例。InstanceId为空时该参数为必填项。</p>
 	InstanceRole *string `json:"InstanceRole,omitnil,omitempty" name:"InstanceRole"`
 
-	// 付费类型，支持值包括：PRE_PAID - 包年包月，HOUR_PAID - 按量计费。InstanceId为空时该参数为必填项。
+	// <p>付费类型，支持值包括：PRE_PAID - 包年包月，HOUR_PAID - 按量计费。InstanceId为空时该参数为必填项。</p>
 	PayType *string `json:"PayType,omitnil,omitempty" name:"PayType"`
 
-	// 数据复制方式，默认为 0，支持值包括：0 - 表示异步复制，1 - 表示半同步复制，2 - 表示强同步复制。
+	// <p>数据复制方式，默认为 0，支持值包括：0 - 表示异步复制，1 - 表示半同步复制，2 - 表示强同步复制。</p>
 	ProtectMode *int64 `json:"ProtectMode,omitnil,omitempty" name:"ProtectMode"`
 
-	// 实例隔离类型。支持值包括： "UNIVERSAL" - 通用型实例， "EXCLUSIVE" - 独享型实例， "BASIC_V2" - 单节点云盘版实例。 "CLOUD_NATIVE_CLUSTER" - 集群版标准型， "CLOUD_NATIVE_CLUSTER_EXCLUSIVE" - 集群版加强型。   不指定则默认为通用型实例。
+	// <p>实例隔离类型。</p><p>枚举值：</p><ul><li>UNIVERSAL： 通用型实例</li><li>EXCLUSIVE： 独享型实例</li><li>CLOUD_NATIVE_CLUSTER： 云盘版标准型</li><li>CLOUD_NATIVE_CLUSTER_EXCLUSIVE： 云盘版加强型</li><li>CLOUD_NATIVE_CLUSTER_ULTRA： 云盘版旗舰型</li></ul><p>默认值：UNIVERSAL</p><p>如需查询单节点云盘版实例的价格，请设置此参数为 CLOUD_NATIVE_CLUSTER，并且指定参数 InstanceNodes 为1。</p>
 	DeviceType *string `json:"DeviceType,omitnil,omitempty" name:"DeviceType"`
 
-	// 实例节点数。对于 RO 和 基础版实例， 该值默认为1。 如果需要询价三节点实例， 请将该值设置为3。其余主实例该值默认为2。
+	// <p>实例节点数。<br>1.查询 RO 实例或者单节点实例价格时，此字段值为1。<br>2.查询双节点实例价格时，此字段值为2。<br>3.查询三节点实例价格时，此字段值为3。<br>4.查询云盘版实例价格时，此字段值范围可输入2 - 6，取值为2表示云盘版实例下对应有1个读写节点 + 1个只读节点；取值为6表示云盘版实例下对应有1个读写节点 + 5个只读节点；其余取值（3 - 5）按1个读写节点 +（取值数 - 1）个只读节点规则类推。</p>
 	InstanceNodes *int64 `json:"InstanceNodes,omitnil,omitempty" name:"InstanceNodes"`
 
-	// 询价实例的CPU核心数目，单位：核，为保证传入 CPU 值有效，请使用 [获取云数据库可售卖规格](https://cloud.tencent.com/document/product/236/17229) 接口获取可售卖的核心数目，当未指定该值时，将按照 Memory 大小补全一个默认值。
+	// <p>询价实例的CPU核心数目，单位：核，为保证传入 CPU 值有效，请使用 <a href="https://cloud.tencent.com/document/product/236/17229">获取云数据库可售卖规格</a> 接口获取可售卖的核心数目，当未指定该值时，将按照 Memory 大小补全一个默认值。</p>
 	Cpu *int64 `json:"Cpu,omitnil,omitempty" name:"Cpu"`
 
-	// 询价续费实例ID。如需查询实例续费价格，填写InstanceId和Period即可。
+	// <p>询价续费实例ID。如需查询实例续费价格，填写InstanceId和Period即可。</p>
 	InstanceId *string `json:"InstanceId,omitnil,omitempty" name:"InstanceId"`
 
-	// 按量计费阶梯。仅PayType=HOUR_PAID有效，支持值包括：1，2，3。阶梯时长见https://cloud.tencent.com/document/product/236/18335。
+	// <p>按量计费阶梯。仅PayType=HOUR_PAID有效，支持值包括：1，2，3。阶梯时长见https://cloud.tencent.com/document/product/236/18335。</p>
 	Ladder *uint64 `json:"Ladder,omitnil,omitempty" name:"Ladder"`
 
-	// 磁盘类型，查询集群版、单节点云盘版实例价格可以指定该参数。支持值包括： "CLOUD_SSD" - SSD云硬盘， "CLOUD_HSSD" - 增强型SSD云硬盘。  默认为 SSD云硬盘。
+	// <p>磁盘类型，查询云盘版、单节点云盘版实例价格可以指定该参数。默认值为 SSD 云硬盘。<br>支持值包括：<br>&quot;CLOUD_SSD&quot; - SSD 云硬盘。<br>&quot;CLOUD_HSSD&quot; - 增强型 SSD 云硬盘。<br>&quot;CLOUD_PREMIUM&quot; - 高性能云硬盘。</p>
 	DiskType *string `json:"DiskType,omitnil,omitempty" name:"DiskType"`
 }
 
@@ -8075,13 +8084,13 @@ func (r *DescribeDBPriceRequest) FromJsonString(s string) error {
 
 // Predefined struct for user
 type DescribeDBPriceResponseParams struct {
-	// 实例价格，单位：分。
+	// <p>实例价格，单位：分。</p>
 	Price *int64 `json:"Price,omitnil,omitempty" name:"Price"`
 
-	// 实例原价，单位：分。
+	// <p>实例原价，单位：分。</p>
 	OriginalPrice *int64 `json:"OriginalPrice,omitnil,omitempty" name:"OriginalPrice"`
 
-	// 货币单位。CNY-人民币，USD-美元。
+	// <p>货币单位。CNY-人民币，USD-美元。</p>
 	Currency *string `json:"Currency,omitnil,omitempty" name:"Currency"`
 
 	// 唯一请求 ID，由服务端生成，每次请求都会返回（若请求因其他原因未能抵达服务端，则该次请求不会获得 RequestId）。定位问题时需要提供该次请求的 RequestId。
@@ -8251,14 +8260,14 @@ func (r *DescribeDBSwitchRecordsResponse) FromJsonString(s string) error {
 
 // Predefined struct for user
 type DescribeDataBackupOverviewRequestParams struct {
-	// 需要查询数据备份概览的云数据库产品类型。可取值为：mysql 指双节点/三节点的高可用实例，mysql-basic 指单节点云盘版实例，mysql-cluster 指云盘版（原集群版）实例。
+	// 需要查询数据备份概览的云数据库产品类型。可取值为：mysql 指双节点/三节点的高可用实例，mysql-basic 指单节点（云盘）实例，mysql-cluster 指云盘版实例。
 	Product *string `json:"Product,omitnil,omitempty" name:"Product"`
 }
 
 type DescribeDataBackupOverviewRequest struct {
 	*tchttp.BaseRequest
 	
-	// 需要查询数据备份概览的云数据库产品类型。可取值为：mysql 指双节点/三节点的高可用实例，mysql-basic 指单节点云盘版实例，mysql-cluster 指云盘版（原集群版）实例。
+	// 需要查询数据备份概览的云数据库产品类型。可取值为：mysql 指双节点/三节点的高可用实例，mysql-basic 指单节点（云盘）实例，mysql-cluster 指云盘版实例。
 	Product *string `json:"Product,omitnil,omitempty" name:"Product"`
 }
 
@@ -9006,6 +9015,66 @@ func (r *DescribeInstanceParamsResponse) FromJsonString(s string) error {
 }
 
 // Predefined struct for user
+type DescribeInstancePasswordComplexityRequestParams struct {
+	// 实例ID 
+	InstanceId *string `json:"InstanceId,omitnil,omitempty" name:"InstanceId"`
+}
+
+type DescribeInstancePasswordComplexityRequest struct {
+	*tchttp.BaseRequest
+	
+	// 实例ID 
+	InstanceId *string `json:"InstanceId,omitnil,omitempty" name:"InstanceId"`
+}
+
+func (r *DescribeInstancePasswordComplexityRequest) ToJsonString() string {
+    b, _ := json.Marshal(r)
+    return string(b)
+}
+
+// FromJsonString It is highly **NOT** recommended to use this function
+// because it has no param check, nor strict type check
+func (r *DescribeInstancePasswordComplexityRequest) FromJsonString(s string) error {
+	f := make(map[string]interface{})
+	if err := json.Unmarshal([]byte(s), &f); err != nil {
+		return err
+	}
+	delete(f, "InstanceId")
+	if len(f) > 0 {
+		return tcerr.NewTencentCloudSDKError("ClientError.BuildRequestError", "DescribeInstancePasswordComplexityRequest has unknown keys!", "")
+	}
+	return json.Unmarshal([]byte(s), &r)
+}
+
+// Predefined struct for user
+type DescribeInstancePasswordComplexityResponseParams struct {
+	// 密码复杂度相关参数总数
+	TotalCount *int64 `json:"TotalCount,omitnil,omitempty" name:"TotalCount"`
+
+	// 密码复杂度参数详情，policy取值范围["","LOW","MEDIUM"],空或者LOW表示：密码复杂度关，MEDIUM表示：密码复杂度开；当policy参数值是MEDIUM时，以下参数才有意义，length:取值范围[8-64],表示：最少字符数；mixed_case_count：取值范围[1-16]，表示大写字母和小写字母的最少个数。number_count：取值范围[1-16]，表示数字字符的最少个数。special_char_count：取值范围[1-16]，表示特殊字符的最少个数。
+	Items []*ParameterDetail `json:"Items,omitnil,omitempty" name:"Items"`
+
+	// 唯一请求 ID，由服务端生成，每次请求都会返回（若请求因其他原因未能抵达服务端，则该次请求不会获得 RequestId）。定位问题时需要提供该次请求的 RequestId。
+	RequestId *string `json:"RequestId,omitnil,omitempty" name:"RequestId"`
+}
+
+type DescribeInstancePasswordComplexityResponse struct {
+	*tchttp.BaseResponse
+	Response *DescribeInstancePasswordComplexityResponseParams `json:"Response"`
+}
+
+func (r *DescribeInstancePasswordComplexityResponse) ToJsonString() string {
+    b, _ := json.Marshal(r)
+    return string(b)
+}
+
+// FromJsonString It is highly **NOT** recommended to use this function
+// because it has no param check, nor strict type check
+func (r *DescribeInstancePasswordComplexityResponse) FromJsonString(s string) error {
+	return json.Unmarshal([]byte(s), &r)
+}
+
+// Predefined struct for user
 type DescribeInstanceUpgradeCheckJobRequestParams struct {
 	// 实例 ID。可通过 [DescribeDBInstances](https://cloud.tencent.com/document/product/236/15872) 接口获取。
 	InstanceId *string `json:"InstanceId,omitnil,omitempty" name:"InstanceId"`
@@ -9076,87 +9145,93 @@ func (r *DescribeInstanceUpgradeCheckJobResponse) FromJsonString(s string) error
 
 // Predefined struct for user
 type DescribeInstanceUpgradeTypeRequestParams struct {
-	// 实例 ID。可通过 [DescribeDBInstances](https://cloud.tencent.com/document/product/236/15872) 接口获取。
+	// <p>实例 ID。可通过 <a href="https://cloud.tencent.com/document/product/236/15872">DescribeDBInstances</a> 接口获取。</p>
 	InstanceId *string `json:"InstanceId,omitnil,omitempty" name:"InstanceId"`
 
-	// 目标实例 CPU 的核数。为保证传入值有效，请使用 [DescribeCdbZoneConfig](https://cloud.tencent.com/document/product/236/80281) 获取实例可售卖的 CPU 值范围。
+	// <p>目标实例 CPU 的核数。为保证传入值有效，请使用 <a href="https://cloud.tencent.com/document/product/236/80281">DescribeCdbZoneConfig</a> 获取实例可售卖的 CPU 值范围。</p>
 	DstCpu *float64 `json:"DstCpu,omitnil,omitempty" name:"DstCpu"`
 
-	// 目标实例内存大小，单位：MB。为保证传入值有效，请使用 [DescribeCdbZoneConfig](https://cloud.tencent.com/document/product/236/80281) 获取实例可售卖的内存大小范围。
+	// <p>目标实例内存大小，单位：MB。为保证传入值有效，请使用 <a href="https://cloud.tencent.com/document/product/236/80281">DescribeCdbZoneConfig</a> 获取实例可售卖的内存大小范围。</p>
 	DstMemory *uint64 `json:"DstMemory,omitnil,omitempty" name:"DstMemory"`
 
-	// 目标实例磁盘大小，单位：GB。为保证传入值有效，请使用 [DescribeCdbZoneConfig](https://cloud.tencent.com/document/product/236/80281) 获取实例可售卖的磁盘大小范围。
+	// <p>目标实例磁盘大小，单位：GB。为保证传入值有效，请使用 <a href="https://cloud.tencent.com/document/product/236/80281">DescribeCdbZoneConfig</a> 获取实例可售卖的磁盘大小范围。</p>
 	DstDisk *uint64 `json:"DstDisk,omitnil,omitempty" name:"DstDisk"`
 
-	// 目标实例数据库版本。可选值：5.6，5.7，8.0。
+	// <p>目标实例数据库版本。可选值：5.6，5.7，8.0。</p>
 	DstVersion *string `json:"DstVersion,omitnil,omitempty" name:"DstVersion"`
 
-	// 目标实例部署模型。默认为0，支持值包括：0 - 表示单可用区，1 - 表示多可用区。
+	// <p>目标实例部署模型。默认为0，支持值包括：0 - 表示单可用区，1 - 表示多可用区。</p>
 	DstDeployMode *int64 `json:"DstDeployMode,omitnil,omitempty" name:"DstDeployMode"`
 
-	// 目标实例复制类型，支持值包括：0 - 表示异步复制，1 - 表示半同步复制，2 - 表示强同步复制。
+	// <p>目标实例复制类型，支持值包括：0 - 表示异步复制，1 - 表示半同步复制，2 - 表示强同步复制。</p>
 	DstProtectMode *int64 `json:"DstProtectMode,omitnil,omitempty" name:"DstProtectMode"`
 
-	// 目标实例备机1可用区 ID。可使用 [DescribeCdbZoneConfig](https://cloud.tencent.com/document/product/236/80281) 获取可用区 ID。
+	// <p>目标实例备机1可用区 ID。可使用 <a href="https://cloud.tencent.com/document/product/236/80281">DescribeCdbZoneConfig</a> 获取可用区 ID。</p>
 	DstSlaveZone *int64 `json:"DstSlaveZone,omitnil,omitempty" name:"DstSlaveZone"`
 
-	// 目标实例备机2可用区 ID。可使用 [DescribeCdbZoneConfig](https://cloud.tencent.com/document/product/236/80281) 获取可用区 ID。
+	// <p>目标实例备机2可用区 ID。可使用 <a href="https://cloud.tencent.com/document/product/236/80281">DescribeCdbZoneConfig</a> 获取可用区 ID。</p>
 	DstBackupZone *int64 `json:"DstBackupZone,omitnil,omitempty" name:"DstBackupZone"`
 
-	// 目标实例类型。支持值包括："CUSTOM" - 通用型实例，"EXCLUSIVE" - 独享型实例，"ONTKE" - ONTKE 单节点实例，"CLOUD_NATIVE_CLUSTER" - 云盘版标准型，"CLOUD_NATIVE_CLUSTER_EXCLUSIVE" - 云盘版加强型。
+	// <p>目标实例类型。支持值包括：&quot;CUSTOM&quot; - 通用型实例，&quot;EXCLUSIVE&quot; - 独享型实例，&quot;ONTKE&quot; - ONTKE 单节点实例，&quot;CLOUD_NATIVE_CLUSTER&quot; - 云盘版标准型，&quot;CLOUD_NATIVE_CLUSTER_EXCLUSIVE&quot; - 云盘版加强型。</p>
 	DstCdbType *string `json:"DstCdbType,omitnil,omitempty" name:"DstCdbType"`
 
-	// 目标实例主可用区 ID。可使用 [DescribeCdbZoneConfig](https://cloud.tencent.com/document/product/236/80281) 获取可用区 ID。
+	// <p>目标实例主可用区 ID。可使用 <a href="https://cloud.tencent.com/document/product/236/80281">DescribeCdbZoneConfig</a> 获取可用区 ID。</p>
 	DstZoneId *int64 `json:"DstZoneId,omitnil,omitempty" name:"DstZoneId"`
 
-	// 独享集群 CDB 实例的节点分布情况。
+	// <p>独享集群 CDB 实例的节点分布情况。</p>
 	NodeDistribution *NodeDistribution `json:"NodeDistribution,omitnil,omitempty" name:"NodeDistribution"`
 
-	// 集群版的节点拓扑配置。Nodeld信息可通过 [DescribeClusterInfo](https://cloud.tencent.com/document/api/236/105116) 接口获取。
+	// <p>云盘版的节点拓扑配置。Nodeld 信息可通过 <a href="https://cloud.tencent.com/document/api/236/105116">DescribeClusterInfo</a> 接口获取。</p>
 	ClusterTopology *ClusterTopology `json:"ClusterTopology,omitnil,omitempty" name:"ClusterTopology"`
+
+	// <p>目标实例备机3可用区 ID。可使用 <a href="https://cloud.tencent.com/document/product/236/80281">DescribeCdbZoneConfig</a> 获取可用区 ID。</p>
+	DstFourthZone *int64 `json:"DstFourthZone,omitnil,omitempty" name:"DstFourthZone"`
 }
 
 type DescribeInstanceUpgradeTypeRequest struct {
 	*tchttp.BaseRequest
 	
-	// 实例 ID。可通过 [DescribeDBInstances](https://cloud.tencent.com/document/product/236/15872) 接口获取。
+	// <p>实例 ID。可通过 <a href="https://cloud.tencent.com/document/product/236/15872">DescribeDBInstances</a> 接口获取。</p>
 	InstanceId *string `json:"InstanceId,omitnil,omitempty" name:"InstanceId"`
 
-	// 目标实例 CPU 的核数。为保证传入值有效，请使用 [DescribeCdbZoneConfig](https://cloud.tencent.com/document/product/236/80281) 获取实例可售卖的 CPU 值范围。
+	// <p>目标实例 CPU 的核数。为保证传入值有效，请使用 <a href="https://cloud.tencent.com/document/product/236/80281">DescribeCdbZoneConfig</a> 获取实例可售卖的 CPU 值范围。</p>
 	DstCpu *float64 `json:"DstCpu,omitnil,omitempty" name:"DstCpu"`
 
-	// 目标实例内存大小，单位：MB。为保证传入值有效，请使用 [DescribeCdbZoneConfig](https://cloud.tencent.com/document/product/236/80281) 获取实例可售卖的内存大小范围。
+	// <p>目标实例内存大小，单位：MB。为保证传入值有效，请使用 <a href="https://cloud.tencent.com/document/product/236/80281">DescribeCdbZoneConfig</a> 获取实例可售卖的内存大小范围。</p>
 	DstMemory *uint64 `json:"DstMemory,omitnil,omitempty" name:"DstMemory"`
 
-	// 目标实例磁盘大小，单位：GB。为保证传入值有效，请使用 [DescribeCdbZoneConfig](https://cloud.tencent.com/document/product/236/80281) 获取实例可售卖的磁盘大小范围。
+	// <p>目标实例磁盘大小，单位：GB。为保证传入值有效，请使用 <a href="https://cloud.tencent.com/document/product/236/80281">DescribeCdbZoneConfig</a> 获取实例可售卖的磁盘大小范围。</p>
 	DstDisk *uint64 `json:"DstDisk,omitnil,omitempty" name:"DstDisk"`
 
-	// 目标实例数据库版本。可选值：5.6，5.7，8.0。
+	// <p>目标实例数据库版本。可选值：5.6，5.7，8.0。</p>
 	DstVersion *string `json:"DstVersion,omitnil,omitempty" name:"DstVersion"`
 
-	// 目标实例部署模型。默认为0，支持值包括：0 - 表示单可用区，1 - 表示多可用区。
+	// <p>目标实例部署模型。默认为0，支持值包括：0 - 表示单可用区，1 - 表示多可用区。</p>
 	DstDeployMode *int64 `json:"DstDeployMode,omitnil,omitempty" name:"DstDeployMode"`
 
-	// 目标实例复制类型，支持值包括：0 - 表示异步复制，1 - 表示半同步复制，2 - 表示强同步复制。
+	// <p>目标实例复制类型，支持值包括：0 - 表示异步复制，1 - 表示半同步复制，2 - 表示强同步复制。</p>
 	DstProtectMode *int64 `json:"DstProtectMode,omitnil,omitempty" name:"DstProtectMode"`
 
-	// 目标实例备机1可用区 ID。可使用 [DescribeCdbZoneConfig](https://cloud.tencent.com/document/product/236/80281) 获取可用区 ID。
+	// <p>目标实例备机1可用区 ID。可使用 <a href="https://cloud.tencent.com/document/product/236/80281">DescribeCdbZoneConfig</a> 获取可用区 ID。</p>
 	DstSlaveZone *int64 `json:"DstSlaveZone,omitnil,omitempty" name:"DstSlaveZone"`
 
-	// 目标实例备机2可用区 ID。可使用 [DescribeCdbZoneConfig](https://cloud.tencent.com/document/product/236/80281) 获取可用区 ID。
+	// <p>目标实例备机2可用区 ID。可使用 <a href="https://cloud.tencent.com/document/product/236/80281">DescribeCdbZoneConfig</a> 获取可用区 ID。</p>
 	DstBackupZone *int64 `json:"DstBackupZone,omitnil,omitempty" name:"DstBackupZone"`
 
-	// 目标实例类型。支持值包括："CUSTOM" - 通用型实例，"EXCLUSIVE" - 独享型实例，"ONTKE" - ONTKE 单节点实例，"CLOUD_NATIVE_CLUSTER" - 云盘版标准型，"CLOUD_NATIVE_CLUSTER_EXCLUSIVE" - 云盘版加强型。
+	// <p>目标实例类型。支持值包括：&quot;CUSTOM&quot; - 通用型实例，&quot;EXCLUSIVE&quot; - 独享型实例，&quot;ONTKE&quot; - ONTKE 单节点实例，&quot;CLOUD_NATIVE_CLUSTER&quot; - 云盘版标准型，&quot;CLOUD_NATIVE_CLUSTER_EXCLUSIVE&quot; - 云盘版加强型。</p>
 	DstCdbType *string `json:"DstCdbType,omitnil,omitempty" name:"DstCdbType"`
 
-	// 目标实例主可用区 ID。可使用 [DescribeCdbZoneConfig](https://cloud.tencent.com/document/product/236/80281) 获取可用区 ID。
+	// <p>目标实例主可用区 ID。可使用 <a href="https://cloud.tencent.com/document/product/236/80281">DescribeCdbZoneConfig</a> 获取可用区 ID。</p>
 	DstZoneId *int64 `json:"DstZoneId,omitnil,omitempty" name:"DstZoneId"`
 
-	// 独享集群 CDB 实例的节点分布情况。
+	// <p>独享集群 CDB 实例的节点分布情况。</p>
 	NodeDistribution *NodeDistribution `json:"NodeDistribution,omitnil,omitempty" name:"NodeDistribution"`
 
-	// 集群版的节点拓扑配置。Nodeld信息可通过 [DescribeClusterInfo](https://cloud.tencent.com/document/api/236/105116) 接口获取。
+	// <p>云盘版的节点拓扑配置。Nodeld 信息可通过 <a href="https://cloud.tencent.com/document/api/236/105116">DescribeClusterInfo</a> 接口获取。</p>
 	ClusterTopology *ClusterTopology `json:"ClusterTopology,omitnil,omitempty" name:"ClusterTopology"`
+
+	// <p>目标实例备机3可用区 ID。可使用 <a href="https://cloud.tencent.com/document/product/236/80281">DescribeCdbZoneConfig</a> 获取可用区 ID。</p>
+	DstFourthZone *int64 `json:"DstFourthZone,omitnil,omitempty" name:"DstFourthZone"`
 }
 
 func (r *DescribeInstanceUpgradeTypeRequest) ToJsonString() string {
@@ -9184,6 +9259,7 @@ func (r *DescribeInstanceUpgradeTypeRequest) FromJsonString(s string) error {
 	delete(f, "DstZoneId")
 	delete(f, "NodeDistribution")
 	delete(f, "ClusterTopology")
+	delete(f, "DstFourthZone")
 	if len(f) > 0 {
 		return tcerr.NewTencentCloudSDKError("ClientError.BuildRequestError", "DescribeInstanceUpgradeTypeRequest has unknown keys!", "")
 	}
@@ -9192,10 +9268,10 @@ func (r *DescribeInstanceUpgradeTypeRequest) FromJsonString(s string) error {
 
 // Predefined struct for user
 type DescribeInstanceUpgradeTypeResponseParams struct {
-	// 实例 ID。
+	// <p>实例 ID。</p>
 	InstanceId *string `json:"InstanceId,omitnil,omitempty" name:"InstanceId"`
 
-	// 实例升级类型。Trsf - 迁移升级，InPlace - 原地升级，Topology - 架构升级。
+	// <p>实例升级类型。Trsf - 迁移升级，InPlace - 原地升级，Topology - 架构升级。</p>
 	UpgradeType *string `json:"UpgradeType,omitnil,omitempty" name:"UpgradeType"`
 
 	// 唯一请求 ID，由服务端生成，每次请求都会返回（若请求因其他原因未能抵达服务端，则该次请求不会获得 RequestId）。定位问题时需要提供该次请求的 RequestId。
@@ -11040,7 +11116,7 @@ func (r *DisassociateSecurityGroupsResponse) FromJsonString(s string) error {
 }
 
 type DiskTypeConfigItem struct {
-	// 磁盘对应的实例类型。仅支持单节点基础型和集群版。
+	// 磁盘对应的实例类型。仅支持单节点（云盘）和云盘版。
 	DeviceType *string `json:"DeviceType,omitnil,omitempty" name:"DeviceType"`
 
 	// 可以选择的磁盘类型列表。
@@ -11398,158 +11474,183 @@ type InstanceDbAuditStatus struct {
 
 	// 实例所应用的规则模板。
 	RuleTemplateIds []*string `json:"RuleTemplateIds,omitnil,omitempty" name:"RuleTemplateIds"`
+
+	// 限免状态
+	TrialStatus *string `json:"TrialStatus,omitnil,omitempty" name:"TrialStatus"`
+
+	// 限免开启时间
+	TrialStartTime *int64 `json:"TrialStartTime,omitnil,omitempty" name:"TrialStartTime"`
+
+	// 限免持续时间
+	TrialDuration *int64 `json:"TrialDuration,omitnil,omitempty" name:"TrialDuration"`
+
+	// 限免关闭时间
+	TrialCloseTime *int64 `json:"TrialCloseTime,omitnil,omitempty" name:"TrialCloseTime"`
+
+	// 限免期查询日志时长
+	TrialDescribeLogHours *int64 `json:"TrialDescribeLogHours,omitnil,omitempty" name:"TrialDescribeLogHours"`
 }
 
 type InstanceInfo struct {
-	// 外网状态，可能的返回值为：0-未开通外网；1-已开通外网；2-已关闭外网
+	// <p>外网状态，可能的返回值为：0-未开通外网；1-已开通外网；2-已关闭外网</p>
 	WanStatus *int64 `json:"WanStatus,omitnil,omitempty" name:"WanStatus"`
 
-	// 可用区信息
+	// <p>可用区信息</p>
 	Zone *string `json:"Zone,omitnil,omitempty" name:"Zone"`
 
-	// 初始化标志，可能的返回值为：0-未初始化；1-已初始化
+	// <p>初始化标志，可能的返回值为：0-未初始化；1-已初始化</p>
 	InitFlag *int64 `json:"InitFlag,omitnil,omitempty" name:"InitFlag"`
 
-	// 只读vip信息。单独开通只读实例访问的只读实例才有该字段
+	// <p>只读vip信息。单独开通只读实例访问的只读实例才有该字段</p>
 	RoVipInfo *RoVipInfo `json:"RoVipInfo,omitnil,omitempty" name:"RoVipInfo"`
 
-	// 内存容量，单位为 MB
+	// <p>内存容量，单位为 MB</p>
 	Memory *int64 `json:"Memory,omitnil,omitempty" name:"Memory"`
 
-	// 实例状态，可能的返回值：0-创建中；1-运行中；4-正在进行隔离操作；5-已隔离
+	// <p>实例状态，可能的返回值：0-创建中；1-运行中；4-正在进行隔离操作；5-已隔离</p>
 	Status *int64 `json:"Status,omitnil,omitempty" name:"Status"`
 
-	// 私有网络 ID，例如：51102
+	// <p>私有网络 ID，例如：51102</p>
 	VpcId *int64 `json:"VpcId,omitnil,omitempty" name:"VpcId"`
 
-	// 备机信息
+	// <p>备机信息</p>
 	SlaveInfo *SlaveInfo `json:"SlaveInfo,omitnil,omitempty" name:"SlaveInfo"`
 
-	// 实例 ID
+	// <p>实例 ID</p>
 	InstanceId *string `json:"InstanceId,omitnil,omitempty" name:"InstanceId"`
 
-	// 硬盘容量，单位为 GB
+	// <p>硬盘容量，单位为 GB</p>
 	Volume *int64 `json:"Volume,omitnil,omitempty" name:"Volume"`
 
-	// 自动续费标志，可能的返回值：0-未开通自动续费；1-已开通自动续费；2-已关闭自动续费
+	// <p>自动续费标志，可能的返回值：0-未开通自动续费；1-已开通自动续费；2-已关闭自动续费</p>
 	AutoRenew *int64 `json:"AutoRenew,omitnil,omitempty" name:"AutoRenew"`
 
-	// 数据复制方式。0 - 异步复制；1 - 半同步复制；2 - 强同步复制
+	// <p>数据复制方式。0 - 异步复制；1 - 半同步复制；2 - 强同步复制</p>
 	ProtectMode *int64 `json:"ProtectMode,omitnil,omitempty" name:"ProtectMode"`
 
-	// 只读组详细信息
+	// <p>只读组详细信息</p>
 	RoGroups []*RoGroup `json:"RoGroups,omitnil,omitempty" name:"RoGroups"`
 
-	// 子网 ID，例如：2333
+	// <p>子网 ID，例如：2333</p>
 	SubnetId *int64 `json:"SubnetId,omitnil,omitempty" name:"SubnetId"`
 
-	// 实例类型，可能的返回值：1-主实例；2-灾备实例；3-只读实例
+	// <p>实例类型，可能的返回值：1-主实例；2-灾备实例；3-只读实例</p>
 	InstanceType *int64 `json:"InstanceType,omitnil,omitempty" name:"InstanceType"`
 
-	// 项目 ID
+	// <p>项目 ID</p>
 	ProjectId *int64 `json:"ProjectId,omitnil,omitempty" name:"ProjectId"`
 
-	// 地域信息
+	// <p>地域信息</p>
 	Region *string `json:"Region,omitnil,omitempty" name:"Region"`
 
-	// 实例到期时间
+	// <p>实例到期时间</p>
 	DeadlineTime *string `json:"DeadlineTime,omitnil,omitempty" name:"DeadlineTime"`
 
-	// 可用区部署方式。可能的值为：0 - 单可用区；1 - 多可用区
+	// <p>可用区部署方式。可能的值为：0 - 单可用区；1 - 多可用区</p>
 	DeployMode *int64 `json:"DeployMode,omitnil,omitempty" name:"DeployMode"`
 
-	// 实例任务状态。0 - 没有任务 ,1 - 升级中,2 - 数据导入中,3 - 开放Slave中,4 - 外网访问开通中,5 - 批量操作执行中,6 - 回档中,7 - 外网访问关闭中,8 - 密码修改中,9 - 实例名修改中,10 - 重启中,12 - 自建迁移中,13 - 删除库表中,14 - 灾备实例创建同步中,15 - 升级待切换,16 - 升级切换中,17 - 升级切换完成
+	// <p>实例任务状态。0 - 没有任务 ,1 - 升级中,2 - 数据导入中,3 - 开放Slave中,4 - 外网访问开通中,5 - 批量操作执行中,6 - 回档中,7 - 外网访问关闭中,8 - 密码修改中,9 - 实例名修改中,10 - 重启中,12 - 自建迁移中,13 - 删除库表中,14 - 灾备实例创建同步中,15 - 升级待切换,16 - 升级切换中,17 - 升级切换完成</p>
 	TaskStatus *int64 `json:"TaskStatus,omitnil,omitempty" name:"TaskStatus"`
 
-	// 主实例详细信息
+	// <p>主实例详细信息</p>
 	MasterInfo *MasterInfo `json:"MasterInfo,omitnil,omitempty" name:"MasterInfo"`
 
-	// 实例类型
+	// <p>实例类型</p>
 	DeviceType *string `json:"DeviceType,omitnil,omitempty" name:"DeviceType"`
 
-	// 内核版本
+	// <p>内核版本</p>
 	EngineVersion *string `json:"EngineVersion,omitnil,omitempty" name:"EngineVersion"`
 
-	// 实例名称
+	// <p>实例名称</p>
 	InstanceName *string `json:"InstanceName,omitnil,omitempty" name:"InstanceName"`
 
-	// 灾备实例详细信息
+	// <p>灾备实例详细信息</p>
 	DrInfo []*DrInfo `json:"DrInfo,omitnil,omitempty" name:"DrInfo"`
 
-	// 外网域名
+	// <p>外网域名</p>
 	WanDomain *string `json:"WanDomain,omitnil,omitempty" name:"WanDomain"`
 
-	// 外网端口号
+	// <p>外网端口号</p>
 	WanPort *int64 `json:"WanPort,omitnil,omitempty" name:"WanPort"`
 
-	// 付费类型，可能的返回值：0-包年包月；1-按量计费
+	// <p>付费类型，可能的返回值：0-包年包月；1-按量计费</p>
 	PayType *int64 `json:"PayType,omitnil,omitempty" name:"PayType"`
 
-	// 实例创建时间
+	// <p>实例创建时间</p>
 	CreateTime *string `json:"CreateTime,omitnil,omitempty" name:"CreateTime"`
 
-	// 实例 IP
+	// <p>实例 IP</p>
 	Vip *string `json:"Vip,omitnil,omitempty" name:"Vip"`
 
-	// 端口号
+	// <p>端口号</p>
 	Vport *int64 `json:"Vport,omitnil,omitempty" name:"Vport"`
 
-	// 磁盘写入是否被锁定（实例数据写入量已经超过磁盘配额）。0 -未被锁定 1 -已被锁定
+	// <p>磁盘写入是否被锁定（实例数据写入量已经超过磁盘配额）。0 -未被锁定 1 -已被锁定</p>
 	CdbError *int64 `json:"CdbError,omitnil,omitempty" name:"CdbError"`
 
-	// 私有网络描述符，例如：“vpc-5v8wn9mg”
+	// <p>私有网络描述符，例如：“vpc-5v8wn9mg”</p>
 	UniqVpcId *string `json:"UniqVpcId,omitnil,omitempty" name:"UniqVpcId"`
 
-	// 子网描述符，例如：“subnet-1typ0s7d”
+	// <p>子网描述符，例如：“subnet-1typ0s7d”</p>
 	UniqSubnetId *string `json:"UniqSubnetId,omitnil,omitempty" name:"UniqSubnetId"`
 
-	// 物理 ID
+	// <p>物理 ID</p>
 	PhysicalId *string `json:"PhysicalId,omitnil,omitempty" name:"PhysicalId"`
 
-	// 核心数
+	// <p>核心数</p>
 	Cpu *int64 `json:"Cpu,omitnil,omitempty" name:"Cpu"`
 
-	// 每秒查询数量
+	// <p>每秒查询数量</p>
 	Qps *int64 `json:"Qps,omitnil,omitempty" name:"Qps"`
 
-	// 可用区中文名称
+	// <p>可用区中文名称</p>
 	ZoneName *string `json:"ZoneName,omitnil,omitempty" name:"ZoneName"`
 
-	// 物理机型
+	// <p>物理机型</p>
 	DeviceClass *string `json:"DeviceClass,omitnil,omitempty" name:"DeviceClass"`
 
-	// 置放群组 ID
+	// <p>置放群组 ID</p>
 	DeployGroupId *string `json:"DeployGroupId,omitnil,omitempty" name:"DeployGroupId"`
 
-	// 可用区 ID
+	// <p>可用区 ID</p>
 	ZoneId *int64 `json:"ZoneId,omitnil,omitempty" name:"ZoneId"`
 
-	// 节点数
+	// <p>节点数</p>
 	InstanceNodes *int64 `json:"InstanceNodes,omitnil,omitempty" name:"InstanceNodes"`
 
-	// 标签列表
+	// <p>标签列表</p>
 	TagList []*TagInfoItem `json:"TagList,omitnil,omitempty" name:"TagList"`
 
-	// 引擎类型
+	// <p>引擎类型</p>
 	EngineType *string `json:"EngineType,omitnil,omitempty" name:"EngineType"`
 
-	// 最大延迟阈值
+	// <p>最大延迟阈值</p>
 	MaxDelayTime *int64 `json:"MaxDelayTime,omitnil,omitempty" name:"MaxDelayTime"`
 
-	// 实例磁盘类型，仅云盘版实例才返回该值。可能的值为 CLOUD_SSD：SSD云硬盘， CLOUD_HSSD：增强型SSD云硬盘
+	// <p>实例磁盘类型，仅云盘版和单节点（云盘）实例才会返回有效值。<br>说明：</p><ol><li>若返回：&quot;DiskType&quot;: &quot;CLOUD_HSSD&quot;，则表示该实例磁盘类型为增强型 SSD 云硬盘。</li><li>若返回：&quot;DiskType&quot;: &quot;CLOUD_SSD&quot;，则表示该实例磁盘类型为 SSD 云硬盘。</li><li>若返回：&quot;DiskType&quot;: &quot;&quot;，且参数 DeviceType 值为 UNIVERSAL 或 EXCLUSIVE，则表示该实例采用的是本地 SSD 盘。</li></ol>
 	DiskType *string `json:"DiskType,omitnil,omitempty" name:"DiskType"`
 
-	// 当前扩容的CPU核心数。
+	// <p>当前扩容的CPU核心数。</p>
 	ExpandCpu *int64 `json:"ExpandCpu,omitnil,omitempty" name:"ExpandCpu"`
 
-	// 实例集群版节点信息
+	// <p>云盘版实例节点信息</p>
 	ClusterInfo []*ClusterInfo `json:"ClusterInfo,omitnil,omitempty" name:"ClusterInfo"`
 
-	// 分析引擎节点列表
+	// <p>分析引擎节点列表</p>
 	AnalysisNodeInfos []*AnalysisNodeInfo `json:"AnalysisNodeInfos,omitnil,omitempty" name:"AnalysisNodeInfos"`
 
-	// 设备带宽，单位G。当DeviceClass不为空时此参数才有效。例：25-表示当前设备带宽为25G；10-表示当前设备带宽为10G。
+	// <p>设备带宽，单位G。当DeviceClass不为空时此参数才有效。例：25-表示当前设备带宽为25G；10-表示当前设备带宽为10G。</p>
 	DeviceBandwidth *uint64 `json:"DeviceBandwidth,omitnil,omitempty" name:"DeviceBandwidth"`
+
+	// <p>实例销毁保护状态，on表示开启保护，否则为关闭保护</p>
+	DestroyProtect *string `json:"DestroyProtect,omitnil,omitempty" name:"DestroyProtect"`
+
+	// <p>TDSQL引擎参数</p>
+	CpuModel *string `json:"CpuModel,omitnil,omitempty" name:"CpuModel"`
+
+	// <p>分析引擎实例版本升级信息</p>
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	AnalysisUpgradeVersionInfo *UpgradeAnalysisInstanceVersionInfo `json:"AnalysisUpgradeVersionInfo,omitnil,omitempty" name:"AnalysisUpgradeVersionInfo"`
 }
 
 type InstanceRebootTime struct {
@@ -11678,58 +11779,58 @@ type LogToCLSConfig struct {
 }
 
 type MasterInfo struct {
-	// 地域信息
+	// <p>地域信息</p>
 	Region *string `json:"Region,omitnil,omitempty" name:"Region"`
 
-	// 地域ID
+	// <p>地域ID</p>
 	RegionId *int64 `json:"RegionId,omitnil,omitempty" name:"RegionId"`
 
-	// 可用区ID
+	// <p>可用区ID</p>
 	ZoneId *int64 `json:"ZoneId,omitnil,omitempty" name:"ZoneId"`
 
-	// 可用区信息
+	// <p>可用区信息</p>
 	Zone *string `json:"Zone,omitnil,omitempty" name:"Zone"`
 
-	// 实例ID
+	// <p>实例ID</p>
 	InstanceId *string `json:"InstanceId,omitnil,omitempty" name:"InstanceId"`
 
-	// 实例长ID
+	// <p>实例长ID</p>
 	ResourceId *string `json:"ResourceId,omitnil,omitempty" name:"ResourceId"`
 
-	// 实例状态
+	// <p>实例状态</p>
 	Status *int64 `json:"Status,omitnil,omitempty" name:"Status"`
 
-	// 实例名称
+	// <p>实例名称</p>
 	InstanceName *string `json:"InstanceName,omitnil,omitempty" name:"InstanceName"`
 
-	// 实例类型
+	// <p>实例类型</p>
 	InstanceType *int64 `json:"InstanceType,omitnil,omitempty" name:"InstanceType"`
 
-	// 任务状态
+	// <p>任务状态</p>
 	TaskStatus *int64 `json:"TaskStatus,omitnil,omitempty" name:"TaskStatus"`
 
-	// 内存容量
+	// <p>内存容量</p>
 	Memory *int64 `json:"Memory,omitnil,omitempty" name:"Memory"`
 
-	// 硬盘容量
+	// <p>硬盘容量</p>
 	Volume *int64 `json:"Volume,omitnil,omitempty" name:"Volume"`
 
-	// 实例机型
+	// <p>实例机型</p>
 	DeviceType *string `json:"DeviceType,omitnil,omitempty" name:"DeviceType"`
 
-	// 每秒查询数
+	// <p>每秒查询数</p>
 	Qps *int64 `json:"Qps,omitnil,omitempty" name:"Qps"`
 
-	// 私有网络ID
+	// <p>私有网络ID</p>
 	VpcId *int64 `json:"VpcId,omitnil,omitempty" name:"VpcId"`
 
-	// 子网ID
+	// <p>子网ID</p>
 	SubnetId *int64 `json:"SubnetId,omitnil,omitempty" name:"SubnetId"`
 
-	// 独享集群ID
+	// <p>独享集群ID</p>
 	ExClusterId *string `json:"ExClusterId,omitnil,omitempty" name:"ExClusterId"`
 
-	// 独享集群名称
+	// <p>独享集群名称</p>
 	ExClusterName *string `json:"ExClusterName,omitnil,omitempty" name:"ExClusterName"`
 }
 
@@ -11752,7 +11853,7 @@ type MigrateClusterRoInfo struct {
 	// 可用区
 	Zone *string `json:"Zone,omitnil,omitempty" name:"Zone"`
 
-	// 迁移实例类型。支持值包括： "CLOUD_NATIVE_CLUSTER" - 标准型集群版实例， "CLOUD_NATIVE_CLUSTER_EXCLUSIVE" - 加强型集群版实例。
+	// 迁移实例类型。支持值包括： "CLOUD_NATIVE_CLUSTER" - 云盘版标准型实例， "CLOUD_NATIVE_CLUSTER_EXCLUSIVE" - 云盘版加强型实例。
 	DeviceType *string `json:"DeviceType,omitnil,omitempty" name:"DeviceType"`
 
 	// 只读实例所在ro组，例：cdbrg-xxx
@@ -11992,6 +12093,11 @@ type ModifyAccountPasswordRequestParams struct {
 
 	// 云数据库账号。可通过 [DescribeAccounts](https://cloud.tencent.com/document/api/236/17499) 接口获取。
 	Accounts []*Account `json:"Accounts,omitnil,omitempty" name:"Accounts"`
+
+	// 该字段已废弃。
+	//
+	// Deprecated: SkipValidatePassword is deprecated.
+	SkipValidatePassword *bool `json:"SkipValidatePassword,omitnil,omitempty" name:"SkipValidatePassword"`
 }
 
 type ModifyAccountPasswordRequest struct {
@@ -12005,6 +12111,9 @@ type ModifyAccountPasswordRequest struct {
 
 	// 云数据库账号。可通过 [DescribeAccounts](https://cloud.tencent.com/document/api/236/17499) 接口获取。
 	Accounts []*Account `json:"Accounts,omitnil,omitempty" name:"Accounts"`
+
+	// 该字段已废弃。
+	SkipValidatePassword *bool `json:"SkipValidatePassword,omitnil,omitempty" name:"SkipValidatePassword"`
 }
 
 func (r *ModifyAccountPasswordRequest) ToJsonString() string {
@@ -12022,6 +12131,7 @@ func (r *ModifyAccountPasswordRequest) FromJsonString(s string) error {
 	delete(f, "InstanceId")
 	delete(f, "NewPassword")
 	delete(f, "Accounts")
+	delete(f, "SkipValidatePassword")
 	if len(f) > 0 {
 		return tcerr.NewTencentCloudSDKError("ClientError.BuildRequestError", "ModifyAccountPasswordRequest has unknown keys!", "")
 	}
@@ -12914,6 +13024,9 @@ type ModifyBackupEncryptionStatusRequestParams struct {
 
 	// 设置实例新增的自动物理备份文件默认加密状态。可选值为 on或者off。
 	EncryptionStatus *string `json:"EncryptionStatus,omitnil,omitempty" name:"EncryptionStatus"`
+
+	// 设置实例新增的自动日志备份文件默认加密状态。可选值为 on或者off。
+	BinlogEncryptionStatus *string `json:"BinlogEncryptionStatus,omitnil,omitempty" name:"BinlogEncryptionStatus"`
 }
 
 type ModifyBackupEncryptionStatusRequest struct {
@@ -12924,6 +13037,9 @@ type ModifyBackupEncryptionStatusRequest struct {
 
 	// 设置实例新增的自动物理备份文件默认加密状态。可选值为 on或者off。
 	EncryptionStatus *string `json:"EncryptionStatus,omitnil,omitempty" name:"EncryptionStatus"`
+
+	// 设置实例新增的自动日志备份文件默认加密状态。可选值为 on或者off。
+	BinlogEncryptionStatus *string `json:"BinlogEncryptionStatus,omitnil,omitempty" name:"BinlogEncryptionStatus"`
 }
 
 func (r *ModifyBackupEncryptionStatusRequest) ToJsonString() string {
@@ -12940,6 +13056,7 @@ func (r *ModifyBackupEncryptionStatusRequest) FromJsonString(s string) error {
 	}
 	delete(f, "InstanceId")
 	delete(f, "EncryptionStatus")
+	delete(f, "BinlogEncryptionStatus")
 	if len(f) > 0 {
 		return tcerr.NewTencentCloudSDKError("ClientError.BuildRequestError", "ModifyBackupEncryptionStatusRequest has unknown keys!", "")
 	}
@@ -13204,73 +13321,75 @@ func (r *ModifyCdbProxyParamResponse) FromJsonString(s string) error {
 
 // Predefined struct for user
 type ModifyDBInstanceLogToCLSRequestParams struct {
-	// 实例 ID，可通过 [DescribeDBInstances](https://cloud.tencent.com/document/product/236/15872) 接口获取。
+	// <p>实例 ID，可通过 <a href="https://cloud.tencent.com/document/product/236/15872">DescribeDBInstances</a> 接口获取。</p>
 	InstanceId *string `json:"InstanceId,omitnil,omitempty" name:"InstanceId"`
 
-	// 日志类型。error：错误日志，slowlog：慢日志。
+	// <p>日志类型。error：错误日志，slowlog：慢日志。</p>
 	LogType *string `json:"LogType,omitnil,omitempty" name:"LogType"`
 
-	// 投递状态。ON：开启，OFF：关闭。
+	// <p>投递状态。ON：开启，OFF：关闭。</p>
 	Status *string `json:"Status,omitnil,omitempty" name:"Status"`
 
-	// 是否需要创建日志集。默认为 false。
+	// <p>是否需要创建日志集。默认为 false。</p>
 	CreateLogset *bool `json:"CreateLogset,omitnil,omitempty" name:"CreateLogset"`
 
-	// 需要创建日志集时为日志集名称；选择已有日志集时，为日志集 ID。默认为空。
-	// 说明：当参数 Status 的值为 ON 时，Logset 和 LogTopic 参数必须填一个。
+	// <p>需要创建日志集时为日志集名称；选择已有日志集时，为日志集 ID。默认为空。<br>说明：当参数 Status 的值为 ON 时，Logset 和 LogTopic 参数必须填一个。</p>
 	Logset *string `json:"Logset,omitnil,omitempty" name:"Logset"`
 
-	// 是否需要创建日志主题。默认为 false。
+	// <p>是否需要创建日志主题。默认为 false。</p>
 	CreateLogTopic *bool `json:"CreateLogTopic,omitnil,omitempty" name:"CreateLogTopic"`
 
-	// 需要创建日志主题时为日志主题名称；选择已有日志主题时，为日志主题 ID。默认为空。
-	// 说明：当参数 Status 的值为 ON 时，Logset 和 LogTopic 参数必须填一个。
+	// <p>需要创建日志主题时为日志主题名称；选择已有日志主题时，为日志主题 ID。默认为空。<br>说明：当参数 Status 的值为 ON 时，Logset 和 LogTopic 参数必须填一个。</p>
 	LogTopic *string `json:"LogTopic,omitnil,omitempty" name:"LogTopic"`
 
-	// 日志主题有效期，不填写时，默认30天，最大值3600。
+	// <p>日志主题有效期，不填写时，默认30天，最大值3600。</p>
 	Period *int64 `json:"Period,omitnil,omitempty" name:"Period"`
 
-	// 创建日志主题时，是否创建索引，默认为 false。
+	// <p>创建日志主题时，是否创建索引，默认为 false。</p>
 	CreateIndex *bool `json:"CreateIndex,omitnil,omitempty" name:"CreateIndex"`
 
-	// CLS 所在地域，不填择默认为 Region 的参数值。
+	// <p>CLS 所在地域，不填择默认为 Region 的参数值。</p>
 	ClsRegion *string `json:"ClsRegion,omitnil,omitempty" name:"ClsRegion"`
+
+	// <p>创建日志集和日志主题的时候可选，最多不能超过10个标签</p>
+	ResourceTags []*TagInfoItem `json:"ResourceTags,omitnil,omitempty" name:"ResourceTags"`
 }
 
 type ModifyDBInstanceLogToCLSRequest struct {
 	*tchttp.BaseRequest
 	
-	// 实例 ID，可通过 [DescribeDBInstances](https://cloud.tencent.com/document/product/236/15872) 接口获取。
+	// <p>实例 ID，可通过 <a href="https://cloud.tencent.com/document/product/236/15872">DescribeDBInstances</a> 接口获取。</p>
 	InstanceId *string `json:"InstanceId,omitnil,omitempty" name:"InstanceId"`
 
-	// 日志类型。error：错误日志，slowlog：慢日志。
+	// <p>日志类型。error：错误日志，slowlog：慢日志。</p>
 	LogType *string `json:"LogType,omitnil,omitempty" name:"LogType"`
 
-	// 投递状态。ON：开启，OFF：关闭。
+	// <p>投递状态。ON：开启，OFF：关闭。</p>
 	Status *string `json:"Status,omitnil,omitempty" name:"Status"`
 
-	// 是否需要创建日志集。默认为 false。
+	// <p>是否需要创建日志集。默认为 false。</p>
 	CreateLogset *bool `json:"CreateLogset,omitnil,omitempty" name:"CreateLogset"`
 
-	// 需要创建日志集时为日志集名称；选择已有日志集时，为日志集 ID。默认为空。
-	// 说明：当参数 Status 的值为 ON 时，Logset 和 LogTopic 参数必须填一个。
+	// <p>需要创建日志集时为日志集名称；选择已有日志集时，为日志集 ID。默认为空。<br>说明：当参数 Status 的值为 ON 时，Logset 和 LogTopic 参数必须填一个。</p>
 	Logset *string `json:"Logset,omitnil,omitempty" name:"Logset"`
 
-	// 是否需要创建日志主题。默认为 false。
+	// <p>是否需要创建日志主题。默认为 false。</p>
 	CreateLogTopic *bool `json:"CreateLogTopic,omitnil,omitempty" name:"CreateLogTopic"`
 
-	// 需要创建日志主题时为日志主题名称；选择已有日志主题时，为日志主题 ID。默认为空。
-	// 说明：当参数 Status 的值为 ON 时，Logset 和 LogTopic 参数必须填一个。
+	// <p>需要创建日志主题时为日志主题名称；选择已有日志主题时，为日志主题 ID。默认为空。<br>说明：当参数 Status 的值为 ON 时，Logset 和 LogTopic 参数必须填一个。</p>
 	LogTopic *string `json:"LogTopic,omitnil,omitempty" name:"LogTopic"`
 
-	// 日志主题有效期，不填写时，默认30天，最大值3600。
+	// <p>日志主题有效期，不填写时，默认30天，最大值3600。</p>
 	Period *int64 `json:"Period,omitnil,omitempty" name:"Period"`
 
-	// 创建日志主题时，是否创建索引，默认为 false。
+	// <p>创建日志主题时，是否创建索引，默认为 false。</p>
 	CreateIndex *bool `json:"CreateIndex,omitnil,omitempty" name:"CreateIndex"`
 
-	// CLS 所在地域，不填择默认为 Region 的参数值。
+	// <p>CLS 所在地域，不填择默认为 Region 的参数值。</p>
 	ClsRegion *string `json:"ClsRegion,omitnil,omitempty" name:"ClsRegion"`
+
+	// <p>创建日志集和日志主题的时候可选，最多不能超过10个标签</p>
+	ResourceTags []*TagInfoItem `json:"ResourceTags,omitnil,omitempty" name:"ResourceTags"`
 }
 
 func (r *ModifyDBInstanceLogToCLSRequest) ToJsonString() string {
@@ -13295,6 +13414,7 @@ func (r *ModifyDBInstanceLogToCLSRequest) FromJsonString(s string) error {
 	delete(f, "Period")
 	delete(f, "CreateIndex")
 	delete(f, "ClsRegion")
+	delete(f, "ResourceTags")
 	if len(f) > 0 {
 		return tcerr.NewTencentCloudSDKError("ClientError.BuildRequestError", "ModifyDBInstanceLogToCLSRequest has unknown keys!", "")
 	}
@@ -13320,6 +13440,77 @@ func (r *ModifyDBInstanceLogToCLSResponse) ToJsonString() string {
 // FromJsonString It is highly **NOT** recommended to use this function
 // because it has no param check, nor strict type check
 func (r *ModifyDBInstanceLogToCLSResponse) FromJsonString(s string) error {
+	return json.Unmarshal([]byte(s), &r)
+}
+
+// Predefined struct for user
+type ModifyDBInstanceModesRequestParams struct {
+	// <p>实例ID，格式如：cdb-c1nl9rpv，与云数据库控制台页面中显示的实例ID相同。</p>
+	InstanceId *string `json:"InstanceId,omitnil,omitempty" name:"InstanceId"`
+
+	// <p>云数据库的模式，目前仅支持传入 &quot;protectMode&quot; 表示修改主从同步方式。</p>
+	Mode *string `json:"Mode,omitnil,omitempty" name:"Mode"`
+
+	// <p>数据同步方式，可选值：0-异步复制，1-半同步复制，2-强同步复制。</p>
+	ProtectMode *int64 `json:"ProtectMode,omitnil,omitempty" name:"ProtectMode"`
+}
+
+type ModifyDBInstanceModesRequest struct {
+	*tchttp.BaseRequest
+	
+	// <p>实例ID，格式如：cdb-c1nl9rpv，与云数据库控制台页面中显示的实例ID相同。</p>
+	InstanceId *string `json:"InstanceId,omitnil,omitempty" name:"InstanceId"`
+
+	// <p>云数据库的模式，目前仅支持传入 &quot;protectMode&quot; 表示修改主从同步方式。</p>
+	Mode *string `json:"Mode,omitnil,omitempty" name:"Mode"`
+
+	// <p>数据同步方式，可选值：0-异步复制，1-半同步复制，2-强同步复制。</p>
+	ProtectMode *int64 `json:"ProtectMode,omitnil,omitempty" name:"ProtectMode"`
+}
+
+func (r *ModifyDBInstanceModesRequest) ToJsonString() string {
+    b, _ := json.Marshal(r)
+    return string(b)
+}
+
+// FromJsonString It is highly **NOT** recommended to use this function
+// because it has no param check, nor strict type check
+func (r *ModifyDBInstanceModesRequest) FromJsonString(s string) error {
+	f := make(map[string]interface{})
+	if err := json.Unmarshal([]byte(s), &f); err != nil {
+		return err
+	}
+	delete(f, "InstanceId")
+	delete(f, "Mode")
+	delete(f, "ProtectMode")
+	if len(f) > 0 {
+		return tcerr.NewTencentCloudSDKError("ClientError.BuildRequestError", "ModifyDBInstanceModesRequest has unknown keys!", "")
+	}
+	return json.Unmarshal([]byte(s), &r)
+}
+
+// Predefined struct for user
+type ModifyDBInstanceModesResponseParams struct {
+	// <p>异步任务的请求ID，可使用此ID查询异步任务的执行结果。</p>
+	AsyncRequestId *string `json:"AsyncRequestId,omitnil,omitempty" name:"AsyncRequestId"`
+
+	// 唯一请求 ID，由服务端生成，每次请求都会返回（若请求因其他原因未能抵达服务端，则该次请求不会获得 RequestId）。定位问题时需要提供该次请求的 RequestId。
+	RequestId *string `json:"RequestId,omitnil,omitempty" name:"RequestId"`
+}
+
+type ModifyDBInstanceModesResponse struct {
+	*tchttp.BaseResponse
+	Response *ModifyDBInstanceModesResponseParams `json:"Response"`
+}
+
+func (r *ModifyDBInstanceModesResponse) ToJsonString() string {
+    b, _ := json.Marshal(r)
+    return string(b)
+}
+
+// FromJsonString It is highly **NOT** recommended to use this function
+// because it has no param check, nor strict type check
+func (r *ModifyDBInstanceModesResponse) FromJsonString(s string) error {
 	return json.Unmarshal([]byte(s), &r)
 }
 
@@ -13530,7 +13721,7 @@ type ModifyDBInstanceSecurityGroupsRequestParams struct {
 	// 当传入只读实例 ID 时，默认操作的是对应只读组的安全组。如果需要操作只读实例 ID 的安全组， 需要将该入参置为 True。默认为 False。
 	ForReadonlyInstance *bool `json:"ForReadonlyInstance,omitnil,omitempty" name:"ForReadonlyInstance"`
 
-	// 变更集群版实例只读组时，InstanceId 传实例 ID，需要额外指定该参数表示操作只读组。 如果操作读写节点则不需指定该参数。
+	// 变更云盘版实例只读组时，InstanceId 传实例 ID，需要额外指定该参数表示操作只读组。 如果操作读写节点则不需指定该参数。
 	OpResourceId *string `json:"OpResourceId,omitnil,omitempty" name:"OpResourceId"`
 }
 
@@ -13547,7 +13738,7 @@ type ModifyDBInstanceSecurityGroupsRequest struct {
 	// 当传入只读实例 ID 时，默认操作的是对应只读组的安全组。如果需要操作只读实例 ID 的安全组， 需要将该入参置为 True。默认为 False。
 	ForReadonlyInstance *bool `json:"ForReadonlyInstance,omitnil,omitempty" name:"ForReadonlyInstance"`
 
-	// 变更集群版实例只读组时，InstanceId 传实例 ID，需要额外指定该参数表示操作只读组。 如果操作读写节点则不需指定该参数。
+	// 变更云盘版实例只读组时，InstanceId 传实例 ID，需要额外指定该参数表示操作只读组。 如果操作读写节点则不需指定该参数。
 	OpResourceId *string `json:"OpResourceId,omitnil,omitempty" name:"OpResourceId"`
 }
 
@@ -15308,7 +15499,7 @@ type ReadWriteNode struct {
 	// RW 节点所在可用区。
 	Zone *string `json:"Zone,omitnil,omitempty" name:"Zone"`
 
-	// 升级集群版实例时，如果要调整只读节点可用区，需要指定节点id。
+	// 升级云盘版实例时，如果要调整只读节点可用区，需要指定节点 ID。
 	NodeId *string `json:"NodeId,omitnil,omitempty" name:"NodeId"`
 }
 
@@ -15319,7 +15510,7 @@ type ReadonlyNode struct {
 	// 指定该节点分布在哪个可用区。
 	Zone *string `json:"Zone,omitnil,omitempty" name:"Zone"`
 
-	// 升级集群版实例时，如果要调整只读节点可用区，需要指定节点id。
+	// 升级云盘版实例时，如果要调整只读节点可用区，需要指定节点 ID。
 	NodeId *string `json:"NodeId,omitnil,omitempty" name:"NodeId"`
 }
 
@@ -15406,7 +15597,10 @@ type ReloadBalanceProxyNodeRequestParams struct {
 	// 代理组 ID。可通过 [DescribeCdbProxyInfo](https://cloud.tencent.com/document/api/236/90585) 接口获取。
 	ProxyGroupId *string `json:"ProxyGroupId,omitnil,omitempty" name:"ProxyGroupId"`
 
-	// 代理组地址 ID。可通过 [DescribeCdbProxyInfo](https://cloud.tencent.com/document/api/236/90585) 接口获取。如果不传则会对所有代理组地址进行负载均衡。
+	// 代理组地址 ID。可通过 [DescribeCdbProxyInfo](https://cloud.tencent.com/document/api/236/90585) 接口获取。
+	// 说明：
+	// 1. 对于双节点实例而言，此参数为非必填，如果不传则会对所有代理组地址进行负载均衡。
+	// 2. 对于云盘版实例而言，此参数为必填。
 	ProxyAddressId *string `json:"ProxyAddressId,omitnil,omitempty" name:"ProxyAddressId"`
 }
 
@@ -15416,7 +15610,10 @@ type ReloadBalanceProxyNodeRequest struct {
 	// 代理组 ID。可通过 [DescribeCdbProxyInfo](https://cloud.tencent.com/document/api/236/90585) 接口获取。
 	ProxyGroupId *string `json:"ProxyGroupId,omitnil,omitempty" name:"ProxyGroupId"`
 
-	// 代理组地址 ID。可通过 [DescribeCdbProxyInfo](https://cloud.tencent.com/document/api/236/90585) 接口获取。如果不传则会对所有代理组地址进行负载均衡。
+	// 代理组地址 ID。可通过 [DescribeCdbProxyInfo](https://cloud.tencent.com/document/api/236/90585) 接口获取。
+	// 说明：
+	// 1. 对于双节点实例而言，此参数为非必填，如果不传则会对所有代理组地址进行负载均衡。
+	// 2. 对于云盘版实例而言，此参数为必填。
 	ProxyAddressId *string `json:"ProxyAddressId,omitnil,omitempty" name:"ProxyAddressId"`
 }
 
@@ -15740,53 +15937,52 @@ func (r *RestartDBInstancesResponse) FromJsonString(s string) error {
 }
 
 type RoGroup struct {
-	// 只读组模式，可选值为：alone-系统自动分配只读组；allinone-新建只读组；join-使用现有只读组。
+	// <p>只读组模式，可选值为：alone-系统自动分配只读组；allinone-新建只读组；join-使用现有只读组。</p>
 	RoGroupMode *string `json:"RoGroupMode,omitnil,omitempty" name:"RoGroupMode"`
 
-	// 只读组 ID。
-	// 说明：若此数据结构在购买实例操作中被使用，则当只读组模式选择 join 时，此项为必填。
+	// <p>只读组 ID。<br>说明：若此数据结构在购买实例操作中被使用，则当只读组模式选择 join 时，此项为必填。</p>
 	RoGroupId *string `json:"RoGroupId,omitnil,omitempty" name:"RoGroupId"`
 
-	// 只读组名称。
+	// <p>只读组名称。</p>
 	RoGroupName *string `json:"RoGroupName,omitnil,omitempty" name:"RoGroupName"`
 
-	// 是否启用延迟超限剔除功能，启用该功能后，只读实例与主实例的延迟超过延迟阈值，只读实例将被隔离。可选值：1-启用；0-不启用。
+	// <p>是否启用延迟超限剔除功能，启用该功能后，只读实例与主实例的延迟超过延迟阈值，只读实例将被隔离。可选值：1-启用；0-不启用。</p>
 	RoOfflineDelay *int64 `json:"RoOfflineDelay,omitnil,omitempty" name:"RoOfflineDelay"`
 
-	// 延迟阈值。单位：秒。值范围：1-10000，整数。
+	// <p>延迟阈值。单位：秒。值范围：1-10000，整数。</p>
 	RoMaxDelayTime *int64 `json:"RoMaxDelayTime,omitnil,omitempty" name:"RoMaxDelayTime"`
 
-	// 最少实例保留个数，若购买只读实例数量小于设置数量将不做剔除。
+	// <p>最少实例保留个数，若购买只读实例数量小于设置数量将不做剔除。</p>
 	MinRoInGroup *int64 `json:"MinRoInGroup,omitnil,omitempty" name:"MinRoInGroup"`
 
-	// 读写权重分配模式，可选值：system-系统自动分配；custom-自定义。
+	// <p>读写权重分配模式，可选值：system-系统自动分配；custom-自定义。</p>
 	WeightMode *string `json:"WeightMode,omitnil,omitempty" name:"WeightMode"`
 
-	// 该字段已经废弃，无意义。查看只读实例的权重，请查看 RoInstances 字段里的 Weight 值。
+	// <p>该字段已经废弃，无意义。查看只读实例的权重，请查看 RoInstances 字段里的 Weight 值。</p>
 	Weight *int64 `json:"Weight,omitnil,omitempty" name:"Weight"`
 
-	// 只读组中的只读实例详情。
+	// <p>只读组中的只读实例详情。</p>
 	RoInstances []*RoInstanceInfo `json:"RoInstances,omitnil,omitempty" name:"RoInstances"`
 
-	// 只读组的内网 IP。
+	// <p>只读组的内网 IP。</p>
 	Vip *string `json:"Vip,omitnil,omitempty" name:"Vip"`
 
-	// 只读组的内网端口号。
+	// <p>只读组的内网端口号。</p>
 	Vport *int64 `json:"Vport,omitnil,omitempty" name:"Vport"`
 
-	// 私有网络 ID。
+	// <p>私有网络 ID。</p>
 	UniqVpcId *string `json:"UniqVpcId,omitnil,omitempty" name:"UniqVpcId"`
 
-	// 子网 ID。
+	// <p>子网 ID。</p>
 	UniqSubnetId *string `json:"UniqSubnetId,omitnil,omitempty" name:"UniqSubnetId"`
 
-	// 只读组所在的地域。
+	// <p>只读组所在的地域。</p>
 	RoGroupRegion *string `json:"RoGroupRegion,omitnil,omitempty" name:"RoGroupRegion"`
 
-	// 只读组所在的可用区。
+	// <p>只读组所在的可用区。</p>
 	RoGroupZone *string `json:"RoGroupZone,omitnil,omitempty" name:"RoGroupZone"`
 
-	// 延迟复制时间。单位：秒。值范围：1-259200，整数。
+	// <p>延迟复制时间。单位：秒。值范围：1-259200，整数。</p>
 	DelayReplicationTime *int64 `json:"DelayReplicationTime,omitnil,omitempty" name:"DelayReplicationTime"`
 }
 
@@ -15828,7 +16024,7 @@ type RoInstanceInfo struct {
 	// RO实例所在区域名称，如ap-shanghai
 	Region *string `json:"Region,omitnil,omitempty" name:"Region"`
 
-	// RO可用区的正式名称，如ap-shanghai-1
+	// RO可用区的正式名称，如 ap-shanghai-2
 	Zone *string `json:"Zone,omitnil,omitempty" name:"Zone"`
 
 	// RO实例ID，格式如：cdbro-c1nl9rpv
@@ -16066,15 +16262,15 @@ type SlaveConfig struct {
 	// 从库复制方式，可能的返回值：aysnc-异步，semisync-半同步
 	ReplicationMode *string `json:"ReplicationMode,omitnil,omitempty" name:"ReplicationMode"`
 
-	// 从库可用区的正式名称，如ap-shanghai-1
+	// 从库可用区的正式名称，如 ap-shanghai-2
 	Zone *string `json:"Zone,omitnil,omitempty" name:"Zone"`
 }
 
 type SlaveInfo struct {
-	// 第一备机信息
+	// <p>第一备机信息</p>
 	First *SlaveInstanceInfo `json:"First,omitnil,omitempty" name:"First"`
 
-	// 第二备机信息
+	// <p>第二备机信息</p>
 	Second *SlaveInstanceInfo `json:"Second,omitnil,omitempty" name:"Second"`
 }
 
@@ -16879,6 +17075,9 @@ func (r *SwitchDrInstanceToMasterResponse) FromJsonString(s string) error {
 type SwitchForUpgradeRequestParams struct {
 	// 实例 ID，格式如：cdb-c1nl9rpv，与云数据库控制台页面中显示的实例 ID 相同。
 	InstanceId *string `json:"InstanceId,omitnil,omitempty" name:"InstanceId"`
+
+	// 是否开启关联切换，true为开启，false为关闭，默认false
+	IsRelatedSwitch *bool `json:"IsRelatedSwitch,omitnil,omitempty" name:"IsRelatedSwitch"`
 }
 
 type SwitchForUpgradeRequest struct {
@@ -16886,6 +17085,9 @@ type SwitchForUpgradeRequest struct {
 	
 	// 实例 ID，格式如：cdb-c1nl9rpv，与云数据库控制台页面中显示的实例 ID 相同。
 	InstanceId *string `json:"InstanceId,omitnil,omitempty" name:"InstanceId"`
+
+	// 是否开启关联切换，true为开启，false为关闭，默认false
+	IsRelatedSwitch *bool `json:"IsRelatedSwitch,omitnil,omitempty" name:"IsRelatedSwitch"`
 }
 
 func (r *SwitchForUpgradeRequest) ToJsonString() string {
@@ -16901,6 +17103,7 @@ func (r *SwitchForUpgradeRequest) FromJsonString(s string) error {
 		return err
 	}
 	delete(f, "InstanceId")
+	delete(f, "IsRelatedSwitch")
 	if len(f) > 0 {
 		return tcerr.NewTencentCloudSDKError("ClientError.BuildRequestError", "SwitchForUpgradeRequest has unknown keys!", "")
 	}
@@ -17094,6 +17297,20 @@ type TimeIntervalStrategy struct {
 	EndTime *int64 `json:"EndTime,omitnil,omitempty" name:"EndTime"`
 }
 
+type UpgradeAnalysisInstanceVersionInfo struct {
+	// <p>版本升级灰度ip</p>
+	Vip *string `json:"Vip,omitnil,omitempty" name:"Vip"`
+
+	// <p>版本升级灰度port</p>
+	Vport *int64 `json:"Vport,omitnil,omitempty" name:"Vport"`
+
+	// <p>升级之后版本</p>
+	EngineVersion *string `json:"EngineVersion,omitnil,omitempty" name:"EngineVersion"`
+
+	// <p>实例升级灰度事件</p><p>单位：天</p>
+	ExpireTime *int64 `json:"ExpireTime,omitnil,omitempty" name:"ExpireTime"`
+}
+
 // Predefined struct for user
 type UpgradeCDBProxyVersionRequestParams struct {
 	// 实例 ID。可通过 [DescribeDBInstances](https://cloud.tencent.com/document/product/236/15872) 接口获取。
@@ -17181,52 +17398,50 @@ func (r *UpgradeCDBProxyVersionResponse) FromJsonString(s string) error {
 
 // Predefined struct for user
 type UpgradeDBInstanceEngineVersionRequestParams struct {
-	// 实例 ID，格式如：cdb-c1nl9rpv 或者 cdbro-c1nl9rpv。与云数据库控制台页面中显示的实例 ID 相同，可使用 [查询实例列表](https://cloud.tencent.com/document/api/236/15872) 接口获取，其值为输出参数中字段 InstanceId 的值。
+	// <p>实例 ID，格式如：cdb-c1nl9rpv 或者 cdbro-c1nl9rpv。与云数据库控制台页面中显示的实例 ID 相同，可使用 <a href="https://cloud.tencent.com/document/api/236/15872">查询实例列表</a> 接口获取，其值为输出参数中字段 InstanceId 的值。</p>
 	InstanceId *string `json:"InstanceId,omitnil,omitempty" name:"InstanceId"`
 
-	// 主实例数据库引擎版本，支持值包括：5.6、5.7、8.0。
-	// 说明：不支持越级升级，升级后不支持降级。
+	// <p>主实例数据库引擎版本，支持值包括：5.6、5.7、8.0。<br>说明：不支持越级升级，升级后不支持降级。</p>
 	EngineVersion *string `json:"EngineVersion,omitnil,omitempty" name:"EngineVersion"`
 
-	// 切换访问新实例的方式，默认为 0。支持值包括：0 - 立刻切换，1 - 时间窗切换；当该值为 1 时，升级过程中，切换访问新实例的流程将会在时间窗内进行，或者用户主动调用接口 [切换访问新实例](https://cloud.tencent.com/document/product/236/15864) 触发该流程。
+	// <p>切换访问新实例的方式，默认为 0。支持值包括：0 - 立刻切换，1 - 时间窗切换；当该值为 1 时，升级过程中，切换访问新实例的流程将会在时间窗内进行，或者用户主动调用接口 <a href="https://cloud.tencent.com/document/product/236/15864">切换访问新实例</a> 触发该流程。</p>
 	WaitSwitch *int64 `json:"WaitSwitch,omitnil,omitempty" name:"WaitSwitch"`
 
-	// 是否是内核子版本升级，支持的值：1 - 升级内核子版本；0 - 升级数据库引擎版本。无默认值，请指定要升级的版本类型。
+	// <p>是否是内核子版本升级，支持的值：1 - 升级内核子版本；0 - 升级数据库引擎版本。无默认值，请指定要升级的版本类型。</p>
 	UpgradeSubversion *int64 `json:"UpgradeSubversion,omitnil,omitempty" name:"UpgradeSubversion"`
 
-	// 延迟阈值。取值范围：1 - 10。无默认值，不传此参数时，延迟阈值为0，表示延迟阈值不做设置。
+	// <p>延迟阈值。取值范围：1 - 10。无默认值，不传此参数时，延迟阈值为0，表示延迟阈值不做设置。</p>
 	MaxDelayTime *int64 `json:"MaxDelayTime,omitnil,omitempty" name:"MaxDelayTime"`
 
-	// 5.7升级8.0是否忽略关键字错误，取值范围[0,1]，1表示忽略，0表示不忽略。无默认值，不传此参数表示不做处理。
+	// <p>5.7升级8.0是否忽略关键字错误，取值范围[0,1]，1表示忽略，0表示不忽略。无默认值，不传此参数表示不做处理。</p>
 	IgnoreErrKeyword *int64 `json:"IgnoreErrKeyword,omitnil,omitempty" name:"IgnoreErrKeyword"`
 
-	// 版本升级支持指定参数
+	// <p>版本升级支持指定参数</p>
 	ParamList []*UpgradeEngineVersionParams `json:"ParamList,omitnil,omitempty" name:"ParamList"`
 }
 
 type UpgradeDBInstanceEngineVersionRequest struct {
 	*tchttp.BaseRequest
 	
-	// 实例 ID，格式如：cdb-c1nl9rpv 或者 cdbro-c1nl9rpv。与云数据库控制台页面中显示的实例 ID 相同，可使用 [查询实例列表](https://cloud.tencent.com/document/api/236/15872) 接口获取，其值为输出参数中字段 InstanceId 的值。
+	// <p>实例 ID，格式如：cdb-c1nl9rpv 或者 cdbro-c1nl9rpv。与云数据库控制台页面中显示的实例 ID 相同，可使用 <a href="https://cloud.tencent.com/document/api/236/15872">查询实例列表</a> 接口获取，其值为输出参数中字段 InstanceId 的值。</p>
 	InstanceId *string `json:"InstanceId,omitnil,omitempty" name:"InstanceId"`
 
-	// 主实例数据库引擎版本，支持值包括：5.6、5.7、8.0。
-	// 说明：不支持越级升级，升级后不支持降级。
+	// <p>主实例数据库引擎版本，支持值包括：5.6、5.7、8.0。<br>说明：不支持越级升级，升级后不支持降级。</p>
 	EngineVersion *string `json:"EngineVersion,omitnil,omitempty" name:"EngineVersion"`
 
-	// 切换访问新实例的方式，默认为 0。支持值包括：0 - 立刻切换，1 - 时间窗切换；当该值为 1 时，升级过程中，切换访问新实例的流程将会在时间窗内进行，或者用户主动调用接口 [切换访问新实例](https://cloud.tencent.com/document/product/236/15864) 触发该流程。
+	// <p>切换访问新实例的方式，默认为 0。支持值包括：0 - 立刻切换，1 - 时间窗切换；当该值为 1 时，升级过程中，切换访问新实例的流程将会在时间窗内进行，或者用户主动调用接口 <a href="https://cloud.tencent.com/document/product/236/15864">切换访问新实例</a> 触发该流程。</p>
 	WaitSwitch *int64 `json:"WaitSwitch,omitnil,omitempty" name:"WaitSwitch"`
 
-	// 是否是内核子版本升级，支持的值：1 - 升级内核子版本；0 - 升级数据库引擎版本。无默认值，请指定要升级的版本类型。
+	// <p>是否是内核子版本升级，支持的值：1 - 升级内核子版本；0 - 升级数据库引擎版本。无默认值，请指定要升级的版本类型。</p>
 	UpgradeSubversion *int64 `json:"UpgradeSubversion,omitnil,omitempty" name:"UpgradeSubversion"`
 
-	// 延迟阈值。取值范围：1 - 10。无默认值，不传此参数时，延迟阈值为0，表示延迟阈值不做设置。
+	// <p>延迟阈值。取值范围：1 - 10。无默认值，不传此参数时，延迟阈值为0，表示延迟阈值不做设置。</p>
 	MaxDelayTime *int64 `json:"MaxDelayTime,omitnil,omitempty" name:"MaxDelayTime"`
 
-	// 5.7升级8.0是否忽略关键字错误，取值范围[0,1]，1表示忽略，0表示不忽略。无默认值，不传此参数表示不做处理。
+	// <p>5.7升级8.0是否忽略关键字错误，取值范围[0,1]，1表示忽略，0表示不忽略。无默认值，不传此参数表示不做处理。</p>
 	IgnoreErrKeyword *int64 `json:"IgnoreErrKeyword,omitnil,omitempty" name:"IgnoreErrKeyword"`
 
-	// 版本升级支持指定参数
+	// <p>版本升级支持指定参数</p>
 	ParamList []*UpgradeEngineVersionParams `json:"ParamList,omitnil,omitempty" name:"ParamList"`
 }
 
@@ -17257,7 +17472,7 @@ func (r *UpgradeDBInstanceEngineVersionRequest) FromJsonString(s string) error {
 
 // Predefined struct for user
 type UpgradeDBInstanceEngineVersionResponseParams struct {
-	// 异步任务 ID，可使用 [查询异步任务的执行结果](https://cloud.tencent.com/document/api/236/20410) 获取其执行情况。
+	// <p>异步任务 ID，可使用 <a href="https://cloud.tencent.com/document/api/236/20410">查询异步任务的执行结果</a> 获取其执行情况。</p>
 	AsyncRequestId *string `json:"AsyncRequestId,omitnil,omitempty" name:"AsyncRequestId"`
 
 	// 唯一请求 ID，由服务端生成，每次请求都会返回（若请求因其他原因未能抵达服务端，则该次请求不会获得 RequestId）。定位问题时需要提供该次请求的 RequestId。
@@ -17282,147 +17497,135 @@ func (r *UpgradeDBInstanceEngineVersionResponse) FromJsonString(s string) error 
 
 // Predefined struct for user
 type UpgradeDBInstanceRequestParams struct {
-	// 实例 ID，格式如：cdb-c1nl9rpv 或者 cdbro-c1nl9rpv。与云数据库控制台页面中显示的实例 ID 相同，可使用 [查询实例列表](https://cloud.tencent.com/document/api/236/15872) 接口获取，其值为输出参数中字段 InstanceId 的值。
+	// <p>实例 ID，格式如：cdb-c1nl9rpv 或者 cdbro-c1nl9rpv。与云数据库控制台页面中显示的实例 ID 相同，可使用 <a href="https://cloud.tencent.com/document/api/236/15872">查询实例列表</a> 接口获取，其值为输出参数中字段 InstanceId 的值。</p>
 	InstanceId *string `json:"InstanceId,omitnil,omitempty" name:"InstanceId"`
 
-	// 升级后的内存大小，单位：MB，为保证传入 Memory 值有效，请使用 [获取云数据库可售卖规格](https://cloud.tencent.com/document/product/236/17229) 接口获取可升级的内存规格。
-	// 说明：如果进行迁移业务，请一定填写实例规格（CPU、内存），不然系统会默认以最小允许规格传参。
+	// <p>升级后的内存大小，单位：MB，为保证传入 Memory 值有效，请使用 <a href="https://cloud.tencent.com/document/product/236/17229">获取云数据库可售卖规格</a> 接口获取可升级的内存规格。<br>说明：如果进行迁移业务，请一定填写实例规格（CPU、内存），不然系统会默认以最小允许规格传参。</p>
 	Memory *int64 `json:"Memory,omitnil,omitempty" name:"Memory"`
 
-	// 升级后的硬盘大小，单位：GB，为保证传入 Volume 值有效，请使用 [获取云数据库可售卖规格](https://cloud.tencent.com/document/product/236/17229) 接口获取可升级的硬盘范围。
+	// <p>升级后的硬盘大小，单位：GB，为保证传入 Volume 值有效，请使用 <a href="https://cloud.tencent.com/document/product/236/17229">获取云数据库可售卖规格</a> 接口获取可升级的硬盘范围。</p>
 	Volume *int64 `json:"Volume,omitnil,omitempty" name:"Volume"`
 
-	// 数据复制方式，支持值包括：0 - 异步复制，1 - 半同步复制，2 - 强同步复制，升级主实例时可指定该参数，升级只读实例或者灾备实例时指定该参数无意义。
+	// <p>数据复制方式，支持值包括：0 - 异步复制，1 - 半同步复制，2 - 强同步复制，升级主实例时可指定该参数，升级只读实例或者灾备实例时指定该参数无意义。</p>
 	ProtectMode *int64 `json:"ProtectMode,omitnil,omitempty" name:"ProtectMode"`
 
-	// 部署模式，默认为 0，支持值包括：0 - 单可用区部署，1 - 多可用区部署，升级主实例时可指定该参数，升级只读实例或者灾备实例时指定该参数无意义。
+	// <p>部署模式，默认为 0，支持值包括：0 - 单可用区部署，1 - 多可用区部署，升级主实例时可指定该参数，升级只读实例或者灾备实例时指定该参数无意义。</p>
 	DeployMode *int64 `json:"DeployMode,omitnil,omitempty" name:"DeployMode"`
 
-	// 备库1的可用区信息，默认和实例的 Zone 参数一致，升级主实例为多可用区部署时可指定该参数，升级只读实例或者灾备实例时指定该参数无意义。可通过 [获取云数据库可售卖规格](https://cloud.tencent.com/document/product/236/17229) 接口查询支持的可用区。
+	// <p>备库1的可用区信息，默认和实例的 Zone 参数一致，升级主实例为多可用区部署时可指定该参数，升级只读实例或者灾备实例时指定该参数无意义。可通过 <a href="https://cloud.tencent.com/document/product/236/17229">获取云数据库可售卖规格</a> 接口查询支持的可用区。</p>
 	SlaveZone *string `json:"SlaveZone,omitnil,omitempty" name:"SlaveZone"`
 
-	// 主实例数据库引擎版本，支持值包括：5.5、5.6、5.7、8.0。
-	// 说明：升级数据库版本请使用 [UpgradeDBInstanceEngineVersion](https://cloud.tencent.com/document/api/236/15870) 接口。
+	// <p>主实例数据库引擎版本，支持值包括：5.5、5.6、5.7、8.0。<br>说明：升级数据库版本请使用 <a href="https://cloud.tencent.com/document/api/236/15870">UpgradeDBInstanceEngineVersion</a> 接口。</p>
 	EngineVersion *string `json:"EngineVersion,omitnil,omitempty" name:"EngineVersion"`
 
-	// 切换访问新实例的方式，默认为 0。支持值包括：0 - 立刻切换，1 - 时间窗切换；当该值为 1 时，升级过程中，切换访问新实例的流程将会在时间窗内进行，或者用户主动调用接口 [切换访问新实例](https://cloud.tencent.com/document/product/236/15864) 触发该流程。
+	// <p>切换访问新实例的方式，默认为 0。支持值包括：0 - 立刻切换，1 - 时间窗切换；当该值为 1 时，升级过程中，切换访问新实例的流程将会在时间窗内进行，或者用户主动调用接口 <a href="https://cloud.tencent.com/document/product/236/15864">切换访问新实例</a> 触发该流程。</p>
 	WaitSwitch *int64 `json:"WaitSwitch,omitnil,omitempty" name:"WaitSwitch"`
 
-	// 备库2的可用区信息，默认为空，升级主实例时可指定该参数，升级只读实例或者灾备实例时指定该参数无意义。可通过 [获取云数据库可售卖规格](https://cloud.tencent.com/document/product/236/17229) 接口查询支持的可用区。
-	// 备注：如您要将三节点降级至双节点，将该参数设置为空值即可实现。
+	// <p>备库2的可用区信息，默认为空，升级主实例时可指定该参数，升级只读实例或者灾备实例时指定该参数无意义。可通过 <a href="https://cloud.tencent.com/document/product/236/17229">获取云数据库可售卖规格</a> 接口查询支持的可用区。<br>备注：如您要将三节点降级至双节点，将该参数设置为空值即可实现。</p>
 	BackupZone *string `json:"BackupZone,omitnil,omitempty" name:"BackupZone"`
 
-	// 实例类型，默认为 master，支持值包括：master - 表示主实例，dr - 表示灾备实例，ro - 表示只读实例。
+	// <p>实例类型，默认为 master，支持值包括：master - 表示主实例，dr - 表示灾备实例，ro - 表示只读实例。</p>
 	InstanceRole *string `json:"InstanceRole,omitnil,omitempty" name:"InstanceRole"`
 
-	// 实例隔离类型。支持值包括： "UNIVERSAL" - 通用型实例， "EXCLUSIVE" - 独享型实例， "BASIC" - 基础版实例。
+	// <p>实例隔离类型。支持值包括： &quot;UNIVERSAL&quot; - 通用型实例， &quot;EXCLUSIVE&quot; - 独享型实例， &quot;BASIC&quot; - 基础版实例。</p>
 	DeviceType *string `json:"DeviceType,omitnil,omitempty" name:"DeviceType"`
 
-	// 升级后的实例cpu核数，如果不传将根据 Memory 指定的内存值自动填充最小允许规格的cpu值。
-	// 说明：如果进行迁移业务，请一定填写实例规格（CPU、内存），不然系统会默认以最小允许规格传参。
+	// <p>升级后的实例cpu核数，如果不传将根据 Memory 指定的内存值自动填充最小允许规格的cpu值。<br>说明：如果进行迁移业务，请一定填写实例规格（CPU、内存），不然系统会默认以最小允许规格传参。</p>
 	Cpu *int64 `json:"Cpu,omitnil,omitempty" name:"Cpu"`
 
-	// 是否极速变配。0-普通升级，1-极速变配，2 极速优先。选择极速变配会根据资源状况校验是否可以进行极速变配，满足条件则进行极速变配，不满足条件会返回报错信息。
+	// <p>是否极速变配。0-普通升级，1-极速变配，2 极速优先。选择极速变配会根据资源状况校验是否可以进行极速变配，满足条件则进行极速变配，不满足条件会返回报错信息。</p>
 	FastUpgrade *int64 `json:"FastUpgrade,omitnil,omitempty" name:"FastUpgrade"`
 
-	// 延迟阈值。取值范围1~10，默认值为10。
+	// <p>延迟阈值。取值范围1~10，默认值为10。</p>
 	MaxDelayTime *int64 `json:"MaxDelayTime,omitnil,omitempty" name:"MaxDelayTime"`
 
-	// 是否跨区迁移。0-普通迁移，1-跨区迁移，默认值为0。该值为1时支持变更实例主节点可用区。
+	// <p>是否跨区迁移。0-普通迁移，1-跨区迁移，默认值为0。该值为1时支持变更实例主节点可用区。</p>
 	CrossCluster *int64 `json:"CrossCluster,omitnil,omitempty" name:"CrossCluster"`
 
-	// 主节点可用区，该值仅在跨区迁移时生效。仅支持同地域下的可用区进行迁移。
+	// <p>主节点可用区，该值仅在跨区迁移时生效。仅支持同地域下的可用区进行迁移。</p>
 	ZoneId *string `json:"ZoneId,omitnil,omitempty" name:"ZoneId"`
 
-	// 针对跨集群搬迁场景，选择同可用区RO的处理逻辑。together-同可用区RO跟随主实例迁移至目标可用区（默认选项），severally-同可用区RO保持原部署模式、不迁移至目标可用区。
+	// <p>针对跨集群搬迁场景，选择同可用区RO的处理逻辑。together-同可用区RO跟随主实例迁移至目标可用区（默认选项），severally-同可用区RO保持原部署模式、不迁移至目标可用区。</p>
 	RoTransType *string `json:"RoTransType,omitnil,omitempty" name:"RoTransType"`
 
-	// 集群版节点拓扑配置。
+	// <p>云盘版节点拓扑配置。</p>
 	ClusterTopology *ClusterTopology `json:"ClusterTopology,omitnil,omitempty" name:"ClusterTopology"`
 
-	// 检查原地升级是否需要重启，1 检查， 0 不检查。如果值为1，检查为原地升级需要重启，则会停止升级并进行返回提示，如果为原地升级不重启，则正常执行升级流程。
+	// <p>检查原地升级是否需要重启，1 检查， 0 不检查。如果值为1，检查为原地升级需要重启，则会停止升级并进行返回提示，如果为原地升级不重启，则正常执行升级流程。</p>
 	CheckFastUpgradeReboot *int64 `json:"CheckFastUpgradeReboot,omitnil,omitempty" name:"CheckFastUpgradeReboot"`
 
-	// 数据校验敏感度，非极速变配时使用此参数，敏感度根据当前实例规格计算迁移过程中的数据对比使用的cpu资源
-	// 对应的选项为: "high"、"normal"、"low"，默认为空
-	// 参数详解，：
-	// "high": 对应控制台中的高，数据库负载过高不建议使用
-	// "normal"：对应控制台中的标准
-	// "low"：对应控制台中的低
+	// <p>数据校验敏感度，非极速变配时使用此参数，敏感度根据当前实例规格计算迁移过程中的数据对比使用的cpu资源<br>对应的选项为: &quot;high&quot;、&quot;normal&quot;、&quot;low&quot;，默认为空<br>参数详解，：<br>&quot;high&quot;: 对应控制台中的高，数据库负载过高不建议使用<br>&quot;normal&quot;：对应控制台中的标准<br>&quot;low&quot;：对应控制台中的低</p>
 	DataCheckSensitive *string `json:"DataCheckSensitive,omitnil,omitempty" name:"DataCheckSensitive"`
+
+	// <p>备库 3 的可用区信息，默认为空，购买四节点主实例时可指定该参数。</p>
+	FourthZone *string `json:"FourthZone,omitnil,omitempty" name:"FourthZone"`
 }
 
 type UpgradeDBInstanceRequest struct {
 	*tchttp.BaseRequest
 	
-	// 实例 ID，格式如：cdb-c1nl9rpv 或者 cdbro-c1nl9rpv。与云数据库控制台页面中显示的实例 ID 相同，可使用 [查询实例列表](https://cloud.tencent.com/document/api/236/15872) 接口获取，其值为输出参数中字段 InstanceId 的值。
+	// <p>实例 ID，格式如：cdb-c1nl9rpv 或者 cdbro-c1nl9rpv。与云数据库控制台页面中显示的实例 ID 相同，可使用 <a href="https://cloud.tencent.com/document/api/236/15872">查询实例列表</a> 接口获取，其值为输出参数中字段 InstanceId 的值。</p>
 	InstanceId *string `json:"InstanceId,omitnil,omitempty" name:"InstanceId"`
 
-	// 升级后的内存大小，单位：MB，为保证传入 Memory 值有效，请使用 [获取云数据库可售卖规格](https://cloud.tencent.com/document/product/236/17229) 接口获取可升级的内存规格。
-	// 说明：如果进行迁移业务，请一定填写实例规格（CPU、内存），不然系统会默认以最小允许规格传参。
+	// <p>升级后的内存大小，单位：MB，为保证传入 Memory 值有效，请使用 <a href="https://cloud.tencent.com/document/product/236/17229">获取云数据库可售卖规格</a> 接口获取可升级的内存规格。<br>说明：如果进行迁移业务，请一定填写实例规格（CPU、内存），不然系统会默认以最小允许规格传参。</p>
 	Memory *int64 `json:"Memory,omitnil,omitempty" name:"Memory"`
 
-	// 升级后的硬盘大小，单位：GB，为保证传入 Volume 值有效，请使用 [获取云数据库可售卖规格](https://cloud.tencent.com/document/product/236/17229) 接口获取可升级的硬盘范围。
+	// <p>升级后的硬盘大小，单位：GB，为保证传入 Volume 值有效，请使用 <a href="https://cloud.tencent.com/document/product/236/17229">获取云数据库可售卖规格</a> 接口获取可升级的硬盘范围。</p>
 	Volume *int64 `json:"Volume,omitnil,omitempty" name:"Volume"`
 
-	// 数据复制方式，支持值包括：0 - 异步复制，1 - 半同步复制，2 - 强同步复制，升级主实例时可指定该参数，升级只读实例或者灾备实例时指定该参数无意义。
+	// <p>数据复制方式，支持值包括：0 - 异步复制，1 - 半同步复制，2 - 强同步复制，升级主实例时可指定该参数，升级只读实例或者灾备实例时指定该参数无意义。</p>
 	ProtectMode *int64 `json:"ProtectMode,omitnil,omitempty" name:"ProtectMode"`
 
-	// 部署模式，默认为 0，支持值包括：0 - 单可用区部署，1 - 多可用区部署，升级主实例时可指定该参数，升级只读实例或者灾备实例时指定该参数无意义。
+	// <p>部署模式，默认为 0，支持值包括：0 - 单可用区部署，1 - 多可用区部署，升级主实例时可指定该参数，升级只读实例或者灾备实例时指定该参数无意义。</p>
 	DeployMode *int64 `json:"DeployMode,omitnil,omitempty" name:"DeployMode"`
 
-	// 备库1的可用区信息，默认和实例的 Zone 参数一致，升级主实例为多可用区部署时可指定该参数，升级只读实例或者灾备实例时指定该参数无意义。可通过 [获取云数据库可售卖规格](https://cloud.tencent.com/document/product/236/17229) 接口查询支持的可用区。
+	// <p>备库1的可用区信息，默认和实例的 Zone 参数一致，升级主实例为多可用区部署时可指定该参数，升级只读实例或者灾备实例时指定该参数无意义。可通过 <a href="https://cloud.tencent.com/document/product/236/17229">获取云数据库可售卖规格</a> 接口查询支持的可用区。</p>
 	SlaveZone *string `json:"SlaveZone,omitnil,omitempty" name:"SlaveZone"`
 
-	// 主实例数据库引擎版本，支持值包括：5.5、5.6、5.7、8.0。
-	// 说明：升级数据库版本请使用 [UpgradeDBInstanceEngineVersion](https://cloud.tencent.com/document/api/236/15870) 接口。
+	// <p>主实例数据库引擎版本，支持值包括：5.5、5.6、5.7、8.0。<br>说明：升级数据库版本请使用 <a href="https://cloud.tencent.com/document/api/236/15870">UpgradeDBInstanceEngineVersion</a> 接口。</p>
 	EngineVersion *string `json:"EngineVersion,omitnil,omitempty" name:"EngineVersion"`
 
-	// 切换访问新实例的方式，默认为 0。支持值包括：0 - 立刻切换，1 - 时间窗切换；当该值为 1 时，升级过程中，切换访问新实例的流程将会在时间窗内进行，或者用户主动调用接口 [切换访问新实例](https://cloud.tencent.com/document/product/236/15864) 触发该流程。
+	// <p>切换访问新实例的方式，默认为 0。支持值包括：0 - 立刻切换，1 - 时间窗切换；当该值为 1 时，升级过程中，切换访问新实例的流程将会在时间窗内进行，或者用户主动调用接口 <a href="https://cloud.tencent.com/document/product/236/15864">切换访问新实例</a> 触发该流程。</p>
 	WaitSwitch *int64 `json:"WaitSwitch,omitnil,omitempty" name:"WaitSwitch"`
 
-	// 备库2的可用区信息，默认为空，升级主实例时可指定该参数，升级只读实例或者灾备实例时指定该参数无意义。可通过 [获取云数据库可售卖规格](https://cloud.tencent.com/document/product/236/17229) 接口查询支持的可用区。
-	// 备注：如您要将三节点降级至双节点，将该参数设置为空值即可实现。
+	// <p>备库2的可用区信息，默认为空，升级主实例时可指定该参数，升级只读实例或者灾备实例时指定该参数无意义。可通过 <a href="https://cloud.tencent.com/document/product/236/17229">获取云数据库可售卖规格</a> 接口查询支持的可用区。<br>备注：如您要将三节点降级至双节点，将该参数设置为空值即可实现。</p>
 	BackupZone *string `json:"BackupZone,omitnil,omitempty" name:"BackupZone"`
 
-	// 实例类型，默认为 master，支持值包括：master - 表示主实例，dr - 表示灾备实例，ro - 表示只读实例。
+	// <p>实例类型，默认为 master，支持值包括：master - 表示主实例，dr - 表示灾备实例，ro - 表示只读实例。</p>
 	InstanceRole *string `json:"InstanceRole,omitnil,omitempty" name:"InstanceRole"`
 
-	// 实例隔离类型。支持值包括： "UNIVERSAL" - 通用型实例， "EXCLUSIVE" - 独享型实例， "BASIC" - 基础版实例。
+	// <p>实例隔离类型。支持值包括： &quot;UNIVERSAL&quot; - 通用型实例， &quot;EXCLUSIVE&quot; - 独享型实例， &quot;BASIC&quot; - 基础版实例。</p>
 	DeviceType *string `json:"DeviceType,omitnil,omitempty" name:"DeviceType"`
 
-	// 升级后的实例cpu核数，如果不传将根据 Memory 指定的内存值自动填充最小允许规格的cpu值。
-	// 说明：如果进行迁移业务，请一定填写实例规格（CPU、内存），不然系统会默认以最小允许规格传参。
+	// <p>升级后的实例cpu核数，如果不传将根据 Memory 指定的内存值自动填充最小允许规格的cpu值。<br>说明：如果进行迁移业务，请一定填写实例规格（CPU、内存），不然系统会默认以最小允许规格传参。</p>
 	Cpu *int64 `json:"Cpu,omitnil,omitempty" name:"Cpu"`
 
-	// 是否极速变配。0-普通升级，1-极速变配，2 极速优先。选择极速变配会根据资源状况校验是否可以进行极速变配，满足条件则进行极速变配，不满足条件会返回报错信息。
+	// <p>是否极速变配。0-普通升级，1-极速变配，2 极速优先。选择极速变配会根据资源状况校验是否可以进行极速变配，满足条件则进行极速变配，不满足条件会返回报错信息。</p>
 	FastUpgrade *int64 `json:"FastUpgrade,omitnil,omitempty" name:"FastUpgrade"`
 
-	// 延迟阈值。取值范围1~10，默认值为10。
+	// <p>延迟阈值。取值范围1~10，默认值为10。</p>
 	MaxDelayTime *int64 `json:"MaxDelayTime,omitnil,omitempty" name:"MaxDelayTime"`
 
-	// 是否跨区迁移。0-普通迁移，1-跨区迁移，默认值为0。该值为1时支持变更实例主节点可用区。
+	// <p>是否跨区迁移。0-普通迁移，1-跨区迁移，默认值为0。该值为1时支持变更实例主节点可用区。</p>
 	CrossCluster *int64 `json:"CrossCluster,omitnil,omitempty" name:"CrossCluster"`
 
-	// 主节点可用区，该值仅在跨区迁移时生效。仅支持同地域下的可用区进行迁移。
+	// <p>主节点可用区，该值仅在跨区迁移时生效。仅支持同地域下的可用区进行迁移。</p>
 	ZoneId *string `json:"ZoneId,omitnil,omitempty" name:"ZoneId"`
 
-	// 针对跨集群搬迁场景，选择同可用区RO的处理逻辑。together-同可用区RO跟随主实例迁移至目标可用区（默认选项），severally-同可用区RO保持原部署模式、不迁移至目标可用区。
+	// <p>针对跨集群搬迁场景，选择同可用区RO的处理逻辑。together-同可用区RO跟随主实例迁移至目标可用区（默认选项），severally-同可用区RO保持原部署模式、不迁移至目标可用区。</p>
 	RoTransType *string `json:"RoTransType,omitnil,omitempty" name:"RoTransType"`
 
-	// 集群版节点拓扑配置。
+	// <p>云盘版节点拓扑配置。</p>
 	ClusterTopology *ClusterTopology `json:"ClusterTopology,omitnil,omitempty" name:"ClusterTopology"`
 
-	// 检查原地升级是否需要重启，1 检查， 0 不检查。如果值为1，检查为原地升级需要重启，则会停止升级并进行返回提示，如果为原地升级不重启，则正常执行升级流程。
+	// <p>检查原地升级是否需要重启，1 检查， 0 不检查。如果值为1，检查为原地升级需要重启，则会停止升级并进行返回提示，如果为原地升级不重启，则正常执行升级流程。</p>
 	CheckFastUpgradeReboot *int64 `json:"CheckFastUpgradeReboot,omitnil,omitempty" name:"CheckFastUpgradeReboot"`
 
-	// 数据校验敏感度，非极速变配时使用此参数，敏感度根据当前实例规格计算迁移过程中的数据对比使用的cpu资源
-	// 对应的选项为: "high"、"normal"、"low"，默认为空
-	// 参数详解，：
-	// "high": 对应控制台中的高，数据库负载过高不建议使用
-	// "normal"：对应控制台中的标准
-	// "low"：对应控制台中的低
+	// <p>数据校验敏感度，非极速变配时使用此参数，敏感度根据当前实例规格计算迁移过程中的数据对比使用的cpu资源<br>对应的选项为: &quot;high&quot;、&quot;normal&quot;、&quot;low&quot;，默认为空<br>参数详解，：<br>&quot;high&quot;: 对应控制台中的高，数据库负载过高不建议使用<br>&quot;normal&quot;：对应控制台中的标准<br>&quot;low&quot;：对应控制台中的低</p>
 	DataCheckSensitive *string `json:"DataCheckSensitive,omitnil,omitempty" name:"DataCheckSensitive"`
+
+	// <p>备库 3 的可用区信息，默认为空，购买四节点主实例时可指定该参数。</p>
+	FourthZone *string `json:"FourthZone,omitnil,omitempty" name:"FourthZone"`
 }
 
 func (r *UpgradeDBInstanceRequest) ToJsonString() string {
@@ -17457,6 +17660,7 @@ func (r *UpgradeDBInstanceRequest) FromJsonString(s string) error {
 	delete(f, "ClusterTopology")
 	delete(f, "CheckFastUpgradeReboot")
 	delete(f, "DataCheckSensitive")
+	delete(f, "FourthZone")
 	if len(f) > 0 {
 		return tcerr.NewTencentCloudSDKError("ClientError.BuildRequestError", "UpgradeDBInstanceRequest has unknown keys!", "")
 	}
@@ -17465,10 +17669,10 @@ func (r *UpgradeDBInstanceRequest) FromJsonString(s string) error {
 
 // Predefined struct for user
 type UpgradeDBInstanceResponseParams struct {
-	// 订单 ID。
+	// <p>订单 ID。</p>
 	DealIds []*string `json:"DealIds,omitnil,omitempty" name:"DealIds"`
 
-	// 异步任务的请求 ID，可使用此 ID [查询异步任务的执行结果](https://cloud.tencent.com/document/product/236/20410)。
+	// <p>异步任务的请求 ID，可使用此 ID <a href="https://cloud.tencent.com/document/product/236/20410">查询异步任务的执行结果</a>。</p>
 	AsyncRequestId *string `json:"AsyncRequestId,omitnil,omitempty" name:"AsyncRequestId"`
 
 	// 唯一请求 ID，由服务端生成，每次请求都会返回（若请求因其他原因未能抵达服务端，则该次请求不会获得 RequestId）。定位问题时需要提供该次请求的 RequestId。

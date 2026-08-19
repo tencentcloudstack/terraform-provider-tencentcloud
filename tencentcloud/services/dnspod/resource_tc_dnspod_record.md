@@ -12,6 +12,11 @@ resource "tencentcloud_dnspod_record" "demo" {
   value="1.2.3.9"
   sub_domain="demo"
 }
+
+# Read the last update time of the record (Computed attribute).
+output "updated_on" {
+  value = tencentcloud_dnspod_record.demo.updated_on
+}
 ```
 
 Import

@@ -6,7 +6,6 @@ import (
 	"fmt"
 	"log"
 	"math"
-	"net"
 	"strconv"
 	"strings"
 	"time"
@@ -415,7 +414,7 @@ func resourceTencentCloudKubernetesClusterCreatePostHandleResponse0(ctx context.
 	//intranet
 	if clusterIntranet {
 		err = resource.Retry(tccommon.WriteRetryTimeout, func() *resource.RetryError {
-			inErr := service.CreateClusterEndpoint(ctx, id, intranetSubnetId, clusterInternetSecurityGroup, false, clusterIntranetDomain, "")
+			inErr := service.CreateClusterEndpoint(ctx, id, intranetSubnetId, clusterInternetSecurityGroup, false, clusterIntranetDomain, "", "")
 			if inErr != nil {
 				return tccommon.RetryError(inErr)
 			}
@@ -424,21 +423,21 @@ func resourceTencentCloudKubernetesClusterCreatePostHandleResponse0(ctx context.
 		if err != nil {
 			return err
 		}
-		err = resource.Retry(2*tccommon.ReadRetryTimeout, func() *resource.RetryError {
+
+		finishStates := []string{TkeInternetStatusNotfound, TkeInternetStatusCreated}
+		err = resource.Retry(10*tccommon.ReadRetryTimeout, func() *resource.RetryError {
 			status, message, inErr := service.DescribeClusterEndpointStatus(ctx, id, false)
 			if inErr != nil {
 				return tccommon.RetryError(inErr)
 			}
-			if status == TkeInternetStatusCreating {
-				return resource.RetryableError(
-					fmt.Errorf("%s create intranet cluster endpoint status still is %s", id, status))
-			}
-			if status == TkeInternetStatusNotfound || status == TkeInternetStatusCreated {
+
+			if tccommon.IsContains(finishStates, status) {
 				return nil
 			}
-			return resource.NonRetryableError(
-				fmt.Errorf("%s create intranet cluster endpoint error ,status is %s,message is %s", id, status, message))
+
+			return resource.RetryableError(fmt.Errorf("%s create cluster intranet endpoint status is %s, message is %s. retry...", id, status, message))
 		})
+
 		if err != nil {
 			return err
 		}
@@ -446,7 +445,7 @@ func resourceTencentCloudKubernetesClusterCreatePostHandleResponse0(ctx context.
 
 	if clusterInternet {
 		err = resource.Retry(tccommon.WriteRetryTimeout, func() *resource.RetryError {
-			inErr := service.CreateClusterEndpoint(ctx, id, "", clusterInternetSecurityGroup, true, clusterInternetDomain, "")
+			inErr := service.CreateClusterEndpoint(ctx, id, "", clusterInternetSecurityGroup, true, clusterInternetDomain, "", "")
 			if inErr != nil {
 				return tccommon.RetryError(inErr)
 			}
@@ -455,21 +454,21 @@ func resourceTencentCloudKubernetesClusterCreatePostHandleResponse0(ctx context.
 		if err != nil {
 			return err
 		}
-		err = resource.Retry(2*tccommon.ReadRetryTimeout, func() *resource.RetryError {
+
+		finishStates := []string{TkeInternetStatusNotfound, TkeInternetStatusCreated}
+		err = resource.Retry(10*tccommon.ReadRetryTimeout, func() *resource.RetryError {
 			status, message, inErr := service.DescribeClusterEndpointStatus(ctx, id, true)
 			if inErr != nil {
 				return tccommon.RetryError(inErr)
 			}
-			if status == TkeInternetStatusCreating {
-				return resource.RetryableError(
-					fmt.Errorf("%s create cluster internet endpoint status still is %s", id, status))
-			}
-			if status == TkeInternetStatusNotfound || status == TkeInternetStatusCreated {
+
+			if tccommon.IsContains(finishStates, status) {
 				return nil
 			}
-			return resource.NonRetryableError(
-				fmt.Errorf("%s create cluster internet endpoint error ,status is %s,message is %s", id, status, message))
+
+			return resource.RetryableError(fmt.Errorf("%s create cluster internet endpoint status is %s, message is %s. retry...", id, status, message))
 		})
+
 		if err != nil {
 			return err
 		}
@@ -931,10 +930,12 @@ func resourceTencentCloudKubernetesClusterReadPostHandleResponse0(ctx context.Co
 				authOptions := make(map[string]interface{}, 0)
 				if helper.PBool(options.UseTKEDefault) {
 					authOptions["use_tke_default"] = helper.PBool(options.UseTKEDefault)
-				} else {
-					authOptions["jwks_uri"] = helper.PString(options.JWKSURI)
-					authOptions["issuer"] = helper.PString(options.Issuer)
 				}
+				// Always read back issuer and jwks_uri from the API so that users can
+				// see the auto-generated values when use_tke_default=true. These fields
+				// are Optional+Computed, so reading them back does not produce drift.
+				authOptions["jwks_uri"] = helper.PString(options.JWKSURI)
+				authOptions["issuer"] = helper.PString(options.Issuer)
 				authOptions["auto_create_discovery_anonymous_auth"] = helper.PBool(options.AutoCreateDiscoveryAnonymousAuth)
 				_ = d.Set("auth_options", []map[string]interface{}{authOptions})
 			}
@@ -1295,7 +1296,6 @@ func resourceTencentCloudKubernetesClusterUpdateOnStart(ctx context.Context) err
 		if err := ModifyClusterInternetOrIntranetAccess(ctx, d, &tkeService, TKE_CLUSTER_INTRANET, clusterIntranet, clusterInternetSecurityGroup, intranetSubnetId, clusterIntranetDomain); err != nil {
 			return err
 		}
-
 	}
 
 	if d.HasChange("cluster_internet") {
@@ -1557,74 +1557,6 @@ func dockerGraphPathDiffSuppressFunc(k, oldValue, newValue string, d *schema.Res
 	} else {
 		return oldValue == newValue
 	}
-}
-
-func clusterCidrValidateFunc(v interface{}, k string) (ws []string, errs []error) {
-	value := v.(string)
-	if value == "" {
-		return
-	}
-	_, ipnet, err := net.ParseCIDR(value)
-	if err != nil {
-		errs = append(errs, fmt.Errorf("%q must contain a valid CIDR, got error parsing: %s", k, err))
-		return
-	}
-	if ipnet == nil || value != ipnet.String() {
-		errs = append(errs, fmt.Errorf("%q must contain a valid network CIDR, expected %q, got %q", k, ipnet, value))
-		return
-	}
-	if !strings.Contains(value, "/") {
-		errs = append(errs, fmt.Errorf("%q must be a network segment", k))
-		return
-	}
-	if !strings.HasPrefix(value, "9.") && !strings.HasPrefix(value, "10.") && !strings.HasPrefix(value, "11.") && !strings.HasPrefix(value, "192.168.") && !strings.HasPrefix(value, "172.") {
-		errs = append(errs, fmt.Errorf("%q must in 9. | 10. | 11. | 192.168. | 172.[16-31]", k))
-		return
-	}
-
-	if strings.HasPrefix(value, "172.") {
-		nextNo := strings.Split(value, ".")[1]
-		no, _ := strconv.ParseInt(nextNo, 10, 64)
-		if no < 16 || no > 31 {
-			errs = append(errs, fmt.Errorf("%q must in 9.0 | 10. | 11. | 192.168. | 172.[16-31]", k))
-			return
-		}
-	}
-	return
-}
-
-func serviceCidrValidateFunc(v interface{}, k string) (ws []string, errs []error) {
-	value := v.(string)
-	if value == "" {
-		return
-	}
-	_, ipnet, err := net.ParseCIDR(value)
-	if err != nil {
-		errs = append(errs, fmt.Errorf("%q must contain a valid CIDR, got error parsing: %s", k, err))
-		return
-	}
-	if ipnet == nil || value != ipnet.String() {
-		errs = append(errs, fmt.Errorf("%q must contain a valid network CIDR, expected %q, got %q", k, ipnet, value))
-		return
-	}
-	if !strings.Contains(value, "/") {
-		errs = append(errs, fmt.Errorf("%q must be a network segment", k))
-		return
-	}
-	if !strings.HasPrefix(value, "9.") && !strings.HasPrefix(value, "10.") && !strings.HasPrefix(value, "192.168.") && !strings.HasPrefix(value, "172.") {
-		errs = append(errs, fmt.Errorf("%q must in 9. | 10. | 192.168. | 172.[16-31]", k))
-		return
-	}
-
-	if strings.HasPrefix(value, "172.") {
-		nextNo := strings.Split(value, ".")[1]
-		no, _ := strconv.ParseInt(nextNo, 10, 64)
-		if no < 16 || no > 31 {
-			errs = append(errs, fmt.Errorf("%q must in 9. | 10. | 192.168. | 172.[16-31]", k))
-			return
-		}
-	}
-	return
 }
 
 func claimExpiredSecondsValidateFunc(v interface{}, k string) (ws []string, errs []error) {
@@ -2397,36 +2329,6 @@ func checkClusterEndpointStatus(ctx context.Context, service *TkeService, d *sch
 		}
 	}
 	return nil
-}
-
-func tkeCvmState() map[string]*schema.Schema {
-	return map[string]*schema.Schema{
-		"instance_id": {
-			Type:        schema.TypeString,
-			Computed:    true,
-			Description: "ID of the cvm.",
-		},
-		"instance_role": {
-			Type:        schema.TypeString,
-			Computed:    true,
-			Description: "Role of the cvm.",
-		},
-		"instance_state": {
-			Type:        schema.TypeString,
-			Computed:    true,
-			Description: "State of the cvm.",
-		},
-		"failed_reason": {
-			Type:        schema.TypeString,
-			Computed:    true,
-			Description: "Information of the cvm when it is failed.",
-		},
-		"lan_ip": {
-			Type:        schema.TypeString,
-			Computed:    true,
-			Description: "LAN IP of the cvm.",
-		},
-	}
 }
 
 //func tkeSecurityInfo() map[string]*schema.Schema {

@@ -4,6 +4,7 @@ import (
 	"context"
 	"log"
 
+	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
 	tccommon "github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/common"
 
 	tat "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/tat/v20201028"
@@ -502,6 +503,7 @@ func (me *TatService) DescribeTatInvocationById(ctx context.Context, invocationI
 	logId := tccommon.GetLogId(ctx)
 
 	request := tat.NewDescribeInvocationsRequest()
+	response := tat.NewDescribeInvocationsResponse()
 	request.InvocationIds = []*string{&invocationId}
 
 	defer func() {
@@ -510,26 +512,37 @@ func (me *TatService) DescribeTatInvocationById(ctx context.Context, invocationI
 		}
 	}()
 
-	ratelimit.Check(request.GetAction())
-
 	var (
-		offset uint64 = 0
-		limit  uint64 = 20
+		offset    uint64 = 0
+		limit     uint64 = 100
+		instances        = make([]*tat.Invocation, 0)
 	)
-	instances := make([]*tat.Invocation, 0)
+
 	for {
 		request.Offset = &offset
 		request.Limit = &limit
-		response, err := me.client.UseTatClient().DescribeInvocations(request)
+		err := resource.Retry(tccommon.ReadRetryTimeout, func() *resource.RetryError {
+			ratelimit.Check(request.GetAction())
+			result, e := me.client.UseTatClient().DescribeInvocations(request)
+			if e != nil {
+				return tccommon.RetryError(e)
+			} else {
+				log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), result.ToJsonString())
+			}
+
+			response = result
+			return nil
+		})
+
 		if err != nil {
 			errRet = err
 			return
 		}
-		log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
 
 		if response == nil || len(response.Response.InvocationSet) < 1 {
 			break
 		}
+
 		instances = append(instances, response.Response.InvocationSet...)
 		if len(response.Response.InvocationSet) < int(limit) {
 			break
@@ -541,6 +554,7 @@ func (me *TatService) DescribeTatInvocationById(ctx context.Context, invocationI
 	if len(instances) < 1 {
 		return
 	}
+
 	invocation = instances[0]
 	return
 }
@@ -558,14 +572,22 @@ func (me *TatService) DeleteTatInvocationById(ctx context.Context, invocationId,
 		}
 	}()
 
-	ratelimit.Check(request.GetAction())
+	err := resource.Retry(tccommon.WriteRetryTimeout, func() *resource.RetryError {
+		ratelimit.Check(request.GetAction())
+		result, e := me.client.UseTatClient().CancelInvocation(request)
+		if e != nil {
+			return tccommon.RetryError(e)
+		} else {
+			log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), result.ToJsonString())
+		}
 
-	response, err := me.client.UseTatClient().CancelInvocation(request)
+		return nil
+	})
+
 	if err != nil {
 		errRet = err
 		return
 	}
-	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
 
 	return
 }

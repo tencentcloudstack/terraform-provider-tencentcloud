@@ -1,4 +1,4 @@
-Provides a resource to create a monitor tmp_alert_group
+Provides a resource to create a monitor tmp alert group
 
 Example Usage
 
@@ -59,7 +59,7 @@ resource "tencentcloud_monitor_tmp_alert_group" "example" {
 
 Import
 
-monitor tmp_alert_group can be imported using the id, e.g.
+monitor tmp alert group can be imported using the id, e.g.
 
 ```
 terraform import tencentcloud_monitor_tmp_alert_group.example prom-34qkzwvs#alert-rfkkr6cw

@@ -62,6 +62,8 @@ resource "tencentcloud_ckafka_instance" "example" {
   dynamic_retention_config {
     enable = 1
   }
+
+  delete_protection_enable = 1
 }
 ```
 
@@ -137,8 +139,9 @@ The following arguments are supported:
 * `charge_type` - (Optional, String, ForceNew) The charge type of instance. Valid values are `PREPAID` and `POSTPAID_BY_HOUR`. Default value is `PREPAID`.
 * `config` - (Optional, List) Instance configuration.
 * `custom_ssl_cert_id` - (Optional, String) Custom certificate ID, only effective when `specifications_type` is set to `profession`, supports custom certificate capabilities.
+* `delete_protection_enable` - (Optional, Int) Instance delete protection switch of ckafka instance: `1` enable, `0` disable.
 * `disk_size` - (Optional, Int) Disk Size. Its interval varies with bandwidth, and the input must be within the interval, which can be viewed through the control. If it is not within the interval, the plan will cause a change when first created.
-* `disk_type` - (Optional, String) Type of disk.
+* `disk_type` - (Optional, String) Disk type for Professional Edition instances; this field is not required for Standard Edition instances. `CLOUD_SSD`: SSD Cloud Disk; `CLOUD_BASIC`: High-Performance Cloud Disk. If not specified, the default value is `CLOUD_BASIC`.
 * `dynamic_retention_config` - (Optional, List) Dynamic message retention policy configuration.
 * `elastic_bandwidth_switch` - (Optional, Int) Elastic bandwidth switch 0 not turned on 1 turned on (0 default). This takes effect only when the instance is created.
 * `instance_type` - (Optional, Int) Description of instance type. `profession`: 1, `standard`:  1(general), 2(standard), 3(advanced), 4(capacity), 5(specialized-1), 6(specialized-2), 7(specialized-3), 8(specialized-4), 9(exclusive).

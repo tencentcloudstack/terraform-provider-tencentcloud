@@ -151,3 +151,11 @@ In addition to all arguments above, the following attributes are exported:
 
 
 
+## Import
+
+AS scaling policy can be imported using the id, e.g.
+
+```
+terraform import tencentcloud_as_scaling_policy.example asp-519acdug
+```
+

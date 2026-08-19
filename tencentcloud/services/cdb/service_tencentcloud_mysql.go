@@ -3555,3 +3555,71 @@ func (me *MysqlService) DescribeMysqlProxyAddressConfig(ctx context.Context, ins
 	log.Printf("[DEBUG]%s proxy address [%s] not found in proxy group [%s], instance [%s].\n", logId, proxyAddressId, proxyGroupId, instanceId)
 	return
 }
+
+func (me *MysqlService) DescribeCdbStartCpuExpandById(ctx context.Context, instanceId string) (ret *cdb.DescribeCPUExpandStrategyInfoResponseParams, errRet error) {
+	logId := tccommon.GetLogId(ctx)
+	request := cdb.NewDescribeCPUExpandStrategyInfoRequest()
+	request.InstanceId = &instanceId
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	err := resource.Retry(tccommon.ReadRetryTimeout, func() *resource.RetryError {
+		ratelimit.Check(request.GetAction())
+		result, e := me.client.UseMysqlClient().DescribeCPUExpandStrategyInfo(request)
+		if e != nil {
+			return tccommon.RetryError(e)
+		}
+		if result == nil || result.Response == nil {
+			return resource.NonRetryableError(fmt.Errorf("Describe cdb_start_cpu_expand failed, Response is nil."))
+		}
+		ret = result.Response
+		return nil
+	})
+
+	if err != nil {
+		errRet = err
+		return
+	}
+
+	return
+}
+
+func (me *MysqlService) DeleteCdbStartCpuExpandById(ctx context.Context, instanceId string) (asyncRequestId string, errRet error) {
+	logId := tccommon.GetLogId(ctx)
+	request := cdb.NewStopCpuExpandRequest()
+	request.InstanceId = &instanceId
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	err := resource.Retry(tccommon.WriteRetryTimeout, func() *resource.RetryError {
+		ratelimit.Check(request.GetAction())
+		result, e := me.client.UseMysqlClient().StopCpuExpand(request)
+		if e != nil {
+			return tccommon.RetryError(e)
+		}
+		log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), result.ToJsonString())
+		if result == nil || result.Response == nil {
+			return resource.NonRetryableError(fmt.Errorf("Stop cdb_start_cpu_expand failed, Response is nil."))
+		}
+		if result.Response.AsyncRequestId == nil || *result.Response.AsyncRequestId == "" {
+			return resource.NonRetryableError(fmt.Errorf("Stop cdb_start_cpu_expand failed, AsyncRequestId is nil or empty."))
+		}
+		asyncRequestId = *result.Response.AsyncRequestId
+		return nil
+	})
+
+	if err != nil {
+		errRet = err
+		return
+	}
+
+	return
+}

@@ -190,3 +190,56 @@ resource "tencentcloud_clb_target_group" "target_group" {
     }
 }
 `
+
+func TestAccTencentCloudClbTargetGroup_snatEnable(t *testing.T) {
+	t.Parallel()
+	resource.Test(t, resource.TestCase{
+		PreCheck:     func() { tcacctest.AccPreCheck(t) },
+		Providers:    tcacctest.AccProviders,
+		CheckDestroy: testAccCheckClbTargetGroupDestroy,
+		Steps: []resource.TestStep{
+			{
+				Config: testAccClbTargetGroupSnatEnableTrue,
+				Check: resource.ComposeTestCheckFunc(
+					testAccCheckClbTargetGroupExists("tencentcloud_clb_target_group.snat"),
+					resource.TestCheckResourceAttr("tencentcloud_clb_target_group.snat", "snat_enable", "true"),
+				),
+			},
+			{
+				Config: testAccClbTargetGroupSnatEnableFalse,
+				Check: resource.ComposeTestCheckFunc(
+					testAccCheckClbTargetGroupExists("tencentcloud_clb_target_group.snat"),
+					resource.TestCheckResourceAttr("tencentcloud_clb_target_group.snat", "snat_enable", "false"),
+				),
+			},
+		},
+	})
+}
+
+const testAccClbTargetGroupSnatEnableTrue = `
+resource "tencentcloud_clb_target_group" "snat" {
+    target_group_name = "tgt_grp_snat"
+    vpc_id            = "vpc-4owdpnwr"
+    type              = "v2"
+    protocol          = "TCP"
+    snat_enable       = true
+    health_check {
+      health_switch = true
+      protocol      = "TCP"
+    }
+}
+`
+
+const testAccClbTargetGroupSnatEnableFalse = `
+resource "tencentcloud_clb_target_group" "snat" {
+    target_group_name = "tgt_grp_snat"
+    vpc_id            = "vpc-4owdpnwr"
+    type              = "v2"
+    protocol          = "TCP"
+    snat_enable       = false
+    health_check {
+      health_switch = true
+      protocol      = "TCP"
+    }
+}
+`

@@ -1,0 +1,7 @@
+```release-note:new-ephemeral
+tencentcloud_ssm_secret_version
+```
+
+```release-note:new-resource
+tencentcloud_ssm_secret_version_v2
+```

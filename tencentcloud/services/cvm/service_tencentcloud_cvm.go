@@ -351,12 +351,12 @@ func (me *CvmService) ModifyProjectId(ctx context.Context, instanceId string, pr
 	return nil
 }
 
-func (me *CvmService) ModifyInstanceType(ctx context.Context, instanceId, instanceType string) error {
+func (me *CvmService) ModifyInstanceType(ctx context.Context, instanceId, instanceType string, forceStop bool) error {
 	logId := tccommon.GetLogId(ctx)
 	request := cvm.NewResetInstancesTypeRequest()
 	request.InstanceIds = []*string{&instanceId}
 	request.InstanceType = &instanceType
-	request.ForceStop = helper.Bool(true)
+	request.ForceStop = &forceStop
 
 	ratelimit.Check(request.GetAction())
 	response, err := me.client.UseCvmClient().ResetInstancesType(request)
@@ -371,12 +371,11 @@ func (me *CvmService) ModifyInstanceType(ctx context.Context, instanceId, instan
 	return nil
 }
 
-func (me *CvmService) ModifyPassword(ctx context.Context, instanceId, password string) error {
+func (me *CvmService) ModifyPassword(ctx context.Context, instanceId, password string, forceStop bool) error {
 	logId := tccommon.GetLogId(ctx)
 	request := cvm.NewResetInstancesPasswordRequest()
 	request.InstanceIds = []*string{&instanceId}
 	request.Password = &password
-	forceStop := true
 	request.ForceStop = &forceStop
 
 	ratelimit.Check(request.GetAction())
@@ -747,12 +746,12 @@ func (me *CvmService) DeleteKeyPair(ctx context.Context, keyId string) error {
 	return nil
 }
 
-func (me *CvmService) UnbindKeyPair(ctx context.Context, keyIds []*string, instanceIds []*string) error {
+func (me *CvmService) UnbindKeyPair(ctx context.Context, keyIds []*string, instanceIds []*string, forceStop bool) error {
 	logId := tccommon.GetLogId(ctx)
 	request := cvm.NewDisassociateInstancesKeyPairsRequest()
 	request.KeyIds = keyIds
 	request.InstanceIds = instanceIds
-	request.ForceStop = helper.Bool(true)
+	request.ForceStop = helper.Bool(forceStop)
 
 	ratelimit.Check(request.GetAction())
 	response, err := me.client.UseCvmClient().DisassociateInstancesKeyPairs(request)
@@ -767,12 +766,12 @@ func (me *CvmService) UnbindKeyPair(ctx context.Context, keyIds []*string, insta
 	return nil
 }
 
-func (me *CvmService) BindKeyPair(ctx context.Context, keyIds []*string, instanceId string) error {
+func (me *CvmService) BindKeyPair(ctx context.Context, keyIds []*string, instanceId string, forceStop bool) error {
 	logId := tccommon.GetLogId(ctx)
 	request := cvm.NewAssociateInstancesKeyPairsRequest()
 	request.KeyIds = keyIds
 	request.InstanceIds = []*string{&instanceId}
-	request.ForceStop = helper.Bool(true)
+	request.ForceStop = helper.Bool(forceStop)
 
 	ratelimit.Check(request.GetAction())
 	_, err := me.client.UseCvmClient().AssociateInstancesKeyPairs(request)
@@ -785,14 +784,22 @@ func (me *CvmService) BindKeyPair(ctx context.Context, keyIds []*string, instanc
 	return nil
 }
 
-func (me *CvmService) CreatePlacementGroup(ctx context.Context, placementName, placementType string, affinity int, tags []*cvm.Tag) (placementId string, errRet error) {
+func (me *CvmService) CreatePlacementGroup(ctx context.Context, placementName, placementType, strategy string, affinity int, partitionCount int, tags []*cvm.Tag) (response *cvm.CreateDisasterRecoverGroupResponse, errRet error) {
 	logId := tccommon.GetLogId(ctx)
 	request := cvm.NewCreateDisasterRecoverGroupRequest()
 	request.Name = &placementName
 	request.Type = &placementType
 
+	if strategy != "" {
+		request.Strategy = &strategy
+	}
+
 	if affinity != 0 {
 		request.Affinity = helper.IntInt64(affinity)
+	}
+
+	if partitionCount > 0 {
+		request.PartitionCount = helper.IntInt64(partitionCount)
 	}
 
 	if len(tags) > 0 {
@@ -818,7 +825,7 @@ func (me *CvmService) CreatePlacementGroup(ctx context.Context, placementName, p
 		errRet = fmt.Errorf("placement group id is nil")
 		return
 	}
-	placementId = *response.Response.DisasterRecoverGroupId
+
 	return
 }
 

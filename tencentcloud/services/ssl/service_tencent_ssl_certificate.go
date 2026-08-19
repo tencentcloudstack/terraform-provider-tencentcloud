@@ -6,6 +6,7 @@ import (
 	"log"
 	"math"
 
+	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
 	ssl "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/ssl/v20191205"
 
 	tccommon "github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/common"
@@ -442,6 +443,8 @@ func (me *SslService) DescribeSslDescribeCertificateBindResourceTaskDetailByFilt
 		}
 	}()
 
+	describeCertificateBindResourceTaskDetail = &ssl.DescribeCertificateBindResourceTaskDetailResponseParams{}
+
 	for k, v := range param {
 		if k == "TaskId" {
 			request.TaskId = v.(*string)
@@ -456,20 +459,36 @@ func (me *SslService) DescribeSslDescribeCertificateBindResourceTaskDetailByFilt
 
 	ratelimit.Check(request.GetAction())
 
-	var offset, limit = 0, 20
+	var offset, limit = 0, 100
 
 	for {
 		request.Offset = helper.String(helper.IntToStr(offset))
 		request.Limit = helper.String(helper.IntToStr(limit))
-		response, err := me.client.UseSSLCertificateClient().DescribeCertificateBindResourceTaskDetail(request)
-		if err != nil {
-			errRet = err
-			return
-		}
-		log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+		var response *ssl.DescribeCertificateBindResourceTaskDetailResponse
+		reqErr := resource.Retry(tccommon.ReadRetryTimeout, func() *resource.RetryError {
+			ratelimit.Check(request.GetAction())
+			result, e := me.client.UseSSLCertificateClient().DescribeCertificateBindResourceTaskDetail(request)
+			if e != nil {
+				return tccommon.RetryError(e)
+			}
+			log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), result.ToJsonString())
 
-		if response == nil || response.Response == nil || checkResult(1, response.Response) {
-			break
+			if result == nil || result.Response == nil {
+				log.Printf("[DATASOURCE] read empty, skip SetId")
+				return resource.NonRetryableError(fmt.Errorf("DescribeCertificateBindResourceTaskDetail response is nil, ssl_certificate_bind_resource_task_detail id=%s", *request.TaskId))
+			}
+
+			if result.Response.Status != nil && *result.Response.Status == 0 {
+				return tccommon.RetryError(fmt.Errorf("ssl_certificate_bind_resource_task_detail task is still in progress, task_id=%s", *request.TaskId))
+			}
+
+			response = result
+			return nil
+		})
+
+		if reqErr != nil {
+			errRet = reqErr
+			return
 		}
 
 		describeCertificateBindResourceTaskDetail.CLB = append(describeCertificateBindResourceTaskDetail.CLB, response.Response.CLB...)
@@ -482,6 +501,22 @@ func (me *SslService) DescribeSslDescribeCertificateBindResourceTaskDetailByFilt
 		describeCertificateBindResourceTaskDetail.APIGATEWAY = append(describeCertificateBindResourceTaskDetail.APIGATEWAY, response.Response.APIGATEWAY...)
 		describeCertificateBindResourceTaskDetail.TCB = append(describeCertificateBindResourceTaskDetail.TCB, response.Response.TCB...)
 		describeCertificateBindResourceTaskDetail.TEO = append(describeCertificateBindResourceTaskDetail.TEO, response.Response.TEO...)
+		describeCertificateBindResourceTaskDetail.TSE = append(describeCertificateBindResourceTaskDetail.TSE, response.Response.TSE...)
+		describeCertificateBindResourceTaskDetail.COS = append(describeCertificateBindResourceTaskDetail.COS, response.Response.COS...)
+		describeCertificateBindResourceTaskDetail.TDMQ = append(describeCertificateBindResourceTaskDetail.TDMQ, response.Response.TDMQ...)
+		describeCertificateBindResourceTaskDetail.MQTT = append(describeCertificateBindResourceTaskDetail.MQTT, response.Response.MQTT...)
+		describeCertificateBindResourceTaskDetail.GAAP = append(describeCertificateBindResourceTaskDetail.GAAP, response.Response.GAAP...)
+		describeCertificateBindResourceTaskDetail.SCF = append(describeCertificateBindResourceTaskDetail.SCF, response.Response.SCF...)
+
+		if response.Response.Status != nil {
+			describeCertificateBindResourceTaskDetail.Status = response.Response.Status
+		}
+		if response.Response.CacheTime != nil {
+			describeCertificateBindResourceTaskDetail.CacheTime = response.Response.CacheTime
+		}
+		if response.Response.RequestId != nil {
+			describeCertificateBindResourceTaskDetail.RequestId = response.Response.RequestId
+		}
 
 		if checkResult(limit, response.Response) {
 			break
@@ -496,7 +531,10 @@ func checkResult(num int, result *ssl.DescribeCertificateBindResourceTaskDetailR
 		len(result.WAF) < num && len(result.DDOS) < num &&
 		len(result.LIVE) < num && len(result.VOD) < num &&
 		len(result.TKE) < num && len(result.APIGATEWAY) < num &&
-		len(result.TCB) < num && len(result.TEO) < num
+		len(result.TCB) < num && len(result.TEO) < num &&
+		len(result.TSE) < num && len(result.COS) < num &&
+		len(result.TDMQ) < num && len(result.MQTT) < num &&
+		len(result.GAAP) < num && len(result.SCF) < num
 }
 
 func (me *SslService) DescribeSslDescribeCompaniesByFilter(ctx context.Context, param map[string]interface{}) (describeCompanies []*ssl.CompanyInfo, errRet error) {

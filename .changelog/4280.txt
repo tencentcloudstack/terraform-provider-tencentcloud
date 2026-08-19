@@ -1,0 +1,23 @@
+```release-note:enhancement
+resource/tencentcloud_ga2_global_accelerator: update doc
+```
+
+```release-note:enhancement
+resource/tencentcloud_ga2_accelerate_area: update doc
+```
+
+```release-note:enhancement
+resource/tencentcloud_ga2_listener: update doc
+```
+
+```release-note:enhancement
+resource/tencentcloud_ga2_endpoint_group: update doc
+```
+
+```release-note:enhancement
+resource/tencentcloud_ga2_forwarding_policy: update doc
+```
+
+```release-note:enhancement
+resource/tencentcloud_ga2_forwarding_rule: update doc
+```

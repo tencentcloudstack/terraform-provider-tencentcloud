@@ -916,39 +916,45 @@ func (r *CreateMessageReceiverResponse) FromJsonString(s string) error {
 
 // Predefined struct for user
 type CreateOIDCConfigRequestParams struct {
-	// 身份提供商URL
+	// <p>身份提供商URL</p>
 	IdentityUrl *string `json:"IdentityUrl,omitnil,omitempty" name:"IdentityUrl"`
 
-	// 客户端ID
+	// <p>客户端ID</p>
 	ClientId []*string `json:"ClientId,omitnil,omitempty" name:"ClientId"`
 
-	// 名称
+	// <p>名称</p>
 	Name *string `json:"Name,omitnil,omitempty" name:"Name"`
 
-	// 签名公钥，需要base64
+	// <p>签名公钥，需要base64</p>
 	IdentityKey *string `json:"IdentityKey,omitnil,omitempty" name:"IdentityKey"`
 
-	// 描述
+	// <p>描述</p>
 	Description *string `json:"Description,omitnil,omitempty" name:"Description"`
+
+	// <p>OIDC公钥自动轮转开关</p><p>枚举值：</p><ul><li>0： 关闭</li><li>1： 开启</li></ul><p>默认值：0</p>
+	AutoRotateKey *uint64 `json:"AutoRotateKey,omitnil,omitempty" name:"AutoRotateKey"`
 }
 
 type CreateOIDCConfigRequest struct {
 	*tchttp.BaseRequest
 	
-	// 身份提供商URL
+	// <p>身份提供商URL</p>
 	IdentityUrl *string `json:"IdentityUrl,omitnil,omitempty" name:"IdentityUrl"`
 
-	// 客户端ID
+	// <p>客户端ID</p>
 	ClientId []*string `json:"ClientId,omitnil,omitempty" name:"ClientId"`
 
-	// 名称
+	// <p>名称</p>
 	Name *string `json:"Name,omitnil,omitempty" name:"Name"`
 
-	// 签名公钥，需要base64
+	// <p>签名公钥，需要base64</p>
 	IdentityKey *string `json:"IdentityKey,omitnil,omitempty" name:"IdentityKey"`
 
-	// 描述
+	// <p>描述</p>
 	Description *string `json:"Description,omitnil,omitempty" name:"Description"`
+
+	// <p>OIDC公钥自动轮转开关</p><p>枚举值：</p><ul><li>0： 关闭</li><li>1： 开启</li></ul><p>默认值：0</p>
+	AutoRotateKey *uint64 `json:"AutoRotateKey,omitnil,omitempty" name:"AutoRotateKey"`
 }
 
 func (r *CreateOIDCConfigRequest) ToJsonString() string {
@@ -968,6 +974,7 @@ func (r *CreateOIDCConfigRequest) FromJsonString(s string) error {
 	delete(f, "Name")
 	delete(f, "IdentityKey")
 	delete(f, "Description")
+	delete(f, "AutoRotateKey")
 	if len(f) > 0 {
 		return tcerr.NewTencentCloudSDKError("ClientError.BuildRequestError", "CreateOIDCConfigRequest has unknown keys!", "")
 	}
@@ -1499,6 +1506,9 @@ type CreateUserOIDCConfigRequestParams struct {
 
 	// 描述信息。由用户自行定义。
 	Description *string `json:"Description,omitnil,omitempty" name:"Description"`
+
+	// OIDC公钥自动轮转开关（默认为0代表关闭，1代表开启）如果不传的话会默认置0
+	AutoRotateKey *uint64 `json:"AutoRotateKey,omitnil,omitempty" name:"AutoRotateKey"`
 }
 
 type CreateUserOIDCConfigRequest struct {
@@ -1531,6 +1541,9 @@ type CreateUserOIDCConfigRequest struct {
 
 	// 描述信息。由用户自行定义。
 	Description *string `json:"Description,omitnil,omitempty" name:"Description"`
+
+	// OIDC公钥自动轮转开关（默认为0代表关闭，1代表开启）如果不传的话会默认置0
+	AutoRotateKey *uint64 `json:"AutoRotateKey,omitnil,omitempty" name:"AutoRotateKey"`
 }
 
 func (r *CreateUserOIDCConfigRequest) ToJsonString() string {
@@ -1554,6 +1567,7 @@ func (r *CreateUserOIDCConfigRequest) FromJsonString(s string) error {
 	delete(f, "IdentityKey")
 	delete(f, "Scope")
 	delete(f, "Description")
+	delete(f, "AutoRotateKey")
 	if len(f) > 0 {
 		return tcerr.NewTencentCloudSDKError("ClientError.BuildRequestError", "CreateUserOIDCConfigRequest has unknown keys!", "")
 	}
@@ -2331,14 +2345,14 @@ func (r *DeleteUserResponse) FromJsonString(s string) error {
 
 // Predefined struct for user
 type DescribeOIDCConfigRequestParams struct {
-	// 名称
+	// <p>名称</p>
 	Name *string `json:"Name,omitnil,omitempty" name:"Name"`
 }
 
 type DescribeOIDCConfigRequest struct {
 	*tchttp.BaseRequest
 	
-	// 名称
+	// <p>名称</p>
 	Name *string `json:"Name,omitnil,omitempty" name:"Name"`
 }
 
@@ -2363,26 +2377,29 @@ func (r *DescribeOIDCConfigRequest) FromJsonString(s string) error {
 
 // Predefined struct for user
 type DescribeOIDCConfigResponseParams struct {
-	// 身份提供商类型 11角色身份提供商
+	// <p>身份提供商类型 11角色身份提供商</p>
 	ProviderType *uint64 `json:"ProviderType,omitnil,omitempty" name:"ProviderType"`
 
-	// 身份提供商URL
+	// <p>身份提供商URL</p>
 	IdentityUrl *string `json:"IdentityUrl,omitnil,omitempty" name:"IdentityUrl"`
 
-	// 签名公钥
+	// <p>签名公钥</p>
 	IdentityKey *string `json:"IdentityKey,omitnil,omitempty" name:"IdentityKey"`
 
-	// 客户端id
+	// <p>客户端id</p>
 	ClientId []*string `json:"ClientId,omitnil,omitempty" name:"ClientId"`
 
-	// 状态：0:未设置，11:已开启，2:已禁用
+	// <p>状态：0:未设置，11:已开启，2:已禁用</p>
 	Status *uint64 `json:"Status,omitnil,omitempty" name:"Status"`
 
-	// 描述
+	// <p>描述</p>
 	Description *string `json:"Description,omitnil,omitempty" name:"Description"`
 
-	// 名称
+	// <p>名称</p>
 	Name *string `json:"Name,omitnil,omitempty" name:"Name"`
+
+	// <p>OIDC公钥自动轮转开关</p><p>枚举值：</p><ul><li>0： 关闭</li><li>1： 开启</li></ul><p>默认值：0</p>
+	AutoRotateKey *uint64 `json:"AutoRotateKey,omitnil,omitempty" name:"AutoRotateKey"`
 
 	// 唯一请求 ID，由服务端生成，每次请求都会返回（若请求因其他原因未能抵达服务端，则该次请求不会获得 RequestId）。定位问题时需要提供该次请求的 RequestId。
 	RequestId *string `json:"RequestId,omitnil,omitempty" name:"RequestId"`
@@ -2406,26 +2423,26 @@ func (r *DescribeOIDCConfigResponse) FromJsonString(s string) error {
 
 // Predefined struct for user
 type DescribeRoleListRequestParams struct {
-	// 页码，从1开始
+	// <p>页码，从1开始</p>
 	Page *uint64 `json:"Page,omitnil,omitempty" name:"Page"`
 
-	// 每页行数，不能大于200
+	// <p>每页行数，不能大于200</p>
 	Rp *uint64 `json:"Rp,omitnil,omitempty" name:"Rp"`
 
-	// 标签筛选
+	// <p>标签筛选</p>
 	Tags []*RoleTags `json:"Tags,omitnil,omitempty" name:"Tags"`
 }
 
 type DescribeRoleListRequest struct {
 	*tchttp.BaseRequest
 	
-	// 页码，从1开始
+	// <p>页码，从1开始</p>
 	Page *uint64 `json:"Page,omitnil,omitempty" name:"Page"`
 
-	// 每页行数，不能大于200
+	// <p>每页行数，不能大于200</p>
 	Rp *uint64 `json:"Rp,omitnil,omitempty" name:"Rp"`
 
-	// 标签筛选
+	// <p>标签筛选</p>
 	Tags []*RoleTags `json:"Tags,omitnil,omitempty" name:"Tags"`
 }
 
@@ -2452,10 +2469,10 @@ func (r *DescribeRoleListRequest) FromJsonString(s string) error {
 
 // Predefined struct for user
 type DescribeRoleListResponseParams struct {
-	// 角色详情列表。
+	// <p>角色详情列表。</p>
 	List []*RoleInfo `json:"List,omitnil,omitempty" name:"List"`
 
-	// 角色总数
+	// <p>角色总数</p>
 	TotalNum *uint64 `json:"TotalNum,omitnil,omitempty" name:"TotalNum"`
 
 	// 唯一请求 ID，由服务端生成，每次请求都会返回（若请求因其他原因未能抵达服务端，则该次请求不会获得 RequestId）。定位问题时需要提供该次请求的 RequestId。
@@ -2787,6 +2804,9 @@ type DescribeUserOIDCConfigResponseParams struct {
 
 	// 描述
 	Description *string `json:"Description,omitnil,omitempty" name:"Description"`
+
+	// OIDC公钥自动轮转开关（默认为0代表关闭，1代表开启）
+	AutoRotateKey *uint64 `json:"AutoRotateKey,omitnil,omitempty" name:"AutoRotateKey"`
 
 	// 唯一请求 ID，由服务端生成，每次请求都会返回（若请求因其他原因未能抵达服务端，则该次请求不会获得 RequestId）。定位问题时需要提供该次请求的 RequestId。
 	RequestId *string `json:"RequestId,omitnil,omitempty" name:"RequestId"`
@@ -3316,6 +3336,66 @@ func (r *GetGroupResponse) ToJsonString() string {
 // FromJsonString It is highly **NOT** recommended to use this function
 // because it has no param check, nor strict type check
 func (r *GetGroupResponse) FromJsonString(s string) error {
+	return json.Unmarshal([]byte(s), &r)
+}
+
+// Predefined struct for user
+type GetPasswordRulesRequestParams struct {
+
+}
+
+type GetPasswordRulesRequest struct {
+	*tchttp.BaseRequest
+	
+}
+
+func (r *GetPasswordRulesRequest) ToJsonString() string {
+    b, _ := json.Marshal(r)
+    return string(b)
+}
+
+// FromJsonString It is highly **NOT** recommended to use this function
+// because it has no param check, nor strict type check
+func (r *GetPasswordRulesRequest) FromJsonString(s string) error {
+	f := make(map[string]interface{})
+	if err := json.Unmarshal([]byte(s), &f); err != nil {
+		return err
+	}
+	
+	if len(f) > 0 {
+		return tcerr.NewTencentCloudSDKError("ClientError.BuildRequestError", "GetPasswordRulesRequest has unknown keys!", "")
+	}
+	return json.Unmarshal([]byte(s), &r)
+}
+
+// Predefined struct for user
+type GetPasswordRulesResponseParams struct {
+	// 密码规则
+	Rules *PassWordRule `json:"Rules,omitnil,omitempty" name:"Rules"`
+
+	// 修改时间
+	UpdateTime *string `json:"UpdateTime,omitnil,omitempty" name:"UpdateTime"`
+
+	// 修改人
+	Modifier *string `json:"Modifier,omitnil,omitempty" name:"Modifier"`
+
+	// 唯一请求 ID，由服务端生成，每次请求都会返回（若请求因其他原因未能抵达服务端，则该次请求不会获得 RequestId）。定位问题时需要提供该次请求的 RequestId。
+	RequestId *string `json:"RequestId,omitnil,omitempty" name:"RequestId"`
+}
+
+type GetPasswordRulesResponse struct {
+	*tchttp.BaseResponse
+	Response *GetPasswordRulesResponseParams `json:"Response"`
+}
+
+func (r *GetPasswordRulesResponse) ToJsonString() string {
+    b, _ := json.Marshal(r)
+    return string(b)
+}
+
+// FromJsonString It is highly **NOT** recommended to use this function
+// because it has no param check, nor strict type check
+func (r *GetPasswordRulesResponse) FromJsonString(s string) error {
 	return json.Unmarshal([]byte(s), &r)
 }
 
@@ -4147,6 +4227,115 @@ func (r *ListAccessKeysResponse) FromJsonString(s string) error {
 }
 
 // Predefined struct for user
+type ListAccountsRequestParams struct {
+	// <p>返回结果的条数，当返回结果达到 MaxItems 限制被截断时，返回参数IsTruncated将等于true。</p><p>取值范围：[1, 100]</p>
+	MaxItems *int64 `json:"MaxItems,omitnil,omitempty" name:"MaxItems"`
+
+	// <p>当请求的返回结果被截断时，可以使用Marker获取从当前截断位置之后的内容。</p>
+	Marker *string `json:"Marker,omitnil,omitempty" name:"Marker"`
+
+	// <p>用户类型</p><p>枚举值：</p><ul><li>Owner： 主账号</li><li>SubUser： 普通子用户</li><li>CICUser： CIC 子用户</li><li>WechatCorpUser： 企业微信子用户</li><li>AgentIdentity： AgentIdentity子用户</li><li>Collaborator： 协作者</li><li>MessageReceiver： 消息接收者</li></ul>
+	UserType *string `json:"UserType,omitnil,omitempty" name:"UserType"`
+}
+
+type ListAccountsRequest struct {
+	*tchttp.BaseRequest
+	
+	// <p>返回结果的条数，当返回结果达到 MaxItems 限制被截断时，返回参数IsTruncated将等于true。</p><p>取值范围：[1, 100]</p>
+	MaxItems *int64 `json:"MaxItems,omitnil,omitempty" name:"MaxItems"`
+
+	// <p>当请求的返回结果被截断时，可以使用Marker获取从当前截断位置之后的内容。</p>
+	Marker *string `json:"Marker,omitnil,omitempty" name:"Marker"`
+
+	// <p>用户类型</p><p>枚举值：</p><ul><li>Owner： 主账号</li><li>SubUser： 普通子用户</li><li>CICUser： CIC 子用户</li><li>WechatCorpUser： 企业微信子用户</li><li>AgentIdentity： AgentIdentity子用户</li><li>Collaborator： 协作者</li><li>MessageReceiver： 消息接收者</li></ul>
+	UserType *string `json:"UserType,omitnil,omitempty" name:"UserType"`
+}
+
+func (r *ListAccountsRequest) ToJsonString() string {
+    b, _ := json.Marshal(r)
+    return string(b)
+}
+
+// FromJsonString It is highly **NOT** recommended to use this function
+// because it has no param check, nor strict type check
+func (r *ListAccountsRequest) FromJsonString(s string) error {
+	f := make(map[string]interface{})
+	if err := json.Unmarshal([]byte(s), &f); err != nil {
+		return err
+	}
+	delete(f, "MaxItems")
+	delete(f, "Marker")
+	delete(f, "UserType")
+	if len(f) > 0 {
+		return tcerr.NewTencentCloudSDKError("ClientError.BuildRequestError", "ListAccountsRequest has unknown keys!", "")
+	}
+	return json.Unmarshal([]byte(s), &r)
+}
+
+// Predefined struct for user
+type ListAccountsResponseParams struct {
+	// <p>子账号列表。</p>
+	Users []*ListAllUser `json:"Users,omitnil,omitempty" name:"Users"`
+
+	// <p>当IsTruncated为true时才有此字段，当返回true时，需要继续调用此接口，并且使用Marker获取截断后的内容 。</p>
+	Marker *string `json:"Marker,omitnil,omitempty" name:"Marker"`
+
+	// <p>请求返回结果是否被截断。</p>
+	IsTruncated *bool `json:"IsTruncated,omitnil,omitempty" name:"IsTruncated"`
+
+	// 唯一请求 ID，由服务端生成，每次请求都会返回（若请求因其他原因未能抵达服务端，则该次请求不会获得 RequestId）。定位问题时需要提供该次请求的 RequestId。
+	RequestId *string `json:"RequestId,omitnil,omitempty" name:"RequestId"`
+}
+
+type ListAccountsResponse struct {
+	*tchttp.BaseResponse
+	Response *ListAccountsResponseParams `json:"Response"`
+}
+
+func (r *ListAccountsResponse) ToJsonString() string {
+    b, _ := json.Marshal(r)
+    return string(b)
+}
+
+// FromJsonString It is highly **NOT** recommended to use this function
+// because it has no param check, nor strict type check
+func (r *ListAccountsResponse) FromJsonString(s string) error {
+	return json.Unmarshal([]byte(s), &r)
+}
+
+type ListAllUser struct {
+	// <p>子账号账号ID。</p>
+	Uin *int64 `json:"Uin,omitnil,omitempty" name:"Uin"`
+
+	// <p>子账号用户名。</p>
+	Name *string `json:"Name,omitnil,omitempty" name:"Name"`
+
+	// <p>子账号 UID。</p>
+	Uid *int64 `json:"Uid,omitnil,omitempty" name:"Uid"`
+
+	// <p>子账号备注。</p>
+	Remark *string `json:"Remark,omitnil,omitempty" name:"Remark"`
+
+	// <p>子账号能否登录控制台。</p>
+	ConsoleLogin *int64 `json:"ConsoleLogin,omitnil,omitempty" name:"ConsoleLogin"`
+
+	// <p>手机号。</p>
+	PhoneNum *string `json:"PhoneNum,omitnil,omitempty" name:"PhoneNum"`
+
+	// <p>区号。</p>
+	CountryCode *string `json:"CountryCode,omitnil,omitempty" name:"CountryCode"`
+
+	// <p>邮箱。</p>
+	Email *string `json:"Email,omitnil,omitempty" name:"Email"`
+
+	// <p>创建时间。</p><p>参数格式：YYYY-MM-DD hh:mm:ss</p>
+	CreateTime *string `json:"CreateTime,omitnil,omitempty" name:"CreateTime"`
+
+	// <p>账号类型</p><p>枚举值：</p><ul><li>Owner： 主账号</li><li>SubUser： 子用户</li><li>CICUser： CIC 用户</li><li>WechatCorpUser： 企业微信子用户</li><li>AgentIdentity： AgentIdentity用户</li><li>Collaborator： 协作者</li><li>MessageReceiver： 消息接收者</li><li>Unknown： 未知</li></ul>
+	UserType *string `json:"UserType,omitnil,omitempty" name:"UserType"`
+}
+
+// Predefined struct for user
 type ListAttachedGroupPoliciesRequestParams struct {
 	// 用户组ID
 	TargetGroupId *uint64 `json:"TargetGroupId,omitnil,omitempty" name:"TargetGroupId"`
@@ -4915,32 +5104,32 @@ func (r *ListPoliciesGrantingServiceAccessResponse) FromJsonString(s string) err
 
 // Predefined struct for user
 type ListPoliciesRequestParams struct {
-	// 每页数量，默认值是 20，必须大于 0 且小于或等于 200
+	// <p>每页数量，默认值是 20，必须大于 0 且小于或等于 200</p>
 	Rp *uint64 `json:"Rp,omitnil,omitempty" name:"Rp"`
 
-	// 页码，默认值是 1，从 1开始，不能大于 200
+	// <p>页码，默认值是 1，从 1开始，不能大于 200</p>
 	Page *uint64 `json:"Page,omitnil,omitempty" name:"Page"`
 
-	// 可取值 'All'、'QCS' 和 'Local'，'All' 获取所有策略，'QCS' 只获取预设策略，'Local' 只获取自定义策略，默认取 'All'
+	// <p>可取值 &#39;All&#39;、&#39;QCS&#39; 和 &#39;Local&#39;，&#39;All&#39; 获取所有策略，&#39;QCS&#39; 只获取预设策略，&#39;Local&#39; 只获取自定义策略，默认取 &#39;All&#39;</p>
 	Scope *string `json:"Scope,omitnil,omitempty" name:"Scope"`
 
-	// 按策略名匹配
+	// <p>按策略名匹配</p>
 	Keyword *string `json:"Keyword,omitnil,omitempty" name:"Keyword"`
 }
 
 type ListPoliciesRequest struct {
 	*tchttp.BaseRequest
 	
-	// 每页数量，默认值是 20，必须大于 0 且小于或等于 200
+	// <p>每页数量，默认值是 20，必须大于 0 且小于或等于 200</p>
 	Rp *uint64 `json:"Rp,omitnil,omitempty" name:"Rp"`
 
-	// 页码，默认值是 1，从 1开始，不能大于 200
+	// <p>页码，默认值是 1，从 1开始，不能大于 200</p>
 	Page *uint64 `json:"Page,omitnil,omitempty" name:"Page"`
 
-	// 可取值 'All'、'QCS' 和 'Local'，'All' 获取所有策略，'QCS' 只获取预设策略，'Local' 只获取自定义策略，默认取 'All'
+	// <p>可取值 &#39;All&#39;、&#39;QCS&#39; 和 &#39;Local&#39;，&#39;All&#39; 获取所有策略，&#39;QCS&#39; 只获取预设策略，&#39;Local&#39; 只获取自定义策略，默认取 &#39;All&#39;</p>
 	Scope *string `json:"Scope,omitnil,omitempty" name:"Scope"`
 
-	// 按策略名匹配
+	// <p>按策略名匹配</p>
 	Keyword *string `json:"Keyword,omitnil,omitempty" name:"Keyword"`
 }
 
@@ -4968,22 +5157,13 @@ func (r *ListPoliciesRequest) FromJsonString(s string) error {
 
 // Predefined struct for user
 type ListPoliciesResponseParams struct {
-	// 策略总数
+	// <p>策略总数</p>
 	TotalNum *uint64 `json:"TotalNum,omitnil,omitempty" name:"TotalNum"`
 
-	// 策略数组，数组每个成员包括 policyId、policyName、addTime、type、description、 createMode 字段。其中： 
-	// policyId：策略 id 
-	// policyName：策略名
-	// addTime：策略创建时间
-	// type：1 表示自定义策略，2 表示预设策略 
-	// description：策略描述 
-	// createMode：1 表示按业务权限创建的策略，其他值表示可以查看策略语法和通过策略语法更新策略
-	// Attachments: 关联的用户数
-	// ServiceType: 策略关联的产品
-	// IsAttached: 当需要查询标记实体是否已经关联策略时不为null。0表示未关联策略，1表示已关联策略
+	// <p>策略数组，数组每个成员包括 policyId、policyName、addTime、type、description、 createMode 字段。其中：<br>policyId：策略 id<br>policyName：策略名<br>addTime：策略创建时间<br>type：1 表示自定义策略，2 表示预设策略<br>description：策略描述<br>createMode：1 表示按业务权限创建的策略，其他值表示可以查看策略语法和通过策略语法更新策略<br>Attachments: 关联的用户数<br>ServiceType: 策略关联的产品<br>IsAttached: 当需要查询标记实体是否已经关联策略时不为null。0表示未关联策略，1表示已关联策略</p>
 	List []*StrategyInfo `json:"List,omitnil,omitempty" name:"List"`
 
-	// 保留字段
+	// <p>保留字段</p>
 	ServiceTypeList []*string `json:"ServiceTypeList,omitnil,omitempty" name:"ServiceTypeList"`
 
 	// 唯一请求 ID，由服务端生成，每次请求都会返回（若请求因其他原因未能抵达服务端，则该次请求不会获得 RequestId）。定位问题时需要提供该次请求的 RequestId。
@@ -5383,26 +5563,29 @@ func (r *ListWeChatWorkSubAccountsResponse) FromJsonString(s string) error {
 }
 
 type LoginActionFlag struct {
-	// 0: 非安全手机校验 1: 安全手机校验。
+	// <p>0: 非安全手机校验 1: 安全手机校验。</p>
 	Phone *uint64 `json:"Phone,omitnil,omitempty" name:"Phone"`
 
-	// 0: 非硬token校验 1: 硬token校验。
+	// <p>0: 非硬token校验 1: 硬token校验。</p>
 	Token *uint64 `json:"Token,omitnil,omitempty" name:"Token"`
 
-	// 0: 非软token校验 1: 软token校验
+	// <p>0: 非软token校验 1: 软token校验</p>
 	Stoken *uint64 `json:"Stoken,omitnil,omitempty" name:"Stoken"`
 
-	// 0: 非微信校验 1: 微信校验
+	// <p>0: 非微信校验 1: 微信校验</p>
 	Wechat *uint64 `json:"Wechat,omitnil,omitempty" name:"Wechat"`
 
-	// 0: 非自定义校验 1: 自定义校验
+	// <p>0: 非自定义校验 1: 自定义校验</p>
 	Custom *uint64 `json:"Custom,omitnil,omitempty" name:"Custom"`
 
-	// 0: 非邮箱校验 1: 邮箱校验
+	// <p>0: 非邮箱校验 1: 邮箱校验</p>
 	Mail *uint64 `json:"Mail,omitnil,omitempty" name:"Mail"`
 
-	// 0: 非u2f硬件token 1: u2f硬件token
+	// <p>0: 非u2f硬件token 1: u2f硬件token</p>
 	U2FToken *uint64 `json:"U2FToken,omitnil,omitempty" name:"U2FToken"`
+
+	// <p>0: 非passkey 校验 1: passkey校验</p>
+	Passkey *uint64 `json:"Passkey,omitnil,omitempty" name:"Passkey"`
 }
 
 type LoginActionFlagIntl struct {
@@ -5454,6 +5637,32 @@ type OffsiteFlag struct {
 
 	// 提示
 	Tips *uint64 `json:"Tips,omitnil,omitempty" name:"Tips"`
+}
+
+type PassWordRule struct {
+	// 最小长度
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	MinimumLength *int64 `json:"MinimumLength,omitnil,omitempty" name:"MinimumLength"`
+
+	// 必须包含的字符
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	MustContain *string `json:"MustContain,omitnil,omitempty" name:"MustContain"`
+
+	// 强制修改周期
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	ForcePasswordChange *int64 `json:"ForcePasswordChange,omitnil,omitempty" name:"ForcePasswordChange"`
+
+	// 重复使用次数
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	ReusePasswordLimit *int64 `json:"ReusePasswordLimit,omitnil,omitempty" name:"ReusePasswordLimit"`
+
+	// 密码重试次数
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	RetryPasswordLimit *int64 `json:"RetryPasswordLimit,omitnil,omitempty" name:"RetryPasswordLimit"`
+
+	// 密码过期失效 1：是，2：否（是：密码过期后，子用户无法登录，需要管理员重置密码。否：密码过期后，子用户可登录，登录后强制根据旧密码修改密码）
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	PasswordExpirationInvalidation *int64 `json:"PasswordExpirationInvalidation,omitnil,omitempty" name:"PasswordExpirationInvalidation"`
 }
 
 type PolicyVersionDetail struct {
@@ -5912,62 +6121,65 @@ func (r *SetMfaFlagResponse) FromJsonString(s string) error {
 }
 
 type StrategyInfo struct {
-	// 策略ID。
+	// <p>策略ID。</p>
 	PolicyId *uint64 `json:"PolicyId,omitnil,omitempty" name:"PolicyId"`
 
-	// 策略名称。
+	// <p>策略名称。</p>
 	PolicyName *string `json:"PolicyName,omitnil,omitempty" name:"PolicyName"`
 
-	// 策略创建时间。
+	// <p>策略创建时间。</p>
 	AddTime *string `json:"AddTime,omitnil,omitempty" name:"AddTime"`
 
-	// 策略类型。1 表示自定义策略，2 表示预设策略。
+	// <p>策略类型。1 表示自定义策略，2 表示预设策略。</p>
 	Type *uint64 `json:"Type,omitnil,omitempty" name:"Type"`
 
-	// 策略描述。
+	// <p>策略描述。</p>
 	// 注意：此字段可能返回 null，表示取不到有效值。
 	Description *string `json:"Description,omitnil,omitempty" name:"Description"`
 
-	// 创建来源，1 通过控制台创建, 2 通过策略语法创建。
+	// <p>创建来源，1 通过控制台创建, 2 通过策略语法创建。</p>
 	CreateMode *uint64 `json:"CreateMode,omitnil,omitempty" name:"CreateMode"`
 
-	// 关联的用户数
+	// <p>关联的用户数</p>
 	Attachments *uint64 `json:"Attachments,omitnil,omitempty" name:"Attachments"`
 
-	// 策略关联的产品
+	// <p>策略关联的产品</p>
 	// 注意：此字段可能返回 null，表示取不到有效值。
 	ServiceType *string `json:"ServiceType,omitnil,omitempty" name:"ServiceType"`
 
-	// 当需要查询标记实体是否已经关联策略时不为null。0表示未关联策略，1表示已关联策略
+	// <p>当需要查询标记实体是否已经关联策略时不为null。0表示未关联策略，1表示已关联策略</p>
 	// 注意：此字段可能返回 null，表示取不到有效值。
 	IsAttached *uint64 `json:"IsAttached,omitnil,omitempty" name:"IsAttached"`
 
-	// 是否已下线
+	// <p>是否已下线</p>
 	// 注意：此字段可能返回 null，表示取不到有效值。
 	Deactived *uint64 `json:"Deactived,omitnil,omitempty" name:"Deactived"`
 
-	// 已下线产品列表
+	// <p>已下线产品列表</p>
 	// 注意：此字段可能返回 null，表示取不到有效值。
 	DeactivedDetail []*string `json:"DeactivedDetail,omitnil,omitempty" name:"DeactivedDetail"`
 
-	// 是否是服务相关角色策略
+	// <p>是否是服务相关角色策略</p>
 	// 注意：此字段可能返回 null，表示取不到有效值。
 	IsServiceLinkedPolicy *uint64 `json:"IsServiceLinkedPolicy,omitnil,omitempty" name:"IsServiceLinkedPolicy"`
 
-	// 关联策略实体数
+	// <p>关联策略实体数</p>
 	// 注意：此字段可能返回 null，表示取不到有效值。
 	AttachEntityCount *int64 `json:"AttachEntityCount,omitnil,omitempty" name:"AttachEntityCount"`
 
-	// 关联权限边界实体数
+	// <p>关联权限边界实体数</p>
 	// 注意：此字段可能返回 null，表示取不到有效值。
 	AttachEntityBoundaryCount *int64 `json:"AttachEntityBoundaryCount,omitnil,omitempty" name:"AttachEntityBoundaryCount"`
 
-	// 最后编辑时间
+	// <p>最后编辑时间</p>
 	// 注意：此字段可能返回 null，表示取不到有效值。
 	UpdateTime *string `json:"UpdateTime,omitnil,omitempty" name:"UpdateTime"`
 
-	// 标签列表
+	// <p>标签列表</p>
 	Tags []*Tag `json:"Tags,omitnil,omitempty" name:"Tags"`
+
+	// <p>权限级别</p><p>枚举值：</p><ul><li>Global： 全局权限</li><li>Finance： 财务权限</li><li>CloudProduct： 云产品权限</li></ul>
+	PermissionLevel *string `json:"PermissionLevel,omitnil,omitempty" name:"PermissionLevel"`
 }
 
 type SubAccountInfo struct {
@@ -6380,39 +6592,45 @@ func (r *UpdateGroupResponse) FromJsonString(s string) error {
 
 // Predefined struct for user
 type UpdateOIDCConfigRequestParams struct {
-	// 身份提供商URL
+	// <p>身份提供商URL</p>
 	IdentityUrl *string `json:"IdentityUrl,omitnil,omitempty" name:"IdentityUrl"`
 
-	// 客户端ID
+	// <p>客户端ID</p>
 	ClientId []*string `json:"ClientId,omitnil,omitempty" name:"ClientId"`
 
-	// 名称
+	// <p>名称</p>
 	Name *string `json:"Name,omitnil,omitempty" name:"Name"`
 
-	// 签名公钥，需要base64
+	// <p>签名公钥，需要base64</p>
 	IdentityKey *string `json:"IdentityKey,omitnil,omitempty" name:"IdentityKey"`
 
-	// 描述
+	// <p>描述</p>
 	Description *string `json:"Description,omitnil,omitempty" name:"Description"`
+
+	// <p>OIDC公钥自动轮转开关</p><p>枚举值：</p><ul><li>0： 关闭</li><li>1： 开启</li></ul><p>默认值：0</p>
+	AutoRotateKey *uint64 `json:"AutoRotateKey,omitnil,omitempty" name:"AutoRotateKey"`
 }
 
 type UpdateOIDCConfigRequest struct {
 	*tchttp.BaseRequest
 	
-	// 身份提供商URL
+	// <p>身份提供商URL</p>
 	IdentityUrl *string `json:"IdentityUrl,omitnil,omitempty" name:"IdentityUrl"`
 
-	// 客户端ID
+	// <p>客户端ID</p>
 	ClientId []*string `json:"ClientId,omitnil,omitempty" name:"ClientId"`
 
-	// 名称
+	// <p>名称</p>
 	Name *string `json:"Name,omitnil,omitempty" name:"Name"`
 
-	// 签名公钥，需要base64
+	// <p>签名公钥，需要base64</p>
 	IdentityKey *string `json:"IdentityKey,omitnil,omitempty" name:"IdentityKey"`
 
-	// 描述
+	// <p>描述</p>
 	Description *string `json:"Description,omitnil,omitempty" name:"Description"`
+
+	// <p>OIDC公钥自动轮转开关</p><p>枚举值：</p><ul><li>0： 关闭</li><li>1： 开启</li></ul><p>默认值：0</p>
+	AutoRotateKey *uint64 `json:"AutoRotateKey,omitnil,omitempty" name:"AutoRotateKey"`
 }
 
 func (r *UpdateOIDCConfigRequest) ToJsonString() string {
@@ -6432,6 +6650,7 @@ func (r *UpdateOIDCConfigRequest) FromJsonString(s string) error {
 	delete(f, "Name")
 	delete(f, "IdentityKey")
 	delete(f, "Description")
+	delete(f, "AutoRotateKey")
 	if len(f) > 0 {
 		return tcerr.NewTencentCloudSDKError("ClientError.BuildRequestError", "UpdateOIDCConfigRequest has unknown keys!", "")
 	}
@@ -6457,6 +6676,60 @@ func (r *UpdateOIDCConfigResponse) ToJsonString() string {
 // FromJsonString It is highly **NOT** recommended to use this function
 // because it has no param check, nor strict type check
 func (r *UpdateOIDCConfigResponse) FromJsonString(s string) error {
+	return json.Unmarshal([]byte(s), &r)
+}
+
+// Predefined struct for user
+type UpdatePasswordRulesRequestParams struct {
+	// 密码规则
+	Rules *PassWordRule `json:"Rules,omitnil,omitempty" name:"Rules"`
+}
+
+type UpdatePasswordRulesRequest struct {
+	*tchttp.BaseRequest
+	
+	// 密码规则
+	Rules *PassWordRule `json:"Rules,omitnil,omitempty" name:"Rules"`
+}
+
+func (r *UpdatePasswordRulesRequest) ToJsonString() string {
+    b, _ := json.Marshal(r)
+    return string(b)
+}
+
+// FromJsonString It is highly **NOT** recommended to use this function
+// because it has no param check, nor strict type check
+func (r *UpdatePasswordRulesRequest) FromJsonString(s string) error {
+	f := make(map[string]interface{})
+	if err := json.Unmarshal([]byte(s), &f); err != nil {
+		return err
+	}
+	delete(f, "Rules")
+	if len(f) > 0 {
+		return tcerr.NewTencentCloudSDKError("ClientError.BuildRequestError", "UpdatePasswordRulesRequest has unknown keys!", "")
+	}
+	return json.Unmarshal([]byte(s), &r)
+}
+
+// Predefined struct for user
+type UpdatePasswordRulesResponseParams struct {
+	// 唯一请求 ID，由服务端生成，每次请求都会返回（若请求因其他原因未能抵达服务端，则该次请求不会获得 RequestId）。定位问题时需要提供该次请求的 RequestId。
+	RequestId *string `json:"RequestId,omitnil,omitempty" name:"RequestId"`
+}
+
+type UpdatePasswordRulesResponse struct {
+	*tchttp.BaseResponse
+	Response *UpdatePasswordRulesResponseParams `json:"Response"`
+}
+
+func (r *UpdatePasswordRulesResponse) ToJsonString() string {
+    b, _ := json.Marshal(r)
+    return string(b)
+}
+
+// FromJsonString It is highly **NOT** recommended to use this function
+// because it has no param check, nor strict type check
+func (r *UpdatePasswordRulesResponse) FromJsonString(s string) error {
 	return json.Unmarshal([]byte(s), &r)
 }
 
@@ -6846,6 +7119,9 @@ type UpdateUserOIDCConfigRequestParams struct {
 
 	// 描述，长度为1~255个英文或中文字符，默认值为空。
 	Description *string `json:"Description,omitnil,omitempty" name:"Description"`
+
+	// OIDC公钥自动轮转开关（默认为0代表关闭，1代表开启）如果不传的话，会默认置0
+	AutoRotateKey *uint64 `json:"AutoRotateKey,omitnil,omitempty" name:"AutoRotateKey"`
 }
 
 type UpdateUserOIDCConfigRequest struct {
@@ -6878,6 +7154,9 @@ type UpdateUserOIDCConfigRequest struct {
 
 	// 描述，长度为1~255个英文或中文字符，默认值为空。
 	Description *string `json:"Description,omitnil,omitempty" name:"Description"`
+
+	// OIDC公钥自动轮转开关（默认为0代表关闭，1代表开启）如果不传的话，会默认置0
+	AutoRotateKey *uint64 `json:"AutoRotateKey,omitnil,omitempty" name:"AutoRotateKey"`
 }
 
 func (r *UpdateUserOIDCConfigRequest) ToJsonString() string {
@@ -6901,6 +7180,7 @@ func (r *UpdateUserOIDCConfigRequest) FromJsonString(s string) error {
 	delete(f, "IdentityKey")
 	delete(f, "Scope")
 	delete(f, "Description")
+	delete(f, "AutoRotateKey")
 	if len(f) > 0 {
 		return tcerr.NewTencentCloudSDKError("ClientError.BuildRequestError", "UpdateUserOIDCConfigRequest has unknown keys!", "")
 	}

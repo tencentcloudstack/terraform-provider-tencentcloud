@@ -105,10 +105,13 @@ func ResourceTencentCloudClbInstance() *schema.Resource {
 				Description: "Bandwidth package id. If set, the `internet_charge_type` must be `BANDWIDTH_PACKAGE`.",
 			},
 			"internet_bandwidth_max_out": {
-				Type:        schema.TypeInt,
-				Optional:    true,
-				Computed:    true,
-				Description: "Max bandwidth out, only applicable to open CLB. Valid value ranges is [1, 2048]. Unit is Mbps.",
+				Type:     schema.TypeInt,
+				Optional: true,
+				Computed: true,
+				Description: "Maximum outbound bandwidth, in Mbps. This parameter is valid only for public network shared, LCU-supported, and exclusive CLB instances and private network LCU-supported CLB instances.\n" +
+					"- The range of the maximum outbound bandwidth for public network shared and exclusive CLB instances is 1-2,048 Mbps.\n" +
+					"- The range of the maximum outbound bandwidth for public network and private network LCU-supported CLB instances is 1-61,440 Mbps.\n" +
+					"(Default to 10Mbps when CreateLoadBalancer is call.).",
 			},
 			"security_groups": {
 				Type:        schema.TypeList,
@@ -172,6 +175,13 @@ func ResourceTencentCloudClbInstance() *schema.Resource {
 					"`clb.c4.large`: Super Large 3; " +
 					"`clb.c4.xlarge`: Super Large 4. " +
 					"For more details, see [Instance Specifications](https://intl.cloud.tencent.com/document/product/214/84689?from_cn_redirect=1).",
+			},
+			"force": {
+				Type:     schema.TypeBool,
+				Optional: true,
+				Default:  false,
+				Description: "Whether to forcibly upgrade the CLB instance, default is `false`. " +
+					"This parameter only takes effect when `sla_type` changes.",
 			},
 			"vip_isp": {
 				Type:        schema.TypeString,
@@ -1086,6 +1096,7 @@ func resourceTencentCloudClbInstanceUpdate(d *schema.ResourceData, meta interfac
 		param.LoadBalancerId = &clbId
 		param.SlaType = helper.String(d.Get("sla_type").(string))
 		slaRequest.LoadBalancerSla = []*clb.SlaUpdateParam{&param}
+		slaRequest.Force = helper.Bool(d.Get("force").(bool))
 		var taskId string
 		err := resource.Retry(d.Timeout(schema.TimeoutUpdate), func() *resource.RetryError {
 			result, e := meta.(tccommon.ProviderMeta).GetAPIV3Conn().UseClbClient().ModifyLoadBalancerSla(slaRequest)

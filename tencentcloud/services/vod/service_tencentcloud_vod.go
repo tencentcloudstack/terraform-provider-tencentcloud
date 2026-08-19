@@ -909,3 +909,145 @@ func (me *VodService) DeleteVodAigcApiToken(ctx context.Context, subAppId uint64
 		logId, request.GetAction(), subAppId, requestId)
 	return
 }
+
+func (me *VodService) CreateVodAigcQuota(ctx context.Context, subAppId uint64, quotaType string, quotaLimit uint64, apiToken string) (errRet error) {
+	logId := tccommon.GetLogId(ctx)
+	request := vod.NewCreateAigcQuotaRequest()
+	request.SubAppId = helper.Uint64(subAppId)
+	request.QuotaType = helper.String(quotaType)
+	request.QuotaLimit = helper.Uint64(quotaLimit)
+	if apiToken != "" {
+		request.ApiToken = helper.String(apiToken)
+	}
+
+	var requestId string
+	err := resource.Retry(tccommon.WriteRetryTimeout, func() *resource.RetryError {
+		ratelimit.Check(request.GetAction())
+		response, e := me.client.UseVodClient().CreateAigcQuota(request)
+		if e != nil {
+			return tccommon.RetryError(e)
+		}
+		if response != nil && response.Response != nil && response.Response.RequestId != nil {
+			requestId = *response.Response.RequestId
+		}
+		return nil
+	})
+	if err != nil {
+		errRet = fmt.Errorf("[CRITAL]%s api[%s] fail, sub_app_id [%d], reason[%s]", logId, request.GetAction(), subAppId, err.Error())
+		return
+	}
+
+	log.Printf("[DEBUG]%s api[%s] success, sub_app_id [%d], request_id [%s]\n",
+		logId, request.GetAction(), subAppId, requestId)
+	return
+}
+
+func (me *VodService) DescribeVodAigcQuotaById(ctx context.Context, subAppId uint64, quotaType string, apiToken string) (quotaItem *vod.AigcQuotaItem, errRet error) {
+	logId := tccommon.GetLogId(ctx)
+	request := vod.NewDescribeAigcQuotasRequest()
+	request.SubAppId = helper.Uint64(subAppId)
+	request.QuotaType = helper.String(quotaType)
+	if apiToken != "" {
+		request.ApiToken = helper.String(apiToken)
+	}
+	request.Limit = helper.IntUint64(VOD_MAX_LIMIT)
+	request.Offset = helper.IntUint64(VOD_DEFAULT_OFFSET)
+
+	err := resource.Retry(tccommon.ReadRetryTimeout, func() *resource.RetryError {
+		ratelimit.Check(request.GetAction())
+		response, e := me.client.UseVodClient().DescribeAigcQuotas(request)
+		if e != nil {
+			return tccommon.RetryError(e)
+		}
+
+		log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+		if response == nil || response.Response == nil {
+			return resource.NonRetryableError(fmt.Errorf("api[%s] response is nil", request.GetAction()))
+		}
+
+		for _, item := range response.Response.QuotaSet {
+			if item != nil {
+				quotaItem = item
+				break
+			}
+		}
+
+		return nil
+	})
+
+	if err != nil {
+		errRet = fmt.Errorf("[CRITAL]%s api[%s] fail, sub_app_id [%d], reason[%s]", logId, request.GetAction(), subAppId, err.Error())
+		return
+	}
+
+	return
+}
+
+func (me *VodService) ModifyVodAigcQuota(ctx context.Context, subAppId uint64, quotaType string, quotaLimit uint64, apiToken string) (errRet error) {
+	logId := tccommon.GetLogId(ctx)
+	request := vod.NewModifyAigcQuotaRequest()
+	request.SubAppId = helper.Uint64(subAppId)
+	request.QuotaType = helper.String(quotaType)
+	request.QuotaLimit = helper.Uint64(quotaLimit)
+	if apiToken != "" {
+		request.ApiToken = helper.String(apiToken)
+	}
+
+	var requestId string
+	err := resource.Retry(tccommon.WriteRetryTimeout, func() *resource.RetryError {
+		ratelimit.Check(request.GetAction())
+		response, e := me.client.UseVodClient().ModifyAigcQuota(request)
+		if e != nil {
+			return tccommon.RetryError(e)
+		}
+		if response != nil && response.Response != nil && response.Response.RequestId != nil {
+			requestId = *response.Response.RequestId
+		}
+		return nil
+	})
+	if err != nil {
+		errRet = fmt.Errorf("[CRITAL]%s api[%s] fail, sub_app_id [%d], reason[%s]", logId, request.GetAction(), subAppId, err.Error())
+		return
+	}
+
+	log.Printf("[DEBUG]%s api[%s] success, sub_app_id [%d], request_id [%s]\n",
+		logId, request.GetAction(), subAppId, requestId)
+	return
+}
+
+func (me *VodService) DeleteVodAigcQuota(ctx context.Context, subAppId uint64, quotaType string, apiToken string) (errRet error) {
+	logId := tccommon.GetLogId(ctx)
+	request := vod.NewDeleteAigcQuotaRequest()
+	request.SubAppId = helper.Uint64(subAppId)
+	request.QuotaType = helper.String(quotaType)
+	if apiToken != "" {
+		request.ApiToken = helper.String(apiToken)
+	}
+
+	var requestId string
+	err := resource.Retry(tccommon.WriteRetryTimeout, func() *resource.RetryError {
+		ratelimit.Check(request.GetAction())
+		response, e := me.client.UseVodClient().DeleteAigcQuota(request)
+		if e != nil {
+			if sdkErr, ok := e.(*sdkErrors.TencentCloudSDKError); ok {
+				if strings.HasPrefix(sdkErr.Code, "ResourceNotFound") {
+					return nil
+				}
+			}
+			return tccommon.RetryError(e)
+		}
+		if response != nil && response.Response != nil && response.Response.RequestId != nil {
+			requestId = *response.Response.RequestId
+		}
+		return nil
+	})
+	if err != nil {
+		errRet = fmt.Errorf("[CRITAL]%s api[%s] fail, sub_app_id [%d], reason[%s]", logId, request.GetAction(), subAppId, err.Error())
+		return
+	}
+
+	log.Printf("[DEBUG]%s api[%s] success, sub_app_id [%d], request_id [%s]\n",
+		logId, request.GetAction(), subAppId, requestId)
+	return
+}

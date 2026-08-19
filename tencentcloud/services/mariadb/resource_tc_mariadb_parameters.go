@@ -31,7 +31,7 @@ func ResourceTencentCloudMariadbParameters() *schema.Resource {
 			},
 
 			"params": {
-				Type:        schema.TypeList,
+				Type:        schema.TypeSet,
 				Required:    true,
 				Description: "Number of days to keep, no more than 30.",
 				Elem: &schema.Resource{
@@ -71,7 +71,7 @@ func resourceTencentCloudMariadbParametersRead(d *schema.ResourceData, meta inte
 	defer tccommon.InconsistentCheck(d, meta)()
 
 	logId := tccommon.GetLogId(tccommon.ContextNil)
-	ctx := context.WithValue(context.TODO(), tccommon.LogIdKey, logId)
+	ctx := tccommon.NewResourceLifeCycleHandleFuncContext(context.Background(), logId, d, meta)
 
 	service := MariadbService{client: meta.(tccommon.ProviderMeta).GetAPIV3Conn()}
 
@@ -85,11 +85,15 @@ func resourceTencentCloudMariadbParametersRead(d *schema.ResourceData, meta inte
 
 	if parameters == nil {
 		d.SetId("")
-		return fmt.Errorf("resource `parameters` %s does not exist", instanceId)
+		return fmt.Errorf("resource `tencentcloud_mariadb_parameters` %s does not exist", instanceId)
 	}
 
 	if parameters.InstanceId != nil {
 		_ = d.Set("instance_id", parameters.InstanceId)
+	}
+
+	if err := resourceTencentCloudMariadbParametersReadPreHandleResponse0(ctx, parameters); err != nil {
+		return err
 	}
 
 	if parameters.Params != nil {
@@ -124,7 +128,8 @@ func resourceTencentCloudMariadbParametersUpdate(d *schema.ResourceData, meta in
 	request.InstanceId = &instanceId
 
 	if v, ok := d.GetOk("params"); ok {
-		for _, item := range v.([]interface{}) {
+		paramsSet := v.(*schema.Set).List()
+		for _, item := range paramsSet {
 			dMap := item.(map[string]interface{})
 			dBParamValue := mariadb.DBParamValue{}
 			if v, ok := dMap["param"]; ok {

@@ -481,6 +481,57 @@ func TestAccTencentCloudScfFunction_fs(t *testing.T) {
 	})
 }
 
+func TestAccTencentCloudScfFunction_instanceConcurrencyConfig(t *testing.T) {
+	t.Parallel()
+	var fnId string
+
+	resource.Test(t, resource.TestCase{
+		PreCheck:     func() { tcacctest.AccPreCheck(t) },
+		Providers:    tcacctest.AccProviders,
+		CheckDestroy: testAccCheckScfFunctionDestroy(&fnId),
+		Steps: []resource.TestStep{
+			{
+				Config: scfFunctionCodeEmbed("first.zip", testAccScfFunctionInstanceConcurrencyConfig),
+				Check: resource.ComposeTestCheckFunc(
+					testAccCheckScfFunctionExists("tencentcloud_scf_function.foo", &fnId),
+					resource.TestMatchResourceAttr("tencentcloud_scf_function.foo", "name", regexp.MustCompile(`ci-test-function`)),
+					resource.TestCheckResourceAttrSet("tencentcloud_scf_function.foo", "zip_file"),
+					resource.TestCheckResourceAttrSet("tencentcloud_scf_function.foo", "function_id"),
+					resource.TestCheckResourceAttr("tencentcloud_scf_function.foo", "instance_concurrency_config.#", "1"),
+					resource.TestCheckResourceAttr("tencentcloud_scf_function.foo", "instance_concurrency_config.0.dynamic_enabled", "FALSE"),
+					resource.TestCheckResourceAttr("tencentcloud_scf_function.foo", "instance_concurrency_config.0.max_concurrency", "10"),
+					resource.TestCheckResourceAttr("tencentcloud_scf_function.foo", "instance_concurrency_config.0.instance_isolation_enabled", "FALSE"),
+					resource.TestCheckResourceAttr("tencentcloud_scf_function.foo", "instance_concurrency_config.0.type", "Request-Based"),
+					resource.TestCheckResourceAttr("tencentcloud_scf_function.foo", "instance_concurrency_config.0.session_config.#", "1"),
+					resource.TestCheckResourceAttr("tencentcloud_scf_function.foo", "instance_concurrency_config.0.session_config.0.session_source", "HEADER"),
+					resource.TestCheckResourceAttr("tencentcloud_scf_function.foo", "instance_concurrency_config.0.session_config.0.session_name", "my_session"),
+					resource.TestCheckResourceAttr("tencentcloud_scf_function.foo", "instance_concurrency_config.0.session_config.0.maximum_concurrency_session_per_instance", "50"),
+					resource.TestCheckResourceAttr("tencentcloud_scf_function.foo", "instance_concurrency_config.0.session_config.0.maximum_ttl_in_seconds", "3600"),
+					resource.TestCheckResourceAttr("tencentcloud_scf_function.foo", "instance_concurrency_config.0.session_config.0.maximum_idle_time_in_seconds", "600"),
+				),
+			},
+			{
+				Config: scfFunctionCodeEmbed("first.zip", testAccScfFunctionInstanceConcurrencyConfigUpdate),
+				Check: resource.ComposeTestCheckFunc(
+					testAccCheckScfFunctionExists("tencentcloud_scf_function.foo", &fnId),
+					resource.TestCheckResourceAttrSet("tencentcloud_scf_function.foo", "function_id"),
+					resource.TestCheckResourceAttr("tencentcloud_scf_function.foo", "instance_concurrency_config.#", "1"),
+					resource.TestCheckResourceAttr("tencentcloud_scf_function.foo", "instance_concurrency_config.0.dynamic_enabled", "TRUE"),
+					resource.TestCheckResourceAttr("tencentcloud_scf_function.foo", "instance_concurrency_config.0.max_concurrency", "50"),
+					resource.TestCheckResourceAttr("tencentcloud_scf_function.foo", "instance_concurrency_config.0.instance_isolation_enabled", "TRUE"),
+					resource.TestCheckResourceAttr("tencentcloud_scf_function.foo", "instance_concurrency_config.0.type", "Session-Based"),
+					resource.TestCheckResourceAttr("tencentcloud_scf_function.foo", "instance_concurrency_config.0.session_config.#", "1"),
+					resource.TestCheckResourceAttr("tencentcloud_scf_function.foo", "instance_concurrency_config.0.session_config.0.session_source", "COOKIE"),
+					resource.TestCheckResourceAttr("tencentcloud_scf_function.foo", "instance_concurrency_config.0.session_config.0.session_name", "updated_session"),
+					resource.TestCheckResourceAttr("tencentcloud_scf_function.foo", "instance_concurrency_config.0.session_config.0.maximum_concurrency_session_per_instance", "100"),
+					resource.TestCheckResourceAttr("tencentcloud_scf_function.foo", "instance_concurrency_config.0.session_config.0.maximum_ttl_in_seconds", "7200"),
+					resource.TestCheckResourceAttr("tencentcloud_scf_function.foo", "instance_concurrency_config.0.session_config.0.maximum_idle_time_in_seconds", "1200"),
+				),
+			},
+		},
+	})
+}
+
 func testAccCheckScfFunctionExists(n string, id *string) resource.TestCheckFunc {
 	return func(s *terraform.State) error {
 		rs, ok := s.RootModule().Resources[n]
@@ -853,6 +904,58 @@ resource "tencentcloud_scf_function" "foo" {
   handler   = "first.do_it_first"
   runtime   = "Python3.6"
   enable_public_net = true
+
+  zip_file = "%s"
+}
+`
+
+const testAccScfFunctionInstanceConcurrencyConfig = `
+resource "tencentcloud_scf_function" "foo" {
+  name              = "%s"
+  handler           = "first.do_it_first"
+  runtime           = "Python3.6"
+  enable_public_net = true
+
+  instance_concurrency_config {
+    dynamic_enabled            = "FALSE"
+    max_concurrency            = 10
+    instance_isolation_enabled = "FALSE"
+    type                       = "Request-Based"
+
+    session_config {
+      session_source                             = "HEADER"
+      session_name                               = "my_session"
+      maximum_concurrency_session_per_instance   = 50
+      maximum_ttl_in_seconds                     = 3600
+      maximum_idle_time_in_seconds               = 600
+    }
+  }
+
+  zip_file = "%s"
+}
+`
+
+const testAccScfFunctionInstanceConcurrencyConfigUpdate = `
+resource "tencentcloud_scf_function" "foo" {
+  name              = "%s"
+  handler           = "first.do_it_first"
+  runtime           = "Python3.6"
+  enable_public_net = true
+
+  instance_concurrency_config {
+    dynamic_enabled            = "TRUE"
+    max_concurrency            = 50
+    instance_isolation_enabled = "TRUE"
+    type                       = "Session-Based"
+
+    session_config {
+      session_source                             = "COOKIE"
+      session_name                               = "updated_session"
+      maximum_concurrency_session_per_instance   = 100
+      maximum_ttl_in_seconds                     = 7200
+      maximum_idle_time_in_seconds               = 1200
+    }
+  }
 
   zip_file = "%s"
 }

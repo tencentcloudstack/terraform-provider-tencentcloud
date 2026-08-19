@@ -37,6 +37,7 @@ resource "tencentcloud_key_pair" "foo1" {
 The following arguments are supported:
 
 * `key_name` - (Required, String) The key pair's name. It is the only in one TencentCloud account.
+* `force_stop` - (Optional, Bool) Whether to forcibly shut down a running instance. Default is false. Forcing a shutdown is equivalent to switching off the power button on a physical computer. Forcing a shutdown may result in data loss or file system corruption; therefore, please use this option only when the server cannot be shut down normally.
 * `project_id` - (Optional, Int, ForceNew) Specifys to which project the key pair belongs.
 * `public_key` - (Optional, String, ForceNew) You can import an existing public key and using TencentCloud key pair to manage it.
 * `tags` - (Optional, Map) Tags of the key pair.

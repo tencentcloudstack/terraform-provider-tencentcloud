@@ -40,3 +40,13 @@
 - [x] 5.3 Verify generated documentation in `website/docs/r/instance.html.markdown` includes the new parameters
 - [ ] 5.4 Run `go test ./tencentcloud/services/cvm -run TestAccTencentCloudInstanceResource_dedicatedResourcePack -v` to verify the new test passes (if acceptance test credentials are available)
 - [x] 5.5 Manually review the code changes to ensure backward compatibility (no existing configurations are broken)
+
+## 6. Disaster Recover Group IDs Priority
+
+- [x] 6.1 Remove `ConflictsWith: ["placement_group_id"]` from `disaster_recover_group_ids` schema
+- [x] 6.2 Add `MaxItems: 3` and `Computed: true` to `disaster_recover_group_ids` schema
+- [x] 6.3 Update Description for `disaster_recover_group_ids` to document priority behavior and 3-group limit
+- [x] 6.4 Modify Create: `disaster_recover_group_ids` takes priority; when set, ignore `placement_group_id` for both `RunInstances` and `rpgFlag` post-create
+- [x] 6.5 Modify Read: populate `disaster_recover_group_ids` from `instance.DisasterRecoverGroupIds`, skip `placement_group_id` readback when `disaster_recover_group_ids` is in state
+- [x] 6.6 Modify Update: reject `placement_group_id` changes when `disaster_recover_group_ids` is set with clear error message
+- [x] 6.7 Verify backward compatibility: `placement_group_id`-only configurations continue to work unchanged

@@ -920,8 +920,9 @@ func (me *MariadbService) DeleteMariadbAccountById(ctx context.Context, instance
 
 func (me *MariadbService) DescribeMariadbParameters(ctx context.Context, instanceId string) (parameters *mariadb.DescribeDBParametersResponseParams, errRet error) {
 	var (
-		logId   = tccommon.GetLogId(ctx)
-		request = mariadb.NewDescribeDBParametersRequest()
+		logId    = tccommon.GetLogId(ctx)
+		request  = mariadb.NewDescribeDBParametersRequest()
+		response = mariadb.NewDescribeDBParametersResponse()
 	)
 
 	defer func() {
@@ -930,17 +931,29 @@ func (me *MariadbService) DescribeMariadbParameters(ctx context.Context, instanc
 				logId, "query object", request.ToJsonString(), errRet.Error())
 		}
 	}()
-	request.InstanceId = &instanceId
 
-	response, err := me.client.UseMariadbClient().DescribeDBParameters(request)
-	if err != nil {
-		log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n",
-			logId, request.GetAction(), request.ToJsonString(), err.Error())
-		errRet = err
+	request.InstanceId = &instanceId
+	errRet = resource.Retry(tccommon.ReadRetryTimeout, func() *resource.RetryError {
+		result, e := me.client.UseMariadbClient().DescribeDBParameters(request)
+		if e != nil {
+			return tccommon.RetryError(e)
+		} else {
+			log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), result.ToJsonString())
+		}
+
+		if result == nil || result.Response == nil {
+			return resource.NonRetryableError(fmt.Errorf("Describe mariadb params failed, Response is nil"))
+		}
+
+		response = result
+		return nil
+	})
+
+	if errRet != nil {
+		log.Printf("[CRITAL]%s describe mariadb params failed, reason:%+v", logId, errRet)
 		return
 	}
-	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n",
-		logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
 	parameters = response.Response
 	return
 }

@@ -2561,14 +2561,17 @@ func (me *MonitorService) DeleteMonitorTmpAlertGroupById(ctx context.Context, in
 		}
 	}()
 
-	ratelimit.Check(request.GetAction())
+	errRet = resource.Retry(tccommon.WriteRetryTimeout, func() *resource.RetryError {
+		ratelimit.Check(request.GetAction())
+		result, e := me.client.UseMonitorClient().DeletePrometheusAlertGroups(request)
+		if e != nil {
+			return tccommon.RetryError(e)
+		} else {
+			log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), result.ToJsonString())
+		}
 
-	response, err := me.client.UseMonitorClient().DeletePrometheusAlertGroups(request)
-	if err != nil {
-		errRet = err
-		return
-	}
-	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+		return nil
+	})
 
 	return
 }

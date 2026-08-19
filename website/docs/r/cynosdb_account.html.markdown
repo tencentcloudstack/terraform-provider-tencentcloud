@@ -13,14 +13,29 @@ Provides a resource to create a cynosdb account
 
 ## Example Usage
 
+### If host is %
+
 ```hcl
-resource "tencentcloud_cynosdb_account" "account" {
-  cluster_id           = "cynosdbmysql-bws8h88b"
-  account_name         = "terraform_test"
-  account_password     = "Password@1234"
+resource "tencentcloud_cynosdb_account" "example" {
+  cluster_id           = "cynosdbmysql-ddciqx2l"
+  account_name         = "tf_example"
+  account_password     = "Password@123"
   host                 = "%"
-  description          = "terraform test"
-  max_user_connections = 2
+  description          = "remark."
+  max_user_connections = 10
+}
+```
+
+### If host is ip
+
+```hcl
+resource "tencentcloud_cynosdb_account" "example" {
+  cluster_id           = "cynosdbmysql-ddciqx2l"
+  account_name         = "tf_example"
+  account_password     = "Password@123"
+  host                 = "1.1.1.1"
+  description          = "remark."
+  max_user_connections = 0
 }
 ```
 
@@ -45,9 +60,13 @@ In addition to all arguments above, the following attributes are exported:
 
 ## Import
 
-cynosdb account can be imported using the id, e.g.
+cynosdb account can be imported using the clusterId#accountName#host, e.g.
 
 ```
-terraform import tencentcloud_cynosdb_account.account account_id
+terraform import tencentcloud_cynosdb_account.example cynosdbmysql-ddciqx2l#tf_example#%
+
+or
+
+terraform import tencentcloud_cynosdb_account.example cynosdbmysql-ddciqx2l#tf_example#1.1.1.1
 ```
 

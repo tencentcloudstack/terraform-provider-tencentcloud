@@ -23,6 +23,11 @@ resource "tencentcloud_dnspod_record" "demo" {
   value       = "1.2.3.9"
   sub_domain  = "demo"
 }
+
+# Read the last update time of the record (Computed attribute).
+output "updated_on" {
+  value = tencentcloud_dnspod_record.demo.updated_on
+}
 ```
 
 ## Argument Reference
@@ -47,6 +52,7 @@ In addition to all arguments above, the following attributes are exported:
 * `id` - ID of the resource.
 * `monitor_status` - The monitoring status of the record.
 * `record_id` - ID of the record.
+* `updated_on` - Last update time of the record.
 
 
 ## Import

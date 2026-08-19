@@ -427,6 +427,41 @@ func (me *CynosdbService) DescribeInsGrpSecurityGroups(ctx context.Context, inst
 	return
 }
 
+func (me *CynosdbService) OpenClusterReadOnlyInstanceGroupAccess(ctx context.Context, clusterId, port string, sg []*string) (flowId int64, errRet error) {
+	logId := tccommon.GetLogId(ctx)
+	request := cynosdb.NewOpenClusterReadOnlyInstanceGroupAccessRequest()
+	response := cynosdb.NewOpenClusterReadOnlyInstanceGroupAccessResponse()
+
+	request.ClusterId = &clusterId
+	request.Port = &port
+	if sg != nil && len(sg) > 0 {
+		request.SecurityGroupIds = sg
+	}
+
+	errRet = resource.Retry(tccommon.WriteRetryTimeout, func() *resource.RetryError {
+		ratelimit.Check(request.GetAction())
+		result, errRet := me.client.UseCynosdbClient().OpenClusterReadOnlyInstanceGroupAccess(request)
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, reason:%s", logId, request.GetAction(), errRet.Error())
+			return tccommon.RetryError(errRet)
+		}
+
+		if result == nil || result.Response == nil || result.Response.FlowId == nil {
+			return resource.RetryableError(fmt.Errorf("cynosdb open cluster read only instance group access failed, flowId is nil"))
+		}
+
+		response = result
+		return nil
+	})
+
+	if errRet != nil {
+		return
+	}
+
+	flowId = *response.Response.FlowId
+	return
+}
+
 func (me *CynosdbService) ModifyInsGrpSecurityGroups(ctx context.Context, insGrp, az string, sg []*string) (errRet error) {
 	logId := tccommon.GetLogId(ctx)
 	request := cynosdb.NewModifyDBInstanceSecurityGroupsRequest()
@@ -2074,14 +2109,25 @@ func (me *CynosdbService) DescribeCynosdbAccountById(ctx context.Context, cluste
 		}
 	}()
 
-	ratelimit.Check(request.GetAction())
+	var response *cynosdb.DescribeAccountsResponse
+	errRet = resource.Retry(tccommon.ReadRetryTimeout, func() *resource.RetryError {
+		ratelimit.Check(request.GetAction())
+		result, e := me.client.UseCynosdbClient().DescribeAccounts(request)
+		if e != nil {
+			return tccommon.RetryError(e)
+		}
+		log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), result.ToJsonString())
 
-	response, err := me.client.UseCynosdbClient().DescribeAccounts(request)
-	if err != nil {
-		errRet = err
+		if result == nil || result.Response == nil || result.Response.AccountSet == nil {
+			return resource.NonRetryableError(fmt.Errorf("Describe account failed, response is nil"))
+		}
+
+		response = result
+		return nil
+	})
+	if errRet != nil {
 		return
 	}
-	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
 
 	if len(response.Response.AccountSet) < 1 {
 		return
@@ -2109,14 +2155,15 @@ func (me *CynosdbService) DeleteCynosdbAccountById(ctx context.Context, clusterI
 		}
 	}()
 
-	ratelimit.Check(request.GetAction())
-
-	response, err := me.client.UseCynosdbClient().DeleteAccounts(request)
-	if err != nil {
-		errRet = err
-		return
-	}
-	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+	errRet = resource.Retry(tccommon.WriteRetryTimeout, func() *resource.RetryError {
+		ratelimit.Check(request.GetAction())
+		result, e := me.client.UseCynosdbClient().DeleteAccounts(request)
+		if e != nil {
+			return tccommon.RetryError(e)
+		}
+		log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), result.ToJsonString())
+		return nil
+	})
 
 	return
 }
@@ -2532,6 +2579,28 @@ func (me *CynosdbService) ModifyClusterName(ctx context.Context, clusterId strin
 	errRet = resource.Retry(tccommon.WriteRetryTimeout, func() *resource.RetryError {
 		ratelimit.Check(request.GetAction())
 		_, errRet = me.client.UseCynosdbClient().ModifyClusterName(request)
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, reason:%s", logId, request.GetAction(), errRet.Error())
+			return tccommon.RetryError(errRet)
+		}
+		return nil
+	})
+	if errRet != nil {
+		return
+	}
+
+	return
+}
+
+func (me *CynosdbService) ModifyInstanceName(ctx context.Context, instanceId string, instanceName string) (errRet error) {
+	logId := tccommon.GetLogId(ctx)
+	request := cynosdb.NewModifyInstanceNameRequest()
+	request.InstanceId = &instanceId
+	request.InstanceName = &instanceName
+
+	errRet = resource.Retry(tccommon.WriteRetryTimeout, func() *resource.RetryError {
+		ratelimit.Check(request.GetAction())
+		_, errRet = me.client.UseCynosdbClient().ModifyInstanceName(request)
 		if errRet != nil {
 			log.Printf("[CRITAL]%s api[%s] fail, reason:%s", logId, request.GetAction(), errRet.Error())
 			return tccommon.RetryError(errRet)
