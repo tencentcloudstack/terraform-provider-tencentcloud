@@ -115,12 +115,6 @@ func DataSourceTencentCloudTeoEnvironments() *schema.Resource {
 				},
 			},
 
-			"total_count": {
-				Type:        schema.TypeInt,
-				Computed:    true,
-				Description: "Total number of environments for the zone.",
-			},
-
 			"result_output_file": {
 				Type:        schema.TypeString,
 				Optional:    true,
@@ -144,12 +138,9 @@ func dataSourceTencentCloudTeoEnvironmentsRead(d *schema.ResourceData, meta inte
 		paramMap["ZoneId"] = helper.String(v.(string))
 	}
 
-	var (
-		respData   []*teov20220901.EnvInfo
-		totalCount *uint64
-	)
+	var respData []*teov20220901.EnvInfo
 	reqErr := resource.Retry(tccommon.ReadRetryTimeout, func() *resource.RetryError {
-		result, count, e := service.DescribeTeoEnvironmentsByFilter(ctx, paramMap)
+		result, e := service.DescribeTeoEnvironmentsByFilter(ctx, paramMap)
 		if e != nil {
 			return tccommon.RetryError(e)
 		}
@@ -158,16 +149,11 @@ func dataSourceTencentCloudTeoEnvironmentsRead(d *schema.ResourceData, meta inte
 			return resource.NonRetryableError(fmt.Errorf("teo environments read returned empty"))
 		}
 		respData = result
-		totalCount = count
 		return nil
 	})
 	if reqErr != nil {
 		log.Printf("[CRUD] teo_environments read empty, paramMap=%v", paramMap)
 		return reqErr
-	}
-
-	if totalCount != nil {
-		_ = d.Set("total_count", *totalCount)
 	}
 
 	ids := make([]string, 0, len(respData))

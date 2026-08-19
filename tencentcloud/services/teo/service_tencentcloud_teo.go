@@ -2453,7 +2453,7 @@ func (me *TeoService) DescribeTeoWebSecurityTemplatesByFilter(ctx context.Contex
 	return
 }
 
-func (me *TeoService) DescribeTeoEnvironmentsByFilter(ctx context.Context, param map[string]interface{}) (ret []*teov20220901.EnvInfo, totalCount *uint64, errRet error) {
+func (me *TeoService) DescribeTeoEnvironmentsByFilter(ctx context.Context, param map[string]interface{}) (ret []*teov20220901.EnvInfo, errRet error) {
 	var (
 		logId   = tccommon.GetLogId(ctx)
 		request = teov20220901.NewDescribeEnvironmentsRequest()
@@ -2479,14 +2479,6 @@ func (me *TeoService) DescribeTeoEnvironmentsByFilter(ctx context.Context, param
 		return
 	}
 	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
-
-	if response == nil || response.Response == nil {
-		return
-	}
-
-	if response.Response.TotalCount != nil {
-		totalCount = response.Response.TotalCount
-	}
 
 	if len(response.Response.EnvInfos) < 1 {
 		return

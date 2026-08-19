@@ -1,8 +1,5 @@
-# teo-environments-params Specification
+## ADDED Requirements
 
-## Purpose
-TBD - created by archiving change add-teo-environments-params. Update Purpose after archive.
-## Requirements
 ### Requirement: Data source schema field for source_version
 The data source `tencentcloud_teo_environments` SHALL provide the following additional output field:
 - `source_version` (Computed, string) nested under `env_infos.current_config_group_version_infos`: The source version ID that a config group version was derived from, mapped from `response.EnvInfos[].CurrentConfigGroupVersionInfos[].SourceVersion` of the `DescribeEnvironments` API.
@@ -35,4 +32,3 @@ The test file `data_source_tc_teo_environments_test.go` SHALL verify the data so
 #### Scenario: Unit test verifies source_version population
 - **WHEN** the `DescribeEnvironments` API returns a response with `SourceVersion` set on a config group version info element
 - **THEN** the data source Read SHALL populate the nested `source_version` field with that value
-

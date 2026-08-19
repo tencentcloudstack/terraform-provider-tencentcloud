@@ -4,12 +4,12 @@ layout: "tencentcloud"
 page_title: "TencentCloud: tencentcloud_teo_environments"
 sidebar_current: "docs-tencentcloud-datasource-teo_environments"
 description: |-
-  Use this data source to query detailed information of TEO environments, including the environment list, the total environment count (`total_count`), and the source version (`source_version`) of each effective config group version.
+  Use this data source to query detailed information of TEO environments, including the environment list and the source version (`source_version`) of each effective config group version.
 ---
 
 # tencentcloud_teo_environments
 
-Use this data source to query detailed information of TEO environments, including the environment list, the total environment count (`total_count`), and the source version (`source_version`) of each effective config group version.
+Use this data source to query detailed information of TEO environments, including the environment list and the source version (`source_version`) of each effective config group version.
 
 ## Example Usage
 
@@ -31,6 +31,5 @@ The following arguments are supported:
 In addition to all arguments above, the following attributes are exported:
 
 * `env_infos` - Environment list.
-* `total_count` - Total number of environments for the zone.
 
 
