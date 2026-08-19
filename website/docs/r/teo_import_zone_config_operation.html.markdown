@@ -29,7 +29,7 @@ resource "tencentcloud_teo_import_zone_config_operation" "example" {
 
 The following arguments are supported:
 
-* `content` - (Required, String, ForceNew) The configuration content to import. It must be in JSON format and encoded in UTF-8. You can obtain the configuration content via the tencentcloud_teo_export_zone_config data source.
+* `content` - (Required, String, ForceNew) The configuration content to be imported, which should be in the JSON format and be encoded in the UTF-8 mode. The configuration content can be obtained through the site configuration export API (ExportZoneConfig). You can individually import "Site Acceleration - Global Acceleration Configuration" or "Site Acceleration - Rule Engine" by passing in the corresponding fields. Refer to the example below for details.
 * `zone_id` - (Required, String, ForceNew) Site ID.
 
 ## Attributes Reference
