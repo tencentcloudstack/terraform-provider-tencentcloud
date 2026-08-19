@@ -970,6 +970,7 @@ tencentcloud_postgresql_db_instance_security_groups
 Resource
 tencentcloud_postgresql_instance
 tencentcloud_postgresql_readonly_instance
+tencentcloud_postgresql_readonly_instance_v2
 tencentcloud_postgresql_readonly_group
 tencentcloud_postgresql_readonly_attachment
 tencentcloud_postgresql_parameter_template
@@ -997,6 +998,7 @@ tencentcloud_postgresql_instance_ssl_config
 tencentcloud_postgresql_restore_db_instance_objects_operation
 tencentcloud_postgresql_time_window
 tencentcloud_postgres_audit_service
+tencentcloud_postgresql_database
 
 TencentDB for Redis(crs)
 Data Source
@@ -1524,6 +1526,7 @@ tencentcloud_cls_cloud_product_log_task_v2
 tencentcloud_cls_open_service_operation
 tencentcloud_cls_dlc_deliver
 tencentcloud_cls_console
+tencentcloud_cls_metric_subscribe
 
 Data Source
 tencentcloud_cls_shipper_tasks
@@ -1592,6 +1595,7 @@ tencentcloud_teo_zones
 tencentcloud_teo_plans
 tencentcloud_teo_origin_acl
 tencentcloud_teo_default_certificate
+tencentcloud_teo_edge_kv_list
 tencentcloud_teo_environments
 tencentcloud_teo_config_group_versions
 tencentcloud_teo_config_group_version_detail
@@ -2242,6 +2246,7 @@ tencentcloud_tse_cngw_network
 tencentcloud_tse_cngw_strategy
 tencentcloud_tse_cngw_strategy_bind_group
 tencentcloud_tse_cngw_network_access_control
+tencentcloud_tse_cloud_native_api_gateway_ip_restriction
 
 ClickHouse(CDWCH)
 Data Source

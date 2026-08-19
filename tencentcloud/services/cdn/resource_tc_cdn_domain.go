@@ -3199,46 +3199,70 @@ func resourceTencentCloudCdnDomainRead(d *schema.ResourceData, meta interface{})
 		auth := make(map[string]interface{})
 		auth["switch"] = authentication.Switch
 		if authType := authentication.TypeA; authType != nil {
+			var typeARaw []interface{}
+			if len(authRaw) > 0 {
+				if authMap, ok := authRaw[0].(map[string]interface{}); ok {
+					typeARaw, _ = authMap["type_a"].([]interface{})
+				}
+			}
 			dMap := map[string]interface{}{
-				"secret_key":        authType.SecretKey,
+				"secret_key":        helper.GetStrPtrWithOldFallback(typeARaw, "secret_key", authType.SecretKey),
 				"sign_param":        authType.SignParam,
 				"expire_time":       authType.ExpireTime,
 				"file_extensions":   authType.FileExtensions,
 				"filter_type":       authType.FilterType,
-				"backup_secret_key": authType.BackupSecretKey,
+				"backup_secret_key": helper.GetStrPtrWithOldFallback(typeARaw, "backup_secret_key", authType.BackupSecretKey),
 			}
 			auth["type_a"] = []interface{}{dMap}
 		}
 		if authType := authentication.TypeB; authType != nil {
+			var typeBRaw []interface{}
+			if len(authRaw) > 0 {
+				if authMap, ok := authRaw[0].(map[string]interface{}); ok {
+					typeBRaw, _ = authMap["type_b"].([]interface{})
+				}
+			}
 			dMap := map[string]interface{}{
-				"secret_key":        authType.SecretKey,
+				"secret_key":        helper.GetStrPtrWithOldFallback(typeBRaw, "secret_key", authType.SecretKey),
 				"expire_time":       authType.ExpireTime,
 				"file_extensions":   authType.FileExtensions,
 				"filter_type":       authType.FilterType,
-				"backup_secret_key": authType.BackupSecretKey,
+				"backup_secret_key": helper.GetStrPtrWithOldFallback(typeBRaw, "backup_secret_key", authType.BackupSecretKey),
 			}
 			auth["type_b"] = []interface{}{dMap}
 		}
 		if authType := authentication.TypeC; authType != nil {
+			var typeCRaw []interface{}
+			if len(authRaw) > 0 {
+				if authMap, ok := authRaw[0].(map[string]interface{}); ok {
+					typeCRaw, _ = authMap["type_c"].([]interface{})
+				}
+			}
 			dMap := map[string]interface{}{
-				"secret_key":        authType.SecretKey,
+				"secret_key":        helper.GetStrPtrWithOldFallback(typeCRaw, "secret_key", authType.SecretKey),
 				"expire_time":       authType.ExpireTime,
 				"file_extensions":   authType.FileExtensions,
 				"filter_type":       authType.FilterType,
 				"time_format":       authType.TimeFormat,
-				"backup_secret_key": authType.BackupSecretKey,
+				"backup_secret_key": helper.GetStrPtrWithOldFallback(typeCRaw, "backup_secret_key", authType.BackupSecretKey),
 			}
 			auth["type_c"] = []interface{}{dMap}
 		}
 		if authType := authentication.TypeD; authType != nil {
+			var typeDRaw []interface{}
+			if len(authRaw) > 0 {
+				if authMap, ok := authRaw[0].(map[string]interface{}); ok {
+					typeDRaw, _ = authMap["type_d"].([]interface{})
+				}
+			}
 			dMap := map[string]interface{}{
-				"secret_key":        authType.SecretKey,
+				"secret_key":        helper.GetStrPtrWithOldFallback(typeDRaw, "secret_key", authType.SecretKey),
 				"expire_time":       authType.ExpireTime,
 				"file_extensions":   authType.FileExtensions,
 				"filter_type":       authType.FilterType,
 				"time_param":        authType.TimeParam,
 				"time_format":       authType.TimeFormat,
-				"backup_secret_key": authType.BackupSecretKey,
+				"backup_secret_key": helper.GetStrPtrWithOldFallback(typeDRaw, "backup_secret_key", authType.BackupSecretKey),
 			}
 			auth["type_d"] = []interface{}{dMap}
 		}
@@ -3597,10 +3621,11 @@ func resourceTencentCloudCdnDomainRead(d *schema.ResourceData, meta interface{})
 		_ = d.Set("quic_switch", dc.Quic.Switch)
 	}
 	if ok := checkCdnInfoWritable(d, "aws_private_access", dc.AwsPrivateAccess); ok {
+		secretKey := helper.GetStrPtrWithOldFallback(d.Get("aws_private_access").([]interface{}), "secret_key", dc.AwsPrivateAccess.SecretKey)
 		_ = helper.SetMapInterfaces(d, "aws_private_access", map[string]interface{}{
 			"switch":     dc.AwsPrivateAccess.Switch,
 			"access_key": dc.AwsPrivateAccess.AccessKey,
-			"secret_key": dc.AwsPrivateAccess.SecretKey,
+			"secret_key": secretKey,
 			"bucket":     dc.AwsPrivateAccess.Bucket,
 			"region":     dc.AwsPrivateAccess.Region,
 		})
@@ -3609,7 +3634,7 @@ func resourceTencentCloudCdnDomainRead(d *schema.ResourceData, meta interface{})
 		_ = helper.SetMapInterfaces(d, "oss_private_access", map[string]interface{}{
 			"switch":     dc.OssPrivateAccess.Switch,
 			"access_key": dc.OssPrivateAccess.AccessKey,
-			"secret_key": dc.OssPrivateAccess.SecretKey,
+			"secret_key": helper.GetStrPtrWithOldFallback(d.Get("oss_private_access").([]interface{}), "secret_key", dc.OssPrivateAccess.SecretKey),
 			"bucket":     dc.OssPrivateAccess.Bucket,
 			"region":     dc.OssPrivateAccess.Region,
 		})
@@ -3618,7 +3643,7 @@ func resourceTencentCloudCdnDomainRead(d *schema.ResourceData, meta interface{})
 		_ = helper.SetMapInterfaces(d, "hw_private_access", map[string]interface{}{
 			"switch":     dc.HwPrivateAccess.Switch,
 			"access_key": dc.HwPrivateAccess.AccessKey,
-			"secret_key": dc.HwPrivateAccess.SecretKey,
+			"secret_key": helper.GetStrPtrWithOldFallback(d.Get("hw_private_access").([]interface{}), "secret_key", dc.HwPrivateAccess.SecretKey),
 			"bucket":     dc.HwPrivateAccess.Bucket,
 		})
 	}
@@ -3626,14 +3651,14 @@ func resourceTencentCloudCdnDomainRead(d *schema.ResourceData, meta interface{})
 		_ = helper.SetMapInterfaces(d, "qn_private_access", map[string]interface{}{
 			"switch":     dc.QnPrivateAccess.Switch,
 			"access_key": dc.QnPrivateAccess.AccessKey,
-			"secret_key": dc.QnPrivateAccess.SecretKey,
+			"secret_key": helper.GetStrPtrWithOldFallback(d.Get("qn_private_access").([]interface{}), "secret_key", dc.QnPrivateAccess.SecretKey),
 		})
 	}
 	if ok := checkCdnInfoWritable(d, "others_private_access", dc.OthersPrivateAccess); ok {
 		_ = helper.SetMapInterfaces(d, "others_private_access", map[string]interface{}{
 			"switch":     dc.OthersPrivateAccess.Switch,
 			"access_key": dc.OthersPrivateAccess.AccessKey,
-			"secret_key": dc.OthersPrivateAccess.SecretKey,
+			"secret_key": helper.GetStrPtrWithOldFallback(d.Get("others_private_access").([]interface{}), "secret_key", dc.OthersPrivateAccess.SecretKey),
 			"bucket":     dc.OthersPrivateAccess.Bucket,
 			"region":     dc.OthersPrivateAccess.Region,
 		})
