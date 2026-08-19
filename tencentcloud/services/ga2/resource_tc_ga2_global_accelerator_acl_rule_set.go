@@ -107,64 +107,64 @@ func resourceTencentCloudGa2GlobalAcceleratorAclRuleSetCreate(d *schema.Resource
 	}
 
 	entries := buildAclEntriesFromSchema(d)
-	request := ga2v20250115.NewCreateGlobalAcceleratorAclRuleRequest()
-	request.GlobalAcceleratorId = helper.String(gaId)
-	request.GlobalAcceleratorAclPolicyId = helper.String(policyId)
-	request.AclEntries = entries
 
-	var (
-		response       = ga2v20250115.NewCreateGlobalAcceleratorAclRuleResponse()
-		createdRuleIds []string
-	)
+	// The API accepts at most 50 acl entries per request, so chunk the input
+	// and issue one request per batch, then wait for each async task to finish.
+	for _, chunk := range chunkSlice(entries, maxAclEntriesPerRequest) {
+		request := ga2v20250115.NewCreateGlobalAcceleratorAclRuleRequest()
+		request.GlobalAcceleratorId = helper.String(gaId)
+		request.GlobalAcceleratorAclPolicyId = helper.String(policyId)
+		request.AclEntries = chunk
 
-	reqErr := resource.Retry(tccommon.WriteRetryTimeout, func() *resource.RetryError {
-		result, e := meta.(tccommon.ProviderMeta).GetAPIV3Conn().UseGa2V20250115Client().CreateGlobalAcceleratorAclRuleWithContext(ctx, request)
-		if e != nil {
-			return tccommon.RetryError(e)
-		} else {
-			log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), result.ToJsonString())
+		var response = ga2v20250115.NewCreateGlobalAcceleratorAclRuleResponse()
+
+		reqErr := resource.Retry(tccommon.WriteRetryTimeout, func() *resource.RetryError {
+			result, e := meta.(tccommon.ProviderMeta).GetAPIV3Conn().UseGa2V20250115Client().CreateGlobalAcceleratorAclRuleWithContext(ctx, request)
+			if e != nil {
+				return tccommon.RetryError(e)
+			} else {
+				log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), result.ToJsonString())
+			}
+
+			if result == nil || result.Response == nil {
+				return resource.NonRetryableError(fmt.Errorf("Create ga2 global_accelerator_acl_rule_set failed, Response is nil."))
+			}
+
+			response = result
+			return nil
+		})
+
+		if reqErr != nil {
+			log.Printf("[CRITAL]%s create ga2 global_accelerator_acl_rule_set failed, reason:%+v", logId, reqErr)
+			return reqErr
 		}
 
-		if result == nil || result.Response == nil {
-			return resource.NonRetryableError(fmt.Errorf("Create ga2 global_accelerator_acl_rule_set failed, Response is nil."))
+		if len(response.Response.GlobalAcceleratorAclRuleIds) == 0 {
+			return fmt.Errorf("Create ga2 global_accelerator_acl_rule_set failed, GlobalAcceleratorAclRuleIds is nil or empty.")
 		}
 
-		response = result
-		return nil
-	})
+		if len(response.Response.GlobalAcceleratorAclRuleIds) != len(chunk) {
+			return fmt.Errorf("Create ga2 global_accelerator_acl_rule_set failed, the count of GlobalAcceleratorAclRuleIds [%d] does not match the count of input AclEntries [%d].", len(response.Response.GlobalAcceleratorAclRuleIds), len(chunk))
+		}
 
-	if reqErr != nil {
-		log.Printf("[CRITAL]%s create ga2 global_accelerator_acl_rule_set failed, reason:%+v", logId, reqErr)
-		return reqErr
+		for _, idPtr := range response.Response.GlobalAcceleratorAclRuleIds {
+			if idPtr == nil {
+				return fmt.Errorf("Create ga2 global_accelerator_acl_rule_set failed, one of GlobalAcceleratorAclRuleIds is nil.")
+			}
+		}
+
+		if response.Response.TaskId == nil {
+			return fmt.Errorf("Create ga2 global_accelerator_acl_rule_set failed, TaskId is nil.")
+		}
+
+		taskId := *response.Response.TaskId
+		if err := service.WaitForGa2TaskFinish(ctx, taskId, d.Timeout(schema.TimeoutCreate)); err != nil {
+			return err
+		}
 	}
 
 	d.SetId(strings.Join([]string{gaId, policyId}, tccommon.FILED_SP))
-
 	log.Printf("[DEBUG]%s create ga2 global_accelerator_acl_rule_set, d.Id()=%s", logId, d.Id())
-
-	if response.Response.GlobalAcceleratorAclRuleIds == nil || len(response.Response.GlobalAcceleratorAclRuleIds) == 0 {
-		return fmt.Errorf("Create ga2 global_accelerator_acl_rule_set failed, GlobalAcceleratorAclRuleIds is nil or empty.")
-	}
-
-	if len(response.Response.GlobalAcceleratorAclRuleIds) != len(entries) {
-		return fmt.Errorf("Create ga2 global_accelerator_acl_rule_set failed, the count of GlobalAcceleratorAclRuleIds [%d] does not match the count of input AclEntries [%d].", len(response.Response.GlobalAcceleratorAclRuleIds), len(entries))
-	}
-
-	for _, idPtr := range response.Response.GlobalAcceleratorAclRuleIds {
-		if idPtr == nil {
-			return fmt.Errorf("Create ga2 global_accelerator_acl_rule_set failed, one of GlobalAcceleratorAclRuleIds is nil.")
-		}
-		createdRuleIds = append(createdRuleIds, *idPtr)
-	}
-
-	if response.Response.TaskId == nil {
-		return fmt.Errorf("Create ga2 global_accelerator_acl_rule_set failed, TaskId is nil.")
-	}
-
-	taskId := *response.Response.TaskId
-	if err := service.WaitForGa2TaskFinish(ctx, taskId, d.Timeout(schema.TimeoutCreate)); err != nil {
-		return err
-	}
 
 	return resourceTencentCloudGa2GlobalAcceleratorAclRuleSetRead(d, meta)
 }
@@ -256,105 +256,108 @@ func resourceTencentCloudGa2GlobalAcceleratorAclRuleSetUpdate(d *schema.Resource
 			}
 		}
 
-		// (b) batch-delete removed entries.
+		// (b) batch-delete removed entries, chunked into batches of 50 rule ids.
 		if len(toRemove) > 0 {
 			ruleIds := make([]*string, 0, len(toRemove))
 			for i := range toRemove {
 				ruleIds = append(ruleIds, helper.String(toRemove[i]))
 			}
 
-			request := ga2v20250115.NewDeleteGlobalAcceleratorAclRuleRequest()
-			request.GlobalAcceleratorId = helper.String(gaId)
-			request.GlobalAcceleratorAclPolicyId = helper.String(policyId)
-			request.GlobalAcceleratorAclRuleIds = ruleIds
+			for _, chunk := range chunkSlice(ruleIds, maxAclEntriesPerRequest) {
+				request := ga2v20250115.NewDeleteGlobalAcceleratorAclRuleRequest()
+				request.GlobalAcceleratorId = helper.String(gaId)
+				request.GlobalAcceleratorAclPolicyId = helper.String(policyId)
+				request.GlobalAcceleratorAclRuleIds = chunk
 
-			deleted := false
-			reqErr := resource.Retry(tccommon.WriteRetryTimeout, func() *resource.RetryError {
-				result, e := meta.(tccommon.ProviderMeta).GetAPIV3Conn().UseGa2V20250115Client().DeleteGlobalAcceleratorAclRuleWithContext(ctx, request)
-				if e != nil {
-					if sdkerr, ok := e.(*sdkErrors.TencentCloudSDKError); ok {
-						if sdkerr.Code == "ResourceNotFound" {
-							// Rules already absent on the cloud side; nothing to wait for.
-							return nil
+				var taskId string
+				reqErr := resource.Retry(tccommon.WriteRetryTimeout, func() *resource.RetryError {
+					result, e := meta.(tccommon.ProviderMeta).GetAPIV3Conn().UseGa2V20250115Client().DeleteGlobalAcceleratorAclRuleWithContext(ctx, request)
+					if e != nil {
+						if sdkerr, ok := e.(*sdkErrors.TencentCloudSDKError); ok {
+							if sdkerr.Code == "ResourceNotFound" {
+								// Rules already absent on the cloud side; nothing to wait for.
+								return nil
+							}
 						}
+						return tccommon.RetryError(e)
+					} else {
+						log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), result.ToJsonString())
 					}
-					return tccommon.RetryError(e)
-				} else {
-					log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), result.ToJsonString())
+
+					if result == nil || result.Response == nil || result.Response.TaskId == nil {
+						return resource.NonRetryableError(fmt.Errorf("Delete ga2 global_accelerator_acl_rule_set failed, Response is nil."))
+					}
+
+					taskId = *result.Response.TaskId
+					return nil
+				})
+
+				if reqErr != nil {
+					log.Printf("[CRITAL]%s update ga2 global_accelerator_acl_rule_set (delete) failed, reason:%+v", logId, reqErr)
+					return reqErr
 				}
 
-				if result == nil || result.Response == nil || result.Response.TaskId == nil {
-					return resource.NonRetryableError(fmt.Errorf("Delete ga2 global_accelerator_acl_rule_set failed, Response is nil."))
-				}
-
-				lastTaskId = *result.Response.TaskId
-				deleted = true
-				return nil
-			})
-
-			if reqErr != nil {
-				log.Printf("[CRITAL]%s update ga2 global_accelerator_acl_rule_set (delete) failed, reason:%+v", logId, reqErr)
-				return reqErr
-			}
-
-			if deleted {
-				if err := service.WaitForGa2TaskFinish(ctx, lastTaskId, d.Timeout(schema.TimeoutUpdate)); err != nil {
-					return err
+				if taskId != "" {
+					if err := service.WaitForGa2TaskFinish(ctx, taskId, d.Timeout(schema.TimeoutUpdate)); err != nil {
+						return err
+					}
 				}
 			}
 		}
 
-		// (a) batch-create new entries.
+		// (a) batch-create new entries, chunked into batches of 50 entries.
 		if len(toCreate) > 0 {
 			aclEntries := make([]*ga2v20250115.AclEntries, 0, len(toCreate))
 			for _, e := range toCreate {
 				aclEntries = append(aclEntries, buildAclEntryFromMap(e))
 			}
 
-			request := ga2v20250115.NewCreateGlobalAcceleratorAclRuleRequest()
-			request.GlobalAcceleratorId = helper.String(gaId)
-			request.GlobalAcceleratorAclPolicyId = helper.String(policyId)
-			request.AclEntries = aclEntries
-
 			var createdRuleIds []string
-			reqErr := resource.Retry(tccommon.WriteRetryTimeout, func() *resource.RetryError {
-				result, e := meta.(tccommon.ProviderMeta).GetAPIV3Conn().UseGa2V20250115Client().CreateGlobalAcceleratorAclRuleWithContext(ctx, request)
-				if e != nil {
-					return tccommon.RetryError(e)
-				} else {
-					log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), result.ToJsonString())
-				}
+			for _, chunk := range chunkSlice(aclEntries, maxAclEntriesPerRequest) {
+				request := ga2v20250115.NewCreateGlobalAcceleratorAclRuleRequest()
+				request.GlobalAcceleratorId = helper.String(gaId)
+				request.GlobalAcceleratorAclPolicyId = helper.String(policyId)
+				request.AclEntries = chunk
 
-				if result == nil || result.Response == nil {
-					return resource.NonRetryableError(fmt.Errorf("Create ga2 global_accelerator_acl_rule_set failed, Response is nil."))
-				}
-
-				if result.Response.GlobalAcceleratorAclRuleIds == nil || len(result.Response.GlobalAcceleratorAclRuleIds) != len(toCreate) {
-					return resource.NonRetryableError(fmt.Errorf("Create ga2 global_accelerator_acl_rule_set failed, the count of GlobalAcceleratorAclRuleIds does not match the input."))
-				}
-
-				for _, idPtr := range result.Response.GlobalAcceleratorAclRuleIds {
-					if idPtr == nil {
-						return resource.NonRetryableError(fmt.Errorf("Create ga2 global_accelerator_acl_rule_set failed, one of GlobalAcceleratorAclRuleIds is nil."))
+				reqErr := resource.Retry(tccommon.WriteRetryTimeout, func() *resource.RetryError {
+					result, e := meta.(tccommon.ProviderMeta).GetAPIV3Conn().UseGa2V20250115Client().CreateGlobalAcceleratorAclRuleWithContext(ctx, request)
+					if e != nil {
+						return tccommon.RetryError(e)
+					} else {
+						log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), result.ToJsonString())
 					}
-					createdRuleIds = append(createdRuleIds, *idPtr)
+
+					if result == nil || result.Response == nil {
+						return resource.NonRetryableError(fmt.Errorf("Create ga2 global_accelerator_acl_rule_set failed, Response is nil."))
+					}
+
+					if result.Response.GlobalAcceleratorAclRuleIds == nil || len(result.Response.GlobalAcceleratorAclRuleIds) != len(chunk) {
+						return resource.NonRetryableError(fmt.Errorf("Create ga2 global_accelerator_acl_rule_set failed, the count of GlobalAcceleratorAclRuleIds does not match the input."))
+					}
+
+					for _, idPtr := range result.Response.GlobalAcceleratorAclRuleIds {
+						if idPtr == nil {
+							return resource.NonRetryableError(fmt.Errorf("Create ga2 global_accelerator_acl_rule_set failed, one of GlobalAcceleratorAclRuleIds is nil."))
+						}
+						createdRuleIds = append(createdRuleIds, *idPtr)
+					}
+
+					if result.Response.TaskId == nil {
+						return resource.NonRetryableError(fmt.Errorf("Create ga2 global_accelerator_acl_rule_set failed, TaskId is nil."))
+					}
+
+					lastTaskId = *result.Response.TaskId
+					return nil
+				})
+
+				if reqErr != nil {
+					log.Printf("[CRITAL]%s update ga2 global_accelerator_acl_rule_set (create) failed, reason:%+v", logId, reqErr)
+					return reqErr
 				}
 
-				if result.Response.TaskId == nil {
-					return resource.NonRetryableError(fmt.Errorf("Create ga2 global_accelerator_acl_rule_set failed, TaskId is nil."))
+				if err := service.WaitForGa2TaskFinish(ctx, lastTaskId, d.Timeout(schema.TimeoutUpdate)); err != nil {
+					return err
 				}
-
-				lastTaskId = *result.Response.TaskId
-				return nil
-			})
-
-			if reqErr != nil {
-				log.Printf("[CRITAL]%s update ga2 global_accelerator_acl_rule_set (create) failed, reason:%+v", logId, reqErr)
-				return reqErr
-			}
-
-			if err := service.WaitForGa2TaskFinish(ctx, lastTaskId, d.Timeout(schema.TimeoutUpdate)); err != nil {
-				return err
 			}
 
 			// Map created ids back onto the toCreate entries in input order.
@@ -439,41 +442,45 @@ func resourceTencentCloudGa2GlobalAcceleratorAclRuleSetDelete(d *schema.Resource
 		return nil
 	}
 
-	request := ga2v20250115.NewDeleteGlobalAcceleratorAclRuleRequest()
-	request.GlobalAcceleratorId = helper.String(gaId)
-	request.GlobalAcceleratorAclPolicyId = helper.String(policyId)
-	request.GlobalAcceleratorAclRuleIds = ruleIds
+	// The API accepts at most 50 rule ids per request, so chunk and delete in
+	// batches, waiting for each async task to finish.
+	for _, chunk := range chunkSlice(ruleIds, maxAclEntriesPerRequest) {
+		request := ga2v20250115.NewDeleteGlobalAcceleratorAclRuleRequest()
+		request.GlobalAcceleratorId = helper.String(gaId)
+		request.GlobalAcceleratorAclPolicyId = helper.String(policyId)
+		request.GlobalAcceleratorAclRuleIds = chunk
 
-	var taskId string
-	reqErr := resource.Retry(tccommon.WriteRetryTimeout, func() *resource.RetryError {
-		result, e := meta.(tccommon.ProviderMeta).GetAPIV3Conn().UseGa2V20250115Client().DeleteGlobalAcceleratorAclRuleWithContext(ctx, request)
-		if e != nil {
-			if sdkerr, ok := e.(*sdkErrors.TencentCloudSDKError); ok {
-				if sdkerr.Code == "ResourceNotFound" {
-					return nil
+		var taskId string
+		reqErr := resource.Retry(tccommon.WriteRetryTimeout, func() *resource.RetryError {
+			result, e := meta.(tccommon.ProviderMeta).GetAPIV3Conn().UseGa2V20250115Client().DeleteGlobalAcceleratorAclRuleWithContext(ctx, request)
+			if e != nil {
+				if sdkerr, ok := e.(*sdkErrors.TencentCloudSDKError); ok {
+					if sdkerr.Code == "ResourceNotFound" {
+						return nil
+					}
 				}
+				return tccommon.RetryError(e)
+			} else {
+				log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), result.ToJsonString())
 			}
-			return tccommon.RetryError(e)
-		} else {
-			log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), result.ToJsonString())
+
+			if result == nil || result.Response == nil || result.Response.TaskId == nil {
+				return resource.NonRetryableError(fmt.Errorf("Delete ga2 global_accelerator_acl_rule_set failed, Response is nil."))
+			}
+
+			taskId = *result.Response.TaskId
+			return nil
+		})
+
+		if reqErr != nil {
+			log.Printf("[CRITAL]%s delete ga2 global_accelerator_acl_rule_set failed, reason:%+v", logId, reqErr)
+			return reqErr
 		}
 
-		if result == nil || result.Response == nil || result.Response.TaskId == nil {
-			return resource.NonRetryableError(fmt.Errorf("Delete ga2 global_accelerator_acl_rule_set failed, Response is nil."))
-		}
-
-		taskId = *result.Response.TaskId
-		return nil
-	})
-
-	if reqErr != nil {
-		log.Printf("[CRITAL]%s delete ga2 global_accelerator_acl_rule_set failed, reason:%+v", logId, reqErr)
-		return reqErr
-	}
-
-	if taskId != "" {
-		if err := service.WaitForGa2TaskFinish(ctx, taskId, d.Timeout(schema.TimeoutDelete)); err != nil {
-			return err
+		if taskId != "" {
+			if err := service.WaitForGa2TaskFinish(ctx, taskId, d.Timeout(schema.TimeoutDelete)); err != nil {
+				return err
+			}
 		}
 	}
 
@@ -599,4 +606,25 @@ func aclEntryEqual(a, b map[string]interface{}) bool {
 		aclEntryStr(a, "source_cidr_block") == aclEntryStr(b, "source_cidr_block") &&
 		aclEntryStr(a, "policy") == aclEntryStr(b, "policy") &&
 		aclEntryStr(a, "description") == aclEntryStr(b, "description")
+}
+
+// maxAclEntriesPerRequest is the maximum number of acl entries (create) or rule
+// ids (delete) accepted by the ga2 ACL APIs in a single request.
+const maxAclEntriesPerRequest = 50
+
+// chunkSlice splits items into contiguous sub-slices of at most size elements.
+// The elements are returned in their original order.
+func chunkSlice[T any](items []T, size int) [][]T {
+	if size <= 0 {
+		return [][]T{items}
+	}
+	var chunks [][]T
+	for i := 0; i < len(items); i += size {
+		end := i + size
+		if end > len(items) {
+			end = len(items)
+		}
+		chunks = append(chunks, items[i:end])
+	}
+	return chunks
 }

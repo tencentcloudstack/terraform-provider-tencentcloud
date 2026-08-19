@@ -3548,13 +3548,7 @@ func NewCreateCdcNetPlanesResponse() (response *CreateCdcNetPlanesResponse) {
 // 创建虚拟连接，用于支持 CDC 多租户模式
 //
 // 可能返回的错误码:
-//  INTERNALERROR_MODULEERROR = "InternalError.ModuleError"
-//  INVALIDPARAMETERVALUE_MALFORMED = "InvalidParameterValue.Malformed"
-//  INVALIDPARAMETERVALUE_RESOURCENOTFOUND = "InvalidParameterValue.ResourceNotFound"
-//  LIMITEXCEEDED = "LimitExceeded"
-//  MISSINGPARAMETER = "MissingParameter"
-//  MISSINGPARAMETER_MULTIMISSINGPARAMETER = "MissingParameter.MultiMissingParameter"
-//  RESOURCENOTFOUND = "ResourceNotFound"
+//  UNSUPPORTEDOPERATION_SERVICEUNSUPPORTEDREGION = "UnsupportedOperation.ServiceUnsupportedRegion"
 func (c *Client) CreateCdcNetPlanes(request *CreateCdcNetPlanesRequest) (response *CreateCdcNetPlanesResponse, err error) {
     return c.CreateCdcNetPlanesWithContext(context.Background(), request)
 }
@@ -3563,13 +3557,7 @@ func (c *Client) CreateCdcNetPlanes(request *CreateCdcNetPlanesRequest) (respons
 // 创建虚拟连接，用于支持 CDC 多租户模式
 //
 // 可能返回的错误码:
-//  INTERNALERROR_MODULEERROR = "InternalError.ModuleError"
-//  INVALIDPARAMETERVALUE_MALFORMED = "InvalidParameterValue.Malformed"
-//  INVALIDPARAMETERVALUE_RESOURCENOTFOUND = "InvalidParameterValue.ResourceNotFound"
-//  LIMITEXCEEDED = "LimitExceeded"
-//  MISSINGPARAMETER = "MissingParameter"
-//  MISSINGPARAMETER_MULTIMISSINGPARAMETER = "MissingParameter.MultiMissingParameter"
-//  RESOURCENOTFOUND = "ResourceNotFound"
+//  UNSUPPORTEDOPERATION_SERVICEUNSUPPORTEDREGION = "UnsupportedOperation.ServiceUnsupportedRegion"
 func (c *Client) CreateCdcNetPlanesWithContext(ctx context.Context, request *CreateCdcNetPlanesRequest) (response *CreateCdcNetPlanesResponse, err error) {
     if request == nil {
         request = NewCreateCdcNetPlanesRequest()
@@ -4096,6 +4084,7 @@ func NewCreateFlowLogResponse() (response *CreateFlowLogResponse) {
 //  UNSUPPORTEDOPERATION_FLOWLOGINSTANCEEXISTED = "UnsupportedOperation.FlowLogInstanceExisted"
 //  UNSUPPORTEDOPERATION_FLOWLOGSNOTSUPPORTKOINSTANCEENI = "UnsupportedOperation.FlowLogsNotSupportKoInstanceEni"
 //  UNSUPPORTEDOPERATION_FLOWLOGSNOTSUPPORTNULLINSTANCEENI = "UnsupportedOperation.FlowLogsNotSupportNullInstanceEni"
+//  UNSUPPORTEDOPERATION_NATGATEWAYDNATANDFLOWLOGCONFLICT = "UnsupportedOperation.NatGatewayDnatAndFlowLogConflict"
 //  UNSUPPORTEDOPERATION_ONLYSUPPORTPROFESSIONKAFKA = "UnsupportedOperation.OnlySupportProfessionKafka"
 //  UNSUPPORTEDOPERATION_TAGALLOCATE = "UnsupportedOperation.TagAllocate"
 //  UNSUPPORTEDOPERATION_TAGFREE = "UnsupportedOperation.TagFree"
@@ -4141,6 +4130,7 @@ func (c *Client) CreateFlowLog(request *CreateFlowLogRequest) (response *CreateF
 //  UNSUPPORTEDOPERATION_FLOWLOGINSTANCEEXISTED = "UnsupportedOperation.FlowLogInstanceExisted"
 //  UNSUPPORTEDOPERATION_FLOWLOGSNOTSUPPORTKOINSTANCEENI = "UnsupportedOperation.FlowLogsNotSupportKoInstanceEni"
 //  UNSUPPORTEDOPERATION_FLOWLOGSNOTSUPPORTNULLINSTANCEENI = "UnsupportedOperation.FlowLogsNotSupportNullInstanceEni"
+//  UNSUPPORTEDOPERATION_NATGATEWAYDNATANDFLOWLOGCONFLICT = "UnsupportedOperation.NatGatewayDnatAndFlowLogConflict"
 //  UNSUPPORTEDOPERATION_ONLYSUPPORTPROFESSIONKAFKA = "UnsupportedOperation.OnlySupportProfessionKafka"
 //  UNSUPPORTEDOPERATION_TAGALLOCATE = "UnsupportedOperation.TagAllocate"
 //  UNSUPPORTEDOPERATION_TAGFREE = "UnsupportedOperation.TagFree"
@@ -4259,7 +4249,9 @@ func NewCreateHaVipResponse() (response *CreateHaVipResponse) {
 //  RESOURCEINSUFFICIENT = "ResourceInsufficient"
 //  RESOURCENOTFOUND = "ResourceNotFound"
 //  UNSUPPORTEDOPERATION = "UnsupportedOperation"
+//  UNSUPPORTEDOPERATION_NOTPUTVPCSNATIPADDRESS = "UnsupportedOperation.NotPutVpcSnatIpAddress"
 //  UNSUPPORTEDOPERATION_SUBNETNOTEXISTS = "UnsupportedOperation.SubnetNotExists"
+//  UNSUPPORTEDOPERATION_TRAFFICPROTECTIONNOTSUPPORTIPV6 = "UnsupportedOperation.TrafficProtectionNotSupportIPv6"
 func (c *Client) CreateHaVip(request *CreateHaVipRequest) (response *CreateHaVipResponse, err error) {
     return c.CreateHaVipWithContext(context.Background(), request)
 }
@@ -4281,7 +4273,9 @@ func (c *Client) CreateHaVip(request *CreateHaVipRequest) (response *CreateHaVip
 //  RESOURCEINSUFFICIENT = "ResourceInsufficient"
 //  RESOURCENOTFOUND = "ResourceNotFound"
 //  UNSUPPORTEDOPERATION = "UnsupportedOperation"
+//  UNSUPPORTEDOPERATION_NOTPUTVPCSNATIPADDRESS = "UnsupportedOperation.NotPutVpcSnatIpAddress"
 //  UNSUPPORTEDOPERATION_SUBNETNOTEXISTS = "UnsupportedOperation.SubnetNotExists"
+//  UNSUPPORTEDOPERATION_TRAFFICPROTECTIONNOTSUPPORTIPV6 = "UnsupportedOperation.TrafficProtectionNotSupportIPv6"
 func (c *Client) CreateHaVipWithContext(ctx context.Context, request *CreateHaVipRequest) (response *CreateHaVipResponse, err error) {
     if request == nil {
         request = NewCreateHaVipRequest()
@@ -4747,6 +4741,7 @@ func NewCreateNatGatewayDestinationIpPortTranslationNatRuleResponse() (response 
 //  LIMITEXCEEDED = "LimitExceeded"
 //  LIMITEXCEEDED_NATGATEWAYDNATLIMITEXCEEDED = "LimitExceeded.NatGatewayDnatLimitExceeded"
 //  RESOURCENOTFOUND = "ResourceNotFound"
+//  UNSUPPORTEDOPERATION_NATGATEWAYDNATANDFLOWLOGCONFLICT = "UnsupportedOperation.NatGatewayDnatAndFlowLogConflict"
 //  UNSUPPORTEDOPERATION_NATGATEWAYEIPNOTEXISTS = "UnsupportedOperation.NatGatewayEipNotExists"
 func (c *Client) CreateNatGatewayDestinationIpPortTranslationNatRule(request *CreateNatGatewayDestinationIpPortTranslationNatRuleRequest) (response *CreateNatGatewayDestinationIpPortTranslationNatRuleResponse, err error) {
     return c.CreateNatGatewayDestinationIpPortTranslationNatRuleWithContext(context.Background(), request)
@@ -4765,6 +4760,7 @@ func (c *Client) CreateNatGatewayDestinationIpPortTranslationNatRule(request *Cr
 //  LIMITEXCEEDED = "LimitExceeded"
 //  LIMITEXCEEDED_NATGATEWAYDNATLIMITEXCEEDED = "LimitExceeded.NatGatewayDnatLimitExceeded"
 //  RESOURCENOTFOUND = "ResourceNotFound"
+//  UNSUPPORTEDOPERATION_NATGATEWAYDNATANDFLOWLOGCONFLICT = "UnsupportedOperation.NatGatewayDnatAndFlowLogConflict"
 //  UNSUPPORTEDOPERATION_NATGATEWAYEIPNOTEXISTS = "UnsupportedOperation.NatGatewayEipNotExists"
 func (c *Client) CreateNatGatewayDestinationIpPortTranslationNatRuleWithContext(ctx context.Context, request *CreateNatGatewayDestinationIpPortTranslationNatRuleRequest) (response *CreateNatGatewayDestinationIpPortTranslationNatRuleResponse, err error) {
     if request == nil {
@@ -7125,6 +7121,70 @@ func (c *Client) CreateTrafficMirrorWithContext(ctx context.Context, request *Cr
     return
 }
 
+func NewCreateTrafficMirrorFilterRulesRequest() (request *CreateTrafficMirrorFilterRulesRequest) {
+    request = &CreateTrafficMirrorFilterRulesRequest{
+        BaseRequest: &tchttp.BaseRequest{},
+    }
+    
+    request.Init().WithApiInfo("vpc", APIVersion, "CreateTrafficMirrorFilterRules")
+    
+    
+    return
+}
+
+func NewCreateTrafficMirrorFilterRulesResponse() (response *CreateTrafficMirrorFilterRulesResponse) {
+    response = &CreateTrafficMirrorFilterRulesResponse{
+        BaseResponse: &tchttp.BaseResponse{},
+    } 
+    return
+
+}
+
+// CreateTrafficMirrorFilterRules
+// 创建流量镜像五元组过滤规则。
+//
+// 可能返回的错误码:
+//  INVALIDPARAMETERVALUE = "InvalidParameterValue"
+//  INVALIDPARAMETERVALUE_LIMITEXCEEDED = "InvalidParameterValue.LimitExceeded"
+//  INVALIDPARAMETERVALUE_MALFORMED = "InvalidParameterValue.Malformed"
+//  LIMITEXCEEDED = "LimitExceeded"
+//  LIMITEXCEEDED_ACTIONLIMITED = "LimitExceeded.ActionLimited"
+//  MISSINGPARAMETER = "MissingParameter"
+//  RESOURCENOTFOUND = "ResourceNotFound"
+//  UNSUPPORTEDOPERATION = "UnsupportedOperation"
+func (c *Client) CreateTrafficMirrorFilterRules(request *CreateTrafficMirrorFilterRulesRequest) (response *CreateTrafficMirrorFilterRulesResponse, err error) {
+    return c.CreateTrafficMirrorFilterRulesWithContext(context.Background(), request)
+}
+
+// CreateTrafficMirrorFilterRules
+// 创建流量镜像五元组过滤规则。
+//
+// 可能返回的错误码:
+//  INVALIDPARAMETERVALUE = "InvalidParameterValue"
+//  INVALIDPARAMETERVALUE_LIMITEXCEEDED = "InvalidParameterValue.LimitExceeded"
+//  INVALIDPARAMETERVALUE_MALFORMED = "InvalidParameterValue.Malformed"
+//  LIMITEXCEEDED = "LimitExceeded"
+//  LIMITEXCEEDED_ACTIONLIMITED = "LimitExceeded.ActionLimited"
+//  MISSINGPARAMETER = "MissingParameter"
+//  RESOURCENOTFOUND = "ResourceNotFound"
+//  UNSUPPORTEDOPERATION = "UnsupportedOperation"
+func (c *Client) CreateTrafficMirrorFilterRulesWithContext(ctx context.Context, request *CreateTrafficMirrorFilterRulesRequest) (response *CreateTrafficMirrorFilterRulesResponse, err error) {
+    if request == nil {
+        request = NewCreateTrafficMirrorFilterRulesRequest()
+    }
+    c.InitBaseRequest(&request.BaseRequest, "vpc", APIVersion, "CreateTrafficMirrorFilterRules")
+    
+    if c.GetCredential() == nil {
+        return nil, errors.New("CreateTrafficMirrorFilterRules require credential")
+    }
+
+    request.SetContext(ctx)
+    
+    response = NewCreateTrafficMirrorFilterRulesResponse()
+    err = c.Send(request, response)
+    return
+}
+
 func NewCreateTrafficPackagesRequest() (request *CreateTrafficPackagesRequest) {
     request = &CreateTrafficPackagesRequest{
         BaseRequest: &tchttp.BaseRequest{},
@@ -7688,6 +7748,8 @@ func NewCreateVpnConnectionResponse() (response *CreateVpnConnectionResponse) {
 //  UNSUPPORTEDOPERATION_TAGNOTPERMIT = "UnsupportedOperation.TagNotPermit"
 //  UNSUPPORTEDOPERATION_TAGSYSTEMRESERVEDTAGKEY = "UnsupportedOperation.TagSystemReservedTagKey"
 //  UNSUPPORTEDOPERATION_VPNCONNCIDRNOTSUPPORTEDHEALTHCHECK = "UnsupportedOperation.VpnConnCidrNotSupportedHealthCheck"
+//  UNSUPPORTEDOPERATION_VPNCONNDESTCIDRCONFLICTWITHPRIVATENET = "UnsupportedOperation.VpnConnDestCidrConflictWithPrivateNet"
+//  UNSUPPORTEDOPERATION_VPNCONNROUTETYPEMIXED = "UnsupportedOperation.VpnConnRouteTypeMixed"
 //  UNSUPPORTEDOPERATION_VPNUNSUPPORTEDBGP = "UnsupportedOperation.VpnUnsupportedBgp"
 //  UNSUPPORTEDOPERATION_VPNUNSUPPORTEDBGPASNEQUAL = "UnsupportedOperation.VpnUnsupportedBgpAsnEqual"
 //  UNSUPPORTEDOPERATION_VPNUNSUPPORTEDNOTEXISTBGPASN = "UnsupportedOperation.VpnUnsupportedNotExistBgpAsn"
@@ -7743,6 +7805,8 @@ func (c *Client) CreateVpnConnection(request *CreateVpnConnectionRequest) (respo
 //  UNSUPPORTEDOPERATION_TAGNOTPERMIT = "UnsupportedOperation.TagNotPermit"
 //  UNSUPPORTEDOPERATION_TAGSYSTEMRESERVEDTAGKEY = "UnsupportedOperation.TagSystemReservedTagKey"
 //  UNSUPPORTEDOPERATION_VPNCONNCIDRNOTSUPPORTEDHEALTHCHECK = "UnsupportedOperation.VpnConnCidrNotSupportedHealthCheck"
+//  UNSUPPORTEDOPERATION_VPNCONNDESTCIDRCONFLICTWITHPRIVATENET = "UnsupportedOperation.VpnConnDestCidrConflictWithPrivateNet"
+//  UNSUPPORTEDOPERATION_VPNCONNROUTETYPEMIXED = "UnsupportedOperation.VpnConnRouteTypeMixed"
 //  UNSUPPORTEDOPERATION_VPNUNSUPPORTEDBGP = "UnsupportedOperation.VpnUnsupportedBgp"
 //  UNSUPPORTEDOPERATION_VPNUNSUPPORTEDBGPASNEQUAL = "UnsupportedOperation.VpnUnsupportedBgpAsnEqual"
 //  UNSUPPORTEDOPERATION_VPNUNSUPPORTEDNOTEXISTBGPASN = "UnsupportedOperation.VpnUnsupportedNotExistBgpAsn"
@@ -7819,6 +7883,7 @@ func NewCreateVpnGatewayResponse() (response *CreateVpnGatewayResponse) {
 //  RESOURCENOTFOUND = "ResourceNotFound"
 //  UNAUTHORIZEDOPERATION_NOREALNAMEAUTHENTICATION = "UnauthorizedOperation.NoRealNameAuthentication"
 //  UNSUPPORTEDOPERATION = "UnsupportedOperation"
+//  UNSUPPORTEDOPERATION_BILLINGFAILED = "UnsupportedOperation.BillingFailed"
 //  UNSUPPORTEDOPERATION_INSUFFICIENTFUNDS = "UnsupportedOperation.InsufficientFunds"
 //  UNSUPPORTEDOPERATION_NOTSUPPORTCREATEIPV6VPNGATEWAY = "UnsupportedOperation.NotSupportCreateIpv6VpnGateway"
 //  UNSUPPORTEDOPERATION_PRIVATEBGPVPNGATEWAY = "UnsupportedOperation.PrivateBgpVpnGateway"
@@ -7873,6 +7938,7 @@ func (c *Client) CreateVpnGateway(request *CreateVpnGatewayRequest) (response *C
 //  RESOURCENOTFOUND = "ResourceNotFound"
 //  UNAUTHORIZEDOPERATION_NOREALNAMEAUTHENTICATION = "UnauthorizedOperation.NoRealNameAuthentication"
 //  UNSUPPORTEDOPERATION = "UnsupportedOperation"
+//  UNSUPPORTEDOPERATION_BILLINGFAILED = "UnsupportedOperation.BillingFailed"
 //  UNSUPPORTEDOPERATION_INSUFFICIENTFUNDS = "UnsupportedOperation.InsufficientFunds"
 //  UNSUPPORTEDOPERATION_NOTSUPPORTCREATEIPV6VPNGATEWAY = "UnsupportedOperation.NotSupportCreateIpv6VpnGateway"
 //  UNSUPPORTEDOPERATION_PRIVATEBGPVPNGATEWAY = "UnsupportedOperation.PrivateBgpVpnGateway"
@@ -8628,14 +8694,7 @@ func NewDeleteCdcLDCXListResponse() (response *DeleteCdcLDCXListResponse) {
 // 删除 IDC通道
 //
 // 可能返回的错误码:
-//  INVALIDPARAMETER = "InvalidParameter"
-//  INVALIDPARAMETERVALUE = "InvalidParameterValue"
-//  INVALIDPARAMETERVALUE_MALFORMED = "InvalidParameterValue.Malformed"
-//  RESOURCENOTFOUND = "ResourceNotFound"
-//  UNSUPPORTEDOPERATION_CCNROUTETABLENOTEXIST = "UnsupportedOperation.CcnRouteTableNotExist"
-//  UNSUPPORTEDOPERATION_DELDEFAULTROUTE = "UnsupportedOperation.DelDefaultRoute"
-//  UNSUPPORTEDOPERATION_NOTSUPPORTDELETEDEFAULTCCNROUTETABLE = "UnsupportedOperation.NotSupportDeleteDefaultCcnRouteTable"
-//  UNSUPPORTEDOPERATION_ROUTETABLECANNOTDELETE = "UnsupportedOperation.RouteTableCanNotDelete"
+//  UNSUPPORTEDOPERATION_SERVICEUNSUPPORTEDREGION = "UnsupportedOperation.ServiceUnsupportedRegion"
 func (c *Client) DeleteCdcLDCXList(request *DeleteCdcLDCXListRequest) (response *DeleteCdcLDCXListResponse, err error) {
     return c.DeleteCdcLDCXListWithContext(context.Background(), request)
 }
@@ -8644,14 +8703,7 @@ func (c *Client) DeleteCdcLDCXList(request *DeleteCdcLDCXListRequest) (response 
 // 删除 IDC通道
 //
 // 可能返回的错误码:
-//  INVALIDPARAMETER = "InvalidParameter"
-//  INVALIDPARAMETERVALUE = "InvalidParameterValue"
-//  INVALIDPARAMETERVALUE_MALFORMED = "InvalidParameterValue.Malformed"
-//  RESOURCENOTFOUND = "ResourceNotFound"
-//  UNSUPPORTEDOPERATION_CCNROUTETABLENOTEXIST = "UnsupportedOperation.CcnRouteTableNotExist"
-//  UNSUPPORTEDOPERATION_DELDEFAULTROUTE = "UnsupportedOperation.DelDefaultRoute"
-//  UNSUPPORTEDOPERATION_NOTSUPPORTDELETEDEFAULTCCNROUTETABLE = "UnsupportedOperation.NotSupportDeleteDefaultCcnRouteTable"
-//  UNSUPPORTEDOPERATION_ROUTETABLECANNOTDELETE = "UnsupportedOperation.RouteTableCanNotDelete"
+//  UNSUPPORTEDOPERATION_SERVICEUNSUPPORTEDREGION = "UnsupportedOperation.ServiceUnsupportedRegion"
 func (c *Client) DeleteCdcLDCXListWithContext(ctx context.Context, request *DeleteCdcLDCXListRequest) (response *DeleteCdcLDCXListResponse, err error) {
     if request == nil {
         request = NewDeleteCdcLDCXListRequest()
@@ -9421,6 +9473,8 @@ func NewDeleteNatGatewayResponse() (response *DeleteNatGatewayResponse) {
 //  UNSUPPORTEDOPERATION_NATGATEWAYHAVEHIGHTRAFFIC = "UnsupportedOperation.NatGatewayHaveHighTraffic"
 //  UNSUPPORTEDOPERATION_NATGATEWAYHAVEROUTE = "UnsupportedOperation.NatGatewayHaveRoute"
 //  UNSUPPORTEDOPERATION_NATGATEWAYHAVEROUTEANDHIGHTRAFFIC = "UnsupportedOperation.NatGatewayHaveRouteAndHighTraffic"
+//  UNSUPPORTEDOPERATION_NATGATEWAYHAVETRAFFICMIRROR = "UnsupportedOperation.NatGatewayHaveTrafficMirror"
+//  UNSUPPORTEDOPERATION_TRAFFICVALIDATIONFAILED = "UnsupportedOperation.TrafficValidationFailed"
 func (c *Client) DeleteNatGateway(request *DeleteNatGatewayRequest) (response *DeleteNatGatewayResponse, err error) {
     return c.DeleteNatGatewayWithContext(context.Background(), request)
 }
@@ -9440,6 +9494,8 @@ func (c *Client) DeleteNatGateway(request *DeleteNatGatewayRequest) (response *D
 //  UNSUPPORTEDOPERATION_NATGATEWAYHAVEHIGHTRAFFIC = "UnsupportedOperation.NatGatewayHaveHighTraffic"
 //  UNSUPPORTEDOPERATION_NATGATEWAYHAVEROUTE = "UnsupportedOperation.NatGatewayHaveRoute"
 //  UNSUPPORTEDOPERATION_NATGATEWAYHAVEROUTEANDHIGHTRAFFIC = "UnsupportedOperation.NatGatewayHaveRouteAndHighTraffic"
+//  UNSUPPORTEDOPERATION_NATGATEWAYHAVETRAFFICMIRROR = "UnsupportedOperation.NatGatewayHaveTrafficMirror"
+//  UNSUPPORTEDOPERATION_TRAFFICVALIDATIONFAILED = "UnsupportedOperation.TrafficValidationFailed"
 func (c *Client) DeleteNatGatewayWithContext(ctx context.Context, request *DeleteNatGatewayRequest) (response *DeleteNatGatewayResponse, err error) {
     if request == nil {
         request = NewDeleteNatGatewayRequest()
@@ -11027,6 +11083,70 @@ func (c *Client) DeleteTrafficMirrorWithContext(ctx context.Context, request *De
     return
 }
 
+func NewDeleteTrafficMirrorFilterRulesRequest() (request *DeleteTrafficMirrorFilterRulesRequest) {
+    request = &DeleteTrafficMirrorFilterRulesRequest{
+        BaseRequest: &tchttp.BaseRequest{},
+    }
+    
+    request.Init().WithApiInfo("vpc", APIVersion, "DeleteTrafficMirrorFilterRules")
+    
+    
+    return
+}
+
+func NewDeleteTrafficMirrorFilterRulesResponse() (response *DeleteTrafficMirrorFilterRulesResponse) {
+    response = &DeleteTrafficMirrorFilterRulesResponse{
+        BaseResponse: &tchttp.BaseResponse{},
+    } 
+    return
+
+}
+
+// DeleteTrafficMirrorFilterRules
+// 删除流量镜像五元组过滤规则。
+//
+// 可能返回的错误码:
+//  INVALIDPARAMETERVALUE = "InvalidParameterValue"
+//  INVALIDPARAMETERVALUE_LIMITEXCEEDED = "InvalidParameterValue.LimitExceeded"
+//  INVALIDPARAMETERVALUE_MALFORMED = "InvalidParameterValue.Malformed"
+//  LIMITEXCEEDED = "LimitExceeded"
+//  LIMITEXCEEDED_ACTIONLIMITED = "LimitExceeded.ActionLimited"
+//  MISSINGPARAMETER = "MissingParameter"
+//  RESOURCENOTFOUND = "ResourceNotFound"
+//  UNSUPPORTEDOPERATION = "UnsupportedOperation"
+func (c *Client) DeleteTrafficMirrorFilterRules(request *DeleteTrafficMirrorFilterRulesRequest) (response *DeleteTrafficMirrorFilterRulesResponse, err error) {
+    return c.DeleteTrafficMirrorFilterRulesWithContext(context.Background(), request)
+}
+
+// DeleteTrafficMirrorFilterRules
+// 删除流量镜像五元组过滤规则。
+//
+// 可能返回的错误码:
+//  INVALIDPARAMETERVALUE = "InvalidParameterValue"
+//  INVALIDPARAMETERVALUE_LIMITEXCEEDED = "InvalidParameterValue.LimitExceeded"
+//  INVALIDPARAMETERVALUE_MALFORMED = "InvalidParameterValue.Malformed"
+//  LIMITEXCEEDED = "LimitExceeded"
+//  LIMITEXCEEDED_ACTIONLIMITED = "LimitExceeded.ActionLimited"
+//  MISSINGPARAMETER = "MissingParameter"
+//  RESOURCENOTFOUND = "ResourceNotFound"
+//  UNSUPPORTEDOPERATION = "UnsupportedOperation"
+func (c *Client) DeleteTrafficMirrorFilterRulesWithContext(ctx context.Context, request *DeleteTrafficMirrorFilterRulesRequest) (response *DeleteTrafficMirrorFilterRulesResponse, err error) {
+    if request == nil {
+        request = NewDeleteTrafficMirrorFilterRulesRequest()
+    }
+    c.InitBaseRequest(&request.BaseRequest, "vpc", APIVersion, "DeleteTrafficMirrorFilterRules")
+    
+    if c.GetCredential() == nil {
+        return nil, errors.New("DeleteTrafficMirrorFilterRules require credential")
+    }
+
+    request.SetContext(ctx)
+    
+    response = NewDeleteTrafficMirrorFilterRulesResponse()
+    err = c.Send(request, response)
+    return
+}
+
 func NewDeleteTrafficPackagesRequest() (request *DeleteTrafficPackagesRequest) {
     request = &DeleteTrafficPackagesRequest{
         BaseRequest: &tchttp.BaseRequest{},
@@ -12100,6 +12220,7 @@ func NewDescribeAddressesResponse() (response *DescribeAddressesResponse) {
 //  INVALIDPARAMETERVALUE_NETWORKINTERFACEIDMALFORMED = "InvalidParameterValue.NetworkInterfaceIdMalformed"
 //  INVALIDPARAMETERVALUE_RESOURCEIDMALFORMED = "InvalidParameterValue.ResourceIdMalformed"
 //  LIMITEXCEEDED_NUMBEROFFILTERS = "LimitExceeded.NumberOfFilters"
+//  REQUESTLIMITEXCEEDED = "RequestLimitExceeded"
 //  UNSUPPORTEDOPERATION = "UnsupportedOperation"
 func (c *Client) DescribeAddresses(request *DescribeAddressesRequest) (response *DescribeAddressesResponse, err error) {
     return c.DescribeAddressesWithContext(context.Background(), request)
@@ -12119,6 +12240,7 @@ func (c *Client) DescribeAddresses(request *DescribeAddressesRequest) (response 
 //  INVALIDPARAMETERVALUE_NETWORKINTERFACEIDMALFORMED = "InvalidParameterValue.NetworkInterfaceIdMalformed"
 //  INVALIDPARAMETERVALUE_RESOURCEIDMALFORMED = "InvalidParameterValue.ResourceIdMalformed"
 //  LIMITEXCEEDED_NUMBEROFFILTERS = "LimitExceeded.NumberOfFilters"
+//  REQUESTLIMITEXCEEDED = "RequestLimitExceeded"
 //  UNSUPPORTEDOPERATION = "UnsupportedOperation"
 func (c *Client) DescribeAddressesWithContext(ctx context.Context, request *DescribeAddressesRequest) (response *DescribeAddressesResponse, err error) {
     if request == nil {
@@ -17835,6 +17957,70 @@ func (c *Client) DescribeTenantCcnsWithContext(ctx context.Context, request *Des
     return
 }
 
+func NewDescribeTrafficMirrorFilterRulesRequest() (request *DescribeTrafficMirrorFilterRulesRequest) {
+    request = &DescribeTrafficMirrorFilterRulesRequest{
+        BaseRequest: &tchttp.BaseRequest{},
+    }
+    
+    request.Init().WithApiInfo("vpc", APIVersion, "DescribeTrafficMirrorFilterRules")
+    
+    
+    return
+}
+
+func NewDescribeTrafficMirrorFilterRulesResponse() (response *DescribeTrafficMirrorFilterRulesResponse) {
+    response = &DescribeTrafficMirrorFilterRulesResponse{
+        BaseResponse: &tchttp.BaseResponse{},
+    } 
+    return
+
+}
+
+// DescribeTrafficMirrorFilterRules
+// 查询流量镜像五元组过滤规则。
+//
+// 可能返回的错误码:
+//  INVALIDPARAMETERVALUE = "InvalidParameterValue"
+//  INVALIDPARAMETERVALUE_LIMITEXCEEDED = "InvalidParameterValue.LimitExceeded"
+//  INVALIDPARAMETERVALUE_MALFORMED = "InvalidParameterValue.Malformed"
+//  LIMITEXCEEDED = "LimitExceeded"
+//  LIMITEXCEEDED_ACTIONLIMITED = "LimitExceeded.ActionLimited"
+//  MISSINGPARAMETER = "MissingParameter"
+//  RESOURCENOTFOUND = "ResourceNotFound"
+//  UNSUPPORTEDOPERATION = "UnsupportedOperation"
+func (c *Client) DescribeTrafficMirrorFilterRules(request *DescribeTrafficMirrorFilterRulesRequest) (response *DescribeTrafficMirrorFilterRulesResponse, err error) {
+    return c.DescribeTrafficMirrorFilterRulesWithContext(context.Background(), request)
+}
+
+// DescribeTrafficMirrorFilterRules
+// 查询流量镜像五元组过滤规则。
+//
+// 可能返回的错误码:
+//  INVALIDPARAMETERVALUE = "InvalidParameterValue"
+//  INVALIDPARAMETERVALUE_LIMITEXCEEDED = "InvalidParameterValue.LimitExceeded"
+//  INVALIDPARAMETERVALUE_MALFORMED = "InvalidParameterValue.Malformed"
+//  LIMITEXCEEDED = "LimitExceeded"
+//  LIMITEXCEEDED_ACTIONLIMITED = "LimitExceeded.ActionLimited"
+//  MISSINGPARAMETER = "MissingParameter"
+//  RESOURCENOTFOUND = "ResourceNotFound"
+//  UNSUPPORTEDOPERATION = "UnsupportedOperation"
+func (c *Client) DescribeTrafficMirrorFilterRulesWithContext(ctx context.Context, request *DescribeTrafficMirrorFilterRulesRequest) (response *DescribeTrafficMirrorFilterRulesResponse, err error) {
+    if request == nil {
+        request = NewDescribeTrafficMirrorFilterRulesRequest()
+    }
+    c.InitBaseRequest(&request.BaseRequest, "vpc", APIVersion, "DescribeTrafficMirrorFilterRules")
+    
+    if c.GetCredential() == nil {
+        return nil, errors.New("DescribeTrafficMirrorFilterRules require credential")
+    }
+
+    request.SetContext(ctx)
+    
+    response = NewDescribeTrafficMirrorFilterRulesResponse()
+    err = c.Send(request, response)
+    return
+}
+
 func NewDescribeTrafficMirrorsRequest() (request *DescribeTrafficMirrorsRequest) {
     request = &DescribeTrafficMirrorsRequest{
         BaseRequest: &tchttp.BaseRequest{},
@@ -21976,12 +22162,18 @@ func NewModifyAddressAttributeResponse() (response *ModifyAddressAttributeRespon
 // 可能返回的错误码:
 //  INVALIDADDRESSID_BLOCKED = "InvalidAddressId.Blocked"
 //  INVALIDADDRESSID_NOTFOUND = "InvalidAddressId.NotFound"
+//  INVALIDPARAMETER_CONFLICT = "InvalidParameter.Conflict"
 //  INVALIDPARAMETERVALUE = "InvalidParameterValue"
+//  INVALIDPARAMETERVALUE_ADDRESSALREADYHASPASSTHROUGH = "InvalidParameterValue.AddressAlreadyHasPassThrough"
 //  INVALIDPARAMETERVALUE_ADDRESSIDMALFORMED = "InvalidParameterValue.AddressIdMalformed"
 //  INVALIDPARAMETERVALUE_ADDRESSNOTFOUND = "InvalidParameterValue.AddressNotFound"
+//  INVALIDPARAMETERVALUE_INSTANCEDOESNOTSUPPORTEIPVISIBLEONENI = "InvalidParameterValue.InstanceDoesNotSupportEipVisibleOnEni"
+//  INVALIDPARAMETERVALUE_INSTANCEVPCDOESNOTSUPPORTEIPVISIBLEONENI = "InvalidParameterValue.InstanceVpcDoesNotSupportEipVisibleOnEni"
+//  INVALIDPARAMETERVALUE_PRIVATEIPADDRESSDOESNOTSUPPORTEIPVISIBLEONENI = "InvalidParameterValue.PrivateIpAddressDoesNotSupportEipVisibleOnEni"
 //  INVALIDPARAMETERVALUE_RESOURCENOTEXISTED = "InvalidParameterValue.ResourceNotExisted"
 //  INVALIDPARAMETERVALUE_TOOLONG = "InvalidParameterValue.TooLong"
 //  OPERATIONDENIED_MUTEXTASKRUNNING = "OperationDenied.MutexTaskRunning"
+//  REQUESTLIMITEXCEEDED = "RequestLimitExceeded"
 //  UNSUPPORTEDOPERATION_ADDRESSSTATUSNOTPERMIT = "UnsupportedOperation.AddressStatusNotPermit"
 //  UNSUPPORTEDOPERATION_INCORRECTADDRESSRESOURCETYPE = "UnsupportedOperation.IncorrectAddressResourceType"
 //  UNSUPPORTEDOPERATION_MODIFYADDRESSATTRIBUTE = "UnsupportedOperation.ModifyAddressAttribute"
@@ -21995,12 +22187,18 @@ func (c *Client) ModifyAddressAttribute(request *ModifyAddressAttributeRequest) 
 // 可能返回的错误码:
 //  INVALIDADDRESSID_BLOCKED = "InvalidAddressId.Blocked"
 //  INVALIDADDRESSID_NOTFOUND = "InvalidAddressId.NotFound"
+//  INVALIDPARAMETER_CONFLICT = "InvalidParameter.Conflict"
 //  INVALIDPARAMETERVALUE = "InvalidParameterValue"
+//  INVALIDPARAMETERVALUE_ADDRESSALREADYHASPASSTHROUGH = "InvalidParameterValue.AddressAlreadyHasPassThrough"
 //  INVALIDPARAMETERVALUE_ADDRESSIDMALFORMED = "InvalidParameterValue.AddressIdMalformed"
 //  INVALIDPARAMETERVALUE_ADDRESSNOTFOUND = "InvalidParameterValue.AddressNotFound"
+//  INVALIDPARAMETERVALUE_INSTANCEDOESNOTSUPPORTEIPVISIBLEONENI = "InvalidParameterValue.InstanceDoesNotSupportEipVisibleOnEni"
+//  INVALIDPARAMETERVALUE_INSTANCEVPCDOESNOTSUPPORTEIPVISIBLEONENI = "InvalidParameterValue.InstanceVpcDoesNotSupportEipVisibleOnEni"
+//  INVALIDPARAMETERVALUE_PRIVATEIPADDRESSDOESNOTSUPPORTEIPVISIBLEONENI = "InvalidParameterValue.PrivateIpAddressDoesNotSupportEipVisibleOnEni"
 //  INVALIDPARAMETERVALUE_RESOURCENOTEXISTED = "InvalidParameterValue.ResourceNotExisted"
 //  INVALIDPARAMETERVALUE_TOOLONG = "InvalidParameterValue.TooLong"
 //  OPERATIONDENIED_MUTEXTASKRUNNING = "OperationDenied.MutexTaskRunning"
+//  REQUESTLIMITEXCEEDED = "RequestLimitExceeded"
 //  UNSUPPORTEDOPERATION_ADDRESSSTATUSNOTPERMIT = "UnsupportedOperation.AddressStatusNotPermit"
 //  UNSUPPORTEDOPERATION_INCORRECTADDRESSRESOURCETYPE = "UnsupportedOperation.IncorrectAddressResourceType"
 //  UNSUPPORTEDOPERATION_MODIFYADDRESSATTRIBUTE = "UnsupportedOperation.ModifyAddressAttribute"
@@ -22313,6 +22511,7 @@ func NewModifyAddressesBandwidthResponse() (response *ModifyAddressesBandwidthRe
 //  INVALIDPARAMETERVALUE_RESOURCENOTSUPPORT = "InvalidParameterValue.ResourceNotSupport"
 //  OPERATIONDENIED_ADDRESSINARREARS = "OperationDenied.AddressInArrears"
 //  OPERATIONDENIED_MUTEXTASKRUNNING = "OperationDenied.MutexTaskRunning"
+//  REQUESTLIMITEXCEEDED = "RequestLimitExceeded"
 //  UNSUPPORTEDOPERATION_ACTIONNOTFOUND = "UnsupportedOperation.ActionNotFound"
 //  UNSUPPORTEDOPERATION_ADDRESSSTATUSNOTPERMIT = "UnsupportedOperation.AddressStatusNotPermit"
 //  UNSUPPORTEDOPERATION_INSTANCESTATENOTSUPPORTED = "UnsupportedOperation.InstanceStateNotSupported"
@@ -22344,6 +22543,7 @@ func (c *Client) ModifyAddressesBandwidth(request *ModifyAddressesBandwidthReque
 //  INVALIDPARAMETERVALUE_RESOURCENOTSUPPORT = "InvalidParameterValue.ResourceNotSupport"
 //  OPERATIONDENIED_ADDRESSINARREARS = "OperationDenied.AddressInArrears"
 //  OPERATIONDENIED_MUTEXTASKRUNNING = "OperationDenied.MutexTaskRunning"
+//  REQUESTLIMITEXCEEDED = "RequestLimitExceeded"
 //  UNSUPPORTEDOPERATION_ACTIONNOTFOUND = "UnsupportedOperation.ActionNotFound"
 //  UNSUPPORTEDOPERATION_ADDRESSSTATUSNOTPERMIT = "UnsupportedOperation.AddressStatusNotPermit"
 //  UNSUPPORTEDOPERATION_INSTANCESTATENOTSUPPORTED = "UnsupportedOperation.InstanceStateNotSupported"
@@ -23250,6 +23450,7 @@ func NewModifyDirectConnectGatewayAttributeResponse() (response *ModifyDirectCon
 //  INVALIDPARAMETERVALUE_MALFORMED = "InvalidParameterValue.Malformed"
 //  INVALIDPARAMETERVALUE_TOOLONG = "InvalidParameterValue.TooLong"
 //  RESOURCENOTFOUND = "ResourceNotFound"
+//  RESOURCEUNAVAILABLE_DCGIPV6NEEDVPCCREATEIPV6CIDR = "ResourceUnavailable.DcgIpv6NeedVpcCreateIPv6Cidr"
 //  UNSUPPORTEDOPERATION = "UnsupportedOperation"
 //  UNSUPPORTEDOPERATION_APPIDMISMATCH = "UnsupportedOperation.AppIdMismatch"
 //  UNSUPPORTEDOPERATION_DIRECTCONNECTGATEWAYISUPDATINGCOMMUNITY = "UnsupportedOperation.DirectConnectGatewayIsUpdatingCommunity"
@@ -23265,6 +23466,7 @@ func (c *Client) ModifyDirectConnectGatewayAttribute(request *ModifyDirectConnec
 //  INVALIDPARAMETERVALUE_MALFORMED = "InvalidParameterValue.Malformed"
 //  INVALIDPARAMETERVALUE_TOOLONG = "InvalidParameterValue.TooLong"
 //  RESOURCENOTFOUND = "ResourceNotFound"
+//  RESOURCEUNAVAILABLE_DCGIPV6NEEDVPCCREATEIPV6CIDR = "ResourceUnavailable.DcgIpv6NeedVpcCreateIPv6Cidr"
 //  UNSUPPORTEDOPERATION = "UnsupportedOperation"
 //  UNSUPPORTEDOPERATION_APPIDMISMATCH = "UnsupportedOperation.AppIdMismatch"
 //  UNSUPPORTEDOPERATION_DIRECTCONNECTGATEWAYISUPDATINGCOMMUNITY = "UnsupportedOperation.DirectConnectGatewayIsUpdatingCommunity"
@@ -24207,6 +24409,66 @@ func (c *Client) ModifyLocalGatewayWithContext(ctx context.Context, request *Mod
     request.SetContext(ctx)
     
     response = NewModifyLocalGatewayResponse()
+    err = c.Send(request, response)
+    return
+}
+
+func NewModifyNatGatewayAdvancedAttributeRequest() (request *ModifyNatGatewayAdvancedAttributeRequest) {
+    request = &ModifyNatGatewayAdvancedAttributeRequest{
+        BaseRequest: &tchttp.BaseRequest{},
+    }
+    
+    request.Init().WithApiInfo("vpc", APIVersion, "ModifyNatGatewayAdvancedAttribute")
+    
+    
+    return
+}
+
+func NewModifyNatGatewayAdvancedAttributeResponse() (response *ModifyNatGatewayAdvancedAttributeResponse) {
+    response = &ModifyNatGatewayAdvancedAttributeResponse{
+        BaseResponse: &tchttp.BaseResponse{},
+    } 
+    return
+
+}
+
+// ModifyNatGatewayAdvancedAttribute
+// 本接口（ModifyNatGatewayAdvancedAttribute）用于修改NAT网关的高级属性。
+//
+// 可能返回的错误码:
+//  INVALIDPARAMETER = "InvalidParameter"
+//  INVALIDPARAMETERVALUE = "InvalidParameterValue"
+//  INVALIDPARAMETERVALUE_MALFORMED = "InvalidParameterValue.Malformed"
+//  INVALIDPARAMETERVALUE_RANGE = "InvalidParameterValue.Range"
+//  RESOURCENOTFOUND = "ResourceNotFound"
+//  UNSUPPORTEDOPERATION = "UnsupportedOperation"
+func (c *Client) ModifyNatGatewayAdvancedAttribute(request *ModifyNatGatewayAdvancedAttributeRequest) (response *ModifyNatGatewayAdvancedAttributeResponse, err error) {
+    return c.ModifyNatGatewayAdvancedAttributeWithContext(context.Background(), request)
+}
+
+// ModifyNatGatewayAdvancedAttribute
+// 本接口（ModifyNatGatewayAdvancedAttribute）用于修改NAT网关的高级属性。
+//
+// 可能返回的错误码:
+//  INVALIDPARAMETER = "InvalidParameter"
+//  INVALIDPARAMETERVALUE = "InvalidParameterValue"
+//  INVALIDPARAMETERVALUE_MALFORMED = "InvalidParameterValue.Malformed"
+//  INVALIDPARAMETERVALUE_RANGE = "InvalidParameterValue.Range"
+//  RESOURCENOTFOUND = "ResourceNotFound"
+//  UNSUPPORTEDOPERATION = "UnsupportedOperation"
+func (c *Client) ModifyNatGatewayAdvancedAttributeWithContext(ctx context.Context, request *ModifyNatGatewayAdvancedAttributeRequest) (response *ModifyNatGatewayAdvancedAttributeResponse, err error) {
+    if request == nil {
+        request = NewModifyNatGatewayAdvancedAttributeRequest()
+    }
+    c.InitBaseRequest(&request.BaseRequest, "vpc", APIVersion, "ModifyNatGatewayAdvancedAttribute")
+    
+    if c.GetCredential() == nil {
+        return nil, errors.New("ModifyNatGatewayAdvancedAttribute require credential")
+    }
+
+    request.SetContext(ctx)
+    
+    response = NewModifyNatGatewayAdvancedAttributeResponse()
     err = c.Send(request, response)
     return
 }
@@ -25927,6 +26189,70 @@ func (c *Client) ModifyTrafficMirrorAttributeWithContext(ctx context.Context, re
     return
 }
 
+func NewModifyTrafficMirrorFilterRulesRequest() (request *ModifyTrafficMirrorFilterRulesRequest) {
+    request = &ModifyTrafficMirrorFilterRulesRequest{
+        BaseRequest: &tchttp.BaseRequest{},
+    }
+    
+    request.Init().WithApiInfo("vpc", APIVersion, "ModifyTrafficMirrorFilterRules")
+    
+    
+    return
+}
+
+func NewModifyTrafficMirrorFilterRulesResponse() (response *ModifyTrafficMirrorFilterRulesResponse) {
+    response = &ModifyTrafficMirrorFilterRulesResponse{
+        BaseResponse: &tchttp.BaseResponse{},
+    } 
+    return
+
+}
+
+// ModifyTrafficMirrorFilterRules
+// 修改流量镜像五元组过滤规则。
+//
+// 可能返回的错误码:
+//  INVALIDPARAMETERVALUE = "InvalidParameterValue"
+//  INVALIDPARAMETERVALUE_LIMITEXCEEDED = "InvalidParameterValue.LimitExceeded"
+//  INVALIDPARAMETERVALUE_MALFORMED = "InvalidParameterValue.Malformed"
+//  LIMITEXCEEDED = "LimitExceeded"
+//  LIMITEXCEEDED_ACTIONLIMITED = "LimitExceeded.ActionLimited"
+//  MISSINGPARAMETER = "MissingParameter"
+//  RESOURCENOTFOUND = "ResourceNotFound"
+//  UNSUPPORTEDOPERATION = "UnsupportedOperation"
+func (c *Client) ModifyTrafficMirrorFilterRules(request *ModifyTrafficMirrorFilterRulesRequest) (response *ModifyTrafficMirrorFilterRulesResponse, err error) {
+    return c.ModifyTrafficMirrorFilterRulesWithContext(context.Background(), request)
+}
+
+// ModifyTrafficMirrorFilterRules
+// 修改流量镜像五元组过滤规则。
+//
+// 可能返回的错误码:
+//  INVALIDPARAMETERVALUE = "InvalidParameterValue"
+//  INVALIDPARAMETERVALUE_LIMITEXCEEDED = "InvalidParameterValue.LimitExceeded"
+//  INVALIDPARAMETERVALUE_MALFORMED = "InvalidParameterValue.Malformed"
+//  LIMITEXCEEDED = "LimitExceeded"
+//  LIMITEXCEEDED_ACTIONLIMITED = "LimitExceeded.ActionLimited"
+//  MISSINGPARAMETER = "MissingParameter"
+//  RESOURCENOTFOUND = "ResourceNotFound"
+//  UNSUPPORTEDOPERATION = "UnsupportedOperation"
+func (c *Client) ModifyTrafficMirrorFilterRulesWithContext(ctx context.Context, request *ModifyTrafficMirrorFilterRulesRequest) (response *ModifyTrafficMirrorFilterRulesResponse, err error) {
+    if request == nil {
+        request = NewModifyTrafficMirrorFilterRulesRequest()
+    }
+    c.InitBaseRequest(&request.BaseRequest, "vpc", APIVersion, "ModifyTrafficMirrorFilterRules")
+    
+    if c.GetCredential() == nil {
+        return nil, errors.New("ModifyTrafficMirrorFilterRules require credential")
+    }
+
+    request.SetContext(ctx)
+    
+    response = NewModifyTrafficMirrorFilterRulesResponse()
+    err = c.Send(request, response)
+    return
+}
+
 func NewModifyVpcAttributeRequest() (request *ModifyVpcAttributeRequest) {
     request = &ModifyVpcAttributeRequest{
         BaseRequest: &tchttp.BaseRequest{},
@@ -26592,6 +26918,7 @@ func NewModifyVpnGatewaySslServerResponse() (response *ModifyVpnGatewaySslServer
 //  LIMITEXCEEDED_SSLVPNCLIENTLIMITEXCEEDED = "LimitExceeded.SslVpnClientLimitExceeded"
 //  RESOURCENOTFOUND = "ResourceNotFound"
 //  UNSUPPORTEDOPERATION = "UnsupportedOperation"
+//  UNSUPPORTEDOPERATION_PARAMETERSSLVPNPROTOCOL = "UnsupportedOperation.ParameterSslVpnProtocol"
 //  UNSUPPORTEDOPERATION_VERSIONNOTSUPPORTED = "UnsupportedOperation.VersionNotSupported"
 func (c *Client) ModifyVpnGatewaySslServer(request *ModifyVpnGatewaySslServerRequest) (response *ModifyVpnGatewaySslServerResponse, err error) {
     return c.ModifyVpnGatewaySslServerWithContext(context.Background(), request)
@@ -26607,6 +26934,7 @@ func (c *Client) ModifyVpnGatewaySslServer(request *ModifyVpnGatewaySslServerReq
 //  LIMITEXCEEDED_SSLVPNCLIENTLIMITEXCEEDED = "LimitExceeded.SslVpnClientLimitExceeded"
 //  RESOURCENOTFOUND = "ResourceNotFound"
 //  UNSUPPORTEDOPERATION = "UnsupportedOperation"
+//  UNSUPPORTEDOPERATION_PARAMETERSSLVPNPROTOCOL = "UnsupportedOperation.ParameterSslVpnProtocol"
 //  UNSUPPORTEDOPERATION_VERSIONNOTSUPPORTED = "UnsupportedOperation.VersionNotSupported"
 func (c *Client) ModifyVpnGatewaySslServerWithContext(ctx context.Context, request *ModifyVpnGatewaySslServerRequest) (response *ModifyVpnGatewaySslServerResponse, err error) {
     if request == nil {
