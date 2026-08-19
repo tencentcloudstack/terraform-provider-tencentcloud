@@ -250,7 +250,7 @@ func TestClsTopic_Create_WithBizType(t *testing.T) {
 			{Key: ptrStringCT("test"), Value: ptrStringCT("test")},
 		},
 	}
-	patches.ApplyMethodFunc(&localcls.ClsService{}, "DescribeClsTopicById", func(_ context.Context, _ string) (*clsv20201016.TopicInfo, error) {
+	patches.ApplyMethodFunc(&localcls.ClsService{}, "DescribeClsTopicById", func(_ context.Context, _ string, _ *uint64) (*clsv20201016.TopicInfo, error) {
 		return topicInfo, nil
 	})
 
@@ -317,7 +317,7 @@ func TestClsTopic_Create_WithoutBizType(t *testing.T) {
 		IsWebTracking:      ptrBoolCT(false),
 		BizType:            ptrUint64CT(0),
 	}
-	patches.ApplyMethodFunc(&localcls.ClsService{}, "DescribeClsTopicById", func(_ context.Context, _ string) (*clsv20201016.TopicInfo, error) {
+	patches.ApplyMethodFunc(&localcls.ClsService{}, "DescribeClsTopicById", func(_ context.Context, _ string, _ *uint64) (*clsv20201016.TopicInfo, error) {
 		return topicInfo, nil
 	})
 
@@ -370,7 +370,7 @@ func TestClsTopic_Read_BizType(t *testing.T) {
 		IsWebTracking:      ptrBoolCT(false),
 		BizType:            ptrUint64CT(1),
 	}
-	patches.ApplyMethodFunc(&localcls.ClsService{}, "DescribeClsTopicById", func(_ context.Context, _ string) (*clsv20201016.TopicInfo, error) {
+	patches.ApplyMethodFunc(&localcls.ClsService{}, "DescribeClsTopicById", func(_ context.Context, _ string, _ *uint64) (*clsv20201016.TopicInfo, error) {
 		return topicInfo, nil
 	})
 
@@ -421,7 +421,7 @@ func TestClsTopic_Read_BizTypeNil(t *testing.T) {
 		IsWebTracking:      ptrBoolCT(false),
 		BizType:            nil,
 	}
-	patches.ApplyMethodFunc(&localcls.ClsService{}, "DescribeClsTopicById", func(_ context.Context, _ string) (*clsv20201016.TopicInfo, error) {
+	patches.ApplyMethodFunc(&localcls.ClsService{}, "DescribeClsTopicById", func(_ context.Context, _ string, _ *uint64) (*clsv20201016.TopicInfo, error) {
 		return topicInfo, nil
 	})
 
@@ -478,4 +478,259 @@ func TestClsTopic_Update_BizTypeImmutable(t *testing.T) {
 	err := res.Update(d, meta)
 	assert.Error(t, err)
 	assert.Contains(t, err.Error(), "biz_type")
+}
+
+// --- gomonkey mock unit tests for custom_kms_info parameters ---
+
+// TestClsTopic_Create_WithKmsInfo verifies that when encryption=1 and
+// custom_kms_info is set, the CreateTopic request contains a
+// non-nil CustomKmsInfo with the correct KmsRegion and KmsKeyId values.
+func TestClsTopic_Create_WithKmsInfo(t *testing.T) {
+	patches := gomonkey.NewPatches()
+	defer patches.Reset()
+
+	clsClient := &clsv20201016.Client{}
+	patches.ApplyMethodReturn(newMockMetaForClsTopic().client, "UseClsClient", clsClient)
+
+	var capturedRequest *clsv20201016.CreateTopicRequest
+	patches.ApplyMethodFunc(clsClient, "CreateTopic", func(request *clsv20201016.CreateTopicRequest) (*clsv20201016.CreateTopicResponse, error) {
+		capturedRequest = request
+		resp := clsv20201016.NewCreateTopicResponse()
+		resp.Response = &clsv20201016.CreateTopicResponseParams{
+			TopicId:   ptrStringCT("fake-topic-id-kms"),
+			RequestId: ptrStringCT("fake-request-id-kms"),
+		}
+		return resp, nil
+	})
+
+	// Mock DescribeClsTopicById to return a topic with encryption and CustomKmsInfo for the read-back after create
+	topicInfo := &clsv20201016.TopicInfo{
+		LogsetId:           ptrStringCT("fake-logset-id"),
+		TopicId:            ptrStringCT("fake-topic-id-kms"),
+		TopicName:          ptrStringCT("tf-test-topic-kms"),
+		PartitionCount:     ptrInt64CT(1),
+		AutoSplit:          ptrBoolCT(false),
+		MaxSplitPartitions: ptrInt64CT(20),
+		StorageType:        ptrStringCT("hot"),
+		Period:             ptrInt64CT(30),
+		HotPeriod:          ptrUint64CT(10),
+		Describes:          ptrStringCT("Test Demo."),
+		IsWebTracking:      ptrBoolCT(false),
+		BizType:            ptrUint64CT(0),
+		KeyId:              ptrStringCT("kms-cls-key-id"),
+		CustomKmsInfo: &clsv20201016.CustomKmsInfo{
+			KmsRegion: ptrStringCT("ap-guangzhou"),
+			KmsKeyId:  ptrStringCT("fake-kms-key-id"),
+		},
+	}
+	patches.ApplyMethodFunc(&localcls.ClsService{}, "DescribeClsTopicById", func(_ context.Context, _ string, _ *uint64) (*clsv20201016.TopicInfo, error) {
+		return topicInfo, nil
+	})
+
+	meta := newMockMetaForClsTopic()
+	res := localcls.ResourceTencentCloudClsTopic()
+	d := schema.TestResourceDataRaw(t, res.Schema, map[string]interface{}{
+		"logset_id":            "fake-logset-id",
+		"topic_name":           "tf-test-topic-kms",
+		"partition_count":      1,
+		"auto_split":           false,
+		"max_split_partitions": 20,
+		"period":               30,
+		"storage_type":         "hot",
+		"describes":            "Test Demo.",
+		"hot_period":           10,
+		"encryption":           1,
+		"custom_kms_info": []interface{}{
+			map[string]interface{}{
+				"kms_region": "ap-guangzhou",
+				"kms_key_id": "fake-kms-key-id",
+			},
+		},
+	})
+
+	err := res.Create(d, meta)
+	assert.NoError(t, err)
+	assert.NotEmpty(t, d.Id())
+
+	// Verify CustomKmsInfo was set on the create request
+	assert.NotNil(t, capturedRequest.CustomKmsInfo)
+	assert.Equal(t, "ap-guangzhou", *capturedRequest.CustomKmsInfo.KmsRegion)
+	assert.Equal(t, "fake-kms-key-id", *capturedRequest.CustomKmsInfo.KmsKeyId)
+
+	// Verify custom_kms_info is read back into state
+	customKmsInfo := d.Get("custom_kms_info").([]interface{})
+	assert.Len(t, customKmsInfo, 1)
+	infoMap := customKmsInfo[0].(map[string]interface{})
+	assert.Equal(t, "ap-guangzhou", infoMap["kms_region"])
+	assert.Equal(t, "fake-kms-key-id", infoMap["kms_key_id"])
+}
+
+// TestClsTopic_Create_WithoutKmsInfo verifies that when custom_kms_info is not set,
+// the CreateTopic request does NOT contain a CustomKmsInfo struct.
+func TestClsTopic_Create_WithoutKmsInfo(t *testing.T) {
+	patches := gomonkey.NewPatches()
+	defer patches.Reset()
+
+	clsClient := &clsv20201016.Client{}
+	patches.ApplyMethodReturn(newMockMetaForClsTopic().client, "UseClsClient", clsClient)
+
+	var capturedRequest *clsv20201016.CreateTopicRequest
+	patches.ApplyMethodFunc(clsClient, "CreateTopic", func(request *clsv20201016.CreateTopicRequest) (*clsv20201016.CreateTopicResponse, error) {
+		capturedRequest = request
+		resp := clsv20201016.NewCreateTopicResponse()
+		resp.Response = &clsv20201016.CreateTopicResponseParams{
+			TopicId:   ptrStringCT("fake-topic-id-no-kms"),
+			RequestId: ptrStringCT("fake-request-id-no-kms"),
+		}
+		return resp, nil
+	})
+
+	// Mock DescribeClsTopicById to return a topic without encryption/CustomKmsInfo
+	topicInfo := &clsv20201016.TopicInfo{
+		LogsetId:           ptrStringCT("fake-logset-id"),
+		TopicId:            ptrStringCT("fake-topic-id-no-kms"),
+		TopicName:          ptrStringCT("tf-test-topic-no-kms"),
+		PartitionCount:     ptrInt64CT(1),
+		AutoSplit:          ptrBoolCT(false),
+		MaxSplitPartitions: ptrInt64CT(20),
+		StorageType:        ptrStringCT("hot"),
+		Period:             ptrInt64CT(30),
+		HotPeriod:          ptrUint64CT(10),
+		Describes:          ptrStringCT("Test Demo."),
+		IsWebTracking:      ptrBoolCT(false),
+		BizType:            ptrUint64CT(0),
+	}
+	patches.ApplyMethodFunc(&localcls.ClsService{}, "DescribeClsTopicById", func(_ context.Context, _ string, _ *uint64) (*clsv20201016.TopicInfo, error) {
+		return topicInfo, nil
+	})
+
+	meta := newMockMetaForClsTopic()
+	res := localcls.ResourceTencentCloudClsTopic()
+	d := schema.TestResourceDataRaw(t, res.Schema, map[string]interface{}{
+		"logset_id":            "fake-logset-id",
+		"topic_name":           "tf-test-topic-no-kms",
+		"partition_count":      1,
+		"auto_split":           false,
+		"max_split_partitions": 20,
+		"period":               30,
+		"storage_type":         "hot",
+		"describes":            "Test Demo.",
+		"hot_period":           10,
+	})
+
+	err := res.Create(d, meta)
+	assert.NoError(t, err)
+	assert.NotEmpty(t, d.Id())
+
+	// Verify CustomKmsInfo was NOT set on the create request
+	assert.Nil(t, capturedRequest.CustomKmsInfo)
+}
+
+// TestClsTopic_Read_KmsInfo verifies that custom_kms_info is
+// correctly read from a TopicInfo response with a non-nil CustomKmsInfo.
+func TestClsTopic_Read_KmsInfo(t *testing.T) {
+	patches := gomonkey.NewPatches()
+	defer patches.Reset()
+
+	clsClient := &clsv20201016.Client{}
+	patches.ApplyMethodReturn(newMockMetaForClsTopic().client, "UseClsClient", clsClient)
+
+	// Mock DescribeClsTopicById to return a topic with CustomKmsInfo
+	topicInfo := &clsv20201016.TopicInfo{
+		LogsetId:           ptrStringCT("fake-logset-id"),
+		TopicId:            ptrStringCT("fake-topic-id-read-kms"),
+		TopicName:          ptrStringCT("tf-test-topic-read-kms"),
+		PartitionCount:     ptrInt64CT(1),
+		AutoSplit:          ptrBoolCT(false),
+		MaxSplitPartitions: ptrInt64CT(20),
+		StorageType:        ptrStringCT("hot"),
+		Period:             ptrInt64CT(30),
+		HotPeriod:          ptrUint64CT(10),
+		Describes:          ptrStringCT("Test Demo."),
+		IsWebTracking:      ptrBoolCT(false),
+		BizType:            ptrUint64CT(0),
+		KeyId:              ptrStringCT("kms-cls-key-id"),
+		CustomKmsInfo: &clsv20201016.CustomKmsInfo{
+			KmsRegion: ptrStringCT("ap-shanghai"),
+			KmsKeyId:  ptrStringCT("read-kms-key-id"),
+		},
+	}
+	patches.ApplyMethodFunc(&localcls.ClsService{}, "DescribeClsTopicById", func(_ context.Context, _ string, _ *uint64) (*clsv20201016.TopicInfo, error) {
+		return topicInfo, nil
+	})
+
+	meta := newMockMetaForClsTopic()
+	res := localcls.ResourceTencentCloudClsTopic()
+	d := schema.TestResourceDataRaw(t, res.Schema, map[string]interface{}{
+		"logset_id":            "fake-logset-id",
+		"topic_name":           "tf-test-topic-read-kms",
+		"partition_count":      1,
+		"auto_split":           false,
+		"max_split_partitions": 20,
+		"period":               30,
+		"storage_type":         "hot",
+		"describes":            "Test Demo.",
+		"hot_period":           10,
+	})
+	d.SetId("fake-topic-id-read-kms")
+
+	err := res.Read(d, meta)
+	assert.NoError(t, err)
+	assert.Equal(t, "fake-topic-id-read-kms", d.Id())
+
+	// Verify custom_kms_info is correctly read from the API response
+	customKmsInfo := d.Get("custom_kms_info").([]interface{})
+	assert.Len(t, customKmsInfo, 1)
+	infoMap := customKmsInfo[0].(map[string]interface{})
+	assert.Equal(t, "ap-shanghai", infoMap["kms_region"])
+	assert.Equal(t, "read-kms-key-id", infoMap["kms_key_id"])
+}
+
+// TestClsTopic_Read_KmsInfoNil verifies that the Read method does not panic
+// when CustomKmsInfo is nil in the TopicInfo response.
+func TestClsTopic_Read_KmsInfoNil(t *testing.T) {
+	patches := gomonkey.NewPatches()
+	defer patches.Reset()
+
+	clsClient := &clsv20201016.Client{}
+	patches.ApplyMethodReturn(newMockMetaForClsTopic().client, "UseClsClient", clsClient)
+
+	// Mock DescribeClsTopicById to return a topic with CustomKmsInfo=nil
+	topicInfo := &clsv20201016.TopicInfo{
+		LogsetId:           ptrStringCT("fake-logset-id"),
+		TopicId:            ptrStringCT("fake-topic-id-nil-kms"),
+		TopicName:          ptrStringCT("tf-test-topic-nil-kms"),
+		PartitionCount:     ptrInt64CT(1),
+		AutoSplit:          ptrBoolCT(false),
+		MaxSplitPartitions: ptrInt64CT(20),
+		StorageType:        ptrStringCT("hot"),
+		Period:             ptrInt64CT(30),
+		HotPeriod:          ptrUint64CT(10),
+		Describes:          ptrStringCT("Test Demo."),
+		IsWebTracking:      ptrBoolCT(false),
+		BizType:            ptrUint64CT(0),
+		CustomKmsInfo:      nil,
+	}
+	patches.ApplyMethodFunc(&localcls.ClsService{}, "DescribeClsTopicById", func(_ context.Context, _ string, _ *uint64) (*clsv20201016.TopicInfo, error) {
+		return topicInfo, nil
+	})
+
+	meta := newMockMetaForClsTopic()
+	res := localcls.ResourceTencentCloudClsTopic()
+	d := schema.TestResourceDataRaw(t, res.Schema, map[string]interface{}{
+		"logset_id":            "fake-logset-id",
+		"topic_name":           "tf-test-topic-nil-kms",
+		"partition_count":      1,
+		"auto_split":           false,
+		"max_split_partitions": 20,
+		"period":               30,
+		"storage_type":         "hot",
+		"describes":            "Test Demo.",
+		"hot_period":           10,
+	})
+	d.SetId("fake-topic-id-nil-kms")
+
+	err := res.Read(d, meta)
+	assert.NoError(t, err)
+	assert.Equal(t, "fake-topic-id-nil-kms", d.Id())
 }

@@ -799,6 +799,72 @@ func (c *Client) CreateDBInstanceNetworkAccessWithContext(ctx context.Context, r
     return
 }
 
+func NewCreateDBProxyRequest() (request *CreateDBProxyRequest) {
+    request = &CreateDBProxyRequest{
+        BaseRequest: &tchttp.BaseRequest{},
+    }
+    
+    request.Init().WithApiInfo("postgres", APIVersion, "CreateDBProxy")
+    
+    
+    return
+}
+
+func NewCreateDBProxyResponse() (response *CreateDBProxyResponse) {
+    response = &CreateDBProxyResponse{
+        BaseResponse: &tchttp.BaseResponse{},
+    } 
+    return
+
+}
+
+// CreateDBProxy
+// 本接口（CreateDBProxy）用于为指定的 PostgreSQL 实例创建数据库代理（Proxy）。走计费下单流程，下单成功后异步发起 Proxy 创建任务，同步返回订单号 DealName 与 Proxy 实例 ID ProxyGroupId。当前仅支持后付费按量计费。
+//
+// 可能返回的错误码:
+//  FAILEDOPERATION_DATABASEACCESSERROR = "FailedOperation.DatabaseAccessError"
+//  FAILEDOPERATION_FAILEDOPERATIONERROR = "FailedOperation.FailedOperationError"
+//  FAILEDOPERATION_FLOWCREATEERROR = "FailedOperation.FlowCreateError"
+//  INVALIDPARAMETER_PARAMETERCHECKERROR = "InvalidParameter.ParameterCheckError"
+//  INVALIDPARAMETERVALUE_INVALIDPARAMETERVALUEERROR = "InvalidParameterValue.InvalidParameterValueError"
+//  OPERATIONDENIED_INSTANCEACCESSDENIEDERROR = "OperationDenied.InstanceAccessDeniedError"
+//  OPERATIONDENIED_INSTANCESTATUSDENIEDERROR = "OperationDenied.InstanceStatusDeniedError"
+//  OPERATIONDENIED_INSTANCESTATUSLIMITOPERROR = "OperationDenied.InstanceStatusLimitOpError"
+//  RESOURCENOTFOUND_INSTANCENOTFOUNDERROR = "ResourceNotFound.InstanceNotFoundError"
+func (c *Client) CreateDBProxy(request *CreateDBProxyRequest) (response *CreateDBProxyResponse, err error) {
+    return c.CreateDBProxyWithContext(context.Background(), request)
+}
+
+// CreateDBProxy
+// 本接口（CreateDBProxy）用于为指定的 PostgreSQL 实例创建数据库代理（Proxy）。走计费下单流程，下单成功后异步发起 Proxy 创建任务，同步返回订单号 DealName 与 Proxy 实例 ID ProxyGroupId。当前仅支持后付费按量计费。
+//
+// 可能返回的错误码:
+//  FAILEDOPERATION_DATABASEACCESSERROR = "FailedOperation.DatabaseAccessError"
+//  FAILEDOPERATION_FAILEDOPERATIONERROR = "FailedOperation.FailedOperationError"
+//  FAILEDOPERATION_FLOWCREATEERROR = "FailedOperation.FlowCreateError"
+//  INVALIDPARAMETER_PARAMETERCHECKERROR = "InvalidParameter.ParameterCheckError"
+//  INVALIDPARAMETERVALUE_INVALIDPARAMETERVALUEERROR = "InvalidParameterValue.InvalidParameterValueError"
+//  OPERATIONDENIED_INSTANCEACCESSDENIEDERROR = "OperationDenied.InstanceAccessDeniedError"
+//  OPERATIONDENIED_INSTANCESTATUSDENIEDERROR = "OperationDenied.InstanceStatusDeniedError"
+//  OPERATIONDENIED_INSTANCESTATUSLIMITOPERROR = "OperationDenied.InstanceStatusLimitOpError"
+//  RESOURCENOTFOUND_INSTANCENOTFOUNDERROR = "ResourceNotFound.InstanceNotFoundError"
+func (c *Client) CreateDBProxyWithContext(ctx context.Context, request *CreateDBProxyRequest) (response *CreateDBProxyResponse, err error) {
+    if request == nil {
+        request = NewCreateDBProxyRequest()
+    }
+    c.InitBaseRequest(&request.BaseRequest, "postgres", APIVersion, "CreateDBProxy")
+    
+    if c.GetCredential() == nil {
+        return nil, errors.New("CreateDBProxy require credential")
+    }
+
+    request.SetContext(ctx)
+    
+    response = NewCreateDBProxyResponse()
+    err = c.Send(request, response)
+    return
+}
+
 func NewCreateDatabaseRequest() (request *CreateDatabaseRequest) {
     request = &CreateDatabaseRequest{
         BaseRequest: &tchttp.BaseRequest{},
@@ -1857,6 +1923,114 @@ func (c *Client) DeleteDBInstanceNetworkAccessWithContext(ctx context.Context, r
     request.SetContext(ctx)
     
     response = NewDeleteDBInstanceNetworkAccessResponse()
+    err = c.Send(request, response)
+    return
+}
+
+func NewDeleteDatabaseRequest() (request *DeleteDatabaseRequest) {
+    request = &DeleteDatabaseRequest{
+        BaseRequest: &tchttp.BaseRequest{},
+    }
+    
+    request.Init().WithApiInfo("postgres", APIVersion, "DeleteDatabase")
+    
+    
+    return
+}
+
+func NewDeleteDatabaseResponse() (response *DeleteDatabaseResponse) {
+    response = &DeleteDatabaseResponse{
+        BaseResponse: &tchttp.BaseResponse{},
+    } 
+    return
+
+}
+
+// DeleteDatabase
+// 本接口（DeleteDatabase）用于删除指定 PostgreSQL 实例中的数据库。删除操作会直接调用底层存储引擎执行，为保障数据安全和系统稳定，接口在执行前会进行多项前置校验。
+//
+// 使用限制
+//
+// 
+//
+// - 实例状态限制：仅允许对运行中的实例执行删除数据库操作。
+//
+// 
+//
+// - 只读实例限制：只读实例不支持删除数据库操作。由于只读实例的数据来源于主实例同步，不允许在只读侧执行库级别的删除变更。若对只读实例发起此请求，将直接被拦截并返回错误。
+//
+// 
+//
+// - 数据库名合法性限制：待删除的数据库名称必须通过以下校验，否则报错：
+//
+// 长度符合 PostgreSQL 命名规范
+//
+// 字符集合法（仅允许字母、数字、下划线，且不能以数字开头）
+//
+// 不能为系统保留库名（如 postgres、template0、template1 等）
+//
+// 不能为 PostgreSQL 关键字/保留字
+//
+// 
+//
+// - 不可逆操作：数据库一经删除，数据将无法恢复。执行前请确认已做好必要的数据备份。
+//
+// 可能返回的错误码:
+//  FAILEDOPERATION_DATABASEACCESSERROR = "FailedOperation.DatabaseAccessError"
+//  FAILEDOPERATION_FAILEDOPERATIONERROR = "FailedOperation.FailedOperationError"
+//  INVALIDPARAMETER_PARAMETERCHECKERROR = "InvalidParameter.ParameterCheckError"
+//  OPERATIONDENIED_INSTANCESTATUSLIMITOPERROR = "OperationDenied.InstanceStatusLimitOpError"
+func (c *Client) DeleteDatabase(request *DeleteDatabaseRequest) (response *DeleteDatabaseResponse, err error) {
+    return c.DeleteDatabaseWithContext(context.Background(), request)
+}
+
+// DeleteDatabase
+// 本接口（DeleteDatabase）用于删除指定 PostgreSQL 实例中的数据库。删除操作会直接调用底层存储引擎执行，为保障数据安全和系统稳定，接口在执行前会进行多项前置校验。
+//
+// 使用限制
+//
+// 
+//
+// - 实例状态限制：仅允许对运行中的实例执行删除数据库操作。
+//
+// 
+//
+// - 只读实例限制：只读实例不支持删除数据库操作。由于只读实例的数据来源于主实例同步，不允许在只读侧执行库级别的删除变更。若对只读实例发起此请求，将直接被拦截并返回错误。
+//
+// 
+//
+// - 数据库名合法性限制：待删除的数据库名称必须通过以下校验，否则报错：
+//
+// 长度符合 PostgreSQL 命名规范
+//
+// 字符集合法（仅允许字母、数字、下划线，且不能以数字开头）
+//
+// 不能为系统保留库名（如 postgres、template0、template1 等）
+//
+// 不能为 PostgreSQL 关键字/保留字
+//
+// 
+//
+// - 不可逆操作：数据库一经删除，数据将无法恢复。执行前请确认已做好必要的数据备份。
+//
+// 可能返回的错误码:
+//  FAILEDOPERATION_DATABASEACCESSERROR = "FailedOperation.DatabaseAccessError"
+//  FAILEDOPERATION_FAILEDOPERATIONERROR = "FailedOperation.FailedOperationError"
+//  INVALIDPARAMETER_PARAMETERCHECKERROR = "InvalidParameter.ParameterCheckError"
+//  OPERATIONDENIED_INSTANCESTATUSLIMITOPERROR = "OperationDenied.InstanceStatusLimitOpError"
+func (c *Client) DeleteDatabaseWithContext(ctx context.Context, request *DeleteDatabaseRequest) (response *DeleteDatabaseResponse, err error) {
+    if request == nil {
+        request = NewDeleteDatabaseRequest()
+    }
+    c.InitBaseRequest(&request.BaseRequest, "postgres", APIVersion, "DeleteDatabase")
+    
+    if c.GetCredential() == nil {
+        return nil, errors.New("DeleteDatabase require credential")
+    }
+
+    request.SetContext(ctx)
+    
+    response = NewDeleteDatabaseResponse()
     err = c.Send(request, response)
     return
 }
@@ -3627,6 +3801,114 @@ func (c *Client) DescribeDBInstancesWithContext(ctx context.Context, request *De
     return
 }
 
+func NewDescribeDBProxyRequest() (request *DescribeDBProxyRequest) {
+    request = &DescribeDBProxyRequest{
+        BaseRequest: &tchttp.BaseRequest{},
+    }
+    
+    request.Init().WithApiInfo("postgres", APIVersion, "DescribeDBProxy")
+    
+    
+    return
+}
+
+func NewDescribeDBProxyResponse() (response *DescribeDBProxyResponse) {
+    response = &DescribeDBProxyResponse{
+        BaseResponse: &tchttp.BaseResponse{},
+    } 
+    return
+
+}
+
+// DescribeDBProxy
+// 本接口（DescribeDBProxy）用于查询指定 PostgreSQL 实例下的数据库代理（Proxy）信息，包含 Proxy 节点列表与接入地址列表。可选传入 ProxyGroupId 精确查询某一 Proxy；不传则返回该实例下的全部 Proxy。
+//
+// 可能返回的错误码:
+//  INVALIDPARAMETER_PARAMETERCHECKERROR = "InvalidParameter.ParameterCheckError"
+//  INVALIDPARAMETERVALUE_INVALIDPARAMETERVALUEERROR = "InvalidParameterValue.InvalidParameterValueError"
+//  RESOURCENOTFOUND_INSTANCENOTFOUNDERROR = "ResourceNotFound.InstanceNotFoundError"
+func (c *Client) DescribeDBProxy(request *DescribeDBProxyRequest) (response *DescribeDBProxyResponse, err error) {
+    return c.DescribeDBProxyWithContext(context.Background(), request)
+}
+
+// DescribeDBProxy
+// 本接口（DescribeDBProxy）用于查询指定 PostgreSQL 实例下的数据库代理（Proxy）信息，包含 Proxy 节点列表与接入地址列表。可选传入 ProxyGroupId 精确查询某一 Proxy；不传则返回该实例下的全部 Proxy。
+//
+// 可能返回的错误码:
+//  INVALIDPARAMETER_PARAMETERCHECKERROR = "InvalidParameter.ParameterCheckError"
+//  INVALIDPARAMETERVALUE_INVALIDPARAMETERVALUEERROR = "InvalidParameterValue.InvalidParameterValueError"
+//  RESOURCENOTFOUND_INSTANCENOTFOUNDERROR = "ResourceNotFound.InstanceNotFoundError"
+func (c *Client) DescribeDBProxyWithContext(ctx context.Context, request *DescribeDBProxyRequest) (response *DescribeDBProxyResponse, err error) {
+    if request == nil {
+        request = NewDescribeDBProxyRequest()
+    }
+    c.InitBaseRequest(&request.BaseRequest, "postgres", APIVersion, "DescribeDBProxy")
+    
+    if c.GetCredential() == nil {
+        return nil, errors.New("DescribeDBProxy require credential")
+    }
+
+    request.SetContext(ctx)
+    
+    response = NewDescribeDBProxyResponse()
+    err = c.Send(request, response)
+    return
+}
+
+func NewDescribeDBProxySpecsRequest() (request *DescribeDBProxySpecsRequest) {
+    request = &DescribeDBProxySpecsRequest{
+        BaseRequest: &tchttp.BaseRequest{},
+    }
+    
+    request.Init().WithApiInfo("postgres", APIVersion, "DescribeDBProxySpecs")
+    
+    
+    return
+}
+
+func NewDescribeDBProxySpecsResponse() (response *DescribeDBProxySpecsResponse) {
+    response = &DescribeDBProxySpecsResponse{
+        BaseResponse: &tchttp.BaseResponse{},
+    } 
+    return
+
+}
+
+// DescribeDBProxySpecs
+// 查询代理可售规格
+//
+// 可能返回的错误码:
+//  INVALIDPARAMETER_PARAMETERCHECKERROR = "InvalidParameter.ParameterCheckError"
+//  INVALIDPARAMETERVALUE_INVALIDPARAMETERVALUEERROR = "InvalidParameterValue.InvalidParameterValueError"
+//  RESOURCENOTFOUND_INSTANCENOTFOUNDERROR = "ResourceNotFound.InstanceNotFoundError"
+func (c *Client) DescribeDBProxySpecs(request *DescribeDBProxySpecsRequest) (response *DescribeDBProxySpecsResponse, err error) {
+    return c.DescribeDBProxySpecsWithContext(context.Background(), request)
+}
+
+// DescribeDBProxySpecs
+// 查询代理可售规格
+//
+// 可能返回的错误码:
+//  INVALIDPARAMETER_PARAMETERCHECKERROR = "InvalidParameter.ParameterCheckError"
+//  INVALIDPARAMETERVALUE_INVALIDPARAMETERVALUEERROR = "InvalidParameterValue.InvalidParameterValueError"
+//  RESOURCENOTFOUND_INSTANCENOTFOUNDERROR = "ResourceNotFound.InstanceNotFoundError"
+func (c *Client) DescribeDBProxySpecsWithContext(ctx context.Context, request *DescribeDBProxySpecsRequest) (response *DescribeDBProxySpecsResponse, err error) {
+    if request == nil {
+        request = NewDescribeDBProxySpecsRequest()
+    }
+    c.InitBaseRequest(&request.BaseRequest, "postgres", APIVersion, "DescribeDBProxySpecs")
+    
+    if c.GetCredential() == nil {
+        return nil, errors.New("DescribeDBProxySpecs require credential")
+    }
+
+    request.SetContext(ctx)
+    
+    response = NewDescribeDBProxySpecsResponse()
+    err = c.Send(request, response)
+    return
+}
+
 func NewDescribeDBVersionsRequest() (request *DescribeDBVersionsRequest) {
     request = &DescribeDBVersionsRequest{
         BaseRequest: &tchttp.BaseRequest{},
@@ -5107,6 +5389,64 @@ func (c *Client) DestroyDBInstanceWithContext(ctx context.Context, request *Dest
     request.SetContext(ctx)
     
     response = NewDestroyDBInstanceResponse()
+    err = c.Send(request, response)
+    return
+}
+
+func NewDestroyDBProxyRequest() (request *DestroyDBProxyRequest) {
+    request = &DestroyDBProxyRequest{
+        BaseRequest: &tchttp.BaseRequest{},
+    }
+    
+    request.Init().WithApiInfo("postgres", APIVersion, "DestroyDBProxy")
+    
+    
+    return
+}
+
+func NewDestroyDBProxyResponse() (response *DestroyDBProxyResponse) {
+    response = &DestroyDBProxyResponse{
+        BaseResponse: &tchttp.BaseResponse{},
+    } 
+    return
+
+}
+
+// DestroyDBProxy
+// 本接口（DestroyDBProxy）用于销毁指定的数据库代理（Proxy）。接口仅返回 RequestId，销毁动作由计费回调异步触发 ProxyDestroy 任务，内部统一完成「隔离 + 销毁」全部步骤（释放 VIP、解绑安全组、回收资源、上报计费等），用户无需先调用隔离接口。
+//
+// 可能返回的错误码:
+//  FAILEDOPERATION_FAILEDOPERATIONERROR = "FailedOperation.FailedOperationError"
+//  INVALIDPARAMETER_PARAMETERCHECKERROR = "InvalidParameter.ParameterCheckError"
+//  OPERATIONDENIED_INSTANCEACCESSDENIEDERROR = "OperationDenied.InstanceAccessDeniedError"
+//  OPERATIONDENIED_INSTANCESTATUSLIMITOPERROR = "OperationDenied.InstanceStatusLimitOpError"
+//  RESOURCENOTFOUND_INSTANCENOTFOUNDERROR = "ResourceNotFound.InstanceNotFoundError"
+func (c *Client) DestroyDBProxy(request *DestroyDBProxyRequest) (response *DestroyDBProxyResponse, err error) {
+    return c.DestroyDBProxyWithContext(context.Background(), request)
+}
+
+// DestroyDBProxy
+// 本接口（DestroyDBProxy）用于销毁指定的数据库代理（Proxy）。接口仅返回 RequestId，销毁动作由计费回调异步触发 ProxyDestroy 任务，内部统一完成「隔离 + 销毁」全部步骤（释放 VIP、解绑安全组、回收资源、上报计费等），用户无需先调用隔离接口。
+//
+// 可能返回的错误码:
+//  FAILEDOPERATION_FAILEDOPERATIONERROR = "FailedOperation.FailedOperationError"
+//  INVALIDPARAMETER_PARAMETERCHECKERROR = "InvalidParameter.ParameterCheckError"
+//  OPERATIONDENIED_INSTANCEACCESSDENIEDERROR = "OperationDenied.InstanceAccessDeniedError"
+//  OPERATIONDENIED_INSTANCESTATUSLIMITOPERROR = "OperationDenied.InstanceStatusLimitOpError"
+//  RESOURCENOTFOUND_INSTANCENOTFOUNDERROR = "ResourceNotFound.InstanceNotFoundError"
+func (c *Client) DestroyDBProxyWithContext(ctx context.Context, request *DestroyDBProxyRequest) (response *DestroyDBProxyResponse, err error) {
+    if request == nil {
+        request = NewDestroyDBProxyRequest()
+    }
+    c.InitBaseRequest(&request.BaseRequest, "postgres", APIVersion, "DestroyDBProxy")
+    
+    if c.GetCredential() == nil {
+        return nil, errors.New("DestroyDBProxy require credential")
+    }
+
+    request.SetContext(ctx)
+    
+    response = NewDestroyDBProxyResponse()
     err = c.Send(request, response)
     return
 }
@@ -6899,6 +7239,130 @@ func (c *Client) ModifyDBInstancesProjectWithContext(ctx context.Context, reques
     return
 }
 
+func NewModifyDBProxyRequest() (request *ModifyDBProxyRequest) {
+    request = &ModifyDBProxyRequest{
+        BaseRequest: &tchttp.BaseRequest{},
+    }
+    
+    request.Init().WithApiInfo("postgres", APIVersion, "ModifyDBProxy")
+    
+    
+    return
+}
+
+func NewModifyDBProxyResponse() (response *ModifyDBProxyResponse) {
+    response = &ModifyDBProxyResponse{
+        BaseResponse: &tchttp.BaseResponse{},
+    } 
+    return
+
+}
+
+// ModifyDBProxy
+// 本接口（ModifyDBProxy）用于修改数据库代理（Proxy）。支持两种模式：①仅修改 Description 时同步生效，不下单，DealName 为空；②变更 Proxy 节点规格或数量（ProxyNodeCustom）时走计费下单流程，异步触发变配任务，返回 DealName。可通过 SwitchTag 控制变配执行时机。
+//
+// 可能返回的错误码:
+//  FAILEDOPERATION_DATABASEACCESSERROR = "FailedOperation.DatabaseAccessError"
+//  FAILEDOPERATION_FAILEDOPERATIONERROR = "FailedOperation.FailedOperationError"
+//  FAILEDOPERATION_FLOWCREATEERROR = "FailedOperation.FlowCreateError"
+//  FAILEDOPERATION_MODIFYRESOURCEERROR = "FailedOperation.ModifyResourceError"
+//  INVALIDPARAMETER_PARAMETERCHECKERROR = "InvalidParameter.ParameterCheckError"
+//  INVALIDPARAMETERVALUE_INVALIDPARAMETERVALUEERROR = "InvalidParameterValue.InvalidParameterValueError"
+//  OPERATIONDENIED_INSTANCEACCESSDENIEDERROR = "OperationDenied.InstanceAccessDeniedError"
+//  OPERATIONDENIED_INSTANCESTATUSLIMITOPERROR = "OperationDenied.InstanceStatusLimitOpError"
+//  RESOURCENOTFOUND_INSTANCENOTFOUNDERROR = "ResourceNotFound.InstanceNotFoundError"
+func (c *Client) ModifyDBProxy(request *ModifyDBProxyRequest) (response *ModifyDBProxyResponse, err error) {
+    return c.ModifyDBProxyWithContext(context.Background(), request)
+}
+
+// ModifyDBProxy
+// 本接口（ModifyDBProxy）用于修改数据库代理（Proxy）。支持两种模式：①仅修改 Description 时同步生效，不下单，DealName 为空；②变更 Proxy 节点规格或数量（ProxyNodeCustom）时走计费下单流程，异步触发变配任务，返回 DealName。可通过 SwitchTag 控制变配执行时机。
+//
+// 可能返回的错误码:
+//  FAILEDOPERATION_DATABASEACCESSERROR = "FailedOperation.DatabaseAccessError"
+//  FAILEDOPERATION_FAILEDOPERATIONERROR = "FailedOperation.FailedOperationError"
+//  FAILEDOPERATION_FLOWCREATEERROR = "FailedOperation.FlowCreateError"
+//  FAILEDOPERATION_MODIFYRESOURCEERROR = "FailedOperation.ModifyResourceError"
+//  INVALIDPARAMETER_PARAMETERCHECKERROR = "InvalidParameter.ParameterCheckError"
+//  INVALIDPARAMETERVALUE_INVALIDPARAMETERVALUEERROR = "InvalidParameterValue.InvalidParameterValueError"
+//  OPERATIONDENIED_INSTANCEACCESSDENIEDERROR = "OperationDenied.InstanceAccessDeniedError"
+//  OPERATIONDENIED_INSTANCESTATUSLIMITOPERROR = "OperationDenied.InstanceStatusLimitOpError"
+//  RESOURCENOTFOUND_INSTANCENOTFOUNDERROR = "ResourceNotFound.InstanceNotFoundError"
+func (c *Client) ModifyDBProxyWithContext(ctx context.Context, request *ModifyDBProxyRequest) (response *ModifyDBProxyResponse, err error) {
+    if request == nil {
+        request = NewModifyDBProxyRequest()
+    }
+    c.InitBaseRequest(&request.BaseRequest, "postgres", APIVersion, "ModifyDBProxy")
+    
+    if c.GetCredential() == nil {
+        return nil, errors.New("ModifyDBProxy require credential")
+    }
+
+    request.SetContext(ctx)
+    
+    response = NewModifyDBProxyResponse()
+    err = c.Send(request, response)
+    return
+}
+
+func NewModifyDBProxyAddressRequest() (request *ModifyDBProxyAddressRequest) {
+    request = &ModifyDBProxyAddressRequest{
+        BaseRequest: &tchttp.BaseRequest{},
+    }
+    
+    request.Init().WithApiInfo("postgres", APIVersion, "ModifyDBProxyAddress")
+    
+    
+    return
+}
+
+func NewModifyDBProxyAddressResponse() (response *ModifyDBProxyAddressResponse) {
+    response = &ModifyDBProxyAddressResponse{
+        BaseResponse: &tchttp.BaseResponse{},
+    } 
+    return
+
+}
+
+// ModifyDBProxyAddress
+// 修改代理地址配置
+//
+// 可能返回的错误码:
+//  INVALIDPARAMETER_PARAMETERCHECKERROR = "InvalidParameter.ParameterCheckError"
+//  INVALIDPARAMETERVALUE_BIZINVALIDPARAMETERVALUEERROR = "InvalidParameterValue.BizInvalidParameterValueError"
+//  INVALIDPARAMETERVALUE_INVALIDPARAMETERVALUEERROR = "InvalidParameterValue.InvalidParameterValueError"
+//  OPERATIONDENIED_INSTANCEACCESSDENIEDERROR = "OperationDenied.InstanceAccessDeniedError"
+//  RESOURCENOTFOUND_INSTANCENOTFOUNDERROR = "ResourceNotFound.InstanceNotFoundError"
+func (c *Client) ModifyDBProxyAddress(request *ModifyDBProxyAddressRequest) (response *ModifyDBProxyAddressResponse, err error) {
+    return c.ModifyDBProxyAddressWithContext(context.Background(), request)
+}
+
+// ModifyDBProxyAddress
+// 修改代理地址配置
+//
+// 可能返回的错误码:
+//  INVALIDPARAMETER_PARAMETERCHECKERROR = "InvalidParameter.ParameterCheckError"
+//  INVALIDPARAMETERVALUE_BIZINVALIDPARAMETERVALUEERROR = "InvalidParameterValue.BizInvalidParameterValueError"
+//  INVALIDPARAMETERVALUE_INVALIDPARAMETERVALUEERROR = "InvalidParameterValue.InvalidParameterValueError"
+//  OPERATIONDENIED_INSTANCEACCESSDENIEDERROR = "OperationDenied.InstanceAccessDeniedError"
+//  RESOURCENOTFOUND_INSTANCENOTFOUNDERROR = "ResourceNotFound.InstanceNotFoundError"
+func (c *Client) ModifyDBProxyAddressWithContext(ctx context.Context, request *ModifyDBProxyAddressRequest) (response *ModifyDBProxyAddressResponse, err error) {
+    if request == nil {
+        request = NewModifyDBProxyAddressRequest()
+    }
+    c.InitBaseRequest(&request.BaseRequest, "postgres", APIVersion, "ModifyDBProxyAddress")
+    
+    if c.GetCredential() == nil {
+        return nil, errors.New("ModifyDBProxyAddress require credential")
+    }
+
+    request.SetContext(ctx)
+    
+    response = NewModifyDBProxyAddressResponse()
+    err = c.Send(request, response)
+    return
+}
+
 func NewModifyDatabaseOwnerRequest() (request *ModifyDatabaseOwnerRequest) {
     request = &ModifyDatabaseOwnerRequest{
         BaseRequest: &tchttp.BaseRequest{},
@@ -7697,6 +8161,60 @@ func (c *Client) RefreshAccountPasswordWithContext(ctx context.Context, request 
     request.SetContext(ctx)
     
     response = NewRefreshAccountPasswordResponse()
+    err = c.Send(request, response)
+    return
+}
+
+func NewReloadBalanceDBProxyNodeRequest() (request *ReloadBalanceDBProxyNodeRequest) {
+    request = &ReloadBalanceDBProxyNodeRequest{
+        BaseRequest: &tchttp.BaseRequest{},
+    }
+    
+    request.Init().WithApiInfo("postgres", APIVersion, "ReloadBalanceDBProxyNode")
+    
+    
+    return
+}
+
+func NewReloadBalanceDBProxyNodeResponse() (response *ReloadBalanceDBProxyNodeResponse) {
+    response = &ReloadBalanceDBProxyNodeResponse{
+        BaseResponse: &tchttp.BaseResponse{},
+    } 
+    return
+
+}
+
+// ReloadBalanceDBProxyNode
+// 本接口（ReloadBalanceDBProxyNode）用于重新均衡数据库代理节点
+//
+// 可能返回的错误码:
+//  INVALIDPARAMETERVALUE_BIZINVALIDPARAMETERVALUEERROR = "InvalidParameterValue.BizInvalidParameterValueError"
+//  INVALIDPARAMETERVALUE_INVALIDPARAMETERVALUEERROR = "InvalidParameterValue.InvalidParameterValueError"
+//  OPERATIONDENIED_INSTANCESTATUSLIMITOPERROR = "OperationDenied.InstanceStatusLimitOpError"
+func (c *Client) ReloadBalanceDBProxyNode(request *ReloadBalanceDBProxyNodeRequest) (response *ReloadBalanceDBProxyNodeResponse, err error) {
+    return c.ReloadBalanceDBProxyNodeWithContext(context.Background(), request)
+}
+
+// ReloadBalanceDBProxyNode
+// 本接口（ReloadBalanceDBProxyNode）用于重新均衡数据库代理节点
+//
+// 可能返回的错误码:
+//  INVALIDPARAMETERVALUE_BIZINVALIDPARAMETERVALUEERROR = "InvalidParameterValue.BizInvalidParameterValueError"
+//  INVALIDPARAMETERVALUE_INVALIDPARAMETERVALUEERROR = "InvalidParameterValue.InvalidParameterValueError"
+//  OPERATIONDENIED_INSTANCESTATUSLIMITOPERROR = "OperationDenied.InstanceStatusLimitOpError"
+func (c *Client) ReloadBalanceDBProxyNodeWithContext(ctx context.Context, request *ReloadBalanceDBProxyNodeRequest) (response *ReloadBalanceDBProxyNodeResponse, err error) {
+    if request == nil {
+        request = NewReloadBalanceDBProxyNodeRequest()
+    }
+    c.InitBaseRequest(&request.BaseRequest, "postgres", APIVersion, "ReloadBalanceDBProxyNode")
+    
+    if c.GetCredential() == nil {
+        return nil, errors.New("ReloadBalanceDBProxyNode require credential")
+    }
+
+    request.SetContext(ctx)
+    
+    response = NewReloadBalanceDBProxyNodeResponse()
     err = c.Send(request, response)
     return
 }

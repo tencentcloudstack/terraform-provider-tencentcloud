@@ -1985,6 +1985,7 @@ func (me *TkeService) WaitForAuthenticationOptionsUpdateSuccess(ctx context.Cont
 		errRet = err
 		return
 	}
+
 	return
 }
 
@@ -3550,11 +3551,8 @@ func (me *TkeService) DescribeKubernetesAuthAttachmentById(ctx context.Context, 
 	logId := tccommon.GetLogId(ctx)
 
 	request := tke.NewDescribeClusterAuthenticationOptionsRequest()
+	response := tke.NewDescribeClusterAuthenticationOptionsResponse()
 	request.ClusterId = helper.String(clusterId)
-
-	if err := resourceTencentCloudKubernetesAuthAttachmentReadPostFillRequest0(ctx, request); err != nil {
-		return nil, err
-	}
 
 	defer func() {
 		if errRet != nil {
@@ -3562,14 +3560,27 @@ func (me *TkeService) DescribeKubernetesAuthAttachmentById(ctx context.Context, 
 		}
 	}()
 
-	ratelimit.Check(request.GetAction())
+	reqErr := resource.Retry(tccommon.ReadRetryTimeout, func() *resource.RetryError {
+		ratelimit.Check(request.GetAction())
+		result, e := me.client.UseTkeV20180525Client().DescribeClusterAuthenticationOptions(request)
+		if e != nil {
+			return tccommon.RetryError(e)
+		} else {
+			log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), result.ToJsonString())
+		}
 
-	response, err := me.client.UseTkeV20180525Client().DescribeClusterAuthenticationOptions(request)
-	if err != nil {
-		errRet = err
+		if result == nil || result.Response == nil {
+			return resource.NonRetryableError(fmt.Errorf("Describe cluster authentication options failed, Response is nil."))
+		}
+
+		response = result
+		return nil
+	})
+
+	if reqErr != nil {
+		errRet = reqErr
 		return
 	}
-	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
 
 	ret = response.Response
 	return
