@@ -12,7 +12,7 @@ TEO EdgeKV 已在 Provider 中落地了 `tencentcloud_teo_edge_kv`（单键 CRUD
 当前状态：
 - `vendor/.../teo/v20220901` 中 `EdgeKVListRequest`/`EdgeKVListResponse` 类型已就绪。
 - `TeoService` 已存在，通过 `me.client.UseTeoClient()` 获取客户端。
-- 现有数据源参考实现：`data_source_tc_teo_security_ip_group_content.go`（同服务，分页遍历 + retry 模式）。
+- 现有数据源参考实现：`data_source_tc_igtm_instance_list.go`（service 层 `DescribeXxxByFilter` + 轻量 Read 模式）。
 
 约束：
 - 数据源不向用户暴露 `limit` 参数；内部固定取云 API 注释标注的最大值 1000，并通过 `Cursor` 自动循环直到游标为空字符串。
@@ -35,20 +35,20 @@ TEO EdgeKV 已在 Provider 中落地了 `tencentcloud_teo_edge_kv`（单键 CRUD
 
 ## Decisions
 
-### Decision 1: 数据源直接在 Read 函数内调用 API，不新增 service 层方法
+### Decision 1: 在 service 层新增 `DescribeTeoEdgeKvListByFilter` 方法，Read 函数保持轻量
 
-**选择**：参照同服务 `data_source_tc_teo_security_ip_group_content.go` 的模式，在 `dataSourceTencentCloudTeoEdgeKvListRead` 内直接通过 `meta.(tccommon.ProviderMeta).GetAPIV3Conn().UseTeoClient()` 获取客户端并调用 `EdgeKVList`，分页循环与 retry 都内联在 Read 函数中。
+**选择**：参照 `data_source_tc_igtm_instance_list.go` / `data_source_tc_teo_content_quota.go` 的模式，在 `service_tencentcloud_teo.go` 中新增 `DescribeTeoEdgeKvListByFilter(ctx, param map[string]interface{}) (keys []*string, cursor *string, err error)` service 层方法，将 `EdgeKVList` 调用、retry、分页循环全部封装在 service 层。数据源 `dataSourceTencentCloudTeoEdgeKvListRead` 仅负责组装 `paramMap`、调用 service 方法、`d.Set` 回填结果、设置 ID 与输出文件，不再内联 retry/分页逻辑。
 
-**备选**：在 `service_tencentcloud_teo.go` 新增 `DescribeTeoEdgeKvListByFilter` service 层方法。
+**备选**：在 Read 函数内直接调用云 API，分页与 retry 内联（参照 `data_source_tc_teo_security_ip_group_content.go`）。
 
 **理由**：
-- `EdgeKVList` 为单一查询接口，入参简单（4 个标量），无复杂 filter 结构转换需求。
-- 同服务的 `data_source_tc_teo_security_ip_group_content.go` 已采用"Read 内联分页+retry"模式，保持一致性。
-- 减少文件改动面，降低引入不一致的风险。
+- 项目规范要求 RESOURCE_KIND_DATASOURCE 资源的代码生成格式严格参考 `tencentcloud_igtm_instance_list` 资源的业务逻辑代码，即 service 层 `DescribeXxxByFilter` + 轻量 Read 模式。
+- 同服务的 `data_source_tc_teo_content_quota.go` 也采用此模式，保持一致性。
+- service 层封装后，retry 与分页细节集中在一处，Read 函数更简洁；由于 service 方法内部已有 retry，Read 函数无需再包一层 retry（避免 retry 嵌套）。
 
-### Decision 2: 内部固定 Limit=1000，通过 Cursor 自动循环遍历
+### Decision 2: service 层内部固定 Limit=1000，通过 Cursor 自动循环遍历
 
-**选择**：在 Read 函数的 for 循环中固定 `request.Limit = helper.IntInt64(1000)`（云 API 注释标注的最大值），每次循环将上一次响应的 `Cursor` 填入 `request.Cursor`，直到响应 `Cursor` 为空字符串（或 nil）时跳出循环。将累计的 `Keys` 一次性 `d.Set("keys", ...)`。
+**选择**：在 `DescribeTeoEdgeKvListByFilter` 的 for 循环中固定 `request.Limit = helper.IntInt64(1000)`（云 API 注释标注的最大值），每次循环将上一次响应的 `Cursor` 填入 `request.Cursor`，直到响应 `Cursor` 为空字符串（或 nil）时跳出循环。将累计的 `Keys` 与最后一次的 `Cursor` 返回给 Read 函数，由 Read 一次性 `d.Set("keys", ...)` 与 `d.Set("cursor", ...)`。
 
 **备选**：将 `cursor` 仅作为入参透传，单次调用即返回，不做内部循环。
 
@@ -67,9 +67,9 @@ TEO EdgeKV 已在 Provider 中落地了 `tencentcloud_teo_edge_kv`（单键 CRUD
 - 云 API 响应的 `Cursor` 是游标遍历的核心产出，用户需要它判断是否还有更多数据并继续遍历。
 - `Optional + Computed` 是 Provider 处理"可选入参 + 由云端回填"字段的标准模式，与现有数据源一致。
 
-### Decision 4: retry 块内对空响应返回 NonRetryableError
+### Decision 4: service 层 retry 块内对空响应返回 NonRetryableError
 
-**选择**：在 `resource.Retry(tccommon.ReadRetryTimeout, ...)` 内，若 `response == nil || response.Response == nil`，返回 `resource.NonRetryableError(...)`；在 retry 失败路径上保留 `log.Printf("[DATASOURCE] read empty, skip SetId")` 提示。遍历循环中 `Keys` 为空但 `Cursor` 非空字符串时继续翻页，不视为错误。
+**选择**：在 `DescribeTeoEdgeKvListByFilter` 内的 `resource.Retry(tccommon.ReadRetryTimeout, ...)` 中，若 `result == nil || result.Response == nil`，返回 `resource.NonRetryableError(...)`；在 retry 失败路径上保留 `log.Printf("[DATASOURCE] read empty, skip SetId")` 提示。遍历循环中 `Keys` 为空但 `Cursor` 非空字符串时继续翻页，不视为错误。Read 函数收到 service 返回的 error 后直接返回，不调用 `d.SetId("")`，从而保留 state id。
 
 **备选**：返回 nil 让外层继续，或直接 `d.SetId("")`。
 
@@ -93,7 +93,7 @@ TEO EdgeKV 已在 Provider 中落地了 `tencentcloud_teo_edge_kv`（单键 CRUD
 
 - **Risk**：命名空间下键名数量极大时，内部自动循环可能产生多次 API 调用 → **Mitigation**：每次取 Limit=1000，单命名空间键名量级通常远小于此；循环以游标空字符串终止，无死循环风险。
 - **Risk**：`cursor` 同时为入参和出参，用户传入过期的 `cursor` 可能导致从中间位置开始遍历，遗漏前段键名 → **Mitigation**：文档中明确说明 `cursor` 用于续续遍历，首次查询不填写；这是云 API 游标的标准语义。
-- **Trade-off**：不新增 service 层方法，导致 Read 函数略长 → 可接受，与同服务 `data_source_tc_teo_security_ip_group_content.go` 保持一致，便于维护。
+- **Trade-off**：新增 service 层方法 `DescribeTeoEdgeKvListByFilter`，service 文件变长 → 可接受，与 `data_source_tc_igtm_instance_list` / `data_source_tc_teo_content_quota` 模式一致，便于维护。
 
 ## Migration Plan
 

@@ -11,7 +11,6 @@ import (
 	"github.com/stretchr/testify/assert"
 	teov20220901 "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/teo/v20220901"
 
-	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/connectivity"
 	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/services/teo"
 )
 
@@ -23,7 +22,7 @@ func TestTeoEdgeKvListDataSource_ReadSuccess(t *testing.T) {
 	defer patches.Reset()
 
 	teoClient := &teov20220901.Client{}
-	patches.ApplyMethodReturn(&connectivity.TencentCloudClient{}, "UseTeoV20220901Client", teoClient)
+	patches.ApplyMethodReturn(newMockMeta().client, "UseTeoClient", teoClient)
 
 	patches.ApplyMethodFunc(teoClient, "EdgeKVListWithContext", func(_ context.Context, request *teov20220901.EdgeKVListRequest) (*teov20220901.EdgeKVListResponse, error) {
 		assert.Equal(t, "zone-2qtuhspy7cr6", *request.ZoneId)
@@ -66,7 +65,7 @@ func TestTeoEdgeKvListDataSource_Paginated(t *testing.T) {
 	defer patches.Reset()
 
 	teoClient := &teov20220901.Client{}
-	patches.ApplyMethodReturn(&connectivity.TencentCloudClient{}, "UseTeoV20220901Client", teoClient)
+	patches.ApplyMethodReturn(newMockMeta().client, "UseTeoClient", teoClient)
 
 	var callCount int32
 	patches.ApplyMethodFunc(teoClient, "EdgeKVListWithContext", func(_ context.Context, request *teov20220901.EdgeKVListRequest) (*teov20220901.EdgeKVListResponse, error) {
@@ -120,7 +119,7 @@ func TestTeoEdgeKvListDataSource_PrefixFilter(t *testing.T) {
 	defer patches.Reset()
 
 	teoClient := &teov20220901.Client{}
-	patches.ApplyMethodReturn(&connectivity.TencentCloudClient{}, "UseTeoV20220901Client", teoClient)
+	patches.ApplyMethodReturn(newMockMeta().client, "UseTeoClient", teoClient)
 
 	patches.ApplyMethodFunc(teoClient, "EdgeKVListWithContext", func(_ context.Context, request *teov20220901.EdgeKVListRequest) (*teov20220901.EdgeKVListResponse, error) {
 		assert.NotNil(t, request.Prefix)
@@ -161,7 +160,7 @@ func TestTeoEdgeKvListDataSource_NilResponse(t *testing.T) {
 	defer patches.Reset()
 
 	teoClient := &teov20220901.Client{}
-	patches.ApplyMethodReturn(&connectivity.TencentCloudClient{}, "UseTeoV20220901Client", teoClient)
+	patches.ApplyMethodReturn(newMockMeta().client, "UseTeoClient", teoClient)
 
 	patches.ApplyMethodFunc(teoClient, "EdgeKVListWithContext", func(_ context.Context, request *teov20220901.EdgeKVListRequest) (*teov20220901.EdgeKVListResponse, error) {
 		return nil, nil
@@ -188,7 +187,7 @@ func TestTeoEdgeKvListDataSource_APIError(t *testing.T) {
 	defer patches.Reset()
 
 	teoClient := &teov20220901.Client{}
-	patches.ApplyMethodReturn(&connectivity.TencentCloudClient{}, "UseTeoV20220901Client", teoClient)
+	patches.ApplyMethodReturn(newMockMeta().client, "UseTeoClient", teoClient)
 
 	patches.ApplyMethodFunc(teoClient, "EdgeKVListWithContext", func(_ context.Context, request *teov20220901.EdgeKVListRequest) (*teov20220901.EdgeKVListResponse, error) {
 		return nil, fmt.Errorf("[TencentCloudSDKError] Code=ResourceUnavailable.NamespaceNotFound, Message=namespace not found")

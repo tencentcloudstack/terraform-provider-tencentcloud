@@ -23,45 +23,45 @@
 - **THEN** the schema SHALL accept the value and pass it to the EdgeKVList API as the starting position
 
 ### Requirement: Data source Read operation queries key list
-数据源 Read 方法 SHALL 调用 TEO `EdgeKVList` API。入参映射如下：
-- `zone_id` → `request.ZoneId`
-- `namespace` → `request.Namespace`
-- `prefix` → `request.Prefix`（仅在用户配置非空时设置）
-- `cursor` → `request.Cursor`（仅在用户配置非空时设置，首次查询不设置）
+数据源 Read 方法 SHALL 通过 `TeoService` 的 `DescribeTeoEdgeKvListByFilter(ctx, paramMap)` service 层方法查询键名列表，不在 Read 函数内直接调用云 API。Read 方法 SHALL 将 schema 字段组装为 `paramMap`：
+- `zone_id` → `paramMap["zone_id"]`
+- `namespace` → `paramMap["namespace"]`
+- `prefix` → `paramMap["prefix"]`（仅在用户配置非空时设置）
+- `cursor` → `paramMap["cursor"]`（仅在用户配置非空时设置，首次查询不设置）
 
-Read 方法 SHALL 在 for 循环内部固定 `request.Limit` 为 1000（云 API 注释标注的最大值），每次循环将上一次响应的 `Cursor` 填入 `request.Cursor`，直到响应 `Cursor` 为空字符串（或 nil）时跳出循环。累计的 `Keys` SHALL 一次性 `d.Set("keys", ...)`。循环结束后，Read 方法 SHALL 用最后一次响应的 `Cursor`（若非 nil）回填 `d.Set("cursor", ...)`。
+service 层方法 SHALL 在 for 循环内部固定 `request.Limit` 为 1000（云 API 注释标注的最大值），每次循环将上一次响应的 `Cursor` 填入 `request.Cursor`，直到响应 `Cursor` 为空字符串（或 nil）时跳出循环。service 层方法 SHALL 返回累计的 `Keys` 与最后一次响应的 `Cursor`。Read 方法 SHALL 一次性 `d.Set("keys", ...)`，并在最后一次响应 `Cursor` 非 nil 时 `d.Set("cursor", ...)`。由于 service 层方法内部已用 `resource.Retry` 包装 API 调用，Read 方法 SHALL NOT 再包一层 retry（避免 retry 嵌套）。
 
 #### Scenario: Query all keys in a namespace
 - **WHEN** user provides `zone_id` and `namespace` without `prefix` or `cursor`
-- **THEN** the data source SHALL call EdgeKVList with `ZoneId` and `Namespace` set, `Prefix` and `Cursor` unset, and `Limit` set to 1000
-- **AND** the data source SHALL loop using the returned `Cursor` until the response `Cursor` is an empty string, accumulating all `Keys` into the `keys` output attribute
+- **THEN** the data source SHALL assemble `paramMap` with `zone_id` and `namespace` set, `prefix` and `cursor` unset, and call `DescribeTeoEdgeKvListByFilter` which sets `Limit` to 1000
+- **AND** the service method SHALL loop using the returned `Cursor` until the response `Cursor` is an empty string, accumulating all `Keys` into the `keys` output attribute
 
 #### Scenario: Query keys with prefix filter
 - **WHEN** user provides `zone_id`, `namespace`, and `prefix`
-- **THEN** the data source SHALL set `request.Prefix` to the configured value and only return keys starting with that prefix
+- **THEN** the data source SHALL set `paramMap["prefix"]` to the configured value and the service method SHALL set `request.Prefix`, only returning keys starting with that prefix
 
 #### Scenario: Continue traversal with cursor
 - **WHEN** user provides `zone_id`, `namespace`, and a previously returned `cursor`
-- **THEN** the data source SHALL set `request.Cursor` to that value and begin traversal from that position
+- **THEN** the data source SHALL set `paramMap["cursor"]` to that value and the service method SHALL set `request.Cursor`, beginning traversal from that position
 
 #### Scenario: Pagination loop terminates on empty cursor
 - **WHEN** the EdgeKVList response returns a `Cursor` that is an empty string (or nil)
-- **THEN** the data source SHALL stop the pagination loop and set `keys` to the accumulated key list
+- **THEN** the service method SHALL stop the pagination loop and return the accumulated key list, and the data source SHALL set `keys` to that list
 
 ### Requirement: Retry and empty response handling
-数据源 Read 方法 SHALL 使用 `resource.Retry(tccommon.ReadRetryTimeout, ...)` 包装 `EdgeKVList` 调用，并按 `tccommon.RetryError()` 处理错误。在 retry 块内，若 `response == nil || response.Response == nil`，SHALL 返回 `resource.NonRetryableError(...)`，而不直接调用 `d.SetId("")`。在 retry 失败路径上 SHALL 保留 `log.Printf("[DATASOURCE] read empty, skip SetId")` 提示。
+service 层方法 `DescribeTeoEdgeKvListByFilter` SHALL 使用 `resource.Retry(tccommon.ReadRetryTimeout, ...)` 包装 `EdgeKVList` 调用，并按 `tccommon.RetryError()` 处理错误。在 retry 块内，若 `result == nil || result.Response == nil`，SHALL 返回 `resource.NonRetryableError(...)`，而不直接调用 `d.SetId("")`。在 retry 失败路径上 SHALL 保留 `log.Printf("[DATASOURCE] read empty, skip SetId")` 提示。Read 方法收到 service 返回的 error 后 SHALL 直接返回，不调用 `d.SetId("")`，从而保留 state id。
 
 #### Scenario: API returns nil response
-- **WHEN** the EdgeKVList API returns a nil `response` or nil `response.Response`
-- **THEN** the data source SHALL return a `NonRetryableError` inside the retry block instead of clearing the state id
+- **WHEN** the EdgeKVList API returns a nil `result` or nil `result.Response`
+- **THEN** the service method SHALL return a `NonRetryableError` inside the retry block, and the Read function SHALL propagate the error without clearing the state id
 
 #### Scenario: API returns retryable error
 - **WHEN** the EdgeKVList API returns a retryable error
-- **THEN** the data source SHALL retry using `tccommon.ReadRetryTimeout` via `resource.Retry` and wrap non-retryable errors with `tccommon.RetryError()`
+- **THEN** the service method SHALL retry using `tccommon.ReadRetryTimeout` via `resource.Retry` and wrap non-retryable errors with `tccommon.RetryError()`
 
 #### Scenario: Empty keys list is a valid result
 - **WHEN** the EdgeKVList API returns an empty `Keys` list but a non-empty `Cursor`
-- **THEN** the data source SHALL continue the pagination loop and SHALL NOT treat the empty keys list as an error
+- **THEN** the service method SHALL continue the pagination loop and SHALL NOT treat the empty keys list as an error
 
 ### Requirement: Data source ID generation
 数据源 Read 方法 SHALL 在成功完成查询后调用 `d.SetId(helper.BuildToken())` 设置 state 占位 ID。

@@ -1,3 +1,3 @@
-```release-note:new-data-source
-tencentcloud_teo_edge_kv_list
+```release-note:enhancement
+data-source/tencentcloud_teo_edge_kv_list: optimize query logic for edge_kv_list datasource
 ```
