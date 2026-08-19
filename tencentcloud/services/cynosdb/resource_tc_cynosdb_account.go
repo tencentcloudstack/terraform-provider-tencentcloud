@@ -120,6 +120,8 @@ func resourceTencentCloudCynosdbAccountCreate(d *schema.ResourceData, meta inter
 		return err
 	}
 
+	d.SetId(clusterId + tccommon.FILED_SP + accountName + tccommon.FILED_SP + host)
+
 	if taskId != nil && *taskId > 0 {
 		service := CynosdbService{client: meta.(tccommon.ProviderMeta).GetAPIV3Conn()}
 		conf := tccommon.BuildStateChangeConf([]string{}, []string{"success"}, 10*tccommon.ReadRetryTimeout, time.Second, service.taskStateRefreshFunc(strconv.FormatInt(*taskId, 10), []string{}))
@@ -127,8 +129,6 @@ func resourceTencentCloudCynosdbAccountCreate(d *schema.ResourceData, meta inter
 			return e
 		}
 	}
-
-	d.SetId(clusterId + tccommon.FILED_SP + accountName + tccommon.FILED_SP + host)
 
 	return resourceTencentCloudCynosdbAccountRead(d, meta)
 }

@@ -17,7 +17,6 @@ import (
 	"github.com/hashicorp/terraform-plugin-sdk/v2/terraform"
 	"github.com/stretchr/testify/assert"
 	cynosdb "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/cynosdb/v20190107"
-	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/internal/helper"
 )
 
 // go test -i; go test -test.run TestAccTencentCloudCynosdbAccountResource_basic -v
