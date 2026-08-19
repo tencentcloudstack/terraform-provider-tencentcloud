@@ -15,9 +15,9 @@
 package v20220901
 
 import (
-	tcerr "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/common/errors"
-	tchttp "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/common/http"
-	"github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/common/json"
+    tcerr "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/common/errors"
+    tchttp "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/common/http"
+    "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/common/json"
 )
 
 type AICrawlerDetection struct {
@@ -3626,6 +3626,9 @@ type CreateInferenceServiceRequestParams struct {
 	// <p>推理服务的资源配置。</p>
 	ResourceConfig *InferenceResourceConfig `json:"ResourceConfig,omitnil,omitempty" name:"ResourceConfig"`
 
+	// <p>推理服务亲和性配置。</p>
+	AffinityConfig *InferenceAffinityConfig `json:"AffinityConfig,omitnil,omitempty" name:"AffinityConfig"`
+
 	// <p>推理服务的请求路径列表。最多支持 20 个路径。</p>
 	RequestPaths []*string `json:"RequestPaths,omitnil,omitempty" name:"RequestPaths"`
 
@@ -3651,6 +3654,9 @@ type CreateInferenceServiceRequest struct {
 	// <p>推理服务的资源配置。</p>
 	ResourceConfig *InferenceResourceConfig `json:"ResourceConfig,omitnil,omitempty" name:"ResourceConfig"`
 
+	// <p>推理服务亲和性配置。</p>
+	AffinityConfig *InferenceAffinityConfig `json:"AffinityConfig,omitnil,omitempty" name:"AffinityConfig"`
+
 	// <p>推理服务的请求路径列表。最多支持 20 个路径。</p>
 	RequestPaths []*string `json:"RequestPaths,omitnil,omitempty" name:"RequestPaths"`
 
@@ -3675,6 +3681,7 @@ func (r *CreateInferenceServiceRequest) FromJsonString(s string) error {
 	delete(f, "ListenPort")
 	delete(f, "Containers")
 	delete(f, "ResourceConfig")
+	delete(f, "AffinityConfig")
 	delete(f, "RequestPaths")
 	delete(f, "Description")
 	if len(f) > 0 {
@@ -5077,6 +5084,9 @@ type CreateRealtimeLogDeliveryTaskRequestParams struct {
 	// <p>投递的自定义字段列表，支持在 HTTP 请求头、响应头、Cookie、请求正文中提取指定内容。<br>自定义字段名称不能重复，仅七层访问日志（LogType= l7-access-logs 或 domain）支持添加自定义字段。<br>允许配置的自定义字段个数有配额限制，如遇配额不足请 [联系我们](https://cloud.tencent.com/online-service?from=sales&amp;source=PRESALE)。</p>
 	CustomFields []*CustomField `json:"CustomFields,omitnil,omitempty" name:"CustomFields"`
 
+	// <p>投递的自定义表达式字段列表，可以通过自定义日志推送字段名称和取值表达式，实现个性化的实时日志内容推送，使用详情见 [自定义日志字段表达式]()。<br>仅七层访问日志（LogType= l7-access-logs 或 domain）支持添加自定义字段。<br>允许配置的自定义字段个数有配额限制，如遇配额不足请 [联系我们](https://cloud.tencent.com/online-service?from=sales&amp;source=PRESALE) 。<br>**注意**：若 CustomExpressionFields 中存在命名 与 Fields 和 CustomFields 中同名的字段，以  CustomExpressionFields 中的取值为准。</p>
+	CustomExpressionFields []*CustomExpressionField `json:"CustomExpressionFields,omitnil,omitempty" name:"CustomExpressionFields"`
+
 	// <p>日志投递的过滤条件，不填表示投递全量日志。</p>
 	DeliveryConditions []*DeliveryCondition `json:"DeliveryConditions,omitnil,omitempty" name:"DeliveryConditions"`
 
@@ -5122,6 +5132,9 @@ type CreateRealtimeLogDeliveryTaskRequest struct {
 
 	// <p>投递的自定义字段列表，支持在 HTTP 请求头、响应头、Cookie、请求正文中提取指定内容。<br>自定义字段名称不能重复，仅七层访问日志（LogType= l7-access-logs 或 domain）支持添加自定义字段。<br>允许配置的自定义字段个数有配额限制，如遇配额不足请 [联系我们](https://cloud.tencent.com/online-service?from=sales&amp;source=PRESALE)。</p>
 	CustomFields []*CustomField `json:"CustomFields,omitnil,omitempty" name:"CustomFields"`
+
+	// <p>投递的自定义表达式字段列表，可以通过自定义日志推送字段名称和取值表达式，实现个性化的实时日志内容推送，使用详情见 [自定义日志字段表达式]()。<br>仅七层访问日志（LogType= l7-access-logs 或 domain）支持添加自定义字段。<br>允许配置的自定义字段个数有配额限制，如遇配额不足请 [联系我们](https://cloud.tencent.com/online-service?from=sales&amp;source=PRESALE) 。<br>**注意**：若 CustomExpressionFields 中存在命名 与 Fields 和 CustomFields 中同名的字段，以  CustomExpressionFields 中的取值为准。</p>
+	CustomExpressionFields []*CustomExpressionField `json:"CustomExpressionFields,omitnil,omitempty" name:"CustomExpressionFields"`
 
 	// <p>日志投递的过滤条件，不填表示投递全量日志。</p>
 	DeliveryConditions []*DeliveryCondition `json:"DeliveryConditions,omitnil,omitempty" name:"DeliveryConditions"`
@@ -17601,6 +17614,17 @@ type InferenceAPIToken struct {
 	CreateTime *string `json:"CreateTime,omitnil,omitempty" name:"CreateTime"`
 }
 
+type InferenceAffinityConfig struct {
+	// <p>推理服务亲和总开关。</p><p>枚举值：</p><ul><li>On： 开启推理服务亲和；</li><li>Off： 关闭推理服务亲和。</li></ul>
+	Switch *string `json:"Switch,omitnil,omitempty" name:"Switch"`
+
+	// <p>推理服务亲和方式。</p><p>枚举值：</p><ul><li>SessionId： 根据会话 ID 实现亲和。</li></ul><p>默认值：SessionId。</p>
+	AffinityMode *string `json:"AffinityMode,omitnil,omitempty" name:"AffinityMode"`
+
+	// <p>推理服务亲和性配置。当 AffinityMode 为 SessionId 时必填。</p>
+	SessionIdAffinityConfig *SessionIdAffinityConfig `json:"SessionIdAffinityConfig,omitnil,omitempty" name:"SessionIdAffinityConfig"`
+}
+
 type InferenceAutoScalingConfig struct {
 	// <p>最小实例数量。当配置了伸缩策略并且策略处于有效期时，将不会生效。</p>
 	MinInstanceCount *int64 `json:"MinInstanceCount,omitnil,omitempty" name:"MinInstanceCount"`
@@ -17610,31 +17634,31 @@ type InferenceAutoScalingConfig struct {
 }
 
 type InferenceContainerConfig struct {
-	// 镜像类型。取值有：<li>TCR：腾讯云容器镜像服务的镜像。</li>
+	// <p>镜像类型。取值有：<li>TCR：腾讯云容器镜像服务的镜像。</li></p>
 	ImageType *string `json:"ImageType,omitnil,omitempty" name:"ImageType"`
 
-	// TCR 镜像仓库信息。当 ImageType 为 TCR 时必填。
+	// <p>TCR 镜像仓库信息。当 ImageType 为 TCR 时必填。</p>
 	// 注意：此字段可能返回 null，表示取不到有效值。
 	TcrRepositoryConfig *InferenceTCRRepositoryConfig `json:"TcrRepositoryConfig,omitnil,omitempty" name:"TcrRepositoryConfig"`
 
-	// 容器启动时执行的命令，未填写时默认使用镜像的 Entrypoint/CMD。最长支持 1024 字符。
+	// <p>容器启动时执行的命令，未填写时默认使用镜像的 Entrypoint/CMD。最长支持 1024 字符。</p>
 	StartupCommand *string `json:"StartupCommand,omitnil,omitempty" name:"StartupCommand"`
 
-	// 容器运行时的环境变量。最多支持 10 个变量。
+	// <p>容器运行时的环境变量。最多支持 10 个变量。</p>
 	EnvironmentVariables []*InferenceEnvironmentVariable `json:"EnvironmentVariables,omitnil,omitempty" name:"EnvironmentVariables"`
 }
 
 type InferenceContainerConfigForModify struct {
-	// 镜像类型。取值有：<li>TCR：腾讯云容器镜像服务的镜像。</li>
+	// <p>镜像类型。取值有：<li>TCR：腾讯云容器镜像服务的镜像。</li></p>
 	ImageType *string `json:"ImageType,omitnil,omitempty" name:"ImageType"`
 
-	// TCR 镜像仓库信息。当 ImageType 为 TCR 时必填。
+	// <p>TCR 镜像仓库信息。当 ImageType 为 TCR 时必填。</p>
 	TcrRepositoryConfig *InferenceTCRRepositoryConfig `json:"TcrRepositoryConfig,omitnil,omitempty" name:"TcrRepositoryConfig"`
 
-	// 容器启动时执行的命令，未填写时默认使用镜像的 Entrypoint/CMD。最长支持 1024 字符。
+	// <p>容器启动时执行的命令，未填写时默认使用镜像的 Entrypoint/CMD。最长支持 1024 字符。</p>
 	StartupCommand *string `json:"StartupCommand,omitnil,omitempty" name:"StartupCommand"`
 
-	// 容器运行时的环境变量。最多支持 10 个变量。
+	// <p>容器运行时的环境变量。最多支持 10 个变量。</p>
 	EnvironmentVariables []*InferenceEnvironmentVariable `json:"EnvironmentVariables,omitnil,omitempty" name:"EnvironmentVariables"`
 }
 
@@ -17791,17 +17815,20 @@ type InferenceService struct {
 }
 
 type InferenceServiceConfig struct {
-	// 模型服务需要监听的端口。
+	// <p>模型服务需要监听的端口。</p>
 	ListenPort *int64 `json:"ListenPort,omitnil,omitempty" name:"ListenPort"`
 
-	// 推理服务的请求路径列表。
+	// <p>推理服务的请求路径列表。</p>
 	RequestPaths []*string `json:"RequestPaths,omitnil,omitempty" name:"RequestPaths"`
 
-	// 推理服务的容器配置。
+	// <p>推理服务的容器配置。</p>
 	Containers []*InferenceContainerConfig `json:"Containers,omitnil,omitempty" name:"Containers"`
 
-	// 推理服务的资源配置。
+	// <p>推理服务的资源配置。</p>
 	ResourceConfig *InferenceResourceConfig `json:"ResourceConfig,omitnil,omitempty" name:"ResourceConfig"`
+
+	// <p>推理服务亲和性配置。</p>
+	AffinityConfig *InferenceAffinityConfig `json:"AffinityConfig,omitnil,omitempty" name:"AffinityConfig"`
 }
 
 type InferenceServiceDeploymentLogInfo struct {
@@ -20263,6 +20290,9 @@ type ModifyInferenceServiceRequestParams struct {
 	// <p>推理服务的资源配置。</p>
 	ResourceConfig *InferenceResourceConfigForModify `json:"ResourceConfig,omitnil,omitempty" name:"ResourceConfig"`
 
+	// <p>推理服务亲和性配置</p>
+	AffinityConfig *InferenceAffinityConfig `json:"AffinityConfig,omitnil,omitempty" name:"AffinityConfig"`
+
 	// <p>描述信息。长度限制不超过 60 个字符。</p>
 	Description *string `json:"Description,omitnil,omitempty" name:"Description"`
 }
@@ -20288,6 +20318,9 @@ type ModifyInferenceServiceRequest struct {
 	// <p>推理服务的资源配置。</p>
 	ResourceConfig *InferenceResourceConfigForModify `json:"ResourceConfig,omitnil,omitempty" name:"ResourceConfig"`
 
+	// <p>推理服务亲和性配置</p>
+	AffinityConfig *InferenceAffinityConfig `json:"AffinityConfig,omitnil,omitempty" name:"AffinityConfig"`
+
 	// <p>描述信息。长度限制不超过 60 个字符。</p>
 	Description *string `json:"Description,omitnil,omitempty" name:"Description"`
 }
@@ -20310,6 +20343,7 @@ func (r *ModifyInferenceServiceRequest) FromJsonString(s string) error {
 	delete(f, "RequestPaths")
 	delete(f, "Containers")
 	delete(f, "ResourceConfig")
+	delete(f, "AffinityConfig")
 	delete(f, "Description")
 	if len(f) > 0 {
 		return tcerr.NewTencentCloudSDKError("ClientError.BuildRequestError", "ModifyInferenceServiceRequest has unknown keys!", "")
@@ -24062,7 +24096,7 @@ type RealtimeLogDeliveryTask struct {
 	// <p>实时日志投递任务的状态，取值有： <li>enabled: 已启用；</li> <li>disabled: 已停用；</li><li>deleted: 异常删除状态，请检查目的地腾讯云 CLS 日志集/日志主题是否已被删除。</li></p>
 	DeliveryStatus *string `json:"DeliveryStatus,omitnil,omitempty" name:"DeliveryStatus"`
 
-	// <p>实时日志投递任务类型，取值有： <li>cls: 推送到腾讯云 CLS；</li> <li>custom_endpoint：推送到自定义 HTTP(S) 地址；</li> <li>s3：推送到 AWS S3 兼容存储桶地址；</li><li>log_analysis：推送到 EdgeOne 日志分析。</li></p>
+	// <p>实时日志投递任务类型，取值有： <ul><li>cls: 推送到腾讯云 CLS；</li> <li>custom_endpoint：推送到自定义 HTTP(S) 地址；</li> <li>s3：推送到 S3 兼容（兼容 SigV4 鉴权算法）的对象存储的地址；</li><li>log_analysis：推送到 EdgeOne 日志分析。</li></ul></p>
 	TaskType *string `json:"TaskType,omitnil,omitempty" name:"TaskType"`
 
 	// <p>实时日志投递任务对应的实体（七层域名或者四层代理实例）列表。取值示例如下： <li>七层域名：domain.example.com；</li> <li>四层代理实例：sid-2s69eb5wcms7。</li></p>
@@ -24079,6 +24113,9 @@ type RealtimeLogDeliveryTask struct {
 
 	// <p>投递的自定义字段列表。</p>
 	CustomFields []*CustomField `json:"CustomFields,omitnil,omitempty" name:"CustomFields"`
+
+	// <p>投递的自定义表达式字段列表。</p>
+	CustomExpressionFields []*CustomExpressionField `json:"CustomExpressionFields,omitnil,omitempty" name:"CustomExpressionFields"`
 
 	// <p>日志投递的过滤条件。</p>
 	DeliveryConditions []*DeliveryCondition `json:"DeliveryConditions,omitnil,omitempty" name:"DeliveryConditions"`
@@ -24098,7 +24135,7 @@ type RealtimeLogDeliveryTask struct {
 	// 注意：此字段可能返回 null，表示取不到有效值。
 	CustomEndpoint *CustomEndpoint `json:"CustomEndpoint,omitnil,omitempty" name:"CustomEndpoint"`
 
-	// <p>AWS S3 兼容存储桶的配置信息。</p>
+	// <p>S3 兼容（兼容 SigV4 鉴权算法）的对象存储的配置信息。</p>
 	// 注意：此字段可能返回 null，表示取不到有效值。
 	S3 *S3 `json:"S3,omitnil,omitempty" name:"S3"`
 
@@ -24502,7 +24539,7 @@ type RuleCondition struct {
 }
 
 type RuleEngineAction struct {
-	// <p>操作名称。名称需要与参数结构体对应，例如 Name=Cache，则 CacheParameters 必填。</p><li>Cache：节点缓存 TTL；</li><li>CacheKey：自定义 Cache Key；</li><li>CachePrefresh：缓存预刷新；</li><li>AccessURLRedirect：访问 URL 重定向；</li><li>UpstreamURLRewrite：回源 URL 重写；</li><li>QUIC：QUIC；</li><li>WebSocket：WebSocket；</li><li>Authentication：Token 鉴权；</li><li>MaxAge：浏览器缓存 TTL；</li><li>StatusCodeCache：状态码缓存 TTL；</li><li>OfflineCache：离线缓存；</li><li>SmartRouting：智能加速；</li><li>AdvancedOriginRouting：高级回源优化；</li><li>RangeOriginPull：分片回源 ；</li><li>UpstreamHTTP2：HTTP2 回源；</li><li>HostHeader：Host Header 重写；</li><li>ForceRedirectHTTPS：访问协议强制 HTTPS 跳转配置；</li><li>OriginPullProtocol：回源 HTTPS；</li><li>Compression：智能压缩配置；</li><li>HSTS：HSTS；</li><li>ClientIPHeader：存储客户端请求 IP 的头部信息配置；</li><li>OCSPStapling：OCSP 装订；</li><li>HTTP2：HTTP2 接入；</li><li>PostMaxSize：POST 请求上传文件流式传输最大限制配置；</li><li>ClientIPCountry：回源时携带客户端 IP 所属地域信息；</li><li>UpstreamFollowRedirect：回源跟随重定向参数配置；</li><li>UpstreamRequest：回源请求参数；</li><li>Shield：源站卸载配置；</li><li>TLSConfig：SSL/TLS 安全；</li><li>ModifyOrigin：修改源站；</li><li> SiteFailover：源站故障转移；</li><li>HTTPUpstreamTimeout：七层回源超时配置；</li><li>HttpResponse：HTTP 应答；</li><li>ErrorPage：自定义错误页面；</li><li>ModifyResponseHeader：修改 HTTP 节点响应头；</li><li>ModifyRequestHeader：修改 HTTP 节点请求头；</li><li>ResponseSpeedLimit：单连接下载限速；</li><li>SetContentIdentifier：设置内容标识符；</li><li>Vary：Vary 特性配置；</li><li>ContentCompression：内容压缩配置；</li><li>OriginAuthentication：回源鉴权配置。</li>
+	// <p>操作名称。名称需要与参数结构体对应，例如 Name=Cache，则 CacheParameters 必填。<li>Cache：节点缓存 TTL；</li><li>CacheKey：自定义 Cache Key；</li><li>CachePrefresh：缓存预刷新；</li><li>AccessURLRedirect：访问 URL 重定向；</li><li>UpstreamURLRewrite：回源 URL 重写；</li><li>QUIC：QUIC；</li><li>WebSocket：WebSocket；</li><li>Authentication：Token 鉴权；</li><li>MaxAge：浏览器缓存 TTL；</li><li>StatusCodeCache：状态码缓存 TTL；</li><li>OfflineCache：离线缓存；</li><li>SmartRouting：智能加速；</li><li>AdvancedOriginRouting：高级回源优化；</li><li>RangeOriginPull：分片回源 ；</li><li>UpstreamHTTP2：HTTP2 回源；</li><li>HostHeader：Host Header 重写；</li><li>ForceRedirectHTTPS：访问协议强制 HTTPS 跳转配置；</li><li>OriginPullProtocol：回源 HTTPS；</li><li>Compression：智能压缩配置；</li><li>HSTS：HSTS；</li><li>ClientIPHeader：存储客户端请求 IP 的头部信息配置；</li><li>OCSPStapling：OCSP 装订；</li><li>HTTP2：HTTP2 接入；</li><li>PostMaxSize：POST 请求上传文件流式传输最大限制配置；</li><li>ClientIPCountry：回源时携带客户端 IP 所属地域信息；</li><li>UpstreamFollowRedirect：回源跟随重定向参数配置；</li><li>UpstreamRequest：回源请求参数；</li><li>Shield：源站卸载配置；</li><li>TLSConfig：SSL/TLS 安全；</li><li>ModifyOrigin：修改源站；</li><li> SiteFailover：源站故障转移；</li><li>HTTPUpstreamTimeout：七层回源超时配置；</li><li>HttpResponse：HTTP 应答；</li><li>ErrorPage：自定义错误页面；</li><li>ModifyResponseHeader：修改 HTTP 节点响应头；</li><li>ModifyRequestHeader：修改 HTTP 节点请求头；</li><li>ResponseSpeedLimit：单连接下载限速；</li><li>SetContentIdentifier：设置内容标识符；</li><li>Vary：Vary 特性配置；</li><li>ContentCompression：内容压缩配置；</li><li>OriginAuthentication：回源鉴权配置；</li><li>CustomAction：定制配置。</li></p>
 	Name *string `json:"Name,omitnil,omitempty" name:"Name"`
 
 	// <p>节点缓存 TTL 配置参数，当 Name 取值为 Cache 时，该参数必填。</p>
