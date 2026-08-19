@@ -3,7 +3,6 @@ package teo
 
 import (
 	"context"
-	"fmt"
 	"log"
 
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
@@ -146,7 +145,7 @@ func dataSourceTencentCloudTeoEnvironmentsRead(d *schema.ResourceData, meta inte
 		}
 		if result == nil {
 			log.Printf("[DATASOURCE] read empty, skip SetId, teo_environments paramMap=%v", paramMap)
-			return resource.NonRetryableError(fmt.Errorf("teo environments read returned empty"))
+			return nil
 		}
 		respData = result
 		return nil
