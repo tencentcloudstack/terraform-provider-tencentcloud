@@ -3601,6 +3601,9 @@ func (me *TeoService) DescribeTeoEdgeKvListByFilter(ctx context.Context, param m
 		err := resource.Retry(tccommon.ReadRetryTimeout, func() *resource.RetryError {
 			result, e := me.client.UseTeoClient().EdgeKVListWithContext(ctx, request)
 			if e != nil {
+				if strings.Contains(e.Error(), "NotFound") {
+					return resource.NonRetryableError(e)
+				}
 				return tccommon.RetryError(e)
 			}
 			if result == nil || result.Response == nil {
