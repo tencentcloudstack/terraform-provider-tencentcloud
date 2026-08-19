@@ -40,5 +40,12 @@ The `filters` object supports the following:
 In addition to all arguments above, the following attributes are exported:
 
 * `config_group_version_infos` - Version information list.
+  * `create_time` - Version creation time. The time format follows the ISO 8601 standard and is represented in Coordinated Universal Time (UTC).
+  * `description` - Version description.
+  * `group_id` - Configuraration group ID.
+  * `group_type` - Configuration group type. Valid values: l7_acceleration (L7 acceleration configuration group), edge_functions (Edge function configuration group).
+  * `source_version` - Source version ID that the configuration group version was derived from. Format: ver-xxxxxxxx.
+  * `status` - Version status. Valid values: creating (Being created), inactive (Not effective), active (Effective).
+  * `version_number` - Version No.
 
 
