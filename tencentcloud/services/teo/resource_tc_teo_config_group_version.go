@@ -56,6 +56,7 @@ func ResourceTencentCloudTeoConfigGroupVersion() *schema.Resource {
 				Type:        schema.TypeString,
 				Optional:    true,
 				ForceNew:    true,
+				Computed:    true,
 				Description: "Source version ID. The new version will be derived from the configuration of this source version. If not specified, the currently active production version is used as the source version by default.",
 			},
 
