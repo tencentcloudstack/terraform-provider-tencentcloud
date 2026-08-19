@@ -411,7 +411,6 @@ func ResourceTencentCloudKubernetesCluster() *schema.Resource {
 				Optional:    true,
 				ForceNew:    true,
 				Description: "A network address block of the cluster. Different from vpc cidr and cidr of other clusters within this vpc. Must be in  10./192.168/172.[16-31] segments.",
-				// ValidateFunc: clusterCidrValidateFunc,
 			},
 
 			"ignore_cluster_cidr_conflict": {
@@ -451,7 +450,6 @@ func ResourceTencentCloudKubernetesCluster() *schema.Resource {
 				Optional:    true,
 				ForceNew:    true,
 				Description: "A network address block of the service. Different from vpc cidr and cidr of other clusters within this vpc. Must be in  10./192.168/172.[16-31] segments.",
-				// ValidateFunc: serviceCidrValidateFunc,
 			},
 
 			"eni_subnet_ids": {
