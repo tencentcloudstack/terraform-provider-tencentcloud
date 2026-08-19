@@ -1862,6 +1862,7 @@ func ResourceTencentCloudTeoSecurityPolicyConfig() *schema.Resource {
 												"device_profiles": {
 													Type:        schema.TypeList,
 													Optional:    true,
+													Computed:    true,
 													Description: "Client device configurations. One profile per client type.",
 													Elem: &schema.Resource{
 														Schema: map[string]*schema.Schema{
