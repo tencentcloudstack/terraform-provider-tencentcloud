@@ -187,6 +187,37 @@ func TestAccTencentCloudCynosdbClusterV2ResourceServerless(t *testing.T) {
 	})
 }
 
+func TestAccTencentCloudCynosdbClusterV2ResourceUpdateInstanceName(t *testing.T) {
+	t.Parallel()
+	resource.Test(t, resource.TestCase{
+		PreCheck:     func() { tcacctest.AccPreCheck(t) },
+		Providers:    tcacctest.AccProviders,
+		CheckDestroy: testAccCheckCynosdbClusterV2Destroy,
+		Steps: []resource.TestStep{
+			{
+				Config: testAccCynosdbV2Cluster,
+				Check: resource.ComposeTestCheckFunc(
+					testAccCheckCynosdbClusterV2Exists("tencentcloud_cynosdb_cluster_v2.foo"),
+					resource.TestCheckResourceAttrSet("tencentcloud_cynosdb_cluster_v2.foo", "instance_name"),
+				),
+			},
+			{
+				Config: testAccCynosdbV2Cluster_updateInstanceName,
+				Check: resource.ComposeTestCheckFunc(
+					testAccCheckCynosdbClusterV2Exists("tencentcloud_cynosdb_cluster_v2.foo"),
+					resource.TestCheckResourceAttr("tencentcloud_cynosdb_cluster_v2.foo", "instance_name", "tf-cynosdb-instance-update"),
+				),
+			},
+			{
+				Config: testAccCynosdbV2Cluster,
+				Check: resource.ComposeTestCheckFunc(
+					testAccCheckCynosdbClusterV2Exists("tencentcloud_cynosdb_cluster_v2.foo"),
+				),
+			},
+		},
+	})
+}
+
 func testAccCheckCynosdbClusterV2Destroy(s *terraform.State) error {
 	logId := tccommon.GetLogId(tccommon.ContextNil)
 	ctx := context.WithValue(context.TODO(), tccommon.LogIdKey, logId)
@@ -443,3 +474,52 @@ resource "tencentcloud_cynosdb_cluster_v2" "foo" {
   serverless_status_flag       = "resume"
   force_delete = true
 }`
+
+const testAccCynosdbV2Cluster_updateInstanceName = testAccCynosdbV2Basic + `
+resource "tencentcloud_cynosdb_cluster_v2" "foo" {
+  available_zone               = var.availability_zone
+  vpc_id                       = var.my_vpc
+  subnet_id                    = var.my_subnet
+  db_type                      = "MYSQL"
+  db_version                   = "5.7"
+  storage_limit                = 1000
+  cluster_name                 = "tf-cynosdb"
+  instance_name                = "tf-cynosdb-instance-update"
+  password                     = "cynos@123"
+  instance_maintain_duration   = 3600
+  instance_maintain_start_time = 10800
+  instance_maintain_weekdays   = [
+    "Fri",
+    "Mon",
+    "Sat",
+    "Sun",
+    "Thu",
+    "Wed",
+    "Tue",
+  ]
+
+  instance_cpu_core    = 1
+  instance_memory_size = 2
+  param_items {
+    name = "character_set_server"
+    current_value = "utf8"
+  }
+  param_items {
+    name = "time_zone"
+    current_value = "+09:00"
+  }
+
+  tags = {
+    test = "test"
+  }
+
+  force_delete = true
+
+  rw_group_sg = [
+    var.rw_group_sg
+  ]
+  ro_group_sg = [
+    var.rw_group_sg
+  ]
+}
+`

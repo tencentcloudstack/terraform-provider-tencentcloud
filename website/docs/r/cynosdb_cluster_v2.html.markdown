@@ -17,6 +17,8 @@ Provide a resource to create a CynosDB cluster.
 
 ## Example Usage
 
+### Create a CynosDB cluster with available_zone
+
 ```hcl
 resource "tencentcloud_cynosdb_cluster_v2" "example" {
   available_zone               = "ap-guangzhou-6"
@@ -34,6 +36,58 @@ resource "tencentcloud_cynosdb_cluster_v2" "example" {
   instance_memory_size         = 4
   open_ro_group                = true
   force_delete                 = true
+  instance_maintain_weekdays = [
+    "Fri",
+    "Mon",
+    "Sat",
+    "Sun",
+    "Thu",
+    "Wed",
+    "Tue",
+  ]
+
+  rw_group_sg        = ["sg-7pnojfur", "sg-37tigqat"]
+  ro_group_sg        = ["sg-7pnojfur", "sg-37tigqat", "sg-08cqf7d5"]
+  single_ro_group_sg = ["sg-7pnojfur", "sg-37tigqat", "sg-08cqf7d5", "sg-l1txcqtj"]
+
+  param_items {
+    name          = "character_set_server"
+    current_value = "utf8mb4"
+  }
+
+  param_items {
+    name          = "lower_case_table_names"
+    current_value = "0"
+  }
+
+  tags = {
+    createBy = "terraform"
+  }
+}
+```
+
+### Create a CynosDB cluster with available_zone and slave_zone
+
+```hcl
+resource "tencentcloud_cynosdb_cluster_v2" "example" {
+  available_zone               = "ap-guangzhou-6"
+  slave_zone                   = "ap-guangzhou-7"
+  vpc_id                       = "vpc-i5yyodl9"
+  subnet_id                    = "subnet-hhi88a58"
+  db_mode                      = "NORMAL"
+  db_type                      = "MYSQL"
+  db_version                   = "5.7"
+  port                         = 3306
+  cluster_name                 = "tf-example"
+  password                     = "cynosDB@123"
+  instance_maintain_duration   = 7200
+  instance_maintain_start_time = 10800
+  instance_cpu_core            = 2
+  instance_memory_size         = 4
+  open_ro_group                = true
+  force_delete                 = true
+  sync_way                     = "async"
+  semi_sync_timeout            = 10000
   instance_maintain_weekdays = [
     "Fri",
     "Mon",
@@ -89,6 +143,7 @@ The following arguments are supported:
 * `instance_maintain_start_time` - (Optional, Int) Offset time from 00:00, unit in second. For example, 03:00am should be `10800`. `10800` by default.
 * `instance_maintain_weekdays` - (Optional, Set: [`String`]) Weekdays for maintenance. `["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"]` by default.
 * `instance_memory_size` - (Optional, Int) Memory capacity of read-write type instance, unit in GB. Required while creating normal cluster. Note: modification of this field will take effect immediately, if want to upgrade on maintenance window, please upgrade from console.
+* `instance_name` - (Optional, String) Name of instance. Only supported when modifying.
 * `max_cpu` - (Optional, Float64) Maximum CPU core count, required while `db_mode` is `SERVERLESS`, request DescribeServerlessInstanceSpecs for more reference.
 * `min_cpu` - (Optional, Float64) Minimum CPU core count, required while `db_mode` is `SERVERLESS`, request DescribeServerlessInstanceSpecs for more reference.
 * `old_ip_reserve_hours` - (Optional, Int) Recycling time of the old address, must be filled in when modifying the vpcRecycling time of the old address, must be filled in when modifying the vpc.
@@ -101,11 +156,13 @@ The following arguments are supported:
 * `project_id` - (Optional, Int, ForceNew) ID of the project. `0` by default.
 * `ro_group_sg` - (Optional, List: [`String`]) IDs of security group for `ro_group`. Only work for `open_ro_group` is true.
 * `rw_group_sg` - (Optional, List: [`String`]) IDs of security group for `rw_group`.
+* `semi_sync_timeout` - (Optional, Int) Semi-sync timeout in ms. Value range: `[1000, 4294967295]`, default `10000`.
 * `serverless_status_flag` - (Optional, String) Specify whether to pause or resume serverless cluster. values: `resume`, `pause`.
 * `single_ro_group_sg` - (Optional, List: [`String`]) IDs of security group for `single_ro_group`.
 * `slave_zone` - (Optional, String) Multi zone Addresses of the CynosDB Cluster.
 * `storage_limit` - (Optional, Int) Storage limit of CynosDB cluster instance, unit in GB. The maximum storage of a non-serverless instance in GB. NOTE: If db_type is `MYSQL` and charge_type is `PREPAID`, the value cannot exceed the maximum storage corresponding to the CPU and memory specifications, and the transaction mode is `order and pay`. when charge_type is `POSTPAID_BY_HOUR`, this argument is unnecessary.
 * `storage_pay_mode` - (Optional, Int) Cluster storage billing mode, pay-as-you-go: `0`-yearly/monthly: `1`-The default is pay-as-you-go. When the DbType is MYSQL, when the cluster computing billing mode is post-paid (including DbMode is SERVERLESS), the storage billing mode can only be billing by volume; rollback and cloning do not support yearly subscriptions monthly storage.
+* `sync_way` - (Optional, String) Synchronization way. Valid values: `async`, `semisync`, `sync`.
 * `tags` - (Optional, Map) The tags of the CynosDB cluster.
 
 The `instance_init_infos` object supports the following:
@@ -135,7 +192,6 @@ In addition to all arguments above, the following attributes are exported:
 * `cluster_status` - Status of the Cynosdb cluster.
 * `create_time` - Creation time of the CynosDB cluster.
 * `instance_id` - ID of instance.
-* `instance_name` - Name of instance.
 * `instance_status` - Status of the instance.
 * `instance_storage_size` - Storage size of the instance, unit in GB.
 * `ro_group_addr` - Readonly addresses. Each element contains the following attributes:

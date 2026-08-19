@@ -5,8 +5,8 @@ Provides a resource to create a CDN domain.
 Example Usage
 
 ```hcl
-resource "tencentcloud_cdn_domain" "foo" {
-  domain         = "xxxx.com"
+resource "tencentcloud_cdn_domain" "example" {
+  domain         = "example.com"
   service_type   = "web"
   area           = "mainland"
   full_url_cache = false
@@ -40,8 +40,8 @@ resource "tencentcloud_cdn_domain" "foo" {
 Example Usage of cdn uses cache and request headers
 
 ```hcl
-resource "tencentcloud_cdn_domain" "foo" {
-  domain       = "xxxx.com"
+resource "tencentcloud_cdn_domain" "example" {
+  domain       = "example.com"
   service_type = "web"
   area         = "mainland"
   cache_key {
@@ -103,8 +103,8 @@ resource "tencentcloud_cos_bucket" "bucket" {
 }
 
 # Create cdn domain
-resource "tencentcloud_cdn_domain" "cdn" {
-  domain         = "abc.com"
+resource "tencentcloud_cdn_domain" "example" {
+  domain         = "example.com"
   service_type   = "web"
   area           = "mainland"
   # full_url_cache = false # Deprecated
@@ -130,19 +130,11 @@ resource "tencentcloud_cdn_domain" "cdn" {
 }
 ```
 
-Import
-
-CDN domain can be imported using the id, e.g.
-
-```
-$ terraform import tencentcloud_cdn_domain.foo xxxx.com
-```
-
 Example Usage of CDN domain with advanced fields
 
 ```hcl
-resource "tencentcloud_cdn_domain" "advanced" {
-  domain       = "xxxx.com"
+resource "tencentcloud_cdn_domain" "example" {
+  domain       = "example.com"
   service_type = "web"
   area         = "mainland"
 
@@ -201,4 +193,12 @@ resource "tencentcloud_cdn_domain" "advanced" {
     }
   }
 }
+```
+
+Import
+
+CDN domain can be imported using the id, e.g.
+
+```
+terraform import tencentcloud_cdn_domain.example example.com
 ```

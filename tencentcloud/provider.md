@@ -6,6 +6,8 @@ Use the navigation on the left to read about the available resources.
 
 -> **Note:** From version 1.9.0 (June 18, 2019), the provider start to support Terraform 0.12.x.
 
+-> **Note:** When managing tag fields such as [`tag`, `tags`, `tag_list`...] for all of the Tencent Cloud resources, avoid using system-reserved fields, such as: [`qcs:`, `project_`, `项目`]. for details, please refer to the [Use Limits](https://www.tencentcloud.com/document/product/651/13354?lang=en&pg=).
+
 Example Usage
 
 ```hcl
@@ -626,6 +628,9 @@ tencentcloud_elasticsearch_update_plugins_operation
 Global Accelerator(GA2)
 Resource
 tencentcloud_ga2_global_accelerator
+tencentcloud_ga2_global_accelerator_acl_policy
+tencentcloud_ga2_global_accelerator_acl_rule
+tencentcloud_ga2_global_accelerator_acl_rule_set
 tencentcloud_ga2_accelerate_area
 tencentcloud_ga2_listener
 tencentcloud_ga2_endpoint_group
@@ -960,10 +965,12 @@ tencentcloud_postgresql_zones
 tencentcloud_postgresql_account_privileges
 tencentcloud_postgresql_dedicated_clusters
 tencentcloud_postgresql_db_versions
+tencentcloud_postgresql_db_instance_security_groups
 
 Resource
 tencentcloud_postgresql_instance
 tencentcloud_postgresql_readonly_instance
+tencentcloud_postgresql_readonly_instance_v2
 tencentcloud_postgresql_readonly_group
 tencentcloud_postgresql_readonly_attachment
 tencentcloud_postgresql_parameter_template
@@ -991,6 +998,7 @@ tencentcloud_postgresql_instance_ssl_config
 tencentcloud_postgresql_restore_db_instance_objects_operation
 tencentcloud_postgresql_time_window
 tencentcloud_postgres_audit_service
+tencentcloud_postgresql_database
 
 TencentDB for Redis(crs)
 Data Source
@@ -1059,6 +1067,7 @@ tencentcloud_scf_namespace
 tencentcloud_scf_layer
 tencentcloud_scf_function_alias
 tencentcloud_scf_trigger_config
+tencentcloud_scf_trigger
 tencentcloud_scf_custom_domain
 
 SQLServer
@@ -1517,12 +1526,14 @@ tencentcloud_cls_cloud_product_log_task_v2
 tencentcloud_cls_open_service_operation
 tencentcloud_cls_dlc_deliver
 tencentcloud_cls_console
+tencentcloud_cls_metric_subscribe
 
 Data Source
 tencentcloud_cls_shipper_tasks
 tencentcloud_cls_machines
 tencentcloud_cls_notice_contents
 tencentcloud_cls_machine_group_configs
+tencentcloud_cls_machine_groups
 tencentcloud_cls_logsets
 tencentcloud_cls_topics
 tencentcloud_cls_alarm_notices
@@ -1584,6 +1595,7 @@ tencentcloud_teo_zones
 tencentcloud_teo_plans
 tencentcloud_teo_origin_acl
 tencentcloud_teo_default_certificate
+tencentcloud_teo_edge_kv_list
 tencentcloud_teo_environments
 tencentcloud_teo_config_group_versions
 tencentcloud_teo_config_group_version_detail
@@ -2234,6 +2246,7 @@ tencentcloud_tse_cngw_network
 tencentcloud_tse_cngw_strategy
 tencentcloud_tse_cngw_strategy_bind_group
 tencentcloud_tse_cngw_network_access_control
+tencentcloud_tse_cloud_native_api_gateway_ip_restriction
 
 ClickHouse(CDWCH)
 Data Source
@@ -2689,7 +2702,14 @@ Data Source
 tencentcloud_dbdc_db_custom_clusters
 tencentcloud_dbdc_db_custom_nodes
 tencentcloud_dbdc_db_custom_cluster_nodes
+tencentcloud_dbdc_db_custom_cluster_node_resources
+tencentcloud_dbdc_db_custom_cluster_node_config_list
 tencentcloud_dbdc_db_custom_images
+tencentcloud_dbdc_db_custom_node_types
+tencentcloud_dbdc_db_custom_node_security_groups
+tencentcloud_dbdc_db_custom_cluster_resources
+tencentcloud_dbdc_db_custom_zones
+tencentcloud_dbdc_db_custom_regions
 
 Resource
 tencentcloud_dbdc_db_custom_cluster

@@ -11,6 +11,8 @@ description: |-
 
 Provide a resource to create a SCF function.
 
+~> **NOTE:** The use of `trigger` is no longer recommended; `tencentcloud_scf_trigger` is recommended instead.
+
 ## Example Usage
 
 ```hcl

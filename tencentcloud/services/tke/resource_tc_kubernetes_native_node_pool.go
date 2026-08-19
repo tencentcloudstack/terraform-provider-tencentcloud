@@ -713,8 +713,9 @@ func resourceTencentCloudKubernetesNativeNodePoolCreate(d *schema.ResourceData, 
 		if v, ok := nativeMap["subnet_ids"]; ok {
 			subnetIdsSet := v.([]interface{})
 			for i := range subnetIdsSet {
-				subnetIds := subnetIdsSet[i].(string)
-				createNativeNodePoolParam.SubnetIds = append(createNativeNodePoolParam.SubnetIds, helper.String(subnetIds))
+				if subnetIds, ok := subnetIdsSet[i].(string); ok {
+					createNativeNodePoolParam.SubnetIds = append(createNativeNodePoolParam.SubnetIds, helper.String(subnetIds))
+				}
 			}
 		}
 		if v, ok := nativeMap["instance_charge_type"]; ok {
@@ -748,15 +749,17 @@ func resourceTencentCloudKubernetesNativeNodePoolCreate(d *schema.ResourceData, 
 		if v, ok := nativeMap["instance_types"]; ok {
 			instanceTypesSet := v.([]interface{})
 			for i := range instanceTypesSet {
-				instanceTypes := instanceTypesSet[i].(string)
-				createNativeNodePoolParam.InstanceTypes = append(createNativeNodePoolParam.InstanceTypes, helper.String(instanceTypes))
+				if instanceTypes, ok := instanceTypesSet[i].(string); ok {
+					createNativeNodePoolParam.InstanceTypes = append(createNativeNodePoolParam.InstanceTypes, helper.String(instanceTypes))
+				}
 			}
 		}
 		if v, ok := nativeMap["security_group_ids"]; ok {
 			securityGroupIdsSet := v.([]interface{})
 			for i := range securityGroupIdsSet {
-				securityGroupIds := securityGroupIdsSet[i].(string)
-				createNativeNodePoolParam.SecurityGroupIds = append(createNativeNodePoolParam.SecurityGroupIds, helper.String(securityGroupIds))
+				if securityGroupIds, ok := securityGroupIdsSet[i].(string); ok {
+					createNativeNodePoolParam.SecurityGroupIds = append(createNativeNodePoolParam.SecurityGroupIds, helper.String(securityGroupIds))
+				}
 			}
 		}
 		//if upgradeSettingsMap, ok := helper.ConvertInterfacesHeadToMap(nativeMap["upgrade_settings"]); ok {
@@ -821,22 +824,25 @@ func resourceTencentCloudKubernetesNativeNodePoolCreate(d *schema.ResourceData, 
 			if v, ok := managementMap["nameservers"]; ok {
 				nameserversSet := v.([]interface{})
 				for i := range nameserversSet {
-					nameservers := nameserversSet[i].(string)
-					managementConfig.Nameservers = append(managementConfig.Nameservers, helper.String(nameservers))
+					if nameservers, ok := nameserversSet[i].(string); ok {
+						managementConfig.Nameservers = append(managementConfig.Nameservers, helper.String(nameservers))
+					}
 				}
 			}
 			if v, ok := managementMap["hosts"]; ok {
 				hostsSet := v.([]interface{})
 				for i := range hostsSet {
-					hosts := hostsSet[i].(string)
-					managementConfig.Hosts = append(managementConfig.Hosts, helper.String(hosts))
+					if hosts, ok := hostsSet[i].(string); ok {
+						managementConfig.Hosts = append(managementConfig.Hosts, helper.String(hosts))
+					}
 				}
 			}
 			if v, ok := managementMap["kernel_args"]; ok {
 				kernelArgsSet := v.([]interface{})
 				for i := range kernelArgsSet {
-					kernelArgs := kernelArgsSet[i].(string)
-					managementConfig.KernelArgs = append(managementConfig.KernelArgs, helper.String(kernelArgs))
+					if kernelArgs, ok := kernelArgsSet[i].(string); ok {
+						managementConfig.KernelArgs = append(managementConfig.KernelArgs, helper.String(kernelArgs))
+					}
 				}
 			}
 			createNativeNodePoolParam.Management = &managementConfig
@@ -850,8 +856,9 @@ func resourceTencentCloudKubernetesNativeNodePoolCreate(d *schema.ResourceData, 
 		if v, ok := nativeMap["kubelet_args"]; ok {
 			kubeletArgsSet := v.([]interface{})
 			for i := range kubeletArgsSet {
-				kubeletArgs := kubeletArgsSet[i].(string)
-				createNativeNodePoolParam.KubeletArgs = append(createNativeNodePoolParam.KubeletArgs, helper.String(kubeletArgs))
+				if kubeletArgs, ok := kubeletArgsSet[i].(string); ok {
+					createNativeNodePoolParam.KubeletArgs = append(createNativeNodePoolParam.KubeletArgs, helper.String(kubeletArgs))
+				}
 			}
 		}
 		if lifecycleMap, ok := helper.ConvertInterfacesHeadToMap(nativeMap["lifecycle"]); ok {
@@ -926,8 +933,9 @@ func resourceTencentCloudKubernetesNativeNodePoolCreate(d *schema.ResourceData, 
 		if v, ok := nativeMap["key_ids"]; ok {
 			keyIdsSet := v.([]interface{})
 			for i := range keyIdsSet {
-				keyIds := keyIdsSet[i].(string)
-				createNativeNodePoolParam.KeyIds = append(createNativeNodePoolParam.KeyIds, helper.String(keyIds))
+				if keyIds, ok := keyIdsSet[i].(string); ok {
+					createNativeNodePoolParam.KeyIds = append(createNativeNodePoolParam.KeyIds, helper.String(keyIds))
+				}
 			}
 		}
 		if v, ok := nativeMap["machine_type"]; ok {
@@ -1547,15 +1555,17 @@ func resourceTencentCloudKubernetesNativeNodePoolUpdate(d *schema.ResourceData, 
 			if v, ok := nativeMap["subnet_ids"]; ok {
 				subnetIdsSet := v.([]interface{})
 				for i := range subnetIdsSet {
-					subnetIds := subnetIdsSet[i].(string)
-					updateNativeNodePoolParam.SubnetIds = append(updateNativeNodePoolParam.SubnetIds, helper.String(subnetIds))
+					if subnetIds, ok := subnetIdsSet[i].(string); ok {
+						updateNativeNodePoolParam.SubnetIds = append(updateNativeNodePoolParam.SubnetIds, helper.String(subnetIds))
+					}
 				}
 			}
 			if v, ok := nativeMap["security_group_ids"]; ok {
 				securityGroupIdsSet := v.([]interface{})
 				for i := range securityGroupIdsSet {
-					securityGroupIds := securityGroupIdsSet[i].(string)
-					updateNativeNodePoolParam.SecurityGroupIds = append(updateNativeNodePoolParam.SecurityGroupIds, helper.String(securityGroupIds))
+					if securityGroupIds, ok := securityGroupIdsSet[i].(string); ok {
+						updateNativeNodePoolParam.SecurityGroupIds = append(updateNativeNodePoolParam.SecurityGroupIds, helper.String(securityGroupIds))
+					}
 				}
 			}
 			//if upgradeSettingsMap, ok := helper.ConvertInterfacesHeadToMap(nativeMap["upgrade_settings"]); ok {
@@ -1657,22 +1667,25 @@ func resourceTencentCloudKubernetesNativeNodePoolUpdate(d *schema.ResourceData, 
 				if v, ok := managementMap["nameservers"]; ok {
 					nameserversSet := v.([]interface{})
 					for i := range nameserversSet {
-						nameservers := nameserversSet[i].(string)
-						managementConfig.Nameservers = append(managementConfig.Nameservers, helper.String(nameservers))
+						if nameservers, ok := nameserversSet[i].(string); ok {
+							managementConfig.Nameservers = append(managementConfig.Nameservers, helper.String(nameservers))
+						}
 					}
 				}
 				if v, ok := managementMap["hosts"]; ok {
 					hostsSet := v.([]interface{})
 					for i := range hostsSet {
-						hosts := hostsSet[i].(string)
-						managementConfig.Hosts = append(managementConfig.Hosts, helper.String(hosts))
+						if hosts, ok := hostsSet[i].(string); ok {
+							managementConfig.Hosts = append(managementConfig.Hosts, helper.String(hosts))
+						}
 					}
 				}
 				if v, ok := managementMap["kernel_args"]; ok {
 					kernelArgsSet := v.([]interface{})
 					for i := range kernelArgsSet {
-						kernelArgs := kernelArgsSet[i].(string)
-						managementConfig.KernelArgs = append(managementConfig.KernelArgs, helper.String(kernelArgs))
+						if kernelArgs, ok := kernelArgsSet[i].(string); ok {
+							managementConfig.KernelArgs = append(managementConfig.KernelArgs, helper.String(kernelArgs))
+						}
 					}
 				}
 				updateNativeNodePoolParam.Management = &managementConfig
@@ -1686,8 +1699,9 @@ func resourceTencentCloudKubernetesNativeNodePoolUpdate(d *schema.ResourceData, 
 			if v, ok := nativeMap["kubelet_args"]; ok {
 				kubeletArgsSet := v.([]interface{})
 				for i := range kubeletArgsSet {
-					kubeletArgs := kubeletArgsSet[i].(string)
-					updateNativeNodePoolParam.KubeletArgs = append(updateNativeNodePoolParam.KubeletArgs, helper.String(kubeletArgs))
+					if kubeletArgs, ok := kubeletArgsSet[i].(string); ok {
+						updateNativeNodePoolParam.KubeletArgs = append(updateNativeNodePoolParam.KubeletArgs, helper.String(kubeletArgs))
+					}
 				}
 			}
 			if lifecycleMap, ok := helper.ConvertInterfacesHeadToMap(nativeMap["lifecycle"]); ok {
@@ -1706,8 +1720,9 @@ func resourceTencentCloudKubernetesNativeNodePoolUpdate(d *schema.ResourceData, 
 			if v, ok := nativeMap["instance_types"]; ok {
 				instanceTypesSet := v.([]interface{})
 				for i := range instanceTypesSet {
-					instanceTypes := instanceTypesSet[i].(string)
-					updateNativeNodePoolParam.InstanceTypes = append(updateNativeNodePoolParam.InstanceTypes, helper.String(instanceTypes))
+					if instanceTypes, ok := instanceTypesSet[i].(string); ok {
+						updateNativeNodePoolParam.InstanceTypes = append(updateNativeNodePoolParam.InstanceTypes, helper.String(instanceTypes))
+					}
 				}
 			}
 			if v, ok := nativeMap["replicas"]; ok {
@@ -1753,8 +1768,9 @@ func resourceTencentCloudKubernetesNativeNodePoolUpdate(d *schema.ResourceData, 
 			if v, ok := nativeMap["key_ids"]; ok {
 				keyIdsSet := v.([]interface{})
 				for i := range keyIdsSet {
-					keyIds := keyIdsSet[i].(string)
-					updateNativeNodePoolParam.KeyIds = append(updateNativeNodePoolParam.KeyIds, helper.String(keyIds))
+					if keyIds, ok := keyIdsSet[i].(string); ok {
+						updateNativeNodePoolParam.KeyIds = append(updateNativeNodePoolParam.KeyIds, helper.String(keyIds))
+					}
 				}
 			}
 			request.Native = &updateNativeNodePoolParam
@@ -1798,13 +1814,47 @@ func resourceTencentCloudKubernetesNativeNodePoolDelete(d *schema.ResourceData, 
 
 	logId := tccommon.GetLogId(tccommon.ContextNil)
 	ctx := tccommon.NewResourceLifeCycleHandleFuncContext(context.Background(), logId, d, meta)
+	service := TkeService{client: meta.(tccommon.ProviderMeta).GetAPIV3Conn()}
 
 	idSplit := strings.Split(d.Id(), tccommon.FILED_SP)
 	if len(idSplit) != 2 {
 		return fmt.Errorf("id is broken,%s", d.Id())
 	}
+
 	clusterId := idSplit[0]
 	nodePoolId := idSplit[1]
+
+	var machineNames []*string
+	err := resource.Retry(tccommon.ReadRetryTimeout, func() *resource.RetryError {
+		respData, errRet := service.DescribeClusterMachinesById(ctx, clusterId, "")
+		if errRet != nil {
+			return tccommon.RetryError(errRet)
+		}
+
+		if respData == nil || len(respData) == 0 {
+			return nil
+		}
+
+		// temp code logic, wait tke fix
+		for _, item := range respData {
+			if item != nil && item.MachineName != nil {
+				if strings.HasPrefix(*item.MachineName, nodePoolId) {
+					machineNames = append(machineNames, item.MachineName)
+				}
+			}
+		}
+
+		return nil
+	})
+
+	if err != nil {
+		log.Printf("[CRITAL]%s describe kubernetes cluster machines failed, reason:%+v", logId, err)
+		return err
+	}
+
+	if len(machineNames) == 0 {
+		return nil
+	}
 
 	var (
 		request  = tke2.NewDeleteNodePoolRequest()
@@ -1812,10 +1862,8 @@ func resourceTencentCloudKubernetesNativeNodePoolDelete(d *schema.ResourceData, 
 	)
 
 	request.ClusterId = &clusterId
-
 	request.NodePoolId = &nodePoolId
-
-	err := resource.Retry(tccommon.WriteRetryTimeout, func() *resource.RetryError {
+	err = resource.Retry(tccommon.WriteRetryTimeout, func() *resource.RetryError {
 		result, e := meta.(tccommon.ProviderMeta).GetAPIV3Conn().UseTke2Client().DeleteNodePoolWithContext(ctx, request)
 		if e != nil {
 			return tccommon.RetryError(e)
@@ -1833,7 +1881,6 @@ func resourceTencentCloudKubernetesNativeNodePoolDelete(d *schema.ResourceData, 
 	_ = response
 
 	// wait node pool for delete ok
-	service := TkeService{client: meta.(tccommon.ProviderMeta).GetAPIV3Conn()}
 	err = resource.Retry(5*tccommon.ReadRetryTimeout, func() *resource.RetryError {
 		respData, errRet := service.DescribeKubernetesNativeNodePoolById(ctx, clusterId, nodePoolId)
 		if errRet != nil {
@@ -1855,26 +1902,36 @@ func resourceTencentCloudKubernetesNativeNodePoolDelete(d *schema.ResourceData, 
 		return err
 	}
 
-	// wait node pool instances for delete ok
+	// wait machines for delete ok
 	err = resource.Retry(5*tccommon.ReadRetryTimeout, func() *resource.RetryError {
-		respData, errRet := service.DescribeKubernetesClusteInstancesById(ctx, clusterId, nodePoolId)
+		respData, errRet := service.DescribeClusterMachinesById(ctx, clusterId, "")
 		if errRet != nil {
-			errCode := errRet.(*sdkErrors.TencentCloudSDKError).Code
-			if strings.Contains(errCode, "InternalError") {
-				return nil
-			}
-			return tccommon.RetryError(errRet, tccommon.InternalError)
+			return tccommon.RetryError(errRet)
 		}
 
-		if len(respData.InstanceSet) == 0 {
+		if respData == nil || len(respData) == 0 {
 			return nil
 		}
 
-		return resource.NonRetryableError(fmt.Errorf("native node pool instances still deleteing"))
+		machineNames = []*string{}
+		// temp code logic, wait tke fix
+		for _, item := range respData {
+			if item != nil && item.MachineName != nil {
+				if strings.HasPrefix(*item.MachineName, nodePoolId) {
+					machineNames = append(machineNames, item.MachineName)
+				}
+			}
+		}
+
+		if len(machineNames) == 0 {
+			return nil
+		}
+
+		return resource.RetryableError(fmt.Errorf("cluster machines still deleteting"))
 	})
 
 	if err != nil {
-		log.Printf("[CRITAL]%s delete kubernetes native node pool failed, reason:%+v", logId, err)
+		log.Printf("[CRITAL]%s describe kubernetes cluster machines failed, reason:%+v", logId, err)
 		return err
 	}
 

@@ -1,4 +1,4 @@
-Use this data source to query detailed information of teo zoneAvailablePlans
+Use this data source to query detailed information of TEO zones.
 
 Example Usage
 

@@ -1327,6 +1327,108 @@ func (r *CreateDBInstanceNetworkAccessResponse) FromJsonString(s string) error {
 }
 
 // Predefined struct for user
+type CreateDBProxyRequestParams struct {
+	// <p>实例 ID，格式形如：postgres-xxxxxxxx</p>
+	DBInstanceId *string `json:"DBInstanceId,omitnil,omitempty" name:"DBInstanceId"`
+
+	// <p>Proxy 所在私有网络 ID，需与主实例所在 VPC 一致</p>
+	VpcId *string `json:"VpcId,omitnil,omitempty" name:"VpcId"`
+
+	// <p>Proxy 所在私有网络子网 ID</p>
+	SubnetId *string `json:"SubnetId,omitnil,omitempty" name:"SubnetId"`
+
+	// <p>Proxy 节点自定义规格列表，至少一个元素，按可用区分组</p>
+	ProxyNodeCustom []*ProxyNodeCustom `json:"ProxyNodeCustom,omitnil,omitempty" name:"ProxyNodeCustom"`
+
+	// <p>Proxy 关联的安全组 ID 列表</p>
+	SecurityGroup []*string `json:"SecurityGroup,omitnil,omitempty" name:"SecurityGroup"`
+
+	// <p>Proxy 描述信息</p><p>长度范围：[0, 256]</p>
+	Description *string `json:"Description,omitnil,omitempty" name:"Description"`
+
+	// <p>连接池阈值（连接数），单位：个</p>
+	ConnectionPoolLimit *int64 `json:"ConnectionPoolLimit,omitnil,omitempty" name:"ConnectionPoolLimit"`
+}
+
+type CreateDBProxyRequest struct {
+	*tchttp.BaseRequest
+	
+	// <p>实例 ID，格式形如：postgres-xxxxxxxx</p>
+	DBInstanceId *string `json:"DBInstanceId,omitnil,omitempty" name:"DBInstanceId"`
+
+	// <p>Proxy 所在私有网络 ID，需与主实例所在 VPC 一致</p>
+	VpcId *string `json:"VpcId,omitnil,omitempty" name:"VpcId"`
+
+	// <p>Proxy 所在私有网络子网 ID</p>
+	SubnetId *string `json:"SubnetId,omitnil,omitempty" name:"SubnetId"`
+
+	// <p>Proxy 节点自定义规格列表，至少一个元素，按可用区分组</p>
+	ProxyNodeCustom []*ProxyNodeCustom `json:"ProxyNodeCustom,omitnil,omitempty" name:"ProxyNodeCustom"`
+
+	// <p>Proxy 关联的安全组 ID 列表</p>
+	SecurityGroup []*string `json:"SecurityGroup,omitnil,omitempty" name:"SecurityGroup"`
+
+	// <p>Proxy 描述信息</p><p>长度范围：[0, 256]</p>
+	Description *string `json:"Description,omitnil,omitempty" name:"Description"`
+
+	// <p>连接池阈值（连接数），单位：个</p>
+	ConnectionPoolLimit *int64 `json:"ConnectionPoolLimit,omitnil,omitempty" name:"ConnectionPoolLimit"`
+}
+
+func (r *CreateDBProxyRequest) ToJsonString() string {
+    b, _ := json.Marshal(r)
+    return string(b)
+}
+
+// FromJsonString It is highly **NOT** recommended to use this function
+// because it has no param check, nor strict type check
+func (r *CreateDBProxyRequest) FromJsonString(s string) error {
+	f := make(map[string]interface{})
+	if err := json.Unmarshal([]byte(s), &f); err != nil {
+		return err
+	}
+	delete(f, "DBInstanceId")
+	delete(f, "VpcId")
+	delete(f, "SubnetId")
+	delete(f, "ProxyNodeCustom")
+	delete(f, "SecurityGroup")
+	delete(f, "Description")
+	delete(f, "ConnectionPoolLimit")
+	if len(f) > 0 {
+		return tcerr.NewTencentCloudSDKError("ClientError.BuildRequestError", "CreateDBProxyRequest has unknown keys!", "")
+	}
+	return json.Unmarshal([]byte(s), &r)
+}
+
+// Predefined struct for user
+type CreateDBProxyResponseParams struct {
+	// <p>订单号，下单成功返回。</p>
+	DealName *string `json:"DealName,omitnil,omitempty" name:"DealName"`
+
+	// <p>创建出的 Proxy 实例 ID，格式形如：proxy-xxxxxxxx。</p>
+	ProxyGroupId *string `json:"ProxyGroupId,omitnil,omitempty" name:"ProxyGroupId"`
+
+	// 唯一请求 ID，由服务端生成，每次请求都会返回（若请求因其他原因未能抵达服务端，则该次请求不会获得 RequestId）。定位问题时需要提供该次请求的 RequestId。
+	RequestId *string `json:"RequestId,omitnil,omitempty" name:"RequestId"`
+}
+
+type CreateDBProxyResponse struct {
+	*tchttp.BaseResponse
+	Response *CreateDBProxyResponseParams `json:"Response"`
+}
+
+func (r *CreateDBProxyResponse) ToJsonString() string {
+    b, _ := json.Marshal(r)
+    return string(b)
+}
+
+// FromJsonString It is highly **NOT** recommended to use this function
+// because it has no param check, nor strict type check
+func (r *CreateDBProxyResponse) FromJsonString(s string) error {
+	return json.Unmarshal([]byte(s), &r)
+}
+
+// Predefined struct for user
 type CreateDatabaseRequestParams struct {
 	// 实例ID，形如postgres-6fego161。可通过[DescribeDBInstances](https://cloud.tencent.com/document/api/409/16773)接口获取
 	DBInstanceId *string `json:"DBInstanceId,omitnil,omitempty" name:"DBInstanceId"`
@@ -1833,7 +1935,7 @@ type CreateReadOnlyDBInstanceRequestParams struct {
 	// <p>只读组ID。</p>
 	ReadOnlyGroupId *string `json:"ReadOnlyGroupId,omitnil,omitempty" name:"ReadOnlyGroupId"`
 
-	// <p>实例需要绑定的Tag信息，默认为空；可以通过调用 <a href="https://cloud.tencent.com/document/api/651/35316">DescribeTags</a> 返回值中的 Tags 字段来获取。</p>
+	// <p>实例需要绑定的Tag信息，默认为空；可以通过调用 <a href="https://cloud.tencent.com/document/api/651/35316">DescribeTags</a> 返回值中的 Tags 字段来获取。</p><p>当前字段未完整支持多个tag形式，不推荐使用，建议使用新字段Tags</p>
 	TagList *Tag `json:"TagList,omitnil,omitempty" name:"TagList"`
 
 	// <p>实例所属安全组，该参数可以通过调用 <a href="https://cloud.tencent.com/document/api/215/15808">DescribeSecurityGroups</a> 的返回值中的sgId字段来获取。若不指定该参数，则绑定默认安全组。</p>
@@ -1855,6 +1957,9 @@ type CreateReadOnlyDBInstanceRequestParams struct {
 
 	// <p>实例是否开启删除保护: true-开启删除保护；false-关闭删除保护。</p>
 	DeletionProtection *bool `json:"DeletionProtection,omitnil,omitempty" name:"DeletionProtection"`
+
+	// <p>实例需要绑定的Tag信息，默认为空；可以通过调用 <a href="https://cloud.tencent.com/document/api/651/35316">DescribeTags</a> 返回值中的 Tags 字段来获取。</p>
+	Tags []*Tag `json:"Tags,omitnil,omitempty" name:"Tags"`
 }
 
 type CreateReadOnlyDBInstanceRequest struct {
@@ -1905,7 +2010,7 @@ type CreateReadOnlyDBInstanceRequest struct {
 	// <p>只读组ID。</p>
 	ReadOnlyGroupId *string `json:"ReadOnlyGroupId,omitnil,omitempty" name:"ReadOnlyGroupId"`
 
-	// <p>实例需要绑定的Tag信息，默认为空；可以通过调用 <a href="https://cloud.tencent.com/document/api/651/35316">DescribeTags</a> 返回值中的 Tags 字段来获取。</p>
+	// <p>实例需要绑定的Tag信息，默认为空；可以通过调用 <a href="https://cloud.tencent.com/document/api/651/35316">DescribeTags</a> 返回值中的 Tags 字段来获取。</p><p>当前字段未完整支持多个tag形式，不推荐使用，建议使用新字段Tags</p>
 	TagList *Tag `json:"TagList,omitnil,omitempty" name:"TagList"`
 
 	// <p>实例所属安全组，该参数可以通过调用 <a href="https://cloud.tencent.com/document/api/215/15808">DescribeSecurityGroups</a> 的返回值中的sgId字段来获取。若不指定该参数，则绑定默认安全组。</p>
@@ -1925,6 +2030,9 @@ type CreateReadOnlyDBInstanceRequest struct {
 
 	// <p>实例是否开启删除保护: true-开启删除保护；false-关闭删除保护。</p>
 	DeletionProtection *bool `json:"DeletionProtection,omitnil,omitempty" name:"DeletionProtection"`
+
+	// <p>实例需要绑定的Tag信息，默认为空；可以通过调用 <a href="https://cloud.tencent.com/document/api/651/35316">DescribeTags</a> 返回值中的 Tags 字段来获取。</p>
+	Tags []*Tag `json:"Tags,omitnil,omitempty" name:"Tags"`
 }
 
 func (r *CreateReadOnlyDBInstanceRequest) ToJsonString() string {
@@ -1961,6 +2069,7 @@ func (r *CreateReadOnlyDBInstanceRequest) FromJsonString(s string) error {
 	delete(f, "DBVersion")
 	delete(f, "DedicatedClusterId")
 	delete(f, "DeletionProtection")
+	delete(f, "Tags")
 	if len(f) > 0 {
 		return tcerr.NewTencentCloudSDKError("ClientError.BuildRequestError", "CreateReadOnlyDBInstanceRequest has unknown keys!", "")
 	}
@@ -2846,6 +2955,67 @@ func (r *DeleteDBInstanceNetworkAccessResponse) ToJsonString() string {
 // FromJsonString It is highly **NOT** recommended to use this function
 // because it has no param check, nor strict type check
 func (r *DeleteDBInstanceNetworkAccessResponse) FromJsonString(s string) error {
+	return json.Unmarshal([]byte(s), &r)
+}
+
+// Predefined struct for user
+type DeleteDatabaseRequestParams struct {
+	// <p>实例ID。可通过<a href="https://cloud.tencent.com/document/api/409/16773">DescribeDBInstances</a>接口获取</p>
+	DBInstanceId *string `json:"DBInstanceId,omitnil,omitempty" name:"DBInstanceId"`
+
+	// <p>数据库名称</p>
+	DatabaseName *string `json:"DatabaseName,omitnil,omitempty" name:"DatabaseName"`
+}
+
+type DeleteDatabaseRequest struct {
+	*tchttp.BaseRequest
+	
+	// <p>实例ID。可通过<a href="https://cloud.tencent.com/document/api/409/16773">DescribeDBInstances</a>接口获取</p>
+	DBInstanceId *string `json:"DBInstanceId,omitnil,omitempty" name:"DBInstanceId"`
+
+	// <p>数据库名称</p>
+	DatabaseName *string `json:"DatabaseName,omitnil,omitempty" name:"DatabaseName"`
+}
+
+func (r *DeleteDatabaseRequest) ToJsonString() string {
+    b, _ := json.Marshal(r)
+    return string(b)
+}
+
+// FromJsonString It is highly **NOT** recommended to use this function
+// because it has no param check, nor strict type check
+func (r *DeleteDatabaseRequest) FromJsonString(s string) error {
+	f := make(map[string]interface{})
+	if err := json.Unmarshal([]byte(s), &f); err != nil {
+		return err
+	}
+	delete(f, "DBInstanceId")
+	delete(f, "DatabaseName")
+	if len(f) > 0 {
+		return tcerr.NewTencentCloudSDKError("ClientError.BuildRequestError", "DeleteDatabaseRequest has unknown keys!", "")
+	}
+	return json.Unmarshal([]byte(s), &r)
+}
+
+// Predefined struct for user
+type DeleteDatabaseResponseParams struct {
+	// 唯一请求 ID，由服务端生成，每次请求都会返回（若请求因其他原因未能抵达服务端，则该次请求不会获得 RequestId）。定位问题时需要提供该次请求的 RequestId。
+	RequestId *string `json:"RequestId,omitnil,omitempty" name:"RequestId"`
+}
+
+type DeleteDatabaseResponse struct {
+	*tchttp.BaseResponse
+	Response *DeleteDatabaseResponseParams `json:"Response"`
+}
+
+func (r *DeleteDatabaseResponse) ToJsonString() string {
+    b, _ := json.Marshal(r)
+    return string(b)
+}
+
+// FromJsonString It is highly **NOT** recommended to use this function
+// because it has no param check, nor strict type check
+func (r *DeleteDatabaseResponse) FromJsonString(s string) error {
 	return json.Unmarshal([]byte(s), &r)
 }
 
@@ -4757,20 +4927,20 @@ func (r *DescribeDBInstanceSSLConfigResponse) FromJsonString(s string) error {
 
 // Predefined struct for user
 type DescribeDBInstanceSecurityGroupsRequestParams struct {
-	// 实例ID，可通过[DescribeDBInstances](https://cloud.tencent.com/document/api/409/16773)接口获取。DBInstanceId和ReadOnlyGroupId至少传一个；如果都传，忽略ReadOnlyGroupId。
+	// <p>实例ID，可通过<a href="https://cloud.tencent.com/document/api/409/16773">DescribeDBInstances</a>接口获取。DBInstanceId、ReadOnlyGroupId、ProxyAddressId至少传一个；如果要查询实例关联的安全组，只传DBInstanceId字段。</p>
 	DBInstanceId *string `json:"DBInstanceId,omitnil,omitempty" name:"DBInstanceId"`
 
-	// 只读组ID，可通过[DescribeReadOnlyGroups](https://cloud.tencent.com/document/api/409/52599)接口获取。DBInstanceId和ReadOnlyGroupId至少传一个；如果要查询只读组关联的安全组，只传ReadOnlyGroupId。
+	// <p>只读组ID，可通过<a href="https://cloud.tencent.com/document/api/409/52599">DescribeReadOnlyGroups</a>接口获取。DBInstanceId、ReadOnlyGroupId、ProxyAddressId至少传一个；如果要查询只读组关联的安全组，只传ReadOnlyGroupId。</p>
 	ReadOnlyGroupId *string `json:"ReadOnlyGroupId,omitnil,omitempty" name:"ReadOnlyGroupId"`
 }
 
 type DescribeDBInstanceSecurityGroupsRequest struct {
 	*tchttp.BaseRequest
 	
-	// 实例ID，可通过[DescribeDBInstances](https://cloud.tencent.com/document/api/409/16773)接口获取。DBInstanceId和ReadOnlyGroupId至少传一个；如果都传，忽略ReadOnlyGroupId。
+	// <p>实例ID，可通过<a href="https://cloud.tencent.com/document/api/409/16773">DescribeDBInstances</a>接口获取。DBInstanceId、ReadOnlyGroupId、ProxyAddressId至少传一个；如果要查询实例关联的安全组，只传DBInstanceId字段。</p>
 	DBInstanceId *string `json:"DBInstanceId,omitnil,omitempty" name:"DBInstanceId"`
 
-	// 只读组ID，可通过[DescribeReadOnlyGroups](https://cloud.tencent.com/document/api/409/52599)接口获取。DBInstanceId和ReadOnlyGroupId至少传一个；如果要查询只读组关联的安全组，只传ReadOnlyGroupId。
+	// <p>只读组ID，可通过<a href="https://cloud.tencent.com/document/api/409/52599">DescribeReadOnlyGroups</a>接口获取。DBInstanceId、ReadOnlyGroupId、ProxyAddressId至少传一个；如果要查询只读组关联的安全组，只传ReadOnlyGroupId。</p>
 	ReadOnlyGroupId *string `json:"ReadOnlyGroupId,omitnil,omitempty" name:"ReadOnlyGroupId"`
 }
 
@@ -4796,7 +4966,7 @@ func (r *DescribeDBInstanceSecurityGroupsRequest) FromJsonString(s string) error
 
 // Predefined struct for user
 type DescribeDBInstanceSecurityGroupsResponseParams struct {
-	// 安全组信息数组
+	// <p>安全组信息数组</p>
 	SecurityGroupSet []*SecurityGroup `json:"SecurityGroupSet,omitnil,omitempty" name:"SecurityGroupSet"`
 
 	// 唯一请求 ID，由服务端生成，每次请求都会返回（若请求因其他原因未能抵达服务端，则该次请求不会获得 RequestId）。定位问题时需要提供该次请求的 RequestId。
@@ -4920,6 +5090,136 @@ func (r *DescribeDBInstancesResponse) ToJsonString() string {
 // FromJsonString It is highly **NOT** recommended to use this function
 // because it has no param check, nor strict type check
 func (r *DescribeDBInstancesResponse) FromJsonString(s string) error {
+	return json.Unmarshal([]byte(s), &r)
+}
+
+// Predefined struct for user
+type DescribeDBProxyRequestParams struct {
+	// <p>实例 ID，格式形如：postgres-xxxxxxxx</p>
+	DBInstanceId *string `json:"DBInstanceId,omitnil,omitempty" name:"DBInstanceId"`
+
+	// <p>Proxy 实例 ID，格式形如：proxy-xxxxxxxx；不传则查询该实例下全部 Proxy</p>
+	ProxyGroupId *string `json:"ProxyGroupId,omitnil,omitempty" name:"ProxyGroupId"`
+}
+
+type DescribeDBProxyRequest struct {
+	*tchttp.BaseRequest
+	
+	// <p>实例 ID，格式形如：postgres-xxxxxxxx</p>
+	DBInstanceId *string `json:"DBInstanceId,omitnil,omitempty" name:"DBInstanceId"`
+
+	// <p>Proxy 实例 ID，格式形如：proxy-xxxxxxxx；不传则查询该实例下全部 Proxy</p>
+	ProxyGroupId *string `json:"ProxyGroupId,omitnil,omitempty" name:"ProxyGroupId"`
+}
+
+func (r *DescribeDBProxyRequest) ToJsonString() string {
+    b, _ := json.Marshal(r)
+    return string(b)
+}
+
+// FromJsonString It is highly **NOT** recommended to use this function
+// because it has no param check, nor strict type check
+func (r *DescribeDBProxyRequest) FromJsonString(s string) error {
+	f := make(map[string]interface{})
+	if err := json.Unmarshal([]byte(s), &f); err != nil {
+		return err
+	}
+	delete(f, "DBInstanceId")
+	delete(f, "ProxyGroupId")
+	if len(f) > 0 {
+		return tcerr.NewTencentCloudSDKError("ClientError.BuildRequestError", "DescribeDBProxyRequest has unknown keys!", "")
+	}
+	return json.Unmarshal([]byte(s), &r)
+}
+
+// Predefined struct for user
+type DescribeDBProxyResponseParams struct {
+	// <p>Proxy 实例数量。</p>
+	Count *int64 `json:"Count,omitnil,omitempty" name:"Count"`
+
+	// <p>Proxy 实例详情列表。</p>
+	ProxyInfos []*ProxyGroupInfo `json:"ProxyInfos,omitnil,omitempty" name:"ProxyInfos"`
+
+	// 唯一请求 ID，由服务端生成，每次请求都会返回（若请求因其他原因未能抵达服务端，则该次请求不会获得 RequestId）。定位问题时需要提供该次请求的 RequestId。
+	RequestId *string `json:"RequestId,omitnil,omitempty" name:"RequestId"`
+}
+
+type DescribeDBProxyResponse struct {
+	*tchttp.BaseResponse
+	Response *DescribeDBProxyResponseParams `json:"Response"`
+}
+
+func (r *DescribeDBProxyResponse) ToJsonString() string {
+    b, _ := json.Marshal(r)
+    return string(b)
+}
+
+// FromJsonString It is highly **NOT** recommended to use this function
+// because it has no param check, nor strict type check
+func (r *DescribeDBProxyResponse) FromJsonString(s string) error {
+	return json.Unmarshal([]byte(s), &r)
+}
+
+// Predefined struct for user
+type DescribeDBProxySpecsRequestParams struct {
+	// <p>实例ID。传入时返回该实例的 Proxy 支持情况和可用区</p>
+	DBInstanceId *string `json:"DBInstanceId,omitnil,omitempty" name:"DBInstanceId"`
+}
+
+type DescribeDBProxySpecsRequest struct {
+	*tchttp.BaseRequest
+	
+	// <p>实例ID。传入时返回该实例的 Proxy 支持情况和可用区</p>
+	DBInstanceId *string `json:"DBInstanceId,omitnil,omitempty" name:"DBInstanceId"`
+}
+
+func (r *DescribeDBProxySpecsRequest) ToJsonString() string {
+    b, _ := json.Marshal(r)
+    return string(b)
+}
+
+// FromJsonString It is highly **NOT** recommended to use this function
+// because it has no param check, nor strict type check
+func (r *DescribeDBProxySpecsRequest) FromJsonString(s string) error {
+	f := make(map[string]interface{})
+	if err := json.Unmarshal([]byte(s), &f); err != nil {
+		return err
+	}
+	delete(f, "DBInstanceId")
+	if len(f) > 0 {
+		return tcerr.NewTencentCloudSDKError("ClientError.BuildRequestError", "DescribeDBProxySpecsRequest has unknown keys!", "")
+	}
+	return json.Unmarshal([]byte(s), &r)
+}
+
+// Predefined struct for user
+type DescribeDBProxySpecsResponseParams struct {
+	// <p>规格列表</p>
+	SpecSet []*ProxySpecItem `json:"SpecSet,omitnil,omitempty" name:"SpecSet"`
+
+	// <p>该实例是否支持开通 Proxy（仅传 DBInstanceId 时返回）</p>
+	SupportProxy *bool `json:"SupportProxy,omitnil,omitempty" name:"SupportProxy"`
+
+	// <p>可部署可用区列表（仅传 DBInstanceId 时返回）</p>
+	AvailableZones []*string `json:"AvailableZones,omitnil,omitempty" name:"AvailableZones"`
+
+	// 唯一请求 ID，由服务端生成，每次请求都会返回（若请求因其他原因未能抵达服务端，则该次请求不会获得 RequestId）。定位问题时需要提供该次请求的 RequestId。
+	RequestId *string `json:"RequestId,omitnil,omitempty" name:"RequestId"`
+}
+
+type DescribeDBProxySpecsResponse struct {
+	*tchttp.BaseResponse
+	Response *DescribeDBProxySpecsResponseParams `json:"Response"`
+}
+
+func (r *DescribeDBProxySpecsResponse) ToJsonString() string {
+    b, _ := json.Marshal(r)
+    return string(b)
+}
+
+// FromJsonString It is highly **NOT** recommended to use this function
+// because it has no param check, nor strict type check
+func (r *DescribeDBProxySpecsResponse) FromJsonString(s string) error {
 	return json.Unmarshal([]byte(s), &r)
 }
 
@@ -6343,56 +6643,56 @@ func (r *DescribeSlowQueryListResponse) FromJsonString(s string) error {
 
 // Predefined struct for user
 type DescribeTasksRequestParams struct {
-	// 按照任务ID进行查询。其余云API中返回的FlowId和TaskId等价。
+	// <p>按照任务ID进行查询。其余云API中返回的FlowId和TaskId等价。</p>
 	TaskId *uint64 `json:"TaskId,omitnil,omitempty" name:"TaskId"`
 
-	// 按照数据库实例ID进行查询。
+	// <p>按照数据库实例ID进行查询。</p>
 	DBInstanceId *string `json:"DBInstanceId,omitnil,omitempty" name:"DBInstanceId"`
 
-	// 任务的最早开始时间，形如2024-08-23 00:00:00,默认只展示180天内的数据。
+	// <p>任务的最早开始时间，形如2024-08-23 00:00:00,默认只展示180天内的数据。</p>
 	MinStartTime *string `json:"MinStartTime,omitnil,omitempty" name:"MinStartTime"`
 
-	// 任务的最晚开始时间，形如2024-08-23 00:00:00，默认为当前时间。
+	// <p>任务的最晚开始时间，形如2024-08-23 00:00:00，默认为当前时间。</p>
 	MaxStartTime *string `json:"MaxStartTime,omitnil,omitempty" name:"MaxStartTime"`
 
-	// 每页显示数量，取值范围为1-100，默认为返回20条。
+	// <p>每页显示数量，取值范围为1-100，默认为返回20条。</p>
 	Limit *uint64 `json:"Limit,omitnil,omitempty" name:"Limit"`
 
-	// 数据偏移量，从0开始。
+	// <p>数据偏移量，从0开始。</p>
 	Offset *uint64 `json:"Offset,omitnil,omitempty" name:"Offset"`
 
-	// 排序字段，支持StartTime,EndTime，默认为StartTime。
+	// <p>排序字段，支持StartTime,EndTime，默认为StartTime。</p>
 	OrderBy *string `json:"OrderBy,omitnil,omitempty" name:"OrderBy"`
 
-	// 排序方式，包括升序：asc，降序：desc，默认为desc。
+	// <p>排序方式，包括升序：asc，降序：desc，默认为desc。</p>
 	OrderByType *string `json:"OrderByType,omitnil,omitempty" name:"OrderByType"`
 }
 
 type DescribeTasksRequest struct {
 	*tchttp.BaseRequest
 	
-	// 按照任务ID进行查询。其余云API中返回的FlowId和TaskId等价。
+	// <p>按照任务ID进行查询。其余云API中返回的FlowId和TaskId等价。</p>
 	TaskId *uint64 `json:"TaskId,omitnil,omitempty" name:"TaskId"`
 
-	// 按照数据库实例ID进行查询。
+	// <p>按照数据库实例ID进行查询。</p>
 	DBInstanceId *string `json:"DBInstanceId,omitnil,omitempty" name:"DBInstanceId"`
 
-	// 任务的最早开始时间，形如2024-08-23 00:00:00,默认只展示180天内的数据。
+	// <p>任务的最早开始时间，形如2024-08-23 00:00:00,默认只展示180天内的数据。</p>
 	MinStartTime *string `json:"MinStartTime,omitnil,omitempty" name:"MinStartTime"`
 
-	// 任务的最晚开始时间，形如2024-08-23 00:00:00，默认为当前时间。
+	// <p>任务的最晚开始时间，形如2024-08-23 00:00:00，默认为当前时间。</p>
 	MaxStartTime *string `json:"MaxStartTime,omitnil,omitempty" name:"MaxStartTime"`
 
-	// 每页显示数量，取值范围为1-100，默认为返回20条。
+	// <p>每页显示数量，取值范围为1-100，默认为返回20条。</p>
 	Limit *uint64 `json:"Limit,omitnil,omitempty" name:"Limit"`
 
-	// 数据偏移量，从0开始。
+	// <p>数据偏移量，从0开始。</p>
 	Offset *uint64 `json:"Offset,omitnil,omitempty" name:"Offset"`
 
-	// 排序字段，支持StartTime,EndTime，默认为StartTime。
+	// <p>排序字段，支持StartTime,EndTime，默认为StartTime。</p>
 	OrderBy *string `json:"OrderBy,omitnil,omitempty" name:"OrderBy"`
 
-	// 排序方式，包括升序：asc，降序：desc，默认为desc。
+	// <p>排序方式，包括升序：asc，降序：desc，默认为desc。</p>
 	OrderByType *string `json:"OrderByType,omitnil,omitempty" name:"OrderByType"`
 }
 
@@ -6424,10 +6724,10 @@ func (r *DescribeTasksRequest) FromJsonString(s string) error {
 
 // Predefined struct for user
 type DescribeTasksResponseParams struct {
-	// 查询到的任务数量
+	// <p>查询到的任务数量</p>
 	TotalCount *uint64 `json:"TotalCount,omitnil,omitempty" name:"TotalCount"`
 
-	// 任务信息列表
+	// <p>任务信息列表</p>
 	TaskSet []*TaskSet `json:"TaskSet,omitnil,omitempty" name:"TaskSet"`
 
 	// 唯一请求 ID，由服务端生成，每次请求都会返回（若请求因其他原因未能抵达服务端，则该次请求不会获得 RequestId）。定位问题时需要提供该次请求的 RequestId。
@@ -6561,6 +6861,67 @@ func (r *DestroyDBInstanceResponse) ToJsonString() string {
 // FromJsonString It is highly **NOT** recommended to use this function
 // because it has no param check, nor strict type check
 func (r *DestroyDBInstanceResponse) FromJsonString(s string) error {
+	return json.Unmarshal([]byte(s), &r)
+}
+
+// Predefined struct for user
+type DestroyDBProxyRequestParams struct {
+	// <p>实例 ID，格式形如：postgres-xxxxxxxx</p>
+	DBInstanceId *string `json:"DBInstanceId,omitnil,omitempty" name:"DBInstanceId"`
+
+	// <p>Proxy 实例 ID，格式形如：proxy-xxxxxxxx；不传时若实例下仅有一个 Proxy 则销毁该 Proxy，存在多个 Proxy 必须显式传入</p>
+	ProxyGroupId *string `json:"ProxyGroupId,omitnil,omitempty" name:"ProxyGroupId"`
+}
+
+type DestroyDBProxyRequest struct {
+	*tchttp.BaseRequest
+	
+	// <p>实例 ID，格式形如：postgres-xxxxxxxx</p>
+	DBInstanceId *string `json:"DBInstanceId,omitnil,omitempty" name:"DBInstanceId"`
+
+	// <p>Proxy 实例 ID，格式形如：proxy-xxxxxxxx；不传时若实例下仅有一个 Proxy 则销毁该 Proxy，存在多个 Proxy 必须显式传入</p>
+	ProxyGroupId *string `json:"ProxyGroupId,omitnil,omitempty" name:"ProxyGroupId"`
+}
+
+func (r *DestroyDBProxyRequest) ToJsonString() string {
+    b, _ := json.Marshal(r)
+    return string(b)
+}
+
+// FromJsonString It is highly **NOT** recommended to use this function
+// because it has no param check, nor strict type check
+func (r *DestroyDBProxyRequest) FromJsonString(s string) error {
+	f := make(map[string]interface{})
+	if err := json.Unmarshal([]byte(s), &f); err != nil {
+		return err
+	}
+	delete(f, "DBInstanceId")
+	delete(f, "ProxyGroupId")
+	if len(f) > 0 {
+		return tcerr.NewTencentCloudSDKError("ClientError.BuildRequestError", "DestroyDBProxyRequest has unknown keys!", "")
+	}
+	return json.Unmarshal([]byte(s), &r)
+}
+
+// Predefined struct for user
+type DestroyDBProxyResponseParams struct {
+	// 唯一请求 ID，由服务端生成，每次请求都会返回（若请求因其他原因未能抵达服务端，则该次请求不会获得 RequestId）。定位问题时需要提供该次请求的 RequestId。
+	RequestId *string `json:"RequestId,omitnil,omitempty" name:"RequestId"`
+}
+
+type DestroyDBProxyResponse struct {
+	*tchttp.BaseResponse
+	Response *DestroyDBProxyResponseParams `json:"Response"`
+}
+
+func (r *DestroyDBProxyResponse) ToJsonString() string {
+    b, _ := json.Marshal(r)
+    return string(b)
+}
+
+// FromJsonString It is highly **NOT** recommended to use this function
+// because it has no param check, nor strict type check
+func (r *DestroyDBProxyResponse) FromJsonString(s string) error {
 	return json.Unmarshal([]byte(s), &r)
 }
 
@@ -8383,30 +8744,26 @@ func (r *ModifyDBInstanceSSLConfigResponse) FromJsonString(s string) error {
 
 // Predefined struct for user
 type ModifyDBInstanceSecurityGroupsRequestParams struct {
-	// 实例或只读组要绑定的安全组列表。
-	// 安全组信息可以通过调用 [DescribeSecurityGroups](https://cloud.tencent.com/document/api/215/15808) 的返回值中的sgId字段来查询。
-	// **注意：**该入参会全量替换存量已有集合，非增量更新。修改需传入预期的全量集合。
+	// <p>实例或只读组要绑定的安全组列表。<br>安全组信息可以通过调用 <a href="https://cloud.tencent.com/document/api/215/15808">DescribeSecurityGroups</a> 的返回值中的sgId字段来查询。<br><strong>注意：</strong>该入参会全量替换存量已有集合，非增量更新。修改需传入预期的全量集合。</p>
 	SecurityGroupIdSet []*string `json:"SecurityGroupIdSet,omitnil,omitempty" name:"SecurityGroupIdSet"`
 
-	// 实例ID，可通过[DescribeDBInstances](https://cloud.tencent.com/document/api/409/16773)接口获取。DBInstanceId和ReadOnlyGroupId至少传一个；如果都传，忽略ReadOnlyGroupId。
+	// <p>实例ID，可通过<a href="https://cloud.tencent.com/document/api/409/16773">DescribeDBInstances</a>接口获取。DBInstanceId、ReadOnlyGroupId、ProxyAddressId至少传一个；如果要查询实例关联的安全组，只传DBInstanceId字段。</p>
 	DBInstanceId *string `json:"DBInstanceId,omitnil,omitempty" name:"DBInstanceId"`
 
-	// 只读组ID，可通过[DescribeReadOnlyGroups](https://cloud.tencent.com/document/api/409/52599)接口获取。DBInstanceId和ReadOnlyGroupId至少传一个；如果要修改只读组关联的安全组，只传ReadOnlyGroupId
+	// <p>只读组ID，可通过<a href="https://cloud.tencent.com/document/api/409/52599">DescribeReadOnlyGroups</a>接口获取。DBInstanceId、ReadOnlyGroupId、ProxyAddressId至少传一个；如果要查询只读组关联的安全组，只传ReadOnlyGroupId。</p>
 	ReadOnlyGroupId *string `json:"ReadOnlyGroupId,omitnil,omitempty" name:"ReadOnlyGroupId"`
 }
 
 type ModifyDBInstanceSecurityGroupsRequest struct {
 	*tchttp.BaseRequest
 	
-	// 实例或只读组要绑定的安全组列表。
-	// 安全组信息可以通过调用 [DescribeSecurityGroups](https://cloud.tencent.com/document/api/215/15808) 的返回值中的sgId字段来查询。
-	// **注意：**该入参会全量替换存量已有集合，非增量更新。修改需传入预期的全量集合。
+	// <p>实例或只读组要绑定的安全组列表。<br>安全组信息可以通过调用 <a href="https://cloud.tencent.com/document/api/215/15808">DescribeSecurityGroups</a> 的返回值中的sgId字段来查询。<br><strong>注意：</strong>该入参会全量替换存量已有集合，非增量更新。修改需传入预期的全量集合。</p>
 	SecurityGroupIdSet []*string `json:"SecurityGroupIdSet,omitnil,omitempty" name:"SecurityGroupIdSet"`
 
-	// 实例ID，可通过[DescribeDBInstances](https://cloud.tencent.com/document/api/409/16773)接口获取。DBInstanceId和ReadOnlyGroupId至少传一个；如果都传，忽略ReadOnlyGroupId。
+	// <p>实例ID，可通过<a href="https://cloud.tencent.com/document/api/409/16773">DescribeDBInstances</a>接口获取。DBInstanceId、ReadOnlyGroupId、ProxyAddressId至少传一个；如果要查询实例关联的安全组，只传DBInstanceId字段。</p>
 	DBInstanceId *string `json:"DBInstanceId,omitnil,omitempty" name:"DBInstanceId"`
 
-	// 只读组ID，可通过[DescribeReadOnlyGroups](https://cloud.tencent.com/document/api/409/52599)接口获取。DBInstanceId和ReadOnlyGroupId至少传一个；如果要修改只读组关联的安全组，只传ReadOnlyGroupId
+	// <p>只读组ID，可通过<a href="https://cloud.tencent.com/document/api/409/52599">DescribeReadOnlyGroups</a>接口获取。DBInstanceId、ReadOnlyGroupId、ProxyAddressId至少传一个；如果要查询只读组关联的安全组，只传ReadOnlyGroupId。</p>
 	ReadOnlyGroupId *string `json:"ReadOnlyGroupId,omitnil,omitempty" name:"ReadOnlyGroupId"`
 }
 
@@ -8455,83 +8812,75 @@ func (r *ModifyDBInstanceSecurityGroupsResponse) FromJsonString(s string) error 
 
 // Predefined struct for user
 type ModifyDBInstanceSpecRequestParams struct {
-	// 实例ID，形如：postgres-6bwgamo3。可通过[DescribeDBInstances](https://cloud.tencent.com/document/api/409/16773)接口获取
+	// <p>实例ID，形如：postgres-6bwgamo3。可通过<a href="https://cloud.tencent.com/document/api/409/16773">DescribeDBInstances</a>接口获取</p>
 	DBInstanceId *string `json:"DBInstanceId,omitnil,omitempty" name:"DBInstanceId"`
 
-	// 修改后的实例内存大小，单位GiB。
+	// <p>修改后的实例内存大小，单位GB。</p>
 	Memory *uint64 `json:"Memory,omitnil,omitempty" name:"Memory"`
 
-	// 修改后的实例磁盘大小，单位GiB。该参数的设置步长为10。
+	// <p>修改后的实例磁盘大小，单位GB。该参数的设置步长为10。</p>
 	Storage *uint64 `json:"Storage,omitnil,omitempty" name:"Storage"`
 
-	// 是否自动使用代金券：
-	// <li>0：否</li>
-	// <li>1：是</li>
-	// 默认值：0
+	// <p>是否自动使用代金券：</p><li>0：否</li><li>1：是</li>默认值：0
 	AutoVoucher *uint64 `json:"AutoVoucher,omitnil,omitempty" name:"AutoVoucher"`
 
-	// 代金券ID列表，目前仅支持指定一张代金券。
+	// <p>代金券ID列表，目前仅支持指定一张代金券。</p>
 	VoucherIds []*string `json:"VoucherIds,omitnil,omitempty" name:"VoucherIds"`
 
-	// 活动ID。
+	// <p>活动ID。</p>
 	ActivityId *uint64 `json:"ActivityId,omitnil,omitempty" name:"ActivityId"`
 
-	// 指定实例配置完成变更后的切换时间。
-	// <li>0：立即切换 </li>
-	// <li>1：指定时间切换</li>
-	// <li>2：维护时间窗口内</li>切换
-	// 默认值：0 
+	// <p>指定实例配置完成变更后的切换时间。</p><li>0：立即切换 </li><li>1：指定时间切换</li><li>2：维护时间窗口内</li>切换默认值：0
 	SwitchTag *uint64 `json:"SwitchTag,omitnil,omitempty" name:"SwitchTag"`
 
-	// 切换开始时间，时间格式：HH:MM:SS，例如：01:00:00。当SwitchTag为0或2时，该参数失效。
+	// <p>切换开始时间，时间格式：HH:MM:SS，例如：01:00:00。当SwitchTag为0或2时，该参数失效。</p>
 	SwitchStartTime *string `json:"SwitchStartTime,omitnil,omitempty" name:"SwitchStartTime"`
 
-	// 切换截止时间，时间格式：HH:MM:SS，例如：01:30:00。当SwitchTag为0或2时，该参数失效。
+	// <p>切换截止时间，时间格式：HH:MM:SS，例如：01:30:00。当SwitchTag为0或2时，该参数失效。</p>
 	SwitchEndTime *string `json:"SwitchEndTime,omitnil,omitempty" name:"SwitchEndTime"`
 
-	// 修改后的实例CPU大小，单位Core。不填写该参数时，默认根据Memory确定Cpu大小。如Memory为2，支持的规格有1核2GiB，则不传入Cpu时，Cpu默认为1。
+	// <p>修改后的实例CPU大小，单位Core。不填写该参数时，默认根据Memory确定Cpu大小。如Memory为2，支持的规格有1核2GB，则不传入Cpu时，Cpu默认为1。</p>
 	Cpu *uint64 `json:"Cpu,omitnil,omitempty" name:"Cpu"`
+
+	// <p>变配时同步修改的参数列表</p>
+	SyncModifyParams []*ParamEntry `json:"SyncModifyParams,omitnil,omitempty" name:"SyncModifyParams"`
 }
 
 type ModifyDBInstanceSpecRequest struct {
 	*tchttp.BaseRequest
 	
-	// 实例ID，形如：postgres-6bwgamo3。可通过[DescribeDBInstances](https://cloud.tencent.com/document/api/409/16773)接口获取
+	// <p>实例ID，形如：postgres-6bwgamo3。可通过<a href="https://cloud.tencent.com/document/api/409/16773">DescribeDBInstances</a>接口获取</p>
 	DBInstanceId *string `json:"DBInstanceId,omitnil,omitempty" name:"DBInstanceId"`
 
-	// 修改后的实例内存大小，单位GiB。
+	// <p>修改后的实例内存大小，单位GB。</p>
 	Memory *uint64 `json:"Memory,omitnil,omitempty" name:"Memory"`
 
-	// 修改后的实例磁盘大小，单位GiB。该参数的设置步长为10。
+	// <p>修改后的实例磁盘大小，单位GB。该参数的设置步长为10。</p>
 	Storage *uint64 `json:"Storage,omitnil,omitempty" name:"Storage"`
 
-	// 是否自动使用代金券：
-	// <li>0：否</li>
-	// <li>1：是</li>
-	// 默认值：0
+	// <p>是否自动使用代金券：</p><li>0：否</li><li>1：是</li>默认值：0
 	AutoVoucher *uint64 `json:"AutoVoucher,omitnil,omitempty" name:"AutoVoucher"`
 
-	// 代金券ID列表，目前仅支持指定一张代金券。
+	// <p>代金券ID列表，目前仅支持指定一张代金券。</p>
 	VoucherIds []*string `json:"VoucherIds,omitnil,omitempty" name:"VoucherIds"`
 
-	// 活动ID。
+	// <p>活动ID。</p>
 	ActivityId *uint64 `json:"ActivityId,omitnil,omitempty" name:"ActivityId"`
 
-	// 指定实例配置完成变更后的切换时间。
-	// <li>0：立即切换 </li>
-	// <li>1：指定时间切换</li>
-	// <li>2：维护时间窗口内</li>切换
-	// 默认值：0 
+	// <p>指定实例配置完成变更后的切换时间。</p><li>0：立即切换 </li><li>1：指定时间切换</li><li>2：维护时间窗口内</li>切换默认值：0
 	SwitchTag *uint64 `json:"SwitchTag,omitnil,omitempty" name:"SwitchTag"`
 
-	// 切换开始时间，时间格式：HH:MM:SS，例如：01:00:00。当SwitchTag为0或2时，该参数失效。
+	// <p>切换开始时间，时间格式：HH:MM:SS，例如：01:00:00。当SwitchTag为0或2时，该参数失效。</p>
 	SwitchStartTime *string `json:"SwitchStartTime,omitnil,omitempty" name:"SwitchStartTime"`
 
-	// 切换截止时间，时间格式：HH:MM:SS，例如：01:30:00。当SwitchTag为0或2时，该参数失效。
+	// <p>切换截止时间，时间格式：HH:MM:SS，例如：01:30:00。当SwitchTag为0或2时，该参数失效。</p>
 	SwitchEndTime *string `json:"SwitchEndTime,omitnil,omitempty" name:"SwitchEndTime"`
 
-	// 修改后的实例CPU大小，单位Core。不填写该参数时，默认根据Memory确定Cpu大小。如Memory为2，支持的规格有1核2GiB，则不传入Cpu时，Cpu默认为1。
+	// <p>修改后的实例CPU大小，单位Core。不填写该参数时，默认根据Memory确定Cpu大小。如Memory为2，支持的规格有1核2GB，则不传入Cpu时，Cpu默认为1。</p>
 	Cpu *uint64 `json:"Cpu,omitnil,omitempty" name:"Cpu"`
+
+	// <p>变配时同步修改的参数列表</p>
+	SyncModifyParams []*ParamEntry `json:"SyncModifyParams,omitnil,omitempty" name:"SyncModifyParams"`
 }
 
 func (r *ModifyDBInstanceSpecRequest) ToJsonString() string {
@@ -8556,6 +8905,7 @@ func (r *ModifyDBInstanceSpecRequest) FromJsonString(s string) error {
 	delete(f, "SwitchStartTime")
 	delete(f, "SwitchEndTime")
 	delete(f, "Cpu")
+	delete(f, "SyncModifyParams")
 	if len(f) > 0 {
 		return tcerr.NewTencentCloudSDKError("ClientError.BuildRequestError", "ModifyDBInstanceSpecRequest has unknown keys!", "")
 	}
@@ -8564,10 +8914,10 @@ func (r *ModifyDBInstanceSpecRequest) FromJsonString(s string) error {
 
 // Predefined struct for user
 type ModifyDBInstanceSpecResponseParams struct {
-	// 订单号。
+	// <p>订单号。</p>
 	DealName *string `json:"DealName,omitnil,omitempty" name:"DealName"`
 
-	// 冻结流水号。
+	// <p>冻结流水号。</p>
 	BillId *string `json:"BillId,omitnil,omitempty" name:"BillId"`
 
 	// 唯一请求 ID，由服务端生成，每次请求都会返回（若请求因其他原因未能抵达服务端，则该次请求不会获得 RequestId）。定位问题时需要提供该次请求的 RequestId。
@@ -8651,6 +9001,194 @@ func (r *ModifyDBInstancesProjectResponse) ToJsonString() string {
 // FromJsonString It is highly **NOT** recommended to use this function
 // because it has no param check, nor strict type check
 func (r *ModifyDBInstancesProjectResponse) FromJsonString(s string) error {
+	return json.Unmarshal([]byte(s), &r)
+}
+
+// Predefined struct for user
+type ModifyDBProxyAddressRequestParams struct {
+	// <p>实例ID</p>
+	DBInstanceId *string `json:"DBInstanceId,omitnil,omitempty" name:"DBInstanceId"`
+
+	// <p>Proxy地址ID</p>
+	AddressId *string `json:"AddressId,omitnil,omitempty" name:"AddressId"`
+
+	// <p>Proxy代理组 ID（不传则默认操作该实例下唯一的代理）</p>
+	ProxyGroupId *string `json:"ProxyGroupId,omitnil,omitempty" name:"ProxyGroupId"`
+
+	// <p>地址描述/备注（最多 256 字符）</p>
+	Description *string `json:"Description,omitnil,omitempty" name:"Description"`
+
+	// <p>连接池开关</p><p>枚举值：</p><ul><li>true： 开启</li><li>false： 关闭</li></ul>
+	ConnectionPool *bool `json:"ConnectionPool,omitnil,omitempty" name:"ConnectionPool"`
+}
+
+type ModifyDBProxyAddressRequest struct {
+	*tchttp.BaseRequest
+	
+	// <p>实例ID</p>
+	DBInstanceId *string `json:"DBInstanceId,omitnil,omitempty" name:"DBInstanceId"`
+
+	// <p>Proxy地址ID</p>
+	AddressId *string `json:"AddressId,omitnil,omitempty" name:"AddressId"`
+
+	// <p>Proxy代理组 ID（不传则默认操作该实例下唯一的代理）</p>
+	ProxyGroupId *string `json:"ProxyGroupId,omitnil,omitempty" name:"ProxyGroupId"`
+
+	// <p>地址描述/备注（最多 256 字符）</p>
+	Description *string `json:"Description,omitnil,omitempty" name:"Description"`
+
+	// <p>连接池开关</p><p>枚举值：</p><ul><li>true： 开启</li><li>false： 关闭</li></ul>
+	ConnectionPool *bool `json:"ConnectionPool,omitnil,omitempty" name:"ConnectionPool"`
+}
+
+func (r *ModifyDBProxyAddressRequest) ToJsonString() string {
+    b, _ := json.Marshal(r)
+    return string(b)
+}
+
+// FromJsonString It is highly **NOT** recommended to use this function
+// because it has no param check, nor strict type check
+func (r *ModifyDBProxyAddressRequest) FromJsonString(s string) error {
+	f := make(map[string]interface{})
+	if err := json.Unmarshal([]byte(s), &f); err != nil {
+		return err
+	}
+	delete(f, "DBInstanceId")
+	delete(f, "AddressId")
+	delete(f, "ProxyGroupId")
+	delete(f, "Description")
+	delete(f, "ConnectionPool")
+	if len(f) > 0 {
+		return tcerr.NewTencentCloudSDKError("ClientError.BuildRequestError", "ModifyDBProxyAddressRequest has unknown keys!", "")
+	}
+	return json.Unmarshal([]byte(s), &r)
+}
+
+// Predefined struct for user
+type ModifyDBProxyAddressResponseParams struct {
+	// 唯一请求 ID，由服务端生成，每次请求都会返回（若请求因其他原因未能抵达服务端，则该次请求不会获得 RequestId）。定位问题时需要提供该次请求的 RequestId。
+	RequestId *string `json:"RequestId,omitnil,omitempty" name:"RequestId"`
+}
+
+type ModifyDBProxyAddressResponse struct {
+	*tchttp.BaseResponse
+	Response *ModifyDBProxyAddressResponseParams `json:"Response"`
+}
+
+func (r *ModifyDBProxyAddressResponse) ToJsonString() string {
+    b, _ := json.Marshal(r)
+    return string(b)
+}
+
+// FromJsonString It is highly **NOT** recommended to use this function
+// because it has no param check, nor strict type check
+func (r *ModifyDBProxyAddressResponse) FromJsonString(s string) error {
+	return json.Unmarshal([]byte(s), &r)
+}
+
+// Predefined struct for user
+type ModifyDBProxyRequestParams struct {
+	// <p>实例 ID，格式形如：postgres-xxxxxxxx</p>
+	DBInstanceId *string `json:"DBInstanceId,omitnil,omitempty" name:"DBInstanceId"`
+
+	// <p>Proxy 实例 ID，格式形如：proxy-xxxxxxxx；不传时若实例下仅有一个 Proxy 则修改该 Proxy</p>
+	ProxyGroupId *string `json:"ProxyGroupId,omitnil,omitempty" name:"ProxyGroupId"`
+
+	// <p>Proxy 描述信息，长度范围 [0, 256]</p>
+	Description *string `json:"Description,omitnil,omitempty" name:"Description"`
+
+	// <p>Proxy 节点变配规格列表，按可用区分组；变配时必填</p>
+	ProxyNodeCustom []*ProxyNodeCustom `json:"ProxyNodeCustom,omitnil,omitempty" name:"ProxyNodeCustom"`
+
+	// <p>负载均衡刷新策略：auto-自动；manual-手动；默认 auto</p>
+	ReloadBalance *string `json:"ReloadBalance,omitnil,omitempty" name:"ReloadBalance"`
+
+	// <p>变配执行时机：0-立即执行（默认），1-维护时间窗内执行，2-指定时间窗执行（需配合 SwitchStartTime/SwitchEndTime）</p>
+	SwitchTag *int64 `json:"SwitchTag,omitnil,omitempty" name:"SwitchTag"`
+
+	// <p>指定时间窗执行的开始时间，格式 HH:MM:SS，仅 SwitchTag=2 时生效</p>
+	SwitchStartTime *string `json:"SwitchStartTime,omitnil,omitempty" name:"SwitchStartTime"`
+
+	// <p>指定时间窗执行的结束时间，格式 HH:MM:SS，仅 SwitchTag=2 时生效</p>
+	SwitchEndTime *string `json:"SwitchEndTime,omitnil,omitempty" name:"SwitchEndTime"`
+}
+
+type ModifyDBProxyRequest struct {
+	*tchttp.BaseRequest
+	
+	// <p>实例 ID，格式形如：postgres-xxxxxxxx</p>
+	DBInstanceId *string `json:"DBInstanceId,omitnil,omitempty" name:"DBInstanceId"`
+
+	// <p>Proxy 实例 ID，格式形如：proxy-xxxxxxxx；不传时若实例下仅有一个 Proxy 则修改该 Proxy</p>
+	ProxyGroupId *string `json:"ProxyGroupId,omitnil,omitempty" name:"ProxyGroupId"`
+
+	// <p>Proxy 描述信息，长度范围 [0, 256]</p>
+	Description *string `json:"Description,omitnil,omitempty" name:"Description"`
+
+	// <p>Proxy 节点变配规格列表，按可用区分组；变配时必填</p>
+	ProxyNodeCustom []*ProxyNodeCustom `json:"ProxyNodeCustom,omitnil,omitempty" name:"ProxyNodeCustom"`
+
+	// <p>负载均衡刷新策略：auto-自动；manual-手动；默认 auto</p>
+	ReloadBalance *string `json:"ReloadBalance,omitnil,omitempty" name:"ReloadBalance"`
+
+	// <p>变配执行时机：0-立即执行（默认），1-维护时间窗内执行，2-指定时间窗执行（需配合 SwitchStartTime/SwitchEndTime）</p>
+	SwitchTag *int64 `json:"SwitchTag,omitnil,omitempty" name:"SwitchTag"`
+
+	// <p>指定时间窗执行的开始时间，格式 HH:MM:SS，仅 SwitchTag=2 时生效</p>
+	SwitchStartTime *string `json:"SwitchStartTime,omitnil,omitempty" name:"SwitchStartTime"`
+
+	// <p>指定时间窗执行的结束时间，格式 HH:MM:SS，仅 SwitchTag=2 时生效</p>
+	SwitchEndTime *string `json:"SwitchEndTime,omitnil,omitempty" name:"SwitchEndTime"`
+}
+
+func (r *ModifyDBProxyRequest) ToJsonString() string {
+    b, _ := json.Marshal(r)
+    return string(b)
+}
+
+// FromJsonString It is highly **NOT** recommended to use this function
+// because it has no param check, nor strict type check
+func (r *ModifyDBProxyRequest) FromJsonString(s string) error {
+	f := make(map[string]interface{})
+	if err := json.Unmarshal([]byte(s), &f); err != nil {
+		return err
+	}
+	delete(f, "DBInstanceId")
+	delete(f, "ProxyGroupId")
+	delete(f, "Description")
+	delete(f, "ProxyNodeCustom")
+	delete(f, "ReloadBalance")
+	delete(f, "SwitchTag")
+	delete(f, "SwitchStartTime")
+	delete(f, "SwitchEndTime")
+	if len(f) > 0 {
+		return tcerr.NewTencentCloudSDKError("ClientError.BuildRequestError", "ModifyDBProxyRequest has unknown keys!", "")
+	}
+	return json.Unmarshal([]byte(s), &r)
+}
+
+// Predefined struct for user
+type ModifyDBProxyResponseParams struct {
+	// <p>订单号，仅变配（节点规格/数量变更）下单成功时返回；仅修改 Description 时不下单，本字段为空。</p>
+	DealName *string `json:"DealName,omitnil,omitempty" name:"DealName"`
+
+	// 唯一请求 ID，由服务端生成，每次请求都会返回（若请求因其他原因未能抵达服务端，则该次请求不会获得 RequestId）。定位问题时需要提供该次请求的 RequestId。
+	RequestId *string `json:"RequestId,omitnil,omitempty" name:"RequestId"`
+}
+
+type ModifyDBProxyResponse struct {
+	*tchttp.BaseResponse
+	Response *ModifyDBProxyResponseParams `json:"Response"`
+}
+
+func (r *ModifyDBProxyResponse) ToJsonString() string {
+    b, _ := json.Marshal(r)
+    return string(b)
+}
+
+// FromJsonString It is highly **NOT** recommended to use this function
+// because it has no param check, nor strict type check
+func (r *ModifyDBProxyResponse) FromJsonString(s string) error {
 	return json.Unmarshal([]byte(s), &r)
 }
 
@@ -9538,6 +10076,126 @@ type PolicyRule struct {
 	Description *string `json:"Description,omitnil,omitempty" name:"Description"`
 }
 
+type ProxyAddress struct {
+	// <p>Proxy 接入地址 ID</p>
+	AddressId *string `json:"AddressId,omitnil,omitempty" name:"AddressId"`
+
+	// <p>Proxy 接入地址 IP</p>
+	Vip *string `json:"Vip,omitnil,omitempty" name:"Vip"`
+
+	// <p>Proxy 接入地址端口</p>
+	Vport *int64 `json:"Vport,omitnil,omitempty" name:"Vport"`
+
+	// <p>VPC ID</p>
+	VpcId *string `json:"VpcId,omitnil,omitempty" name:"VpcId"`
+
+	// <p>子网 ID</p>
+	SubnetId *string `json:"SubnetId,omitnil,omitempty" name:"SubnetId"`
+
+	// <p>接入地址描述</p>
+	Description *string `json:"Description,omitnil,omitempty" name:"Description"`
+
+	// <p>是否开启连接池：0-未开启，1-开启</p>
+	ConnectionPool *bool `json:"ConnectionPool,omitnil,omitempty" name:"ConnectionPool"`
+
+	// <p>路由列表</p>
+	Routes []*ProxyRoute `json:"Routes,omitnil,omitempty" name:"Routes"`
+
+	// <p>连接池大小</p>
+	ConnectionPoolLimit *uint64 `json:"ConnectionPoolLimit,omitnil,omitempty" name:"ConnectionPoolLimit"`
+}
+
+type ProxyGroupInfo struct {
+	// <p>Proxy 实例 ID，格式形如：proxygroup-xxxxxxxx</p>
+	ProxyGroupId *string `json:"ProxyGroupId,omitnil,omitempty" name:"ProxyGroupId"`
+
+	// <p>Proxy 状态：running/isolated/offline 等</p>
+	Status *string `json:"Status,omitnil,omitempty" name:"Status"`
+
+	// <p>Proxy 任务状态，无任务时为空</p>
+	TaskStatus *string `json:"TaskStatus,omitnil,omitempty" name:"TaskStatus"`
+
+	// <p>Proxy 描述</p>
+	Description *string `json:"Description,omitnil,omitempty" name:"Description"`
+
+	// <p>Proxy 内核版本号</p>
+	ProxyVersion *string `json:"ProxyVersion,omitnil,omitempty" name:"ProxyVersion"`
+
+	// <p>连接池阈值（连接数）</p>
+	ConnectionPoolLimit *int64 `json:"ConnectionPoolLimit,omitnil,omitempty" name:"ConnectionPoolLimit"`
+
+	// <p>Proxy 节点列表</p>
+	ProxyNodeSet []*ProxyNode `json:"ProxyNodeSet,omitnil,omitempty" name:"ProxyNodeSet"`
+
+	// <p>Proxy 接入地址列表</p>
+	ProxyAddressSet []*ProxyAddress `json:"ProxyAddressSet,omitnil,omitempty" name:"ProxyAddressSet"`
+
+	// <p>创建时间，格式：YYYY-MM-DD HH:MM:SS</p>
+	CreateTime *string `json:"CreateTime,omitnil,omitempty" name:"CreateTime"`
+}
+
+type ProxyNode struct {
+	// <p>Proxy 节点 ID</p>
+	ProxyNodeId *string `json:"ProxyNodeId,omitnil,omitempty" name:"ProxyNodeId"`
+
+	// <p>Proxy 节点所在可用区</p>
+	Zone *string `json:"Zone,omitnil,omitempty" name:"Zone"`
+
+	// <p>节点 CPU 核数（核）</p>
+	Cpu *int64 `json:"Cpu,omitnil,omitempty" name:"Cpu"`
+
+	// <p>节点内存大小（MB）</p><p>单位：MB</p>
+	Mem *int64 `json:"Mem,omitnil,omitempty" name:"Mem"`
+
+	// <p>节点状态：running/isolated/abnormal 等</p>
+	Status *string `json:"Status,omitnil,omitempty" name:"Status"`
+
+	// <p>节点当前连接数</p>
+	Connection *int64 `json:"Connection,omitnil,omitempty" name:"Connection"`
+}
+
+type ProxyNodeCustom struct {
+	// <p>该可用区下的 Proxy 节点数量</p><p>取值范围：[1, 16]</p>
+	NodeCount *int64 `json:"NodeCount,omitnil,omitempty" name:"NodeCount"`
+
+	// <p>Proxy 节点所在可用区</p>
+	Zone *string `json:"Zone,omitnil,omitempty" name:"Zone"`
+
+	// <p>Proxy 节点 CPU 核数（核）</p>
+	Cpu *int64 `json:"Cpu,omitnil,omitempty" name:"Cpu"`
+
+	// <p>Proxy 节点内存大小（MB）</p><p>单位：MB</p>
+	Mem *int64 `json:"Mem,omitnil,omitempty" name:"Mem"`
+}
+
+type ProxyRoute struct {
+	// <p>路由指向的 PG 节点 ID（实例或只读节点 ID）</p>
+	NodeId *string `json:"NodeId,omitnil,omitempty" name:"NodeId"`
+
+	// <p>节点角色：master/slave/readonly</p>
+	Role *string `json:"Role,omitnil,omitempty" name:"Role"`
+
+	// <p>路由权重，取值范围 [0, 100]</p>
+	Weight *int64 `json:"Weight,omitnil,omitempty" name:"Weight"`
+
+	// <p>路由状态：available/unavailable</p>
+	Status *string `json:"Status,omitnil,omitempty" name:"Status"`
+}
+
+type ProxySpecItem struct {
+	// <p>CPU 核数</p><p>单位：核</p>
+	Cpu *uint64 `json:"Cpu,omitnil,omitempty" name:"Cpu"`
+
+	// <p>内存大小</p><p>单位：MB</p>
+	Memory *uint64 `json:"Memory,omitnil,omitempty" name:"Memory"`
+
+	// <p>最小节点数</p>
+	MinNodeNum *uint64 `json:"MinNodeNum,omitnil,omitempty" name:"MinNodeNum"`
+
+	// <p>最大节点数</p>
+	MaxNodeNum *uint64 `json:"MaxNodeNum,omitnil,omitempty" name:"MaxNodeNum"`
+}
+
 type RawSlowQuery struct {
 	// <p>慢SQL 语句</p>
 	RawQuery *string `json:"RawQuery,omitnil,omitempty" name:"RawQuery"`
@@ -9765,6 +10423,74 @@ type RegionInfo struct {
 
 	// 该地域是否支持国际站售卖，0：不支持，1：支持
 	SupportInternational *uint64 `json:"SupportInternational,omitnil,omitempty" name:"SupportInternational"`
+}
+
+// Predefined struct for user
+type ReloadBalanceDBProxyNodeRequestParams struct {
+	// <p>实例ID</p>
+	DBInstanceId *string `json:"DBInstanceId,omitnil,omitempty" name:"DBInstanceId"`
+
+	// <p>Proxy代理组ID（不传则默认操作该实例下唯一的代理）</p>
+	ProxyGroupId *string `json:"ProxyGroupId,omitnil,omitempty" name:"ProxyGroupId"`
+
+	// <p>Proxy地址ID。传入时校验归属，实际重平衡为代理组维度</p>
+	AddressId *string `json:"AddressId,omitnil,omitempty" name:"AddressId"`
+}
+
+type ReloadBalanceDBProxyNodeRequest struct {
+	*tchttp.BaseRequest
+	
+	// <p>实例ID</p>
+	DBInstanceId *string `json:"DBInstanceId,omitnil,omitempty" name:"DBInstanceId"`
+
+	// <p>Proxy代理组ID（不传则默认操作该实例下唯一的代理）</p>
+	ProxyGroupId *string `json:"ProxyGroupId,omitnil,omitempty" name:"ProxyGroupId"`
+
+	// <p>Proxy地址ID。传入时校验归属，实际重平衡为代理组维度</p>
+	AddressId *string `json:"AddressId,omitnil,omitempty" name:"AddressId"`
+}
+
+func (r *ReloadBalanceDBProxyNodeRequest) ToJsonString() string {
+    b, _ := json.Marshal(r)
+    return string(b)
+}
+
+// FromJsonString It is highly **NOT** recommended to use this function
+// because it has no param check, nor strict type check
+func (r *ReloadBalanceDBProxyNodeRequest) FromJsonString(s string) error {
+	f := make(map[string]interface{})
+	if err := json.Unmarshal([]byte(s), &f); err != nil {
+		return err
+	}
+	delete(f, "DBInstanceId")
+	delete(f, "ProxyGroupId")
+	delete(f, "AddressId")
+	if len(f) > 0 {
+		return tcerr.NewTencentCloudSDKError("ClientError.BuildRequestError", "ReloadBalanceDBProxyNodeRequest has unknown keys!", "")
+	}
+	return json.Unmarshal([]byte(s), &r)
+}
+
+// Predefined struct for user
+type ReloadBalanceDBProxyNodeResponseParams struct {
+	// 唯一请求 ID，由服务端生成，每次请求都会返回（若请求因其他原因未能抵达服务端，则该次请求不会获得 RequestId）。定位问题时需要提供该次请求的 RequestId。
+	RequestId *string `json:"RequestId,omitnil,omitempty" name:"RequestId"`
+}
+
+type ReloadBalanceDBProxyNodeResponse struct {
+	*tchttp.BaseResponse
+	Response *ReloadBalanceDBProxyNodeResponseParams `json:"Response"`
+}
+
+func (r *ReloadBalanceDBProxyNodeResponse) ToJsonString() string {
+    b, _ := json.Marshal(r)
+    return string(b)
+}
+
+// FromJsonString It is highly **NOT** recommended to use this function
+// because it has no param check, nor strict type check
+func (r *ReloadBalanceDBProxyNodeResponse) FromJsonString(s string) error {
+	return json.Unmarshal([]byte(s), &r)
 }
 
 // Predefined struct for user

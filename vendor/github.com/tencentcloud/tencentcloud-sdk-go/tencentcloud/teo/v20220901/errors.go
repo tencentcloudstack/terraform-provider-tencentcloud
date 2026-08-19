@@ -194,6 +194,9 @@ const (
 	// 当前域名不支持同时开启高级回源优化和多层架构。
 	INVALIDPARAMETER_ADVANCEDORIGINROUTINGNOTSUPPORTMULTIPLYLAYER = "InvalidParameter.AdvancedOriginRoutingNotSupportMultiplyLayer"
 
+	// 新增域名过程中不支持开启高级回源优化，请关闭高级回源优化配置后重试。
+	INVALIDPARAMETER_ADVANCEDORIGINROUTINGNOTSUPPORTNEWLYADDEDHOST = "InvalidParameter.AdvancedOriginRoutingNotSupportNewlyAddedHost"
+
 	// 当前域名不支持同时开启高级回源优化和OC互转。
 	INVALIDPARAMETER_ADVANCEDORIGINROUTINGNOTSUPPORTOCDIRECTORIGIN = "InvalidParameter.AdvancedOriginRoutingNotSupportOCDirectOrigin"
 
@@ -1318,6 +1321,9 @@ const (
 
 	// 无域名接入站点不支持除切换为CNAME接入类型以外的任何修改动作。
 	OPERATIONDENIED_NODOMAINACCESSZONEONLYSUPPORTMODIFYTYPE = "OperationDenied.NoDomainAccessZoneOnlySupportModifyType"
+
+	// 当前站点下存在域名关联了专属加速IP，如需关闭「中国大陆网络优化」请先解绑专属IP后重试。
+	OPERATIONDENIED_NOTALLOWCLOSEACCELERATEMAINLANDWHENDOMAINBOUNDEXCLUSIVEIP = "OperationDenied.NotAllowCloseAccelerateMainlandWhenDomainBoundExclusiveIP"
 
 	// 当前高级回源优化功能仅针对白名单用户开放。
 	OPERATIONDENIED_NOTINADVANCEDORIGINROUTINGWHITELIST = "OperationDenied.NotInAdvancedOriginRoutingWhiteList"

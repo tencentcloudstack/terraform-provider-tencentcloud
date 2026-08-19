@@ -68,6 +68,7 @@ func ResourceTencentCloudCdnDomain() *schema.Resource {
 			"area": {
 				Type:         schema.TypeString,
 				Optional:     true,
+				Computed:     true,
 				ValidateFunc: tccommon.ValidateAllowedStringValue(CDN_AREA),
 				Description:  "Domain name acceleration region. `mainland`: acceleration inside mainland China, `overseas`: acceleration outside mainland China, `global`: global acceleration. Overseas acceleration service must be enabled to use overseas acceleration and global acceleration.",
 			},
@@ -124,23 +125,27 @@ func ResourceTencentCloudCdnDomain() *schema.Resource {
 						"backup_origin_type": {
 							Type:         schema.TypeString,
 							Optional:     true,
+							Computed:     true,
 							ValidateFunc: tccommon.ValidateAllowedStringValue(CDN_BACKUP_ORIGIN_TYPE),
 							Description:  "Backup origin server type, which supports the following types: `domain`: domain name type, `ip`: IP list used as origin server, `ipv6_domain`: Multiple IPv6 addresses and one domain name, `ip_ipv6`: Multiple IPv4 addresses and one IPv6 address, `ip_ipv6_domain`: Multiple IPv4 and IPv6 addresses and one domain name.",
 						},
 						"backup_origin_list": {
 							Type:        schema.TypeList,
 							Optional:    true,
+							Computed:    true,
 							Elem:        &schema.Schema{Type: schema.TypeString},
 							Description: "Backup origin server list. Valid values can be ip or domain name. When modifying the backup origin server, you need to enter the corresponding `backup_origin_type`.",
 						},
 						"backup_server_name": {
 							Type:        schema.TypeString,
 							Optional:    true,
+							Computed:    true,
 							Description: "Host header used when accessing the backup origin server. If left empty, the ServerName of master origin server will be used by default.",
 						},
 						"origin_company": {
 							Type:        schema.TypeString,
 							Optional:    true,
+							Computed:    true,
 							Description: "Object storage back to the source vendor. Required when the source station type is a third-party storage source station (third_party). Optional values include the following: `aws_s3`: AWS S3; `ali_oss`: Alibaba Cloud OSS; `hw_obs`: Huawei OBS; `qiniu_kodo`: Qiniu Cloud kodo; `others`: other vendors' object storage, only supports object storage compatible with AWS signature algorithm, such as Tencent Cloud Financial Zone COS. Example value: `hw_obs`.",
 						},
 					},
@@ -191,6 +196,7 @@ func ResourceTencentCloudCdnDomain() *schema.Resource {
 						"server_certificate_config": {
 							Type:        schema.TypeList,
 							Optional:    true,
+							Computed:    true,
 							MaxItems:    1,
 							Description: "Server certificate configuration information.",
 							Elem: &schema.Resource{
@@ -198,6 +204,7 @@ func ResourceTencentCloudCdnDomain() *schema.Resource {
 									"certificate_id": {
 										Type:        schema.TypeString,
 										Optional:    true,
+										Computed:    true,
 										Description: "Server certificate ID.",
 									},
 									"certificate_name": {
@@ -208,11 +215,13 @@ func ResourceTencentCloudCdnDomain() *schema.Resource {
 									"certificate_content": {
 										Type:        schema.TypeString,
 										Optional:    true,
+										Computed:    true,
 										Description: "Server certificate information. This is required when uploading an external certificate, which should contain the complete certificate chain.",
 									},
 									"private_key": {
 										Type:        schema.TypeString,
 										Optional:    true,
+										Computed:    true,
 										Description: "Server key information. This is required when uploading an external certificate.",
 									},
 									"message": {
@@ -237,6 +246,7 @@ func ResourceTencentCloudCdnDomain() *schema.Resource {
 						"client_certificate_config": {
 							Type:        schema.TypeList,
 							Optional:    true,
+							Computed:    true,
 							MaxItems:    1,
 							Description: "Client certificate configuration information.",
 							Elem: &schema.Resource{
@@ -328,11 +338,13 @@ func ResourceTencentCloudCdnDomain() *schema.Resource {
 									"max_age": {
 										Type:        schema.TypeInt,
 										Optional:    true,
+										Computed:    true,
 										Description: "MaxAge value.",
 									},
 									"include_sub_domains": {
 										Type:         schema.TypeString,
 										Optional:     true,
+										Computed:     true,
 										ValidateFunc: tccommon.ValidateAllowedStringValue(CDN_SWITCH),
 										Description:  "Whether to include sub domains, values `on` and `off`.",
 									},
@@ -366,6 +378,7 @@ func ResourceTencentCloudCdnDomain() *schema.Resource {
 			"authentication": {
 				Type:        schema.TypeList,
 				Optional:    true,
+				Computed:    true,
 				MaxItems:    1,
 				Description: "Specify timestamp hotlink protection configuration, NOTE: only one type can choose for the sub elements.",
 				Elem: &schema.Resource{
@@ -373,12 +386,14 @@ func ResourceTencentCloudCdnDomain() *schema.Resource {
 						"switch": {
 							Type:         schema.TypeString,
 							Optional:     true,
+							Computed:     true,
 							Description:  "Authentication switching, available values: `on`, `off`.",
 							ValidateFunc: tccommon.ValidateAllowedStringValue(CDN_SWITCH),
 						},
 						"type_a": {
 							Type:        schema.TypeList,
 							Optional:    true,
+							Computed:    true,
 							MaxItems:    1,
 							Description: "Timestamp hotlink protection mode A configuration.",
 							Elem: &schema.Resource{
@@ -412,6 +427,7 @@ func ResourceTencentCloudCdnDomain() *schema.Resource {
 									"backup_secret_key": {
 										Type:        schema.TypeString,
 										Optional:    true,
+										Computed:    true,
 										Description: "Used for calculate a signature. 6-32 characters. Only digits and letters are allowed.",
 									},
 								},
@@ -420,6 +436,7 @@ func ResourceTencentCloudCdnDomain() *schema.Resource {
 						"type_b": {
 							Type:        schema.TypeList,
 							Optional:    true,
+							Computed:    true,
 							MaxItems:    1,
 							Description: "Timestamp hotlink protection mode B configuration. NOTE: according to upgrading of TencentCloud Platform, TypeB is unavailable for now.",
 							Elem: &schema.Resource{
@@ -448,6 +465,7 @@ func ResourceTencentCloudCdnDomain() *schema.Resource {
 									"backup_secret_key": {
 										Type:        schema.TypeString,
 										Optional:    true,
+										Computed:    true,
 										Description: "Used for calculate a signature. 6-32 characters. Only digits and letters are allowed.",
 									},
 								},
@@ -456,6 +474,7 @@ func ResourceTencentCloudCdnDomain() *schema.Resource {
 						"type_c": {
 							Type:        schema.TypeList,
 							Optional:    true,
+							Computed:    true,
 							MaxItems:    1,
 							Description: "Timestamp hotlink protection mode C configuration.",
 							Elem: &schema.Resource{
@@ -484,11 +503,13 @@ func ResourceTencentCloudCdnDomain() *schema.Resource {
 									"time_format": {
 										Type:        schema.TypeString,
 										Optional:    true,
+										Computed:    true,
 										Description: "Timestamp formation, available values: `dec`, `hex`.",
 									},
 									"backup_secret_key": {
 										Type:        schema.TypeString,
 										Optional:    true,
+										Computed:    true,
 										Description: "Used for calculate a signature. 6-32 characters. Only digits and letters are allowed.",
 									},
 								},
@@ -497,6 +518,7 @@ func ResourceTencentCloudCdnDomain() *schema.Resource {
 						"type_d": {
 							Type:        schema.TypeList,
 							Optional:    true,
+							Computed:    true,
 							MaxItems:    1,
 							Description: "Timestamp hotlink protection mode D configuration.",
 							Elem: &schema.Resource{
@@ -525,16 +547,19 @@ func ResourceTencentCloudCdnDomain() *schema.Resource {
 									"time_param": {
 										Type:        schema.TypeString,
 										Optional:    true,
+										Computed:    true,
 										Description: "Timestamp parameter name. Only upper and lower-case letters, digits, and underscores (_) are allowed. It cannot start with a digit. Length limit: 1-100 characters.",
 									},
 									"time_format": {
 										Type:        schema.TypeString,
 										Optional:    true,
+										Computed:    true,
 										Description: "Timestamp formation, available values: `dec`, `hex`.",
 									},
 									"backup_secret_key": {
 										Type:        schema.TypeString,
 										Optional:    true,
+										Computed:    true,
 										Description: "Used for calculate a signature. 6-32 characters. Only digits and letters are allowed.",
 									},
 								},
@@ -546,6 +571,7 @@ func ResourceTencentCloudCdnDomain() *schema.Resource {
 			"rule_cache": {
 				Type:        schema.TypeList,
 				Optional:    true,
+				Computed:    true,
 				Description: "Advanced path cache configuration.",
 				Elem: &schema.Resource{
 					Schema: map[string]*schema.Schema{
@@ -633,6 +659,7 @@ func ResourceTencentCloudCdnDomain() *schema.Resource {
 						"heuristic_cache_time": {
 							Type:        schema.TypeInt,
 							Optional:    true,
+							Computed:    true,
 							Description: "Specify heuristic cache time in second, only available while `follow_origin_switch` and `heuristic_cache_switch` enabled.",
 						},
 					},
@@ -656,6 +683,7 @@ func ResourceTencentCloudCdnDomain() *schema.Resource {
 						"header_rules": {
 							Type:        schema.TypeList,
 							Optional:    true,
+							Computed:    true,
 							Description: "Custom request header configuration rules.",
 							Elem: &schema.Resource{
 								Schema: map[string]*schema.Schema{
@@ -700,6 +728,7 @@ func ResourceTencentCloudCdnDomain() *schema.Resource {
 			"ip_filter": {
 				Type:        schema.TypeList,
 				Optional:    true,
+				Computed:    true,
 				Description: "Specify Ip filter configurations.",
 				MaxItems:    1,
 				Elem: &schema.Resource{
@@ -712,17 +741,20 @@ func ResourceTencentCloudCdnDomain() *schema.Resource {
 						"filter_type": {
 							Type:        schema.TypeString,
 							Optional:    true,
+							Computed:    true,
 							Description: "IP `blacklist`/`whitelist` type.",
 						},
 						"filters": {
 							Type:        schema.TypeList,
 							Optional:    true,
+							Computed:    true,
 							Description: "Ip filter list, Supports IPs in X.X.X.X format, or /8, /16, /24 format IP ranges. Up to 50 allowlists or blocklists can be entered.",
 							Elem:        &schema.Schema{Type: schema.TypeString},
 						},
 						"filter_rules": {
 							Type:        schema.TypeList,
 							Optional:    true,
+							Computed:    true,
 							Description: "Ip filter rules, This feature is only available to selected beta customers.",
 							Elem: &schema.Resource{
 								Schema: map[string]*schema.Schema{
@@ -754,6 +786,7 @@ func ResourceTencentCloudCdnDomain() *schema.Resource {
 						"return_code": {
 							Type:        schema.TypeInt,
 							Optional:    true,
+							Computed:    true,
 							Description: "Return code, available values: 400-499.",
 						},
 					},
@@ -763,6 +796,7 @@ func ResourceTencentCloudCdnDomain() *schema.Resource {
 				Type:        schema.TypeList,
 				MaxItems:    1,
 				Optional:    true,
+				Computed:    true,
 				Description: "Specify Ip frequency limit configurations.",
 				Elem: &schema.Resource{
 					Schema: map[string]*schema.Schema{
@@ -774,6 +808,7 @@ func ResourceTencentCloudCdnDomain() *schema.Resource {
 						"qps": {
 							Type:        schema.TypeInt,
 							Optional:    true,
+							Computed:    true,
 							Description: "Sets the limited number of requests per second, 514 will be returned for requests that exceed the limit.",
 						},
 					},
@@ -795,6 +830,7 @@ func ResourceTencentCloudCdnDomain() *schema.Resource {
 						"cache_rules": {
 							Type:        schema.TypeList,
 							Optional:    true,
+							Computed:    true,
 							Description: "List of cache rule.",
 							Elem: &schema.Resource{
 								Schema: map[string]*schema.Schema{
@@ -818,6 +854,7 @@ func ResourceTencentCloudCdnDomain() *schema.Resource {
 				Type:        schema.TypeList,
 				MaxItems:    1,
 				Optional:    true,
+				Computed:    true,
 				Description: "Smart compression configurations.",
 				Elem: &schema.Resource{
 					Schema: map[string]*schema.Schema{
@@ -829,6 +866,7 @@ func ResourceTencentCloudCdnDomain() *schema.Resource {
 						"compression_rules": {
 							Type:        schema.TypeList,
 							Optional:    true,
+							Computed:    true,
 							Description: "List of compression rules.",
 							Elem: &schema.Resource{
 								Schema: map[string]*schema.Schema{
@@ -856,17 +894,20 @@ func ResourceTencentCloudCdnDomain() *schema.Resource {
 									"file_extensions": {
 										Type:        schema.TypeList,
 										Optional:    true,
+										Computed:    true,
 										Description: "List of file extensions like `jpg`, `txt`.",
 										Elem:        &schema.Schema{Type: schema.TypeString},
 									},
 									"rule_type": {
 										Type:        schema.TypeString,
 										Optional:    true,
+										Computed:    true,
 										Description: "Rule type, available: `all`, `file`, `directory`, `path`, `contentType`.",
 									},
 									"rule_paths": {
 										Type:        schema.TypeList,
 										Optional:    true,
+										Computed:    true,
 										Description: "List of rule paths for each `rule_type`: `*` for `all`, file ext like `jpg` for `file`, `/dir/like/` for `directory` and `/path/index.html` for `path`.",
 										Elem:        &schema.Schema{Type: schema.TypeString},
 									},
@@ -880,6 +921,7 @@ func ResourceTencentCloudCdnDomain() *schema.Resource {
 				Type:        schema.TypeList,
 				MaxItems:    1,
 				Optional:    true,
+				Computed:    true,
 				Description: "Bandwidth cap configuration.",
 				Elem: &schema.Resource{
 					Schema: map[string]*schema.Schema{
@@ -891,11 +933,13 @@ func ResourceTencentCloudCdnDomain() *schema.Resource {
 						"bps_threshold": {
 							Type:        schema.TypeInt,
 							Optional:    true,
+							Computed:    true,
 							Description: "threshold of bps.",
 						},
 						"counter_measure": {
 							Type:        schema.TypeString,
 							Optional:    true,
+							Computed:    true,
 							Description: "Counter measure.",
 						},
 						"last_trigger_time": {
@@ -906,11 +950,13 @@ func ResourceTencentCloudCdnDomain() *schema.Resource {
 						"alert_switch": {
 							Type:        schema.TypeString,
 							Optional:    true,
+							Computed:    true,
 							Description: "Switch alert.",
 						},
 						"alert_percentage": {
 							Type:        schema.TypeInt,
 							Optional:    true,
+							Computed:    true,
 							Description: "Alert percentage.",
 						},
 						"last_trigger_time_overseas": {
@@ -921,11 +967,13 @@ func ResourceTencentCloudCdnDomain() *schema.Resource {
 						"metric": {
 							Type:        schema.TypeString,
 							Optional:    true,
+							Computed:    true,
 							Description: "Metric.",
 						},
 						"statistic_item": {
 							Type:        schema.TypeList,
 							Optional:    true,
+							Computed:    true,
 							MaxItems:    1,
 							Description: "Specify statistic item configuration.",
 							Elem: &schema.Resource{
@@ -938,41 +986,49 @@ func ResourceTencentCloudCdnDomain() *schema.Resource {
 									"type": {
 										Type:        schema.TypeString,
 										Optional:    true,
+										Computed:    true,
 										Description: "Type of statistic item.",
 									},
 									"unblock_time": {
 										Type:        schema.TypeInt,
 										Optional:    true,
+										Computed:    true,
 										Description: "Time of auto unblock.",
 									},
 									"bps_threshold": {
 										Type:        schema.TypeInt,
 										Optional:    true,
+										Computed:    true,
 										Description: "threshold of bps.",
 									},
 									"counter_measure": {
 										Type:        schema.TypeString,
 										Optional:    true,
+										Computed:    true,
 										Description: "Counter measure, values: `RETURN_404`, `RESOLVE_DNS_TO_ORIGIN`.",
 									},
 									"alert_switch": {
 										Type:        schema.TypeString,
 										Optional:    true,
+										Computed:    true,
 										Description: "Switch alert.",
 									},
 									"alert_percentage": {
 										Type:        schema.TypeInt,
 										Optional:    true,
+										Computed:    true,
 										Description: "Alert percentage.",
 									},
 									"metric": {
 										Type:        schema.TypeString,
 										Optional:    true,
+										Computed:    true,
 										Description: "Metric.",
 									},
 									"cycle": {
 										Type:        schema.TypeInt,
 										Optional:    true,
+										Computed:    true,
 										Description: "Cycle of checking in minutes, values `60`, `1440`.",
 									},
 								},
@@ -985,6 +1041,7 @@ func ResourceTencentCloudCdnDomain() *schema.Resource {
 				Type:        schema.TypeList,
 				MaxItems:    1,
 				Optional:    true,
+				Computed:    true,
 				Description: "Error page configurations.",
 				Elem: &schema.Resource{
 					Schema: map[string]*schema.Schema{
@@ -996,6 +1053,7 @@ func ResourceTencentCloudCdnDomain() *schema.Resource {
 						"page_rules": {
 							Type:        schema.TypeList,
 							Optional:    true,
+							Computed:    true,
 							Description: "List of error page rule.",
 							Elem: &schema.Resource{
 								Schema: map[string]*schema.Schema{
@@ -1036,6 +1094,7 @@ func ResourceTencentCloudCdnDomain() *schema.Resource {
 						"header_rules": {
 							Type:        schema.TypeList,
 							Optional:    true,
+							Computed:    true,
 							Description: "List of response header rule.",
 							Elem: &schema.Resource{
 								Schema: map[string]*schema.Schema{
@@ -1075,6 +1134,7 @@ func ResourceTencentCloudCdnDomain() *schema.Resource {
 				Type:        schema.TypeList,
 				MaxItems:    1,
 				Optional:    true,
+				Computed:    true,
 				Description: "Downstream capping configuration.",
 				Elem: &schema.Resource{
 					Schema: map[string]*schema.Schema{
@@ -1086,6 +1146,7 @@ func ResourceTencentCloudCdnDomain() *schema.Resource {
 						"capping_rules": {
 							Type:        schema.TypeList,
 							Optional:    true,
+							Computed:    true,
 							Description: "List of capping rule.",
 							Elem: &schema.Resource{
 								Schema: map[string]*schema.Schema{
@@ -1114,12 +1175,14 @@ func ResourceTencentCloudCdnDomain() *schema.Resource {
 			"response_header_cache_switch": {
 				Type:        schema.TypeString,
 				Optional:    true,
+				Computed:    true,
 				Description: "Response header cache switch, available values: `on`, `off` (default).",
 			},
 			"origin_pull_optimization": {
 				Type:        schema.TypeList,
 				MaxItems:    1,
 				Optional:    true,
+				Computed:    true,
 				Description: "Cross-border linkage optimization configuration. (This feature is in beta and not generally available yet).",
 				Elem: &schema.Resource{
 					Schema: map[string]*schema.Schema{
@@ -1131,6 +1194,7 @@ func ResourceTencentCloudCdnDomain() *schema.Resource {
 						"optimization_type": {
 							Type:        schema.TypeString,
 							Optional:    true,
+							Computed:    true,
 							Description: "Optimization type, values: `OVToCN` - Overseas to CN, `CNToOV` CN to Overseas.",
 						},
 					},
@@ -1139,12 +1203,14 @@ func ResourceTencentCloudCdnDomain() *schema.Resource {
 			"seo_switch": {
 				Type:        schema.TypeString,
 				Optional:    true,
+				Computed:    true,
 				Description: "SEO switch, available values: `on`, `off` (default).",
 			},
 			"referer": {
 				Type:        schema.TypeList,
 				MaxItems:    1,
 				Optional:    true,
+				Computed:    true,
 				Description: "Referer configuration.",
 				Elem: &schema.Resource{
 					Schema: map[string]*schema.Schema{
@@ -1156,6 +1222,7 @@ func ResourceTencentCloudCdnDomain() *schema.Resource {
 						"referer_rules": {
 							Type:        schema.TypeList,
 							Optional:    true,
+							Computed:    true,
 							Description: "List of referer rules.",
 							Elem: &schema.Resource{
 								Schema: map[string]*schema.Schema{
@@ -1195,12 +1262,14 @@ func ResourceTencentCloudCdnDomain() *schema.Resource {
 			"video_seek_switch": {
 				Type:        schema.TypeString,
 				Optional:    true,
+				Computed:    true,
 				Description: "Video seek switch, available values: `on`, `off` (default).",
 			},
 			"max_age": {
 				Type:        schema.TypeList,
 				MaxItems:    1,
 				Optional:    true,
+				Computed:    true,
 				Description: "Browser cache configuration. (This feature is in beta and not generally available yet).",
 				Elem: &schema.Resource{
 					Schema: map[string]*schema.Schema{
@@ -1212,6 +1281,7 @@ func ResourceTencentCloudCdnDomain() *schema.Resource {
 						"max_age_rules": {
 							Type:        schema.TypeList,
 							Optional:    true,
+							Computed:    true,
 							Description: "List of Max Age rule configuration.",
 							Elem: &schema.Resource{
 								Schema: map[string]*schema.Schema{
@@ -1234,6 +1304,7 @@ func ResourceTencentCloudCdnDomain() *schema.Resource {
 									"follow_origin": {
 										Type:        schema.TypeString,
 										Optional:    true,
+										Computed:    true,
 										Description: "Whether to follow origin, values: `on`/`off`, if set to `on`, the `max_age_time` will be ignored.",
 									},
 								},
@@ -1245,12 +1316,14 @@ func ResourceTencentCloudCdnDomain() *schema.Resource {
 			"specific_config_mainland": {
 				Type:             schema.TypeString,
 				Optional:         true,
+				Computed:         true,
 				Description:      "Specific configuration for mainland, NOTE: Both specifying full schema or using it is superfluous, please use cloud api parameters json passthroughs, check the [Data Types](https://www.tencentcloud.com/document/api/228/31739#MainlandConfig) for more details.",
 				DiffSuppressFunc: helper.DiffSupressJSON,
 			},
 			"specific_config_overseas": {
 				Type:             schema.TypeString,
 				Optional:         true,
+				Computed:         true,
 				Description:      "Specific configuration for oversea, NOTE: Both specifying full schema or using it is superfluous, please use cloud api parameters json passthroughs, check the [Data Types](https://www.tencentcloud.com/document/api/228/31739#OverseaConfig) for more details.",
 				DiffSuppressFunc: helper.DiffSupressJSON,
 			},
@@ -1258,6 +1331,7 @@ func ResourceTencentCloudCdnDomain() *schema.Resource {
 				Type:        schema.TypeList,
 				MaxItems:    1,
 				Optional:    true,
+				Computed:    true,
 				Description: "Cross-border linkage optimization configuration.",
 				Elem: &schema.Resource{
 					Schema: map[string]*schema.Schema{
@@ -1277,11 +1351,13 @@ func ResourceTencentCloudCdnDomain() *schema.Resource {
 			"offline_cache_switch": {
 				Type:        schema.TypeString,
 				Optional:    true,
+				Computed:    true,
 				Description: "Offline cache switch, available values: `on`, `off` (default).",
 			},
 			"post_max_size": {
 				Type:        schema.TypeList,
 				Optional:    true,
+				Computed:    true,
 				Description: "Maximum post size configuration.",
 				Elem: &schema.Resource{
 					Schema: map[string]*schema.Schema{
@@ -1293,6 +1369,7 @@ func ResourceTencentCloudCdnDomain() *schema.Resource {
 						"max_size": {
 							Type:        schema.TypeInt,
 							Optional:    true,
+							Computed:    true,
 							Description: "Maximum size in MB, value range is `[1, 200]`.",
 						},
 					},
@@ -1301,10 +1378,12 @@ func ResourceTencentCloudCdnDomain() *schema.Resource {
 			"quic_switch": {
 				Type:        schema.TypeString,
 				Optional:    true,
+				Computed:    true,
 				Description: "QUIC switch, available values: `on`, `off` (default).",
 			},
 			"cache_key": {
 				Optional:      true,
+				Computed:      true,
 				Type:          schema.TypeList,
 				MaxItems:      1,
 				ConflictsWith: []string{"full_url_cache"},
@@ -1327,6 +1406,7 @@ func ResourceTencentCloudCdnDomain() *schema.Resource {
 							Type:        schema.TypeList,
 							MaxItems:    1,
 							Optional:    true,
+							Computed:    true,
 							Description: "Request parameter contained in CacheKey.",
 							Elem: &schema.Resource{
 								Schema: map[string]*schema.Schema{
@@ -1351,6 +1431,7 @@ func ResourceTencentCloudCdnDomain() *schema.Resource {
 									"value": {
 										Type:        schema.TypeString,
 										Optional:    true,
+										Computed:    true,
 										Description: "Array of included/excluded query strings (separated by `;`).",
 									},
 								},
@@ -1359,6 +1440,7 @@ func ResourceTencentCloudCdnDomain() *schema.Resource {
 						"key_rules": {
 							Type:        schema.TypeList,
 							Optional:    true,
+							Computed:    true,
 							Description: "Path-specific cache key configuration.",
 							Elem: &schema.Resource{
 								Schema: map[string]*schema.Schema{
@@ -1403,6 +1485,7 @@ func ResourceTencentCloudCdnDomain() *schema.Resource {
 												"action": {
 													Type:        schema.TypeString,
 													Optional:    true,
+													Computed:    true,
 													Description: "Specify key rule QS action, values: `includeCustom`, `excludeCustom`.",
 												},
 												"value": {
@@ -1417,6 +1500,7 @@ func ResourceTencentCloudCdnDomain() *schema.Resource {
 									"rule_tag": {
 										Type:        schema.TypeString,
 										Optional:    true,
+										Computed:    true,
 										Description: "Specify rule tag, default value is `user`.",
 									},
 								},
@@ -1429,6 +1513,7 @@ func ResourceTencentCloudCdnDomain() *schema.Resource {
 				Type:        schema.TypeList,
 				MaxItems:    1,
 				Optional:    true,
+				Computed:    true,
 				Description: "Access authentication for S3 origin.",
 				Elem: &schema.Resource{
 					Schema: map[string]*schema.Schema{
@@ -1440,23 +1525,27 @@ func ResourceTencentCloudCdnDomain() *schema.Resource {
 						"access_key": {
 							Type:        schema.TypeString,
 							Optional:    true,
+							Computed:    true,
 							Description: "Access ID.",
 							Sensitive:   true,
 						},
 						"secret_key": {
 							Type:        schema.TypeString,
 							Optional:    true,
+							Computed:    true,
 							Description: "Key.",
 							Sensitive:   true,
 						},
 						"region": {
 							Type:        schema.TypeString,
 							Optional:    true,
+							Computed:    true,
 							Description: "Region.",
 						},
 						"bucket": {
 							Type:        schema.TypeString,
 							Optional:    true,
+							Computed:    true,
 							Description: "Bucket.",
 						},
 					},
@@ -1466,6 +1555,7 @@ func ResourceTencentCloudCdnDomain() *schema.Resource {
 				Type:        schema.TypeList,
 				MaxItems:    1,
 				Optional:    true,
+				Computed:    true,
 				Description: "Access authentication for OSS origin.",
 				Elem: &schema.Resource{
 					Schema: map[string]*schema.Schema{
@@ -1477,23 +1567,27 @@ func ResourceTencentCloudCdnDomain() *schema.Resource {
 						"access_key": {
 							Type:        schema.TypeString,
 							Optional:    true,
+							Computed:    true,
 							Description: "Access ID.",
 							Sensitive:   true,
 						},
 						"secret_key": {
 							Type:        schema.TypeString,
 							Optional:    true,
+							Computed:    true,
 							Description: "Key.",
 							Sensitive:   true,
 						},
 						"region": {
 							Type:        schema.TypeString,
 							Optional:    true,
+							Computed:    true,
 							Description: "Region.",
 						},
 						"bucket": {
 							Type:        schema.TypeString,
 							Optional:    true,
+							Computed:    true,
 							Description: "Bucket.",
 						},
 					},
@@ -1503,6 +1597,7 @@ func ResourceTencentCloudCdnDomain() *schema.Resource {
 				Type:        schema.TypeList,
 				MaxItems:    1,
 				Optional:    true,
+				Computed:    true,
 				Description: "Access authentication for OBS origin.",
 				Elem: &schema.Resource{
 					Schema: map[string]*schema.Schema{
@@ -1514,18 +1609,21 @@ func ResourceTencentCloudCdnDomain() *schema.Resource {
 						"access_key": {
 							Type:        schema.TypeString,
 							Optional:    true,
+							Computed:    true,
 							Description: "Access ID.",
 							Sensitive:   true,
 						},
 						"secret_key": {
 							Type:        schema.TypeString,
 							Optional:    true,
+							Computed:    true,
 							Description: "Key.",
 							Sensitive:   true,
 						},
 						"bucket": {
 							Type:        schema.TypeString,
 							Optional:    true,
+							Computed:    true,
 							Description: "Bucket.",
 						},
 					},
@@ -1535,6 +1633,7 @@ func ResourceTencentCloudCdnDomain() *schema.Resource {
 				Type:        schema.TypeList,
 				MaxItems:    1,
 				Optional:    true,
+				Computed:    true,
 				Description: "Access authentication for OBS origin.",
 				Elem: &schema.Resource{
 					Schema: map[string]*schema.Schema{
@@ -1546,12 +1645,14 @@ func ResourceTencentCloudCdnDomain() *schema.Resource {
 						"access_key": {
 							Type:        schema.TypeString,
 							Optional:    true,
+							Computed:    true,
 							Description: "Access ID.",
 							Sensitive:   true,
 						},
 						"secret_key": {
 							Type:        schema.TypeString,
 							Optional:    true,
+							Computed:    true,
 							Description: "Key.",
 							Sensitive:   true,
 						},
@@ -1562,6 +1663,7 @@ func ResourceTencentCloudCdnDomain() *schema.Resource {
 				Type:        schema.TypeList,
 				MaxItems:    1,
 				Optional:    true,
+				Computed:    true,
 				Description: "Object storage back-to-source authentication of other vendors.",
 				Elem: &schema.Resource{
 					Schema: map[string]*schema.Schema{
@@ -1573,23 +1675,27 @@ func ResourceTencentCloudCdnDomain() *schema.Resource {
 						"access_key": {
 							Type:        schema.TypeString,
 							Optional:    true,
+							Computed:    true,
 							Description: "Access ID.",
 							Sensitive:   true,
 						},
 						"secret_key": {
 							Type:        schema.TypeString,
 							Optional:    true,
+							Computed:    true,
 							Description: "Key.",
 							Sensitive:   true,
 						},
 						"region": {
 							Type:        schema.TypeString,
 							Optional:    true,
+							Computed:    true,
 							Description: "Region.",
 						},
 						"bucket": {
 							Type:        schema.TypeString,
 							Optional:    true,
+							Computed:    true,
 							Description: "Bucket.",
 						},
 					},
@@ -1628,6 +1734,7 @@ func ResourceTencentCloudCdnDomain() *schema.Resource {
 						"filter_rules": {
 							Type:        schema.TypeList,
 							Optional:    true,
+							Computed:    true,
 							Description: "UA blacklist/whitelist effect rule list.",
 							Elem: &schema.Resource{
 								Schema: map[string]*schema.Schema{
@@ -1676,6 +1783,7 @@ func ResourceTencentCloudCdnDomain() *schema.Resource {
 						"path_rules": {
 							Type:        schema.TypeList,
 							Optional:    true,
+							Computed:    true,
 							Description: "URL redirect rule list, maximum 10 rules.",
 							Elem: &schema.Resource{
 								Schema: map[string]*schema.Schema{
@@ -1698,11 +1806,13 @@ func ResourceTencentCloudCdnDomain() *schema.Resource {
 									"redirect_host": {
 										Type:        schema.TypeString,
 										Optional:    true,
+										Computed:    true,
 										Description: "Target host, must start with `http://` or `https://`.",
 									},
 									"full_match": {
 										Type:        schema.TypeBool,
 										Optional:    true,
+										Computed:    true,
 										Description: "Whether to use full path match.",
 									},
 								},
@@ -1745,6 +1855,7 @@ func ResourceTencentCloudCdnDomain() *schema.Resource {
 						"range_rules": {
 							Type:        schema.TypeList,
 							Optional:    true,
+							Computed:    true,
 							Description: "Path-based range origin pull rules.",
 							Elem: &schema.Resource{
 								Schema: map[string]*schema.Schema{
@@ -1796,6 +1907,7 @@ func ResourceTencentCloudCdnDomain() *schema.Resource {
 			"explicit_using_dry_run": {
 				Type:        schema.TypeBool,
 				Optional:    true,
+				Computed:    true,
 				Description: "Used for validate only by store arguments to request json string as expected, WARNING: if set to `true`, NO Cloud Api will be invoked but store as local data, do not use this argument unless you really know what you are doing.",
 			},
 			"dry_run_create_result": {
@@ -1832,22 +1944,26 @@ func ResourceTencentCloudCdnDomain() *schema.Resource {
 						"filter_rules": {
 							Type:        schema.TypeList,
 							Optional:    true,
+							Computed:    true,
 							Description: "AutoGuard filter rules.",
 							Elem: &schema.Resource{
 								Schema: map[string]*schema.Schema{
 									"filter_type": {
 										Type:        schema.TypeString,
 										Optional:    true,
+										Computed:    true,
 										Description: "Block type. `forbidden`: block.",
 									},
 									"rule_type": {
 										Type:        schema.TypeString,
 										Optional:    true,
+										Computed:    true,
 										Description: "Block rule type. `all`: all requests; `file`: file requests with specified suffix.",
 									},
 									"rule_paths": {
 										Type:        schema.TypeList,
 										Optional:    true,
+										Computed:    true,
 										Elem:        &schema.Schema{Type: schema.TypeString},
 										Description: "Block rule paths.",
 									},
@@ -1874,28 +1990,33 @@ func ResourceTencentCloudCdnDomain() *schema.Resource {
 						"block_rules": {
 							Type:        schema.TypeList,
 							Optional:    true,
+							Computed:    true,
 							Description: "GeoBlocker block rules.",
 							Elem: &schema.Resource{
 								Schema: map[string]*schema.Schema{
 									"block_type": {
 										Type:        schema.TypeString,
 										Optional:    true,
+										Computed:    true,
 										Description: "Rule type. `whitelist`: whitelist; `blacklist`: blacklist.",
 									},
 									"rule_paths": {
 										Type:        schema.TypeList,
 										Optional:    true,
+										Computed:    true,
 										Elem:        &schema.Schema{Type: schema.TypeString},
 										Description: "Rule paths.",
 									},
 									"rule_type": {
 										Type:        schema.TypeString,
 										Optional:    true,
+										Computed:    true,
 										Description: "Rule effective type. `all`: all; `directory`: directory.",
 									},
 									"districts": {
 										Type:        schema.TypeList,
 										Optional:    true,
+										Computed:    true,
 										Elem:        &schema.Schema{Type: schema.TypeString},
 										Description: "Effective districts, e.g. `CN-HK`, `CN-BJ`, etc.",
 									},
@@ -3078,46 +3199,70 @@ func resourceTencentCloudCdnDomainRead(d *schema.ResourceData, meta interface{})
 		auth := make(map[string]interface{})
 		auth["switch"] = authentication.Switch
 		if authType := authentication.TypeA; authType != nil {
+			var typeARaw []interface{}
+			if len(authRaw) > 0 {
+				if authMap, ok := authRaw[0].(map[string]interface{}); ok {
+					typeARaw, _ = authMap["type_a"].([]interface{})
+				}
+			}
 			dMap := map[string]interface{}{
-				"secret_key":        authType.SecretKey,
+				"secret_key":        helper.GetStrPtrWithOldFallback(typeARaw, "secret_key", authType.SecretKey),
 				"sign_param":        authType.SignParam,
 				"expire_time":       authType.ExpireTime,
 				"file_extensions":   authType.FileExtensions,
 				"filter_type":       authType.FilterType,
-				"backup_secret_key": authType.BackupSecretKey,
+				"backup_secret_key": helper.GetStrPtrWithOldFallback(typeARaw, "backup_secret_key", authType.BackupSecretKey),
 			}
 			auth["type_a"] = []interface{}{dMap}
 		}
 		if authType := authentication.TypeB; authType != nil {
+			var typeBRaw []interface{}
+			if len(authRaw) > 0 {
+				if authMap, ok := authRaw[0].(map[string]interface{}); ok {
+					typeBRaw, _ = authMap["type_b"].([]interface{})
+				}
+			}
 			dMap := map[string]interface{}{
-				"secret_key":        authType.SecretKey,
+				"secret_key":        helper.GetStrPtrWithOldFallback(typeBRaw, "secret_key", authType.SecretKey),
 				"expire_time":       authType.ExpireTime,
 				"file_extensions":   authType.FileExtensions,
 				"filter_type":       authType.FilterType,
-				"backup_secret_key": authType.BackupSecretKey,
+				"backup_secret_key": helper.GetStrPtrWithOldFallback(typeBRaw, "backup_secret_key", authType.BackupSecretKey),
 			}
 			auth["type_b"] = []interface{}{dMap}
 		}
 		if authType := authentication.TypeC; authType != nil {
+			var typeCRaw []interface{}
+			if len(authRaw) > 0 {
+				if authMap, ok := authRaw[0].(map[string]interface{}); ok {
+					typeCRaw, _ = authMap["type_c"].([]interface{})
+				}
+			}
 			dMap := map[string]interface{}{
-				"secret_key":        authType.SecretKey,
+				"secret_key":        helper.GetStrPtrWithOldFallback(typeCRaw, "secret_key", authType.SecretKey),
 				"expire_time":       authType.ExpireTime,
 				"file_extensions":   authType.FileExtensions,
 				"filter_type":       authType.FilterType,
 				"time_format":       authType.TimeFormat,
-				"backup_secret_key": authType.BackupSecretKey,
+				"backup_secret_key": helper.GetStrPtrWithOldFallback(typeCRaw, "backup_secret_key", authType.BackupSecretKey),
 			}
 			auth["type_c"] = []interface{}{dMap}
 		}
 		if authType := authentication.TypeD; authType != nil {
+			var typeDRaw []interface{}
+			if len(authRaw) > 0 {
+				if authMap, ok := authRaw[0].(map[string]interface{}); ok {
+					typeDRaw, _ = authMap["type_d"].([]interface{})
+				}
+			}
 			dMap := map[string]interface{}{
-				"secret_key":        authType.SecretKey,
+				"secret_key":        helper.GetStrPtrWithOldFallback(typeDRaw, "secret_key", authType.SecretKey),
 				"expire_time":       authType.ExpireTime,
 				"file_extensions":   authType.FileExtensions,
 				"filter_type":       authType.FilterType,
 				"time_param":        authType.TimeParam,
 				"time_format":       authType.TimeFormat,
-				"backup_secret_key": authType.BackupSecretKey,
+				"backup_secret_key": helper.GetStrPtrWithOldFallback(typeDRaw, "backup_secret_key", authType.BackupSecretKey),
 			}
 			auth["type_d"] = []interface{}{dMap}
 		}
@@ -3476,10 +3621,11 @@ func resourceTencentCloudCdnDomainRead(d *schema.ResourceData, meta interface{})
 		_ = d.Set("quic_switch", dc.Quic.Switch)
 	}
 	if ok := checkCdnInfoWritable(d, "aws_private_access", dc.AwsPrivateAccess); ok {
+		secretKey := helper.GetStrPtrWithOldFallback(d.Get("aws_private_access").([]interface{}), "secret_key", dc.AwsPrivateAccess.SecretKey)
 		_ = helper.SetMapInterfaces(d, "aws_private_access", map[string]interface{}{
 			"switch":     dc.AwsPrivateAccess.Switch,
 			"access_key": dc.AwsPrivateAccess.AccessKey,
-			"secret_key": dc.AwsPrivateAccess.SecretKey,
+			"secret_key": secretKey,
 			"bucket":     dc.AwsPrivateAccess.Bucket,
 			"region":     dc.AwsPrivateAccess.Region,
 		})
@@ -3488,7 +3634,7 @@ func resourceTencentCloudCdnDomainRead(d *schema.ResourceData, meta interface{})
 		_ = helper.SetMapInterfaces(d, "oss_private_access", map[string]interface{}{
 			"switch":     dc.OssPrivateAccess.Switch,
 			"access_key": dc.OssPrivateAccess.AccessKey,
-			"secret_key": dc.OssPrivateAccess.SecretKey,
+			"secret_key": helper.GetStrPtrWithOldFallback(d.Get("oss_private_access").([]interface{}), "secret_key", dc.OssPrivateAccess.SecretKey),
 			"bucket":     dc.OssPrivateAccess.Bucket,
 			"region":     dc.OssPrivateAccess.Region,
 		})
@@ -3497,7 +3643,7 @@ func resourceTencentCloudCdnDomainRead(d *schema.ResourceData, meta interface{})
 		_ = helper.SetMapInterfaces(d, "hw_private_access", map[string]interface{}{
 			"switch":     dc.HwPrivateAccess.Switch,
 			"access_key": dc.HwPrivateAccess.AccessKey,
-			"secret_key": dc.HwPrivateAccess.SecretKey,
+			"secret_key": helper.GetStrPtrWithOldFallback(d.Get("hw_private_access").([]interface{}), "secret_key", dc.HwPrivateAccess.SecretKey),
 			"bucket":     dc.HwPrivateAccess.Bucket,
 		})
 	}
@@ -3505,14 +3651,14 @@ func resourceTencentCloudCdnDomainRead(d *schema.ResourceData, meta interface{})
 		_ = helper.SetMapInterfaces(d, "qn_private_access", map[string]interface{}{
 			"switch":     dc.QnPrivateAccess.Switch,
 			"access_key": dc.QnPrivateAccess.AccessKey,
-			"secret_key": dc.QnPrivateAccess.SecretKey,
+			"secret_key": helper.GetStrPtrWithOldFallback(d.Get("qn_private_access").([]interface{}), "secret_key", dc.QnPrivateAccess.SecretKey),
 		})
 	}
 	if ok := checkCdnInfoWritable(d, "others_private_access", dc.OthersPrivateAccess); ok {
 		_ = helper.SetMapInterfaces(d, "others_private_access", map[string]interface{}{
 			"switch":     dc.OthersPrivateAccess.Switch,
 			"access_key": dc.OthersPrivateAccess.AccessKey,
-			"secret_key": dc.OthersPrivateAccess.SecretKey,
+			"secret_key": helper.GetStrPtrWithOldFallback(d.Get("others_private_access").([]interface{}), "secret_key", dc.OthersPrivateAccess.SecretKey),
 			"bucket":     dc.OthersPrivateAccess.Bucket,
 			"region":     dc.OthersPrivateAccess.Region,
 		})

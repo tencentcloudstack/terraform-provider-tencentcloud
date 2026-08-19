@@ -13,9 +13,47 @@ Provides a resource to create a DTS sync config
 
 ## Example Usage
 
-### Sync mysql database to cynosdb through cdb access type
+### Sync MySQL database to CynosDB through cdb access type
 
 ```hcl
+resource "tencentcloud_mysql_instance" "example" {
+  instance_name     = "tf-example"
+  internet_service  = 1
+  engine_version    = "5.7"
+  charge_type       = "POSTPAID"
+  root_password     = "Mysql@2026"
+  slave_deploy_mode = 0
+  slave_sync_mode   = 0
+  device_type       = "CLOUD_NATIVE_CLUSTER"
+  availability_zone = "ap-guangzhou-6"
+  cpu               = 2
+  mem_size          = 4000
+  volume_size       = 200
+  vpc_id            = "vpc-i5yyodl9"
+  subnet_id         = "subnet-hhi88a58"
+  intranet_port     = 3306
+  security_groups   = ["sg-4rd5741x"]
+  parameters = {
+    character_set_server = "utf8"
+    max_connections      = "1000"
+  }
+
+  tags = {
+    createBy = "terraform"
+  }
+
+  cluster_topology {
+    read_write_node {
+      zone = "ap-guangzhou-6"
+    }
+  }
+
+  timeouts {
+    create = "30m"
+    delete = "30m"
+  }
+}
+
 resource "tencentcloud_cynosdb_cluster" "example" {
   available_zone               = "ap-guangzhou-6"
   vpc_id                       = "vpc-i5yyodl9"
@@ -25,7 +63,7 @@ resource "tencentcloud_cynosdb_cluster" "example" {
   db_version                   = "5.7"
   port                         = 3306
   cluster_name                 = "tf-example"
-  password                     = "cynosDB@123"
+  password                     = "CynosDB@2026"
   instance_maintain_duration   = 7200
   instance_maintain_start_time = 10800
   instance_cpu_core            = 2
@@ -81,23 +119,43 @@ resource "tencentcloud_dts_sync_config" "example" {
   objects {
     mode = "Partial"
     databases {
-      db_name     = "tf_ci_test"
-      new_db_name = "tf_ci_test_new"
-      db_mode     = "Partial"
-      table_mode  = "All"
+      db_name        = "testDB"
+      db_mode        = "Partial"
+      table_mode     = "Partial"
+      view_mode      = "Partial"
+      procedure_mode = "Partial"
+      function_mode  = "Partial"
       tables {
-        table_name     = "test"
-        new_table_name = "test_new"
+        table_name  = "testTable"
+        column_mode = "Partial"
+        columns {
+          column_name = "id"
+        }
+
+        tmp_tables = [
+          "_testTable_new",
+          "_testTable_old",
+          "_testTable_ghc",
+          "_testTable_gho",
+          "_testTable_del",
+        ]
+
+        table_edit_mode = "pt"
       }
     }
+
+    advanced_objects = [
+      "procedure",
+      "function",
+    ]
   }
 
   src_info {
     region      = "ap-guangzhou"
-    instance_id = "cdb-fitq5t9h"
-    user        = "your_user_name"
-    password    = "*"
-    db_name     = "tf_ci_test"
+    instance_id = tencentcloud_mysql_instance.example.id
+    user        = "root"
+    password    = tencentcloud_mysql_instance.example.root_password
+    db_name     = "testDB"
     vpc_id      = "vpc-i5yyodl9"
     subnet_id   = "subnet-hhi88a58"
   }
@@ -106,93 +164,13 @@ resource "tencentcloud_dts_sync_config" "example" {
     region      = "ap-guangzhou"
     instance_id = tencentcloud_cynosdb_cluster.example.id
     user        = "root"
-    password    = "*"
-    db_name     = "tf_ci_test_new"
+    password    = tencentcloud_cynosdb_cluster.example.password
+    db_name     = "testDB"
     vpc_id      = "vpc-i5yyodl9"
     subnet_id   = "subnet-hhi88a58"
   }
 
-  auto_retry_time_range_minutes = 0
-}
-```
-
-### Sync mysql database using CCN to route from ap-shanghai to ap-guangzhou
-
-```hcl
-locals {
-  vpc_id_sh    = "vpc-evtcyb3g"
-  subnet_id_sh = "subnet-1t83cxkp"
-  src_ip       = data.tencentcloud_mysql_instance.src_mysql.instance_list.0.intranet_ip
-  src_port     = data.tencentcloud_mysql_instance.src_mysql.instance_list.0.intranet_port
-  ccn_id       = data.tencentcloud_ccn_instances.ccns.instance_list.0.ccn_id
-  dst_mysql_id = data.tencentcloud_mysql_instance.dst_mysql.instance_list.0.mysql_id
-}
-
-variable "src_az_sh" {
-  default = "ap-shanghai"
-}
-
-variable "dst_az_gz" {
-  default = "ap-guangzhou"
-}
-
-data "tencentcloud_dts_sync_jobs" "sync_jobs" {
-  job_name = "keep_sync_config_ccn_2_cdb"
-}
-
-data "tencentcloud_ccn_instances" "ccns" {
-  name = "keep-ccn-dts-sh"
-}
-
-data "tencentcloud_mysql_instance" "src_mysql" {
-  instance_name = "your_user_name_mysql_src"
-}
-
-data "tencentcloud_mysql_instance" "dst_mysql" {
-  instance_name = "your_user_name_mysql_src"
-}
-
-resource "tencentcloud_dts_sync_config" "example" {
-  job_id          = data.tencentcloud_dts_sync_jobs.sync_jobs.list.0.job_id
-  src_access_type = "ccn"
-  dst_access_type = "cdb"
-  job_mode        = "liteMode"
-  run_mode        = "Immediate"
-
-  objects {
-    mode = "Partial"
-    databases {
-      db_name     = "tf_ci_test"
-      new_db_name = "tf_ci_test_new"
-      db_mode     = "Partial"
-      table_mode  = "All"
-      tables {
-        table_name     = "test"
-        new_table_name = "test_new"
-      }
-    }
-  }
-
-  src_info { // shanghai to guangzhou via ccn
-    region           = var.src_az_sh
-    user             = "your_user_name"
-    password         = "your_pass_word"
-    ip               = local.src_ip
-    port             = local.src_port
-    vpc_id           = local.vpc_id_sh
-    subnet_id        = local.subnet_id_sh
-    ccn_id           = local.ccn_id
-    database_net_env = "TencentVPC"
-  }
-
-  dst_info {
-    region      = var.dst_az_gz
-    instance_id = local.dst_mysql_id
-    user        = "your_user_name"
-    password    = "your_pass_word"
-  }
-
-  auto_retry_time_range_minutes = 0
+  auto_retry_time_range_minutes = 5
 }
 ```
 
@@ -213,6 +191,11 @@ The following arguments are supported:
 * `run_mode` - (Optional, String) Operation mode, such as: Immediate (indicates immediate operation, the default value is this value), Timed (indicates scheduled operation).
 * `src_info` - (Optional, List) Source information, single-node database use.
 
+The `columns` object of `tables` supports the following:
+
+* `column_name` - (Optional, String) Column name. Note: This field may return null, indicating that no valid value can be obtained.
+* `new_column_name` - (Optional, String) New column name. Note: This field may return null, indicating that no valid value can be obtained.
+
 The `conflict_handle_option` object of `options` supports the following:
 
 * `condition_column` - (Optional, String) Columns covered by the condition. Note: This field may return null, indicating that no valid value can be obtained.
@@ -231,6 +214,7 @@ The `databases` object of `objects` supports the following:
 * `new_schema_name` - (Optional, String) Schema name after migration or synchronization. Note: This field may return null, indicating that no valid value can be obtained.
 * `procedure_mode` - (Optional, String) Select the mode to be synchronized, Partial is part, All is the whole selection. Note: This field may return null, indicating that no valid value can be obtained.
 * `procedures` - (Optional, Set) Required when the value of ProcedureMode is Partial. Note: This field may return null, indicating that no valid value can be obtained.
+* `schema_mode` - (Optional, String) Schema selection mode, used by PostgreSQL and SQL Server sync links. Valid values: `All` (all objects under the current object), `Partial` (some objects). Note: This field may return null, indicating that no valid value can be obtained.
 * `schema_name` - (Optional, String) Migrated or synchronized schemaNote: This field may return null, indicating that no valid value can be obtained.
 * `table_mode` - (Optional, String) Table selection mode: All (for all objects under the current object), Partial (for some objects), this item is required when the DBMode is Partial. Note: This field may return null, indicating that no valid value can be obtained.
 * `tables` - (Optional, List) A collection of table graph objects, when TableMode is Partial, this item needs to be filled in. Note: This field may return null, indicating that no valid value can be obtained.
@@ -278,11 +262,11 @@ The `objects` object supports the following:
 * `advanced_objects` - (Optional, Set) For advanced object types, such as function and procedure, when an advanced object needs to be synchronized, the initialization type must include the structure initialization type, that is, the value of the Options.InitType field is Structure or Full. Note: This field may return null, indicating that no valid value can be obtained.
 * `databases` - (Optional, List) Synchronization object, not null when Mode is Partial. Note: This field may return null, indicating that no valid value can be obtained.
 * `mode` - (Optional, String) Migration object type Partial (partial object). Note: This field may return null, indicating that no valid value can be obtained.
-* `online_ddl` - (Optional, List) OnlineDDL type. Note: This field may return null, indicating that no valid value can be obtained.
+* `online_ddl` - (Optional, List, **Deprecated**) It has been deprecated from version 1.83.20. OnlineDDL type. Note: This field may return null, indicating that no valid value can be obtained.
 
 The `online_ddl` object of `objects` supports the following:
 
-* `status` - (Optional, String) status.
+* `status` - (Optional, String, **Deprecated**) It has been deprecated from version 1.83.20. Status: ON - Enabled, OFF - Disabled.
 
 The `options` object supports the following:
 
@@ -342,9 +326,13 @@ The `src_info` object supports the following:
 
 The `tables` object of `databases` supports the following:
 
+* `column_mode` - (Optional, String) Whether to synchronize all columns in the table, All: all columns under the current table, Partial: part of the columns under the current table, fill in the detailed column information through the columns field. Note: This field may return null, indicating that no valid value can be obtained.
+* `columns` - (Optional, List) Synchronized column information, required when ColumnMode is Partial. Note: This field may return null, indicating that no valid value can be obtained.
 * `filter_condition` - (Optional, String) Filter condition. Note: This field may return null, indicating that no valid value can be obtained.
 * `new_table_name` - (Optional, String) New table name. Note: This field may return null, indicating that no valid value can be obtained.
+* `table_edit_mode` - (Optional, String) Edit table type, rename (table mapping), pt (synchronize attached tables). Note: This field may return null, indicating that no valid value can be obtained.
 * `table_name` - (Optional, String) Table name. Note: This field may return null, indicating that no valid value can be obtained.
+* `tmp_tables` - (Optional, Set) Temporary table generated by pt-osc/gh-ost. Note: This field may return null, indicating that no valid value can be obtained.
 
 The `views` object of `databases` supports the following:
 

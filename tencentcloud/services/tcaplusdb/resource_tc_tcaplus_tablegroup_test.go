@@ -3,6 +3,7 @@ package tcaplusdb_test
 import (
 	"context"
 	"fmt"
+	"regexp"
 	"testing"
 
 	tcacctest "github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/acctest"
@@ -42,6 +43,32 @@ func TestAccTencentCloudTcaplusGroupResource(t *testing.T) {
 					resource.TestCheckResourceAttr(testTcaplusGroupResourceNameResourceKey, "tablegroup_name", "tf_test_group_name_guagua_2"),
 					resource.TestCheckResourceAttr(testTcaplusGroupResourceNameResourceKey, "table_count", "0"),
 				),
+			},
+		},
+	})
+}
+
+func TestAccTencentCloudTcaplusGroupResourceWithTableGroupId(t *testing.T) {
+	t.Parallel()
+	resource.Test(t, resource.TestCase{
+		PreCheck:     func() { tcacctest.AccPreCheck(t) },
+		Providers:    tcacctest.AccProviders,
+		CheckDestroy: testAccCheckTcaplusGroupDestroy,
+		Steps: []resource.TestStep{
+			{
+				Config: testAccTcaplusGroupWithId,
+				Check: resource.ComposeTestCheckFunc(
+					testAccCheckTcaplusGroupExists(testTcaplusGroupResourceNameResourceKey),
+					resource.TestCheckResourceAttrSet(testTcaplusGroupResourceNameResourceKey, "total_size"),
+					resource.TestCheckResourceAttrSet(testTcaplusGroupResourceNameResourceKey, "create_time"),
+					resource.TestCheckResourceAttr(testTcaplusGroupResourceNameResourceKey, "tablegroup_name", "tf_test_group_name_with_id"),
+					resource.TestCheckResourceAttr(testTcaplusGroupResourceNameResourceKey, "table_group_id", "10101"),
+					resource.TestCheckResourceAttr(testTcaplusGroupResourceNameResourceKey, "table_count", "0"),
+				),
+			},
+			{
+				Config:      testAccTcaplusGroupWithIdUpdate,
+				ExpectError: regexp.MustCompile(`argument.*table_group_id.*cannot be changed`),
 			},
 		},
 	})
@@ -108,5 +135,19 @@ const testAccTcaplusGroupUpdate = tcacctest.DefaultTcaPlusData + `
 resource "tencentcloud_tcaplus_tablegroup" "test_group" {
   cluster_id         = local.tcaplus_id
   tablegroup_name    = "tf_test_group_name_guagua_2"
+}
+`
+const testAccTcaplusGroupWithId = tcacctest.DefaultTcaPlusData + `
+resource "tencentcloud_tcaplus_tablegroup" "test_group" {
+  cluster_id      = local.tcaplus_id
+  tablegroup_name = "tf_test_group_name_with_id"
+  table_group_id  = "10101"
+}
+`
+const testAccTcaplusGroupWithIdUpdate = tcacctest.DefaultTcaPlusData + `
+resource "tencentcloud_tcaplus_tablegroup" "test_group" {
+  cluster_id      = local.tcaplus_id
+  tablegroup_name = "tf_test_group_name_with_id"
+  table_group_id  = "10102"
 }
 `

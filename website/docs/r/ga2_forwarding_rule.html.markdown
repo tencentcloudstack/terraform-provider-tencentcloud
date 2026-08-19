@@ -113,6 +113,16 @@ resource "tencentcloud_ga2_forwarding_rule" "example" {
     rule_action_type  = "ForwardGroup"
     rule_action_value = tencentcloud_ga2_endpoint_group.example.endpoint_group_id
   }
+
+  response_headers {
+    key   = "ShowKey"
+    value = "ShowValue"
+  }
+
+  hide_response_headers {
+    key   = "HideKey"
+    value = ""
+  }
 }
 ```
 
@@ -146,20 +156,32 @@ resource "tencentcloud_ga2_forwarding_rule" "example" {
 
 The following arguments are supported:
 
-* `forwarding_policy_id` - (Required, String, ForceNew) Forwarding policy ID this forwarding rule belongs to.
-* `global_accelerator_id` - (Required, String, ForceNew) Global accelerator instance ID this forwarding rule belongs to.
-* `listener_id` - (Required, String, ForceNew) Listener ID this forwarding rule belongs to.
-* `rule_actions` - (Required, Set) Layer-7 forwarding rule action list. Treated as an unordered set; HCL element order has no semantic meaning.
-* `rule_conditions` - (Required, Set) Layer-7 forwarding rule condition list. Maximum of 1 element. Treated as an unordered set; HCL element order has no semantic meaning.
+* `forwarding_policy_id` - (Required, String, ForceNew) Forwarding policy ID. Example value: `dm-dz058e4q`.
+* `global_accelerator_id` - (Required, String, ForceNew) Global accelerator instance ID. Example value: `ga-ask56kjh`.
+* `listener_id` - (Required, String, ForceNew) Listener ID. Example value: `lsr-kzjzfs7n`.
+* `rule_actions` - (Required, Set) Layer-7 forwarding rule actions. The array length cannot exceed 1. Treated as an unordered set; HCL element order has no semantic meaning.
+* `rule_conditions` - (Required, Set) Layer-7 forwarding rule conditions. The array length cannot exceed 1. Treated as an unordered set; HCL element order has no semantic meaning.
 * `enable_origin_sni` - (Optional, Bool) Whether to enable origin SNI. Default: `false`. Required when `rule_actions.rule_action_type` is `ForwardGroup`.
-* `origin_headers` - (Optional, Set) Origin request header list. Maximum of 5 elements. Required when `rule_actions.rule_action_type` is `ForwardGroup`. Treated as an unordered set; HCL element order has no semantic meaning.
+* `hide_response_headers` - (Optional, Set) Origin response headers to remove. The array length cannot exceed 5. An empty set means clearing the configuration. Treated as an unordered set; HCL element order has no semantic meaning.
+* `origin_headers` - (Optional, Set) Origin request headers. The array length cannot exceed 5. Required when `rule_actions.rule_action_type` is `ForwardGroup`. Treated as an unordered set; HCL element order has no semantic meaning.
 * `origin_host` - (Optional, String) Origin host value. Maximum length is 80 characters. Required when `rule_actions.rule_action_type` is `ForwardGroup`.
 * `origin_sni` - (Optional, String) Origin SNI value. Maximum length is 80 characters. Required when `enable_origin_sni` is `true`, and also required when `rule_actions.rule_action_type` is `ForwardGroup`.
+* `response_headers` - (Optional, Set) Origin response headers. The array length cannot exceed 5. An empty set means clearing the configuration. Treated as an unordered set; HCL element order has no semantic meaning.
+
+The `hide_response_headers` object supports the following:
+
+* `key` - (Required, String) Origin response header key to remove. Maximum length is 128 characters. If it contains `$`, only `$remote_addr` or `$remote_port` are supported.
+* `value` - (Optional, String) Origin response header value to remove. Currently only an empty string is accepted.
 
 The `origin_headers` object supports the following:
 
 * `key` - (Required, String) Origin request header key. Must contain only printable ASCII characters and must not contain `()<>@,;:\"/[ ]?={}`. Length must be between 1 and 40 characters.
 * `value` - (Required, String) Origin request header value. Maximum length is 128 characters. If the value contains `$`, only `$remote_addr` or `$remote_port` are supported.
+
+The `response_headers` object supports the following:
+
+* `key` - (Required, String) Origin response header key. Must contain only printable ASCII characters and must not contain `()<>@,;:\"/[ ]?={}`. Length must be between 1 and 40 characters.
+* `value` - (Required, String) Origin response header value. Maximum length is 128 characters. If the value contains `$`, only `$remote_addr` or `$remote_port` are supported.
 
 The `rule_actions` object supports the following:
 
@@ -169,7 +191,7 @@ The `rule_actions` object supports the following:
 The `rule_conditions` object supports the following:
 
 * `rule_condition_type` - (Required, String) Layer-7 forwarding rule condition type. Valid values: `Path`.
-* `rule_condition_value` - (Required, Set) Layer-7 forwarding rule condition values. Each value must match the regular expression `^[a-zA-Z0-9_.-/]{1,80}$`. Maximum of 1 element. Treated as an unordered set.
+* `rule_condition_value` - (Required, Set) Layer-7 forwarding rule condition values. Each value must match the regular expression `^[a-zA-Z0-9_.-/]{1,80}$`. The array length cannot exceed 1. Treated as an unordered set.
 
 ## Attributes Reference
 
