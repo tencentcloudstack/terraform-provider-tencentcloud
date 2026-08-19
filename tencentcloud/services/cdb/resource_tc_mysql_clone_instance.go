@@ -15,12 +15,12 @@ import (
 	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/internal/helper"
 )
 
-func ResourceTencentCloudCdbCloneInstance() *schema.Resource {
+func ResourceTencentCloudMysqlCloneInstance() *schema.Resource {
 	return &schema.Resource{
-		Create: resourceTencentCloudCdbCloneInstanceCreate,
-		Read:   resourceTencentCloudCdbCloneInstanceRead,
-		Update: resourceTencentCloudCdbCloneInstanceUpdate,
-		Delete: resourceTencentCloudCdbCloneInstanceDelete,
+		Create: resourceTencentCloudMysqlCloneInstanceCreate,
+		Read:   resourceTencentCloudMysqlCloneInstanceRead,
+		Update: resourceTencentCloudMysqlCloneInstanceUpdate,
+		Delete: resourceTencentCloudMysqlCloneInstanceDelete,
 		Importer: &schema.ResourceImporter{
 			State: schema.ImportStatePassthrough,
 		},
@@ -34,7 +34,7 @@ func ResourceTencentCloudCdbCloneInstance() *schema.Resource {
 				Type:        schema.TypeString,
 				Required:    true,
 				ForceNew:    true,
-				Description: "Source CDB instance ID to clone from.",
+				Description: "Source MySQL (CDB) instance ID to clone from.",
 			},
 
 			"specified_rollback_time": {
@@ -298,8 +298,8 @@ func ResourceTencentCloudCdbCloneInstance() *schema.Resource {
 	}
 }
 
-func resourceTencentCloudCdbCloneInstanceCreate(d *schema.ResourceData, meta interface{}) error {
-	defer tccommon.LogElapsed("resource.tencentcloud_cdb_clone_instance.create")()
+func resourceTencentCloudMysqlCloneInstanceCreate(d *schema.ResourceData, meta interface{}) error {
+	defer tccommon.LogElapsed("resource.tencentcloud_mysql_clone_instance.create")()
 	defer tccommon.InconsistentCheck(d, meta)()
 
 	var (
@@ -483,18 +483,18 @@ func resourceTencentCloudCdbCloneInstanceCreate(d *schema.ResourceData, meta int
 			log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), result.ToJsonString())
 		}
 		if result == nil || result.Response == nil {
-			return resource.NonRetryableError(fmt.Errorf("Create cdb_clone_instance failed, Response is nil."))
+			return resource.NonRetryableError(fmt.Errorf("Create mysql_clone_instance failed, Response is nil."))
 		}
 		if result.Response.AsyncRequestId == nil || *result.Response.AsyncRequestId == "" {
-			log.Printf("[CRITAL]%s create cdb_clone_instance, logId=%s, id=%s\n", logId, logId, d.Id())
-			return resource.NonRetryableError(fmt.Errorf("Create cdb_clone_instance failed, AsyncRequestId is nil or empty."))
+			log.Printf("[CRITAL]%s create mysql_clone_instance, logId=%s, id=%s\n", logId, logId, d.Id())
+			return resource.NonRetryableError(fmt.Errorf("Create mysql_clone_instance failed, AsyncRequestId is nil or empty."))
 		}
 		asyncRequestId = *result.Response.AsyncRequestId
 		return nil
 	})
 
 	if reqErr != nil {
-		log.Printf("[CRITAL]%s create cdb_clone_instance failed, reason:%+v", logId, reqErr)
+		log.Printf("[CRITAL]%s create mysql_clone_instance failed, reason:%+v", logId, reqErr)
 		return reqErr
 	}
 
@@ -509,13 +509,13 @@ func resourceTencentCloudCdbCloneInstanceCreate(d *schema.ResourceData, meta int
 			return nil
 		}
 		if taskStatus == MYSQL_TASK_STATUS_INITIAL || taskStatus == MYSQL_TASK_STATUS_RUNNING {
-			return resource.RetryableError(fmt.Errorf("cdb_clone_instance async task status is %s", taskStatus))
+			return resource.RetryableError(fmt.Errorf("mysql_clone_instance async task status is %s", taskStatus))
 		}
-		return resource.NonRetryableError(fmt.Errorf("cdb_clone_instance async task status is %s, message:%s", taskStatus, message))
+		return resource.NonRetryableError(fmt.Errorf("mysql_clone_instance async task status is %s, message:%s", taskStatus, message))
 	})
 
 	if err != nil {
-		log.Printf("[CRITAL]%s create cdb_clone_instance async task fail, reason:%s\n", logId, err.Error())
+		log.Printf("[CRITAL]%s create mysql_clone_instance async task fail, reason:%s\n", logId, err.Error())
 		return err
 	}
 
@@ -534,24 +534,24 @@ func resourceTencentCloudCdbCloneInstanceCreate(d *schema.ResourceData, meta int
 			}
 		}
 		if dstInstanceId == "" {
-			return resource.RetryableError(fmt.Errorf("cdb_clone_instance DstInstanceId not found in DescribeCloneList"))
+			return resource.RetryableError(fmt.Errorf("mysql_clone_instance DstInstanceId not found in DescribeCloneList"))
 		}
 		return nil
 	})
 
 	if err != nil {
-		log.Printf("[CRITAL]%s create cdb_clone_instance, get DstInstanceId fail, reason:%s\n", logId, err.Error())
+		log.Printf("[CRITAL]%s create mysql_clone_instance, get DstInstanceId fail, reason:%s\n", logId, err.Error())
 		return err
 	}
 
-	log.Printf("[DEBUG]%s create cdb_clone_instance, dstInstanceId=%s, logId=%s, id=%s\n", logId, dstInstanceId, logId, d.Id())
+	log.Printf("[DEBUG]%s create mysql_clone_instance, dstInstanceId=%s, logId=%s, id=%s\n", logId, dstInstanceId, logId, d.Id())
 	d.SetId(dstInstanceId)
 
-	return resourceTencentCloudCdbCloneInstanceRead(d, meta)
+	return resourceTencentCloudMysqlCloneInstanceRead(d, meta)
 }
 
-func resourceTencentCloudCdbCloneInstanceRead(d *schema.ResourceData, meta interface{}) error {
-	defer tccommon.LogElapsed("resource.tencentcloud_cdb_clone_instance.read")()
+func resourceTencentCloudMysqlCloneInstanceRead(d *schema.ResourceData, meta interface{}) error {
+	defer tccommon.LogElapsed("resource.tencentcloud_mysql_clone_instance.read")()
 	defer tccommon.InconsistentCheck(d, meta)()
 
 	var (
@@ -566,7 +566,7 @@ func resourceTencentCloudCdbCloneInstanceRead(d *schema.ResourceData, meta inter
 	}
 
 	if respData == nil {
-		log.Printf("[CRUD] cdb_clone_instance id=%s", d.Id())
+		log.Printf("[CRUD] mysql_clone_instance id=%s", d.Id())
 		d.SetId("")
 		return nil
 	}
@@ -631,8 +631,8 @@ func resourceTencentCloudCdbCloneInstanceRead(d *schema.ResourceData, meta inter
 	return nil
 }
 
-func resourceTencentCloudCdbCloneInstanceUpdate(d *schema.ResourceData, meta interface{}) error {
-	defer tccommon.LogElapsed("resource.tencentcloud_cdb_clone_instance.update")()
+func resourceTencentCloudMysqlCloneInstanceUpdate(d *schema.ResourceData, meta interface{}) error {
+	defer tccommon.LogElapsed("resource.tencentcloud_mysql_clone_instance.update")()
 	defer tccommon.InconsistentCheck(d, meta)()
 
 	var (
@@ -665,7 +665,7 @@ func resourceTencentCloudCdbCloneInstanceUpdate(d *schema.ResourceData, meta int
 
 	for _, arg := range immutableArgs {
 		if d.HasChange(arg) {
-			return fmt.Errorf("cdb_clone_instance argument `%s` cannot be modified", arg)
+			return fmt.Errorf("mysql_clone_instance argument `%s` cannot be modified", arg)
 		}
 	}
 
@@ -764,18 +764,18 @@ func resourceTencentCloudCdbCloneInstanceUpdate(d *schema.ResourceData, meta int
 				log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), result.ToJsonString())
 			}
 			if result == nil || result.Response == nil {
-				return resource.NonRetryableError(fmt.Errorf("Upgrade cdb_clone_instance failed, Response is nil."))
+				return resource.NonRetryableError(fmt.Errorf("Upgrade mysql_clone_instance failed, Response is nil."))
 			}
 			if result.Response.AsyncRequestId == nil || *result.Response.AsyncRequestId == "" {
-				log.Printf("[CRITAL]%s update cdb_clone_instance, logId=%s, id=%s\n", logId, logId, d.Id())
-				return resource.NonRetryableError(fmt.Errorf("Upgrade cdb_clone_instance failed, AsyncRequestId is nil or empty."))
+				log.Printf("[CRITAL]%s update mysql_clone_instance, logId=%s, id=%s\n", logId, logId, d.Id())
+				return resource.NonRetryableError(fmt.Errorf("Upgrade mysql_clone_instance failed, AsyncRequestId is nil or empty."))
 			}
 			asyncRequestId = *result.Response.AsyncRequestId
 			return nil
 		})
 
 		if reqErr != nil {
-			log.Printf("[CRITAL]%s update cdb_clone_instance failed, reason:%+v", logId, reqErr)
+			log.Printf("[CRITAL]%s update mysql_clone_instance failed, reason:%+v", logId, reqErr)
 			return reqErr
 		}
 
@@ -790,22 +790,22 @@ func resourceTencentCloudCdbCloneInstanceUpdate(d *schema.ResourceData, meta int
 				return nil
 			}
 			if taskStatus == MYSQL_TASK_STATUS_INITIAL || taskStatus == MYSQL_TASK_STATUS_RUNNING {
-				return resource.RetryableError(fmt.Errorf("cdb_clone_instance upgrade async task status is %s", taskStatus))
+				return resource.RetryableError(fmt.Errorf("mysql_clone_instance upgrade async task status is %s", taskStatus))
 			}
-			return resource.NonRetryableError(fmt.Errorf("cdb_clone_instance upgrade async task status is %s, message:%s", taskStatus, message))
+			return resource.NonRetryableError(fmt.Errorf("mysql_clone_instance upgrade async task status is %s, message:%s", taskStatus, message))
 		})
 
 		if err != nil {
-			log.Printf("[CRITAL]%s update cdb_clone_instance async task fail, reason:%s\n", logId, err.Error())
+			log.Printf("[CRITAL]%s update mysql_clone_instance async task fail, reason:%s\n", logId, err.Error())
 			return err
 		}
 	}
 
-	return resourceTencentCloudCdbCloneInstanceRead(d, meta)
+	return resourceTencentCloudMysqlCloneInstanceRead(d, meta)
 }
 
-func resourceTencentCloudCdbCloneInstanceDelete(d *schema.ResourceData, meta interface{}) error {
-	defer tccommon.LogElapsed("resource.tencentcloud_cdb_clone_instance.delete")()
+func resourceTencentCloudMysqlCloneInstanceDelete(d *schema.ResourceData, meta interface{}) error {
+	defer tccommon.LogElapsed("resource.tencentcloud_mysql_clone_instance.delete")()
 	defer tccommon.InconsistentCheck(d, meta)()
 
 	var (
@@ -844,12 +844,12 @@ func resourceTencentCloudCdbCloneInstanceDelete(d *schema.ResourceData, meta int
 			return nil
 		}
 		if *mysqlInfo.Status == MYSQL_STATUS_ISOLATING || *mysqlInfo.Status == MYSQL_STATUS_RUNNING {
-			return resource.RetryableError(fmt.Errorf("cdb_clone_instance isolating."))
+			return resource.RetryableError(fmt.Errorf("mysql_clone_instance isolating."))
 		}
 		if *mysqlInfo.Status == MYSQL_STATUS_ISOLATED {
 			return nil
 		}
-		return resource.NonRetryableError(fmt.Errorf("after IsolateDBInstance cdb_clone_instance status is %d", *mysqlInfo.Status))
+		return resource.NonRetryableError(fmt.Errorf("after IsolateDBInstance mysql_clone_instance status is %d", *mysqlInfo.Status))
 	})
 
 	if hasDeleted {
@@ -879,11 +879,11 @@ func resourceTencentCloudCdbCloneInstanceDelete(d *schema.ResourceData, meta int
 		if mysqlInfo == nil {
 			return nil
 		}
-		return resource.RetryableError(fmt.Errorf("cdb_clone_instance still in isolated list."))
+		return resource.RetryableError(fmt.Errorf("mysql_clone_instance still in isolated list."))
 	})
 
 	if err != nil {
-		log.Printf("[CRITAL]%s delete cdb_clone_instance fail, reason:%s\n", logId, err.Error())
+		log.Printf("[CRITAL]%s delete mysql_clone_instance fail, reason:%s\n", logId, err.Error())
 		return err
 	}
 

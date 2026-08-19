@@ -4,10 +4,10 @@ CDB (Cloud Database MySQL) currently has no Terraform resource to clone (clone/r
 
 ## What Changes
 
-- Add a new Terraform RESOURCE_KIND_GENERAL resource `tencentcloud_cdb_clone_instance` to manage the full CRUD lifecycle of cloned CDB instances
-- Create resource file: `tencentcloud/services/cdb/resource_tc_cdb_clone_instance.go`
-- Create test file: `tencentcloud/services/cdb/resource_tc_cdb_clone_instance_test.go`
-- Create documentation file: `tencentcloud/services/cdb/resource_tc_cdb_clone_instance.md`
+- Add a new Terraform RESOURCE_KIND_GENERAL resource `tencentcloud_mysql_clone_instance` to manage the full CRUD lifecycle of cloned CDB instances
+- Create resource file: `tencentcloud/services/cdb/resource_tc_mysql_clone_instance.go`
+- Create test file: `tencentcloud/services/cdb/resource_tc_mysql_clone_instance_test.go`
+- Create documentation file: `tencentcloud/services/cdb/resource_tc_mysql_clone_instance.md`
 - Register the resource in `tencentcloud/provider.go` and `tencentcloud/provider.md`
 - The resource will support CRUD operations:
   - **Create**: Call `CreateCloneInstance` API (async) to clone a CDB instance; poll `DescribeAsyncRequestInfo` until the async task succeeds, then extract the cloned instance ID from `DescribeDBInstances`
@@ -18,7 +18,7 @@ CDB (Cloud Database MySQL) currently has no Terraform resource to clone (clone/r
 ## Capabilities
 
 ### New Capabilities
-- `cdb-clone-instance`: Manages the full lifecycle of a cloned CDB instance — creation from a source instance with optional rollback time/backup, configuration upgrades, querying instance details, and deletion via offline
+- `mysql-clone-instance`: Manages the full lifecycle of a cloned CDB instance — creation from a source instance with optional rollback time/backup, configuration upgrades, querying instance details, and deletion via offline
 
 ### Modified Capabilities
 <!-- No existing capabilities are modified -->
@@ -26,7 +26,7 @@ CDB (Cloud Database MySQL) currently has no Terraform resource to clone (clone/r
 ## Impact
 
 - New resource registration in `tencentcloud/provider.go` and `tencentcloud/provider.md`
-- New resource implementation in `tencentcloud/services/cdb/resource_tc_cdb_clone_instance.go`
-- New test file in `tencentcloud/services/cdb/resource_tc_cdb_clone_instance_test.go`
-- New documentation in `tencentcloud/services/cdb/resource_tc_cdb_clone_instance.md` and `website/docs/r/` (generated via `make doc` in finalize phase)
+- New resource implementation in `tencentcloud/services/cdb/resource_tc_mysql_clone_instance.go`
+- New test file in `tencentcloud/services/cdb/resource_tc_mysql_clone_instance_test.go`
+- New documentation in `tencentcloud/services/cdb/resource_tc_mysql_clone_instance.md` and `website/docs/r/` (generated via `make doc` in finalize phase)
 - Cloud API dependencies from `cdb/v20170320` SDK package: `CreateCloneInstance` (async), `DescribeDBInstances`, `UpgradeDBInstance` (async), `OfflineIsolatedInstances`, `DescribeAsyncRequestInfo` (for async task polling)

@@ -1,3 +1,3 @@
 ```release-note:new-resource
-tencentcloud_cdb_clone_instance
+tencentcloud_mysql_clone_instance
 ```

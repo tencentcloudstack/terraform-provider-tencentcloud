@@ -1,11 +1,11 @@
-Provides a resource to create a CDB clone instance from an existing source instance, optionally rolling back to a specified time point or backup set.
+Provides a resource to create a TencentDB for MySQL (CDB) clone instance from an existing source instance, optionally rolling back to a specified time point or backup set.
 
 Example Usage
 
 Clone instance with rollback time
 
 ```hcl
-resource "tencentcloud_cdb_clone_instance" "example" {
+resource "tencentcloud_mysql_clone_instance" "example" {
   instance_id            = "cdb-c1nl9rpv"
   specified_rollback_time = "2024-01-01 12:00:00"
   memory                 = 4000
@@ -27,7 +27,7 @@ resource "tencentcloud_cdb_clone_instance" "example" {
 Clone instance with backup id
 
 ```hcl
-resource "tencentcloud_cdb_clone_instance" "example" {
+resource "tencentcloud_mysql_clone_instance" "example" {
   instance_id        = "cdb-c1nl9rpv"
   specified_backup_id = 1000001
   memory              = 4000
@@ -49,7 +49,7 @@ resource "tencentcloud_cdb_clone_instance" "example" {
 Clone instance with resource tags
 
 ```hcl
-resource "tencentcloud_cdb_clone_instance" "example" {
+resource "tencentcloud_mysql_clone_instance" "example" {
   instance_id            = "cdb-c1nl9rpv"
   specified_rollback_time = "2024-01-01 12:00:00"
   memory                 = 4000
@@ -75,8 +75,8 @@ resource "tencentcloud_cdb_clone_instance" "example" {
 
 Import
 
-CDB clone instance can be imported using the cloned instance id, e.g.
+TencentDB for MySQL (CDB) clone instance can be imported using the cloned instance id, e.g.
 
 ```
-terraform import tencentcloud_cdb_clone_instance.example cdb-bcet7sdb
+terraform import tencentcloud_mysql_clone_instance.example cdb-bcet7sdb
 ```

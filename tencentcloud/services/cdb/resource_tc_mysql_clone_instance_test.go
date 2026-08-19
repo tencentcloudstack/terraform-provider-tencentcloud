@@ -15,18 +15,18 @@ import (
 	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/services/cdb"
 )
 
-type mockMetaForCdbCloneInstance struct {
+type mockMetaForMysqlCloneInstance struct {
 	client *connectivity.TencentCloudClient
 }
 
-func (m *mockMetaForCdbCloneInstance) GetAPIV3Conn() *connectivity.TencentCloudClient {
+func (m *mockMetaForMysqlCloneInstance) GetAPIV3Conn() *connectivity.TencentCloudClient {
 	return m.client
 }
 
-var _ tccommon.ProviderMeta = &mockMetaForCdbCloneInstance{}
+var _ tccommon.ProviderMeta = &mockMetaForMysqlCloneInstance{}
 
-func newMockMetaForCdbCloneInstance() *mockMetaForCdbCloneInstance {
-	return &mockMetaForCdbCloneInstance{client: &connectivity.TencentCloudClient{}}
+func newMockMetaForMysqlCloneInstance() *mockMetaForMysqlCloneInstance {
+	return &mockMetaForMysqlCloneInstance{client: &connectivity.TencentCloudClient{}}
 }
 
 func ptrStringClone(s string) *string { return &s }
@@ -73,12 +73,12 @@ func patchDescribeDBInstancesClone(patches *gomonkey.Patches, cdbClient *cdb_sdk
 	})
 }
 
-func TestCdbCloneInstance_Create_Success(t *testing.T) {
+func TestMysqlCloneInstance_Create_Success(t *testing.T) {
 	patches := gomonkey.NewPatches()
 	defer patches.Reset()
 
 	cdbClient := &cdb_sdk.Client{}
-	patches.ApplyMethodReturn(newMockMetaForCdbCloneInstance().client, "UseMysqlClient", cdbClient)
+	patches.ApplyMethodReturn(newMockMetaForMysqlCloneInstance().client, "UseMysqlClient", cdbClient)
 
 	patches.ApplyMethodFunc(cdbClient, "CreateCloneInstanceWithContext", func(_ context.Context, request *cdb_sdk.CreateCloneInstanceRequest) (*cdb_sdk.CreateCloneInstanceResponse, error) {
 		resp := cdb_sdk.NewCreateCloneInstanceResponse()
@@ -111,8 +111,8 @@ func TestCdbCloneInstance_Create_Success(t *testing.T) {
 
 	patchDescribeDBInstancesClone(patches, cdbClient, "cdb-clone1234", 1, 4000, 200, 2)
 
-	meta := newMockMetaForCdbCloneInstance()
-	res := cdb.ResourceTencentCloudCdbCloneInstance()
+	meta := newMockMetaForMysqlCloneInstance()
+	res := cdb.ResourceTencentCloudMysqlCloneInstance()
 	d := schema.TestResourceDataRaw(t, res.Schema, map[string]interface{}{
 		"instance_id":             "cdb-source1234",
 		"specified_rollback_time": "2024-01-01 12:00:00",
@@ -133,17 +133,17 @@ func TestCdbCloneInstance_Create_Success(t *testing.T) {
 	assert.Equal(t, "async-request-id-123", d.Get("async_request_id"))
 }
 
-func TestCdbCloneInstance_Read_Success(t *testing.T) {
+func TestMysqlCloneInstance_Read_Success(t *testing.T) {
 	patches := gomonkey.NewPatches()
 	defer patches.Reset()
 
 	cdbClient := &cdb_sdk.Client{}
-	patches.ApplyMethodReturn(newMockMetaForCdbCloneInstance().client, "UseMysqlClient", cdbClient)
+	patches.ApplyMethodReturn(newMockMetaForMysqlCloneInstance().client, "UseMysqlClient", cdbClient)
 
 	patchDescribeDBInstancesClone(patches, cdbClient, "cdb-clone1234", 1, 4000, 200, 2)
 
-	meta := newMockMetaForCdbCloneInstance()
-	res := cdb.ResourceTencentCloudCdbCloneInstance()
+	meta := newMockMetaForMysqlCloneInstance()
+	res := cdb.ResourceTencentCloudMysqlCloneInstance()
 	d := schema.TestResourceDataRaw(t, res.Schema, map[string]interface{}{
 		"instance_id": "cdb-source1234",
 	})
@@ -157,12 +157,12 @@ func TestCdbCloneInstance_Read_Success(t *testing.T) {
 	assert.Equal(t, int64(2), d.Get("cpu"))
 }
 
-func TestCdbCloneInstance_Read_NotFound(t *testing.T) {
+func TestMysqlCloneInstance_Read_NotFound(t *testing.T) {
 	patches := gomonkey.NewPatches()
 	defer patches.Reset()
 
 	cdbClient := &cdb_sdk.Client{}
-	patches.ApplyMethodReturn(newMockMetaForCdbCloneInstance().client, "UseMysqlClient", cdbClient)
+	patches.ApplyMethodReturn(newMockMetaForMysqlCloneInstance().client, "UseMysqlClient", cdbClient)
 
 	patches.ApplyMethodFunc(cdbClient, "DescribeDBInstances", func(request *cdb_sdk.DescribeDBInstancesRequest) (*cdb_sdk.DescribeDBInstancesResponse, error) {
 		resp := cdb_sdk.NewDescribeDBInstancesResponse()
@@ -173,8 +173,8 @@ func TestCdbCloneInstance_Read_NotFound(t *testing.T) {
 		return resp, nil
 	})
 
-	meta := newMockMetaForCdbCloneInstance()
-	res := cdb.ResourceTencentCloudCdbCloneInstance()
+	meta := newMockMetaForMysqlCloneInstance()
+	res := cdb.ResourceTencentCloudMysqlCloneInstance()
 	d := schema.TestResourceDataRaw(t, res.Schema, map[string]interface{}{
 		"instance_id": "cdb-source1234",
 	})
@@ -185,12 +185,12 @@ func TestCdbCloneInstance_Read_NotFound(t *testing.T) {
 	assert.Equal(t, "", d.Id())
 }
 
-func TestCdbCloneInstance_Update_Success(t *testing.T) {
+func TestMysqlCloneInstance_Update_Success(t *testing.T) {
 	patches := gomonkey.NewPatches()
 	defer patches.Reset()
 
 	cdbClient := &cdb_sdk.Client{}
-	patches.ApplyMethodReturn(newMockMetaForCdbCloneInstance().client, "UseMysqlClient", cdbClient)
+	patches.ApplyMethodReturn(newMockMetaForMysqlCloneInstance().client, "UseMysqlClient", cdbClient)
 
 	patches.ApplyMethodFunc(cdbClient, "UpgradeDBInstanceWithContext", func(_ context.Context, request *cdb_sdk.UpgradeDBInstanceRequest) (*cdb_sdk.UpgradeDBInstanceResponse, error) {
 		resp := cdb_sdk.NewUpgradeDBInstanceResponse()
@@ -204,8 +204,8 @@ func TestCdbCloneInstance_Update_Success(t *testing.T) {
 	patchAsyncRequestSuccessClone(patches, cdbClient)
 	patchDescribeDBInstancesClone(patches, cdbClient, "cdb-clone1234", 1, 8000, 400, 4)
 
-	meta := newMockMetaForCdbCloneInstance()
-	res := cdb.ResourceTencentCloudCdbCloneInstance()
+	meta := newMockMetaForMysqlCloneInstance()
+	res := cdb.ResourceTencentCloudMysqlCloneInstance()
 
 	state := &terraform.InstanceState{
 		ID: "cdb-clone1234",
@@ -234,21 +234,21 @@ func TestCdbCloneInstance_Update_Success(t *testing.T) {
 		"device_type":  "UNIVERSAL",
 	})
 
-	diff, err := res.Diff(nil, state, rawConfig, newMockMetaForCdbCloneInstance())
+	diff, err := res.Diff(nil, state, rawConfig, newMockMetaForMysqlCloneInstance())
 	assert.NoError(t, err)
 	assert.NotNil(t, diff)
 
 	d, err := schema.InternalMap(res.Schema).Data(state, diff)
 	assert.NoError(t, err)
 
-	updateErr := res.Update(d, newMockMetaForCdbCloneInstance())
+	updateErr := res.Update(d, newMockMetaForMysqlCloneInstance())
 	assert.NoError(t, updateErr)
 	assert.Equal(t, "cdb-clone1234", d.Id())
 	assert.Equal(t, "async-upgrade-123", d.Get("async_request_id"))
 }
 
-func TestCdbCloneInstance_Update_ImmutableChange(t *testing.T) {
-	res := cdb.ResourceTencentCloudCdbCloneInstance()
+func TestMysqlCloneInstance_Update_ImmutableChange(t *testing.T) {
+	res := cdb.ResourceTencentCloudMysqlCloneInstance()
 
 	state := &terraform.InstanceState{
 		ID: "cdb-clone1234",
@@ -268,24 +268,24 @@ func TestCdbCloneInstance_Update_ImmutableChange(t *testing.T) {
 		"volume":        200,
 	})
 
-	diff, err := res.Diff(nil, state, rawConfig, newMockMetaForCdbCloneInstance())
+	diff, err := res.Diff(nil, state, rawConfig, newMockMetaForMysqlCloneInstance())
 	assert.NoError(t, err)
 	assert.NotNil(t, diff)
 
 	d, err := schema.InternalMap(res.Schema).Data(state, diff)
 	assert.NoError(t, err)
 
-	updateErr := res.Update(d, newMockMetaForCdbCloneInstance())
+	updateErr := res.Update(d, newMockMetaForMysqlCloneInstance())
 	assert.Error(t, updateErr)
 	assert.Contains(t, updateErr.Error(), "cannot be modified")
 }
 
-func TestCdbCloneInstance_Delete_Success(t *testing.T) {
+func TestMysqlCloneInstance_Delete_Success(t *testing.T) {
 	patches := gomonkey.NewPatches()
 	defer patches.Reset()
 
 	cdbClient := &cdb_sdk.Client{}
-	patches.ApplyMethodReturn(newMockMetaForCdbCloneInstance().client, "UseMysqlClient", cdbClient)
+	patches.ApplyMethodReturn(newMockMetaForMysqlCloneInstance().client, "UseMysqlClient", cdbClient)
 
 	patches.ApplyMethodFunc(cdbClient, "IsolateDBInstance", func(request *cdb_sdk.IsolateDBInstanceRequest) (*cdb_sdk.IsolateDBInstanceResponse, error) {
 		resp := cdb_sdk.NewIsolateDBInstanceResponse()
@@ -326,8 +326,8 @@ func TestCdbCloneInstance_Delete_Success(t *testing.T) {
 		return resp, nil
 	})
 
-	meta := newMockMetaForCdbCloneInstance()
-	res := cdb.ResourceTencentCloudCdbCloneInstance()
+	meta := newMockMetaForMysqlCloneInstance()
+	res := cdb.ResourceTencentCloudMysqlCloneInstance()
 	d := schema.TestResourceDataRaw(t, res.Schema, map[string]interface{}{
 		"instance_id": "cdb-source1234",
 	})
@@ -337,12 +337,12 @@ func TestCdbCloneInstance_Delete_Success(t *testing.T) {
 	assert.NoError(t, err)
 }
 
-func TestCdbCloneInstance_Delete_AlreadyGone(t *testing.T) {
+func TestMysqlCloneInstance_Delete_AlreadyGone(t *testing.T) {
 	patches := gomonkey.NewPatches()
 	defer patches.Reset()
 
 	cdbClient := &cdb_sdk.Client{}
-	patches.ApplyMethodReturn(newMockMetaForCdbCloneInstance().client, "UseMysqlClient", cdbClient)
+	patches.ApplyMethodReturn(newMockMetaForMysqlCloneInstance().client, "UseMysqlClient", cdbClient)
 
 	patches.ApplyMethodFunc(cdbClient, "IsolateDBInstance", func(request *cdb_sdk.IsolateDBInstanceRequest) (*cdb_sdk.IsolateDBInstanceResponse, error) {
 		resp := cdb_sdk.NewIsolateDBInstanceResponse()
@@ -361,8 +361,8 @@ func TestCdbCloneInstance_Delete_AlreadyGone(t *testing.T) {
 		return resp, nil
 	})
 
-	meta := newMockMetaForCdbCloneInstance()
-	res := cdb.ResourceTencentCloudCdbCloneInstance()
+	meta := newMockMetaForMysqlCloneInstance()
+	res := cdb.ResourceTencentCloudMysqlCloneInstance()
 	d := schema.TestResourceDataRaw(t, res.Schema, map[string]interface{}{
 		"instance_id": "cdb-source1234",
 	})

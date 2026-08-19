@@ -3654,7 +3654,7 @@ func (me *MysqlService) CreateCloneInstance(ctx context.Context, request *cdb.Cr
 	return
 }
 
-func (me *MysqlService) UpgradeCdbCloneInstance(ctx context.Context, request *cdb.UpgradeDBInstanceRequest) (asyncRequestId string, errRet error) {
+func (me *MysqlService) UpgradeMysqlCloneInstance(ctx context.Context, request *cdb.UpgradeDBInstanceRequest) (asyncRequestId string, errRet error) {
 	logId := tccommon.GetLogId(ctx)
 
 	defer func() {

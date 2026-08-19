@@ -1669,7 +1669,7 @@ func Provider() *schema.Provider {
 			"tencentcloud_mysql_cls_log_attachment":                                                 cdb.ResourceTencentCloudMysqlClsLogAttachment(),
 			"tencentcloud_cdb_start_cpu_expand":                                                     cdb.ResourceTencentCloudCdbStartCpuExpand(),
 			"tencentcloud_mysql_audit_service":                                                      cdb.ResourceTencentCloudMysqlAuditService(),
-			"tencentcloud_cdb_clone_instance":                                                       cdb.ResourceTencentCloudCdbCloneInstance(),
+			"tencentcloud_mysql_clone_instance":                                                     cdb.ResourceTencentCloudMysqlCloneInstance(),
 			"tencentcloud_cos_bucket":                                                               cos.ResourceTencentCloudCosBucket(),
 			"tencentcloud_cos_bucket_object":                                                        cos.ResourceTencentCloudCosBucketObject(),
 			"tencentcloud_cos_bucket_referer":                                                       cos.ResourceTencentCloudCosBucketReferer(),

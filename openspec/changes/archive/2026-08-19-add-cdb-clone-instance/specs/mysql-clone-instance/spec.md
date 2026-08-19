@@ -1,10 +1,7 @@
-# cdb-clone-instance Specification
+## ADDED Requirements
 
-## Purpose
-TBD - created by archiving change add-cdb-clone-instance. Update Purpose after archive.
-## Requirements
 ### Requirement: Resource schema defines clone instance parameters
-The resource `tencentcloud_cdb_clone_instance` SHALL define a schema with the following top-level fields:
+The resource `tencentcloud_mysql_clone_instance` SHALL define a schema with the following top-level fields:
 - `instance_id` (Required, ForceNew, TypeString): Source CDB instance ID to clone from
 - `specified_rollback_time` (Optional, ForceNew, TypeString): Rollback time (yyyy-mm-dd hh:mm:ss); mutually exclusive with `specified_backup_id`
 - `specified_backup_id` (Optional, ForceNew, TypeInt): Backup file ID to clone from; mutually exclusive with `specified_rollback_time`
@@ -75,7 +72,7 @@ The resource Create operation SHALL call the `CreateCloneInstance` cloud API wit
 ### Requirement: Resource Read operation
 The resource Read operation SHALL call `DescribeDBInstances` with `InstanceIds` set to `d.Id()` (the cloned instance ID) and `QueryClusterInfo` set to `true`. The Read operation SHALL:
 1. Use retry with `tccommon.ReadRetryTimeout`
-2. If the response items are empty (instance not found), log `log.Printf("[CRUD] cdb_clone_instance id=%s", d.Id())` before calling `d.SetId("")`
+2. If the response items are empty (instance not found), log `log.Printf("[CRUD] mysql_clone_instance id=%s", d.Id())` before calling `d.SetId("")`
 3. If the instance is found, set schema fields from the response only when the response field is non-nil: `memory`, `volume`, `cpu`, `protect_mode`, `deploy_mode`, `device_type`, `instance_name`, `zone`, `project_id`, `deploy_group_id`, `uniq_vpc_id` (from `UniqVpcId`), `uniq_subnet_id` (from `UniqSubnetId`)
 4. Do NOT overwrite create-only/source fields (e.g. `instance_id`, `specified_rollback_time`, `specified_backup_id`) during Read — preserve the configured values
 
@@ -85,7 +82,7 @@ The resource Read operation SHALL call `DescribeDBInstances` with `InstanceIds` 
 
 #### Scenario: Reading a deleted instance
 - **WHEN** `DescribeDBInstances` returns an empty items list
-- **THEN** the resource SHALL log `[CRUD] cdb_clone_instance id=<id>` and call `d.SetId("")`
+- **THEN** the resource SHALL log `[CRUD] mysql_clone_instance id=<id>` and call `d.SetId("")`
 
 ### Requirement: Resource Update operation
 The resource Update operation SHALL call the `UpgradeDBInstance` cloud API to adjust instance configuration. Since `UpgradeDBInstance` is an async interface returning `AsyncRequestId`, the Update operation SHALL:
@@ -120,9 +117,8 @@ The resource Delete operation SHALL destroy the cloned instance using the `Offli
 - **THEN** the resource SHALL return nil without error (already deleted)
 
 ### Requirement: Provider registration
-The provider SHALL register the `tencentcloud_cdb_clone_instance` resource in `tencentcloud/provider.go` with the factory function `cdb.ResourceTencentCloudCdbCloneInstance()`, and SHALL add the corresponding entry to `tencentcloud/provider.md`.
+The provider SHALL register the `tencentcloud_mysql_clone_instance` resource in `tencentcloud/provider.go` with the factory function `cdb.ResourceTencentCloudMysqlCloneInstance()`, and SHALL add the corresponding entry to `tencentcloud/provider.md`.
 
 #### Scenario: Resource is available in the provider
 - **WHEN** the provider is initialized
-- **THEN** the `tencentcloud_cdb_clone_instance` resource type SHALL be registered and usable in Terraform configurations
-
+- **THEN** the `tencentcloud_mysql_clone_instance` resource type SHALL be registered and usable in Terraform configurations

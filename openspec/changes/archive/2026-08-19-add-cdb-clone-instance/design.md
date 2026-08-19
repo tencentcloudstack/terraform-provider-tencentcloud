@@ -17,7 +17,7 @@ This is a RESOURCE_KIND_GENERAL resource — it manages the full CRUD lifecycle 
 ## Goals / Non-Goals
 
 **Goals:**
-- Add a new Terraform resource `tencentcloud_cdb_clone_instance` to manage the full lifecycle of cloned CDB instances
+- Add a new Terraform resource `tencentcloud_mysql_clone_instance` to manage the full lifecycle of cloned CDB instances
 - Support creating a clone from a source instance with optional rollback time or backup set
 - Support async operation polling after Create and Update using `DescribeAsyncRequestInfo`
 - Support reading instance configuration from `DescribeDBInstances`
@@ -49,7 +49,7 @@ This is a RESOURCE_KIND_GENERAL resource — it manages the full CRUD lifecycle 
    3. Call Read to refresh state
    The polling uses `d.Timeout(schema.TimeoutUpdate)`.
 
-4. **Read Operation**: The Read operation calls `DescribeDBInstances` with `InstanceIds` set to `d.Id()` (the cloned instance ID). Following the existing `DescribeDBInstanceById` pattern, `QueryClusterInfo` is set to `true`. If the response items are empty, log `[CRUD] cdb_clone_instance id=<id>` before calling `d.SetId("")`. Fields are set only when the response field is non-nil.
+4. **Read Operation**: The Read operation calls `DescribeDBInstances` with `InstanceIds` set to `d.Id()` (the cloned instance ID). Following the existing `DescribeDBInstanceById` pattern, `QueryClusterInfo` is set to `true`. If the response items are empty, log `[CRUD] mysql_clone_instance id=<id>` before calling `d.SetId("")`. Fields are set only when the response field is non-nil.
 
 5. **Delete Operation**: The delete operation follows the existing pattern in `resource_tc_mysql_dr_instance.go`: first isolate the instance via `IsolateDBInstance`, poll `DescribeDBInstanceById` until status reaches `MYSQL_STATUS_ISOLATED`, then call `OfflineIsolatedInstances`. However, the user-specified delete API is `OfflineIsolatedInstances` only. To handle a freshly cloned instance (which may already be in a deletable state or require isolation first), the Delete operation SHALL: isolate via `IsolateDBInstance` (retry), poll until isolated, then call `OfflineIsolatedInstances`, then poll `DescribeIsolatedDBInstanceById` until the instance disappears. This reuses the proven delete flow from the existing CDB instance resources to ensure robustness. If isolation is unnecessary, the retry will still converge to the isolated state.
 
