@@ -46,6 +46,7 @@ In addition to all arguments above, the following attributes are exported:
   * `group_type` - Configuration group type. Valid values: l7_acceleration (L7 acceleration configuration group), edge_functions (Edge function configuration group).
   * `source_version` - Source version ID that the configuration group version was derived from. Format: ver-xxxxxxxx.
   * `status` - Version status. Valid values: creating (Being created), inactive (Not effective), active (Effective).
+  * `version_id` - Version ID.
   * `version_number` - Version No.
 
 
