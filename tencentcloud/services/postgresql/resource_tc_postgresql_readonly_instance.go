@@ -21,10 +21,11 @@ import (
 
 func ResourceTencentCloudPostgresqlReadonlyInstance() *schema.Resource {
 	return &schema.Resource{
-		Create: resourceTencentCloudPostgresqlReadOnlyInstanceCreate,
-		Read:   resourceTencentCloudPostgresqlReadOnlyInstanceRead,
-		Update: resourceTencentCloudPostgresqlReadOnlyInstanceUpdate,
-		Delete: resourceTencentCLoudPostgresqlReadOnlyInstanceDelete,
+		DeprecationMessage: "This resource has been deprecated in Terraform TencentCloud provider version 1.83.23. Please use `tencentcloud_postgresql_readonly_instance_v2` instead.",
+		Create:             resourceTencentCloudPostgresqlReadOnlyInstanceCreate,
+		Read:               resourceTencentCloudPostgresqlReadOnlyInstanceRead,
+		Update:             resourceTencentCloudPostgresqlReadOnlyInstanceUpdate,
+		Delete:             resourceTencentCLoudPostgresqlReadOnlyInstanceDelete,
 		Importer: &schema.ResourceImporter{
 			State: schema.ImportStatePassthrough,
 		},

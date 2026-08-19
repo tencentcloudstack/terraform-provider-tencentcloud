@@ -213,8 +213,33 @@ func ResourceTencentCloudAsScalingGroup() *schema.Resource {
 				Optional:    true,
 				Description: "Tags of a scaling group.",
 			},
+			"multi_zone_subnet_policy": {
+				Type:     schema.TypeString,
+				Optional: true,
+				Computed: true,
+				ValidateFunc: tccommon.ValidateAllowedStringValue([]string{MultiZoneSubnetPolicyPriority,
+					MultiZoneSubnetPolicyEquality}),
+				Description: "Multi zone or subnet strategy, Valid values: `PRIORITY` and `EQUALITY`.",
+			},
+			"instance_allocation_policy": {
+				Type:        schema.TypeString,
+				Computed:    true,
+				Optional:    true,
+				Description: "Instance allocation strategy, with values including `LAUNCH_CONFIGURATION` and `SPOT_MIXED`, defaults to `LAUNCH_CONFIGURATION`.\n`LAUNCH_CONFIGURATION`: Represents the traditional startup configuration mode;\n`SPOT_MIXED`: Representing the bidding mixed mode. At present, only hybrid mode is supported when the startup configuration is set to pay by volume mode. In hybrid mode, the scaling group will expand according to the set pay by volume or bidding models. When using hybrid mode, the billing type of the associated startup configuration cannot be modified.",
+			},
+			"concurrent_scale_out_for_desired_capacity": {
+				Type:        schema.TypeBool,
+				Computed:    true,
+				Optional:    true,
+				Description: "The concurrent expansion function that matches the expected number cannot be set when `instance_allocation_policy` is in bidding `SPOT_MIXED` mode, nor can it be set when `scaling_mode` is in expansion priority boot mode(`WAKE_UP_STOPPED_SCALING`). At present, only two matching expected expansion activities are supported concurrently, and other types of activities such as specified quantity expansion and contraction are not supported. The default value is False, indicating that it is not turned on.",
+			},
 
 			// computed value
+			"auto_scaling_group_id": {
+				Type:        schema.TypeString,
+				Computed:    true,
+				Description: "ID of a scaling group.",
+			},
 			"status": {
 				Type:        schema.TypeString,
 				Computed:    true,
@@ -229,13 +254,6 @@ func ResourceTencentCloudAsScalingGroup() *schema.Resource {
 				Type:        schema.TypeString,
 				Computed:    true,
 				Description: "The time when the AS group was created.",
-			},
-			"multi_zone_subnet_policy": {
-				Type:     schema.TypeString,
-				Optional: true,
-				ValidateFunc: tccommon.ValidateAllowedStringValue([]string{MultiZoneSubnetPolicyPriority,
-					MultiZoneSubnetPolicyEquality}),
-				Description: "Multi zone or subnet strategy, Valid values: PRIORITY and EQUALITY.",
 			},
 		},
 	}
@@ -376,6 +394,14 @@ func resourceTencentCloudAsScalingGroupCreate(d *schema.ResourceData, meta inter
 		}
 	}
 
+	if v, ok := d.GetOk("instance_allocation_policy"); ok {
+		request.InstanceAllocationPolicy = helper.String(v.(string))
+	}
+
+	if v, ok := d.GetOkExists("concurrent_scale_out_for_desired_capacity"); ok {
+		request.ConcurrentScaleOutForDesiredCapacity = helper.Bool(v.(bool))
+	}
+
 	var id string
 	if err := resource.Retry(tccommon.WriteRetryTimeout, func() *resource.RetryError {
 		ratelimit.Check(request.GetAction())
@@ -508,6 +534,18 @@ func resourceTencentCloudAsScalingGroupRead(d *schema.ResourceData, meta interfa
 		_ = d.Set("forward_balancer_ids", forwardLoadBalancers)
 	}
 
+	if scalingGroup.InstanceAllocationPolicy != nil {
+		_ = d.Set("instance_allocation_policy", scalingGroup.InstanceAllocationPolicy)
+	}
+
+	if scalingGroup.ConcurrentScaleOutForDesiredCapacity != nil {
+		_ = d.Set("concurrent_scale_out_for_desired_capacity", scalingGroup.ConcurrentScaleOutForDesiredCapacity)
+	}
+
+	if scalingGroup.AutoScalingGroupId != nil {
+		_ = d.Set("auto_scaling_group_id", scalingGroup.AutoScalingGroupId)
+	}
+
 	tcClient := meta.(tccommon.ProviderMeta).GetAPIV3Conn()
 	tagService := svctag.NewTagService(tcClient)
 	tags, err := tagService.DescribeResourceTags(ctx, "as", "auto-scaling-group", tcClient.Region, d.Id())
@@ -637,32 +675,48 @@ func resourceTencentCloudAsScalingGroupUpdate(d *schema.ResourceData, meta inter
 	}
 
 	if d.HasChange("health_check_type") || d.HasChange("lb_health_check_grace_period") {
+		updateAttrs = append(updateAttrs, "health_check_type", "lb_health_check_grace_period")
 		request.HealthCheckType = helper.String(d.Get("health_check_type").(string))
 		if v, ok := d.GetOkExists("lb_health_check_grace_period"); ok {
 			request.LoadBalancerHealthCheckGracePeriod = helper.IntUint64(v.(int))
 		}
 	}
 
-	if err := resource.Retry(tccommon.WriteRetryTimeout, func() *resource.RetryError {
-		ratelimit.Check(request.GetAction())
+	if d.HasChange("instance_allocation_policy") {
+		updateAttrs = append(updateAttrs, "instance_allocation_policy")
+		if v, ok := d.GetOk("instance_allocation_policy"); ok {
+			request.InstanceAllocationPolicy = helper.String(v.(string))
+		}
+	}
 
-		response, err := client.UseAsClient().ModifyAutoScalingGroup(request)
-		if err != nil {
-			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n",
-				logId, request.GetAction(), request.ToJsonString(), err.Error())
-			return tccommon.RetryError(err)
+	if d.HasChange("concurrent_scale_out_for_desired_capacity") {
+		updateAttrs = append(updateAttrs, "concurrent_scale_out_for_desired_capacity")
+		if v, ok := d.GetOkExists("concurrent_scale_out_for_desired_capacity"); ok {
+			request.ConcurrentScaleOutForDesiredCapacity = helper.Bool(v.(bool))
 		}
 
-		log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n",
-			logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+	}
 
-		return nil
-	}); err != nil {
-		return err
+	if len(updateAttrs) > 0 {
+		if err := resource.Retry(tccommon.WriteRetryTimeout, func() *resource.RetryError {
+			ratelimit.Check(request.GetAction())
+			response, err := client.UseAsClient().ModifyAutoScalingGroup(request)
+			if err != nil {
+				log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n",
+					logId, request.GetAction(), request.ToJsonString(), err.Error())
+				return tccommon.RetryError(err)
+			}
+
+			log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n",
+				logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+			return nil
+		}); err != nil {
+			return err
+		}
 	}
 
 	updateAttrs = updateAttrs[:0]
-
 	balancerRequest := as.NewModifyLoadBalancersRequest()
 	balancerRequest.AutoScalingGroupId = &scalingGroupId
 	if d.HasChange("load_balancer_ids") {
@@ -771,7 +825,7 @@ func resourceTencentCloudAsScalingGroupDelete(d *schema.ResourceData, meta inter
 		}
 	}
 
-	err = resource.Retry(d.Timeout(schema.TimeoutDelete), func() *resource.RetryError {
+	err = resource.Retry(tccommon.WriteRetryTimeout, func() *resource.RetryError {
 		if errRet := asService.DeleteScalingGroup(ctx, scalingGroupId); errRet != nil {
 			if sdkErr, ok := errRet.(*sdkErrors.TencentCloudSDKError); ok {
 				if sdkErr.Code == AsScalingGroupNotFound {
