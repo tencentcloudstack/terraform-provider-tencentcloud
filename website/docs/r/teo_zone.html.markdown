@@ -79,13 +79,8 @@ The following arguments are supported:
 
 The `work_mode_infos` object supports the following:
 
-* `config_group_type` - (Required, String) Configuration group type. Options are as follows:
-l7_acceleration: layer-7 acceleration configuration group;
-edge_functions: edge function configuration group;
-web_security: web protection configuration group.
-* `work_mode` - (Required, String) Working mode. options are as follows:
-immediate_effect: immediate effect mode;
-version_control: version control mode.
+* `config_group_type` - (Required, String) Configuration group type. Options are as follows:`l7_acceleration`: layer-7 acceleration configuration group;`edge_functions`: edge function configuration group;`web_security`: web protection configuration group.
+* `work_mode` - (Required, String) Working mode. options are as follows:`immediate_effect`: immediate effect mode;`version_control`: version control mode.
 
 ## Attributes Reference
 

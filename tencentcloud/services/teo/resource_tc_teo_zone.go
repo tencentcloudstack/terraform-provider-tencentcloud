@@ -135,12 +135,12 @@ func ResourceTencentCloudTeoZone() *schema.Resource {
 						"config_group_type": {
 							Type:        schema.TypeString,
 							Required:    true,
-							Description: "Configuration group type. Options are as follows:\nl7_acceleration: layer-7 acceleration configuration group;\nedge_functions: edge function configuration group;\nweb_security: web protection configuration group.",
+							Description: "Configuration group type. Options are as follows:`l7_acceleration`: layer-7 acceleration configuration group;`edge_functions`: edge function configuration group;`web_security`: web protection configuration group.",
 						},
 						"work_mode": {
 							Type:        schema.TypeString,
 							Required:    true,
-							Description: "Working mode. options are as follows:\nimmediate_effect: immediate effect mode;\nversion_control: version control mode.",
+							Description: "Working mode. options are as follows:`immediate_effect`: immediate effect mode;`version_control`: version control mode.",
 						},
 					},
 				},
