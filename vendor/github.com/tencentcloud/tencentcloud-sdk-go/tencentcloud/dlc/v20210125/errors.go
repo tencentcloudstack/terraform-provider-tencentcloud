@@ -44,6 +44,9 @@ const (
 	// 绑定的标签数量超出限制。
 	FAILEDOPERATION_BINDTOOMANYTAGS = "FailedOperation.BindTooManyTags"
 
+	// 集群组不存在
+	FAILEDOPERATION_CLUSTERGROUPNOTFOUND = "FailedOperation.ClusterGroupNotFound"
+
 	// 创建引擎失败。
 	FAILEDOPERATION_CREATEDATAENGINEFAILED = "FailedOperation.CreateDataEngineFailed"
 
@@ -55,6 +58,15 @@ const (
 
 	// 重复的标签键。
 	FAILEDOPERATION_DUPLICATETAGKEY = "FailedOperation.DuplicateTagKey"
+
+	// 案例服务请求失败
+	FAILEDOPERATION_EXAMPLE = "FailedOperation.Example"
+
+	// 案例不存在
+	FAILEDOPERATION_EXAMPLENOTFOUND = "FailedOperation.ExampleNotFound"
+
+	// 外部服务异常
+	FAILEDOPERATION_EXTERNALSERVICE = "FailedOperation.ExternalService"
 
 	// 扣费失败。
 	FAILEDOPERATION_FEEDEDUCTIONFAILED = "FailedOperation.FeeDeductionFailed"
@@ -95,6 +107,21 @@ const (
 	// Invalid NetworkConnectionType
 	FAILEDOPERATION_INVALIDNETWORKCONNECTIONTYPE = "FailedOperation.InvalidNetworkConnectionType"
 
+	// 数据实验室正处于过渡状态：数据实验室正在状态转换中（启动中/停止中/删除中），请稍后重试
+	FAILEDOPERATION_LABINTRANSITION = "FailedOperation.LabInTransition"
+
+	// 数据实验室不存在：数据实验室不存在，请检查数据实验室标识
+	FAILEDOPERATION_LABNOTFOUND = "FailedOperation.LabNotFound"
+
+	// 实验室未运行
+	FAILEDOPERATION_LABNOTRUNNING = "FailedOperation.LabNotRunning"
+
+	// 数据实验室当前状态不允许修改：仅在停止或异常状态下可修改配置，请先停止数据实验室后重试
+	FAILEDOPERATION_LABNOTUPDATABLE = "FailedOperation.LabNotUpdatable"
+
+	// 数据实验室正在运行中：数据实验室正在运行中，请稍后重试
+	FAILEDOPERATION_LABRUNNING = "FailedOperation.LabRunning"
+
 	// 元数据错误，请重试，或者提交工单联系我们
 	FAILEDOPERATION_METASTOREERROR = "FailedOperation.MetastoreError"
 
@@ -119,6 +146,9 @@ const (
 	// 采购数量超过限制。
 	FAILEDOPERATION_NUMBEREXCEEDLIMIT = "FailedOperation.NumberExceedLimit"
 
+	// 其他异常：服务遇到未知问题，请稍后再试。
+	FAILEDOPERATION_OTHEREXCEPTION = "FailedOperation.OtherException"
+
 	// 参数校验失败。
 	FAILEDOPERATION_PARAMETERVALIDATIONFAILED = "FailedOperation.ParameterValidationFailed"
 
@@ -133,6 +163,9 @@ const (
 
 	// 语法解析失败，请校验后重试
 	FAILEDOPERATION_SQLTASKPARSEFAILED = "FailedOperation.SQLTaskParseFailed"
+
+	// SQL任务结果超出限制
+	FAILEDOPERATION_SQLTASKRESULTOVERSIZE = "FailedOperation.SQLTaskResultOversize"
 
 	// 资源已经绑定了同名标签键。
 	FAILEDOPERATION_TAGALREADYATTACHED = "FailedOperation.TagAlreadyAttached"
@@ -398,6 +431,9 @@ const (
 	// SQL解析失败。
 	INVALIDPARAMETER_INVALIDSQL = "InvalidParameter.InvalidSQL"
 
+	// 传入的 SQL 配置参数不合法
+	INVALIDPARAMETER_INVALIDSQLCONFIG = "InvalidParameter.InvalidSQLConfig"
+
 	// 参数校验失败，请调整参数，或者提交工单联系我们
 	INVALIDPARAMETER_INVALIDSQLCONFIGSQL = "InvalidParameter.InvalidSQLConfigSQL"
 
@@ -500,6 +536,9 @@ const (
 	// 权限类型冲突。
 	INVALIDPARAMETER_POLICYTYPECONFLICT = "InvalidParameter.PolicyTypeConflict"
 
+	// 参数错误：资源规格组不存在
+	INVALIDPARAMETER_RESOURCESPECNOTFOUND = "InvalidParameter.ResourceSpecNotFound"
+
 	// SQL脚本Base64解析失败
 	INVALIDPARAMETER_SQLBASE64DECODEFAIL = "InvalidParameter.SQLBase64DecodeFail"
 
@@ -563,8 +602,20 @@ const (
 	// Vpc cidr重叠。
 	INVALIDPARAMETER_VPCCIDROVERLAP = "InvalidParameter.VpcCidrOverlap"
 
+	// 无效参数组合
+	INVALIDPARAMETERCOMBINATION = "InvalidParameterCombination"
+
 	// 参数取值错误。
 	INVALIDPARAMETERVALUE = "InvalidParameterValue"
+
+	// 队列 Id 与 PartitionCode/QueueName 不一致
+	INVALIDPARAMETERVALUE_QUEUEIDMISMATCH = "InvalidParameterValue.QueueIdMismatch"
+
+	// 队列名称格式不合法
+	INVALIDPARAMETERVALUE_QUEUENAME = "InvalidParameterValue.QueueName"
+
+	// 申请资源配额超过分区可用额度
+	INVALIDPARAMETERVALUE_QUOTAEXCEEDED = "InvalidParameterValue.QuotaExceeded"
 
 	// 超过配额限制。
 	LIMITEXCEEDED = "LimitExceeded"
@@ -575,11 +626,20 @@ const (
 	// 操作被拒绝。
 	OPERATIONDENIED = "OperationDenied"
 
+	// 默认队列不允许删除
+	OPERATIONDENIED_DEFAULTQUEUEDELETEFORBIDDEN = "OperationDenied.DefaultQueueDeleteForbidden"
+
+	// 资源分区当前状态不允许该操作
+	OPERATIONDENIED_PARTITIONNOTREADY = "OperationDenied.PartitionNotReady"
+
 	// 地域错误
 	REGIONERROR = "RegionError"
 
 	// 资源被占用。
 	RESOURCEINUSE = "ResourceInUse"
+
+	// 同一分区下队列名称已存在
+	RESOURCEINUSE_QUEUENAME = "ResourceInUse.QueueName"
 
 	// 有SQL任务尚未执行完成。
 	RESOURCEINUSE_UNFINISHEDSQLS = "ResourceInUse.UnfinishedSQLs"
@@ -650,6 +710,12 @@ const (
 	// 该网络连接不存在
 	RESOURCENOTFOUND_NETWORKCONNECTIONNOTFOUND = "ResourceNotFound.NetworkConnectionNotFound"
 
+	// 资源包Partition不存在
+	RESOURCENOTFOUND_PARTITION = "ResourceNotFound.Partition"
+
+	// 资源组不存在
+	RESOURCENOTFOUND_PARTITIONQUEUE = "ResourceNotFound.PartitionQueue"
+
 	// 网关不存在
 	RESOURCENOTFOUND_RESOURCENOTFOUNDCODE_GATEWAYNOTFOUND = "ResourceNotFound.ResourceNotFoundCode_GatewayNotFound"
 
@@ -682,6 +748,9 @@ const (
 
 	// 任务资源不足，请调整driver或executor指定规格大小
 	RESOURCENOTFOUND_SPARKJOBINSUFFICIENTRESOURCES = "ResourceNotFound.SparkJobInsufficientResources"
+
+	// 系统文件错误，请重试，或者提交工单联系我们
+	RESOURCENOTFOUND_SYSTEMCONFIGNOTFOUND = "ResourceNotFound.SystemConfigNotFound"
 
 	// 表不存在，请重试，或者提交工单联系我们
 	RESOURCENOTFOUND_TABLENOTFOUND = "ResourceNotFound.TableNotFound"

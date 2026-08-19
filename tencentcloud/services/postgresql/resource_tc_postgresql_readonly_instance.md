@@ -1,5 +1,7 @@
 Use this resource to create postgresql readonly instance.
 
+~~> **NOTE:** This resource has been deprecated in Terraform TencentCloud provider version 1.83.23. Please use `tencentcloud_postgresql_readonly_instance_v2` instead.
+
 Example Usage
 
 Create postgresql readonly instance
