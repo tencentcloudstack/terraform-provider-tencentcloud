@@ -1,7 +1,6 @@
 package teo
 
 import (
-	"fmt"
 	"log"
 
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
@@ -117,7 +116,8 @@ func dataSourceTencentCloudTeoIPGroupReferencesRead(d *schema.ResourceData, meta
 			}
 
 			if resp == nil || resp.Response == nil || len(resp.Response.References) == 0 {
-				return resource.NonRetryableError(fmt.Errorf("teo_ip_group_references DescribeIPGroupReferences response is empty, zone_id=%s, group_id=%d", d.Get("zone_id"), d.Get("group_id")))
+				log.Printf("teo_ip_group_references DescribeIPGroupReferences response is empty, zone_id=%s, group_id=%d", d.Get("zone_id"), d.Get("group_id"))
+				return nil
 			}
 
 			response = resp
