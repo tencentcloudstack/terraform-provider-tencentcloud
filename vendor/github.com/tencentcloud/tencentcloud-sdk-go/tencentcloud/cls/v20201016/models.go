@@ -255,74 +255,57 @@ type AlarmInfo struct {
 }
 
 type AlarmNotice struct {
-	// 告警通知渠道组名称。
+	// <p>告警通知渠道组名称。</p>
 	Name *string `json:"Name,omitnil,omitempty" name:"Name"`
 
-	// 告警通知渠道组绑定的标签信息。
+	// <p>告警通知渠道组绑定的标签信息。</p>
 	Tags []*Tag `json:"Tags,omitnil,omitempty" name:"Tags"`
 
-	// 告警模板的类型。可选值：
-	// <br><li> Trigger - 告警触发</li>
-	// <br><li> Recovery - 告警恢复</li>
-	// <br><li> All - 告警触发和告警恢复</li>
+	// <p>告警模板的类型。可选值：<br><br><li> Trigger - 告警触发</li><br><br><li> Recovery - 告警恢复</li><br><br><li> All - 告警触发和告警恢复</li></p>
 	Type *string `json:"Type,omitnil,omitempty" name:"Type"`
 
-	// 告警通知模板接收者信息。
+	// <p>告警通知模板接收者信息。</p>
 	NoticeReceivers []*NoticeReceiver `json:"NoticeReceivers,omitnil,omitempty" name:"NoticeReceivers"`
 
-	// 告警通知模板回调信息。
+	// <p>告警通知模板回调信息。</p>
 	WebCallbacks []*WebCallback `json:"WebCallbacks,omitnil,omitempty" name:"WebCallbacks"`
 
-	// 告警通知模板ID。
+	// <p>告警通知模板ID。</p>
 	AlarmNoticeId *string `json:"AlarmNoticeId,omitnil,omitempty" name:"AlarmNoticeId"`
 
-	// 通知规则。
+	// <p>通知规则。</p>
 	NoticeRules []*NoticeRule `json:"NoticeRules,omitnil,omitempty" name:"NoticeRules"`
 
-	// 免登录操作告警开关。
-	// 参数值： 1：关闭 2：开启（默认开启）
+	// <p>免登录操作告警开关。<br>参数值： 1：关闭 2：开启（默认开启）</p>
 	AlarmShieldStatus *uint64 `json:"AlarmShieldStatus,omitnil,omitempty" name:"AlarmShieldStatus"`
 
-	// 调用链接域名。http:// 或者 https:// 开头，不能/结尾
+	// <p>告警详情需要安全认证登录开关，未传时默认&quot;关闭&quot;</p><p>枚举值：</p><ul><li>1： 关闭（默认值）</li><li>2： 开启</li></ul>
+	SecureDetailStatus *uint64 `json:"SecureDetailStatus,omitnil,omitempty" name:"SecureDetailStatus"`
+
+	// <p>调用链接域名。http:// 或者 https:// 开头，不能/结尾</p>
 	JumpDomain *string `json:"JumpDomain,omitnil,omitempty" name:"JumpDomain"`
 
-	// 投递相关信息。
+	// <p>投递相关信息。</p>
 	// 注意：此字段可能返回 null，表示取不到有效值。
 	AlarmNoticeDeliverConfig *AlarmNoticeDeliverConfig `json:"AlarmNoticeDeliverConfig,omitnil,omitempty" name:"AlarmNoticeDeliverConfig"`
 
-	// 创建时间。格式： YYYY-MM-DD HH:MM:SS
+	// <p>创建时间。格式： YYYY-MM-DD HH:MM:SS</p>
 	CreateTime *string `json:"CreateTime,omitnil,omitempty" name:"CreateTime"`
 
-	// 最近更新时间。格式： YYYY-MM-DD HH:MM:SS
+	// <p>最近更新时间。格式： YYYY-MM-DD HH:MM:SS</p>
 	UpdateTime *string `json:"UpdateTime,omitnil,omitempty" name:"UpdateTime"`
 
-	// 投递日志开关。
-	// 
-	// 参数值：
-	// 
-	// 1：关闭
-	// 
-	// 2：开启 
+	// <p>投递日志开关。</p><p>参数值：</p><p>1：关闭</p><p>2：开启</p>
 	DeliverStatus *uint64 `json:"DeliverStatus,omitnil,omitempty" name:"DeliverStatus"`
 
-	// 投递日志标识。
-	// 
-	// 参数值：
-	// 
-	// 1：未启用
-	// 
-	// 2：已启用
-	// 
-	// 3：投递异常
+	// <p>投递日志标识。</p><p>参数值：</p><p>1：未启用</p><p>2：已启用</p><p>3：投递异常</p>
 	DeliverFlag *uint64 `json:"DeliverFlag,omitnil,omitempty" name:"DeliverFlag"`
 
-	// 通知渠道组配置的告警屏蔽统计状态数量信息。
+	// <p>通知渠道组配置的告警屏蔽统计状态数量信息。</p>
 	// 注意：此字段可能返回 null，表示取不到有效值。
 	AlarmShieldCount *AlarmShieldCount `json:"AlarmShieldCount,omitnil,omitempty" name:"AlarmShieldCount"`
 
-	// 统一设定自定义回调参数。
-	// -  true: 使用通知内容模板中的自定义回调参数覆盖告警策略中单独配置的请求头及请求内容。
-	// -  false:优先使用告警策略中单独配置的请求头及请求内容。
+	// <p>统一设定自定义回调参数。</p><ul><li>true: 使用通知内容模板中的自定义回调参数覆盖告警策略中单独配置的请求头及请求内容。</li><li>false:优先使用告警策略中单独配置的请求头及请求内容。</li></ul>
 	CallbackPrioritize *bool `json:"CallbackPrioritize,omitnil,omitempty" name:"CallbackPrioritize"`
 }
 
@@ -1910,7 +1893,7 @@ type CreateAgentApplicationRequestParams struct {
 	// <p>应用名称</p><p>入参限制：</p><ul><li>不能为空字符串</li><li>不能包含字符<code>|</code></li><li>不能超过64字符</li></ul>
 	ApplicationName *string `json:"ApplicationName,omitnil,omitempty" name:"ApplicationName"`
 
-	// <p>接入类型</p><p>枚举值：</p><ul><li>Langfuse： Langfuse 是一款开源的 LLM（大语言模型）工程与可观测性平台（LLMOps Tool）</li></ul>
+	// <p>接入类型</p><p>枚举值：</p><ul><li>Langfuse： Langfuse 是一款开源的 LLM（大语言模型）工程与可观测性平台（LLMOps Tool）</li><li>Agent： 用户创建 Agent 应用时，系统按统一规范自动创建对应的 CLS 主题（Topic），并为主题打上统一标签，便于后续在 Agent 可观测场景下做统一管理与检索。</li></ul>
 	AccessType *string `json:"AccessType,omitnil,omitempty" name:"AccessType"`
 
 	// <p>日志集Id。通过 <a href="https://cloud.tencent.com/document/product/614/58624">获取日志集列表</a>获取日志集Id。</p>
@@ -1923,7 +1906,7 @@ type CreateAgentApplicationRequest struct {
 	// <p>应用名称</p><p>入参限制：</p><ul><li>不能为空字符串</li><li>不能包含字符<code>|</code></li><li>不能超过64字符</li></ul>
 	ApplicationName *string `json:"ApplicationName,omitnil,omitempty" name:"ApplicationName"`
 
-	// <p>接入类型</p><p>枚举值：</p><ul><li>Langfuse： Langfuse 是一款开源的 LLM（大语言模型）工程与可观测性平台（LLMOps Tool）</li></ul>
+	// <p>接入类型</p><p>枚举值：</p><ul><li>Langfuse： Langfuse 是一款开源的 LLM（大语言模型）工程与可观测性平台（LLMOps Tool）</li><li>Agent： 用户创建 Agent 应用时，系统按统一规范自动创建对应的 CLS 主题（Topic），并为主题打上统一标签，便于后续在 Agent 可观测场景下做统一管理与检索。</li></ul>
 	AccessType *string `json:"AccessType,omitnil,omitempty" name:"AccessType"`
 
 	// <p>日志集Id。通过 <a href="https://cloud.tencent.com/document/product/614/58624">获取日志集列表</a>获取日志集Id。</p>
@@ -1984,102 +1967,80 @@ func (r *CreateAgentApplicationResponse) FromJsonString(s string) error {
 
 // Predefined struct for user
 type CreateAlarmNoticeRequestParams struct {
-	// 通知渠道组名称。最大支持255个字节。 不支持 '|'。
+	// <p>通知渠道组名称。最大支持255个字节。 不支持 &#39;|&#39;。</p>
 	Name *string `json:"Name,omitnil,omitempty" name:"Name"`
 
-	// 标签描述列表，通过指定该参数可以同时绑定标签到相应的通知渠道组。最大支持50个标签键值对，并且不能有重复的键值对。
+	// <p>标签描述列表，通过指定该参数可以同时绑定标签到相应的通知渠道组。最大支持50个标签键值对，并且不能有重复的键值对。</p>
 	Tags []*Tag `json:"Tags,omitnil,omitempty" name:"Tags"`
 
-	// 【简易模式】（简易模式/告警模式二选一，分别配置相应参数）
-	// 需要发送通知的告警类型。可选值：
-	// - Trigger - 告警触发
-	// - Recovery - 告警恢复
-	// - All - 告警触发和告警恢复
+	// <p>【简易模式】（简易模式/告警模式二选一，分别配置相应参数）<br>需要发送通知的告警类型。可选值：</p><ul><li>Trigger - 告警触发</li><li>Recovery - 告警恢复</li><li>All - 告警触发和告警恢复</li></ul>
 	Type *string `json:"Type,omitnil,omitempty" name:"Type"`
 
-	// 【简易模式】（简易模式/告警模式二选一，分别配置相应参数）
-	// 通知接收对象。
+	// <p>【简易模式】（简易模式/告警模式二选一，分别配置相应参数）<br>通知接收对象。</p>
 	NoticeReceivers []*NoticeReceiver `json:"NoticeReceivers,omitnil,omitempty" name:"NoticeReceivers"`
 
-	// 【简易模式】（简易模式/告警模式二选一，分别配置相应参数）
-	// 接口回调信息（包括企业微信、钉钉、飞书）。
+	// <p>【简易模式】（简易模式/告警模式二选一，分别配置相应参数）<br>接口回调信息（包括企业微信、钉钉、飞书）。</p>
 	WebCallbacks []*WebCallback `json:"WebCallbacks,omitnil,omitempty" name:"WebCallbacks"`
 
-	// 【高级模式】（简易模式/告警模式二选一，分别配置相应参数）
-	// 通知规则。
+	// <p>【高级模式】（简易模式/告警模式二选一，分别配置相应参数）<br>通知规则。</p>
 	NoticeRules []*NoticeRule `json:"NoticeRules,omitnil,omitempty" name:"NoticeRules"`
 
-	// 查询数据链接。http:// 或者 https:// 开头，不能/结尾
+	// <p>查询数据链接。http:// 或者 https:// 开头，不能/结尾</p>
 	JumpDomain *string `json:"JumpDomain,omitnil,omitempty" name:"JumpDomain"`
 
-	// 投递日志开关。可取值如下：
-	// 1：关闭（默认值）；
-	// 2：开启 
-	// 投递日志开关开启时， DeliverConfig参数必填。
+	// <p>投递日志开关。可取值如下：<br>1：关闭（默认值）；<br>2：开启<br>投递日志开关开启时， DeliverConfig参数必填。</p>
 	DeliverStatus *uint64 `json:"DeliverStatus,omitnil,omitempty" name:"DeliverStatus"`
 
-	// 投递日志配置参数。当DeliverStatus开启时，必填。
+	// <p>投递日志配置参数。当DeliverStatus开启时，必填。</p>
 	DeliverConfig *DeliverConfig `json:"DeliverConfig,omitnil,omitempty" name:"DeliverConfig"`
 
-	// 免登录操作告警开关。可取值如下：
-	// -      1：关闭
-	// -      2：开启（默认值）
+	// <p>免登录操作告警开关。可取值如下：</p><ul><li>1：关闭</li><li>2：开启（默认值）</li></ul>
 	AlarmShieldStatus *uint64 `json:"AlarmShieldStatus,omitnil,omitempty" name:"AlarmShieldStatus"`
 
-	// 统一设定自定义回调参数。
-	// -  true: 使用通知内容模板中的自定义回调参数覆盖告警策略中单独配置的请求头及请求内容。
-	// -  false:优先使用告警策略中单独配置的请求头及请求内容。
+	// <p>告警详情安全认证跳转开关，未传时默认&quot;关闭&quot;</p><p>枚举值：</p><ul><li>1： 关闭（默认值）</li><li>2： 开启</li></ul>
+	SecureDetailStatus *uint64 `json:"SecureDetailStatus,omitnil,omitempty" name:"SecureDetailStatus"`
+
+	// <p>统一设定自定义回调参数。</p><ul><li>true: 使用通知内容模板中的自定义回调参数覆盖告警策略中单独配置的请求头及请求内容。</li><li>false:优先使用告警策略中单独配置的请求头及请求内容。</li></ul>
 	CallbackPrioritize *bool `json:"CallbackPrioritize,omitnil,omitempty" name:"CallbackPrioritize"`
 }
 
 type CreateAlarmNoticeRequest struct {
 	*tchttp.BaseRequest
 	
-	// 通知渠道组名称。最大支持255个字节。 不支持 '|'。
+	// <p>通知渠道组名称。最大支持255个字节。 不支持 &#39;|&#39;。</p>
 	Name *string `json:"Name,omitnil,omitempty" name:"Name"`
 
-	// 标签描述列表，通过指定该参数可以同时绑定标签到相应的通知渠道组。最大支持50个标签键值对，并且不能有重复的键值对。
+	// <p>标签描述列表，通过指定该参数可以同时绑定标签到相应的通知渠道组。最大支持50个标签键值对，并且不能有重复的键值对。</p>
 	Tags []*Tag `json:"Tags,omitnil,omitempty" name:"Tags"`
 
-	// 【简易模式】（简易模式/告警模式二选一，分别配置相应参数）
-	// 需要发送通知的告警类型。可选值：
-	// - Trigger - 告警触发
-	// - Recovery - 告警恢复
-	// - All - 告警触发和告警恢复
+	// <p>【简易模式】（简易模式/告警模式二选一，分别配置相应参数）<br>需要发送通知的告警类型。可选值：</p><ul><li>Trigger - 告警触发</li><li>Recovery - 告警恢复</li><li>All - 告警触发和告警恢复</li></ul>
 	Type *string `json:"Type,omitnil,omitempty" name:"Type"`
 
-	// 【简易模式】（简易模式/告警模式二选一，分别配置相应参数）
-	// 通知接收对象。
+	// <p>【简易模式】（简易模式/告警模式二选一，分别配置相应参数）<br>通知接收对象。</p>
 	NoticeReceivers []*NoticeReceiver `json:"NoticeReceivers,omitnil,omitempty" name:"NoticeReceivers"`
 
-	// 【简易模式】（简易模式/告警模式二选一，分别配置相应参数）
-	// 接口回调信息（包括企业微信、钉钉、飞书）。
+	// <p>【简易模式】（简易模式/告警模式二选一，分别配置相应参数）<br>接口回调信息（包括企业微信、钉钉、飞书）。</p>
 	WebCallbacks []*WebCallback `json:"WebCallbacks,omitnil,omitempty" name:"WebCallbacks"`
 
-	// 【高级模式】（简易模式/告警模式二选一，分别配置相应参数）
-	// 通知规则。
+	// <p>【高级模式】（简易模式/告警模式二选一，分别配置相应参数）<br>通知规则。</p>
 	NoticeRules []*NoticeRule `json:"NoticeRules,omitnil,omitempty" name:"NoticeRules"`
 
-	// 查询数据链接。http:// 或者 https:// 开头，不能/结尾
+	// <p>查询数据链接。http:// 或者 https:// 开头，不能/结尾</p>
 	JumpDomain *string `json:"JumpDomain,omitnil,omitempty" name:"JumpDomain"`
 
-	// 投递日志开关。可取值如下：
-	// 1：关闭（默认值）；
-	// 2：开启 
-	// 投递日志开关开启时， DeliverConfig参数必填。
+	// <p>投递日志开关。可取值如下：<br>1：关闭（默认值）；<br>2：开启<br>投递日志开关开启时， DeliverConfig参数必填。</p>
 	DeliverStatus *uint64 `json:"DeliverStatus,omitnil,omitempty" name:"DeliverStatus"`
 
-	// 投递日志配置参数。当DeliverStatus开启时，必填。
+	// <p>投递日志配置参数。当DeliverStatus开启时，必填。</p>
 	DeliverConfig *DeliverConfig `json:"DeliverConfig,omitnil,omitempty" name:"DeliverConfig"`
 
-	// 免登录操作告警开关。可取值如下：
-	// -      1：关闭
-	// -      2：开启（默认值）
+	// <p>免登录操作告警开关。可取值如下：</p><ul><li>1：关闭</li><li>2：开启（默认值）</li></ul>
 	AlarmShieldStatus *uint64 `json:"AlarmShieldStatus,omitnil,omitempty" name:"AlarmShieldStatus"`
 
-	// 统一设定自定义回调参数。
-	// -  true: 使用通知内容模板中的自定义回调参数覆盖告警策略中单独配置的请求头及请求内容。
-	// -  false:优先使用告警策略中单独配置的请求头及请求内容。
+	// <p>告警详情安全认证跳转开关，未传时默认&quot;关闭&quot;</p><p>枚举值：</p><ul><li>1： 关闭（默认值）</li><li>2： 开启</li></ul>
+	SecureDetailStatus *uint64 `json:"SecureDetailStatus,omitnil,omitempty" name:"SecureDetailStatus"`
+
+	// <p>统一设定自定义回调参数。</p><ul><li>true: 使用通知内容模板中的自定义回调参数覆盖告警策略中单独配置的请求头及请求内容。</li><li>false:优先使用告警策略中单独配置的请求头及请求内容。</li></ul>
 	CallbackPrioritize *bool `json:"CallbackPrioritize,omitnil,omitempty" name:"CallbackPrioritize"`
 }
 
@@ -2105,6 +2066,7 @@ func (r *CreateAlarmNoticeRequest) FromJsonString(s string) error {
 	delete(f, "DeliverStatus")
 	delete(f, "DeliverConfig")
 	delete(f, "AlarmShieldStatus")
+	delete(f, "SecureDetailStatus")
 	delete(f, "CallbackPrioritize")
 	if len(f) > 0 {
 		return tcerr.NewTencentCloudSDKError("ClientError.BuildRequestError", "CreateAlarmNoticeRequest has unknown keys!", "")
@@ -2114,7 +2076,7 @@ func (r *CreateAlarmNoticeRequest) FromJsonString(s string) error {
 
 // Predefined struct for user
 type CreateAlarmNoticeResponseParams struct {
-	// 告警模板ID
+	// <p>告警模板ID</p>
 	AlarmNoticeId *string `json:"AlarmNoticeId,omitnil,omitempty" name:"AlarmNoticeId"`
 
 	// 唯一请求 ID，由服务端生成，每次请求都会返回（若请求因其他原因未能抵达服务端，则该次请求不会获得 RequestId）。定位问题时需要提供该次请求的 RequestId。
@@ -4703,38 +4665,26 @@ func (r *CreateKafkaRechargeResponse) FromJsonString(s string) error {
 
 // Predefined struct for user
 type CreateLogsetRequestParams struct {
-	// 日志集名字。
-	// 
-	// - 最大支持255个字符。不支持`|`字符。
+	// <p>日志集名字。</p><ul><li>最大支持255个字符。不支持<code>|</code>字符。</li></ul>
 	LogsetName *string `json:"LogsetName,omitnil,omitempty" name:"LogsetName"`
 
-	// 标签描述列表。最大支持10个标签键值对，并且不能有重复的键值对
+	// <p>标签描述列表。最大支持10个标签键值对，并且不能有重复的键值对</p>
 	Tags []*Tag `json:"Tags,omitnil,omitempty" name:"Tags"`
 
-	// 日志集ID，格式为：用户自定义部分-用户APPID。未填写该参数时将自动生成ID。
-	// 
-	// - 用户自定义部分仅支持小写字母、数字和-，且不能以-开头和结尾，长度为3至40字符。
-	// - 尾部需要使用-拼接用户APPID，APPID可在https://console.cloud.tencent.com/developer页面查询。
-	// - 如果指定该字段，需保证全地域唯一
+	// <p>日志集ID，格式为：用户自定义部分-用户APPID。未填写该参数时将自动生成ID。</p><ul><li>用户自定义部分仅支持小写字母、数字和-，且不能以-开头和结尾，长度为3至40字符。</li><li>尾部需要使用-拼接用户APPID，APPID可在https://console.cloud.tencent.com/developer页面查询。</li><li>如果指定该字段，需保证全地域唯一</li></ul>
 	LogsetId *string `json:"LogsetId,omitnil,omitempty" name:"LogsetId"`
 }
 
 type CreateLogsetRequest struct {
 	*tchttp.BaseRequest
 	
-	// 日志集名字。
-	// 
-	// - 最大支持255个字符。不支持`|`字符。
+	// <p>日志集名字。</p><ul><li>最大支持255个字符。不支持<code>|</code>字符。</li></ul>
 	LogsetName *string `json:"LogsetName,omitnil,omitempty" name:"LogsetName"`
 
-	// 标签描述列表。最大支持10个标签键值对，并且不能有重复的键值对
+	// <p>标签描述列表。最大支持10个标签键值对，并且不能有重复的键值对</p>
 	Tags []*Tag `json:"Tags,omitnil,omitempty" name:"Tags"`
 
-	// 日志集ID，格式为：用户自定义部分-用户APPID。未填写该参数时将自动生成ID。
-	// 
-	// - 用户自定义部分仅支持小写字母、数字和-，且不能以-开头和结尾，长度为3至40字符。
-	// - 尾部需要使用-拼接用户APPID，APPID可在https://console.cloud.tencent.com/developer页面查询。
-	// - 如果指定该字段，需保证全地域唯一
+	// <p>日志集ID，格式为：用户自定义部分-用户APPID。未填写该参数时将自动生成ID。</p><ul><li>用户自定义部分仅支持小写字母、数字和-，且不能以-开头和结尾，长度为3至40字符。</li><li>尾部需要使用-拼接用户APPID，APPID可在https://console.cloud.tencent.com/developer页面查询。</li><li>如果指定该字段，需保证全地域唯一</li></ul>
 	LogsetId *string `json:"LogsetId,omitnil,omitempty" name:"LogsetId"`
 }
 
@@ -4761,7 +4711,7 @@ func (r *CreateLogsetRequest) FromJsonString(s string) error {
 
 // Predefined struct for user
 type CreateLogsetResponseParams struct {
-	// 日志集ID
+	// <p>日志集ID</p>
 	LogsetId *string `json:"LogsetId,omitnil,omitempty" name:"LogsetId"`
 
 	// 唯一请求 ID，由服务端生成，每次请求都会返回（若请求因其他原因未能抵达服务端，则该次请求不会获得 RequestId）。定位问题时需要提供该次请求的 RequestId。
@@ -8427,6 +8377,84 @@ func (r *DeleteKafkaRechargeResponse) ToJsonString() string {
 // FromJsonString It is highly **NOT** recommended to use this function
 // because it has no param check, nor strict type check
 func (r *DeleteKafkaRechargeResponse) FromJsonString(s string) error {
+	return json.Unmarshal([]byte(s), &r)
+}
+
+// Predefined struct for user
+type DeleteLogRequestParams struct {
+	// <p>日志主题id</p><p>仅在创建日志主题时，开启了日志修改/删除开关的主题，支持日志修改/删除。该功能暂时仅面向白名单内客户使用。</p>
+	TopicId *string `json:"TopicId,omitnil,omitempty" name:"TopicId"`
+
+	// <p>检索时间范围-开始时间</p><p>单位：ms</p>
+	From *int64 `json:"From,omitnil,omitempty" name:"From"`
+
+	// <p>检索时间范围-结束时间</p><p>单位：ms</p>
+	To *int64 `json:"To,omitnil,omitempty" name:"To"`
+
+	// <p>日志检索条件，仅支持 CQL 语法，不支持 Lucene 语法</p><p>对符合检索条件的日志进行删除</p>
+	QueryString *string `json:"QueryString,omitnil,omitempty" name:"QueryString"`
+}
+
+type DeleteLogRequest struct {
+	*tchttp.BaseRequest
+	
+	// <p>日志主题id</p><p>仅在创建日志主题时，开启了日志修改/删除开关的主题，支持日志修改/删除。该功能暂时仅面向白名单内客户使用。</p>
+	TopicId *string `json:"TopicId,omitnil,omitempty" name:"TopicId"`
+
+	// <p>检索时间范围-开始时间</p><p>单位：ms</p>
+	From *int64 `json:"From,omitnil,omitempty" name:"From"`
+
+	// <p>检索时间范围-结束时间</p><p>单位：ms</p>
+	To *int64 `json:"To,omitnil,omitempty" name:"To"`
+
+	// <p>日志检索条件，仅支持 CQL 语法，不支持 Lucene 语法</p><p>对符合检索条件的日志进行删除</p>
+	QueryString *string `json:"QueryString,omitnil,omitempty" name:"QueryString"`
+}
+
+func (r *DeleteLogRequest) ToJsonString() string {
+    b, _ := json.Marshal(r)
+    return string(b)
+}
+
+// FromJsonString It is highly **NOT** recommended to use this function
+// because it has no param check, nor strict type check
+func (r *DeleteLogRequest) FromJsonString(s string) error {
+	f := make(map[string]interface{})
+	if err := json.Unmarshal([]byte(s), &f); err != nil {
+		return err
+	}
+	delete(f, "TopicId")
+	delete(f, "From")
+	delete(f, "To")
+	delete(f, "QueryString")
+	if len(f) > 0 {
+		return tcerr.NewTencentCloudSDKError("ClientError.BuildRequestError", "DeleteLogRequest has unknown keys!", "")
+	}
+	return json.Unmarshal([]byte(s), &r)
+}
+
+// Predefined struct for user
+type DeleteLogResponseParams struct {
+	// <p>影响日志条数</p>
+	AffectedRows *int64 `json:"AffectedRows,omitnil,omitempty" name:"AffectedRows"`
+
+	// 唯一请求 ID，由服务端生成，每次请求都会返回（若请求因其他原因未能抵达服务端，则该次请求不会获得 RequestId）。定位问题时需要提供该次请求的 RequestId。
+	RequestId *string `json:"RequestId,omitnil,omitempty" name:"RequestId"`
+}
+
+type DeleteLogResponse struct {
+	*tchttp.BaseResponse
+	Response *DeleteLogResponseParams `json:"Response"`
+}
+
+func (r *DeleteLogResponse) ToJsonString() string {
+    b, _ := json.Marshal(r)
+    return string(b)
+}
+
+// FromJsonString It is highly **NOT** recommended to use this function
+// because it has no param check, nor strict type check
+func (r *DeleteLogResponse) FromJsonString(s string) error {
 	return json.Unmarshal([]byte(s), &r)
 }
 
@@ -17082,118 +17110,86 @@ func (r *ModifyAgentApplicationResponse) FromJsonString(s string) error {
 
 // Predefined struct for user
 type ModifyAlarmNoticeRequestParams struct {
-	// 通知渠道组ID。-通过[获取通知渠道组列表](https://cloud.tencent.com/document/api/614/56462)获取通知渠道组ID
+	// <p>通知渠道组ID。-通过<a href="https://cloud.tencent.com/document/api/614/56462">获取通知渠道组列表</a>获取通知渠道组ID</p>
 	AlarmNoticeId *string `json:"AlarmNoticeId,omitnil,omitempty" name:"AlarmNoticeId"`
 
-	// 标签描述列表，通过指定该参数可以同时绑定标签到相应的通知渠道组。最大支持10个标签键值对，并且不能有重复的键值对。
+	// <p>标签描述列表，通过指定该参数可以同时绑定标签到相应的通知渠道组。最大支持10个标签键值对，并且不能有重复的键值对。</p>
 	Tags []*Tag `json:"Tags,omitnil,omitempty" name:"Tags"`
 
-	// 通知渠道组名称。
+	// <p>通知渠道组名称。</p>
 	Name *string `json:"Name,omitnil,omitempty" name:"Name"`
 
-	// 通知类型。可选值：
-	// <li> Trigger - 告警触发</li>
-	// <li> Recovery - 告警恢复</li>
-	// <li> All - 告警触发和告警恢复</li>
+	// <p>通知类型。可选值：</p><li> Trigger - 告警触发</li><li> Recovery - 告警恢复</li><li> All - 告警触发和告警恢复</li>
 	Type *string `json:"Type,omitnil,omitempty" name:"Type"`
 
-	// 通知接收对象。
+	// <p>通知接收对象。</p>
 	NoticeReceivers []*NoticeReceiver `json:"NoticeReceivers,omitnil,omitempty" name:"NoticeReceivers"`
 
-	// 接口回调信息（包括企业微信等）。
+	// <p>接口回调信息（包括企业微信等）。</p>
 	WebCallbacks []*WebCallback `json:"WebCallbacks,omitnil,omitempty" name:"WebCallbacks"`
 
-	// 通知规则。
-	// 
-	// 注意: 
-	// 
-	// - Type、NoticeReceivers和WebCallbacks是一组配置，NoticeRules是另一组配置，2组配置互斥。
-	// - 传其中一组数据，则另一组数据置空。
+	// <p>通知规则。</p><p>注意: </p><ul><li>Type、NoticeReceivers和WebCallbacks是一组配置，NoticeRules是另一组配置，2组配置互斥。</li><li>传其中一组数据，则另一组数据置空。</li></ul>
 	NoticeRules []*NoticeRule `json:"NoticeRules,omitnil,omitempty" name:"NoticeRules"`
 
-	// 调用链接域名。http:// 或者 https:// 开头，不能/结尾
+	// <p>调用链接域名。http:// 或者 https:// 开头，不能/结尾</p>
 	JumpDomain *string `json:"JumpDomain,omitnil,omitempty" name:"JumpDomain"`
 
-	// 投递日志开关。
-	// 
-	// 参数值：
-	// 1：关闭；
-	// 
-	// 2：开启 
+	// <p>投递日志开关。</p><p>参数值：<br>1：关闭；</p><p>2：开启</p>
 	DeliverStatus *uint64 `json:"DeliverStatus,omitnil,omitempty" name:"DeliverStatus"`
 
-	// 投递日志配置。
+	// <p>投递日志配置。</p>
 	DeliverConfig *DeliverConfig `json:"DeliverConfig,omitnil,omitempty" name:"DeliverConfig"`
 
-	// 免登录操作告警开关。
-	// 
-	// 参数值： 
-	//         1：关闭
-	//         2：开启（默认开启）
+	// <p>免登录操作告警开关。</p><p>参数值：<br>        1：关闭<br>        2：开启（默认开启）</p>
 	AlarmShieldStatus *uint64 `json:"AlarmShieldStatus,omitnil,omitempty" name:"AlarmShieldStatus"`
 
-	// 统一设定自定义回调参数。
-	// -  true: 使用通知内容模板中的自定义回调参数覆盖告警策略中单独配置的请求头及请求内容。
-	// -  false:优先使用告警策略中单独配置的请求头及请求内容。
+	// <p>告警详情安全认证跳转开关，未传时默认&quot;关闭&quot;</p><p>枚举值：</p><ul><li>1： 关闭（默认值）</li><li>2： 开启</li></ul>
+	SecureDetailStatus *uint64 `json:"SecureDetailStatus,omitnil,omitempty" name:"SecureDetailStatus"`
+
+	// <p>统一设定自定义回调参数。</p><ul><li>true: 使用通知内容模板中的自定义回调参数覆盖告警策略中单独配置的请求头及请求内容。</li><li>false:优先使用告警策略中单独配置的请求头及请求内容。</li></ul>
 	CallbackPrioritize *bool `json:"CallbackPrioritize,omitnil,omitempty" name:"CallbackPrioritize"`
 }
 
 type ModifyAlarmNoticeRequest struct {
 	*tchttp.BaseRequest
 	
-	// 通知渠道组ID。-通过[获取通知渠道组列表](https://cloud.tencent.com/document/api/614/56462)获取通知渠道组ID
+	// <p>通知渠道组ID。-通过<a href="https://cloud.tencent.com/document/api/614/56462">获取通知渠道组列表</a>获取通知渠道组ID</p>
 	AlarmNoticeId *string `json:"AlarmNoticeId,omitnil,omitempty" name:"AlarmNoticeId"`
 
-	// 标签描述列表，通过指定该参数可以同时绑定标签到相应的通知渠道组。最大支持10个标签键值对，并且不能有重复的键值对。
+	// <p>标签描述列表，通过指定该参数可以同时绑定标签到相应的通知渠道组。最大支持10个标签键值对，并且不能有重复的键值对。</p>
 	Tags []*Tag `json:"Tags,omitnil,omitempty" name:"Tags"`
 
-	// 通知渠道组名称。
+	// <p>通知渠道组名称。</p>
 	Name *string `json:"Name,omitnil,omitempty" name:"Name"`
 
-	// 通知类型。可选值：
-	// <li> Trigger - 告警触发</li>
-	// <li> Recovery - 告警恢复</li>
-	// <li> All - 告警触发和告警恢复</li>
+	// <p>通知类型。可选值：</p><li> Trigger - 告警触发</li><li> Recovery - 告警恢复</li><li> All - 告警触发和告警恢复</li>
 	Type *string `json:"Type,omitnil,omitempty" name:"Type"`
 
-	// 通知接收对象。
+	// <p>通知接收对象。</p>
 	NoticeReceivers []*NoticeReceiver `json:"NoticeReceivers,omitnil,omitempty" name:"NoticeReceivers"`
 
-	// 接口回调信息（包括企业微信等）。
+	// <p>接口回调信息（包括企业微信等）。</p>
 	WebCallbacks []*WebCallback `json:"WebCallbacks,omitnil,omitempty" name:"WebCallbacks"`
 
-	// 通知规则。
-	// 
-	// 注意: 
-	// 
-	// - Type、NoticeReceivers和WebCallbacks是一组配置，NoticeRules是另一组配置，2组配置互斥。
-	// - 传其中一组数据，则另一组数据置空。
+	// <p>通知规则。</p><p>注意: </p><ul><li>Type、NoticeReceivers和WebCallbacks是一组配置，NoticeRules是另一组配置，2组配置互斥。</li><li>传其中一组数据，则另一组数据置空。</li></ul>
 	NoticeRules []*NoticeRule `json:"NoticeRules,omitnil,omitempty" name:"NoticeRules"`
 
-	// 调用链接域名。http:// 或者 https:// 开头，不能/结尾
+	// <p>调用链接域名。http:// 或者 https:// 开头，不能/结尾</p>
 	JumpDomain *string `json:"JumpDomain,omitnil,omitempty" name:"JumpDomain"`
 
-	// 投递日志开关。
-	// 
-	// 参数值：
-	// 1：关闭；
-	// 
-	// 2：开启 
+	// <p>投递日志开关。</p><p>参数值：<br>1：关闭；</p><p>2：开启</p>
 	DeliverStatus *uint64 `json:"DeliverStatus,omitnil,omitempty" name:"DeliverStatus"`
 
-	// 投递日志配置。
+	// <p>投递日志配置。</p>
 	DeliverConfig *DeliverConfig `json:"DeliverConfig,omitnil,omitempty" name:"DeliverConfig"`
 
-	// 免登录操作告警开关。
-	// 
-	// 参数值： 
-	//         1：关闭
-	//         2：开启（默认开启）
+	// <p>免登录操作告警开关。</p><p>参数值：<br>        1：关闭<br>        2：开启（默认开启）</p>
 	AlarmShieldStatus *uint64 `json:"AlarmShieldStatus,omitnil,omitempty" name:"AlarmShieldStatus"`
 
-	// 统一设定自定义回调参数。
-	// -  true: 使用通知内容模板中的自定义回调参数覆盖告警策略中单独配置的请求头及请求内容。
-	// -  false:优先使用告警策略中单独配置的请求头及请求内容。
+	// <p>告警详情安全认证跳转开关，未传时默认&quot;关闭&quot;</p><p>枚举值：</p><ul><li>1： 关闭（默认值）</li><li>2： 开启</li></ul>
+	SecureDetailStatus *uint64 `json:"SecureDetailStatus,omitnil,omitempty" name:"SecureDetailStatus"`
+
+	// <p>统一设定自定义回调参数。</p><ul><li>true: 使用通知内容模板中的自定义回调参数覆盖告警策略中单独配置的请求头及请求内容。</li><li>false:优先使用告警策略中单独配置的请求头及请求内容。</li></ul>
 	CallbackPrioritize *bool `json:"CallbackPrioritize,omitnil,omitempty" name:"CallbackPrioritize"`
 }
 
@@ -17220,6 +17216,7 @@ func (r *ModifyAlarmNoticeRequest) FromJsonString(s string) error {
 	delete(f, "DeliverStatus")
 	delete(f, "DeliverConfig")
 	delete(f, "AlarmShieldStatus")
+	delete(f, "SecureDetailStatus")
 	delete(f, "CallbackPrioritize")
 	if len(f) > 0 {
 		return tcerr.NewTencentCloudSDKError("ClientError.BuildRequestError", "ModifyAlarmNoticeRequest has unknown keys!", "")
@@ -19658,6 +19655,98 @@ func (r *ModifyKafkaRechargeResponse) ToJsonString() string {
 // FromJsonString It is highly **NOT** recommended to use this function
 // because it has no param check, nor strict type check
 func (r *ModifyKafkaRechargeResponse) FromJsonString(s string) error {
+	return json.Unmarshal([]byte(s), &r)
+}
+
+// Predefined struct for user
+type ModifyLogRequestParams struct {
+	// <p>日志主题id</p><p>仅在创建日志主题时，开启了日志修改/删除开关的主题，支持日志修改/删除。该功能暂时仅面向白名单内客户使用。</p>
+	TopicId *string `json:"TopicId,omitnil,omitempty" name:"TopicId"`
+
+	// <p>检索时间范围-开始时间</p><p>单位：ms</p>
+	From *int64 `json:"From,omitnil,omitempty" name:"From"`
+
+	// <p>检索时间范围-结束时间</p><p>单位：ms</p>
+	To *int64 `json:"To,omitnil,omitempty" name:"To"`
+
+	// <p>日志检索条件，仅支持 CQL 语法，不支持 Lucene 语法</p><p>对符合检索条件的日志进行修改</p>
+	QueryString *string `json:"QueryString,omitnil,omitempty" name:"QueryString"`
+
+	// <p>修改模式</p><p>枚举值：</p><ul><li>PARTIAL： 只修改指定的日志字段</li><li>REPLACE： 整体替换原有日志（不包含预置字段及元数据字段）</li></ul>
+	ModifyMode *string `json:"ModifyMode,omitnil,omitempty" name:"ModifyMode"`
+
+	// <p>修改内容</p><p>不支持修改预置字段(__FILENAME__、__SOURCE__等，但不包括__CONTENT__)及元数据字段(__TAG__开头的字段)</p>
+	ModifyContent *string `json:"ModifyContent,omitnil,omitempty" name:"ModifyContent"`
+}
+
+type ModifyLogRequest struct {
+	*tchttp.BaseRequest
+	
+	// <p>日志主题id</p><p>仅在创建日志主题时，开启了日志修改/删除开关的主题，支持日志修改/删除。该功能暂时仅面向白名单内客户使用。</p>
+	TopicId *string `json:"TopicId,omitnil,omitempty" name:"TopicId"`
+
+	// <p>检索时间范围-开始时间</p><p>单位：ms</p>
+	From *int64 `json:"From,omitnil,omitempty" name:"From"`
+
+	// <p>检索时间范围-结束时间</p><p>单位：ms</p>
+	To *int64 `json:"To,omitnil,omitempty" name:"To"`
+
+	// <p>日志检索条件，仅支持 CQL 语法，不支持 Lucene 语法</p><p>对符合检索条件的日志进行修改</p>
+	QueryString *string `json:"QueryString,omitnil,omitempty" name:"QueryString"`
+
+	// <p>修改模式</p><p>枚举值：</p><ul><li>PARTIAL： 只修改指定的日志字段</li><li>REPLACE： 整体替换原有日志（不包含预置字段及元数据字段）</li></ul>
+	ModifyMode *string `json:"ModifyMode,omitnil,omitempty" name:"ModifyMode"`
+
+	// <p>修改内容</p><p>不支持修改预置字段(__FILENAME__、__SOURCE__等，但不包括__CONTENT__)及元数据字段(__TAG__开头的字段)</p>
+	ModifyContent *string `json:"ModifyContent,omitnil,omitempty" name:"ModifyContent"`
+}
+
+func (r *ModifyLogRequest) ToJsonString() string {
+    b, _ := json.Marshal(r)
+    return string(b)
+}
+
+// FromJsonString It is highly **NOT** recommended to use this function
+// because it has no param check, nor strict type check
+func (r *ModifyLogRequest) FromJsonString(s string) error {
+	f := make(map[string]interface{})
+	if err := json.Unmarshal([]byte(s), &f); err != nil {
+		return err
+	}
+	delete(f, "TopicId")
+	delete(f, "From")
+	delete(f, "To")
+	delete(f, "QueryString")
+	delete(f, "ModifyMode")
+	delete(f, "ModifyContent")
+	if len(f) > 0 {
+		return tcerr.NewTencentCloudSDKError("ClientError.BuildRequestError", "ModifyLogRequest has unknown keys!", "")
+	}
+	return json.Unmarshal([]byte(s), &r)
+}
+
+// Predefined struct for user
+type ModifyLogResponseParams struct {
+	// <p>影响日志条数</p>
+	AffectedRows *int64 `json:"AffectedRows,omitnil,omitempty" name:"AffectedRows"`
+
+	// 唯一请求 ID，由服务端生成，每次请求都会返回（若请求因其他原因未能抵达服务端，则该次请求不会获得 RequestId）。定位问题时需要提供该次请求的 RequestId。
+	RequestId *string `json:"RequestId,omitnil,omitempty" name:"RequestId"`
+}
+
+type ModifyLogResponse struct {
+	*tchttp.BaseResponse
+	Response *ModifyLogResponseParams `json:"Response"`
+}
+
+func (r *ModifyLogResponse) ToJsonString() string {
+    b, _ := json.Marshal(r)
+    return string(b)
+}
+
+// FromJsonString It is highly **NOT** recommended to use this function
+// because it has no param check, nor strict type check
+func (r *ModifyLogResponse) FromJsonString(s string) error {
 	return json.Unmarshal([]byte(s), &r)
 }
 
@@ -23998,6 +24087,9 @@ type ToolCall struct {
 
 	// <p>索引值</p>
 	Index *uint64 `json:"Index,omitnil,omitempty" name:"Index"`
+
+	// <p>模型返回的思考签名，执行工具后需在后续请求中原样回传</p>
+	ThoughtSignature *string `json:"ThoughtSignature,omitnil,omitempty" name:"ThoughtSignature"`
 }
 
 type ToolCallFunction struct {
