@@ -1,22 +1,18 @@
 ## Requirements
 
-### Requirement: Read locates binding via DescribeSecurityTemplateBindings
-The `DescribeTeoBindSecurityTemplateById` service function SHALL locate a template-to-domain binding by calling the `DescribeSecurityTemplateBindings` API with the specified `zoneId` and `templateId` (as a single-element array). It SHALL NOT use the `DescribeZones` or `DescribeWebSecurityTemplates` APIs. The function SHALL return the matching `EntityStatus` from the `TemplateScope`'s `EntityStatus` list where `Entity` matches the requested `entity`.
+### Requirement: Read locates binding via DescribeZones and DescribeWebSecurityTemplates
+The `DescribeTeoBindSecurityTemplateById` service function SHALL locate a template-to-domain binding by first paging through the `DescribeZones` API (with `Limit` set to the documented maximum of 100) to collect all zone IDs under the account, then calling `DescribeWebSecurityTemplates` in batches of at most 100 zone IDs per request. It SHALL NOT use the `DescribeSecurityTemplateBindings` API.
 
-#### Scenario: Binding found in the API response
-- **WHEN** the `DescribeSecurityTemplateBindings` API returns a `SecurityTemplate` list containing a `TemplateScope` with `ZoneId` matching the requested `zoneId`, and the `EntityStatus` list contains an entry whose `Entity` matches the requested `entity`
-- **THEN** the function SHALL return the matched `EntityStatus` (including `Entity`, `Status`, and `Message` fields)
+#### Scenario: Binding found in the first batch
+- **WHEN** the account has fewer than 100 zones and one of the returned `SecurityPolicyTemplates` matches the requested `templateId` and contains a `BindDomains` entry whose `Domain` equals the requested `entity`
+- **THEN** the function SHALL return an `EntityStatus` with `Entity` set to the requested entity and `Status` set to the matched `BindDomainInfo.Status`
 
-#### Scenario: TemplateScope is empty
-- **WHEN** the `DescribeSecurityTemplateBindings` API returns an empty `SecurityTemplate` list or an empty `TemplateScope` array
-- **THEN** the function SHALL return nil without error
-
-#### Scenario: Entity not found in EntityStatus list
-- **WHEN** the `DescribeSecurityTemplateBindings` API returns a matching `TemplateScope` but no `EntityStatus` entry matches the requested `entity`
-- **THEN** the function SHALL return nil without error
+#### Scenario: Binding found in a later batch
+- **WHEN** the account has more than 100 zones and the matching binding is only returned for a zone ID in the second (or later) `DescribeWebSecurityTemplates` batch
+- **THEN** the function SHALL issue at least two `DescribeWebSecurityTemplates` requests and return the matching `EntityStatus`
 
 #### Scenario: API call retry on failure
-- **WHEN** the `DescribeSecurityTemplateBindings` API call fails with a retryable error
+- **WHEN** a `DescribeZones` or `DescribeWebSecurityTemplates` API call fails with a retryable error
 - **THEN** the function SHALL retry the call with `tccommon.ReadRetryTimeout` duration using `resource.Retry`, and wrap failures with `tccommon.RetryError`
 
 ### Requirement: Read returns nil when no binding matches
