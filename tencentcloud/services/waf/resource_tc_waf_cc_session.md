@@ -13,6 +13,7 @@ resource "tencentcloud_waf_cc_session" "example" {
   end_offset       = "-1"
   edition          = "sparta-waf"
   session_name     = "terraformDemo"
+  key              = "sessionId"
 }
 ```
 

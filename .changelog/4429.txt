@@ -1,0 +1,3 @@
+```release-note:new-resource
+tencentcloud_tse_cloud_native_api_gateway_ip_restriction
+```

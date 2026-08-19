@@ -34,6 +34,11 @@ resource "tencentcloud_dlc_data_engine" "example" {
     executor_nums        = 1
     executor_size        = "medium"
   }
+
+  tags {
+    tag_key   = "createBy"
+    tag_value = "Terraform"
+  }
 }
 ```
 
@@ -70,6 +75,7 @@ The following arguments are supported:
 * `resource_type` - (Optional, String) The resource type. Valid values: `Standard_CU` (standard) and `Memory_CU` (memory).
 * `session_resource_template` - (Optional, List) The session resource configuration template for a Spark job cluster.
 * `size` - (Optional, Int) Cluster size. Required when updating.
+* `tags` - (Optional, Set) Tag list. Each tag contains a key-value pair. Changing this parameter will trigger a new resource since the DLC `UpdateDataEngine` API does not support modifying tags.
 * `time_span` - (Optional, Int) The usage duration of the resource. Postpaid: Fill in 3,600 as a fixed figure; prepaid: fill in a figure equal to or bigger than 1 which means purchasing resources for one month. The maximum figure is not bigger than 120. The default value is 1.
 * `time_unit` - (Optional, String) The unit of the resource period. Valid values: `s` (default) for the postpaid mode and `m` for the prepaid mode.
 * `tolerable_queue_time` - (Optional, Int) The task queue time limit, which defaults to 0. When the actual queue time exceeds the value set here, scale-out may be triggered. Setting this parameter to 0 represents that scale-out may be triggered immediately after a task queues up.
@@ -97,6 +103,11 @@ The `session_resource_template` object supports the following:
 * `executor_nums` - (Optional, Int) The executor count. The minimum value is 1 and the maximum value is less than the cluster specification.
 * `executor_size` - (Optional, String) The executor size. Valid values for the standard resource type: `small`, `medium`, `large`, and `xlarge`. Valid values for the memory resource type: `m.small`, `m.medium`, `m.large`, and `m.xlarge`.
 * `running_time_parameters` - (Optional, List) The running time parameters of the session resource configuration template for a Spark job cluster.
+
+The `tags` object supports the following:
+
+* `tag_key` - (Required, String) Tag key.
+* `tag_value` - (Optional, String) Tag value.
 
 ## Attributes Reference
 

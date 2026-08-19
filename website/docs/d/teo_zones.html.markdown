@@ -4,12 +4,12 @@ layout: "tencentcloud"
 page_title: "TencentCloud: tencentcloud_teo_zones"
 sidebar_current: "docs-tencentcloud-datasource-teo_zones"
 description: |-
-  Use this data source to query detailed information of teo zoneAvailablePlans
+  Use this data source to query detailed information of TEO zones.
 ---
 
 # tencentcloud_teo_zones
 
-Use this data source to query detailed information of teo zoneAvailablePlans
+Use this data source to query detailed information of TEO zones.
 
 ## Example Usage
 
@@ -108,6 +108,9 @@ Note: This field may return null, indicating that no valid values can be obtaine
 Note: This field may return null, indicating that no valid values can be obtained.
     * `servers` - List of custom name servers.
     * `switch` - Whether to enable custom name servers. Values: `on`: Enable; `off`: Disable.
+  * `work_mode_infos` - Information list of the work mode of the version management configuration group. Note: This field may return null, indicating that no valid values can be obtained.
+    * `config_group_type` - Configuration group type. Values: `l7_acceleration`: L7 acceleration configuration group; `edge_functions`: Edge functions configuration group; `web_security`: Web security configuration group. Note: This field may return null, indicating that no valid values can be obtained.
+    * `work_mode` - Work mode. Values: `immediate_effect`: Immediate effect mode; `version_control`: Version management mode. Note: This field may return null, indicating that no valid values can be obtained.
   * `zone_id` - Site ID.
   * `zone_name` - The site name.
 

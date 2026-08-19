@@ -6,7 +6,6 @@ import (
 	"fmt"
 	"log"
 	"math"
-	"net"
 	"strconv"
 	"strings"
 	"time"
@@ -1560,74 +1559,6 @@ func dockerGraphPathDiffSuppressFunc(k, oldValue, newValue string, d *schema.Res
 	}
 }
 
-func clusterCidrValidateFunc(v interface{}, k string) (ws []string, errs []error) {
-	value := v.(string)
-	if value == "" {
-		return
-	}
-	_, ipnet, err := net.ParseCIDR(value)
-	if err != nil {
-		errs = append(errs, fmt.Errorf("%q must contain a valid CIDR, got error parsing: %s", k, err))
-		return
-	}
-	if ipnet == nil || value != ipnet.String() {
-		errs = append(errs, fmt.Errorf("%q must contain a valid network CIDR, expected %q, got %q", k, ipnet, value))
-		return
-	}
-	if !strings.Contains(value, "/") {
-		errs = append(errs, fmt.Errorf("%q must be a network segment", k))
-		return
-	}
-	if !strings.HasPrefix(value, "9.") && !strings.HasPrefix(value, "10.") && !strings.HasPrefix(value, "11.") && !strings.HasPrefix(value, "192.168.") && !strings.HasPrefix(value, "172.") {
-		errs = append(errs, fmt.Errorf("%q must in 9. | 10. | 11. | 192.168. | 172.[16-31]", k))
-		return
-	}
-
-	if strings.HasPrefix(value, "172.") {
-		nextNo := strings.Split(value, ".")[1]
-		no, _ := strconv.ParseInt(nextNo, 10, 64)
-		if no < 16 || no > 31 {
-			errs = append(errs, fmt.Errorf("%q must in 9.0 | 10. | 11. | 192.168. | 172.[16-31]", k))
-			return
-		}
-	}
-	return
-}
-
-func serviceCidrValidateFunc(v interface{}, k string) (ws []string, errs []error) {
-	value := v.(string)
-	if value == "" {
-		return
-	}
-	_, ipnet, err := net.ParseCIDR(value)
-	if err != nil {
-		errs = append(errs, fmt.Errorf("%q must contain a valid CIDR, got error parsing: %s", k, err))
-		return
-	}
-	if ipnet == nil || value != ipnet.String() {
-		errs = append(errs, fmt.Errorf("%q must contain a valid network CIDR, expected %q, got %q", k, ipnet, value))
-		return
-	}
-	if !strings.Contains(value, "/") {
-		errs = append(errs, fmt.Errorf("%q must be a network segment", k))
-		return
-	}
-	if !strings.HasPrefix(value, "9.") && !strings.HasPrefix(value, "10.") && !strings.HasPrefix(value, "192.168.") && !strings.HasPrefix(value, "172.") {
-		errs = append(errs, fmt.Errorf("%q must in 9. | 10. | 192.168. | 172.[16-31]", k))
-		return
-	}
-
-	if strings.HasPrefix(value, "172.") {
-		nextNo := strings.Split(value, ".")[1]
-		no, _ := strconv.ParseInt(nextNo, 10, 64)
-		if no < 16 || no > 31 {
-			errs = append(errs, fmt.Errorf("%q must in 9. | 10. | 192.168. | 172.[16-31]", k))
-			return
-		}
-	}
-	return
-}
-
 func claimExpiredSecondsValidateFunc(v interface{}, k string) (ws []string, errs []error) {
 	value := v.(int)
 	if value < 300 || value > 15768000 {
@@ -2399,77 +2330,6 @@ func checkClusterEndpointStatus(ctx context.Context, service *TkeService, d *sch
 	}
 	return nil
 }
-
-func tkeCvmState() map[string]*schema.Schema {
-	return map[string]*schema.Schema{
-		"instance_id": {
-			Type:        schema.TypeString,
-			Computed:    true,
-			Description: "ID of the cvm.",
-		},
-		"instance_role": {
-			Type:        schema.TypeString,
-			Computed:    true,
-			Description: "Role of the cvm.",
-		},
-		"instance_state": {
-			Type:        schema.TypeString,
-			Computed:    true,
-			Description: "State of the cvm.",
-		},
-		"failed_reason": {
-			Type:        schema.TypeString,
-			Computed:    true,
-			Description: "Information of the cvm when it is failed.",
-		},
-		"lan_ip": {
-			Type:        schema.TypeString,
-			Computed:    true,
-			Description: "LAN IP of the cvm.",
-		},
-	}
-}
-
-//func tkeSecurityInfo() map[string]*schema.Schema {
-//	return map[string]*schema.Schema{
-//		"user_name": {
-//			Type:        schema.TypeString,
-//			Computed:    true,
-//			Description: "User name of account.",
-//		},
-//		"password": {
-//			Type:        schema.TypeString,
-//			Computed:    true,
-//			Description: "Password of account.",
-//		},
-//		"certification_authority": {
-//			Type:        schema.TypeString,
-//			Computed:    true,
-//			Description: "The certificate used for access.",
-//		},
-//		"cluster_external_endpoint": {
-//			Type:        schema.TypeString,
-//			Computed:    true,
-//			Description: "External network address to access.",
-//		},
-//		"domain": {
-//			Type:        schema.TypeString,
-//			Computed:    true,
-//			Description: "Domain name for access.",
-//		},
-//		"pgw_endpoint": {
-//			Type:        schema.TypeString,
-//			Computed:    true,
-//			Description: "The Intranet address used for access.",
-//		},
-//		"security_policy": {
-//			Type:        schema.TypeList,
-//			Computed:    true,
-//			Elem:        &schema.Schema{Type: schema.TypeString},
-//			Description: "Access policy.",
-//		},
-//	}
-//}
 
 func TkeCvmCreateInfo() map[string]*schema.Schema {
 	return map[string]*schema.Schema{
