@@ -11,7 +11,11 @@ description: |-
 
 Provides a resource to create a Tencent Cloud Global Accelerator V2 (GA2) listener.
 
+~> **NOTE:** The current resource does not support concurrent operations; if batch execution is required, please use `depends_on` to specify the execution order.
+
 ## Example Usage
+
+### Create listener with TCP and UDP
 
 ```hcl
 resource "tencentcloud_ga2_global_accelerator" "example" {
@@ -32,7 +36,7 @@ resource "tencentcloud_ga2_accelerate_area" "example" {
   ip_version            = "IPv4"
 }
 
-resource "tencentcloud_ga2_listener" "example1" {
+resource "tencentcloud_ga2_listener" "example" {
   global_accelerator_id = tencentcloud_ga2_accelerate_area.example.global_accelerator_id
   name                  = "tf-example-tcp"
   protocol              = "TCP"
@@ -49,8 +53,30 @@ resource "tencentcloud_ga2_listener" "example1" {
   idle_timeout     = 900
 }
 
-resource "tencentcloud_ga2_listener" "example2" {
+resource "tencentcloud_ga2_listener" "example1" {
   global_accelerator_id = tencentcloud_ga2_accelerate_area.example.global_accelerator_id
+  name                  = "tf-example-udp"
+  protocol              = "UDP"
+
+  port_ranges {
+    from_port = 70
+    to_port   = 70
+  }
+
+  description     = "tf example listener"
+  client_affinity = "Open"
+  listener_type   = "Standard"
+  idle_timeout    = 20
+
+  depends_on = [tencentcloud_ga2_listener.example]
+}
+```
+
+### Create listener with HTTP
+
+```hcl
+resource "tencentcloud_ga2_listener" "example" {
+  global_accelerator_id = "ga-4mredmiu"
   name                  = "tf-example-http"
   protocol              = "HTTP"
 
@@ -64,12 +90,14 @@ resource "tencentcloud_ga2_listener" "example2" {
   request_timeout         = 60
   listener_type           = "Standard"
   x_forwarded_for_real_ip = true
-
-  depends_on = [tencentcloud_ga2_listener.example1]
 }
+```
 
-resource "tencentcloud_ga2_listener" "example3" {
-  global_accelerator_id = tencentcloud_ga2_accelerate_area.example.global_accelerator_id
+### Create listener with HTTPS
+
+```hcl
+resource "tencentcloud_ga2_listener" "example" {
+  global_accelerator_id = "ga-4mredmiu"
   name                  = "tf-example-https"
   protocol              = "HTTPS"
 
@@ -84,11 +112,9 @@ resource "tencentcloud_ga2_listener" "example3" {
   x_forwarded_for_real_ip = true
   certification_type      = "MUTUAL"
   cipher_policy_id        = "tls_policy_1.2_strict-1.3"
-  server_certificates     = ["Yj6CmODs"]
-  client_ca_certificates  = ["W6aH2tOc"]
+  server_certificates     = ["ZDxux2I9"]
+  client_ca_certificates  = ["UL45hi9B"]
   http_version            = "HTTP/2"
-
-  depends_on = [tencentcloud_ga2_listener.example2]
 }
 ```
 
@@ -105,7 +131,7 @@ The following arguments are supported:
 * `client_ca_certificates` - (Optional, Set: [`String`]) Client CA certificate ID list. Required when the listener protocol is `HTTPS` and `certification_type` is `MUTUAL`. Only HTTPS listeners support modifying this field. Treated as an unordered set; HCL element order has no semantic meaning.
 * `description` - (Optional, String) Listener description. Maximum length is 100 bytes.
 * `get_real_ip_type` - (Optional, String) Method used to retrieve the real client IP for layer-4 listeners. Valid values: `TOA`, `ProxyProtocol`, `ProxyProtocolV2`, `Close`. Only takes effect when the layer-4 real-IP feature is enabled. Only TCP listeners support modifying this field after creation.
-* `http_version` - (Optional, String) HTTP version negotiated for this listener. Valid values: `HTTP/1.1`, `HTTP/2`. Only applicable to HTTPS listeners.
+* `http_version` - (Optional, String, ForceNew) HTTP version negotiated for this listener. Valid values: `HTTP/1.1`, `HTTP/2`. Only applicable to HTTPS listeners.
 * `idle_timeout` - (Optional, Int) Connection idle timeout in seconds. Valid range and default value depend on the listener protocol: `1-60` for HTTP/HTTPS listeners (default `15`), `10-900` for TCP listeners (default `900`), `10-20` for UDP listeners (default `20`).
 * `listener_type` - (Optional, String, ForceNew) Listener routing type. Valid values: `Standard` (smart routing). Default: `Standard`. Cannot be modified after creation; modifying it forces a new resource.
 * `name` - (Optional, String) Listener name. Maximum length is 60 bytes.

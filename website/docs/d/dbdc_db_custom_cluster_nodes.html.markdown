@@ -52,7 +52,9 @@ The `filters` object supports the following:
 In addition to all arguments above, the following attributes are exported:
 
 * `node_set` - DB Custom cluster node list.
+  * `eni_ip` - When the network mode is `cross_tenant_eni`, the accessible IP address of the node.
   * `lan_ip` - Node internal IP address.
+  * `network_mode` - Network mode. Valid values: `privatelink` (L4 network connectivity, opens SSH channel), `cross_tenant_eni` (L3 network connectivity, dual-network-card mode).
   * `node_id` - Node ID.
   * `node_name` - Node name.
   * `node_type` - Node type.

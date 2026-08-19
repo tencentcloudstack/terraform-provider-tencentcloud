@@ -37,63 +37,63 @@ type AIOptimizerTaskData struct {
 }
 
 type Ability struct {
-	// 是否支持从可用区
+	// <p>是否支持从可用区</p>
 	IsSupportSlaveZone *string `json:"IsSupportSlaveZone,omitnil,omitempty" name:"IsSupportSlaveZone"`
 
-	// 不支持从可用区的原因
+	// <p>不支持从可用区的原因</p>
 	NonsupportSlaveZoneReason *string `json:"NonsupportSlaveZoneReason,omitnil,omitempty" name:"NonsupportSlaveZoneReason"`
 
-	// 是否支持RO实例
+	// <p>是否支持RO实例</p>
 	IsSupportRo *string `json:"IsSupportRo,omitnil,omitempty" name:"IsSupportRo"`
 
-	// 不支持RO实例的原因
+	// <p>不支持RO实例的原因</p>
 	NonsupportRoReason *string `json:"NonsupportRoReason,omitnil,omitempty" name:"NonsupportRoReason"`
 
-	// 是否支持手动发起快照备份
+	// <p>是否支持手动发起快照备份</p>
 	IsSupportManualSnapshot *string `json:"IsSupportManualSnapshot,omitnil,omitempty" name:"IsSupportManualSnapshot"`
 
-	// 是否支持透明数据加密
+	// <p>是否支持透明数据加密</p>
 	IsSupportTransparentDataEncryption *string `json:"IsSupportTransparentDataEncryption,omitnil,omitempty" name:"IsSupportTransparentDataEncryption"`
 
-	// 不支持透明数据加密原因
+	// <p>不支持透明数据加密原因</p>
 	NoSupportTransparentDataEncryptionReason *string `json:"NoSupportTransparentDataEncryptionReason,omitnil,omitempty" name:"NoSupportTransparentDataEncryptionReason"`
 
-	// 是否支持手动发起逻辑备份
+	// <p>是否支持手动发起逻辑备份</p>
 	IsSupportManualLogic *string `json:"IsSupportManualLogic,omitnil,omitempty" name:"IsSupportManualLogic"`
 
-	// 是否支持开启全局加密
+	// <p>是否支持开启全局加密</p>
 	IsSupportGlobalEncryption *string `json:"IsSupportGlobalEncryption,omitnil,omitempty" name:"IsSupportGlobalEncryption"`
 
-	// 不支持全局加密的原因
+	// <p>不支持全局加密的原因</p>
 	NoSupportGlobalEncryptionReason *string `json:"NoSupportGlobalEncryptionReason,omitnil,omitempty" name:"NoSupportGlobalEncryptionReason"`
 
-	// 不支持透明加密原因状态码
+	// <p>不支持透明加密原因状态码</p>
 	NoSupportTransparentDataEncryptionReasonCode *string `json:"NoSupportTransparentDataEncryptionReasonCode,omitnil,omitempty" name:"NoSupportTransparentDataEncryptionReasonCode"`
 
-	// 不支持全局加密原因状态码
+	// <p>不支持全局加密原因状态码</p>
 	NoSupportGlobalEncryptionReasonCode *string `json:"NoSupportGlobalEncryptionReasonCode,omitnil,omitempty" name:"NoSupportGlobalEncryptionReasonCode"`
 }
 
 type Account struct {
-	// 数据库账号名
+	// <p>数据库账号名</p>
 	AccountName *string `json:"AccountName,omitnil,omitempty" name:"AccountName"`
 
-	// 主机
+	// <p>主机</p>
 	Host *string `json:"Host,omitnil,omitempty" name:"Host"`
 
-	// 数据库账号描述
+	// <p>数据库账号描述</p>
 	Description *string `json:"Description,omitnil,omitempty" name:"Description"`
 
-	// 创建时间
+	// <p>创建时间</p>
 	CreateTime *string `json:"CreateTime,omitnil,omitempty" name:"CreateTime"`
 
-	// 更新时间
+	// <p>更新时间</p>
 	UpdateTime *string `json:"UpdateTime,omitnil,omitempty" name:"UpdateTime"`
 
-	// 用户最大连接数
+	// <p>用户最大连接数</p>
 	MaxUserConnections *int64 `json:"MaxUserConnections,omitnil,omitempty" name:"MaxUserConnections"`
 
-	// 是否开启密码轮转(0:关闭;1:开启)
+	// <p>是否开启密码轮转(0:关闭;1:开启)</p>
 	PasswordRotation *int64 `json:"PasswordRotation,omitnil,omitempty" name:"PasswordRotation"`
 }
 
@@ -954,6 +954,8 @@ type AssociateSecurityGroupsRequestParams struct {
 	SecurityGroupIds []*string `json:"SecurityGroupIds,omitnil,omitempty" name:"SecurityGroupIds"`
 
 	// 可用区
+	//
+	// Deprecated: Zone is deprecated.
 	Zone *string `json:"Zone,omitnil,omitempty" name:"Zone"`
 }
 
@@ -1240,38 +1242,39 @@ type AutoMapRule struct {
 }
 
 type BackupConfigInfo struct {
-	// 系统自动时间
+	// <p>系统自动时间</p>
 	BackupCustomAutoTime *bool `json:"BackupCustomAutoTime,omitnil,omitempty" name:"BackupCustomAutoTime"`
 
-	// 表示全备开始时间，[0-24*3600]， 如0:00, 1:00, 2:00 分别为 0，3600， 7200
+	// <p>表示全备开始时间，[0-24*3600]， 如0:00, 1:00, 2:00 分别为 0，3600， 7200</p>
 	BackupTimeBeg *uint64 `json:"BackupTimeBeg,omitnil,omitempty" name:"BackupTimeBeg"`
 
-	// 表示全备结束时间，[0-24*3600]， 如0:00, 1:00, 2:00 分别为 0，3600， 7200
+	// <p>表示全备结束时间，[0-24*3600]， 如0:00, 1:00, 2:00 分别为 0，3600， 7200</p>
 	BackupTimeEnd *uint64 `json:"BackupTimeEnd,omitnil,omitempty" name:"BackupTimeEnd"`
 
-	// 该参数目前不支持修改，无需填写。备份频率，长度为7的数组，分别对应周日到周六的备份方式，full-全量备份，increment-增量备份
+	// <p>该参数目前不支持修改，无需填写。备份频率，长度为7的数组，分别对应周日到周六的备份方式，full-全量备份，increment-增量备份</p>
 	// 注意：此字段可能返回 null，表示取不到有效值。
 	BackupWeekDays []*string `json:"BackupWeekDays,omitnil,omitempty" name:"BackupWeekDays"`
 
-	// 间隔时间
+	// <p>间隔时间</p>
 	BackupIntervalTime *int64 `json:"BackupIntervalTime,omitnil,omitempty" name:"BackupIntervalTime"`
 
-	// 表示保留备份时长, 单位秒，超过该时间将被清理, 七天表示为3600247=604800，最大为158112000
+	// <p>表示保留备份时长, 单位秒，超过该时间将被清理, 七天表示为3600247=604800，最大为158112000</p>
 	ReserveDuration *uint64 `json:"ReserveDuration,omitnil,omitempty" name:"ReserveDuration"`
 
-	// 跨地域备份开启
-	// yes-开启
-	// no-关闭
+	// <p>跨地域备份开启<br>yes-开启<br>no-关闭</p>
 	CrossRegionsEnable *string `json:"CrossRegionsEnable,omitnil,omitempty" name:"CrossRegionsEnable"`
 
-	// 跨地域备份地域
+	// <p>跨地域备份地域</p>
 	// 注意：此字段可能返回 null，表示取不到有效值。
 	CrossRegions []*string `json:"CrossRegions,omitnil,omitempty" name:"CrossRegions"`
 
-	// 自动数据备份触发策略，periodically:自动周期备份,frequent:高频备份
+	// <p>跨地域备份保留时间</p><p>单位：天</p>
+	CrossRegionSaveDays *int64 `json:"CrossRegionSaveDays,omitnil,omitempty" name:"CrossRegionSaveDays"`
+
+	// <p>自动数据备份触发策略，periodically:自动周期备份,frequent:高频备份</p>
 	BackupTriggerStrategy *string `json:"BackupTriggerStrategy,omitnil,omitempty" name:"BackupTriggerStrategy"`
 
-	// 备份投递关系
+	// <p>备份投递关系</p>
 	AutoCopyVaults []*CreateBackupVaultItem `json:"AutoCopyVaults,omitnil,omitempty" name:"AutoCopyVaults"`
 }
 
@@ -1371,6 +1374,17 @@ type BackupRegionAndIds struct {
 	BackupId *int64 `json:"BackupId,omitnil,omitempty" name:"BackupId"`
 }
 
+type BackupVolumeInfo struct {
+	// 备份使用量
+	BackupVolume *float64 `json:"BackupVolume,omitnil,omitempty" name:"BackupVolume"`
+
+	// 备份类型
+	BackupType *string `json:"BackupType,omitnil,omitempty" name:"BackupType"`
+
+	// 备份方式
+	BackupMethod *string `json:"BackupMethod,omitnil,omitempty" name:"BackupMethod"`
+}
+
 type BillingResourceInfo struct {
 	// 集群ID
 	ClusterId *string `json:"ClusterId,omitnil,omitempty" name:"ClusterId"`
@@ -1458,50 +1472,64 @@ type BindInstanceInfo struct {
 }
 
 type BinlogConfigInfo struct {
-	// binlog保留时间
+	// <p>binlog保留时间</p>
 	BinlogSaveDays *int64 `json:"BinlogSaveDays,omitnil,omitempty" name:"BinlogSaveDays"`
 
-	// binlog异地地域备份是否开启
+	// <p>binlog异地地域备份是否开启</p>
 	BinlogCrossRegionsEnable *string `json:"BinlogCrossRegionsEnable,omitnil,omitempty" name:"BinlogCrossRegionsEnable"`
 
-	// binlog异地地域
+	// <p>binlog异地地域</p>
 	// 注意：此字段可能返回 null，表示取不到有效值。
 	BinlogCrossRegions []*string `json:"BinlogCrossRegions,omitnil,omitempty" name:"BinlogCrossRegions"`
 
-	// 保险箱信息
+	// <p>跨地域备份保留时间</p><p>单位：天</p>
+	BinlogCrossRegionSaveDays *int64 `json:"BinlogCrossRegionSaveDays,omitnil,omitempty" name:"BinlogCrossRegionSaveDays"`
+
+	// <p>保险箱信息</p>
 	AutoCopyVaults []*CreateBackupVaultItem `json:"AutoCopyVaults,omitnil,omitempty" name:"AutoCopyVaults"`
 }
 
 type BinlogItem struct {
-	// Binlog文件名称
+	// <p>Binlog文件名称</p>
 	FileName *string `json:"FileName,omitnil,omitempty" name:"FileName"`
 
-	// 文件大小，单位：字节
+	// <p>文件大小，单位：字节</p>
 	FileSize *int64 `json:"FileSize,omitnil,omitempty" name:"FileSize"`
 
-	// 事务最早时间
+	// <p>事务最早时间</p>
 	StartTime *string `json:"StartTime,omitnil,omitempty" name:"StartTime"`
 
-	// 事务最晚时间
+	// <p>事务最晚时间</p>
 	FinishTime *string `json:"FinishTime,omitnil,omitempty" name:"FinishTime"`
 
-	// Binlog文件ID
+	// <p>Binlog文件ID</p>
 	BinlogId *int64 `json:"BinlogId,omitnil,omitempty" name:"BinlogId"`
 
-	// binlog所跨地域
+	// <p>binlog所跨地域</p>
 	CrossRegions []*string `json:"CrossRegions,omitnil,omitempty" name:"CrossRegions"`
 
-	// 备份投递状态
+	// <p>备份投递状态</p>
 	CopyStatus *string `json:"CopyStatus,omitnil,omitempty" name:"CopyStatus"`
 
-	// 保险箱信息
+	// <p>保险箱信息</p>
 	VaultInfos []*VaultInfo `json:"VaultInfos,omitnil,omitempty" name:"VaultInfos"`
 
-	// 加密秘钥key
+	// <p>加密秘钥key</p>
 	EncryptKeyId *string `json:"EncryptKeyId,omitnil,omitempty" name:"EncryptKeyId"`
 
-	// 加密秘钥地域
+	// <p>加密秘钥地域</p>
 	EncryptRegion *string `json:"EncryptRegion,omitnil,omitempty" name:"EncryptRegion"`
+
+	// <p>备份的地域分布信息</p>
+	ExistRegions []*BinlogRegionInfo `json:"ExistRegions,omitnil,omitempty" name:"ExistRegions"`
+}
+
+type BinlogRegionInfo struct {
+	// <p>备份地域</p>
+	BackupRegion *string `json:"BackupRegion,omitnil,omitempty" name:"BackupRegion"`
+
+	// <p>备份ID</p>
+	BackupId *int64 `json:"BackupId,omitnil,omitempty" name:"BackupId"`
 }
 
 type BizTaskInfo struct {
@@ -1789,6 +1817,70 @@ func (r *CalculateBackupSaveSecExpiresResponse) ToJsonString() string {
 // FromJsonString It is highly **NOT** recommended to use this function
 // because it has no param check, nor strict type check
 func (r *CalculateBackupSaveSecExpiresResponse) FromJsonString(s string) error {
+	return json.Unmarshal([]byte(s), &r)
+}
+
+// Predefined struct for user
+type CancelClusterServerlessScalePlanRequestParams struct {
+	// 集群ID
+	ClusterId *string `json:"ClusterId,omitnil,omitempty" name:"ClusterId"`
+
+	// 计划ID
+	PlanId *int64 `json:"PlanId,omitnil,omitempty" name:"PlanId"`
+}
+
+type CancelClusterServerlessScalePlanRequest struct {
+	*tchttp.BaseRequest
+	
+	// 集群ID
+	ClusterId *string `json:"ClusterId,omitnil,omitempty" name:"ClusterId"`
+
+	// 计划ID
+	PlanId *int64 `json:"PlanId,omitnil,omitempty" name:"PlanId"`
+}
+
+func (r *CancelClusterServerlessScalePlanRequest) ToJsonString() string {
+    b, _ := json.Marshal(r)
+    return string(b)
+}
+
+// FromJsonString It is highly **NOT** recommended to use this function
+// because it has no param check, nor strict type check
+func (r *CancelClusterServerlessScalePlanRequest) FromJsonString(s string) error {
+	f := make(map[string]interface{})
+	if err := json.Unmarshal([]byte(s), &f); err != nil {
+		return err
+	}
+	delete(f, "ClusterId")
+	delete(f, "PlanId")
+	if len(f) > 0 {
+		return tcerr.NewTencentCloudSDKError("ClientError.BuildRequestError", "CancelClusterServerlessScalePlanRequest has unknown keys!", "")
+	}
+	return json.Unmarshal([]byte(s), &r)
+}
+
+// Predefined struct for user
+type CancelClusterServerlessScalePlanResponseParams struct {
+	// 任务id
+	TaskId *int64 `json:"TaskId,omitnil,omitempty" name:"TaskId"`
+
+	// 唯一请求 ID，由服务端生成，每次请求都会返回（若请求因其他原因未能抵达服务端，则该次请求不会获得 RequestId）。定位问题时需要提供该次请求的 RequestId。
+	RequestId *string `json:"RequestId,omitnil,omitempty" name:"RequestId"`
+}
+
+type CancelClusterServerlessScalePlanResponse struct {
+	*tchttp.BaseResponse
+	Response *CancelClusterServerlessScalePlanResponseParams `json:"Response"`
+}
+
+func (r *CancelClusterServerlessScalePlanResponse) ToJsonString() string {
+    b, _ := json.Marshal(r)
+    return string(b)
+}
+
+// FromJsonString It is highly **NOT** recommended to use this function
+// because it has no param check, nor strict type check
+func (r *CancelClusterServerlessScalePlanResponse) FromJsonString(s string) error {
 	return json.Unmarshal([]byte(s), &r)
 }
 
@@ -2430,12 +2522,108 @@ type ClusterParamModifyLog struct {
 	InstanceId *string `json:"InstanceId,omitnil,omitempty" name:"InstanceId"`
 }
 
+type ClusterPeriodScalePolicy struct {
+	// <p>策略ID</p>
+	PolicyId *string `json:"PolicyId,omitnil,omitempty" name:"PolicyId"`
+
+	// <p>实例类型。rw-读写类型，ro-只读类型。</p>
+	InstanceType *string `json:"InstanceType,omitnil,omitempty" name:"InstanceType"`
+
+	// <p>弹性下限, 后续废弃, 请使用MinCcu</p>
+	MinCpu *float64 `json:"MinCpu,omitnil,omitempty" name:"MinCpu"`
+
+	// <p>弹性上限,后续废弃，请使用MaxCcu</p>
+	MaxCpu *float64 `json:"MaxCpu,omitnil,omitempty" name:"MaxCpu"`
+
+	// <p>弹性开始时间</p>
+	ScaleStartTime *string `json:"ScaleStartTime,omitnil,omitempty" name:"ScaleStartTime"`
+
+	// <p>弹性结束时间</p>
+	ScaleEndTime *string `json:"ScaleEndTime,omitnil,omitempty" name:"ScaleEndTime"`
+
+	// <p>策略有效起始日期时间</p>
+	PolicyStartTime *string `json:"PolicyStartTime,omitnil,omitempty" name:"PolicyStartTime"`
+
+	// <p>策略有效截止日期时间</p>
+	PolicyEndTime *string `json:"PolicyEndTime,omitnil,omitempty" name:"PolicyEndTime"`
+
+	// <p>周期类型。day-天， week-星期，month-月</p>
+	PeriodType *string `json:"PeriodType,omitnil,omitempty" name:"PeriodType"`
+
+	// <p>在周期内的时间配置。对于week，表示星期几；对于month，表示几号。对于day，此参数不生效。</p>
+	PeriodConfig []*int64 `json:"PeriodConfig,omitnil,omitempty" name:"PeriodConfig"`
+
+	// <p>创建时间</p>
+	CreateTime *string `json:"CreateTime,omitnil,omitempty" name:"CreateTime"`
+
+	// <p>更新时间</p>
+	UpdateTime *string `json:"UpdateTime,omitnil,omitempty" name:"UpdateTime"`
+
+	// <p>策略状态。normal-正常，expired-过期, deleted-删除</p>
+	Status *string `json:"Status,omitnil,omitempty" name:"Status"`
+}
+
 type ClusterReadOnlyValue struct {
 	// 集群ID
 	ClusterId *string `json:"ClusterId,omitnil,omitempty" name:"ClusterId"`
 
 	// 只读开关值
 	ReadOnlyValue *string `json:"ReadOnlyValue,omitnil,omitempty" name:"ReadOnlyValue"`
+}
+
+type ClusterServerlessScalePlan struct {
+	// <p>计划ID</p>
+	PlanId *int64 `json:"PlanId,omitnil,omitempty" name:"PlanId"`
+
+	// <p>集群ID</p>
+	ClusterId *string `json:"ClusterId,omitnil,omitempty" name:"ClusterId"`
+
+	// <p>实例对象。具体是实例id或者类型。比如ro-即集群下的所有只读实例。</p>
+	ObjectInstance *string `json:"ObjectInstance,omitnil,omitempty" name:"ObjectInstance"`
+
+	// <p>策略ID</p>
+	PolicyId *string `json:"PolicyId,omitnil,omitempty" name:"PolicyId"`
+
+	// <p>策略类型</p>
+	PolicyType *string `json:"PolicyType,omitnil,omitempty" name:"PolicyType"`
+
+	// <p>原规格下限</p>
+	SourceMinCpu *float64 `json:"SourceMinCpu,omitnil,omitempty" name:"SourceMinCpu"`
+
+	// <p>原规格上限</p>
+	SourceMaxCpu *float64 `json:"SourceMaxCpu,omitnil,omitempty" name:"SourceMaxCpu"`
+
+	// <p>原规格下限</p>
+	TargetMinCpu *float64 `json:"TargetMinCpu,omitnil,omitempty" name:"TargetMinCpu"`
+
+	// <p>原规格上限</p>
+	TargetMaxCpu *float64 `json:"TargetMaxCpu,omitnil,omitempty" name:"TargetMaxCpu"`
+
+	// <p>计划状态</p>
+	Status *string `json:"Status,omitnil,omitempty" name:"Status"`
+
+	// <p>弹性任务ID</p>
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	ScaleTaskId *int64 `json:"ScaleTaskId,omitnil,omitempty" name:"ScaleTaskId"`
+
+	// <p>失败原因</p>
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	FailReason *string `json:"FailReason,omitnil,omitempty" name:"FailReason"`
+
+	// <p>计划预期开始执行时间</p>
+	ExpectedStartTime *string `json:"ExpectedStartTime,omitnil,omitempty" name:"ExpectedStartTime"`
+
+	// <p>计划预期结束时间</p>
+	ExpectedEndTime *string `json:"ExpectedEndTime,omitnil,omitempty" name:"ExpectedEndTime"`
+
+	// <p>恢复自动弹性任务</p>
+	ResetTaskId *int64 `json:"ResetTaskId,omitnil,omitempty" name:"ResetTaskId"`
+
+	// <p>恢复自动弹性任务执行方式</p>
+	ResetType *string `json:"ResetType,omitnil,omitempty" name:"ResetType"`
+
+	// <p>恢复自动弹性任务执行时间</p>
+	ResetTime *string `json:"ResetTime,omitnil,omitempty" name:"ResetTime"`
 }
 
 type ClusterSlaveData struct {
@@ -2598,20 +2786,20 @@ func (r *CopyClusterPasswordComplexityResponse) FromJsonString(s string) error {
 
 // Predefined struct for user
 type CreateAccountsRequestParams struct {
-	// 集群id
+	// <p>集群id</p>
 	ClusterId *string `json:"ClusterId,omitnil,omitempty" name:"ClusterId"`
 
-	// 新账户列表
+	// <p>新账户列表</p>
 	Accounts []*NewAccount `json:"Accounts,omitnil,omitempty" name:"Accounts"`
 }
 
 type CreateAccountsRequest struct {
 	*tchttp.BaseRequest
 	
-	// 集群id
+	// <p>集群id</p>
 	ClusterId *string `json:"ClusterId,omitnil,omitempty" name:"ClusterId"`
 
-	// 新账户列表
+	// <p>新账户列表</p>
 	Accounts []*NewAccount `json:"Accounts,omitnil,omitempty" name:"Accounts"`
 }
 
@@ -2637,6 +2825,9 @@ func (r *CreateAccountsRequest) FromJsonString(s string) error {
 
 // Predefined struct for user
 type CreateAccountsResponseParams struct {
+	// <p>任务 ID</p>
+	TaskId *int64 `json:"TaskId,omitnil,omitempty" name:"TaskId"`
+
 	// 唯一请求 ID，由服务端生成，每次请求都会返回（若请求因其他原因未能抵达服务端，则该次请求不会获得 RequestId）。定位问题时需要提供该次请求的 RequestId。
 	RequestId *string `json:"RequestId,omitnil,omitempty" name:"RequestId"`
 }
@@ -3125,6 +3316,126 @@ func (r *CreateClusterDatabaseResponse) FromJsonString(s string) error {
 	return json.Unmarshal([]byte(s), &r)
 }
 
+// Predefined struct for user
+type CreateClusterPeriodScalePolicyRequestParams struct {
+	// <p>集群ID</p>
+	ClusterId *string `json:"ClusterId,omitnil,omitempty" name:"ClusterId"`
+
+	// <p>实例类型。rw读写，ro-只读</p>
+	InstanceType *string `json:"InstanceType,omitnil,omitempty" name:"InstanceType"`
+
+	// <p>当天开始弹性时间。格式是小时:分钟</p>
+	ScaleStartTime *string `json:"ScaleStartTime,omitnil,omitempty" name:"ScaleStartTime"`
+
+	// <p>当天结束弹性时间。格式是小时:分钟</p>
+	ScaleEndTime *string `json:"ScaleEndTime,omitnil,omitempty" name:"ScaleEndTime"`
+
+	// <p>策略生效的起始日期时间</p>
+	PolicyStartTime *string `json:"PolicyStartTime,omitnil,omitempty" name:"PolicyStartTime"`
+
+	// <p>策略生效的截止日期时间</p>
+	PolicyEndTime *string `json:"PolicyEndTime,omitnil,omitempty" name:"PolicyEndTime"`
+
+	// <p>周期类型。day-天，week-周，month-月。</p>
+	PeriodType *string `json:"PeriodType,omitnil,omitempty" name:"PeriodType"`
+
+	// <p>弹性规格下限</p>
+	MinCpu *float64 `json:"MinCpu,omitnil,omitempty" name:"MinCpu"`
+
+	// <p>弹性规格上限</p>
+	MaxCpu *float64 `json:"MaxCpu,omitnil,omitempty" name:"MaxCpu"`
+
+	// <p>周期内的时间列表。针对PeriodType=week， 表示星期几，比如[1,3]表示星期一、星期三。同理，对于PeriodType=month，[1,3,10]表示每月的1、3、10号。PeriodType=day则该字段无效。</p>
+	PeriodConfig []*int64 `json:"PeriodConfig,omitnil,omitempty" name:"PeriodConfig"`
+}
+
+type CreateClusterPeriodScalePolicyRequest struct {
+	*tchttp.BaseRequest
+	
+	// <p>集群ID</p>
+	ClusterId *string `json:"ClusterId,omitnil,omitempty" name:"ClusterId"`
+
+	// <p>实例类型。rw读写，ro-只读</p>
+	InstanceType *string `json:"InstanceType,omitnil,omitempty" name:"InstanceType"`
+
+	// <p>当天开始弹性时间。格式是小时:分钟</p>
+	ScaleStartTime *string `json:"ScaleStartTime,omitnil,omitempty" name:"ScaleStartTime"`
+
+	// <p>当天结束弹性时间。格式是小时:分钟</p>
+	ScaleEndTime *string `json:"ScaleEndTime,omitnil,omitempty" name:"ScaleEndTime"`
+
+	// <p>策略生效的起始日期时间</p>
+	PolicyStartTime *string `json:"PolicyStartTime,omitnil,omitempty" name:"PolicyStartTime"`
+
+	// <p>策略生效的截止日期时间</p>
+	PolicyEndTime *string `json:"PolicyEndTime,omitnil,omitempty" name:"PolicyEndTime"`
+
+	// <p>周期类型。day-天，week-周，month-月。</p>
+	PeriodType *string `json:"PeriodType,omitnil,omitempty" name:"PeriodType"`
+
+	// <p>弹性规格下限</p>
+	MinCpu *float64 `json:"MinCpu,omitnil,omitempty" name:"MinCpu"`
+
+	// <p>弹性规格上限</p>
+	MaxCpu *float64 `json:"MaxCpu,omitnil,omitempty" name:"MaxCpu"`
+
+	// <p>周期内的时间列表。针对PeriodType=week， 表示星期几，比如[1,3]表示星期一、星期三。同理，对于PeriodType=month，[1,3,10]表示每月的1、3、10号。PeriodType=day则该字段无效。</p>
+	PeriodConfig []*int64 `json:"PeriodConfig,omitnil,omitempty" name:"PeriodConfig"`
+}
+
+func (r *CreateClusterPeriodScalePolicyRequest) ToJsonString() string {
+    b, _ := json.Marshal(r)
+    return string(b)
+}
+
+// FromJsonString It is highly **NOT** recommended to use this function
+// because it has no param check, nor strict type check
+func (r *CreateClusterPeriodScalePolicyRequest) FromJsonString(s string) error {
+	f := make(map[string]interface{})
+	if err := json.Unmarshal([]byte(s), &f); err != nil {
+		return err
+	}
+	delete(f, "ClusterId")
+	delete(f, "InstanceType")
+	delete(f, "ScaleStartTime")
+	delete(f, "ScaleEndTime")
+	delete(f, "PolicyStartTime")
+	delete(f, "PolicyEndTime")
+	delete(f, "PeriodType")
+	delete(f, "MinCpu")
+	delete(f, "MaxCpu")
+	delete(f, "PeriodConfig")
+	if len(f) > 0 {
+		return tcerr.NewTencentCloudSDKError("ClientError.BuildRequestError", "CreateClusterPeriodScalePolicyRequest has unknown keys!", "")
+	}
+	return json.Unmarshal([]byte(s), &r)
+}
+
+// Predefined struct for user
+type CreateClusterPeriodScalePolicyResponseParams struct {
+	// <p>策略ID</p>
+	PolicyId *string `json:"PolicyId,omitnil,omitempty" name:"PolicyId"`
+
+	// 唯一请求 ID，由服务端生成，每次请求都会返回（若请求因其他原因未能抵达服务端，则该次请求不会获得 RequestId）。定位问题时需要提供该次请求的 RequestId。
+	RequestId *string `json:"RequestId,omitnil,omitempty" name:"RequestId"`
+}
+
+type CreateClusterPeriodScalePolicyResponse struct {
+	*tchttp.BaseResponse
+	Response *CreateClusterPeriodScalePolicyResponseParams `json:"Response"`
+}
+
+func (r *CreateClusterPeriodScalePolicyResponse) ToJsonString() string {
+    b, _ := json.Marshal(r)
+    return string(b)
+}
+
+// FromJsonString It is highly **NOT** recommended to use this function
+// because it has no param check, nor strict type check
+func (r *CreateClusterPeriodScalePolicyResponse) FromJsonString(s string) error {
+	return json.Unmarshal([]byte(s), &r)
+}
+
 type CreateClustersData struct {
 	// 实例CPU
 	Cpu *int64 `json:"Cpu,omitnil,omitempty" name:"Cpu"`
@@ -3278,6 +3589,12 @@ type CreateClustersRequestParams struct {
 
 	// <p>内核小版本号</p>
 	CynosVersion *string `json:"CynosVersion,omitnil,omitempty" name:"CynosVersion"`
+
+	// <p>同步方式。可选值：async、semisync、sync。</p>
+	SyncWay *string `json:"SyncWay,omitnil,omitempty" name:"SyncWay"`
+
+	// <p>半同步超时时间，单位ms。为保证业务稳定性，半同步复制存在退化逻辑，当主可用区集群在等待备可用区集群确认事务时若超过该超时时间，复制方式将降为异步复制。</p><p>取值范围：[1000, 4294967295]</p><p>单位：毫秒</p><p>默认值：10000</p>
+	SemiSyncTimeout *int64 `json:"SemiSyncTimeout,omitnil,omitempty" name:"SemiSyncTimeout"`
 }
 
 type CreateClustersRequest struct {
@@ -3423,6 +3740,12 @@ type CreateClustersRequest struct {
 
 	// <p>内核小版本号</p>
 	CynosVersion *string `json:"CynosVersion,omitnil,omitempty" name:"CynosVersion"`
+
+	// <p>同步方式。可选值：async、semisync、sync。</p>
+	SyncWay *string `json:"SyncWay,omitnil,omitempty" name:"SyncWay"`
+
+	// <p>半同步超时时间，单位ms。为保证业务稳定性，半同步复制存在退化逻辑，当主可用区集群在等待备可用区集群确认事务时若超过该超时时间，复制方式将降为异步复制。</p><p>取值范围：[1000, 4294967295]</p><p>单位：毫秒</p><p>默认值：10000</p>
+	SemiSyncTimeout *int64 `json:"SemiSyncTimeout,omitnil,omitempty" name:"SemiSyncTimeout"`
 }
 
 func (r *CreateClustersRequest) ToJsonString() string {
@@ -3484,6 +3807,8 @@ func (r *CreateClustersRequest) FromJsonString(s string) error {
 	delete(f, "AutoArchiveDelayHours")
 	delete(f, "ClusterLevel")
 	delete(f, "CynosVersion")
+	delete(f, "SyncWay")
+	delete(f, "SemiSyncTimeout")
 	if len(f) > 0 {
 		return tcerr.NewTencentCloudSDKError("ClientError.BuildRequestError", "CreateClustersRequest has unknown keys!", "")
 	}
@@ -4235,6 +4560,9 @@ type CreateProxyEndPointRequestParams struct {
 
 	// <p>实例权重。</p>
 	InstanceWeights []*ProxyInstanceWeight `json:"InstanceWeights,omitnil,omitempty" name:"InstanceWeights"`
+
+	// <p>负载均衡模式</p><p>枚举值：</p><ul><li>static： 静态负载</li><li>dynamic： 动态负载</li></ul>
+	LoadBalanceMode *string `json:"LoadBalanceMode,omitnil,omitempty" name:"LoadBalanceMode"`
 }
 
 type CreateProxyEndPointRequest struct {
@@ -4293,6 +4621,9 @@ type CreateProxyEndPointRequest struct {
 
 	// <p>实例权重。</p>
 	InstanceWeights []*ProxyInstanceWeight `json:"InstanceWeights,omitnil,omitempty" name:"InstanceWeights"`
+
+	// <p>负载均衡模式</p><p>枚举值：</p><ul><li>static： 静态负载</li><li>dynamic： 动态负载</li></ul>
+	LoadBalanceMode *string `json:"LoadBalanceMode,omitnil,omitempty" name:"LoadBalanceMode"`
 }
 
 func (r *CreateProxyEndPointRequest) ToJsonString() string {
@@ -4325,6 +4656,7 @@ func (r *CreateProxyEndPointRequest) FromJsonString(s string) error {
 	delete(f, "TransSplit")
 	delete(f, "AccessMode")
 	delete(f, "InstanceWeights")
+	delete(f, "LoadBalanceMode")
 	if len(f) > 0 {
 		return tcerr.NewTencentCloudSDKError("ClientError.BuildRequestError", "CreateProxyEndPointRequest has unknown keys!", "")
 	}
@@ -4864,192 +5196,182 @@ type CynosdbCluster struct {
 }
 
 type CynosdbClusterDetail struct {
-	// 集群ID
+	// <p>集群ID</p>
 	ClusterId *string `json:"ClusterId,omitnil,omitempty" name:"ClusterId"`
 
-	// 集群名称
+	// <p>集群名称</p>
 	ClusterName *string `json:"ClusterName,omitnil,omitempty" name:"ClusterName"`
 
-	// 地域
+	// <p>地域</p>
 	Region *string `json:"Region,omitnil,omitempty" name:"Region"`
 
-	// 可用区
+	// <p>集群主可用区</p>
 	Zone *string `json:"Zone,omitnil,omitempty" name:"Zone"`
 
-	// 物理可用区
+	// <p>物理可用区</p>
 	PhysicalZone *string `json:"PhysicalZone,omitnil,omitempty" name:"PhysicalZone"`
 
-	// 状态，支持的值如下：
-	// - creating：创建中
-	// - running：运行中
-	// - isolating：隔离中
-	// - isolated：已隔离
-	// - activating：从回收站重新恢复
-	// - offlining：下线中
-	// - offlined：已下线
-	// - deleting：删除中
-	// - deleted：已删除
+	// <p>状态，支持的值如下：</p><ul><li>creating：创建中</li><li>running：运行中</li><li>isolating：隔离中</li><li>isolated：已隔离</li><li>activating：从回收站重新恢复</li><li>offlining：下线中</li><li>offlined：已下线</li><li>deleting：删除中</li><li>deleted：已删除</li></ul>
 	Status *string `json:"Status,omitnil,omitempty" name:"Status"`
 
-	// 状态描述
+	// <p>状态描述</p>
 	StatusDesc *string `json:"StatusDesc,omitnil,omitempty" name:"StatusDesc"`
 
-	// 当Db类型为SERVERLESS时，serverless集群状态，可选值:
-	// resume
-	// resuming
-	// pause
-	// pausing
+	// <p>当Db类型为SERVERLESS时，serverless集群状态，可选值:<br>resume<br>resuming<br>pause<br>pausing</p>
 	ServerlessStatus *string `json:"ServerlessStatus,omitnil,omitempty" name:"ServerlessStatus"`
 
-	// 存储Id
+	// <p>存储Id</p>
 	StorageId *string `json:"StorageId,omitnil,omitempty" name:"StorageId"`
 
-	// 存储大小，单位为G
+	// <p>存储大小，单位为G</p>
 	Storage *int64 `json:"Storage,omitnil,omitempty" name:"Storage"`
 
-	// 最大存储规格，单位为G
+	// <p>最大存储规格，单位为G</p>
 	MaxStorageSize *int64 `json:"MaxStorageSize,omitnil,omitempty" name:"MaxStorageSize"`
 
-	// 最小存储规格，单位为G
+	// <p>最小存储规格，单位为G</p>
 	MinStorageSize *int64 `json:"MinStorageSize,omitnil,omitempty" name:"MinStorageSize"`
 
-	// 存储付费类型，1为包年包月，0为按量计费
+	// <p>存储付费类型，1为包年包月，0为按量计费</p>
 	StoragePayMode *int64 `json:"StoragePayMode,omitnil,omitempty" name:"StoragePayMode"`
 
-	// VPC名称
+	// <p>VPC名称</p>
 	VpcName *string `json:"VpcName,omitnil,omitempty" name:"VpcName"`
 
-	// vpc唯一id
+	// <p>vpc唯一id</p>
 	VpcId *string `json:"VpcId,omitnil,omitempty" name:"VpcId"`
 
-	// 子网名称
+	// <p>子网名称</p>
 	SubnetName *string `json:"SubnetName,omitnil,omitempty" name:"SubnetName"`
 
-	// 子网ID
+	// <p>子网ID</p>
 	SubnetId *string `json:"SubnetId,omitnil,omitempty" name:"SubnetId"`
 
-	// 字符集
+	// <p>字符集</p>
 	Charset *string `json:"Charset,omitnil,omitempty" name:"Charset"`
 
-	// 创建时间
+	// <p>创建时间</p>
 	CreateTime *string `json:"CreateTime,omitnil,omitempty" name:"CreateTime"`
 
-	// 数据库类型
+	// <p>数据库类型</p>
 	DbType *string `json:"DbType,omitnil,omitempty" name:"DbType"`
 
-	// Db类型：<li>NORMAL</li><li>SERVERLESS</li>
+	// <p>Db类型：<li>NORMAL</li><li>SERVERLESS</li></p>
 	DbMode *string `json:"DbMode,omitnil,omitempty" name:"DbMode"`
 
-	// 数据库版本
+	// <p>数据库版本</p>
 	DbVersion *string `json:"DbVersion,omitnil,omitempty" name:"DbVersion"`
 
-	// 存储空间上限
+	// <p>存储空间上限</p>
 	StorageLimit *int64 `json:"StorageLimit,omitnil,omitempty" name:"StorageLimit"`
 
-	// 使用容量
+	// <p>使用容量</p>
 	UsedStorage *int64 `json:"UsedStorage,omitnil,omitempty" name:"UsedStorage"`
 
-	// vip地址
+	// <p>vip地址</p>
 	Vip *string `json:"Vip,omitnil,omitempty" name:"Vip"`
 
-	// vport端口
+	// <p>vport端口</p>
 	Vport *int64 `json:"Vport,omitnil,omitempty" name:"Vport"`
 
-	// 集群只读实例的vip地址和vport端口
+	// <p>集群只读实例的vip地址和vport端口</p>
 	RoAddr []*Addr `json:"RoAddr,omitnil,omitempty" name:"RoAddr"`
 
-	// 集群支持的功能
+	// <p>集群支持的功能</p>
 	Ability *Ability `json:"Ability,omitnil,omitempty" name:"Ability"`
 
-	// cynos版本
+	// <p>cynos版本</p>
 	CynosVersion *string `json:"CynosVersion,omitnil,omitempty" name:"CynosVersion"`
 
-	// 商业类型
+	// <p>商业类型</p>
 	BusinessType *string `json:"BusinessType,omitnil,omitempty" name:"BusinessType"`
 
-	// 是否有从可用区
+	// <p>是否有从可用区</p>
 	HasSlaveZone *string `json:"HasSlaveZone,omitnil,omitempty" name:"HasSlaveZone"`
 
-	// 是否冻结
+	// <p>是否冻结</p>
 	IsFreeze *string `json:"IsFreeze,omitnil,omitempty" name:"IsFreeze"`
 
-	// 任务列表
+	// <p>任务列表</p>
 	Tasks []*ObjectTask `json:"Tasks,omitnil,omitempty" name:"Tasks"`
 
-	// 主可用区
+	// <p>读写实例当前所在可用区</p>
 	MasterZone *string `json:"MasterZone,omitnil,omitempty" name:"MasterZone"`
 
-	// 从可用区列表
+	// <p>从可用区列表</p>
 	SlaveZones []*string `json:"SlaveZones,omitnil,omitempty" name:"SlaveZones"`
 
-	// 实例信息
+	// <p>实例信息</p>
 	InstanceSet []*ClusterInstanceDetail `json:"InstanceSet,omitnil,omitempty" name:"InstanceSet"`
 
-	// 付费模式
+	// <p>付费模式</p>
 	PayMode *int64 `json:"PayMode,omitnil,omitempty" name:"PayMode"`
 
-	// 到期时间
+	// <p>到期时间</p>
 	PeriodEndTime *string `json:"PeriodEndTime,omitnil,omitempty" name:"PeriodEndTime"`
 
-	// 项目id
+	// <p>项目id</p>
 	ProjectID *int64 `json:"ProjectID,omitnil,omitempty" name:"ProjectID"`
 
-	// 实例绑定的tag数组信息
+	// <p>实例绑定的tag数组信息</p>
 	ResourceTags []*Tag `json:"ResourceTags,omitnil,omitempty" name:"ResourceTags"`
 
-	// Proxy状态
+	// <p>Proxy状态</p>
 	ProxyStatus *string `json:"ProxyStatus,omitnil,omitempty" name:"ProxyStatus"`
 
-	// binlog开关，可选值：ON, OFF
+	// <p>binlog开关，可选值：ON, OFF</p>
 	LogBin *string `json:"LogBin,omitnil,omitempty" name:"LogBin"`
 
-	// 是否跳过交易
+	// <p>是否跳过交易</p>
 	IsSkipTrade *string `json:"IsSkipTrade,omitnil,omitempty" name:"IsSkipTrade"`
 
-	// pitr类型，可选值：normal, redo_pitr
+	// <p>pitr类型，可选值：normal, redo_pitr</p>
 	PitrType *string `json:"PitrType,omitnil,omitempty" name:"PitrType"`
 
-	// 是否打开密码复杂度
+	// <p>是否打开密码复杂度</p>
 	IsOpenPasswordComplexity *string `json:"IsOpenPasswordComplexity,omitnil,omitempty" name:"IsOpenPasswordComplexity"`
 
-	// 网络类型
+	// <p>网络类型</p>
 	NetworkStatus *string `json:"NetworkStatus,omitnil,omitempty" name:"NetworkStatus"`
 
-	// 集群绑定的资源包信息	
+	// <p>集群绑定的资源包信息</p>
 	ResourcePackages []*ResourcePackage `json:"ResourcePackages,omitnil,omitempty" name:"ResourcePackages"`
 
-	// 自动续费标识，1为自动续费，0为到期不续
+	// <p>自动续费标识，1为自动续费，0为到期不续</p>
 	RenewFlag *int64 `json:"RenewFlag,omitnil,omitempty" name:"RenewFlag"`
 
-	// 节点网络类型
+	// <p>节点网络类型</p>
 	NetworkType *string `json:"NetworkType,omitnil,omitempty" name:"NetworkType"`
 
-	// 备可用区属性
+	// <p>备可用区属性</p>
 	SlaveZoneAttr []*SlaveZoneAttrItem `json:"SlaveZoneAttr,omitnil,omitempty" name:"SlaveZoneAttr"`
 
-	// 版本标签
+	// <p>版本标签</p>
 	CynosVersionTag *string `json:"CynosVersionTag,omitnil,omitempty" name:"CynosVersionTag"`
 
-	// 全球数据库网络唯一标识
+	// <p>全球数据库网络唯一标识</p>
 	GdnId *string `json:"GdnId,omitnil,omitempty" name:"GdnId"`
 
-	// 集群在全球数据网络中的角色。
-	// 主集群- primary
-	// 从集群 - standby
-	// 如为空，该字段无效
+	// <p>集群在全球数据网络中的角色。<br>主集群- primary<br>从集群 - standby<br>如为空，该字段无效</p>
 	GdnRole *string `json:"GdnRole,omitnil,omitempty" name:"GdnRole"`
 
-	// 二级存储使用量，单位：G
+	// <p>二级存储使用量，单位：G</p>
 	UsedArchiveStorage *int64 `json:"UsedArchiveStorage,omitnil,omitempty" name:"UsedArchiveStorage"`
 
-	// 归档状态，枚举值<li>normal:正常</li><li>archiving:归档中</li><li>resuming:恢复中</li><li>archived :已归档</li>
+	// <p>归档状态，枚举值<li>normal:正常</li><li>archiving:归档中</li><li>resuming:恢复中</li><li>archived :已归档</li></p>
 	ArchiveStatus *string `json:"ArchiveStatus,omitnil,omitempty" name:"ArchiveStatus"`
 
-	// 归档进度，百分比。
+	// <p>归档进度，百分比。</p>
 	ArchiveProgress *int64 `json:"ArchiveProgress,omitnil,omitempty" name:"ArchiveProgress"`
 
-	// 是否开启透明加密
+	// <p>集群级别。例如 P0, P1</p>
+	ClusterLevel *string `json:"ClusterLevel,omitnil,omitempty" name:"ClusterLevel"`
+
+	// <p>是否开启透明加密</p>
 	IsOpenTDE *bool `json:"IsOpenTDE,omitnil,omitempty" name:"IsOpenTDE"`
+
+	// <p>实例当前所在可用区</p>
+	RealZone *string `json:"RealZone,omitnil,omitempty" name:"RealZone"`
 }
 
 type CynosdbErrorLogItem struct {
@@ -5088,7 +5410,7 @@ type CynosdbInstance struct {
 	// <p>地域</p>
 	Region *string `json:"Region,omitnil,omitempty" name:"Region"`
 
-	// <p>可用区</p>
+	// <p>集群主可用区</p>
 	Zone *string `json:"Zone,omitnil,omitempty" name:"Zone"`
 
 	// <p>实例状态</p>
@@ -5209,7 +5531,7 @@ type CynosdbInstance struct {
 	// 注意：此字段可能返回 null，表示取不到有效值。
 	ResourceTags []*Tag `json:"ResourceTags,omitnil,omitempty" name:"ResourceTags"`
 
-	// <p>主可用区</p>
+	// <p>读写实例当前所在可用区</p>
 	MasterZone *string `json:"MasterZone,omitnil,omitempty" name:"MasterZone"`
 
 	// <p>备可用区</p>
@@ -5243,6 +5565,9 @@ type CynosdbInstance struct {
 
 	// <p>全球数据库唯一标识</p>
 	GdnId *string `json:"GdnId,omitnil,omitempty" name:"GdnId"`
+
+	// <p>实例当前所在可用区</p>
+	RealZone *string `json:"RealZone,omitnil,omitempty" name:"RealZone"`
 }
 
 type CynosdbInstanceDetail struct {
@@ -5584,20 +5909,20 @@ type DbTable struct {
 
 // Predefined struct for user
 type DeleteAccountsRequestParams struct {
-	// 集群ID
+	// <p>集群ID</p>
 	ClusterId *string `json:"ClusterId,omitnil,omitempty" name:"ClusterId"`
 
-	// 账号数组，包含account和host
+	// <p>账号数组，包含account和host</p>
 	Accounts []*InputAccount `json:"Accounts,omitnil,omitempty" name:"Accounts"`
 }
 
 type DeleteAccountsRequest struct {
 	*tchttp.BaseRequest
 	
-	// 集群ID
+	// <p>集群ID</p>
 	ClusterId *string `json:"ClusterId,omitnil,omitempty" name:"ClusterId"`
 
-	// 账号数组，包含account和host
+	// <p>账号数组，包含account和host</p>
 	Accounts []*InputAccount `json:"Accounts,omitnil,omitempty" name:"Accounts"`
 }
 
@@ -6026,6 +6351,67 @@ func (r *DeleteClusterDatabaseResponse) ToJsonString() string {
 // FromJsonString It is highly **NOT** recommended to use this function
 // because it has no param check, nor strict type check
 func (r *DeleteClusterDatabaseResponse) FromJsonString(s string) error {
+	return json.Unmarshal([]byte(s), &r)
+}
+
+// Predefined struct for user
+type DeleteClusterPeriodScalePolicyRequestParams struct {
+	// 集群ID
+	ClusterId *string `json:"ClusterId,omitnil,omitempty" name:"ClusterId"`
+
+	// 策略ID
+	PolicyId *string `json:"PolicyId,omitnil,omitempty" name:"PolicyId"`
+}
+
+type DeleteClusterPeriodScalePolicyRequest struct {
+	*tchttp.BaseRequest
+	
+	// 集群ID
+	ClusterId *string `json:"ClusterId,omitnil,omitempty" name:"ClusterId"`
+
+	// 策略ID
+	PolicyId *string `json:"PolicyId,omitnil,omitempty" name:"PolicyId"`
+}
+
+func (r *DeleteClusterPeriodScalePolicyRequest) ToJsonString() string {
+    b, _ := json.Marshal(r)
+    return string(b)
+}
+
+// FromJsonString It is highly **NOT** recommended to use this function
+// because it has no param check, nor strict type check
+func (r *DeleteClusterPeriodScalePolicyRequest) FromJsonString(s string) error {
+	f := make(map[string]interface{})
+	if err := json.Unmarshal([]byte(s), &f); err != nil {
+		return err
+	}
+	delete(f, "ClusterId")
+	delete(f, "PolicyId")
+	if len(f) > 0 {
+		return tcerr.NewTencentCloudSDKError("ClientError.BuildRequestError", "DeleteClusterPeriodScalePolicyRequest has unknown keys!", "")
+	}
+	return json.Unmarshal([]byte(s), &r)
+}
+
+// Predefined struct for user
+type DeleteClusterPeriodScalePolicyResponseParams struct {
+	// 唯一请求 ID，由服务端生成，每次请求都会返回（若请求因其他原因未能抵达服务端，则该次请求不会获得 RequestId）。定位问题时需要提供该次请求的 RequestId。
+	RequestId *string `json:"RequestId,omitnil,omitempty" name:"RequestId"`
+}
+
+type DeleteClusterPeriodScalePolicyResponse struct {
+	*tchttp.BaseResponse
+	Response *DeleteClusterPeriodScalePolicyResponseParams `json:"Response"`
+}
+
+func (r *DeleteClusterPeriodScalePolicyResponse) ToJsonString() string {
+    b, _ := json.Marshal(r)
+    return string(b)
+}
+
+// FromJsonString It is highly **NOT** recommended to use this function
+// because it has no param check, nor strict type check
+func (r *DeleteClusterPeriodScalePolicyResponse) FromJsonString(s string) error {
 	return json.Unmarshal([]byte(s), &r)
 }
 
@@ -7659,6 +8045,96 @@ func (r *DescribeBackupListResponse) FromJsonString(s string) error {
 }
 
 // Predefined struct for user
+type DescribeBackupOverviewRequestParams struct {
+	// 集群id
+	ClusterId *string `json:"ClusterId,omitnil,omitempty" name:"ClusterId"`
+}
+
+type DescribeBackupOverviewRequest struct {
+	*tchttp.BaseRequest
+	
+	// 集群id
+	ClusterId *string `json:"ClusterId,omitnil,omitempty" name:"ClusterId"`
+}
+
+func (r *DescribeBackupOverviewRequest) ToJsonString() string {
+    b, _ := json.Marshal(r)
+    return string(b)
+}
+
+// FromJsonString It is highly **NOT** recommended to use this function
+// because it has no param check, nor strict type check
+func (r *DescribeBackupOverviewRequest) FromJsonString(s string) error {
+	f := make(map[string]interface{})
+	if err := json.Unmarshal([]byte(s), &f); err != nil {
+		return err
+	}
+	delete(f, "ClusterId")
+	if len(f) > 0 {
+		return tcerr.NewTencentCloudSDKError("ClientError.BuildRequestError", "DescribeBackupOverviewRequest has unknown keys!", "")
+	}
+	return json.Unmarshal([]byte(s), &r)
+}
+
+// Predefined struct for user
+type DescribeBackupOverviewResponseParams struct {
+	// 备份总容量
+	BackupTotalVolume *float64 `json:"BackupTotalVolume,omitnil,omitempty" name:"BackupTotalVolume"`
+
+	// 备份快照容量
+	BackupSnapshotVolume *float64 `json:"BackupSnapshotVolume,omitnil,omitempty" name:"BackupSnapshotVolume"`
+
+	// 备份逻辑容量
+	BackupLogicVolume *float64 `json:"BackupLogicVolume,omitnil,omitempty" name:"BackupLogicVolume"`
+
+	// 日志总容量
+	LogTotalVolume *float64 `json:"LogTotalVolume,omitnil,omitempty" name:"LogTotalVolume"`
+
+	// 日志binlog容量
+	LogBinlogVolume *float64 `json:"LogBinlogVolume,omitnil,omitempty" name:"LogBinlogVolume"`
+
+	// 日志redolog容量
+	LogRedoLogVolume *float64 `json:"LogRedoLogVolume,omitnil,omitempty" name:"LogRedoLogVolume"`
+
+	// 跨地域备份总容量
+	CrossTotalVolume *float64 `json:"CrossTotalVolume,omitnil,omitempty" name:"CrossTotalVolume"`
+
+	// 跨地域备份容量
+	CrossRegionBackupVolume *float64 `json:"CrossRegionBackupVolume,omitnil,omitempty" name:"CrossRegionBackupVolume"`
+
+	// 跨地域日志容量
+	CrossRegionLogVolume *float64 `json:"CrossRegionLogVolume,omitnil,omitempty" name:"CrossRegionLogVolume"`
+
+	// 备份容量详情
+	BackupVolumeInfos []*BackupVolumeInfo `json:"BackupVolumeInfos,omitnil,omitempty" name:"BackupVolumeInfos"`
+
+	// 跨地域备份容量详情
+	CrossRegionBackupVolumeInfos []*BackupVolumeInfo `json:"CrossRegionBackupVolumeInfos,omitnil,omitempty" name:"CrossRegionBackupVolumeInfos"`
+
+	// 跨地域信息
+	CrossRegions []*string `json:"CrossRegions,omitnil,omitempty" name:"CrossRegions"`
+
+	// 唯一请求 ID，由服务端生成，每次请求都会返回（若请求因其他原因未能抵达服务端，则该次请求不会获得 RequestId）。定位问题时需要提供该次请求的 RequestId。
+	RequestId *string `json:"RequestId,omitnil,omitempty" name:"RequestId"`
+}
+
+type DescribeBackupOverviewResponse struct {
+	*tchttp.BaseResponse
+	Response *DescribeBackupOverviewResponseParams `json:"Response"`
+}
+
+func (r *DescribeBackupOverviewResponse) ToJsonString() string {
+    b, _ := json.Marshal(r)
+    return string(b)
+}
+
+// FromJsonString It is highly **NOT** recommended to use this function
+// because it has no param check, nor strict type check
+func (r *DescribeBackupOverviewResponse) FromJsonString(s string) error {
+	return json.Unmarshal([]byte(s), &r)
+}
+
+// Predefined struct for user
 type DescribeBinlogConfigRequestParams struct {
 	// 集群ID
 	ClusterId *string `json:"ClusterId,omitnil,omitempty" name:"ClusterId"`
@@ -8401,14 +8877,14 @@ func (r *DescribeClusterDetailDatabasesResponse) FromJsonString(s string) error 
 
 // Predefined struct for user
 type DescribeClusterDetailRequestParams struct {
-	// 集群Id
+	// <p>集群Id</p>
 	ClusterId *string `json:"ClusterId,omitnil,omitempty" name:"ClusterId"`
 }
 
 type DescribeClusterDetailRequest struct {
 	*tchttp.BaseRequest
 	
-	// 集群Id
+	// <p>集群Id</p>
 	ClusterId *string `json:"ClusterId,omitnil,omitempty" name:"ClusterId"`
 }
 
@@ -8433,7 +8909,7 @@ func (r *DescribeClusterDetailRequest) FromJsonString(s string) error {
 
 // Predefined struct for user
 type DescribeClusterDetailResponseParams struct {
-	// 集群详细信息
+	// <p>集群详细信息</p>
 	Detail *CynosdbClusterDetail `json:"Detail,omitnil,omitempty" name:"Detail"`
 
 	// 唯一请求 ID，由服务端生成，每次请求都会返回（若请求因其他原因未能抵达服务端，则该次请求不会获得 RequestId）。定位问题时需要提供该次请求的 RequestId。
@@ -8578,6 +9054,66 @@ func (r *DescribeClusterInstanceGrpsResponse) ToJsonString() string {
 // FromJsonString It is highly **NOT** recommended to use this function
 // because it has no param check, nor strict type check
 func (r *DescribeClusterInstanceGrpsResponse) FromJsonString(s string) error {
+	return json.Unmarshal([]byte(s), &r)
+}
+
+// Predefined struct for user
+type DescribeClusterLevelsRequestParams struct {
+	// <p>可用区</p>
+	Zone *string `json:"Zone,omitnil,omitempty" name:"Zone"`
+}
+
+type DescribeClusterLevelsRequest struct {
+	*tchttp.BaseRequest
+	
+	// <p>可用区</p>
+	Zone *string `json:"Zone,omitnil,omitempty" name:"Zone"`
+}
+
+func (r *DescribeClusterLevelsRequest) ToJsonString() string {
+    b, _ := json.Marshal(r)
+    return string(b)
+}
+
+// FromJsonString It is highly **NOT** recommended to use this function
+// because it has no param check, nor strict type check
+func (r *DescribeClusterLevelsRequest) FromJsonString(s string) error {
+	f := make(map[string]interface{})
+	if err := json.Unmarshal([]byte(s), &f); err != nil {
+		return err
+	}
+	delete(f, "Zone")
+	if len(f) > 0 {
+		return tcerr.NewTencentCloudSDKError("ClientError.BuildRequestError", "DescribeClusterLevelsRequest has unknown keys!", "")
+	}
+	return json.Unmarshal([]byte(s), &r)
+}
+
+// Predefined struct for user
+type DescribeClusterLevelsResponseParams struct {
+	// <p>集群类型列表</p>
+	LevelList []*string `json:"LevelList,omitnil,omitempty" name:"LevelList"`
+
+	// <p>专区列表</p>
+	Zones []*string `json:"Zones,omitnil,omitempty" name:"Zones"`
+
+	// 唯一请求 ID，由服务端生成，每次请求都会返回（若请求因其他原因未能抵达服务端，则该次请求不会获得 RequestId）。定位问题时需要提供该次请求的 RequestId。
+	RequestId *string `json:"RequestId,omitnil,omitempty" name:"RequestId"`
+}
+
+type DescribeClusterLevelsResponse struct {
+	*tchttp.BaseResponse
+	Response *DescribeClusterLevelsResponseParams `json:"Response"`
+}
+
+func (r *DescribeClusterLevelsResponse) ToJsonString() string {
+    b, _ := json.Marshal(r)
+    return string(b)
+}
+
+// FromJsonString It is highly **NOT** recommended to use this function
+// because it has no param check, nor strict type check
+func (r *DescribeClusterLevelsResponse) FromJsonString(s string) error {
 	return json.Unmarshal([]byte(s), &r)
 }
 
@@ -8823,6 +9359,63 @@ func (r *DescribeClusterPasswordComplexityResponse) FromJsonString(s string) err
 }
 
 // Predefined struct for user
+type DescribeClusterPeriodScalePolicyRequestParams struct {
+	// 集群id
+	ClusterId *string `json:"ClusterId,omitnil,omitempty" name:"ClusterId"`
+}
+
+type DescribeClusterPeriodScalePolicyRequest struct {
+	*tchttp.BaseRequest
+	
+	// 集群id
+	ClusterId *string `json:"ClusterId,omitnil,omitempty" name:"ClusterId"`
+}
+
+func (r *DescribeClusterPeriodScalePolicyRequest) ToJsonString() string {
+    b, _ := json.Marshal(r)
+    return string(b)
+}
+
+// FromJsonString It is highly **NOT** recommended to use this function
+// because it has no param check, nor strict type check
+func (r *DescribeClusterPeriodScalePolicyRequest) FromJsonString(s string) error {
+	f := make(map[string]interface{})
+	if err := json.Unmarshal([]byte(s), &f); err != nil {
+		return err
+	}
+	delete(f, "ClusterId")
+	if len(f) > 0 {
+		return tcerr.NewTencentCloudSDKError("ClientError.BuildRequestError", "DescribeClusterPeriodScalePolicyRequest has unknown keys!", "")
+	}
+	return json.Unmarshal([]byte(s), &r)
+}
+
+// Predefined struct for user
+type DescribeClusterPeriodScalePolicyResponseParams struct {
+	// 集群周期弹性策略列表
+	PolicyList []*ClusterPeriodScalePolicy `json:"PolicyList,omitnil,omitempty" name:"PolicyList"`
+
+	// 唯一请求 ID，由服务端生成，每次请求都会返回（若请求因其他原因未能抵达服务端，则该次请求不会获得 RequestId）。定位问题时需要提供该次请求的 RequestId。
+	RequestId *string `json:"RequestId,omitnil,omitempty" name:"RequestId"`
+}
+
+type DescribeClusterPeriodScalePolicyResponse struct {
+	*tchttp.BaseResponse
+	Response *DescribeClusterPeriodScalePolicyResponseParams `json:"Response"`
+}
+
+func (r *DescribeClusterPeriodScalePolicyResponse) ToJsonString() string {
+    b, _ := json.Marshal(r)
+    return string(b)
+}
+
+// FromJsonString It is highly **NOT** recommended to use this function
+// because it has no param check, nor strict type check
+func (r *DescribeClusterPeriodScalePolicyResponse) FromJsonString(s string) error {
+	return json.Unmarshal([]byte(s), &r)
+}
+
+// Predefined struct for user
 type DescribeClusterReadOnlyRequestParams struct {
 	// 集群ID列表
 	ClusterIds []*string `json:"ClusterIds,omitnil,omitempty" name:"ClusterIds"`
@@ -8876,6 +9469,115 @@ func (r *DescribeClusterReadOnlyResponse) ToJsonString() string {
 // FromJsonString It is highly **NOT** recommended to use this function
 // because it has no param check, nor strict type check
 func (r *DescribeClusterReadOnlyResponse) FromJsonString(s string) error {
+	return json.Unmarshal([]byte(s), &r)
+}
+
+// Predefined struct for user
+type DescribeClusterServerlessScalePlansRequestParams struct {
+	// 集群ID
+	ClusterId *string `json:"ClusterId,omitnil,omitempty" name:"ClusterId"`
+
+	// 实例列表
+	InstanceIds []*string `json:"InstanceIds,omitnil,omitempty" name:"InstanceIds"`
+
+	// 策略类型. PolicyTypePeriodScale - 周期弹性
+	PolicyType *string `json:"PolicyType,omitnil,omitempty" name:"PolicyType"`
+
+	// 计划ID
+	PlanId *int64 `json:"PlanId,omitnil,omitempty" name:"PlanId"`
+
+	// 分页数量限制，默认10
+	Limit *int64 `json:"Limit,omitnil,omitempty" name:"Limit"`
+
+	// 查询偏移，默认0
+	Offset *int64 `json:"Offset,omitnil,omitempty" name:"Offset"`
+
+	// 按计划预期执行时间为条件查询的开始时间点，包含当前时间
+	ExpectedStartTime *string `json:"ExpectedStartTime,omitnil,omitempty" name:"ExpectedStartTime"`
+
+	// 按计划预期执行时间为条件查询的结束时间点，包含当前时间
+	ExpectedEndTime *string `json:"ExpectedEndTime,omitnil,omitempty" name:"ExpectedEndTime"`
+}
+
+type DescribeClusterServerlessScalePlansRequest struct {
+	*tchttp.BaseRequest
+	
+	// 集群ID
+	ClusterId *string `json:"ClusterId,omitnil,omitempty" name:"ClusterId"`
+
+	// 实例列表
+	InstanceIds []*string `json:"InstanceIds,omitnil,omitempty" name:"InstanceIds"`
+
+	// 策略类型. PolicyTypePeriodScale - 周期弹性
+	PolicyType *string `json:"PolicyType,omitnil,omitempty" name:"PolicyType"`
+
+	// 计划ID
+	PlanId *int64 `json:"PlanId,omitnil,omitempty" name:"PlanId"`
+
+	// 分页数量限制，默认10
+	Limit *int64 `json:"Limit,omitnil,omitempty" name:"Limit"`
+
+	// 查询偏移，默认0
+	Offset *int64 `json:"Offset,omitnil,omitempty" name:"Offset"`
+
+	// 按计划预期执行时间为条件查询的开始时间点，包含当前时间
+	ExpectedStartTime *string `json:"ExpectedStartTime,omitnil,omitempty" name:"ExpectedStartTime"`
+
+	// 按计划预期执行时间为条件查询的结束时间点，包含当前时间
+	ExpectedEndTime *string `json:"ExpectedEndTime,omitnil,omitempty" name:"ExpectedEndTime"`
+}
+
+func (r *DescribeClusterServerlessScalePlansRequest) ToJsonString() string {
+    b, _ := json.Marshal(r)
+    return string(b)
+}
+
+// FromJsonString It is highly **NOT** recommended to use this function
+// because it has no param check, nor strict type check
+func (r *DescribeClusterServerlessScalePlansRequest) FromJsonString(s string) error {
+	f := make(map[string]interface{})
+	if err := json.Unmarshal([]byte(s), &f); err != nil {
+		return err
+	}
+	delete(f, "ClusterId")
+	delete(f, "InstanceIds")
+	delete(f, "PolicyType")
+	delete(f, "PlanId")
+	delete(f, "Limit")
+	delete(f, "Offset")
+	delete(f, "ExpectedStartTime")
+	delete(f, "ExpectedEndTime")
+	if len(f) > 0 {
+		return tcerr.NewTencentCloudSDKError("ClientError.BuildRequestError", "DescribeClusterServerlessScalePlansRequest has unknown keys!", "")
+	}
+	return json.Unmarshal([]byte(s), &r)
+}
+
+// Predefined struct for user
+type DescribeClusterServerlessScalePlansResponseParams struct {
+	// 计划总数
+	TotalCount *int64 `json:"TotalCount,omitnil,omitempty" name:"TotalCount"`
+
+	// 策略列表
+	ServerlessScalePlans []*ClusterServerlessScalePlan `json:"ServerlessScalePlans,omitnil,omitempty" name:"ServerlessScalePlans"`
+
+	// 唯一请求 ID，由服务端生成，每次请求都会返回（若请求因其他原因未能抵达服务端，则该次请求不会获得 RequestId）。定位问题时需要提供该次请求的 RequestId。
+	RequestId *string `json:"RequestId,omitnil,omitempty" name:"RequestId"`
+}
+
+type DescribeClusterServerlessScalePlansResponse struct {
+	*tchttp.BaseResponse
+	Response *DescribeClusterServerlessScalePlansResponseParams `json:"Response"`
+}
+
+func (r *DescribeClusterServerlessScalePlansResponse) ToJsonString() string {
+    b, _ := json.Marshal(r)
+    return string(b)
+}
+
+// FromJsonString It is highly **NOT** recommended to use this function
+// because it has no param check, nor strict type check
+func (r *DescribeClusterServerlessScalePlansResponse) FromJsonString(s string) error {
 	return json.Unmarshal([]byte(s), &r)
 }
 
@@ -9703,29 +10405,33 @@ func (r *DescribeInstanceSpecsByOperationTypeResponse) FromJsonString(s string) 
 
 // Predefined struct for user
 type DescribeInstanceSpecsRequestParams struct {
-	// 数据库类型，取值范围: 
-	// <li> MYSQL </li>
+	// <p>数据库类型，取值范围: </p><li> MYSQL </li>
 	DbType *string `json:"DbType,omitnil,omitempty" name:"DbType"`
 
-	// 是否需要返回可用区信息
+	// <p>是否需要返回可用区信息</p>
 	IncludeZoneStocks *bool `json:"IncludeZoneStocks,omitnil,omitempty" name:"IncludeZoneStocks"`
 
-	// 实例机器类型
+	// <p>实例机器类型</p>
 	DeviceType *string `json:"DeviceType,omitnil,omitempty" name:"DeviceType"`
+
+	// <p>集群级别，可空。例如 P0, P1</p>
+	ClusterLevel *string `json:"ClusterLevel,omitnil,omitempty" name:"ClusterLevel"`
 }
 
 type DescribeInstanceSpecsRequest struct {
 	*tchttp.BaseRequest
 	
-	// 数据库类型，取值范围: 
-	// <li> MYSQL </li>
+	// <p>数据库类型，取值范围: </p><li> MYSQL </li>
 	DbType *string `json:"DbType,omitnil,omitempty" name:"DbType"`
 
-	// 是否需要返回可用区信息
+	// <p>是否需要返回可用区信息</p>
 	IncludeZoneStocks *bool `json:"IncludeZoneStocks,omitnil,omitempty" name:"IncludeZoneStocks"`
 
-	// 实例机器类型
+	// <p>实例机器类型</p>
 	DeviceType *string `json:"DeviceType,omitnil,omitempty" name:"DeviceType"`
+
+	// <p>集群级别，可空。例如 P0, P1</p>
+	ClusterLevel *string `json:"ClusterLevel,omitnil,omitempty" name:"ClusterLevel"`
 }
 
 func (r *DescribeInstanceSpecsRequest) ToJsonString() string {
@@ -9743,6 +10449,7 @@ func (r *DescribeInstanceSpecsRequest) FromJsonString(s string) error {
 	delete(f, "DbType")
 	delete(f, "IncludeZoneStocks")
 	delete(f, "DeviceType")
+	delete(f, "ClusterLevel")
 	if len(f) > 0 {
 		return tcerr.NewTencentCloudSDKError("ClientError.BuildRequestError", "DescribeInstanceSpecsRequest has unknown keys!", "")
 	}
@@ -9751,7 +10458,7 @@ func (r *DescribeInstanceSpecsRequest) FromJsonString(s string) error {
 
 // Predefined struct for user
 type DescribeInstanceSpecsResponseParams struct {
-	// 规格信息
+	// <p>规格信息</p>
 	InstanceSpecSet []*InstanceSpec `json:"InstanceSpecSet,omitnil,omitempty" name:"InstanceSpecSet"`
 
 	// 唯一请求 ID，由服务端生成，每次请求都会返回（若请求因其他原因未能抵达服务端，则该次请求不会获得 RequestId）。定位问题时需要提供该次请求的 RequestId。
@@ -12835,15 +13542,21 @@ func (r *DescribeSaveBackupClustersResponse) FromJsonString(s string) error {
 
 // Predefined struct for user
 type DescribeServerlessInstanceSpecsRequestParams struct {
-	// 可用区
+	// <p>可用区</p>
 	Zone *string `json:"Zone,omitnil,omitempty" name:"Zone"`
+
+	// <p>集群级别</p>
+	ClusterLevel *string `json:"ClusterLevel,omitnil,omitempty" name:"ClusterLevel"`
 }
 
 type DescribeServerlessInstanceSpecsRequest struct {
 	*tchttp.BaseRequest
 	
-	// 可用区
+	// <p>可用区</p>
 	Zone *string `json:"Zone,omitnil,omitempty" name:"Zone"`
+
+	// <p>集群级别</p>
+	ClusterLevel *string `json:"ClusterLevel,omitnil,omitempty" name:"ClusterLevel"`
 }
 
 func (r *DescribeServerlessInstanceSpecsRequest) ToJsonString() string {
@@ -12859,6 +13572,7 @@ func (r *DescribeServerlessInstanceSpecsRequest) FromJsonString(s string) error 
 		return err
 	}
 	delete(f, "Zone")
+	delete(f, "ClusterLevel")
 	if len(f) > 0 {
 		return tcerr.NewTencentCloudSDKError("ClientError.BuildRequestError", "DescribeServerlessInstanceSpecsRequest has unknown keys!", "")
 	}
@@ -12867,7 +13581,7 @@ func (r *DescribeServerlessInstanceSpecsRequest) FromJsonString(s string) error 
 
 // Predefined struct for user
 type DescribeServerlessInstanceSpecsResponseParams struct {
-	// Serverless实例可选规格
+	// <p>Serverless实例可选规格</p>
 	Specs []*ServerlessSpec `json:"Specs,omitnil,omitempty" name:"Specs"`
 
 	// 唯一请求 ID，由服务端生成，每次请求都会返回（若请求因其他原因未能抵达服务端，则该次请求不会获得 RequestId）。定位问题时需要提供该次请求的 RequestId。
@@ -13503,6 +14217,8 @@ type DisassociateSecurityGroupsRequestParams struct {
 
 	// 可用区。
 	// 说明：请正确输入集群所在的主可用区，若输入非集群所在的主可用区可能显示调用成功，但实际执行会失败。
+	//
+	// Deprecated: Zone is deprecated.
 	Zone *string `json:"Zone,omitnil,omitempty" name:"Zone"`
 }
 
@@ -14297,79 +15013,87 @@ type InputAccount struct {
 
 // Predefined struct for user
 type InquirePriceCreateRequestParams struct {
-	// 可用区,每个地域提供最佳实践
+	// <p>可用区,每个地域提供最佳实践</p>
 	Zone *string `json:"Zone,omitnil,omitempty" name:"Zone"`
 
-	// 购买计算节点个数
+	// <p>购买计算节点个数</p>
 	GoodsNum *int64 `json:"GoodsNum,omitnil,omitempty" name:"GoodsNum"`
 
-	// 实例购买类型，可选值为：PREPAID, POSTPAID, SERVERLESS
+	// <p>实例购买类型，可选值为：PREPAID, POSTPAID, SERVERLESS</p>
 	InstancePayMode *string `json:"InstancePayMode,omitnil,omitempty" name:"InstancePayMode"`
 
-	// 存储购买类型，可选值为：PREPAID, POSTPAID
+	// <p>存储购买类型，可选值为：PREPAID, POSTPAID</p>
 	StoragePayMode *string `json:"StoragePayMode,omitnil,omitempty" name:"StoragePayMode"`
 
-	// 实例设备类型，支持值如下：
-	// - common：表示通用型
-	// - exclusive：表示独享型
+	// <p>实例设备类型，支持值如下：</p><ul><li>common：表示通用型</li><li>exclusive：表示独享型</li></ul>
 	DeviceType *string `json:"DeviceType,omitnil,omitempty" name:"DeviceType"`
 
-	// CPU核数，PREPAID与POSTPAID实例类型必传
+	// <p>CPU核数，PREPAID与POSTPAID实例类型必传</p>
 	Cpu *int64 `json:"Cpu,omitnil,omitempty" name:"Cpu"`
 
-	// 内存大小，单位G，PREPAID与POSTPAID实例类型必传
+	// <p>内存大小，单位G，PREPAID与POSTPAID实例类型必传</p>
 	Memory *int64 `json:"Memory,omitnil,omitempty" name:"Memory"`
 
-	// Ccu大小，serverless类型必传
+	// <p>Ccu大小，serverless类型必传</p>
 	Ccu *float64 `json:"Ccu,omitnil,omitempty" name:"Ccu"`
 
-	// 存储大小，PREPAID存储类型必传
+	// <p>存储大小，PREPAID存储类型必传</p>
 	StorageLimit *int64 `json:"StorageLimit,omitnil,omitempty" name:"StorageLimit"`
 
-	// 购买时长，PREPAID购买类型必传
+	// <p>购买时长，PREPAID购买类型必传</p>
 	TimeSpan *int64 `json:"TimeSpan,omitnil,omitempty" name:"TimeSpan"`
 
-	// 时长单位，可选值为：m,d。PREPAID购买类型必传
+	// <p>时长单位，可选值为：m,d。PREPAID购买类型必传</p>
 	TimeUnit *string `json:"TimeUnit,omitnil,omitempty" name:"TimeUnit"`
+
+	// <p>存储架构类型。 枚举值：1.0/2.0 默认值：1.0</p>
+	StorageVersion *string `json:"StorageVersion,omitnil,omitempty" name:"StorageVersion"`
+
+	// <p>存储是否跨AZ，2.0存储架构下有效</p>
+	IsMultiAz *bool `json:"IsMultiAz,omitnil,omitempty" name:"IsMultiAz"`
 }
 
 type InquirePriceCreateRequest struct {
 	*tchttp.BaseRequest
 	
-	// 可用区,每个地域提供最佳实践
+	// <p>可用区,每个地域提供最佳实践</p>
 	Zone *string `json:"Zone,omitnil,omitempty" name:"Zone"`
 
-	// 购买计算节点个数
+	// <p>购买计算节点个数</p>
 	GoodsNum *int64 `json:"GoodsNum,omitnil,omitempty" name:"GoodsNum"`
 
-	// 实例购买类型，可选值为：PREPAID, POSTPAID, SERVERLESS
+	// <p>实例购买类型，可选值为：PREPAID, POSTPAID, SERVERLESS</p>
 	InstancePayMode *string `json:"InstancePayMode,omitnil,omitempty" name:"InstancePayMode"`
 
-	// 存储购买类型，可选值为：PREPAID, POSTPAID
+	// <p>存储购买类型，可选值为：PREPAID, POSTPAID</p>
 	StoragePayMode *string `json:"StoragePayMode,omitnil,omitempty" name:"StoragePayMode"`
 
-	// 实例设备类型，支持值如下：
-	// - common：表示通用型
-	// - exclusive：表示独享型
+	// <p>实例设备类型，支持值如下：</p><ul><li>common：表示通用型</li><li>exclusive：表示独享型</li></ul>
 	DeviceType *string `json:"DeviceType,omitnil,omitempty" name:"DeviceType"`
 
-	// CPU核数，PREPAID与POSTPAID实例类型必传
+	// <p>CPU核数，PREPAID与POSTPAID实例类型必传</p>
 	Cpu *int64 `json:"Cpu,omitnil,omitempty" name:"Cpu"`
 
-	// 内存大小，单位G，PREPAID与POSTPAID实例类型必传
+	// <p>内存大小，单位G，PREPAID与POSTPAID实例类型必传</p>
 	Memory *int64 `json:"Memory,omitnil,omitempty" name:"Memory"`
 
-	// Ccu大小，serverless类型必传
+	// <p>Ccu大小，serverless类型必传</p>
 	Ccu *float64 `json:"Ccu,omitnil,omitempty" name:"Ccu"`
 
-	// 存储大小，PREPAID存储类型必传
+	// <p>存储大小，PREPAID存储类型必传</p>
 	StorageLimit *int64 `json:"StorageLimit,omitnil,omitempty" name:"StorageLimit"`
 
-	// 购买时长，PREPAID购买类型必传
+	// <p>购买时长，PREPAID购买类型必传</p>
 	TimeSpan *int64 `json:"TimeSpan,omitnil,omitempty" name:"TimeSpan"`
 
-	// 时长单位，可选值为：m,d。PREPAID购买类型必传
+	// <p>时长单位，可选值为：m,d。PREPAID购买类型必传</p>
 	TimeUnit *string `json:"TimeUnit,omitnil,omitempty" name:"TimeUnit"`
+
+	// <p>存储架构类型。 枚举值：1.0/2.0 默认值：1.0</p>
+	StorageVersion *string `json:"StorageVersion,omitnil,omitempty" name:"StorageVersion"`
+
+	// <p>存储是否跨AZ，2.0存储架构下有效</p>
+	IsMultiAz *bool `json:"IsMultiAz,omitnil,omitempty" name:"IsMultiAz"`
 }
 
 func (r *InquirePriceCreateRequest) ToJsonString() string {
@@ -14395,6 +15119,8 @@ func (r *InquirePriceCreateRequest) FromJsonString(s string) error {
 	delete(f, "StorageLimit")
 	delete(f, "TimeSpan")
 	delete(f, "TimeUnit")
+	delete(f, "StorageVersion")
+	delete(f, "IsMultiAz")
 	if len(f) > 0 {
 		return tcerr.NewTencentCloudSDKError("ClientError.BuildRequestError", "InquirePriceCreateRequest has unknown keys!", "")
 	}
@@ -14403,10 +15129,10 @@ func (r *InquirePriceCreateRequest) FromJsonString(s string) error {
 
 // Predefined struct for user
 type InquirePriceCreateResponseParams struct {
-	// 实例价格
+	// <p>实例价格</p>
 	InstancePrice *TradePrice `json:"InstancePrice,omitnil,omitempty" name:"InstancePrice"`
 
-	// 存储价格
+	// <p>存储价格</p>
 	StoragePrice *TradePrice `json:"StoragePrice,omitnil,omitempty" name:"StoragePrice"`
 
 	// 唯一请求 ID，由服务端生成，每次请求都会返回（若请求因其他原因未能抵达服务端，则该次请求不会获得 RequestId）。定位问题时需要提供该次请求的 RequestId。
@@ -15815,29 +16541,30 @@ type LogRuleTemplateInfo struct {
 }
 
 type LogicBackupConfigInfo struct {
-	// 是否开启自动逻辑备份
+	// <p>是否开启自动逻辑备份</p>
 	LogicBackupEnable *string `json:"LogicBackupEnable,omitnil,omitempty" name:"LogicBackupEnable"`
 
-	// 自动逻辑备份开始时间
+	// <p>自动逻辑备份开始时间</p>
 	LogicBackupTimeBeg *uint64 `json:"LogicBackupTimeBeg,omitnil,omitempty" name:"LogicBackupTimeBeg"`
 
-	// 自动逻辑备份结束时间
+	// <p>自动逻辑备份结束时间</p>
 	LogicBackupTimeEnd *uint64 `json:"LogicBackupTimeEnd,omitnil,omitempty" name:"LogicBackupTimeEnd"`
 
-	// 自动逻辑备份保留时间
-	// 单位：秒
+	// <p>自动逻辑备份保留时间<br>单位：秒</p>
 	LogicReserveDuration *uint64 `json:"LogicReserveDuration,omitnil,omitempty" name:"LogicReserveDuration"`
 
-	// 是否开启跨地域逻辑备份
-	// 可选值：ON/OFF
+	// <p>是否开启跨地域逻辑备份<br>可选值：ON/OFF</p>
 	LogicCrossRegionsEnable *string `json:"LogicCrossRegionsEnable,omitnil,omitempty" name:"LogicCrossRegionsEnable"`
 
-	// 逻辑备份所跨地域
+	// <p>逻辑备份所跨地域</p>
 	// 注意：此字段可能返回 null，表示取不到有效值。
 	LogicCrossRegions []*string `json:"LogicCrossRegions,omitnil,omitempty" name:"LogicCrossRegions"`
 
-	// 备份投递关系
+	// <p>备份投递关系</p>
 	AutoCopyVaults []*CreateBackupVaultItem `json:"AutoCopyVaults,omitnil,omitempty" name:"AutoCopyVaults"`
+
+	// <p>天</p><p>单位：跨地域逻辑备份保留时间</p>
+	LogicCrossRegionSaveDays *int64 `json:"LogicCrossRegionSaveDays,omitnil,omitempty" name:"LogicCrossRegionSaveDays"`
 }
 
 type ManualBackupData struct {
@@ -16785,21 +17512,27 @@ func (r *ModifyBinlogConfigResponse) FromJsonString(s string) error {
 
 // Predefined struct for user
 type ModifyBinlogSaveDaysRequestParams struct {
-	// 集群ID
+	// <p>集群ID</p>
 	ClusterId *string `json:"ClusterId,omitnil,omitempty" name:"ClusterId"`
 
-	// Binlog保留天数
+	// <p>Binlog保留天数</p>
 	BinlogSaveDays *int64 `json:"BinlogSaveDays,omitnil,omitempty" name:"BinlogSaveDays"`
+
+	// <p>跨地域备份保留时间</p><p>单位：天</p>
+	BinlogCrossRegionSaveDays *int64 `json:"BinlogCrossRegionSaveDays,omitnil,omitempty" name:"BinlogCrossRegionSaveDays"`
 }
 
 type ModifyBinlogSaveDaysRequest struct {
 	*tchttp.BaseRequest
 	
-	// 集群ID
+	// <p>集群ID</p>
 	ClusterId *string `json:"ClusterId,omitnil,omitempty" name:"ClusterId"`
 
-	// Binlog保留天数
+	// <p>Binlog保留天数</p>
 	BinlogSaveDays *int64 `json:"BinlogSaveDays,omitnil,omitempty" name:"BinlogSaveDays"`
+
+	// <p>跨地域备份保留时间</p><p>单位：天</p>
+	BinlogCrossRegionSaveDays *int64 `json:"BinlogCrossRegionSaveDays,omitnil,omitempty" name:"BinlogCrossRegionSaveDays"`
 }
 
 func (r *ModifyBinlogSaveDaysRequest) ToJsonString() string {
@@ -16816,6 +17549,7 @@ func (r *ModifyBinlogSaveDaysRequest) FromJsonString(s string) error {
 	}
 	delete(f, "ClusterId")
 	delete(f, "BinlogSaveDays")
+	delete(f, "BinlogCrossRegionSaveDays")
 	if len(f) > 0 {
 		return tcerr.NewTencentCloudSDKError("ClientError.BuildRequestError", "ModifyBinlogSaveDaysRequest has unknown keys!", "")
 	}
@@ -17282,6 +18016,123 @@ func (r *ModifyClusterPasswordComplexityResponse) ToJsonString() string {
 // FromJsonString It is highly **NOT** recommended to use this function
 // because it has no param check, nor strict type check
 func (r *ModifyClusterPasswordComplexityResponse) FromJsonString(s string) error {
+	return json.Unmarshal([]byte(s), &r)
+}
+
+// Predefined struct for user
+type ModifyClusterPeriodScalePolicyRequestParams struct {
+	// <p>集群ID</p>
+	ClusterId *string `json:"ClusterId,omitnil,omitempty" name:"ClusterId"`
+
+	// <p>策略ID</p>
+	PolicyId *string `json:"PolicyId,omitnil,omitempty" name:"PolicyId"`
+
+	// <p>当天开始弹性时间。格式是小时:分钟</p>
+	ScaleStartTime *string `json:"ScaleStartTime,omitnil,omitempty" name:"ScaleStartTime"`
+
+	// <p>当天结束弹性时间。格式是小时:分钟</p>
+	ScaleEndTime *string `json:"ScaleEndTime,omitnil,omitempty" name:"ScaleEndTime"`
+
+	// <p>策略生效的起始日期时间</p>
+	PolicyStartTime *string `json:"PolicyStartTime,omitnil,omitempty" name:"PolicyStartTime"`
+
+	// <p>策略生效的截止日期时间</p>
+	PolicyEndTime *string `json:"PolicyEndTime,omitnil,omitempty" name:"PolicyEndTime"`
+
+	// <p>周期类型。day-天，week-周，month-月。</p>
+	PeriodType *string `json:"PeriodType,omitnil,omitempty" name:"PeriodType"`
+
+	// <p>周期内的时间列表。针对PeriodType=week， 表示星期几，比如[1,3]表示星期一、星期三。同理，对于PeriodType=month，[1,3,10]表示每月的1、3、10号。PeriodType=day则该字段无效。</p>
+	PeriodConfig []*int64 `json:"PeriodConfig,omitnil,omitempty" name:"PeriodConfig"`
+
+	// <p>弹性规格下限</p>
+	MinCpu *float64 `json:"MinCpu,omitnil,omitempty" name:"MinCpu"`
+
+	// <p>弹性规格上限</p>
+	MaxCpu *float64 `json:"MaxCpu,omitnil,omitempty" name:"MaxCpu"`
+}
+
+type ModifyClusterPeriodScalePolicyRequest struct {
+	*tchttp.BaseRequest
+	
+	// <p>集群ID</p>
+	ClusterId *string `json:"ClusterId,omitnil,omitempty" name:"ClusterId"`
+
+	// <p>策略ID</p>
+	PolicyId *string `json:"PolicyId,omitnil,omitempty" name:"PolicyId"`
+
+	// <p>当天开始弹性时间。格式是小时:分钟</p>
+	ScaleStartTime *string `json:"ScaleStartTime,omitnil,omitempty" name:"ScaleStartTime"`
+
+	// <p>当天结束弹性时间。格式是小时:分钟</p>
+	ScaleEndTime *string `json:"ScaleEndTime,omitnil,omitempty" name:"ScaleEndTime"`
+
+	// <p>策略生效的起始日期时间</p>
+	PolicyStartTime *string `json:"PolicyStartTime,omitnil,omitempty" name:"PolicyStartTime"`
+
+	// <p>策略生效的截止日期时间</p>
+	PolicyEndTime *string `json:"PolicyEndTime,omitnil,omitempty" name:"PolicyEndTime"`
+
+	// <p>周期类型。day-天，week-周，month-月。</p>
+	PeriodType *string `json:"PeriodType,omitnil,omitempty" name:"PeriodType"`
+
+	// <p>周期内的时间列表。针对PeriodType=week， 表示星期几，比如[1,3]表示星期一、星期三。同理，对于PeriodType=month，[1,3,10]表示每月的1、3、10号。PeriodType=day则该字段无效。</p>
+	PeriodConfig []*int64 `json:"PeriodConfig,omitnil,omitempty" name:"PeriodConfig"`
+
+	// <p>弹性规格下限</p>
+	MinCpu *float64 `json:"MinCpu,omitnil,omitempty" name:"MinCpu"`
+
+	// <p>弹性规格上限</p>
+	MaxCpu *float64 `json:"MaxCpu,omitnil,omitempty" name:"MaxCpu"`
+}
+
+func (r *ModifyClusterPeriodScalePolicyRequest) ToJsonString() string {
+    b, _ := json.Marshal(r)
+    return string(b)
+}
+
+// FromJsonString It is highly **NOT** recommended to use this function
+// because it has no param check, nor strict type check
+func (r *ModifyClusterPeriodScalePolicyRequest) FromJsonString(s string) error {
+	f := make(map[string]interface{})
+	if err := json.Unmarshal([]byte(s), &f); err != nil {
+		return err
+	}
+	delete(f, "ClusterId")
+	delete(f, "PolicyId")
+	delete(f, "ScaleStartTime")
+	delete(f, "ScaleEndTime")
+	delete(f, "PolicyStartTime")
+	delete(f, "PolicyEndTime")
+	delete(f, "PeriodType")
+	delete(f, "PeriodConfig")
+	delete(f, "MinCpu")
+	delete(f, "MaxCpu")
+	if len(f) > 0 {
+		return tcerr.NewTencentCloudSDKError("ClientError.BuildRequestError", "ModifyClusterPeriodScalePolicyRequest has unknown keys!", "")
+	}
+	return json.Unmarshal([]byte(s), &r)
+}
+
+// Predefined struct for user
+type ModifyClusterPeriodScalePolicyResponseParams struct {
+	// 唯一请求 ID，由服务端生成，每次请求都会返回（若请求因其他原因未能抵达服务端，则该次请求不会获得 RequestId）。定位问题时需要提供该次请求的 RequestId。
+	RequestId *string `json:"RequestId,omitnil,omitempty" name:"RequestId"`
+}
+
+type ModifyClusterPeriodScalePolicyResponse struct {
+	*tchttp.BaseResponse
+	Response *ModifyClusterPeriodScalePolicyResponseParams `json:"Response"`
+}
+
+func (r *ModifyClusterPeriodScalePolicyResponse) ToJsonString() string {
+    b, _ := json.Marshal(r)
+    return string(b)
+}
+
+// FromJsonString It is highly **NOT** recommended to use this function
+// because it has no param check, nor strict type check
+func (r *ModifyClusterPeriodScalePolicyResponse) FromJsonString(s string) error {
 	return json.Unmarshal([]byte(s), &r)
 }
 
@@ -18754,6 +19605,9 @@ type ModifyProxyRwSplitRequestParams struct {
 
 	// <p>libra节点故障，是否转发给其他节点</p>
 	ApQueryToOtherNode *bool `json:"ApQueryToOtherNode,omitnil,omitempty" name:"ApQueryToOtherNode"`
+
+	// <p>负载均衡模式</p><p>枚举值：</p><ul><li>static： 静态负载</li><li>dynamic： 动态负载</li></ul>
+	LoadBalanceMode *string `json:"LoadBalanceMode,omitnil,omitempty" name:"LoadBalanceMode"`
 }
 
 type ModifyProxyRwSplitRequest struct {
@@ -18809,6 +19663,9 @@ type ModifyProxyRwSplitRequest struct {
 
 	// <p>libra节点故障，是否转发给其他节点</p>
 	ApQueryToOtherNode *bool `json:"ApQueryToOtherNode,omitnil,omitempty" name:"ApQueryToOtherNode"`
+
+	// <p>负载均衡模式</p><p>枚举值：</p><ul><li>static： 静态负载</li><li>dynamic： 动态负载</li></ul>
+	LoadBalanceMode *string `json:"LoadBalanceMode,omitnil,omitempty" name:"LoadBalanceMode"`
 }
 
 func (r *ModifyProxyRwSplitRequest) ToJsonString() string {
@@ -18840,6 +19697,7 @@ func (r *ModifyProxyRwSplitRequest) FromJsonString(s string) error {
 	delete(f, "ConnectionPoolTimeOut")
 	delete(f, "ApNodeAsRoNode")
 	delete(f, "ApQueryToOtherNode")
+	delete(f, "LoadBalanceMode")
 	if len(f) > 0 {
 		return tcerr.NewTencentCloudSDKError("ClientError.BuildRequestError", "ModifyProxyRwSplitRequest has unknown keys!", "")
 	}
@@ -19226,27 +20084,33 @@ func (r *ModifyServerlessStrategyResponse) FromJsonString(s string) error {
 
 // Predefined struct for user
 type ModifySnapBackupCrossRegionConfigRequestParams struct {
-	// 集群ID
+	// <p>集群ID</p>
 	ClusterId *string `json:"ClusterId,omitnil,omitempty" name:"ClusterId"`
 
-	// 是否开启跨地域快照备份ON/OFF
+	// <p>是否开启跨地域快照备份ON/OFF</p>
 	CrossRegionsEnable *string `json:"CrossRegionsEnable,omitnil,omitempty" name:"CrossRegionsEnable"`
 
-	// 快照备份所跨地域
+	// <p>快照备份所跨地域</p>
 	CrossRegions []*string `json:"CrossRegions,omitnil,omitempty" name:"CrossRegions"`
+
+	// <p>跨地域备份保留时间</p><p>单位：天</p>
+	CrossRegionSaveDays *int64 `json:"CrossRegionSaveDays,omitnil,omitempty" name:"CrossRegionSaveDays"`
 }
 
 type ModifySnapBackupCrossRegionConfigRequest struct {
 	*tchttp.BaseRequest
 	
-	// 集群ID
+	// <p>集群ID</p>
 	ClusterId *string `json:"ClusterId,omitnil,omitempty" name:"ClusterId"`
 
-	// 是否开启跨地域快照备份ON/OFF
+	// <p>是否开启跨地域快照备份ON/OFF</p>
 	CrossRegionsEnable *string `json:"CrossRegionsEnable,omitnil,omitempty" name:"CrossRegionsEnable"`
 
-	// 快照备份所跨地域
+	// <p>快照备份所跨地域</p>
 	CrossRegions []*string `json:"CrossRegions,omitnil,omitempty" name:"CrossRegions"`
+
+	// <p>跨地域备份保留时间</p><p>单位：天</p>
+	CrossRegionSaveDays *int64 `json:"CrossRegionSaveDays,omitnil,omitempty" name:"CrossRegionSaveDays"`
 }
 
 func (r *ModifySnapBackupCrossRegionConfigRequest) ToJsonString() string {
@@ -19264,6 +20128,7 @@ func (r *ModifySnapBackupCrossRegionConfigRequest) FromJsonString(s string) erro
 	delete(f, "ClusterId")
 	delete(f, "CrossRegionsEnable")
 	delete(f, "CrossRegions")
+	delete(f, "CrossRegionSaveDays")
 	if len(f) > 0 {
 		return tcerr.NewTencentCloudSDKError("ClientError.BuildRequestError", "ModifySnapBackupCrossRegionConfigRequest has unknown keys!", "")
 	}
@@ -19272,7 +20137,7 @@ func (r *ModifySnapBackupCrossRegionConfigRequest) FromJsonString(s string) erro
 
 // Predefined struct for user
 type ModifySnapBackupCrossRegionConfigResponseParams struct {
-	// 任务id
+	// <p>任务id</p>
 	TaskId *int64 `json:"TaskId,omitnil,omitempty" name:"TaskId"`
 
 	// 唯一请求 ID，由服务端生成，每次请求都会返回（若请求因其他原因未能抵达服务端，则该次请求不会获得 RequestId）。定位问题时需要提供该次请求的 RequestId。
@@ -19570,22 +20435,22 @@ type NetAddr struct {
 }
 
 type NewAccount struct {
-	// 账户名，包含字母数字_,以字母开头，字母或数字结尾，长度1-30
+	// <p>账户名，包含字母数字_,以字母开头，字母或数字结尾，长度1-30</p>
 	AccountName *string `json:"AccountName,omitnil,omitempty" name:"AccountName"`
 
-	// 主机(%或ipv4地址)
+	// <p>主机(%或ipv4地址)</p>
 	Host *string `json:"Host,omitnil,omitempty" name:"Host"`
 
-	// 密码，密码长度范围为8到64个字符
+	// <p>密码，密码长度范围为8到64个字符</p>
 	AccountPassword *string `json:"AccountPassword,omitnil,omitempty" name:"AccountPassword"`
 
-	// 是否开启密码轮转(0:关闭;1:开启)
+	// <p>是否开启密码轮转(0:关闭;1:开启)</p>
 	PasswordRotation *int64 `json:"PasswordRotation,omitnil,omitempty" name:"PasswordRotation"`
 
-	// 描述
+	// <p>描述</p>
 	Description *string `json:"Description,omitnil,omitempty" name:"Description"`
 
-	// 用户最大连接数，不能大于10240
+	// <p>用户最大连接数，不能大于10240</p>
 	MaxUserConnections *int64 `json:"MaxUserConnections,omitnil,omitempty" name:"MaxUserConnections"`
 }
 
@@ -19864,6 +20729,70 @@ type OldAddrInfo struct {
 
 	// 期望执行回收时间
 	ReturnTime *string `json:"ReturnTime,omitnil,omitempty" name:"ReturnTime"`
+}
+
+// Predefined struct for user
+type OpenAIOptimizerRequestParams struct {
+	// <p>集群ID</p>
+	ClusterId *string `json:"ClusterId,omitnil,omitempty" name:"ClusterId"`
+
+	// <p>实例ID</p>
+	InstanceId *string `json:"InstanceId,omitnil,omitempty" name:"InstanceId"`
+}
+
+type OpenAIOptimizerRequest struct {
+	*tchttp.BaseRequest
+	
+	// <p>集群ID</p>
+	ClusterId *string `json:"ClusterId,omitnil,omitempty" name:"ClusterId"`
+
+	// <p>实例ID</p>
+	InstanceId *string `json:"InstanceId,omitnil,omitempty" name:"InstanceId"`
+}
+
+func (r *OpenAIOptimizerRequest) ToJsonString() string {
+    b, _ := json.Marshal(r)
+    return string(b)
+}
+
+// FromJsonString It is highly **NOT** recommended to use this function
+// because it has no param check, nor strict type check
+func (r *OpenAIOptimizerRequest) FromJsonString(s string) error {
+	f := make(map[string]interface{})
+	if err := json.Unmarshal([]byte(s), &f); err != nil {
+		return err
+	}
+	delete(f, "ClusterId")
+	delete(f, "InstanceId")
+	if len(f) > 0 {
+		return tcerr.NewTencentCloudSDKError("ClientError.BuildRequestError", "OpenAIOptimizerRequest has unknown keys!", "")
+	}
+	return json.Unmarshal([]byte(s), &r)
+}
+
+// Predefined struct for user
+type OpenAIOptimizerResponseParams struct {
+	// <p>任务流id</p>
+	TaskId *int64 `json:"TaskId,omitnil,omitempty" name:"TaskId"`
+
+	// 唯一请求 ID，由服务端生成，每次请求都会返回（若请求因其他原因未能抵达服务端，则该次请求不会获得 RequestId）。定位问题时需要提供该次请求的 RequestId。
+	RequestId *string `json:"RequestId,omitnil,omitempty" name:"RequestId"`
+}
+
+type OpenAIOptimizerResponse struct {
+	*tchttp.BaseResponse
+	Response *OpenAIOptimizerResponseParams `json:"Response"`
+}
+
+func (r *OpenAIOptimizerResponse) ToJsonString() string {
+    b, _ := json.Marshal(r)
+    return string(b)
+}
+
+// FromJsonString It is highly **NOT** recommended to use this function
+// because it has no param check, nor strict type check
+func (r *OpenAIOptimizerResponse) FromJsonString(s string) error {
+	return json.Unmarshal([]byte(s), &r)
 }
 
 // Predefined struct for user
@@ -20890,32 +21819,38 @@ type ProxyEndPointConfigInfo struct {
 }
 
 type ProxyGroup struct {
-	// 数据库代理组ID
+	// <p>数据库代理组ID</p>
 	ProxyGroupId *string `json:"ProxyGroupId,omitnil,omitempty" name:"ProxyGroupId"`
 
-	// 数据库代理组节点个数
+	// <p>数据库代理组节点个数</p>
 	ProxyNodeCount *int64 `json:"ProxyNodeCount,omitnil,omitempty" name:"ProxyNodeCount"`
 
-	// 数据库代理组状态
+	// <p>数据库代理组状态</p>
 	Status *string `json:"Status,omitnil,omitempty" name:"Status"`
 
-	// 地域
+	// <p>地域</p>
 	Region *string `json:"Region,omitnil,omitempty" name:"Region"`
 
-	// 可用区
+	// <p>可用区</p>
 	Zone *string `json:"Zone,omitnil,omitempty" name:"Zone"`
 
-	// 当前代理版本
+	// <p>当前代理版本</p>
 	CurrentProxyVersion *string `json:"CurrentProxyVersion,omitnil,omitempty" name:"CurrentProxyVersion"`
 
-	// 集群ID
+	// <p>集群ID</p>
 	ClusterId *string `json:"ClusterId,omitnil,omitempty" name:"ClusterId"`
 
-	// 用户AppId
+	// <p>用户AppId</p>
 	AppId *int64 `json:"AppId,omitnil,omitempty" name:"AppId"`
 
-	// 读写节点开通数据库代理
+	// <p>读写节点开通数据库代理</p>
 	OpenRw *string `json:"OpenRw,omitnil,omitempty" name:"OpenRw"`
+
+	// <p>创建时间</p>
+	CreateTime *string `json:"CreateTime,omitnil,omitempty" name:"CreateTime"`
+
+	// <p>更新时间</p>
+	UpdateTime *string `json:"UpdateTime,omitnil,omitempty" name:"UpdateTime"`
 }
 
 type ProxyGroupInfo struct {
@@ -20976,6 +21911,9 @@ type ProxyGroupRwInfo struct {
 
 	// <p>libra节点故障，是否转发给其他节点</p>
 	ApQueryToOtherNode *bool `json:"ApQueryToOtherNode,omitnil,omitempty" name:"ApQueryToOtherNode"`
+
+	// <p>自动负载</p><p>枚举值：</p><ul><li>static： 静态负载</li><li>dynamic： 动态负载</li></ul>
+	LoadBalanceMode *string `json:"LoadBalanceMode,omitnil,omitempty" name:"LoadBalanceMode"`
 }
 
 type ProxyInstanceWeight struct {
@@ -20987,38 +21925,44 @@ type ProxyInstanceWeight struct {
 }
 
 type ProxyNodeInfo struct {
-	// 数据库代理节点ID
+	// <p>数据库代理节点ID</p>
 	ProxyNodeId *string `json:"ProxyNodeId,omitnil,omitempty" name:"ProxyNodeId"`
 
-	// 节点当前连接数, DescribeProxyNodes接口此字段值不返回
+	// <p>节点当前连接数, DescribeProxyNodes接口此字段值不返回</p>
 	ProxyNodeConnections *int64 `json:"ProxyNodeConnections,omitnil,omitempty" name:"ProxyNodeConnections"`
 
-	// 数据库代理节点cpu
+	// <p>数据库代理节点cpu</p>
 	Cpu *int64 `json:"Cpu,omitnil,omitempty" name:"Cpu"`
 
-	// 数据库代理节点内存
+	// <p>数据库代理节点内存</p>
 	Mem *int64 `json:"Mem,omitnil,omitempty" name:"Mem"`
 
-	// 数据库代理节点状态
+	// <p>数据库代理节点状态</p>
 	Status *string `json:"Status,omitnil,omitempty" name:"Status"`
 
-	// 数据库代理组ID
+	// <p>数据库代理组ID</p>
 	ProxyGroupId *string `json:"ProxyGroupId,omitnil,omitempty" name:"ProxyGroupId"`
 
-	// 集群ID
+	// <p>集群ID</p>
 	ClusterId *string `json:"ClusterId,omitnil,omitempty" name:"ClusterId"`
 
-	// 用户AppID
+	// <p>用户AppID</p>
 	AppId *int64 `json:"AppId,omitnil,omitempty" name:"AppId"`
 
-	// 地域
+	// <p>地域</p>
 	Region *string `json:"Region,omitnil,omitempty" name:"Region"`
 
-	// 可用区
+	// <p>可用区</p>
 	Zone *string `json:"Zone,omitnil,omitempty" name:"Zone"`
 
-	// 数据库代理节点名字
+	// <p>数据库代理节点名字</p>
 	OssProxyNodeName *string `json:"OssProxyNodeName,omitnil,omitempty" name:"OssProxyNodeName"`
+
+	// <p>创建时间</p>
+	CreateTime *string `json:"CreateTime,omitnil,omitempty" name:"CreateTime"`
+
+	// <p>更新时间</p>
+	UpdateTime *string `json:"UpdateTime,omitnil,omitempty" name:"UpdateTime"`
 }
 
 type ProxySpec struct {
@@ -21046,19 +21990,19 @@ type ProxyZone struct {
 }
 
 type QueryFilter struct {
-	// 搜索字符串
+	// 字段值列表，与 Names 一一对应。InstanceId/ClusterId 为精确匹配，InstanceName 默认模糊匹配
 	Values []*string `json:"Values,omitnil,omitempty" name:"Values"`
 
-	// 搜索字段，目前支持："InstanceId", "ProjectId", "InstanceName", "Vip"
+	// 搜索字段名称列表，仅支持以下 3 个字段（不区分大小写，多个值为 OR 关系）：ClusterId（按集群 ID 过滤，精确匹配）、InstanceId（按实例 ID 反查所属集群）、InstanceName（按实例名称反查所属集群，默认 LIKE 模糊匹配，ExactMatch=true 时精确匹配）。InstanceId 与 InstanceName 同时传入时取交集（AND 语义）。
 	Names []*string `json:"Names,omitnil,omitempty" name:"Names"`
 
-	// 是否精确匹配
+	// 是否精确匹配。仅对 InstanceName 生效：true 精确匹配，false（默认）LIKE 模糊匹配。
 	ExactMatch *bool `json:"ExactMatch,omitnil,omitempty" name:"ExactMatch"`
 
-	// 搜索字段
+	// 搜索字段名称（单个字段模式，与 Names 二选一）。支持：ClusterId、InstanceId、InstanceName
 	Name *string `json:"Name,omitnil,omitempty" name:"Name"`
 
-	// 操作符
+	// 操作符（预留字段，当前未启用）。可选值：>、>=、!=、=、<、<=
 	//
 	// Deprecated: Operator is deprecated.
 	Operator *string `json:"Operator,omitnil,omitempty" name:"Operator"`
@@ -22451,6 +23395,15 @@ type RollbackToNewClusterRequestParams struct {
 
 	// <p>是否从保存备份中恢复</p>
 	FromSaveBackup *bool `json:"FromSaveBackup,omitnil,omitempty" name:"FromSaveBackup"`
+
+	// <p>同步方式。可选值：async、semisync、sync，默认异步。</p>
+	SyncWay *string `json:"SyncWay,omitnil,omitempty" name:"SyncWay"`
+
+	// <p>半同步超时时间，单位ms。为保证业务稳定性，半同步复制存在退化逻辑，当主可用区集群在等待备可用区集群确认事务时若超过该超时时间，复制方式将降为异步复制。</p><p>取值范围：[1000, 4294967295]</p><p>单位：毫秒</p><p>默认值：10000</p>
+	SemiSyncTimeout *int64 `json:"SemiSyncTimeout,omitnil,omitempty" name:"SemiSyncTimeout"`
+
+	// <p>备可用区</p>
+	SlaveZone *string `json:"SlaveZone,omitnil,omitempty" name:"SlaveZone"`
 }
 
 type RollbackToNewClusterRequest struct {
@@ -22542,6 +23495,15 @@ type RollbackToNewClusterRequest struct {
 
 	// <p>是否从保存备份中恢复</p>
 	FromSaveBackup *bool `json:"FromSaveBackup,omitnil,omitempty" name:"FromSaveBackup"`
+
+	// <p>同步方式。可选值：async、semisync、sync，默认异步。</p>
+	SyncWay *string `json:"SyncWay,omitnil,omitempty" name:"SyncWay"`
+
+	// <p>半同步超时时间，单位ms。为保证业务稳定性，半同步复制存在退化逻辑，当主可用区集群在等待备可用区集群确认事务时若超过该超时时间，复制方式将降为异步复制。</p><p>取值范围：[1000, 4294967295]</p><p>单位：毫秒</p><p>默认值：10000</p>
+	SemiSyncTimeout *int64 `json:"SemiSyncTimeout,omitnil,omitempty" name:"SemiSyncTimeout"`
+
+	// <p>备可用区</p>
+	SlaveZone *string `json:"SlaveZone,omitnil,omitempty" name:"SlaveZone"`
 }
 
 func (r *RollbackToNewClusterRequest) ToJsonString() string {
@@ -22585,6 +23547,9 @@ func (r *RollbackToNewClusterRequest) FromJsonString(s string) error {
 	delete(f, "ProjectId")
 	delete(f, "AutoArchive")
 	delete(f, "FromSaveBackup")
+	delete(f, "SyncWay")
+	delete(f, "SemiSyncTimeout")
+	delete(f, "SlaveZone")
 	if len(f) > 0 {
 		return tcerr.NewTencentCloudSDKError("ClientError.BuildRequestError", "RollbackToNewClusterRequest has unknown keys!", "")
 	}
@@ -23515,32 +24480,32 @@ func (r *SwitchClusterVpcResponse) FromJsonString(s string) error {
 
 // Predefined struct for user
 type SwitchClusterZoneRequestParams struct {
-	// 集群Id
+	// <p>集群Id</p>
 	ClusterId *string `json:"ClusterId,omitnil,omitempty" name:"ClusterId"`
 
-	// 当前可用区
+	// <p>当前可用区</p>
 	OldZone *string `json:"OldZone,omitnil,omitempty" name:"OldZone"`
 
-	// 要切换到的可用区
+	// <p>要切换到的可用区</p>
 	NewZone *string `json:"NewZone,omitnil,omitempty" name:"NewZone"`
 
-	// 维护期间执行-yes,立即执行-no
+	// <p>维护期间执行-yes,立即执行-no</p>
 	IsInMaintainPeriod *string `json:"IsInMaintainPeriod,omitnil,omitempty" name:"IsInMaintainPeriod"`
 }
 
 type SwitchClusterZoneRequest struct {
 	*tchttp.BaseRequest
 	
-	// 集群Id
+	// <p>集群Id</p>
 	ClusterId *string `json:"ClusterId,omitnil,omitempty" name:"ClusterId"`
 
-	// 当前可用区
+	// <p>当前可用区</p>
 	OldZone *string `json:"OldZone,omitnil,omitempty" name:"OldZone"`
 
-	// 要切换到的可用区
+	// <p>要切换到的可用区</p>
 	NewZone *string `json:"NewZone,omitnil,omitempty" name:"NewZone"`
 
-	// 维护期间执行-yes,立即执行-no
+	// <p>维护期间执行-yes,立即执行-no</p>
 	IsInMaintainPeriod *string `json:"IsInMaintainPeriod,omitnil,omitempty" name:"IsInMaintainPeriod"`
 }
 
@@ -23568,7 +24533,10 @@ func (r *SwitchClusterZoneRequest) FromJsonString(s string) error {
 
 // Predefined struct for user
 type SwitchClusterZoneResponseParams struct {
-	// 异步FlowId
+	// <p>任务id</p>
+	TaskId *int64 `json:"TaskId,omitnil,omitempty" name:"TaskId"`
+
+	// <p>异步FlowId</p>
 	FlowId *int64 `json:"FlowId,omitnil,omitempty" name:"FlowId"`
 
 	// 唯一请求 ID，由服务端生成，每次请求都会返回（若请求因其他原因未能抵达服务端，则该次请求不会获得 RequestId）。定位问题时需要提供该次请求的 RequestId。
@@ -23811,6 +24779,57 @@ type TradePrice struct {
 }
 
 // Predefined struct for user
+type TransferClusterPrepayToPostpayRequestParams struct {
+
+}
+
+type TransferClusterPrepayToPostpayRequest struct {
+	*tchttp.BaseRequest
+	
+}
+
+func (r *TransferClusterPrepayToPostpayRequest) ToJsonString() string {
+    b, _ := json.Marshal(r)
+    return string(b)
+}
+
+// FromJsonString It is highly **NOT** recommended to use this function
+// because it has no param check, nor strict type check
+func (r *TransferClusterPrepayToPostpayRequest) FromJsonString(s string) error {
+	f := make(map[string]interface{})
+	if err := json.Unmarshal([]byte(s), &f); err != nil {
+		return err
+	}
+	
+	if len(f) > 0 {
+		return tcerr.NewTencentCloudSDKError("ClientError.BuildRequestError", "TransferClusterPrepayToPostpayRequest has unknown keys!", "")
+	}
+	return json.Unmarshal([]byte(s), &r)
+}
+
+// Predefined struct for user
+type TransferClusterPrepayToPostpayResponseParams struct {
+	// 唯一请求 ID，由服务端生成，每次请求都会返回（若请求因其他原因未能抵达服务端，则该次请求不会获得 RequestId）。定位问题时需要提供该次请求的 RequestId。
+	RequestId *string `json:"RequestId,omitnil,omitempty" name:"RequestId"`
+}
+
+type TransferClusterPrepayToPostpayResponse struct {
+	*tchttp.BaseResponse
+	Response *TransferClusterPrepayToPostpayResponseParams `json:"Response"`
+}
+
+func (r *TransferClusterPrepayToPostpayResponse) ToJsonString() string {
+    b, _ := json.Marshal(r)
+    return string(b)
+}
+
+// FromJsonString It is highly **NOT** recommended to use this function
+// because it has no param check, nor strict type check
+func (r *TransferClusterPrepayToPostpayResponse) FromJsonString(s string) error {
+	return json.Unmarshal([]byte(s), &r)
+}
+
+// Predefined struct for user
 type TransferClusterZoneRequestParams struct {
 	// 源集群Id
 	ClusterId *string `json:"ClusterId,omitnil,omitempty" name:"ClusterId"`
@@ -23899,6 +24918,57 @@ func (r *TransferClusterZoneResponse) ToJsonString() string {
 // FromJsonString It is highly **NOT** recommended to use this function
 // because it has no param check, nor strict type check
 func (r *TransferClusterZoneResponse) FromJsonString(s string) error {
+	return json.Unmarshal([]byte(s), &r)
+}
+
+// Predefined struct for user
+type TransferStoragePrepayToPostpayRequestParams struct {
+
+}
+
+type TransferStoragePrepayToPostpayRequest struct {
+	*tchttp.BaseRequest
+	
+}
+
+func (r *TransferStoragePrepayToPostpayRequest) ToJsonString() string {
+    b, _ := json.Marshal(r)
+    return string(b)
+}
+
+// FromJsonString It is highly **NOT** recommended to use this function
+// because it has no param check, nor strict type check
+func (r *TransferStoragePrepayToPostpayRequest) FromJsonString(s string) error {
+	f := make(map[string]interface{})
+	if err := json.Unmarshal([]byte(s), &f); err != nil {
+		return err
+	}
+	
+	if len(f) > 0 {
+		return tcerr.NewTencentCloudSDKError("ClientError.BuildRequestError", "TransferStoragePrepayToPostpayRequest has unknown keys!", "")
+	}
+	return json.Unmarshal([]byte(s), &r)
+}
+
+// Predefined struct for user
+type TransferStoragePrepayToPostpayResponseParams struct {
+	// 唯一请求 ID，由服务端生成，每次请求都会返回（若请求因其他原因未能抵达服务端，则该次请求不会获得 RequestId）。定位问题时需要提供该次请求的 RequestId。
+	RequestId *string `json:"RequestId,omitnil,omitempty" name:"RequestId"`
+}
+
+type TransferStoragePrepayToPostpayResponse struct {
+	*tchttp.BaseResponse
+	Response *TransferStoragePrepayToPostpayResponseParams `json:"Response"`
+}
+
+func (r *TransferStoragePrepayToPostpayResponse) ToJsonString() string {
+    b, _ := json.Marshal(r)
+    return string(b)
+}
+
+// FromJsonString It is highly **NOT** recommended to use this function
+// because it has no param check, nor strict type check
+func (r *TransferStoragePrepayToPostpayResponse) FromJsonString(s string) error {
 	return json.Unmarshal([]byte(s), &r)
 }
 

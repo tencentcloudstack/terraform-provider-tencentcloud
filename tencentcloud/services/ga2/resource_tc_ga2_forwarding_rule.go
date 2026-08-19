@@ -40,24 +40,24 @@ func ResourceTencentCloudGa2ForwardingRule() *schema.Resource {
 				Type:        schema.TypeString,
 				Required:    true,
 				ForceNew:    true,
-				Description: "Global accelerator instance ID this forwarding rule belongs to.",
+				Description: "Global accelerator instance ID. Example value: `ga-ask56kjh`.",
 			},
 			"listener_id": {
 				Type:        schema.TypeString,
 				Required:    true,
 				ForceNew:    true,
-				Description: "Listener ID this forwarding rule belongs to.",
+				Description: "Listener ID. Example value: `lsr-kzjzfs7n`.",
 			},
 			"forwarding_policy_id": {
 				Type:        schema.TypeString,
 				Required:    true,
 				ForceNew:    true,
-				Description: "Forwarding policy ID this forwarding rule belongs to.",
+				Description: "Forwarding policy ID. Example value: `dm-dz058e4q`.",
 			},
 			"rule_conditions": {
 				Type:        schema.TypeSet,
 				Required:    true,
-				Description: "Layer-7 forwarding rule condition list. Maximum of 1 element. Treated as an unordered set; HCL element order has no semantic meaning.",
+				Description: "Layer-7 forwarding rule conditions. The array length cannot exceed 1. Treated as an unordered set; HCL element order has no semantic meaning.",
 				Elem: &schema.Resource{
 					Schema: map[string]*schema.Schema{
 						"rule_condition_type": {
@@ -70,7 +70,7 @@ func ResourceTencentCloudGa2ForwardingRule() *schema.Resource {
 							Required: true,
 							Elem:     &schema.Schema{Type: schema.TypeString},
 							Description: "Layer-7 forwarding rule condition values. Each value must match the regular expression " +
-								"`^[a-zA-Z0-9_.-/]{1,80}$`. Maximum of 1 element. Treated as an unordered set.",
+								"`^[a-zA-Z0-9_.-/]{1,80}$`. The array length cannot exceed 1. Treated as an unordered set.",
 						},
 					},
 				},
@@ -78,7 +78,7 @@ func ResourceTencentCloudGa2ForwardingRule() *schema.Resource {
 			"rule_actions": {
 				Type:        schema.TypeSet,
 				Required:    true,
-				Description: "Layer-7 forwarding rule action list. Treated as an unordered set; HCL element order has no semantic meaning.",
+				Description: "Layer-7 forwarding rule actions. The array length cannot exceed 1. Treated as an unordered set; HCL element order has no semantic meaning.",
 				Elem: &schema.Resource{
 					Schema: map[string]*schema.Schema{
 						"rule_action_type": {
@@ -101,7 +101,7 @@ func ResourceTencentCloudGa2ForwardingRule() *schema.Resource {
 				Type:     schema.TypeSet,
 				Optional: true,
 				Computed: true,
-				Description: "Origin request header list. Maximum of 5 elements. Required when `rule_actions.rule_action_type` " +
+				Description: "Origin request headers. The array length cannot exceed 5. Required when `rule_actions.rule_action_type` " +
 					"is `ForwardGroup`. Treated as an unordered set; HCL element order has no semantic meaning.",
 				Elem: &schema.Resource{
 					Schema: map[string]*schema.Schema{
@@ -143,7 +143,7 @@ func ResourceTencentCloudGa2ForwardingRule() *schema.Resource {
 				Type:     schema.TypeSet,
 				Optional: true,
 				Computed: true,
-				Description: "Origin response header list. Maximum of 5 elements. An empty set means clearing the " +
+				Description: "Origin response headers. The array length cannot exceed 5. An empty set means clearing the " +
 					"configuration. Treated as an unordered set; HCL element order has no semantic meaning.",
 				Elem: &schema.Resource{
 					Schema: map[string]*schema.Schema{
@@ -164,19 +164,19 @@ func ResourceTencentCloudGa2ForwardingRule() *schema.Resource {
 				Type:     schema.TypeSet,
 				Optional: true,
 				Computed: true,
-				Description: "Hide origin response header list. Maximum of 5 elements. An empty set means clearing the " +
+				Description: "Origin response headers to remove. The array length cannot exceed 5. An empty set means clearing the " +
 					"configuration. Treated as an unordered set; HCL element order has no semantic meaning.",
 				Elem: &schema.Resource{
 					Schema: map[string]*schema.Schema{
 						"key": {
 							Type:        schema.TypeString,
 							Required:    true,
-							Description: "Hide origin response header key. Maximum length is 128 characters. If the value contains `$`, only `$remote_addr` or `$remote_port` are supported.",
+							Description: "Origin response header key to remove. Maximum length is 128 characters. If it contains `$`, only `$remote_addr` or `$remote_port` are supported.",
 						},
 						"value": {
 							Type:        schema.TypeString,
 							Optional:    true,
-							Description: "Hide origin response header value. Currently only an empty string is accepted.",
+							Description: "Origin response header value to remove. Currently only an empty string is accepted.",
 						},
 					},
 				},
@@ -240,7 +240,7 @@ func resourceTencentCloudGa2ForwardingRuleCreate(d *schema.ResourceData, meta in
 		request.EnableOriginSni = helper.Bool(v.(bool))
 	}
 
-	if v, ok := d.GetOk("origin_sni"); ok {
+	if v, ok := d.GetOk("origin_sni"); ok && v.(string) != "" {
 		request.OriginSni = helper.String(v.(string))
 	}
 
@@ -439,7 +439,7 @@ func resourceTencentCloudGa2ForwardingRuleUpdate(d *schema.ResourceData, meta in
 		request.EnableOriginSni = helper.Bool(v.(bool))
 	}
 
-	if v, ok := d.GetOk("origin_sni"); ok {
+	if v, ok := d.GetOk("origin_sni"); ok && v.(string) != "" {
 		request.OriginSni = helper.String(v.(string))
 	}
 

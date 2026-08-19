@@ -483,6 +483,18 @@ func TencentCynosdbClusterBaseInfo() map[string]*schema.Schema {
 			Computed:    true,
 			Description: "Multi zone Addresses of the CynosDB Cluster.",
 		},
+		"sync_way": {
+			Type:        schema.TypeString,
+			Optional:    true,
+			Computed:    true,
+			Description: "Synchronization way. Valid values: `async`, `semisync`, `sync`.",
+		},
+		"semi_sync_timeout": {
+			Type:        schema.TypeInt,
+			Optional:    true,
+			Computed:    true,
+			Description: "Semi-sync timeout in ms. Value range: `[1000, 4294967295]`, default `10000`.",
+		},
 		"serverless_status_flag": {
 			Type:         schema.TypeString,
 			Optional:     true,
@@ -940,6 +952,18 @@ func TencentCynosdbClusterBaseInfoV2() map[string]*schema.Schema {
 			Optional:    true,
 			Computed:    true,
 			Description: "Multi zone Addresses of the CynosDB Cluster.",
+		},
+		"sync_way": {
+			Type:        schema.TypeString,
+			Optional:    true,
+			Computed:    true,
+			Description: "Synchronization way. Valid values: `async`, `semisync`, `sync`.",
+		},
+		"semi_sync_timeout": {
+			Type:        schema.TypeInt,
+			Optional:    true,
+			Computed:    true,
+			Description: "Semi-sync timeout in ms. Value range: `[1000, 4294967295]`, default `10000`.",
 		},
 		"serverless_status_flag": {
 			Type:         schema.TypeString,

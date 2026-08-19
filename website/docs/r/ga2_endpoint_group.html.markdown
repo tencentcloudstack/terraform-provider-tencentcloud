@@ -13,7 +13,7 @@ Provides a resource to create a GA2 (Global Accelerator 2) endpoint group.
 
 ## Example Usage
 
-### If enable_health_check is false
+### If listener protocol is TCP
 
 ```hcl
 resource "tencentcloud_ga2_global_accelerator" "example" {
@@ -34,7 +34,7 @@ resource "tencentcloud_ga2_accelerate_area" "example" {
   ip_version            = "IPv4"
 }
 
-resource "tencentcloud_ga2_listener" "example1" {
+resource "tencentcloud_ga2_listener" "example" {
   global_accelerator_id = tencentcloud_ga2_accelerate_area.example.global_accelerator_id
   name                  = "tf-example-tcp"
   protocol              = "TCP"
@@ -48,51 +48,12 @@ resource "tencentcloud_ga2_listener" "example1" {
   get_real_ip_type = "ProxyProtocol"
   client_affinity  = "Open"
   listener_type    = "Standard"
-  idle_timeout     = 800
+  idle_timeout     = 900
 }
 
-resource "tencentcloud_ga2_listener" "example2" {
-  global_accelerator_id = tencentcloud_ga2_accelerate_area.example.global_accelerator_id
-  name                  = "tf-example-http"
-  protocol              = "HTTP"
-
-  port_ranges {
-    from_port = 90
-    to_port   = 90
-  }
-
-  description             = "tf example listener"
-  idle_timeout            = 30
-  request_timeout         = 60
-  listener_type           = "Standard"
-  x_forwarded_for_real_ip = true
-
-  depends_on = [tencentcloud_ga2_listener.example1]
-}
-
-resource "tencentcloud_ga2_listener" "example3" {
-  global_accelerator_id = tencentcloud_ga2_accelerate_area.example.global_accelerator_id
-  name                  = "tf-example-https"
-  protocol              = "HTTPS"
-
-  port_ranges {
-    from_port = 9090
-    to_port   = 9090
-  }
-
-  listener_type       = "Standard"
-  idle_timeout        = 60
-  request_timeout     = 60
-  certification_type  = "SVR"
-  cipher_policy_id    = "tls_policy_1.2_strict-1.3"
-  server_certificates = ["Yj6CmODs"]
-
-  depends_on = [tencentcloud_ga2_listener.example2]
-}
-
-resource "tencentcloud_ga2_endpoint_group" "example1" {
+resource "tencentcloud_ga2_endpoint_group" "example" {
   global_accelerator_id = tencentcloud_ga2_global_accelerator.example.id
-  listener_id           = tencentcloud_ga2_listener.example1.listener_id
+  listener_id           = tencentcloud_ga2_listener.example.listener_id
   endpoint_group_type   = "DEFAULT"
 
   endpoint_group_configuration {
@@ -124,10 +85,117 @@ resource "tencentcloud_ga2_endpoint_group" "example1" {
     }
   }
 }
+```
 
-resource "tencentcloud_ga2_endpoint_group" "example2" {
+### If listener protocol is UDP
+
+```hcl
+resource "tencentcloud_ga2_global_accelerator" "example" {
+  name                 = "tf-example"
+  instance_charge_type = "POSTPAID"
+  description          = "tf example global accelerator"
+
+  tags = {
+    createdBy = "Terraform"
+  }
+}
+
+resource "tencentcloud_ga2_accelerate_area" "example" {
   global_accelerator_id = tencentcloud_ga2_global_accelerator.example.id
-  listener_id           = tencentcloud_ga2_listener.example2.listener_id
+  accelerate_region     = "ap-guangzhou"
+  bandwidth             = 10
+  isp_type              = "BGP"
+  ip_version            = "IPv4"
+}
+
+resource "tencentcloud_ga2_listener" "example" {
+  global_accelerator_id = tencentcloud_ga2_accelerate_area.example.global_accelerator_id
+  name                  = "tf-example-udp"
+  protocol              = "UDP"
+
+  port_ranges {
+    from_port = 70
+    to_port   = 70
+  }
+
+  description     = "tf example listener"
+  client_affinity = "Open"
+  listener_type   = "Standard"
+  idle_timeout    = 20
+}
+
+
+resource "tencentcloud_ga2_endpoint_group" "example" {
+  global_accelerator_id = tencentcloud_ga2_global_accelerator.example.id
+  listener_id           = tencentcloud_ga2_listener.example.listener_id
+  endpoint_group_type   = "DEFAULT"
+
+  endpoint_group_configuration {
+    name                  = "tf-example"
+    endpoint_group_region = "ap-guangzhou"
+    description           = "tf example endpoint group"
+    enable_health_check   = false
+    check_type            = "PING"
+    connect_timeout       = 2
+    health_check_interval = 30
+    healthy_threshold     = 3
+    unhealthy_threshold   = 3
+
+    endpoint_configurations {
+      endpoint_type    = "CustomDomain"
+      endpoint_service = "example.com"
+      weight           = 100
+    }
+
+    port_overrides {
+      listener_port = 70
+      endpoint_port = 9090
+    }
+  }
+}
+```
+
+### If listener protocol is HTTP
+
+```hcl
+resource "tencentcloud_ga2_global_accelerator" "example" {
+  name                 = "tf-example"
+  instance_charge_type = "POSTPAID"
+  description          = "tf example global accelerator"
+
+  tags = {
+    createdBy = "Terraform"
+  }
+}
+
+resource "tencentcloud_ga2_accelerate_area" "example" {
+  global_accelerator_id = tencentcloud_ga2_global_accelerator.example.id
+  accelerate_region     = "ap-guangzhou"
+  bandwidth             = 10
+  isp_type              = "BGP"
+  ip_version            = "IPv4"
+}
+
+resource "tencentcloud_ga2_listener" "example" {
+  global_accelerator_id = tencentcloud_ga2_accelerate_area.example.global_accelerator_id
+  name                  = "tf-example-http"
+  protocol              = "HTTP"
+
+  port_ranges {
+    from_port = 90
+    to_port   = 90
+  }
+
+  description             = "tf example listener"
+  idle_timeout            = 15
+  request_timeout         = 60
+  listener_type           = "Standard"
+  x_forwarded_for_real_ip = true
+}
+
+resource "tencentcloud_ga2_endpoint_group" "example" {
+  global_accelerator_id = tencentcloud_ga2_global_accelerator.example.id
+  listener_id           = tencentcloud_ga2_listener.example.listener_id
   endpoint_group_type   = "VIRTUAL"
 
   endpoint_group_configuration {
@@ -167,14 +235,55 @@ resource "tencentcloud_ga2_endpoint_group" "example2" {
       endpoint_port = 9090
     }
   }
+}
+```
 
-  depends_on = [tencentcloud_ga2_endpoint_group.example1]
+### If listener protocol is HTTPS
+
+```hcl
+resource "tencentcloud_ga2_global_accelerator" "example" {
+  name                 = "tf-example"
+  instance_charge_type = "POSTPAID"
+  description          = "tf example global accelerator"
+
+  tags = {
+    createdBy = "Terraform"
+  }
 }
 
-resource "tencentcloud_ga2_endpoint_group" "example3" {
+resource "tencentcloud_ga2_accelerate_area" "example" {
   global_accelerator_id = tencentcloud_ga2_global_accelerator.example.id
-  listener_id           = tencentcloud_ga2_listener.example3.listener_id
-  endpoint_group_type   = "DEFAULT"
+  accelerate_region     = "ap-guangzhou"
+  bandwidth             = 10
+  isp_type              = "BGP"
+  ip_version            = "IPv4"
+}
+
+resource "tencentcloud_ga2_listener" "example" {
+  global_accelerator_id = tencentcloud_ga2_accelerate_area.example.global_accelerator_id
+  name                  = "tf-example-https"
+  protocol              = "HTTPS"
+
+  port_ranges {
+    from_port = 9090
+    to_port   = 9090
+  }
+
+  listener_type           = "Standard"
+  idle_timeout            = 38
+  request_timeout         = 60
+  x_forwarded_for_real_ip = true
+  certification_type      = "MUTUAL"
+  cipher_policy_id        = "tls_policy_1.2_strict-1.3"
+  server_certificates     = ["ZDxux2I9"]
+  client_ca_certificates  = ["UL45hi9B"]
+  http_version            = "HTTP/2"
+}
+
+resource "tencentcloud_ga2_endpoint_group" "example" {
+  global_accelerator_id = tencentcloud_ga2_global_accelerator.example.id
+  listener_id           = tencentcloud_ga2_listener.example.listener_id
+  endpoint_group_type   = "VIRTUAL"
 
   endpoint_group_configuration {
     name                  = "tf-example"
@@ -184,7 +293,7 @@ resource "tencentcloud_ga2_endpoint_group" "example3" {
     check_type            = "HTTP"
     check_port            = "8080"
     check_domain          = "www.tencent.com"
-    check_path            = "/test"
+    check_path            = "/path"
     check_method          = "GET"
     connect_timeout       = 2
     health_check_interval = 30
@@ -210,8 +319,6 @@ resource "tencentcloud_ga2_endpoint_group" "example3" {
       endpoint_port = 80
     }
   }
-
-  depends_on = [tencentcloud_ga2_endpoint_group.example2]
 }
 ```
 
