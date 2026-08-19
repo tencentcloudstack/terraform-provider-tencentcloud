@@ -491,3 +491,281 @@ func TestDtsSyncConfig_Read_SchemaMode(t *testing.T) {
 
 // keep context import for compile safety / future use.
 var _ = context.TODO
+
+// TestDtsSyncConfig_Update_TableColumnParams verifies that setting `column_mode`,
+// `columns`, `tmp_tables`, and `table_edit_mode` on a table object causes those
+// values to be forwarded on the ConfigureSyncJob request's
+// Objects.Databases[].Tables[] entry (write path).
+func TestDtsSyncConfig_Update_TableColumnParams(t *testing.T) {
+	patches := gomonkey.NewPatches()
+	defer patches.Reset()
+
+	dtsClient := &dts.Client{}
+	patches.ApplyMethodReturn(newMockMetaDtsSyncConfig().client, "UseDtsClient", dtsClient)
+
+	// Capture and assert the ConfigureSyncJob request carries the new table fields.
+	patches.ApplyMethodFunc(dtsClient, "ConfigureSyncJob", func(request *dts.ConfigureSyncJobRequest) (*dts.ConfigureSyncJobResponse, error) {
+		assert.NotNil(t, request.Objects)
+		assert.NotNil(t, request.Objects.Databases)
+		assert.Len(t, request.Objects.Databases, 1)
+		db := request.Objects.Databases[0]
+		assert.Equal(t, "tf_ci_test", *db.DbName)
+		assert.NotNil(t, db.Tables)
+		assert.Len(t, db.Tables, 1)
+		tbl := db.Tables[0]
+		assert.NotNil(t, tbl.TableName)
+		assert.Equal(t, "test", *tbl.TableName)
+		assert.NotNil(t, tbl.ColumnMode)
+		assert.Equal(t, "Partial", *tbl.ColumnMode)
+		assert.NotNil(t, tbl.TableEditMode)
+		assert.Equal(t, "pt", *tbl.TableEditMode)
+		assert.NotNil(t, tbl.Columns)
+		assert.Len(t, tbl.Columns, 1)
+		assert.NotNil(t, tbl.Columns[0].ColumnName)
+		assert.Equal(t, "c1", *tbl.Columns[0].ColumnName)
+		assert.NotNil(t, tbl.Columns[0].NewColumnName)
+		assert.Equal(t, "c1_new", *tbl.Columns[0].NewColumnName)
+		assert.NotNil(t, tbl.TmpTables)
+		assert.Len(t, tbl.TmpTables, 2)
+		assert.Equal(t, "_t1_new", *tbl.TmpTables[0])
+		assert.Equal(t, "_t1_old", *tbl.TmpTables[1])
+
+		resp := dts.NewConfigureSyncJobResponse()
+		resp.Response = &dts.ConfigureSyncJobResponseParams{
+			RequestId: ptrStringDtsSyncConfig("fake-request-id"),
+		}
+		return resp, nil
+	})
+
+	// Mock DescribeSyncJobs for both the state refresh polling and the final Read.
+	var describeCallCount int
+	patches.ApplyMethodFunc(dtsClient, "DescribeSyncJobs", func(request *dts.DescribeSyncJobsRequest) (*dts.DescribeSyncJobsResponse, error) {
+		describeCallCount++
+		resp := dts.NewDescribeSyncJobsResponse()
+		resp.Response = &dts.DescribeSyncJobsResponseParams{
+			JobList: []*dts.SyncJobInfo{
+				{
+					JobId:         ptrStringDtsSyncConfig("sync-test-table-column-params"),
+					JobName:       ptrStringDtsSyncConfig("tf_test_sync_config"),
+					SrcAccessType: ptrStringDtsSyncConfig("cdb"),
+					DstAccessType: ptrStringDtsSyncConfig("cdb"),
+					RunMode:       ptrStringDtsSyncConfig("Immediate"),
+					Status:        ptrStringDtsSyncConfig("Initialized"),
+					TradeStatus:   ptrStringDtsSyncConfig("Normal"),
+					Objects: &dts.Objects{
+						Mode: ptrStringDtsSyncConfig("Partial"),
+						Databases: []*dts.Database{
+							{
+								DbName:    ptrStringDtsSyncConfig("tf_ci_test"),
+								NewDbName: ptrStringDtsSyncConfig("tf_ci_test_new"),
+								DbMode:    ptrStringDtsSyncConfig("Partial"),
+								TableMode: ptrStringDtsSyncConfig("Partial"),
+								Tables: []*dts.Table{
+									{
+										TableName:     ptrStringDtsSyncConfig("test"),
+										ColumnMode:    ptrStringDtsSyncConfig("Partial"),
+										TableEditMode: ptrStringDtsSyncConfig("pt"),
+										Columns: []*dts.Column{
+											{
+												ColumnName:    ptrStringDtsSyncConfig("c1"),
+												NewColumnName: ptrStringDtsSyncConfig("c1_new"),
+											},
+										},
+										TmpTables: []*string{
+											ptrStringDtsSyncConfig("_t1_new"),
+											ptrStringDtsSyncConfig("_t1_old"),
+										},
+									},
+								},
+							},
+						},
+					},
+					SrcInfo: &dts.Endpoint{
+						Region:     ptrStringDtsSyncConfig("ap-guangzhou"),
+						InstanceId: ptrStringDtsSyncConfig("cdb-fitq5t9h"),
+						User:       ptrStringDtsSyncConfig("keep_dts"),
+						Password:   ptrStringDtsSyncConfig("Letmein123"),
+						DbName:     ptrStringDtsSyncConfig("tf_ci_test"),
+						VpcId:      ptrStringDtsSyncConfig("vpc-i5yyodl9"),
+						SubnetId:   ptrStringDtsSyncConfig("subnet-hhi88a58"),
+					},
+					DstInfo: &dts.Endpoint{
+						Region:     ptrStringDtsSyncConfig("ap-guangzhou"),
+						InstanceId: ptrStringDtsSyncConfig("cynosdbmysql-bws8h88b"),
+						User:       ptrStringDtsSyncConfig("keep_dts"),
+						Password:   ptrStringDtsSyncConfig("Letmein123"),
+						DbName:     ptrStringDtsSyncConfig("tf_ci_test_new"),
+						VpcId:      ptrStringDtsSyncConfig("vpc-i5yyodl9"),
+						SubnetId:   ptrStringDtsSyncConfig("subnet-hhi88a58"),
+					},
+					AutoRetryTimeRangeMinutes: func() *int64 { v := int64(0); return &v }(),
+				},
+			},
+			RequestId: ptrStringDtsSyncConfig("fake-request-id"),
+		}
+		return resp, nil
+	})
+
+	meta := newMockMetaDtsSyncConfig()
+	res := dtssvc.ResourceTencentCloudDtsSyncConfig()
+	rawConfig := map[string]interface{}{
+		"job_id":          "sync-test-table-column-params",
+		"src_access_type": "cdb",
+		"dst_access_type": "cdb",
+		"job_name":        "tf_test_sync_config",
+		"job_mode":        "liteMode",
+		"run_mode":        "Immediate",
+		"objects": []interface{}{
+			map[string]interface{}{
+				"mode": "Partial",
+				"databases": []interface{}{
+					map[string]interface{}{
+						"db_name":     "tf_ci_test",
+						"new_db_name": "tf_ci_test_new",
+						"db_mode":     "Partial",
+						"table_mode":  "Partial",
+						"tables": []interface{}{
+							map[string]interface{}{
+								"table_name":      "test",
+								"column_mode":     "Partial",
+								"table_edit_mode": "pt",
+								"columns": []interface{}{
+									map[string]interface{}{
+										"column_name":     "c1",
+										"new_column_name": "c1_new",
+									},
+								},
+								"tmp_tables": []interface{}{
+									"_t1_new",
+									"_t1_old",
+								},
+							},
+						},
+					},
+				},
+			},
+		},
+		"src_info": []interface{}{
+			map[string]interface{}{
+				"region":      "ap-guangzhou",
+				"instance_id": "cdb-fitq5t9h",
+				"user":        "keep_dts",
+				"password":    "Letmein123",
+				"db_name":     "tf_ci_test",
+				"vpc_id":      "vpc-i5yyodl9",
+				"subnet_id":   "subnet-hhi88a58",
+			},
+		},
+		"dst_info": []interface{}{
+			map[string]interface{}{
+				"region":      "ap-guangzhou",
+				"instance_id": "cynosdbmysql-bws8h88b",
+				"user":        "keep_dts",
+				"password":    "Letmein123",
+				"db_name":     "tf_ci_test_new",
+				"vpc_id":      "vpc-i5yyodl9",
+				"subnet_id":   "subnet-hhi88a58",
+			},
+		},
+		"auto_retry_time_range_minutes": 0,
+	}
+	d := schema.TestResourceDataRaw(t, res.Schema, rawConfig)
+	d.SetId("sync-test-table-column-params")
+
+	err := res.Update(d, meta)
+	assert.NoError(t, err)
+	assert.Equal(t, "Partial", d.Get("objects.0.databases.0.tables.0.column_mode").(string))
+	assert.Equal(t, "pt", d.Get("objects.0.databases.0.tables.0.table_edit_mode").(string))
+	assert.Equal(t, "c1", d.Get("objects.0.databases.0.tables.0.columns.0.column_name").(string))
+	assert.Equal(t, "c1_new", d.Get("objects.0.databases.0.tables.0.columns.0.new_column_name").(string))
+	assert.Equal(t, 2, d.Get("objects.0.databases.0.tables.0.tmp_tables.#").(int))
+	assert.GreaterOrEqual(t, describeCallCount, 1)
+}
+
+// TestDtsSyncConfig_Read_TableColumnParams verifies that `column_mode`,
+// `columns`, `tmp_tables`, and `table_edit_mode` returned by DescribeSyncJobs
+// are read back into Terraform state (read path), and that absent fields are
+// not set.
+func TestDtsSyncConfig_Read_TableColumnParams(t *testing.T) {
+	patches := gomonkey.NewPatches()
+	defer patches.Reset()
+
+	dtsClient := &dts.Client{}
+	patches.ApplyMethodReturn(newMockMetaDtsSyncConfig().client, "UseDtsClient", dtsClient)
+
+	patches.ApplyMethodFunc(dtsClient, "DescribeSyncJobs", func(request *dts.DescribeSyncJobsRequest) (*dts.DescribeSyncJobsResponse, error) {
+		resp := dts.NewDescribeSyncJobsResponse()
+		resp.Response = &dts.DescribeSyncJobsResponseParams{
+			JobList: []*dts.SyncJobInfo{
+				{
+					JobId:         ptrStringDtsSyncConfig("sync-test-table-column-params"),
+					JobName:       ptrStringDtsSyncConfig("tf_test_sync_config"),
+					SrcAccessType: ptrStringDtsSyncConfig("cdb"),
+					DstAccessType: ptrStringDtsSyncConfig("cdb"),
+					RunMode:       ptrStringDtsSyncConfig("Immediate"),
+					Objects: &dts.Objects{
+						Mode: ptrStringDtsSyncConfig("Partial"),
+						Databases: []*dts.Database{
+							{
+								DbName:    ptrStringDtsSyncConfig("tf_ci_test"),
+								NewDbName: ptrStringDtsSyncConfig("tf_ci_test_new"),
+								DbMode:    ptrStringDtsSyncConfig("Partial"),
+								TableMode: ptrStringDtsSyncConfig("Partial"),
+								Tables: []*dts.Table{
+									{
+										TableName:     ptrStringDtsSyncConfig("test"),
+										ColumnMode:    ptrStringDtsSyncConfig("All"),
+										TableEditMode: ptrStringDtsSyncConfig("rename"),
+										Columns: []*dts.Column{
+											{
+												ColumnName:    ptrStringDtsSyncConfig("c1"),
+												NewColumnName: ptrStringDtsSyncConfig("c1_new"),
+											},
+											{
+												ColumnName: ptrStringDtsSyncConfig("c2"),
+											},
+										},
+										TmpTables: []*string{
+											ptrStringDtsSyncConfig("_t1_new"),
+										},
+									},
+								},
+							},
+						},
+					},
+					SrcInfo: &dts.Endpoint{
+						Region:     ptrStringDtsSyncConfig("ap-guangzhou"),
+						InstanceId: ptrStringDtsSyncConfig("cdb-fitq5t9h"),
+						User:       ptrStringDtsSyncConfig("keep_dts"),
+						DbName:     ptrStringDtsSyncConfig("tf_ci_test"),
+					},
+					DstInfo: &dts.Endpoint{
+						Region:     ptrStringDtsSyncConfig("ap-guangzhou"),
+						InstanceId: ptrStringDtsSyncConfig("cynosdbmysql-bws8h88b"),
+						User:       ptrStringDtsSyncConfig("keep_dts"),
+						DbName:     ptrStringDtsSyncConfig("tf_ci_test_new"),
+					},
+				},
+			},
+			RequestId: ptrStringDtsSyncConfig("fake-request-id"),
+		}
+		return resp, nil
+	})
+
+	meta := newMockMetaDtsSyncConfig()
+	res := dtssvc.ResourceTencentCloudDtsSyncConfig()
+	d := schema.TestResourceDataRaw(t, res.Schema, map[string]interface{}{})
+	d.SetId("sync-test-table-column-params")
+
+	err := res.Read(d, meta)
+	assert.NoError(t, err)
+	assert.Equal(t, "All", d.Get("objects.0.databases.0.tables.0.column_mode").(string))
+	assert.Equal(t, "rename", d.Get("objects.0.databases.0.tables.0.table_edit_mode").(string))
+	assert.Equal(t, "test", d.Get("objects.0.databases.0.tables.0.table_name").(string))
+	assert.Equal(t, 2, d.Get("objects.0.databases.0.tables.0.columns.#").(int))
+	assert.Equal(t, "c1", d.Get("objects.0.databases.0.tables.0.columns.0.column_name").(string))
+	assert.Equal(t, "c1_new", d.Get("objects.0.databases.0.tables.0.columns.0.new_column_name").(string))
+	assert.Equal(t, "c2", d.Get("objects.0.databases.0.tables.0.columns.1.column_name").(string))
+	assert.Equal(t, "", d.Get("objects.0.databases.0.tables.0.columns.1.new_column_name").(string))
+	assert.Equal(t, 1, d.Get("objects.0.databases.0.tables.0.tmp_tables.#").(int))
+}

@@ -44,72 +44,79 @@ func ResourceTencentCloudClsTopic() *schema.Resource {
 			"logset_id": {
 				Type:        schema.TypeString,
 				Required:    true,
-				Description: "Logset ID.",
+				Description: "Logset ID. Get the logset ID via `DescribeLogsets` API.",
 			},
 			"topic_name": {
-				Type:        schema.TypeString,
-				Required:    true,
-				Description: "Log topic name.",
+				Type:     schema.TypeString,
+				Required: true,
+				Description: "Log topic name. Constraints: cannot be an empty string, cannot contain the `|` character, " +
+					"and cannot use the following reserved names: `cls_service_log`, `loglistener_status`, " +
+					"`loglistener_alarm`, `loglistener_business`, `cls_service_metric`.",
 			},
 			"partition_count": {
 				Type:        schema.TypeInt,
 				Optional:    true,
 				Computed:    true,
-				Description: "Number of log topic partitions. Default value: 1. Maximum value: 10.",
+				Description: "Number of log topic partitions. Default: 1, maximum: 10.",
 			},
 			"tags": {
 				Type:        schema.TypeMap,
 				Optional:    true,
-				Description: "Tag description list. Up to 10 tag key-value pairs are supported and must be unique.",
+				Description: "Tag description list. Up to 10 tag key-value pairs are supported, and the same resource can only be bound to the same tag key.",
 			},
 			"auto_split": {
 				Type:        schema.TypeBool,
 				Optional:    true,
 				Computed:    true,
-				Description: "Whether to enable automatic split. Default value: true.",
+				Description: "Whether to enable automatic split. Default value: `true`.",
 			},
 			"max_split_partitions": {
-				Type:     schema.TypeInt,
-				Optional: true,
-				Computed: true,
-				Description: "Maximum number of partitions to split into for this topic if" +
-					" automatic split is enabled. Default value: 50.",
+				Type:        schema.TypeInt,
+				Optional:    true,
+				Computed:    true,
+				Description: "Maximum number of partitions allowed for the topic if automatic split is enabled. Default value: `50`.",
 			},
 			"storage_type": {
 				Type:     schema.TypeString,
 				Optional: true,
 				Computed: true,
-				Description: "Log topic storage class. Valid values: hot: real-time storage; cold: offline storage. Default value: hot. If cold is passed in, " +
-					"please contact the customer service to add the log topic to the allowlist first.",
+				Description: "Log topic storage type. Valid values: `hot`: standard storage; `cold`: infrequent storage. " +
+					"Default value: `hot`. Not supported for metric topics.",
 			},
 			"period": {
-				Type:        schema.TypeInt,
-				Optional:    true,
-				Computed:    true,
-				Description: "lifetime. Unit: days. Standard storage value range: 1 to 3600. Infrequent storage value range: 7 to 3600 days. A value of 3640 indicates permanent retention.If this value is not input, it defaults to the Period value of the log set corresponding to the accessed log topic (defaults to 30 days in case of access failure).",
+				Type:     schema.TypeInt,
+				Optional: true,
+				Computed: true,
+				Description: "Retention period, unit: days. Log topic (standard storage): 1 to 3600 days, value `3640` " +
+					"means permanent retention. Log topic (infrequent storage): 7 to 3600 days, value `3640` means " +
+					"permanent retention. Metric topic: 1 to 3600 days, value `3640` means permanent retention.",
 			},
 			"hot_period": {
-				Type:        schema.TypeInt,
-				Optional:    true,
-				Computed:    true,
-				Description: "0: Turn off log sinking. Non 0: The number of days of standard storage after enabling log settling. HotPeriod needs to be greater than or equal to 7 and less than Period. Only effective when StorageType is hot.",
+				Type:     schema.TypeInt,
+				Optional: true,
+				Computed: true,
+				Description: "`0`: turn off log settling. Non-`0`: the number of days of standard storage after enabling " +
+					"log settling. HotPeriod must be greater than or equal to 7 and less than Period. Only effective " +
+					"when `storage_type` is `hot`. Not supported for metric topics.",
 			},
 			"describes": {
 				Type:        schema.TypeString,
 				Optional:    true,
-				Description: "Log Topic Description.",
+				Description: "Log topic description.",
 			},
 			"is_web_tracking": {
-				Type:        schema.TypeBool,
-				Optional:    true,
-				Computed:    true,
-				Description: "No authentication switch. False: closed; True: Enable. The default is false. After activation, anonymous access to the log topic will be supported for specified operations.",
+				Type:     schema.TypeBool,
+				Optional: true,
+				Computed: true,
+				Description: "Free authentication switch. `false`: closed (default); `true`: enabled. When enabled, " +
+					"anonymous access to the log topic will be supported for specified operations. " +
+					"Not supported for metric topics.",
 			},
 			"extends": {
 				Type:        schema.TypeList,
 				Optional:    true,
 				MaxItems:    1,
-				Description: "Log Subject Extension Information.",
+				Description: "Topic extension information.",
 				Elem: &schema.Resource{
 					Schema: map[string]*schema.Schema{
 						"anonymous_access": {
@@ -159,14 +166,41 @@ func ResourceTencentCloudClsTopic() *schema.Resource {
 				Type:         schema.TypeInt,
 				Optional:     true,
 				Computed:     true,
-				Description:  "Topic type. 0: log topic (default), 1: metric topic.",
+				Description:  "Topic type. `0`: log topic (default), `1`: metric topic.",
 				ValidateFunc: tccommon.ValidateAllowedIntValue([]int{0, 1}),
 			},
 			"encryption": {
-				Type:        schema.TypeInt,
-				Optional:    true,
-				Computed:    true,
-				Description: "Encryption-related parameters. This parameter is supported for users with an open access list and from encrypted regions; it cannot be passed in other scenarios. 0 or not passed: No encryption. 1: KMS-CLS cloud product key encryption. Once enabled, it cannot be disabled.\nSupported regions: ap-beijing, ap-guangzhou, ap-shanghai, ap-singapore, ap-bangkok, ap-jakarta, eu-frankfurt, ap-seoul, ap-tokyo.",
+				Type:     schema.TypeInt,
+				Optional: true,
+				Computed: true,
+				Description: "Encryption-related parameters. Supported for encryption-enabled regions and " +
+					"allowlisted users; cannot be passed in other scenarios. `0` or not passed: no encryption; " +
+					"`1`: kms-cls cloud product key encryption. Once enabled, it cannot be disabled. " +
+					"Supported regions: ap-beijing, ap-guangzhou, ap-shanghai, ap-singapore, ap-bangkok, " +
+					"ap-jakarta, eu-frankfurt, ap-seoul, ap-tokyo.",
+			},
+			"custom_kms_info": {
+				Type:     schema.TypeList,
+				Optional: true,
+				Computed: true,
+				MaxItems: 1,
+				Description: "User-defined KMS key information. If empty, the default key (alias `KMS-CLS`) " +
+					"is used.",
+				Elem: &schema.Resource{
+					Schema: map[string]*schema.Schema{
+						"kms_region": {
+							Type:     schema.TypeString,
+							Required: true,
+							Description: "KMS region. Refer to Tencent Cloud KMS documentation for supported regions. " +
+								"Format: `ap-guangzhou`.",
+						},
+						"kms_key_id": {
+							Type:        schema.TypeString,
+							Required:    true,
+							Description: "KMS key ID.",
+						},
+					},
+				},
 			},
 		},
 	}
@@ -289,6 +323,17 @@ func resourceTencentCloudClsTopicCreate(d *schema.ResourceData, meta interface{}
 
 	if v, ok := d.GetOkExists("encryption"); ok {
 		request.Encryption = helper.IntUint64(v.(int))
+	}
+
+	if customKmsInfoMap, ok := helper.InterfacesHeadMap(d, "custom_kms_info"); ok {
+		customKmsInfo := &cls.CustomKmsInfo{}
+		if v, ok := customKmsInfoMap["kms_region"]; ok {
+			customKmsInfo.KmsRegion = helper.String(v.(string))
+		}
+		if v, ok := customKmsInfoMap["kms_key_id"]; ok {
+			customKmsInfo.KmsKeyId = helper.String(v.(string))
+		}
+		request.CustomKmsInfo = customKmsInfo
 	}
 
 	err := resource.Retry(tccommon.WriteRetryTimeout, func() *resource.RetryError {
@@ -426,6 +471,19 @@ func resourceTencentCloudClsTopicRead(d *schema.ResourceData, meta interface{}) 
 		_ = d.Set("encryption", 1)
 	}
 
+	if topic.CustomKmsInfo != nil {
+		customKmsInfoMap := map[string]interface{}{}
+		if topic.CustomKmsInfo.KmsRegion != nil {
+			customKmsInfoMap["kms_region"] = *topic.CustomKmsInfo.KmsRegion
+		}
+		if topic.CustomKmsInfo.KmsKeyId != nil {
+			customKmsInfoMap["kms_key_id"] = *topic.CustomKmsInfo.KmsKeyId
+		}
+		_ = d.Set("custom_kms_info", []interface{}{customKmsInfoMap})
+	} else {
+		_ = d.Set("custom_kms_info", []interface{}{})
+	}
+
 	return nil
 }
 
@@ -558,6 +616,20 @@ func resourceTencentCloudClsTopicUpdate(d *schema.ResourceData, meta interface{}
 			request.Encryption = helper.IntUint64(v.(int))
 		}
 
+		hasChange = true
+	}
+
+	if d.HasChange("custom_kms_info") {
+		if customKmsInfoMap, ok := helper.InterfacesHeadMap(d, "custom_kms_info"); ok {
+			customKmsInfo := &cls.CustomKmsInfo{}
+			if v, ok := customKmsInfoMap["kms_region"]; ok {
+				customKmsInfo.KmsRegion = helper.String(v.(string))
+			}
+			if v, ok := customKmsInfoMap["kms_key_id"]; ok {
+				customKmsInfo.KmsKeyId = helper.String(v.(string))
+			}
+			request.CustomKmsInfo = customKmsInfo
+		}
 		hasChange = true
 	}
 
