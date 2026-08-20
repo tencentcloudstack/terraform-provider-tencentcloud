@@ -22,6 +22,12 @@ import (
 
 func ResourceTencentCloudMongodbReadOnlyInstance() *schema.Resource {
 	mongodbReadOnlyInstanceInfo := map[string]*schema.Schema{
+		"cpu": {
+			Type:        schema.TypeInt,
+			Optional:    true,
+			Computed:    true,
+			Description: "The CPU core count of the MongoDB instance after the configuration change. Unit: C. When this parameter is empty, the current CPU size of the instance is used by default. The supported CPU specifications can be obtained through the DescribeSpecInfo API.",
+		},
 		"father_instance_region": {
 			Type:        schema.TypeString,
 			ForceNew:    true,
@@ -135,6 +141,9 @@ func mongodbAllReadOnlyInstanceReqSet(requestInter interface{}, d *schema.Resour
 		value.FieldByName(k).Set(reflect.ValueOf(v))
 	}
 
+	if v, ok := d.GetOkExists("cpu"); ok {
+		value.FieldByName("CpuCore").Set(reflect.ValueOf(helper.IntInt64(v.(int))))
+	}
 	var okVpc, okSubnet bool
 	if v, ok := d.GetOk("vpc_id"); ok {
 		okVpc = ok
@@ -176,6 +185,18 @@ func mongodbAllReadOnlyInstanceReqSet(requestInter interface{}, d *schema.Resour
 	}
 	if v, ok := d.GetOk("mongos_node_num"); ok {
 		value.FieldByName("MongosNodeNum").Set(reflect.ValueOf(helper.IntUint64(v.(int))))
+	}
+	if v, ok := d.GetOk("data_encryption"); ok {
+		value.FieldByName("DataEncryption").Set(reflect.ValueOf(helper.String(v.(string))))
+	}
+	if v, ok := d.GetOk("encryption_key_source"); ok {
+		value.FieldByName("EncryptionKeySource").Set(reflect.ValueOf(helper.String(v.(string))))
+	}
+	if v, ok := d.GetOk("key_id"); ok {
+		value.FieldByName("KeyId").Set(reflect.ValueOf(helper.String(v.(string))))
+	}
+	if v, ok := d.GetOk("kms_region"); ok {
+		value.FieldByName("KmsRegion").Set(reflect.ValueOf(helper.String(v.(string))))
 	}
 	return nil
 }
@@ -378,6 +399,9 @@ func resourceTencentCloudMongodbReadOnlyInstanceRead(d *schema.ResourceData, met
 	if MONGODB_CHARGE_TYPE[*instance.PayMode] == MONGODB_CHARGE_TYPE_PREPAID {
 		_ = d.Set("auto_renew_flag", *instance.AutoRenewFlag)
 	}
+	if instance.CpuNum != nil && instance.ReplicationSetNum != nil {
+		_ = d.Set("cpu", int(*instance.CpuNum/(*instance.ReplicationSetNum)))
+	}
 
 	groups, err := mongodbService.DescribeSecurityGroup(ctx, instanceId)
 	if err != nil {
@@ -425,6 +449,35 @@ func resourceTencentCloudMongodbReadOnlyInstanceRead(d *schema.ResourceData, met
 			tags[*tag.TagKey] = *tag.TagValue
 		}
 		_ = d.Set("tags", tags)
+	}
+
+	// encryption
+	encryptResp, err := mongodbService.DescribeTransparentDataEncryptionStatusById(ctx, instanceId)
+	if err != nil {
+		return err
+	}
+
+	if encryptResp != nil {
+		if encryptResp.TransparentDataEncryptionStatus != nil {
+			if *encryptResp.TransparentDataEncryptionStatus == "open" {
+				_ = d.Set("data_encryption", "TDE")
+			}
+
+			if *encryptResp.TransparentDataEncryptionStatus == "close" {
+				_ = d.Set("data_encryption", "No_Encryption")
+			}
+		}
+
+		if encryptResp.KeyInfoList != nil && len(encryptResp.KeyInfoList) > 0 {
+			keyInfo := encryptResp.KeyInfoList[0]
+			if keyInfo.KeyName != nil {
+				_ = d.Set("key_id", keyInfo.KeyName)
+			}
+
+			if keyInfo.KmsRegion != nil {
+				_ = d.Set("kms_region", keyInfo.KmsRegion)
+			}
+		}
 	}
 
 	return nil

@@ -17,7 +17,7 @@ resource "tencentcloud_mongodb_instance" "example" {
   vpc_id         = "vpc-i5yyodl9"
   subnet_id      = "subnet-hhi88a58"
   project_id     = 0
-  password       = "Password@123"
+  password       = "Password@2026"
 }
 ```
 
@@ -34,7 +34,7 @@ resource "tencentcloud_mongodb_instance" "example" {
   vpc_id         = "vpc-i5yyodl9"
   subnet_id      = "subnet-hhi88a58"
   project_id     = 0
-  password       = "Password@123"
+  password       = "Password@2026"
   cpu            = 2
 }
 ```
@@ -58,7 +58,49 @@ resource "tencentcloud_mongodb_instance" "example" {
   vpc_id     = "vpc-i5yyodl9"
   subnet_id  = "subnet-hhi88a58"
   project_id = 0
-  password   = "Password@123"
+  password   = "Password@2026"
+}
+```
+
+Create instance with auto encryption
+
+```hcl
+resource "tencentcloud_mongodb_instance" "example" {
+  instance_name         = "tf-example"
+  cpu                   = 2
+  memory                = 4
+  volume                = 100
+  engine_version        = "MONGO_80_WT"
+  machine_type          = "GE.LD.T1"
+  available_zone        = "ap-guangzhou-6"
+  vpc_id                = "vpc-i5yyodl9"
+  subnet_id             = "subnet-hhi88a58"
+  project_id            = 0
+  password              = "Password@2026"
+  data_encryption       = "TDE"
+  encryption_key_source = "auto"
+}
+```
+
+Create instance with custom encryption
+
+```hcl
+resource "tencentcloud_mongodb_instance" "example" {
+  instance_name         = "tf-example"
+  cpu                   = 2
+  memory                = 4
+  volume                = 100
+  engine_version        = "MONGO_80_WT"
+  machine_type          = "GE.LD.T1"
+  available_zone        = "ap-guangzhou-6"
+  vpc_id                = "vpc-i5yyodl9"
+  subnet_id             = "subnet-hhi88a58"
+  project_id            = 0
+  password              = "Password@2026"
+  data_encryption       = "TDE"
+  encryption_key_source = "manual"
+  key_id                = "KMS-MONGODB"
+  kms_region            = "ap-guangzhou"
 }
 ```
 

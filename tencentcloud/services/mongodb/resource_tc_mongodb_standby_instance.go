@@ -22,6 +22,12 @@ import (
 
 func ResourceTencentCloudMongodbStandbyInstance() *schema.Resource {
 	mongodbStandbyInstanceInfo := map[string]*schema.Schema{
+		"cpu": {
+			Type:        schema.TypeInt,
+			Optional:    true,
+			Computed:    true,
+			Description: "The CPU core count of the MongoDB instance after the configuration change. Unit: C. When this parameter is empty, the current CPU size of the instance is used by default. The supported CPU specifications can be obtained through the DescribeSpecInfo API.",
+		},
 		"father_instance_region": {
 			Type:        schema.TypeString,
 			ForceNew:    true,
@@ -110,6 +116,10 @@ func mongodbAllStandbyInstanceReqSet(requestInter interface{}, d *schema.Resourc
 		value.FieldByName(k).Set(reflect.ValueOf(v))
 	}
 
+	if v, ok := d.GetOkExists("cpu"); ok {
+		value.FieldByName("CpuCore").Set(reflect.ValueOf(helper.IntInt64(v.(int))))
+	}
+
 	var okVpc, okSubnet bool
 	if v, ok := d.GetOk("vpc_id"); ok {
 		okVpc = ok
@@ -134,6 +144,18 @@ func mongodbAllStandbyInstanceReqSet(requestInter interface{}, d *schema.Resourc
 			return fmt.Errorf("prepaid_period must be specified for a PREPAID instance")
 		}
 		value.FieldByName("AutoRenewFlag").Set(reflect.ValueOf(helper.IntUint64(d.Get("auto_renew_flag").(int))))
+	}
+	if v, ok := d.GetOk("data_encryption"); ok {
+		value.FieldByName("DataEncryption").Set(reflect.ValueOf(helper.String(v.(string))))
+	}
+	if v, ok := d.GetOk("encryption_key_source"); ok {
+		value.FieldByName("EncryptionKeySource").Set(reflect.ValueOf(helper.String(v.(string))))
+	}
+	if v, ok := d.GetOk("key_id"); ok {
+		value.FieldByName("KeyId").Set(reflect.ValueOf(helper.String(v.(string))))
+	}
+	if v, ok := d.GetOk("kms_region"); ok {
+		value.FieldByName("KmsRegion").Set(reflect.ValueOf(helper.String(v.(string))))
 	}
 
 	return nil
@@ -331,6 +353,9 @@ func resourceTencentCloudMongodbStandbyInstanceRead(d *schema.ResourceData, meta
 	}
 
 	_ = d.Set("instance_name", instance.InstanceName)
+	if instance.CpuNum != nil && instance.ReplicationSetNum != nil {
+		_ = d.Set("cpu", int(*instance.CpuNum/(*instance.ReplicationSetNum)))
+	}
 	_ = d.Set("memory", *instance.Memory/1024)
 	_ = d.Set("volume", *instance.Volume/1024)
 	_ = d.Set("engine_version", instance.MongoVersion)
@@ -382,6 +407,35 @@ func resourceTencentCloudMongodbStandbyInstanceRead(d *schema.ResourceData, meta
 	}
 	_ = d.Set("tags", tags)
 
+	// encryption
+	encryptResp, err := mongodbService.DescribeTransparentDataEncryptionStatusById(ctx, instanceId)
+	if err != nil {
+		return err
+	}
+
+	if encryptResp != nil {
+		if encryptResp.TransparentDataEncryptionStatus != nil {
+			if *encryptResp.TransparentDataEncryptionStatus == "open" {
+				_ = d.Set("data_encryption", "TDE")
+			}
+
+			if *encryptResp.TransparentDataEncryptionStatus == "close" {
+				_ = d.Set("data_encryption", "No_Encryption")
+			}
+		}
+
+		if encryptResp.KeyInfoList != nil && len(encryptResp.KeyInfoList) > 0 {
+			keyInfo := encryptResp.KeyInfoList[0]
+			if keyInfo.KeyName != nil {
+				_ = d.Set("key_id", keyInfo.KeyName)
+			}
+
+			if keyInfo.KmsRegion != nil {
+				_ = d.Set("kms_region", keyInfo.KmsRegion)
+			}
+		}
+	}
+
 	return nil
 }
 
@@ -408,7 +462,7 @@ func resourceTencentCloudMongodbStandbyInstanceUpdate(d *schema.ResourceData, me
 
 	d.Partial(true)
 
-	if d.HasChange("memory") || d.HasChange("volume") {
+	if d.HasChange("memory") || d.HasChange("volume") || d.HasChange("cpu") {
 		memory := d.Get("memory").(int)
 		volume := d.Get("volume").(int)
 		params := make(map[string]interface{})
@@ -416,6 +470,9 @@ func resourceTencentCloudMongodbStandbyInstanceUpdate(d *schema.ResourceData, me
 		if v, ok := d.GetOkExists("in_maintenance"); ok {
 			inMaintenance = v.(int)
 			params["in_maintenance"] = v.(int)
+		}
+		if v, ok := d.GetOkExists("cpu"); ok {
+			params["cpu"] = v.(int)
 		}
 		dealId, err := mongodbService.UpgradeInstance(ctx, instanceId, memory, volume, params)
 		if err != nil {
