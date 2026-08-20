@@ -85,11 +85,13 @@ func ResourceTencentCloudClsDataTransform() *schema.Resource {
 						"role_arn": {
 							Type:        schema.TypeString,
 							Optional:    true,
+							Computed:    true,
 							Description: "In the cross-account scenario, the Role ARN value. The target account creates a role for the delivering account. Find this in the target account role list.",
 						},
 						"external_id": {
 							Type:        schema.TypeString,
 							Optional:    true,
+							Computed:    true,
 							Description: "External ID value, used for cross-account role assumption. Find this in the target account role trust policy.",
 						},
 						"topic_name": {
