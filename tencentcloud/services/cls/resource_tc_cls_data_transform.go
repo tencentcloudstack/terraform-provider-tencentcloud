@@ -79,6 +79,7 @@ func ResourceTencentCloudClsDataTransform() *schema.Resource {
 						"is_cross_account": {
 							Type:        schema.TypeBool,
 							Optional:    true,
+							Computed:    true,
 							Description: "Whether the destination topic is in another TencentCloud account. `false`: same account (default); `true`: cross-account.",
 						},
 						"role_arn": {
@@ -94,11 +95,13 @@ func ResourceTencentCloudClsDataTransform() *schema.Resource {
 						"topic_name": {
 							Type:        schema.TypeString,
 							Optional:    true,
+							Computed:    true,
 							Description: "Name of the destination topic. Used in cross-account scenario.",
 						},
 						"logset_name": {
 							Type:        schema.TypeString,
 							Optional:    true,
+							Computed:    true,
 							Description: "Name of the logset that contains the destination topic. Used in cross-account scenario.",
 						},
 					},
