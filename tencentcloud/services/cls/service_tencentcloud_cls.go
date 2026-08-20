@@ -1324,9 +1324,23 @@ func (me *ClsService) DescribeClsDataTransformById(ctx context.Context, taskId s
 		}
 	}()
 
-	ratelimit.Check(request.GetAction())
+	var response *cls.DescribeDataTransformInfoResponse
+	err := resource.Retry(tccommon.ReadRetryTimeout, func() *resource.RetryError {
+		ratelimit.Check(request.GetAction())
 
-	response, err := me.client.UseClsClient().DescribeDataTransformInfo(request)
+		result, e := me.client.UseClsClient().DescribeDataTransformInfo(request)
+		if e != nil {
+			return tccommon.RetryError(e)
+		}
+
+		if result == nil || result.Response == nil {
+			return resource.NonRetryableError(fmt.Errorf("Describe cls dataTransform failed, Response is nil."))
+		}
+
+		response = result
+		return nil
+	})
+
 	if err != nil {
 		errRet = err
 		return
@@ -1354,14 +1368,26 @@ func (me *ClsService) DeleteClsDataTransformById(ctx context.Context, taskId str
 		}
 	}()
 
-	ratelimit.Check(request.GetAction())
+	err := resource.Retry(tccommon.WriteRetryTimeout, func() *resource.RetryError {
+		ratelimit.Check(request.GetAction())
 
-	response, err := me.client.UseClsClient().DeleteDataTransform(request)
+		result, e := me.client.UseClsClient().DeleteDataTransform(request)
+		if e != nil {
+			return tccommon.RetryError(e)
+		}
+
+		if result == nil || result.Response == nil {
+			return resource.NonRetryableError(fmt.Errorf("Delete cls dataTransform failed, Response is nil."))
+		}
+
+		log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), result.ToJsonString())
+		return nil
+	})
+
 	if err != nil {
 		errRet = err
 		return
 	}
-	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
 
 	return
 }
