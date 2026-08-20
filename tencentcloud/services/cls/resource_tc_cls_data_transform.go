@@ -370,6 +370,10 @@ func resourceTencentCloudClsDataTransformCreate(d *schema.ResourceData, meta int
 			log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), result.ToJsonString())
 		}
 
+		if result == nil || result.Response == nil {
+			return resource.NonRetryableError(fmt.Errorf("Create data transform failed, Response is nil."))
+		}
+
 		response = result
 		return nil
 	})
@@ -377,6 +381,10 @@ func resourceTencentCloudClsDataTransformCreate(d *schema.ResourceData, meta int
 	if err != nil {
 		log.Printf("[CRITAL]%s create cls dataTransform failed, reason:%+v", logId, err)
 		return err
+	}
+
+	if response.Response.TaskId == nil {
+		return fmt.Errorf("TaskId is nil.")
 	}
 
 	taskId = *response.Response.TaskId
