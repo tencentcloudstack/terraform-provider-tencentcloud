@@ -506,7 +506,7 @@ func resourceTencentCloudMongodbReadOnlyInstanceUpdate(d *schema.ResourceData, m
 
 	d.Partial(true)
 
-	if d.HasChange("memory") || d.HasChange("volume") {
+	if d.HasChange("memory") || d.HasChange("volume") || d.HasChange("cpu") {
 		memory := d.Get("memory").(int)
 		volume := d.Get("volume").(int)
 		params := make(map[string]interface{})
@@ -514,6 +514,9 @@ func resourceTencentCloudMongodbReadOnlyInstanceUpdate(d *schema.ResourceData, m
 		if v, ok := d.GetOkExists("in_maintenance"); ok {
 			inMaintenance = v.(int)
 			params["in_maintenance"] = v.(int)
+		}
+		if v, ok := d.GetOkExists("cpu"); ok {
+			params["cpu"] = v.(int)
 		}
 		dealId, err := mongodbService.UpgradeInstance(ctx, instanceId, memory, volume, params)
 		if err != nil {
