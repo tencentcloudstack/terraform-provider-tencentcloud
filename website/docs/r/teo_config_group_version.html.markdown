@@ -4,18 +4,18 @@ layout: "tencentcloud"
 page_title: "TencentCloud: tencentcloud_teo_config_group_version"
 sidebar_current: "docs-tencentcloud-resource-teo_config_group_version"
 description: |-
-  Provides a resource to create a teo config group version
+  Provides a resource to create a TEO (EdgeOne) config group version
 ---
 
 # tencentcloud_teo_config_group_version
 
-Provides a resource to create a teo config group version
+Provides a resource to create a TEO (EdgeOne) config group version
 
 ## Example Usage
 
 ```hcl
 resource "tencentcloud_teo_config_group_version" "teo_config_group_version" {
-  content     = <<EOT
+  content        = <<EOT
 {
   "FormatVersion": "1.0",
   "ZoneConfig": {
@@ -333,9 +333,10 @@ resource "tencentcloud_teo_config_group_version" "teo_config_group_version" {
   ]
 }
 EOT
-  description = "test version"
-  group_id    = "cg-3lchxitnb5pb"
-  zone_id     = "zone-2xkazzl8yf6k"
+  description    = "test version"
+  group_id       = "cg-3lchxitnb5pb"
+  source_version = "ver-2kplomhisdcb"
+  zone_id        = "zone-2xkazzl8yf6k"
 }
 ```
 
@@ -358,6 +359,7 @@ The following arguments are supported:
 * `group_id` - (Required, String, ForceNew) GroupId of the version to be created.
 * `zone_id` - (Required, String, ForceNew) Zone ID.
 * `description` - (Optional, String, ForceNew) Version description. The maximum length allowed is 50 characters. This field can be used to provide details about the application scenarios of this version.
+* `source_version` - (Optional, String, ForceNew) Source version ID. The new version will be derived from the configuration of this source version. If not specified, the currently active production version is used as the source version by default.
 
 ## Attributes Reference
 
@@ -370,4 +372,11 @@ In addition to all arguments above, the following attributes are exported:
 * `version_id` - Version ID.
 * `version_number` - Version number.
 
+
+## Import
+
+TEO config group version can be imported using the zoneId#groupId#versionId, e.g.
+```
+terraform import tencentcloud_teo_config_group_version.teo_config_group_version zone-2xkazzl8yf6k#cg-3lchxitnb5pb#ver-2kplomhisdcb
+```
 

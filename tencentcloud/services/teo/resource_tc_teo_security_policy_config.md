@@ -256,6 +256,14 @@ resource "tencentcloud_teo_security_policy_config" "example" {
         web_security_modules_for_exception = ["websec-mod-adaptive-control"]
         enabled                            = "off"
       }
+
+      rules {
+        name                                 = "Skip managed rule set submodule"
+        condition                            = "$${http.request.uri.path} in ['/legacy/api']"
+        skip_scope                           = "WebSecuritySubmodules"
+        web_security_submodules_for_exception = ["websec-mod-managed-rules/managed-rule-groups", "websec-mod-rate-limiting-rules"]
+        enabled                              = "off"
+      }
     }
 
     bot_management_lite {

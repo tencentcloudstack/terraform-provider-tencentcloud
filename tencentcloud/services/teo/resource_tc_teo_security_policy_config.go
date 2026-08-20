@@ -1514,6 +1514,15 @@ func ResourceTencentCloudTeoSecurityPolicyConfig() *schema.Resource {
 														Type: schema.TypeString,
 													},
 												},
+												"web_security_submodules_for_exception": {
+													Type:        schema.TypeSet,
+													Optional:    true,
+													Computed:    true,
+													Description: "Specifies the security protection submodule for the exception rule. It is valid only when SkipScope is WebSecuritySubmodules. The possible values are: <ul><li>ManagedRules module: <ul><li>websec-mod-managed-rules/managed-rule-groups: rule set; </li><li>websec-mod-managed-rules/frequent-scanning-protection: high-frequency scanning protection; </li></ul></li><li>RateLimitingRules module: <ul><li>websec-mod-rate-limiting-rules: rate limiting rule; </li></ul></li><li>CustomRules module: <ul><li>websec-mod-custom-rules: custom rule; </li></ul></li><li>HttpDDoSProtection module: <ul><li>websec-mod-http-ddos-protection/adaptive-frequency-control: adaptive frequency control; </li><li>websec-mod-http-ddos-protection/client-filtering: intelligent client filtering; </li><li>websec-mod-http-ddos-protection/bandwidth-abuse-defense: traffic theft protection; </li></ul></li><li>BotManagement module: <ul><li>websec-mod-bot-management/basic-feature: basic feature management; </li><li>websec-mod-bot-management/ip-reputation: client portrait analysis; </li><li>websec-mod-bot-management/bot-intelligence: intelligent Bot analysis; </li><li>websec-mod-bot-management/custom-rules: custom rule; </li><li>websec-mod-bot-management/browser-impersonation-detection: active feature recognition; </li><li>websec-mod-bot-management/client-attestation-rules: client authentication; </li></ul></li><li>BotManagementLite module: <ul><li>websec-mod-bot-management-lite/ai-crawler-detection: AI crawler disposal; </li><li>websec-mod-bot-management-lite/captcha-page-challenge: human verification page. </li></ul></li></ul>.",
+													Elem: &schema.Schema{
+														Type: schema.TypeString,
+													},
+												},
 												"managed_rules_for_exception": {
 													Type:        schema.TypeSet,
 													Optional:    true,
@@ -3915,6 +3924,10 @@ func resourceTencentCloudTeoSecurityPolicyConfigRead(d *schema.ResourceData, met
 					rulesMap["web_security_modules_for_exception"] = rules.WebSecurityModulesForException
 				}
 
+				if rules.WebSecuritySubmodulesForException != nil {
+					rulesMap["web_security_submodules_for_exception"] = rules.WebSecuritySubmodulesForException
+				}
+
 				if rules.ManagedRulesForException != nil {
 					rulesMap["managed_rules_for_exception"] = rules.ManagedRulesForException
 				}
@@ -5296,6 +5309,16 @@ func resourceTencentCloudTeoSecurityPolicyConfigUpdate(d *schema.ResourceData, m
 							if webSecurityModulesForExceptionSet[i] != nil {
 								webSecurityModulesForException := webSecurityModulesForExceptionSet[i].(string)
 								exceptionRule.WebSecurityModulesForException = append(exceptionRule.WebSecurityModulesForException, &webSecurityModulesForException)
+							}
+						}
+					}
+
+					if v, ok := rulesMap["web_security_submodules_for_exception"]; ok {
+						webSecuritySubmodulesForExceptionSet := v.(*schema.Set).List()
+						for i := range webSecuritySubmodulesForExceptionSet {
+							if webSecuritySubmodulesForExceptionSet[i] != nil {
+								webSecuritySubmodulesForException := webSecuritySubmodulesForExceptionSet[i].(string)
+								exceptionRule.WebSecuritySubmodulesForException = append(exceptionRule.WebSecuritySubmodulesForException, &webSecuritySubmodulesForException)
 							}
 						}
 					}
