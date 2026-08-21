@@ -1232,7 +1232,18 @@ func mysqlAllInstanceRoleUpdate(ctx context.Context, d *schema.ResourceData, met
 
 	if d.HasChange("destroy_protect") {
 		destroyProtect := d.Get("destroy_protect").(string)
-		if err := mysqlService.ModifyInstanceDestroyProtect(ctx, d.Id(), destroyProtect); err != nil {
+		err := resource.Retry(d.Timeout(schema.TimeoutUpdate), func() *resource.RetryError {
+			if err := mysqlService.ModifyInstanceDestroyProtect(ctx, d.Id(), destroyProtect); err != nil {
+				if _, ok := err.(*errors.TencentCloudSDKError); !ok {
+					return resource.RetryableError(err)
+				} else {
+					return resource.NonRetryableError(err)
+				}
+			}
+			return nil
+		})
+		if err != nil {
+			log.Printf("[CRITAL]%s modify mysql destroy_protect fail, reason:%s\n", logId, err.Error())
 			return err
 		}
 	}
