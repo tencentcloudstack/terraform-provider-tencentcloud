@@ -2276,6 +2276,7 @@ tencentcloud_tag_keys
 Resource
 tencentcloud_tag
 tencentcloud_tag_attachment
+tencentcloud_tag_attachment_v2
 
 EventBridge(EB)
 Data Source
