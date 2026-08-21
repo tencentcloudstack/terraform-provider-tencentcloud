@@ -2,17 +2,17 @@
 
 ## ADDED Requirements
 
-### Requirement: node_info_list type 字段放行 dedicatedCoordinating 取值
+### Requirement: node_info_list type 字段移除 ValidateFunc 白名单校验
 
-`tencentcloud_elasticsearch_instance` 资源 SHALL 允许 `node_info_list[].type` 字段取值 `dedicatedCoordinating`，并与现有 `hotData`、`warmData`、`dedicatedMaster` 一同构成 `type` 字段的有效取值集合。校验 SHALL 在 plan 阶段通过 `ValidateFunc` 白名单完成，默认值 SHALL 保持为 `hotData`。
+`tencentcloud_elasticsearch_instance` 资源 SHALL 允许 `node_info_list[].type` 字段取值 `dedicatedCoordinating`，并与现有 `hotData`、`warmData`、`dedicatedMaster` 一同构成 `type` 字段的有效取值集合。`type` 字段 SHALL NOT 配置 `ValidateFunc` 白名单校验（即不再调用 `tccommon.ValidateAllowedStringValue(ES_NODE_TYPE)`），默认值 SHALL 保持为 `hotData`。
 
-**Rationale**: 腾讯云 ES 云 API `NodeInfo.Type` 已支持 `dedicatedCoordinating`（专用协调节点，见 https://cloud.tencent.com/document/api/845/30634 ）。白名单校验能在 plan 阶段拦截拼写错误，避免错误取值透传到云 API 才暴露。
+**Rationale**: 腾讯云 ES 云 API `NodeInfo.Type` 已支持 `dedicatedCoordinating`（专用协调节点，见 https://cloud.tencent.com/document/api/845/30634 ）。移除 `ValidateFunc` 后，未来新增节点类型（如 `dedicatedMl`）无需修改 `ES_NODE_TYPE` 即可通过 plan 校验，取值有效性交由云 API 语义约束，降低维护成本。
 
-#### Scenario: 配置 dedicatedCoordinating 类型节点通过 plan 校验
+#### Scenario: 配置 dedicatedCoordinating 类型节点通过 plan
 
 - **WHEN** 用户在 `tencentcloud_elasticsearch_instance` 的 `node_info_list` 中声明一个 `type = "dedicatedCoordinating"` 的节点项
 - **THEN** `terraform plan` SHALL 成功
-- **AND** 不会出现 "expected type to be one of ..." 校验错误
+- **AND** 不会出现 "expected type to be one of ..." 校验错误（因为已移除 `ValidateFunc`）
 
 #### Scenario: 未声明 type 时默认值为 hotData
 
@@ -46,9 +46,9 @@
 
 ### Requirement: 更新流程识别并处理 dedicatedCoordinating 节点变更
 
-资源 Update SHALL 在 `node_info_list` 发生变更时，将 `dedicatedCoordinating` 纳入逐类型 diff 的 `typeList`，并按非数据节点路径处理其新增、删除、数量修改、规格修改与磁盘大小修改。`dedicatedCoordinating` SHALL NOT 被加入 `dataTypeList`，即不参与多可用区 node_num 倍数校验。
+资源 Update SHALL 在 `node_info_list` 发生变更时，通过引用 `ES_NODE_TYPE` 的 `typeList` 将 `dedicatedCoordinating` 纳入逐类型 diff，并按非数据节点路径处理其新增、删除、数量修改、规格修改与磁盘大小修改。`dedicatedCoordinating` SHALL NOT 被加入 `dataTypeList`，即不参与多可用区 node_num 倍数校验。
 
-**Rationale**: Update 中 `typeList` 原硬编码为 `["hotData","warmData","dedicatedMaster"]`，若不扩展，协调节点的增删改会被 diff 逻辑跳过，导致 state 与云上不一致。协调节点不承载数据分片，语义与 `dedicatedMaster` 一致（非数据节点），故归类为非数据节点。
+**Rationale**: Update 中 `typeList` 原硬编码为 `["hotData","warmData","dedicatedMaster"]`，若不通过 `ES_NODE_TYPE` 枚举扩展，协调节点的增删改会被 diff 逻辑跳过，导致 state 与云上不一致。协调节点不承载数据分片，语义与 `dedicatedMaster` 一致（非数据节点），故归类为非数据节点。`typeList` 直接引用 `ES_NODE_TYPE`，使未来新增类型无需再修改 Update 逻辑。
 
 #### Scenario: 新增 dedicatedCoordinating 节点
 

@@ -197,11 +197,10 @@ func ResourceTencentCloudElasticsearchInstance() *schema.Resource {
 							Description: "Node specification, and valid values refer to [document of tencentcloud](https://intl.cloud.tencent.com/document/product/845/18376).",
 						},
 						"type": {
-							Type:         schema.TypeString,
-							Optional:     true,
-							Default:      ES_NODE_TYPE_HOT_DATA,
-							ValidateFunc: tccommon.ValidateAllowedStringValue(ES_NODE_TYPE),
-							Description:  "Node type. Valid values are `hotData`, `warmData`, `dedicatedMaster` and `dedicatedCoordinating`. The default value is `hotData`.",
+							Type:        schema.TypeString,
+							Optional:    true,
+							Default:     ES_NODE_TYPE_HOT_DATA,
+							Description: "Node type. Valid values are `hotData`, `warmData`, `dedicatedMaster` and `dedicatedCoordinating`. The default value is `hotData`.",
 						},
 						"disk_type": {
 							Type:         schema.TypeString,
@@ -1125,7 +1124,7 @@ func resourceTencentCloudElasticsearchInstanceUpdate(d *schema.ResourceData, met
 
 		}
 
-		typeList := []string{"hotData", "warmData", "dedicatedMaster", "dedicatedCoordinating"}
+		typeList := ES_NODE_TYPE
 		dataTypeList := []string{"hotData", "warmData"}
 		for _, t := range typeList {
 			old := oldNodeMap[t]

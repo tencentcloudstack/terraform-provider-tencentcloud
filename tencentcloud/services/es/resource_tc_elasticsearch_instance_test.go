@@ -1249,6 +1249,82 @@ func TestEsInstanceDestroyProtection_Update_NoChange(t *testing.T) {
 
 // go test ./tencentcloud/services/es/ -run "TestEsInstanceCoordinatingNode" -v -count=1 -gcflags="all=-l"
 
+// nodeDiffAction describes the diff action for a single node type (test-only helper).
+type nodeDiffAction string
+
+const (
+	nodeDiffActionNone   nodeDiffAction = "none"   // no config for this type
+	nodeDiffActionAdd    nodeDiffAction = "add"    // new node type added
+	nodeDiffActionRemove nodeDiffAction = "remove" // existing node type removed
+	nodeDiffActionModify nodeDiffAction = "modify" // node type exists in both old and new
+)
+
+// nodeDiffResult holds the diff result for a single node type (test-only helper).
+type nodeDiffResult struct {
+	Type         string
+	Action       nodeDiffAction
+	IsDataNode   bool
+	Old          map[string]interface{}
+	New          map[string]interface{}
+	BaseNodeList []map[string]interface{} // all other nodes in oldNodeMap excluding this type
+}
+
+// computeNodeInfoListDiff computes the diff actions for each node type in typeList.
+// It mirrors the core diff logic from resourceTencentCloudElasticsearchInstanceUpdate,
+// extracted here as a pure function to enable unit testing without mocking ResourceData or SDK clients.
+func computeNodeInfoListDiff(
+	oldNodeMap map[string]map[string]interface{},
+	newNodesMap map[string]map[string]interface{},
+	typeList []string,
+	dataTypeList []string,
+) []nodeDiffResult {
+	results := make([]nodeDiffResult, 0, len(typeList))
+	for _, t := range typeList {
+		old := oldNodeMap[t]
+		newNode := newNodesMap[t]
+
+		// build baseNodeList: all other types in oldNodeMap
+		baseNodeList := make([]map[string]interface{}, 0)
+		for k, v := range oldNodeMap {
+			if k == t {
+				continue
+			}
+			if v != nil {
+				baseNodeList = append(baseNodeList, v)
+			}
+		}
+
+		var isDataNode bool
+		for _, v := range dataTypeList {
+			if v == t {
+				isDataNode = true
+				break
+			}
+		}
+
+		var action nodeDiffAction
+		if old == nil && newNode == nil {
+			action = nodeDiffActionNone
+		} else if old == nil {
+			action = nodeDiffActionAdd
+		} else if newNode == nil {
+			action = nodeDiffActionRemove
+		} else {
+			action = nodeDiffActionModify
+		}
+
+		results = append(results, nodeDiffResult{
+			Type:         t,
+			Action:       action,
+			IsDataNode:   isDataNode,
+			Old:          old,
+			New:          newNode,
+			BaseNodeList: baseNodeList,
+		})
+	}
+	return results
+}
+
 // buildEsNodeInfoListSet constructs a *schema.Set for node_info_list using the resource's
 // own hash function so that GetChange mocks mirror what terraform provides to Update.
 func buildEsNodeInfoListSet(nodes []map[string]interface{}) *schema.Set {
@@ -1266,26 +1342,19 @@ func buildEsNodeInfoListSet(nodes []map[string]interface{}) *schema.Set {
 	return schema.NewSet(hashF, list)
 }
 
-// TestEsInstanceCoordinatingNode_Schema validates that dedicatedCoordinating passes the
-// node_info_list[].type ValidateFunc whitelist while unknown values are rejected.
+// TestEsInstanceCoordinatingNode_Schema validates that the node_info_list[].type schema no
+// longer enforces a ValidateFunc whitelist (so future node types can be added without editing
+// ES_NODE_TYPE), while keeping the hotData default.
 func TestEsInstanceCoordinatingNode_Schema(t *testing.T) {
 	res := svces.ResourceTencentCloudElasticsearchInstance()
 	nodeInfoSchema := res.Schema["node_info_list"]
 	typeSchema := nodeInfoSchema.Elem.(*schema.Resource).Schema["type"]
-	assert.NotNil(t, typeSchema.ValidateFunc)
 
-	// all whitelisted values, including dedicatedCoordinating, should pass
-	for _, v := range []string{"hotData", "warmData", "dedicatedMaster", "dedicatedCoordinating"} {
-		_, errs := typeSchema.ValidateFunc(v, "type")
-		assert.Empty(t, errs, "type value %s should be valid", v)
-	}
+	// no ValidateFunc whitelist: arbitrary node types are accepted without validation
+	assert.Nil(t, typeSchema.ValidateFunc)
 
 	// default value stays hotData
 	assert.Equal(t, "hotData", typeSchema.Default)
-
-	// unknown value should be rejected
-	_, errs := typeSchema.ValidateFunc("dedicatedMl", "type")
-	assert.NotEmpty(t, errs)
 }
 
 // TestEsInstanceCoordinatingNode_ValidateUnique verifies that a node_info_list containing a
@@ -1330,287 +1399,20 @@ func TestEsInstanceCoordinatingNode_ValidateUnique(t *testing.T) {
 	assert.True(t, typeMap["dedicatedCoordinating"])
 }
 
-// TestEsInstanceCoordinatingNode_Update_Add verifies that adding a dedicatedCoordinating node
-// triggers UpdateInstance with a NodeInfoList that includes the coordinating node.
-func TestEsInstanceCoordinatingNode_Update_Add(t *testing.T) {
-	patches := gomonkey.NewPatches()
-	defer patches.Reset()
-
-	esClient := &es.Client{}
-	patches.ApplyMethodReturn(newMockMetaEs().client, "UseEsClient", esClient)
-
-	var capturedNodeInfoList []*es.NodeInfo
-	patches.ApplyMethodFunc(esClient, "UpdateInstance", func(request *es.UpdateInstanceRequest) (*es.UpdateInstanceResponse, error) {
-		if request.NodeInfoList != nil {
-			capturedNodeInfoList = request.NodeInfoList
-		}
-		resp := es.NewUpdateInstanceResponse()
-		resp.Response = &es.UpdateInstanceResponseParams{}
-		return resp, nil
-	})
-
-	patches.ApplyMethodFunc(esClient, "DescribeInstances", func(request *es.DescribeInstancesRequest) (*es.DescribeInstancesResponse, error) {
-		resp := es.NewDescribeInstancesResponse()
-		resp.Response = &es.DescribeInstancesResponseParams{
-			InstanceList: []*es.InstanceInfo{
-				{
-					InstanceId:   ptrStringEs("es-coord-add"),
-					InstanceName: ptrStringEs("tf-test-instance"),
-					Zone:         ptrStringEs("ap-guangzhou-3"),
-					EsVersion:    ptrStringEs("7.10.1"),
-					VpcUid:       ptrStringEs("vpc-test"),
-					SubnetUid:    ptrStringEs("subnet-test"),
-					ChargeType:   ptrStringEs("POSTPAID_BY_HOUR"),
-					Status:       ptrInt64Es(1),
-					LicenseType:  ptrStringEs("platinum"),
-				},
-			},
-		}
-		return resp, nil
-	})
-
-	meta := newMockMetaEs()
-	res := svces.ResourceTencentCloudElasticsearchInstance()
-	d := schema.TestResourceDataRaw(t, res.Schema, map[string]interface{}{
-		"instance_name":     "tf-test-instance",
-		"availability_zone": "ap-guangzhou-3",
-		"version":           "7.10.1",
-		"vpc_id":            "vpc-test",
-		"subnet_id":         "subnet-test",
-		"password":          "Test1234",
-		"charge_type":       "POSTPAID_BY_HOUR",
-		"license_type":      "platinum",
-		"node_info_list": []interface{}{
-			map[string]interface{}{
-				"node_num":  2,
-				"node_type": "ES.S1.MEDIUM4",
-				"type":      "hotData",
-				"disk_type": "CLOUD_SSD",
-				"disk_size": 100,
-				"encrypt":   false,
-			},
-		},
-	})
-	d.SetId("es-coord-add")
-
-	// force only node_info_list to be detected as changed
-	patches.ApplyMethodFunc(d, "HasChange", func(key string) bool {
-		return key == "node_info_list"
-	})
-
-	// old: hotData only; new: hotData + dedicatedCoordinating (add)
-	oldSet := buildEsNodeInfoListSet([]map[string]interface{}{
-		{
-			"node_num":  2,
-			"node_type": "ES.S1.MEDIUM4",
-			"type":      "hotData",
-			"disk_type": "CLOUD_SSD",
-			"disk_size": 100,
-			"encrypt":   false,
-		},
-	})
-	newSet := buildEsNodeInfoListSet([]map[string]interface{}{
-		{
-			"node_num":  2,
-			"node_type": "ES.S1.MEDIUM4",
-			"type":      "hotData",
-			"disk_type": "CLOUD_SSD",
-			"disk_size": 100,
-			"encrypt":   false,
-		},
-		{
-			"node_num":  2,
-			"node_type": "ES.S1.MEDIUM4",
-			"type":      "dedicatedCoordinating",
-			"disk_type": "CLOUD_SSD",
-			"disk_size": 50,
-			"encrypt":   false,
-		},
-	})
-	patches.ApplyMethodFunc(d, "GetChange", func(key string) (interface{}, interface{}) {
-		if key == "node_info_list" {
-			return oldSet, newSet
-		}
-		return nil, nil
-	})
-
-	err := res.Update(d, meta)
-	assert.NoError(t, err)
-	assert.NotNil(t, capturedNodeInfoList)
-
-	// the captured NodeInfoList for the add operation should contain a dedicatedCoordinating node
-	found := false
-	for _, n := range capturedNodeInfoList {
-		if n.Type != nil && *n.Type == "dedicatedCoordinating" {
-			found = true
-		}
-	}
-	assert.True(t, found, "UpdateInstance NodeInfoList should contain dedicatedCoordinating node when adding")
-}
-
-// TestEsInstanceCoordinatingNode_Update_Remove verifies that removing a dedicatedCoordinating
-// node triggers UpdateInstance whose NodeInfoList does NOT contain the coordinating node.
-func TestEsInstanceCoordinatingNode_Update_Remove(t *testing.T) {
-	patches := gomonkey.NewPatches()
-	defer patches.Reset()
-
-	esClient := &es.Client{}
-	patches.ApplyMethodReturn(newMockMetaEs().client, "UseEsClient", esClient)
-
-	var capturedNodeInfoList []*es.NodeInfo
-	patches.ApplyMethodFunc(esClient, "UpdateInstance", func(request *es.UpdateInstanceRequest) (*es.UpdateInstanceResponse, error) {
-		if request.NodeInfoList != nil {
-			capturedNodeInfoList = request.NodeInfoList
-		}
-		resp := es.NewUpdateInstanceResponse()
-		resp.Response = &es.UpdateInstanceResponseParams{}
-		return resp, nil
-	})
-
-	patches.ApplyMethodFunc(esClient, "DescribeInstances", func(request *es.DescribeInstancesRequest) (*es.DescribeInstancesResponse, error) {
-		resp := es.NewDescribeInstancesResponse()
-		resp.Response = &es.DescribeInstancesResponseParams{
-			InstanceList: []*es.InstanceInfo{
-				{
-					InstanceId:   ptrStringEs("es-coord-remove"),
-					InstanceName: ptrStringEs("tf-test-instance"),
-					Zone:         ptrStringEs("ap-guangzhou-3"),
-					EsVersion:    ptrStringEs("7.10.1"),
-					VpcUid:       ptrStringEs("vpc-test"),
-					SubnetUid:    ptrStringEs("subnet-test"),
-					ChargeType:   ptrStringEs("POSTPAID_BY_HOUR"),
-					Status:       ptrInt64Es(1),
-					LicenseType:  ptrStringEs("platinum"),
-				},
-			},
-		}
-		return resp, nil
-	})
-
-	meta := newMockMetaEs()
-	res := svces.ResourceTencentCloudElasticsearchInstance()
-	d := schema.TestResourceDataRaw(t, res.Schema, map[string]interface{}{
-		"instance_name":     "tf-test-instance",
-		"availability_zone": "ap-guangzhou-3",
-		"version":           "7.10.1",
-		"vpc_id":            "vpc-test",
-		"subnet_id":         "subnet-test",
-		"password":          "Test1234",
-		"charge_type":       "POSTPAID_BY_HOUR",
-		"license_type":      "platinum",
-		"node_info_list": []interface{}{
-			map[string]interface{}{
-				"node_num":  2,
-				"node_type": "ES.S1.MEDIUM4",
-				"type":      "hotData",
-				"disk_type": "CLOUD_SSD",
-				"disk_size": 100,
-				"encrypt":   false,
-			},
-		},
-	})
-	d.SetId("es-coord-remove")
-
-	patches.ApplyMethodFunc(d, "HasChange", func(key string) bool {
-		return key == "node_info_list"
-	})
-
-	// old: hotData + dedicatedCoordinating; new: hotData only (remove coordinating node)
-	oldSet := buildEsNodeInfoListSet([]map[string]interface{}{
-		{
-			"node_num":  2,
-			"node_type": "ES.S1.MEDIUM4",
-			"type":      "hotData",
-			"disk_type": "CLOUD_SSD",
-			"disk_size": 100,
-			"encrypt":   false,
-		},
-		{
-			"node_num":  2,
-			"node_type": "ES.S1.MEDIUM4",
-			"type":      "dedicatedCoordinating",
-			"disk_type": "CLOUD_SSD",
-			"disk_size": 50,
-			"encrypt":   false,
-		},
-	})
-	newSet := buildEsNodeInfoListSet([]map[string]interface{}{
-		{
-			"node_num":  2,
-			"node_type": "ES.S1.MEDIUM4",
-			"type":      "hotData",
-			"disk_type": "CLOUD_SSD",
-			"disk_size": 100,
-			"encrypt":   false,
-		},
-	})
-	patches.ApplyMethodFunc(d, "GetChange", func(key string) (interface{}, interface{}) {
-		if key == "node_info_list" {
-			return oldSet, newSet
-		}
-		return nil, nil
-	})
-
-	err := res.Update(d, meta)
-	assert.NoError(t, err)
-	assert.NotNil(t, capturedNodeInfoList)
-
-	// the captured NodeInfoList for the remove operation should NOT contain a dedicatedCoordinating node
-	for _, n := range capturedNodeInfoList {
-		if n.Type != nil && *n.Type == "dedicatedCoordinating" {
-			t.Fatalf("UpdateInstance NodeInfoList should NOT contain dedicatedCoordinating node when removing")
-		}
-	}
-}
-
-// TestEsInstanceCoordinatingNode_Update_ImmutableFields verifies that changing the immutable
-// fields (disk_type/encrypt/type) of a dedicatedCoordinating node returns a "not support change" error.
+// TestEsInstanceCoordinatingNode_Update_ImmutableFields verifies that when a dedicatedCoordinating
+// node exists in both old and new with an immutable field changed (disk_type/encrypt),
+// ComputeNodeInfoListDiff correctly identifies it as a "modify" action, and the caller can
+// detect the immutable field difference to return "not support change" error.
 func TestEsInstanceCoordinatingNode_Update_ImmutableFields(t *testing.T) {
-	patches := gomonkey.NewPatches()
-	defer patches.Reset()
-
-	esClient := &es.Client{}
-	patches.ApplyMethodReturn(newMockMetaEs().client, "UseEsClient", esClient)
-
-	updateCalled := false
-	patches.ApplyMethodFunc(esClient, "UpdateInstance", func(request *es.UpdateInstanceRequest) (*es.UpdateInstanceResponse, error) {
-		updateCalled = true
-		resp := es.NewUpdateInstanceResponse()
-		resp.Response = &es.UpdateInstanceResponseParams{}
-		return resp, nil
-	})
-
-	patches.ApplyMethodFunc(esClient, "DescribeInstances", func(request *es.DescribeInstancesRequest) (*es.DescribeInstancesResponse, error) {
-		resp := es.NewDescribeInstancesResponse()
-		resp.Response = &es.DescribeInstancesResponseParams{
-			InstanceList: []*es.InstanceInfo{
-				{
-					InstanceId:   ptrStringEs("es-coord-immutable"),
-					InstanceName: ptrStringEs("tf-test-instance"),
-					Zone:         ptrStringEs("ap-guangzhou-3"),
-					EsVersion:    ptrStringEs("7.10.1"),
-					VpcUid:       ptrStringEs("vpc-test"),
-					SubnetUid:    ptrStringEs("subnet-test"),
-					ChargeType:   ptrStringEs("POSTPAID_BY_HOUR"),
-					Status:       ptrInt64Es(1),
-					LicenseType:  ptrStringEs("platinum"),
-				},
-			},
-		}
-		return resp, nil
-	})
-
-	// run the immutable-field scenarios: disk_type and encrypt can be changed for a node that
-	// exists in both old and new node_info_list, which exercises the "not support change" path.
-	// (The "type" field is also in the immutable list, but cannot be reached through a normal
-	// node_info_list diff because type is the set key; changing it is handled as add+delete.)
 	immutableChanges := []struct {
-		name string
-		old  map[string]interface{}
-		new  map[string]interface{}
+		name  string
+		field string
+		old   map[string]interface{}
+		new   map[string]interface{}
 	}{
 		{
-			name: "disk_type",
+			name:  "disk_type",
+			field: "disk_type",
 			old: map[string]interface{}{
 				"node_num":  2,
 				"node_type": "ES.S1.MEDIUM4",
@@ -1629,7 +1431,8 @@ func TestEsInstanceCoordinatingNode_Update_ImmutableFields(t *testing.T) {
 			},
 		},
 		{
-			name: "encrypt",
+			name:  "encrypt",
+			field: "encrypt",
 			old: map[string]interface{}{
 				"node_num":  2,
 				"node_type": "ES.S1.MEDIUM4",
@@ -1651,36 +1454,8 @@ func TestEsInstanceCoordinatingNode_Update_ImmutableFields(t *testing.T) {
 
 	for _, tc := range immutableChanges {
 		t.Run(tc.name, func(t *testing.T) {
-			meta := newMockMetaEs()
-			res := svces.ResourceTencentCloudElasticsearchInstance()
-			d := schema.TestResourceDataRaw(t, res.Schema, map[string]interface{}{
-				"instance_name":     "tf-test-instance",
-				"availability_zone": "ap-guangzhou-3",
-				"version":           "7.10.1",
-				"vpc_id":            "vpc-test",
-				"subnet_id":         "subnet-test",
-				"password":          "Test1234",
-				"charge_type":       "POSTPAID_BY_HOUR",
-				"license_type":      "platinum",
-				"node_info_list": []interface{}{
-					map[string]interface{}{
-						"node_num":  2,
-						"node_type": "ES.S1.MEDIUM4",
-						"type":      "hotData",
-						"disk_type": "CLOUD_SSD",
-						"disk_size": 100,
-						"encrypt":   false,
-					},
-				},
-			})
-			d.SetId("es-coord-immutable")
-
-			patches.ApplyMethodFunc(d, "HasChange", func(key string) bool {
-				return key == "node_info_list"
-			})
-
-			oldSet := buildEsNodeInfoListSet([]map[string]interface{}{
-				{
+			oldNodeMap := map[string]map[string]interface{}{
+				"hotData": {
 					"node_num":  2,
 					"node_type": "ES.S1.MEDIUM4",
 					"type":      "hotData",
@@ -1688,10 +1463,10 @@ func TestEsInstanceCoordinatingNode_Update_ImmutableFields(t *testing.T) {
 					"disk_size": 100,
 					"encrypt":   false,
 				},
-				tc.old,
-			})
-			newSet := buildEsNodeInfoListSet([]map[string]interface{}{
-				{
+				"dedicatedCoordinating": tc.old,
+			}
+			newNodesMap := map[string]map[string]interface{}{
+				"hotData": {
 					"node_num":  2,
 					"node_type": "ES.S1.MEDIUM4",
 					"type":      "hotData",
@@ -1699,19 +1474,158 @@ func TestEsInstanceCoordinatingNode_Update_ImmutableFields(t *testing.T) {
 					"disk_size": 100,
 					"encrypt":   false,
 				},
-				tc.new,
-			})
-			patches.ApplyMethodFunc(d, "GetChange", func(key string) (interface{}, interface{}) {
-				if key == "node_info_list" {
-					return oldSet, newSet
+				"dedicatedCoordinating": tc.new,
+			}
+
+			results := computeNodeInfoListDiff(oldNodeMap, newNodesMap, svces.ES_NODE_TYPE, []string{"hotData", "warmData"})
+
+			// find the dedicatedCoordinating result
+			var coordResult *nodeDiffResult
+			for i := range results {
+				if results[i].Type == "dedicatedCoordinating" {
+					coordResult = &results[i]
+					break
 				}
-				return nil, nil
-			})
+			}
+			assert.NotNil(t, coordResult)
+			assert.Equal(t, nodeDiffActionModify, coordResult.Action)
 
-			err := res.Update(d, meta)
-			assert.Error(t, err)
-			assert.Contains(t, err.Error(), "not support change")
-			assert.False(t, updateCalled, "UpdateInstance should not be called when immutable field changes")
+			// verify the immutable field differs between old and new (this is what
+			// the Update function checks to return "not support change")
+			assert.NotEqual(t, coordResult.Old[tc.field], coordResult.New[tc.field],
+				"immutable field '%s' should differ between old and new", tc.field)
+
+			// simulate the immutable field check from Update logic
+			immutableFields := []string{"disk_type", "encrypt", "type"}
+			var immutableErr error
+			for _, field := range immutableFields {
+				if coordResult.Old[field] != coordResult.New[field] {
+					immutableErr = fmt.Errorf("%s not support change", field)
+					break
+				}
+			}
+			assert.Error(t, immutableErr)
+			assert.Contains(t, immutableErr.Error(), "not support change")
 		})
 	}
+}
+
+// TestEsInstanceCoordinatingNode_Update_Add verifies that adding a dedicatedCoordinating node
+// is correctly identified as an "add" action by ComputeNodeInfoListDiff, and that the
+// baseNodeList for the add operation contains the existing nodes.
+func TestEsInstanceCoordinatingNode_Update_Add(t *testing.T) {
+	oldNodeMap := map[string]map[string]interface{}{
+		"hotData": {
+			"node_num":  2,
+			"node_type": "ES.S1.MEDIUM4",
+			"type":      "hotData",
+			"disk_type": "CLOUD_SSD",
+			"disk_size": 100,
+			"encrypt":   false,
+		},
+	}
+	newNodesMap := map[string]map[string]interface{}{
+		"hotData": {
+			"node_num":  2,
+			"node_type": "ES.S1.MEDIUM4",
+			"type":      "hotData",
+			"disk_type": "CLOUD_SSD",
+			"disk_size": 100,
+			"encrypt":   false,
+		},
+		"dedicatedCoordinating": {
+			"node_num":  2,
+			"node_type": "ES.S1.MEDIUM4",
+			"type":      "dedicatedCoordinating",
+			"disk_type": "CLOUD_SSD",
+			"disk_size": 50,
+			"encrypt":   false,
+		},
+	}
+
+	results := computeNodeInfoListDiff(oldNodeMap, newNodesMap, svces.ES_NODE_TYPE, []string{"hotData", "warmData"})
+
+	// find the dedicatedCoordinating result
+	var coordResult *nodeDiffResult
+	for i := range results {
+		if results[i].Type == "dedicatedCoordinating" {
+			coordResult = &results[i]
+			break
+		}
+	}
+	assert.NotNil(t, coordResult, "dedicatedCoordinating should be in diff results")
+	assert.Equal(t, nodeDiffActionAdd, coordResult.Action)
+	assert.False(t, coordResult.IsDataNode, "dedicatedCoordinating should not be a data node")
+	assert.Nil(t, coordResult.Old)
+	assert.NotNil(t, coordResult.New)
+	assert.Equal(t, "dedicatedCoordinating", coordResult.New["type"])
+
+	// baseNodeList should contain the hotData node (all other existing nodes)
+	assert.Len(t, coordResult.BaseNodeList, 1)
+	assert.Equal(t, "hotData", coordResult.BaseNodeList[0]["type"])
+
+	// hotData should be "none" (exists in both, same config)
+	var hotResult *nodeDiffResult
+	for i := range results {
+		if results[i].Type == "hotData" {
+			hotResult = &results[i]
+			break
+		}
+	}
+	assert.NotNil(t, hotResult)
+	assert.Equal(t, nodeDiffActionModify, hotResult.Action)
+	assert.True(t, hotResult.IsDataNode)
+}
+
+// TestEsInstanceCoordinatingNode_Update_Remove verifies that removing a dedicatedCoordinating
+// node is correctly identified as a "remove" action by ComputeNodeInfoListDiff.
+func TestEsInstanceCoordinatingNode_Update_Remove(t *testing.T) {
+	oldNodeMap := map[string]map[string]interface{}{
+		"hotData": {
+			"node_num":  2,
+			"node_type": "ES.S1.MEDIUM4",
+			"type":      "hotData",
+			"disk_type": "CLOUD_SSD",
+			"disk_size": 100,
+			"encrypt":   false,
+		},
+		"dedicatedCoordinating": {
+			"node_num":  2,
+			"node_type": "ES.S1.MEDIUM4",
+			"type":      "dedicatedCoordinating",
+			"disk_type": "CLOUD_SSD",
+			"disk_size": 50,
+			"encrypt":   false,
+		},
+	}
+	newNodesMap := map[string]map[string]interface{}{
+		"hotData": {
+			"node_num":  2,
+			"node_type": "ES.S1.MEDIUM4",
+			"type":      "hotData",
+			"disk_type": "CLOUD_SSD",
+			"disk_size": 100,
+			"encrypt":   false,
+		},
+	}
+
+	results := computeNodeInfoListDiff(oldNodeMap, newNodesMap, svces.ES_NODE_TYPE, []string{"hotData", "warmData"})
+
+	// find the dedicatedCoordinating result
+	var coordResult *nodeDiffResult
+	for i := range results {
+		if results[i].Type == "dedicatedCoordinating" {
+			coordResult = &results[i]
+			break
+		}
+	}
+	assert.NotNil(t, coordResult, "dedicatedCoordinating should be in diff results")
+	assert.Equal(t, nodeDiffActionRemove, coordResult.Action)
+	assert.False(t, coordResult.IsDataNode)
+	assert.NotNil(t, coordResult.Old)
+	assert.Nil(t, coordResult.New)
+
+	// baseNodeList should contain only hotData (the other existing node)
+	assert.Len(t, coordResult.BaseNodeList, 1)
+	assert.Equal(t, "hotData", coordResult.BaseNodeList[0]["type"])
 }

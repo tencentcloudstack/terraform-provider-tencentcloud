@@ -24,17 +24,17 @@
 
 ## Decisions
 
-### D1 — 新增 `dedicatedCoordinating` 常量并加入校验白名单
+### D1 — 新增 `dedicatedCoordinating` 常量并移除 `type` 字段校验
 
-在 `extension_elasticsearch.go` 新增 `ES_NODE_TYPE_DEDICATED_COORDINATING = "dedicatedCoordinating"`，并追加到 `ES_NODE_TYPE` 切片，使 schema 的 `ValidateFunc: tccommon.ValidateAllowedStringValue(ES_NODE_TYPE)` 放行该取值。
+在 `extension_elasticsearch.go` 新增 `ES_NODE_TYPE_DEDICATED_COORDINATING = "dedicatedCoordinating"`，并追加到 `ES_NODE_TYPE` 切片（该切片继续作为节点类型枚举的唯一数据源）。同时移除 `node_info_list[].type` 字段的 `ValidateFunc: tccommon.ValidateAllowedStringValue(ES_NODE_TYPE)`，避免后续新增节点类型时必须同步更新白名单。
 
-**备选方案**：放宽为不校验（去掉 `ValidateFunc`）。**否决**：白名单能在 plan 阶段拦截无效取值（如拼写错误），与现有 `hotData`/`warmData`/`dedicatedMaster` 的一致性更好，也避免把错误取值透传到云 API 才暴露。
+**备选方案**：保留 `ValidateFunc` 白名单校验。**否决**：白名单会让每个新节点类型（如 `dedicatedMl`）都必须改动 `ES_NODE_TYPE` 才能通过 plan 校验，增加维护负担；而云 API 本身会对非法取值报错，plan 阶段拦截的收益有限。移除校验后，`type` 字段取值完全交由云 API 语义约束，未来新增类型无需修改任何代码。
 
-### D2 — 将 `dedicatedCoordinating` 归类为非数据节点
+### D2 — 将 `dedicatedCoordinating` 归类为非数据节点，并使 `typeList` 引用 `ES_NODE_TYPE`
 
-在 `resourceTencentCloudElasticsearchInstanceUpdate` 的 `node_info_list` 变更分支中，把 `typeList` 扩展为 `[]string{"hotData", "warmData", "dedicatedMaster", "dedicatedCoordinating"}`，但 `dataTypeList` 保持 `[]string{"hotData", "warmData"}` 不变。
+在 `resourceTencentCloudElasticsearchInstanceUpdate` 的 `node_info_list` 变更分支中，把 `typeList` 改为直接引用 `ES_NODE_TYPE` 切片（其内容为 `[]string{"hotData", "warmData", "dedicatedMaster", "dedicatedCoordinating"}`），但 `dataTypeList` 保持 `[]string{"hotData", "warmData"}` 不变。
 
-**理由**：协调节点不承载数据分片，行为与 `dedicatedMaster` 一致——不参与多可用区 node_num 倍数校验（`isDataNode && !changeMultiZone` 分支），在「新增节点」分支中走 `!isDataNode` 路径（将新节点追加到 `baseNodeList` 后整体下发 `UpdateInstance`）。这与云 API 对协调节点的语义一致。
+**理由**：协调节点不承载数据分片，行为与 `dedicatedMaster` 一致——不参与多可用区 node_num 倍数校验（`isDataNode && !changeMultiZone` 分支），在「新增节点」分支中走 `!isDataNode` 路径（将新节点追加到 `baseNodeList` 后整体下发 `UpdateInstance`）。这与云 API 对协调节点的语义一致。用 `ES_NODE_TYPE` 替代硬编码，使 `typeList` 与枚举切片保持单一数据源，未来新增类型时无需再改 `typeList`。
 
 **备选方案**：把 `dedicatedCoordinating` 加入 `dataTypeList`。**否决**：会导致多可用区变更时对协调节点强制 node_num 倍数校验，而协调节点并非按数据可用区分布，会误报错误。
 
@@ -42,10 +42,10 @@
 
 将 `node_info_list[].type` 的 `Description` 更新为列举 `hotData`、`warmData`、`dedicatedMaster`、`dedicatedCoordinating` 四种取值，默认值仍为 `hotData`。在 `resource_tc_elasticsearch_instance.md` 示例中补充一个含协调节点的用法。文档最终通过收尾阶段 `make doc` 生成 website 文档，不在本阶段直接修改 `website/`。
 
-### D4 — 单元测试覆盖校验与 update diff
+### D4 — 单元测试覆盖 schema 与 update diff
 
 在 `resource_tc_elasticsearch_instance_test.go` 中用 gomonkey mock 云 API（`ElasticsearchService.UpdateInstance` / `DescribeInstanceById`）补充单元测试：
-- schema 校验白名单放行 `dedicatedCoordinating`；
+- schema 中 `node_info_list[].type` 字段不再有 `ValidateFunc`（断言 `ValidateFunc == nil`）；
 - `node_info_list` 含协调节点时 `validateNodeInfoListUnique` 不报错；
 - Update 中新增/删除协调节点调用 `UpdateInstance` 的入参 `NodeInfoList` 包含协调节点 `Type`。
 
@@ -54,5 +54,5 @@
 ## Risks / Trade-offs
 
 - **[协调节点磁盘字段语义]** → 协调节点与专用主节点一样不带数据盘，云 API 可能忽略 `disk_type`/`disk_size`。本次不改变现有 `diskTypeSizeDefault` CustomizeDiff 对非大数据/高IO机型默认填值的逻辑；若协调节点被填入默认磁盘值且云 API 忽略，Read 会回填实际值（与 `dedicatedMaster` 现有行为一致）。保持与 `dedicatedMaster` 一致以降低风险。
-- **[typeList 顺序]** → `typeList` 的迭代顺序影响多步 Update 的执行顺序。把 `dedicatedCoordinating` 放在末尾，保证既有三种类型的处理顺序不变，避免对现有 state 产生行为回归。
+- **[typeList 顺序]** → `typeList` 的迭代顺序影响多步 Update 的执行顺序。`ES_NODE_TYPE` 将 `dedicatedCoordinating` 放在末尾，保证既有三种类型的处理顺序不变，避免对现有 state 产生行为回归。
 - **[Read 过滤 kibana]** → 现有 Read 跳过 `*item.Type == "kibana"` 的节点，协调节点不在过滤名单，会被正常回填到 state，符合预期。
