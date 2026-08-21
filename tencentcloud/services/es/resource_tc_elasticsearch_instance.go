@@ -200,7 +200,7 @@ func ResourceTencentCloudElasticsearchInstance() *schema.Resource {
 							Type:        schema.TypeString,
 							Optional:    true,
 							Default:     ES_NODE_TYPE_HOT_DATA,
-							Description: "Node type. Valid values are `hotData`, `warmData`, `dedicatedMaster` and `dedicatedCoordinating`. The default value is `hotData`.",
+							Description: "Node type. Valid values are `hotData`, `warmData`, `dedicatedMaster`, `dedicatedCoordinating` and `dedicatedMl`. The default value is `hotData`.",
 						},
 						"disk_type": {
 							Type:         schema.TypeString,

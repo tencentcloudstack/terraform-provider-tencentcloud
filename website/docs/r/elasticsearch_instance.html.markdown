@@ -318,7 +318,7 @@ The `node_info_list` object supports the following:
 * `disk_size` - (Optional, Int) Node disk size. Unit is GB, and default value is `100`. Big Data and High IO models do not support the specified disk size and have no default values.
 * `disk_type` - (Optional, String) Node disk type. Valid values are `CLOUD_SSD`, `CLOUD_PREMIUM`, `CLOUD_HSSD`, `CLOUD_BSSD`, `CLOUD_BIGDATA` and `CLOUD_HIGHIO`. The default value is `CLOUD_SSD`. Big Data and High IO models do not support the specified disk type and have no default values.
 * `encrypt` - (Optional, Bool) Decides to encrypt this disk or not.
-* `type` - (Optional, String) Node type. Valid values are `hotData`, `warmData`, `dedicatedMaster` and `dedicatedCoordinating`. The default value is `hotData`.
+* `type` - (Optional, String) Node type. Valid values are `hotData`, `warmData`, `dedicatedMaster`, `dedicatedCoordinating` and `dedicatedMl`. The default value is `hotData`.
 
 The `web_node_type_info` object supports the following:
 
