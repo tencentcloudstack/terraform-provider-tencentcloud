@@ -1,3 +1,25 @@
+## 1.83.25(August 21, 2026)
+
+FEATURES:
+
+* **New Data Source:** `tencentcloud_teo_billing_data` ([#4322](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/4322))
+* **New Data Source:** `tencentcloud_teo_ip_group_references` ([#4393](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/4393))
+* **New Resource:** `tencentcloud_tag_attachment_v2` ([#4423](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/4423))
+
+ENHANCEMENTS:
+
+* data-source/tencentcloud_teo_environments: add source_version output field ([#4415](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/4415))
+* resource/tencentcloud_cls_data_transform: support cross-account destination topic configuration with is_cross_account, role_arn, external_id, topic_name and logset_name fields in dst_resources block ([#4441](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/4441))
+* resource/tencentcloud_elasticsearch_instance: support dedicatedCoordinating node type in node_info_list.type field ([#4433](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/4433))
+* resource/tencentcloud_mongodb_instance: support TDE ([#4448](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/4448))
+* resource/tencentcloud_mongodb_readonly_instance: support TDE ([#4448](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/4448))
+* resource/tencentcloud_mongodb_sharding_instance: support TDE ([#4448](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/4448))
+* resource/tencentcloud_mongodb_standby_instance: support TDE ([#4448](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/4448))
+* resource/tencentcloud_mysql_instance: support setting destroy protection status ([#4434](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/4434))
+* resource/tencentcloud_teo_config_group_version: support specifying source_version parameter to derive a new version from a given source version ([#4414](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/4414))
+* resource/tencentcloud_teo_security_policy_config: support `device_profiles` parameter in `client_attestation_rules` to configure per-rule client device attestation scoring thresholds and request actions ([#4387](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/4387))
+* resource/tencentcloud_teo_security_policy_config: support web_security_submodules_for_exception parameter in exception_rules.rules block ([#4395](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/4395))
+
 ## 1.83.24(August 19, 2026)
 
 FEATURES:
