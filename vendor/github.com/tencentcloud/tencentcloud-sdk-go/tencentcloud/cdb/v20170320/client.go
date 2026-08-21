@@ -3301,6 +3301,7 @@ func NewDescribeAuditInstanceListResponse() (response *DescribeAuditInstanceList
 //  INVALIDPARAMETER_CONTROLLERNOTFOUNDERROR = "InvalidParameter.ControllerNotFoundError"
 //  INVALIDPARAMETER_EXCEPTIONPARAM = "InvalidParameter.ExceptionParam"
 //  INVALIDPARAMETERVALUE_DATACONVERTERROR = "InvalidParameterValue.DataConvertError"
+//  OPERATIONDENIED_RESOURCENOTFUNDERROR = "OperationDenied.ResourceNotFundError"
 func (c *Client) DescribeAuditInstanceList(request *DescribeAuditInstanceListRequest) (response *DescribeAuditInstanceListResponse, err error) {
     return c.DescribeAuditInstanceListWithContext(context.Background(), request)
 }
@@ -3316,6 +3317,7 @@ func (c *Client) DescribeAuditInstanceList(request *DescribeAuditInstanceListReq
 //  INVALIDPARAMETER_CONTROLLERNOTFOUNDERROR = "InvalidParameter.ControllerNotFoundError"
 //  INVALIDPARAMETER_EXCEPTIONPARAM = "InvalidParameter.ExceptionParam"
 //  INVALIDPARAMETERVALUE_DATACONVERTERROR = "InvalidParameterValue.DataConvertError"
+//  OPERATIONDENIED_RESOURCENOTFUNDERROR = "OperationDenied.ResourceNotFundError"
 func (c *Client) DescribeAuditInstanceListWithContext(ctx context.Context, request *DescribeAuditInstanceListRequest) (response *DescribeAuditInstanceListResponse, err error) {
     if request == nil {
         request = NewDescribeAuditInstanceListRequest()
@@ -9403,6 +9405,142 @@ func (c *Client) ModifyDBInstanceVipVportWithContext(ctx context.Context, reques
     return
 }
 
+func NewModifyInstanceChargeTypeRequest() (request *ModifyInstanceChargeTypeRequest) {
+    request = &ModifyInstanceChargeTypeRequest{
+        BaseRequest: &tchttp.BaseRequest{},
+    }
+    
+    request.Init().WithApiInfo("cdb", APIVersion, "ModifyInstanceChargeType")
+    
+    
+    return
+}
+
+func NewModifyInstanceChargeTypeResponse() (response *ModifyInstanceChargeTypeResponse) {
+    response = &ModifyInstanceChargeTypeResponse{
+        BaseResponse: &tchttp.BaseResponse{},
+    } 
+    return
+
+}
+
+// ModifyInstanceChargeType
+// 本接口(ModifyInstanceChargeType)用于将实例的计费模式从包年包月改为按量计费。
+//
+// 可能返回的错误码:
+//  AUTHFAILURE = "AuthFailure"
+//  FAILEDOPERATION_STATUSCONFLICT = "FailedOperation.StatusConflict"
+//  INTERNALERROR_JSONERROR = "InternalError.JSONError"
+//  INTERNALERROR_NETWORKERROR = "InternalError.NetworkError"
+//  INTERNALERROR_VPCERROR = "InternalError.VpcError"
+//  INVALIDPARAMETER = "InvalidParameter"
+//  INVALIDPARAMETER_INVALIDPARAMETERERROR = "InvalidParameter.InvalidParameterError"
+//  INVALIDPARAMETERVALUE_INVALIDPARAMETERVALUEERROR = "InvalidParameterValue.InvalidParameterValueError"
+//  OPERATIONDENIED = "OperationDenied"
+func (c *Client) ModifyInstanceChargeType(request *ModifyInstanceChargeTypeRequest) (response *ModifyInstanceChargeTypeResponse, err error) {
+    return c.ModifyInstanceChargeTypeWithContext(context.Background(), request)
+}
+
+// ModifyInstanceChargeType
+// 本接口(ModifyInstanceChargeType)用于将实例的计费模式从包年包月改为按量计费。
+//
+// 可能返回的错误码:
+//  AUTHFAILURE = "AuthFailure"
+//  FAILEDOPERATION_STATUSCONFLICT = "FailedOperation.StatusConflict"
+//  INTERNALERROR_JSONERROR = "InternalError.JSONError"
+//  INTERNALERROR_NETWORKERROR = "InternalError.NetworkError"
+//  INTERNALERROR_VPCERROR = "InternalError.VpcError"
+//  INVALIDPARAMETER = "InvalidParameter"
+//  INVALIDPARAMETER_INVALIDPARAMETERERROR = "InvalidParameter.InvalidParameterError"
+//  INVALIDPARAMETERVALUE_INVALIDPARAMETERVALUEERROR = "InvalidParameterValue.InvalidParameterValueError"
+//  OPERATIONDENIED = "OperationDenied"
+func (c *Client) ModifyInstanceChargeTypeWithContext(ctx context.Context, request *ModifyInstanceChargeTypeRequest) (response *ModifyInstanceChargeTypeResponse, err error) {
+    if request == nil {
+        request = NewModifyInstanceChargeTypeRequest()
+    }
+    c.InitBaseRequest(&request.BaseRequest, "cdb", APIVersion, "ModifyInstanceChargeType")
+    
+    if c.GetCredential() == nil {
+        return nil, errors.New("ModifyInstanceChargeType require credential")
+    }
+
+    request.SetContext(ctx)
+    
+    response = NewModifyInstanceChargeTypeResponse()
+    err = c.Send(request, response)
+    return
+}
+
+func NewModifyInstanceDestroyProtectRequest() (request *ModifyInstanceDestroyProtectRequest) {
+    request = &ModifyInstanceDestroyProtectRequest{
+        BaseRequest: &tchttp.BaseRequest{},
+    }
+    
+    request.Init().WithApiInfo("cdb", APIVersion, "ModifyInstanceDestroyProtect")
+    
+    
+    return
+}
+
+func NewModifyInstanceDestroyProtectResponse() (response *ModifyInstanceDestroyProtectResponse) {
+    response = &ModifyInstanceDestroyProtectResponse{
+        BaseResponse: &tchttp.BaseResponse{},
+    } 
+    return
+
+}
+
+// ModifyInstanceDestroyProtect
+// 该接口（ModifyInstanceDestroyProtect）用于修改实例销毁保护状态。
+//
+// 可能返回的错误码:
+//  AUTHFAILURE = "AuthFailure"
+//  CDBERROR = "CdbError"
+//  INTERNALERROR_CDBERROR = "InternalError.CdbError"
+//  INTERNALERROR_DATABASEACCESSERROR = "InternalError.DatabaseAccessError"
+//  INTERNALERROR_INTERNALHTTPSERVERERROR = "InternalError.InternalHttpServerError"
+//  INTERNALERROR_PARAMERROR = "InternalError.ParamError"
+//  INTERNALERROR_UNKNOWNERROR = "InternalError.UnknownError"
+//  INVALIDPARAMETER = "InvalidParameter"
+//  INVALIDPARAMETER_CONTROLLERNOTFOUNDERROR = "InvalidParameter.ControllerNotFoundError"
+//  INVALIDPARAMETER_INSTANCENOTFOUND = "InvalidParameter.InstanceNotFound"
+//  OPERATIONDENIED = "OperationDenied"
+func (c *Client) ModifyInstanceDestroyProtect(request *ModifyInstanceDestroyProtectRequest) (response *ModifyInstanceDestroyProtectResponse, err error) {
+    return c.ModifyInstanceDestroyProtectWithContext(context.Background(), request)
+}
+
+// ModifyInstanceDestroyProtect
+// 该接口（ModifyInstanceDestroyProtect）用于修改实例销毁保护状态。
+//
+// 可能返回的错误码:
+//  AUTHFAILURE = "AuthFailure"
+//  CDBERROR = "CdbError"
+//  INTERNALERROR_CDBERROR = "InternalError.CdbError"
+//  INTERNALERROR_DATABASEACCESSERROR = "InternalError.DatabaseAccessError"
+//  INTERNALERROR_INTERNALHTTPSERVERERROR = "InternalError.InternalHttpServerError"
+//  INTERNALERROR_PARAMERROR = "InternalError.ParamError"
+//  INTERNALERROR_UNKNOWNERROR = "InternalError.UnknownError"
+//  INVALIDPARAMETER = "InvalidParameter"
+//  INVALIDPARAMETER_CONTROLLERNOTFOUNDERROR = "InvalidParameter.ControllerNotFoundError"
+//  INVALIDPARAMETER_INSTANCENOTFOUND = "InvalidParameter.InstanceNotFound"
+//  OPERATIONDENIED = "OperationDenied"
+func (c *Client) ModifyInstanceDestroyProtectWithContext(ctx context.Context, request *ModifyInstanceDestroyProtectRequest) (response *ModifyInstanceDestroyProtectResponse, err error) {
+    if request == nil {
+        request = NewModifyInstanceDestroyProtectRequest()
+    }
+    c.InitBaseRequest(&request.BaseRequest, "cdb", APIVersion, "ModifyInstanceDestroyProtect")
+    
+    if c.GetCredential() == nil {
+        return nil, errors.New("ModifyInstanceDestroyProtect require credential")
+    }
+
+    request.SetContext(ctx)
+    
+    response = NewModifyInstanceDestroyProtectResponse()
+    err = c.Send(request, response)
+    return
+}
+
 func NewModifyInstanceParamRequest() (request *ModifyInstanceParamRequest) {
     request = &ModifyInstanceParamRequest{
         BaseRequest: &tchttp.BaseRequest{},
@@ -10247,6 +10385,7 @@ func NewOpenAuditServiceResponse() (response *OpenAuditServiceResponse) {
 //
 // 可能返回的错误码:
 //  FAILEDOPERATION_CREATEAUDITFAILERROR = "FailedOperation.CreateAuditFailError"
+//  FAILEDOPERATION_INSTANCEQUERYERROR = "FailedOperation.InstanceQueryError"
 //  INTERNALERROR_DBERROR = "InternalError.DBError"
 //  INTERNALERROR_HTTPERROR = "InternalError.HttpError"
 //  INTERNALERROR_UNKNOWNERROR = "InternalError.UnknownError"
@@ -10268,6 +10407,7 @@ func (c *Client) OpenAuditService(request *OpenAuditServiceRequest) (response *O
 //
 // 可能返回的错误码:
 //  FAILEDOPERATION_CREATEAUDITFAILERROR = "FailedOperation.CreateAuditFailError"
+//  FAILEDOPERATION_INSTANCEQUERYERROR = "FailedOperation.InstanceQueryError"
 //  INTERNALERROR_DBERROR = "InternalError.DBError"
 //  INTERNALERROR_HTTPERROR = "InternalError.HttpError"
 //  INTERNALERROR_UNKNOWNERROR = "InternalError.UnknownError"
@@ -11905,6 +12045,76 @@ func (c *Client) UpgradeDBInstanceEngineVersionWithContext(ctx context.Context, 
     request.SetContext(ctx)
     
     response = NewUpgradeDBInstanceEngineVersionResponse()
+    err = c.Send(request, response)
+    return
+}
+
+func NewUpgradeRoGroupRequest() (request *UpgradeRoGroupRequest) {
+    request = &UpgradeRoGroupRequest{
+        BaseRequest: &tchttp.BaseRequest{},
+    }
+    
+    request.Init().WithApiInfo("cdb", APIVersion, "UpgradeRoGroup")
+    
+    
+    return
+}
+
+func NewUpgradeRoGroupResponse() (response *UpgradeRoGroupResponse) {
+    response = &UpgradeRoGroupResponse{
+        BaseResponse: &tchttp.BaseResponse{},
+    } 
+    return
+
+}
+
+// UpgradeRoGroup
+// 该接口（UpgradeRoGroup）用于只读组升级为纯网络转发模式。
+//
+// 可能返回的错误码:
+//  FAILEDOPERATION_STATUSCONFLICT = "FailedOperation.StatusConflict"
+//  INTERNALERROR_CDBERROR = "InternalError.CdbError"
+//  INTERNALERROR_DATABASEACCESSERROR = "InternalError.DatabaseAccessError"
+//  INTERNALERROR_FTPERROR = "InternalError.FtpError"
+//  INTERNALERROR_TRADEERROR = "InternalError.TradeError"
+//  INTERNALERROR_UNDEFINEDERROR = "InternalError.UndefinedError"
+//  INVALIDPARAMETER = "InvalidParameter"
+//  INVALIDPARAMETER_INSTANCENOTFOUND = "InvalidParameter.InstanceNotFound"
+//  OPERATIONDENIED = "OperationDenied"
+//  OPERATIONDENIED_ACTIONNOTSUPPORT = "OperationDenied.ActionNotSupport"
+//  OPERATIONDENIED_USERHASNOSTRATEGY = "OperationDenied.UserHasNoStrategy"
+func (c *Client) UpgradeRoGroup(request *UpgradeRoGroupRequest) (response *UpgradeRoGroupResponse, err error) {
+    return c.UpgradeRoGroupWithContext(context.Background(), request)
+}
+
+// UpgradeRoGroup
+// 该接口（UpgradeRoGroup）用于只读组升级为纯网络转发模式。
+//
+// 可能返回的错误码:
+//  FAILEDOPERATION_STATUSCONFLICT = "FailedOperation.StatusConflict"
+//  INTERNALERROR_CDBERROR = "InternalError.CdbError"
+//  INTERNALERROR_DATABASEACCESSERROR = "InternalError.DatabaseAccessError"
+//  INTERNALERROR_FTPERROR = "InternalError.FtpError"
+//  INTERNALERROR_TRADEERROR = "InternalError.TradeError"
+//  INTERNALERROR_UNDEFINEDERROR = "InternalError.UndefinedError"
+//  INVALIDPARAMETER = "InvalidParameter"
+//  INVALIDPARAMETER_INSTANCENOTFOUND = "InvalidParameter.InstanceNotFound"
+//  OPERATIONDENIED = "OperationDenied"
+//  OPERATIONDENIED_ACTIONNOTSUPPORT = "OperationDenied.ActionNotSupport"
+//  OPERATIONDENIED_USERHASNOSTRATEGY = "OperationDenied.UserHasNoStrategy"
+func (c *Client) UpgradeRoGroupWithContext(ctx context.Context, request *UpgradeRoGroupRequest) (response *UpgradeRoGroupResponse, err error) {
+    if request == nil {
+        request = NewUpgradeRoGroupRequest()
+    }
+    c.InitBaseRequest(&request.BaseRequest, "cdb", APIVersion, "UpgradeRoGroup")
+    
+    if c.GetCredential() == nil {
+        return nil, errors.New("UpgradeRoGroup require credential")
+    }
+
+    request.SetContext(ctx)
+    
+    response = NewUpgradeRoGroupResponse()
     err = c.Send(request, response)
     return
 }
