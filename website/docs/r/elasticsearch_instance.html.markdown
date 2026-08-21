@@ -199,6 +199,69 @@ resource "tencentcloud_elasticsearch_instance" "example_multi_zone" {
 }
 ```
 
+### Create a basic version of elasticsearch instance with dedicated coordinating node
+
+```hcl
+data "tencentcloud_availability_zones_by_product" "availability_zone" {
+  product = "es"
+}
+
+resource "tencentcloud_vpc" "vpc" {
+  cidr_block = "10.0.0.0/16"
+  name       = "tf_es_vpc"
+}
+
+resource "tencentcloud_subnet" "subnet" {
+  vpc_id            = tencentcloud_vpc.vpc.id
+  availability_zone = data.tencentcloud_availability_zones_by_product.availability_zone.zones.0.name
+  name              = "tf_es_subnet"
+  cidr_block        = "10.0.1.0/24"
+}
+
+resource "tencentcloud_elasticsearch_instance" "example" {
+  instance_name       = "tf_example_es"
+  availability_zone   = data.tencentcloud_availability_zones_by_product.availability_zone.zones.0.name
+  version             = "7.10.1"
+  vpc_id              = tencentcloud_vpc.vpc.id
+  subnet_id           = tencentcloud_subnet.subnet.id
+  password            = "Test12345"
+  license_type        = "basic"
+  basic_security_type = 2
+
+  web_node_type_info {
+    node_num  = 1
+    node_type = "ES.S1.MEDIUM4"
+  }
+
+  node_info_list {
+    type      = "hotData"
+    node_num  = 2
+    node_type = "ES.S1.MEDIUM8"
+    disk_type = "CLOUD_SSD"
+    disk_size = 100
+    encrypt   = false
+  }
+
+  node_info_list {
+    type      = "dedicatedMaster"
+    node_num  = 3
+    node_type = "ES.S1.MEDIUM4"
+    disk_type = "CLOUD_SSD"
+    disk_size = 50
+    encrypt   = false
+  }
+
+  node_info_list {
+    type      = "dedicatedCoordinating"
+    node_num  = 2
+    node_type = "ES.S1.MEDIUM4"
+    disk_type = "CLOUD_SSD"
+    disk_size = 50
+    encrypt   = false
+  }
+}
+```
+
 ## Argument Reference
 
 The following arguments are supported:
@@ -255,7 +318,7 @@ The `node_info_list` object supports the following:
 * `disk_size` - (Optional, Int) Node disk size. Unit is GB, and default value is `100`. Big Data and High IO models do not support the specified disk size and have no default values.
 * `disk_type` - (Optional, String) Node disk type. Valid values are `CLOUD_SSD`, `CLOUD_PREMIUM`, `CLOUD_HSSD`, `CLOUD_BSSD`, `CLOUD_BIGDATA` and `CLOUD_HIGHIO`. The default value is `CLOUD_SSD`. Big Data and High IO models do not support the specified disk type and have no default values.
 * `encrypt` - (Optional, Bool) Decides to encrypt this disk or not.
-* `type` - (Optional, String) Node type. Valid values are `hotData`, `warmData` and `dedicatedMaster`. The default value is 'hotData`.
+* `type` - (Optional, String) Node type. Valid values are `hotData`, `warmData`, `dedicatedMaster`, `dedicatedCoordinating` and `dedicatedMl`. The default value is `hotData`.
 
 The `web_node_type_info` object supports the following:
 
