@@ -4,7 +4,7 @@ The `tencentcloud_clb_log_topic` resource currently does not support configuring
 
 ## What Changes
 
-- Add a new optional `tags` parameter (TypeList of objects with `tag_key`/`tag_value` fields for create, and `key`/`value` for read/update) to the `tencentcloud_clb_log_topic` resource schema.
+- Add a new optional `tags` parameter (TypeMap of string key/value pairs) to the `tencentcloud_clb_log_topic` resource schema.
 - Update the `Create` method to pass tags to the `CreateTopic` API (`clb/v20180317`) using the `TagInfo` structure (`TagKey`/`TagValue` fields).
 - Update the `Update` method to pass tags to the `ModifyTopic` API (`cls/v20201016`) using the `Tag` structure (`Key`/`Value` fields) when tags change.
 - Update the `Read` method to read tags from the `DescribeTopics` API response (`cls/v20201016`) `TopicInfo.Tags` (`Tag` structure with `Key`/`Value` fields) and set them into state.

@@ -48,23 +48,10 @@ func ResourceTencentCloudClbLogTopic() *schema.Resource {
 				Description: "The status of log topic. true: enable; false: disable. Default is true.",
 			},
 			"tags": {
-				Type:        schema.TypeList,
+				Type:        schema.TypeMap,
 				Optional:    true,
 				Description: "Tags of clb log topic.",
-				Elem: &schema.Resource{
-					Schema: map[string]*schema.Schema{
-						"key": {
-							Type:        schema.TypeString,
-							Required:    true,
-							Description: "Tag key.",
-						},
-						"value": {
-							Type:        schema.TypeString,
-							Optional:    true,
-							Description: "Tag value.",
-						},
-					},
-				},
+				Elem:        &schema.Schema{Type: schema.TypeString},
 			},
 			//compute
 			"create_time": {
@@ -103,15 +90,15 @@ func resourceTencentCloudClbInstanceTopicCreate(d *schema.ResourceData, meta int
 		params["partition_count"] = partitionCount
 	}
 	if tags, ok := d.GetOk("tags"); ok {
-		params["tags"] = tags.([]interface{})
+		params["tags"] = tags.(map[string]interface{})
 	}
 	resp, err := clbService.CreateTopic(ctx, params)
 	if err != nil {
-		log.Printf("[CRITAL]%s create clb log topic failed, reason:%+v", logId, err)
+		log.Printf("[CRITAL]%s create tencentcloud_clb_log_topic failed, reason:%+v", logId, err)
 		return err
 	}
 	if resp == nil || resp.Response == nil || resp.Response.TopicId == nil {
-		log.Printf("[CRITAL]%s create clb log topic failed, response is nil, logId=%s", logId, logId)
+		log.Printf("[CRITAL]%s create tencentcloud_clb_log_topic failed, response is nil, logId=%s", logId, logId)
 		return fmt.Errorf("create clb log topic failed, response is nil")
 	}
 
@@ -156,9 +143,12 @@ func resourceTencentCloudClbInstanceTopicRead(d *schema.ResourceData, meta inter
 		return err
 	}
 	if res == nil {
-		log.Printf("[CRUD] clb log topic id=%s", id)
+		if d.IsNewResource() {
+			return fmt.Errorf("reading resource `tencentcloud_clb_log_topic` %s failed after creation", id)
+		}
+		log.Printf("[WARN] tencentcloud_clb_log_topic not found with id=%s", id)
 		d.SetId("")
-		return fmt.Errorf("resource `logTopic` %s does not exist", id)
+		return nil
 	}
 	_ = d.Set("log_set_id", res.LogsetId)
 	_ = d.Set("topic_name", res.TopicName)
@@ -166,21 +156,16 @@ func resourceTencentCloudClbInstanceTopicRead(d *schema.ResourceData, meta inter
 	_ = d.Set("status", res.Status)
 
 	if res.Tags != nil {
-		tagsList := make([]map[string]interface{}, 0, len(res.Tags))
+		tagsMap := make(map[string]string, len(res.Tags))
 		for _, tag := range res.Tags {
 			if tag == nil {
 				continue
 			}
-			tagMap := make(map[string]interface{})
-			if tag.Key != nil {
-				tagMap["key"] = *tag.Key
+			if tag.Key != nil && tag.Value != nil {
+				tagsMap[*tag.Key] = *tag.Value
 			}
-			if tag.Value != nil {
-				tagMap["value"] = *tag.Value
-			}
-			tagsList = append(tagsList, tagMap)
 		}
-		_ = d.Set("tags", tagsList)
+		_ = d.Set("tags", tagsMap)
 	}
 
 	return nil
@@ -220,20 +205,13 @@ func resourceTencentCloudClbInstanceTopicUpdate(d *schema.ResourceData, meta int
 		request := cls.NewModifyTopicRequest()
 		request.TopicId = &topicId
 		if v, ok := d.GetOk("tags"); ok {
-			tagsList := v.([]interface{})
-			if len(tagsList) > 0 {
-				clsTags := make([]*cls.Tag, 0, len(tagsList))
-				for _, tag := range tagsList {
-					tagMap, ok := tag.(map[string]interface{})
-					if !ok {
-						continue
-					}
-					clsTag := &cls.Tag{}
-					if key, ok := tagMap["key"].(string); ok {
-						clsTag.Key = helper.String(key)
-					}
-					if value, ok := tagMap["value"].(string); ok {
-						clsTag.Value = helper.String(value)
+			tagsMap := v.(map[string]interface{})
+			if len(tagsMap) > 0 {
+				clsTags := make([]*cls.Tag, 0, len(tagsMap))
+				for key, value := range tagsMap {
+					clsTag := &cls.Tag{
+						Key:   helper.String(key),
+						Value: helper.String(value.(string)),
 					}
 					clsTags = append(clsTags, clsTag)
 				}

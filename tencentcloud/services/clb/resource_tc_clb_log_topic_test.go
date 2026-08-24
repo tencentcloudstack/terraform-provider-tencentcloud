@@ -32,8 +32,7 @@ func TestAccTencentCloudClbInstanceTopic(t *testing.T) {
 				Check: resource.ComposeTestCheckFunc(
 					testAccCheckClbInstanceTopicExists("tencentcloud_clb_log_topic.topic"),
 					resource.TestCheckResourceAttr("tencentcloud_clb_log_topic.topic", "topic_name", "clb-topic-test"),
-					resource.TestCheckResourceAttr("tencentcloud_clb_log_topic.topic", "tags.0.key", "env"),
-					resource.TestCheckResourceAttr("tencentcloud_clb_log_topic.topic", "tags.0.value", "prod"),
+					resource.TestCheckResourceAttr("tencentcloud_clb_log_topic.topic", "tags.env", "prod"),
 				),
 			},
 			{
@@ -41,8 +40,7 @@ func TestAccTencentCloudClbInstanceTopic(t *testing.T) {
 				Check: resource.ComposeTestCheckFunc(
 					testAccCheckClbInstanceTopicExists("tencentcloud_clb_log_topic.topic"),
 					resource.TestCheckResourceAttr("tencentcloud_clb_log_topic.topic", "topic_name", "clb-topic-test"),
-					resource.TestCheckResourceAttr("tencentcloud_clb_log_topic.topic", "tags.0.key", "team"),
-					resource.TestCheckResourceAttr("tencentcloud_clb_log_topic.topic", "tags.0.value", "dev"),
+					resource.TestCheckResourceAttr("tencentcloud_clb_log_topic.topic", "tags.team", "dev"),
 				),
 			},
 			{
@@ -50,7 +48,7 @@ func TestAccTencentCloudClbInstanceTopic(t *testing.T) {
 				Check: resource.ComposeTestCheckFunc(
 					testAccCheckClbInstanceTopicExists("tencentcloud_clb_log_topic.topic"),
 					resource.TestCheckResourceAttr("tencentcloud_clb_log_topic.topic", "topic_name", "clb-topic-test"),
-					resource.TestCheckResourceAttr("tencentcloud_clb_log_topic.topic", "tags.#", "0"),
+					resource.TestCheckResourceAttr("tencentcloud_clb_log_topic.topic", "tags.%", "0"),
 				),
 			},
 		},
@@ -101,9 +99,8 @@ resource "tencentcloud_clb_log_set" "set1" {
 resource "tencentcloud_clb_log_topic" "topic" {
     log_set_id = tencentcloud_clb_log_set.set1.id
     topic_name = "clb-topic-test"
-    tags {
-      key   = "env"
-      value = "prod"
+    tags = {
+      env = "prod"
     }
 }
 `
@@ -116,9 +113,8 @@ resource "tencentcloud_clb_log_set" "set1" {
 resource "tencentcloud_clb_log_topic" "topic" {
     log_set_id = tencentcloud_clb_log_set.set1.id
     topic_name = "clb-topic-test"
-    tags {
-      key   = "team"
-      value = "dev"
+    tags = {
+      team = "dev"
     }
 }
 `

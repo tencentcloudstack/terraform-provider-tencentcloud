@@ -23,13 +23,13 @@ The existing resource implementation already crosses these two SDK packages: `Cr
 
 ## Decisions
 
-### Decision 1: Unified `tags` schema field using `key` / `value` element fields
+### Decision 1: `tags` schema field as a `TypeMap` of string key/value pairs
 
-The Terraform schema will define `tags` as a `TypeList` of objects, where each element has `key` and `value` string fields.
+The Terraform schema will define `tags` as a `TypeMap` (`Elem: &schema.Schema{Type: schema.TypeString}`), where each map key is the tag key and each map value is the tag value.
 
-**Rationale**: The Read (`DescribeTopics`) and Update (`ModifyTopic`) APIs both use the `Tag` structure with `Key`/`Value` fields. Only Create (`CreateTopic`) uses `TagInfo` with `TagKey`/`TagValue`. Unifying on `key`/`value` keeps the state consistent with what the Read API returns and avoids name-mismatch drift in state. The Create code path performs the mapping from schema `key`/`value` to `TagInfo.TagKey`/`TagInfo.TagValue`.
+**Rationale**: Tags are naturally represented as a key/value map. The Read (`DescribeTopics`) and Update (`ModifyTopic`) APIs both use the `Tag` structure with `Key`/`Value` fields, and Create (`CreateTopic`) uses `TagInfo` with `TagKey`/`TagValue`. Using a `TypeMap` keeps state aligned with the API responses and avoids the extra `TypeList` wrapper. The Create and Update code paths map the map entries to `TagInfo.TagKey`/`TagInfo.TagValue` and `Tag.Key`/`Tag.Value` respectively.
 
-**Alternative considered**: Name the element fields `tag_key`/`tag_value` to match the Create API. Rejected because Read/Update (2 of 3 operations) use `Key`/`Value`, so `key`/`value` minimizes mapping and keeps state aligned with the Describe response.
+**Alternative considered**: Use a `TypeList` of objects with `key`/`value` element fields. Rejected because a map is simpler and matches the key/value nature of tags, eliminating the redundant list wrapper.
 
 ### Decision 2: Tags are updatable (not ForceNew)
 
@@ -41,12 +41,12 @@ The `tags` parameter will be `Optional` without `ForceNew`, and the Update metho
 
 The existing `CreateTopic` service method takes a `params map[string]interface{}`. Tags will be passed through this map and converted to `[]*clb.TagInfo` inside the service method, keeping the resource Create function consistent with the existing pattern (which already passes `topic_name` and `partition_count` via the params map).
 
-### Decision 4: Read maps `TopicInfo.Tags` ([]*Tag) back to the schema list
+### Decision 4: Read maps `TopicInfo.Tags` ([]*Tag) back to the schema map
 
-The existing `resourceTencentCloudClbInstanceTopicRead` calls `ClsService.DescribeClsTopicById`, which returns a `*cls.TopicInfo`. The `TopicInfo.Tags` field (`[]*cls.Tag` with `Key`/`Value`) will be flattened into the `tags` schema list, with nil-safety checks before setting.
+The existing `resourceTencentCloudClbInstanceTopicRead` calls `ClsService.DescribeClsTopicById`, which returns a `*cls.TopicInfo`. The `TopicInfo.Tags` field (`[]*cls.Tag` with `Key`/`Value`) will be flattened into the `tags` schema map (`map[string]string`), with nil-safety checks before setting.
 
 ## Risks / Trade-offs
 
-- **[Tag structure mismatch between Create and Update/Read]** → Mitigated by Decision 1: unified schema field names with explicit mapping only in the Create code path.
-- **[Existing `CreateTopic` service method uses a loosely-typed params map]** → Mitigated by passing tags as a typed `[]*clb.TagInfo` value in the map and handling it explicitly inside the service method; type assertions are guarded.
-- **[Read returns empty tags vs. nil]** → Mitigated by nil-checking `res.Tags` before flattening; an empty/nil tag list results in an empty list in state.
+- **[Tag structure mismatch between Create and Update/Read]** → Mitigated by Decision 1: a single `TypeMap` schema field with explicit mapping to the correct SDK structures (`TagInfo` on Create, `Tag` on Update/Read).
+- **[Existing `CreateTopic` service method uses a loosely-typed params map]** → Mitigated by passing tags as a `map[string]interface{}` value in the map and handling it explicitly inside the service method; type assertions are guarded.
+- **[Read returns empty tags vs. nil]** → Mitigated by nil-checking `res.Tags` before flattening; an empty/nil tag list results in an empty map in state.
