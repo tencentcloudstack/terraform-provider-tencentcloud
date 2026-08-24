@@ -18,6 +18,10 @@ resource "tencentcloud_clb_log_topic" "example" {
   log_set_id = "2ed70190-bf06-4777-980d-2d8a327a2554"
   topic_name = "tf-example"
   status     = true
+  tags {
+    key   = "env"
+    value = "prod"
+  }
 }
 ```
 
@@ -28,6 +32,12 @@ The following arguments are supported:
 * `log_set_id` - (Required, String, ForceNew) Log topic of CLB instance.
 * `topic_name` - (Required, String, ForceNew) Log topic of CLB instance.
 * `status` - (Optional, Bool) The status of log topic. true: enable; false: disable. Default is true.
+* `tags` - (Optional, List) Tags of clb log topic.
+
+The `tags` object supports the following:
+
+* `key` - (Required, String) Tag key.
+* `value` - (Optional, String) Tag value.
 
 ## Attributes Reference
 
