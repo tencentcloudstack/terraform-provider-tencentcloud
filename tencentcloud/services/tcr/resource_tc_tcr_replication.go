@@ -265,6 +265,10 @@ func resourceTencentCloudTcrReplicationRead(d *schema.ResourceData, meta interfa
 		return nil
 	}
 
+	if respData.Description != nil {
+		_ = d.Set("description", respData.Description)
+	}
+
 	return nil
 }
 
@@ -289,57 +293,59 @@ func resourceTencentCloudTcrReplicationUpdate(d *schema.ResourceData, meta inter
 	request.SourceRegistryId = &sourceRegistryId
 	request.RuleName = &ruleName
 
-	if ruleMap, ok := helper.InterfacesHeadMap(d, "rule"); ok {
-		replicationRule := tcrv20190924.ModifyReplicationRule{}
-		if v, ok := ruleMap["dest_namespace"].(string); ok {
-			replicationRule.DestNamespace = helper.String(v)
-		}
-
-		if v, ok := ruleMap["override"].(bool); ok {
-			replicationRule.Override = helper.Bool(v)
-		}
-
-		if v, ok := ruleMap["filters"]; ok {
-			for _, item := range v.([]interface{}) {
-				filtersMap := item.(map[string]interface{})
-				replicationFilter := tcrv20190924.ReplicationFilter{}
-				if v, ok := filtersMap["type"].(string); ok && v != "" {
-					replicationFilter.Type = helper.String(v)
-				}
-
-				if v, ok := filtersMap["value"].(string); ok {
-					replicationFilter.Value = helper.String(v)
-				}
-
-				replicationRule.Filters = append(replicationRule.Filters, &replicationFilter)
+	if d.HasChange("rule") || d.HasChange("description") {
+		if ruleMap, ok := helper.InterfacesHeadMap(d, "rule"); ok {
+			replicationRule := tcrv20190924.ModifyReplicationRule{}
+			if v, ok := ruleMap["dest_namespace"].(string); ok {
+				replicationRule.DestNamespace = helper.String(v)
 			}
+
+			if v, ok := ruleMap["override"].(bool); ok {
+				replicationRule.Override = helper.Bool(v)
+			}
+
+			if v, ok := ruleMap["filters"]; ok {
+				for _, item := range v.([]interface{}) {
+					filtersMap := item.(map[string]interface{})
+					replicationFilter := tcrv20190924.ReplicationFilter{}
+					if v, ok := filtersMap["type"].(string); ok && v != "" {
+						replicationFilter.Type = helper.String(v)
+					}
+
+					if v, ok := filtersMap["value"].(string); ok {
+						replicationFilter.Value = helper.String(v)
+					}
+
+					replicationRule.Filters = append(replicationRule.Filters, &replicationFilter)
+				}
+			}
+
+			if v, ok := ruleMap["deletion"].(bool); ok {
+				replicationRule.Deletion = helper.Bool(v)
+			}
+
+			request.Rule = &replicationRule
 		}
 
-		if v, ok := ruleMap["deletion"].(bool); ok {
-			replicationRule.Deletion = helper.Bool(v)
+		if v, ok := d.GetOk("description"); ok {
+			request.Description = helper.String(v.(string))
 		}
 
-		request.Rule = &replicationRule
-	}
+		reqErr := resource.Retry(tccommon.WriteRetryTimeout, func() *resource.RetryError {
+			result, e := meta.(tccommon.ProviderMeta).GetAPIV3Conn().UseTCRClient().ModifyReplicationWithContext(ctx, request)
+			if e != nil {
+				return tccommon.RetryError(e)
+			} else {
+				log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), result.ToJsonString())
+			}
 
-	if v, ok := d.GetOk("description"); ok {
-		request.Description = helper.String(v.(string))
-	}
+			return nil
+		})
 
-	reqErr := resource.Retry(tccommon.WriteRetryTimeout, func() *resource.RetryError {
-		result, e := meta.(tccommon.ProviderMeta).GetAPIV3Conn().UseTCRClient().ModifyReplicationWithContext(ctx, request)
-		if e != nil {
-			return tccommon.RetryError(e)
-		} else {
-			log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), result.ToJsonString())
+		if reqErr != nil {
+			log.Printf("[CRITAL]%s update tcr replication failed, reason:%+v", logId, reqErr)
+			return reqErr
 		}
-
-		return nil
-	})
-
-	if reqErr != nil {
-		log.Printf("[CRITAL]%s update tcr replication failed, reason:%+v", logId, reqErr)
-		return reqErr
 	}
 
 	return resourceTencentCloudTcrReplicationRead(d, meta)
