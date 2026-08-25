@@ -4,12 +4,12 @@ layout: "tencentcloud"
 page_title: "TencentCloud: tencentcloud_tcr_replication"
 sidebar_current: "docs-tencentcloud-resource-tcr_replication"
 description: |-
-  Provides a resource to create a TCR replication
+  Provides a resource to create and update a TCR replication
 ---
 
 # tencentcloud_tcr_replication
 
-Provides a resource to create a TCR replication
+Provides a resource to create and update a TCR replication
 
 ## Example Usage
 
@@ -83,16 +83,16 @@ resource "tencentcloud_tcr_replication" "example" {
 The following arguments are supported:
 
 * `destination_registry_id` - (Required, String, ForceNew) Destination instance ID.
-* `rule` - (Required, List, ForceNew) Synchronization rule.
+* `rule` - (Required, List) Synchronization rule.
 * `source_registry_id` - (Required, String, ForceNew) Source instance ID.
-* `description` - (Optional, String, ForceNew) Rule description.
+* `description` - (Optional, String) Rule description.
 * `destination_region_id` - (Optional, Int, ForceNew) Region ID of the destination instance. For example, `1` represents Guangzhou.
 * `peer_replication_option` - (Optional, List, ForceNew) Configuration of the synchronization rule.
 
 The `filters` object of `rule` supports the following:
 
-* `type` - (Required, String, ForceNew) Type (`name`, `tag` and `resource`).
-* `value` - (Optional, String, ForceNew) It is left blank by default. If the type is `resource` it supports `image`, `chart`, and an empty string. If the type is `name` it supports Namespace name/**, Namespace name/Repository name.
+* `type` - (Required, String) Type (`name`, `tag` and `resource`).
+* `value` - (Optional, String) It is left blank by default. If the type is `resource` it supports `image`, `chart`, and an empty string. If the type is `name` it supports Namespace name/**, Namespace name/Repository name.
 
 The `peer_replication_option` object supports the following:
 
@@ -102,11 +102,11 @@ The `peer_replication_option` object supports the following:
 
 The `rule` object supports the following:
 
-* `dest_namespace` - (Required, String, ForceNew) Destination namespace.
-* `filters` - (Required, List, ForceNew) Synchronization filters.
+* `dest_namespace` - (Required, String) Destination namespace.
+* `filters` - (Required, List) Synchronization filters.
 * `name` - (Required, String, ForceNew) Name of synchronization rule.
-* `override` - (Required, Bool, ForceNew) Whether to override.
-* `deletion` - (Optional, Bool, ForceNew) Whether synchronous deletion event.
+* `override` - (Required, Bool) Whether to override.
+* `deletion` - (Optional, Bool) Whether synchronous deletion event.
 
 ## Attributes Reference
 
