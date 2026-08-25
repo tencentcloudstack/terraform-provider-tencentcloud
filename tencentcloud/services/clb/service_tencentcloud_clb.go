@@ -1586,6 +1586,18 @@ func (me *ClbService) CreateTopic(ctx context.Context, params map[string]interfa
 		request.PartitionCount = common.Uint64Ptr((uint64)(partitionCount.(int)))
 	}
 
+	if tags, ok := params["tags"].(map[string]interface{}); ok && len(tags) > 0 {
+		tagInfoList := make([]*clb.TagInfo, 0, len(tags))
+		for key, value := range tags {
+			tagInfo := &clb.TagInfo{
+				TagKey:   common.StringPtr(key),
+				TagValue: common.StringPtr(value.(string)),
+			}
+			tagInfoList = append(tagInfoList, tagInfo)
+		}
+		request.Tags = tagInfoList
+	}
+
 	err = resource.Retry(tccommon.WriteRetryTimeout, func() *resource.RetryError {
 		ratelimit.Check(request.GetAction())
 		resp, ok := me.client.UseClbClient().CreateTopic(request)
