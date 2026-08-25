@@ -110,6 +110,23 @@ resource "tencentcloud_teo_web_security_template" "web_security_template" {
         }
       }
     }
+    bot_management_lite {
+      captcha_page_challenge {
+        enabled = "on"
+      }
+      ai_crawler_detection {
+        enabled = "on"
+        action {
+          name = "Deny"
+          deny_action_parameters {
+            block_ip           = "on"
+            block_ip_duration  = "3600"
+            return_custom_page = "off"
+            response_code      = "403"
+          }
+        }
+      }
+    }
     custom_rules {
       rules {
         condition = "$${http.request.headers['user-agent']} contain ['curl/','Wget/','ApacheBench/']"
