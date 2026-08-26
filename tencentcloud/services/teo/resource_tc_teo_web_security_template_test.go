@@ -42,6 +42,14 @@ func TestAccTencentCloudTeoWebSecurityTemplateResource_basic(t *testing.T) {
 					resource.TestCheckResourceAttr("tencentcloud_teo_web_security_template.web_security_template", "security_policy.0.bot_management.0.basic_bot_settings.0.ip_reputation.0.enabled", "on"),
 					resource.TestCheckResourceAttr("tencentcloud_teo_web_security_template.web_security_template", "security_policy.0.bot_management.0.browser_impersonation_detection.#", "1"),
 					resource.TestCheckResourceAttr("tencentcloud_teo_web_security_template.web_security_template", "security_policy.0.bot_management.0.custom_rules.#", "1"),
+					// bot_management_lite
+					resource.TestCheckResourceAttr("tencentcloud_teo_web_security_template.web_security_template", "security_policy.0.bot_management_lite.#", "1"),
+					resource.TestCheckResourceAttr("tencentcloud_teo_web_security_template.web_security_template", "security_policy.0.bot_management_lite.0.captcha_page_challenge.#", "1"),
+					resource.TestCheckResourceAttr("tencentcloud_teo_web_security_template.web_security_template", "security_policy.0.bot_management_lite.0.captcha_page_challenge.0.enabled", "on"),
+					resource.TestCheckResourceAttr("tencentcloud_teo_web_security_template.web_security_template", "security_policy.0.bot_management_lite.0.ai_crawler_detection.#", "1"),
+					resource.TestCheckResourceAttr("tencentcloud_teo_web_security_template.web_security_template", "security_policy.0.bot_management_lite.0.ai_crawler_detection.0.enabled", "on"),
+					resource.TestCheckResourceAttr("tencentcloud_teo_web_security_template.web_security_template", "security_policy.0.bot_management_lite.0.ai_crawler_detection.0.action.#", "1"),
+					resource.TestCheckResourceAttr("tencentcloud_teo_web_security_template.web_security_template", "security_policy.0.bot_management_lite.0.ai_crawler_detection.0.action.0.name", "Deny"),
 					// custom_rules
 					resource.TestCheckResourceAttr("tencentcloud_teo_web_security_template.web_security_template", "security_policy.0.custom_rules.#", "1"),
 					resource.TestCheckResourceAttr("tencentcloud_teo_web_security_template.web_security_template", "security_policy.0.custom_rules.0.rules.#", "2"),
@@ -79,6 +87,10 @@ func TestAccTencentCloudTeoWebSecurityTemplateResource_basic(t *testing.T) {
 					// bot_management
 					resource.TestCheckResourceAttr("tencentcloud_teo_web_security_template.web_security_template", "security_policy.0.bot_management.#", "1"),
 					resource.TestCheckResourceAttr("tencentcloud_teo_web_security_template.web_security_template", "security_policy.0.bot_management.0.enabled", "off"),
+					// bot_management_lite
+					resource.TestCheckResourceAttr("tencentcloud_teo_web_security_template.web_security_template", "security_policy.0.bot_management_lite.#", "1"),
+					resource.TestCheckResourceAttr("tencentcloud_teo_web_security_template.web_security_template", "security_policy.0.bot_management_lite.0.captcha_page_challenge.#", "1"),
+					resource.TestCheckResourceAttr("tencentcloud_teo_web_security_template.web_security_template", "security_policy.0.bot_management_lite.0.captcha_page_challenge.0.enabled", "off"),
 					// custom_rules
 					resource.TestCheckResourceAttr("tencentcloud_teo_web_security_template.web_security_template", "security_policy.0.custom_rules.#", "1"),
 					resource.TestCheckResourceAttr("tencentcloud_teo_web_security_template.web_security_template", "security_policy.0.custom_rules.0.rules.#", "2"),
@@ -209,6 +221,25 @@ resource "tencentcloud_teo_web_security_template" "web_security_template" {
                 stall              = "on"
               }
             }
+          }
+        }
+      }
+    }
+    bot_management_lite {
+      captcha_page_challenge {
+        enabled = "on"
+      }
+      ai_crawler_detection {
+        enabled = "on"
+        action {
+          name = "Deny"
+          deny_action_parameters {
+            block_ip           = "on"
+            block_ip_duration  = "3600"
+            return_custom_page = "off"
+            response_code      = "403"
+            error_page_id      = null
+            stall              = "off"
           }
         }
       }
@@ -438,6 +469,11 @@ resource "tencentcloud_teo_web_security_template" "web_security_template" {
             }
           }
         }
+      }
+    }
+    bot_management_lite {
+      captcha_page_challenge {
+        enabled = "off"
       }
     }
     custom_rules {
@@ -972,4 +1008,366 @@ func TestTeoWebSecurityTemplate_DefaultDeny_Schema(t *testing.T) {
 		assert.Equal(t, schema.TypeString, fieldSchema.Type, fmt.Sprintf("%s should be TypeString", field))
 		assert.True(t, fieldSchema.Optional, fmt.Sprintf("%s should be Optional", field))
 	}
+}
+
+// ---- Unit Tests (gomonkey mock) for bot_management_lite ----
+
+// buildMockSecurityPolicyForBotManagementLiteRead constructs a SecurityPolicy with BotManagementLite for Read tests
+func buildMockSecurityPolicyForBotManagementLiteRead() *teov20220901.SecurityPolicy {
+	return &teov20220901.SecurityPolicy{
+		BotManagementLite: &teov20220901.BotManagementLite{
+			CAPTCHAPageChallenge: &teov20220901.CAPTCHAPageChallenge{
+				Enabled: ptrStringWebSecTpl("on"),
+			},
+			AICrawlerDetection: &teov20220901.AICrawlerDetection{
+				Enabled: ptrStringWebSecTpl("on"),
+				Action: &teov20220901.SecurityAction{
+					Name: ptrStringWebSecTpl("Deny"),
+					DenyActionParameters: &teov20220901.DenyActionParameters{
+						BlockIp:          ptrStringWebSecTpl("on"),
+						BlockIpDuration:  ptrStringWebSecTpl("3600"),
+						ReturnCustomPage: ptrStringWebSecTpl("off"),
+						ResponseCode:     ptrStringWebSecTpl("403"),
+						ErrorPageId:      ptrStringWebSecTpl(""),
+						Stall:            ptrStringWebSecTpl("off"),
+					},
+				},
+			},
+		},
+	}
+}
+
+// TestTeoWebSecurityTemplate_BotManagementLite_Create tests Create with bot_management_lite
+func TestTeoWebSecurityTemplate_BotManagementLite_Create(t *testing.T) {
+	patches := gomonkey.NewPatches()
+	defer patches.Reset()
+
+	teoClient := &teov20220901.Client{}
+	patches.ApplyMethodReturn(newMockMetaWebSecTpl().client, "UseTeoV20220901Client", teoClient)
+
+	// Mock CreateWebSecurityTemplateWithContext to return success
+	patches.ApplyMethodFunc(teoClient, "CreateWebSecurityTemplateWithContext", func(_ context.Context, _ *teov20220901.CreateWebSecurityTemplateRequest) (*teov20220901.CreateWebSecurityTemplateResponse, error) {
+		resp := teov20220901.NewCreateWebSecurityTemplateResponse()
+		resp.Response = &teov20220901.CreateWebSecurityTemplateResponseParams{
+			TemplateId: ptrStringWebSecTpl("temp-bot-lite"),
+			RequestId:  ptrStringWebSecTpl("fake-request-id"),
+		}
+		return resp, nil
+	})
+
+	// Mock TeoService.DescribeTeoWebSecurityTemplateById for the Read call after Create
+	patches.ApplyMethodFunc(&svcteo.TeoService{}, "DescribeTeoWebSecurityTemplateById", func(_ context.Context, zoneId string, templateId string) (*teov20220901.SecurityPolicy, error) {
+		policy := buildMockSecurityPolicyForBotManagementLiteRead()
+		return policy, nil
+	})
+
+	// Mock TeoService.DescribeTeoWebSecurityTemplateNameById for the Read call after Create
+	patches.ApplyMethodFunc(&svcteo.TeoService{}, "DescribeTeoWebSecurityTemplateNameById", func(_ context.Context, zoneId string, templateId string) (string, error) {
+		return "test-template", nil
+	})
+
+	meta := newMockMetaWebSecTpl()
+	res := svcteo.ResourceTencentCloudTeoWebSecurityTemplate()
+	d := schema.TestResourceDataRaw(t, res.Schema, map[string]interface{}{
+		"zone_id":       "zone-test1234",
+		"template_name": "test-template",
+		"security_policy": []interface{}{
+			map[string]interface{}{
+				"bot_management_lite": []interface{}{
+					map[string]interface{}{
+						"captcha_page_challenge": []interface{}{
+							map[string]interface{}{
+								"enabled": "on",
+							},
+						},
+						"ai_crawler_detection": []interface{}{
+							map[string]interface{}{
+								"enabled": "on",
+								"action": []interface{}{
+									map[string]interface{}{
+										"name": "Deny",
+										"deny_action_parameters": []interface{}{
+											map[string]interface{}{
+												"block_ip":           "on",
+												"block_ip_duration":  "3600",
+												"return_custom_page": "off",
+												"response_code":      "403",
+												"error_page_id":      "",
+												"stall":              "off",
+											},
+										},
+									},
+								},
+							},
+						},
+					},
+				},
+			},
+		},
+	})
+
+	err := res.Create(d, meta)
+	assert.NoError(t, err)
+
+	// Verify composite ID
+	assert.Equal(t, "zone-test1234#temp-bot-lite", d.Id())
+}
+
+// TestTeoWebSecurityTemplate_BotManagementLite_Read tests Read with BotManagementLite in response
+func TestTeoWebSecurityTemplate_BotManagementLite_Read(t *testing.T) {
+	patches := gomonkey.NewPatches()
+	defer patches.Reset()
+
+	// Mock TeoService.DescribeTeoWebSecurityTemplateById to return SecurityPolicy with BotManagementLite
+	patches.ApplyMethodFunc(&svcteo.TeoService{}, "DescribeTeoWebSecurityTemplateById", func(_ context.Context, zoneId string, templateId string) (*teov20220901.SecurityPolicy, error) {
+		assert.Equal(t, "zone-test1234", zoneId)
+		assert.Equal(t, "temp-bot-lite", templateId)
+		return buildMockSecurityPolicyForBotManagementLiteRead(), nil
+	})
+
+	// Mock TeoService.DescribeTeoWebSecurityTemplateNameById for template_name
+	patches.ApplyMethodFunc(&svcteo.TeoService{}, "DescribeTeoWebSecurityTemplateNameById", func(_ context.Context, zoneId string, templateId string) (string, error) {
+		return "test-template", nil
+	})
+
+	meta := newMockMetaWebSecTpl()
+	res := svcteo.ResourceTencentCloudTeoWebSecurityTemplate()
+	d := schema.TestResourceDataRaw(t, res.Schema, map[string]interface{}{
+		"zone_id":       "zone-test1234",
+		"template_name": "test-template",
+	})
+	d.SetId("zone-test1234#temp-bot-lite")
+
+	err := res.Read(d, meta)
+	assert.NoError(t, err)
+
+	// Verify security_policy contains bot_management_lite
+	securityPolicy := d.Get("security_policy").([]interface{})
+	assert.Equal(t, 1, len(securityPolicy), "security_policy should have 1 element")
+
+	spMap := securityPolicy[0].(map[string]interface{})
+	botManagementLite := spMap["bot_management_lite"].([]interface{})
+	assert.Equal(t, 1, len(botManagementLite), "bot_management_lite should have 1 element")
+
+	botLiteMap := botManagementLite[0].(map[string]interface{})
+
+	// Verify captcha_page_challenge
+	captchaPageChallenge := botLiteMap["captcha_page_challenge"].([]interface{})
+	assert.Equal(t, 1, len(captchaPageChallenge), "captcha_page_challenge should have 1 element")
+	cpcMap := captchaPageChallenge[0].(map[string]interface{})
+	assert.Equal(t, "on", cpcMap["enabled"])
+
+	// Verify ai_crawler_detection
+	aiCrawlerDetection := botLiteMap["ai_crawler_detection"].([]interface{})
+	assert.Equal(t, 1, len(aiCrawlerDetection), "ai_crawler_detection should have 1 element")
+	acdMap := aiCrawlerDetection[0].(map[string]interface{})
+	assert.Equal(t, "on", acdMap["enabled"])
+
+	// Verify action
+	action := acdMap["action"].([]interface{})
+	assert.Equal(t, 1, len(action), "action should have 1 element")
+	actionMap := action[0].(map[string]interface{})
+	assert.Equal(t, "Deny", actionMap["name"])
+
+	// Verify deny_action_parameters
+	denyActionParams := actionMap["deny_action_parameters"].([]interface{})
+	assert.Equal(t, 1, len(denyActionParams), "deny_action_parameters should have 1 element")
+	denyMap := denyActionParams[0].(map[string]interface{})
+	assert.Equal(t, "on", denyMap["block_ip"])
+	assert.Equal(t, "3600", denyMap["block_ip_duration"])
+}
+
+// TestTeoWebSecurityTemplate_BotManagementLite_Read_NilResponse tests Read when BotManagementLite is nil
+func TestTeoWebSecurityTemplate_BotManagementLite_Read_NilResponse(t *testing.T) {
+	patches := gomonkey.NewPatches()
+	defer patches.Reset()
+
+	// Mock TeoService.DescribeTeoWebSecurityTemplateById to return SecurityPolicy without BotManagementLite
+	patches.ApplyMethodFunc(&svcteo.TeoService{}, "DescribeTeoWebSecurityTemplateById", func(_ context.Context, zoneId string, templateId string) (*teov20220901.SecurityPolicy, error) {
+		return &teov20220901.SecurityPolicy{}, nil
+	})
+
+	// Mock TeoService.DescribeTeoWebSecurityTemplateNameById for template_name
+	patches.ApplyMethodFunc(&svcteo.TeoService{}, "DescribeTeoWebSecurityTemplateNameById", func(_ context.Context, zoneId string, templateId string) (string, error) {
+		return "test-template", nil
+	})
+
+	meta := newMockMetaWebSecTpl()
+	res := svcteo.ResourceTencentCloudTeoWebSecurityTemplate()
+	d := schema.TestResourceDataRaw(t, res.Schema, map[string]interface{}{
+		"zone_id":       "zone-test1234",
+		"template_name": "test-template",
+	})
+	d.SetId("zone-test1234#temp-bot-lite")
+
+	err := res.Read(d, meta)
+	assert.NoError(t, err)
+
+	// When BotManagementLite is nil, bot_management_lite should not be set
+	securityPolicy := d.Get("security_policy").([]interface{})
+	if len(securityPolicy) > 0 {
+		spMap := securityPolicy[0].(map[string]interface{})
+		botManagementLite, _ := spMap["bot_management_lite"]
+		assert.Nil(t, botManagementLite, "bot_management_lite should be nil when API returns nil")
+	}
+}
+
+// TestTeoWebSecurityTemplate_BotManagementLite_Update tests that bot_management_lite
+// expand logic works correctly for the Update operation.
+func TestTeoWebSecurityTemplate_BotManagementLite_Update(t *testing.T) {
+	patches := gomonkey.NewPatches()
+	defer patches.Reset()
+
+	teoClient := &teov20220901.Client{}
+	patches.ApplyMethodReturn(newMockMetaWebSecTpl().client, "UseTeoV20220901Client", teoClient)
+
+	// Mock ModifyWebSecurityTemplateWithContext to return success and verify the request
+	patches.ApplyMethodFunc(teoClient, "ModifyWebSecurityTemplateWithContext", func(_ context.Context, req *teov20220901.ModifyWebSecurityTemplateRequest) (*teov20220901.ModifyWebSecurityTemplateResponse, error) {
+		resp := teov20220901.NewModifyWebSecurityTemplateResponse()
+		resp.Response = &teov20220901.ModifyWebSecurityTemplateResponseParams{
+			RequestId: ptrStringWebSecTpl("fake-request-id"),
+		}
+		// Verify that BotManagementLite is populated in the request
+		assert.NotNil(t, req.SecurityPolicy, "SecurityPolicy should not be nil")
+		if req.SecurityPolicy != nil {
+			assert.NotNil(t, req.SecurityPolicy.BotManagementLite, "BotManagementLite should not be nil")
+			if req.SecurityPolicy.BotManagementLite != nil {
+				assert.NotNil(t, req.SecurityPolicy.BotManagementLite.CAPTCHAPageChallenge, "CAPTCHAPageChallenge should not be nil")
+				if req.SecurityPolicy.BotManagementLite.CAPTCHAPageChallenge != nil {
+					assert.Equal(t, "on", *req.SecurityPolicy.BotManagementLite.CAPTCHAPageChallenge.Enabled)
+				}
+				assert.NotNil(t, req.SecurityPolicy.BotManagementLite.AICrawlerDetection, "AICrawlerDetection should not be nil")
+				if req.SecurityPolicy.BotManagementLite.AICrawlerDetection != nil {
+					assert.Equal(t, "on", *req.SecurityPolicy.BotManagementLite.AICrawlerDetection.Enabled)
+					assert.NotNil(t, req.SecurityPolicy.BotManagementLite.AICrawlerDetection.Action, "Action should not be nil")
+					if req.SecurityPolicy.BotManagementLite.AICrawlerDetection.Action != nil {
+						assert.Equal(t, "Deny", *req.SecurityPolicy.BotManagementLite.AICrawlerDetection.Action.Name)
+					}
+				}
+			}
+		}
+		return resp, nil
+	})
+
+	// Mock TeoService.DescribeTeoWebSecurityTemplateById for the Read call after Update
+	patches.ApplyMethodFunc(&svcteo.TeoService{}, "DescribeTeoWebSecurityTemplateById", func(_ context.Context, zoneId string, templateId string) (*teov20220901.SecurityPolicy, error) {
+		policy := buildMockSecurityPolicyForBotManagementLiteRead()
+		return policy, nil
+	})
+
+	// Mock TeoService.DescribeTeoWebSecurityTemplateNameById for the Read call after Update
+	patches.ApplyMethodFunc(&svcteo.TeoService{}, "DescribeTeoWebSecurityTemplateNameById", func(_ context.Context, zoneId string, templateId string) (string, error) {
+		return "test-template", nil
+	})
+
+	// Build the SecurityPolicy with BotManagementLite the same way the Update function does
+	request := teov20220901.NewModifyWebSecurityTemplateRequest()
+	request.ZoneId = ptrStringWebSecTpl("zone-test1234")
+	request.TemplateId = ptrStringWebSecTpl("temp-bot-lite")
+	request.TemplateName = ptrStringWebSecTpl("test-template")
+
+	securityPolicy := teov20220901.SecurityPolicy{}
+	botManagementLite := teov20220901.BotManagementLite{}
+
+	captchaPageChallenge := teov20220901.CAPTCHAPageChallenge{}
+	captchaPageChallenge.Enabled = ptrStringWebSecTpl("on")
+	botManagementLite.CAPTCHAPageChallenge = &captchaPageChallenge
+
+	aiCrawlerDetection := teov20220901.AICrawlerDetection{}
+	aiCrawlerDetection.Enabled = ptrStringWebSecTpl("on")
+	securityAction := teov20220901.SecurityAction{}
+	securityAction.Name = ptrStringWebSecTpl("Deny")
+	denyActionParameters := teov20220901.DenyActionParameters{}
+	denyActionParameters.BlockIp = ptrStringWebSecTpl("on")
+	denyActionParameters.BlockIpDuration = ptrStringWebSecTpl("3600")
+	securityAction.DenyActionParameters = &denyActionParameters
+	aiCrawlerDetection.Action = &securityAction
+	botManagementLite.AICrawlerDetection = &aiCrawlerDetection
+
+	securityPolicy.BotManagementLite = &botManagementLite
+	request.SecurityPolicy = &securityPolicy
+
+	_, err := teoClient.ModifyWebSecurityTemplateWithContext(context.Background(), request)
+	assert.NoError(t, err)
+}
+
+// TestTeoWebSecurityTemplate_BotManagementLite_Schema tests that bot_management_lite schema is defined correctly
+func TestTeoWebSecurityTemplate_BotManagementLite_Schema(t *testing.T) {
+	res := svcteo.ResourceTencentCloudTeoWebSecurityTemplate()
+
+	assert.NotNil(t, res)
+
+	// Find security_policy schema
+	spSchema, ok := res.Schema["security_policy"]
+	assert.True(t, ok, "security_policy should exist in schema")
+
+	// Get security_policy's element schema
+	spElem := spSchema.Elem.(*schema.Resource)
+	botLiteSchema, ok := spElem.Schema["bot_management_lite"]
+	assert.True(t, ok, "bot_management_lite should exist in security_policy schema")
+	assert.Equal(t, schema.TypeList, botLiteSchema.Type)
+	assert.True(t, botLiteSchema.Optional)
+	assert.True(t, botLiteSchema.Computed)
+	assert.Equal(t, 1, botLiteSchema.MaxItems)
+
+	// Get bot_management_lite's element schema
+	botLiteElem := botLiteSchema.Elem.(*schema.Resource)
+
+	// Verify captcha_page_challenge sub-block
+	cpcSchema, ok := botLiteElem.Schema["captcha_page_challenge"]
+	assert.True(t, ok, "captcha_page_challenge should exist in bot_management_lite schema")
+	assert.Equal(t, schema.TypeList, cpcSchema.Type)
+	assert.True(t, cpcSchema.Optional)
+	assert.True(t, cpcSchema.Computed)
+	assert.Equal(t, 1, cpcSchema.MaxItems)
+
+	// Verify captcha_page_challenge fields
+	cpcElem := cpcSchema.Elem.(*schema.Resource)
+	enabledSchema, ok := cpcElem.Schema["enabled"]
+	assert.True(t, ok, "enabled should exist in captcha_page_challenge schema")
+	assert.Equal(t, schema.TypeString, enabledSchema.Type)
+	assert.True(t, enabledSchema.Required)
+
+	// Verify ai_crawler_detection sub-block
+	acdSchema, ok := botLiteElem.Schema["ai_crawler_detection"]
+	assert.True(t, ok, "ai_crawler_detection should exist in bot_management_lite schema")
+	assert.Equal(t, schema.TypeList, acdSchema.Type)
+	assert.True(t, acdSchema.Optional)
+	assert.True(t, acdSchema.Computed)
+	assert.Equal(t, 1, acdSchema.MaxItems)
+
+	// Verify ai_crawler_detection fields
+	acdElem := acdSchema.Elem.(*schema.Resource)
+	acdEnabledSchema, ok := acdElem.Schema["enabled"]
+	assert.True(t, ok, "enabled should exist in ai_crawler_detection schema")
+	assert.Equal(t, schema.TypeString, acdEnabledSchema.Type)
+	assert.True(t, acdEnabledSchema.Required)
+
+	actionSchema, ok := acdElem.Schema["action"]
+	assert.True(t, ok, "action should exist in ai_crawler_detection schema")
+	assert.Equal(t, schema.TypeList, actionSchema.Type)
+	assert.True(t, actionSchema.Optional)
+	assert.Equal(t, 1, actionSchema.MaxItems)
+
+	// Verify action fields
+	actionElem := actionSchema.Elem.(*schema.Resource)
+	nameSchema, ok := actionElem.Schema["name"]
+	assert.True(t, ok, "name should exist in action schema")
+	assert.Equal(t, schema.TypeString, nameSchema.Type)
+	assert.True(t, nameSchema.Required)
+
+	// Verify deny_action_parameters sub-block
+	denySchema, ok := actionElem.Schema["deny_action_parameters"]
+	assert.True(t, ok, "deny_action_parameters should exist in action schema")
+	assert.True(t, denySchema.Optional)
+
+	// Verify allow_action_parameters sub-block
+	allowSchema, ok := actionElem.Schema["allow_action_parameters"]
+	assert.True(t, ok, "allow_action_parameters should exist in action schema")
+	assert.True(t, allowSchema.Optional)
+
+	// Verify challenge_action_parameters sub-block
+	challengeSchema, ok := actionElem.Schema["challenge_action_parameters"]
+	assert.True(t, ok, "challenge_action_parameters should exist in action schema")
+	assert.True(t, challengeSchema.Optional)
 }
