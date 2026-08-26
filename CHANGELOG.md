@@ -1,3 +1,13 @@
+## 1.83.26(August 26, 2026)
+
+ENHANCEMENTS:
+
+* resource/tencentcloud_ccn_instances_accept_attach: support `order_type` parameter to specify billing account for accepted CCN attachment instances ([#4449](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/4449))
+* resource/tencentcloud_clb_log_topic: support configuring tags ([#4453](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/4453))
+* resource/tencentcloud_monitor_tmp_scrape_job: This resource has been deprecated. ([#4454](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/4454))
+* resource/tencentcloud_tcr_replication: support in-place update via ModifyReplication API ([#4455](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/4455))
+* resource/tencentcloud_teo_web_security_template: support `bot_management_lite` parameter under `security_policy` block, including `captcha_page_challenge` and `ai_crawler_detection` configurations ([#4456](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/4456))
+
 ## 1.83.25(August 21, 2026)
 
 FEATURES:
