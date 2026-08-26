@@ -323,6 +323,32 @@ func ResourceTencentCloudElasticsearchInstance() *schema.Resource {
 				ValidateFunc: tccommon.ValidateAllowedStringValue(ES_DESTROY_PROTECTION),
 				Description:  "Cluster destroy protection status. Valid values are `OPEN` (enable protection) and `CLOSE` (disable protection). NOTE: when destroy protection is `OPEN`, `terraform destroy` will fail at the cloud API `DeleteInstance` call until this field is set to `CLOSE`.",
 			},
+			"enable_cerebro": {
+				Type:        schema.TypeBool,
+				Optional:    true,
+				Computed:    true,
+				Description: "Whether to enable Cerebro. Note: Cerebro configuration cannot be read back from the API, so Terraform will not detect drift if changed outside of Terraform.",
+			},
+			"cerebro_public_access": {
+				Type:         schema.TypeString,
+				Optional:     true,
+				Computed:     true,
+				ValidateFunc: tccommon.ValidateAllowedStringValue(ES_CEREBRO_PUBLIC_ACCESS),
+				Description:  "Cerebro public network access status. Valid values are `OPEN` and `CLOSE`. Note: Cerebro configuration cannot be read back from the API, so Terraform will not detect drift if changed outside of Terraform.",
+			},
+			"cerebro_private_access": {
+				Type:         schema.TypeString,
+				Optional:     true,
+				Computed:     true,
+				ValidateFunc: tccommon.ValidateAllowedStringValue(ES_CEREBRO_PRIVATE_ACCESS),
+				Description:  "Cerebro private network access status. Valid values are `OPEN` and `CLOSE`. Note: Cerebro configuration cannot be read back from the API, so Terraform will not detect drift if changed outside of Terraform.",
+			},
+			"cerebro_private_domain": {
+				Type:        schema.TypeString,
+				Optional:    true,
+				Computed:    true,
+				Description: "Cerebro private network custom domain. Note: Cerebro configuration cannot be read back from the API, so Terraform will not detect drift if changed outside of Terraform.",
+			},
 			// computed
 			"elasticsearch_domain": {
 				Type:        schema.TypeString,
@@ -553,7 +579,7 @@ func resourceTencentCloudElasticsearchInstanceCreate(d *schema.ResourceData, met
 			}
 		}
 		err := resource.Retry(tccommon.WriteRetryTimeout*2, func() *resource.RetryError {
-			errRet := elasticsearchService.UpdateInstance(ctx, instanceId, "", "", "", "", "", "", 0, nil, nil, &esAcl, nil, nil, nil, "")
+			errRet := elasticsearchService.UpdateInstance(ctx, instanceId, "", "", "", "", "", "", 0, nil, nil, &esAcl, nil, nil, nil, "", nil, "", "", "")
 			if errRet != nil {
 				return tccommon.RetryError(errRet)
 			}
@@ -573,7 +599,7 @@ func resourceTencentCloudElasticsearchInstanceCreate(d *schema.ResourceData, met
 		kibanaPublicAccess := v.(string)
 		if kibanaPublicAccess != ES_KIBANA_PUBLIC_ACCESS_OPEN {
 			err = resource.Retry(tccommon.WriteRetryTimeout*2, func() *resource.RetryError {
-				errRet := elasticsearchService.UpdateInstance(ctx, instanceId, "", "", kibanaPublicAccess, "", "", "", 0, nil, nil, nil, nil, nil, nil, "")
+				errRet := elasticsearchService.UpdateInstance(ctx, instanceId, "", "", kibanaPublicAccess, "", "", "", 0, nil, nil, nil, nil, nil, nil, "", nil, "", "", "")
 				if errRet != nil {
 					return tccommon.RetryError(errRet)
 				}
@@ -594,7 +620,7 @@ func resourceTencentCloudElasticsearchInstanceCreate(d *schema.ResourceData, met
 		kibanaPrivateAccess := v.(string)
 		if actualKibanaPrivateAccess != "" && actualKibanaPrivateAccess != kibanaPrivateAccess {
 			err = resource.Retry(tccommon.WriteRetryTimeout*2, func() *resource.RetryError {
-				errRet := elasticsearchService.UpdateInstance(ctx, instanceId, "", "", "", kibanaPrivateAccess, "", "", 0, nil, nil, nil, nil, nil, nil, "")
+				errRet := elasticsearchService.UpdateInstance(ctx, instanceId, "", "", "", kibanaPrivateAccess, "", "", 0, nil, nil, nil, nil, nil, nil, "", nil, "", "", "")
 				if errRet != nil {
 					return tccommon.RetryError(errRet)
 				}
@@ -640,7 +666,7 @@ func resourceTencentCloudElasticsearchInstanceCreate(d *schema.ResourceData, met
 
 	if isUpdate {
 		err = resource.Retry(tccommon.WriteRetryTimeout*2, func() *resource.RetryError {
-			errRet := elasticsearchService.UpdateInstance(ctx, instanceId, "", "", "", "", publicAccess, "", 0, nil, nil, nil, nil, &esPublicAcl, nil, "")
+			errRet := elasticsearchService.UpdateInstance(ctx, instanceId, "", "", "", "", publicAccess, "", 0, nil, nil, nil, nil, &esPublicAcl, nil, "", nil, "", "", "")
 			if errRet != nil {
 				return tccommon.RetryError(errRet)
 			}
@@ -670,7 +696,7 @@ func resourceTencentCloudElasticsearchInstanceCreate(d *schema.ResourceData, met
 		}
 
 		err = resource.Retry(tccommon.WriteRetryTimeout*2, func() *resource.RetryError {
-			errRet := elasticsearchService.UpdateInstance(ctx, instanceId, "", "", "", "", "", "", 0, nil, nil, nil, &cosBackup, nil, nil, "")
+			errRet := elasticsearchService.UpdateInstance(ctx, instanceId, "", "", "", "", "", "", 0, nil, nil, nil, &cosBackup, nil, nil, "", nil, "", "", "")
 			if errRet != nil {
 				return tccommon.RetryError(errRet)
 			}
@@ -691,7 +717,7 @@ func resourceTencentCloudElasticsearchInstanceCreate(d *schema.ResourceData, met
 	if v, ok := d.GetOk("enable_destroy_protection"); ok {
 		enableDestroyProtection := v.(string)
 		err = resource.Retry(tccommon.WriteRetryTimeout*2, func() *resource.RetryError {
-			errRet := elasticsearchService.UpdateInstance(ctx, instanceId, "", "", "", "", "", "", 0, nil, nil, nil, nil, nil, nil, enableDestroyProtection)
+			errRet := elasticsearchService.UpdateInstance(ctx, instanceId, "", "", "", "", "", "", 0, nil, nil, nil, nil, nil, nil, enableDestroyProtection, nil, "", "", "")
 			if errRet != nil {
 				return tccommon.RetryError(errRet)
 			}
@@ -874,7 +900,7 @@ func resourceTencentCloudElasticsearchInstanceUpdate(d *schema.ResourceData, met
 	if d.HasChange("protocol") {
 		if v, ok := d.GetOk("protocol"); ok && v != "" {
 			err := resource.Retry(tccommon.WriteRetryTimeout, func() *resource.RetryError {
-				errRet := elasticsearchService.UpdateInstance(ctx, instanceId, "", "", "", "", "", v.(string), 0, nil, nil, nil, nil, nil, nil, "")
+				errRet := elasticsearchService.UpdateInstance(ctx, instanceId, "", "", "", "", "", v.(string), 0, nil, nil, nil, nil, nil, nil, "", nil, "", "", "")
 				if errRet != nil {
 					return tccommon.RetryError(errRet)
 				}
@@ -894,7 +920,7 @@ func resourceTencentCloudElasticsearchInstanceUpdate(d *schema.ResourceData, met
 		instanceName := d.Get("instance_name").(string)
 		// Update operation support at most one item at the same time
 		err := resource.Retry(tccommon.WriteRetryTimeout, func() *resource.RetryError {
-			errRet := elasticsearchService.UpdateInstance(ctx, instanceId, instanceName, "", "", "", "", "", 0, nil, nil, nil, nil, nil, nil, "")
+			errRet := elasticsearchService.UpdateInstance(ctx, instanceId, instanceName, "", "", "", "", "", 0, nil, nil, nil, nil, nil, nil, "", nil, "", "", "")
 			if errRet != nil {
 				return tccommon.RetryError(errRet)
 			}
@@ -911,7 +937,7 @@ func resourceTencentCloudElasticsearchInstanceUpdate(d *schema.ResourceData, met
 	if d.HasChange("password") {
 		password := d.Get("password").(string)
 		err := resource.Retry(tccommon.WriteRetryTimeout, func() *resource.RetryError {
-			errRet := elasticsearchService.UpdateInstance(ctx, instanceId, "", password, "", "", "", "", 0, nil, nil, nil, nil, nil, nil, "")
+			errRet := elasticsearchService.UpdateInstance(ctx, instanceId, "", password, "", "", "", "", 0, nil, nil, nil, nil, nil, nil, "", nil, "", "", "")
 			if errRet != nil {
 				return tccommon.RetryError(errRet)
 			}
@@ -930,7 +956,7 @@ func resourceTencentCloudElasticsearchInstanceUpdate(d *schema.ResourceData, met
 	if d.HasChange("kibana_public_access") {
 		if v, ok := d.GetOk("kibana_public_access"); ok {
 			err := resource.Retry(tccommon.WriteRetryTimeout, func() *resource.RetryError {
-				errRet := elasticsearchService.UpdateInstance(ctx, instanceId, "", "", v.(string), "", "", "", 0, nil, nil, nil, nil, nil, nil, "")
+				errRet := elasticsearchService.UpdateInstance(ctx, instanceId, "", "", v.(string), "", "", "", 0, nil, nil, nil, nil, nil, nil, "", nil, "", "", "")
 				if errRet != nil {
 					return tccommon.RetryError(errRet)
 				}
@@ -950,7 +976,7 @@ func resourceTencentCloudElasticsearchInstanceUpdate(d *schema.ResourceData, met
 	if d.HasChange("kibana_private_access") {
 		if v, ok := d.GetOk("kibana_private_access"); ok {
 			err := resource.Retry(tccommon.WriteRetryTimeout, func() *resource.RetryError {
-				errRet := elasticsearchService.UpdateInstance(ctx, instanceId, "", "", "", v.(string), "", "", 0, nil, nil, nil, nil, nil, nil, "")
+				errRet := elasticsearchService.UpdateInstance(ctx, instanceId, "", "", "", v.(string), "", "", 0, nil, nil, nil, nil, nil, nil, "", nil, "", "", "")
 				if errRet != nil {
 					return tccommon.RetryError(errRet)
 				}
@@ -965,6 +991,80 @@ func resourceTencentCloudElasticsearchInstanceUpdate(d *schema.ResourceData, met
 			}
 		}
 
+	}
+	// Cerebro
+	if d.HasChange("enable_cerebro") {
+		if v, ok := d.GetOkExists("enable_cerebro"); ok {
+			enableCerebro := helper.Bool(v.(bool))
+			err := resource.Retry(tccommon.WriteRetryTimeout, func() *resource.RetryError {
+				errRet := elasticsearchService.UpdateInstance(ctx, instanceId, "", "", "", "", "", "", 0, nil, nil, nil, nil, nil, nil, "", enableCerebro, "", "", "")
+				if errRet != nil {
+					return tccommon.RetryError(errRet)
+				}
+				return nil
+			})
+			if err != nil {
+				return err
+			}
+			err = tencentCloudElasticsearchInstanceUpgradeWaiting(ctx, &elasticsearchService, instanceId)
+			if err != nil {
+				return err
+			}
+		}
+	}
+	if d.HasChange("cerebro_public_access") {
+		if v, ok := d.GetOk("cerebro_public_access"); ok {
+			err := resource.Retry(tccommon.WriteRetryTimeout, func() *resource.RetryError {
+				errRet := elasticsearchService.UpdateInstance(ctx, instanceId, "", "", "", "", "", "", 0, nil, nil, nil, nil, nil, nil, "", nil, v.(string), "", "")
+				if errRet != nil {
+					return tccommon.RetryError(errRet)
+				}
+				return nil
+			})
+			if err != nil {
+				return err
+			}
+			err = tencentCloudElasticsearchInstanceUpgradeWaiting(ctx, &elasticsearchService, instanceId)
+			if err != nil {
+				return err
+			}
+		}
+	}
+	if d.HasChange("cerebro_private_access") {
+		if v, ok := d.GetOk("cerebro_private_access"); ok {
+			err := resource.Retry(tccommon.WriteRetryTimeout, func() *resource.RetryError {
+				errRet := elasticsearchService.UpdateInstance(ctx, instanceId, "", "", "", "", "", "", 0, nil, nil, nil, nil, nil, nil, "", nil, "", v.(string), "")
+				if errRet != nil {
+					return tccommon.RetryError(errRet)
+				}
+				return nil
+			})
+			if err != nil {
+				return err
+			}
+			err = tencentCloudElasticsearchInstanceUpgradeWaiting(ctx, &elasticsearchService, instanceId)
+			if err != nil {
+				return err
+			}
+		}
+	}
+	if d.HasChange("cerebro_private_domain") {
+		if v, ok := d.GetOk("cerebro_private_domain"); ok {
+			err := resource.Retry(tccommon.WriteRetryTimeout, func() *resource.RetryError {
+				errRet := elasticsearchService.UpdateInstance(ctx, instanceId, "", "", "", "", "", "", 0, nil, nil, nil, nil, nil, nil, "", nil, "", "", v.(string))
+				if errRet != nil {
+					return tccommon.RetryError(errRet)
+				}
+				return nil
+			})
+			if err != nil {
+				return err
+			}
+			err = tencentCloudElasticsearchInstanceUpgradeWaiting(ctx, &elasticsearchService, instanceId)
+			if err != nil {
+				return err
+			}
+		}
 	}
 	if d.HasChange("version") {
 		version := d.Get("version").(string)
@@ -1009,7 +1109,7 @@ func resourceTencentCloudElasticsearchInstanceUpdate(d *schema.ResourceData, met
 		licenseType := d.Get("license_type").(string)
 		licenseTypeUpgrading := licenseType != "oss"
 		err := resource.Retry(tccommon.WriteRetryTimeout*2, func() *resource.RetryError {
-			errRet := elasticsearchService.UpdateInstance(ctx, instanceId, "", "", "", "", "", "", int64(basicSecurityType), nil, nil, nil, nil, nil, nil, "")
+			errRet := elasticsearchService.UpdateInstance(ctx, instanceId, "", "", "", "", "", "", int64(basicSecurityType), nil, nil, nil, nil, nil, nil, "", nil, "", "", "")
 			if errRet != nil {
 				err := errRet.(*sdkErrors.TencentCloudSDKError)
 				if err.Code == es.INVALIDPARAMETER && licenseTypeUpgrading {
@@ -1062,7 +1162,7 @@ func resourceTencentCloudElasticsearchInstanceUpdate(d *schema.ResourceData, met
 				NodeType: helper.String(value["node_type"].(string)),
 			}
 			err = resource.Retry(tccommon.WriteRetryTimeout*2, func() *resource.RetryError {
-				errRet := elasticsearchService.UpdateInstance(ctx, instanceId, "", "", "", "", "", "", 0, nil, info, nil, nil, nil, nil, "")
+				errRet := elasticsearchService.UpdateInstance(ctx, instanceId, "", "", "", "", "", "", 0, nil, info, nil, nil, nil, nil, "", nil, "", "", "")
 				if errRet != nil {
 					return tccommon.RetryError(errRet)
 				}
@@ -1151,7 +1251,7 @@ func resourceTencentCloudElasticsearchInstanceUpdate(d *schema.ResourceData, met
 				if !isDataNode {
 					baseNodeList = append(baseNodeList, new)
 					err := resource.Retry(tccommon.WriteRetryTimeout*2, func() *resource.RetryError {
-						errRet := elasticsearchService.UpdateInstance(ctx, instanceId, "", "", "", "", "", "", 0, convertToNodeInfos(baseNodeList), nil, nil, nil, nil, nil, "")
+						errRet := elasticsearchService.UpdateInstance(ctx, instanceId, "", "", "", "", "", "", 0, convertToNodeInfos(baseNodeList), nil, nil, nil, nil, nil, "", nil, "", "", "")
 						if errRet != nil {
 							return tccommon.RetryError(errRet)
 						}
@@ -1170,7 +1270,7 @@ func resourceTencentCloudElasticsearchInstanceUpdate(d *schema.ResourceData, met
 			} else if new == nil {
 				// 删除
 				err := resource.Retry(tccommon.WriteRetryTimeout*2, func() *resource.RetryError {
-					errRet := elasticsearchService.UpdateInstance(ctx, instanceId, "", "", "", "", "", "", 0, convertToNodeInfos(baseNodeList), nil, nil, nil, nil, nil, "")
+					errRet := elasticsearchService.UpdateInstance(ctx, instanceId, "", "", "", "", "", "", 0, convertToNodeInfos(baseNodeList), nil, nil, nil, nil, nil, "", nil, "", "", "")
 					if errRet != nil {
 						return tccommon.RetryError(errRet)
 					}
@@ -1203,7 +1303,7 @@ func resourceTencentCloudElasticsearchInstanceUpdate(d *schema.ResourceData, met
 						thisNode.NodeNum = helper.IntUint64(new["node_num"].(int))
 						changeESNodes = append(changeESNodes, thisNode)
 						err := resource.Retry(tccommon.WriteRetryTimeout*2, func() *resource.RetryError {
-							errRet := elasticsearchService.UpdateInstance(ctx, instanceId, "", "", "", "", "", "", 0, changeESNodes, nil, nil, nil, nil, nil, "")
+							errRet := elasticsearchService.UpdateInstance(ctx, instanceId, "", "", "", "", "", "", 0, changeESNodes, nil, nil, nil, nil, nil, "", nil, "", "", "")
 							if errRet != nil {
 								return tccommon.RetryError(errRet)
 							}
@@ -1230,7 +1330,7 @@ func resourceTencentCloudElasticsearchInstanceUpdate(d *schema.ResourceData, met
 					}
 					changeESNodes = append(changeESNodes, thisNode)
 					err := resource.Retry(tccommon.WriteRetryTimeout*2, func() *resource.RetryError {
-						errRet := elasticsearchService.UpdateInstance(ctx, instanceId, "", "", "", "", "", "", 0, changeESNodes, nil, nil, nil, nil, nil, "")
+						errRet := elasticsearchService.UpdateInstance(ctx, instanceId, "", "", "", "", "", "", 0, changeESNodes, nil, nil, nil, nil, nil, "", nil, "", "", "")
 						if errRet != nil {
 							return tccommon.RetryError(errRet)
 						}
@@ -1259,7 +1359,7 @@ func resourceTencentCloudElasticsearchInstanceUpdate(d *schema.ResourceData, met
 					}
 					changeESNodes = append(changeESNodes, thisNode)
 					err := resource.Retry(tccommon.WriteRetryTimeout*2, func() *resource.RetryError {
-						errRet := elasticsearchService.UpdateInstance(ctx, instanceId, "", "", "", "", "", "", 0, changeESNodes, nil, nil, nil, nil, nil, "")
+						errRet := elasticsearchService.UpdateInstance(ctx, instanceId, "", "", "", "", "", "", 0, changeESNodes, nil, nil, nil, nil, nil, "", nil, "", "", "")
 						if errRet != nil {
 							return tccommon.RetryError(errRet)
 						}
@@ -1316,7 +1416,7 @@ func resourceTencentCloudElasticsearchInstanceUpdate(d *schema.ResourceData, met
 				}
 
 				err := resource.Retry(tccommon.WriteRetryTimeout*2, func() *resource.RetryError {
-					errRet := elasticsearchService.UpdateInstance(ctx, instanceId, "", "", "", "", "", "", 0, changeESNodes, nil, nil, nil, nil, multiZoneInfos, "")
+					errRet := elasticsearchService.UpdateInstance(ctx, instanceId, "", "", "", "", "", "", 0, changeESNodes, nil, nil, nil, nil, multiZoneInfos, "", nil, "", "", "")
 					if errRet != nil {
 						return tccommon.RetryError(errRet)
 					}
@@ -1342,7 +1442,7 @@ func resourceTencentCloudElasticsearchInstanceUpdate(d *schema.ResourceData, met
 			thisHotDataNode := convertToNodeInfo(newHotData)
 			changeESNodes = append(changeESNodes, thisHotDataNode)
 			err := resource.Retry(tccommon.WriteRetryTimeout*2, func() *resource.RetryError {
-				errRet := elasticsearchService.UpdateInstance(ctx, instanceId, "", "", "", "", "", "", 0, changeESNodes, nil, nil, nil, nil, multiZoneInfos, "")
+				errRet := elasticsearchService.UpdateInstance(ctx, instanceId, "", "", "", "", "", "", 0, changeESNodes, nil, nil, nil, nil, multiZoneInfos, "", nil, "", "", "")
 				if errRet != nil {
 					return tccommon.RetryError(errRet)
 				}
@@ -1369,7 +1469,7 @@ func resourceTencentCloudElasticsearchInstanceUpdate(d *schema.ResourceData, met
 			thisWarmDataNode := convertToNodeInfo(newWarmData)
 			changeESNodes2 := append(changeESNodes, thisWarmDataNode)
 			err := resource.Retry(tccommon.WriteRetryTimeout*2, func() *resource.RetryError {
-				errRet := elasticsearchService.UpdateInstance(ctx, instanceId, "", "", "", "", "", "", 0, changeESNodes2, nil, nil, nil, nil, multiZoneInfos, "")
+				errRet := elasticsearchService.UpdateInstance(ctx, instanceId, "", "", "", "", "", "", 0, changeESNodes2, nil, nil, nil, nil, multiZoneInfos, "", nil, "", "", "")
 				if errRet != nil {
 					return tccommon.RetryError(errRet)
 				}
@@ -1413,7 +1513,7 @@ func resourceTencentCloudElasticsearchInstanceUpdate(d *schema.ResourceData, met
 			esPublicAcl = nil
 		}
 		err := resource.Retry(tccommon.WriteRetryTimeout*2, func() *resource.RetryError {
-			errRet := elasticsearchService.UpdateInstance(ctx, instanceId, "", "", "", "", publicAccess, "", 0, nil, nil, nil, nil, esPublicAcl, nil, "")
+			errRet := elasticsearchService.UpdateInstance(ctx, instanceId, "", "", "", "", publicAccess, "", 0, nil, nil, nil, nil, esPublicAcl, nil, "", nil, "", "", "")
 			if errRet != nil {
 				return tccommon.RetryError(errRet)
 			}
@@ -1445,7 +1545,7 @@ func resourceTencentCloudElasticsearchInstanceUpdate(d *schema.ResourceData, met
 			}
 		}
 		err := resource.Retry(tccommon.WriteRetryTimeout*2, func() *resource.RetryError {
-			errRet := elasticsearchService.UpdateInstance(ctx, instanceId, "", "", "", "", "", "", 0, nil, nil, nil, nil, &esPublicAcl, nil, "")
+			errRet := elasticsearchService.UpdateInstance(ctx, instanceId, "", "", "", "", "", "", 0, nil, nil, nil, nil, &esPublicAcl, nil, "", nil, "", "", "")
 			if errRet != nil {
 				return tccommon.RetryError(errRet)
 			}
@@ -1496,7 +1596,7 @@ func resourceTencentCloudElasticsearchInstanceUpdate(d *schema.ResourceData, met
 		}
 
 		err := resource.Retry(tccommon.WriteRetryTimeout*2, func() *resource.RetryError {
-			errRet := elasticsearchService.UpdateInstance(ctx, instanceId, "", "", "", "", "", "", 0, nil, nil, &esAcl, nil, nil, nil, "")
+			errRet := elasticsearchService.UpdateInstance(ctx, instanceId, "", "", "", "", "", "", 0, nil, nil, &esAcl, nil, nil, nil, "", nil, "", "", "")
 			if errRet != nil {
 				return tccommon.RetryError(errRet)
 			}
@@ -1526,7 +1626,7 @@ func resourceTencentCloudElasticsearchInstanceUpdate(d *schema.ResourceData, met
 			}
 
 			err := resource.Retry(tccommon.WriteRetryTimeout*2, func() *resource.RetryError {
-				errRet := elasticsearchService.UpdateInstance(ctx, instanceId, "", "", "", "", "", "", 0, nil, nil, nil, &cosBackup, nil, nil, "")
+				errRet := elasticsearchService.UpdateInstance(ctx, instanceId, "", "", "", "", "", "", 0, nil, nil, nil, &cosBackup, nil, nil, "", nil, "", "", "")
 				if errRet != nil {
 					return tccommon.RetryError(errRet)
 				}
@@ -1548,7 +1648,7 @@ func resourceTencentCloudElasticsearchInstanceUpdate(d *schema.ResourceData, met
 	if d.HasChange("enable_destroy_protection") {
 		enableDestroyProtection := d.Get("enable_destroy_protection").(string)
 		err := resource.Retry(tccommon.WriteRetryTimeout*2, func() *resource.RetryError {
-			errRet := elasticsearchService.UpdateInstance(ctx, instanceId, "", "", "", "", "", "", 0, nil, nil, nil, nil, nil, nil, enableDestroyProtection)
+			errRet := elasticsearchService.UpdateInstance(ctx, instanceId, "", "", "", "", "", "", 0, nil, nil, nil, nil, nil, nil, enableDestroyProtection, nil, "", "", "")
 			if errRet != nil {
 				return tccommon.RetryError(errRet)
 			}
