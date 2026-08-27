@@ -19,8 +19,8 @@ func ResourceTencentCloudClsSplunkDeliver() *schema.Resource {
 	return &schema.Resource{
 		Create: resourceTencentCloudClsSplunkDeliverCreate,
 		Read:   resourceTencentCloudClsSplunkDeliverRead,
-		Delete: resourceTencentCloudClsSplunkDeliverDelete,
 		Update: resourceTencentCloudClsSplunkDeliverUpdate,
+		Delete: resourceTencentCloudClsSplunkDeliverDelete,
 		Importer: &schema.ResourceImporter{
 			State: schema.ImportStatePassthrough,
 		},
@@ -95,13 +95,13 @@ func ResourceTencentCloudClsSplunkDeliver() *schema.Resource {
 						},
 						"meta_fields": {
 							Type:        schema.TypeSet,
-							Required:    true,
+							Optional:    true,
 							Elem:        &schema.Schema{Type: schema.TypeString},
 							Description: "Delivery fields, including __SOURCE__, __FILENAME__, __TIMESTAMP__, __HOSTNAME__, __PKG_ID__.",
 						},
 						"enable_tag": {
 							Type:        schema.TypeBool,
-							Required:    true,
+							Optional:    true,
 							Description: "Whether to deliver __TAG__ field.",
 						},
 						"tag_json_tiled": {
@@ -173,6 +173,7 @@ func ResourceTencentCloudClsSplunkDeliver() *schema.Resource {
 				Computed:    true,
 				Description: "Delivery task enable status. 0: disable, 1: enable.",
 			},
+			// computed
 			"task_id": {
 				Type:        schema.TypeString,
 				Computed:    true,
@@ -185,9 +186,8 @@ func ResourceTencentCloudClsSplunkDeliver() *schema.Resource {
 func resourceTencentCloudClsSplunkDeliverCreate(d *schema.ResourceData, meta interface{}) error {
 	defer tccommon.LogElapsed("resource.tencentcloud_cls_splunk_deliver.create")()
 
-	logId := tccommon.GetLogId(tccommon.ContextNil)
-
 	var (
+		logId    = tccommon.GetLogId(tccommon.ContextNil)
 		request  = cls.NewCreateSplunkDeliverRequest()
 		response *cls.CreateSplunkDeliverResponse
 		topicId  string
@@ -328,7 +328,7 @@ func resourceTencentCloudClsSplunkDeliverCreate(d *schema.ResourceData, meta int
 	}
 
 	taskId := *response.Response.TaskId
-	d.SetId(strings.Join([]string{taskId, topicId}, tccommon.FILED_SP))
+	d.SetId(strings.Join([]string{topicId, taskId}, tccommon.FILED_SP))
 	return resourceTencentCloudClsSplunkDeliverRead(d, meta)
 }
 
@@ -342,10 +342,11 @@ func resourceTencentCloudClsSplunkDeliverRead(d *schema.ResourceData, meta inter
 	id := d.Id()
 	idSplit := strings.Split(id, tccommon.FILED_SP)
 	if len(idSplit) != 2 {
-		return fmt.Errorf("splunk_deliver id is invalid, id format should be task_id#topic_id, got: %s", id)
+		return fmt.Errorf("splunk_deliver id is invalid, id format should be topic_id#task_id, got: %s", id)
 	}
-	taskId := idSplit[0]
-	topicId := idSplit[1]
+
+	topicId := idSplit[0]
+	taskId := idSplit[1]
 
 	request := cls.NewDescribeSplunkDeliversRequest()
 	request.TopicId = helper.String(topicId)
@@ -359,7 +360,7 @@ func resourceTencentCloudClsSplunkDeliverRead(d *schema.ResourceData, meta inter
 
 	var response *cls.DescribeSplunkDeliversResponse
 	err := resource.Retry(tccommon.ReadRetryTimeout, func() *resource.RetryError {
-		result, e := meta.(tccommon.ProviderMeta).GetAPIV3Conn().UseClsClient().DescribeSplunkDelivers(request)
+		result, e := meta.(tccommon.ProviderMeta).GetAPIV3Conn().UseClsClient().DescribeSplunkDeliversWithContext(ctx, request)
 		if e != nil {
 			return tccommon.RetryError(e)
 		} else {
@@ -379,8 +380,6 @@ func resourceTencentCloudClsSplunkDeliverRead(d *schema.ResourceData, meta inter
 		log.Printf("[CRITAL]%s read cls splunk_deliver failed, reason:%+v", logId, err)
 		return err
 	}
-
-	_ = ctx
 
 	if response.Response.Infos == nil || len(response.Response.Infos) == 0 {
 		log.Printf("[CRUD] cls splunk_deliver id=%s, read empty, skip SetId", d.Id())
@@ -485,21 +484,15 @@ func resourceTencentCloudClsSplunkDeliverUpdate(d *schema.ResourceData, meta int
 	id := d.Id()
 	idSplit := strings.Split(id, tccommon.FILED_SP)
 	if len(idSplit) != 2 {
-		return fmt.Errorf("splunk_deliver id is invalid, id format should be task_id#topic_id, got: %s", id)
+		return fmt.Errorf("splunk_deliver id is invalid, id format should be topic_id#task_id, got: %s", id)
 	}
-	taskId := idSplit[0]
-	topicId := idSplit[1]
+
+	topicId := idSplit[0]
+	taskId := idSplit[1]
 
 	request := cls.NewModifySplunkDeliverRequest()
 	request.TaskId = helper.String(taskId)
 	request.TopicId = helper.String(topicId)
-
-	immutableArgs := []string{"topic_id"}
-	for _, v := range immutableArgs {
-		if d.HasChange(v) {
-			return fmt.Errorf("argument `%s` cannot be changed", v)
-		}
-	}
 
 	if d.HasChange("name") {
 		if v, ok := d.GetOk("name"); ok {
@@ -657,10 +650,11 @@ func resourceTencentCloudClsSplunkDeliverDelete(d *schema.ResourceData, meta int
 	id := d.Id()
 	idSplit := strings.Split(id, tccommon.FILED_SP)
 	if len(idSplit) != 2 {
-		return fmt.Errorf("splunk_deliver id is invalid, id format should be task_id#topic_id, got: %s", id)
+		return fmt.Errorf("splunk_deliver id is invalid, id format should be topic_id#task_id, got: %s", id)
 	}
-	taskId := idSplit[0]
+
 	topicId := idSplit[1]
+	taskId := idSplit[0]
 
 	request := cls.NewDeleteSplunkDeliverRequest()
 	request.TaskId = helper.String(taskId)
