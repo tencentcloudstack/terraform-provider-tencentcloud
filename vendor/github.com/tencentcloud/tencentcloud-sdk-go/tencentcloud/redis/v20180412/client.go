@@ -3103,6 +3103,56 @@ func (c *Client) DescribeInstanceParamsWithContext(ctx context.Context, request 
     return
 }
 
+func NewDescribeInstancePasswordPolicyRequest() (request *DescribeInstancePasswordPolicyRequest) {
+    request = &DescribeInstancePasswordPolicyRequest{
+        BaseRequest: &tchttp.BaseRequest{},
+    }
+    
+    request.Init().WithApiInfo("redis", APIVersion, "DescribeInstancePasswordPolicy")
+    
+    
+    return
+}
+
+func NewDescribeInstancePasswordPolicyResponse() (response *DescribeInstancePasswordPolicyResponse) {
+    response = &DescribeInstancePasswordPolicyResponse{
+        BaseResponse: &tchttp.BaseResponse{},
+    } 
+    return
+
+}
+
+// DescribeInstancePasswordPolicy
+// 查询指定实例当前密码复杂度配置
+//
+// 可能返回的错误码:
+//  RESOURCENOTFOUND_INSTANCENOTEXISTS = "ResourceNotFound.InstanceNotExists"
+func (c *Client) DescribeInstancePasswordPolicy(request *DescribeInstancePasswordPolicyRequest) (response *DescribeInstancePasswordPolicyResponse, err error) {
+    return c.DescribeInstancePasswordPolicyWithContext(context.Background(), request)
+}
+
+// DescribeInstancePasswordPolicy
+// 查询指定实例当前密码复杂度配置
+//
+// 可能返回的错误码:
+//  RESOURCENOTFOUND_INSTANCENOTEXISTS = "ResourceNotFound.InstanceNotExists"
+func (c *Client) DescribeInstancePasswordPolicyWithContext(ctx context.Context, request *DescribeInstancePasswordPolicyRequest) (response *DescribeInstancePasswordPolicyResponse, err error) {
+    if request == nil {
+        request = NewDescribeInstancePasswordPolicyRequest()
+    }
+    c.InitBaseRequest(&request.BaseRequest, "redis", APIVersion, "DescribeInstancePasswordPolicy")
+    
+    if c.GetCredential() == nil {
+        return nil, errors.New("DescribeInstancePasswordPolicy require credential")
+    }
+
+    request.SetContext(ctx)
+    
+    response = NewDescribeInstancePasswordPolicyResponse()
+    err = c.Send(request, response)
+    return
+}
+
 func NewDescribeInstanceSecurityGroupRequest() (request *DescribeInstanceSecurityGroupRequest) {
     request = &DescribeInstanceSecurityGroupRequest{
         BaseRequest: &tchttp.BaseRequest{},
@@ -3556,15 +3606,10 @@ func NewDescribeLogsResponse() (response *DescribeLogsResponse) {
 // 查询日志
 //
 // 可能返回的错误码:
-//  FAILEDOPERATION_SYSTEMERROR = "FailedOperation.SystemError"
-//  FAILEDOPERATION_UNKNOWN = "FailedOperation.Unknown"
-//  INTERNALERROR_DBOPERATIONFAILED = "InternalError.DbOperationFailed"
-//  INVALIDPARAMETER = "InvalidParameter"
-//  INVALIDPARAMETER_EMPTYPARAM = "InvalidParameter.EmptyParam"
-//  INVALIDPARAMETER_INVALIDPARAMETER = "InvalidParameter.InvalidParameter"
-//  INVALIDPARAMETER_PERMISSIONDENIED = "InvalidParameter.PermissionDenied"
-//  UNAUTHORIZEDOPERATION_NOCAMAUTHED = "UnauthorizedOperation.NoCAMAuthed"
-//  UNSUPPORTEDOPERATION = "UnsupportedOperation"
+//  FAILEDOPERATION_SERVICEACCESSERROR = "FailedOperation.ServiceAccessError"
+//  INVALIDPARAMETER_INVALIDPARAMETERERROR = "InvalidParameter.InvalidParameterError"
+//  INVALIDPARAMETERVALUE_DATACONVERTERROR = "InvalidParameterValue.DataConvertError"
+//  INVALIDPARAMETERVALUE_INVALIDPARAMETERVALUEERROR = "InvalidParameterValue.InvalidParameterValueError"
 func (c *Client) DescribeLogs(request *DescribeLogsRequest) (response *DescribeLogsResponse, err error) {
     return c.DescribeLogsWithContext(context.Background(), request)
 }
@@ -3573,15 +3618,10 @@ func (c *Client) DescribeLogs(request *DescribeLogsRequest) (response *DescribeL
 // 查询日志
 //
 // 可能返回的错误码:
-//  FAILEDOPERATION_SYSTEMERROR = "FailedOperation.SystemError"
-//  FAILEDOPERATION_UNKNOWN = "FailedOperation.Unknown"
-//  INTERNALERROR_DBOPERATIONFAILED = "InternalError.DbOperationFailed"
-//  INVALIDPARAMETER = "InvalidParameter"
-//  INVALIDPARAMETER_EMPTYPARAM = "InvalidParameter.EmptyParam"
-//  INVALIDPARAMETER_INVALIDPARAMETER = "InvalidParameter.InvalidParameter"
-//  INVALIDPARAMETER_PERMISSIONDENIED = "InvalidParameter.PermissionDenied"
-//  UNAUTHORIZEDOPERATION_NOCAMAUTHED = "UnauthorizedOperation.NoCAMAuthed"
-//  UNSUPPORTEDOPERATION = "UnsupportedOperation"
+//  FAILEDOPERATION_SERVICEACCESSERROR = "FailedOperation.ServiceAccessError"
+//  INVALIDPARAMETER_INVALIDPARAMETERERROR = "InvalidParameter.InvalidParameterError"
+//  INVALIDPARAMETERVALUE_DATACONVERTERROR = "InvalidParameterValue.DataConvertError"
+//  INVALIDPARAMETERVALUE_INVALIDPARAMETERVALUEERROR = "InvalidParameterValue.InvalidParameterValueError"
 func (c *Client) DescribeLogsWithContext(ctx context.Context, request *DescribeLogsRequest) (response *DescribeLogsResponse, err error) {
     if request == nil {
         request = NewDescribeLogsRequest()
@@ -6159,6 +6199,64 @@ func (c *Client) ModifyInstancePasswordWithContext(ctx context.Context, request 
     request.SetContext(ctx)
     
     response = NewModifyInstancePasswordResponse()
+    err = c.Send(request, response)
+    return
+}
+
+func NewModifyInstancePasswordPolicyRequest() (request *ModifyInstancePasswordPolicyRequest) {
+    request = &ModifyInstancePasswordPolicyRequest{
+        BaseRequest: &tchttp.BaseRequest{},
+    }
+    
+    request.Init().WithApiInfo("redis", APIVersion, "ModifyInstancePasswordPolicy")
+    
+    
+    return
+}
+
+func NewModifyInstancePasswordPolicyResponse() (response *ModifyInstancePasswordPolicyResponse) {
+    response = &ModifyInstancePasswordPolicyResponse{
+        BaseResponse: &tchttp.BaseResponse{},
+    } 
+    return
+
+}
+
+// ModifyInstancePasswordPolicy
+// 本接口（ModifyInstancePasswordPolicy）用于修改实例密码复杂度。
+//
+// 可能返回的错误码:
+//  INTERNALERROR_INSTANCENOTFOUNDERROR = "InternalError.InstanceNotFoundError"
+//  RESOURCENOTFOUND_INSTANCENOTEXISTS = "ResourceNotFound.InstanceNotExists"
+//  RESOURCENOTFOUND_INSTANCENOTFOUND = "ResourceNotFound.InstanceNotFound"
+//  RESOURCEUNAVAILABLE_INSTANCENOTSUPPORTOPERATION = "ResourceUnavailable.InstanceNotSupportOperation"
+//  UNSUPPORTEDOPERATION_INSTANCENOTOPERATION = "UnsupportedOperation.InstanceNotOperation"
+func (c *Client) ModifyInstancePasswordPolicy(request *ModifyInstancePasswordPolicyRequest) (response *ModifyInstancePasswordPolicyResponse, err error) {
+    return c.ModifyInstancePasswordPolicyWithContext(context.Background(), request)
+}
+
+// ModifyInstancePasswordPolicy
+// 本接口（ModifyInstancePasswordPolicy）用于修改实例密码复杂度。
+//
+// 可能返回的错误码:
+//  INTERNALERROR_INSTANCENOTFOUNDERROR = "InternalError.InstanceNotFoundError"
+//  RESOURCENOTFOUND_INSTANCENOTEXISTS = "ResourceNotFound.InstanceNotExists"
+//  RESOURCENOTFOUND_INSTANCENOTFOUND = "ResourceNotFound.InstanceNotFound"
+//  RESOURCEUNAVAILABLE_INSTANCENOTSUPPORTOPERATION = "ResourceUnavailable.InstanceNotSupportOperation"
+//  UNSUPPORTEDOPERATION_INSTANCENOTOPERATION = "UnsupportedOperation.InstanceNotOperation"
+func (c *Client) ModifyInstancePasswordPolicyWithContext(ctx context.Context, request *ModifyInstancePasswordPolicyRequest) (response *ModifyInstancePasswordPolicyResponse, err error) {
+    if request == nil {
+        request = NewModifyInstancePasswordPolicyRequest()
+    }
+    c.InitBaseRequest(&request.BaseRequest, "redis", APIVersion, "ModifyInstancePasswordPolicy")
+    
+    if c.GetCredential() == nil {
+        return nil, errors.New("ModifyInstancePasswordPolicy require credential")
+    }
+
+    request.SetContext(ctx)
+    
+    response = NewModifyInstancePasswordPolicyResponse()
     err = c.Send(request, response)
     return
 }

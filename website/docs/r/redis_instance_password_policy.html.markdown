@@ -1,0 +1,110 @@
+---
+subcategory: "TencentDB for Redis(crs)"
+layout: "tencentcloud"
+page_title: "TencentCloud: tencentcloud_redis_instance_password_policy"
+sidebar_current: "docs-tencentcloud-resource-redis_instance_password_policy"
+description: |-
+  Provides a resource to manage Redis instance password complexity policy configuration.
+---
+
+# tencentcloud_redis_instance_password_policy
+
+Provides a resource to manage Redis instance password complexity policy configuration.
+
+## Example Usage
+
+```hcl
+data "tencentcloud_redis_zone_config" "zone" {
+  type_id = 7
+}
+
+resource "tencentcloud_vpc" "vpc" {
+  cidr_block = "10.0.0.0/16"
+  name       = "tf_redis_vpc"
+}
+
+resource "tencentcloud_subnet" "subnet" {
+  vpc_id            = tencentcloud_vpc.vpc.id
+  availability_zone = data.tencentcloud_redis_zone_config.zone.list[2].zone
+  name              = "tf_redis_subnet"
+  cidr_block        = "10.0.1.0/24"
+}
+
+resource "tencentcloud_security_group" "security_group" {
+  name = "tf-redis-sg"
+}
+
+resource "tencentcloud_security_group_lite_rule" "example" {
+  security_group_id = tencentcloud_security_group.security_group.id
+
+  ingress = [
+    "ACCEPT#192.168.1.0/24#80#TCP",
+    "DROP#8.8.8.8#80,90#UDP",
+    "DROP#0.0.0.0/0#80-90#TCP",
+  ]
+
+  egress = [
+    "ACCEPT#192.168.0.0/16#ALL#TCP",
+    "ACCEPT#10.0.0.0/8#ALL#ICMP",
+    "DROP#0.0.0.0/0#ALL#ALL",
+  ]
+}
+
+resource "tencentcloud_redis_instance" "example" {
+  availability_zone  = data.tencentcloud_redis_zone_config.zone.list[2].zone
+  type_id            = data.tencentcloud_redis_zone_config.zone.list[2].type_id
+  password           = "Password@123"
+  mem_size           = 8192
+  redis_shard_num    = data.tencentcloud_redis_zone_config.zone.list[2].redis_shard_nums[0]
+  redis_replicas_num = data.tencentcloud_redis_zone_config.zone.list[2].redis_replicas_nums[0]
+  name               = "tf_example"
+  port               = 6379
+  vpc_id             = tencentcloud_vpc.vpc.id
+  subnet_id          = tencentcloud_subnet.subnet.id
+  security_groups    = [tencentcloud_security_group.security_group.id]
+}
+
+resource "tencentcloud_redis_instance_password_policy" "example" {
+  instance_id = tencentcloud_redis_instance.example.id
+
+  password_policy {
+    enabled           = true
+    min_letter_count  = 1
+    min_digit_count   = 1
+    min_special_count = 1
+    min_length        = 8
+  }
+}
+```
+
+## Argument Reference
+
+The following arguments are supported:
+
+* `instance_id` - (Required, String, ForceNew) The ID of the Redis instance.
+* `password_policy` - (Required, List) Password complexity policy configuration.
+
+The `password_policy` object supports the following:
+
+* `enabled` - (Required, Bool) Whether to enable password complexity policy. true: enabled, false: disabled.
+* `min_digit_count` - (Optional, Int) Minimum number of digits. Range: [1, 16]. Default: 1.
+* `min_length` - (Optional, Int) Minimum total password length. Range: [8, 64]. Default: 8.
+* `min_letter_count` - (Optional, Int) Minimum number of letters. Range: [1, 16]. Default: 1.
+* `min_special_count` - (Optional, Int) Minimum number of special characters. Range: [1, 16]. Default: 1.
+
+## Attributes Reference
+
+In addition to all arguments above, the following attributes are exported:
+
+* `id` - ID of the resource.
+
+
+
+## Import
+
+Redis instance password policy can be imported using the instance ID, e.g.
+
+```
+terraform import tencentcloud_redis_instance_password_policy.example crs-c1nl9rpv
+```
+

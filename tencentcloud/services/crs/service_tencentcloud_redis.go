@@ -2346,3 +2346,52 @@ func (me *RedisService) DescribeRedisAuditLogById(ctx context.Context, instanceI
 	instance = response.Response.Items[0]
 	return
 }
+
+func (me *RedisService) DescribeRedisInstancePasswordPolicyById(ctx context.Context, instanceId string) (passwordPolicy *redis.PasswordPolicy, errRet error) {
+	logId := tccommon.GetLogId(ctx)
+
+	request := redis.NewDescribeInstancePasswordPolicyRequest()
+	response := redis.NewDescribeInstancePasswordPolicyResponse()
+	request.InstanceId = &instanceId
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	err := resource.Retry(tccommon.ReadRetryTimeout, func() *resource.RetryError {
+		ratelimit.Check(request.GetAction())
+		result, e := me.client.UseRedisClient().DescribeInstancePasswordPolicy(request)
+		if e != nil {
+			if sdkErr, ok := e.(*sdkErrors.TencentCloudSDKError); ok {
+				if sdkErr.Code == RedisInstanceNotFound {
+					return resource.NonRetryableError(e)
+				}
+			}
+			return tccommon.RetryError(e)
+		} else {
+			log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), result.ToJsonString())
+		}
+
+		response = result
+		return nil
+	})
+
+	if err != nil {
+		if sdkErr, ok := err.(*sdkErrors.TencentCloudSDKError); ok {
+			if sdkErr.Code == RedisInstanceNotFound {
+				return
+			}
+		}
+		errRet = err
+		return
+	}
+
+	if response.Response == nil || response.Response.PasswordPolicy == nil {
+		return
+	}
+
+	passwordPolicy = response.Response.PasswordPolicy
+	return
+}

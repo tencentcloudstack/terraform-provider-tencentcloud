@@ -1692,6 +1692,7 @@ func Provider() *schema.Provider {
 			"tencentcloud_redis_connection_config":                                                  crs.ResourceTencentCloudRedisConnectionConfig(),
 			"tencentcloud_redis_param":                                                              crs.ResourceTencentCloudRedisParam(),
 			"tencentcloud_redis_read_only":                                                          crs.ResourceTencentCloudRedisReadOnly(),
+			"tencentcloud_redis_instance_password_policy":                                           crs.ResourceTencentCloudRedisInstancePasswordPolicyConfig(),
 			"tencentcloud_redis_ssl":                                                                crs.ResourceTencentCloudRedisSsl(),
 			"tencentcloud_redis_backup_download_restriction":                                        crs.ResourceTencentCloudRedisBackupDownloadRestriction(),
 			"tencentcloud_redis_clear_instance_operation":                                           crs.ResourceTencentCloudRedisClearInstanceOperation(),
