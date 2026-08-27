@@ -72,11 +72,3 @@ resource "tencentcloud_mysql_clone_instance" "example" {
   }
 }
 ```
-
-Import
-
-TencentDB for MySQL (CDB) clone instance can be imported using the cloned instance id, e.g.
-
-```
-terraform import tencentcloud_mysql_clone_instance.example cdb-bcet7sdb
-```

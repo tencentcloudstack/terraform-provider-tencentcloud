@@ -21,9 +21,6 @@ func ResourceTencentCloudMysqlCloneInstance() *schema.Resource {
 		Read:   resourceTencentCloudMysqlCloneInstanceRead,
 		Update: resourceTencentCloudMysqlCloneInstanceUpdate,
 		Delete: resourceTencentCloudMysqlCloneInstanceDelete,
-		Importer: &schema.ResourceImporter{
-			State: schema.ImportStatePassthrough,
-		},
 		Timeouts: &schema.ResourceTimeout{
 			Create: schema.DefaultTimeout(60 * time.Minute),
 			Update: schema.DefaultTimeout(60 * time.Minute),
@@ -288,12 +285,6 @@ func ResourceTencentCloudMysqlCloneInstance() *schema.Resource {
 				Optional:    true,
 				Description: "Slave 3 zone. Updatable via `UpgradeDBInstance`.",
 			},
-
-			"async_request_id": {
-				Type:        schema.TypeString,
-				Computed:    true,
-				Description: "Async request ID returned by Create/Update APIs.",
-			},
 		},
 	}
 }
@@ -497,8 +488,6 @@ func resourceTencentCloudMysqlCloneInstanceCreate(d *schema.ResourceData, meta i
 		log.Printf("[CRITAL]%s create mysql_clone_instance failed, reason:%+v", logId, reqErr)
 		return reqErr
 	}
-
-	_ = d.Set("async_request_id", asyncRequestId)
 
 	err := resource.Retry(d.Timeout(schema.TimeoutCreate), func() *resource.RetryError {
 		taskStatus, message, err := service.DescribeAsyncRequestInfo(ctx, asyncRequestId)
@@ -778,8 +767,6 @@ func resourceTencentCloudMysqlCloneInstanceUpdate(d *schema.ResourceData, meta i
 			log.Printf("[CRITAL]%s update mysql_clone_instance failed, reason:%+v", logId, reqErr)
 			return reqErr
 		}
-
-		_ = d.Set("async_request_id", asyncRequestId)
 
 		err := resource.Retry(d.Timeout(schema.TimeoutUpdate), func() *resource.RetryError {
 			taskStatus, message, err := service.DescribeAsyncRequestInfo(ctx, asyncRequestId)

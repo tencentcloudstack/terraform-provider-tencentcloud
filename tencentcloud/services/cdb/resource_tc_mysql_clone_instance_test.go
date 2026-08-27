@@ -204,7 +204,6 @@ func TestMysqlCloneInstance_Update_Success(t *testing.T) {
 	patchAsyncRequestSuccessClone(patches, cdbClient)
 	patchDescribeDBInstancesClone(patches, cdbClient, "cdb-clone1234", 1, 8000, 400, 4)
 
-	meta := newMockMetaForMysqlCloneInstance()
 	res := cdb.ResourceTencentCloudMysqlCloneInstance()
 
 	state := &terraform.InstanceState{
