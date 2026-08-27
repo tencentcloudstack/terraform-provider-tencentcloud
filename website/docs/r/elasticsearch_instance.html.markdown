@@ -11,6 +11,10 @@ description: |-
 
 Provides an elasticsearch instance resource.
 
+~> **NOTE:** After executing `terraform destroy`, the resource instance will be isolated in the recycle bin(reserved for 24 hours by default). If you need to completely destroy the instance, you can set `force_delete` to `true`.
+
+~> **NOTE:** Currently, Once the `enable_cerebro` field is `true`, it cannot be `false`.
+
 ## Example Usage
 
 ### Create a basic version of elasticsearch instance paid by the hour
@@ -113,6 +117,100 @@ resource "tencentcloud_elasticsearch_instance" "example" {
     node_num  = 2
     node_type = "ES.S1.MEDIUM8"
     encrypt   = false
+  }
+}
+```
+
+### Create a elasticsearch instance with Cerebro public access enabled
+
+```hcl
+resource "tencentcloud_elasticsearch_instance" "example" {
+  instance_name       = "tf_example"
+  availability_zone   = "ap-guangzhou-6"
+  version             = "7.14.2"
+  vpc_id              = "vpc-i5yyodl9"
+  subnet_id           = "subnet-hhi88a58"
+  password            = "Password@2026"
+  license_type        = "platinum"
+  basic_security_type = 2
+  enable_cerebro      = true
+  force_delete        = true
+
+  web_node_type_info {
+    node_num  = 1
+    node_type = "ES.S1.MEDIUM4"
+  }
+
+  node_info_list {
+    type      = "dedicatedMaster"
+    node_num  = 3
+    node_type = "ES.S1.MEDIUM8"
+    encrypt   = false
+  }
+
+  node_info_list {
+    type      = "hotData"
+    node_num  = 2
+    node_type = "ES.S1.MEDIUM8"
+    encrypt   = false
+  }
+
+  es_acl {
+    white_list = [
+      "127.0.0.1",
+    ]
+  }
+
+  tags = {
+    createBy = "Terraform"
+  }
+}
+```
+
+### Create a elasticsearch instance with Cerebro private access enabled
+
+```hcl
+resource "tencentcloud_elasticsearch_instance" "example" {
+  instance_name          = "tf_example"
+  availability_zone      = "ap-guangzhou-6"
+  version                = "7.14.2"
+  vpc_id                 = "vpc-i5yyodl9"
+  subnet_id              = "subnet-hhi88a58"
+  password               = "Password@2026"
+  license_type           = "platinum"
+  basic_security_type    = 2
+  enable_cerebro         = true
+  cerebro_private_access = "OPEN"
+  cerebro_private_domain = "http://10.0.30.56:9000"
+  force_delete           = true
+
+  web_node_type_info {
+    node_num  = 1
+    node_type = "ES.S1.MEDIUM4"
+  }
+
+  node_info_list {
+    type      = "dedicatedMaster"
+    node_num  = 3
+    node_type = "ES.S1.MEDIUM8"
+    encrypt   = false
+  }
+
+  node_info_list {
+    type      = "hotData"
+    node_num  = 2
+    node_type = "ES.S1.MEDIUM8"
+    encrypt   = false
+  }
+
+  es_acl {
+    white_list = [
+      "127.0.0.1",
+    ]
+  }
+
+  tags = {
+    createBy = "Terraform"
   }
 }
 ```
@@ -271,13 +369,18 @@ The following arguments are supported:
 * `vpc_id` - (Required, String, ForceNew) The ID of a VPC network.
 * `availability_zone` - (Optional, String, ForceNew) Availability zone. When create multi-az es, this parameter must be the primary availability zone.
 * `basic_security_type` - (Optional, Int) Whether to enable X-Pack security authentication in Basic Edition 6.8 and above. Valid values are `1` and `2`. `1` is disabled, `2` is enabled, and default value is `1`. Notice: this parameter is only take effect on `basic` license.
+* `cerebro_private_access` - (Optional, String) Cerebro private network access status. Valid values are `OPEN` and `CLOSE`. Note: Cerebro configuration cannot be read back from the API, so Terraform will not detect drift if changed outside of Terraform.
+* `cerebro_private_domain` - (Optional, String) Cerebro private network custom domain. Note: Cerebro configuration cannot be read back from the API, so Terraform will not detect drift if changed outside of Terraform.
+* `cerebro_public_access` - (Optional, String) Cerebro public network access status. Valid values are `OPEN` and `CLOSE`. Note: Cerebro configuration cannot be read back from the API, so Terraform will not detect drift if changed outside of Terraform.
 * `charge_period` - (Optional, Int, ForceNew) The tenancy of the prepaid instance, and uint is month. NOTE: it only works when charge_type is set to `PREPAID`.
 * `charge_type` - (Optional, String, ForceNew) The charge type of instance. Valid values are `PREPAID` and `POSTPAID_BY_HOUR`.
 * `cos_backup` - (Optional, List) COS automatic backup information.
 * `deploy_mode` - (Optional, Int) Cluster deployment mode. Valid values are `0` and `1`. `0` is single-AZ deployment, and `1` is multi-AZ deployment. Default value is `0`.
+* `enable_cerebro` - (Optional, Bool) Whether to enable Cerebro. Note: Cerebro configuration cannot be read back from the API, so Terraform will not detect drift if changed outside of Terraform.
 * `enable_destroy_protection` - (Optional, String) Cluster destroy protection status. Valid values are `OPEN` (enable protection) and `CLOSE` (disable protection). NOTE: when destroy protection is `OPEN`, `terraform destroy` will fail at the cloud API `DeleteInstance` call until this field is set to `CLOSE`.
 * `es_acl` - (Optional, List) Kibana Access Control Configuration.
 * `es_public_acl` - (Optional, List) Public network access control list.
+* `force_delete` - (Optional, Bool) Whether to force delete the instance. Default is `false`. Set it to `true` while deleting the instance.
 * `instance_name` - (Optional, String) Name of the instance, which can contain 1 to 50 English letters, Chinese characters, digits, dashes(-), or underscores(_).
 * `kibana_private_access` - (Optional, String) Kibana private network access status. Valid values are `OPEN` and `CLOSE`.
 * `kibana_public_access` - (Optional, String) Kibana public network access status. Valid values are `OPEN` and `CLOSE`.
