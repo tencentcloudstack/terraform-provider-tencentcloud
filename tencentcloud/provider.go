@@ -2101,6 +2101,7 @@ func Provider() *schema.Provider {
 			"tencentcloud_cls_config_attachment":                                                    cls.ResourceTencentCloudClsConfigAttachment(),
 			"tencentcloud_cls_machine_group":                                                        cls.ResourceTencentCloudClsMachineGroup(),
 			"tencentcloud_cls_cos_shipper":                                                          cls.ResourceTencentCloudClsCosShipper(),
+			"tencentcloud_cls_splunk_deliver":                                                       cls.ResourceTencentCloudClsSplunkDeliver(),
 			"tencentcloud_cls_index":                                                                cls.ResourceTencentCloudClsIndex(),
 			"tencentcloud_cls_alarm":                                                                cls.ResourceTencentCloudClsAlarm(),
 			"tencentcloud_cls_alarm_notice":                                                         cls.ResourceTencentCloudClsAlarmNotice(),
