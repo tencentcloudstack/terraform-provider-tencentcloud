@@ -330,24 +330,27 @@ func ResourceTencentCloudElasticsearchInstance() *schema.Resource {
 				Description: "Whether to enable Cerebro. Note: Cerebro configuration cannot be read back from the API, so Terraform will not detect drift if changed outside of Terraform.",
 			},
 			"cerebro_public_access": {
-				Type:         schema.TypeString,
-				Optional:     true,
-				Computed:     true,
-				ValidateFunc: tccommon.ValidateAllowedStringValue(ES_CEREBRO_PUBLIC_ACCESS),
-				Description:  "Cerebro public network access status. Valid values are `OPEN` and `CLOSE`. Note: Cerebro configuration cannot be read back from the API, so Terraform will not detect drift if changed outside of Terraform.",
+				Type:        schema.TypeString,
+				Optional:    true,
+				Computed:    true,
+				Description: "Cerebro public network access status. Valid values are `OPEN` and `CLOSE`. Note: Cerebro configuration cannot be read back from the API, so Terraform will not detect drift if changed outside of Terraform.",
 			},
 			"cerebro_private_access": {
-				Type:         schema.TypeString,
-				Optional:     true,
-				Computed:     true,
-				ValidateFunc: tccommon.ValidateAllowedStringValue(ES_CEREBRO_PRIVATE_ACCESS),
-				Description:  "Cerebro private network access status. Valid values are `OPEN` and `CLOSE`. Note: Cerebro configuration cannot be read back from the API, so Terraform will not detect drift if changed outside of Terraform.",
+				Type:        schema.TypeString,
+				Optional:    true,
+				Computed:    true,
+				Description: "Cerebro private network access status. Valid values are `OPEN` and `CLOSE`. Note: Cerebro configuration cannot be read back from the API, so Terraform will not detect drift if changed outside of Terraform.",
 			},
 			"cerebro_private_domain": {
 				Type:        schema.TypeString,
 				Optional:    true,
 				Computed:    true,
 				Description: "Cerebro private network custom domain. Note: Cerebro configuration cannot be read back from the API, so Terraform will not detect drift if changed outside of Terraform.",
+			},
+			"force_delete": {
+				Type:        schema.TypeBool,
+				Optional:    true,
+				Description: "Whether to force delete the instance. Default is `false`. Set it to `true` while deleting the instance.",
 			},
 			// computed
 			"elasticsearch_domain": {
@@ -733,6 +736,87 @@ func resourceTencentCloudElasticsearchInstanceCreate(d *schema.ResourceData, met
 		}
 	}
 
+	// Cerebro
+	if v, ok := d.GetOkExists("enable_cerebro"); ok {
+		enableCerebro := v.(bool)
+		if enableCerebro {
+			err := resource.Retry(tccommon.WriteRetryTimeout, func() *resource.RetryError {
+				errRet := elasticsearchService.UpdateInstance(ctx, instanceId, "", "", "", "", "", "", 0, nil, nil, nil, nil, nil, nil, "", &enableCerebro, "", "", "")
+				if errRet != nil {
+					return tccommon.RetryError(errRet)
+				}
+				return nil
+			})
+			if err != nil {
+				return err
+			}
+			err = tencentCloudElasticsearchInstanceUpgradeWaiting(ctx, &elasticsearchService, instanceId)
+			if err != nil {
+				return err
+			}
+		}
+	}
+
+	if v, ok := d.GetOk("cerebro_public_access"); ok {
+		cerebroPublicAccess := v.(string)
+		if cerebroPublicAccess == "OPEN" {
+			err := resource.Retry(tccommon.WriteRetryTimeout, func() *resource.RetryError {
+				errRet := elasticsearchService.UpdateInstance(ctx, instanceId, "", "", "", "", "", "", 0, nil, nil, nil, nil, nil, nil, "", nil, cerebroPublicAccess, "", "")
+				if errRet != nil {
+					return tccommon.RetryError(errRet)
+				}
+				return nil
+			})
+			if err != nil {
+				return err
+			}
+			err = tencentCloudElasticsearchInstanceUpgradeWaiting(ctx, &elasticsearchService, instanceId)
+			if err != nil {
+				return err
+			}
+		}
+	}
+
+	if v, ok := d.GetOk("cerebro_private_access"); ok {
+		cerebroPrivateAccess := v.(string)
+		if cerebroPrivateAccess == "OPEN" {
+			err := resource.Retry(tccommon.WriteRetryTimeout, func() *resource.RetryError {
+				errRet := elasticsearchService.UpdateInstance(ctx, instanceId, "", "", "", "", "", "", 0, nil, nil, nil, nil, nil, nil, "", nil, "", cerebroPrivateAccess, "")
+				if errRet != nil {
+					return tccommon.RetryError(errRet)
+				}
+				return nil
+			})
+			if err != nil {
+				return err
+			}
+			err = tencentCloudElasticsearchInstanceUpgradeWaiting(ctx, &elasticsearchService, instanceId)
+			if err != nil {
+				return err
+			}
+		}
+	}
+
+	if v, ok := d.GetOk("cerebro_private_domain"); ok {
+		cerebroPrivateDomain := v.(string)
+		if cerebroPrivateDomain != "" {
+			err := resource.Retry(tccommon.WriteRetryTimeout, func() *resource.RetryError {
+				errRet := elasticsearchService.UpdateInstance(ctx, instanceId, "", "", "", "", "", "", 0, nil, nil, nil, nil, nil, nil, "", nil, "", "", cerebroPrivateDomain)
+				if errRet != nil {
+					return tccommon.RetryError(errRet)
+				}
+				return nil
+			})
+			if err != nil {
+				return err
+			}
+			err = tencentCloudElasticsearchInstanceUpgradeWaiting(ctx, &elasticsearchService, instanceId)
+			if err != nil {
+				return err
+			}
+		}
+	}
+
 	return resourceTencentCloudElasticsearchInstanceRead(d, meta)
 }
 
@@ -880,6 +964,28 @@ func resourceTencentCloudElasticsearchInstanceRead(d *schema.ResourceData, meta 
 			tags[*tag.TagKey] = *tag.TagValue
 		}
 		_ = d.Set("tags", tags)
+	}
+
+	if instance.OptionalWebServiceInfos != nil {
+		for _, item := range instance.OptionalWebServiceInfos {
+			if item.PublicAccess != nil {
+				_ = d.Set("cerebro_public_access", item.PublicAccess)
+				if *item.PublicAccess == "OPEN" {
+					_ = d.Set("enable_cerebro", true)
+				}
+			}
+
+			if item.PrivateAccess != nil {
+				_ = d.Set("cerebro_private_access", item.PrivateAccess)
+				if *item.PrivateAccess == "OPEN" {
+					_ = d.Set("enable_cerebro", true)
+				}
+			}
+
+			if item.CustomPrivateUrl != nil {
+				_ = d.Set("cerebro_private_domain", item.CustomPrivateUrl)
+			}
+		}
 	}
 
 	return nil
@@ -1671,12 +1777,14 @@ func resourceTencentCloudElasticsearchInstanceUpdate(d *schema.ResourceData, met
 func resourceTencentCloudElasticsearchInstanceDelete(d *schema.ResourceData, meta interface{}) error {
 	defer tccommon.LogElapsed("resource.tencentcloud_elasticsearch.delete")()
 
-	logId := tccommon.GetLogId(tccommon.ContextNil)
-	ctx := context.WithValue(context.TODO(), tccommon.LogIdKey, logId)
-	instanceId := d.Id()
-	elasticsearchService := ElasticsearchService{
-		client: meta.(tccommon.ProviderMeta).GetAPIV3Conn(),
-	}
+	var (
+		logId                = tccommon.GetLogId(tccommon.ContextNil)
+		ctx                  = context.WithValue(context.TODO(), tccommon.LogIdKey, logId)
+		elasticsearchService = ElasticsearchService{client: meta.(tccommon.ProviderMeta).GetAPIV3Conn()}
+		instanceId           = d.Id()
+		forceDelete          bool
+	)
+
 	err := resource.Retry(tccommon.WriteRetryTimeout, func() *resource.RetryError {
 		errRet := elasticsearchService.DeleteInstance(ctx, instanceId)
 		if errRet != nil {
@@ -1684,6 +1792,7 @@ func resourceTencentCloudElasticsearchInstanceDelete(d *schema.ResourceData, met
 		}
 		return nil
 	})
+
 	if err != nil {
 		return err
 	}
@@ -1693,13 +1802,55 @@ func resourceTencentCloudElasticsearchInstanceDelete(d *schema.ResourceData, met
 		if errRet != nil {
 			return tccommon.RetryError(errRet, tccommon.InternalError)
 		}
+
 		if instance == nil {
 			return nil
 		}
-		return resource.RetryableError(fmt.Errorf("elasticsearch instance status is %d, retry...", *instance.Status))
+
+		if instance.Status != nil && *instance.Status == -4 {
+			return nil
+		}
+
+		return resource.RetryableError(fmt.Errorf("Elasticsearch instance is still deleting, status is %d, retry...", *instance.Status))
 	})
+
 	if err != nil {
 		return err
+	}
+
+	if v, ok := d.GetOkExists("force_delete"); ok {
+		forceDelete = v.(bool)
+	}
+
+	if forceDelete {
+		err := resource.Retry(tccommon.WriteRetryTimeout, func() *resource.RetryError {
+			errRet := elasticsearchService.DeleteInstance(ctx, instanceId)
+			if errRet != nil {
+				return tccommon.RetryError(errRet)
+			}
+			return nil
+		})
+
+		if err != nil {
+			return err
+		}
+
+		err = resource.Retry(2*tccommon.ReadRetryTimeout, func() *resource.RetryError {
+			instance, errRet := elasticsearchService.DescribeInstanceById(ctx, instanceId)
+			if errRet != nil {
+				return tccommon.RetryError(errRet, tccommon.InternalError)
+			}
+
+			if instance == nil {
+				return nil
+			}
+
+			return resource.RetryableError(fmt.Errorf("Elasticsearch instance is still deleting, status is %d, retry...", *instance.Status))
+		})
+
+		if err != nil {
+			return err
+		}
 	}
 
 	return nil
