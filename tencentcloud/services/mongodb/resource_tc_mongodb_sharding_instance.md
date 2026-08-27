@@ -19,7 +19,7 @@ resource "tencentcloud_mongodb_sharding_instance" "example" {
   vpc_id          = "vpc-i5yyodl9"
   subnet_id       = "subnet-hhi88a58"
   project_id      = 0
-  password        = "Password@123"
+  password        = "Password@2026"
   mongos_cpu      = 1
   mongos_memory   = 2
   mongos_node_num = 3
@@ -41,7 +41,7 @@ resource "tencentcloud_mongodb_sharding_instance" "example" {
   vpc_id          = "vpc-i5yyodl9"
   subnet_id       = "subnet-hhi88a58"
   project_id      = 0
-  password        = "Password@123"
+  password        = "Password@2026"
   mongos_cpu      = 1
   mongos_memory   = 2
   mongos_node_num = 3
@@ -68,7 +68,7 @@ resource "tencentcloud_mongodb_sharding_instance" "example" {
   vpc_id          = "vpc-i5yyodl9"
   subnet_id       = "subnet-hhi88a58"
   project_id      = 0
-  password        = "Password@123"
+  password        = "Password@2026"
   mongos_cpu      = 1
   mongos_memory   = 2
   mongos_node_num = 3
@@ -78,6 +78,58 @@ resource "tencentcloud_mongodb_sharding_instance" "example" {
     node_name = "cmgo-xxxx_0-node-readonly0"
     zone      = "ap-guangzhou-6"
   }
+}
+```
+
+Create instance with auto encryption
+
+```hcl
+resource "tencentcloud_mongodb_sharding_instance" "example" {
+  instance_name         = "tf-example"
+  shard_quantity        = 2
+  nodes_per_shard       = 3
+  cpu                   = 2
+  memory                = 4
+  volume                = 100
+  engine_version        = "MONGO_80_WT"
+  machine_type          = "GE.LD.T1"
+  available_zone        = "ap-guangzhou-6"
+  vpc_id                = "vpc-i5yyodl9"
+  subnet_id             = "subnet-hhi88a58"
+  project_id            = 0
+  password              = "Password@2026"
+  mongos_cpu            = 1
+  mongos_memory         = 2
+  mongos_node_num       = 3
+  data_encryption       = "TDE"
+  encryption_key_source = "auto"
+}
+```
+
+Create instance with custom encryption
+
+```hcl
+resource "tencentcloud_mongodb_sharding_instance" "example" {
+  instance_name         = "tf-example"
+  shard_quantity        = 2
+  nodes_per_shard       = 3
+  cpu                   = 2
+  memory                = 4
+  volume                = 100
+  engine_version        = "MONGO_80_WT"
+  machine_type          = "GE.LD.T1"
+  available_zone        = "ap-guangzhou-6"
+  vpc_id                = "vpc-i5yyodl9"
+  subnet_id             = "subnet-hhi88a58"
+  project_id            = 0
+  password              = "Password@2026"
+  mongos_cpu            = 1
+  mongos_memory         = 2
+  mongos_node_num       = 3
+  data_encryption       = "TDE"
+  encryption_key_source = "manual"
+  key_id                = "KMS-MONGODB"
+  kms_region            = "ap-guangzhou"
 }
 ```
 

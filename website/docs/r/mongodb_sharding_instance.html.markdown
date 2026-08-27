@@ -30,7 +30,7 @@ resource "tencentcloud_mongodb_sharding_instance" "example" {
   vpc_id          = "vpc-i5yyodl9"
   subnet_id       = "subnet-hhi88a58"
   project_id      = 0
-  password        = "Password@123"
+  password        = "Password@2026"
   mongos_cpu      = 1
   mongos_memory   = 2
   mongos_node_num = 3
@@ -52,7 +52,7 @@ resource "tencentcloud_mongodb_sharding_instance" "example" {
   vpc_id          = "vpc-i5yyodl9"
   subnet_id       = "subnet-hhi88a58"
   project_id      = 0
-  password        = "Password@123"
+  password        = "Password@2026"
   mongos_cpu      = 1
   mongos_memory   = 2
   mongos_node_num = 3
@@ -79,7 +79,7 @@ resource "tencentcloud_mongodb_sharding_instance" "example" {
   vpc_id          = "vpc-i5yyodl9"
   subnet_id       = "subnet-hhi88a58"
   project_id      = 0
-  password        = "Password@123"
+  password        = "Password@2026"
   mongos_cpu      = 1
   mongos_memory   = 2
   mongos_node_num = 3
@@ -89,6 +89,58 @@ resource "tencentcloud_mongodb_sharding_instance" "example" {
     node_name = "cmgo-xxxx_0-node-readonly0"
     zone      = "ap-guangzhou-6"
   }
+}
+```
+
+### Create instance with auto encryption
+
+```hcl
+resource "tencentcloud_mongodb_sharding_instance" "example" {
+  instance_name         = "tf-example"
+  shard_quantity        = 2
+  nodes_per_shard       = 3
+  cpu                   = 2
+  memory                = 4
+  volume                = 100
+  engine_version        = "MONGO_80_WT"
+  machine_type          = "GE.LD.T1"
+  available_zone        = "ap-guangzhou-6"
+  vpc_id                = "vpc-i5yyodl9"
+  subnet_id             = "subnet-hhi88a58"
+  project_id            = 0
+  password              = "Password@2026"
+  mongos_cpu            = 1
+  mongos_memory         = 2
+  mongos_node_num       = 3
+  data_encryption       = "TDE"
+  encryption_key_source = "auto"
+}
+```
+
+### Create instance with custom encryption
+
+```hcl
+resource "tencentcloud_mongodb_sharding_instance" "example" {
+  instance_name         = "tf-example"
+  shard_quantity        = 2
+  nodes_per_shard       = 3
+  cpu                   = 2
+  memory                = 4
+  volume                = 100
+  engine_version        = "MONGO_80_WT"
+  machine_type          = "GE.LD.T1"
+  available_zone        = "ap-guangzhou-6"
+  vpc_id                = "vpc-i5yyodl9"
+  subnet_id             = "subnet-hhi88a58"
+  project_id            = 0
+  password              = "Password@2026"
+  mongos_cpu            = 1
+  mongos_memory         = 2
+  mongos_node_num       = 3
+  data_encryption       = "TDE"
+  encryption_key_source = "manual"
+  key_id                = "KMS-MONGODB"
+  kms_region            = "ap-guangzhou"
 }
 ```
 
@@ -120,11 +172,15 @@ The following arguments are supported:
 			- Basic network cannot be selected.
 * `charge_type` - (Optional, String, ForceNew) The charge type of instance. Valid values are `PREPAID` and `POSTPAID_BY_HOUR`. Default value is `POSTPAID_BY_HOUR`. Note: TencentCloud International only supports `POSTPAID_BY_HOUR`. Caution that update operation on this field will delete old instances and create new one with new charge type.
 * `cpu` - (Optional, Int) The CPU core count of the MongoDB instance after the configuration change. Unit: C. When this parameter is empty, the current CPU size of the instance is used by default. The supported CPU specifications can be obtained through the DescribeSpecInfo API.
+* `data_encryption` - (Optional, String, ForceNew) Database storage encryption setting. `No_Encryption`: Storage encryption is not used. `TDE`: Enables TDE storage encryption.
+* `encryption_key_source` - (Optional, String, ForceNew) If TDE storage encryption is selected, the key source must be specified. `auto`: Automatically generate the key. `manual`: Manually specify the key.
 * `hidden_zone` - (Optional, String) The availability zone to which the Hidden node belongs. This parameter is required in cross-AZ instance deployment.
 * `in_maintenance` - (Optional, Int) Switch time for instance configuration changes.
 	- 0: When the adjustment is completed, perform the configuration task immediately. Default is 0.
 	- 1: Perform reconfiguration tasks within the maintenance time window.
 Note: Adjusting the number of nodes and slices does not support changes within the maintenance window.
+* `key_id` - (Optional, String, ForceNew) Key ID. If `manual` is selected as the key resource, you must enter the specified key ID.
+* `kms_region` - (Optional, String, ForceNew) Key ID. If `manual` is selected as the key resource, you must enter the specified key region.
 * `mongos_cpu` - (Optional, Int) Number of mongos cpu.
 * `mongos_memory` - (Optional, Int) Mongos memory size in GB.
 * `mongos_node_num` - (Optional, Int) Number of mongos.

@@ -76,6 +76,36 @@ func ResourceTencentCloudClsDataTransform() *schema.Resource {
 							Required:    true,
 							Description: "Alias.",
 						},
+						"is_cross_account": {
+							Type:        schema.TypeBool,
+							Optional:    true,
+							Computed:    true,
+							Description: "Whether the destination topic is in another TencentCloud account. `false`: same account (default); `true`: cross-account.",
+						},
+						"role_arn": {
+							Type:        schema.TypeString,
+							Optional:    true,
+							Computed:    true,
+							Description: "In the cross-account scenario, the Role ARN value. The target account creates a role for the delivering account. Find this in the target account role list.",
+						},
+						"external_id": {
+							Type:        schema.TypeString,
+							Optional:    true,
+							Computed:    true,
+							Description: "External ID value, used for cross-account role assumption. Find this in the target account role trust policy.",
+						},
+						"topic_name": {
+							Type:        schema.TypeString,
+							Optional:    true,
+							Computed:    true,
+							Description: "Name of the destination topic. Used in cross-account scenario.",
+						},
+						"logset_name": {
+							Type:        schema.TypeString,
+							Optional:    true,
+							Computed:    true,
+							Description: "Name of the logset that contains the destination topic. Used in cross-account scenario.",
+						},
 					},
 				},
 			},
@@ -237,6 +267,26 @@ func resourceTencentCloudClsDataTransformCreate(d *schema.ResourceData, meta int
 				dataTransformResouceInfo.Alias = helper.String(v.(string))
 			}
 
+			if v, ok := dMap["is_cross_account"]; ok {
+				dataTransformResouceInfo.IsCrossAccount = helper.Bool(v.(bool))
+			}
+
+			if v, ok := dMap["role_arn"]; ok {
+				dataTransformResouceInfo.RoleARN = helper.String(v.(string))
+			}
+
+			if v, ok := dMap["external_id"]; ok {
+				dataTransformResouceInfo.ExternalId = helper.String(v.(string))
+			}
+
+			if v, ok := dMap["topic_name"]; ok {
+				dataTransformResouceInfo.TopicName = helper.String(v.(string))
+			}
+
+			if v, ok := dMap["logset_name"]; ok {
+				dataTransformResouceInfo.LogsetName = helper.String(v.(string))
+			}
+
 			request.DstResources = append(request.DstResources, &dataTransformResouceInfo)
 		}
 	}
@@ -325,6 +375,10 @@ func resourceTencentCloudClsDataTransformCreate(d *schema.ResourceData, meta int
 			log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), result.ToJsonString())
 		}
 
+		if result == nil || result.Response == nil {
+			return resource.NonRetryableError(fmt.Errorf("Create data transform failed, Response is nil."))
+		}
+
 		response = result
 		return nil
 	})
@@ -332,6 +386,10 @@ func resourceTencentCloudClsDataTransformCreate(d *schema.ResourceData, meta int
 	if err != nil {
 		log.Printf("[CRITAL]%s create cls dataTransform failed, reason:%+v", logId, err)
 		return err
+	}
+
+	if response.Response.TaskId == nil {
+		return fmt.Errorf("TaskId is nil.")
 	}
 
 	taskId = *response.Response.TaskId
@@ -389,6 +447,26 @@ func resourceTencentCloudClsDataTransformRead(d *schema.ResourceData, meta inter
 
 			if dstResources.Alias != nil {
 				dstResourcesMap["alias"] = dstResources.Alias
+			}
+
+			if dstResources.IsCrossAccount != nil {
+				dstResourcesMap["is_cross_account"] = dstResources.IsCrossAccount
+			}
+
+			if dstResources.RoleARN != nil {
+				dstResourcesMap["role_arn"] = dstResources.RoleARN
+			}
+
+			if dstResources.ExternalId != nil {
+				dstResourcesMap["external_id"] = dstResources.ExternalId
+			}
+
+			if dstResources.TopicName != nil {
+				dstResourcesMap["topic_name"] = dstResources.TopicName
+			}
+
+			if dstResources.LogsetName != nil {
+				dstResourcesMap["logset_name"] = dstResources.LogsetName
 			}
 
 			dstResourcesList = append(dstResourcesList, dstResourcesMap)
@@ -530,6 +608,26 @@ func resourceTencentCloudClsDataTransformUpdate(d *schema.ResourceData, meta int
 
 				if v, ok := dMap["alias"]; ok {
 					dataTransformResouceInfo.Alias = helper.String(v.(string))
+				}
+
+				if v, ok := dMap["is_cross_account"]; ok {
+					dataTransformResouceInfo.IsCrossAccount = helper.Bool(v.(bool))
+				}
+
+				if v, ok := dMap["role_arn"]; ok {
+					dataTransformResouceInfo.RoleARN = helper.String(v.(string))
+				}
+
+				if v, ok := dMap["external_id"]; ok {
+					dataTransformResouceInfo.ExternalId = helper.String(v.(string))
+				}
+
+				if v, ok := dMap["topic_name"]; ok {
+					dataTransformResouceInfo.TopicName = helper.String(v.(string))
+				}
+
+				if v, ok := dMap["logset_name"]; ok {
+					dataTransformResouceInfo.LogsetName = helper.String(v.(string))
 				}
 
 				request.DstResources = append(request.DstResources, &dataTransformResouceInfo)

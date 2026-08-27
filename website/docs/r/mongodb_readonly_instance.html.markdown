@@ -4,55 +4,101 @@ layout: "tencentcloud"
 page_title: "TencentCloud: tencentcloud_mongodb_readonly_instance"
 sidebar_current: "docs-tencentcloud-resource-mongodb_readonly_instance"
 description: |-
-  Provide a resource to create a Readonly mongodb instance.
+  Provide a resource to create a Mongodb readonly instance.
 ---
 
 # tencentcloud_mongodb_readonly_instance
 
-Provide a resource to create a Readonly mongodb instance.
+Provide a resource to create a Mongodb readonly instance.
 
 ## Example Usage
 
 ### Replset readonly instance
 
 ```hcl
-resource "tencentcloud_mongodb_readonly_instance" "mongodb" {
-  instance_name          = "tf-mongodb-readonly-test"
+resource "tencentcloud_mongodb_instance" "example" {
+  instance_name         = "tf-example"
+  cpu                   = 2
+  memory                = 4
+  volume                = 100
+  engine_version        = "MONGO_80_WT"
+  machine_type          = "GE.LD.T1"
+  available_zone        = "ap-guangzhou-6"
+  vpc_id                = "vpc-i5yyodl9"
+  subnet_id             = "subnet-hhi88a58"
+  project_id            = 0
+  password              = "Password@2026"
+  data_encryption       = "TDE"
+  encryption_key_source = "manual"
+  key_id                = "KMS-MONGODB"
+  kms_region            = "ap-guangzhou"
+}
+
+resource "tencentcloud_mongodb_readonly_instance" "example" {
+  instance_name          = "tf-mongodb"
+  cpu                    = 2
   memory                 = 4
   volume                 = 100
-  engine_version         = "MONGO_44_WT"
-  machine_type           = "HIO10G"
-  available_zone         = "ap-guangzhou-3"
+  engine_version         = "MONGO_80_WT"
+  machine_type           = "GE.LD.T1"
+  available_zone         = "ap-guangzhou-7"
   project_id             = 0
-  father_instance_id     = "cmgo-xxxxxx"
+  father_instance_id     = tencentcloud_mongodb_instance.example.id
   father_instance_region = "ap-guangzhou"
-  vpc_id                 = "vpc-xxxxxx"
-  subnet_id              = "subnet-xxxxxx"
-  security_groups        = ["sg-xxxxxx"]
+  vpc_id                 = "vpc-i5yyodl9"
+  subnet_id              = "subnet-d4umunpy"
+  security_groups        = ["sg-n8zf5ry9"]
   cluster_type           = "REPLSET"
+  data_encryption        = "No_Encryption"
 }
 ```
 
-### Shard readonly instance
+### Sharding readonly instance
 
 ```hcl
-resource "tencentcloud_mongodb_readonly_instance" "sharding_mongodb" {
-  instance_name          = "tf-mongodb-readonly-shard"
+resource "tencentcloud_mongodb_sharding_instance" "example" {
+  instance_name         = "tf-example"
+  shard_quantity        = 2
+  nodes_per_shard       = 3
+  cpu                   = 2
+  memory                = 4
+  volume                = 100
+  engine_version        = "MONGO_80_WT"
+  machine_type          = "GE.LD.T1"
+  available_zone        = "ap-guangzhou-6"
+  vpc_id                = "vpc-i5yyodl9"
+  subnet_id             = "subnet-hhi88a58"
+  project_id            = 0
+  password              = "Password@2026"
+  mongos_cpu            = 1
+  mongos_memory         = 2
+  mongos_node_num       = 3
+  data_encryption       = "TDE"
+  encryption_key_source = "auto"
+}
+
+resource "tencentcloud_mongodb_readonly_instance" "example" {
+  instance_name          = "tf-mongodb"
+  cpu                    = 2
   memory                 = 4
   volume                 = 100
-  engine_version         = "MONGO_44_WT"
-  machine_type           = "HIO10G"
-  available_zone         = "ap-guangzhou-3"
+  engine_version         = "MONGO_80_WT"
+  machine_type           = "GE.LD.T1"
+  available_zone         = "ap-guangzhou-7"
   project_id             = 0
-  father_instance_id     = "cmgo-xxxxxx"
+  father_instance_id     = tencentcloud_mongodb_sharding_instance.example.id
   father_instance_region = "ap-guangzhou"
-  vpc_id                 = "vpc-xxxxxx"
-  subnet_id              = "subnet-xxxxxx"
-  security_groups        = ["sg-xxxxxx"]
+  vpc_id                 = "vpc-i5yyodl9"
+  subnet_id              = "subnet-d4umunpy"
+  security_groups        = ["sg-n8zf5ry9"]
   cluster_type           = "SHARD"
   mongos_cpu             = 1
   mongos_memory          = 2
   mongos_node_num        = 3
+  data_encryption        = "TDE"
+  encryption_key_source  = "manual"
+  key_id                 = "KMS-MONGODB"
+  kms_region             = "ap-guangzhou"
 }
 ```
 
@@ -78,10 +124,15 @@ The following arguments are supported:
 * `volume` - (Required, Int) Disk size. The minimum value is 25, and unit is GB. Memory and volume must be upgraded or degraded simultaneously.
 * `auto_renew_flag` - (Optional, Int) Auto renew flag. Valid values are `0`(NOTIFY_AND_MANUAL_RENEW), `1`(NOTIFY_AND_AUTO_RENEW) and `2`(DISABLE_NOTIFY_AND_MANUAL_RENEW). Default value is `0`. Note: only works for PREPAID instance. Only supports`0` and `1` for creation.
 * `charge_type` - (Optional, String, ForceNew) The charge type of instance. Valid values are `PREPAID` and `POSTPAID_BY_HOUR`. Default value is `POSTPAID_BY_HOUR`. Note: TencentCloud International only supports `POSTPAID_BY_HOUR`. Caution that update operation on this field will delete old instances and create new one with new charge type.
+* `cpu` - (Optional, Int) The CPU core count of the MongoDB instance after the configuration change. Unit: C. When this parameter is empty, the current CPU size of the instance is used by default. The supported CPU specifications can be obtained through the DescribeSpecInfo API.
+* `data_encryption` - (Optional, String, ForceNew) Database storage encryption setting. `No_Encryption`: Storage encryption is not used. `TDE`: Enables TDE storage encryption.
+* `encryption_key_source` - (Optional, String, ForceNew) If TDE storage encryption is selected, the key source must be specified. `auto`: Automatically generate the key. `manual`: Manually specify the key.
 * `in_maintenance` - (Optional, Int) Switch time for instance configuration changes.
 	- 0: When the adjustment is completed, perform the configuration task immediately. Default is 0.
 	- 1: Perform reconfiguration tasks within the maintenance time window.
 Note: Adjusting the number of nodes and slices does not support changes within the maintenance window.
+* `key_id` - (Optional, String, ForceNew) Key ID. If `manual` is selected as the key resource, you must enter the specified key ID.
+* `kms_region` - (Optional, String, ForceNew) Key ID. If `manual` is selected as the key resource, you must enter the specified key region.
 * `mongos_cpu` - (Optional, Int) Number of mongos cpu.
 * `mongos_memory` - (Optional, Int) Mongos memory size in GB.
 * `mongos_node_num` - (Optional, Int) Number of mongos.
@@ -108,9 +159,9 @@ In addition to all arguments above, the following attributes are exported:
 
 ## Import
 
-Mongodb instance can be imported using the id, e.g.
+Mongodb readonly instance can be imported using the id, e.g.
 
 ```
-$ terraform import tencentcloud_mongodb_instance.mongodb cmgo-xxxxxx
+terraform import tencentcloud_mongodb_instance.mongodb cmgo-7ohkcdu7
 ```
 

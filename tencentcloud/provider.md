@@ -1527,6 +1527,7 @@ tencentcloud_cls_cloud_product_log_task_v2
 tencentcloud_cls_open_service_operation
 tencentcloud_cls_dlc_deliver
 tencentcloud_cls_console
+tencentcloud_cls_metric_subscribe
 
 Data Source
 tencentcloud_cls_shipper_tasks
@@ -1595,11 +1596,13 @@ tencentcloud_teo_zones
 tencentcloud_teo_plans
 tencentcloud_teo_origin_acl
 tencentcloud_teo_default_certificate
+tencentcloud_teo_edge_kv_list
 tencentcloud_teo_environments
 tencentcloud_teo_config_group_versions
 tencentcloud_teo_config_group_version_detail
 tencentcloud_teo_deploy_config_version_history
 tencentcloud_teo_export_zone_config
+tencentcloud_teo_ip_group_references
 tencentcloud_teo_ip_region
 tencentcloud_teo_multi_path_gateways
 tencentcloud_teo_multi_path_gateway_region
@@ -1607,6 +1610,7 @@ tencentcloud_teo_multi_path_gateway_origin_acl
 tencentcloud_teo_security_ip_group_content
 tencentcloud_teo_web_security_templates
 tencentcloud_teo_content_quota
+tencentcloud_teo_billing_data
 
 Resource
 tencentcloud_teo_zone
@@ -2273,6 +2277,7 @@ tencentcloud_tag_keys
 Resource
 tencentcloud_tag
 tencentcloud_tag_attachment
+tencentcloud_tag_attachment_v2
 
 EventBridge(EB)
 Data Source

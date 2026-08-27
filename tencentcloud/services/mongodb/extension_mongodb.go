@@ -206,6 +206,34 @@ func TencentMongodbBasicInfo() map[string]*schema.Schema {
 				"	- 1: Perform reconfiguration tasks within the maintenance time window.\n" +
 				"Note: Adjusting the number of nodes and slices does not support changes within the maintenance window.",
 		},
+		// encryption
+		"data_encryption": {
+			Type:        schema.TypeString,
+			Optional:    true,
+			ForceNew:    true,
+			Computed:    true,
+			Description: "Database storage encryption setting. `No_Encryption`: Storage encryption is not used. `TDE`: Enables TDE storage encryption.",
+		},
+		"encryption_key_source": {
+			Type:        schema.TypeString,
+			Optional:    true,
+			ForceNew:    true,
+			Description: "If TDE storage encryption is selected, the key source must be specified. `auto`: Automatically generate the key. `manual`: Manually specify the key.",
+		},
+		"key_id": {
+			Type:        schema.TypeString,
+			Optional:    true,
+			ForceNew:    true,
+			Computed:    true,
+			Description: "Key ID. If `manual` is selected as the key resource, you must enter the specified key ID.",
+		},
+		"kms_region": {
+			Type:        schema.TypeString,
+			Optional:    true,
+			ForceNew:    true,
+			Computed:    true,
+			Description: "Key ID. If `manual` is selected as the key resource, you must enter the specified key region.",
+		},
 		// Computed
 		"status": {
 			Type:        schema.TypeInt,

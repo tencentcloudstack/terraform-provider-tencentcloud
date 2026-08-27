@@ -27,6 +27,30 @@ func TestAccTencentCloudClbInstanceTopic(t *testing.T) {
 					resource.TestCheckResourceAttr("tencentcloud_clb_log_topic.topic", "topic_name", "clb-topic-test"),
 				),
 			},
+			{
+				Config: testAccClbInstanceTopicWithTags,
+				Check: resource.ComposeTestCheckFunc(
+					testAccCheckClbInstanceTopicExists("tencentcloud_clb_log_topic.topic"),
+					resource.TestCheckResourceAttr("tencentcloud_clb_log_topic.topic", "topic_name", "clb-topic-test"),
+					resource.TestCheckResourceAttr("tencentcloud_clb_log_topic.topic", "tags.env", "prod"),
+				),
+			},
+			{
+				Config: testAccClbInstanceTopicWithTagsUpdate,
+				Check: resource.ComposeTestCheckFunc(
+					testAccCheckClbInstanceTopicExists("tencentcloud_clb_log_topic.topic"),
+					resource.TestCheckResourceAttr("tencentcloud_clb_log_topic.topic", "topic_name", "clb-topic-test"),
+					resource.TestCheckResourceAttr("tencentcloud_clb_log_topic.topic", "tags.team", "dev"),
+				),
+			},
+			{
+				Config: testAccClbInstanceTopic,
+				Check: resource.ComposeTestCheckFunc(
+					testAccCheckClbInstanceTopicExists("tencentcloud_clb_log_topic.topic"),
+					resource.TestCheckResourceAttr("tencentcloud_clb_log_topic.topic", "topic_name", "clb-topic-test"),
+					resource.TestCheckResourceAttr("tencentcloud_clb_log_topic.topic", "tags.%", "0"),
+				),
+			},
 		},
 	})
 }
@@ -64,5 +88,33 @@ resource "tencentcloud_clb_log_set" "set1" {
 resource "tencentcloud_clb_log_topic" "topic" {
     log_set_id = tencentcloud_clb_log_set.set1.id
     topic_name="clb-topic-test"
+}
+`
+
+const testAccClbInstanceTopicWithTags = `
+resource "tencentcloud_clb_log_set" "set1" {
+    period = 7
+}
+
+resource "tencentcloud_clb_log_topic" "topic" {
+    log_set_id = tencentcloud_clb_log_set.set1.id
+    topic_name = "clb-topic-test"
+    tags = {
+      env = "prod"
+    }
+}
+`
+
+const testAccClbInstanceTopicWithTagsUpdate = `
+resource "tencentcloud_clb_log_set" "set1" {
+    period = 7
+}
+
+resource "tencentcloud_clb_log_topic" "topic" {
+    log_set_id = tencentcloud_clb_log_set.set1.id
+    topic_name = "clb-topic-test"
+    tags = {
+      team = "dev"
+    }
 }
 `

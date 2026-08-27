@@ -4,21 +4,21 @@ layout: "tencentcloud"
 page_title: "TencentCloud: tencentcloud_teo_web_security_template"
 sidebar_current: "docs-tencentcloud-resource-teo_web_security_template"
 description: |-
-  Provides a resource to create a teo web security template
+  Provides a resource to create a TEO web security template
 ---
 
 # tencentcloud_teo_web_security_template
 
-Provides a resource to create a teo web security template
+Provides a resource to create a TEO web security template
 
-~> **NOTE:** The current resources do not support managed_rule_groups.
+~> **NOTE:** The current resources do not support `managed_rule_groups`.
 
 ## Example Usage
 
 ### Basic usage
 
 ```hcl
-resource "tencentcloud_teo_web_security_template" "web_security_template" {
+resource "tencentcloud_teo_web_security_template" "example" {
   template_name = "tf_example"
   zone_id       = "zone-3fkff38fyw8s"
   security_policy {
@@ -31,22 +31,27 @@ resource "tencentcloud_teo_web_security_template" "web_security_template" {
             high_risk_bot_requests_action {
               name = "Monitor"
             }
+
             human_requests_action {
               name = "Allow"
             }
+
             likely_bot_requests_action {
               name = "Monitor"
             }
+
             verified_bot_requests_action {
               name = "Monitor"
             }
           }
         }
+
         ip_reputation {
           enabled = "on"
           ip_reputation_group {
           }
         }
+
         known_bot_categories {
           bot_management_action_overrides {
             ids = ["9395241960"]
@@ -55,14 +60,16 @@ resource "tencentcloud_teo_web_security_template" "web_security_template" {
             }
           }
         }
+
         search_engine_bots {
           bot_management_action_overrides {
             ids = ["9126905504"]
             action {
-              name = "Deny"
+              name = "Allow"
             }
           }
         }
+
         source_idc {
           bot_management_action_overrides {
             ids = ["8868370049", "8868370048"]
@@ -72,6 +79,7 @@ resource "tencentcloud_teo_web_security_template" "web_security_template" {
           }
         }
       }
+
       browser_impersonation_detection {
         rules {
           condition = "$${http.request.uri.path} like ['/*'] and $${http.request.method} in ['get']"
@@ -84,15 +92,18 @@ resource "tencentcloud_teo_web_security_template" "web_security_template" {
                 max_new_session_count_interval  = "10s"
                 max_new_session_count_threshold = 300
               }
+
               session_expired_action {
                 name = "Deny"
               }
+
               session_invalid_action {
                 name = "Deny"
                 deny_action_parameters {
                   stall = "on"
                 }
               }
+
               session_rate_control {
                 enabled = "off"
               }
@@ -100,8 +111,9 @@ resource "tencentcloud_teo_web_security_template" "web_security_template" {
           }
         }
       }
-      client_attestation_rules {
-      }
+
+      client_attestation_rules {}
+
       custom_rules {
         rules {
           condition = "$${http.request.ip} in ['222.22.22.0/24'] and $${http.request.headers['user-agent']} contain ['cURL']"
@@ -120,6 +132,20 @@ resource "tencentcloud_teo_web_security_template" "web_security_template" {
         }
       }
     }
+
+    bot_management_lite {
+      captcha_page_challenge {
+        enabled = "on"
+      }
+
+      ai_crawler_detection {
+        enabled = "on"
+        action {
+          name = "Deny"
+        }
+      }
+    }
+
     custom_rules {
       rules {
         condition = "$${http.request.headers['user-agent']} contain ['curl/','Wget/','ApacheBench/']"
@@ -131,6 +157,7 @@ resource "tencentcloud_teo_web_security_template" "web_security_template" {
           name = "JSChallenge"
         }
       }
+
       rules {
         condition = "$${http.request.ip} in ['36']"
         enabled   = "on"
@@ -142,6 +169,7 @@ resource "tencentcloud_teo_web_security_template" "web_security_template" {
         }
       }
     }
+
     exception_rules {
       rules {
         condition                          = "$${http.request.method} in ['post'] and $${http.request.uri.path} in ['/api/EventLogUpload']"
@@ -153,6 +181,7 @@ resource "tencentcloud_teo_web_security_template" "web_security_template" {
         skip_scope                         = "WebSecurityModules"
         web_security_modules_for_exception = ["websec-mod-adaptive-control"]
       }
+
       rules {
         condition                          = "$${http.request.ip} in ['123.123.123.0/24']"
         enabled                            = "on"
@@ -164,6 +193,7 @@ resource "tencentcloud_teo_web_security_template" "web_security_template" {
         web_security_modules_for_exception = ["websec-mod-adaptive-control", "websec-mod-bot", "websec-mod-custom-rules", "websec-mod-managed-rules", "websec-mod-rate-limiting"]
       }
     }
+
     http_ddos_protection {
       adaptive_frequency_control {
         enabled     = "on"
@@ -175,12 +205,14 @@ resource "tencentcloud_teo_web_security_template" "web_security_template" {
           }
         }
       }
+
       bandwidth_abuse_defense {
         enabled = "on"
         action {
           name = "Deny"
         }
       }
+
       client_filtering {
         enabled = "on"
         action {
@@ -190,22 +222,26 @@ resource "tencentcloud_teo_web_security_template" "web_security_template" {
           }
         }
       }
+
       slow_attack_defense {
         enabled = "on"
         action {
           name = "Deny"
         }
+
         minimal_request_body_transfer_rate {
           counting_period                     = "60s"
           enabled                             = "off"
           minimal_avg_transfer_rate_threshold = "80bps"
         }
+
         request_body_transfer_timeout {
           enabled      = "off"
           idle_timeout = "5s"
         }
       }
     }
+
     rate_limiting_rules {
       rules {
         action_duration       = "30m"
@@ -224,12 +260,14 @@ resource "tencentcloud_teo_web_security_template" "web_security_template" {
         }
       }
     }
+
     default_deny_security_action_parameters {
       managed_rules {
         return_custom_page = "on"
         response_code      = "567"
         error_page_id      = "default"
       }
+
       other_modules {
         return_custom_page = "on"
         response_code      = "567"
@@ -257,6 +295,13 @@ The `action` object of `adaptive_frequency_control` supports the following:
 * `deny_action_parameters` - (Optional, List) Additional parameters when Name is Deny.
 * `redirect_action_parameters` - (Optional, List) Additional parameter when Name is Redirect.
 * `return_custom_page_action_parameters` - (Optional, List) To be deprecated, additional parameter when Name is ReturnCustomPage.
+
+The `action` object of `ai_crawler_detection` supports the following:
+
+* `name` - (Required, String) The security action name. Valid values: `Deny`, `Monitor`, `Allow`, `Challenge`.
+* `allow_action_parameters` - (Optional, List) Additional parameters when Name is Allow.
+* `challenge_action_parameters` - (Optional, List) Additional parameters when Name is Challenge.
+* `deny_action_parameters` - (Optional, List) Additional parameters when Name is Deny.
 
 The `action` object of `bandwidth_abuse_defense` supports the following:
 
@@ -333,6 +378,16 @@ The `adaptive_frequency_control` object of `http_ddos_protection` supports the f
 * `enabled` - (Required, String) Whether adaptive frequency control is enabled. valid values: - on: enable; - off: disable.
 * `action` - (Optional, List) The handling method of adaptive frequency control. this field is required when Enabled is on. valid values for SecurityAction Name: - Monitor: observation; - Deny: block; - Challenge: Challenge, where ChallengeActionParameters.Name only supports JSChallenge.
 * `sensitivity` - (Optional, String) The restriction level of adaptive frequency control. required when Enabled is on. valid values: - Loose: Loose- Moderate: Moderate- Strict: Strict.
+
+The `ai_crawler_detection` object of `bot_management_lite` supports the following:
+
+* `enabled` - (Required, String) Whether AI crawler detection is enabled. Valid values: `on`, `off`.
+* `action` - (Optional, List) Execution action when Enabled is on. When Enabled is on, this field is required. SecurityAction Name value supports: Deny, Monitor, Allow, Challenge.
+
+The `allow_action_parameters` object of `action` supports the following:
+
+* `max_delay_time` - (Optional, String) Maximum delay response time. Supported unit: seconds, range 5-10.
+* `min_delay_time` - (Optional, String) Minimum delay response time. Supported unit: seconds, range 0-5.
 
 The `allow_action_parameters` object of `action` supports the following:
 
@@ -589,6 +644,11 @@ The `bot_management_action_overrides` object of `source_idc` supports the follow
 * `action` - (Optional, List) Specifies the handling action for Bot rule items in Ids. valid values for the Name parameter in SecurityAction: - Deny: block;- Monitor: observe;- Disabled: Disabled, disable the specified rule;- Challenge: Challenge, where ChallengeOption in ChallengeActionParameters supports JSChallenge and ManagedChallenge;- Allow: pass (only for Bot basic feature management).
 * `ids` - (Optional, Set) Specific item under Bot rules used to rewrite the configuration content of this single rule. refer to the returned message from the DescribeBotManagedRules API for detailed information corresponding to Ids.
 
+The `bot_management_lite` object of `security_policy` supports the following:
+
+* `ai_crawler_detection` - (Optional, List) AI crawler detection configuration.
+* `captcha_page_challenge` - (Optional, List) CAPTCHA page challenge configuration.
+
 The `bot_management` object of `security_policy` supports the following:
 
 * `basic_bot_settings` - (Optional, List) Bot management basic configuration. takes effect on all domains associated with the policy. can be customized through CustomRules.
@@ -616,11 +676,21 @@ The `browser_impersonation_detection` object of `bot_management` supports the fo
 
 * `rules` - (Optional, List) List of browser spoofing identification Rules. When using ModifySecurityPolicy to modify Web protection configuration: - if Rules parameter in SecurityPolicy.BotManagement.BrowserImpersonationDetection is not specified or parameter length is zero: clear all browser spoofing identification rule configurations; - if BrowserImpersonationDetection parameter value is unspecified in SecurityPolicy.BotManagement parameters: keep existing browser spoofing identification rule configurations without modification.
 
+The `captcha_page_challenge` object of `bot_management_lite` supports the following:
+
+* `enabled` - (Required, String) Whether CAPTCHA page challenge is enabled. Valid values: `on`, `off`.
+
 The `challenge_action_parameters` object of `action` supports the following:
 
 * `challenge_option` - (Required, String) Safe execution challenge actions. valid values: -  InterstitialChallenge: interstitial challenge; -  InlineChallenge: embedded challenge; -  JSChallenge: JavaScript challenge; -  ManagedChallenge: managed challenge.
 * `attester_id` - (Optional, String) Client authentication method ID. this field is required when Name is InterstitialChallenge/InlineChallenge.
 * `interval` - (Optional, String) Specifies the time interval for challenge repetition. this field is required when Name is InterstitialChallenge/InlineChallenge. default value is 300s. supported units: - s: second, value ranges from 1 to 60;- m: minute, value ranges from 1 to 60;- h: hour, value ranges from 1 to 24.
+
+The `challenge_action_parameters` object of `action` supports the following:
+
+* `challenge_option` - (Required, String) The specific challenge action to be executed safely. Valid values: `JSChallenge`, `ManagedChallenge`.
+* `attester_id` - (Optional, String) Client authentication method ID.
+* `interval` - (Optional, String) The time interval for repeating the challenge.
 
 The `challenge_action_parameters` object of `base_action` supports the following:
 
@@ -793,6 +863,15 @@ The `deny_action_parameters` object of `action` supports the following:
 * `response_code` - (Optional, String) Status code of the custom page.
 * `return_custom_page` - (Optional, String) Specifies whether to use a custom page. valid values:. - `on`: Enable; - off: Disable. Enabled, use custom page content to intercept requests. when this option is enabled, ResponseCode and ErrorPageId parameters must be specified simultaneously.Note: this option cannot intersect with the BlockIp or Stall option.
 * `stall` - (Optional, String) Specifies whether to suspend the request source without processing. valid values:. - `on`: Enable;  - off: Disable.  Enabled, no longer responds to requests in the current connection session and does not actively disconnect. used for crawler combat to consume client connection resources. Note: this option cannot intersect with BlockIp or ReturnCustomPage options.
+
+The `deny_action_parameters` object of `action` supports the following:
+
+* `block_ip_duration` - (Optional, String) When BlockIP is on, the IP blocking duration.
+* `block_ip` - (Optional, String) Whether to extend the blocking of source IP. Valid values: `on`, `off`.
+* `error_page_id` - (Optional, String) The PageId of the custom page.
+* `response_code` - (Optional, String) Customize the status code of the page.
+* `return_custom_page` - (Optional, String) Whether to use custom pages. Valid values: `on`, `off`.
+* `stall` - (Optional, String) Whether to ignore the request source suspension. Valid values: `on`, `off`.
 
 The `deny_action_parameters` object of `base_action` supports the following:
 
@@ -1369,6 +1448,7 @@ The `security_action` object of `action` supports the following:
 
 The `security_policy` object supports the following:
 
+* `bot_management_lite` - (Optional, List) Basic Bot management configuration.
 * `bot_management` - (Optional, List) Bot management configuration.
 * `custom_rules` - (Optional, List) Custom rules. If the parameter is null or not filled, the configuration last set will be used by default. Note: This field may return null, indicating that no valid value can be obtained.
 * `default_deny_security_action_parameters` - (Optional, List) Default deny security action parameters configuration.
@@ -1431,14 +1511,14 @@ The `verified_bot_requests_action` object of `bot_ratings` supports the followin
 In addition to all arguments above, the following attributes are exported:
 
 * `id` - ID of the resource.
-
+* `template_id` - Template ID.
 
 
 ## Import
 
-teo web security template can be imported using the id, e.g.
+TEO web security template can be imported using the zoneId#templateId, e.g.
 
 ```
-terraform import tencentcloud_teo_web_security_template.example zone-3fkff38fyw8s#temp-rpccs7c6
+terraform import tencentcloud_teo_web_security_template.example zone-3fkff38fyw8s#temp-3u86ilp39yyn
 ```
 

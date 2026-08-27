@@ -255,74 +255,57 @@ type AlarmInfo struct {
 }
 
 type AlarmNotice struct {
-	// 告警通知渠道组名称。
+	// <p>告警通知渠道组名称。</p>
 	Name *string `json:"Name,omitnil,omitempty" name:"Name"`
 
-	// 告警通知渠道组绑定的标签信息。
+	// <p>告警通知渠道组绑定的标签信息。</p>
 	Tags []*Tag `json:"Tags,omitnil,omitempty" name:"Tags"`
 
-	// 告警模板的类型。可选值：
-	// <br><li> Trigger - 告警触发</li>
-	// <br><li> Recovery - 告警恢复</li>
-	// <br><li> All - 告警触发和告警恢复</li>
+	// <p>告警模板的类型。可选值：<br><br><li> Trigger - 告警触发</li><br><br><li> Recovery - 告警恢复</li><br><br><li> All - 告警触发和告警恢复</li></p>
 	Type *string `json:"Type,omitnil,omitempty" name:"Type"`
 
-	// 告警通知模板接收者信息。
+	// <p>告警通知模板接收者信息。</p>
 	NoticeReceivers []*NoticeReceiver `json:"NoticeReceivers,omitnil,omitempty" name:"NoticeReceivers"`
 
-	// 告警通知模板回调信息。
+	// <p>告警通知模板回调信息。</p>
 	WebCallbacks []*WebCallback `json:"WebCallbacks,omitnil,omitempty" name:"WebCallbacks"`
 
-	// 告警通知模板ID。
+	// <p>告警通知模板ID。</p>
 	AlarmNoticeId *string `json:"AlarmNoticeId,omitnil,omitempty" name:"AlarmNoticeId"`
 
-	// 通知规则。
+	// <p>通知规则。</p>
 	NoticeRules []*NoticeRule `json:"NoticeRules,omitnil,omitempty" name:"NoticeRules"`
 
-	// 免登录操作告警开关。
-	// 参数值： 1：关闭 2：开启（默认开启）
+	// <p>免登录操作告警开关。<br>参数值： 1：关闭 2：开启（默认开启）</p>
 	AlarmShieldStatus *uint64 `json:"AlarmShieldStatus,omitnil,omitempty" name:"AlarmShieldStatus"`
 
-	// 调用链接域名。http:// 或者 https:// 开头，不能/结尾
+	// <p>告警详情需要安全认证登录开关，未传时默认&quot;关闭&quot;</p><p>枚举值：</p><ul><li>1： 关闭（默认值）</li><li>2： 开启</li></ul>
+	SecureDetailStatus *uint64 `json:"SecureDetailStatus,omitnil,omitempty" name:"SecureDetailStatus"`
+
+	// <p>调用链接域名。http:// 或者 https:// 开头，不能/结尾</p>
 	JumpDomain *string `json:"JumpDomain,omitnil,omitempty" name:"JumpDomain"`
 
-	// 投递相关信息。
+	// <p>投递相关信息。</p>
 	// 注意：此字段可能返回 null，表示取不到有效值。
 	AlarmNoticeDeliverConfig *AlarmNoticeDeliverConfig `json:"AlarmNoticeDeliverConfig,omitnil,omitempty" name:"AlarmNoticeDeliverConfig"`
 
-	// 创建时间。格式： YYYY-MM-DD HH:MM:SS
+	// <p>创建时间。格式： YYYY-MM-DD HH:MM:SS</p>
 	CreateTime *string `json:"CreateTime,omitnil,omitempty" name:"CreateTime"`
 
-	// 最近更新时间。格式： YYYY-MM-DD HH:MM:SS
+	// <p>最近更新时间。格式： YYYY-MM-DD HH:MM:SS</p>
 	UpdateTime *string `json:"UpdateTime,omitnil,omitempty" name:"UpdateTime"`
 
-	// 投递日志开关。
-	// 
-	// 参数值：
-	// 
-	// 1：关闭
-	// 
-	// 2：开启 
+	// <p>投递日志开关。</p><p>参数值：</p><p>1：关闭</p><p>2：开启</p>
 	DeliverStatus *uint64 `json:"DeliverStatus,omitnil,omitempty" name:"DeliverStatus"`
 
-	// 投递日志标识。
-	// 
-	// 参数值：
-	// 
-	// 1：未启用
-	// 
-	// 2：已启用
-	// 
-	// 3：投递异常
+	// <p>投递日志标识。</p><p>参数值：</p><p>1：未启用</p><p>2：已启用</p><p>3：投递异常</p>
 	DeliverFlag *uint64 `json:"DeliverFlag,omitnil,omitempty" name:"DeliverFlag"`
 
-	// 通知渠道组配置的告警屏蔽统计状态数量信息。
+	// <p>通知渠道组配置的告警屏蔽统计状态数量信息。</p>
 	// 注意：此字段可能返回 null，表示取不到有效值。
 	AlarmShieldCount *AlarmShieldCount `json:"AlarmShieldCount,omitnil,omitempty" name:"AlarmShieldCount"`
 
-	// 统一设定自定义回调参数。
-	// -  true: 使用通知内容模板中的自定义回调参数覆盖告警策略中单独配置的请求头及请求内容。
-	// -  false:优先使用告警策略中单独配置的请求头及请求内容。
+	// <p>统一设定自定义回调参数。</p><ul><li>true: 使用通知内容模板中的自定义回调参数覆盖告警策略中单独配置的请求头及请求内容。</li><li>false:优先使用告警策略中单独配置的请求头及请求内容。</li></ul>
 	CallbackPrioritize *bool `json:"CallbackPrioritize,omitnil,omitempty" name:"CallbackPrioritize"`
 }
 
@@ -1984,102 +1967,80 @@ func (r *CreateAgentApplicationResponse) FromJsonString(s string) error {
 
 // Predefined struct for user
 type CreateAlarmNoticeRequestParams struct {
-	// 通知渠道组名称。最大支持255个字节。 不支持 '|'。
+	// <p>通知渠道组名称。最大支持255个字节。 不支持 &#39;|&#39;。</p>
 	Name *string `json:"Name,omitnil,omitempty" name:"Name"`
 
-	// 标签描述列表，通过指定该参数可以同时绑定标签到相应的通知渠道组。最大支持50个标签键值对，并且不能有重复的键值对。
+	// <p>标签描述列表，通过指定该参数可以同时绑定标签到相应的通知渠道组。最大支持50个标签键值对，并且不能有重复的键值对。</p>
 	Tags []*Tag `json:"Tags,omitnil,omitempty" name:"Tags"`
 
-	// 【简易模式】（简易模式/告警模式二选一，分别配置相应参数）
-	// 需要发送通知的告警类型。可选值：
-	// - Trigger - 告警触发
-	// - Recovery - 告警恢复
-	// - All - 告警触发和告警恢复
+	// <p>【简易模式】（简易模式/告警模式二选一，分别配置相应参数）<br>需要发送通知的告警类型。可选值：</p><ul><li>Trigger - 告警触发</li><li>Recovery - 告警恢复</li><li>All - 告警触发和告警恢复</li></ul>
 	Type *string `json:"Type,omitnil,omitempty" name:"Type"`
 
-	// 【简易模式】（简易模式/告警模式二选一，分别配置相应参数）
-	// 通知接收对象。
+	// <p>【简易模式】（简易模式/告警模式二选一，分别配置相应参数）<br>通知接收对象。</p>
 	NoticeReceivers []*NoticeReceiver `json:"NoticeReceivers,omitnil,omitempty" name:"NoticeReceivers"`
 
-	// 【简易模式】（简易模式/告警模式二选一，分别配置相应参数）
-	// 接口回调信息（包括企业微信、钉钉、飞书）。
+	// <p>【简易模式】（简易模式/告警模式二选一，分别配置相应参数）<br>接口回调信息（包括企业微信、钉钉、飞书）。</p>
 	WebCallbacks []*WebCallback `json:"WebCallbacks,omitnil,omitempty" name:"WebCallbacks"`
 
-	// 【高级模式】（简易模式/告警模式二选一，分别配置相应参数）
-	// 通知规则。
+	// <p>【高级模式】（简易模式/告警模式二选一，分别配置相应参数）<br>通知规则。</p>
 	NoticeRules []*NoticeRule `json:"NoticeRules,omitnil,omitempty" name:"NoticeRules"`
 
-	// 查询数据链接。http:// 或者 https:// 开头，不能/结尾
+	// <p>查询数据链接。http:// 或者 https:// 开头，不能/结尾</p>
 	JumpDomain *string `json:"JumpDomain,omitnil,omitempty" name:"JumpDomain"`
 
-	// 投递日志开关。可取值如下：
-	// 1：关闭（默认值）；
-	// 2：开启 
-	// 投递日志开关开启时， DeliverConfig参数必填。
+	// <p>投递日志开关。可取值如下：<br>1：关闭（默认值）；<br>2：开启<br>投递日志开关开启时， DeliverConfig参数必填。</p>
 	DeliverStatus *uint64 `json:"DeliverStatus,omitnil,omitempty" name:"DeliverStatus"`
 
-	// 投递日志配置参数。当DeliverStatus开启时，必填。
+	// <p>投递日志配置参数。当DeliverStatus开启时，必填。</p>
 	DeliverConfig *DeliverConfig `json:"DeliverConfig,omitnil,omitempty" name:"DeliverConfig"`
 
-	// 免登录操作告警开关。可取值如下：
-	// -      1：关闭
-	// -      2：开启（默认值）
+	// <p>免登录操作告警开关。可取值如下：</p><ul><li>1：关闭</li><li>2：开启（默认值）</li></ul>
 	AlarmShieldStatus *uint64 `json:"AlarmShieldStatus,omitnil,omitempty" name:"AlarmShieldStatus"`
 
-	// 统一设定自定义回调参数。
-	// -  true: 使用通知内容模板中的自定义回调参数覆盖告警策略中单独配置的请求头及请求内容。
-	// -  false:优先使用告警策略中单独配置的请求头及请求内容。
+	// <p>告警详情安全认证跳转开关，未传时默认&quot;关闭&quot;</p><p>枚举值：</p><ul><li>1： 关闭（默认值）</li><li>2： 开启</li></ul>
+	SecureDetailStatus *uint64 `json:"SecureDetailStatus,omitnil,omitempty" name:"SecureDetailStatus"`
+
+	// <p>统一设定自定义回调参数。</p><ul><li>true: 使用通知内容模板中的自定义回调参数覆盖告警策略中单独配置的请求头及请求内容。</li><li>false:优先使用告警策略中单独配置的请求头及请求内容。</li></ul>
 	CallbackPrioritize *bool `json:"CallbackPrioritize,omitnil,omitempty" name:"CallbackPrioritize"`
 }
 
 type CreateAlarmNoticeRequest struct {
 	*tchttp.BaseRequest
 	
-	// 通知渠道组名称。最大支持255个字节。 不支持 '|'。
+	// <p>通知渠道组名称。最大支持255个字节。 不支持 &#39;|&#39;。</p>
 	Name *string `json:"Name,omitnil,omitempty" name:"Name"`
 
-	// 标签描述列表，通过指定该参数可以同时绑定标签到相应的通知渠道组。最大支持50个标签键值对，并且不能有重复的键值对。
+	// <p>标签描述列表，通过指定该参数可以同时绑定标签到相应的通知渠道组。最大支持50个标签键值对，并且不能有重复的键值对。</p>
 	Tags []*Tag `json:"Tags,omitnil,omitempty" name:"Tags"`
 
-	// 【简易模式】（简易模式/告警模式二选一，分别配置相应参数）
-	// 需要发送通知的告警类型。可选值：
-	// - Trigger - 告警触发
-	// - Recovery - 告警恢复
-	// - All - 告警触发和告警恢复
+	// <p>【简易模式】（简易模式/告警模式二选一，分别配置相应参数）<br>需要发送通知的告警类型。可选值：</p><ul><li>Trigger - 告警触发</li><li>Recovery - 告警恢复</li><li>All - 告警触发和告警恢复</li></ul>
 	Type *string `json:"Type,omitnil,omitempty" name:"Type"`
 
-	// 【简易模式】（简易模式/告警模式二选一，分别配置相应参数）
-	// 通知接收对象。
+	// <p>【简易模式】（简易模式/告警模式二选一，分别配置相应参数）<br>通知接收对象。</p>
 	NoticeReceivers []*NoticeReceiver `json:"NoticeReceivers,omitnil,omitempty" name:"NoticeReceivers"`
 
-	// 【简易模式】（简易模式/告警模式二选一，分别配置相应参数）
-	// 接口回调信息（包括企业微信、钉钉、飞书）。
+	// <p>【简易模式】（简易模式/告警模式二选一，分别配置相应参数）<br>接口回调信息（包括企业微信、钉钉、飞书）。</p>
 	WebCallbacks []*WebCallback `json:"WebCallbacks,omitnil,omitempty" name:"WebCallbacks"`
 
-	// 【高级模式】（简易模式/告警模式二选一，分别配置相应参数）
-	// 通知规则。
+	// <p>【高级模式】（简易模式/告警模式二选一，分别配置相应参数）<br>通知规则。</p>
 	NoticeRules []*NoticeRule `json:"NoticeRules,omitnil,omitempty" name:"NoticeRules"`
 
-	// 查询数据链接。http:// 或者 https:// 开头，不能/结尾
+	// <p>查询数据链接。http:// 或者 https:// 开头，不能/结尾</p>
 	JumpDomain *string `json:"JumpDomain,omitnil,omitempty" name:"JumpDomain"`
 
-	// 投递日志开关。可取值如下：
-	// 1：关闭（默认值）；
-	// 2：开启 
-	// 投递日志开关开启时， DeliverConfig参数必填。
+	// <p>投递日志开关。可取值如下：<br>1：关闭（默认值）；<br>2：开启<br>投递日志开关开启时， DeliverConfig参数必填。</p>
 	DeliverStatus *uint64 `json:"DeliverStatus,omitnil,omitempty" name:"DeliverStatus"`
 
-	// 投递日志配置参数。当DeliverStatus开启时，必填。
+	// <p>投递日志配置参数。当DeliverStatus开启时，必填。</p>
 	DeliverConfig *DeliverConfig `json:"DeliverConfig,omitnil,omitempty" name:"DeliverConfig"`
 
-	// 免登录操作告警开关。可取值如下：
-	// -      1：关闭
-	// -      2：开启（默认值）
+	// <p>免登录操作告警开关。可取值如下：</p><ul><li>1：关闭</li><li>2：开启（默认值）</li></ul>
 	AlarmShieldStatus *uint64 `json:"AlarmShieldStatus,omitnil,omitempty" name:"AlarmShieldStatus"`
 
-	// 统一设定自定义回调参数。
-	// -  true: 使用通知内容模板中的自定义回调参数覆盖告警策略中单独配置的请求头及请求内容。
-	// -  false:优先使用告警策略中单独配置的请求头及请求内容。
+	// <p>告警详情安全认证跳转开关，未传时默认&quot;关闭&quot;</p><p>枚举值：</p><ul><li>1： 关闭（默认值）</li><li>2： 开启</li></ul>
+	SecureDetailStatus *uint64 `json:"SecureDetailStatus,omitnil,omitempty" name:"SecureDetailStatus"`
+
+	// <p>统一设定自定义回调参数。</p><ul><li>true: 使用通知内容模板中的自定义回调参数覆盖告警策略中单独配置的请求头及请求内容。</li><li>false:优先使用告警策略中单独配置的请求头及请求内容。</li></ul>
 	CallbackPrioritize *bool `json:"CallbackPrioritize,omitnil,omitempty" name:"CallbackPrioritize"`
 }
 
@@ -2105,6 +2066,7 @@ func (r *CreateAlarmNoticeRequest) FromJsonString(s string) error {
 	delete(f, "DeliverStatus")
 	delete(f, "DeliverConfig")
 	delete(f, "AlarmShieldStatus")
+	delete(f, "SecureDetailStatus")
 	delete(f, "CallbackPrioritize")
 	if len(f) > 0 {
 		return tcerr.NewTencentCloudSDKError("ClientError.BuildRequestError", "CreateAlarmNoticeRequest has unknown keys!", "")
@@ -2114,7 +2076,7 @@ func (r *CreateAlarmNoticeRequest) FromJsonString(s string) error {
 
 // Predefined struct for user
 type CreateAlarmNoticeResponseParams struct {
-	// 告警模板ID
+	// <p>告警模板ID</p>
 	AlarmNoticeId *string `json:"AlarmNoticeId,omitnil,omitempty" name:"AlarmNoticeId"`
 
 	// 唯一请求 ID，由服务端生成，每次请求都会返回（若请求因其他原因未能抵达服务端，则该次请求不会获得 RequestId）。定位问题时需要提供该次请求的 RequestId。
@@ -2803,106 +2765,62 @@ func (r *CreateConfigExtraResponse) FromJsonString(s string) error {
 
 // Predefined struct for user
 type CreateConfigRequestParams struct {
-	// 采集配置名称
-	// - 名称种不得包含特殊字符｜
-	// - 名称最长255字符，超过截断
+	// <p>采集配置名称</p><ul><li>名称种不得包含特殊字符｜</li><li>名称最长255字符，超过截断</li></ul>
 	Name *string `json:"Name,omitnil,omitempty" name:"Name"`
 
-	// 采集配置所属日志主题ID即TopicId
-	// - 通过[获取日志主题列表](https://cloud.tencent.com/document/product/614/56454)获取日志主题Id。
+	// <p>采集配置所属日志主题ID即TopicId</p><ul><li>通过<a href="https://cloud.tencent.com/document/product/614/56454">获取日志主题列表</a>获取日志主题Id。</li></ul>
 	Output *string `json:"Output,omitnil,omitempty" name:"Output"`
 
-	// 日志采集路径，包含文件名，支持多个路径，多个路径之间英文逗号分隔，文件采集情况下必填
+	// <p>日志采集路径，包含文件名，支持多个路径，多个路径之间英文逗号分隔，文件采集情况下必填</p>
 	Path *string `json:"Path,omitnil,omitempty" name:"Path"`
 
-	// 采集的日志类型，默认为minimalist_log。支持以下类型：
-	// - json_log代表：JSON-文件日志（详见[使用 JSON 提取模式采集日志](https://cloud.tencent.com/document/product/614/17419)）；
-	// - delimiter_log代表：分隔符-文件日志（详见[使用分隔符提取模式采集日志](https://cloud.tencent.com/document/product/614/17420)）；
-	// - minimalist_log代表：单行全文-文件日志（详见[使用单行全文提取模式采集日志](https://cloud.tencent.com/document/product/614/17421)）；
-	// - fullregex_log代表：单行完全正则-文件日志（详见[使用单行-完全正则提取模式采集日志](https://cloud.tencent.com/document/product/614/52365)）；
-	// - multiline_log代表：多行全文-文件日志（详见[使用多行全文提取模式采集日志](https://cloud.tencent.com/document/product/614/17422)）；
-	// - multiline_fullregex_log代表：多行完全正则-文件日志（详见[使用多行-完全正则提取模式采集日志](https://cloud.tencent.com/document/product/614/52366)）；
-	// - user_define_log代表：组合解析（适用于多格式嵌套的日志，详见[使用组合解析提取模式采集日志](https://cloud.tencent.com/document/product/614/61310)）；
-	// - service_syslog代表：syslog 采集（详见[采集 Syslog](https://cloud.tencent.com/document/product/614/81454)）；
-	// - windows_event_log代表：Windows事件日志（详见[采集 Windows 事件日志](https://cloud.tencent.com/document/product/614/96678)）。
+	// <p>采集的日志类型，默认为minimalist_log。支持以下类型：</p><ul><li>json_log代表：JSON-文件日志（详见<a href="https://cloud.tencent.com/document/product/614/17419">使用 JSON 提取模式采集日志</a>）；</li><li>delimiter_log代表：分隔符-文件日志（详见<a href="https://cloud.tencent.com/document/product/614/17420">使用分隔符提取模式采集日志</a>）；</li><li>minimalist_log代表：单行全文-文件日志（详见<a href="https://cloud.tencent.com/document/product/614/17421">使用单行全文提取模式采集日志</a>）；</li><li>fullregex_log代表：单行完全正则-文件日志（详见<a href="https://cloud.tencent.com/document/product/614/52365">使用单行-完全正则提取模式采集日志</a>）；</li><li>multiline_log代表：多行全文-文件日志（详见<a href="https://cloud.tencent.com/document/product/614/17422">使用多行全文提取模式采集日志</a>）；</li><li>multiline_fullregex_log代表：多行完全正则-文件日志（详见<a href="https://cloud.tencent.com/document/product/614/52366">使用多行-完全正则提取模式采集日志</a>）；</li><li>user_define_log代表：组合解析（适用于多格式嵌套的日志，详见<a href="https://cloud.tencent.com/document/product/614/61310">使用组合解析提取模式采集日志</a>）；</li><li>service_syslog代表：syslog 采集（详见<a href="https://cloud.tencent.com/document/product/614/81454">采集 Syslog</a>）；</li><li>windows_event_log代表：Windows事件日志（详见<a href="https://cloud.tencent.com/document/product/614/96678">采集 Windows 事件日志</a>）。</li><li>journal_log代表：journal日志采集</li></ul>
 	LogType *string `json:"LogType,omitnil,omitempty" name:"LogType"`
 
-	// 提取规则，如果设置了ExtractRule，则必须设置LogType
+	// <p>提取规则，如果设置了ExtractRule，则必须设置LogType</p>
 	ExtractRule *ExtractRuleInfo `json:"ExtractRule,omitnil,omitempty" name:"ExtractRule"`
 
-	// 采集黑名单路径列表
+	// <p>采集黑名单路径列表</p>
 	ExcludePaths []*ExcludePathInfo `json:"ExcludePaths,omitnil,omitempty" name:"ExcludePaths"`
 
-	// 用户自定义采集规则，Json格式序列化的字符串。当LogType为user_define_log时，必填。
+	// <p>用户自定义采集规则，Json格式序列化的字符串。当LogType为user_define_log时，必填。</p>
 	UserDefineRule *string `json:"UserDefineRule,omitnil,omitempty" name:"UserDefineRule"`
 
-	// 高级采集配置。 Json字符串， Key/Value定义为如下：
-	// - ClsAgentFileTimeout(超时属性), 取值范围: 大于等于0的整数， 0为不超时
-	// - ClsAgentMaxDepth(最大目录深度)，取值范围: 大于等于0的整数
-	// - ClsAgentParseFailMerge(合并解析失败日志)，取值范围: true或false
-	// 样例：
-	// `{\"ClsAgentFileTimeout\":0,\"ClsAgentMaxDepth\":10,\"ClsAgentParseFailMerge\":true}`
-	// 
-	// 控制台默认占位值：`{\"ClsAgentDefault\":0}`
+	// <p>高级采集配置。 Json字符串， Key/Value定义为如下：</p><ul><li>ClsAgentFileTimeout(超时属性), 取值范围: 大于等于0的整数， 0为不超时</li><li>ClsAgentMaxDepth(最大目录深度)，取值范围: 大于等于0的整数</li><li>ClsAgentParseFailMerge(合并解析失败日志)，取值范围: true或false<br>样例：<br><code>{\&quot;ClsAgentFileTimeout\&quot;:0,\&quot;ClsAgentMaxDepth\&quot;:10,\&quot;ClsAgentParseFailMerge\&quot;:true}</code></li></ul><p>控制台默认占位值：<code>{\&quot;ClsAgentDefault\&quot;:0}</code></p>
 	AdvancedConfig *string `json:"AdvancedConfig,omitnil,omitempty" name:"AdvancedConfig"`
 
-	// 日志输入类型（<span style="color:red; font-weight:bold">注：windows场景必填且仅支持file和windows_event类型</span>）
-	// - file: 文件类型采集
-	// - windows_event：windows事件采集
-	// - syslog：系统日志采集
+	// <p>日志输入类型（<span style="color:red; font-weight:bold">注：windows场景必填且仅支持file和windows_event类型</span>）</p><ul><li>file: 文件类型采集</li><li>windows_event：windows事件采集</li><li>syslog：系统日志采集</li></ul>
 	InputType *string `json:"InputType,omitnil,omitempty" name:"InputType"`
 }
 
 type CreateConfigRequest struct {
 	*tchttp.BaseRequest
 	
-	// 采集配置名称
-	// - 名称种不得包含特殊字符｜
-	// - 名称最长255字符，超过截断
+	// <p>采集配置名称</p><ul><li>名称种不得包含特殊字符｜</li><li>名称最长255字符，超过截断</li></ul>
 	Name *string `json:"Name,omitnil,omitempty" name:"Name"`
 
-	// 采集配置所属日志主题ID即TopicId
-	// - 通过[获取日志主题列表](https://cloud.tencent.com/document/product/614/56454)获取日志主题Id。
+	// <p>采集配置所属日志主题ID即TopicId</p><ul><li>通过<a href="https://cloud.tencent.com/document/product/614/56454">获取日志主题列表</a>获取日志主题Id。</li></ul>
 	Output *string `json:"Output,omitnil,omitempty" name:"Output"`
 
-	// 日志采集路径，包含文件名，支持多个路径，多个路径之间英文逗号分隔，文件采集情况下必填
+	// <p>日志采集路径，包含文件名，支持多个路径，多个路径之间英文逗号分隔，文件采集情况下必填</p>
 	Path *string `json:"Path,omitnil,omitempty" name:"Path"`
 
-	// 采集的日志类型，默认为minimalist_log。支持以下类型：
-	// - json_log代表：JSON-文件日志（详见[使用 JSON 提取模式采集日志](https://cloud.tencent.com/document/product/614/17419)）；
-	// - delimiter_log代表：分隔符-文件日志（详见[使用分隔符提取模式采集日志](https://cloud.tencent.com/document/product/614/17420)）；
-	// - minimalist_log代表：单行全文-文件日志（详见[使用单行全文提取模式采集日志](https://cloud.tencent.com/document/product/614/17421)）；
-	// - fullregex_log代表：单行完全正则-文件日志（详见[使用单行-完全正则提取模式采集日志](https://cloud.tencent.com/document/product/614/52365)）；
-	// - multiline_log代表：多行全文-文件日志（详见[使用多行全文提取模式采集日志](https://cloud.tencent.com/document/product/614/17422)）；
-	// - multiline_fullregex_log代表：多行完全正则-文件日志（详见[使用多行-完全正则提取模式采集日志](https://cloud.tencent.com/document/product/614/52366)）；
-	// - user_define_log代表：组合解析（适用于多格式嵌套的日志，详见[使用组合解析提取模式采集日志](https://cloud.tencent.com/document/product/614/61310)）；
-	// - service_syslog代表：syslog 采集（详见[采集 Syslog](https://cloud.tencent.com/document/product/614/81454)）；
-	// - windows_event_log代表：Windows事件日志（详见[采集 Windows 事件日志](https://cloud.tencent.com/document/product/614/96678)）。
+	// <p>采集的日志类型，默认为minimalist_log。支持以下类型：</p><ul><li>json_log代表：JSON-文件日志（详见<a href="https://cloud.tencent.com/document/product/614/17419">使用 JSON 提取模式采集日志</a>）；</li><li>delimiter_log代表：分隔符-文件日志（详见<a href="https://cloud.tencent.com/document/product/614/17420">使用分隔符提取模式采集日志</a>）；</li><li>minimalist_log代表：单行全文-文件日志（详见<a href="https://cloud.tencent.com/document/product/614/17421">使用单行全文提取模式采集日志</a>）；</li><li>fullregex_log代表：单行完全正则-文件日志（详见<a href="https://cloud.tencent.com/document/product/614/52365">使用单行-完全正则提取模式采集日志</a>）；</li><li>multiline_log代表：多行全文-文件日志（详见<a href="https://cloud.tencent.com/document/product/614/17422">使用多行全文提取模式采集日志</a>）；</li><li>multiline_fullregex_log代表：多行完全正则-文件日志（详见<a href="https://cloud.tencent.com/document/product/614/52366">使用多行-完全正则提取模式采集日志</a>）；</li><li>user_define_log代表：组合解析（适用于多格式嵌套的日志，详见<a href="https://cloud.tencent.com/document/product/614/61310">使用组合解析提取模式采集日志</a>）；</li><li>service_syslog代表：syslog 采集（详见<a href="https://cloud.tencent.com/document/product/614/81454">采集 Syslog</a>）；</li><li>windows_event_log代表：Windows事件日志（详见<a href="https://cloud.tencent.com/document/product/614/96678">采集 Windows 事件日志</a>）。</li><li>journal_log代表：journal日志采集</li></ul>
 	LogType *string `json:"LogType,omitnil,omitempty" name:"LogType"`
 
-	// 提取规则，如果设置了ExtractRule，则必须设置LogType
+	// <p>提取规则，如果设置了ExtractRule，则必须设置LogType</p>
 	ExtractRule *ExtractRuleInfo `json:"ExtractRule,omitnil,omitempty" name:"ExtractRule"`
 
-	// 采集黑名单路径列表
+	// <p>采集黑名单路径列表</p>
 	ExcludePaths []*ExcludePathInfo `json:"ExcludePaths,omitnil,omitempty" name:"ExcludePaths"`
 
-	// 用户自定义采集规则，Json格式序列化的字符串。当LogType为user_define_log时，必填。
+	// <p>用户自定义采集规则，Json格式序列化的字符串。当LogType为user_define_log时，必填。</p>
 	UserDefineRule *string `json:"UserDefineRule,omitnil,omitempty" name:"UserDefineRule"`
 
-	// 高级采集配置。 Json字符串， Key/Value定义为如下：
-	// - ClsAgentFileTimeout(超时属性), 取值范围: 大于等于0的整数， 0为不超时
-	// - ClsAgentMaxDepth(最大目录深度)，取值范围: 大于等于0的整数
-	// - ClsAgentParseFailMerge(合并解析失败日志)，取值范围: true或false
-	// 样例：
-	// `{\"ClsAgentFileTimeout\":0,\"ClsAgentMaxDepth\":10,\"ClsAgentParseFailMerge\":true}`
-	// 
-	// 控制台默认占位值：`{\"ClsAgentDefault\":0}`
+	// <p>高级采集配置。 Json字符串， Key/Value定义为如下：</p><ul><li>ClsAgentFileTimeout(超时属性), 取值范围: 大于等于0的整数， 0为不超时</li><li>ClsAgentMaxDepth(最大目录深度)，取值范围: 大于等于0的整数</li><li>ClsAgentParseFailMerge(合并解析失败日志)，取值范围: true或false<br>样例：<br><code>{\&quot;ClsAgentFileTimeout\&quot;:0,\&quot;ClsAgentMaxDepth\&quot;:10,\&quot;ClsAgentParseFailMerge\&quot;:true}</code></li></ul><p>控制台默认占位值：<code>{\&quot;ClsAgentDefault\&quot;:0}</code></p>
 	AdvancedConfig *string `json:"AdvancedConfig,omitnil,omitempty" name:"AdvancedConfig"`
 
-	// 日志输入类型（<span style="color:red; font-weight:bold">注：windows场景必填且仅支持file和windows_event类型</span>）
-	// - file: 文件类型采集
-	// - windows_event：windows事件采集
-	// - syslog：系统日志采集
+	// <p>日志输入类型（<span style="color:red; font-weight:bold">注：windows场景必填且仅支持file和windows_event类型</span>）</p><ul><li>file: 文件类型采集</li><li>windows_event：windows事件采集</li><li>syslog：系统日志采集</li></ul>
 	InputType *string `json:"InputType,omitnil,omitempty" name:"InputType"`
 }
 
@@ -2935,7 +2853,7 @@ func (r *CreateConfigRequest) FromJsonString(s string) error {
 
 // Predefined struct for user
 type CreateConfigResponseParams struct {
-	// 采集配置ID
+	// <p>采集配置ID</p>
 	ConfigId *string `json:"ConfigId,omitnil,omitempty" name:"ConfigId"`
 
 	// 唯一请求 ID，由服务端生成，每次请求都会返回（若请求因其他原因未能抵达服务端，则该次请求不会获得 RequestId）。定位问题时需要提供该次请求的 RequestId。
@@ -4703,38 +4621,26 @@ func (r *CreateKafkaRechargeResponse) FromJsonString(s string) error {
 
 // Predefined struct for user
 type CreateLogsetRequestParams struct {
-	// 日志集名字。
-	// 
-	// - 最大支持255个字符。不支持`|`字符。
+	// <p>日志集名字。</p><ul><li>最大支持255个字符。不支持<code>|</code>字符。</li></ul>
 	LogsetName *string `json:"LogsetName,omitnil,omitempty" name:"LogsetName"`
 
-	// 标签描述列表。最大支持10个标签键值对，并且不能有重复的键值对
+	// <p>标签描述列表。最大支持10个标签键值对，并且不能有重复的键值对</p>
 	Tags []*Tag `json:"Tags,omitnil,omitempty" name:"Tags"`
 
-	// 日志集ID，格式为：用户自定义部分-用户APPID。未填写该参数时将自动生成ID。
-	// 
-	// - 用户自定义部分仅支持小写字母、数字和-，且不能以-开头和结尾，长度为3至40字符。
-	// - 尾部需要使用-拼接用户APPID，APPID可在https://console.cloud.tencent.com/developer页面查询。
-	// - 如果指定该字段，需保证全地域唯一
+	// <p>日志集ID，格式为：用户自定义部分-用户APPID。未填写该参数时将自动生成ID。</p><ul><li>用户自定义部分仅支持小写字母、数字和-，且不能以-开头和结尾，长度为3至40字符。</li><li>尾部需要使用-拼接用户APPID，APPID可在https://console.cloud.tencent.com/developer页面查询。</li><li>如果指定该字段，需保证全地域唯一</li></ul>
 	LogsetId *string `json:"LogsetId,omitnil,omitempty" name:"LogsetId"`
 }
 
 type CreateLogsetRequest struct {
 	*tchttp.BaseRequest
 	
-	// 日志集名字。
-	// 
-	// - 最大支持255个字符。不支持`|`字符。
+	// <p>日志集名字。</p><ul><li>最大支持255个字符。不支持<code>|</code>字符。</li></ul>
 	LogsetName *string `json:"LogsetName,omitnil,omitempty" name:"LogsetName"`
 
-	// 标签描述列表。最大支持10个标签键值对，并且不能有重复的键值对
+	// <p>标签描述列表。最大支持10个标签键值对，并且不能有重复的键值对</p>
 	Tags []*Tag `json:"Tags,omitnil,omitempty" name:"Tags"`
 
-	// 日志集ID，格式为：用户自定义部分-用户APPID。未填写该参数时将自动生成ID。
-	// 
-	// - 用户自定义部分仅支持小写字母、数字和-，且不能以-开头和结尾，长度为3至40字符。
-	// - 尾部需要使用-拼接用户APPID，APPID可在https://console.cloud.tencent.com/developer页面查询。
-	// - 如果指定该字段，需保证全地域唯一
+	// <p>日志集ID，格式为：用户自定义部分-用户APPID。未填写该参数时将自动生成ID。</p><ul><li>用户自定义部分仅支持小写字母、数字和-，且不能以-开头和结尾，长度为3至40字符。</li><li>尾部需要使用-拼接用户APPID，APPID可在https://console.cloud.tencent.com/developer页面查询。</li><li>如果指定该字段，需保证全地域唯一</li></ul>
 	LogsetId *string `json:"LogsetId,omitnil,omitempty" name:"LogsetId"`
 }
 
@@ -4761,7 +4667,7 @@ func (r *CreateLogsetRequest) FromJsonString(s string) error {
 
 // Predefined struct for user
 type CreateLogsetResponseParams struct {
-	// 日志集ID
+	// <p>日志集ID</p>
 	LogsetId *string `json:"LogsetId,omitnil,omitempty" name:"LogsetId"`
 
 	// 唯一请求 ID，由服务端生成，每次请求都会返回（若请求因其他原因未能抵达服务端，则该次请求不会获得 RequestId）。定位问题时需要提供该次请求的 RequestId。
@@ -8432,7 +8338,7 @@ func (r *DeleteKafkaRechargeResponse) FromJsonString(s string) error {
 
 // Predefined struct for user
 type DeleteLogRequestParams struct {
-	// <p>日志主题id</p>
+	// <p>日志主题id</p><p>仅在创建日志主题时，开启了日志修改/删除开关的主题，支持日志修改/删除。该功能暂时仅面向白名单内客户使用。</p>
 	TopicId *string `json:"TopicId,omitnil,omitempty" name:"TopicId"`
 
 	// <p>检索时间范围-开始时间</p><p>单位：ms</p>
@@ -8448,7 +8354,7 @@ type DeleteLogRequestParams struct {
 type DeleteLogRequest struct {
 	*tchttp.BaseRequest
 	
-	// <p>日志主题id</p>
+	// <p>日志主题id</p><p>仅在创建日志主题时，开启了日志修改/删除开关的主题，支持日志修改/删除。该功能暂时仅面向白名单内客户使用。</p>
 	TopicId *string `json:"TopicId,omitnil,omitempty" name:"TopicId"`
 
 	// <p>检索时间范围-开始时间</p><p>单位：ms</p>
@@ -9615,32 +9521,32 @@ func (r *DescribeAgentApplicationsResponse) FromJsonString(s string) error {
 
 // Predefined struct for user
 type DescribeAgentConfigsRequestParams struct {
-	// agent的版本号
+	// <p>agent的版本号</p>
 	AgentVersion *string `json:"AgentVersion,omitnil,omitempty" name:"AgentVersion"`
 
-	// agent的IP地址
+	// <p>agent的IP地址</p>
 	AgentIp *string `json:"AgentIp,omitnil,omitempty" name:"AgentIp"`
 
-	// 机器组标签列表
+	// <p>机器组标签列表</p>
 	Labels []*string `json:"Labels,omitnil,omitempty" name:"Labels"`
 
-	// agent的instance id
+	// <p>agent的instance id</p>
 	InstanceId *string `json:"InstanceId,omitnil,omitempty" name:"InstanceId"`
 }
 
 type DescribeAgentConfigsRequest struct {
 	*tchttp.BaseRequest
 	
-	// agent的版本号
+	// <p>agent的版本号</p>
 	AgentVersion *string `json:"AgentVersion,omitnil,omitempty" name:"AgentVersion"`
 
-	// agent的IP地址
+	// <p>agent的IP地址</p>
 	AgentIp *string `json:"AgentIp,omitnil,omitempty" name:"AgentIp"`
 
-	// 机器组标签列表
+	// <p>机器组标签列表</p>
 	Labels []*string `json:"Labels,omitnil,omitempty" name:"Labels"`
 
-	// agent的instance id
+	// <p>agent的instance id</p>
 	InstanceId *string `json:"InstanceId,omitnil,omitempty" name:"InstanceId"`
 }
 
@@ -9668,27 +9574,27 @@ func (r *DescribeAgentConfigsRequest) FromJsonString(s string) error {
 
 // Predefined struct for user
 type DescribeAgentConfigsResponseParams struct {
-	// 采集配置
+	// <p>采集配置</p>
 	// 注意：此字段可能返回 null，表示取不到有效值。
 	LogConfigs []*LogConfigInfo `json:"LogConfigs,omitnil,omitempty" name:"LogConfigs"`
 
-	// 服务日志的配置信息
+	// <p>服务日志的配置信息</p>
 	// 注意：此字段可能返回 null，表示取不到有效值。
 	ServiceLogConfigs []*ServiceLogConfigInfo `json:"ServiceLogConfigs,omitnil,omitempty" name:"ServiceLogConfigs"`
 
-	// 弃用
+	// <p>弃用</p>
 	// 注意：此字段可能返回 null，表示取不到有效值。
 	LastVersion *string `json:"LastVersion,omitnil,omitempty" name:"LastVersion"`
 
-	// 弃用
+	// <p>弃用</p>
 	// 注意：此字段可能返回 null，表示取不到有效值。
 	NeedUpdate *bool `json:"NeedUpdate,omitnil,omitempty" name:"NeedUpdate"`
 
-	// 弃用
+	// <p>弃用</p>
 	// 注意：此字段可能返回 null，表示取不到有效值。
 	URL *string `json:"URL,omitnil,omitempty" name:"URL"`
 
-	// 弃用
+	// <p>弃用</p>
 	// 注意：此字段可能返回 null，表示取不到有效值。
 	FileMd5 *string `json:"FileMd5,omitnil,omitempty" name:"FileMd5"`
 
@@ -15816,6 +15722,21 @@ type ExtractRuleInfo struct {
 
 	// <p>原始日志的键名称(Key)；所有原始日志， 均以您指定的键名称（Key），原始日志内容作为值（Value）进行上传，为空时表示不开启原始日志上传。</p><ul><li>COS导入不支持此字段。</li></ul>
 	RawLogKey *string `json:"RawLogKey,omitnil,omitempty" name:"RawLogKey"`
+
+	// <p>采集范围。空数组表示采集全部Unit，非空数组表示采集指定Unit</p>
+	Units []*string `json:"Units,omitnil,omitempty" name:"Units"`
+
+	// <p>是否采集内核日志</p><p>默认值：true</p>
+	IncludeKernel *bool `json:"IncludeKernel,omitnil,omitempty" name:"IncludeKernel"`
+
+	// <p>是否使用journal原始时间。true ：用 journal 原始时间；false： 用采集时间 </p><p>默认值：false</p>
+	UseJournalTime *bool `json:"UseJournalTime,omitnil,omitempty" name:"UseJournalTime"`
+
+	// <p>字段间分隔符数组（长度 = keys.length），每个元素是前一字段结尾到当前字段开头的分隔串</p>
+	KeysDelimiter []*string `json:"KeysDelimiter,omitnil,omitempty" name:"KeysDelimiter"`
+
+	// <p>字段标志位数组（长度 = keys.length），<code>0</code> = 普通字段，<code>1</code> = 包含子字段需二次拆分</p>
+	KeysFlag []*int64 `json:"KeysFlag,omitnil,omitempty" name:"KeysFlag"`
 }
 
 type FilePathInfo struct {
@@ -17160,118 +17081,86 @@ func (r *ModifyAgentApplicationResponse) FromJsonString(s string) error {
 
 // Predefined struct for user
 type ModifyAlarmNoticeRequestParams struct {
-	// 通知渠道组ID。-通过[获取通知渠道组列表](https://cloud.tencent.com/document/api/614/56462)获取通知渠道组ID
+	// <p>通知渠道组ID。-通过<a href="https://cloud.tencent.com/document/api/614/56462">获取通知渠道组列表</a>获取通知渠道组ID</p>
 	AlarmNoticeId *string `json:"AlarmNoticeId,omitnil,omitempty" name:"AlarmNoticeId"`
 
-	// 标签描述列表，通过指定该参数可以同时绑定标签到相应的通知渠道组。最大支持10个标签键值对，并且不能有重复的键值对。
+	// <p>标签描述列表，通过指定该参数可以同时绑定标签到相应的通知渠道组。最大支持10个标签键值对，并且不能有重复的键值对。</p>
 	Tags []*Tag `json:"Tags,omitnil,omitempty" name:"Tags"`
 
-	// 通知渠道组名称。
+	// <p>通知渠道组名称。</p>
 	Name *string `json:"Name,omitnil,omitempty" name:"Name"`
 
-	// 通知类型。可选值：
-	// <li> Trigger - 告警触发</li>
-	// <li> Recovery - 告警恢复</li>
-	// <li> All - 告警触发和告警恢复</li>
+	// <p>通知类型。可选值：</p><li> Trigger - 告警触发</li><li> Recovery - 告警恢复</li><li> All - 告警触发和告警恢复</li>
 	Type *string `json:"Type,omitnil,omitempty" name:"Type"`
 
-	// 通知接收对象。
+	// <p>通知接收对象。</p>
 	NoticeReceivers []*NoticeReceiver `json:"NoticeReceivers,omitnil,omitempty" name:"NoticeReceivers"`
 
-	// 接口回调信息（包括企业微信等）。
+	// <p>接口回调信息（包括企业微信等）。</p>
 	WebCallbacks []*WebCallback `json:"WebCallbacks,omitnil,omitempty" name:"WebCallbacks"`
 
-	// 通知规则。
-	// 
-	// 注意: 
-	// 
-	// - Type、NoticeReceivers和WebCallbacks是一组配置，NoticeRules是另一组配置，2组配置互斥。
-	// - 传其中一组数据，则另一组数据置空。
+	// <p>通知规则。</p><p>注意: </p><ul><li>Type、NoticeReceivers和WebCallbacks是一组配置，NoticeRules是另一组配置，2组配置互斥。</li><li>传其中一组数据，则另一组数据置空。</li></ul>
 	NoticeRules []*NoticeRule `json:"NoticeRules,omitnil,omitempty" name:"NoticeRules"`
 
-	// 调用链接域名。http:// 或者 https:// 开头，不能/结尾
+	// <p>调用链接域名。http:// 或者 https:// 开头，不能/结尾</p>
 	JumpDomain *string `json:"JumpDomain,omitnil,omitempty" name:"JumpDomain"`
 
-	// 投递日志开关。
-	// 
-	// 参数值：
-	// 1：关闭；
-	// 
-	// 2：开启 
+	// <p>投递日志开关。</p><p>参数值：<br>1：关闭；</p><p>2：开启</p>
 	DeliverStatus *uint64 `json:"DeliverStatus,omitnil,omitempty" name:"DeliverStatus"`
 
-	// 投递日志配置。
+	// <p>投递日志配置。</p>
 	DeliverConfig *DeliverConfig `json:"DeliverConfig,omitnil,omitempty" name:"DeliverConfig"`
 
-	// 免登录操作告警开关。
-	// 
-	// 参数值： 
-	//         1：关闭
-	//         2：开启（默认开启）
+	// <p>免登录操作告警开关。</p><p>参数值：<br>        1：关闭<br>        2：开启（默认开启）</p>
 	AlarmShieldStatus *uint64 `json:"AlarmShieldStatus,omitnil,omitempty" name:"AlarmShieldStatus"`
 
-	// 统一设定自定义回调参数。
-	// -  true: 使用通知内容模板中的自定义回调参数覆盖告警策略中单独配置的请求头及请求内容。
-	// -  false:优先使用告警策略中单独配置的请求头及请求内容。
+	// <p>告警详情安全认证跳转开关，未传时默认&quot;关闭&quot;</p><p>枚举值：</p><ul><li>1： 关闭（默认值）</li><li>2： 开启</li></ul>
+	SecureDetailStatus *uint64 `json:"SecureDetailStatus,omitnil,omitempty" name:"SecureDetailStatus"`
+
+	// <p>统一设定自定义回调参数。</p><ul><li>true: 使用通知内容模板中的自定义回调参数覆盖告警策略中单独配置的请求头及请求内容。</li><li>false:优先使用告警策略中单独配置的请求头及请求内容。</li></ul>
 	CallbackPrioritize *bool `json:"CallbackPrioritize,omitnil,omitempty" name:"CallbackPrioritize"`
 }
 
 type ModifyAlarmNoticeRequest struct {
 	*tchttp.BaseRequest
 	
-	// 通知渠道组ID。-通过[获取通知渠道组列表](https://cloud.tencent.com/document/api/614/56462)获取通知渠道组ID
+	// <p>通知渠道组ID。-通过<a href="https://cloud.tencent.com/document/api/614/56462">获取通知渠道组列表</a>获取通知渠道组ID</p>
 	AlarmNoticeId *string `json:"AlarmNoticeId,omitnil,omitempty" name:"AlarmNoticeId"`
 
-	// 标签描述列表，通过指定该参数可以同时绑定标签到相应的通知渠道组。最大支持10个标签键值对，并且不能有重复的键值对。
+	// <p>标签描述列表，通过指定该参数可以同时绑定标签到相应的通知渠道组。最大支持10个标签键值对，并且不能有重复的键值对。</p>
 	Tags []*Tag `json:"Tags,omitnil,omitempty" name:"Tags"`
 
-	// 通知渠道组名称。
+	// <p>通知渠道组名称。</p>
 	Name *string `json:"Name,omitnil,omitempty" name:"Name"`
 
-	// 通知类型。可选值：
-	// <li> Trigger - 告警触发</li>
-	// <li> Recovery - 告警恢复</li>
-	// <li> All - 告警触发和告警恢复</li>
+	// <p>通知类型。可选值：</p><li> Trigger - 告警触发</li><li> Recovery - 告警恢复</li><li> All - 告警触发和告警恢复</li>
 	Type *string `json:"Type,omitnil,omitempty" name:"Type"`
 
-	// 通知接收对象。
+	// <p>通知接收对象。</p>
 	NoticeReceivers []*NoticeReceiver `json:"NoticeReceivers,omitnil,omitempty" name:"NoticeReceivers"`
 
-	// 接口回调信息（包括企业微信等）。
+	// <p>接口回调信息（包括企业微信等）。</p>
 	WebCallbacks []*WebCallback `json:"WebCallbacks,omitnil,omitempty" name:"WebCallbacks"`
 
-	// 通知规则。
-	// 
-	// 注意: 
-	// 
-	// - Type、NoticeReceivers和WebCallbacks是一组配置，NoticeRules是另一组配置，2组配置互斥。
-	// - 传其中一组数据，则另一组数据置空。
+	// <p>通知规则。</p><p>注意: </p><ul><li>Type、NoticeReceivers和WebCallbacks是一组配置，NoticeRules是另一组配置，2组配置互斥。</li><li>传其中一组数据，则另一组数据置空。</li></ul>
 	NoticeRules []*NoticeRule `json:"NoticeRules,omitnil,omitempty" name:"NoticeRules"`
 
-	// 调用链接域名。http:// 或者 https:// 开头，不能/结尾
+	// <p>调用链接域名。http:// 或者 https:// 开头，不能/结尾</p>
 	JumpDomain *string `json:"JumpDomain,omitnil,omitempty" name:"JumpDomain"`
 
-	// 投递日志开关。
-	// 
-	// 参数值：
-	// 1：关闭；
-	// 
-	// 2：开启 
+	// <p>投递日志开关。</p><p>参数值：<br>1：关闭；</p><p>2：开启</p>
 	DeliverStatus *uint64 `json:"DeliverStatus,omitnil,omitempty" name:"DeliverStatus"`
 
-	// 投递日志配置。
+	// <p>投递日志配置。</p>
 	DeliverConfig *DeliverConfig `json:"DeliverConfig,omitnil,omitempty" name:"DeliverConfig"`
 
-	// 免登录操作告警开关。
-	// 
-	// 参数值： 
-	//         1：关闭
-	//         2：开启（默认开启）
+	// <p>免登录操作告警开关。</p><p>参数值：<br>        1：关闭<br>        2：开启（默认开启）</p>
 	AlarmShieldStatus *uint64 `json:"AlarmShieldStatus,omitnil,omitempty" name:"AlarmShieldStatus"`
 
-	// 统一设定自定义回调参数。
-	// -  true: 使用通知内容模板中的自定义回调参数覆盖告警策略中单独配置的请求头及请求内容。
-	// -  false:优先使用告警策略中单独配置的请求头及请求内容。
+	// <p>告警详情安全认证跳转开关，未传时默认&quot;关闭&quot;</p><p>枚举值：</p><ul><li>1： 关闭（默认值）</li><li>2： 开启</li></ul>
+	SecureDetailStatus *uint64 `json:"SecureDetailStatus,omitnil,omitempty" name:"SecureDetailStatus"`
+
+	// <p>统一设定自定义回调参数。</p><ul><li>true: 使用通知内容模板中的自定义回调参数覆盖告警策略中单独配置的请求头及请求内容。</li><li>false:优先使用告警策略中单独配置的请求头及请求内容。</li></ul>
 	CallbackPrioritize *bool `json:"CallbackPrioritize,omitnil,omitempty" name:"CallbackPrioritize"`
 }
 
@@ -17298,6 +17187,7 @@ func (r *ModifyAlarmNoticeRequest) FromJsonString(s string) error {
 	delete(f, "DeliverStatus")
 	delete(f, "DeliverConfig")
 	delete(f, "AlarmShieldStatus")
+	delete(f, "SecureDetailStatus")
 	delete(f, "CallbackPrioritize")
 	if len(f) > 0 {
 		return tcerr.NewTencentCloudSDKError("ClientError.BuildRequestError", "ModifyAlarmNoticeRequest has unknown keys!", "")
@@ -17957,110 +17847,68 @@ func (r *ModifyConfigExtraResponse) FromJsonString(s string) error {
 
 // Predefined struct for user
 type ModifyConfigRequestParams struct {
-	// 采集规则配置ID，通过[获取采集规则配置](https://cloud.tencent.com/document/product/614/58616)返回信息获取。
+	// <p>采集规则配置ID，通过<a href="https://cloud.tencent.com/document/product/614/58616">获取采集规则配置</a>返回信息获取。</p>
 	ConfigId *string `json:"ConfigId,omitnil,omitempty" name:"ConfigId"`
 
-	// 采集规则配置名称
-	// - 不能包含特殊字符｜
-	// - 长度不能超过255字符，超过会被截断
+	// <p>采集规则配置名称</p><ul><li>不能包含特殊字符｜</li><li>长度不能超过255字符，超过会被截断</li></ul>
 	Name *string `json:"Name,omitnil,omitempty" name:"Name"`
 
-	// 日志采集路径，包含文件名
+	// <p>日志采集路径，包含文件名</p>
 	Path *string `json:"Path,omitnil,omitempty" name:"Path"`
 
-	// 采集的日志类型。支持以下类型：
-	// - json_log代表：JSON-文件日志（详见[使用 JSON 提取模式采集日志](https://cloud.tencent.com/document/product/614/17419)）；
-	// - delimiter_log代表：分隔符-文件日志（详见[使用分隔符提取模式采集日志](https://cloud.tencent.com/document/product/614/17420)）；
-	// - minimalist_log代表：单行全文-文件日志（详见[使用单行全文提取模式采集日志](https://cloud.tencent.com/document/product/614/17421)）；
-	// - fullregex_log代表：单行完全正则-文件日志（详见[使用单行-完全正则提取模式采集日志](https://cloud.tencent.com/document/product/614/52365)）；
-	// - multiline_log代表：多行全文-文件日志（详见[使用多行全文提取模式采集日志](https://cloud.tencent.com/document/product/614/17422)）；
-	// - multiline_fullregex_log代表：多行完全正则-文件日志（详见[使用多行-完全正则提取模式采集日志](https://cloud.tencent.com/document/product/614/52366)）；
-	// - user_define_log代表：组合解析（适用于多格式嵌套的日志，详见[使用组合解析提取模式采集日志](https://cloud.tencent.com/document/product/614/61310)）；
-	// - service_syslog代表：syslog 采集（详见[采集 Syslog](https://cloud.tencent.com/document/product/614/81454)）；
-	// - windows_event_log代表：Windows事件日志（详见[采集 Windows 事件日志](https://cloud.tencent.com/document/product/614/96678)）。
-	// 
+	// <p>采集的日志类型。支持以下类型：</p><ul><li>json_log代表：JSON-文件日志（详见<a href="https://cloud.tencent.com/document/product/614/17419">使用 JSON 提取模式采集日志</a>）；</li><li>delimiter_log代表：分隔符-文件日志（详见<a href="https://cloud.tencent.com/document/product/614/17420">使用分隔符提取模式采集日志</a>）；</li><li>minimalist_log代表：单行全文-文件日志（详见<a href="https://cloud.tencent.com/document/product/614/17421">使用单行全文提取模式采集日志</a>）；</li><li>fullregex_log代表：单行完全正则-文件日志（详见<a href="https://cloud.tencent.com/document/product/614/52365">使用单行-完全正则提取模式采集日志</a>）；</li><li>multiline_log代表：多行全文-文件日志（详见<a href="https://cloud.tencent.com/document/product/614/17422">使用多行全文提取模式采集日志</a>）；</li><li>multiline_fullregex_log代表：多行完全正则-文件日志（详见<a href="https://cloud.tencent.com/document/product/614/52366">使用多行-完全正则提取模式采集日志</a>）；</li><li>user_define_log代表：组合解析（适用于多格式嵌套的日志，详见<a href="https://cloud.tencent.com/document/product/614/61310">使用组合解析提取模式采集日志</a>）；</li><li>service_syslog代表：syslog 采集（详见<a href="https://cloud.tencent.com/document/product/614/81454">采集 Syslog</a>）；</li><li>windows_event_log代表：Windows事件日志（详见<a href="https://cloud.tencent.com/document/product/614/96678">采集 Windows 事件日志</a>）。</li><li>journal_log代表：journal日志采集</li></ul>
 	LogType *string `json:"LogType,omitnil,omitempty" name:"LogType"`
 
-	// 提取规则，如果设置了ExtractRule，则必须设置LogType
+	// <p>提取规则，如果设置了ExtractRule，则必须设置LogType</p>
 	ExtractRule *ExtractRuleInfo `json:"ExtractRule,omitnil,omitempty" name:"ExtractRule"`
 
-	// 采集黑名单路径列表
+	// <p>采集黑名单路径列表</p>
 	ExcludePaths []*ExcludePathInfo `json:"ExcludePaths,omitnil,omitempty" name:"ExcludePaths"`
 
-	// 采集配置关联的日志主题（TopicId）
-	// - 通过[获取日志主题列表](https://cloud.tencent.com/document/product/614/56454)获取日志主题Id。
+	// <p>采集配置关联的日志主题（TopicId）</p><ul><li>通过<a href="https://cloud.tencent.com/document/product/614/56454">获取日志主题列表</a>获取日志主题Id。</li></ul>
 	Output *string `json:"Output,omitnil,omitempty" name:"Output"`
 
-	// 用户自定义解析字符串，Json格式序列化的字符串。
+	// <p>用户自定义解析字符串，Json格式序列化的字符串。</p>
 	UserDefineRule *string `json:"UserDefineRule,omitnil,omitempty" name:"UserDefineRule"`
 
-	// 高级采集配置。 Json字符串， Key/Value定义为如下：
-	// - ClsAgentFileTimeout(超时属性), 取值范围: 大于等于0的整数， 0为不超时
-	// - ClsAgentMaxDepth(最大目录深度)，取值范围: 大于等于0的整数
-	// - ClsAgentParseFailMerge(合并解析失败日志)，取值范围: true或false
-	// 样例：
-	// `{\"ClsAgentFileTimeout\":0,\"ClsAgentMaxDepth\":10,\"ClsAgentParseFailMerge\":true}`
+	// <p>高级采集配置。 Json字符串， Key/Value定义为如下：</p><ul><li>ClsAgentFileTimeout(超时属性), 取值范围: 大于等于0的整数， 0为不超时</li><li>ClsAgentMaxDepth(最大目录深度)，取值范围: 大于等于0的整数</li><li>ClsAgentParseFailMerge(合并解析失败日志)，取值范围: true或false<br>样例：<br><code>{\&quot;ClsAgentFileTimeout\&quot;:0,\&quot;ClsAgentMaxDepth\&quot;:10,\&quot;ClsAgentParseFailMerge\&quot;:true}</code></li></ul>
 	AdvancedConfig *string `json:"AdvancedConfig,omitnil,omitempty" name:"AdvancedConfig"`
 
-	// 日志输入类型（<span style="color:red; font-weight:bold">注：windows场景必填且仅支持file和windows_event类型</span>）
-	// - file: 文件类型采集
-	// - windows_event：windows事件采集
-	// - syslog：系统日志采集
+	// <p>日志输入类型（<span style="color:red; font-weight:bold">注：windows场景必填且仅支持file和windows_event类型</span>）</p><ul><li>file: 文件类型采集</li><li>windows_event：windows事件采集</li><li>syslog：系统日志采集</li></ul>
 	InputType *string `json:"InputType,omitnil,omitempty" name:"InputType"`
 }
 
 type ModifyConfigRequest struct {
 	*tchttp.BaseRequest
 	
-	// 采集规则配置ID，通过[获取采集规则配置](https://cloud.tencent.com/document/product/614/58616)返回信息获取。
+	// <p>采集规则配置ID，通过<a href="https://cloud.tencent.com/document/product/614/58616">获取采集规则配置</a>返回信息获取。</p>
 	ConfigId *string `json:"ConfigId,omitnil,omitempty" name:"ConfigId"`
 
-	// 采集规则配置名称
-	// - 不能包含特殊字符｜
-	// - 长度不能超过255字符，超过会被截断
+	// <p>采集规则配置名称</p><ul><li>不能包含特殊字符｜</li><li>长度不能超过255字符，超过会被截断</li></ul>
 	Name *string `json:"Name,omitnil,omitempty" name:"Name"`
 
-	// 日志采集路径，包含文件名
+	// <p>日志采集路径，包含文件名</p>
 	Path *string `json:"Path,omitnil,omitempty" name:"Path"`
 
-	// 采集的日志类型。支持以下类型：
-	// - json_log代表：JSON-文件日志（详见[使用 JSON 提取模式采集日志](https://cloud.tencent.com/document/product/614/17419)）；
-	// - delimiter_log代表：分隔符-文件日志（详见[使用分隔符提取模式采集日志](https://cloud.tencent.com/document/product/614/17420)）；
-	// - minimalist_log代表：单行全文-文件日志（详见[使用单行全文提取模式采集日志](https://cloud.tencent.com/document/product/614/17421)）；
-	// - fullregex_log代表：单行完全正则-文件日志（详见[使用单行-完全正则提取模式采集日志](https://cloud.tencent.com/document/product/614/52365)）；
-	// - multiline_log代表：多行全文-文件日志（详见[使用多行全文提取模式采集日志](https://cloud.tencent.com/document/product/614/17422)）；
-	// - multiline_fullregex_log代表：多行完全正则-文件日志（详见[使用多行-完全正则提取模式采集日志](https://cloud.tencent.com/document/product/614/52366)）；
-	// - user_define_log代表：组合解析（适用于多格式嵌套的日志，详见[使用组合解析提取模式采集日志](https://cloud.tencent.com/document/product/614/61310)）；
-	// - service_syslog代表：syslog 采集（详见[采集 Syslog](https://cloud.tencent.com/document/product/614/81454)）；
-	// - windows_event_log代表：Windows事件日志（详见[采集 Windows 事件日志](https://cloud.tencent.com/document/product/614/96678)）。
-	// 
+	// <p>采集的日志类型。支持以下类型：</p><ul><li>json_log代表：JSON-文件日志（详见<a href="https://cloud.tencent.com/document/product/614/17419">使用 JSON 提取模式采集日志</a>）；</li><li>delimiter_log代表：分隔符-文件日志（详见<a href="https://cloud.tencent.com/document/product/614/17420">使用分隔符提取模式采集日志</a>）；</li><li>minimalist_log代表：单行全文-文件日志（详见<a href="https://cloud.tencent.com/document/product/614/17421">使用单行全文提取模式采集日志</a>）；</li><li>fullregex_log代表：单行完全正则-文件日志（详见<a href="https://cloud.tencent.com/document/product/614/52365">使用单行-完全正则提取模式采集日志</a>）；</li><li>multiline_log代表：多行全文-文件日志（详见<a href="https://cloud.tencent.com/document/product/614/17422">使用多行全文提取模式采集日志</a>）；</li><li>multiline_fullregex_log代表：多行完全正则-文件日志（详见<a href="https://cloud.tencent.com/document/product/614/52366">使用多行-完全正则提取模式采集日志</a>）；</li><li>user_define_log代表：组合解析（适用于多格式嵌套的日志，详见<a href="https://cloud.tencent.com/document/product/614/61310">使用组合解析提取模式采集日志</a>）；</li><li>service_syslog代表：syslog 采集（详见<a href="https://cloud.tencent.com/document/product/614/81454">采集 Syslog</a>）；</li><li>windows_event_log代表：Windows事件日志（详见<a href="https://cloud.tencent.com/document/product/614/96678">采集 Windows 事件日志</a>）。</li><li>journal_log代表：journal日志采集</li></ul>
 	LogType *string `json:"LogType,omitnil,omitempty" name:"LogType"`
 
-	// 提取规则，如果设置了ExtractRule，则必须设置LogType
+	// <p>提取规则，如果设置了ExtractRule，则必须设置LogType</p>
 	ExtractRule *ExtractRuleInfo `json:"ExtractRule,omitnil,omitempty" name:"ExtractRule"`
 
-	// 采集黑名单路径列表
+	// <p>采集黑名单路径列表</p>
 	ExcludePaths []*ExcludePathInfo `json:"ExcludePaths,omitnil,omitempty" name:"ExcludePaths"`
 
-	// 采集配置关联的日志主题（TopicId）
-	// - 通过[获取日志主题列表](https://cloud.tencent.com/document/product/614/56454)获取日志主题Id。
+	// <p>采集配置关联的日志主题（TopicId）</p><ul><li>通过<a href="https://cloud.tencent.com/document/product/614/56454">获取日志主题列表</a>获取日志主题Id。</li></ul>
 	Output *string `json:"Output,omitnil,omitempty" name:"Output"`
 
-	// 用户自定义解析字符串，Json格式序列化的字符串。
+	// <p>用户自定义解析字符串，Json格式序列化的字符串。</p>
 	UserDefineRule *string `json:"UserDefineRule,omitnil,omitempty" name:"UserDefineRule"`
 
-	// 高级采集配置。 Json字符串， Key/Value定义为如下：
-	// - ClsAgentFileTimeout(超时属性), 取值范围: 大于等于0的整数， 0为不超时
-	// - ClsAgentMaxDepth(最大目录深度)，取值范围: 大于等于0的整数
-	// - ClsAgentParseFailMerge(合并解析失败日志)，取值范围: true或false
-	// 样例：
-	// `{\"ClsAgentFileTimeout\":0,\"ClsAgentMaxDepth\":10,\"ClsAgentParseFailMerge\":true}`
+	// <p>高级采集配置。 Json字符串， Key/Value定义为如下：</p><ul><li>ClsAgentFileTimeout(超时属性), 取值范围: 大于等于0的整数， 0为不超时</li><li>ClsAgentMaxDepth(最大目录深度)，取值范围: 大于等于0的整数</li><li>ClsAgentParseFailMerge(合并解析失败日志)，取值范围: true或false<br>样例：<br><code>{\&quot;ClsAgentFileTimeout\&quot;:0,\&quot;ClsAgentMaxDepth\&quot;:10,\&quot;ClsAgentParseFailMerge\&quot;:true}</code></li></ul>
 	AdvancedConfig *string `json:"AdvancedConfig,omitnil,omitempty" name:"AdvancedConfig"`
 
-	// 日志输入类型（<span style="color:red; font-weight:bold">注：windows场景必填且仅支持file和windows_event类型</span>）
-	// - file: 文件类型采集
-	// - windows_event：windows事件采集
-	// - syslog：系统日志采集
+	// <p>日志输入类型（<span style="color:red; font-weight:bold">注：windows场景必填且仅支持file和windows_event类型</span>）</p><ul><li>file: 文件类型采集</li><li>windows_event：windows事件采集</li><li>syslog：系统日志采集</li></ul>
 	InputType *string `json:"InputType,omitnil,omitempty" name:"InputType"`
 }
 
@@ -19741,7 +19589,7 @@ func (r *ModifyKafkaRechargeResponse) FromJsonString(s string) error {
 
 // Predefined struct for user
 type ModifyLogRequestParams struct {
-	// <p>日志主题id</p>
+	// <p>日志主题id</p><p>仅在创建日志主题时，开启了日志修改/删除开关的主题，支持日志修改/删除。该功能暂时仅面向白名单内客户使用。</p>
 	TopicId *string `json:"TopicId,omitnil,omitempty" name:"TopicId"`
 
 	// <p>检索时间范围-开始时间</p><p>单位：ms</p>
@@ -19763,7 +19611,7 @@ type ModifyLogRequestParams struct {
 type ModifyLogRequest struct {
 	*tchttp.BaseRequest
 	
-	// <p>日志主题id</p>
+	// <p>日志主题id</p><p>仅在创建日志主题时，开启了日志修改/删除开关的主题，支持日志修改/删除。该功能暂时仅面向白名单内客户使用。</p>
 	TopicId *string `json:"TopicId,omitnil,omitempty" name:"TopicId"`
 
 	// <p>检索时间范围-开始时间</p><p>单位：ms</p>

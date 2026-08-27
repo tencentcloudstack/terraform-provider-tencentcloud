@@ -43,14 +43,14 @@ require (
 	github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/chdfs v1.0.600
 	github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/ciam v1.0.695
 	github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/ckafka v1.3.133
-	github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/clb v1.3.150
+	github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/clb v1.3.165
 	github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/cloudaudit v1.3.40
-	github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/cls v1.3.156
-	github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/common v1.3.162
+	github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/cls v1.3.164
+	github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/common v1.3.168
 	github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/config v1.3.80
 	github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/cvm v1.3.130
 	github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/cwp v1.3.30
-	github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/cynosdb v1.3.150
+	github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/cynosdb v1.3.159
 	github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/dayu v1.0.335
 	github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/dbbrain v1.3.26
 	github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/dc v1.0.633
@@ -89,11 +89,11 @@ require (
 	github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/tat v1.0.634
 	github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/tcaplusdb v1.3.105
 	github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/tcm v1.0.547
-	github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/tcr v1.3.89
+	github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/tcr v1.3.162
 	github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/tdcpg v1.0.533
 	github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/tdmq v1.3.113
 	github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/tem v1.0.578
-	github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/teo v1.3.151
+	github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/teo v1.3.168
 	github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/tke v1.3.107
 	github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/trocket v1.3.129
 	github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/tse v1.3.157

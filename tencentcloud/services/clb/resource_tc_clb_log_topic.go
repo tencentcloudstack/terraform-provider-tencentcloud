@@ -47,6 +47,12 @@ func ResourceTencentCloudClbLogTopic() *schema.Resource {
 				Computed:    true,
 				Description: "The status of log topic. true: enable; false: disable. Default is true.",
 			},
+			"tags": {
+				Type:        schema.TypeMap,
+				Optional:    true,
+				Description: "Tags of clb log topic.",
+				Elem:        &schema.Schema{Type: schema.TypeString},
+			},
 			//compute
 			"create_time": {
 				Type:        schema.TypeString,
@@ -83,10 +89,17 @@ func resourceTencentCloudClbInstanceTopicCreate(d *schema.ResourceData, meta int
 	if partitionCount, ok := d.GetOk("partition_count"); ok {
 		params["partition_count"] = partitionCount
 	}
+	if tags, ok := d.GetOk("tags"); ok {
+		params["tags"] = tags.(map[string]interface{})
+	}
 	resp, err := clbService.CreateTopic(ctx, params)
 	if err != nil {
-		log.Printf("[CRITAL]%s create clb topic failed, reason:%+v", logId, err)
+		log.Printf("[CRITAL]%s create tencentcloud_clb_log_topic failed, reason:%+v", logId, err)
 		return err
+	}
+	if resp == nil || resp.Response == nil || resp.Response.TopicId == nil {
+		log.Printf("[CRITAL]%s create tencentcloud_clb_log_topic failed, response is nil, logId=%s", logId, logId)
+		return fmt.Errorf("create clb log topic failed, response is nil")
 	}
 
 	topicId := *resp.Response.TopicId
@@ -130,13 +143,31 @@ func resourceTencentCloudClbInstanceTopicRead(d *schema.ResourceData, meta inter
 		return err
 	}
 	if res == nil {
+		if d.IsNewResource() {
+			return fmt.Errorf("reading resource `tencentcloud_clb_log_topic` %s failed after creation", id)
+		}
+		log.Printf("[WARN] tencentcloud_clb_log_topic not found with id=%s", id)
 		d.SetId("")
-		return fmt.Errorf("resource `logTopic` %s does not exist", id)
+		return nil
 	}
 	_ = d.Set("log_set_id", res.LogsetId)
 	_ = d.Set("topic_name", res.TopicName)
 	_ = d.Set("create_time", res.CreateTime)
 	_ = d.Set("status", res.Status)
+
+	if res.Tags != nil {
+		tagsMap := make(map[string]string, len(res.Tags))
+		for _, tag := range res.Tags {
+			if tag == nil {
+				continue
+			}
+			if tag.Key != nil && tag.Value != nil {
+				tagsMap[*tag.Key] = *tag.Value
+			}
+		}
+		_ = d.Set("tags", tagsMap)
+	}
+
 	return nil
 }
 
@@ -167,6 +198,39 @@ func resourceTencentCloudClbInstanceTopicUpdate(d *schema.ResourceData, meta int
 			if err != nil {
 				return err
 			}
+		}
+	}
+
+	if d.HasChange("tags") {
+		request := cls.NewModifyTopicRequest()
+		request.TopicId = &topicId
+		if v, ok := d.GetOk("tags"); ok {
+			tagsMap := v.(map[string]interface{})
+			if len(tagsMap) > 0 {
+				clsTags := make([]*cls.Tag, 0, len(tagsMap))
+				for key, value := range tagsMap {
+					clsTag := &cls.Tag{
+						Key:   helper.String(key),
+						Value: helper.String(value.(string)),
+					}
+					clsTags = append(clsTags, clsTag)
+				}
+				request.Tags = clsTags
+			}
+		}
+		err := resource.Retry(tccommon.WriteRetryTimeout, func() *resource.RetryError {
+			result, e := meta.(tccommon.ProviderMeta).GetAPIV3Conn().UseClsClient().ModifyTopic(request)
+			if e != nil {
+				return tccommon.RetryError(e)
+			} else {
+				log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), result.ToJsonString())
+			}
+
+			return nil
+		})
+
+		if err != nil {
+			return err
 		}
 	}
 
