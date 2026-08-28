@@ -335,6 +335,34 @@ func resourceTencentCloudClsSplunkDeliverCreate(d *schema.ResourceData, meta int
 
 	taskId := *response.Response.TaskId
 	d.SetId(strings.Join([]string{topicId, taskId}, tccommon.FILED_SP))
+
+	// enable
+	if v, ok := d.GetOkExists("enable"); ok {
+		enable := v.(int)
+		if enable == 0 {
+			request := cls.NewModifySplunkDeliverRequest()
+			request.TaskId = helper.String(taskId)
+			request.TopicId = helper.String(topicId)
+			request.Enable = helper.IntInt64(0)
+
+			err := resource.Retry(tccommon.ReadRetryTimeout, func() *resource.RetryError {
+				result, e := meta.(tccommon.ProviderMeta).GetAPIV3Conn().UseClsClient().ModifySplunkDeliver(request)
+				if e != nil {
+					return tccommon.RetryError(e)
+				} else {
+					log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n",
+						logId, request.GetAction(), request.ToJsonString(), result.ToJsonString())
+				}
+				return nil
+			})
+
+			if err != nil {
+				log.Printf("[CRITAL]%s update cls splunk_deliver failed, reason:%+v", logId, err)
+				return err
+			}
+		}
+	}
+
 	return resourceTencentCloudClsSplunkDeliverRead(d, meta)
 }
 
