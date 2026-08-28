@@ -504,6 +504,13 @@ func resourceTencentCloudMongodbReadOnlyInstanceUpdate(d *schema.ResourceData, m
 		return fmt.Errorf("setting of the field[available_zone] does not support update")
 	}
 
+	immutableArgs := []string{"data_encryption", "encryption_key_source", "key_id", "kms_region"}
+	for _, v := range immutableArgs {
+		if d.HasChange(v) {
+			return fmt.Errorf("argument `%s` cannot be changed", v)
+		}
+	}
+
 	d.Partial(true)
 
 	if d.HasChange("memory") || d.HasChange("volume") || d.HasChange("cpu") {
