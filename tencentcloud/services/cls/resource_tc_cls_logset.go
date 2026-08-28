@@ -6,7 +6,6 @@ import (
 	"log"
 
 	tccommon "github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/common"
-	svctag "github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/services/tag"
 
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
@@ -32,9 +31,23 @@ func ResourceTencentCloudClsLogset() *schema.Resource {
 			},
 
 			"tags": {
-				Type:        schema.TypeMap,
+				Type:        schema.TypeList,
 				Optional:    true,
-				Description: "Tag description list.",
+				Description: "Tag description list. The CLS API supports up to 10 tag key-value pairs, and duplicate keys are not allowed.",
+				Elem: &schema.Resource{
+					Schema: map[string]*schema.Schema{
+						"key": {
+							Type:        schema.TypeString,
+							Required:    true,
+							Description: "Tag key.",
+						},
+						"value": {
+							Type:        schema.TypeString,
+							Required:    true,
+							Description: "Tag value.",
+						},
+					},
+				},
 			},
 
 			"create_time": {
@@ -64,13 +77,27 @@ func resourceTencentCloudClsLogsetCreate(d *schema.ResourceData, meta interface{
 
 	var (
 		logId    = tccommon.GetLogId(tccommon.ContextNil)
-		ctx      = context.WithValue(context.TODO(), tccommon.LogIdKey, logId)
 		request  = cls.NewCreateLogsetRequest()
 		response = cls.NewCreateLogsetResponse()
 	)
 
 	if v, ok := d.GetOk("logset_name"); ok {
 		request.LogsetName = helper.String(v.(string))
+	}
+
+	if v, ok := d.GetOk("tags"); ok {
+		tagsList := v.([]interface{})
+		for _, item := range tagsList {
+			tagMap := item.(map[string]interface{})
+			tag := &cls.Tag{}
+			if v, ok := tagMap["key"].(string); ok && v != "" {
+				tag.Key = helper.String(v)
+			}
+			if v, ok := tagMap["value"].(string); ok {
+				tag.Value = helper.String(v)
+			}
+			request.Tags = append(request.Tags, tag)
+		}
 	}
 
 	err := resource.Retry(tccommon.WriteRetryTimeout, func() *resource.RetryError {
@@ -102,15 +129,6 @@ func resourceTencentCloudClsLogsetCreate(d *schema.ResourceData, meta interface{
 	logsetId := *response.Response.LogsetId
 	d.SetId(logsetId)
 
-	if tags := helper.GetTags(d, "tags"); len(tags) > 0 {
-		tagService := svctag.NewTagService(meta.(tccommon.ProviderMeta).GetAPIV3Conn())
-		region := meta.(tccommon.ProviderMeta).GetAPIV3Conn().Region
-		resourceName := fmt.Sprintf("qcs::cls:%s:uin/:logset/%s", region, logsetId)
-		if err := tagService.ModifyTags(ctx, resourceName, tags, nil); err != nil {
-			return err
-		}
-	}
-
 	return resourceTencentCloudClsLogsetRead(d, meta)
 }
 
@@ -131,6 +149,7 @@ func resourceTencentCloudClsLogsetRead(d *schema.ResourceData, meta interface{})
 	}
 
 	if logset == nil {
+		log.Printf("[CRUD] cls_logset id=%s", logsetId)
 		d.SetId("")
 		return fmt.Errorf("resource `logset` %s does not exist", logsetId)
 	}
@@ -151,14 +170,21 @@ func resourceTencentCloudClsLogsetRead(d *schema.ResourceData, meta interface{})
 		_ = d.Set("role_name", logset.RoleName)
 	}
 
-	tcClient := meta.(tccommon.ProviderMeta).GetAPIV3Conn()
-	tagService := svctag.NewTagService(tcClient)
-	tags, err := tagService.DescribeResourceTags(ctx, "cls", "logset", tcClient.Region, d.Id())
-	if err != nil {
-		return err
+	tagsList := make([]map[string]interface{}, 0, len(logset.Tags))
+	for _, tag := range logset.Tags {
+		if tag == nil {
+			continue
+		}
+		tagMap := map[string]interface{}{}
+		if tag.Key != nil {
+			tagMap["key"] = tag.Key
+		}
+		if tag.Value != nil {
+			tagMap["value"] = tag.Value
+		}
+		tagsList = append(tagsList, tagMap)
 	}
-
-	_ = d.Set("tags", tags)
+	_ = d.Set("tags", tagsList)
 
 	return nil
 }
@@ -169,14 +195,30 @@ func resourceTencentCloudClsLogsetUpdate(d *schema.ResourceData, meta interface{
 
 	var (
 		logId = tccommon.GetLogId(tccommon.ContextNil)
-		ctx   = context.WithValue(context.TODO(), tccommon.LogIdKey, logId)
 	)
 
-	if d.HasChange("logset_name") {
+	if d.HasChange("logset_name") || d.HasChange("tags") {
 		request := cls.NewModifyLogsetRequest()
 		request.LogsetId = helper.String(d.Id())
 		if v, ok := d.GetOk("logset_name"); ok {
 			request.LogsetName = helper.String(v.(string))
+		}
+
+		if d.HasChange("tags") {
+			if v, ok := d.GetOk("tags"); ok {
+				tagsList := v.([]interface{})
+				for _, item := range tagsList {
+					tagMap := item.(map[string]interface{})
+					tag := &cls.Tag{}
+					if v, ok := tagMap["key"].(string); ok && v != "" {
+						tag.Key = helper.String(v)
+					}
+					if v, ok := tagMap["value"].(string); ok {
+						tag.Value = helper.String(v)
+					}
+					request.Tags = append(request.Tags, tag)
+				}
+			}
 		}
 
 		err := resource.Retry(tccommon.WriteRetryTimeout, func() *resource.RetryError {
@@ -192,17 +234,6 @@ func resourceTencentCloudClsLogsetUpdate(d *schema.ResourceData, meta interface{
 		})
 
 		if err != nil {
-			return err
-		}
-	}
-
-	if d.HasChange("tags") {
-		tcClient := meta.(tccommon.ProviderMeta).GetAPIV3Conn()
-		tagService := svctag.NewTagService(tcClient)
-		oldTags, newTags := d.GetChange("tags")
-		replaceTags, deleteTags := svctag.DiffTags(oldTags.(map[string]interface{}), newTags.(map[string]interface{}))
-		resourceName := tccommon.BuildTagResourceName("cls", "logset", tcClient.Region, d.Id())
-		if err := tagService.ModifyTags(ctx, resourceName, replaceTags, deleteTags); err != nil {
 			return err
 		}
 	}

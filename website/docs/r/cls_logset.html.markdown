@@ -16,8 +16,9 @@ Provides a resource to create a CLS logset
 ```hcl
 resource "tencentcloud_cls_logset" "example" {
   logset_name = "tf-example"
-  tags = {
-    createdBy = "Terraform"
+  tags {
+    key   = "createdBy"
+    value = "Terraform"
   }
 }
 ```
@@ -27,7 +28,12 @@ resource "tencentcloud_cls_logset" "example" {
 The following arguments are supported:
 
 * `logset_name` - (Required, String) Logset name, which must be unique.
-* `tags` - (Optional, Map) Tag description list.
+* `tags` - (Optional, List) Tag description list. The CLS API supports up to 10 tag key-value pairs, and duplicate keys are not allowed.
+
+The `tags` object supports the following:
+
+* `key` - (Required, String) Tag key.
+* `value` - (Required, String) Tag value.
 
 ## Attributes Reference
 
