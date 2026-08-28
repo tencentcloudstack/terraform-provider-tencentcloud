@@ -4,7 +4,9 @@ Example Usage
 
 ```hcl
 data "tencentcloud_ckafka_routes" "example" {
-  instance_id = "ckafka-bqwlyrg8"
+  instance_id = "ckafka-exampleabc"
+  main_route_flag = true
+  route_id = 123
 }
 
 output "routes" {
