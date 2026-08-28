@@ -14,28 +14,15 @@ Provides a resource to create a CLS splunk deliver.
 ## Example Usage
 
 ```hcl
-resource "tencentcloud_cls_logset" "example" {
-  logset_name = "tf-example"
-}
-
-resource "tencentcloud_cls_topic" "example" {
-  topic_name           = "tf-example"
-  logset_id            = tencentcloud_cls_logset.example.id
-  auto_split           = false
-  max_split_partitions = 20
-  partition_count      = 1
-  period               = 10
-  storage_type         = "hot"
-}
-
 resource "tencentcloud_cls_splunk_deliver" "example" {
-  topic_id = tencentcloud_cls_topic.example.id
-  name     = "tf-example"
+  topic_id  = "eb417b1d-fc00-46f2-85f7-47ca0848a6b3"
+  name      = "tf-example"
+  index_ack = 1
 
   net_info {
-    host     = "10.0.0.1"
+    host     = "110.11.22.106"
     port     = 8088
-    token    = "your-splunk-token"
+    token    = "e27274fb-****-****-****-****00206282"
     net_type = 2
     is_ssl   = true
   }
@@ -43,11 +30,10 @@ resource "tencentcloud_cls_splunk_deliver" "example" {
   metadata_info {
     format = "json"
     meta_fields = [
-      "__SOURCE__",
+      "__HOSTNAME__",
       "__FILENAME__",
       "__TIMESTAMP__",
     ]
-    enable_tag = true
   }
 }
 ```
@@ -77,9 +63,9 @@ The `external_role` object supports the following:
 
 The `metadata_info` object supports the following:
 
-* `enable_tag` - (Required, Bool) Whether to deliver __TAG__ field.
 * `format` - (Required, String) Data format. Valid values: rawlog, json.
-* `meta_fields` - (Required, Set) Delivery fields, including __SOURCE__, __FILENAME__, __TIMESTAMP__, __HOSTNAME__, __PKG_ID__.
+* `enable_tag` - (Optional, Bool) Whether to deliver __TAG__ field.
+* `meta_fields` - (Optional, Set) Delivery fields, including __SOURCE__, __FILENAME__, __TIMESTAMP__, __HOSTNAME__, __PKG_ID__.
 * `tag_json_tiled` - (Optional, Bool) Whether to flatten JSON. Required when enable_tag is true.
 
 The `net_info` object supports the following:
@@ -102,9 +88,9 @@ In addition to all arguments above, the following attributes are exported:
 
 ## Import
 
-cls splunk deliver can be imported using the id, e.g.
+cls splunk deliver can be imported using the topicId#taskId, e.g.
 
 ```
-$ terraform import tencentcloud_cls_splunk_deliver.example task-xxx#topic-yyy
+terraform import tencentcloud_cls_splunk_deliver.example eb417b1d-fc00-46f2-85f7-47ca0848a6b3#716dae34-7eba-4b09-a3d9-6fe8e510e236
 ```
 

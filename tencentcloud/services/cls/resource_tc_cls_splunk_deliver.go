@@ -71,11 +71,13 @@ func ResourceTencentCloudClsSplunkDeliver() *schema.Resource {
 						"virtual_gateway_type": {
 							Type:        schema.TypeInt,
 							Optional:    true,
+							Computed:    true,
 							Description: "Network service type. Required when net_type is internal network. 0: CVM, 3: Direct Connect Gateway, 11: CCN, 1025: CLB.",
 						},
 						"is_ssl": {
 							Type:        schema.TypeBool,
 							Optional:    true,
+							Computed:    true,
 							Description: "Whether to use SSL. Default is false.",
 						},
 					},
@@ -102,11 +104,13 @@ func ResourceTencentCloudClsSplunkDeliver() *schema.Resource {
 						"enable_tag": {
 							Type:        schema.TypeBool,
 							Optional:    true,
+							Computed:    true,
 							Description: "Whether to deliver __TAG__ field.",
 						},
 						"tag_json_tiled": {
 							Type:        schema.TypeBool,
 							Optional:    true,
+							Computed:    true,
 							Description: "Whether to flatten JSON. Required when enable_tag is true.",
 						},
 					},
@@ -115,11 +119,13 @@ func ResourceTencentCloudClsSplunkDeliver() *schema.Resource {
 			"has_service_log": {
 				Type:        schema.TypeInt,
 				Optional:    true,
+				Computed:    true,
 				Description: "Whether to enable service log. 1: disable, 2: enable. Default: enable.",
 			},
 			"index_ack": {
 				Type:        schema.TypeInt,
 				Optional:    true,
+				Computed:    true,
 				Description: "Whether to enable indexer. 1: disable, 2: enable. Default: 1.",
 			},
 			"source": {
@@ -653,8 +659,8 @@ func resourceTencentCloudClsSplunkDeliverDelete(d *schema.ResourceData, meta int
 		return fmt.Errorf("splunk_deliver id is invalid, id format should be topic_id#task_id, got: %s", id)
 	}
 
-	topicId := idSplit[1]
-	taskId := idSplit[0]
+	topicId := idSplit[0]
+	taskId := idSplit[1]
 
 	request := cls.NewDeleteSplunkDeliverRequest()
 	request.TaskId = helper.String(taskId)
