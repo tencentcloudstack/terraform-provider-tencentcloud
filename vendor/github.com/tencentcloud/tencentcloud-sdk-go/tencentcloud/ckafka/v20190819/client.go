@@ -45,6 +45,64 @@ func NewClient(credential common.CredentialIface, region string, clientProfile *
 }
 
 
+func NewAssociateRoutesSecurityGroupRequest() (request *AssociateRoutesSecurityGroupRequest) {
+    request = &AssociateRoutesSecurityGroupRequest{
+        BaseRequest: &tchttp.BaseRequest{},
+    }
+    
+    request.Init().WithApiInfo("ckafka", APIVersion, "AssociateRoutesSecurityGroup")
+    
+    
+    return
+}
+
+func NewAssociateRoutesSecurityGroupResponse() (response *AssociateRoutesSecurityGroupResponse) {
+    response = &AssociateRoutesSecurityGroupResponse{
+        BaseResponse: &tchttp.BaseResponse{},
+    } 
+    return
+
+}
+
+// AssociateRoutesSecurityGroup
+// 绑定路由安全组
+//
+// 可能返回的错误码:
+//  INTERNALERROR = "InternalError"
+//  INVALIDPARAMETER = "InvalidParameter"
+//  INVALIDPARAMETERVALUE = "InvalidParameterValue"
+//  LIMITEXCEEDED = "LimitExceeded"
+//  UNSUPPORTEDOPERATION = "UnsupportedOperation"
+func (c *Client) AssociateRoutesSecurityGroup(request *AssociateRoutesSecurityGroupRequest) (response *AssociateRoutesSecurityGroupResponse, err error) {
+    return c.AssociateRoutesSecurityGroupWithContext(context.Background(), request)
+}
+
+// AssociateRoutesSecurityGroup
+// 绑定路由安全组
+//
+// 可能返回的错误码:
+//  INTERNALERROR = "InternalError"
+//  INVALIDPARAMETER = "InvalidParameter"
+//  INVALIDPARAMETERVALUE = "InvalidParameterValue"
+//  LIMITEXCEEDED = "LimitExceeded"
+//  UNSUPPORTEDOPERATION = "UnsupportedOperation"
+func (c *Client) AssociateRoutesSecurityGroupWithContext(ctx context.Context, request *AssociateRoutesSecurityGroupRequest) (response *AssociateRoutesSecurityGroupResponse, err error) {
+    if request == nil {
+        request = NewAssociateRoutesSecurityGroupRequest()
+    }
+    c.InitBaseRequest(&request.BaseRequest, "ckafka", APIVersion, "AssociateRoutesSecurityGroup")
+    
+    if c.GetCredential() == nil {
+        return nil, errors.New("AssociateRoutesSecurityGroup require credential")
+    }
+
+    request.SetContext(ctx)
+    
+    response = NewAssociateRoutesSecurityGroupResponse()
+    err = c.Send(request, response)
+    return
+}
+
 func NewAuthorizeTokenRequest() (request *AuthorizeTokenRequest) {
     request = &AuthorizeTokenRequest{
         BaseRequest: &tchttp.BaseRequest{},
@@ -1471,6 +1529,62 @@ func (c *Client) CreateRouteWithContext(ctx context.Context, request *CreateRout
     return
 }
 
+func NewCreateThrottleRuleRequest() (request *CreateThrottleRuleRequest) {
+    request = &CreateThrottleRuleRequest{
+        BaseRequest: &tchttp.BaseRequest{},
+    }
+    
+    request.Init().WithApiInfo("ckafka", APIVersion, "CreateThrottleRule")
+    
+    
+    return
+}
+
+func NewCreateThrottleRuleResponse() (response *CreateThrottleRuleResponse) {
+    response = &CreateThrottleRuleResponse{
+        BaseResponse: &tchttp.BaseResponse{},
+    } 
+    return
+
+}
+
+// CreateThrottleRule
+// 实例限流规则相关接口
+//
+// 可能返回的错误码:
+//  FAILEDOPERATION = "FailedOperation"
+//  INVALIDPARAMETER = "InvalidParameter"
+//  INVALIDPARAMETERVALUE = "InvalidParameterValue"
+//  RESOURCENOTFOUND = "ResourceNotFound"
+func (c *Client) CreateThrottleRule(request *CreateThrottleRuleRequest) (response *CreateThrottleRuleResponse, err error) {
+    return c.CreateThrottleRuleWithContext(context.Background(), request)
+}
+
+// CreateThrottleRule
+// 实例限流规则相关接口
+//
+// 可能返回的错误码:
+//  FAILEDOPERATION = "FailedOperation"
+//  INVALIDPARAMETER = "InvalidParameter"
+//  INVALIDPARAMETERVALUE = "InvalidParameterValue"
+//  RESOURCENOTFOUND = "ResourceNotFound"
+func (c *Client) CreateThrottleRuleWithContext(ctx context.Context, request *CreateThrottleRuleRequest) (response *CreateThrottleRuleResponse, err error) {
+    if request == nil {
+        request = NewCreateThrottleRuleRequest()
+    }
+    c.InitBaseRequest(&request.BaseRequest, "ckafka", APIVersion, "CreateThrottleRule")
+    
+    if c.GetCredential() == nil {
+        return nil, errors.New("CreateThrottleRule require credential")
+    }
+
+    request.SetContext(ctx)
+    
+    response = NewCreateThrottleRuleResponse()
+    err = c.Send(request, response)
+    return
+}
+
 func NewCreateTokenRequest() (request *CreateTokenRequest) {
     request = &CreateTokenRequest{
         BaseRequest: &tchttp.BaseRequest{},
@@ -2509,6 +2623,62 @@ func (c *Client) DeleteRouteTriggerTimeWithContext(ctx context.Context, request 
     request.SetContext(ctx)
     
     response = NewDeleteRouteTriggerTimeResponse()
+    err = c.Send(request, response)
+    return
+}
+
+func NewDeleteThrottleRuleRequest() (request *DeleteThrottleRuleRequest) {
+    request = &DeleteThrottleRuleRequest{
+        BaseRequest: &tchttp.BaseRequest{},
+    }
+    
+    request.Init().WithApiInfo("ckafka", APIVersion, "DeleteThrottleRule")
+    
+    
+    return
+}
+
+func NewDeleteThrottleRuleResponse() (response *DeleteThrottleRuleResponse) {
+    response = &DeleteThrottleRuleResponse{
+        BaseResponse: &tchttp.BaseResponse{},
+    } 
+    return
+
+}
+
+// DeleteThrottleRule
+// 删除实例限流规则
+//
+// 可能返回的错误码:
+//  FAILEDOPERATION = "FailedOperation"
+//  INVALIDPARAMETER = "InvalidParameter"
+//  INVALIDPARAMETERVALUE = "InvalidParameterValue"
+//  RESOURCENOTFOUND = "ResourceNotFound"
+func (c *Client) DeleteThrottleRule(request *DeleteThrottleRuleRequest) (response *DeleteThrottleRuleResponse, err error) {
+    return c.DeleteThrottleRuleWithContext(context.Background(), request)
+}
+
+// DeleteThrottleRule
+// 删除实例限流规则
+//
+// 可能返回的错误码:
+//  FAILEDOPERATION = "FailedOperation"
+//  INVALIDPARAMETER = "InvalidParameter"
+//  INVALIDPARAMETERVALUE = "InvalidParameterValue"
+//  RESOURCENOTFOUND = "ResourceNotFound"
+func (c *Client) DeleteThrottleRuleWithContext(ctx context.Context, request *DeleteThrottleRuleRequest) (response *DeleteThrottleRuleResponse, err error) {
+    if request == nil {
+        request = NewDeleteThrottleRuleRequest()
+    }
+    c.InitBaseRequest(&request.BaseRequest, "ckafka", APIVersion, "DeleteThrottleRule")
+    
+    if c.GetCredential() == nil {
+        return nil, errors.New("DeleteThrottleRule require credential")
+    }
+
+    request.SetContext(ctx)
+    
+    response = NewDeleteThrottleRuleResponse()
     err = c.Send(request, response)
     return
 }
@@ -4577,6 +4747,58 @@ func (c *Client) DescribeTaskStatusWithContext(ctx context.Context, request *Des
     return
 }
 
+func NewDescribeThrottleRulesRequest() (request *DescribeThrottleRulesRequest) {
+    request = &DescribeThrottleRulesRequest{
+        BaseRequest: &tchttp.BaseRequest{},
+    }
+    
+    request.Init().WithApiInfo("ckafka", APIVersion, "DescribeThrottleRules")
+    
+    
+    return
+}
+
+func NewDescribeThrottleRulesResponse() (response *DescribeThrottleRulesResponse) {
+    response = &DescribeThrottleRulesResponse{
+        BaseResponse: &tchttp.BaseResponse{},
+    } 
+    return
+
+}
+
+// DescribeThrottleRules
+// 获取实例限流规则列表
+//
+// 可能返回的错误码:
+//  INVALIDPARAMETER = "InvalidParameter"
+//  INVALIDPARAMETERVALUE = "InvalidParameterValue"
+func (c *Client) DescribeThrottleRules(request *DescribeThrottleRulesRequest) (response *DescribeThrottleRulesResponse, err error) {
+    return c.DescribeThrottleRulesWithContext(context.Background(), request)
+}
+
+// DescribeThrottleRules
+// 获取实例限流规则列表
+//
+// 可能返回的错误码:
+//  INVALIDPARAMETER = "InvalidParameter"
+//  INVALIDPARAMETERVALUE = "InvalidParameterValue"
+func (c *Client) DescribeThrottleRulesWithContext(ctx context.Context, request *DescribeThrottleRulesRequest) (response *DescribeThrottleRulesResponse, err error) {
+    if request == nil {
+        request = NewDescribeThrottleRulesRequest()
+    }
+    c.InitBaseRequest(&request.BaseRequest, "ckafka", APIVersion, "DescribeThrottleRules")
+    
+    if c.GetCredential() == nil {
+        return nil, errors.New("DescribeThrottleRules require credential")
+    }
+
+    request.SetContext(ctx)
+    
+    response = NewDescribeThrottleRulesResponse()
+    err = c.Send(request, response)
+    return
+}
+
 func NewDescribeTopicRequest() (request *DescribeTopicRequest) {
     request = &DescribeTopicRequest{
         BaseRequest: &tchttp.BaseRequest{},
@@ -5215,6 +5437,64 @@ func (c *Client) DescribeUserWithContext(ctx context.Context, request *DescribeU
     request.SetContext(ctx)
     
     response = NewDescribeUserResponse()
+    err = c.Send(request, response)
+    return
+}
+
+func NewDisassociateRoutesSecurityGroupRequest() (request *DisassociateRoutesSecurityGroupRequest) {
+    request = &DisassociateRoutesSecurityGroupRequest{
+        BaseRequest: &tchttp.BaseRequest{},
+    }
+    
+    request.Init().WithApiInfo("ckafka", APIVersion, "DisassociateRoutesSecurityGroup")
+    
+    
+    return
+}
+
+func NewDisassociateRoutesSecurityGroupResponse() (response *DisassociateRoutesSecurityGroupResponse) {
+    response = &DisassociateRoutesSecurityGroupResponse{
+        BaseResponse: &tchttp.BaseResponse{},
+    } 
+    return
+
+}
+
+// DisassociateRoutesSecurityGroup
+// 解绑路由安全组
+//
+// 可能返回的错误码:
+//  INTERNALERROR = "InternalError"
+//  INVALIDPARAMETER = "InvalidParameter"
+//  INVALIDPARAMETERVALUE = "InvalidParameterValue"
+//  LIMITEXCEEDED = "LimitExceeded"
+//  UNSUPPORTEDOPERATION = "UnsupportedOperation"
+func (c *Client) DisassociateRoutesSecurityGroup(request *DisassociateRoutesSecurityGroupRequest) (response *DisassociateRoutesSecurityGroupResponse, err error) {
+    return c.DisassociateRoutesSecurityGroupWithContext(context.Background(), request)
+}
+
+// DisassociateRoutesSecurityGroup
+// 解绑路由安全组
+//
+// 可能返回的错误码:
+//  INTERNALERROR = "InternalError"
+//  INVALIDPARAMETER = "InvalidParameter"
+//  INVALIDPARAMETERVALUE = "InvalidParameterValue"
+//  LIMITEXCEEDED = "LimitExceeded"
+//  UNSUPPORTEDOPERATION = "UnsupportedOperation"
+func (c *Client) DisassociateRoutesSecurityGroupWithContext(ctx context.Context, request *DisassociateRoutesSecurityGroupRequest) (response *DisassociateRoutesSecurityGroupResponse, err error) {
+    if request == nil {
+        request = NewDisassociateRoutesSecurityGroupRequest()
+    }
+    c.InitBaseRequest(&request.BaseRequest, "ckafka", APIVersion, "DisassociateRoutesSecurityGroup")
+    
+    if c.GetCredential() == nil {
+        return nil, errors.New("DisassociateRoutesSecurityGroup require credential")
+    }
+
+    request.SetContext(ctx)
+    
+    response = NewDisassociateRoutesSecurityGroupResponse()
     err = c.Send(request, response)
     return
 }
@@ -6293,6 +6573,66 @@ func (c *Client) ModifyPasswordWithContext(ctx context.Context, request *ModifyP
     return
 }
 
+func NewModifyRouteSecurityGroupsRequest() (request *ModifyRouteSecurityGroupsRequest) {
+    request = &ModifyRouteSecurityGroupsRequest{
+        BaseRequest: &tchttp.BaseRequest{},
+    }
+    
+    request.Init().WithApiInfo("ckafka", APIVersion, "ModifyRouteSecurityGroups")
+    
+    
+    return
+}
+
+func NewModifyRouteSecurityGroupsResponse() (response *ModifyRouteSecurityGroupsResponse) {
+    response = &ModifyRouteSecurityGroupsResponse{
+        BaseResponse: &tchttp.BaseResponse{},
+    } 
+    return
+
+}
+
+// ModifyRouteSecurityGroups
+// 修改路由安全组关联
+//
+// 可能返回的错误码:
+//  FAILEDOPERATION = "FailedOperation"
+//  INTERNALERROR = "InternalError"
+//  INVALIDPARAMETER = "InvalidParameter"
+//  INVALIDPARAMETERVALUE = "InvalidParameterValue"
+//  INVALIDPARAMETERVALUE_NOTALLOWEDEMPTY = "InvalidParameterValue.NotAllowedEmpty"
+//  RESOURCEUNAVAILABLE = "ResourceUnavailable"
+func (c *Client) ModifyRouteSecurityGroups(request *ModifyRouteSecurityGroupsRequest) (response *ModifyRouteSecurityGroupsResponse, err error) {
+    return c.ModifyRouteSecurityGroupsWithContext(context.Background(), request)
+}
+
+// ModifyRouteSecurityGroups
+// 修改路由安全组关联
+//
+// 可能返回的错误码:
+//  FAILEDOPERATION = "FailedOperation"
+//  INTERNALERROR = "InternalError"
+//  INVALIDPARAMETER = "InvalidParameter"
+//  INVALIDPARAMETERVALUE = "InvalidParameterValue"
+//  INVALIDPARAMETERVALUE_NOTALLOWEDEMPTY = "InvalidParameterValue.NotAllowedEmpty"
+//  RESOURCEUNAVAILABLE = "ResourceUnavailable"
+func (c *Client) ModifyRouteSecurityGroupsWithContext(ctx context.Context, request *ModifyRouteSecurityGroupsRequest) (response *ModifyRouteSecurityGroupsResponse, err error) {
+    if request == nil {
+        request = NewModifyRouteSecurityGroupsRequest()
+    }
+    c.InitBaseRequest(&request.BaseRequest, "ckafka", APIVersion, "ModifyRouteSecurityGroups")
+    
+    if c.GetCredential() == nil {
+        return nil, errors.New("ModifyRouteSecurityGroups require credential")
+    }
+
+    request.SetContext(ctx)
+    
+    response = NewModifyRouteSecurityGroupsResponse()
+    err = c.Send(request, response)
+    return
+}
+
 func NewModifyRoutineMaintenanceTaskRequest() (request *ModifyRoutineMaintenanceTaskRequest) {
     request = &ModifyRoutineMaintenanceTaskRequest{
         BaseRequest: &tchttp.BaseRequest{},
@@ -6365,6 +6705,62 @@ func (c *Client) ModifyRoutineMaintenanceTaskWithContext(ctx context.Context, re
     request.SetContext(ctx)
     
     response = NewModifyRoutineMaintenanceTaskResponse()
+    err = c.Send(request, response)
+    return
+}
+
+func NewModifyThrottleRuleRequest() (request *ModifyThrottleRuleRequest) {
+    request = &ModifyThrottleRuleRequest{
+        BaseRequest: &tchttp.BaseRequest{},
+    }
+    
+    request.Init().WithApiInfo("ckafka", APIVersion, "ModifyThrottleRule")
+    
+    
+    return
+}
+
+func NewModifyThrottleRuleResponse() (response *ModifyThrottleRuleResponse) {
+    response = &ModifyThrottleRuleResponse{
+        BaseResponse: &tchttp.BaseResponse{},
+    } 
+    return
+
+}
+
+// ModifyThrottleRule
+// 修改限流规则接口
+//
+// 可能返回的错误码:
+//  FAILEDOPERATION = "FailedOperation"
+//  INVALIDPARAMETER = "InvalidParameter"
+//  INVALIDPARAMETERVALUE = "InvalidParameterValue"
+//  RESOURCENOTFOUND = "ResourceNotFound"
+func (c *Client) ModifyThrottleRule(request *ModifyThrottleRuleRequest) (response *ModifyThrottleRuleResponse, err error) {
+    return c.ModifyThrottleRuleWithContext(context.Background(), request)
+}
+
+// ModifyThrottleRule
+// 修改限流规则接口
+//
+// 可能返回的错误码:
+//  FAILEDOPERATION = "FailedOperation"
+//  INVALIDPARAMETER = "InvalidParameter"
+//  INVALIDPARAMETERVALUE = "InvalidParameterValue"
+//  RESOURCENOTFOUND = "ResourceNotFound"
+func (c *Client) ModifyThrottleRuleWithContext(ctx context.Context, request *ModifyThrottleRuleRequest) (response *ModifyThrottleRuleResponse, err error) {
+    if request == nil {
+        request = NewModifyThrottleRuleRequest()
+    }
+    c.InitBaseRequest(&request.BaseRequest, "ckafka", APIVersion, "ModifyThrottleRule")
+    
+    if c.GetCredential() == nil {
+        return nil, errors.New("ModifyThrottleRule require credential")
+    }
+
+    request.SetContext(ctx)
+    
+    response = NewModifyThrottleRuleResponse()
     err = c.Send(request, response)
     return
 }

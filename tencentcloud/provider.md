@@ -229,6 +229,7 @@ tencentcloud_ckafka_topic_subscribe_group
 tencentcloud_ckafka_topic_sync_replica
 tencentcloud_ckafka_zone
 tencentcloud_ckafka_version
+tencentcloud_ckafka_routes
 
 Resource
 tencentcloud_ckafka_instance

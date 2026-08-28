@@ -878,6 +878,7 @@ func Provider() *schema.Provider {
 			"tencentcloud_ckafka_topic_sync_replica":                              ckafka.DataSourceTencentCloudCkafkaTopicSyncReplica(),
 			"tencentcloud_ckafka_version":                                         ckafka.DataSourceTencentCloudCkafkaVersion(),
 			"tencentcloud_ckafka_zone":                                            ckafka.DataSourceTencentCloudCkafkaZone(),
+			"tencentcloud_ckafka_routes":                                          ckafka.DataSourceTencentCloudCkafkaRoutes(),
 			"tencentcloud_audit_cos_regions":                                      cloudaudit.DataSourceTencentCloudAuditCosRegions(),
 			"tencentcloud_audit_key_alias":                                        cloudaudit.DataSourceTencentCloudAuditKeyAlias(),
 			"tencentcloud_audits":                                                 cloudaudit.DataSourceTencentCloudAudits(),
