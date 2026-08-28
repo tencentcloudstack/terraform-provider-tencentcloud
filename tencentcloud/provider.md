@@ -1528,6 +1528,7 @@ tencentcloud_cls_open_service_operation
 tencentcloud_cls_dlc_deliver
 tencentcloud_cls_console
 tencentcloud_cls_metric_subscribe
+tencentcloud_cls_splunk_deliver
 
 Data Source
 tencentcloud_cls_shipper_tasks
