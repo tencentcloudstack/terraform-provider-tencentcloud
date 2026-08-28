@@ -140,15 +140,15 @@ The following arguments are supported:
 	- Multiple availability zone deployment nodes can only be deployed in 3 different availability zones. Deploying most nodes of a cluster in the same availability zone is not supported. For example, a 3-node cluster does not support 2 nodes deployed in the same zone.
 * `charge_type` - (Optional, String, ForceNew) The charge type of instance. Valid values are `PREPAID` and `POSTPAID_BY_HOUR`. Default value is `POSTPAID_BY_HOUR`. Note: TencentCloud International only supports `POSTPAID_BY_HOUR`. Caution that update operation on this field will delete old instances and create new one with new charge type.
 * `cpu` - (Optional, Int) The CPU core count of the MongoDB instance after the configuration change. Unit: C. When this parameter is empty, the current CPU size of the instance is used by default. The supported CPU specifications can be obtained through the DescribeSpecInfo API.
-* `data_encryption` - (Optional, String, ForceNew) Database storage encryption setting. `No_Encryption`: Storage encryption is not used. `TDE`: Enables TDE storage encryption.
-* `encryption_key_source` - (Optional, String, ForceNew) If TDE storage encryption is selected, the key source must be specified. `auto`: Automatically generate the key. `manual`: Manually specify the key.
+* `data_encryption` - (Optional, String) Database storage encryption setting. `No_Encryption`: Storage encryption is not used. `TDE`: Enables TDE storage encryption. Note: this field does not support update, please recreate the resource if you need to change it.
+* `encryption_key_source` - (Optional, String) If TDE storage encryption is selected, the key source must be specified. `auto`: Automatically generate the key. `manual`: Manually specify the key. Note: this field does not support update, please recreate the resource if you need to change it.
 * `hidden_zone` - (Optional, String) The availability zone to which the Hidden node belongs. This parameter is required in cross-AZ instance deployment.
 * `in_maintenance` - (Optional, Int) Switch time for instance configuration changes.
 	- 0: When the adjustment is completed, perform the configuration task immediately. Default is 0.
 	- 1: Perform reconfiguration tasks within the maintenance time window.
 Note: Adjusting the number of nodes and slices does not support changes within the maintenance window.
-* `key_id` - (Optional, String, ForceNew) Key ID. If `manual` is selected as the key resource, you must enter the specified key ID.
-* `kms_region` - (Optional, String, ForceNew) Key ID. If `manual` is selected as the key resource, you must enter the specified key region.
+* `key_id` - (Optional, String) Key ID. If `manual` is selected as the key resource, you must enter the specified key ID. Note: this field does not support update, please recreate the resource if you need to change it.
+* `kms_region` - (Optional, String) Key ID. If `manual` is selected as the key resource, you must enter the specified key region. Note: this field does not support update, please recreate the resource if you need to change it.
 * `maintenance_end` - (Optional, String) Maintenance window end time.
 	- The value range is any full point or half point from `00:00-23:00`, and the maintenance time duration is at least 30 minutes and at most 3 hours.
 	- The end time must be based on the start time backwards.

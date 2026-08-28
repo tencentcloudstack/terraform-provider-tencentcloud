@@ -1,0 +1,15 @@
+```release-note:enhancement
+resource/tencentcloud_mongodb_instance: update document
+```
+
+```release-note:enhancement
+resource/tencentcloud_mongodb_sharding_instance: update document
+```
+
+```release-note:enhancement
+resource/tencentcloud_mongodb_standby_instance: update document
+```
+
+```release-note:enhancement
+resource/tencentcloud_mongodb_readonly_instance: update document
+```

@@ -210,29 +210,25 @@ func TencentMongodbBasicInfo() map[string]*schema.Schema {
 		"data_encryption": {
 			Type:        schema.TypeString,
 			Optional:    true,
-			ForceNew:    true,
 			Computed:    true,
-			Description: "Database storage encryption setting. `No_Encryption`: Storage encryption is not used. `TDE`: Enables TDE storage encryption.",
+			Description: "Database storage encryption setting. `No_Encryption`: Storage encryption is not used. `TDE`: Enables TDE storage encryption. Note: this field does not support update, please recreate the resource if you need to change it.",
 		},
 		"encryption_key_source": {
 			Type:        schema.TypeString,
 			Optional:    true,
-			ForceNew:    true,
-			Description: "If TDE storage encryption is selected, the key source must be specified. `auto`: Automatically generate the key. `manual`: Manually specify the key.",
+			Description: "If TDE storage encryption is selected, the key source must be specified. `auto`: Automatically generate the key. `manual`: Manually specify the key. Note: this field does not support update, please recreate the resource if you need to change it.",
 		},
 		"key_id": {
 			Type:        schema.TypeString,
 			Optional:    true,
-			ForceNew:    true,
 			Computed:    true,
-			Description: "Key ID. If `manual` is selected as the key resource, you must enter the specified key ID.",
+			Description: "Key ID. If `manual` is selected as the key resource, you must enter the specified key ID. Note: this field does not support update, please recreate the resource if you need to change it.",
 		},
 		"kms_region": {
 			Type:        schema.TypeString,
 			Optional:    true,
-			ForceNew:    true,
 			Computed:    true,
-			Description: "Key ID. If `manual` is selected as the key resource, you must enter the specified key region.",
+			Description: "Key ID. If `manual` is selected as the key resource, you must enter the specified key region. Note: this field does not support update, please recreate the resource if you need to change it.",
 		},
 		// Computed
 		"status": {
