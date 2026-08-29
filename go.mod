@@ -131,6 +131,7 @@ require (
 	github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/oceanus v1.0.831
 	github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/region v1.3.40
 	github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/tcss v1.1.50
+	github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/tdmysql v1.3.132
 	github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/thpc v1.0.998
 	github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/vcube v1.3.20
 	github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/vdb v1.3.27
