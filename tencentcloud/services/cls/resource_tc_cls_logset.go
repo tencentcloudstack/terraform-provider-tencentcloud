@@ -32,17 +32,19 @@ func ResourceTencentCloudClsLogset() *schema.Resource {
 			},
 
 			"tags": {
-				Type:        schema.TypeMap,
-				Optional:    true,
-				Deprecated:  "It is recommended to use `tag_list` because the current `tags` field is binding resources by calling the tag API.",
-				Description: "Tag description list.",
+				Type:          schema.TypeMap,
+				Optional:      true,
+				Deprecated:    "It is recommended to use `tag_list` because the current `tags` field is binding resources by calling the tag API.",
+				ConflictsWith: []string{"tag_list"},
+				Description:   "Tag description list.",
 			},
 
 			"tag_list": {
-				Type:        schema.TypeList,
-				Optional:    true,
-				Computed:    true,
-				Description: "Tag description list. The CLS API supports up to 10 tag key-value pairs, and duplicate keys are not allowed.",
+				Type:          schema.TypeList,
+				Optional:      true,
+				Computed:      true,
+				ConflictsWith: []string{"tags"},
+				Description:   "Tag description list. The CLS API supports up to 10 tag key-value pairs, and duplicate keys are not allowed.",
 				Elem: &schema.Resource{
 					Schema: map[string]*schema.Schema{
 						"key": {
@@ -189,30 +191,34 @@ func resourceTencentCloudClsLogsetRead(d *schema.ResourceData, meta interface{})
 		_ = d.Set("role_name", logset.RoleName)
 	}
 
-	tagsList := make([]map[string]interface{}, 0, len(logset.Tags))
-	for _, tag := range logset.Tags {
-		if tag == nil {
-			continue
+	if logset.Tags == nil {
+		tagsList := make([]map[string]interface{}, 0, len(logset.Tags))
+		for _, tag := range logset.Tags {
+			if tag == nil {
+				continue
+			}
+			tagMap := map[string]interface{}{}
+			if tag.Key != nil {
+				tagMap["key"] = tag.Key
+			}
+			if tag.Value != nil {
+				tagMap["value"] = tag.Value
+			}
+			tagsList = append(tagsList, tagMap)
 		}
-		tagMap := map[string]interface{}{}
-		if tag.Key != nil {
-			tagMap["key"] = tag.Key
-		}
-		if tag.Value != nil {
-			tagMap["value"] = tag.Value
-		}
-		tagsList = append(tagsList, tagMap)
-	}
-	_ = d.Set("tag_list", tagsList)
-
-	tcClient := meta.(tccommon.ProviderMeta).GetAPIV3Conn()
-	tagService := svctag.NewTagService(tcClient)
-	tags, err := tagService.DescribeResourceTags(ctx, "cls", "logset", tcClient.Region, d.Id())
-	if err != nil {
-		return err
+		_ = d.Set("tag_list", tagsList)
 	}
 
-	_ = d.Set("tags", tags)
+	if tags := helper.GetTags(d, "tags"); len(tags) > 0 {
+		tcClient := meta.(tccommon.ProviderMeta).GetAPIV3Conn()
+		tagService := svctag.NewTagService(tcClient)
+		tags, err := tagService.DescribeResourceTags(ctx, "cls", "logset", tcClient.Region, d.Id())
+		if err != nil {
+			return err
+		}
+
+		_ = d.Set("tags", tags)
+	}
 
 	return nil
 }
@@ -226,7 +232,7 @@ func resourceTencentCloudClsLogsetUpdate(d *schema.ResourceData, meta interface{
 		ctx   = context.WithValue(context.TODO(), tccommon.LogIdKey, logId)
 	)
 
-	if d.HasChange("logset_name") || d.HasChange("tags") {
+	if d.HasChange("logset_name") || d.HasChange("tag_list") {
 		request := cls.NewModifyLogsetRequest()
 		request.LogsetId = helper.String(d.Id())
 		if v, ok := d.GetOk("logset_name"); ok {
@@ -267,7 +273,7 @@ func resourceTencentCloudClsLogsetUpdate(d *schema.ResourceData, meta interface{
 		}
 	}
 
-	if d.HasChange("tags") {
+	if tags := helper.GetTags(d, "tags"); len(tags) > 0 && d.HasChange("tags") {
 		tcClient := meta.(tccommon.ProviderMeta).GetAPIV3Conn()
 		tagService := svctag.NewTagService(tcClient)
 		oldTags, newTags := d.GetChange("tags")
