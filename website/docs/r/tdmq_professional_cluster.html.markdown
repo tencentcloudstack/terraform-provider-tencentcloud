@@ -72,7 +72,7 @@ The following arguments are supported:
 * `storage_size` - (Required, Int) Storage specifications. Reference[Professional Cluster Specifications](https://cloud.tencent.com/document/product/1179/83705).
 * `zone_ids` - (Required, Set: [`Int`]) Multi-AZ deployment select three Availability Zones, like: [200002,200003,200004]. Single availability zone deployment selects an availability zone, like [200002].
 * `auto_voucher` - (Optional, Int, ForceNew) Whether to automatically select vouchers. `1`: Yes, `0`: No. Default is `0`.
-* `instance_version` - (Optional, String) Cluster version information. User can specify a version when creating the cluster.
+* `instance_version` - (Optional, String, ForceNew) Cluster version information. User can specify a version when creating the cluster.
 * `tags` - (Optional, Map) Tag description list.
 * `time_span` - (Optional, Int, ForceNew) Purchase duration, value range: 1~50. Default: 1.
 * `vpc` - (Optional, List) Label of VPC network.

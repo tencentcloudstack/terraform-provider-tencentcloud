@@ -78,6 +78,7 @@ func ResourceTencentCloudTdmqProfessionalCluster() *schema.Resource {
 
 			"instance_version": {
 				Optional:    true,
+				ForceNew:    true,
 				Computed:    true,
 				Type:        schema.TypeString,
 				Description: "Cluster version information. User can specify a version when creating the cluster.",
