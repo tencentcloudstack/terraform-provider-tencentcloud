@@ -46,7 +46,7 @@ require (
 	github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/clb v1.3.165
 	github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/cloudaudit v1.3.40
 	github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/cls v1.3.168
-	github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/common v1.3.168
+	github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/common v1.3.170
 	github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/config v1.3.80
 	github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/cvm v1.3.130
 	github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/cwp v1.3.30
@@ -70,7 +70,7 @@ require (
 	github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/live v1.3.95
 	github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/mariadb v1.3.102
 	github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/mongodb v1.3.141
-	github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/monitor v1.3.101
+	github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/monitor v1.3.170
 	github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/mps v1.3.45
 	github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/organization v1.3.110
 	github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/postgres v1.3.157

@@ -932,6 +932,7 @@ tencentcloud_monitor_tmp_multiple_writes_list
 TencentCloud Managed Service for Grafana(TCMG)
 Data Source
 tencentcloud_monitor_grafana_plugin_overviews
+tencentcloud_monitor_grafana_versions
 
 Resource
 tencentcloud_monitor_grafana_instance
