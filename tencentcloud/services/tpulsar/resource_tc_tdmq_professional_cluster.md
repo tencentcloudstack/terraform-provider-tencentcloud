@@ -6,11 +6,12 @@ single-zone Professional Cluster
 
 ```hcl
 resource "tencentcloud_tdmq_professional_cluster" "professional_cluster" {
-  auto_renew_flag = 1
-  cluster_name    = "single_zone_cluster"
-  product_name    = "PULSAR.P1.MINI2"
-  storage_size    = 600
-  tags            = {
+  auto_renew_flag  = 1
+  cluster_name     = "single_zone_cluster"
+  product_name     = "PULSAR.P1.MINI2"
+  storage_size     = 600
+  instance_version = "PULSAR_PRO_2.0.0"
+  tags             = {
     "createby" = "terrafrom"
   }
   zone_ids = [
@@ -28,11 +29,12 @@ Multi-zone Professional Cluster
 
 ```hcl
 resource "tencentcloud_tdmq_professional_cluster" "professional_cluster" {
-  auto_renew_flag = 1
-  cluster_name    = "multi_zone_cluster"
-  product_name    = "PULSAR.P1.MINI2"
-  storage_size    = 200
-  tags            = {
+  auto_renew_flag  = 1
+  cluster_name     = "multi_zone_cluster"
+  product_name     = "PULSAR.P1.MINI2"
+  storage_size     = 200
+  instance_version = "PULSAR_PRO_2.0.0"
+  tags             = {
     "key"  = "value1"
     "key2" = "value2"
   }

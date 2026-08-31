@@ -17,10 +17,11 @@ Provides a resource to create a tdmq professional_cluster
 
 ```hcl
 resource "tencentcloud_tdmq_professional_cluster" "professional_cluster" {
-  auto_renew_flag = 1
-  cluster_name    = "single_zone_cluster"
-  product_name    = "PULSAR.P1.MINI2"
-  storage_size    = 600
+  auto_renew_flag  = 1
+  cluster_name     = "single_zone_cluster"
+  product_name     = "PULSAR.P1.MINI2"
+  storage_size     = 600
+  instance_version = "PULSAR_PRO_2.0.0"
   tags = {
     "createby" = "terrafrom"
   }
@@ -39,10 +40,11 @@ resource "tencentcloud_tdmq_professional_cluster" "professional_cluster" {
 
 ```hcl
 resource "tencentcloud_tdmq_professional_cluster" "professional_cluster" {
-  auto_renew_flag = 1
-  cluster_name    = "multi_zone_cluster"
-  product_name    = "PULSAR.P1.MINI2"
-  storage_size    = 200
+  auto_renew_flag  = 1
+  cluster_name     = "multi_zone_cluster"
+  product_name     = "PULSAR.P1.MINI2"
+  storage_size     = 200
+  instance_version = "PULSAR_PRO_2.0.0"
   tags = {
     "key"  = "value1"
     "key2" = "value2"
@@ -70,6 +72,7 @@ The following arguments are supported:
 * `storage_size` - (Required, Int) Storage specifications. Reference[Professional Cluster Specifications](https://cloud.tencent.com/document/product/1179/83705).
 * `zone_ids` - (Required, Set: [`Int`]) Multi-AZ deployment select three Availability Zones, like: [200002,200003,200004]. Single availability zone deployment selects an availability zone, like [200002].
 * `auto_voucher` - (Optional, Int, ForceNew) Whether to automatically select vouchers. `1`: Yes, `0`: No. Default is `0`.
+* `instance_version` - (Optional, String) Cluster version information. User can specify a version when creating the cluster.
 * `tags` - (Optional, Map) Tag description list.
 * `time_span` - (Optional, Int, ForceNew) Purchase duration, value range: 1~50. Default: 1.
 * `vpc` - (Optional, List) Label of VPC network.

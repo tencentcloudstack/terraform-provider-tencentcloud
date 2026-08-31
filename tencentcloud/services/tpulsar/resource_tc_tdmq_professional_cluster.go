@@ -76,6 +76,13 @@ func ResourceTencentCloudTdmqProfessionalCluster() *schema.Resource {
 				Computed:    true,
 			},
 
+			"instance_version": {
+				Optional:    true,
+				Computed:    true,
+				Type:        schema.TypeString,
+				Description: "Cluster version information. User can specify a version when creating the cluster.",
+			},
+
 			"vpc": {
 				Optional:    true,
 				Type:        schema.TypeList,
@@ -151,6 +158,10 @@ func resourceTencentCloudTdmqProfessionalClusterCreate(d *schema.ResourceData, m
 		request.AutoVoucher = helper.IntInt64(v.(int))
 	} else {
 		request.AutoVoucher = helper.Int64(0)
+	}
+
+	if v, ok := d.GetOk("instance_version"); ok {
+		request.InstanceVersion = helper.String(v.(string))
 	}
 
 	if dMap, ok := helper.InterfacesHeadMap(d, "vpc"); ok {
@@ -257,6 +268,10 @@ func resourceTencentCloudTdmqProfessionalClusterRead(d *schema.ResourceData, met
 
 	if professionalCluster.InstanceName != nil {
 		_ = d.Set("cluster_name", professionalCluster.InstanceName)
+	}
+
+	if professionalCluster.InstanceVersion != nil {
+		_ = d.Set("instance_version", professionalCluster.InstanceVersion)
 	}
 
 	//if professionalCluster.AutoVoucher != nil {
