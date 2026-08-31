@@ -28,9 +28,10 @@ resource "tencentcloud_cls_logset" "example" {
 The following arguments are supported:
 
 * `logset_name` - (Required, String) Logset name, which must be unique.
-* `tags` - (Optional, List) Tag description list. The CLS API supports up to 10 tag key-value pairs, and duplicate keys are not allowed.
+* `tag_list` - (Optional, List) Tag description list. The CLS API supports up to 10 tag key-value pairs, and duplicate keys are not allowed.
+* `tags` - (Optional, Map, **Deprecated**) It is recommended to use `tag_list` because the current `tags` field is binding resources by calling the tag API. Tag description list.
 
-The `tags` object supports the following:
+The `tag_list` object supports the following:
 
 * `key` - (Required, String) Tag key.
 * `value` - (Required, String) Tag value.
