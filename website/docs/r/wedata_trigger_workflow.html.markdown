@@ -83,8 +83,8 @@ The `trigger_workflow_scheduler_configurations` object supports the following:
 * `schedule_time_zone` - (Optional, String) Scheduler time zone.
 * `scheduler_status` - (Optional, String) Trigger status, ACTIVE or PAUSED.
 * `start_time` - (Optional, String) Schedule effective start time.
-* `trigger_minimum_interval_second` - (Optional, Int) Minimum trigger interval in file arrival mode (seconds).
-* `trigger_wait_time_second` - (Optional, Int) Trigger wait time in file arrival mode (seconds).
+* `trigger_minimum_interval_second` - (Optional, Int, **Deprecated**) This parameter is deprecated and will be removed in a future version. Minimum trigger interval in file arrival mode (seconds).
+* `trigger_wait_time_second` - (Optional, Int, **Deprecated**) This parameter is deprecated and will be removed in a future version. Trigger wait time in file arrival mode (seconds).
 
 The `workflow_params` object supports the following:
 

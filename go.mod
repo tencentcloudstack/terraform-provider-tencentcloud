@@ -46,7 +46,7 @@ require (
 	github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/clb v1.3.165
 	github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/cloudaudit v1.3.40
 	github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/cls v1.3.168
-	github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/common v1.3.168
+	github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/common v1.3.170
 	github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/config v1.3.80
 	github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/cvm v1.3.130
 	github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/cwp v1.3.30
@@ -101,7 +101,7 @@ require (
 	github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/vod v1.3.127
 	github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/vpc v1.3.157
 	github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/waf v1.3.144
-	github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/wedata v1.3.30
+	github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/wedata v1.3.170
 	github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/wss v1.0.199
 	github.com/tencentyun/cos-go-sdk-v5 v0.7.74
 	github.com/yangwenmai/ratelimit v0.0.0-20180104140304-44221c2292e1
