@@ -109,6 +109,13 @@ func ResourceTencentCloudTdmqProfessionalCluster() *schema.Resource {
 				Optional:    true,
 				Description: "Tag description list.",
 			},
+
+			// computed
+			"cluster_id": {
+				Computed:    true,
+				Type:        schema.TypeString,
+				Description: "Id of cluster.",
+			},
 		},
 	}
 }
@@ -182,6 +189,11 @@ func resourceTencentCloudTdmqProfessionalClusterCreate(d *schema.ResourceData, m
 		} else {
 			log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), result.ToJsonString())
 		}
+
+		if result == nil || result.Response == nil {
+			return resource.NonRetryableError(fmt.Errorf("Create pro cluster failed, Response is nil"))
+		}
+
 		response = result
 		return nil
 	})
@@ -190,13 +202,15 @@ func resourceTencentCloudTdmqProfessionalClusterCreate(d *schema.ResourceData, m
 		return err
 	}
 
+	if response.Response.ClusterId == nil {
+		return fmt.Errorf("ClusterId is nil")
+	}
+
 	clusterId = *response.Response.ClusterId
 	d.SetId(clusterId)
 
 	service := svctdmq.NewTdmqService(meta.(tccommon.ProviderMeta).GetAPIV3Conn())
-
 	conf := tccommon.BuildStateChangeConf([]string{"0"}, []string{"1"}, 8*tccommon.ReadRetryTimeout, time.Second, service.TdmqProfessionalClusterStateRefreshFunc(d.Id(), []string{}))
-
 	if _, e := conf.WaitForState(); e != nil {
 		return e
 	}
@@ -237,9 +251,13 @@ func resourceTencentCloudTdmqProfessionalClusterRead(d *schema.ResourceData, met
 	}
 
 	if professionalCluster == nil {
+		log.Printf("[WARN]%s resource `tencentcloud_tdmq_professional_cluster` [%s] not found, please check if it has been deleted.\n", logId, d.Id())
 		d.SetId("")
-		log.Printf("[WARN]%s resource `TdmqProfessionalCluster` [%s] not found, please check if it has been deleted.\n", logId, d.Id())
 		return nil
+	}
+
+	if clusterInfo.ClusterId != nil {
+		_ = d.Set("cluster_id", clusterInfo.ClusterId)
 	}
 
 	if clusterInfo.NodeDistribution != nil {
