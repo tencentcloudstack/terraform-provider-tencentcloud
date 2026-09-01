@@ -1656,7 +1656,7 @@ func (me *TeoService) DescribeTeoL7AccRuleById(ctx context.Context, zoneId strin
 
 	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
 
-	if response == nil {
+	if response == nil || response.Response == nil {
 		return
 	}
 
