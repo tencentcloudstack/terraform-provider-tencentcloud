@@ -46,6 +46,9 @@ In addition to all arguments above, the following attributes are exported:
 
 * `id` - ID of the resource.
 
+The `js_injection_rules` object exports the following:
+
+* `rule_id` - Rule ID, e.g. `injection-xxxxxxxx`.
 
 
 ## Import

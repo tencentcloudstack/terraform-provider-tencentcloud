@@ -42,6 +42,9 @@ In addition to all arguments above, the following attributes are exported:
 
 * `id` - ID of the resource.
 
+The `api_services` object exports the following:
+
+* `id` - API service ID, e.g. `apisrv-xxxxxxxx`.
 
 
 ## Import

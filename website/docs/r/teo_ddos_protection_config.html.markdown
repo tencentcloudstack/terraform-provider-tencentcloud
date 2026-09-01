@@ -83,6 +83,13 @@ In addition to all arguments above, the following attributes are exported:
 
 * `id` - ID of the resource.
 
+The `ddos_protection` object exports the following:
+
+* `shared_cname_ddos_protections` - Specifies the exclusive DDoS protection configuration of a shared CNAME. used as an output parameter.
+  * `domain` - Domain name.
+  * `switch` - Standalone DDoS switch of the domain. valid values:.
+<li>on: enabled;</li>.
+<li>off: closed.</li>.
 
 
 ## Import

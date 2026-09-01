@@ -321,6 +321,10 @@ In addition to all arguments above, the following attributes are exported:
 * `id` - ID of the resource.
 * `resource_id` - CVM instance ID.
 
+The `system_disk` object exports the following:
+
+* `disk_id` - System disk snapshot ID used to initialize the system disk. When system disk type is `LOCAL_BASIC` and `LOCAL_SSD`, disk id is not supported.
+
 
 ## Import
 

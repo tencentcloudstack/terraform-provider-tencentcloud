@@ -60,6 +60,10 @@ In addition to all arguments above, the following attributes are exported:
 * `create_time` - Creation time.
 * `update_time` - Update time.
 
+The `baseline_config_items` object exports the following:
+
+* `apply_count` - Specifies the number of accounts for baseline applications.
+
 
 ## Import
 

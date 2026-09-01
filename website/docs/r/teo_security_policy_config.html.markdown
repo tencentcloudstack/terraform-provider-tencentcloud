@@ -2231,6 +2231,121 @@ In addition to all arguments above, the following attributes are exported:
 
 * `id` - ID of the resource.
 
+The `acl_user_rules` object of `acl_config` exports the following:
+
+* `rule_id` - Rule ID. Output-only.
+* `update_time` - Update time. Output-only.
+
+The `alg_detect_rule` object of `bot_config` exports the following:
+
+* `rule_id` - Rule ID. Output-only.
+* `update_time` - Update time.
+
+The `auto_update` object of `managed_rules` exports the following:
+
+* `ruleset_version` - The currently used version, in the format compliant with ISO 8601 standard, such as 2023-12-21T12:00:32Z. it is empty by default and is only an output parameter.
+
+The `basic_access_rules` object of `custom_rules` exports the following:
+
+* `id` - The ID of a custom rule. <br> the rule ID supports different rule configuration operations: <br> - add a new rule: ID is empty or the ID parameter is not specified; <br> - modify an existing rule: specify the rule ID that needs to be updated/modified; <br> - delete an existing rule: existing Rules not included in the Rules list of the CustomRules parameter will be deleted.
+* `rule_type` - Type of custom rule. valid values: <li>BasicAccessRule: basic access control;</li> <li>PreciseMatchRule: exact matching rule, default;</li> <li>ManagedAccessRule: expert customized rule, for output only.</li> the default value is PreciseMatchRule.
+
+The `bot_intelligence` object of `basic_bot_settings` exports the following:
+
+* `id` - Rule ID. Output-only.
+
+The `bot_managed_rule` object of `bot_config` exports the following:
+
+* `rule_id` - Rule ID. Output-only.
+
+The `bot_portrait_rule` object of `bot_config` exports the following:
+
+* `rule_id` - Rule ID. Output-only.
+
+The `bot_user_rules` object of `bot_config` exports the following:
+
+* `rule_id` - Rule ID. Output-only.
+* `update_time` - Update time. Output-only.
+
+The `customizes` object of `acl_config` exports the following:
+
+* `rule_id` - Rule ID. Output-only.
+* `update_time` - Update time. Output-only.
+
+The `customizes` object of `bot_config` exports the following:
+
+* `rule_id` - Rule ID. Output-only.
+* `update_time` - Update time. Output-only.
+
+The `except_user_rules` object of `except_config` exports the following:
+
+* `rule_id` - Rule ID. Output-only.
+* `update_time` - Update time.
+
+The `ip_table_rules` object of `ip_table_config` exports the following:
+
+* `rule_id` - Rule ID. Output-only.
+* `update_time` - Update time. Output-only.
+
+The `managed_rule_groups` object of `managed_rules` exports the following:
+
+* `meta_data` - Managed rule group information, for output only.
+  * `group_detail` - Managed rule group description, for output only.
+  * `group_name` - Managed rule group name, for output only.
+  * `rule_details` - All sub-rule information under the current managed rule group, for output only.
+    * `description` - Rule description.
+    * `risk_level` - Protection level of managed rules. valid values: <li>low: low risk. this rule has a relatively low risk and is applicable to access scenarios in a very strict control environment. this level of rule may generate considerable false alarms.</li> <li>medium: medium risk. this means the risk of this rule is normal and it is suitable for protection scenarios with stricter requirements.</li> <li>high: high risk. this indicates that the risk of this rule is relatively high and it will not generate false alarms in most scenarios.</li> <li>extreme: ultra-high risk. this represents that the risk of this rule is extremely high and it will not generate false alarms basically.</li>.
+    * `rule_id` - Managed rule Id.
+    * `rule_version` - Rule ownership version.
+    * `tags` - Rule tag. some types of rules do not have tags.
+
+The `precise_match_rules` object of `custom_rules` exports the following:
+
+* `id` - The ID of a custom rule. <br> the rule ID supports different rule configuration operations: <br> - add a new rule: ID is empty or the ID parameter is not specified; <br> - modify an existing rule: specify the rule ID that needs to be updated/modified; <br> - delete an existing rule: existing Rules not included in the Rules list of the CustomRules parameter will be deleted.
+* `rule_type` - Type of custom rule. valid values: <li>BasicAccessRule: basic access control;</li> <li>PreciseMatchRule: exact matching rule, default;</li> <li>ManagedAccessRule: expert customized rule, for output only.</li> the default value is PreciseMatchRule.
+
+The `rate_limit_customizes` object of `rate_limit_config` exports the following:
+
+* `rule_id` - Rule ID. Output-only.
+* `update_time` - Update time. Output-only.
+
+The `rate_limit_intelligence` object of `rate_limit_config` exports the following:
+
+* `rule_id` - Rule ID. Output-only.
+
+The `rate_limit_template` object of `rate_limit_config` exports the following:
+
+* `rate_limit_template_detail` - Template detail. Output-only.
+  * `action` - Template action. Output-only.
+  * `id` - Template ID. Output-only.
+  * `mode` - Template level. Output-only.
+  * `period` - Statistical period in seconds. Output-only.
+  * `punish_time` - Penalty time in seconds. Output-only.
+  * `threshold` - Rate limit threshold. Output-only.
+
+The `rate_limit_user_rules` object of `rate_limit_config` exports the following:
+
+* `rule_id` - Rule ID. Output-only.
+* `update_time` - Update time. Output-only.
+
+The `security_config` object exports the following:
+
+* `detect_length_limit_config` - Detect length limit configuration.
+  * `detect_length_limit_rules` - Detect length limit rules.
+    * `action` - Action. Valid values: `skip`, `scan`. Output-only.
+    * `conditions` - Rule conditions. Output-only.
+      * `name` - Condition name. Valid values: `body_depth`. Output-only.
+      * `values` - Condition values. Valid values: `10KB`, `64KB`, `128KB`. Output-only.
+    * `description` - Rule description. Output-only.
+    * `rule_id` - Rule ID. Output-only.
+    * `rule_name` - Rule name. Output-only.
+* `template_config` - Template configuration.
+  * `template_id` - Template ID.
+  * `template_name` - Template name.
+
+The `slow_post_config` object of `security_config` exports the following:
+
+* `rule_id` - Rule ID. Output-only.
 
 
 ## Import

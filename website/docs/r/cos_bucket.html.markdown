@@ -792,6 +792,10 @@ In addition to all arguments above, the following attributes are exported:
 * `id` - ID of the resource.
 * `cos_bucket_url` - The URL of this cos bucket.
 
+The `website` object exports the following:
+
+* `endpoint` - `Endpoint` of the static website.
+
 
 ## Import
 

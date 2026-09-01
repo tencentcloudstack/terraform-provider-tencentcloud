@@ -93,6 +93,9 @@ In addition to all arguments above, the following attributes are exported:
 
 * `id` - ID of the resource.
 
+The `l4_proxy_rules` object exports the following:
+
+* `rule_id` - Forwarding rule ID.
 
 
 ## Import
