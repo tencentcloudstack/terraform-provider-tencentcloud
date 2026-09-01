@@ -1,4 +1,4 @@
-// Copyright (c) 2017-2018 THL A29 Limited, a Tencent company. All Rights Reserved.
+// Copyright (c) 2017-2025 Tencent. All Rights Reserved.
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -67,7 +67,7 @@ func NewAssociateTargetGroupsResponse() (response *AssociateTargetGroupsResponse
 // AssociateTargetGroups
 // 本接口(AssociateTargetGroups)用来将目标组绑定到负载均衡。
 //
-// 本接口为异步接口，本接口返回成功后需以返回的 RequestID 为入参，调用 DescribeTaskStatus 接口查询本次任务是否成功。
+// 本接口为异步接口，本接口返回成功后需以返回的 RequestID 为入参，调用 [DescribeTaskStatus](https://cloud.tencent.com/document/product/214/30683) 接口查询本次任务是否成功。
 //
 // 可能返回的错误码:
 //  FAILEDOPERATION = "FailedOperation"
@@ -84,7 +84,7 @@ func (c *Client) AssociateTargetGroups(request *AssociateTargetGroupsRequest) (r
 // AssociateTargetGroups
 // 本接口(AssociateTargetGroups)用来将目标组绑定到负载均衡。
 //
-// 本接口为异步接口，本接口返回成功后需以返回的 RequestID 为入参，调用 DescribeTaskStatus 接口查询本次任务是否成功。
+// 本接口为异步接口，本接口返回成功后需以返回的 RequestID 为入参，调用 [DescribeTaskStatus](https://cloud.tencent.com/document/product/214/30683) 接口查询本次任务是否成功。
 //
 // 可能返回的错误码:
 //  FAILEDOPERATION = "FailedOperation"
@@ -98,6 +98,7 @@ func (c *Client) AssociateTargetGroupsWithContext(ctx context.Context, request *
     if request == nil {
         request = NewAssociateTargetGroupsRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "gwlb", APIVersion, "AssociateTargetGroups")
     
     if c.GetCredential() == nil {
         return nil, errors.New("AssociateTargetGroups require credential")
@@ -134,7 +135,7 @@ func NewCreateGatewayLoadBalancerResponse() (response *CreateGatewayLoadBalancer
 //
 // 注意：单个账号在每个地域的默认购买配额为：10个。
 //
-// 本接口为异步接口，接口成功返回后，可使用 DescribeGatewayLoadBalancers 接口查询负载均衡实例的状态（如创建中、正常），以确定是否创建成功。
+// 本接口为异步接口，接口成功返回后，可使用 [DescribeTaskStatus](https://cloud.tencent.com/document/api/1782/111700) 接口查询负载均衡实例的状态。
 //
 // 可能返回的错误码:
 //  INVALIDPARAMETER_FORMATERROR = "InvalidParameter.FormatError"
@@ -148,7 +149,7 @@ func (c *Client) CreateGatewayLoadBalancer(request *CreateGatewayLoadBalancerReq
 //
 // 注意：单个账号在每个地域的默认购买配额为：10个。
 //
-// 本接口为异步接口，接口成功返回后，可使用 DescribeGatewayLoadBalancers 接口查询负载均衡实例的状态（如创建中、正常），以确定是否创建成功。
+// 本接口为异步接口，接口成功返回后，可使用 [DescribeTaskStatus](https://cloud.tencent.com/document/api/1782/111700) 接口查询负载均衡实例的状态。
 //
 // 可能返回的错误码:
 //  INVALIDPARAMETER_FORMATERROR = "InvalidParameter.FormatError"
@@ -157,6 +158,7 @@ func (c *Client) CreateGatewayLoadBalancerWithContext(ctx context.Context, reque
     if request == nil {
         request = NewCreateGatewayLoadBalancerRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "gwlb", APIVersion, "CreateGatewayLoadBalancer")
     
     if c.GetCredential() == nil {
         return nil, errors.New("CreateGatewayLoadBalancer require credential")
@@ -189,7 +191,7 @@ func NewCreateTargetGroupResponse() (response *CreateTargetGroupResponse) {
 }
 
 // CreateTargetGroup
-// 创建目标组。该功能正在内测中，如需使用，请通过[工单申请](https://console.cloud.tencent.com/workorder/category?level1_id=6&level2_id=163&source=0&data_title=%E8%B4%9F%E8%BD%BD%E5%9D%87%E8%A1%A1%20LB&step=1)。
+// 创建目标组。
 //
 // 可能返回的错误码:
 //  FAILEDOPERATION = "FailedOperation"
@@ -204,7 +206,7 @@ func (c *Client) CreateTargetGroup(request *CreateTargetGroupRequest) (response 
 }
 
 // CreateTargetGroup
-// 创建目标组。该功能正在内测中，如需使用，请通过[工单申请](https://console.cloud.tencent.com/workorder/category?level1_id=6&level2_id=163&source=0&data_title=%E8%B4%9F%E8%BD%BD%E5%9D%87%E8%A1%A1%20LB&step=1)。
+// 创建目标组。
 //
 // 可能返回的错误码:
 //  FAILEDOPERATION = "FailedOperation"
@@ -218,6 +220,7 @@ func (c *Client) CreateTargetGroupWithContext(ctx context.Context, request *Crea
     if request == nil {
         request = NewCreateTargetGroupRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "gwlb", APIVersion, "CreateTargetGroup")
     
     if c.GetCredential() == nil {
         return nil, errors.New("CreateTargetGroup require credential")
@@ -252,7 +255,7 @@ func NewDeleteGatewayLoadBalancerResponse() (response *DeleteGatewayLoadBalancer
 // DeleteGatewayLoadBalancer
 // DeleteGatewayLoadBalancer 接口用以删除指定的一个或多个网关负载均衡实例。成功删除后，会把网关负载均衡实例与后端服务解绑。
 //
-// 本接口为异步接口，接口返回成功后，需以返回的 RequestId 为入参，调用 DescribeTaskStatus 接口查询本次任务是否成功。
+// 本接口为异步接口，接口返回成功后，需以返回的 RequestId 为入参，调用 [DescribeTaskStatus](https://cloud.tencent.com/document/api/1782/111700) 接口查询本次任务是否成功。
 //
 // 可能返回的错误码:
 //  INVALIDPARAMETER_FORMATERROR = "InvalidParameter.FormatError"
@@ -263,7 +266,7 @@ func (c *Client) DeleteGatewayLoadBalancer(request *DeleteGatewayLoadBalancerReq
 // DeleteGatewayLoadBalancer
 // DeleteGatewayLoadBalancer 接口用以删除指定的一个或多个网关负载均衡实例。成功删除后，会把网关负载均衡实例与后端服务解绑。
 //
-// 本接口为异步接口，接口返回成功后，需以返回的 RequestId 为入参，调用 DescribeTaskStatus 接口查询本次任务是否成功。
+// 本接口为异步接口，接口返回成功后，需以返回的 RequestId 为入参，调用 [DescribeTaskStatus](https://cloud.tencent.com/document/api/1782/111700) 接口查询本次任务是否成功。
 //
 // 可能返回的错误码:
 //  INVALIDPARAMETER_FORMATERROR = "InvalidParameter.FormatError"
@@ -271,6 +274,7 @@ func (c *Client) DeleteGatewayLoadBalancerWithContext(ctx context.Context, reque
     if request == nil {
         request = NewDeleteGatewayLoadBalancerRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "gwlb", APIVersion, "DeleteGatewayLoadBalancer")
     
     if c.GetCredential() == nil {
         return nil, errors.New("DeleteGatewayLoadBalancer require credential")
@@ -328,6 +332,7 @@ func (c *Client) DeleteTargetGroupsWithContext(ctx context.Context, request *Del
     if request == nil {
         request = NewDeleteTargetGroupsRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "gwlb", APIVersion, "DeleteTargetGroups")
     
     if c.GetCredential() == nil {
         return nil, errors.New("DeleteTargetGroups require credential")
@@ -362,8 +367,6 @@ func NewDeregisterTargetGroupInstancesResponse() (response *DeregisterTargetGrou
 // DeregisterTargetGroupInstances
 // 从目标组中解绑服务器。
 //
-// 本接口为异步接口，本接口返回成功后需以返回的 RequestID 为入参，调用 DescribeTaskStatus 接口查询本次任务是否成功。
-//
 // 可能返回的错误码:
 //  FAILEDOPERATION = "FailedOperation"
 //  FAILEDOPERATION_RESOURCEINOPERATING = "FailedOperation.ResourceInOperating"
@@ -378,8 +381,6 @@ func (c *Client) DeregisterTargetGroupInstances(request *DeregisterTargetGroupIn
 // DeregisterTargetGroupInstances
 // 从目标组中解绑服务器。
 //
-// 本接口为异步接口，本接口返回成功后需以返回的 RequestID 为入参，调用 DescribeTaskStatus 接口查询本次任务是否成功。
-//
 // 可能返回的错误码:
 //  FAILEDOPERATION = "FailedOperation"
 //  FAILEDOPERATION_RESOURCEINOPERATING = "FailedOperation.ResourceInOperating"
@@ -391,6 +392,7 @@ func (c *Client) DeregisterTargetGroupInstancesWithContext(ctx context.Context, 
     if request == nil {
         request = NewDeregisterTargetGroupInstancesRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "gwlb", APIVersion, "DeregisterTargetGroupInstances")
     
     if c.GetCredential() == nil {
         return nil, errors.New("DeregisterTargetGroupInstances require credential")
@@ -444,6 +446,7 @@ func (c *Client) DescribeGatewayLoadBalancersWithContext(ctx context.Context, re
     if request == nil {
         request = NewDescribeGatewayLoadBalancersRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "gwlb", APIVersion, "DescribeGatewayLoadBalancers")
     
     if c.GetCredential() == nil {
         return nil, errors.New("DescribeGatewayLoadBalancers require credential")
@@ -452,6 +455,60 @@ func (c *Client) DescribeGatewayLoadBalancersWithContext(ctx context.Context, re
     request.SetContext(ctx)
     
     response = NewDescribeGatewayLoadBalancersResponse()
+    err = c.Send(request, response)
+    return
+}
+
+func NewDescribeGatewayLoadBalancersResourcesRequest() (request *DescribeGatewayLoadBalancersResourcesRequest) {
+    request = &DescribeGatewayLoadBalancersResourcesRequest{
+        BaseRequest: &tchttp.BaseRequest{},
+    }
+    
+    request.Init().WithApiInfo("gwlb", APIVersion, "DescribeGatewayLoadBalancersResources")
+    
+    
+    return
+}
+
+func NewDescribeGatewayLoadBalancersResourcesResponse() (response *DescribeGatewayLoadBalancersResourcesResponse) {
+    response = &DescribeGatewayLoadBalancersResourcesResponse{
+        BaseResponse: &tchttp.BaseResponse{},
+    } 
+    return
+
+}
+
+// DescribeGatewayLoadBalancersResources
+// 查询用户在当前地域支持可用区列表
+//
+// 可能返回的错误码:
+//  INVALIDPARAMETER_FORMATERROR = "InvalidParameter.FormatError"
+//  INVALIDPARAMETERVALUE_INVALIDFILTER = "InvalidParameterValue.InvalidFilter"
+//  INVALIDPARAMETERVALUE_LENGTH = "InvalidParameterValue.Length"
+func (c *Client) DescribeGatewayLoadBalancersResources(request *DescribeGatewayLoadBalancersResourcesRequest) (response *DescribeGatewayLoadBalancersResourcesResponse, err error) {
+    return c.DescribeGatewayLoadBalancersResourcesWithContext(context.Background(), request)
+}
+
+// DescribeGatewayLoadBalancersResources
+// 查询用户在当前地域支持可用区列表
+//
+// 可能返回的错误码:
+//  INVALIDPARAMETER_FORMATERROR = "InvalidParameter.FormatError"
+//  INVALIDPARAMETERVALUE_INVALIDFILTER = "InvalidParameterValue.InvalidFilter"
+//  INVALIDPARAMETERVALUE_LENGTH = "InvalidParameterValue.Length"
+func (c *Client) DescribeGatewayLoadBalancersResourcesWithContext(ctx context.Context, request *DescribeGatewayLoadBalancersResourcesRequest) (response *DescribeGatewayLoadBalancersResourcesResponse, err error) {
+    if request == nil {
+        request = NewDescribeGatewayLoadBalancersResourcesRequest()
+    }
+    c.InitBaseRequest(&request.BaseRequest, "gwlb", APIVersion, "DescribeGatewayLoadBalancersResources")
+    
+    if c.GetCredential() == nil {
+        return nil, errors.New("DescribeGatewayLoadBalancersResources require credential")
+    }
+
+    request.SetContext(ctx)
+    
+    response = NewDescribeGatewayLoadBalancersResourcesResponse()
     err = c.Send(request, response)
     return
 }
@@ -497,6 +554,7 @@ func (c *Client) DescribeTargetGroupInstanceStatusWithContext(ctx context.Contex
     if request == nil {
         request = NewDescribeTargetGroupInstanceStatusRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "gwlb", APIVersion, "DescribeTargetGroupInstanceStatus")
     
     if c.GetCredential() == nil {
         return nil, errors.New("DescribeTargetGroupInstanceStatus require credential")
@@ -536,6 +594,7 @@ func NewDescribeTargetGroupInstancesResponse() (response *DescribeTargetGroupIns
 //  INTERNALERROR = "InternalError"
 //  INVALIDPARAMETER = "InvalidParameter"
 //  INVALIDPARAMETERVALUE = "InvalidParameterValue"
+//  INVALIDPARAMETERVALUE_RANGE = "InvalidParameterValue.Range"
 //  UNAUTHORIZEDOPERATION = "UnauthorizedOperation"
 func (c *Client) DescribeTargetGroupInstances(request *DescribeTargetGroupInstancesRequest) (response *DescribeTargetGroupInstancesResponse, err error) {
     return c.DescribeTargetGroupInstancesWithContext(context.Background(), request)
@@ -549,11 +608,13 @@ func (c *Client) DescribeTargetGroupInstances(request *DescribeTargetGroupInstan
 //  INTERNALERROR = "InternalError"
 //  INVALIDPARAMETER = "InvalidParameter"
 //  INVALIDPARAMETERVALUE = "InvalidParameterValue"
+//  INVALIDPARAMETERVALUE_RANGE = "InvalidParameterValue.Range"
 //  UNAUTHORIZEDOPERATION = "UnauthorizedOperation"
 func (c *Client) DescribeTargetGroupInstancesWithContext(ctx context.Context, request *DescribeTargetGroupInstancesRequest) (response *DescribeTargetGroupInstancesResponse, err error) {
     if request == nil {
         request = NewDescribeTargetGroupInstancesRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "gwlb", APIVersion, "DescribeTargetGroupInstances")
     
     if c.GetCredential() == nil {
         return nil, errors.New("DescribeTargetGroupInstances require credential")
@@ -593,6 +654,7 @@ func NewDescribeTargetGroupListResponse() (response *DescribeTargetGroupListResp
 //  INVALIDPARAMETER = "InvalidParameter"
 //  INVALIDPARAMETER_FORMATERROR = "InvalidParameter.FormatError"
 //  INVALIDPARAMETERVALUE = "InvalidParameterValue"
+//  INVALIDPARAMETERVALUE_RANGE = "InvalidParameterValue.Range"
 //  UNAUTHORIZEDOPERATION = "UnauthorizedOperation"
 func (c *Client) DescribeTargetGroupList(request *DescribeTargetGroupListRequest) (response *DescribeTargetGroupListResponse, err error) {
     return c.DescribeTargetGroupListWithContext(context.Background(), request)
@@ -606,11 +668,13 @@ func (c *Client) DescribeTargetGroupList(request *DescribeTargetGroupListRequest
 //  INVALIDPARAMETER = "InvalidParameter"
 //  INVALIDPARAMETER_FORMATERROR = "InvalidParameter.FormatError"
 //  INVALIDPARAMETERVALUE = "InvalidParameterValue"
+//  INVALIDPARAMETERVALUE_RANGE = "InvalidParameterValue.Range"
 //  UNAUTHORIZEDOPERATION = "UnauthorizedOperation"
 func (c *Client) DescribeTargetGroupListWithContext(ctx context.Context, request *DescribeTargetGroupListRequest) (response *DescribeTargetGroupListResponse, err error) {
     if request == nil {
         request = NewDescribeTargetGroupListRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "gwlb", APIVersion, "DescribeTargetGroupList")
     
     if c.GetCredential() == nil {
         return nil, errors.New("DescribeTargetGroupList require credential")
@@ -668,6 +732,7 @@ func (c *Client) DescribeTargetGroupsWithContext(ctx context.Context, request *D
     if request == nil {
         request = NewDescribeTargetGroupsRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "gwlb", APIVersion, "DescribeTargetGroups")
     
     if c.GetCredential() == nil {
         return nil, errors.New("DescribeTargetGroups require credential")
@@ -723,6 +788,7 @@ func (c *Client) DescribeTaskStatusWithContext(ctx context.Context, request *Des
     if request == nil {
         request = NewDescribeTaskStatusRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "gwlb", APIVersion, "DescribeTaskStatus")
     
     if c.GetCredential() == nil {
         return nil, errors.New("DescribeTaskStatus require credential")
@@ -757,7 +823,7 @@ func NewDisassociateTargetGroupsResponse() (response *DisassociateTargetGroupsRe
 // DisassociateTargetGroups
 // 解除负载均衡和目标组的关联关系。
 //
-// 本接口为异步接口，本接口返回成功后需以返回的 RequestID 为入参，调用 DescribeTaskStatus 接口查询本次任务是否成功。
+// 本接口为异步接口，本接口返回成功后需以返回的 RequestID 为入参，调用 [DescribeTaskStatus](https://cloud.tencent.com/document/product/214/30683) 接口查询本次任务是否成功。
 //
 // 可能返回的错误码:
 //  FAILEDOPERATION = "FailedOperation"
@@ -773,7 +839,7 @@ func (c *Client) DisassociateTargetGroups(request *DisassociateTargetGroupsReque
 // DisassociateTargetGroups
 // 解除负载均衡和目标组的关联关系。
 //
-// 本接口为异步接口，本接口返回成功后需以返回的 RequestID 为入参，调用 DescribeTaskStatus 接口查询本次任务是否成功。
+// 本接口为异步接口，本接口返回成功后需以返回的 RequestID 为入参，调用 [DescribeTaskStatus](https://cloud.tencent.com/document/product/214/30683) 接口查询本次任务是否成功。
 //
 // 可能返回的错误码:
 //  FAILEDOPERATION = "FailedOperation"
@@ -786,6 +852,7 @@ func (c *Client) DisassociateTargetGroupsWithContext(ctx context.Context, reques
     if request == nil {
         request = NewDisassociateTargetGroupsRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "gwlb", APIVersion, "DisassociateTargetGroups")
     
     if c.GetCredential() == nil {
         return nil, errors.New("DisassociateTargetGroups require credential")
@@ -845,6 +912,7 @@ func (c *Client) InquirePriceCreateGatewayLoadBalancerWithContext(ctx context.Co
     if request == nil {
         request = NewInquirePriceCreateGatewayLoadBalancerRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "gwlb", APIVersion, "InquirePriceCreateGatewayLoadBalancer")
     
     if c.GetCredential() == nil {
         return nil, errors.New("InquirePriceCreateGatewayLoadBalancer require credential")
@@ -898,6 +966,7 @@ func (c *Client) ModifyGatewayLoadBalancerAttributeWithContext(ctx context.Conte
     if request == nil {
         request = NewModifyGatewayLoadBalancerAttributeRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "gwlb", APIVersion, "ModifyGatewayLoadBalancerAttribute")
     
     if c.GetCredential() == nil {
         return nil, errors.New("ModifyGatewayLoadBalancerAttribute require credential")
@@ -955,6 +1024,7 @@ func (c *Client) ModifyTargetGroupAttributeWithContext(ctx context.Context, requ
     if request == nil {
         request = NewModifyTargetGroupAttributeRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "gwlb", APIVersion, "ModifyTargetGroupAttribute")
     
     if c.GetCredential() == nil {
         return nil, errors.New("ModifyTargetGroupAttribute require credential")
@@ -989,8 +1059,6 @@ func NewModifyTargetGroupInstancesWeightResponse() (response *ModifyTargetGroupI
 // ModifyTargetGroupInstancesWeight
 // 修改目标组的服务器权重。
 //
-// 本接口为异步接口，本接口返回成功后需以返回的 RequestID 为入参，调用 DescribeTaskStatus 接口查询本次任务是否成功。
-//
 // 可能返回的错误码:
 //  FAILEDOPERATION = "FailedOperation"
 //  FAILEDOPERATION_RESOURCEINOPERATING = "FailedOperation.ResourceInOperating"
@@ -1005,8 +1073,6 @@ func (c *Client) ModifyTargetGroupInstancesWeight(request *ModifyTargetGroupInst
 // ModifyTargetGroupInstancesWeight
 // 修改目标组的服务器权重。
 //
-// 本接口为异步接口，本接口返回成功后需以返回的 RequestID 为入参，调用 DescribeTaskStatus 接口查询本次任务是否成功。
-//
 // 可能返回的错误码:
 //  FAILEDOPERATION = "FailedOperation"
 //  FAILEDOPERATION_RESOURCEINOPERATING = "FailedOperation.ResourceInOperating"
@@ -1018,6 +1084,7 @@ func (c *Client) ModifyTargetGroupInstancesWeightWithContext(ctx context.Context
     if request == nil {
         request = NewModifyTargetGroupInstancesWeightRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "gwlb", APIVersion, "ModifyTargetGroupInstancesWeight")
     
     if c.GetCredential() == nil {
         return nil, errors.New("ModifyTargetGroupInstancesWeight require credential")
@@ -1052,8 +1119,6 @@ func NewRegisterTargetGroupInstancesResponse() (response *RegisterTargetGroupIns
 // RegisterTargetGroupInstances
 // 注册服务器到目标组。
 //
-// 本接口为异步接口，本接口返回成功后需以返回的 RequestID 为入参，调用 DescribeTaskStatus 接口查询本次任务是否成功。
-//
 // 可能返回的错误码:
 //  FAILEDOPERATION = "FailedOperation"
 //  FAILEDOPERATION_RESOURCEINOPERATING = "FailedOperation.ResourceInOperating"
@@ -1069,8 +1134,6 @@ func (c *Client) RegisterTargetGroupInstances(request *RegisterTargetGroupInstan
 // RegisterTargetGroupInstances
 // 注册服务器到目标组。
 //
-// 本接口为异步接口，本接口返回成功后需以返回的 RequestID 为入参，调用 DescribeTaskStatus 接口查询本次任务是否成功。
-//
 // 可能返回的错误码:
 //  FAILEDOPERATION = "FailedOperation"
 //  FAILEDOPERATION_RESOURCEINOPERATING = "FailedOperation.ResourceInOperating"
@@ -1083,6 +1146,7 @@ func (c *Client) RegisterTargetGroupInstancesWithContext(ctx context.Context, re
     if request == nil {
         request = NewRegisterTargetGroupInstancesRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "gwlb", APIVersion, "RegisterTargetGroupInstances")
     
     if c.GetCredential() == nil {
         return nil, errors.New("RegisterTargetGroupInstances require credential")
