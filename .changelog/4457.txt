@@ -1,0 +1,3 @@
+```release-note:enhancement
+resource/tencentcloud_elasticsearch_instance: add enable_cerebro, cerebro_public_access, cerebro_private_access, cerebro_private_domain parameters for Cerebro configuration
+```

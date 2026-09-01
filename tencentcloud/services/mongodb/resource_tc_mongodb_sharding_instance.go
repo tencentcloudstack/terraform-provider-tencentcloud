@@ -579,6 +579,13 @@ func resourceMongodbShardingInstanceUpdate(d *schema.ResourceData, meta interfac
 	tagService := svctag.NewTagService(client)
 	region := client.Region
 
+	immutableArgs := []string{"data_encryption", "encryption_key_source", "key_id", "kms_region"}
+	for _, v := range immutableArgs {
+		if d.HasChange(v) {
+			return fmt.Errorf("argument `%s` cannot be changed", v)
+		}
+	}
+
 	d.Partial(true)
 	if d.HasChange("mongos_node_num") && !(d.HasChange("add_node_list") || d.HasChange("remove_node_list")) {
 		return fmt.Errorf("setting of the field[mongos_node_num] does not support update")

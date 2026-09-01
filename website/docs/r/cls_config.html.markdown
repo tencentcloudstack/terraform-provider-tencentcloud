@@ -68,7 +68,7 @@ The following arguments are supported:
 * `name` - (Required, String) Collection configuration name.
 * `exclude_paths` - (Optional, List) Collection path blocklist.
 * `input_type` - (Optional, String) Log input type. Valid values: file: file type collection; windows_event: Windows event collection; syslog: system log collection.
-* `log_type` - (Optional, String) Type of the log to be collected. Valid values: json_log: log in JSON format; delimiter_log: log in delimited format; minimalist_log: minimalist log; multiline_log: log in multi-line format; fullregex_log: log in full regex format. Default value: minimalist_log.
+* `log_type` - (Optional, String) Type of the log to be collected. Valid values: json_log: log in JSON format; delimiter_log: log in delimited format; minimalist_log: minimalist log; multiline_log: log in multi-line format; fullregex_log: log in full regex format; multiline_fullregex_log: log in multi-line and full regex format. Default value: minimalist_log.
 * `output` - (Optional, String) Log topic ID (TopicId) of collection configuration.
 * `path` - (Optional, String) Log collection path containing the filename. Required for document collection.
 * `user_define_rule` - (Optional, String) Custom collection rule, which is a serialized JSON string. Required when LogType is user_define_log.

@@ -229,6 +229,7 @@ tencentcloud_ckafka_topic_subscribe_group
 tencentcloud_ckafka_topic_sync_replica
 tencentcloud_ckafka_zone
 tencentcloud_ckafka_version
+tencentcloud_ckafka_routes
 
 Resource
 tencentcloud_ckafka_instance
@@ -1038,6 +1039,7 @@ tencentcloud_redis_security_group_attachment
 tencentcloud_redis_connection_config
 tencentcloud_redis_log_delivery
 tencentcloud_redis_audit_log
+tencentcloud_redis_instance_password_policy_config
 
 Serverless Cloud Function(SCF)
 Data Source
@@ -1528,6 +1530,7 @@ tencentcloud_cls_open_service_operation
 tencentcloud_cls_dlc_deliver
 tencentcloud_cls_console
 tencentcloud_cls_metric_subscribe
+tencentcloud_cls_splunk_deliver
 
 Data Source
 tencentcloud_cls_shipper_tasks

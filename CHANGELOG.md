@@ -1,3 +1,20 @@
+## 1.83.27(August 28, 2026)
+
+FEATURES:
+
+* **New Data Source:** `tencentcloud_ckafka_routes` ([#4463](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/4463))
+* **New Resource:** `tencentcloud_cls_splunk_deliver` ([#4459](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/4459))
+* **New Resource:** `tencentcloud_redis_instance_password_policy_config` ([#4462](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/4462))
+
+ENHANCEMENTS:
+
+* resource/tencentcloud_cls_config: update log_type description to include multiline_fullregex_log as a valid value ([#4461](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/4461))
+* resource/tencentcloud_elasticsearch_instance: add enable_cerebro, cerebro_public_access, cerebro_private_access, cerebro_private_domain parameters for Cerebro configuration ([#4457](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/4457))
+* resource/tencentcloud_mongodb_instance: update document ([#4464](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/4464))
+* resource/tencentcloud_mongodb_readonly_instance: update document ([#4464](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/4464))
+* resource/tencentcloud_mongodb_sharding_instance: update document ([#4464](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/4464))
+* resource/tencentcloud_mongodb_standby_instance: update document ([#4464](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/4464))
+
 ## 1.83.26(August 26, 2026)
 
 ENHANCEMENTS:
