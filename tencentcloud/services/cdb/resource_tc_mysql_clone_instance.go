@@ -51,14 +51,12 @@ func ResourceTencentCloudMysqlCloneInstance() *schema.Resource {
 			"uniq_vpc_id": {
 				Type:        schema.TypeString,
 				Optional:    true,
-				ForceNew:    true,
 				Description: "VPC ID.",
 			},
 
 			"uniq_subnet_id": {
 				Type:        schema.TypeString,
 				Optional:    true,
-				ForceNew:    true,
 				Description: "Subnet ID. If `uniq_vpc_id` is set, this value is required.",
 			},
 
@@ -77,14 +75,12 @@ func ResourceTencentCloudMysqlCloneInstance() *schema.Resource {
 			"instance_name": {
 				Type:        schema.TypeString,
 				Optional:    true,
-				ForceNew:    true,
 				Description: "Cloned instance name.",
 			},
 
 			"security_group": {
 				Type:     schema.TypeList,
 				Optional: true,
-				ForceNew: true,
 				Elem: &schema.Schema{
 					Type: schema.TypeString,
 				},
@@ -94,7 +90,6 @@ func ResourceTencentCloudMysqlCloneInstance() *schema.Resource {
 			"resource_tags": {
 				Type:        schema.TypeList,
 				Optional:    true,
-				ForceNew:    true,
 				Description: "Instance tags.",
 				Elem: &schema.Resource{
 					Schema: map[string]*schema.Schema{
@@ -151,49 +146,42 @@ func ResourceTencentCloudMysqlCloneInstance() *schema.Resource {
 			"instance_nodes": {
 				Type:        schema.TypeInt,
 				Optional:    true,
-				ForceNew:    true,
 				Description: "Instance node count.",
 			},
 
 			"deploy_group_id": {
 				Type:        schema.TypeString,
 				Optional:    true,
-				ForceNew:    true,
 				Description: "Placement group ID.",
 			},
 
 			"dry_run": {
 				Type:        schema.TypeBool,
 				Optional:    true,
-				ForceNew:    true,
 				Description: "Dry-run flag. true: only pre-check, false: send normal request.",
 			},
 
 			"cage_id": {
 				Type:        schema.TypeString,
 				Optional:    true,
-				ForceNew:    true,
 				Description: "Financial cage ID.",
 			},
 
 			"project_id": {
 				Type:        schema.TypeInt,
 				Optional:    true,
-				ForceNew:    true,
 				Description: "Project ID. Default is 0.",
 			},
 
 			"pay_type": {
 				Type:        schema.TypeString,
 				Optional:    true,
-				ForceNew:    true,
 				Description: "Payment type. PRE_PAID - prepaid, USED_PAID - postpaid. Default is postpaid.",
 			},
 
 			"period": {
 				Type:        schema.TypeInt,
 				Optional:    true,
-				ForceNew:    true,
 				Description: "Instance duration in months. Required when `pay_type` is PRE_PAID.",
 			},
 
@@ -255,28 +243,24 @@ func ResourceTencentCloudMysqlCloneInstance() *schema.Resource {
 			"src_region": {
 				Type:        schema.TypeString,
 				Optional:    true,
-				ForceNew:    true,
 				Description: "Source instance region for cross-region clone.",
 			},
 
 			"specified_sub_backup_id": {
 				Type:        schema.TypeInt,
 				Optional:    true,
-				ForceNew:    true,
 				Description: "Cross-region backup ID.",
 			},
 
 			"master_zone": {
 				Type:        schema.TypeString,
 				Optional:    true,
-				ForceNew:    true,
 				Description: "Master zone.",
 			},
 
 			"zone": {
 				Type:        schema.TypeString,
 				Optional:    true,
-				ForceNew:    true,
 				Description: "Instance zone.",
 			},
 
