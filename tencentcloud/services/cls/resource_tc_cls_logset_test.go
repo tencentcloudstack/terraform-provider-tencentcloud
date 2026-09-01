@@ -94,18 +94,18 @@ func TestAccTencentCloudClsLogset_basic(t *testing.T) {
 					testAccCheckClsLogsetExists("tencentcloud_cls_logset.logset"),
 					resource.TestCheckResourceAttrSet("tencentcloud_cls_logset.logset", "create_time"),
 					resource.TestCheckResourceAttr("tencentcloud_cls_logset.logset", "logset_name", "tf-logset-test"),
-					resource.TestCheckResourceAttr("tencentcloud_cls_logset.logset", "tags.0.key", "test"),
-					resource.TestCheckResourceAttr("tencentcloud_cls_logset.logset", "tags.0.value", "test"),
+					resource.TestCheckResourceAttr("tencentcloud_cls_logset.logset", "tag_list.0.key", "test"),
+					resource.TestCheckResourceAttr("tencentcloud_cls_logset.logset", "tag_list.0.value", "test"),
 				),
 			},
 			{
 				Config: testAccClsLogset_tagsUpdate,
 				Check: resource.ComposeTestCheckFunc(
 					testAccCheckClsLogsetExists("tencentcloud_cls_logset.logset"),
-					resource.TestCheckResourceAttr("tencentcloud_cls_logset.logset", "tags.0.key", "test"),
-					resource.TestCheckResourceAttr("tencentcloud_cls_logset.logset", "tags.0.value", "updated"),
-					resource.TestCheckResourceAttr("tencentcloud_cls_logset.logset", "tags.1.key", "env"),
-					resource.TestCheckResourceAttr("tencentcloud_cls_logset.logset", "tags.1.value", "prod"),
+					resource.TestCheckResourceAttr("tencentcloud_cls_logset.logset", "tag_list.0.key", "test"),
+					resource.TestCheckResourceAttr("tencentcloud_cls_logset.logset", "tag_list.0.value", "updated"),
+					resource.TestCheckResourceAttr("tencentcloud_cls_logset.logset", "tag_list.1.key", "env"),
+					resource.TestCheckResourceAttr("tencentcloud_cls_logset.logset", "tag_list.1.value", "prod"),
 				),
 			},
 			{
@@ -145,7 +145,7 @@ func testAccCheckClsLogsetExists(n string) resource.TestCheckFunc {
 const testAccClsLogset_basic = `
 resource "tencentcloud_cls_logset" "logset" {
   logset_name = "tf-logset-test"
-  tags {
+  tag_list {
     key   = "test"
     value = "test"
   }
@@ -155,11 +155,11 @@ resource "tencentcloud_cls_logset" "logset" {
 const testAccClsLogset_tagsUpdate = `
 resource "tencentcloud_cls_logset" "logset" {
   logset_name = "tf-logset-test"
-  tags {
+  tag_list {
     key   = "test"
     value = "updated"
   }
-  tags {
+  tag_list {
     key   = "env"
     value = "prod"
   }

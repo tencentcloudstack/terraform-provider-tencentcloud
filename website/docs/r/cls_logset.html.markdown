@@ -16,7 +16,7 @@ Provides a resource to create a CLS logset
 ```hcl
 resource "tencentcloud_cls_logset" "example" {
   logset_name = "tf-example"
-  tags {
+  tag_list {
     key   = "createdBy"
     value = "Terraform"
   }
