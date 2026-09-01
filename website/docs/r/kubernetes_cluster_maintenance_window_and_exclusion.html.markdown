@@ -69,6 +69,9 @@ In addition to all arguments above, the following attributes are exported:
 
 * `id` - ID of the resource.
 
+The `exclusions` object exports the following:
+
+* `id` - Maintenance exclusion ID.
 
 
 ## Import

@@ -100,6 +100,10 @@ In addition to all arguments above, the following attributes are exported:
 
 * `id` - ID of the resource.
 
+The `ingress` object exports the following:
+
+* `create_time` - creation time.
+* `vip` - gateway vip.
 
 
 ## Import

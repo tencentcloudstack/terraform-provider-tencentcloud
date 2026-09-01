@@ -78,6 +78,9 @@ In addition to all arguments above, the following attributes are exported:
 
 * `id` - ID of the resource.
 
+The `acl_entries` object exports the following:
+
+* `global_accelerator_acl_rule_id` - ACL rule ID.
 
 ## Timeouts
 

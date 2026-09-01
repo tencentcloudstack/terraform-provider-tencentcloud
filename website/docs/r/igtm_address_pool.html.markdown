@@ -57,6 +57,13 @@ In addition to all arguments above, the following attributes are exported:
 * `id` - ID of the resource.
 * `pool_id` - Address pool ID.
 
+The `address_set` object exports the following:
+
+* `address_id` - Address ID.
+* `created_on` - Creation time.
+* `status` - OK for normal, DOWN for failure, WARN for risk, UNKNOWN for probing, UNMONITORED for unknown.
+* `updated_on` - Modification time.
+
 
 ## Import
 

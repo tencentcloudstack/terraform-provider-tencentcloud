@@ -55,6 +55,10 @@ In addition to all arguments above, the following attributes are exported:
 
 * `id` - ID of the resource.
 
+The `life_cycle_rule` object exports the following:
+
+* `create_time` - rule create time.
+* `life_cycle_rule_id` - single rule id.
 
 
 ## Import

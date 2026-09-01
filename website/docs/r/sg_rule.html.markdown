@@ -56,6 +56,9 @@ In addition to all arguments above, the following attributes are exported:
 
 * `id` - ID of the resource.
 
+The `data` object exports the following:
+
+* `order_index` - Rule priority.
 
 
 ## Import

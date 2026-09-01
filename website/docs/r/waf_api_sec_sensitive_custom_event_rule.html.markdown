@@ -95,6 +95,11 @@ In addition to all arguments above, the following attributes are exported:
 * `id` - ID of the resource.
 * `update_time` - Update timestamp.
 
+The `api_name_method` object of `api_name_op` exports the following:
+
+* `count` - API request count in the last 30 days.
+* `label` - API label.
+
 
 ## Import
 

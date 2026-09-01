@@ -98,6 +98,10 @@ In addition to all arguments above, the following attributes are exported:
 * `id` - ID of the resource.
 * `fw_group_id` - Firewall group ID.
 
+The `vpc_fw_instances` object exports the following:
+
+* `fw_ins_id` - Firewall instance ID (passed in editing scenario).
+
 
 ## Import
 

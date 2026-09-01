@@ -65,6 +65,11 @@ In addition to all arguments above, the following attributes are exported:
 
 * `id` - ID of the resource.
 
+The `items` object exports the following:
+
+* `id` - Id.
+* `source` - Source.
+* `valid_status` - Valid status.
 
 
 ## Import

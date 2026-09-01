@@ -66,6 +66,10 @@ In addition to all arguments above, the following attributes are exported:
 
 * `id` - ID of the resource.
 
+The `client_attesters` object exports the following:
+
+* `id` - Client attester ID, e.g. `attest-xxxxxxxx`.
+* `type` - Attester rule type (read-only). Valid values: `PRESET` (system preset), `CUSTOM` (user defined).
 
 
 ## Import
