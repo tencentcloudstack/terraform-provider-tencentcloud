@@ -140,6 +140,7 @@ const (
 	PROVIDER_REGION         = "TENCENTCLOUD_REGION"
 	PROVIDER_PROTOCOL       = "TENCENTCLOUD_PROTOCOL"
 	PROVIDER_DOMAIN         = "TENCENTCLOUD_DOMAIN"
+	PROVIDER_CUSTOM_HEADERS = "TENCENTCLOUD_CUSTOM_HEADERS"
 	PROVIDER_COS_DOMAIN     = "TENCENTCLOUD_COS_DOMAIN"
 	//internal version: replace envYunti begin, please do not modify this annotation and refrain from inserting any code between the beginning and end lines of the annotation.
 	//internal version: replace envYunti end, please do not modify this annotation and refrain from inserting any code between the beginning and end lines of the annotation.
@@ -229,6 +230,13 @@ func Provider() *schema.Provider {
 				Optional:    true,
 				DefaultFunc: schema.EnvDefaultFunc(PROVIDER_DOMAIN, nil),
 				Description: "The root domain of the API request, Default is `tencentcloudapi.com`.",
+			},
+			"custom_headers": {
+				Type:        schema.TypeMap,
+				Optional:    true,
+				DefaultFunc: schema.EnvDefaultFunc(PROVIDER_CUSTOM_HEADERS, nil),
+				Description: "Custom HTTP headers to add to all API requests.",
+				Elem:        &schema.Schema{Type: schema.TypeString},
 			},
 			"cos_domain": {
 				Type:        schema.TypeString,
@@ -2836,6 +2844,15 @@ func providerConfigure(d *schema.ResourceData) (interface{}, error) {
 
 	if v, ok := d.GetOk("domain"); ok {
 		domain = v.(string)
+	}
+
+	customHeaders := map[string]string{}
+	if v, ok := d.GetOk("custom_headers"); ok {
+		for key, val := range v.(map[string]interface{}) {
+			customHeaders[key] = val.(string)
+		}
+
+		connectivity.SetCustomHeaders(customHeaders)
 	}
 
 	if v, ok := d.GetOk("cos_domain"); ok {
