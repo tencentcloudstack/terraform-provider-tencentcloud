@@ -820,6 +820,7 @@ func Provider() *schema.Provider {
 			"tencentcloud_monitor_alarm_basic_metric":                             monitor.DataSourceTencentCloudMonitorAlarmBasicMetric(),
 			"tencentcloud_monitor_alarm_conditions_template":                      monitor.DataSourceTencentCloudMonitorAlarmConditionsTemplate(),
 			"tencentcloud_monitor_grafana_plugin_overviews":                       tcmg.DataSourceTencentCloudMonitorGrafanaPluginOverviews(),
+			"tencentcloud_monitor_grafana_versions":                               tcmg.DataSourceTencentCloudMonitorGrafanaVersions(),
 			"tencentcloud_monitor_alarm_notice_callbacks":                         monitor.DataSourceTencentCloudMonitorAlarmNoticeCallbacks(),
 			"tencentcloud_monitor_alarm_all_namespaces":                           monitor.DataSourceTencentCloudMonitorAlarmAllNamespaces(),
 			"tencentcloud_monitor_alarm_monitor_type":                             monitor.DataSourceTencentCloudMonitorAlarmMonitorType(),

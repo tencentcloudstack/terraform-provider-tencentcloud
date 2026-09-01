@@ -70,7 +70,7 @@ require (
 	github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/live v1.3.95
 	github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/mariadb v1.3.102
 	github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/mongodb v1.3.141
-	github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/monitor v1.3.101
+	github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/monitor v1.3.170
 	github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/mps v1.3.45
 	github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/organization v1.3.110
 	github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/postgres v1.3.157
