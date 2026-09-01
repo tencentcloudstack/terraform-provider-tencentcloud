@@ -5,8 +5,9 @@ Example Usage
 ```hcl
 resource "tencentcloud_cls_logset" "example" {
   logset_name = "tf-example"
-  tags = {
-    createdBy = "Terraform"
+  tag_list {
+    key   = "createdBy"
+    value = "Terraform"
   }
 }
 ```
