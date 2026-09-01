@@ -144,7 +144,7 @@ The `resource_tags` object supports the following:
 In addition to all arguments above, the following attributes are exported:
 
 * `id` - ID of the resource.
-* `async_request_id` - Async request ID returned by Create/Update APIs.
+
 
 ## Timeouts
 
@@ -153,12 +153,4 @@ The `timeouts` block allows you to specify [timeouts](https://developer.hashicor
 * `create` - (Defaults to `1h0m`) Used when creating the resource.
 * `update` - (Defaults to `1h0m`) Used when updating the resource.
 * `delete` - (Defaults to `20m`) Used when deleting the resource.
-
-## Import
-
-TencentDB for MySQL (CDB) clone instance can be imported using the cloned instance id, e.g.
-
-```
-terraform import tencentcloud_mysql_clone_instance.example cdb-bcet7sdb
-```
 
