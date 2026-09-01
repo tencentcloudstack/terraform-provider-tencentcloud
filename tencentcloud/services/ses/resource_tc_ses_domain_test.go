@@ -46,8 +46,8 @@ func TestAccTencentCloudSesDomain_dkimTag(t *testing.T) {
 					resource.TestCheckResourceAttrSet("tencentcloud_ses_domain.domain", "id"),
 					resource.TestCheckResourceAttr("tencentcloud_ses_domain.domain", "email_identity", "iac.cloud"),
 					resource.TestCheckResourceAttr("tencentcloud_ses_domain.domain", "dkim_option", "1"),
-					resource.TestCheckResourceAttr("tencentcloud_ses_domain.domain", "tag_key", "env"),
-					resource.TestCheckResourceAttr("tencentcloud_ses_domain.domain", "tag_value", "prod"),
+					resource.TestCheckResourceAttr("tencentcloud_ses_domain.domain", "tag_list.0.tag_key", "env"),
+					resource.TestCheckResourceAttr("tencentcloud_ses_domain.domain", "tag_list.0.tag_value", "prod"),
 				),
 			},
 			{
@@ -72,8 +72,10 @@ const testAccSesDomainDkimTag = `
 resource "tencentcloud_ses_domain" "domain" {
   email_identity = "iac.cloud"
   dkim_option    = 1
-  tag_key        = "env"
-  tag_value      = "prod"
+  tag_list {
+    tag_key   = "env"
+    tag_value = "prod"
+  }
 }
 
 `

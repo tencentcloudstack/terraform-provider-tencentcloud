@@ -18,30 +18,34 @@ The `tencentcloud_ses_domain` resource SHALL accept an optional `dkim_option` pa
 - **WHEN** the provider reads an existing SES domain via `GetEmailIdentity`
 - **THEN** the provider SHALL populate `dkim_option` in Terraform state from the response `DKIMOption` field if it is not nil
 
-### Requirement: SES domain resource supports tag parameters
+### Requirement: SES domain resource supports tag_list parameter
 
-The `tencentcloud_ses_domain` resource SHALL accept optional `tag_key` and `tag_value` parameters (string) that associate a single tag with the domain. Both parameters SHALL be `ForceNew` — changing either requires resource recreation.
+The `tencentcloud_ses_domain` resource SHALL accept an optional `tag_list` nested block parameter that associates one or more tags with the domain. Each `tag_list` block SHALL contain `tag_key` and `tag_value` string sub-fields. The `tag_list` parameter SHALL be `ForceNew` — changing it requires resource recreation.
 
-#### Scenario: Create domain with tag
-- **WHEN** user creates a `tencentcloud_ses_domain` resource with `tag_key = "env"` and `tag_value = "prod"`
+#### Scenario: Create domain with tags
+- **WHEN** user creates a `tencentcloud_ses_domain` resource with a `tag_list` block containing `tag_key = "env"` and `tag_value = "prod"`
 - **THEN** the provider SHALL call `CreateEmailIdentity` with a `TagList` containing one element with `TagKey = "env"` and `TagValue = "prod"`
 
+#### Scenario: Create domain with multiple tags
+- **WHEN** user creates a `tencentcloud_ses_domain` resource with multiple `tag_list` blocks
+- **THEN** the provider SHALL call `CreateEmailIdentity` with a `TagList` containing one element per block, preserving all tag key/value pairs
+
 #### Scenario: Create domain without tag
-- **WHEN** user creates a `tencentcloud_ses_domain` resource without specifying `tag_key` or `tag_value`
+- **WHEN** user creates a `tencentcloud_ses_domain` resource without specifying `tag_list`
 - **THEN** the provider SHALL call `CreateEmailIdentity` without setting `TagList`
 
-#### Scenario: Read reflects tag
+#### Scenario: Read reflects tags
 - **WHEN** the provider reads an existing SES domain via `GetEmailIdentity` and the response `TagList` contains at least one element
-- **THEN** the provider SHALL populate `tag_key` and `tag_value` in Terraform state from the first element of the response `TagList`
+- **THEN** the provider SHALL populate `tag_list` in Terraform state with one block per element, each containing `tag_key` and `tag_value` from the response
 
 #### Scenario: Read with no tag
 - **WHEN** the provider reads an existing SES domain via `GetEmailIdentity` and the response `TagList` is empty or nil
-- **THEN** the provider SHALL NOT set `tag_key` or `tag_value` in Terraform state
+- **THEN** the provider SHALL NOT set `tag_list` in Terraform state
 
 ### Requirement: Backward compatibility
 
-The addition of `dkim_option`, `tag_key`, and `tag_value` parameters SHALL NOT break existing `tencentcloud_ses_domain` configurations. All new parameters SHALL be optional.
+The addition of `dkim_option` and `tag_list` parameters SHALL NOT break existing `tencentcloud_ses_domain` configurations. All new parameters SHALL be optional.
 
 #### Scenario: Existing configuration without new parameters
-- **WHEN** a user applies an existing `tencentcloud_ses_domain` configuration that does not include `dkim_option`, `tag_key`, or `tag_value`
+- **WHEN** a user applies an existing `tencentcloud_ses_domain` configuration that does not include `dkim_option` or `tag_list`
 - **THEN** the provider SHALL create and manage the domain as before, with no behavioral change

@@ -5,14 +5,14 @@ The `tencentcloud_ses_domain` resource currently only supports setting the `emai
 ## What Changes
 
 - Add a new optional `dkim_option` parameter (uint64) to the `tencentcloud_ses_domain` resource schema, allowing users to specify the DKIM key length (0: 1024-bit, 1: 2048-bit) at creation time.
-- Add new optional `tag_key` and `tag_value` parameters (string) to the `tencentcloud_ses_domain` resource schema, allowing users to associate a single tag with the domain at creation time.
-- Populate `dkim_option`, `tag_key`, and `tag_value` from the `GetEmailIdentity` response in the resource Read operation so they are reflected in Terraform state.
+- Add a new optional `tag_list` nested block parameter to the `tencentcloud_ses_domain` resource schema, allowing users to associate tags with the domain at creation time. The `tag_list` block contains `tag_key` and `tag_value` string sub-fields and supports multiple tag entries.
+- Populate `dkim_option` and `tag_list` from the `GetEmailIdentity` response in the resource Read operation so they are reflected in Terraform state.
 
 ## Capabilities
 
 ### New Capabilities
 
-- `ses-domain-params`: Adds `dkim_option`, `tag_key`, and `tag_value` parameters to the `tencentcloud_ses_domain` resource, enabling DKIM key length configuration and tag association for SES domains.
+- `ses-domain-params`: Adds `dkim_option` and `tag_list` (with `tag_key` and `tag_value` sub-fields) parameters to the `tencentcloud_ses_domain` resource, enabling DKIM key length configuration and tag association for SES domains.
 
 ### Modified Capabilities
 

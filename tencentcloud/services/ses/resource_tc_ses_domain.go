@@ -37,18 +37,25 @@ func ResourceTencentCloudSesDomain() *schema.Resource {
 				Description: "DKIM key length. 0: 1024-bit, 1: 2048-bit.",
 			},
 
-			"tag_key": {
-				Type:        schema.TypeString,
+			"tag_list": {
+				Type:        schema.TypeList,
 				Optional:    true,
 				ForceNew:    true,
-				Description: "Tag key.",
-			},
-
-			"tag_value": {
-				Type:        schema.TypeString,
-				Optional:    true,
-				ForceNew:    true,
-				Description: "Tag value.",
+				Description: "Tag list.",
+				Elem: &schema.Resource{
+					Schema: map[string]*schema.Schema{
+						"tag_key": {
+							Type:        schema.TypeString,
+							Required:    true,
+							Description: "Tag key.",
+						},
+						"tag_value": {
+							Type:        schema.TypeString,
+							Required:    true,
+							Description: "Tag value.",
+						},
+					},
+				},
 			},
 
 			"attributes": {
@@ -99,16 +106,20 @@ func resourceTencentCloudSesDomainCreate(d *schema.ResourceData, meta interface{
 		request.DKIMOption = helper.IntUint64(v.(int))
 	}
 
-	if v, ok := d.GetOk("tag_key"); ok {
-		tagKey := v.(string)
-		if v, ok := d.GetOk("tag_value"); ok {
-			tagList := make([]*ses.TagList, 0, 1)
-			tagList = append(tagList, &ses.TagList{
-				TagKey:   helper.String(tagKey),
-				TagValue: helper.String(v.(string)),
-			})
-			request.TagList = tagList
+	if v, ok := d.GetOk("tag_list"); ok {
+		tagList := make([]*ses.TagList, 0, len(v.([]interface{})))
+		for _, item := range v.([]interface{}) {
+			dMap := item.(map[string]interface{})
+			tag := &ses.TagList{}
+			if v, ok := dMap["tag_key"]; ok {
+				tag.TagKey = helper.String(v.(string))
+			}
+			if v, ok := dMap["tag_value"]; ok {
+				tag.TagValue = helper.String(v.(string))
+			}
+			tagList = append(tagList, tag)
 		}
+		request.TagList = tagList
 	}
 
 	err := resource.Retry(tccommon.WriteRetryTimeout, func() *resource.RetryError {
@@ -189,12 +200,18 @@ func resourceTencentCloudSesDomainRead(d *schema.ResourceData, meta interface{})
 	}
 
 	if len(response.TagList) > 0 {
-		if response.TagList[0].TagKey != nil {
-			_ = d.Set("tag_key", *response.TagList[0].TagKey)
+		tagListList := make([]interface{}, 0, len(response.TagList))
+		for _, tag := range response.TagList {
+			tagListMap := map[string]interface{}{}
+			if tag.TagKey != nil {
+				tagListMap["tag_key"] = *tag.TagKey
+			}
+			if tag.TagValue != nil {
+				tagListMap["tag_value"] = *tag.TagValue
+			}
+			tagListList = append(tagListList, tagListMap)
 		}
-		if response.TagList[0].TagValue != nil {
-			_ = d.Set("tag_value", *response.TagList[0].TagValue)
-		}
+		_ = d.Set("tag_list", tagListList)
 	}
 
 	return nil
