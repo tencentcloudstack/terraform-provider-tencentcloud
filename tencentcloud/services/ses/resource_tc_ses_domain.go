@@ -30,6 +30,27 @@ func ResourceTencentCloudSesDomain() *schema.Resource {
 				Description: "Your sender domain. You are advised to use a third-level domain, for example, mail.qcloud.com.",
 			},
 
+			"dkim_option": {
+				Type:        schema.TypeInt,
+				Optional:    true,
+				ForceNew:    true,
+				Description: "DKIM key length. 0: 1024-bit, 1: 2048-bit.",
+			},
+
+			"tag_key": {
+				Type:        schema.TypeString,
+				Optional:    true,
+				ForceNew:    true,
+				Description: "Tag key.",
+			},
+
+			"tag_value": {
+				Type:        schema.TypeString,
+				Optional:    true,
+				ForceNew:    true,
+				Description: "Tag value.",
+			},
+
 			"attributes": {
 				Computed:    true,
 				Type:        schema.TypeList,
@@ -74,6 +95,22 @@ func resourceTencentCloudSesDomainCreate(d *schema.ResourceData, meta interface{
 		request.EmailIdentity = helper.String(v.(string))
 	}
 
+	if v, ok := d.GetOkExists("dkim_option"); ok {
+		request.DKIMOption = helper.IntUint64(v.(int))
+	}
+
+	if v, ok := d.GetOk("tag_key"); ok {
+		tagKey := v.(string)
+		if v, ok := d.GetOk("tag_value"); ok {
+			tagList := make([]*ses.TagList, 0, 1)
+			tagList = append(tagList, &ses.TagList{
+				TagKey:   helper.String(tagKey),
+				TagValue: helper.String(v.(string)),
+			})
+			request.TagList = tagList
+		}
+	}
+
 	err := resource.Retry(tccommon.WriteRetryTimeout, func() *resource.RetryError {
 		result, e := meta.(tccommon.ProviderMeta).GetAPIV3Conn().UseSesClient().CreateEmailIdentity(request)
 		if e != nil {
@@ -82,6 +119,11 @@ func resourceTencentCloudSesDomainCreate(d *schema.ResourceData, meta interface{
 			log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n",
 				logId, request.GetAction(), request.ToJsonString(), result.ToJsonString())
 		}
+
+		if result == nil || result.Response == nil {
+			return resource.NonRetryableError(fmt.Errorf("create ses domain failed, response is nil"))
+		}
+
 		return nil
 	})
 
@@ -105,22 +147,23 @@ func resourceTencentCloudSesDomainRead(d *schema.ResourceData, meta interface{})
 
 	emailIdentity := d.Id()
 
-	attributes, err := service.DescribeSesDomain(ctx, emailIdentity)
+	response, err := service.DescribeSesDomain(ctx, emailIdentity)
 
 	if err != nil {
 		return err
 	}
 
-	if attributes == nil {
+	if response == nil {
+		log.Printf("[CRUD] ses_domain id=%s", d.Id())
 		d.SetId("")
-		return fmt.Errorf("resource `domain` %s does not exist", emailIdentity)
+		return fmt.Errorf("resource `ses_domain` %s does not exist", emailIdentity)
 	}
 
 	_ = d.Set("email_identity", emailIdentity)
 
-	if attributes != nil {
-		attributesList := make([]interface{}, 0, len(attributes))
-		for _, v := range attributes {
+	if response.Attributes != nil {
+		attributesList := make([]interface{}, 0, len(response.Attributes))
+		for _, v := range response.Attributes {
 			attributesMap := map[string]interface{}{}
 
 			if v.Type != nil {
@@ -139,6 +182,19 @@ func resourceTencentCloudSesDomainRead(d *schema.ResourceData, meta interface{})
 		}
 
 		_ = d.Set("attributes", attributesList)
+	}
+
+	if response.DKIMOption != nil {
+		_ = d.Set("dkim_option", *response.DKIMOption)
+	}
+
+	if len(response.TagList) > 0 {
+		if response.TagList[0].TagKey != nil {
+			_ = d.Set("tag_key", *response.TagList[0].TagKey)
+		}
+		if response.TagList[0].TagValue != nil {
+			_ = d.Set("tag_value", *response.TagList[0].TagValue)
+		}
 	}
 
 	return nil

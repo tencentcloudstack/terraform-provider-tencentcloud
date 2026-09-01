@@ -16,6 +16,9 @@ Provides a resource to create a ses domain
 ```hcl
 resource "tencentcloud_ses_domain" "domain" {
   email_identity = "iac.cloud"
+  dkim_option    = 1
+  tag_key        = "env"
+  tag_value      = "prod"
 }
 ```
 
@@ -24,6 +27,9 @@ resource "tencentcloud_ses_domain" "domain" {
 The following arguments are supported:
 
 * `email_identity` - (Required, String, ForceNew) Your sender domain. You are advised to use a third-level domain, for example, mail.qcloud.com.
+* `dkim_option` - (Optional, Int, ForceNew) DKIM key length. 0: 1024-bit, 1: 2048-bit.
+* `tag_key` - (Optional, String, ForceNew) Tag key.
+* `tag_value` - (Optional, String, ForceNew) Tag value.
 
 ## Attributes Reference
 

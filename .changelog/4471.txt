@@ -1,0 +1,3 @@
+```release-note:enhancement
+resource/tencentcloud_ses_domain: support dkim_option, tag_key and tag_value parameters
+```
