@@ -1,16 +1,17 @@
 package cat_test
 
 import (
+	"context"
 	"testing"
 
-	"github.com/agiledagon/gomonkey/v2"
+	"github.com/agiledragon/gomonkey/v2"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 	"github.com/stretchr/testify/assert"
 	cat "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/cat/v20180409"
 
 	tccommon "github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/common"
 	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/connectivity"
-	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/services/cat"
+	svccat "github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/services/cat"
 )
 
 type mockMetaForCatInstantTasksDS struct {
@@ -53,7 +54,7 @@ func TestCatInstantTasksDS_ReadBasic(t *testing.T) {
 	catClient := &cat.Client{}
 	patches.ApplyMethodReturn(newMockMetaForCatInstantTasksDS().client, "UseCatClient", catClient)
 
-	patches.ApplyMethodFunc(catClient, "DescribeInstantTasks", func(request *cat.DescribeInstantTasksRequest) (*cat.DescribeInstantTasksResponse, error) {
+	patches.ApplyMethodFunc(catClient, "DescribeInstantTasksWithContext", func(ctx context.Context, request *cat.DescribeInstantTasksRequest) (*cat.DescribeInstantTasksResponse, error) {
 		resp := cat.NewDescribeInstantTasksResponse()
 		resp.Response = &cat.DescribeInstantTasksResponseParams{
 			Tasks: []*cat.SingleInstantTask{
@@ -67,7 +68,7 @@ func TestCatInstantTasksDS_ReadBasic(t *testing.T) {
 	})
 
 	meta := newMockMetaForCatInstantTasksDS()
-	res := cat.DataSourceTencentCloudCatInstantTasks()
+	res := svccat.DataSourceTencentCloudCatInstantTasks()
 	d := schema.TestResourceDataRaw(t, res.Schema, map[string]interface{}{})
 
 	err := res.Read(d, meta)
@@ -102,7 +103,7 @@ func TestCatInstantTasksDS_ReadEmpty(t *testing.T) {
 	catClient := &cat.Client{}
 	patches.ApplyMethodReturn(newMockMetaForCatInstantTasksDS().client, "UseCatClient", catClient)
 
-	patches.ApplyMethodFunc(catClient, "DescribeInstantTasks", func(request *cat.DescribeInstantTasksRequest) (*cat.DescribeInstantTasksResponse, error) {
+	patches.ApplyMethodFunc(catClient, "DescribeInstantTasksWithContext", func(ctx context.Context, request *cat.DescribeInstantTasksRequest) (*cat.DescribeInstantTasksResponse, error) {
 		resp := cat.NewDescribeInstantTasksResponse()
 		resp.Response = &cat.DescribeInstantTasksResponseParams{
 			Tasks:     []*cat.SingleInstantTask{},
@@ -113,7 +114,7 @@ func TestCatInstantTasksDS_ReadEmpty(t *testing.T) {
 	})
 
 	meta := newMockMetaForCatInstantTasksDS()
-	res := cat.DataSourceTencentCloudCatInstantTasks()
+	res := svccat.DataSourceTencentCloudCatInstantTasks()
 	d := schema.TestResourceDataRaw(t, res.Schema, map[string]interface{}{})
 
 	err := res.Read(d, meta)
@@ -133,12 +134,12 @@ func TestCatInstantTasksDS_ReadError(t *testing.T) {
 	catClient := &cat.Client{}
 	patches.ApplyMethodReturn(newMockMetaForCatInstantTasksDS().client, "UseCatClient", catClient)
 
-	patches.ApplyMethodFunc(catClient, "DescribeInstantTasks", func(request *cat.DescribeInstantTasksRequest) (*cat.DescribeInstantTasksResponse, error) {
+	patches.ApplyMethodFunc(catClient, "DescribeInstantTasksWithContext", func(ctx context.Context, request *cat.DescribeInstantTasksRequest) (*cat.DescribeInstantTasksResponse, error) {
 		return nil, assert.AnError
 	})
 
 	meta := newMockMetaForCatInstantTasksDS()
-	res := cat.DataSourceTencentCloudCatInstantTasks()
+	res := svccat.DataSourceTencentCloudCatInstantTasks()
 	d := schema.TestResourceDataRaw(t, res.Schema, map[string]interface{}{})
 
 	err := res.Read(d, meta)
@@ -146,7 +147,7 @@ func TestCatInstantTasksDS_ReadError(t *testing.T) {
 }
 
 func TestCatInstantTasksDS_Schema(t *testing.T) {
-	res := cat.DataSourceTencentCloudCatInstantTasks()
+	res := svccat.DataSourceTencentCloudCatInstantTasks()
 
 	assert.NotNil(t, res)
 	assert.Contains(t, res.Schema, "tasks")
