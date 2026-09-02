@@ -1027,6 +1027,7 @@ func Provider() *schema.Provider {
 			"tencentcloud_cat_probe_data":                                         cat.DataSourceTencentCloudCatProbeData(),
 			"tencentcloud_cat_node":                                               cat.DataSourceTencentCloudCatNode(),
 			"tencentcloud_cat_metric_data":                                        cat.DataSourceTencentCloudCatMetricData(),
+			"tencentcloud_cat_probe_metric_tag_values":                            cat.DataSourceTencentCloudCatProbeMetricTagValues(),
 			"tencentcloud_rum_project":                                            rum.DataSourceTencentCloudRumProject(),
 			"tencentcloud_rum_offline_log_config":                                 rum.DataSourceTencentCloudRumOfflineLogConfig(),
 			"tencentcloud_rum_whitelist":                                          rum.DataSourceTencentCloudRumWhitelist(),
