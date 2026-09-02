@@ -1,3 +1,27 @@
+## 1.83.28(September 2, 2026)
+
+FEATURES:
+
+* **New Data Source:** `tencentcloud_cam_accounts` ([#4476](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/4476))
+* **New Data Source:** `tencentcloud_cat_instant_tasks` ([#4479](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/4479))
+* **New Data Source:** `tencentcloud_cat_node_groups` ([#4480](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/4480))
+* **New Data Source:** `tencentcloud_cat_probe_metric_tag_values` ([#4477](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/4477))
+* **New Data Source:** `tencentcloud_monitor_grafana_versions` ([#4469](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/4469))
+* **New Resource:** `tencentcloud_mysql_clone_instance` ([#4438](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/4438))
+
+ENHANCEMENTS:
+
+* resource/tencentcloud_cls_alarm_notice: support secure_detail_status parameter ([#4473](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/4473))
+* resource/tencentcloud_cls_logset: support tag_list parameter ([#4465](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/4465))
+* resource/tencentcloud_reserve_ip_address: add subnet_id read-back support from DescribeReserveIpAddresses API response ([#4482](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/4482))
+* resource/tencentcloud_ses_domain: support dkim_option and tag_list parameters ([#4471](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/4471))
+* resource/tencentcloud_tdmq_professional_cluster: support instance_version parameter ([#4468](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/4468))
+* resource/tencentcloud_wedata_project: support new fileds ([#4467](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/4467))
+
+BUG FIXES:
+
+* resource/tencentcloud_gwlb_target_group: fix health check timeout, interval_time, health_num, and un_health_num sending zero values instead of defaults when not set ([#4472](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/4472))
+
 ## 1.83.27(August 28, 2026)
 
 FEATURES:
