@@ -2,7 +2,6 @@ package cam
 
 import (
 	"context"
-	"fmt"
 	"log"
 
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
@@ -136,10 +135,6 @@ func dataSourceTencentCloudCamAccountsRead(d *schema.ResourceData, meta interfac
 		users, marker, truncated, e := service.DescribeCamAccountsByFilter(ctx, paramMap)
 		if e != nil {
 			return tccommon.RetryError(e)
-		}
-
-		if len(users) == 0 {
-			return resource.NonRetryableError(fmt.Errorf("cam accounts is empty"))
 		}
 
 		respData = users
