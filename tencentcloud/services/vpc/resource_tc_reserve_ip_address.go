@@ -62,6 +62,8 @@ func ResourceTencentCloudReserveIpAddress() *schema.Resource {
 				Optional:    true,
 				Description: "Tags.",
 			},
+
+			// computed
 			"reserve_ip_id": {
 				Type:        schema.TypeString,
 				Computed:    true,
@@ -139,9 +141,12 @@ func resourceTencentCloudReserveIpAddressCreate(d *schema.ResourceData, meta int
 		} else {
 			log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), result.ToJsonString())
 		}
-		if len(result.Response.ReserveIpAddressSet) > 0 {
-			reserveIpId = *result.Response.ReserveIpAddressSet[0].ReserveIpId
+
+		if result == nil || result.Response == nil {
+			return resource.NonRetryableError(fmt.Errorf("Create reserve ip addresses failed, Response is nil"))
 		}
+
+		response = result
 		return nil
 	})
 	if err != nil {
@@ -149,7 +154,17 @@ func resourceTencentCloudReserveIpAddressCreate(d *schema.ResourceData, meta int
 		return err
 	}
 
-	_ = response
+	if response.Response.ReserveIpAddressSet == nil || len(response.Response.ReserveIpAddressSet) == 0 {
+		return fmt.Errorf("ReserveIpAddressSet is nil.")
+	}
+
+	reserveIpAddress := response.Response.ReserveIpAddressSet[0]
+	if reserveIpAddress.ReserveIpId == nil {
+		return fmt.Errorf("ReserveIpId is nil.")
+	}
+
+	reserveIpId = *reserveIpAddress.ReserveIpId
+	d.SetId(strings.Join([]string{vpcId, reserveIpId}, tccommon.FILED_SP))
 
 	if tags := helper.GetTags(d, "tags"); len(tags) > 0 {
 		tcClient := meta.(tccommon.ProviderMeta).GetAPIV3Conn()
@@ -159,8 +174,6 @@ func resourceTencentCloudReserveIpAddressCreate(d *schema.ResourceData, meta int
 			return err
 		}
 	}
-
-	d.SetId(strings.Join([]string{vpcId, reserveIpId}, tccommon.FILED_SP))
 
 	return resourceTencentCloudReserveIpAddressRead(d, meta)
 }
@@ -186,16 +199,12 @@ func resourceTencentCloudReserveIpAddressRead(d *schema.ResourceData, meta inter
 		return err
 	}
 
-	if respData == nil {
+	if respData == nil || len(respData.ReserveIpAddressSet) < 1 {
+		log.Printf("[WARN]%s resource `tencentcloud_reserve_ip_address` [%s] not found, please check if it has been deleted.\n", logId, d.Id())
 		d.SetId("")
-		log.Printf("[WARN]%s resource `reserve_ip_addresses` [%s] not found, please check if it has been deleted.\n", logId, d.Id())
 		return nil
 	}
-	if len(respData.ReserveIpAddressSet) < 1 {
-		d.SetId("")
-		log.Printf("[WARN]%s resource `reserve_ip_addresses` [%s] not found, please check if it has been deleted.\n", logId, d.Id())
-		return nil
-	}
+
 	reserveIpAddress := respData.ReserveIpAddressSet[0]
 
 	_ = d.Set("vpc_id", reserveIpAddress.VpcId)
@@ -217,8 +226,8 @@ func resourceTencentCloudReserveIpAddressRead(d *schema.ResourceData, meta inter
 	if err != nil {
 		return err
 	}
+
 	_ = d.Set("tags", tags)
-	_ = reserveIpId
 	return nil
 }
 
@@ -254,9 +263,7 @@ func resourceTencentCloudReserveIpAddressUpdate(d *schema.ResourceData, meta int
 
 	if needChange {
 		request := vpc.NewModifyReserveIpAddressRequest()
-
 		request.VpcId = helper.String(vpcId)
-
 		request.ReserveIpId = helper.String(reserveIpId)
 
 		if v, ok := d.GetOk("name"); ok {
@@ -276,6 +283,7 @@ func resourceTencentCloudReserveIpAddressUpdate(d *schema.ResourceData, meta int
 			}
 			return nil
 		})
+
 		if err != nil {
 			log.Printf("[CRITAL]%s update reserve ip addresses failed, reason:%+v", logId, err)
 			return err
@@ -307,17 +315,13 @@ func resourceTencentCloudReserveIpAddressDelete(d *schema.ResourceData, meta int
 	if len(idSplit) != 2 {
 		return fmt.Errorf("id is broken,%s", d.Id())
 	}
+
 	vpcId := idSplit[0]
 	reserveIpId := idSplit[1]
 
-	var (
-		request  = vpc.NewDeleteReserveIpAddressesRequest()
-		response = vpc.NewDeleteReserveIpAddressesResponse()
-	)
-
+	request := vpc.NewDeleteReserveIpAddressesRequest()
 	request.VpcId = helper.String(vpcId)
 	request.ReserveIpIds = []*string{&reserveIpId}
-
 	err := resource.Retry(tccommon.WriteRetryTimeout, func() *resource.RetryError {
 		result, e := meta.(tccommon.ProviderMeta).GetAPIV3Conn().UseVpcClient().DeleteReserveIpAddressesWithContext(ctx, request)
 		if e != nil {
@@ -325,15 +329,14 @@ func resourceTencentCloudReserveIpAddressDelete(d *schema.ResourceData, meta int
 		} else {
 			log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), result.ToJsonString())
 		}
-		response = result
+
 		return nil
 	})
+
 	if err != nil {
 		log.Printf("[CRITAL]%s delete reserve ip addresses failed, reason:%+v", logId, err)
 		return err
 	}
 
-	_ = response
-	_ = reserveIpId
 	return nil
 }
