@@ -2618,139 +2618,136 @@ type BgpConfigAndAsn struct {
 }
 
 type CCN struct {
-	// 云联网唯一ID
+	// <p>云联网唯一ID</p>
 	CcnId *string `json:"CcnId,omitnil,omitempty" name:"CcnId"`
 
-	// 云联网名称
+	// <p>云联网名称</p>
 	CcnName *string `json:"CcnName,omitnil,omitempty" name:"CcnName"`
 
-	// 云联网描述信息
+	// <p>云联网描述信息</p>
 	CcnDescription *string `json:"CcnDescription,omitnil,omitempty" name:"CcnDescription"`
 
-	// 关联实例数量
+	// <p>关联实例数量</p>
 	InstanceCount *uint64 `json:"InstanceCount,omitnil,omitempty" name:"InstanceCount"`
 
-	// 创建时间
+	// <p>创建时间</p>
 	CreateTime *string `json:"CreateTime,omitnil,omitempty" name:"CreateTime"`
 
-	// 实例状态， 'ISOLATED': 隔离中（欠费停服），'AVAILABLE'：运行中。
+	// <p>实例状态， &#39;ISOLATED&#39;: 隔离中（欠费停服），&#39;AVAILABLE&#39;：运行中。</p>
 	State *string `json:"State,omitnil,omitempty" name:"State"`
 
-	// 实例服务质量，’PT’：白金，'AU'：金，'AG'：银。
+	// <p>实例服务质量，’PT’：白金，&#39;AU&#39;：金，&#39;AG&#39;：银。</p>
 	QosLevel *string `json:"QosLevel,omitnil,omitempty" name:"QosLevel"`
 
-	// 付费类型，PREPAID为预付费，POSTPAID为后付费。
+	// <p>付费类型，PREPAID为预付费，POSTPAID为后付费。</p>
 	InstanceChargeType *string `json:"InstanceChargeType,omitnil,omitempty" name:"InstanceChargeType"`
 
-	// 计量类型
+	// <p>计量类型</p>
 	InstanceMeteringType *string `json:"InstanceMeteringType,omitnil,omitempty" name:"InstanceMeteringType"`
 
-	// 限速类型，`INTER_REGION_LIMIT` 为地域间限速；`OUTER_REGION_LIMIT` 为地域出口限速。
+	// <p>限速类型，<code>INTER_REGION_LIMIT</code> 为地域间限速；<code>OUTER_REGION_LIMIT</code> 为地域出口限速。</p>
 	BandwidthLimitType *string `json:"BandwidthLimitType,omitnil,omitempty" name:"BandwidthLimitType"`
 
-	// 标签键值对。
+	// <p>标签键值对。</p>
 	TagSet []*Tag `json:"TagSet,omitnil,omitempty" name:"TagSet"`
 
-	// 是否支持云联网路由优先级的功能。`False`：不支持，`True`：支持。
+	// <p>是否支持云联网路由优先级的功能。<code>False</code>：不支持，<code>True</code>：支持。</p>
 	RoutePriorityFlag *bool `json:"RoutePriorityFlag,omitnil,omitempty" name:"RoutePriorityFlag"`
 
-	// 实例关联的路由表个数。
+	// <p>实例关联的路由表个数。</p>
 	RouteTableCount *uint64 `json:"RouteTableCount,omitnil,omitempty" name:"RouteTableCount"`
 
-	// 是否开启云联网多路由表特性。`False`：未开启，`True`：开启。
+	// <p>是否开启云联网多路由表特性。<code>False</code>：未开启，<code>True</code>：开启。</p>
 	RouteTableFlag *bool `json:"RouteTableFlag,omitnil,omitempty" name:"RouteTableFlag"`
 
-	// `true`：实例已被封禁，流量不通，`false`:解封禁。
+	// <p><code>true</code>：实例已被封禁，流量不通，<code>false</code>:解封禁。</p>
 	IsSecurityLock *bool `json:"IsSecurityLock,omitnil,omitempty" name:"IsSecurityLock"`
 
-	// 是否开启云联网路由传播策略。`False` 未开启，`True` 开启。
+	// <p>是否开启云联网路由传播策略。<code>False</code> 未开启，<code>True</code> 开启。</p>
 	RouteBroadcastPolicyFlag *bool `json:"RouteBroadcastPolicyFlag,omitnil,omitempty" name:"RouteBroadcastPolicyFlag"`
 
-	// 是否开启等价路由功能。`False` 未开启，`True` 开启。
+	// <p>是否开启等价路由功能。<code>False</code> 未开启，<code>True</code> 开启。</p>
 	RouteECMPFlag *bool `json:"RouteECMPFlag,omitnil,omitempty" name:"RouteECMPFlag"`
 
-	// 是否开启路由重叠功能。`False` 未开启，`True` 开启。
+	// <p>是否开启路由重叠功能。<code>False</code> 未开启，<code>True</code> 开启。</p>
 	RouteOverlapFlag *bool `json:"RouteOverlapFlag,omitnil,omitempty" name:"RouteOverlapFlag"`
 
-	// 是否开启QOS。
+	// <p>是否开启QOS。</p>
 	TrafficMarkingPolicyFlag *bool `json:"TrafficMarkingPolicyFlag,omitnil,omitempty" name:"TrafficMarkingPolicyFlag"`
 
-	// 是否开启路由表选择策略。
+	// <p>是否开启路由表选择策略。</p>
 	RouteSelectPolicyFlag *bool `json:"RouteSelectPolicyFlag,omitnil,omitempty" name:"RouteSelectPolicyFlag"`
 
-	// 是否开启二层云联网通道。
+	// <p>是否开启二层云联网通道。</p>
 	DirectConnectAccelerateChannelFlag *bool `json:"DirectConnectAccelerateChannelFlag,omitnil,omitempty" name:"DirectConnectAccelerateChannelFlag"`
 
-	// 是否支持ipv6路由表
+	// <p>是否支持ipv6路由表</p>
 	Ipv6Flag *bool `json:"Ipv6Flag,omitnil,omitempty" name:"Ipv6Flag"`
 
-	// 是否支持路由表聚合策略
+	// <p>是否支持路由表聚合策略</p>
 	MrtbAggregatePolicyFlag *bool `json:"MrtbAggregatePolicyFlag,omitnil,omitempty" name:"MrtbAggregatePolicyFlag"`
 
-	// 是否支持AsPath策略值
+	// <p>是否支持AsPath策略值</p>
 	MrtbPolicyValueFlag *bool `json:"MrtbPolicyValueFlag,omitnil,omitempty" name:"MrtbPolicyValueFlag"`
 
-	// 是否支持Community策略值
+	// <p>是否支持Community策略值</p>
 	RouteTablePolicyValueCommunityFlag *bool `json:"RouteTablePolicyValueCommunityFlag,omitnil,omitempty" name:"RouteTablePolicyValueCommunityFlag"`
 
-	// 是否支持策略路由
+	// <p>是否支持策略路由</p>
 	PolicyBasedRoutingFlag *bool `json:"PolicyBasedRoutingFlag,omitnil,omitempty" name:"PolicyBasedRoutingFlag"`
+
+	// <p>服务等级模式</p><p>枚举值：</p><ul><li>0： 云联网模式</li><li>1： 地域间模式</li></ul>
+	ServiceLevelMode *uint64 `json:"ServiceLevelMode,omitnil,omitempty" name:"ServiceLevelMode"`
 }
 
 type CcnAttachedInstance struct {
-	// 云联网实例ID。
+	// <p>云联网实例ID。</p>
 	CcnId *string `json:"CcnId,omitnil,omitempty" name:"CcnId"`
 
-	// 关联实例类型：
-	// <li>`VPC`：私有网络</li>
-	// <li>`DIRECTCONNECT`：专线网关</li>
-	// <li>`BMVPC`：黑石私有网络</li>
+	// <p>关联实例类型：</p><li><code>VPC</code>：私有网络</li><li><code>DIRECTCONNECT</code>：专线网关</li><li><code>BMVPC</code>：黑石私有网络</li>
 	InstanceType *string `json:"InstanceType,omitnil,omitempty" name:"InstanceType"`
 
-	// 关联实例ID。
+	// <p>关联实例ID。</p>
 	InstanceId *string `json:"InstanceId,omitnil,omitempty" name:"InstanceId"`
 
-	// 关联实例名称。
+	// <p>关联实例名称。</p>
 	InstanceName *string `json:"InstanceName,omitnil,omitempty" name:"InstanceName"`
 
-	// 关联实例所属大区，例如：ap-guangzhou。
+	// <p>关联实例所属大区，例如：ap-guangzhou。</p>
 	InstanceRegion *string `json:"InstanceRegion,omitnil,omitempty" name:"InstanceRegion"`
 
-	// 关联实例所属UIN（根账号）。
+	// <p>关联实例所属UIN（根账号）。</p>
 	InstanceUin *string `json:"InstanceUin,omitnil,omitempty" name:"InstanceUin"`
 
-	// 关联实例CIDR。
+	// <p>关联实例CIDR。</p>
 	CidrBlock []*string `json:"CidrBlock,omitnil,omitempty" name:"CidrBlock"`
 
-	// 关联实例状态：
-	// <li>`PENDING`：申请中</li>
-	// <li>`ACTIVE`：已连接</li>
-	// <li>`EXPIRED`：已过期</li>
-	// <li>`REJECTED`：已拒绝</li>
-	// <li>`DELETED`：已删除</li>
-	// <li>`FAILED`：失败的（2小时后将异步强制解关联）</li>
-	// <li>`ATTACHING`：关联中</li>
-	// <li>`DETACHING`：解关联中</li>
-	// <li>`DETACHFAILED`：解关联失败（2小时后将异步强制解关联）</li>
+	// <p>关联实例状态：</p><li><code>PENDING</code>：申请中</li><li><code>ACTIVE</code>：已连接</li><li><code>EXPIRED</code>：已过期</li><li><code>REJECTED</code>：已拒绝</li><li><code>DELETED</code>：已删除</li><li><code>FAILED</code>：失败的（2小时后将异步强制解关联）</li><li><code>ATTACHING</code>：关联中</li><li><code>DETACHING</code>：解关联中</li><li><code>DETACHFAILED</code>：解关联失败（2小时后将异步强制解关联）</li>
 	State *string `json:"State,omitnil,omitempty" name:"State"`
 
-	// 关联时间。
+	// <p>关联时间。</p>
 	AttachedTime *string `json:"AttachedTime,omitnil,omitempty" name:"AttachedTime"`
 
-	// 云联网所属UIN（根账号）。
+	// <p>云联网所属UIN（根账号）。</p>
 	CcnUin *string `json:"CcnUin,omitnil,omitempty" name:"CcnUin"`
 
-	// 关联实例所属的大地域，如: CHINA_MAINLAND
+	// <p>关联实例所属的大地域，如: CHINA_MAINLAND</p>
 	InstanceArea *string `json:"InstanceArea,omitnil,omitempty" name:"InstanceArea"`
 
-	// 备注
+	// <p>备注</p>
 	Description *string `json:"Description,omitnil,omitempty" name:"Description"`
 
-	// 路由表ID
+	// <p>路由表ID</p>
 	RouteTableId *string `json:"RouteTableId,omitnil,omitempty" name:"RouteTableId"`
 
-	// 路由表名称
+	// <p>路由表名称</p>
 	RouteTableName *string `json:"RouteTableName,omitnil,omitempty" name:"RouteTableName"`
+
+	// <p>别名类型</p>
+	AliasType *string `json:"AliasType,omitnil,omitempty" name:"AliasType"`
+
+	// <p>别名ID</p>
+	AliasInstanceId *string `json:"AliasInstanceId,omitnil,omitempty" name:"AliasInstanceId"`
 }
 
 type CcnBandwidth struct {
@@ -2984,50 +2981,56 @@ type CcnRegionBandwidthLimitInfo struct {
 }
 
 type CcnRoute struct {
-	// 路由策略ID
+	// <p>路由策略ID</p>
 	RouteId *string `json:"RouteId,omitnil,omitempty" name:"RouteId"`
 
-	// 目的端
+	// <p>目的端</p>
 	DestinationCidrBlock *string `json:"DestinationCidrBlock,omitnil,omitempty" name:"DestinationCidrBlock"`
 
-	// 下一跳类型（关联实例类型），所有类型：VPC、DIRECTCONNECT
+	// <p>下一跳类型（关联实例类型），所有类型：VPC、DIRECTCONNECT</p>
 	InstanceType *string `json:"InstanceType,omitnil,omitempty" name:"InstanceType"`
 
-	// 下一跳（关联实例）
+	// <p>下一跳（关联实例）</p>
 	InstanceId *string `json:"InstanceId,omitnil,omitempty" name:"InstanceId"`
 
-	// 下一跳名称（关联实例名称）
+	// <p>下一跳名称（关联实例名称）</p>
 	InstanceName *string `json:"InstanceName,omitnil,omitempty" name:"InstanceName"`
 
-	// 下一跳所属地域（关联实例所属地域）
+	// <p>下一跳所属地域（关联实例所属地域）</p>
 	InstanceRegion *string `json:"InstanceRegion,omitnil,omitempty" name:"InstanceRegion"`
 
-	// 更新时间
+	// <p>更新时间</p>
 	UpdateTime *string `json:"UpdateTime,omitnil,omitempty" name:"UpdateTime"`
 
-	// 路由是否启用
+	// <p>路由是否启用</p>
 	Enabled *bool `json:"Enabled,omitnil,omitempty" name:"Enabled"`
 
-	// 关联实例所属UIN（根账号）
+	// <p>关联实例所属UIN（根账号）</p>
 	InstanceUin *string `json:"InstanceUin,omitnil,omitempty" name:"InstanceUin"`
 
-	// 路由的扩展状态
+	// <p>路由的扩展状态</p>
 	ExtraState *string `json:"ExtraState,omitnil,omitempty" name:"ExtraState"`
 
-	// 是否动态路由
+	// <p>是否动态路由</p>
 	IsBgp *bool `json:"IsBgp,omitnil,omitempty" name:"IsBgp"`
 
-	// 路由优先级
+	// <p>路由优先级</p>
 	RoutePriority *uint64 `json:"RoutePriority,omitnil,omitempty" name:"RoutePriority"`
 
-	// 下一跳扩展名称（关联实例的扩展名称）
+	// <p>下一跳扩展名称（关联实例的扩展名称）</p>
 	InstanceExtraName *string `json:"InstanceExtraName,omitnil,omitempty" name:"InstanceExtraName"`
 
-	// 实例类型
+	// <p>实例类型</p>
 	AliasType *string `json:"AliasType,omitnil,omitempty" name:"AliasType"`
 
-	// 实例id
+	// <p>实例id</p>
 	AliasInstanceId *string `json:"AliasInstanceId,omitnil,omitempty" name:"AliasInstanceId"`
+
+	// <p>路由表ID</p>
+	RouteTableId *string `json:"RouteTableId,omitnil,omitempty" name:"RouteTableId"`
+
+	// <p>AS-PATH</p>
+	AsPath *string `json:"AsPath,omitnil,omitempty" name:"AsPath"`
 }
 
 type CcnRouteBroadcastPolicyRouteCondition struct {
@@ -3062,28 +3065,28 @@ type CcnRouteTable struct {
 }
 
 type CcnRouteTableBroadcastPolicy struct {
-	// 路由条件
+	// <p>路由条件</p>
 	RouteConditions []*CcnRouteBroadcastPolicyRouteCondition `json:"RouteConditions,omitnil,omitempty" name:"RouteConditions"`
 
-	// 传播条件
+	// <p>传播条件</p>
 	BroadcastConditions []*CcnRouteBroadcastPolicyRouteCondition `json:"BroadcastConditions,omitnil,omitempty" name:"BroadcastConditions"`
 
-	// 路由行为，`accept` 允许，`drop` 拒绝
+	// <p>路由行为，<code>accept</code> 允许，<code>drop</code> 拒绝</p>
 	Action *string `json:"Action,omitnil,omitempty" name:"Action"`
 
-	// 策略描述
+	// <p>策略描述</p>
 	Description *string `json:"Description,omitnil,omitempty" name:"Description"`
 
-	// as-path操作
+	// <p>as-path操作</p>
 	OperateAsPath *string `json:"OperateAsPath,omitnil,omitempty" name:"OperateAsPath"`
 
-	// as-path操作模式
+	// <p>as-path操作模式</p>
 	AsPathOperateMode *string `json:"AsPathOperateMode,omitnil,omitempty" name:"AsPathOperateMode"`
 
-	// community操作
+	// <p>community操作</p>
 	OperateCommunitySet []*string `json:"OperateCommunitySet,omitnil,omitempty" name:"OperateCommunitySet"`
 
-	// community操作模式
+	// <p>community操作模式</p>
 	CommunityOperateMode *string `json:"CommunityOperateMode,omitnil,omitempty" name:"CommunityOperateMode"`
 }
 
@@ -16368,34 +16371,32 @@ func (r *DescribeGlobalRoutesResponse) FromJsonString(s string) error {
 
 // Predefined struct for user
 type DescribeHaVipsRequestParams struct {
-	// `HAVIP`唯一`ID`，形如：`havip-9o233uri`。
+	// <p><code>HAVIP</code>唯一<code>ID</code>，形如：<code>havip-9o233uri</code>。</p>
 	HaVipIds []*string `json:"HaVipIds,omitnil,omitempty" name:"HaVipIds"`
 
-	// 过滤条件，参数不支持同时指定`HaVipIds`和`Filters`。<li>havip-id - String - `HAVIP`唯一`ID`，形如：`havip-9o233uri`。</li><li>havip-name - String - `HAVIP`名称。</li><li>vpc-id - String - `HAVIP`所在私有网络`ID`。</li><li>subnet-id - String - `HAVIP`所在子网`ID`。</li><li>vip - String - `HAVIP`的地址`VIP`。</li><li>address-ip - String - `HAVIP`绑定的弹性公网`IP`。</li><li>havip-association.instance-id - String - `HAVIP`绑定的子机或网卡。</li><li>havip-association.instance-type - String - `HAVIP`绑定的类型，取值:CVM, ENI。</li><li>check-associate - Bool - 是否开启HaVip飘移时校验绑定的子机或网卡。</li><li>cdc-id - String - CDC实例ID。</li>
-	// <li>type- String - HAVIP类型。取值: NORMAL(普通); GWLB(网关负载均衡); OPTIMIZATION(优化模式)。</li>
+	// <p>过滤条件，参数不支持同时指定<code>HaVipIds</code>和<code>Filters</code>。Filter 数量限制为10个，以及单Filter 的value值限制为5个。<li>havip-id - String - <code>HAVIP</code>唯一<code>ID</code>，形如：<code>havip-9o233uri</code>。</li><li>havip-name - String - <code>HAVIP</code>名称。</li><li>vpc-id - String - <code>HAVIP</code>所在私有网络<code>ID</code>。</li><li>subnet-id - String - <code>HAVIP</code>所在子网<code>ID</code>。</li><li>vip - String - <code>HAVIP</code>的地址<code>VIP</code>。</li><li>address-ip - String - <code>HAVIP</code>绑定的弹性公网<code>IP</code>。</li><li>havip-association.instance-id - String - <code>HAVIP</code>绑定的子机或网卡。</li><li>havip-association.instance-type - String - <code>HAVIP</code>绑定的类型，取值:CVM, ENI。</li><li>check-associate - Bool - 是否开启HaVip飘移时校验绑定的子机或网卡。</li><li>cdc-id - String - CDC实例ID。</li></p><li>type - String - HAVIP类型。取值: NORMAL(普通); GWLB(网关负载均衡); OPTIMIZATION(优化模式)。</li><li>termination-protection - String - 删除保护。取值: true; false。</li><li>traffic-protection - String - 流量保护。取值: true; false。</li>
 	Filters []*Filter `json:"Filters,omitnil,omitempty" name:"Filters"`
 
-	// 偏移量，默认为0。
+	// <p>偏移量，默认为0。</p>
 	Offset *uint64 `json:"Offset,omitnil,omitempty" name:"Offset"`
 
-	// 返回数量，默认为20，最大值为100。
+	// <p>返回数量，默认为20，最大值为100。</p>
 	Limit *uint64 `json:"Limit,omitnil,omitempty" name:"Limit"`
 }
 
 type DescribeHaVipsRequest struct {
 	*tchttp.BaseRequest
 	
-	// `HAVIP`唯一`ID`，形如：`havip-9o233uri`。
+	// <p><code>HAVIP</code>唯一<code>ID</code>，形如：<code>havip-9o233uri</code>。</p>
 	HaVipIds []*string `json:"HaVipIds,omitnil,omitempty" name:"HaVipIds"`
 
-	// 过滤条件，参数不支持同时指定`HaVipIds`和`Filters`。<li>havip-id - String - `HAVIP`唯一`ID`，形如：`havip-9o233uri`。</li><li>havip-name - String - `HAVIP`名称。</li><li>vpc-id - String - `HAVIP`所在私有网络`ID`。</li><li>subnet-id - String - `HAVIP`所在子网`ID`。</li><li>vip - String - `HAVIP`的地址`VIP`。</li><li>address-ip - String - `HAVIP`绑定的弹性公网`IP`。</li><li>havip-association.instance-id - String - `HAVIP`绑定的子机或网卡。</li><li>havip-association.instance-type - String - `HAVIP`绑定的类型，取值:CVM, ENI。</li><li>check-associate - Bool - 是否开启HaVip飘移时校验绑定的子机或网卡。</li><li>cdc-id - String - CDC实例ID。</li>
-	// <li>type- String - HAVIP类型。取值: NORMAL(普通); GWLB(网关负载均衡); OPTIMIZATION(优化模式)。</li>
+	// <p>过滤条件，参数不支持同时指定<code>HaVipIds</code>和<code>Filters</code>。Filter 数量限制为10个，以及单Filter 的value值限制为5个。<li>havip-id - String - <code>HAVIP</code>唯一<code>ID</code>，形如：<code>havip-9o233uri</code>。</li><li>havip-name - String - <code>HAVIP</code>名称。</li><li>vpc-id - String - <code>HAVIP</code>所在私有网络<code>ID</code>。</li><li>subnet-id - String - <code>HAVIP</code>所在子网<code>ID</code>。</li><li>vip - String - <code>HAVIP</code>的地址<code>VIP</code>。</li><li>address-ip - String - <code>HAVIP</code>绑定的弹性公网<code>IP</code>。</li><li>havip-association.instance-id - String - <code>HAVIP</code>绑定的子机或网卡。</li><li>havip-association.instance-type - String - <code>HAVIP</code>绑定的类型，取值:CVM, ENI。</li><li>check-associate - Bool - 是否开启HaVip飘移时校验绑定的子机或网卡。</li><li>cdc-id - String - CDC实例ID。</li></p><li>type - String - HAVIP类型。取值: NORMAL(普通); GWLB(网关负载均衡); OPTIMIZATION(优化模式)。</li><li>termination-protection - String - 删除保护。取值: true; false。</li><li>traffic-protection - String - 流量保护。取值: true; false。</li>
 	Filters []*Filter `json:"Filters,omitnil,omitempty" name:"Filters"`
 
-	// 偏移量，默认为0。
+	// <p>偏移量，默认为0。</p>
 	Offset *uint64 `json:"Offset,omitnil,omitempty" name:"Offset"`
 
-	// 返回数量，默认为20，最大值为100。
+	// <p>返回数量，默认为20，最大值为100。</p>
 	Limit *uint64 `json:"Limit,omitnil,omitempty" name:"Limit"`
 }
 
@@ -16423,10 +16424,10 @@ func (r *DescribeHaVipsRequest) FromJsonString(s string) error {
 
 // Predefined struct for user
 type DescribeHaVipsResponseParams struct {
-	// 符合条件的对象数。
+	// <p>符合条件的对象数。</p>
 	TotalCount *uint64 `json:"TotalCount,omitnil,omitempty" name:"TotalCount"`
 
-	// `HAVIP`对象数组。
+	// <p><code>HAVIP</code>对象数组。</p>
 	HaVipSet []*HaVip `json:"HaVipSet,omitnil,omitempty" name:"HaVipSet"`
 
 	// 唯一请求 ID，由服务端生成，每次请求都会返回（若请求因其他原因未能抵达服务端，则该次请求不会获得 RequestId）。定位问题时需要提供该次请求的 RequestId。
@@ -25616,54 +25617,52 @@ type GlobalRoute struct {
 }
 
 type HaVip struct {
-	// `HAVIP`的`ID`，是`HAVIP`的唯一标识。
+	// <p><code>HAVIP</code>的<code>ID</code>，是<code>HAVIP</code>的唯一标识。</p>
 	HaVipId *string `json:"HaVipId,omitnil,omitempty" name:"HaVipId"`
 
-	// `HAVIP`名称。
+	// <p><code>HAVIP</code>名称。</p>
 	HaVipName *string `json:"HaVipName,omitnil,omitempty" name:"HaVipName"`
 
-	// 虚拟IP地址。
+	// <p>虚拟IP地址。</p>
 	Vip *string `json:"Vip,omitnil,omitempty" name:"Vip"`
 
-	// `HAVIP`所在私有网络`ID`。
+	// <p><code>HAVIP</code>所在私有网络<code>ID</code>。</p>
 	VpcId *string `json:"VpcId,omitnil,omitempty" name:"VpcId"`
 
-	// `HAVIP`所在子网`ID`。
+	// <p><code>HAVIP</code>所在子网<code>ID</code>。</p>
 	SubnetId *string `json:"SubnetId,omitnil,omitempty" name:"SubnetId"`
 
-	// `HAVIP`关联弹性网卡`ID`。
+	// <p><code>HAVIP</code>关联弹性网卡<code>ID</code>。</p>
 	NetworkInterfaceId *string `json:"NetworkInterfaceId,omitnil,omitempty" name:"NetworkInterfaceId"`
 
-	// 被绑定的实例`ID`。
+	// <p>被绑定的实例<code>ID</code>。</p>
 	InstanceId *string `json:"InstanceId,omitnil,omitempty" name:"InstanceId"`
 
-	// 绑定`EIP`。
+	// <p>绑定<code>EIP</code>。</p>
 	AddressIp *string `json:"AddressIp,omitnil,omitempty" name:"AddressIp"`
 
-	// 状态：
-	// <li>`AVAILABLE`：运行中</li>
-	// <li>`UNBIND`：未绑定</li>
+	// <p>状态：</p><li><code>AVAILABLE</code>：运行中</li><li><code>UNBIND</code>：未绑定</li>
 	State *string `json:"State,omitnil,omitempty" name:"State"`
 
-	// 创建时间。
+	// <p>创建时间。</p>
 	CreatedTime *string `json:"CreatedTime,omitnil,omitempty" name:"CreatedTime"`
 
-	// 使用havip的业务标识。
+	// <p>使用havip的业务标识。</p>
 	Business *string `json:"Business,omitnil,omitempty" name:"Business"`
 
-	// `HAVIP`的飘移范围。
+	// <p><code>HAVIP</code>的飘移范围。</p>
 	HaVipAssociationSet []*HaVipAssociation `json:"HaVipAssociationSet,omitnil,omitempty" name:"HaVipAssociationSet"`
 
-	// 是否开启`HAVIP`的漂移范围校验。
+	// <p>是否开启<code>HAVIP</code>的漂移范围校验。</p>
 	CheckAssociate *bool `json:"CheckAssociate,omitnil,omitempty" name:"CheckAssociate"`
 
-	// CDC实例ID。
+	// <p>CDC实例ID。</p>
 	CdcId *string `json:"CdcId,omitnil,omitempty" name:"CdcId"`
 
-	// HAVIP 刷新时间。该参数只作为出参数。以下场景会触发FlushedTime 被刷新：1）子机发出免费 ARP 触发 HAVIP 漂移；2）手动HAVIP解绑网卡; 没有更新时默认值：0000-00-00 00:00:00
+	// <p>HAVIP 刷新时间。该参数只作为出参数。以下场景会触发FlushedTime 被刷新：1）子机发出免费 ARP 触发 HAVIP 漂移；2）手动HAVIP解绑网卡; 没有更新时默认值：0000-00-00 00:00:00</p>
 	FlushedTime *string `json:"FlushedTime,omitnil,omitempty" name:"FlushedTime"`
 
-	// 标签键值对。	
+	// <p>标签键值对。</p>
 	TagSet []*Tag `json:"TagSet,omitnil,omitempty" name:"TagSet"`
 }
 
@@ -26461,41 +26460,38 @@ func (r *InquiryPriceResetVpnGatewayInternetMaxBandwidthResponse) FromJsonString
 }
 
 type InstanceBind struct {
-	// 云联网ID。
+	// <p>云联网ID。</p>
 	CcnId *string `json:"CcnId,omitnil,omitempty" name:"CcnId"`
 
-	// 实例类型：VPC，DIRECTCONNECT，BMVPC，EDGE，EDGE_TUNNEL，EDGE_VPNGW，VPNGW。
+	// <p>实例类型：VPC，DIRECTCONNECT，BMVPC，EDGE，EDGE_TUNNEL，EDGE_VPNGW，VPNGW。</p>
 	InstanceType *string `json:"InstanceType,omitnil,omitempty" name:"InstanceType"`
 
-	// 实例ID。
+	// <p>实例ID。</p>
 	InstanceId *string `json:"InstanceId,omitnil,omitempty" name:"InstanceId"`
 
-	// 实例绑定路由表的时间。
+	// <p>实例绑定路由表的时间。</p>
 	InstanceBindTime *string `json:"InstanceBindTime,omitnil,omitempty" name:"InstanceBindTime"`
 
-	// 路由表ID。
+	// <p>路由表ID。</p>
 	RouteTableId *string `json:"RouteTableId,omitnil,omitempty" name:"RouteTableId"`
 
-	// 实例名称。
+	// <p>实例名称。</p>
 	InstanceName *string `json:"InstanceName,omitnil,omitempty" name:"InstanceName"`
 
-	// 实例所在地域。
+	// <p>实例所在地域。</p>
 	InstanceRegion *string `json:"InstanceRegion,omitnil,omitempty" name:"InstanceRegion"`
 
-	// 实例所属的账户uin。
+	// <p>实例所属的账户uin。</p>
 	InstanceUin *string `json:"InstanceUin,omitnil,omitempty" name:"InstanceUin"`
 
-	// 关联实例状态：
-	// <li>`PENDING`：申请中</li>
-	// <li>`ACTIVE`：已连接</li>
-	// <li>`EXPIRED`：已过期</li>
-	// <li>`REJECTED`：已拒绝</li>
-	// <li>`DELETED`：已删除</li>
-	// <li>`FAILED`：失败的（2小时后将异步强制解关联）</li>
-	// <li>`ATTACHING`：关联中</li>
-	// <li>`DETACHING`：解关联中</li>
-	// <li>`DETACHFAILED`：解关联失败（2小时后将异步强制解关联）</li>
+	// <p>关联实例状态：</p><li><code>PENDING</code>：申请中</li><li><code>ACTIVE</code>：已连接</li><li><code>EXPIRED</code>：已过期</li><li><code>REJECTED</code>：已拒绝</li><li><code>DELETED</code>：已删除</li><li><code>FAILED</code>：失败的（2小时后将异步强制解关联）</li><li><code>ATTACHING</code>：关联中</li><li><code>DETACHING</code>：解关联中</li><li><code>DETACHFAILED</code>：解关联失败（2小时后将异步强制解关联）</li>
 	State *string `json:"State,omitnil,omitempty" name:"State"`
+
+	// <p>别名类型</p>
+	AliasType *string `json:"AliasType,omitnil,omitempty" name:"AliasType"`
+
+	// <p>别名实例ID</p>
+	AliasInstanceId *string `json:"AliasInstanceId,omitnil,omitempty" name:"AliasInstanceId"`
 }
 
 type InstanceChargePrepaid struct {
