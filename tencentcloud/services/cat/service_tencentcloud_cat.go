@@ -458,3 +458,54 @@ func (me *CatService) DescribeCatNodeGroupsByFilter(ctx context.Context, param m
 
 	return
 }
+
+func (me *CatService) DescribeCatInstantTasksByFilter(ctx context.Context) (tasks []*cat.SingleInstantTask, total *uint64, errRet error) {
+	var (
+		logId   = tccommon.GetLogId(ctx)
+		request = cat.NewDescribeInstantTasksRequest()
+	)
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n",
+				logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	var pageSize uint64 = 100
+	var offset uint64 = 0
+	tasks = make([]*cat.SingleInstantTask, 0)
+
+	for {
+		request.Limit = &pageSize
+		request.Offset = &offset
+		ratelimit.Check(request.GetAction())
+		response, err := me.client.UseCatClient().DescribeInstantTasks(request)
+		if err != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n",
+				logId, request.GetAction(), request.ToJsonString(), err.Error())
+			errRet = err
+			return
+		}
+		log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n",
+			logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+		if response == nil || response.Response == nil {
+			break
+		}
+
+		if response.Response.Tasks != nil {
+			tasks = append(tasks, response.Response.Tasks...)
+		}
+		if response.Response.Total != nil {
+			total = response.Response.Total
+		}
+
+		if len(response.Response.Tasks) < int(pageSize) {
+			break
+		}
+		offset += pageSize
+	}
+
+	return
+}
