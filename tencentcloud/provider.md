@@ -2348,6 +2348,7 @@ tencentcloud_dlc_attach_data_mask_policy
 tencentcloud_dlc_standard_engine_resource_group_config_info
 tencentcloud_dlc_datasource_house_attachment
 tencentcloud_dlc_attach_user_policy_attachment
+tencentcloud_dlc_meta_database
 
 Web Application Firewall(WAF)
 Data Source
