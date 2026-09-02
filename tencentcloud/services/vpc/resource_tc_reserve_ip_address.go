@@ -41,6 +41,7 @@ func ResourceTencentCloudReserveIpAddress() *schema.Resource {
 			"subnet_id": {
 				Type:        schema.TypeString,
 				Optional:    true,
+				Computed:    true,
 				Description: "Subnet ID.",
 			},
 
@@ -199,6 +200,9 @@ func resourceTencentCloudReserveIpAddressRead(d *schema.ResourceData, meta inter
 
 	_ = d.Set("vpc_id", reserveIpAddress.VpcId)
 	_ = d.Set("ip_address", reserveIpAddress.ReserveIpAddress)
+	if reserveIpAddress.SubnetId != nil {
+		_ = d.Set("subnet_id", reserveIpAddress.SubnetId)
+	}
 	_ = d.Set("name", reserveIpAddress.Name)
 	_ = d.Set("description", reserveIpAddress.Description)
 	_ = d.Set("reserve_ip_id", reserveIpAddress.ReserveIpId)
