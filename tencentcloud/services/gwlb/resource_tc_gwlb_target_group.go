@@ -107,28 +107,24 @@ func ResourceTencentCloudGwlbTargetGroup() *schema.Resource {
 							Type:        schema.TypeInt,
 							Optional:    true,
 							Computed:    true,
-							Default:     2,
 							Description: "Health check timeout. The default is 2 seconds. Value range: 2-30 seconds.",
 						},
 						"interval_time": {
 							Type:        schema.TypeInt,
 							Optional:    true,
 							Computed:    true,
-							Default:     5,
 							Description: "Detection interval time. The default is 5 seconds. Value range: 2-300 seconds.",
 						},
 						"health_num": {
 							Type:        schema.TypeInt,
 							Optional:    true,
 							Computed:    true,
-							Default:     3,
 							Description: "Health detection threshold. The default is 3 times. Value range: 2-10 times.",
 						},
 						"un_health_num": {
 							Type:        schema.TypeInt,
 							Optional:    true,
 							Computed:    true,
-							Default:     3,
 							Description: "Unhealth detection threshold. The default is 3 times. Value range: 2-10 times.",
 						},
 					},
@@ -196,16 +192,16 @@ func resourceTencentCloudGwlbTargetGroupCreate(d *schema.ResourceData, meta inte
 		if v, ok := healthCheckMap["port"]; ok {
 			targetGroupHealthCheck.Port = helper.IntInt64(v.(int))
 		}
-		if v, ok := healthCheckMap["timeout"]; ok {
+		if v, ok := d.GetOk("health_check.0.timeout"); ok {
 			targetGroupHealthCheck.Timeout = helper.IntInt64(v.(int))
 		}
-		if v, ok := healthCheckMap["interval_time"]; ok {
+		if v, ok := d.GetOk("health_check.0.interval_time"); ok {
 			targetGroupHealthCheck.IntervalTime = helper.IntInt64(v.(int))
 		}
-		if v, ok := healthCheckMap["health_num"]; ok {
+		if v, ok := d.GetOk("health_check.0.health_num"); ok {
 			targetGroupHealthCheck.HealthNum = helper.IntInt64(v.(int))
 		}
-		if v, ok := healthCheckMap["un_health_num"]; ok {
+		if v, ok := d.GetOk("health_check.0.un_health_num"); ok {
 			targetGroupHealthCheck.UnHealthNum = helper.IntInt64(v.(int))
 		}
 		request.HealthCheck = &targetGroupHealthCheck
@@ -385,16 +381,16 @@ func resourceTencentCloudGwlbTargetGroupUpdate(d *schema.ResourceData, meta inte
 			if v, ok := healthCheckMap["port"]; ok {
 				targetGroupHealthCheck.Port = helper.IntInt64(v.(int))
 			}
-			if v, ok := healthCheckMap["timeout"]; ok {
+			if v, ok := d.GetOk("health_check.0.timeout"); ok {
 				targetGroupHealthCheck.Timeout = helper.IntInt64(v.(int))
 			}
-			if v, ok := healthCheckMap["interval_time"]; ok {
+			if v, ok := d.GetOk("health_check.0.interval_time"); ok {
 				targetGroupHealthCheck.IntervalTime = helper.IntInt64(v.(int))
 			}
-			if v, ok := healthCheckMap["health_num"]; ok {
+			if v, ok := d.GetOk("health_check.0.health_num"); ok {
 				targetGroupHealthCheck.HealthNum = helper.IntInt64(v.(int))
 			}
-			if v, ok := healthCheckMap["un_health_num"]; ok {
+			if v, ok := d.GetOk("health_check.0.un_health_num"); ok {
 				targetGroupHealthCheck.UnHealthNum = helper.IntInt64(v.(int))
 			}
 			request1.HealthCheck = &targetGroupHealthCheck

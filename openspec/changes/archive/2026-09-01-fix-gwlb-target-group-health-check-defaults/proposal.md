@@ -4,10 +4,9 @@ When users create a `tencentcloud_gwlb_target_group` resource with a `health_che
 
 ## What Changes
 
-- Add `Default: 2` to the `timeout` field in the `health_check` nested schema
-- Add `Default: 5` to the `interval_time` field in the `health_check` nested schema
-- Add `Default: 3` to the `health_num` field in the `health_check` nested schema
-- Add `Default: 3` to the `un_health_num` field in the `health_check` nested schema
+- Modify `resourceTencentCloudGwlbTargetGroupCreate` and `resourceTencentCloudGwlbTargetGroupUpdate` so that `timeout`, `interval_time`, `health_num`, and `un_health_num` are read via `d.GetOk("health_check.0.<field>")` instead of from the flattened `health_check` map
+- When any of these four fields is omitted, the provider no longer sends `0` to the GWLB API; the field pointer stays `nil` and is omitted from the request (SDK `omitempty`), letting the API apply its own defaults
+- The schema is unchanged: the four fields remain `Optional: true, Computed: true`
 
 ## Capabilities
 
@@ -19,6 +18,6 @@ When users create a `tencentcloud_gwlb_target_group` resource with a `health_che
 
 ## Impact
 
-- **Code**: `tencentcloud/services/gwlb/resource_tc_gwlb_target_group.go` — schema definition for `health_check` nested block
-- **Tests**: `tencentcloud/services/gwlb/resource_tc_gwlb_target_group_test.go` — update test cases to verify default values
-- **Docs**: `tencentcloud/services/gwlb/resource_tc_gwlb_target_group.md` — no change needed, `Default` values are auto-documented
+- **Code**: `tencentcloud/services/gwlb/resource_tc_gwlb_target_group.go` — `Create`/`Update` health check field handling
+- **Tests**: `tencentcloud/services/gwlb/resource_tc_gwlb_target_group_test.go` — test that omits the four fields and verifies API defaults are reflected in state
+- **Docs**: no doc change needed (schema fields are unchanged)
