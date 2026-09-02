@@ -1600,6 +1600,93 @@ resource "tencentcloud_cdn_domain" "advanced" {
 }
 `
 
+const testAccCdnDomainOriginPathRules = testAccDomainCosForCDN + `
+
+resource "tencentcloud_cdn_domain" "path_rules" {
+  domain       = "pr.${local.domain}"
+  service_type = "web"
+  area         = "overseas"
+
+  origin {
+    origin_type          = "cos"
+    origin_list          = [local.bucket_url]
+    server_name          = local.bucket_url
+    origin_pull_protocol = "follow"
+
+    path_rules {
+      regex       = true
+      path        = "/api/*"
+      server_name = "origin.example.com"
+      forward_uri = "/v2/$1"
+    }
+  }
+}
+`
+
+const testAccCdnDomainOriginPathRulesUpdate = testAccDomainCosForCDN + `
+
+resource "tencentcloud_cdn_domain" "path_rules" {
+  domain       = "pr.${local.domain}"
+  service_type = "web"
+  area         = "overseas"
+
+  origin {
+    origin_type          = "cos"
+    origin_list          = [local.bucket_url]
+    server_name          = local.bucket_url
+    origin_pull_protocol = "follow"
+
+    path_rules {
+      regex       = false
+      path        = "/images/test.jpg"
+      server_name = "origin2.example.com"
+      forward_uri = "/static/images/test.jpg"
+    }
+  }
+}
+`
+
+func TestAccTencentCloudCdnDomainResource_OriginPathRules(t *testing.T) {
+	t.Parallel()
+
+	resource.Test(t, resource.TestCase{
+		PreCheck: func() {
+			tcacctest.AccPreCheckCommon(t, tcacctest.ACCOUNT_TYPE_PREPAY)
+		},
+		Providers:    tcacctest.AccProviders,
+		CheckDestroy: testAccCheckCdnDomainDestroy,
+		Steps: []resource.TestStep{
+			{
+				Config: testAccCdnDomainOriginPathRules,
+				Check: resource.ComposeAggregateTestCheckFunc(
+					testAccCheckCdnDomainExists("tencentcloud_cdn_domain.path_rules"),
+					resource.TestCheckResourceAttr("tencentcloud_cdn_domain.path_rules", "origin.0.path_rules.#", "1"),
+					resource.TestCheckResourceAttr("tencentcloud_cdn_domain.path_rules", "origin.0.path_rules.0.regex", "true"),
+					resource.TestCheckResourceAttr("tencentcloud_cdn_domain.path_rules", "origin.0.path_rules.0.path", "/api/*"),
+					resource.TestCheckResourceAttr("tencentcloud_cdn_domain.path_rules", "origin.0.path_rules.0.server_name", "origin.example.com"),
+					resource.TestCheckResourceAttr("tencentcloud_cdn_domain.path_rules", "origin.0.path_rules.0.forward_uri", "/v2/$1"),
+				),
+			},
+			{
+				Config: testAccCdnDomainOriginPathRulesUpdate,
+				Check: resource.ComposeAggregateTestCheckFunc(
+					testAccCheckCdnDomainExists("tencentcloud_cdn_domain.path_rules"),
+					resource.TestCheckResourceAttr("tencentcloud_cdn_domain.path_rules", "origin.0.path_rules.#", "1"),
+					resource.TestCheckResourceAttr("tencentcloud_cdn_domain.path_rules", "origin.0.path_rules.0.regex", "false"),
+					resource.TestCheckResourceAttr("tencentcloud_cdn_domain.path_rules", "origin.0.path_rules.0.path", "/images/test.jpg"),
+					resource.TestCheckResourceAttr("tencentcloud_cdn_domain.path_rules", "origin.0.path_rules.0.server_name", "origin2.example.com"),
+					resource.TestCheckResourceAttr("tencentcloud_cdn_domain.path_rules", "origin.0.path_rules.0.forward_uri", "/static/images/test.jpg"),
+				),
+			},
+			{
+				ResourceName:      "tencentcloud_cdn_domain.path_rules",
+				ImportState:       true,
+				ImportStateVerify: true,
+			},
+		},
+	})
+}
+
 func TestAccTencentCloudCdnDomainResource_AdvancedFields(t *testing.T) {
 	t.Parallel()
 

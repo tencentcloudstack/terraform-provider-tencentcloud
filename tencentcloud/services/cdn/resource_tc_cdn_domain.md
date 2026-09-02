@@ -195,6 +195,29 @@ resource "tencentcloud_cdn_domain" "example" {
 }
 ```
 
+Example Usage of CDN domain with origin path rewrite rules
+
+```hcl
+resource "tencentcloud_cdn_domain" "example" {
+  domain       = "example.com"
+  service_type = "web"
+  area         = "mainland"
+
+  origin {
+    origin_type          = "ip"
+    origin_list          = ["127.0.0.1"]
+    origin_pull_protocol = "follow"
+
+    path_rules {
+      regex       = true
+      path        = "/api/*"
+      server_name = "origin.example.com"
+      forward_uri = "/v2/$1"
+    }
+  }
+}
+```
+
 Import
 
 CDN domain can be imported using the id, e.g.
