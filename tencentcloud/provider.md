@@ -264,6 +264,7 @@ tencentcloud_cam_policy_granting_service_access
 tencentcloud_cam_oidc_config
 tencentcloud_cam_group_user_account
 tencentcloud_cam_sub_accounts
+tencentcloud_cam_accounts
 tencentcloud_cam_role_detail
 tencentcloud_cam_policy_detail
 
