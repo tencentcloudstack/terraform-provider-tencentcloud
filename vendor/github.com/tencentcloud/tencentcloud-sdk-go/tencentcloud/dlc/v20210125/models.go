@@ -3559,6 +3559,15 @@ type CreateInferenceModelRequestParams struct {
 
 	// <p>模型 UID（可选，前端预先生成的 UID，不传则后端自动生成）</p>
 	ModelUid *string `json:"ModelUid,omitnil,omitempty" name:"ModelUid"`
+
+	// <p>系统标签列表（TagKey-TagValue）</p>
+	ResourceTags []*Tag `json:"ResourceTags,omitnil,omitempty" name:"ResourceTags"`
+
+	// <p>模型文件来源于goosefs</p>
+	GooseFSConfig *GooseFSConfig `json:"GooseFSConfig,omitnil,omitempty" name:"GooseFSConfig"`
+
+	// <p>模型上传来源类型</p><p>枚举值：</p><ul><li>Local： 本地上传</li><li>COS： COS上传</li><li>CFS： CFS上传</li><li>CFSTurbo： CFSTurbo上传</li><li>GooseFS： GooseFS上传</li></ul>
+	StorageType *string `json:"StorageType,omitnil,omitempty" name:"StorageType"`
 }
 
 type CreateInferenceModelRequest struct {
@@ -3596,6 +3605,15 @@ type CreateInferenceModelRequest struct {
 
 	// <p>模型 UID（可选，前端预先生成的 UID，不传则后端自动生成）</p>
 	ModelUid *string `json:"ModelUid,omitnil,omitempty" name:"ModelUid"`
+
+	// <p>系统标签列表（TagKey-TagValue）</p>
+	ResourceTags []*Tag `json:"ResourceTags,omitnil,omitempty" name:"ResourceTags"`
+
+	// <p>模型文件来源于goosefs</p>
+	GooseFSConfig *GooseFSConfig `json:"GooseFSConfig,omitnil,omitempty" name:"GooseFSConfig"`
+
+	// <p>模型上传来源类型</p><p>枚举值：</p><ul><li>Local： 本地上传</li><li>COS： COS上传</li><li>CFS： CFS上传</li><li>CFSTurbo： CFSTurbo上传</li><li>GooseFS： GooseFS上传</li></ul>
+	StorageType *string `json:"StorageType,omitnil,omitempty" name:"StorageType"`
 }
 
 func (r *CreateInferenceModelRequest) ToJsonString() string {
@@ -3621,6 +3639,9 @@ func (r *CreateInferenceModelRequest) FromJsonString(s string) error {
 	delete(f, "UseCustomStorage")
 	delete(f, "Tasks")
 	delete(f, "ModelUid")
+	delete(f, "ResourceTags")
+	delete(f, "GooseFSConfig")
+	delete(f, "StorageType")
 	if len(f) > 0 {
 		return tcerr.NewTencentCloudSDKError("ClientError.BuildRequestError", "CreateInferenceModelRequest has unknown keys!", "")
 	}
@@ -3689,6 +3710,9 @@ type CreateInferenceModelResponseParams struct {
 
 	// <p>Sub UIN</p>
 	SubAccountUin *string `json:"SubAccountUin,omitnil,omitempty" name:"SubAccountUin"`
+
+	// <p>系统标签列表（TagKey-TagValue）</p>
+	ResourceTags []*Tag `json:"ResourceTags,omitnil,omitempty" name:"ResourceTags"`
 
 	// 唯一请求 ID，由服务端生成，每次请求都会返回（若请求因其他原因未能抵达服务端，则该次请求不会获得 RequestId）。定位问题时需要提供该次请求的 RequestId。
 	RequestId *string `json:"RequestId,omitnil,omitempty" name:"RequestId"`
@@ -3765,6 +3789,18 @@ type CreateInferenceServiceRequestParams struct {
 
 	// <p>ApiKeyIds</p>
 	ApiKeyIds []*string `json:"ApiKeyIds,omitnil,omitempty" name:"ApiKeyIds"`
+
+	// <p>AdvancedOptions 高级参数 JSON 字符串（可选），扁平 KV 结构，作用于 K8s RayService CR YAML 字段级</p>
+	AdvancedOptions *string `json:"AdvancedOptions,omitnil,omitempty" name:"AdvancedOptions"`
+
+	// <p>系统标签列表（TagKey-TagValue）</p>
+	ResourceTags []*Tag `json:"ResourceTags,omitnil,omitempty" name:"ResourceTags"`
+
+	// <p>自定义RayServe提交</p>
+	IsCustom *bool `json:"IsCustom,omitnil,omitempty" name:"IsCustom"`
+
+	// <p>python runtime env</p>
+	RuntimeEnv *string `json:"RuntimeEnv,omitnil,omitempty" name:"RuntimeEnv"`
 }
 
 type CreateInferenceServiceRequest struct {
@@ -3823,6 +3859,18 @@ type CreateInferenceServiceRequest struct {
 
 	// <p>ApiKeyIds</p>
 	ApiKeyIds []*string `json:"ApiKeyIds,omitnil,omitempty" name:"ApiKeyIds"`
+
+	// <p>AdvancedOptions 高级参数 JSON 字符串（可选），扁平 KV 结构，作用于 K8s RayService CR YAML 字段级</p>
+	AdvancedOptions *string `json:"AdvancedOptions,omitnil,omitempty" name:"AdvancedOptions"`
+
+	// <p>系统标签列表（TagKey-TagValue）</p>
+	ResourceTags []*Tag `json:"ResourceTags,omitnil,omitempty" name:"ResourceTags"`
+
+	// <p>自定义RayServe提交</p>
+	IsCustom *bool `json:"IsCustom,omitnil,omitempty" name:"IsCustom"`
+
+	// <p>python runtime env</p>
+	RuntimeEnv *string `json:"RuntimeEnv,omitnil,omitempty" name:"RuntimeEnv"`
 }
 
 func (r *CreateInferenceServiceRequest) ToJsonString() string {
@@ -3855,6 +3903,10 @@ func (r *CreateInferenceServiceRequest) FromJsonString(s string) error {
 	delete(f, "MaxReplicas")
 	delete(f, "AutoscalerOptions")
 	delete(f, "ApiKeyIds")
+	delete(f, "AdvancedOptions")
+	delete(f, "ResourceTags")
+	delete(f, "IsCustom")
+	delete(f, "RuntimeEnv")
 	if len(f) > 0 {
 		return tcerr.NewTencentCloudSDKError("ClientError.BuildRequestError", "CreateInferenceServiceRequest has unknown keys!", "")
 	}
@@ -3961,6 +4013,18 @@ type CreateInferenceServiceResponseParams struct {
 
 	// <p>资源配置（JSON 字符串，取自第一个部署）</p>
 	ResourceConfig *string `json:"ResourceConfig,omitnil,omitempty" name:"ResourceConfig"`
+
+	// <p>AdvancedOptions 高级参数 JSON 字符串（扁平 KV 结构，取自第一个部署）</p>
+	AdvancedOptions *string `json:"AdvancedOptions,omitnil,omitempty" name:"AdvancedOptions"`
+
+	// <p>系统标签列表（TagKey-TagValue）</p>
+	ResourceTags []*Tag `json:"ResourceTags,omitnil,omitempty" name:"ResourceTags"`
+
+	// <p>部署模式</p>
+	DeploymentMode *string `json:"DeploymentMode,omitnil,omitempty" name:"DeploymentMode"`
+
+	// <p>是否是自定义 RayServe 创建</p>
+	IsCustom *bool `json:"IsCustom,omitnil,omitempty" name:"IsCustom"`
 
 	// 唯一请求 ID，由服务端生成，每次请求都会返回（若请求因其他原因未能抵达服务端，则该次请求不会获得 RequestId）。定位问题时需要提供该次请求的 RequestId。
 	RequestId *string `json:"RequestId,omitnil,omitempty" name:"RequestId"`
@@ -4377,20 +4441,20 @@ type CreateLabRequestParams struct {
 	// <p>数据实验室名称</p>
 	Name *string `json:"Name,omitnil,omitempty" name:"Name"`
 
-	// <p>Lab 镜像地址（必填，用于开发工具如 Jupyter/VSCode/WebShell）。前端在&quot;内置 / 自定义&quot;两态中选择此值；当 Image 字段未显式传入时，后端会基于该字段按 R1（镜像表命中）/R2（同值 fallback）派生 Ray 集群镜像。</p>
-	LabImage *string `json:"LabImage,omitnil,omitempty" name:"LabImage"`
-
 	// <p>资源分区ID</p>
 	ResourcePartitionId *string `json:"ResourcePartitionId,omitnil,omitempty" name:"ResourcePartitionId"`
 
 	// <p>队列名称</p>
 	Queue *string `json:"Queue,omitnil,omitempty" name:"Queue"`
 
-	// <p>数据实验室描述</p>
-	Description *string `json:"Description,omitnil,omitempty" name:"Description"`
-
 	// <p>Ray 集群镜像地址（可选，OpenAPI/SDK 高级控制入口）。前端不再传递此字段；为空时后端按 R1（镜像表查询命中）→ R2（同值 fallback）顺序自动派生。非空时直接作为 Ray 集群镜像，跳过派生（EXPLICIT），且后端不校验其与 LabImage 的兼容性。</p>
 	Image *string `json:"Image,omitnil,omitempty" name:"Image"`
+
+	// <p>Lab 镜像地址（必填，用于开发工具如 Jupyter/VSCode/WebShell）。前端在&quot;内置 / 自定义&quot;两态中选择此值；当 Image 字段未显式传入时，后端会基于该字段按 R1（镜像表命中）/R2（同值 fallback）派生 Ray 集群镜像。</p>
+	LabImage *string `json:"LabImage,omitnil,omitempty" name:"LabImage"`
+
+	// <p>数据实验室描述</p>
+	Description *string `json:"Description,omitnil,omitempty" name:"Description"`
 
 	// <p>镜像拉取策略（Always, IfNotPresent, Never）</p>
 	ImagePullPolicy *string `json:"ImagePullPolicy,omitnil,omitempty" name:"ImagePullPolicy"`
@@ -4447,20 +4511,20 @@ type CreateLabRequest struct {
 	// <p>数据实验室名称</p>
 	Name *string `json:"Name,omitnil,omitempty" name:"Name"`
 
-	// <p>Lab 镜像地址（必填，用于开发工具如 Jupyter/VSCode/WebShell）。前端在&quot;内置 / 自定义&quot;两态中选择此值；当 Image 字段未显式传入时，后端会基于该字段按 R1（镜像表命中）/R2（同值 fallback）派生 Ray 集群镜像。</p>
-	LabImage *string `json:"LabImage,omitnil,omitempty" name:"LabImage"`
-
 	// <p>资源分区ID</p>
 	ResourcePartitionId *string `json:"ResourcePartitionId,omitnil,omitempty" name:"ResourcePartitionId"`
 
 	// <p>队列名称</p>
 	Queue *string `json:"Queue,omitnil,omitempty" name:"Queue"`
 
-	// <p>数据实验室描述</p>
-	Description *string `json:"Description,omitnil,omitempty" name:"Description"`
-
 	// <p>Ray 集群镜像地址（可选，OpenAPI/SDK 高级控制入口）。前端不再传递此字段；为空时后端按 R1（镜像表查询命中）→ R2（同值 fallback）顺序自动派生。非空时直接作为 Ray 集群镜像，跳过派生（EXPLICIT），且后端不校验其与 LabImage 的兼容性。</p>
 	Image *string `json:"Image,omitnil,omitempty" name:"Image"`
+
+	// <p>Lab 镜像地址（必填，用于开发工具如 Jupyter/VSCode/WebShell）。前端在&quot;内置 / 自定义&quot;两态中选择此值；当 Image 字段未显式传入时，后端会基于该字段按 R1（镜像表命中）/R2（同值 fallback）派生 Ray 集群镜像。</p>
+	LabImage *string `json:"LabImage,omitnil,omitempty" name:"LabImage"`
+
+	// <p>数据实验室描述</p>
+	Description *string `json:"Description,omitnil,omitempty" name:"Description"`
 
 	// <p>镜像拉取策略（Always, IfNotPresent, Never）</p>
 	ImagePullPolicy *string `json:"ImagePullPolicy,omitnil,omitempty" name:"ImagePullPolicy"`
@@ -4524,11 +4588,11 @@ func (r *CreateLabRequest) FromJsonString(s string) error {
 		return err
 	}
 	delete(f, "Name")
-	delete(f, "LabImage")
 	delete(f, "ResourcePartitionId")
 	delete(f, "Queue")
-	delete(f, "Description")
 	delete(f, "Image")
+	delete(f, "LabImage")
+	delete(f, "Description")
 	delete(f, "ImagePullPolicy")
 	delete(f, "ResourceConfig")
 	delete(f, "ResourceConfigId")
@@ -4757,6 +4821,12 @@ type CreateModelVersionRequestParams struct {
 
 	// <p>是否使用用户自带存储桶（默认 false 表示平台托管）</p>
 	UseCustomStorage *bool `json:"UseCustomStorage,omitnil,omitempty" name:"UseCustomStorage"`
+
+	// <p>创建模型时，模型从goosfe里面选取，则需要传递该参数</p>
+	GooseFSConfig *GooseFSConfig `json:"GooseFSConfig,omitnil,omitempty" name:"GooseFSConfig"`
+
+	// <p>模型上传路径类型</p><p>枚举值：</p><ul><li>LOCAL： 本地上传</li><li>CFS： CFS上传</li><li>COS： COS上传</li><li>CFSTurbo： CFSTurbo上传</li><li>GooseFS： GooseFS上传</li></ul><p>选择cos、cfs、cfstrubo则必须要传storageuri，选择local时不能传递goosefsconfig</p>
+	StorageType *string `json:"StorageType,omitnil,omitempty" name:"StorageType"`
 }
 
 type CreateModelVersionRequest struct {
@@ -4776,6 +4846,12 @@ type CreateModelVersionRequest struct {
 
 	// <p>是否使用用户自带存储桶（默认 false 表示平台托管）</p>
 	UseCustomStorage *bool `json:"UseCustomStorage,omitnil,omitempty" name:"UseCustomStorage"`
+
+	// <p>创建模型时，模型从goosfe里面选取，则需要传递该参数</p>
+	GooseFSConfig *GooseFSConfig `json:"GooseFSConfig,omitnil,omitempty" name:"GooseFSConfig"`
+
+	// <p>模型上传路径类型</p><p>枚举值：</p><ul><li>LOCAL： 本地上传</li><li>CFS： CFS上传</li><li>COS： COS上传</li><li>CFSTurbo： CFSTurbo上传</li><li>GooseFS： GooseFS上传</li></ul><p>选择cos、cfs、cfstrubo则必须要传storageuri，选择local时不能传递goosefsconfig</p>
+	StorageType *string `json:"StorageType,omitnil,omitempty" name:"StorageType"`
 }
 
 func (r *CreateModelVersionRequest) ToJsonString() string {
@@ -4795,6 +4871,8 @@ func (r *CreateModelVersionRequest) FromJsonString(s string) error {
 	delete(f, "Description")
 	delete(f, "StorageUri")
 	delete(f, "UseCustomStorage")
+	delete(f, "GooseFSConfig")
+	delete(f, "StorageType")
 	if len(f) > 0 {
 		return tcerr.NewTencentCloudSDKError("ClientError.BuildRequestError", "CreateModelVersionRequest has unknown keys!", "")
 	}
@@ -5267,19 +5345,19 @@ func (r *CreatePartitionQueueResponse) FromJsonString(s string) error {
 
 // Predefined struct for user
 type CreatePartitionRequestParams struct {
-	// <p>交易类型：purchase-新购，renew-续费，modify-变配</p>
+	// <p>交易类型：purchase-新购</p>
 	ActionType *string `json:"ActionType,omitnil,omitempty" name:"ActionType"`
 
-	// <p>付费模式：0-后付费，1-预付费</p>
+	// <p>付费模式：1-预付费</p>
 	PayMode *uint64 `json:"PayMode,omitnil,omitempty" name:"PayMode"`
 
 	// <p>资源配额列表（计费项+数量）</p>
 	ResourceQuotaList []*ResourceQuota `json:"ResourceQuotaList,omitnil,omitempty" name:"ResourceQuotaList"`
 
-	// <p>时间大小，预付费时为购买月数，后付费时为3600</p>
+	// <p>时间大小，预付费时为购买月数</p>
 	TimeSpan *int64 `json:"TimeSpan,omitnil,omitempty" name:"TimeSpan"`
 
-	// <p>时间单位，预付费为m（月），后付费为s（秒）</p>
+	// <p>时间单位，预付费为m（月）</p>
 	TimeUnit *string `json:"TimeUnit,omitnil,omitempty" name:"TimeUnit"`
 
 	// <p>自动续费标志：0-默认，1-自动续费，2-不自动续费（仅预付费有效）</p>
@@ -5288,26 +5366,26 @@ type CreatePartitionRequestParams struct {
 	// <p>弹性资源池名称，用于订单页展示</p>
 	Name *string `json:"Name,omitnil,omitempty" name:"Name"`
 
-	// <p>队列描述</p>
+	// <p>资源包描述</p>
 	Description *string `json:"Description,omitnil,omitempty" name:"Description"`
 }
 
 type CreatePartitionRequest struct {
 	*tchttp.BaseRequest
 	
-	// <p>交易类型：purchase-新购，renew-续费，modify-变配</p>
+	// <p>交易类型：purchase-新购</p>
 	ActionType *string `json:"ActionType,omitnil,omitempty" name:"ActionType"`
 
-	// <p>付费模式：0-后付费，1-预付费</p>
+	// <p>付费模式：1-预付费</p>
 	PayMode *uint64 `json:"PayMode,omitnil,omitempty" name:"PayMode"`
 
 	// <p>资源配额列表（计费项+数量）</p>
 	ResourceQuotaList []*ResourceQuota `json:"ResourceQuotaList,omitnil,omitempty" name:"ResourceQuotaList"`
 
-	// <p>时间大小，预付费时为购买月数，后付费时为3600</p>
+	// <p>时间大小，预付费时为购买月数</p>
 	TimeSpan *int64 `json:"TimeSpan,omitnil,omitempty" name:"TimeSpan"`
 
-	// <p>时间单位，预付费为m（月），后付费为s（秒）</p>
+	// <p>时间单位，预付费为m（月）</p>
 	TimeUnit *string `json:"TimeUnit,omitnil,omitempty" name:"TimeUnit"`
 
 	// <p>自动续费标志：0-默认，1-自动续费，2-不自动续费（仅预付费有效）</p>
@@ -5316,7 +5394,7 @@ type CreatePartitionRequest struct {
 	// <p>弹性资源池名称，用于订单页展示</p>
 	Name *string `json:"Name,omitnil,omitempty" name:"Name"`
 
-	// <p>队列描述</p>
+	// <p>资源包描述</p>
 	Description *string `json:"Description,omitnil,omitempty" name:"Description"`
 }
 
@@ -8698,51 +8776,54 @@ type DatabaseResponseInfo struct {
 }
 
 type DatasourceConnectionConfig struct {
-	// Mysql数据源连接的属性
+	// <p>Mysql数据源连接的属性</p>
 	// 注意：此字段可能返回 null，表示取不到有效值。
 	Mysql *MysqlInfo `json:"Mysql,omitnil,omitempty" name:"Mysql"`
 
-	// Hive数据源连接的属性
+	// <p>Hive数据源连接的属性</p>
 	// 注意：此字段可能返回 null，表示取不到有效值。
 	Hive *HiveInfo `json:"Hive,omitnil,omitempty" name:"Hive"`
 
-	// Kafka数据源连接的属性
+	// <p>Kafka数据源连接的属性</p>
 	// 注意：此字段可能返回 null，表示取不到有效值。
 	Kafka *KafkaInfo `json:"Kafka,omitnil,omitempty" name:"Kafka"`
 
-	// 其他数据源连接的属性
+	// <p>其他数据源连接的属性</p>
 	// 注意：此字段可能返回 null，表示取不到有效值。
 	OtherDatasourceConnection *OtherDatasourceConnection `json:"OtherDatasourceConnection,omitnil,omitempty" name:"OtherDatasourceConnection"`
 
-	// PostgreSQL数据源连接的属性
+	// <p>PostgreSQL数据源连接的属性</p>
 	// 注意：此字段可能返回 null，表示取不到有效值。
 	PostgreSql *DataSourceInfo `json:"PostgreSql,omitnil,omitempty" name:"PostgreSql"`
 
-	// SQLServer数据源连接的属性
+	// <p>SQLServer数据源连接的属性</p>
 	// 注意：此字段可能返回 null，表示取不到有效值。
 	SqlServer *DataSourceInfo `json:"SqlServer,omitnil,omitempty" name:"SqlServer"`
 
-	// ClickHouse数据源连接的属性
+	// <p>ClickHouse数据源连接的属性</p>
 	// 注意：此字段可能返回 null，表示取不到有效值。
 	ClickHouse *DataSourceInfo `json:"ClickHouse,omitnil,omitempty" name:"ClickHouse"`
 
-	// Elasticsearch数据源连接的属性
+	// <p>Elasticsearch数据源连接的属性</p>
 	// 注意：此字段可能返回 null，表示取不到有效值。
 	Elasticsearch *ElasticsearchInfo `json:"Elasticsearch,omitnil,omitempty" name:"Elasticsearch"`
 
-	// TDSQL-PostgreSQL数据源连接的属性
+	// <p>TDSQL-PostgreSQL数据源连接的属性</p>
 	// 注意：此字段可能返回 null，表示取不到有效值。
 	TDSQLPostgreSql *DataSourceInfo `json:"TDSQLPostgreSql,omitnil,omitempty" name:"TDSQLPostgreSql"`
 
-	// Doris数据源连接的属性
+	// <p>Doris数据源连接的属性</p>
 	// 注意：此字段可能返回 null，表示取不到有效值。
 	TCHouseD *TCHouseD `json:"TCHouseD,omitnil,omitempty" name:"TCHouseD"`
 
-	// TccHive数据目录连接信息
+	// <p>TccHive数据目录连接信息</p>
 	TccHive *TccHive `json:"TccHive,omitnil,omitempty" name:"TccHive"`
 
-	// MongoDB 数据源
+	// <p>MongoDB 数据源</p>
 	MongoDB *DataSourceInfo `json:"MongoDB,omitnil,omitempty" name:"MongoDB"`
+
+	// <p>TCHouseP数据源</p>
+	TCHouseP *TCHousePInfo `json:"TCHouseP,omitnil,omitempty" name:"TCHouseP"`
 }
 
 type DatasourceConnectionInfo struct {
@@ -12746,6 +12827,9 @@ func (r *DescribeMCPTaskResponse) FromJsonString(s string) error {
 type DescribeMCPTaskResultRequestParams struct {
 	// <p>任务ID</p>
 	TaskId *string `json:"TaskId,omitnil,omitempty" name:"TaskId"`
+
+	// <p>下一次请求数据</p>
+	NextToken *string `json:"NextToken,omitnil,omitempty" name:"NextToken"`
 }
 
 type DescribeMCPTaskResultRequest struct {
@@ -12753,6 +12837,9 @@ type DescribeMCPTaskResultRequest struct {
 	
 	// <p>任务ID</p>
 	TaskId *string `json:"TaskId,omitnil,omitempty" name:"TaskId"`
+
+	// <p>下一次请求数据</p>
+	NextToken *string `json:"NextToken,omitnil,omitempty" name:"NextToken"`
 }
 
 func (r *DescribeMCPTaskResultRequest) ToJsonString() string {
@@ -12768,6 +12855,7 @@ func (r *DescribeMCPTaskResultRequest) FromJsonString(s string) error {
 		return err
 	}
 	delete(f, "TaskId")
+	delete(f, "NextToken")
 	if len(f) > 0 {
 		return tcerr.NewTencentCloudSDKError("ClientError.BuildRequestError", "DescribeMCPTaskResultRequest has unknown keys!", "")
 	}
@@ -13976,7 +14064,7 @@ func (r *DescribeSaleResourceInfoRequest) FromJsonString(s string) error {
 
 // Predefined struct for user
 type DescribeSaleResourceInfoResponseParams struct {
-	// 可售卖资源规格列表
+	// 可售卖资源规格列表，包含规格、步长、单账户上限、以及库存情况
 	SaleResourceInfoList []*ResourceSaleInfo `json:"SaleResourceInfoList,omitnil,omitempty" name:"SaleResourceInfoList"`
 
 	// 唯一请求 ID，由服务端生成，每次请求都会返回（若请求因其他原因未能抵达服务端，则该次请求不会获得 RequestId）。定位问题时需要提供该次请求的 RequestId。
@@ -18697,6 +18785,10 @@ type GetInferenceModelResponseParams struct {
 	// <p>Sub UIN</p>
 	SubAccountUin *string `json:"SubAccountUin,omitnil,omitempty" name:"SubAccountUin"`
 
+	// <p>系统标签列表（TagKey-TagValue）</p>
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	ResourceTags []*Tag `json:"ResourceTags,omitnil,omitempty" name:"ResourceTags"`
+
 	// 唯一请求 ID，由服务端生成，每次请求都会返回（若请求因其他原因未能抵达服务端，则该次请求不会获得 RequestId）。定位问题时需要提供该次请求的 RequestId。
 	RequestId *string `json:"RequestId,omitnil,omitempty" name:"RequestId"`
 }
@@ -18847,6 +18939,15 @@ type GetInferenceServiceResponseParams struct {
 
 	// <p>资源配置（JSON 字符串，取自第一个部署）</p>
 	ResourceConfig *string `json:"ResourceConfig,omitnil,omitempty" name:"ResourceConfig"`
+
+	// <p>部署模式</p>
+	DeploymentMode *string `json:"DeploymentMode,omitnil,omitempty" name:"DeploymentMode"`
+
+	// <p>是否为自定义代码部署</p>
+	IsCustom *bool `json:"IsCustom,omitnil,omitempty" name:"IsCustom"`
+
+	// <p>系统标签列表（TagKey-TagValue）</p>
+	ResourceTags []*Tag `json:"ResourceTags,omitnil,omitempty" name:"ResourceTags"`
 
 	// 唯一请求 ID，由服务端生成，每次请求都会返回（若请求因其他原因未能抵达服务端，则该次请求不会获得 RequestId）。定位问题时需要提供该次请求的 RequestId。
 	RequestId *string `json:"RequestId,omitnil,omitempty" name:"RequestId"`
@@ -21254,8 +21355,29 @@ func (r *GetResourceConfigResponse) FromJsonString(s string) error {
 	return json.Unmarshal([]byte(s), &r)
 }
 
-type GpuSummaryItem struct {
+type GooseFSConfig struct {
+	// <p>goosefs集群id</p>
+	ClusterId *string `json:"ClusterId,omitnil,omitempty" name:"ClusterId"`
 
+	// <p>goosefs命名空间名称</p>
+	GooseFSPath *string `json:"GooseFSPath,omitnil,omitempty" name:"GooseFSPath"`
+
+	// <p>主从节点信息</p>
+	MasterAddresses []*string `json:"MasterAddresses,omitnil,omitempty" name:"MasterAddresses"`
+}
+
+type GpuSummaryItem struct {
+	// <p>GPU 型号</p>
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	GpuType *string `json:"GpuType,omitnil,omitempty" name:"GpuType"`
+
+	// <p>GPU 总数（gpuNum × replicas）</p>
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	GpuCount *int64 `json:"GpuCount,omitnil,omitempty" name:"GpuCount"`
+
+	// <p>运行中的副本数</p>
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	Replicas *int64 `json:"Replicas,omitnil,omitempty" name:"Replicas"`
 }
 
 // Predefined struct for user
@@ -21498,6 +21620,32 @@ type IcebergTablePartition struct {
 	Location *LocationInfo `json:"Location,omitnil,omitempty" name:"Location"`
 }
 
+type ImageDto struct {
+	// <p>镜像ID</p>
+	Id *int64 `json:"Id,omitnil,omitempty" name:"Id"`
+
+	// <p>镜像名称</p>
+	Name *string `json:"Name,omitnil,omitempty" name:"Name"`
+
+	// <p>镜像地址</p>
+	Url *string `json:"Url,omitnil,omitempty" name:"Url"`
+
+	// <p>镜像描述</p>
+	Description *string `json:"Description,omitnil,omitempty" name:"Description"`
+
+	// <p>镜像类型（Ray/Workspace）</p>
+	Type *string `json:"Type,omitnil,omitempty" name:"Type"`
+
+	// <p>镜像内置的 Ray 版本号</p>
+	RayVersion *string `json:"RayVersion,omitnil,omitempty" name:"RayVersion"`
+
+	// <p>创建时间</p>
+	CreateTime *uint64 `json:"CreateTime,omitnil,omitempty" name:"CreateTime"`
+
+	// <p>更新时间</p>
+	UpdateTime *uint64 `json:"UpdateTime,omitnil,omitempty" name:"UpdateTime"`
+}
+
 type InferenceEngineInfo struct {
 	// <p>引擎标识符</p>
 	EngineId *string `json:"EngineId,omitnil,omitempty" name:"EngineId"`
@@ -21617,6 +21765,10 @@ type InferenceModelInfo struct {
 
 	// <p>云账户的 Sub UIN</p>
 	SubAccountUin *string `json:"SubAccountUin,omitnil,omitempty" name:"SubAccountUin"`
+
+	// <p>系统标签列表（TagKey-TagValue）</p>
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	ResourceTags []*Tag `json:"ResourceTags,omitnil,omitempty" name:"ResourceTags"`
 }
 
 type InferenceServiceInfo struct {
@@ -22688,6 +22840,96 @@ func (r *ListExamplesResponse) ToJsonString() string {
 // FromJsonString It is highly **NOT** recommended to use this function
 // because it has no param check, nor strict type check
 func (r *ListExamplesResponse) FromJsonString(s string) error {
+	return json.Unmarshal([]byte(s), &r)
+}
+
+// Predefined struct for user
+type ListImagesRequestParams struct {
+	// 关键词搜索（模糊匹配名称或描述）
+	Keyword *string `json:"Keyword,omitnil,omitempty" name:"Keyword"`
+
+	// 镜像类型过滤（Ray/Workspace）
+	Type *string `json:"Type,omitnil,omitempty" name:"Type"`
+
+	// 页数
+	Page *int64 `json:"Page,omitnil,omitempty" name:"Page"`
+
+	// 数量
+	PageSize *int64 `json:"PageSize,omitnil,omitempty" name:"PageSize"`
+}
+
+type ListImagesRequest struct {
+	*tchttp.BaseRequest
+	
+	// 关键词搜索（模糊匹配名称或描述）
+	Keyword *string `json:"Keyword,omitnil,omitempty" name:"Keyword"`
+
+	// 镜像类型过滤（Ray/Workspace）
+	Type *string `json:"Type,omitnil,omitempty" name:"Type"`
+
+	// 页数
+	Page *int64 `json:"Page,omitnil,omitempty" name:"Page"`
+
+	// 数量
+	PageSize *int64 `json:"PageSize,omitnil,omitempty" name:"PageSize"`
+}
+
+func (r *ListImagesRequest) ToJsonString() string {
+    b, _ := json.Marshal(r)
+    return string(b)
+}
+
+// FromJsonString It is highly **NOT** recommended to use this function
+// because it has no param check, nor strict type check
+func (r *ListImagesRequest) FromJsonString(s string) error {
+	f := make(map[string]interface{})
+	if err := json.Unmarshal([]byte(s), &f); err != nil {
+		return err
+	}
+	delete(f, "Keyword")
+	delete(f, "Type")
+	delete(f, "Page")
+	delete(f, "PageSize")
+	if len(f) > 0 {
+		return tcerr.NewTencentCloudSDKError("ClientError.BuildRequestError", "ListImagesRequest has unknown keys!", "")
+	}
+	return json.Unmarshal([]byte(s), &r)
+}
+
+// Predefined struct for user
+type ListImagesResponseParams struct {
+	// 总记录数
+	Total *int64 `json:"Total,omitnil,omitempty" name:"Total"`
+
+	// 当前页码（从1开始）
+	Page *int64 `json:"Page,omitnil,omitempty" name:"Page"`
+
+	// 页数
+	PageSize *int64 `json:"PageSize,omitnil,omitempty" name:"PageSize"`
+
+	// 总页数
+	TotalPages *int64 `json:"TotalPages,omitnil,omitempty" name:"TotalPages"`
+
+	// 镜像列表
+	Items []*ImageDto `json:"Items,omitnil,omitempty" name:"Items"`
+
+	// 唯一请求 ID，由服务端生成，每次请求都会返回（若请求因其他原因未能抵达服务端，则该次请求不会获得 RequestId）。定位问题时需要提供该次请求的 RequestId。
+	RequestId *string `json:"RequestId,omitnil,omitempty" name:"RequestId"`
+}
+
+type ListImagesResponse struct {
+	*tchttp.BaseResponse
+	Response *ListImagesResponseParams `json:"Response"`
+}
+
+func (r *ListImagesResponse) ToJsonString() string {
+    b, _ := json.Marshal(r)
+    return string(b)
+}
+
+// FromJsonString It is highly **NOT** recommended to use this function
+// because it has no param check, nor strict type check
+func (r *ListImagesResponse) FromJsonString(s string) error {
 	return json.Unmarshal([]byte(s), &r)
 }
 
@@ -27579,6 +27821,10 @@ type ResourceSaleInfo struct {
 	// <p>最大资源数量，仅GU有值</p>
 	// 注意：此字段可能返回 null，表示取不到有效值。
 	MaxSpec *int64 `json:"MaxSpec,omitnil,omitempty" name:"MaxSpec"`
+
+	// <p>库存情况，对当前地域该计费项实时可新增数量的分级预估。取值复用 BcpConstants 库存状态常量：</p><ul><li>EnoughStock：余量充足</li><li>NormalStock：余量正常</li><li>UnderStock：余量紧张</li><li>WithoutStock：无库存</li></ul><p>该值为底层提供的预估值，不代表保证可发货量，仅用于展示库存概况。当请求 Region 与资源池地域不一致、cold-start 缓存未 ready、或该计费项在快照中缺失时返回 null。</p>
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	StatusCategory *string `json:"StatusCategory,omitnil,omitempty" name:"StatusCategory"`
 }
 
 type ResourceSpec struct {
@@ -27800,6 +28046,10 @@ type RestartInferenceServiceResponseParams struct {
 
 	// <p>资源配置（JSON 字符串，取自第一个部署）</p>
 	ResourceConfig *string `json:"ResourceConfig,omitnil,omitempty" name:"ResourceConfig"`
+
+	// <p>系统标签列表（TagKey-TagValue）</p>
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	ResourceTags []*Tag `json:"ResourceTags,omitnil,omitempty" name:"ResourceTags"`
 
 	// 唯一请求 ID，由服务端生成，每次请求都会返回（若请求因其他原因未能抵达服务端，则该次请求不会获得 RequestId）。定位问题时需要提供该次请求的 RequestId。
 	RequestId *string `json:"RequestId,omitnil,omitempty" name:"RequestId"`
@@ -29198,6 +29448,16 @@ type StopInferenceServiceResponseParams struct {
 	// <p>资源配置（JSON 字符串，取自第一个部署）</p>
 	ResourceConfig *string `json:"ResourceConfig,omitnil,omitempty" name:"ResourceConfig"`
 
+	// <p>系统标签列表（TagKey-TagValue）</p>
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	ResourceTags []*Tag `json:"ResourceTags,omitnil,omitempty" name:"ResourceTags"`
+
+	// <p>部署模式</p>
+	DeploymentMode *string `json:"DeploymentMode,omitnil,omitempty" name:"DeploymentMode"`
+
+	// <p>是否为自定义代码部署</p>
+	IsCustom *bool `json:"IsCustom,omitnil,omitempty" name:"IsCustom"`
+
 	// 唯一请求 ID，由服务端生成，每次请求都会返回（若请求因其他原因未能抵达服务端，则该次请求不会获得 RequestId）。定位问题时需要提供该次请求的 RequestId。
 	RequestId *string `json:"RequestId,omitnil,omitempty" name:"RequestId"`
 }
@@ -29724,6 +29984,40 @@ type TCHouseD struct {
 	DbName *string `json:"DbName,omitnil,omitempty" name:"DbName"`
 
 	// 访问信息
+	AccessInfo *string `json:"AccessInfo,omitnil,omitempty" name:"AccessInfo"`
+}
+
+type TCHousePInfo struct {
+	// <p>实例id</p>
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	InstanceId *string `json:"InstanceId,omitnil,omitempty" name:"InstanceId"`
+
+	// <p>实例名称</p>
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	InstanceName *string `json:"InstanceName,omitnil,omitempty" name:"InstanceName"`
+
+	// <p>JdbcUrl</p>
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	JdbcUrl *string `json:"JdbcUrl,omitnil,omitempty" name:"JdbcUrl"`
+
+	// <p>用户名</p>
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	User *string `json:"User,omitnil,omitempty" name:"User"`
+
+	// <p>密码</p>
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	Password *string `json:"Password,omitnil,omitempty" name:"Password"`
+
+	// <p>地址</p>
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	Location *DatasourceConnectionLocation `json:"Location,omitnil,omitempty" name:"Location"`
+
+	// <p>数据库名称</p>
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	DbName *string `json:"DbName,omitnil,omitempty" name:"DbName"`
+
+	// <p>地址信息</p>
+	// 注意：此字段可能返回 null，表示取不到有效值。
 	AccessInfo *string `json:"AccessInfo,omitnil,omitempty" name:"AccessInfo"`
 }
 
@@ -31138,6 +31432,9 @@ type UpdateInferenceModelRequestParams struct {
 
 	// <p>模型标签列表（可选）</p>
 	Tags []*string `json:"Tags,omitnil,omitempty" name:"Tags"`
+
+	// <p>系统标签列表（TagKey-TagValue）</p>
+	ResourceTags []*Tag `json:"ResourceTags,omitnil,omitempty" name:"ResourceTags"`
 }
 
 type UpdateInferenceModelRequest struct {
@@ -31157,6 +31454,9 @@ type UpdateInferenceModelRequest struct {
 
 	// <p>模型标签列表（可选）</p>
 	Tags []*string `json:"Tags,omitnil,omitempty" name:"Tags"`
+
+	// <p>系统标签列表（TagKey-TagValue）</p>
+	ResourceTags []*Tag `json:"ResourceTags,omitnil,omitempty" name:"ResourceTags"`
 }
 
 func (r *UpdateInferenceModelRequest) ToJsonString() string {
@@ -31176,6 +31476,7 @@ func (r *UpdateInferenceModelRequest) FromJsonString(s string) error {
 	delete(f, "Description")
 	delete(f, "ParameterSize")
 	delete(f, "Tags")
+	delete(f, "ResourceTags")
 	if len(f) > 0 {
 		return tcerr.NewTencentCloudSDKError("ClientError.BuildRequestError", "UpdateInferenceModelRequest has unknown keys!", "")
 	}
@@ -31243,6 +31544,10 @@ type UpdateInferenceModelResponseParams struct {
 
 	// <p>SUB UIN</p>
 	SubAccountUin *string `json:"SubAccountUin,omitnil,omitempty" name:"SubAccountUin"`
+
+	// <p>系统标签列表（TagKey-TagValue）</p>
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	ResourceTags []*Tag `json:"ResourceTags,omitnil,omitempty" name:"ResourceTags"`
 
 	// 唯一请求 ID，由服务端生成，每次请求都会返回（若请求因其他原因未能抵达服务端，则该次请求不会获得 RequestId）。定位问题时需要提供该次请求的 RequestId。
 	RequestId *string `json:"RequestId,omitnil,omitempty" name:"RequestId"`
@@ -31748,14 +32053,14 @@ type UpdateLabRequestParams struct {
 	// <p>数据实验室名称</p>
 	Name *string `json:"Name,omitnil,omitempty" name:"Name"`
 
+	// <p>Ray 集群镜像地址（可选，OpenAPI/SDK 高级控制入口）。前端不再传递此字段；为空时后端按 R1（镜像表查询命中）→ R2（同值 fallback）顺序自动派生。非空时直接作为 Ray 集群镜像，跳过派生（EXPLICIT），且后端不校验其与 LabImage 的兼容性。</p>
+	Image *string `json:"Image,omitnil,omitempty" name:"Image"`
+
 	// <p>Lab 镜像地址（必填，用于开发工具如 Jupyter/VSCode/WebShell）。前端在&quot;内置 / 自定义&quot;两态中选择此值；当 Image 字段未显式传入时，后端会基于该字段按 R1（镜像表命中）/R2（同值 fallback）派生 Ray 集群镜像。</p>
 	LabImage *string `json:"LabImage,omitnil,omitempty" name:"LabImage"`
 
 	// <p>数据实验室描述</p>
 	Description *string `json:"Description,omitnil,omitempty" name:"Description"`
-
-	// <p>Ray 集群镜像地址（可选，OpenAPI/SDK 高级控制入口）。前端不再传递此字段；为空时后端按 R1（镜像表查询命中）→ R2（同值 fallback）顺序自动派生。非空时直接作为 Ray 集群镜像，跳过派生（EXPLICIT），且后端不校验其与 LabImage 的兼容性。</p>
-	Image *string `json:"Image,omitnil,omitempty" name:"Image"`
 
 	// <p>镜像拉取策略（Always, IfNotPresent, Never）</p>
 	ImagePullPolicy *string `json:"ImagePullPolicy,omitnil,omitempty" name:"ImagePullPolicy"`
@@ -31806,14 +32111,14 @@ type UpdateLabRequest struct {
 	// <p>数据实验室名称</p>
 	Name *string `json:"Name,omitnil,omitempty" name:"Name"`
 
+	// <p>Ray 集群镜像地址（可选，OpenAPI/SDK 高级控制入口）。前端不再传递此字段；为空时后端按 R1（镜像表查询命中）→ R2（同值 fallback）顺序自动派生。非空时直接作为 Ray 集群镜像，跳过派生（EXPLICIT），且后端不校验其与 LabImage 的兼容性。</p>
+	Image *string `json:"Image,omitnil,omitempty" name:"Image"`
+
 	// <p>Lab 镜像地址（必填，用于开发工具如 Jupyter/VSCode/WebShell）。前端在&quot;内置 / 自定义&quot;两态中选择此值；当 Image 字段未显式传入时，后端会基于该字段按 R1（镜像表命中）/R2（同值 fallback）派生 Ray 集群镜像。</p>
 	LabImage *string `json:"LabImage,omitnil,omitempty" name:"LabImage"`
 
 	// <p>数据实验室描述</p>
 	Description *string `json:"Description,omitnil,omitempty" name:"Description"`
-
-	// <p>Ray 集群镜像地址（可选，OpenAPI/SDK 高级控制入口）。前端不再传递此字段；为空时后端按 R1（镜像表查询命中）→ R2（同值 fallback）顺序自动派生。非空时直接作为 Ray 集群镜像，跳过派生（EXPLICIT），且后端不校验其与 LabImage 的兼容性。</p>
-	Image *string `json:"Image,omitnil,omitempty" name:"Image"`
 
 	// <p>镜像拉取策略（Always, IfNotPresent, Never）</p>
 	ImagePullPolicy *string `json:"ImagePullPolicy,omitnil,omitempty" name:"ImagePullPolicy"`
@@ -31871,9 +32176,9 @@ func (r *UpdateLabRequest) FromJsonString(s string) error {
 		return err
 	}
 	delete(f, "Name")
+	delete(f, "Image")
 	delete(f, "LabImage")
 	delete(f, "Description")
-	delete(f, "Image")
 	delete(f, "ImagePullPolicy")
 	delete(f, "ResourceConfigId")
 	delete(f, "GroupId")
