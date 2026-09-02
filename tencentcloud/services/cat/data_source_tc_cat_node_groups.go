@@ -359,5 +359,5 @@ func dataSourceTencentCloudCatNodeGroupsRead(d *schema.ResourceData, meta interf
 
 func logError(logId, msg string) error {
 	log.Printf("[CRITAL]%s %s", logId, msg)
-	return fmt.Errorf(msg)
+	return fmt.Errorf("%s", msg)
 }

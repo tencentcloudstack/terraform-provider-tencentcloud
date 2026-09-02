@@ -1,6 +1,7 @@
 package cat_test
 
 import (
+	"context"
 	"testing"
 
 	"github.com/agiledragon/gomonkey/v2"
@@ -10,7 +11,7 @@ import (
 
 	tccommon "github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/common"
 	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/connectivity"
-	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/services/cat"
+	svccat "github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/services/cat"
 )
 
 type mockMetaForCatNodeGroups struct {
@@ -41,7 +42,7 @@ func TestCatNodeGroups_Read_Success(t *testing.T) {
 	catClient := &cat.Client{}
 	patches.ApplyMethodReturn(newMockMetaForCatNodeGroups().client, "UseCatClient", catClient)
 
-	patches.ApplyMethodFunc(catClient, "DescribeNodeGroups", func(request *cat.DescribeNodeGroupsRequest) (*cat.DescribeNodeGroupsResponse, error) {
+	patches.ApplyMethodFunc(catClient, "DescribeNodeGroupsWithContext", func(ctx context.Context, request *cat.DescribeNodeGroupsRequest) (*cat.DescribeNodeGroupsResponse, error) {
 		resp := cat.NewDescribeNodeGroupsResponse()
 		resp.Response = &cat.DescribeNodeGroupsResponseParams{
 			NodeList: []*cat.NodeTree{
@@ -80,7 +81,7 @@ func TestCatNodeGroups_Read_Success(t *testing.T) {
 	})
 
 	meta := newMockMetaForCatNodeGroups()
-	res := cat.DataSourceTencentCloudCatNodeGroups()
+	res := svccat.DataSourceTencentCloudCatNodeGroups()
 	d := schema.TestResourceDataRaw(t, res.Schema, map[string]interface{}{
 		"node_type": []interface{}{1},
 		"ip_type":   1,
@@ -129,14 +130,14 @@ func TestCatNodeGroups_Read_NilResponse(t *testing.T) {
 	catClient := &cat.Client{}
 	patches.ApplyMethodReturn(newMockMetaForCatNodeGroups().client, "UseCatClient", catClient)
 
-	patches.ApplyMethodFunc(catClient, "DescribeNodeGroups", func(request *cat.DescribeNodeGroupsRequest) (*cat.DescribeNodeGroupsResponse, error) {
+	patches.ApplyMethodFunc(catClient, "DescribeNodeGroupsWithContext", func(ctx context.Context, request *cat.DescribeNodeGroupsRequest) (*cat.DescribeNodeGroupsResponse, error) {
 		resp := cat.NewDescribeNodeGroupsResponse()
 		resp.Response = nil
 		return resp, nil
 	})
 
 	meta := newMockMetaForCatNodeGroups()
-	res := cat.DataSourceTencentCloudCatNodeGroups()
+	res := svccat.DataSourceTencentCloudCatNodeGroups()
 	d := schema.TestResourceDataRaw(t, res.Schema, map[string]interface{}{})
 
 	err := res.Read(d, meta)
@@ -152,7 +153,7 @@ func TestCatNodeGroups_Read_EmptyResponse(t *testing.T) {
 	catClient := &cat.Client{}
 	patches.ApplyMethodReturn(newMockMetaForCatNodeGroups().client, "UseCatClient", catClient)
 
-	patches.ApplyMethodFunc(catClient, "DescribeNodeGroups", func(request *cat.DescribeNodeGroupsRequest) (*cat.DescribeNodeGroupsResponse, error) {
+	patches.ApplyMethodFunc(catClient, "DescribeNodeGroupsWithContext", func(ctx context.Context, request *cat.DescribeNodeGroupsRequest) (*cat.DescribeNodeGroupsResponse, error) {
 		resp := cat.NewDescribeNodeGroupsResponse()
 		resp.Response = &cat.DescribeNodeGroupsResponseParams{
 			NodeList:       []*cat.NodeTree{},
@@ -164,7 +165,7 @@ func TestCatNodeGroups_Read_EmptyResponse(t *testing.T) {
 	})
 
 	meta := newMockMetaForCatNodeGroups()
-	res := cat.DataSourceTencentCloudCatNodeGroups()
+	res := svccat.DataSourceTencentCloudCatNodeGroups()
 	d := schema.TestResourceDataRaw(t, res.Schema, map[string]interface{}{})
 
 	err := res.Read(d, meta)
@@ -187,12 +188,12 @@ func TestCatNodeGroups_Read_APIError(t *testing.T) {
 	catClient := &cat.Client{}
 	patches.ApplyMethodReturn(newMockMetaForCatNodeGroups().client, "UseCatClient", catClient)
 
-	patches.ApplyMethodFunc(catClient, "DescribeNodeGroups", func(request *cat.DescribeNodeGroupsRequest) (*cat.DescribeNodeGroupsResponse, error) {
+	patches.ApplyMethodFunc(catClient, "DescribeNodeGroupsWithContext", func(ctx context.Context, request *cat.DescribeNodeGroupsRequest) (*cat.DescribeNodeGroupsResponse, error) {
 		return nil, assert.AnError
 	})
 
 	meta := newMockMetaForCatNodeGroups()
-	res := cat.DataSourceTencentCloudCatNodeGroups()
+	res := svccat.DataSourceTencentCloudCatNodeGroups()
 	d := schema.TestResourceDataRaw(t, res.Schema, map[string]interface{}{})
 
 	err := res.Read(d, meta)
@@ -201,7 +202,7 @@ func TestCatNodeGroups_Read_APIError(t *testing.T) {
 
 // TestCatNodeGroups_Schema tests the schema definition
 func TestCatNodeGroups_Schema(t *testing.T) {
-	res := cat.DataSourceTencentCloudCatNodeGroups()
+	res := svccat.DataSourceTencentCloudCatNodeGroups()
 
 	assert.NotNil(t, res)
 	assert.NotNil(t, res.Read)
