@@ -19,7 +19,7 @@ resource "tencentcloud_cls_alarm_notice" "example" {
   jump_domain          = "https://console.cloud.tencent.com"
   deliver_status       = 2
   alarm_shield_status  = 2
-  secure_detail_status = 2
+  secure_detail_status = 1
   callback_prioritize  = true
   notice_rules {
     escalate = true
