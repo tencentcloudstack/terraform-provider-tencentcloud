@@ -1,3 +1,3 @@
 ```release-note:new-data-source
-	tencentcloud_cam_accounts
+tencentcloud_cam_accounts
 ```

@@ -15,8 +15,7 @@ Use this data source to query the list of CAM accounts via the CAM `ListAccounts
 
 ```hcl
 # query all CAM accounts
-data "tencentcloud_cam_accounts" "all" {
-}
+data "tencentcloud_cam_accounts" "all" {}
 
 # query accounts filtered by user type
 data "tencentcloud_cam_accounts" "sub_users" {
