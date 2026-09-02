@@ -1,6 +1,7 @@
 package cat_test
 
 import (
+	"context"
 	"testing"
 
 	"github.com/agiledragon/gomonkey/v2"
@@ -10,7 +11,7 @@ import (
 
 	tccommon "github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/common"
 	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/connectivity"
-	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/services/cat"
+	svccat "github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/services/cat"
 )
 
 type mockMetaForCatProbeMetricTagValuesDS struct {
@@ -36,7 +37,7 @@ func TestCatProbeMetricTagValuesDS_ReadBasic(t *testing.T) {
 	catClient := &cat.Client{}
 	patches.ApplyMethodReturn(newMockMetaForCatProbeMetricTagValuesDS().client, "UseCatClient", catClient)
 
-	patches.ApplyMethodFunc(catClient, "DescribeProbeMetricTagValues", func(request *cat.DescribeProbeMetricTagValuesRequest) (*cat.DescribeProbeMetricTagValuesResponse, error) {
+	patches.ApplyMethodFunc(catClient, "DescribeProbeMetricTagValuesWithContext", func(ctx context.Context, request *cat.DescribeProbeMetricTagValuesRequest) (*cat.DescribeProbeMetricTagValuesResponse, error) {
 		resp := cat.NewDescribeProbeMetricTagValuesResponse()
 		resp.Response = &cat.DescribeProbeMetricTagValuesResponseParams{
 			TagValueSet: ptrStringCatPMDS("[\"www.qq.com\",\"www.baidu.com\"]"),
@@ -46,7 +47,7 @@ func TestCatProbeMetricTagValuesDS_ReadBasic(t *testing.T) {
 	})
 
 	meta := newMockMetaForCatProbeMetricTagValuesDS()
-	res := cat.DataSourceTencentCloudCatProbeMetricTagValues()
+	res := svccat.DataSourceTencentCloudCatProbeMetricTagValues()
 	d := schema.TestResourceDataRaw(t, res.Schema, map[string]interface{}{
 		"analyze_task_type": "AnalyzeTaskType_Network",
 		"key":               "host",
@@ -69,7 +70,7 @@ func TestCatProbeMetricTagValuesDS_ReadWithFilters(t *testing.T) {
 	catClient := &cat.Client{}
 	patches.ApplyMethodReturn(newMockMetaForCatProbeMetricTagValuesDS().client, "UseCatClient", catClient)
 
-	patches.ApplyMethodFunc(catClient, "DescribeProbeMetricTagValues", func(request *cat.DescribeProbeMetricTagValuesRequest) (*cat.DescribeProbeMetricTagValuesResponse, error) {
+	patches.ApplyMethodFunc(catClient, "DescribeProbeMetricTagValuesWithContext", func(ctx context.Context, request *cat.DescribeProbeMetricTagValuesRequest) (*cat.DescribeProbeMetricTagValuesResponse, error) {
 		assert.Equal(t, "AnalyzeTaskType_Network", *request.AnalyzeTaskType)
 		assert.Equal(t, "area", *request.Key)
 		assert.Equal(t, int(2), len(request.Filters))
@@ -82,14 +83,14 @@ func TestCatProbeMetricTagValuesDS_ReadWithFilters(t *testing.T) {
 	})
 
 	meta := newMockMetaForCatProbeMetricTagValuesDS()
-	res := cat.DataSourceTencentCloudCatProbeMetricTagValues()
-	filters := schema.NewSet(schema.HashString, []interface{}{})
-	filters.Add("\"host\" = 'www.qq.com'")
-	filters.Add("time >= now()-1h")
+	res := svccat.DataSourceTencentCloudCatProbeMetricTagValues()
 	d := schema.TestResourceDataRaw(t, res.Schema, map[string]interface{}{
 		"analyze_task_type": "AnalyzeTaskType_Network",
 		"key":               "area",
-		"filters":           filters,
+		"filters": []interface{}{
+			"\"host\" = 'www.qq.com'",
+			"time >= now()-1h",
+		},
 	})
 
 	err := res.Read(d, meta)
@@ -107,14 +108,14 @@ func TestCatProbeMetricTagValuesDS_ReadEmptyResponse(t *testing.T) {
 	catClient := &cat.Client{}
 	patches.ApplyMethodReturn(newMockMetaForCatProbeMetricTagValuesDS().client, "UseCatClient", catClient)
 
-	patches.ApplyMethodFunc(catClient, "DescribeProbeMetricTagValues", func(request *cat.DescribeProbeMetricTagValuesRequest) (*cat.DescribeProbeMetricTagValuesResponse, error) {
+	patches.ApplyMethodFunc(catClient, "DescribeProbeMetricTagValuesWithContext", func(ctx context.Context, request *cat.DescribeProbeMetricTagValuesRequest) (*cat.DescribeProbeMetricTagValuesResponse, error) {
 		resp := cat.NewDescribeProbeMetricTagValuesResponse()
 		resp.Response = &cat.DescribeProbeMetricTagValuesResponseParams{}
 		return resp, nil
 	})
 
 	meta := newMockMetaForCatProbeMetricTagValuesDS()
-	res := cat.DataSourceTencentCloudCatProbeMetricTagValues()
+	res := svccat.DataSourceTencentCloudCatProbeMetricTagValues()
 	d := schema.TestResourceDataRaw(t, res.Schema, map[string]interface{}{
 		"analyze_task_type": "AnalyzeTaskType_Network",
 		"key":               "host",
@@ -129,7 +130,7 @@ func TestCatProbeMetricTagValuesDS_ReadEmptyResponse(t *testing.T) {
 }
 
 func TestCatProbeMetricTagValuesDS_Schema(t *testing.T) {
-	res := cat.DataSourceTencentCloudCatProbeMetricTagValues()
+	res := svccat.DataSourceTencentCloudCatProbeMetricTagValues()
 
 	assert.NotNil(t, res)
 	assert.Contains(t, res.Schema, "analyze_task_type")
