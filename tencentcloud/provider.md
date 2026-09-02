@@ -1755,6 +1755,7 @@ Cloud Automated Testing(CAT)
 Data Source
 tencentcloud_cat_probe_data
 tencentcloud_cat_node
+tencentcloud_cat_node_groups
 tencentcloud_cat_metric_data
 tencentcloud_cat_probe_metric_tag_values
 
