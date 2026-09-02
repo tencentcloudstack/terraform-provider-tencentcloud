@@ -1336,7 +1336,7 @@ github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/gaap/v20180529
 # github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/gs v1.3.58
 ## explicit; go 1.14
 github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/gs/v20191118
-# github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/gwlb v1.3.150
+# github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/gwlb v1.0.1127
 ## explicit; go 1.14
 github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/gwlb/v20240906
 # github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/igtm v1.3.29

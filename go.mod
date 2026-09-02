@@ -125,7 +125,7 @@ require (
 	github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/dasb v1.0.970
 	github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/dbdc v1.3.149
 	github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/ga2 v1.3.144
-	github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/gwlb v1.3.150
+	github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/gwlb v1.0.1127
 	github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/igtm v1.3.29
 	github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/mqtt v1.3.104
 	github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/oceanus v1.0.831
