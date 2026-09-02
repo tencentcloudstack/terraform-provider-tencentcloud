@@ -1531,6 +1531,7 @@ tencentcloud_cls_dlc_deliver
 tencentcloud_cls_console
 tencentcloud_cls_metric_subscribe
 tencentcloud_cls_splunk_deliver
+tencentcloud_cls_remote_write_task
 
 Data Source
 tencentcloud_cls_shipper_tasks
