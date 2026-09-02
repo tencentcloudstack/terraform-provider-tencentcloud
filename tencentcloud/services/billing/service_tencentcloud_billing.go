@@ -219,3 +219,106 @@ func (me *BillingService) DescribeBillingInstanceById(ctx context.Context, insta
 	ret = response.Response.InstanceList[0]
 	return
 }
+
+func (me *BillingService) DescribeBillingBillDetailByFilter(ctx context.Context, param map[string]interface{}) (detailSet []*billingv20180709.BillDetail, total uint64, retContext *string, errRet error) {
+	logId := tccommon.GetLogId(ctx)
+
+	request := billingv20180709.NewDescribeBillDetailRequest()
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	for k, v := range param {
+		if k == "PeriodType" {
+			request.PeriodType = v.(*string)
+		}
+		if k == "Month" {
+			request.Month = v.(*string)
+		}
+		if k == "BeginTime" {
+			request.BeginTime = v.(*string)
+		}
+		if k == "EndTime" {
+			request.EndTime = v.(*string)
+		}
+		if k == "NeedRecordNum" {
+			request.NeedRecordNum = v.(*int64)
+		}
+		if k == "ProductCode" {
+			request.ProductCode = v.(*string)
+		}
+		if k == "PayMode" {
+			request.PayMode = v.(*string)
+		}
+		if k == "ResourceId" {
+			request.ResourceId = v.(*string)
+		}
+		if k == "ActionType" {
+			request.ActionType = v.(*string)
+		}
+		if k == "ProjectId" {
+			request.ProjectId = v.(*int64)
+		}
+		if k == "BusinessCode" {
+			request.BusinessCode = v.(*string)
+		}
+		if k == "Context" {
+			request.Context = v.(*string)
+		}
+		if k == "PayerUin" {
+			request.PayerUin = v.(*string)
+		}
+	}
+
+	var (
+		limit  uint64 = 300
+		offset uint64 = 0
+	)
+
+	for {
+		request.Offset = &offset
+		request.Limit = &limit
+		err := resource.Retry(tccommon.ReadRetryTimeout, func() *resource.RetryError {
+			ratelimit.Check(request.GetAction())
+			result, e := me.client.UseBillingV20180709Client().DescribeBillDetail(request)
+			if e != nil {
+				return tccommon.RetryError(e)
+			} else {
+				log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), result.ToJsonString())
+			}
+
+			if result == nil || result.Response == nil {
+				return resource.NonRetryableError(fmt.Errorf("Describe billing bill detail failed, Response is nil."))
+			}
+
+			if result.Response.DetailSet == nil {
+				return resource.NonRetryableError(fmt.Errorf("Describe billing bill detail failed, DetailSet is nil."))
+			}
+
+			detailSet = append(detailSet, result.Response.DetailSet...)
+			if result.Response.Total != nil {
+				total = *result.Response.Total
+			}
+			if result.Response.Context != nil {
+				retContext = result.Response.Context
+			}
+			return nil
+		})
+
+		if err != nil {
+			errRet = err
+			return
+		}
+
+		if uint64(len(detailSet)) >= total || total == 0 {
+			break
+		}
+
+		offset += limit
+	}
+
+	return
+}

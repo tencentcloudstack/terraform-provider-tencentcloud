@@ -351,7 +351,7 @@ func NewCreateInstanceResponse() (response *CreateInstanceResponse) {
 }
 
 // CreateInstance
-// 创建一个实例资源，会创建一个新购实例资源的订单，并通过腾讯云账户余额自动支付。调用该接口的账号需要授予finace:trade的权限，否则无法支付成功。目前已接入并支持购买的产品包括：T-Sec-Web应用防火墙、云防火墙、主机安全、主机容器、云安全中心、T-Sec-密钥管理系统。
+// 创建一个实例资源，会创建一个新购实例资源的订单，并通过腾讯云账户余额自动支付。调用该接口的账号需要授予finance:trade的权限，否则无法支付成功。目前已接入并支持购买的产品包括：T-Sec-Web应用防火墙、云防火墙、主机安全、主机容器、云安全中心、T-Sec-密钥管理系统。
 //
 // 可能返回的错误码:
 //  AUTHFAILURE_UNAUTHORIZEDOPERATION = "AuthFailure.UnauthorizedOperation"
@@ -377,7 +377,7 @@ func (c *Client) CreateInstance(request *CreateInstanceRequest) (response *Creat
 }
 
 // CreateInstance
-// 创建一个实例资源，会创建一个新购实例资源的订单，并通过腾讯云账户余额自动支付。调用该接口的账号需要授予finace:trade的权限，否则无法支付成功。目前已接入并支持购买的产品包括：T-Sec-Web应用防火墙、云防火墙、主机安全、主机容器、云安全中心、T-Sec-密钥管理系统。
+// 创建一个实例资源，会创建一个新购实例资源的订单，并通过腾讯云账户余额自动支付。调用该接口的账号需要授予finance:trade的权限，否则无法支付成功。目前已接入并支持购买的产品包括：T-Sec-Web应用防火墙、云防火墙、主机安全、主机容器、云安全中心、T-Sec-密钥管理系统。
 //
 // 可能返回的错误码:
 //  AUTHFAILURE_UNAUTHORIZEDOPERATION = "AuthFailure.UnauthorizedOperation"
@@ -3245,6 +3245,66 @@ func (c *Client) DescribeGatherRuleDetailWithContext(ctx context.Context, reques
     return
 }
 
+func NewDescribeOrgMemberAccountBalanceRequest() (request *DescribeOrgMemberAccountBalanceRequest) {
+    request = &DescribeOrgMemberAccountBalanceRequest{
+        BaseRequest: &tchttp.BaseRequest{},
+    }
+    
+    request.Init().WithApiInfo("billing", APIVersion, "DescribeOrgMemberAccountBalance")
+    
+    
+    return
+}
+
+func NewDescribeOrgMemberAccountBalanceResponse() (response *DescribeOrgMemberAccountBalanceResponse) {
+    response = &DescribeOrgMemberAccountBalanceResponse{
+        BaseResponse: &tchttp.BaseResponse{},
+    } 
+    return
+
+}
+
+// DescribeOrgMemberAccountBalance
+// 批量查询成员可用余额信息
+//
+// 可能返回的错误码:
+//  FAILEDOPERATION = "FailedOperation"
+//  FAILEDOPERATION_PAYPRICEERROR = "FailedOperation.PayPriceError"
+//  INTERNALERROR = "InternalError"
+//  INTERNALERROR_GATEWAYERROR = "InternalError.GatewayError"
+//  UNAUTHORIZEDOPERATION_CAMNOAUTH = "UnauthorizedOperation.CamNoAuth"
+//  UNSUPPORTEDOPERATION = "UnsupportedOperation"
+func (c *Client) DescribeOrgMemberAccountBalance(request *DescribeOrgMemberAccountBalanceRequest) (response *DescribeOrgMemberAccountBalanceResponse, err error) {
+    return c.DescribeOrgMemberAccountBalanceWithContext(context.Background(), request)
+}
+
+// DescribeOrgMemberAccountBalance
+// 批量查询成员可用余额信息
+//
+// 可能返回的错误码:
+//  FAILEDOPERATION = "FailedOperation"
+//  FAILEDOPERATION_PAYPRICEERROR = "FailedOperation.PayPriceError"
+//  INTERNALERROR = "InternalError"
+//  INTERNALERROR_GATEWAYERROR = "InternalError.GatewayError"
+//  UNAUTHORIZEDOPERATION_CAMNOAUTH = "UnauthorizedOperation.CamNoAuth"
+//  UNSUPPORTEDOPERATION = "UnsupportedOperation"
+func (c *Client) DescribeOrgMemberAccountBalanceWithContext(ctx context.Context, request *DescribeOrgMemberAccountBalanceRequest) (response *DescribeOrgMemberAccountBalanceResponse, err error) {
+    if request == nil {
+        request = NewDescribeOrgMemberAccountBalanceRequest()
+    }
+    c.InitBaseRequest(&request.BaseRequest, "billing", APIVersion, "DescribeOrgMemberAccountBalance")
+    
+    if c.GetCredential() == nil {
+        return nil, errors.New("DescribeOrgMemberAccountBalance require credential")
+    }
+
+    request.SetContext(ctx)
+    
+    response = NewDescribeOrgMemberAccountBalanceResponse()
+    err = c.Send(request, response)
+    return
+}
+
 func NewDescribeRenewInstancesRequest() (request *DescribeRenewInstancesRequest) {
     request = &DescribeRenewInstancesRequest{
         BaseRequest: &tchttp.BaseRequest{},
@@ -3272,10 +3332,12 @@ func NewDescribeRenewInstancesResponse() (response *DescribeRenewInstancesRespon
 // 2、子用户使用该接口时，应具备QcloudFinanceRenewManageFullAccess权限策略。
 //
 // 可能返回的错误码:
+//  FAILEDOPERATION = "FailedOperation"
+//  FAILEDOPERATION_PAYPRICEERROR = "FailedOperation.PayPriceError"
 //  INTERNALERROR = "InternalError"
-//  INTERNALERROR_DBOPERATERROR = "InternalError.DbOperatError"
 //  INTERNALERROR_GATEWAYERROR = "InternalError.GatewayError"
-//  INVALIDPARAMETER = "InvalidParameter"
+//  UNAUTHORIZEDOPERATION_CAMNOAUTH = "UnauthorizedOperation.CamNoAuth"
+//  UNSUPPORTEDOPERATION = "UnsupportedOperation"
 func (c *Client) DescribeRenewInstances(request *DescribeRenewInstancesRequest) (response *DescribeRenewInstancesResponse, err error) {
     return c.DescribeRenewInstancesWithContext(context.Background(), request)
 }
@@ -3288,10 +3350,12 @@ func (c *Client) DescribeRenewInstances(request *DescribeRenewInstancesRequest) 
 // 2、子用户使用该接口时，应具备QcloudFinanceRenewManageFullAccess权限策略。
 //
 // 可能返回的错误码:
+//  FAILEDOPERATION = "FailedOperation"
+//  FAILEDOPERATION_PAYPRICEERROR = "FailedOperation.PayPriceError"
 //  INTERNALERROR = "InternalError"
-//  INTERNALERROR_DBOPERATERROR = "InternalError.DbOperatError"
 //  INTERNALERROR_GATEWAYERROR = "InternalError.GatewayError"
-//  INVALIDPARAMETER = "InvalidParameter"
+//  UNAUTHORIZEDOPERATION_CAMNOAUTH = "UnauthorizedOperation.CamNoAuth"
+//  UNSUPPORTEDOPERATION = "UnsupportedOperation"
 func (c *Client) DescribeRenewInstancesWithContext(ctx context.Context, request *DescribeRenewInstancesRequest) (response *DescribeRenewInstancesResponse, err error) {
     if request == nil {
         request = NewDescribeRenewInstancesRequest()
@@ -3857,7 +3921,7 @@ func NewRefundInstanceResponse() (response *RefundInstanceResponse) {
 }
 
 // RefundInstance
-// 退订不再需要的实例，只退还实付金额的部分，已使用的代金券不退还，退还的实付金额默认退到腾讯云账户余额中。调用该接口的账号需要授予finace:RefundInstance的权限，否则无法支付成功。目前已接入并支持退订的产品包括：T-Sec-Web应用防火墙、云防火墙、主机安全、主机容器、云安全中心、T-Sec-密钥管理系统。
+// 退订不再需要的实例，只退还实付金额的部分，已使用的代金券不退还，退还的实付金额默认退到腾讯云账户余额中。调用该接口的账号需要授予finance:RefundInstance的权限，否则无法支付成功。目前已接入并支持退订的产品包括：T-Sec-Web应用防火墙、云防火墙、主机安全、主机容器、云安全中心、T-Sec-密钥管理系统。
 //
 // 可能返回的错误码:
 //  AUTHFAILURE_UNAUTHORIZEDOPERATION = "AuthFailure.UnauthorizedOperation"
@@ -3865,7 +3929,9 @@ func NewRefundInstanceResponse() (response *RefundInstanceResponse) {
 //  FAILEDOPERATION_BUSINESSCHECKERRCODE = "FailedOperation.BusinessCheckErrCode"
 //  FAILEDOPERATION_GETPRICEPARAMERROR = "FailedOperation.GetPriceParamError"
 //  FAILEDOPERATION_INVALIDDEAL = "FailedOperation.InvalidDeal"
+//  FAILEDOPERATION_NOTALLOWTOREFUND = "FailedOperation.NotAllowToRefund"
 //  FAILEDOPERATION_NUMLIMITERROR = "FailedOperation.NumLimitError"
+//  FAILEDOPERATION_RETURNCOMMONERROR = "FailedOperation.ReturnCommonError"
 //  INTERNALERROR = "InternalError"
 //  INTERNALERROR_INTERNALERROR = "InternalError.InternalError"
 //  INVALIDPARAMETER = "InvalidParameter"
@@ -3880,7 +3946,7 @@ func (c *Client) RefundInstance(request *RefundInstanceRequest) (response *Refun
 }
 
 // RefundInstance
-// 退订不再需要的实例，只退还实付金额的部分，已使用的代金券不退还，退还的实付金额默认退到腾讯云账户余额中。调用该接口的账号需要授予finace:RefundInstance的权限，否则无法支付成功。目前已接入并支持退订的产品包括：T-Sec-Web应用防火墙、云防火墙、主机安全、主机容器、云安全中心、T-Sec-密钥管理系统。
+// 退订不再需要的实例，只退还实付金额的部分，已使用的代金券不退还，退还的实付金额默认退到腾讯云账户余额中。调用该接口的账号需要授予finance:RefundInstance的权限，否则无法支付成功。目前已接入并支持退订的产品包括：T-Sec-Web应用防火墙、云防火墙、主机安全、主机容器、云安全中心、T-Sec-密钥管理系统。
 //
 // 可能返回的错误码:
 //  AUTHFAILURE_UNAUTHORIZEDOPERATION = "AuthFailure.UnauthorizedOperation"
@@ -3888,7 +3954,9 @@ func (c *Client) RefundInstance(request *RefundInstanceRequest) (response *Refun
 //  FAILEDOPERATION_BUSINESSCHECKERRCODE = "FailedOperation.BusinessCheckErrCode"
 //  FAILEDOPERATION_GETPRICEPARAMERROR = "FailedOperation.GetPriceParamError"
 //  FAILEDOPERATION_INVALIDDEAL = "FailedOperation.InvalidDeal"
+//  FAILEDOPERATION_NOTALLOWTOREFUND = "FailedOperation.NotAllowToRefund"
 //  FAILEDOPERATION_NUMLIMITERROR = "FailedOperation.NumLimitError"
+//  FAILEDOPERATION_RETURNCOMMONERROR = "FailedOperation.ReturnCommonError"
 //  INTERNALERROR = "InternalError"
 //  INTERNALERROR_INTERNALERROR = "InternalError.InternalError"
 //  INVALIDPARAMETER = "InvalidParameter"
@@ -3935,7 +4003,7 @@ func NewRenewInstanceResponse() (response *RenewInstanceResponse) {
 }
 
 // RenewInstance
-// 续费一台实例，调用该接口续费服务器时，您需要确保您的腾讯云账户余额充足，否则会续费失败。调用该接口的账号需要授予finace:trade的权限，否则无法续费成功。目前已接入并支持续费的产品包括：T-Sec-Web应用防火墙、云防火墙、主机安全、主机容器、云安全中心、T-Sec-密钥管理系统。
+// 续费一台实例，调用该接口续费服务器时，您需要确保您的腾讯云账户余额充足，否则会续费失败。调用该接口的账号需要授予finance:trade的权限，否则无法续费成功。目前已接入并支持续费的产品包括：T-Sec-Web应用防火墙、云防火墙、主机安全、主机容器、云安全中心、T-Sec-密钥管理系统。
 //
 // 可能返回的错误码:
 //  AUTHFAILURE_UNAUTHORIZEDOPERATION = "AuthFailure.UnauthorizedOperation"
@@ -3961,7 +4029,7 @@ func (c *Client) RenewInstance(request *RenewInstanceRequest) (response *RenewIn
 }
 
 // RenewInstance
-// 续费一台实例，调用该接口续费服务器时，您需要确保您的腾讯云账户余额充足，否则会续费失败。调用该接口的账号需要授予finace:trade的权限，否则无法续费成功。目前已接入并支持续费的产品包括：T-Sec-Web应用防火墙、云防火墙、主机安全、主机容器、云安全中心、T-Sec-密钥管理系统。
+// 续费一台实例，调用该接口续费服务器时，您需要确保您的腾讯云账户余额充足，否则会续费失败。调用该接口的账号需要授予finance:trade的权限，否则无法续费成功。目前已接入并支持续费的产品包括：T-Sec-Web应用防火墙、云防火墙、主机安全、主机容器、云安全中心、T-Sec-密钥管理系统。
 //
 // 可能返回的错误码:
 //  AUTHFAILURE_UNAUTHORIZEDOPERATION = "AuthFailure.UnauthorizedOperation"
@@ -3995,6 +4063,102 @@ func (c *Client) RenewInstanceWithContext(ctx context.Context, request *RenewIns
     request.SetContext(ctx)
     
     response = NewRenewInstanceResponse()
+    err = c.Send(request, response)
+    return
+}
+
+func NewSetRenewalRequest() (request *SetRenewalRequest) {
+    request = &SetRenewalRequest{
+        BaseRequest: &tchttp.BaseRequest{},
+    }
+    
+    request.Init().WithApiInfo("billing", APIVersion, "SetRenewal")
+    
+    
+    return
+}
+
+func NewSetRenewalResponse() (response *SetRenewalResponse) {
+    response = &SetRenewalResponse{
+        BaseResponse: &tchttp.BaseResponse{},
+    } 
+    return
+
+}
+
+// SetRenewal
+// 注意事项：
+//
+// 1、本接口支持对包年包月实例设置自动续费模式及周期
+//
+// 2、可通过实例查询接口获取到产品编码、地域编码
+//
+// 3、子用户使用该接口时，应具备QcloudFinanceRenewManageFullAccess权限策略。
+//
+// 可能返回的错误码:
+//  AUTHFAILURE_UNAUTHORIZEDOPERATION = "AuthFailure.UnauthorizedOperation"
+//  FAILEDOPERATION_BALANCEINSUFFICIENT = "FailedOperation.BalanceInsufficient"
+//  FAILEDOPERATION_BUSINESSCHECKERRCODE = "FailedOperation.BusinessCheckErrCode"
+//  FAILEDOPERATION_DISTRIBUTEERROR = "FailedOperation.DistributeError"
+//  FAILEDOPERATION_GETPRICEPARAMERROR = "FailedOperation.GetPriceParamError"
+//  FAILEDOPERATION_INVALIDDEAL = "FailedOperation.InvalidDeal"
+//  FAILEDOPERATION_INVALIDGOODSCATEGORYID = "FailedOperation.InvalidGoodsCategoryId"
+//  FAILEDOPERATION_DEALCREATEWHITELISTERROR = "FailedOperation.dealCreateWhitelistError"
+//  INTERNALERROR = "InternalError"
+//  INTERNALERROR_INTERNALERROR = "InternalError.InternalError"
+//  INVALIDPARAMETER = "InvalidParameter"
+//  INVALIDPARAMETER_APIPARAMERROR = "InvalidParameter.ApiParamError"
+//  INVALIDPARAMETER_INVALIDPARAMETER = "InvalidParameter.InvalidParameter"
+//  INVALIDPARAMETER_RESOURCELOCKED = "InvalidParameter.ResourceLocked"
+//  UNAUTHORIZEDOPERATION_CERTIFICATIONNEEDUPGRADE = "UnauthorizedOperation.CertificationNeedUpgrade"
+//  UNAUTHORIZEDOPERATION_NOTCERTIFICATION = "UnauthorizedOperation.NotCertification"
+//  UNSUPPORTEDOPERATION = "UnsupportedOperation"
+//  UNSUPPORTEDOPERATION_NOT_SUPPORT_THIS_ACTION = "UnsupportedOperation.NOT_SUPPORT_THIS_ACTION"
+func (c *Client) SetRenewal(request *SetRenewalRequest) (response *SetRenewalResponse, err error) {
+    return c.SetRenewalWithContext(context.Background(), request)
+}
+
+// SetRenewal
+// 注意事项：
+//
+// 1、本接口支持对包年包月实例设置自动续费模式及周期
+//
+// 2、可通过实例查询接口获取到产品编码、地域编码
+//
+// 3、子用户使用该接口时，应具备QcloudFinanceRenewManageFullAccess权限策略。
+//
+// 可能返回的错误码:
+//  AUTHFAILURE_UNAUTHORIZEDOPERATION = "AuthFailure.UnauthorizedOperation"
+//  FAILEDOPERATION_BALANCEINSUFFICIENT = "FailedOperation.BalanceInsufficient"
+//  FAILEDOPERATION_BUSINESSCHECKERRCODE = "FailedOperation.BusinessCheckErrCode"
+//  FAILEDOPERATION_DISTRIBUTEERROR = "FailedOperation.DistributeError"
+//  FAILEDOPERATION_GETPRICEPARAMERROR = "FailedOperation.GetPriceParamError"
+//  FAILEDOPERATION_INVALIDDEAL = "FailedOperation.InvalidDeal"
+//  FAILEDOPERATION_INVALIDGOODSCATEGORYID = "FailedOperation.InvalidGoodsCategoryId"
+//  FAILEDOPERATION_DEALCREATEWHITELISTERROR = "FailedOperation.dealCreateWhitelistError"
+//  INTERNALERROR = "InternalError"
+//  INTERNALERROR_INTERNALERROR = "InternalError.InternalError"
+//  INVALIDPARAMETER = "InvalidParameter"
+//  INVALIDPARAMETER_APIPARAMERROR = "InvalidParameter.ApiParamError"
+//  INVALIDPARAMETER_INVALIDPARAMETER = "InvalidParameter.InvalidParameter"
+//  INVALIDPARAMETER_RESOURCELOCKED = "InvalidParameter.ResourceLocked"
+//  UNAUTHORIZEDOPERATION_CERTIFICATIONNEEDUPGRADE = "UnauthorizedOperation.CertificationNeedUpgrade"
+//  UNAUTHORIZEDOPERATION_NOTCERTIFICATION = "UnauthorizedOperation.NotCertification"
+//  UNSUPPORTEDOPERATION = "UnsupportedOperation"
+//  UNSUPPORTEDOPERATION_NOT_SUPPORT_THIS_ACTION = "UnsupportedOperation.NOT_SUPPORT_THIS_ACTION"
+func (c *Client) SetRenewalWithContext(ctx context.Context, request *SetRenewalRequest) (response *SetRenewalResponse, err error) {
+    if request == nil {
+        request = NewSetRenewalRequest()
+    }
+    c.InitBaseRequest(&request.BaseRequest, "billing", APIVersion, "SetRenewal")
+    
+    if c.GetCredential() == nil {
+        return nil, errors.New("SetRenewal require credential")
+    }
+
+    request.SetContext(ctx)
+    
+    response = NewSetRenewalResponse()
     err = c.Send(request, response)
     return
 }

@@ -1390,6 +1390,7 @@ func Provider() *schema.Provider {
 			"tencentcloud_mqtt_instance_detail":                                   mqtt.DataSourceTencentCloudMqttInstanceDetail(),
 			"tencentcloud_mqtt_topics":                                            mqtt.DataSourceTencentCloudMqttTopics(),
 			"tencentcloud_billing_budget_operation_log":                           billing.DataSourceTencentCloudBillingBudgetOperationLog(),
+			"tencentcloud_billing_bill_detail":                                    billing.DataSourceTencentCloudBillingBillDetail(),
 			"tencentcloud_igtm_instance_list":                                     igtm.DataSourceTencentCloudIgtmInstanceList(),
 			"tencentcloud_igtm_address_pool_list":                                 igtm.DataSourceTencentCloudIgtmAddressPoolList(),
 			"tencentcloud_igtm_monitors":                                          igtm.DataSourceTencentCloudIgtmMonitors(),

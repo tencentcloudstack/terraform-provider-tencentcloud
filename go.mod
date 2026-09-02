@@ -116,7 +116,7 @@ require (
 	github.com/hashicorp/terraform-plugin-mux v0.23.1
 	github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/advisor v1.3.37
 	github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/bh v1.3.93
-	github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/billing v1.3.39
+	github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/billing v1.3.166
 	github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/cdc v1.0.1149
 	github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/cdwdoris v1.3.139
 	github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/cdwpg v1.0.1126
