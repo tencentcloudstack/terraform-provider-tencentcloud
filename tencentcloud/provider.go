@@ -785,6 +785,7 @@ func Provider() *schema.Provider {
 			"tencentcloud_cam_oidc_config":                                        cam.DataSourceTencentCloudCamOidcConfig(),
 			"tencentcloud_user_info":                                              cam.DataSourceTencentCloudUserInfo(),
 			"tencentcloud_cam_sub_accounts":                                       cam.DataSourceTencentCloudCamSubAccounts(),
+			"tencentcloud_cam_accounts":                                           cam.DataSourceTencentCloudCamAccounts(),
 			"tencentcloud_cam_role_detail":                                        cam.DataSourceTencentCloudCamRoleDetail(),
 			"tencentcloud_cam_policy_detail":                                      cam.DataSourceTencentCloudCamPolicyDetail(),
 			"tencentcloud_cdn_domains":                                            cdn.DataSourceTencentCloudCdnDomains(),

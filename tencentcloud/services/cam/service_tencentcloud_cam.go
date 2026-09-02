@@ -2128,3 +2128,48 @@ func (me *CamService) DescribeCamPolicyDetailByFilter(ctx context.Context, param
 	result = response.Response
 	return
 }
+
+func (me *CamService) DescribeCamAccountsByFilter(ctx context.Context, paramMap map[string]interface{}) (users []*cam.ListAllUser, marker string, isTruncated bool, errRet error) {
+	var (
+		logId   = tccommon.GetLogId(ctx)
+		request = cam.NewListAccountsRequest()
+	)
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	if v, ok := paramMap["MaxItems"]; ok {
+		request.MaxItems = v.(*int64)
+	}
+	if v, ok := paramMap["Marker"]; ok {
+		request.Marker = v.(*string)
+	}
+	if v, ok := paramMap["UserType"]; ok {
+		request.UserType = v.(*string)
+	}
+
+	ratelimit.Check(request.GetAction())
+
+	response, err := me.client.UseCamClient().ListAccounts(request)
+	if err != nil {
+		errRet = err
+		return
+	}
+	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+	if response == nil || response.Response == nil {
+		return
+	}
+
+	users = response.Response.Users
+	if response.Response.Marker != nil {
+		marker = *response.Response.Marker
+	}
+	if response.Response.IsTruncated != nil {
+		isTruncated = *response.Response.IsTruncated
+	}
+	return
+}
