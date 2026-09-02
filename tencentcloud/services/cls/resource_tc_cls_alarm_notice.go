@@ -183,6 +183,13 @@ func ResourceTencentCloudClsAlarmNotice() *schema.Resource {
 				Description: "Alarm shield status (no-login operation). Valid values: 1 (off), 2 (on, default).",
 			},
 
+			"secure_detail_status": {
+				Optional:    true,
+				Computed:    true,
+				Type:        schema.TypeInt,
+				Description: "Alarm detail secure authentication redirect switch. Valid values: 1 (off, default), 2 (on).",
+			},
+
 			"callback_prioritize": {
 				Optional:    true,
 				Type:        schema.TypeBool,
@@ -642,6 +649,10 @@ func resourceTencentCloudClsAlarmNoticeCreate(d *schema.ResourceData, meta inter
 		request.AlarmShieldStatus = helper.IntUint64(v.(int))
 	}
 
+	if v, ok := d.GetOkExists("secure_detail_status"); ok {
+		request.SecureDetailStatus = helper.IntUint64(v.(int))
+	}
+
 	if v, ok := d.GetOkExists("callback_prioritize"); ok {
 		request.CallbackPrioritize = helper.Bool(v.(bool))
 	}
@@ -944,6 +955,10 @@ func resourceTencentCloudClsAlarmNoticeRead(d *schema.ResourceData, meta interfa
 		_ = d.Set("alarm_shield_status", alarmNotice.AlarmShieldStatus)
 	}
 
+	if alarmNotice.SecureDetailStatus != nil {
+		_ = d.Set("secure_detail_status", alarmNotice.SecureDetailStatus)
+	}
+
 	if alarmNotice.CallbackPrioritize != nil {
 		_ = d.Set("callback_prioritize", alarmNotice.CallbackPrioritize)
 	}
@@ -1093,7 +1108,7 @@ func resourceTencentCloudClsAlarmNoticeUpdate(d *schema.ResourceData, meta inter
 	needChange := false
 	request.AlarmNoticeId = &alarmNoticeId
 
-	mutableArgs := []string{"name", "type", "notice_receivers", "web_callbacks", "jump_domain", "deliver_status", "deliver_config", "alarm_shield_status", "callback_prioritize", "notice_rules"}
+	mutableArgs := []string{"name", "type", "notice_receivers", "web_callbacks", "jump_domain", "deliver_status", "deliver_config", "alarm_shield_status", "secure_detail_status", "callback_prioritize", "notice_rules"}
 
 	for _, v := range mutableArgs {
 		if d.HasChange(v) {
@@ -1212,6 +1227,10 @@ func resourceTencentCloudClsAlarmNoticeUpdate(d *schema.ResourceData, meta inter
 
 		if v, ok := d.GetOkExists("alarm_shield_status"); ok {
 			request.AlarmShieldStatus = helper.IntUint64(v.(int))
+		}
+
+		if v, ok := d.GetOkExists("secure_detail_status"); ok {
+			request.SecureDetailStatus = helper.IntUint64(v.(int))
 		}
 
 		if v, ok := d.GetOkExists("callback_prioritize"); ok {
