@@ -33,6 +33,7 @@ func ResourceTencentCloudSesDomain() *schema.Resource {
 			"dkim_option": {
 				Type:        schema.TypeInt,
 				Optional:    true,
+				Computed:    true,
 				ForceNew:    true,
 				Description: "DKIM key length. 0: 1024-bit, 1: 2048-bit.",
 			},
@@ -40,6 +41,7 @@ func ResourceTencentCloudSesDomain() *schema.Resource {
 			"tag_list": {
 				Type:        schema.TypeList,
 				Optional:    true,
+				Computed:    true,
 				ForceNew:    true,
 				Description: "Tag list.",
 				Elem: &schema.Resource{
