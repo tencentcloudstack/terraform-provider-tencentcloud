@@ -2129,7 +2129,11 @@ func (me *CamService) DescribeCamPolicyDetailByFilter(ctx context.Context, param
 	return
 }
 
-func (me *CamService) DescribeCamAccountsByFilter(ctx context.Context, paramMap map[string]interface{}) (users []*cam.ListAllUser, marker string, isTruncated bool, errRet error) {
+// DescribeCamAccountsByFilter queries all CAM accounts via the ListAccounts API with
+// automatic pagination. The API returns at most 100 records per request; the loop keeps
+// requesting with the returned Marker until IsTruncated is false, so the full account
+// list is fetched and returned.
+func (me *CamService) DescribeCamAccountsByFilter(ctx context.Context, paramMap map[string]interface{}) (users []*cam.ListAllUser, errRet error) {
 	var (
 		logId   = tccommon.GetLogId(ctx)
 		request = cam.NewListAccountsRequest()
@@ -2141,35 +2145,35 @@ func (me *CamService) DescribeCamAccountsByFilter(ctx context.Context, paramMap 
 		}
 	}()
 
-	if v, ok := paramMap["MaxItems"]; ok {
-		request.MaxItems = v.(*int64)
-	}
-	if v, ok := paramMap["Marker"]; ok {
-		request.Marker = v.(*string)
-	}
 	if v, ok := paramMap["UserType"]; ok {
 		request.UserType = v.(*string)
 	}
 
-	ratelimit.Check(request.GetAction())
+	// The ListAccounts API returns at most 100 records per request, so request the
+	// maximum page size and follow the returned Marker while IsTruncated is true.
+	maxItems := int64(100)
+	users = make([]*cam.ListAllUser, 0)
+	for {
+		request.MaxItems = &maxItems
+		ratelimit.Check(request.GetAction())
 
-	response, err := me.client.UseCamClient().ListAccounts(request)
-	if err != nil {
-		errRet = err
-		return
-	}
-	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+		response, err := me.client.UseCamClient().ListAccounts(request)
+		if err != nil {
+			errRet = err
+			return
+		}
+		log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
 
-	if response == nil || response.Response == nil {
-		return
-	}
+		if response == nil || response.Response == nil {
+			return
+		}
 
-	users = response.Response.Users
-	if response.Response.Marker != nil {
-		marker = *response.Response.Marker
-	}
-	if response.Response.IsTruncated != nil {
-		isTruncated = *response.Response.IsTruncated
+		users = append(users, response.Response.Users...)
+		if response.Response.IsTruncated == nil || !*response.Response.IsTruncated || response.Response.Marker == nil {
+			break
+		}
+
+		request.Marker = response.Response.Marker
 	}
 	return
 }

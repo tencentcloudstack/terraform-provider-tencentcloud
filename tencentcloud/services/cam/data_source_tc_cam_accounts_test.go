@@ -34,12 +34,12 @@ func ptrInt64CamAccountsDS(v int64) *int64 { return &v }
 // go test ./tencentcloud/services/cam/ -run "TestCamAccountsDataSource" -v -count=1 -gcflags="all=-l"
 
 // TestCamAccountsDataSource_ReadBasic tests that the read handler flattens a populated
-// ListAccounts response into the users list and surfaces marker / is_truncated correctly.
+// ListAccounts response into the users list.
 func TestCamAccountsDataSource_ReadBasic(t *testing.T) {
 	patches := gomonkey.NewPatches()
 	defer patches.Reset()
 
-	patches.ApplyMethodFunc(&cam.CamService{}, "DescribeCamAccountsByFilter", func(_ context.Context, _ map[string]interface{}) ([]*camv20190116.ListAllUser, string, bool, error) {
+	patches.ApplyMethodFunc(&cam.CamService{}, "DescribeCamAccountsByFilter", func(_ context.Context, _ map[string]interface{}) ([]*camv20190116.ListAllUser, error) {
 		return []*camv20190116.ListAllUser{
 			{
 				Uin:          ptrInt64CamAccountsDS(100037718139),
@@ -65,7 +65,7 @@ func TestCamAccountsDataSource_ReadBasic(t *testing.T) {
 				CreateTime:   ptrStrCamAccountsDS("2024-02-02 11:00:00"),
 				UserType:     ptrStrCamAccountsDS("Collaborator"),
 			},
-		}, "next-page-marker", true, nil
+		}, nil
 	})
 
 	meta := newMockMetaForCamAccountsDS()
@@ -96,9 +96,6 @@ func TestCamAccountsDataSource_ReadBasic(t *testing.T) {
 	assert.Equal(t, "bob", user1["name"].(string))
 	assert.Equal(t, "Collaborator", user1["user_type"].(string))
 	assert.Equal(t, 0, user1["console_login"].(int))
-
-	assert.Equal(t, "next-page-marker", d.Get("marker").(string))
-	assert.Equal(t, true, d.Get("is_truncated").(bool))
 }
 
 // TestCamAccountsDataSource_ReadWithNilFields tests that nil fields in the API response
@@ -107,7 +104,7 @@ func TestCamAccountsDataSource_ReadWithNilFields(t *testing.T) {
 	patches := gomonkey.NewPatches()
 	defer patches.Reset()
 
-	patches.ApplyMethodFunc(&cam.CamService{}, "DescribeCamAccountsByFilter", func(_ context.Context, _ map[string]interface{}) ([]*camv20190116.ListAllUser, string, bool, error) {
+	patches.ApplyMethodFunc(&cam.CamService{}, "DescribeCamAccountsByFilter", func(_ context.Context, _ map[string]interface{}) ([]*camv20190116.ListAllUser, error) {
 		return []*camv20190116.ListAllUser{
 			{
 				Uin:        ptrInt64CamAccountsDS(100037718141),
@@ -118,7 +115,7 @@ func TestCamAccountsDataSource_ReadWithNilFields(t *testing.T) {
 				UserType:   ptrStrCamAccountsDS("MessageReceiver"),
 				CreateTime: ptrStrCamAccountsDS("2024-03-03 12:00:00"),
 			},
-		}, "", false, nil
+		}, nil
 	})
 
 	meta := newMockMetaForCamAccountsDS()
@@ -141,19 +138,16 @@ func TestCamAccountsDataSource_ReadWithNilFields(t *testing.T) {
 	assert.Equal(t, 0, user0["uid"].(int))
 	assert.Equal(t, "", user0["remark"].(string))
 	assert.Equal(t, "", user0["phone_num"].(string))
-
-	assert.Equal(t, "", d.Get("marker").(string))
-	assert.Equal(t, false, d.Get("is_truncated").(bool))
 }
 
-// TestCamAccountsDataSource_ReadEmptyResponse tests that an empty Users list returns an
-// error (NonRetryableError inside retry) and does not clear the id.
+// TestCamAccountsDataSource_ReadEmptyResponse tests that an empty Users list does not
+// produce an error and the read handler still completes.
 func TestCamAccountsDataSource_ReadEmptyResponse(t *testing.T) {
 	patches := gomonkey.NewPatches()
 	defer patches.Reset()
 
-	patches.ApplyMethodFunc(&cam.CamService{}, "DescribeCamAccountsByFilter", func(_ context.Context, _ map[string]interface{}) ([]*camv20190116.ListAllUser, string, bool, error) {
-		return []*camv20190116.ListAllUser{}, "", false, nil
+	patches.ApplyMethodFunc(&cam.CamService{}, "DescribeCamAccountsByFilter", func(_ context.Context, _ map[string]interface{}) ([]*camv20190116.ListAllUser, error) {
+		return []*camv20190116.ListAllUser{}, nil
 	})
 
 	meta := newMockMetaForCamAccountsDS()
@@ -161,7 +155,8 @@ func TestCamAccountsDataSource_ReadEmptyResponse(t *testing.T) {
 	d := schema.TestResourceDataRaw(t, res.Schema, map[string]interface{}{})
 
 	err := res.Read(d, meta)
-	assert.Error(t, err)
+	assert.NoError(t, err)
+	assert.Empty(t, d.Get("users").([]interface{}))
 }
 
 // TestCamAccountsDataSource_Schema tests the schema definition includes the expected fields.
@@ -171,21 +166,13 @@ func TestCamAccountsDataSource_Schema(t *testing.T) {
 	assert.NotNil(t, res)
 	assert.NotNil(t, res.Read)
 
-	assert.Contains(t, res.Schema, "max_items")
-	assert.Contains(t, res.Schema, "marker")
 	assert.Contains(t, res.Schema, "user_type")
 	assert.Contains(t, res.Schema, "users")
-	assert.Contains(t, res.Schema, "is_truncated")
 	assert.Contains(t, res.Schema, "result_output_file")
-
-	maxItemsSchema := res.Schema["max_items"]
-	assert.Equal(t, schema.TypeInt, maxItemsSchema.Type)
-	assert.True(t, maxItemsSchema.Optional)
-
-	markerSchema := res.Schema["marker"]
-	assert.Equal(t, schema.TypeString, markerSchema.Type)
-	assert.True(t, markerSchema.Optional)
-	assert.True(t, markerSchema.Computed)
+	// pagination is handled automatically in the service layer and must not be exposed
+	assert.NotContains(t, res.Schema, "max_items")
+	assert.NotContains(t, res.Schema, "marker")
+	assert.NotContains(t, res.Schema, "is_truncated")
 
 	userTypeSchema := res.Schema["user_type"]
 	assert.Equal(t, schema.TypeString, userTypeSchema.Type)
@@ -213,8 +200,4 @@ func TestCamAccountsDataSource_Schema(t *testing.T) {
 
 	uinSchema := elemRes.Schema["uin"]
 	assert.Equal(t, schema.TypeInt, uinSchema.Type)
-
-	isTruncatedSchema := res.Schema["is_truncated"]
-	assert.Equal(t, schema.TypeBool, isTruncatedSchema.Type)
-	assert.True(t, isTruncatedSchema.Computed)
 }

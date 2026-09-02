@@ -16,17 +16,6 @@ func DataSourceTencentCloudCamAccounts() *schema.Resource {
 	return &schema.Resource{
 		Read: dataSourceTencentCloudCamAccountsRead,
 		Schema: map[string]*schema.Schema{
-			"max_items": {
-				Type:        schema.TypeInt,
-				Optional:    true,
-				Description: "Maximum number of accounts to return per request. Valid range: [1, 100]. When the returned result is truncated due to reaching MaxItems, the output `is_truncated` will be true.",
-			},
-			"marker": {
-				Type:        schema.TypeString,
-				Optional:    true,
-				Computed:    true,
-				Description: "When the returned result is truncated, use Marker to fetch the content after the current truncation position. Output `marker` carries the next page marker when `is_truncated` is true.",
-			},
 			"user_type": {
 				Type:        schema.TypeString,
 				Optional:    true,
@@ -91,11 +80,6 @@ func DataSourceTencentCloudCamAccounts() *schema.Resource {
 					},
 				},
 			},
-			"is_truncated": {
-				Type:        schema.TypeBool,
-				Computed:    true,
-				Description: "Whether the returned result is truncated.",
-			},
 			"result_output_file": {
 				Type:        schema.TypeString,
 				Optional:    true,
@@ -116,30 +100,18 @@ func dataSourceTencentCloudCamAccountsRead(d *schema.ResourceData, meta interfac
 	)
 
 	paramMap := make(map[string]interface{})
-	if v, ok := d.GetOk("max_items"); ok {
-		paramMap["MaxItems"] = helper.IntInt64(v.(int))
-	}
-	if v, ok := d.GetOk("marker"); ok {
-		paramMap["Marker"] = helper.String(v.(string))
-	}
 	if v, ok := d.GetOk("user_type"); ok {
 		paramMap["UserType"] = helper.String(v.(string))
 	}
 
-	var (
-		respData    []*cam.ListAllUser
-		respMarker  string
-		isTruncated bool
-	)
+	var respData []*cam.ListAllUser
 	reqErr := resource.Retry(tccommon.ReadRetryTimeout, func() *resource.RetryError {
-		users, marker, truncated, e := service.DescribeCamAccountsByFilter(ctx, paramMap)
+		users, e := service.DescribeCamAccountsByFilter(ctx, paramMap)
 		if e != nil {
 			return tccommon.RetryError(e)
 		}
 
 		respData = users
-		respMarker = marker
-		isTruncated = truncated
 		return nil
 	})
 
@@ -188,8 +160,6 @@ func dataSourceTencentCloudCamAccountsRead(d *schema.ResourceData, meta interfac
 
 	d.SetId(helper.DataResourceIdsHash(ids))
 	_ = d.Set("users", usersList)
-	_ = d.Set("marker", respMarker)
-	_ = d.Set("is_truncated", isTruncated)
 
 	output, ok := d.GetOk("result_output_file")
 	if ok && output.(string) != "" {
