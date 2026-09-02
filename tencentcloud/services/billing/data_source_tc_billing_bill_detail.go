@@ -494,11 +494,6 @@ func DataSourceTencentCloudBillingBillDetail() *schema.Resource {
 							Computed:    true,
 							Description: "Discount content.",
 						},
-						"extend_field": {
-							Type:        schema.TypeString,
-							Computed:    true,
-							Description: "Resource extension information.",
-						},
 					},
 				},
 			},
@@ -851,9 +846,6 @@ func dataSourceTencentCloudBillingBillDetailRead(d *schema.ResourceData, meta in
 		}
 		if detail.DiscountContent != nil {
 			detailMap["discount_content"] = detail.DiscountContent
-		}
-		if detail.ExtendField != nil {
-			detailMap["extend_field"] = detail.ExtendField
 		}
 		detailSetList = append(detailSetList, detailMap)
 	}

@@ -63,7 +63,6 @@
   - `discount_object` (String): 优惠对象
   - `discount_type` (String): 优惠类型
   - `discount_content` (String): 优惠内容
-  - `extend_field` (String): 资源扩展信息
 - `total` (Int): 总记录数
 - `context` (String): 本次请求的上下文信息
 

@@ -106,7 +106,6 @@ In addition to all arguments above, the following attributes are exported:
   * `discount_content` - Discount content.
   * `discount_object` - Discount object.
   * `discount_type` - Discount type.
-  * `extend_field` - Resource extension information.
   * `fee_begin_time` - Start time of use.
   * `fee_end_time` - End time of use.
   * `formula_url` - Billing rule link.
