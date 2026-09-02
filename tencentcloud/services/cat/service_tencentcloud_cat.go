@@ -343,3 +343,50 @@ func (me *CatService) DescribeCatMetricDataByFilter(ctx context.Context, param m
 
 	return
 }
+
+func (me *CatService) DescribeCatProbeMetricTagValuesByFilter(ctx context.Context, param map[string]interface{}) (tagValues *cat.DescribeProbeMetricTagValuesResponseParams, errRet error) {
+	var (
+		logId   = tccommon.GetLogId(ctx)
+		request = cat.NewDescribeProbeMetricTagValuesRequest()
+	)
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	for k, v := range param {
+		if k == "AnalyzeTaskType" {
+			request.AnalyzeTaskType = v.(*string)
+		}
+		if k == "Key" {
+			request.Key = v.(*string)
+		}
+		if k == "Filter" {
+			request.Filter = v.(*string)
+		}
+		if k == "Filters" {
+			request.Filters = v.([]*string)
+		}
+		if k == "TimeRange" {
+			request.TimeRange = v.(*string)
+		}
+	}
+
+	ratelimit.Check(request.GetAction())
+	response, err := me.client.UseCatClient().DescribeProbeMetricTagValues(request)
+	if err != nil {
+		errRet = err
+		return
+	}
+	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+	if response == nil || response.Response == nil {
+		return
+	}
+
+	tagValues = response.Response
+
+	return
+}
