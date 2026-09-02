@@ -206,6 +206,29 @@ resource "tencentcloud_cdn_domain" "example" {
 }
 ```
 
+### Example Usage of CDN domain with origin path rewrite rules
+
+```hcl
+resource "tencentcloud_cdn_domain" "example" {
+  domain       = "example.com"
+  service_type = "web"
+  area         = "mainland"
+
+  origin {
+    origin_type          = "ip"
+    origin_list          = ["127.0.0.1"]
+    origin_pull_protocol = "follow"
+
+    path_rules {
+      regex       = true
+      path        = "/api/*"
+      server_name = "origin.example.com"
+      forward_uri = "/v2/$1"
+    }
+  }
+}
+```
+
 ## Argument Reference
 
 The following arguments are supported:
@@ -481,6 +504,7 @@ The `origin` object supports the following:
 * `cos_private_access` - (Optional, String) When OriginType is COS, you can specify if access to private buckets is allowed. Valid values are `on` and `off`. and default value is `off`.
 * `origin_company` - (Optional, String) Object storage back to the source vendor. Required when the source station type is a third-party storage source station (third_party). Optional values include the following: `aws_s3`: AWS S3; `ali_oss`: Alibaba Cloud OSS; `hw_obs`: Huawei OBS; `qiniu_kodo`: Qiniu Cloud kodo; `others`: other vendors' object storage, only supports object storage compatible with AWS signature algorithm, such as Tencent Cloud Financial Zone COS. Example value: `hw_obs`.
 * `origin_pull_protocol` - (Optional, String) Origin-pull protocol configuration. `http`: forced HTTP origin-pull, `follow`: protocol follow origin-pull, `https`: forced HTTPS origin-pull. This only supports origin server port 443 for origin-pull.
+* `path_rules` - (Optional, List) Origin path rewrite rules. Each element configures a path-based origin routing rule.
 * `server_name` - (Optional, String) Host header used when accessing the master origin server. If left empty, the acceleration domain name will be used by default.
 
 The `oss_private_access` object supports the following:
@@ -504,6 +528,13 @@ The `page_rules` object of `error_page` supports the following:
 * `redirect_code` - (Required, Int) Redirect code of error page rules.
 * `redirect_url` - (Required, String) Redirect url of error page rules.
 * `status_code` - (Required, Int) Status code of error page rules.
+
+The `path_rules` object of `origin` supports the following:
+
+* `forward_uri` - (Optional, String) URI path for origin on path match. Must start with `/` and does not include the parameter part. Maximum length is 1024 characters. `$1`-`$5` can be used to capture wildcard `*` in the matched path, up to 10 capture values.
+* `path` - (Optional, String) Matched URL path. Only URL path is supported, not parameters. Default is full match. When wildcard `*` matching is enabled, up to 5 wildcards are supported, with a maximum length of 1024 characters.
+* `regex` - (Optional, Bool) Whether to enable wildcard `*` matching. `false`: disable, `true`: enable.
+* `server_name` - (Optional, String) Host header used when accessing the origin server on path match. If left empty, the default ServerName is used.
 
 The `path_rules` object of `url_redirect` supports the following:
 

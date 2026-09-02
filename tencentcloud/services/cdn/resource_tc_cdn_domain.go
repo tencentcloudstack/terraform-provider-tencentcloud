@@ -148,6 +148,40 @@ func ResourceTencentCloudCdnDomain() *schema.Resource {
 							Computed:    true,
 							Description: "Object storage back to the source vendor. Required when the source station type is a third-party storage source station (third_party). Optional values include the following: `aws_s3`: AWS S3; `ali_oss`: Alibaba Cloud OSS; `hw_obs`: Huawei OBS; `qiniu_kodo`: Qiniu Cloud kodo; `others`: other vendors' object storage, only supports object storage compatible with AWS signature algorithm, such as Tencent Cloud Financial Zone COS. Example value: `hw_obs`.",
 						},
+						"path_rules": {
+							Type:        schema.TypeList,
+							Optional:    true,
+							Computed:    true,
+							Description: "Origin path rewrite rules. Each element configures a path-based origin routing rule.",
+							Elem: &schema.Resource{
+								Schema: map[string]*schema.Schema{
+									"regex": {
+										Type:        schema.TypeBool,
+										Optional:    true,
+										Computed:    true,
+										Description: "Whether to enable wildcard `*` matching. `false`: disable, `true`: enable.",
+									},
+									"path": {
+										Type:        schema.TypeString,
+										Optional:    true,
+										Computed:    true,
+										Description: "Matched URL path. Only URL path is supported, not parameters. Default is full match. When wildcard `*` matching is enabled, up to 5 wildcards are supported, with a maximum length of 1024 characters.",
+									},
+									"server_name": {
+										Type:        schema.TypeString,
+										Optional:    true,
+										Computed:    true,
+										Description: "Host header used when accessing the origin server on path match. If left empty, the default ServerName is used.",
+									},
+									"forward_uri": {
+										Type:        schema.TypeString,
+										Optional:    true,
+										Computed:    true,
+										Description: "URI path for origin on path match. Must start with `/` and does not include the parameter part. Maximum length is 1024 characters. `$1`-`$5` can be used to capture wildcard `*` in the matched path, up to 10 capture values.",
+									},
+								},
+							},
+						},
 					},
 				},
 			},
@@ -2319,6 +2353,27 @@ func resourceTencentCloudCdnDomainCreate(d *schema.ResourceData, meta interface{
 	if v := origin["origin_company"]; v.(string) != "" {
 		request.Origin.OriginCompany = helper.String(v.(string))
 	}
+	if pathRules, ok := origin["path_rules"].([]interface{}); ok && len(pathRules) > 0 {
+		pathRulesList := make([]*cdn.PathRule, 0, len(pathRules))
+		for _, rule := range pathRules {
+			ruleMap := rule.(map[string]interface{})
+			pathRule := &cdn.PathRule{}
+			if rv, ok := ruleMap["regex"].(bool); ok {
+				pathRule.Regex = &rv
+			}
+			if rv, ok := ruleMap["path"].(string); ok && rv != "" {
+				pathRule.Path = &rv
+			}
+			if rv, ok := ruleMap["server_name"].(string); ok && rv != "" {
+				pathRule.ServerName = &rv
+			}
+			if rv, ok := ruleMap["forward_uri"].(string); ok && rv != "" {
+				pathRule.ForwardUri = &rv
+			}
+			pathRulesList = append(pathRulesList, pathRule)
+		}
+		request.Origin.PathRules = pathRulesList
+	}
 
 	// https config
 	if v, ok := d.GetOk("https_config"); ok {
@@ -3046,6 +3101,26 @@ func resourceTencentCloudCdnDomainRead(d *schema.ResourceData, meta interface{})
 	origin["backup_origin_list"] = domainConfig.Origin.BackupOrigins
 	origin["backup_server_name"] = domainConfig.Origin.BackupServerName
 	origin["origin_company"] = domainConfig.Origin.OriginCompany
+	if domainConfig.Origin.PathRules != nil {
+		pathRulesList := make([]map[string]interface{}, 0, len(domainConfig.Origin.PathRules))
+		for _, pathRule := range domainConfig.Origin.PathRules {
+			pathRuleMap := make(map[string]interface{})
+			if pathRule.Regex != nil {
+				pathRuleMap["regex"] = *pathRule.Regex
+			}
+			if pathRule.Path != nil {
+				pathRuleMap["path"] = *pathRule.Path
+			}
+			if pathRule.ServerName != nil {
+				pathRuleMap["server_name"] = *pathRule.ServerName
+			}
+			if pathRule.ForwardUri != nil {
+				pathRuleMap["forward_uri"] = *pathRule.ForwardUri
+			}
+			pathRulesList = append(pathRulesList, pathRuleMap)
+		}
+		origin["path_rules"] = pathRulesList
+	}
 	origins = append(origins, origin)
 	_ = d.Set("origin", origins)
 
@@ -3826,6 +3901,27 @@ func resourceTencentCloudCdnDomainUpdate(d *schema.ResourceData, meta interface{
 		}
 		if v := origin["origin_company"]; v.(string) != "" {
 			request.Origin.OriginCompany = helper.String(v.(string))
+		}
+		if pathRules, ok := origin["path_rules"].([]interface{}); ok && len(pathRules) > 0 {
+			pathRulesList := make([]*cdn.PathRule, 0, len(pathRules))
+			for _, rule := range pathRules {
+				ruleMap := rule.(map[string]interface{})
+				pathRule := &cdn.PathRule{}
+				if rv, ok := ruleMap["regex"].(bool); ok {
+					pathRule.Regex = &rv
+				}
+				if rv, ok := ruleMap["path"].(string); ok && rv != "" {
+					pathRule.Path = &rv
+				}
+				if rv, ok := ruleMap["server_name"].(string); ok && rv != "" {
+					pathRule.ServerName = &rv
+				}
+				if rv, ok := ruleMap["forward_uri"].(string); ok && rv != "" {
+					pathRule.ForwardUri = &rv
+				}
+				pathRulesList = append(pathRulesList, pathRule)
+			}
+			request.Origin.PathRules = pathRulesList
 		}
 	}
 	if d.HasChange("request_header") {
