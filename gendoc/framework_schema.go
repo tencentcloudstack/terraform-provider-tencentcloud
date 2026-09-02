@@ -45,10 +45,11 @@ type fwAttrSpec struct {
 //   - Nested objects emit additional "The `xxx` object supports..." blocks.
 func renderFrameworkSchema(name string, attrs map[string]fwAttrSpec) (arguments, attributes string) {
 	var (
-		required []string
-		optional []string
-		readOnly []string
-		nested   []string
+		required    []string
+		optional    []string
+		readOnly    []string
+		nested      []string
+		nestedAttrs []string
 	)
 
 	keys := make([]string, 0, len(attrs))
@@ -81,12 +82,14 @@ func renderFrameworkSchema(name string, attrs map[string]fwAttrSpec) (arguments,
 		case a.Required:
 			required = append(required, line)
 			if len(a.Nested) > 0 {
-				nested = append(nested, renderNested(k, a.Nested)...)
+				nested = append(nested, renderNested("", k, a.Nested)...)
+				nestedAttrs = append(nestedAttrs, renderNestedExports("", k, a.Nested)...)
 			}
 		case a.Optional:
 			optional = append(optional, line)
 			if len(a.Nested) > 0 {
-				nested = append(nested, renderNested(k, a.Nested)...)
+				nested = append(nested, renderNested("", k, a.Nested)...)
+				nestedAttrs = append(nestedAttrs, renderNestedExports("", k, a.Nested)...)
 			}
 		case a.Computed:
 			readOnly = append(readOnly, fmt.Sprintf("* `%s` - %s", k, desc))
@@ -106,12 +109,21 @@ func renderFrameworkSchema(name string, attrs map[string]fwAttrSpec) (arguments,
 		arguments += "\n" + strings.Join(nested, "\n")
 	}
 	attributes = strings.Join(readOnly, "\n")
+	if len(nestedAttrs) > 0 {
+		sort.Strings(nestedAttrs)
+		if attributes != "" {
+			attributes += "\n"
+		}
+		attributes += strings.Join(nestedAttrs, "\n")
+	}
 	return arguments, attributes
 }
 
 // renderNested produces the "The `foo` object supports the following:"
-// section for a nested object attribute.
-func renderNested(name string, nested []fwAttrSpec) []string {
+// section for a nested object attribute. parentK is the name of the parent
+// object, used to render the "The `foo` object of `bar` supports the
+// following:" title for deeper nesting levels (empty at the top level).
+func renderNested(parentK, name string, nested []fwAttrSpec) []string {
 	var (
 		req []string
 		opt []string
@@ -136,10 +148,82 @@ func renderNested(name string, nested []fwAttrSpec) []string {
 	sort.Strings(req)
 	sort.Strings(opt)
 
-	out := []string{fmt.Sprintf("\nThe `%s` object supports the following:\n", name)}
+	var title string
+	if parentK == "" {
+		title = fmt.Sprintf("\nThe `%s` object supports the following:\n", name)
+	} else {
+		title = fmt.Sprintf("\nThe `%s` object of `%s` supports the following:\n", name, parentK)
+	}
+	out := []string{title}
 	out = append(out, req...)
 	out = append(out, opt...)
+
+	// Recursively render deeper nested Required/Optional objects so the
+	// behaviour matches the SDKv2 getSubStruct recursion. Pure Computed
+	// nested objects are skipped here (handled by renderNestedExports).
+	for _, a := range nested {
+		if a.Description == "" || len(a.Nested) == 0 {
+			continue
+		}
+		if a.Computed && !a.Optional && !a.Required {
+			continue
+		}
+		out = append(out, renderNested(name, a.Name, a.Nested)...)
+	}
 	return out
+}
+
+// renderNestedExports produces the "The `foo` object exports the following:"
+// section for the Computed sub-fields of a Required/Optional nested object,
+// feeding the "Attributes Reference" section. It mirrors renderNested but
+// collects only Computed fields, and recurses into deeper nested objects so
+// read-only attributes are never dropped from the documentation.
+//
+// Each returned element is a complete section block (title plus indented
+// sub-fields) so the caller can sort blocks without splitting a block apart.
+func renderNestedExports(parentK, name string, nested []fwAttrSpec) []string {
+	var blocks []string
+
+	var lines []string
+	for _, a := range nested {
+		if a.Description == "" {
+			continue
+		}
+		// 只收集纯 Computed 字段；Optional/Required(+Computed) 字段
+		// 已经作为参数在 renderNested 的 supports 节中列出，避免重复。
+		if a.Computed && !a.Optional && !a.Required {
+			line := fmt.Sprintf("* `%s` - %s", a.Name, a.Description)
+			if len(a.Nested) > 0 {
+				line += "\n" + strings.Join(renderNestedAttrs(1, a.Nested), "\n")
+			}
+			lines = append(lines, line)
+		}
+	}
+
+	if len(lines) > 0 {
+		sort.Strings(lines)
+		var title string
+		if parentK == "" {
+			title = fmt.Sprintf("\nThe `%s` object exports the following:\n", name)
+		} else {
+			title = fmt.Sprintf("\nThe `%s` object of `%s` exports the following:\n", name, parentK)
+		}
+		blocks = append(blocks, title+"\n"+strings.Join(lines, "\n"))
+	}
+
+	// Recurse into deeper nested objects that may still hold pure Computed
+	// fields. Pure Computed nested objects are skipped here (already rendered
+	// with indentation by renderNestedAttrs above).
+	for _, a := range nested {
+		if a.Description == "" || len(a.Nested) == 0 {
+			continue
+		}
+		if a.Computed && !a.Optional && !a.Required {
+			continue
+		}
+		blocks = append(blocks, renderNestedExports(name, a.Name, a.Nested)...)
+	}
+	return blocks
 }
 
 // renderNestedAttrs produces indented bullets under a Computed nested
@@ -422,7 +506,7 @@ func typeLabelFromAttribute(attr any) string {
 	if t == nil {
 		return "Object"
 	}
-	if t.Kind() == reflect.Ptr {
+	if t.Kind() == reflect.Pointer {
 		t = t.Elem()
 	}
 	name := t.Name()
@@ -456,7 +540,7 @@ func blockTypeLabel(blk any) string {
 	if t == nil {
 		return "Block"
 	}
-	if t.Kind() == reflect.Ptr {
+	if t.Kind() == reflect.Pointer {
 		t = t.Elem()
 	}
 	name := t.Name()
@@ -478,7 +562,7 @@ func typeLabelFromValueType(t any) string {
 		return "Object"
 	}
 	rt := reflect.TypeOf(t)
-	if rt.Kind() == reflect.Ptr {
+	if rt.Kind() == reflect.Pointer {
 		rt = rt.Elem()
 	}
 	name := rt.Name()

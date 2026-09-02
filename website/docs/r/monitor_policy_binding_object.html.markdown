@@ -81,6 +81,9 @@ In addition to all arguments above, the following attributes are exported:
 
 * `id` - ID of the resource.
 
+The `dimensions` object exports the following:
+
+* `unique_id` - Object unique ID.
 
 
 ## Import

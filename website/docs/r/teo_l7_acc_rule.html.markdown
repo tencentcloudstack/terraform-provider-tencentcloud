@@ -835,6 +835,10 @@ In addition to all arguments above, the following attributes are exported:
 
 * `id` - ID of the resource.
 
+The `rules` object exports the following:
+
+* `rule_id` - Rule ID. Unique identifier of the rule.
+* `rule_priority` - Rule priority. only used as an output parameter.
 
 
 ## Import

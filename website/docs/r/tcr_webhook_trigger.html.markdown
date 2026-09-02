@@ -106,6 +106,9 @@ In addition to all arguments above, the following attributes are exported:
 
 * `id` - ID of the resource.
 
+The `trigger` object exports the following:
+
+* `id` - trigger Id.
 
 
 ## Import

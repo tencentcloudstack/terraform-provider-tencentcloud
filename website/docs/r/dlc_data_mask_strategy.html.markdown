@@ -49,6 +49,9 @@ In addition to all arguments above, the following attributes are exported:
 
 * `id` - ID of the resource.
 
+The `strategy` object exports the following:
+
+* `strategy_id` - The ID of the data masking strategy.
 
 
 ## Import

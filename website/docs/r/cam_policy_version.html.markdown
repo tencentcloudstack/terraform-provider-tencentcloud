@@ -79,6 +79,12 @@ In addition to all arguments above, the following attributes are exported:
 
 * `id` - ID of the resource.
 
+The `policy_version` object exports the following:
+
+* `create_date` - Strategic version creation timeNote: This field may return NULL, indicating that the valid value cannot be obtained.
+* `document` - Strategic grammar textNote: This field may return NULL, indicating that the valid value cannot be obtained.
+* `is_default_version` - Whether it is an effective version.0 means not, 1 means yesNote: This field may return NULL, indicating that the valid value cannot be obtained.
+* `version_id` - Strategic version numberNote: This field may return NULL, indicating that the valid value cannot be obtained.
 
 
 ## Import

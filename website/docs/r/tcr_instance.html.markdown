@@ -139,6 +139,15 @@ In addition to all arguments above, the following attributes are exported:
 * `public_status` - Status of the TCR instance public network access.
 * `status` - Status of the TCR instance.
 
+The `replications` object exports the following:
+
+* `id` - Replication registry ID (readonly).
+
+The `security_policy` object exports the following:
+
+* `index` - Index of policy.
+* `version` - Version of policy.
+
 
 ## Import
 

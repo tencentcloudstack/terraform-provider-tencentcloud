@@ -97,6 +97,9 @@ In addition to all arguments above, the following attributes are exported:
 
 * `id` - ID of the resource.
 
+The `trigger_workflow_scheduler_configurations` object exports the following:
+
+* `trigger_id` - Trigger ID (UUID).
 
 
 ## Import

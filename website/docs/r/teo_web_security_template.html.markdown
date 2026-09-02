@@ -1513,6 +1513,30 @@ In addition to all arguments above, the following attributes are exported:
 * `id` - ID of the resource.
 * `template_id` - Template ID.
 
+The `rules` object of `browser_impersonation_detection` exports the following:
+
+* `id` - Browser spoofing identification rule ID. rule ID supports different rule configuration operations: -  add a new rule: ID is empty or without specifying the ID parameter; -  modify an existing rule: specify the rule ID that needs to be updated/modified; -  delete an existing rule: existing Rules not included in the Rules list of the BrowserImpersonationDetection parameter will be deleted.
+
+The `rules` object of `client_attestation_rules` exports the following:
+
+* `id` - Client authentication rule ID. supported rule configuration operations by rule ID: -  add a new rule: leave the ID empty or do not specify the ID parameter. -  modify an existing rule: specify the rule ID that needs to be updated/modified. -  delete an existing rule: existing rules not included in the ClientAttestationRule list under BotManagement parameters will be deleted.
+
+The `rules` object of `custom_rules` exports the following:
+
+* `id` - Custom rule ID. Different rule configuration operations are supported by rule ID: - Add a new rule: ID is empty or the ID parameter is not specified; - Modify an existing rule: specify the rule ID that needs to be updated/modified; - Delete an existing rule: existing rules not included in the Rules parameter will be deleted.
+
+The `rules` object of `custom_rules` exports the following:
+
+* `id` - The ID of a Bot custom rule. different rule configuration operations are supported by rule ID: - add a new rule: leave the ID empty or do not specify the ID parameter. - modify an existing rule: specify the rule ID that needs to be updated/modified. - delete an existing rule: existing Rules not included in the Rules list under the BotManagementCustomRules parameter will be deleted.
+
+The `rules` object of `exception_rules` exports the following:
+
+* `id` - The ID of the exception rule. different rule configuration operations are supported by rule ID: -  add a new rule: leave the ID empty or do not specify the ID parameter. -  modify an existing rule: specify the rule ID that needs to be updated/modified. -  delete an existing rule: existing Rules not included in the Rules list under the ExceptionRules parameter will be deleted.
+
+The `rules` object of `rate_limiting_rules` exports the following:
+
+* `id` - The ID of precise rate limiting. rule ID supports different rule configuration operations: - add a new rule: leave the ID empty or do not specify the ID parameter. - modify an existing rule: specify the rule ID that needs to be updated/modified. - delete an existing rule: existing Rules not included in the Rules list under the RateLimitingRules parameter will be deleted.
+
 
 ## Import
 

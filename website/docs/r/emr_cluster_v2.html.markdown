@@ -684,6 +684,80 @@ In addition to all arguments above, the following attributes are exported:
 * `cluster_id` - Cluster ID (same as the resource ID).
 * `status` - Cluster status code. `2` indicates the cluster is running.
 
+The `common_resource_spec` object of `all_node_resource_spec` exports the following:
+
+* `emr_resource_id` - EMR node resource ID (read-only).
+* `order_no` - Machine instance ID (read-only).
+* `serial_no` - Serial number (read-only).
+
+The `core_resource_spec` object of `all_node_resource_spec` exports the following:
+
+* `emr_resource_id` - EMR node resource ID (read-only).
+* `order_no` - Machine instance ID (read-only).
+* `serial_no` - Serial number (read-only).
+
+The `data_disk` object of `common_resource_spec` exports the following:
+
+* `disk_id` - Disk ID (read-only, populated from API).
+
+The `data_disk` object of `core_resource_spec` exports the following:
+
+* `disk_id` - Disk ID (read-only, populated from API).
+
+The `data_disk` object of `master_resource_spec` exports the following:
+
+* `disk_id` - Disk ID (read-only, populated from API).
+
+The `data_disk` object of `router_resource_spec` exports the following:
+
+* `disk_id` - Disk ID (read-only, populated from API).
+
+The `data_disk` object of `task_resource_spec` exports the following:
+
+* `disk_id` - Disk ID (read-only, populated from API).
+
+The `master_resource_spec` object of `all_node_resource_spec` exports the following:
+
+* `emr_resource_id` - EMR node resource ID (read-only).
+* `order_no` - Machine instance ID (read-only).
+* `serial_no` - Serial number (read-only).
+
+The `router_resource_spec` object of `all_node_resource_spec` exports the following:
+
+* `emr_resource_id` - EMR node resource ID (read-only).
+* `order_no` - Machine instance ID (read-only).
+* `serial_no` - Serial number (read-only).
+
+The `scene_software_config` object exports the following:
+
+* `software` - Deduped list of components actually deployed on the cluster (read-back from API).
+
+The `system_disk` object of `common_resource_spec` exports the following:
+
+* `disk_id` - Disk ID.
+
+The `system_disk` object of `core_resource_spec` exports the following:
+
+* `disk_id` - Disk ID.
+
+The `system_disk` object of `master_resource_spec` exports the following:
+
+* `disk_id` - Disk ID.
+
+The `system_disk` object of `router_resource_spec` exports the following:
+
+* `disk_id` - Disk ID.
+
+The `system_disk` object of `task_resource_spec` exports the following:
+
+* `disk_id` - Disk ID.
+
+The `task_resource_spec` object of `all_node_resource_spec` exports the following:
+
+* `emr_resource_id` - EMR node resource ID (read-only).
+* `order_no` - Machine instance ID (read-only).
+* `serial_no` - Serial number (read-only).
+
 ## Timeouts
 
 The `timeouts` block allows you to specify [timeouts](https://developer.hashicorp.com/terraform/language/resources/syntax#operation-timeouts) for certain actions:

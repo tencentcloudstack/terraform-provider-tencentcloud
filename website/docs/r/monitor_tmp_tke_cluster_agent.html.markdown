@@ -218,5 +218,9 @@ In addition to all arguments above, the following attributes are exported:
 
 * `id` - ID of the resource.
 
+The `agents` object exports the following:
+
+* `cluster_name` - the name of the cluster.
+* `status` - agent state, `normal`, `abnormal`.
 
 
