@@ -58,22 +58,26 @@ func ResourceTencentCloudClsScheduledSql() *schema.Resource {
 						"region": {
 							Type:        schema.TypeString,
 							Optional:    true,
+							Computed:    true,
 							Description: "topic region.",
 						},
 						"biz_type": {
 							Type:        schema.TypeInt,
 							Optional:    true,
+							Computed:    true,
 							Description: "topic type.",
 						},
 						"metric_name": {
 							Type:        schema.TypeString,
 							Optional:    true,
+							Computed:    true,
 							Description: "metric name.",
 						},
 						"metric_names": {
 							Type:        schema.TypeList,
 							Elem:        &schema.Schema{Type: schema.TypeString},
 							Optional:    true,
+							Computed:    true,
 							Description: "metric names, used when biz_type is 1 (metric topic) for multi-metric scenarios.",
 						},
 						"metric_labels": {
@@ -163,6 +167,13 @@ func ResourceTencentCloudClsScheduledSql() *schema.Resource {
 				Optional:    true,
 				Type:        schema.TypeInt,
 				Description: "syntax rule.",
+			},
+
+			// computed
+			"task_id": {
+				Type:        schema.TypeString,
+				Computed:    true,
+				Description: "task id.",
 			},
 		},
 	}
@@ -319,9 +330,13 @@ func resourceTencentCloudClsScheduledSqlRead(d *schema.ResourceData, meta interf
 	}
 
 	if scheduledSql == nil {
+		log.Printf("[WARN]%s resource `tencentcloud_cls_scheduled_sql` [%s] not found, please check if it has been deleted.\n", logId, d.Id())
 		d.SetId("")
-		log.Printf("[WARN]%s resource `ClsScheduledSql` [%s] not found, please check if it has been deleted.\n", logId, d.Id())
 		return nil
+	}
+
+	if scheduledSql.TaskId != nil {
+		_ = d.Set("task_id", scheduledSql.TaskId)
 	}
 
 	if scheduledSql.SrcTopicId != nil {
@@ -458,7 +473,6 @@ func resourceTencentCloudClsScheduledSqlUpdate(d *schema.ResourceData, meta inte
 	request.TaskId = &scheduledSqlId
 
 	immutableArgs := []string{"src_topic_id", "name", "enable_flag", "dst_resource", "scheduled_sql_content", "process_start_time", "process_type", "process_period", "process_time_window", "process_delay", "src_topic_region", "process_end_time", "syntax_rule"}
-
 	for _, v := range immutableArgs {
 		if d.HasChange(v) {
 			return fmt.Errorf("argument `%s` cannot be changed", v)

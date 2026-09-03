@@ -4,106 +4,51 @@ layout: "tencentcloud"
 page_title: "TencentCloud: tencentcloud_cls_scheduled_sql"
 sidebar_current: "docs-tencentcloud-resource-cls_scheduled_sql"
 description: |-
-  Provides a resource to create a cls scheduled_sql
+  Provides a resource to create a CLS scheduled sql
 ---
 
 # tencentcloud_cls_scheduled_sql
 
-Provides a resource to create a cls scheduled_sql
+Provides a resource to create a CLS scheduled sql
 
 ## Example Usage
 
 ```hcl
-resource "tencentcloud_cls_logset" "logset" {
-  logset_name = "tf-example-logset"
-  tags = {
-    "createdBy" = "terraform"
-  }
-}
-resource "tencentcloud_cls_topic" "topic" {
-  topic_name           = "tf-example-topic"
-  logset_id            = tencentcloud_cls_logset.logset.id
-  auto_split           = false
-  max_split_partitions = 20
-  partition_count      = 1
-  period               = 10
-  storage_type         = "hot"
-  tags = {
-    "test" = "test",
-  }
-}
-resource "tencentcloud_cls_scheduled_sql" "scheduled_sql" {
-  src_topic_id = tencentcloud_cls_topic.topic.id
-  name         = "tf-example-task"
-  enable_flag  = 1
+resource "tencentcloud_cls_scheduled_sql" "example" {
+  src_topic_id     = "2360e4a2-2b9e-4640-9829-72bc5052c9dd"
+  src_topic_region = "ap-guangzhou"
+  name             = "tf-example"
+  enable_flag      = 1
   dst_resource {
-    topic_id    = tencentcloud_cls_topic.topic.id
-    region      = "ap-guangzhou"
-    biz_type    = 0
-    metric_name = "test"
-
-  }
-  scheduled_sql_content = "xxx"
-  process_start_time    = 1690515360000
-  process_type          = 1
-  process_period        = 10
-  process_time_window   = "@m-15m,@m"
-  process_delay         = 5
-  src_topic_region      = "ap-guangzhou"
-  process_end_time      = 1690515360000
-  syntax_rule           = 0
-}
-```
-
-### Example Usage with metric destination resource (biz_type=1)
-
-```hcl
-resource "tencentcloud_cls_logset" "logset" {
-  logset_name = "tf-example-logset"
-  tags = {
-    "createdBy" = "terraform"
-  }
-}
-resource "tencentcloud_cls_topic" "topic" {
-  topic_name           = "tf-example-topic"
-  logset_id            = tencentcloud_cls_logset.logset.id
-  auto_split           = false
-  max_split_partitions = 20
-  partition_count      = 1
-  period               = 10
-  storage_type         = "hot"
-  tags = {
-    "test" = "test",
-  }
-}
-resource "tencentcloud_cls_scheduled_sql" "scheduled_sql_metric" {
-  src_topic_id = tencentcloud_cls_topic.topic.id
-  name         = "tf-example-metric-task"
-  enable_flag  = 1
-  dst_resource {
-    topic_id      = tencentcloud_cls_topic.topic.id
+    topic_id      = "3f5cc19d-f601-48b6-9671-9019b7b09bd0"
     region        = "ap-guangzhou"
     biz_type      = 1
-    metric_names  = ["metric1", "metric2"]
-    metric_labels = ["label1", "label2"]
-    custom_time   = "timestamp"
+    metric_names  = ["name1", "name2", "name3"]
+    metric_labels = ["lable1", "lable2", "lable3"]
+    custom_time   = "__WindowStartTime__"
     custom_metric_labels {
-      key   = "env"
-      value = "production"
+      key   = "cmlKey1"
+      value = "cmlValue1"
     }
+
     custom_metric_labels {
-      key   = "app"
-      value = "myapp"
+      key   = "cmlKey2"
+      value = "cmlValue2"
+    }
+
+    custom_metric_labels {
+      key   = "cmlKey3"
+      value = "cmlValue3"
     }
   }
-  scheduled_sql_content = "select * from log"
-  process_start_time    = 1690515360000
+
+  scheduled_sql_content = "verb:get AND responseStatus.code>=400\n| select stageTimestamp, responseStatus.code, objectRef.resource, objectRef.name, objectRef.namespace, user.username, \"annotations.authorization.k8s.io/decision\" as auth_decision\n  order by stageTimestamp desc\n  limit 50"
+  process_start_time    = 1788417300000
   process_type          = 1
-  process_period        = 10
-  process_time_window   = "@m-15m,@m"
-  process_delay         = 5
-  src_topic_region      = "ap-guangzhou"
-  syntax_rule           = 0
+  process_period        = 1
+  process_time_window   = "@m-1m,@m"
+  process_delay         = 60
+  syntax_rule           = 1
 }
 ```
 
@@ -146,14 +91,14 @@ The `dst_resource` object supports the following:
 In addition to all arguments above, the following attributes are exported:
 
 * `id` - ID of the resource.
-
+* `task_id` - task id.
 
 
 ## Import
 
-cls scheduled_sql can be imported using the id, e.g.
+CLS scheduled sql can be imported using the id, e.g.
 
 ```
-terraform import tencentcloud_cls_scheduled_sql.scheduled_sql scheduled_sql_id
+terraform import tencentcloud_cls_scheduled_sql.example aebbad1b-4228-4ccc-8d62-0333c9739452
 ```
 
