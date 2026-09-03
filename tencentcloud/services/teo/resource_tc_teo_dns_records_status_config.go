@@ -159,75 +159,74 @@ func resourceTencentCloudTeoDnsRecordsStatusUpdate(d *schema.ResourceData, meta 
 
 	log.Printf("[CRUD]%s update teo_dns_records_status, zoneId=%s, recordsId=%s", logId, zoneId, recordsId)
 
-	if d.HasChange("status") {
-		status := d.Get("status").(string)
+	status := d.Get("status").(string)
 
-		request := teov20220901.NewModifyDnsRecordsStatusRequest()
-		request.ZoneId = helper.String(zoneId)
+	request := teov20220901.NewModifyDnsRecordsStatusRequest()
+	request.ZoneId = helper.String(zoneId)
 
-		if status == "enable" {
-			request.RecordsToEnable = []*string{helper.String(recordsId)}
-		} else if status == "disable" {
-			request.RecordsToDisable = []*string{helper.String(recordsId)}
+	switch status {
+	case "enable":
+		request.RecordsToEnable = []*string{helper.String(recordsId)}
+	case "disable":
+		request.RecordsToDisable = []*string{helper.String(recordsId)}
+	default:
+		return fmt.Errorf("invalid status %s, must be `enable` or `disable`", status)
+	}
+
+	err := resource.Retry(tccommon.WriteRetryTimeout, func() *resource.RetryError {
+		result, e := meta.(tccommon.ProviderMeta).GetAPIV3Conn().UseTeoV20220901Client().ModifyDnsRecordsStatusWithContext(ctx, request)
+		if e != nil {
+			return tccommon.RetryError(e)
 		} else {
-			return fmt.Errorf("invalid status %s, must be `enable` or `disable`", status)
+			log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), result.ToJsonString())
 		}
 
-		err := resource.Retry(tccommon.WriteRetryTimeout, func() *resource.RetryError {
-			result, e := meta.(tccommon.ProviderMeta).GetAPIV3Conn().UseTeoV20220901Client().ModifyDnsRecordsStatusWithContext(ctx, request)
+		if result == nil || result.Response == nil {
+			return resource.NonRetryableError(fmt.Errorf("Update teo_dns_records_status failed, Response is nil."))
+		}
+
+		return nil
+	})
+
+	if err != nil {
+		log.Printf("[CRITAL]%s update teo_dns_records_status failed, reason:%+v", logId, err)
+		return err
+	}
+
+	// ModifyDnsRecordsStatus is an async interface, poll DescribeDnsRecords until status reaches the target value.
+	describeRequest := teov20220901.NewDescribeDnsRecordsRequest()
+	describeRequest.ZoneId = helper.String(zoneId)
+	describeRequest.Limit = helper.Int64(1000)
+	describeRequest.Filters = []*teov20220901.AdvancedFilter{
+		{
+			Name:   helper.String("id"),
+			Values: []*string{helper.String(recordsId)},
+		},
+	}
+
+	if _, waitErr := (&resource.StateChangeConf{
+		Delay:      5 * time.Second,
+		MinTimeout: 3 * time.Second,
+		Pending:    []string{"pending", ""},
+		Target:     []string{status},
+		Timeout:    tccommon.WriteRetryTimeout,
+		Refresh: func() (interface{}, string, error) {
+			result, e := meta.(tccommon.ProviderMeta).GetAPIV3Conn().UseTeoV20220901Client().DescribeDnsRecordsWithContext(ctx, describeRequest)
 			if e != nil {
-				return tccommon.RetryError(e)
-			} else {
-				log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), result.ToJsonString())
+				return nil, "", e
 			}
-
-			if result == nil || result.Response == nil {
-				return resource.NonRetryableError(fmt.Errorf("Update teo_dns_records_status failed, Response is nil."))
+			if result == nil || result.Response == nil || len(result.Response.DnsRecords) == 0 {
+				return nil, "pending", nil
 			}
-
-			return nil
-		})
-
-		if err != nil {
-			log.Printf("[CRITAL]%s update teo_dns_records_status failed, reason:%+v", logId, err)
-			return err
-		}
-
-		// ModifyDnsRecordsStatus is an async interface, poll DescribeDnsRecords until status reaches the target value.
-		describeRequest := teov20220901.NewDescribeDnsRecordsRequest()
-		describeRequest.ZoneId = helper.String(zoneId)
-		describeRequest.Limit = helper.Int64(1000)
-		describeRequest.Filters = []*teov20220901.AdvancedFilter{
-			{
-				Name:   helper.String("id"),
-				Values: []*string{helper.String(recordsId)},
-			},
-		}
-
-		if _, waitErr := (&resource.StateChangeConf{
-			Delay:      5 * time.Second,
-			MinTimeout: 3 * time.Second,
-			Pending:    []string{"pending", ""},
-			Target:     []string{status},
-			Timeout:    tccommon.ReadRetryTimeout,
-			Refresh: func() (interface{}, string, error) {
-				result, e := meta.(tccommon.ProviderMeta).GetAPIV3Conn().UseTeoV20220901Client().DescribeDnsRecordsWithContext(ctx, describeRequest)
-				if e != nil {
-					return nil, "", e
-				}
-				if result == nil || result.Response == nil || len(result.Response.DnsRecords) == 0 {
-					return nil, "pending", nil
-				}
-				recordStatus := ""
-				if result.Response.DnsRecords[0].Status != nil {
-					recordStatus = *result.Response.DnsRecords[0].Status
-				}
-				return result, recordStatus, nil
-			},
-		}).WaitForStateContext(ctx); waitErr != nil {
-			log.Printf("[CRITAL]%s wait teo_dns_records_status status to %s failed, reason:%+v", logId, status, waitErr)
-			return fmt.Errorf("waiting for teo_dns_records_status (%s) to become %s: %s", d.Id(), status, waitErr)
-		}
+			recordStatus := ""
+			if result.Response.DnsRecords[0].Status != nil {
+				recordStatus = *result.Response.DnsRecords[0].Status
+			}
+			return result, recordStatus, nil
+		},
+	}).WaitForStateContext(ctx); waitErr != nil {
+		log.Printf("[CRITAL]%s wait teo_dns_records_status status to %s failed, reason:%+v", logId, status, waitErr)
+		return fmt.Errorf("waiting for teo_dns_records_status (%s) to become %s: %s", d.Id(), status, waitErr)
 	}
 
 	return resourceTencentCloudTeoDnsRecordsStatusRead(d, meta)
