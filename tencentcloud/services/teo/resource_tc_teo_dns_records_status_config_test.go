@@ -91,12 +91,6 @@ func TestTeoDnsRecordsStatus_Create_Success_Enable(t *testing.T) {
 	err := res.Create(d, meta)
 	assert.NoError(t, err)
 	assert.Equal(t, "zone-1234567890", d.Id())
-
-	dnsRecords := d.Get("dns_records").([]interface{})
-	assert.Equal(t, 1, len(dnsRecords))
-	record := dnsRecords[0].(map[string]interface{})
-	assert.Equal(t, "record-1234567890", record["record_id"])
-	assert.Equal(t, "enable", record["status"])
 }
 
 // TestTeoDnsRecordsStatus_Create_Success_Disable tests Create with records_to_disable
@@ -151,12 +145,6 @@ func TestTeoDnsRecordsStatus_Create_Success_Disable(t *testing.T) {
 	err := res.Create(d, meta)
 	assert.NoError(t, err)
 	assert.Equal(t, "zone-1234567890", d.Id())
-
-	dnsRecords := d.Get("dns_records").([]interface{})
-	assert.Equal(t, 1, len(dnsRecords))
-	record := dnsRecords[0].(map[string]interface{})
-	assert.Equal(t, "record-1234567890", record["record_id"])
-	assert.Equal(t, "disable", record["status"])
 }
 
 // TestTeoDnsRecordsStatus_Create_NoRecords tests Create with empty records_to_enable and records_to_disable
@@ -280,73 +268,6 @@ func TestTeoDnsRecordsStatus_Read_Success(t *testing.T) {
 	err := res.Read(d, meta)
 	assert.NoError(t, err)
 	assert.Equal(t, "zone-1234567890", d.Id())
-
-	dnsRecords := d.Get("dns_records").([]interface{})
-	assert.Equal(t, 1, len(dnsRecords))
-	record := dnsRecords[0].(map[string]interface{})
-	assert.Equal(t, "record-1234567890", record["record_id"])
-	assert.Equal(t, "www.example.com", record["name"])
-	assert.Equal(t, "A", record["type"])
-	assert.Equal(t, "enable", record["status"])
-	assert.Equal(t, 300, record["ttl"])
-}
-
-// TestTeoDnsRecordsStatus_Read_WithFilters tests Read with filters set
-func TestTeoDnsRecordsStatus_Read_WithFilters(t *testing.T) {
-	patches := gomonkey.NewPatches()
-	defer patches.Reset()
-
-	teoClient := &teov20220901.Client{}
-	patches.ApplyMethodReturn(newMockMetaTeoDnsRecordsStatus().client, "UseTeoV20220901Client", teoClient)
-
-	var capturedRequest *teov20220901.DescribeDnsRecordsRequest
-	patches.ApplyMethodFunc(teoClient, "DescribeDnsRecordsWithContext", func(_ context.Context, request *teov20220901.DescribeDnsRecordsRequest) (*teov20220901.DescribeDnsRecordsResponse, error) {
-		capturedRequest = request
-		resp := teov20220901.NewDescribeDnsRecordsResponse()
-		resp.Response = &teov20220901.DescribeDnsRecordsResponseParams{
-			TotalCount: ptrInt64DnsRecordsStatus(1),
-			DnsRecords: []*teov20220901.DnsRecord{
-				{
-					ZoneId:   ptrStringDnsRecordsStatus("zone-1234567890"),
-					RecordId: ptrStringDnsRecordsStatus("record-1234567890"),
-					Name:     ptrStringDnsRecordsStatus("www.example.com"),
-					Type:     ptrStringDnsRecordsStatus("A"),
-					Status:   ptrStringDnsRecordsStatus("enable"),
-				},
-			},
-			RequestId: ptrStringDnsRecordsStatus("fake-request-id"),
-		}
-		return resp, nil
-	})
-
-	meta := newMockMetaTeoDnsRecordsStatus()
-	res := teo.ResourceTencentCloudTeoDnsRecordsStatus()
-	d := schema.TestResourceDataRaw(t, res.Schema, map[string]interface{}{
-		"zone_id": "zone-1234567890",
-		"filters": []interface{}{
-			map[string]interface{}{
-				"name":   "id",
-				"values": []interface{}{"record-1234567890"},
-				"fuzzy":  false,
-			},
-		},
-		"sort_by":    "name",
-		"sort_order": "asc",
-		"match":      "all",
-	})
-	d.SetId("zone-1234567890")
-
-	err := res.Read(d, meta)
-	assert.NoError(t, err)
-
-	assert.NotNil(t, capturedRequest.Filters)
-	assert.Equal(t, 1, len(capturedRequest.Filters))
-	assert.Equal(t, "id", *capturedRequest.Filters[0].Name)
-	assert.Equal(t, "record-1234567890", *capturedRequest.Filters[0].Values[0])
-	assert.False(t, *capturedRequest.Filters[0].Fuzzy)
-	assert.Equal(t, "name", *capturedRequest.SortBy)
-	assert.Equal(t, "asc", *capturedRequest.SortOrder)
-	assert.Equal(t, "all", *capturedRequest.Match)
 }
 
 // TestTeoDnsRecordsStatus_Read_NotFound tests Read handles resource not found
@@ -431,11 +352,6 @@ func TestTeoDnsRecordsStatus_Update_Success(t *testing.T) {
 
 	err := res.Update(d, meta)
 	assert.NoError(t, err)
-
-	dnsRecords := d.Get("dns_records").([]interface{})
-	assert.Equal(t, 1, len(dnsRecords))
-	record := dnsRecords[0].(map[string]interface{})
-	assert.Equal(t, "enable", record["status"])
 }
 
 // TestTeoDnsRecordsStatus_Update_APIError tests Update handles API error during Read
@@ -496,23 +412,6 @@ func TestTeoDnsRecordsStatus_Schema(t *testing.T) {
 	assert.True(t, zoneId.Required)
 	assert.True(t, zoneId.ForceNew)
 
-	// Check filters field
-	assert.Contains(t, res.Schema, "filters")
-	filters := res.Schema["filters"]
-	assert.Equal(t, schema.TypeList, filters.Type)
-	assert.True(t, filters.Optional)
-
-	// Check filters sub-fields
-	filtersElem := filters.Elem.(*schema.Resource)
-	assert.Contains(t, filtersElem.Schema, "name")
-	assert.Contains(t, filtersElem.Schema, "values")
-	assert.Contains(t, filtersElem.Schema, "fuzzy")
-
-	// Check optional fields
-	assert.Contains(t, res.Schema, "sort_by")
-	assert.Contains(t, res.Schema, "sort_order")
-	assert.Contains(t, res.Schema, "match")
-
 	// Check records_to_enable and records_to_disable
 	assert.Contains(t, res.Schema, "records_to_enable")
 	recordsToEnable := res.Schema["records_to_enable"]
@@ -524,68 +423,12 @@ func TestTeoDnsRecordsStatus_Schema(t *testing.T) {
 	assert.Equal(t, schema.TypeList, recordsToDisable.Type)
 	assert.True(t, recordsToDisable.Optional)
 
-	// Check dns_records computed field
-	assert.Contains(t, res.Schema, "dns_records")
-	dnsRecords := res.Schema["dns_records"]
-	assert.Equal(t, schema.TypeList, dnsRecords.Type)
-	assert.True(t, dnsRecords.Computed)
-
-	// Check dns_records sub-fields
-	dnsRecordsElem := dnsRecords.Elem.(*schema.Resource)
-	expectedSubFields := []string{
-		"zone_id", "record_id", "name", "type", "location",
-		"content", "ttl", "weight", "priority", "status",
-		"created_on", "modified_on",
-	}
-	for _, field := range expectedSubFields {
-		assert.Contains(t, dnsRecordsElem.Schema, field)
-	}
-
-	// Verify pagination parameters are NOT exposed
+	// Verify pagination parameters and query-only fields are NOT exposed
+	assert.NotContains(t, res.Schema, "filters")
+	assert.NotContains(t, res.Schema, "sort_by")
+	assert.NotContains(t, res.Schema, "sort_order")
+	assert.NotContains(t, res.Schema, "match")
+	assert.NotContains(t, res.Schema, "dns_records")
 	assert.NotContains(t, res.Schema, "limit")
 	assert.NotContains(t, res.Schema, "offset")
-}
-
-// TestTeoDnsRecordsStatus_Read_WithNilFields tests Read handles nil DnsRecord fields
-func TestTeoDnsRecordsStatus_Read_WithNilFields(t *testing.T) {
-	patches := gomonkey.NewPatches()
-	defer patches.Reset()
-
-	teoClient := &teov20220901.Client{}
-	patches.ApplyMethodReturn(newMockMetaTeoDnsRecordsStatus().client, "UseTeoV20220901Client", teoClient)
-
-	patches.ApplyMethodFunc(teoClient, "DescribeDnsRecordsWithContext", func(_ context.Context, request *teov20220901.DescribeDnsRecordsRequest) (*teov20220901.DescribeDnsRecordsResponse, error) {
-		resp := teov20220901.NewDescribeDnsRecordsResponse()
-		resp.Response = &teov20220901.DescribeDnsRecordsResponseParams{
-			TotalCount: ptrInt64DnsRecordsStatus(1),
-			DnsRecords: []*teov20220901.DnsRecord{
-				{
-					ZoneId:   ptrStringDnsRecordsStatus("zone-1234567890"),
-					RecordId: ptrStringDnsRecordsStatus("record-1234567890"),
-					Name:     ptrStringDnsRecordsStatus("www.example.com"),
-					Type:     ptrStringDnsRecordsStatus("A"),
-					// Location, Content, TTL, Weight, Priority are nil
-					Status: ptrStringDnsRecordsStatus("enable"),
-				},
-			},
-			RequestId: ptrStringDnsRecordsStatus("fake-request-id"),
-		}
-		return resp, nil
-	})
-
-	meta := newMockMetaTeoDnsRecordsStatus()
-	res := teo.ResourceTencentCloudTeoDnsRecordsStatus()
-	d := schema.TestResourceDataRaw(t, res.Schema, map[string]interface{}{
-		"zone_id": "zone-1234567890",
-	})
-	d.SetId("zone-1234567890")
-
-	err := res.Read(d, meta)
-	assert.NoError(t, err)
-
-	dnsRecords := d.Get("dns_records").([]interface{})
-	assert.Equal(t, 1, len(dnsRecords))
-	record := dnsRecords[0].(map[string]interface{})
-	assert.Equal(t, "record-1234567890", record["record_id"])
-	assert.Equal(t, "enable", record["status"])
 }

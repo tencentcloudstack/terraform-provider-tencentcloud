@@ -1,36 +1,17 @@
 ## Requirements
 
 ### Requirement: Resource Schema Definition
-The system SHALL define a Terraform RESOURCE_KIND_CONFIG resource `tencentcloud_teo_dns_records_status` with the following schema fields:
+The system SHALL define a Terraform RESOURCE_KIND_CONFIG resource `tencentcloud_teo_dns_records_status` with the following schema fields (only the Modify interface `ModifyDnsRecordsStatus` parameters):
 - `zone_id` (Required, ForceNew, TypeString): 站点 ID，同时用于 Read（`DescribeDnsRecords` 的 `request.ZoneId`）和 Update（`ModifyDnsRecordsStatus` 的 `request.ZoneId`）
-- `filters` (Optional, TypeList): 过滤条件列表，元素为 AdvancedFilter，对应 `request.Filters`，用于 Read 时按条件查询 DNS 记录
-  - `name` (Required, TypeString): 需要过滤的字段，对应 `request.Filters.Name`
-  - `values` (Required, TypeList of TypeString): 字段的过滤值，对应 `request.Filters.Values`
-  - `fuzzy` (Optional, TypeBool): 是否启用模糊查询，对应 `request.Filters.Fuzzy`
-- `sort_by` (Optional, TypeString): 排序依据，对应 `request.SortBy`
-- `sort_order` (Optional, TypeString): 排序方式，对应 `request.SortOrder`
-- `match` (Optional, TypeString): 匹配方式，对应 `request.Match`
 - `records_to_enable` (Optional, TypeList of TypeString): 待启用的 DNS 记录 ID 列表，对应 `request.RecordsToEnable`，只管理单个资源，传入单个记录 ID
 - `records_to_disable` (Optional, TypeList of TypeString): 待停用的 DNS 记录 ID 列表，对应 `request.RecordsToDisable`，只管理单个资源，传入单个记录 ID
-- `dns_records` (Computed, TypeList): DNS 记录列表，对应 `response.Response.DnsRecords`，列表展开平铺，每个元素包含以下字段：
-  - `zone_id` (Computed, TypeString): 站点 ID，对应 `response.Response.DnsRecords.ZoneId`
-  - `record_id` (Computed, TypeString): DNS 记录 ID，对应 `response.Response.DnsRecords.RecordId`
-  - `name` (Computed, TypeString): DNS 记录名，对应 `response.Response.DnsRecords.Name`
-  - `type` (Computed, TypeString): DNS 记录类型，对应 `response.Response.DnsRecords.Type`
-  - `location` (Computed, TypeString): DNS 记录解析线路，对应 `response.Response.DnsRecords.Location`
-  - `content` (Computed, TypeString): DNS 记录内容，对应 `response.Response.DnsRecords.Content`
-  - `ttl` (Computed, TypeInt): 缓存时间，对应 `response.Response.DnsRecords.TTL`
-  - `weight` (Computed, TypeInt): DNS 记录权重，对应 `response.Response.DnsRecords.Weight`
-  - `priority` (Computed, TypeInt): MX 记录优先级，对应 `response.Response.DnsRecords.Priority`
-  - `status` (Computed, TypeString): DNS 记录解析状态，对应 `response.Response.DnsRecords.Status`
-  - `created_on` (Computed, TypeString): 创建时间，对应 `response.Response.DnsRecords.CreatedOn`
-  - `modified_on` (Computed, TypeString): 修改时间，对应 `response.Response.DnsRecords.ModifiedOn`
 
-The resource ID SHALL be `zone_id`. The resource SHALL support import using the `zone_id` as ID. The resource SHALL NOT expose `limit`/`offset` pagination parameters.
+The resource ID SHALL be `zone_id`. The resource SHALL support import using the `zone_id` as ID. The resource SHALL NOT expose `filters`, `sort_by`, `sort_order`, `match` (Describe query parameters), `dns_records` (response data), or `limit`/`offset` pagination parameters.
 
-#### Scenario: Schema defines all fields
+#### Scenario: Schema defines only Modify interface fields
 - **WHEN** the resource schema is defined
-- **THEN** it SHALL include zone_id, filters (with name/values/fuzzy sub-fields), sort_by, sort_order, match, records_to_enable, records_to_disable, and dns_records (with zone_id/record_id/name/type/location/content/ttl/weight/priority/status/created_on/modified_on sub-fields) with correct types and constraints
+- **THEN** it SHALL include only zone_id, records_to_enable, records_to_disable with correct types and constraints
+- **AND** it SHALL NOT include filters, sort_by, sort_order, match, dns_records, limit, or offset
 
 #### Scenario: ForceNew fields prevent in-place update
 - **WHEN** zone_id is changed in the Terraform configuration
@@ -40,22 +21,18 @@ The resource ID SHALL be `zone_id`. The resource SHALL support import using the 
 - **WHEN** a user imports the resource using `zone_id` as ID
 - **THEN** the system SHALL populate the resource state by calling the Read operation
 
-#### Scenario: Pagination parameters not exposed
-- **WHEN** the resource schema is defined
-- **THEN** it SHALL NOT include `limit` or `offset` fields
-
 ### Requirement: Resource Create Operation
-The resource Create method SHALL reuse the Update logic because RESOURCE_KIND_CONFIG has no independent creation API. The Create method SHALL call `ModifyDnsRecordsStatus` API with `zone_id` → `request.ZoneId`, `records_to_enable` → `request.RecordsToEnable` (if set), `records_to_disable` → `request.RecordsToDisable` (if set). If both `records_to_enable` and `records_to_disable` are empty, the Create method SHALL skip the `ModifyDnsRecordsStatus` call and directly call Read. The Create method SHALL use `resource.Retry(tccommon.WriteRetryTimeout, ...)` for retry logic, wrapping errors with `tccommon.RetryError()`. After the API call succeeds, the Create method SHALL set the resource ID to `zone_id` and call Read to populate state. Setting the ID and other success operations SHALL be performed outside the retry block.
+The resource Create method SHALL reuse the Update logic because RESOURCE_KIND_CONFIG has no independent creation API. The Create method SHALL call `ModifyDnsRecordsStatus` API with `zone_id` → `request.ZoneId`, `records_to_enable` → `request.RecordsToEnable` (if set), `records_to_disable` → `request.RecordsToDisable` (if set). If both `records_to_enable` and `records_to_disable` are empty, the Create method SHALL skip the `ModifyDnsRecordsStatus` call and directly call Read. The Create method SHALL use `resource.Retry(tccommon.WriteRetryTimeout, ...)` for retry logic, wrapping errors with `tccommon.RetryError()`. After the API call succeeds, the Create method SHALL set the resource ID to `zone_id` and poll `DescribeDnsRecords` until the target record's status reaches the expected value. Setting the ID and other success operations SHALL be performed outside the retry block.
 
 #### Scenario: Successful create with records_to_enable
 - **WHEN** user applies a configuration with `records_to_enable` set to a single record ID
 - **THEN** the resource SHALL call `ModifyDnsRecordsStatus` API with `request.ZoneId` and `request.RecordsToEnable` populated
-- **AND** after success, the resource SHALL set the ID to `zone_id` and call Read to populate state
+- **AND** after success, the resource SHALL set the ID to `zone_id` and poll `DescribeDnsRecords` until status reaches `enable`
 
 #### Scenario: Successful create with records_to_disable
 - **WHEN** user applies a configuration with `records_to_disable` set to a single record ID
 - **THEN** the resource SHALL call `ModifyDnsRecordsStatus` API with `request.ZoneId` and `request.RecordsToDisable` populated
-- **AND** after success, the resource SHALL set the ID to `zone_id` and call Read to populate state
+- **AND** after success, the resource SHALL set the ID to `zone_id` and poll `DescribeDnsRecords` until status reaches `disable`
 
 #### Scenario: Create with no records_to_enable and no records_to_disable
 - **WHEN** user applies a configuration with both `records_to_enable` and `records_to_disable` empty
@@ -68,24 +45,12 @@ The resource Create method SHALL reuse the Update logic because RESOURCE_KIND_CO
 - **AND** on non-retryable errors, the resource SHALL return the error directly
 
 ### Requirement: Resource Read Operation
-The resource Read method SHALL call `DescribeDnsRecords` API with the following parameter mapping:
-- `zone_id` → `request.ZoneId`
-- `filters` → `request.Filters` (each filter element: `name` → `AdvancedFilter.Name`, `values` → `AdvancedFilter.Values`, `fuzzy` → `AdvancedFilter.Fuzzy`)
-- `sort_by` → `request.SortBy` (if set)
-- `sort_order` → `request.SortOrder` (if set)
-- `match` → `request.Match` (if set)
+The resource Read method SHALL call `DescribeDnsRecords` API with only `zone_id` → `request.ZoneId`. The Read method SHALL use `resource.Retry(tccommon.ReadRetryTimeout, ...)` for retry logic, wrapping errors with `tccommon.RetryError()`. If the cloud API returns empty (response is nil, response.Response is nil, or len(response.Response.DnsRecords) == 0), the Read method SHALL first log `log.Printf("[CRUD] teo_dns_records_status id=%s", d.Id())` to preserve context, then call `d.SetId("")` to mark the resource as deleted. The Read method SHALL NOT perform retry inside an existing retry block.
 
-The Read method SHALL use `resource.Retry(tccommon.ReadRetryTimeout, ...)` for retry logic, wrapping errors with `tccommon.RetryError()`. The Read method SHALL populate `dns_records` from `response.Response.DnsRecords`, flattening the list elements. Before each `d.Set` call, the Read method SHALL check that the Response field is not nil; if nil, the Read method SHALL NOT call `d.Set` for that field. If the cloud API returns empty (response is nil, response.Response is nil, or len(response.Response.DnsRecords) == 0), the Read method SHALL first log `log.Printf("[CRUD] teo_dns_records_status id=%s", d.Id())` to preserve context, then call `d.SetId("")` to mark the resource as deleted. The Read method SHALL NOT perform retry inside an existing retry block.
-
-#### Scenario: Successful read with filters
-- **WHEN** the Read method queries DNS records with filters set
-- **THEN** the resource SHALL call `DescribeDnsRecords` with `request.Filters` populated from the filters schema
-- **AND** populate `dns_records` from `response.Response.DnsRecords`
-
-#### Scenario: Read with nil DnsRecords fields
-- **WHEN** the Read method queries DNS records where some `DnsRecords` element fields are nil
-- **THEN** the resource SHALL check each field is not nil before calling `d.Set`
-- **AND** no error SHALL be returned for nil fields
+#### Scenario: Successful read
+- **WHEN** the Read method queries DNS records with zone_id
+- **THEN** the resource SHALL call `DescribeDnsRecords` with `request.ZoneId` populated
+- **AND** if records exist, the resource SHALL remain in state
 
 #### Scenario: Resource not found
 - **WHEN** `DescribeDnsRecords` returns empty response or `DnsRecords` list is empty
@@ -102,7 +67,7 @@ The resource Update method SHALL call `ModifyDnsRecordsStatus` API when `records
 - `records_to_enable` → `request.RecordsToEnable` (if set)
 - `records_to_disable` → `request.RecordsToDisable` (if set)
 
-The Update method SHALL use `resource.Retry(tccommon.WriteRetryTimeout, ...)` for retry logic, wrapping errors with `tccommon.RetryError()`. Setting the ID and other success operations SHALL be performed outside the retry block. Because `ModifyDnsRecordsStatus` is an asynchronous API, after the API call succeeds, the Update method SHALL call `DescribeDnsRecords` (via the Read operation) to poll until the target record's `status` reaches the expected value (`enable` or `disable`) or the update timeout is reached. The Update method SHALL end with a call to `resourceTencentCloudTeoDnsRecordsStatusRead(d, meta)` to refresh state.
+The Update method SHALL use `resource.Retry(tccommon.WriteRetryTimeout, ...)` for retry logic, wrapping errors with `tccommon.RetryError()`. Setting the ID and other success operations SHALL be performed outside the retry block. Because `ModifyDnsRecordsStatus` is an asynchronous API, after the API call succeeds, the Update method SHALL call `DescribeDnsRecords` to poll until the target record's `status` reaches the expected value (`enable` or `disable`) or the update timeout is reached. The Update method SHALL end with a call to `resourceTencentCloudTeoDnsRecordsStatusRead(d, meta)` to refresh state.
 
 #### Scenario: Update records_to_enable
 - **WHEN** `records_to_enable` changes in the Terraform configuration
@@ -143,25 +108,25 @@ The resource SHALL have unit tests in `resource_tc_teo_dns_records_status_config
 #### Scenario: Unit test for Create with records_to_enable
 - **WHEN** the unit test for Create with `records_to_enable` set is executed
 - **THEN** it SHALL mock `ModifyDnsRecordsStatusWithContext` to return success
-- **AND** mock `DescribeDnsRecordsWithContext` to return the DNS records
-- **AND** verify the resource is created correctly with `dns_records` populated in state
+- **AND** mock `DescribeDnsRecordsWithContext` to return the DNS records with expected status
+- **AND** verify the resource is created correctly
 
 #### Scenario: Unit test for Create with records_to_disable
 - **WHEN** the unit test for Create with `records_to_disable` set is executed
 - **THEN** it SHALL mock `ModifyDnsRecordsStatusWithContext` to return success
-- **AND** mock `DescribeDnsRecordsWithContext` to return the DNS records
+- **AND** mock `DescribeDnsRecordsWithContext` to return the DNS records with expected status
 - **AND** verify the resource is created correctly
 
 #### Scenario: Unit test for Read
 - **WHEN** the unit test for Read is executed
 - **THEN** it SHALL mock `DescribeDnsRecordsWithContext` to return the DNS records
-- **AND** verify the resource state is populated with `dns_records` fields
+- **AND** verify the resource remains in state
 
 #### Scenario: Unit test for Update
 - **WHEN** the unit test for Update with `records_to_enable` change is executed
 - **THEN** it SHALL mock `ModifyDnsRecordsStatusWithContext` to return success
 - **AND** mock `DescribeDnsRecordsWithContext` to return the updated DNS records
-- **AND** verify the update operation completes and state is refreshed
+- **AND** verify the update operation completes
 
 ### Requirement: Resource Documentation
 The system SHALL provide a markdown documentation file `resource_tc_teo_dns_records_status.md` with a one-line description mentioning TEO (EdgeOne), example usage, and import section. The documentation SHALL NOT include `Argument Reference` or `Attribute Reference` sections (auto-generated by tooling).
@@ -169,5 +134,5 @@ The system SHALL provide a markdown documentation file `resource_tc_teo_dns_reco
 #### Scenario: Documentation exists with required sections
 - **WHEN** the resource documentation is created
 - **THEN** the .md file SHALL exist with a one-line description mentioning TEO (EdgeOne)
-- **AND** example usage SHALL demonstrate `zone_id`, `filters`, `records_to_enable`/`records_to_disable` fields
+- **AND** example usage SHALL demonstrate `zone_id`, `records_to_enable`/`records_to_disable` fields
 - **AND** an import section SHALL be present showing the `zone_id` ID format

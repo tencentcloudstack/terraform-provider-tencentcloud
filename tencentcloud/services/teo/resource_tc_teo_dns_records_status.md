@@ -8,11 +8,6 @@ Enable a DNS record
 resource "tencentcloud_teo_dns_records_status" "example" {
   zone_id = "zone-3edjdliiw3he"
 
-  filters {
-    name   = "id"
-    values = ["record-1234567890"]
-  }
-
   records_to_enable = ["record-1234567890"]
 }
 ```
@@ -22,11 +17,6 @@ Disable a DNS record
 ```hcl
 resource "tencentcloud_teo_dns_records_status" "example" {
   zone_id = "zone-3edjdliiw3he"
-
-  filters {
-    name   = "id"
-    values = ["record-1234567890"]
-  }
 
   records_to_disable = ["record-1234567890"]
 }

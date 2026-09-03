@@ -37,50 +37,6 @@ func ResourceTencentCloudTeoDnsRecordsStatus() *schema.Resource {
 				Description: "Site ID.",
 			},
 
-			"filters": {
-				Type:        schema.TypeList,
-				Optional:    true,
-				Description: "Filter conditions, each filter element contains `name`, `values` and `fuzzy`.",
-				Elem: &schema.Resource{
-					Schema: map[string]*schema.Schema{
-						"name": {
-							Type:        schema.TypeString,
-							Required:    true,
-							Description: "Field to be filtered.",
-						},
-						"values": {
-							Type:        schema.TypeList,
-							Required:    true,
-							Elem:        &schema.Schema{Type: schema.TypeString},
-							Description: "Filter values of the field.",
-						},
-						"fuzzy": {
-							Type:        schema.TypeBool,
-							Optional:    true,
-							Description: "Whether to enable fuzzy query.",
-						},
-					},
-				},
-			},
-
-			"sort_by": {
-				Type:        schema.TypeString,
-				Optional:    true,
-				Description: "Sort by field.",
-			},
-
-			"sort_order": {
-				Type:        schema.TypeString,
-				Optional:    true,
-				Description: "Sort order, valid values: `asc`, `desc`.",
-			},
-
-			"match": {
-				Type:        schema.TypeString,
-				Optional:    true,
-				Description: "Match mode, valid values: `all`, `any`.",
-			},
-
 			"records_to_enable": {
 				Type:        schema.TypeList,
 				Optional:    true,
@@ -93,76 +49,6 @@ func ResourceTencentCloudTeoDnsRecordsStatus() *schema.Resource {
 				Optional:    true,
 				Elem:        &schema.Schema{Type: schema.TypeString},
 				Description: "DNS record ID list to be disabled, only manages a single resource, pass in a single record ID.",
-			},
-
-			"dns_records": {
-				Type:        schema.TypeList,
-				Computed:    true,
-				Description: "DNS record list.",
-				Elem: &schema.Resource{
-					Schema: map[string]*schema.Schema{
-						"zone_id": {
-							Type:        schema.TypeString,
-							Computed:    true,
-							Description: "Site ID.",
-						},
-						"record_id": {
-							Type:        schema.TypeString,
-							Computed:    true,
-							Description: "DNS record ID.",
-						},
-						"name": {
-							Type:        schema.TypeString,
-							Computed:    true,
-							Description: "DNS record name.",
-						},
-						"type": {
-							Type:        schema.TypeString,
-							Computed:    true,
-							Description: "DNS record type.",
-						},
-						"location": {
-							Type:        schema.TypeString,
-							Computed:    true,
-							Description: "DNS record resolution line.",
-						},
-						"content": {
-							Type:        schema.TypeString,
-							Computed:    true,
-							Description: "DNS record content.",
-						},
-						"ttl": {
-							Type:        schema.TypeInt,
-							Computed:    true,
-							Description: "Cache time, unit: seconds.",
-						},
-						"weight": {
-							Type:        schema.TypeInt,
-							Computed:    true,
-							Description: "DNS record weight.",
-						},
-						"priority": {
-							Type:        schema.TypeInt,
-							Computed:    true,
-							Description: "MX record priority.",
-						},
-						"status": {
-							Type:        schema.TypeString,
-							Computed:    true,
-							Description: "DNS record resolution status, valid values: `enable`, `disable`.",
-						},
-						"created_on": {
-							Type:        schema.TypeString,
-							Computed:    true,
-							Description: "Creation time.",
-						},
-						"modified_on": {
-							Type:        schema.TypeString,
-							Computed:    true,
-							Description: "Modification time.",
-						},
-					},
-				},
 			},
 		},
 	}
@@ -225,7 +111,27 @@ func resourceTencentCloudTeoDnsRecordsStatusCreate(d *schema.ResourceData, meta 
 
 	d.SetId(zoneId)
 
-	return resourceTencentCloudTeoDnsRecordsStatusRead(d, meta)
+	// Because ModifyDnsRecordsStatus is an asynchronous API, poll DescribeDnsRecords
+	// until the target record's status reaches the expected value or timeout.
+	err = resource.Retry(d.Timeout(schema.TimeoutCreate), func() *resource.RetryError {
+		readErr := resourceTencentCloudTeoDnsRecordsStatusRead(d, meta)
+		if readErr != nil {
+			return resource.NonRetryableError(readErr)
+		}
+
+		if checkDnsRecordsStatus(d, meta) {
+			return nil
+		}
+
+		return resource.RetryableError(fmt.Errorf("teo_dns_records_status: record status has not reached the expected value, waiting for async operation to complete."))
+	})
+
+	if err != nil {
+		log.Printf("[CRITAL]%s poll teo_dns_records_status status failed, reason:%+v", logId, err)
+		return err
+	}
+
+	return nil
 }
 
 func resourceTencentCloudTeoDnsRecordsStatusRead(d *schema.ResourceData, meta interface{}) error {
@@ -233,45 +139,13 @@ func resourceTencentCloudTeoDnsRecordsStatusRead(d *schema.ResourceData, meta in
 	defer tccommon.InconsistentCheck(d, meta)()
 
 	var (
-		logId      = tccommon.GetLogId(tccommon.ContextNil)
-		ctx        = tccommon.NewResourceLifeCycleHandleFuncContext(context.Background(), logId, d, meta)
-		zoneId     = d.Id()
-		request    = teov20220901.NewDescribeDnsRecordsRequest()
-		dnsRecords []*teov20220901.DnsRecord
+		logId   = tccommon.GetLogId(tccommon.ContextNil)
+		ctx     = tccommon.NewResourceLifeCycleHandleFuncContext(context.Background(), logId, d, meta)
+		zoneId  = d.Id()
+		request = teov20220901.NewDescribeDnsRecordsRequest()
 	)
 
 	request.ZoneId = helper.String(zoneId)
-
-	if v, ok := d.GetOk("filters"); ok {
-		filters := make([]*teov20220901.AdvancedFilter, 0, len(v.([]interface{})))
-		for _, item := range v.([]interface{}) {
-			filterMap := item.(map[string]interface{})
-			filter := teov20220901.AdvancedFilter{}
-			if v, ok := filterMap["name"].(string); ok && v != "" {
-				filter.Name = helper.String(v)
-			}
-			if v, ok := filterMap["values"].([]interface{}); ok && len(v) > 0 {
-				filter.Values = helper.Strings(interfaceToStringSlice(v))
-			}
-			if v, ok := filterMap["fuzzy"].(bool); ok {
-				filter.Fuzzy = helper.Bool(v)
-			}
-			filters = append(filters, &filter)
-		}
-		request.Filters = filters
-	}
-
-	if v, ok := d.GetOk("sort_by"); ok {
-		request.SortBy = helper.String(v.(string))
-	}
-
-	if v, ok := d.GetOk("sort_order"); ok {
-		request.SortOrder = helper.String(v.(string))
-	}
-
-	if v, ok := d.GetOk("match"); ok {
-		request.Match = helper.String(v.(string))
-	}
 
 	err := resource.Retry(tccommon.ReadRetryTimeout, func() *resource.RetryError {
 		result, e := meta.(tccommon.ProviderMeta).GetAPIV3Conn().UseTeoV20220901Client().DescribeDnsRecordsWithContext(ctx, request)
@@ -285,65 +159,18 @@ func resourceTencentCloudTeoDnsRecordsStatusRead(d *schema.ResourceData, meta in
 			return resource.NonRetryableError(fmt.Errorf("Read teo_dns_records_status failed, Response is nil."))
 		}
 
-		dnsRecords = result.Response.DnsRecords
+		if len(result.Response.DnsRecords) == 0 {
+			log.Printf("[CRUD] teo_dns_records_status id=%s", d.Id())
+			d.SetId("")
+			return nil
+		}
+
 		return nil
 	})
 
 	if err != nil {
 		log.Printf("[CRITAL]%s read teo_dns_records_status failed, reason:%+v", logId, err)
 		return err
-	}
-
-	if len(dnsRecords) == 0 {
-		log.Printf("[CRUD] teo_dns_records_status id=%s", d.Id())
-		d.SetId("")
-		return nil
-	}
-
-	dnsRecordsList := make([]map[string]interface{}, 0, len(dnsRecords))
-	for _, record := range dnsRecords {
-		recordMap := map[string]interface{}{}
-		if record.ZoneId != nil {
-			recordMap["zone_id"] = record.ZoneId
-		}
-		if record.RecordId != nil {
-			recordMap["record_id"] = record.RecordId
-		}
-		if record.Name != nil {
-			recordMap["name"] = record.Name
-		}
-		if record.Type != nil {
-			recordMap["type"] = record.Type
-		}
-		if record.Location != nil {
-			recordMap["location"] = record.Location
-		}
-		if record.Content != nil {
-			recordMap["content"] = record.Content
-		}
-		if record.TTL != nil {
-			recordMap["ttl"] = record.TTL
-		}
-		if record.Weight != nil {
-			recordMap["weight"] = record.Weight
-		}
-		if record.Priority != nil {
-			recordMap["priority"] = record.Priority
-		}
-		if record.Status != nil {
-			recordMap["status"] = record.Status
-		}
-		if record.CreatedOn != nil {
-			recordMap["created_on"] = record.CreatedOn
-		}
-		if record.ModifiedOn != nil {
-			recordMap["modified_on"] = record.ModifiedOn
-		}
-		dnsRecordsList = append(dnsRecordsList, recordMap)
-	}
-
-	if len(dnsRecordsList) > 0 {
-		_ = d.Set("dns_records", dnsRecordsList)
 	}
 
 	return nil
@@ -410,12 +237,7 @@ func resourceTencentCloudTeoDnsRecordsStatusUpdate(d *schema.ResourceData, meta 
 				return resource.NonRetryableError(readErr)
 			}
 
-			dnsRecords := d.Get("dns_records").([]interface{})
-			if len(dnsRecords) == 0 {
-				return resource.RetryableError(fmt.Errorf("teo_dns_records_status: dns_records is empty, waiting for status to take effect."))
-			}
-
-			if checkDnsRecordsStatus(dnsRecords, d) {
+			if checkDnsRecordsStatus(d, meta) {
 				return nil
 			}
 
@@ -438,10 +260,24 @@ func resourceTencentCloudTeoDnsRecordsStatusDelete(d *schema.ResourceData, meta 
 	return nil
 }
 
-// checkDnsRecordsStatus checks whether the target record's status has reached the expected value.
-func checkDnsRecordsStatus(dnsRecords []interface{}, d *schema.ResourceData) bool {
+// checkDnsRecordsStatus queries DescribeDnsRecords and checks whether the target record's
+// status has reached the expected value (enable/disable).
+func checkDnsRecordsStatus(d *schema.ResourceData, meta interface{}) bool {
+	var (
+		logId   = tccommon.GetLogId(tccommon.ContextNil)
+		ctx     = tccommon.NewResourceLifeCycleHandleFuncContext(context.Background(), logId, d, meta)
+		zoneId  = d.Id()
+		request = teov20220901.NewDescribeDnsRecordsRequest()
+	)
+
+	request.ZoneId = helper.String(zoneId)
+
 	recordsToEnable := d.Get("records_to_enable").([]interface{})
 	recordsToDisable := d.Get("records_to_disable").([]interface{})
+
+	if len(recordsToEnable) == 0 && len(recordsToDisable) == 0 {
+		return true
+	}
 
 	enableMap := make(map[string]bool)
 	for _, v := range recordsToEnable {
@@ -452,16 +288,25 @@ func checkDnsRecordsStatus(dnsRecords []interface{}, d *schema.ResourceData) boo
 		disableMap[v.(string)] = true
 	}
 
-	for _, record := range dnsRecords {
-		recordMap := record.(map[string]interface{})
-		recordId, ok := recordMap["record_id"].(string)
-		if !ok || recordId == "" {
+	result, e := meta.(tccommon.ProviderMeta).GetAPIV3Conn().UseTeoV20220901Client().DescribeDnsRecordsWithContext(ctx, request)
+	if e != nil {
+		log.Printf("[CRITAL]%s poll teo_dns_records_status status failed, reason:%+v", logId, e)
+		return false
+	}
+
+	if result == nil || result.Response == nil || len(result.Response.DnsRecords) == 0 {
+		return false
+	}
+
+	for _, record := range result.Response.DnsRecords {
+		if record == nil || record.RecordId == nil {
 			continue
 		}
-		status, ok := recordMap["status"].(string)
-		if !ok {
-			continue
+		recordId := *record.RecordId
+		if record.Status == nil {
+			return false
 		}
+		status := *record.Status
 		if enableMap[recordId] && status != "enable" {
 			return false
 		}
