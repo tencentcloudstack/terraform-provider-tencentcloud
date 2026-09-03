@@ -44,6 +44,58 @@ resource "tencentcloud_cls_scheduled_sql" "scheduled_sql" {
 }
 ```
 
+Example Usage with metric destination resource (biz_type=1)
+
+```hcl
+resource "tencentcloud_cls_logset" "logset" {
+  logset_name = "tf-example-logset"
+  tags = {
+    "createdBy" = "terraform"
+  }
+}
+resource "tencentcloud_cls_topic" "topic" {
+  topic_name           = "tf-example-topic"
+  logset_id            = tencentcloud_cls_logset.logset.id
+  auto_split           = false
+  max_split_partitions = 20
+  partition_count      = 1
+  period               = 10
+  storage_type         = "hot"
+  tags                 = {
+    "test" = "test",
+  }
+}
+resource "tencentcloud_cls_scheduled_sql" "scheduled_sql_metric" {
+  src_topic_id = tencentcloud_cls_topic.topic.id
+  name = "tf-example-metric-task"
+  enable_flag = 1
+  dst_resource {
+    topic_id = tencentcloud_cls_topic.topic.id
+    region = "ap-guangzhou"
+    biz_type = 1
+    metric_names = ["metric1", "metric2"]
+    metric_labels = ["label1", "label2"]
+    custom_time = "timestamp"
+    custom_metric_labels {
+      key = "env"
+      value = "production"
+    }
+    custom_metric_labels {
+      key = "app"
+      value = "myapp"
+    }
+  }
+  scheduled_sql_content = "select * from log"
+  process_start_time = 1690515360000
+  process_type = 1
+  process_period = 10
+  process_time_window = "@m-15m,@m"
+  process_delay = 5
+  src_topic_region = "ap-guangzhou"
+  syntax_rule = 0
+}
+```
+
 Import
 
 cls scheduled_sql can be imported using the id, e.g.

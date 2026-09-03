@@ -70,6 +70,42 @@ func ResourceTencentCloudClsScheduledSql() *schema.Resource {
 							Optional:    true,
 							Description: "metric name.",
 						},
+						"metric_names": {
+							Type:        schema.TypeList,
+							Elem:        &schema.Schema{Type: schema.TypeString},
+							Optional:    true,
+							Description: "metric names, used when biz_type is 1 (metric topic) for multi-metric scenarios.",
+						},
+						"metric_labels": {
+							Type:        schema.TypeList,
+							Elem:        &schema.Schema{Type: schema.TypeString},
+							Optional:    true,
+							Description: "metric dimensions, time type is not accepted.",
+						},
+						"custom_time": {
+							Type:        schema.TypeString,
+							Optional:    true,
+							Description: "metric timestamp field, the default value is the left boundary time of the SQL query range.",
+						},
+						"custom_metric_labels": {
+							Type:     schema.TypeList,
+							Optional: true,
+							Elem: &schema.Resource{
+								Schema: map[string]*schema.Schema{
+									"key": {
+										Type:        schema.TypeString,
+										Required:    true,
+										Description: "custom metric label key.",
+									},
+									"value": {
+										Type:        schema.TypeString,
+										Required:    true,
+										Description: "custom metric label value.",
+									},
+								},
+							},
+							Description: "custom metric labels, used to add static dimensions to metrics.",
+						},
 					},
 				},
 			},
@@ -169,6 +205,37 @@ func resourceTencentCloudClsScheduledSqlCreate(d *schema.ResourceData, meta inte
 		if v, ok := dMap["metric_name"]; ok {
 			scheduledSqlResouceInfo.MetricName = helper.String(v.(string))
 		}
+		if v, ok := dMap["metric_names"]; ok {
+			metricNamesList := v.([]interface{})
+			for _, name := range metricNamesList {
+				metricName := name.(string)
+				scheduledSqlResouceInfo.MetricNames = append(scheduledSqlResouceInfo.MetricNames, &metricName)
+			}
+		}
+		if v, ok := dMap["metric_labels"]; ok {
+			metricLabelsList := v.([]interface{})
+			for _, label := range metricLabelsList {
+				metricLabel := label.(string)
+				scheduledSqlResouceInfo.MetricLabels = append(scheduledSqlResouceInfo.MetricLabels, &metricLabel)
+			}
+		}
+		if v, ok := dMap["custom_time"]; ok {
+			scheduledSqlResouceInfo.CustomTime = helper.String(v.(string))
+		}
+		if v, ok := dMap["custom_metric_labels"]; ok {
+			customMetricLabelsList := v.([]interface{})
+			for _, item := range customMetricLabelsList {
+				labelMap := item.(map[string]interface{})
+				metricLabel := cls.MetricLabel{}
+				if v, ok := labelMap["key"]; ok {
+					metricLabel.Key = helper.String(v.(string))
+				}
+				if v, ok := labelMap["value"]; ok {
+					metricLabel.Value = helper.String(v.(string))
+				}
+				scheduledSqlResouceInfo.CustomMetricLabels = append(scheduledSqlResouceInfo.CustomMetricLabels, &metricLabel)
+			}
+		}
 		request.DstResource = &scheduledSqlResouceInfo
 	}
 
@@ -219,8 +286,13 @@ func resourceTencentCloudClsScheduledSqlCreate(d *schema.ResourceData, meta inte
 		return nil
 	})
 	if err != nil {
-		log.Printf("[CRITAL]%s create cls scheduledSql failed, reason:%+v", logId, err)
+		log.Printf("[CRITAL]%s create cls scheduled_sql failed, reason:%+v", logId, err)
 		return err
+	}
+
+	if response == nil || response.Response == nil || response.Response.TaskId == nil || *response.Response.TaskId == "" {
+		log.Printf("[CRITAL]%s api[%s] create cls scheduled_sql return empty, logId=%s, response=%+v", logId, request.GetAction(), logId, response)
+		return fmt.Errorf("create cls scheduled_sql return empty")
 	}
 
 	taskId = *response.Response.TaskId
@@ -281,6 +353,41 @@ func resourceTencentCloudClsScheduledSqlRead(d *schema.ResourceData, meta interf
 
 		if scheduledSql.DstResource.MetricName != nil {
 			dstResourceMap["metric_name"] = scheduledSql.DstResource.MetricName
+		}
+
+		if scheduledSql.DstResource.MetricNames != nil {
+			tmpList := make([]string, 0, len(scheduledSql.DstResource.MetricNames))
+			for _, name := range scheduledSql.DstResource.MetricNames {
+				tmpList = append(tmpList, *name)
+			}
+			dstResourceMap["metric_names"] = tmpList
+		}
+
+		if scheduledSql.DstResource.MetricLabels != nil {
+			tmpList := make([]string, 0, len(scheduledSql.DstResource.MetricLabels))
+			for _, label := range scheduledSql.DstResource.MetricLabels {
+				tmpList = append(tmpList, *label)
+			}
+			dstResourceMap["metric_labels"] = tmpList
+		}
+
+		if scheduledSql.DstResource.CustomTime != nil {
+			dstResourceMap["custom_time"] = scheduledSql.DstResource.CustomTime
+		}
+
+		if scheduledSql.DstResource.CustomMetricLabels != nil {
+			customMetricLabelsList := []interface{}{}
+			for _, label := range scheduledSql.DstResource.CustomMetricLabels {
+				labelMap := map[string]interface{}{}
+				if label.Key != nil {
+					labelMap["key"] = label.Key
+				}
+				if label.Value != nil {
+					labelMap["value"] = label.Value
+				}
+				customMetricLabelsList = append(customMetricLabelsList, labelMap)
+			}
+			dstResourceMap["custom_metric_labels"] = customMetricLabelsList
 		}
 
 		_ = d.Set("dst_resource", []interface{}{dstResourceMap})
@@ -390,6 +497,37 @@ func resourceTencentCloudClsScheduledSqlUpdate(d *schema.ResourceData, meta inte
 			}
 			if v, ok := dMap["metric_name"]; ok {
 				scheduledSqlResouceInfo.MetricName = helper.String(v.(string))
+			}
+			if v, ok := dMap["metric_names"]; ok {
+				metricNamesList := v.([]interface{})
+				for _, name := range metricNamesList {
+					metricName := name.(string)
+					scheduledSqlResouceInfo.MetricNames = append(scheduledSqlResouceInfo.MetricNames, &metricName)
+				}
+			}
+			if v, ok := dMap["metric_labels"]; ok {
+				metricLabelsList := v.([]interface{})
+				for _, label := range metricLabelsList {
+					metricLabel := label.(string)
+					scheduledSqlResouceInfo.MetricLabels = append(scheduledSqlResouceInfo.MetricLabels, &metricLabel)
+				}
+			}
+			if v, ok := dMap["custom_time"]; ok {
+				scheduledSqlResouceInfo.CustomTime = helper.String(v.(string))
+			}
+			if v, ok := dMap["custom_metric_labels"]; ok {
+				customMetricLabelsList := v.([]interface{})
+				for _, item := range customMetricLabelsList {
+					labelMap := item.(map[string]interface{})
+					metricLabel := cls.MetricLabel{}
+					if v, ok := labelMap["key"]; ok {
+						metricLabel.Key = helper.String(v.(string))
+					}
+					if v, ok := labelMap["value"]; ok {
+						metricLabel.Value = helper.String(v.(string))
+					}
+					scheduledSqlResouceInfo.CustomMetricLabels = append(scheduledSqlResouceInfo.CustomMetricLabels, &metricLabel)
+				}
 			}
 			request.DstResource = &scheduledSqlResouceInfo
 		}

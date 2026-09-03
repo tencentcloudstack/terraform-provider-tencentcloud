@@ -55,6 +55,58 @@ resource "tencentcloud_cls_scheduled_sql" "scheduled_sql" {
 }
 ```
 
+### Example Usage with metric destination resource (biz_type=1)
+
+```hcl
+resource "tencentcloud_cls_logset" "logset" {
+  logset_name = "tf-example-logset"
+  tags = {
+    "createdBy" = "terraform"
+  }
+}
+resource "tencentcloud_cls_topic" "topic" {
+  topic_name           = "tf-example-topic"
+  logset_id            = tencentcloud_cls_logset.logset.id
+  auto_split           = false
+  max_split_partitions = 20
+  partition_count      = 1
+  period               = 10
+  storage_type         = "hot"
+  tags = {
+    "test" = "test",
+  }
+}
+resource "tencentcloud_cls_scheduled_sql" "scheduled_sql_metric" {
+  src_topic_id = tencentcloud_cls_topic.topic.id
+  name         = "tf-example-metric-task"
+  enable_flag  = 1
+  dst_resource {
+    topic_id      = tencentcloud_cls_topic.topic.id
+    region        = "ap-guangzhou"
+    biz_type      = 1
+    metric_names  = ["metric1", "metric2"]
+    metric_labels = ["label1", "label2"]
+    custom_time   = "timestamp"
+    custom_metric_labels {
+      key   = "env"
+      value = "production"
+    }
+    custom_metric_labels {
+      key   = "app"
+      value = "myapp"
+    }
+  }
+  scheduled_sql_content = "select * from log"
+  process_start_time    = 1690515360000
+  process_type          = 1
+  process_period        = 10
+  process_time_window   = "@m-15m,@m"
+  process_delay         = 5
+  src_topic_region      = "ap-guangzhou"
+  syntax_rule           = 0
+}
+```
+
 ## Argument Reference
 
 The following arguments are supported:
@@ -73,11 +125,20 @@ The following arguments are supported:
 * `process_end_time` - (Optional, Int) process end timestamp.
 * `syntax_rule` - (Optional, Int) syntax rule.
 
+The `custom_metric_labels` object of `dst_resource` supports the following:
+
+* `key` - (Required, String) custom metric label key.
+* `value` - (Required, String) custom metric label value.
+
 The `dst_resource` object supports the following:
 
 * `topic_id` - (Required, String) dst topic id.
 * `biz_type` - (Optional, Int) topic type.
+* `custom_metric_labels` - (Optional, List) custom metric labels, used to add static dimensions to metrics.
+* `custom_time` - (Optional, String) metric timestamp field, the default value is the left boundary time of the SQL query range.
+* `metric_labels` - (Optional, List) metric dimensions, time type is not accepted.
 * `metric_name` - (Optional, String) metric name.
+* `metric_names` - (Optional, List) metric names, used when biz_type is 1 (metric topic) for multi-metric scenarios.
 * `region` - (Optional, String) topic region.
 
 ## Attributes Reference
