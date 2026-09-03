@@ -107,6 +107,7 @@ func ResourceTencentCloudClsRemoteWriteTask() *schema.Resource {
 				},
 			},
 
+			// computed
 			"task_id": {
 				Type:        schema.TypeString,
 				Computed:    true,
@@ -169,11 +170,11 @@ func resourceTencentCloudClsRemoteWriteTaskCreate(d *schema.ResourceData, meta i
 		request.RemoteWriteURL = helper.String(v.(string))
 	}
 
-	if v, ok := d.GetOk("auth_type"); ok {
+	if v, ok := d.GetOkExists("auth_type"); ok {
 		request.AuthType = helper.IntUint64(v.(int))
 	}
 
-	if v, ok := d.GetOk("net_type"); ok {
+	if v, ok := d.GetOkExists("net_type"); ok {
 		request.NetType = helper.IntUint64(v.(int))
 	}
 
@@ -231,7 +232,7 @@ func resourceTencentCloudClsRemoteWriteTaskCreate(d *schema.ResourceData, meta i
 	}
 
 	taskId := *response.Response.TaskId
-	d.SetId(taskId + tccommon.FILED_SP + topicId)
+	d.SetId(strings.Join([]string{topicId, taskId}, tccommon.FILED_SP))
 	return resourceTencentCloudClsRemoteWriteTaskRead(d, meta)
 }
 
@@ -249,17 +250,17 @@ func resourceTencentCloudClsRemoteWriteTaskRead(d *schema.ResourceData, meta int
 		return fmt.Errorf("id is broken,%s", d.Id())
 	}
 
-	taskId := idSplit[0]
-	topicId := idSplit[1]
+	taskId := idSplit[1]
 
 	request := cls.NewDescribeRemoteWriteTasksRequest()
+	request.Offset = helper.Uint64(uint64(0))
+	request.Limit = helper.Uint64(uint64(100))
 	request.Filters = []*cls.Filter{
 		{
 			Key:    helper.String("taskId"),
 			Values: []*string{helper.String(taskId)},
 		},
 	}
-	request.Limit = helper.Uint64(uint64(100))
 
 	var infos []*cls.RemoteWriteInfo
 	err := resource.Retry(tccommon.ReadRetryTimeout, func() *resource.RetryError {
@@ -361,7 +362,6 @@ func resourceTencentCloudClsRemoteWriteTaskRead(d *schema.ResourceData, meta int
 		_ = d.Set("logset_id", info.LogsetId)
 	}
 
-	_ = topicId
 	return nil
 }
 
@@ -379,8 +379,8 @@ func resourceTencentCloudClsRemoteWriteTaskUpdate(d *schema.ResourceData, meta i
 		return fmt.Errorf("id is broken,%s", d.Id())
 	}
 
-	taskId := idSplit[0]
-	topicId := idSplit[1]
+	topicId := idSplit[0]
+	taskId := idSplit[1]
 
 	needChange := false
 	mutableArgs := []string{"name", "net_type", "vpc_id", "target", "remote_write_url", "auth_type", "enable", "virtual_gateway_type", "auth_info"}
@@ -484,8 +484,8 @@ func resourceTencentCloudClsRemoteWriteTaskDelete(d *schema.ResourceData, meta i
 		return fmt.Errorf("id is broken,%s", d.Id())
 	}
 
-	taskId := idSplit[0]
-	topicId := idSplit[1]
+	topicId := idSplit[0]
+	taskId := idSplit[1]
 
 	request := cls.NewDeleteRemoteWriteTaskRequest()
 	request.TaskId = helper.String(taskId)

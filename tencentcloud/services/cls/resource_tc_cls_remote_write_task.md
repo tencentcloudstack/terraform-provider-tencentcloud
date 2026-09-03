@@ -3,77 +3,29 @@ Provides a resource to create a CLS (Cloud Log Service) remote write task.
 Example Usage
 
 ```hcl
-resource "tencentcloud_cls_logset" "example" {
-  logset_name = "tf-example-remote-write"
-  tags = {
-    createBy = "Terraform"
-  }
-}
-
-resource "tencentcloud_cls_topic" "example" {
-  topic_name           = "tf-example-remote-write"
-  logset_id            = tencentcloud_cls_logset.example.id
-  auto_split           = false
-  max_split_partitions = 20
-  partition_count      = 1
-  period               = 10
-  storage_type         = "hot"
-  tags = {
-    createBy = "Terraform"
-  }
-}
-
 resource "tencentcloud_cls_remote_write_task" "example" {
-  topic_id         = tencentcloud_cls_topic.example.id
-  name             = "tf-example-remote-write"
-  target           = "prometheus"
-  remote_write_url = "http://prometheus-server.monitoring.svc.cluster.local:9090/api/v1/write"
-  auth_type        = 0
-  net_type         = 1
-  vpc_id           = "vpc-xxxxxxxx"
-  enable           = 1
-}
-```
-
-Example with basic auth:
-
-```hcl
-resource "tencentcloud_cls_remote_write_task" "basic_auth_example" {
-  topic_id         = tencentcloud_cls_topic.example.id
-  name             = "tf-example-remote-write-basic-auth"
-  target           = "prometheus"
-  remote_write_url = "https://prometheus.example.com/api/v1/write"
-  auth_type        = 1
-  net_type         = 2
+  topic_id             = "d22f6119-68d7-4fce-abb1-4db8518b5ec4"
+  name                 = "tf-example"
+  target               = "TencentCloud_Prometheus"
+  remote_write_url     = "http://172.16.0.14:9090/api/v1/prom/write"
+  auth_type            = 1
+  net_type             = 1
+  vpc_id               = "vpc-mkegckdp"
+  virtual_gateway_type = 1025
+  instance_id          = "prom-qha7cws8"
+  has_services_log     = 2
 
   auth_info {
-    username = "admin"
-    password = "my-password"
-  }
-}
-```
-
-Example with token auth:
-
-```hcl
-resource "tencentcloud_cls_remote_write_task" "token_auth_example" {
-  topic_id         = tencentcloud_cls_topic.example.id
-  name             = "tf-example-remote-write-token-auth"
-  target           = "prometheus"
-  remote_write_url = "https://prometheus.example.com/api/v1/write"
-  auth_type        = 2
-  net_type         = 2
-
-  auth_info {
-    token = "my-token-string"
+    token    = "1309118522"
+    password = "FqzgGX3Ty9TQs10ZtVaD5d255Ko"
   }
 }
 ```
 
 Import
 
-CLS remote write task can be imported using the composite id, e.g. the format is `task_id#topic_id`
+CLS remote write task can be imported using the composite id, e.g. the format is `topic_id#task_id`
 
 ```
-$ terraform import tencentcloud_cls_remote_write_task.example task-id-xxxxxx#topic-id-xxxxxx
+terraform import tencentcloud_cls_remote_write_task.example d22f6119-68d7-4fce-abb1-4db8518b5ec4#task_id
 ```
