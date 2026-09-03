@@ -16,7 +16,7 @@ func DataSourceTencentCloudCatProbeTasks() *schema.Resource {
 	return &schema.Resource{
 		Read: dataSourceTencentCloudCatProbeTasksRead,
 		Schema: map[string]*schema.Schema{
-			"task_i_ds": {
+			"task_ids": {
 				Type:        schema.TypeList,
 				Optional:    true,
 				Description: "Task ID list.",
@@ -232,13 +232,13 @@ func dataSourceTencentCloudCatProbeTasksRead(d *schema.ResourceData, meta interf
 	catService := CatService{client: meta.(tccommon.ProviderMeta).GetAPIV3Conn()}
 
 	paramMap := make(map[string]interface{})
-	if v, ok := d.GetOk("task_i_ds"); ok {
+	if v, ok := d.GetOk("task_ids"); ok {
 		taskIDs := v.([]interface{})
 		tmpList := make([]*string, 0, len(taskIDs))
 		for _, item := range taskIDs {
 			tmpList = append(tmpList, helper.String(item.(string)))
 		}
-		paramMap["task_i_ds"] = tmpList
+		paramMap["task_ids"] = tmpList
 	}
 	if v, ok := d.GetOk("task_name"); ok {
 		paramMap["task_name"] = helper.String(v.(string))

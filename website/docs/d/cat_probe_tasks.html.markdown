@@ -58,7 +58,7 @@ The following arguments are supported:
 * `tag_filters` - (Optional, List) Tag filters.
 * `target_address` - (Optional, String) Target address.
 * `task_category` - (Optional, List: [`Int`]) Task category list.
-* `task_i_ds` - (Optional, List: [`String`]) Task ID list.
+* `task_ids` - (Optional, List: [`String`]) Task ID list.
 * `task_name` - (Optional, String) Task name.
 * `task_status` - (Optional, List: [`Int`]) Task status list.
 * `task_type` - (Optional, List: [`Int`]) Task type list.

@@ -224,7 +224,7 @@ func TestCatProbeTasksDS_Schema(t *testing.T) {
 	res := svccat.DataSourceTencentCloudCatProbeTasks()
 
 	assert.NotNil(t, res)
-	assert.Contains(t, res.Schema, "task_i_ds")
+	assert.Contains(t, res.Schema, "task_ids")
 	assert.Contains(t, res.Schema, "task_name")
 	assert.Contains(t, res.Schema, "target_address")
 	assert.Contains(t, res.Schema, "task_status")
@@ -239,7 +239,7 @@ func TestCatProbeTasksDS_Schema(t *testing.T) {
 	assert.Contains(t, res.Schema, "total")
 	assert.Contains(t, res.Schema, "result_output_file")
 
-	taskIDsSchema := res.Schema["task_i_ds"]
+	taskIDsSchema := res.Schema["task_ids"]
 	assert.Equal(t, schema.TypeList, taskIDsSchema.Type)
 	assert.True(t, taskIDsSchema.Optional)
 
