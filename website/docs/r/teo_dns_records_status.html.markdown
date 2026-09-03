@@ -17,9 +17,9 @@ Provides a resource to manage TEO (EdgeOne) DNS records status config.
 
 ```hcl
 resource "tencentcloud_teo_dns_records_status" "example" {
-  zone_id = "zone-3edjdliiw3he"
-
-  records_to_enable = ["record-1234567890"]
+  zone_id    = "zone-3edjdliiw3he"
+  records_id = "record-1234567890"
+  status     = "enable"
 }
 ```
 
@@ -27,9 +27,9 @@ resource "tencentcloud_teo_dns_records_status" "example" {
 
 ```hcl
 resource "tencentcloud_teo_dns_records_status" "example" {
-  zone_id = "zone-3edjdliiw3he"
-
-  records_to_disable = ["record-1234567890"]
+  zone_id    = "zone-3edjdliiw3he"
+  records_id = "record-1234567890"
+  status     = "disable"
 }
 ```
 
@@ -37,9 +37,9 @@ resource "tencentcloud_teo_dns_records_status" "example" {
 
 The following arguments are supported:
 
+* `records_id` - (Required, String, ForceNew) DNS record ID, combined with `zone_id` as the unique ID of the resource.
+* `status` - (Required, String) DNS record status. Valid values: `enable` (enabled), `disable` (disabled).
 * `zone_id` - (Required, String, ForceNew) Site ID.
-* `records_to_disable` - (Optional, List: [`String`]) DNS record ID list to be disabled, only manages a single resource, pass in a single record ID.
-* `records_to_enable` - (Optional, List: [`String`]) DNS record ID list to be enabled, only manages a single resource, pass in a single record ID.
 
 ## Attributes Reference
 
@@ -51,9 +51,9 @@ In addition to all arguments above, the following attributes are exported:
 
 ## Import
 
-TEO (EdgeOne) DNS records status config can be imported using the `zone_id`, e.g.
+TEO (EdgeOne) DNS records status config can be imported using the composite id `zone_id#records_id`, e.g.
 
 ```
-terraform import tencentcloud_teo_dns_records_status.example zone-3edjdliiw3he
+terraform import tencentcloud_teo_dns_records_status.example zone-3edjdliiw3he#record-1234567890
 ```
 
