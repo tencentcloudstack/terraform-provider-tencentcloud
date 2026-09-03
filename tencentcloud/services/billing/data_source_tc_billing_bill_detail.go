@@ -15,11 +15,6 @@ func DataSourceTencentCloudBillingBillDetail() *schema.Resource {
 	return &schema.Resource{
 		Read: dataSourceTencentCloudBillingBillDetailRead,
 		Schema: map[string]*schema.Schema{
-			"period_type": {
-				Type:        schema.TypeString,
-				Optional:    true,
-				Description: "Period type, byUsedTime (by billing cycle) / byPayTime (by deduction cycle). It needs to be consistent with the cycle type of the bill for that month in the cost center. Deprecated but kept for compatibility.",
-			},
 			"month": {
 				Type:        schema.TypeString,
 				Optional:    true,
@@ -39,11 +34,6 @@ func DataSourceTencentCloudBillingBillDetail() *schema.Resource {
 				Type:        schema.TypeInt,
 				Optional:    true,
 				Description: "Whether to return the total number of records, 1 means yes, 0 means no.",
-			},
-			"product_code": {
-				Type:        schema.TypeString,
-				Optional:    true,
-				Description: "Sub-product code. Deprecated but kept for compatibility.",
 			},
 			"pay_mode": {
 				Type:        schema.TypeString,
@@ -522,9 +512,6 @@ func dataSourceTencentCloudBillingBillDetailRead(d *schema.ResourceData, meta in
 	)
 
 	paramMap := make(map[string]interface{})
-	if v, ok := d.GetOk("period_type"); ok {
-		paramMap["PeriodType"] = helper.String(v.(string))
-	}
 	if v, ok := d.GetOk("month"); ok {
 		paramMap["Month"] = helper.String(v.(string))
 	}
@@ -536,9 +523,6 @@ func dataSourceTencentCloudBillingBillDetailRead(d *schema.ResourceData, meta in
 	}
 	if v, ok := d.GetOkExists("need_record_num"); ok {
 		paramMap["NeedRecordNum"] = helper.Int64(int64(v.(int)))
-	}
-	if v, ok := d.GetOk("product_code"); ok {
-		paramMap["ProductCode"] = helper.String(v.(string))
 	}
 	if v, ok := d.GetOk("pay_mode"); ok {
 		paramMap["PayMode"] = helper.String(v.(string))
@@ -853,7 +837,7 @@ func dataSourceTencentCloudBillingBillDetailRead(d *schema.ResourceData, meta in
 
 	output, ok := d.GetOk("result_output_file")
 	if ok && output.(string) != "" {
-		if e := tccommon.WriteToFile(output.(string), d); e != nil {
+		if e := tccommon.WriteToFile(output.(string), detailSetList); e != nil {
 			return e
 		}
 	}

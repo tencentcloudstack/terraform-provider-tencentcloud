@@ -9,12 +9,10 @@
 数据源 `tencentcloud_billing_bill_detail` SHALL 支持以下可选输入参数，并 MUST 返回以下输出属性。
 
 **Input Parameters (All Optional):**
-- `period_type` (String): 周期类型，byUsedTime 按计费周期 / byPayTime 按扣费周期（已废弃，保留兼容）
 - `month` (String): 月份，格式 yyyy-mm；与 begin_time/end_time 二选一
 - `begin_time` (String): 周期开始时间，格式 yyyy-mm-dd hh:ii:ss；与 end_time 成对出现，且必须同月
 - `end_time` (String): 周期结束时间，格式 yyyy-mm-dd hh:ii:ss
 - `need_record_num` (Int): 是否返回总记录数，1=需要，0=不需要
-- `product_code` (String): 子产品编码（已废弃，保留兼容）
 - `pay_mode` (String): 付费模式，prePay 包年包月 / postPay 按量计费
 - `resource_id` (String): 资源 ID
 - `action_type` (String): 交易类型名称

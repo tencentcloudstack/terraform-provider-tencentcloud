@@ -6,14 +6,14 @@
 ## 2. Service 层实现
 
 - [x] 2.1 在 `tencentcloud/services/billing/service_tencentcloud_billing.go` 中新增（或补充）`DescribeBillingBillDetailByFilter` 方法
-- [x] 2.2 方法内部封装 `DescribeBillDetail` 调用，将入参 map 转换为 `DescribeBillDetailRequest`（period_type、month、begin_time、end_time、need_record_num、product_code、pay_mode、resource_id、action_type、project_id、business_code、context、payer_uin）
+- [x] 2.2 方法内部封装 `DescribeBillDetail` 调用，将入参 map 转换为 `DescribeBillDetailRequest`（month、begin_time、end_time、need_record_num、pay_mode、resource_id、action_type、project_id、business_code、context、payer_uin）
 - [x] 2.3 实现自动分页：使用 Offset 递增、Limit=300 循环调用，当某次返回条数 < Limit 时停止，合并所有 DetailSet（不依赖 Total 作为终止条件，避免 Total 缺失时提前中断丢数据）
 - [x] 2.4 同时返回 Total、Context 顶层字段
 
 ## 3. Data Source Schema 与 Read 实现
 
 - [x] 3.1 创建 `tencentcloud/services/billing/data_source_tc_billing_bill_detail.go`，定义 `DataSourceTencentCloudBillingBillDetail()` 返回 `*schema.Resource`
-- [x] 3.2 定义可选输入参数 schema：period_type、month、begin_time、end_time、need_record_num(int)、product_code、pay_mode、resource_id、action_type、project_id(int)、business_code、context、payer_uin、result_output_file
+- [x] 3.2 定义可选输入参数 schema：month、begin_time、end_time、need_record_num(int)、pay_mode、resource_id、action_type、project_id(int)、business_code、context、payer_uin、result_output_file
 - [x] 3.3 定义输出 `detail_set`（TypeList）schema，展开 BillDetail 全部字段；其中 component_set 为 TypeList（含 component_config 子 TypeList）、tags 为 TypeList（含 tag_key/tag_value）、associated_order 为 TypeList（含 6 个订单字段）、price_info 为 TypeList of String
 - [x] 3.4 定义顶层输出 `total`(Int)、`context`(String)
 - [x] 3.5 实现 `dataSourceTencentCloudBillingBillDetailRead`：defer LogElapsed/InconsistentCheck，组装 paramMap 调用 service 层

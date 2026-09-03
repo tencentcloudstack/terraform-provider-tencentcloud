@@ -51,10 +51,9 @@
 
 ### 决策 4: 入参映射
 - 所有入参均为 Optional（云 API 也均非必填，但 month 与 begin_time/end_time 二选一）
-- `period_type`、`product_code` 在云 API 中标记为 Deprecated，但仍作为可选参数保留以兼容存量用户习惯，在 schema description 中注明
 - `need_record_num` 为 int64 类型
 - `project_id` 为 int64 类型
-- **理由**: 完全遵循云 API 入参定义，保留已废弃但可用的参数。
+- **理由**: 完全遵循云 API 入参定义；`period_type`、`product_code` 已从官方文档移除且 SDK 标注 Deprecated/未开放，实测传参不生效，故从 schema 中移除。
 
 ### 决策 5: 错误处理与重试
 - Read 方法使用 `resource.Retry(tccommon.ReadRetryTimeout, ...)` 包裹 API 调用

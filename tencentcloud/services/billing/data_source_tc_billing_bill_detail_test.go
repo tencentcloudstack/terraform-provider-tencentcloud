@@ -298,12 +298,10 @@ func TestBillingBillDetailDS_ReadParamPassing(t *testing.T) {
 
 	patches.ApplyMethodFunc(billingClient, "DescribeBillDetail", func(request *billingv20180709.DescribeBillDetailRequest) (*billingv20180709.DescribeBillDetailResponse, error) {
 		// 断言所有 Optional 入参都被正确透传到 request（「有」分支）
-		assert.Equal(t, "byUsedTime", *request.PeriodType)
 		assert.Equal(t, "2024-01", *request.Month)
 		assert.Equal(t, "2024-01-01 00:00:00", *request.BeginTime)
 		assert.Equal(t, "2024-01-31 23:59:59", *request.EndTime)
 		assert.Equal(t, int64(1), *request.NeedRecordNum)
-		assert.Equal(t, "p_cvm", *request.ProductCode)
 		assert.Equal(t, "postPay", *request.PayMode)
 		assert.Equal(t, "ins-xxxxxxxx", *request.ResourceId)
 		assert.Equal(t, "按量计费日结", *request.ActionType)
@@ -324,12 +322,10 @@ func TestBillingBillDetailDS_ReadParamPassing(t *testing.T) {
 	meta := newMockMetaBillingBillDetailDS()
 	res := billing.DataSourceTencentCloudBillingBillDetail()
 	d := schema.TestResourceDataRaw(t, res.Schema, map[string]interface{}{
-		"period_type":     "byUsedTime",
 		"month":           "2024-01",
 		"begin_time":      "2024-01-01 00:00:00",
 		"end_time":        "2024-01-31 23:59:59",
 		"need_record_num": 1,
-		"product_code":    "p_cvm",
 		"pay_mode":        "postPay",
 		"resource_id":     "ins-xxxxxxxx",
 		"action_type":     "按量计费日结",
@@ -357,11 +353,9 @@ func TestBillingBillDetailDS_ReadMinimalArgs(t *testing.T) {
 		assert.Equal(t, uint64(300), *request.Limit)
 		// 空入参 {}，其余可选入参均为 nil（未被设置）
 		assert.Nil(t, request.Month)
-		assert.Nil(t, request.PeriodType)
 		assert.Nil(t, request.BeginTime)
 		assert.Nil(t, request.EndTime)
 		assert.Nil(t, request.NeedRecordNum)
-		assert.Nil(t, request.ProductCode)
 		assert.Nil(t, request.PayMode)
 		assert.Nil(t, request.ResourceId)
 		assert.Nil(t, request.ActionType)

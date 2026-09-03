@@ -45,8 +45,6 @@ The following arguments are supported:
 * `need_record_num` - (Optional, Int) Whether to return the total number of records, 1 means yes, 0 means no.
 * `pay_mode` - (Optional, String) Payment mode, prePay (prepaid) / postPay (pay-as-you-go).
 * `payer_uin` - (Optional, String) Payer account ID (the account ID is the user's unique account identifier on Tencent Cloud). Defaults to querying the current account's bill.
-* `period_type` - (Optional, String) Period type, byUsedTime (by billing cycle) / byPayTime (by deduction cycle). It needs to be consistent with the cycle type of the bill for that month in the cost center. Deprecated but kept for compatibility.
-* `product_code` - (Optional, String) Sub-product code. Deprecated but kept for compatibility.
 * `project_id` - (Optional, Int) Project ID.
 * `resource_id` - (Optional, String) Resource ID.
 * `result_output_file` - (Optional, String) Used to save results.

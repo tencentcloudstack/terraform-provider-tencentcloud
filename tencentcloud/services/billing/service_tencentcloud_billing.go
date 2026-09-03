@@ -232,9 +232,6 @@ func (me *BillingService) DescribeBillingBillDetailByFilter(ctx context.Context,
 	}()
 
 	for k, v := range param {
-		if k == "PeriodType" {
-			request.PeriodType = v.(*string)
-		}
 		if k == "Month" {
 			request.Month = v.(*string)
 		}
@@ -246,9 +243,6 @@ func (me *BillingService) DescribeBillingBillDetailByFilter(ctx context.Context,
 		}
 		if k == "NeedRecordNum" {
 			request.NeedRecordNum = v.(*int64)
-		}
-		if k == "ProductCode" {
-			request.ProductCode = v.(*string)
 		}
 		if k == "PayMode" {
 			request.PayMode = v.(*string)
