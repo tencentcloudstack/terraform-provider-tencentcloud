@@ -281,6 +281,7 @@ func (me *BillingService) DescribeBillingBillDetailByFilter(ctx context.Context,
 	for {
 		request.Offset = &offset
 		request.Limit = &limit
+		var pageLen uint64
 		err := resource.Retry(tccommon.ReadRetryTimeout, func() *resource.RetryError {
 			ratelimit.Check(request.GetAction())
 			result, e := me.client.UseBillingV20180709Client().DescribeBillDetail(request)
@@ -298,6 +299,7 @@ func (me *BillingService) DescribeBillingBillDetailByFilter(ctx context.Context,
 				return resource.NonRetryableError(fmt.Errorf("Describe billing bill detail failed, DetailSet is nil."))
 			}
 
+			pageLen = uint64(len(result.Response.DetailSet))
 			detailSet = append(detailSet, result.Response.DetailSet...)
 			if result.Response.Total != nil {
 				total = *result.Response.Total
@@ -313,7 +315,7 @@ func (me *BillingService) DescribeBillingBillDetailByFilter(ctx context.Context,
 			return
 		}
 
-		if uint64(len(detailSet)) >= total || total == 0 {
+		if pageLen < limit {
 			break
 		}
 

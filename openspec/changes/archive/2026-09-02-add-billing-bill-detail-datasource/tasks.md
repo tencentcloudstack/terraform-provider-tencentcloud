@@ -7,7 +7,7 @@
 
 - [x] 2.1 在 `tencentcloud/services/billing/service_tencentcloud_billing.go` 中新增（或补充）`DescribeBillingBillDetailByFilter` 方法
 - [x] 2.2 方法内部封装 `DescribeBillDetail` 调用，将入参 map 转换为 `DescribeBillDetailRequest`（period_type、month、begin_time、end_time、need_record_num、product_code、pay_mode、resource_id、action_type、project_id、business_code、context、payer_uin）
-- [x] 2.3 实现自动分页：使用 Offset 递增、Limit=300 循环调用，直到累计返回记录数达到 Total 或某次返回为空，合并所有 DetailSet
+- [x] 2.3 实现自动分页：使用 Offset 递增、Limit=300 循环调用，当某次返回条数 < Limit 时停止，合并所有 DetailSet（不依赖 Total 作为终止条件，避免 Total 缺失时提前中断丢数据）
 - [x] 2.4 同时返回 Total、Context 顶层字段
 
 ## 3. Data Source Schema 与 Read 实现
@@ -17,7 +17,7 @@
 - [x] 3.3 定义输出 `detail_set`（TypeList）schema，展开 BillDetail 全部字段；其中 component_set 为 TypeList（含 component_config 子 TypeList）、tags 为 TypeList（含 tag_key/tag_value）、associated_order 为 TypeList（含 6 个订单字段）、price_info 为 TypeList of String
 - [x] 3.4 定义顶层输出 `total`(Int)、`context`(String)
 - [x] 3.5 实现 `dataSourceTencentCloudBillingBillDetailRead`：defer LogElapsed/InconsistentCheck，组装 paramMap 调用 service 层
-- [x] 3.6 在 `resource.Retry(tccommon.ReadRetryTimeout)` 内调用 service 方法，失败用 `tccommon.RetryError` 包装；成功后检查空响应返回 `NonRetryableError` 并打印 `[DATASOURCE] read empty, skip SetId`
+- [x] 3.6 在 `resource.Retry(tccommon.ReadRetryTimeout)` 内调用 service 方法，失败用 `tccommon.RetryError` 包装；`DetailSet` 为空（查询无结果）时正常返回空列表、不报错，`total=0`
 - [x] 3.7 retry 块外遍历 DetailSet 填充 `detail_set` 列表（逐字段 nil 检查后再 set），设置 `total`、`context`，`d.SetId(helper.BuildToken())`，处理 `result_output_file` 输出
 
 ## 4. Provider 注册

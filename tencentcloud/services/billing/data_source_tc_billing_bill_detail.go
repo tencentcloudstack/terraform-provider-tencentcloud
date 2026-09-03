@@ -2,8 +2,6 @@ package billing
 
 import (
 	"context"
-	"fmt"
-	"log"
 
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
@@ -573,11 +571,6 @@ func dataSourceTencentCloudBillingBillDetailRead(d *schema.ResourceData, meta in
 		result, totalRet, contextRet, e := service.DescribeBillingBillDetailByFilter(ctx, paramMap)
 		if e != nil {
 			return tccommon.RetryError(e)
-		}
-
-		if len(result) == 0 {
-			log.Printf("[DATASOURCE] read empty, skip SetId")
-			return resource.NonRetryableError(fmt.Errorf("billing bill detail read empty, result is nil"))
 		}
 
 		respData = result

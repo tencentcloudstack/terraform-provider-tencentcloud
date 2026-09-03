@@ -89,7 +89,7 @@
 #### Scenario: Empty result
 
 - **WHEN** 查询条件下没有账单明细数据（API 返回空 DetailSet）
-- **THEN** 数据源返回 `NonRetryableError`，不清空 id，上层任务以「重试耗尽」形式失败，便于人工介入排障
+- **THEN** 数据源正常返回，`detail_set` 为空列表、`total=0`，不报错（按 resource_id 或组合条件过滤查不到数据是常见合法场景）
 
 #### Scenario: Output to file
 
@@ -118,5 +118,5 @@ Provider SHALL 注册 `tencentcloud_billing_bill_detail` 数据源，使其 MUST
 #### Scenario: API success with empty response
 
 - **WHEN** `DescribeBillDetail` 返回的 `Response` 为 nil 或 `DetailSet` 为空
-- **THEN** Read 方法返回 `NonRetryableError`，保留 `log.Printf("[DATASOURCE] read empty, skip SetId")` 日志，不调用 `d.SetId("")`
+- **THEN** `DetailSet` 为空时 Read 正常返回空列表、不报错；仅当 `Response` 为 nil 时才返回 `NonRetryableError`
 

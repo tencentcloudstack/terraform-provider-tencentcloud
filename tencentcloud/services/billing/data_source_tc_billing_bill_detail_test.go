@@ -186,7 +186,11 @@ func TestBillingBillDetailDS_ReadWithEmptyResponse(t *testing.T) {
 	})
 
 	err := res.Read(d, meta)
-	assert.Error(t, err)
+	assert.NoError(t, err)
+
+	detailSet := d.Get("detail_set").([]interface{})
+	assert.Len(t, detailSet, 0)
+	assert.Equal(t, 0, d.Get("total").(int))
 }
 
 func TestBillingBillDetailDS_ReadPagination(t *testing.T) {
@@ -238,6 +242,151 @@ func TestBillingBillDetailDS_ReadPagination(t *testing.T) {
 	detailSet := d.Get("detail_set").([]interface{})
 	assert.Len(t, detailSet, 301)
 	assert.Equal(t, 301, d.Get("total").(int))
+}
+
+func TestBillingBillDetailDS_ReadPaginationNoTotal(t *testing.T) {
+	patches := gomonkey.NewPatches()
+	defer patches.Reset()
+
+	billingClient := &billingv20180709.Client{}
+	patches.ApplyMethodReturn(newMockMetaBillingBillDetailDS().client, "UseBillingV20180709Client", billingClient)
+
+	callCount := 0
+	patches.ApplyMethodFunc(billingClient, "DescribeBillDetail", func(request *billingv20180709.DescribeBillDetailRequest) (*billingv20180709.DescribeBillDetailResponse, error) {
+		callCount++
+		resp := billingv20180709.NewDescribeBillDetailResponse()
+		var detailSet []*billingv20180709.BillDetail
+		if callCount == 1 {
+			// first page returns 300 items, Total is NOT returned (need_record_num not set)
+			for i := 0; i < 300; i++ {
+				detailSet = append(detailSet, &billingv20180709.BillDetail{
+					BillId: billingBillDetailPtrStr("bill-page1"),
+				})
+			}
+		} else {
+			// second page returns 1 item
+			detailSet = append(detailSet, &billingv20180709.BillDetail{
+				BillId: billingBillDetailPtrStr("bill-page2"),
+			})
+		}
+		resp.Response = &billingv20180709.DescribeBillDetailResponseParams{
+			DetailSet: detailSet,
+		}
+		return resp, nil
+	})
+
+	meta := newMockMetaBillingBillDetailDS()
+	res := billing.DataSourceTencentCloudBillingBillDetail()
+	d := schema.TestResourceDataRaw(t, res.Schema, map[string]interface{}{
+		"month": "2024-01",
+	})
+
+	err := res.Read(d, meta)
+	assert.NoError(t, err)
+	assert.Equal(t, 2, callCount)
+
+	detailSet := d.Get("detail_set").([]interface{})
+	assert.Len(t, detailSet, 301)
+}
+
+func TestBillingBillDetailDS_ReadParamPassing(t *testing.T) {
+	patches := gomonkey.NewPatches()
+	defer patches.Reset()
+
+	billingClient := &billingv20180709.Client{}
+	patches.ApplyMethodReturn(newMockMetaBillingBillDetailDS().client, "UseBillingV20180709Client", billingClient)
+
+	patches.ApplyMethodFunc(billingClient, "DescribeBillDetail", func(request *billingv20180709.DescribeBillDetailRequest) (*billingv20180709.DescribeBillDetailResponse, error) {
+		// 断言所有 Optional 入参都被正确透传到 request（「有」分支）
+		assert.Equal(t, "byUsedTime", *request.PeriodType)
+		assert.Equal(t, "2024-01", *request.Month)
+		assert.Equal(t, "2024-01-01 00:00:00", *request.BeginTime)
+		assert.Equal(t, "2024-01-31 23:59:59", *request.EndTime)
+		assert.Equal(t, int64(1), *request.NeedRecordNum)
+		assert.Equal(t, "p_cvm", *request.ProductCode)
+		assert.Equal(t, "postPay", *request.PayMode)
+		assert.Equal(t, "ins-xxxxxxxx", *request.ResourceId)
+		assert.Equal(t, "按量计费日结", *request.ActionType)
+		assert.Equal(t, int64(1002227), *request.ProjectId)
+		assert.Equal(t, "p_cvm", *request.BusinessCode)
+		assert.Equal(t, "ctx-input", *request.Context)
+		assert.Equal(t, "909619400", *request.PayerUin)
+
+		resp := billingv20180709.NewDescribeBillDetailResponse()
+		resp.Response = &billingv20180709.DescribeBillDetailResponseParams{
+			Total:     billingBillDetailPtrUint64(1),
+			DetailSet: []*billingv20180709.BillDetail{{BillId: billingBillDetailPtrStr("bill-001")}},
+			Context:   billingBillDetailPtrStr("ctx-output"),
+		}
+		return resp, nil
+	})
+
+	meta := newMockMetaBillingBillDetailDS()
+	res := billing.DataSourceTencentCloudBillingBillDetail()
+	d := schema.TestResourceDataRaw(t, res.Schema, map[string]interface{}{
+		"period_type":     "byUsedTime",
+		"month":           "2024-01",
+		"begin_time":      "2024-01-01 00:00:00",
+		"end_time":        "2024-01-31 23:59:59",
+		"need_record_num": 1,
+		"product_code":    "p_cvm",
+		"pay_mode":        "postPay",
+		"resource_id":     "ins-xxxxxxxx",
+		"action_type":     "按量计费日结",
+		"project_id":      1002227,
+		"business_code":   "p_cvm",
+		"context":         "ctx-input",
+		"payer_uin":       "909619400",
+	})
+
+	err := res.Read(d, meta)
+	assert.NoError(t, err)
+	assert.Equal(t, 1, d.Get("total").(int))
+}
+
+func TestBillingBillDetailDS_ReadMinimalArgs(t *testing.T) {
+	patches := gomonkey.NewPatches()
+	defer patches.Reset()
+
+	billingClient := &billingv20180709.Client{}
+	patches.ApplyMethodReturn(newMockMetaBillingBillDetailDS().client, "UseBillingV20180709Client", billingClient)
+
+	patches.ApplyMethodFunc(billingClient, "DescribeBillDetail", func(request *billingv20180709.DescribeBillDetailRequest) (*billingv20180709.DescribeBillDetailResponse, error) {
+		// 必选参数 offset/limit 由内部自动兜底，用户无需传
+		assert.Equal(t, uint64(0), *request.Offset)
+		assert.Equal(t, uint64(300), *request.Limit)
+		// 空入参 {}，其余可选入参均为 nil（未被设置）
+		assert.Nil(t, request.Month)
+		assert.Nil(t, request.PeriodType)
+		assert.Nil(t, request.BeginTime)
+		assert.Nil(t, request.EndTime)
+		assert.Nil(t, request.NeedRecordNum)
+		assert.Nil(t, request.ProductCode)
+		assert.Nil(t, request.PayMode)
+		assert.Nil(t, request.ResourceId)
+		assert.Nil(t, request.ActionType)
+		assert.Nil(t, request.ProjectId)
+		assert.Nil(t, request.BusinessCode)
+		assert.Nil(t, request.Context)
+		assert.Nil(t, request.PayerUin)
+
+		resp := billingv20180709.NewDescribeBillDetailResponse()
+		resp.Response = &billingv20180709.DescribeBillDetailResponseParams{
+			Total:     billingBillDetailPtrUint64(1),
+			DetailSet: []*billingv20180709.BillDetail{{BillId: billingBillDetailPtrStr("bill-001")}},
+		}
+		return resp, nil
+	})
+
+	meta := newMockMetaBillingBillDetailDS()
+	res := billing.DataSourceTencentCloudBillingBillDetail()
+	// 最小测试单元：空入参 {}
+	d := schema.TestResourceDataRaw(t, res.Schema, map[string]interface{}{})
+
+	err := res.Read(d, meta)
+	assert.NoError(t, err)
+	assert.NotEmpty(t, d.Id())
+	assert.Equal(t, 1, d.Get("total").(int))
 }
 
 func TestBillingBillDetailDS_Schema(t *testing.T) {

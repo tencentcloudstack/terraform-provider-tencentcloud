@@ -59,9 +59,9 @@
 ### 决策 5: 错误处理与重试
 - Read 方法使用 `resource.Retry(tccommon.ReadRetryTimeout, ...)` 包裹 API 调用
 - 失败时使用 `tccommon.RetryError(e)` 包装返回
-- 在 retry 块内检查返回空（response==nil 或 DetailSet 为空），若为空直接返回 `NonRetryableError`，不清空 id（遵循数据源规则）
+- `Response` 为 nil（真正的异常）时返回 `NonRetryableError`；`DetailSet` 为空（查询无结果）时**正常返回空列表、不报错**（按 resource_id 或组合条件过滤查不到数据是常见合法场景，报错会让 plan 直接失败）
 - retry 块外设置 schema 字段、SetId
-- **理由**: 遵循项目数据源 Read 重试与空响应处理规则。
+- **理由**: 遵循项目数据源 Read 重试与空响应处理规则；空结果属于正常业务场景而非错误。
 
 ### 决策 6: 测试方式
 - 新增资源使用 mock（gomonkey）对云 API 进行 mock，只测试业务代码逻辑
