@@ -11,6 +11,8 @@ description: |-
 
 Provides a resource to manage TEO (EdgeOne) DNS records status config.
 
+~> **NOTE:** This resource is currently used to manage default DNS resolution. The same DNS record cannot be used simultaneously with the tencentcloud_teo_dns_record resource.
+
 ## Example Usage
 
 ### Enable a DNS record
