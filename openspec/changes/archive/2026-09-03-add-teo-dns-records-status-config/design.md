@@ -14,9 +14,8 @@ TEO（EdgeOne）DNS 记录的启用/停用状态目前无法通过 Terraform 声
 - 参照其他 config 类型资源做重构，schema 字段只需要 Modify 接口的参数字段（`zone_id`、`records_to_enable`、`records_to_disable`），不需要暴露 Describe 接口的查询参数（`filters`、`sort_by`、`sort_order`、`match`）和返回的列表数据（`dns_records`）。
 - 必须保持向后兼容（新增资源，无破坏性）。
 - 调用云 API 需以 `tccommon.ReadRetryTimeout`（Read）/`tccommon.WriteRetryTimeout`（Update）作为超时时间添加 retry 处理，失败时用 `tccommon.RetryError()` 包装。
-- `ModifyDnsRecordsStatus` 为异步接口，调用后需调用 `DescribeDnsRecords` 轮询直到接口生效（记录 `status` 达到 enable/disable 期望值）。
 - Read 回填前需判断 Response 字段是否为 nil，nil 则不调用 set；若云 API 返回空，先打印 `log.Printf("[CRUD] xxx id=%s", d.Id())` 保留现场再 `d.SetId("")`。
-- Create 完成后必须检查返回值是否为空，若为空返回 `NonRetryableError`。
+- Create 复用 Update 的简化模式：`d.SetId(zoneId)` 后直接 `return Update(d, meta)`，不在 Create 中重复调用 API 的逻辑。
 - 只管理单个资源，不支持批量：`records_to_enable`/`records_to_disable` 传入单个记录 ID。
 - 资源支持 import，import 时使用 `zone_id` 作为 ID。
 
@@ -51,15 +50,16 @@ TEO（EdgeOne）DNS 记录的启用/停用状态目前无法通过 Terraform 声
 - 用户自定义要求"只管理单个资源，不支持批量"，配置入口为 `zone_id`。
 - import 时使用 `zone_id` 作为 ID，简洁明了。
 
-### Decision 2: Create 复用 Update 逻辑
+### Decision 2: Create 复用 Update 逻辑（简化模式）
 
-**选择**：RESOURCE_KIND_CONFIG 无独立创建接口，Create 函数复用 Update 逻辑：调用 `ModifyDnsRecordsStatus` 设置初始状态，成功后调用 Read 回填。
+**选择**：RESOURCE_KIND_CONFIG 无独立创建接口，Create 函数采用与其他 config 资源（如 `tencentcloud_teo_ddos_protection_config`、`tencentcloud_teo_multi_path_gateway_secret_key_config`）一致的简化模式：仅 `d.SetId(zoneId)` 后直接 `return resourceTencentCloudTeoDnsRecordsStatusUpdate(d, meta)`，不在 Create 中重复调用 `ModifyDnsRecordsStatus` 的逻辑。
 
-**备选**：Create 仅调用 Read 不调用 Modify。
+**备选**：Create 中独立构造 `ModifyDnsRecordsStatusRequest` 并调用 API，再单独轮询状态。
 
 **理由**：
-- CONFIG 资源语义为"资源存在配置就存在"，Create 等同于首次设置配置。
-- 用户提供了 `ModifyDnsRecordsStatus` 作为 Update 接口，Create 复用该接口设置 `records_to_enable`/`records_to_disable` 初始值，符合 CONFIG 资源 RU 模式。
+- CONFIG 资源语义为"资源存在配置就存在"，Create 等同于首次设置配置，Update 已经包含了构造请求、调用 API、retry、调用 Read 回填的全部逻辑。
+- 复用 Update 避免代码重复，与仓库内既有 config 资源实现风格一致，便于维护。
+- Create 设置 ID 后，Update 内通过 `d.HasChange` 判断字段是否变化来决定是否调用 API；对于全新资源，旧状态为空，设置了 `records_to_enable`/`records_to_disable` 即视为变化，会触发调用。
 
 ### Decision 3: Schema 只包含 Modify 接口参数字段
 
@@ -81,15 +81,16 @@ TEO（EdgeOne）DNS 记录的启用/停用状态目前无法通过 Terraform 声
 - Schema 不含 `dns_records` 字段，Read 只需判断资源是否存在。
 - 若 `zone_id` 下存在 DNS 记录，则配置存在；否则配置不存在。
 
-### Decision 5: Update 后轮询 DescribeDnsRecords 确认状态生效
+### Decision 5: Update 后直接调用 Read 回写状态
 
-**选择**：`ModifyDnsRecordsStatus` 为异步接口，调用成功后调用 `DescribeDnsRecords` 轮询，检查目标记录 `status` 是否达到期望值（enable/disable），在 `d.Timeout(schema.TimeoutUpdate)` 内等待。
+**选择**：`ModifyDnsRecordsStatus` 调用成功（retry 块外）后，Update 函数末尾直接调用 `resourceTencentCloudTeoDnsRecordsStatusRead(d, meta)` 回写最新状态，不再单独轮询 `DescribeDnsRecords` 确认状态生效。
 
-**备选**：不等待，立即返回。
+**备选**：调用成功后轮询 `DescribeDnsRecords` 检查记录 `status` 是否达到期望值。
 
 **理由**：
-- 异步接口需轮询确认生效，避免 apply 结束后 Read 拿到中间态导致 plan drift。
-- 与 provider 现有异步操作处理模式一致。
+- 与仓库内其他 config 资源（如 `tencentcloud_teo_ddos_protection_config`、`tencentcloud_teo_multi_path_gateway_secret_key_config`）处理方式一致：调用 Modify 后直接调用 Read 回填，不额外轮询。
+- 避免引入额外的 `checkDnsRecordsStatus` 轮询逻辑与 `Timeouts` 块，保持实现简洁。
+- 若 apply 后 Read 拿到中间态导致 plan drift，用户重跑 apply 即可收敛，与 provider 统一模式一致。
 
 ### Decision 6: Delete 为 no-op
 
@@ -109,9 +110,9 @@ TEO（EdgeOne）DNS 记录的启用/停用状态目前无法通过 Terraform 声
 
 ## Risks / Trade-offs
 
-- **Risk**：`ModifyDnsRecordsStatus` 异步轮询超时 → **Mitigation**：沿用 provider 统一 `RetryError` 模式，用户可重跑 apply 收敛。
+- **Risk**：`ModifyDnsRecordsStatus` 调用后状态可能有短暂中间态 → **Mitigation**：沿用 provider 统一 `RetryError` 模式与"Modify 后调用 Read 回填"模式，用户重跑 apply 即可收敛。
 - **Trade-off**：`records_to_enable`/`records_to_disable` 为 `TypeList` 但语义上只传单个 ID，可能与"只管理单个资源"语义略有张力 → 可接受，schema 类型与云 API 一致，文档约束用法。
-- **Risk**：CONFIG 资源 Create 复用 Update 调用 `ModifyDnsRecordsStatus`，若用户未配置 `records_to_enable`/`records_to_disable` 则不调用 API → **Mitigation**：Create 时检查两个字段是否非空，都为空则跳过 Modify 直接 Read。
+- **Risk**：CONFIG 资源 Create 复用 Update，若用户未配置 `records_to_enable`/`records_to_disable` 则 `d.HasChange` 为 false，Update 不调用 API，仅调用 Read → **Mitigation**：符合 CONFIG 资源语义，配置为空时无需调用 Modify。
 
 ## Migration Plan
 

@@ -22,22 +22,18 @@ The resource ID SHALL be `zone_id`. The resource SHALL support import using the 
 - **THEN** the system SHALL populate the resource state by calling the Read operation
 
 ### Requirement: Resource Create Operation
-The resource Create method SHALL reuse the Update logic because RESOURCE_KIND_CONFIG has no independent creation API. The Create method SHALL call `ModifyDnsRecordsStatus` API with `zone_id` → `request.ZoneId`, `records_to_enable` → `request.RecordsToEnable` (if set), `records_to_disable` → `request.RecordsToDisable` (if set). If both `records_to_enable` and `records_to_disable` are empty, the Create method SHALL skip the `ModifyDnsRecordsStatus` call and directly call Read. The Create method SHALL use `resource.Retry(tccommon.WriteRetryTimeout, ...)` for retry logic, wrapping errors with `tccommon.RetryError()`. After the API call succeeds, the Create method SHALL set the resource ID to `zone_id` and poll `DescribeDnsRecords` until the target record's status reaches the expected value. Setting the ID and other success operations SHALL be performed outside the retry block.
+The resource Create method SHALL reuse the Update logic because RESOURCE_KIND_CONFIG has no independent creation API. The Create method SHALL set the resource ID to `zone_id` via `d.SetId(zoneId)` and then directly return `resourceTencentCloudTeoDnsRecordsStatusUpdate(d, meta)`. The Create method SHALL NOT independently construct the `ModifyDnsRecordsStatus` request or call the API; all API interaction is delegated to the Update method.
 
-#### Scenario: Successful create with records_to_enable
-- **WHEN** user applies a configuration with `records_to_enable` set to a single record ID
-- **THEN** the resource SHALL call `ModifyDnsRecordsStatus` API with `request.ZoneId` and `request.RecordsToEnable` populated
-- **AND** after success, the resource SHALL set the ID to `zone_id` and poll `DescribeDnsRecords` until status reaches `enable`
-
-#### Scenario: Successful create with records_to_disable
-- **WHEN** user applies a configuration with `records_to_disable` set to a single record ID
-- **THEN** the resource SHALL call `ModifyDnsRecordsStatus` API with `request.ZoneId` and `request.RecordsToDisable` populated
-- **AND** after success, the resource SHALL set the ID to `zone_id` and poll `DescribeDnsRecords` until status reaches `disable`
+#### Scenario: Successful create delegates to update
+- **WHEN** user applies a configuration with `records_to_enable` or `records_to_disable` set
+- **THEN** the resource SHALL set the ID to `zone_id`
+- **AND** delegate to the Update method which calls `ModifyDnsRecordsStatus` API when `d.HasChange` is true
+- **AND** finally call Read to populate state
 
 #### Scenario: Create with no records_to_enable and no records_to_disable
 - **WHEN** user applies a configuration with both `records_to_enable` and `records_to_disable` empty
-- **THEN** the resource SHALL skip the `ModifyDnsRecordsStatus` call
-- **AND** set the ID to `zone_id` and call Read to populate state
+- **THEN** the resource SHALL set the ID to `zone_id`
+- **AND** delegate to the Update method which detects no change (`d.HasChange` is false), skips the `ModifyDnsRecordsStatus` call, and only calls Read
 
 #### Scenario: Create API returns error
 - **WHEN** `ModifyDnsRecordsStatus` API returns a retryable error
@@ -62,22 +58,22 @@ The resource Read method SHALL call `DescribeDnsRecords` API with only `zone_id`
 - **THEN** the resource SHALL wrap the error with `tccommon.RetryError()` and retry within `tccommon.ReadRetryTimeout`
 
 ### Requirement: Resource Update Operation
-The resource Update method SHALL call `ModifyDnsRecordsStatus` API when `records_to_enable` or `records_to_disable` changes, with the following parameter mapping:
+The resource Update method SHALL call `ModifyDnsRecordsStatus` API when `records_to_enable` or `records_to_disable` changes (`d.HasChange`), with the following parameter mapping:
 - `zone_id` → `request.ZoneId`
-- `records_to_enable` → `request.RecordsToEnable` (if set)
-- `records_to_disable` → `request.RecordsToDisable` (if set)
+- `records_to_enable` → `request.RecordsToEnable` (if set, converted via `helper.InterfacesStrings`)
+- `records_to_disable` → `request.RecordsToDisable` (if set, converted via `helper.InterfacesStrings`)
 
-The Update method SHALL use `resource.Retry(tccommon.WriteRetryTimeout, ...)` for retry logic, wrapping errors with `tccommon.RetryError()`. Setting the ID and other success operations SHALL be performed outside the retry block. Because `ModifyDnsRecordsStatus` is an asynchronous API, after the API call succeeds, the Update method SHALL call `DescribeDnsRecords` to poll until the target record's `status` reaches the expected value (`enable` or `disable`) or the update timeout is reached. The Update method SHALL end with a call to `resourceTencentCloudTeoDnsRecordsStatusRead(d, meta)` to refresh state.
+The Update method SHALL use `resource.Retry(tccommon.WriteRetryTimeout, ...)` for retry logic, wrapping errors with `tccommon.RetryError()`. Setting the ID and other success operations SHALL be performed outside the retry block. The Update method SHALL end with a call to `resourceTencentCloudTeoDnsRecordsStatusRead(d, meta)` to refresh state. The Update method SHALL NOT poll `DescribeDnsRecords` to confirm status reached an expected value.
 
 #### Scenario: Update records_to_enable
 - **WHEN** `records_to_enable` changes in the Terraform configuration
 - **THEN** the resource SHALL call `ModifyDnsRecordsStatus` with `request.ZoneId` and `request.RecordsToEnable` populated
-- **AND** poll `DescribeDnsRecords` until the target record's `status` reaches `enable` or the update timeout is reached
+- **AND** end with a call to Read to refresh state
 
 #### Scenario: Update records_to_disable
 - **WHEN** `records_to_disable` changes in the Terraform configuration
 - **THEN** the resource SHALL call `ModifyDnsRecordsStatus` with `request.ZoneId` and `request.RecordsToDisable` populated
-- **AND** poll `DescribeDnsRecords` until the target record's `status` reaches `disable` or the update timeout is reached
+- **AND** end with a call to Read to refresh state
 
 #### Scenario: Update API returns error
 - **WHEN** `ModifyDnsRecordsStatus` API returns a retryable error
@@ -108,14 +104,21 @@ The resource SHALL have unit tests in `resource_tc_teo_dns_records_status_config
 #### Scenario: Unit test for Create with records_to_enable
 - **WHEN** the unit test for Create with `records_to_enable` set is executed
 - **THEN** it SHALL mock `ModifyDnsRecordsStatusWithContext` to return success
-- **AND** mock `DescribeDnsRecordsWithContext` to return the DNS records with expected status
-- **AND** verify the resource is created correctly
+- **AND** mock `DescribeDnsRecordsWithContext` to return the DNS records
+- **AND** verify that `ModifyDnsRecordsStatusWithContext` is called with the correct parameters
+- **AND** verify the resource is created correctly with the zone_id as ID
 
 #### Scenario: Unit test for Create with records_to_disable
 - **WHEN** the unit test for Create with `records_to_disable` set is executed
 - **THEN** it SHALL mock `ModifyDnsRecordsStatusWithContext` to return success
-- **AND** mock `DescribeDnsRecordsWithContext` to return the DNS records with expected status
-- **AND** verify the resource is created correctly
+- **AND** mock `DescribeDnsRecordsWithContext` to return the DNS records
+- **AND** verify that `ModifyDnsRecordsStatusWithContext` is called with the correct parameters
+- **AND** verify the resource is created correctly with the zone_id as ID
+
+#### Scenario: Unit test for Create with no records
+- **WHEN** the unit test for Create with both `records_to_enable` and `records_to_disable` empty is executed
+- **THEN** it SHALL mock `DescribeDnsRecordsWithContext` to return the DNS records
+- **AND** verify that `ModifyDnsRecordsStatusWithContext` is NOT called (Update detects no change)
 
 #### Scenario: Unit test for Read
 - **WHEN** the unit test for Read is executed
@@ -126,6 +129,7 @@ The resource SHALL have unit tests in `resource_tc_teo_dns_records_status_config
 - **WHEN** the unit test for Update with `records_to_enable` change is executed
 - **THEN** it SHALL mock `ModifyDnsRecordsStatusWithContext` to return success
 - **AND** mock `DescribeDnsRecordsWithContext` to return the updated DNS records
+- **AND** verify that `ModifyDnsRecordsStatusWithContext` is called
 - **AND** verify the update operation completes
 
 ### Requirement: Resource Documentation

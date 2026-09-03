@@ -39,15 +39,55 @@ func ptrInt64DnsRecordsStatus(n int64) *int64 {
 
 // go test ./tencentcloud/services/teo/ -run "TestTeoDnsRecordsStatus" -v -count=1 -gcflags="all=-l"
 
-// TestTeoDnsRecordsStatus_Create_Success_Enable tests Create with records_to_enable
+// buildDescribeDnsRecordsResponse builds a DescribeDnsRecords response with one record.
+func buildDescribeDnsRecordsResponse(recordId, status string) *teov20220901.DescribeDnsRecordsResponse {
+	resp := teov20220901.NewDescribeDnsRecordsResponse()
+	resp.Response = &teov20220901.DescribeDnsRecordsResponseParams{
+		TotalCount: ptrInt64DnsRecordsStatus(1),
+		DnsRecords: []*teov20220901.DnsRecord{
+			{
+				ZoneId:     ptrStringDnsRecordsStatus("zone-1234567890"),
+				RecordId:   ptrStringDnsRecordsStatus(recordId),
+				Name:       ptrStringDnsRecordsStatus("www.example.com"),
+				Type:       ptrStringDnsRecordsStatus("A"),
+				Location:   ptrStringDnsRecordsStatus("Default"),
+				Content:    ptrStringDnsRecordsStatus("1.2.3.4"),
+				TTL:        ptrInt64DnsRecordsStatus(300),
+				Weight:     ptrInt64DnsRecordsStatus(-1),
+				Priority:   ptrInt64DnsRecordsStatus(0),
+				Status:     ptrStringDnsRecordsStatus(status),
+				CreatedOn:  ptrStringDnsRecordsStatus("2024-01-01T00:00:00Z"),
+				ModifiedOn: ptrStringDnsRecordsStatus("2024-01-01T00:00:00Z"),
+			},
+		},
+		RequestId: ptrStringDnsRecordsStatus("fake-request-id"),
+	}
+	return resp
+}
+
+// patchTeoClient patches the mock meta's UseTeoV20220901Client and returns the teoClient.
+func patchTeoClient(patches *gomonkey.Patches) *teov20220901.Client {
+	teoClient := &teov20220901.Client{}
+	patches.ApplyMethodReturn(newMockMetaTeoDnsRecordsStatus().client, "UseTeoV20220901Client", teoClient)
+	return teoClient
+}
+
+// TestTeoDnsRecordsStatus_Create_Success_Enable tests Create with records_to_enable.
+// Create sets the id to zone_id then reuses Update, which calls ModifyDnsRecordsStatus
+// with RecordsToEnable populated and finally calls Read.
 func TestTeoDnsRecordsStatus_Create_Success_Enable(t *testing.T) {
 	patches := gomonkey.NewPatches()
 	defer patches.Reset()
 
-	teoClient := &teov20220901.Client{}
-	patches.ApplyMethodReturn(newMockMetaTeoDnsRecordsStatus().client, "UseTeoV20220901Client", teoClient)
+	teoClient := patchTeoClient(patches)
 
+	modifyCalled := false
 	patches.ApplyMethodFunc(teoClient, "ModifyDnsRecordsStatusWithContext", func(_ context.Context, request *teov20220901.ModifyDnsRecordsStatusRequest) (*teov20220901.ModifyDnsRecordsStatusResponse, error) {
+		modifyCalled = true
+		assert.NotNil(t, request.ZoneId)
+		assert.Equal(t, "zone-1234567890", *request.ZoneId)
+		assert.NotNil(t, request.RecordsToEnable)
+		assert.Equal(t, "record-1234567890", *request.RecordsToEnable[0])
 		resp := teov20220901.NewModifyDnsRecordsStatusResponse()
 		resp.Response = &teov20220901.ModifyDnsRecordsStatusResponseParams{
 			RequestId: ptrStringDnsRecordsStatus("fake-request-id"),
@@ -56,28 +96,7 @@ func TestTeoDnsRecordsStatus_Create_Success_Enable(t *testing.T) {
 	})
 
 	patches.ApplyMethodFunc(teoClient, "DescribeDnsRecordsWithContext", func(_ context.Context, request *teov20220901.DescribeDnsRecordsRequest) (*teov20220901.DescribeDnsRecordsResponse, error) {
-		resp := teov20220901.NewDescribeDnsRecordsResponse()
-		resp.Response = &teov20220901.DescribeDnsRecordsResponseParams{
-			TotalCount: ptrInt64DnsRecordsStatus(1),
-			DnsRecords: []*teov20220901.DnsRecord{
-				{
-					ZoneId:     ptrStringDnsRecordsStatus("zone-1234567890"),
-					RecordId:   ptrStringDnsRecordsStatus("record-1234567890"),
-					Name:       ptrStringDnsRecordsStatus("www.example.com"),
-					Type:       ptrStringDnsRecordsStatus("A"),
-					Location:   ptrStringDnsRecordsStatus("Default"),
-					Content:    ptrStringDnsRecordsStatus("1.2.3.4"),
-					TTL:        ptrInt64DnsRecordsStatus(300),
-					Weight:     ptrInt64DnsRecordsStatus(-1),
-					Priority:   ptrInt64DnsRecordsStatus(0),
-					Status:     ptrStringDnsRecordsStatus("enable"),
-					CreatedOn:  ptrStringDnsRecordsStatus("2024-01-01T00:00:00Z"),
-					ModifiedOn: ptrStringDnsRecordsStatus("2024-01-01T00:00:00Z"),
-				},
-			},
-			RequestId: ptrStringDnsRecordsStatus("fake-request-id"),
-		}
-		return resp, nil
+		return buildDescribeDnsRecordsResponse("record-1234567890", "enable"), nil
 	})
 
 	meta := newMockMetaTeoDnsRecordsStatus()
@@ -91,17 +110,23 @@ func TestTeoDnsRecordsStatus_Create_Success_Enable(t *testing.T) {
 	err := res.Create(d, meta)
 	assert.NoError(t, err)
 	assert.Equal(t, "zone-1234567890", d.Id())
+	assert.True(t, modifyCalled)
 }
 
-// TestTeoDnsRecordsStatus_Create_Success_Disable tests Create with records_to_disable
+// TestTeoDnsRecordsStatus_Create_Success_Disable tests Create with records_to_disable.
 func TestTeoDnsRecordsStatus_Create_Success_Disable(t *testing.T) {
 	patches := gomonkey.NewPatches()
 	defer patches.Reset()
 
-	teoClient := &teov20220901.Client{}
-	patches.ApplyMethodReturn(newMockMetaTeoDnsRecordsStatus().client, "UseTeoV20220901Client", teoClient)
+	teoClient := patchTeoClient(patches)
 
+	modifyCalled := false
 	patches.ApplyMethodFunc(teoClient, "ModifyDnsRecordsStatusWithContext", func(_ context.Context, request *teov20220901.ModifyDnsRecordsStatusRequest) (*teov20220901.ModifyDnsRecordsStatusResponse, error) {
+		modifyCalled = true
+		assert.NotNil(t, request.ZoneId)
+		assert.Equal(t, "zone-1234567890", *request.ZoneId)
+		assert.NotNil(t, request.RecordsToDisable)
+		assert.Equal(t, "record-1234567890", *request.RecordsToDisable[0])
 		resp := teov20220901.NewModifyDnsRecordsStatusResponse()
 		resp.Response = &teov20220901.ModifyDnsRecordsStatusResponseParams{
 			RequestId: ptrStringDnsRecordsStatus("fake-request-id"),
@@ -110,28 +135,7 @@ func TestTeoDnsRecordsStatus_Create_Success_Disable(t *testing.T) {
 	})
 
 	patches.ApplyMethodFunc(teoClient, "DescribeDnsRecordsWithContext", func(_ context.Context, request *teov20220901.DescribeDnsRecordsRequest) (*teov20220901.DescribeDnsRecordsResponse, error) {
-		resp := teov20220901.NewDescribeDnsRecordsResponse()
-		resp.Response = &teov20220901.DescribeDnsRecordsResponseParams{
-			TotalCount: ptrInt64DnsRecordsStatus(1),
-			DnsRecords: []*teov20220901.DnsRecord{
-				{
-					ZoneId:     ptrStringDnsRecordsStatus("zone-1234567890"),
-					RecordId:   ptrStringDnsRecordsStatus("record-1234567890"),
-					Name:       ptrStringDnsRecordsStatus("www.example.com"),
-					Type:       ptrStringDnsRecordsStatus("A"),
-					Location:   ptrStringDnsRecordsStatus("Default"),
-					Content:    ptrStringDnsRecordsStatus("1.2.3.4"),
-					TTL:        ptrInt64DnsRecordsStatus(300),
-					Weight:     ptrInt64DnsRecordsStatus(-1),
-					Priority:   ptrInt64DnsRecordsStatus(0),
-					Status:     ptrStringDnsRecordsStatus("disable"),
-					CreatedOn:  ptrStringDnsRecordsStatus("2024-01-01T00:00:00Z"),
-					ModifiedOn: ptrStringDnsRecordsStatus("2024-01-01T00:00:00Z"),
-				},
-			},
-			RequestId: ptrStringDnsRecordsStatus("fake-request-id"),
-		}
-		return resp, nil
+		return buildDescribeDnsRecordsResponse("record-1234567890", "disable"), nil
 	})
 
 	meta := newMockMetaTeoDnsRecordsStatus()
@@ -145,15 +149,17 @@ func TestTeoDnsRecordsStatus_Create_Success_Disable(t *testing.T) {
 	err := res.Create(d, meta)
 	assert.NoError(t, err)
 	assert.Equal(t, "zone-1234567890", d.Id())
+	assert.True(t, modifyCalled)
 }
 
-// TestTeoDnsRecordsStatus_Create_NoRecords tests Create with empty records_to_enable and records_to_disable
+// TestTeoDnsRecordsStatus_Create_NoRecords tests Create with empty records_to_enable and
+// records_to_disable. Update detects no change and skips the ModifyDnsRecordsStatus call,
+// only calling Read.
 func TestTeoDnsRecordsStatus_Create_NoRecords(t *testing.T) {
 	patches := gomonkey.NewPatches()
 	defer patches.Reset()
 
-	teoClient := &teov20220901.Client{}
-	patches.ApplyMethodReturn(newMockMetaTeoDnsRecordsStatus().client, "UseTeoV20220901Client", teoClient)
+	teoClient := patchTeoClient(patches)
 
 	modifyCalled := false
 	patches.ApplyMethodFunc(teoClient, "ModifyDnsRecordsStatusWithContext", func(_ context.Context, request *teov20220901.ModifyDnsRecordsStatusRequest) (*teov20220901.ModifyDnsRecordsStatusResponse, error) {
@@ -162,28 +168,7 @@ func TestTeoDnsRecordsStatus_Create_NoRecords(t *testing.T) {
 	})
 
 	patches.ApplyMethodFunc(teoClient, "DescribeDnsRecordsWithContext", func(_ context.Context, request *teov20220901.DescribeDnsRecordsRequest) (*teov20220901.DescribeDnsRecordsResponse, error) {
-		resp := teov20220901.NewDescribeDnsRecordsResponse()
-		resp.Response = &teov20220901.DescribeDnsRecordsResponseParams{
-			TotalCount: ptrInt64DnsRecordsStatus(1),
-			DnsRecords: []*teov20220901.DnsRecord{
-				{
-					ZoneId:     ptrStringDnsRecordsStatus("zone-1234567890"),
-					RecordId:   ptrStringDnsRecordsStatus("record-1234567890"),
-					Name:       ptrStringDnsRecordsStatus("www.example.com"),
-					Type:       ptrStringDnsRecordsStatus("A"),
-					Location:   ptrStringDnsRecordsStatus("Default"),
-					Content:    ptrStringDnsRecordsStatus("1.2.3.4"),
-					TTL:        ptrInt64DnsRecordsStatus(300),
-					Weight:     ptrInt64DnsRecordsStatus(-1),
-					Priority:   ptrInt64DnsRecordsStatus(0),
-					Status:     ptrStringDnsRecordsStatus("enable"),
-					CreatedOn:  ptrStringDnsRecordsStatus("2024-01-01T00:00:00Z"),
-					ModifiedOn: ptrStringDnsRecordsStatus("2024-01-01T00:00:00Z"),
-				},
-			},
-			RequestId: ptrStringDnsRecordsStatus("fake-request-id"),
-		}
-		return resp, nil
+		return buildDescribeDnsRecordsResponse("record-1234567890", "enable"), nil
 	})
 
 	meta := newMockMetaTeoDnsRecordsStatus()
@@ -200,16 +185,19 @@ func TestTeoDnsRecordsStatus_Create_NoRecords(t *testing.T) {
 	assert.False(t, modifyCalled)
 }
 
-// TestTeoDnsRecordsStatus_Create_APIError tests Create handles API error
+// TestTeoDnsRecordsStatus_Create_APIError tests Create handles ModifyDnsRecordsStatus error.
 func TestTeoDnsRecordsStatus_Create_APIError(t *testing.T) {
 	patches := gomonkey.NewPatches()
 	defer patches.Reset()
 
-	teoClient := &teov20220901.Client{}
-	patches.ApplyMethodReturn(newMockMetaTeoDnsRecordsStatus().client, "UseTeoV20220901Client", teoClient)
+	teoClient := patchTeoClient(patches)
 
 	patches.ApplyMethodFunc(teoClient, "ModifyDnsRecordsStatusWithContext", func(_ context.Context, request *teov20220901.ModifyDnsRecordsStatusRequest) (*teov20220901.ModifyDnsRecordsStatusResponse, error) {
 		return nil, fmt.Errorf("[TencentCloudSDKError] Code=InvalidParameter, Message=Invalid zone_id")
+	})
+
+	patches.ApplyMethodFunc(teoClient, "DescribeDnsRecordsWithContext", func(_ context.Context, request *teov20220901.DescribeDnsRecordsRequest) (*teov20220901.DescribeDnsRecordsResponse, error) {
+		return buildDescribeDnsRecordsResponse("record-1234567890", "enable"), nil
 	})
 
 	meta := newMockMetaTeoDnsRecordsStatus()
@@ -225,37 +213,15 @@ func TestTeoDnsRecordsStatus_Create_APIError(t *testing.T) {
 	assert.Contains(t, err.Error(), "InvalidParameter")
 }
 
-// TestTeoDnsRecordsStatus_Read_Success tests Read retrieves DNS records
+// TestTeoDnsRecordsStatus_Read_Success tests Read retrieves DNS records and keeps resource in state.
 func TestTeoDnsRecordsStatus_Read_Success(t *testing.T) {
 	patches := gomonkey.NewPatches()
 	defer patches.Reset()
 
-	teoClient := &teov20220901.Client{}
-	patches.ApplyMethodReturn(newMockMetaTeoDnsRecordsStatus().client, "UseTeoV20220901Client", teoClient)
+	teoClient := patchTeoClient(patches)
 
 	patches.ApplyMethodFunc(teoClient, "DescribeDnsRecordsWithContext", func(_ context.Context, request *teov20220901.DescribeDnsRecordsRequest) (*teov20220901.DescribeDnsRecordsResponse, error) {
-		resp := teov20220901.NewDescribeDnsRecordsResponse()
-		resp.Response = &teov20220901.DescribeDnsRecordsResponseParams{
-			TotalCount: ptrInt64DnsRecordsStatus(1),
-			DnsRecords: []*teov20220901.DnsRecord{
-				{
-					ZoneId:     ptrStringDnsRecordsStatus("zone-1234567890"),
-					RecordId:   ptrStringDnsRecordsStatus("record-1234567890"),
-					Name:       ptrStringDnsRecordsStatus("www.example.com"),
-					Type:       ptrStringDnsRecordsStatus("A"),
-					Location:   ptrStringDnsRecordsStatus("Default"),
-					Content:    ptrStringDnsRecordsStatus("1.2.3.4"),
-					TTL:        ptrInt64DnsRecordsStatus(300),
-					Weight:     ptrInt64DnsRecordsStatus(-1),
-					Priority:   ptrInt64DnsRecordsStatus(0),
-					Status:     ptrStringDnsRecordsStatus("enable"),
-					CreatedOn:  ptrStringDnsRecordsStatus("2024-01-01T00:00:00Z"),
-					ModifiedOn: ptrStringDnsRecordsStatus("2024-01-01T00:00:00Z"),
-				},
-			},
-			RequestId: ptrStringDnsRecordsStatus("fake-request-id"),
-		}
-		return resp, nil
+		return buildDescribeDnsRecordsResponse("record-1234567890", "enable"), nil
 	})
 
 	meta := newMockMetaTeoDnsRecordsStatus()
@@ -270,13 +236,12 @@ func TestTeoDnsRecordsStatus_Read_Success(t *testing.T) {
 	assert.Equal(t, "zone-1234567890", d.Id())
 }
 
-// TestTeoDnsRecordsStatus_Read_NotFound tests Read handles resource not found
+// TestTeoDnsRecordsStatus_Read_NotFound tests Read clears id when DescribeDnsRecords returns empty.
 func TestTeoDnsRecordsStatus_Read_NotFound(t *testing.T) {
 	patches := gomonkey.NewPatches()
 	defer patches.Reset()
 
-	teoClient := &teov20220901.Client{}
-	patches.ApplyMethodReturn(newMockMetaTeoDnsRecordsStatus().client, "UseTeoV20220901Client", teoClient)
+	teoClient := patchTeoClient(patches)
 
 	patches.ApplyMethodFunc(teoClient, "DescribeDnsRecordsWithContext", func(_ context.Context, request *teov20220901.DescribeDnsRecordsRequest) (*teov20220901.DescribeDnsRecordsResponse, error) {
 		resp := teov20220901.NewDescribeDnsRecordsResponse()
@@ -300,15 +265,20 @@ func TestTeoDnsRecordsStatus_Read_NotFound(t *testing.T) {
 	assert.Equal(t, "", d.Id())
 }
 
-// TestTeoDnsRecordsStatus_Update_Success tests Update with records_to_enable change
+// TestTeoDnsRecordsStatus_Update_Success tests Update calls ModifyDnsRecordsStatus on change.
 func TestTeoDnsRecordsStatus_Update_Success(t *testing.T) {
 	patches := gomonkey.NewPatches()
 	defer patches.Reset()
 
-	teoClient := &teov20220901.Client{}
-	patches.ApplyMethodReturn(newMockMetaTeoDnsRecordsStatus().client, "UseTeoV20220901Client", teoClient)
+	teoClient := patchTeoClient(patches)
 
+	modifyCalled := false
 	patches.ApplyMethodFunc(teoClient, "ModifyDnsRecordsStatusWithContext", func(_ context.Context, request *teov20220901.ModifyDnsRecordsStatusRequest) (*teov20220901.ModifyDnsRecordsStatusResponse, error) {
+		modifyCalled = true
+		assert.NotNil(t, request.ZoneId)
+		assert.Equal(t, "zone-1234567890", *request.ZoneId)
+		assert.NotNil(t, request.RecordsToEnable)
+		assert.Equal(t, "record-1234567890", *request.RecordsToEnable[0])
 		resp := teov20220901.NewModifyDnsRecordsStatusResponse()
 		resp.Response = &teov20220901.ModifyDnsRecordsStatusResponseParams{
 			RequestId: ptrStringDnsRecordsStatus("fake-request-id"),
@@ -317,28 +287,7 @@ func TestTeoDnsRecordsStatus_Update_Success(t *testing.T) {
 	})
 
 	patches.ApplyMethodFunc(teoClient, "DescribeDnsRecordsWithContext", func(_ context.Context, request *teov20220901.DescribeDnsRecordsRequest) (*teov20220901.DescribeDnsRecordsResponse, error) {
-		resp := teov20220901.NewDescribeDnsRecordsResponse()
-		resp.Response = &teov20220901.DescribeDnsRecordsResponseParams{
-			TotalCount: ptrInt64DnsRecordsStatus(1),
-			DnsRecords: []*teov20220901.DnsRecord{
-				{
-					ZoneId:     ptrStringDnsRecordsStatus("zone-1234567890"),
-					RecordId:   ptrStringDnsRecordsStatus("record-1234567890"),
-					Name:       ptrStringDnsRecordsStatus("www.example.com"),
-					Type:       ptrStringDnsRecordsStatus("A"),
-					Location:   ptrStringDnsRecordsStatus("Default"),
-					Content:    ptrStringDnsRecordsStatus("1.2.3.4"),
-					TTL:        ptrInt64DnsRecordsStatus(300),
-					Weight:     ptrInt64DnsRecordsStatus(-1),
-					Priority:   ptrInt64DnsRecordsStatus(0),
-					Status:     ptrStringDnsRecordsStatus("enable"),
-					CreatedOn:  ptrStringDnsRecordsStatus("2024-01-01T00:00:00Z"),
-					ModifiedOn: ptrStringDnsRecordsStatus("2024-01-01T00:00:00Z"),
-				},
-			},
-			RequestId: ptrStringDnsRecordsStatus("fake-request-id"),
-		}
-		return resp, nil
+		return buildDescribeDnsRecordsResponse("record-1234567890", "enable"), nil
 	})
 
 	meta := newMockMetaTeoDnsRecordsStatus()
@@ -352,18 +301,22 @@ func TestTeoDnsRecordsStatus_Update_Success(t *testing.T) {
 
 	err := res.Update(d, meta)
 	assert.NoError(t, err)
+	assert.True(t, modifyCalled)
 }
 
-// TestTeoDnsRecordsStatus_Update_APIError tests Update handles API error during Read
+// TestTeoDnsRecordsStatus_Update_APIError tests Update handles ModifyDnsRecordsStatus error.
 func TestTeoDnsRecordsStatus_Update_APIError(t *testing.T) {
 	patches := gomonkey.NewPatches()
 	defer patches.Reset()
 
-	teoClient := &teov20220901.Client{}
-	patches.ApplyMethodReturn(newMockMetaTeoDnsRecordsStatus().client, "UseTeoV20220901Client", teoClient)
+	teoClient := patchTeoClient(patches)
+
+	patches.ApplyMethodFunc(teoClient, "ModifyDnsRecordsStatusWithContext", func(_ context.Context, request *teov20220901.ModifyDnsRecordsStatusRequest) (*teov20220901.ModifyDnsRecordsStatusResponse, error) {
+		return nil, fmt.Errorf("[TencentCloudSDKError] Code=ResourceNotFound, Message=Zone not found")
+	})
 
 	patches.ApplyMethodFunc(teoClient, "DescribeDnsRecordsWithContext", func(_ context.Context, request *teov20220901.DescribeDnsRecordsRequest) (*teov20220901.DescribeDnsRecordsResponse, error) {
-		return nil, fmt.Errorf("[TencentCloudSDKError] Code=ResourceNotFound, Message=Zone not found")
+		return buildDescribeDnsRecordsResponse("record-1234567890", "enable"), nil
 	})
 
 	meta := newMockMetaTeoDnsRecordsStatus()
@@ -380,7 +333,7 @@ func TestTeoDnsRecordsStatus_Update_APIError(t *testing.T) {
 	assert.Contains(t, err.Error(), "ResourceNotFound")
 }
 
-// TestTeoDnsRecordsStatus_Delete_Success tests Delete is a no-op
+// TestTeoDnsRecordsStatus_Delete_Success tests Delete is a no-op.
 func TestTeoDnsRecordsStatus_Delete_Success(t *testing.T) {
 	meta := newMockMetaTeoDnsRecordsStatus()
 	res := teo.ResourceTencentCloudTeoDnsRecordsStatus()
@@ -394,7 +347,7 @@ func TestTeoDnsRecordsStatus_Delete_Success(t *testing.T) {
 	assert.Equal(t, "zone-1234567890", d.Id())
 }
 
-// TestTeoDnsRecordsStatus_Schema validates schema definition
+// TestTeoDnsRecordsStatus_Schema validates schema definition.
 func TestTeoDnsRecordsStatus_Schema(t *testing.T) {
 	res := teo.ResourceTencentCloudTeoDnsRecordsStatus()
 

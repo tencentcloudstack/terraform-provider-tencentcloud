@@ -10,9 +10,9 @@ TEO（EdgeOne）DNS 记录的启用/停用状态目前无法通过 Terraform 声
   - `records_to_enable`（Optional）：待启用的 DNS 记录 ID 列表，对应 `request.RecordsToEnable`，Update 时传入。
   - `records_to_disable`（Optional）：待停用的 DNS 记录 ID 列表，对应 `request.RecordsToDisable`，Update 时传入。
 - 资源 ID 采用 `zone_id`（CONFIG 资源只管理单个资源的配置，ID 仅用 `zone_id` 标识）。
-- Create 操作：RESOURCE_KIND_CONFIG 资源无独立创建接口，Create 复用 Update 逻辑（调用 `ModifyDnsRecordsStatus` 设置初始状态），成功后调用 Read 回填。
+- Create 操作：RESOURCE_KIND_CONFIG 资源无独立创建接口，Create 复用 Update 逻辑——仅 `d.SetId(zoneId)` 后直接调用 `resourceTencentCloudTeoDnsRecordsStatusUpdate(d, meta)`，与 `tencentcloud_teo_ddos_protection_config` 等其他 config 资源保持一致。
 - Read 操作：调用 `DescribeDnsRecords`，仅传入 `zone_id`，查询 DNS 记录列表判断资源是否存在；若返回空则 `d.SetId("")`，使用 `tccommon.ReadRetryTimeout` 重试。
-- Update 操作：调用 `ModifyDnsRecordsStatus`，传入 `zone_id`、`records_to_enable`（若有）、`records_to_disable`（若有），使用 `tccommon.WriteRetryTimeout` 重试；成功后调用 `DescribeDnsRecords` 轮询直到接口生效（检查对应记录的 `status` 达到期望值）。
+- Update 操作：当 `records_to_enable` 或 `records_to_disable` 发生变化（`d.HasChange`）时，调用 `ModifyDnsRecordsStatus`，传入 `zone_id`、`records_to_enable`（若有）、`records_to_disable`（若有），使用 `tccommon.WriteRetryTimeout` 重试；成功后调用 `resourceTencentCloudTeoDnsRecordsStatusRead(d, meta)` 回写最新状态。
 - Delete 操作：CONFIG 资源无云端删除语义，Delete 为 no-op（不清空记录状态，仅移除 Terraform state）。
 - 资源支持 import，import 时使用 `zone_id` 作为 ID。
 - 在 `tencentcloud/provider.go` 和 `tencentcloud/provider.md` 中注册资源 `tencentcloud_teo_dns_records_status`。

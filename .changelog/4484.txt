@@ -1,3 +1,7 @@
+```release-note:new-resource
+tencentcloud_teo_dns_records_status
+```
+
 ```release-note:enhancement
-resource/tencentcloud_teo_dns_records_status: optimize resource schema by removing unnecessary filter and sort fields
+resource/tencentcloud_teo_dns_records_status: optimize dns records status resource implementation
 ```
