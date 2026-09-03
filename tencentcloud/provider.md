@@ -1673,6 +1673,7 @@ tencentcloud_teo_shared_cname
 tencentcloud_teo_domain_shared_cname_attachment
 tencentcloud_teo_edge_kv
 tencentcloud_teo_edge_kv_namespace
+tencentcloud_teo_dns_records_status
 
 TencentCloud ServiceMesh(TCM)
 Data Source
