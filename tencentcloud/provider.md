@@ -1760,6 +1760,7 @@ tencentcloud_cat_node_groups
 tencentcloud_cat_metric_data
 tencentcloud_cat_probe_metric_tag_values
 tencentcloud_cat_instant_tasks
+tencentcloud_cat_probe_tasks
 
 Resource
 tencentcloud_cat_task_set
