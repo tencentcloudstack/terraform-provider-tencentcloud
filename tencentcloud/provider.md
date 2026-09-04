@@ -2683,6 +2683,7 @@ tencentcloud_mqtt_message_enrichment_rule
 
 Billing
 Data Source
+tencentcloud_billing_bill_detail
 tencentcloud_billing_budget_operation_log
 Resource
 tencentcloud_billing_allocation_tag
