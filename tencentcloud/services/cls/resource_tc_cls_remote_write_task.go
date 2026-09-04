@@ -107,6 +107,19 @@ func ResourceTencentCloudClsRemoteWriteTask() *schema.Resource {
 				},
 			},
 
+			"instance_id": {
+				Type:        schema.TypeString,
+				Optional:    true,
+				Description: "Instance ID.",
+			},
+
+			"has_services_log": {
+				Type:        schema.TypeInt,
+				Optional:    true,
+				Computed:    true,
+				Description: "Enable delivery service logging. 1: Disabled, 2: Enabled. Default value: 2.",
+			},
+
 			// computed
 			"task_id": {
 				Type:        schema.TypeString,
@@ -202,6 +215,14 @@ func resourceTencentCloudClsRemoteWriteTaskCreate(d *schema.ResourceData, meta i
 			}
 			request.AuthInfo = &authInfo
 		}
+	}
+
+	if v, ok := d.GetOk("instance_id"); ok {
+		request.InstanceId = helper.String(v.(string))
+	}
+
+	if v, ok := d.GetOkExists("has_services_log"); ok {
+		request.HasServicesLog = helper.IntUint64(v.(int))
 	}
 
 	err := resource.Retry(tccommon.WriteRetryTimeout, func() *resource.RetryError {
@@ -342,6 +363,14 @@ func resourceTencentCloudClsRemoteWriteTaskRead(d *schema.ResourceData, meta int
 		_ = d.Set("auth_info", []interface{}{authInfoMap})
 	}
 
+	if info.InstanceId != nil {
+		_ = d.Set("instance_id", info.InstanceId)
+	}
+
+	if info.HasServicesLog != nil {
+		_ = d.Set("has_services_log", info.HasServicesLog)
+	}
+
 	if info.TaskId != nil {
 		_ = d.Set("task_id", info.TaskId)
 	}
@@ -383,7 +412,7 @@ func resourceTencentCloudClsRemoteWriteTaskUpdate(d *schema.ResourceData, meta i
 	taskId := idSplit[1]
 
 	needChange := false
-	mutableArgs := []string{"name", "net_type", "vpc_id", "target", "remote_write_url", "auth_type", "enable", "virtual_gateway_type", "auth_info"}
+	mutableArgs := []string{"name", "net_type", "vpc_id", "target", "remote_write_url", "auth_type", "enable", "virtual_gateway_type", "auth_info", "instance_id", "has_services_log"}
 	for _, v := range mutableArgs {
 		if d.HasChange(v) {
 			needChange = true
@@ -444,6 +473,14 @@ func resourceTencentCloudClsRemoteWriteTaskUpdate(d *schema.ResourceData, meta i
 				}
 				request.AuthInfo = &authInfo
 			}
+		}
+
+		if v, ok := d.GetOk("instance_id"); ok {
+			request.InstanceId = helper.String(v.(string))
+		}
+
+		if v, ok := d.GetOkExists("has_services_log"); ok {
+			request.HasServicesLog = helper.IntUint64(v.(int))
 		}
 
 		err := resource.Retry(tccommon.WriteRetryTimeout, func() *resource.RetryError {
