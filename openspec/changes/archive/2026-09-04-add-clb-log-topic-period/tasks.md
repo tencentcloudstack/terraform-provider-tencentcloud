@@ -1,6 +1,6 @@
 ## 1. Schema Definition
 
-- [x] 1.1 Add `period` schema field (TypeInt, Optional, not ForceNew, description "Log storage lifecycle in days. Standard storage supports 1-3600; 3640 means permanent retention. Defaults to 30 when unset.") to `ResourceTencentCloudClbLogTopic()` in `tencentcloud/services/clb/resource_tc_clb_log_topic.go`
+- [x] 1.1 Add `period` schema field (TypeInt, Optional, Computed, not ForceNew, description "Log storage lifecycle in days. Standard storage supports 1-3600; 3640 means permanent retention. Defaults to 30 when unset.") to `ResourceTencentCloudClbLogTopic()` in `tencentcloud/services/clb/resource_tc_clb_log_topic.go`
 
 ## 2. Service Layer Changes
 
@@ -16,7 +16,7 @@
 
 ## 5. Update Function Changes
 
-- [x] 5.1 In `resourceTencentCloudClbInstanceTopicUpdate`, add a `d.HasChange("period")` branch that builds/includes `Period` (cast to `*int64` via `helper.Int64`) on the `cls.NewModifyTopicRequest()` when `period` changes, reusing the existing retry/`ModifyTopic` call pattern
+- [x] 5.1 In `resourceTencentCloudClbInstanceTopicUpdate`, build a single `cls.NewModifyTopicRequest()` when any of `status`, `tags`, or `period` changes, populate `Period` (cast to `*int64` via `helper.Int64`) only when `period` changes, and issue one retried `ModifyTopic` call that updates all changed fields together
 
 ## 6. Documentation
 

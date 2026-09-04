@@ -40,14 +40,14 @@ The resource is unusual because it spans two Tencent Cloud SDK packages:
 ### Decision 1: `period` is updatable (not `ForceNew`)
 **Rationale:** The `ModifyTopic` API (CLS SDK) accepts `Period`, so the value can be changed in-place after creation. Marking it `ForceNew` would unnecessarily destroy and recreate log topics (and their data) on every retention change.
 
-### Decision 2: `period` is `Optional` (not `Computed`)
-**Rationale:** The user explicitly configures retention. We do not mark it `Computed` because doing so would force Terraform to reconcile the API default (30) with an unset value, causing spurious diffs for users who do not set `period`. Keeping it purely `Optional` matches the existing `tags` field pattern on this resource. When unset, the provider does not send `Period` and the API applies its own default.
+### Decision 2: `period` is `Optional` and `Computed`
+**Rationale:** The user can explicitly configure retention; marking it `Computed` as well lets the provider surface the API-applied default (30 days) in state after Read when the user leaves it unset, following the same pattern as the existing `status` field on this resource. When unset, the provider does not send `Period` on Create and the API applies its own default.
 
 ### Decision 3: Service-layer `CreateTopic` receives `period` via the existing `params` map
 **Rationale:** `ClbService.CreateTopic(ctx, params map[string]interface{})` already accepts a generic params map (used for `topic_name`, `partition_count`, `tags`). Adding `params["period"]` avoids changing the function signature and is consistent with the existing pattern. Inside the service function, `Period` is set on `clb.CreateTopicRequest` as `*uint64` only when present.
 
-### Decision 4: Update flow calls `ModifyTopic` directly (consistent with existing `status`/`tags` handling)
-**Rationale:** The existing Update function already calls `cls.NewModifyTopicRequest()` directly for `status` and `tags` changes (with retry). Adding a `d.HasChange("period")` branch that sets `request.Period = helper.Int64(...)` and reuses the same retry/`ModifyTopic` call is the minimal, consistent approach. To handle the case where only `period` changes (and `status`/`tags` do not), the Update function will build a `ModifyTopic` request whenever any of `status`, `tags`, or `period` changes.
+### Decision 4: Update flow builds a single `ModifyTopic` request when any updatable field changes
+**Rationale:** `ModifyTopic` (CLS SDK) accepts `Status`, `Tags`, and `Period` in the same request, so the Update function builds one `cls.NewModifyTopicRequest()` whenever any of `status`, `tags`, or `period` changes, populates only the changed fields, and issues a single retried `ModifyTopic` call for all of them. This reuses one call path for all updatable fields (consistent with the previous `status`/`tags` handling) and avoids redundant API calls when multiple fields change at once.
 
 ### Decision 5: Type casting at call sites
 **Rationale:** Because the CLB Create SDK uses `*uint64` and the CLS Modify/Describe SDK uses `*int64`, the resource code casts the schema `int` value to `uint64` before Create and to `int64` before Modify/Read-set. This is localized to each call site and avoids introducing a shared type abstraction for a single field.
