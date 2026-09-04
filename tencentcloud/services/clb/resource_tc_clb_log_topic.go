@@ -53,6 +53,11 @@ func ResourceTencentCloudClbLogTopic() *schema.Resource {
 				Description: "Tags of clb log topic.",
 				Elem:        &schema.Schema{Type: schema.TypeString},
 			},
+			"period": {
+				Type:        schema.TypeInt,
+				Optional:    true,
+				Description: "Log storage lifecycle in days. Standard storage supports 1-3600; 3640 means permanent retention. Defaults to 30 when unset.",
+			},
 			//compute
 			"create_time": {
 				Type:        schema.TypeString,
@@ -91,6 +96,9 @@ func resourceTencentCloudClbInstanceTopicCreate(d *schema.ResourceData, meta int
 	}
 	if tags, ok := d.GetOk("tags"); ok {
 		params["tags"] = tags.(map[string]interface{})
+	}
+	if period, ok := d.GetOk("period"); ok {
+		params["period"] = period
 	}
 	resp, err := clbService.CreateTopic(ctx, params)
 	if err != nil {
@@ -155,6 +163,10 @@ func resourceTencentCloudClbInstanceTopicRead(d *schema.ResourceData, meta inter
 	_ = d.Set("create_time", res.CreateTime)
 	_ = d.Set("status", res.Status)
 
+	if res.Period != nil {
+		_ = d.Set("period", res.Period)
+	}
+
 	if res.Tags != nil {
 		tagsMap := make(map[string]string, len(res.Tags))
 		for _, tag := range res.Tags {
@@ -217,6 +229,28 @@ func resourceTencentCloudClbInstanceTopicUpdate(d *schema.ResourceData, meta int
 				}
 				request.Tags = clsTags
 			}
+		}
+		err := resource.Retry(tccommon.WriteRetryTimeout, func() *resource.RetryError {
+			result, e := meta.(tccommon.ProviderMeta).GetAPIV3Conn().UseClsClient().ModifyTopic(request)
+			if e != nil {
+				return tccommon.RetryError(e)
+			} else {
+				log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), result.ToJsonString())
+			}
+
+			return nil
+		})
+
+		if err != nil {
+			return err
+		}
+	}
+
+	if d.HasChange("period") {
+		request := cls.NewModifyTopicRequest()
+		request.TopicId = &topicId
+		if v, ok := d.GetOk("period"); ok {
+			request.Period = helper.Int64(int64(v.(int)))
 		}
 		err := resource.Retry(tccommon.WriteRetryTimeout, func() *resource.RetryError {
 			result, e := meta.(tccommon.ProviderMeta).GetAPIV3Conn().UseClsClient().ModifyTopic(request)
