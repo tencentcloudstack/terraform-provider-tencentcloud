@@ -2,6 +2,7 @@ package billing
 
 import (
 	"context"
+	"log"
 
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
@@ -567,6 +568,7 @@ func dataSourceTencentCloudBillingBillDetailRead(d *schema.ResourceData, meta in
 	}
 
 	detailSetList := make([]map[string]interface{}, 0, len(respData))
+	ids := make([]string, 0, len(respData))
 	for _, detail := range respData {
 		detailMap := map[string]interface{}{}
 		if detail.BusinessCodeName != nil {
@@ -805,6 +807,7 @@ func dataSourceTencentCloudBillingBillDetailRead(d *schema.ResourceData, meta in
 		}
 		if detail.Id != nil {
 			detailMap["id"] = detail.Id
+			ids = append(ids, *detail.Id)
 		}
 		if detail.RegionType != nil {
 			detailMap["region_type"] = detail.RegionType
@@ -827,13 +830,16 @@ func dataSourceTencentCloudBillingBillDetailRead(d *schema.ResourceData, meta in
 		detailSetList = append(detailSetList, detailMap)
 	}
 
-	_ = d.Set("detail_set", detailSetList)
+	if e := d.Set("detail_set", detailSetList); e != nil {
+		log.Printf("[CRITAL]%s provider set billing bill detail list fail, reason:%s\n", logId, e.Error())
+		return e
+	}
 	_ = d.Set("total", total)
 	if respContext != nil {
 		_ = d.Set("context", respContext)
 	}
 
-	d.SetId(helper.BuildToken())
+	d.SetId(helper.DataResourceIdsHash(ids))
 
 	output, ok := d.GetOk("result_output_file")
 	if ok && output.(string) != "" {
