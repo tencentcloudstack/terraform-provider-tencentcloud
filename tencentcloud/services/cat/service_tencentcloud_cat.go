@@ -459,6 +459,93 @@ func (me *CatService) DescribeCatNodeGroupsByFilter(ctx context.Context, param m
 	return
 }
 
+func (me *CatService) DescribeCatProbeTasksByFilter(ctx context.Context, param map[string]interface{}) (tasks []*cat.ProbeTask, total *int64, errRet error) {
+	var (
+		logId   = tccommon.GetLogId(ctx)
+		request = cat.NewDescribeProbeTasksRequest()
+	)
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n",
+				logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	for k, v := range param {
+		if k == "task_i_ds" {
+			request.TaskIDs = v.([]*string)
+		}
+		if k == "task_name" {
+			request.TaskName = v.(*string)
+		}
+		if k == "target_address" {
+			request.TargetAddress = v.(*string)
+		}
+		if k == "task_status" {
+			request.TaskStatus = v.([]*int64)
+		}
+		if k == "pay_mode" {
+			request.PayMode = v.(*int64)
+		}
+		if k == "order_state" {
+			request.OrderState = v.(*int64)
+		}
+		if k == "task_type" {
+			request.TaskType = v.([]*int64)
+		}
+		if k == "task_category" {
+			request.TaskCategory = v.([]*int64)
+		}
+		if k == "order_by" {
+			request.OrderBy = v.(*string)
+		}
+		if k == "ascend" {
+			request.Ascend = v.(*bool)
+		}
+		if k == "tag_filters" {
+			request.TagFilters = v.([]*cat.KeyValuePair)
+		}
+	}
+
+	var offset int64 = 0
+	var pageSize int64 = 100
+	tasks = make([]*cat.ProbeTask, 0)
+
+	for {
+		request.Offset = &offset
+		request.Limit = &pageSize
+		ratelimit.Check(request.GetAction())
+		response, err := me.client.UseCatClient().DescribeProbeTasks(request)
+		if err != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n",
+				logId, request.GetAction(), request.ToJsonString(), err.Error())
+			errRet = err
+			return
+		}
+		log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n",
+			logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+		if response == nil || response.Response == nil {
+			break
+		}
+
+		if response.Response.TaskSet != nil {
+			tasks = append(tasks, response.Response.TaskSet...)
+		}
+		if response.Response.Total != nil {
+			total = response.Response.Total
+		}
+
+		if len(response.Response.TaskSet) < int(pageSize) {
+			break
+		}
+		offset += pageSize
+	}
+
+	return
+}
+
 func (me *CatService) DescribeCatInstantTasksByFilter(ctx context.Context) (tasks []*cat.SingleInstantTask, total *uint64, errRet error) {
 	var (
 		logId   = tccommon.GetLogId(ctx)
