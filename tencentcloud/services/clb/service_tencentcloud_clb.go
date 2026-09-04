@@ -1586,6 +1586,10 @@ func (me *ClbService) CreateTopic(ctx context.Context, params map[string]interfa
 		request.PartitionCount = common.Uint64Ptr((uint64)(partitionCount.(int)))
 	}
 
+	if period, ok := params["period"]; ok {
+		request.Period = common.Uint64Ptr((uint64)(period.(int)))
+	}
+
 	if tags, ok := params["tags"].(map[string]interface{}); ok && len(tags) > 0 {
 		tagInfoList := make([]*clb.TagInfo, 0, len(tags))
 		for key, value := range tags {
