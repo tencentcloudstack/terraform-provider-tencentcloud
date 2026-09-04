@@ -905,24 +905,38 @@ func (me *ClsService) DescribeClsAlarmNoticeById(ctx context.Context, alarmNotic
 		}
 	}()
 
-	ratelimit.Check(request.GetAction())
-
 	var (
-		offset int64 = 0
-		limit  int64 = 20
+		offset    int64 = 0
+		limit     int64 = 100
+		instances       = make([]*cls.AlarmNotice, 0)
 	)
-	instances := make([]*cls.AlarmNotice, 0)
 	for {
 		request.Offset = &offset
 		request.Limit = &limit
-		response, err := me.client.UseClsClient().DescribeAlarmNotices(request)
+		var response *cls.DescribeAlarmNoticesResponse
+		err := resource.Retry(tccommon.ReadRetryTimeout, func() *resource.RetryError {
+			ratelimit.Check(request.GetAction())
+			result, e := me.client.UseClsClient().DescribeAlarmNotices(request)
+			if e != nil {
+				return tccommon.RetryError(e)
+			}
+
+			if result == nil || result.Response == nil {
+				return resource.NonRetryableError(fmt.Errorf("Describe cls alarm notice failed, Response is nil."))
+			}
+
+			response = result
+			return nil
+		})
+
 		if err != nil {
 			errRet = err
 			return
 		}
+
 		log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
 
-		if response == nil || len(response.Response.AlarmNotices) < 1 {
+		if len(response.Response.AlarmNotices) < 1 {
 			break
 		}
 		instances = append(instances, response.Response.AlarmNotices...)
@@ -952,14 +966,21 @@ func (me *ClsService) DeleteClsAlarmNoticeById(ctx context.Context, alarmNoticeI
 		}
 	}()
 
-	ratelimit.Check(request.GetAction())
+	err := resource.Retry(tccommon.WriteRetryTimeout, func() *resource.RetryError {
+		ratelimit.Check(request.GetAction())
+		response, e := me.client.UseClsClient().DeleteAlarmNotice(request)
+		if e != nil {
+			return tccommon.RetryError(e)
+		} else {
+			log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+		}
 
-	response, err := me.client.UseClsClient().DeleteAlarmNotice(request)
+		return nil
+	})
+
 	if err != nil {
-		errRet = err
-		return
+		return err
 	}
-	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
 
 	return
 }
@@ -1456,13 +1477,27 @@ func (me *ClsService) DescribeClsScheduledSqlById(ctx context.Context, taskId st
 		}
 	}()
 
-	ratelimit.Check(request.GetAction())
+	var response *cls.DescribeScheduledSqlInfoResponse
+	err := resource.Retry(tccommon.ReadRetryTimeout, func() *resource.RetryError {
+		ratelimit.Check(request.GetAction())
+		result, e := me.client.UseClsClient().DescribeScheduledSqlInfo(request)
+		if e != nil {
+			return tccommon.RetryError(e)
+		}
 
-	response, err := me.client.UseClsClient().DescribeScheduledSqlInfo(request)
+		if result == nil || result.Response == nil {
+			return resource.NonRetryableError(fmt.Errorf("Describe cls scheduled sql failed, Response is nil."))
+		}
+
+		response = result
+		return nil
+	})
+
 	if err != nil {
 		errRet = err
 		return
 	}
+
 	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
 
 	if len(response.Response.ScheduledSqlTaskInfos) < 1 {
@@ -1485,14 +1520,21 @@ func (me *ClsService) DeleteClsScheduledSqlById(ctx context.Context, taskId stri
 		}
 	}()
 
-	ratelimit.Check(request.GetAction())
+	err := resource.Retry(tccommon.WriteRetryTimeout, func() *resource.RetryError {
+		ratelimit.Check(request.GetAction())
+		response, e := me.client.UseClsClient().DeleteScheduledSql(request)
+		if e != nil {
+			return tccommon.RetryError(e)
+		} else {
+			log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+		}
 
-	response, err := me.client.UseClsClient().DeleteScheduledSql(request)
+		return nil
+	})
+
 	if err != nil {
-		errRet = err
-		return
+		return err
 	}
-	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
 
 	return
 }

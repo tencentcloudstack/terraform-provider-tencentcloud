@@ -343,3 +343,169 @@ func (me *CatService) DescribeCatMetricDataByFilter(ctx context.Context, param m
 
 	return
 }
+
+func (me *CatService) DescribeCatProbeMetricTagValuesByFilter(ctx context.Context, param map[string]interface{}) (tagValues *cat.DescribeProbeMetricTagValuesResponseParams, errRet error) {
+	var (
+		logId   = tccommon.GetLogId(ctx)
+		request = cat.NewDescribeProbeMetricTagValuesRequest()
+	)
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	for k, v := range param {
+		if k == "AnalyzeTaskType" {
+			request.AnalyzeTaskType = v.(*string)
+		}
+		if k == "Key" {
+			request.Key = v.(*string)
+		}
+		if k == "Filter" {
+			request.Filter = v.(*string)
+		}
+		if k == "Filters" {
+			request.Filters = v.([]*string)
+		}
+		if k == "TimeRange" {
+			request.TimeRange = v.(*string)
+		}
+	}
+
+	ratelimit.Check(request.GetAction())
+	response, err := me.client.UseCatClient().DescribeProbeMetricTagValues(request)
+	if err != nil {
+		errRet = err
+		return
+	}
+	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+	if response == nil || response.Response == nil {
+		return
+	}
+
+	tagValues = response.Response
+
+	return
+}
+
+func (me *CatService) DescribeCatNodeGroupsByFilter(ctx context.Context, param map[string]interface{}) (nodeList []*cat.NodeTree, districtList []*cat.DistinctOrNetServiceInfo, netServiceList []*cat.DistinctOrNetServiceInfo, errRet error) {
+	var (
+		logId   = tccommon.GetLogId(ctx)
+		request = cat.NewDescribeNodeGroupsRequest()
+	)
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n",
+				logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	for k, v := range param {
+		if k == "node_type" {
+			request.NodeType = v.([]*int64)
+		}
+		if k == "task_category" {
+			request.TaskCategory = v.(*int64)
+		}
+		if k == "ip_type" {
+			request.IPType = v.(*int64)
+		}
+		if k == "name" {
+			request.Name = v.(*string)
+		}
+		if k == "region_id" {
+			request.RegionID = v.(*int64)
+		}
+		if k == "district_id" {
+			request.DistrictID = v.(*int64)
+		}
+		if k == "net_service_id" {
+			request.NetServiceID = v.(*int64)
+		}
+		if k == "node_group_type" {
+			request.NodeGroupType = v.(*int64)
+		}
+		if k == "task_type" {
+			request.TaskType = v.(*int64)
+		}
+		if k == "probe_type" {
+			request.ProbeType = v.(*uint64)
+		}
+	}
+
+	ratelimit.Check(request.GetAction())
+	response, err := me.client.UseCatClient().DescribeNodeGroups(request)
+	if err != nil {
+		log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n",
+			logId, request.GetAction(), request.ToJsonString(), err.Error())
+		errRet = err
+		return
+	}
+	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n",
+		logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+	if response == nil || response.Response == nil {
+		return
+	}
+
+	nodeList = response.Response.NodeList
+	districtList = response.Response.DistrictList
+	netServiceList = response.Response.NetServiceList
+
+	return
+}
+
+func (me *CatService) DescribeCatInstantTasksByFilter(ctx context.Context) (tasks []*cat.SingleInstantTask, total *uint64, errRet error) {
+	var (
+		logId   = tccommon.GetLogId(ctx)
+		request = cat.NewDescribeInstantTasksRequest()
+	)
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n",
+				logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	var pageSize uint64 = 100
+	var offset uint64 = 0
+	tasks = make([]*cat.SingleInstantTask, 0)
+
+	for {
+		request.Limit = &pageSize
+		request.Offset = &offset
+		ratelimit.Check(request.GetAction())
+		response, err := me.client.UseCatClient().DescribeInstantTasks(request)
+		if err != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n",
+				logId, request.GetAction(), request.ToJsonString(), err.Error())
+			errRet = err
+			return
+		}
+		log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n",
+			logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+		if response == nil || response.Response == nil {
+			break
+		}
+
+		if response.Response.Tasks != nil {
+			tasks = append(tasks, response.Response.Tasks...)
+		}
+		if response.Response.Total != nil {
+			total = response.Response.Total
+		}
+
+		if len(response.Response.Tasks) < int(pageSize) {
+			break
+		}
+		offset += pageSize
+	}
+
+	return
+}

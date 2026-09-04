@@ -1,4 +1,4 @@
-// Copyright (c) 2017-2018 THL A29 Limited, a Tencent company. All Rights Reserved.
+// Copyright (c) 2017-2025 Tencent. All Rights Reserved.
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -34,6 +34,9 @@ const (
 
 	// 任务绑定的预付费套餐已过期。
 	FAILEDOPERATION_ERRPREPAIDRESOURCEEXPIRE = "FailedOperation.ErrPrePaidResourceExpire"
+
+	// 触发指定审批流
+	FAILEDOPERATION_NEEDAPPROVAL = "FailedOperation.NeedApproval"
 
 	// 无有效节点。
 	FAILEDOPERATION_NOVALIDNODES = "FailedOperation.NoValidNodes"

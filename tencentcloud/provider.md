@@ -264,6 +264,7 @@ tencentcloud_cam_policy_granting_service_access
 tencentcloud_cam_oidc_config
 tencentcloud_cam_group_user_account
 tencentcloud_cam_sub_accounts
+tencentcloud_cam_accounts
 tencentcloud_cam_role_detail
 tencentcloud_cam_policy_detail
 
@@ -871,6 +872,7 @@ tencentcloud_mysql_ssl
 tencentcloud_mysql_cls_log_attachment
 tencentcloud_cdb_start_cpu_expand
 tencentcloud_mysql_audit_service
+tencentcloud_mysql_clone_instance
 
 Cloud Monitor(Monitor)
 Data Source
@@ -1672,6 +1674,7 @@ tencentcloud_teo_shared_cname
 tencentcloud_teo_domain_shared_cname_attachment
 tencentcloud_teo_edge_kv
 tencentcloud_teo_edge_kv_namespace
+tencentcloud_teo_dns_records_status
 
 TencentCloud ServiceMesh(TCM)
 Data Source
@@ -1755,7 +1758,10 @@ Cloud Automated Testing(CAT)
 Data Source
 tencentcloud_cat_probe_data
 tencentcloud_cat_node
+tencentcloud_cat_node_groups
 tencentcloud_cat_metric_data
+tencentcloud_cat_probe_metric_tag_values
+tencentcloud_cat_instant_tasks
 
 Resource
 tencentcloud_cat_task_set
