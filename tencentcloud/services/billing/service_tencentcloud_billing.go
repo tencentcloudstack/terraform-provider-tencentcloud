@@ -300,6 +300,7 @@ func (me *BillingService) DescribeBillingBillDetailByFilter(ctx context.Context,
 			}
 			if result.Response.Context != nil {
 				retContext = result.Response.Context
+				request.Context = result.Response.Context
 			}
 			return nil
 		})

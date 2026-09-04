@@ -1,6 +1,7 @@
 package billing_test
 
 import (
+	"os"
 	"testing"
 
 	"github.com/agiledragon/gomonkey/v2"
@@ -381,6 +382,99 @@ func TestBillingBillDetailDS_ReadMinimalArgs(t *testing.T) {
 	assert.NoError(t, err)
 	assert.NotEmpty(t, d.Id())
 	assert.Equal(t, 1, d.Get("total").(int))
+}
+
+func TestBillingBillDetailDS_ReadPaginationWithContext(t *testing.T) {
+	patches := gomonkey.NewPatches()
+	defer patches.Reset()
+
+	billingClient := &billingv20180709.Client{}
+	patches.ApplyMethodReturn(newMockMetaBillingBillDetailDS().client, "UseBillingV20180709Client", billingClient)
+
+	callCount := 0
+	patches.ApplyMethodFunc(billingClient, "DescribeBillDetail", func(request *billingv20180709.DescribeBillDetailRequest) (*billingv20180709.DescribeBillDetailResponse, error) {
+		callCount++
+		resp := billingv20180709.NewDescribeBillDetailResponse()
+
+		var detailSet []*billingv20180709.BillDetail
+		if callCount == 1 {
+			// 第一页：offset=0 + 用户传入的 context
+			assert.Equal(t, uint64(0), *request.Offset)
+			assert.Equal(t, "ctx-input", *request.Context)
+			for i := 0; i < 300; i++ {
+				detailSet = append(detailSet, &billingv20180709.BillDetail{BillId: billingBillDetailPtrStr("bill-page1")})
+			}
+			resp.Response = &billingv20180709.DescribeBillDetailResponseParams{
+				DetailSet: detailSet,
+				Context:   billingBillDetailPtrStr("ctx-page2"),
+			}
+		} else {
+			// 第二页：offset=300 + 上一页返回的 context
+			assert.Equal(t, uint64(300), *request.Offset)
+			assert.Equal(t, "ctx-page2", *request.Context)
+			detailSet = append(detailSet, &billingv20180709.BillDetail{BillId: billingBillDetailPtrStr("bill-page2")})
+			resp.Response = &billingv20180709.DescribeBillDetailResponseParams{
+				DetailSet: detailSet,
+			}
+		}
+		return resp, nil
+	})
+
+	meta := newMockMetaBillingBillDetailDS()
+	res := billing.DataSourceTencentCloudBillingBillDetail()
+	d := schema.TestResourceDataRaw(t, res.Schema, map[string]interface{}{
+		"month":   "2024-01",
+		"context": "ctx-input",
+	})
+
+	err := res.Read(d, meta)
+	assert.NoError(t, err)
+	assert.Equal(t, 2, callCount)
+
+	detailSet := d.Get("detail_set").([]interface{})
+	assert.Len(t, detailSet, 301)
+}
+
+func TestBillingBillDetailDS_ReadWithResultOutputFile(t *testing.T) {
+	patches := gomonkey.NewPatches()
+	defer patches.Reset()
+
+	billingClient := &billingv20180709.Client{}
+	patches.ApplyMethodReturn(newMockMetaBillingBillDetailDS().client, "UseBillingV20180709Client", billingClient)
+
+	patches.ApplyMethodFunc(billingClient, "DescribeBillDetail", func(request *billingv20180709.DescribeBillDetailRequest) (*billingv20180709.DescribeBillDetailResponse, error) {
+		resp := billingv20180709.NewDescribeBillDetailResponse()
+		resp.Response = &billingv20180709.DescribeBillDetailResponseParams{
+			Total: billingBillDetailPtrUint64(1),
+			DetailSet: []*billingv20180709.BillDetail{
+				{
+					BillId:          billingBillDetailPtrStr("bill-001"),
+					ProductCodeName: billingBillDetailPtrStr("CVM-Standard S1"),
+					ResourceId:      billingBillDetailPtrStr("ins-xxxxxxxx"),
+				},
+			},
+		}
+		return resp, nil
+	})
+
+	meta := newMockMetaBillingBillDetailDS()
+	res := billing.DataSourceTencentCloudBillingBillDetail()
+	tmpFile := "/tmp/billing_bill_detail_test_result.json"
+	d := schema.TestResourceDataRaw(t, res.Schema, map[string]interface{}{
+		"month":              "2024-01",
+		"result_output_file": tmpFile,
+	})
+
+	err := res.Read(d, meta)
+	assert.NoError(t, err)
+
+	content, readErr := os.ReadFile(tmpFile)
+	assert.NoError(t, readErr)
+	assert.Contains(t, string(content), "bill-001")
+	assert.Contains(t, string(content), "CVM-Standard S1")
+	assert.Contains(t, string(content), "ins-xxxxxxxx")
+
+	_ = os.Remove(tmpFile)
 }
 
 func TestBillingBillDetailDS_Schema(t *testing.T) {
