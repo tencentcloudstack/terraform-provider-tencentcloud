@@ -917,8 +917,8 @@ github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/ciam v1.0.695 h1:FGwsF1
 github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/ciam v1.0.695/go.mod h1:HAasVoWz8ed6kAg7Q/DTg+8uZXiOgW7lmJeAGGrquEQ=
 github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/ckafka v1.3.165 h1:CpNyChYwEyO/fjM1f0KQY1pWgvDn+XftDdgi2LaXMeg=
 github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/ckafka v1.3.165/go.mod h1:cvbOkDX2rAK1Xcb65kGnWHJZMvLvxcc8i4N7OLEdNlo=
-github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/clb v1.3.165 h1:sQRHq9cZ2TOPqTl86exaNKZ/B7RKvCEviQRvqgC8cqI=
-github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/clb v1.3.165/go.mod h1:s88/DboRoSIkZNA9/lmXt1ja4LGDG+A+4ZwbqLrCZMQ=
+github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/clb v1.3.173 h1:0ciQExi8a31QKI3Fth846moJRs2ytDu2HusVyW5hgtY=
+github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/clb v1.3.173/go.mod h1:r125DBDoW8wpHUxdS5h8ABpJ7lFQk+2F9tfayyU4EZs=
 github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/cloudaudit v1.3.40 h1:bhPBpfz0w3mdVyEolvXrtELUf+gE00O0WnAYIHZq70s=
 github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/cloudaudit v1.3.40/go.mod h1:taTki0q8SHBIUFhjtnDA5UkiVic/WaPQzTqoXeGH3Ns=
 github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/cls v1.3.171 h1:Lcc4x/WNqrQBpc8+/Aun4d3sSCjn+WLz5ezE2i/c1ps=
@@ -1003,8 +1003,9 @@ github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/common v1.3.165/go.mod 
 github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/common v1.3.168/go.mod h1:r5r4xbfxSaeR04b166HGsBa/R4U3SueirEUpXGuw+Q0=
 github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/common v1.3.170/go.mod h1:r5r4xbfxSaeR04b166HGsBa/R4U3SueirEUpXGuw+Q0=
 github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/common v1.3.171/go.mod h1:r5r4xbfxSaeR04b166HGsBa/R4U3SueirEUpXGuw+Q0=
-github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/common v1.3.172 h1:q2hBMhsSSV1dIawliBqDDIU9L1G+tWpu3hdmJWvYG44=
 github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/common v1.3.172/go.mod h1:r5r4xbfxSaeR04b166HGsBa/R4U3SueirEUpXGuw+Q0=
+github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/common v1.3.173 h1:ROOEWJjiR+R1mHu9kxNNUXTgWXdj2V+1zEREDCGg5hE=
+github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/common v1.3.173/go.mod h1:r5r4xbfxSaeR04b166HGsBa/R4U3SueirEUpXGuw+Q0=
 github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/config v1.3.80 h1:chnsNBeJn3MieFLki4hpbzoml5NiTvLVzOTqYRVxQho=
 github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/config v1.3.80/go.mod h1:B/ezGtlvDhZlleNM+2QdvZccrUi+J+fN6vMnDDsZnuM=
 github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/controlcenter v1.1.51 h1:pGwrfCBBCt1u+EDHwfNj9NLQpvk5MVKVMcsE7SvwqM4=
