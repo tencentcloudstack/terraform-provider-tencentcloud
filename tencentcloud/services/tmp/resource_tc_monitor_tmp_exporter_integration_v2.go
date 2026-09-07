@@ -205,6 +205,7 @@ func resourceTencentCloudMonitorTmpExporterIntegrationV2Create(d *schema.Resourc
 	waitReq.KubeType = request.KubeType
 	waitReq.ClusterId = request.ClusterId
 	waitReq.Kind = request.Kind
+	waitReq.Name = &tmpExporterIntegrationId
 	err = resource.Retry(tccommon.ReadRetryTimeout, func() *resource.RetryError {
 		result, e := meta.(tccommon.ProviderMeta).GetAPIV3Conn().UseMonitorClient().DescribeExporterIntegrations(waitReq)
 		if e != nil {

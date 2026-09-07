@@ -18,6 +18,7 @@ func ResourceTencentCloudTcrReplication() *schema.Resource {
 	return &schema.Resource{
 		Create: resourceTencentCloudTcrReplicationCreate,
 		Read:   resourceTencentCloudTcrReplicationRead,
+		Update: resourceTencentCloudTcrReplicationUpdate,
 		Delete: resourceTencentCloudTcrReplicationDelete,
 		Schema: map[string]*schema.Schema{
 			"source_registry_id": {
@@ -37,7 +38,6 @@ func ResourceTencentCloudTcrReplication() *schema.Resource {
 			"rule": {
 				Type:        schema.TypeList,
 				Required:    true,
-				ForceNew:    true,
 				MaxItems:    1,
 				Description: "Synchronization rule.",
 				Elem: &schema.Resource{
@@ -51,32 +51,27 @@ func ResourceTencentCloudTcrReplication() *schema.Resource {
 						"dest_namespace": {
 							Type:        schema.TypeString,
 							Required:    true,
-							ForceNew:    true,
 							Description: "Destination namespace.",
 						},
 						"override": {
 							Type:        schema.TypeBool,
 							Required:    true,
-							ForceNew:    true,
 							Description: "Whether to override.",
 						},
 						"filters": {
 							Type:        schema.TypeList,
 							Required:    true,
-							ForceNew:    true,
 							Description: "Synchronization filters.",
 							Elem: &schema.Resource{
 								Schema: map[string]*schema.Schema{
 									"type": {
 										Type:        schema.TypeString,
 										Required:    true,
-										ForceNew:    true,
 										Description: "Type (`name`, `tag` and `resource`).",
 									},
 									"value": {
 										Type:        schema.TypeString,
 										Optional:    true,
-										ForceNew:    true,
 										Description: "It is left blank by default. If the type is `resource` it supports `image`, `chart`, and an empty string. If the type is `name` it supports Namespace name/**, Namespace name/Repository name.",
 									},
 								},
@@ -85,7 +80,6 @@ func ResourceTencentCloudTcrReplication() *schema.Resource {
 						"deletion": {
 							Type:        schema.TypeBool,
 							Optional:    true,
-							ForceNew:    true,
 							Description: "Whether synchronous deletion event.",
 						},
 					},
@@ -95,7 +89,6 @@ func ResourceTencentCloudTcrReplication() *schema.Resource {
 			"description": {
 				Type:        schema.TypeString,
 				Optional:    true,
-				ForceNew:    true,
 				Description: "Rule description.",
 			},
 
@@ -272,7 +265,90 @@ func resourceTencentCloudTcrReplicationRead(d *schema.ResourceData, meta interfa
 		return nil
 	}
 
+	if respData.Description != nil {
+		_ = d.Set("description", respData.Description)
+	}
+
 	return nil
+}
+
+func resourceTencentCloudTcrReplicationUpdate(d *schema.ResourceData, meta interface{}) error {
+	defer tccommon.LogElapsed("resource.tencentcloud_tcr_replication.update")()
+	defer tccommon.InconsistentCheck(d, meta)()
+
+	var (
+		logId   = tccommon.GetLogId(tccommon.ContextNil)
+		ctx     = tccommon.NewResourceLifeCycleHandleFuncContext(context.Background(), logId, d, meta)
+		request = tcrv20190924.NewModifyReplicationRequest()
+	)
+
+	idSplit := strings.Split(d.Id(), tccommon.FILED_SP)
+	if len(idSplit) != 2 {
+		return fmt.Errorf("id is broken,%s", d.Id())
+	}
+
+	sourceRegistryId := idSplit[0]
+	ruleName := idSplit[1]
+
+	request.SourceRegistryId = &sourceRegistryId
+	request.RuleName = &ruleName
+
+	if d.HasChange("rule") || d.HasChange("description") {
+		if ruleMap, ok := helper.InterfacesHeadMap(d, "rule"); ok {
+			replicationRule := tcrv20190924.ModifyReplicationRule{}
+			if v, ok := ruleMap["dest_namespace"].(string); ok {
+				replicationRule.DestNamespace = helper.String(v)
+			}
+
+			if v, ok := ruleMap["override"].(bool); ok {
+				replicationRule.Override = helper.Bool(v)
+			}
+
+			if v, ok := ruleMap["filters"]; ok {
+				for _, item := range v.([]interface{}) {
+					filtersMap := item.(map[string]interface{})
+					replicationFilter := tcrv20190924.ReplicationFilter{}
+					if v, ok := filtersMap["type"].(string); ok && v != "" {
+						replicationFilter.Type = helper.String(v)
+					}
+
+					if v, ok := filtersMap["value"].(string); ok {
+						replicationFilter.Value = helper.String(v)
+					}
+
+					replicationRule.Filters = append(replicationRule.Filters, &replicationFilter)
+				}
+			}
+
+			if v, ok := ruleMap["deletion"].(bool); ok {
+				replicationRule.Deletion = helper.Bool(v)
+			}
+
+			request.Rule = &replicationRule
+		}
+
+		if v, ok := d.GetOk("description"); ok {
+			request.Description = helper.String(v.(string))
+		}
+
+		reqErr := resource.Retry(tccommon.WriteRetryTimeout, func() *resource.RetryError {
+			result, e := meta.(tccommon.ProviderMeta).GetAPIV3Conn().UseTCRClient().ModifyReplicationWithContext(ctx, request)
+			if e != nil {
+				return tccommon.RetryError(e)
+			} else {
+				log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), result.ToJsonString())
+			}
+
+			return nil
+		})
+
+		if reqErr != nil {
+			log.Printf("[CRITAL]%s update tcr replication failed, reason:%+v", logId, reqErr)
+			return reqErr
+		}
+	}
+
+	return resourceTencentCloudTcrReplicationRead(d, meta)
 }
 
 func resourceTencentCloudTcrReplicationDelete(d *schema.ResourceData, meta interface{}) error {

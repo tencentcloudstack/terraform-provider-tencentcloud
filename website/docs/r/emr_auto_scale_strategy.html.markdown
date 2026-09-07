@@ -166,6 +166,9 @@ In addition to all arguments above, the following attributes are exported:
 
 * `id` - ID of the resource.
 
+The `time_auto_scale_strategy` object exports the following:
+
+* `strategy_id` - Policy unique ID.
 
 
 ## Import

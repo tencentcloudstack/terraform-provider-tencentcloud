@@ -1514,6 +1514,15 @@ func ResourceTencentCloudTeoSecurityPolicyConfig() *schema.Resource {
 														Type: schema.TypeString,
 													},
 												},
+												"web_security_submodules_for_exception": {
+													Type:        schema.TypeSet,
+													Optional:    true,
+													Computed:    true,
+													Description: "Specifies the security protection submodule for the exception rule. It is valid only when SkipScope is WebSecuritySubmodules. The possible values are: <ul><li>ManagedRules module: <ul><li>websec-mod-managed-rules/managed-rule-groups: rule set; </li><li>websec-mod-managed-rules/frequent-scanning-protection: high-frequency scanning protection; </li></ul></li><li>RateLimitingRules module: <ul><li>websec-mod-rate-limiting-rules: rate limiting rule; </li></ul></li><li>CustomRules module: <ul><li>websec-mod-custom-rules: custom rule; </li></ul></li><li>HttpDDoSProtection module: <ul><li>websec-mod-http-ddos-protection/adaptive-frequency-control: adaptive frequency control; </li><li>websec-mod-http-ddos-protection/client-filtering: intelligent client filtering; </li><li>websec-mod-http-ddos-protection/bandwidth-abuse-defense: traffic theft protection; </li></ul></li><li>BotManagement module: <ul><li>websec-mod-bot-management/basic-feature: basic feature management; </li><li>websec-mod-bot-management/ip-reputation: client portrait analysis; </li><li>websec-mod-bot-management/bot-intelligence: intelligent Bot analysis; </li><li>websec-mod-bot-management/custom-rules: custom rule; </li><li>websec-mod-bot-management/browser-impersonation-detection: active feature recognition; </li><li>websec-mod-bot-management/client-attestation-rules: client authentication; </li></ul></li><li>BotManagementLite module: <ul><li>websec-mod-bot-management-lite/ai-crawler-detection: AI crawler disposal; </li><li>websec-mod-bot-management-lite/captcha-page-challenge: human verification page. </li></ul></li></ul>.",
+													Elem: &schema.Schema{
+														Type: schema.TypeString,
+													},
+												},
 												"managed_rules_for_exception": {
 													Type:        schema.TypeSet,
 													Optional:    true,
@@ -1858,6 +1867,47 @@ func ResourceTencentCloudTeoSecurityPolicyConfig() *schema.Resource {
 													MaxItems:    1,
 													Description: "Action when attestation is invalid.",
 													Elem:        securityActionSchema(),
+												},
+												"device_profiles": {
+													Type:        schema.TypeList,
+													Optional:    true,
+													Computed:    true,
+													Description: "Client device configurations. One profile per client type.",
+													Elem: &schema.Resource{
+														Schema: map[string]*schema.Schema{
+															"client_type": {
+																Type:        schema.TypeString,
+																Required:    true,
+																Description: "Client device type. Valid values: `iOS`, `Android`, `WebView`, `WeChatMiniProgram`.",
+															},
+															"high_risk_min_score": {
+																Type:        schema.TypeInt,
+																Optional:    true,
+																Computed:    true,
+																Description: "Minimum score (1-99) for judging a request as high risk. Default 50.",
+															},
+															"high_risk_request_action": {
+																Type:        schema.TypeList,
+																Optional:    true,
+																MaxItems:    1,
+																Description: "Action for high-risk requests, using the shared SecurityAction schema (Name supports `Deny`, `Monitor`, `Redirect`, `Challenge`; default `Monitor`).",
+																Elem:        securityActionSchema(),
+															},
+															"medium_risk_min_score": {
+																Type:        schema.TypeInt,
+																Optional:    true,
+																Computed:    true,
+																Description: "Minimum score (1-99) for judging a request as medium risk. Default 15.",
+															},
+															"medium_risk_request_action": {
+																Type:        schema.TypeList,
+																Optional:    true,
+																MaxItems:    1,
+																Description: "Action for medium-risk requests, using the shared SecurityAction schema (default `Monitor`).",
+																Elem:        securityActionSchema(),
+															},
+														},
+													},
 												},
 											},
 										},
@@ -3874,6 +3924,10 @@ func resourceTencentCloudTeoSecurityPolicyConfigRead(d *schema.ResourceData, met
 					rulesMap["web_security_modules_for_exception"] = rules.WebSecurityModulesForException
 				}
 
+				if rules.WebSecuritySubmodulesForException != nil {
+					rulesMap["web_security_submodules_for_exception"] = rules.WebSecuritySubmodulesForException
+				}
+
 				if rules.ManagedRulesForException != nil {
 					rulesMap["managed_rules_for_exception"] = rules.ManagedRulesForException
 				}
@@ -4095,6 +4149,29 @@ func resourceTencentCloudTeoSecurityPolicyConfigRead(d *schema.ResourceData, met
 				}
 				if rule.InvalidAttestationAction != nil {
 					ruleMap["invalid_attestation_action"] = []interface{}{flattenSecurityAction(rule.InvalidAttestationAction)}
+				}
+				if rule.DeviceProfiles != nil {
+					deviceProfilesList := []interface{}{}
+					for _, deviceProfile := range rule.DeviceProfiles {
+						deviceProfileMap := map[string]interface{}{}
+						if deviceProfile.ClientType != nil {
+							deviceProfileMap["client_type"] = deviceProfile.ClientType
+						}
+						if deviceProfile.HighRiskMinScore != nil {
+							deviceProfileMap["high_risk_min_score"] = deviceProfile.HighRiskMinScore
+						}
+						if deviceProfile.MediumRiskMinScore != nil {
+							deviceProfileMap["medium_risk_min_score"] = deviceProfile.MediumRiskMinScore
+						}
+						if deviceProfile.HighRiskRequestAction != nil {
+							deviceProfileMap["high_risk_request_action"] = []interface{}{flattenSecurityAction(deviceProfile.HighRiskRequestAction)}
+						}
+						if deviceProfile.MediumRiskRequestAction != nil {
+							deviceProfileMap["medium_risk_request_action"] = []interface{}{flattenSecurityAction(deviceProfile.MediumRiskRequestAction)}
+						}
+						deviceProfilesList = append(deviceProfilesList, deviceProfileMap)
+					}
+					ruleMap["device_profiles"] = deviceProfilesList
 				}
 				rulesList = append(rulesList, ruleMap)
 			}
@@ -5236,6 +5313,16 @@ func resourceTencentCloudTeoSecurityPolicyConfigUpdate(d *schema.ResourceData, m
 						}
 					}
 
+					if v, ok := rulesMap["web_security_submodules_for_exception"]; ok {
+						webSecuritySubmodulesForExceptionSet := v.(*schema.Set).List()
+						for i := range webSecuritySubmodulesForExceptionSet {
+							if webSecuritySubmodulesForExceptionSet[i] != nil {
+								webSecuritySubmodulesForException := webSecuritySubmodulesForExceptionSet[i].(string)
+								exceptionRule.WebSecuritySubmodulesForException = append(exceptionRule.WebSecuritySubmodulesForException, &webSecuritySubmodulesForException)
+							}
+						}
+					}
+
 					if v, ok := rulesMap["managed_rules_for_exception"]; ok {
 						managedRulesForExceptionSet := v.(*schema.Set).List()
 						for i := range managedRulesForExceptionSet {
@@ -5517,6 +5604,31 @@ func resourceTencentCloudTeoSecurityPolicyConfigUpdate(d *schema.ResourceData, m
 					}
 					if invalidActionMap, ok := helper.ConvertInterfacesHeadToMap(ruleMap["invalid_attestation_action"]); ok {
 						clientAttestationRule.InvalidAttestationAction = buildSecurityActionFromMap(invalidActionMap)
+					}
+					if deviceProfiles, ok := ruleMap["device_profiles"].([]interface{}); ok && len(deviceProfiles) > 0 {
+						for _, dpItem := range deviceProfiles {
+							deviceProfileMap, ok := dpItem.(map[string]interface{})
+							if !ok {
+								continue
+							}
+							deviceProfile := teov20220901.DeviceProfile{}
+							if v, ok := deviceProfileMap["client_type"].(string); ok && v != "" {
+								deviceProfile.ClientType = helper.String(v)
+							}
+							if v, ok := deviceProfileMap["high_risk_min_score"].(int); ok {
+								deviceProfile.HighRiskMinScore = helper.IntUint64(v)
+							}
+							if v, ok := deviceProfileMap["medium_risk_min_score"].(int); ok {
+								deviceProfile.MediumRiskMinScore = helper.IntUint64(v)
+							}
+							if highRiskActionMap, ok := helper.ConvertInterfacesHeadToMap(deviceProfileMap["high_risk_request_action"]); ok {
+								deviceProfile.HighRiskRequestAction = buildSecurityActionFromMap(highRiskActionMap)
+							}
+							if mediumRiskActionMap, ok := helper.ConvertInterfacesHeadToMap(deviceProfileMap["medium_risk_request_action"]); ok {
+								deviceProfile.MediumRiskRequestAction = buildSecurityActionFromMap(mediumRiskActionMap)
+							}
+							clientAttestationRule.DeviceProfiles = append(clientAttestationRule.DeviceProfiles, &deviceProfile)
+						}
 					}
 					botManagement.ClientAttestationRules = &teov20220901.ClientAttestationRules{
 						Rules: []*teov20220901.ClientAttestationRule{&clientAttestationRule},

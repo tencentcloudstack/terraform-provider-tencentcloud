@@ -1,0 +1,3 @@
+```release-note:enhancement
+resource/tencentcloud_teo_security_policy_config: support `device_profiles` parameter in `client_attestation_rules` to configure per-rule client device attestation scoring thresholds and request actions
+```

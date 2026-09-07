@@ -18,10 +18,11 @@ import (
 
 func ResourceTencentCloudMonitorTmpScrapeJob() *schema.Resource {
 	return &schema.Resource{
-		Read:   resourceTencentCloudMonitorTmpScrapeJobRead,
-		Create: resourceTencentCloudMonitorTmpScrapeJobCreate,
-		Update: resourceTencentCloudMonitorTmpScrapeJobUpdate,
-		Delete: resourceTencentCloudMonitorTmpScrapeJobDelete,
+		DeprecationMessage: "This resource has been deprecated in Terraform TencentCloud provider version 1.83.26.",
+		Read:               resourceTencentCloudMonitorTmpScrapeJobRead,
+		Create:             resourceTencentCloudMonitorTmpScrapeJobCreate,
+		Update:             resourceTencentCloudMonitorTmpScrapeJobUpdate,
+		Delete:             resourceTencentCloudMonitorTmpScrapeJobDelete,
 		Importer: &schema.ResourceImporter{
 			State: schema.ImportStatePassthrough,
 		},

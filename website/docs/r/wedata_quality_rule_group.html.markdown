@@ -122,5 +122,8 @@ In addition to all arguments above, the following attributes are exported:
 
 * `id` - ID of the resource.
 
+The `rule_group_exec_strategy_bo_list` object exports the following:
+
+* `rule_group_id` - Monitor task ID, required when editing monitor tasks.
 
 

@@ -183,6 +183,13 @@ func ResourceTencentCloudClsAlarmNotice() *schema.Resource {
 				Description: "Alarm shield status (no-login operation). Valid values: 1 (off), 2 (on, default).",
 			},
 
+			"secure_detail_status": {
+				Optional:    true,
+				Computed:    true,
+				Type:        schema.TypeInt,
+				Description: "Alarm detail secure authentication redirect switch. Valid values: 1 (off, default), 2 (on).",
+			},
+
 			"callback_prioritize": {
 				Optional:    true,
 				Type:        schema.TypeBool,
@@ -642,6 +649,10 @@ func resourceTencentCloudClsAlarmNoticeCreate(d *schema.ResourceData, meta inter
 		request.AlarmShieldStatus = helper.IntUint64(v.(int))
 	}
 
+	if v, ok := d.GetOkExists("secure_detail_status"); ok {
+		request.SecureDetailStatus = helper.IntUint64(v.(int))
+	}
+
 	if v, ok := d.GetOkExists("callback_prioritize"); ok {
 		request.CallbackPrioritize = helper.Bool(v.(bool))
 	}
@@ -766,12 +777,22 @@ func resourceTencentCloudClsAlarmNoticeCreate(d *schema.ResourceData, meta inter
 		} else {
 			log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), result.ToJsonString())
 		}
+
+		if result == nil || result.Response == nil {
+			return resource.NonRetryableError(fmt.Errorf("Create alarm notice failed, Response is nil."))
+		}
+
 		response = result
 		return nil
 	})
+
 	if err != nil {
 		log.Printf("[CRITAL]%s create cls alarmNotice failed, reason:%+v", logId, err)
 		return err
+	}
+
+	if response.Response.AlarmNoticeId == nil || *response.Response.AlarmNoticeId == "" {
+		return fmt.Errorf("AlarmNoticeId is nil.")
 	}
 
 	alarmNoticeId = *response.Response.AlarmNoticeId
@@ -808,8 +829,8 @@ func resourceTencentCloudClsAlarmNoticeRead(d *schema.ResourceData, meta interfa
 	}
 
 	if alarmNotice == nil {
+		log.Printf("[WARN]%s resource `tencentcloud_cls_alarm_notice` [%s] not found, please check if it has been deleted.\n", logId, d.Id())
 		d.SetId("")
-		log.Printf("[WARN]%s resource `ClsAlarmNotice` [%s] not found, please check if it has been deleted.\n", logId, d.Id())
 		return nil
 	}
 
@@ -942,6 +963,10 @@ func resourceTencentCloudClsAlarmNoticeRead(d *schema.ResourceData, meta interfa
 
 	if alarmNotice.AlarmShieldStatus != nil {
 		_ = d.Set("alarm_shield_status", alarmNotice.AlarmShieldStatus)
+	}
+
+	if alarmNotice.SecureDetailStatus != nil {
+		_ = d.Set("secure_detail_status", alarmNotice.SecureDetailStatus)
 	}
 
 	if alarmNotice.CallbackPrioritize != nil {
@@ -1093,7 +1118,7 @@ func resourceTencentCloudClsAlarmNoticeUpdate(d *schema.ResourceData, meta inter
 	needChange := false
 	request.AlarmNoticeId = &alarmNoticeId
 
-	mutableArgs := []string{"name", "type", "notice_receivers", "web_callbacks", "jump_domain", "deliver_status", "deliver_config", "alarm_shield_status", "callback_prioritize", "notice_rules"}
+	mutableArgs := []string{"name", "type", "notice_receivers", "web_callbacks", "jump_domain", "deliver_status", "deliver_config", "alarm_shield_status", "secure_detail_status", "callback_prioritize", "notice_rules"}
 
 	for _, v := range mutableArgs {
 		if d.HasChange(v) {
@@ -1103,7 +1128,6 @@ func resourceTencentCloudClsAlarmNoticeUpdate(d *schema.ResourceData, meta inter
 	}
 
 	if needChange {
-
 		if v, ok := d.GetOk("name"); ok {
 			request.Name = helper.String(v.(string))
 		}
@@ -1210,8 +1234,16 @@ func resourceTencentCloudClsAlarmNoticeUpdate(d *schema.ResourceData, meta inter
 			request.DeliverStatus = helper.IntUint64(v.(int))
 		}
 
-		if v, ok := d.GetOkExists("alarm_shield_status"); ok {
-			request.AlarmShieldStatus = helper.IntUint64(v.(int))
+		if d.HasChange("alarm_shield_status") {
+			if v, ok := d.GetOkExists("alarm_shield_status"); ok {
+				request.AlarmShieldStatus = helper.IntUint64(v.(int))
+			}
+		}
+
+		if d.HasChange("secure_detail_status") {
+			if v, ok := d.GetOkExists("secure_detail_status"); ok {
+				request.SecureDetailStatus = helper.IntUint64(v.(int))
+			}
 		}
 
 		if v, ok := d.GetOkExists("callback_prioritize"); ok {

@@ -92,6 +92,11 @@ In addition to all arguments above, the following attributes are exported:
 * `compliance_pack_id` - Compliance pack ID.
 * `create_time` - Creation time of the compliance pack.
 
+The `config_rules` object exports the following:
+
+* `compliance_result` - Compliance result. Valid values: COMPLIANT, NON_COMPLIANT.
+* `status` - Rule status.
+
 
 ## Import
 

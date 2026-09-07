@@ -1,13 +1,19 @@
 package cdb_test
 
 import (
-	tcacctest "github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/acctest"
-	tccommon "github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/common"
-	localcdb "github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/services/cdb"
-
 	"context"
 	"fmt"
 	"testing"
+
+	"github.com/agiledragon/gomonkey/v2"
+	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
+	"github.com/stretchr/testify/assert"
+	tag_sdk "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/tag/v20180813"
+
+	tcacctest "github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/acctest"
+	tccommon "github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/common"
+	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/connectivity"
+	localcdb "github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/services/cdb"
 
 	cdb "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/cdb/v20170320"
 
@@ -695,3 +701,279 @@ resource "tencentcloud_mysql_instance" "mysql" {
   }
 }
 `
+
+// ---------------------------------------------------------------------------
+// Mock-based unit tests for destroy_protect parameter (no real cloud API calls)
+// ---------------------------------------------------------------------------
+
+type mockMetaForMysqlInstance struct {
+	client *connectivity.TencentCloudClient
+}
+
+func (m *mockMetaForMysqlInstance) GetAPIV3Conn() *connectivity.TencentCloudClient {
+	return m.client
+}
+
+var _ tccommon.ProviderMeta = &mockMetaForMysqlInstance{}
+
+func newMockMetaForMysqlInstance() *mockMetaForMysqlInstance {
+	return &mockMetaForMysqlInstance{client: &connectivity.TencentCloudClient{Region: "ap-guangzhou"}}
+}
+
+func ptrStrMysql(s string) *string    { return &s }
+func ptrInt64Mysql(v int64) *int64    { return &v }
+func ptrUint64Mysql(v uint64) *uint64 { return &v }
+
+// patchMysqlReadApis mocks all SDK client methods invoked during the mysql
+// instance Read flow so that Create (which ends by calling Read) completes
+// without touching the real cloud API. destroyProtectVal controls the value
+// returned in the DescribeDBInstances response.
+func patchMysqlReadApis(patches *gomonkey.Patches, cdbClient *cdb.Client, tagClient *tag_sdk.Client, instanceId string, destroyProtectVal string) {
+	// DescribeDBInstances: returns one running instance with the given DestroyProtect value
+	patches.ApplyMethodFunc(cdbClient, "DescribeDBInstances", func(request *cdb.DescribeDBInstancesRequest) (*cdb.DescribeDBInstancesResponse, error) {
+		status := int64(localcdb.MYSQL_STATUS_RUNNING)
+		payType := int64(localcdb.MysqlPayByUse)
+		autoRenew := int64(localcdb.MYSQL_RENEW_CLOSE)
+		wanStatus := int64(0)
+		taskStatus := int64(0)
+		cdbError := int64(0)
+		port := int64(3306)
+		cpu := int64(1)
+		mem := int64(1000)
+		vol := int64(50)
+		project := int64(0)
+		instanceName := "testAccMysql"
+		engineVersion := "5.7"
+		vip := "10.0.0.1"
+		zone := "ap-guangzhou-3"
+		deviceType := "UNIVERSAL"
+		resp := cdb.NewDescribeDBInstancesResponse()
+		resp.Response = &cdb.DescribeDBInstancesResponseParams{
+			TotalCount: ptrInt64Mysql(1),
+			Items: []*cdb.InstanceInfo{
+				{
+					InstanceId:     ptrStrMysql(instanceId),
+					InstanceName:   ptrStrMysql(instanceName),
+					Status:         &status,
+					PayType:        &payType,
+					AutoRenew:      &autoRenew,
+					Memory:         &mem,
+					Cpu:            &cpu,
+					Volume:         &vol,
+					ProjectId:      &project,
+					WanStatus:      &wanStatus,
+					TaskStatus:     &taskStatus,
+					CdbError:       &cdbError,
+					Vip:            ptrStrMysql(vip),
+					Vport:          &port,
+					EngineVersion:  ptrStrMysql(engineVersion),
+					Zone:           ptrStrMysql(zone),
+					DeviceType:     ptrStrMysql(deviceType),
+					DestroyProtect: ptrStrMysql(destroyProtectVal),
+				},
+			},
+			RequestId: ptrStrMysql("fake-request-id"),
+		}
+		return resp, nil
+	})
+
+	// DescribeDBSecurityGroups: empty list
+	patches.ApplyMethodFunc(cdbClient, "DescribeDBSecurityGroups", func(request *cdb.DescribeDBSecurityGroupsRequest) (*cdb.DescribeDBSecurityGroupsResponse, error) {
+		resp := cdb.NewDescribeDBSecurityGroupsResponse()
+		resp.Response = &cdb.DescribeDBSecurityGroupsResponseParams{
+			Groups:    []*cdb.SecurityGroup{},
+			RequestId: ptrStrMysql("fake-request-id"),
+		}
+		return resp, nil
+	})
+
+	// DescribeDBInstanceGTID: GTID not open
+	patches.ApplyMethodFunc(cdbClient, "DescribeDBInstanceGTID", func(request *cdb.DescribeDBInstanceGTIDRequest) (*cdb.DescribeDBInstanceGTIDResponse, error) {
+		isOpen := int64(0)
+		resp := cdb.NewDescribeDBInstanceGTIDResponse()
+		resp.Response = &cdb.DescribeDBInstanceGTIDResponseParams{
+			IsGTIDOpen: &isOpen,
+			RequestId:  ptrStrMysql("fake-request-id"),
+		}
+		return resp, nil
+	})
+
+	// DescribeDBInstanceConfig: basic config
+	patches.ApplyMethodFunc(cdbClient, "DescribeDBInstanceConfig", func(request *cdb.DescribeDBInstanceConfigRequest) (*cdb.DescribeDBInstanceConfigResponse, error) {
+		protectMode := int64(0)
+		deployMode := int64(0)
+		resp := cdb.NewDescribeDBInstanceConfigResponse()
+		resp.Response = &cdb.DescribeDBInstanceConfigResponseParams{
+			ProtectMode: &protectMode,
+			DeployMode:  &deployMode,
+			Zone:        ptrStrMysql("ap-guangzhou-3"),
+			RequestId:   ptrStrMysql("fake-request-id"),
+		}
+		return resp, nil
+	})
+
+	// DescribeInstanceParams: empty list (no parameters to read)
+	patches.ApplyMethodFunc(cdbClient, "DescribeInstanceParams", func(request *cdb.DescribeInstanceParamsRequest) (*cdb.DescribeInstanceParamsResponse, error) {
+		resp := cdb.NewDescribeInstanceParamsResponse()
+		resp.Response = &cdb.DescribeInstanceParamsResponseParams{
+			TotalCount: ptrInt64Mysql(0),
+			Items:      []*cdb.ParameterDetail{},
+			RequestId:  ptrStrMysql("fake-request-id"),
+		}
+		return resp, nil
+	})
+
+	// tag client DescribeResourceTagsByResourceIds: empty tags
+	patches.ApplyMethodFunc(tagClient, "DescribeResourceTagsByResourceIds", func(request *tag_sdk.DescribeResourceTagsByResourceIdsRequest) (*tag_sdk.DescribeResourceTagsByResourceIdsResponse, error) {
+		resp := tag_sdk.NewDescribeResourceTagsByResourceIdsResponse()
+		resp.Response = &tag_sdk.DescribeResourceTagsByResourceIdsResponseParams{
+			TotalCount: ptrUint64Mysql(0),
+			Tags:       []*tag_sdk.TagResource{},
+			RequestId:  ptrStrMysql("fake-request-id"),
+		}
+		return resp, nil
+	})
+}
+
+// TestMysqlInstance_Create_WithDestroyProtect verifies that when destroy_protect
+// is set in the configuration, the Create flow passes DestroyProtect to the
+// CreateDBInstanceHour API and reads the value back from DescribeDBInstances.
+func TestMysqlInstance_Create_WithDestroyProtect(t *testing.T) {
+	patches := gomonkey.NewPatches()
+	defer patches.Reset()
+
+	cdbClient := &cdb.Client{}
+	tagClient := &tag_sdk.Client{}
+	patches.ApplyMethodReturn(newMockMetaForMysqlInstance().client, "UseMysqlClient", cdbClient)
+	patches.ApplyMethodReturn(newMockMetaForMysqlInstance().client, "UseTagClient", tagClient)
+
+	var capturedDestroyProtect *string
+	instanceId := "cdb-test-destroy-protect-001"
+
+	// CreateDBInstanceHour: capture DestroyProtect from request and return instance id
+	patches.ApplyMethodFunc(cdbClient, "CreateDBInstanceHour", func(request *cdb.CreateDBInstanceHourRequest) (*cdb.CreateDBInstanceHourResponse, error) {
+		if request.DestroyProtect != nil {
+			val := *request.DestroyProtect
+			capturedDestroyProtect = &val
+		}
+		resp := cdb.NewCreateDBInstanceHourResponse()
+		resp.Response = &cdb.CreateDBInstanceHourResponseParams{
+			InstanceIds: []*string{ptrStrMysql(instanceId)},
+			RequestId:   ptrStrMysql("fake-request-id"),
+		}
+		return resp, nil
+	})
+
+	patchMysqlReadApis(patches, cdbClient, tagClient, instanceId, "on")
+
+	meta := newMockMetaForMysqlInstance()
+	res := localcdb.ResourceTencentCloudMysqlInstance()
+	d := schema.TestResourceDataRaw(t, res.Schema, map[string]interface{}{
+		"charge_type":       "POSTPAID",
+		"instance_name":     "testAccMysql",
+		"mem_size":          1000,
+		"volume_size":       50,
+		"engine_version":    "5.7",
+		"root_password":     "test1234",
+		"intranet_port":     3360,
+		"destroy_protect":   "on",
+		"availability_zone": "ap-guangzhou-3",
+		"first_slave_zone":  "ap-guangzhou-3",
+	})
+
+	err := res.Create(d, meta)
+	assert.NoError(t, err)
+	assert.Equal(t, instanceId, d.Id())
+
+	// Verify DestroyProtect was passed to the create API request
+	assert.NotNil(t, capturedDestroyProtect, "DestroyProtect should be set on CreateDBInstanceHour request")
+	assert.Equal(t, "on", *capturedDestroyProtect)
+
+	// Verify destroy_protect is read back from the API response
+	assert.Equal(t, "on", d.Get("destroy_protect"))
+}
+
+// TestMysqlInstance_Create_WithoutDestroyProtect verifies that when destroy_protect
+// is NOT specified in the configuration, the Create flow does NOT set DestroyProtect
+// on the API request (API uses default).
+func TestMysqlInstance_Create_WithoutDestroyProtect(t *testing.T) {
+	patches := gomonkey.NewPatches()
+	defer patches.Reset()
+
+	cdbClient := &cdb.Client{}
+	tagClient := &tag_sdk.Client{}
+	patches.ApplyMethodReturn(newMockMetaForMysqlInstance().client, "UseMysqlClient", cdbClient)
+	patches.ApplyMethodReturn(newMockMetaForMysqlInstance().client, "UseTagClient", tagClient)
+
+	var requestHadDestroyProtect bool
+	instanceId := "cdb-test-no-destroy-protect-002"
+
+	patches.ApplyMethodFunc(cdbClient, "CreateDBInstanceHour", func(request *cdb.CreateDBInstanceHourRequest) (*cdb.CreateDBInstanceHourResponse, error) {
+		requestHadDestroyProtect = request.DestroyProtect != nil
+		resp := cdb.NewCreateDBInstanceHourResponse()
+		resp.Response = &cdb.CreateDBInstanceHourResponseParams{
+			InstanceIds: []*string{ptrStrMysql(instanceId)},
+			RequestId:   ptrStrMysql("fake-request-id"),
+		}
+		return resp, nil
+	})
+
+	// API returns empty string for DestroyProtect when not configured
+	patchMysqlReadApis(patches, cdbClient, tagClient, instanceId, "")
+
+	meta := newMockMetaForMysqlInstance()
+	res := localcdb.ResourceTencentCloudMysqlInstance()
+	d := schema.TestResourceDataRaw(t, res.Schema, map[string]interface{}{
+		"charge_type":       "POSTPAID",
+		"instance_name":     "testAccMysql",
+		"mem_size":          1000,
+		"volume_size":       50,
+		"engine_version":    "5.7",
+		"root_password":     "test1234",
+		"intranet_port":     3360,
+		"availability_zone": "ap-guangzhou-3",
+		"first_slave_zone":  "ap-guangzhou-3",
+	})
+
+	err := res.Create(d, meta)
+	assert.NoError(t, err)
+	assert.Equal(t, instanceId, d.Id())
+
+	// DestroyProtect should NOT be set on the request when not specified
+	assert.False(t, requestHadDestroyProtect, "DestroyProtect should not be set on request when destroy_protect is not specified")
+}
+
+// TestMysqlInstance_Read_DestroyProtect verifies that the Read operation
+// correctly reads DestroyProtect from the DescribeDBInstances response.
+func TestMysqlInstance_Read_DestroyProtect(t *testing.T) {
+	patches := gomonkey.NewPatches()
+	defer patches.Reset()
+
+	cdbClient := &cdb.Client{}
+	tagClient := &tag_sdk.Client{}
+	patches.ApplyMethodReturn(newMockMetaForMysqlInstance().client, "UseMysqlClient", cdbClient)
+	patches.ApplyMethodReturn(newMockMetaForMysqlInstance().client, "UseTagClient", tagClient)
+
+	instanceId := "cdb-test-read-destroy-protect-003"
+	patchMysqlReadApis(patches, cdbClient, tagClient, instanceId, "off")
+
+	meta := newMockMetaForMysqlInstance()
+	res := localcdb.ResourceTencentCloudMysqlInstance()
+	d := schema.TestResourceDataRaw(t, res.Schema, map[string]interface{}{
+		"charge_type":       "POSTPAID",
+		"instance_name":     "testAccMysql",
+		"mem_size":          1000,
+		"volume_size":       50,
+		"engine_version":    "5.7",
+		"root_password":     "test1234",
+		"intranet_port":     3360,
+		"availability_zone": "ap-guangzhou-3",
+		"first_slave_zone":  "ap-guangzhou-3",
+	})
+	d.SetId(instanceId)
+
+	err := res.Read(d, meta)
+	assert.NoError(t, err)
+	assert.Equal(t, instanceId, d.Id())
+	assert.Equal(t, "off", d.Get("destroy_protect"))
+}

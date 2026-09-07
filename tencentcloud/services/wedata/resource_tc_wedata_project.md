@@ -8,6 +8,7 @@ resource "tencentcloud_wedata_project" "example" {
     project_name  = "tf_example"
     display_name  = "display_name"
     project_model = "SIMPLE"
+    schedule_mode = "task"
   }
 
   dlc_info {

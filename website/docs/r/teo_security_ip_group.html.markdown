@@ -45,6 +45,9 @@ In addition to all arguments above, the following attributes are exported:
 
 * `id` - ID of the resource.
 
+The `ip_group` object exports the following:
+
+* `group_id` - Group ID.
 
 
 ## Import

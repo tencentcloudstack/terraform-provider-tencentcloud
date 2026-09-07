@@ -192,16 +192,16 @@ func resourceTencentCloudGwlbTargetGroupCreate(d *schema.ResourceData, meta inte
 		if v, ok := healthCheckMap["port"]; ok {
 			targetGroupHealthCheck.Port = helper.IntInt64(v.(int))
 		}
-		if v, ok := healthCheckMap["timeout"]; ok {
+		if v, ok := d.GetOkExists("health_check.0.timeout"); ok {
 			targetGroupHealthCheck.Timeout = helper.IntInt64(v.(int))
 		}
-		if v, ok := healthCheckMap["interval_time"]; ok {
+		if v, ok := d.GetOkExists("health_check.0.interval_time"); ok {
 			targetGroupHealthCheck.IntervalTime = helper.IntInt64(v.(int))
 		}
-		if v, ok := healthCheckMap["health_num"]; ok {
+		if v, ok := d.GetOkExists("health_check.0.health_num"); ok {
 			targetGroupHealthCheck.HealthNum = helper.IntInt64(v.(int))
 		}
-		if v, ok := healthCheckMap["un_health_num"]; ok {
+		if v, ok := d.GetOkExists("health_check.0.un_health_num"); ok {
 			targetGroupHealthCheck.UnHealthNum = helper.IntInt64(v.(int))
 		}
 		request.HealthCheck = &targetGroupHealthCheck
@@ -381,16 +381,16 @@ func resourceTencentCloudGwlbTargetGroupUpdate(d *schema.ResourceData, meta inte
 			if v, ok := healthCheckMap["port"]; ok {
 				targetGroupHealthCheck.Port = helper.IntInt64(v.(int))
 			}
-			if v, ok := healthCheckMap["timeout"]; ok {
+			if v, ok := d.GetOkExists("health_check.0.timeout"); ok {
 				targetGroupHealthCheck.Timeout = helper.IntInt64(v.(int))
 			}
-			if v, ok := healthCheckMap["interval_time"]; ok {
+			if v, ok := d.GetOkExists("health_check.0.interval_time"); ok {
 				targetGroupHealthCheck.IntervalTime = helper.IntInt64(v.(int))
 			}
-			if v, ok := healthCheckMap["health_num"]; ok {
+			if v, ok := d.GetOkExists("health_check.0.health_num"); ok {
 				targetGroupHealthCheck.HealthNum = helper.IntInt64(v.(int))
 			}
-			if v, ok := healthCheckMap["un_health_num"]; ok {
+			if v, ok := d.GetOkExists("health_check.0.un_health_num"); ok {
 				targetGroupHealthCheck.UnHealthNum = helper.IntInt64(v.(int))
 			}
 			request1.HealthCheck = &targetGroupHealthCheck

@@ -67,6 +67,11 @@ In addition to all arguments above, the following attributes are exported:
 
 * `id` - ID of the resource.
 
+The `param_list` object exports the following:
+
+* `default_value` - The default value of the parameter. Returned as a string.
+* `param_description_ch` - Parameter Chinese Description.
+* `param_description_en` - Parameter English Description.
 
 
 ## Import

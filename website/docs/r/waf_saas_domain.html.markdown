@@ -228,6 +228,10 @@ In addition to all arguments above, the following attributes are exported:
 * `id` - ID of the resource.
 * `domain_id` - Domain id.
 
+The `ports` object exports the following:
+
+* `nginx_server_id` - Nginx server ID.
+
 
 ## Import
 

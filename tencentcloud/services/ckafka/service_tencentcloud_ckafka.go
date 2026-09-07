@@ -1774,6 +1774,41 @@ func (me *CkafkaService) DescribeCkafkaRouteById(ctx context.Context, instanceId
 	return
 }
 
+func (me *CkafkaService) DescribeCkafkaRouteByFilter(ctx context.Context, instanceId string, routeId *int64, mainRouteFlag *bool) (routeResponse *ckafka.RouteResponse, errRet error) {
+	logId := tccommon.GetLogId(ctx)
+
+	request := ckafka.NewDescribeRouteRequest()
+	request.InstanceId = &instanceId
+	if routeId != nil {
+		request.RouteId = routeId
+	}
+	if mainRouteFlag != nil {
+		request.MainRouteFlag = mainRouteFlag
+	}
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	ratelimit.Check(request.GetAction())
+
+	response, err := me.client.UseCkafkaClient().DescribeRoute(request)
+	if err != nil {
+		errRet = err
+		return
+	}
+	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+	if response == nil || response.Response == nil || response.Response.Result == nil {
+		return
+	}
+
+	routeResponse = response.Response.Result
+	return
+}
+
 func (me *CkafkaService) DeleteCkafkaRouteById(ctx context.Context, instanceId string, routeId int64) (errRet error) {
 	logId := tccommon.GetLogId(ctx)
 

@@ -23,8 +23,8 @@ func ResourceTencentCloudTeoBindSecurityTemplate() *schema.Resource {
 			State: schema.ImportStatePassthrough,
 		},
 		Timeouts: &schema.ResourceTimeout{
-			Create: schema.DefaultTimeout(3 * time.Minute),
-			Delete: schema.DefaultTimeout(3 * time.Minute),
+			Create: schema.DefaultTimeout(10 * time.Minute),
+			Delete: schema.DefaultTimeout(10 * time.Minute),
 		},
 		Schema: map[string]*schema.Schema{
 			"zone_id": {
@@ -171,7 +171,7 @@ func resourceTencentCloudTeoBindSecurityTemplateRead(d *schema.ResourceData, met
 	if respData == nil {
 		log.Printf("[CRUD] teo_bind_security_template id=%s", d.Id())
 		d.SetId("")
-		log.Printf("[WARN]%s resource `teo_bind_security_template` not found, please check if it has been deleted.\n", logId)
+		log.Printf("[WARN]%s resource `tencentcloud_teo_bind_security_template` not found, please check if it has been deleted.\n", logId)
 		return nil
 	}
 

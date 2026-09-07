@@ -126,6 +126,11 @@ In addition to all arguments above, the following attributes are exported:
 * `id` - ID of the resource.
 * `service_id` - service id.
 
+The `targets` object of `upstream_info` exports the following:
+
+* `created_time` - created time.
+* `health` - health.
+
 
 ## Import
 

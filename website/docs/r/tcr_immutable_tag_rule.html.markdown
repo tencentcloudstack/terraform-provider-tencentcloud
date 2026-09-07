@@ -126,6 +126,10 @@ In addition to all arguments above, the following attributes are exported:
 
 * `id` - ID of the resource.
 
+The `rule` object exports the following:
+
+* `id` - rule id.
+* `ns_name` - namespace name.
 
 
 ## Import

@@ -154,12 +154,20 @@ func NewAssociateBudgetResponse() (response *AssociateBudgetResponse) {
 
 // AssociateBudget
 // 将Budget关联到企业型模型路由实例或企业型实例下的Key。资源已关联其他Budget时，本次请求会替换为新的Budget。
+//
+// 可能返回的错误码:
+//  INVALIDPARAMETERVALUE = "InvalidParameterValue"
+//  UNSUPPORTEDOPERATION_BUDGETONLYSUPPORTSENTERPRISE = "UnsupportedOperation.BudgetOnlySupportsEnterprise"
 func (c *Client) AssociateBudget(request *AssociateBudgetRequest) (response *AssociateBudgetResponse, err error) {
     return c.AssociateBudgetWithContext(context.Background(), request)
 }
 
 // AssociateBudget
 // 将Budget关联到企业型模型路由实例或企业型实例下的Key。资源已关联其他Budget时，本次请求会替换为新的Budget。
+//
+// 可能返回的错误码:
+//  INVALIDPARAMETERVALUE = "InvalidParameterValue"
+//  UNSUPPORTEDOPERATION_BUDGETONLYSUPPORTSENTERPRISE = "UnsupportedOperation.BudgetOnlySupportsEnterprise"
 func (c *Client) AssociateBudgetWithContext(ctx context.Context, request *AssociateBudgetRequest) (response *AssociateBudgetResponse, err error) {
     if request == nil {
         request = NewAssociateBudgetRequest()
@@ -8515,6 +8523,10 @@ func NewModifyLoadBalancerSlaResponse() (response *ModifyLoadBalancerSlaResponse
 //
 // - 传统型负载均衡实例不支持升级为性能容量型实例。
 //
+// 
+//
+// 本接口为异步接口，本接口返回成功后需以返回的RequestID为入参，调用 [DescribeTaskStatus](https://cloud.tencent.com/document/product/214/30683) 接口查询本次任务是否成功。
+//
 // 可能返回的错误码:
 //  FAILEDOPERATION = "FailedOperation"
 //  INTERNALERROR = "InternalError"
@@ -8536,6 +8548,10 @@ func (c *Client) ModifyLoadBalancerSla(request *ModifyLoadBalancerSlaRequest) (r
 // - 共享型升级为性能容量型实例后，不支持再回退到共享型实例。
 //
 // - 传统型负载均衡实例不支持升级为性能容量型实例。
+//
+// 
+//
+// 本接口为异步接口，本接口返回成功后需以返回的RequestID为入参，调用 [DescribeTaskStatus](https://cloud.tencent.com/document/product/214/30683) 接口查询本次任务是否成功。
 //
 // 可能返回的错误码:
 //  FAILEDOPERATION = "FailedOperation"

@@ -158,6 +158,9 @@ const (
 	// 接入网段前缀必须是10，172，192开头。
 	INVALIDPARAMETERVALUE_ACCESSSUBNETPREFIX = "InvalidParameterValue.AccessSubnetPrefix"
 
+	// 指定的EIP已开启直通开关，无法再次开启
+	INVALIDPARAMETERVALUE_ADDRESSALREADYHASPASSTHROUGH = "InvalidParameterValue.AddressAlreadyHasPassThrough"
+
 	// 被攻击的IP地址。
 	INVALIDPARAMETERVALUE_ADDRESSATTACKED = "InvalidParameterValue.AddressAttacked"
 
@@ -812,6 +815,9 @@ const (
 	// 资源不可用。
 	RESOURCEUNAVAILABLE = "ResourceUnavailable"
 
+	// 专线网关所在VPC未创建IPv6 CIDR，专线网关无法开启IPv6功能
+	RESOURCEUNAVAILABLE_DCGIPV6NEEDVPCCREATEIPV6CIDR = "ResourceUnavailable.DcgIpv6NeedVpcCreateIPv6Cidr"
+
 	// 获取CDC IDC VIP失败.
 	RESOURCEUNAVAILABLE_FAILEDGETCDCIDCVIP = "ResourceUnavailable.FailedGetCdcIdcVip"
 
@@ -890,6 +896,9 @@ const (
 	// 该带宽包不支持此操作。
 	UNSUPPORTEDOPERATION_BANDWIDTHPACKAGEIDNOTSUPPORTED = "UnsupportedOperation.BandwidthPackageIdNotSupported"
 
+	// 抱歉，您的操作暂时无法完成，请稍后重试或联系客服。
+	UNSUPPORTEDOPERATION_BILLINGFAILED = "UnsupportedOperation.BillingFailed"
+
 	// 绑定了防火墙，请先到防火墙页面解绑。
 	UNSUPPORTEDOPERATION_BINDCLOUDFIREWALL = "UnsupportedOperation.BindCloudFirewall"
 
@@ -937,6 +946,9 @@ const (
 
 	// 添加 community 时，vpg 需要开通传播 community 白名单
 	UNSUPPORTEDOPERATION_CCNNOTENABLECOMMUNITY = "UnsupportedOperation.CcnNotEnableCommunity"
+
+	// 未开启云联网AsPath策略值功能
+	UNSUPPORTEDOPERATION_CCNNOTENABLEPOLICYASPATHFLAG = "UnsupportedOperation.CcnNotEnablePolicyAsPathFlag"
 
 	// 云联网未开启策略路由开关
 	UNSUPPORTEDOPERATION_CCNNOTENABLEPOLICYBASEDROUTINGFLAG = "UnsupportedOperation.CcnNotEnablePolicyBasedRoutingFlag"
@@ -1175,6 +1187,9 @@ const (
 	// 资源互斥操作任务正在执行。
 	UNSUPPORTEDOPERATION_MUTEXOPERATIONTASKRUNNING = "UnsupportedOperation.MutexOperationTaskRunning"
 
+	// 传统型NAT网关暂不支持同时创建DNAT规则和开通流日志功能。
+	UNSUPPORTEDOPERATION_NATGATEWAYDNATANDFLOWLOGCONFLICT = "UnsupportedOperation.NatGatewayDnatAndFlowLogConflict"
+
 	// NAT网关的公网IP不存在。
 	UNSUPPORTEDOPERATION_NATGATEWAYEIPNOTEXISTS = "UnsupportedOperation.NatGatewayEipNotExists"
 
@@ -1189,6 +1204,9 @@ const (
 
 	// NAT网关存在路由和最近流量“出/入带宽”峰值取大超过检测带宽阈值。
 	UNSUPPORTEDOPERATION_NATGATEWAYHAVEROUTEANDHIGHTRAFFIC = "UnsupportedOperation.NatGatewayHaveRouteAndHighTraffic"
+
+	// NAT实例正在使用流量镜像
+	UNSUPPORTEDOPERATION_NATGATEWAYHAVETRAFFICMIRROR = "UnsupportedOperation.NatGatewayHaveTrafficMirror"
 
 	// NAT实例当前负载较高，请稍后重试
 	UNSUPPORTEDOPERATION_NATGATEWAYISBUSY = "UnsupportedOperation.NatGatewayIsBusy"
@@ -1256,11 +1274,17 @@ const (
 	// 当前云联网为非后付费类型，无法进行此操作。
 	UNSUPPORTEDOPERATION_NOTPOSTPAIDCCNOPERATION = "UnsupportedOperation.NotPostpaidCcnOperation"
 
+	// 该VPC没有投放Snat子网地址池
+	UNSUPPORTEDOPERATION_NOTPUTVPCSNATIPADDRESS = "UnsupportedOperation.NotPutVpcSnatIpAddress"
+
 	// 当前云联网不支持同时关联EDGE实例和跨境实例
 	UNSUPPORTEDOPERATION_NOTSUPPORTATTACHEDGEANDCROSSBORDERINSTANCE = "UnsupportedOperation.NotSupportAttachEdgeAndCrossBorderInstance"
 
 	// 没有开启多路由表特性，不能创建用户路由表。
 	UNSUPPORTEDOPERATION_NOTSUPPORTCREATECCNROUTETABLE = "UnsupportedOperation.NotSupportCreateCcnRouteTable"
+
+	// 不支持创建跨域对等连接
+	UNSUPPORTEDOPERATION_NOTSUPPORTCREATECROSSREGIONVPCPEER = "UnsupportedOperation.NotSupportCreateCrossRegionVpcPeer"
 
 	// 当前操作不支持创建Ipv6类型VPN网关。
 	UNSUPPORTEDOPERATION_NOTSUPPORTCREATEIPV6VPNGATEWAY = "UnsupportedOperation.NotSupportCreateIpv6VpnGateway"
@@ -1312,6 +1336,9 @@ const (
 
 	// 仅支持专业版Ckafka。
 	UNSUPPORTEDOPERATION_ONLYSUPPORTPROFESSIONKAFKA = "UnsupportedOperation.OnlySupportProfessionKafka"
+
+	// 参数 `SslVpnProtocol` 不支持修改。
+	UNSUPPORTEDOPERATION_PARAMETERSSLVPNPROTOCOL = "UnsupportedOperation.ParameterSslVpnProtocol"
 
 	// 预付费云联网只支持带宽计量类型
 	UNSUPPORTEDOPERATION_PREPAIDCCNONLYSUPPORTBANDWIDTHMETERING = "UnsupportedOperation.PrepaidCcnOnlySupportBandwidthMetering"
@@ -1400,6 +1427,9 @@ const (
 	// SSL客户端状态不可用，不支持下载
 	UNSUPPORTEDOPERATION_SSLCLIENTCERTDISABLEUNSUPPORTEDDOWNLOADSSLCLIENTCERT = "UnsupportedOperation.SSLClientCertDisableUnsupportedDownloadSSLClientCert"
 
+	// 服务在当前地域不支持。
+	UNSUPPORTEDOPERATION_SERVICEUNSUPPORTEDREGION = "UnsupportedOperation.ServiceUnsupportedRegion"
+
 	// 安全组展开后的规则已达到上限。
 	UNSUPPORTEDOPERATION_SGNUMEXCEEDLIMIT = "UnsupportedOperation.SgNumExceedLimit"
 
@@ -1463,8 +1493,14 @@ const (
 	// 流量镜像源、目的不可同端。
 	UNSUPPORTEDOPERATION_TRAFFICMIRRORNOTSUPPORTSAMESRCTARGET = "UnsupportedOperation.TrafficMirrorNotSupportSameSrcTarget"
 
+	// 流量保护不支持IPv6。
+	UNSUPPORTEDOPERATION_TRAFFICPROTECTIONNOTSUPPORTIPV6 = "UnsupportedOperation.TrafficProtectionNotSupportIPv6"
+
 	// 流量调度策略分配带宽和地域间带宽不一致，不支持关闭流量调度策略功能。
 	UNSUPPORTEDOPERATION_TRAFFICQOSPOLICYBANDWIDTH = "UnsupportedOperation.TrafficQosPolicyBandwidth"
+
+	// 资源业务带宽超过防误操作检测阈值。
+	UNSUPPORTEDOPERATION_TRAFFICVALIDATIONFAILED = "UnsupportedOperation.TrafficValidationFailed"
 
 	// 账号ID不存在。
 	UNSUPPORTEDOPERATION_UINNOTFOUND = "UnsupportedOperation.UinNotFound"
@@ -1526,8 +1562,14 @@ const (
 	// VPN SPD通道不支持配置健康检查
 	UNSUPPORTEDOPERATION_VPNCONNCIDRNOTSUPPORTEDHEALTHCHECK = "UnsupportedOperation.VpnConnCidrNotSupportedHealthCheck"
 
+	// 私网VPN通道目的网段与私网VPN网关的私网网段冲突，请修改后重试。
+	UNSUPPORTEDOPERATION_VPNCONNDESTCIDRCONFLICTWITHPRIVATENET = "UnsupportedOperation.VpnConnDestCidrConflictWithPrivateNet"
+
 	// 当前通道为非可用状态，不支持该操作。
 	UNSUPPORTEDOPERATION_VPNCONNINVALIDSTATE = "UnsupportedOperation.VpnConnInvalidState"
+
+	// VPN网关下的通道不支持动态路由与非动态路由混用，请检查后重试。
+	UNSUPPORTEDOPERATION_VPNCONNROUTETYPEMIXED = "UnsupportedOperation.VpnConnRouteTypeMixed"
 
 	// SPD本端网段冲突，请检查后重试。
 	UNSUPPORTEDOPERATION_VPNCONNSPDOVERLAP = "UnsupportedOperation.VpnConnSPDOverlap"

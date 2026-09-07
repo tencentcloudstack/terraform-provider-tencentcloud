@@ -52,6 +52,16 @@ In addition to all arguments above, the following attributes are exported:
 * `record_id` - Deploy record ID.
 * `status` - Deploy status. Valid values: deploying (Deploying), failure (Deploy failed), success (Deploy successful).
 
+The `config_group_version_infos` object exports the following:
+
+* `create_time` - Version creation time. The time format follows the ISO 8601 standard and is represented in Coordinated Universal Time (UTC).
+* `description` - Version description.
+* `group_id` - Configuraration group ID.
+* `group_type` - Configuration group type. Valid values: l7_acceleration (L7 acceleration configuration group), edge_functions (Edge function configuration group).
+* `source_version` - Source version ID. The version ID from which this version was derived. Read-only.
+* `status` - Version status. Valid values: creating (Being created), inactive (Not effective), active (Effective).
+* `version_number` - Version No.
+
 ## Timeouts
 
 The `timeouts` block allows you to specify [timeouts](https://developer.hashicorp.com/terraform/language/resources/syntax#operation-timeouts) for certain actions:

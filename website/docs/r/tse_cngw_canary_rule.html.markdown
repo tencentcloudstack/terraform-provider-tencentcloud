@@ -111,6 +111,9 @@ In addition to all arguments above, the following attributes are exported:
 
 * `id` - ID of the resource.
 
+The `balanced_service_list` object of `canary_rule` exports the following:
+
+* `upstream_name` - upstream name, meaningless when used as an input parameter.
 
 
 ## Import

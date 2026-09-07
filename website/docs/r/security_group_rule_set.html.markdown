@@ -143,6 +143,14 @@ In addition to all arguments above, the following attributes are exported:
 * `id` - ID of the resource.
 * `version` - Security policies version, auto increment for every update.
 
+The `egress` object exports the following:
+
+* `policy_index` - The security group rule index number, whose value dynamically changes with changes in security group rules.
+
+The `ingress` object exports the following:
+
+* `policy_index` - The security group rule index number, whose value dynamically changes with changes in security group rules.
+
 
 ## Import
 

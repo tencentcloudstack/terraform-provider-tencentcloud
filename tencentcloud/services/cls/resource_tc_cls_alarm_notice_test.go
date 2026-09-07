@@ -18,12 +18,16 @@ func TestAccTencentCloudClsAlarmNoticeResource_basic(t *testing.T) {
 		Steps: []resource.TestStep{
 			{
 				Config: testAccClsAlarmNotice,
-				Check:  resource.ComposeTestCheckFunc(resource.TestCheckResourceAttrSet("tencentcloud_cls_alarm_notice.alarm_notice", "id")),
+				Check: resource.ComposeTestCheckFunc(
+					resource.TestCheckResourceAttrSet("tencentcloud_cls_alarm_notice.alarm_notice", "id"),
+					resource.TestCheckResourceAttr("tencentcloud_cls_alarm_notice.alarm_notice", "secure_detail_status", "2"),
+				),
 			},
 			{
 				Config: testAccClsAlarmNoticeUpdate,
 				Check: resource.ComposeTestCheckFunc(
 					resource.TestCheckResourceAttr("tencentcloud_cls_alarm_notice.alarm_notice", "name", "terraform-alarm-notice-for-test"),
+					resource.TestCheckResourceAttr("tencentcloud_cls_alarm_notice.alarm_notice", "secure_detail_status", "1"),
 				),
 			},
 			{
@@ -43,6 +47,7 @@ resource "tencentcloud_cls_alarm_notice" "alarm_notice" {
     "createdBy" = "terraform"
   }
   type = "All"
+  secure_detail_status = 2
 
   notice_receivers {
     index             = 0
@@ -69,6 +74,7 @@ resource "tencentcloud_cls_alarm_notice" "alarm_notice" {
     "createdBy" = "terraform"
   }
   type = "All"
+  secure_detail_status = 1
 
   notice_receivers {
     index             = 0

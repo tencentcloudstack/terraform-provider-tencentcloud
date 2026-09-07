@@ -1,4 +1,4 @@
-// Copyright (c) 2017-2018 THL A29 Limited, a Tencent company. All Rights Reserved.
+// Copyright (c) 2017-2025 Tencent. All Rights Reserved.
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -62,6 +62,9 @@ const (
 	// 角色获取错误。
 	INTERNALERROR_GETROLEERROR = "InternalError.GetRoleError"
 
+	// 访问治理中心引擎内部错误。
+	INTERNALERROR_GOVERNANCEFAILURE = "InternalError.GovernanceFailure"
+
 	// 状态码错误。
 	INTERNALERROR_HTTPSTATUSCODEERROR = "InternalError.HttpStatusCodeError"
 
@@ -94,6 +97,9 @@ const (
 
 	// 参数错误。
 	INVALIDPARAMETER = "InvalidParameter"
+
+	// json转换失败
+	INVALIDPARAMETER_PARSEJSONERROR = "InvalidParameter.ParseJsonError"
 
 	// 参数取值错误。
 	INVALIDPARAMETERVALUE = "InvalidParameterValue"
@@ -167,6 +173,15 @@ const (
 	// 不允许的操作。
 	OPERATIONDENIED_OPERATIONDENIED = "OperationDenied.OperationDenied"
 
+	// 服务来源与服务关联。
+	RESOURCEINUSE_GATEWAYSERVICESOURCEEXISTSERVICE = "ResourceInUse.GatewayServiceSourceExistService"
+
+	// 服务下存在实例，无法删除。
+	RESOURCEINUSE_INSTANCESEXISTEDINSERVICE = "ResourceInUse.InstancesExistedInService"
+
+	// 此命名空间下存在服务，无法删除。
+	RESOURCEINUSE_SERVICESEXISTEDINNAMESPACE = "ResourceInUse.ServicesExistedInNamespace"
+
 	// 资源不存在。
 	RESOURCENOTFOUND = "ResourceNotFound"
 
@@ -178,6 +193,9 @@ const (
 
 	// 资源不存在。
 	RESOURCENOTFOUND_RESOURCENOTFOUND = "ResourceNotFound.ResourceNotFound"
+
+	// 未购买
+	RESOURCEUNAVAILABLE_NOTPURCHASED = "ResourceUnavailable.NotPurchased"
 
 	// 未授权操作。
 	UNAUTHORIZEDOPERATION = "UnauthorizedOperation"

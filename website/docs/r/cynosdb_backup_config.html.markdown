@@ -148,6 +148,11 @@ In addition to all arguments above, the following attributes are exported:
 * `backup_freq` - Backup frequency. It is an array of 7 elements corresponding to Monday through Sunday. full: full backup; increment: incremental backup. This parameter cannot be modified currently and doesn't need to be entered.
 * `backup_type` - Backup mode. logic: logic backup; snapshot: snapshot backup. This parameter cannot be modified currently and doesn't need to be entered.
 
+The `snapshot_secondary_backup_config` object exports the following:
+
+* `cross_regions_enable` - Whether cross-region backup is enabled. Values: `yes`, `no`.
+* `cross_regions` - Cross-region backup target regions.
+
 
 ## Import
 

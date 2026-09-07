@@ -11,6 +11,8 @@ description: |-
 
 Provides a resource to create a monitor tmpScrapeJob
 
+~> **NOTE:** This resource has been deprecated in Terraform TencentCloud provider version 1.83.26.
+
 ## Example Usage
 
 ```hcl

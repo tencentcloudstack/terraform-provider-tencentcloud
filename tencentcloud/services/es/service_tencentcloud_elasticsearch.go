@@ -108,7 +108,8 @@ func (me *ElasticsearchService) DeleteInstance(ctx context.Context, instanceId s
 
 // UpdateInstance FIXME: use *Request instead of these suck params
 func (me *ElasticsearchService) UpdateInstance(ctx context.Context, instanceId, instanceName, password, kibanaPublicAccess, kibanaPrivateAccess, publicAccess, protocol string,
-	basicSecurityType int64, nodeList []*es.NodeInfo, nodeTypeInfo *es.WebNodeTypeInfo, esAcl *es.EsAcl, cosBackup *es.CosBackup, esPublicAcl *es.EsPublicAcl, multiZoneInfo []*es.ZoneDetail, enableDestroyProtection string) error {
+	basicSecurityType int64, nodeList []*es.NodeInfo, nodeTypeInfo *es.WebNodeTypeInfo, esAcl *es.EsAcl, cosBackup *es.CosBackup, esPublicAcl *es.EsPublicAcl, multiZoneInfo []*es.ZoneDetail, enableDestroyProtection string,
+	enableCerebro *bool, cerebroPublicAccess string, cerebroPrivateAccess string, cerebroPrivateDomain string) error {
 	logId := tccommon.GetLogId(ctx)
 	request := es.NewUpdateInstanceRequest()
 	request.InstanceId = &instanceId
@@ -153,6 +154,18 @@ func (me *ElasticsearchService) UpdateInstance(ctx context.Context, instanceId, 
 	}
 	if enableDestroyProtection != "" {
 		request.EnableDestroyProtection = &enableDestroyProtection
+	}
+	if enableCerebro != nil {
+		request.EnableCerebro = enableCerebro
+	}
+	if cerebroPublicAccess != "" {
+		request.CerebroPublicAccess = &cerebroPublicAccess
+	}
+	if cerebroPrivateAccess != "" {
+		request.CerebroPrivateAccess = &cerebroPrivateAccess
+	}
+	if cerebroPrivateDomain != "" {
+		request.CerebroPrivateDomain = &cerebroPrivateDomain
 	}
 	ratelimit.Check(request.GetAction())
 	_, err := me.client.UseEsClient().UpdateInstance(request)

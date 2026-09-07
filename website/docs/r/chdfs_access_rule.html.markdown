@@ -44,6 +44,10 @@ In addition to all arguments above, the following attributes are exported:
 
 * `id` - ID of the resource.
 
+The `access_rule` object exports the following:
+
+* `access_rule_id` - single rule id.
+* `create_time` - rule create time.
 
 
 ## Import

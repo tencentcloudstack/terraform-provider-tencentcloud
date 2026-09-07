@@ -375,6 +375,10 @@ In addition to all arguments above, the following attributes are exported:
 * `public_access_port` - Port for public access.
 * `uid` - Uid of the postgresql instance.
 
+The `backup_plan` object exports the following:
+
+* `monthly_plan_id` - Monthly plan id.
+
 ## Timeouts
 
 The `timeouts` block allows you to specify [timeouts](https://developer.hashicorp.com/terraform/language/resources/syntax#operation-timeouts) for certain actions:

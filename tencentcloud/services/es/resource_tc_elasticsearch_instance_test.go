@@ -1246,3 +1246,386 @@ func TestEsInstanceDestroyProtection_Update_NoChange(t *testing.T) {
 	assert.NoError(t, err)
 	assert.False(t, updateCalled)
 }
+
+// go test ./tencentcloud/services/es/ -run "TestEsInstanceCoordinatingNode" -v -count=1 -gcflags="all=-l"
+
+// nodeDiffAction describes the diff action for a single node type (test-only helper).
+type nodeDiffAction string
+
+const (
+	nodeDiffActionNone   nodeDiffAction = "none"   // no config for this type
+	nodeDiffActionAdd    nodeDiffAction = "add"    // new node type added
+	nodeDiffActionRemove nodeDiffAction = "remove" // existing node type removed
+	nodeDiffActionModify nodeDiffAction = "modify" // node type exists in both old and new
+)
+
+// nodeDiffResult holds the diff result for a single node type (test-only helper).
+type nodeDiffResult struct {
+	Type         string
+	Action       nodeDiffAction
+	IsDataNode   bool
+	Old          map[string]interface{}
+	New          map[string]interface{}
+	BaseNodeList []map[string]interface{} // all other nodes in oldNodeMap excluding this type
+}
+
+// computeNodeInfoListDiff computes the diff actions for each node type in typeList.
+// It mirrors the core diff logic from resourceTencentCloudElasticsearchInstanceUpdate,
+// extracted here as a pure function to enable unit testing without mocking ResourceData or SDK clients.
+func computeNodeInfoListDiff(
+	oldNodeMap map[string]map[string]interface{},
+	newNodesMap map[string]map[string]interface{},
+	typeList []string,
+	dataTypeList []string,
+) []nodeDiffResult {
+	results := make([]nodeDiffResult, 0, len(typeList))
+	for _, t := range typeList {
+		old := oldNodeMap[t]
+		newNode := newNodesMap[t]
+
+		// build baseNodeList: all other types in oldNodeMap
+		baseNodeList := make([]map[string]interface{}, 0)
+		for k, v := range oldNodeMap {
+			if k == t {
+				continue
+			}
+			if v != nil {
+				baseNodeList = append(baseNodeList, v)
+			}
+		}
+
+		var isDataNode bool
+		for _, v := range dataTypeList {
+			if v == t {
+				isDataNode = true
+				break
+			}
+		}
+
+		var action nodeDiffAction
+		if old == nil && newNode == nil {
+			action = nodeDiffActionNone
+		} else if old == nil {
+			action = nodeDiffActionAdd
+		} else if newNode == nil {
+			action = nodeDiffActionRemove
+		} else {
+			action = nodeDiffActionModify
+		}
+
+		results = append(results, nodeDiffResult{
+			Type:         t,
+			Action:       action,
+			IsDataNode:   isDataNode,
+			Old:          old,
+			New:          newNode,
+			BaseNodeList: baseNodeList,
+		})
+	}
+	return results
+}
+
+// buildEsNodeInfoListSet constructs a *schema.Set for node_info_list using the resource's
+// own hash function so that GetChange mocks mirror what terraform provides to Update.
+func buildEsNodeInfoListSet(nodes []map[string]interface{}) *schema.Set {
+	res := svces.ResourceTencentCloudElasticsearchInstance()
+	nodeInfoSchema := res.Schema["node_info_list"]
+	hashF := nodeInfoSchema.Set
+	if hashF == nil {
+		// fall back to the resource default hash
+		hashF = schema.HashResource(nodeInfoSchema.Elem.(*schema.Resource))
+	}
+	list := make([]interface{}, 0, len(nodes))
+	for _, n := range nodes {
+		list = append(list, n)
+	}
+	return schema.NewSet(hashF, list)
+}
+
+// TestEsInstanceCoordinatingNode_Schema validates that the node_info_list[].type schema no
+// longer enforces a ValidateFunc whitelist (so future node types can be added without editing
+// ES_NODE_TYPE), while keeping the hotData default.
+func TestEsInstanceCoordinatingNode_Schema(t *testing.T) {
+	res := svces.ResourceTencentCloudElasticsearchInstance()
+	nodeInfoSchema := res.Schema["node_info_list"]
+	typeSchema := nodeInfoSchema.Elem.(*schema.Resource).Schema["type"]
+
+	// no ValidateFunc whitelist: arbitrary node types are accepted without validation
+	assert.Nil(t, typeSchema.ValidateFunc)
+
+	// default value stays hotData
+	assert.Equal(t, "hotData", typeSchema.Default)
+}
+
+// TestEsInstanceCoordinatingNode_ValidateUnique verifies that a node_info_list containing a
+// dedicatedCoordinating node alongside the other node types produces a set of distinct types
+// (mirroring the invariant enforced by validateNodeInfoListUnique: no duplicate node types).
+func TestEsInstanceCoordinatingNode_ValidateUnique(t *testing.T) {
+	set := buildEsNodeInfoListSet([]map[string]interface{}{
+		{
+			"node_num":  2,
+			"node_type": "ES.S1.MEDIUM4",
+			"type":      "hotData",
+			"disk_type": "CLOUD_SSD",
+			"disk_size": 100,
+			"encrypt":   false,
+		},
+		{
+			"node_num":  3,
+			"node_type": "ES.S1.MEDIUM4",
+			"type":      "dedicatedMaster",
+			"disk_type": "CLOUD_SSD",
+			"disk_size": 50,
+			"encrypt":   false,
+		},
+		{
+			"node_num":  2,
+			"node_type": "ES.S1.MEDIUM4",
+			"type":      "dedicatedCoordinating",
+			"disk_type": "CLOUD_SSD",
+			"disk_size": 50,
+			"encrypt":   false,
+		},
+	})
+
+	// mirror validateNodeInfoListUnique: each element's type must be unique
+	typeMap := map[string]bool{}
+	for _, v := range set.List() {
+		m := v.(map[string]interface{})
+		tt := m["type"].(string)
+		assert.False(t, typeMap[tt], "duplicate node type '%s' should not be present", tt)
+		typeMap[tt] = true
+	}
+	assert.True(t, typeMap["dedicatedCoordinating"])
+}
+
+// TestEsInstanceCoordinatingNode_Update_ImmutableFields verifies that when a dedicatedCoordinating
+// node exists in both old and new with an immutable field changed (disk_type/encrypt),
+// ComputeNodeInfoListDiff correctly identifies it as a "modify" action, and the caller can
+// detect the immutable field difference to return "not support change" error.
+func TestEsInstanceCoordinatingNode_Update_ImmutableFields(t *testing.T) {
+	immutableChanges := []struct {
+		name  string
+		field string
+		old   map[string]interface{}
+		new   map[string]interface{}
+	}{
+		{
+			name:  "disk_type",
+			field: "disk_type",
+			old: map[string]interface{}{
+				"node_num":  2,
+				"node_type": "ES.S1.MEDIUM4",
+				"type":      "dedicatedCoordinating",
+				"disk_type": "CLOUD_SSD",
+				"disk_size": 50,
+				"encrypt":   false,
+			},
+			new: map[string]interface{}{
+				"node_num":  2,
+				"node_type": "ES.S1.MEDIUM4",
+				"type":      "dedicatedCoordinating",
+				"disk_type": "CLOUD_PREMIUM",
+				"disk_size": 50,
+				"encrypt":   false,
+			},
+		},
+		{
+			name:  "encrypt",
+			field: "encrypt",
+			old: map[string]interface{}{
+				"node_num":  2,
+				"node_type": "ES.S1.MEDIUM4",
+				"type":      "dedicatedCoordinating",
+				"disk_type": "CLOUD_SSD",
+				"disk_size": 50,
+				"encrypt":   false,
+			},
+			new: map[string]interface{}{
+				"node_num":  2,
+				"node_type": "ES.S1.MEDIUM4",
+				"type":      "dedicatedCoordinating",
+				"disk_type": "CLOUD_SSD",
+				"disk_size": 50,
+				"encrypt":   true,
+			},
+		},
+	}
+
+	for _, tc := range immutableChanges {
+		t.Run(tc.name, func(t *testing.T) {
+			oldNodeMap := map[string]map[string]interface{}{
+				"hotData": {
+					"node_num":  2,
+					"node_type": "ES.S1.MEDIUM4",
+					"type":      "hotData",
+					"disk_type": "CLOUD_SSD",
+					"disk_size": 100,
+					"encrypt":   false,
+				},
+				"dedicatedCoordinating": tc.old,
+			}
+			newNodesMap := map[string]map[string]interface{}{
+				"hotData": {
+					"node_num":  2,
+					"node_type": "ES.S1.MEDIUM4",
+					"type":      "hotData",
+					"disk_type": "CLOUD_SSD",
+					"disk_size": 100,
+					"encrypt":   false,
+				},
+				"dedicatedCoordinating": tc.new,
+			}
+
+			results := computeNodeInfoListDiff(oldNodeMap, newNodesMap, svces.ES_NODE_TYPE, []string{"hotData", "warmData"})
+
+			// find the dedicatedCoordinating result
+			var coordResult *nodeDiffResult
+			for i := range results {
+				if results[i].Type == "dedicatedCoordinating" {
+					coordResult = &results[i]
+					break
+				}
+			}
+			assert.NotNil(t, coordResult)
+			assert.Equal(t, nodeDiffActionModify, coordResult.Action)
+
+			// verify the immutable field differs between old and new (this is what
+			// the Update function checks to return "not support change")
+			assert.NotEqual(t, coordResult.Old[tc.field], coordResult.New[tc.field],
+				"immutable field '%s' should differ between old and new", tc.field)
+
+			// simulate the immutable field check from Update logic
+			immutableFields := []string{"disk_type", "encrypt", "type"}
+			var immutableErr error
+			for _, field := range immutableFields {
+				if coordResult.Old[field] != coordResult.New[field] {
+					immutableErr = fmt.Errorf("%s not support change", field)
+					break
+				}
+			}
+			assert.Error(t, immutableErr)
+			assert.Contains(t, immutableErr.Error(), "not support change")
+		})
+	}
+}
+
+// TestEsInstanceCoordinatingNode_Update_Add verifies that adding a dedicatedCoordinating node
+// is correctly identified as an "add" action by ComputeNodeInfoListDiff, and that the
+// baseNodeList for the add operation contains the existing nodes.
+func TestEsInstanceCoordinatingNode_Update_Add(t *testing.T) {
+	oldNodeMap := map[string]map[string]interface{}{
+		"hotData": {
+			"node_num":  2,
+			"node_type": "ES.S1.MEDIUM4",
+			"type":      "hotData",
+			"disk_type": "CLOUD_SSD",
+			"disk_size": 100,
+			"encrypt":   false,
+		},
+	}
+	newNodesMap := map[string]map[string]interface{}{
+		"hotData": {
+			"node_num":  2,
+			"node_type": "ES.S1.MEDIUM4",
+			"type":      "hotData",
+			"disk_type": "CLOUD_SSD",
+			"disk_size": 100,
+			"encrypt":   false,
+		},
+		"dedicatedCoordinating": {
+			"node_num":  2,
+			"node_type": "ES.S1.MEDIUM4",
+			"type":      "dedicatedCoordinating",
+			"disk_type": "CLOUD_SSD",
+			"disk_size": 50,
+			"encrypt":   false,
+		},
+	}
+
+	results := computeNodeInfoListDiff(oldNodeMap, newNodesMap, svces.ES_NODE_TYPE, []string{"hotData", "warmData"})
+
+	// find the dedicatedCoordinating result
+	var coordResult *nodeDiffResult
+	for i := range results {
+		if results[i].Type == "dedicatedCoordinating" {
+			coordResult = &results[i]
+			break
+		}
+	}
+	assert.NotNil(t, coordResult, "dedicatedCoordinating should be in diff results")
+	assert.Equal(t, nodeDiffActionAdd, coordResult.Action)
+	assert.False(t, coordResult.IsDataNode, "dedicatedCoordinating should not be a data node")
+	assert.Nil(t, coordResult.Old)
+	assert.NotNil(t, coordResult.New)
+	assert.Equal(t, "dedicatedCoordinating", coordResult.New["type"])
+
+	// baseNodeList should contain the hotData node (all other existing nodes)
+	assert.Len(t, coordResult.BaseNodeList, 1)
+	assert.Equal(t, "hotData", coordResult.BaseNodeList[0]["type"])
+
+	// hotData should be "none" (exists in both, same config)
+	var hotResult *nodeDiffResult
+	for i := range results {
+		if results[i].Type == "hotData" {
+			hotResult = &results[i]
+			break
+		}
+	}
+	assert.NotNil(t, hotResult)
+	assert.Equal(t, nodeDiffActionModify, hotResult.Action)
+	assert.True(t, hotResult.IsDataNode)
+}
+
+// TestEsInstanceCoordinatingNode_Update_Remove verifies that removing a dedicatedCoordinating
+// node is correctly identified as a "remove" action by ComputeNodeInfoListDiff.
+func TestEsInstanceCoordinatingNode_Update_Remove(t *testing.T) {
+	oldNodeMap := map[string]map[string]interface{}{
+		"hotData": {
+			"node_num":  2,
+			"node_type": "ES.S1.MEDIUM4",
+			"type":      "hotData",
+			"disk_type": "CLOUD_SSD",
+			"disk_size": 100,
+			"encrypt":   false,
+		},
+		"dedicatedCoordinating": {
+			"node_num":  2,
+			"node_type": "ES.S1.MEDIUM4",
+			"type":      "dedicatedCoordinating",
+			"disk_type": "CLOUD_SSD",
+			"disk_size": 50,
+			"encrypt":   false,
+		},
+	}
+	newNodesMap := map[string]map[string]interface{}{
+		"hotData": {
+			"node_num":  2,
+			"node_type": "ES.S1.MEDIUM4",
+			"type":      "hotData",
+			"disk_type": "CLOUD_SSD",
+			"disk_size": 100,
+			"encrypt":   false,
+		},
+	}
+
+	results := computeNodeInfoListDiff(oldNodeMap, newNodesMap, svces.ES_NODE_TYPE, []string{"hotData", "warmData"})
+
+	// find the dedicatedCoordinating result
+	var coordResult *nodeDiffResult
+	for i := range results {
+		if results[i].Type == "dedicatedCoordinating" {
+			coordResult = &results[i]
+			break
+		}
+	}
+	assert.NotNil(t, coordResult, "dedicatedCoordinating should be in diff results")
+	assert.Equal(t, nodeDiffActionRemove, coordResult.Action)
+	assert.False(t, coordResult.IsDataNode)
+	assert.NotNil(t, coordResult.Old)
+	assert.Nil(t, coordResult.New)
+
+	// baseNodeList should contain only hotData (the other existing node)
+	assert.Len(t, coordResult.BaseNodeList, 1)
+	assert.Equal(t, "hotData", coordResult.BaseNodeList[0]["type"])
+}

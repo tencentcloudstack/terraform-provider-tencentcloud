@@ -375,6 +375,10 @@ In addition to all arguments above, the following attributes are exported:
 * `id` - ID of the resource.
 * `endpoint_group_id` - Endpoint group instance ID.
 
+The `endpoint_configurations` object of `endpoint_group_configuration` exports the following:
+
+* `health_check_status` - Health check status. Valid values: `HEALTH`, `UNHEALTH`.
+
 ## Timeouts
 
 The `timeouts` block allows you to specify [timeouts](https://developer.hashicorp.com/terraform/language/resources/syntax#operation-timeouts) for certain actions:

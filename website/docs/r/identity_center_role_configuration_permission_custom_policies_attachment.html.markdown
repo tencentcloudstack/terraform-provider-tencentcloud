@@ -59,6 +59,10 @@ In addition to all arguments above, the following attributes are exported:
 
 * `id` - ID of the resource.
 
+The `policies` object exports the following:
+
+* `add_time` - Role policy add time.
+* `role_policy_type` - Role policy type.
 
 
 ## Import

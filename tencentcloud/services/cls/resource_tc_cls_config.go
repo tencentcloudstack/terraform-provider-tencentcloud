@@ -42,7 +42,7 @@ func ResourceTencentCloudClsConfig() *schema.Resource {
 				Type:     schema.TypeString,
 				Optional: true,
 				Description: "Type of the log to be collected. Valid values: json_log: log in JSON format; delimiter_log: log in delimited format; minimalist_log: minimalist log; multiline_log: log in multi-line format; " +
-					"fullregex_log: log in full regex format. Default value: minimalist_log.",
+					"fullregex_log: log in full regex format; multiline_fullregex_log: log in multi-line and full regex format. Default value: minimalist_log.",
 			},
 			"extract_rule": {
 				Type:        schema.TypeList,

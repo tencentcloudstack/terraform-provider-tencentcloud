@@ -2305,6 +2305,165 @@ func (me *PostgresqlService) DescribePostgresAccountPrivilegesById(ctx context.C
 	return
 }
 
+func (me *PostgresqlService) DescribePostgresqlDatabaseById(ctx context.Context, dBInstanceId string, databaseName string) (database *postgresql.Database, errRet error) {
+	logId := tccommon.GetLogId(ctx)
+
+	request := postgresql.NewDescribeDatabasesRequest()
+	request.DBInstanceId = &dBInstanceId
+	request.Filters = []*postgresql.Filter{
+		{
+			Name:   helper.String("database-name"),
+			Values: []*string{&databaseName},
+		},
+	}
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	ratelimit.Check(request.GetAction())
+
+	response, err := me.client.UsePostgresqlClient().DescribeDatabases(request)
+	if err != nil {
+		errRet = err
+		return
+	}
+
+	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+	if response == nil || response.Response == nil || len(response.Response.Databases) < 1 {
+		return
+	}
+
+	// the "database-name" filter performs fuzzy matching, do an exact match on the returned databases
+	for _, item := range response.Response.Databases {
+		if item != nil && item.DatabaseName != nil && *item.DatabaseName == databaseName {
+			database = item
+			break
+		}
+	}
+
+	return
+}
+
+func (me *PostgresqlService) CreatePostgresqlDatabase(ctx context.Context, dBInstanceId, databaseName, databaseOwner, encoding, collate, ctype string) (errRet error) {
+	logId := tccommon.GetLogId(ctx)
+
+	request := postgresql.NewCreateDatabaseRequest()
+	request.DBInstanceId = &dBInstanceId
+	request.DatabaseName = &databaseName
+	request.DatabaseOwner = &databaseOwner
+	if encoding != "" {
+		request.Encoding = &encoding
+	}
+	if collate != "" {
+		request.Collate = &collate
+	}
+	if ctype != "" {
+		request.Ctype = &ctype
+	}
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	err := resource.Retry(tccommon.WriteRetryTimeout, func() *resource.RetryError {
+		ratelimit.Check(request.GetAction())
+		result, e := me.client.UsePostgresqlClient().CreateDatabase(request)
+		if e != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, reason:%s\n", logId, request.GetAction(), e.Error())
+			return tccommon.RetryError(e)
+		}
+		if result == nil || result.Response == nil {
+			return resource.NonRetryableError(fmt.Errorf("create postgresql database failed, Response is nil"))
+		}
+		log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), result.ToJsonString())
+		return nil
+	})
+
+	if err != nil {
+		errRet = err
+		return
+	}
+
+	return
+}
+
+func (me *PostgresqlService) ModifyPostgresqlDatabaseOwner(ctx context.Context, dBInstanceId, databaseName, databaseOwner string) (errRet error) {
+	logId := tccommon.GetLogId(ctx)
+
+	request := postgresql.NewModifyDatabaseOwnerRequest()
+	request.DBInstanceId = &dBInstanceId
+	request.DatabaseName = &databaseName
+	request.DatabaseOwner = &databaseOwner
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	err := resource.Retry(tccommon.WriteRetryTimeout, func() *resource.RetryError {
+		ratelimit.Check(request.GetAction())
+		result, e := me.client.UsePostgresqlClient().ModifyDatabaseOwner(request)
+		if e != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, reason:%s\n", logId, request.GetAction(), e.Error())
+			return tccommon.RetryError(e)
+		}
+		if result == nil || result.Response == nil {
+			return resource.NonRetryableError(fmt.Errorf("modify postgresql database owner failed, Response is nil"))
+		}
+		log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), result.ToJsonString())
+		return nil
+	})
+
+	if err != nil {
+		errRet = err
+		return
+	}
+
+	return
+}
+
+func (me *PostgresqlService) DeletePostgresqlDatabaseById(ctx context.Context, dBInstanceId, databaseName string) (errRet error) {
+	logId := tccommon.GetLogId(ctx)
+
+	request := postgresql.NewDeleteDatabaseRequest()
+	request.DBInstanceId = &dBInstanceId
+	request.DatabaseName = &databaseName
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	err := resource.Retry(tccommon.WriteRetryTimeout, func() *resource.RetryError {
+		ratelimit.Check(request.GetAction())
+		result, e := me.client.UsePostgresqlClient().DeleteDatabase(request)
+		if e != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, reason:%s\n", logId, request.GetAction(), e.Error())
+			return tccommon.RetryError(e)
+		}
+		if result == nil || result.Response == nil {
+			return resource.NonRetryableError(fmt.Errorf("delete postgresql database failed, Response is nil"))
+		}
+		log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), result.ToJsonString())
+		return nil
+	})
+
+	if err != nil {
+		errRet = err
+		return
+	}
+
+	return
+}
+
 func (me *PostgresqlService) DescribePostgresqlDedicatedClustersByFilter(ctx context.Context, param map[string]interface{}) (ret []*postgresql.DedicatedCluster, errRet error) {
 	var (
 		logId   = tccommon.GetLogId(ctx)

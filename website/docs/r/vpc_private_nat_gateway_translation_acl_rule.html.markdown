@@ -78,6 +78,9 @@ In addition to all arguments above, the following attributes are exported:
 
 * `id` - ID of the resource.
 
+The `translation_acl_rules` object exports the following:
+
+* `acl_rule_id` - ACL rule ID.
 
 
 ## Import

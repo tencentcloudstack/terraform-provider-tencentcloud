@@ -137,5 +137,13 @@ In addition to all arguments above, the following attributes are exported:
 
 * `id` - ID of the resource.
 
+The `cc_precision_policys` object exports the following:
+
+* `policy_id` - Policy Id.
+
+The `cc_precision_req_limits` object exports the following:
+
+* `instance_id` - Instance id.
+* `ip` - IP address.
 
 

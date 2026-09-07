@@ -164,6 +164,32 @@ In addition to all arguments above, the following attributes are exported:
 
 * `id` - ID of the resource.
 
+The `cert_infos` object of `client_cert_info` exports the following:
+
+* `alias` - Alias of the certificate.
+* `deploy_time` - Time when the certificate is deployed.
+* `expire_time` - The certificate expiration time.
+* `sign_algo` - Signature algorithm.
+* `status` - Certificate status.
+* `type` - Type of the certificate. Values: `default`: Default certificate; `upload`: Specified certificate; `managed`: Tencent Cloud-managed certificate.
+
+The `cert_infos` object of `upstream_mutual_tls` exports the following:
+
+* `alias` - Alias of the certificate.
+* `deploy_time` - Time when the certificate is deployed.
+* `expire_time` - The certificate expiration time.
+* `sign_algo` - Signature algorithm.
+* `status` - Certificate status.
+* `type` - Type of the certificate. Values: `default`: Default certificate `upload`: Specified certificate `managed`: Tencent Cloud-managed certificate.
+
+The `custom_ca_certs` object of `upstream_certificate_verify` exports the following:
+
+* `alias` - Alias of the certificate.
+* `deploy_time` - Time when the certificate is deployed.
+* `expire_time` - The certificate expiration time.
+* `sign_algo` - Signature algorithm.
+* `status` - Certificate status.
+* `type` - Type of the certificate.
 
 ## Timeouts
 

@@ -3564,3 +3564,75 @@ func (me *TeoService) DescribeTeoFunctionComponentBindingsById(ctx context.Conte
 
 	return
 }
+
+func (me *TeoService) DescribeTeoEdgeKvListByFilter(ctx context.Context, param map[string]interface{}) (keys []*string, cursor *string, errRet error) {
+	var (
+		logId   = tccommon.GetLogId(ctx)
+		request = teo.NewEdgeKVListRequest()
+	)
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	if v, ok := param["zone_id"]; ok {
+		request.ZoneId = helper.String(v.(string))
+	}
+
+	if v, ok := param["namespace"]; ok {
+		request.Namespace = helper.String(v.(string))
+	}
+
+	if v, ok := param["prefix"]; ok {
+		request.Prefix = helper.String(v.(string))
+	}
+
+	if v, ok := param["cursor"]; ok {
+		request.Cursor = helper.String(v.(string))
+	}
+
+	request.Limit = helper.IntInt64(1000)
+
+	for {
+		ratelimit.Check(request.GetAction())
+		response := teo.NewEdgeKVListResponse()
+		err := resource.Retry(tccommon.ReadRetryTimeout, func() *resource.RetryError {
+			result, e := me.client.UseTeoClient().EdgeKVListWithContext(ctx, request)
+			if e != nil {
+				if strings.Contains(e.Error(), "NotFound") {
+					return resource.NonRetryableError(e)
+				}
+				return tccommon.RetryError(e)
+			}
+			if result == nil || result.Response == nil {
+				log.Printf("[DATASOURCE] read empty, skip SetId, teo_edge_kv_list zone_id=%v namespace=%v", param["zone_id"], param["namespace"])
+				return resource.NonRetryableError(fmt.Errorf("teo_edge_kv_list EdgeKVList response is nil"))
+			}
+			response = result
+			return nil
+		})
+		if err != nil {
+			errRet = err
+			return
+		}
+		log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+		if response.Response.Keys != nil {
+			keys = append(keys, response.Response.Keys...)
+		}
+
+		if response.Response.Cursor != nil {
+			cursor = response.Response.Cursor
+			if strings.TrimSpace(*response.Response.Cursor) == "" {
+				break
+			}
+			request.Cursor = response.Response.Cursor
+		} else {
+			break
+		}
+	}
+
+	return
+}

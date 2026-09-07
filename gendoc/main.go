@@ -132,7 +132,11 @@ func writeIdxErb(filePath string, prods []Product) {
 		message("[FAIL!]open file %s failed: %s", filename, err)
 		os.Exit(1)
 	}
-	defer fd.Close()
+	defer func() {
+		if err := fd.Close(); err != nil {
+			message("[WARN]close file %s failed: %s", filename, err)
+		}
+	}()
 
 	tmpl := template.Must(template.New("t").Funcs(template.FuncMap{"replace": replace}).Parse(idxTPL))
 	if err := tmpl.Execute(fd, data); err != nil {
@@ -267,6 +271,7 @@ func genDoc(product, dtype, fpath, name string, resource *schema.Resource) {
 		optionalArgs []string
 		attributes   []string
 		subStruct    []string
+		nestedAttrs  []string
 	)
 
 	if _, ok := resource.Schema["result_output_file"]; dtype == "data_source" && !ok {
@@ -297,6 +302,7 @@ func genDoc(product, dtype, fpath, name string, resource *schema.Resource) {
 			opt := "Required"
 			sub := getSubStruct(0, "", k, v)
 			subStruct = append(subStruct, sub...)
+			nestedAttrs = append(nestedAttrs, getSubStructAttrs(0, "", k, v)...)
 			// get type
 			res := parseSubtract(v, sub)
 			valueType := parseType(v)
@@ -317,6 +323,7 @@ func genDoc(product, dtype, fpath, name string, resource *schema.Resource) {
 			opt := "Optional"
 			sub := getSubStruct(0, "", k, v)
 			subStruct = append(subStruct, sub...)
+			nestedAttrs = append(nestedAttrs, getSubStructAttrs(0, "", k, v)...)
 			// get type
 			res := parseSubtract(v, sub)
 			valueType := parseType(v)
@@ -345,6 +352,7 @@ func genDoc(product, dtype, fpath, name string, resource *schema.Resource) {
 	sort.Strings(optionalArgs)
 	sort.Strings(attributes)
 	sort.Strings(subStruct)
+	sort.Strings(nestedAttrs)
 
 	// remove duplicates
 	if len(subStruct) > 0 {
@@ -365,6 +373,12 @@ func genDoc(product, dtype, fpath, name string, resource *schema.Resource) {
 		data["arguments"] += "\n" + strings.Join(subStruct, "\n")
 	}
 	data["attributes"] = strings.Join(attributes, "\n")
+	if len(nestedAttrs) > 0 {
+		if data["attributes"] != "" {
+			data["attributes"] += "\n"
+		}
+		data["attributes"] += strings.Join(nestedAttrs, "\n")
+	}
 	if dtype == "resource" {
 		idAttribute := "* `id` - ID of the resource.\n"
 		data["attributes"] = idAttribute + data["attributes"]
@@ -378,7 +392,11 @@ func genDoc(product, dtype, fpath, name string, resource *schema.Resource) {
 		os.Exit(1)
 	}
 
-	defer fd.Close()
+	defer func() {
+		if err := fd.Close(); err != nil {
+			message("[WARN]close file %s failed: %s", filename, err)
+		}
+	}()
 	t := template.Must(template.New("t").Parse(docTPL))
 	err = t.Execute(fd, data)
 	if err != nil {
@@ -488,6 +506,57 @@ func getSubStruct(step int, parentK, k string, v *schema.Schema) []string {
 	}
 
 	return subStructs
+}
+
+// getSubStructAttrs 收集 Required/Optional 的 List/Set/Map 嵌套对象中
+// Computed 子字段，生成 "The `xxx` object exports the following:" 节，
+// 供 Attributes Reference 使用。它与 getSubStruct（仅收集 Required/Optional
+// 参数）对称，避免嵌套的只读(computed)属性在文档中丢失。
+//
+// 每个返回元素都是一个完整的节块（含标题与缩进后的子字段），由调用方
+// 统一排序后拼接到 Attributes Reference 末尾。
+func getSubStructAttrs(step int, parentK, k string, v *schema.Schema) []string {
+	var blocks []string
+
+	if v.Type != schema.TypeMap && v.Type != schema.TypeList && v.Type != schema.TypeSet {
+		return blocks
+	}
+	res, ok := v.Elem.(*schema.Resource)
+	if !ok {
+		return blocks
+	}
+
+	var computedLines []string
+	for kk, vv := range res.Schema {
+		// 只收集纯 Computed 子字段；Optional/Required(+Computed) 字段
+		// 已经作为参数在 getSubStruct 的 supports 节中列出，避免重复渲染。
+		if !vv.Computed || vv.Optional || vv.Required {
+			continue
+		}
+		computedLines = append(computedLines, getAttributes(0, kk, vv)...)
+	}
+
+	if len(computedLines) > 0 {
+		sort.Strings(computedLines)
+		var title string
+		if step == 0 {
+			title = fmt.Sprintf("\nThe `%s` object exports the following:\n", k)
+		} else {
+			title = fmt.Sprintf("\nThe `%s` object of `%s` exports the following:\n", k, parentK)
+		}
+		blocks = append(blocks, title+"\n"+strings.Join(computedLines, "\n"))
+	}
+
+	// 递归处理更深层嵌套对象中的纯 Computed 子字段。纯 Computed 的
+	// 嵌套对象已由 getAttributes 缩进渲染，这里跳过以避免重复。
+	for kk, vv := range res.Schema {
+		if vv.Computed && !vv.Optional && !vv.Required {
+			continue
+		}
+		blocks = append(blocks, getSubStructAttrs(step+1, k, kk, vv)...)
+	}
+
+	return blocks
 }
 
 // formatHCL format HLC code

@@ -134,6 +134,10 @@ In addition to all arguments above, the following attributes are exported:
 * `ssh_endpoint` - SSH endpoint to access this node, in the format `IP:Port`.
 * `status` - Node status. Valid values: `Creating`, `Running`, `Isolating`, `Isolated`, `Activating`, `Destroying`.
 
+The `data_disks` object exports the following:
+
+* `disk_name` - Disk name. Read-only; ignored as a create input (per API).
+
 ## Timeouts
 
 The `timeouts` block allows you to specify [timeouts](https://developer.hashicorp.com/terraform/language/resources/syntax#operation-timeouts) for certain actions:

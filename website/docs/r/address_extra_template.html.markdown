@@ -61,6 +61,9 @@ In addition to all arguments above, the following attributes are exported:
 
 * `id` - ID of the resource.
 
+The `addresses_extra` object exports the following:
+
+* `updated_time` - Update Time.
 
 
 ## Import

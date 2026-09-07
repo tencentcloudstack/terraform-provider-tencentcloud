@@ -73,28 +73,6 @@ func (t fwDocType) outputDir() string {
 	return ""
 }
 
-// sourceMdRelDir is no longer used as a directory name (framework
-// references now live alongside SDKv2 code under
-// tencentcloud/services/<product>/). It is retained as documentation of
-// the legacy directory naming for reference only.
-func (t fwDocType) sourceMdRelDir() string {
-	switch t {
-	case fwResource:
-		return "resources"
-	case fwDataSrc:
-		return "datasources"
-	case fwFunction:
-		return "functions"
-	case fwEphemeral:
-		return "ephemerals"
-	case fwList:
-		return "lists"
-	case fwAction:
-		return "actions"
-	}
-	return ""
-}
-
 // mdFilePrefix returns the file-name prefix used by the new
 // services/<product>/ layout. Combined with the resource short name and
 // an optional product segment, it forms the full <prefix><resName>.md or
@@ -289,7 +267,11 @@ func genFrameworkDoc(servicesRoot string, dtype fwDocType, name, product string,
 	if err != nil {
 		fail(fmt.Sprintf("open %s failed: %s", outPath, err))
 	}
-	defer fd.Close()
+	defer func() {
+		if err := fd.Close(); err != nil {
+			message("[WARN]close file %s failed: %s", outPath, err)
+		}
+	}()
 
 	t := template.Must(template.New("fw").Parse(docTPL))
 	if err := t.Execute(fd, out); err != nil {
@@ -351,7 +333,11 @@ func genFrameworkListPlaceholder(servicesRoot, name, product string) {
 	if err != nil {
 		fail(fmt.Sprintf("open %s failed: %s", outPath, err))
 	}
-	defer fd.Close()
+	defer func() {
+		if err := fd.Close(); err != nil {
+			message("[WARN]close file %s failed: %s", outPath, err)
+		}
+	}()
 	t := template.Must(template.New("fw_list").Parse(docTPL))
 	if err := t.Execute(fd, out); err != nil {
 		fail(fmt.Sprintf("write %s failed: %s", outPath, err))

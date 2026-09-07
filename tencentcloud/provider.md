@@ -229,6 +229,7 @@ tencentcloud_ckafka_topic_subscribe_group
 tencentcloud_ckafka_topic_sync_replica
 tencentcloud_ckafka_zone
 tencentcloud_ckafka_version
+tencentcloud_ckafka_routes
 
 Resource
 tencentcloud_ckafka_instance
@@ -263,6 +264,7 @@ tencentcloud_cam_policy_granting_service_access
 tencentcloud_cam_oidc_config
 tencentcloud_cam_group_user_account
 tencentcloud_cam_sub_accounts
+tencentcloud_cam_accounts
 tencentcloud_cam_role_detail
 tencentcloud_cam_policy_detail
 
@@ -870,6 +872,7 @@ tencentcloud_mysql_ssl
 tencentcloud_mysql_cls_log_attachment
 tencentcloud_cdb_start_cpu_expand
 tencentcloud_mysql_audit_service
+tencentcloud_mysql_clone_instance
 
 Cloud Monitor(Monitor)
 Data Source
@@ -931,6 +934,7 @@ tencentcloud_monitor_tmp_multiple_writes_list
 TencentCloud Managed Service for Grafana(TCMG)
 Data Source
 tencentcloud_monitor_grafana_plugin_overviews
+tencentcloud_monitor_grafana_versions
 
 Resource
 tencentcloud_monitor_grafana_instance
@@ -998,7 +1002,11 @@ tencentcloud_postgresql_instance_ssl_config
 tencentcloud_postgresql_restore_db_instance_objects_operation
 tencentcloud_postgresql_time_window
 tencentcloud_postgres_audit_service
+<<<<<<< HEAD
 tencentcloud_postgres_audit_log_file
+=======
+tencentcloud_postgresql_database
+>>>>>>> origin/master
 
 TencentDB for Redis(crs)
 Data Source
@@ -1037,6 +1045,7 @@ tencentcloud_redis_security_group_attachment
 tencentcloud_redis_connection_config
 tencentcloud_redis_log_delivery
 tencentcloud_redis_audit_log
+tencentcloud_redis_instance_password_policy_config
 
 Serverless Cloud Function(SCF)
 Data Source
@@ -1526,6 +1535,9 @@ tencentcloud_cls_cloud_product_log_task_v2
 tencentcloud_cls_open_service_operation
 tencentcloud_cls_dlc_deliver
 tencentcloud_cls_console
+tencentcloud_cls_metric_subscribe
+tencentcloud_cls_splunk_deliver
+tencentcloud_cls_remote_write_task
 
 Data Source
 tencentcloud_cls_shipper_tasks
@@ -1594,11 +1606,13 @@ tencentcloud_teo_zones
 tencentcloud_teo_plans
 tencentcloud_teo_origin_acl
 tencentcloud_teo_default_certificate
+tencentcloud_teo_edge_kv_list
 tencentcloud_teo_environments
 tencentcloud_teo_config_group_versions
 tencentcloud_teo_config_group_version_detail
 tencentcloud_teo_deploy_config_version_history
 tencentcloud_teo_export_zone_config
+tencentcloud_teo_ip_group_references
 tencentcloud_teo_ip_region
 tencentcloud_teo_multi_path_gateways
 tencentcloud_teo_multi_path_gateway_region
@@ -1606,6 +1620,7 @@ tencentcloud_teo_multi_path_gateway_origin_acl
 tencentcloud_teo_security_ip_group_content
 tencentcloud_teo_web_security_templates
 tencentcloud_teo_content_quota
+tencentcloud_teo_billing_data
 
 Resource
 tencentcloud_teo_zone
@@ -1663,6 +1678,7 @@ tencentcloud_teo_shared_cname
 tencentcloud_teo_domain_shared_cname_attachment
 tencentcloud_teo_edge_kv
 tencentcloud_teo_edge_kv_namespace
+tencentcloud_teo_dns_records_status
 
 TencentCloud ServiceMesh(TCM)
 Data Source
@@ -1746,7 +1762,11 @@ Cloud Automated Testing(CAT)
 Data Source
 tencentcloud_cat_probe_data
 tencentcloud_cat_node
+tencentcloud_cat_node_groups
 tencentcloud_cat_metric_data
+tencentcloud_cat_probe_metric_tag_values
+tencentcloud_cat_instant_tasks
+tencentcloud_cat_probe_tasks
 
 Resource
 tencentcloud_cat_task_set
@@ -2243,6 +2263,7 @@ tencentcloud_tse_cngw_network
 tencentcloud_tse_cngw_strategy
 tencentcloud_tse_cngw_strategy_bind_group
 tencentcloud_tse_cngw_network_access_control
+tencentcloud_tse_cloud_native_api_gateway_ip_restriction
 
 ClickHouse(CDWCH)
 Data Source
@@ -2271,6 +2292,7 @@ tencentcloud_tag_keys
 Resource
 tencentcloud_tag
 tencentcloud_tag_attachment
+tencentcloud_tag_attachment_v2
 
 EventBridge(EB)
 Data Source
@@ -2665,6 +2687,7 @@ tencentcloud_mqtt_message_enrichment_rule
 
 Billing
 Data Source
+tencentcloud_billing_bill_detail
 tencentcloud_billing_budget_operation_log
 Resource
 tencentcloud_billing_allocation_tag

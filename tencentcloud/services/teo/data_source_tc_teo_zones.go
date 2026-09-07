@@ -379,6 +379,25 @@ func DataSourceTencentCloudTeoZones() *schema.Resource {
 								},
 							},
 						},
+						"work_mode_infos": {
+							Type:        schema.TypeList,
+							Computed:    true,
+							Description: "Information list of the work mode of the version management configuration group. Note: This field may return null, indicating that no valid values can be obtained.",
+							Elem: &schema.Resource{
+								Schema: map[string]*schema.Schema{
+									"config_group_type": {
+										Type:        schema.TypeString,
+										Computed:    true,
+										Description: "Configuration group type. Values: `l7_acceleration`: L7 acceleration configuration group; `edge_functions`: Edge functions configuration group; `web_security`: Web security configuration group. Note: This field may return null, indicating that no valid values can be obtained.",
+									},
+									"work_mode": {
+										Type:        schema.TypeString,
+										Computed:    true,
+										Description: "Work mode. Values: `immediate_effect`: Immediate effect mode; `version_control`: Version management mode. Note: This field may return null, indicating that no valid values can be obtained.",
+									},
+								},
+							},
+						},
 					},
 				},
 			},
@@ -703,6 +722,25 @@ func dataSourceTencentCloudTeoZonesRead(d *schema.ResourceData, meta interface{}
 				}
 
 				zonesMap["ownership_verification"] = []interface{}{ownershipVerificationMap}
+			}
+
+			workModeInfosList := make([]map[string]interface{}, 0, len(zones.WorkModeInfos))
+			if zones.WorkModeInfos != nil {
+				for _, workModeInfo := range zones.WorkModeInfos {
+					workModeInfosMap := map[string]interface{}{}
+
+					if workModeInfo.ConfigGroupType != nil {
+						workModeInfosMap["config_group_type"] = workModeInfo.ConfigGroupType
+					}
+
+					if workModeInfo.WorkMode != nil {
+						workModeInfosMap["work_mode"] = workModeInfo.WorkMode
+					}
+
+					workModeInfosList = append(workModeInfosList, workModeInfosMap)
+				}
+
+				zonesMap["work_mode_infos"] = workModeInfosList
 			}
 
 			zoneIds = append(zoneIds, zoneId)

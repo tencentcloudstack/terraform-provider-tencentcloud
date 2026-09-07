@@ -58,6 +58,12 @@ In addition to all arguments above, the following attributes are exported:
 * `id` - ID of the resource.
 * `active_scheduler` - Resource dispatchers currently in effect.
 
+The `default_settings` object of `capacity_global_config` exports the following:
+
+* `desc` - Described.
+* `key` - Key, used for display. This configuration corresponds to the configuration item in the configuration file.
+* `prompt` - Prompt.
+
 
 ## Import
 

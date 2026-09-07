@@ -667,6 +667,23 @@ In addition to all arguments above, the following attributes are exported:
 * `dry_run_update_result` - Used for store `dry_run` update request json.
 * `status` - Acceleration service status.
 
+The `band_width_alert` object exports the following:
+
+* `last_trigger_time_overseas` - Last trigger time of overseas.
+* `last_trigger_time` - Last trigger time.
+
+The `client_certificate_config` object of `https_config` exports the following:
+
+* `certificate_name` - Client certificate name.
+* `deploy_time` - Deploy time of client certificate.
+* `expire_time` - Expire time of client certificate.
+
+The `server_certificate_config` object of `https_config` exports the following:
+
+* `certificate_name` - Server certificate name.
+* `deploy_time` - Deploy time of server certificate.
+* `expire_time` - Expire time of server certificate.
+
 
 ## Import
 

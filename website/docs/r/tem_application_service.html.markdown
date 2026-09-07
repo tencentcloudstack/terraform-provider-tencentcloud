@@ -57,6 +57,9 @@ In addition to all arguments above, the following attributes are exported:
 
 * `id` - ID of the resource.
 
+The `service` object exports the following:
+
+* `ip` - ip address of application service.
 
 
 ## Import

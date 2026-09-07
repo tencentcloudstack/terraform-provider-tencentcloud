@@ -1,24 +1,24 @@
-Provides a resource to create a vpc reserve ip addresses
+Provides a resource to create a VPC reserve ip address
 
 Example Usage
 
 ```hcl
-resource "tencentcloud_reserve_ip_address" "reserve_ip" {
-  vpc_id = "xxxxxx"
-  subnet_id = "xxxxxx"
-  ip_address = "10.0.0.13"
-  name = "reserve-ip-tf"
-  description = "description"
-  tags ={
-    "test1" = "test1"
+resource "tencentcloud_reserve_ip_address" "example" {
+  vpc_id      = "vpc-i5yyodl9"
+  subnet_id   = "subnet-hhi88a58"
+  ip_address  = "10.0.30.27"
+  name        = "tf-example"
+  description = "remark."
+  tags = {
+    createBy = "Terraform"
   }
 }
 ```
 
 Import
 
-vpc reserve_ip_addresses can be imported using the id, e.g.
+VPC reserve ip address can be imported using the vpcId#reserveIpId, e.g.
 
 ```
-terraform import tencentcloud_reserve_ip_addresses.reserve_ip_addresses ${vpcId}#${reserveIpId}
+terraform import tencentcloud_reserve_ip_address.example vpc-i5yyodl9#rsvip-cz3ces44
 ```

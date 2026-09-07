@@ -37,6 +37,12 @@ func ResourceTencentCloudTeoZoneSetting() *schema.Resource {
 				Description: "Acceleration area of the zone. Valid values: `mainland`, `overseas`.",
 			},
 
+			"zone_name": {
+				Type:        schema.TypeString,
+				Computed:    true,
+				Description: "Zone name.",
+			},
+
 			"cache": {
 				Type:        schema.TypeList,
 				Optional:    true,
@@ -540,6 +546,10 @@ func resourceTencentCloudTeoZoneSettingRead(d *schema.ResourceData, meta interfa
 	}
 	if respData.Area != nil {
 		_ = d.Set("area", respData.Area)
+	}
+
+	if respData.ZoneName != nil {
+		_ = d.Set("zone_name", respData.ZoneName)
 	}
 
 	cacheConfigMap := map[string]interface{}{}

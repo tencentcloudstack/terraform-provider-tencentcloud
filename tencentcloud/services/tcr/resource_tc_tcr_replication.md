@@ -1,4 +1,4 @@
-Provides a resource to create a TCR replication
+Provides a resource to create and update a TCR replication
 
 Example Usage
 

@@ -1296,3 +1296,40 @@ func (me *MongodbService) DisableSRVConnectionUrl(ctx context.Context, instanceI
 
 	return
 }
+
+func (me *MongodbService) DescribeTransparentDataEncryptionStatusById(ctx context.Context, instanceId string) (ret *mongodb.DescribeTransparentDataEncryptionStatusResponseParams, errRet error) {
+	logId := tccommon.GetLogId(ctx)
+	request := mongodb.NewDescribeTransparentDataEncryptionStatusRequest()
+	response := mongodb.NewDescribeTransparentDataEncryptionStatusResponse()
+	request.InstanceId = &instanceId
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	err := resource.Retry(tccommon.ReadRetryTimeout, func() *resource.RetryError {
+		ratelimit.Check(request.GetAction())
+		result, e := me.client.UseMongodbClient().DescribeTransparentDataEncryptionStatusWithContext(ctx, request)
+		if e != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, reason:%s", logId, request.GetAction(), e.Error())
+			return resource.RetryableError(e)
+		}
+
+		if result == nil || result.Response == nil {
+			return resource.NonRetryableError(fmt.Errorf("Describe transparent data encryption status failed, Response is nil."))
+		}
+
+		response = result
+		return nil
+	})
+
+	if err != nil {
+		errRet = err
+		return
+	}
+
+	ret = response.Response
+	return
+}

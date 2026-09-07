@@ -28,7 +28,7 @@ func ResourceTencentCloudTeoImportZoneConfigOperation() *schema.Resource {
 				Type:        schema.TypeString,
 				Required:    true,
 				ForceNew:    true,
-				Description: "The configuration content to import. It must be in JSON format and encoded in UTF-8. You can obtain the configuration content via the tencentcloud_teo_export_zone_config data source.",
+				Description: "Configuration content to be imported. Use JSON format and encode by UTF-8. You can obtain the configuration content through the site configuration export interface (ExportZoneConfig). You can individually import \"Site Acceleration - Global Acceleration Configuration\" or \"Site Acceleration - Rule Engine\". Just pass in the corresponding fields. For specific details, see the example below. Note: AccelerationDomain (acceleration domain name configuration) and Origin (origin configuration) exported by ExportZoneConfig are temporary not supported for import through this interface. If the Content contains the above configuration content, it will cause import failure.",
 			},
 			"task_id": {
 				Type:        schema.TypeString,

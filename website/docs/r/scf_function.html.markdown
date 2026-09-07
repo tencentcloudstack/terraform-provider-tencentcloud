@@ -231,6 +231,16 @@ In addition to all arguments above, the following attributes are exported:
   * `type` - Type of SCF function trigger.
 * `vip` - SCF function vip.
 
+The `cfs_config` object exports the following:
+
+* `ip_address` - (Readonly) File system ip address.
+* `mount_subnet_id` - (Readonly) File system subnet ID.
+* `mount_vpc_id` - (Readonly) File system virtual private network ID.
+
+The `intranet_config` object exports the following:
+
+* `ip_address` - If fixed intranet IP is enabled, this field returns the IP list used.
+
 
 ## Import
 

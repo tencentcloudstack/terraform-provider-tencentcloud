@@ -1,0 +1,3 @@
+```release-note:enhancement
+resource/tencentcloud_teo_security_policy_config: support web_security_submodules_for_exception parameter in exception_rules.rules block
+```
