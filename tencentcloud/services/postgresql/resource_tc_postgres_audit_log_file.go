@@ -20,12 +20,8 @@ func ResourceTencentCloudPostgresAuditLogFile() *schema.Resource {
 		Create: resourceTencentCloudPostgresAuditLogFileCreate,
 		Read:   resourceTencentCloudPostgresAuditLogFileRead,
 		Delete: resourceTencentCloudPostgresAuditLogFileDelete,
-		Importer: &schema.ResourceImporter{
-			State: schema.ImportStatePassthrough,
-		},
 		Timeouts: &schema.ResourceTimeout{
 			Create: schema.DefaultTimeout(5 * time.Minute),
-			Delete: schema.DefaultTimeout(5 * time.Minute),
 		},
 		Schema: map[string]*schema.Schema{
 			"instance_id": {
@@ -134,9 +130,11 @@ func resourceTencentCloudPostgresAuditLogFileCreate(d *schema.ResourceData, meta
 
 	var (
 		logId      = tccommon.GetLogId(tccommon.ContextNil)
-		_          = context.WithValue(context.TODO(), tccommon.LogIdKey, logId)
+		ctx        = context.WithValue(context.TODO(), tccommon.LogIdKey, logId)
 		request    = postgresql.NewCreateAuditLogFileRequest()
+		response   = postgresql.NewCreateAuditLogFileResponse()
 		instanceId string
+		fileName   string
 	)
 
 	if v, ok := d.GetOk("instance_id"); ok {
@@ -206,7 +204,7 @@ func resourceTencentCloudPostgresAuditLogFileCreate(d *schema.ResourceData, meta
 
 	// Call CreateAuditLogFile
 	err := resource.Retry(tccommon.WriteRetryTimeout, func() *resource.RetryError {
-		result, e := meta.(tccommon.ProviderMeta).GetAPIV3Conn().UsePostgresqlClient().CreateAuditLogFile(request)
+		result, e := meta.(tccommon.ProviderMeta).GetAPIV3Conn().UsePostgresqlClient().CreateAuditLogFileWithContext(ctx, request)
 		if e != nil {
 			return tccommon.RetryError(e)
 		}
@@ -216,6 +214,7 @@ func resourceTencentCloudPostgresAuditLogFileCreate(d *schema.ResourceData, meta
 		}
 
 		log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), result.ToJsonString())
+		response = result
 		return nil
 	})
 
@@ -224,12 +223,19 @@ func resourceTencentCloudPostgresAuditLogFileCreate(d *schema.ResourceData, meta
 		return err
 	}
 
+	if response.Response.FileName == nil || *response.Response.FileName == "" {
+		return fmt.Errorf("FileName is nil")
+	}
+
+	fileName = *response.Response.FileName
+	d.SetId(strings.Join([]string{instanceId, fileName}, tccommon.FILED_SP))
+
 	// Poll DescribeAuditLogFiles to find the new file and wait for success
-	var fileName string
 	err = resource.Retry(d.Timeout(schema.TimeoutCreate), func() *resource.RetryError {
 		descReq := postgresql.NewDescribeAuditLogFilesRequest()
 		descReq.InstanceId = helper.String(instanceId)
 		descReq.Product = helper.String("postgres")
+		descReq.FileName = helper.String(fileName)
 		descReq.Limit = helper.Uint64(300)
 		descReq.Offset = helper.Uint64(0)
 
@@ -248,21 +254,18 @@ func resourceTencentCloudPostgresAuditLogFileCreate(d *schema.ResourceData, meta
 				continue
 			}
 
-			if existingFileNames[*item.FileName] {
-				continue
-			}
+			if *item.FileName == fileName {
+				// Found the new file
+				if item.Status != nil && *item.Status == "success" {
+					return nil
+				} else if item.Status != nil && *item.Status == "failed" {
+					errMsg := ""
+					if item.ErrMsg != nil {
+						errMsg = *item.ErrMsg
+					}
 
-			// Found the new file
-			if item.Status != nil && *item.Status == "success" {
-				fileName = *item.FileName
-				return nil
-			} else if item.Status != nil && *item.Status == "failed" {
-				errMsg := ""
-				if item.ErrMsg != nil {
-					errMsg = *item.ErrMsg
+					return resource.NonRetryableError(fmt.Errorf("audit log file creation failed: %s", errMsg))
 				}
-
-				return resource.NonRetryableError(fmt.Errorf("audit log file creation failed: %s", errMsg))
 			}
 
 			// Still running
@@ -277,12 +280,6 @@ func resourceTencentCloudPostgresAuditLogFileCreate(d *schema.ResourceData, meta
 		return err
 	}
 
-	if fileName == "" {
-		return fmt.Errorf("audit log file name is empty after creation")
-	}
-
-	d.SetId(strings.Join([]string{instanceId, fileName}, tccommon.FILED_SP))
-
 	return resourceTencentCloudPostgresAuditLogFileRead(d, meta)
 }
 
@@ -292,7 +289,7 @@ func resourceTencentCloudPostgresAuditLogFileRead(d *schema.ResourceData, meta i
 
 	var (
 		logId = tccommon.GetLogId(tccommon.ContextNil)
-		_     = context.WithValue(context.TODO(), tccommon.LogIdKey, logId)
+		ctx   = context.WithValue(context.TODO(), tccommon.LogIdKey, logId)
 	)
 
 	idSplit := strings.Split(d.Id(), tccommon.FILED_SP)
@@ -312,7 +309,7 @@ func resourceTencentCloudPostgresAuditLogFileRead(d *schema.ResourceData, meta i
 
 	var fileInfo *postgresql.AuditLogFile
 	err := resource.Retry(tccommon.ReadRetryTimeout, func() *resource.RetryError {
-		result, e := meta.(tccommon.ProviderMeta).GetAPIV3Conn().UsePostgresqlClient().DescribeAuditLogFiles(request)
+		result, e := meta.(tccommon.ProviderMeta).GetAPIV3Conn().UsePostgresqlClient().DescribeAuditLogFilesWithContext(ctx, request)
 		if e != nil {
 			return tccommon.RetryError(e)
 		}
@@ -336,7 +333,6 @@ func resourceTencentCloudPostgresAuditLogFileRead(d *schema.ResourceData, meta i
 	}
 
 	_ = d.Set("instance_id", instanceId)
-	_ = d.Set("product", product)
 
 	if fileInfo.FileName != nil {
 		_ = d.Set("file_name", fileInfo.FileName)
@@ -350,24 +346,8 @@ func resourceTencentCloudPostgresAuditLogFileRead(d *schema.ResourceData, meta i
 		_ = d.Set("file_size", fileInfo.FileSize)
 	}
 
-	if fileInfo.CreateTime != nil {
-		_ = d.Set("create_time", fileInfo.CreateTime)
-	}
-
 	if fileInfo.DownloadUrl != nil {
 		_ = d.Set("download_url", fileInfo.DownloadUrl)
-	}
-
-	if fileInfo.ErrMsg != nil {
-		_ = d.Set("err_msg", fileInfo.ErrMsg)
-	}
-
-	if fileInfo.Progress != nil {
-		_ = d.Set("progress", fileInfo.Progress)
-	}
-
-	if fileInfo.FinishTime != nil {
-		_ = d.Set("finish_time", fileInfo.FinishTime)
 	}
 
 	return nil
@@ -379,7 +359,7 @@ func resourceTencentCloudPostgresAuditLogFileDelete(d *schema.ResourceData, meta
 
 	var (
 		logId = tccommon.GetLogId(tccommon.ContextNil)
-		_     = context.WithValue(context.TODO(), tccommon.LogIdKey, logId)
+		ctx   = context.WithValue(context.TODO(), tccommon.LogIdKey, logId)
 	)
 
 	idSplit := strings.Split(d.Id(), tccommon.FILED_SP)
@@ -396,7 +376,7 @@ func resourceTencentCloudPostgresAuditLogFileDelete(d *schema.ResourceData, meta
 	request.FileName = helper.String(fileName)
 
 	err := resource.Retry(tccommon.WriteRetryTimeout, func() *resource.RetryError {
-		result, e := meta.(tccommon.ProviderMeta).GetAPIV3Conn().UsePostgresqlClient().DeleteAuditLogFile(request)
+		result, e := meta.(tccommon.ProviderMeta).GetAPIV3Conn().UsePostgresqlClient().DeleteAuditLogFileWithContext(ctx, request)
 		if e != nil {
 			return tccommon.RetryError(e)
 		}
