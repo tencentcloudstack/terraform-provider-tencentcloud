@@ -1002,11 +1002,8 @@ tencentcloud_postgresql_instance_ssl_config
 tencentcloud_postgresql_restore_db_instance_objects_operation
 tencentcloud_postgresql_time_window
 tencentcloud_postgres_audit_service
-<<<<<<< HEAD
 tencentcloud_postgres_audit_log_file
-=======
 tencentcloud_postgresql_database
->>>>>>> origin/master
 
 TencentDB for Redis(crs)
 Data Source
