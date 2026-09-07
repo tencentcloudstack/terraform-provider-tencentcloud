@@ -123,6 +123,38 @@ func (me *TeoService) DeleteTeoZoneById(ctx context.Context, zoneId string) (err
 	return
 }
 
+func (me *TeoService) ConfirmOriginACLUpdate(ctx context.Context, zoneId string) (errRet error) {
+	logId := tccommon.GetLogId(ctx)
+
+	request := teo.NewConfirmOriginACLUpdateRequest()
+	request.ZoneId = &zoneId
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n",
+				logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	err := resource.Retry(tccommon.WriteRetryTimeout, func() *resource.RetryError {
+		ratelimit.Check(request.GetAction())
+		result, e := me.client.UseTeoV20220901Client().ConfirmOriginACLUpdateWithContext(ctx, request)
+		if e != nil {
+			return tccommon.RetryError(e)
+		}
+		log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n",
+			logId, request.GetAction(), request.ToJsonString(), result.ToJsonString())
+		return nil
+	})
+
+	if err != nil {
+		errRet = err
+		return err
+	}
+
+	return
+}
+
 func (me *TeoService) DescribeTeoOriginGroup(ctx context.Context,
 	zoneId, originGroupId string) (originGroup *teo.OriginGroup, errRet error) {
 	var (

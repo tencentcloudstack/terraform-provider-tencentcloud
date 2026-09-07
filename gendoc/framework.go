@@ -90,7 +90,7 @@ func (t fwDocType) mdFilePrefix() string {
 	case fwList:
 		return "list_tc_"
 	case fwAction:
-		return "action_tc_"
+		return "resource_tc_"
 	}
 	return ""
 }

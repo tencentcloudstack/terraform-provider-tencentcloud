@@ -64,10 +64,10 @@ framework type:
 | Function | `function_tc_` | `function_tc_parse_resource_id.go` |
 | Ephemeral Resource | `ephemeral_tc_` | `ephemeral_tc_temp_credential.go` |
 | List Resource | `list_tc_` | `list_tc_region.go` |
-| Action | `action_tc_` | `action_tc_cvm_reboot_instance.go` |
+| Action | `resource_tc_` | `resource_tc_cvm_reboot_instance.go` |
 
 When a reference is product-specific, include the product segment (e.g.
-`action_tc_cvm_reboot_instance`); when it lives under `services/common/`,
+`resource_tc_cvm_reboot_instance`); when it lives under `services/common/`,
 the product segment is omitted (e.g. `resource_tc_local_note`).
 
 Each reference ships with a sibling Markdown file (`<stem>.md`)
