@@ -1607,3 +1607,48 @@ func (me *DlcService) DeleteDlcAttachWorkGroupPolicyAttachmentByPolicyId(ctx con
 
 	return
 }
+
+func (me *DlcService) DescribeDlcInternalTableById(ctx context.Context, databaseName, tableName, datasourceConnectionName string) (tableInfo *dlc.TableResponseInfo, errRet error) {
+	logId := tccommon.GetLogId(ctx)
+
+	request := dlc.NewDescribeTableRequest()
+	request.DatabaseName = helper.String(databaseName)
+	request.TableName = helper.String(tableName)
+	if datasourceConnectionName != "" {
+		request.DatasourceConnectionName = helper.String(datasourceConnectionName)
+	}
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	errRet = resource.Retry(tccommon.ReadRetryTimeout, func() *resource.RetryError {
+		ratelimit.Check(request.GetAction())
+		result, e := me.client.UseDlcClient().DescribeTable(request)
+		if e != nil {
+			return tccommon.RetryError(e)
+		} else {
+			log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), result.ToJsonString())
+		}
+
+		if result == nil || result.Response == nil {
+			return resource.NonRetryableError(fmt.Errorf("Describe dlc internal table failed, Response is nil."))
+		}
+
+		if result.Response.Table == nil {
+			return nil
+		}
+
+		tableInfo = result.Response.Table
+		return nil
+	})
+
+	if errRet != nil {
+		log.Printf("[CRITAL]%s describe dlc internal table failed, reason:%+v", logId, errRet)
+		return
+	}
+
+	return
+}

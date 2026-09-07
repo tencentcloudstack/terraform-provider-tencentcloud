@@ -35,6 +35,9 @@ const (
 	// 另一个请求正在处理中，请稍后再试。
 	FAILEDOPERATION_ANOTHERREQUESTPROCESSING = "FailedOperation.AnotherRequestProcessing"
 
+	// 调用下游计费接口失败，资源销毁通知未送达
+	FAILEDOPERATION_APICALLFAILED = "FailedOperation.ApiCallFailed"
+
 	// 账户余额不足。
 	FAILEDOPERATION_BALANCENOTENOUGH = "FailedOperation.BalanceNotEnough"
 
@@ -356,6 +359,9 @@ const (
 	// 数据源连接配置异常，请重试，或者提交工单联系我们
 	INVALIDPARAMETER_INVALIDDATASOURCECONNECTIONCONFIG = "InvalidParameter.InvalidDatasourceConnectionConfig"
 
+	// 数据源连接名称不合法
+	INVALIDPARAMETER_INVALIDDATASOURCENAME = "InvalidParameter.InvalidDatasourceName"
+
 	// DecimalType设置非法，Precision必须大于等于Scale，且Precision必须小于38
 	INVALIDPARAMETER_INVALIDDECIMALTYPE = "InvalidParameter.InvalidDecimalType"
 
@@ -608,6 +614,12 @@ const (
 	// 参数取值错误。
 	INVALIDPARAMETERVALUE = "InvalidParameterValue"
 
+	// 机型步长不规范，cpu需要为32倍数
+	INVALIDPARAMETERVALUE_BILLINGITEMSTEP = "InvalidParameterValue.BillingItemStep"
+
+	// 按量计费资源包名称不规范
+	INVALIDPARAMETERVALUE_POSTPAYPARTITIONNAME = "InvalidParameterValue.PostpayPartitionName"
+
 	// 队列 Id 与 PartitionCode/QueueName 不一致
 	INVALIDPARAMETERVALUE_QUEUEIDMISMATCH = "InvalidParameterValue.QueueIdMismatch"
 
@@ -643,6 +655,9 @@ const (
 
 	// 有SQL任务尚未执行完成。
 	RESOURCEINUSE_UNFINISHEDSQLS = "ResourceInUse.UnfinishedSQLs"
+
+	// 资源不足。
+	RESOURCEINSUFFICIENT = "ResourceInsufficient"
 
 	// 指定的spark作业资源不足，请调整driver/executor规格
 	RESOURCEINSUFFICIENT_SPARKJOBINSUFFICIENTRESOURCES = "ResourceInsufficient.SparkJobInsufficientResources"
