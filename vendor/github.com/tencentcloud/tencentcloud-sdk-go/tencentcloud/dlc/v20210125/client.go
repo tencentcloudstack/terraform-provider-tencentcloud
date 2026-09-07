@@ -2216,6 +2216,7 @@ func NewCreateDatasourceConnectionResponse() (response *CreateDatasourceConnecti
 //  INVALIDPARAMETER_DUPLICATEDATASOURCENAME = "InvalidParameter.DuplicateDatasourceName"
 //  INVALIDPARAMETER_INVALIDDATAENGINENAME = "InvalidParameter.InvalidDataEngineName"
 //  INVALIDPARAMETER_INVALIDDATASOURCECONNECTIONCONFIG = "InvalidParameter.InvalidDatasourceConnectionConfig"
+//  INVALIDPARAMETER_INVALIDDATASOURCENAME = "InvalidParameter.InvalidDatasourceName"
 //  INVALIDPARAMETER_INVALIDHIVEVERSION = "InvalidParameter.InvalidHiveVersion"
 //  INVALIDPARAMETER_URLFORMATERROR = "InvalidParameter.UrlFormatError"
 //  INVALIDPARAMETER_VPCCIDRFORMATERROR = "InvalidParameter.VpcCidrFormatError"
@@ -2238,6 +2239,7 @@ func (c *Client) CreateDatasourceConnection(request *CreateDatasourceConnectionR
 //  INVALIDPARAMETER_DUPLICATEDATASOURCENAME = "InvalidParameter.DuplicateDatasourceName"
 //  INVALIDPARAMETER_INVALIDDATAENGINENAME = "InvalidParameter.InvalidDataEngineName"
 //  INVALIDPARAMETER_INVALIDDATASOURCECONNECTIONCONFIG = "InvalidParameter.InvalidDatasourceConnectionConfig"
+//  INVALIDPARAMETER_INVALIDDATASOURCENAME = "InvalidParameter.InvalidDatasourceName"
 //  INVALIDPARAMETER_INVALIDHIVEVERSION = "InvalidParameter.InvalidHiveVersion"
 //  INVALIDPARAMETER_URLFORMATERROR = "InvalidParameter.UrlFormatError"
 //  INVALIDPARAMETER_VPCCIDRFORMATERROR = "InvalidParameter.VpcCidrFormatError"
@@ -3058,17 +3060,11 @@ func NewCreatePartitionResponse() (response *CreatePartitionResponse) {
 // 新增资源包
 //
 // 可能返回的错误码:
-//  FAILEDOPERATION = "FailedOperation"
-//  INTERNALERROR = "InternalError"
-//  INTERNALERROR_INTERNALSYSTEMEXCEPTION = "InternalError.InternalSystemException"
-//  INVALIDPARAMETER = "InvalidParameter"
-//  INVALIDPARAMETER_INVALIDSQL = "InvalidParameter.InvalidSQL"
-//  INVALIDPARAMETER_INVALIDSTATEMENTKINDTYPE = "InvalidParameter.InvalidStatementKindType"
-//  INVALIDPARAMETER_PARAMETERNOTFOUNDORBENONE = "InvalidParameter.ParameterNotFoundOrBeNone"
-//  RESOURCENOTFOUND = "ResourceNotFound"
-//  RESOURCENOTFOUND_RESULTSAVEPATHNOTFOUND = "ResourceNotFound.ResultSavePathNotFound"
-//  RESOURCENOTFOUND_SESSIONNOTFOUND = "ResourceNotFound.SessionNotFound"
-//  RESOURCENOTFOUND_SESSIONSTATEDEAD = "ResourceNotFound.SessionStateDead"
+//  FAILEDOPERATION_APICALLFAILED = "FailedOperation.ApiCallFailed"
+//  INVALIDPARAMETERVALUE_BILLINGITEMSTEP = "InvalidParameterValue.BillingItemStep"
+//  INVALIDPARAMETERVALUE_POSTPAYPARTITIONNAME = "InvalidParameterValue.PostpayPartitionName"
+//  LIMITEXCEEDED = "LimitExceeded"
+//  RESOURCEINSUFFICIENT = "ResourceInsufficient"
 func (c *Client) CreatePartition(request *CreatePartitionRequest) (response *CreatePartitionResponse, err error) {
     return c.CreatePartitionWithContext(context.Background(), request)
 }
@@ -3077,17 +3073,11 @@ func (c *Client) CreatePartition(request *CreatePartitionRequest) (response *Cre
 // 新增资源包
 //
 // 可能返回的错误码:
-//  FAILEDOPERATION = "FailedOperation"
-//  INTERNALERROR = "InternalError"
-//  INTERNALERROR_INTERNALSYSTEMEXCEPTION = "InternalError.InternalSystemException"
-//  INVALIDPARAMETER = "InvalidParameter"
-//  INVALIDPARAMETER_INVALIDSQL = "InvalidParameter.InvalidSQL"
-//  INVALIDPARAMETER_INVALIDSTATEMENTKINDTYPE = "InvalidParameter.InvalidStatementKindType"
-//  INVALIDPARAMETER_PARAMETERNOTFOUNDORBENONE = "InvalidParameter.ParameterNotFoundOrBeNone"
-//  RESOURCENOTFOUND = "ResourceNotFound"
-//  RESOURCENOTFOUND_RESULTSAVEPATHNOTFOUND = "ResourceNotFound.ResultSavePathNotFound"
-//  RESOURCENOTFOUND_SESSIONNOTFOUND = "ResourceNotFound.SessionNotFound"
-//  RESOURCENOTFOUND_SESSIONSTATEDEAD = "ResourceNotFound.SessionStateDead"
+//  FAILEDOPERATION_APICALLFAILED = "FailedOperation.ApiCallFailed"
+//  INVALIDPARAMETERVALUE_BILLINGITEMSTEP = "InvalidParameterValue.BillingItemStep"
+//  INVALIDPARAMETERVALUE_POSTPAYPARTITIONNAME = "InvalidParameterValue.PostpayPartitionName"
+//  LIMITEXCEEDED = "LimitExceeded"
+//  RESOURCEINSUFFICIENT = "ResourceInsufficient"
 func (c *Client) CreatePartitionWithContext(ctx context.Context, request *CreatePartitionRequest) (response *CreatePartitionResponse, err error) {
     if request == nil {
         request = NewCreatePartitionRequest()
@@ -8845,7 +8835,7 @@ func NewDescribeSaleResourceInfoResponse() (response *DescribeSaleResourceInfoRe
 }
 
 // DescribeSaleResourceInfo
-// 查询当前地域可售卖的资源规格和最大配额
+// 查询当前地域可售卖的资源规格、最大配额，以及库存情况。StatusCategory 与 DescribePartitionAvailableQuota 数据同源，将实时可新增数量映射为库存分级；当请求 Region 与资源池实际部署地域不一致，或服务 cold-start 快照尚未就绪时，StatusCategory 为 null。
 //
 // 可能返回的错误码:
 //  FAILEDOPERATION = "FailedOperation"
@@ -8854,7 +8844,7 @@ func (c *Client) DescribeSaleResourceInfo(request *DescribeSaleResourceInfoReque
 }
 
 // DescribeSaleResourceInfo
-// 查询当前地域可售卖的资源规格和最大配额
+// 查询当前地域可售卖的资源规格、最大配额，以及库存情况。StatusCategory 与 DescribePartitionAvailableQuota 数据同源，将实时可新增数量映射为库存分级；当请求 Region 与资源池实际部署地域不一致，或服务 cold-start 快照尚未就绪时，StatusCategory 为 null。
 //
 // 可能返回的错误码:
 //  FAILEDOPERATION = "FailedOperation"
@@ -13743,6 +13733,56 @@ func (c *Client) ListExamplesWithContext(ctx context.Context, request *ListExamp
     request.SetContext(ctx)
     
     response = NewListExamplesResponse()
+    err = c.Send(request, response)
+    return
+}
+
+func NewListImagesRequest() (request *ListImagesRequest) {
+    request = &ListImagesRequest{
+        BaseRequest: &tchttp.BaseRequest{},
+    }
+    
+    request.Init().WithApiInfo("dlc", APIVersion, "ListImages")
+    
+    
+    return
+}
+
+func NewListImagesResponse() (response *ListImagesResponse) {
+    response = &ListImagesResponse{
+        BaseResponse: &tchttp.BaseResponse{},
+    } 
+    return
+
+}
+
+// ListImages
+// 列出所有镜像
+//
+// 可能返回的错误码:
+//  FAILEDOPERATION_EXTERNALSERVICE = "FailedOperation.ExternalService"
+func (c *Client) ListImages(request *ListImagesRequest) (response *ListImagesResponse, err error) {
+    return c.ListImagesWithContext(context.Background(), request)
+}
+
+// ListImages
+// 列出所有镜像
+//
+// 可能返回的错误码:
+//  FAILEDOPERATION_EXTERNALSERVICE = "FailedOperation.ExternalService"
+func (c *Client) ListImagesWithContext(ctx context.Context, request *ListImagesRequest) (response *ListImagesResponse, err error) {
+    if request == nil {
+        request = NewListImagesRequest()
+    }
+    c.InitBaseRequest(&request.BaseRequest, "dlc", APIVersion, "ListImages")
+    
+    if c.GetCredential() == nil {
+        return nil, errors.New("ListImages require credential")
+    }
+
+    request.SetContext(ctx)
+    
+    response = NewListImagesResponse()
     err = c.Send(request, response)
     return
 }
