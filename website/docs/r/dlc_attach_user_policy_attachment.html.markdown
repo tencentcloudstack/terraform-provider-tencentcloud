@@ -26,6 +26,7 @@ resource "tencentcloud_dlc_attach_user_policy_attachment" "example" {
     data_engine = "test_engine"
     operation   = "USE,MONITOR"
     source      = "USER"
+    re_auth     = true
   }
 }
 ```
@@ -85,6 +86,7 @@ The `policy_set` object supports the following:
 * `model` - (Optional, String) The name of the target Model. `*` represents all tables in the current database. To grant admin permissions, it must be `*`; to grant data connection and database permissions, it must be null; to grant other permissions, it can be any table.
 * `operation` - (Optional, String) The target permissions, which vary by permission level. Admin: `ALL` (default); data connection: `CREATE`; database: `ALL`, `CREATE`, `ALTER`, and `DROP`; table: `ALL`, `SELECT`, `INSERT`, `ALTER`, `DELETE`, `DROP`, and `UPDATE`.
 * `policy_type` - (Optional, String) The permission type. Valid values: `ADMIN`, `DATASOURCE`, `DATABASE`, `TABLE`, `VIEW`, `FUNCTION`, `COLUMN`, and `ENGINE`. Note: If it is left empty, `ADMIN` is used.
+* `re_auth` - (Optional, Bool) Whether the grantee is allowed to further grant the permissions. Valid values: `false` (default) and `true` (the grantee can grant permissions gained here to other sub-users).
 * `source` - (Optional, String) The permission source, Valid values: `USER` (from the user) and `WORKGROUP` (from one or more associated work groups).
 * `table` - (Optional, String) The name of the target table. `*` represents all tables in the current database. To grant admin permissions, it must be `*`; to grant data connection and database permissions, it must be null; to grant other permissions, it can be any table.
 * `view` - (Optional, String) The name of the target view. `*` represents all views in the current database. To grant admin permissions, it must be `*`; to grant data connection and database permissions, it must be null; to grant other permissions, it can be any view.
@@ -102,7 +104,6 @@ The `policy_set` object exports the following:
 * `is_admin_policy` - Whether the permission source is admin.
 * `operator` - The operator, which is not required as an input parameter.
 * `policy_id` - The deterministic string PolicyId corresponding to the user and workgroup.
-* `re_auth` - Whether the grantee is allowed to further grant the permissions. Valid values: `false` (default) and `true` (the grantee can grant permissions gained here to other sub-users).
 * `source_id` - The ID of the work group, which applies only when the value of the `Source` field is `WORKGROUP`.
 * `source_name` - The name of the work group, which applies only when the value of the `Source` field is `WORKGROUP`.
 

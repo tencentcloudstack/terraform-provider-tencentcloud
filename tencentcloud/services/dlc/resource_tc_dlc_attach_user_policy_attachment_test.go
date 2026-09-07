@@ -144,6 +144,104 @@ func TestDlcAttachUserPolicyAttachment_Create(t *testing.T) {
 	assert.Equal(t, dlcAupaPolicyIdTable, policyMap["policy_id"])
 }
 
+// TestDlcAttachUserPolicyAttachment_Create_WithReAuth verifies that when a user
+// sets `policy_set.0.re_auth = true`, the Create handler forwards `ReAuth = true`
+// to the AttachUserPolicy request `PolicySet[0].ReAuth`, and that the read-back
+// state is populated with `re_auth` from the DescribeUserInfo response.
+func TestDlcAttachUserPolicyAttachment_Create_WithReAuth(t *testing.T) {
+	patches := gomonkey.NewPatches()
+	defer patches.Reset()
+
+	dlcClient := &dlc.Client{}
+	patches.ApplyMethodReturn(newMockMetaDlcAttachUserPolicyAttachment().client, "UseDlcClient", dlcClient)
+
+	var capturedRequest *dlc.AttachUserPolicyRequest
+	patches.ApplyMethodFunc(dlcClient, "AttachUserPolicyWithContext", func(_ context.Context, request *dlc.AttachUserPolicyRequest) (*dlc.AttachUserPolicyResponse, error) {
+		capturedRequest = request
+		resp := dlc.NewAttachUserPolicyResponse()
+		resp.Response = &dlc.AttachUserPolicyResponseParams{
+			RequestId: ptrStrDlcAupa("fake-request-id-create-reauth"),
+			PolicySet: []*dlc.Policy{
+				{
+					Database:   ptrStrDlcAupa("tf_example_db"),
+					Catalog:    ptrStrDlcAupa("DataLakeCatalog"),
+					Table:      ptrStrDlcAupa("tf_example_table"),
+					Operation:  ptrStrDlcAupa("SELECT"),
+					PolicyType: ptrStrDlcAupa("TABLE"),
+					PolicyId:   ptrStrDlcAupa(dlcAupaPolicyIdTable),
+					ReAuth:     ptrBoolDlcAupa(true),
+					Source:     ptrStrDlcAupa("USER"),
+					Mode:       ptrStrDlcAupa("COMMON"),
+				},
+			},
+		}
+		return resp, nil
+	})
+
+	patches.ApplyMethodFunc(dlcClient, "DescribeUserInfoWithContext", func(_ context.Context, request *dlc.DescribeUserInfoRequest) (*dlc.DescribeUserInfoResponse, error) {
+		totalCount := int64(1)
+		resp := dlc.NewDescribeUserInfoResponse()
+		resp.Response = &dlc.DescribeUserInfoResponseParams{
+			RequestId: ptrStrDlcAupa("fake-request-id-read-reauth"),
+			UserInfo: &dlc.UserDetailInfo{
+				UserId:      ptrStrDlcAupa("100032676511"),
+				Type:        ptrStrDlcAupa("DataAuth"),
+				AccountType: ptrStrDlcAupa("TencentAccount"),
+				DataPolicyInfo: &dlc.Policys{
+					TotalCount: &totalCount,
+					PolicySet: []*dlc.Policy{
+						{
+							Database:   ptrStrDlcAupa("tf_example_db"),
+							Catalog:    ptrStrDlcAupa("DataLakeCatalog"),
+							Table:      ptrStrDlcAupa("tf_example_table"),
+							Operation:  ptrStrDlcAupa("SELECT"),
+							PolicyType: ptrStrDlcAupa("TABLE"),
+							PolicyId:   ptrStrDlcAupa(dlcAupaPolicyIdTable),
+							ReAuth:     ptrBoolDlcAupa(true),
+							Source:     ptrStrDlcAupa("USER"),
+							Mode:       ptrStrDlcAupa("COMMON"),
+						},
+					},
+				},
+			},
+		}
+		return resp, nil
+	})
+
+	meta := newMockMetaDlcAttachUserPolicyAttachment()
+	res := svcdlc.ResourceTencentCloudDlcAttachUserPolicyAttachment()
+	d := schema.TestResourceDataRaw(t, res.Schema, map[string]interface{}{
+		"user_id":      "100032676511",
+		"account_type": "TencentAccount",
+		"policy_set": []interface{}{
+			map[string]interface{}{
+				"database":    "tf_example_db",
+				"catalog":     "DataLakeCatalog",
+				"table":       "tf_example_table",
+				"operation":   "SELECT",
+				"policy_type": "TABLE",
+				"re_auth":     true,
+			},
+		},
+	})
+
+	err := res.Create(d, meta)
+	assert.NoError(t, err)
+	assert.Equal(t, fmt.Sprintf("100032676511#%s", dlcAupaPolicyIdTable), d.Id())
+
+	// The configured re_auth must be forwarded to the AttachUserPolicy request.
+	assert.NotNil(t, capturedRequest)
+	assert.Len(t, capturedRequest.PolicySet, 1)
+	assert.NotNil(t, capturedRequest.PolicySet[0].ReAuth)
+	assert.True(t, *capturedRequest.PolicySet[0].ReAuth)
+
+	// The read-back state must reflect the ReAuth value from the API response.
+	policySet := d.Get("policy_set").([]interface{})
+	assert.Len(t, policySet, 1)
+	policyMap := policySet[0].(map[string]interface{})
+	assert.Equal(t, true, policyMap["re_auth"])
+}
+
 func TestDlcAttachUserPolicyAttachment_Create_MultiplePolicies_Error(t *testing.T) {
 	patches := gomonkey.NewPatches()
 	defer patches.Reset()
