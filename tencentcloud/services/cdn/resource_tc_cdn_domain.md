@@ -209,7 +209,7 @@ resource "tencentcloud_cdn_domain" "example" {
     origin_pull_protocol = "follow"
 
     path_rules {
-      regex       = true
+      full_match  = false
       path        = "/api/*"
       server_name = "origin.example.com"
       forward_uri = "/v2/$1"

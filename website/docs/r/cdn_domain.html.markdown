@@ -220,7 +220,7 @@ resource "tencentcloud_cdn_domain" "example" {
     origin_pull_protocol = "follow"
 
     path_rules {
-      regex       = true
+      full_match  = false
       path        = "/api/*"
       server_name = "origin.example.com"
       forward_uri = "/v2/$1"
@@ -532,8 +532,8 @@ The `page_rules` object of `error_page` supports the following:
 The `path_rules` object of `origin` supports the following:
 
 * `forward_uri` - (Optional, String) URI path for origin on path match. Must start with `/` and does not include the parameter part. Maximum length is 1024 characters. `$1`-`$5` can be used to capture wildcard `*` in the matched path, up to 10 capture values.
+* `full_match` - (Optional, Bool) Whether to enable full matching of the matched path. `false`: disable, `true`: enable.
 * `path` - (Optional, String) Matched URL path. Only URL path is supported, not parameters. Default is full match. When wildcard `*` matching is enabled, up to 5 wildcards are supported, with a maximum length of 1024 characters.
-* `regex` - (Optional, Bool) Whether to enable wildcard `*` matching. `false`: disable, `true`: enable.
 * `server_name` - (Optional, String) Host header used when accessing the origin server on path match. If left empty, the default ServerName is used.
 
 The `path_rules` object of `url_redirect` supports the following:

@@ -8,8 +8,8 @@
 - `path_rules` 列表中的每个元素包含 4 个可选字段：`regex`（是否开启通配符匹配，bool）、`path`（匹配的 URL 路径，string）、`server_name`（路径匹配时回源的 Host 头部，string）、`forward_uri`（路径匹配时回源的 URI 路径，string）
 - 在资源的 Create 方法（`AddCdnDomain`）中填充 `request.Origin.PathRules`
 - 在资源的 Read 方法（`DescribeDomainsConfig`）中将 `response.Domains.Origin.PathRules` 写入 state
-- 在资源的 Update 方法（`UpdateDomainConfig`）中填充 `request.Origin.PathRules`
-- 更新单元测试文件补充测试用例
+- 在资源的 Update 方法（`UpdateDomainConfig`）中填充 `request.Origin.PathRules`；在调用 `UpdateDomainConfig` 接口之前，先通过 `DescribeDomainsConfig` 接口查询得到 `Origin.PathRules` 参数，如果 tfstate 中的 `{regex, path, server_name, forward_uri}` 四元组已存在于 `DescribeDomainsConfig` 的结果中，则从结果中获取 `FullMatch`、`OriginArea`、`Origin`、`RequestHeaders` 四个参数，作为 `UpdateDomainConfig` 入参的一部分；如果四元组不存在于结果中，则无需额外补充 `UpdateDomainConfig` 的入参
+- 更新资源验收测试用例
 - 更新资源文档（.md 文件）
 
 ## Capabilities

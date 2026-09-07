@@ -15,6 +15,14 @@
 - **WHEN** 用户修改 `origin` 配置块中的 `path_rules` 并执行 `terraform apply` 更新 CDN 域名
 - **THEN** Update 方法（`UpdateDomainConfig`）的 `request.Origin.PathRules` 中 SHALL 包含用户配置的 `regex`、`path`、`server_name`、`forward_uri` 字段值
 
+#### Scenario: Update 前预查询 DescribeDomainsConfig 并回填服务端字段
+- **WHEN** 调用 `UpdateDomainConfig` 之前，tfstate 中某条 `path_rules` 的 `{regex, path, server_name, forward_uri}` 四元组已存在于 `DescribeDomainsConfig` 返回的 `Origin.PathRules` 结果中
+- **THEN** Update 方法 SHALL 从该结果中获取 `FullMatch`、`OriginArea`、`Origin`、`RequestHeaders` 四个参数，作为 `UpdateDomainConfig` 入参（`request.Origin.PathRules`）的一部分
+
+#### Scenario: Update 时四元组不存在则不补充额外入参
+- **WHEN** 调用 `UpdateDomainConfig` 之前，tfstate 中某条 `path_rules` 的 `{regex, path, server_name, forward_uri}` 四元组不存在于 `DescribeDomainsConfig` 返回的 `Origin.PathRules` 结果中
+- **THEN** Update 方法 SHALL 不为该规则额外补充 `FullMatch`、`OriginArea`、`Origin`、`RequestHeaders` 入参，仅提交用户配置的字段
+
 #### Scenario: 未配置 path_rules 时不影响现有行为
 - **WHEN** 用户未配置 `origin.path_rules`
 - **THEN** Create/Update 方法 SHALL 不设置 `request.Origin.PathRules`（或设置为空），现有行为不受影响

@@ -1614,7 +1614,7 @@ resource "tencentcloud_cdn_domain" "path_rules" {
     origin_pull_protocol = "follow"
 
     path_rules {
-      regex       = true
+      full_match  = false
       path        = "/api/*"
       server_name = "origin.example.com"
       forward_uri = "/v2/$1"
@@ -1637,7 +1637,7 @@ resource "tencentcloud_cdn_domain" "path_rules" {
     origin_pull_protocol = "follow"
 
     path_rules {
-      regex       = false
+      full_match  = true
       path        = "/images/test.jpg"
       server_name = "origin2.example.com"
       forward_uri = "/static/images/test.jpg"
@@ -1661,7 +1661,7 @@ func TestAccTencentCloudCdnDomainResource_OriginPathRules(t *testing.T) {
 				Check: resource.ComposeAggregateTestCheckFunc(
 					testAccCheckCdnDomainExists("tencentcloud_cdn_domain.path_rules"),
 					resource.TestCheckResourceAttr("tencentcloud_cdn_domain.path_rules", "origin.0.path_rules.#", "1"),
-					resource.TestCheckResourceAttr("tencentcloud_cdn_domain.path_rules", "origin.0.path_rules.0.regex", "true"),
+					resource.TestCheckResourceAttr("tencentcloud_cdn_domain.path_rules", "origin.0.path_rules.0.full_match", "false"),
 					resource.TestCheckResourceAttr("tencentcloud_cdn_domain.path_rules", "origin.0.path_rules.0.path", "/api/*"),
 					resource.TestCheckResourceAttr("tencentcloud_cdn_domain.path_rules", "origin.0.path_rules.0.server_name", "origin.example.com"),
 					resource.TestCheckResourceAttr("tencentcloud_cdn_domain.path_rules", "origin.0.path_rules.0.forward_uri", "/v2/$1"),
@@ -1672,7 +1672,7 @@ func TestAccTencentCloudCdnDomainResource_OriginPathRules(t *testing.T) {
 				Check: resource.ComposeAggregateTestCheckFunc(
 					testAccCheckCdnDomainExists("tencentcloud_cdn_domain.path_rules"),
 					resource.TestCheckResourceAttr("tencentcloud_cdn_domain.path_rules", "origin.0.path_rules.#", "1"),
-					resource.TestCheckResourceAttr("tencentcloud_cdn_domain.path_rules", "origin.0.path_rules.0.regex", "false"),
+					resource.TestCheckResourceAttr("tencentcloud_cdn_domain.path_rules", "origin.0.path_rules.0.full_match", "true"),
 					resource.TestCheckResourceAttr("tencentcloud_cdn_domain.path_rules", "origin.0.path_rules.0.path", "/images/test.jpg"),
 					resource.TestCheckResourceAttr("tencentcloud_cdn_domain.path_rules", "origin.0.path_rules.0.server_name", "origin2.example.com"),
 					resource.TestCheckResourceAttr("tencentcloud_cdn_domain.path_rules", "origin.0.path_rules.0.forward_uri", "/static/images/test.jpg"),
