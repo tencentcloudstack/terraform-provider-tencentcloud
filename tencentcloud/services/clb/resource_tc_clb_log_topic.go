@@ -98,7 +98,7 @@ func resourceTencentCloudClbInstanceTopicCreate(d *schema.ResourceData, meta int
 	if tags, ok := d.GetOk("tags"); ok {
 		params["tags"] = tags.(map[string]interface{})
 	}
-	if period, ok := d.GetOk("period"); ok {
+	if period, ok := d.GetOkExists("period"); ok {
 		params["period"] = period
 	}
 	resp, err := clbService.CreateTopic(ctx, params)
@@ -218,7 +218,7 @@ func resourceTencentCloudClbInstanceTopicUpdate(d *schema.ResourceData, meta int
 			}
 		}
 		if d.HasChange("period") {
-			if v, ok := d.GetOk("period"); ok {
+			if v, ok := d.GetOkExists("period"); ok {
 				request.Period = helper.Int64(int64(v.(int)))
 			}
 		}
