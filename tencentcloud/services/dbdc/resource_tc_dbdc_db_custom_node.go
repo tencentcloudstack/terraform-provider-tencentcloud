@@ -234,6 +234,17 @@ func ResourceTencentCloudDbdcDbCustomNode() *schema.Resource {
 				},
 			},
 
+			"disaster_recover_group_ids": {
+				Type:        schema.TypeList,
+				Optional:    true,
+				ForceNew:    true,
+				MaxItems:    1,
+				Description: "Placement (disaster recover) group ID list to bind to the node. Maps to the `DisasterRecoverGroupIds` request field of the `CreateDBCustomNodes` API. The API supports specifying only one placement group ID. Changing this forces replacement of the resource.",
+				Elem: &schema.Schema{
+					Type: schema.TypeString,
+				},
+			},
+
 			// computed
 			"node_id": {
 				Type:        schema.TypeString,
@@ -305,6 +316,12 @@ func ResourceTencentCloudDbdcDbCustomNode() *schema.Resource {
 				Type:        schema.TypeString,
 				Computed:    true,
 				Description: "Node access IP address when the `NetworkModeCrossTenantENI` network mode is selected. Refreshed from the `DescribeDBCustomNodes` API response.",
+			},
+
+			"disaster_recover_group_id": {
+				Type:        schema.TypeString,
+				Computed:    true,
+				Description: "Placement (disaster recover) group ID bound to the node. Refreshed from the `DescribeDBCustomNodes` API response (`DBCustomNode.DisasterRecoverGroupId`).",
 			},
 		},
 	}
@@ -445,6 +462,14 @@ func resourceTencentCloudDbdcDbCustomNodeCreate(d *schema.ResourceData, meta int
 		for i := range securityGroupIdsSet {
 			securityGroupId := securityGroupIdsSet[i].(string)
 			request.SecurityGroupIds = append(request.SecurityGroupIds, &securityGroupId)
+		}
+	}
+
+	if v, ok := d.GetOk("disaster_recover_group_ids"); ok {
+		disasterRecoverGroupIdsList := v.([]interface{})
+		for i := range disasterRecoverGroupIdsList {
+			disasterRecoverGroupId := disasterRecoverGroupIdsList[i].(string)
+			request.DisasterRecoverGroupIds = append(request.DisasterRecoverGroupIds, &disasterRecoverGroupId)
 		}
 	}
 
@@ -607,6 +632,10 @@ func resourceTencentCloudDbdcDbCustomNodeRead(d *schema.ResourceData, meta inter
 
 	if respData.EniIP != nil {
 		_ = d.Set("eni_ip", respData.EniIP)
+	}
+
+	if respData.DisasterRecoverGroupId != nil {
+		_ = d.Set("disaster_recover_group_id", respData.DisasterRecoverGroupId)
 	}
 
 	if respData.SystemDisk != nil {
