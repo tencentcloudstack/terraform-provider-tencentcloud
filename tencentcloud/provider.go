@@ -2773,6 +2773,7 @@ func Provider() *schema.Provider {
 			"tencentcloud_dbdc_db_custom_cluster":                                                   dbdc.ResourceTencentCloudDbdcDbCustomCluster(),
 			"tencentcloud_dbdc_db_custom_node":                                                      dbdc.ResourceTencentCloudDbdcDbCustomNode(),
 			"tencentcloud_dbdc_node_to_db_custom_cluster_attachment":                                dbdc.ResourceTencentCloudDbdcNodeToDbCustomClusterAttachment(),
+			"tencentcloud_dbdc_db_custom_disaster_recover_group":                                    dbdc.ResourceTencentCloudDbdcDbCustomDisasterRecoverGroup(),
 			"tencentcloud_vcube_application_and_video":                                              vcube.ResourceTencentCloudVcubeApplicationAndVideo(),
 			"tencentcloud_vcube_application_and_web_player_license":                                 vcube.ResourceTencentCloudVcubeApplicationAndWebPlayerLicense(),
 			"tencentcloud_vcube_renew_video_operation":                                              vcube.ResourceTencentCloudVcubeRenewVideoOperation(),
