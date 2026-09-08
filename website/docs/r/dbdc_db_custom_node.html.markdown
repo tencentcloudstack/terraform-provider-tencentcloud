@@ -118,7 +118,7 @@ The following arguments are supported:
 * `auto_voucher` - (Optional, Int) Whether to use voucher to deduct automatically. Valid values: `1` (use), `0` (not use). Default value is `0`.
 * `charge_type` - (Optional, String, ForceNew) Charge type. Valid values: `PREPAID` (subscription, default), `POSTPAID` (pay-as-you-go).
 * `data_disks` - (Optional, List, ForceNew) Data disk configuration. Only cloud-disk node types (e.g. `DB.SA5`) support setting this; local-disk types (e.g. `DB.AT5`) do not. Refreshed from the `DescribeDBCustomNodes` API response. Note: `disk_name` is read-only and ignored as a create input.
-* `disaster_recover_group_ids` - (Optional, List: [`String`], ForceNew) Placement (disaster recover) group ID list to bind to the node. Maps to the `DisasterRecoverGroupIds` request field of the `CreateDBCustomNodes` API. The API supports specifying only one placement group ID. Changing this forces replacement of the resource.
+* `disaster_recover_group_ids` - (Optional, List: [`String`]) Placement (disaster recover) group ID list to bind to the node. Maps to the `DisasterRecoverGroupIds` request field of the `CreateDBCustomNodes` API. The API supports specifying only one placement group ID.
 * `host_name` - (Optional, String, ForceNew) Hostname of the node. Dots (`.`) and hyphens (`-`) cannot be the first/last character or be used consecutively; underscores (`_`) are not allowed. Windows: 2-15 chars (letters, digits, `-`, no `.`); Linux/others: 2-60 chars (supports multiple dot-separated segments). Write-only: not returned by `DescribeDBCustomNodes`, so the configured value is preserved in state.
 * `login_settings` - (Optional, List, ForceNew) Instance login settings. You can set the login method to password, key, or keep the original image login settings. Only one method can be set.
 * `network_mode` - (Optional, String, ForceNew) Node network mode. Valid values: `privatelink` (four-layer SSH connectivity), `cross_tenant_eni` (three-layer dual-NIC access). Default is `privatelink`. Refreshed from the `DescribeDBCustomNodes` API response.
@@ -153,7 +153,6 @@ In addition to all arguments above, the following attributes are exported:
 * `cluster_id` - Cluster ID that the node belongs to.
 * `cpu` - Node CPU size, unit: core.
 * `created_time` - Node creation time.
-* `disaster_recover_group_id` - Placement (disaster recover) group ID bound to the node. Refreshed from the `DescribeDBCustomNodes` API response (`DBCustomNode.DisasterRecoverGroupId`).
 * `eni_ip` - Node access IP address when the `NetworkModeCrossTenantENI` network mode is selected. Refreshed from the `DescribeDBCustomNodes` API response.
 * `expire_time` - Node expiration time.
 * `isolated_time` - Node isolation time.

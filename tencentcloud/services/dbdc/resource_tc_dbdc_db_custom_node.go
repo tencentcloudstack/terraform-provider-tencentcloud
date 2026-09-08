@@ -237,9 +237,9 @@ func ResourceTencentCloudDbdcDbCustomNode() *schema.Resource {
 			"disaster_recover_group_ids": {
 				Type:        schema.TypeList,
 				Optional:    true,
-				ForceNew:    true,
+				Computed:    true,
 				MaxItems:    1,
-				Description: "Placement (disaster recover) group ID list to bind to the node. Maps to the `DisasterRecoverGroupIds` request field of the `CreateDBCustomNodes` API. The API supports specifying only one placement group ID. Changing this forces replacement of the resource.",
+				Description: "Placement (disaster recover) group ID list to bind to the node. Maps to the `DisasterRecoverGroupIds` request field of the `CreateDBCustomNodes` API. The API supports specifying only one placement group ID.",
 				Elem: &schema.Schema{
 					Type: schema.TypeString,
 				},
@@ -317,12 +317,6 @@ func ResourceTencentCloudDbdcDbCustomNode() *schema.Resource {
 				Computed:    true,
 				Description: "Node access IP address when the `NetworkModeCrossTenantENI` network mode is selected. Refreshed from the `DescribeDBCustomNodes` API response.",
 			},
-
-			"disaster_recover_group_id": {
-				Type:        schema.TypeString,
-				Computed:    true,
-				Description: "Placement (disaster recover) group ID bound to the node. Refreshed from the `DescribeDBCustomNodes` API response (`DBCustomNode.DisasterRecoverGroupId`).",
-			},
 		},
 	}
 }
@@ -379,8 +373,9 @@ func resourceTencentCloudDbdcDbCustomNodeCreate(d *schema.ResourceData, meta int
 		if v, ok := dMap["key_ids"]; ok {
 			keyIdsList := v.([]interface{})
 			for i := range keyIdsList {
-				keyId := keyIdsList[i].(string)
-				loginSettings.KeyIds = append(loginSettings.KeyIds, &keyId)
+				if keyId, ok := keyIdsList[i].(string); ok {
+					loginSettings.KeyIds = append(loginSettings.KeyIds, &keyId)
+				}
 			}
 		}
 
@@ -402,8 +397,9 @@ func resourceTencentCloudDbdcDbCustomNodeCreate(d *schema.ResourceData, meta int
 	if v, ok := d.GetOk("voucher_ids"); ok {
 		voucherIdsList := v.([]interface{})
 		for i := range voucherIdsList {
-			voucherId := voucherIdsList[i].(string)
-			request.VoucherIds = append(request.VoucherIds, &voucherId)
+			if voucherId, ok := voucherIdsList[i].(string); ok {
+				request.VoucherIds = append(request.VoucherIds, &voucherId)
+			}
 		}
 	}
 
@@ -460,16 +456,18 @@ func resourceTencentCloudDbdcDbCustomNodeCreate(d *schema.ResourceData, meta int
 	if v, ok := d.GetOk("security_group_ids"); ok {
 		securityGroupIdsSet := v.(*schema.Set).List()
 		for i := range securityGroupIdsSet {
-			securityGroupId := securityGroupIdsSet[i].(string)
-			request.SecurityGroupIds = append(request.SecurityGroupIds, &securityGroupId)
+			if securityGroupId, ok := securityGroupIdsSet[i].(string); ok {
+				request.SecurityGroupIds = append(request.SecurityGroupIds, &securityGroupId)
+			}
 		}
 	}
 
 	if v, ok := d.GetOk("disaster_recover_group_ids"); ok {
 		disasterRecoverGroupIdsList := v.([]interface{})
 		for i := range disasterRecoverGroupIdsList {
-			disasterRecoverGroupId := disasterRecoverGroupIdsList[i].(string)
-			request.DisasterRecoverGroupIds = append(request.DisasterRecoverGroupIds, &disasterRecoverGroupId)
+			if disasterRecoverGroupId, ok := disasterRecoverGroupIdsList[i].(string); ok {
+				request.DisasterRecoverGroupIds = append(request.DisasterRecoverGroupIds, &disasterRecoverGroupId)
+			}
 		}
 	}
 
@@ -635,7 +633,7 @@ func resourceTencentCloudDbdcDbCustomNodeRead(d *schema.ResourceData, meta inter
 	}
 
 	if respData.DisasterRecoverGroupId != nil {
-		_ = d.Set("disaster_recover_group_id", respData.DisasterRecoverGroupId)
+		_ = d.Set("disaster_recover_group_ids", []string{*respData.DisasterRecoverGroupId})
 	}
 
 	if respData.SystemDisk != nil {
@@ -796,8 +794,9 @@ func resourceTencentCloudDbdcDbCustomNodeUpdate(d *schema.ResourceData, meta int
 		if v, ok := d.GetOk("voucher_ids"); ok {
 			voucherIdsList := v.([]interface{})
 			for i := range voucherIdsList {
-				voucherId := voucherIdsList[i].(string)
-				request.VoucherIds = append(request.VoucherIds, &voucherId)
+				if voucherId, ok := voucherIdsList[i].(string); ok {
+					request.VoucherIds = append(request.VoucherIds, &voucherId)
+				}
 			}
 		}
 
@@ -829,8 +828,9 @@ func resourceTencentCloudDbdcDbCustomNodeUpdate(d *schema.ResourceData, meta int
 		request := dbdcv20201029.NewModifyDBCustomNodeSecurityGroupsRequest()
 		request.NodeId = helper.String(nodeId)
 		for i := range newIds {
-			securityGroupId := newIds[i].(string)
-			request.SecurityGroupIds = append(request.SecurityGroupIds, &securityGroupId)
+			if securityGroupId, ok := newIds[i].(string); ok {
+				request.SecurityGroupIds = append(request.SecurityGroupIds, &securityGroupId)
+			}
 		}
 
 		reqErr := resource.Retry(tccommon.WriteRetryTimeout, func() *resource.RetryError {
@@ -849,6 +849,47 @@ func resourceTencentCloudDbdcDbCustomNodeUpdate(d *schema.ResourceData, meta int
 		if reqErr != nil {
 			log.Printf("[CRITAL]%s modify dbdc db custom node security groups failed, reason:%+v", logId, reqErr)
 			return reqErr
+		}
+	}
+
+	if d.HasChange("disaster_recover_group_ids") {
+		request := dbdcv20201029.NewModifyDBCustomNodesDisasterRecoverGroupRequest()
+		response := dbdcv20201029.NewModifyDBCustomNodesDisasterRecoverGroupResponse()
+		if v, ok := d.GetOk("disaster_recover_group_ids"); ok {
+			disasterRecoverGroupIdsList := v.([]interface{})
+			for i := range disasterRecoverGroupIdsList {
+				if disasterRecoverGroupId, ok := disasterRecoverGroupIdsList[i].(string); ok {
+					request.DisasterRecoverGroupIds = append(request.DisasterRecoverGroupIds, &disasterRecoverGroupId)
+				}
+			}
+		}
+
+		request.NodeIds = helper.Strings([]string{nodeId})
+		reqErr := resource.Retry(tccommon.WriteRetryTimeout, func() *resource.RetryError {
+			result, e := meta.(tccommon.ProviderMeta).GetAPIV3Conn().UseDbdcV20201029Client().ModifyDBCustomNodesDisasterRecoverGroupWithContext(ctx, request)
+			if e != nil {
+				return tccommon.RetryError(e)
+			}
+
+			if result == nil || result.Response == nil {
+				return resource.NonRetryableError(fmt.Errorf("Modify dbdc db custom node disaster recover groups failed, Response is nil."))
+			}
+
+			response = result
+			return nil
+		})
+
+		if reqErr != nil {
+			log.Printf("[CRITAL]%s modify dbdc db custom node disaster recover group failed, reason:%+v", logId, reqErr)
+			return reqErr
+		}
+
+		// wait
+		if response.Response.TaskId != nil {
+			service := DbdcService{client: meta.(tccommon.ProviderMeta).GetAPIV3Conn()}
+			if err := waitDBCustomTaskSucceeded(ctx, &service, *response.Response.TaskId, d.Timeout(schema.TimeoutUpdate)); err != nil {
+				return err
+			}
 		}
 	}
 
