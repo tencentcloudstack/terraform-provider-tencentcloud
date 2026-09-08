@@ -5,15 +5,16 @@
 // next to the Go source under tencentcloud/services/<product>/, and
 // renders them into website/docs/<dir>/<resource>.html.markdown.
 //
-// Output dirs (single-letter where possible, mirroring the SDKv2 d/r
-// shorthand):
+// Output dirs (Terraform Registry canonical directory names; the SDKv2
+// d/r shorthand is still accepted by the Registry, but the newer reference
+// types must use their full names):
 //
 //	resource           -> website/docs/r/
 //	datasource         -> website/docs/d/
-//	function           -> website/docs/f/
-//	ephemeral resource -> website/docs/e/
-//	list resource      -> website/docs/l/
-//	action             -> website/docs/a/
+//	function           -> website/docs/functions/
+//	ephemeral resource -> website/docs/ephemeral-resources/
+//	list resource      -> website/docs/list-resources/
+//	action             -> website/docs/actions/
 //
 // The framework references are listed inside the unified index file
 // tencentcloud/provider.md alongside SDKv2 references. GetIndex (in
@@ -54,7 +55,9 @@ const (
 )
 
 // outputDir maps a framework doc type to its registry website directory.
-// The single-letter shorthands mirror the SDKv2 d/r convention.
+// The SDKv2 d/r shorthand is still accepted by the Registry, but the newer
+// reference types must use their full canonical directory names ("actions",
+// "ephemeral-resources", "functions", "list-resources").
 func (t fwDocType) outputDir() string {
 	switch t {
 	case fwResource:
@@ -62,13 +65,13 @@ func (t fwDocType) outputDir() string {
 	case fwDataSrc:
 		return "d"
 	case fwFunction:
-		return "f"
+		return "functions"
 	case fwEphemeral:
-		return "e"
+		return "ephemeral-resources"
 	case fwList:
-		return "l"
+		return "list-resources"
 	case fwAction:
-		return "a"
+		return "actions"
 	}
 	return ""
 }
