@@ -152,6 +152,14 @@ func (r *AddModelRewriteResponse) FromJsonString(s string) error {
 	return json.Unmarshal([]byte(s), &r)
 }
 
+type ApiBaseItem struct {
+	// <p>后端转发协议</p>
+	Protocol *string `json:"Protocol,omitnil,omitempty" name:"Protocol"`
+
+	// <p>Api Base URL</p>
+	ApiBase *string `json:"ApiBase,omitnil,omitempty" name:"ApiBase"`
+}
+
 // Predefined struct for user
 type AssociateBudgetRequestParams struct {
 	// <p>Budget ID。</p>
@@ -2865,6 +2873,9 @@ type CreateModelRequestParams struct {
 	// <p>API Base URL</p>
 	ApiBase *string `json:"ApiBase,omitnil,omitempty" name:"ApiBase"`
 
+	// <p>多协议 Api Base URL</p>
+	ApiBases []*ApiBaseItem `json:"ApiBases,omitnil,omitempty" name:"ApiBases"`
+
 	// <p>VPC ID</p>
 	VpcId *string `json:"VpcId,omitnil,omitempty" name:"VpcId"`
 
@@ -2882,6 +2893,12 @@ type CreateModelRequestParams struct {
 
 	// <p>健康检查配置</p>
 	HealthCheckConfig *ServiceProviderHealthCheckConfigInput `json:"HealthCheckConfig,omitnil,omitempty" name:"HealthCheckConfig"`
+
+	// <p>私网管道 ID</p>
+	CMRPrivateNetworkTunnelId *string `json:"CMRPrivateNetworkTunnelId,omitnil,omitempty" name:"CMRPrivateNetworkTunnelId"`
+
+	// <p>健康检查配置</p>
+	HealthCheckConfigs []*ServiceProviderHealthCheckConfigItemInput `json:"HealthCheckConfigs,omitnil,omitempty" name:"HealthCheckConfigs"`
 }
 
 type CreateModelRequest struct {
@@ -2911,6 +2928,9 @@ type CreateModelRequest struct {
 	// <p>API Base URL</p>
 	ApiBase *string `json:"ApiBase,omitnil,omitempty" name:"ApiBase"`
 
+	// <p>多协议 Api Base URL</p>
+	ApiBases []*ApiBaseItem `json:"ApiBases,omitnil,omitempty" name:"ApiBases"`
+
 	// <p>VPC ID</p>
 	VpcId *string `json:"VpcId,omitnil,omitempty" name:"VpcId"`
 
@@ -2928,6 +2948,12 @@ type CreateModelRequest struct {
 
 	// <p>健康检查配置</p>
 	HealthCheckConfig *ServiceProviderHealthCheckConfigInput `json:"HealthCheckConfig,omitnil,omitempty" name:"HealthCheckConfig"`
+
+	// <p>私网管道 ID</p>
+	CMRPrivateNetworkTunnelId *string `json:"CMRPrivateNetworkTunnelId,omitnil,omitempty" name:"CMRPrivateNetworkTunnelId"`
+
+	// <p>健康检查配置</p>
+	HealthCheckConfigs []*ServiceProviderHealthCheckConfigItemInput `json:"HealthCheckConfigs,omitnil,omitempty" name:"HealthCheckConfigs"`
 }
 
 func (r *CreateModelRequest) ToJsonString() string {
@@ -2950,12 +2976,15 @@ func (r *CreateModelRequest) FromJsonString(s string) error {
 	delete(f, "ServiceProviderName")
 	delete(f, "Protocol")
 	delete(f, "ApiBase")
+	delete(f, "ApiBases")
 	delete(f, "VpcId")
 	delete(f, "SubnetId")
 	delete(f, "HostHeader")
 	delete(f, "Tags")
 	delete(f, "VerifySSL")
 	delete(f, "HealthCheckConfig")
+	delete(f, "CMRPrivateNetworkTunnelId")
+	delete(f, "HealthCheckConfigs")
 	if len(f) > 0 {
 		return tcerr.NewTencentCloudSDKError("ClientError.BuildRequestError", "CreateModelRequest has unknown keys!", "")
 	}
@@ -9128,8 +9157,11 @@ type DescribeUpperModelsRequestParams struct {
 	// <p>模型提供商</p>
 	ModelProvider *string `json:"ModelProvider,omitnil,omitempty" name:"ModelProvider"`
 
-	// <p>BYOK 业务 ID，可选</p><p>格式：byok-xxxxxxxx</p>
+	// <p>BYOK 业务 ID，可选</p><p>格式：byok-xxxxxxxx，预留参数</p>
 	ServiceProviderId *string `json:"ServiceProviderId,omitnil,omitempty" name:"ServiceProviderId"`
+
+	// <p>    CMR 私网管道ID </p>
+	CMRPrivateNetworkTunnelId *string `json:"CMRPrivateNetworkTunnelId,omitnil,omitempty" name:"CMRPrivateNetworkTunnelId"`
 }
 
 type DescribeUpperModelsRequest struct {
@@ -9159,8 +9191,11 @@ type DescribeUpperModelsRequest struct {
 	// <p>模型提供商</p>
 	ModelProvider *string `json:"ModelProvider,omitnil,omitempty" name:"ModelProvider"`
 
-	// <p>BYOK 业务 ID，可选</p><p>格式：byok-xxxxxxxx</p>
+	// <p>BYOK 业务 ID，可选</p><p>格式：byok-xxxxxxxx，预留参数</p>
 	ServiceProviderId *string `json:"ServiceProviderId,omitnil,omitempty" name:"ServiceProviderId"`
+
+	// <p>    CMR 私网管道ID </p>
+	CMRPrivateNetworkTunnelId *string `json:"CMRPrivateNetworkTunnelId,omitnil,omitempty" name:"CMRPrivateNetworkTunnelId"`
 }
 
 func (r *DescribeUpperModelsRequest) ToJsonString() string {
@@ -9184,6 +9219,7 @@ func (r *DescribeUpperModelsRequest) FromJsonString(s string) error {
 	delete(f, "ModelProtocol")
 	delete(f, "ModelProvider")
 	delete(f, "ServiceProviderId")
+	delete(f, "CMRPrivateNetworkTunnelId")
 	if len(f) > 0 {
 		return tcerr.NewTencentCloudSDKError("ClientError.BuildRequestError", "DescribeUpperModelsRequest has unknown keys!", "")
 	}
@@ -11249,6 +11285,10 @@ type ModelKeyInfoItem struct {
 	// 注意：此字段可能返回 null，表示取不到有效值。
 	ApiBase *string `json:"ApiBase,omitnil,omitempty" name:"ApiBase"`
 
+	// <p>多协议 API Base URL</p>
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	ApiBases []*ApiBaseItem `json:"ApiBases,omitnil,omitempty" name:"ApiBases"`
+
 	// <p>模型创建时间（ISO 8601）</p>
 	// 注意：此字段可能返回 null，表示取不到有效值。
 	CreatedAt *string `json:"CreatedAt,omitnil,omitempty" name:"CreatedAt"`
@@ -11301,6 +11341,17 @@ type ModelKeyInfoItem struct {
 
 	// <p>健康检查配置</p>
 	HealthCheckConfig *ServiceProviderHealthCheckConfigOutput `json:"HealthCheckConfig,omitnil,omitempty" name:"HealthCheckConfig"`
+
+	// <p>私网管道 ID</p>
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	CMRPrivateNetworkTunnelId *string `json:"CMRPrivateNetworkTunnelId,omitnil,omitempty" name:"CMRPrivateNetworkTunnelId"`
+
+	// <p>私网管道名称</p>
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	CMRPrivateNetworkTunnelName *string `json:"CMRPrivateNetworkTunnelName,omitnil,omitempty" name:"CMRPrivateNetworkTunnelName"`
+
+	// <p>健康检查配置</p>
+	HealthCheckConfigs []*ServiceProviderHealthCheckConfigItemOutput `json:"HealthCheckConfigs,omitnil,omitempty" name:"HealthCheckConfigs"`
 }
 
 type ModelNameAggregatedItem struct {
@@ -11410,6 +11461,7 @@ type ModelRouterDetail struct {
 	VpcId *string `json:"VpcId,omitnil,omitempty" name:"VpcId"`
 
 	// <p>带宽</p><p>单位：Mbps</p>
+	// 注意：此字段可能返回 null，表示取不到有效值。
 	Bandwidth *uint64 `json:"Bandwidth,omitnil,omitempty" name:"Bandwidth"`
 
 	// <p>弹性公网IP的ID</p>
@@ -13029,8 +13081,11 @@ type ModifyModelAttributesRequestParams struct {
 	// <p>BYOK的ID</p><p>参数格式：byok-kot39u7j</p>
 	ServiceProviderId *string `json:"ServiceProviderId,omitnil,omitempty" name:"ServiceProviderId"`
 
-	// <p>BYOK的自定义名字</p><p>入参限制：1～256个字符</p>
+	// <p>BYOK的自定义名字</p><p>入参限制：1～255个字符</p>
 	ServiceProviderName *string `json:"ServiceProviderName,omitnil,omitempty" name:"ServiceProviderName"`
+
+	// <p>多协议 Api Base URL</p>
+	ApiBases []*ApiBaseItem `json:"ApiBases,omitnil,omitempty" name:"ApiBases"`
 }
 
 type ModifyModelAttributesRequest struct {
@@ -13039,8 +13094,11 @@ type ModifyModelAttributesRequest struct {
 	// <p>BYOK的ID</p><p>参数格式：byok-kot39u7j</p>
 	ServiceProviderId *string `json:"ServiceProviderId,omitnil,omitempty" name:"ServiceProviderId"`
 
-	// <p>BYOK的自定义名字</p><p>入参限制：1～256个字符</p>
+	// <p>BYOK的自定义名字</p><p>入参限制：1～255个字符</p>
 	ServiceProviderName *string `json:"ServiceProviderName,omitnil,omitempty" name:"ServiceProviderName"`
+
+	// <p>多协议 Api Base URL</p>
+	ApiBases []*ApiBaseItem `json:"ApiBases,omitnil,omitempty" name:"ApiBases"`
 }
 
 func (r *ModifyModelAttributesRequest) ToJsonString() string {
@@ -13057,6 +13115,7 @@ func (r *ModifyModelAttributesRequest) FromJsonString(s string) error {
 	}
 	delete(f, "ServiceProviderId")
 	delete(f, "ServiceProviderName")
+	delete(f, "ApiBases")
 	if len(f) > 0 {
 		return tcerr.NewTencentCloudSDKError("ClientError.BuildRequestError", "ModifyModelAttributesRequest has unknown keys!", "")
 	}
@@ -15268,6 +15327,41 @@ type ServiceProviderHealthCheckConfigInput struct {
 	HealthCheckEnabled *bool `json:"HealthCheckEnabled,omitnil,omitempty" name:"HealthCheckEnabled"`
 }
 
+type ServiceProviderHealthCheckConfigItemInput struct {
+	// <p>是否开启健康检查</p><p>枚举值：</p><ul><li>true： 是</li><li>false： 否</li></ul>
+	HealthCheckEnabled *bool `json:"HealthCheckEnabled,omitnil,omitempty" name:"HealthCheckEnabled"`
+
+	// <p>健康检查间隔。支持以300s为步长配置。</p><p>取值范围：[300, 14400]</p><p>单位：s</p><p>默认值：300</p>
+	HealthCheckInterval *uint64 `json:"HealthCheckInterval,omitnil,omitempty" name:"HealthCheckInterval"`
+
+	// <p>不健康阈值。表示当模型连续多少次不健康时认为该模型不健康。</p><p>取值范围：[1, 10]</p>
+	HealthCheckUnhealthyThreshold *uint64 `json:"HealthCheckUnhealthyThreshold,omitnil,omitempty" name:"HealthCheckUnhealthyThreshold"`
+
+	// <p>健康检查使用的最大Token数量。部分模型如gpt系列可能仅支持大于等于16。</p><p>取值范围：[1, 1024]</p><p>默认值：1</p>
+	HealthCheckMaxTokens *uint64 `json:"HealthCheckMaxTokens,omitnil,omitempty" name:"HealthCheckMaxTokens"`
+
+	// <p>健康检查协议</p><p>枚举值：</p><ul><li>chat： 表示/chat/completion协议</li><li>messages： 表示/v1/messages协议</li><li>responses： 表示/v1/messages协议</li></ul>
+	HealthCheckProtocol *string `json:"HealthCheckProtocol,omitnil,omitempty" name:"HealthCheckProtocol"`
+}
+
+type ServiceProviderHealthCheckConfigItemOutput struct {
+	// <p>是否开启健康检查</p><p>枚举值：</p><ul><li>true： 是</li><li>false： 否</li></ul>
+	HealthCheckEnabled *bool `json:"HealthCheckEnabled,omitnil,omitempty" name:"HealthCheckEnabled"`
+
+	// <p>健康检查间隔。支持以300s为步长配置。</p><p>单位：s</p><p>默认值：300</p>
+	HealthCheckInterval *uint64 `json:"HealthCheckInterval,omitnil,omitempty" name:"HealthCheckInterval"`
+
+	// <p>不健康阈值。表示当模型连续多少次不健康时认为该模型不健康。</p><p>取值范围：[1, 10]</p><p>默认值：1</p>
+	HealthCheckUnhealthyThreshold *uint64 `json:"HealthCheckUnhealthyThreshold,omitnil,omitempty" name:"HealthCheckUnhealthyThreshold"`
+
+	// <p>健康检查使用的最大Token数量。部分模型如gpt系列可能仅支持大于等于16。</p><p>默认值：1</p>
+	HealthCheckMaxTokens *uint64 `json:"HealthCheckMaxTokens,omitnil,omitempty" name:"HealthCheckMaxTokens"`
+
+	// <p>健康检查协议</p><p>枚举值：</p><ul><li>chat： 表示/chat/completion协议</li><li>messages： 表示/v1/messages协议</li><li>responses： 表示/v1/messages协议</li></ul>
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	HealthCheckProtocol *string `json:"HealthCheckProtocol,omitnil,omitempty" name:"HealthCheckProtocol"`
+}
+
 type ServiceProviderHealthCheckConfigOutput struct {
 	// <p>是否开启健康检查</p><p>枚举值：</p><ul><li>true： 是</li><li>false： 否</li></ul>
 	HealthCheckEnabled *bool `json:"HealthCheckEnabled,omitnil,omitempty" name:"HealthCheckEnabled"`
@@ -15837,64 +15931,63 @@ type TargetGroupBackend struct {
 }
 
 type TargetGroupHealthCheck struct {
-	// 是否开启健康检查。
+	// <p>是否开启健康检查。</p>
 	HealthSwitch *bool `json:"HealthSwitch,omitnil,omitempty" name:"HealthSwitch"`
 
-	// 健康检查方式， 其中仅V2新版目标组类型支持该参数， 支持取值 TCP | HTTP | HTTPS | PING | CUSTOM，其中:
-	// <ur><li>当目标组后端转发协议为TCP时， 健康检查方式支持 TCP/HTTP/CUSTOM， 默认为TCP。</li><li>当目标组后端转发协议为UDP时， 健康检查方式支持 PING/CUSTOM，默认为PING。</li><li>当目标组后端转发协议为HTTP时， 健康检查方式支持 HTTP/TCP， 默认为HTTP。</li><li>当目标组后端转发协议为HTTPS时， 健康检查方式支持 HTTPS/TCP， 默认为HTTPS。</li><li>当目标组后端转发协议为GRPC时， 健康检查方式支持GRPC/TCP， 默认为GRPC。</li></ur>
+	// <p>健康检查方式， 其中仅V2新版目标组类型支持该参数， 支持取值 TCP | HTTP | HTTPS | PING | CUSTOM，其中:<br><ur><li>当目标组后端转发协议为TCP时， 健康检查方式支持 TCP/HTTP/CUSTOM， 默认为TCP。</li><li>当目标组后端转发协议为UDP时， 健康检查方式支持 PING/CUSTOM，默认为PING。</li><li>当目标组后端转发协议为HTTP时， 健康检查方式支持 HTTP/TCP， 默认为HTTP。</li><li>当目标组后端转发协议为HTTPS时， 健康检查方式支持 HTTPS/TCP， 默认为HTTPS。</li><li>当目标组后端转发协议为GRPC时， 健康检查方式支持GRPC/TCP， 默认为GRPC。</li></ur></p>
 	Protocol *string `json:"Protocol,omitnil,omitempty" name:"Protocol"`
 
-	// 自定义探测相关参数。健康检查端口，默认为后端服务的端口，除非您希望指定特定端口，否则建议留空。（仅适用于TCP/UDP目标组）。
+	// <p>自定义探测相关参数。健康检查端口，默认为后端服务的端口，除非您希望指定特定端口，否则建议留空。（仅适用于TCP/UDP目标组）。</p>
 	Port *int64 `json:"Port,omitnil,omitempty" name:"Port"`
 
-	// 健康检查超时时间。 默认为2秒。 可配置范围：2 - 30秒。
+	// <p>健康检查超时时间。 </p><p>取值范围：[2, 60]</p><p>单位：秒</p><p>默认值：2</p><p>响应超时时间要小于检查间隔时间。</p>
 	Timeout *int64 `json:"Timeout,omitnil,omitempty" name:"Timeout"`
 
-	// 检测间隔时间。 默认为5秒。 可配置范围：2 - 300秒。
+	// <p>检测间隔时间。</p><p>取值范围：[1, 600]</p><p>单位：秒</p><p>默认值：5</p>
 	GapTime *int64 `json:"GapTime,omitnil,omitempty" name:"GapTime"`
 
-	// 检测健康阈值。 默认为3秒。 可配置范围：2 - 10次。
+	// <p>检测健康阈值。</p><p>取值范围：[2, 10]</p><p>单位：次</p><p>默认值：3</p>
 	GoodLimit *int64 `json:"GoodLimit,omitnil,omitempty" name:"GoodLimit"`
 
-	// 检测不健康阈值。 默认为3秒。 可配置范围：2 - 10次。
+	// <p>检测不健康阈值。</p><p>取值范围：[2, 10]</p><p>单位：次</p><p>默认值：3</p>
 	BadLimit *int64 `json:"BadLimit,omitnil,omitempty" name:"BadLimit"`
 
-	// 目标组下的所有rs的探测包是否开启巨帧。默认开启。仅GWLB类型目标组支持该参数。
+	// <p>目标组下的所有rs的探测包是否开启巨帧。默认开启。仅GWLB类型目标组支持该参数。</p>
 	JumboFrame *bool `json:"JumboFrame,omitnil,omitempty" name:"JumboFrame"`
 
-	// 健康检查状态码（仅适用于HTTP/HTTPS目标组、TCP目标组的HTTP健康检查方式）。可选值：1~31，默认 31，其中：<url> <li>1 表示探测后返回值 1xx 代表健康。</li><li>2 表示返回 2xx 代表健康。</li><li>4 表示返回 3xx 代表健康。</li><li>8 表示返回 4xx 代表健康。</li><li>16 表示返回 5xx 代表健康。</li></url>若希望多种返回码都可代表健康，则将相应的值相加。
+	// <p>健康检查状态码（仅适用于HTTP/HTTPS目标组、TCP目标组的HTTP健康检查方式）。可选值：1~31，默认 31，其中：<url> <li>1 表示探测后返回值 1xx 代表健康。</li><li>2 表示返回 2xx 代表健康。</li><li>4 表示返回 3xx 代表健康。</li><li>8 表示返回 4xx 代表健康。</li><li>16 表示返回 5xx 代表健康。</li></url>若希望多种返回码都可代表健康，则将相应的值相加。</p>
 	// 注意：此字段可能返回 null，表示取不到有效值。
 	HttpCode *int64 `json:"HttpCode,omitnil,omitempty" name:"HttpCode"`
 
-	// 健康检查域名， 其中：<ur><li>仅适用于HTTP/HTTPS目标组和TCP目标组的HTTP健康检查方式。</li><li>针对HTTP/HTTPS目标组，当使用HTTP健康检查方式时，该参数为必填项。</li></ur>
+	// <p>健康检查域名， 其中：<ur><li>仅适用于HTTP/HTTPS目标组和TCP目标组的HTTP健康检查方式。</li><li>针对HTTP/HTTPS目标组，当使用HTTP健康检查方式时，该参数为必填项。</li></ur></p>
 	// 注意：此字段可能返回 null，表示取不到有效值。
 	HttpCheckDomain *string `json:"HttpCheckDomain,omitnil,omitempty" name:"HttpCheckDomain"`
 
-	// 健康检查路径（仅适用于HTTP/HTTPS转发规则、TCP监听器的HTTP健康检查方式）。
+	// <p>健康检查路径（仅适用于HTTP/HTTPS转发规则、TCP监听器的HTTP健康检查方式）。</p>
 	// 注意：此字段可能返回 null，表示取不到有效值。
 	HttpCheckPath *string `json:"HttpCheckPath,omitnil,omitempty" name:"HttpCheckPath"`
 
-	// 健康检查方法（仅适用于HTTP/HTTPS转发规则、TCP监听器的HTTP健康检查方式），默认值：HEAD，可选值HEAD或GET。
+	// <p>健康检查方法（仅适用于HTTP/HTTPS转发规则、TCP监听器的HTTP健康检查方式），默认值：HEAD，可选值HEAD或GET。</p>
 	// 注意：此字段可能返回 null，表示取不到有效值。
 	HttpCheckMethod *string `json:"HttpCheckMethod,omitnil,omitempty" name:"HttpCheckMethod"`
 
-	// 健康检查的输入格式，健康检查方式取CUSTOM时，必填此字段，可取值：HEX或TEXT，其中：<ur><li>TEXT：文本格式。</li><li>HEX：十六进制格式， SendContext和RecvContext的字符只能在0123456789ABCDEF中选取且长度必须是偶数位。</li><li>仅适用于TCP/UDP目标组。</li></ur>
+	// <p>健康检查的输入格式，健康检查方式取CUSTOM时，必填此字段，可取值：HEX或TEXT，其中：<ur><li>TEXT：文本格式。</li><li>HEX：十六进制格式， SendContext和RecvContext的字符只能在0123456789ABCDEF中选取且长度必须是偶数位。</li><li>仅适用于TCP/UDP目标组。</li></ur></p>
 	// 注意：此字段可能返回 null，表示取不到有效值。
 	ContextType *string `json:"ContextType,omitnil,omitempty" name:"ContextType"`
 
-	// 自定义探测相关参数。健康检查协议CheckType的值取CUSTOM时，必填此字段，代表健康检查发送的请求内容，只允许ASCII可见字符，最大长度限制500。（仅适用于TCP/UDP目标组）。
+	// <p>自定义探测相关参数。健康检查协议CheckType的值取CUSTOM时，必填此字段，代表健康检查发送的请求内容，只允许ASCII可见字符，最大长度限制500。（仅适用于TCP/UDP目标组）。</p>
 	// 注意：此字段可能返回 null，表示取不到有效值。
 	SendContext *string `json:"SendContext,omitnil,omitempty" name:"SendContext"`
 
-	// 自定义探测相关参数。健康检查协议CheckType的值取CUSTOM时，必填此字段，代表健康检查返回的结果，只允许ASCII可见字符，最大长度限制500。（仅适用于TCP/UDP目标组）。
+	// <p>自定义探测相关参数。健康检查协议CheckType的值取CUSTOM时，必填此字段，代表健康检查返回的结果，只允许ASCII可见字符，最大长度限制500。（仅适用于TCP/UDP目标组）。</p>
 	// 注意：此字段可能返回 null，表示取不到有效值。
 	RecvContext *string `json:"RecvContext,omitnil,omitempty" name:"RecvContext"`
 
-	// HTTP版本, 其中：<ur><li>健康检查协议CheckType的值取HTTP时，必传此字段。</li><li>支持配置选项：HTTP/1.0, HTTP/1.1。</li><li>仅适用于TCP目标组。</li></ur>
+	// <p>HTTP版本, 其中：<ur><li>健康检查协议CheckType的值取HTTP时，必传此字段。</li><li>支持配置选项：HTTP/1.0, HTTP/1.1。</li><li>仅适用于TCP目标组。</li></ur></p>
 	// 注意：此字段可能返回 null，表示取不到有效值。
 	HttpVersion *string `json:"HttpVersion,omitnil,omitempty" name:"HttpVersion"`
 
-	// GRPC健康检查状态码（仅适用于后端转发协议为GRPC的目标组）。默认值为 12，可输入值为数值、多个数值、或者范围，例如 20 或 20,25 或 0-99。
+	// <p>GRPC健康检查状态码（仅适用于后端转发协议为GRPC的目标组）。默认值为 12，可输入值为数值、多个数值、或者范围，例如 20 或 20,25 或 0-99。</p>
 	// 注意：此字段可能返回 null，表示取不到有效值。
 	ExtendedCode *string `json:"ExtendedCode,omitnil,omitempty" name:"ExtendedCode"`
 }
@@ -16086,6 +16179,12 @@ type TestModelInputModalitiesRequestParams struct {
 
 	// <p>是否校验服务提供商的SSL证书</p><p>PublicBYOK时为True且禁止传入；若传入VerifySSL，则优先同步入参逻辑；若传入了ServiceProviderId则同步已创建的Byok实例该Model的逻辑；否则PublicCustom模式下为True，PrivateCustom模式下为False。</p>
 	VerifySSL *bool `json:"VerifySSL,omitnil,omitempty" name:"VerifySSL"`
+
+	// <p>健康检查协议</p><p>枚举值：</p><ul><li>chat： 表示/chat/completion协议</li><li>messages： 表示/v1/messages协议</li><li>responses： 表示/responses协议</li></ul>
+	HealthCheckProtocol *string `json:"HealthCheckProtocol,omitnil,omitempty" name:"HealthCheckProtocol"`
+
+	// <p>CMR私网管道ID</p>
+	CMRPrivateNetworkTunnelId *string `json:"CMRPrivateNetworkTunnelId,omitnil,omitempty" name:"CMRPrivateNetworkTunnelId"`
 }
 
 type TestModelInputModalitiesRequest struct {
@@ -16120,6 +16219,12 @@ type TestModelInputModalitiesRequest struct {
 
 	// <p>是否校验服务提供商的SSL证书</p><p>PublicBYOK时为True且禁止传入；若传入VerifySSL，则优先同步入参逻辑；若传入了ServiceProviderId则同步已创建的Byok实例该Model的逻辑；否则PublicCustom模式下为True，PrivateCustom模式下为False。</p>
 	VerifySSL *bool `json:"VerifySSL,omitnil,omitempty" name:"VerifySSL"`
+
+	// <p>健康检查协议</p><p>枚举值：</p><ul><li>chat： 表示/chat/completion协议</li><li>messages： 表示/v1/messages协议</li><li>responses： 表示/responses协议</li></ul>
+	HealthCheckProtocol *string `json:"HealthCheckProtocol,omitnil,omitempty" name:"HealthCheckProtocol"`
+
+	// <p>CMR私网管道ID</p>
+	CMRPrivateNetworkTunnelId *string `json:"CMRPrivateNetworkTunnelId,omitnil,omitempty" name:"CMRPrivateNetworkTunnelId"`
 }
 
 func (r *TestModelInputModalitiesRequest) ToJsonString() string {
@@ -16144,6 +16249,8 @@ func (r *TestModelInputModalitiesRequest) FromJsonString(s string) error {
 	delete(f, "HostHeader")
 	delete(f, "ServiceProviderId")
 	delete(f, "VerifySSL")
+	delete(f, "HealthCheckProtocol")
+	delete(f, "CMRPrivateNetworkTunnelId")
 	if len(f) > 0 {
 		return tcerr.NewTencentCloudSDKError("ClientError.BuildRequestError", "TestModelInputModalitiesRequest has unknown keys!", "")
 	}
@@ -16212,6 +16319,12 @@ type TestServiceProviderConnectionRequestParams struct {
 
 	// <p>是否校验服务提供商的SSL证书</p><p>默认值：AccessType取值为：</p><ul><li>PublicBYOK时，该参数无效；</li><li>PublicCustom时，该参数默认为true；</li><li>PrivateCustom时，该参数默认为false；</li></ul>
 	VerifySSL *bool `json:"VerifySSL,omitnil,omitempty" name:"VerifySSL"`
+
+	// <p>健康检查协议</p><p>枚举值：</p><ul><li>chat： 表示/chat/completion协议</li><li>messages： 表示/v1/messages协议</li><li>responses： 表示/responses协议</li></ul>
+	HealthCheckProtocol *string `json:"HealthCheckProtocol,omitnil,omitempty" name:"HealthCheckProtocol"`
+
+	// <p>    CMR 私网管道ID </p>
+	CMRPrivateNetworkTunnelId *string `json:"CMRPrivateNetworkTunnelId,omitnil,omitempty" name:"CMRPrivateNetworkTunnelId"`
 }
 
 type TestServiceProviderConnectionRequest struct {
@@ -16246,6 +16359,12 @@ type TestServiceProviderConnectionRequest struct {
 
 	// <p>是否校验服务提供商的SSL证书</p><p>默认值：AccessType取值为：</p><ul><li>PublicBYOK时，该参数无效；</li><li>PublicCustom时，该参数默认为true；</li><li>PrivateCustom时，该参数默认为false；</li></ul>
 	VerifySSL *bool `json:"VerifySSL,omitnil,omitempty" name:"VerifySSL"`
+
+	// <p>健康检查协议</p><p>枚举值：</p><ul><li>chat： 表示/chat/completion协议</li><li>messages： 表示/v1/messages协议</li><li>responses： 表示/responses协议</li></ul>
+	HealthCheckProtocol *string `json:"HealthCheckProtocol,omitnil,omitempty" name:"HealthCheckProtocol"`
+
+	// <p>    CMR 私网管道ID </p>
+	CMRPrivateNetworkTunnelId *string `json:"CMRPrivateNetworkTunnelId,omitnil,omitempty" name:"CMRPrivateNetworkTunnelId"`
 }
 
 func (r *TestServiceProviderConnectionRequest) ToJsonString() string {
@@ -16270,6 +16389,8 @@ func (r *TestServiceProviderConnectionRequest) FromJsonString(s string) error {
 	delete(f, "HostHeader")
 	delete(f, "ServiceProviderId")
 	delete(f, "VerifySSL")
+	delete(f, "HealthCheckProtocol")
+	delete(f, "CMRPrivateNetworkTunnelId")
 	if len(f) > 0 {
 		return tcerr.NewTencentCloudSDKError("ClientError.BuildRequestError", "TestServiceProviderConnectionRequest has unknown keys!", "")
 	}

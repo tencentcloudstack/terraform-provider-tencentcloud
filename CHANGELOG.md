@@ -1,3 +1,16 @@
+## 1.83.29(September 4, 2026)
+
+FEATURES:
+
+* **New Data Source:** `tencentcloud_billing_bill_detail` ([#4483](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/4483))
+* **New Data Source:** `tencentcloud_cat_probe_tasks` ([#4487](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/4487))
+* **New Resource:** `tencentcloud_cls_remote_write_task` ([#4481](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/4481))
+* **New Resource:** `tencentcloud_teo_dns_records_status` ([#4484](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/4484))
+
+ENHANCEMENTS:
+
+* resource/tencentcloud_cls_scheduled_sql: support metric destination resource params (metric_names, metric_labels, custom_time, custom_metric_labels) ([#4486](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/4486))
+
 ## 1.83.28(September 2, 2026)
 
 FEATURES:
