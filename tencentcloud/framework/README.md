@@ -67,7 +67,7 @@ framework type:
 | Action | `action_tc_` | `action_tc_cvm_reboot_instance.go` |
 
 When a reference is product-specific, include the product segment (e.g.
-`resource_tc_cvm_reboot_instance`); when it lives under `services/common/`,
+`action_tc_cvm_reboot_instance`); when it lives under `services/common/`,
 the product segment is omitted (e.g. `resource_tc_local_note`).
 
 Each reference ships with a sibling Markdown file (`<stem>.md`)
