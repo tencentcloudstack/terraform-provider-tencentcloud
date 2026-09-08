@@ -12,34 +12,34 @@ import (
 )
 
 // _ action.Action is intentionally omitted: the factory function
-// NewTeoConfirmOriginAclUpdateAction returns action.Action, which already
+// NewTeoConfirmOriginAclUpdate returns action.Action, which already
 // performs the implicit compile-time check at the return statement. Only the
 // extended-interface assertion is kept here to verify the Configure method
 // signature (promoted from fw.ActionWithConfigure) at compile time.
-var _ action.ActionWithConfigure = &TeoConfirmOriginAclUpdateAction{}
+var _ action.ActionWithConfigure = &TeoConfirmOriginAclUpdate{}
 
-// NewTeoConfirmOriginAclUpdateAction is the factory referenced by
+// NewTeoConfirmOriginAclUpdate is the factory referenced by
 // tencentcloud/framework/registry.go to register this action.
-func NewTeoConfirmOriginAclUpdateAction() action.Action {
-	return &TeoConfirmOriginAclUpdateAction{}
+func NewTeoConfirmOriginAclUpdate() action.Action {
+	return &TeoConfirmOriginAclUpdate{}
 }
 
-// TeoConfirmOriginAclUpdateAction implements action.Action for
+// TeoConfirmOriginAclUpdate implements action.Action for
 // tencentcloud_teo_confirm_origin_acl_update_action.
-type TeoConfirmOriginAclUpdateAction struct {
+type TeoConfirmOriginAclUpdate struct {
 	fw.ActionWithConfigure
 }
 
-// TeoConfirmOriginAclUpdateActionModel maps the schema attributes.
-type TeoConfirmOriginAclUpdateActionModel struct {
+// TeoConfirmOriginAclUpdateModel maps the schema attributes.
+type TeoConfirmOriginAclUpdateModel struct {
 	ZoneId types.String `tfsdk:"zone_id"`
 }
 
-func (a *TeoConfirmOriginAclUpdateAction) Metadata(_ context.Context, _ action.MetadataRequest, resp *action.MetadataResponse) {
+func (a *TeoConfirmOriginAclUpdate) Metadata(_ context.Context, _ action.MetadataRequest, resp *action.MetadataResponse) {
 	resp.TypeName = "tencentcloud_teo_confirm_origin_acl_update"
 }
 
-func (a *TeoConfirmOriginAclUpdateAction) Schema(_ context.Context, _ action.SchemaRequest, resp *action.SchemaResponse) {
+func (a *TeoConfirmOriginAclUpdate) Schema(_ context.Context, _ action.SchemaRequest, resp *action.SchemaResponse) {
 	resp.Schema = schema.Schema{
 		Description: "Provides an action to confirm TEO origin ACL update for a zone. " +
 			"When the origin IP ranges of TEO change, you can use this action to confirm that the latest " +
@@ -54,8 +54,8 @@ func (a *TeoConfirmOriginAclUpdateAction) Schema(_ context.Context, _ action.Sch
 }
 
 // Invoke is called to run the logic of the action.
-func (a *TeoConfirmOriginAclUpdateAction) Invoke(ctx context.Context, req action.InvokeRequest, resp *action.InvokeResponse) {
-	var data TeoConfirmOriginAclUpdateActionModel
+func (a *TeoConfirmOriginAclUpdate) Invoke(ctx context.Context, req action.InvokeRequest, resp *action.InvokeResponse) {
+	var data TeoConfirmOriginAclUpdateModel
 	resp.Diagnostics.Append(req.Config.Get(ctx, &data)...)
 	if resp.Diagnostics.HasError() {
 		return
