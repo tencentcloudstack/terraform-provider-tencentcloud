@@ -36,7 +36,7 @@ type TeoConfirmOriginAclUpdateActionModel struct {
 }
 
 func (a *TeoConfirmOriginAclUpdateAction) Metadata(_ context.Context, _ action.MetadataRequest, resp *action.MetadataResponse) {
-	resp.TypeName = "tencentcloud_teo_confirm_origin_acl_update_action"
+	resp.TypeName = "tencentcloud_teo_confirm_origin_acl_update"
 }
 
 func (a *TeoConfirmOriginAclUpdateAction) Schema(_ context.Context, _ action.SchemaRequest, resp *action.SchemaResponse) {
