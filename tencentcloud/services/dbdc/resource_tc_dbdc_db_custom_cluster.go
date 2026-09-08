@@ -96,6 +96,7 @@ func ResourceTencentCloudDbdcDbCustomCluster() *schema.Resource {
 			"deletion_protection": {
 				Type:        schema.TypeBool,
 				Optional:    true,
+				Computed:    true,
 				Description: "Whether to enable cluster deletion protection. Valid values: `true` (enabled, API default), `false` (disabled).",
 			},
 
@@ -199,7 +200,7 @@ func resourceTencentCloudDbdcDbCustomClusterCreate(d *schema.ResourceData, meta 
 		request.ClusterDescription = helper.String(v.(string))
 	}
 
-	if v, ok := d.GetOk("deletion_protection"); ok {
+	if v, ok := d.GetOkExists("deletion_protection"); ok {
 		request.DeletionProtection = helper.Bool(v.(bool))
 	}
 
@@ -413,9 +414,11 @@ func resourceTencentCloudDbdcDbCustomClusterUpdate(d *schema.ResourceData, meta 
 
 	if d.HasChange("deletion_protection") {
 		request := dbdcv20201029.NewModifyDBCustomClusterAttributesRequest()
-		request.ClusterId = helper.String(clusterId)
-		request.DeletionProtection = helper.Bool(d.Get("deletion_protection").(bool))
+		if v, ok := d.GetOkExists("deletion_protection"); ok {
+			request.DeletionProtection = helper.Bool(v.(bool))
+		}
 
+		request.ClusterId = helper.String(clusterId)
 		reqErr := resource.Retry(tccommon.WriteRetryTimeout, func() *resource.RetryError {
 			result, e := meta.(tccommon.ProviderMeta).GetAPIV3Conn().UseDbdcV20201029Client().ModifyDBCustomClusterAttributesWithContext(ctx, request)
 			if e != nil {
@@ -454,7 +457,6 @@ func resourceTencentCloudDbdcDbCustomClusterDelete(d *schema.ResourceData, meta 
 	)
 
 	request.ClusterId = helper.String(clusterId)
-
 	reqErr := resource.Retry(tccommon.WriteRetryTimeout, func() *resource.RetryError {
 		result, e := meta.(tccommon.ProviderMeta).GetAPIV3Conn().UseDbdcV20201029Client().DestroyDBCustomClusterWithContext(ctx, request)
 		if e != nil {
