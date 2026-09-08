@@ -93,6 +93,12 @@ func ResourceTencentCloudDbdcDbCustomCluster() *schema.Resource {
 				Description: "Cluster description.",
 			},
 
+			"deletion_protection": {
+				Type:        schema.TypeBool,
+				Optional:    true,
+				Description: "Whether to enable cluster deletion protection. Valid values: `true` (enabled, API default), `false` (disabled).",
+			},
+
 			"tags": {
 				Type:        schema.TypeMap,
 				Optional:    true,
@@ -191,6 +197,10 @@ func resourceTencentCloudDbdcDbCustomClusterCreate(d *schema.ResourceData, meta 
 
 	if v, ok := d.GetOk("cluster_description"); ok {
 		request.ClusterDescription = helper.String(v.(string))
+	}
+
+	if v, ok := d.GetOk("deletion_protection"); ok {
+		request.DeletionProtection = helper.Bool(v.(bool))
 	}
 
 	if v, ok := d.GetOk("tags"); ok {
@@ -298,6 +308,10 @@ func resourceTencentCloudDbdcDbCustomClusterRead(d *schema.ResourceData, meta in
 		_ = d.Set("cluster_description", respData.ClusterDescription)
 	}
 
+	if respData.DeletionProtection != nil {
+		_ = d.Set("deletion_protection", respData.DeletionProtection)
+	}
+
 	if respData.Tags != nil {
 		tags := make(map[string]interface{}, len(respData.Tags))
 		for _, tag := range respData.Tags {
@@ -352,7 +366,7 @@ func resourceTencentCloudDbdcDbCustomClusterUpdate(d *schema.ResourceData, meta 
 		clusterId = d.Id()
 	)
 
-	// Only tags are mutable via the API, all other arguments are ForceNew.
+	// Only tags and deletion_protection are mutable via the API, all other arguments are ForceNew.
 	if d.HasChange("tags") {
 		oldRaw, newRaw := d.GetChange("tags")
 		oldTags := oldRaw.(map[string]interface{})
@@ -393,6 +407,32 @@ func resourceTencentCloudDbdcDbCustomClusterUpdate(d *schema.ResourceData, meta 
 
 		if reqErr != nil {
 			log.Printf("[CRITAL]%s update dbdc db custom cluster tags failed, reason:%+v", logId, reqErr)
+			return reqErr
+		}
+	}
+
+	if d.HasChange("deletion_protection") {
+		request := dbdcv20201029.NewModifyDBCustomClusterAttributesRequest()
+		request.ClusterId = helper.String(clusterId)
+		request.DeletionProtection = helper.Bool(d.Get("deletion_protection").(bool))
+
+		reqErr := resource.Retry(tccommon.WriteRetryTimeout, func() *resource.RetryError {
+			result, e := meta.(tccommon.ProviderMeta).GetAPIV3Conn().UseDbdcV20201029Client().ModifyDBCustomClusterAttributesWithContext(ctx, request)
+			if e != nil {
+				return tccommon.RetryError(e)
+			} else {
+				log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), result.ToJsonString())
+			}
+
+			if result == nil || result.Response == nil {
+				return resource.NonRetryableError(fmt.Errorf("Modify dbdc db custom cluster attributes failed, Response is nil."))
+			}
+
+			return nil
+		})
+
+		if reqErr != nil {
+			log.Printf("[CRITAL]%s update dbdc db custom cluster deletion_protection failed, reason:%+v", logId, reqErr)
 			return reqErr
 		}
 	}
