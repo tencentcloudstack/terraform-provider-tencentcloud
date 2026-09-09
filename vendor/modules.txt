@@ -1300,7 +1300,7 @@ github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/dbbrain/v20210527
 # github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/dbdc v1.3.174
 ## explicit; go 1.14
 github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/dbdc/v20201029
-# github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/dc v1.0.633
+# github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/dc v1.3.96
 ## explicit; go 1.14
 github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/dc/v20180410
 # github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/dcdb v1.0.673

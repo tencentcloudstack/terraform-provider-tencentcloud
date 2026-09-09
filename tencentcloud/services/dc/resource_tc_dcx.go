@@ -76,7 +76,6 @@ func ResourceTencentCloudDcxInstance() *schema.Resource {
 				Type:        schema.TypeInt,
 				Optional:    true,
 				Computed:    true,
-				ForceNew:    true,
 				Description: "Bandwidth of the DC.",
 			},
 			"route_type": {
@@ -401,6 +400,29 @@ func resourceTencentCloudDcxInstanceUpdate(d *schema.ResourceData, meta interfac
 
 		if err != nil {
 			log.Printf("[CRITAL]%s Modify direct connect tunnel failed, reason:%s\n", logId, err.Error())
+			return err
+		}
+	}
+
+	if d.HasChange("bandwidth") {
+		request := dc.NewModifyDirectConnectTunnelAttributeRequest()
+		request.DirectConnectTunnelId = &dcxId
+		if v, ok := d.GetOkExists("bandwidth"); ok {
+			request.Bandwidth = helper.IntInt64(v.(int))
+		}
+
+		err := resource.Retry(tccommon.WriteRetryTimeout, func() *resource.RetryError {
+			_, e := meta.(tccommon.ProviderMeta).GetAPIV3Conn().UseDcClient().ModifyDirectConnectTunnelAttribute(request)
+			if e != nil {
+				log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), e.Error())
+				return tccommon.RetryError(e)
+			}
+
+			return nil
+		})
+
+		if err != nil {
+			log.Printf("[CRITAL]%s Modify direct connect tunnel bandwidth failed, reason:%s\n", logId, err.Error())
 			return err
 		}
 	}
