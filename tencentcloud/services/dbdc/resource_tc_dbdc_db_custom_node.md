@@ -47,7 +47,7 @@ resource "tencentcloud_dbdc_db_custom_node" "example" {
   }
 
   disaster_recover_group_ids = [
-    "dbrg-xxxxxxxx",
+    "dbps-n2qbf6zv",
   ]
 
   tags = {
