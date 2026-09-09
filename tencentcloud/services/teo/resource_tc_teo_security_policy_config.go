@@ -7137,22 +7137,19 @@ func buildBotManagementActionOverrideFromMap(m map[string]interface{}) *teov2022
 		return nil
 	}
 	override := &teov20220901.BotManagementActionOverrides{}
-	ids := make([]*string, 0)
+	if v, ok := m["rule_id"].(string); ok && v != "" {
+		override.Ids = []*string{helper.String(v)}
+	}
 	if v, ok := m["rule_ids"].([]interface{}); ok {
+		ids := make([]*string, 0)
 		for _, item := range v {
 			if s, ok := item.(string); ok && s != "" {
 				ids = append(ids, helper.String(s))
 			}
 		}
-	}
-	// Fallback to the deprecated single-value rule_id when rule_ids is not set.
-	if len(ids) == 0 {
-		if v, ok := m["rule_id"].(string); ok && v != "" {
-			ids = append(ids, helper.String(v))
+		if len(ids) > 0 {
+			override.Ids = ids
 		}
-	}
-	if len(ids) > 0 {
-		override.Ids = ids
 	}
 	if actionMap, ok := helper.ConvertInterfacesHeadToMap(m["action"]); ok && len(actionMap) > 0 {
 		override.Action = buildSecurityActionFromMap(actionMap)
@@ -7237,6 +7234,9 @@ func flattenBotManagementActionOverride(override *teov20220901.BotManagementActi
 	m := map[string]interface{}{}
 	if override == nil {
 		return m
+	}
+	if len(override.Ids) > 0 && override.Ids[0] != nil {
+		m["rule_id"] = override.Ids[0]
 	}
 	if len(override.Ids) > 0 {
 		ruleIds := make([]interface{}, 0, len(override.Ids))
