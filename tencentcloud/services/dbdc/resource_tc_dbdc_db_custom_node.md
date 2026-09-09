@@ -28,6 +28,34 @@ resource "tencentcloud_dbdc_db_custom_node" "example" {
 }
 ```
 
+Create a PREPAID DBDC db custom node with disaster recover group
+
+```hcl
+resource "tencentcloud_dbdc_db_custom_node" "example" {
+  zone        = "ap-shanghai-5"
+  image_id    = "img-rm13akp3"
+  vpc_id      = "vpc-cseo7req"
+  subnet_id   = "subnet-huka6qhj"
+  node_type   = "DB.AT5.8XLARGE128"
+  period      = 1
+  auto_renew  = 1
+  charge_type = "PREPAID"
+  node_name   = "tf-example"
+
+  login_settings {
+    password = "Password@2026"
+  }
+
+  disaster_recover_group_ids = [
+    "dbrg-xxxxxxxx",
+  ]
+
+  tags = {
+    createBy = "Terraform"
+  }
+}
+```
+
 Create a POSTPAID DBDC db custom node
 
 ```hcl
