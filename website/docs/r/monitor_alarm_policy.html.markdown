@@ -294,6 +294,38 @@ resource "tencentcloud_monitor_alarm_policy" "foo" {
 }
 ```
 
+### alarm policy binding all objects
+
+```hcl
+resource "tencentcloud_monitor_alarm_policy" "foo" {
+  policy_name  = "tf-policy-bind-all"
+  monitor_type = "MT_QCE"
+  enable       = 1
+  project_id   = 0
+  namespace    = "cvm_device"
+  is_bind_all  = 1
+
+  conditions {
+    is_union_rule = 1
+    rules {
+      metric_name      = "CpuUsage"
+      period           = 60
+      operator         = "ge"
+      value            = "89.9"
+      continue_period  = 1
+      notice_frequency = 3600
+      is_power_notice  = 0
+    }
+  }
+
+  event_conditions {
+    metric_name = "ping_unreachable"
+  }
+
+  notice_ids = [tencentcloud_monitor_alarm_notice.foo.id]
+}
+```
+
 ## Argument Reference
 
 The following arguments are supported:
@@ -308,6 +340,7 @@ The following arguments are supported:
 * `filter` - (Optional, List) Global filters.
 * `group_by` - (Optional, Set: [`String`]) Aggregate dimension list, specify which dimension keys to use for group by.
 * `hierarchical_notices` - (Optional, List) Alarm hierarchical notice rules configuration.
+* `is_bind_all` - (Optional, Int, ForceNew) Whether to bind all objects. If yes, no need to pass `filter` or call `BindPolicyObject`. Valid values: `0` (no, default), `1` (yes). Not all policy types support binding all objects. Immutable after creation.
 * `notice_content_tmpl_bind_infos` - (Optional, List) Notice content template binding info.
 * `notice_ids` - (Optional, List: [`String`]) List of notification rule IDs.
 * `policy_tag` - (Optional, List, ForceNew) Policy tag to bind object.
