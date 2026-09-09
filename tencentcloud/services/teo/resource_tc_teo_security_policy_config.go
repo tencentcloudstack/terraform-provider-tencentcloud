@@ -7042,10 +7042,13 @@ func securityActionSchema() *schema.Resource {
 func botManagementActionOverrideSchema() *schema.Resource {
 	return &schema.Resource{
 		Schema: map[string]*schema.Schema{
-			"rule_id": {
-				Type:        schema.TypeString,
-				Required:    true,
-				Description: "Rule ID or category ID for action override.",
+			"rule_ids": {
+				Type:     schema.TypeList,
+				Required: true,
+				Elem: &schema.Schema{
+					Type: schema.TypeString,
+				},
+				Description: "One or more bot rule IDs (or category IDs) whose action is overridden. Maps to the cloud API field BotManagementActionOverrides.Ids.",
 			},
 			"action": {
 				Type:        schema.TypeList,
@@ -7128,8 +7131,16 @@ func buildBotManagementActionOverrideFromMap(m map[string]interface{}) *teov2022
 		return nil
 	}
 	override := &teov20220901.BotManagementActionOverrides{}
-	if v, ok := m["rule_id"].(string); ok && v != "" {
-		override.Ids = []*string{helper.String(v)}
+	if v, ok := m["rule_ids"].([]interface{}); ok {
+		ids := make([]*string, 0, len(v))
+		for _, item := range v {
+			if s, ok := item.(string); ok && s != "" {
+				ids = append(ids, helper.String(s))
+			}
+		}
+		if len(ids) > 0 {
+			override.Ids = ids
+		}
 	}
 	if actionMap, ok := helper.ConvertInterfacesHeadToMap(m["action"]); ok && len(actionMap) > 0 {
 		override.Action = buildSecurityActionFromMap(actionMap)
@@ -7215,8 +7226,16 @@ func flattenBotManagementActionOverride(override *teov20220901.BotManagementActi
 	if override == nil {
 		return m
 	}
-	if len(override.Ids) > 0 && override.Ids[0] != nil {
-		m["rule_id"] = override.Ids[0]
+	if len(override.Ids) > 0 {
+		ruleIds := make([]interface{}, 0, len(override.Ids))
+		for _, id := range override.Ids {
+			if id != nil {
+				ruleIds = append(ruleIds, *id)
+			}
+		}
+		if len(ruleIds) > 0 {
+			m["rule_ids"] = ruleIds
+		}
 	}
 	if override.Action != nil {
 		m["action"] = []interface{}{flattenSecurityAction(override.Action)}

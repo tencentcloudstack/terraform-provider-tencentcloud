@@ -284,6 +284,32 @@ resource "tencentcloud_teo_security_policy_config" "example" {
     }
 
     bot_management {
+      basic_bot_settings {
+        source_idc {
+          base_action {
+            name = "Monitor"
+          }
+          action_overrides {
+            rule_ids = ["rule-a", "rule-b"]
+            action {
+              name = "Deny"
+            }
+          }
+        }
+
+        search_engine_bots {
+          base_action {
+            name = "Monitor"
+          }
+          action_overrides {
+            rule_ids = ["rule-c"]
+            action {
+              name = "Monitor"
+            }
+          }
+        }
+      }
+
       client_attestation_rules {
         name         = "client-attestation-rule"
         enabled      = "on"

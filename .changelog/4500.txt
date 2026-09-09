@@ -1,0 +1,3 @@
+```release-note:bug
+resource/tencentcloud_teo_security_policy_config: fix bot_management action_overrides to support multiple rule IDs via rule_ids field
+```

@@ -1350,3 +1350,76 @@ func TestExceptionRuleSubmodules_UpdateChange(t *testing.T) {
 	assert.Len(t, rule.WebSecuritySubmodulesForException, 1)
 	assert.Equal(t, "websec-mod-custom-rules", *rule.WebSecuritySubmodulesForException[0])
 }
+
+// TestBuildBotManagementActionOverrideFromMap_MultipleRuleIDs tests build path with multiple rule_ids
+func TestBuildBotManagementActionOverrideFromMap_MultipleRuleIDs(t *testing.T) {
+	m := map[string]interface{}{
+		"rule_ids": []interface{}{"rule-a", "rule-b"},
+	}
+	override := teo.BuildBotManagementActionOverrideFromMap(m)
+	assert.NotNil(t, override)
+	assert.Len(t, override.Ids, 2)
+	assert.Equal(t, "rule-a", *override.Ids[0])
+	assert.Equal(t, "rule-b", *override.Ids[1])
+}
+
+// TestBuildBotManagementActionOverrideFromMap_SingleRuleID tests build path with single rule_id
+func TestBuildBotManagementActionOverrideFromMap_SingleRuleID(t *testing.T) {
+	m := map[string]interface{}{
+		"rule_ids": []interface{}{"rule-a"},
+	}
+	override := teo.BuildBotManagementActionOverrideFromMap(m)
+	assert.NotNil(t, override)
+	assert.Len(t, override.Ids, 1)
+	assert.Equal(t, "rule-a", *override.Ids[0])
+}
+
+// TestBuildBotManagementActionOverrideFromMap_EmptyRuleIDs tests build path with empty rule_ids
+func TestBuildBotManagementActionOverrideFromMap_EmptyRuleIDs(t *testing.T) {
+	m := map[string]interface{}{
+		"rule_ids": []interface{}{},
+	}
+	override := teo.BuildBotManagementActionOverrideFromMap(m)
+	assert.NotNil(t, override)
+	assert.Nil(t, override.Ids)
+}
+
+// TestFlattenBotManagementActionOverride_MultipleIDs tests flatten path with multiple IDs
+func TestFlattenBotManagementActionOverride_MultipleIDs(t *testing.T) {
+	override := &teov20220901.BotManagementActionOverrides{
+		Ids: []*string{
+			ptrStringSecurityPolicy("rule-a"),
+			ptrStringSecurityPolicy("rule-b"),
+		},
+	}
+	m := teo.FlattenBotManagementActionOverride(override)
+	ruleIds, ok := m["rule_ids"].([]interface{})
+	assert.True(t, ok)
+	assert.Len(t, ruleIds, 2)
+	assert.Equal(t, "rule-a", ruleIds[0])
+	assert.Equal(t, "rule-b", ruleIds[1])
+}
+
+// TestFlattenBotManagementActionOverride_SingleID tests flatten path with single ID
+func TestFlattenBotManagementActionOverride_SingleID(t *testing.T) {
+	override := &teov20220901.BotManagementActionOverrides{
+		Ids: []*string{
+			ptrStringSecurityPolicy("rule-a"),
+		},
+	}
+	m := teo.FlattenBotManagementActionOverride(override)
+	ruleIds, ok := m["rule_ids"].([]interface{})
+	assert.True(t, ok)
+	assert.Len(t, ruleIds, 1)
+	assert.Equal(t, "rule-a", ruleIds[0])
+}
+
+// TestFlattenBotManagementActionOverride_NilIDs tests flatten path with nil Ids
+func TestFlattenBotManagementActionOverride_NilIDs(t *testing.T) {
+	override := &teov20220901.BotManagementActionOverrides{
+		Ids: nil,
+	}
+	m := teo.FlattenBotManagementActionOverride(override)
+	_, ok := m["rule_ids"]
+	assert.False(t, ok)
+}
