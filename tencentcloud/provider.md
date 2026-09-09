@@ -2734,6 +2734,7 @@ Resource
 tencentcloud_dbdc_db_custom_cluster
 tencentcloud_dbdc_db_custom_node
 tencentcloud_dbdc_node_to_db_custom_cluster_attachment
+tencentcloud_dbdc_db_custom_disaster_recover_group
 
 VCube
 Resource
