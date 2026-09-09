@@ -4034,7 +4034,7 @@ func resourceTencentCloudTeoSecurityPolicyConfigRead(d *schema.ResourceData, met
 				if basicBotSettings.SourceIDC.BotManagementActionOverrides != nil {
 					overridesList := []interface{}{}
 					for _, override := range basicBotSettings.SourceIDC.BotManagementActionOverrides {
-						overridesList = append(overridesList, flattenBotManagementActionOverride(override))
+						overridesList = append(overridesList, FlattenBotManagementActionOverride(override))
 					}
 					sourceIDCMap["action_overrides"] = overridesList
 				}
@@ -4050,7 +4050,7 @@ func resourceTencentCloudTeoSecurityPolicyConfigRead(d *schema.ResourceData, met
 				if basicBotSettings.SearchEngineBots.BotManagementActionOverrides != nil {
 					overridesList := []interface{}{}
 					for _, override := range basicBotSettings.SearchEngineBots.BotManagementActionOverrides {
-						overridesList = append(overridesList, flattenBotManagementActionOverride(override))
+						overridesList = append(overridesList, FlattenBotManagementActionOverride(override))
 					}
 					searchEngineBotsMap["action_overrides"] = overridesList
 				}
@@ -4066,7 +4066,7 @@ func resourceTencentCloudTeoSecurityPolicyConfigRead(d *schema.ResourceData, met
 				if basicBotSettings.KnownBotCategories.BotManagementActionOverrides != nil {
 					overridesList := []interface{}{}
 					for _, override := range basicBotSettings.KnownBotCategories.BotManagementActionOverrides {
-						overridesList = append(overridesList, flattenBotManagementActionOverride(override))
+						overridesList = append(overridesList, FlattenBotManagementActionOverride(override))
 					}
 					knownBotCategoriesMap["action_overrides"] = overridesList
 				}
@@ -4087,7 +4087,7 @@ func resourceTencentCloudTeoSecurityPolicyConfigRead(d *schema.ResourceData, met
 					if basicBotSettings.IPReputation.IPReputationGroup.BotManagementActionOverrides != nil {
 						overridesList := []interface{}{}
 						for _, override := range basicBotSettings.IPReputation.IPReputationGroup.BotManagementActionOverrides {
-							overridesList = append(overridesList, flattenBotManagementActionOverride(override))
+							overridesList = append(overridesList, FlattenBotManagementActionOverride(override))
 						}
 						ipReputationGroupMap["action_overrides"] = overridesList
 					}
@@ -5493,7 +5493,7 @@ func resourceTencentCloudTeoSecurityPolicyConfigUpdate(d *schema.ResourceData, m
 					if v, ok := sourceIDCMaps["action_overrides"]; ok {
 						for _, item := range v.([]interface{}) {
 							actionOverrideMap := item.(map[string]interface{})
-							actionOverride := buildBotManagementActionOverrideFromMap(actionOverrideMap)
+							actionOverride := BuildBotManagementActionOverrideFromMap(actionOverrideMap)
 							sourceIDC.BotManagementActionOverrides = append(sourceIDC.BotManagementActionOverrides, actionOverride)
 						}
 					}
@@ -5508,7 +5508,7 @@ func resourceTencentCloudTeoSecurityPolicyConfigUpdate(d *schema.ResourceData, m
 					if v, ok := searchEngineBotsMap["action_overrides"]; ok {
 						for _, item := range v.([]interface{}) {
 							actionOverrideMap := item.(map[string]interface{})
-							actionOverride := buildBotManagementActionOverrideFromMap(actionOverrideMap)
+							actionOverride := BuildBotManagementActionOverrideFromMap(actionOverrideMap)
 							searchEngineBots.BotManagementActionOverrides = append(searchEngineBots.BotManagementActionOverrides, actionOverride)
 						}
 					}
@@ -5523,7 +5523,7 @@ func resourceTencentCloudTeoSecurityPolicyConfigUpdate(d *schema.ResourceData, m
 					if v, ok := knownBotCategoriesMap["action_overrides"]; ok {
 						for _, item := range v.([]interface{}) {
 							actionOverrideMap := item.(map[string]interface{})
-							actionOverride := buildBotManagementActionOverrideFromMap(actionOverrideMap)
+							actionOverride := BuildBotManagementActionOverrideFromMap(actionOverrideMap)
 							knownBotCategories.BotManagementActionOverrides = append(knownBotCategories.BotManagementActionOverrides, actionOverride)
 						}
 					}
@@ -5543,7 +5543,7 @@ func resourceTencentCloudTeoSecurityPolicyConfigUpdate(d *schema.ResourceData, m
 						if v, ok := ipReputationGroupMap["action_overrides"]; ok {
 							for _, item := range v.([]interface{}) {
 								actionOverrideMap := item.(map[string]interface{})
-								actionOverride := buildBotManagementActionOverrideFromMap(actionOverrideMap)
+								actionOverride := BuildBotManagementActionOverrideFromMap(actionOverrideMap)
 								ipReputationGroup.BotManagementActionOverrides = append(ipReputationGroup.BotManagementActionOverrides, actionOverride)
 							}
 						}
@@ -7045,6 +7045,7 @@ func botManagementActionOverrideSchema() *schema.Resource {
 			"rule_id": {
 				Type:        schema.TypeString,
 				Optional:    true,
+				Computed:    true,
 				Deprecated:  "It has been deprecated from version 1.81.184. Please use `rule_ids` instead.",
 				Description: "A single bot rule ID (or category ID) whose action is overridden. Maps to the cloud API field BotManagementActionOverrides.Ids. Deprecated: use `rule_ids` to support one or more IDs.",
 			},
@@ -7131,8 +7132,8 @@ func buildSecurityActionFromMap(m map[string]interface{}) *teov20220901.Security
 	return action
 }
 
-// buildBotManagementActionOverrideFromMap converts a schema map to *teov20220901.BotManagementActionOverrides.
-func buildBotManagementActionOverrideFromMap(m map[string]interface{}) *teov20220901.BotManagementActionOverrides {
+// BuildBotManagementActionOverrideFromMap converts a schema map to *teov20220901.BotManagementActionOverrides.
+func BuildBotManagementActionOverrideFromMap(m map[string]interface{}) *teov20220901.BotManagementActionOverrides {
 	if len(m) == 0 {
 		return nil
 	}
@@ -7229,8 +7230,8 @@ func flattenSecurityAction(action *teov20220901.SecurityAction) map[string]inter
 	return m
 }
 
-// flattenBotManagementActionOverride converts *teov20220901.BotManagementActionOverrides to a schema map.
-func flattenBotManagementActionOverride(override *teov20220901.BotManagementActionOverrides) map[string]interface{} {
+// FlattenBotManagementActionOverride converts *teov20220901.BotManagementActionOverrides to a schema map.
+func FlattenBotManagementActionOverride(override *teov20220901.BotManagementActionOverrides) map[string]interface{} {
 	m := map[string]interface{}{}
 	if override == nil {
 		return m
