@@ -1,3 +1,17 @@
+## 1.83.30(September 9, 2026)
+
+FEATURES:
+
+* **New Resource:** `tencentcloud_dbdc_db_custom_disaster_recover_group` ([#4494](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/4494))
+* **New Resource:** `tencentcloud_postgres_audit_log_file` ([#4184](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/4184))
+
+ENHANCEMENTS:
+
+* resource/tencentcloud_clb_log_topic: support `period` parameter to configure log retention lifecycle ([#4488](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/4488))
+* resource/tencentcloud_dbdc_db_custom_cluster: support deletion_protection parameter for managing cluster deletion protection ([#4492](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/4492))
+* resource/tencentcloud_dbdc_db_custom_node: support specifying the disaster recover (placement) group via the `disaster_recover_group_ids` parameter and refreshing the bound `disaster_recover_group_id` on Read ([#4493](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/4493))
+* resource/tencentcloud_dlc_attach_user_policy_attachment: support setting `policy_set.re_auth` as an optional input parameter ([#4491](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/4491))
+
 ## 1.83.29(September 4, 2026)
 
 FEATURES:
