@@ -7042,13 +7042,19 @@ func securityActionSchema() *schema.Resource {
 func botManagementActionOverrideSchema() *schema.Resource {
 	return &schema.Resource{
 		Schema: map[string]*schema.Schema{
+			"rule_id": {
+				Type:        schema.TypeString,
+				Optional:    true,
+				Deprecated:  "It has been deprecated from version 1.81.184. Please use `rule_ids` instead.",
+				Description: "A single bot rule ID (or category ID) whose action is overridden. Maps to the cloud API field BotManagementActionOverrides.Ids. Deprecated: use `rule_ids` to support one or more IDs.",
+			},
 			"rule_ids": {
 				Type:     schema.TypeList,
-				Required: true,
+				Optional: true,
 				Elem: &schema.Schema{
 					Type: schema.TypeString,
 				},
-				Description: "One or more bot rule IDs (or category IDs) whose action is overridden. Maps to the cloud API field BotManagementActionOverrides.Ids.",
+				Description: "One or more bot rule IDs (or category IDs) whose action is overridden. Maps to the cloud API field BotManagementActionOverrides.Ids ([]*string). If both `rule_ids` and `rule_id` are set, `rule_ids` takes precedence.",
 			},
 			"action": {
 				Type:        schema.TypeList,
@@ -7131,16 +7137,22 @@ func buildBotManagementActionOverrideFromMap(m map[string]interface{}) *teov2022
 		return nil
 	}
 	override := &teov20220901.BotManagementActionOverrides{}
+	ids := make([]*string, 0)
 	if v, ok := m["rule_ids"].([]interface{}); ok {
-		ids := make([]*string, 0, len(v))
 		for _, item := range v {
 			if s, ok := item.(string); ok && s != "" {
 				ids = append(ids, helper.String(s))
 			}
 		}
-		if len(ids) > 0 {
-			override.Ids = ids
+	}
+	// Fallback to the deprecated single-value rule_id when rule_ids is not set.
+	if len(ids) == 0 {
+		if v, ok := m["rule_id"].(string); ok && v != "" {
+			ids = append(ids, helper.String(v))
 		}
+	}
+	if len(ids) > 0 {
+		override.Ids = ids
 	}
 	if actionMap, ok := helper.ConvertInterfacesHeadToMap(m["action"]); ok && len(actionMap) > 0 {
 		override.Action = buildSecurityActionFromMap(actionMap)

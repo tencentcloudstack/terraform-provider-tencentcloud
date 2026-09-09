@@ -1384,6 +1384,48 @@ func TestBuildBotManagementActionOverrideFromMap_EmptyRuleIDs(t *testing.T) {
 	assert.Nil(t, override.Ids)
 }
 
+// TestBuildBotManagementActionOverrideFromMap_DeprecatedRuleIDFallback tests build path
+// where only the deprecated rule_id is set; it is used as a fallback single-element Ids.
+func TestBuildBotManagementActionOverrideFromMap_DeprecatedRuleIDFallback(t *testing.T) {
+	m := map[string]interface{}{
+		"rule_id": "rule-legacy",
+	}
+	override := teo.BuildBotManagementActionOverrideFromMap(m)
+	assert.NotNil(t, override)
+	assert.Len(t, override.Ids, 1)
+	assert.Equal(t, "rule-legacy", *override.Ids[0])
+}
+
+// TestBuildBotManagementActionOverrideFromMap_RuleIDsPrecedenceOverRuleID tests that when both
+// rule_ids and the deprecated rule_id are set, rule_ids takes precedence.
+func TestBuildBotManagementActionOverrideFromMap_RuleIDsPrecedenceOverRuleID(t *testing.T) {
+	m := map[string]interface{}{
+		"rule_id":  "rule-legacy",
+		"rule_ids": []interface{}{"rule-a", "rule-b"},
+	}
+	override := teo.BuildBotManagementActionOverrideFromMap(m)
+	assert.NotNil(t, override)
+	assert.Len(t, override.Ids, 2)
+	assert.Equal(t, "rule-a", *override.Ids[0])
+	assert.Equal(t, "rule-b", *override.Ids[1])
+}
+
+// TestBuildBotManagementActionOverrideFromMap_NeitherFieldSet tests that when neither
+// rule_ids nor rule_id is set, Ids remains nil.
+func TestBuildBotManagementActionOverrideFromMap_NeitherFieldSet(t *testing.T) {
+	m := map[string]interface{}{
+		"action": []interface{}{
+			map[string]interface{}{
+				"name": "Deny",
+			},
+		},
+	}
+	override := teo.BuildBotManagementActionOverrideFromMap(m)
+	assert.NotNil(t, override)
+	assert.Nil(t, override.Ids)
+	assert.NotNil(t, override.Action)
+}
+
 // TestFlattenBotManagementActionOverride_MultipleIDs tests flatten path with multiple IDs
 func TestFlattenBotManagementActionOverride_MultipleIDs(t *testing.T) {
 	override := &teov20220901.BotManagementActionOverrides{
