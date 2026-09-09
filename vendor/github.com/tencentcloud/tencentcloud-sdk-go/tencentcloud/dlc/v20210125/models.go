@@ -21477,20 +21477,6 @@ type EventItem struct {
 	Reason *string `json:"Reason,omitnil,omitempty" name:"Reason"`
 }
 
-type EventLogItem struct {
-	// 事件时间（Unix 时间戳，秒级）
-	EventTime *uint64 `json:"EventTime,omitnil,omitempty" name:"EventTime"`
-
-	// 组件名称
-	Component *string `json:"Component,omitnil,omitempty" name:"Component"`
-
-	// 日志级别（INFO/WARN/ERROR）
-	Level *string `json:"Level,omitnil,omitempty" name:"Level"`
-
-	// 事件内容
-	Message *string `json:"Message,omitnil,omitempty" name:"Message"`
-}
-
 type ExampleCategories struct {
 	// <p>分类名称</p>
 	Categories *string `json:"Categories,omitnil,omitempty" name:"Categories"`
@@ -23931,110 +23917,6 @@ func (r *GetRayClusterYamlResponse) ToJsonString() string {
 // FromJsonString It is highly **NOT** recommended to use this function
 // because it has no param check, nor strict type check
 func (r *GetRayClusterYamlResponse) FromJsonString(s string) error {
-	return json.Unmarshal([]byte(s), &r)
-}
-
-// Predefined struct for user
-type GetRayJobEventLogRequestParams struct {
-	// ray-jobID
-	Id *string `json:"Id,omitnil,omitempty" name:"Id"`
-
-	// 开始时间
-	StartTime *uint64 `json:"StartTime,omitnil,omitempty" name:"StartTime"`
-
-	// 结束时间
-	EndTime *uint64 `json:"EndTime,omitnil,omitempty" name:"EndTime"`
-
-	// 当前页码（从1开始）
-	Page *int64 `json:"Page,omitnil,omitempty" name:"Page"`
-
-	// 页数
-	PageSize *int64 `json:"PageSize,omitnil,omitempty" name:"PageSize"`
-
-	// 排序字段列表（列表字段）
-	SortFields []*SortField `json:"SortFields,omitnil,omitempty" name:"SortFields"`
-}
-
-type GetRayJobEventLogRequest struct {
-	*tchttp.BaseRequest
-	
-	// ray-jobID
-	Id *string `json:"Id,omitnil,omitempty" name:"Id"`
-
-	// 开始时间
-	StartTime *uint64 `json:"StartTime,omitnil,omitempty" name:"StartTime"`
-
-	// 结束时间
-	EndTime *uint64 `json:"EndTime,omitnil,omitempty" name:"EndTime"`
-
-	// 当前页码（从1开始）
-	Page *int64 `json:"Page,omitnil,omitempty" name:"Page"`
-
-	// 页数
-	PageSize *int64 `json:"PageSize,omitnil,omitempty" name:"PageSize"`
-
-	// 排序字段列表（列表字段）
-	SortFields []*SortField `json:"SortFields,omitnil,omitempty" name:"SortFields"`
-}
-
-func (r *GetRayJobEventLogRequest) ToJsonString() string {
-    b, _ := json.Marshal(r)
-    return string(b)
-}
-
-// FromJsonString It is highly **NOT** recommended to use this function
-// because it has no param check, nor strict type check
-func (r *GetRayJobEventLogRequest) FromJsonString(s string) error {
-	f := make(map[string]interface{})
-	if err := json.Unmarshal([]byte(s), &f); err != nil {
-		return err
-	}
-	delete(f, "Id")
-	delete(f, "StartTime")
-	delete(f, "EndTime")
-	delete(f, "Page")
-	delete(f, "PageSize")
-	delete(f, "SortFields")
-	if len(f) > 0 {
-		return tcerr.NewTencentCloudSDKError("ClientError.BuildRequestError", "GetRayJobEventLogRequest has unknown keys!", "")
-	}
-	return json.Unmarshal([]byte(s), &r)
-}
-
-// Predefined struct for user
-type GetRayJobEventLogResponseParams struct {
-	// 事件总数
-	TotalCount *int64 `json:"TotalCount,omitnil,omitempty" name:"TotalCount"`
-
-	// 事件列表
-	Events []*EventLogItem `json:"Events,omitnil,omitempty" name:"Events"`
-
-	// 当前页码（从1开始）
-	Page *int64 `json:"Page,omitnil,omitempty" name:"Page"`
-
-	// 页数
-	PageSize *int64 `json:"PageSize,omitnil,omitempty" name:"PageSize"`
-
-	// 总页数
-	TotalPages *int64 `json:"TotalPages,omitnil,omitempty" name:"TotalPages"`
-
-	// 唯一请求 ID，由服务端生成，每次请求都会返回（若请求因其他原因未能抵达服务端，则该次请求不会获得 RequestId）。定位问题时需要提供该次请求的 RequestId。
-	RequestId *string `json:"RequestId,omitnil,omitempty" name:"RequestId"`
-}
-
-type GetRayJobEventLogResponse struct {
-	*tchttp.BaseResponse
-	Response *GetRayJobEventLogResponseParams `json:"Response"`
-}
-
-func (r *GetRayJobEventLogResponse) ToJsonString() string {
-    b, _ := json.Marshal(r)
-    return string(b)
-}
-
-// FromJsonString It is highly **NOT** recommended to use this function
-// because it has no param check, nor strict type check
-func (r *GetRayJobEventLogResponse) FromJsonString(s string) error {
 	return json.Unmarshal([]byte(s), &r)
 }
 

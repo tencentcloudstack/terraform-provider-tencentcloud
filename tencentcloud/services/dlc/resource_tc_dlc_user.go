@@ -49,6 +49,12 @@ func ResourceTencentCloudDlcUser() *schema.Resource {
 				Description: "User alias, and its characters are less than 50.",
 			},
 
+			"account_type": {
+				Optional:    true,
+				Type:        schema.TypeString,
+				Description: "Account type. Valid values: `UserAccount` (user account), `RoleAccount` (role account). Default is `UserAccount`.",
+			},
+
 			"work_group_ids": {
 				Computed:    true,
 				Type:        schema.TypeSet,
@@ -86,6 +92,10 @@ func resourceTencentCloudDlcUserCreate(d *schema.ResourceData, meta interface{})
 		request.UserAlias = helper.String(v.(string))
 	}
 
+	if v, ok := d.GetOk("account_type"); ok {
+		request.AccountType = helper.String(v.(string))
+	}
+
 	err := resource.Retry(tccommon.WriteRetryTimeout, func() *resource.RetryError {
 		result, e := meta.(tccommon.ProviderMeta).GetAPIV3Conn().UseDlcClient().CreateUser(request)
 		if e != nil {
@@ -121,7 +131,8 @@ func resourceTencentCloudDlcUserRead(d *schema.ResourceData, meta interface{}) e
 		userId  = d.Id()
 	)
 
-	user, err := service.DescribeDlcUserById(ctx, userId)
+	accountType := d.Get("account_type").(string)
+	user, err := service.DescribeDlcUserById(ctx, userId, accountType)
 	if err != nil {
 		return err
 	}
@@ -146,6 +157,10 @@ func resourceTencentCloudDlcUserRead(d *schema.ResourceData, meta interface{}) e
 
 	if user.UserAlias != nil {
 		_ = d.Set("user_alias", user.UserAlias)
+	}
+
+	if user.AccountType != nil {
+		_ = d.Set("account_type", user.AccountType)
 	}
 
 	if user.WorkGroupSet != nil {
@@ -200,6 +215,30 @@ func resourceTencentCloudDlcUserUpdate(d *schema.ResourceData, meta interface{})
 		}
 	}
 
+	if d.HasChange("account_type") {
+		modifyRequest := dlc.NewModifyUserRequest()
+		modifyRequest.UserId = &userId
+		if v, ok := d.GetOk("account_type"); ok {
+			modifyRequest.AccountType = helper.String(v.(string))
+		}
+
+		err := resource.Retry(tccommon.WriteRetryTimeout, func() *resource.RetryError {
+			result, e := meta.(tccommon.ProviderMeta).GetAPIV3Conn().UseDlcClient().ModifyUser(modifyRequest)
+			if e != nil {
+				return tccommon.RetryError(e)
+			} else {
+				log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, modifyRequest.GetAction(), modifyRequest.ToJsonString(), result.ToJsonString())
+			}
+
+			return nil
+		})
+
+		if err != nil {
+			log.Printf("[CRITAL]%s update dlc user failed, reason:%+v", logId, err)
+			return err
+		}
+	}
+
 	return resourceTencentCloudDlcUserRead(d, meta)
 }
 
@@ -214,7 +253,8 @@ func resourceTencentCloudDlcUserDelete(d *schema.ResourceData, meta interface{})
 		userId  = d.Id()
 	)
 
-	if err := service.DeleteDlcUserById(ctx, userId); err != nil {
+	accountType := d.Get("account_type").(string)
+	if err := service.DeleteDlcUserById(ctx, userId, accountType); err != nil {
 		return err
 	}
 
