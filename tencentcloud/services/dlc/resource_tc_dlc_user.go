@@ -51,6 +51,7 @@ func ResourceTencentCloudDlcUser() *schema.Resource {
 
 			"account_type": {
 				Optional:    true,
+				Computed:    true,
 				Type:        schema.TypeString,
 				Description: "Account type. Valid values: `UserAccount` (user account), `RoleAccount` (role account). Default is `UserAccount`.",
 			},
@@ -138,7 +139,7 @@ func resourceTencentCloudDlcUserRead(d *schema.ResourceData, meta interface{}) e
 	}
 
 	if user == nil {
-		log.Printf("[WARN]%s resource `DlcUser` [%s] not found, please check if it has been deleted.\n", logId, d.Id())
+		log.Printf("[WARN]%s resource `tencentcloud_dlc_user` [%s] not found, please check if it has been deleted.\n", logId, d.Id())
 		d.SetId("")
 		return nil
 	}
@@ -180,9 +181,8 @@ func resourceTencentCloudDlcUserUpdate(d *schema.ResourceData, meta interface{})
 	defer tccommon.InconsistentCheck(d, meta)()
 
 	var (
-		logId   = tccommon.GetLogId(tccommon.ContextNil)
-		request = dlc.NewModifyUserRequest()
-		userId  = d.Id()
+		logId  = tccommon.GetLogId(tccommon.ContextNil)
+		userId = d.Id()
 	)
 
 	immutableArgs := []string{"user_type", "user_alias"}
@@ -192,9 +192,14 @@ func resourceTencentCloudDlcUserUpdate(d *schema.ResourceData, meta interface{})
 		}
 	}
 
-	if d.HasChange("user_description") {
+	if d.HasChange("user_description") || d.HasChange("account_type") {
+		request := dlc.NewModifyUserRequest()
 		if v, ok := d.GetOk("user_description"); ok {
 			request.UserDescription = helper.String(v.(string))
+		}
+
+		if v, ok := d.GetOk("account_type"); ok {
+			request.AccountType = helper.String(v.(string))
 		}
 
 		request.UserId = &userId
@@ -204,30 +209,6 @@ func resourceTencentCloudDlcUserUpdate(d *schema.ResourceData, meta interface{})
 				return tccommon.RetryError(e)
 			} else {
 				log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), result.ToJsonString())
-			}
-
-			return nil
-		})
-
-		if err != nil {
-			log.Printf("[CRITAL]%s update dlc user failed, reason:%+v", logId, err)
-			return err
-		}
-	}
-
-	if d.HasChange("account_type") {
-		modifyRequest := dlc.NewModifyUserRequest()
-		modifyRequest.UserId = &userId
-		if v, ok := d.GetOk("account_type"); ok {
-			modifyRequest.AccountType = helper.String(v.(string))
-		}
-
-		err := resource.Retry(tccommon.WriteRetryTimeout, func() *resource.RetryError {
-			result, e := meta.(tccommon.ProviderMeta).GetAPIV3Conn().UseDlcClient().ModifyUser(modifyRequest)
-			if e != nil {
-				return tccommon.RetryError(e)
-			} else {
-				log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, modifyRequest.GetAction(), modifyRequest.ToJsonString(), result.ToJsonString())
 			}
 
 			return nil
