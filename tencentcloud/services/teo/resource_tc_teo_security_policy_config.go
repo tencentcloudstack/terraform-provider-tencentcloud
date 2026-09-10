@@ -7046,12 +7046,13 @@ func botManagementActionOverrideSchema() *schema.Resource {
 				Type:        schema.TypeString,
 				Optional:    true,
 				Computed:    true,
-				Deprecated:  "It has been deprecated from version 1.81.184. Please use `rule_ids` instead.",
+				Deprecated:  "It has been deprecated from version 1.83.31. Please use `rule_ids` instead.",
 				Description: "A single bot rule ID (or category ID) whose action is overridden. Maps to the cloud API field BotManagementActionOverrides.Ids. Deprecated: use `rule_ids` to support one or more IDs.",
 			},
 			"rule_ids": {
 				Type:     schema.TypeList,
 				Optional: true,
+				Computed: true,
 				Elem: &schema.Schema{
 					Type: schema.TypeString,
 				},
