@@ -106,6 +106,23 @@ resource "tencentcloud_cbs_storage" "example" {
 }
 ```
 
+### Create a CBS storage with auto-mount instance id
+
+```hcl
+resource "tencentcloud_cbs_storage" "example" {
+  storage_name      = "tf-example"
+  storage_type      = "CLOUD_SSD"
+  storage_size      = 100
+  availability_zone = "ap-guangzhou-3"
+  project_id        = 0
+  instance_id       = "ins-xxxxxxxx"
+
+  tags = {
+    createBy = "Terraform"
+  }
+}
+```
+
 ## Argument Reference
 
 The following arguments are supported:
@@ -121,6 +138,7 @@ The following arguments are supported:
 * `encrypt_type` - (Optional, String, ForceNew) Specifies the cloud disk encryption type. The values are `ENCRYPT_V1` and `ENCRYPT_V2`, which represent the first-generation and second-generation encryption technologies respectively. The two encryption technologies are incompatible with each other. It is recommended to use the second-generation encryption technology `ENCRYPT_V2` first. The first-generation encryption technology is only supported on some older models. This parameter is only valid when creating an encrypted cloud disk.
 * `encrypt` - (Optional, Bool, ForceNew) Pass in this parameter to create an encrypted cloud disk.
 * `force_delete` - (Optional, Bool) Indicate whether to delete CBS instance directly or not. Default is false. If set true, the instance will be deleted instead of staying recycle bin.
+* `instance_id` - (Optional, String) Specifies the CVM instance ID for auto-mounting and auto-initializing the data disk during creation. When set, the disk will be automatically mounted to the specified CVM instance. This parameter maps to `AutoMountConfiguration.InstanceId` of the `CreateDisks` API. Note: encrypted disks do not support auto-mounting, so this parameter cannot be used together with `encrypt`.
 * `kms_key_id` - (Optional, String, ForceNew) Optional parameters. When purchasing an encryption disk, customize the key. When this parameter is passed in, the `encrypt` parameter need be set.
 * `period` - (Optional, Int, **Deprecated**) It has been deprecated from version 1.33.0. Set `prepaid_period` instead. The purchased usage period of CBS. Valid values: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 24, 36].
 * `prepaid_period` - (Optional, Int) The tenancy (time unit is month) of the prepaid instance, NOTE: it only works when charge_type is set to `PREPAID`. Valid values are 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 24, 36.

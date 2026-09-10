@@ -143,6 +143,11 @@ func ResourceTencentCloudCbsStorage() *schema.Resource {
 				Computed:    true,
 				Description: "Specifies the cloud disk encryption type. The values are `ENCRYPT_V1` and `ENCRYPT_V2`, which represent the first-generation and second-generation encryption technologies respectively. The two encryption technologies are incompatible with each other. It is recommended to use the second-generation encryption technology `ENCRYPT_V2` first. The first-generation encryption technology is only supported on some older models. This parameter is only valid when creating an encrypted cloud disk.",
 			},
+			"instance_id": {
+				Type:        schema.TypeString,
+				Optional:    true,
+				Description: "Specifies the CVM instance ID for auto-mounting and auto-initializing the data disk during creation. When set, the disk will be automatically mounted to the specified CVM instance. This parameter maps to `AutoMountConfiguration.InstanceId` of the `CreateDisks` API. Note: encrypted disks do not support auto-mounting, so this parameter cannot be used together with `encrypt`.",
+			},
 			// computed
 			"storage_status": {
 				Type:        schema.TypeString,
@@ -235,6 +240,12 @@ func resourceTencentCloudCbsStorageCreate(d *schema.ResourceData, meta interface
 
 	if v, ok := d.GetOkExists("encrypt_type"); ok {
 		request.EncryptType = helper.String(v.(string))
+	}
+
+	if v, ok := d.GetOk("instance_id"); ok {
+		request.AutoMountConfiguration = &cbs.AutoMountConfiguration{
+			InstanceId: []*string{helper.String(v.(string))},
+		}
 	}
 
 	storageId := ""
@@ -352,6 +363,10 @@ func resourceTencentCloudCbsStorageRead(d *schema.ResourceData, meta interface{}
 
 	if storage.KmsKeyId != nil {
 		_ = d.Set("kms_key_id", storage.KmsKeyId)
+	}
+
+	if storage.InstanceId != nil {
+		_ = d.Set("instance_id", storage.InstanceId)
 	}
 
 	if *storage.DiskChargeType == CBS_CHARGE_TYPE_PREPAID {
