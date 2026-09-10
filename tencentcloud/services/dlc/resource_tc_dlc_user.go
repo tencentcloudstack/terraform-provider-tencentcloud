@@ -39,6 +39,7 @@ func ResourceTencentCloudDlcUser() *schema.Resource {
 
 			"user_type": {
 				Optional:    true,
+				Computed:    true,
 				Type:        schema.TypeString,
 				Description: "Types of users. ADMIN: administrators; COMMON: general users. When the type of user is administrator, the collections of permissions and bound working groups cannot be set. Administrators own all the permissions by default. If the parameter is not filled in, it will be COMMON by default.",
 			},
@@ -192,14 +193,10 @@ func resourceTencentCloudDlcUserUpdate(d *schema.ResourceData, meta interface{})
 		}
 	}
 
-	if d.HasChange("user_description") || d.HasChange("account_type") {
+	if d.HasChange("user_description") {
 		request := dlc.NewModifyUserRequest()
 		if v, ok := d.GetOk("user_description"); ok {
 			request.UserDescription = helper.String(v.(string))
-		}
-
-		if v, ok := d.GetOk("account_type"); ok {
-			request.AccountType = helper.String(v.(string))
 		}
 
 		request.UserId = &userId
@@ -216,6 +213,34 @@ func resourceTencentCloudDlcUserUpdate(d *schema.ResourceData, meta interface{})
 
 		if err != nil {
 			log.Printf("[CRITAL]%s update dlc user failed, reason:%+v", logId, err)
+			return err
+		}
+	}
+
+	if d.HasChange("account_type") {
+		request := dlc.NewModifyUserTypeRequest()
+		if v, ok := d.GetOk("user_type"); ok {
+			request.UserType = helper.String(v.(string))
+		}
+
+		if v, ok := d.GetOk("account_type"); ok {
+			request.AccountType = helper.String(v.(string))
+		}
+
+		request.UserId = &userId
+		err := resource.Retry(tccommon.WriteRetryTimeout, func() *resource.RetryError {
+			result, e := meta.(tccommon.ProviderMeta).GetAPIV3Conn().UseDlcClient().ModifyUserType(request)
+			if e != nil {
+				return tccommon.RetryError(e)
+			} else {
+				log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), result.ToJsonString())
+			}
+
+			return nil
+		})
+
+		if err != nil {
+			log.Printf("[CRITAL]%s update dlc user type failed, reason:%+v", logId, err)
 			return err
 		}
 	}
