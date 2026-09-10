@@ -136,6 +136,9 @@ type AccelerationDomain struct {
 
 	// <p>修改时间。</p>
 	ModifiedOn *string `json:"ModifiedOn,omitnil,omitempty" name:"ModifiedOn"`
+
+	// <p>域名因合规问题产生的地区访问限制列表。</p>
+	ComplianceRestrictions []*ComplianceRestriction `json:"ComplianceRestrictions,omitnil,omitempty" name:"ComplianceRestrictions"`
 }
 
 type AccelerationDomainCertificate struct {
@@ -1974,6 +1977,14 @@ type CodeAction struct {
 
 	// 操作参数。
 	Parameters []*RuleCodeActionParams `json:"Parameters,omitnil,omitempty" name:"Parameters"`
+}
+
+type ComplianceRestriction struct {
+	// <p>下发访问限制的原因。</p><p>枚举值：</p><ul><li>ICP_RECORD_REQUIRED： 未备案；</li><li>GOVERNMENT_ORDER： 政府指令。</li></ul>
+	Reason *string `json:"Reason,omitnil,omitempty" name:"Reason"`
+
+	// <p>限制访问地区的具体国家/地区码，使用“ISO 3166 国家/地区代码标准”。</p><p>参数格式：查看链接：https://www.iso.org/iso-3166-country-codes.html。</p>
+	Region *string `json:"Region,omitnil,omitempty" name:"Region"`
 }
 
 type ComponentReference struct {
@@ -16876,28 +16887,31 @@ type FrequentScanningProtection struct {
 }
 
 type Function struct {
-	// 函数 ID。
+	// <p>函数 ID。</p>
 	FunctionId *string `json:"FunctionId,omitnil,omitempty" name:"FunctionId"`
 
-	// 站点 ID。
+	// <p>站点 ID。</p>
 	ZoneId *string `json:"ZoneId,omitnil,omitempty" name:"ZoneId"`
 
-	// 函数名字。
+	// <p>函数名字。</p>
 	Name *string `json:"Name,omitnil,omitempty" name:"Name"`
 
-	// 函数描述。
+	// <p>函数描述。</p>
 	Remark *string `json:"Remark,omitnil,omitempty" name:"Remark"`
 
-	// 函数内容。
+	// <p>函数内容。</p>
 	Content *string `json:"Content,omitnil,omitempty" name:"Content"`
 
-	// 函数默认域名。
+	// <p>函数默认域名。</p>
 	Domain *string `json:"Domain,omitnil,omitempty" name:"Domain"`
 
-	// 创建时间。时间为世界标准时间（UTC）， 遵循 ISO 8601 标准的日期和时间格式。
+	// <p>边缘函数默认域名因合规问题产生的地区访问限制列表。</p>
+	DomainComplianceRestrictions []*ComplianceRestriction `json:"DomainComplianceRestrictions,omitnil,omitempty" name:"DomainComplianceRestrictions"`
+
+	// <p>创建时间。时间为世界标准时间（UTC）， 遵循 ISO 8601 标准的日期和时间格式。</p>
 	CreateTime *string `json:"CreateTime,omitnil,omitempty" name:"CreateTime"`
 
-	// 修改时间。时间为世界标准时间（UTC）， 遵循 ISO 8601 标准的日期和时间格式。
+	// <p>修改时间。时间为世界标准时间（UTC）， 遵循 ISO 8601 标准的日期和时间格式。</p>
 	UpdateTime *string `json:"UpdateTime,omitnil,omitempty" name:"UpdateTime"`
 }
 
