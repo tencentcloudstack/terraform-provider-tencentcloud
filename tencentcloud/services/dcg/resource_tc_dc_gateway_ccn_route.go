@@ -17,6 +17,9 @@ func ResourceTencentCloudDcGatewayCcnRouteInstance() *schema.Resource {
 		Create: resourceTencentCloudDcGatewayCcnRouteCreate,
 		Read:   resourceTencentCloudDcGatewayCcnRouteRead,
 		Delete: resourceTencentCloudDcGatewayCcnRouteDelete,
+		Importer: &schema.ResourceImporter{
+			State: schema.ImportStatePassthrough,
+		},
 		Schema: map[string]*schema.Schema{
 			"dcg_id": {
 				Type:        schema.TypeString,

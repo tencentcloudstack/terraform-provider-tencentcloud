@@ -53,3 +53,11 @@ In addition to all arguments above, the following attributes are exported:
 * `as_path` - As path list of the BGP.
 
 
+## Import
+
+dc_gateway_ccn_route can be imported using the id, e.g.
+
+```
+terraform import tencentcloud_dc_gateway_ccn_route.example dcg-dr1y0hu7#192.1.1.0/32
+```
+
