@@ -1,6 +1,7 @@
 package monitor_test
 
 import (
+	"context"
 	"testing"
 
 	tcacctest "github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/acctest"
@@ -165,7 +166,7 @@ func TestMonitorAlarmPolicy_Read_IsBindAll(t *testing.T) {
 	monitorClient := &monitor.Client{}
 	patches.ApplyMethodReturn(newMockMetaForMonitorAlarmPolicy().client, "UseMonitorClient", monitorClient)
 
-	patches.ApplyMethodFunc(monitorClient, "DescribeAlarmPolicy", func(request *monitor.DescribeAlarmPolicyRequest) (*monitor.DescribeAlarmPolicyResponse, error) {
+	patches.ApplyMethodFunc(monitorClient, "DescribeAlarmPolicyWithContext", func(ctx context.Context, request *monitor.DescribeAlarmPolicyRequest) (*monitor.DescribeAlarmPolicyResponse, error) {
 		resp := monitor.NewDescribeAlarmPolicyResponse()
 		resp.Response = &monitor.DescribeAlarmPolicyResponseParams{
 			Policy:    buildMockAlarmPolicy(helper.IntInt64(1)),
@@ -196,7 +197,7 @@ func TestMonitorAlarmPolicy_Read_IsBindAllNil(t *testing.T) {
 	monitorClient := &monitor.Client{}
 	patches.ApplyMethodReturn(newMockMetaForMonitorAlarmPolicy().client, "UseMonitorClient", monitorClient)
 
-	patches.ApplyMethodFunc(monitorClient, "DescribeAlarmPolicy", func(request *monitor.DescribeAlarmPolicyRequest) (*monitor.DescribeAlarmPolicyResponse, error) {
+	patches.ApplyMethodFunc(monitorClient, "DescribeAlarmPolicyWithContext", func(ctx context.Context, request *monitor.DescribeAlarmPolicyRequest) (*monitor.DescribeAlarmPolicyResponse, error) {
 		resp := monitor.NewDescribeAlarmPolicyResponse()
 		resp.Response = &monitor.DescribeAlarmPolicyResponseParams{
 			Policy:    buildMockAlarmPolicy(nil),
@@ -228,7 +229,7 @@ func TestMonitorAlarmPolicy_Read_NilPolicy(t *testing.T) {
 	monitorClient := &monitor.Client{}
 	patches.ApplyMethodReturn(newMockMetaForMonitorAlarmPolicy().client, "UseMonitorClient", monitorClient)
 
-	patches.ApplyMethodFunc(monitorClient, "DescribeAlarmPolicy", func(request *monitor.DescribeAlarmPolicyRequest) (*monitor.DescribeAlarmPolicyResponse, error) {
+	patches.ApplyMethodFunc(monitorClient, "DescribeAlarmPolicyWithContext", func(ctx context.Context, request *monitor.DescribeAlarmPolicyRequest) (*monitor.DescribeAlarmPolicyResponse, error) {
 		resp := monitor.NewDescribeAlarmPolicyResponse()
 		resp.Response = &monitor.DescribeAlarmPolicyResponseParams{
 			Policy:    nil,
@@ -260,7 +261,7 @@ func TestMonitorAlarmPolicy_Create_WithIsBindAll(t *testing.T) {
 	patches.ApplyMethodReturn(newMockMetaForMonitorAlarmPolicy().client, "UseMonitorClient", monitorClient)
 
 	var capturedRequest *monitor.CreateAlarmPolicyRequest
-	patches.ApplyMethodFunc(monitorClient, "CreateAlarmPolicy", func(request *monitor.CreateAlarmPolicyRequest) (*monitor.CreateAlarmPolicyResponse, error) {
+	patches.ApplyMethodFunc(monitorClient, "CreateAlarmPolicyWithContext", func(ctx context.Context, request *monitor.CreateAlarmPolicyRequest) (*monitor.CreateAlarmPolicyResponse, error) {
 		capturedRequest = request
 		resp := monitor.NewCreateAlarmPolicyResponse()
 		resp.Response = &monitor.CreateAlarmPolicyResponseParams{
@@ -271,7 +272,7 @@ func TestMonitorAlarmPolicy_Create_WithIsBindAll(t *testing.T) {
 		return resp, nil
 	})
 
-	patches.ApplyMethodFunc(monitorClient, "DescribeAlarmPolicy", func(request *monitor.DescribeAlarmPolicyRequest) (*monitor.DescribeAlarmPolicyResponse, error) {
+	patches.ApplyMethodFunc(monitorClient, "DescribeAlarmPolicyWithContext", func(ctx context.Context, request *monitor.DescribeAlarmPolicyRequest) (*monitor.DescribeAlarmPolicyResponse, error) {
 		resp := monitor.NewDescribeAlarmPolicyResponse()
 		resp.Response = &monitor.DescribeAlarmPolicyResponseParams{
 			Policy:    buildMockAlarmPolicy(helper.IntInt64(1)),
@@ -306,7 +307,7 @@ func TestMonitorAlarmPolicy_Create_WithoutIsBindAll(t *testing.T) {
 	patches.ApplyMethodReturn(newMockMetaForMonitorAlarmPolicy().client, "UseMonitorClient", monitorClient)
 
 	var capturedRequest *monitor.CreateAlarmPolicyRequest
-	patches.ApplyMethodFunc(monitorClient, "CreateAlarmPolicy", func(request *monitor.CreateAlarmPolicyRequest) (*monitor.CreateAlarmPolicyResponse, error) {
+	patches.ApplyMethodFunc(monitorClient, "CreateAlarmPolicyWithContext", func(ctx context.Context, request *monitor.CreateAlarmPolicyRequest) (*monitor.CreateAlarmPolicyResponse, error) {
 		capturedRequest = request
 		resp := monitor.NewCreateAlarmPolicyResponse()
 		resp.Response = &monitor.CreateAlarmPolicyResponseParams{
@@ -317,7 +318,7 @@ func TestMonitorAlarmPolicy_Create_WithoutIsBindAll(t *testing.T) {
 		return resp, nil
 	})
 
-	patches.ApplyMethodFunc(monitorClient, "DescribeAlarmPolicy", func(request *monitor.DescribeAlarmPolicyRequest) (*monitor.DescribeAlarmPolicyResponse, error) {
+	patches.ApplyMethodFunc(monitorClient, "DescribeAlarmPolicyWithContext", func(ctx context.Context, request *monitor.DescribeAlarmPolicyRequest) (*monitor.DescribeAlarmPolicyResponse, error) {
 		resp := monitor.NewDescribeAlarmPolicyResponse()
 		resp.Response = &monitor.DescribeAlarmPolicyResponseParams{
 			Policy:    buildMockAlarmPolicy(nil),
@@ -349,7 +350,7 @@ func TestMonitorAlarmPolicy_Schema_IsBindAll(t *testing.T) {
 	field := res.Schema["is_bind_all"]
 	assert.NotNil(t, field)
 	assert.True(t, field.Optional)
+	assert.True(t, field.Computed)
 	assert.True(t, field.ForceNew)
 	assert.Equal(t, schema.TypeInt, field.Type)
-	assert.NotNil(t, field.ValidateFunc)
 }

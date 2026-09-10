@@ -238,11 +238,11 @@ func ResourceTencentCloudMonitorAlarmPolicy() *schema.Resource {
 			},
 
 			"is_bind_all": {
-				Type:         schema.TypeInt,
-				Optional:     true,
-				ForceNew:     true,
-				ValidateFunc: tccommon.ValidateAllowedIntValue([]int{0, 1}),
-				Description:  "Whether to bind all objects. If yes, no need to pass `filter` or call `BindPolicyObject`. Valid values: `0` (no, default), `1` (yes). Not all policy types support binding all objects. Immutable after creation.",
+				Type:        schema.TypeInt,
+				Optional:    true,
+				Computed:    true,
+				ForceNew:    true,
+				Description: "Whether to bind all objects. If yes, no need to pass `filter` or call `BindPolicyObject`. Valid values: `0` (no, default), `1` (yes). Not all policy types support binding all objects. Immutable after creation.",
 			},
 
 			"group_by": {
@@ -663,7 +663,7 @@ func resourceTencentMonitorAlarmPolicyRead(d *schema.ResourceData, meta interfac
 	)
 
 	if policy.IsBindAll != nil {
-		errs = append(errs, d.Set("is_bind_all", policy.IsBindAll))
+		_ = d.Set("is_bind_all", policy.IsBindAll)
 	}
 
 	if policy.GroupBy != nil {
