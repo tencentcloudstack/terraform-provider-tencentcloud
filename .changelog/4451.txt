@@ -1,0 +1,3 @@
+```release-note:bug
+resource/tencentcloud_cls_config_extra: preserve extract_rule.keys order
+```

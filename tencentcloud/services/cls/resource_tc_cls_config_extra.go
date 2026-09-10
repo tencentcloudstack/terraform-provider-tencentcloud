@@ -15,7 +15,7 @@ import (
 )
 
 func ResourceTencentCloudClsConfigExtra() *schema.Resource {
-	return &schema.Resource{
+	configExtraResource := &schema.Resource{
 		Create: resourceTencentCloudClsConfigExtraCreate,
 		Read:   resourceTencentCloudClsConfigExtraRead,
 		Delete: resourceTencentCloudClsConfigExtraDelete,
@@ -275,10 +275,10 @@ func ResourceTencentCloudClsConfigExtra() *schema.Resource {
 							Description: "First-Line matching rule, which is valid only if log_type is multiline_log or fullregex_log.",
 						},
 						"keys": {
-							Type:        schema.TypeSet,
+							Type:        schema.TypeList,
 							Optional:    true,
 							Elem:        &schema.Schema{Type: schema.TypeString},
-							Description: "Key name of each extracted field. An empty key indicates to discard the field. This parameter is valid only if log_type is delimiter_log. json_log logs use the key of JSON itself.",
+							Description: "Ordered key names for fields extracted from delimiter or full regex logs. An empty key indicates to discard the field. JSON logs use the keys from the JSON object itself.",
 						},
 						"filter_key_regex": {
 							Type:        schema.TypeList,
@@ -357,6 +357,45 @@ func ResourceTencentCloudClsConfigExtra() *schema.Resource {
 			},
 		},
 	}
+
+	legacyResource := &schema.Resource{Schema: clsConfigExtraV0Schema(configExtraResource.Schema)}
+	configExtraResource.SchemaVersion = 1
+	configExtraResource.StateUpgraders = []schema.StateUpgrader{
+		{
+			Version: 0,
+			Type:    legacyResource.CoreConfigSchema().ImpliedType(),
+			// Sets and lists have the same JSON representation. The legacy type
+			// decodes the set state before it is encoded using the current schema.
+			Upgrade: func(_ context.Context, rawState map[string]interface{}, _ interface{}) (map[string]interface{}, error) {
+				return rawState, nil
+			},
+		},
+	}
+
+	return configExtraResource
+}
+
+func clsConfigExtraV0Schema(current map[string]*schema.Schema) map[string]*schema.Schema {
+	legacy := make(map[string]*schema.Schema, len(current))
+	for name, value := range current {
+		legacy[name] = value
+	}
+
+	extractRule := *legacy["extract_rule"]
+	extractRuleResource := *extractRule.Elem.(*schema.Resource)
+	extractRuleSchema := make(map[string]*schema.Schema, len(extractRuleResource.Schema))
+	for name, value := range extractRuleResource.Schema {
+		extractRuleSchema[name] = value
+	}
+
+	keys := *extractRuleSchema["keys"]
+	keys.Type = schema.TypeSet
+	extractRuleSchema["keys"] = &keys
+	extractRuleResource.Schema = extractRuleSchema
+	extractRule.Elem = &extractRuleResource
+	legacy["extract_rule"] = &extractRule
+
+	return legacy
 }
 
 func resourceTencentCloudClsConfigExtraCreate(d *schema.ResourceData, meta interface{}) error {
@@ -553,10 +592,7 @@ func resourceTencentCloudClsConfigExtraCreate(d *schema.ResourceData, meta inter
 			extractRule.BeginRegex = helper.String(v.(string))
 		}
 		if v, ok := dMap["keys"]; ok {
-			keys := v.(*schema.Set).List()
-			for _, key := range keys {
-				extractRule.Keys = append(extractRule.Keys, helper.String(key.(string)))
-			}
+			extractRule.Keys = helper.InterfacesStringsPoint(v.([]interface{}))
 		}
 		if v, ok := dMap["filter_key_regex"]; ok {
 			keyRegexs := make([]*cls.KeyRegexInfo, 0, 10)
@@ -1127,10 +1163,7 @@ func resourceTencentCloudClsConfigExtraUpdate(d *schema.ResourceData, meta inter
 				extractRule.BeginRegex = helper.String(v.(string))
 			}
 			if v, ok := dMap["keys"]; ok {
-				keys := v.(*schema.Set).List()
-				for _, key := range keys {
-					extractRule.Keys = append(extractRule.Keys, helper.String(key.(string)))
-				}
+				extractRule.Keys = helper.InterfacesStringsPoint(v.([]interface{}))
 			}
 			if v, ok := dMap["filter_key_regex"]; ok {
 				keyRegexs := make([]*cls.KeyRegexInfo, 0, 10)
