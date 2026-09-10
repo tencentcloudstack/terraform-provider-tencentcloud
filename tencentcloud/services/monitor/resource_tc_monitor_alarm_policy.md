@@ -282,6 +282,38 @@ resource "tencentcloud_monitor_alarm_policy" "foo" {
 }
 ```
 
+alarm policy binding all objects
+
+```hcl
+resource "tencentcloud_monitor_alarm_policy" "foo" {
+  policy_name  = "tf-policy-bind-all"
+  monitor_type = "MT_QCE"
+  enable       = 1
+  project_id   = 0
+  namespace    = "cvm_device"
+  is_bind_all  = 1
+
+  conditions {
+    is_union_rule = 1
+    rules {
+      metric_name      = "CpuUsage"
+      period           = 60
+      operator         = "ge"
+      value            = "89.9"
+      continue_period  = 1
+      notice_frequency = 3600
+      is_power_notice  = 0
+    }
+  }
+
+  event_conditions {
+    metric_name = "ping_unreachable"
+  }
+
+  notice_ids = [tencentcloud_monitor_alarm_notice.foo.id]
+}
+```
+
 Import
 
 Alarm policy instance can be imported, e.g.
