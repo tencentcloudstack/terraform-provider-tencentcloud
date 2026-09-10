@@ -514,7 +514,7 @@ func resourceTencentMonitorAlarmPolicyCreate(d *schema.ResourceData, meta interf
 		}
 	}
 
-	if v, ok := d.GetOk("is_bind_all"); ok {
+	if v, ok := d.GetOkExists("is_bind_all"); ok {
 		request.IsBindAll = helper.IntInt64(v.(int))
 	}
 
