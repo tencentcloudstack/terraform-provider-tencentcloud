@@ -49,7 +49,7 @@ func TestDcxInstance_UpdateBandwidth_Success(t *testing.T) {
 	patches.ApplyMethodReturn(newMockMetaDcx().client, "UseDcClient", dcClient)
 
 	var capturedRequest *dc.ModifyDirectConnectTunnelAttributeRequest
-	patches.ApplyMethodFunc(dcClient, "ModifyDirectConnectTunnelAttribute", func(request *dc.ModifyDirectConnectTunnelAttributeRequest) (*dc.ModifyDirectConnectTunnelAttributeResponse, error) {
+	patches.ApplyMethodFunc(dcClient, "ModifyDirectConnectTunnelAttributeWithContext", func(ctx context.Context, request *dc.ModifyDirectConnectTunnelAttributeRequest) (*dc.ModifyDirectConnectTunnelAttributeResponse, error) {
 		capturedRequest = request
 		resp := dc.NewModifyDirectConnectTunnelAttributeResponse()
 		resp.Response = &dc.ModifyDirectConnectTunnelAttributeResponseParams{
@@ -58,16 +58,16 @@ func TestDcxInstance_UpdateBandwidth_Success(t *testing.T) {
 		return resp, nil
 	})
 
-	// Mock the service Describe method used by Read
+	// Mock the underlying Describe method (plural form, not inlined) used by Read
 	var service dcservice.DcService
-	patches.ApplyMethodFunc(&service, "DescribeDirectConnectTunnel", func(ctx context.Context, dcxId string) (dc.DirectConnectTunnel, int64, error) {
+	patches.ApplyMethodFunc(&service, "DescribeDirectConnectTunnels", func(ctx context.Context, dcxId, name string) ([]dc.DirectConnectTunnel, error) {
 		info := dc.DirectConnectTunnel{
 			DirectConnectTunnelId:   ptrStringDcx("dcx-test-id"),
 			DirectConnectTunnelName: ptrStringDcx("test-dcx"),
 			Bandwidth:               ptrInt64Dcx(100),
 			State:                   ptrStringDcx("AVAILABLE"),
 		}
-		return info, 1, nil
+		return []dc.DirectConnectTunnel{info}, nil
 	})
 
 	meta := newMockMetaDcx()
@@ -79,10 +79,6 @@ func TestDcxInstance_UpdateBandwidth_Success(t *testing.T) {
 		"bandwidth": 100,
 	})
 	d.SetId("dcx-test-id")
-	d.MarkNewResource()
-
-	// Simulate bandwidth change from 50 to 100
-	d.SetNew("bandwidth", 100)
 
 	err := res.Update(d, meta)
 	assert.NoError(t, err)
@@ -104,18 +100,18 @@ func TestDcxInstance_UpdateBandwidth_APIError(t *testing.T) {
 	dcClient := &dc.Client{}
 	patches.ApplyMethodReturn(newMockMetaDcx().client, "UseDcClient", dcClient)
 
-	patches.ApplyMethodFunc(dcClient, "ModifyDirectConnectTunnelAttribute", func(request *dc.ModifyDirectConnectTunnelAttributeRequest) (*dc.ModifyDirectConnectTunnelAttributeResponse, error) {
+	patches.ApplyMethodFunc(dcClient, "ModifyDirectConnectTunnelAttributeWithContext", func(ctx context.Context, request *dc.ModifyDirectConnectTunnelAttributeRequest) (*dc.ModifyDirectConnectTunnelAttributeResponse, error) {
 		return nil, fmt.Errorf("[TencentCloudSDKError] Code=InvalidParameter, Message=Invalid bandwidth value")
 	})
 
-	// Mock the service Describe method used by Read (won't be reached due to update error)
+	// Mock the underlying Describe method (plural form, not inlined) used by Read (won't be reached due to update error)
 	var service dcservice.DcService
-	patches.ApplyMethodFunc(&service, "DescribeDirectConnectTunnel", func(ctx context.Context, dcxId string) (dc.DirectConnectTunnel, int64, error) {
+	patches.ApplyMethodFunc(&service, "DescribeDirectConnectTunnels", func(ctx context.Context, dcxId, name string) ([]dc.DirectConnectTunnel, error) {
 		info := dc.DirectConnectTunnel{
 			DirectConnectTunnelId: ptrStringDcx("dcx-test-id"),
 			Bandwidth:             ptrInt64Dcx(100),
 		}
-		return info, 1, nil
+		return []dc.DirectConnectTunnel{info}, nil
 	})
 
 	meta := newMockMetaDcx()
@@ -127,8 +123,6 @@ func TestDcxInstance_UpdateBandwidth_APIError(t *testing.T) {
 		"bandwidth": 100,
 	})
 	d.SetId("dcx-test-id")
-	d.MarkNewResource()
-	d.SetNew("bandwidth", 100)
 
 	err := res.Update(d, meta)
 	assert.Error(t, err)

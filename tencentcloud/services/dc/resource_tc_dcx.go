@@ -377,54 +377,38 @@ func resourceTencentCloudDcxInstanceUpdate(d *schema.ResourceData, meta interfac
 	defer tccommon.LogElapsed("resource.tencentcloud_dcx.update")()
 
 	var (
-		logId = tccommon.GetLogId(tccommon.ContextNil)
-		dcxId = d.Id()
+		logId   = tccommon.GetLogId(tccommon.ContextNil)
+		request = dc.NewModifyDirectConnectTunnelAttributeRequest()
+		dcxId   = d.Id()
 	)
 
+	request.DirectConnectTunnelId = &dcxId
+
 	if d.HasChange("name") {
-		request := dc.NewModifyDirectConnectTunnelAttributeRequest()
-		request.DirectConnectTunnelId = &dcxId
 		if v, ok := d.GetOk("name"); ok {
 			request.DirectConnectTunnelName = helper.String(v.(string))
-		}
-
-		err := resource.Retry(tccommon.WriteRetryTimeout, func() *resource.RetryError {
-			_, e := meta.(tccommon.ProviderMeta).GetAPIV3Conn().UseDcClient().ModifyDirectConnectTunnelAttribute(request)
-			if e != nil {
-				log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), e.Error())
-				return tccommon.RetryError(e)
-			}
-
-			return nil
-		})
-
-		if err != nil {
-			log.Printf("[CRITAL]%s Modify direct connect tunnel failed, reason:%s\n", logId, err.Error())
-			return err
 		}
 	}
 
 	if d.HasChange("bandwidth") {
-		request := dc.NewModifyDirectConnectTunnelAttributeRequest()
-		request.DirectConnectTunnelId = &dcxId
 		if v, ok := d.GetOkExists("bandwidth"); ok {
 			request.Bandwidth = helper.IntInt64(v.(int))
 		}
+	}
 
-		err := resource.Retry(tccommon.WriteRetryTimeout, func() *resource.RetryError {
-			_, e := meta.(tccommon.ProviderMeta).GetAPIV3Conn().UseDcClient().ModifyDirectConnectTunnelAttribute(request)
-			if e != nil {
-				log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), e.Error())
-				return tccommon.RetryError(e)
-			}
-
-			return nil
-		})
-
-		if err != nil {
-			log.Printf("[CRITAL]%s Modify direct connect tunnel bandwidth failed, reason:%s\n", logId, err.Error())
-			return err
+	err := resource.Retry(tccommon.WriteRetryTimeout, func() *resource.RetryError {
+		_, e := meta.(tccommon.ProviderMeta).GetAPIV3Conn().UseDcClient().ModifyDirectConnectTunnelAttribute(request)
+		if e != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), e.Error())
+			return tccommon.RetryError(e)
 		}
+
+		return nil
+	})
+
+	if err != nil {
+		log.Printf("[CRITAL]%s Modify direct connect tunnel failed, reason:%s\n", logId, err.Error())
+		return err
 	}
 
 	return resourceTencentCloudDcxInstanceRead(d, meta)
