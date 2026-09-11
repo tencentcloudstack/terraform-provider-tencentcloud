@@ -94,12 +94,15 @@ func (me *DlcService) DeleteDlcWorkGroupById(ctx context.Context, workGroupId st
 	return
 }
 
-func (me *DlcService) DescribeDlcUserById(ctx context.Context, userId string) (user *dlc.UserInfo, errRet error) {
+func (me *DlcService) DescribeDlcUserById(ctx context.Context, userId string, accountType string) (user *dlc.UserInfo, errRet error) {
 	logId := tccommon.GetLogId(ctx)
 
 	request := dlc.NewDescribeUsersRequest()
 	response := dlc.NewDescribeUsersResponse()
 	request.UserId = &userId
+	if accountType != "" {
+		request.AccountType = &accountType
+	}
 
 	defer func() {
 		if errRet != nil {
@@ -134,11 +137,14 @@ func (me *DlcService) DescribeDlcUserById(ctx context.Context, userId string) (u
 	return
 }
 
-func (me *DlcService) DeleteDlcUserById(ctx context.Context, userId string) (errRet error) {
+func (me *DlcService) DeleteDlcUserById(ctx context.Context, userId string, accountType string) (errRet error) {
 	logId := tccommon.GetLogId(ctx)
 
 	request := dlc.NewDeleteUserRequest()
 	request.UserIds = []*string{&userId}
+	if accountType != "" {
+		request.AccountType = &accountType
+	}
 
 	defer func() {
 		if errRet != nil {

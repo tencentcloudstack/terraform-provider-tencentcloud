@@ -19,6 +19,7 @@ resource "tencentcloud_dlc_user" "example" {
   user_type        = "COMMON"
   user_alias       = "terraform-test"
   user_description = "for terraform test"
+  account_type     = "UserAccount"
 }
 ```
 
@@ -27,6 +28,7 @@ resource "tencentcloud_dlc_user" "example" {
 The following arguments are supported:
 
 * `user_id` - (Required, String, ForceNew) Sub-user UIN that needs to be granted permissions. It can be checked through the upper right corner of Tencent Cloud Console -> Account Information -> Account ID.
+* `account_type` - (Optional, String) Account type. Valid values: `UserAccount` (user account), `RoleAccount` (role account). Default is `UserAccount`.
 * `user_alias` - (Optional, String) User alias, and its characters are less than 50.
 * `user_description` - (Optional, String) User description, which can make it easy to identify different users.
 * `user_type` - (Optional, String) Types of users. ADMIN: administrators; COMMON: general users. When the type of user is administrator, the collections of permissions and bound working groups cannot be set. Administrators own all the permissions by default. If the parameter is not filled in, it will be COMMON by default.

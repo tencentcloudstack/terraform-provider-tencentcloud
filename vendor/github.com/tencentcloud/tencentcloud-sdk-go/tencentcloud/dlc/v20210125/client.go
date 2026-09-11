@@ -15055,56 +15055,6 @@ func (c *Client) GetRayJobEventWithContext(ctx context.Context, request *GetRayJ
     return
 }
 
-func NewGetRayJobEventLogRequest() (request *GetRayJobEventLogRequest) {
-    request = &GetRayJobEventLogRequest{
-        BaseRequest: &tchttp.BaseRequest{},
-    }
-    
-    request.Init().WithApiInfo("dlc", APIVersion, "GetRayJobEventLog")
-    
-    
-    return
-}
-
-func NewGetRayJobEventLogResponse() (response *GetRayJobEventLogResponse) {
-    response = &GetRayJobEventLogResponse{
-        BaseResponse: &tchttp.BaseResponse{},
-    } 
-    return
-
-}
-
-// GetRayJobEventLog
-// 获取作业事件日志
-//
-// 可能返回的错误码:
-//  FAILEDOPERATION_EXTERNALSERVICE = "FailedOperation.ExternalService"
-func (c *Client) GetRayJobEventLog(request *GetRayJobEventLogRequest) (response *GetRayJobEventLogResponse, err error) {
-    return c.GetRayJobEventLogWithContext(context.Background(), request)
-}
-
-// GetRayJobEventLog
-// 获取作业事件日志
-//
-// 可能返回的错误码:
-//  FAILEDOPERATION_EXTERNALSERVICE = "FailedOperation.ExternalService"
-func (c *Client) GetRayJobEventLogWithContext(ctx context.Context, request *GetRayJobEventLogRequest) (response *GetRayJobEventLogResponse, err error) {
-    if request == nil {
-        request = NewGetRayJobEventLogRequest()
-    }
-    c.InitBaseRequest(&request.BaseRequest, "dlc", APIVersion, "GetRayJobEventLog")
-    
-    if c.GetCredential() == nil {
-        return nil, errors.New("GetRayJobEventLog require credential")
-    }
-
-    request.SetContext(ctx)
-    
-    response = NewGetRayJobEventLogResponse()
-    err = c.Send(request, response)
-    return
-}
-
 func NewGetRayJobHistoryRequest() (request *GetRayJobHistoryRequest) {
     request = &GetRayJobHistoryRequest{
         BaseRequest: &tchttp.BaseRequest{},
