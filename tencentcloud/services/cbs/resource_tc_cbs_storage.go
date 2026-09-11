@@ -141,7 +141,7 @@ func ResourceTencentCloudCbsStorage() *schema.Resource {
 				Optional:    true,
 				ForceNew:    true,
 				Computed:    true,
-				Description: "Specifies the cloud disk encryption type. The values are `ENCRYPT_V1` and `ENCRYPT_V2`, which represent the first-generation and second-generation encryption technologies respectively. The two encryption technologies are incompatible with each other. It is recommended to use the second-generation encryption technology `ENCRYPT_V2` first. The first-generation encryption technology is only supported on some older models. This parameter is only valid when creating an encrypted cloud disk.",
+				Description: "Specifies the cloud disk encryption type. The values are `ENCRYPT_V1` and `ENCRYPT_V2`, which represent the first-generation and second-generation encryption technologies respectively. The two encryption technologies are incompatible with each other. It is recommended to use the second-generation encryption technology `ENCRYPT_V2` first. The first-generation encryption technology is only supported on some older models. This parameter is only valid when creating an encrypted cloud disk. https://www.tencentcloud.com/document/product/362/33139?lang=en&pg=.",
 			},
 			"instance_id": {
 				Type:        schema.TypeString,
