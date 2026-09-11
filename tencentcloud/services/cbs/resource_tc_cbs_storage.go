@@ -146,7 +146,8 @@ func ResourceTencentCloudCbsStorage() *schema.Resource {
 			"instance_id": {
 				Type:        schema.TypeString,
 				Optional:    true,
-				Description: "Specifies the CVM instance ID for auto-mounting and auto-initializing the data disk during creation. When set, the disk will be automatically mounted to the specified CVM instance. This parameter maps to `AutoMountConfiguration.InstanceId` of the `CreateDisks` API. Note: encrypted disks do not support auto-mounting, so this parameter cannot be used together with `encrypt`.",
+				Computed:    true,
+				Description: "Specifies the CVM instance ID for auto-mounting and auto-initializing the data disk during creation. When set, the disk will be automatically mounted to the specified CVM instance. This parameter maps to `AutoMountConfiguration.InstanceId` of the `CreateDisks` API. Note: 1. encrypted disks do not support auto-mounting, so this parameter cannot be used together with `encrypt`. 2.Cannot be used simultaneously with `tencentcloud_cbs_storage_set_attachment`. 3.Modification is not supported. The current field only supports binding to an instance when creating a CBS instance.",
 			},
 			// computed
 			"storage_status": {
@@ -405,6 +406,10 @@ func resourceTencentCloudCbsStorageUpdate(d *schema.ResourceData, meta interface
 		return fmt.Errorf("tencentcloud_cbs_storage do not support downgrade instance")
 	}
 
+	if d.HasChange("instance_id") {
+		return fmt.Errorf("instance_id cannot be modified.")
+	}
+
 	storageId := d.Id()
 	storageName := ""
 	projectId := -1
@@ -588,6 +593,31 @@ func resourceTencentCloudCbsStorageUpdate(d *schema.ResourceData, meta interface
 		if err != nil {
 			return err
 		}
+	}
+
+	v, _ := d.GetOk("instance_id")
+	log.Printf("[CRITAL]%s instance_id:%+v\n ", logId, v)
+
+	if d.HasChange("instance_id") {
+		// if v, ok := d.GetOk("instance_id"); ok {
+		// 	instanceId := v.(string)
+		// 	err := resource.Retry(tccommon.WriteRetryTimeout, func() *resource.RetryError {
+		// 		e := cbsService.AttachDisk(ctx, storageId, instanceId)
+		// 		if e != nil {
+		// 			ee, ok := e.(*sdkErrors.TencentCloudSDKError)
+		// 			if ok && tccommon.IsContains(CVM_RETRYABLE_ERROR, ee.Code) {
+		// 				time.Sleep(1 * time.Second) // 需要重试的话，等待1s进行重试
+		// 				return resource.RetryableError(fmt.Errorf("cbs attach error: %s, retrying", ee.Error()))
+		// 			}
+		// 			return resource.NonRetryableError(ee)
+		// 		}
+		// 		return nil
+		// 	})
+		// 	if err != nil {
+		// 		log.Printf("[CRITAL]%s cbs storage attach failed, reason:%s\n ", logId, err.Error())
+		// 		return err
+		// 	}
+		// }
 	}
 
 	if d.HasChange("tags") {
