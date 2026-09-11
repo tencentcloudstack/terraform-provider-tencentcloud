@@ -595,31 +595,6 @@ func resourceTencentCloudCbsStorageUpdate(d *schema.ResourceData, meta interface
 		}
 	}
 
-	v, _ := d.GetOk("instance_id")
-	log.Printf("[CRITAL]%s instance_id:%+v\n ", logId, v)
-
-	if d.HasChange("instance_id") {
-		// if v, ok := d.GetOk("instance_id"); ok {
-		// 	instanceId := v.(string)
-		// 	err := resource.Retry(tccommon.WriteRetryTimeout, func() *resource.RetryError {
-		// 		e := cbsService.AttachDisk(ctx, storageId, instanceId)
-		// 		if e != nil {
-		// 			ee, ok := e.(*sdkErrors.TencentCloudSDKError)
-		// 			if ok && tccommon.IsContains(CVM_RETRYABLE_ERROR, ee.Code) {
-		// 				time.Sleep(1 * time.Second) // 需要重试的话，等待1s进行重试
-		// 				return resource.RetryableError(fmt.Errorf("cbs attach error: %s, retrying", ee.Error()))
-		// 			}
-		// 			return resource.NonRetryableError(ee)
-		// 		}
-		// 		return nil
-		// 	})
-		// 	if err != nil {
-		// 		log.Printf("[CRITAL]%s cbs storage attach failed, reason:%s\n ", logId, err.Error())
-		// 		return err
-		// 	}
-		// }
-	}
-
 	if d.HasChange("tags") {
 		oldValue, newValue := d.GetChange("tags")
 		replaceTags, deleteTags := svctag.DiffTags(oldValue.(map[string]interface{}), newValue.(map[string]interface{}))
