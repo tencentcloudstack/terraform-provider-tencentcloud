@@ -1,0 +1,7 @@
+```release-note:new-resource
+tencentcloud_captcha_info_international
+```
+
+```release-note:new-resource
+tencentcloud_captcha_ip_white_list_international
+```
