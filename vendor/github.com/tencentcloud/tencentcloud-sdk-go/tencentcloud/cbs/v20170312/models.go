@@ -1335,6 +1335,20 @@ func (r *CreateSnapshotResponse) FromJsonString(s string) error {
 	return json.Unmarshal([]byte(s), &r)
 }
 
+type DedicatedClusterDiskStatistic struct {
+	// <p>硬盘介质类型。取值范围：<br>&lt;li&gt;CLOUD_BASIC：表示普通云硬盘<br>&lt;li&gt;CLOUD_PREMIUM：表示高性能云硬盘<br>&lt;li&gt;CLOUD_SSD：表示SSD云硬盘<br>&lt;li&gt;CLOUD_HSSD：表示增强型SSD云硬盘<br>&lt;li&gt;CLOUD_TSSD：表示极速型SSD云硬盘。</p>
+	DiskType *string `json:"DiskType,omitnil,omitempty" name:"DiskType"`
+
+	// <p>云硬盘总容量。</p><p>单位：GiB</p>
+	TotalDiskSize *uint64 `json:"TotalDiskSize,omitnil,omitempty" name:"TotalDiskSize"`
+
+	// <p>已使用的云硬盘容量。</p><p>单位：GiB</p>
+	UsedDiskSize *uint64 `json:"UsedDiskSize,omitnil,omitempty" name:"UsedDiskSize"`
+
+	// <p>可用的云硬盘容量。</p><p>单位：GiB</p>
+	AvailableDiskSize *uint64 `json:"AvailableDiskSize,omitnil,omitempty" name:"AvailableDiskSize"`
+}
+
 // Predefined struct for user
 type DeleteAutoSnapshotPoliciesRequestParams struct {
 	// 要删除的定期快照策略ID列表，通过[ DescribeAutoSnapshotPolicies](https://cloud.tencent.com/document/api/362/33556)接口查询。
@@ -1670,6 +1684,63 @@ func (r *DescribeAutoSnapshotPoliciesResponse) ToJsonString() string {
 // FromJsonString It is highly **NOT** recommended to use this function
 // because it has no param check, nor strict type check
 func (r *DescribeAutoSnapshotPoliciesResponse) FromJsonString(s string) error {
+	return json.Unmarshal([]byte(s), &r)
+}
+
+// Predefined struct for user
+type DescribeDedicatedClusterDiskStatisticsRequestParams struct {
+	// <p>云服务器独享集群ID。</p>
+	DedicatedClusterId *string `json:"DedicatedClusterId,omitnil,omitempty" name:"DedicatedClusterId"`
+}
+
+type DescribeDedicatedClusterDiskStatisticsRequest struct {
+	*tchttp.BaseRequest
+	
+	// <p>云服务器独享集群ID。</p>
+	DedicatedClusterId *string `json:"DedicatedClusterId,omitnil,omitempty" name:"DedicatedClusterId"`
+}
+
+func (r *DescribeDedicatedClusterDiskStatisticsRequest) ToJsonString() string {
+    b, _ := json.Marshal(r)
+    return string(b)
+}
+
+// FromJsonString It is highly **NOT** recommended to use this function
+// because it has no param check, nor strict type check
+func (r *DescribeDedicatedClusterDiskStatisticsRequest) FromJsonString(s string) error {
+	f := make(map[string]interface{})
+	if err := json.Unmarshal([]byte(s), &f); err != nil {
+		return err
+	}
+	delete(f, "DedicatedClusterId")
+	if len(f) > 0 {
+		return tcerr.NewTencentCloudSDKError("ClientError.BuildRequestError", "DescribeDedicatedClusterDiskStatisticsRequest has unknown keys!", "")
+	}
+	return json.Unmarshal([]byte(s), &r)
+}
+
+// Predefined struct for user
+type DescribeDedicatedClusterDiskStatisticsResponseParams struct {
+	// <p>云服务器独享集群云硬盘统计信息。</p>
+	DedicatedClusterDiskStatisticSet []*DedicatedClusterDiskStatistic `json:"DedicatedClusterDiskStatisticSet,omitnil,omitempty" name:"DedicatedClusterDiskStatisticSet"`
+
+	// 唯一请求 ID，由服务端生成，每次请求都会返回（若请求因其他原因未能抵达服务端，则该次请求不会获得 RequestId）。定位问题时需要提供该次请求的 RequestId。
+	RequestId *string `json:"RequestId,omitnil,omitempty" name:"RequestId"`
+}
+
+type DescribeDedicatedClusterDiskStatisticsResponse struct {
+	*tchttp.BaseResponse
+	Response *DescribeDedicatedClusterDiskStatisticsResponseParams `json:"Response"`
+}
+
+func (r *DescribeDedicatedClusterDiskStatisticsResponse) ToJsonString() string {
+    b, _ := json.Marshal(r)
+    return string(b)
+}
+
+// FromJsonString It is highly **NOT** recommended to use this function
+// because it has no param check, nor strict type check
+func (r *DescribeDedicatedClusterDiskStatisticsResponse) FromJsonString(s string) error {
 	return json.Unmarshal([]byte(s), &r)
 }
 
@@ -2326,6 +2397,12 @@ func (r *DescribeRemoteDisksRequest) FromJsonString(s string) error {
 
 // Predefined struct for user
 type DescribeRemoteDisksResponseParams struct {
+	// <p>单副本SSD硬盘的详细信息列表。</p>
+	RemoteDiskSet []*RemoteDiskDetail `json:"RemoteDiskSet,omitnil,omitempty" name:"RemoteDiskSet"`
+
+	// <p>符合条件的单副本SSD硬盘数量。</p>
+	TotalCount *uint64 `json:"TotalCount,omitnil,omitempty" name:"TotalCount"`
+
 	// 唯一请求 ID，由服务端生成，每次请求都会返回（若请求因其他原因未能抵达服务端，则该次请求不会获得 RequestId）。定位问题时需要提供该次请求的 RequestId。
 	RequestId *string `json:"RequestId,omitnil,omitempty" name:"RequestId"`
 }
@@ -4180,6 +4257,9 @@ type ModifyRemoteDiskAttributesRequestParams struct {
 
 	// <p>新的单副本SSD硬盘项目ID。</p>
 	ProjectId *uint64 `json:"ProjectId,omitnil,omitempty" name:"ProjectId"`
+
+	// <p>云硬盘的自动续费标识</p><p>枚举值：</p><ul><li>NOTIFY_AND_AUTO_RENEW： 通知过期且自动续费</li><li>NOTIFY_AND_MANUAL_RENEW： 通知过期不自动续费</li><li>DISABLE_NOTIFY_AND_MANUAL_RENEW： 不通知过期不自动续费</li></ul>
+	AutoRenewFlag *string `json:"AutoRenewFlag,omitnil,omitempty" name:"AutoRenewFlag"`
 }
 
 type ModifyRemoteDiskAttributesRequest struct {
@@ -4193,6 +4273,9 @@ type ModifyRemoteDiskAttributesRequest struct {
 
 	// <p>新的单副本SSD硬盘项目ID。</p>
 	ProjectId *uint64 `json:"ProjectId,omitnil,omitempty" name:"ProjectId"`
+
+	// <p>云硬盘的自动续费标识</p><p>枚举值：</p><ul><li>NOTIFY_AND_AUTO_RENEW： 通知过期且自动续费</li><li>NOTIFY_AND_MANUAL_RENEW： 通知过期不自动续费</li><li>DISABLE_NOTIFY_AND_MANUAL_RENEW： 不通知过期不自动续费</li></ul>
+	AutoRenewFlag *string `json:"AutoRenewFlag,omitnil,omitempty" name:"AutoRenewFlag"`
 }
 
 func (r *ModifyRemoteDiskAttributesRequest) ToJsonString() string {
@@ -4210,6 +4293,7 @@ func (r *ModifyRemoteDiskAttributesRequest) FromJsonString(s string) error {
 	delete(f, "RemoteDiskIds")
 	delete(f, "DiskName")
 	delete(f, "ProjectId")
+	delete(f, "AutoRenewFlag")
 	if len(f) > 0 {
 		return tcerr.NewTencentCloudSDKError("ClientError.BuildRequestError", "ModifyRemoteDiskAttributesRequest has unknown keys!", "")
 	}
@@ -4518,6 +4602,44 @@ type RemoteDiskChargePrepaid struct {
 	RenewFlag *string `json:"RenewFlag,omitnil,omitempty" name:"RenewFlag"`
 }
 
+type RemoteDiskDetail struct {
+	// <p>单副本SSD硬盘的创建时间。</p>
+	CreateTime *string `json:"CreateTime,omitnil,omitempty" name:"CreateTime"`
+
+	// <p>单副本SSD硬盘到期时间。按小时后付费单副本SSD硬盘可能为空。</p>
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	DeadlineTime *string `json:"DeadlineTime,omitnil,omitempty" name:"DeadlineTime"`
+
+	// <p>单副本SSD硬盘计费类型。</p><p>枚举值：</p><ul><li>PREPAID： 预付费</li><li>POSTPAID_BY_HOUR： 按小时后付费</li></ul>
+	DiskChargeType *string `json:"DiskChargeType,omitnil,omitempty" name:"DiskChargeType"`
+
+	// <p>单副本SSD硬盘大小，单位为 GiB。</p>
+	DiskSize *uint64 `json:"DiskSize,omitnil,omitempty" name:"DiskSize"`
+
+	// <p>单副本SSD硬盘挂载的云服务器实例ID。未挂载时为空字符串。</p>
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	InstanceId *string `json:"InstanceId,omitnil,omitempty" name:"InstanceId"`
+
+	// <p>单副本SSD硬盘所在的位置。</p>
+	Placement *Placement `json:"Placement,omitnil,omitempty" name:"Placement"`
+
+	// <p>单副本SSD硬盘ID。</p>
+	RemoteDiskId *string `json:"RemoteDiskId,omitnil,omitempty" name:"RemoteDiskId"`
+
+	// <p>单副本SSD硬盘名称。</p>
+	RemoteDiskName *string `json:"RemoteDiskName,omitnil,omitempty" name:"RemoteDiskName"`
+
+	// <p>单副本SSD硬盘状态。</p><p>枚举值：</p><ul><li>UNATTACHED： 未挂载</li><li>ATTACHED： 已挂载</li><li>TORECYCLE： 待回收</li></ul>
+	RemoteDiskState *string `json:"RemoteDiskState,omitnil,omitempty" name:"RemoteDiskState"`
+
+	// <p>单副本SSD硬盘类型。</p><p>枚举值：</p><ul><li>REMOTE_SSD： 单副本SSD硬盘</li><li>ELASTIC_REMOTE_SSD： 弹性单副本SSD硬盘</li></ul>
+	RemoteDiskType *string `json:"RemoteDiskType,omitnil,omitempty" name:"RemoteDiskType"`
+
+	// <p>自动续费标识。</p><p>枚举值：</p><ul><li>NOTIFY_AND_AUTO_RENEW： 通知过期且自动续费</li><li>NOTIFY_AND_MANUAL_RENEW： 通知过期不自动续费</li><li>DISABLE_NOTIFY_AND_MANUAL_RENEW： 不通知过期不自动续费</li></ul>
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	RenewFlag *string `json:"RenewFlag,omitnil,omitempty" name:"RenewFlag"`
+}
+
 // Predefined struct for user
 type RenewDiskRequestParams struct {
 	// <p>预付费模式，即包年包月相关参数设置。通过该参数可以指定包年包月云硬盘的续费时长。<br>在云硬盘与挂载的实例一起续费的场景下，可以指定参数CurInstanceDeadline，此时云硬盘会按对齐到实例续费后的到期时间来续费。</p>
@@ -4778,6 +4900,9 @@ type Snapshot struct {
 
 	// <p>自动快照策略ID，仅当该快照由自动快照策略方式创建时才会返回。</p>
 	AutoSnapshotPolicyId *string `json:"AutoSnapshotPolicyId,omitnil,omitempty" name:"AutoSnapshotPolicyId"`
+
+	// <p>快照模式。取值为 INSTANT_SNAPSHOT 表示极速快照，STANDARD_SNAPSHOT 表示普通快照。</p><p>枚举值：</p><ul><li>INSTANT_SNAPSHOT： 极速快照</li><li>STANDARD_SNAPSHOT： 普通快照</li></ul>
+	SnapshotMode *string `json:"SnapshotMode,omitnil,omitempty" name:"SnapshotMode"`
 }
 
 type SnapshotCopyResult struct {

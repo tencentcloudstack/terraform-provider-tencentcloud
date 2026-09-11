@@ -141,7 +141,13 @@ func ResourceTencentCloudCbsStorage() *schema.Resource {
 				Optional:    true,
 				ForceNew:    true,
 				Computed:    true,
-				Description: "Specifies the cloud disk encryption type. The values are `ENCRYPT_V1` and `ENCRYPT_V2`, which represent the first-generation and second-generation encryption technologies respectively. The two encryption technologies are incompatible with each other. It is recommended to use the second-generation encryption technology `ENCRYPT_V2` first. The first-generation encryption technology is only supported on some older models. This parameter is only valid when creating an encrypted cloud disk.",
+				Description: "Specifies the cloud disk encryption type. The values are `ENCRYPT_V1` and `ENCRYPT_V2`, which represent the first-generation and second-generation encryption technologies respectively. The two encryption technologies are incompatible with each other. It is recommended to use the second-generation encryption technology `ENCRYPT_V2` first. The first-generation encryption technology is only supported on some older models. This parameter is only valid when creating an encrypted cloud disk. https://www.tencentcloud.com/document/product/362/33139?lang=en&pg=.",
+			},
+			"instance_id": {
+				Type:        schema.TypeString,
+				Optional:    true,
+				Computed:    true,
+				Description: "Specifies the CVM instance ID for auto-mounting and auto-initializing the data disk during creation. When set, the disk will be automatically mounted to the specified CVM instance. This parameter maps to `AutoMountConfiguration.InstanceId` of the `CreateDisks` API. Note: 1. encrypted disks do not support auto-mounting, so this parameter cannot be used together with `encrypt`. 2.Cannot be used simultaneously with `tencentcloud_cbs_storage_set_attachment`. 3.Modification is not supported. The current field only supports binding to an instance when creating a CBS instance.",
 			},
 			// computed
 			"storage_status": {
@@ -235,6 +241,12 @@ func resourceTencentCloudCbsStorageCreate(d *schema.ResourceData, meta interface
 
 	if v, ok := d.GetOkExists("encrypt_type"); ok {
 		request.EncryptType = helper.String(v.(string))
+	}
+
+	if v, ok := d.GetOk("instance_id"); ok {
+		request.AutoMountConfiguration = &cbs.AutoMountConfiguration{
+			InstanceId: []*string{helper.String(v.(string))},
+		}
 	}
 
 	storageId := ""
@@ -354,6 +366,10 @@ func resourceTencentCloudCbsStorageRead(d *schema.ResourceData, meta interface{}
 		_ = d.Set("kms_key_id", storage.KmsKeyId)
 	}
 
+	if storage.InstanceId != nil {
+		_ = d.Set("instance_id", storage.InstanceId)
+	}
+
 	if *storage.DiskChargeType == CBS_CHARGE_TYPE_PREPAID {
 		_ = d.Set("prepaid_renew_flag", storage.RenewFlag)
 	}
@@ -388,6 +404,10 @@ func resourceTencentCloudCbsStorageUpdate(d *schema.ResourceData, meta interface
 
 	if d.HasChange("charge_type") && d.Get("charge_type").(string) != CBS_CHARGE_TYPE_PREPAID {
 		return fmt.Errorf("tencentcloud_cbs_storage do not support downgrade instance")
+	}
+
+	if d.HasChange("instance_id") {
+		return fmt.Errorf("instance_id cannot be modified.")
 	}
 
 	storageId := d.Id()
