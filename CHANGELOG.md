@@ -1,3 +1,20 @@
+## 1.83.31(September 11, 2026)
+
+FEATURES:
+
+* **New Resource:** `tencentcloud_captcha_info_international` ([#4504](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/4504))
+* **New Resource:** `tencentcloud_captcha_ip_white_list_international` ([#4504](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/4504))
+
+ENHANCEMENTS:
+
+* resource/tencentcloud_cbs_storage: support `instance_id` parameter to auto-mount and auto-initialize the data disk to a specified CVM instance during creation. ([#4503](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/4503))
+* resource/tencentcloud_dc_gateway_ccn_route: Support import. ([#4501](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/4501))
+* resource/tencentcloud_dcx: support in-place bandwidth update via ModifyDirectConnectTunnelAttribute ([#4498](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/4498))
+* resource/tencentcloud_dlc_user: support account_type parameter for specifying user account type ([#4495](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/4495))
+* resource/tencentcloud_monitor_alarm_policy: support `is_bind_all` parameter to specify whether the alarm policy binds to all objects ([#4499](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/4499))
+* resource/tencentcloud_monitor_tmp_recording_rule: Optimize group field updates. ([#4502](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/4502))
+* resource/tencentcloud_teo_security_policy_config: add `rule_ids` field to `bot_management.basic_bot_settings.*.action_overrides` to support multiple bot rule IDs (deprecate `rule_id`) ([#4500](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/4500))
+
 ## 1.83.30(September 9, 2026)
 
 FEATURES:
