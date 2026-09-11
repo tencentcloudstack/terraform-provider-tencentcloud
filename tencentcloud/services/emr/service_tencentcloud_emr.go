@@ -112,6 +112,10 @@ func (me *EMRService) CreateInstance(ctx context.Context, d *schema.ResourceData
 		}
 	}
 
+	if v, ok := d.GetOk("cos_bucket"); ok {
+		request.CosBucket = helper.String(v.(string))
+	}
+
 	if v, ok := d.GetOk("resource_spec"); ok {
 		tmpResourceSpec := v.([]interface{})
 		resourceSpec := tmpResourceSpec[0].(map[string]interface{})
