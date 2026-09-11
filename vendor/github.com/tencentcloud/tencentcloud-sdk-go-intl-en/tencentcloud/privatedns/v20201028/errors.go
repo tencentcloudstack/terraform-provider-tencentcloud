@@ -47,7 +47,7 @@ const (
 	// Data exception.
 	FAILEDOPERATION_DATAERROR = "FailedOperation.DataError"
 
-	// The private domain is currently associated with a VPC. Please disassociate the VPC first before clearing its records.
+	// The current private domain has been associated with the VPC. To clear private DNS records, disassociate the VPC first.
 	FAILEDOPERATION_DELETELASTBINDVPCRECORDFAILED = "FailedOperation.DeleteLastBindVpcRecordFailed"
 
 	// Record deletion failed.
@@ -158,14 +158,17 @@ const (
 	// The record does not exist.
 	INVALIDPARAMETER_RECORDNOTEXIST = "InvalidParameter.RecordNotExist"
 
-	// The number of round-robin DNS records exceeds the limit.
-	INVALIDPARAMETER_RECORDROLLLIMITCOUNTEXCEED = "InvalidParameter.RecordRolllimitCountExceed"
+	// 
+	INVALIDPARAMETER_RECORDROLLLIMITCOUNTEXCEED = "InvalidParameter.RecordRollLimitCountExceed"
 
 	// The number of round-robin DNS TXT records exceeds 10.
 	INVALIDPARAMETER_RECORDTXTCOUNTEXCEED = "InvalidParameter.RecordTXTCountExceed"
 
 	// The current record type does not support weight.
 	INVALIDPARAMETER_RECORDUNSUPPORTWEIGHT = "InvalidParameter.RecordUnsupportWeight"
+
+	// Unique ID does not exist.
+	INVALIDPARAMETER_UNIQUEIDNOTEXIST = "InvalidParameter.UniqueIdNotExist"
 
 	// The VPC has been bound to another domain.
 	INVALIDPARAMETER_VPCBINDED = "InvalidParameter.VpcBinded"

@@ -1758,6 +1758,11 @@ Resource
 tencentcloud_sms_sign
 tencentcloud_sms_template
 
+Captcha
+Resource
+tencentcloud_captcha_info_international
+tencentcloud_captcha_ip_white_list_international
+
 Cloud Automated Testing(CAT)
 Data Source
 tencentcloud_cat_probe_data

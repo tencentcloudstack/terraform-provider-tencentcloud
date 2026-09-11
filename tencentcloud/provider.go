@@ -31,6 +31,7 @@ import (
 	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/services/bi"
 	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/services/billing"
 	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/services/cam"
+	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/services/captcha"
 	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/services/cat"
 	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/services/cbs"
 	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/services/ccn"
@@ -2231,6 +2232,8 @@ func Provider() *schema.Provider {
 			"tencentcloud_dcdb_cancel_dcn_job_operation":                                            dcdb.ResourceTencentCloudDcdbCancelDcnJobOperation(),
 			"tencentcloud_dcdb_flush_binlog_operation":                                              dcdb.ResourceTencentCloudDcdbFlushBinlogOperation(),
 			"tencentcloud_dcdb_switch_db_instance_ha_operation":                                     dcdb.ResourceTencentCloudDcdbSwitchDbInstanceHaOperation(),
+			"tencentcloud_captcha_info_international":                                               captcha.ResourceTencentCloudCaptchaInfoInternational(),
+			"tencentcloud_captcha_ip_white_list_international":                                      captcha.ResourceTencentCloudCaptchaIpWhiteListInternational(),
 			"tencentcloud_cat_task_set":                                                             cat.ResourceTencentCloudCatTaskSet(),
 			"tencentcloud_mariadb_dedicatedcluster_db_instance":                                     mariadb.ResourceTencentCloudMariadbDedicatedclusterDbInstance(),
 			"tencentcloud_mariadb_instance":                                                         mariadb.ResourceTencentCloudMariadbInstance(),
