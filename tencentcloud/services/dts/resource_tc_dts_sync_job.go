@@ -2,7 +2,6 @@ package dts
 
 import (
 	"context"
-	"fmt"
 	"log"
 	"time"
 
@@ -366,6 +365,35 @@ func resourceTencentCloudDtsSyncJobDelete(d *schema.ResourceData, meta interface
 		service   = DtsService{client: meta.(tccommon.ProviderMeta).GetAPIV3Conn()}
 		syncJobId = d.Id()
 	)
+
+	// Check current state before attempting isolation.
+	syncJob, err := service.DescribeDtsSyncJob(ctx, helper.String(syncJobId))
+	if err != nil {
+		return err
+	}
+
+	// Job already gone — remove from state cleanly.
+	if syncJob == nil {
+		return nil
+	}
+
+	// Job already in a billing-terminal state (auto-deleted by Tencent) — nothing to do.
+	if syncJob.TradeStatus != nil && (*syncJob.TradeStatus == "NotBilledByInternational" || *syncJob.TradeStatus == "NotBilled") {
+		return nil
+	}
+
+	// Job is running or syncing — pause it first so isolation is accepted.
+	if syncJob.Status != nil && *syncJob.Status != "Paused" && *syncJob.Status != "Isolated" {
+		log.Printf("[DEBUG]%s sync job[%s] is in status [%s], pausing before isolation\n", logId, syncJobId, *syncJob.Status)
+		if err := service.PauseDtsSyncJobById(ctx, syncJobId); err != nil {
+			return err
+		}
+
+		conf := tccommon.BuildStateChangeConf([]string{}, []string{"Paused"}, 2*tccommon.ReadRetryTimeout, time.Second, service.DtsSyncJobStateRefreshFunc(syncJobId, "Paused", []string{}))
+		if _, e := conf.WaitForState(); e != nil {
+			return e
+		}
+	}
 
 	if err := service.IsolateDtsSyncJobById(ctx, syncJobId); err != nil {
 		return err
