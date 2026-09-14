@@ -81,6 +81,8 @@ resource "tencentcloud_kubernetes_native_node_pool" "example" {
     }
 
     key_ids = ["skey-9pcs2100"]
+
+    custom_image = "img-xxx"
   }
 
   annotations {

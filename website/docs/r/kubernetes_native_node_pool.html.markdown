@@ -92,6 +92,8 @@ resource "tencentcloud_kubernetes_native_node_pool" "example" {
     }
 
     key_ids = ["skey-9pcs2100"]
+
+    custom_image = "img-xxx"
   }
 
   annotations {
@@ -177,6 +179,7 @@ The `native` object supports the following:
 * `subnet_ids` - (Required, List) Subnet list.
 * `system_disk` - (Required, List, ForceNew) System disk configuration.
 * `auto_repair` - (Optional, Bool) Whether to enable self-healing ability.
+* `custom_image` - (Optional, String) Custom image ID.
 * `data_disks` - (Optional, List) Native node pool data disk list.
 * `enable_autoscaling` - (Optional, Bool) Whether to enable elastic scaling.
 * `health_check_policy_name` - (Optional, String) Fault self-healing rule name.
