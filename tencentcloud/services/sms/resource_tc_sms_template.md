@@ -14,3 +14,8 @@ resource "tencentcloud_sms_template" "template" {
 }
 
 ```
+The `status_code` field is a computed output attribute that shows the template's review status:
+- `0`: approved and effective
+- `1`: pending review
+- `2`: approved pending activation
+- `-1`: review failed or rejected
