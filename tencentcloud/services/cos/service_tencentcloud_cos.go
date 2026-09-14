@@ -624,15 +624,16 @@ func (me *CosService) GetBucketLifecycle(ctx context.Context, bucket string, cdc
 			if value.ID != nil {
 				rule["id"] = *value.ID
 			}
+			if value.Status != nil {
+				rule["status"] = *value.Status
+			}
 
-			// filter_prefix
-			if value.Filter != nil {
-				if value.Filter.And != nil && value.Filter.And.Prefix != nil &&
-					*value.Filter.And.Prefix != "" {
-					rule["filter_prefix"] = *value.Filter.And.Prefix
-				} else if value.Filter.Prefix != nil && *value.Filter.Prefix != "" {
-					rule["filter_prefix"] = *value.Filter.Prefix
-				}
+			prefix, tags := flattenCosBucketLifecycleRuleFilter(value.Filter)
+			if prefix != "" {
+				rule["filter_prefix"] = prefix
+			}
+			if len(tags) > 0 {
+				rule["filter_tags"] = tags
 			}
 			// transition
 			if len(value.Transitions) > 0 {
@@ -733,14 +734,15 @@ func (me *CosService) GetDataSourceBucketLifecycle(ctx context.Context, bucket s
 		for _, value := range response.Rules {
 			rule := make(map[string]interface{})
 
-			// filter_prefix
-			if value.Filter != nil {
-				if value.Filter.And != nil && value.Filter.And.Prefix != nil &&
-					*value.Filter.And.Prefix != "" {
-					rule["filter_prefix"] = *value.Filter.And.Prefix
-				} else if value.Filter.Prefix != nil && *value.Filter.Prefix != "" {
-					rule["filter_prefix"] = *value.Filter.Prefix
-				}
+			if value.Status != nil {
+				rule["status"] = *value.Status
+			}
+			prefix, tags := flattenCosBucketLifecycleRuleFilter(value.Filter)
+			if prefix != "" {
+				rule["filter_prefix"] = prefix
+			}
+			if len(tags) > 0 {
+				rule["filter_tags"] = tags
 			}
 			// transition
 			if len(value.Transitions) > 0 {
@@ -807,6 +809,31 @@ func (me *CosService) GetDataSourceBucketLifecycle(ctx context.Context, bucket s
 		}
 	}
 	return
+}
+
+func flattenCosBucketLifecycleRuleFilter(filter *s3.LifecycleRuleFilter) (string, map[string]interface{}) {
+	tags := map[string]interface{}{}
+	if filter == nil {
+		return "", tags
+	}
+
+	prefix := ""
+	if filter.And != nil {
+		if filter.And.Prefix != nil {
+			prefix = *filter.And.Prefix
+		}
+		for _, tag := range filter.And.Tags {
+			if tag != nil && tag.Key != nil && tag.Value != nil {
+				tags[*tag.Key] = *tag.Value
+			}
+		}
+	} else if filter.Prefix != nil {
+		prefix = *filter.Prefix
+	} else if filter.Tag != nil && filter.Tag.Key != nil && filter.Tag.Value != nil {
+		tags[*filter.Tag.Key] = *filter.Tag.Value
+	}
+
+	return prefix, tags
 }
 
 func (me *CosService) GetBucketWebsite(ctx context.Context, bucket string, cdcId string) (websites []map[string]interface{}, errRet error) {
