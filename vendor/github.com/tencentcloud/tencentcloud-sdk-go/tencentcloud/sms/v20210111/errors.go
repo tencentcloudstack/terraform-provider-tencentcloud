@@ -1,4 +1,4 @@
-// Copyright (c) 2017-2018 THL A29 Limited, a Tencent company. All Rights Reserved.
+// Copyright (c) 2017-2025 Tencent. All Rights Reserved.
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -68,6 +68,12 @@ const (
 	// 非主账号无法使用拉取模板列表功能。您可以使用主账号下云 API 密钥来调用接口。
 	FAILEDOPERATION_PROHIBITSUBACCOUNTUSE = "FailedOperation.ProhibitSubAccountUse"
 
+	// 资质ID未审核通过。资质 ID 信息可前往国内短信的 [实名资质管理](https://console.cloud.tencent.com/smsv2/enterprise) 页查看。
+	FAILEDOPERATION_QUALIFICATIONIDNOTAPPROVED = "FailedOperation.QualificationIdNotApproved"
+
+	// 签名 ID 不存在。
+	FAILEDOPERATION_SIGNIDNOTEXIST = "FailedOperation.SignIdNotExist"
+
 	// 签名个数达到最大值。
 	FAILEDOPERATION_SIGNNUMBERLIMIT = "FailedOperation.SignNumberLimit"
 
@@ -77,7 +83,7 @@ const (
 	// 此模板已经通过审核，无法再次进行修改。
 	FAILEDOPERATION_TEMPLATEALREADYPASSEDCHECK = "FailedOperation.TemplateAlreadyPassedCheck"
 
-	// 模板 ID 或签名 ID 不存在。
+	// 模板 ID 不存在。
 	FAILEDOPERATION_TEMPLATEIDNOTEXIST = "FailedOperation.TemplateIdNotExist"
 
 	// 模板未审批或内容不匹配。（1）可登录 [短信控制台](https://console.cloud.tencent.com/smsv2)，核查模板是否已审批并审批通过；（2）核查是否符合 [格式规范](https://cloud.tencent.com/document/product/382/9558#.E8.BF.94.E5.9B.9E1014.E9.94.99.E8.AF.AF.E5.A6.82.E4.BD.95.E5.A4.84.E7.90.86.EF.BC.9F)，若存在疑问可联系 [腾讯云短信小助手](https://cloud.tencent.com/document/product/382/3773#.E6.8A.80.E6.9C.AF.E4.BA.A4.E6.B5.81)。
@@ -91,6 +97,9 @@ const (
 
 	// 模板未审批或不存在。可登录 [短信控制台](https://console.cloud.tencent.com/smsv2)，核查模板是否已审批并审批通过。若存在疑问可联系 [腾讯云短信小助手](https://cloud.tencent.com/document/product/382/3773#.E6.8A.80.E6.9C.AF.E4.BA.A4.E6.B5.81)。
 	FAILEDOPERATION_TEMPLATEUNAPPROVEDORNOTEXIST = "FailedOperation.TemplateUnapprovedOrNotExist"
+
+	// 内部错误。
+	INTERNALERROR = "InternalError"
 
 	// 解析用户参数失败，可联系 [腾讯云短信小助手](https://cloud.tencent.com/document/product/382/3773#.E6.8A.80.E6.9C.AF.E4.BA.A4.E6.B5.81)。
 	INTERNALERROR_JSONPARSEFAIL = "InternalError.JsonParseFail"
@@ -131,32 +140,35 @@ const (
 	// 存在敏感词。
 	INVALIDPARAMETER_DIRTYWORDFOUND = "InvalidParameter.DirtyWordFound"
 
-	// International 或者 SmsType 参数有误，如有需要请联系 [腾讯云短信小助手](https://cloud.tencent.com/document/product/382/3773#.E6.8A.80.E6.9C.AF.E4.BA.A4.E6.B5.81)。
+	// 参数有误，如有需要请联系 [腾讯云短信小助手](https://cloud.tencent.com/document/product/382/3773#.E6.8A.80.E6.9C.AF.E4.BA.A4.E6.B5.81)。
 	INVALIDPARAMETER_INVALIDPARAMETERS = "InvalidParameter.InvalidParameters"
 
 	// 参数 BeginTime 校验失败。
 	INVALIDPARAMETERVALUE_BEGINTIMEVERIFYFAIL = "InvalidParameterValue.BeginTimeVerifyFail"
 
-	// 请求的短信内容太长，短信长度规则请参考 [国内短信内容长度计算规则](https://cloud.tencent.com/document/product/382/18058)。
+	// 请求的短信内容太长，短信长度规则请参考 [国内短信内容长度计算规则](https://cloud.tencent.com/document/product/382/18058) 或 [国际/港澳台短信内容长度计算规则](https://cloud.tencent.com/document/product/382/18052#size)。
 	INVALIDPARAMETERVALUE_CONTENTLENGTHLIMIT = "InvalidParameterValue.ContentLengthLimit"
 
 	// 参数 EndTime 校验失败。
 	INVALIDPARAMETERVALUE_ENDTIMEVERIFYFAIL = "InvalidParameterValue.EndTimeVerifyFail"
 
-	// 上传的转码图片格式错误，请参照 API 接口说明中对改字段的说明，如有需要请联系 [腾讯云短信小助手](https://cloud.tencent.com/document/product/382/3773#.E6.8A.80.E6.9C.AF.E4.BA.A4.E6.B5.81)。
+	// 上传的转码图片格式错误，请参照 API 接口说明中对该字段的说明，如有需要请联系 [腾讯云短信小助手](https://cloud.tencent.com/document/product/382/3773#.E6.8A.80.E6.9C.AF.E4.BA.A4.E6.B5.81)。
 	INVALIDPARAMETERVALUE_IMAGEINVALID = "InvalidParameterValue.ImageInvalid"
 
-	// 手机号格式错误，请参考 [1016错误详解](https://cloud.tencent.com/document/product/382/9558#.E8.BF.94.E5.9B.9E1016.E9.94.99.E8.AF.AF.E5.A6.82.E4.BD.95.E5.A4.84.E7.90.86.EF.BC.9F)。
+	// 手机号格式错误。
 	INVALIDPARAMETERVALUE_INCORRECTPHONENUMBER = "InvalidParameterValue.IncorrectPhoneNumber"
 
-	// DocumentType 字段校验错误，请参照 API 接口说明中对改字段的说明，如有需要请联系 [腾讯云短信小助手](https://cloud.tencent.com/document/product/382/3773#.E6.8A.80.E6.9C.AF.E4.BA.A4.E6.B5.81)。
+	// DocumentType 字段校验错误，请参照 API 接口说明中对该字段的说明，如有需要请联系 [腾讯云短信小助手](https://cloud.tencent.com/document/product/382/3773#.E6.8A.80.E6.9C.AF.E4.BA.A4.E6.B5.81)。
 	INVALIDPARAMETERVALUE_INVALIDDOCUMENTTYPE = "InvalidParameterValue.InvalidDocumentType"
 
-	// International 字段校验错误，请参照 API 接口说明中对改字段的说明，如有需要请联系 [腾讯云短信小助手](https://cloud.tencent.com/document/product/382/3773#.E6.8A.80.E6.9C.AF.E4.BA.A4.E6.B5.81)。
+	// International 字段校验错误，请参照 API 接口说明中对该字段的说明，如有需要请联系 [腾讯云短信小助手](https://cloud.tencent.com/document/product/382/3773#.E6.8A.80.E6.9C.AF.E4.BA.A4.E6.B5.81)。
 	INVALIDPARAMETERVALUE_INVALIDINTERNATIONAL = "InvalidParameterValue.InvalidInternational"
 
-	// SignPurpose 字段校验错误，请参照 API 接口说明中对改字段的说明，如有需要请联系 [腾讯云短信小助手](https://cloud.tencent.com/document/product/382/3773#.E6.8A.80.E6.9C.AF.E4.BA.A4.E6.B5.81)。
+	// SignPurpose 字段校验错误，请参照 API 接口说明中对该字段的说明，如有需要请联系 [腾讯云短信小助手](https://cloud.tencent.com/document/product/382/3773#.E6.8A.80.E6.9C.AF.E4.BA.A4.E6.B5.81)。
 	INVALIDPARAMETERVALUE_INVALIDSIGNPURPOSE = "InvalidParameterValue.InvalidSignPurpose"
+
+	// SmsType 字段校验错误，请参照 API 接口说明中对该字段的描述，更多疑问可咨询 [腾讯云短信小助手](https://cloud.tencent.com/document/product/382/3773#.E6.8A.80.E6.9C.AF.E4.BA.A4.E6.B5.81)。
+	INVALIDPARAMETERVALUE_INVALIDSMSTYPE = "InvalidParameterValue.InvalidSmsType"
 
 	// 无效的拉取起始/截止时间，具体原因可能是请求的 SendDateTime 大于 EndDateTime。
 	INVALIDPARAMETERVALUE_INVALIDSTARTTIME = "InvalidParameterValue.InvalidStartTime"
@@ -164,17 +176,26 @@ const (
 	// 模板格式错误，请参考[正文模板审核标准](https://cloud.tencent.com/document/product/382/39023)。
 	INVALIDPARAMETERVALUE_INVALIDTEMPLATEFORMAT = "InvalidParameterValue.InvalidTemplateFormat"
 
-	// UsedMethod 字段校验错误，请参照 API 接口说明中对改字段的说明，如有需要请联系 [腾讯云短信小助手](https://cloud.tencent.com/document/product/382/3773#.E6.8A.80.E6.9C.AF.E4.BA.A4.E6.B5.81)。
+	// UsedMethod 字段校验错误，请参照 API 接口说明中对该字段的说明，如有需要请联系 [腾讯云短信小助手](https://cloud.tencent.com/document/product/382/3773#.E6.8A.80.E6.9C.AF.E4.BA.A4.E6.B5.81)。
 	INVALIDPARAMETERVALUE_INVALIDUSEDMETHOD = "InvalidParameterValue.InvalidUsedMethod"
 
 	// 参数 Limit 校验失败。
 	INVALIDPARAMETERVALUE_LIMITVERIFYFAIL = "InvalidParameterValue.LimitVerifyFail"
 
+	// 营销短信必须包含退订方式，请在短信模板尾部添加“拒收请回复R”后提交。可参考 [关于营销短信退订标识修改的公告](https://cloud.tencent.com/document/product/382/100568)。
+	INVALIDPARAMETERVALUE_MARKETINGTEMPLATEWITHOUTUNSUBSCRIBE = "InvalidParameterValue.MarketingTemplateWithoutUnsubscribe"
+
+	// 传入的 MultiSmsInfoSet 列表为空，请确认您的参数中是否传入 MultiSmsInfoSet。
+	INVALIDPARAMETERVALUE_MULTISMSINFOSETEMPTY = "InvalidParameterValue.MultiSmsInfoSetEmpty"
+
 	// 参数 Offset 校验失败。
 	INVALIDPARAMETERVALUE_OFFSETVERIFYFAIL = "InvalidParameterValue.OffsetVerifyFail"
 
-	// 禁止在模板变量中使用 URL。
+	// 禁止在模板变量中使用 URL。您可以参考正文模板审核标准下关于 [变量规范](https://cloud.tencent.com/document/product/382/39023#variable) 的描述
 	INVALIDPARAMETERVALUE_PROHIBITEDUSEURLINTEMPLATEPARAMETER = "InvalidParameterValue.ProhibitedUseUrlInTemplateParameter"
+
+	// 资质ID未找到。资质 ID 信息可前往国内短信的 [实名资质管理](https://console.cloud.tencent.com/smsv2/enterprise) 页查看。
+	INVALIDPARAMETERVALUE_QUALIFICATIONIDNOTFOUND = "InvalidParameterValue.QualificationIdNotFound"
 
 	// SdkAppId 不存在。
 	INVALIDPARAMETERVALUE_SDKAPPIDNOTEXIST = "InvalidParameterValue.SdkAppIdNotExist"
@@ -185,14 +206,20 @@ const (
 	// 已存在相同的待审核签名。
 	INVALIDPARAMETERVALUE_SIGNEXISTANDUNAPPROVED = "InvalidParameterValue.SignExistAndUnapproved"
 
+	// 签名内容长度过长。
+	INVALIDPARAMETERVALUE_SIGNNAMELENGTHTOOLONG = "InvalidParameterValue.SignNameLengthTooLong"
+
 	// 验证码模板参数格式错误，验证码类模板，模板变量只能传入0 - 6位（包括6位）纯数字。
 	INVALIDPARAMETERVALUE_TEMPLATEPARAMETERFORMATERROR = "InvalidParameterValue.TemplateParameterFormatError"
 
-	// 单个模板变量字符数超过12个，企业认证用户不限制单个变量值字数，您可以 [变更实名认证模式](https://cloud.tencent.com/document/product/378/34075)，变更为企业认证用户后，该限制变更约1小时左右生效。
+	// 单个模板变量字符数超过规定的限制数。您可以参考 <a href="https://cloud.tencent.com/document/product/382/39023#variable">正文模板审核标准</a>下变量规范中关于长度的描述，对于长期未使用的账号及2024年1月25日后开通新账号默认最长支持6个字符，您的账号具体可支持字符长度以<a href="https://console.cloud.tencent.com/smsv2/csms-template/create">控制台显示为准</a>。更多疑问可联系 <a href="https://cloud.tencent.com/document/product/382/3773#.E6.8A.80.E6.9C.AF.E4.BA.A4.E6.B5.81">腾讯云短信小助手</a> 。
 	INVALIDPARAMETERVALUE_TEMPLATEPARAMETERLENGTHLIMIT = "InvalidParameterValue.TemplateParameterLengthLimit"
 
 	// 模板内容存在敏感词，请参考[正文模板审核标准](https://cloud.tencent.com/document/product/382/39023)。
 	INVALIDPARAMETERVALUE_TEMPLATEWITHDIRTYWORDS = "InvalidParameterValue.TemplateWithDirtyWords"
+
+	// 申请国内短信通知和营销短信模板不支持添加变量。可参考 [控制台说明](https://console.cloud.tencent.com/smsv2/csms-template)，更多疑问可咨询 [腾讯云短信小助手](https://cloud.tencent.com/document/product/382/3773#.E6.8A.80.E6.9C.AF.E4.BA.A4.E6.B5.81)
+	INVALIDPARAMETERVALUE_UNSUPPORTEDTEMPLATEVARIABLE = "InvalidParameterValue.UnsupportedTemplateVariable"
 
 	// 业务短信国家/地区日下发条数超过设定的上限，可自行到控制台应用管理>基础配置下调整国际港澳台短信发送限制。
 	LIMITEXCEEDED_APPCOUNTRYORREGIONDAILYLIMIT = "LimitExceeded.AppCountryOrRegionDailyLimit"
@@ -215,7 +242,10 @@ const (
 	// 下发短信命中了频率限制策略，可自行到控制台调整短信频率限制策略，如有其他需求请联系 [腾讯云短信小助手](https://cloud.tencent.com/document/product/382/3773#.E6.8A.80.E6.9C.AF.E4.BA.A4.E6.B5.81)。
 	LIMITEXCEEDED_DELIVERYFREQUENCYLIMIT = "LimitExceeded.DeliveryFrequencyLimit"
 
-	// 调用接口单次提交的手机号个数超过200个，请遵守 API 接口输入参数 PhoneNumberSet 描述。
+	// 国际短信发送速率限制。若存在疑问可联系 [腾讯云短信小助手](https://cloud.tencent.com/document/product/382/3773#.E6.8A.80.E6.9C.AF.E4.BA.A4.E6.B5.81)。
+	LIMITEXCEEDED_GLOBALSMSSENDINGRATELIMIT = "LimitExceeded.GlobalSmsSendingRateLimit"
+
+	// 调用接口单次提交的手机号个数超过200个，请遵守 API 接口输入参数描述。
 	LIMITEXCEEDED_PHONENUMBERCOUNTLIMIT = "LimitExceeded.PhoneNumberCountLimit"
 
 	// 单个手机号日下发短信条数超过设定的上限，可自行到控制台调整短信频率限制策略。
@@ -249,13 +279,13 @@ const (
 	UNAUTHORIZEDOPERATION_SDKAPPIDISDISABLED = "UnauthorizedOperation.SdkAppIdIsDisabled"
 
 	// 欠费被停止服务，可自行登录腾讯云充值来缴清欠款。
-	UNAUTHORIZEDOPERATION_SERIVCESUSPENDDUETOARREARS = "UnauthorizedOperation.SerivceSuspendDueToArrears"
+	UNAUTHORIZEDOPERATION_SERVICESUSPENDDUETOARREARS = "UnauthorizedOperation.ServiceSuspendDueToArrears"
 
 	// SmsSdkAppId 校验失败，请检查 [SmsSdkAppId](https://console.cloud.tencent.com/smsv2/app-manage) 是否属于 [云API密钥](https://console.cloud.tencent.com/cam/capi) 的关联账户。
 	UNAUTHORIZEDOPERATION_SMSSDKAPPIDVERIFYFAIL = "UnauthorizedOperation.SmsSdkAppIdVerifyFail"
 
-	// 不支持该请求。
-	UNSUPPORTEDOPERATION_ = "UnsupportedOperation."
+	// 操作不支持。
+	UNSUPPORTEDOPERATION = "UnsupportedOperation"
 
 	// 国内短信模板不支持发送国际/港澳台手机号。发送国际/港澳台手机号请使用国际/港澳台短信正文模板。
 	UNSUPPORTEDOPERATION_CHINESEMAINLANDTEMPLATETOGLOBALPHONE = "UnsupportedOperation.ChineseMainlandTemplateToGlobalPhone"
@@ -263,9 +293,12 @@ const (
 	// 群发请求里既有国内手机号也有国际手机号。请排查是否存在（1）使用国内签名或模板却发送短信到国际手机号；（2）使用国际签名或模板却发送短信到国内手机号。
 	UNSUPPORTEDOPERATION_CONTAINDOMESTICANDINTERNATIONALPHONENUMBER = "UnsupportedOperation.ContainDomesticAndInternationalPhoneNumber"
 
+	// 包含中国大陆号码，该接口仅支持国际/港澳台号码。
+	UNSUPPORTEDOPERATION_CONTAINDOMESTICPHONENUMBER = "UnsupportedOperation.ContainDomesticPhoneNumber"
+
 	// 国际/港澳台短信模板不支持发送国内手机号。发送国内手机号请使用国内短信正文模板。
 	UNSUPPORTEDOPERATION_GLOBALTEMPLATETOCHINESEMAINLANDPHONE = "UnsupportedOperation.GlobalTemplateToChineseMainlandPhone"
 
 	// 不支持该地区短信下发。
-	UNSUPPORTEDOPERATION_UNSUPORTEDREGION = "UnsupportedOperation.UnsuportedRegion"
+	UNSUPPORTEDOPERATION_UNSUPPORTEDREGION = "UnsupportedOperation.UnsupportedRegion"
 )

@@ -55,6 +55,13 @@ func ResourceTencentCloudSmsTemplate() *schema.Resource {
 				Required:    true,
 				Description: "Template remarks, such as reason for application and use case.",
 			},
+
+			"status_code": {
+				Type:        schema.TypeInt,
+				Computed:    true,
+				ForceNew:    false,
+				Description: "Template status. 0: approved and effective, 1: pending review, 2: approved pending activation, -1: review failed or rejected.",
+			},
 		},
 	}
 }
@@ -153,6 +160,10 @@ func resourceTencentCloudSmsTemplateRead(d *schema.ResourceData, meta interface{
 
 	if template.International != nil {
 		_ = d.Set("international", template.International)
+	}
+
+	if template.StatusCode != nil {
+		_ = d.Set("status_code", template.StatusCode)
 	}
 
 	return nil
