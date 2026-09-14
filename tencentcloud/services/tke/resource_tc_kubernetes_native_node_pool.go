@@ -564,6 +564,7 @@ func ResourceTencentCloudKubernetesNativeNodePool() *schema.Resource {
 						"custom_image": {
 							Type:        schema.TypeString,
 							Optional:    true,
+							Computed:    true,
 							Description: "Custom image ID.",
 						},
 					},
