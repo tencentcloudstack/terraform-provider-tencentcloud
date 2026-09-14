@@ -1297,6 +1297,119 @@ func (me *MongodbService) DisableSRVConnectionUrl(ctx context.Context, instanceI
 	return
 }
 
+func (me *MongodbService) DescribeMongodbInstanceById(ctx context.Context, instanceId string) (instance *mongodb.InstanceDetail, has bool, errRet error) {
+	logId := tccommon.GetLogId(ctx)
+	request := mongodb.NewDescribeDBInstancesRequest()
+	request.InstanceIds = []*string{&instanceId}
+
+	var iacExtInfo connectivity.IacExtInfo
+	iacExtInfo.InstanceId = instanceId
+	var response *mongodb.DescribeDBInstancesResponse
+	err := resource.Retry(tccommon.ReadRetryTimeout, func() *resource.RetryError {
+		ratelimit.Check(request.GetAction())
+		result, e := me.client.UseMongodbClient(iacExtInfo).DescribeDBInstances(request)
+		if e != nil {
+			return tccommon.RetryError(e)
+		}
+
+		if result != nil && result.Response != nil {
+			response = result
+			return nil
+		}
+		return resource.NonRetryableError(fmt.Errorf("response is null"))
+	})
+	if err != nil {
+		log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]",
+			logId, request.GetAction(), request.ToJsonString(), err.Error())
+		errRet = err
+		return
+	}
+	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]",
+		logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+	if len(response.Response.InstanceDetails) == 0 {
+		has = false
+		return
+	}
+
+	has = true
+	instance = response.Response.InstanceDetails[0]
+	return
+}
+
+func (me *MongodbService) ScaleUpMongodbDBInstanceCpu(ctx context.Context, instanceId string, extraCpu int64) (flowId int64, errRet error) {
+	logId := tccommon.GetLogId(ctx)
+	request := mongodb.NewScaleUpDBInstanceCpuRequest()
+	request.InstanceId = &instanceId
+	request.ExtraCpu = &extraCpu
+
+	var iacExtInfo connectivity.IacExtInfo
+	iacExtInfo.InstanceId = instanceId
+	var response *mongodb.ScaleUpDBInstanceCpuResponse
+	err := resource.Retry(tccommon.ReadRetryTimeout, func() *resource.RetryError {
+		ratelimit.Check(request.GetAction())
+		result, e := me.client.UseMongodbClient(iacExtInfo).ScaleUpDBInstanceCpu(request)
+		if e != nil {
+			return tccommon.RetryError(e)
+		}
+
+		if result != nil && result.Response != nil {
+			response = result
+			return nil
+		}
+		return resource.NonRetryableError(fmt.Errorf("response is null"))
+	})
+	if err != nil {
+		log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]",
+			logId, request.GetAction(), request.ToJsonString(), err.Error())
+		errRet = err
+		return
+	}
+	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]",
+		logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+	if response.Response.FlowId != nil {
+		flowId = *response.Response.FlowId
+	}
+	return
+}
+
+func (me *MongodbService) ScaleDownMongodbDBInstanceCpu(ctx context.Context, instanceId string) (flowId int64, errRet error) {
+	logId := tccommon.GetLogId(ctx)
+	request := mongodb.NewScaleDownDBInstanceCpuRequest()
+	request.InstanceId = &instanceId
+
+	var iacExtInfo connectivity.IacExtInfo
+	iacExtInfo.InstanceId = instanceId
+	var response *mongodb.ScaleDownDBInstanceCpuResponse
+	err := resource.Retry(tccommon.ReadRetryTimeout, func() *resource.RetryError {
+		ratelimit.Check(request.GetAction())
+		result, e := me.client.UseMongodbClient(iacExtInfo).ScaleDownDBInstanceCpu(request)
+		if e != nil {
+			return tccommon.RetryError(e)
+		}
+
+		if result != nil && result.Response != nil {
+			response = result
+			return nil
+		}
+		return resource.NonRetryableError(fmt.Errorf("response is null"))
+	})
+	if err != nil {
+		log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]",
+			logId, request.GetAction(), request.ToJsonString(), err.Error())
+		errRet = err
+		return
+	}
+	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]",
+		logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+	if response.Response.FlowId != nil {
+		flowId = *response.Response.FlowId
+	}
+	return
+}
+
 func (me *MongodbService) DescribeTransparentDataEncryptionStatusById(ctx context.Context, instanceId string) (ret *mongodb.DescribeTransparentDataEncryptionStatusResponseParams, errRet error) {
 	logId := tccommon.GetLogId(ctx)
 	request := mongodb.NewDescribeTransparentDataEncryptionStatusRequest()

@@ -1744,6 +1744,7 @@ func Provider() *schema.Provider {
 			"tencentcloud_mongodb_instance_backup_download_task":                                    mongodb.ResourceTencentCloudMongodbInstanceBackupDownloadTask(),
 			"tencentcloud_mongodb_instance_transparent_data_encryption":                             mongodb.ResourceTencentCloudMongodbInstanceTransparentDataEncryption(),
 			"tencentcloud_mongodb_instance_backup_rule":                                             mongodb.ResourceTencentCloudMongodbInstanceBackupRule(),
+			"tencentcloud_mongodb_instance_cpu_scale":                                               mongodb.ResourceTencentCloudMongodbInstanceCpuScaleConfig(),
 			"tencentcloud_mongodb_instance_params":                                                  mongodb.ResourceTencentCloudMongodbInstanceParams(),
 			"tencentcloud_mongodb_instance_ssl":                                                     mongodb.ResourceTencentCloudMongodbInstanceSsl(),
 			"tencentcloud_mongodb_instance_srv_connection":                                          mongodb.ResourceTencentCloudMongodbInstanceSrvConnection(),
