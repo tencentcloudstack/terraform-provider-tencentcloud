@@ -27,6 +27,7 @@ import (
 	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/services/apigateway"
 	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/services/apm"
 	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/services/as"
+	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/services/bdrc"
 	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/services/bh"
 	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/services/bi"
 	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/services/billing"
@@ -2705,6 +2706,7 @@ func Provider() *schema.Provider {
 			"tencentcloud_dasb_bind_device_account_private_key":                                     bh.ResourceTencentCloudDasbBindDeviceAccountPrivateKey(),
 			"tencentcloud_dasb_bind_device_account_password":                                        bh.ResourceTencentCloudDasbBindDeviceAccountPassword(),
 			"tencentcloud_dasb_asset_sync_job_operation":                                            bh.ResourceTencentCloudDasbAssetSyncJobOperationOperation(),
+			"tencentcloud_bdrc_disaster_recovery_vpc_mapping":                                       bdrc.ResourceTencentCloudBdrcDisasterRecoveryVpcMapping(),
 			"tencentcloud_ssl_check_certificate_chain_operation":                                    ssl.ResourceTencentCloudSslCheckCertificateChainOperation(),
 			"tencentcloud_ssl_complete_certificate_operation":                                       ssl.ResourceTencentCloudSslCompleteCertificateOperation(),
 			"tencentcloud_ssl_deploy_certificate_instance_operation":                                ssl.ResourceTencentCloudSslDeployCertificateInstanceOperation(),

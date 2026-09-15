@@ -2599,6 +2599,9 @@ tencentcloud_dasb_reset_user
 tencentcloud_dasb_bind_device_account_private_key
 tencentcloud_dasb_bind_device_account_password
 tencentcloud_dasb_asset_sync_job_operation
+Backup & Disaster Recovery(BDRC)
+Resource
+tencentcloud_bdrc_disaster_recovery_vpc_mapping
 
 Cwp
 Data Source
