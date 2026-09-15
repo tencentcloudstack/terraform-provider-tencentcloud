@@ -27,6 +27,7 @@ import (
 	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/services/apigateway"
 	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/services/apm"
 	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/services/as"
+	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/services/bdrc"
 	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/services/bh"
 	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/services/bi"
 	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/services/billing"
@@ -2782,6 +2783,7 @@ func Provider() *schema.Provider {
 			"tencentcloud_vcube_renew_video_operation":                                              vcube.ResourceTencentCloudVcubeRenewVideoOperation(),
 			"tencentcloud_advisor_authorization_operation":                                          advisor.ResourceTencentCloudAdvisorAuthorizationOperation(),
 			"tencentcloud_vdb_instance":                                                             vdb.ResourceTencentCloudVdbInstance(),
+			"tencentcloud_bdrc_disaster_recovery_protect_group":                                     bdrc.ResourceTencentCloudBdrcDisasterRecoveryProtectGroup(),
 		},
 
 		ConfigureFunc: providerConfigure,
