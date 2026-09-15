@@ -28,6 +28,7 @@ import (
 	apigateway "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/apigateway/v20180808"
 	apm "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/apm/v20210622"
 	as "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/as/v20180419"
+	bdrcv20260330 "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/bdrc/v20260330"
 	bhv20230418 "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/bh/v20230418"
 	bi "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/bi/v20220105"
 	billing "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/billing/v20180709"
@@ -243,6 +244,7 @@ type TencentCloudClient struct {
 	omitNilConn                 *common.Client
 	emrv20190103Conn            *emr.Client
 	teov20220901Conn            *teo.Client
+	bdrcv20260330Conn           *bdrcv20260330.Client
 	sslv20191205Conn            *sslCertificate.Client
 	postgresv20170312Conn       *postgre.Client
 	cfwv20190904Conn            *cfw.Client
@@ -1995,6 +1997,18 @@ func (me *TencentCloudClient) UseTeoV20220901Client() *teo.Client {
 	me.teov20220901Conn.WithHttpTransport(&LogRoundTripper{})
 
 	return me.teov20220901Conn
+}
+
+// UseBdrcV20260330Client return BDRC client for service
+func (me *TencentCloudClient) UseBdrcV20260330Client() *bdrcv20260330.Client {
+	if me.bdrcv20260330Conn != nil {
+		return me.bdrcv20260330Conn
+	}
+	cpf := me.NewClientProfile(300)
+	me.bdrcv20260330Conn, _ = bdrcv20260330.NewClient(me.Credential, me.Region, cpf)
+	me.bdrcv20260330Conn.WithHttpTransport(&LogRoundTripper{})
+
+	return me.bdrcv20260330Conn
 }
 
 // UseSslV20191205Client return SSL client for service
