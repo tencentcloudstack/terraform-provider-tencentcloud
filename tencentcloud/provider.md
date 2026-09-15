@@ -2721,6 +2721,10 @@ tencentcloud_igtm_strategy
 tencentcloud_igtm_package_instance
 tencentcloud_igtm_package_task
 
+Identity and Access Management Open APIs(IOA)
+Resource
+tencentcloud_ioa_company_directory_config
+
 Database Dedicated Cluster(DBDC)
 Data Source
 tencentcloud_dbdc_db_custom_clusters
