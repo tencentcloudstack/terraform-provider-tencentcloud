@@ -27,6 +27,7 @@ import (
 	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/services/apigateway"
 	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/services/apm"
 	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/services/as"
+	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/services/bdrc"
 	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/services/bh"
 	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/services/bi"
 	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/services/billing"
@@ -1789,6 +1790,7 @@ func Provider() *schema.Provider {
 			"tencentcloud_ssl_certificate":                                                          ssl.ResourceTencentCloudSslCertificate(),
 			"tencentcloud_ssl_pay_certificate":                                                      ssl.ResourceTencentCloudSSLInstance(),
 			"tencentcloud_ssl_free_certificate":                                                     ssl.ResourceTencentCloudSSLFreeCertificate(),
+			"tencentcloud_bdrc_instance_copy_pair":                                                  bdrc.ResourceTencentCloudBdrcInstanceCopyPair(),
 			"tencentcloud_cam_role":                                                                 cam.ResourceTencentCloudCamRole(),
 			"tencentcloud_cam_role_by_name":                                                         cam.ResourceTencentCloudCamRoleByName(),
 			"tencentcloud_cam_user":                                                                 cam.ResourceTencentCloudCamUser(),

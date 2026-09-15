@@ -2699,6 +2699,10 @@ tencentcloud_billing_allocation_tag
 tencentcloud_billing_budget
 tencentcloud_billing_instance
 
+Backup and Disaster Recovery(BDRC)
+Resource
+tencentcloud_bdrc_instance_copy_pair
+
 Tencent Container Security Service(TCSS)
 Resource
 tencentcloud_tcss_cluster_access
