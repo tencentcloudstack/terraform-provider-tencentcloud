@@ -4,6 +4,7 @@ import (
 	"context"
 	"encoding/json"
 	"fmt"
+	"strings"
 	"time"
 
 	tccommon "github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/common"
@@ -3936,6 +3937,11 @@ func resourceTencentCloudCdnDomainUpdate(d *schema.ResourceData, meta interface{
 							}
 						}
 					}
+				}
+				if strings.Contains(*pathRule.Path, "*") {
+					pathRule.Regex = helper.Bool(true)
+				} else {
+					pathRule.Regex = helper.Bool(false)
 				}
 				pathRulesList = append(pathRulesList, pathRule)
 			}
