@@ -27,6 +27,7 @@ import (
 	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/services/apigateway"
 	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/services/apm"
 	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/services/as"
+	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/services/bdrc"
 	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/services/bh"
 	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/services/bi"
 	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/services/billing"
@@ -2777,6 +2778,7 @@ func Provider() *schema.Provider {
 			"tencentcloud_dbdc_db_custom_node":                                                      dbdc.ResourceTencentCloudDbdcDbCustomNode(),
 			"tencentcloud_dbdc_node_to_db_custom_cluster_attachment":                                dbdc.ResourceTencentCloudDbdcNodeToDbCustomClusterAttachment(),
 			"tencentcloud_dbdc_db_custom_disaster_recover_group":                                    dbdc.ResourceTencentCloudDbdcDbCustomDisasterRecoverGroup(),
+			"tencentcloud_bdrc_security_group_mapping":                                              bdrc.ResourceTencentCloudBdrcSecurityGroupMapping(),
 			"tencentcloud_vcube_application_and_video":                                              vcube.ResourceTencentCloudVcubeApplicationAndVideo(),
 			"tencentcloud_vcube_application_and_web_player_license":                                 vcube.ResourceTencentCloudVcubeApplicationAndWebPlayerLicense(),
 			"tencentcloud_vcube_renew_video_operation":                                              vcube.ResourceTencentCloudVcubeRenewVideoOperation(),
