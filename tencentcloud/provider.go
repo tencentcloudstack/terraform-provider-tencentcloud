@@ -27,6 +27,7 @@ import (
 	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/services/apigateway"
 	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/services/apm"
 	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/services/as"
+	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/services/bdrc"
 	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/services/bh"
 	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/services/bi"
 	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/services/billing"
@@ -2773,6 +2774,7 @@ func Provider() *schema.Provider {
 			"tencentcloud_igtm_strategy":                                                            igtm.ResourceTencentCloudIgtmStrategy(),
 			"tencentcloud_igtm_package_instance":                                                    igtm.ResourceTencentCloudIgtmPackageInstance(),
 			"tencentcloud_igtm_package_task":                                                        igtm.ResourceTencentCloudIgtmPackageTask(),
+			"tencentcloud_bdrc_disaster_recovery_site_pair":                                         bdrc.ResourceTencentCloudBdrcDisasterRecoverySitePair(),
 			"tencentcloud_dbdc_db_custom_cluster":                                                   dbdc.ResourceTencentCloudDbdcDbCustomCluster(),
 			"tencentcloud_dbdc_db_custom_node":                                                      dbdc.ResourceTencentCloudDbdcDbCustomNode(),
 			"tencentcloud_dbdc_node_to_db_custom_cluster_attachment":                                dbdc.ResourceTencentCloudDbdcNodeToDbCustomClusterAttachment(),
