@@ -127,6 +127,7 @@ require (
 	github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/ga2 v1.3.144
 	github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/gwlb v1.0.1127
 	github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/igtm v1.3.29
+	github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/ioa v1.3.177
 	github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/mqtt v1.3.104
 	github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/oceanus v1.0.831
 	github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/region v1.3.40

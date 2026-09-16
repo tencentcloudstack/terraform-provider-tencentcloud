@@ -1004,6 +1004,7 @@ github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/common v1.3.172/go.mod 
 github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/common v1.3.173/go.mod h1:r5r4xbfxSaeR04b166HGsBa/R4U3SueirEUpXGuw+Q0=
 github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/common v1.3.174/go.mod h1:r5r4xbfxSaeR04b166HGsBa/R4U3SueirEUpXGuw+Q0=
 github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/common v1.3.175/go.mod h1:r5r4xbfxSaeR04b166HGsBa/R4U3SueirEUpXGuw+Q0=
+github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/common v1.3.177/go.mod h1:r5r4xbfxSaeR04b166HGsBa/R4U3SueirEUpXGuw+Q0=
 github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/common v1.3.178 h1:CX2pX4NjA7JtbB0edCWYpRIhk/oO0JdhbdjkL6pnKAg=
 github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/common v1.3.178/go.mod h1:r5r4xbfxSaeR04b166HGsBa/R4U3SueirEUpXGuw+Q0=
 github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/config v1.3.80 h1:chnsNBeJn3MieFLki4hpbzoml5NiTvLVzOTqYRVxQho=
@@ -1054,6 +1055,8 @@ github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/gwlb v1.0.1127 h1:1ZhrN
 github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/gwlb v1.0.1127/go.mod h1:HSfd/mm8VyXn7VTe3tOvPgsumbsfeYcG5QgaCI1vsRk=
 github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/igtm v1.3.29 h1:cVyUyqwbJPp1JiWRR7ddCqfIZx0VjsKafmAkiU4Ih/4=
 github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/igtm v1.3.29/go.mod h1:U4XvU5GDPGiiC3iiHk0E6WNB2R/we6znpm6qcSyE+70=
+github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/ioa v1.3.177 h1:YUsoCvqcqlDMPo/0K0UAaPhZdnTAn8a3Rl4G/DVWGYo=
+github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/ioa v1.3.177/go.mod h1:hM2wVHfFvNRZ6j/9uVq2+F02agDzAfeKU/UCM7YT5fE=
 github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/keewidb v1.3.32 h1:Jpl+Dmr0Z4/rb35YyO8qmRLrQt1XYEZzBbgUzFmvncg=
 github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/keewidb v1.3.32/go.mod h1:yCALhdOhAuZQIHf3zsNWu5AGSVjTJ5AtvVA6iunx+ks=
 github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/kms v1.0.563/go.mod h1:uom4Nvi9W+Qkom0exYiJ9VWJjXwyxtPYTkKkaLMlfE0=
