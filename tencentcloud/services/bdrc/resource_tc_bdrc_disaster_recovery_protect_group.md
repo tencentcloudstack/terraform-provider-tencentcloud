@@ -4,11 +4,11 @@ Example Usage
 
 ```hcl
 resource "tencentcloud_bdrc_disaster_recovery_protect_group" "example" {
-  site_pair_id               = "sitepair-xxxxxxxx"
-  protect_group_type         = "DISK"
-  recovery_point_objective   = 15
-  protect_group_name         = "tf-example-protect-group"
-  data_direction             = "POSITIVE"
+  site_pair_id             = "sitepair-xxxxxxxx"
+  protect_group_type       = "DISK"
+  recovery_point_objective = 15
+  protect_group_name       = "tf-example-protect-group"
+  data_direction           = "POSITIVE"
 }
 ```
 

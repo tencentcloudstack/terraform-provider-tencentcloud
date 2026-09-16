@@ -57,6 +57,7 @@ func ResourceTencentCloudBdrcDisasterRecoveryProtectGroup() *schema.Resource {
 				Description: "Data replication direction. Valid values: `POSITIVE`, `REVERSE`.",
 			},
 
+			// computed
 			"app_id": {
 				Type:        schema.TypeInt,
 				Computed:    true,
@@ -247,7 +248,7 @@ func resourceTencentCloudBdrcDisasterRecoveryProtectGroupCreate(d *schema.Resour
 	}
 
 	log.Printf("[CRITAL]%s create bdrc disaster_recovery_protect_group current id=%s", logId, d.Id())
-	if response.Response.ProtectGroupId == nil {
+	if response.Response.ProtectGroupId == nil || *response.Response.ProtectGroupId == "" {
 		return fmt.Errorf("ProtectGroupId is nil.")
 	}
 
