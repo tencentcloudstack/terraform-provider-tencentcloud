@@ -19,7 +19,6 @@ func ResourceTencentCloudBdrcDisasterRecoveryVpcMapping() *schema.Resource {
 	return &schema.Resource{
 		Create: resourceTencentCloudBdrcDisasterRecoveryVpcMappingCreate,
 		Read:   resourceTencentCloudBdrcDisasterRecoveryVpcMappingRead,
-		Update: resourceTencentCloudBdrcDisasterRecoveryVpcMappingUpdate,
 		Delete: resourceTencentCloudBdrcDisasterRecoveryVpcMappingDelete,
 		Importer: &schema.ResourceImporter{
 			State: schema.ImportStatePassthrough,
@@ -60,34 +59,11 @@ func ResourceTencentCloudBdrcDisasterRecoveryVpcMapping() *schema.Resource {
 				Description: "Target subnet ID of the disaster recovery VPC mapping.",
 			},
 
+			// computed
 			"id": {
 				Type:        schema.TypeInt,
 				Computed:    true,
 				Description: "Mapping rule primary key ID.",
-			},
-
-			"source_vpc": {
-				Type:        schema.TypeString,
-				Computed:    true,
-				Description: "Source VPC ID returned by the cloud API.",
-			},
-
-			"source_subnet": {
-				Type:        schema.TypeString,
-				Computed:    true,
-				Description: "Source subnet ID returned by the cloud API.",
-			},
-
-			"target_vpc": {
-				Type:        schema.TypeString,
-				Computed:    true,
-				Description: "Target VPC ID returned by the cloud API.",
-			},
-
-			"target_subnet": {
-				Type:        schema.TypeString,
-				Computed:    true,
-				Description: "Target subnet ID returned by the cloud API.",
 			},
 
 			"status": {
@@ -300,19 +276,19 @@ func resourceTencentCloudBdrcDisasterRecoveryVpcMappingRead(d *schema.ResourceDa
 	}
 
 	if matched.SourceVpc != nil {
-		_ = d.Set("source_vpc", *matched.SourceVpc)
+		_ = d.Set("source_vpc_id", *matched.SourceVpc)
 	}
 
 	if matched.SourceSubnet != nil {
-		_ = d.Set("source_subnet", *matched.SourceSubnet)
+		_ = d.Set("source_subnet_id", *matched.SourceSubnet)
 	}
 
 	if matched.TargetVpc != nil {
-		_ = d.Set("target_vpc", *matched.TargetVpc)
+		_ = d.Set("target_vpc_id", *matched.TargetVpc)
 	}
 
 	if matched.TargetSubnet != nil {
-		_ = d.Set("target_subnet", *matched.TargetSubnet)
+		_ = d.Set("target_subnet_id", *matched.TargetSubnet)
 	}
 
 	if matched.Status != nil {
@@ -324,26 +300,6 @@ func resourceTencentCloudBdrcDisasterRecoveryVpcMappingRead(d *schema.ResourceDa
 	}
 
 	return nil
-}
-
-func resourceTencentCloudBdrcDisasterRecoveryVpcMappingUpdate(d *schema.ResourceData, meta interface{}) error {
-	defer tccommon.LogElapsed("resource.tencentcloud_bdrc_disaster_recovery_vpc_mapping.update")()
-	defer tccommon.InconsistentCheck(d, meta)()
-
-	needChange := false
-	immutableArgs := []string{"site_pair_id", "source_vpc_id", "source_subnet_id", "target_vpc_id", "target_subnet_id"}
-	for _, v := range immutableArgs {
-		if d.HasChange(v) {
-			needChange = true
-			break
-		}
-	}
-
-	if needChange {
-		return fmt.Errorf("Update bdrc_disaster_recovery_vpc_mapping is not supported, all business arguments are immutable (CRD-only API), please recreate the resource.")
-	}
-
-	return resourceTencentCloudBdrcDisasterRecoveryVpcMappingRead(d, meta)
 }
 
 func resourceTencentCloudBdrcDisasterRecoveryVpcMappingDelete(d *schema.ResourceData, meta interface{}) error {

@@ -15,7 +15,7 @@ Provides a resource to create a disaster recovery VPC mapping for site pair of B
 
 ```hcl
 resource "tencentcloud_bdrc_disaster_recovery_vpc_mapping" "example" {
-  site_pair_id     = "site-pair-xxxx"
+  site_pair_id     = "sitepair-a4mtozsz"
   source_vpc_id    = "vpc-source-xxxx"
   source_subnet_id = "subnet-source-xxxx"
   target_vpc_id    = "vpc-target-xxxx"
@@ -40,11 +40,7 @@ In addition to all arguments above, the following attributes are exported:
 * `id` - ID of the resource.
 * `id` - Mapping rule primary key ID.
 * `life_state` - Lifecycle state.
-* `source_subnet` - Source subnet ID returned by the cloud API.
-* `source_vpc` - Source VPC ID returned by the cloud API.
 * `status` - Mapping status.
-* `target_subnet` - Target subnet ID returned by the cloud API.
-* `target_vpc` - Target VPC ID returned by the cloud API.
 
 
 ## Import
