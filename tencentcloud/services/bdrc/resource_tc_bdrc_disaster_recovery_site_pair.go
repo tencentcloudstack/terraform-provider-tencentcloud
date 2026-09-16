@@ -4,6 +4,7 @@ import (
 	"context"
 	"fmt"
 	"log"
+	"strings"
 
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
@@ -82,6 +83,7 @@ func ResourceTencentCloudBdrcDisasterRecoverySitePair() *schema.Resource {
 			"site_pair_name": {
 				Type:        schema.TypeString,
 				Optional:    true,
+				Computed:    true,
 				Description: "Site pair name, max length is 60 characters.",
 			},
 
@@ -89,19 +91,21 @@ func ResourceTencentCloudBdrcDisasterRecoverySitePair() *schema.Resource {
 				Type:        schema.TypeString,
 				Optional:    true,
 				ForceNew:    true,
+				Computed:    true,
 				Description: "Replication technology, SYN (synchronous) / ASY (asynchronous).",
+			},
+
+			// computed
+			"site_pair_id": {
+				Type:        schema.TypeString,
+				Computed:    true,
+				Description: "Site pair ID.",
 			},
 
 			"site_pair_state": {
 				Type:        schema.TypeString,
 				Computed:    true,
 				Description: "Site pair state.",
-			},
-
-			"site_pair_type": {
-				Type:        schema.TypeString,
-				Computed:    true,
-				Description: "Site pair type (product type, such as DISK/CFS/INSTANCE).",
 			},
 
 			"create_from": {
@@ -264,10 +268,11 @@ func resourceTencentCloudBdrcDisasterRecoverySitePairCreate(d *schema.ResourceDa
 	defer tccommon.InconsistentCheck(d, meta)()
 
 	var (
-		logId    = tccommon.GetLogId(tccommon.ContextNil)
-		ctx      = tccommon.NewResourceLifeCycleHandleFuncContext(context.Background(), logId, d, meta)
-		request  = bdrcv20260330.NewCreateDisasterRecoverySitePairRequest()
-		response = bdrcv20260330.NewCreateDisasterRecoverySitePairResponse()
+		logId               = tccommon.GetLogId(tccommon.ContextNil)
+		ctx                 = tccommon.NewResourceLifeCycleHandleFuncContext(context.Background(), logId, d, meta)
+		request             = bdrcv20260330.NewCreateDisasterRecoverySitePairRequest()
+		response            = bdrcv20260330.NewCreateDisasterRecoverySitePairResponse()
+		sitePairProductType string
 	)
 
 	if v, ok := d.GetOk("disaster_recovery_type"); ok {
@@ -300,6 +305,7 @@ func resourceTencentCloudBdrcDisasterRecoverySitePairCreate(d *schema.ResourceDa
 
 	if v, ok := d.GetOk("site_pair_product_type"); ok {
 		request.SitePairProductType = helper.String(v.(string))
+		sitePairProductType = v.(string)
 	}
 
 	if v, ok := d.GetOk("site_pair_name"); ok {
@@ -337,7 +343,8 @@ func resourceTencentCloudBdrcDisasterRecoverySitePairCreate(d *schema.ResourceDa
 		return fmt.Errorf("Create bdrc disaster_recovery_site_pair failed, SitePairId is empty.")
 	}
 
-	d.SetId(*response.Response.SitePairId)
+	sitePairId := *response.Response.SitePairId
+	d.SetId(strings.Join([]string{sitePairId, sitePairProductType}, tccommon.FILED_SP))
 	return resourceTencentCloudBdrcDisasterRecoverySitePairRead(d, meta)
 }
 
@@ -351,17 +358,15 @@ func resourceTencentCloudBdrcDisasterRecoverySitePairRead(d *schema.ResourceData
 		service = NewBdrcService(meta.(tccommon.ProviderMeta).GetAPIV3Conn())
 	)
 
-	sitePairType := ""
-	if v, ok := d.GetOk("site_pair_type"); ok {
-		sitePairType = v.(string)
-	}
-	if sitePairType == "" {
-		if v, ok := d.GetOk("site_pair_product_type"); ok {
-			sitePairType = v.(string)
-		}
+	parts := strings.Split(d.Id(), tccommon.FILED_SP)
+	if len(parts) != 2 {
+		return fmt.Errorf("resource id is broken, id: %s (expected `<site_pair_id>%s<site_pair_product_type>`)", d.Id(), tccommon.FILED_SP)
 	}
 
-	respData, err := service.DescribeDisasterRecoverySitePairById(ctx, d.Id(), sitePairType)
+	sitePairId := parts[0]
+	sitePairProductType := parts[1]
+
+	respData, err := service.DescribeDisasterRecoverySitePairById(ctx, sitePairId, sitePairProductType)
 	if err != nil {
 		log.Printf("[CRITAL]%s read bdrc disaster_recovery_site_pair failed, reason:%+v", logId, err)
 		return err
@@ -406,12 +411,15 @@ func resourceTencentCloudBdrcDisasterRecoverySitePairRead(d *schema.ResourceData
 	}
 
 	if respData.SitePairType != nil {
-		_ = d.Set("site_pair_type", respData.SitePairType)
 		_ = d.Set("site_pair_product_type", respData.SitePairType)
 	}
 
 	if respData.CopyType != nil {
 		_ = d.Set("copy_type", respData.CopyType)
+	}
+
+	if respData.SitePairId != nil {
+		_ = d.Set("site_pair_id", respData.SitePairId)
 	}
 
 	if respData.SitePairState != nil {
@@ -438,58 +446,56 @@ func resourceTencentCloudBdrcDisasterRecoverySitePairRead(d *schema.ResourceData
 		_ = d.Set("bind_protect_group_count", respData.BindProtectGroupCount)
 	}
 
-	if respData.ErrorRecoveryPointObjectiveCopyPairSet != nil {
-		errorRecoveryPointObjectiveCopyPairSetList := make([]string, 0, len(respData.ErrorRecoveryPointObjectiveCopyPairSet))
-		for _, v := range respData.ErrorRecoveryPointObjectiveCopyPairSet {
-			if v != nil {
-				errorRecoveryPointObjectiveCopyPairSetList = append(errorRecoveryPointObjectiveCopyPairSetList, *v)
-			}
+	// The four computed list attributes below are always written back to state,
+	// even when the API returns nothing. Skipping the write leaves the
+	// attribute null in state, which Terraform treats as "not yet populated"
+	// and reports as a perpetual diff.
+	errorRecoveryPointObjectiveCopyPairSetList := make([]string, 0, len(respData.ErrorRecoveryPointObjectiveCopyPairSet))
+	for _, v := range respData.ErrorRecoveryPointObjectiveCopyPairSet {
+		if v != nil {
+			errorRecoveryPointObjectiveCopyPairSetList = append(errorRecoveryPointObjectiveCopyPairSetList, *v)
 		}
-		_ = d.Set("error_recovery_point_objective_copy_pair_set", errorRecoveryPointObjectiveCopyPairSetList)
 	}
+	_ = d.Set("error_recovery_point_objective_copy_pair_set", errorRecoveryPointObjectiveCopyPairSetList)
 
-	if respData.ProtectedResourceSet != nil {
-		protectedResourceSetList := make([]map[string]interface{}, 0, len(respData.ProtectedResourceSet))
-		for _, protectedResource := range respData.ProtectedResourceSet {
-			protectedResourceMap := map[string]interface{}{}
-			if protectedResource.ResourceType != nil {
-				protectedResourceMap["resource_type"] = protectedResource.ResourceType
-			}
+	protectedResourceSetList := make([]map[string]interface{}, 0, len(respData.ProtectedResourceSet))
+	for _, protectedResource := range respData.ProtectedResourceSet {
+		protectedResourceMap := map[string]interface{}{}
+		if protectedResource.ResourceType != nil {
+			protectedResourceMap["resource_type"] = protectedResource.ResourceType
+		}
 
-			if protectedResource.ResourceIdSet != nil {
-				resourceIdSetList := make([]string, 0, len(protectedResource.ResourceIdSet))
-				for _, v := range protectedResource.ResourceIdSet {
-					if v != nil {
-						resourceIdSetList = append(resourceIdSetList, *v)
-					}
+		if protectedResource.ResourceIdSet != nil {
+			resourceIdSetList := make([]string, 0, len(protectedResource.ResourceIdSet))
+			for _, v := range protectedResource.ResourceIdSet {
+				if v != nil {
+					resourceIdSetList = append(resourceIdSetList, *v)
 				}
-				protectedResourceMap["resource_id_set"] = resourceIdSetList
 			}
-
-			protectedResourceSetList = append(protectedResourceSetList, protectedResourceMap)
+			protectedResourceMap["resource_id_set"] = resourceIdSetList
 		}
-		_ = d.Set("protected_resource_set", protectedResourceSetList)
+
+		protectedResourceSetList = append(protectedResourceSetList, protectedResourceMap)
 	}
+	_ = d.Set("protected_resource_set", protectedResourceSetList)
 
-	if respData.ProtectedResourceStatusSet != nil {
-		protectedResourceStatusSetList := make([]map[string]interface{}, 0, len(respData.ProtectedResourceStatusSet))
-		for _, protectedResourceStatus := range respData.ProtectedResourceStatusSet {
-			protectedResourceStatusMap := map[string]interface{}{}
-			if protectedResourceStatus.Status != nil {
-				protectedResourceStatusMap["status"] = protectedResourceStatus.Status
-			}
-
-			if protectedResourceStatus.Count != nil {
-				protectedResourceStatusMap["count"] = protectedResourceStatus.Count
-			}
-
-			protectedResourceStatusSetList = append(protectedResourceStatusSetList, protectedResourceStatusMap)
+	protectedResourceStatusSetList := make([]map[string]interface{}, 0, len(respData.ProtectedResourceStatusSet))
+	for _, protectedResourceStatus := range respData.ProtectedResourceStatusSet {
+		protectedResourceStatusMap := map[string]interface{}{}
+		if protectedResourceStatus.Status != nil {
+			protectedResourceStatusMap["status"] = protectedResourceStatus.Status
 		}
-		_ = d.Set("protected_resource_status_set", protectedResourceStatusSetList)
-	}
 
+		if protectedResourceStatus.Count != nil {
+			protectedResourceStatusMap["count"] = protectedResourceStatus.Count
+		}
+
+		protectedResourceStatusSetList = append(protectedResourceStatusSetList, protectedResourceStatusMap)
+	}
+	_ = d.Set("protected_resource_status_set", protectedResourceStatusSetList)
+
+	crossCloudDetailsList := make([]map[string]interface{}, 0, 1)
 	if respData.CrossCloudDetails != nil {
-		crossCloudDetailsList := make([]map[string]interface{}, 0, 1)
 		crossCloudDetailsMap := map[string]interface{}{}
 		crossCloudDetails := respData.CrossCloudDetails
 		if crossCloudDetails.SourceCloudName != nil {
@@ -541,8 +547,8 @@ func resourceTencentCloudBdrcDisasterRecoverySitePairRead(d *schema.ResourceData
 		}
 
 		crossCloudDetailsList = append(crossCloudDetailsList, crossCloudDetailsMap)
-		_ = d.Set("cross_cloud_details", crossCloudDetailsList)
 	}
+	_ = d.Set("cross_cloud_details", crossCloudDetailsList)
 
 	return nil
 }
@@ -556,6 +562,13 @@ func resourceTencentCloudBdrcDisasterRecoverySitePairUpdate(d *schema.ResourceDa
 		ctx   = tccommon.NewResourceLifeCycleHandleFuncContext(context.Background(), logId, d, meta)
 	)
 
+	parts := strings.Split(d.Id(), tccommon.FILED_SP)
+	if len(parts) != 2 {
+		return fmt.Errorf("resource id is broken, id: %s (expected `<site_pair_id>%s<site_pair_product_type>`)", d.Id(), tccommon.FILED_SP)
+	}
+
+	sitePairId := parts[0]
+
 	immutableArgs := []string{"disaster_recovery_type", "source_region", "source_zone", "target_region", "target_zone", "source_vpc", "target_vpc", "site_pair_product_type", "copy_type"}
 	for _, v := range immutableArgs {
 		if d.HasChange(v) {
@@ -565,7 +578,7 @@ func resourceTencentCloudBdrcDisasterRecoverySitePairUpdate(d *schema.ResourceDa
 
 	if d.HasChange("site_pair_name") {
 		request := bdrcv20260330.NewModifySitePairAttributeRequest()
-		request.SitePairId = helper.String(d.Id())
+		request.SitePairId = helper.String(sitePairId)
 
 		if v, ok := d.GetOk("site_pair_name"); ok {
 			request.SitePairName = helper.String(v.(string))
@@ -605,8 +618,14 @@ func resourceTencentCloudBdrcDisasterRecoverySitePairDelete(d *schema.ResourceDa
 		request = bdrcv20260330.NewDeleteDisasterRecoverySitePairsRequest()
 	)
 
-	request.SitePairIds = helper.Strings([]string{d.Id()})
+	parts := strings.Split(d.Id(), tccommon.FILED_SP)
+	if len(parts) != 2 {
+		return fmt.Errorf("resource id is broken, id: %s (expected `<site_pair_id>%s<site_pair_product_type>`)", d.Id(), tccommon.FILED_SP)
+	}
 
+	sitePairId := parts[0]
+
+	request.SitePairIds = helper.Strings([]string{sitePairId})
 	reqErr := resource.Retry(tccommon.WriteRetryTimeout, func() *resource.RetryError {
 		result, e := meta.(tccommon.ProviderMeta).GetAPIV3Conn().UseBdrcV20260330Client().DeleteDisasterRecoverySitePairsWithContext(ctx, request)
 		if e != nil {

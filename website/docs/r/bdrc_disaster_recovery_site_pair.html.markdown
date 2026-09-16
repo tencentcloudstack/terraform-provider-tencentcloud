@@ -15,15 +15,15 @@ Provides a resource to create a BDRC (Backup and Disaster Recovery Center) disas
 
 ```hcl
 resource "tencentcloud_bdrc_disaster_recovery_site_pair" "example" {
-  disaster_recovery_type = "CROSS_REGION"
-  source_region          = "ap-guangzhou"
-  source_zone            = "ap-guangzhou-3"
+  disaster_recovery_type = "CROSS_ZONE"
+  source_region          = "ap-shanghai"
+  source_zone            = "ap-shanghai-3"
   target_region          = "ap-shanghai"
-  target_zone            = "ap-shanghai-2"
-  source_vpc             = "vpc-xxxxxxxx"
-  target_vpc             = "vpc-yyyyyyyy"
-  site_pair_product_type = "DISK"
-  site_pair_name         = "tf-example-site-pair"
+  target_zone            = "ap-shanghai-4"
+  source_vpc             = "vpc-lx6q09ji"
+  target_vpc             = "vpc-jktad5e6"
+  site_pair_product_type = "INSTANCE"
+  site_pair_name         = "tf-example"
   copy_type              = "ASY"
 }
 ```
@@ -72,16 +72,16 @@ In addition to all arguments above, the following attributes are exported:
 * `protected_resource_status_set` - Status statistics of protected resources.
   * `count` - Number of resources under this status.
   * `status` - Copy pair status.
+* `site_pair_id` - Site pair ID.
 * `site_pair_state` - Site pair state.
-* `site_pair_type` - Site pair type (product type, such as DISK/CFS/INSTANCE).
 * `sub_account_uin` - Sub account Uin of the account that created the site pair.
 
 
 ## Import
 
-BDRC disaster recovery site pair can be imported using the SitePairId, e.g.
+BDRC disaster recovery site pair can be imported using the sitePairId#sitePairProductType, e.g.
 
 ```
-terraform import tencentcloud_bdrc_disaster_recovery_site_pair.example site-pair-xxxxxx
+terraform import tencentcloud_bdrc_disaster_recovery_site_pair.example sitepair-la2re1mv#INSTANCE
 ```
 

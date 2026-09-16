@@ -78,7 +78,6 @@ func TestBdrcDisasterRecoverySitePair_Create(t *testing.T) {
 					TargetZone:            ptrStringSitePair("ap-shanghai-2"),
 					SourceVpc:             ptrStringSitePair("vpc-source-xxx"),
 					TargetVpc:             ptrStringSitePair("vpc-target-yyy"),
-					SitePairProductType:   ptrStringSitePair("DISK"),
 					CopyType:              ptrStringSitePair("ASY"),
 					CreateFrom:            ptrStringSitePair("LOCAL"),
 					AccountUin:            ptrStringSitePair("100000000001"),
@@ -109,10 +108,10 @@ func TestBdrcDisasterRecoverySitePair_Create(t *testing.T) {
 
 	err := res.Create(d, meta)
 	assert.NoError(t, err)
-	assert.Equal(t, "site-pair-create-001", d.Id())
+	assert.Equal(t, "site-pair-create-001#DISK", d.Id())
 	assert.Equal(t, "tf-example-site-pair", d.Get("site_pair_name").(string))
 	assert.Equal(t, "RUNNING", d.Get("site_pair_state").(string))
-	assert.Equal(t, "DISK", d.Get("site_pair_type").(string))
+	assert.Equal(t, "DISK", d.Get("site_pair_product_type").(string))
 }
 
 // TestBdrcDisasterRecoverySitePair_Create_EmptyId tests Create when SitePairId is empty
@@ -193,14 +192,14 @@ func TestBdrcDisasterRecoverySitePair_Read(t *testing.T) {
 	d := schema.TestResourceDataRaw(t, res.Schema, map[string]interface{}{
 		"site_pair_product_type": "DISK",
 	})
-	d.SetId("site-pair-read-001")
+	d.SetId("site-pair-read-001#DISK")
 
 	err := res.Read(d, meta)
 	assert.NoError(t, err)
-	assert.Equal(t, "site-pair-read-001", d.Id())
+	assert.Equal(t, "site-pair-read-001#DISK", d.Id())
 	assert.Equal(t, "tf-read-site-pair", d.Get("site_pair_name").(string))
 	assert.Equal(t, "RUNNING", d.Get("site_pair_state").(string))
-	assert.Equal(t, "DISK", d.Get("site_pair_type").(string))
+	assert.Equal(t, "DISK", d.Get("site_pair_product_type").(string))
 	assert.Equal(t, "CROSS_REGION", d.Get("disaster_recovery_type").(string))
 	assert.Equal(t, 2, d.Get("bind_protect_group_count").(int))
 }
@@ -228,7 +227,7 @@ func TestBdrcDisasterRecoverySitePair_Read_NotFound(t *testing.T) {
 	d := schema.TestResourceDataRaw(t, res.Schema, map[string]interface{}{
 		"site_pair_product_type": "DISK",
 	})
-	d.SetId("site-pair-not-found")
+	d.SetId("site-pair-not-found#DISK")
 
 	err := res.Read(d, meta)
 	assert.NoError(t, err)
@@ -296,7 +295,11 @@ func TestBdrcDisasterRecoverySitePair_Update(t *testing.T) {
 		"site_pair_name":         "tf-updated-site-pair",
 		"copy_type":              "ASY",
 	})
-	d.SetId("site-pair-update-001")
+	d.SetId("site-pair-update-001#DISK")
+
+	patches.ApplyMethodFunc(d, "HasChange", func(key string) bool {
+		return key == "site_pair_name"
+	})
 
 	err := res.Update(d, meta)
 	assert.NoError(t, err)
@@ -328,7 +331,7 @@ func TestBdrcDisasterRecoverySitePair_Delete(t *testing.T) {
 	meta := newMockMetaBdrcSitePair()
 	res := bdrc.ResourceTencentCloudBdrcDisasterRecoverySitePair()
 	d := schema.TestResourceDataRaw(t, res.Schema, map[string]interface{}{})
-	d.SetId("site-pair-delete-001")
+	d.SetId("site-pair-delete-001#DISK")
 
 	err := res.Delete(d, meta)
 	assert.NoError(t, err)
