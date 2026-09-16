@@ -104,50 +104,6 @@ func ResourceTencentCloudIoaCompanyDirectoryConfig() *schema.Resource {
 					},
 				},
 			},
-
-			"source_id": {
-				Type:        schema.TypeString,
-				Computed:    true,
-				Description: "Config source ID.",
-			},
-
-			"identify_source_id": {
-				Type:        schema.TypeString,
-				Computed:    true,
-				Description: "Identity source config ID (from Create/Modify result).",
-			},
-
-			"auth_source_id": {
-				Type:        schema.TypeString,
-				Computed:    true,
-				Description: "Auth source config ID (from Create/Modify result).",
-			},
-
-			"auth_config_id": {
-				Type:        schema.TypeInt,
-				Computed:    true,
-				Description: "Auth config ID (from Create/Modify result).",
-			},
-
-			"auth_policy_id": {
-				Type:        schema.TypeInt,
-				Computed:    true,
-				Description: "Auth policy ID (from Create/Modify result).",
-			},
-
-			"auth_support_platforms": {
-				Type:        schema.TypeList,
-				Computed:    true,
-				Elem:        &schema.Schema{Type: schema.TypeString},
-				Description: "Auth supported platforms, e.g. PC or Mobile (from Create/Modify result).",
-			},
-
-			"auth_methods": {
-				Type:        schema.TypeList,
-				Computed:    true,
-				Elem:        &schema.Schema{Type: schema.TypeString},
-				Description: "Auth methods, e.g. authorization auth / scan auth (from Create/Modify result).",
-			},
 		},
 	}
 }
@@ -246,7 +202,6 @@ func resourceTencentCloudIoaCompanyDirectoryConfigCreate(d *schema.ResourceData,
 	}
 
 	d.SetId(strconv.FormatInt(*response.Response.Data.Id, 10))
-	setDirectoryConfigResultData(d, response.Response.Data)
 	return resourceTencentCloudIoaCompanyDirectoryConfigRead(d, meta)
 }
 
@@ -305,10 +260,6 @@ func resourceTencentCloudIoaCompanyDirectoryConfigRead(d *schema.ResourceData, m
 
 	if respData.Description != nil {
 		_ = d.Set("description", respData.Description)
-	}
-
-	if respData.SourceId != nil {
-		_ = d.Set("source_id", respData.SourceId)
 	}
 
 	if respData.NameI18n != nil && len(respData.NameI18n) > 0 {
@@ -417,9 +368,6 @@ func resourceTencentCloudIoaCompanyDirectoryConfigUpdate(d *schema.ResourceData,
 				return resource.NonRetryableError(fmt.Errorf("Modify ioa_company_directory_config failed, Response is nil."))
 			}
 
-			if result.Response.Data != nil {
-				setDirectoryConfigResultData(d, result.Response.Data)
-			}
 			return nil
 		})
 
@@ -466,34 +414,4 @@ func resourceTencentCloudIoaCompanyDirectoryConfigDelete(d *schema.ResourceData,
 	}
 
 	return nil
-}
-
-func setDirectoryConfigResultData(d *schema.ResourceData, data *ioav20220601.DirectoryConfigResultData) {
-	if data == nil {
-		return
-	}
-
-	if data.IdentifySourceId != nil {
-		_ = d.Set("identify_source_id", data.IdentifySourceId)
-	}
-
-	if data.AuthSourceId != nil {
-		_ = d.Set("auth_source_id", data.AuthSourceId)
-	}
-
-	if data.AuthConfigId != nil {
-		_ = d.Set("auth_config_id", data.AuthConfigId)
-	}
-
-	if data.AuthPolicyId != nil {
-		_ = d.Set("auth_policy_id", data.AuthPolicyId)
-	}
-
-	if data.AuthSupportPlatforms != nil {
-		_ = d.Set("auth_support_platforms", helper.StringsInterfaces(data.AuthSupportPlatforms))
-	}
-
-	if data.AuthMethods != nil {
-		_ = d.Set("auth_methods", helper.StringsInterfaces(data.AuthMethods))
-	}
 }

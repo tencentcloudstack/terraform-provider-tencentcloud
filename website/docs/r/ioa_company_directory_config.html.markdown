@@ -64,13 +64,7 @@ The `name_i18n` object supports the following:
 In addition to all arguments above, the following attributes are exported:
 
 * `id` - ID of the resource.
-* `auth_config_id` - Auth config ID (from Create/Modify result).
-* `auth_methods` - Auth methods, e.g. authorization auth / scan auth (from Create/Modify result).
-* `auth_policy_id` - Auth policy ID (from Create/Modify result).
-* `auth_source_id` - Auth source config ID (from Create/Modify result).
-* `auth_support_platforms` - Auth supported platforms, e.g. PC or Mobile (from Create/Modify result).
-* `identify_source_id` - Identity source config ID (from Create/Modify result).
-* `source_id` - Config source ID.
+
 
 
 ## Import
