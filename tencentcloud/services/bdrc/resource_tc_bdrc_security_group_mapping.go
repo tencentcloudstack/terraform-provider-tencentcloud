@@ -18,7 +18,6 @@ func ResourceTencentCloudBdrcSecurityGroupMapping() *schema.Resource {
 	return &schema.Resource{
 		Create: resourceTencentCloudBdrcSecurityGroupMappingCreate,
 		Read:   resourceTencentCloudBdrcSecurityGroupMappingRead,
-		Update: resourceTencentCloudBdrcSecurityGroupMappingUpdate,
 		Delete: resourceTencentCloudBdrcSecurityGroupMappingDelete,
 		Importer: &schema.ResourceImporter{
 			State: schema.ImportStatePassthrough,
@@ -179,20 +178,6 @@ func resourceTencentCloudBdrcSecurityGroupMappingRead(d *schema.ResourceData, me
 	}
 
 	return nil
-}
-
-func resourceTencentCloudBdrcSecurityGroupMappingUpdate(d *schema.ResourceData, meta interface{}) error {
-	defer tccommon.LogElapsed("resource.tencentcloud_bdrc_security_group_mapping.update")()
-	defer tccommon.InconsistentCheck(d, meta)()
-
-	immutableArgs := []string{"src_security_group_id", "target_security_group_id", "site_pair_id"}
-	for _, v := range immutableArgs {
-		if d.HasChange(v) {
-			return fmt.Errorf("argument `%s` cannot be changed, please delete and recreate", v)
-		}
-	}
-
-	return resourceTencentCloudBdrcSecurityGroupMappingRead(d, meta)
 }
 
 func resourceTencentCloudBdrcSecurityGroupMappingDelete(d *schema.ResourceData, meta interface{}) error {

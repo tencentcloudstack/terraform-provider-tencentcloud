@@ -31,14 +31,9 @@ func ptrStringBdrc(s string) *string {
 	return &s
 }
 
-func ptrInt64Bdrc(i int64) *int64 {
-	return &i
-}
-
 func mockDescribeSecurityGroupMappingsResponse(sitePairId, mappingId, srcSgId, targetSgId, lifeState string) *bdrcv20260330.DescribeSecurityGroupMappingsResponse {
 	resp := bdrcv20260330.NewDescribeSecurityGroupMappingsResponse()
 	resp.Response = &bdrcv20260330.DescribeSecurityGroupMappingsResponseParams{
-		TotalCount: ptrInt64Bdrc(1),
 		SecurityGroupMappingSet: []*bdrcv20260330.SecurityGroupMapping{
 			{
 				SecurityGroupMappingId: ptrStringBdrc(mappingId),
@@ -56,7 +51,6 @@ func mockDescribeSecurityGroupMappingsResponse(sitePairId, mappingId, srcSgId, t
 func mockEmptyDescribeSecurityGroupMappingsResponse() *bdrcv20260330.DescribeSecurityGroupMappingsResponse {
 	resp := bdrcv20260330.NewDescribeSecurityGroupMappingsResponse()
 	resp.Response = &bdrcv20260330.DescribeSecurityGroupMappingsResponseParams{
-		TotalCount:              ptrInt64Bdrc(0),
 		SecurityGroupMappingSet: []*bdrcv20260330.SecurityGroupMapping{},
 		RequestId:               ptrStringBdrc("fake-request-id"),
 	}
