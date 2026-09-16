@@ -4,6 +4,7 @@ import (
 	"context"
 	"fmt"
 	"log"
+	"strings"
 
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
@@ -47,6 +48,7 @@ func ResourceTencentCloudBdrcDisasterRecoveryProtectGroup() *schema.Resource {
 			"protect_group_name": {
 				Type:        schema.TypeString,
 				Optional:    true,
+				Computed:    true,
 				Description: "Name of the protect group, up to 60 characters.",
 			},
 
@@ -54,6 +56,7 @@ func ResourceTencentCloudBdrcDisasterRecoveryProtectGroup() *schema.Resource {
 				Type:        schema.TypeString,
 				Optional:    true,
 				ForceNew:    true,
+				Computed:    true,
 				Description: "Data replication direction. Valid values: `POSITIVE`, `REVERSE`.",
 			},
 
@@ -200,10 +203,12 @@ func resourceTencentCloudBdrcDisasterRecoveryProtectGroupCreate(d *schema.Resour
 	defer tccommon.InconsistentCheck(d, meta)()
 
 	var (
-		logId    = tccommon.GetLogId(tccommon.ContextNil)
-		ctx      = tccommon.NewResourceLifeCycleHandleFuncContext(context.Background(), logId, d, meta)
-		request  = bdrcv20260330.NewCreateDisasterRecoveryProtectGroupRequest()
-		response = bdrcv20260330.NewCreateDisasterRecoveryProtectGroupResponse()
+		logId            = tccommon.GetLogId(tccommon.ContextNil)
+		ctx              = tccommon.NewResourceLifeCycleHandleFuncContext(context.Background(), logId, d, meta)
+		request          = bdrcv20260330.NewCreateDisasterRecoveryProtectGroupRequest()
+		response         = bdrcv20260330.NewCreateDisasterRecoveryProtectGroupResponse()
+		protectGroupId   string
+		protectGroupType string
 	)
 
 	if v, ok := d.GetOk("site_pair_id"); ok {
@@ -212,6 +217,7 @@ func resourceTencentCloudBdrcDisasterRecoveryProtectGroupCreate(d *schema.Resour
 
 	if v, ok := d.GetOk("protect_group_type"); ok {
 		request.ProtectGroupType = helper.String(v.(string))
+		protectGroupType = v.(string)
 	}
 
 	if v, ok := d.GetOk("recovery_point_objective"); ok {
@@ -247,12 +253,12 @@ func resourceTencentCloudBdrcDisasterRecoveryProtectGroupCreate(d *schema.Resour
 		return reqErr
 	}
 
-	log.Printf("[CRITAL]%s create bdrc disaster_recovery_protect_group current id=%s", logId, d.Id())
 	if response.Response.ProtectGroupId == nil || *response.Response.ProtectGroupId == "" {
 		return fmt.Errorf("ProtectGroupId is nil.")
 	}
 
-	d.SetId(*response.Response.ProtectGroupId)
+	protectGroupId = *response.Response.ProtectGroupId
+	d.SetId(strings.Join([]string{protectGroupId, protectGroupType}, tccommon.FILED_SP))
 	return resourceTencentCloudBdrcDisasterRecoveryProtectGroupRead(d, meta)
 }
 
@@ -266,8 +272,13 @@ func resourceTencentCloudBdrcDisasterRecoveryProtectGroupRead(d *schema.Resource
 		service = BdrcService{client: meta.(tccommon.ProviderMeta).GetAPIV3Conn()}
 	)
 
-	protectGroupId := d.Id()
-	protectGroupType := d.Get("protect_group_type").(string)
+	parts := strings.Split(d.Id(), tccommon.FILED_SP)
+	if len(parts) != 2 {
+		return fmt.Errorf("resource id is broken, id: %s (expected `<protect_group_id>%s<protect_group_type>`)", d.Id(), tccommon.FILED_SP)
+	}
+
+	protectGroupId := parts[0]
+	protectGroupType := parts[1]
 
 	respData, err := service.DescribeDisasterRecoveryProtectGroupById(ctx, protectGroupId, protectGroupType)
 	if err != nil {
@@ -376,23 +387,25 @@ func resourceTencentCloudBdrcDisasterRecoveryProtectGroupRead(d *schema.Resource
 		_ = d.Set("error_recovery_point_objective_count", respData.ErrorRecoveryPointObjectiveCount)
 	}
 
-	if respData.ProtectedResourceStatusSet != nil && len(respData.ProtectedResourceStatusSet) > 0 {
-		statusSetList := make([]map[string]interface{}, 0, len(respData.ProtectedResourceStatusSet))
-		for _, status := range respData.ProtectedResourceStatusSet {
-			statusMap := map[string]interface{}{}
-			if status.Status != nil {
-				statusMap["status"] = status.Status
-			}
-
-			if status.Count != nil {
-				statusMap["count"] = status.Count
-			}
-
-			statusSetList = append(statusSetList, statusMap)
+	statusSetList := make([]map[string]interface{}, 0, len(respData.ProtectedResourceStatusSet))
+	for _, status := range respData.ProtectedResourceStatusSet {
+		statusMap := map[string]interface{}{}
+		if status.Status != nil {
+			statusMap["status"] = status.Status
 		}
 
-		_ = d.Set("protected_resource_status_set", statusSetList)
+		if status.Count != nil {
+			statusMap["count"] = status.Count
+		}
+
+		statusSetList = append(statusSetList, statusMap)
 	}
+
+	// Always set the field, even when the API returns an empty list. If we skip
+	// the write here the field stays null in state, which Terraform interprets
+	// as "not yet populated" and surfaces a perpetual diff for this computed
+	// attribute.
+	_ = d.Set("protected_resource_status_set", statusSetList)
 
 	return nil
 }
@@ -413,9 +426,15 @@ func resourceTencentCloudBdrcDisasterRecoveryProtectGroupUpdate(d *schema.Resour
 		}
 	}
 
+	parts := strings.Split(d.Id(), tccommon.FILED_SP)
+	if len(parts) != 2 {
+		return fmt.Errorf("resource id is broken, id: %s (expected `<protect_group_id>%s<protect_group_type>`)", d.Id(), tccommon.FILED_SP)
+	}
+
+	protectGroupId := parts[0]
+
 	if d.HasChange("protect_group_name") {
 		request := bdrcv20260330.NewModifyProtectGroupAttributeRequest()
-		protectGroupId := d.Id()
 		request.ProtectGroupId = helper.String(protectGroupId)
 		if v, ok := d.GetOk("protect_group_name"); ok {
 			request.ProtectGroupName = helper.String(v.(string))
@@ -455,9 +474,13 @@ func resourceTencentCloudBdrcDisasterRecoveryProtectGroupDelete(d *schema.Resour
 		request = bdrcv20260330.NewDeleteDisasterRecoveryProtectGroupsRequest()
 	)
 
-	protectGroupId := d.Id()
-	request.ProtectGroups = []*string{helper.String(protectGroupId)}
+	parts := strings.Split(d.Id(), tccommon.FILED_SP)
+	if len(parts) != 2 {
+		return fmt.Errorf("resource id is broken, id: %s (expected `<protect_group_id>%s<protect_group_type>`)", d.Id(), tccommon.FILED_SP)
+	}
 
+	protectGroupId := parts[0]
+	request.ProtectGroups = []*string{helper.String(protectGroupId)}
 	reqErr := resource.Retry(tccommon.WriteRetryTimeout, func() *resource.RetryError {
 		result, e := meta.(tccommon.ProviderMeta).GetAPIV3Conn().UseBdrcV20260330Client().DeleteDisasterRecoveryProtectGroupsWithContext(ctx, request)
 		if e != nil {

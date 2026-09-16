@@ -119,7 +119,7 @@ func TestBdrcDisasterRecoveryProtectGroup_Create(t *testing.T) {
 
 	err := res.Create(d, meta)
 	assert.NoError(t, err)
-	assert.Equal(t, "pg-abc123", d.Id())
+	assert.Equal(t, "pg-abc123#DISK", d.Id())
 	assert.NotNil(t, capturedRequest)
 }
 
@@ -146,11 +146,11 @@ func TestBdrcDisasterRecoveryProtectGroup_Read(t *testing.T) {
 		"protect_group_name":       "tf-example-protect-group",
 		"data_direction":           "POSITIVE",
 	})
-	d.SetId("pg-read123")
+	d.SetId("pg-read123#DISK")
 
 	err := res.Read(d, meta)
 	assert.NoError(t, err)
-	assert.Equal(t, "pg-read123", d.Id())
+	assert.Equal(t, "pg-read123#DISK", d.Id())
 
 	assert.Equal(t, "tf-example-protect-group", d.Get("protect_group_name"))
 	assert.Equal(t, "DISK", d.Get("protect_group_type"))
@@ -199,7 +199,7 @@ func TestBdrcDisasterRecoveryProtectGroup_Update_Rename(t *testing.T) {
 		"protect_group_name":       "tf-example-protect-group-renamed",
 		"data_direction":           "POSITIVE",
 	})
-	d.SetId("pg-update123")
+	d.SetId("pg-update123#DISK")
 
 	patches.ApplyMethodFunc(d, "HasChange", func(key string) bool {
 		return key == "protect_group_name"
@@ -227,7 +227,7 @@ func TestBdrcDisasterRecoveryProtectGroup_Update_ImmutableArg(t *testing.T) {
 		"protect_group_name":       "tf-example-protect-group",
 		"data_direction":           "POSITIVE",
 	})
-	d.SetId("pg-immutable123")
+	d.SetId("pg-immutable123#INSTANCE")
 
 	patches.ApplyMethodFunc(d, "HasChange", func(key string) bool {
 		return key == "protect_group_type"
@@ -270,7 +270,7 @@ func TestBdrcDisasterRecoveryProtectGroup_Delete(t *testing.T) {
 		"protect_group_name":       "tf-example-protect-group",
 		"data_direction":           "POSITIVE",
 	})
-	d.SetId("pg-del123")
+	d.SetId("pg-del123#DISK")
 
 	err := res.Delete(d, meta)
 	assert.NoError(t, err)
@@ -304,7 +304,7 @@ func TestBdrcDisasterRecoveryProtectGroup_Read_NotFound(t *testing.T) {
 		"protect_group_name":       "tf-example-protect-group",
 		"data_direction":           "POSITIVE",
 	})
-	d.SetId("pg-missing")
+	d.SetId("pg-missing#DISK")
 
 	err := res.Read(d, meta)
 	assert.NoError(t, err)

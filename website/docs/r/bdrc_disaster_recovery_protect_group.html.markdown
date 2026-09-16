@@ -15,11 +15,11 @@ Provides a resource to create a BDRC disaster recovery protect group.
 
 ```hcl
 resource "tencentcloud_bdrc_disaster_recovery_protect_group" "example" {
-  site_pair_id             = "sitepair-xxxxxxxx"
-  protect_group_type       = "DISK"
-  recovery_point_objective = 15
-  protect_group_name       = "tf-example-protect-group"
+  site_pair_id             = "sitepair-a4mtozsz"
+  protect_group_name       = "tf-example"
   data_direction           = "POSITIVE"
+  protect_group_type       = "INSTANCE"
+  recovery_point_objective = 15
 }
 ```
 
@@ -64,9 +64,9 @@ In addition to all arguments above, the following attributes are exported:
 
 ## Import
 
-BDRC disaster recovery protect group can be imported using the ProtectGroupId, e.g.
+BDRC disaster recovery protect group can be imported using the protectGroupId#protectGroupType, e.g.
 
 ```
-terraform import tencentcloud_bdrc_disaster_recovery_protect_group.example pg-xxxxxxxx
+terraform import tencentcloud_bdrc_disaster_recovery_protect_group.example pg-l5xwdgsn#INSTANCE
 ```
 
