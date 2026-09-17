@@ -28,10 +28,6 @@ func newMockMetaBdrcVpcMapping() *mockMetaBdrcVpcMapping {
 	return &mockMetaBdrcVpcMapping{client: &connectivity.TencentCloudClient{}}
 }
 
-func ptrStringBdrc(s string) *string {
-	return &s
-}
-
 func ptrUint64Bdrc(v uint64) *uint64 {
 	return &v
 }

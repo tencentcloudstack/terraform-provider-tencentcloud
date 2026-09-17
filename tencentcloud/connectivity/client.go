@@ -269,7 +269,6 @@ type TencentCloudClient struct {
 	keewidbv20220308Conn        *keewidbv20220308.Client
 	vdbv20230616Conn            *vdbv20230616.Client
 	bhv20230418Conn             *bhv20230418.Client
-	bdrcV20260330Conn           *bdrcv20260330.Client
 	dbdcv20201029Conn           *dbdcv20201029.Client
 	vcubev20220410Conn          *vcubev20220410.Client
 	advisorv20200721Conn        *advisorv20200721.Client
@@ -1809,6 +1808,19 @@ func (me *TencentCloudClient) UseBhV20230418Client() *bhv20230418.Client {
 	return me.bhv20230418Conn
 }
 
+// UseBdrcV20260330Client return BDRC client for service
+func (me *TencentCloudClient) UseBdrcV20260330Client() *bdrcv20260330.Client {
+	if me.bdrcv20260330Conn != nil {
+		return me.bdrcv20260330Conn
+	}
+
+	cpf := me.NewClientProfile(300)
+	me.bdrcv20260330Conn, _ = bdrcv20260330.NewClient(me.Credential, me.Region, cpf)
+	me.bdrcv20260330Conn.WithHttpTransport(&LogRoundTripper{})
+
+	return me.bdrcv20260330Conn
+}
+
 // UseTrocketClient returns trocket client for service
 func (me *TencentCloudClient) UseTrocketClient() *trocket.Client {
 	if me.trocketConn != nil {
@@ -2215,18 +2227,6 @@ func (me *TencentCloudClient) UseBillingV20180709Client() *billing.Client {
 	me.billingv20180709Conn.WithHttpTransport(&LogRoundTripper{})
 
 	return me.billingv20180709Conn
-}
-
-// UseBdrcV20260330Client return BDRC client for service
-func (me *TencentCloudClient) UseBdrcV20260330Client() *bdrcv20260330.Client {
-	if me.bdrcv20260330Conn != nil {
-		return me.bdrcv20260330Conn
-	}
-	cpf := me.NewClientProfile(300)
-	me.bdrcv20260330Conn, _ = bdrcv20260330.NewClient(me.Credential, me.Region, cpf)
-	me.bdrcv20260330Conn.WithHttpTransport(&LogRoundTripper{})
-
-	return me.bdrcv20260330Conn
 }
 
 // UseIgtmV20231024Client return IGTM client for service
