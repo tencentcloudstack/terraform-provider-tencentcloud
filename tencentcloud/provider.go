@@ -2775,6 +2775,7 @@ func Provider() *schema.Provider {
 			"tencentcloud_igtm_strategy":                                                            igtm.ResourceTencentCloudIgtmStrategy(),
 			"tencentcloud_igtm_package_instance":                                                    igtm.ResourceTencentCloudIgtmPackageInstance(),
 			"tencentcloud_igtm_package_task":                                                        igtm.ResourceTencentCloudIgtmPackageTask(),
+			"tencentcloud_bdrc_disaster_recovery_site_pair":                                         bdrc.ResourceTencentCloudBdrcDisasterRecoverySitePair(),
 			"tencentcloud_dbdc_db_custom_cluster":                                                   dbdc.ResourceTencentCloudDbdcDbCustomCluster(),
 			"tencentcloud_dbdc_db_custom_node":                                                      dbdc.ResourceTencentCloudDbdcDbCustomNode(),
 			"tencentcloud_dbdc_node_to_db_custom_cluster_attachment":                                dbdc.ResourceTencentCloudDbdcNodeToDbCustomClusterAttachment(),
@@ -2784,6 +2785,7 @@ func Provider() *schema.Provider {
 			"tencentcloud_vcube_renew_video_operation":                                              vcube.ResourceTencentCloudVcubeRenewVideoOperation(),
 			"tencentcloud_advisor_authorization_operation":                                          advisor.ResourceTencentCloudAdvisorAuthorizationOperation(),
 			"tencentcloud_vdb_instance":                                                             vdb.ResourceTencentCloudVdbInstance(),
+			"tencentcloud_bdrc_disaster_recovery_protect_group":                                     bdrc.ResourceTencentCloudBdrcDisasterRecoveryProtectGroup(),
 		},
 
 		ConfigureFunc: providerConfigure,

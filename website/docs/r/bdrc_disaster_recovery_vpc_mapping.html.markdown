@@ -1,5 +1,5 @@
 ---
-subcategory: "Backup & Disaster Recovery(BDRC)"
+subcategory: "Backup and Disaster Recovery Center(BDRC)"
 layout: "tencentcloud"
 page_title: "TencentCloud: tencentcloud_bdrc_disaster_recovery_vpc_mapping"
 sidebar_current: "docs-tencentcloud-resource-bdrc_disaster_recovery_vpc_mapping"
