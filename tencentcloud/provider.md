@@ -2741,10 +2741,6 @@ tencentcloud_dbdc_db_custom_node
 tencentcloud_dbdc_node_to_db_custom_cluster_attachment
 tencentcloud_dbdc_db_custom_disaster_recover_group
 
-BDRC
-Resource
-tencentcloud_bdrc_security_group_mapping
-
 VCube
 Resource
 tencentcloud_vcube_application_and_video
@@ -2789,3 +2785,10 @@ tencentcloud_gs_android_instances
 KeeWiDB
 Data Source
 tencentcloud_keewidb_instances
+
+Backup and Disaster Recovery Center(BDRC)
+Resource
+tencentcloud_bdrc_disaster_recovery_vpc_mapping
+tencentcloud_bdrc_disaster_recovery_site_pair
+tencentcloud_bdrc_disaster_recovery_protect_group
+tencentcloud_bdrc_security_group_mapping
