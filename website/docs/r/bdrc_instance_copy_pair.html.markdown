@@ -1,5 +1,5 @@
 ---
-subcategory: "Backup and Disaster Recovery(BDRC)"
+subcategory: "Backup and Disaster Recovery Center(BDRC)"
 layout: "tencentcloud"
 page_title: "TencentCloud: tencentcloud_bdrc_instance_copy_pair"
 sidebar_current: "docs-tencentcloud-resource-bdrc_instance_copy_pair"
