@@ -2216,18 +2216,6 @@ func (me *TencentCloudClient) UseBillingV20180709Client() *billing.Client {
 	return me.billingv20180709Conn
 }
 
-// UseIgtmV20231024Client return IGTM client for service
-func (me *TencentCloudClient) UseIgtmV20231024Client() *igtmv20231024.Client {
-	if me.igtmv20231024Conn != nil {
-		return me.igtmv20231024Conn
-	}
-	cpf := me.NewClientProfile(300)
-	me.igtmv20231024Conn, _ = igtmv20231024.NewClient(me.Credential, me.Region, cpf)
-	me.igtmv20231024Conn.WithHttpTransport(&LogRoundTripper{})
-
-	return me.igtmv20231024Conn
-}
-
 // UseBdrcV20260330Client return BDRC client for service
 func (me *TencentCloudClient) UseBdrcV20260330Client() *bdrcv20260330.Client {
 	if me.bdrcv20260330Conn != nil {
@@ -2238,6 +2226,18 @@ func (me *TencentCloudClient) UseBdrcV20260330Client() *bdrcv20260330.Client {
 	me.bdrcv20260330Conn.WithHttpTransport(&LogRoundTripper{})
 
 	return me.bdrcv20260330Conn
+}
+
+// UseIgtmV20231024Client return IGTM client for service
+func (me *TencentCloudClient) UseIgtmV20231024Client() *igtmv20231024.Client {
+	if me.igtmv20231024Conn != nil {
+		return me.igtmv20231024Conn
+	}
+	cpf := me.NewClientProfile(300)
+	me.igtmv20231024Conn, _ = igtmv20231024.NewClient(me.Credential, me.Region, cpf)
+	me.igtmv20231024Conn.WithHttpTransport(&LogRoundTripper{})
+
+	return me.igtmv20231024Conn
 }
 
 // UseGa2V20250115Client return GA2 (Global Accelerator 2) client for service
