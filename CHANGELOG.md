@@ -1,3 +1,19 @@
+## 1.83.32(September 17, 2026)
+
+FEATURES:
+
+* **New Resource:** `tencentcloud_bdrc_copy_pair_tasks` ([#4513](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/4513))
+* **New Resource:** `tencentcloud_bdrc_disaster_recovery_protect_group` ([#4509](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/4509))
+* **New Resource:** `tencentcloud_bdrc_disaster_recovery_site_pair` ([#4510](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/4510))
+* **New Resource:** `tencentcloud_bdrc_disaster_recovery_vpc_mapping` ([#4511](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/4511))
+* **New Resource:** `tencentcloud_bdrc_instance_copy_pair` ([#4515](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/4515))
+* **New Resource:** `tencentcloud_bdrc_security_group_mapping` ([#4512](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/4512))
+
+ENHANCEMENTS:
+
+* resource/tencentcloud_cdn_domain: add `path_rules` field to `origin` block to support origin path rewrite rules ([#4474](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/4474))
+* resource/tencentcloud_kubernetes_native_node_pool: support `custom_image` parameter to specify custom image ID for native node pool ([#4507](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/4507))
+
 ## 1.83.31(September 11, 2026)
 
 FEATURES:
