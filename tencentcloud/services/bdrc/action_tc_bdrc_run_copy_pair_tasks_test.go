@@ -18,14 +18,14 @@ import (
 	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/services/bdrc"
 )
 
-func ptrStringBdrcCopyPairTasks(s string) *string {
+func ptrStringBdrcRunCopyPairTasks(s string) *string {
 	return &s
 }
 
-// bdrcCopyPairTasksSchema returns the framework action schema used to build
+// bdrcRunCopyPairTasksSchema returns the framework action schema used to build
 // the raw config value for InvokeRequest.
-func bdrcCopyPairTasksSchema(t *testing.T) action_schema.Schema {
-	a := bdrc.NewBdrcCopyPairTasks()
+func bdrcRunCopyPairTasksSchema(t *testing.T) action_schema.Schema {
+	a := bdrc.NewBdrcRunCopyPairTasks()
 	schemaResp := &action.SchemaResponse{}
 	a.Schema(context.Background(), action.SchemaRequest{}, schemaResp)
 	if schemaResp.Diagnostics.HasError() {
@@ -34,10 +34,10 @@ func bdrcCopyPairTasksSchema(t *testing.T) action_schema.Schema {
 	return schemaResp.Schema
 }
 
-// newBdrcCopyPairTasksInvokeRequest builds an action.InvokeRequest carrying
+// newBdrcRunCopyPairTasksInvokeRequest builds an action.InvokeRequest carrying
 // the given copy_pair_ids and copy_pair_type as raw tftypes values.
-func newBdrcCopyPairTasksInvokeRequest(t *testing.T, copyPairIds []string, copyPairType string) action.InvokeRequest {
-	s := bdrcCopyPairTasksSchema(t)
+func newBdrcRunCopyPairTasksInvokeRequest(t *testing.T, copyPairIds []string, copyPairType string) action.InvokeRequest {
+	s := bdrcRunCopyPairTasksSchema(t)
 
 	idVals := make([]tftypes.Value, 0, len(copyPairIds))
 	for _, id := range copyPairIds {
@@ -67,10 +67,10 @@ func newBdrcCopyPairTasksInvokeRequest(t *testing.T, copyPairIds []string, copyP
 	return req
 }
 
-// newBdrcCopyPairTasksInvokeRequestNullIds builds an InvokeRequest whose
+// newBdrcRunCopyPairTasksInvokeRequestNullIds builds an InvokeRequest whose
 // copy_pair_ids is null.
-func newBdrcCopyPairTasksInvokeRequestNullIds(t *testing.T, copyPairType string) action.InvokeRequest {
-	s := bdrcCopyPairTasksSchema(t)
+func newBdrcRunCopyPairTasksInvokeRequestNullIds(t *testing.T, copyPairType string) action.InvokeRequest {
+	s := bdrcRunCopyPairTasksSchema(t)
 
 	raw := tftypes.NewValue(tftypes.Object{
 		AttributeTypes: map[string]tftypes.Type{
@@ -88,19 +88,19 @@ func newBdrcCopyPairTasksInvokeRequestNullIds(t *testing.T, copyPairType string)
 	return req
 }
 
-// setBdrcCopyPairTasksClient injects a mock connectivity client into the
+// setBdrcRunCopyPairTasksClient injects a mock connectivity client into the
 // action instance via the Configure method.
-func setBdrcCopyPairTasksClient(a *bdrc.BdrcCopyPairTasks, client *connectivity.TencentCloudClient) {
+func setBdrcRunCopyPairTasksClient(a *bdrc.BdrcRunCopyPairTasks, client *connectivity.TencentCloudClient) {
 	meta := &sharedmeta.ProviderMeta{Client: client}
 	configureReq := action.ConfigureRequest{ProviderData: meta}
 	configureResp := &action.ConfigureResponse{}
 	a.Configure(context.Background(), configureReq, configureResp)
 }
 
-// go test ./tencentcloud/services/bdrc/ -run "TestBdrcCopyPairTasks" -v -count=1 -gcflags="all=-l"
+// go test ./tencentcloud/services/bdrc/ -run "TestBdrcRunCopyPairTasks" -v -count=1 -gcflags="all=-l"
 
-// TestBdrcCopyPairTasks_Invoke_Success tests a successful invoke
-func TestBdrcCopyPairTasks_Invoke_Success(t *testing.T) {
+// TestBdrcRunCopyPairTasks_Invoke_Success tests a successful invoke
+func TestBdrcRunCopyPairTasks_Invoke_Success(t *testing.T) {
 	patches := gomonkey.NewPatches()
 	defer patches.Reset()
 
@@ -114,18 +114,18 @@ func TestBdrcCopyPairTasks_Invoke_Success(t *testing.T) {
 		resp := bdrcv20260330.NewRunCopyPairTasksResponse()
 		resp.Response = &bdrcv20260330.RunCopyPairTasksResponseParams{
 			CopyPairIds: []*string{
-				ptrStringBdrcCopyPairTasks("pair-1111222233334444"),
-				ptrStringBdrcCopyPairTasks("pair-5555666677778888"),
+				ptrStringBdrcRunCopyPairTasks("pair-1111222233334444"),
+				ptrStringBdrcRunCopyPairTasks("pair-5555666677778888"),
 			},
-			RequestId: ptrStringBdrcCopyPairTasks("fake-request-id"),
+			RequestId: ptrStringBdrcRunCopyPairTasks("fake-request-id"),
 		}
 		return resp, nil
 	})
 
-	a := bdrc.NewBdrcCopyPairTasks()
-	setBdrcCopyPairTasksClient(a.(*bdrc.BdrcCopyPairTasks), client)
+	a := bdrc.NewBdrcRunCopyPairTasks()
+	setBdrcRunCopyPairTasksClient(a.(*bdrc.BdrcRunCopyPairTasks), client)
 
-	req := newBdrcCopyPairTasksInvokeRequest(t,
+	req := newBdrcRunCopyPairTasksInvokeRequest(t,
 		[]string{"pair-1111222233334444", "pair-5555666677778888"},
 		"DISK")
 	resp := &action.InvokeResponse{}
@@ -135,14 +135,14 @@ func TestBdrcCopyPairTasks_Invoke_Success(t *testing.T) {
 
 	assert.NotNil(t, gotRequest)
 	assert.Equal(t, []*string{
-		ptrStringBdrcCopyPairTasks("pair-1111222233334444"),
-		ptrStringBdrcCopyPairTasks("pair-5555666677778888"),
+		ptrStringBdrcRunCopyPairTasks("pair-1111222233334444"),
+		ptrStringBdrcRunCopyPairTasks("pair-5555666677778888"),
 	}, gotRequest.CopyPairIds)
 	assert.Equal(t, "DISK", *gotRequest.CopyPairType)
 }
 
-// TestBdrcCopyPairTasks_Invoke_APIError tests API error handling
-func TestBdrcCopyPairTasks_Invoke_APIError(t *testing.T) {
+// TestBdrcRunCopyPairTasks_Invoke_APIError tests API error handling
+func TestBdrcRunCopyPairTasks_Invoke_APIError(t *testing.T) {
 	patches := gomonkey.NewPatches()
 	defer patches.Reset()
 
@@ -154,10 +154,10 @@ func TestBdrcCopyPairTasks_Invoke_APIError(t *testing.T) {
 		return nil, fmt.Errorf("[TencentCloudSDKError] Code=ResourceNotFound.CopyPairNotExist, Message=copy pair not exist")
 	})
 
-	a := bdrc.NewBdrcCopyPairTasks()
-	setBdrcCopyPairTasksClient(a.(*bdrc.BdrcCopyPairTasks), client)
+	a := bdrc.NewBdrcRunCopyPairTasks()
+	setBdrcRunCopyPairTasksClient(a.(*bdrc.BdrcRunCopyPairTasks), client)
 
-	req := newBdrcCopyPairTasksInvokeRequest(t,
+	req := newBdrcRunCopyPairTasksInvokeRequest(t,
 		[]string{"pair-invalid"},
 		"DISK")
 	resp := &action.InvokeResponse{}
@@ -168,9 +168,9 @@ func TestBdrcCopyPairTasks_Invoke_APIError(t *testing.T) {
 	assert.Contains(t, resp.Diagnostics.Errors()[0].Detail(), "ResourceNotFound.CopyPairNotExist")
 }
 
-// TestBdrcCopyPairTasks_Invoke_MissingInput tests missing required inputs are
+// TestBdrcRunCopyPairTasks_Invoke_MissingInput tests missing required inputs are
 // rejected before any API call
-func TestBdrcCopyPairTasks_Invoke_MissingInput(t *testing.T) {
+func TestBdrcRunCopyPairTasks_Invoke_MissingInput(t *testing.T) {
 	patches := gomonkey.NewPatches()
 	defer patches.Reset()
 
@@ -184,11 +184,11 @@ func TestBdrcCopyPairTasks_Invoke_MissingInput(t *testing.T) {
 		return bdrcv20260330.NewRunCopyPairTasksResponse(), nil
 	})
 
-	a := bdrc.NewBdrcCopyPairTasks()
-	setBdrcCopyPairTasksClient(a.(*bdrc.BdrcCopyPairTasks), client)
+	a := bdrc.NewBdrcRunCopyPairTasks()
+	setBdrcRunCopyPairTasksClient(a.(*bdrc.BdrcRunCopyPairTasks), client)
 
 	// empty copy_pair_type
-	req := newBdrcCopyPairTasksInvokeRequest(t, []string{"pair-1111222233334444"}, "")
+	req := newBdrcRunCopyPairTasksInvokeRequest(t, []string{"pair-1111222233334444"}, "")
 	resp := &action.InvokeResponse{}
 	a.Invoke(context.Background(), req, resp)
 	assert.True(t, resp.Diagnostics.HasError())
@@ -196,7 +196,7 @@ func TestBdrcCopyPairTasks_Invoke_MissingInput(t *testing.T) {
 	assert.False(t, apiCalled)
 
 	// null copy_pair_ids
-	req = newBdrcCopyPairTasksInvokeRequestNullIds(t, "DISK")
+	req = newBdrcRunCopyPairTasksInvokeRequestNullIds(t, "DISK")
 	resp = &action.InvokeResponse{}
 	a.Invoke(context.Background(), req, resp)
 	assert.True(t, resp.Diagnostics.HasError())
@@ -204,11 +204,11 @@ func TestBdrcCopyPairTasks_Invoke_MissingInput(t *testing.T) {
 	assert.False(t, apiCalled)
 }
 
-// TestBdrcCopyPairTasks_Invoke_ClientNotConfigured tests the nil-client guard
-func TestBdrcCopyPairTasks_Invoke_ClientNotConfigured(t *testing.T) {
-	a := bdrc.NewBdrcCopyPairTasks()
+// TestBdrcRunCopyPairTasks_Invoke_ClientNotConfigured tests the nil-client guard
+func TestBdrcRunCopyPairTasks_Invoke_ClientNotConfigured(t *testing.T) {
+	a := bdrc.NewBdrcRunCopyPairTasks()
 
-	req := newBdrcCopyPairTasksInvokeRequest(t, []string{"pair-1111222233334444"}, "DISK")
+	req := newBdrcRunCopyPairTasksInvokeRequest(t, []string{"pair-1111222233334444"}, "DISK")
 	resp := &action.InvokeResponse{}
 	a.Invoke(context.Background(), req, resp)
 
@@ -216,13 +216,13 @@ func TestBdrcCopyPairTasks_Invoke_ClientNotConfigured(t *testing.T) {
 	assert.Contains(t, resp.Diagnostics.Errors()[0].Summary(), "Provider not configured")
 }
 
-// TestBdrcCopyPairTasks_MetadataAndSchema validates metadata and schema definition
-func TestBdrcCopyPairTasks_MetadataAndSchema(t *testing.T) {
-	a := bdrc.NewBdrcCopyPairTasks()
+// TestBdrcRunCopyPairTasks_MetadataAndSchema validates metadata and schema definition
+func TestBdrcRunCopyPairTasks_MetadataAndSchema(t *testing.T) {
+	a := bdrc.NewBdrcRunCopyPairTasks()
 
 	metaResp := &action.MetadataResponse{}
 	a.Metadata(context.Background(), action.MetadataRequest{}, metaResp)
-	assert.Equal(t, "tencentcloud_bdrc_copy_pair_tasks", metaResp.TypeName)
+	assert.Equal(t, "tencentcloud_bdrc_run_copy_pair_tasks", metaResp.TypeName)
 
 	schemaResp := &action.SchemaResponse{}
 	a.Schema(context.Background(), action.SchemaRequest{}, schemaResp)

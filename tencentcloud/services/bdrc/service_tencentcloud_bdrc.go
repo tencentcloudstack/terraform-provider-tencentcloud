@@ -138,7 +138,7 @@ func (me *BdrcService) DescribeSecurityGroupMappingById(ctx context.Context, sit
 
 	request := bdrcv20260330.NewDescribeSecurityGroupMappingsRequest()
 	request.SitePairId = helper.String(sitePairId)
-	request.Limit = helper.Int64(500)
+	request.Limit = helper.Int64(100)
 
 	defer func() {
 		if errRet != nil {
@@ -184,7 +184,7 @@ func (me *BdrcService) DescribeSecurityGroupMappingByFilter(ctx context.Context,
 
 	request := bdrcv20260330.NewDescribeSecurityGroupMappingsRequest()
 	request.SitePairId = helper.String(sitePairId)
-	request.Limit = helper.Int64(500)
+	request.Limit = helper.Int64(100)
 
 	srcFilter := &bdrcv20260330.FilterModel{
 		Name:   helper.String("src-security-group-id"),

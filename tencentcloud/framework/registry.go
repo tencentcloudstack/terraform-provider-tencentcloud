@@ -44,7 +44,7 @@ var listResourceFactories = []func() list.ListResource{}
 // actionFactories lists every framework Action factory.
 var actionFactories = []func() action.Action{
 	teo.NewTeoConfirmOriginAclUpdate,
-	bdrc.NewBdrcCopyPairTasks,
+	bdrc.NewBdrcRunCopyPairTasks,
 }
 
 // frameworkResources returns every framework Resource factory.

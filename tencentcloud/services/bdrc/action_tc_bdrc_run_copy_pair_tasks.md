@@ -5,13 +5,12 @@ Provides an action to launch a group of BDRC (Business Data Resilient Disaster R
 Example Usage
 
 ```hcl
-action "tencentcloud_bdrc_copy_pair_tasks" "example" {
+action "tencentcloud_bdrc_run_copy_pair_tasks" "example" {
   config {
     copy_pair_ids = [
-      "pair-1111222233334444",
-      "pair-5555666677778888",
+      "cvmcopypair-avp8kqtj",
     ]
-    copy_pair_type = "DISK"
+    copy_pair_type = "INSTANCE"
   }
 }
 ```

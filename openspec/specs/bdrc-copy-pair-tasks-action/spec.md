@@ -15,7 +15,7 @@ The system SHALL register a BDRC SDK client accessor `UseBdrcV20260330Client()` 
 - **THEN** the system SHALL return the cached bdrc client without creating a new one
 
 ### Requirement: Action Resource Schema Definition
-The system SHALL define a Terraform Plugin Framework action `tencentcloud_bdrc_copy_pair_tasks` with the following schema attributes:
+The system SHALL define a Terraform Plugin Framework action `tencentcloud_bdrc_run_copy_pair_tasks` with the following schema attributes:
 - `copy_pair_ids` (Required, List of String): 复制对 ID 列表
 - `copy_pair_type` (Required, String): 要启动复制对的类型，取值 DISK / INSTANCE / CFS
 
@@ -55,18 +55,18 @@ The system SHALL implement the action `Invoke` handler to call the BDRC `RunCopy
 - **THEN** the system SHALL NOT set any id, SHALL NOT write any output/computed attribute, and SHALL NOT implement Read/Update/Delete lifecycle methods
 
 ### Requirement: Action Registration
-The system SHALL register the `tencentcloud_bdrc_copy_pair_tasks` action factory `bdrc.NewBdrcCopyPairTasks` in `tencentcloud/framework/registry.go`'s `actionFactories` slice, and SHALL NOT register it in the SDKv2 `provider.go` `ResourcesMap`.
+The system SHALL register the `tencentcloud_bdrc_run_copy_pair_tasks` action factory `bdrc.NewBdrcRunCopyPairTasks` in `tencentcloud/framework/registry.go`'s `actionFactories` slice, and SHALL NOT register it in the SDKv2 `provider.go` `ResourcesMap`.
 
 #### Scenario: Action factory registered
 - **WHEN** the framework provider collects action factories
-- **THEN** `frameworkActions()` SHALL include `bdrc.NewBdrcCopyPairTasks`
+- **THEN** `frameworkActions()` SHALL include `bdrc.NewBdrcRunCopyPairTasks`
 
 #### Scenario: Not registered in SDKv2 provider
 - **WHEN** the SDKv2 provider resources map is built
-- **THEN** it SHALL NOT contain an entry keyed `tencentcloud_bdrc_copy_pair_tasks_operation`
+- **THEN** it SHALL NOT contain an entry keyed `tencentcloud_bdrc_run_copy_pair_tasks_operation`
 
 ### Requirement: Unit Tests
-The system SHALL provide unit tests in `tencentcloud/services/bdrc/action_tc_bdrc_copy_pair_tasks_test.go` using gomonkey to mock the BDRC cloud API, testing only business logic (no Terraform acceptance test suite).
+The system SHALL provide unit tests in `tencentcloud/services/bdrc/action_tc_bdrc_run_copy_pair_tasks_test.go` using gomonkey to mock the BDRC cloud API, testing only business logic (no Terraform acceptance test suite).
 
 #### Scenario: Successful invoke test
 - **WHEN** a test invokes the action with valid inputs and mocks `RunCopyPairTasksWithContext` to return a successful response
@@ -77,9 +77,9 @@ The system SHALL provide unit tests in `tencentcloud/services/bdrc/action_tc_bdr
 - **THEN** the test SHALL assert an error diagnostic is produced containing the API error message
 
 ### Requirement: Action Documentation
-The system SHALL provide a markdown documentation file `action_tc_bdrc_copy_pair_tasks.md` with a one-line description mentioning BDRC, an Example Usage section using the framework action `action` block syntax, and a NOTE about Terraform version support. It SHALL NOT contain an Import section or manually-written Argument/Attribute Reference sections.
+The system SHALL provide a markdown documentation file `action_tc_bdrc_run_copy_pair_tasks.md` with a one-line description mentioning BDRC, an Example Usage section using the framework action `action` block syntax, and a NOTE about Terraform version support. It SHALL NOT contain an Import section or manually-written Argument/Attribute Reference sections.
 
 #### Scenario: Documentation file exists with required sections
 - **WHEN** the action is created
-- **THEN** a `.md` file SHALL exist with a one-line description mentioning BDRC, an Example Usage block using `action "tencentcloud_bdrc_copy_pair_tasks" "example" { config { ... } }` syntax, and a NOTE about Terraform 1.14+ support
+- **THEN** a `.md` file SHALL exist with a one-line description mentioning BDRC, an Example Usage block using `action "tencentcloud_bdrc_run_copy_pair_tasks" "example" { config { ... } }` syntax, and a NOTE about Terraform 1.14+ support
 

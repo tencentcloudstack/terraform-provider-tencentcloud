@@ -19,9 +19,6 @@ func ResourceTencentCloudBdrcInstanceCopyPair() *schema.Resource {
 		Read:   resourceTencentCloudBdrcInstanceCopyPairRead,
 		Update: resourceTencentCloudBdrcInstanceCopyPairUpdate,
 		Delete: resourceTencentCloudBdrcInstanceCopyPairDelete,
-		Importer: &schema.ResourceImporter{
-			State: schema.ImportStatePassthrough,
-		},
 		Schema: map[string]*schema.Schema{
 			"protect_group_id": {
 				Type:        schema.TypeString,
@@ -106,11 +103,6 @@ func ResourceTencentCloudBdrcInstanceCopyPair() *schema.Resource {
 										Type:        schema.TypeInt,
 										Optional:    true,
 										Description: "Cloud disk size in GB.",
-									},
-									"delete_with_instance": {
-										Type:        schema.TypeBool,
-										Optional:    true,
-										Description: "Delete with instance.",
 									},
 								},
 							},
@@ -402,12 +394,6 @@ func ResourceTencentCloudBdrcInstanceCopyPair() *schema.Resource {
 			},
 
 			// computed
-			"copy_pair_ids": {
-				Type:        schema.TypeList,
-				Computed:    true,
-				Elem:        &schema.Schema{Type: schema.TypeString},
-				Description: "Created copy pair IDs.",
-			},
 			"copy_pair_id": {
 				Type:        schema.TypeString,
 				Computed:    true,
@@ -669,12 +655,6 @@ func resourceTencentCloudBdrcInstanceCopyPairCreate(d *schema.ResourceData, meta
 	copyPairId := *response.Response.CopyPairIds[0]
 	d.SetId(copyPairId)
 
-	copyPairIdsList := make([]interface{}, 0, len(response.Response.CopyPairIds))
-	for _, id := range response.Response.CopyPairIds {
-		copyPairIdsList = append(copyPairIdsList, *id)
-	}
-	_ = d.Set("copy_pair_ids", copyPairIdsList)
-
 	pollErr := resource.Retry(tccommon.ReadRetryTimeout, func() *resource.RetryError {
 		service := NewBdrcService(meta.(tccommon.ProviderMeta).GetAPIV3Conn())
 		copyPair, e := service.DescribeBdrcInstanceCopyPairById(ctx, copyPairId)
@@ -848,6 +828,8 @@ func resourceTencentCloudBdrcInstanceCopyPairRead(d *schema.ResourceData, meta i
 
 	if respData.ProtectionTimeSet != nil {
 		_ = d.Set("protection_time_set", helper.StringsInterfaces(respData.ProtectionTimeSet))
+	} else {
+		_ = d.Set("protection_time_set", []string{})
 	}
 
 	if respData.DiskCopyPairSet != nil {
