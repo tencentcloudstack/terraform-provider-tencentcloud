@@ -28,6 +28,7 @@ import (
 	apigateway "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/apigateway/v20180808"
 	apm "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/apm/v20210622"
 	as "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/as/v20180419"
+	bdrcv20260330 "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/bdrc/v20260330"
 	bhv20230418 "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/bh/v20230418"
 	bi "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/bi/v20220105"
 	billing "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/billing/v20180709"
@@ -261,6 +262,7 @@ type TencentCloudClient struct {
 	cdwpgv20201230Conn          *cdwpg.Client
 	gwlbv20240906Conn           *gwlb.Client
 	billingv20180709Conn        *billing.Client
+	bdrcv20260330Conn           *bdrcv20260330.Client
 	igtmv20231024Conn           *igtmv20231024.Client
 	ga2v20250115Conn            *ga2v20250115.Client
 	gsv20191118Conn             *gsv20191118.Client
@@ -2224,6 +2226,18 @@ func (me *TencentCloudClient) UseIgtmV20231024Client() *igtmv20231024.Client {
 	me.igtmv20231024Conn.WithHttpTransport(&LogRoundTripper{})
 
 	return me.igtmv20231024Conn
+}
+
+// UseBdrcV20260330Client return BDRC client for service
+func (me *TencentCloudClient) UseBdrcV20260330Client() *bdrcv20260330.Client {
+	if me.bdrcv20260330Conn != nil {
+		return me.bdrcv20260330Conn
+	}
+	cpf := me.NewClientProfile(300)
+	me.bdrcv20260330Conn, _ = bdrcv20260330.NewClient(me.Credential, me.Region, cpf)
+	me.bdrcv20260330Conn.WithHttpTransport(&LogRoundTripper{})
+
+	return me.bdrcv20260330Conn
 }
 
 // UseGa2V20250115Client return GA2 (Global Accelerator 2) client for service
