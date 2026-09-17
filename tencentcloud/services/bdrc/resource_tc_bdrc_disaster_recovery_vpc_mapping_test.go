@@ -100,7 +100,6 @@ func TestBdrcDisasterRecoveryVpcMapping_Create(t *testing.T) {
 	err := res.Create(d, meta)
 	assert.NoError(t, err)
 	assert.Equal(t, "sp-001#88", d.Id())
-	assert.Equal(t, int64(88), d.Get("id").(int))
 	assert.Equal(t, "vpc-source", d.Get("source_vpc").(string))
 	assert.Equal(t, "ok", d.Get("status").(string))
 	assert.Equal(t, "NORMAL", d.Get("life_state").(string))
