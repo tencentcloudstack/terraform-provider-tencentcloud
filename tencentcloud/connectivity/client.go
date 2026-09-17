@@ -244,7 +244,6 @@ type TencentCloudClient struct {
 	omitNilConn                 *common.Client
 	emrv20190103Conn            *emr.Client
 	teov20220901Conn            *teo.Client
-	bdrcv20260330Conn           *bdrcv20260330.Client
 	sslv20191205Conn            *sslCertificate.Client
 	postgresv20170312Conn       *postgre.Client
 	cfwv20190904Conn            *cfw.Client
@@ -263,6 +262,7 @@ type TencentCloudClient struct {
 	cdwpgv20201230Conn          *cdwpg.Client
 	gwlbv20240906Conn           *gwlb.Client
 	billingv20180709Conn        *billing.Client
+	bdrcv20260330Conn           *bdrcv20260330.Client
 	igtmv20231024Conn           *igtmv20231024.Client
 	ga2v20250115Conn            *ga2v20250115.Client
 	gsv20191118Conn             *gsv20191118.Client
@@ -1808,6 +1808,19 @@ func (me *TencentCloudClient) UseBhV20230418Client() *bhv20230418.Client {
 	return me.bhv20230418Conn
 }
 
+// UseBdrcV20260330Client return BDRC client for service
+func (me *TencentCloudClient) UseBdrcV20260330Client() *bdrcv20260330.Client {
+	if me.bdrcv20260330Conn != nil {
+		return me.bdrcv20260330Conn
+	}
+
+	cpf := me.NewClientProfile(300)
+	me.bdrcv20260330Conn, _ = bdrcv20260330.NewClient(me.Credential, me.Region, cpf)
+	me.bdrcv20260330Conn.WithHttpTransport(&LogRoundTripper{})
+
+	return me.bdrcv20260330Conn
+}
+
 // UseTrocketClient returns trocket client for service
 func (me *TencentCloudClient) UseTrocketClient() *trocket.Client {
 	if me.trocketConn != nil {
@@ -1997,18 +2010,6 @@ func (me *TencentCloudClient) UseTeoV20220901Client() *teo.Client {
 	me.teov20220901Conn.WithHttpTransport(&LogRoundTripper{})
 
 	return me.teov20220901Conn
-}
-
-// UseBdrcV20260330Client return BDRC client for service
-func (me *TencentCloudClient) UseBdrcV20260330Client() *bdrcv20260330.Client {
-	if me.bdrcv20260330Conn != nil {
-		return me.bdrcv20260330Conn
-	}
-	cpf := me.NewClientProfile(300)
-	me.bdrcv20260330Conn, _ = bdrcv20260330.NewClient(me.Credential, me.Region, cpf)
-	me.bdrcv20260330Conn.WithHttpTransport(&LogRoundTripper{})
-
-	return me.bdrcv20260330Conn
 }
 
 // UseSslV20191205Client return SSL client for service

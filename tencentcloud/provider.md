@@ -2785,3 +2785,10 @@ tencentcloud_gs_android_instances
 KeeWiDB
 Data Source
 tencentcloud_keewidb_instances
+
+Backup and Disaster Recovery Center(BDRC)
+Resource
+tencentcloud_bdrc_disaster_recovery_vpc_mapping
+tencentcloud_bdrc_disaster_recovery_site_pair
+tencentcloud_bdrc_disaster_recovery_protect_group
+tencentcloud_bdrc_security_group_mapping
