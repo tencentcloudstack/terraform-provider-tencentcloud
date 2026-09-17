@@ -269,6 +269,7 @@ type TencentCloudClient struct {
 	keewidbv20220308Conn        *keewidbv20220308.Client
 	vdbv20230616Conn            *vdbv20230616.Client
 	bhv20230418Conn             *bhv20230418.Client
+	bdrcV20260330Conn           *bdrcv20260330.Client
 	dbdcv20201029Conn           *dbdcv20201029.Client
 	vcubev20220410Conn          *vcubev20220410.Client
 	advisorv20200721Conn        *advisorv20200721.Client

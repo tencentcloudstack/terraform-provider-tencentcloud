@@ -2721,10 +2721,6 @@ tencentcloud_igtm_strategy
 tencentcloud_igtm_package_instance
 tencentcloud_igtm_package_task
 
-Backup and Disaster Recovery Center(BDRC)
-Resource
-tencentcloud_bdrc_disaster_recovery_site_pair
-
 Database Dedicated Cluster(DBDC)
 Data Source
 tencentcloud_dbdc_db_custom_clusters
@@ -2790,6 +2786,8 @@ KeeWiDB
 Data Source
 tencentcloud_keewidb_instances
 
-Business Disaster Recovery Center(BDRC)
+Backup and Disaster Recovery Center(BDRC)
 Resource
+tencentcloud_bdrc_disaster_recovery_vpc_mapping
+tencentcloud_bdrc_disaster_recovery_site_pair
 tencentcloud_bdrc_disaster_recovery_protect_group
