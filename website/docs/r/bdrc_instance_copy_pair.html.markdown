@@ -71,7 +71,6 @@ The following arguments are supported:
 
 * `create_target_instance_parameters` - (Required, List, ForceNew) Target CVM creation parameters list.
 * `protect_group_id` - (Required, String, ForceNew) Protect group ID.
-* `client_token` - (Optional, String, ForceNew) Idempotency token.
 * `delete_target_resource` - (Optional, Bool) Whether to delete the disaster-recovery site disk on destroy.
 * `instance_copy_pair_name` - (Optional, String) Copy pair name.
 * `recovery_point_objective` - (Optional, Int, ForceNew) User-desired RPO in minutes.

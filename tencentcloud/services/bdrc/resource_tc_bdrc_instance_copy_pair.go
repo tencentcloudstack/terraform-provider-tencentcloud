@@ -388,13 +388,6 @@ func ResourceTencentCloudBdrcInstanceCopyPair() *schema.Resource {
 				Description: "Copy pair name.",
 			},
 
-			"client_token": {
-				Type:        schema.TypeString,
-				Optional:    true,
-				ForceNew:    true,
-				Description: "Idempotency token.",
-			},
-
 			"recovery_point_objective": {
 				Type:        schema.TypeInt,
 				Optional:    true,
@@ -641,10 +634,6 @@ func resourceTencentCloudBdrcInstanceCopyPairCreate(d *schema.ResourceData, meta
 
 	if v, ok := d.GetOk("instance_copy_pair_name"); ok {
 		request.InstanceCopyPairName = helper.String(v.(string))
-	}
-
-	if v, ok := d.GetOk("client_token"); ok {
-		request.ClientToken = helper.String(v.(string))
 	}
 
 	if v, ok := d.GetOkExists("recovery_point_objective"); ok {
@@ -915,7 +904,7 @@ func resourceTencentCloudBdrcInstanceCopyPairUpdate(d *schema.ResourceData, meta
 		ctx   = tccommon.NewResourceLifeCycleHandleFuncContext(context.Background(), logId, d, meta)
 	)
 
-	immutableArgs := []string{"protect_group_id", "create_target_instance_parameters", "client_token", "recovery_point_objective", "delete_target_resource"}
+	immutableArgs := []string{"protect_group_id", "create_target_instance_parameters", "recovery_point_objective", "delete_target_resource"}
 	for _, v := range immutableArgs {
 		if d.HasChange(v) {
 			return fmt.Errorf("bdrc_instance_copy_pair argument `%s` is immutable, it can only be changed via recreation.", v)
