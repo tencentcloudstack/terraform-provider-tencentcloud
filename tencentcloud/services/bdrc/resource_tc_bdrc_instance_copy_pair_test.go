@@ -28,14 +28,6 @@ func newMockMetaBdrc() *mockMetaBdrc {
 	return &mockMetaBdrc{client: &connectivity.TencentCloudClient{}}
 }
 
-func ptrStringBdrc(s string) *string {
-	return &s
-}
-
-func ptrInt64Bdrc(i int64) *int64 {
-	return &i
-}
-
 func ptrBoolBdrc(b bool) *bool {
 	return &b
 }

@@ -3,61 +3,66 @@ Provides a resource to create a BDRC instance copy pair
 Example Usage
 
 ```hcl
+resource "tencentcloud_bdrc_disaster_recovery_site_pair" "example" {
+  disaster_recovery_type = "CROSS_ZONE"
+  source_region          = "ap-shanghai"
+  source_zone            = "ap-shanghai-3"
+  target_region          = "ap-shanghai"
+  target_zone            = "ap-shanghai-4"
+  source_vpc             = "vpc-lx6q09ji"
+  target_vpc             = "vpc-jktad5e6"
+  site_pair_product_type = "INSTANCE"
+  site_pair_name         = "tf-example"
+  copy_type              = "ASY"
+}
+
+resource "tencentcloud_bdrc_disaster_recovery_protect_group" "example" {
+  site_pair_id             = tencentcloud_bdrc_disaster_recovery_site_pair.example.site_pair_id
+  protect_group_name       = "tf-example"
+  data_direction           = "POSITIVE"
+  protect_group_type       = "INSTANCE"
+  recovery_point_objective = 15
+}
+
+resource "tencentcloud_bdrc_disaster_recovery_vpc_mapping" "example" {
+  site_pair_id     = tencentcloud_bdrc_disaster_recovery_site_pair.example.site_pair_id
+  source_vpc_id    = "vpc-lx6q09ji"
+  source_subnet_id = "subnet-nyrg9pkl"
+  target_vpc_id    = "vpc-jktad5e6"
+  target_subnet_id = "subnet-jdzuvvvb"
+}
+
+resource "tencentcloud_bdrc_security_group_mapping" "example" {
+  site_pair_id             = tencentcloud_bdrc_disaster_recovery_site_pair.example.site_pair_id
+  src_security_group_id    = "sg-ool7tmf8"
+  target_security_group_id = "sg-jfy3gi92"
+}
+
 resource "tencentcloud_bdrc_instance_copy_pair" "example" {
-  protect_group_id          = "ProtectGroup-xxxxx"
-  instance_copy_pair_name   = "tf-example-copy-pair"
-  recovery_point_objective  = 15
+  protect_group_id         = tencentcloud_bdrc_disaster_recovery_protect_group.example.protect_group_id
+  instance_copy_pair_name  = "tf-example"
+  recovery_point_objective = 15
 
   create_target_instance_parameters {
-    source_instance_id   = "ins-xxxxxxxx"
+    source_instance_id   = "ins-0ryh0vvn"
     instance_charge_type = "POSTPAID_BY_HOUR"
-    instance_type        = "S5.MEDIUM4"
-    image_id             = "img-xxxxxxxx"
+    instance_type        = "S5.MEDIUM2"
+    image_id             = "img-9qrfy1xt"
     instance_name        = "tf-example-instance"
 
     placement {
-      zone       = "ap-guangzhou-3"
-      project_id = 0
+      zone = "ap-shanghai-4"
     }
 
     system_disk {
-      disk_type            = "CLOUD_BSSD"
-      disk_size            = 50
-      delete_with_instance = true
+      disk_type = "CLOUD_BSSD"
+      disk_size = 50
     }
 
     virtual_private_cloud {
-      vpc_id       = "vpc-xxxxxxxx"
-      subnet_id    = "subnet-xxxxxxxx"
-      as_vpc_gateway = false
-    }
-
-    internet_accessible {
-      internet_charge_type       = "TRAFFIC_POSTPAID_BY_HOUR"
-      internet_max_bandwidth_out = 10
-      public_ip_assigned         = false
-    }
-
-    login_settings {
-      password = "TFexample123"
-    }
-
-    enhanced_service {
-      security_service {
-        enabled = true
-      }
-      monitor_service {
-        enabled = true
-      }
+      vpc_id    = "vpc-jktad5e6"
+      subnet_id = "subnet-jdzuvvvb"
     }
   }
 }
-```
-
-Import
-
-BDRC instance copy pair can be imported using the copyPairId, e.g.
-
-```
-terraform import tencentcloud_bdrc_instance_copy_pair.example cvmcopypair-xxxxxxxx
 ```

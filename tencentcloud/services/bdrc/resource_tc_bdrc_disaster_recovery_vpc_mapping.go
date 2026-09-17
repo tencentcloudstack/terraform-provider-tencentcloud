@@ -60,7 +60,7 @@ func ResourceTencentCloudBdrcDisasterRecoveryVpcMapping() *schema.Resource {
 			},
 
 			// computed
-			"id": {
+			"vpc_mapping_id": {
 				Type:        schema.TypeInt,
 				Computed:    true,
 				Description: "Mapping rule primary key ID.",
@@ -267,10 +267,6 @@ func resourceTencentCloudBdrcDisasterRecoveryVpcMappingRead(d *schema.ResourceDa
 		return nil
 	}
 
-	if matched.Id != nil {
-		_ = d.Set("id", *matched.Id)
-	}
-
 	if matched.SitePairId != nil {
 		_ = d.Set("site_pair_id", *matched.SitePairId)
 	}
@@ -289,6 +285,10 @@ func resourceTencentCloudBdrcDisasterRecoveryVpcMappingRead(d *schema.ResourceDa
 
 	if matched.TargetSubnet != nil {
 		_ = d.Set("target_subnet_id", *matched.TargetSubnet)
+	}
+
+	if matched.Id != nil {
+		_ = d.Set("vpc_mapping_id", *matched.Id)
 	}
 
 	if matched.Status != nil {

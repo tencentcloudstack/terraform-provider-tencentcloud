@@ -1,13 +1,13 @@
 ---
-subcategory: "Provider Meta"
+subcategory: "Backup and Disaster Recovery Center(BDRC)"
 layout: "tencentcloud"
-page_title: "TencentCloud: tencentcloud_bdrc_copy_pair_tasks"
-sidebar_current: "docs-tencentcloud-action-bdrc_copy_pair_tasks"
+page_title: "TencentCloud: tencentcloud_bdrc_run_copy_pair_tasks"
+sidebar_current: "docs-tencentcloud-action-bdrc_run_copy_pair_tasks"
 description: |-
   Provides an action to launch a group of BDRC (Business Data Resilient Disaster Recovery) copy pair tasks via the RunCopyPairTasks API. This is a one-time operation; no cloud-side state is persisted after the action completes.
 ---
 
-# tencentcloud_bdrc_copy_pair_tasks
+# tencentcloud_bdrc_run_copy_pair_tasks
 
 Provides an action to launch a group of BDRC (Business Data Resilient Disaster Recovery) copy pair tasks via the RunCopyPairTasks API. This is a one-time operation; no cloud-side state is persisted after the action completes.
 
@@ -16,13 +16,12 @@ Provides an action to launch a group of BDRC (Business Data Resilient Disaster R
 ## Example Usage
 
 ```hcl
-action "tencentcloud_bdrc_copy_pair_tasks" "example" {
+action "tencentcloud_bdrc_run_copy_pair_tasks" "example" {
   config {
     copy_pair_ids = [
-      "pair-1111222233334444",
-      "pair-5555666677778888",
+      "cvmcopypair-avp8kqtj",
     ]
-    copy_pair_type = "DISK"
+    copy_pair_type = "INSTANCE"
   }
 }
 ```

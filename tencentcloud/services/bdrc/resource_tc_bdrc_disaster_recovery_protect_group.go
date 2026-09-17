@@ -61,6 +61,12 @@ func ResourceTencentCloudBdrcDisasterRecoveryProtectGroup() *schema.Resource {
 			},
 
 			// computed
+			"protect_group_id": {
+				Type:        schema.TypeString,
+				Computed:    true,
+				Description: "Protect Group ID.",
+			},
+
 			"app_id": {
 				Type:        schema.TypeInt,
 				Computed:    true,
@@ -309,6 +315,10 @@ func resourceTencentCloudBdrcDisasterRecoveryProtectGroupRead(d *schema.Resource
 
 	if respData.DataDirection != nil {
 		_ = d.Set("data_direction", respData.DataDirection)
+	}
+
+	if respData.ProtectGroupId != nil {
+		_ = d.Set("protect_group_id", respData.ProtectGroupId)
 	}
 
 	if respData.AppId != nil {

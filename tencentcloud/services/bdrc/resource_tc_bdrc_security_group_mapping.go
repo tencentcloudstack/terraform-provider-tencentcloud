@@ -44,6 +44,7 @@ func ResourceTencentCloudBdrcSecurityGroupMapping() *schema.Resource {
 				Description: "Disaster recovery end instance bound to the security group ID.",
 			},
 
+			// computed
 			"security_group_mapping_id": {
 				Type:        schema.TypeString,
 				Computed:    true,

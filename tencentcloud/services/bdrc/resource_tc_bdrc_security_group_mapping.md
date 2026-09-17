@@ -3,8 +3,21 @@ Provides a resource to create a BDRC security group mapping.
 Example Usage
 
 ```hcl
+resource "tencentcloud_bdrc_disaster_recovery_site_pair" "example" {
+  disaster_recovery_type = "CROSS_ZONE"
+  source_region          = "ap-shanghai"
+  source_zone            = "ap-shanghai-3"
+  target_region          = "ap-shanghai"
+  target_zone            = "ap-shanghai-4"
+  source_vpc             = "vpc-lx6q09ji"
+  target_vpc             = "vpc-jktad5e6"
+  site_pair_product_type = "INSTANCE"
+  site_pair_name         = "tf-example"
+  copy_type              = "ASY"
+}
+
 resource "tencentcloud_bdrc_security_group_mapping" "example" {
-  site_pair_id             = "sitepair-a4mtozsz"
+  site_pair_id             = tencentcloud_bdrc_disaster_recovery_site_pair.example.site_pair_id
   src_security_group_id    = "sg-ool7tmf8"
   target_security_group_id = "sg-jfy3gi92"
 }
@@ -15,5 +28,5 @@ Import
 BDRC security group mapping can be imported using the sitePairId#securityGroupMappingId, e.g.
 
 ```
-terraform import tencentcloud_bdrc_security_group_mapping.example sitepair-a4mtozsz#sgmap-88ylio5h
+terraform import tencentcloud_bdrc_security_group_mapping.example sitepair-1sxvs5oj#sgmap-b7teooa7
 ```
