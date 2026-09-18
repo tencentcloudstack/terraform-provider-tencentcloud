@@ -1,3 +1,3 @@
 ```release-note:enhancement
-resource/tencentcloud_kubernetes_native_node_pool: support `custom_image` parameter to specify custom image ID for native node pool
+resource/tencentcloud_kubernetes_node_pool: support modify `extra_args`
 ```
