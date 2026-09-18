@@ -4899,6 +4899,126 @@ func (c *Client) RestoreDBInstanceWithContext(ctx context.Context, request *Rest
     return
 }
 
+func NewScaleDownDBInstanceCpuRequest() (request *ScaleDownDBInstanceCpuRequest) {
+    request = &ScaleDownDBInstanceCpuRequest{
+        BaseRequest: &tchttp.BaseRequest{},
+    }
+    
+    request.Init().WithApiInfo("mongodb", APIVersion, "ScaleDownDBInstanceCpu")
+    
+    
+    return
+}
+
+func NewScaleDownDBInstanceCpuResponse() (response *ScaleDownDBInstanceCpuResponse) {
+    response = &ScaleDownDBInstanceCpuResponse{
+        BaseResponse: &tchttp.BaseResponse{},
+    } 
+    return
+
+}
+
+// ScaleDownDBInstanceCpu
+// ScaleDownDBInstanceCpu
+//
+// 可能返回的错误码:
+//  INTERNALERROR = "InternalError"
+//  INVALIDPARAMETER = "InvalidParameter"
+//  INVALIDPARAMETERVALUE_ILLEGALINSTANCESTATUS = "InvalidParameterValue.IllegalInstanceStatus"
+//  INVALIDPARAMETERVALUE_LOCKFAILED = "InvalidParameterValue.LockFailed"
+//  INVALIDPARAMETERVALUE_NOTFOUNDINSTANCE = "InvalidParameterValue.NotFoundInstance"
+//  INVALIDPARAMETERVALUE_STATUSABNORMAL = "InvalidParameterValue.StatusAbnormal"
+func (c *Client) ScaleDownDBInstanceCpu(request *ScaleDownDBInstanceCpuRequest) (response *ScaleDownDBInstanceCpuResponse, err error) {
+    return c.ScaleDownDBInstanceCpuWithContext(context.Background(), request)
+}
+
+// ScaleDownDBInstanceCpu
+// ScaleDownDBInstanceCpu
+//
+// 可能返回的错误码:
+//  INTERNALERROR = "InternalError"
+//  INVALIDPARAMETER = "InvalidParameter"
+//  INVALIDPARAMETERVALUE_ILLEGALINSTANCESTATUS = "InvalidParameterValue.IllegalInstanceStatus"
+//  INVALIDPARAMETERVALUE_LOCKFAILED = "InvalidParameterValue.LockFailed"
+//  INVALIDPARAMETERVALUE_NOTFOUNDINSTANCE = "InvalidParameterValue.NotFoundInstance"
+//  INVALIDPARAMETERVALUE_STATUSABNORMAL = "InvalidParameterValue.StatusAbnormal"
+func (c *Client) ScaleDownDBInstanceCpuWithContext(ctx context.Context, request *ScaleDownDBInstanceCpuRequest) (response *ScaleDownDBInstanceCpuResponse, err error) {
+    if request == nil {
+        request = NewScaleDownDBInstanceCpuRequest()
+    }
+    c.InitBaseRequest(&request.BaseRequest, "mongodb", APIVersion, "ScaleDownDBInstanceCpu")
+    
+    if c.GetCredential() == nil {
+        return nil, errors.New("ScaleDownDBInstanceCpu require credential")
+    }
+
+    request.SetContext(ctx)
+    
+    response = NewScaleDownDBInstanceCpuResponse()
+    err = c.Send(request, response)
+    return
+}
+
+func NewScaleUpDBInstanceCpuRequest() (request *ScaleUpDBInstanceCpuRequest) {
+    request = &ScaleUpDBInstanceCpuRequest{
+        BaseRequest: &tchttp.BaseRequest{},
+    }
+    
+    request.Init().WithApiInfo("mongodb", APIVersion, "ScaleUpDBInstanceCpu")
+    
+    
+    return
+}
+
+func NewScaleUpDBInstanceCpuResponse() (response *ScaleUpDBInstanceCpuResponse) {
+    response = &ScaleUpDBInstanceCpuResponse{
+        BaseResponse: &tchttp.BaseResponse{},
+    } 
+    return
+
+}
+
+// ScaleUpDBInstanceCpu
+// 手动开启cpu弹性扩容
+//
+// 可能返回的错误码:
+//  INTERNALERROR = "InternalError"
+//  INVALIDPARAMETERVALUE = "InvalidParameterValue"
+//  INVALIDPARAMETERVALUE_ILLEGALINSTANCESTATUS = "InvalidParameterValue.IllegalInstanceStatus"
+//  INVALIDPARAMETERVALUE_LOCKFAILED = "InvalidParameterValue.LockFailed"
+//  INVALIDPARAMETERVALUE_NOTFOUNDINSTANCE = "InvalidParameterValue.NotFoundInstance"
+//  INVALIDPARAMETERVALUE_STATUSABNORMAL = "InvalidParameterValue.StatusAbnormal"
+func (c *Client) ScaleUpDBInstanceCpu(request *ScaleUpDBInstanceCpuRequest) (response *ScaleUpDBInstanceCpuResponse, err error) {
+    return c.ScaleUpDBInstanceCpuWithContext(context.Background(), request)
+}
+
+// ScaleUpDBInstanceCpu
+// 手动开启cpu弹性扩容
+//
+// 可能返回的错误码:
+//  INTERNALERROR = "InternalError"
+//  INVALIDPARAMETERVALUE = "InvalidParameterValue"
+//  INVALIDPARAMETERVALUE_ILLEGALINSTANCESTATUS = "InvalidParameterValue.IllegalInstanceStatus"
+//  INVALIDPARAMETERVALUE_LOCKFAILED = "InvalidParameterValue.LockFailed"
+//  INVALIDPARAMETERVALUE_NOTFOUNDINSTANCE = "InvalidParameterValue.NotFoundInstance"
+//  INVALIDPARAMETERVALUE_STATUSABNORMAL = "InvalidParameterValue.StatusAbnormal"
+func (c *Client) ScaleUpDBInstanceCpuWithContext(ctx context.Context, request *ScaleUpDBInstanceCpuRequest) (response *ScaleUpDBInstanceCpuResponse, err error) {
+    if request == nil {
+        request = NewScaleUpDBInstanceCpuRequest()
+    }
+    c.InitBaseRequest(&request.BaseRequest, "mongodb", APIVersion, "ScaleUpDBInstanceCpu")
+    
+    if c.GetCredential() == nil {
+        return nil, errors.New("ScaleUpDBInstanceCpu require credential")
+    }
+
+    request.SetContext(ctx)
+    
+    response = NewScaleUpDBInstanceCpuResponse()
+    err = c.Send(request, response)
+    return
+}
+
 func NewSetAccountUserPrivilegeRequest() (request *SetAccountUserPrivilegeRequest) {
     request = &SetAccountUserPrivilegeRequest{
         BaseRequest: &tchttp.BaseRequest{},
