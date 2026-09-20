@@ -980,6 +980,7 @@ func Provider() *schema.Provider {
 			"tencentcloud_teo_web_security_templates":                             teo.DataSourceTencentCloudTeoWebSecurityTemplates(),
 			"tencentcloud_teo_content_quota":                                      teo.DataSourceTencentCloudTeoContentQuota(),
 			"tencentcloud_teo_billing_data":                                       teo.DataSourceTencentCloudTeoBillingData(),
+			"tencentcloud_teo_inference_service_deployment_records":               teo.DataSourceTencentCloudTeoInferenceServiceDeploymentRecords(),
 			"tencentcloud_sts_caller_identity":                                    sts.DataSourceTencentCloudStsCallerIdentity(),
 			"tencentcloud_dcdb_instances":                                         dcdb.DataSourceTencentCloudDcdbInstances(),
 			"tencentcloud_dcdb_accounts":                                          dcdb.DataSourceTencentCloudDcdbAccounts(),
