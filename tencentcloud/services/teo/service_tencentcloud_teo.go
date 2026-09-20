@@ -3668,3 +3668,69 @@ func (me *TeoService) DescribeTeoEdgeKvListByFilter(ctx context.Context, param m
 
 	return
 }
+
+func (me *TeoService) DescribeTeoInferenceServiceDeploymentLogs(ctx context.Context, param map[string]interface{}) (ret []*teov20220901.InferenceServiceDeploymentLogInfo, errRet error) {
+	var (
+		logId   = tccommon.GetLogId(ctx)
+		request = teov20220901.NewDescribeInferenceServiceDeploymentLogsRequest()
+	)
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	for k, v := range param {
+		if k == "ZoneId" {
+			request.ZoneId = v.(*string)
+		}
+		if k == "ServiceId" {
+			request.ServiceId = v.(*string)
+		}
+		if k == "RecordId" {
+			request.RecordId = v.(*string)
+		}
+		if k == "StartTime" {
+			request.StartTime = v.(*string)
+		}
+		if k == "EndTime" {
+			request.EndTime = v.(*string)
+		}
+		if k == "SortBy" {
+			request.SortBy = v.(*string)
+		}
+		if k == "SortOrder" {
+			request.SortOrder = v.(*string)
+		}
+	}
+
+	ratelimit.Check(request.GetAction())
+
+	var (
+		offset int64 = 0
+		limit  int64 = 1000
+	)
+	for {
+		request.Offset = &offset
+		request.Limit = &limit
+		response, err := me.client.UseTeoV20220901Client().DescribeInferenceServiceDeploymentLogs(request)
+		if err != nil {
+			errRet = err
+			return
+		}
+		log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+		if response == nil || len(response.Response.DeploymentLogInfoSet) < 1 {
+			break
+		}
+		ret = append(ret, response.Response.DeploymentLogInfoSet...)
+		if len(response.Response.DeploymentLogInfoSet) < int(limit) {
+			break
+		}
+
+		offset += limit
+	}
+
+	return
+}
