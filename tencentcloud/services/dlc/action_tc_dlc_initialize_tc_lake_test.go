@@ -7,6 +7,7 @@ import (
 
 	"github.com/agiledragon/gomonkey/v2"
 	"github.com/hashicorp/terraform-plugin-framework/action"
+	action_schema "github.com/hashicorp/terraform-plugin-framework/action/schema"
 	"github.com/hashicorp/terraform-plugin-go/tftypes"
 	"github.com/stretchr/testify/assert"
 	dlcv20210125 "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/dlc/v20210125"
@@ -26,7 +27,7 @@ func ptrBoolDlcInitializeTCLake(b bool) *bool {
 
 // dlcInitializeTCLakeSchema returns the framework action schema used to build
 // the raw config value for InvokeRequest.
-func dlcInitializeTCLakeSchema(t *testing.T) action.Schema {
+func dlcInitializeTCLakeSchema(t *testing.T) action_schema.Schema {
 	a := dlc.NewDlcInitializeTCLake()
 	schemaResp := &action.SchemaResponse{}
 	a.Schema(context.Background(), action.SchemaRequest{}, schemaResp)
