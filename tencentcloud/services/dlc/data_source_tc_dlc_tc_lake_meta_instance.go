@@ -6,6 +6,7 @@ import (
 	"log"
 
 	tccommon "github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/common"
+	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/internal/helper"
 
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
@@ -59,7 +60,7 @@ func dataSourceTencentCloudDlcTCLakeMetaInstanceRead(d *schema.ResourceData, met
 		_ = d.Set("status", status)
 	}
 
-	d.SetId("tc_lake_meta_instance")
+	d.SetId(helper.BuildToken())
 	output, ok := d.GetOk("result_output_file")
 	if ok && output.(string) != "" {
 		if e := tccommon.WriteToFile(output.(string), status); e != nil {
