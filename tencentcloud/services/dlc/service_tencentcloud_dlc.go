@@ -311,6 +311,34 @@ func (me *DlcService) DescribeDlcDescribeUserTypeByFilter(ctx context.Context, p
 	describeUserType = response.Response.UserType
 	return
 }
+func (me *DlcService) DescribeDlcTCLakeMetaInstance(ctx context.Context) (status *string, errRet error) {
+	var (
+		logId   = tccommon.GetLogId(ctx)
+		request = dlc.NewDescribeTCLakeMetaInstanceRequest()
+	)
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	ratelimit.Check(request.GetAction())
+
+	response, err := me.client.UseDlcClient().DescribeTCLakeMetaInstance(request)
+	if err != nil {
+		errRet = err
+		return
+	}
+	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+	if response == nil || response.Response == nil || response.Response.Status == nil {
+		return
+	}
+
+	status = response.Response.Status
+	return
+}
 func (me *DlcService) DescribeDlcDescribeUserRolesByFilter(ctx context.Context, param map[string]interface{}) (describeUserRoles []*dlc.UserRole, errRet error) {
 	var (
 		logId    = tccommon.GetLogId(ctx)
