@@ -3668,3 +3668,46 @@ func (me *TeoService) DescribeTeoEdgeKvListByFilter(ctx context.Context, param m
 
 	return
 }
+
+func (me *TeoService) DescribeTeoInferenceAPIToken(ctx context.Context, zoneId, tokenId string) (token *teo.InferenceAPIToken, errRet error) {
+	logId := tccommon.GetLogId(ctx)
+
+	request := teo.NewDescribeInferenceAPITokensRequest()
+	request.ZoneId = helper.String(zoneId)
+	request.Limit = helper.Int64(100)
+
+	err := resource.Retry(tccommon.ReadRetryTimeout, func() *resource.RetryError {
+		ratelimit.Check(request.GetAction())
+		result, e := me.client.UseTeoV20220901Client().DescribeInferenceAPITokens(request)
+		if e != nil {
+			return tccommon.RetryError(e)
+		}
+		log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), result.ToJsonString())
+
+		if result == nil || result.Response == nil || len(result.Response.Tokens) == 0 {
+			return resource.NonRetryableError(fmt.Errorf("teo inference_api_token not found"))
+		}
+
+		for _, item := range result.Response.Tokens {
+			if item.TokenId != nil && *item.TokenId == tokenId {
+				token = item
+				break
+			}
+		}
+
+		if token == nil {
+			return resource.NonRetryableError(fmt.Errorf("teo inference_api_token not found"))
+		}
+
+		return nil
+	})
+
+	if err != nil {
+		log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n",
+			logId, request.GetAction(), request.ToJsonString(), err.Error())
+		errRet = err
+		return
+	}
+
+	return
+}
