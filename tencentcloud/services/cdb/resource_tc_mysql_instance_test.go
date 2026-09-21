@@ -728,7 +728,7 @@ func ptrUint64Mysql(v uint64) *uint64 { return &v }
 // instance Read flow so that Create (which ends by calling Read) completes
 // without touching the real cloud API. destroyProtectVal controls the value
 // returned in the DescribeDBInstances response.
-func patchMysqlReadApis(patches *gomonkey.Patches, cdbClient *cdb.Client, tagClient *tag_sdk.Client, instanceId string, destroyProtectVal string) {
+func patchMysqlReadApis(patches *gomonkey.Patches, cdbClient *cdb.Client, tagClient *tag_sdk.Client, instanceId string, destroyProtectVal string, diskEncryptionVal string) {
 	// DescribeDBInstances: returns one running instance with the given DestroyProtect value
 	patches.ApplyMethodFunc(cdbClient, "DescribeDBInstances", func(request *cdb.DescribeDBInstancesRequest) (*cdb.DescribeDBInstancesResponse, error) {
 		status := int64(localcdb.MYSQL_STATUS_RUNNING)
@@ -770,6 +770,7 @@ func patchMysqlReadApis(patches *gomonkey.Patches, cdbClient *cdb.Client, tagCli
 					Zone:           ptrStrMysql(zone),
 					DeviceType:     ptrStrMysql(deviceType),
 					DestroyProtect: ptrStrMysql(destroyProtectVal),
+					DiskEncryption: ptrStrMysql(diskEncryptionVal),
 				},
 			},
 			RequestId: ptrStrMysql("fake-request-id"),
@@ -864,7 +865,7 @@ func TestMysqlInstance_Create_WithDestroyProtect(t *testing.T) {
 		return resp, nil
 	})
 
-	patchMysqlReadApis(patches, cdbClient, tagClient, instanceId, "on")
+	patchMysqlReadApis(patches, cdbClient, tagClient, instanceId, "on", "")
 
 	meta := newMockMetaForMysqlInstance()
 	res := localcdb.ResourceTencentCloudMysqlInstance()
@@ -919,7 +920,7 @@ func TestMysqlInstance_Create_WithoutDestroyProtect(t *testing.T) {
 	})
 
 	// API returns empty string for DestroyProtect when not configured
-	patchMysqlReadApis(patches, cdbClient, tagClient, instanceId, "")
+	patchMysqlReadApis(patches, cdbClient, tagClient, instanceId, "", "")
 
 	meta := newMockMetaForMysqlInstance()
 	res := localcdb.ResourceTencentCloudMysqlInstance()
@@ -955,7 +956,7 @@ func TestMysqlInstance_Read_DestroyProtect(t *testing.T) {
 	patches.ApplyMethodReturn(newMockMetaForMysqlInstance().client, "UseTagClient", tagClient)
 
 	instanceId := "cdb-test-read-destroy-protect-003"
-	patchMysqlReadApis(patches, cdbClient, tagClient, instanceId, "off")
+	patchMysqlReadApis(patches, cdbClient, tagClient, instanceId, "off", "")
 
 	meta := newMockMetaForMysqlInstance()
 	res := localcdb.ResourceTencentCloudMysqlInstance()
@@ -976,4 +977,348 @@ func TestMysqlInstance_Read_DestroyProtect(t *testing.T) {
 	assert.NoError(t, err)
 	assert.Equal(t, instanceId, d.Id())
 	assert.Equal(t, "off", d.Get("destroy_protect"))
+}
+
+// ---------------------------------------------------------------------------
+// Mock-based unit tests for disk_encryption parameter (no real cloud API calls)
+// ---------------------------------------------------------------------------
+
+// TestMysqlInstance_Create_WithDiskEncryption verifies that when disk_encryption
+// is set in the configuration, the Create flow (hourly-paid) passes DiskEncryption
+// to the CreateDBInstanceHour API and reads the value back from DescribeDBInstances.
+func TestMysqlInstance_Create_WithDiskEncryption(t *testing.T) {
+	patches := gomonkey.NewPatches()
+	defer patches.Reset()
+
+	cdbClient := &cdb.Client{}
+	tagClient := &tag_sdk.Client{}
+	patches.ApplyMethodReturn(newMockMetaForMysqlInstance().client, "UseMysqlClient", cdbClient)
+	patches.ApplyMethodReturn(newMockMetaForMysqlInstance().client, "UseTagClient", tagClient)
+
+	var capturedDiskEncryption *string
+	instanceId := "cdb-test-disk-encryption-001"
+
+	// CreateDBInstanceHour: capture DiskEncryption from request and return instance id
+	patches.ApplyMethodFunc(cdbClient, "CreateDBInstanceHour", func(request *cdb.CreateDBInstanceHourRequest) (*cdb.CreateDBInstanceHourResponse, error) {
+		if request.DiskEncryption != nil {
+			val := *request.DiskEncryption
+			capturedDiskEncryption = &val
+		}
+		resp := cdb.NewCreateDBInstanceHourResponse()
+		resp.Response = &cdb.CreateDBInstanceHourResponseParams{
+			InstanceIds: []*string{ptrStrMysql(instanceId)},
+			RequestId:   ptrStrMysql("fake-request-id"),
+		}
+		return resp, nil
+	})
+
+	patchMysqlReadApis(patches, cdbClient, tagClient, instanceId, "", "on")
+
+	meta := newMockMetaForMysqlInstance()
+	res := localcdb.ResourceTencentCloudMysqlInstance()
+	d := schema.TestResourceDataRaw(t, res.Schema, map[string]interface{}{
+		"charge_type":       "POSTPAID",
+		"instance_name":     "testAccMysql",
+		"mem_size":          1000,
+		"volume_size":       50,
+		"engine_version":    "5.7",
+		"root_password":     "test1234",
+		"intranet_port":     3360,
+		"disk_encryption":   "on",
+		"availability_zone": "ap-guangzhou-3",
+		"first_slave_zone":  "ap-guangzhou-3",
+	})
+
+	err := res.Create(d, meta)
+	assert.NoError(t, err)
+	assert.Equal(t, instanceId, d.Id())
+
+	// Verify DiskEncryption was passed to the create API request
+	assert.NotNil(t, capturedDiskEncryption, "DiskEncryption should be set on CreateDBInstanceHour request")
+	assert.Equal(t, "on", *capturedDiskEncryption)
+
+	// Verify disk_encryption is read back from the API response
+	assert.Equal(t, "on", d.Get("disk_encryption"))
+}
+
+// TestMysqlInstance_Create_WithDiskEncryption_PrePaid verifies that when disk_encryption
+// is set in the configuration with month-paid billing, the Create flow passes DiskEncryption
+// to the CreateDBInstance API.
+func TestMysqlInstance_Create_WithDiskEncryption_PrePaid(t *testing.T) {
+	patches := gomonkey.NewPatches()
+	defer patches.Reset()
+
+	cdbClient := &cdb.Client{}
+	tagClient := &tag_sdk.Client{}
+	patches.ApplyMethodReturn(newMockMetaForMysqlInstance().client, "UseMysqlClient", cdbClient)
+	patches.ApplyMethodReturn(newMockMetaForMysqlInstance().client, "UseTagClient", tagClient)
+
+	var capturedDiskEncryption *string
+	instanceId := "cdb-test-disk-encryption-prepaid-002"
+
+	// CreateDBInstance: capture DiskEncryption from request and return instance id
+	patches.ApplyMethodFunc(cdbClient, "CreateDBInstance", func(request *cdb.CreateDBInstanceRequest) (*cdb.CreateDBInstanceResponse, error) {
+		if request.DiskEncryption != nil {
+			val := *request.DiskEncryption
+			capturedDiskEncryption = &val
+		}
+		resp := cdb.NewCreateDBInstanceResponse()
+		resp.Response = &cdb.CreateDBInstanceResponseParams{
+			InstanceIds: []*string{ptrStrMysql(instanceId)},
+			RequestId:   ptrStrMysql("fake-request-id"),
+		}
+		return resp, nil
+	})
+
+	patchMysqlReadApis(patches, cdbClient, tagClient, instanceId, "", "on")
+
+	meta := newMockMetaForMysqlInstance()
+	res := localcdb.ResourceTencentCloudMysqlInstance()
+	d := schema.TestResourceDataRaw(t, res.Schema, map[string]interface{}{
+		"charge_type":       "PREPAID",
+		"prepaid_period":    1,
+		"instance_name":     "testAccMysql",
+		"mem_size":          1000,
+		"volume_size":       50,
+		"engine_version":    "5.7",
+		"root_password":     "test1234",
+		"intranet_port":     3360,
+		"disk_encryption":   "on",
+		"availability_zone": "ap-guangzhou-3",
+		"first_slave_zone":  "ap-guangzhou-3",
+	})
+
+	err := res.Create(d, meta)
+	assert.NoError(t, err)
+	assert.Equal(t, instanceId, d.Id())
+
+	// Verify DiskEncryption was passed to the create API request
+	assert.NotNil(t, capturedDiskEncryption, "DiskEncryption should be set on CreateDBInstance request")
+	assert.Equal(t, "on", *capturedDiskEncryption)
+}
+
+// TestMysqlInstance_Create_WithoutDiskEncryption verifies that when disk_encryption
+// is NOT specified in the configuration, the Create flow does NOT set DiskEncryption
+// on the API request (API uses default).
+func TestMysqlInstance_Create_WithoutDiskEncryption(t *testing.T) {
+	patches := gomonkey.NewPatches()
+	defer patches.Reset()
+
+	cdbClient := &cdb.Client{}
+	tagClient := &tag_sdk.Client{}
+	patches.ApplyMethodReturn(newMockMetaForMysqlInstance().client, "UseMysqlClient", cdbClient)
+	patches.ApplyMethodReturn(newMockMetaForMysqlInstance().client, "UseTagClient", tagClient)
+
+	var requestHadDiskEncryption bool
+	instanceId := "cdb-test-no-disk-encryption-003"
+
+	patches.ApplyMethodFunc(cdbClient, "CreateDBInstanceHour", func(request *cdb.CreateDBInstanceHourRequest) (*cdb.CreateDBInstanceHourResponse, error) {
+		requestHadDiskEncryption = request.DiskEncryption != nil
+		resp := cdb.NewCreateDBInstanceHourResponse()
+		resp.Response = &cdb.CreateDBInstanceHourResponseParams{
+			InstanceIds: []*string{ptrStrMysql(instanceId)},
+			RequestId:   ptrStrMysql("fake-request-id"),
+		}
+		return resp, nil
+	})
+
+	// API returns empty string for DiskEncryption when not configured
+	patchMysqlReadApis(patches, cdbClient, tagClient, instanceId, "", "")
+
+	meta := newMockMetaForMysqlInstance()
+	res := localcdb.ResourceTencentCloudMysqlInstance()
+	d := schema.TestResourceDataRaw(t, res.Schema, map[string]interface{}{
+		"charge_type":       "POSTPAID",
+		"instance_name":     "testAccMysql",
+		"mem_size":          1000,
+		"volume_size":       50,
+		"engine_version":    "5.7",
+		"root_password":     "test1234",
+		"intranet_port":     3360,
+		"availability_zone": "ap-guangzhou-3",
+		"first_slave_zone":  "ap-guangzhou-3",
+	})
+
+	err := res.Create(d, meta)
+	assert.NoError(t, err)
+	assert.Equal(t, instanceId, d.Id())
+
+	// DiskEncryption should NOT be set on the request when not specified
+	assert.False(t, requestHadDiskEncryption, "DiskEncryption should not be set on request when disk_encryption is not specified")
+}
+
+// TestMysqlInstance_Read_DiskEncryption verifies that the Read operation
+// correctly reads DiskEncryption from the DescribeDBInstances response.
+func TestMysqlInstance_Read_DiskEncryption(t *testing.T) {
+	patches := gomonkey.NewPatches()
+	defer patches.Reset()
+
+	cdbClient := &cdb.Client{}
+	tagClient := &tag_sdk.Client{}
+	patches.ApplyMethodReturn(newMockMetaForMysqlInstance().client, "UseMysqlClient", cdbClient)
+	patches.ApplyMethodReturn(newMockMetaForMysqlInstance().client, "UseTagClient", tagClient)
+
+	instanceId := "cdb-test-read-disk-encryption-004"
+	patchMysqlReadApis(patches, cdbClient, tagClient, instanceId, "", "on")
+
+	meta := newMockMetaForMysqlInstance()
+	res := localcdb.ResourceTencentCloudMysqlInstance()
+	d := schema.TestResourceDataRaw(t, res.Schema, map[string]interface{}{
+		"charge_type":       "POSTPAID",
+		"instance_name":     "testAccMysql",
+		"mem_size":          1000,
+		"volume_size":       50,
+		"engine_version":    "5.7",
+		"root_password":     "test1234",
+		"intranet_port":     3360,
+		"availability_zone": "ap-guangzhou-3",
+		"first_slave_zone":  "ap-guangzhou-3",
+	})
+	d.SetId(instanceId)
+
+	err := res.Read(d, meta)
+	assert.NoError(t, err)
+	assert.Equal(t, instanceId, d.Id())
+	assert.Equal(t, "on", d.Get("disk_encryption"))
+}
+
+// TestMysqlInstance_Read_DiskEncryptionNil verifies that the Read operation
+// skips setting disk_encryption when the DescribeDBInstances response returns
+// a nil DiskEncryption field (nil guard).
+func TestMysqlInstance_Read_DiskEncryptionNil(t *testing.T) {
+	patches := gomonkey.NewPatches()
+	defer patches.Reset()
+
+	cdbClient := &cdb.Client{}
+	tagClient := &tag_sdk.Client{}
+	patches.ApplyMethodReturn(newMockMetaForMysqlInstance().client, "UseMysqlClient", cdbClient)
+	patches.ApplyMethodReturn(newMockMetaForMysqlInstance().client, "UseTagClient", tagClient)
+
+	instanceId := "cdb-test-read-disk-encryption-nil-005"
+
+	// DescribeDBInstances: returns one running instance with a nil DiskEncryption field
+	patches.ApplyMethodFunc(cdbClient, "DescribeDBInstances", func(request *cdb.DescribeDBInstancesRequest) (*cdb.DescribeDBInstancesResponse, error) {
+		status := int64(localcdb.MYSQL_STATUS_RUNNING)
+		payType := int64(localcdb.MysqlPayByUse)
+		autoRenew := int64(localcdb.MYSQL_RENEW_CLOSE)
+		wanStatus := int64(0)
+		taskStatus := int64(0)
+		cdbError := int64(0)
+		port := int64(3306)
+		cpu := int64(1)
+		mem := int64(1000)
+		vol := int64(50)
+		project := int64(0)
+		instanceName := "testAccMysql"
+		engineVersion := "5.7"
+		vip := "10.0.0.1"
+		zone := "ap-guangzhou-3"
+		deviceType := "UNIVERSAL"
+		resp := cdb.NewDescribeDBInstancesResponse()
+		resp.Response = &cdb.DescribeDBInstancesResponseParams{
+			TotalCount: ptrInt64Mysql(1),
+			Items: []*cdb.InstanceInfo{
+				{
+					InstanceId:     ptrStrMysql(instanceId),
+					InstanceName:   ptrStrMysql(instanceName),
+					Status:         &status,
+					PayType:        &payType,
+					AutoRenew:      &autoRenew,
+					Memory:         &mem,
+					Cpu:            &cpu,
+					Volume:         &vol,
+					ProjectId:      &project,
+					WanStatus:      &wanStatus,
+					TaskStatus:     &taskStatus,
+					CdbError:       &cdbError,
+					Vip:            ptrStrMysql(vip),
+					Vport:          &port,
+					EngineVersion:  ptrStrMysql(engineVersion),
+					Zone:           ptrStrMysql(zone),
+					DeviceType:     ptrStrMysql(deviceType),
+					DiskEncryption: nil,
+				},
+			},
+			RequestId: ptrStrMysql("fake-request-id"),
+		}
+		return resp, nil
+	})
+
+	// DescribeDBSecurityGroups: empty list
+	patches.ApplyMethodFunc(cdbClient, "DescribeDBSecurityGroups", func(request *cdb.DescribeDBSecurityGroupsRequest) (*cdb.DescribeDBSecurityGroupsResponse, error) {
+		resp := cdb.NewDescribeDBSecurityGroupsResponse()
+		resp.Response = &cdb.DescribeDBSecurityGroupsResponseParams{
+			Groups:    []*cdb.SecurityGroup{},
+			RequestId: ptrStrMysql("fake-request-id"),
+		}
+		return resp, nil
+	})
+
+	// DescribeDBInstanceGTID: GTID not open
+	patches.ApplyMethodFunc(cdbClient, "DescribeDBInstanceGTID", func(request *cdb.DescribeDBInstanceGTIDRequest) (*cdb.DescribeDBInstanceGTIDResponse, error) {
+		isOpen := int64(0)
+		resp := cdb.NewDescribeDBInstanceGTIDResponse()
+		resp.Response = &cdb.DescribeDBInstanceGTIDResponseParams{
+			IsGTIDOpen: &isOpen,
+			RequestId:  ptrStrMysql("fake-request-id"),
+		}
+		return resp, nil
+	})
+
+	// DescribeDBInstanceConfig: basic config
+	patches.ApplyMethodFunc(cdbClient, "DescribeDBInstanceConfig", func(request *cdb.DescribeDBInstanceConfigRequest) (*cdb.DescribeDBInstanceConfigResponse, error) {
+		protectMode := int64(0)
+		deployMode := int64(0)
+		resp := cdb.NewDescribeDBInstanceConfigResponse()
+		resp.Response = &cdb.DescribeDBInstanceConfigResponseParams{
+			ProtectMode: &protectMode,
+			DeployMode:  &deployMode,
+			Zone:        ptrStrMysql("ap-guangzhou-3"),
+			RequestId:   ptrStrMysql("fake-request-id"),
+		}
+		return resp, nil
+	})
+
+	// DescribeInstanceParams: empty list (no parameters to read)
+	patches.ApplyMethodFunc(cdbClient, "DescribeInstanceParams", func(request *cdb.DescribeInstanceParamsRequest) (*cdb.DescribeInstanceParamsResponse, error) {
+		resp := cdb.NewDescribeInstanceParamsResponse()
+		resp.Response = &cdb.DescribeInstanceParamsResponseParams{
+			TotalCount: ptrInt64Mysql(0),
+			Items:      []*cdb.ParameterDetail{},
+			RequestId:  ptrStrMysql("fake-request-id"),
+		}
+		return resp, nil
+	})
+
+	// tag client DescribeResourceTagsByResourceIds: empty tags
+	patches.ApplyMethodFunc(tagClient, "DescribeResourceTagsByResourceIds", func(request *tag_sdk.DescribeResourceTagsByResourceIdsRequest) (*tag_sdk.DescribeResourceTagsByResourceIdsResponse, error) {
+		resp := tag_sdk.NewDescribeResourceTagsByResourceIdsResponse()
+		resp.Response = &tag_sdk.DescribeResourceTagsByResourceIdsResponseParams{
+			TotalCount: ptrUint64Mysql(0),
+			Tags:       []*tag_sdk.TagResource{},
+			RequestId:  ptrStrMysql("fake-request-id"),
+		}
+		return resp, nil
+	})
+
+	meta := newMockMetaForMysqlInstance()
+	res := localcdb.ResourceTencentCloudMysqlInstance()
+	d := schema.TestResourceDataRaw(t, res.Schema, map[string]interface{}{
+		"charge_type":       "POSTPAID",
+		"instance_name":     "testAccMysql",
+		"mem_size":          1000,
+		"volume_size":       50,
+		"engine_version":    "5.7",
+		"root_password":     "test1234",
+		"intranet_port":     3360,
+		"availability_zone": "ap-guangzhou-3",
+		"first_slave_zone":  "ap-guangzhou-3",
+	})
+	d.SetId(instanceId)
+
+	err := res.Read(d, meta)
+	assert.NoError(t, err)
+	assert.Equal(t, instanceId, d.Id())
+	// disk_encryption should remain empty (not panic) when nil guard skips the set
+	assert.Equal(t, "", d.Get("disk_encryption"))
 }
