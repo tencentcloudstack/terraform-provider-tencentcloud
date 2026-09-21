@@ -1350,6 +1350,9 @@ github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/gwlb/v20240906
 # github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/igtm v1.3.29
 ## explicit; go 1.14
 github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/igtm/v20231024
+# github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/ioa v1.3.177
+## explicit; go 1.14
+github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/ioa/v20220601
 # github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/keewidb v1.3.32
 ## explicit; go 1.14
 github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/keewidb/v20220308

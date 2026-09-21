@@ -10,6 +10,7 @@ import (
 	_ "github.com/katbyte/terrafmt"
 	_ "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/bdrc/v20260330"
 	_ "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/dbdc/v20201029"
+	_ "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/ioa/v20220601"
 	_ "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/monitor/v20180724"
 	_ "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/mqtt/v20240516"
 )
