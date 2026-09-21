@@ -1,3 +1,18 @@
+## 1.83.33(September 21, 2026)
+
+FEATURES:
+
+* **New Data Source:** `tencentcloud_dlc_tc_lake_meta_instance` ([#4527](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/4527))
+* **New Resource:** `tencentcloud_dlc_initialize_tc_lake` ([#4528](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/4528))
+* **New Resource:** `tencentcloud_mongodb_restore_db_instance` ([#4529](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/4529))
+
+ENHANCEMENTS:
+
+* resource/tencentcloud_bh_resource: support import ([#4520](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/4520))
+* resource/tencentcloud_kubernetes_node_pool: support modify `extra_args` ([#4518](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/4518))
+* resource/tencentcloud_waf_custom_rule: update document ([#4519](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/4519))
+* resource/tencentcloud_waf_custom_white_rule: update document ([#4519](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/4519))
+
 ## 1.83.32(September 17, 2026)
 
 FEATURES:
