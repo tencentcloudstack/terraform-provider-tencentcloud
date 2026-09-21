@@ -1371,6 +1371,7 @@ func Provider() *schema.Provider {
 			"tencentcloud_dlc_data_engine_network":                                dlc.DataSourceTencentCloudDlcDataEngineNetwork(),
 			"tencentcloud_dlc_data_engine_session_parameters":                     dlc.DataSourceTencentCloudDlcDataEngineSessionParameters(),
 			"tencentcloud_dlc_session_image_version":                              dlc.DataSourceTencentCloudDlcSessionImageVersion(),
+			"tencentcloud_dlc_tc_lake_meta_instance":                              dlc.DataSourceTencentCloudDlcTCLakeMetaInstance(),
 			"tencentcloud_bi_project":                                             bi.DataSourceTencentCloudBiProject(),
 			"tencentcloud_bi_user_project":                                        bi.DataSourceTencentCloudBiUserProject(),
 			"tencentcloud_antiddos_basic_device_status":                           antiddos.DataSourceTencentCloudAntiddosBasicDeviceStatus(),
