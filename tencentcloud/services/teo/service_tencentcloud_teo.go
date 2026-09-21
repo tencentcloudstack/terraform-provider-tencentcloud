@@ -3668,3 +3668,70 @@ func (me *TeoService) DescribeTeoEdgeKvListByFilter(ctx context.Context, param m
 
 	return
 }
+
+func (me *TeoService) DescribeTeoInferenceServiceById(ctx context.Context, zoneId string, serviceId string) (ret *teo.InferenceService, errRet error) {
+	logId := tccommon.GetLogId(ctx)
+
+	request := teo.NewDescribeInferenceServicesRequest()
+	request.ZoneId = helper.String(zoneId)
+	advancedFilter := &teo.AdvancedFilter{
+		Name:   helper.String("service-id"),
+		Values: []*string{helper.String(serviceId)},
+	}
+	request.Filters = append(request.Filters, advancedFilter)
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	ratelimit.Check(request.GetAction())
+
+	var (
+		offset int64 = 0
+		limit  int64 = 200
+	)
+	var instances []*teo.InferenceService
+	for {
+		request.Offset = &offset
+		request.Limit = &limit
+		response := teo.NewDescribeInferenceServicesResponse()
+		err := resource.Retry(tccommon.ReadRetryTimeout, func() *resource.RetryError {
+			result, e := me.client.UseTeoV20220901Client().DescribeInferenceServicesWithContext(ctx, request)
+			if e != nil {
+				return tccommon.RetryError(e)
+			}
+			response = result
+			return nil
+		})
+		if err != nil {
+			errRet = err
+			return
+		}
+		log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+		if response == nil || response.Response == nil || len(response.Response.Services) < 1 {
+			break
+		}
+		instances = append(instances, response.Response.Services...)
+		if len(response.Response.Services) < int(limit) {
+			break
+		}
+
+		offset += limit
+	}
+
+	if len(instances) < 1 {
+		return
+	}
+
+	for _, item := range instances {
+		if item.ServiceId != nil && *item.ServiceId == serviceId {
+			ret = item
+			return
+		}
+	}
+
+	return
+}
