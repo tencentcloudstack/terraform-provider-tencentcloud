@@ -22,3 +22,11 @@ resource "tencentcloud_bh_resource" "example" {
   external_access  = 1
 }
 ```
+
+Import
+
+BH resource can be imported using the id, e.g.
+
+```
+terraform import tencentcloud_bh_resource.example bh-saas-sada9k
+```
