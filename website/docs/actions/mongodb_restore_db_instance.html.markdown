@@ -18,11 +18,11 @@ Provides an action to restore a MongoDB instance to a specified point in time vi
 ```hcl
 action "tencentcloud_mongodb_restore_db_instance" "example" {
   config {
-    instance_id  = "cmgo-xxxxxxxx"
-    restore_time = "2024-09-01 12:00:00"
+    instance_id  = "cmgo-3n1xu3sz"
+    restore_time = "2026-09-01 12:00:00"
 
     databases {
-      db = "db1"
+      db = "dbDemo"
 
       collections {
         old_collection = "col_old_1"
@@ -33,6 +33,10 @@ action "tencentcloud_mongodb_restore_db_instance" "example" {
         old_collection = "col_old_2"
         new_collection = "col_new_2"
       }
+    }
+
+    timeouts {
+      invoke = "30m"
     }
   }
 }
@@ -45,6 +49,7 @@ The following arguments are supported:
 * `instance_id` - (Required, String) Instance ID, e.g. `cmgo-xxxxxxxx`. Please log in to the MongoDB console and copy the instance ID from the instance list.
 * `restore_time` - (Required, String) Target point in time to restore. The time must be within the backup retention period of the instance. Format: `YYYY-MM-DD hh:mm:ss`.
 * `databases` - (Optional, List of Object) Database and collection information to restore.
+* `timeouts` - (Optional, Object) The timeouts block allows you to specify the timeout for the invoke operation.
 
 The `databases` object supports the following:
 

@@ -7,11 +7,11 @@ Example Usage
 ```hcl
 action "tencentcloud_mongodb_restore_db_instance" "example" {
   config {
-    instance_id  = "cmgo-xxxxxxxx"
-    restore_time = "2024-09-01 12:00:00"
+    instance_id  = "cmgo-3n1xu3sz"
+    restore_time = "2026-09-01 12:00:00"
 
     databases {
-      db = "db1"
+      db = "dbDemo"
 
       collections {
         old_collection = "col_old_1"
@@ -22,6 +22,10 @@ action "tencentcloud_mongodb_restore_db_instance" "example" {
         old_collection = "col_old_2"
         new_collection = "col_new_2"
       }
+    }
+
+    timeouts {
+      invoke = "30m"
     }
   }
 }

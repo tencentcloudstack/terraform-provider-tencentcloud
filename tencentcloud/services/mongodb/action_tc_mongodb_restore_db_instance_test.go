@@ -6,6 +6,7 @@ import (
 	"testing"
 
 	"github.com/agiledragon/gomonkey/v2"
+	actiontimeouts "github.com/hashicorp/terraform-plugin-framework-timeouts/action/timeouts"
 	"github.com/hashicorp/terraform-plugin-framework/action"
 	action_schema "github.com/hashicorp/terraform-plugin-framework/action/schema"
 	"github.com/hashicorp/terraform-plugin-go/tftypes"
@@ -30,6 +31,20 @@ func mongodbRestoreDbInstanceSchema(t *testing.T) action_schema.Schema {
 		t.Fatalf("failed to build action schema: %v", schemaResp.Diagnostics)
 	}
 	return schemaResp.Schema
+}
+
+// timeoutsObjType builds the tftypes.Object type for the timeouts block.
+func timeoutsObjType() tftypes.Object {
+	return tftypes.Object{
+		AttributeTypes: map[string]tftypes.Type{
+			"invoke": tftypes.String,
+		},
+	}
+}
+
+// nullTimeoutsValue is the null value for an unconfigured timeouts block.
+func nullTimeoutsValue() tftypes.Value {
+	return tftypes.NewValue(timeoutsObjType(), nil)
 }
 
 // collectionObjType builds the tftypes.Object type for a collections block
@@ -73,7 +88,16 @@ func newDatabaseValue(db string, collections []tftypes.Value) tftypes.Value {
 	})
 }
 
+// newMongodbRestoreDbInstanceInvokeRequest builds an InvokeRequest whose
+// timeouts block is left unconfigured, so the action's built-in default (15m)
+// applies.
 func newMongodbRestoreDbInstanceInvokeRequest(t *testing.T, instanceId, restoreTime string, databases []tftypes.Value) action.InvokeRequest {
+	return newMongodbRestoreDbInstanceInvokeRequestWithTimeouts(t, instanceId, restoreTime, databases, nullTimeoutsValue())
+}
+
+// newMongodbRestoreDbInstanceInvokeRequestWithTimeouts builds an InvokeRequest
+// carrying the given raw value for the timeouts block.
+func newMongodbRestoreDbInstanceInvokeRequestWithTimeouts(t *testing.T, instanceId, restoreTime string, databases []tftypes.Value, timeoutsVal tftypes.Value) action.InvokeRequest {
 	s := mongodbRestoreDbInstanceSchema(t)
 
 	dbListType := tftypes.List{ElementType: databaseObjType()}
@@ -89,11 +113,13 @@ func newMongodbRestoreDbInstanceInvokeRequest(t *testing.T, instanceId, restoreT
 			"instance_id":  tftypes.String,
 			"restore_time": tftypes.String,
 			"databases":    dbListType,
+			"timeouts":     timeoutsObjType(),
 		},
 	}, map[string]tftypes.Value{
 		"instance_id":  tftypes.NewValue(tftypes.String, instanceId),
 		"restore_time": tftypes.NewValue(tftypes.String, restoreTime),
 		"databases":    dbListVal,
+		"timeouts":     timeoutsVal,
 	})
 
 	req := action.InvokeRequest{}
@@ -389,6 +415,18 @@ func TestMongodbRestoreDbInstance_MetadataAndSchema(t *testing.T) {
 	newColAttr, ok := colAttrs["new_collection"].(action_schema.StringAttribute)
 	assert.True(t, ok)
 	assert.True(t, newColAttr.Required)
+
+	assert.Contains(t, blocks, "timeouts")
+	timeoutsBlock, ok := blocks["timeouts"].(action_schema.SingleNestedBlock)
+	assert.True(t, ok)
+	// The block is provided by the official
+	// terraform-plugin-framework-timeouts module, so it carries the custom
+	// timeouts type plus a duration validator on `invoke`.
+	assert.IsType(t, actiontimeouts.Type{}, timeoutsBlock.CustomType)
+	invokeAttr, ok := timeoutsBlock.Attributes["invoke"].(action_schema.StringAttribute)
+	assert.True(t, ok)
+	assert.True(t, invokeAttr.Optional)
+	assert.NotEmpty(t, invokeAttr.Validators)
 }
 
 func TestMongodbRestoreDbInstance_Invoke_MissingNestedInput(t *testing.T) {
@@ -424,4 +462,99 @@ func TestMongodbRestoreDbInstance_Invoke_MissingNestedInput(t *testing.T) {
 	assert.True(t, resp.Diagnostics.HasError())
 	assert.Contains(t, resp.Diagnostics.Errors()[0].Summary(), "Missing collections")
 	assert.False(t, apiCalled)
+}
+
+// TestMongodbRestoreDbInstance_Invoke_InvalidTimeout verifies that a malformed
+// timeouts.invoke value is rejected before the restore API is called. The
+// official terraform-plugin-framework-timeouts Value.Invoke surfaces the parse
+// failure through a diagnostic.
+func TestMongodbRestoreDbInstance_Invoke_InvalidTimeout(t *testing.T) {
+	patches := gomonkey.NewPatches()
+	defer patches.Reset()
+
+	client := &connectivity.TencentCloudClient{}
+	mongodbClient := &mongodb_sdk.Client{}
+	patches.ApplyMethodReturn(client, "UseMongodbClient", mongodbClient)
+
+	apiCalled := false
+	patches.ApplyMethodFunc(mongodbClient, "RestoreDBInstanceWithContext", func(_ context.Context, request *mongodb_sdk.RestoreDBInstanceRequest) (*mongodb_sdk.RestoreDBInstanceResponse, error) {
+		apiCalled = true
+		return mongodb_sdk.NewRestoreDBInstanceResponse(), nil
+	})
+
+	aImpl := mongodb.NewMongodbRestoreDbInstance()
+	a := aImpl.(*mongodb.MongodbRestoreDbInstance)
+	setMongodbRestoreDbInstanceClient(a, client)
+
+	req := newMongodbRestoreDbInstanceInvokeRequestWithTimeouts(t,
+		"cmgo-xxxxxxxx",
+		"2024-09-01 12:00:00",
+		[]tftypes.Value{
+			newDatabaseValue("db1", []tftypes.Value{
+				newCollectionValue("col_old", "col_new"),
+			}),
+		},
+		tftypes.NewValue(timeoutsObjType(), map[string]tftypes.Value{
+			"invoke": tftypes.NewValue(tftypes.String, "not-a-duration"),
+		}),
+	)
+	resp := &action.InvokeResponse{}
+	a.Invoke(context.Background(), req, resp)
+
+	assert.True(t, resp.Diagnostics.HasError())
+	assert.Contains(t, resp.Diagnostics.Errors()[0].Summary(), "Timeout Cannot Be Parsed")
+	assert.False(t, apiCalled)
+}
+
+// TestMongodbRestoreDbInstance_Invoke_CustomTimeout verifies that a configured
+// timeouts.invoke value really bounds the async polling: the mocked task stays
+// in "running" forever, so the invoke can only return (quickly) if the 1ms
+// custom timeout - rather than the 15m default - was applied.
+func TestMongodbRestoreDbInstance_Invoke_CustomTimeout(t *testing.T) {
+	patches := gomonkey.NewPatches()
+	defer patches.Reset()
+
+	client := &connectivity.TencentCloudClient{}
+	mongodbClient := &mongodb_sdk.Client{}
+	patches.ApplyMethodReturn(client, "UseMongodbClient", mongodbClient)
+
+	flowId := int64(77777)
+	patches.ApplyMethodFunc(mongodbClient, "RestoreDBInstanceWithContext", func(_ context.Context, request *mongodb_sdk.RestoreDBInstanceRequest) (*mongodb_sdk.RestoreDBInstanceResponse, error) {
+		resp := mongodb_sdk.NewRestoreDBInstanceResponse()
+		resp.Response = &mongodb_sdk.RestoreDBInstanceResponseParams{
+			FlowId: &flowId,
+		}
+		return resp, nil
+	})
+
+	runningStatus := "running"
+	patches.ApplyMethodFunc(mongodbClient, "DescribeAsyncRequestInfo", func(request *mongodb_sdk.DescribeAsyncRequestInfoRequest) (*mongodb_sdk.DescribeAsyncRequestInfoResponse, error) {
+		resp := mongodb_sdk.NewDescribeAsyncRequestInfoResponse()
+		resp.Response = &mongodb_sdk.DescribeAsyncRequestInfoResponseParams{
+			Status: &runningStatus,
+		}
+		return resp, nil
+	})
+
+	aImpl := mongodb.NewMongodbRestoreDbInstance()
+	a := aImpl.(*mongodb.MongodbRestoreDbInstance)
+	setMongodbRestoreDbInstanceClient(a, client)
+
+	req := newMongodbRestoreDbInstanceInvokeRequestWithTimeouts(t,
+		"cmgo-xxxxxxxx",
+		"2024-09-01 12:00:00",
+		[]tftypes.Value{
+			newDatabaseValue("db1", []tftypes.Value{
+				newCollectionValue("col_old", "col_new"),
+			}),
+		},
+		tftypes.NewValue(timeoutsObjType(), map[string]tftypes.Value{
+			"invoke": tftypes.NewValue(tftypes.String, "1ms"),
+		}),
+	)
+	resp := &action.InvokeResponse{}
+	a.Invoke(context.Background(), req, resp)
+
+	assert.True(t, resp.Diagnostics.HasError())
+	assert.Contains(t, resp.Diagnostics.Errors()[0].Summary(), "waiting for mongodb restore_db_instance task")
 }

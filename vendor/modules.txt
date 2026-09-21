@@ -702,6 +702,10 @@ github.com/hashicorp/terraform-plugin-framework/statestore/schema
 github.com/hashicorp/terraform-plugin-framework/tfsdk
 github.com/hashicorp/terraform-plugin-framework/types
 github.com/hashicorp/terraform-plugin-framework/types/basetypes
+# github.com/hashicorp/terraform-plugin-framework-timeouts v0.7.0
+## explicit; go 1.24.0
+github.com/hashicorp/terraform-plugin-framework-timeouts/action/timeouts
+github.com/hashicorp/terraform-plugin-framework-timeouts/internal/validators
 # github.com/hashicorp/terraform-plugin-go v0.31.0
 ## explicit; go 1.25.0
 github.com/hashicorp/terraform-plugin-go/internal/logging

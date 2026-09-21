@@ -3,12 +3,13 @@ package mongodb
 import (
 	"context"
 	"fmt"
+	"time"
 
+	actiontimeouts "github.com/hashicorp/terraform-plugin-framework-timeouts/action/timeouts"
 	"github.com/hashicorp/terraform-plugin-framework/action"
 	"github.com/hashicorp/terraform-plugin-framework/action/schema"
 	"github.com/hashicorp/terraform-plugin-framework/types"
 
-	tccommon "github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/common"
 	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/framework/fw"
 	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/internal/helper"
 
@@ -28,6 +29,11 @@ func NewMongodbRestoreDbInstance() action.Action {
 	return &MongodbRestoreDbInstance{}
 }
 
+// defaultRestoreDbInstanceInvokeTimeout is the built-in maximum duration to
+// wait for the asynchronous restore task to finish. Practitioners can override
+// it through the `timeouts` block, e.g. `timeouts { invoke = "30m" }`.
+const defaultRestoreDbInstanceInvokeTimeout = 15 * time.Minute
+
 // MongodbRestoreDbInstance implements action.Action for
 // tencentcloud_mongodb_restore_db_instance.
 type MongodbRestoreDbInstance struct {
@@ -39,6 +45,11 @@ type MongodbRestoreDbInstanceModel struct {
 	InstanceId  types.String `tfsdk:"instance_id"`
 	RestoreTime types.String `tfsdk:"restore_time"`
 	Databases   types.List   `tfsdk:"databases"`
+
+	// Timeouts is the value type defined by the official
+	// terraform-plugin-framework-timeouts module. Only the `invoke` stage
+	// exists because an action has a single lifecycle stage.
+	Timeouts actiontimeouts.Value `tfsdk:"timeouts"`
 }
 
 // MongodbRestoreDbDatabaseModel maps the databases nested block.
@@ -57,7 +68,7 @@ func (a *MongodbRestoreDbInstance) Metadata(_ context.Context, _ action.Metadata
 	resp.TypeName = "tencentcloud_mongodb_restore_db_instance"
 }
 
-func (a *MongodbRestoreDbInstance) Schema(_ context.Context, _ action.SchemaRequest, resp *action.SchemaResponse) {
+func (a *MongodbRestoreDbInstance) Schema(ctx context.Context, _ action.SchemaRequest, resp *action.SchemaResponse) {
 	resp.Schema = schema.Schema{
 		Description: "Provides an action to restore a MongoDB instance to a specified point in time via the RestoreDBInstance API. " +
 			"This is a one-time operation; no cloud-side state is persisted after the action completes.",
@@ -72,6 +83,7 @@ func (a *MongodbRestoreDbInstance) Schema(_ context.Context, _ action.SchemaRequ
 			},
 		},
 		Blocks: map[string]schema.Block{
+			"timeouts": mongodbRestoreDbInstanceTimeoutsBlock(ctx),
 			"databases": schema.ListNestedBlock{
 				Description: "Database and collection information to restore.",
 				NestedObject: schema.NestedBlockObject{
@@ -102,6 +114,26 @@ func (a *MongodbRestoreDbInstance) Schema(_ context.Context, _ action.SchemaRequ
 			},
 		},
 	}
+}
+
+// mongodbRestoreDbInstanceTimeoutsBlock builds the `timeouts` block from the
+// official terraform-plugin-framework-timeouts module, whose single optional
+// `invoke` attribute is validated as a time.Duration at plan time. That module
+// leaves the block itself undescribed (only the attribute carries a
+// description), so the block description is restored here to keep the schema -
+// and the documentation generated from it by gendoc - self-explanatory.
+func mongodbRestoreDbInstanceTimeoutsBlock(ctx context.Context) schema.Block {
+	block := actiontimeouts.BlockWithOpts(ctx, actiontimeouts.Opts{
+		InvokeDescription: "A string that can be parsed as a duration (https://pkg.go.dev/time#ParseDuration), e.g. `15m`. " +
+			"It limits how long the action waits for the asynchronous restore task to complete. Default is `15m`.",
+	})
+
+	if nested, ok := block.(schema.SingleNestedBlock); ok {
+		nested.Description = "The timeouts block allows you to specify the timeout for the invoke operation."
+		return nested
+	}
+
+	return block
 }
 
 // Invoke is called to run the logic of the action.
@@ -207,6 +239,16 @@ func (a *MongodbRestoreDbInstance) Invoke(ctx context.Context, req action.Invoke
 		return
 	}
 
+	// An unset/null timeouts block falls back to the built-in default, and a
+	// malformed duration is reported as an error diagnostic. The schema
+	// validator normally rejects malformed values at plan time; this is the
+	// runtime safety net.
+	timeout, timeoutDiags := data.Timeouts.Invoke(ctx, defaultRestoreDbInstanceInvokeTimeout)
+	resp.Diagnostics.Append(timeoutDiags...)
+	if resp.Diagnostics.HasError() {
+		return
+	}
+
 	instanceId := data.InstanceId.ValueString()
 	restoreTime := data.RestoreTime.ValueString()
 	service := NewMongodbService(a.Client())
@@ -221,7 +263,7 @@ func (a *MongodbRestoreDbInstance) Invoke(ctx context.Context, req action.Invoke
 	}
 
 	flowIdStr := helper.Int64ToStr(flowId)
-	if err := service.DescribeAsyncRequestInfo(ctx, flowIdStr, 3*tccommon.ReadRetryTimeout); err != nil {
+	if err := service.DescribeAsyncRequestInfo(ctx, flowIdStr, timeout); err != nil {
 		resp.Diagnostics.AddError(
 			fmt.Sprintf("waiting for mongodb restore_db_instance task (%s) to complete", flowIdStr),
 			err.Error(),
