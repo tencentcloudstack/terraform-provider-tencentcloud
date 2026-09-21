@@ -3668,3 +3668,74 @@ func (me *TeoService) DescribeTeoEdgeKvListByFilter(ctx context.Context, param m
 
 	return
 }
+
+func (me *TeoService) DescribeTeoLogAnalysisDownloadTaskById(ctx context.Context, zoneId, area, taskId string) (ret *teov20220901.LogAnalysisDownloadTask, errRet error) {
+	logId := tccommon.GetLogId(ctx)
+
+	request := teo.NewDescribeLogAnalysisDownloadTasksRequest()
+	request.ZoneId = helper.String(zoneId)
+	request.Area = helper.String(area)
+	filter := &teo.AdvancedFilter{
+		Name:   helper.String("task-id"),
+		Values: []*string{helper.String(taskId)},
+	}
+	request.Filters = append(request.Filters, filter)
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	ratelimit.Check(request.GetAction())
+
+	var (
+		offset int64 = 0
+		limit  int64 = 100
+	)
+	var instances []*teov20220901.LogAnalysisDownloadTask
+	for {
+		request.Offset = &offset
+		request.Limit = &limit
+		response := teo.NewDescribeLogAnalysisDownloadTasksResponse()
+		err := resource.Retry(tccommon.ReadRetryTimeout, func() *resource.RetryError {
+			result, e := me.client.UseTeoV20220901Client().DescribeLogAnalysisDownloadTasks(request)
+			if e != nil {
+				return tccommon.RetryError(e)
+			}
+			response = result
+			return nil
+		})
+		if err != nil {
+			errRet = err
+			return
+		}
+		log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+		if response == nil || response.Response == nil || len(response.Response.Tasks) < 1 {
+			break
+		}
+
+		for _, task := range response.Response.Tasks {
+			if task.TaskId != nil && *task.TaskId == taskId {
+				instances = append(instances, task)
+			}
+		}
+
+		if response.Response.TotalCount != nil && int64(len(instances)) >= *response.Response.TotalCount {
+			break
+		}
+		if int64(len(response.Response.Tasks)) < limit {
+			break
+		}
+
+		offset = offset + limit
+	}
+
+	if len(instances) < 1 {
+		return
+	}
+
+	ret = instances[0]
+	return
+}
