@@ -20,6 +20,13 @@ type DlcService struct {
 	client *connectivity.TencentCloudClient
 }
 
+// NewDlcService constructs a DlcService from a shared TencentCloud client.
+// It mirrors the NewBdrcService factory used by framework actions so that the
+// DLC action implementations can be registered in framework/registry.go.
+func NewDlcService(client *connectivity.TencentCloudClient) DlcService {
+	return DlcService{client: client}
+}
+
 func (me *DlcService) DescribeDlcWorkGroupById(ctx context.Context, workGroupId string) (workGroup *dlc.WorkGroupInfo, errRet error) {
 	logId := tccommon.GetLogId(ctx)
 
@@ -309,6 +316,34 @@ func (me *DlcService) DescribeDlcDescribeUserTypeByFilter(ctx context.Context, p
 	}
 
 	describeUserType = response.Response.UserType
+	return
+}
+func (me *DlcService) DescribeDlcTCLakeMetaInstance(ctx context.Context) (status *string, errRet error) {
+	var (
+		logId   = tccommon.GetLogId(ctx)
+		request = dlc.NewDescribeTCLakeMetaInstanceRequest()
+	)
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	ratelimit.Check(request.GetAction())
+
+	response, err := me.client.UseDlcClient().DescribeTCLakeMetaInstance(request)
+	if err != nil {
+		errRet = err
+		return
+	}
+	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+	if response == nil || response.Response == nil || response.Response.Status == nil {
+		return
+	}
+
+	status = response.Response.Status
 	return
 }
 func (me *DlcService) DescribeDlcDescribeUserRolesByFilter(ctx context.Context, param map[string]interface{}) (describeUserRoles []*dlc.UserRole, errRet error) {
@@ -1608,6 +1643,41 @@ func (me *DlcService) DeleteDlcAttachWorkGroupPolicyAttachmentByPolicyId(ctx con
 
 	if errRet != nil {
 		log.Printf("[CRITAL]%s delete dlc attach work group policy attachment failed, reason:%+v", logId, errRet)
+		return
+	}
+
+	return
+}
+
+// InitializeTCLake activates (opens) the TCLake service for the current
+// account via the DLC InitializeTCLake API. The API takes no request
+// parameters and returns the InstanceId and IsSuccess fields, which are
+// logged for observability. It is a one-time, idempotent initialization step.
+func (me *DlcService) InitializeTCLake(ctx context.Context) (response *dlc.InitializeTCLakeResponse, errRet error) {
+	logId := tccommon.GetLogId(ctx)
+
+	request := dlc.NewInitializeTCLakeRequest()
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n",
+				logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	errRet = resource.Retry(tccommon.WriteRetryTimeout, func() *resource.RetryError {
+		ratelimit.Check(request.GetAction())
+		result, e := me.client.UseDlcClient().InitializeTCLakeWithContext(ctx, request)
+		if e != nil {
+			return tccommon.RetryError(e)
+		}
+		log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n",
+			logId, request.GetAction(), request.ToJsonString(), result.ToJsonString())
+		response = result
+		return nil
+	})
+
+	if errRet != nil {
 		return
 	}
 
