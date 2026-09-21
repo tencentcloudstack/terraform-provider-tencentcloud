@@ -18,6 +18,7 @@ import (
 	"github.com/hashicorp/terraform-plugin-framework/resource"
 
 	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/services/bdrc"
+	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/services/dlc"
 	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/services/mongodb"
 	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/services/ssm"
 	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/services/teo"
@@ -46,6 +47,7 @@ var listResourceFactories = []func() list.ListResource{}
 var actionFactories = []func() action.Action{
 	teo.NewTeoConfirmOriginAclUpdate,
 	bdrc.NewBdrcRunCopyPairTasks,
+	dlc.NewDlcInitializeTCLake,
 	mongodb.NewMongodbRestoreDbInstance,
 }
 
