@@ -614,6 +614,46 @@ func (me *ConfigService) DescribeConfigDeliver(ctx context.Context) (ret *config
 	return
 }
 
+func (me *ConfigService) DescribeAggregateConfigDeliver(ctx context.Context, accountGroupId string) (ret *configv20220802.DescribeAggregateConfigDeliverResponseParams, errRet error) {
+	logId := tccommon.GetLogId(ctx)
+
+	request := configv20220802.NewDescribeAggregateConfigDeliverRequest()
+	response := configv20220802.NewDescribeAggregateConfigDeliverResponse()
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	request.AccountGroupId = helper.String(accountGroupId)
+
+	err := resource.Retry(tccommon.ReadRetryTimeout, func() *resource.RetryError {
+		ratelimit.Check(request.GetAction())
+		result, e := me.client.UseConfigV20220802Client().DescribeAggregateConfigDeliver(request)
+		if e != nil {
+			return tccommon.RetryError(e)
+		}
+
+		if result == nil || result.Response == nil {
+			return resource.NonRetryableError(fmt.Errorf("describe aggregate config deliver failed, Response is nil"))
+		}
+
+		log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), result.ToJsonString())
+
+		response = result
+		return nil
+	})
+
+	if err != nil {
+		errRet = err
+		return
+	}
+
+	ret = response.Response
+	return
+}
+
 func (me *ConfigService) DescribeConfigRemediationById(ctx context.Context, ruleId, remediationId string) (ret *configv20220802.Remediation, errRet error) {
 	logId := tccommon.GetLogId(ctx)
 
