@@ -1353,7 +1353,7 @@ github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/igtm/v20231024
 # github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/keewidb v1.3.32
 ## explicit; go 1.14
 github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/keewidb/v20220308
-# github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/kms v1.0.1145
+# github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/kms v1.3.168
 ## explicit; go 1.14
 github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/kms/v20190118
 # github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/lighthouse v1.3.108

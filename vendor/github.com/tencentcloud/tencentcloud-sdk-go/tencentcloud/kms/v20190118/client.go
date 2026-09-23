@@ -1,4 +1,4 @@
-// Copyright (c) 2017-2018 THL A29 Limited, a Tencent company. All Rights Reserved.
+// Copyright (c) 2017-2025 Tencent. All Rights Reserved.
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -75,6 +75,7 @@ func NewArchiveKeyResponse() (response *ArchiveKeyResponse) {
 //  RESOURCEUNAVAILABLE_CMKNOTFOUND = "ResourceUnavailable.CmkNotFound"
 //  RESOURCEUNAVAILABLE_CMKSTATENOTSUPPORT = "ResourceUnavailable.CmkStateNotSupport"
 //  UNAUTHORIZEDOPERATION = "UnauthorizedOperation"
+//  UNSUPPORTEDOPERATION_NOTROLEOPERATION = "UnsupportedOperation.NotRoleOperation"
 //  UNSUPPORTEDOPERATION_NOTUSERCREATEDCMK = "UnsupportedOperation.NotUserCreatedCmk"
 //  UNSUPPORTEDOPERATION_SERVICETEMPORARYUNAVAILABLE = "UnsupportedOperation.ServiceTemporaryUnavailable"
 func (c *Client) ArchiveKey(request *ArchiveKeyRequest) (response *ArchiveKeyResponse, err error) {
@@ -92,12 +93,14 @@ func (c *Client) ArchiveKey(request *ArchiveKeyRequest) (response *ArchiveKeyRes
 //  RESOURCEUNAVAILABLE_CMKNOTFOUND = "ResourceUnavailable.CmkNotFound"
 //  RESOURCEUNAVAILABLE_CMKSTATENOTSUPPORT = "ResourceUnavailable.CmkStateNotSupport"
 //  UNAUTHORIZEDOPERATION = "UnauthorizedOperation"
+//  UNSUPPORTEDOPERATION_NOTROLEOPERATION = "UnsupportedOperation.NotRoleOperation"
 //  UNSUPPORTEDOPERATION_NOTUSERCREATEDCMK = "UnsupportedOperation.NotUserCreatedCmk"
 //  UNSUPPORTEDOPERATION_SERVICETEMPORARYUNAVAILABLE = "UnsupportedOperation.ServiceTemporaryUnavailable"
 func (c *Client) ArchiveKeyWithContext(ctx context.Context, request *ArchiveKeyRequest) (response *ArchiveKeyResponse, err error) {
     if request == nil {
         request = NewArchiveKeyRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "kms", APIVersion, "ArchiveKey")
     
     if c.GetCredential() == nil {
         return nil, errors.New("ArchiveKey require credential")
@@ -161,6 +164,7 @@ func (c *Client) AsymmetricRsaDecryptWithContext(ctx context.Context, request *A
     if request == nil {
         request = NewAsymmetricRsaDecryptRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "kms", APIVersion, "AsymmetricRsaDecrypt")
     
     if c.GetCredential() == nil {
         return nil, errors.New("AsymmetricRsaDecrypt require credential")
@@ -226,6 +230,7 @@ func (c *Client) AsymmetricSm2DecryptWithContext(ctx context.Context, request *A
     if request == nil {
         request = NewAsymmetricSm2DecryptRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "kms", APIVersion, "AsymmetricSm2Decrypt")
     
     if c.GetCredential() == nil {
         return nil, errors.New("AsymmetricSm2Decrypt require credential")
@@ -287,6 +292,7 @@ func (c *Client) BindCloudResourceWithContext(ctx context.Context, request *Bind
     if request == nil {
         request = NewBindCloudResourceRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "kms", APIVersion, "BindCloudResource")
     
     if c.GetCredential() == nil {
         return nil, errors.New("BindCloudResource require credential")
@@ -295,6 +301,72 @@ func (c *Client) BindCloudResourceWithContext(ctx context.Context, request *Bind
     request.SetContext(ctx)
     
     response = NewBindCloudResourceResponse()
+    err = c.Send(request, response)
+    return
+}
+
+func NewCancelDataKeyDeletionRequest() (request *CancelDataKeyDeletionRequest) {
+    request = &CancelDataKeyDeletionRequest{
+        BaseRequest: &tchttp.BaseRequest{},
+    }
+    
+    request.Init().WithApiInfo("kms", APIVersion, "CancelDataKeyDeletion")
+    
+    
+    return
+}
+
+func NewCancelDataKeyDeletionResponse() (response *CancelDataKeyDeletionResponse) {
+    response = &CancelDataKeyDeletionResponse{
+        BaseResponse: &tchttp.BaseResponse{},
+    } 
+    return
+
+}
+
+// CancelDataKeyDeletion
+// 取消计划删除数据密钥
+//
+// 可能返回的错误码:
+//  INTERNALERROR = "InternalError"
+//  INVALIDPARAMETERVALUE_INVALIDDATAKEYID = "InvalidParameterValue.InvalidDataKeyId"
+//  LIMITEXCEEDED_DATAKEYLIMITEXCEEDED = "LimitExceeded.DataKeyLimitExceeded"
+//  RESOURCEUNAVAILABLE_CMKNOTFOUND = "ResourceUnavailable.CmkNotFound"
+//  RESOURCEUNAVAILABLE_CMKSTATENOTSUPPORT = "ResourceUnavailable.CmkStateNotSupport"
+//  RESOURCEUNAVAILABLE_DATAKEYNOTFOUND = "ResourceUnavailable.DataKeyNotFound"
+//  RESOURCEUNAVAILABLE_DATAKEYNOTPENDINGDELETE = "ResourceUnavailable.DataKeyNotPendingDelete"
+//  UNAUTHORIZEDOPERATION = "UnauthorizedOperation"
+//  UNSUPPORTEDOPERATION_NOTROLEOPERATION = "UnsupportedOperation.NotRoleOperation"
+func (c *Client) CancelDataKeyDeletion(request *CancelDataKeyDeletionRequest) (response *CancelDataKeyDeletionResponse, err error) {
+    return c.CancelDataKeyDeletionWithContext(context.Background(), request)
+}
+
+// CancelDataKeyDeletion
+// 取消计划删除数据密钥
+//
+// 可能返回的错误码:
+//  INTERNALERROR = "InternalError"
+//  INVALIDPARAMETERVALUE_INVALIDDATAKEYID = "InvalidParameterValue.InvalidDataKeyId"
+//  LIMITEXCEEDED_DATAKEYLIMITEXCEEDED = "LimitExceeded.DataKeyLimitExceeded"
+//  RESOURCEUNAVAILABLE_CMKNOTFOUND = "ResourceUnavailable.CmkNotFound"
+//  RESOURCEUNAVAILABLE_CMKSTATENOTSUPPORT = "ResourceUnavailable.CmkStateNotSupport"
+//  RESOURCEUNAVAILABLE_DATAKEYNOTFOUND = "ResourceUnavailable.DataKeyNotFound"
+//  RESOURCEUNAVAILABLE_DATAKEYNOTPENDINGDELETE = "ResourceUnavailable.DataKeyNotPendingDelete"
+//  UNAUTHORIZEDOPERATION = "UnauthorizedOperation"
+//  UNSUPPORTEDOPERATION_NOTROLEOPERATION = "UnsupportedOperation.NotRoleOperation"
+func (c *Client) CancelDataKeyDeletionWithContext(ctx context.Context, request *CancelDataKeyDeletionRequest) (response *CancelDataKeyDeletionResponse, err error) {
+    if request == nil {
+        request = NewCancelDataKeyDeletionRequest()
+    }
+    c.InitBaseRequest(&request.BaseRequest, "kms", APIVersion, "CancelDataKeyDeletion")
+    
+    if c.GetCredential() == nil {
+        return nil, errors.New("CancelDataKeyDeletion require credential")
+    }
+
+    request.SetContext(ctx)
+    
+    response = NewCancelDataKeyDeletionResponse()
     err = c.Send(request, response)
     return
 }
@@ -328,6 +400,7 @@ func NewCancelKeyArchiveResponse() (response *CancelKeyArchiveResponse) {
 //  RESOURCEUNAVAILABLE_CMKNOTFOUND = "ResourceUnavailable.CmkNotFound"
 //  RESOURCEUNAVAILABLE_CMKSTATENOTSUPPORT = "ResourceUnavailable.CmkStateNotSupport"
 //  UNAUTHORIZEDOPERATION = "UnauthorizedOperation"
+//  UNSUPPORTEDOPERATION_NOTROLEOPERATION = "UnsupportedOperation.NotRoleOperation"
 //  UNSUPPORTEDOPERATION_NOTUSERCREATEDCMK = "UnsupportedOperation.NotUserCreatedCmk"
 //  UNSUPPORTEDOPERATION_SERVICETEMPORARYUNAVAILABLE = "UnsupportedOperation.ServiceTemporaryUnavailable"
 func (c *Client) CancelKeyArchive(request *CancelKeyArchiveRequest) (response *CancelKeyArchiveResponse, err error) {
@@ -344,12 +417,14 @@ func (c *Client) CancelKeyArchive(request *CancelKeyArchiveRequest) (response *C
 //  RESOURCEUNAVAILABLE_CMKNOTFOUND = "ResourceUnavailable.CmkNotFound"
 //  RESOURCEUNAVAILABLE_CMKSTATENOTSUPPORT = "ResourceUnavailable.CmkStateNotSupport"
 //  UNAUTHORIZEDOPERATION = "UnauthorizedOperation"
+//  UNSUPPORTEDOPERATION_NOTROLEOPERATION = "UnsupportedOperation.NotRoleOperation"
 //  UNSUPPORTEDOPERATION_NOTUSERCREATEDCMK = "UnsupportedOperation.NotUserCreatedCmk"
 //  UNSUPPORTEDOPERATION_SERVICETEMPORARYUNAVAILABLE = "UnsupportedOperation.ServiceTemporaryUnavailable"
 func (c *Client) CancelKeyArchiveWithContext(ctx context.Context, request *CancelKeyArchiveRequest) (response *CancelKeyArchiveResponse, err error) {
     if request == nil {
         request = NewCancelKeyArchiveRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "kms", APIVersion, "CancelKeyArchive")
     
     if c.GetCredential() == nil {
         return nil, errors.New("CancelKeyArchive require credential")
@@ -390,6 +465,7 @@ func NewCancelKeyDeletionResponse() (response *CancelKeyDeletionResponse) {
 //  RESOURCEUNAVAILABLE_CMKNOTFOUND = "ResourceUnavailable.CmkNotFound"
 //  RESOURCEUNAVAILABLE_CMKNOTPENDINGDELETE = "ResourceUnavailable.CmkNotPendingDelete"
 //  UNAUTHORIZEDOPERATION = "UnauthorizedOperation"
+//  UNSUPPORTEDOPERATION_NOTROLEOPERATION = "UnsupportedOperation.NotRoleOperation"
 //  UNSUPPORTEDOPERATION_SERVICETEMPORARYUNAVAILABLE = "UnsupportedOperation.ServiceTemporaryUnavailable"
 func (c *Client) CancelKeyDeletion(request *CancelKeyDeletionRequest) (response *CancelKeyDeletionResponse, err error) {
     return c.CancelKeyDeletionWithContext(context.Background(), request)
@@ -404,11 +480,13 @@ func (c *Client) CancelKeyDeletion(request *CancelKeyDeletionRequest) (response 
 //  RESOURCEUNAVAILABLE_CMKNOTFOUND = "ResourceUnavailable.CmkNotFound"
 //  RESOURCEUNAVAILABLE_CMKNOTPENDINGDELETE = "ResourceUnavailable.CmkNotPendingDelete"
 //  UNAUTHORIZEDOPERATION = "UnauthorizedOperation"
+//  UNSUPPORTEDOPERATION_NOTROLEOPERATION = "UnsupportedOperation.NotRoleOperation"
 //  UNSUPPORTEDOPERATION_SERVICETEMPORARYUNAVAILABLE = "UnsupportedOperation.ServiceTemporaryUnavailable"
 func (c *Client) CancelKeyDeletionWithContext(ctx context.Context, request *CancelKeyDeletionRequest) (response *CancelKeyDeletionResponse, err error) {
     if request == nil {
         request = NewCancelKeyDeletionRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "kms", APIVersion, "CancelKeyDeletion")
     
     if c.GetCredential() == nil {
         return nil, errors.New("CancelKeyDeletion require credential")
@@ -484,6 +562,7 @@ func (c *Client) CreateKeyWithContext(ctx context.Context, request *CreateKeyReq
     if request == nil {
         request = NewCreateKeyRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "kms", APIVersion, "CreateKey")
     
     if c.GetCredential() == nil {
         return nil, errors.New("CreateKey require credential")
@@ -549,6 +628,7 @@ func (c *Client) CreateWhiteBoxKeyWithContext(ctx context.Context, request *Crea
     if request == nil {
         request = NewCreateWhiteBoxKeyRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "kms", APIVersion, "CreateWhiteBoxKey")
     
     if c.GetCredential() == nil {
         return nil, errors.New("CreateWhiteBoxKey require credential")
@@ -610,6 +690,7 @@ func (c *Client) DecryptWithContext(ctx context.Context, request *DecryptRequest
     if request == nil {
         request = NewDecryptRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "kms", APIVersion, "Decrypt")
     
     if c.GetCredential() == nil {
         return nil, errors.New("Decrypt require credential")
@@ -673,6 +754,7 @@ func (c *Client) DeleteImportedKeyMaterialWithContext(ctx context.Context, reque
     if request == nil {
         request = NewDeleteImportedKeyMaterialRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "kms", APIVersion, "DeleteImportedKeyMaterial")
     
     if c.GetCredential() == nil {
         return nil, errors.New("DeleteImportedKeyMaterial require credential")
@@ -732,6 +814,7 @@ func (c *Client) DeleteWhiteBoxKeyWithContext(ctx context.Context, request *Dele
     if request == nil {
         request = NewDeleteWhiteBoxKeyRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "kms", APIVersion, "DeleteWhiteBoxKey")
     
     if c.GetCredential() == nil {
         return nil, errors.New("DeleteWhiteBoxKey require credential")
@@ -740,6 +823,124 @@ func (c *Client) DeleteWhiteBoxKeyWithContext(ctx context.Context, request *Dele
     request.SetContext(ctx)
     
     response = NewDeleteWhiteBoxKeyResponse()
+    err = c.Send(request, response)
+    return
+}
+
+func NewDescribeDataKeyRequest() (request *DescribeDataKeyRequest) {
+    request = &DescribeDataKeyRequest{
+        BaseRequest: &tchttp.BaseRequest{},
+    }
+    
+    request.Init().WithApiInfo("kms", APIVersion, "DescribeDataKey")
+    
+    
+    return
+}
+
+func NewDescribeDataKeyResponse() (response *DescribeDataKeyResponse) {
+    response = &DescribeDataKeyResponse{
+        BaseResponse: &tchttp.BaseResponse{},
+    } 
+    return
+
+}
+
+// DescribeDataKey
+// 获取数据密钥的详情
+//
+// 可能返回的错误码:
+//  INTERNALERROR = "InternalError"
+//  INVALIDPARAMETERVALUE_INVALIDDATAKEYID = "InvalidParameterValue.InvalidDataKeyId"
+//  RESOURCEUNAVAILABLE_DATAKEYNOTFOUND = "ResourceUnavailable.DataKeyNotFound"
+//  UNSUPPORTEDOPERATION_NOTROLEOPERATION = "UnsupportedOperation.NotRoleOperation"
+func (c *Client) DescribeDataKey(request *DescribeDataKeyRequest) (response *DescribeDataKeyResponse, err error) {
+    return c.DescribeDataKeyWithContext(context.Background(), request)
+}
+
+// DescribeDataKey
+// 获取数据密钥的详情
+//
+// 可能返回的错误码:
+//  INTERNALERROR = "InternalError"
+//  INVALIDPARAMETERVALUE_INVALIDDATAKEYID = "InvalidParameterValue.InvalidDataKeyId"
+//  RESOURCEUNAVAILABLE_DATAKEYNOTFOUND = "ResourceUnavailable.DataKeyNotFound"
+//  UNSUPPORTEDOPERATION_NOTROLEOPERATION = "UnsupportedOperation.NotRoleOperation"
+func (c *Client) DescribeDataKeyWithContext(ctx context.Context, request *DescribeDataKeyRequest) (response *DescribeDataKeyResponse, err error) {
+    if request == nil {
+        request = NewDescribeDataKeyRequest()
+    }
+    c.InitBaseRequest(&request.BaseRequest, "kms", APIVersion, "DescribeDataKey")
+    
+    if c.GetCredential() == nil {
+        return nil, errors.New("DescribeDataKey require credential")
+    }
+
+    request.SetContext(ctx)
+    
+    response = NewDescribeDataKeyResponse()
+    err = c.Send(request, response)
+    return
+}
+
+func NewDescribeDataKeysRequest() (request *DescribeDataKeysRequest) {
+    request = &DescribeDataKeysRequest{
+        BaseRequest: &tchttp.BaseRequest{},
+    }
+    
+    request.Init().WithApiInfo("kms", APIVersion, "DescribeDataKeys")
+    
+    
+    return
+}
+
+func NewDescribeDataKeysResponse() (response *DescribeDataKeysResponse) {
+    response = &DescribeDataKeysResponse{
+        BaseResponse: &tchttp.BaseResponse{},
+    } 
+    return
+
+}
+
+// DescribeDataKeys
+// 返回数据密钥属性信息列表
+//
+// 可能返回的错误码:
+//  INTERNALERROR = "InternalError"
+//  INVALIDPARAMETERVALUE = "InvalidParameterValue"
+//  INVALIDPARAMETERVALUE_DUPLICATEDDATAKEYID = "InvalidParameterValue.DuplicatedDataKeyId"
+//  INVALIDPARAMETERVALUE_INVALIDDATAKEYID = "InvalidParameterValue.InvalidDataKeyId"
+//  INVALIDPARAMETERVALUE_INVALIDKEYID = "InvalidParameterValue.InvalidKeyId"
+//  RESOURCEUNAVAILABLE_DATAKEYNOTFOUND = "ResourceUnavailable.DataKeyNotFound"
+//  UNSUPPORTEDOPERATION_NOTROLEOPERATION = "UnsupportedOperation.NotRoleOperation"
+func (c *Client) DescribeDataKeys(request *DescribeDataKeysRequest) (response *DescribeDataKeysResponse, err error) {
+    return c.DescribeDataKeysWithContext(context.Background(), request)
+}
+
+// DescribeDataKeys
+// 返回数据密钥属性信息列表
+//
+// 可能返回的错误码:
+//  INTERNALERROR = "InternalError"
+//  INVALIDPARAMETERVALUE = "InvalidParameterValue"
+//  INVALIDPARAMETERVALUE_DUPLICATEDDATAKEYID = "InvalidParameterValue.DuplicatedDataKeyId"
+//  INVALIDPARAMETERVALUE_INVALIDDATAKEYID = "InvalidParameterValue.InvalidDataKeyId"
+//  INVALIDPARAMETERVALUE_INVALIDKEYID = "InvalidParameterValue.InvalidKeyId"
+//  RESOURCEUNAVAILABLE_DATAKEYNOTFOUND = "ResourceUnavailable.DataKeyNotFound"
+//  UNSUPPORTEDOPERATION_NOTROLEOPERATION = "UnsupportedOperation.NotRoleOperation"
+func (c *Client) DescribeDataKeysWithContext(ctx context.Context, request *DescribeDataKeysRequest) (response *DescribeDataKeysResponse, err error) {
+    if request == nil {
+        request = NewDescribeDataKeysRequest()
+    }
+    c.InitBaseRequest(&request.BaseRequest, "kms", APIVersion, "DescribeDataKeys")
+    
+    if c.GetCredential() == nil {
+        return nil, errors.New("DescribeDataKeys require credential")
+    }
+
+    request.SetContext(ctx)
+    
+    response = NewDescribeDataKeysResponse()
     err = c.Send(request, response)
     return
 }
@@ -772,6 +973,7 @@ func NewDescribeKeyResponse() (response *DescribeKeyResponse) {
 //  INVALIDPARAMETERVALUE_INVALIDKEYID = "InvalidParameterValue.InvalidKeyId"
 //  RESOURCEUNAVAILABLE_CMKNOTFOUND = "ResourceUnavailable.CmkNotFound"
 //  UNAUTHORIZEDOPERATION = "UnauthorizedOperation"
+//  UNSUPPORTEDOPERATION_NOTROLEOPERATION = "UnsupportedOperation.NotRoleOperation"
 func (c *Client) DescribeKey(request *DescribeKeyRequest) (response *DescribeKeyResponse, err error) {
     return c.DescribeKeyWithContext(context.Background(), request)
 }
@@ -785,10 +987,12 @@ func (c *Client) DescribeKey(request *DescribeKeyRequest) (response *DescribeKey
 //  INVALIDPARAMETERVALUE_INVALIDKEYID = "InvalidParameterValue.InvalidKeyId"
 //  RESOURCEUNAVAILABLE_CMKNOTFOUND = "ResourceUnavailable.CmkNotFound"
 //  UNAUTHORIZEDOPERATION = "UnauthorizedOperation"
+//  UNSUPPORTEDOPERATION_NOTROLEOPERATION = "UnsupportedOperation.NotRoleOperation"
 func (c *Client) DescribeKeyWithContext(ctx context.Context, request *DescribeKeyRequest) (response *DescribeKeyResponse, err error) {
     if request == nil {
         request = NewDescribeKeyRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "kms", APIVersion, "DescribeKey")
     
     if c.GetCredential() == nil {
         return nil, errors.New("DescribeKey require credential")
@@ -830,6 +1034,7 @@ func NewDescribeKeysResponse() (response *DescribeKeysResponse) {
 //  INVALIDPARAMETERVALUE_INVALIDKEYID = "InvalidParameterValue.InvalidKeyId"
 //  RESOURCEUNAVAILABLE_CMKNOTFOUND = "ResourceUnavailable.CmkNotFound"
 //  UNAUTHORIZEDOPERATION = "UnauthorizedOperation"
+//  UNSUPPORTEDOPERATION_NOTROLEOPERATION = "UnsupportedOperation.NotRoleOperation"
 func (c *Client) DescribeKeys(request *DescribeKeysRequest) (response *DescribeKeysResponse, err error) {
     return c.DescribeKeysWithContext(context.Background(), request)
 }
@@ -844,10 +1049,12 @@ func (c *Client) DescribeKeys(request *DescribeKeysRequest) (response *DescribeK
 //  INVALIDPARAMETERVALUE_INVALIDKEYID = "InvalidParameterValue.InvalidKeyId"
 //  RESOURCEUNAVAILABLE_CMKNOTFOUND = "ResourceUnavailable.CmkNotFound"
 //  UNAUTHORIZEDOPERATION = "UnauthorizedOperation"
+//  UNSUPPORTEDOPERATION_NOTROLEOPERATION = "UnsupportedOperation.NotRoleOperation"
 func (c *Client) DescribeKeysWithContext(ctx context.Context, request *DescribeKeysRequest) (response *DescribeKeysResponse, err error) {
     if request == nil {
         request = NewDescribeKeysRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "kms", APIVersion, "DescribeKeys")
     
     if c.GetCredential() == nil {
         return nil, errors.New("DescribeKeys require credential")
@@ -905,6 +1112,7 @@ func (c *Client) DescribeWhiteBoxDecryptKeyWithContext(ctx context.Context, requ
     if request == nil {
         request = NewDescribeWhiteBoxDecryptKeyRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "kms", APIVersion, "DescribeWhiteBoxDecryptKey")
     
     if c.GetCredential() == nil {
         return nil, errors.New("DescribeWhiteBoxDecryptKey require credential")
@@ -962,6 +1170,7 @@ func (c *Client) DescribeWhiteBoxDeviceFingerprintsWithContext(ctx context.Conte
     if request == nil {
         request = NewDescribeWhiteBoxDeviceFingerprintsRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "kms", APIVersion, "DescribeWhiteBoxDeviceFingerprints")
     
     if c.GetCredential() == nil {
         return nil, errors.New("DescribeWhiteBoxDeviceFingerprints require credential")
@@ -1019,6 +1228,7 @@ func (c *Client) DescribeWhiteBoxKeyWithContext(ctx context.Context, request *De
     if request == nil {
         request = NewDescribeWhiteBoxKeyRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "kms", APIVersion, "DescribeWhiteBoxKey")
     
     if c.GetCredential() == nil {
         return nil, errors.New("DescribeWhiteBoxKey require credential")
@@ -1074,6 +1284,7 @@ func (c *Client) DescribeWhiteBoxKeyDetailsWithContext(ctx context.Context, requ
     if request == nil {
         request = NewDescribeWhiteBoxKeyDetailsRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "kms", APIVersion, "DescribeWhiteBoxKeyDetails")
     
     if c.GetCredential() == nil {
         return nil, errors.New("DescribeWhiteBoxKeyDetails require credential")
@@ -1127,6 +1338,7 @@ func (c *Client) DescribeWhiteBoxServiceStatusWithContext(ctx context.Context, r
     if request == nil {
         request = NewDescribeWhiteBoxServiceStatusRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "kms", APIVersion, "DescribeWhiteBoxServiceStatus")
     
     if c.GetCredential() == nil {
         return nil, errors.New("DescribeWhiteBoxServiceStatus require credential")
@@ -1135,6 +1347,126 @@ func (c *Client) DescribeWhiteBoxServiceStatusWithContext(ctx context.Context, r
     request.SetContext(ctx)
     
     response = NewDescribeWhiteBoxServiceStatusResponse()
+    err = c.Send(request, response)
+    return
+}
+
+func NewDisableDataKeyRequest() (request *DisableDataKeyRequest) {
+    request = &DisableDataKeyRequest{
+        BaseRequest: &tchttp.BaseRequest{},
+    }
+    
+    request.Init().WithApiInfo("kms", APIVersion, "DisableDataKey")
+    
+    
+    return
+}
+
+func NewDisableDataKeyResponse() (response *DisableDataKeyResponse) {
+    response = &DisableDataKeyResponse{
+        BaseResponse: &tchttp.BaseResponse{},
+    } 
+    return
+
+}
+
+// DisableDataKey
+// 禁用数据密钥
+//
+// 可能返回的错误码:
+//  INTERNALERROR = "InternalError"
+//  INVALIDPARAMETERVALUE_INVALIDDATAKEYID = "InvalidParameterValue.InvalidDataKeyId"
+//  RESOURCEUNAVAILABLE_DATAKEYNOTFOUND = "ResourceUnavailable.DataKeyNotFound"
+//  RESOURCEUNAVAILABLE_DATAKEYSTATENOTSUPPORT = "ResourceUnavailable.DataKeyStateNotSupport"
+//  UNSUPPORTEDOPERATION_NOTROLEOPERATION = "UnsupportedOperation.NotRoleOperation"
+func (c *Client) DisableDataKey(request *DisableDataKeyRequest) (response *DisableDataKeyResponse, err error) {
+    return c.DisableDataKeyWithContext(context.Background(), request)
+}
+
+// DisableDataKey
+// 禁用数据密钥
+//
+// 可能返回的错误码:
+//  INTERNALERROR = "InternalError"
+//  INVALIDPARAMETERVALUE_INVALIDDATAKEYID = "InvalidParameterValue.InvalidDataKeyId"
+//  RESOURCEUNAVAILABLE_DATAKEYNOTFOUND = "ResourceUnavailable.DataKeyNotFound"
+//  RESOURCEUNAVAILABLE_DATAKEYSTATENOTSUPPORT = "ResourceUnavailable.DataKeyStateNotSupport"
+//  UNSUPPORTEDOPERATION_NOTROLEOPERATION = "UnsupportedOperation.NotRoleOperation"
+func (c *Client) DisableDataKeyWithContext(ctx context.Context, request *DisableDataKeyRequest) (response *DisableDataKeyResponse, err error) {
+    if request == nil {
+        request = NewDisableDataKeyRequest()
+    }
+    c.InitBaseRequest(&request.BaseRequest, "kms", APIVersion, "DisableDataKey")
+    
+    if c.GetCredential() == nil {
+        return nil, errors.New("DisableDataKey require credential")
+    }
+
+    request.SetContext(ctx)
+    
+    response = NewDisableDataKeyResponse()
+    err = c.Send(request, response)
+    return
+}
+
+func NewDisableDataKeysRequest() (request *DisableDataKeysRequest) {
+    request = &DisableDataKeysRequest{
+        BaseRequest: &tchttp.BaseRequest{},
+    }
+    
+    request.Init().WithApiInfo("kms", APIVersion, "DisableDataKeys")
+    
+    
+    return
+}
+
+func NewDisableDataKeysResponse() (response *DisableDataKeysResponse) {
+    response = &DisableDataKeysResponse{
+        BaseResponse: &tchttp.BaseResponse{},
+    } 
+    return
+
+}
+
+// DisableDataKeys
+// 批量禁用数据密钥
+//
+// 可能返回的错误码:
+//  INTERNALERROR = "InternalError"
+//  INVALIDPARAMETERVALUE = "InvalidParameterValue"
+//  INVALIDPARAMETERVALUE_DUPLICATEDDATAKEYID = "InvalidParameterValue.DuplicatedDataKeyId"
+//  INVALIDPARAMETERVALUE_INVALIDDATAKEYID = "InvalidParameterValue.InvalidDataKeyId"
+//  RESOURCEUNAVAILABLE_DATAKEYNOTFOUND = "ResourceUnavailable.DataKeyNotFound"
+//  RESOURCEUNAVAILABLE_DATAKEYSTATENOTSUPPORT = "ResourceUnavailable.DataKeyStateNotSupport"
+//  UNSUPPORTEDOPERATION_NOTROLEOPERATION = "UnsupportedOperation.NotRoleOperation"
+func (c *Client) DisableDataKeys(request *DisableDataKeysRequest) (response *DisableDataKeysResponse, err error) {
+    return c.DisableDataKeysWithContext(context.Background(), request)
+}
+
+// DisableDataKeys
+// 批量禁用数据密钥
+//
+// 可能返回的错误码:
+//  INTERNALERROR = "InternalError"
+//  INVALIDPARAMETERVALUE = "InvalidParameterValue"
+//  INVALIDPARAMETERVALUE_DUPLICATEDDATAKEYID = "InvalidParameterValue.DuplicatedDataKeyId"
+//  INVALIDPARAMETERVALUE_INVALIDDATAKEYID = "InvalidParameterValue.InvalidDataKeyId"
+//  RESOURCEUNAVAILABLE_DATAKEYNOTFOUND = "ResourceUnavailable.DataKeyNotFound"
+//  RESOURCEUNAVAILABLE_DATAKEYSTATENOTSUPPORT = "ResourceUnavailable.DataKeyStateNotSupport"
+//  UNSUPPORTEDOPERATION_NOTROLEOPERATION = "UnsupportedOperation.NotRoleOperation"
+func (c *Client) DisableDataKeysWithContext(ctx context.Context, request *DisableDataKeysRequest) (response *DisableDataKeysResponse, err error) {
+    if request == nil {
+        request = NewDisableDataKeysRequest()
+    }
+    c.InitBaseRequest(&request.BaseRequest, "kms", APIVersion, "DisableDataKeys")
+    
+    if c.GetCredential() == nil {
+        return nil, errors.New("DisableDataKeys require credential")
+    }
+
+    request.SetContext(ctx)
+    
+    response = NewDisableDataKeysResponse()
     err = c.Send(request, response)
     return
 }
@@ -1169,6 +1501,7 @@ func NewDisableKeyResponse() (response *DisableKeyResponse) {
 //  RESOURCEUNAVAILABLE_CMKNOTFOUND = "ResourceUnavailable.CmkNotFound"
 //  RESOURCEUNAVAILABLE_CMKSTATENOTSUPPORT = "ResourceUnavailable.CmkStateNotSupport"
 //  UNAUTHORIZEDOPERATION = "UnauthorizedOperation"
+//  UNSUPPORTEDOPERATION_NOTROLEOPERATION = "UnsupportedOperation.NotRoleOperation"
 //  UNSUPPORTEDOPERATION_SERVICETEMPORARYUNAVAILABLE = "UnsupportedOperation.ServiceTemporaryUnavailable"
 func (c *Client) DisableKey(request *DisableKeyRequest) (response *DisableKeyResponse, err error) {
     return c.DisableKeyWithContext(context.Background(), request)
@@ -1185,11 +1518,13 @@ func (c *Client) DisableKey(request *DisableKeyRequest) (response *DisableKeyRes
 //  RESOURCEUNAVAILABLE_CMKNOTFOUND = "ResourceUnavailable.CmkNotFound"
 //  RESOURCEUNAVAILABLE_CMKSTATENOTSUPPORT = "ResourceUnavailable.CmkStateNotSupport"
 //  UNAUTHORIZEDOPERATION = "UnauthorizedOperation"
+//  UNSUPPORTEDOPERATION_NOTROLEOPERATION = "UnsupportedOperation.NotRoleOperation"
 //  UNSUPPORTEDOPERATION_SERVICETEMPORARYUNAVAILABLE = "UnsupportedOperation.ServiceTemporaryUnavailable"
 func (c *Client) DisableKeyWithContext(ctx context.Context, request *DisableKeyRequest) (response *DisableKeyResponse, err error) {
     if request == nil {
         request = NewDisableKeyRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "kms", APIVersion, "DisableKey")
     
     if c.GetCredential() == nil {
         return nil, errors.New("DisableKey require credential")
@@ -1230,6 +1565,7 @@ func NewDisableKeyRotationResponse() (response *DisableKeyRotationResponse) {
 //  INVALIDPARAMETERVALUE_INVALIDKEYID = "InvalidParameterValue.InvalidKeyId"
 //  RESOURCEUNAVAILABLE_CMKNOTFOUND = "ResourceUnavailable.CmkNotFound"
 //  UNAUTHORIZEDOPERATION = "UnauthorizedOperation"
+//  UNSUPPORTEDOPERATION_NOTROLEOPERATION = "UnsupportedOperation.NotRoleOperation"
 func (c *Client) DisableKeyRotation(request *DisableKeyRotationRequest) (response *DisableKeyRotationResponse, err error) {
     return c.DisableKeyRotationWithContext(context.Background(), request)
 }
@@ -1243,10 +1579,12 @@ func (c *Client) DisableKeyRotation(request *DisableKeyRotationRequest) (respons
 //  INVALIDPARAMETERVALUE_INVALIDKEYID = "InvalidParameterValue.InvalidKeyId"
 //  RESOURCEUNAVAILABLE_CMKNOTFOUND = "ResourceUnavailable.CmkNotFound"
 //  UNAUTHORIZEDOPERATION = "UnauthorizedOperation"
+//  UNSUPPORTEDOPERATION_NOTROLEOPERATION = "UnsupportedOperation.NotRoleOperation"
 func (c *Client) DisableKeyRotationWithContext(ctx context.Context, request *DisableKeyRotationRequest) (response *DisableKeyRotationResponse, err error) {
     if request == nil {
         request = NewDisableKeyRotationRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "kms", APIVersion, "DisableKeyRotation")
     
     if c.GetCredential() == nil {
         return nil, errors.New("DisableKeyRotation require credential")
@@ -1290,6 +1628,7 @@ func NewDisableKeysResponse() (response *DisableKeysResponse) {
 //  RESOURCEUNAVAILABLE_CMKNOTFOUND = "ResourceUnavailable.CmkNotFound"
 //  RESOURCEUNAVAILABLE_CMKSTATENOTSUPPORT = "ResourceUnavailable.CmkStateNotSupport"
 //  UNAUTHORIZEDOPERATION = "UnauthorizedOperation"
+//  UNSUPPORTEDOPERATION_NOTROLEOPERATION = "UnsupportedOperation.NotRoleOperation"
 //  UNSUPPORTEDOPERATION_SERVICETEMPORARYUNAVAILABLE = "UnsupportedOperation.ServiceTemporaryUnavailable"
 func (c *Client) DisableKeys(request *DisableKeysRequest) (response *DisableKeysResponse, err error) {
     return c.DisableKeysWithContext(context.Background(), request)
@@ -1307,11 +1646,13 @@ func (c *Client) DisableKeys(request *DisableKeysRequest) (response *DisableKeys
 //  RESOURCEUNAVAILABLE_CMKNOTFOUND = "ResourceUnavailable.CmkNotFound"
 //  RESOURCEUNAVAILABLE_CMKSTATENOTSUPPORT = "ResourceUnavailable.CmkStateNotSupport"
 //  UNAUTHORIZEDOPERATION = "UnauthorizedOperation"
+//  UNSUPPORTEDOPERATION_NOTROLEOPERATION = "UnsupportedOperation.NotRoleOperation"
 //  UNSUPPORTEDOPERATION_SERVICETEMPORARYUNAVAILABLE = "UnsupportedOperation.ServiceTemporaryUnavailable"
 func (c *Client) DisableKeysWithContext(ctx context.Context, request *DisableKeysRequest) (response *DisableKeysResponse, err error) {
     if request == nil {
         request = NewDisableKeysRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "kms", APIVersion, "DisableKeys")
     
     if c.GetCredential() == nil {
         return nil, errors.New("DisableKeys require credential")
@@ -1369,6 +1710,7 @@ func (c *Client) DisableWhiteBoxKeyWithContext(ctx context.Context, request *Dis
     if request == nil {
         request = NewDisableWhiteBoxKeyRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "kms", APIVersion, "DisableWhiteBoxKey")
     
     if c.GetCredential() == nil {
         return nil, errors.New("DisableWhiteBoxKey require credential")
@@ -1430,6 +1772,7 @@ func (c *Client) DisableWhiteBoxKeysWithContext(ctx context.Context, request *Di
     if request == nil {
         request = NewDisableWhiteBoxKeysRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "kms", APIVersion, "DisableWhiteBoxKeys")
     
     if c.GetCredential() == nil {
         return nil, errors.New("DisableWhiteBoxKeys require credential")
@@ -1438,6 +1781,134 @@ func (c *Client) DisableWhiteBoxKeysWithContext(ctx context.Context, request *Di
     request.SetContext(ctx)
     
     response = NewDisableWhiteBoxKeysResponse()
+    err = c.Send(request, response)
+    return
+}
+
+func NewEnableDataKeyRequest() (request *EnableDataKeyRequest) {
+    request = &EnableDataKeyRequest{
+        BaseRequest: &tchttp.BaseRequest{},
+    }
+    
+    request.Init().WithApiInfo("kms", APIVersion, "EnableDataKey")
+    
+    
+    return
+}
+
+func NewEnableDataKeyResponse() (response *EnableDataKeyResponse) {
+    response = &EnableDataKeyResponse{
+        BaseResponse: &tchttp.BaseResponse{},
+    } 
+    return
+
+}
+
+// EnableDataKey
+// 启用数据密钥
+//
+// 可能返回的错误码:
+//  INTERNALERROR = "InternalError"
+//  INVALIDPARAMETERVALUE_INVALIDDATAKEYID = "InvalidParameterValue.InvalidDataKeyId"
+//  RESOURCEUNAVAILABLE_CMKNOTFOUND = "ResourceUnavailable.CmkNotFound"
+//  RESOURCEUNAVAILABLE_CMKSTATENOTSUPPORT = "ResourceUnavailable.CmkStateNotSupport"
+//  RESOURCEUNAVAILABLE_DATAKEYNOTFOUND = "ResourceUnavailable.DataKeyNotFound"
+//  UNSUPPORTEDOPERATION_NOTROLEOPERATION = "UnsupportedOperation.NotRoleOperation"
+func (c *Client) EnableDataKey(request *EnableDataKeyRequest) (response *EnableDataKeyResponse, err error) {
+    return c.EnableDataKeyWithContext(context.Background(), request)
+}
+
+// EnableDataKey
+// 启用数据密钥
+//
+// 可能返回的错误码:
+//  INTERNALERROR = "InternalError"
+//  INVALIDPARAMETERVALUE_INVALIDDATAKEYID = "InvalidParameterValue.InvalidDataKeyId"
+//  RESOURCEUNAVAILABLE_CMKNOTFOUND = "ResourceUnavailable.CmkNotFound"
+//  RESOURCEUNAVAILABLE_CMKSTATENOTSUPPORT = "ResourceUnavailable.CmkStateNotSupport"
+//  RESOURCEUNAVAILABLE_DATAKEYNOTFOUND = "ResourceUnavailable.DataKeyNotFound"
+//  UNSUPPORTEDOPERATION_NOTROLEOPERATION = "UnsupportedOperation.NotRoleOperation"
+func (c *Client) EnableDataKeyWithContext(ctx context.Context, request *EnableDataKeyRequest) (response *EnableDataKeyResponse, err error) {
+    if request == nil {
+        request = NewEnableDataKeyRequest()
+    }
+    c.InitBaseRequest(&request.BaseRequest, "kms", APIVersion, "EnableDataKey")
+    
+    if c.GetCredential() == nil {
+        return nil, errors.New("EnableDataKey require credential")
+    }
+
+    request.SetContext(ctx)
+    
+    response = NewEnableDataKeyResponse()
+    err = c.Send(request, response)
+    return
+}
+
+func NewEnableDataKeysRequest() (request *EnableDataKeysRequest) {
+    request = &EnableDataKeysRequest{
+        BaseRequest: &tchttp.BaseRequest{},
+    }
+    
+    request.Init().WithApiInfo("kms", APIVersion, "EnableDataKeys")
+    
+    
+    return
+}
+
+func NewEnableDataKeysResponse() (response *EnableDataKeysResponse) {
+    response = &EnableDataKeysResponse{
+        BaseResponse: &tchttp.BaseResponse{},
+    } 
+    return
+
+}
+
+// EnableDataKeys
+// 批量启用数据密钥
+//
+// 可能返回的错误码:
+//  INTERNALERROR = "InternalError"
+//  INVALIDPARAMETERVALUE = "InvalidParameterValue"
+//  INVALIDPARAMETERVALUE_DUPLICATEDDATAKEYID = "InvalidParameterValue.DuplicatedDataKeyId"
+//  INVALIDPARAMETERVALUE_INVALIDDATAKEYID = "InvalidParameterValue.InvalidDataKeyId"
+//  INVALIDPARAMETERVALUE_INVALIDKEYID = "InvalidParameterValue.InvalidKeyId"
+//  RESOURCEUNAVAILABLE_CMKNOTFOUND = "ResourceUnavailable.CmkNotFound"
+//  RESOURCEUNAVAILABLE_CMKSTATENOTSUPPORT = "ResourceUnavailable.CmkStateNotSupport"
+//  RESOURCEUNAVAILABLE_DATAKEYNOTFOUND = "ResourceUnavailable.DataKeyNotFound"
+//  RESOURCEUNAVAILABLE_DATAKEYSTATENOTSUPPORT = "ResourceUnavailable.DataKeyStateNotSupport"
+//  UNSUPPORTEDOPERATION_NOTROLEOPERATION = "UnsupportedOperation.NotRoleOperation"
+func (c *Client) EnableDataKeys(request *EnableDataKeysRequest) (response *EnableDataKeysResponse, err error) {
+    return c.EnableDataKeysWithContext(context.Background(), request)
+}
+
+// EnableDataKeys
+// 批量启用数据密钥
+//
+// 可能返回的错误码:
+//  INTERNALERROR = "InternalError"
+//  INVALIDPARAMETERVALUE = "InvalidParameterValue"
+//  INVALIDPARAMETERVALUE_DUPLICATEDDATAKEYID = "InvalidParameterValue.DuplicatedDataKeyId"
+//  INVALIDPARAMETERVALUE_INVALIDDATAKEYID = "InvalidParameterValue.InvalidDataKeyId"
+//  INVALIDPARAMETERVALUE_INVALIDKEYID = "InvalidParameterValue.InvalidKeyId"
+//  RESOURCEUNAVAILABLE_CMKNOTFOUND = "ResourceUnavailable.CmkNotFound"
+//  RESOURCEUNAVAILABLE_CMKSTATENOTSUPPORT = "ResourceUnavailable.CmkStateNotSupport"
+//  RESOURCEUNAVAILABLE_DATAKEYNOTFOUND = "ResourceUnavailable.DataKeyNotFound"
+//  RESOURCEUNAVAILABLE_DATAKEYSTATENOTSUPPORT = "ResourceUnavailable.DataKeyStateNotSupport"
+//  UNSUPPORTEDOPERATION_NOTROLEOPERATION = "UnsupportedOperation.NotRoleOperation"
+func (c *Client) EnableDataKeysWithContext(ctx context.Context, request *EnableDataKeysRequest) (response *EnableDataKeysResponse, err error) {
+    if request == nil {
+        request = NewEnableDataKeysRequest()
+    }
+    c.InitBaseRequest(&request.BaseRequest, "kms", APIVersion, "EnableDataKeys")
+    
+    if c.GetCredential() == nil {
+        return nil, errors.New("EnableDataKeys require credential")
+    }
+
+    request.SetContext(ctx)
+    
+    response = NewEnableDataKeysResponse()
     err = c.Send(request, response)
     return
 }
@@ -1471,6 +1942,7 @@ func NewEnableKeyResponse() (response *EnableKeyResponse) {
 //  RESOURCEUNAVAILABLE_CMKNOTFOUND = "ResourceUnavailable.CmkNotFound"
 //  RESOURCEUNAVAILABLE_CMKSTATENOTSUPPORT = "ResourceUnavailable.CmkStateNotSupport"
 //  UNAUTHORIZEDOPERATION = "UnauthorizedOperation"
+//  UNSUPPORTEDOPERATION_NOTROLEOPERATION = "UnsupportedOperation.NotRoleOperation"
 //  UNSUPPORTEDOPERATION_SERVICETEMPORARYUNAVAILABLE = "UnsupportedOperation.ServiceTemporaryUnavailable"
 func (c *Client) EnableKey(request *EnableKeyRequest) (response *EnableKeyResponse, err error) {
     return c.EnableKeyWithContext(context.Background(), request)
@@ -1486,11 +1958,13 @@ func (c *Client) EnableKey(request *EnableKeyRequest) (response *EnableKeyRespon
 //  RESOURCEUNAVAILABLE_CMKNOTFOUND = "ResourceUnavailable.CmkNotFound"
 //  RESOURCEUNAVAILABLE_CMKSTATENOTSUPPORT = "ResourceUnavailable.CmkStateNotSupport"
 //  UNAUTHORIZEDOPERATION = "UnauthorizedOperation"
+//  UNSUPPORTEDOPERATION_NOTROLEOPERATION = "UnsupportedOperation.NotRoleOperation"
 //  UNSUPPORTEDOPERATION_SERVICETEMPORARYUNAVAILABLE = "UnsupportedOperation.ServiceTemporaryUnavailable"
 func (c *Client) EnableKeyWithContext(ctx context.Context, request *EnableKeyRequest) (response *EnableKeyResponse, err error) {
     if request == nil {
         request = NewEnableKeyRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "kms", APIVersion, "EnableKey")
     
     if c.GetCredential() == nil {
         return nil, errors.New("EnableKey require credential")
@@ -1534,6 +2008,7 @@ func NewEnableKeyRotationResponse() (response *EnableKeyRotationResponse) {
 //  RESOURCEUNAVAILABLE_CMKSTATENOTSUPPORT = "ResourceUnavailable.CmkStateNotSupport"
 //  UNAUTHORIZEDOPERATION = "UnauthorizedOperation"
 //  UNSUPPORTEDOPERATION_EXTERNALCMKCANNOTROTATE = "UnsupportedOperation.ExternalCmkCanNotRotate"
+//  UNSUPPORTEDOPERATION_NOTROLEOPERATION = "UnsupportedOperation.NotRoleOperation"
 //  UNSUPPORTEDOPERATION_SERVICETEMPORARYUNAVAILABLE = "UnsupportedOperation.ServiceTemporaryUnavailable"
 func (c *Client) EnableKeyRotation(request *EnableKeyRotationRequest) (response *EnableKeyRotationResponse, err error) {
     return c.EnableKeyRotationWithContext(context.Background(), request)
@@ -1551,11 +2026,13 @@ func (c *Client) EnableKeyRotation(request *EnableKeyRotationRequest) (response 
 //  RESOURCEUNAVAILABLE_CMKSTATENOTSUPPORT = "ResourceUnavailable.CmkStateNotSupport"
 //  UNAUTHORIZEDOPERATION = "UnauthorizedOperation"
 //  UNSUPPORTEDOPERATION_EXTERNALCMKCANNOTROTATE = "UnsupportedOperation.ExternalCmkCanNotRotate"
+//  UNSUPPORTEDOPERATION_NOTROLEOPERATION = "UnsupportedOperation.NotRoleOperation"
 //  UNSUPPORTEDOPERATION_SERVICETEMPORARYUNAVAILABLE = "UnsupportedOperation.ServiceTemporaryUnavailable"
 func (c *Client) EnableKeyRotationWithContext(ctx context.Context, request *EnableKeyRotationRequest) (response *EnableKeyRotationResponse, err error) {
     if request == nil {
         request = NewEnableKeyRotationRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "kms", APIVersion, "EnableKeyRotation")
     
     if c.GetCredential() == nil {
         return nil, errors.New("EnableKeyRotation require credential")
@@ -1598,6 +2075,7 @@ func NewEnableKeysResponse() (response *EnableKeysResponse) {
 //  RESOURCEUNAVAILABLE_CMKNOTFOUND = "ResourceUnavailable.CmkNotFound"
 //  RESOURCEUNAVAILABLE_CMKSTATENOTSUPPORT = "ResourceUnavailable.CmkStateNotSupport"
 //  UNAUTHORIZEDOPERATION = "UnauthorizedOperation"
+//  UNSUPPORTEDOPERATION_NOTROLEOPERATION = "UnsupportedOperation.NotRoleOperation"
 //  UNSUPPORTEDOPERATION_SERVICETEMPORARYUNAVAILABLE = "UnsupportedOperation.ServiceTemporaryUnavailable"
 func (c *Client) EnableKeys(request *EnableKeysRequest) (response *EnableKeysResponse, err error) {
     return c.EnableKeysWithContext(context.Background(), request)
@@ -1614,11 +2092,13 @@ func (c *Client) EnableKeys(request *EnableKeysRequest) (response *EnableKeysRes
 //  RESOURCEUNAVAILABLE_CMKNOTFOUND = "ResourceUnavailable.CmkNotFound"
 //  RESOURCEUNAVAILABLE_CMKSTATENOTSUPPORT = "ResourceUnavailable.CmkStateNotSupport"
 //  UNAUTHORIZEDOPERATION = "UnauthorizedOperation"
+//  UNSUPPORTEDOPERATION_NOTROLEOPERATION = "UnsupportedOperation.NotRoleOperation"
 //  UNSUPPORTEDOPERATION_SERVICETEMPORARYUNAVAILABLE = "UnsupportedOperation.ServiceTemporaryUnavailable"
 func (c *Client) EnableKeysWithContext(ctx context.Context, request *EnableKeysRequest) (response *EnableKeysResponse, err error) {
     if request == nil {
         request = NewEnableKeysRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "kms", APIVersion, "EnableKeys")
     
     if c.GetCredential() == nil {
         return nil, errors.New("EnableKeys require credential")
@@ -1676,6 +2156,7 @@ func (c *Client) EnableWhiteBoxKeyWithContext(ctx context.Context, request *Enab
     if request == nil {
         request = NewEnableWhiteBoxKeyRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "kms", APIVersion, "EnableWhiteBoxKey")
     
     if c.GetCredential() == nil {
         return nil, errors.New("EnableWhiteBoxKey require credential")
@@ -1737,6 +2218,7 @@ func (c *Client) EnableWhiteBoxKeysWithContext(ctx context.Context, request *Ena
     if request == nil {
         request = NewEnableWhiteBoxKeysRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "kms", APIVersion, "EnableWhiteBoxKeys")
     
     if c.GetCredential() == nil {
         return nil, errors.New("EnableWhiteBoxKeys require credential")
@@ -1800,6 +2282,7 @@ func (c *Client) EncryptWithContext(ctx context.Context, request *EncryptRequest
     if request == nil {
         request = NewEncryptRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "kms", APIVersion, "Encrypt")
     
     if c.GetCredential() == nil {
         return nil, errors.New("Encrypt require credential")
@@ -1861,6 +2344,7 @@ func (c *Client) EncryptByWhiteBoxWithContext(ctx context.Context, request *Encr
     if request == nil {
         request = NewEncryptByWhiteBoxRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "kms", APIVersion, "EncryptByWhiteBox")
     
     if c.GetCredential() == nil {
         return nil, errors.New("EncryptByWhiteBox require credential")
@@ -1897,9 +2381,19 @@ func NewGenerateDataKeyResponse() (response *GenerateDataKeyResponse) {
 //
 // 可能返回的错误码:
 //  FAILEDOPERATION_ENCRYPTIONERROR = "FailedOperation.EncryptionError"
+//  FAILEDOPERATION_TAGGINGERROR = "FailedOperation.TaggingError"
 //  INTERNALERROR = "InternalError"
 //  INVALIDPARAMETER = "InvalidParameter"
+//  INVALIDPARAMETERVALUE_DATAKEYNAMEALREADYEXISTS = "InvalidParameterValue.DataKeyNameAlreadyExists"
+//  INVALIDPARAMETERVALUE_INVALIDDATAKEYNAME = "InvalidParameterValue.InvalidDataKeyName"
+//  INVALIDPARAMETERVALUE_INVALIDHSMCLUSTERID = "InvalidParameterValue.InvalidHsmClusterId"
 //  INVALIDPARAMETERVALUE_INVALIDKEYID = "InvalidParameterValue.InvalidKeyId"
+//  INVALIDPARAMETERVALUE_INVALIDKEYUSAGE = "InvalidParameterValue.InvalidKeyUsage"
+//  INVALIDPARAMETERVALUE_INVALIDTYPE = "InvalidParameterValue.InvalidType"
+//  INVALIDPARAMETERVALUE_TAGKEYSDUPLICATED = "InvalidParameterValue.TagKeysDuplicated"
+//  INVALIDPARAMETERVALUE_TAGSNOTEXISTED = "InvalidParameterValue.TagsNotExisted"
+//  LIMITEXCEEDED_CMKLIMITEXCEEDED = "LimitExceeded.CmkLimitExceeded"
+//  LIMITEXCEEDED_DATAKEYLIMITEXCEEDED = "LimitExceeded.DataKeyLimitExceeded"
 //  RESOURCEUNAVAILABLE_CMKDISABLED = "ResourceUnavailable.CmkDisabled"
 //  RESOURCEUNAVAILABLE_CMKNOTFOUND = "ResourceUnavailable.CmkNotFound"
 //  RESOURCEUNAVAILABLE_KEYPENDINGDELETE = "ResourceUnavailable.KeyPendingDelete"
@@ -1913,9 +2407,19 @@ func (c *Client) GenerateDataKey(request *GenerateDataKeyRequest) (response *Gen
 //
 // 可能返回的错误码:
 //  FAILEDOPERATION_ENCRYPTIONERROR = "FailedOperation.EncryptionError"
+//  FAILEDOPERATION_TAGGINGERROR = "FailedOperation.TaggingError"
 //  INTERNALERROR = "InternalError"
 //  INVALIDPARAMETER = "InvalidParameter"
+//  INVALIDPARAMETERVALUE_DATAKEYNAMEALREADYEXISTS = "InvalidParameterValue.DataKeyNameAlreadyExists"
+//  INVALIDPARAMETERVALUE_INVALIDDATAKEYNAME = "InvalidParameterValue.InvalidDataKeyName"
+//  INVALIDPARAMETERVALUE_INVALIDHSMCLUSTERID = "InvalidParameterValue.InvalidHsmClusterId"
 //  INVALIDPARAMETERVALUE_INVALIDKEYID = "InvalidParameterValue.InvalidKeyId"
+//  INVALIDPARAMETERVALUE_INVALIDKEYUSAGE = "InvalidParameterValue.InvalidKeyUsage"
+//  INVALIDPARAMETERVALUE_INVALIDTYPE = "InvalidParameterValue.InvalidType"
+//  INVALIDPARAMETERVALUE_TAGKEYSDUPLICATED = "InvalidParameterValue.TagKeysDuplicated"
+//  INVALIDPARAMETERVALUE_TAGSNOTEXISTED = "InvalidParameterValue.TagsNotExisted"
+//  LIMITEXCEEDED_CMKLIMITEXCEEDED = "LimitExceeded.CmkLimitExceeded"
+//  LIMITEXCEEDED_DATAKEYLIMITEXCEEDED = "LimitExceeded.DataKeyLimitExceeded"
 //  RESOURCEUNAVAILABLE_CMKDISABLED = "ResourceUnavailable.CmkDisabled"
 //  RESOURCEUNAVAILABLE_CMKNOTFOUND = "ResourceUnavailable.CmkNotFound"
 //  RESOURCEUNAVAILABLE_KEYPENDINGDELETE = "ResourceUnavailable.KeyPendingDelete"
@@ -1924,6 +2428,7 @@ func (c *Client) GenerateDataKeyWithContext(ctx context.Context, request *Genera
     if request == nil {
         request = NewGenerateDataKeyRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "kms", APIVersion, "GenerateDataKey")
     
     if c.GetCredential() == nil {
         return nil, errors.New("GenerateDataKey require credential")
@@ -1977,6 +2482,7 @@ func (c *Client) GenerateRandomWithContext(ctx context.Context, request *Generat
     if request == nil {
         request = NewGenerateRandomRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "kms", APIVersion, "GenerateRandom")
     
     if c.GetCredential() == nil {
         return nil, errors.New("GenerateRandom require credential")
@@ -1985,6 +2491,138 @@ func (c *Client) GenerateRandomWithContext(ctx context.Context, request *Generat
     request.SetContext(ctx)
     
     response = NewGenerateRandomResponse()
+    err = c.Send(request, response)
+    return
+}
+
+func NewGetDataKeyCiphertextBlobRequest() (request *GetDataKeyCiphertextBlobRequest) {
+    request = &GetDataKeyCiphertextBlobRequest{
+        BaseRequest: &tchttp.BaseRequest{},
+    }
+    
+    request.Init().WithApiInfo("kms", APIVersion, "GetDataKeyCiphertextBlob")
+    
+    
+    return
+}
+
+func NewGetDataKeyCiphertextBlobResponse() (response *GetDataKeyCiphertextBlobResponse) {
+    response = &GetDataKeyCiphertextBlobResponse{
+        BaseResponse: &tchttp.BaseResponse{},
+    } 
+    return
+
+}
+
+// GetDataKeyCiphertextBlob
+// 下载数据密钥密文
+//
+// 可能返回的错误码:
+//  INTERNALERROR = "InternalError"
+//  INVALIDPARAMETERVALUE_INVALIDDATAKEYID = "InvalidParameterValue.InvalidDataKeyId"
+//  RESOURCEUNAVAILABLE_DATAKEYNOTFOUND = "ResourceUnavailable.DataKeyNotFound"
+//  RESOURCEUNAVAILABLE_DATAKEYSTATENOTSUPPORT = "ResourceUnavailable.DataKeyStateNotSupport"
+//  UNSUPPORTEDOPERATION_NOTROLEOPERATION = "UnsupportedOperation.NotRoleOperation"
+func (c *Client) GetDataKeyCiphertextBlob(request *GetDataKeyCiphertextBlobRequest) (response *GetDataKeyCiphertextBlobResponse, err error) {
+    return c.GetDataKeyCiphertextBlobWithContext(context.Background(), request)
+}
+
+// GetDataKeyCiphertextBlob
+// 下载数据密钥密文
+//
+// 可能返回的错误码:
+//  INTERNALERROR = "InternalError"
+//  INVALIDPARAMETERVALUE_INVALIDDATAKEYID = "InvalidParameterValue.InvalidDataKeyId"
+//  RESOURCEUNAVAILABLE_DATAKEYNOTFOUND = "ResourceUnavailable.DataKeyNotFound"
+//  RESOURCEUNAVAILABLE_DATAKEYSTATENOTSUPPORT = "ResourceUnavailable.DataKeyStateNotSupport"
+//  UNSUPPORTEDOPERATION_NOTROLEOPERATION = "UnsupportedOperation.NotRoleOperation"
+func (c *Client) GetDataKeyCiphertextBlobWithContext(ctx context.Context, request *GetDataKeyCiphertextBlobRequest) (response *GetDataKeyCiphertextBlobResponse, err error) {
+    if request == nil {
+        request = NewGetDataKeyCiphertextBlobRequest()
+    }
+    c.InitBaseRequest(&request.BaseRequest, "kms", APIVersion, "GetDataKeyCiphertextBlob")
+    
+    if c.GetCredential() == nil {
+        return nil, errors.New("GetDataKeyCiphertextBlob require credential")
+    }
+
+    request.SetContext(ctx)
+    
+    response = NewGetDataKeyCiphertextBlobResponse()
+    err = c.Send(request, response)
+    return
+}
+
+func NewGetDataKeyPlaintextRequest() (request *GetDataKeyPlaintextRequest) {
+    request = &GetDataKeyPlaintextRequest{
+        BaseRequest: &tchttp.BaseRequest{},
+    }
+    
+    request.Init().WithApiInfo("kms", APIVersion, "GetDataKeyPlaintext")
+    
+    
+    return
+}
+
+func NewGetDataKeyPlaintextResponse() (response *GetDataKeyPlaintextResponse) {
+    response = &GetDataKeyPlaintextResponse{
+        BaseResponse: &tchttp.BaseResponse{},
+    } 
+    return
+
+}
+
+// GetDataKeyPlaintext
+// 获取数据密钥明文
+//
+// 可能返回的错误码:
+//  AUTHFAILURE_UNAUTHORIZEDOPERATION = "AuthFailure.UnauthorizedOperation"
+//  FAILEDOPERATION_ENCRYPTIONERROR = "FailedOperation.EncryptionError"
+//  INTERNALERROR = "InternalError"
+//  INVALIDPARAMETERVALUE = "InvalidParameterValue"
+//  INVALIDPARAMETERVALUE_INVALIDDATAKEYID = "InvalidParameterValue.InvalidDataKeyId"
+//  INVALIDPARAMETERVALUE_INVALIDTYPE = "InvalidParameterValue.InvalidType"
+//  RESOURCEUNAVAILABLE_CMKDISABLED = "ResourceUnavailable.CmkDisabled"
+//  RESOURCEUNAVAILABLE_CMKNOTFOUND = "ResourceUnavailable.CmkNotFound"
+//  RESOURCEUNAVAILABLE_CMKSTATENOTSUPPORT = "ResourceUnavailable.CmkStateNotSupport"
+//  RESOURCEUNAVAILABLE_DATAKEYDISABLED = "ResourceUnavailable.DataKeyDisabled"
+//  RESOURCEUNAVAILABLE_DATAKEYNOTFOUND = "ResourceUnavailable.DataKeyNotFound"
+//  RESOURCEUNAVAILABLE_DATAKEYPENDINGDELETE = "ResourceUnavailable.DataKeyPendingDelete"
+//  UNAUTHORIZEDOPERATION = "UnauthorizedOperation"
+func (c *Client) GetDataKeyPlaintext(request *GetDataKeyPlaintextRequest) (response *GetDataKeyPlaintextResponse, err error) {
+    return c.GetDataKeyPlaintextWithContext(context.Background(), request)
+}
+
+// GetDataKeyPlaintext
+// 获取数据密钥明文
+//
+// 可能返回的错误码:
+//  AUTHFAILURE_UNAUTHORIZEDOPERATION = "AuthFailure.UnauthorizedOperation"
+//  FAILEDOPERATION_ENCRYPTIONERROR = "FailedOperation.EncryptionError"
+//  INTERNALERROR = "InternalError"
+//  INVALIDPARAMETERVALUE = "InvalidParameterValue"
+//  INVALIDPARAMETERVALUE_INVALIDDATAKEYID = "InvalidParameterValue.InvalidDataKeyId"
+//  INVALIDPARAMETERVALUE_INVALIDTYPE = "InvalidParameterValue.InvalidType"
+//  RESOURCEUNAVAILABLE_CMKDISABLED = "ResourceUnavailable.CmkDisabled"
+//  RESOURCEUNAVAILABLE_CMKNOTFOUND = "ResourceUnavailable.CmkNotFound"
+//  RESOURCEUNAVAILABLE_CMKSTATENOTSUPPORT = "ResourceUnavailable.CmkStateNotSupport"
+//  RESOURCEUNAVAILABLE_DATAKEYDISABLED = "ResourceUnavailable.DataKeyDisabled"
+//  RESOURCEUNAVAILABLE_DATAKEYNOTFOUND = "ResourceUnavailable.DataKeyNotFound"
+//  RESOURCEUNAVAILABLE_DATAKEYPENDINGDELETE = "ResourceUnavailable.DataKeyPendingDelete"
+//  UNAUTHORIZEDOPERATION = "UnauthorizedOperation"
+func (c *Client) GetDataKeyPlaintextWithContext(ctx context.Context, request *GetDataKeyPlaintextRequest) (response *GetDataKeyPlaintextResponse, err error) {
+    if request == nil {
+        request = NewGetDataKeyPlaintextRequest()
+    }
+    c.InitBaseRequest(&request.BaseRequest, "kms", APIVersion, "GetDataKeyPlaintext")
+    
+    if c.GetCredential() == nil {
+        return nil, errors.New("GetDataKeyPlaintext require credential")
+    }
+
+    request.SetContext(ctx)
+    
+    response = NewGetDataKeyPlaintextResponse()
     err = c.Send(request, response)
     return
 }
@@ -2017,6 +2655,7 @@ func NewGetKeyRotationStatusResponse() (response *GetKeyRotationStatusResponse) 
 //  INVALIDPARAMETERVALUE_INVALIDKEYID = "InvalidParameterValue.InvalidKeyId"
 //  RESOURCEUNAVAILABLE_CMKNOTFOUND = "ResourceUnavailable.CmkNotFound"
 //  UNAUTHORIZEDOPERATION = "UnauthorizedOperation"
+//  UNSUPPORTEDOPERATION_NOTROLEOPERATION = "UnsupportedOperation.NotRoleOperation"
 func (c *Client) GetKeyRotationStatus(request *GetKeyRotationStatusRequest) (response *GetKeyRotationStatusResponse, err error) {
     return c.GetKeyRotationStatusWithContext(context.Background(), request)
 }
@@ -2030,10 +2669,12 @@ func (c *Client) GetKeyRotationStatus(request *GetKeyRotationStatusRequest) (res
 //  INVALIDPARAMETERVALUE_INVALIDKEYID = "InvalidParameterValue.InvalidKeyId"
 //  RESOURCEUNAVAILABLE_CMKNOTFOUND = "ResourceUnavailable.CmkNotFound"
 //  UNAUTHORIZEDOPERATION = "UnauthorizedOperation"
+//  UNSUPPORTEDOPERATION_NOTROLEOPERATION = "UnsupportedOperation.NotRoleOperation"
 func (c *Client) GetKeyRotationStatusWithContext(ctx context.Context, request *GetKeyRotationStatusRequest) (response *GetKeyRotationStatusResponse, err error) {
     if request == nil {
         request = NewGetKeyRotationStatusRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "kms", APIVersion, "GetKeyRotationStatus")
     
     if c.GetCredential() == nil {
         return nil, errors.New("GetKeyRotationStatus require credential")
@@ -2093,6 +2734,7 @@ func (c *Client) GetParametersForImportWithContext(ctx context.Context, request 
     if request == nil {
         request = NewGetParametersForImportRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "kms", APIVersion, "GetParametersForImport")
     
     if c.GetCredential() == nil {
         return nil, errors.New("GetParametersForImport require credential")
@@ -2152,6 +2794,7 @@ func (c *Client) GetPublicKeyWithContext(ctx context.Context, request *GetPublic
     if request == nil {
         request = NewGetPublicKeyRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "kms", APIVersion, "GetPublicKey")
     
     if c.GetCredential() == nil {
         return nil, errors.New("GetPublicKey require credential")
@@ -2201,6 +2844,7 @@ func (c *Client) GetRegionsWithContext(ctx context.Context, request *GetRegionsR
     if request == nil {
         request = NewGetRegionsRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "kms", APIVersion, "GetRegions")
     
     if c.GetCredential() == nil {
         return nil, errors.New("GetRegions require credential")
@@ -2254,6 +2898,7 @@ func (c *Client) GetServiceStatusWithContext(ctx context.Context, request *GetSe
     if request == nil {
         request = NewGetServiceStatusRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "kms", APIVersion, "GetServiceStatus")
     
     if c.GetCredential() == nil {
         return nil, errors.New("GetServiceStatus require credential")
@@ -2262,6 +2907,94 @@ func (c *Client) GetServiceStatusWithContext(ctx context.Context, request *GetSe
     request.SetContext(ctx)
     
     response = NewGetServiceStatusResponse()
+    err = c.Send(request, response)
+    return
+}
+
+func NewImportDataKeyRequest() (request *ImportDataKeyRequest) {
+    request = &ImportDataKeyRequest{
+        BaseRequest: &tchttp.BaseRequest{},
+    }
+    
+    request.Init().WithApiInfo("kms", APIVersion, "ImportDataKey")
+    
+    
+    return
+}
+
+func NewImportDataKeyResponse() (response *ImportDataKeyResponse) {
+    response = &ImportDataKeyResponse{
+        BaseResponse: &tchttp.BaseResponse{},
+    } 
+    return
+
+}
+
+// ImportDataKey
+// 数据密钥导入接口，并托管到KMS
+//
+// 可能返回的错误码:
+//  AUTHFAILURE_UNAUTHORIZEDOPERATION = "AuthFailure.UnauthorizedOperation"
+//  FAILEDOPERATION_TAGGINGERROR = "FailedOperation.TaggingError"
+//  INTERNALERROR = "InternalError"
+//  INVALIDPARAMETER = "InvalidParameter"
+//  INVALIDPARAMETERVALUE_INVALIDDATAKEYNAME = "InvalidParameterValue.InvalidDataKeyName"
+//  INVALIDPARAMETERVALUE_INVALIDIMPORTKEYMATERIAL = "InvalidParameterValue.InvalidImportKeyMaterial"
+//  INVALIDPARAMETERVALUE_INVALIDKEYID = "InvalidParameterValue.InvalidKeyId"
+//  INVALIDPARAMETERVALUE_INVALIDKEYUSAGE = "InvalidParameterValue.InvalidKeyUsage"
+//  INVALIDPARAMETERVALUE_INVALIDPLAINTEXT = "InvalidParameterValue.InvalidPlaintext"
+//  INVALIDPARAMETERVALUE_INVALIDTYPE = "InvalidParameterValue.InvalidType"
+//  INVALIDPARAMETERVALUE_TAGKEYSDUPLICATED = "InvalidParameterValue.TagKeysDuplicated"
+//  INVALIDPARAMETERVALUE_TAGSNOTEXISTED = "InvalidParameterValue.TagsNotExisted"
+//  LIMITEXCEEDED_CMKLIMITEXCEEDED = "LimitExceeded.CmkLimitExceeded"
+//  LIMITEXCEEDED_DATAKEYLIMITEXCEEDED = "LimitExceeded.DataKeyLimitExceeded"
+//  RESOURCEUNAVAILABLE_CMKARCHIVED = "ResourceUnavailable.CmkArchived"
+//  RESOURCEUNAVAILABLE_CMKDISABLED = "ResourceUnavailable.CmkDisabled"
+//  RESOURCEUNAVAILABLE_CMKNOTFOUND = "ResourceUnavailable.CmkNotFound"
+//  RESOURCEUNAVAILABLE_CMKSTATENOTSUPPORT = "ResourceUnavailable.CmkStateNotSupport"
+//  RESOURCEUNAVAILABLE_KEYPENDINGDELETE = "ResourceUnavailable.KeyPendingDelete"
+//  UNAUTHORIZEDOPERATION = "UnauthorizedOperation"
+func (c *Client) ImportDataKey(request *ImportDataKeyRequest) (response *ImportDataKeyResponse, err error) {
+    return c.ImportDataKeyWithContext(context.Background(), request)
+}
+
+// ImportDataKey
+// 数据密钥导入接口，并托管到KMS
+//
+// 可能返回的错误码:
+//  AUTHFAILURE_UNAUTHORIZEDOPERATION = "AuthFailure.UnauthorizedOperation"
+//  FAILEDOPERATION_TAGGINGERROR = "FailedOperation.TaggingError"
+//  INTERNALERROR = "InternalError"
+//  INVALIDPARAMETER = "InvalidParameter"
+//  INVALIDPARAMETERVALUE_INVALIDDATAKEYNAME = "InvalidParameterValue.InvalidDataKeyName"
+//  INVALIDPARAMETERVALUE_INVALIDIMPORTKEYMATERIAL = "InvalidParameterValue.InvalidImportKeyMaterial"
+//  INVALIDPARAMETERVALUE_INVALIDKEYID = "InvalidParameterValue.InvalidKeyId"
+//  INVALIDPARAMETERVALUE_INVALIDKEYUSAGE = "InvalidParameterValue.InvalidKeyUsage"
+//  INVALIDPARAMETERVALUE_INVALIDPLAINTEXT = "InvalidParameterValue.InvalidPlaintext"
+//  INVALIDPARAMETERVALUE_INVALIDTYPE = "InvalidParameterValue.InvalidType"
+//  INVALIDPARAMETERVALUE_TAGKEYSDUPLICATED = "InvalidParameterValue.TagKeysDuplicated"
+//  INVALIDPARAMETERVALUE_TAGSNOTEXISTED = "InvalidParameterValue.TagsNotExisted"
+//  LIMITEXCEEDED_CMKLIMITEXCEEDED = "LimitExceeded.CmkLimitExceeded"
+//  LIMITEXCEEDED_DATAKEYLIMITEXCEEDED = "LimitExceeded.DataKeyLimitExceeded"
+//  RESOURCEUNAVAILABLE_CMKARCHIVED = "ResourceUnavailable.CmkArchived"
+//  RESOURCEUNAVAILABLE_CMKDISABLED = "ResourceUnavailable.CmkDisabled"
+//  RESOURCEUNAVAILABLE_CMKNOTFOUND = "ResourceUnavailable.CmkNotFound"
+//  RESOURCEUNAVAILABLE_CMKSTATENOTSUPPORT = "ResourceUnavailable.CmkStateNotSupport"
+//  RESOURCEUNAVAILABLE_KEYPENDINGDELETE = "ResourceUnavailable.KeyPendingDelete"
+//  UNAUTHORIZEDOPERATION = "UnauthorizedOperation"
+func (c *Client) ImportDataKeyWithContext(ctx context.Context, request *ImportDataKeyRequest) (response *ImportDataKeyResponse, err error) {
+    if request == nil {
+        request = NewImportDataKeyRequest()
+    }
+    c.InitBaseRequest(&request.BaseRequest, "kms", APIVersion, "ImportDataKey")
+    
+    if c.GetCredential() == nil {
+        return nil, errors.New("ImportDataKey require credential")
+    }
+
+    request.SetContext(ctx)
+    
+    response = NewImportDataKeyResponse()
     err = c.Send(request, response)
     return
 }
@@ -2325,6 +3058,7 @@ func (c *Client) ImportKeyMaterialWithContext(ctx context.Context, request *Impo
     if request == nil {
         request = NewImportKeyMaterialRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "kms", APIVersion, "ImportKeyMaterial")
     
     if c.GetCredential() == nil {
         return nil, errors.New("ImportKeyMaterial require credential")
@@ -2376,6 +3110,7 @@ func (c *Client) ListAlgorithmsWithContext(ctx context.Context, request *ListAlg
     if request == nil {
         request = NewListAlgorithmsRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "kms", APIVersion, "ListAlgorithms")
     
     if c.GetCredential() == nil {
         return nil, errors.New("ListAlgorithms require credential")
@@ -2384,6 +3119,126 @@ func (c *Client) ListAlgorithmsWithContext(ctx context.Context, request *ListAlg
     request.SetContext(ctx)
     
     response = NewListAlgorithmsResponse()
+    err = c.Send(request, response)
+    return
+}
+
+func NewListDataKeyDetailRequest() (request *ListDataKeyDetailRequest) {
+    request = &ListDataKeyDetailRequest{
+        BaseRequest: &tchttp.BaseRequest{},
+    }
+    
+    request.Init().WithApiInfo("kms", APIVersion, "ListDataKeyDetail")
+    
+    
+    return
+}
+
+func NewListDataKeyDetailResponse() (response *ListDataKeyDetailResponse) {
+    response = &ListDataKeyDetailResponse{
+        BaseResponse: &tchttp.BaseResponse{},
+    } 
+    return
+
+}
+
+// ListDataKeyDetail
+// 根据指定Offset和Limit获取数据密钥列表详情。
+//
+// 可能返回的错误码:
+//  AUTHFAILURE_UNAUTHORIZEDOPERATION = "AuthFailure.UnauthorizedOperation"
+//  INTERNALERROR = "InternalError"
+//  INVALIDPARAMETER = "InvalidParameter"
+//  INVALIDPARAMETERVALUE_INVALIDHSMCLUSTERID = "InvalidParameterValue.InvalidHsmClusterId"
+//  INVALIDPARAMETERVALUE_INVALIDKEYID = "InvalidParameterValue.InvalidKeyId"
+//  RESOURCEUNAVAILABLE_CMKNOTFOUND = "ResourceUnavailable.CmkNotFound"
+//  UNAUTHORIZEDOPERATION = "UnauthorizedOperation"
+//  UNSUPPORTEDOPERATION_NOTROLEOPERATION = "UnsupportedOperation.NotRoleOperation"
+func (c *Client) ListDataKeyDetail(request *ListDataKeyDetailRequest) (response *ListDataKeyDetailResponse, err error) {
+    return c.ListDataKeyDetailWithContext(context.Background(), request)
+}
+
+// ListDataKeyDetail
+// 根据指定Offset和Limit获取数据密钥列表详情。
+//
+// 可能返回的错误码:
+//  AUTHFAILURE_UNAUTHORIZEDOPERATION = "AuthFailure.UnauthorizedOperation"
+//  INTERNALERROR = "InternalError"
+//  INVALIDPARAMETER = "InvalidParameter"
+//  INVALIDPARAMETERVALUE_INVALIDHSMCLUSTERID = "InvalidParameterValue.InvalidHsmClusterId"
+//  INVALIDPARAMETERVALUE_INVALIDKEYID = "InvalidParameterValue.InvalidKeyId"
+//  RESOURCEUNAVAILABLE_CMKNOTFOUND = "ResourceUnavailable.CmkNotFound"
+//  UNAUTHORIZEDOPERATION = "UnauthorizedOperation"
+//  UNSUPPORTEDOPERATION_NOTROLEOPERATION = "UnsupportedOperation.NotRoleOperation"
+func (c *Client) ListDataKeyDetailWithContext(ctx context.Context, request *ListDataKeyDetailRequest) (response *ListDataKeyDetailResponse, err error) {
+    if request == nil {
+        request = NewListDataKeyDetailRequest()
+    }
+    c.InitBaseRequest(&request.BaseRequest, "kms", APIVersion, "ListDataKeyDetail")
+    
+    if c.GetCredential() == nil {
+        return nil, errors.New("ListDataKeyDetail require credential")
+    }
+
+    request.SetContext(ctx)
+    
+    response = NewListDataKeyDetailResponse()
+    err = c.Send(request, response)
+    return
+}
+
+func NewListDataKeysRequest() (request *ListDataKeysRequest) {
+    request = &ListDataKeysRequest{
+        BaseRequest: &tchttp.BaseRequest{},
+    }
+    
+    request.Init().WithApiInfo("kms", APIVersion, "ListDataKeys")
+    
+    
+    return
+}
+
+func NewListDataKeysResponse() (response *ListDataKeysResponse) {
+    response = &ListDataKeysResponse{
+        BaseResponse: &tchttp.BaseResponse{},
+    } 
+    return
+
+}
+
+// ListDataKeys
+// 用于查询数据密钥的列表
+//
+// 可能返回的错误码:
+//  INTERNALERROR = "InternalError"
+//  INVALIDPARAMETERVALUE = "InvalidParameterValue"
+//  INVALIDPARAMETERVALUE_INVALIDHSMCLUSTERID = "InvalidParameterValue.InvalidHsmClusterId"
+//  UNAUTHORIZEDOPERATION = "UnauthorizedOperation"
+func (c *Client) ListDataKeys(request *ListDataKeysRequest) (response *ListDataKeysResponse, err error) {
+    return c.ListDataKeysWithContext(context.Background(), request)
+}
+
+// ListDataKeys
+// 用于查询数据密钥的列表
+//
+// 可能返回的错误码:
+//  INTERNALERROR = "InternalError"
+//  INVALIDPARAMETERVALUE = "InvalidParameterValue"
+//  INVALIDPARAMETERVALUE_INVALIDHSMCLUSTERID = "InvalidParameterValue.InvalidHsmClusterId"
+//  UNAUTHORIZEDOPERATION = "UnauthorizedOperation"
+func (c *Client) ListDataKeysWithContext(ctx context.Context, request *ListDataKeysRequest) (response *ListDataKeysResponse, err error) {
+    if request == nil {
+        request = NewListDataKeysRequest()
+    }
+    c.InitBaseRequest(&request.BaseRequest, "kms", APIVersion, "ListDataKeys")
+    
+    if c.GetCredential() == nil {
+        return nil, errors.New("ListDataKeys require credential")
+    }
+
+    request.SetContext(ctx)
+    
+    response = NewListDataKeysResponse()
     err = c.Send(request, response)
     return
 }
@@ -2415,6 +3270,7 @@ func NewListKeyDetailResponse() (response *ListKeyDetailResponse) {
 //  INVALIDPARAMETER = "InvalidParameter"
 //  INVALIDPARAMETERVALUE_INVALIDHSMCLUSTERID = "InvalidParameterValue.InvalidHsmClusterId"
 //  UNAUTHORIZEDOPERATION = "UnauthorizedOperation"
+//  UNSUPPORTEDOPERATION_NOTROLEOPERATION = "UnsupportedOperation.NotRoleOperation"
 func (c *Client) ListKeyDetail(request *ListKeyDetailRequest) (response *ListKeyDetailResponse, err error) {
     return c.ListKeyDetailWithContext(context.Background(), request)
 }
@@ -2427,10 +3283,12 @@ func (c *Client) ListKeyDetail(request *ListKeyDetailRequest) (response *ListKey
 //  INVALIDPARAMETER = "InvalidParameter"
 //  INVALIDPARAMETERVALUE_INVALIDHSMCLUSTERID = "InvalidParameterValue.InvalidHsmClusterId"
 //  UNAUTHORIZEDOPERATION = "UnauthorizedOperation"
+//  UNSUPPORTEDOPERATION_NOTROLEOPERATION = "UnsupportedOperation.NotRoleOperation"
 func (c *Client) ListKeyDetailWithContext(ctx context.Context, request *ListKeyDetailRequest) (response *ListKeyDetailResponse, err error) {
     if request == nil {
         request = NewListKeyDetailRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "kms", APIVersion, "ListKeyDetail")
     
     if c.GetCredential() == nil {
         return nil, errors.New("ListKeyDetail require credential")
@@ -2486,6 +3344,7 @@ func (c *Client) ListKeysWithContext(ctx context.Context, request *ListKeysReque
     if request == nil {
         request = NewListKeysRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "kms", APIVersion, "ListKeys")
     
     if c.GetCredential() == nil {
         return nil, errors.New("ListKeys require credential")
@@ -2547,6 +3406,7 @@ func (c *Client) OverwriteWhiteBoxDeviceFingerprintsWithContext(ctx context.Cont
     if request == nil {
         request = NewOverwriteWhiteBoxDeviceFingerprintsRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "kms", APIVersion, "OverwriteWhiteBoxDeviceFingerprints")
     
     if c.GetCredential() == nil {
         return nil, errors.New("OverwriteWhiteBoxDeviceFingerprints require credential")
@@ -2608,6 +3468,7 @@ func (c *Client) PostQuantumCryptoDecryptWithContext(ctx context.Context, reques
     if request == nil {
         request = NewPostQuantumCryptoDecryptRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "kms", APIVersion, "PostQuantumCryptoDecrypt")
     
     if c.GetCredential() == nil {
         return nil, errors.New("PostQuantumCryptoDecrypt require credential")
@@ -2671,6 +3532,7 @@ func (c *Client) PostQuantumCryptoEncryptWithContext(ctx context.Context, reques
     if request == nil {
         request = NewPostQuantumCryptoEncryptRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "kms", APIVersion, "PostQuantumCryptoEncrypt")
     
     if c.GetCredential() == nil {
         return nil, errors.New("PostQuantumCryptoEncrypt require credential")
@@ -2732,6 +3594,7 @@ func (c *Client) PostQuantumCryptoSignWithContext(ctx context.Context, request *
     if request == nil {
         request = NewPostQuantumCryptoSignRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "kms", APIVersion, "PostQuantumCryptoSign")
     
     if c.GetCredential() == nil {
         return nil, errors.New("PostQuantumCryptoSign require credential")
@@ -2791,6 +3654,7 @@ func (c *Client) PostQuantumCryptoVerifyWithContext(ctx context.Context, request
     if request == nil {
         request = NewPostQuantumCryptoVerifyRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "kms", APIVersion, "PostQuantumCryptoVerify")
     
     if c.GetCredential() == nil {
         return nil, errors.New("PostQuantumCryptoVerify require credential")
@@ -2852,6 +3716,7 @@ func (c *Client) ReEncryptWithContext(ctx context.Context, request *ReEncryptReq
     if request == nil {
         request = NewReEncryptRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "kms", APIVersion, "ReEncrypt")
     
     if c.GetCredential() == nil {
         return nil, errors.New("ReEncrypt require credential")
@@ -2860,6 +3725,132 @@ func (c *Client) ReEncryptWithContext(ctx context.Context, request *ReEncryptReq
     request.SetContext(ctx)
     
     response = NewReEncryptResponse()
+    err = c.Send(request, response)
+    return
+}
+
+func NewRotateKeyRequest() (request *RotateKeyRequest) {
+    request = &RotateKeyRequest{
+        BaseRequest: &tchttp.BaseRequest{},
+    }
+    
+    request.Init().WithApiInfo("kms", APIVersion, "RotateKey")
+    
+    
+    return
+}
+
+func NewRotateKeyResponse() (response *RotateKeyResponse) {
+    response = &RotateKeyResponse{
+        BaseResponse: &tchttp.BaseResponse{},
+    } 
+    return
+
+}
+
+// RotateKey
+// 对指定的CMK（用户主密钥）执行立即轮转操作。可以通过调用DescribeKey，返回上次轮转时间和下次轮转时间，判断是否轮转成功。
+//
+// 可能返回的错误码:
+//  FAILEDOPERATION_ROTATETASKRUNNING = "FailedOperation.RotateTaskRunning"
+//  INTERNALERROR = "InternalError"
+//  INVALIDPARAMETER = "InvalidParameter"
+//  INVALIDPARAMETERVALUE_INVALIDKEYID = "InvalidParameterValue.InvalidKeyId"
+//  REQUESTLIMITEXCEEDED_ROTATERATELIMITED = "RequestLimitExceeded.RotateRateLimited"
+//  RESOURCEUNAVAILABLE_CMKNOTFOUND = "ResourceUnavailable.CmkNotFound"
+//  RESOURCEUNAVAILABLE_CMKSTATENOTSUPPORT = "ResourceUnavailable.CmkStateNotSupport"
+//  UNAUTHORIZEDOPERATION = "UnauthorizedOperation"
+//  UNSUPPORTEDOPERATION_ROTATENOTSUPPORTED = "UnsupportedOperation.RotateNotSupported"
+func (c *Client) RotateKey(request *RotateKeyRequest) (response *RotateKeyResponse, err error) {
+    return c.RotateKeyWithContext(context.Background(), request)
+}
+
+// RotateKey
+// 对指定的CMK（用户主密钥）执行立即轮转操作。可以通过调用DescribeKey，返回上次轮转时间和下次轮转时间，判断是否轮转成功。
+//
+// 可能返回的错误码:
+//  FAILEDOPERATION_ROTATETASKRUNNING = "FailedOperation.RotateTaskRunning"
+//  INTERNALERROR = "InternalError"
+//  INVALIDPARAMETER = "InvalidParameter"
+//  INVALIDPARAMETERVALUE_INVALIDKEYID = "InvalidParameterValue.InvalidKeyId"
+//  REQUESTLIMITEXCEEDED_ROTATERATELIMITED = "RequestLimitExceeded.RotateRateLimited"
+//  RESOURCEUNAVAILABLE_CMKNOTFOUND = "ResourceUnavailable.CmkNotFound"
+//  RESOURCEUNAVAILABLE_CMKSTATENOTSUPPORT = "ResourceUnavailable.CmkStateNotSupport"
+//  UNAUTHORIZEDOPERATION = "UnauthorizedOperation"
+//  UNSUPPORTEDOPERATION_ROTATENOTSUPPORTED = "UnsupportedOperation.RotateNotSupported"
+func (c *Client) RotateKeyWithContext(ctx context.Context, request *RotateKeyRequest) (response *RotateKeyResponse, err error) {
+    if request == nil {
+        request = NewRotateKeyRequest()
+    }
+    c.InitBaseRequest(&request.BaseRequest, "kms", APIVersion, "RotateKey")
+    
+    if c.GetCredential() == nil {
+        return nil, errors.New("RotateKey require credential")
+    }
+
+    request.SetContext(ctx)
+    
+    response = NewRotateKeyResponse()
+    err = c.Send(request, response)
+    return
+}
+
+func NewScheduleDataKeyDeletionRequest() (request *ScheduleDataKeyDeletionRequest) {
+    request = &ScheduleDataKeyDeletionRequest{
+        BaseRequest: &tchttp.BaseRequest{},
+    }
+    
+    request.Init().WithApiInfo("kms", APIVersion, "ScheduleDataKeyDeletion")
+    
+    
+    return
+}
+
+func NewScheduleDataKeyDeletionResponse() (response *ScheduleDataKeyDeletionResponse) {
+    response = &ScheduleDataKeyDeletionResponse{
+        BaseResponse: &tchttp.BaseResponse{},
+    } 
+    return
+
+}
+
+// ScheduleDataKeyDeletion
+// 计划删除数据密钥
+//
+// 可能返回的错误码:
+//  INTERNALERROR = "InternalError"
+//  INVALIDPARAMETER_INVALIDPENDINGWINDOWINDAYS = "InvalidParameter.InvalidPendingWindowInDays"
+//  INVALIDPARAMETERVALUE_INVALIDDATAKEYID = "InvalidParameterValue.InvalidDataKeyId"
+//  RESOURCEUNAVAILABLE_DATAKEYNOTFOUND = "ResourceUnavailable.DataKeyNotFound"
+//  RESOURCEUNAVAILABLE_DATAKEYSTATENOTSUPPORT = "ResourceUnavailable.DataKeyStateNotSupport"
+//  UNSUPPORTEDOPERATION_NOTROLEOPERATION = "UnsupportedOperation.NotRoleOperation"
+func (c *Client) ScheduleDataKeyDeletion(request *ScheduleDataKeyDeletionRequest) (response *ScheduleDataKeyDeletionResponse, err error) {
+    return c.ScheduleDataKeyDeletionWithContext(context.Background(), request)
+}
+
+// ScheduleDataKeyDeletion
+// 计划删除数据密钥
+//
+// 可能返回的错误码:
+//  INTERNALERROR = "InternalError"
+//  INVALIDPARAMETER_INVALIDPENDINGWINDOWINDAYS = "InvalidParameter.InvalidPendingWindowInDays"
+//  INVALIDPARAMETERVALUE_INVALIDDATAKEYID = "InvalidParameterValue.InvalidDataKeyId"
+//  RESOURCEUNAVAILABLE_DATAKEYNOTFOUND = "ResourceUnavailable.DataKeyNotFound"
+//  RESOURCEUNAVAILABLE_DATAKEYSTATENOTSUPPORT = "ResourceUnavailable.DataKeyStateNotSupport"
+//  UNSUPPORTEDOPERATION_NOTROLEOPERATION = "UnsupportedOperation.NotRoleOperation"
+func (c *Client) ScheduleDataKeyDeletionWithContext(ctx context.Context, request *ScheduleDataKeyDeletionRequest) (response *ScheduleDataKeyDeletionResponse, err error) {
+    if request == nil {
+        request = NewScheduleDataKeyDeletionRequest()
+    }
+    c.InitBaseRequest(&request.BaseRequest, "kms", APIVersion, "ScheduleDataKeyDeletion")
+    
+    if c.GetCredential() == nil {
+        return nil, errors.New("ScheduleDataKeyDeletion require credential")
+    }
+
+    request.SetContext(ctx)
+    
+    response = NewScheduleDataKeyDeletionResponse()
     err = c.Send(request, response)
     return
 }
@@ -2895,6 +3886,7 @@ func NewScheduleKeyDeletionResponse() (response *ScheduleKeyDeletionResponse) {
 //  RESOURCEUNAVAILABLE_CMKSHOULDBEDISABLED = "ResourceUnavailable.CmkShouldBeDisabled"
 //  RESOURCEUNAVAILABLE_CMKSTATENOTSUPPORT = "ResourceUnavailable.CmkStateNotSupport"
 //  UNAUTHORIZEDOPERATION = "UnauthorizedOperation"
+//  UNSUPPORTEDOPERATION_NOTROLEOPERATION = "UnsupportedOperation.NotRoleOperation"
 //  UNSUPPORTEDOPERATION_SERVICETEMPORARYUNAVAILABLE = "UnsupportedOperation.ServiceTemporaryUnavailable"
 func (c *Client) ScheduleKeyDeletion(request *ScheduleKeyDeletionRequest) (response *ScheduleKeyDeletionResponse, err error) {
     return c.ScheduleKeyDeletionWithContext(context.Background(), request)
@@ -2912,11 +3904,13 @@ func (c *Client) ScheduleKeyDeletion(request *ScheduleKeyDeletionRequest) (respo
 //  RESOURCEUNAVAILABLE_CMKSHOULDBEDISABLED = "ResourceUnavailable.CmkShouldBeDisabled"
 //  RESOURCEUNAVAILABLE_CMKSTATENOTSUPPORT = "ResourceUnavailable.CmkStateNotSupport"
 //  UNAUTHORIZEDOPERATION = "UnauthorizedOperation"
+//  UNSUPPORTEDOPERATION_NOTROLEOPERATION = "UnsupportedOperation.NotRoleOperation"
 //  UNSUPPORTEDOPERATION_SERVICETEMPORARYUNAVAILABLE = "UnsupportedOperation.ServiceTemporaryUnavailable"
 func (c *Client) ScheduleKeyDeletionWithContext(ctx context.Context, request *ScheduleKeyDeletionRequest) (response *ScheduleKeyDeletionResponse, err error) {
     if request == nil {
         request = NewScheduleKeyDeletionRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "kms", APIVersion, "ScheduleKeyDeletion")
     
     if c.GetCredential() == nil {
         return nil, errors.New("ScheduleKeyDeletion require credential")
@@ -2982,6 +3976,7 @@ func (c *Client) SignByAsymmetricKeyWithContext(ctx context.Context, request *Si
     if request == nil {
         request = NewSignByAsymmetricKeyRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "kms", APIVersion, "SignByAsymmetricKey")
     
     if c.GetCredential() == nil {
         return nil, errors.New("SignByAsymmetricKey require credential")
@@ -3043,6 +4038,7 @@ func (c *Client) UnbindCloudResourceWithContext(ctx context.Context, request *Un
     if request == nil {
         request = NewUnbindCloudResourceRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "kms", APIVersion, "UnbindCloudResource")
     
     if c.GetCredential() == nil {
         return nil, errors.New("UnbindCloudResource require credential")
@@ -3085,6 +4081,7 @@ func NewUpdateAliasResponse() (response *UpdateAliasResponse) {
 //  INVALIDPARAMETERVALUE_INVALIDKEYID = "InvalidParameterValue.InvalidKeyId"
 //  RESOURCEUNAVAILABLE_CMKNOTFOUND = "ResourceUnavailable.CmkNotFound"
 //  UNAUTHORIZEDOPERATION = "UnauthorizedOperation"
+//  UNSUPPORTEDOPERATION_NOTROLEOPERATION = "UnsupportedOperation.NotRoleOperation"
 //  UNSUPPORTEDOPERATION_SERVICETEMPORARYUNAVAILABLE = "UnsupportedOperation.ServiceTemporaryUnavailable"
 func (c *Client) UpdateAlias(request *UpdateAliasRequest) (response *UpdateAliasResponse, err error) {
     return c.UpdateAliasWithContext(context.Background(), request)
@@ -3101,11 +4098,13 @@ func (c *Client) UpdateAlias(request *UpdateAliasRequest) (response *UpdateAlias
 //  INVALIDPARAMETERVALUE_INVALIDKEYID = "InvalidParameterValue.InvalidKeyId"
 //  RESOURCEUNAVAILABLE_CMKNOTFOUND = "ResourceUnavailable.CmkNotFound"
 //  UNAUTHORIZEDOPERATION = "UnauthorizedOperation"
+//  UNSUPPORTEDOPERATION_NOTROLEOPERATION = "UnsupportedOperation.NotRoleOperation"
 //  UNSUPPORTEDOPERATION_SERVICETEMPORARYUNAVAILABLE = "UnsupportedOperation.ServiceTemporaryUnavailable"
 func (c *Client) UpdateAliasWithContext(ctx context.Context, request *UpdateAliasRequest) (response *UpdateAliasResponse, err error) {
     if request == nil {
         request = NewUpdateAliasRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "kms", APIVersion, "UpdateAlias")
     
     if c.GetCredential() == nil {
         return nil, errors.New("UpdateAlias require credential")
@@ -3114,6 +4113,122 @@ func (c *Client) UpdateAliasWithContext(ctx context.Context, request *UpdateAlia
     request.SetContext(ctx)
     
     response = NewUpdateAliasResponse()
+    err = c.Send(request, response)
+    return
+}
+
+func NewUpdateDataKeyDescriptionRequest() (request *UpdateDataKeyDescriptionRequest) {
+    request = &UpdateDataKeyDescriptionRequest{
+        BaseRequest: &tchttp.BaseRequest{},
+    }
+    
+    request.Init().WithApiInfo("kms", APIVersion, "UpdateDataKeyDescription")
+    
+    
+    return
+}
+
+func NewUpdateDataKeyDescriptionResponse() (response *UpdateDataKeyDescriptionResponse) {
+    response = &UpdateDataKeyDescriptionResponse{
+        BaseResponse: &tchttp.BaseResponse{},
+    } 
+    return
+
+}
+
+// UpdateDataKeyDescription
+// 修改数据密钥描述
+//
+// 可能返回的错误码:
+//  INTERNALERROR = "InternalError"
+//  INVALIDPARAMETERVALUE_INVALIDDATAKEYID = "InvalidParameterValue.InvalidDataKeyId"
+//  INVALIDPARAMETERVALUE_INVALIDDATAKEYNAME = "InvalidParameterValue.InvalidDataKeyName"
+//  RESOURCEUNAVAILABLE_DATAKEYNOTFOUND = "ResourceUnavailable.DataKeyNotFound"
+//  UNSUPPORTEDOPERATION_NOTROLEOPERATION = "UnsupportedOperation.NotRoleOperation"
+func (c *Client) UpdateDataKeyDescription(request *UpdateDataKeyDescriptionRequest) (response *UpdateDataKeyDescriptionResponse, err error) {
+    return c.UpdateDataKeyDescriptionWithContext(context.Background(), request)
+}
+
+// UpdateDataKeyDescription
+// 修改数据密钥描述
+//
+// 可能返回的错误码:
+//  INTERNALERROR = "InternalError"
+//  INVALIDPARAMETERVALUE_INVALIDDATAKEYID = "InvalidParameterValue.InvalidDataKeyId"
+//  INVALIDPARAMETERVALUE_INVALIDDATAKEYNAME = "InvalidParameterValue.InvalidDataKeyName"
+//  RESOURCEUNAVAILABLE_DATAKEYNOTFOUND = "ResourceUnavailable.DataKeyNotFound"
+//  UNSUPPORTEDOPERATION_NOTROLEOPERATION = "UnsupportedOperation.NotRoleOperation"
+func (c *Client) UpdateDataKeyDescriptionWithContext(ctx context.Context, request *UpdateDataKeyDescriptionRequest) (response *UpdateDataKeyDescriptionResponse, err error) {
+    if request == nil {
+        request = NewUpdateDataKeyDescriptionRequest()
+    }
+    c.InitBaseRequest(&request.BaseRequest, "kms", APIVersion, "UpdateDataKeyDescription")
+    
+    if c.GetCredential() == nil {
+        return nil, errors.New("UpdateDataKeyDescription require credential")
+    }
+
+    request.SetContext(ctx)
+    
+    response = NewUpdateDataKeyDescriptionResponse()
+    err = c.Send(request, response)
+    return
+}
+
+func NewUpdateDataKeyNameRequest() (request *UpdateDataKeyNameRequest) {
+    request = &UpdateDataKeyNameRequest{
+        BaseRequest: &tchttp.BaseRequest{},
+    }
+    
+    request.Init().WithApiInfo("kms", APIVersion, "UpdateDataKeyName")
+    
+    
+    return
+}
+
+func NewUpdateDataKeyNameResponse() (response *UpdateDataKeyNameResponse) {
+    response = &UpdateDataKeyNameResponse{
+        BaseResponse: &tchttp.BaseResponse{},
+    } 
+    return
+
+}
+
+// UpdateDataKeyName
+// 修改数据密钥名称
+//
+// 可能返回的错误码:
+//  INTERNALERROR = "InternalError"
+//  INVALIDPARAMETERVALUE = "InvalidParameterValue"
+//  INVALIDPARAMETERVALUE_INVALIDDATAKEYID = "InvalidParameterValue.InvalidDataKeyId"
+//  RESOURCEUNAVAILABLE_DATAKEYNOTFOUND = "ResourceUnavailable.DataKeyNotFound"
+//  UNSUPPORTEDOPERATION_NOTROLEOPERATION = "UnsupportedOperation.NotRoleOperation"
+func (c *Client) UpdateDataKeyName(request *UpdateDataKeyNameRequest) (response *UpdateDataKeyNameResponse, err error) {
+    return c.UpdateDataKeyNameWithContext(context.Background(), request)
+}
+
+// UpdateDataKeyName
+// 修改数据密钥名称
+//
+// 可能返回的错误码:
+//  INTERNALERROR = "InternalError"
+//  INVALIDPARAMETERVALUE = "InvalidParameterValue"
+//  INVALIDPARAMETERVALUE_INVALIDDATAKEYID = "InvalidParameterValue.InvalidDataKeyId"
+//  RESOURCEUNAVAILABLE_DATAKEYNOTFOUND = "ResourceUnavailable.DataKeyNotFound"
+//  UNSUPPORTEDOPERATION_NOTROLEOPERATION = "UnsupportedOperation.NotRoleOperation"
+func (c *Client) UpdateDataKeyNameWithContext(ctx context.Context, request *UpdateDataKeyNameRequest) (response *UpdateDataKeyNameResponse, err error) {
+    if request == nil {
+        request = NewUpdateDataKeyNameRequest()
+    }
+    c.InitBaseRequest(&request.BaseRequest, "kms", APIVersion, "UpdateDataKeyName")
+    
+    if c.GetCredential() == nil {
+        return nil, errors.New("UpdateDataKeyName require credential")
+    }
+
+    request.SetContext(ctx)
+    
+    response = NewUpdateDataKeyNameResponse()
     err = c.Send(request, response)
     return
 }
@@ -3146,6 +4261,7 @@ func NewUpdateKeyDescriptionResponse() (response *UpdateKeyDescriptionResponse) 
 //  INVALIDPARAMETERVALUE_INVALIDKEYID = "InvalidParameterValue.InvalidKeyId"
 //  RESOURCEUNAVAILABLE_CMKNOTFOUND = "ResourceUnavailable.CmkNotFound"
 //  UNAUTHORIZEDOPERATION = "UnauthorizedOperation"
+//  UNSUPPORTEDOPERATION_NOTROLEOPERATION = "UnsupportedOperation.NotRoleOperation"
 //  UNSUPPORTEDOPERATION_SERVICETEMPORARYUNAVAILABLE = "UnsupportedOperation.ServiceTemporaryUnavailable"
 func (c *Client) UpdateKeyDescription(request *UpdateKeyDescriptionRequest) (response *UpdateKeyDescriptionResponse, err error) {
     return c.UpdateKeyDescriptionWithContext(context.Background(), request)
@@ -3160,11 +4276,13 @@ func (c *Client) UpdateKeyDescription(request *UpdateKeyDescriptionRequest) (res
 //  INVALIDPARAMETERVALUE_INVALIDKEYID = "InvalidParameterValue.InvalidKeyId"
 //  RESOURCEUNAVAILABLE_CMKNOTFOUND = "ResourceUnavailable.CmkNotFound"
 //  UNAUTHORIZEDOPERATION = "UnauthorizedOperation"
+//  UNSUPPORTEDOPERATION_NOTROLEOPERATION = "UnsupportedOperation.NotRoleOperation"
 //  UNSUPPORTEDOPERATION_SERVICETEMPORARYUNAVAILABLE = "UnsupportedOperation.ServiceTemporaryUnavailable"
 func (c *Client) UpdateKeyDescriptionWithContext(ctx context.Context, request *UpdateKeyDescriptionRequest) (response *UpdateKeyDescriptionResponse, err error) {
     if request == nil {
         request = NewUpdateKeyDescriptionRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "kms", APIVersion, "UpdateKeyDescription")
     
     if c.GetCredential() == nil {
         return nil, errors.New("UpdateKeyDescription require credential")
@@ -3224,6 +4342,7 @@ func (c *Client) VerifyByAsymmetricKeyWithContext(ctx context.Context, request *
     if request == nil {
         request = NewVerifyByAsymmetricKeyRequest()
     }
+    c.InitBaseRequest(&request.BaseRequest, "kms", APIVersion, "VerifyByAsymmetricKey")
     
     if c.GetCredential() == nil {
         return nil, errors.New("VerifyByAsymmetricKey require credential")
