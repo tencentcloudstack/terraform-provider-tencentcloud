@@ -366,7 +366,11 @@ resource "tencentcloud_cos_bucket" "bucket_with_lifecycle" {
   acl    = "public-read-write"
 
   lifecycle_rules {
+    status        = "Enabled"
     filter_prefix = "path1/"
+    filter_tags = {
+      env = "prod"
+    }
 
     transition {
       days          = 30
@@ -404,6 +408,7 @@ resource "tencentcloud_cos_bucket" "bucket_with_lifecycle" {
   acl    = "private"
 
   lifecycle_rules {
+    status        = "Enabled"
     filter_prefix = "path1/"
 
     expiration {
@@ -681,9 +686,11 @@ The `lifecycle_rules` object supports the following:
 * `abort_incomplete_multipart_upload` - (Optional, Set) Set the maximum time a multipart upload is allowed to remain running.
 * `expiration` - (Optional, Set) Specifies a period in the object's expire (documented below).
 * `filter_prefix` - (Optional, String) Object key prefix identifying one or more objects to which the rule applies.
+* `filter_tags` - (Optional, Map) Object tags identifying objects to which the rule applies. All tags and `filter_prefix`, when set, are combined with a logical AND. COS supports up to 10 tags.
 * `id` - (Optional, String) A unique identifier for the rule. It can be up to 255 characters.
 * `non_current_expiration` - (Optional, Set) Specifies when non current object versions shall expire.
 * `non_current_transition` - (Optional, Set) Specifies a period in the non current object's transitions.
+* `status` - (Optional, String) Whether the lifecycle rule is enabled. Valid values are `Enabled` and `Disabled`.
 * `transition` - (Optional, Set) Specifies a period in the object's transitions (documented below).
 
 The `non_current_expiration` object of `lifecycle_rules` supports the following:
