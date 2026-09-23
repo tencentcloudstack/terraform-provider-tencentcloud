@@ -1426,6 +1426,7 @@ func Provider() *schema.Provider {
 			"tencentcloud_config_rules":                                           config.DataSourceTencentCloudConfigRules(),
 			"tencentcloud_config_discovered_resources":                            config.DataSourceTencentCloudConfigDiscoveredResources(),
 			"tencentcloud_config_resource_types":                                  config.DataSourceTencentCloudConfigResourceTypes(),
+			"tencentcloud_config_list_aggregators":                                config.DataSourceTencentCloudConfigListAggregators(),
 			"tencentcloud_products":                                               regionpkg.DataSourceTencentCloudProducts(),
 			"tencentcloud_regions":                                                regionpkg.DataSourceTencentCloudRegions(),
 			"tencentcloud_zones":                                                  regionpkg.DataSourceTencentCloudZones(),
