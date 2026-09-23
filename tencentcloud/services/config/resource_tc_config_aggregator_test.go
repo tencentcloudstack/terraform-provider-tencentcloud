@@ -89,6 +89,12 @@ func TestConfigAggregator_Schema(t *testing.T) {
 	assert.True(t, ok, "aggregator_accounts should exist in schema")
 	assert.Equal(t, schema.TypeList, res.Schema["aggregator_accounts"].Type)
 	assert.True(t, res.Schema["aggregator_accounts"].Optional)
+	// Computed is required: for RD (global) aggregators the members are populated by
+	// the cloud and written back by the read function. Without Computed the empty
+	// configured list conflicts with the populated state, producing a permanent
+	// "update in-place" diff that never converges.
+	assert.True(t, res.Schema["aggregator_accounts"].Computed,
+		"aggregator_accounts must be Computed so cloud-populated members do not cause a permanent diff")
 }
 
 // TestConfigAggregator_Create covers the Create business logic end-to-end with mocked cloud API.

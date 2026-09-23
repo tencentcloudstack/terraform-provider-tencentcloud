@@ -23,6 +23,23 @@ func ResourceTencentCloudConfigAggregator() *schema.Resource {
 		Importer: &schema.ResourceImporter{
 			State: schema.ImportStatePassthrough,
 		},
+		CustomizeDiff: func(ctx context.Context, d *schema.ResourceDiff, meta interface{}) error {
+			// A CUSTOM aggregator must carry at least one member account, otherwise the
+			// cloud API only returns a generic `InvalidParameter: 参数错误。`, which is
+			// hard to diagnose. Fail fast during plan with an actionable message instead.
+			// RD (global) aggregators must not specify members here: their members are
+			// derived from the resource directory and returned by the read API.
+			if d.Get("type").(string) != "CUSTOM" {
+				return nil
+			}
+
+			accounts, _ := d.Get("aggregator_accounts").([]interface{})
+			if len(accounts) == 0 {
+				return fmt.Errorf("`aggregator_accounts` must contain at least one member account when `type` is `CUSTOM`")
+			}
+
+			return nil
+		},
 		Schema: map[string]*schema.Schema{
 			"name": {
 				Type:        schema.TypeString,
@@ -53,7 +70,8 @@ func ResourceTencentCloudConfigAggregator() *schema.Resource {
 			"aggregator_accounts": {
 				Type:        schema.TypeList,
 				Optional:    true,
-				Description: "Member account list of the aggregator, up to 100 entries.",
+				Computed:    true,
+				Description: "Member account list of the aggregator, up to 100 entries. Required when `type` is `CUSTOM`; for `RD` (global) aggregators the members are maintained by the cloud and returned here automatically.",
 				Elem: &schema.Resource{
 					Schema: map[string]*schema.Schema{
 						"member_uin": {
