@@ -77,10 +77,9 @@ func ResourceTencentCloudKmsKey() *schema.Resource {
 			Description: "Specify whether to enable key rotation, valid when key_usage is `ENCRYPT_DECRYPT`. Default value is `false`.",
 		},
 		"rotate_days": {
-			Type:         schema.TypeInt,
-			Optional:     true,
-			ValidateFunc: tccommon.ValidateIntegerInRange(7, 365),
-			Description:  "Key rotation period in days, range 7~365, default 365. Only effective when `key_usage` is `ENCRYPT_DECRYPT` and `key_rotation_enabled` is `true`.",
+			Type:        schema.TypeInt,
+			Optional:    true,
+			Description: "Key rotation period in days, range 7~365, default 365. Only effective when `key_usage` is `ENCRYPT_DECRYPT` and `key_rotation_enabled` is `true`.",
 		},
 		"hsm_cluster_id": {
 			Type:        schema.TypeString,

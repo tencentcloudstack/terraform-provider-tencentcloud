@@ -6,6 +6,7 @@
 ## 2. Resource Schema Changes
 
 - [x] 2.1 Add `rotate_days` schema field
+- [x] 2.2 Remove `ValidateFunc: tccommon.ValidateIntegerInRange(7, 365)` from `rotate_days` so range validation is delegated to the cloud API
 
 ## 3. Create Function Changes
 

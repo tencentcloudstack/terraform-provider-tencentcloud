@@ -121,7 +121,7 @@ Currently the function only accepts `keyId` and does not pass `RotateDays`.
 ## Goals / Non-Goals
 
 **Goals:**
-- Add `rotate_days` (Optional, TypeInt, validate range 7–365) parameter to `tencentcloud_kms_key` to specify the key rotation period when key rotation is enabled.
+- Add `rotate_days` (Optional, TypeInt) parameter to `tencentcloud_kms_key` to specify the key rotation period when key rotation is enabled. The valid range (7–365) is enforced by the cloud API; no Terraform-side `ValidateFunc` is applied so that API-side validation messages surface directly.
 - Pass `RotateDays` to the `EnableKeyRotation` API request when specified, during both Create and Update flows.
 - Read `RotateDays` from the `DescribeKey` API response (`KeyMetadata.RotateDays`) in the Read function to support state refresh and import.
 - Update the `EnableKeyRotation` service-layer function to accept and pass the `rotateDays` parameter.

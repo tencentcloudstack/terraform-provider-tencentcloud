@@ -1,7 +1,7 @@
 ## ADDED Requirements
 
 ### Requirement: Rotate days parameter on kms key
-The `tencentcloud_kms_key` resource SHALL support an optional `rotate_days` parameter (TypeInt, validate range 7–365) that specifies the key rotation period in days. This parameter is passed to the `EnableKeyRotation` API as `RotateDays` when key rotation is enabled. It is only effective when `key_usage` is `ENCRYPT_DECRYPT` and `key_rotation_enabled` is `true`.
+The `tencentcloud_kms_key` resource SHALL support an optional `rotate_days` parameter (TypeInt) that specifies the key rotation period in days. This parameter is passed to the `EnableKeyRotation` API as `RotateDays` when key rotation is enabled. It is only effective when `key_usage` is `ENCRYPT_DECRYPT` and `key_rotation_enabled` is `true`. No Terraform-side `ValidateFunc` is applied; the valid range (7–365) is enforced by the cloud API.
 
 #### Scenario: Create kms key with key rotation and rotate_days
 - **WHEN** a user specifies `key_rotation_enabled = true` and `rotate_days = 30` in the `tencentcloud_kms_key` resource configuration (with `key_usage = ENCRYPT_DECRYPT`)
@@ -17,7 +17,7 @@ The `tencentcloud_kms_key` resource SHALL support an optional `rotate_days` para
 
 #### Scenario: Validation of rotate_days range
 - **WHEN** a user specifies `rotate_days = 1` or `rotate_days = 366`
-- **THEN** the provider SHALL return a validation error indicating the value must be between 7 and 365
+- **THEN** the provider SHALL NOT perform Terraform-side validation and SHALL defer to the cloud API, which returns an error indicating the value must be between 7 and 365
 
 #### Scenario: Read existing kms key with rotate_days
 - **WHEN** the provider reads an existing `tencentcloud_kms_key` resource where key rotation is enabled

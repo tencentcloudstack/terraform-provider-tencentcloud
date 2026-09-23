@@ -4,7 +4,7 @@ The KMS `EnableKeyRotation` API supports a `RotateDays` parameter to specify the
 
 ## What Changes
 
-- Add `rotate_days` (Optional, TypeInt, validate range 7–365) parameter to the `tencentcloud_kms_key` resource to specify the key rotation period when key rotation is enabled. Only valid when `key_usage` is `ENCRYPT_DECRYPT` and `key_rotation_enabled` is `true`.
+- Add `rotate_days` (Optional, TypeInt) parameter to the `tencentcloud_kms_key` resource to specify the key rotation period when key rotation is enabled. Only valid when `key_usage` is `ENCRYPT_DECRYPT` and `key_rotation_enabled` is `true`. The valid range is 7–365 (the API enforces this); no Terraform-side `ValidateFunc` is applied so that API-side validation messages surface directly.
 - Pass `RotateDays` to the `EnableKeyRotation` API request when specified during Create and Update flows.
 - Read `RotateDays` from the `DescribeKey` API response (`KeyMetadata.RotateDays`) in the Read function to support state refresh and import.
 - Treat `rotate_days` as immutable: once a key is created with a rotation period, changing `rotate_days` along with `key_rotation_enabled` updates will re-call `EnableKeyRotation` with the new `RotateDays` value (the `EnableKeyRotation` API accepts `RotateDays` and can be re-invoked to update the period). Changes to `rotate_days` without `key_rotation_enabled = true` are ignored.
@@ -14,7 +14,7 @@ The KMS `EnableKeyRotation` API supports a `RotateDays` parameter to specify the
 ## Capabilities
 
 ### New Capabilities
-- `kms-key-rotate-days`: Enable the `rotate_days` parameter on the `tencentcloud_kms_key` resource to allow users to specify the key rotation period (in days) when key rotation is enabled.
+- `kms-key-rotate-days`: Enable the `rotate_days` parameter on the `tencentcloud_kms_key` resource to allow users to specify the key rotation period (in days) when key rotation is enabled. Validation of the 7–365 range is delegated to the cloud API (no Terraform-side `ValidateFunc`).
 
 ### Modified Capabilities
 <!-- No existing specs require modification -->
