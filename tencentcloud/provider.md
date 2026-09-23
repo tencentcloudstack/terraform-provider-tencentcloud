@@ -2778,6 +2778,7 @@ tencentcloud_config_remediation
 tencentcloud_config_start_config_rule_evaluation_operation
 tencentcloud_config_deliver_config
 tencentcloud_config_recorder_config
+tencentcloud_config_aggregator
 
 GS
 Data Source
