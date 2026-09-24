@@ -2559,6 +2559,38 @@ func (me *AntiddosService) DescribeAntiddosBgpInstancesByFilter(ctx context.Cont
 	return
 }
 
+func (me *AntiddosService) UnblockResources(ctx context.Context, resources []*string) (errRet error) {
+	logId := tccommon.GetLogId(ctx)
+
+	request := antiddosv20250903.NewUnblockResourcesRequest()
+	request.Resources = resources
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n",
+				logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	err := resource.Retry(tccommon.WriteRetryTimeout, func() *resource.RetryError {
+		ratelimit.Check(request.GetAction())
+		result, e := me.client.UseAntiddosV20250903Client().UnblockResourcesWithContext(ctx, request)
+		if e != nil {
+			return tccommon.RetryError(e)
+		}
+		log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n",
+			logId, request.GetAction(), request.ToJsonString(), result.ToJsonString())
+		return nil
+	})
+
+	if err != nil {
+		errRet = err
+		return err
+	}
+
+	return
+}
+
 func (me *AntiddosService) DescribeAntiddosDDoSBlockRecordsByFilter(ctx context.Context, param map[string]interface{}) (blockRecords []*antiddosv20250903.DDoSBlockRecord, unblockQuotaInfo *antiddosv20250903.DDoSUnblockQuota, errRet error) {
 	var (
 		logId    = tccommon.GetLogId(ctx)
