@@ -2590,3 +2590,77 @@ func (me *AntiddosService) UnblockResources(ctx context.Context, resources []*st
 
 	return
 }
+
+func (me *AntiddosService) DescribeAntiddosDDoSBlockRecordsByFilter(ctx context.Context, param map[string]interface{}) (blockRecords []*antiddosv20250903.DDoSBlockRecord, unblockQuotaInfo *antiddosv20250903.DDoSUnblockQuota, errRet error) {
+	var (
+		logId    = tccommon.GetLogId(ctx)
+		request  = antiddosv20250903.NewDescribeDDoSBlockRecordsRequest()
+		response = antiddosv20250903.NewDescribeDDoSBlockRecordsResponse()
+	)
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	for k, v := range param {
+		if k == "StartTime" {
+			request.StartTime = helper.String(v.(string))
+		}
+		if k == "EndTime" {
+			request.EndTime = helper.String(v.(string))
+		}
+		if k == "Filters" {
+			request.Filters = v.([]*antiddosv20250903.Filter)
+		}
+	}
+
+	var (
+		offset uint64 = 0
+		limit  uint64 = 100
+	)
+
+	for {
+		request.Offset = &offset
+		request.Limit = &limit
+		err := resource.Retry(tccommon.ReadRetryTimeout, func() *resource.RetryError {
+			ratelimit.Check(request.GetAction())
+			result, e := me.client.UseAntiddosV20250903Client().DescribeDDoSBlockRecords(request)
+			if e != nil {
+				return tccommon.RetryError(e)
+			} else {
+				log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), result.ToJsonString())
+			}
+
+			if result == nil || result.Response == nil {
+				return resource.NonRetryableError(fmt.Errorf("Describe antiddos ddos block records failed, Response is nil."))
+			}
+
+			if result.Response.BlockRecords == nil {
+				return resource.NonRetryableError(fmt.Errorf("Describe antiddos ddos block records failed, BlockRecords is nil."))
+			}
+
+			if result.Response.UnblockQuotaInfo != nil {
+				unblockQuotaInfo = result.Response.UnblockQuotaInfo
+			}
+
+			response = result
+			return nil
+		})
+
+		if err != nil {
+			errRet = err
+			return
+		}
+
+		blockRecords = append(blockRecords, response.Response.BlockRecords...)
+		if len(response.Response.BlockRecords) < int(limit) {
+			break
+		}
+
+		offset += limit
+	}
+
+	return
+}

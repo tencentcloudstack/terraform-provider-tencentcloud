@@ -151,10 +151,13 @@ func (me *KmsService) CreateKey(ctx context.Context, keyType uint64, alias, desc
 	return
 }
 
-func (me *KmsService) EnableKeyRotation(ctx context.Context, keyId string) (errRet error) {
+func (me *KmsService) EnableKeyRotation(ctx context.Context, keyId string, rotateDays uint64) (errRet error) {
 	logId := tccommon.GetLogId(ctx)
 	request := kms.NewEnableKeyRotationRequest()
 	request.KeyId = helper.String(keyId)
+	if rotateDays > 0 {
+		request.RotateDays = helper.Uint64(rotateDays)
+	}
 	ratelimit.Check(request.GetAction())
 
 	response, err := me.client.UseKmsClient().EnableKeyRotation(request)
