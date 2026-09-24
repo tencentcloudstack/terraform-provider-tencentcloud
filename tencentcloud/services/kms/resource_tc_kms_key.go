@@ -170,7 +170,10 @@ func resourceTencentCloudKmsKeyCreate(d *schema.ResourceData, meta interface{}) 
 
 	if keyUsage == KMS_KEY_USAGE_ENCRYPT_DECRYPT {
 		if keyRotationEnabled := d.Get("key_rotation_enabled").(bool); keyRotationEnabled {
-			rotateDays := uint64(d.Get("rotate_days").(int))
+			var rotateDays uint64
+			if v, ok := d.GetOk("rotate_days"); ok {
+				rotateDays = uint64(v.(int))
+			}
 			err := resource.Retry(tccommon.WriteRetryTimeout, func() *resource.RetryError {
 				e := kmsService.EnableKeyRotation(ctx, d.Id(), rotateDays)
 				if e != nil {
@@ -350,30 +353,16 @@ func resourceTencentCloudKmsKeyUpdate(d *schema.ResourceData, meta interface{}) 
 	}
 
 	if v := d.Get("key_usage").(string); v == KMS_KEY_USAGE_ENCRYPT_DECRYPT {
-		if d.HasChange("key_rotation_enabled") {
+		if d.HasChange("key_rotation_enabled") || d.HasChange("rotate_days") {
 			keyRotationEnabled := d.Get("key_rotation_enabled").(bool)
-			rotateDays := uint64(d.Get("rotate_days").(int))
+			var rotateDays uint64
+			if v, ok := d.GetOk("rotate_days"); ok {
+				rotateDays = uint64(v.(int))
+			}
 			err := updateKeyRotationStatus(ctx, kmsService, keyId, keyRotationEnabled, rotateDays)
 			if err != nil {
 				log.Printf("[CRITAL]%s modify KMS key rotation status failed, reason:%+v", logId, err)
 				return err
-			}
-
-		} else if d.HasChange("rotate_days") {
-			keyRotationEnabled := d.Get("key_rotation_enabled").(bool)
-			if keyRotationEnabled {
-				rotateDays := uint64(d.Get("rotate_days").(int))
-				err := resource.Retry(tccommon.WriteRetryTimeout, func() *resource.RetryError {
-					e := kmsService.EnableKeyRotation(ctx, keyId, rotateDays)
-					if e != nil {
-						return tccommon.RetryError(e)
-					}
-					return nil
-				})
-				if err != nil {
-					log.Printf("[CRITAL]%s modify KMS key rotate days failed, reason:%+v", logId, err)
-					return err
-				}
 			}
 		}
 	}
