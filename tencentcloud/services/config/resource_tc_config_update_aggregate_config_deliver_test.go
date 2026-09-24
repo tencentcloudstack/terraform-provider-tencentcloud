@@ -32,6 +32,72 @@ func ptrStrAggDeliver(s string) *string    { return &s }
 func ptrUint64AggDeliver(v uint64) *uint64 { return &v }
 func ptrInt64AggDeliver(v int64) *int64    { return &v }
 
+// TestAggregateConfigDeliver_Schema_GuardsPermanentDiff asserts the schema flags that
+// keep `plan` convergent. Two distinct defects are guarded here:
+//
+//  1. The optional fields are populated by the cloud even when the configuration omits
+//     them (`deliver_type` defaults to COS, `deliver_content_type` to 1, `deliver_uin`
+//     to 0). Without `Computed` the populated state conflicts with the null
+//     configuration, producing an "update in-place" diff on every plan that never
+//     converges. This is the most likely defect for a user to hit, because it only
+//     requires omitting an optional argument.
+//  2. `account_group_id` must stay `ForceNew` and is written back by Read (see
+//     TestAggregateConfigDeliver_Read_ImportPopulatesAccountGroupId).
+func TestAggregateConfigDeliver_Schema_GuardsPermanentDiff(t *testing.T) {
+	res := svcconfig.ResourceTencentCloudConfigUpdateAggregateConfigDeliver()
+
+	// The cloud returns a default for each of these, so each must accept a
+	// cloud-populated value even though the user may never set it.
+	for _, name := range []string{
+		"deliver_name",
+		"target_arn",
+		"deliver_prefix",
+		"deliver_type",
+		"deliver_uin",
+		"deliver_content_type",
+	} {
+		s, ok := res.Schema[name]
+		assert.True(t, ok, "%s should exist in schema", name)
+		assert.True(t, s.Optional, "%s should be Optional", name)
+		assert.True(t, s.Computed,
+			"%s must be Computed so a cloud-populated value does not cause a permanent diff", name)
+	}
+
+	assert.True(t, res.Schema["account_group_id"].Required)
+	assert.True(t, res.Schema["account_group_id"].ForceNew)
+	assert.True(t, res.Schema["status"].Required)
+}
+
+// TestAggregateConfigDeliver_Read_ImportPopulatesAccountGroupId covers the import path.
+// `account_group_id` is ForceNew but is NOT part of the Describe response, so during
+// `terraform import` the state only carries the imported id. If Read does not write the
+// field back, the next plan reports `must be replaced` (ForceNew false-positive).
+func TestAggregateConfigDeliver_Read_ImportPopulatesAccountGroupId(t *testing.T) {
+	patches := gomonkey.NewPatches()
+	defer patches.Reset()
+
+	configClient := &configv20220802.Client{}
+	patches.ApplyMethodReturn(newMockMetaForAggregateConfigDeliver().client, "UseConfigV20220802Client", configClient)
+
+	patches.ApplyMethodFunc(configClient, "DescribeAggregateConfigDeliver", func(request *configv20220802.DescribeAggregateConfigDeliverRequest) (*configv20220802.DescribeAggregateConfigDeliverResponse, error) {
+		return mockDescribeAggregateConfigDeliverResponse("ca-ag-import1234"), nil
+	})
+
+	meta := newMockMetaForAggregateConfigDeliver()
+	res := svcconfig.ResourceTencentCloudConfigUpdateAggregateConfigDeliver()
+
+	// Simulate a plain `terraform import <addr> ca-ag-import1234`: the id is the only
+	// thing available, no other attribute is known yet.
+	d := schema.TestResourceDataRaw(t, res.Schema, map[string]interface{}{})
+	d.SetId("ca-ag-import1234")
+
+	err := res.Read(d, meta)
+	assert.NoError(t, err)
+	assert.Equal(t, "ca-ag-import1234", d.Id())
+	assert.Equal(t, "ca-ag-import1234", d.Get("account_group_id"),
+		"Read must write account_group_id back, otherwise an imported resource is replaced on the next plan")
+}
+
 func mockDescribeAggregateConfigDeliverResponse(accountGroupId string) *configv20220802.DescribeAggregateConfigDeliverResponse {
 	resp := configv20220802.NewDescribeAggregateConfigDeliverResponse()
 	resp.Response = &configv20220802.DescribeAggregateConfigDeliverResponseParams{

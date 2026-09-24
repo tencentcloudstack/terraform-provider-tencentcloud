@@ -38,37 +38,43 @@ func ResourceTencentCloudConfigUpdateAggregateConfigDeliver() *schema.Resource {
 			"deliver_name": {
 				Type:        schema.TypeString,
 				Optional:    true,
+				Computed:    true,
 				Description: "Delivery service name.",
 			},
 
 			"target_arn": {
 				Type:        schema.TypeString,
 				Optional:    true,
+				Computed:    true,
 				Description: "Resource ARN. COS format: qcs::cos:$region:$account:prefix/$appid/$BucketName. CLS format: qcs::cls:$region:$account:cls/topicId.",
 			},
 
 			"deliver_prefix": {
 				Type:        schema.TypeString,
 				Optional:    true,
+				Computed:    true,
 				Description: "Log prefix for stored delivery content.",
 			},
 
 			"deliver_type": {
 				Type:        schema.TypeString,
 				Optional:    true,
-				Description: "Delivery type. Valid values: COS, CLS.",
+				Computed:    true,
+				Description: "Delivery type. Valid values: COS, CLS. Defaults to COS on the cloud side when omitted.",
 			},
 
 			"deliver_uin": {
 				Type:        schema.TypeInt,
 				Optional:    true,
+				Computed:    true,
 				Description: "Member account uin that supports cross-account delivery. Only the delegated administrator can be used. The default value is 0, which means delivery to the administrator account.",
 			},
 
 			"deliver_content_type": {
 				Type:        schema.TypeInt,
 				Optional:    true,
-				Description: "Delivery content type. Valid values: 1 (configuration change), 2 (resource list), 3 (all).",
+				Computed:    true,
+				Description: "Delivery content type. Valid values: 1 (configuration change), 2 (resource list), 3 (all). Defaults to 1 on the cloud side when omitted.",
 			},
 
 			"create_time": {
@@ -115,6 +121,13 @@ func resourceTencentCloudConfigUpdateAggregateConfigDeliverRead(d *schema.Resour
 		d.SetId("")
 		return nil
 	}
+
+	// `account_group_id` is a ForceNew field that identifies the resource, but it is
+	// NOT part of the `DescribeAggregateConfigDeliver` response. During import the
+	// state is built from the imported id only, so without this the field stays empty
+	// and the next plan reports `must be replaced` (ForceNew false-positive).
+	// The resource id *is* the account group id, so write it back here.
+	_ = d.Set("account_group_id", d.Id())
 
 	if respData.Status != nil {
 		_ = d.Set("status", int(*respData.Status))
