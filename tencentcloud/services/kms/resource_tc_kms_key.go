@@ -79,6 +79,7 @@ func ResourceTencentCloudKmsKey() *schema.Resource {
 		"rotate_days": {
 			Type:        schema.TypeInt,
 			Optional:    true,
+			Computed:    true,
 			Description: "Key rotation period in days, range 7~365, default 365. Only effective when `key_usage` is `ENCRYPT_DECRYPT` and `key_rotation_enabled` is `true`.",
 		},
 		"hsm_cluster_id": {
