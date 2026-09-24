@@ -431,10 +431,8 @@ func (me *EMRService) DescribeInstances(ctx context.Context, filters map[string]
 		errRet = err
 		return
 	}
-	// NOTE: the response may contain sensitive credentials (MetaDataPass inside
-	// MetaDBGroupInfo), so the raw response body is intentionally NOT logged.
-	log.Printf("[DEBUG]%s api[%s] success, request body [%s], got %d clusters\n",
-		logId, request.GetAction(), request.ToJsonString(), len(response.Response.ClusterList))
+	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n",
+		logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
 
 	clusters = response.Response.ClusterList
 	return
@@ -458,10 +456,8 @@ func (me *EMRService) DescribeInstancesById(ctx context.Context, instanceId stri
 		errRet = err
 		return
 	}
-	// NOTE: the response may contain sensitive credentials (MetaDataPass inside
-	// MetaDBGroupInfo), so the raw response body is intentionally NOT logged.
-	log.Printf("[DEBUG]%s api[%s] success, request body [%s], got %d clusters\n",
-		logId, request.GetAction(), request.ToJsonString(), len(response.Response.ClusterList))
+	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n",
+		logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
 
 	clusters = response.Response.ClusterList
 	return
@@ -529,10 +525,8 @@ func (me *EMRService) DescribeEmrClusterV2ById(ctx context.Context, instanceId s
 	if response == nil || response.Response == nil {
 		return
 	}
-	// NOTE: the response may contain sensitive credentials (MetaDataPass inside
-	// MetaDBGroupInfo), so the raw response body is intentionally NOT logged.
-	log.Printf("[DEBUG]%s api[%s] success, request body [%s], got %d clusters\n",
-		logId, request.GetAction(), request.ToJsonString(), len(response.Response.ClusterList))
+	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n",
+		logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
 
 	if len(response.Response.ClusterList) == 0 {
 		return

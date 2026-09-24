@@ -886,10 +886,7 @@ func resourceTencentCloudEmrClusterV2Create(d *schema.ResourceData, meta interfa
 		if e != nil {
 			return tccommon.RetryError(e)
 		}
-		// NOTE: the request may contain sensitive credentials (MetaDataPass
-		// inside MetaDBInfo / MetaDBGroupInfo), so the raw request body is
-		// intentionally NOT logged.
-		log.Printf("[DEBUG]%s api[%s] success, response body [%s]\n", logId, request.GetAction(), result.ToJsonString())
+		log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), result.ToJsonString())
 
 		if result == nil || result.Response == nil {
 			return resource.NonRetryableError(fmt.Errorf("Create emr cluster v2 failed, Response is nil."))
