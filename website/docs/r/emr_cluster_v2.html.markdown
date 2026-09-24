@@ -481,6 +481,7 @@ The following arguments are supported:
 * `enable_remote_login_flag` - (Optional, Bool, ForceNew) Whether to enable external remote login. Invalid when `security_group_ids` is set. Default is false.
 * `instance_charge_prepaid` - (Optional, List, ForceNew) Prepaid (monthly/yearly) billing parameters. Required when `instance_charge_type` is `PREPAID`.
 * `load_balancer_id` - (Optional, String, ForceNew) CLB instance ID, e.g., `lb-xxxxxxxx`.
+* `meta_db_group_info` - (Optional, List) Custom MetaDB group information of the cluster. Supported on create (CreateCluster), update (InstallSoftware) and query (DescribeMetaDBInfo). When `meta_type` is `EMR_EXIST_META`, `unify_meta_instance_id` must be set; when `USER_CUSTOM_META`, `meta_data_jdbc_url`/`meta_data_user`/`meta_data_pass` must be set.
 * `meta_db_info` - (Optional, List, ForceNew) Metadata database information. When `meta_type` is `EMR_NEW_META`/`EMR_DEFAULT_META`, no extra fields are required; when `EMR_EXIT_META`, `unify_meta_instance_id` must be set; when `USER_CUSTOM_META`, `meta_data_jdbc_url`/`meta_data_user`/`meta_data_pass` must be set.
 * `need_cdb_audit` - (Optional, Int, ForceNew) Whether to enable database auditing.
 * `need_master_wan` - (Optional, String, ForceNew) Whether to enable master public network. Valid values: `NEED_MASTER_WAN` (default), `NOT_NEED_MASTER_WAN`.
@@ -568,6 +569,16 @@ The `master_resource_spec` object of `all_node_resource_spec` supports the follo
 * `data_disk` - (Optional, Set) Cloud data disk specifications. `TypeSet` keyed by full content (including `_disk_index`); block order in HCL is irrelevant.
 * `instance_type` - (Optional, String) CVM instance type, e.g., `S6.2XLARGE32`, `SA4.8XLARGE64`.
 * `system_disk` - (Optional, List) System disk specifications.
+
+The `meta_db_group_info` object supports the following:
+
+* `components` - (Optional, List) Components that use the MetaDB.
+* `default_meta_version` - (Optional, String) MetaDB version.
+* `meta_data_jdbc_url` - (Optional, String) JDBC connection of the custom MetaDB, e.g. `jdbc:mysql://10.10.10.10:3306/dbname`.
+* `meta_data_pass` - (Optional, String) Password of the custom MetaDB.
+* `meta_data_user` - (Optional, String) Username of the custom MetaDB.
+* `meta_type` - (Optional, String) Hive shared meta DB type. `EMR_DEFAULT_META`: created by the cluster by default; `EMR_EXIST_META`: use the specified EMR-MetaDB; `USER_CUSTOM_META`: use a custom MetaDB.
+* `unify_meta_instance_id` - (Optional, String) EMR-MetaDB instance ID, required when `meta_type` is `EMR_EXIST_META`.
 
 The `meta_db_info` object supports the following:
 
@@ -721,6 +732,10 @@ The `master_resource_spec` object of `all_node_resource_spec` exports the follow
 * `emr_resource_id` - EMR node resource ID (read-only).
 * `order_no` - Machine instance ID (read-only).
 * `serial_no` - Serial number (read-only).
+
+The `meta_db_group_info` object exports the following:
+
+* `link_instance_id` - CDB instance ID.
 
 The `router_resource_spec` object of `all_node_resource_spec` exports the following:
 

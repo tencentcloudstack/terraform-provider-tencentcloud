@@ -2161,6 +2161,70 @@ func (c *Client) DescribeEmrOverviewMetricsWithContext(ctx context.Context, requ
     return
 }
 
+func NewDescribeExportConfsRequest() (request *DescribeExportConfsRequest) {
+    request = &DescribeExportConfsRequest{
+        BaseRequest: &tchttp.BaseRequest{},
+    }
+    
+    request.Init().WithApiInfo("emr", APIVersion, "DescribeExportConfs")
+    
+    
+    return
+}
+
+func NewDescribeExportConfsResponse() (response *DescribeExportConfsResponse) {
+    response = &DescribeExportConfsResponse{
+        BaseResponse: &tchttp.BaseResponse{},
+    } 
+    return
+
+}
+
+// DescribeExportConfs
+// 查询导出配置
+//
+// 可能返回的错误码:
+//  INTERNALERROR = "InternalError"
+//  INTERNALERROR_WOODSERVERERROR = "InternalError.WoodServerError"
+//  INVALIDPARAMETER = "InvalidParameter"
+//  INVALIDPARAMETER_INVALIDAPPID = "InvalidParameter.InvalidAppId"
+//  INVALIDPARAMETER_INVALIDCLUSTERID = "InvalidParameter.InvalidClusterId"
+//  INVALIDPARAMETER_INVALIDDOWNLOADOBJ = "InvalidParameter.InvalidDownloadObj"
+//  RESOURCEINUSE_INSTANCEINPROCESS = "ResourceInUse.InstanceInProcess"
+//  RESOURCENOTFOUND_CLUSTERNOTFOUND = "ResourceNotFound.ClusterNotFound"
+func (c *Client) DescribeExportConfs(request *DescribeExportConfsRequest) (response *DescribeExportConfsResponse, err error) {
+    return c.DescribeExportConfsWithContext(context.Background(), request)
+}
+
+// DescribeExportConfs
+// 查询导出配置
+//
+// 可能返回的错误码:
+//  INTERNALERROR = "InternalError"
+//  INTERNALERROR_WOODSERVERERROR = "InternalError.WoodServerError"
+//  INVALIDPARAMETER = "InvalidParameter"
+//  INVALIDPARAMETER_INVALIDAPPID = "InvalidParameter.InvalidAppId"
+//  INVALIDPARAMETER_INVALIDCLUSTERID = "InvalidParameter.InvalidClusterId"
+//  INVALIDPARAMETER_INVALIDDOWNLOADOBJ = "InvalidParameter.InvalidDownloadObj"
+//  RESOURCEINUSE_INSTANCEINPROCESS = "ResourceInUse.InstanceInProcess"
+//  RESOURCENOTFOUND_CLUSTERNOTFOUND = "ResourceNotFound.ClusterNotFound"
+func (c *Client) DescribeExportConfsWithContext(ctx context.Context, request *DescribeExportConfsRequest) (response *DescribeExportConfsResponse, err error) {
+    if request == nil {
+        request = NewDescribeExportConfsRequest()
+    }
+    c.InitBaseRequest(&request.BaseRequest, "emr", APIVersion, "DescribeExportConfs")
+    
+    if c.GetCredential() == nil {
+        return nil, errors.New("DescribeExportConfs require credential")
+    }
+
+    request.SetContext(ctx)
+    
+    response = NewDescribeExportConfsResponse()
+    err = c.Send(request, response)
+    return
+}
+
 func NewDescribeGlobalConfigRequest() (request *DescribeGlobalConfigRequest) {
     request = &DescribeGlobalConfigRequest{
         BaseRequest: &tchttp.BaseRequest{},
@@ -3189,6 +3253,58 @@ func (c *Client) DescribeKyuubiQueryInfoWithContext(ctx context.Context, request
     request.SetContext(ctx)
     
     response = NewDescribeKyuubiQueryInfoResponse()
+    err = c.Send(request, response)
+    return
+}
+
+func NewDescribeMetaDBInfoRequest() (request *DescribeMetaDBInfoRequest) {
+    request = &DescribeMetaDBInfoRequest{
+        BaseRequest: &tchttp.BaseRequest{},
+    }
+    
+    request.Init().WithApiInfo("emr", APIVersion, "DescribeMetaDBInfo")
+    
+    
+    return
+}
+
+func NewDescribeMetaDBInfoResponse() (response *DescribeMetaDBInfoResponse) {
+    response = &DescribeMetaDBInfoResponse{
+        BaseResponse: &tchttp.BaseResponse{},
+    } 
+    return
+
+}
+
+// DescribeMetaDBInfo
+// 集群metadb数据
+//
+// 可能返回的错误码:
+//  RESOURCENOTFOUND_CLUSTERNOTFOUND = "ResourceNotFound.ClusterNotFound"
+//  UNAUTHORIZEDOPERATION_APPIDMISMATCHED = "UnauthorizedOperation.AppIdMismatched"
+func (c *Client) DescribeMetaDBInfo(request *DescribeMetaDBInfoRequest) (response *DescribeMetaDBInfoResponse, err error) {
+    return c.DescribeMetaDBInfoWithContext(context.Background(), request)
+}
+
+// DescribeMetaDBInfo
+// 集群metadb数据
+//
+// 可能返回的错误码:
+//  RESOURCENOTFOUND_CLUSTERNOTFOUND = "ResourceNotFound.ClusterNotFound"
+//  UNAUTHORIZEDOPERATION_APPIDMISMATCHED = "UnauthorizedOperation.AppIdMismatched"
+func (c *Client) DescribeMetaDBInfoWithContext(ctx context.Context, request *DescribeMetaDBInfoRequest) (response *DescribeMetaDBInfoResponse, err error) {
+    if request == nil {
+        request = NewDescribeMetaDBInfoRequest()
+    }
+    c.InitBaseRequest(&request.BaseRequest, "emr", APIVersion, "DescribeMetaDBInfo")
+    
+    if c.GetCredential() == nil {
+        return nil, errors.New("DescribeMetaDBInfo require credential")
+    }
+
+    request.SetContext(ctx)
+    
+    response = NewDescribeMetaDBInfoResponse()
     err = c.Send(request, response)
     return
 }
@@ -6305,6 +6421,66 @@ func (c *Client) ModifySLInstanceBasicWithContext(ctx context.Context, request *
     request.SetContext(ctx)
     
     response = NewModifySLInstanceBasicResponse()
+    err = c.Send(request, response)
+    return
+}
+
+func NewModifyServiceParamsByExportConfsRequest() (request *ModifyServiceParamsByExportConfsRequest) {
+    request = &ModifyServiceParamsByExportConfsRequest{
+        BaseRequest: &tchttp.BaseRequest{},
+    }
+    
+    request.Init().WithApiInfo("emr", APIVersion, "ModifyServiceParamsByExportConfs")
+    
+    
+    return
+}
+
+func NewModifyServiceParamsByExportConfsResponse() (response *ModifyServiceParamsByExportConfsResponse) {
+    response = &ModifyServiceParamsByExportConfsResponse{
+        BaseResponse: &tchttp.BaseResponse{},
+    } 
+    return
+
+}
+
+// ModifyServiceParamsByExportConfs
+// 配置导入下发
+//
+// 可能返回的错误码:
+//  INTERNALERROR = "InternalError"
+//  INTERNALERROR_CAMCGWERROR = "InternalError.CamCgwError"
+//  RESOURCENOTFOUND = "ResourceNotFound"
+//  RESOURCENOTFOUND_CLUSTERNOTFOUND = "ResourceNotFound.ClusterNotFound"
+//  RESOURCENOTFOUND_INSTANCENOTFOUND = "ResourceNotFound.InstanceNotFound"
+//  UNAUTHORIZEDOPERATION_CHECKCAMAUTH = "UnauthorizedOperation.CheckCamAuth"
+func (c *Client) ModifyServiceParamsByExportConfs(request *ModifyServiceParamsByExportConfsRequest) (response *ModifyServiceParamsByExportConfsResponse, err error) {
+    return c.ModifyServiceParamsByExportConfsWithContext(context.Background(), request)
+}
+
+// ModifyServiceParamsByExportConfs
+// 配置导入下发
+//
+// 可能返回的错误码:
+//  INTERNALERROR = "InternalError"
+//  INTERNALERROR_CAMCGWERROR = "InternalError.CamCgwError"
+//  RESOURCENOTFOUND = "ResourceNotFound"
+//  RESOURCENOTFOUND_CLUSTERNOTFOUND = "ResourceNotFound.ClusterNotFound"
+//  RESOURCENOTFOUND_INSTANCENOTFOUND = "ResourceNotFound.InstanceNotFound"
+//  UNAUTHORIZEDOPERATION_CHECKCAMAUTH = "UnauthorizedOperation.CheckCamAuth"
+func (c *Client) ModifyServiceParamsByExportConfsWithContext(ctx context.Context, request *ModifyServiceParamsByExportConfsRequest) (response *ModifyServiceParamsByExportConfsResponse, err error) {
+    if request == nil {
+        request = NewModifyServiceParamsByExportConfsRequest()
+    }
+    c.InitBaseRequest(&request.BaseRequest, "emr", APIVersion, "ModifyServiceParamsByExportConfs")
+    
+    if c.GetCredential() == nil {
+        return nil, errors.New("ModifyServiceParamsByExportConfs require credential")
+    }
+
+    request.SetContext(ctx)
+    
+    response = NewModifyServiceParamsByExportConfsResponse()
     err = c.Send(request, response)
     return
 }
