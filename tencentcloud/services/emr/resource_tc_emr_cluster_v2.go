@@ -472,6 +472,69 @@ func ResourceTencentCloudEmrClusterV2() *schema.Resource {
 				Computed:    true,
 				Description: "Cluster ID (same as the resource ID).",
 			},
+
+			"meta_db_group_info": {
+				Type:     schema.TypeList,
+				Optional: true,
+				Computed: true,
+				Description: "Custom MetaDB group information of the cluster. Supported on create (CreateCluster), update (InstallSoftware) and query (DescribeMetaDBInfo). " +
+					"When `meta_type` is `EMR_EXIST_META`, `unify_meta_instance_id` must be set; when `USER_CUSTOM_META`, `meta_data_jdbc_url`/`meta_data_user`/`meta_data_pass` must be set.",
+				Elem: &schema.Resource{
+					Schema: map[string]*schema.Schema{
+						"meta_data_jdbc_url": {
+							Type:        schema.TypeString,
+							Optional:    true,
+							Computed:    true,
+							Description: "JDBC connection of the custom MetaDB, e.g. `jdbc:mysql://10.10.10.10:3306/dbname`.",
+						},
+						"meta_data_user": {
+							Type:        schema.TypeString,
+							Optional:    true,
+							Computed:    true,
+							Description: "Username of the custom MetaDB.",
+						},
+						"meta_data_pass": {
+							Type:        schema.TypeString,
+							Optional:    true,
+							Computed:    true,
+							Sensitive:   true,
+							Description: "Password of the custom MetaDB.",
+						},
+						"meta_type": {
+							Type:        schema.TypeString,
+							Optional:    true,
+							Computed:    true,
+							Description: "Hive shared meta DB type. `EMR_DEFAULT_META`: created by the cluster by default; `EMR_EXIST_META`: use the specified EMR-MetaDB; `USER_CUSTOM_META`: use a custom MetaDB.",
+						},
+						"unify_meta_instance_id": {
+							Type:        schema.TypeString,
+							Optional:    true,
+							Computed:    true,
+							Description: "EMR-MetaDB instance ID, required when `meta_type` is `EMR_EXIST_META`.",
+						},
+						"components": {
+							Type:     schema.TypeList,
+							Optional: true,
+							Computed: true,
+							Elem: &schema.Schema{
+								Type: schema.TypeString,
+							},
+							Description: "Components that use the MetaDB.",
+						},
+						"default_meta_version": {
+							Type:        schema.TypeString,
+							Optional:    true,
+							Computed:    true,
+							Description: "MetaDB version.",
+						},
+						"link_instance_id": {
+							Type:        schema.TypeString,
+							Computed:    true,
+							Description: "CDB instance ID.",
+						},
+					},
+				},
+			},
 		},
 	}
 }
@@ -639,6 +702,10 @@ func resourceTencentCloudEmrClusterV2Create(d *schema.ResourceData, meta interfa
 			}
 			request.MetaDBInfo = &metaDB
 		}
+	}
+
+	if v, ok := d.GetOk("meta_db_group_info"); ok {
+		request.MetaDBGroupInfo = buildEmrMetaDBGroupInfo(v)
 	}
 
 	if v, ok := d.GetOk("depend_service"); ok {
@@ -992,6 +1059,39 @@ func resourceTencentCloudEmrClusterV2Read(d *schema.ResourceData, meta interface
 			tagList = append(tagList, m)
 		}
 		_ = d.Set("tags", tagList)
+	}
+
+	if len(cluster.MetaDBGroupInfo) > 0 {
+		existingList, _ := d.Get("meta_db_group_info").([]interface{})
+		metaDBList := make([]map[string]interface{}, 0, len(cluster.MetaDBGroupInfo))
+		for i, item := range cluster.MetaDBGroupInfo {
+			m := map[string]interface{}{}
+			var old map[string]interface{}
+			if i < len(existingList) {
+				old, _ = existingList[i].(map[string]interface{})
+			}
+			keepIfNil := func(key string, val *string) {
+				if val != nil {
+					m[key] = *val
+				} else if v, ok := old[key]; ok {
+					m[key] = v
+				}
+			}
+			keepIfNil("meta_data_jdbc_url", item.MetaDataJdbcUrl)
+			keepIfNil("meta_data_user", item.MetaDataUser)
+			keepIfNil("meta_data_pass", item.MetaDataPass)
+			keepIfNil("meta_type", item.MetaType)
+			keepIfNil("unify_meta_instance_id", item.UnifyMetaInstanceId)
+			if item.Components != nil {
+				m["components"] = item.Components
+			} else if v, ok := old["components"]; ok {
+				m["components"] = v
+			}
+			keepIfNil("default_meta_version", item.DefaultMetaVersion)
+			keepIfNil("link_instance_id", item.LinkInstanceId)
+			metaDBList = append(metaDBList, m)
+		}
+		_ = d.Set("meta_db_group_info", metaDBList)
 	}
 
 	if _, existing := d.GetOk("zone_resource_configuration"); existing {
@@ -2003,6 +2103,7 @@ func resourceTencentCloudEmrClusterV2Update(d *schema.ResourceData, meta interfa
 		var (
 			softInfo              = make([]*string, 0)
 			serviceDeployInfoList = make([]*emr.ServiceDeployInfo, 0)
+			metaDBGroupInfoList   = make([]*emr.CustomMetaDBInfo, 0)
 
 			softInfoSeen = make(map[string]bool)
 			serviceIdx   = make(map[string]int)
@@ -2126,10 +2227,16 @@ func resourceTencentCloudEmrClusterV2Update(d *schema.ResourceData, meta interfa
 			}
 		}
 
+		if d.HasChange("meta_db_group_info") {
+			if v, ok := d.GetOk("meta_db_group_info"); ok {
+				metaDBGroupInfoList = buildEmrMetaDBGroupInfo(v)
+			}
+		}
+
 		// Issue a single aggregated InstallSoftware call covering the added
 		// components of every node. On failure, revert all participating nodes.
 		if len(serviceDeployInfoList) > 0 {
-			if err := emrInstallAddedSoftware(ctx, meta, d, logId, instanceId, softInfo, serviceDeployInfoList); err != nil {
+			if err := emrInstallAddedSoftware(ctx, meta, d, logId, instanceId, softInfo, serviceDeployInfoList, metaDBGroupInfoList); err != nil {
 				if softwareInstallErr == nil {
 					softwareInstallErr = err
 				}
@@ -3767,6 +3874,49 @@ func emrDetectNodeAddedSoftware(oldSpec, newSpec map[string]interface{}) (added 
 	return added, serialNo
 }
 
+// buildEmrMetaDBGroupInfo converts the `meta_db_group_info` schema value into
+// the SDK []*CustomMetaDBInfo used by CreateCluster.MetaDBGroupInfo and
+// InstallSoftware.MetaDBGroupInfo. Output-only fields (link_instance_id) are
+// intentionally ignored.
+func buildEmrMetaDBGroupInfo(v interface{}) []*emr.CustomMetaDBInfo {
+	list, _ := v.([]interface{})
+	result := make([]*emr.CustomMetaDBInfo, 0, len(list))
+	for _, item := range list {
+		m, _ := item.(map[string]interface{})
+		if m == nil {
+			continue
+		}
+		info := &emr.CustomMetaDBInfo{}
+		if val, ok := m["meta_data_jdbc_url"].(string); ok && val != "" {
+			info.MetaDataJdbcUrl = helper.String(val)
+		}
+		if val, ok := m["meta_data_user"].(string); ok && val != "" {
+			info.MetaDataUser = helper.String(val)
+		}
+		if val, ok := m["meta_data_pass"].(string); ok && val != "" {
+			info.MetaDataPass = helper.String(val)
+		}
+		if val, ok := m["meta_type"].(string); ok && val != "" {
+			info.MetaType = helper.String(val)
+		}
+		if val, ok := m["unify_meta_instance_id"].(string); ok && val != "" {
+			info.UnifyMetaInstanceId = helper.String(val)
+		}
+		if val, ok := m["components"].([]interface{}); ok {
+			for _, c := range val {
+				if s, ok := c.(string); ok && s != "" {
+					info.Components = append(info.Components, helper.String(s))
+				}
+			}
+		}
+		if val, ok := m["default_meta_version"].(string); ok && val != "" {
+			info.DefaultMetaVersion = helper.String(val)
+		}
+		result = append(result, info)
+	}
+	return result
+}
+
 // emrInstallAddedSoftware issues a single InstallSoftware call for the given
 // aggregated softInfo / serviceDeployInfoList (covering added components across
 // all nodes) and waits for the resulting flow to finish. Only three request
@@ -3779,8 +3929,9 @@ func emrInstallAddedSoftware(
 	logId, instanceId string,
 	softInfo []*string,
 	serviceDeployInfoList []*emr.ServiceDeployInfo,
+	metaDBGroupInfo []*emr.CustomMetaDBInfo,
 ) error {
-	if len(serviceDeployInfoList) == 0 {
+	if len(serviceDeployInfoList) == 0 && len(metaDBGroupInfo) == 0 {
 		return nil
 	}
 
@@ -3791,8 +3942,13 @@ func emrInstallAddedSoftware(
 	resp := emr.NewInstallSoftwareResponse()
 	req.InstanceId = helper.String(instanceId)
 	req.SoftInfo = softInfo
-	req.ServiceDeployInfoList = serviceDeployInfoList
+	if len(serviceDeployInfoList) > 0 {
+		req.ServiceDeployInfoList = serviceDeployInfoList
+	}
 	req.CheckServiceDeployInfo = helper.Bool(true)
+	if len(metaDBGroupInfo) > 0 {
+		req.MetaDBGroupInfo = metaDBGroupInfo
+	}
 
 	reqErr := resource.Retry(tccommon.WriteRetryTimeout, func() *resource.RetryError {
 		result, e := conn.UseEmrClient().InstallSoftwareWithContext(ctx, req)
