@@ -61,6 +61,7 @@ tencentcloud_antiddos_bgp_biz_trend
 tencentcloud_antiddos_list_listener
 tencentcloud_antiddos_overview_attack_trend
 tencentcloud_antiddos_bgp_instances
+tencentcloud_antiddos_ddos_block_records
 
 Resource
 tencentcloud_antiddos_bgp_instance
