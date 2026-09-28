@@ -166,7 +166,7 @@ func resourceTencentCloudMonitorTmpRecordingRuleUpdate(d *schema.ResourceData, m
 	}
 
 	if v, ok := d.GetOk("group"); ok {
-		request.Group = helper.String(v.(string))
+		request.Group = helper.String(tccommon.StringToBase64(v.(string)))
 	}
 
 	if d.HasChange("rule_state") {

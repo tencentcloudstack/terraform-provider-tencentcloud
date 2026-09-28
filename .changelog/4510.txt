@@ -1,0 +1,3 @@
+```release-note:new-resource
+tencentcloud_bdrc_disaster_recovery_site_pair
+```

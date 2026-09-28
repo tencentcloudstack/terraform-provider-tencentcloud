@@ -617,6 +617,15 @@ const (
 	// 机型步长不规范，cpu需要为32倍数
 	INVALIDPARAMETERVALUE_BILLINGITEMSTEP = "InvalidParameterValue.BillingItemStep"
 
+<<<<<<< HEAD
+=======
+	// 付费模式不合法
+	INVALIDPARAMETERVALUE_PAYMODE = "InvalidParameterValue.PayMode"
+
+	// 按量计费资源包不允许修改Description
+	INVALIDPARAMETERVALUE_POSTPAYPARTITIONDESCRIPTION = "InvalidParameterValue.PostpayPartitionDescription"
+
+>>>>>>> origin/master
 	// 按量计费资源包名称不规范
 	INVALIDPARAMETERVALUE_POSTPAYPARTITIONNAME = "InvalidParameterValue.PostpayPartitionName"
 
@@ -860,11 +869,17 @@ const (
 	// 子用户无权查看引擎监控。
 	UNAUTHORIZEDOPERATION_MONITORCOMPUTINGENGINE = "UnauthorizedOperation.MonitorComputingEngine"
 
+	// 无引擎cam权限
+	UNAUTHORIZEDOPERATION_NOENGINECAMPERMISSIONS = "UnauthorizedOperation.NoEngineCamPermissions"
+
 	// 没有支付权限。
 	UNAUTHORIZEDOPERATION_NOPAYMENTAUTHORITY = "UnauthorizedOperation.NoPaymentAuthority"
 
 	// 子用户无权操作引擎。
 	UNAUTHORIZEDOPERATION_OPERATECOMPUTINGENGINE = "UnauthorizedOperation.OperateComputingEngine"
+
+	// 无权限访问其他用户资源包
+	UNAUTHORIZEDOPERATION_PARTITIONACCESSDENIED = "UnauthorizedOperation.PartitionAccessDenied"
 
 	// Prohibited operation admin
 	UNAUTHORIZEDOPERATION_PROHIBITEDOPERATIONADMIN = "UnauthorizedOperation.ProhibitedOperationAdmin"

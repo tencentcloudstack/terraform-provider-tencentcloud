@@ -1,4 +1,4 @@
-// Copyright (c) 2017-2018 THL A29 Limited, a Tencent company. All Rights Reserved.
+// Copyright (c) 2017-2025 Tencent. All Rights Reserved.
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -15,22 +15,22 @@
 package v20180410
 
 import (
-    "encoding/json"
     tcerr "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/common/errors"
     tchttp "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/common/http"
+    "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/common/json"
 )
 
 // Predefined struct for user
 type AcceptDirectConnectTunnelRequestParams struct {
-	// 物理专线拥有者接受共享专用通道申请
-	DirectConnectTunnelId *string `json:"DirectConnectTunnelId,omitempty" name:"DirectConnectTunnelId"`
+	// 专用通道ID。可以通过[DescribeDirectConnectTunnels](https://cloud.tencent.com/document/product/216/19819)接口获取。
+	DirectConnectTunnelId *string `json:"DirectConnectTunnelId,omitnil,omitempty" name:"DirectConnectTunnelId"`
 }
 
 type AcceptDirectConnectTunnelRequest struct {
 	*tchttp.BaseRequest
 	
-	// 物理专线拥有者接受共享专用通道申请
-	DirectConnectTunnelId *string `json:"DirectConnectTunnelId,omitempty" name:"DirectConnectTunnelId"`
+	// 专用通道ID。可以通过[DescribeDirectConnectTunnels](https://cloud.tencent.com/document/product/216/19819)接口获取。
+	DirectConnectTunnelId *string `json:"DirectConnectTunnelId,omitnil,omitempty" name:"DirectConnectTunnelId"`
 }
 
 func (r *AcceptDirectConnectTunnelRequest) ToJsonString() string {
@@ -54,8 +54,8 @@ func (r *AcceptDirectConnectTunnelRequest) FromJsonString(s string) error {
 
 // Predefined struct for user
 type AcceptDirectConnectTunnelResponseParams struct {
-	// 唯一请求 ID，每次请求都会返回。定位问题时需要提供该次请求的 RequestId。
-	RequestId *string `json:"RequestId,omitempty" name:"RequestId"`
+	// 唯一请求 ID，由服务端生成，每次请求都会返回（若请求因其他原因未能抵达服务端，则该次请求不会获得 RequestId）。定位问题时需要提供该次请求的 RequestId。
+	RequestId *string `json:"RequestId,omitnil,omitempty" name:"RequestId"`
 }
 
 type AcceptDirectConnectTunnelResponse struct {
@@ -76,75 +76,85 @@ func (r *AcceptDirectConnectTunnelResponse) FromJsonString(s string) error {
 
 type AccessPoint struct {
 	// 接入点的名称。
-	AccessPointName *string `json:"AccessPointName,omitempty" name:"AccessPointName"`
+	AccessPointName *string `json:"AccessPointName,omitnil,omitempty" name:"AccessPointName"`
 
 	// 接入点唯一ID。
-	AccessPointId *string `json:"AccessPointId,omitempty" name:"AccessPointId"`
+	AccessPointId *string `json:"AccessPointId,omitnil,omitempty" name:"AccessPointId"`
 
 	// 接入点的状态。可用，不可用。
-	State *string `json:"State,omitempty" name:"State"`
+	State *string `json:"State,omitnil,omitempty" name:"State"`
 
 	// 接入点的位置。
-	Location *string `json:"Location,omitempty" name:"Location"`
+	Location *string `json:"Location,omitnil,omitempty" name:"Location"`
 
 	// 接入点支持的运营商列表。
-	LineOperator []*string `json:"LineOperator,omitempty" name:"LineOperator"`
+	LineOperator []*string `json:"LineOperator,omitnil,omitempty" name:"LineOperator"`
 
 	// 接入点管理的大区ID。
-	RegionId *string `json:"RegionId,omitempty" name:"RegionId"`
+	RegionId *string `json:"RegionId,omitnil,omitempty" name:"RegionId"`
 
-	// 接入点可用的端口类型列表。1000BASE-T代表千兆电口，1000BASE-LX代表千兆单模光口10km，1000BASE-ZX代表千兆单模光口80km,10GBASE-LR代表万兆单模光口10km,10GBASE-ZR代表万兆单模光口80km,10GBASE-LH代表万兆单模光口40km,100GBASE-LR4代表100G单模光口10km
-	// 注意：此字段可能返回 null，表示取不到有效值。
-	AvailablePortType []*string `json:"AvailablePortType,omitempty" name:"AvailablePortType"`
+	// 接入点可用的端口类型列表。1000BASE-T代表千兆电口，1000BASE-LX代表千兆单模光口10km，1000BASE-ZX代表千兆单模光口80km,10GBASE-LR代表万兆单模光口10km,10GBASE-ZR代表万兆单模光口80km,10GBASE-LH代表万兆单模光口40km,100GBASE-LR4代表100G单模光口10km。
+	AvailablePortType []*string `json:"AvailablePortType,omitnil,omitempty" name:"AvailablePortType"`
 
-	// 接入点经纬度
-	// 注意：此字段可能返回 null，表示取不到有效值。
-	Coordinate *Coordinate `json:"Coordinate,omitempty" name:"Coordinate"`
+	// 接入点经纬度。
+	Coordinate *Coordinate `json:"Coordinate,omitnil,omitempty" name:"Coordinate"`
 
-	// 接入点所在城市
-	// 注意：此字段可能返回 null，表示取不到有效值。
-	City *string `json:"City,omitempty" name:"City"`
+	// 接入点所在城市。
+	City *string `json:"City,omitnil,omitempty" name:"City"`
 
-	// 接入点地域名称
-	// 注意：此字段可能返回 null，表示取不到有效值。
-	Area *string `json:"Area,omitempty" name:"Area"`
+	// 接入点地域名称。
+	Area *string `json:"Area,omitnil,omitempty" name:"Area"`
 
 	// 接入点类型。VXLAN/QCPL/QCAR
-	// 注意：此字段可能返回 null，表示取不到有效值。
-	AccessPointType *string `json:"AccessPointType,omitempty" name:"AccessPointType"`
+	AccessPointType *string `json:"AccessPointType,omitnil,omitempty" name:"AccessPointType"`
+
+	// 端口规格信息。
+	AvailablePortInfo []*PortSpecification `json:"AvailablePortInfo,omitnil,omitempty" name:"AvailablePortInfo"`
+
+	// 接入点地址。
+	Address *string `json:"Address,omitnil,omitempty" name:"Address"`
+
+	// 是否MACsec
+	IsMacSec *bool `json:"IsMacSec,omitnil,omitempty" name:"IsMacSec"`
+
+	// 版本号
+	Version *string `json:"Version,omitnil,omitempty" name:"Version"`
+
+	// 接入点业务类型，枚举值：NORMAL-标准接入点，CDZ：EZ/CDZ接入点，COOPERATIVE-合作POP
+	AccessPointServiceType *string `json:"AccessPointServiceType,omitnil,omitempty" name:"AccessPointServiceType"`
 }
 
 // Predefined struct for user
 type ApplyInternetAddressRequestParams struct {
 	// CIDR地址掩码长度
-	MaskLen *int64 `json:"MaskLen,omitempty" name:"MaskLen"`
+	MaskLen *int64 `json:"MaskLen,omitnil,omitempty" name:"MaskLen"`
 
 	// 0:BGP类型地址
 	// 1：中国电信
 	// 2：中国移动
 	// 3：中国联通
-	AddrType *int64 `json:"AddrType,omitempty" name:"AddrType"`
+	AddrType *int64 `json:"AddrType,omitnil,omitempty" name:"AddrType"`
 
 	// 0：IPv4
 	// 1:IPv6
-	AddrProto *int64 `json:"AddrProto,omitempty" name:"AddrProto"`
+	AddrProto *int64 `json:"AddrProto,omitnil,omitempty" name:"AddrProto"`
 }
 
 type ApplyInternetAddressRequest struct {
 	*tchttp.BaseRequest
 	
 	// CIDR地址掩码长度
-	MaskLen *int64 `json:"MaskLen,omitempty" name:"MaskLen"`
+	MaskLen *int64 `json:"MaskLen,omitnil,omitempty" name:"MaskLen"`
 
 	// 0:BGP类型地址
 	// 1：中国电信
 	// 2：中国移动
 	// 3：中国联通
-	AddrType *int64 `json:"AddrType,omitempty" name:"AddrType"`
+	AddrType *int64 `json:"AddrType,omitnil,omitempty" name:"AddrType"`
 
 	// 0：IPv4
 	// 1:IPv6
-	AddrProto *int64 `json:"AddrProto,omitempty" name:"AddrProto"`
+	AddrProto *int64 `json:"AddrProto,omitnil,omitempty" name:"AddrProto"`
 }
 
 func (r *ApplyInternetAddressRequest) ToJsonString() string {
@@ -171,11 +181,10 @@ func (r *ApplyInternetAddressRequest) FromJsonString(s string) error {
 // Predefined struct for user
 type ApplyInternetAddressResponseParams struct {
 	// 互联网公网地址ID
-	// 注意：此字段可能返回 null，表示取不到有效值。
-	InstanceId *string `json:"InstanceId,omitempty" name:"InstanceId"`
+	InstanceId *string `json:"InstanceId,omitnil,omitempty" name:"InstanceId"`
 
-	// 唯一请求 ID，每次请求都会返回。定位问题时需要提供该次请求的 RequestId。
-	RequestId *string `json:"RequestId,omitempty" name:"RequestId"`
+	// 唯一请求 ID，由服务端生成，每次请求都会返回（若请求因其他原因未能抵达服务端，则该次请求不会获得 RequestId）。定位问题时需要提供该次请求的 RequestId。
+	RequestId *string `json:"RequestId,omitnil,omitempty" name:"RequestId"`
 }
 
 type ApplyInternetAddressResponse struct {
@@ -195,45 +204,233 @@ func (r *ApplyInternetAddressResponse) FromJsonString(s string) error {
 }
 
 type BFDInfo struct {
+	// 使能BFD多跳，0:未开启，2-255:BFD跳数
+	EnableBfdMultiHop *int64 `json:"EnableBfdMultiHop,omitnil,omitempty" name:"EnableBfdMultiHop"`
+
 	// 健康检查次数
-	ProbeFailedTimes *int64 `json:"ProbeFailedTimes,omitempty" name:"ProbeFailedTimes"`
+	ProbeFailedTimes *int64 `json:"ProbeFailedTimes,omitnil,omitempty" name:"ProbeFailedTimes"`
 
 	// 健康检查间隔
-	Interval *int64 `json:"Interval,omitempty" name:"Interval"`
+	Interval *int64 `json:"Interval,omitnil,omitempty" name:"Interval"`
 }
 
 type BGPStatus struct {
 	// 腾讯侧主互联IP BGP状态
-	TencentAddressBgpState *string `json:"TencentAddressBgpState,omitempty" name:"TencentAddressBgpState"`
+	TencentAddressBgpState *string `json:"TencentAddressBgpState,omitnil,omitempty" name:"TencentAddressBgpState"`
 
 	// 腾讯侧备互联IP BGP状态
-	TencentBackupAddressBgpState *string `json:"TencentBackupAddressBgpState,omitempty" name:"TencentBackupAddressBgpState"`
+	TencentBackupAddressBgpState *string `json:"TencentBackupAddressBgpState,omitnil,omitempty" name:"TencentBackupAddressBgpState"`
 }
 
 type BgpPeer struct {
-	// 用户侧，BGP Asn
-	Asn *int64 `json:"Asn,omitempty" name:"Asn"`
+	// 腾讯侧BGP ASN
+	CloudAsn *int64 `json:"CloudAsn,omitnil,omitempty" name:"CloudAsn"`
+
+	// 用户侧BGP ASN
+	Asn *int64 `json:"Asn,omitnil,omitempty" name:"Asn"`
 
 	// 用户侧BGP密钥
-	AuthKey *string `json:"AuthKey,omitempty" name:"AuthKey"`
+	AuthKey *string `json:"AuthKey,omitnil,omitempty" name:"AuthKey"`
+}
+
+type CloudAttachInfo struct {
+	// 敏捷上云实例id
+	InstanceId *string `json:"InstanceId,omitnil,omitempty" name:"InstanceId"`
+
+	// 敏捷上云名称
+	Name *string `json:"Name,omitnil,omitempty" name:"Name"`
+
+	// 合作伙伴的AppId
+	IapId *string `json:"IapId,omitnil,omitempty" name:"IapId"`
+
+	// 需要接入敏捷上云的IDC的地址
+	IdcAddress *string `json:"IdcAddress,omitnil,omitempty" name:"IdcAddress"`
+
+	// 需要接入敏捷上云的IDC的互联网服务提供商类型
+	IdcType *string `json:"IdcType,omitnil,omitempty" name:"IdcType"`
+
+	// 敏捷上云的带宽，单位为MB
+	Bandwidth *uint64 `json:"Bandwidth,omitnil,omitempty" name:"Bandwidth"`
+
+	// 联系电话
+	Telephone *string `json:"Telephone,omitnil,omitempty" name:"Telephone"`
+
+	// 敏捷上云的状态
+	// available：就绪状态
+	// applying：申请，待审核状态
+	// pendingpay：代付款状态
+	// building：建设中状态
+	// confirming：待确认状态
+	// isolate: 隔离状态
+	// stoped：终止状态
+	Status *string `json:"Status,omitnil,omitempty" name:"Status"`
+
+	// 敏捷上云申请的时间
+	ApplyTime *string `json:"ApplyTime,omitnil,omitempty" name:"ApplyTime"`
+
+	// 敏捷上云建设完成的时间
+	ReadyTime *string `json:"ReadyTime,omitnil,omitempty" name:"ReadyTime"`
+
+	// 敏捷上云过期时间
+	ExpireTime *string `json:"ExpireTime,omitnil,omitempty" name:"ExpireTime"`
+
+	// 备注信息
+	Remarks *string `json:"Remarks,omitnil,omitempty" name:"Remarks"`
+
+	// 敏捷上云的地域状态。
+	// same-region：同地域
+	// cross-region：跨地域
+	RegionStatus *string `json:"RegionStatus,omitnil,omitempty" name:"RegionStatus"`
+
+	// 用户的AppId
+	AppId *string `json:"AppId,omitnil,omitempty" name:"AppId"`
+
+	// 用户的Uin
+	Uin *string `json:"Uin,omitnil,omitempty" name:"Uin"`
+
+	// 用户注册名称
+	CustomerAuthName *string `json:"CustomerAuthName,omitnil,omitempty" name:"CustomerAuthName"`
+
+	// 物理专线实例ID
+	DirectConnectId *string `json:"DirectConnectId,omitnil,omitempty" name:"DirectConnectId"`
+
+	// 敏捷上云是否支持创建高速上云专线网关
+	CloudAttachServiceGatewaysSupport *bool `json:"CloudAttachServiceGatewaysSupport,omitnil,omitempty" name:"CloudAttachServiceGatewaysSupport"`
+
+	// 敏捷上云服务是否处于升降配中
+	BUpdateBandwidth *bool `json:"BUpdateBandwidth,omitnil,omitempty" name:"BUpdateBandwidth"`
+
+	// 接入地域
+	ArRegion *string `json:"ArRegion,omitnil,omitempty" name:"ArRegion"`
+
+	// 运营商代码
+	IapCode *string `json:"IapCode,omitnil,omitempty" name:"IapCode"`
+
+	// IDC侧类型。枚举值：CLOUD-云，ISP-运营商，OTHER-第三方
+	IdcPointType *string `json:"IdcPointType,omitnil,omitempty" name:"IdcPointType"`
+
+	// 运营商链路是否有保护
+	BIapLinkProtected *bool `json:"BIapLinkProtected,omitnil,omitempty" name:"BIapLinkProtected"`
+
+	// 服务类型：SHARE-共享型，EXCLUSIVE-独占型
+	ServiceType *string `json:"ServiceType,omitnil,omitempty" name:"ServiceType"`
+
+	// VLAN范围
+	VlanRange *string `json:"VlanRange,omitnil,omitempty" name:"VlanRange"`
 }
 
 type Coordinate struct {
 	// 纬度
-	Lat *float64 `json:"Lat,omitempty" name:"Lat"`
+	Lat *float64 `json:"Lat,omitnil,omitempty" name:"Lat"`
 
 	// 经度
-	Lng *float64 `json:"Lng,omitempty" name:"Lng"`
+	Lng *float64 `json:"Lng,omitnil,omitempty" name:"Lng"`
+}
+
+type CreateCasInput struct {
+	// <p>敏捷上云名称</p>
+	Name *string `json:"Name,omitnil,omitempty" name:"Name"`
+
+	// <p>需要接入敏捷上云的IDC的地址</p>
+	IdcAddress *string `json:"IdcAddress,omitnil,omitempty" name:"IdcAddress"`
+
+	// <p>需要接入敏捷上云的IDC的互联网服务提供商类型</p>
+	IdcType *string `json:"IdcType,omitnil,omitempty" name:"IdcType"`
+
+	// <p>敏捷上云的带宽，单位为MB</p>
+	Bandwidth *uint64 `json:"Bandwidth,omitnil,omitempty" name:"Bandwidth"`
+
+	// <p>联系电话</p>
+	Telephone *string `json:"Telephone,omitnil,omitempty" name:"Telephone"`
+
+	// <p>备注信息</p>
+	Remarks *string `json:"Remarks,omitnil,omitempty" name:"Remarks"`
+
+	// <p>接入地域</p>
+	ArRegion *string `json:"ArRegion,omitnil,omitempty" name:"ArRegion"`
+
+	// <p>IDC侧类型，默认为OTHER。枚举值：CLOUD-云，ISP-运营商，OTHER-第三方</p>
+	IdcPointType *string `json:"IdcPointType,omitnil,omitempty" name:"IdcPointType"`
+
+	// <p>运营商链路是否有保护</p>
+	BIapLinkProtected *bool `json:"BIapLinkProtected,omitnil,omitempty" name:"BIapLinkProtected"`
+
+	// <p>服务类型，SHARE-共享型，EXCLUSIVE-独占型</p>
+	ServiceType *string `json:"ServiceType,omitnil,omitempty" name:"ServiceType"`
+}
+
+// Predefined struct for user
+type CreateCloudAttachServiceRequestParams struct {
+	// <p>创建敏捷上云入参</p>
+	Data *CreateCasInput `json:"Data,omitnil,omitempty" name:"Data"`
+
+	// <p>标签</p>
+	Tags []*Tag `json:"Tags,omitnil,omitempty" name:"Tags"`
+}
+
+type CreateCloudAttachServiceRequest struct {
+	*tchttp.BaseRequest
+	
+	// <p>创建敏捷上云入参</p>
+	Data *CreateCasInput `json:"Data,omitnil,omitempty" name:"Data"`
+
+	// <p>标签</p>
+	Tags []*Tag `json:"Tags,omitnil,omitempty" name:"Tags"`
+}
+
+func (r *CreateCloudAttachServiceRequest) ToJsonString() string {
+    b, _ := json.Marshal(r)
+    return string(b)
+}
+
+// FromJsonString It is highly **NOT** recommended to use this function
+// because it has no param check, nor strict type check
+func (r *CreateCloudAttachServiceRequest) FromJsonString(s string) error {
+	f := make(map[string]interface{})
+	if err := json.Unmarshal([]byte(s), &f); err != nil {
+		return err
+	}
+	delete(f, "Data")
+	delete(f, "Tags")
+	if len(f) > 0 {
+		return tcerr.NewTencentCloudSDKError("ClientError.BuildRequestError", "CreateCloudAttachServiceRequest has unknown keys!", "")
+	}
+	return json.Unmarshal([]byte(s), &r)
+}
+
+// Predefined struct for user
+type CreateCloudAttachServiceResponseParams struct {
+	// <p>敏捷上云服务详情</p>
+	CloudAttach *CloudAttachInfo `json:"CloudAttach,omitnil,omitempty" name:"CloudAttach"`
+
+	// 唯一请求 ID，由服务端生成，每次请求都会返回（若请求因其他原因未能抵达服务端，则该次请求不会获得 RequestId）。定位问题时需要提供该次请求的 RequestId。
+	RequestId *string `json:"RequestId,omitnil,omitempty" name:"RequestId"`
+}
+
+type CreateCloudAttachServiceResponse struct {
+	*tchttp.BaseResponse
+	Response *CreateCloudAttachServiceResponseParams `json:"Response"`
+}
+
+func (r *CreateCloudAttachServiceResponse) ToJsonString() string {
+    b, _ := json.Marshal(r)
+    return string(b)
+}
+
+// FromJsonString It is highly **NOT** recommended to use this function
+// because it has no param check, nor strict type check
+func (r *CreateCloudAttachServiceResponse) FromJsonString(s string) error {
+	return json.Unmarshal([]byte(s), &r)
 }
 
 // Predefined struct for user
 type CreateDirectConnectRequestParams struct {
 	// 物理专线的名称。
-	DirectConnectName *string `json:"DirectConnectName,omitempty" name:"DirectConnectName"`
+	DirectConnectName *string `json:"DirectConnectName,omitnil,omitempty" name:"DirectConnectName"`
 
 	// 物理专线所在的接入点。
-	// 您可以通过调用 DescribeAccessPoints接口获取地域ID。所选择的接入点必须存在且处于可接入的状态。
-	AccessPointId *string `json:"AccessPointId,omitempty" name:"AccessPointId"`
+	// 您可以通过调用[DescribeAccessPoints](https://cloud.tencent.com/document/product/216/34827)接口获取接入点ID。
+	AccessPointId *string `json:"AccessPointId,omitnil,omitempty" name:"AccessPointId"`
 
 	// 提供接入物理专线的运营商。
 	// ChinaTelecom：中国电信； 
@@ -242,7 +439,7 @@ type CreateDirectConnectRequestParams struct {
 	//  In-houseWiring：楼内线；
 	// ChinaOther：中国其他；
 	//  InternationalOperator：境外其他。
-	LineOperator *string `json:"LineOperator,omitempty" name:"LineOperator"`
+	LineOperator *string `json:"LineOperator,omitnil,omitempty" name:"LineOperator"`
 
 	// 物理专线接入端口类型，取值：
 	// 100Base-T：百兆电口；
@@ -250,57 +447,66 @@ type CreateDirectConnectRequestParams struct {
 	// 1000Base-LX：千兆单模光口（10千米）；
 	// 10GBase-T：万兆电口；
 	// 10GBase-LR（默认值）：万兆单模光口（10千米）。
-	PortType *string `json:"PortType,omitempty" name:"PortType"`
+	PortType *string `json:"PortType,omitnil,omitempty" name:"PortType"`
 
 	// 运营商或者服务商为物理专线提供的电路编码。
-	CircuitCode *string `json:"CircuitCode,omitempty" name:"CircuitCode"`
+	CircuitCode *string `json:"CircuitCode,omitnil,omitempty" name:"CircuitCode"`
 
 	// 本地数据中心的地理位置。
-	Location *string `json:"Location,omitempty" name:"Location"`
+	Location *string `json:"Location,omitnil,omitempty" name:"Location"`
 
 	// 物理专线接入接口带宽，单位为Mbps，默认值为1000，取值范围为 [2, 10240]。
-	Bandwidth *int64 `json:"Bandwidth,omitempty" name:"Bandwidth"`
+	Bandwidth *int64 `json:"Bandwidth,omitnil,omitempty" name:"Bandwidth"`
 
 	// 冗余物理专线的ID。
-	RedundantDirectConnectId *string `json:"RedundantDirectConnectId,omitempty" name:"RedundantDirectConnectId"`
+	RedundantDirectConnectId *string `json:"RedundantDirectConnectId,omitnil,omitempty" name:"RedundantDirectConnectId"`
 
 	// 物理专线调试VLAN。默认开启VLAN，自动分配VLAN。
-	Vlan *int64 `json:"Vlan,omitempty" name:"Vlan"`
+	Vlan *int64 `json:"Vlan,omitnil,omitempty" name:"Vlan"`
 
 	// 物理专线调试腾讯侧互联 IP。默认自动分配。
-	TencentAddress *string `json:"TencentAddress,omitempty" name:"TencentAddress"`
+	TencentAddress *string `json:"TencentAddress,omitnil,omitempty" name:"TencentAddress"`
 
 	// 物理专线调试用户侧互联 IP。默认自动分配。
-	CustomerAddress *string `json:"CustomerAddress,omitempty" name:"CustomerAddress"`
+	CustomerAddress *string `json:"CustomerAddress,omitnil,omitempty" name:"CustomerAddress"`
 
 	// 物理专线申请者姓名。默认从账户体系获取。
-	CustomerName *string `json:"CustomerName,omitempty" name:"CustomerName"`
+	CustomerName *string `json:"CustomerName,omitnil,omitempty" name:"CustomerName"`
 
 	// 物理专线申请者联系邮箱。默认从账户体系获取。
-	CustomerContactMail *string `json:"CustomerContactMail,omitempty" name:"CustomerContactMail"`
+	CustomerContactMail *string `json:"CustomerContactMail,omitnil,omitempty" name:"CustomerContactMail"`
 
 	// 物理专线申请者联系号码。默认从账户体系获取。
-	CustomerContactNumber *string `json:"CustomerContactNumber,omitempty" name:"CustomerContactNumber"`
+	CustomerContactNumber *string `json:"CustomerContactNumber,omitnil,omitempty" name:"CustomerContactNumber"`
 
 	// 报障联系人。
-	FaultReportContactPerson *string `json:"FaultReportContactPerson,omitempty" name:"FaultReportContactPerson"`
+	FaultReportContactPerson *string `json:"FaultReportContactPerson,omitnil,omitempty" name:"FaultReportContactPerson"`
 
 	// 报障联系电话。
-	FaultReportContactNumber *string `json:"FaultReportContactNumber,omitempty" name:"FaultReportContactNumber"`
+	FaultReportContactNumber *string `json:"FaultReportContactNumber,omitnil,omitempty" name:"FaultReportContactNumber"`
+
+	// 报障联系邮箱。
+	FaultReportContactEmail *string `json:"FaultReportContactEmail,omitnil,omitempty" name:"FaultReportContactEmail"`
 
 	// 物理专线申请者是否签署了用户使用协议。默认已签署。
-	SignLaw *bool `json:"SignLaw,omitempty" name:"SignLaw"`
+	SignLaw *bool `json:"SignLaw,omitnil,omitempty" name:"SignLaw"`
+
+	// 标签键值对
+	Tags []*Tag `json:"Tags,omitnil,omitempty" name:"Tags"`
+
+	// 是否MACsec需求
+	IsMacSec *bool `json:"IsMacSec,omitnil,omitempty" name:"IsMacSec"`
 }
 
 type CreateDirectConnectRequest struct {
 	*tchttp.BaseRequest
 	
 	// 物理专线的名称。
-	DirectConnectName *string `json:"DirectConnectName,omitempty" name:"DirectConnectName"`
+	DirectConnectName *string `json:"DirectConnectName,omitnil,omitempty" name:"DirectConnectName"`
 
 	// 物理专线所在的接入点。
-	// 您可以通过调用 DescribeAccessPoints接口获取地域ID。所选择的接入点必须存在且处于可接入的状态。
-	AccessPointId *string `json:"AccessPointId,omitempty" name:"AccessPointId"`
+	// 您可以通过调用[DescribeAccessPoints](https://cloud.tencent.com/document/product/216/34827)接口获取接入点ID。
+	AccessPointId *string `json:"AccessPointId,omitnil,omitempty" name:"AccessPointId"`
 
 	// 提供接入物理专线的运营商。
 	// ChinaTelecom：中国电信； 
@@ -309,7 +515,7 @@ type CreateDirectConnectRequest struct {
 	//  In-houseWiring：楼内线；
 	// ChinaOther：中国其他；
 	//  InternationalOperator：境外其他。
-	LineOperator *string `json:"LineOperator,omitempty" name:"LineOperator"`
+	LineOperator *string `json:"LineOperator,omitnil,omitempty" name:"LineOperator"`
 
 	// 物理专线接入端口类型，取值：
 	// 100Base-T：百兆电口；
@@ -317,46 +523,55 @@ type CreateDirectConnectRequest struct {
 	// 1000Base-LX：千兆单模光口（10千米）；
 	// 10GBase-T：万兆电口；
 	// 10GBase-LR（默认值）：万兆单模光口（10千米）。
-	PortType *string `json:"PortType,omitempty" name:"PortType"`
+	PortType *string `json:"PortType,omitnil,omitempty" name:"PortType"`
 
 	// 运营商或者服务商为物理专线提供的电路编码。
-	CircuitCode *string `json:"CircuitCode,omitempty" name:"CircuitCode"`
+	CircuitCode *string `json:"CircuitCode,omitnil,omitempty" name:"CircuitCode"`
 
 	// 本地数据中心的地理位置。
-	Location *string `json:"Location,omitempty" name:"Location"`
+	Location *string `json:"Location,omitnil,omitempty" name:"Location"`
 
 	// 物理专线接入接口带宽，单位为Mbps，默认值为1000，取值范围为 [2, 10240]。
-	Bandwidth *int64 `json:"Bandwidth,omitempty" name:"Bandwidth"`
+	Bandwidth *int64 `json:"Bandwidth,omitnil,omitempty" name:"Bandwidth"`
 
 	// 冗余物理专线的ID。
-	RedundantDirectConnectId *string `json:"RedundantDirectConnectId,omitempty" name:"RedundantDirectConnectId"`
+	RedundantDirectConnectId *string `json:"RedundantDirectConnectId,omitnil,omitempty" name:"RedundantDirectConnectId"`
 
 	// 物理专线调试VLAN。默认开启VLAN，自动分配VLAN。
-	Vlan *int64 `json:"Vlan,omitempty" name:"Vlan"`
+	Vlan *int64 `json:"Vlan,omitnil,omitempty" name:"Vlan"`
 
 	// 物理专线调试腾讯侧互联 IP。默认自动分配。
-	TencentAddress *string `json:"TencentAddress,omitempty" name:"TencentAddress"`
+	TencentAddress *string `json:"TencentAddress,omitnil,omitempty" name:"TencentAddress"`
 
 	// 物理专线调试用户侧互联 IP。默认自动分配。
-	CustomerAddress *string `json:"CustomerAddress,omitempty" name:"CustomerAddress"`
+	CustomerAddress *string `json:"CustomerAddress,omitnil,omitempty" name:"CustomerAddress"`
 
 	// 物理专线申请者姓名。默认从账户体系获取。
-	CustomerName *string `json:"CustomerName,omitempty" name:"CustomerName"`
+	CustomerName *string `json:"CustomerName,omitnil,omitempty" name:"CustomerName"`
 
 	// 物理专线申请者联系邮箱。默认从账户体系获取。
-	CustomerContactMail *string `json:"CustomerContactMail,omitempty" name:"CustomerContactMail"`
+	CustomerContactMail *string `json:"CustomerContactMail,omitnil,omitempty" name:"CustomerContactMail"`
 
 	// 物理专线申请者联系号码。默认从账户体系获取。
-	CustomerContactNumber *string `json:"CustomerContactNumber,omitempty" name:"CustomerContactNumber"`
+	CustomerContactNumber *string `json:"CustomerContactNumber,omitnil,omitempty" name:"CustomerContactNumber"`
 
 	// 报障联系人。
-	FaultReportContactPerson *string `json:"FaultReportContactPerson,omitempty" name:"FaultReportContactPerson"`
+	FaultReportContactPerson *string `json:"FaultReportContactPerson,omitnil,omitempty" name:"FaultReportContactPerson"`
 
 	// 报障联系电话。
-	FaultReportContactNumber *string `json:"FaultReportContactNumber,omitempty" name:"FaultReportContactNumber"`
+	FaultReportContactNumber *string `json:"FaultReportContactNumber,omitnil,omitempty" name:"FaultReportContactNumber"`
+
+	// 报障联系邮箱。
+	FaultReportContactEmail *string `json:"FaultReportContactEmail,omitnil,omitempty" name:"FaultReportContactEmail"`
 
 	// 物理专线申请者是否签署了用户使用协议。默认已签署。
-	SignLaw *bool `json:"SignLaw,omitempty" name:"SignLaw"`
+	SignLaw *bool `json:"SignLaw,omitnil,omitempty" name:"SignLaw"`
+
+	// 标签键值对
+	Tags []*Tag `json:"Tags,omitnil,omitempty" name:"Tags"`
+
+	// 是否MACsec需求
+	IsMacSec *bool `json:"IsMacSec,omitnil,omitempty" name:"IsMacSec"`
 }
 
 func (r *CreateDirectConnectRequest) ToJsonString() string {
@@ -387,7 +602,10 @@ func (r *CreateDirectConnectRequest) FromJsonString(s string) error {
 	delete(f, "CustomerContactNumber")
 	delete(f, "FaultReportContactPerson")
 	delete(f, "FaultReportContactNumber")
+	delete(f, "FaultReportContactEmail")
 	delete(f, "SignLaw")
+	delete(f, "Tags")
+	delete(f, "IsMacSec")
 	if len(f) > 0 {
 		return tcerr.NewTencentCloudSDKError("ClientError.BuildRequestError", "CreateDirectConnectRequest has unknown keys!", "")
 	}
@@ -397,10 +615,10 @@ func (r *CreateDirectConnectRequest) FromJsonString(s string) error {
 // Predefined struct for user
 type CreateDirectConnectResponseParams struct {
 	// 物理专线的ID。
-	DirectConnectIdSet []*string `json:"DirectConnectIdSet,omitempty" name:"DirectConnectIdSet"`
+	DirectConnectIdSet []*string `json:"DirectConnectIdSet,omitnil,omitempty" name:"DirectConnectIdSet"`
 
-	// 唯一请求 ID，每次请求都会返回。定位问题时需要提供该次请求的 RequestId。
-	RequestId *string `json:"RequestId,omitempty" name:"RequestId"`
+	// 唯一请求 ID，由服务端生成，每次请求都会返回（若请求因其他原因未能抵达服务端，则该次请求不会获得 RequestId）。定位问题时需要提供该次请求的 RequestId。
+	RequestId *string `json:"RequestId,omitnil,omitempty" name:"RequestId"`
 }
 
 type CreateDirectConnectResponse struct {
@@ -421,147 +639,139 @@ func (r *CreateDirectConnectResponse) FromJsonString(s string) error {
 
 // Predefined struct for user
 type CreateDirectConnectTunnelRequestParams struct {
-	// 专线 ID，例如：dc-kd7d06of
-	DirectConnectId *string `json:"DirectConnectId,omitempty" name:"DirectConnectId"`
+	// 物理专线ID，例如：dc-kd7d06of。
+	DirectConnectId *string `json:"DirectConnectId,omitnil,omitempty" name:"DirectConnectId"`
 
-	// 专用通道名称
-	DirectConnectTunnelName *string `json:"DirectConnectTunnelName,omitempty" name:"DirectConnectTunnelName"`
+	// 专用通道名称。
+	DirectConnectTunnelName *string `json:"DirectConnectTunnelName,omitnil,omitempty" name:"DirectConnectTunnelName"`
 
-	// 物理专线 owner，缺省为当前客户（物理专线 owner）
-	// 共享专线时这里需要填写共享专线的开发商账号 ID
-	DirectConnectOwnerAccount *string `json:"DirectConnectOwnerAccount,omitempty" name:"DirectConnectOwnerAccount"`
+	// 物理专线owner，缺省为当前客户（物理专线 owner）
+	// 共享专线时这里需要填写共享专线的开发商账号 ID。
+	DirectConnectOwnerAccount *string `json:"DirectConnectOwnerAccount,omitnil,omitempty" name:"DirectConnectOwnerAccount"`
 
-	// 网络类型，分别为VPC、BMVPC，CCN，默认是VPC
-	// VPC：私有网络
-	// BMVPC：黑石网络
-	// CCN：云联网
-	NetworkType *string `json:"NetworkType,omitempty" name:"NetworkType"`
+	// 网络类型，枚举：VPC、CCN、NAT；默认为VPC。VPC：私有网络；CCN：云联网；NAT：NAT网络）。
+	NetworkType *string `json:"NetworkType,omitnil,omitempty" name:"NetworkType"`
 
-	// 网络地域
-	NetworkRegion *string `json:"NetworkRegion,omitempty" name:"NetworkRegion"`
+	// 网络地域。
+	NetworkRegion *string `json:"NetworkRegion,omitnil,omitempty" name:"NetworkRegion"`
 
-	// 私有网络统一 ID 或者黑石网络统一 ID
-	VpcId *string `json:"VpcId,omitempty" name:"VpcId"`
+	// 私有网络统一ID，在NetworkType为VPC时必填，且与专线网关所属的VPCID一致；NetworkType为其它组网类型时可不填，内部会统一处理。
+	VpcId *string `json:"VpcId,omitnil,omitempty" name:"VpcId"`
 
-	// 专线网关 ID，例如 dcg-d545ddf
-	DirectConnectGatewayId *string `json:"DirectConnectGatewayId,omitempty" name:"DirectConnectGatewayId"`
+	// 专线网关ID，例如 dcg-d545ddf。
+	DirectConnectGatewayId *string `json:"DirectConnectGatewayId,omitnil,omitempty" name:"DirectConnectGatewayId"`
 
-	// 专线带宽，单位：Mbps
-	// 默认是物理专线带宽值
-	Bandwidth *int64 `json:"Bandwidth,omitempty" name:"Bandwidth"`
+	// 专线带宽，单位：Mbps；默认是物理专线带宽值。
+	Bandwidth *int64 `json:"Bandwidth,omitnil,omitempty" name:"Bandwidth"`
 
-	// BGP ：BGP路由
-	// STATIC：静态
-	// 默认为 BGP 路由
-	RouteType *string `json:"RouteType,omitempty" name:"RouteType"`
+	// 路由类型，枚举：BGP、STATIC；默认为BGP 。（BGP ：BGP路由；STATIC：静态）。
+	RouteType *string `json:"RouteType,omitnil,omitempty" name:"RouteType"`
 
-	// BgpPeer，用户侧bgp信息，包括Asn和AuthKey
-	BgpPeer *BgpPeer `json:"BgpPeer,omitempty" name:"BgpPeer"`
+	// BgpPeer，用户侧bgp信息，包括Asn和AuthKey。
+	BgpPeer *BgpPeer `json:"BgpPeer,omitnil,omitempty" name:"BgpPeer"`
 
-	// 静态路由，用户IDC的网段地址
-	RouteFilterPrefixes []*RouteFilterPrefix `json:"RouteFilterPrefixes,omitempty" name:"RouteFilterPrefixes"`
+	// 静态路由，用户IDC的网段地址。
+	RouteFilterPrefixes []*RouteFilterPrefix `json:"RouteFilterPrefixes,omitnil,omitempty" name:"RouteFilterPrefixes"`
 
-	// vlan，范围：0 ~ 3000
-	// 0：不开启子接口
-	// 默认值是非0
-	Vlan *int64 `json:"Vlan,omitempty" name:"Vlan"`
+	// vlan，范围：0 ~ 3000。
+	// 0：不开启子接口，默认值是非0。
+	Vlan *int64 `json:"Vlan,omitnil,omitempty" name:"Vlan"`
 
-	// TencentAddress，腾讯侧互联 IP
-	TencentAddress *string `json:"TencentAddress,omitempty" name:"TencentAddress"`
+	// TencentAddress，腾讯侧互联 IP。
+	TencentAddress *string `json:"TencentAddress,omitnil,omitempty" name:"TencentAddress"`
 
-	// CustomerAddress，用户侧互联 IP
-	CustomerAddress *string `json:"CustomerAddress,omitempty" name:"CustomerAddress"`
+	// CustomerAddress，用户侧互联 IP。
+	CustomerAddress *string `json:"CustomerAddress,omitnil,omitempty" name:"CustomerAddress"`
 
-	// TencentBackupAddress，腾讯侧备用互联 IP
-	TencentBackupAddress *string `json:"TencentBackupAddress,omitempty" name:"TencentBackupAddress"`
+	// TencentBackupAddress，腾讯侧备用互联 IP。
+	TencentBackupAddress *string `json:"TencentBackupAddress,omitnil,omitempty" name:"TencentBackupAddress"`
 
-	// 高速上云服务ID
-	CloudAttachId *string `json:"CloudAttachId,omitempty" name:"CloudAttachId"`
+	// 高速上云服务ID。
+	CloudAttachId *string `json:"CloudAttachId,omitnil,omitempty" name:"CloudAttachId"`
 
-	// 是否开启BFD
-	BfdEnable *int64 `json:"BfdEnable,omitempty" name:"BfdEnable"`
+	// 是否开启BFD。
+	BfdEnable *int64 `json:"BfdEnable,omitnil,omitempty" name:"BfdEnable"`
 
-	// 是否开启NQA
-	NqaEnable *int64 `json:"NqaEnable,omitempty" name:"NqaEnable"`
+	// 是否开启NQA。
+	NqaEnable *int64 `json:"NqaEnable,omitnil,omitempty" name:"NqaEnable"`
 
-	// BFD配置信息
-	BfdInfo *BFDInfo `json:"BfdInfo,omitempty" name:"BfdInfo"`
+	// BFD配置信息。
+	BfdInfo *BFDInfo `json:"BfdInfo,omitnil,omitempty" name:"BfdInfo"`
 
-	// NQA配置信息
-	NqaInfo *NQAInfo `json:"NqaInfo,omitempty" name:"NqaInfo"`
+	// NQA配置信息。
+	NqaInfo *NQAInfo `json:"NqaInfo,omitnil,omitempty" name:"NqaInfo"`
+
+	// 标签键值对
+	Tags []*Tag `json:"Tags,omitnil,omitempty" name:"Tags"`
 }
 
 type CreateDirectConnectTunnelRequest struct {
 	*tchttp.BaseRequest
 	
-	// 专线 ID，例如：dc-kd7d06of
-	DirectConnectId *string `json:"DirectConnectId,omitempty" name:"DirectConnectId"`
+	// 物理专线ID，例如：dc-kd7d06of。
+	DirectConnectId *string `json:"DirectConnectId,omitnil,omitempty" name:"DirectConnectId"`
 
-	// 专用通道名称
-	DirectConnectTunnelName *string `json:"DirectConnectTunnelName,omitempty" name:"DirectConnectTunnelName"`
+	// 专用通道名称。
+	DirectConnectTunnelName *string `json:"DirectConnectTunnelName,omitnil,omitempty" name:"DirectConnectTunnelName"`
 
-	// 物理专线 owner，缺省为当前客户（物理专线 owner）
-	// 共享专线时这里需要填写共享专线的开发商账号 ID
-	DirectConnectOwnerAccount *string `json:"DirectConnectOwnerAccount,omitempty" name:"DirectConnectOwnerAccount"`
+	// 物理专线owner，缺省为当前客户（物理专线 owner）
+	// 共享专线时这里需要填写共享专线的开发商账号 ID。
+	DirectConnectOwnerAccount *string `json:"DirectConnectOwnerAccount,omitnil,omitempty" name:"DirectConnectOwnerAccount"`
 
-	// 网络类型，分别为VPC、BMVPC，CCN，默认是VPC
-	// VPC：私有网络
-	// BMVPC：黑石网络
-	// CCN：云联网
-	NetworkType *string `json:"NetworkType,omitempty" name:"NetworkType"`
+	// 网络类型，枚举：VPC、CCN、NAT；默认为VPC。VPC：私有网络；CCN：云联网；NAT：NAT网络）。
+	NetworkType *string `json:"NetworkType,omitnil,omitempty" name:"NetworkType"`
 
-	// 网络地域
-	NetworkRegion *string `json:"NetworkRegion,omitempty" name:"NetworkRegion"`
+	// 网络地域。
+	NetworkRegion *string `json:"NetworkRegion,omitnil,omitempty" name:"NetworkRegion"`
 
-	// 私有网络统一 ID 或者黑石网络统一 ID
-	VpcId *string `json:"VpcId,omitempty" name:"VpcId"`
+	// 私有网络统一ID，在NetworkType为VPC时必填，且与专线网关所属的VPCID一致；NetworkType为其它组网类型时可不填，内部会统一处理。
+	VpcId *string `json:"VpcId,omitnil,omitempty" name:"VpcId"`
 
-	// 专线网关 ID，例如 dcg-d545ddf
-	DirectConnectGatewayId *string `json:"DirectConnectGatewayId,omitempty" name:"DirectConnectGatewayId"`
+	// 专线网关ID，例如 dcg-d545ddf。
+	DirectConnectGatewayId *string `json:"DirectConnectGatewayId,omitnil,omitempty" name:"DirectConnectGatewayId"`
 
-	// 专线带宽，单位：Mbps
-	// 默认是物理专线带宽值
-	Bandwidth *int64 `json:"Bandwidth,omitempty" name:"Bandwidth"`
+	// 专线带宽，单位：Mbps；默认是物理专线带宽值。
+	Bandwidth *int64 `json:"Bandwidth,omitnil,omitempty" name:"Bandwidth"`
 
-	// BGP ：BGP路由
-	// STATIC：静态
-	// 默认为 BGP 路由
-	RouteType *string `json:"RouteType,omitempty" name:"RouteType"`
+	// 路由类型，枚举：BGP、STATIC；默认为BGP 。（BGP ：BGP路由；STATIC：静态）。
+	RouteType *string `json:"RouteType,omitnil,omitempty" name:"RouteType"`
 
-	// BgpPeer，用户侧bgp信息，包括Asn和AuthKey
-	BgpPeer *BgpPeer `json:"BgpPeer,omitempty" name:"BgpPeer"`
+	// BgpPeer，用户侧bgp信息，包括Asn和AuthKey。
+	BgpPeer *BgpPeer `json:"BgpPeer,omitnil,omitempty" name:"BgpPeer"`
 
-	// 静态路由，用户IDC的网段地址
-	RouteFilterPrefixes []*RouteFilterPrefix `json:"RouteFilterPrefixes,omitempty" name:"RouteFilterPrefixes"`
+	// 静态路由，用户IDC的网段地址。
+	RouteFilterPrefixes []*RouteFilterPrefix `json:"RouteFilterPrefixes,omitnil,omitempty" name:"RouteFilterPrefixes"`
 
-	// vlan，范围：0 ~ 3000
-	// 0：不开启子接口
-	// 默认值是非0
-	Vlan *int64 `json:"Vlan,omitempty" name:"Vlan"`
+	// vlan，范围：0 ~ 3000。
+	// 0：不开启子接口，默认值是非0。
+	Vlan *int64 `json:"Vlan,omitnil,omitempty" name:"Vlan"`
 
-	// TencentAddress，腾讯侧互联 IP
-	TencentAddress *string `json:"TencentAddress,omitempty" name:"TencentAddress"`
+	// TencentAddress，腾讯侧互联 IP。
+	TencentAddress *string `json:"TencentAddress,omitnil,omitempty" name:"TencentAddress"`
 
-	// CustomerAddress，用户侧互联 IP
-	CustomerAddress *string `json:"CustomerAddress,omitempty" name:"CustomerAddress"`
+	// CustomerAddress，用户侧互联 IP。
+	CustomerAddress *string `json:"CustomerAddress,omitnil,omitempty" name:"CustomerAddress"`
 
-	// TencentBackupAddress，腾讯侧备用互联 IP
-	TencentBackupAddress *string `json:"TencentBackupAddress,omitempty" name:"TencentBackupAddress"`
+	// TencentBackupAddress，腾讯侧备用互联 IP。
+	TencentBackupAddress *string `json:"TencentBackupAddress,omitnil,omitempty" name:"TencentBackupAddress"`
 
-	// 高速上云服务ID
-	CloudAttachId *string `json:"CloudAttachId,omitempty" name:"CloudAttachId"`
+	// 高速上云服务ID。
+	CloudAttachId *string `json:"CloudAttachId,omitnil,omitempty" name:"CloudAttachId"`
 
-	// 是否开启BFD
-	BfdEnable *int64 `json:"BfdEnable,omitempty" name:"BfdEnable"`
+	// 是否开启BFD。
+	BfdEnable *int64 `json:"BfdEnable,omitnil,omitempty" name:"BfdEnable"`
 
-	// 是否开启NQA
-	NqaEnable *int64 `json:"NqaEnable,omitempty" name:"NqaEnable"`
+	// 是否开启NQA。
+	NqaEnable *int64 `json:"NqaEnable,omitnil,omitempty" name:"NqaEnable"`
 
-	// BFD配置信息
-	BfdInfo *BFDInfo `json:"BfdInfo,omitempty" name:"BfdInfo"`
+	// BFD配置信息。
+	BfdInfo *BFDInfo `json:"BfdInfo,omitnil,omitempty" name:"BfdInfo"`
 
-	// NQA配置信息
-	NqaInfo *NQAInfo `json:"NqaInfo,omitempty" name:"NqaInfo"`
+	// NQA配置信息。
+	NqaInfo *NQAInfo `json:"NqaInfo,omitnil,omitempty" name:"NqaInfo"`
+
+	// 标签键值对
+	Tags []*Tag `json:"Tags,omitnil,omitempty" name:"Tags"`
 }
 
 func (r *CreateDirectConnectTunnelRequest) ToJsonString() string {
@@ -596,6 +806,7 @@ func (r *CreateDirectConnectTunnelRequest) FromJsonString(s string) error {
 	delete(f, "NqaEnable")
 	delete(f, "BfdInfo")
 	delete(f, "NqaInfo")
+	delete(f, "Tags")
 	if len(f) > 0 {
 		return tcerr.NewTencentCloudSDKError("ClientError.BuildRequestError", "CreateDirectConnectTunnelRequest has unknown keys!", "")
 	}
@@ -604,11 +815,11 @@ func (r *CreateDirectConnectTunnelRequest) FromJsonString(s string) error {
 
 // Predefined struct for user
 type CreateDirectConnectTunnelResponseParams struct {
-	// 专用通道ID
-	DirectConnectTunnelIdSet []*string `json:"DirectConnectTunnelIdSet,omitempty" name:"DirectConnectTunnelIdSet"`
+	// 专用通道ID。
+	DirectConnectTunnelIdSet []*string `json:"DirectConnectTunnelIdSet,omitnil,omitempty" name:"DirectConnectTunnelIdSet"`
 
-	// 唯一请求 ID，每次请求都会返回。定位问题时需要提供该次请求的 RequestId。
-	RequestId *string `json:"RequestId,omitempty" name:"RequestId"`
+	// 唯一请求 ID，由服务端生成，每次请求都会返回（若请求因其他原因未能抵达服务端，则该次请求不会获得 RequestId）。定位问题时需要提供该次请求的 RequestId。
+	RequestId *string `json:"RequestId,omitnil,omitempty" name:"RequestId"`
 }
 
 type CreateDirectConnectTunnelResponse struct {
@@ -630,14 +841,14 @@ func (r *CreateDirectConnectTunnelResponse) FromJsonString(s string) error {
 // Predefined struct for user
 type DeleteDirectConnectRequestParams struct {
 	// 物理专线的ID。
-	DirectConnectId *string `json:"DirectConnectId,omitempty" name:"DirectConnectId"`
+	DirectConnectId *string `json:"DirectConnectId,omitnil,omitempty" name:"DirectConnectId"`
 }
 
 type DeleteDirectConnectRequest struct {
 	*tchttp.BaseRequest
 	
 	// 物理专线的ID。
-	DirectConnectId *string `json:"DirectConnectId,omitempty" name:"DirectConnectId"`
+	DirectConnectId *string `json:"DirectConnectId,omitnil,omitempty" name:"DirectConnectId"`
 }
 
 func (r *DeleteDirectConnectRequest) ToJsonString() string {
@@ -661,8 +872,8 @@ func (r *DeleteDirectConnectRequest) FromJsonString(s string) error {
 
 // Predefined struct for user
 type DeleteDirectConnectResponseParams struct {
-	// 唯一请求 ID，每次请求都会返回。定位问题时需要提供该次请求的 RequestId。
-	RequestId *string `json:"RequestId,omitempty" name:"RequestId"`
+	// 唯一请求 ID，由服务端生成，每次请求都会返回（若请求因其他原因未能抵达服务端，则该次请求不会获得 RequestId）。定位问题时需要提供该次请求的 RequestId。
+	RequestId *string `json:"RequestId,omitnil,omitempty" name:"RequestId"`
 }
 
 type DeleteDirectConnectResponse struct {
@@ -683,15 +894,15 @@ func (r *DeleteDirectConnectResponse) FromJsonString(s string) error {
 
 // Predefined struct for user
 type DeleteDirectConnectTunnelRequestParams struct {
-	// 专用通道ID
-	DirectConnectTunnelId *string `json:"DirectConnectTunnelId,omitempty" name:"DirectConnectTunnelId"`
+	// 专用通道ID。
+	DirectConnectTunnelId *string `json:"DirectConnectTunnelId,omitnil,omitempty" name:"DirectConnectTunnelId"`
 }
 
 type DeleteDirectConnectTunnelRequest struct {
 	*tchttp.BaseRequest
 	
-	// 专用通道ID
-	DirectConnectTunnelId *string `json:"DirectConnectTunnelId,omitempty" name:"DirectConnectTunnelId"`
+	// 专用通道ID。
+	DirectConnectTunnelId *string `json:"DirectConnectTunnelId,omitnil,omitempty" name:"DirectConnectTunnelId"`
 }
 
 func (r *DeleteDirectConnectTunnelRequest) ToJsonString() string {
@@ -715,8 +926,8 @@ func (r *DeleteDirectConnectTunnelRequest) FromJsonString(s string) error {
 
 // Predefined struct for user
 type DeleteDirectConnectTunnelResponseParams struct {
-	// 唯一请求 ID，每次请求都会返回。定位问题时需要提供该次请求的 RequestId。
-	RequestId *string `json:"RequestId,omitempty" name:"RequestId"`
+	// 唯一请求 ID，由服务端生成，每次请求都会返回（若请求因其他原因未能抵达服务端，则该次请求不会获得 RequestId）。定位问题时需要提供该次请求的 RequestId。
+	RequestId *string `json:"RequestId,omitnil,omitempty" name:"RequestId"`
 }
 
 type DeleteDirectConnectTunnelResponse struct {
@@ -737,31 +948,33 @@ func (r *DeleteDirectConnectTunnelResponse) FromJsonString(s string) error {
 
 // Predefined struct for user
 type DescribeAccessPointsRequestParams struct {
-	// 接入点所在的地域。使用DescribeRegions查询
-	// 
-	// 您可以通过调用 DescribeRegions接口获取地域ID。
-	RegionId *string `json:"RegionId,omitempty" name:"RegionId"`
+	// 接入点所在的地域。你可以通过调用[DescribeRegions](https://cloud.tencent.com/document/product/1596/77930)接口获取地域ID。
+	RegionId *string `json:"RegionId,omitnil,omitempty" name:"RegionId"`
 
 	// 偏移量，默认为0。
-	Offset *int64 `json:"Offset,omitempty" name:"Offset"`
+	Offset *int64 `json:"Offset,omitnil,omitempty" name:"Offset"`
 
 	// 返回数量，默认为20，最大值为100。
-	Limit *int64 `json:"Limit,omitempty" name:"Limit"`
+	Limit *int64 `json:"Limit,omitnil,omitempty" name:"Limit"`
+
+	// 过滤参数，支持：access-point-id、isp
+	Filters []*Filter `json:"Filters,omitnil,omitempty" name:"Filters"`
 }
 
 type DescribeAccessPointsRequest struct {
 	*tchttp.BaseRequest
 	
-	// 接入点所在的地域。使用DescribeRegions查询
-	// 
-	// 您可以通过调用 DescribeRegions接口获取地域ID。
-	RegionId *string `json:"RegionId,omitempty" name:"RegionId"`
+	// 接入点所在的地域。你可以通过调用[DescribeRegions](https://cloud.tencent.com/document/product/1596/77930)接口获取地域ID。
+	RegionId *string `json:"RegionId,omitnil,omitempty" name:"RegionId"`
 
 	// 偏移量，默认为0。
-	Offset *int64 `json:"Offset,omitempty" name:"Offset"`
+	Offset *int64 `json:"Offset,omitnil,omitempty" name:"Offset"`
 
 	// 返回数量，默认为20，最大值为100。
-	Limit *int64 `json:"Limit,omitempty" name:"Limit"`
+	Limit *int64 `json:"Limit,omitnil,omitempty" name:"Limit"`
+
+	// 过滤参数，支持：access-point-id、isp
+	Filters []*Filter `json:"Filters,omitnil,omitempty" name:"Filters"`
 }
 
 func (r *DescribeAccessPointsRequest) ToJsonString() string {
@@ -779,6 +992,7 @@ func (r *DescribeAccessPointsRequest) FromJsonString(s string) error {
 	delete(f, "RegionId")
 	delete(f, "Offset")
 	delete(f, "Limit")
+	delete(f, "Filters")
 	if len(f) > 0 {
 		return tcerr.NewTencentCloudSDKError("ClientError.BuildRequestError", "DescribeAccessPointsRequest has unknown keys!", "")
 	}
@@ -788,13 +1002,13 @@ func (r *DescribeAccessPointsRequest) FromJsonString(s string) error {
 // Predefined struct for user
 type DescribeAccessPointsResponseParams struct {
 	// 接入点信息。
-	AccessPointSet []*AccessPoint `json:"AccessPointSet,omitempty" name:"AccessPointSet"`
+	AccessPointSet []*AccessPoint `json:"AccessPointSet,omitnil,omitempty" name:"AccessPointSet"`
 
-	// 符合接入点数量。
-	TotalCount *int64 `json:"TotalCount,omitempty" name:"TotalCount"`
+	// 接入点总数量。
+	TotalCount *int64 `json:"TotalCount,omitnil,omitempty" name:"TotalCount"`
 
-	// 唯一请求 ID，每次请求都会返回。定位问题时需要提供该次请求的 RequestId。
-	RequestId *string `json:"RequestId,omitempty" name:"RequestId"`
+	// 唯一请求 ID，由服务端生成，每次请求都会返回（若请求因其他原因未能抵达服务端，则该次请求不会获得 RequestId）。定位问题时需要提供该次请求的 RequestId。
+	RequestId *string `json:"RequestId,omitnil,omitempty" name:"RequestId"`
 }
 
 type DescribeAccessPointsResponse struct {
@@ -815,15 +1029,15 @@ func (r *DescribeAccessPointsResponse) FromJsonString(s string) error {
 
 // Predefined struct for user
 type DescribeDirectConnectTunnelExtraRequestParams struct {
-	// 专用通道ID
-	DirectConnectTunnelId *string `json:"DirectConnectTunnelId,omitempty" name:"DirectConnectTunnelId"`
+	// 专用通道ID。
+	DirectConnectTunnelId *string `json:"DirectConnectTunnelId,omitnil,omitempty" name:"DirectConnectTunnelId"`
 }
 
 type DescribeDirectConnectTunnelExtraRequest struct {
 	*tchttp.BaseRequest
 	
-	// 专用通道ID
-	DirectConnectTunnelId *string `json:"DirectConnectTunnelId,omitempty" name:"DirectConnectTunnelId"`
+	// 专用通道ID。
+	DirectConnectTunnelId *string `json:"DirectConnectTunnelId,omitnil,omitempty" name:"DirectConnectTunnelId"`
 }
 
 func (r *DescribeDirectConnectTunnelExtraRequest) ToJsonString() string {
@@ -847,11 +1061,11 @@ func (r *DescribeDirectConnectTunnelExtraRequest) FromJsonString(s string) error
 
 // Predefined struct for user
 type DescribeDirectConnectTunnelExtraResponseParams struct {
-	// 专用通道扩展信息
-	DirectConnectTunnelExtra *DirectConnectTunnelExtra `json:"DirectConnectTunnelExtra,omitempty" name:"DirectConnectTunnelExtra"`
+	// 专用通道扩展信息。
+	DirectConnectTunnelExtra *DirectConnectTunnelExtra `json:"DirectConnectTunnelExtra,omitnil,omitempty" name:"DirectConnectTunnelExtra"`
 
-	// 唯一请求 ID，每次请求都会返回。定位问题时需要提供该次请求的 RequestId。
-	RequestId *string `json:"RequestId,omitempty" name:"RequestId"`
+	// 唯一请求 ID，由服务端生成，每次请求都会返回（若请求因其他原因未能抵达服务端，则该次请求不会获得 RequestId）。定位问题时需要提供该次请求的 RequestId。
+	RequestId *string `json:"RequestId,omitnil,omitempty" name:"RequestId"`
 }
 
 type DescribeDirectConnectTunnelExtraResponse struct {
@@ -874,19 +1088,19 @@ func (r *DescribeDirectConnectTunnelExtraResponse) FromJsonString(s string) erro
 type DescribeDirectConnectTunnelsRequestParams struct {
 	// 过滤条件:
 	// 参数不支持同时指定DirectConnectTunnelIds和Filters。
-	// <li> direct-connect-tunnel-name, 专用通道名称。</li>
-	// <li> direct-connect-tunnel-id, 专用通道实例ID，如dcx-abcdefgh。</li>
-	// <li>direct-connect-id, 物理专线实例ID，如，dc-abcdefgh。</li>
-	Filters []*Filter `json:"Filters,omitempty" name:"Filters"`
+	// direct-connect-tunnel-name, 专用通道名称。
+	// direct-connect-tunnel-id, 专用通道实例ID，如：dcx-abcdefgh。
+	// direct-connect-id, 物理专线实例ID，如：dc-abcdefgh。
+	Filters []*Filter `json:"Filters,omitnil,omitempty" name:"Filters"`
 
-	// 专用通道 ID数组
-	DirectConnectTunnelIds []*string `json:"DirectConnectTunnelIds,omitempty" name:"DirectConnectTunnelIds"`
+	// 专用通道ID数组。
+	DirectConnectTunnelIds []*string `json:"DirectConnectTunnelIds,omitnil,omitempty" name:"DirectConnectTunnelIds"`
 
-	// 偏移量，默认为0
-	Offset *int64 `json:"Offset,omitempty" name:"Offset"`
+	// 偏移量，默认为0。
+	Offset *int64 `json:"Offset,omitnil,omitempty" name:"Offset"`
 
-	// 返回数量，默认为20，最大值为100
-	Limit *int64 `json:"Limit,omitempty" name:"Limit"`
+	// 返回数量，默认为20，最大值为100。
+	Limit *int64 `json:"Limit,omitnil,omitempty" name:"Limit"`
 }
 
 type DescribeDirectConnectTunnelsRequest struct {
@@ -894,19 +1108,19 @@ type DescribeDirectConnectTunnelsRequest struct {
 	
 	// 过滤条件:
 	// 参数不支持同时指定DirectConnectTunnelIds和Filters。
-	// <li> direct-connect-tunnel-name, 专用通道名称。</li>
-	// <li> direct-connect-tunnel-id, 专用通道实例ID，如dcx-abcdefgh。</li>
-	// <li>direct-connect-id, 物理专线实例ID，如，dc-abcdefgh。</li>
-	Filters []*Filter `json:"Filters,omitempty" name:"Filters"`
+	// direct-connect-tunnel-name, 专用通道名称。
+	// direct-connect-tunnel-id, 专用通道实例ID，如：dcx-abcdefgh。
+	// direct-connect-id, 物理专线实例ID，如：dc-abcdefgh。
+	Filters []*Filter `json:"Filters,omitnil,omitempty" name:"Filters"`
 
-	// 专用通道 ID数组
-	DirectConnectTunnelIds []*string `json:"DirectConnectTunnelIds,omitempty" name:"DirectConnectTunnelIds"`
+	// 专用通道ID数组。
+	DirectConnectTunnelIds []*string `json:"DirectConnectTunnelIds,omitnil,omitempty" name:"DirectConnectTunnelIds"`
 
-	// 偏移量，默认为0
-	Offset *int64 `json:"Offset,omitempty" name:"Offset"`
+	// 偏移量，默认为0。
+	Offset *int64 `json:"Offset,omitnil,omitempty" name:"Offset"`
 
-	// 返回数量，默认为20，最大值为100
-	Limit *int64 `json:"Limit,omitempty" name:"Limit"`
+	// 返回数量，默认为20，最大值为100。
+	Limit *int64 `json:"Limit,omitnil,omitempty" name:"Limit"`
 }
 
 func (r *DescribeDirectConnectTunnelsRequest) ToJsonString() string {
@@ -933,14 +1147,14 @@ func (r *DescribeDirectConnectTunnelsRequest) FromJsonString(s string) error {
 
 // Predefined struct for user
 type DescribeDirectConnectTunnelsResponseParams struct {
-	// 专用通道列表
-	DirectConnectTunnelSet []*DirectConnectTunnel `json:"DirectConnectTunnelSet,omitempty" name:"DirectConnectTunnelSet"`
+	// 专用通道列表。
+	DirectConnectTunnelSet []*DirectConnectTunnel `json:"DirectConnectTunnelSet,omitnil,omitempty" name:"DirectConnectTunnelSet"`
 
-	// 符合专用通道数量。
-	TotalCount *int64 `json:"TotalCount,omitempty" name:"TotalCount"`
+	// 专用通道总数量。
+	TotalCount *int64 `json:"TotalCount,omitnil,omitempty" name:"TotalCount"`
 
-	// 唯一请求 ID，每次请求都会返回。定位问题时需要提供该次请求的 RequestId。
-	RequestId *string `json:"RequestId,omitempty" name:"RequestId"`
+	// 唯一请求 ID，由服务端生成，每次请求都会返回（若请求因其他原因未能抵达服务端，则该次请求不会获得 RequestId）。定位问题时需要提供该次请求的 RequestId。
+	RequestId *string `json:"RequestId,omitnil,omitempty" name:"RequestId"`
 }
 
 type DescribeDirectConnectTunnelsResponse struct {
@@ -961,33 +1175,33 @@ func (r *DescribeDirectConnectTunnelsResponse) FromJsonString(s string) error {
 
 // Predefined struct for user
 type DescribeDirectConnectsRequestParams struct {
-	// 过滤条件:
-	Filters []*Filter `json:"Filters,omitempty" name:"Filters"`
+	// 过滤条件。direct-connect-id：物理专线ID，states：物理专线状态（AVAILABLE-就绪，PENDING-申请中，REJECTED-申请被拒绝，PENDINGPAY-待付款，PAID-付款完成，BUILDING-建设中，STOPED-建设终止，DELETED-删除完成）。
+	Filters []*Filter `json:"Filters,omitnil,omitempty" name:"Filters"`
 
-	// 物理专线 ID数组
-	DirectConnectIds []*string `json:"DirectConnectIds,omitempty" name:"DirectConnectIds"`
+	// 物理专线 ID数组。
+	DirectConnectIds []*string `json:"DirectConnectIds,omitnil,omitempty" name:"DirectConnectIds"`
 
-	// 偏移量，默认为0
-	Offset *int64 `json:"Offset,omitempty" name:"Offset"`
+	// 偏移量，默认为0。
+	Offset *int64 `json:"Offset,omitnil,omitempty" name:"Offset"`
 
-	// 返回数量，默认为20，最大值为100
-	Limit *int64 `json:"Limit,omitempty" name:"Limit"`
+	// 返回数量，默认为20，最大值为100。
+	Limit *int64 `json:"Limit,omitnil,omitempty" name:"Limit"`
 }
 
 type DescribeDirectConnectsRequest struct {
 	*tchttp.BaseRequest
 	
-	// 过滤条件:
-	Filters []*Filter `json:"Filters,omitempty" name:"Filters"`
+	// 过滤条件。direct-connect-id：物理专线ID，states：物理专线状态（AVAILABLE-就绪，PENDING-申请中，REJECTED-申请被拒绝，PENDINGPAY-待付款，PAID-付款完成，BUILDING-建设中，STOPED-建设终止，DELETED-删除完成）。
+	Filters []*Filter `json:"Filters,omitnil,omitempty" name:"Filters"`
 
-	// 物理专线 ID数组
-	DirectConnectIds []*string `json:"DirectConnectIds,omitempty" name:"DirectConnectIds"`
+	// 物理专线 ID数组。
+	DirectConnectIds []*string `json:"DirectConnectIds,omitnil,omitempty" name:"DirectConnectIds"`
 
-	// 偏移量，默认为0
-	Offset *int64 `json:"Offset,omitempty" name:"Offset"`
+	// 偏移量，默认为0。
+	Offset *int64 `json:"Offset,omitnil,omitempty" name:"Offset"`
 
-	// 返回数量，默认为20，最大值为100
-	Limit *int64 `json:"Limit,omitempty" name:"Limit"`
+	// 返回数量，默认为20，最大值为100。
+	Limit *int64 `json:"Limit,omitnil,omitempty" name:"Limit"`
 }
 
 func (r *DescribeDirectConnectsRequest) ToJsonString() string {
@@ -1015,17 +1229,16 @@ func (r *DescribeDirectConnectsRequest) FromJsonString(s string) error {
 // Predefined struct for user
 type DescribeDirectConnectsResponseParams struct {
 	// 物理专线列表。
-	DirectConnectSet []*DirectConnect `json:"DirectConnectSet,omitempty" name:"DirectConnectSet"`
+	DirectConnectSet []*DirectConnect `json:"DirectConnectSet,omitnil,omitempty" name:"DirectConnectSet"`
 
 	// 符合物理专线列表数量。
-	TotalCount *int64 `json:"TotalCount,omitempty" name:"TotalCount"`
+	TotalCount *int64 `json:"TotalCount,omitnil,omitempty" name:"TotalCount"`
 
-	// 用户名下物理专线是否都签署了用户协议
-	// 注意：此字段可能返回 null，表示取不到有效值。
-	AllSignLaw *bool `json:"AllSignLaw,omitempty" name:"AllSignLaw"`
+	// 用户名下物理专线是否都签署了用户协议。
+	AllSignLaw *bool `json:"AllSignLaw,omitnil,omitempty" name:"AllSignLaw"`
 
-	// 唯一请求 ID，每次请求都会返回。定位问题时需要提供该次请求的 RequestId。
-	RequestId *string `json:"RequestId,omitempty" name:"RequestId"`
+	// 唯一请求 ID，由服务端生成，每次请求都会返回（若请求因其他原因未能抵达服务端，则该次请求不会获得 RequestId）。定位问题时需要提供该次请求的 RequestId。
+	RequestId *string `json:"RequestId,omitnil,omitempty" name:"RequestId"`
 }
 
 type DescribeDirectConnectsResponse struct {
@@ -1076,27 +1289,22 @@ func (r *DescribeInternetAddressQuotaRequest) FromJsonString(s string) error {
 // Predefined struct for user
 type DescribeInternetAddressQuotaResponseParams struct {
 	// IPv6互联网公网允许的最小前缀长度
-	// 注意：此字段可能返回 null，表示取不到有效值。
-	Ipv6PrefixLen *int64 `json:"Ipv6PrefixLen,omitempty" name:"Ipv6PrefixLen"`
+	Ipv6PrefixLen *int64 `json:"Ipv6PrefixLen,omitnil,omitempty" name:"Ipv6PrefixLen"`
 
 	// BGP类型IPv4互联网地址配额
-	// 注意：此字段可能返回 null，表示取不到有效值。
-	Ipv4BgpQuota *int64 `json:"Ipv4BgpQuota,omitempty" name:"Ipv4BgpQuota"`
+	Ipv4BgpQuota *int64 `json:"Ipv4BgpQuota,omitnil,omitempty" name:"Ipv4BgpQuota"`
 
 	// 非BGP类型IPv4互联网地址配额
-	// 注意：此字段可能返回 null，表示取不到有效值。
-	Ipv4OtherQuota *int64 `json:"Ipv4OtherQuota,omitempty" name:"Ipv4OtherQuota"`
+	Ipv4OtherQuota *int64 `json:"Ipv4OtherQuota,omitnil,omitempty" name:"Ipv4OtherQuota"`
 
 	// BGP类型IPv4互联网地址已使用数量
-	// 注意：此字段可能返回 null，表示取不到有效值。
-	Ipv4BgpNum *int64 `json:"Ipv4BgpNum,omitempty" name:"Ipv4BgpNum"`
+	Ipv4BgpNum *int64 `json:"Ipv4BgpNum,omitnil,omitempty" name:"Ipv4BgpNum"`
 
 	// 非BGP类型互联网地址已使用数量
-	// 注意：此字段可能返回 null，表示取不到有效值。
-	Ipv4OtherNum *int64 `json:"Ipv4OtherNum,omitempty" name:"Ipv4OtherNum"`
+	Ipv4OtherNum *int64 `json:"Ipv4OtherNum,omitnil,omitempty" name:"Ipv4OtherNum"`
 
-	// 唯一请求 ID，每次请求都会返回。定位问题时需要提供该次请求的 RequestId。
-	RequestId *string `json:"RequestId,omitempty" name:"RequestId"`
+	// 唯一请求 ID，由服务端生成，每次请求都会返回（若请求因其他原因未能抵达服务端，则该次请求不会获得 RequestId）。定位问题时需要提供该次请求的 RequestId。
+	RequestId *string `json:"RequestId,omitnil,omitempty" name:"RequestId"`
 }
 
 type DescribeInternetAddressQuotaResponse struct {
@@ -1118,36 +1326,26 @@ func (r *DescribeInternetAddressQuotaResponse) FromJsonString(s string) error {
 // Predefined struct for user
 type DescribeInternetAddressRequestParams struct {
 	// 偏移量，默认为0
-	Offset *int64 `json:"Offset,omitempty" name:"Offset"`
+	Offset *int64 `json:"Offset,omitnil,omitempty" name:"Offset"`
 
 	// 返回数量，默认为20，最大值100
-	Limit *int64 `json:"Limit,omitempty" name:"Limit"`
+	Limit *int64 `json:"Limit,omitnil,omitempty" name:"Limit"`
 
-	// 过滤条件：
-	// <li>AddrType, 地址类型。0：BGP 1; 1: 电信， 2：移动， 3：联通</li>
-	// <li>AddrProto地址类型。0：IPv4 1:IPv6</li>
-	// <li>Status 地址状态。 0：使用中， 1：已停用， 2：已退还</li>
-	// <li>Subnet 互联网公网地址，数组</li>
-	// <InstanceIds>互联网公网地址ID，数组</li>
-	Filters []*Filter `json:"Filters,omitempty" name:"Filters"`
+	// 过滤条件： <li>AddrType，地址类型。0：BGP 1；1: 电信；2：移动；3：联通</li> <li>AddrProto，地址类型。0：IPv4；1:IPv6</li> <li>Status，地址状态。 0：使用中；1：已停用； 2：已退还</li> <li>Subnet，互联网公网地址。数组</li> <li>InstanceIds，互联网公网地址ID。数组</li>
+	Filters []*Filter `json:"Filters,omitnil,omitempty" name:"Filters"`
 }
 
 type DescribeInternetAddressRequest struct {
 	*tchttp.BaseRequest
 	
 	// 偏移量，默认为0
-	Offset *int64 `json:"Offset,omitempty" name:"Offset"`
+	Offset *int64 `json:"Offset,omitnil,omitempty" name:"Offset"`
 
 	// 返回数量，默认为20，最大值100
-	Limit *int64 `json:"Limit,omitempty" name:"Limit"`
+	Limit *int64 `json:"Limit,omitnil,omitempty" name:"Limit"`
 
-	// 过滤条件：
-	// <li>AddrType, 地址类型。0：BGP 1; 1: 电信， 2：移动， 3：联通</li>
-	// <li>AddrProto地址类型。0：IPv4 1:IPv6</li>
-	// <li>Status 地址状态。 0：使用中， 1：已停用， 2：已退还</li>
-	// <li>Subnet 互联网公网地址，数组</li>
-	// <InstanceIds>互联网公网地址ID，数组</li>
-	Filters []*Filter `json:"Filters,omitempty" name:"Filters"`
+	// 过滤条件： <li>AddrType，地址类型。0：BGP 1；1: 电信；2：移动；3：联通</li> <li>AddrProto，地址类型。0：IPv4；1:IPv6</li> <li>Status，地址状态。 0：使用中；1：已停用； 2：已退还</li> <li>Subnet，互联网公网地址。数组</li> <li>InstanceIds，互联网公网地址ID。数组</li>
+	Filters []*Filter `json:"Filters,omitnil,omitempty" name:"Filters"`
 }
 
 func (r *DescribeInternetAddressRequest) ToJsonString() string {
@@ -1174,14 +1372,13 @@ func (r *DescribeInternetAddressRequest) FromJsonString(s string) error {
 // Predefined struct for user
 type DescribeInternetAddressResponseParams struct {
 	// 互联网公网地址数量
-	TotalCount *int64 `json:"TotalCount,omitempty" name:"TotalCount"`
+	TotalCount *int64 `json:"TotalCount,omitnil,omitempty" name:"TotalCount"`
 
 	// 互联网公网地址列表
-	// 注意：此字段可能返回 null，表示取不到有效值。
-	Subnets []*InternetAddressDetail `json:"Subnets,omitempty" name:"Subnets"`
+	Subnets []*InternetAddressDetail `json:"Subnets,omitnil,omitempty" name:"Subnets"`
 
-	// 唯一请求 ID，每次请求都会返回。定位问题时需要提供该次请求的 RequestId。
-	RequestId *string `json:"RequestId,omitempty" name:"RequestId"`
+	// 唯一请求 ID，由服务端生成，每次请求都会返回（若请求因其他原因未能抵达服务端，则该次请求不会获得 RequestId）。定位问题时需要提供该次请求的 RequestId。
+	RequestId *string `json:"RequestId,omitnil,omitempty" name:"RequestId"`
 }
 
 type DescribeInternetAddressResponse struct {
@@ -1232,14 +1429,13 @@ func (r *DescribeInternetAddressStatisticsRequest) FromJsonString(s string) erro
 // Predefined struct for user
 type DescribeInternetAddressStatisticsResponseParams struct {
 	// 互联网公网地址统计信息数量
-	TotalCount *int64 `json:"TotalCount,omitempty" name:"TotalCount"`
+	TotalCount *int64 `json:"TotalCount,omitnil,omitempty" name:"TotalCount"`
 
 	// 互联网公网地址统计信息列表
-	// 注意：此字段可能返回 null，表示取不到有效值。
-	InternetAddressStatistics []*InternetAddressStatistics `json:"InternetAddressStatistics,omitempty" name:"InternetAddressStatistics"`
+	InternetAddressStatistics []*InternetAddressStatistics `json:"InternetAddressStatistics,omitnil,omitempty" name:"InternetAddressStatistics"`
 
-	// 唯一请求 ID，每次请求都会返回。定位问题时需要提供该次请求的 RequestId。
-	RequestId *string `json:"RequestId,omitempty" name:"RequestId"`
+	// 唯一请求 ID，由服务端生成，每次请求都会返回（若请求因其他原因未能抵达服务端，则该次请求不会获得 RequestId）。定位问题时需要提供该次请求的 RequestId。
+	RequestId *string `json:"RequestId,omitnil,omitempty" name:"RequestId"`
 }
 
 type DescribeInternetAddressStatisticsResponse struct {
@@ -1260,37 +1456,37 @@ func (r *DescribeInternetAddressStatisticsResponse) FromJsonString(s string) err
 
 // Predefined struct for user
 type DescribePublicDirectConnectTunnelRoutesRequestParams struct {
-	// 专用通道ID
-	DirectConnectTunnelId *string `json:"DirectConnectTunnelId,omitempty" name:"DirectConnectTunnelId"`
+	// 专用通道ID。
+	DirectConnectTunnelId *string `json:"DirectConnectTunnelId,omitnil,omitempty" name:"DirectConnectTunnelId"`
 
 	// 过滤条件：
-	// route-type：路由类型，取值：BGP/STATIC
-	// route-subnet：路由cidr，取值如：192.68.1.0/24
-	Filters []*Filter `json:"Filters,omitempty" name:"Filters"`
+	// route-type：路由类型，取值：BGP/STATIC；
+	// route-subnet：路由cidr，取值如：192.68.1.0/24。
+	Filters []*Filter `json:"Filters,omitnil,omitempty" name:"Filters"`
 
-	// 偏移量，默认为0
-	Offset *int64 `json:"Offset,omitempty" name:"Offset"`
+	// 偏移量，默认为0。
+	Offset *int64 `json:"Offset,omitnil,omitempty" name:"Offset"`
 
-	// 返回数量，默认为20，最大值为100
-	Limit *int64 `json:"Limit,omitempty" name:"Limit"`
+	// 返回数量，默认为20，最大值为100。
+	Limit *int64 `json:"Limit,omitnil,omitempty" name:"Limit"`
 }
 
 type DescribePublicDirectConnectTunnelRoutesRequest struct {
 	*tchttp.BaseRequest
 	
-	// 专用通道ID
-	DirectConnectTunnelId *string `json:"DirectConnectTunnelId,omitempty" name:"DirectConnectTunnelId"`
+	// 专用通道ID。
+	DirectConnectTunnelId *string `json:"DirectConnectTunnelId,omitnil,omitempty" name:"DirectConnectTunnelId"`
 
 	// 过滤条件：
-	// route-type：路由类型，取值：BGP/STATIC
-	// route-subnet：路由cidr，取值如：192.68.1.0/24
-	Filters []*Filter `json:"Filters,omitempty" name:"Filters"`
+	// route-type：路由类型，取值：BGP/STATIC；
+	// route-subnet：路由cidr，取值如：192.68.1.0/24。
+	Filters []*Filter `json:"Filters,omitnil,omitempty" name:"Filters"`
 
-	// 偏移量，默认为0
-	Offset *int64 `json:"Offset,omitempty" name:"Offset"`
+	// 偏移量，默认为0。
+	Offset *int64 `json:"Offset,omitnil,omitempty" name:"Offset"`
 
-	// 返回数量，默认为20，最大值为100
-	Limit *int64 `json:"Limit,omitempty" name:"Limit"`
+	// 返回数量，默认为20，最大值为100。
+	Limit *int64 `json:"Limit,omitnil,omitempty" name:"Limit"`
 }
 
 func (r *DescribePublicDirectConnectTunnelRoutesRequest) ToJsonString() string {
@@ -1317,14 +1513,14 @@ func (r *DescribePublicDirectConnectTunnelRoutesRequest) FromJsonString(s string
 
 // Predefined struct for user
 type DescribePublicDirectConnectTunnelRoutesResponseParams struct {
-	// 互联网通道路由列表
-	Routes []*DirectConnectTunnelRoute `json:"Routes,omitempty" name:"Routes"`
+	// 互联网通道路由列表。
+	Routes []*DirectConnectTunnelRoute `json:"Routes,omitnil,omitempty" name:"Routes"`
 
-	// 记录总数
-	TotalCount *int64 `json:"TotalCount,omitempty" name:"TotalCount"`
+	// 路由总数量。
+	TotalCount *int64 `json:"TotalCount,omitnil,omitempty" name:"TotalCount"`
 
-	// 唯一请求 ID，每次请求都会返回。定位问题时需要提供该次请求的 RequestId。
-	RequestId *string `json:"RequestId,omitempty" name:"RequestId"`
+	// 唯一请求 ID，由服务端生成，每次请求都会返回（若请求因其他原因未能抵达服务端，则该次请求不会获得 RequestId）。定位问题时需要提供该次请求的 RequestId。
+	RequestId *string `json:"RequestId,omitnil,omitempty" name:"RequestId"`
 }
 
 type DescribePublicDirectConnectTunnelRoutesResponse struct {
@@ -1345,13 +1541,13 @@ func (r *DescribePublicDirectConnectTunnelRoutesResponse) FromJsonString(s strin
 
 type DirectConnect struct {
 	// 物理专线ID。
-	DirectConnectId *string `json:"DirectConnectId,omitempty" name:"DirectConnectId"`
+	DirectConnectId *string `json:"DirectConnectId,omitnil,omitempty" name:"DirectConnectId"`
 
 	// 物理专线的名称。
-	DirectConnectName *string `json:"DirectConnectName,omitempty" name:"DirectConnectName"`
+	DirectConnectName *string `json:"DirectConnectName,omitnil,omitempty" name:"DirectConnectName"`
 
 	// 物理专线的接入点ID。
-	AccessPointId *string `json:"AccessPointId,omitempty" name:"AccessPointId"`
+	AccessPointId *string `json:"AccessPointId,omitnil,omitempty" name:"AccessPointId"`
 
 	// 物理专线的状态。
 	// 申请中：PENDING 
@@ -1362,119 +1558,117 @@ type DirectConnect struct {
 	// 已开通：AVAILABLE  
 	// 删除中 ：DELETING
 	// 已删除：DELETED 。
-	State *string `json:"State,omitempty" name:"State"`
+	State *string `json:"State,omitnil,omitempty" name:"State"`
 
 	// 物理专线创建时间。
-	CreatedTime *string `json:"CreatedTime,omitempty" name:"CreatedTime"`
+	CreatedTime *string `json:"CreatedTime,omitnil,omitempty" name:"CreatedTime"`
 
 	// 物理专线的开通时间。
-	EnabledTime *string `json:"EnabledTime,omitempty" name:"EnabledTime"`
+	EnabledTime *string `json:"EnabledTime,omitnil,omitempty" name:"EnabledTime"`
 
 	// 提供接入物理专线的运营商。ChinaTelecom：中国电信， ChinaMobile：中国移动，ChinaUnicom：中国联通， In-houseWiring：楼内线，ChinaOther：中国其他， InternationalOperator：境外其他。
-	LineOperator *string `json:"LineOperator,omitempty" name:"LineOperator"`
+	LineOperator *string `json:"LineOperator,omitnil,omitempty" name:"LineOperator"`
 
 	// 本地数据中心的地理位置。
-	Location *string `json:"Location,omitempty" name:"Location"`
+	Location *string `json:"Location,omitnil,omitempty" name:"Location"`
 
 	// 物理专线接入接口带宽，单位为Mbps。
-	Bandwidth *int64 `json:"Bandwidth,omitempty" name:"Bandwidth"`
+	Bandwidth *int64 `json:"Bandwidth,omitnil,omitempty" name:"Bandwidth"`
 
 	// 用户侧物理专线接入端口类型,取值：100Base-T：百兆电口,1000Base-T（默认值）：千兆电口,1000Base-LX：千兆单模光口（10千米）,10GBase-T：万兆电口10GBase-LR：万兆单模光口（10千米），默认值，千兆单模光口（10千米）
-	PortType *string `json:"PortType,omitempty" name:"PortType"`
+	PortType *string `json:"PortType,omitnil,omitempty" name:"PortType"`
 
 	// 运营商或者服务商为物理专线提供的电路编码。
-	// 注意：此字段可能返回 null，表示取不到有效值。
-	CircuitCode *string `json:"CircuitCode,omitempty" name:"CircuitCode"`
+	CircuitCode *string `json:"CircuitCode,omitnil,omitempty" name:"CircuitCode"`
 
 	// 冗余物理专线的ID。
-	RedundantDirectConnectId *string `json:"RedundantDirectConnectId,omitempty" name:"RedundantDirectConnectId"`
+	RedundantDirectConnectId *string `json:"RedundantDirectConnectId,omitnil,omitempty" name:"RedundantDirectConnectId"`
 
 	// 物理专线调试VLAN。默认开启VLAN，自动分配VLAN。
-	// 注意：此字段可能返回 null，表示取不到有效值。
-	Vlan *int64 `json:"Vlan,omitempty" name:"Vlan"`
+	Vlan *int64 `json:"Vlan,omitnil,omitempty" name:"Vlan"`
 
 	// 物理专线调试腾讯侧互联IP。
-	// 注意：此字段可能返回 null，表示取不到有效值。
-	TencentAddress *string `json:"TencentAddress,omitempty" name:"TencentAddress"`
+	TencentAddress *string `json:"TencentAddress,omitnil,omitempty" name:"TencentAddress"`
 
 	// 物理专线调试用户侧互联IP。
-	// 注意：此字段可能返回 null，表示取不到有效值。
-	CustomerAddress *string `json:"CustomerAddress,omitempty" name:"CustomerAddress"`
+	CustomerAddress *string `json:"CustomerAddress,omitnil,omitempty" name:"CustomerAddress"`
 
 	// 物理专线申请者姓名。默认从账户体系获取。
-	// 注意：此字段可能返回 null，表示取不到有效值。
-	CustomerName *string `json:"CustomerName,omitempty" name:"CustomerName"`
+	CustomerName *string `json:"CustomerName,omitnil,omitempty" name:"CustomerName"`
 
 	// 物理专线申请者联系邮箱。默认从账户体系获取。
-	// 注意：此字段可能返回 null，表示取不到有效值。
-	CustomerContactMail *string `json:"CustomerContactMail,omitempty" name:"CustomerContactMail"`
+	CustomerContactMail *string `json:"CustomerContactMail,omitnil,omitempty" name:"CustomerContactMail"`
 
 	// 物理专线申请者联系号码。默认从账户体系获取。
-	// 注意：此字段可能返回 null，表示取不到有效值。
-	CustomerContactNumber *string `json:"CustomerContactNumber,omitempty" name:"CustomerContactNumber"`
+	CustomerContactNumber *string `json:"CustomerContactNumber,omitnil,omitempty" name:"CustomerContactNumber"`
 
 	// 物理专线的过期时间。
-	// 注意：此字段可能返回 null，表示取不到有效值。
-	ExpiredTime *string `json:"ExpiredTime,omitempty" name:"ExpiredTime"`
+	ExpiredTime *string `json:"ExpiredTime,omitnil,omitempty" name:"ExpiredTime"`
 
 	// 物理专线计费类型。 NON_RECURRING_CHARGE：一次性接入费用；PREPAID_BY_YEAR：按年预付费。
-	// 注意：此字段可能返回 null，表示取不到有效值。
-	ChargeType *string `json:"ChargeType,omitempty" name:"ChargeType"`
+	ChargeType *string `json:"ChargeType,omitnil,omitempty" name:"ChargeType"`
 
 	// 报障联系人。
-	// 注意：此字段可能返回 null，表示取不到有效值。
-	FaultReportContactPerson *string `json:"FaultReportContactPerson,omitempty" name:"FaultReportContactPerson"`
+	FaultReportContactPerson *string `json:"FaultReportContactPerson,omitnil,omitempty" name:"FaultReportContactPerson"`
 
 	// 报障联系电话。
-	// 注意：此字段可能返回 null，表示取不到有效值。
-	FaultReportContactNumber *string `json:"FaultReportContactNumber,omitempty" name:"FaultReportContactNumber"`
+	FaultReportContactNumber *string `json:"FaultReportContactNumber,omitnil,omitempty" name:"FaultReportContactNumber"`
+
+	// 报障联系邮箱。
+	FaultReportContactEmail *string `json:"FaultReportContactEmail,omitnil,omitempty" name:"FaultReportContactEmail"`
 
 	// 标签键值对
-	// 注意：此字段可能返回 null，表示取不到有效值。
-	TagSet []*Tag `json:"TagSet,omitempty" name:"TagSet"`
+	TagSet []*Tag `json:"TagSet,omitnil,omitempty" name:"TagSet"`
 
 	// 物理专线的接入点类型。
-	AccessPointType *string `json:"AccessPointType,omitempty" name:"AccessPointType"`
+	AccessPointType *string `json:"AccessPointType,omitnil,omitempty" name:"AccessPointType"`
 
 	// IDC所在城市
-	// 注意：此字段可能返回 null，表示取不到有效值。
-	IdcCity *string `json:"IdcCity,omitempty" name:"IdcCity"`
+	IdcCity *string `json:"IdcCity,omitnil,omitempty" name:"IdcCity"`
 
 	// 计费状态
-	// 注意：此字段可能返回 null，表示取不到有效值。
-	ChargeState *string `json:"ChargeState,omitempty" name:"ChargeState"`
+	ChargeState *string `json:"ChargeState,omitnil,omitempty" name:"ChargeState"`
 
 	// 物理专线开通时间
-	// 注意：此字段可能返回 null，表示取不到有效值。
-	StartTime *string `json:"StartTime,omitempty" name:"StartTime"`
+	StartTime *string `json:"StartTime,omitnil,omitempty" name:"StartTime"`
 
 	// 物理专线是否已签署用户协议
-	// 注意：此字段可能返回 null，表示取不到有效值。
-	SignLaw *bool `json:"SignLaw,omitempty" name:"SignLaw"`
+	SignLaw *bool `json:"SignLaw,omitnil,omitempty" name:"SignLaw"`
 
 	// 物理专线是否为LocalZone
-	// 注意：此字段可能返回 null，表示取不到有效值。
-	LocalZone *bool `json:"LocalZone,omitempty" name:"LocalZone"`
+	LocalZone *bool `json:"LocalZone,omitnil,omitempty" name:"LocalZone"`
 
 	// 该物理专线下vlan 0的专用通道数量
-	// 注意：此字段可能返回 null，表示取不到有效值。
-	VlanZeroDirectConnectTunnelCount *uint64 `json:"VlanZeroDirectConnectTunnelCount,omitempty" name:"VlanZeroDirectConnectTunnelCount"`
+	VlanZeroDirectConnectTunnelCount *uint64 `json:"VlanZeroDirectConnectTunnelCount,omitnil,omitempty" name:"VlanZeroDirectConnectTunnelCount"`
 
 	// 该物理专线下非vlan 0的专用通道数量
-	// 注意：此字段可能返回 null，表示取不到有效值。
-	OtherVlanDirectConnectTunnelCount *uint64 `json:"OtherVlanDirectConnectTunnelCount,omitempty" name:"OtherVlanDirectConnectTunnelCount"`
+	OtherVlanDirectConnectTunnelCount *uint64 `json:"OtherVlanDirectConnectTunnelCount,omitnil,omitempty" name:"OtherVlanDirectConnectTunnelCount"`
 
 	// 物理专线最小带宽
-	// 注意：此字段可能返回 null，表示取不到有效值。
-	MinBandwidth *uint64 `json:"MinBandwidth,omitempty" name:"MinBandwidth"`
+	MinBandwidth *uint64 `json:"MinBandwidth,omitnil,omitempty" name:"MinBandwidth"`
+
+	// 建设模式
+	Construct *uint64 `json:"Construct,omitnil,omitempty" name:"Construct"`
+
+	// 物理专线的接入点名称
+	AccessPointName *string `json:"AccessPointName,omitnil,omitempty" name:"AccessPointName"`
+
+	// 是否三层架构
+	IsThreeArch *bool `json:"IsThreeArch,omitnil,omitempty" name:"IsThreeArch"`
+
+	// 是否MACsec
+	IsMacSec *bool `json:"IsMacSec,omitnil,omitempty" name:"IsMacSec"`
+
+	// 端口规格(Mbps)
+	PortSpecification *uint64 `json:"PortSpecification,omitnil,omitempty" name:"PortSpecification"`
 }
 
 type DirectConnectTunnel struct {
 	// 专用通道ID
-	DirectConnectTunnelId *string `json:"DirectConnectTunnelId,omitempty" name:"DirectConnectTunnelId"`
+	DirectConnectTunnelId *string `json:"DirectConnectTunnelId,omitnil,omitempty" name:"DirectConnectTunnelId"`
 
 	// 物理专线ID
-	DirectConnectId *string `json:"DirectConnectId,omitempty" name:"DirectConnectId"`
+	DirectConnectId *string `json:"DirectConnectId,omitnil,omitempty" name:"DirectConnectId"`
 
 	// 专用通道状态
 	// AVAILABLE:就绪或者已连接
@@ -1486,108 +1680,106 @@ type DirectConnectTunnel struct {
 	// DELETED:删除完成
 	// COMFIRMING:待接受
 	// REJECTED:拒绝
-	State *string `json:"State,omitempty" name:"State"`
+	State *string `json:"State,omitnil,omitempty" name:"State"`
 
 	// 物理专线的拥有者，开发商账号 ID
-	DirectConnectOwnerAccount *string `json:"DirectConnectOwnerAccount,omitempty" name:"DirectConnectOwnerAccount"`
+	DirectConnectOwnerAccount *string `json:"DirectConnectOwnerAccount,omitnil,omitempty" name:"DirectConnectOwnerAccount"`
 
 	// 专用通道的拥有者，开发商账号 ID
-	OwnerAccount *string `json:"OwnerAccount,omitempty" name:"OwnerAccount"`
+	OwnerAccount *string `json:"OwnerAccount,omitnil,omitempty" name:"OwnerAccount"`
 
 	// 网络类型，分别为VPC、BMVPC、CCN
 	//  VPC：私有网络 ，BMVPC：黑石网络，CCN：云联网
-	NetworkType *string `json:"NetworkType,omitempty" name:"NetworkType"`
+	NetworkType *string `json:"NetworkType,omitnil,omitempty" name:"NetworkType"`
 
 	// VPC地域对应的网络名，如ap-guangzhou
-	NetworkRegion *string `json:"NetworkRegion,omitempty" name:"NetworkRegion"`
+	NetworkRegion *string `json:"NetworkRegion,omitnil,omitempty" name:"NetworkRegion"`
 
 	// 私有网络统一 ID 或者黑石网络统一 ID
-	VpcId *string `json:"VpcId,omitempty" name:"VpcId"`
+	VpcId *string `json:"VpcId,omitnil,omitempty" name:"VpcId"`
 
 	// 专线网关 ID
-	DirectConnectGatewayId *string `json:"DirectConnectGatewayId,omitempty" name:"DirectConnectGatewayId"`
+	DirectConnectGatewayId *string `json:"DirectConnectGatewayId,omitnil,omitempty" name:"DirectConnectGatewayId"`
 
 	// BGP ：BGP路由 STATIC：静态 默认为 BGP 路由
-	RouteType *string `json:"RouteType,omitempty" name:"RouteType"`
+	RouteType *string `json:"RouteType,omitnil,omitempty" name:"RouteType"`
 
-	// 用户侧BGP，Asn，AuthKey
-	BgpPeer *BgpPeer `json:"BgpPeer,omitempty" name:"BgpPeer"`
+	// 用户侧BGP，包括： CloudAsn，Asn，AuthKey
+	BgpPeer *BgpPeer `json:"BgpPeer,omitnil,omitempty" name:"BgpPeer"`
 
 	// 用户侧网段地址
-	RouteFilterPrefixes []*RouteFilterPrefix `json:"RouteFilterPrefixes,omitempty" name:"RouteFilterPrefixes"`
+	RouteFilterPrefixes []*RouteFilterPrefix `json:"RouteFilterPrefixes,omitnil,omitempty" name:"RouteFilterPrefixes"`
 
 	// 专用通道的Vlan
-	Vlan *int64 `json:"Vlan,omitempty" name:"Vlan"`
+	Vlan *int64 `json:"Vlan,omitnil,omitempty" name:"Vlan"`
 
 	// TencentAddress，腾讯侧互联 IP
-	TencentAddress *string `json:"TencentAddress,omitempty" name:"TencentAddress"`
+	TencentAddress *string `json:"TencentAddress,omitnil,omitempty" name:"TencentAddress"`
 
 	// CustomerAddress，用户侧互联 IP
-	CustomerAddress *string `json:"CustomerAddress,omitempty" name:"CustomerAddress"`
+	CustomerAddress *string `json:"CustomerAddress,omitnil,omitempty" name:"CustomerAddress"`
 
 	// 专用通道名称
-	DirectConnectTunnelName *string `json:"DirectConnectTunnelName,omitempty" name:"DirectConnectTunnelName"`
+	DirectConnectTunnelName *string `json:"DirectConnectTunnelName,omitnil,omitempty" name:"DirectConnectTunnelName"`
 
 	// 专用通道创建时间
-	CreatedTime *string `json:"CreatedTime,omitempty" name:"CreatedTime"`
+	CreatedTime *string `json:"CreatedTime,omitnil,omitempty" name:"CreatedTime"`
 
 	// 专用通道带宽值
-	Bandwidth *int64 `json:"Bandwidth,omitempty" name:"Bandwidth"`
+	Bandwidth *int64 `json:"Bandwidth,omitnil,omitempty" name:"Bandwidth"`
 
 	// 专用通道标签值
-	TagSet []*Tag `json:"TagSet,omitempty" name:"TagSet"`
+	TagSet []*Tag `json:"TagSet,omitnil,omitempty" name:"TagSet"`
 
 	// 关联的网络自定义探测ID
-	// 注意：此字段可能返回 null，表示取不到有效值。
-	NetDetectId *string `json:"NetDetectId,omitempty" name:"NetDetectId"`
+	NetDetectId *string `json:"NetDetectId,omitnil,omitempty" name:"NetDetectId"`
 
 	// BGP community开关
-	// 注意：此字段可能返回 null，表示取不到有效值。
-	EnableBGPCommunity *bool `json:"EnableBGPCommunity,omitempty" name:"EnableBGPCommunity"`
+	EnableBGPCommunity *bool `json:"EnableBGPCommunity,omitnil,omitempty" name:"EnableBGPCommunity"`
 
 	// 是否为Nat通道
-	// 注意：此字段可能返回 null，表示取不到有效值。
-	NatType *int64 `json:"NatType,omitempty" name:"NatType"`
+	NatType *int64 `json:"NatType,omitnil,omitempty" name:"NatType"`
 
 	// VPC地域简码，如gz、cd
-	// 注意：此字段可能返回 null，表示取不到有效值。
-	VpcRegion *string `json:"VpcRegion,omitempty" name:"VpcRegion"`
+	VpcRegion *string `json:"VpcRegion,omitnil,omitempty" name:"VpcRegion"`
 
 	// 是否开启BFD
-	// 注意：此字段可能返回 null，表示取不到有效值。
-	BfdEnable *int64 `json:"BfdEnable,omitempty" name:"BfdEnable"`
+	BfdEnable *int64 `json:"BfdEnable,omitnil,omitempty" name:"BfdEnable"`
 
 	// 专用通道接入点类型
-	// 注意：此字段可能返回 null，表示取不到有效值。
-	AccessPointType *string `json:"AccessPointType,omitempty" name:"AccessPointType"`
+	AccessPointType *string `json:"AccessPointType,omitnil,omitempty" name:"AccessPointType"`
 
 	// 专线网关名称
-	// 注意：此字段可能返回 null，表示取不到有效值。
-	DirectConnectGatewayName *string `json:"DirectConnectGatewayName,omitempty" name:"DirectConnectGatewayName"`
+	DirectConnectGatewayName *string `json:"DirectConnectGatewayName,omitnil,omitempty" name:"DirectConnectGatewayName"`
 
 	// VPC名称
-	// 注意：此字段可能返回 null，表示取不到有效值。
-	VpcName *string `json:"VpcName,omitempty" name:"VpcName"`
+	VpcName *string `json:"VpcName,omitnil,omitempty" name:"VpcName"`
 
 	// TencentBackupAddress，腾讯侧备用互联 IP
-	// 注意：此字段可能返回 null，表示取不到有效值。
-	TencentBackupAddress *string `json:"TencentBackupAddress,omitempty" name:"TencentBackupAddress"`
+	TencentBackupAddress *string `json:"TencentBackupAddress,omitnil,omitempty" name:"TencentBackupAddress"`
 
 	// 专用通道关联的物理专线是否签署了用户协议
-	// 注意：此字段可能返回 null，表示取不到有效值。
-	SignLaw *bool `json:"SignLaw,omitempty" name:"SignLaw"`
+	SignLaw *bool `json:"SignLaw,omitnil,omitempty" name:"SignLaw"`
 
 	// 高速上云服务ID
-	// 注意：此字段可能返回 null，表示取不到有效值。
-	CloudAttachId *string `json:"CloudAttachId,omitempty" name:"CloudAttachId"`
+	CloudAttachId *string `json:"CloudAttachId,omitnil,omitempty" name:"CloudAttachId"`
+
+	// 是否共享通道
+	ShareOrNot *uint64 `json:"ShareOrNot,omitnil,omitempty" name:"ShareOrNot"`
+
+	// 接入点名称
+	AccessPointName *string `json:"AccessPointName,omitnil,omitempty" name:"AccessPointName"`
+
+	// 接入点ID
+	AccessPointId *string `json:"AccessPointId,omitnil,omitempty" name:"AccessPointId"`
 }
 
 type DirectConnectTunnelExtra struct {
 	// 专用通道ID
-	DirectConnectTunnelId *string `json:"DirectConnectTunnelId,omitempty" name:"DirectConnectTunnelId"`
+	DirectConnectTunnelId *string `json:"DirectConnectTunnelId,omitnil,omitempty" name:"DirectConnectTunnelId"`
 
 	// 物理专线ID
-	DirectConnectId *string `json:"DirectConnectId,omitempty" name:"DirectConnectId"`
+	DirectConnectId *string `json:"DirectConnectId,omitnil,omitempty" name:"DirectConnectId"`
 
 	// 专用通道状态
 	// AVAILABLE:就绪或者已连接
@@ -1599,159 +1791,158 @@ type DirectConnectTunnelExtra struct {
 	// DELETED:删除完成
 	// COMFIRMING:待接受
 	// REJECTED:拒绝
-	State *string `json:"State,omitempty" name:"State"`
+	State *string `json:"State,omitnil,omitempty" name:"State"`
 
 	// 物理专线的拥有者，开发商账号 ID
-	DirectConnectOwnerAccount *string `json:"DirectConnectOwnerAccount,omitempty" name:"DirectConnectOwnerAccount"`
+	DirectConnectOwnerAccount *string `json:"DirectConnectOwnerAccount,omitnil,omitempty" name:"DirectConnectOwnerAccount"`
 
 	// 专用通道的拥有者，开发商账号 ID
-	OwnerAccount *string `json:"OwnerAccount,omitempty" name:"OwnerAccount"`
+	OwnerAccount *string `json:"OwnerAccount,omitnil,omitempty" name:"OwnerAccount"`
 
 	// 网络类型，分别为VPC、BMVPC、CCN
 	//  VPC：私有网络 ，BMVPC：黑石网络，CCN：云联网
-	NetworkType *string `json:"NetworkType,omitempty" name:"NetworkType"`
+	NetworkType *string `json:"NetworkType,omitnil,omitempty" name:"NetworkType"`
 
 	// VPC地域对应的网络名，如ap-guangzhou
-	NetworkRegion *string `json:"NetworkRegion,omitempty" name:"NetworkRegion"`
+	NetworkRegion *string `json:"NetworkRegion,omitnil,omitempty" name:"NetworkRegion"`
 
 	// 私有网络统一 ID 或者黑石网络统一 ID
-	VpcId *string `json:"VpcId,omitempty" name:"VpcId"`
+	VpcId *string `json:"VpcId,omitnil,omitempty" name:"VpcId"`
 
 	// 专线网关 ID
-	DirectConnectGatewayId *string `json:"DirectConnectGatewayId,omitempty" name:"DirectConnectGatewayId"`
+	DirectConnectGatewayId *string `json:"DirectConnectGatewayId,omitnil,omitempty" name:"DirectConnectGatewayId"`
 
 	// BGP ：BGP路由 STATIC：静态 默认为 BGP 路由
-	RouteType *string `json:"RouteType,omitempty" name:"RouteType"`
+	RouteType *string `json:"RouteType,omitnil,omitempty" name:"RouteType"`
 
 	// 用户侧BGP，Asn，AuthKey
-	BgpPeer *BgpPeer `json:"BgpPeer,omitempty" name:"BgpPeer"`
+	BgpPeer *BgpPeer `json:"BgpPeer,omitnil,omitempty" name:"BgpPeer"`
 
 	// 用户侧网段地址
-	RouteFilterPrefixes []*RouteFilterPrefix `json:"RouteFilterPrefixes,omitempty" name:"RouteFilterPrefixes"`
+	RouteFilterPrefixes []*RouteFilterPrefix `json:"RouteFilterPrefixes,omitnil,omitempty" name:"RouteFilterPrefixes"`
 
 	// 互联网通道公网网段地址
-	PublicAddresses []*RouteFilterPrefix `json:"PublicAddresses,omitempty" name:"PublicAddresses"`
+	PublicAddresses []*RouteFilterPrefix `json:"PublicAddresses,omitnil,omitempty" name:"PublicAddresses"`
 
 	// 专用通道的Vlan
-	Vlan *int64 `json:"Vlan,omitempty" name:"Vlan"`
+	Vlan *int64 `json:"Vlan,omitnil,omitempty" name:"Vlan"`
 
 	// 腾讯侧互联 IP
-	TencentAddress *string `json:"TencentAddress,omitempty" name:"TencentAddress"`
+	TencentAddress *string `json:"TencentAddress,omitnil,omitempty" name:"TencentAddress"`
 
 	// 腾讯侧备用互联IP
-	TencentBackupAddress *string `json:"TencentBackupAddress,omitempty" name:"TencentBackupAddress"`
+	TencentBackupAddress *string `json:"TencentBackupAddress,omitnil,omitempty" name:"TencentBackupAddress"`
 
 	// 用户侧互联 IP
-	CustomerAddress *string `json:"CustomerAddress,omitempty" name:"CustomerAddress"`
+	CustomerAddress *string `json:"CustomerAddress,omitnil,omitempty" name:"CustomerAddress"`
 
 	// 专用通道名称
-	DirectConnectTunnelName *string `json:"DirectConnectTunnelName,omitempty" name:"DirectConnectTunnelName"`
+	DirectConnectTunnelName *string `json:"DirectConnectTunnelName,omitnil,omitempty" name:"DirectConnectTunnelName"`
 
 	// 专用通道创建时间
-	CreatedTime *string `json:"CreatedTime,omitempty" name:"CreatedTime"`
+	CreatedTime *string `json:"CreatedTime,omitnil,omitempty" name:"CreatedTime"`
 
 	// 专用通道带宽值
-	Bandwidth *int64 `json:"Bandwidth,omitempty" name:"Bandwidth"`
+	Bandwidth *int64 `json:"Bandwidth,omitnil,omitempty" name:"Bandwidth"`
 
 	// 关联的网络自定义探测ID
-	NetDetectId *string `json:"NetDetectId,omitempty" name:"NetDetectId"`
+	NetDetectId *string `json:"NetDetectId,omitnil,omitempty" name:"NetDetectId"`
 
 	// BGP community开关
-	EnableBGPCommunity *bool `json:"EnableBGPCommunity,omitempty" name:"EnableBGPCommunity"`
+	EnableBGPCommunity *bool `json:"EnableBGPCommunity,omitnil,omitempty" name:"EnableBGPCommunity"`
 
 	// 是否为Nat通道
-	NatType *int64 `json:"NatType,omitempty" name:"NatType"`
+	NatType *int64 `json:"NatType,omitnil,omitempty" name:"NatType"`
 
 	// VPC地域简码，如gz、cd
-	VpcRegion *string `json:"VpcRegion,omitempty" name:"VpcRegion"`
+	VpcRegion *string `json:"VpcRegion,omitnil,omitempty" name:"VpcRegion"`
 
 	// 是否开启BFD
-	BfdEnable *int64 `json:"BfdEnable,omitempty" name:"BfdEnable"`
+	BfdEnable *int64 `json:"BfdEnable,omitnil,omitempty" name:"BfdEnable"`
 
 	// 是否开启NQA
-	NqaEnable *int64 `json:"NqaEnable,omitempty" name:"NqaEnable"`
+	NqaEnable *int64 `json:"NqaEnable,omitnil,omitempty" name:"NqaEnable"`
 
 	// 专用通道接入点类型
-	AccessPointType *string `json:"AccessPointType,omitempty" name:"AccessPointType"`
+	AccessPointType *string `json:"AccessPointType,omitnil,omitempty" name:"AccessPointType"`
 
 	// 专线网关名称
-	DirectConnectGatewayName *string `json:"DirectConnectGatewayName,omitempty" name:"DirectConnectGatewayName"`
+	DirectConnectGatewayName *string `json:"DirectConnectGatewayName,omitnil,omitempty" name:"DirectConnectGatewayName"`
 
 	// VPC名称
-	VpcName *string `json:"VpcName,omitempty" name:"VpcName"`
+	VpcName *string `json:"VpcName,omitnil,omitempty" name:"VpcName"`
 
 	// 专用通道关联的物理专线是否签署了用户协议
-	SignLaw *bool `json:"SignLaw,omitempty" name:"SignLaw"`
+	SignLaw *bool `json:"SignLaw,omitnil,omitempty" name:"SignLaw"`
 
 	// BFD配置信息
-	BfdInfo *BFDInfo `json:"BfdInfo,omitempty" name:"BfdInfo"`
+	BfdInfo *BFDInfo `json:"BfdInfo,omitnil,omitempty" name:"BfdInfo"`
 
 	// NQA配置信息
-	NqaInfo *NQAInfo `json:"NqaInfo,omitempty" name:"NqaInfo"`
+	NqaInfo *NQAInfo `json:"NqaInfo,omitnil,omitempty" name:"NqaInfo"`
 
 	// BGP状态
-	BgpStatus *BGPStatus `json:"BgpStatus,omitempty" name:"BgpStatus"`
+	BgpStatus *BGPStatus `json:"BgpStatus,omitnil,omitempty" name:"BgpStatus"`
 
 	// 是否开启IPv6
-	// 注意：此字段可能返回 null，表示取不到有效值。
-	IPv6Enable *int64 `json:"IPv6Enable,omitempty" name:"IPv6Enable"`
+	IPv6Enable *int64 `json:"IPv6Enable,omitnil,omitempty" name:"IPv6Enable"`
 
 	// 腾讯侧互联IPv6地址
-	// 注意：此字段可能返回 null，表示取不到有效值。
-	TencentIPv6Address *string `json:"TencentIPv6Address,omitempty" name:"TencentIPv6Address"`
+	TencentIPv6Address *string `json:"TencentIPv6Address,omitnil,omitempty" name:"TencentIPv6Address"`
 
 	// 腾讯侧备用互联IPv6地址
-	// 注意：此字段可能返回 null，表示取不到有效值。
-	TencentBackupIPv6Address *string `json:"TencentBackupIPv6Address,omitempty" name:"TencentBackupIPv6Address"`
+	TencentBackupIPv6Address *string `json:"TencentBackupIPv6Address,omitnil,omitempty" name:"TencentBackupIPv6Address"`
 
 	// BGPv6状态
-	// 注意：此字段可能返回 null，表示取不到有效值。
-	BgpIPv6Status *BGPStatus `json:"BgpIPv6Status,omitempty" name:"BgpIPv6Status"`
+	BgpIPv6Status *BGPStatus `json:"BgpIPv6Status,omitnil,omitempty" name:"BgpIPv6Status"`
 
 	// 用户侧互联IPv6地址
-	// 注意：此字段可能返回 null，表示取不到有效值。
-	CustomerIPv6Address *string `json:"CustomerIPv6Address,omitempty" name:"CustomerIPv6Address"`
+	CustomerIPv6Address *string `json:"CustomerIPv6Address,omitnil,omitempty" name:"CustomerIPv6Address"`
 
 	// 专用通道是否支持巨帧。1 支持，0 不支持
-	// 注意：此字段可能返回 null，表示取不到有效值。
-	JumboEnable *int64 `json:"JumboEnable,omitempty" name:"JumboEnable"`
+	JumboEnable *int64 `json:"JumboEnable,omitnil,omitempty" name:"JumboEnable"`
 
 	// 专用通道是否支持高精度BFD。1支持，0不支持
-	// 注意：此字段可能返回 null，表示取不到有效值。
-	HighPrecisionBFDEnable *int64 `json:"HighPrecisionBFDEnable,omitempty" name:"HighPrecisionBFDEnable"`
+	HighPrecisionBFDEnable *int64 `json:"HighPrecisionBFDEnable,omitnil,omitempty" name:"HighPrecisionBFDEnable"`
 }
 
 type DirectConnectTunnelRoute struct {
 	// 专用通道路由ID
-	RouteId *string `json:"RouteId,omitempty" name:"RouteId"`
+	RouteId *string `json:"RouteId,omitnil,omitempty" name:"RouteId"`
 
 	// 网段CIDR
-	DestinationCidrBlock *string `json:"DestinationCidrBlock,omitempty" name:"DestinationCidrBlock"`
+	DestinationCidrBlock *string `json:"DestinationCidrBlock,omitnil,omitempty" name:"DestinationCidrBlock"`
 
 	// 路由类型：BGP/STATIC路由
-	RouteType *string `json:"RouteType,omitempty" name:"RouteType"`
+	RouteType *string `json:"RouteType,omitnil,omitempty" name:"RouteType"`
 
 	// ENABLE：路由启用，DISABLE：路由禁用
-	Status *string `json:"Status,omitempty" name:"Status"`
+	Status *string `json:"Status,omitnil,omitempty" name:"Status"`
 
 	// ASPath信息
-	ASPath []*string `json:"ASPath,omitempty" name:"ASPath"`
+	ASPath []*string `json:"ASPath,omitnil,omitempty" name:"ASPath"`
 
 	// 路由下一跳IP
-	NextHop *string `json:"NextHop,omitempty" name:"NextHop"`
+	NextHop *string `json:"NextHop,omitnil,omitempty" name:"NextHop"`
+
+	// 路由更新时间
+	UpdateTime *string `json:"UpdateTime,omitnil,omitempty" name:"UpdateTime"`
+
+	// 是否配置在通道上
+	ApplyOnTunnelEnable *bool `json:"ApplyOnTunnelEnable,omitnil,omitempty" name:"ApplyOnTunnelEnable"`
 }
 
 // Predefined struct for user
 type DisableInternetAddressRequestParams struct {
 	// 公网互联网地址ID
-	InstanceId *string `json:"InstanceId,omitempty" name:"InstanceId"`
+	InstanceId *string `json:"InstanceId,omitnil,omitempty" name:"InstanceId"`
 }
 
 type DisableInternetAddressRequest struct {
 	*tchttp.BaseRequest
 	
 	// 公网互联网地址ID
-	InstanceId *string `json:"InstanceId,omitempty" name:"InstanceId"`
+	InstanceId *string `json:"InstanceId,omitnil,omitempty" name:"InstanceId"`
 }
 
 func (r *DisableInternetAddressRequest) ToJsonString() string {
@@ -1775,8 +1966,8 @@ func (r *DisableInternetAddressRequest) FromJsonString(s string) error {
 
 // Predefined struct for user
 type DisableInternetAddressResponseParams struct {
-	// 唯一请求 ID，每次请求都会返回。定位问题时需要提供该次请求的 RequestId。
-	RequestId *string `json:"RequestId,omitempty" name:"RequestId"`
+	// 唯一请求 ID，由服务端生成，每次请求都会返回（若请求因其他原因未能抵达服务端，则该次请求不会获得 RequestId）。定位问题时需要提供该次请求的 RequestId。
+	RequestId *string `json:"RequestId,omitnil,omitempty" name:"RequestId"`
 }
 
 type DisableInternetAddressResponse struct {
@@ -1798,14 +1989,14 @@ func (r *DisableInternetAddressResponse) FromJsonString(s string) error {
 // Predefined struct for user
 type EnableInternetAddressRequestParams struct {
 	// 互联网公网地址ID
-	InstanceId *string `json:"InstanceId,omitempty" name:"InstanceId"`
+	InstanceId *string `json:"InstanceId,omitnil,omitempty" name:"InstanceId"`
 }
 
 type EnableInternetAddressRequest struct {
 	*tchttp.BaseRequest
 	
 	// 互联网公网地址ID
-	InstanceId *string `json:"InstanceId,omitempty" name:"InstanceId"`
+	InstanceId *string `json:"InstanceId,omitnil,omitempty" name:"InstanceId"`
 }
 
 func (r *EnableInternetAddressRequest) ToJsonString() string {
@@ -1829,8 +2020,8 @@ func (r *EnableInternetAddressRequest) FromJsonString(s string) error {
 
 // Predefined struct for user
 type EnableInternetAddressResponseParams struct {
-	// 唯一请求 ID，每次请求都会返回。定位问题时需要提供该次请求的 RequestId。
-	RequestId *string `json:"RequestId,omitempty" name:"RequestId"`
+	// 唯一请求 ID，由服务端生成，每次请求都会返回（若请求因其他原因未能抵达服务端，则该次请求不会获得 RequestId）。定位问题时需要提供该次请求的 RequestId。
+	RequestId *string `json:"RequestId,omitnil,omitempty" name:"RequestId"`
 }
 
 type EnableInternetAddressResponse struct {
@@ -1851,159 +2042,152 @@ func (r *EnableInternetAddressResponse) FromJsonString(s string) error {
 
 type Filter struct {
 	// 需要过滤的字段。
-	Name *string `json:"Name,omitempty" name:"Name"`
+	Name *string `json:"Name,omitnil,omitempty" name:"Name"`
 
 	// 字段的过滤值。
-	Values []*string `json:"Values,omitempty" name:"Values"`
+	Values []*string `json:"Values,omitnil,omitempty" name:"Values"`
 }
 
 type InternetAddressDetail struct {
 	// 互联网地址ID
-	// 注意：此字段可能返回 null，表示取不到有效值。
-	InstanceId *string `json:"InstanceId,omitempty" name:"InstanceId"`
+	InstanceId *string `json:"InstanceId,omitnil,omitempty" name:"InstanceId"`
 
 	// 互联网网络地址
-	// 注意：此字段可能返回 null，表示取不到有效值。
-	Subnet *string `json:"Subnet,omitempty" name:"Subnet"`
+	Subnet *string `json:"Subnet,omitnil,omitempty" name:"Subnet"`
 
 	// 网络地址掩码长度
-	// 注意：此字段可能返回 null，表示取不到有效值。
-	MaskLen *int64 `json:"MaskLen,omitempty" name:"MaskLen"`
+	MaskLen *int64 `json:"MaskLen,omitnil,omitempty" name:"MaskLen"`
 
 	// 0:BGP
 	// 1:电信
 	// 2:移动
 	// 3:联通
-	// 注意：此字段可能返回 null，表示取不到有效值。
-	AddrType *int64 `json:"AddrType,omitempty" name:"AddrType"`
+	AddrType *int64 `json:"AddrType,omitnil,omitempty" name:"AddrType"`
 
 	// 0:使用中
 	// 1:已停用
 	// 2:已退还
-	Status *int64 `json:"Status,omitempty" name:"Status"`
+	Status *int64 `json:"Status,omitnil,omitempty" name:"Status"`
 
 	// 申请时间
-	// 注意：此字段可能返回 null，表示取不到有效值。
-	ApplyTime *string `json:"ApplyTime,omitempty" name:"ApplyTime"`
+	ApplyTime *string `json:"ApplyTime,omitnil,omitempty" name:"ApplyTime"`
 
 	// 停用时间
-	// 注意：此字段可能返回 null，表示取不到有效值。
-	StopTime *string `json:"StopTime,omitempty" name:"StopTime"`
+	StopTime *string `json:"StopTime,omitnil,omitempty" name:"StopTime"`
 
 	// 退还时间
-	// 注意：此字段可能返回 null，表示取不到有效值。
-	ReleaseTime *string `json:"ReleaseTime,omitempty" name:"ReleaseTime"`
+	ReleaseTime *string `json:"ReleaseTime,omitnil,omitempty" name:"ReleaseTime"`
 
 	// 地域信息
-	// 注意：此字段可能返回 null，表示取不到有效值。
-	Region *string `json:"Region,omitempty" name:"Region"`
+	Region *string `json:"Region,omitnil,omitempty" name:"Region"`
 
 	// 用户ID
-	// 注意：此字段可能返回 null，表示取不到有效值。
-	AppId *int64 `json:"AppId,omitempty" name:"AppId"`
+	AppId *int64 `json:"AppId,omitnil,omitempty" name:"AppId"`
 
 	// 0:IPv4 1:IPv6
-	// 注意：此字段可能返回 null，表示取不到有效值。
-	AddrProto *int64 `json:"AddrProto,omitempty" name:"AddrProto"`
+	AddrProto *int64 `json:"AddrProto,omitnil,omitempty" name:"AddrProto"`
 
 	// 释放状态的IP地址保留的天数
-	// 注意：此字段可能返回 null，表示取不到有效值。
-	ReserveTime *int64 `json:"ReserveTime,omitempty" name:"ReserveTime"`
+	ReserveTime *int64 `json:"ReserveTime,omitnil,omitempty" name:"ReserveTime"`
 }
 
 type InternetAddressStatistics struct {
 	// 地域
-	// 注意：此字段可能返回 null，表示取不到有效值。
-	Region *string `json:"Region,omitempty" name:"Region"`
+	Region *string `json:"Region,omitnil,omitempty" name:"Region"`
 
 	// 互联网公网地址数量
-	// 注意：此字段可能返回 null，表示取不到有效值。
-	SubnetNum *int64 `json:"SubnetNum,omitempty" name:"SubnetNum"`
+	SubnetNum *int64 `json:"SubnetNum,omitnil,omitempty" name:"SubnetNum"`
 }
 
 // Predefined struct for user
 type ModifyDirectConnectAttributeRequestParams struct {
-	// 物理专线的ID。
-	DirectConnectId *string `json:"DirectConnectId,omitempty" name:"DirectConnectId"`
+	// 物理专线ID。
+	DirectConnectId *string `json:"DirectConnectId,omitnil,omitempty" name:"DirectConnectId"`
 
 	// 物理专线名称。
-	DirectConnectName *string `json:"DirectConnectName,omitempty" name:"DirectConnectName"`
+	DirectConnectName *string `json:"DirectConnectName,omitnil,omitempty" name:"DirectConnectName"`
 
 	// 运营商或者服务商为物理专线提供的电路编码。
-	CircuitCode *string `json:"CircuitCode,omitempty" name:"CircuitCode"`
+	CircuitCode *string `json:"CircuitCode,omitnil,omitempty" name:"CircuitCode"`
 
 	// 物理专线调试VLAN。
-	Vlan *int64 `json:"Vlan,omitempty" name:"Vlan"`
+	Vlan *int64 `json:"Vlan,omitnil,omitempty" name:"Vlan"`
 
 	// 物理专线调试腾讯侧互联 IP。
-	TencentAddress *string `json:"TencentAddress,omitempty" name:"TencentAddress"`
+	TencentAddress *string `json:"TencentAddress,omitnil,omitempty" name:"TencentAddress"`
 
 	// 物理专线调试用户侧互联 IP。
-	CustomerAddress *string `json:"CustomerAddress,omitempty" name:"CustomerAddress"`
+	CustomerAddress *string `json:"CustomerAddress,omitnil,omitempty" name:"CustomerAddress"`
 
 	// 物理专线申请者姓名。默认从账户体系获取。
-	CustomerName *string `json:"CustomerName,omitempty" name:"CustomerName"`
+	CustomerName *string `json:"CustomerName,omitnil,omitempty" name:"CustomerName"`
 
 	// 物理专线申请者联系邮箱。默认从账户体系获取。
-	CustomerContactMail *string `json:"CustomerContactMail,omitempty" name:"CustomerContactMail"`
+	CustomerContactMail *string `json:"CustomerContactMail,omitnil,omitempty" name:"CustomerContactMail"`
 
 	// 物理专线申请者联系号码。默认从账户体系获取。
-	CustomerContactNumber *string `json:"CustomerContactNumber,omitempty" name:"CustomerContactNumber"`
+	CustomerContactNumber *string `json:"CustomerContactNumber,omitnil,omitempty" name:"CustomerContactNumber"`
 
 	// 报障联系人。
-	FaultReportContactPerson *string `json:"FaultReportContactPerson,omitempty" name:"FaultReportContactPerson"`
+	FaultReportContactPerson *string `json:"FaultReportContactPerson,omitnil,omitempty" name:"FaultReportContactPerson"`
 
 	// 报障联系电话。
-	FaultReportContactNumber *string `json:"FaultReportContactNumber,omitempty" name:"FaultReportContactNumber"`
+	FaultReportContactNumber *string `json:"FaultReportContactNumber,omitnil,omitempty" name:"FaultReportContactNumber"`
 
-	// 物理专线申请者补签用户使用协议
-	SignLaw *bool `json:"SignLaw,omitempty" name:"SignLaw"`
+	// 报障联系邮箱。
+	FaultReportContactEmail *string `json:"FaultReportContactEmail,omitnil,omitempty" name:"FaultReportContactEmail"`
 
-	// 物理专线带宽
-	Bandwidth *uint64 `json:"Bandwidth,omitempty" name:"Bandwidth"`
+	// 物理专线申请者补签用户使用协议。
+	SignLaw *bool `json:"SignLaw,omitnil,omitempty" name:"SignLaw"`
+
+	// 物理专线带宽。
+	Bandwidth *uint64 `json:"Bandwidth,omitnil,omitempty" name:"Bandwidth"`
 }
 
 type ModifyDirectConnectAttributeRequest struct {
 	*tchttp.BaseRequest
 	
-	// 物理专线的ID。
-	DirectConnectId *string `json:"DirectConnectId,omitempty" name:"DirectConnectId"`
+	// 物理专线ID。
+	DirectConnectId *string `json:"DirectConnectId,omitnil,omitempty" name:"DirectConnectId"`
 
 	// 物理专线名称。
-	DirectConnectName *string `json:"DirectConnectName,omitempty" name:"DirectConnectName"`
+	DirectConnectName *string `json:"DirectConnectName,omitnil,omitempty" name:"DirectConnectName"`
 
 	// 运营商或者服务商为物理专线提供的电路编码。
-	CircuitCode *string `json:"CircuitCode,omitempty" name:"CircuitCode"`
+	CircuitCode *string `json:"CircuitCode,omitnil,omitempty" name:"CircuitCode"`
 
 	// 物理专线调试VLAN。
-	Vlan *int64 `json:"Vlan,omitempty" name:"Vlan"`
+	Vlan *int64 `json:"Vlan,omitnil,omitempty" name:"Vlan"`
 
 	// 物理专线调试腾讯侧互联 IP。
-	TencentAddress *string `json:"TencentAddress,omitempty" name:"TencentAddress"`
+	TencentAddress *string `json:"TencentAddress,omitnil,omitempty" name:"TencentAddress"`
 
 	// 物理专线调试用户侧互联 IP。
-	CustomerAddress *string `json:"CustomerAddress,omitempty" name:"CustomerAddress"`
+	CustomerAddress *string `json:"CustomerAddress,omitnil,omitempty" name:"CustomerAddress"`
 
 	// 物理专线申请者姓名。默认从账户体系获取。
-	CustomerName *string `json:"CustomerName,omitempty" name:"CustomerName"`
+	CustomerName *string `json:"CustomerName,omitnil,omitempty" name:"CustomerName"`
 
 	// 物理专线申请者联系邮箱。默认从账户体系获取。
-	CustomerContactMail *string `json:"CustomerContactMail,omitempty" name:"CustomerContactMail"`
+	CustomerContactMail *string `json:"CustomerContactMail,omitnil,omitempty" name:"CustomerContactMail"`
 
 	// 物理专线申请者联系号码。默认从账户体系获取。
-	CustomerContactNumber *string `json:"CustomerContactNumber,omitempty" name:"CustomerContactNumber"`
+	CustomerContactNumber *string `json:"CustomerContactNumber,omitnil,omitempty" name:"CustomerContactNumber"`
 
 	// 报障联系人。
-	FaultReportContactPerson *string `json:"FaultReportContactPerson,omitempty" name:"FaultReportContactPerson"`
+	FaultReportContactPerson *string `json:"FaultReportContactPerson,omitnil,omitempty" name:"FaultReportContactPerson"`
 
 	// 报障联系电话。
-	FaultReportContactNumber *string `json:"FaultReportContactNumber,omitempty" name:"FaultReportContactNumber"`
+	FaultReportContactNumber *string `json:"FaultReportContactNumber,omitnil,omitempty" name:"FaultReportContactNumber"`
 
-	// 物理专线申请者补签用户使用协议
-	SignLaw *bool `json:"SignLaw,omitempty" name:"SignLaw"`
+	// 报障联系邮箱。
+	FaultReportContactEmail *string `json:"FaultReportContactEmail,omitnil,omitempty" name:"FaultReportContactEmail"`
 
-	// 物理专线带宽
-	Bandwidth *uint64 `json:"Bandwidth,omitempty" name:"Bandwidth"`
+	// 物理专线申请者补签用户使用协议。
+	SignLaw *bool `json:"SignLaw,omitnil,omitempty" name:"SignLaw"`
+
+	// 物理专线带宽。
+	Bandwidth *uint64 `json:"Bandwidth,omitnil,omitempty" name:"Bandwidth"`
 }
 
 func (r *ModifyDirectConnectAttributeRequest) ToJsonString() string {
@@ -2029,6 +2213,7 @@ func (r *ModifyDirectConnectAttributeRequest) FromJsonString(s string) error {
 	delete(f, "CustomerContactNumber")
 	delete(f, "FaultReportContactPerson")
 	delete(f, "FaultReportContactNumber")
+	delete(f, "FaultReportContactEmail")
 	delete(f, "SignLaw")
 	delete(f, "Bandwidth")
 	if len(f) > 0 {
@@ -2039,8 +2224,8 @@ func (r *ModifyDirectConnectAttributeRequest) FromJsonString(s string) error {
 
 // Predefined struct for user
 type ModifyDirectConnectAttributeResponseParams struct {
-	// 唯一请求 ID，每次请求都会返回。定位问题时需要提供该次请求的 RequestId。
-	RequestId *string `json:"RequestId,omitempty" name:"RequestId"`
+	// 唯一请求 ID，由服务端生成，每次请求都会返回（若请求因其他原因未能抵达服务端，则该次请求不会获得 RequestId）。定位问题时需要提供该次请求的 RequestId。
+	RequestId *string `json:"RequestId,omitnil,omitempty" name:"RequestId"`
 }
 
 type ModifyDirectConnectAttributeResponse struct {
@@ -2061,57 +2246,57 @@ func (r *ModifyDirectConnectAttributeResponse) FromJsonString(s string) error {
 
 // Predefined struct for user
 type ModifyDirectConnectTunnelAttributeRequestParams struct {
-	// 专用通道ID
-	DirectConnectTunnelId *string `json:"DirectConnectTunnelId,omitempty" name:"DirectConnectTunnelId"`
+	// 专用通道ID。
+	DirectConnectTunnelId *string `json:"DirectConnectTunnelId,omitnil,omitempty" name:"DirectConnectTunnelId"`
 
-	// 专用通道名称
-	DirectConnectTunnelName *string `json:"DirectConnectTunnelName,omitempty" name:"DirectConnectTunnelName"`
+	// 专用通道名称。
+	DirectConnectTunnelName *string `json:"DirectConnectTunnelName,omitnil,omitempty" name:"DirectConnectTunnelName"`
 
-	// 用户侧BGP，包括Asn，AuthKey
-	BgpPeer *BgpPeer `json:"BgpPeer,omitempty" name:"BgpPeer"`
+	// 用户侧BGP，包括Asn，AuthKey。
+	BgpPeer *BgpPeer `json:"BgpPeer,omitnil,omitempty" name:"BgpPeer"`
 
-	// 用户侧网段地址
-	RouteFilterPrefixes []*RouteFilterPrefix `json:"RouteFilterPrefixes,omitempty" name:"RouteFilterPrefixes"`
+	// 用户侧网段地址。
+	RouteFilterPrefixes []*RouteFilterPrefix `json:"RouteFilterPrefixes,omitnil,omitempty" name:"RouteFilterPrefixes"`
 
-	// 腾讯侧互联IP
-	TencentAddress *string `json:"TencentAddress,omitempty" name:"TencentAddress"`
+	// 腾讯侧互联IP。
+	TencentAddress *string `json:"TencentAddress,omitnil,omitempty" name:"TencentAddress"`
 
-	// 用户侧互联IP
-	CustomerAddress *string `json:"CustomerAddress,omitempty" name:"CustomerAddress"`
+	// 用户侧互联IP。
+	CustomerAddress *string `json:"CustomerAddress,omitnil,omitempty" name:"CustomerAddress"`
 
 	// 专用通道带宽值，单位为M。
-	Bandwidth *int64 `json:"Bandwidth,omitempty" name:"Bandwidth"`
+	Bandwidth *int64 `json:"Bandwidth,omitnil,omitempty" name:"Bandwidth"`
 
-	// 腾讯侧备用互联IP
-	TencentBackupAddress *string `json:"TencentBackupAddress,omitempty" name:"TencentBackupAddress"`
+	// 腾讯侧备用互联IP。
+	TencentBackupAddress *string `json:"TencentBackupAddress,omitnil,omitempty" name:"TencentBackupAddress"`
 }
 
 type ModifyDirectConnectTunnelAttributeRequest struct {
 	*tchttp.BaseRequest
 	
-	// 专用通道ID
-	DirectConnectTunnelId *string `json:"DirectConnectTunnelId,omitempty" name:"DirectConnectTunnelId"`
+	// 专用通道ID。
+	DirectConnectTunnelId *string `json:"DirectConnectTunnelId,omitnil,omitempty" name:"DirectConnectTunnelId"`
 
-	// 专用通道名称
-	DirectConnectTunnelName *string `json:"DirectConnectTunnelName,omitempty" name:"DirectConnectTunnelName"`
+	// 专用通道名称。
+	DirectConnectTunnelName *string `json:"DirectConnectTunnelName,omitnil,omitempty" name:"DirectConnectTunnelName"`
 
-	// 用户侧BGP，包括Asn，AuthKey
-	BgpPeer *BgpPeer `json:"BgpPeer,omitempty" name:"BgpPeer"`
+	// 用户侧BGP，包括Asn，AuthKey。
+	BgpPeer *BgpPeer `json:"BgpPeer,omitnil,omitempty" name:"BgpPeer"`
 
-	// 用户侧网段地址
-	RouteFilterPrefixes []*RouteFilterPrefix `json:"RouteFilterPrefixes,omitempty" name:"RouteFilterPrefixes"`
+	// 用户侧网段地址。
+	RouteFilterPrefixes []*RouteFilterPrefix `json:"RouteFilterPrefixes,omitnil,omitempty" name:"RouteFilterPrefixes"`
 
-	// 腾讯侧互联IP
-	TencentAddress *string `json:"TencentAddress,omitempty" name:"TencentAddress"`
+	// 腾讯侧互联IP。
+	TencentAddress *string `json:"TencentAddress,omitnil,omitempty" name:"TencentAddress"`
 
-	// 用户侧互联IP
-	CustomerAddress *string `json:"CustomerAddress,omitempty" name:"CustomerAddress"`
+	// 用户侧互联IP。
+	CustomerAddress *string `json:"CustomerAddress,omitnil,omitempty" name:"CustomerAddress"`
 
 	// 专用通道带宽值，单位为M。
-	Bandwidth *int64 `json:"Bandwidth,omitempty" name:"Bandwidth"`
+	Bandwidth *int64 `json:"Bandwidth,omitnil,omitempty" name:"Bandwidth"`
 
-	// 腾讯侧备用互联IP
-	TencentBackupAddress *string `json:"TencentBackupAddress,omitempty" name:"TencentBackupAddress"`
+	// 腾讯侧备用互联IP。
+	TencentBackupAddress *string `json:"TencentBackupAddress,omitnil,omitempty" name:"TencentBackupAddress"`
 }
 
 func (r *ModifyDirectConnectTunnelAttributeRequest) ToJsonString() string {
@@ -2142,8 +2327,8 @@ func (r *ModifyDirectConnectTunnelAttributeRequest) FromJsonString(s string) err
 
 // Predefined struct for user
 type ModifyDirectConnectTunnelAttributeResponseParams struct {
-	// 唯一请求 ID，每次请求都会返回。定位问题时需要提供该次请求的 RequestId。
-	RequestId *string `json:"RequestId,omitempty" name:"RequestId"`
+	// 唯一请求 ID，由服务端生成，每次请求都会返回（若请求因其他原因未能抵达服务端，则该次请求不会获得 RequestId）。定位问题时需要提供该次请求的 RequestId。
+	RequestId *string `json:"RequestId,omitnil,omitempty" name:"RequestId"`
 }
 
 type ModifyDirectConnectTunnelAttributeResponse struct {
@@ -2164,111 +2349,129 @@ func (r *ModifyDirectConnectTunnelAttributeResponse) FromJsonString(s string) er
 
 // Predefined struct for user
 type ModifyDirectConnectTunnelExtraRequestParams struct {
-	// 专用通道ID
-	DirectConnectTunnelId *string `json:"DirectConnectTunnelId,omitempty" name:"DirectConnectTunnelId"`
+	// 专用通道ID。
+	DirectConnectTunnelId *string `json:"DirectConnectTunnelId,omitnil,omitempty" name:"DirectConnectTunnelId"`
 
-	// 专用通道的Vlan
-	Vlan *int64 `json:"Vlan,omitempty" name:"Vlan"`
+	// 专用通道的Vlan。
+	Vlan *int64 `json:"Vlan,omitnil,omitempty" name:"Vlan"`
 
-	// 用户侧BGP，Asn，AuthKey
-	BgpPeer *BgpPeer `json:"BgpPeer,omitempty" name:"BgpPeer"`
+	// Bgp参数，包括Asn，AuthKey
+	BgpPeer *BgpPeer `json:"BgpPeer,omitnil,omitempty" name:"BgpPeer"`
 
-	// 用户侧过滤网段地址
-	RouteFilterPrefixes *RouteFilterPrefix `json:"RouteFilterPrefixes,omitempty" name:"RouteFilterPrefixes"`
+	// 用户侧过滤网段地址。
+	RouteFilterPrefixes *RouteFilterPrefix `json:"RouteFilterPrefixes,omitnil,omitempty" name:"RouteFilterPrefixes"`
 
-	// 腾讯侧互联IP
-	TencentAddress *string `json:"TencentAddress,omitempty" name:"TencentAddress"`
+	// 腾讯侧互联IP。
+	TencentAddress *string `json:"TencentAddress,omitnil,omitempty" name:"TencentAddress"`
 
-	// 腾讯侧备用互联IP
-	TencentBackupAddress *string `json:"TencentBackupAddress,omitempty" name:"TencentBackupAddress"`
+	// 腾讯侧备用互联IP。
+	TencentBackupAddress *string `json:"TencentBackupAddress,omitnil,omitempty" name:"TencentBackupAddress"`
 
-	// 用户侧互联IP
-	CustomerAddress *string `json:"CustomerAddress,omitempty" name:"CustomerAddress"`
+	// 用户侧互联IP。
+	CustomerAddress *string `json:"CustomerAddress,omitnil,omitempty" name:"CustomerAddress"`
 
-	// 专用通道带宽值
-	Bandwidth *int64 `json:"Bandwidth,omitempty" name:"Bandwidth"`
+	// 专用通道带宽值。
+	Bandwidth *int64 `json:"Bandwidth,omitnil,omitempty" name:"Bandwidth"`
 
-	// BGP community开关
-	EnableBGPCommunity *bool `json:"EnableBGPCommunity,omitempty" name:"EnableBGPCommunity"`
+	// BGP community开关。
+	EnableBGPCommunity *bool `json:"EnableBGPCommunity,omitnil,omitempty" name:"EnableBGPCommunity"`
 
-	// 是否开启BFD
-	BfdEnable *int64 `json:"BfdEnable,omitempty" name:"BfdEnable"`
+	// 是否开启BFD。
+	BfdEnable *int64 `json:"BfdEnable,omitnil,omitempty" name:"BfdEnable"`
 
-	// 是否开启NQA
-	NqaEnable *int64 `json:"NqaEnable,omitempty" name:"NqaEnable"`
+	// 是否开启NQA。
+	NqaEnable *int64 `json:"NqaEnable,omitnil,omitempty" name:"NqaEnable"`
 
-	// BFD配置信息
-	BfdInfo *BFDInfo `json:"BfdInfo,omitempty" name:"BfdInfo"`
+	// BFD配置信息。
+	BfdInfo *BFDInfo `json:"BfdInfo,omitnil,omitempty" name:"BfdInfo"`
 
-	// NQA配置信息
-	NqaInfo *NQAInfo `json:"NqaInfo,omitempty" name:"NqaInfo"`
+	// NQA配置信息。
+	NqaInfo *NQAInfo `json:"NqaInfo,omitnil,omitempty" name:"NqaInfo"`
 
-	// 0：停用IPv6
-	// 1: 启用IPv6
-	IPv6Enable *int64 `json:"IPv6Enable,omitempty" name:"IPv6Enable"`
+	// IPV6使能。0：停用IPv6；1: 启用IPv6。
+	IPv6Enable *int64 `json:"IPv6Enable,omitnil,omitempty" name:"IPv6Enable"`
 
-	// 去往用户侧的路由信息
-	CustomerIDCRoutes []*RouteFilterPrefix `json:"CustomerIDCRoutes,omitempty" name:"CustomerIDCRoutes"`
+	// 去往用户侧的路由信息。
+	CustomerIDCRoutes []*RouteFilterPrefix `json:"CustomerIDCRoutes,omitnil,omitempty" name:"CustomerIDCRoutes"`
 
-	// 是否开启巨帧
-	// 1：开启
-	// 0：不开启
-	JumboEnable *int64 `json:"JumboEnable,omitempty" name:"JumboEnable"`
+	// 是否开启巨帧。1：开启；0：不开启。
+	JumboEnable *int64 `json:"JumboEnable,omitnil,omitempty" name:"JumboEnable"`
+
+	// 腾讯侧互联IPv6。
+	TencentIPv6Address *string `json:"TencentIPv6Address,omitnil,omitempty" name:"TencentIPv6Address"`
+
+	// 腾讯侧备用互联IPv6。
+	TencentBackupIPv6Address *string `json:"TencentBackupIPv6Address,omitnil,omitempty" name:"TencentBackupIPv6Address"`
+
+	// 用户侧互联IPv6。
+	CustomerIPv6Address *string `json:"CustomerIPv6Address,omitnil,omitempty" name:"CustomerIPv6Address"`
+
+	// 互联IP重分布状态
+	ImportDirectRoute *bool `json:"ImportDirectRoute,omitnil,omitempty" name:"ImportDirectRoute"`
 }
 
 type ModifyDirectConnectTunnelExtraRequest struct {
 	*tchttp.BaseRequest
 	
-	// 专用通道ID
-	DirectConnectTunnelId *string `json:"DirectConnectTunnelId,omitempty" name:"DirectConnectTunnelId"`
+	// 专用通道ID。
+	DirectConnectTunnelId *string `json:"DirectConnectTunnelId,omitnil,omitempty" name:"DirectConnectTunnelId"`
 
-	// 专用通道的Vlan
-	Vlan *int64 `json:"Vlan,omitempty" name:"Vlan"`
+	// 专用通道的Vlan。
+	Vlan *int64 `json:"Vlan,omitnil,omitempty" name:"Vlan"`
 
-	// 用户侧BGP，Asn，AuthKey
-	BgpPeer *BgpPeer `json:"BgpPeer,omitempty" name:"BgpPeer"`
+	// Bgp参数，包括Asn，AuthKey
+	BgpPeer *BgpPeer `json:"BgpPeer,omitnil,omitempty" name:"BgpPeer"`
 
-	// 用户侧过滤网段地址
-	RouteFilterPrefixes *RouteFilterPrefix `json:"RouteFilterPrefixes,omitempty" name:"RouteFilterPrefixes"`
+	// 用户侧过滤网段地址。
+	RouteFilterPrefixes *RouteFilterPrefix `json:"RouteFilterPrefixes,omitnil,omitempty" name:"RouteFilterPrefixes"`
 
-	// 腾讯侧互联IP
-	TencentAddress *string `json:"TencentAddress,omitempty" name:"TencentAddress"`
+	// 腾讯侧互联IP。
+	TencentAddress *string `json:"TencentAddress,omitnil,omitempty" name:"TencentAddress"`
 
-	// 腾讯侧备用互联IP
-	TencentBackupAddress *string `json:"TencentBackupAddress,omitempty" name:"TencentBackupAddress"`
+	// 腾讯侧备用互联IP。
+	TencentBackupAddress *string `json:"TencentBackupAddress,omitnil,omitempty" name:"TencentBackupAddress"`
 
-	// 用户侧互联IP
-	CustomerAddress *string `json:"CustomerAddress,omitempty" name:"CustomerAddress"`
+	// 用户侧互联IP。
+	CustomerAddress *string `json:"CustomerAddress,omitnil,omitempty" name:"CustomerAddress"`
 
-	// 专用通道带宽值
-	Bandwidth *int64 `json:"Bandwidth,omitempty" name:"Bandwidth"`
+	// 专用通道带宽值。
+	Bandwidth *int64 `json:"Bandwidth,omitnil,omitempty" name:"Bandwidth"`
 
-	// BGP community开关
-	EnableBGPCommunity *bool `json:"EnableBGPCommunity,omitempty" name:"EnableBGPCommunity"`
+	// BGP community开关。
+	EnableBGPCommunity *bool `json:"EnableBGPCommunity,omitnil,omitempty" name:"EnableBGPCommunity"`
 
-	// 是否开启BFD
-	BfdEnable *int64 `json:"BfdEnable,omitempty" name:"BfdEnable"`
+	// 是否开启BFD。
+	BfdEnable *int64 `json:"BfdEnable,omitnil,omitempty" name:"BfdEnable"`
 
-	// 是否开启NQA
-	NqaEnable *int64 `json:"NqaEnable,omitempty" name:"NqaEnable"`
+	// 是否开启NQA。
+	NqaEnable *int64 `json:"NqaEnable,omitnil,omitempty" name:"NqaEnable"`
 
-	// BFD配置信息
-	BfdInfo *BFDInfo `json:"BfdInfo,omitempty" name:"BfdInfo"`
+	// BFD配置信息。
+	BfdInfo *BFDInfo `json:"BfdInfo,omitnil,omitempty" name:"BfdInfo"`
 
-	// NQA配置信息
-	NqaInfo *NQAInfo `json:"NqaInfo,omitempty" name:"NqaInfo"`
+	// NQA配置信息。
+	NqaInfo *NQAInfo `json:"NqaInfo,omitnil,omitempty" name:"NqaInfo"`
 
-	// 0：停用IPv6
-	// 1: 启用IPv6
-	IPv6Enable *int64 `json:"IPv6Enable,omitempty" name:"IPv6Enable"`
+	// IPV6使能。0：停用IPv6；1: 启用IPv6。
+	IPv6Enable *int64 `json:"IPv6Enable,omitnil,omitempty" name:"IPv6Enable"`
 
-	// 去往用户侧的路由信息
-	CustomerIDCRoutes []*RouteFilterPrefix `json:"CustomerIDCRoutes,omitempty" name:"CustomerIDCRoutes"`
+	// 去往用户侧的路由信息。
+	CustomerIDCRoutes []*RouteFilterPrefix `json:"CustomerIDCRoutes,omitnil,omitempty" name:"CustomerIDCRoutes"`
 
-	// 是否开启巨帧
-	// 1：开启
-	// 0：不开启
-	JumboEnable *int64 `json:"JumboEnable,omitempty" name:"JumboEnable"`
+	// 是否开启巨帧。1：开启；0：不开启。
+	JumboEnable *int64 `json:"JumboEnable,omitnil,omitempty" name:"JumboEnable"`
+
+	// 腾讯侧互联IPv6。
+	TencentIPv6Address *string `json:"TencentIPv6Address,omitnil,omitempty" name:"TencentIPv6Address"`
+
+	// 腾讯侧备用互联IPv6。
+	TencentBackupIPv6Address *string `json:"TencentBackupIPv6Address,omitnil,omitempty" name:"TencentBackupIPv6Address"`
+
+	// 用户侧互联IPv6。
+	CustomerIPv6Address *string `json:"CustomerIPv6Address,omitnil,omitempty" name:"CustomerIPv6Address"`
+
+	// 互联IP重分布状态
+	ImportDirectRoute *bool `json:"ImportDirectRoute,omitnil,omitempty" name:"ImportDirectRoute"`
 }
 
 func (r *ModifyDirectConnectTunnelExtraRequest) ToJsonString() string {
@@ -2299,6 +2502,10 @@ func (r *ModifyDirectConnectTunnelExtraRequest) FromJsonString(s string) error {
 	delete(f, "IPv6Enable")
 	delete(f, "CustomerIDCRoutes")
 	delete(f, "JumboEnable")
+	delete(f, "TencentIPv6Address")
+	delete(f, "TencentBackupIPv6Address")
+	delete(f, "CustomerIPv6Address")
+	delete(f, "ImportDirectRoute")
 	if len(f) > 0 {
 		return tcerr.NewTencentCloudSDKError("ClientError.BuildRequestError", "ModifyDirectConnectTunnelExtraRequest has unknown keys!", "")
 	}
@@ -2307,8 +2514,8 @@ func (r *ModifyDirectConnectTunnelExtraRequest) FromJsonString(s string) error {
 
 // Predefined struct for user
 type ModifyDirectConnectTunnelExtraResponseParams struct {
-	// 唯一请求 ID，每次请求都会返回。定位问题时需要提供该次请求的 RequestId。
-	RequestId *string `json:"RequestId,omitempty" name:"RequestId"`
+	// 唯一请求 ID，由服务端生成，每次请求都会返回（若请求因其他原因未能抵达服务端，则该次请求不会获得 RequestId）。定位问题时需要提供该次请求的 RequestId。
+	RequestId *string `json:"RequestId,omitnil,omitempty" name:"RequestId"`
 }
 
 type ModifyDirectConnectTunnelExtraResponse struct {
@@ -2329,26 +2536,37 @@ func (r *ModifyDirectConnectTunnelExtraResponse) FromJsonString(s string) error 
 
 type NQAInfo struct {
 	// 健康检查次数
-	ProbeFailedTimes *int64 `json:"ProbeFailedTimes,omitempty" name:"ProbeFailedTimes"`
+	ProbeFailedTimes *int64 `json:"ProbeFailedTimes,omitnil,omitempty" name:"ProbeFailedTimes"`
 
 	// 健康检查间隔
-	Interval *int64 `json:"Interval,omitempty" name:"Interval"`
+	Interval *int64 `json:"Interval,omitnil,omitempty" name:"Interval"`
 
 	// 健康检查地址
-	DestinationIp *string `json:"DestinationIp,omitempty" name:"DestinationIp"`
+	DestinationIp *string `json:"DestinationIp,omitnil,omitempty" name:"DestinationIp"`
+}
+
+type PortSpecification struct {
+	// 端口名称
+	InternationalName *string `json:"InternationalName,omitnil,omitempty" name:"InternationalName"`
+
+	// 端口规格（M）
+	Specification *uint64 `json:"Specification,omitnil,omitempty" name:"Specification"`
+
+	// 端口类型：T-电口，X-光口
+	PortType *string `json:"PortType,omitnil,omitempty" name:"PortType"`
 }
 
 // Predefined struct for user
 type RejectDirectConnectTunnelRequestParams struct {
-	// 无
-	DirectConnectTunnelId *string `json:"DirectConnectTunnelId,omitempty" name:"DirectConnectTunnelId"`
+	// 专用通道ID。
+	DirectConnectTunnelId *string `json:"DirectConnectTunnelId,omitnil,omitempty" name:"DirectConnectTunnelId"`
 }
 
 type RejectDirectConnectTunnelRequest struct {
 	*tchttp.BaseRequest
 	
-	// 无
-	DirectConnectTunnelId *string `json:"DirectConnectTunnelId,omitempty" name:"DirectConnectTunnelId"`
+	// 专用通道ID。
+	DirectConnectTunnelId *string `json:"DirectConnectTunnelId,omitnil,omitempty" name:"DirectConnectTunnelId"`
 }
 
 func (r *RejectDirectConnectTunnelRequest) ToJsonString() string {
@@ -2372,8 +2590,8 @@ func (r *RejectDirectConnectTunnelRequest) FromJsonString(s string) error {
 
 // Predefined struct for user
 type RejectDirectConnectTunnelResponseParams struct {
-	// 唯一请求 ID，每次请求都会返回。定位问题时需要提供该次请求的 RequestId。
-	RequestId *string `json:"RequestId,omitempty" name:"RequestId"`
+	// 唯一请求 ID，由服务端生成，每次请求都会返回（若请求因其他原因未能抵达服务端，则该次请求不会获得 RequestId）。定位问题时需要提供该次请求的 RequestId。
+	RequestId *string `json:"RequestId,omitnil,omitempty" name:"RequestId"`
 }
 
 type RejectDirectConnectTunnelResponse struct {
@@ -2395,14 +2613,14 @@ func (r *RejectDirectConnectTunnelResponse) FromJsonString(s string) error {
 // Predefined struct for user
 type ReleaseInternetAddressRequestParams struct {
 	// 公网互联网地址ID
-	InstanceId *string `json:"InstanceId,omitempty" name:"InstanceId"`
+	InstanceId *string `json:"InstanceId,omitnil,omitempty" name:"InstanceId"`
 }
 
 type ReleaseInternetAddressRequest struct {
 	*tchttp.BaseRequest
 	
 	// 公网互联网地址ID
-	InstanceId *string `json:"InstanceId,omitempty" name:"InstanceId"`
+	InstanceId *string `json:"InstanceId,omitnil,omitempty" name:"InstanceId"`
 }
 
 func (r *ReleaseInternetAddressRequest) ToJsonString() string {
@@ -2426,8 +2644,8 @@ func (r *ReleaseInternetAddressRequest) FromJsonString(s string) error {
 
 // Predefined struct for user
 type ReleaseInternetAddressResponseParams struct {
-	// 唯一请求 ID，每次请求都会返回。定位问题时需要提供该次请求的 RequestId。
-	RequestId *string `json:"RequestId,omitempty" name:"RequestId"`
+	// 唯一请求 ID，由服务端生成，每次请求都会返回（若请求因其他原因未能抵达服务端，则该次请求不会获得 RequestId）。定位问题时需要提供该次请求的 RequestId。
+	RequestId *string `json:"RequestId,omitnil,omitempty" name:"RequestId"`
 }
 
 type ReleaseInternetAddressResponse struct {
@@ -2448,15 +2666,13 @@ func (r *ReleaseInternetAddressResponse) FromJsonString(s string) error {
 
 type RouteFilterPrefix struct {
 	// 用户侧网段地址
-	Cidr *string `json:"Cidr,omitempty" name:"Cidr"`
+	Cidr *string `json:"Cidr,omitnil,omitempty" name:"Cidr"`
 }
 
 type Tag struct {
 	// 标签键
-	// 注意：此字段可能返回 null，表示取不到有效值。
-	Key *string `json:"Key,omitempty" name:"Key"`
+	Key *string `json:"Key,omitnil,omitempty" name:"Key"`
 
 	// 标签值
-	// 注意：此字段可能返回 null，表示取不到有效值。
-	Value *string `json:"Value,omitempty" name:"Value"`
+	Value *string `json:"Value,omitnil,omitempty" name:"Value"`
 }

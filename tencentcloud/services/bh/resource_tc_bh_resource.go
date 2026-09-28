@@ -19,6 +19,9 @@ func ResourceTencentCloudBhResource() *schema.Resource {
 		Read:   resourceTencentCloudBhResourceRead,
 		Update: resourceTencentCloudBhResourceUpdate,
 		Delete: resourceTencentCloudBhResourceDelete,
+		Importer: &schema.ResourceImporter{
+			State: schema.ImportStatePassthrough,
+		},
 		Schema: map[string]*schema.Schema{
 			"deploy_region": {
 				Type:        schema.TypeString,
@@ -376,6 +379,10 @@ func resourceTencentCloudBhResourceRead(d *schema.ResourceData, meta interface{}
 		return nil
 	}
 
+	if respData.ResourceId != nil {
+		_ = d.Set("resource_id", respData.ResourceId)
+	}
+
 	if respData.ApCode != nil {
 		_ = d.Set("deploy_region", respData.ApCode)
 	}
@@ -388,8 +395,24 @@ func resourceTencentCloudBhResourceRead(d *schema.ResourceData, meta interface{}
 		_ = d.Set("subnet_id", respData.SubnetId)
 	}
 
+	if respData.ResourceEdition != nil {
+		_ = d.Set("resource_edition", respData.ResourceEdition)
+	}
+
 	if respData.Nodes != nil {
 		_ = d.Set("resource_node", respData.Nodes)
+	}
+
+	if respData.TimeUnit != nil {
+		_ = d.Set("time_unit", respData.TimeUnit)
+	}
+
+	if respData.TimeSpan != nil {
+		_ = d.Set("time_span", respData.TimeSpan)
+	}
+
+	if respData.PayMode != nil {
+		_ = d.Set("pay_mode", respData.PayMode)
 	}
 
 	if respData.RenewFlag != nil {
@@ -418,10 +441,6 @@ func resourceTencentCloudBhResourceRead(d *schema.ResourceData, meta interface{}
 
 	if respData.VpcCidrBlock != nil {
 		_ = d.Set("vpc_cidr_block", respData.VpcCidrBlock)
-	}
-
-	if respData.WebAccess != nil {
-		_ = d.Set("web_access", respData.WebAccess)
 	}
 
 	if respData.WebAccess != nil {

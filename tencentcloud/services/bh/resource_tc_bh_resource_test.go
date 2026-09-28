@@ -28,6 +28,11 @@ func TestAccTencentCloudBhResourceResource_basic(t *testing.T) {
 					resource.TestCheckResourceAttrSet("tencentcloud_bh_resource.example", "id"),
 				),
 			},
+			{
+				ResourceName:      "tencentcloud_bh_resource.example",
+				ImportState:       true,
+				ImportStateVerify: true,
+			},
 		},
 	})
 }

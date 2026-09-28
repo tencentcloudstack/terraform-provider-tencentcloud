@@ -194,7 +194,7 @@ func (me *SesService) DeleteSesEmail_addressById(ctx context.Context, emailAddre
 	return
 }
 
-func (me *SesService) DescribeSesDomain(ctx context.Context, emailIdentity string) (attributes []*ses.DNSAttributes, errRet error) {
+func (me *SesService) DescribeSesDomain(ctx context.Context, emailIdentity string) (response *ses.GetEmailIdentityResponseParams, errRet error) {
 	var (
 		logId   = tccommon.GetLogId(ctx)
 		request = ses.NewGetEmailIdentityRequest()
@@ -208,7 +208,7 @@ func (me *SesService) DescribeSesDomain(ctx context.Context, emailIdentity strin
 	}()
 	request.EmailIdentity = &emailIdentity
 
-	response, err := me.client.UseSesClient().GetEmailIdentity(request)
+	result, err := me.client.UseSesClient().GetEmailIdentity(request)
 	if err != nil {
 		log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n",
 			logId, request.GetAction(), request.ToJsonString(), err.Error())
@@ -216,11 +216,11 @@ func (me *SesService) DescribeSesDomain(ctx context.Context, emailIdentity strin
 		return
 	}
 	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n",
-		logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
-	if len(response.Response.Attributes) < 1 {
+		logId, request.GetAction(), request.ToJsonString(), result.ToJsonString())
+	if result == nil || result.Response == nil {
 		return
 	}
-	attributes = response.Response.Attributes
+	response = result.Response
 	return
 }
 

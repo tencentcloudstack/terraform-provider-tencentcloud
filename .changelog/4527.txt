@@ -1,0 +1,3 @@
+```release-note:new-data-source
+tencentcloud_dlc_tc_lake_meta_instance
+```

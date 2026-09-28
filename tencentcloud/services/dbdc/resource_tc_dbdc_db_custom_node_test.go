@@ -164,6 +164,15 @@ func TestDbdcDbCustomNodeNetworkMode_Read(t *testing.T) {
 		return resp, nil
 	})
 
+	patches.ApplyMethodFunc(dbdcClient, "DescribeDBCustomNodeSecurityGroupsWithContext", func(_ context.Context, request *dbdcv20201029.DescribeDBCustomNodeSecurityGroupsRequest) (*dbdcv20201029.DescribeDBCustomNodeSecurityGroupsResponse, error) {
+		resp := dbdcv20201029.NewDescribeDBCustomNodeSecurityGroupsResponse()
+		resp.Response = &dbdcv20201029.DescribeDBCustomNodeSecurityGroupsResponseParams{
+			Groups:    []*dbdcv20201029.SecurityGroup{},
+			RequestId: ptrDbdcDbCustomNodeString("fake-request-id"),
+		}
+		return resp, nil
+	})
+
 	meta := &mockMetaDbdcDbCustomNode{client: mockClient}
 	res := svcdbdc.ResourceTencentCloudDbdcDbCustomNode()
 	d := schema.TestResourceDataRaw(t, res.Schema, map[string]interface{}{
@@ -206,6 +215,15 @@ func TestDbdcDbCustomNodeNetworkMode_ReadNil(t *testing.T) {
 		return resp, nil
 	})
 
+	patches.ApplyMethodFunc(dbdcClient, "DescribeDBCustomNodeSecurityGroupsWithContext", func(_ context.Context, request *dbdcv20201029.DescribeDBCustomNodeSecurityGroupsRequest) (*dbdcv20201029.DescribeDBCustomNodeSecurityGroupsResponse, error) {
+		resp := dbdcv20201029.NewDescribeDBCustomNodeSecurityGroupsResponse()
+		resp.Response = &dbdcv20201029.DescribeDBCustomNodeSecurityGroupsResponseParams{
+			Groups:    []*dbdcv20201029.SecurityGroup{},
+			RequestId: ptrDbdcDbCustomNodeString("fake-request-id"),
+		}
+		return resp, nil
+	})
+
 	meta := &mockMetaDbdcDbCustomNode{client: mockClient}
 	res := svcdbdc.ResourceTencentCloudDbdcDbCustomNode()
 	d := schema.TestResourceDataRaw(t, res.Schema, map[string]interface{}{
@@ -218,4 +236,254 @@ func TestDbdcDbCustomNodeNetworkMode_ReadNil(t *testing.T) {
 	assert.NoError(t, err)
 	assert.Equal(t, "", d.Get("network_mode").(string))
 	assert.Equal(t, "", d.Get("eni_ip").(string))
+}
+
+// TestDbdcDbCustomNodeDisasterRecoverGroup_Schema tests the schema definition of disaster_recover_group_ids and disaster_recover_group_id
+func TestDbdcDbCustomNodeDisasterRecoverGroup_Schema(t *testing.T) {
+	res := svcdbdc.ResourceTencentCloudDbdcDbCustomNode()
+
+	assert.NotNil(t, res)
+
+	disasterRecoverGroupIds, ok := res.Schema["disaster_recover_group_ids"]
+	assert.True(t, ok)
+	assert.Equal(t, schema.TypeList, disasterRecoverGroupIds.Type)
+	assert.True(t, disasterRecoverGroupIds.Optional)
+	assert.True(t, disasterRecoverGroupIds.ForceNew)
+	assert.Equal(t, 1, disasterRecoverGroupIds.MaxItems)
+	assert.False(t, disasterRecoverGroupIds.Computed)
+
+	disasterRecoverGroupId, ok := res.Schema["disaster_recover_group_id"]
+	assert.True(t, ok)
+	assert.Equal(t, schema.TypeString, disasterRecoverGroupId.Type)
+	assert.True(t, disasterRecoverGroupId.Computed)
+	assert.False(t, disasterRecoverGroupId.Optional)
+	assert.False(t, disasterRecoverGroupId.ForceNew)
+}
+
+// TestDbdcDbCustomNodeDisasterRecoverGroup_Read tests that disaster_recover_group_id is correctly read from DescribeDBCustomNodes response
+func TestDbdcDbCustomNodeDisasterRecoverGroup_Read(t *testing.T) {
+	patches := gomonkey.NewPatches()
+	defer patches.Reset()
+
+	dbdcClient := &dbdcv20201029.Client{}
+	mockClient := &connectivity.TencentCloudClient{}
+	patches.ApplyMethodReturn(mockClient, "UseDbdcV20201029Client", dbdcClient)
+
+	patches.ApplyMethodFunc(dbdcClient, "DescribeDBCustomNodesWithContext", func(_ context.Context, request *dbdcv20201029.DescribeDBCustomNodesRequest) (*dbdcv20201029.DescribeDBCustomNodesResponse, error) {
+		resp := dbdcv20201029.NewDescribeDBCustomNodesResponse()
+		resp.Response = &dbdcv20201029.DescribeDBCustomNodesResponseParams{
+			TotalCount: ptrDbdcDbCustomNodeInt64(1),
+			NodeSet: []*dbdcv20201029.DBCustomNode{
+				{
+					NodeId:                 ptrDbdcDbCustomNodeString("dbcn-test-node-id"),
+					NodeName:               ptrDbdcDbCustomNodeString("test-node"),
+					Zone:                   ptrDbdcDbCustomNodeString("ap-shanghai-5"),
+					DisasterRecoverGroupId: ptrDbdcDbCustomNodeString("dbrg-test-group-id"),
+				},
+			},
+			RequestId: ptrDbdcDbCustomNodeString("fake-request-id"),
+		}
+		return resp, nil
+	})
+
+	patches.ApplyMethodFunc(dbdcClient, "DescribeDBCustomNodeSecurityGroupsWithContext", func(_ context.Context, request *dbdcv20201029.DescribeDBCustomNodeSecurityGroupsRequest) (*dbdcv20201029.DescribeDBCustomNodeSecurityGroupsResponse, error) {
+		resp := dbdcv20201029.NewDescribeDBCustomNodeSecurityGroupsResponse()
+		resp.Response = &dbdcv20201029.DescribeDBCustomNodeSecurityGroupsResponseParams{
+			Groups:    []*dbdcv20201029.SecurityGroup{},
+			RequestId: ptrDbdcDbCustomNodeString("fake-request-id"),
+		}
+		return resp, nil
+	})
+
+	meta := &mockMetaDbdcDbCustomNode{client: mockClient}
+	res := svcdbdc.ResourceTencentCloudDbdcDbCustomNode()
+	d := schema.TestResourceDataRaw(t, res.Schema, map[string]interface{}{
+		"zone":                       "ap-shanghai-5",
+		"node_type":                  "DB.AT5.8XLARGE128",
+		"disaster_recover_group_ids": []interface{}{"dbrg-test-group-id"},
+	})
+	d.SetId("dbcn-test-node-id")
+
+	err := res.Read(d, meta)
+	assert.NoError(t, err)
+	assert.Equal(t, "dbrg-test-group-id", d.Get("disaster_recover_group_id").(string))
+}
+
+// TestDbdcDbCustomNodeDisasterRecoverGroup_ReadNil tests that disaster_recover_group_id is not set when the response field is nil
+func TestDbdcDbCustomNodeDisasterRecoverGroup_ReadNil(t *testing.T) {
+	patches := gomonkey.NewPatches()
+	defer patches.Reset()
+
+	dbdcClient := &dbdcv20201029.Client{}
+	mockClient := &connectivity.TencentCloudClient{}
+	patches.ApplyMethodReturn(mockClient, "UseDbdcV20201029Client", dbdcClient)
+
+	patches.ApplyMethodFunc(dbdcClient, "DescribeDBCustomNodesWithContext", func(_ context.Context, request *dbdcv20201029.DescribeDBCustomNodesRequest) (*dbdcv20201029.DescribeDBCustomNodesResponse, error) {
+		resp := dbdcv20201029.NewDescribeDBCustomNodesResponse()
+		resp.Response = &dbdcv20201029.DescribeDBCustomNodesResponseParams{
+			TotalCount: ptrDbdcDbCustomNodeInt64(1),
+			NodeSet: []*dbdcv20201029.DBCustomNode{
+				{
+					NodeId:                 ptrDbdcDbCustomNodeString("dbcn-test-node-id"),
+					NodeName:               ptrDbdcDbCustomNodeString("test-node"),
+					Zone:                   ptrDbdcDbCustomNodeString("ap-shanghai-5"),
+					DisasterRecoverGroupId: nil,
+				},
+			},
+			RequestId: ptrDbdcDbCustomNodeString("fake-request-id"),
+		}
+		return resp, nil
+	})
+
+	patches.ApplyMethodFunc(dbdcClient, "DescribeDBCustomNodeSecurityGroupsWithContext", func(_ context.Context, request *dbdcv20201029.DescribeDBCustomNodeSecurityGroupsRequest) (*dbdcv20201029.DescribeDBCustomNodeSecurityGroupsResponse, error) {
+		resp := dbdcv20201029.NewDescribeDBCustomNodeSecurityGroupsResponse()
+		resp.Response = &dbdcv20201029.DescribeDBCustomNodeSecurityGroupsResponseParams{
+			Groups:    []*dbdcv20201029.SecurityGroup{},
+			RequestId: ptrDbdcDbCustomNodeString("fake-request-id"),
+		}
+		return resp, nil
+	})
+
+	meta := &mockMetaDbdcDbCustomNode{client: mockClient}
+	res := svcdbdc.ResourceTencentCloudDbdcDbCustomNode()
+	d := schema.TestResourceDataRaw(t, res.Schema, map[string]interface{}{
+		"zone":      "ap-shanghai-5",
+		"node_type": "DB.AT5.8XLARGE128",
+	})
+	d.SetId("dbcn-test-node-id")
+
+	err := res.Read(d, meta)
+	assert.NoError(t, err)
+	assert.Equal(t, "", d.Get("disaster_recover_group_id").(string))
+}
+
+// TestDbdcDbCustomNodeDisasterRecoverGroup_Create tests that disaster_recover_group_ids is correctly mapped into the CreateDBCustomNodes request
+func TestDbdcDbCustomNodeDisasterRecoverGroup_Create(t *testing.T) {
+	patches := gomonkey.NewPatches()
+	defer patches.Reset()
+
+	dbdcClient := &dbdcv20201029.Client{}
+	mockClient := &connectivity.TencentCloudClient{}
+	patches.ApplyMethodReturn(mockClient, "UseDbdcV20201029Client", dbdcClient)
+
+	var capturedRequest *dbdcv20201029.CreateDBCustomNodesRequest
+	patches.ApplyMethodFunc(dbdcClient, "CreateDBCustomNodesWithContext", func(_ context.Context, request *dbdcv20201029.CreateDBCustomNodesRequest) (*dbdcv20201029.CreateDBCustomNodesResponse, error) {
+		capturedRequest = request
+		resp := dbdcv20201029.NewCreateDBCustomNodesResponse()
+		resp.Response = &dbdcv20201029.CreateDBCustomNodesResponseParams{
+			NodeIds:   []*string{ptrDbdcDbCustomNodeString("dbcn-test-node-id")},
+			RequestId: ptrDbdcDbCustomNodeString("fake-request-id"),
+		}
+		return resp, nil
+	})
+
+	// Patch the read path invoked at the end of Create.
+	patches.ApplyMethodFunc(dbdcClient, "DescribeDBCustomNodesWithContext", func(_ context.Context, request *dbdcv20201029.DescribeDBCustomNodesRequest) (*dbdcv20201029.DescribeDBCustomNodesResponse, error) {
+		resp := dbdcv20201029.NewDescribeDBCustomNodesResponse()
+		resp.Response = &dbdcv20201029.DescribeDBCustomNodesResponseParams{
+			TotalCount: ptrDbdcDbCustomNodeInt64(1),
+			NodeSet: []*dbdcv20201029.DBCustomNode{
+				{
+					NodeId:                 ptrDbdcDbCustomNodeString("dbcn-test-node-id"),
+					NodeName:               ptrDbdcDbCustomNodeString("test-node"),
+					Zone:                   ptrDbdcDbCustomNodeString("ap-shanghai-5"),
+					DisasterRecoverGroupId: ptrDbdcDbCustomNodeString("dbrg-test-group-id"),
+				},
+			},
+			RequestId: ptrDbdcDbCustomNodeString("fake-request-id"),
+		}
+		return resp, nil
+	})
+
+	patches.ApplyMethodFunc(dbdcClient, "DescribeDBCustomNodeSecurityGroupsWithContext", func(_ context.Context, request *dbdcv20201029.DescribeDBCustomNodeSecurityGroupsRequest) (*dbdcv20201029.DescribeDBCustomNodeSecurityGroupsResponse, error) {
+		resp := dbdcv20201029.NewDescribeDBCustomNodeSecurityGroupsResponse()
+		resp.Response = &dbdcv20201029.DescribeDBCustomNodeSecurityGroupsResponseParams{
+			Groups:    []*dbdcv20201029.SecurityGroup{},
+			RequestId: ptrDbdcDbCustomNodeString("fake-request-id"),
+		}
+		return resp, nil
+	})
+
+	meta := &mockMetaDbdcDbCustomNode{client: mockClient}
+	res := svcdbdc.ResourceTencentCloudDbdcDbCustomNode()
+	d := schema.TestResourceDataRaw(t, res.Schema, map[string]interface{}{
+		"zone":                       "ap-shanghai-5",
+		"image_id":                   "img-xxxxxxxx",
+		"vpc_id":                     "vpc-xxxxxxxx",
+		"subnet_id":                  "subnet-xxxxxxxx",
+		"node_type":                  "DB.AT5.8XLARGE128",
+		"disaster_recover_group_ids": []interface{}{"dbrg-test-group-id"},
+	})
+
+	err := res.Create(d, meta)
+	assert.NoError(t, err)
+	assert.Equal(t, "dbcn-test-node-id", d.Id())
+	// Verify the input parameter was passed through to the API request.
+	assert.NotNil(t, capturedRequest.DisasterRecoverGroupIds)
+	assert.Len(t, capturedRequest.DisasterRecoverGroupIds, 1)
+	assert.Equal(t, "dbrg-test-group-id", *capturedRequest.DisasterRecoverGroupIds[0])
+	// Verify the computed output was refreshed during the Create-time Read.
+	assert.Equal(t, "dbrg-test-group-id", d.Get("disaster_recover_group_id").(string))
+}
+
+// TestDbdcDbCustomNodeDisasterRecoverGroup_CreateWithoutGroup tests that DisasterRecoverGroupIds is not set on the request when the input is absent
+func TestDbdcDbCustomNodeDisasterRecoverGroup_CreateWithoutGroup(t *testing.T) {
+	patches := gomonkey.NewPatches()
+	defer patches.Reset()
+
+	dbdcClient := &dbdcv20201029.Client{}
+	mockClient := &connectivity.TencentCloudClient{}
+	patches.ApplyMethodReturn(mockClient, "UseDbdcV20201029Client", dbdcClient)
+
+	var capturedRequest *dbdcv20201029.CreateDBCustomNodesRequest
+	patches.ApplyMethodFunc(dbdcClient, "CreateDBCustomNodesWithContext", func(_ context.Context, request *dbdcv20201029.CreateDBCustomNodesRequest) (*dbdcv20201029.CreateDBCustomNodesResponse, error) {
+		capturedRequest = request
+		resp := dbdcv20201029.NewCreateDBCustomNodesResponse()
+		resp.Response = &dbdcv20201029.CreateDBCustomNodesResponseParams{
+			NodeIds:   []*string{ptrDbdcDbCustomNodeString("dbcn-test-node-id")},
+			RequestId: ptrDbdcDbCustomNodeString("fake-request-id"),
+		}
+		return resp, nil
+	})
+
+	patches.ApplyMethodFunc(dbdcClient, "DescribeDBCustomNodesWithContext", func(_ context.Context, request *dbdcv20201029.DescribeDBCustomNodesRequest) (*dbdcv20201029.DescribeDBCustomNodesResponse, error) {
+		resp := dbdcv20201029.NewDescribeDBCustomNodesResponse()
+		resp.Response = &dbdcv20201029.DescribeDBCustomNodesResponseParams{
+			TotalCount: ptrDbdcDbCustomNodeInt64(1),
+			NodeSet: []*dbdcv20201029.DBCustomNode{
+				{
+					NodeId:   ptrDbdcDbCustomNodeString("dbcn-test-node-id"),
+					NodeName: ptrDbdcDbCustomNodeString("test-node"),
+					Zone:     ptrDbdcDbCustomNodeString("ap-shanghai-5"),
+				},
+			},
+			RequestId: ptrDbdcDbCustomNodeString("fake-request-id"),
+		}
+		return resp, nil
+	})
+
+	patches.ApplyMethodFunc(dbdcClient, "DescribeDBCustomNodeSecurityGroupsWithContext", func(_ context.Context, request *dbdcv20201029.DescribeDBCustomNodeSecurityGroupsRequest) (*dbdcv20201029.DescribeDBCustomNodeSecurityGroupsResponse, error) {
+		resp := dbdcv20201029.NewDescribeDBCustomNodeSecurityGroupsResponse()
+		resp.Response = &dbdcv20201029.DescribeDBCustomNodeSecurityGroupsResponseParams{
+			Groups:    []*dbdcv20201029.SecurityGroup{},
+			RequestId: ptrDbdcDbCustomNodeString("fake-request-id"),
+		}
+		return resp, nil
+	})
+
+	meta := &mockMetaDbdcDbCustomNode{client: mockClient}
+	res := svcdbdc.ResourceTencentCloudDbdcDbCustomNode()
+	d := schema.TestResourceDataRaw(t, res.Schema, map[string]interface{}{
+		"zone":      "ap-shanghai-5",
+		"image_id":  "img-xxxxxxxx",
+		"vpc_id":    "vpc-xxxxxxxx",
+		"subnet_id": "subnet-xxxxxxxx",
+		"node_type": "DB.AT5.8XLARGE128",
+	})
+
+	err := res.Create(d, meta)
+	assert.NoError(t, err)
+	assert.Equal(t, "dbcn-test-node-id", d.Id())
+	assert.Nil(t, capturedRequest.DisasterRecoverGroupIds)
+	assert.Equal(t, "", d.Get("disaster_recover_group_id").(string))
 }

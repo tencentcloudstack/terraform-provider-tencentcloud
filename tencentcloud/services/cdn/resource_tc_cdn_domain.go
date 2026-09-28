@@ -4,6 +4,7 @@ import (
 	"context"
 	"encoding/json"
 	"fmt"
+	"strings"
 	"time"
 
 	tccommon "github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/common"
@@ -147,6 +148,40 @@ func ResourceTencentCloudCdnDomain() *schema.Resource {
 							Optional:    true,
 							Computed:    true,
 							Description: "Object storage back to the source vendor. Required when the source station type is a third-party storage source station (third_party). Optional values include the following: `aws_s3`: AWS S3; `ali_oss`: Alibaba Cloud OSS; `hw_obs`: Huawei OBS; `qiniu_kodo`: Qiniu Cloud kodo; `others`: other vendors' object storage, only supports object storage compatible with AWS signature algorithm, such as Tencent Cloud Financial Zone COS. Example value: `hw_obs`.",
+						},
+						"path_rules": {
+							Type:        schema.TypeList,
+							Optional:    true,
+							Computed:    true,
+							Description: "Origin path rewrite rules. Each element configures a path-based origin routing rule.",
+							Elem: &schema.Resource{
+								Schema: map[string]*schema.Schema{
+									"full_match": {
+										Type:        schema.TypeBool,
+										Optional:    true,
+										Computed:    true,
+										Description: "Whether to enable full matching of the matched path. `false`: disable, `true`: enable.",
+									},
+									"path": {
+										Type:        schema.TypeString,
+										Optional:    true,
+										Computed:    true,
+										Description: "Matched URL path. Only URL path is supported, not parameters. Default is full match. When wildcard `*` matching is enabled, up to 5 wildcards are supported, with a maximum length of 1024 characters.",
+									},
+									"server_name": {
+										Type:        schema.TypeString,
+										Optional:    true,
+										Computed:    true,
+										Description: "Host header used when accessing the origin server on path match. If left empty, the default ServerName is used.",
+									},
+									"forward_uri": {
+										Type:        schema.TypeString,
+										Optional:    true,
+										Computed:    true,
+										Description: "URI path for origin on path match. Must start with `/` and does not include the parameter part. Maximum length is 1024 characters. `$1`-`$5` can be used to capture wildcard `*` in the matched path, up to 10 capture values.",
+									},
+								},
+							},
 						},
 					},
 				},
@@ -2319,6 +2354,13 @@ func resourceTencentCloudCdnDomainCreate(d *schema.ResourceData, meta interface{
 	if v := origin["origin_company"]; v.(string) != "" {
 		request.Origin.OriginCompany = helper.String(v.(string))
 	}
+	if pathRules, ok := origin["path_rules"].([]interface{}); ok && len(pathRules) > 0 {
+		pathRulesList := make([]*cdn.PathRule, 0, len(pathRules))
+		for _, rule := range pathRules {
+			pathRulesList = append(pathRulesList, expandCdnPathRuleFromMap(rule.(map[string]interface{})))
+		}
+		request.Origin.PathRules = pathRulesList
+	}
 
 	// https config
 	if v, ok := d.GetOk("https_config"); ok {
@@ -3046,6 +3088,27 @@ func resourceTencentCloudCdnDomainRead(d *schema.ResourceData, meta interface{})
 	origin["backup_origin_list"] = domainConfig.Origin.BackupOrigins
 	origin["backup_server_name"] = domainConfig.Origin.BackupServerName
 	origin["origin_company"] = domainConfig.Origin.OriginCompany
+
+	if domainConfig.Origin.PathRules != nil {
+		pathRulesList := make([]map[string]interface{}, 0, len(domainConfig.Origin.PathRules))
+		for _, pathRule := range domainConfig.Origin.PathRules {
+			pathRuleMap := make(map[string]interface{})
+			if pathRule.FullMatch != nil {
+				pathRuleMap["full_match"] = *pathRule.FullMatch
+			}
+			if pathRule.Path != nil {
+				pathRuleMap["path"] = *pathRule.Path
+			}
+			if pathRule.ServerName != nil {
+				pathRuleMap["server_name"] = *pathRule.ServerName
+			}
+			if pathRule.ForwardUri != nil {
+				pathRuleMap["forward_uri"] = *pathRule.ForwardUri
+			}
+			pathRulesList = append(pathRulesList, pathRuleMap)
+		}
+		origin["path_rules"] = pathRulesList
+	}
 	origins = append(origins, origin)
 	_ = d.Set("origin", origins)
 
@@ -3826,6 +3889,63 @@ func resourceTencentCloudCdnDomainUpdate(d *schema.ResourceData, meta interface{
 		}
 		if v := origin["origin_company"]; v.(string) != "" {
 			request.Origin.OriginCompany = helper.String(v.(string))
+		}
+		if pathRules, ok := origin["path_rules"].([]interface{}); ok && len(pathRules) > 0 {
+			// Before calling UpdateDomainConfig, query the current Origin.PathRules via
+			// DescribeDomainsConfig. For each rule, compare the {full_match, path,
+			// server_name, forward_uri} tuple of the rule at the same index from the state
+			// before modification with the rules in the DescribeDomainsConfig result. If a
+			// match is found, supplement the rule with Regex, OriginArea, Origin and
+			// RequestHeaders fetched from the result. Otherwise only the user-configured
+			// fields are submitted.
+			var oldPathRules []interface{}
+			oldOriginRaw, _ := d.GetChange("origin")
+			if oldOrigins, ok := oldOriginRaw.([]interface{}); ok && len(oldOrigins) > 0 {
+				if oldOrigin, ok := oldOrigins[0].(map[string]interface{}); ok {
+					oldPathRules, _ = oldOrigin["path_rules"].([]interface{})
+				}
+			}
+			var existingPathRules []*cdn.PathRule
+			err := resource.Retry(5*tccommon.ReadRetryTimeout, func() *resource.RetryError {
+				domainConfig, errRet := cdnService.DescribeDomainsConfigByDomain(ctx, domain)
+				if errRet != nil {
+					return tccommon.RetryError(errRet, tccommon.InternalError)
+				}
+				if domainConfig != nil && domainConfig.Origin != nil {
+					existingPathRules = domainConfig.Origin.PathRules
+				}
+				return nil
+			})
+			if err != nil {
+				return err
+			}
+			pathRulesList := make([]*cdn.PathRule, 0, len(pathRules))
+			for i, rule := range pathRules {
+				pathRule := expandCdnPathRuleFromMap(rule.(map[string]interface{}))
+				// supplement the server-side fields not exposed in the schema when the
+				// rule at the same index before modification matches an existing rule
+				if i < len(oldPathRules) {
+					if oldRuleMap, ok := oldPathRules[i].(map[string]interface{}); ok {
+						oldPathRule := expandCdnPathRuleFromMap(oldRuleMap)
+						for _, existingRule := range existingPathRules {
+							if existingRule != nil && isPathRuleTupleEqual(existingRule, oldPathRule) {
+								pathRule.Regex = existingRule.Regex
+								pathRule.OriginArea = existingRule.OriginArea
+								pathRule.Origin = existingRule.Origin
+								pathRule.RequestHeaders = existingRule.RequestHeaders
+								break
+							}
+						}
+					}
+				}
+				if strings.Contains(*pathRule.Path, "*") {
+					pathRule.Regex = helper.Bool(true)
+				} else {
+					pathRule.Regex = helper.Bool(false)
+				}
+				pathRulesList = append(pathRulesList, pathRule)
+			}
+			request.Origin.PathRules = pathRulesList
 		}
 	}
 	if d.HasChange("request_header") {
@@ -5133,6 +5253,34 @@ func checkCdnHeadMapOkAndChanged(d *schema.ResourceData, key string) (v map[stri
 	changed = d.HasChange(key)
 	v, ok = helper.InterfacesHeadMap(d, key)
 	return
+}
+
+// expandCdnPathRuleFromMap builds a cdn.PathRule from a Terraform path_rules element map,
+// filling only the user-configured non-empty fields.
+func expandCdnPathRuleFromMap(ruleMap map[string]interface{}) *cdn.PathRule {
+	pathRule := &cdn.PathRule{}
+	if rv, ok := ruleMap["full_match"].(bool); ok {
+		pathRule.FullMatch = &rv
+	}
+	if rv, ok := ruleMap["path"].(string); ok && rv != "" {
+		pathRule.Path = &rv
+	}
+	if rv, ok := ruleMap["server_name"].(string); ok && rv != "" {
+		pathRule.ServerName = &rv
+	}
+	if rv, ok := ruleMap["forward_uri"].(string); ok && rv != "" {
+		pathRule.ForwardUri = &rv
+	}
+	return pathRule
+}
+
+// isPathRuleTupleEqual checks whether the {full_match, path, server_name, forward_uri} tuple
+// of a path rule from the state before modification matches the one returned by DescribeDomainsConfig.
+func isPathRuleTupleEqual(existing, old *cdn.PathRule) bool {
+	return helper.PBool(existing.FullMatch) == helper.PBool(old.FullMatch) &&
+		helper.PString(existing.Path) == helper.PString(old.Path) &&
+		helper.PString(existing.ServerName) == helper.PString(old.ServerName) &&
+		helper.PString(existing.ForwardUri) == helper.PString(old.ForwardUri)
 }
 
 func checkCdnInfoWritable(d *schema.ResourceData, key string, val interface{}) bool {

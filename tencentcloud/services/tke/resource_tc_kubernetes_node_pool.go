@@ -211,8 +211,7 @@ func ResourceTencentCloudKubernetesNodePool() *schema.Resource {
 						"extra_args": {
 							Type:        schema.TypeList,
 							Optional:    true,
-							ForceNew:    true,
-							Description: "Custom parameter information related to the node. This is a white-list parameter.",
+							Description: "Custom parameter information related to the node. This is a white-list parameter. It can be modified via the `ModifyClusterNodePool` API.",
 							Elem: &schema.Schema{
 								Type: schema.TypeString,
 							},

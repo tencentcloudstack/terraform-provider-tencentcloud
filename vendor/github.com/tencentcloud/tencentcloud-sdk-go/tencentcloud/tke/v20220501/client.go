@@ -119,7 +119,185 @@ func NewCreateNodePoolResponse() (response *CreateNodePoolResponse) {
 }
 
 // CreateNodePool
-// 创建 TKE 节点池
+// **通过 CAM 策略强制节点池安全配置**
+//
+// 
+//
+// 创建原生节点池（`CreateNodePool`）接口已接入 CAM 条件鉴权，会根据请求参数计算出一组**条件键（Condition Key）**并传入 CAM 鉴权。您可以在 CAM/SCP 策略中基于这些条件键配置 `deny` 规则，从而强制约束节点池的安全配置（如必须开启磁盘加密、安全加固等）。
+//
+// 
+//
+// **支持的条件键**
+//
+// 
+//
+// | 条件键 | 含义 | 取值 | 取值判定说明 |
+//
+// |--------|------|------|-------------|
+//
+// | `tke:NodePoolType` | 节点池类型 | `Native` / `External` | 取请求的节点池类型，未指定时默认为 `Native` |
+//
+// | `tke:SystemDiskEncrypted` | 系统盘是否加密 | `true` / `false` | 系统盘加密属性为 `ENCRYPT`（大小写不敏感）时为 `true`，否则为 `false` |
+//
+// | `tke:AllDataDisksEncrypted` | 所有数据盘是否都已加密 | `true` / `false` | 全部数据盘加密属性均为 `ENCRYPT` 时为 `true`；未配置数据盘时也为 `true`；只要有任一数据盘未加密即为 `false` |
+//
+// | `tke:SecurityAgentEnabled` | 是否开启安全加固（Security Agent） | `true` / `false` | 开启安全加固时为 `true`，否则为 `false` |
+//
+// 
+//
+// > 说明：所有条件键的取值均为字符串 `"true"` / `"false"`，请在策略中使用字符串形式匹配。
+//
+// 
+//
+// **使用方式**
+//
+// 
+//
+// 在 CAM 策略中使用 `bool_equal` 匹配条件键值为 `"false"`，配合 `effect: deny`，即可实现"未满足安全配置则拒绝创建节点池"的强制约束。
+//
+// 
+//
+// **示例一：强制开启安全加固**
+//
+// 
+//
+// 创建节点池时若未开启安全加固（`tke:SecurityAgentEnabled = "false"`），则拒绝。
+//
+// 
+//
+// ```json
+//
+// {
+//
+//     "version": "2.0",
+//
+//     "statement": [
+//
+//         {
+//
+//             "effect": "deny",
+//
+//             "action": ["tke:CreateNodePool"],
+//
+//             "resource": ["*"],
+//
+//             "condition": {
+//
+//                 "bool_equal": {
+//
+//                     "tke:SecurityAgentEnabled": "false"
+//
+//                 }
+//
+//             }
+//
+//         }
+//
+//     ]
+//
+// }
+//
+// ```
+//
+// 
+//
+// **示例二：强制数据盘加密**
+//
+// 
+//
+// 创建节点池时若存在未加密的数据盘（`tke:AllDataDisksEncrypted = "false"`），则拒绝。
+//
+// 
+//
+// ```json
+//
+// {
+//
+//     "version": "2.0",
+//
+//     "statement": [
+//
+//         {
+//
+//             "effect": "deny",
+//
+//             "action": ["tke:CreateNodePool"],
+//
+//             "resource": ["*"],
+//
+//             "condition": {
+//
+//                 "bool_equal": {
+//
+//                     "tke:AllDataDisksEncrypted": "false"
+//
+//                 }
+//
+//             }
+//
+//         }
+//
+//     ]
+//
+// }
+//
+// ```
+//
+// 
+//
+// **示例三：强制系统盘加密**
+//
+// 
+//
+// 创建节点池时若系统盘未加密（`tke:SystemDiskEncrypted = "false"`），则拒绝。
+//
+// 
+//
+// ```json
+//
+// {
+//
+//     "version": "2.0",
+//
+//     "statement": [
+//
+//         {
+//
+//             "effect": "deny",
+//
+//             "action": ["tke:CreateNodePool"],
+//
+//             "resource": ["*"],
+//
+//             "condition": {
+//
+//                 "bool_equal": {
+//
+//                     "tke:SystemDiskEncrypted": "false"
+//
+//                 }
+//
+//             }
+//
+//         }
+//
+//     ]
+//
+// }
+//
+// ```
+//
+// 
+//
+// **注意事项**
+//
+// 
+//
+// - 上述条件键在**未配置任何 CAM 策略**时不会影响节点池创建，仅在您显式配置了对应 `deny` 策略时才生效。
+//
+// - 如需同时强制多项安全配置，必须在同一策略的 `statement` 中配置多条 `deny` 规则，不能将多个条件键写入同一条 `condition`。
+//
+// - `tke:AllDataDisksEncrypted` 在**无数据盘**场景下取值为 `true`（不存在未加密的数据盘），因此仅约束"已配置的数据盘必须加密"，不会强制要求必须挂载数据盘。
 //
 // 可能返回的错误码:
 //  FAILEDOPERATION = "FailedOperation"
@@ -132,7 +310,185 @@ func (c *Client) CreateNodePool(request *CreateNodePoolRequest) (response *Creat
 }
 
 // CreateNodePool
-// 创建 TKE 节点池
+// **通过 CAM 策略强制节点池安全配置**
+//
+// 
+//
+// 创建原生节点池（`CreateNodePool`）接口已接入 CAM 条件鉴权，会根据请求参数计算出一组**条件键（Condition Key）**并传入 CAM 鉴权。您可以在 CAM/SCP 策略中基于这些条件键配置 `deny` 规则，从而强制约束节点池的安全配置（如必须开启磁盘加密、安全加固等）。
+//
+// 
+//
+// **支持的条件键**
+//
+// 
+//
+// | 条件键 | 含义 | 取值 | 取值判定说明 |
+//
+// |--------|------|------|-------------|
+//
+// | `tke:NodePoolType` | 节点池类型 | `Native` / `External` | 取请求的节点池类型，未指定时默认为 `Native` |
+//
+// | `tke:SystemDiskEncrypted` | 系统盘是否加密 | `true` / `false` | 系统盘加密属性为 `ENCRYPT`（大小写不敏感）时为 `true`，否则为 `false` |
+//
+// | `tke:AllDataDisksEncrypted` | 所有数据盘是否都已加密 | `true` / `false` | 全部数据盘加密属性均为 `ENCRYPT` 时为 `true`；未配置数据盘时也为 `true`；只要有任一数据盘未加密即为 `false` |
+//
+// | `tke:SecurityAgentEnabled` | 是否开启安全加固（Security Agent） | `true` / `false` | 开启安全加固时为 `true`，否则为 `false` |
+//
+// 
+//
+// > 说明：所有条件键的取值均为字符串 `"true"` / `"false"`，请在策略中使用字符串形式匹配。
+//
+// 
+//
+// **使用方式**
+//
+// 
+//
+// 在 CAM 策略中使用 `bool_equal` 匹配条件键值为 `"false"`，配合 `effect: deny`，即可实现"未满足安全配置则拒绝创建节点池"的强制约束。
+//
+// 
+//
+// **示例一：强制开启安全加固**
+//
+// 
+//
+// 创建节点池时若未开启安全加固（`tke:SecurityAgentEnabled = "false"`），则拒绝。
+//
+// 
+//
+// ```json
+//
+// {
+//
+//     "version": "2.0",
+//
+//     "statement": [
+//
+//         {
+//
+//             "effect": "deny",
+//
+//             "action": ["tke:CreateNodePool"],
+//
+//             "resource": ["*"],
+//
+//             "condition": {
+//
+//                 "bool_equal": {
+//
+//                     "tke:SecurityAgentEnabled": "false"
+//
+//                 }
+//
+//             }
+//
+//         }
+//
+//     ]
+//
+// }
+//
+// ```
+//
+// 
+//
+// **示例二：强制数据盘加密**
+//
+// 
+//
+// 创建节点池时若存在未加密的数据盘（`tke:AllDataDisksEncrypted = "false"`），则拒绝。
+//
+// 
+//
+// ```json
+//
+// {
+//
+//     "version": "2.0",
+//
+//     "statement": [
+//
+//         {
+//
+//             "effect": "deny",
+//
+//             "action": ["tke:CreateNodePool"],
+//
+//             "resource": ["*"],
+//
+//             "condition": {
+//
+//                 "bool_equal": {
+//
+//                     "tke:AllDataDisksEncrypted": "false"
+//
+//                 }
+//
+//             }
+//
+//         }
+//
+//     ]
+//
+// }
+//
+// ```
+//
+// 
+//
+// **示例三：强制系统盘加密**
+//
+// 
+//
+// 创建节点池时若系统盘未加密（`tke:SystemDiskEncrypted = "false"`），则拒绝。
+//
+// 
+//
+// ```json
+//
+// {
+//
+//     "version": "2.0",
+//
+//     "statement": [
+//
+//         {
+//
+//             "effect": "deny",
+//
+//             "action": ["tke:CreateNodePool"],
+//
+//             "resource": ["*"],
+//
+//             "condition": {
+//
+//                 "bool_equal": {
+//
+//                     "tke:SystemDiskEncrypted": "false"
+//
+//                 }
+//
+//             }
+//
+//         }
+//
+//     ]
+//
+// }
+//
+// ```
+//
+// 
+//
+// **注意事项**
+//
+// 
+//
+// - 上述条件键在**未配置任何 CAM 策略**时不会影响节点池创建，仅在您显式配置了对应 `deny` 策略时才生效。
+//
+// - 如需同时强制多项安全配置，必须在同一策略的 `statement` 中配置多条 `deny` 规则，不能将多个条件键写入同一条 `condition`。
+//
+// - `tke:AllDataDisksEncrypted` 在**无数据盘**场景下取值为 `true`（不存在未加密的数据盘），因此仅约束"已配置的数据盘必须加密"，不会强制要求必须挂载数据盘。
 //
 // 可能返回的错误码:
 //  FAILEDOPERATION = "FailedOperation"
@@ -833,6 +1189,56 @@ func (c *Client) DescribeNodePoolsWithContext(ctx context.Context, request *Desc
     return
 }
 
+func NewDescribeNodePoolsElasticityStrengthRequest() (request *DescribeNodePoolsElasticityStrengthRequest) {
+    request = &DescribeNodePoolsElasticityStrengthRequest{
+        BaseRequest: &tchttp.BaseRequest{},
+    }
+    
+    request.Init().WithApiInfo("tke", APIVersion, "DescribeNodePoolsElasticityStrength")
+    
+    
+    return
+}
+
+func NewDescribeNodePoolsElasticityStrengthResponse() (response *DescribeNodePoolsElasticityStrengthResponse) {
+    response = &DescribeNodePoolsElasticityStrengthResponse{
+        BaseResponse: &tchttp.BaseResponse{},
+    } 
+    return
+
+}
+
+// DescribeNodePoolsElasticityStrength
+// 查询节点池健康度相关信息
+//
+// 可能返回的错误码:
+//  FAILEDOPERATION = "FailedOperation"
+func (c *Client) DescribeNodePoolsElasticityStrength(request *DescribeNodePoolsElasticityStrengthRequest) (response *DescribeNodePoolsElasticityStrengthResponse, err error) {
+    return c.DescribeNodePoolsElasticityStrengthWithContext(context.Background(), request)
+}
+
+// DescribeNodePoolsElasticityStrength
+// 查询节点池健康度相关信息
+//
+// 可能返回的错误码:
+//  FAILEDOPERATION = "FailedOperation"
+func (c *Client) DescribeNodePoolsElasticityStrengthWithContext(ctx context.Context, request *DescribeNodePoolsElasticityStrengthRequest) (response *DescribeNodePoolsElasticityStrengthResponse, err error) {
+    if request == nil {
+        request = NewDescribeNodePoolsElasticityStrengthRequest()
+    }
+    c.InitBaseRequest(&request.BaseRequest, "tke", APIVersion, "DescribeNodePoolsElasticityStrength")
+    
+    if c.GetCredential() == nil {
+        return nil, errors.New("DescribeNodePoolsElasticityStrength require credential")
+    }
+
+    request.SetContext(ctx)
+    
+    response = NewDescribeNodePoolsElasticityStrengthResponse()
+    err = c.Send(request, response)
+    return
+}
+
 func NewDescribeZoneInstanceConfigInfosRequest() (request *DescribeZoneInstanceConfigInfosRequest) {
     request = &DescribeZoneInstanceConfigInfosRequest{
         BaseRequest: &tchttp.BaseRequest{},
@@ -883,6 +1289,68 @@ func (c *Client) DescribeZoneInstanceConfigInfosWithContext(ctx context.Context,
     request.SetContext(ctx)
     
     response = NewDescribeZoneInstanceConfigInfosResponse()
+    err = c.Send(request, response)
+    return
+}
+
+func NewDetachApplicationRoleRequest() (request *DetachApplicationRoleRequest) {
+    request = &DetachApplicationRoleRequest{
+        BaseRequest: &tchttp.BaseRequest{},
+    }
+    
+    request.Init().WithApiInfo("tke", APIVersion, "DetachApplicationRole")
+    
+    
+    return
+}
+
+func NewDetachApplicationRoleResponse() (response *DetachApplicationRoleResponse) {
+    response = &DetachApplicationRoleResponse{
+        BaseResponse: &tchttp.BaseResponse{},
+    } 
+    return
+
+}
+
+// DetachApplicationRole
+// 解绑原生节点 Application Role
+//
+// 可能返回的错误码:
+//  FAILEDOPERATION_CAMNOAUTH = "FailedOperation.CamNoAuth"
+//  INTERNALERROR = "InternalError"
+//  INVALIDPARAMETER = "InvalidParameter"
+//  OPERATIONDENIED = "OperationDenied"
+//  RESOURCENOTFOUND = "ResourceNotFound"
+//  UNKNOWNPARAMETER = "UnknownParameter"
+//  UNSUPPORTEDOPERATION = "UnsupportedOperation"
+func (c *Client) DetachApplicationRole(request *DetachApplicationRoleRequest) (response *DetachApplicationRoleResponse, err error) {
+    return c.DetachApplicationRoleWithContext(context.Background(), request)
+}
+
+// DetachApplicationRole
+// 解绑原生节点 Application Role
+//
+// 可能返回的错误码:
+//  FAILEDOPERATION_CAMNOAUTH = "FailedOperation.CamNoAuth"
+//  INTERNALERROR = "InternalError"
+//  INVALIDPARAMETER = "InvalidParameter"
+//  OPERATIONDENIED = "OperationDenied"
+//  RESOURCENOTFOUND = "ResourceNotFound"
+//  UNKNOWNPARAMETER = "UnknownParameter"
+//  UNSUPPORTEDOPERATION = "UnsupportedOperation"
+func (c *Client) DetachApplicationRoleWithContext(ctx context.Context, request *DetachApplicationRoleRequest) (response *DetachApplicationRoleResponse, err error) {
+    if request == nil {
+        request = NewDetachApplicationRoleRequest()
+    }
+    c.InitBaseRequest(&request.BaseRequest, "tke", APIVersion, "DetachApplicationRole")
+    
+    if c.GetCredential() == nil {
+        return nil, errors.New("DetachApplicationRole require credential")
+    }
+
+    request.SetContext(ctx)
+    
+    response = NewDetachApplicationRoleResponse()
     err = c.Send(request, response)
     return
 }

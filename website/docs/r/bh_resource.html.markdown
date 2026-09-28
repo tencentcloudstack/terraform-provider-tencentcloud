@@ -67,3 +67,11 @@ In addition to all arguments above, the following attributes are exported:
 * `resource_id` - Resource instance ID.
 
 
+## Import
+
+BH resource can be imported using the id, e.g.
+
+```
+terraform import tencentcloud_bh_resource.example bh-saas-sada9k
+```
+

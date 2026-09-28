@@ -17,6 +17,7 @@ Provides a resource to create a DBDC db custom cluster.
 resource "tencentcloud_dbdc_db_custom_cluster" "example" {
   cluster_name        = "tf-example"
   cluster_description = "cluster description."
+  deletion_protection = true
 
   container_network {
     vpc_id     = "vpc-py7mlxqm"
@@ -42,6 +43,7 @@ The following arguments are supported:
 * `cluster_name` - (Required, String, ForceNew) Cluster name. Up to 128 characters, only Chinese, English and underscore are allowed.
 * `container_network` - (Required, List, ForceNew) Container network. All pods in this cluster are connected to this network.
 * `cluster_description` - (Optional, String, ForceNew) Cluster description.
+* `deletion_protection` - (Optional, Bool) Whether to enable cluster deletion protection. Valid values: `true` (enabled, API default), `false` (disabled).
 * `tags` - (Optional, Map) Cluster tags.
 
 The `api_server_network` object supports the following:

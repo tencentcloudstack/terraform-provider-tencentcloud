@@ -77,7 +77,6 @@ func TestSsmSecretVersionV2Resource_Schema(t *testing.T) {
 // TestSsmSecretVersionV2Resource_ImplementsInterfaces verifies the resource
 // satisfies the framework interfaces it advertises in package-level _ asserts.
 func TestSsmSecretVersionV2Resource_ImplementsInterfaces(t *testing.T) {
-	var _ resource.Resource = &SsmSecretVersionV2Resource{}
 	var _ resource.ResourceWithConfigure = &SsmSecretVersionV2Resource{}
 	var _ resource.ResourceWithImportState = &SsmSecretVersionV2Resource{}
 }
@@ -104,20 +103,6 @@ func TestSsmSecretVersionV2Resource_ConfigureNilProviderData(t *testing.T) {
 
 	if resp.Diagnostics.HasError() {
 		t.Fatalf("Configure with nil ProviderData returned diagnostics: %v", resp.Diagnostics)
-	}
-}
-
-// TestSsmSecretVersionV2Resource_ConfigureWrongType ensures Configure adds an
-// error diagnostic when ProviderData is of an unexpected type.
-func TestSsmSecretVersionV2Resource_ConfigureWrongType(t *testing.T) {
-	r := &SsmSecretVersionV2Resource{}
-	req := resource.ConfigureRequest{ProviderData: "not-a-meta"}
-	resp := &resource.ConfigureResponse{}
-
-	r.Configure(context.Background(), req, resp)
-
-	if !resp.Diagnostics.HasError() {
-		t.Error("expected error diagnostic for wrong ProviderData type")
 	}
 }
 

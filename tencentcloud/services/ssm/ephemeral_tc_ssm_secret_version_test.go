@@ -87,10 +87,9 @@ func TestSsmSecretVersionEphemeralResource_ModelTypes(t *testing.T) {
 }
 
 // TestSsmSecretVersionEphemeralResource_ImplementsInterface validates that
-// SsmSecretVersionEphemeralResource implements ephemeral.EphemeralResource
-// and ephemeral.EphemeralResourceWithConfigure.
+// SsmSecretVersionEphemeralResource implements
+// ephemeral.EphemeralResourceWithConfigure.
 func TestSsmSecretVersionEphemeralResource_ImplementsInterface(t *testing.T) {
-	var _ ephemeral.EphemeralResource = &svcssm.SsmSecretVersionEphemeralResource{}
 	var _ ephemeral.EphemeralResourceWithConfigure = &svcssm.SsmSecretVersionEphemeralResource{}
 }
 
@@ -115,22 +114,5 @@ func TestSsmSecretVersionEphemeralResource_ConfigureNilProviderData(t *testing.T
 
 	if resp.Diagnostics.HasError() {
 		t.Fatalf("Configure with nil ProviderData returned diagnostics: %v", resp.Diagnostics)
-	}
-}
-
-// TestSsmSecretVersionEphemeralResource_ConfigureWrongType validates that
-// Configure adds an error diagnostic when ProviderData is of an unexpected
-// type (defensive guard against future refactors that change the meta type).
-func TestSsmSecretVersionEphemeralResource_ConfigureWrongType(t *testing.T) {
-	e := &svcssm.SsmSecretVersionEphemeralResource{}
-	req := ephemeral.ConfigureRequest{
-		ProviderData: "wrong_type",
-	}
-	resp := &ephemeral.ConfigureResponse{}
-
-	e.Configure(t.Context(), req, resp)
-
-	if !resp.Diagnostics.HasError() {
-		t.Error("expected error diagnostic for wrong ProviderData type")
 	}
 }

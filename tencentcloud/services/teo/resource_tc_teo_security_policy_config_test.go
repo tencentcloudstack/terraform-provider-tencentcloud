@@ -246,7 +246,7 @@ func TestBotManagementLite_ReadWithBotManagementLite(t *testing.T) {
 	teoClient := &teov20220901.Client{}
 	patches.ApplyMethodReturn(newMockMetaSecurityPolicy().client, "UseTeoV20220901Client", teoClient)
 
-	patches.ApplyMethodFunc(teoClient, "DescribeSecurityPolicy", func(request *teov20220901.DescribeSecurityPolicyRequest) (*teov20220901.DescribeSecurityPolicyResponse, error) {
+	patches.ApplyMethodFunc(teoClient, "DescribeSecurityPolicyWithContext", func(ctx context.Context, request *teov20220901.DescribeSecurityPolicyRequest) (*teov20220901.DescribeSecurityPolicyResponse, error) {
 		resp := teov20220901.NewDescribeSecurityPolicyResponse()
 		resp.Response = &teov20220901.DescribeSecurityPolicyResponseParams{
 			SecurityPolicy: &teov20220901.SecurityPolicy{
@@ -320,7 +320,7 @@ func TestBotManagementLite_ReadWithNilBotManagementLite(t *testing.T) {
 	teoClient := &teov20220901.Client{}
 	patches.ApplyMethodReturn(newMockMetaSecurityPolicy().client, "UseTeoV20220901Client", teoClient)
 
-	patches.ApplyMethodFunc(teoClient, "DescribeSecurityPolicy", func(request *teov20220901.DescribeSecurityPolicyRequest) (*teov20220901.DescribeSecurityPolicyResponse, error) {
+	patches.ApplyMethodFunc(teoClient, "DescribeSecurityPolicyWithContext", func(ctx context.Context, request *teov20220901.DescribeSecurityPolicyRequest) (*teov20220901.DescribeSecurityPolicyResponse, error) {
 		resp := teov20220901.NewDescribeSecurityPolicyResponse()
 		resp.Response = &teov20220901.DescribeSecurityPolicyResponseParams{
 			SecurityPolicy: &teov20220901.SecurityPolicy{},
@@ -356,7 +356,7 @@ func TestBotManagementLite_ReadWithPartialBotManagementLite(t *testing.T) {
 	teoClient := &teov20220901.Client{}
 	patches.ApplyMethodReturn(newMockMetaSecurityPolicy().client, "UseTeoV20220901Client", teoClient)
 
-	patches.ApplyMethodFunc(teoClient, "DescribeSecurityPolicy", func(request *teov20220901.DescribeSecurityPolicyRequest) (*teov20220901.DescribeSecurityPolicyResponse, error) {
+	patches.ApplyMethodFunc(teoClient, "DescribeSecurityPolicyWithContext", func(ctx context.Context, request *teov20220901.DescribeSecurityPolicyRequest) (*teov20220901.DescribeSecurityPolicyResponse, error) {
 		resp := teov20220901.NewDescribeSecurityPolicyResponse()
 		resp.Response = &teov20220901.DescribeSecurityPolicyResponseParams{
 			SecurityPolicy: &teov20220901.SecurityPolicy{
@@ -407,7 +407,7 @@ func TestBotManagementLite_ReadWithAllowAction(t *testing.T) {
 	teoClient := &teov20220901.Client{}
 	patches.ApplyMethodReturn(newMockMetaSecurityPolicy().client, "UseTeoV20220901Client", teoClient)
 
-	patches.ApplyMethodFunc(teoClient, "DescribeSecurityPolicy", func(request *teov20220901.DescribeSecurityPolicyRequest) (*teov20220901.DescribeSecurityPolicyResponse, error) {
+	patches.ApplyMethodFunc(teoClient, "DescribeSecurityPolicyWithContext", func(ctx context.Context, request *teov20220901.DescribeSecurityPolicyRequest) (*teov20220901.DescribeSecurityPolicyResponse, error) {
 		resp := teov20220901.NewDescribeSecurityPolicyResponse()
 		resp.Response = &teov20220901.DescribeSecurityPolicyResponseParams{
 			SecurityPolicy: &teov20220901.SecurityPolicy{
@@ -473,7 +473,7 @@ func TestBotManagementLite_ReadWithChallengeAction(t *testing.T) {
 	teoClient := &teov20220901.Client{}
 	patches.ApplyMethodReturn(newMockMetaSecurityPolicy().client, "UseTeoV20220901Client", teoClient)
 
-	patches.ApplyMethodFunc(teoClient, "DescribeSecurityPolicy", func(request *teov20220901.DescribeSecurityPolicyRequest) (*teov20220901.DescribeSecurityPolicyResponse, error) {
+	patches.ApplyMethodFunc(teoClient, "DescribeSecurityPolicyWithContext", func(ctx context.Context, request *teov20220901.DescribeSecurityPolicyRequest) (*teov20220901.DescribeSecurityPolicyResponse, error) {
 		resp := teov20220901.NewDescribeSecurityPolicyResponse()
 		resp.Response = &teov20220901.DescribeSecurityPolicyResponseParams{
 			SecurityPolicy: &teov20220901.SecurityPolicy{
@@ -550,7 +550,7 @@ func TestBotManagementLite_UpdateExpand(t *testing.T) {
 	})
 
 	// Also mock DescribeSecurityPolicy for the Read call after Update
-	patches.ApplyMethodFunc(teoClient, "DescribeSecurityPolicy", func(request *teov20220901.DescribeSecurityPolicyRequest) (*teov20220901.DescribeSecurityPolicyResponse, error) {
+	patches.ApplyMethodFunc(teoClient, "DescribeSecurityPolicyWithContext", func(ctx context.Context, request *teov20220901.DescribeSecurityPolicyRequest) (*teov20220901.DescribeSecurityPolicyResponse, error) {
 		resp := teov20220901.NewDescribeSecurityPolicyResponse()
 		resp.Response = &teov20220901.DescribeSecurityPolicyResponseParams{
 			SecurityPolicy: &teov20220901.SecurityPolicy{
@@ -717,7 +717,7 @@ func TestClientAttestationRules_ReadWithDeviceProfiles(t *testing.T) {
 	teoClient := &teov20220901.Client{}
 	patches.ApplyMethodReturn(newMockMetaSecurityPolicy().client, "UseTeoV20220901Client", teoClient)
 
-	patches.ApplyMethodFunc(teoClient, "DescribeSecurityPolicy", func(request *teov20220901.DescribeSecurityPolicyRequest) (*teov20220901.DescribeSecurityPolicyResponse, error) {
+	patches.ApplyMethodFunc(teoClient, "DescribeSecurityPolicyWithContext", func(ctx context.Context, request *teov20220901.DescribeSecurityPolicyRequest) (*teov20220901.DescribeSecurityPolicyResponse, error) {
 		resp := teov20220901.NewDescribeSecurityPolicyResponse()
 		resp.Response = &teov20220901.DescribeSecurityPolicyResponseParams{
 			SecurityPolicy: &teov20220901.SecurityPolicy{
@@ -847,7 +847,7 @@ func TestClientAttestationRules_ReadWithNilDeviceProfiles(t *testing.T) {
 	teoClient := &teov20220901.Client{}
 	patches.ApplyMethodReturn(newMockMetaSecurityPolicy().client, "UseTeoV20220901Client", teoClient)
 
-	patches.ApplyMethodFunc(teoClient, "DescribeSecurityPolicy", func(request *teov20220901.DescribeSecurityPolicyRequest) (*teov20220901.DescribeSecurityPolicyResponse, error) {
+	patches.ApplyMethodFunc(teoClient, "DescribeSecurityPolicyWithContext", func(ctx context.Context, request *teov20220901.DescribeSecurityPolicyRequest) (*teov20220901.DescribeSecurityPolicyResponse, error) {
 		resp := teov20220901.NewDescribeSecurityPolicyResponse()
 		resp.Response = &teov20220901.DescribeSecurityPolicyResponseParams{
 			SecurityPolicy: &teov20220901.SecurityPolicy{
@@ -924,7 +924,7 @@ func TestClientAttestationRules_UpdateExpandDeviceProfiles(t *testing.T) {
 	})
 
 	// Mock DescribeSecurityPolicy for the Read call after Update
-	patches.ApplyMethodFunc(teoClient, "DescribeSecurityPolicy", func(request *teov20220901.DescribeSecurityPolicyRequest) (*teov20220901.DescribeSecurityPolicyResponse, error) {
+	patches.ApplyMethodFunc(teoClient, "DescribeSecurityPolicyWithContext", func(ctx context.Context, request *teov20220901.DescribeSecurityPolicyRequest) (*teov20220901.DescribeSecurityPolicyResponse, error) {
 		resp := teov20220901.NewDescribeSecurityPolicyResponse()
 		resp.Response = &teov20220901.DescribeSecurityPolicyResponseParams{
 			SecurityPolicy: &teov20220901.SecurityPolicy{
@@ -1075,7 +1075,7 @@ func TestExceptionRuleSubmodules_UpdateExpand(t *testing.T) {
 	})
 
 	// Also mock DescribeSecurityPolicy for the Read call after Update
-	patches.ApplyMethodFunc(teoClient, "DescribeSecurityPolicy", func(request *teov20220901.DescribeSecurityPolicyRequest) (*teov20220901.DescribeSecurityPolicyResponse, error) {
+	patches.ApplyMethodFunc(teoClient, "DescribeSecurityPolicyWithContext", func(ctx context.Context, request *teov20220901.DescribeSecurityPolicyRequest) (*teov20220901.DescribeSecurityPolicyResponse, error) {
 		resp := teov20220901.NewDescribeSecurityPolicyResponse()
 		resp.Response = &teov20220901.DescribeSecurityPolicyResponseParams{
 			SecurityPolicy: &teov20220901.SecurityPolicy{
@@ -1113,10 +1113,10 @@ func TestExceptionRuleSubmodules_UpdateExpand(t *testing.T) {
 								"name":       "exception-rule-1",
 								"condition":  "$${http.request.host} contain ['abc']",
 								"skip_scope": "WebSecuritySubmodules",
-								"web_security_submodules_for_exception": schema.NewSet(schema.HashString, []interface{}{
+								"web_security_submodules_for_exception": []interface{}{
 									"websec-mod-managed-rules/managed-rule-groups",
 									"websec-mod-rate-limiting-rules",
-								}),
+								},
 								"enabled": "on",
 							},
 						},
@@ -1156,7 +1156,7 @@ func TestExceptionRuleSubmodules_ReadWithSubmodules(t *testing.T) {
 	teoClient := &teov20220901.Client{}
 	patches.ApplyMethodReturn(newMockMetaSecurityPolicy().client, "UseTeoV20220901Client", teoClient)
 
-	patches.ApplyMethodFunc(teoClient, "DescribeSecurityPolicy", func(request *teov20220901.DescribeSecurityPolicyRequest) (*teov20220901.DescribeSecurityPolicyResponse, error) {
+	patches.ApplyMethodFunc(teoClient, "DescribeSecurityPolicyWithContext", func(ctx context.Context, request *teov20220901.DescribeSecurityPolicyRequest) (*teov20220901.DescribeSecurityPolicyResponse, error) {
 		resp := teov20220901.NewDescribeSecurityPolicyResponse()
 		resp.Response = &teov20220901.DescribeSecurityPolicyResponseParams{
 			SecurityPolicy: &teov20220901.SecurityPolicy{
@@ -1222,7 +1222,7 @@ func TestExceptionRuleSubmodules_ReadWithNilSubmodules(t *testing.T) {
 	teoClient := &teov20220901.Client{}
 	patches.ApplyMethodReturn(newMockMetaSecurityPolicy().client, "UseTeoV20220901Client", teoClient)
 
-	patches.ApplyMethodFunc(teoClient, "DescribeSecurityPolicy", func(request *teov20220901.DescribeSecurityPolicyRequest) (*teov20220901.DescribeSecurityPolicyResponse, error) {
+	patches.ApplyMethodFunc(teoClient, "DescribeSecurityPolicyWithContext", func(ctx context.Context, request *teov20220901.DescribeSecurityPolicyRequest) (*teov20220901.DescribeSecurityPolicyResponse, error) {
 		resp := teov20220901.NewDescribeSecurityPolicyResponse()
 		resp.Response = &teov20220901.DescribeSecurityPolicyResponseParams{
 			SecurityPolicy: &teov20220901.SecurityPolicy{
@@ -1289,7 +1289,7 @@ func TestExceptionRuleSubmodules_UpdateChange(t *testing.T) {
 	})
 
 	// Also mock DescribeSecurityPolicy for the Read call after Update
-	patches.ApplyMethodFunc(teoClient, "DescribeSecurityPolicy", func(request *teov20220901.DescribeSecurityPolicyRequest) (*teov20220901.DescribeSecurityPolicyResponse, error) {
+	patches.ApplyMethodFunc(teoClient, "DescribeSecurityPolicyWithContext", func(ctx context.Context, request *teov20220901.DescribeSecurityPolicyRequest) (*teov20220901.DescribeSecurityPolicyResponse, error) {
 		resp := teov20220901.NewDescribeSecurityPolicyResponse()
 		resp.Response = &teov20220901.DescribeSecurityPolicyResponseParams{
 			SecurityPolicy: &teov20220901.SecurityPolicy{
@@ -1326,9 +1326,9 @@ func TestExceptionRuleSubmodules_UpdateChange(t *testing.T) {
 								"name":       "exception-rule-1",
 								"condition":  "$${http.request.host} contain ['abc']",
 								"skip_scope": "WebSecuritySubmodules",
-								"web_security_submodules_for_exception": schema.NewSet(schema.HashString, []interface{}{
+								"web_security_submodules_for_exception": []interface{}{
 									"websec-mod-custom-rules",
-								}),
+								},
 								"enabled": "on",
 							},
 						},
@@ -1349,4 +1349,119 @@ func TestExceptionRuleSubmodules_UpdateChange(t *testing.T) {
 	assert.NotNil(t, rule.WebSecuritySubmodulesForException)
 	assert.Len(t, rule.WebSecuritySubmodulesForException, 1)
 	assert.Equal(t, "websec-mod-custom-rules", *rule.WebSecuritySubmodulesForException[0])
+}
+
+// TestBuildBotManagementActionOverrideFromMap_MultipleRuleIDs tests build path with multiple rule_ids
+func TestBuildBotManagementActionOverrideFromMap_MultipleRuleIDs(t *testing.T) {
+	m := map[string]interface{}{
+		"rule_ids": []interface{}{"rule-a", "rule-b"},
+	}
+	override := teo.BuildBotManagementActionOverrideFromMap(m)
+	assert.NotNil(t, override)
+	assert.Len(t, override.Ids, 2)
+	assert.Equal(t, "rule-a", *override.Ids[0])
+	assert.Equal(t, "rule-b", *override.Ids[1])
+}
+
+// TestBuildBotManagementActionOverrideFromMap_SingleRuleID tests build path with single rule_id
+func TestBuildBotManagementActionOverrideFromMap_SingleRuleID(t *testing.T) {
+	m := map[string]interface{}{
+		"rule_ids": []interface{}{"rule-a"},
+	}
+	override := teo.BuildBotManagementActionOverrideFromMap(m)
+	assert.NotNil(t, override)
+	assert.Len(t, override.Ids, 1)
+	assert.Equal(t, "rule-a", *override.Ids[0])
+}
+
+// TestBuildBotManagementActionOverrideFromMap_EmptyRuleIDs tests build path with empty rule_ids
+func TestBuildBotManagementActionOverrideFromMap_EmptyRuleIDs(t *testing.T) {
+	m := map[string]interface{}{
+		"rule_ids": []interface{}{},
+	}
+	override := teo.BuildBotManagementActionOverrideFromMap(m)
+	assert.NotNil(t, override)
+	assert.Nil(t, override.Ids)
+}
+
+// TestBuildBotManagementActionOverrideFromMap_DeprecatedRuleIDFallback tests build path
+// where only the deprecated rule_id is set; it is used as a fallback single-element Ids.
+func TestBuildBotManagementActionOverrideFromMap_DeprecatedRuleIDFallback(t *testing.T) {
+	m := map[string]interface{}{
+		"rule_id": "rule-legacy",
+	}
+	override := teo.BuildBotManagementActionOverrideFromMap(m)
+	assert.NotNil(t, override)
+	assert.Len(t, override.Ids, 1)
+	assert.Equal(t, "rule-legacy", *override.Ids[0])
+}
+
+// TestBuildBotManagementActionOverrideFromMap_RuleIDsPrecedenceOverRuleID tests that when both
+// rule_ids and the deprecated rule_id are set, rule_ids takes precedence.
+func TestBuildBotManagementActionOverrideFromMap_RuleIDsPrecedenceOverRuleID(t *testing.T) {
+	m := map[string]interface{}{
+		"rule_id":  "rule-legacy",
+		"rule_ids": []interface{}{"rule-a", "rule-b"},
+	}
+	override := teo.BuildBotManagementActionOverrideFromMap(m)
+	assert.NotNil(t, override)
+	assert.Len(t, override.Ids, 2)
+	assert.Equal(t, "rule-a", *override.Ids[0])
+	assert.Equal(t, "rule-b", *override.Ids[1])
+}
+
+// TestBuildBotManagementActionOverrideFromMap_NeitherFieldSet tests that when neither
+// rule_ids nor rule_id is set, Ids remains nil.
+func TestBuildBotManagementActionOverrideFromMap_NeitherFieldSet(t *testing.T) {
+	m := map[string]interface{}{
+		"action": []interface{}{
+			map[string]interface{}{
+				"name": "Deny",
+			},
+		},
+	}
+	override := teo.BuildBotManagementActionOverrideFromMap(m)
+	assert.NotNil(t, override)
+	assert.Nil(t, override.Ids)
+	assert.NotNil(t, override.Action)
+}
+
+// TestFlattenBotManagementActionOverride_MultipleIDs tests flatten path with multiple IDs
+func TestFlattenBotManagementActionOverride_MultipleIDs(t *testing.T) {
+	override := &teov20220901.BotManagementActionOverrides{
+		Ids: []*string{
+			ptrStringSecurityPolicy("rule-a"),
+			ptrStringSecurityPolicy("rule-b"),
+		},
+	}
+	m := teo.FlattenBotManagementActionOverride(override)
+	ruleIds, ok := m["rule_ids"].([]interface{})
+	assert.True(t, ok)
+	assert.Len(t, ruleIds, 2)
+	assert.Equal(t, "rule-a", ruleIds[0])
+	assert.Equal(t, "rule-b", ruleIds[1])
+}
+
+// TestFlattenBotManagementActionOverride_SingleID tests flatten path with single ID
+func TestFlattenBotManagementActionOverride_SingleID(t *testing.T) {
+	override := &teov20220901.BotManagementActionOverrides{
+		Ids: []*string{
+			ptrStringSecurityPolicy("rule-a"),
+		},
+	}
+	m := teo.FlattenBotManagementActionOverride(override)
+	ruleIds, ok := m["rule_ids"].([]interface{})
+	assert.True(t, ok)
+	assert.Len(t, ruleIds, 1)
+	assert.Equal(t, "rule-a", ruleIds[0])
+}
+
+// TestFlattenBotManagementActionOverride_NilIDs tests flatten path with nil Ids
+func TestFlattenBotManagementActionOverride_NilIDs(t *testing.T) {
+	override := &teov20220901.BotManagementActionOverrides{
+		Ids: nil,
+	}
+	m := teo.FlattenBotManagementActionOverride(override)
+	_, ok := m["rule_ids"]
+	assert.False(t, ok)
 }

@@ -727,6 +727,67 @@ func (me *DbdcService) DescribeDBCustomClusterNodeConfigByFilter(ctx context.Con
 	return
 }
 
+func (me *DbdcService) DescribeDBCustomDisasterRecoverGroupById(ctx context.Context, disasterRecoverGroupId string) (ret *dbdcv20201029.DisasterRecoverGroup, errRet error) {
+	var (
+		logId   = tccommon.GetLogId(ctx)
+		request = dbdcv20201029.NewDescribeDBCustomDisasterRecoverGroupsRequest()
+	)
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	request.DisasterRecoverGroupIds = []*string{&disasterRecoverGroupId}
+
+	var (
+		offset int64 = 0
+		limit  int64 = 100
+	)
+	for {
+		request.Offset = &offset
+		request.Limit = &limit
+		var groupSet []*dbdcv20201029.DisasterRecoverGroup
+		err := resource.Retry(tccommon.ReadRetryTimeout, func() *resource.RetryError {
+			ratelimit.Check(request.GetAction())
+			result, e := me.client.UseDbdcV20201029Client().DescribeDBCustomDisasterRecoverGroupsWithContext(ctx, request)
+			if e != nil {
+				return tccommon.RetryError(e)
+			} else {
+				log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), result.ToJsonString())
+			}
+
+			if result == nil || result.Response == nil {
+				return resource.NonRetryableError(fmt.Errorf("Describe dbdc db custom disaster recover group failed, Response is nil."))
+			}
+
+			groupSet = result.Response.DisasterRecoverGroupSet
+			return nil
+		})
+
+		if err != nil {
+			errRet = err
+			return
+		}
+
+		for _, group := range groupSet {
+			if group != nil && group.DisasterRecoverGroupId != nil && *group.DisasterRecoverGroupId == disasterRecoverGroupId {
+				ret = group
+				return
+			}
+		}
+
+		if len(groupSet) < int(limit) {
+			break
+		}
+
+		offset += limit
+	}
+
+	return
+}
+
 func (me *DbdcService) DescribeDBCustomRegions(ctx context.Context) (ret []*dbdcv20201029.RegionInfo, errRet error) {
 	var (
 		logId   = tccommon.GetLogId(ctx)

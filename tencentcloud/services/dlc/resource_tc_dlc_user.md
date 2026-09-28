@@ -8,6 +8,7 @@ resource "tencentcloud_dlc_user" "example" {
   user_type        = "COMMON"
   user_alias       = "terraform-test"
   user_description = "for terraform test"
+  account_type     = "UserAccount"
 }
 ```
 

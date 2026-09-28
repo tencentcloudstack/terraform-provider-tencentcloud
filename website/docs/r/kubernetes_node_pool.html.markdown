@@ -437,7 +437,7 @@ The `node_config` object supports the following:
 * `data_disk` - (Optional, List, ForceNew) Configurations of data disk.
 * `desired_pod_num` - (Optional, Int, ForceNew) Indicate to set desired pod number in node. valid when the cluster is podCIDR.
 * `docker_graph_path` - (Optional, String, ForceNew) Docker graph path. Default is `/var/lib/docker`.
-* `extra_args` - (Optional, List, ForceNew) Custom parameter information related to the node. This is a white-list parameter.
+* `extra_args` - (Optional, List) Custom parameter information related to the node. This is a white-list parameter. It can be modified via the `ModifyClusterNodePool` API.
 * `gpu_args` - (Optional, List, ForceNew) GPU driver parameters.
 * `is_schedule` - (Optional, Bool, ForceNew) Indicate to schedule the adding node or not. Default is true.
 * `mount_target` - (Optional, String, ForceNew) Mount target. Default is not mounting.

@@ -1,4 +1,4 @@
-// Copyright (c) 2017-2018 THL A29 Limited, a Tencent company. All Rights Reserved.
+// Copyright (c) 2017-2025 Tencent. All Rights Reserved.
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -17,11 +17,17 @@ package v20201002
 const (
 	// 此产品的特有错误码
 
+	// CAM 后台鉴权失败
+	AUTHFAILURE_UNAUTHORIZEDOPERATION = "AuthFailure.UnauthorizedOperation"
+
 	// 操作失败。
 	FAILEDOPERATION = "FailedOperation"
 
 	// 附件太大，请参考单个附件以及附件总量大小限制。
 	FAILEDOPERATION_ATTACHCONTENTTOOLARGE = "FailedOperation.AttachContentToolarge"
+
+	// DKIM没有创建，需要提前创建
+	FAILEDOPERATION_DKIMNOTAPPLIED = "FailedOperation.DKIMNotApplied"
 
 	// 邮件地址在黑名单中。
 	FAILEDOPERATION_EMAILADDRINBLACKLIST = "FailedOperation.EmailAddrInBlacklist"
@@ -35,11 +41,17 @@ const (
 	// 超出最大模板数量限制。
 	FAILEDOPERATION_EXCEEDTEMPLATELIMIT = "FailedOperation.ExceedTemplateLimit"
 
+	// 链接地址无效或者不存在
+	FAILEDOPERATION_FILEURLNOTEXIST = "FailedOperation.FileURLNotExist"
+
 	// 触发频率控制，短时间内对同一地址发送过多邮件。
 	FAILEDOPERATION_FREQUENCYLIMIT = "FailedOperation.FrequencyLimit"
 
 	// 拒信率过高，被临时block。
 	FAILEDOPERATION_HIGHREJECTIONRATE = "FailedOperation.HighRejectionRate"
+
+	// 邮件包含不合规链接
+	FAILEDOPERATION_ILLEGALURL = "FailedOperation.IllegalURL"
 
 	// 邮箱地址错误。
 	FAILEDOPERATION_INCORRECTEMAIL = "FailedOperation.IncorrectEmail"
@@ -101,6 +113,9 @@ const (
 	// 收件人数太多，最多支持同时发送50人。
 	FAILEDOPERATION_TOOMANYRECIPIENTS = "FailedOperation.TooManyRecipients"
 
+	// 禁止到达率低用户在邮件内容中带有URL 网页链接
+	FAILEDOPERATION_URLFORBIDDEN = "FailedOperation.URLForbidden"
+
 	// 不支持的邮箱类型。
 	FAILEDOPERATION_UNSUPPORTMAILTYPE = "FailedOperation.UnsupportMailType"
 
@@ -113,8 +128,20 @@ const (
 	// 内部错误。
 	INTERNALERROR = "InternalError"
 
+	// 查询数据库超时或失败
+	INTERNALERROR_QUERYDATABASEFAILED = "InternalError.QueryDataBaseFailed"
+
 	// 参数错误。
 	INVALIDPARAMETER = "InvalidParameter"
+
+	// AppId不存在
+	INVALIDPARAMETER_APPIDISREQUIRED = "InvalidParameter.AppIdIsRequired"
+
+	// 结束时间格式错误
+	INVALIDPARAMETER_INVALIDENDTIMEFORMAT = "InvalidParameter.InvalidEndTimeFormat"
+
+	// 开始时间格式错误
+	INVALIDPARAMETER_INVALIDSTARTTIMEFORMAT = "InvalidParameter.InvalidStartTimeFormat"
 
 	// 参数取值错误。
 	INVALIDPARAMETERVALUE = "InvalidParameterValue"
@@ -248,6 +275,9 @@ const (
 	// 超出最大发信地址限制。
 	OPERATIONDENIED_EXCEEDSENDERLIMIT = "OperationDenied.ExceedSenderLimit"
 
+	// 不允许删除域名
+	OPERATIONDENIED_NOTALLOWDELETE = "OperationDenied.NotAllowDelete"
+
 	// 收件人列表正在上传中，请稍后操作。
 	OPERATIONDENIED_RECEIVERISOPERATING = "OperationDenied.ReceiverIsOperating"
 
@@ -262,6 +292,9 @@ const (
 
 	// 发信地址不存在或者状态不是通过状态。
 	OPERATIONDENIED_SENDADDRESSSTATUSERROR = "OperationDenied.SendAddressStatusError"
+
+	// 与该域名相关的发信地址不为空
+	OPERATIONDENIED_SENDERWITHDOMAINISNOTEMPTY = "OperationDenied.SenderWithDomainIsNotEmpty"
 
 	// 发信模板不存在或者状态不是审核通过状态。
 	OPERATIONDENIED_TEMPLATESTATUSERROR = "OperationDenied.TemplateStatusError"
