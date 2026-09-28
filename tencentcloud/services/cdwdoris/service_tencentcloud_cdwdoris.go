@@ -262,3 +262,67 @@ func (me *CdwdorisService) DescribeCdwdorisInstancesByFilter(ctx context.Context
 
 	return
 }
+
+func (me *CdwdorisService) DescribeCdwdorisInstanceNodesByFilter(ctx context.Context, param map[string]interface{}) (instanceNodes []*cdwdorisv20211228.InstanceNode, nodeRoles []*string, errRet error) {
+	var (
+		logId   = tccommon.GetLogId(ctx)
+		request = cdwdorisv20211228.NewDescribeInstanceNodesRequest()
+	)
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	for k, v := range param {
+		if k == "InstanceId" {
+			request.InstanceId = v.(*string)
+		}
+
+		if k == "NodeRole" {
+			request.NodeRole = v.(*string)
+		}
+
+		if k == "DisplayPolicy" {
+			request.DisplayPolicy = v.(*string)
+		}
+	}
+
+	var (
+		offset int64 = 0
+		limit  int64 = 10
+	)
+
+	for {
+		request.Offset = &offset
+		request.Limit = &limit
+		ratelimit.Check(request.GetAction())
+		response, err := me.client.UseCdwdorisV20211228Client().DescribeInstanceNodes(request)
+		if err != nil {
+			errRet = err
+			return
+		}
+
+		log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+		if response == nil || response.Response == nil {
+			break
+		}
+
+		if len(response.Response.InstanceNodesList) < 1 {
+			nodeRoles = response.Response.NodeRoles
+			break
+		}
+
+		instanceNodes = append(instanceNodes, response.Response.InstanceNodesList...)
+		nodeRoles = response.Response.NodeRoles
+		if len(response.Response.InstanceNodesList) < int(limit) {
+			break
+		}
+
+		offset += limit
+	}
+
+	return
+}
