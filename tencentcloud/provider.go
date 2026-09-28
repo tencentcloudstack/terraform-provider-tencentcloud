@@ -959,6 +959,7 @@ func Provider() *schema.Provider {
 			"tencentcloud_ssm_ssh_key_pair_value":                                 ssm.DataSourceTencentCloudSsmSshKeyPairValue(),
 			"tencentcloud_cdh_instances":                                          cdh.DataSourceTencentCloudCdhInstances(),
 			"tencentcloud_dayu_eip":                                               dayuv2.DataSourceTencentCloudDayuEip(),
+			"tencentcloud_teo_available_origin_acl_family":                        teo.DataSourceTencentCloudTeoAvailableOriginAclFamily(),
 			"tencentcloud_teo_zone_available_plans":                               teo.DataSourceTencentCloudTeoZoneAvailablePlans(),
 			"tencentcloud_teo_rule_engine_settings":                               teo.DataSourceTencentCloudTeoRuleEngineSettings(),
 			"tencentcloud_teo_zones":                                              teo.DataSourceTencentCloudTeoZones(),
