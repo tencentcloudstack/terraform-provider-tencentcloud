@@ -4,8 +4,6 @@ import (
 	"context"
 	"log"
 
-	"fmt"
-
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 	cdwdorisv20211228 "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/cdwdoris/v20211228"
@@ -164,10 +162,6 @@ func dataSourceTencentCloudCdwdorisInstanceNodesRead(d *schema.ResourceData, met
 		result, roles, e := service.DescribeCdwdorisInstanceNodesByFilter(ctx, paramMap)
 		if e != nil {
 			return tccommon.RetryError(e)
-		}
-
-		if len(result) == 0 {
-			return resource.NonRetryableError(fmt.Errorf("Describe cdwdoris_instance_nodes failed, response is empty."))
 		}
 
 		respData = result
