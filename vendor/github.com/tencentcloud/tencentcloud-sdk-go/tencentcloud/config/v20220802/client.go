@@ -456,6 +456,7 @@ func NewCloseConfigRuleResponse() (response *CloseConfigRuleResponse) {
 // 关闭规则
 //
 // 可能返回的错误码:
+//  FAILEDOPERATION_NOTALLOWOPERATECONTROLCENTERGOVERNANCEPACKAGERULE = "FailedOperation.NotAllowOperateControlCenterGovernancePackageRule"
 //  INVALIDPARAMETER = "InvalidParameter"
 //  RESOURCENOTFOUND_RULEISNOTEXIST = "ResourceNotFound.RuleIsNotExist"
 func (c *Client) CloseConfigRule(request *CloseConfigRuleRequest) (response *CloseConfigRuleResponse, err error) {
@@ -466,6 +467,7 @@ func (c *Client) CloseConfigRule(request *CloseConfigRuleRequest) (response *Clo
 // 关闭规则
 //
 // 可能返回的错误码:
+//  FAILEDOPERATION_NOTALLOWOPERATECONTROLCENTERGOVERNANCEPACKAGERULE = "FailedOperation.NotAllowOperateControlCenterGovernancePackageRule"
 //  INVALIDPARAMETER = "InvalidParameter"
 //  RESOURCENOTFOUND_RULEISNOTEXIST = "ResourceNotFound.RuleIsNotExist"
 func (c *Client) CloseConfigRuleWithContext(ctx context.Context, request *CloseConfigRuleRequest) (response *CloseConfigRuleResponse, err error) {
@@ -715,6 +717,66 @@ func (c *Client) DeleteAggregateConfigRuleWithContext(ctx context.Context, reque
     return
 }
 
+func NewDeleteAggregatorsRequest() (request *DeleteAggregatorsRequest) {
+    request = &DeleteAggregatorsRequest{
+        BaseRequest: &tchttp.BaseRequest{},
+    }
+    
+    request.Init().WithApiInfo("config", APIVersion, "DeleteAggregators")
+    
+    
+    return
+}
+
+func NewDeleteAggregatorsResponse() (response *DeleteAggregatorsResponse) {
+    response = &DeleteAggregatorsResponse{
+        BaseResponse: &tchttp.BaseResponse{},
+    } 
+    return
+
+}
+
+// DeleteAggregators
+// 删除账号组
+//
+// 可能返回的错误码:
+//  INTERNALERROR = "InternalError"
+//  INVALIDPARAMETER = "InvalidParameter"
+//  RESOURCENOTFOUND_ACCOUNTGROUPISNOTEXIST = "ResourceNotFound.AccountGroupIsNotExist"
+//  RESOURCENOTFOUND_MEMBERNOTEXIST = "ResourceNotFound.MemberNotExist"
+//  RESOURCENOTFOUND_RULEISNOTEXIST = "ResourceNotFound.RuleIsNotExist"
+//  UNAUTHORIZEDOPERATION = "UnauthorizedOperation"
+func (c *Client) DeleteAggregators(request *DeleteAggregatorsRequest) (response *DeleteAggregatorsResponse, err error) {
+    return c.DeleteAggregatorsWithContext(context.Background(), request)
+}
+
+// DeleteAggregators
+// 删除账号组
+//
+// 可能返回的错误码:
+//  INTERNALERROR = "InternalError"
+//  INVALIDPARAMETER = "InvalidParameter"
+//  RESOURCENOTFOUND_ACCOUNTGROUPISNOTEXIST = "ResourceNotFound.AccountGroupIsNotExist"
+//  RESOURCENOTFOUND_MEMBERNOTEXIST = "ResourceNotFound.MemberNotExist"
+//  RESOURCENOTFOUND_RULEISNOTEXIST = "ResourceNotFound.RuleIsNotExist"
+//  UNAUTHORIZEDOPERATION = "UnauthorizedOperation"
+func (c *Client) DeleteAggregatorsWithContext(ctx context.Context, request *DeleteAggregatorsRequest) (response *DeleteAggregatorsResponse, err error) {
+    if request == nil {
+        request = NewDeleteAggregatorsRequest()
+    }
+    c.InitBaseRequest(&request.BaseRequest, "config", APIVersion, "DeleteAggregators")
+    
+    if c.GetCredential() == nil {
+        return nil, errors.New("DeleteAggregators require credential")
+    }
+
+    request.SetContext(ctx)
+    
+    response = NewDeleteAggregatorsResponse()
+    err = c.Send(request, response)
+    return
+}
+
 func NewDeleteAlarmPolicyRequest() (request *DeleteAlarmPolicyRequest) {
     request = &DeleteAlarmPolicyRequest{
         BaseRequest: &tchttp.BaseRequest{},
@@ -792,6 +854,7 @@ func NewDeleteCompliancePackResponse() (response *DeleteCompliancePackResponse) 
 // 可能返回的错误码:
 //  FAILEDOPERATION_COMPLIANCEPACKISNOTEXIST = "FailedOperation.CompliancePackIsNotExist"
 //  FAILEDOPERATION_COMPLIANCEPACKISNOTSTOP = "FailedOperation.CompliancePackIsNotStop"
+//  FAILEDOPERATION_NOTALLOWOPERATECONTROLCENTERGOVERNANCEPACKAGE = "FailedOperation.NotAllowOperateControlCenterGovernancePackage"
 //  FAILEDOPERATION_RULEISNOTSTOP = "FailedOperation.RuleIsNotStop"
 //  INVALIDPARAMETER = "InvalidParameter"
 //  RESOURCENOTFOUND_COMPLIANCEPACKISNOTEXIST = "ResourceNotFound.CompliancePackIsNotExist"
@@ -805,6 +868,7 @@ func (c *Client) DeleteCompliancePack(request *DeleteCompliancePackRequest) (res
 // 可能返回的错误码:
 //  FAILEDOPERATION_COMPLIANCEPACKISNOTEXIST = "FailedOperation.CompliancePackIsNotExist"
 //  FAILEDOPERATION_COMPLIANCEPACKISNOTSTOP = "FailedOperation.CompliancePackIsNotStop"
+//  FAILEDOPERATION_NOTALLOWOPERATECONTROLCENTERGOVERNANCEPACKAGE = "FailedOperation.NotAllowOperateControlCenterGovernancePackage"
 //  FAILEDOPERATION_RULEISNOTSTOP = "FailedOperation.RuleIsNotStop"
 //  INVALIDPARAMETER = "InvalidParameter"
 //  RESOURCENOTFOUND_COMPLIANCEPACKISNOTEXIST = "ResourceNotFound.CompliancePackIsNotExist"
@@ -848,6 +912,7 @@ func NewDeleteConfigRuleResponse() (response *DeleteConfigRuleResponse) {
 // 删除规则
 //
 // 可能返回的错误码:
+//  FAILEDOPERATION_NOTALLOWOPERATECONTROLCENTERGOVERNANCEPACKAGERULE = "FailedOperation.NotAllowOperateControlCenterGovernancePackageRule"
 //  FAILEDOPERATION_RULEISNOTSTOP = "FailedOperation.RuleIsNotStop"
 //  INVALIDPARAMETER = "InvalidParameter"
 //  RESOURCENOTFOUND_RULEISNOTEXIST = "ResourceNotFound.RuleIsNotExist"
@@ -859,6 +924,7 @@ func (c *Client) DeleteConfigRule(request *DeleteConfigRuleRequest) (response *D
 // 删除规则
 //
 // 可能返回的错误码:
+//  FAILEDOPERATION_NOTALLOWOPERATECONTROLCENTERGOVERNANCEPACKAGERULE = "FailedOperation.NotAllowOperateControlCenterGovernancePackageRule"
 //  FAILEDOPERATION_RULEISNOTSTOP = "FailedOperation.RuleIsNotStop"
 //  INVALIDPARAMETER = "InvalidParameter"
 //  RESOURCENOTFOUND_RULEISNOTEXIST = "ResourceNotFound.RuleIsNotExist"
@@ -1649,6 +1715,7 @@ func NewDetachConfigRuleToCompliancePackResponse() (response *DetachConfigRuleTo
 //
 // 可能返回的错误码:
 //  FAILEDOPERATION_COMPLIANCEPACKISNOTEXIST = "FailedOperation.CompliancePackIsNotExist"
+//  FAILEDOPERATION_NOTALLOWOPERATECONTROLCENTERGOVERNANCEPACKAGE = "FailedOperation.NotAllowOperateControlCenterGovernancePackage"
 //  INVALIDPARAMETER = "InvalidParameter"
 //  RESOURCENOTFOUND_COMPLIANCEPACKISNOTEXIST = "ResourceNotFound.CompliancePackIsNotExist"
 //  RESOURCENOTFOUND_RULEISNOTEXIST = "ResourceNotFound.RuleIsNotExist"
@@ -1661,6 +1728,7 @@ func (c *Client) DetachConfigRuleToCompliancePack(request *DetachConfigRuleToCom
 //
 // 可能返回的错误码:
 //  FAILEDOPERATION_COMPLIANCEPACKISNOTEXIST = "FailedOperation.CompliancePackIsNotExist"
+//  FAILEDOPERATION_NOTALLOWOPERATECONTROLCENTERGOVERNANCEPACKAGE = "FailedOperation.NotAllowOperateControlCenterGovernancePackage"
 //  INVALIDPARAMETER = "InvalidParameter"
 //  RESOURCENOTFOUND_COMPLIANCEPACKISNOTEXIST = "ResourceNotFound.CompliancePackIsNotExist"
 //  RESOURCENOTFOUND_RULEISNOTEXIST = "ResourceNotFound.RuleIsNotExist"
@@ -1787,6 +1855,58 @@ func (c *Client) ListAggregateConfigRuleEvaluationResultsWithContext(ctx context
     request.SetContext(ctx)
     
     response = NewListAggregateConfigRuleEvaluationResultsResponse()
+    err = c.Send(request, response)
+    return
+}
+
+func NewListAggregateConfigRuleResourceEvaluationResultsRequest() (request *ListAggregateConfigRuleResourceEvaluationResultsRequest) {
+    request = &ListAggregateConfigRuleResourceEvaluationResultsRequest{
+        BaseRequest: &tchttp.BaseRequest{},
+    }
+    
+    request.Init().WithApiInfo("config", APIVersion, "ListAggregateConfigRuleResourceEvaluationResults")
+    
+    
+    return
+}
+
+func NewListAggregateConfigRuleResourceEvaluationResultsResponse() (response *ListAggregateConfigRuleResourceEvaluationResultsResponse) {
+    response = &ListAggregateConfigRuleResourceEvaluationResultsResponse{
+        BaseResponse: &tchttp.BaseResponse{},
+    } 
+    return
+
+}
+
+// ListAggregateConfigRuleResourceEvaluationResults
+// 账号组查询配置规则资源评估结果列表
+//
+// 可能返回的错误码:
+//  INTERNALERROR = "InternalError"
+//  INVALIDPARAMETER = "InvalidParameter"
+func (c *Client) ListAggregateConfigRuleResourceEvaluationResults(request *ListAggregateConfigRuleResourceEvaluationResultsRequest) (response *ListAggregateConfigRuleResourceEvaluationResultsResponse, err error) {
+    return c.ListAggregateConfigRuleResourceEvaluationResultsWithContext(context.Background(), request)
+}
+
+// ListAggregateConfigRuleResourceEvaluationResults
+// 账号组查询配置规则资源评估结果列表
+//
+// 可能返回的错误码:
+//  INTERNALERROR = "InternalError"
+//  INVALIDPARAMETER = "InvalidParameter"
+func (c *Client) ListAggregateConfigRuleResourceEvaluationResultsWithContext(ctx context.Context, request *ListAggregateConfigRuleResourceEvaluationResultsRequest) (response *ListAggregateConfigRuleResourceEvaluationResultsResponse, err error) {
+    if request == nil {
+        request = NewListAggregateConfigRuleResourceEvaluationResultsRequest()
+    }
+    c.InitBaseRequest(&request.BaseRequest, "config", APIVersion, "ListAggregateConfigRuleResourceEvaluationResults")
+    
+    if c.GetCredential() == nil {
+        return nil, errors.New("ListAggregateConfigRuleResourceEvaluationResults require credential")
+    }
+
+    request.SetContext(ctx)
+    
+    response = NewListAggregateConfigRuleResourceEvaluationResultsResponse()
     err = c.Send(request, response)
     return
 }
@@ -2099,6 +2219,58 @@ func (c *Client) ListConfigRuleEvaluationResultsWithContext(ctx context.Context,
     request.SetContext(ctx)
     
     response = NewListConfigRuleEvaluationResultsResponse()
+    err = c.Send(request, response)
+    return
+}
+
+func NewListConfigRuleResourceEvaluationResultsRequest() (request *ListConfigRuleResourceEvaluationResultsRequest) {
+    request = &ListConfigRuleResourceEvaluationResultsRequest{
+        BaseRequest: &tchttp.BaseRequest{},
+    }
+    
+    request.Init().WithApiInfo("config", APIVersion, "ListConfigRuleResourceEvaluationResults")
+    
+    
+    return
+}
+
+func NewListConfigRuleResourceEvaluationResultsResponse() (response *ListConfigRuleResourceEvaluationResultsResponse) {
+    response = &ListConfigRuleResourceEvaluationResultsResponse{
+        BaseResponse: &tchttp.BaseResponse{},
+    } 
+    return
+
+}
+
+// ListConfigRuleResourceEvaluationResults
+// 查询配置规则资源评估结果列表
+//
+// 可能返回的错误码:
+//  INTERNALERROR = "InternalError"
+//  INVALIDPARAMETER = "InvalidParameter"
+func (c *Client) ListConfigRuleResourceEvaluationResults(request *ListConfigRuleResourceEvaluationResultsRequest) (response *ListConfigRuleResourceEvaluationResultsResponse, err error) {
+    return c.ListConfigRuleResourceEvaluationResultsWithContext(context.Background(), request)
+}
+
+// ListConfigRuleResourceEvaluationResults
+// 查询配置规则资源评估结果列表
+//
+// 可能返回的错误码:
+//  INTERNALERROR = "InternalError"
+//  INVALIDPARAMETER = "InvalidParameter"
+func (c *Client) ListConfigRuleResourceEvaluationResultsWithContext(ctx context.Context, request *ListConfigRuleResourceEvaluationResultsRequest) (response *ListConfigRuleResourceEvaluationResultsResponse, err error) {
+    if request == nil {
+        request = NewListConfigRuleResourceEvaluationResultsRequest()
+    }
+    c.InitBaseRequest(&request.BaseRequest, "config", APIVersion, "ListConfigRuleResourceEvaluationResults")
+    
+    if c.GetCredential() == nil {
+        return nil, errors.New("ListConfigRuleResourceEvaluationResults require credential")
+    }
+
+    request.SetContext(ctx)
+    
+    response = NewListConfigRuleResourceEvaluationResultsResponse()
     err = c.Send(request, response)
     return
 }
@@ -2588,6 +2760,7 @@ func NewOpenConfigRuleResponse() (response *OpenConfigRuleResponse) {
 // 开启规则
 //
 // 可能返回的错误码:
+//  FAILEDOPERATION_NOTALLOWOPERATECONTROLCENTERGOVERNANCEPACKAGERULE = "FailedOperation.NotAllowOperateControlCenterGovernancePackageRule"
 //  INVALIDPARAMETER = "InvalidParameter"
 //  RESOURCENOTFOUND_RULEISNOTEXIST = "ResourceNotFound.RuleIsNotExist"
 func (c *Client) OpenConfigRule(request *OpenConfigRuleRequest) (response *OpenConfigRuleResponse, err error) {
@@ -2598,6 +2771,7 @@ func (c *Client) OpenConfigRule(request *OpenConfigRuleRequest) (response *OpenC
 // 开启规则
 //
 // 可能返回的错误码:
+//  FAILEDOPERATION_NOTALLOWOPERATECONTROLCENTERGOVERNANCEPACKAGERULE = "FailedOperation.NotAllowOperateControlCenterGovernancePackageRule"
 //  INVALIDPARAMETER = "InvalidParameter"
 //  RESOURCENOTFOUND_RULEISNOTEXIST = "ResourceNotFound.RuleIsNotExist"
 func (c *Client) OpenConfigRuleWithContext(ctx context.Context, request *OpenConfigRuleRequest) (response *OpenConfigRuleResponse, err error) {
@@ -3063,6 +3237,64 @@ func (c *Client) UpdateAggregateConfigRuleWithContext(ctx context.Context, reque
     return
 }
 
+func NewUpdateAggregatorRequest() (request *UpdateAggregatorRequest) {
+    request = &UpdateAggregatorRequest{
+        BaseRequest: &tchttp.BaseRequest{},
+    }
+    
+    request.Init().WithApiInfo("config", APIVersion, "UpdateAggregator")
+    
+    
+    return
+}
+
+func NewUpdateAggregatorResponse() (response *UpdateAggregatorResponse) {
+    response = &UpdateAggregatorResponse{
+        BaseResponse: &tchttp.BaseResponse{},
+    } 
+    return
+
+}
+
+// UpdateAggregator
+// 编辑账号组
+//
+// 可能返回的错误码:
+//  INTERNALERROR = "InternalError"
+//  INVALIDPARAMETER = "InvalidParameter"
+//  RESOURCENOTFOUND_ACCOUNTGROUPISNOTEXIST = "ResourceNotFound.AccountGroupIsNotExist"
+//  RESOURCENOTFOUND_MEMBERNOTEXIST = "ResourceNotFound.MemberNotExist"
+//  UNAUTHORIZEDOPERATION = "UnauthorizedOperation"
+func (c *Client) UpdateAggregator(request *UpdateAggregatorRequest) (response *UpdateAggregatorResponse, err error) {
+    return c.UpdateAggregatorWithContext(context.Background(), request)
+}
+
+// UpdateAggregator
+// 编辑账号组
+//
+// 可能返回的错误码:
+//  INTERNALERROR = "InternalError"
+//  INVALIDPARAMETER = "InvalidParameter"
+//  RESOURCENOTFOUND_ACCOUNTGROUPISNOTEXIST = "ResourceNotFound.AccountGroupIsNotExist"
+//  RESOURCENOTFOUND_MEMBERNOTEXIST = "ResourceNotFound.MemberNotExist"
+//  UNAUTHORIZEDOPERATION = "UnauthorizedOperation"
+func (c *Client) UpdateAggregatorWithContext(ctx context.Context, request *UpdateAggregatorRequest) (response *UpdateAggregatorResponse, err error) {
+    if request == nil {
+        request = NewUpdateAggregatorRequest()
+    }
+    c.InitBaseRequest(&request.BaseRequest, "config", APIVersion, "UpdateAggregator")
+    
+    if c.GetCredential() == nil {
+        return nil, errors.New("UpdateAggregator require credential")
+    }
+
+    request.SetContext(ctx)
+    
+    response = NewUpdateAggregatorResponse()
+    err = c.Send(request, response)
+    return
+}
+
 func NewUpdateAlarmPolicyRequest() (request *UpdateAlarmPolicyRequest) {
     request = &UpdateAlarmPolicyRequest{
         BaseRequest: &tchttp.BaseRequest{},
@@ -3139,6 +3371,7 @@ func NewUpdateCompliancePackResponse() (response *UpdateCompliancePackResponse) 
 //
 // 可能返回的错误码:
 //  FAILEDOPERATION_COMPLIANCEPACKISNOTEXIST = "FailedOperation.CompliancePackIsNotExist"
+//  FAILEDOPERATION_NOTALLOWOPERATECONTROLCENTERGOVERNANCEPACKAGE = "FailedOperation.NotAllowOperateControlCenterGovernancePackage"
 //  INVALIDPARAMETER = "InvalidParameter"
 //  RESOURCENOTFOUND_COMPLIANCEPACKISNOTEXIST = "ResourceNotFound.CompliancePackIsNotExist"
 //  RESOURCENOTFOUND_RULEISNOTEXIST = "ResourceNotFound.RuleIsNotExist"
@@ -3151,6 +3384,7 @@ func (c *Client) UpdateCompliancePack(request *UpdateCompliancePackRequest) (res
 //
 // 可能返回的错误码:
 //  FAILEDOPERATION_COMPLIANCEPACKISNOTEXIST = "FailedOperation.CompliancePackIsNotExist"
+//  FAILEDOPERATION_NOTALLOWOPERATECONTROLCENTERGOVERNANCEPACKAGE = "FailedOperation.NotAllowOperateControlCenterGovernancePackage"
 //  INVALIDPARAMETER = "InvalidParameter"
 //  RESOURCENOTFOUND_COMPLIANCEPACKISNOTEXIST = "ResourceNotFound.CompliancePackIsNotExist"
 //  RESOURCENOTFOUND_RULEISNOTEXIST = "ResourceNotFound.RuleIsNotExist"
@@ -3195,6 +3429,7 @@ func NewUpdateCompliancePackStatusResponse() (response *UpdateCompliancePackStat
 //
 // 可能返回的错误码:
 //  FAILEDOPERATION_COMPLIANCEPACKISNOTEXIST = "FailedOperation.CompliancePackIsNotExist"
+//  FAILEDOPERATION_NOTALLOWOPERATECONTROLCENTERGOVERNANCEPACKAGE = "FailedOperation.NotAllowOperateControlCenterGovernancePackage"
 //  INVALIDPARAMETER = "InvalidParameter"
 //  RESOURCENOTFOUND_COMPLIANCEPACKISNOTEXIST = "ResourceNotFound.CompliancePackIsNotExist"
 func (c *Client) UpdateCompliancePackStatus(request *UpdateCompliancePackStatusRequest) (response *UpdateCompliancePackStatusResponse, err error) {
@@ -3206,6 +3441,7 @@ func (c *Client) UpdateCompliancePackStatus(request *UpdateCompliancePackStatusR
 //
 // 可能返回的错误码:
 //  FAILEDOPERATION_COMPLIANCEPACKISNOTEXIST = "FailedOperation.CompliancePackIsNotExist"
+//  FAILEDOPERATION_NOTALLOWOPERATECONTROLCENTERGOVERNANCEPACKAGE = "FailedOperation.NotAllowOperateControlCenterGovernancePackage"
 //  INVALIDPARAMETER = "InvalidParameter"
 //  RESOURCENOTFOUND_COMPLIANCEPACKISNOTEXIST = "ResourceNotFound.CompliancePackIsNotExist"
 func (c *Client) UpdateCompliancePackStatusWithContext(ctx context.Context, request *UpdateCompliancePackStatusRequest) (response *UpdateCompliancePackStatusResponse, err error) {
@@ -3356,6 +3592,7 @@ func NewUpdateConfigRuleResponse() (response *UpdateConfigRuleResponse) {
 // 编辑规则
 //
 // 可能返回的错误码:
+//  FAILEDOPERATION_NOTALLOWOPERATECONTROLCENTERGOVERNANCEPACKAGERULE = "FailedOperation.NotAllowOperateControlCenterGovernancePackageRule"
 //  INVALIDPARAMETER = "InvalidParameter"
 //  RESOURCENOTFOUND_RULEISNOTEXIST = "ResourceNotFound.RuleIsNotExist"
 func (c *Client) UpdateConfigRule(request *UpdateConfigRuleRequest) (response *UpdateConfigRuleResponse, err error) {
@@ -3366,6 +3603,7 @@ func (c *Client) UpdateConfigRule(request *UpdateConfigRuleRequest) (response *U
 // 编辑规则
 //
 // 可能返回的错误码:
+//  FAILEDOPERATION_NOTALLOWOPERATECONTROLCENTERGOVERNANCEPACKAGERULE = "FailedOperation.NotAllowOperateControlCenterGovernancePackageRule"
 //  INVALIDPARAMETER = "InvalidParameter"
 //  RESOURCENOTFOUND_RULEISNOTEXIST = "ResourceNotFound.RuleIsNotExist"
 func (c *Client) UpdateConfigRuleWithContext(ctx context.Context, request *UpdateConfigRuleRequest) (response *UpdateConfigRuleResponse, err error) {
