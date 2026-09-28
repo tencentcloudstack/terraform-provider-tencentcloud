@@ -24916,8 +24916,6 @@ type ImageDto struct {
 	UpdateTime *uint64 `json:"UpdateTime,omitnil,omitempty" name:"UpdateTime"`
 }
 
-<<<<<<< HEAD
-=======
 // Predefined struct for user
 type ImportExternalClusterRequestParams struct {
 	// <p>资源池对应的分区名称。</p>
@@ -25156,7 +25154,6 @@ func (r *ImportTkeClusterResponse) FromJsonString(s string) error {
 	return json.Unmarshal([]byte(s), &r)
 }
 
->>>>>>> origin/master
 type InferenceEngineInfo struct {
 	// <p>引擎标识符</p>
 	EngineId *string `json:"EngineId,omitnil,omitempty" name:"EngineId"`

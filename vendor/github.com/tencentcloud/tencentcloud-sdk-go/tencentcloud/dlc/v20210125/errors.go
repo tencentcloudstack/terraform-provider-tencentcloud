@@ -617,15 +617,12 @@ const (
 	// 机型步长不规范，cpu需要为32倍数
 	INVALIDPARAMETERVALUE_BILLINGITEMSTEP = "InvalidParameterValue.BillingItemStep"
 
-<<<<<<< HEAD
-=======
 	// 付费模式不合法
 	INVALIDPARAMETERVALUE_PAYMODE = "InvalidParameterValue.PayMode"
 
 	// 按量计费资源包不允许修改Description
 	INVALIDPARAMETERVALUE_POSTPAYPARTITIONDESCRIPTION = "InvalidParameterValue.PostpayPartitionDescription"
 
->>>>>>> origin/master
 	// 按量计费资源包名称不规范
 	INVALIDPARAMETERVALUE_POSTPAYPARTITIONNAME = "InvalidParameterValue.PostpayPartitionName"
 

@@ -3629,13 +3629,9 @@ func NewCreatePartitionResponse() (response *CreatePartitionResponse) {
 //
 // 可能返回的错误码:
 //  FAILEDOPERATION_APICALLFAILED = "FailedOperation.ApiCallFailed"
-<<<<<<< HEAD
-//  INVALIDPARAMETERVALUE_BILLINGITEMSTEP = "InvalidParameterValue.BillingItemStep"
-=======
 //  INVALIDPARAMETERVALUE = "InvalidParameterValue"
 //  INVALIDPARAMETERVALUE_BILLINGITEMSTEP = "InvalidParameterValue.BillingItemStep"
 //  INVALIDPARAMETERVALUE_POSTPAYPARTITIONDESCRIPTION = "InvalidParameterValue.PostpayPartitionDescription"
->>>>>>> origin/master
 //  INVALIDPARAMETERVALUE_POSTPAYPARTITIONNAME = "InvalidParameterValue.PostpayPartitionName"
 //  LIMITEXCEEDED = "LimitExceeded"
 //  RESOURCEINSUFFICIENT = "ResourceInsufficient"
@@ -3648,13 +3644,9 @@ func (c *Client) CreatePartition(request *CreatePartitionRequest) (response *Cre
 //
 // 可能返回的错误码:
 //  FAILEDOPERATION_APICALLFAILED = "FailedOperation.ApiCallFailed"
-<<<<<<< HEAD
-//  INVALIDPARAMETERVALUE_BILLINGITEMSTEP = "InvalidParameterValue.BillingItemStep"
-=======
 //  INVALIDPARAMETERVALUE = "InvalidParameterValue"
 //  INVALIDPARAMETERVALUE_BILLINGITEMSTEP = "InvalidParameterValue.BillingItemStep"
 //  INVALIDPARAMETERVALUE_POSTPAYPARTITIONDESCRIPTION = "InvalidParameterValue.PostpayPartitionDescription"
->>>>>>> origin/master
 //  INVALIDPARAMETERVALUE_POSTPAYPARTITIONNAME = "InvalidParameterValue.PostpayPartitionName"
 //  LIMITEXCEEDED = "LimitExceeded"
 //  RESOURCEINSUFFICIENT = "ResourceInsufficient"
