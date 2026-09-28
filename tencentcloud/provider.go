@@ -2137,6 +2137,7 @@ func Provider() *schema.Provider {
 			"tencentcloud_cls_console":                                                              cls.ResourceTencentCloudClsConsole(),
 			"tencentcloud_cls_metric_subscribe":                                                     cls.ResourceTencentCloudClsMetricSubscribe(),
 			"tencentcloud_cls_remote_write_task":                                                    cls.ResourceTencentCloudClsRemoteWriteTask(),
+			"tencentcloud_cls_cls_deliver_task":                                                     cls.ResourceTencentCloudClsClsDeliverTask(),
 			"tencentcloud_lighthouse_instance":                                                      lighthouse.ResourceTencentCloudLighthouseInstance(),
 			"tencentcloud_lighthouse_firewall_template":                                             lighthouse.ResourceTencentCloudLighthouseFirewallTemplate(),
 			"tencentcloud_tem_environment":                                                          tem.ResourceTencentCloudTemEnvironment(),
