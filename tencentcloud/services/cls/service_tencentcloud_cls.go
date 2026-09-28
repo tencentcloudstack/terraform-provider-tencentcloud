@@ -2067,3 +2067,59 @@ func (me *ClsService) DescribeClsMetricSubscribeById(ctx context.Context, topicI
 	ret = response.Response.Datas[0]
 	return
 }
+
+func (me *ClsService) DescribeClsClsDeliverTaskById(ctx context.Context, taskId string) (info *cls.CLSDeliverTaskInfo, errRet error) {
+	var (
+		logId   = tccommon.GetLogId(ctx)
+		request = cls.NewDescribeCLSDeliverTasksRequest()
+	)
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n",
+				logId, "query cls_cls_deliver_task", request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	request.Filters = []*cls.Filter{
+		{
+			Key:    common.StringPtr("taskId"),
+			Values: common.StringPtrs([]string{taskId}),
+		},
+	}
+
+	var offset uint64 = 0
+	var pageSize uint64 = 100
+	request.Offset = &offset
+	request.Limit = &pageSize
+
+	var response *cls.DescribeCLSDeliverTasksResponse
+	err := resource.Retry(tccommon.ReadRetryTimeout, func() *resource.RetryError {
+		ratelimit.Check(request.GetAction())
+		result, e := me.client.UseClsClient().DescribeCLSDeliverTasksWithContext(ctx, request)
+		if e != nil {
+			return tccommon.RetryError(e)
+		}
+
+		if result == nil || result.Response == nil {
+			return resource.NonRetryableError(fmt.Errorf("Describe cls_cls_deliver_task failed, Response is nil."))
+		}
+
+		response = result
+		return nil
+	})
+
+	if err != nil {
+		errRet = err
+		return
+	}
+	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n",
+		logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+	if len(response.Response.Infos) == 0 {
+		return
+	}
+
+	info = response.Response.Infos[0]
+	return
+}
