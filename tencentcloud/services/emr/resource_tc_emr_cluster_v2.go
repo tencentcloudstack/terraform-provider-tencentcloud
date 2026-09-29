@@ -513,7 +513,7 @@ func ResourceTencentCloudEmrClusterV2() *schema.Resource {
 							Description: "EMR-MetaDB instance ID, required when `meta_type` is `EMR_EXIST_META`.",
 						},
 						"components": {
-							Type:     schema.TypeList,
+							Type:     schema.TypeSet,
 							Optional: true,
 							Computed: true,
 							Elem: &schema.Schema{
@@ -1062,34 +1062,35 @@ func resourceTencentCloudEmrClusterV2Read(d *schema.ResourceData, meta interface
 	}
 
 	if len(cluster.MetaDBGroupInfo) > 0 {
-		existingList, _ := d.Get("meta_db_group_info").([]interface{})
 		metaDBList := make([]map[string]interface{}, 0, len(cluster.MetaDBGroupInfo))
-		for i, item := range cluster.MetaDBGroupInfo {
-			m := map[string]interface{}{}
-			var old map[string]interface{}
-			if i < len(existingList) {
-				old, _ = existingList[i].(map[string]interface{})
+		for _, item := range cluster.MetaDBGroupInfo {
+			if item == nil {
+				continue
 			}
-			keepIfNil := func(key string, val *string) {
-				if val != nil {
-					m[key] = *val
-				} else if v, ok := old[key]; ok {
-					m[key] = v
+
+			// components is a TypeSet: d.Set expects a slice of generic values
+			// (it hashes them into the set) rather than the SDK's []*string.
+			components := make([]interface{}, 0, len(item.Components))
+			for _, c := range item.Components {
+				if c != nil {
+					components = append(components, *c)
 				}
 			}
-			keepIfNil("meta_data_jdbc_url", item.MetaDataJdbcUrl)
-			keepIfNil("meta_data_user", item.MetaDataUser)
-			keepIfNil("meta_data_pass", item.MetaDataPass)
-			keepIfNil("meta_type", item.MetaType)
-			keepIfNil("unify_meta_instance_id", item.UnifyMetaInstanceId)
-			if item.Components != nil {
-				m["components"] = item.Components
-			} else if v, ok := old["components"]; ok {
-				m["components"] = v
-			}
-			keepIfNil("default_meta_version", item.DefaultMetaVersion)
-			keepIfNil("link_instance_id", item.LinkInstanceId)
-			metaDBList = append(metaDBList, m)
+
+			// Field-by-field flatten of CustomMetaDBInfo. Every key is always
+			// written (zero value when the API omits the field) so the nested
+			// block mirrors the response exactly instead of carrying stale
+			// state values.
+			metaDBList = append(metaDBList, map[string]interface{}{
+				"meta_data_jdbc_url":     helper.PString(item.MetaDataJdbcUrl),
+				"meta_data_user":         helper.PString(item.MetaDataUser),
+				"meta_data_pass":         helper.PString(item.MetaDataPass),
+				"meta_type":              helper.PString(item.MetaType),
+				"unify_meta_instance_id": helper.PString(item.UnifyMetaInstanceId),
+				"components":             components,
+				"default_meta_version":   helper.PString(item.DefaultMetaVersion),
+				"link_instance_id":       helper.PString(item.LinkInstanceId),
+			})
 		}
 		_ = d.Set("meta_db_group_info", metaDBList)
 	}
@@ -3902,11 +3903,11 @@ func buildEmrMetaDBGroupInfo(v interface{}) []*emr.CustomMetaDBInfo {
 		if val, ok := m["unify_meta_instance_id"].(string); ok && val != "" {
 			info.UnifyMetaInstanceId = helper.String(val)
 		}
-		if val, ok := m["components"].([]interface{}); ok {
-			for _, c := range val {
-				if s, ok := c.(string); ok && s != "" {
-					info.Components = append(info.Components, helper.String(s))
-				}
+		// components is a TypeSet now, so the nested value is a *schema.Set
+		// rather than a []interface{}; emrNodeSetToList normalises both shapes.
+		for _, c := range emrNodeSetToList(m["components"]) {
+			if s, ok := c.(string); ok && s != "" {
+				info.Components = append(info.Components, helper.String(s))
 			}
 		}
 		if val, ok := m["default_meta_version"].(string); ok && val != "" {
