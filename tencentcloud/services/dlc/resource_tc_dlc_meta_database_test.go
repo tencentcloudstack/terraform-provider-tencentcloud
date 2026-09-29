@@ -92,8 +92,12 @@ func TestResourceTencentCloudDlcMetaDatabaseCreate(t *testing.T) {
 	meta := newMockMetaDlcMetaDatabase()
 	res := svcdlc.ResourceTencentCloudDlcMetaDatabase()
 	d := schema.TestResourceDataRaw(t, res.Schema, map[string]interface{}{
-		"database_name": "tf_example_db",
-		"comment":       "tf example meta database",
+		"meta_database_info": []interface{}{
+			map[string]interface{}{
+				"database_name": "tf_example_db",
+				"comment":       "tf example meta database",
+			},
+		},
 		"govern_policy": []interface{}{
 			map[string]interface{}{
 				"rule_type":     "Customize",
@@ -112,7 +116,8 @@ func TestResourceTencentCloudDlcMetaDatabaseCreate(t *testing.T) {
 	assert.Equal(t, "Customize", *capturedRequest.GovernPolicy.RuleType)
 
 	assert.Equal(t, "tf_example_db", d.Id())
-	assert.Equal(t, "tf_example_db", d.Get("database_name").(string))
+	assert.Equal(t, "tf_example_db", d.Get("meta_database_info.0.database_name").(string))
+	assert.Equal(t, "tf example meta database", d.Get("meta_database_info.0.comment").(string))
 	assert.Equal(t, "batch-123", d.Get("batch_id").(string))
 	assert.Equal(t, "cosn://example/path", d.Get("location").(string))
 	assert.Equal(t, "DataLakeCatalog", d.Get("catalog_name").(string))
@@ -152,7 +157,11 @@ func TestResourceTencentCloudDlcMetaDatabaseCreateWithDatasourceConnectionName(t
 	meta := newMockMetaDlcMetaDatabase()
 	res := svcdlc.ResourceTencentCloudDlcMetaDatabase()
 	d := schema.TestResourceDataRaw(t, res.Schema, map[string]interface{}{
-		"database_name":              "tf_example_db",
+		"meta_database_info": []interface{}{
+			map[string]interface{}{
+				"database_name": "tf_example_db",
+			},
+		},
 		"datasource_connection_name": "custom_connection",
 	})
 
@@ -184,7 +193,11 @@ func TestResourceTencentCloudDlcMetaDatabaseCreateNilResponse(t *testing.T) {
 	meta := newMockMetaDlcMetaDatabase()
 	res := svcdlc.ResourceTencentCloudDlcMetaDatabase()
 	d := schema.TestResourceDataRaw(t, res.Schema, map[string]interface{}{
-		"database_name": "tf_example_db",
+		"meta_database_info": []interface{}{
+			map[string]interface{}{
+				"database_name": "tf_example_db",
+			},
+		},
 	})
 
 	err := res.Create(d, meta)
@@ -244,7 +257,8 @@ func TestResourceTencentCloudDlcMetaDatabaseRead(t *testing.T) {
 	assert.Nil(t, capturedRequest.DatasourceConnectionName)
 
 	assert.Equal(t, "tf_example_db", d.Id())
-	assert.Equal(t, "tf_example_db", d.Get("database_name").(string))
+	assert.Equal(t, "tf_example_db", d.Get("meta_database_info.0.database_name").(string))
+	assert.Equal(t, "tf example meta database", d.Get("meta_database_info.0.comment").(string))
 	assert.Equal(t, "cosn://example/path", d.Get("location").(string))
 	assert.Equal(t, "1700000000", d.Get("create_time").(string))
 	assert.Equal(t, "100000000001", d.Get("user_sub_uin").(string))
@@ -414,19 +428,23 @@ func TestResourceTencentCloudDlcMetaDatabaseUpdateImmutableChanged(t *testing.T)
 	meta := newMockMetaDlcMetaDatabase()
 	res := svcdlc.ResourceTencentCloudDlcMetaDatabase()
 	d := schema.TestResourceDataRaw(t, res.Schema, map[string]interface{}{
-		"database_name": "tf_example_db",
-		"comment":       "new comment",
+		"meta_database_info": []interface{}{
+			map[string]interface{}{
+				"database_name": "tf_example_db",
+				"comment":       "new comment",
+			},
+		},
 	})
 	d.SetId("tf_example_db")
 
-	// Patch HasChange to simulate a change in comment
+	// Patch HasChange to simulate a change in meta_database_info.0.comment
 	patches.ApplyMethodFunc(d, "HasChange", func(key string) bool {
-		return key == "comment"
+		return key == "meta_database_info.0.comment"
 	})
 
 	err := res.Update(d, meta)
 	assert.Error(t, err)
-	assert.Contains(t, err.Error(), "argument `comment` cannot be changed")
+	assert.Contains(t, err.Error(), "argument `meta_database_info.0.comment` cannot be changed")
 }
 
 func TestResourceTencentCloudDlcMetaDatabaseUpdateNoChange(t *testing.T) {
@@ -451,7 +469,11 @@ func TestResourceTencentCloudDlcMetaDatabaseUpdateNoChange(t *testing.T) {
 	meta := newMockMetaDlcMetaDatabase()
 	res := svcdlc.ResourceTencentCloudDlcMetaDatabase()
 	d := schema.TestResourceDataRaw(t, res.Schema, map[string]interface{}{
-		"database_name": "tf_example_db",
+		"meta_database_info": []interface{}{
+			map[string]interface{}{
+				"database_name": "tf_example_db",
+			},
+		},
 	})
 	d.SetId("tf_example_db")
 
@@ -468,9 +490,8 @@ func TestResourceTencentCloudDlcMetaDatabaseSchema(t *testing.T) {
 	res := svcdlc.ResourceTencentCloudDlcMetaDatabase()
 
 	assert.NotNil(t, res)
-	assert.Contains(t, res.Schema, "database_name")
+	assert.Contains(t, res.Schema, "meta_database_info")
 	assert.Contains(t, res.Schema, "datasource_connection_name")
-	assert.Contains(t, res.Schema, "comment")
 	assert.Contains(t, res.Schema, "govern_policy")
 	assert.Contains(t, res.Schema, "smart_policy")
 	assert.Contains(t, res.Schema, "batch_id")
@@ -486,10 +507,24 @@ func TestResourceTencentCloudDlcMetaDatabaseSchema(t *testing.T) {
 	assert.Contains(t, res.Schema, "catalog_type")
 	assert.Contains(t, res.Schema, "is_information_schema")
 
-	dbName := res.Schema["database_name"]
+	// database_name and comment live inside the meta_database_info block, which
+	// maps 1:1 to the MetaDatabaseInfo structure of the CreateMetaDatabase API.
+	metaDatabaseInfo := res.Schema["meta_database_info"]
+	assert.Equal(t, schema.TypeList, metaDatabaseInfo.Type)
+	assert.True(t, metaDatabaseInfo.Required)
+	assert.Equal(t, 1, metaDatabaseInfo.MaxItems)
+	assert.NotContains(t, res.Schema, "database_name")
+	assert.NotContains(t, res.Schema, "comment")
+
+	metaDatabaseInfoElem := metaDatabaseInfo.Elem.(*schema.Resource)
+	dbName := metaDatabaseInfoElem.Schema["database_name"]
 	assert.Equal(t, schema.TypeString, dbName.Type)
 	assert.True(t, dbName.Required)
 	assert.True(t, dbName.ForceNew)
+
+	comment := metaDatabaseInfoElem.Schema["comment"]
+	assert.Equal(t, schema.TypeString, comment.Type)
+	assert.True(t, comment.Optional)
 
 	governPolicy := res.Schema["govern_policy"]
 	assert.Equal(t, schema.TypeList, governPolicy.Type)
@@ -545,7 +580,11 @@ func TestResourceTencentCloudDlcMetaDatabaseCreateFullSmartPolicy(t *testing.T) 
 	meta := newMockMetaDlcMetaDatabase()
 	res := svcdlc.ResourceTencentCloudDlcMetaDatabase()
 	d := schema.TestResourceDataRaw(t, res.Schema, map[string]interface{}{
-		"database_name": "tf_example_db",
+		"meta_database_info": []interface{}{
+			map[string]interface{}{
+				"database_name": "tf_example_db",
+			},
+		},
 		"smart_policy": []interface{}{
 			map[string]interface{}{
 				"base_info": []interface{}{

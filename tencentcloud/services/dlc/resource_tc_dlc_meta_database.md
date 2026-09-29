@@ -4,8 +4,11 @@ Example Usage
 
 ```hcl
 resource "tencentcloud_dlc_meta_database" "example" {
-  database_name = "tf_example_db"
-  comment       = "tf example meta database"
+  meta_database_info {
+    database_name = "tf_example_db"
+    comment       = "tf example meta database"
+  }
+
   govern_policy {
     rule_type     = "Customize"
     govern_engine = "engine_name"

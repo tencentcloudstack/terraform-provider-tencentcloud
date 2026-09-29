@@ -8,11 +8,17 @@ The system SHALL define a Terraform resource named `tencentcloud_dlc_meta_databa
 
 #### Scenario: top-level input fields
 - **WHEN** the `tencentcloud_dlc_meta_database` resource schema is defined
-- **THEN** it includes `database_name` of type `schema.TypeString` with `Required: true` and `ForceNew: true`
+- **THEN** it includes `meta_database_info` of type `schema.TypeList` with `Required: true` and `MaxItems: 1`
 - **AND** it includes `datasource_connection_name` of type `schema.TypeString` with `Optional: true`
-- **AND** it includes `comment` of type `schema.TypeString` with `Optional: true`
 - **AND** it includes `govern_policy` of type `schema.TypeList` with `Optional: true` and `MaxItems: 1`
 - **AND** it includes `smart_policy` of type `schema.TypeList` with `Optional: true` and `MaxItems: 1`
+- **AND** it does NOT declare top-level `database_name` or `comment`
+
+#### Scenario: meta_database_info block structure
+- **WHEN** the `meta_database_info` element schema is defined
+- **THEN** it is a `schema.Resource` that mirrors the `MetaDatabaseInfo` structure of the `CreateMetaDatabase` API
+- **AND** it has `database_name` of type `schema.TypeString` with `Required: true` and `ForceNew: true`
+- **AND** it has `comment` of type `schema.TypeString` with `Optional: true`
 
 #### Scenario: govern_policy block structure
 - **WHEN** the `govern_policy` element schema is defined
@@ -121,8 +127,9 @@ The system SHALL create a DLC meta database by calling `CreateMetaDatabase` with
 #### Scenario: build CreateMetaDatabase request from schema
 - **WHEN** the Create handler is invoked
 - **THEN** it builds a `CreateMetaDatabaseRequest` with `DatasourceConnectionName` from `datasource_connection_name` if set
-- **AND** it sets `MetaDatabaseInfo.DatabaseName` from `database_name`
-- **AND** it sets `MetaDatabaseInfo.Comment` from `comment` if set
+- **AND** it sets `MetaDatabaseInfo.DatabaseName` from `meta_database_info.0.database_name`
+- **AND** it sets `MetaDatabaseInfo.Comment` from `meta_database_info.0.comment` if set
+- **AND** it returns an error when the resolved `MetaDatabaseInfo.DatabaseName` is empty
 - **AND** it sets `GovernPolicy.RuleType` and `GovernPolicy.GovernEngine` from the `govern_policy` block if set
 - **AND** it sets `SmartPolicy.BaseInfo` and `SmartPolicy.Policy` from the `smart_policy` block if set
 
@@ -146,7 +153,8 @@ The system SHALL read the DLC meta database by calling `DescribeDatabase` and fl
 
 #### Scenario: flatten response into state
 - **WHEN** `DescribeDatabase` returns a non-nil `DatabaseInfo` (of type `DatabaseResponseInfo`)
-- **THEN** the system sets `database_name`, `comment`, `location`, `create_time`, `modified_time`, `user_alias`, `user_sub_uin`, `database_id`, `catalog_name`, `catalog_type`, `is_information_schema` from the response fields when they are non-nil
+- **THEN** the system sets the `meta_database_info` block from the response `DatabaseName` and `Comment`, falling back to the values resolved from the ID/state when the response omits them
+- **AND** it sets `location`, `create_time`, `modified_time`, `user_alias`, `user_sub_uin`, `database_id`, `catalog_name`, `catalog_type`, `is_information_schema` from the response fields when they are non-nil
 - **AND** it flattens `Properties` into the `properties` list
 - **AND** it flattens `GovernPolicy` into the `govern_policy` block
 
@@ -177,7 +185,7 @@ The system SHALL delete the DLC meta database by calling `DeleteMetaDatabase`, t
 The system SHALL implement an Update handler that enforces immutability of all non-ID top-level schema fields, because no cloud API Update endpoint exists.
 
 #### Scenario: immutable field changed
-- **WHEN** the Update handler is invoked and any of `datasource_connection_name`, `comment`, `govern_policy`, `smart_policy` has changed
+- **WHEN** the Update handler is invoked and any of `datasource_connection_name`, `meta_database_info.0.comment`, `govern_policy`, `smart_policy` has changed
 - **THEN** the system returns `fmt.Errorf("argument `%s` cannot be changed", v)` naming the changed field
 
 #### Scenario: no changes

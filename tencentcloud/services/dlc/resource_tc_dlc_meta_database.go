@@ -31,21 +31,31 @@ func ResourceTencentCloudDlcMetaDatabase() *schema.Resource {
 			Delete: schema.DefaultTimeout(20 * time.Minute),
 		},
 		Schema: map[string]*schema.Schema{
-			"database_name": {
-				Type:        schema.TypeString,
+			"meta_database_info": {
+				Type:        schema.TypeList,
+				MaxItems:    1,
 				Required:    true,
-				ForceNew:    true,
-				Description: "Name of the DLC meta database.",
+				Description: "Meta database basic information, which corresponds to the `MetaDatabaseInfo` structure of the `CreateMetaDatabase` API.",
+				Elem: &schema.Resource{
+					Schema: map[string]*schema.Schema{
+						"database_name": {
+							Type:        schema.TypeString,
+							Required:    true,
+							ForceNew:    true,
+							Description: "Name of the DLC meta database, length 0~128, digits, letters and underscores are supported, cannot start with a digit, and is converted to lowercase.",
+						},
+						"comment": {
+							Type:        schema.TypeString,
+							Optional:    true,
+							Description: "Description of the DLC meta database, length 0~2048.",
+						},
+					},
+				},
 			},
 			"datasource_connection_name": {
 				Type:        schema.TypeString,
 				Optional:    true,
 				Description: "Datasource connection name, default `DataLakeCatalog`.",
-			},
-			"comment": {
-				Type:        schema.TypeString,
-				Optional:    true,
-				Description: "Description of the DLC meta database, length 0~2048.",
 			},
 			"govern_policy": {
 				Type:        schema.TypeList,
@@ -492,13 +502,12 @@ func resourceTencentCloudDlcMetaDatabaseCreate(d *schema.ResourceData, meta inte
 		request = dlc.NewCreateMetaDatabaseRequest()
 	)
 
-	databaseName := d.Get("database_name").(string)
-	metaDatabaseInfo := &dlc.MetaDatabaseInfo{
-		DatabaseName: helper.String(databaseName),
+	metaDatabaseInfo := buildDlcMetaDatabaseInfo(d.Get("meta_database_info").([]interface{}))
+	if metaDatabaseInfo == nil || metaDatabaseInfo.DatabaseName == nil || *metaDatabaseInfo.DatabaseName == "" {
+		return fmt.Errorf("meta_database_info.database_name is required")
 	}
-	if v, ok := d.GetOk("comment"); ok {
-		metaDatabaseInfo.Comment = helper.String(v.(string))
-	}
+
+	databaseName := *metaDatabaseInfo.DatabaseName
 	request.MetaDatabaseInfo = metaDatabaseInfo
 
 	if v, ok := d.GetOk("datasource_connection_name"); ok {
@@ -650,12 +659,21 @@ func resourceTencentCloudDlcMetaDatabaseRead(d *schema.ResourceData, meta interf
 
 	info := response.Response.DatabaseInfo
 
+	// meta_database_info maps 1:1 to the MetaDatabaseInfo structure. SDKv2
+	// replaces the whole nested block on Set, so fields that the API does not
+	// return fall back to the configured value instead of being cleared.
+	metaDatabaseInfo := map[string]interface{}{
+		"database_name": databaseName,
+		"comment":       d.Get("meta_database_info.0.comment").(string),
+	}
 	if info.DatabaseName != nil {
-		_ = d.Set("database_name", *info.DatabaseName)
+		metaDatabaseInfo["database_name"] = *info.DatabaseName
 	}
 	if info.Comment != nil {
-		_ = d.Set("comment", *info.Comment)
+		metaDatabaseInfo["comment"] = *info.Comment
 	}
+	_ = d.Set("meta_database_info", []interface{}{metaDatabaseInfo})
+
 	if info.Location != nil {
 		_ = d.Set("location", *info.Location)
 	}
@@ -716,7 +734,7 @@ func resourceTencentCloudDlcMetaDatabaseUpdate(d *schema.ResourceData, meta inte
 	defer tccommon.LogElapsed("resource.tencentcloud_dlc_meta_database.update")()
 	defer tccommon.InconsistentCheck(d, meta)()
 
-	immutableArgs := []string{"datasource_connection_name", "comment", "govern_policy", "smart_policy"}
+	immutableArgs := []string{"datasource_connection_name", "meta_database_info.0.comment", "govern_policy", "smart_policy"}
 	for _, v := range immutableArgs {
 		if d.HasChange(v) {
 			return fmt.Errorf("argument `%s` cannot be changed", v)
@@ -795,6 +813,23 @@ func resourceTencentCloudDlcMetaDatabaseDelete(d *schema.ResourceData, meta inte
 	}
 
 	return nil
+}
+
+// buildDlcMetaDatabaseInfo maps the `meta_database_info` block onto the
+// `MetaDatabaseInfo` structure of the CreateMetaDatabase API.
+func buildDlcMetaDatabaseInfo(list []interface{}) *dlc.MetaDatabaseInfo {
+	if len(list) == 0 || list[0] == nil {
+		return nil
+	}
+	m := list[0].(map[string]interface{})
+	info := &dlc.MetaDatabaseInfo{}
+	if v, ok := m["database_name"]; ok && v.(string) != "" {
+		info.DatabaseName = helper.String(v.(string))
+	}
+	if v, ok := m["comment"]; ok && v.(string) != "" {
+		info.Comment = helper.String(v.(string))
+	}
+	return info
 }
 
 func buildDlcMetaDatabaseGovernPolicy(list []interface{}) *dlc.DataGovernPolicy {

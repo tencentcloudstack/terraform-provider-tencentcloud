@@ -15,8 +15,11 @@ Provides a resource to create a DLC meta database
 
 ```hcl
 resource "tencentcloud_dlc_meta_database" "example" {
-  database_name = "tf_example_db"
-  comment       = "tf example meta database"
+  meta_database_info {
+    database_name = "tf_example_db"
+    comment       = "tf example meta database"
+  }
+
   govern_policy {
     rule_type     = "Customize"
     govern_engine = "engine_name"
@@ -28,8 +31,7 @@ resource "tencentcloud_dlc_meta_database" "example" {
 
 The following arguments are supported:
 
-* `database_name` - (Required, String, ForceNew) Name of the DLC meta database.
-* `comment` - (Optional, String) Description of the DLC meta database, length 0~2048.
+* `meta_database_info` - (Required, List) Meta database basic information, which corresponds to the `MetaDatabaseInfo` structure of the `CreateMetaDatabase` API.
 * `datasource_connection_name` - (Optional, String) Datasource connection name, default `DataLakeCatalog`.
 * `govern_policy` - (Optional, List) Data governance config.
 * `smart_policy` - (Optional, List) Smart data governance config.
@@ -84,6 +86,11 @@ The `lifecycle` object of `policy` supports the following:
 * `expired_field_format` - (Optional, String) Expired field format.
 * `expired_field` - (Optional, String) Expired field.
 * `lifecycle_enable` - (Optional, String) Whether to enable lifecycle.
+
+The `meta_database_info` object supports the following:
+
+* `database_name` - (Required, String, ForceNew) Name of the DLC meta database, length 0~128, digits, letters and underscores are supported, cannot start with a digit, and is converted to lowercase.
+* `comment` - (Optional, String) Description of the DLC meta database, length 0~2048.
 
 The `policy` object of `smart_policy` supports the following:
 
