@@ -2657,6 +2657,7 @@ tencentcloud_cdc_dedicated_cluster_image_cache
 
 CdwDoris
 Data Source
+tencentcloud_cdwdoris_instance_nodes
 tencentcloud_cdwdoris_instances
 Resource
 tencentcloud_cdwdoris_instance
