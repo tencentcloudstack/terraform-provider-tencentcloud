@@ -116,6 +116,7 @@ func ResourceTencentCloudCfsFileSystem() *schema.Resource {
 				Type:        schema.TypeBool,
 				Optional:    true,
 				ForceNew:    true,
+				Computed:    true,
 				Description: "Indicates whether the cfs_file_system is encrypted. true means encrypted, false means not encrypted. Modifying this parameter will trigger a rebuild.",
 			},
 			// computed
@@ -154,7 +155,6 @@ func resourceTencentCloudCfsFileSystemCreate(d *schema.ResourceData, meta interf
 	request.VpcId = helper.String(d.Get("vpc_id").(string))
 	request.SubnetId = helper.String(d.Get("subnet_id").(string))
 	request.StorageType = helper.String(d.Get("storage_type").(string))
-	request.Encrypted = helper.Bool(d.Get("encrypted").(bool))
 	if v, ok := d.GetOk("name"); ok {
 		request.FsName = helper.String(v.(string))
 	}
@@ -179,6 +179,10 @@ func resourceTencentCloudCfsFileSystemCreate(d *schema.ResourceData, meta interf
 			}
 			request.ResourceTags = append(request.ResourceTags, &tag)
 		}
+	}
+
+	if v, ok := d.GetOkExists("encrypted"); ok {
+		request.Encrypted = helper.Bool(v.(bool))
 	}
 
 	fsId := ""
