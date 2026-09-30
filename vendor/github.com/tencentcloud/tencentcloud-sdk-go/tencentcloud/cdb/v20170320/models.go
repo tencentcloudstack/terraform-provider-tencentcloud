@@ -353,53 +353,45 @@ func (r *AdjustCdbProxyAddressResponse) FromJsonString(s string) error {
 
 // Predefined struct for user
 type AdjustCdbProxyRequestParams struct {
-	// 实例 ID。可通过 [DescribeDBInstances](https://cloud.tencent.com/document/product/236/15872) 接口获取。
+	// <p>实例 ID。可通过 <a href="https://cloud.tencent.com/document/product/236/15872">DescribeDBInstances</a> 接口获取。</p>
 	InstanceId *string `json:"InstanceId,omitnil,omitempty" name:"InstanceId"`
 
-	// 代理组 ID。可通过 [DescribeCdbProxyInfo](https://cloud.tencent.com/document/api/236/90585) 接口获取。
+	// <p>代理组 ID。可通过 <a href="https://cloud.tencent.com/document/api/236/90585">DescribeCdbProxyInfo</a> 接口获取。</p>
 	ProxyGroupId *string `json:"ProxyGroupId,omitnil,omitempty" name:"ProxyGroupId"`
 
-	// 节点规格配置
-	// 备注：数据库代理支持的节点规格为：2C4000MB、4C8000MB、8C16000MB。
-	// 示例中参数说明：
-	// NodeCount：节点个数
-	// Region：节点地域
-	// Zone：节点可用区
-	// Cpu：单个代理节点核数（单位：核）
-	// Mem：单个代理节点内存数（单位：MB）
+	// <p>节点规格配置<br>备注：数据库代理支持的节点规格为：2C4000MB、4C8000MB、8C16000MB。<br>示例中参数说明：<br>NodeCount：节点个数<br>Region：节点地域<br>Zone：节点可用区<br>Cpu：单个代理节点核数（单位：核）<br>Mem：单个代理节点内存数（单位：MB）</p>
 	ProxyNodeCustom []*ProxyNodeCustom `json:"ProxyNodeCustom,omitnil,omitempty" name:"ProxyNodeCustom"`
 
-	// 重新负载均衡：auto(自动),manual(手动)
+	// <p>重新负载均衡：auto(自动),manual(手动)</p>
 	ReloadBalance *string `json:"ReloadBalance,omitnil,omitempty" name:"ReloadBalance"`
 
-	// 升级切换时间：nowTime(升级完成时),timeWindow(维护时间内)
+	// <p>升级切换时间。</p><p>枚举值：</p><ul><li>nowTime： 升级完成时</li><li>timeWindow： 维护时间内</li><li>rollUpgrade： 滚动升级</li></ul>
 	UpgradeTime *string `json:"UpgradeTime,omitnil,omitempty" name:"UpgradeTime"`
+
+	// <p>滚动升级或平滑变配等待时间</p><p>取值范围：[0, 3600]</p><p>单位：秒</p>
+	RollUpgradeWaitingTime *int64 `json:"RollUpgradeWaitingTime,omitnil,omitempty" name:"RollUpgradeWaitingTime"`
 }
 
 type AdjustCdbProxyRequest struct {
 	*tchttp.BaseRequest
 	
-	// 实例 ID。可通过 [DescribeDBInstances](https://cloud.tencent.com/document/product/236/15872) 接口获取。
+	// <p>实例 ID。可通过 <a href="https://cloud.tencent.com/document/product/236/15872">DescribeDBInstances</a> 接口获取。</p>
 	InstanceId *string `json:"InstanceId,omitnil,omitempty" name:"InstanceId"`
 
-	// 代理组 ID。可通过 [DescribeCdbProxyInfo](https://cloud.tencent.com/document/api/236/90585) 接口获取。
+	// <p>代理组 ID。可通过 <a href="https://cloud.tencent.com/document/api/236/90585">DescribeCdbProxyInfo</a> 接口获取。</p>
 	ProxyGroupId *string `json:"ProxyGroupId,omitnil,omitempty" name:"ProxyGroupId"`
 
-	// 节点规格配置
-	// 备注：数据库代理支持的节点规格为：2C4000MB、4C8000MB、8C16000MB。
-	// 示例中参数说明：
-	// NodeCount：节点个数
-	// Region：节点地域
-	// Zone：节点可用区
-	// Cpu：单个代理节点核数（单位：核）
-	// Mem：单个代理节点内存数（单位：MB）
+	// <p>节点规格配置<br>备注：数据库代理支持的节点规格为：2C4000MB、4C8000MB、8C16000MB。<br>示例中参数说明：<br>NodeCount：节点个数<br>Region：节点地域<br>Zone：节点可用区<br>Cpu：单个代理节点核数（单位：核）<br>Mem：单个代理节点内存数（单位：MB）</p>
 	ProxyNodeCustom []*ProxyNodeCustom `json:"ProxyNodeCustom,omitnil,omitempty" name:"ProxyNodeCustom"`
 
-	// 重新负载均衡：auto(自动),manual(手动)
+	// <p>重新负载均衡：auto(自动),manual(手动)</p>
 	ReloadBalance *string `json:"ReloadBalance,omitnil,omitempty" name:"ReloadBalance"`
 
-	// 升级切换时间：nowTime(升级完成时),timeWindow(维护时间内)
+	// <p>升级切换时间。</p><p>枚举值：</p><ul><li>nowTime： 升级完成时</li><li>timeWindow： 维护时间内</li><li>rollUpgrade： 滚动升级</li></ul>
 	UpgradeTime *string `json:"UpgradeTime,omitnil,omitempty" name:"UpgradeTime"`
+
+	// <p>滚动升级或平滑变配等待时间</p><p>取值范围：[0, 3600]</p><p>单位：秒</p>
+	RollUpgradeWaitingTime *int64 `json:"RollUpgradeWaitingTime,omitnil,omitempty" name:"RollUpgradeWaitingTime"`
 }
 
 func (r *AdjustCdbProxyRequest) ToJsonString() string {
@@ -419,6 +411,7 @@ func (r *AdjustCdbProxyRequest) FromJsonString(s string) error {
 	delete(f, "ProxyNodeCustom")
 	delete(f, "ReloadBalance")
 	delete(f, "UpgradeTime")
+	delete(f, "RollUpgradeWaitingTime")
 	if len(f) > 0 {
 		return tcerr.NewTencentCloudSDKError("ClientError.BuildRequestError", "AdjustCdbProxyRequest has unknown keys!", "")
 	}
@@ -427,7 +420,7 @@ func (r *AdjustCdbProxyRequest) FromJsonString(s string) error {
 
 // Predefined struct for user
 type AdjustCdbProxyResponseParams struct {
-	// 异步任务ID
+	// <p>异步任务ID</p>
 	AsyncRequestId *string `json:"AsyncRequestId,omitnil,omitempty" name:"AsyncRequestId"`
 
 	// 唯一请求 ID，由服务端生成，每次请求都会返回（若请求因其他原因未能抵达服务端，则该次请求不会获得 RequestId）。定位问题时需要提供该次请求的 RequestId。
@@ -1270,19 +1263,13 @@ type CdbSellConfig struct {
 }
 
 type CdbSellType struct {
-	// 售卖实例名称。
-	// Z3：是高可用类型，对应规格中的 DeviceType，包含 UNIVERSAL，EXCLUSIVE。
-	// CVM：是基础版类型，对应规格中的 DeviceType 是 BASIC（已下线）。
-	// TKE：是基础版v2类型，对应规格中的 DeviceType 是 BASIC_V2。
-	// CLOUD_NATIVE_CLUSTER：表示云盘版标准型。
-	// CLOUD_NATIVE_CLUSTER_EXCLUSIVE：表示云盘版加强型。
-	// ECONOMICAL：表示经济型。
+	// <p>售卖实例名称。<br>Z3：是高可用类型，对应规格中的 DeviceType，包含 UNIVERSAL，EXCLUSIVE。<br>CVM：是基础版类型，对应规格中的 DeviceType 是 BASIC（已下线）。<br>TKE：是基础版v2类型，对应规格中的 DeviceType 是 BASIC_V2。<br>CLOUD_NATIVE_CLUSTER：表示云盘版标准型。<br>CLOUD_NATIVE_CLUSTER_EXCLUSIVE：表示云盘版加强型。<br>CLOUD_NATIVE_CLUSTER_ULTRA：表示云盘版旗舰型。<br>CLOUD_NATIVE_SINGLE_NODE：表示云盘版单节点<br>ECONOMICAL：表示经济型。</p>
 	TypeName *string `json:"TypeName,omitnil,omitempty" name:"TypeName"`
 
-	// 引擎版本号
+	// <p>引擎版本号</p>
 	EngineVersion []*string `json:"EngineVersion,omitnil,omitempty" name:"EngineVersion"`
 
-	// 售卖规格Id
+	// <p>售卖规格Id</p>
 	ConfigIds []*int64 `json:"ConfigIds,omitnil,omitempty" name:"ConfigIds"`
 }
 
@@ -3249,6 +3236,9 @@ type CreateDBInstanceHourRequestParams struct {
 
 	// <p>备库 3 的可用区信息，默认为空，购买四节点主实例时可指定该参数。</p>
 	FourthZone *string `json:"FourthZone,omitnil,omitempty" name:"FourthZone"`
+
+	// <p>弹性扩容参数（如果不传，则不开启）</p>
+	AutoStrategy *AutoStrategy `json:"AutoStrategy,omitnil,omitempty" name:"AutoStrategy"`
 }
 
 type CreateDBInstanceHourRequest struct {
@@ -3388,6 +3378,9 @@ type CreateDBInstanceHourRequest struct {
 
 	// <p>备库 3 的可用区信息，默认为空，购买四节点主实例时可指定该参数。</p>
 	FourthZone *string `json:"FourthZone,omitnil,omitempty" name:"FourthZone"`
+
+	// <p>弹性扩容参数（如果不传，则不开启）</p>
+	AutoStrategy *AutoStrategy `json:"AutoStrategy,omitnil,omitempty" name:"AutoStrategy"`
 }
 
 func (r *CreateDBInstanceHourRequest) ToJsonString() string {
@@ -3447,6 +3440,7 @@ func (r *CreateDBInstanceHourRequest) FromJsonString(s string) error {
 	delete(f, "DiskEncryption")
 	delete(f, "DestroyProtect")
 	delete(f, "FourthZone")
+	delete(f, "AutoStrategy")
 	if len(f) > 0 {
 		return tcerr.NewTencentCloudSDKError("ClientError.BuildRequestError", "CreateDBInstanceHourRequest has unknown keys!", "")
 	}
@@ -3614,6 +3608,9 @@ type CreateDBInstanceRequestParams struct {
 
 	// <p>备库 3 的可用区信息，默认为空，购买四节点主实例时可指定该参数。</p>
 	FourthZone *string `json:"FourthZone,omitnil,omitempty" name:"FourthZone"`
+
+	// <p>弹性扩容参数（如果不传，则不开启）</p>
+	AutoStrategy *AutoStrategy `json:"AutoStrategy,omitnil,omitempty" name:"AutoStrategy"`
 }
 
 type CreateDBInstanceRequest struct {
@@ -3750,6 +3747,9 @@ type CreateDBInstanceRequest struct {
 
 	// <p>备库 3 的可用区信息，默认为空，购买四节点主实例时可指定该参数。</p>
 	FourthZone *string `json:"FourthZone,omitnil,omitempty" name:"FourthZone"`
+
+	// <p>弹性扩容参数（如果不传，则不开启）</p>
+	AutoStrategy *AutoStrategy `json:"AutoStrategy,omitnil,omitempty" name:"AutoStrategy"`
 }
 
 func (r *CreateDBInstanceRequest) ToJsonString() string {
@@ -3808,6 +3808,7 @@ func (r *CreateDBInstanceRequest) FromJsonString(s string) error {
 	delete(f, "DiskEncryption")
 	delete(f, "DestroyProtect")
 	delete(f, "FourthZone")
+	delete(f, "AutoStrategy")
 	if len(f) > 0 {
 		return tcerr.NewTencentCloudSDKError("ClientError.BuildRequestError", "CreateDBInstanceRequest has unknown keys!", "")
 	}
@@ -11675,6 +11676,9 @@ type InstanceInfo struct {
 	// <p>实例销毁保护状态，on表示开启保护，否则为关闭保护</p>
 	DestroyProtect *string `json:"DestroyProtect,omitnil,omitempty" name:"DestroyProtect"`
 
+	// <p>云盘版实例才使用该值。 on表示磁盘加密，否则为不加密。</p>
+	DiskEncryption *string `json:"DiskEncryption,omitnil,omitempty" name:"DiskEncryption"`
+
 	// <p>TDSQL引擎参数</p>
 	CpuModel *string `json:"CpuModel,omitnil,omitempty" name:"CpuModel"`
 
@@ -13672,20 +13676,20 @@ func (r *ModifyDBInstanceProjectResponse) FromJsonString(s string) error {
 
 // Predefined struct for user
 type ModifyDBInstanceReadOnlyStatusRequestParams struct {
-	// 实例ID，格式如：cdb-c1nl9rpv，与云数据库控制台页面中显示的实例ID相同，可使用[查询实例列表](https://cloud.tencent.com/document/api/236/15872) 接口获取，其值为输出参数中字段 InstanceId 的值。
+	// <p>实例ID，格式如：cdb-c1nl9rpv，与云数据库控制台页面中显示的实例ID相同，可使用<a href="https://cloud.tencent.com/document/api/236/15872">查询实例列表</a> 接口获取，其值为输出参数中字段 InstanceId 的值。此接口不支持设置云盘版实例为只读。</p>
 	InstanceId *string `json:"InstanceId,omitnil,omitempty" name:"InstanceId"`
 
-	// 是否设置为只读。其中：1表示设置实例为只读，0表示解除只读状态
+	// <p>是否设置为只读。其中：1表示设置实例为只读，0表示解除只读状态</p>
 	ReadOnly *int64 `json:"ReadOnly,omitnil,omitempty" name:"ReadOnly"`
 }
 
 type ModifyDBInstanceReadOnlyStatusRequest struct {
 	*tchttp.BaseRequest
 	
-	// 实例ID，格式如：cdb-c1nl9rpv，与云数据库控制台页面中显示的实例ID相同，可使用[查询实例列表](https://cloud.tencent.com/document/api/236/15872) 接口获取，其值为输出参数中字段 InstanceId 的值。
+	// <p>实例ID，格式如：cdb-c1nl9rpv，与云数据库控制台页面中显示的实例ID相同，可使用<a href="https://cloud.tencent.com/document/api/236/15872">查询实例列表</a> 接口获取，其值为输出参数中字段 InstanceId 的值。此接口不支持设置云盘版实例为只读。</p>
 	InstanceId *string `json:"InstanceId,omitnil,omitempty" name:"InstanceId"`
 
-	// 是否设置为只读。其中：1表示设置实例为只读，0表示解除只读状态
+	// <p>是否设置为只读。其中：1表示设置实例为只读，0表示解除只读状态</p>
 	ReadOnly *int64 `json:"ReadOnly,omitnil,omitempty" name:"ReadOnly"`
 }
 
@@ -15093,26 +15097,26 @@ func (r *OpenAuditServiceResponse) FromJsonString(s string) error {
 
 // Predefined struct for user
 type OpenDBInstanceEncryptionRequestParams struct {
-	// 云数据库实例 ID。可通过 [DescribeDBInstances](https://cloud.tencent.com/document/product/236/15872) 接口获取。
+	// <p>云数据库实例 ID。可通过 <a href="https://cloud.tencent.com/document/product/236/15872">DescribeDBInstances</a> 接口获取。</p>
 	InstanceId *string `json:"InstanceId,omitnil,omitempty" name:"InstanceId"`
 
-	// 用户自定义密钥 ID，CMK 唯一标识符。该值为空时，将使用腾讯云自动生成的密钥 KMS-CDB。
+	// <p>用户自定义密钥 ID，CMK 唯一标识符。该值为空时，将使用腾讯云自动生成的密钥 KMS-CDB。</p>
 	KeyId *string `json:"KeyId,omitnil,omitempty" name:"KeyId"`
 
-	// 用户自定义密钥的存储地域。如：ap-guangzhou 。KeyId 不为空时，该参数必填。
+	// <p>用户自定义密钥的存储地域。如：ap-guangzhou 。KeyId 不为空时，该参数必填。</p>
 	KeyRegion *string `json:"KeyRegion,omitnil,omitempty" name:"KeyRegion"`
 }
 
 type OpenDBInstanceEncryptionRequest struct {
 	*tchttp.BaseRequest
 	
-	// 云数据库实例 ID。可通过 [DescribeDBInstances](https://cloud.tencent.com/document/product/236/15872) 接口获取。
+	// <p>云数据库实例 ID。可通过 <a href="https://cloud.tencent.com/document/product/236/15872">DescribeDBInstances</a> 接口获取。</p>
 	InstanceId *string `json:"InstanceId,omitnil,omitempty" name:"InstanceId"`
 
-	// 用户自定义密钥 ID，CMK 唯一标识符。该值为空时，将使用腾讯云自动生成的密钥 KMS-CDB。
+	// <p>用户自定义密钥 ID，CMK 唯一标识符。该值为空时，将使用腾讯云自动生成的密钥 KMS-CDB。</p>
 	KeyId *string `json:"KeyId,omitnil,omitempty" name:"KeyId"`
 
-	// 用户自定义密钥的存储地域。如：ap-guangzhou 。KeyId 不为空时，该参数必填。
+	// <p>用户自定义密钥的存储地域。如：ap-guangzhou 。KeyId 不为空时，该参数必填。</p>
 	KeyRegion *string `json:"KeyRegion,omitnil,omitempty" name:"KeyRegion"`
 }
 
@@ -16431,6 +16435,9 @@ type SlaveInfo struct {
 
 	// <p>第二备机信息</p>
 	Second *SlaveInstanceInfo `json:"Second,omitnil,omitempty" name:"Second"`
+
+	// <p>第三备机信息</p>
+	Third *SlaveInstanceInfo `json:"Third,omitnil,omitempty" name:"Third"`
 }
 
 type SlaveInstanceInfo struct {
@@ -17474,39 +17481,45 @@ type UpgradeAnalysisInstanceVersionInfo struct {
 
 // Predefined struct for user
 type UpgradeCDBProxyVersionRequestParams struct {
-	// 实例 ID。可通过 [DescribeDBInstances](https://cloud.tencent.com/document/product/236/15872) 接口获取。
+	// <p>实例 ID。可通过 <a href="https://cloud.tencent.com/document/product/236/15872">DescribeDBInstances</a> 接口获取。</p>
 	InstanceId *string `json:"InstanceId,omitnil,omitempty" name:"InstanceId"`
 
-	// 数据库代理 ID。可通过 [DescribeCdbProxyInfo](https://cloud.tencent.com/document/api/236/90585) 接口获取。
+	// <p>数据库代理 ID。可通过 <a href="https://cloud.tencent.com/document/api/236/90585">DescribeCdbProxyInfo</a> 接口获取。</p>
 	ProxyGroupId *string `json:"ProxyGroupId,omitnil,omitempty" name:"ProxyGroupId"`
 
-	// 数据库代理当前版本
+	// <p>数据库代理当前版本</p>
 	SrcProxyVersion *string `json:"SrcProxyVersion,omitnil,omitempty" name:"SrcProxyVersion"`
 
-	// 数据库代理升级版本
+	// <p>数据库代理升级版本</p>
 	DstProxyVersion *string `json:"DstProxyVersion,omitnil,omitempty" name:"DstProxyVersion"`
 
-	// 升级时间 ：nowTime（升级完成时）timeWindow（实例维护时间）
+	// <p>升级切换时间</p><p>枚举值：</p><ul><li>nowTime： 升级完成时</li><li>timeWindow： 实例维护时间</li><li>rollUpgrade： 滚动升级</li></ul>
 	UpgradeTime *string `json:"UpgradeTime,omitnil,omitempty" name:"UpgradeTime"`
+
+	// <p>滚动升级等待时间</p><p>取值范围：[10, 3600]</p><p>单位：秒</p>
+	RollUpgradeWaitingTime *int64 `json:"RollUpgradeWaitingTime,omitnil,omitempty" name:"RollUpgradeWaitingTime"`
 }
 
 type UpgradeCDBProxyVersionRequest struct {
 	*tchttp.BaseRequest
 	
-	// 实例 ID。可通过 [DescribeDBInstances](https://cloud.tencent.com/document/product/236/15872) 接口获取。
+	// <p>实例 ID。可通过 <a href="https://cloud.tencent.com/document/product/236/15872">DescribeDBInstances</a> 接口获取。</p>
 	InstanceId *string `json:"InstanceId,omitnil,omitempty" name:"InstanceId"`
 
-	// 数据库代理 ID。可通过 [DescribeCdbProxyInfo](https://cloud.tencent.com/document/api/236/90585) 接口获取。
+	// <p>数据库代理 ID。可通过 <a href="https://cloud.tencent.com/document/api/236/90585">DescribeCdbProxyInfo</a> 接口获取。</p>
 	ProxyGroupId *string `json:"ProxyGroupId,omitnil,omitempty" name:"ProxyGroupId"`
 
-	// 数据库代理当前版本
+	// <p>数据库代理当前版本</p>
 	SrcProxyVersion *string `json:"SrcProxyVersion,omitnil,omitempty" name:"SrcProxyVersion"`
 
-	// 数据库代理升级版本
+	// <p>数据库代理升级版本</p>
 	DstProxyVersion *string `json:"DstProxyVersion,omitnil,omitempty" name:"DstProxyVersion"`
 
-	// 升级时间 ：nowTime（升级完成时）timeWindow（实例维护时间）
+	// <p>升级切换时间</p><p>枚举值：</p><ul><li>nowTime： 升级完成时</li><li>timeWindow： 实例维护时间</li><li>rollUpgrade： 滚动升级</li></ul>
 	UpgradeTime *string `json:"UpgradeTime,omitnil,omitempty" name:"UpgradeTime"`
+
+	// <p>滚动升级等待时间</p><p>取值范围：[10, 3600]</p><p>单位：秒</p>
+	RollUpgradeWaitingTime *int64 `json:"RollUpgradeWaitingTime,omitnil,omitempty" name:"RollUpgradeWaitingTime"`
 }
 
 func (r *UpgradeCDBProxyVersionRequest) ToJsonString() string {
@@ -17526,6 +17539,7 @@ func (r *UpgradeCDBProxyVersionRequest) FromJsonString(s string) error {
 	delete(f, "SrcProxyVersion")
 	delete(f, "DstProxyVersion")
 	delete(f, "UpgradeTime")
+	delete(f, "RollUpgradeWaitingTime")
 	if len(f) > 0 {
 		return tcerr.NewTencentCloudSDKError("ClientError.BuildRequestError", "UpgradeCDBProxyVersionRequest has unknown keys!", "")
 	}
@@ -17534,7 +17548,7 @@ func (r *UpgradeCDBProxyVersionRequest) FromJsonString(s string) error {
 
 // Predefined struct for user
 type UpgradeCDBProxyVersionResponseParams struct {
-	// 异步处理ID
+	// <p>异步处理ID</p>
 	AsyncRequestId *string `json:"AsyncRequestId,omitnil,omitempty" name:"AsyncRequestId"`
 
 	// 唯一请求 ID，由服务端生成，每次请求都会返回（若请求因其他原因未能抵达服务端，则该次请求不会获得 RequestId）。定位问题时需要提供该次请求的 RequestId。
@@ -17635,6 +17649,9 @@ func (r *UpgradeDBInstanceEngineVersionRequest) FromJsonString(s string) error {
 type UpgradeDBInstanceEngineVersionResponseParams struct {
 	// <p>异步任务 ID，可使用 <a href="https://cloud.tencent.com/document/api/236/20410">查询异步任务的执行结果</a> 获取其执行情况。</p>
 	AsyncRequestId *string `json:"AsyncRequestId,omitnil,omitempty" name:"AsyncRequestId"`
+
+	// <p>任务列表ID</p>
+	JobId *int64 `json:"JobId,omitnil,omitempty" name:"JobId"`
 
 	// 唯一请求 ID，由服务端生成，每次请求都会返回（若请求因其他原因未能抵达服务端，则该次请求不会获得 RequestId）。定位问题时需要提供该次请求的 RequestId。
 	RequestId *string `json:"RequestId,omitnil,omitempty" name:"RequestId"`
