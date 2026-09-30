@@ -76,12 +76,12 @@ func ResourceTencentCloudSecurityGroupRule() *schema.Resource {
 				},
 				ForceNew:    true,
 				Computed:    true,
-				Description: "Range of the port. The available value can be one, multiple or one segment. E.g. `80`, `80,90` and `80-90`. Default to all ports, and confilicts with `protocol_template`.",
+				Description: "Range of the port. The available value can be `ALL`, one port, multiple ports or one port range. E.g. `ALL`, `80`, `80,90` and `80-90`. Default to all ports, and conflicts with `protocol_template`.",
 				ValidateFunc: func(v interface{}, k string) (ws []string, errors []error) {
 					value := v.(string)
-					match, _ := regexp.MatchString("^(\\d{1,5},)*\\d{1,5}$|^\\d{1,5}-\\d{1,5}$", value)
+					match, _ := regexp.MatchString(`^(ALL|(\d{1,5},)*\d{1,5}|\d{1,5}-\d{1,5})$`, value)
 					if !match {
-						errors = append(errors, fmt.Errorf("%s example: `53`, `80,443` and `80-90`, Not configured to represent all ports", k))
+						errors = append(errors, fmt.Errorf("%s must be `ALL`, a single port, multiple ports, or a port range; examples: `ALL`, `53`, `80,443`, and `80-90`", k))
 					}
 					return
 				},
