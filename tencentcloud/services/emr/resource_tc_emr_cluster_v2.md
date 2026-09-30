@@ -926,13 +926,13 @@ resource "tencentcloud_emr_cluster_v2" "example" {
 
   meta_db_group_info {
     meta_type            = "EMR_DEFAULT_META"
-    components           = ["ranger"]
+    components           = ["RANGER"]
     default_meta_version = "mysql8"
   }
 
   meta_db_group_info {
     meta_type          = "USER_CUSTOM_META"
-    components         = ["hive"]
+    components         = ["HIVE"]
     meta_data_jdbc_url = "jdbc:mysql://10.0.30.13:3306/hivemetastore"
     meta_data_user     = "root"
     meta_data_pass     = "Password@123"
@@ -940,7 +940,7 @@ resource "tencentcloud_emr_cluster_v2" "example" {
 
   meta_db_group_info {
     meta_type              = "EMR_EXIST_META"
-    components             = ["hue"]
+    components             = ["HUE"]
     unify_meta_instance_id = "cdb-jg8rqjn0"
   }
 }

@@ -937,13 +937,13 @@ resource "tencentcloud_emr_cluster_v2" "example" {
 
   meta_db_group_info {
     meta_type            = "EMR_DEFAULT_META"
-    components           = ["ranger"]
+    components           = ["RANGER"]
     default_meta_version = "mysql8"
   }
 
   meta_db_group_info {
     meta_type          = "USER_CUSTOM_META"
-    components         = ["hive"]
+    components         = ["HIVE"]
     meta_data_jdbc_url = "jdbc:mysql://10.0.30.13:3306/hivemetastore"
     meta_data_user     = "root"
     meta_data_pass     = "Password@123"
@@ -951,7 +951,7 @@ resource "tencentcloud_emr_cluster_v2" "example" {
 
   meta_db_group_info {
     meta_type              = "EMR_EXIST_META"
-    components             = ["hue"]
+    components             = ["HUE"]
     unify_meta_instance_id = "cdb-jg8rqjn0"
   }
 }
@@ -978,7 +978,7 @@ The following arguments are supported:
 * `enable_remote_login_flag` - (Optional, Bool, ForceNew) Whether to enable external remote login. Invalid when `security_group_ids` is set. Default is false.
 * `instance_charge_prepaid` - (Optional, List, ForceNew) Prepaid (monthly/yearly) billing parameters. Required when `instance_charge_type` is `PREPAID`.
 * `load_balancer_id` - (Optional, String, ForceNew) CLB instance ID, e.g., `lb-xxxxxxxx`.
-* `meta_db_group_info` - (Optional, List) Custom MetaDB group information of the cluster. Supported on create (CreateCluster), update (InstallSoftware) and query (DescribeMetaDBInfo). When `meta_type` is `EMR_EXIST_META`, `unify_meta_instance_id` must be set; when `USER_CUSTOM_META`, `meta_data_jdbc_url`/`meta_data_user`/`meta_data_pass` must be set.
+* `meta_db_group_info` - (Optional, List) Custom MetaDB group information of the cluster. It can only be set on create (CreateCluster) and cannot be changed afterwards. A component can belong to only one block. The query result (DescribeMetaDBInfo) is matched to the blocks by `components`, so the block order follows the configuration; fields that are not configured are filled in from the query result. When `meta_type` is `EMR_EXIST_META`, `unify_meta_instance_id` must be set; when `USER_CUSTOM_META`, `meta_data_jdbc_url`/`meta_data_user`/`meta_data_pass` must be set.
 * `meta_db_info` - (Optional, List, ForceNew) Metadata database information. When `meta_type` is `EMR_NEW_META`/`EMR_DEFAULT_META`, no extra fields are required; when `EMR_EXIT_META`, `unify_meta_instance_id` must be set; when `USER_CUSTOM_META`, `meta_data_jdbc_url`/`meta_data_user`/`meta_data_pass` must be set.
 * `need_cdb_audit` - (Optional, Int, ForceNew) Whether to enable database auditing.
 * `need_master_wan` - (Optional, String, ForceNew) Whether to enable master public network. Valid values: `NEED_MASTER_WAN` (default), `NOT_NEED_MASTER_WAN`.
@@ -1069,10 +1069,10 @@ The `master_resource_spec` object of `all_node_resource_spec` supports the follo
 
 The `meta_db_group_info` object supports the following:
 
-* `components` - (Optional, Set) Components that use the MetaDB.
-* `default_meta_version` - (Optional, String) MetaDB version.
+* `components` - (Optional, Set) Components that use the MetaDB. A component can belong to only one `meta_db_group_info` block.
+* `default_meta_version` - (Optional, String) MetaDB version, e.g. `mysql8`.
 * `meta_data_jdbc_url` - (Optional, String) JDBC connection of the custom MetaDB, e.g. `jdbc:mysql://10.10.10.10:3306/dbname`.
-* `meta_data_pass` - (Optional, String) Password of the custom MetaDB.
+* `meta_data_pass` - (Optional, String) Password of the custom MetaDB. It is a write-only value: the API never returns it, so the state always keeps the configured value.
 * `meta_data_user` - (Optional, String) Username of the custom MetaDB.
 * `meta_type` - (Optional, String) Hive shared meta DB type. `EMR_DEFAULT_META`: created by the cluster by default; `EMR_EXIST_META`: use the specified EMR-MetaDB; `USER_CUSTOM_META`: use a custom MetaDB.
 * `unify_meta_instance_id` - (Optional, String) EMR-MetaDB instance ID, required when `meta_type` is `EMR_EXIST_META`.

@@ -477,10 +477,13 @@ func ResourceTencentCloudEmrClusterV2() *schema.Resource {
 				Type:     schema.TypeList,
 				Optional: true,
 				Computed: true,
-				Description: "Custom MetaDB group information of the cluster. Supported on create (CreateCluster), update (InstallSoftware) and query (DescribeMetaDBInfo). " +
+				Description: "Custom MetaDB group information of the cluster. It can only be set on create (CreateCluster) and cannot be changed afterwards. " +
+					"A component can belong to only one block. The query result (DescribeMetaDBInfo) is matched to the blocks by `components`, so the block order follows the configuration; fields that are not configured are filled in from the query result. " +
 					"When `meta_type` is `EMR_EXIST_META`, `unify_meta_instance_id` must be set; when `USER_CUSTOM_META`, `meta_data_jdbc_url`/`meta_data_user`/`meta_data_pass` must be set.",
 				Elem: &schema.Resource{
 					Schema: map[string]*schema.Schema{
+						// Fields are Optional+Computed so unset ones take the queried
+						// value; Read aligns the list order by `components`.
 						"meta_data_jdbc_url": {
 							Type:        schema.TypeString,
 							Optional:    true,
@@ -498,7 +501,7 @@ func ResourceTencentCloudEmrClusterV2() *schema.Resource {
 							Optional:    true,
 							Computed:    true,
 							Sensitive:   true,
-							Description: "Password of the custom MetaDB.",
+							Description: "Password of the custom MetaDB. It is a write-only value: the API never returns it, so the state always keeps the configured value.",
 						},
 						"meta_type": {
 							Type:        schema.TypeString,
@@ -519,13 +522,13 @@ func ResourceTencentCloudEmrClusterV2() *schema.Resource {
 							Elem: &schema.Schema{
 								Type: schema.TypeString,
 							},
-							Description: "Components that use the MetaDB.",
+							Description: "Components that use the MetaDB. A component can belong to only one `meta_db_group_info` block.",
 						},
 						"default_meta_version": {
 							Type:        schema.TypeString,
 							Optional:    true,
 							Computed:    true,
-							Description: "MetaDB version.",
+							Description: "MetaDB version, e.g. `mysql8`.",
 						},
 						"link_instance_id": {
 							Type:        schema.TypeString,
@@ -1061,38 +1064,13 @@ func resourceTencentCloudEmrClusterV2Read(d *schema.ResourceData, meta interface
 		_ = d.Set("tags", tagList)
 	}
 
-	if len(cluster.MetaDBGroupInfo) > 0 {
-		metaDBList := make([]map[string]interface{}, 0, len(cluster.MetaDBGroupInfo))
-		for _, item := range cluster.MetaDBGroupInfo {
-			if item == nil {
-				continue
-			}
+	metaDBGroupInfo, err := service.DescribeEmrMetaDBInfo(ctx, instanceId)
+	if err != nil {
+		return err
+	}
 
-			// components is a TypeSet: d.Set expects a slice of generic values
-			// (it hashes them into the set) rather than the SDK's []*string.
-			components := make([]interface{}, 0, len(item.Components))
-			for _, c := range item.Components {
-				if c != nil {
-					components = append(components, *c)
-				}
-			}
-
-			// Field-by-field flatten of CustomMetaDBInfo. Every key is always
-			// written (zero value when the API omits the field) so the nested
-			// block mirrors the response exactly instead of carrying stale
-			// state values.
-			metaDBList = append(metaDBList, map[string]interface{}{
-				"meta_data_jdbc_url":     helper.PString(item.MetaDataJdbcUrl),
-				"meta_data_user":         helper.PString(item.MetaDataUser),
-				"meta_data_pass":         helper.PString(item.MetaDataPass),
-				"meta_type":              helper.PString(item.MetaType),
-				"unify_meta_instance_id": helper.PString(item.UnifyMetaInstanceId),
-				"components":             components,
-				"default_meta_version":   helper.PString(item.DefaultMetaVersion),
-				"link_instance_id":       helper.PString(item.LinkInstanceId),
-			})
-		}
-		_ = d.Set("meta_db_group_info", metaDBList)
+	if len(metaDBGroupInfo) > 0 {
+		_ = d.Set("meta_db_group_info", flattenEmrMetaDBGroupInfo(d.Get("meta_db_group_info"), metaDBGroupInfo))
 	}
 
 	if _, existing := d.GetOk("zone_resource_configuration"); existing {
@@ -1616,6 +1594,10 @@ func resourceTencentCloudEmrClusterV2Update(d *schema.ResourceData, meta interfa
 		instanceId = d.Id()
 	)
 
+	if d.HasChange("meta_db_group_info") {
+		return fmt.Errorf("argument `meta_db_group_info` cannot be changed")
+	}
+
 	if d.HasChange("instance_name") {
 		request := emr.NewModifyInstanceBasicRequest()
 		request.InstanceId = helper.String(instanceId)
@@ -2104,7 +2086,6 @@ func resourceTencentCloudEmrClusterV2Update(d *schema.ResourceData, meta interfa
 		var (
 			softInfo              = make([]*string, 0)
 			serviceDeployInfoList = make([]*emr.ServiceDeployInfo, 0)
-			metaDBGroupInfoList   = make([]*emr.CustomMetaDBInfo, 0)
 
 			softInfoSeen = make(map[string]bool)
 			serviceIdx   = make(map[string]int)
@@ -2228,16 +2209,10 @@ func resourceTencentCloudEmrClusterV2Update(d *schema.ResourceData, meta interfa
 			}
 		}
 
-		if d.HasChange("meta_db_group_info") {
-			if v, ok := d.GetOk("meta_db_group_info"); ok {
-				metaDBGroupInfoList = buildEmrMetaDBGroupInfo(v)
-			}
-		}
-
 		// Issue a single aggregated InstallSoftware call covering the added
 		// components of every node. On failure, revert all participating nodes.
 		if len(serviceDeployInfoList) > 0 {
-			if err := emrInstallAddedSoftware(ctx, meta, d, logId, instanceId, softInfo, serviceDeployInfoList, metaDBGroupInfoList); err != nil {
+			if err := emrInstallAddedSoftware(ctx, meta, d, logId, instanceId, softInfo, serviceDeployInfoList); err != nil {
 				if softwareInstallErr == nil {
 					softwareInstallErr = err
 				}
@@ -3876,8 +3851,8 @@ func emrDetectNodeAddedSoftware(oldSpec, newSpec map[string]interface{}) (added 
 }
 
 // buildEmrMetaDBGroupInfo converts the `meta_db_group_info` schema value into
-// the SDK []*CustomMetaDBInfo used by CreateCluster.MetaDBGroupInfo and
-// InstallSoftware.MetaDBGroupInfo. Output-only fields (link_instance_id) are
+// the SDK []*CustomMetaDBInfo used by CreateCluster.MetaDBGroupInfo. Output-only
+// fields (link_instance_id) are
 // intentionally ignored.
 func buildEmrMetaDBGroupInfo(v interface{}) []*emr.CustomMetaDBInfo {
 	list, _ := v.([]interface{})
@@ -3918,6 +3893,132 @@ func buildEmrMetaDBGroupInfo(v interface{}) []*emr.CustomMetaDBInfo {
 	return result
 }
 
+// flattenEmrMetaDBGroupInfo maps the DescribeMetaDBInfo response onto the
+// `meta_db_group_info` list in the order of the existing elements, matched by
+// `components` (a component belongs to only one entry). Unmatched response
+// entries are appended; without existing elements (import) the API order is
+// used. `meta_data_pass` is never returned, so the existing value is kept.
+func flattenEmrMetaDBGroupInfo(current interface{}, metaDBGroupInfo []*emr.CustomMetaDBInfo) []interface{} {
+	currentList := make([]map[string]interface{}, 0)
+	for _, raw := range emrNodeSetToList(current) {
+		if m, ok := raw.(map[string]interface{}); ok && m != nil {
+			currentList = append(currentList, m)
+		}
+	}
+
+	items := make([]*emr.CustomMetaDBInfo, 0, len(metaDBGroupInfo))
+	for _, item := range metaDBGroupInfo {
+		if item != nil {
+			items = append(items, item)
+		}
+	}
+
+	// component (upper-cased) -> index of the response entry that owns it.
+	owner := make(map[string]int)
+	for i, item := range items {
+		for _, c := range item.Components {
+			if c != nil && *c != "" {
+				owner[strings.ToUpper(*c)] = i
+			}
+		}
+	}
+
+	used := make([]bool, len(items))
+	result := make([]interface{}, 0, len(items))
+	for _, prior := range currentList {
+		matched := -1
+		for _, c := range emrMetaDBComponentList(prior["components"]) {
+			if i, ok := owner[strings.ToUpper(c)]; ok && !used[i] {
+				matched = i
+				break
+			}
+		}
+		if matched < 0 {
+			continue
+		}
+		used[matched] = true
+		result = append(result, flattenEmrMetaDBGroupInfoItem(items[matched], prior))
+	}
+
+	for i, item := range items {
+		if !used[i] {
+			result = append(result, flattenEmrMetaDBGroupInfoItem(item, nil))
+		}
+	}
+
+	return result
+}
+
+// flattenEmrMetaDBGroupInfoItem flattens one CustomMetaDBInfo; prior is the
+// matched existing element (nil if none). The existing `components` spelling
+// is kept when it equals the response ignoring case.
+func flattenEmrMetaDBGroupInfoItem(item *emr.CustomMetaDBInfo, prior map[string]interface{}) map[string]interface{} {
+	components := make([]interface{}, 0, len(item.Components))
+	reported := make([]string, 0, len(item.Components))
+	for _, c := range item.Components {
+		if c != nil {
+			components = append(components, *c)
+			reported = append(reported, *c)
+		}
+	}
+
+	metaDataPass := ""
+	if prior != nil {
+		metaDataPass, _ = prior["meta_data_pass"].(string)
+
+		existing := emrMetaDBComponentList(prior["components"])
+		if emrMetaDBComponentsEqualFold(existing, reported) {
+			components = make([]interface{}, 0, len(existing))
+			for _, c := range existing {
+				components = append(components, c)
+			}
+		}
+	}
+
+	return map[string]interface{}{
+		"meta_data_jdbc_url":     helper.PString(item.MetaDataJdbcUrl),
+		"meta_data_user":         helper.PString(item.MetaDataUser),
+		"meta_data_pass":         metaDataPass,
+		"meta_type":              helper.PString(item.MetaType),
+		"unify_meta_instance_id": helper.PString(item.UnifyMetaInstanceId),
+		"components":             components,
+		"default_meta_version":   helper.PString(item.DefaultMetaVersion),
+		"link_instance_id":       helper.PString(item.LinkInstanceId),
+	}
+}
+
+// emrMetaDBComponentList extracts the component names from a nested
+// `components` value (*schema.Set from d.Get, or []interface{}).
+func emrMetaDBComponentList(raw interface{}) []string {
+	result := make([]string, 0)
+	for _, c := range emrNodeSetToList(raw) {
+		if s, ok := c.(string); ok && s != "" {
+			result = append(result, s)
+		}
+	}
+	return result
+}
+
+// emrMetaDBComponentsEqualFold reports whether a and b hold the same component
+// names ignoring case and order.
+func emrMetaDBComponentsEqualFold(a, b []string) bool {
+	if len(a) != len(b) {
+		return false
+	}
+	count := make(map[string]int, len(a))
+	for _, c := range a {
+		count[strings.ToUpper(c)]++
+	}
+	for _, c := range b {
+		key := strings.ToUpper(c)
+		if count[key] == 0 {
+			return false
+		}
+		count[key]--
+	}
+	return true
+}
+
 // emrInstallAddedSoftware issues a single InstallSoftware call for the given
 // aggregated softInfo / serviceDeployInfoList (covering added components across
 // all nodes) and waits for the resulting flow to finish. Only three request
@@ -3930,9 +4031,8 @@ func emrInstallAddedSoftware(
 	logId, instanceId string,
 	softInfo []*string,
 	serviceDeployInfoList []*emr.ServiceDeployInfo,
-	metaDBGroupInfo []*emr.CustomMetaDBInfo,
 ) error {
-	if len(serviceDeployInfoList) == 0 && len(metaDBGroupInfo) == 0 {
+	if len(serviceDeployInfoList) == 0 {
 		return nil
 	}
 
@@ -3947,9 +4047,6 @@ func emrInstallAddedSoftware(
 		req.ServiceDeployInfoList = serviceDeployInfoList
 	}
 	req.CheckServiceDeployInfo = helper.Bool(true)
-	if len(metaDBGroupInfo) > 0 {
-		req.MetaDBGroupInfo = metaDBGroupInfo
-	}
 
 	reqErr := resource.Retry(tccommon.WriteRetryTimeout, func() *resource.RetryError {
 		result, e := conn.UseEmrClient().InstallSoftwareWithContext(ctx, req)
