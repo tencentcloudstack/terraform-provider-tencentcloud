@@ -9,6 +9,7 @@ import (
 	"io/ioutil"
 	"log"
 	"net/url"
+	"sort"
 	"strings"
 	"time"
 
@@ -159,10 +160,11 @@ func originPullRules() *schema.Resource {
 
 func ResourceTencentCloudCosBucket() *schema.Resource {
 	return &schema.Resource{
-		Create: resourceTencentCloudCosBucketCreate,
-		Read:   resourceTencentCloudCosBucketRead,
-		Update: resourceTencentCloudCosBucketUpdate,
-		Delete: resourceTencentCloudCosBucketDelete,
+		Create:        resourceTencentCloudCosBucketCreate,
+		Read:          resourceTencentCloudCosBucketRead,
+		Update:        resourceTencentCloudCosBucketUpdate,
+		Delete:        resourceTencentCloudCosBucketDelete,
+		CustomizeDiff: customizeDiffCosBucketLifecycleRules,
 		Importer: &schema.ResourceImporter{
 			State: helper.ImportWithDefaultValue(map[string]interface{}{
 				"force_clean": false,
@@ -468,10 +470,24 @@ func ResourceTencentCloudCosBucket() *schema.Resource {
 							Optional:    true,
 							Description: "A unique identifier for the rule. It can be up to 255 characters.",
 						},
+						"status": {
+							Type:         schema.TypeString,
+							Optional:     true,
+							Default:      s3.ExpirationStatusEnabled,
+							ValidateFunc: tccommon.ValidateAllowedStringValue([]string{s3.ExpirationStatusEnabled, s3.ExpirationStatusDisabled}),
+							Description:  "Whether the lifecycle rule is enabled. Valid values are `Enabled` and `Disabled`.",
+						},
 						"filter_prefix": {
 							Type:        schema.TypeString,
 							Optional:    true,
 							Description: "Object key prefix identifying one or more objects to which the rule applies.",
+						},
+						"filter_tags": {
+							Type:         schema.TypeMap,
+							Optional:     true,
+							Elem:         &schema.Schema{Type: schema.TypeString},
+							ValidateFunc: validateCosBucketLifecycleFilterTags,
+							Description:  "Object tags identifying objects to which the rule applies. All tags and `filter_prefix`, when set, are combined with a logical AND. COS supports up to 10 tags.",
 						},
 						"transition": {
 							Type:        schema.TypeSet,
@@ -1853,6 +1869,9 @@ func resourceTencentCloudCosBucketLifecycleUpdate(ctx context.Context, meta inte
 
 	bucket := d.Get("bucket").(string)
 	lifecycleRules := d.Get("lifecycle_rules").([]interface{})
+	if err := validateCosBucketLifecycleRules(lifecycleRules); err != nil {
+		return err
+	}
 	cdcId := d.Get("cdc_id").(string)
 	if len(lifecycleRules) == 0 {
 		request := s3.DeleteBucketLifecycleInput{
@@ -1876,11 +1895,17 @@ func resourceTencentCloudCosBucketLifecycleUpdate(ctx context.Context, meta inte
 			if ok {
 				rule.ID = &id
 			}
-			rule.Status = helper.String(s3.ExpirationStatusEnabled)
-			prefix := r["filter_prefix"].(string)
-			rule.Filter = &s3.LifecycleRuleFilter{
-				Prefix: &prefix,
+			status := s3.ExpirationStatusEnabled
+			if value, ok := r["status"].(string); ok && value != "" {
+				status = value
 			}
+			rule.Status = helper.String(status)
+			prefix := r["filter_prefix"].(string)
+			filterTags := map[string]interface{}{}
+			if value, ok := r["filter_tags"].(map[string]interface{}); ok {
+				filterTags = value
+			}
+			rule.Filter = expandCosBucketLifecycleRuleFilter(prefix, filterTags)
 
 			// Transitions
 			transitions := d.Get(fmt.Sprintf("lifecycle_rules.%d.transition", i)).(*schema.Set).List()
@@ -1993,6 +2018,89 @@ func resourceTencentCloudCosBucketLifecycleUpdate(ctx context.Context, meta inte
 	}
 
 	return nil
+}
+
+func customizeDiffCosBucketLifecycleRules(_ context.Context, d *schema.ResourceDiff, _ interface{}) error {
+	rawRules, ok := d.Get("lifecycle_rules").([]interface{})
+	if !ok {
+		return nil
+	}
+	return validateCosBucketLifecycleRules(rawRules)
+}
+
+func validateCosBucketLifecycleFilterTags(value interface{}, key string) ([]string, []error) {
+	tags, ok := value.(map[string]interface{})
+	if !ok {
+		return nil, []error{fmt.Errorf("%s must be a map of strings", key)}
+	}
+	if len(tags) > 10 {
+		return nil, []error{fmt.Errorf("%s supports at most 10 tags, got %d", key, len(tags))}
+	}
+	for tagKey, rawValue := range tags {
+		tagValue, ok := rawValue.(string)
+		if !ok {
+			return nil, []error{fmt.Errorf("%s.%s must be a string", key, tagKey)}
+		}
+		if len(tagKey) == 0 {
+			return nil, []error{fmt.Errorf("%s contains an empty tag key", key)}
+		}
+		if len(tagKey) > 128 {
+			return nil, []error{fmt.Errorf("%s.%s key must not exceed 128 bytes", key, tagKey)}
+		}
+		if len(tagValue) > 256 {
+			return nil, []error{fmt.Errorf("%s.%s value must not exceed 256 bytes", key, tagKey)}
+		}
+	}
+	return nil, nil
+}
+
+func validateCosBucketLifecycleRules(rules []interface{}) error {
+	for index, rawRule := range rules {
+		rule, ok := rawRule.(map[string]interface{})
+		if !ok || rule == nil {
+			continue
+		}
+		rawTags, hasTags := rule["filter_tags"]
+		tags, tagsOK := rawTags.(map[string]interface{})
+		if !hasTags || !tagsOK || len(tags) == 0 {
+			continue
+		}
+		abortUploads, ok := rule["abort_incomplete_multipart_upload"].(*schema.Set)
+		if ok && abortUploads.Len() > 0 {
+			return fmt.Errorf("lifecycle_rules.%d.filter_tags cannot be used with abort_incomplete_multipart_upload in the same rule", index)
+		}
+	}
+	return nil
+}
+
+func expandCosBucketLifecycleRuleFilter(prefix string, rawTags map[string]interface{}) *s3.LifecycleRuleFilter {
+	if len(rawTags) == 0 {
+		return &s3.LifecycleRuleFilter{Prefix: helper.String(prefix)}
+	}
+
+	keys := make([]string, 0, len(rawTags))
+	for key := range rawTags {
+		keys = append(keys, key)
+	}
+	sort.Strings(keys)
+
+	tags := make([]*s3.Tag, 0, len(keys))
+	for _, key := range keys {
+		tags = append(tags, &s3.Tag{
+			Key:   helper.String(key),
+			Value: helper.String(rawTags[key].(string)),
+		})
+	}
+
+	if prefix == "" && len(tags) == 1 {
+		return &s3.LifecycleRuleFilter{Tag: tags[0]}
+	}
+
+	and := &s3.LifecycleRuleAndOperator{Tags: tags}
+	if prefix != "" {
+		and.Prefix = helper.String(prefix)
+	}
+	return &s3.LifecycleRuleFilter{And: and}
 }
 
 func resourceTencentCloudCosBucketWebsiteUpdate(ctx context.Context, meta interface{}, d *schema.ResourceData) error {
