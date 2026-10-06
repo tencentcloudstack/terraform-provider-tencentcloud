@@ -344,6 +344,11 @@ func ResourceTencentCloudDtsMigrateJob() *schema.Resource {
 							Required:    true,
 							Description: "Node type, empty or simple indicates a general node, cluster indicates a cluster node; for mongo services, valid values: replicaset (mongodb replica set), standalone (mongodb single node), cluster (mongodb cluster); for redis instances, valid values: empty or simple (single node), cluster (cluster), cluster-cache (cache cluster), cluster-proxy (proxy cluster).",
 						},
+						"database_net_env": {
+							Type:        schema.TypeString,
+							Optional:    true,
+							Description: "Network environment of the database, required when access_type is `ccn` (e.g. `Aws`, `UserIDC`, `TencentVPC`).",
+						},
 						"info": {
 							Type:        schema.TypeList,
 							Required:    true,
@@ -509,6 +514,11 @@ func ResourceTencentCloudDtsMigrateJob() *schema.Resource {
 							Type:        schema.TypeString,
 							Required:    true,
 							Description: "Node type, empty or simple indicates a general node, cluster indicates a cluster node; for mongo services, valid values: replicaset (mongodb replica set), standalone (mongodb single node), cluster (mongodb cluster); for redis instances, valid values: empty or simple (single node), cluster (cluster), cluster-cache (cache cluster), cluster-proxy (proxy cluster).",
+						},
+						"database_net_env": {
+							Type:        schema.TypeString,
+							Optional:    true,
+							Description: "Network environment of the database, required when access_type is `ccn` (e.g. `Aws`, `UserIDC`, `TencentVPC`).",
 						},
 						"info": {
 							Type:        schema.TypeList,
@@ -981,6 +991,10 @@ func resourceTencentCloudDtsMigrateJobRead(d *schema.ResourceData, meta interfac
 			srcInfoMap["access_type"] = migrateJob.SrcInfo.AccessType
 		}
 
+		if migrateJob.SrcInfo.DatabaseNetEnv != nil {
+			srcInfoMap["database_net_env"] = migrateJob.SrcInfo.DatabaseNetEnv
+		}
+
 		if migrateJob.SrcInfo.DatabaseType != nil {
 			srcInfoMap["database_type"] = migrateJob.SrcInfo.DatabaseType
 		}
@@ -1122,6 +1136,10 @@ func resourceTencentCloudDtsMigrateJobRead(d *schema.ResourceData, meta interfac
 
 		if migrateJob.DstInfo.AccessType != nil {
 			dstInfoMap["access_type"] = migrateJob.DstInfo.AccessType
+		}
+
+		if migrateJob.DstInfo.DatabaseNetEnv != nil {
+			dstInfoMap["database_net_env"] = migrateJob.DstInfo.DatabaseNetEnv
 		}
 
 		if migrateJob.DstInfo.DatabaseType != nil {
@@ -1463,6 +1481,9 @@ func handleModifyMigrate(d *schema.ResourceData, tcClient *connectivity.TencentC
 		if v, ok := dMap["access_type"]; ok && v.(string) != "" {
 			dBEndpointInfo.AccessType = helper.String(v.(string))
 		}
+		if v, ok := dMap["database_net_env"]; ok && v.(string) != "" {
+			dBEndpointInfo.DatabaseNetEnv = helper.String(v.(string))
+		}
 		if v, ok := dMap["database_type"]; ok && v.(string) != "" {
 			dBEndpointInfo.DatabaseType = helper.String(v.(string))
 		}
@@ -1562,6 +1583,9 @@ func handleModifyMigrate(d *schema.ResourceData, tcClient *connectivity.TencentC
 		}
 		if v, ok := dMap["access_type"]; ok && v.(string) != "" {
 			dBEndpointInfo.AccessType = helper.String(v.(string))
+		}
+		if v, ok := dMap["database_net_env"]; ok && v.(string) != "" {
+			dBEndpointInfo.DatabaseNetEnv = helper.String(v.(string))
 		}
 		if v, ok := dMap["database_type"]; ok && v.(string) != "" {
 			dBEndpointInfo.DatabaseType = helper.String(v.(string))
