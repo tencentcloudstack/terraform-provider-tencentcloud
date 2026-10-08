@@ -5077,6 +5077,9 @@ func (me *VpcService) DescribeVpnGatewayRoutes(ctx context.Context, vpnGatewayId
 			ratelimit.Check(request.GetAction())
 			response, errRet = me.client.UseVpcClient().DescribeVpnGatewayRoutes(request)
 			if errRet != nil {
+				if tccommon.IsExpectError(errRet, []string{"ResourceNotFound"}) {
+					return nil
+				}
 				return tccommon.RetryError(errRet, tccommon.InternalError)
 			}
 			return nil
@@ -5086,7 +5089,7 @@ func (me *VpcService) DescribeVpnGatewayRoutes(ctx context.Context, vpnGatewayId
 		}
 
 		if response == nil || response.Response == nil {
-			return fmt.Errorf("TencentCloud SDK return nil response, %s", request.GetAction()), nil
+			return nil, nil
 		} else if len(response.Response.Routes) > 0 {
 			result = append(result, response.Response.Routes...)
 		} else {
