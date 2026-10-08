@@ -32,9 +32,11 @@ The resource MUST be exposed in `tencentcloud/provider.go` ResourcesMap as `"ten
 
 The resource schema MUST expose one Terraform attribute per top-level field of `CreateClusterRequestParams` from `tencentcloud-sdk-go/tencentcloud/emr/v20190103/models.go`, with no field merging, renaming, or omission.
 
-The top-level attributes are, in snake_case: `product_version`, `enable_support_ha_flag`, `instance_name`, `instance_charge_type`, `login_settings`, `scene_software_config`, `instance_charge_prepaid`, `security_group_ids`, `script_bootstrap_action_config`, `client_token`, `need_master_wan`, `enable_remote_login_flag`, `enable_kerberos_flag`, `custom_conf`, `tags`, `disaster_recover_group_ids`, `enable_cbs_encrypt_flag`, `meta_db_info`, `depend_service`, `zone_resource_configuration`, `cos_bucket`, `node_marks`, `load_balancer_id`, `default_meta_version`, `need_cdb_audit`, `sg_ip`, `partition_number`, `web_ui_version`.
+The top-level attributes are, in snake_case: `product_version`, `enable_support_ha_flag`, `instance_name`, `instance_charge_type`, `login_settings`, `scene_software_config`, `instance_charge_prepaid`, `security_group_ids`, `script_bootstrap_action_config`, `client_token`, `need_master_wan`, `enable_remote_login_flag`, `enable_kerberos_flag`, `custom_conf`, `tags`, `disaster_recover_group_ids`, `enable_cbs_encrypt_flag`, `meta_db_info`, `meta_db_group_info`, `depend_service`, `zone_resource_configuration`, `cos_bucket`, `node_marks`, `load_balancer_id`, `default_meta_version`, `need_cdb_audit`, `sg_ip`, `partition_number`, `web_ui_version`.
 
 Nested SDK structs MUST be represented as `TypeList` blocks preserving the SDK hierarchy (`LoginSettings`, `SceneSoftwareConfig`, `InstanceChargePrepaid`, `ScriptBootstrapActionConfig`, `Tag`, `CustomMetaDBInfo`, `DependService`, `ZoneResourceConfiguration → VirtualPrivateCloud/Placement/AllNodeResourceSpec → NodeResourceSpec → DiskSpecInfo/Tag`, `NodeMark`).
+
+`meta_db_group_info` (the `MetaDBGroupInfo` field of `CreateClusterRequest`) is a `TypeList` as well. The query API returns its entries in its own order, so Read MUST re-order them to match the existing elements (see Read Operation).
 
 No schema field in this change SHALL have `ForceNew: true`.
 
@@ -54,12 +56,26 @@ No schema field in this change SHALL have `ForceNew: true`.
 - **WHEN** the schema is inspected
 - **THEN** `login_settings.password` has `Sensitive: true`
 - **AND** `meta_db_info.meta_data_pass` has `Sensitive: true`
+- **AND** `meta_db_group_info.meta_data_pass` has `Sensitive: true`
 
 #### Scenario: Required-vs-Optional matches the API contract
 
 - **WHEN** a user writes a minimal config containing only `product_version`, `enable_support_ha_flag`, `instance_name`, `instance_charge_type`, `login_settings`, and `scene_software_config`
 - **THEN** `terraform validate` passes
 - **AND** omitting any one of those six top-level attributes causes `terraform validate` to fail with a "Missing required argument" error
+
+#### Scenario: meta_db_group_info element schema
+
+- **WHEN** the `meta_db_group_info` schema is inspected
+- **THEN** it is a `TypeList`
+- **AND** `meta_data_jdbc_url`, `meta_data_user`, `meta_data_pass`, `meta_type`, `unify_meta_instance_id`, `components` and `default_meta_version` are `Optional` and `Computed`, so fields that are not configured keep the values reported by `DescribeMetaDBInfo` without producing a diff
+- **AND** `link_instance_id` is `Computed` without `Optional`
+
+#### Scenario: meta_db_group_info is immutable after creation
+
+- **WHEN** the Update handler is invoked and `meta_db_group_info` has changed
+- **THEN** it returns the error ``argument `meta_db_group_info` cannot be changed`` before calling any API
+- **AND** `meta_db_group_info` does not carry `ForceNew`
 
 ---
 
@@ -103,6 +119,8 @@ If `DescribeInstances` returns an empty `Clusters` list for the configured `Inst
 
 Fields that are **not** returned by `DescribeInstances`/`DescribeClusterNodes` (secrets, `client_token`, `custom_conf`) MUST NOT be overwritten from API data — they remain whatever the user's config declared.
 
+`meta_db_group_info` MUST be populated from `DescribeMetaDBInfo` in the order of the existing elements. A component belongs to only one entry (business rule), so each response entry is placed at the index of the existing element that shares one of its `components` (case-insensitive). Unmatched response entries are appended in API order and existing elements without a matching entry are dropped. Without existing elements (i.e. `terraform import`) the API order is used. `meta_data_pass` is write-only (the API returns an empty string) and MUST keep the existing value; `components` MUST keep the existing spelling when it equals the response ignoring case.
+
 #### Scenario: Normal read round-trip
 
 - **WHEN** a cluster exists and the Read handler is invoked
@@ -121,6 +139,8 @@ Fields that are **not** returned by `DescribeInstances`/`DescribeClusterNodes` (
 - **WHEN** the Read handler runs against an existing cluster
 - **THEN** `login_settings.password` in state is NOT replaced by API data
 - **AND** `meta_db_info.meta_data_pass` in state is NOT replaced by API data
+- **AND** `meta_db_group_info.meta_data_pass` in state is NOT replaced by API data
+- **AND** the `meta_db_group_info` entries keep the order of the existing elements, matched through `components`
 
 ---
 
