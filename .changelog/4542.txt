@@ -1,0 +1,7 @@
+```release-note:bug
+resource/tencentcloud_emr_cluster_v2: fix the permanent `meta_db_group_info` diff - the block is now a `TypeList` whose query result is matched to the configured blocks by `components`, its fields are `Optional` and `Computed`, and the write-only `meta_data_pass` keeps the configured value.
+```
+
+```release-note:enhancement
+resource/tencentcloud_emr_cluster_v2: `meta_db_group_info` can only be set on create; changing it afterwards returns an error.
+```

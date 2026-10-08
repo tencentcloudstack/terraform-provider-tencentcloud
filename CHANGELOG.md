@@ -1,3 +1,23 @@
+## 1.83.34(September 30, 2026)
+
+FEATURES:
+
+* **New Data Source:** `tencentcloud_antiddos_ddos_block_records` ([#4535](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/4535))
+* **New Data Source:** `tencentcloud_cdwdoris_instance_nodes` ([#4544](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/4544))
+* **New Resource:** `tencentcloud_antiddos_unblock_resources` ([#4534](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/4534))
+
+ENHANCEMENTS:
+
+* resource/tencentcloud_cfs_file_system: support encrypted parameter for file system encryption ([#4546](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/4546))
+* resource/tencentcloud_emr_cluster_v2: `meta_db_group_info` can only be set on create; changing it afterwards returns an error. ([#4542](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/4542))
+* resource/tencentcloud_emr_cluster_v2: add meta_db_group_info field. ([#4541](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/4541))
+* resource/tencentcloud_kms_key: support rotate_days parameter to specify key rotation period ([#4532](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/4532))
+* resource/tencentcloud_mysql_instance: support `disk_encryption` parameter to enable disk encryption when creating cloud-disk edition CDB instances ([#4531](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/4531))
+
+BUG FIXES:
+
+* resource/tencentcloud_emr_cluster_v2: fix the permanent `meta_db_group_info` diff - the block is now a `TypeList` whose query result is matched to the configured blocks by `components`, its fields are `Optional` and `Computed`, and the write-only `meta_data_pass` keeps the configured value. ([#4542](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/4542))
+
 ## 1.83.33(September 21, 2026)
 
 FEATURES:
