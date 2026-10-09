@@ -40,7 +40,7 @@ The following arguments are supported:
 * `name` - (Required, String) Aggregator name.
 * `owner_uin` - (Required, String, ForceNew) Creator UIN of the aggregator. Required by Describe/Update/Delete APIs. Create does not return it.
 * `type` - (Required, String, ForceNew) Aggregator type. Valid values: `RD` (global aggregator), `CUSTOM` (custom aggregator).
-* `aggregator_accounts` - (Optional, List) Member account list of the aggregator, up to 100 entries.
+* `aggregator_accounts` - (Optional, List) Member account list of the aggregator, up to 100 entries. Required when `type` is `CUSTOM`; for `RD` (global) aggregators the members are maintained by the cloud and returned here automatically.
 
 The `aggregator_accounts` object supports the following:
 
