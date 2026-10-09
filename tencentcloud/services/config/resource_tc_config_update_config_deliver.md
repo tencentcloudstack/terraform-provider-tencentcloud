@@ -13,10 +13,10 @@ resource "tencentcloud_config_update_config_deliver" "example" {
 }
 ```
 
-## Import
+Import
 
-Config delivery settings can be imported using the id, e.g.
+Config delivery settings can be imported using the region, e.g.
 
-```terraform
-terraform import tencentcloud_config_update_config_deliver.example example-id
+```hcl
+terraform import tencentcloud_config_update_config_deliver.example ap-guangzhou
 ```

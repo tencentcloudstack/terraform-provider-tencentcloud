@@ -24,14 +24,6 @@ resource "tencentcloud_config_update_config_deliver" "example" {
 }
 ```
 
-## Import
-
-Config delivery settings can be imported using the region, e.g.
-
-```hcl
-terraform import tencentcloud_config_update_config_deliver.example ap-guangzhou
-```
-
 ## Argument Reference
 
 The following arguments are supported:
@@ -50,4 +42,12 @@ In addition to all arguments above, the following attributes are exported:
 * `id` - ID of the resource.
 * `create_time` - Creation time of the delivery configuration.
 
+
+## Import
+
+Config delivery settings can be imported using the region, e.g.
+
+```hcl
+terraform import tencentcloud_config_update_config_deliver.example ap-guangzhou
+```
 
