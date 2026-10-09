@@ -9,11 +9,19 @@ import (
 
 	tcacctest "github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/acctest"
 	tccommon "github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/common"
+	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/connectivity"
 	svcvpc "github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/services/vpc"
 
+	"github.com/agiledragon/gomonkey/v2"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
+	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/terraform"
-	"github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/common/errors"
+	sdkErrors "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/common/errors"
+	vpc "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/vpc/v20170312"
+	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/internal/helper"
+	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/services/vpn"
+
+	"github.com/stretchr/testify/assert"
 )
 
 // go test -i; go test -test.run TestAccTencentCloudVpnGatewayRoute_basic -v -timeout=0
@@ -64,7 +72,7 @@ func testAccCheckVpnGatewayRouteDestroy(s *terraform.State) error {
 		err, result := vpcService.DescribeVpnGatewayRoutes(ctx, ids[0], nil)
 		if err != nil {
 			log.Printf("[CRITAL]%s read VPN gateway route failed, reason:%s\n", logId, err.Error())
-			ee, ok := err.(*errors.TencentCloudSDKError)
+			ee, ok := err.(*sdkErrors.TencentCloudSDKError)
 			if !ok {
 				return err
 			}
@@ -230,3 +238,78 @@ resource "tencentcloud_vpn_gateway_route" "route1" {
   status                 = "DISABLE"
 }
 `
+
+type mockMetaForVpnGatewayRoute struct {
+	client *connectivity.TencentCloudClient
+}
+
+func (m *mockMetaForVpnGatewayRoute) GetAPIV3Conn() *connectivity.TencentCloudClient {
+	return m.client
+}
+
+var _ tccommon.ProviderMeta = &mockMetaForVpnGatewayRoute{}
+
+func newMockMetaForVpnGatewayRoute() *mockMetaForVpnGatewayRoute {
+	return &mockMetaForVpnGatewayRoute{client: &connectivity.TencentCloudClient{}}
+}
+
+// TestVpnGatewayRouteServiceDescribe_ResourceNotFound verifies that when the
+// cloud API DescribeVpnGatewayRoutes returns a ResourceNotFound error, the
+// service method returns (nil, nil) instead of propagating the error, so the
+// upper Read path can treat the route as deleted and clear the id.
+func TestVpnGatewayRouteServiceDescribe_ResourceNotFound(t *testing.T) {
+	patches := gomonkey.NewPatches()
+	defer patches.Reset()
+
+	vpcClient := &vpc.Client{}
+	patches.ApplyMethodReturn(newMockMetaForVpnGatewayRoute().client, "UseVpcClient", vpcClient)
+
+	patches.ApplyMethodFunc(vpcClient, "DescribeVpnGatewayRoutes", func(request *vpc.DescribeVpnGatewayRoutesRequest) (*vpc.DescribeVpnGatewayRoutesResponse, error) {
+		return nil, &sdkErrors.TencentCloudSDKError{
+			Code:    "ResourceNotFound",
+			Message: "the resource not found",
+		}
+	})
+
+	logId := tccommon.GetLogId(tccommon.ContextNil)
+	ctx := context.WithValue(context.TODO(), tccommon.LogIdKey, logId)
+	service := svcvpc.NewVpcService(newMockMetaForVpnGatewayRoute().GetAPIV3Conn())
+
+	err, result := service.DescribeVpnGatewayRoutes(ctx, "vpngw-test", nil)
+	assert.NoError(t, err)
+	assert.Nil(t, result)
+}
+
+// TestVpnGatewayRouteRead_ResourceNotFound verifies that the resource Read
+// clears d.Id() and returns nil when the cloud API returns ResourceNotFound,
+// which is the behavior expected after the service-layer fix.
+func TestVpnGatewayRouteRead_ResourceNotFound(t *testing.T) {
+	patches := gomonkey.NewPatches()
+	defer patches.Reset()
+
+	vpcClient := &vpc.Client{}
+	patches.ApplyMethodReturn(newMockMetaForVpnGatewayRoute().client, "UseVpcClient", vpcClient)
+
+	patches.ApplyMethodFunc(vpcClient, "DescribeVpnGatewayRoutes", func(request *vpc.DescribeVpnGatewayRoutesRequest) (*vpc.DescribeVpnGatewayRoutesResponse, error) {
+		return nil, &sdkErrors.TencentCloudSDKError{
+			Code:    "ResourceNotFound",
+			Message: "the resource not found",
+		}
+	})
+
+	meta := newMockMetaForVpnGatewayRoute()
+	res := vpn.ResourceTencentCloudVpnGatewayRoute()
+	d := schema.TestResourceDataRaw(t, res.Schema, map[string]interface{}{
+		"vpn_gateway_id":         "vpngw-test",
+		"destination_cidr_block": "10.0.0.0/16",
+		"instance_type":          "VPNCONN",
+		"instance_id":            "vpnx-test",
+		"priority":               100,
+		"status":                 "ENABLE",
+	})
+	d.SetId(helper.IdFormat("vpngw-test", "route-test"))
+
+	err := res.Read(d, meta)
+	assert.NoError(t, err)
+	assert.Equal(t, "", d.Id())
+}
