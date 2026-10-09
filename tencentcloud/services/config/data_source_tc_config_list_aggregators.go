@@ -2,8 +2,6 @@ package config
 
 import (
 	"context"
-	"fmt"
-	"log"
 
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
@@ -110,11 +108,9 @@ func dataSourceTencentCloudConfigListAggregatorsRead(d *schema.ResourceData, met
 			return tccommon.RetryError(e)
 		}
 
-		if len(items) == 0 && total == 0 {
-			log.Printf("[DATASOURCE] read empty, skip SetId, config_list_aggregators paramMap=%v", paramMap)
-			return resource.NonRetryableError(fmt.Errorf("DescribeConfigListAggregatorsByFilter return empty"))
-		}
-
+		// An empty result is a legitimate answer: the account simply has no
+		// aggregators yet. Returning an error here would make the data source
+		// unusable instead of surfacing `total = 0` and `items = []`.
 		respItems = flattenConfigListAggregatorsList(items)
 		respTotal = int(total)
 		return nil

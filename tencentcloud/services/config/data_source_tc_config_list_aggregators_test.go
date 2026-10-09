@@ -101,6 +101,11 @@ func TestConfigListAggregatorsDS_ReadBasic(t *testing.T) {
 	assert.Equal(t, "member-name", item0["member_name"].(string))
 }
 
+// TestConfigListAggregatorsDS_ReadEmpty covers an account that has no aggregators yet.
+// An empty result is a legitimate answer, not a failure: the data source must succeed and
+// expose `total = 0` with an empty `items` list. Treating it as an error (e.g. returning a
+// NonRetryableError from inside the retry block) makes the data source unusable for any
+// account without aggregators.
 func TestConfigListAggregatorsDS_ReadEmpty(t *testing.T) {
 	patches := gomonkey.NewPatches()
 	defer patches.Reset()
@@ -123,7 +128,42 @@ func TestConfigListAggregatorsDS_ReadEmpty(t *testing.T) {
 	d := schema.TestResourceDataRaw(t, res.Schema, map[string]interface{}{})
 
 	err := res.Read(d, meta)
-	assert.Error(t, err)
+	assert.NoError(t, err, "an account without aggregators must not be reported as an error")
+	assert.NotEmpty(t, d.Id(), "the data source must still be usable, so its id is set")
+
+	assert.Equal(t, 0, d.Get("total").(int))
+	assert.Empty(t, d.Get("items").([]interface{}))
+}
+
+// TestConfigListAggregatorsDS_ReadNilItems covers the case where the API reports a total but
+// returns no page items at all (nil slice). The flatten helper must not panic and the data
+// source must still succeed.
+func TestConfigListAggregatorsDS_ReadNilItems(t *testing.T) {
+	patches := gomonkey.NewPatches()
+	defer patches.Reset()
+
+	configClient := &configv20220802.Client{}
+	patches.ApplyMethodReturn(newMockMetaForConfigListAggregatorsDS().client, "UseConfigV20220802Client", configClient)
+
+	patches.ApplyMethodFunc(configClient, "ListAggregatorsWithContext", func(_ context.Context, request *configv20220802.ListAggregatorsRequest) (*configv20220802.ListAggregatorsResponse, error) {
+		resp := configv20220802.NewListAggregatorsResponse()
+		resp.Response = &configv20220802.ListAggregatorsResponseParams{
+			Total:     ptrUint64CLA(0),
+			Items:     nil,
+			RequestId: ptrStringCLA("fake-request-id"),
+		}
+		return resp, nil
+	})
+
+	meta := newMockMetaForConfigListAggregatorsDS()
+	res := config.DataSourceTencentCloudConfigListAggregators()
+	d := schema.TestResourceDataRaw(t, res.Schema, map[string]interface{}{})
+
+	err := res.Read(d, meta)
+	assert.NoError(t, err)
+	assert.NotEmpty(t, d.Id())
+	assert.Equal(t, 0, d.Get("total").(int))
+	assert.Empty(t, d.Get("items").([]interface{}))
 }
 
 func TestConfigListAggregatorsDS_Schema(t *testing.T) {

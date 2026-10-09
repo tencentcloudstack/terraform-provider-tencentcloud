@@ -16,9 +16,10 @@ Provides a Terraform data source `tencentcloud_config_list_aggregators` that que
 - **WHEN** 云 API 返回账号组列表
 - **THEN** 每个 `items` 元素 SHALL 包含字段：`name`、`description`、`owner_uin`、`create_time`、`account_count`、`type`、`account_group_id`、`aggregator_status`、`member_name`，仅当对应云 API 字段非 nil 时 set
 
-#### Scenario: 云 API 返回空时不清空数据源
-- **WHEN** 数据源 Read 调用 `ListAggregators` 返回空（`items` 为 nil 且 `total` 为 0）
-- **THEN** 系统 SHALL 在 retry 块内返回 `NonRetryableError`，不得直接 `d.SetId("")`，并保留 `[DATASOURCE] read empty, skip SetId` 日志
+#### Scenario: 云 API 返回空结果时正常返回
+- **WHEN** 数据源 Read 调用 `ListAggregators` 返回空结果（`items` 为 nil 或空列表且 `total` 为 0）
+- **THEN** 系统 SHALL 视为正常空结果，成功返回并设置 `total = 0`、`items = []`，并设置数据源 id；不得返回 error，也不得调用 `d.SetId("")`
+- **AND** 只有云 API 调用本身失败（`DescribeConfigListAggregatorsByFilter` 返回 error）时才返回 error
 
 ### Requirement: 数据源注册与文档
 系统 SHALL 在 `provider.go` 中注册数据源 `tencentcloud_config_list_aggregators`，并通过 `make doc` 生成对应文档。
