@@ -31,30 +31,35 @@ func ResourceTencentCloudConfigUpdateConfigDeliver() *schema.Resource {
 			"deliver_name": {
 				Type:        schema.TypeString,
 				Optional:    true,
+				Computed:    true,
 				Description: "Delivery service name.",
 			},
 
 			"target_arn": {
 				Type:        schema.TypeString,
 				Optional:    true,
+				Computed:    true,
 				Description: "Resource ARN. COS format: qcs::cos:$region:$account:prefix/$appid/$BucketName. CLS format: qcs::cls:$region:$account:cls/topicId.",
 			},
 
 			"deliver_prefix": {
 				Type:        schema.TypeString,
 				Optional:    true,
+				Computed:    true,
 				Description: "Log prefix for stored delivery content.",
 			},
 
 			"deliver_type": {
 				Type:        schema.TypeString,
 				Optional:    true,
+				Computed:    true,
 				Description: "Delivery type. Valid values: COS, CLS.",
 			},
 
 			"deliver_content_type": {
 				Type:        schema.TypeInt,
 				Optional:    true,
+				Computed:    true,
 				Description: "Delivery content type. Valid values: 1 (configuration change), 2 (resource list), 3 (all).",
 			},
 
@@ -72,7 +77,12 @@ func resourceTencentCloudConfigUpdateConfigDeliverCreate(d *schema.ResourceData,
 	defer tccommon.LogElapsed("resource.tencentcloud_config_update_config_deliver.create")()
 	defer tccommon.InconsistentCheck(d, meta)()
 
-	d.SetId(helper.BuildToken())
+	// The delivery configuration is an account-level singleton, use a deterministic id
+	// (region) instead of a random token, so that the resource cannot be imported
+	// repeatedly with different ids.
+	region := meta.(tccommon.ProviderMeta).GetAPIV3Conn().Region
+
+	d.SetId(region)
 
 	return resourceTencentCloudConfigUpdateConfigDeliverUpdate(d, meta)
 }

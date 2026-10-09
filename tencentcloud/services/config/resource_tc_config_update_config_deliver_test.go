@@ -28,7 +28,7 @@ func (m *mockMetaConfigUpdateConfigDeliver) GetAPIV3Conn() *connectivity.Tencent
 var _ tccommon.ProviderMeta = &mockMetaConfigUpdateConfigDeliver{}
 
 func newMockMetaConfigUpdateConfigDeliver() *mockMetaConfigUpdateConfigDeliver {
-	return &mockMetaConfigUpdateConfigDeliver{client: &connectivity.TencentCloudClient{}}
+	return &mockMetaConfigUpdateConfigDeliver{client: &connectivity.TencentCloudClient{Region: "ap-guangzhou"}}
 }
 
 func ptrUint64ConfigDeliver(v uint64) *uint64 {
@@ -101,7 +101,9 @@ func TestConfigUpdateConfigDeliver_Create(t *testing.T) {
 
 	err := res.Create(d, meta)
 	assert.NoError(t, err)
-	assert.NotEmpty(t, d.Id())
+
+	// The id should be deterministic (region) instead of a random token.
+	assert.Equal(t, "ap-guangzhou", d.Id())
 
 	// Verify status was passed to the update request.
 	assert.NotNil(t, capturedRequest.Status)
