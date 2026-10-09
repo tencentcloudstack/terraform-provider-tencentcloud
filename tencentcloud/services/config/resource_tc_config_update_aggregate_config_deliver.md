@@ -1,4 +1,4 @@
-Provides a resource to manage the aggregate delivery settings (投递设置) of a Tencent Cloud Config account group (账号组).
+Provides a resource to manage the aggregate delivery settings of a Tencent Cloud Config account group.
 
 Example Usage
 

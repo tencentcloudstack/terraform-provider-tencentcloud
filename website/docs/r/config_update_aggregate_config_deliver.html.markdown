@@ -4,12 +4,12 @@ layout: "tencentcloud"
 page_title: "TencentCloud: tencentcloud_config_update_aggregate_config_deliver"
 sidebar_current: "docs-tencentcloud-resource-config_update_aggregate_config_deliver"
 description: |-
-  Provides a resource to manage the aggregate delivery settings (投递设置) of a Tencent Cloud Config account group (账号组).
+  Provides a resource to manage the aggregate delivery settings of a Tencent Cloud Config account group.
 ---
 
 # tencentcloud_config_update_aggregate_config_deliver
 
-Provides a resource to manage the aggregate delivery settings (投递设置) of a Tencent Cloud Config account group (账号组).
+Provides a resource to manage the aggregate delivery settings of a Tencent Cloud Config account group.
 
 ## Example Usage
 
@@ -32,10 +32,10 @@ The following arguments are supported:
 
 * `account_group_id` - (Required, String, ForceNew) Account group ID.
 * `status` - (Required, Int) Delivery switch. Valid values: 0 (disabled), 1 (enabled).
-* `deliver_content_type` - (Optional, Int) Delivery content type. Valid values: 1 (configuration change), 2 (resource list), 3 (all).
+* `deliver_content_type` - (Optional, Int) Delivery content type. Valid values: 1 (configuration change), 2 (resource list), 3 (all). Defaults to 1 on the cloud side when omitted.
 * `deliver_name` - (Optional, String) Delivery service name.
 * `deliver_prefix` - (Optional, String) Log prefix for stored delivery content.
-* `deliver_type` - (Optional, String) Delivery type. Valid values: COS, CLS.
+* `deliver_type` - (Optional, String) Delivery type. Valid values: COS, CLS. Defaults to COS on the cloud side when omitted.
 * `deliver_uin` - (Optional, Int) Member account uin that supports cross-account delivery. Only the delegated administrator can be used. The default value is 0, which means delivery to the administrator account.
 * `target_arn` - (Optional, String) Resource ARN. COS format: qcs::cos:$region:$account:prefix/$appid/$BucketName. CLS format: qcs::cls:$region:$account:cls/topicId.
 
