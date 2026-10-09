@@ -103,9 +103,7 @@ func TestConfigListAggregatorsDS_ReadBasic(t *testing.T) {
 
 // TestConfigListAggregatorsDS_ReadEmpty covers an account that has no aggregators yet.
 // An empty result is a legitimate answer, not a failure: the data source must succeed and
-// expose `total = 0` with an empty `items` list. Treating it as an error (e.g. returning a
-// NonRetryableError from inside the retry block) makes the data source unusable for any
-// account without aggregators.
+// expose `total = 0` with an empty `items` list.
 func TestConfigListAggregatorsDS_ReadEmpty(t *testing.T) {
 	patches := gomonkey.NewPatches()
 	defer patches.Reset()

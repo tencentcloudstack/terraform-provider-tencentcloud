@@ -108,9 +108,6 @@ func dataSourceTencentCloudConfigListAggregatorsRead(d *schema.ResourceData, met
 			return tccommon.RetryError(e)
 		}
 
-		// An empty result is a legitimate answer: the account simply has no
-		// aggregators yet. Returning an error here would make the data source
-		// unusable instead of surfacing `total = 0` and `items = []`.
 		respItems = flattenConfigListAggregatorsList(items)
 		respTotal = int(total)
 		return nil
