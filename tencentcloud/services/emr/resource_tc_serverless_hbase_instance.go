@@ -384,7 +384,7 @@ func resourceTencentCloudServerlessHbaseInstanceUpdate(d *schema.ResourceData, m
 
 	ctx := tccommon.NewResourceLifeCycleHandleFuncContext(context.Background(), logId, d, meta)
 
-	immutableArgs := []string{"pay_mode", "disk_type", "disk_size", "node_type", "time_span", "time_unit", "auto_renew_flag"}
+	immutableArgs := []string{"pay_mode", "disk_type", "node_type", "time_span", "time_unit", "auto_renew_flag"}
 	for _, v := range immutableArgs {
 		if d.HasChange(v) {
 			return fmt.Errorf("argument `%s` cannot be changed", v)
@@ -435,6 +435,34 @@ func resourceTencentCloudServerlessHbaseInstanceUpdate(d *schema.ResourceData, m
 		err := tagService.ModifyTags(ctx, resourceName, replaceTags, deleteTags)
 		if err != nil {
 			return err
+		}
+	}
+	if d.HasChange("disk_size") {
+		diskSize := d.Get("disk_size").(int)
+		request := emr.NewModifySLInstanceRequest()
+		request.InstanceId = helper.String(instanceId)
+		request.DiskSize = helper.IntInt64(diskSize)
+
+		err := resource.Retry(tccommon.WriteRetryTimeout, func() *resource.RetryError {
+			result, e := meta.(tccommon.ProviderMeta).GetAPIV3Conn().UseEmrClient().ModifySLInstanceWithContext(ctx, request)
+			if e != nil {
+				return tccommon.RetryError(e)
+			} else {
+				log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), result.ToJsonString())
+			}
+			return nil
+		})
+		if err != nil {
+			log.Printf("[CRITAL]%s update serverless hbase instance disk_size failed, reason:%+v", logId, err)
+			return err
+		}
+
+		emrService := EMRService{
+			client: meta.(tccommon.ProviderMeta).GetAPIV3Conn(),
+		}
+		conf := tccommon.BuildStateChangeConf([]string{"22"}, []string{"2"}, 10*tccommon.ReadRetryTimeout, time.Second, emrService.SLInstanceStateRefreshFunc(instanceId, []string{}))
+		if _, e := conf.WaitForState(); e != nil {
+			return e
 		}
 	}
 	needChange := false
