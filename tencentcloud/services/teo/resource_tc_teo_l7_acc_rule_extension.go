@@ -392,6 +392,7 @@ func TencentTeoL7RuleBranchBasicInfo(depth int) map[string]*schema.Schema {
 								"secret_key": {
 									Type:        schema.TypeString,
 									Optional:    true,
+									Sensitive:   true,
 									Description: "The primary authentication key consists of 6-40 uppercase and lowercase english letters or digits, and cannot contain \" and $.",
 								},
 								"timeout": {
@@ -402,6 +403,7 @@ func TencentTeoL7RuleBranchBasicInfo(depth int) map[string]*schema.Schema {
 								"backup_secret_key": {
 									Type:        schema.TypeString,
 									Optional:    true,
+									Sensitive:   true,
 									Description: "The backup authentication key consists of 6-40 uppercase and lowercase english letters or digits, and cannot contain \" and $.",
 								},
 								"auth_param": {
@@ -892,6 +894,7 @@ func TencentTeoL7RuleBranchBasicInfo(depth int) map[string]*schema.Schema {
 											"secret_access_key": {
 												Type:        schema.TypeString,
 												Required:    true,
+												Sensitive:   true,
 												Description: "Authentication parameter secret access key.",
 											},
 											"signature_version": {
@@ -1375,6 +1378,7 @@ func TencentTeoL7RuleBranchBasicInfo(depth int) map[string]*schema.Schema {
 														"secret_access_key": {
 															Type:        schema.TypeString,
 															Required:    true,
+															Sensitive:   true,
 															Description: "Authentication parameter secret access key.",
 														},
 														"signature_version": {
