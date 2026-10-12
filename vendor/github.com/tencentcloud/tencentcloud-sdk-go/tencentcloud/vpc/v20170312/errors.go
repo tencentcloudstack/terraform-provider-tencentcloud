@@ -128,6 +128,9 @@ const (
 	// 指定参数值不是预期的字典格式。
 	INVALIDPARAMETER_INVALIDKEY = "InvalidParameter.InvalidKey"
 
+	// 子机与弹性网卡所属的CDC集群不一致。
+	INVALIDPARAMETER_MISMATCHINSTANCEENICDC = "InvalidParameter.MismatchInstanceEniCdc"
+
 	// 下一跳类型与下一跳网关不匹配。
 	INVALIDPARAMETER_NEXTHOPMISMATCH = "InvalidParameter.NextHopMismatch"
 
@@ -298,6 +301,9 @@ const (
 
 	// 弹性网卡绑定的实例与地址绑定的实例不一致。
 	INVALIDPARAMETERVALUE_INSTANCENOTMATCHASSOCIATEENI = "InvalidParameterValue.InstanceNotMatchAssociateEni"
+
+	// 指定实例与EIP当前绑定实例不一致。
+	INVALIDPARAMETERVALUE_INSTANCENOTMATCHDISASSOCIATEINSTANCE = "InvalidParameterValue.InstanceNotMatchDisassociateInstance"
 
 	// 实例所属的VPC不支持在网卡上显示EIP
 	INVALIDPARAMETERVALUE_INSTANCEVPCDOESNOTSUPPORTEIPVISIBLEONENI = "InvalidParameterValue.InstanceVpcDoesNotSupportEipVisibleOnEni"
@@ -689,6 +695,9 @@ const (
 	// 默认VPC数量已达到上限。
 	LIMITEXCEEDED_DEFAULTVPCLIMITEXCEEDED = "LimitExceeded.DefaultVpcLimitExceeded"
 
+	// 弹性网卡的辅助内网IP数量超过上限。
+	LIMITEXCEEDED_ENIPRIVATEIPLIMIT = "LimitExceeded.EniPrivateIpLimit"
+
 	// 实例绑定的弹性IP超过配额。
 	LIMITEXCEEDED_INSTANCEADDRESSQUOTA = "LimitExceeded.InstanceAddressQuota"
 
@@ -836,6 +845,9 @@ const (
 	// 未授权的用户。
 	UNAUTHORIZEDOPERATION_INVALIDACCOUNT = "UnauthorizedOperation.InvalidAccount"
 
+	// 该操作已经被配置为拦截事件的拦截对象，请前往事件中心管理页查询处理。
+	UNAUTHORIZEDOPERATION_NEEDAPPROVAL = "UnauthorizedOperation.NeedApproval"
+
 	// 账号未实名。
 	UNAUTHORIZEDOPERATION_NOREALNAMEAUTHENTICATION = "UnauthorizedOperation.NoRealNameAuthentication"
 
@@ -896,6 +908,9 @@ const (
 	// 该带宽包不支持此操作。
 	UNSUPPORTEDOPERATION_BANDWIDTHPACKAGEIDNOTSUPPORTED = "UnsupportedOperation.BandwidthPackageIdNotSupported"
 
+	// 创建带宽地域信息冲突。
+	UNSUPPORTEDOPERATION_BANDWIDTHREGIONINFOCONFLICT = "UnsupportedOperation.BandwidthRegionInfoConflict"
+
 	// 抱歉，您的操作暂时无法完成，请稍后重试或联系客服。
 	UNSUPPORTEDOPERATION_BILLINGFAILED = "UnsupportedOperation.BillingFailed"
 
@@ -907,6 +922,9 @@ const (
 
 	// 资源在BPAAS审批中。
 	UNSUPPORTEDOPERATION_BPAASRESOURCES = "UnsupportedOperation.BpaasResources"
+
+	// 添加 community 时，传播条件只支持 vpg 实例
+	UNSUPPORTEDOPERATION_BROADCASTCONDITIONMUSTBEVPGINSTANCE = "UnsupportedOperation.BroadcastConditionMustBeVpgInstance"
 
 	// 添加 community 时，传播条件只支持 vpg 类型或 vpg 实例
 	UNSUPPORTEDOPERATION_BROADCASTCONDITIONMUSTBEVPGTYPEORVPGINSTANCE = "UnsupportedOperation.BroadcastConditionMustBeVpgTypeOrVpgInstance"
@@ -922,6 +940,9 @@ const (
 
 	// 云联网实例不支持跨账号关联。
 	UNSUPPORTEDOPERATION_CCNCROSSACCOUNT = "UnsupportedOperation.CcnCrossAccount"
+
+	// 云联网默认路由表不支持设置路由接收策略
+	UNSUPPORTEDOPERATION_CCNDEFAULTRTBROUTE = "UnsupportedOperation.CcnDefaultRTBRoute"
 
 	// 当前云联网有流日志，不支持删除。
 	UNSUPPORTEDOPERATION_CCNHASFLOWLOG = "UnsupportedOperation.CcnHasFlowLog"
@@ -941,11 +962,17 @@ const (
 	// 实例未关联CCN。
 	UNSUPPORTEDOPERATION_CCNNOTATTACHED = "UnsupportedOperation.CcnNotAttached"
 
+	// 当前云联网未开启路由传播和接收策略。
+	UNSUPPORTEDOPERATION_CCNNOTENABLEBROADCASTANDINPUTPOLICY = "UnsupportedOperation.CcnNotEnableBroadcastAndInputPolicy"
+
 	// 当前云联网未开启路由传播策略。
 	UNSUPPORTEDOPERATION_CCNNOTENABLEBROADCASTPOLICY = "UnsupportedOperation.CcnNotEnableBroadcastPolicy"
 
 	// 添加 community 时，vpg 需要开通传播 community 白名单
 	UNSUPPORTEDOPERATION_CCNNOTENABLECOMMUNITY = "UnsupportedOperation.CcnNotEnableCommunity"
+
+	// 未开启CCN AsPathAndCommunityFlag
+	UNSUPPORTEDOPERATION_CCNNOTENABLEPOLICYASPATHANDCOMMUNITYFLAG = "UnsupportedOperation.CcnNotEnablePolicyAsPathAndCommunityFlag"
 
 	// 未开启云联网AsPath策略值功能
 	UNSUPPORTEDOPERATION_CCNNOTENABLEPOLICYASPATHFLAG = "UnsupportedOperation.CcnNotEnablePolicyAsPathFlag"
@@ -953,8 +980,20 @@ const (
 	// 云联网未开启策略路由开关
 	UNSUPPORTEDOPERATION_CCNNOTENABLEPOLICYBASEDROUTINGFLAG = "UnsupportedOperation.CcnNotEnablePolicyBasedRoutingFlag"
 
+	// 未开启云联网Community策略值功能
+	UNSUPPORTEDOPERATION_CCNNOTENABLEPOLICYCOMMUNITYFLAG = "UnsupportedOperation.CcnNotEnablePolicyCommunityFlag"
+
 	// 跨账号场景下不支持自驾云账号实例 关联普通账号云联网。
 	UNSUPPORTEDOPERATION_CCNORDINARYACCOUNTREFUSEATTACH = "UnsupportedOperation.CcnOrdinaryAccountRefuseAttach"
+
+	// 拒绝行为不支持传递策略值参数
+	UNSUPPORTEDOPERATION_CCNPOLICYDROPACTIONNOTSUPPORTOPERATEPARAM = "UnsupportedOperation.CcnPolicyDropActionNotSupportOperateParam"
+
+	// OperateSet和OperateMode必须同时传递
+	UNSUPPORTEDOPERATION_CCNPOLICYOPERATESETANDMODEMUSTHAVEBOTH = "UnsupportedOperation.CcnPolicyOperateSetAndModeMustHaveBoth"
+
+	// 云联网策略路由非VPC实例类型不支持配置下一跳资源
+	UNSUPPORTEDOPERATION_CCNROUTEBASEDROUTEINGNOVPCTYPENOTSUPPORTCONFIGNEXTHOPRESOURCE = "UnsupportedOperation.CcnRouteBasedRouteingNoVpcTypeNotSupportConfigNextHopResource"
 
 	// 当前路由与已有路由的CIDR重叠，仅能开启其中一条路由。
 	UNSUPPORTEDOPERATION_CCNROUTECIDROVERLAP = "UnsupportedOperation.CcnRouteCidrOverlap"
@@ -967,6 +1006,9 @@ const (
 
 	// 流量计量类型云联网暂不支持跨境
 	UNSUPPORTEDOPERATION_CCNTRAFFICMETERINGUNABLECROSSBORDER = "UnsupportedOperation.CcnTrafficMeteringUnableCrossBorder"
+
+	// CDC CCN不支持路由选择策略。
+	UNSUPPORTEDOPERATION_CDCCCNNOTSUPPORTROUTETABLESELECTIONPOLICIES = "UnsupportedOperation.CdcCcnNotSupportRouteTableSelectionPolicies"
 
 	// 配置Cdc子网发布前需要先设置VPC属性CdcId。
 	UNSUPPORTEDOPERATION_CDCPUBLISHNEEDCDCID = "UnsupportedOperation.CdcPublishNeedCdcId"
@@ -1000,6 +1042,9 @@ const (
 
 	// 当前查询地域非跨境。
 	UNSUPPORTEDOPERATION_CURRENTQUERYREGIONISNOTCROSSBORDER = "UnsupportedOperation.CurrentQueryRegionIsNotCrossBorder"
+
+	// 当前操作不支持创建Ivp6类型对端网关。
+	UNSUPPORTEDOPERATION_CUSTOMERGATEWAYIPV6 = "UnsupportedOperation.CustomerGatewayIpv6"
 
 	// 该专线网关存在关联的NAT规则，不允许删除，请先删调所有的NAT规则。
 	UNSUPPORTEDOPERATION_DCGATEWAYNATRULEEXISTS = "UnsupportedOperation.DCGatewayNatRuleExists"
@@ -1079,6 +1124,9 @@ const (
 	// 存在路由匹配规则，不支持关闭流量调度策略功能。
 	UNSUPPORTEDOPERATION_EXISTCCNROUTEMATCHRULE = "UnsupportedOperation.ExistCcnRouteMatchRule"
 
+	// 已配置固定带宽不允许操作。
+	UNSUPPORTEDOPERATION_EXISTFIXEDBANDWIDTHLIMITS = "UnsupportedOperation.ExistFixedBandwidthLimits"
+
 	// 存在非默认流量调度策略，不支持关闭流量调度策略功能。
 	UNSUPPORTEDOPERATION_EXISTTRAFFICQOSPOLICY = "UnsupportedOperation.ExistTrafficQosPolicy"
 
@@ -1093,6 +1141,9 @@ const (
 
 	// GUA类型的网段不支持分配给CDC子网。
 	UNSUPPORTEDOPERATION_GUANOTSUPPORTALLOCATECDCSUBNET = "UnsupportedOperation.GUANotSupportAllocateCdcSubnet"
+
+	// 非DPDK集群类型的GWLB不支持创建策略路由下一跳
+	UNSUPPORTEDOPERATION_GWLBCLUSTERTYPENOTDPDKNOTSUPPORTCREATE = "UnsupportedOperation.GwlbClusterTypeNotDpdkNotSupportCreate"
 
 	// TGW还没有投放IPv6网段
 	UNSUPPORTEDOPERATION_IPV6CIDRNOTDEPLOYED = "UnsupportedOperation.IPV6CidrNotDeployed"
@@ -1162,6 +1213,9 @@ const (
 
 	// 不支持IPV6。
 	UNSUPPORTEDOPERATION_IPV6NOTSUPPORT = "UnsupportedOperation.Ipv6NotSupport"
+
+	// Ipv6不支持Bgp，不支持携带Bgp相关参数。
+	UNSUPPORTEDOPERATION_IPV6NOTSUPPORTBGP = "UnsupportedOperation.Ipv6NotSupportBgp"
 
 	// 关联当前云联网的实例的账号存在不是金融云账号。
 	UNSUPPORTEDOPERATION_ISNOTFINANCEACCOUNT = "UnsupportedOperation.IsNotFinanceAccount"
@@ -1255,6 +1309,9 @@ const (
 
 	// NAT网关近30天的最大用量超过标准型NAT规格，不支持该操作。
 	UNSUPPORTEDOPERATION_NATUSAGEEXCEEDED = "UnsupportedOperation.NatUsageExceeded"
+
+	// 需要保留一份默认带宽。
+	UNSUPPORTEDOPERATION_NEEDTORETAINONEDEFAULTBANDWIDTH = "UnsupportedOperation.NeedToRetainOneDefaultBandwidth"
 
 	// 没有CDC专线网关。
 	UNSUPPORTEDOPERATION_NOCDCDCGW = "UnsupportedOperation.NoCdcDcGw"
@@ -1378,6 +1435,9 @@ const (
 
 	// 当前账号不能在该地域使用产品。
 	UNSUPPORTEDOPERATION_PURCHASELIMIT = "UnsupportedOperation.PurchaseLimit"
+
+	// 查询时间超过限制。
+	UNSUPPORTEDOPERATION_QUERYTIMEEXCEEDEDLIMIT = "UnsupportedOperation.QueryTimeExceededLimit"
 
 	// 记录已存在。
 	UNSUPPORTEDOPERATION_RECORDEXISTS = "UnsupportedOperation.RecordExists"
@@ -1585,6 +1645,9 @@ const (
 
 	// VPN不支持BGP
 	UNSUPPORTEDOPERATION_VPNUNSUPPORTEDBGP = "UnsupportedOperation.VpnUnsupportedBgp"
+
+	// 当前账号或地域，VPN不支持BGP。
+	UNSUPPORTEDOPERATION_VPNUNSUPPORTEDBGPACCOUNTORREGION = "UnsupportedOperation.VpnUnsupportedBgpAccountOrRegion"
 
 	// 对端网关BGP ASN和已有的通道对端或云上VPN的BGP ASN相同。
 	UNSUPPORTEDOPERATION_VPNUNSUPPORTEDBGPASNEQUAL = "UnsupportedOperation.VpnUnsupportedBgpAsnEqual"
