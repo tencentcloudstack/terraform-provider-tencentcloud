@@ -10,7 +10,8 @@ The `tencentcloud_serverless_hbase_instance` resource SHALL allow the `disk_size
 #### Scenario: Increasing disk_size triggers ModifySLInstance
 
 - **WHEN** the user changes only `disk_size` to a larger value (a multiple of 100 GB) on an existing `tencentcloud_serverless_hbase_instance`
-- **THEN** the `Update` function constructs a `ModifySLInstanceRequest` with `InstanceId` set from `d.Id()` and `DiskSize` set to the new value, and calls `ModifySLInstanceWithContext`
+- **THEN** the `Update` function constructs a `ModifySLInstanceRequest` with `InstanceId` set from `d.Id()`, `Zone` set from `zone_settings.0.zone` (required by the API) and `DiskSize` set to the new value, and calls `ModifySLInstanceWithContext`
+- **AND** if `zone_settings.0.zone` is empty, `Update` returns an error before calling the API
 - **AND** the call is wrapped in `resource.Retry(tccommon.WriteRetryTimeout, ...)` with errors wrapped via `tccommon.RetryError`
 
 #### Scenario: disk_size change is no longer rejected as immutable
@@ -38,12 +39,12 @@ Because `ModifySLInstance` is asynchronous, the `Update` function SHALL wait for
 
 ### Requirement: disk_size update is independent of node_num expansion
 
-The `disk_size` update branch SHALL be independent from the existing `zone_settings.node_num` expansion logic. Changing `disk_size` SHALL NOT require or modify `Zone`/`NodeNum`, and changing `node_num` SHALL NOT modify `DiskSize`. Both changes MAY occur in the same `terraform apply` and SHALL be applied sequentially without conflict.
+The `disk_size` update branch SHALL be independent from the existing `zone_settings.node_num` expansion logic. Changing `disk_size` SHALL only read `Zone` from `zone_settings.0.zone` and SHALL NOT modify `NodeNum`, and changing `node_num` SHALL NOT modify `DiskSize`. Both changes MAY occur in the same `terraform apply` and SHALL be applied sequentially without conflict.
 
 #### Scenario: Only disk_size changed, zone_settings unchanged
 
 - **WHEN** the user changes `disk_size` but does not change `zone_settings`
-- **THEN** the `disk_size` branch calls `ModifySLInstance` with `InstanceId` and `DiskSize` only (no `Zone`, no `NodeNum`)
+- **THEN** the `disk_size` branch calls `ModifySLInstance` with `InstanceId`, `Zone` (from `zone_settings.0.zone`) and `DiskSize` (no `NodeNum`)
 - **AND** the `node_num` loop is not entered
 
 #### Scenario: Both disk_size and node_num changed together

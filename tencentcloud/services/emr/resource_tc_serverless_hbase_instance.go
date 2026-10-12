@@ -390,6 +390,25 @@ func resourceTencentCloudServerlessHbaseInstanceUpdate(d *schema.ResourceData, m
 			return fmt.Errorf("argument `%s` cannot be changed", v)
 		}
 	}
+
+	// Only zone_settings.*.node_num can be changed. Check it before any API call so
+	// that a rejected change does not leave other fields (e.g. disk_size) half-applied.
+	needChange := false
+	if d.HasChange("zone_settings") {
+		for idx, zoneSetting := range d.Get("zone_settings").([]interface{}) {
+			for k := range zoneSetting.(map[string]interface{}) {
+				param := fmt.Sprintf("zone_settings.%d.%s", idx, k)
+				if d.HasChange(param) {
+					if k == "node_num" {
+						needChange = true
+					} else {
+						return fmt.Errorf("argument `%s` cannot be changed", param)
+					}
+				}
+			}
+		}
+	}
+
 	instanceId := d.Id()
 
 	if d.HasChange("instance_name") {
@@ -438,9 +457,21 @@ func resourceTencentCloudServerlessHbaseInstanceUpdate(d *schema.ResourceData, m
 		}
 	}
 	if d.HasChange("disk_size") {
+		// ModifySLInstance requires Zone; use the zone of the first zone_settings block.
+		var zone string
+		if zoneSettings, ok := d.Get("zone_settings").([]interface{}); ok && len(zoneSettings) > 0 {
+			if zoneSettingMap, ok := zoneSettings[0].(map[string]interface{}); ok {
+				zone, _ = zoneSettingMap["zone"].(string)
+			}
+		}
+		if zone == "" {
+			return fmt.Errorf("`zone_settings.0.zone` is required to update `disk_size`")
+		}
+
 		diskSize := d.Get("disk_size").(int)
 		request := emr.NewModifySLInstanceRequest()
 		request.InstanceId = helper.String(instanceId)
+		request.Zone = helper.String(zone)
 		request.DiskSize = helper.IntInt64(diskSize)
 
 		err := resource.Retry(tccommon.WriteRetryTimeout, func() *resource.RetryError {
@@ -463,21 +494,6 @@ func resourceTencentCloudServerlessHbaseInstanceUpdate(d *schema.ResourceData, m
 		conf := tccommon.BuildStateChangeConf([]string{"22"}, []string{"2"}, 10*tccommon.ReadRetryTimeout, time.Second, emrService.SLInstanceStateRefreshFunc(instanceId, []string{}))
 		if _, e := conf.WaitForState(); e != nil {
 			return e
-		}
-	}
-	needChange := false
-	if d.HasChange("zone_settings") {
-		for idx, zoneSetting := range d.Get("zone_settings").([]interface{}) {
-			for k := range zoneSetting.(map[string]interface{}) {
-				param := fmt.Sprintf("zone_settings.%d.%s", idx, k)
-				if d.HasChange(param) {
-					if k == "node_num" {
-						needChange = true
-					} else {
-						return fmt.Errorf("argument `%s` cannot be changed", param)
-					}
-				}
-			}
 		}
 	}
 	if needChange {
