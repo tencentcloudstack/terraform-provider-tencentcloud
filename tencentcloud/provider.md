@@ -799,6 +799,7 @@ tencentcloud_mongodb_instance_ssl
 tencentcloud_mongodb_readonly_instance
 tencentcloud_mongodb_audit_log_file
 tencentcloud_mongodb_audit_service
+tencentcloud_mongodb_scale_up_db_instance_cpu
 
 TencentDB for MySQL(cdb)
 Data Source

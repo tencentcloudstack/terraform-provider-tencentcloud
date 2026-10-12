@@ -1756,6 +1756,7 @@ func Provider() *schema.Provider {
 			"tencentcloud_mongodb_readonly_instance":                                                mongodb.ResourceTencentCloudMongodbReadOnlyInstance(),
 			"tencentcloud_mongodb_audit_log_file":                                                   mongodb.ResourceTencentCloudMongodbAuditLogFile(),
 			"tencentcloud_mongodb_audit_service":                                                    mongodb.ResourceTencentCloudMongodbAuditService(),
+			"tencentcloud_mongodb_scale_up_db_instance_cpu":                                         mongodb.ResourceTencentCloudMongodbScaleUpDbInstanceCpu(),
 			"tencentcloud_dayu_cc_http_policy":                                                      dayu.ResourceTencentCloudDayuCCHttpPolicy(),
 			"tencentcloud_dayu_cc_https_policy":                                                     dayu.ResourceTencentCloudDayuCCHttpsPolicy(),
 			"tencentcloud_dayu_ddos_policy":                                                         dayu.ResourceTencentCloudDayuDdosPolicy(),

@@ -1372,3 +1372,141 @@ func (me *MongodbService) RestoreDBInstance(ctx context.Context, instanceId, res
 	flowId = *response.Response.FlowId
 	return
 }
+
+func (me *MongodbService) ScaleUpDBInstanceCpu(ctx context.Context, instanceId string, extraCpu int64) (flowId *int64, errRet error) {
+	logId := tccommon.GetLogId(ctx)
+	request := mongodb.NewScaleUpDBInstanceCpuRequest()
+	request.InstanceId = &instanceId
+	request.ExtraCpu = &extraCpu
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	var response *mongodb.ScaleUpDBInstanceCpuResponse
+	err := resource.Retry(tccommon.WriteRetryTimeout, func() *resource.RetryError {
+		ratelimit.Check(request.GetAction())
+		result, e := me.client.UseMongodbClient().ScaleUpDBInstanceCpu(request)
+		if e != nil {
+			return tccommon.RetryError(e)
+		}
+
+		if result == nil || result.Response == nil {
+			return resource.NonRetryableError(fmt.Errorf("ScaleUpDBInstanceCpu response is nil"))
+		}
+
+		response = result
+		return nil
+	})
+	if err != nil {
+		errRet = err
+		return
+	}
+
+	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+	if response.Response.FlowId != nil {
+		flowId = response.Response.FlowId
+	}
+	return
+}
+
+func (me *MongodbService) ScaleDownDBInstanceCpu(ctx context.Context, instanceId string) (flowId *int64, errRet error) {
+	logId := tccommon.GetLogId(ctx)
+	request := mongodb.NewScaleDownDBInstanceCpuRequest()
+	request.InstanceId = &instanceId
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	var response *mongodb.ScaleDownDBInstanceCpuResponse
+	err := resource.Retry(tccommon.WriteRetryTimeout, func() *resource.RetryError {
+		ratelimit.Check(request.GetAction())
+		result, e := me.client.UseMongodbClient().ScaleDownDBInstanceCpu(request)
+		if e != nil {
+			return tccommon.RetryError(e)
+		}
+
+		if result == nil || result.Response == nil {
+			return resource.NonRetryableError(fmt.Errorf("ScaleDownDBInstanceCpu response is nil"))
+		}
+
+		response = result
+		return nil
+	})
+	if err != nil {
+		errRet = err
+		return
+	}
+
+	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+	if response.Response.FlowId != nil {
+		flowId = response.Response.FlowId
+	}
+	return
+}
+
+func (me *MongodbService) CheckDBInstanceElasticCpuScalable(ctx context.Context, instanceId string) (response *mongodb.CheckDBInstanceElasticCpuScalableResponse, errRet error) {
+	logId := tccommon.GetLogId(ctx)
+	request := mongodb.NewCheckDBInstanceElasticCpuScalableRequest()
+	request.InstanceId = &instanceId
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	err := resource.Retry(tccommon.ReadRetryTimeout, func() *resource.RetryError {
+		ratelimit.Check(request.GetAction())
+		result, e := me.client.UseMongodbClient().CheckDBInstanceElasticCpuScalable(request)
+		if e != nil {
+			return tccommon.RetryError(e)
+		}
+		response = result
+		return nil
+	})
+	if err != nil {
+		errRet = err
+		return
+	}
+
+	if response != nil && response.Response != nil {
+		log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+	}
+	return
+}
+
+func (me *MongodbService) WaitMongodbScaleUpDbInstanceCpuComplete(ctx context.Context, instanceId string, expectScaled bool) (errRet error) {
+	logId := tccommon.GetLogId(ctx)
+	err := resource.Retry(3*tccommon.ReadRetryTimeout, func() *resource.RetryError {
+		result, e := me.CheckDBInstanceElasticCpuScalable(ctx, instanceId)
+		if e != nil {
+			return tccommon.RetryError(e)
+		}
+
+		if result == nil || result.Response == nil {
+			return resource.NonRetryableError(fmt.Errorf("CheckDBInstanceElasticCpuScalable response is nil"))
+		}
+
+		if result.Response.IsLocked != nil && *result.Response.IsLocked {
+			return resource.RetryableError(fmt.Errorf("mongodb scale_up_db_instance_cpu instance is locked, instanceId=%s", instanceId))
+		}
+
+		if result.Response.IsScaled != nil && *result.Response.IsScaled != expectScaled {
+			return resource.RetryableError(fmt.Errorf("mongodb scale_up_db_instance_cpu not reach expected state, instanceId=%s, expectScaled=%v", instanceId, expectScaled))
+		}
+
+		return nil
+	})
+	if err != nil {
+		log.Printf("[CRITAL]%s wait mongodb scale_up_db_instance_cpu complete failed, reason: %v", logId, err)
+		errRet = err
+		return
+	}
+	return
+}
