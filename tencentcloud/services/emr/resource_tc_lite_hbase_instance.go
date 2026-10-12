@@ -443,8 +443,20 @@ func resourceTencentCloudLiteHbaseInstanceUpdate(d *schema.ResourceData, meta in
 	}
 
 	if d.HasChange("disk_size") {
+		// ModifySLInstance requires Zone; use the zone of the first zone_settings block.
+		var zone string
+		if zoneSettings, ok := d.Get("zone_settings").([]interface{}); ok && len(zoneSettings) > 0 {
+			if zoneSettingMap, ok := zoneSettings[0].(map[string]interface{}); ok {
+				zone, _ = zoneSettingMap["zone"].(string)
+			}
+		}
+		if zone == "" {
+			return fmt.Errorf("`zone_settings.0.zone` is required to update `disk_size`")
+		}
+
 		request := emr.NewModifySLInstanceRequest()
 		request.InstanceId = helper.String(instanceId)
+		request.Zone = helper.String(zone)
 		if v, ok := d.GetOkExists("disk_size"); ok {
 			request.DiskSize = helper.IntInt64(v.(int))
 		}
@@ -464,7 +476,7 @@ func resourceTencentCloudLiteHbaseInstanceUpdate(d *schema.ResourceData, meta in
 		emrService := EMRService{
 			client: meta.(tccommon.ProviderMeta).GetAPIV3Conn(),
 		}
-		conf := tccommon.BuildStateChangeConf([]string{}, []string{"2"}, 10*tccommon.ReadRetryTimeout, time.Second, emrService.SLInstanceStateRefreshFunc(instanceId, []string{}))
+		conf := tccommon.BuildStateChangeConf([]string{"22"}, []string{"2"}, 10*tccommon.ReadRetryTimeout, time.Second, emrService.SLInstanceStateRefreshFunc(instanceId, []string{}))
 		if _, e := conf.WaitForState(); e != nil {
 			return e
 		}

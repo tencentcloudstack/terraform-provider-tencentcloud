@@ -45,15 +45,21 @@ Provider SHALL 在调用 ModifySLInstance API 后通过现有的 `SLInstanceStat
 - **AND** Update 操作完成
 
 ### Requirement: disk_size 扩容 API 调用参数构造
-Provider SHALL 在检测到 `disk_size` 变更时构造 `ModifySLInstanceRequest`，设置 `InstanceId`（取自 `d.Id()`）与目标 `DiskSize`（取自 schema 新值），并通过 `ModifySLInstanceWithContext` 调用接口，调用过程使用 `resource.Retry` + `tccommon.WriteRetryTimeout` 进行重试。
+Provider SHALL 在检测到 `disk_size` 变更时构造 `ModifySLInstanceRequest`，设置 `InstanceId`（取自 `d.Id()`）、`Zone`（取自 `zone_settings` 第一个元素的 `zone`，接口必传）与目标 `DiskSize`（取自 schema 新值），并通过 `ModifySLInstanceWithContext` 调用接口，调用过程使用 `resource.Retry` + `tccommon.WriteRetryTimeout` 进行重试。若取不到 `zone_settings.0.zone`，SHALL 在调用接口前返回错误。
 
 #### Scenario: 构造 ModifySLInstanceRequest 并调用接口
 - **GIVEN** 检测到 `d.HasChange("disk_size")` 为 true
 - **WHEN** Provider 执行 disk_size 变更处理
 - **THEN** 应构造 ModifySLInstanceRequest
 - **AND** 设置 InstanceId 为 d.Id() 的值
+- **AND** 设置 Zone 为 `zone_settings` 第一个元素的 `zone`
 - **AND** 设置 DiskSize 为 schema 中的新值
 - **AND** 使用 resource.Retry 包装调用，超时使用 tccommon.WriteRetryTimeout
+
+#### Scenario: 取不到 zone 时不调用接口
+- **GIVEN** 检测到 `d.HasChange("disk_size")` 为 true
+- **WHEN** `zone_settings` 为空或其第一个元素没有 `zone`
+- **THEN** SHALL 在调用 ModifySLInstance 之前返回错误
 
 #### Scenario: API 调用失败处理
 - **GIVEN** ModifySLInstance API 返回错误
