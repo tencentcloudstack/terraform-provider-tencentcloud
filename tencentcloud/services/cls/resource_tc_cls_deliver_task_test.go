@@ -14,18 +14,18 @@ import (
 	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/services/cls"
 )
 
-type mockMetaForClsClsDeliverTask struct {
+type mockMetaForClsDeliverTask struct {
 	client *connectivity.TencentCloudClient
 }
 
-func (m *mockMetaForClsClsDeliverTask) GetAPIV3Conn() *connectivity.TencentCloudClient {
+func (m *mockMetaForClsDeliverTask) GetAPIV3Conn() *connectivity.TencentCloudClient {
 	return m.client
 }
 
-var _ tccommon.ProviderMeta = &mockMetaForClsClsDeliverTask{}
+var _ tccommon.ProviderMeta = &mockMetaForClsDeliverTask{}
 
-func newMockMetaForClsClsDeliverTask() *mockMetaForClsClsDeliverTask {
-	return &mockMetaForClsClsDeliverTask{client: &connectivity.TencentCloudClient{}}
+func newMockMetaForClsDeliverTask() *mockMetaForClsDeliverTask {
+	return &mockMetaForClsDeliverTask{client: &connectivity.TencentCloudClient{}}
 }
 
 func ptrStringCDT(s string) *string { return &s }
@@ -89,7 +89,7 @@ func TestClsDeliverTask_Create_Basic(t *testing.T) {
 	defer patches.Reset()
 
 	clsClient := &clsv20201016.Client{}
-	patches.ApplyMethodReturn(newMockMetaForClsClsDeliverTask().client, "UseClsClient", clsClient)
+	patches.ApplyMethodReturn(newMockMetaForClsDeliverTask().client, "UseClsClient", clsClient)
 
 	var capturedRequest *clsv20201016.CreateCLSDeliverTaskRequest
 	patches.ApplyMethodFunc(clsClient, "CreateCLSDeliverTaskWithContext", func(_ context.Context, request *clsv20201016.CreateCLSDeliverTaskRequest) (*clsv20201016.CreateCLSDeliverTaskResponse, error) {
@@ -105,8 +105,8 @@ func TestClsDeliverTask_Create_Basic(t *testing.T) {
 		return buildClsDeliverTaskReadResp("deliver-task-id"), nil
 	})
 
-	meta := newMockMetaForClsClsDeliverTask()
-	res := cls.ResourceTencentCloudClsClsDeliverTask()
+	meta := newMockMetaForClsDeliverTask()
+	res := cls.ResourceTencentCloudClsDeliverTask()
 	d := schema.TestResourceDataRaw(t, res.Schema, map[string]interface{}{
 		"task_name":  "tf-example-deliver-task",
 		"compliance": 1,
@@ -159,14 +159,14 @@ func TestClsDeliverTask_Read_Basic(t *testing.T) {
 	defer patches.Reset()
 
 	clsClient := &clsv20201016.Client{}
-	patches.ApplyMethodReturn(newMockMetaForClsClsDeliverTask().client, "UseClsClient", clsClient)
+	patches.ApplyMethodReturn(newMockMetaForClsDeliverTask().client, "UseClsClient", clsClient)
 
 	patches.ApplyMethodFunc(clsClient, "DescribeCLSDeliverTasksWithContext", func(_ context.Context, request *clsv20201016.DescribeCLSDeliverTasksRequest) (*clsv20201016.DescribeCLSDeliverTasksResponse, error) {
 		return buildClsDeliverTaskReadResp("deliver-task-id"), nil
 	})
 
-	meta := newMockMetaForClsClsDeliverTask()
-	res := cls.ResourceTencentCloudClsClsDeliverTask()
+	meta := newMockMetaForClsDeliverTask()
+	res := cls.ResourceTencentCloudClsDeliverTask()
 	d := schema.TestResourceDataRaw(t, res.Schema, map[string]interface{}{})
 	d.SetId("deliver-task-id")
 
@@ -184,14 +184,14 @@ func TestClsDeliverTask_Read_EmptyResult(t *testing.T) {
 	defer patches.Reset()
 
 	clsClient := &clsv20201016.Client{}
-	patches.ApplyMethodReturn(newMockMetaForClsClsDeliverTask().client, "UseClsClient", clsClient)
+	patches.ApplyMethodReturn(newMockMetaForClsDeliverTask().client, "UseClsClient", clsClient)
 
 	patches.ApplyMethodFunc(clsClient, "DescribeCLSDeliverTasksWithContext", func(_ context.Context, request *clsv20201016.DescribeCLSDeliverTasksRequest) (*clsv20201016.DescribeCLSDeliverTasksResponse, error) {
 		return buildClsDeliverTaskEmptyResp(), nil
 	})
 
-	meta := newMockMetaForClsClsDeliverTask()
-	res := cls.ResourceTencentCloudClsClsDeliverTask()
+	meta := newMockMetaForClsDeliverTask()
+	res := cls.ResourceTencentCloudClsDeliverTask()
 	d := schema.TestResourceDataRaw(t, res.Schema, map[string]interface{}{})
 	d.SetId("delivered-task-id")
 
@@ -207,7 +207,7 @@ func TestClsDeliverTask_Update_Basic(t *testing.T) {
 	defer patches.Reset()
 
 	clsClient := &clsv20201016.Client{}
-	patches.ApplyMethodReturn(newMockMetaForClsClsDeliverTask().client, "UseClsClient", clsClient)
+	patches.ApplyMethodReturn(newMockMetaForClsDeliverTask().client, "UseClsClient", clsClient)
 
 	var capturedRequest *clsv20201016.ModifyCLSDeliverTaskRequest
 	patches.ApplyMethodFunc(clsClient, "ModifyCLSDeliverTaskWithContext", func(_ context.Context, request *clsv20201016.ModifyCLSDeliverTaskRequest) (*clsv20201016.ModifyCLSDeliverTaskResponse, error) {
@@ -221,8 +221,8 @@ func TestClsDeliverTask_Update_Basic(t *testing.T) {
 		return buildClsDeliverTaskReadResp("deliver-task-id"), nil
 	})
 
-	meta := newMockMetaForClsClsDeliverTask()
-	res := cls.ResourceTencentCloudClsClsDeliverTask()
+	meta := newMockMetaForClsDeliverTask()
+	res := cls.ResourceTencentCloudClsDeliverTask()
 	d := schema.TestResourceDataRaw(t, res.Schema, map[string]interface{}{
 		"task_name":  "tf-example-deliver-task-updated",
 		"compliance": 1,
@@ -276,7 +276,7 @@ func TestClsDeliverTask_Delete_Basic(t *testing.T) {
 	defer patches.Reset()
 
 	clsClient := &clsv20201016.Client{}
-	patches.ApplyMethodReturn(newMockMetaForClsClsDeliverTask().client, "UseClsClient", clsClient)
+	patches.ApplyMethodReturn(newMockMetaForClsDeliverTask().client, "UseClsClient", clsClient)
 
 	var capturedRequest *clsv20201016.DeleteCLSDeliverTaskRequest
 	patches.ApplyMethodFunc(clsClient, "DeleteCLSDeliverTaskWithContext", func(_ context.Context, request *clsv20201016.DeleteCLSDeliverTaskRequest) (*clsv20201016.DeleteCLSDeliverTaskResponse, error) {
@@ -286,8 +286,8 @@ func TestClsDeliverTask_Delete_Basic(t *testing.T) {
 		return resp, nil
 	})
 
-	meta := newMockMetaForClsClsDeliverTask()
-	res := cls.ResourceTencentCloudClsClsDeliverTask()
+	meta := newMockMetaForClsDeliverTask()
+	res := cls.ResourceTencentCloudClsDeliverTask()
 	d := schema.TestResourceDataRaw(t, res.Schema, map[string]interface{}{})
 	d.SetId("deliver-task-id")
 

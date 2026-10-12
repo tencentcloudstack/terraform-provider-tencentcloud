@@ -13,12 +13,12 @@ import (
 	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/internal/helper"
 )
 
-func ResourceTencentCloudClsClsDeliverTask() *schema.Resource {
+func ResourceTencentCloudClsDeliverTask() *schema.Resource {
 	return &schema.Resource{
-		Create: resourceTencentCloudClsClsDeliverTaskCreate,
-		Read:   resourceTencentCloudClsClsDeliverTaskRead,
-		Update: resourceTencentCloudClsClsDeliverTaskUpdate,
-		Delete: resourceTencentCloudClsClsDeliverTaskDelete,
+		Create: resourceTencentCloudClsDeliverTaskCreate,
+		Read:   resourceTencentCloudClsDeliverTaskRead,
+		Update: resourceTencentCloudClsDeliverTaskUpdate,
+		Delete: resourceTencentCloudClsDeliverTaskDelete,
 		Importer: &schema.ResourceImporter{
 			State: schema.ImportStatePassthrough,
 		},
@@ -185,8 +185,8 @@ func ResourceTencentCloudClsClsDeliverTask() *schema.Resource {
 	}
 }
 
-func resourceTencentCloudClsClsDeliverTaskCreate(d *schema.ResourceData, meta interface{}) error {
-	defer tccommon.LogElapsed("resource.tencentcloud_cls_cls_deliver_task.create")()
+func resourceTencentCloudClsDeliverTaskCreate(d *schema.ResourceData, meta interface{}) error {
+	defer tccommon.LogElapsed("resource.tencentcloud_cls_deliver_task.create")()
 	defer tccommon.InconsistentCheck(d, meta)()
 
 	var (
@@ -290,7 +290,7 @@ func resourceTencentCloudClsClsDeliverTaskCreate(d *schema.ResourceData, meta in
 		}
 
 		if result == nil || result.Response == nil {
-			return resource.NonRetryableError(fmt.Errorf("Create cls_cls_deliver_task failed, Response is nil."))
+			return resource.NonRetryableError(fmt.Errorf("Create cls_deliver_task failed, Response is nil."))
 		}
 
 		response = result
@@ -298,23 +298,23 @@ func resourceTencentCloudClsClsDeliverTaskCreate(d *schema.ResourceData, meta in
 	})
 
 	if err != nil {
-		log.Printf("[CRITAL]%s create cls_cls_deliver_task failed, reason:%+v", logId, err)
+		log.Printf("[CRITAL]%s create cls_deliver_task failed, reason:%+v", logId, err)
 		return err
 	}
 
-	log.Printf("[CRUD] cls_cls_deliver_task logId=%s, d.Id()=%s, taskId=%s", logId, d.Id(), *response.Response.TaskId)
+	log.Printf("[CRUD] cls_deliver_task logId=%s, d.Id()=%s, taskId=%s", logId, d.Id(), *response.Response.TaskId)
 
 	if response.Response.TaskId == nil || *response.Response.TaskId == "" {
-		return fmt.Errorf("Create cls_cls_deliver_task failed, TaskId is nil or empty.")
+		return fmt.Errorf("Create cls_deliver_task failed, TaskId is nil or empty.")
 	}
 
 	taskId := *response.Response.TaskId
 	d.SetId(taskId)
-	return resourceTencentCloudClsClsDeliverTaskRead(d, meta)
+	return resourceTencentCloudClsDeliverTaskRead(d, meta)
 }
 
-func resourceTencentCloudClsClsDeliverTaskRead(d *schema.ResourceData, meta interface{}) error {
-	defer tccommon.LogElapsed("resource.tencentcloud_cls_cls_deliver_task.read")()
+func resourceTencentCloudClsDeliverTaskRead(d *schema.ResourceData, meta interface{}) error {
+	defer tccommon.LogElapsed("resource.tencentcloud_cls_deliver_task.read")()
 	defer tccommon.InconsistentCheck(d, meta)()
 
 	var (
@@ -324,13 +324,13 @@ func resourceTencentCloudClsClsDeliverTaskRead(d *schema.ResourceData, meta inte
 		taskId  = d.Id()
 	)
 
-	respData, err := service.DescribeClsClsDeliverTaskById(ctx, taskId)
+	respData, err := service.DescribeClsDeliverTaskById(ctx, taskId)
 	if err != nil {
 		return err
 	}
 
 	if respData == nil {
-		log.Printf("[CRUD] cls_cls_deliver_task id=%s", d.Id())
+		log.Printf("[CRUD] cls_deliver_task id=%s", d.Id())
 		d.SetId("")
 		return nil
 	}
@@ -441,8 +441,8 @@ func resourceTencentCloudClsClsDeliverTaskRead(d *schema.ResourceData, meta inte
 	return nil
 }
 
-func resourceTencentCloudClsClsDeliverTaskUpdate(d *schema.ResourceData, meta interface{}) error {
-	defer tccommon.LogElapsed("resource.tencentcloud_cls_cls_deliver_task.update")()
+func resourceTencentCloudClsDeliverTaskUpdate(d *schema.ResourceData, meta interface{}) error {
+	defer tccommon.LogElapsed("resource.tencentcloud_cls_deliver_task.update")()
 	defer tccommon.InconsistentCheck(d, meta)()
 
 	var (
@@ -558,23 +558,23 @@ func resourceTencentCloudClsClsDeliverTaskUpdate(d *schema.ResourceData, meta in
 			}
 
 			if result == nil || result.Response == nil {
-				return resource.NonRetryableError(fmt.Errorf("Modify cls_cls_deliver_task failed, Response is nil."))
+				return resource.NonRetryableError(fmt.Errorf("Modify cls_deliver_task failed, Response is nil."))
 			}
 
 			return nil
 		})
 
 		if err != nil {
-			log.Printf("[CRITAL]%s update cls_cls_deliver_task failed, reason:%+v", logId, err)
+			log.Printf("[CRITAL]%s update cls_deliver_task failed, reason:%+v", logId, err)
 			return err
 		}
 	}
 
-	return resourceTencentCloudClsClsDeliverTaskRead(d, meta)
+	return resourceTencentCloudClsDeliverTaskRead(d, meta)
 }
 
-func resourceTencentCloudClsClsDeliverTaskDelete(d *schema.ResourceData, meta interface{}) error {
-	defer tccommon.LogElapsed("resource.tencentcloud_cls_cls_deliver_task.delete")()
+func resourceTencentCloudClsDeliverTaskDelete(d *schema.ResourceData, meta interface{}) error {
+	defer tccommon.LogElapsed("resource.tencentcloud_cls_deliver_task.delete")()
 	defer tccommon.InconsistentCheck(d, meta)()
 
 	var (
@@ -595,14 +595,14 @@ func resourceTencentCloudClsClsDeliverTaskDelete(d *schema.ResourceData, meta in
 		}
 
 		if result == nil || result.Response == nil {
-			return resource.NonRetryableError(fmt.Errorf("Delete cls_cls_deliver_task failed, Response is nil."))
+			return resource.NonRetryableError(fmt.Errorf("Delete cls_deliver_task failed, Response is nil."))
 		}
 
 		return nil
 	})
 
 	if err != nil {
-		log.Printf("[CRITAL]%s delete cls_cls_deliver_task failed, reason:%+v", logId, err)
+		log.Printf("[CRITAL]%s delete cls_deliver_task failed, reason:%+v", logId, err)
 		return err
 	}
 

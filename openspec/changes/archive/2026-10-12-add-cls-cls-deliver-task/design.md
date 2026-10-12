@@ -1,8 +1,8 @@
 ## Context
 
-The Terraform Provider for TencentCloud manages cloud resources via `tencentcloud-sdk-go`. The CLS (Cloud Log Service) product supports cross-account/cross-region log delivery tasks but no corresponding Terraform resource exists. This change adds a new RESOURCE_KIND_GENERAL resource `tencentcloud_cls_cls_deliver_task` implementing full CRUD using four cloud APIs from the `cls/v20201016` SDK package (already vendored).
+The Terraform Provider for TencentCloud manages cloud resources via `tencentcloud-sdk-go`. The CLS (Cloud Log Service) product supports cross-account/cross-region log delivery tasks but no corresponding Terraform resource exists. This change adds a new RESOURCE_KIND_GENERAL resource `tencentcloud_cls_deliver_task` implementing full CRUD using four cloud APIs from the `cls/v20201016` SDK package (already vendored).
 
-The resource will live in `tencentcloud/services/cls/resource_tc_cls_cls_deliver_task.go` and follow the established CRUD skeleton of `tencentcloud_igtm_strategy` (nested block schema, single-id with `FILED_SP` separator is NOT needed here because the resource has a single `task_id`, retry with `tccommon.WriteRetryTimeout`/`ReadRetryTimeout`, immutable-args handling for ForceNew fields).
+The resource will live in `tencentcloud/services/cls/resource_tc_cls_deliver_task.go` and follow the established CRUD skeleton of `tencentcloud_igtm_strategy` (nested block schema, single-id with `FILED_SP` separator is NOT needed here because the resource has a single `task_id`, retry with `tccommon.WriteRetryTimeout`/`ReadRetryTimeout`, immutable-args handling for ForceNew fields).
 
 ## Goals / Non-Goals
 
@@ -28,7 +28,7 @@ The resource will live in `tencentcloud/services/cls/resource_tc_cls_cls_deliver
 
 ### Decision 2: Read path queries `DescribeCLSDeliverTasks` with a `taskId` filter
 
-**Rationale**: There is no single-task Describe API. The list API `DescribeCLSDeliverTasks` accepts a `Filters` array where `Key=taskId` filters by task id. The service helper `DescribeClsClsDeliverTaskById` builds this filter, takes `Infos[0]`, and returns `*cls.CLSDeliverTaskInfo`. Set `Limit=100` (API max) and a fixed offset 0.
+**Rationale**: There is no single-task Describe API. The list API `DescribeCLSDeliverTasks` accepts a `Filters` array where `Key=taskId` filters by task id. The service helper `DescribeClsDeliverTaskById` builds this filter, takes `Infos[0]`, and returns `*cls.CLSDeliverTaskInfo`. Set `Limit=100` (API max) and a fixed offset 0.
 
 **Alternative**: Calling DescribeCLSDeliverTasks without filter and searching client-side — rejected (inefficient, filter is supported).
 
@@ -70,7 +70,7 @@ Nested structs:
 
 ## Risks / Trade-offs
 
-- [Risk] `DescribeCLSDeliverTasks` returns a list; a missing task returns an empty `Infos` array → Mitigation: service helper returns nil; Read logs `[CRUD] cls_cls_deliver_task id=<id>` then `d.SetId("")`.
+- [Risk] `DescribeCLSDeliverTasks` returns a list; a missing task returns an empty `Infos` array → Mitigation: service helper returns nil; Read logs `[CRUD] cls_deliver_task id=<id>` then `d.SetId("")`.
 - [Risk] `compliance` is create-only but appears in the response — user edits to it after create would be silently ignored → Mitigation: treat `compliance` as immutable (not in mutableArgs); on update, do not send it.
 - [Risk] `Enable` field has dual meaning (create-time not present, modify-time toggles run/pause) → Mitigation: `enable` is Optional+Computed, only sent in ModifyCLSDeliverTask when `d.HasChange("enable")`.
 

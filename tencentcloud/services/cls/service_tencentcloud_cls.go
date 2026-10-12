@@ -2068,7 +2068,7 @@ func (me *ClsService) DescribeClsMetricSubscribeById(ctx context.Context, topicI
 	return
 }
 
-func (me *ClsService) DescribeClsClsDeliverTaskById(ctx context.Context, taskId string) (info *cls.CLSDeliverTaskInfo, errRet error) {
+func (me *ClsService) DescribeClsDeliverTaskById(ctx context.Context, taskId string) (info *cls.CLSDeliverTaskInfo, errRet error) {
 	var (
 		logId   = tccommon.GetLogId(ctx)
 		request = cls.NewDescribeCLSDeliverTasksRequest()
@@ -2077,7 +2077,7 @@ func (me *ClsService) DescribeClsClsDeliverTaskById(ctx context.Context, taskId 
 	defer func() {
 		if errRet != nil {
 			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n",
-				logId, "query cls_cls_deliver_task", request.ToJsonString(), errRet.Error())
+				logId, "query cls_deliver_task", request.ToJsonString(), errRet.Error())
 		}
 	}()
 
@@ -2102,7 +2102,7 @@ func (me *ClsService) DescribeClsClsDeliverTaskById(ctx context.Context, taskId 
 		}
 
 		if result == nil || result.Response == nil {
-			return resource.NonRetryableError(fmt.Errorf("Describe cls_cls_deliver_task failed, Response is nil."))
+			return resource.NonRetryableError(fmt.Errorf("Describe cls_deliver_task failed, Response is nil."))
 		}
 
 		response = result

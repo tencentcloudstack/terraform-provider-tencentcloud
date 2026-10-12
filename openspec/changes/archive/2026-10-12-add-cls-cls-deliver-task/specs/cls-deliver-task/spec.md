@@ -1,6 +1,6 @@
 # Spec: CLS Deliver Task Resource
 
-**Capability**: cls-cls-deliver-task
+**Capability**: cls-deliver-task
 **Related Change**: add-cls-cls-deliver-task
 **Status**: Draft
 
@@ -8,9 +8,9 @@
 
 ## ADDED Requirements
 
-### Requirement: Resource tencentcloud_cls_cls_deliver_task manages CLS deliver task lifecycle
+### Requirement: Resource tencentcloud_cls_deliver_task manages CLS deliver task lifecycle
 
-The provider SHALL expose a `tencentcloud_cls_cls_deliver_task` resource of kind RESOURCE_KIND_GENERAL that creates, reads, updates, and deletes a CLS cross-account/cross-region deliver task via the cloud APIs `CreateCLSDeliverTask`, `DescribeCLSDeliverTasks`, `ModifyCLSDeliverTask`, and `DeleteCLSDeliverTask`.
+The provider SHALL expose a `tencentcloud_cls_deliver_task` resource of kind RESOURCE_KIND_GENERAL that creates, reads, updates, and deletes a CLS cross-account/cross-region deliver task via the cloud APIs `CreateCLSDeliverTask`, `DescribeCLSDeliverTasks`, `ModifyCLSDeliverTask`, and `DeleteCLSDeliverTask`.
 
 #### Scenario: Create a deliver task with source and target topic config
 - **WHEN** the user applies a configuration specifying `task_name`, a `source_topic_config` block (with `topic_filter_type`, `logset_id`, and a `topics` list of `topic_id`), a `target_topic_config` block (with `account_type`, `region`, `logset_id`, `topic_id`), a `deliver_rule` block (with `data_scope`), and `compliance`
@@ -18,7 +18,7 @@ The provider SHALL expose a `tencentcloud_cls_cls_deliver_task` resource of kind
 
 #### Scenario: Read an existing deliver task by id
 - **WHEN** the provider refreshes state for a resource with a known id
-- **THEN** the provider calls `DescribeCLSDeliverTasks` with a `taskId` filter, populates all schema fields from the first `Infos` entry, and if the list is empty logs `[CRUD] cls_cls_deliver_task id=<id>` and clears the id
+- **THEN** the provider calls `DescribeCLSDeliverTasks` with a `taskId` filter, populates all schema fields from the first `Infos` entry, and if the list is empty logs `[CRUD] cls_deliver_task id=<id>` and clears the id
 
 #### Scenario: Update mutable fields
 - **WHEN** the user changes `task_name`, `source_topic_config`, `target_topic_config`, `deliver_rule`, `enable`, or `has_services_log`
@@ -29,7 +29,7 @@ The provider SHALL expose a `tencentcloud_cls_cls_deliver_task` resource of kind
 - **THEN** the provider calls `DeleteCLSDeliverTask` with `TaskId`
 
 #### Scenario: Import by task id
-- **WHEN** the user runs `terraform import tencentcloud_cls_cls_deliver_task.example <task_id>`
+- **WHEN** the user runs `terraform import tencentcloud_cls_deliver_task.example <task_id>`
 - **THEN** the provider uses the task id as the resource id and reads the resource state
 
 ### Requirement: Schema fields match cloud API parameters
@@ -86,7 +86,7 @@ The generated CRUD code MUST only send parameters that exist in the correspondin
 
 ### Requirement: Unit tests use gomonkey mocks
 
-The test file `resource_tc_cls_cls_deliver_task_test.go` SHALL use `github.com/agiledragon/gomonkey/v2` to mock the CLS client methods (`CreateCLSDeliverTaskWithContext`, `DescribeCLSDeliverTasksWithContext`, `ModifyCLSDeliverTaskWithContext`, `DeleteCLSDeliverTaskWithContext`) and test Create/Read/Update/Delete business logic without calling the real cloud API.
+The test file `resource_tc_cls_deliver_task_test.go` SHALL use `github.com/agiledragon/gomonkey/v2` to mock the CLS client methods (`CreateCLSDeliverTaskWithContext`, `DescribeCLSDeliverTasksWithContext`, `ModifyCLSDeliverTaskWithContext`, `DeleteCLSDeliverTaskWithContext`) and test Create/Read/Update/Delete business logic without calling the real cloud API.
 
 #### Scenario: Create test verifies request fields and id
 - **WHEN** the Create test runs with a mock client returning `TaskId`

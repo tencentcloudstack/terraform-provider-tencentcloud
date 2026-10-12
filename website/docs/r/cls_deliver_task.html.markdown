@@ -1,13 +1,13 @@
 ---
 subcategory: "Cloud Log Service(CLS)"
 layout: "tencentcloud"
-page_title: "TencentCloud: tencentcloud_cls_cls_deliver_task"
-sidebar_current: "docs-tencentcloud-resource-cls_cls_deliver_task"
+page_title: "TencentCloud: tencentcloud_cls_deliver_task"
+sidebar_current: "docs-tencentcloud-resource-cls_deliver_task"
 description: |-
   Provides a resource to create a CLS deliver task
 ---
 
-# tencentcloud_cls_cls_deliver_task
+# tencentcloud_cls_deliver_task
 
 Provides a resource to create a CLS deliver task
 
@@ -36,7 +36,7 @@ resource "tencentcloud_cls_topic" "target_topic" {
   storage_type = "hot"
 }
 
-resource "tencentcloud_cls_cls_deliver_task" "deliver_task" {
+resource "tencentcloud_cls_deliver_task" "deliver_task" {
   task_name  = "tf-example-deliver-task"
   compliance = 1
 
@@ -115,6 +115,6 @@ In addition to all arguments above, the following attributes are exported:
 CLS deliver task can be imported using the id, e.g.
 
 ```
-terraform import tencentcloud_cls_cls_deliver_task.deliver_task deliver_task_id
+terraform import tencentcloud_cls_deliver_task.deliver_task deliver_task_id
 ```
 
