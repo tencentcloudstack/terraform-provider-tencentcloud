@@ -25,7 +25,7 @@ resource "tencentcloud_cls_topic" "target_topic" {
   storage_type = "hot"
 }
 
-resource "tencentcloud_cls_deliver_task" "deliver_task" {
+resource "tencentcloud_cls_deliver_task" "example" {
   task_name   = "tf-example-deliver-task"
   compliance  = 1
 
@@ -55,5 +55,5 @@ Import
 CLS deliver task can be imported using the id, e.g.
 
 ```
-terraform import tencentcloud_cls_deliver_task.deliver_task deliver_task_id
+terraform import tencentcloud_cls_deliver_task.example 42aa917e-a14d-4531-bbf1-0468e32e87f3
 ```

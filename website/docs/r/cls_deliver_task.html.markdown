@@ -36,7 +36,7 @@ resource "tencentcloud_cls_topic" "target_topic" {
   storage_type = "hot"
 }
 
-resource "tencentcloud_cls_deliver_task" "deliver_task" {
+resource "tencentcloud_cls_deliver_task" "example" {
   task_name  = "tf-example-deliver-task"
   compliance = 1
 
@@ -101,13 +101,7 @@ The `topics` object of `source_topic_config` supports the following:
 In addition to all arguments above, the following attributes are exported:
 
 * `id` - ID of the resource.
-* `create_time` - Create time (unix seconds).
-* `progress` - Task progress percentage.
-* `status` - Task status. 0: running, 1: paused, 2: completed, 3: abnormal.
 * `task_id` - Deliver task id.
-* `total` - Total count of matched tasks.
-* `uin` - Main account id.
-* `update_time` - Update time (unix seconds).
 
 
 ## Import
@@ -115,6 +109,6 @@ In addition to all arguments above, the following attributes are exported:
 CLS deliver task can be imported using the id, e.g.
 
 ```
-terraform import tencentcloud_cls_deliver_task.deliver_task deliver_task_id
+terraform import tencentcloud_cls_deliver_task.example 42aa917e-a14d-4531-bbf1-0468e32e87f3
 ```
 

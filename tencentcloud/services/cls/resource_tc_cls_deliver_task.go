@@ -130,6 +130,7 @@ func ResourceTencentCloudClsDeliverTask() *schema.Resource {
 			"has_services_log": {
 				Type:        schema.TypeInt,
 				Optional:    true,
+				Computed:    true,
 				Description: "Whether to deliver service log. 1: off, 2: on.",
 			},
 
@@ -140,46 +141,11 @@ func ResourceTencentCloudClsDeliverTask() *schema.Resource {
 				Description: "Task status. 0: run, 1: pause.",
 			},
 
+			// computed
 			"task_id": {
 				Type:        schema.TypeString,
 				Computed:    true,
 				Description: "Deliver task id.",
-			},
-
-			"uin": {
-				Type:        schema.TypeInt,
-				Computed:    true,
-				Description: "Main account id.",
-			},
-
-			"status": {
-				Type:        schema.TypeInt,
-				Computed:    true,
-				Description: "Task status. 0: running, 1: paused, 2: completed, 3: abnormal.",
-			},
-
-			"progress": {
-				Type:        schema.TypeInt,
-				Computed:    true,
-				Description: "Task progress percentage.",
-			},
-
-			"create_time": {
-				Type:        schema.TypeInt,
-				Computed:    true,
-				Description: "Create time (unix seconds).",
-			},
-
-			"update_time": {
-				Type:        schema.TypeInt,
-				Computed:    true,
-				Description: "Update time (unix seconds).",
-			},
-
-			"total": {
-				Type:        schema.TypeInt,
-				Computed:    true,
-				Description: "Total count of matched tasks.",
 			},
 		},
 	}
@@ -310,6 +276,37 @@ func resourceTencentCloudClsDeliverTaskCreate(d *schema.ResourceData, meta inter
 
 	taskId := *response.Response.TaskId
 	d.SetId(taskId)
+
+	if v, ok := d.GetOkExists("enable"); ok {
+		if v.(int) == 1 {
+			request := cls.NewModifyCLSDeliverTaskRequest()
+			request.TaskId = helper.String(taskId)
+			if v, ok := d.GetOkExists("enable"); ok {
+				request.Enable = helper.IntUint64(v.(int))
+			}
+
+			err := resource.Retry(tccommon.WriteRetryTimeout, func() *resource.RetryError {
+				result, e := meta.(tccommon.ProviderMeta).GetAPIV3Conn().UseClsClient().ModifyCLSDeliverTaskWithContext(ctx, request)
+				if e != nil {
+					return tccommon.RetryError(e)
+				} else {
+					log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), result.ToJsonString())
+				}
+
+				if result == nil || result.Response == nil {
+					return resource.NonRetryableError(fmt.Errorf("Modify cls_deliver_task failed, Response is nil."))
+				}
+
+				return nil
+			})
+
+			if err != nil {
+				log.Printf("[CRITAL]%s update cls_deliver_task failed, reason:%+v", logId, err)
+				return err
+			}
+		}
+	}
+
 	return resourceTencentCloudClsDeliverTaskRead(d, meta)
 }
 
@@ -353,26 +350,6 @@ func resourceTencentCloudClsDeliverTaskRead(d *schema.ResourceData, meta interfa
 
 	if respData.Enable != nil {
 		_ = d.Set("enable", respData.Enable)
-	}
-
-	if respData.Uin != nil {
-		_ = d.Set("uin", respData.Uin)
-	}
-
-	if respData.Status != nil {
-		_ = d.Set("status", respData.Status)
-	}
-
-	if respData.Progress != nil {
-		_ = d.Set("progress", respData.Progress)
-	}
-
-	if respData.CreateTime != nil {
-		_ = d.Set("create_time", respData.CreateTime)
-	}
-
-	if respData.UpdateTime != nil {
-		_ = d.Set("update_time", respData.UpdateTime)
 	}
 
 	if respData.SourceTopicConfig != nil {
