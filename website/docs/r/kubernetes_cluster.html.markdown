@@ -1082,6 +1082,7 @@ This resource interacts with the following TencentCloud APIs:
 * Create: [CreateCluster](https://cloud.tencent.com/document/api/457/34527) - 创建集群
 * Read: [DescribeClusterExtraArgs](https://cloud.tencent.com/document/api/457/101764) - 查询集群自定义参数
 * Read: [DescribeClusterInstances](https://cloud.tencent.com/document/api/457/31863) - 查询集群节点信息
+* Read: [DescribeClusterSecurity](https://cloud.tencent.com/document/api/457/36703) - 集群的密钥信息
 * Read: [DescribeClusters](https://cloud.tencent.com/document/api/457/31862) - 查询TKE集群列表
 * Update: [AddVpcCniSubnets](https://cloud.tencent.com/document/api/457/56371) - 增加集群子网
 * Update: [DescribeBatchModifyTagsStatus](https://cloud.tencent.com/document/api/457/111753) - 查询批量修改标签状态
