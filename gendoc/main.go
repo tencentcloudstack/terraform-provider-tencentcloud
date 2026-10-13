@@ -34,6 +34,16 @@ var (
 )
 
 func main() {
+	// Snapshot refresh mode: download the latest public API catalog and
+	// rewrite gendoc/data/*.json, then exit.
+	if flagRefreshData() {
+		if err := refreshData(); err != nil {
+			fmt.Fprintf(os.Stderr, "[FAIL!]refresh catalog data: %v\n", err)
+			os.Exit(1)
+		}
+		return
+	}
+
 	// PoC probe mode: print the API call chain of one resource and exit.
 	if res := flagProbeResource(); res != "" {
 		repoRoot, _ := filepath.Abs("..")

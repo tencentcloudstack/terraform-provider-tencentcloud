@@ -174,7 +174,14 @@ Example Usage
 ...
 ```
 
-快照刷新（暂未接入 CI，需手动）：从 https://main.qcloudimg.com/qcloud/main/scripts/release/common/api-all-actions.json 下载完整目录后，仅保留 product/action/name/url 四个字段重新生成 `data/api-actions.json`。
+快照刷新（暂未接入 CI，需手动）：
+
+```
+make doc-refresh-data   # 下载最新目录并重写 gendoc/data/*.json
+make doc                # 用新数据重新生成文档
+```
+
+`-refresh-data` 会从腾讯云公开端点下载完整目录（约 6 MB），仅保留 product/action/name/url 四个字段后原子重写 `data/api-actions.json` 与 `data/api-products.json`。若下载失败，旧快照保持不变。刷新后建议检查 `git diff gendoc/data/` 确认变更合理，再随代码一并提交。
 
 ## 文档索引更新
 

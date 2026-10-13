@@ -190,6 +190,11 @@ test-build-x86:
 doc:
 	cd gendoc && go run ./... && cd ..
 
+doc-refresh-data:
+	@echo "==> Refreshing API catalog snapshot (gendoc/data)..."
+	cd gendoc && go run ./... -refresh-data && cd ..
+	@echo "==> Done. Re-run 'make doc' to regenerate docs with the new data."
+
 doc-faster:
 	@echo "==> [Faster]Generating doc..."
 	@if [ ! -f gendoc/gendoc ]; then \
@@ -247,6 +252,6 @@ endif
 changelog:
 	./scripts/generate-changelog.sh
 
-.PHONY: build sweep test testacc fmt fmtcheck lint tools tfproviderlint-install tfproviderlint-local golangci-lint-install golangci-lint-local test-compile doc hooks website website-lint website-test check-mux
+.PHONY: build sweep test testacc fmt fmtcheck lint tools tfproviderlint-install tfproviderlint-local golangci-lint-install golangci-lint-local test-compile doc doc-refresh-data hooks website website-lint website-test check-mux
 
 ready: doc fmt-faster
