@@ -153,4 +153,17 @@ The `timeouts` block allows you to specify [timeouts](https://developer.hashicor
 * `create` - (Defaults to `1h0m`) Used when creating the resource.
 * `update` - (Defaults to `1h0m`) Used when updating the resource.
 * `delete` - (Defaults to `20m`) Used when deleting the resource.
+## API Reference
+
+This resource interacts with the following TencentCloud APIs:
+
+* Create: [CreateCloneInstance](https://cloud.tencent.com/document/api/236/50424) - 创建克隆实例
+* Create: [DescribeAsyncRequestInfo](https://cloud.tencent.com/document/api/236/20410) - 查询异步任务的执行结果
+* Create: [DescribeCloneList](https://cloud.tencent.com/document/api/236/50423) - 查询克隆任务列表
+* Read: [DescribeDBInstances](https://cloud.tencent.com/document/api/236/15872) - 查询实例列表
+* Update: [DescribeAsyncRequestInfo](https://cloud.tencent.com/document/api/236/20410) - 查询异步任务的执行结果
+* Update: [UpgradeDBInstance](https://cloud.tencent.com/document/api/236/15876) - 调整云数据库实例的配置
+* Delete: [DescribeDBInstances](https://cloud.tencent.com/document/api/236/15872) - 查询实例列表
+* Delete: [IsolateDBInstance](https://cloud.tencent.com/document/api/236/15869) - 隔离云数据库实例
+* Delete: [OfflineIsolatedInstances](https://cloud.tencent.com/document/api/236/36197) - 下线隔离状态的云数据库实例
 

@@ -38,6 +38,13 @@ In addition to all arguments above, the following attributes are exported:
 * `id` - ID of the resource.
 
 
+## API Reference
+
+This resource interacts with the following TencentCloud APIs:
+
+* Create: [AddResourceTag](https://cloud.tencent.com/document/api/651/35326) - 标签关联资源
+* Read: [GetResources](https://cloud.tencent.com/document/api/651/72278) - 查询资源标签列表
+* Delete: [DeleteResourceTag](https://cloud.tencent.com/document/api/651/35324) - 标签解绑资源
 
 ## Import
 

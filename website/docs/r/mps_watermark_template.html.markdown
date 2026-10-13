@@ -70,6 +70,14 @@ In addition to all arguments above, the following attributes are exported:
 * `id` - ID of the resource.
 
 
+## API Reference
+
+This resource interacts with the following TencentCloud APIs:
+
+* Create: [CreateWatermarkTemplate](https://cloud.tencent.com/document/api/862/37604) - 创建水印模板
+* Read: [DescribeWatermarkTemplates](https://cloud.tencent.com/document/api/862/37592) - 获取水印模板列表
+* Update: [ModifyWatermarkTemplate](https://cloud.tencent.com/document/api/862/37586) - 修改水印模板
+* Delete: [DeleteWatermarkTemplate](https://cloud.tencent.com/document/api/862/37598) - 删除水印模板
 
 ## Import
 

@@ -58,6 +58,25 @@ In addition to all arguments above, the following attributes are exported:
 * `instance_status` - Status of the instance.
 * `instance_storage_size` - Storage size of the instance, unit in GB.
 
+## API Reference
+
+This resource interacts with the following TencentCloud APIs:
+
+* Create: [AddInstances](https://cloud.tencent.com/document/api/1003/48088) - 集群添加实例
+* Create: [DescribeResourcesByDealName](https://cloud.tencent.com/document/api/1003/52131) - 查询订单关联实例
+* Create: [ModifyMaintainPeriodConfig](https://cloud.tencent.com/document/api/1003/48080) - 修改维护时间配置
+* Read: [DescribeInstanceDetail](https://cloud.tencent.com/document/api/1003/48250) - 查询实例详情
+* Read: [DescribeInstances](https://cloud.tencent.com/document/api/1003/48334) - 查询实例的列表
+* Read: [DescribeMaintainPeriod](https://cloud.tencent.com/document/api/1003/48083) - 查询实例维护时间窗
+* Update: [DescribeInstanceDetail](https://cloud.tencent.com/document/api/1003/48250) - 查询实例详情
+* Update: [DescribeInstances](https://cloud.tencent.com/document/api/1003/48334) - 查询实例的列表
+* Update: [ModifyInstanceName](https://cloud.tencent.com/document/api/1003/71728) - 修改实例名称
+* Update: [ModifyMaintainPeriodConfig](https://cloud.tencent.com/document/api/1003/48080) - 修改维护时间配置
+* Update: [UpgradeInstance](https://cloud.tencent.com/document/api/1003/48077) - 实例变配
+* Delete: [DescribeInstanceDetail](https://cloud.tencent.com/document/api/1003/48250) - 查询实例详情
+* Delete: [DescribeInstances](https://cloud.tencent.com/document/api/1003/48334) - 查询实例的列表
+* Delete: [IsolateInstance](https://cloud.tencent.com/document/api/1003/48081) - 隔离实例
+* Delete: [OfflineInstance](https://cloud.tencent.com/document/api/1003/48249) - 销毁实例
 
 ## Import
 

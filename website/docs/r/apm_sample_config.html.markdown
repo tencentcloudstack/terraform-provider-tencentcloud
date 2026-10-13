@@ -61,6 +61,14 @@ In addition to all arguments above, the following attributes are exported:
 * `id` - ID of the resource.
 
 
+## API Reference
+
+This resource interacts with the following TencentCloud APIs:
+
+* Create: [CreateApmSampleConfig](https://cloud.tencent.com/document/api/1463/125081) - 创建采样配置
+* Read: [DescribeApmSampleConfig](https://cloud.tencent.com/document/api/1463/125077) - 查询采样配置
+* Update: [ModifyApmSampleConfig](https://cloud.tencent.com/document/api/1463/125074) - 修改采样配置
+* Delete: [DeleteApmSampleConfig](https://cloud.tencent.com/document/api/1463/125080) - 删除采样配置
 
 ## Import
 

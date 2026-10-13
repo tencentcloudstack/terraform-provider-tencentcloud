@@ -137,6 +137,15 @@ The `timeouts` block allows you to specify [timeouts](https://developer.hashicor
 
 * `create` - (Defaults to `20m`) Used when creating the resource.
 * `delete` - (Defaults to `20m`) Used when deleting the resource.
+## API Reference
+
+This resource interacts with the following TencentCloud APIs:
+
+* Create: [DescribeAsyncRequestInfo](https://cloud.tencent.com/document/api/236/20410) - 查询异步任务的执行结果
+* Create: [StartCpuExpand](https://cloud.tencent.com/document/api/236/96017) - 开启 CPU 弹性扩容
+* Read: [DescribeCPUExpandStrategyInfo](https://cloud.tencent.com/document/api/236/116999) - 查询实例的 CPU 弹性扩容策略信息
+* Delete: [DescribeAsyncRequestInfo](https://cloud.tencent.com/document/api/236/20410) - 查询异步任务的执行结果
+* Delete: [StopCpuExpand](https://cloud.tencent.com/document/api/236/96016) - 关闭 CPU 弹性扩容
 
 ## Import
 

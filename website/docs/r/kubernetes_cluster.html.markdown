@@ -1075,6 +1075,32 @@ In addition to all arguments above, the following attributes are exported:
   * `instance_state` - State of the cvm.
   * `lan_ip` - LAN IP of the cvm.
 
+## API Reference
+
+This resource interacts with the following TencentCloud APIs:
+
+* Create: [CreateCluster](https://cloud.tencent.com/document/api/457/34527) - 创建集群
+* Read: [DescribeClusterExtraArgs](https://cloud.tencent.com/document/api/457/101764) - 查询集群自定义参数
+* Read: [DescribeClusterInstances](https://cloud.tencent.com/document/api/457/31863) - 查询集群节点信息
+* Read: [DescribeClusters](https://cloud.tencent.com/document/api/457/31862) - 查询TKE集群列表
+* Update: [AddVpcCniSubnets](https://cloud.tencent.com/document/api/457/56371) - 增加集群子网
+* Update: [DescribeBatchModifyTagsStatus](https://cloud.tencent.com/document/api/457/111753) - 查询批量修改标签状态
+* Update: [DescribeClusterInstances](https://cloud.tencent.com/document/api/457/31863) - 查询集群节点信息
+* Update: [DescribeClusters](https://cloud.tencent.com/document/api/457/31862) - 查询TKE集群列表
+* Update: [DescribeIPAMD](https://cloud.tencent.com/document/api/457/101765) - 获取eniipamd组件信息
+* Update: [DescribeInstances](https://cloud.tencent.com/document/api/213/15728) - 查看实例列表
+* Update: [DescribeTasks](https://cloud.tencent.com/document/api/457/125020) - 查询任务相关信息
+* Update: [DisableVpcCniNetworkType](https://cloud.tencent.com/document/api/457/59035) - 关闭附加的VPC-CNI网络能力
+* Update: [EnableVpcCniNetworkType](https://cloud.tencent.com/document/api/457/55757) - 开启vpc-cni容器网络能力
+* Update: [ModifyClusterAsGroupOptionAttribute](https://cloud.tencent.com/document/api/457/51289) - 修改集群弹性伸缩属性
+* Update: [ModifyClusterAttribute](https://cloud.tencent.com/document/api/457/42938) - 修改集群属性
+* Update: [ModifyClusterEndpointSP](https://cloud.tencent.com/document/api/457/39408) - 修改托管集群外网端口的安全策略
+* Update: [ModifyClusterExtraArgs](https://cloud.tencent.com/document/api/457/125019) - 更新集群自定义参数
+* Update: [ModifyClusterImage](https://cloud.tencent.com/document/api/457/111984) - 修改集群镜像
+* Update: [ScaleInClusterMaster](https://cloud.tencent.com/document/api/457/64792) - 缩容独立集群master节点
+* Update: [ScaleOutClusterMaster](https://cloud.tencent.com/document/api/457/64791) - 扩容独立集群master节点
+* Update: [UpdateClusterVersion](https://cloud.tencent.com/document/api/457/52133) - 升级集群
+* Delete: [DeleteCluster](https://cloud.tencent.com/document/api/457/36704) - 删除集群
 
 ## Import
 

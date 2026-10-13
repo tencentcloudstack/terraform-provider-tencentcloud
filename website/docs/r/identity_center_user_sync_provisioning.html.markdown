@@ -58,6 +58,16 @@ In addition to all arguments above, the following attributes are exported:
 * `update_time` - Update time.
 * `user_provisioning_id` - User provisioning id.
 
+## API Reference
+
+This resource interacts with the following TencentCloud APIs:
+
+* Create: [CreateUserSyncProvisioning](https://cloud.tencent.com/document/api/850/109950) - 创建CAM用户同步
+* Create: [GetProvisioningTaskStatus](https://cloud.tencent.com/document/api/850/109948) - 查询用户同步异步任务的状态
+* Read: [GetUserSyncProvisioning](https://cloud.tencent.com/document/api/850/109947) - 查询CAM用户同步
+* Update: [UpdateUserSyncProvisioning](https://cloud.tencent.com/document/api/850/109945) - 更新CAM用户同步
+* Delete: [DeleteUserSyncProvisioning](https://cloud.tencent.com/document/api/850/109949) - 删除CAM用户同步
+* Delete: [GetProvisioningTaskStatus](https://cloud.tencent.com/document/api/850/109948) - 查询用户同步异步任务的状态
 
 ## Import
 

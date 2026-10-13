@@ -156,4 +156,22 @@ In addition to all arguments above, the following attributes are exported:
 * `route_ids` - Route id list.
 * `state` - States of instance is attached. Valid values: `PENDING`, `ACTIVE`, `EXPIRED`, `REJECTED`, `DELETED`, `FAILED`, `ATTACHING`, `DETACHING` and `DETACHFAILED`. `FAILED` means asynchronous forced disassociation after 2 hours. `DETACHFAILED` means asynchronous forced disassociation after 2 hours.
 
+## API Reference
+
+This resource interacts with the following TencentCloud APIs:
+
+* Create: [AttachCcnInstances](https://cloud.tencent.com/document/api/215/19205) - 云联网关联实例
+* Create: [DescribeCcnAttachedInstances](https://cloud.tencent.com/document/api/215/19202) - 查询云联网关联实例列表
+* Create: [DescribeCcnRoutes](https://cloud.tencent.com/document/api/215/19200) - 查询云联网路由条目
+* Create: [DescribeCcns](https://cloud.tencent.com/document/api/215/19199) - 查询CCN列表
+* Read: [DescribeCcnAttachedInstances](https://cloud.tencent.com/document/api/215/19202) - 查询云联网关联实例列表
+* Read: [DescribeCcnRoutes](https://cloud.tencent.com/document/api/215/19200) - 查询云联网路由条目
+* Read: [DescribeCcns](https://cloud.tencent.com/document/api/215/19199) - 查询CCN列表
+* Update: [DescribeCcnAttachedInstances](https://cloud.tencent.com/document/api/215/19202) - 查询云联网关联实例列表
+* Update: [DescribeCcnRoutes](https://cloud.tencent.com/document/api/215/19200) - 查询云联网路由条目
+* Update: [DescribeCcns](https://cloud.tencent.com/document/api/215/19199) - 查询CCN列表
+* Update: [ModifyCcnAttachedInstancesAttribute](https://cloud.tencent.com/document/api/215/54517) - 修改CCN关联实例属性
+* Delete: [DescribeCcnAttachedInstances](https://cloud.tencent.com/document/api/215/19202) - 查询云联网关联实例列表
+* Delete: [DescribeCcns](https://cloud.tencent.com/document/api/215/19199) - 查询CCN列表
+* Delete: [DetachCcnInstances](https://cloud.tencent.com/document/api/215/19198) - 云联网解关联实例
 

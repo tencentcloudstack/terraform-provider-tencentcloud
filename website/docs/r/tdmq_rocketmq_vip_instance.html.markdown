@@ -91,4 +91,17 @@ In addition to all arguments above, the following attributes are exported:
 * `id` - ID of the resource.
 
 
+## API Reference
+
+This resource interacts with the following TencentCloud APIs:
+
+* Create: [CreateRocketMQVipInstance](https://cloud.tencent.com/document/api/1179/95721) - 创建 RocketMQ 专享或通用集群
+* Create: [DescribeRocketMQVipInstances](https://cloud.tencent.com/document/api/1179/80903) - 查询 RocketMQ 专享和通用集群列表
+* Read: [DescribeRocketMQVipInstanceDetail](https://cloud.tencent.com/document/api/1179/86725) - 查询 RocketMQ 专享或通用集群信息
+* Read: [DescribeRocketMQVipInstances](https://cloud.tencent.com/document/api/1179/80903) - 查询 RocketMQ 专享和通用集群列表
+* Update: [DescribeRocketMQVipInstances](https://cloud.tencent.com/document/api/1179/80903) - 查询 RocketMQ 专享和通用集群列表
+* Update: [ModifyRocketMQCluster](https://cloud.tencent.com/document/api/1179/63417) - 修改 RocketMQ 虚拟集群属性
+* Update: [ModifyRocketMQInstanceSpec](https://cloud.tencent.com/document/api/1179/90461) - 修改 RocketMQ 专享集群规格
+* Delete: [DeleteRocketMQVipInstance](https://cloud.tencent.com/document/api/1179/95802) - 删除 RocketMQ 专享或通用集群
+* Delete: [DescribeRocketMQVipInstanceDetail](https://cloud.tencent.com/document/api/1179/86725) - 查询 RocketMQ 专享或通用集群信息
 

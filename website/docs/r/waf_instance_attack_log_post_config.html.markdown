@@ -36,6 +36,13 @@ In addition to all arguments above, the following attributes are exported:
 * `id` - ID of the resource.
 
 
+## API Reference
+
+This resource interacts with the following TencentCloud APIs:
+
+* Create: [ModifyInstanceAttackLogPost](https://cloud.tencent.com/document/api/627/118381) - 修改实例攻击日志投递开关
+* Read: [DescribeInstances](https://cloud.tencent.com/document/api/627/75922) - 查询用户所有实例的详细信息
+* Update: [ModifyInstanceAttackLogPost](https://cloud.tencent.com/document/api/627/118381) - 修改实例攻击日志投递开关
 
 ## Import
 

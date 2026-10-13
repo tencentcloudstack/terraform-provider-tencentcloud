@@ -177,6 +177,14 @@ In addition to all arguments above, the following attributes are exported:
 * `id` - ID of the resource.
 
 
+## API Reference
+
+This resource interacts with the following TencentCloud APIs:
+
+* Create: [CreateShipper](https://cloud.tencent.com/document/api/614/58747) - 新建投递到COS的任务
+* Read: [DescribeShippers](https://cloud.tencent.com/document/api/614/58744) - 获取投递到COS的任务配置信息
+* Update: [ModifyShipper](https://cloud.tencent.com/document/api/614/58743) - 修改投递COS任务
+* Delete: [DeleteShipper](https://cloud.tencent.com/document/api/614/58746) - 删除投递COS任务
 
 ## Import
 

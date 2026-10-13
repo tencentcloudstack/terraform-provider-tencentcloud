@@ -73,4 +73,10 @@ In addition to all arguments above, the following attributes are exported:
 * `id` - ID of the resource.
 
 
+## API Reference
+
+This resource interacts with the following TencentCloud APIs:
+
+* Create: [DescribeTaskResult](https://cloud.tencent.com/document/api/215/36271) - 查询异步任务执行结果
+* Create: [TransformAddress](https://cloud.tencent.com/document/api/215/16706) - 普通IP转弹性IP
 

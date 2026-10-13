@@ -84,6 +84,22 @@ In addition to all arguments above, the following attributes are exported:
 * `status` - Task status 1:TaskPending, 2:TaskRunning,3:TaskRunException,4:TaskSuspending 5:TaskSuspendException,6:TaskSuspendException,7:TaskSuspended,9:TaskDeleted.
 * `task_id` - Task Id.
 
+## API Reference
+
+This resource interacts with the following TencentCloud APIs:
+
+* Create: [CreateProbeTasks](https://cloud.tencent.com/document/api/280/66213) - 批量创建拨测任务
+* Create: [DescribeProbeTasks](https://cloud.tencent.com/document/api/280/66212) - 分页查询拨测任务列表
+* Create: [ModifyResourceTags](https://cloud.tencent.com/document/api/651/35322) - 批量修改资源关联的标签
+* Read: [DescribeProbeTasks](https://cloud.tencent.com/document/api/280/66212) - 分页查询拨测任务列表
+* Read: [DescribeResourceTagsByResourceIds](https://cloud.tencent.com/document/api/651/35319) - 批量查看资源关联的标签
+* Update: [ModifyResourceTags](https://cloud.tencent.com/document/api/651/35322) - 批量修改资源关联的标签
+* Update: [ResumeProbeTask](https://cloud.tencent.com/document/api/280/66203) - 恢复拨测任务
+* Update: [SuspendProbeTask](https://cloud.tencent.com/document/api/280/66202) - 暂停任务
+* Update: [UpdateProbeTaskAttributes](https://cloud.tencent.com/document/api/280/82588) - 更新探测任务属性
+* Update: [UpdateProbeTaskConfigurationList](https://cloud.tencent.com/document/api/280/66201) - 批量更新拨测任务配置
+* Delete: [DeleteProbeTask](https://cloud.tencent.com/document/api/280/66206) - 删除任务
+* Delete: [DescribeProbeTasks](https://cloud.tencent.com/document/api/280/66212) - 分页查询拨测任务列表
 
 ## Import
 

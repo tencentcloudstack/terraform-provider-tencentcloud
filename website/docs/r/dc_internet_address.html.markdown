@@ -36,6 +36,13 @@ In addition to all arguments above, the following attributes are exported:
 * `id` - ID of the resource.
 
 
+## API Reference
+
+This resource interacts with the following TencentCloud APIs:
+
+* Create: [ApplyInternetAddress](https://cloud.tencent.com/document/api/216/51491) - 申请互联网地址
+* Read: [DescribeInternetAddress](https://cloud.tencent.com/document/api/216/51490) - 获取用户互联网公网地址信息
+* Delete: [ReleaseInternetAddress](https://cloud.tencent.com/document/api/216/51485) - 释放互联网地址
 
 ## Import
 

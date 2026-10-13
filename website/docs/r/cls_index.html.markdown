@@ -228,6 +228,16 @@ In addition to all arguments above, the following attributes are exported:
 * `id` - ID of the resource.
 
 
+## API Reference
+
+This resource interacts with the following TencentCloud APIs:
+
+* Create: [CreateIndex](https://cloud.tencent.com/document/api/614/56445) - 创建索引
+* Create: [DescribeIndex](https://cloud.tencent.com/document/api/614/56443) - 获取索引配置信息
+* Read: [DescribeIndex](https://cloud.tencent.com/document/api/614/56443) - 获取索引配置信息
+* Update: [DescribeIndex](https://cloud.tencent.com/document/api/614/56443) - 获取索引配置信息
+* Update: [ModifyIndex](https://cloud.tencent.com/document/api/614/56442) - 修改索引
+* Delete: [DeleteIndex](https://cloud.tencent.com/document/api/614/56444) - 删除索引配置
 
 ## Import
 

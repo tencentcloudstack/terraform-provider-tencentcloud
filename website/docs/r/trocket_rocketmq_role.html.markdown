@@ -64,6 +64,14 @@ In addition to all arguments above, the following attributes are exported:
 * `modified_time` - Modified time.
 * `secret_key` - Secret key.
 
+## API Reference
+
+This resource interacts with the following TencentCloud APIs:
+
+* Create: [CreateRole](https://cloud.tencent.com/document/api/1493/98864) - 创建角色
+* Read: [DescribeRoleList](https://cloud.tencent.com/document/api/1493/98862) - 查询角色列表
+* Update: [ModifyRole](https://cloud.tencent.com/document/api/1493/98861) - 修改角色
+* Delete: [DeleteRole](https://cloud.tencent.com/document/api/1493/98863) - 删除角色
 
 ## Import
 

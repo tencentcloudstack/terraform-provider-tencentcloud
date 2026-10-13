@@ -34,6 +34,13 @@ In addition to all arguments above, the following attributes are exported:
 * `remaining_amount` - Remaining amount.
 * `used_amount` - Used amount.
 
+## API Reference
+
+This resource interacts with the following TencentCloud APIs:
+
+* Create: [CreateTrafficPackages](https://cloud.tencent.com/document/api/215/85309) - 创建共享流量包
+* Read: [DescribeTrafficPackages](https://cloud.tencent.com/document/api/215/80090) - 查询共享流量包
+* Delete: [DeleteTrafficPackages](https://cloud.tencent.com/document/api/215/91087) - 删除共享流量包
 
 ## Import
 

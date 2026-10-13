@@ -39,6 +39,16 @@ In addition to all arguments above, the following attributes are exported:
 * `created_on` - Creation time in ISO 8601 format (UTC).
 * `modified_on` - Last modification time in ISO 8601 format (UTC).
 
+## API Reference
+
+This resource interacts with the following TencentCloud APIs:
+
+* Create: [CreateEdgeKVNamespace](https://cloud.tencent.com/document/api/1552/130189) - 创建 KV 命名空间
+* Create: [DescribeEdgeKVNamespaces](https://cloud.tencent.com/document/api/1552/130187) - 查询 KV 命名空间
+* Read: [DescribeEdgeKVNamespaces](https://cloud.tencent.com/document/api/1552/130187) - 查询 KV 命名空间
+* Update: [DescribeEdgeKVNamespaces](https://cloud.tencent.com/document/api/1552/130187) - 查询 KV 命名空间
+* Update: [ModifyEdgeKVNamespace](https://cloud.tencent.com/document/api/1552/130182) - 修改 KV 命名空间
+* Delete: [DeleteEdgeKVNamespace](https://cloud.tencent.com/document/api/1552/130188) - 删除 KV 命名空间
 
 ## Import
 

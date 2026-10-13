@@ -385,6 +385,56 @@ The `timeouts` block allows you to specify [timeouts](https://developer.hashicor
 
 * `create` - (Defaults to `1h0m`) Used when creating the resource.
 * `update` - (Defaults to `1h0m`) Used when updating the resource.
+## API Reference
+
+This resource interacts with the following TencentCloud APIs:
+
+* Create: [CloseDBExtranetAccess](https://cloud.tencent.com/document/api/409/18105) - 关闭实例公网地址
+* Create: [CreateBackupPlan](https://cloud.tencent.com/document/api/409/116174) - 创建备份计划
+* Create: [CreateInstances](https://cloud.tencent.com/document/api/409/56107) - 创建实例
+* Create: [DescribeDBInstanceAttribute](https://cloud.tencent.com/document/api/409/16772) - 查询实例详情
+* Create: [DescribeOrders](https://cloud.tencent.com/document/api/409/18104) - 查询订单信息
+* Create: [DescribeProductConfig](https://cloud.tencent.com/document/api/409/16776) - 查询售卖规格配置
+* Create: [ModifyBackupPlan](https://cloud.tencent.com/document/api/409/68067) - 修改备份计划
+* Create: [ModifyDBInstanceName](https://cloud.tencent.com/document/api/409/18101) - 修改实例名字
+* Create: [ModifyDBInstanceParameters](https://cloud.tencent.com/document/api/409/63342) - 修改实例参数
+* Create: [ModifyResourceTags](https://cloud.tencent.com/document/api/651/35322) - 批量修改资源关联的标签
+* Create: [OpenDBExtranetAccess](https://cloud.tencent.com/document/api/409/18099) - 开通实例公网地址
+* Read: [DescribeAccounts](https://cloud.tencent.com/document/api/409/18109) - 查询实例的数据库账号列表
+* Read: [DescribeBackupPlans](https://cloud.tencent.com/document/api/409/68069) - 查询备份计划
+* Read: [DescribeDBInstanceAttribute](https://cloud.tencent.com/document/api/409/16772) - 查询实例详情
+* Read: [DescribeDBInstanceParameters](https://cloud.tencent.com/document/api/409/63344) - 查询实例参数
+* Read: [DescribeDBInstanceSecurityGroups](https://cloud.tencent.com/document/api/409/84064) - 查询实例安全组
+* Read: [DescribeDBInstances](https://cloud.tencent.com/document/api/409/16773) - 查询实例列表
+* Read: [DescribeEncryptionKeys](https://cloud.tencent.com/document/api/409/73069) - 查询实例密钥信息列表
+* Read: [DescribeParamsEvent](https://cloud.tencent.com/document/api/409/63343) - 查询参数修改事件
+* Read: [DescribeResourceTagsByResourceIds](https://cloud.tencent.com/document/api/651/35319) - 批量查看资源关联的标签
+* Update: [CloseDBExtranetAccess](https://cloud.tencent.com/document/api/409/18105) - 关闭实例公网地址
+* Update: [CreateBackupPlan](https://cloud.tencent.com/document/api/409/116174) - 创建备份计划
+* Update: [CreateDBInstanceNetworkAccess](https://cloud.tencent.com/document/api/409/70581) - 创建实例网络
+* Update: [DeleteBackupPlan](https://cloud.tencent.com/document/api/409/116173) - 删除备份计划
+* Update: [DeleteDBInstanceNetworkAccess](https://cloud.tencent.com/document/api/409/70579) - 删除实例网络
+* Update: [DescribeDBInstanceAttribute](https://cloud.tencent.com/document/api/409/16772) - 查询实例详情
+* Update: [DescribeDBVersions](https://cloud.tencent.com/document/api/409/89018) - 查询支持的数据库版本
+* Update: [ModifyBackupPlan](https://cloud.tencent.com/document/api/409/68067) - 修改备份计划
+* Update: [ModifyDBInstanceChargeType](https://cloud.tencent.com/document/api/409/90458) - 修改实例计费类型
+* Update: [ModifyDBInstanceDeletionProtection](https://cloud.tencent.com/document/api/409/125336) - 修改实例删除保护
+* Update: [ModifyDBInstanceDeployment](https://cloud.tencent.com/document/api/409/68066) - 修改实例部署方式
+* Update: [ModifyDBInstanceName](https://cloud.tencent.com/document/api/409/18101) - 修改实例名字
+* Update: [ModifyDBInstanceParameters](https://cloud.tencent.com/document/api/409/63342) - 修改实例参数
+* Update: [ModifyDBInstanceSecurityGroups](https://cloud.tencent.com/document/api/409/84063) - 修改实例的安全组
+* Update: [ModifyDBInstanceSpec](https://cloud.tencent.com/document/api/409/63689) - 修改实例规格
+* Update: [ModifyDBInstancesProject](https://cloud.tencent.com/document/api/409/18100) - 修改实例所属项目
+* Update: [ModifyResourceTags](https://cloud.tencent.com/document/api/651/35322) - 批量修改资源关联的标签
+* Update: [OpenDBExtranetAccess](https://cloud.tencent.com/document/api/409/18099) - 开通实例公网地址
+* Update: [RenewInstance](https://cloud.tencent.com/document/api/409/18098) - 续费实例
+* Update: [ResetAccountPassword](https://cloud.tencent.com/document/api/409/18107) - 重置账户密码
+* Update: [SetAutoRenewFlag](https://cloud.tencent.com/document/api/409/18096) - 设置自动续费
+* Update: [UpgradeDBInstanceKernelVersion](https://cloud.tencent.com/document/api/409/89029) - 升级实例内核版本号
+* Update: [UpgradeDBInstanceMajorVersion](https://cloud.tencent.com/document/api/409/99280) - 升级实例内核大版本
+* Delete: [DescribeDBInstanceAttribute](https://cloud.tencent.com/document/api/409/16772) - 查询实例详情
+* Delete: [DestroyDBInstance](https://cloud.tencent.com/document/api/409/43352) - 销毁实例
+* Delete: [IsolateDBInstances](https://cloud.tencent.com/document/api/409/54790) - 隔离实例
 
 ## Import
 

@@ -56,4 +56,9 @@ In addition to all arguments above, the following attributes are exported:
   * `url` - Push url.
 * `task_id` - Push task id.
 
+## API Reference
+
+This resource interacts with the following TencentCloud APIs:
+
+* Read: [DescribePushTasks](https://cloud.tencent.com/document/api/228/37872) - 预热历史查询
 

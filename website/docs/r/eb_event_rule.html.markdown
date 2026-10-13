@@ -61,6 +61,17 @@ In addition to all arguments above, the following attributes are exported:
 * `id` - ID of the resource.
 * `rule_id` - event rule id.
 
+## API Reference
+
+This resource interacts with the following TencentCloud APIs:
+
+* Create: [CreateRule](https://cloud.tencent.com/document/api/1359/67697) - 创建事件规则
+* Create: [ModifyResourceTags](https://cloud.tencent.com/document/api/651/35322) - 批量修改资源关联的标签
+* Read: [DescribeResourceTagsByResourceIds](https://cloud.tencent.com/document/api/651/35319) - 批量查看资源关联的标签
+* Read: [GetRule](https://cloud.tencent.com/document/api/1359/67695) - 获取事件规则详情
+* Update: [ModifyResourceTags](https://cloud.tencent.com/document/api/651/35322) - 批量修改资源关联的标签
+* Update: [UpdateRule](https://cloud.tencent.com/document/api/1359/67693) - 更新事件规则
+* Delete: [DeleteRule](https://cloud.tencent.com/document/api/1359/67696) - 删除事件规则
 
 ## Import
 

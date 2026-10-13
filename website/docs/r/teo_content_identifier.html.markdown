@@ -49,6 +49,14 @@ In addition to all arguments above, the following attributes are exported:
 * `modified_on` - The time of the latest update, in Coordinated Universal Time (UTC), following the ISO 8601 date and time format..
 * `status` - Content identifier status. Valid values: `active` (effective), `deleted` (deleted).
 
+## API Reference
+
+This resource interacts with the following TencentCloud APIs:
+
+* Create: [CreateContentIdentifier](https://cloud.tencent.com/document/api/1552/114249) - 创建内容标识符
+* Read: [DescribeContentIdentifiers](https://cloud.tencent.com/document/api/1552/114247) - 批量查询内容标识符
+* Update: [ModifyContentIdentifier](https://cloud.tencent.com/document/api/1552/114246) - 修改内容标识符
+* Delete: [DeleteContentIdentifier](https://cloud.tencent.com/document/api/1552/114248) - 删除内容标识符
 
 ## Import
 

@@ -40,6 +40,14 @@ In addition to all arguments above, the following attributes are exported:
 * `member_count` - Number of team members.
 * `update_time` - Modification time for the user group.
 
+## API Reference
+
+This resource interacts with the following TencentCloud APIs:
+
+* Create: [CreateGroup](https://cloud.tencent.com/document/api/850/109920) - 创建用户组
+* Read: [GetGroup](https://cloud.tencent.com/document/api/850/109918) - 查询用户组信息
+* Update: [UpdateGroup](https://cloud.tencent.com/document/api/850/109913) - 修改用户组信息
+* Delete: [DeleteGroup](https://cloud.tencent.com/document/api/850/109919) - 删除用户组
 
 ## Import
 

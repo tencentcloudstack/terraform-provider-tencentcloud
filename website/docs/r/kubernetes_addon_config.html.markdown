@@ -80,6 +80,13 @@ In addition to all arguments above, the following attributes are exported:
 * `phase` - Status of addon.
 * `reason` - Reason of addon failed.
 
+## API Reference
+
+This resource interacts with the following TencentCloud APIs:
+
+* Create: [UpdateAddon](https://cloud.tencent.com/document/api/457/94180) - 更新addon
+* Read: [DescribeAddon](https://cloud.tencent.com/document/api/457/94183) - 获取addon列表
+* Update: [UpdateAddon](https://cloud.tencent.com/document/api/457/94180) - 更新addon
 
 ## Import
 

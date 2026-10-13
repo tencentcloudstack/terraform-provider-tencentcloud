@@ -74,6 +74,14 @@ In addition to all arguments above, the following attributes are exported:
 * `update_by` - desc who update the task.
 * `update_time` - update time.
 
+## API Reference
+
+This resource interacts with the following TencentCloud APIs:
+
+* Create: [CreateLivePullStreamTask](https://cloud.tencent.com/document/api/267/56245) - 创建直播拉流任务
+* Read: [DescribeLivePullStreamTasks](https://cloud.tencent.com/document/api/267/56243) - 查询直播拉流任务
+* Update: [ModifyLivePullStreamTask](https://cloud.tencent.com/document/api/267/56242) - 更新直播拉流任务
+* Delete: [DeleteLivePullStreamTask](https://cloud.tencent.com/document/api/267/56244) - 删除直播拉流任务
 
 ## Import
 

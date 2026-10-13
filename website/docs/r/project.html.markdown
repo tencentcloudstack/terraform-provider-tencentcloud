@@ -38,6 +38,15 @@ In addition to all arguments above, the following attributes are exported:
 * `create_time` - Create time.
 * `creator_uin` - Uin of creator.
 
+## API Reference
+
+This resource interacts with the following TencentCloud APIs:
+
+* Create: [AddProject](https://cloud.tencent.com/document/api/651/81952) - 创建项目
+* Create: [UpdateProject](https://cloud.tencent.com/document/api/651/81951) - 修改项目
+* Read: [DescribeProjects](https://cloud.tencent.com/document/api/651/78725) - 获取项目列表
+* Update: [UpdateProject](https://cloud.tencent.com/document/api/651/81951) - 修改项目
+* Delete: [UpdateProject](https://cloud.tencent.com/document/api/651/81951) - 修改项目
 
 ## Import
 

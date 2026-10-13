@@ -82,6 +82,14 @@ The `instances` object exports the following:
 
 * `snapshot_policy_id` - Snapshot policy Id.
 
+## API Reference
+
+This resource interacts with the following TencentCloud APIs:
+
+* Create: [AttachSnapshotInstances](https://cloud.tencent.com/document/api/215/85159) - 快照策略关联实例
+* Read: [DescribeSnapshotAttachedInstances](https://cloud.tencent.com/document/api/215/85155) - 查询快照策略关联实例列表
+* Delete: [DescribeSnapshotAttachedInstances](https://cloud.tencent.com/document/api/215/85155) - 查询快照策略关联实例列表
+* Delete: [DetachSnapshotInstances](https://cloud.tencent.com/document/api/215/85152) - 快照策略解关联实例
 
 ## Import
 

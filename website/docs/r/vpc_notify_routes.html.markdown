@@ -44,6 +44,13 @@ In addition to all arguments above, the following attributes are exported:
 * `id` - ID of the resource.
 * `published_to_vbc` - If published to vbc.
 
+## API Reference
+
+This resource interacts with the following TencentCloud APIs:
+
+* Create: [NotifyRoutes](https://cloud.tencent.com/document/api/215/52618) - 发布路由至云联网
+* Read: [DescribeRouteTables](https://cloud.tencent.com/document/api/215/15763) - 查询路由表
+* Delete: [WithdrawNotifyRoutes](https://cloud.tencent.com/document/api/215/52617) - 从云联网撤销路由
 
 ## Import
 

@@ -54,6 +54,15 @@ In addition to all arguments above, the following attributes are exported:
 * `id` - ID of the resource.
 
 
+## API Reference
+
+This resource interacts with the following TencentCloud APIs:
+
+* Create: [CreateAcl](https://cloud.tencent.com/document/api/597/40860) - 添加 ACL 策略
+* Read: [DescribeACL](https://cloud.tencent.com/document/api/597/40856) - 枚举ACL
+* Read: [DescribeInstanceAttributes](https://cloud.tencent.com/document/api/597/40836) - 获取实例属性
+* Read: [DescribeTopicAttributes](https://cloud.tencent.com/document/api/597/40846) - 获取主题属性
+* Delete: [DeleteAcl](https://cloud.tencent.com/document/api/597/40858) - 删除ACL
 
 ## Import
 

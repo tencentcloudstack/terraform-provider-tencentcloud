@@ -37,6 +37,12 @@ In addition to all arguments above, the following attributes are exported:
 * `id` - ID of the resource.
 
 
+## API Reference
+
+This resource interacts with the following TencentCloud APIs:
+
+* Create: [CreateOrganizationMembersPolicy](https://cloud.tencent.com/document/api/850/100457) - 创建组织成员访问策略
+* Delete: [DeleteOrganizationMembersPolicy](https://cloud.tencent.com/document/api/850/96105) - 删除组织成员访问策略
 
 ## Import
 

@@ -166,6 +166,21 @@ In addition to all arguments above, the following attributes are exported:
 * `public_end_point` - Public network access address.
 * `vpc_end_point` - VPC access address.
 
+## API Reference
+
+This resource interacts with the following TencentCloud APIs:
+
+* Create: [CreateInstance](https://cloud.tencent.com/document/api/1493/97868) - 创建集群
+* Create: [DescribeInstance](https://cloud.tencent.com/document/api/1493/97866) - 查询集群信息
+* Create: [ModifyResourceTags](https://cloud.tencent.com/document/api/651/35322) - 批量修改资源关联的标签
+* Read: [DescribeInstance](https://cloud.tencent.com/document/api/1493/97866) - 查询集群信息
+* Read: [DescribeResourceTagsByResourceIds](https://cloud.tencent.com/document/api/651/35319) - 批量查看资源关联的标签
+* Update: [DescribeInstance](https://cloud.tencent.com/document/api/1493/97866) - 查询集群信息
+* Update: [ModifyInstance](https://cloud.tencent.com/document/api/1493/97865) - 修改集群属性
+* Update: [ModifyInstanceEndpoint](https://cloud.tencent.com/document/api/1493/115981) - 修改集群接入点
+* Update: [ModifyResourceTags](https://cloud.tencent.com/document/api/651/35322) - 批量修改资源关联的标签
+* Delete: [DeleteInstance](https://cloud.tencent.com/document/api/1493/97867) - 删除集群
+* Delete: [DescribeInstance](https://cloud.tencent.com/document/api/1493/97866) - 查询集群信息
 
 ## Import
 

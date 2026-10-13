@@ -107,6 +107,15 @@ In addition to all arguments above, the following attributes are exported:
 * `id` - ID of the resource.
 
 
+## API Reference
+
+This resource interacts with the following TencentCloud APIs:
+
+* Create: [CreateParamTemplate](https://cloud.tencent.com/document/api/236/32663) - 创建参数模板
+* Read: [DescribeParamTemplateInfo](https://cloud.tencent.com/document/api/236/32660) - 查询参数模板详情
+* Read: [DescribeParamTemplates](https://cloud.tencent.com/document/api/236/32659) - 查询参数模板列表
+* Update: [ModifyParamTemplate](https://cloud.tencent.com/document/api/236/32658) - 修改参数模板
+* Delete: [DeleteParamTemplate](https://cloud.tencent.com/document/api/236/32824) - 删除参数模板
 
 ## Import
 

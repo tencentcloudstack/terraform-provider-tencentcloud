@@ -67,4 +67,12 @@ In addition to all arguments above, the following attributes are exported:
 * `id` - ID of the resource.
 * `integration_id` - integration id.
 
+## API Reference
+
+This resource interacts with the following TencentCloud APIs:
+
+* Create: [CreateGrafanaIntegration](https://cloud.tencent.com/document/api/248/79218) - 创建 Grafana 集成配置
+* Read: [DescribeGrafanaIntegrations](https://cloud.tencent.com/document/api/248/79207) - 列出 Grafana 已安装的集成
+* Update: [UpdateGrafanaIntegration](https://cloud.tencent.com/document/api/248/79191) - 更新 Grafana 集成配置
+* Delete: [DeleteGrafanaIntegration](https://cloud.tencent.com/document/api/248/79214) - 删除 Grafana 集成配置
 

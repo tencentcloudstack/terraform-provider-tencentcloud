@@ -34,6 +34,13 @@ In addition to all arguments above, the following attributes are exported:
 * `id` - ID of the resource.
 
 
+## API Reference
+
+This resource interacts with the following TencentCloud APIs:
+
+* Create: [OpenBackUp](https://cloud.tencent.com/document/api/1299/83421) - 开启或者关闭策略
+* Read: [DescribeBackUpSchedule](https://cloud.tencent.com/document/api/1299/86155) - 查询备份策略信息
+* Delete: [OpenBackUp](https://cloud.tencent.com/document/api/1299/83421) - 开启或者关闭策略
 
 ## Import
 

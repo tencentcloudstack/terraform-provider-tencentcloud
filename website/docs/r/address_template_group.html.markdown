@@ -34,6 +34,15 @@ In addition to all arguments above, the following attributes are exported:
 * `id` - ID of the resource.
 
 
+## API Reference
+
+This resource interacts with the following TencentCloud APIs:
+
+* Create: [CreateAddressTemplateGroup](https://cloud.tencent.com/document/api/215/16709) - 创建IP地址模板集合
+* Read: [DescribeAddressTemplateGroups](https://cloud.tencent.com/document/api/215/16716) - 查询IP地址模板集合
+* Update: [ModifyAddressTemplateGroupAttribute](https://cloud.tencent.com/document/api/215/16721) - 修改IP地址模板集合
+* Delete: [DeleteAddressTemplateGroup](https://cloud.tencent.com/document/api/215/16713) - 删除IP地址模板集合
+* Delete: [DescribeAddressTemplateGroups](https://cloud.tencent.com/document/api/215/16716) - 查询IP地址模板集合
 
 ## Import
 

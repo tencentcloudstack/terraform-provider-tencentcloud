@@ -54,6 +54,23 @@ In addition to all arguments above, the following attributes are exported:
 * `status` - Status of the GAAP proxy.
 * `support_protocols` - Supported protocols of the GAAP proxy.
 
+## API Reference
+
+This resource interacts with the following TencentCloud APIs:
+
+* Create: [CloseProxies](https://cloud.tencent.com/document/api/608/36973) - 关闭通道
+* Create: [CreateProxy](https://cloud.tencent.com/document/api/608/36971) - 创建通道
+* Create: [DescribeProxies](https://cloud.tencent.com/document/api/608/36963) - 查询通道实例列表
+* Read: [DescribeProxies](https://cloud.tencent.com/document/api/608/36963) - 查询通道实例列表
+* Update: [CloseProxies](https://cloud.tencent.com/document/api/608/36973) - 关闭通道
+* Update: [DescribeProxies](https://cloud.tencent.com/document/api/608/36963) - 查询通道实例列表
+* Update: [ModifyProxiesAttribute](https://cloud.tencent.com/document/api/608/36956) - 修改通道的属性
+* Update: [ModifyProxiesProject](https://cloud.tencent.com/document/api/608/36955) - 修改通道所属项目
+* Update: [ModifyProxyConfiguration](https://cloud.tencent.com/document/api/608/36954) - 修改通道配置
+* Update: [ModifyResourceTags](https://cloud.tencent.com/document/api/651/35322) - 批量修改资源关联的标签
+* Update: [OpenProxies](https://cloud.tencent.com/document/api/608/36952) - 开启通道
+* Delete: [DescribeProxies](https://cloud.tencent.com/document/api/608/36963) - 查询通道实例列表
+* Delete: [DestroyProxies](https://cloud.tencent.com/document/api/608/36958) - 销毁通道
 
 ## Import
 

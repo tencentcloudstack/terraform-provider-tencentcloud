@@ -84,6 +84,15 @@ In addition to all arguments above, the following attributes are exported:
 * `id` - ID of the resource.
 
 
+## API Reference
+
+This resource interacts with the following TencentCloud APIs:
+
+* Create: [DescribeFlowStatus](https://cloud.tencent.com/document/api/238/19967) - 查询流程状态
+* Create: [ModifyDatabaseMdf](https://cloud.tencent.com/document/api/238/59031) - 收缩数据库mdf (已废弃）
+* Read: [DescribeDBsNormal](https://cloud.tencent.com/document/api/238/59034) - 查询数据库配置信息（已废弃）
+* Update: [DescribeFlowStatus](https://cloud.tencent.com/document/api/238/19967) - 查询流程状态
+* Update: [ModifyDatabaseMdf](https://cloud.tencent.com/document/api/238/59031) - 收缩数据库mdf (已废弃）
 
 ## Import
 

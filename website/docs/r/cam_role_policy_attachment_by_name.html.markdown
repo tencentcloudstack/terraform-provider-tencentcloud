@@ -52,6 +52,14 @@ In addition to all arguments above, the following attributes are exported:
 * `create_time` - The create time of the CAM role policy attachment.
 * `policy_type` - Type of the policy strategy. `User` means customer strategy and `QCS` means preset strategy.
 
+## API Reference
+
+This resource interacts with the following TencentCloud APIs:
+
+* Create: [AttachRolePolicy](https://cloud.tencent.com/document/api/598/36226) - 绑定权限策略到角色
+* Create: [ListAttachedRolePolicies](https://cloud.tencent.com/document/api/598/36220) - 获取角色绑定的策略列表
+* Read: [ListAttachedRolePolicies](https://cloud.tencent.com/document/api/598/36220) - 获取角色绑定的策略列表
+* Delete: [DetachRolePolicy](https://cloud.tencent.com/document/api/598/36222) - 解绑角色的策略
 
 ## Import
 

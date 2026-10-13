@@ -38,6 +38,14 @@ In addition to all arguments above, the following attributes are exported:
 * `id` - ID of the resource.
 
 
+## API Reference
+
+This resource interacts with the following TencentCloud APIs:
+
+* Create: [CreateDeployGroup](https://cloud.tencent.com/document/api/236/38681) - 创建置放群组
+* Read: [DescribeDeployGroupList](https://cloud.tencent.com/document/api/236/38679) - 查询置放群组列表
+* Update: [ModifyNameOrDescByDpId](https://cloud.tencent.com/document/api/236/38678) - 修改置放群组的名称或者描述
+* Delete: [DeleteDeployGroups](https://cloud.tencent.com/document/api/236/38680) - 删除置放群组
 
 ## Import
 

@@ -42,6 +42,15 @@ In addition to all arguments above, the following attributes are exported:
 * `id` - ID of the resource.
 
 
+## API Reference
+
+This resource interacts with the following TencentCloud APIs:
+
+* Create: [DescribeDBParameters](https://cloud.tencent.com/document/api/557/19992) - 查看数据库参数
+* Create: [ModifyDBParameters](https://cloud.tencent.com/document/api/557/19982) - 修改数据库参数
+* Read: [DescribeDBParameters](https://cloud.tencent.com/document/api/557/19992) - 查看数据库参数
+* Update: [DescribeDBParameters](https://cloud.tencent.com/document/api/557/19992) - 查看数据库参数
+* Update: [ModifyDBParameters](https://cloud.tencent.com/document/api/557/19982) - 修改数据库参数
 
 ## Import
 

@@ -86,6 +86,17 @@ In addition to all arguments above, the following attributes are exported:
 * `id` - ID of the resource.
 
 
+## API Reference
+
+This resource interacts with the following TencentCloud APIs:
+
+* Create: [CloneDB](https://cloud.tencent.com/document/api/238/52563) - 克隆数据库
+* Create: [DescribeFlowStatus](https://cloud.tencent.com/document/api/238/19967) - 查询流程状态
+* Read: [DescribeDBsNormal](https://cloud.tencent.com/document/api/238/59034) - 查询数据库配置信息（已废弃）
+* Update: [DescribeFlowStatus](https://cloud.tencent.com/document/api/238/19967) - 查询流程状态
+* Update: [ModifyDBName](https://cloud.tencent.com/document/api/238/19955) - 更新数据库名
+* Delete: [DeleteDB](https://cloud.tencent.com/document/api/238/19971) - 删除数据库
+* Delete: [DescribeFlowStatus](https://cloud.tencent.com/document/api/238/19967) - 查询流程状态
 
 ## Import
 

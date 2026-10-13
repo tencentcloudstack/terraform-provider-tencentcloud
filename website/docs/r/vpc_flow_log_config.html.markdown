@@ -139,6 +139,15 @@ In addition to all arguments above, the following attributes are exported:
 * `id` - ID of the resource.
 
 
+## API Reference
+
+This resource interacts with the following TencentCloud APIs:
+
+* Create: [DisableFlowLogs](https://cloud.tencent.com/document/api/215/73922) - 停止流日志
+* Create: [EnableFlowLogs](https://cloud.tencent.com/document/api/215/73921) - 启动流日志
+* Read: [DescribeFlowLogs](https://cloud.tencent.com/document/api/215/35012) - 查询流日志集合
+* Update: [DisableFlowLogs](https://cloud.tencent.com/document/api/215/73922) - 停止流日志
+* Update: [EnableFlowLogs](https://cloud.tencent.com/document/api/215/73921) - 启动流日志
 
 ## Import
 

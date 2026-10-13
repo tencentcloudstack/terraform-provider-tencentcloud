@@ -102,4 +102,11 @@ In addition to all arguments above, the following attributes are exported:
 * `disk_ids` - disk id list.
 * `storage_status` - Status of CBS. Valid values: UNATTACHED, ATTACHING, ATTACHED, DETACHING, EXPANDING, ROLLBACKING, TORECYCLE and DUMPING.
 
+## API Reference
+
+This resource interacts with the following TencentCloud APIs:
+
+* Create: [CreateDisks](https://cloud.tencent.com/document/api/362/16312) - 创建云硬盘
+* Read: [DescribeDisks](https://cloud.tencent.com/document/api/362/16315) - 查询云硬盘列表
+* Delete: [TerminateDisks](https://cloud.tencent.com/document/api/362/16321) - 退还云硬盘
 

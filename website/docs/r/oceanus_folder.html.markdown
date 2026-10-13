@@ -38,6 +38,14 @@ In addition to all arguments above, the following attributes are exported:
 * `id` - ID of the resource.
 
 
+## API Reference
+
+This resource interacts with the following TencentCloud APIs:
+
+* Create: [CreateFolder](https://cloud.tencent.com/document/api/849/77739) - 创建文件夹
+* Read: [DescribeFolder](https://cloud.tencent.com/document/api/849/102187) - 查询文件夹
+* Update: [ModifyFolder](https://cloud.tencent.com/document/api/849/100452) - 拖拽文件夹
+* Delete: [DeleteFolders](https://cloud.tencent.com/document/api/849/100453) - 删除文件夹
 
 ## Import
 

@@ -96,6 +96,22 @@ In addition to all arguments above, the following attributes are exported:
 * `id` - ID of the resource.
 
 
+## API Reference
+
+This resource interacts with the following TencentCloud APIs:
+
+* Create: [CreateInstanceByApi](https://cloud.tencent.com/document/api/878/98894) - 创建集群
+* Create: [DescribeInstanceState](https://cloud.tencent.com/document/api/878/100160) - 获取集群实例状态
+* Create: [ModifyResourceTags](https://cloud.tencent.com/document/api/651/35322) - 批量修改资源关联的标签
+* Read: [DescribeInstanceInfo](https://cloud.tencent.com/document/api/878/100615) - 获取集群信息
+* Read: [DescribeResourceTagsByResourceIds](https://cloud.tencent.com/document/api/651/35319) - 批量查看资源关联的标签
+* Update: [DescribeInstanceState](https://cloud.tencent.com/document/api/878/100160) - 获取集群实例状态
+* Update: [ModifyInstance](https://cloud.tencent.com/document/api/878/100159) - 修改实例信息
+* Update: [ModifyResourceTags](https://cloud.tencent.com/document/api/651/35322) - 批量修改资源关联的标签
+* Update: [ScaleOutInstance](https://cloud.tencent.com/document/api/878/116649) - 水平扩容
+* Update: [UpgradeInstance](https://cloud.tencent.com/document/api/878/116652) - 在线升级
+* Delete: [DescribeInstanceState](https://cloud.tencent.com/document/api/878/100160) - 获取集群实例状态
+* Delete: [DestroyInstanceByApi](https://cloud.tencent.com/document/api/878/98893) - 销毁集群
 
 ## Import
 

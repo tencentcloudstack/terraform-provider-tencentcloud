@@ -110,6 +110,17 @@ The `trigger` object exports the following:
 
 * `id` - trigger Id.
 
+## API Reference
+
+This resource interacts with the following TencentCloud APIs:
+
+* Create: [CreateWebhookTrigger](https://cloud.tencent.com/document/api/1141/43531) - 创建触发器
+* Create: [ModifyResourceTags](https://cloud.tencent.com/document/api/651/35322) - 批量修改资源关联的标签
+* Read: [DescribeResourceTagsByResourceIds](https://cloud.tencent.com/document/api/651/35319) - 批量查看资源关联的标签
+* Read: [DescribeWebhookTrigger](https://cloud.tencent.com/document/api/1141/43529) - 查询触发器
+* Update: [ModifyResourceTags](https://cloud.tencent.com/document/api/651/35322) - 批量修改资源关联的标签
+* Update: [ModifyWebhookTrigger](https://cloud.tencent.com/document/api/1141/43527) - 更新触发器
+* Delete: [DeleteWebhookTrigger](https://cloud.tencent.com/document/api/1141/43530) - 删除触发器
 
 ## Import
 

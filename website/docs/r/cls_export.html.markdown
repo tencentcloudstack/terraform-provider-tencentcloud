@@ -44,6 +44,13 @@ In addition to all arguments above, the following attributes are exported:
 * `id` - ID of the resource.
 
 
+## API Reference
+
+This resource interacts with the following TencentCloud APIs:
+
+* Create: [CreateExport](https://cloud.tencent.com/document/api/614/56451) - 创建日志下载任务
+* Read: [DescribeExports](https://cloud.tencent.com/document/api/614/56449) - 获取日志下载任务列表
+* Delete: [DeleteExport](https://cloud.tencent.com/document/api/614/56450) - 删除日志下载任务
 
 ## Import
 

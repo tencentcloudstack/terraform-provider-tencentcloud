@@ -85,6 +85,16 @@ In addition to all arguments above, the following attributes are exported:
 * `id` - ID of the resource.
 
 
+## API Reference
+
+This resource interacts with the following TencentCloud APIs:
+
+* Create: [AddSpecifyPrivateZoneVpc](https://cloud.tencent.com/document/api/1338/98675) - 追加与私有域关联的VPC
+* Create: [QueryAsyncBindVpcStatus](https://cloud.tencent.com/document/api/1338/102361) - 查询异步绑定vpc操作状态
+* Read: [DescribePrivateZone](https://cloud.tencent.com/document/api/1338/55940) - 获取私有域信息
+* Delete: [DeleteSpecifyPrivateZoneVpc](https://cloud.tencent.com/document/api/1338/98674) - 删除与私有域关联的VPC
+* Delete: [DescribePrivateZone](https://cloud.tencent.com/document/api/1338/55940) - 获取私有域信息
+* Delete: [QueryAsyncBindVpcStatus](https://cloud.tencent.com/document/api/1338/102361) - 查询异步绑定vpc操作状态
 
 ## Import
 

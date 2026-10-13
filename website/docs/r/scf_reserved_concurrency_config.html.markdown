@@ -36,6 +36,13 @@ In addition to all arguments above, the following attributes are exported:
 * `id` - ID of the resource.
 
 
+## API Reference
+
+This resource interacts with the following TencentCloud APIs:
+
+* Create: [PutReservedConcurrencyConfig](https://cloud.tencent.com/document/api/583/51245) - 设置最大独占配额
+* Read: [GetReservedConcurrencyConfig](https://cloud.tencent.com/document/api/583/51247) - 获取函数最大独占配额详情
+* Delete: [DeleteReservedConcurrencyConfig](https://cloud.tencent.com/document/api/583/51249) - 删除函数最大独占配额
 
 ## Import
 

@@ -37,6 +37,14 @@ In addition to all arguments above, the following attributes are exported:
 * `id` - ID of the resource.
 
 
+## API Reference
+
+This resource interacts with the following TencentCloud APIs:
+
+* Create: [AssociateAccessGroups](https://cloud.tencent.com/document/api/1105/51155) - 绑定权限组列表
+* Read: [DescribeMountPoint](https://cloud.tencent.com/document/api/1105/51153) - 查看挂载点详细信息
+* Delete: [DescribeMountPoint](https://cloud.tencent.com/document/api/1105/51153) - 查看挂载点详细信息
+* Delete: [DisassociateAccessGroups](https://cloud.tencent.com/document/api/1105/51151) - 解绑权限组列表
 
 ## Import
 

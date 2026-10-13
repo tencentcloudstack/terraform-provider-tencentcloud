@@ -38,6 +38,14 @@ In addition to all arguments above, the following attributes are exported:
 * `id` - ID of the resource.
 
 
+## API Reference
+
+This resource interacts with the following TencentCloud APIs:
+
+* Create: [CreateProject](https://cloud.tencent.com/document/api/590/98838) - 创建项目
+* Read: [DescribeProjectInfo](https://cloud.tencent.com/document/api/590/98836) - 项目详情
+* Update: [ModifyProject](https://cloud.tencent.com/document/api/590/98834) - 修改项目
+* Delete: [DeleteProject](https://cloud.tencent.com/document/api/590/98837) - 删除项目
 
 ## Import
 

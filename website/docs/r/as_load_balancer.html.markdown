@@ -125,6 +125,14 @@ In addition to all arguments above, the following attributes are exported:
 * `id` - ID of the resource.
 
 
+## API Reference
+
+This resource interacts with the following TencentCloud APIs:
+
+* Create: [AttachLoadBalancers](https://cloud.tencent.com/document/api/377/67354) - 添加负载均衡器
+* Read: [DescribeAutoScalingGroups](https://cloud.tencent.com/document/api/377/20438) - 查询伸缩组
+* Update: [ModifyLoadBalancerTargetAttributes](https://cloud.tencent.com/document/api/377/67352) - 修改负载均衡器目标规则属性
+* Delete: [ModifyLoadBalancers](https://cloud.tencent.com/document/api/377/32868) - 修改伸缩组的负载均衡器
 
 ## Import
 

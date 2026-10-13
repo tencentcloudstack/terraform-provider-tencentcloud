@@ -87,6 +87,16 @@ In addition to all arguments above, the following attributes are exported:
 * `id` - ID of the resource.
 
 
+## API Reference
+
+This resource interacts with the following TencentCloud APIs:
+
+* Create: [CreateInsPublicEndpoint](https://cloud.tencent.com/document/api/1778/116045) - 为MQTT实例创建公网接入点
+* Create: [DescribeInsPublicEndpoints](https://cloud.tencent.com/document/api/1778/116041) - 查询MQTT实例公网接入点
+* Read: [DescribeInsPublicEndpoints](https://cloud.tencent.com/document/api/1778/116041) - 查询MQTT实例公网接入点
+* Update: [DescribeInsPublicEndpoints](https://cloud.tencent.com/document/api/1778/116041) - 查询MQTT实例公网接入点
+* Update: [ModifyInsPublicEndpoint](https://cloud.tencent.com/document/api/1778/116040) - 更新MQTT实例公网接入点
+* Delete: [DeleteInsPublicEndpoint](https://cloud.tencent.com/document/api/1778/116043) - 删除MQTT实例的公网接入点
 
 ## Import
 

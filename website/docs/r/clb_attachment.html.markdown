@@ -151,6 +151,16 @@ In addition to all arguments above, the following attributes are exported:
 * `id` - ID of the resource.
 * `protocol_type` - Type of protocol within the listener.
 
+## API Reference
+
+This resource interacts with the following TencentCloud APIs:
+
+* Create: [RegisterTargets](https://cloud.tencent.com/document/api/214/30676) - 绑定后端机器到监听器上
+* Read: [DescribeListeners](https://cloud.tencent.com/document/api/214/30686) - 查询负载均衡的监听器列表
+* Read: [DescribeTargets](https://cloud.tencent.com/document/api/214/30684) - 查询负载均衡绑定的后端服务列表
+* Update: [ModifyTargetWeight](https://cloud.tencent.com/document/api/214/30677) - 修改监听器绑定的后端机器的转发权重
+* Update: [RegisterTargets](https://cloud.tencent.com/document/api/214/30676) - 绑定后端机器到监听器上
+* Delete: [DeregisterTargets](https://cloud.tencent.com/document/api/214/30687) - 从负载均衡监听器上解绑后端服务
 
 ## Import
 

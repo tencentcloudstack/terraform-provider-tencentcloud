@@ -94,4 +94,13 @@ In addition to all arguments above, the following attributes are exported:
 * `id` - ID of the resource.
 
 
+## API Reference
+
+This resource interacts with the following TencentCloud APIs:
+
+* Create: [ChangeReplicaToMaster](https://cloud.tencent.com/document/api/239/56698) - 副本组提主
+* Create: [DescribeTaskInfo](https://cloud.tencent.com/document/api/239/30601) - Redis查询任务结果
+* Read: [DescribeInstanceZoneInfo](https://cloud.tencent.com/document/api/239/50312) - 查询Redis节点详细信息
+* Update: [ChangeReplicaToMaster](https://cloud.tencent.com/document/api/239/56698) - 副本组提主
+* Update: [DescribeTaskInfo](https://cloud.tencent.com/document/api/239/30601) - Redis查询任务结果
 

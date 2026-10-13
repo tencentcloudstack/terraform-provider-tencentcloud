@@ -67,6 +67,14 @@ In addition to all arguments above, the following attributes are exported:
 * `machine_wan_ip` - machine wan ip.
 * `uuid` - uuid.
 
+## API Reference
+
+This resource interacts with the following TencentCloud APIs:
+
+* Create: [DescribeLicenseBindSchedule](https://cloud.tencent.com/document/api/296/80399) - 查询授权绑定进度
+* Create: [ModifyLicenseBinds](https://cloud.tencent.com/document/api/296/80394) - 授权批量绑定
+* Read: [DescribeLicenseBindList](https://cloud.tencent.com/document/api/296/80400) - 查看授权绑定列表
+* Delete: [ModifyLicenseUnBinds](https://cloud.tencent.com/document/api/296/80393) - 授权批量解绑
 
 ## Import
 

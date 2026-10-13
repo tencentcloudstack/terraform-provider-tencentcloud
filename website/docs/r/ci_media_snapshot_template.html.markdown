@@ -74,6 +74,9 @@ In addition to all arguments above, the following attributes are exported:
 * `template_id` - Template ID.
 * `update_time` - update time.
 
+## API Reference
+
+This resource interacts with the following TencentCloud APIs:
 
 ## Import
 

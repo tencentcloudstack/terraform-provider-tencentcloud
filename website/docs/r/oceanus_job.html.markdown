@@ -48,4 +48,12 @@ In addition to all arguments above, the following attributes are exported:
 * `id` - ID of the resource.
 
 
+## API Reference
+
+This resource interacts with the following TencentCloud APIs:
+
+* Create: [CreateJob](https://cloud.tencent.com/document/api/849/52009) - 新建作业
+* Read: [DescribeJobs](https://cloud.tencent.com/document/api/849/52008) - 查询作业
+* Update: [ModifyJob](https://cloud.tencent.com/document/api/849/75553) - 更新作业
+* Delete: [DeleteJobs](https://cloud.tencent.com/document/api/849/76834) - 删除作业
 

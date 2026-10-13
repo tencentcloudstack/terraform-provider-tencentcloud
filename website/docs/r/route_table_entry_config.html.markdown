@@ -50,6 +50,15 @@ In addition to all arguments above, the following attributes are exported:
 * `id` - ID of the resource.
 
 
+## API Reference
+
+This resource interacts with the following TencentCloud APIs:
+
+* Create: [DisableRoutes](https://cloud.tencent.com/document/api/215/19216) - 禁用子网路由
+* Create: [EnableRoutes](https://cloud.tencent.com/document/api/215/19215) - 启用子网路由
+* Read: [DescribeRouteTables](https://cloud.tencent.com/document/api/215/15763) - 查询路由表
+* Update: [DisableRoutes](https://cloud.tencent.com/document/api/215/19216) - 禁用子网路由
+* Update: [EnableRoutes](https://cloud.tencent.com/document/api/215/19215) - 启用子网路由
 
 ## Import
 

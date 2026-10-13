@@ -117,6 +117,15 @@ In addition to all arguments above, the following attributes are exported:
 * `id` - ID of the resource.
 
 
+## API Reference
+
+This resource interacts with the following TencentCloud APIs:
+
+* Create: [DescribeNatAcRule](https://cloud.tencent.com/document/api/1132/86860) - 查询NAT访问控制列表
+* Create: [ModifyNatAcRule](https://cloud.tencent.com/document/api/1132/86859) - 修改NAT边界访问控制规则
+* Read: [DescribeNatAcRule](https://cloud.tencent.com/document/api/1132/86860) - 查询NAT访问控制列表
+* Update: [DescribeNatAcRule](https://cloud.tencent.com/document/api/1132/86860) - 查询NAT访问控制列表
+* Update: [ModifyNatAcRule](https://cloud.tencent.com/document/api/1132/86859) - 修改NAT边界访问控制规则
 
 ## Import
 

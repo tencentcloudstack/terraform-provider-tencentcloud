@@ -46,6 +46,15 @@ In addition to all arguments above, the following attributes are exported:
 * `function_id` - ID of the Function.
 * `update_time` - Modification time. The time is in Coordinated Universal Time (UTC) and follows the date and time format specified by the ISO 8601 standard.
 
+## API Reference
+
+This resource interacts with the following TencentCloud APIs:
+
+* Create: [CreateFunction](https://cloud.tencent.com/document/api/1552/111389) - 创建边缘函数
+* Create: [DescribeFunctions](https://cloud.tencent.com/document/api/1552/111383) - 查询边缘函数列表
+* Read: [DescribeFunctions](https://cloud.tencent.com/document/api/1552/111383) - 查询边缘函数列表
+* Update: [ModifyFunction](https://cloud.tencent.com/document/api/1552/111381) - 修改边缘函数
+* Delete: [DeleteFunction](https://cloud.tencent.com/document/api/1552/111387) - 删除边缘函数
 
 ## Import
 

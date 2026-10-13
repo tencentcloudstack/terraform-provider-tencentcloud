@@ -55,6 +55,14 @@ In addition to all arguments above, the following attributes are exported:
 * `account_group_id` - Aggregator ID.
 * `aggregator_status` - Aggregator creation status.
 
+## API Reference
+
+This resource interacts with the following TencentCloud APIs:
+
+* Create: [CreateAggregator](https://cloud.tencent.com/document/api/1579/129705) - 新建账号组
+* Read: [DescribeAggregator](https://cloud.tencent.com/document/api/1579/129704) - 账号组详情
+* Update: [UpdateAggregator](https://cloud.tencent.com/document/api/1579/135877) - 编辑账号组
+* Delete: [DeleteAggregators](https://cloud.tencent.com/document/api/1579/135878) - 删除账号组
 
 ## Import
 

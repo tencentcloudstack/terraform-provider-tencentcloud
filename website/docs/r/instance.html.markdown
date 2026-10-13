@@ -567,6 +567,49 @@ In addition to all arguments above, the following attributes are exported:
 The `timeouts` block allows you to specify [timeouts](https://developer.hashicorp.com/terraform/language/resources/syntax#operation-timeouts) for certain actions:
 
 * `create` - (Defaults to `15m`) Used when creating the resource.
+## API Reference
+
+This resource interacts with the following TencentCloud APIs:
+
+* Create: [DescribeDisks](https://cloud.tencent.com/document/api/362/16315) - 查询云硬盘列表
+* Create: [DescribeImages](https://cloud.tencent.com/document/api/213/15715) - 查看镜像列表
+* Create: [DescribeInstances](https://cloud.tencent.com/document/api/213/15728) - 查看实例列表
+* Create: [DescribeInstancesAttributes](https://cloud.tencent.com/document/api/213/116941) - 批量获取指定实例属性
+* Create: [DescribeResourceTagsByResourceIds](https://cloud.tencent.com/document/api/651/35319) - 批量查看资源关联的标签
+* Create: [ModifyInstancesDisasterRecoverGroup](https://cloud.tencent.com/document/api/213/115717) - 调整实例分散置放群组
+* Create: [RunInstances](https://cloud.tencent.com/document/api/213/15730) - 创建实例
+* Create: [StopInstances](https://cloud.tencent.com/document/api/213/15743) - 关闭实例
+* Read: [DescribeDisks](https://cloud.tencent.com/document/api/362/16315) - 查询云硬盘列表
+* Read: [DescribeImages](https://cloud.tencent.com/document/api/213/15715) - 查看镜像列表
+* Read: [DescribeInstances](https://cloud.tencent.com/document/api/213/15728) - 查看实例列表
+* Read: [DescribeInstancesAttributes](https://cloud.tencent.com/document/api/213/116941) - 批量获取指定实例属性
+* Read: [DescribeResourceTagsByResourceIds](https://cloud.tencent.com/document/api/651/35319) - 批量查看资源关联的标签
+* Update: [AssociateInstancesKeyPairs](https://cloud.tencent.com/document/api/213/15698) - 绑定密钥对
+* Update: [DescribeDisks](https://cloud.tencent.com/document/api/362/16315) - 查询云硬盘列表
+* Update: [DescribeImages](https://cloud.tencent.com/document/api/213/15715) - 查看镜像列表
+* Update: [DescribeInstances](https://cloud.tencent.com/document/api/213/15728) - 查看实例列表
+* Update: [DescribeInstancesAttributes](https://cloud.tencent.com/document/api/213/116941) - 批量获取指定实例属性
+* Update: [DescribeResourceTagsByResourceIds](https://cloud.tencent.com/document/api/651/35319) - 批量查看资源关联的标签
+* Update: [DisassociateInstancesKeyPairs](https://cloud.tencent.com/document/api/213/15697) - 解绑密钥对
+* Update: [ModifyDiskAttributes](https://cloud.tencent.com/document/api/362/15659) - 修改云硬盘属性
+* Update: [ModifyInstancesAttribute](https://cloud.tencent.com/document/api/213/15739) - 修改实例的属性
+* Update: [ModifyInstancesChargeType](https://cloud.tencent.com/document/api/213/17964) - 修改实例计费模式
+* Update: [ModifyInstancesDisasterRecoverGroup](https://cloud.tencent.com/document/api/213/115717) - 调整实例分散置放群组
+* Update: [ModifyInstancesProject](https://cloud.tencent.com/document/api/213/15746) - 修改实例所属项目
+* Update: [ModifyInstancesRenewFlag](https://cloud.tencent.com/document/api/213/15752) - 修改实例续费标识
+* Update: [ModifyInstancesVpcAttribute](https://cloud.tencent.com/document/api/213/15750) - 修改实例vpc的属性
+* Update: [ModifyResourceTags](https://cloud.tencent.com/document/api/651/35322) - 批量修改资源关联的标签
+* Update: [ResetInstance](https://cloud.tencent.com/document/api/213/15724) - 重装实例
+* Update: [ResetInstancesInternetMaxBandwidth](https://cloud.tencent.com/document/api/213/15721) - 调整实例带宽上限
+* Update: [ResetInstancesPassword](https://cloud.tencent.com/document/api/213/15736) - 重置实例密码
+* Update: [ResetInstancesType](https://cloud.tencent.com/document/api/213/15744) - 调整实例配置
+* Update: [ResizeDisk](https://cloud.tencent.com/document/api/362/16310) - 扩容云硬盘
+* Update: [ResizeInstanceDisks](https://cloud.tencent.com/document/api/213/15731) - 扩容实例磁盘
+* Delete: [DescribeDisks](https://cloud.tencent.com/document/api/362/16315) - 查询云硬盘列表
+* Delete: [DescribeInstances](https://cloud.tencent.com/document/api/213/15728) - 查看实例列表
+* Delete: [DetachDisks](https://cloud.tencent.com/document/api/362/16316) - 卸载云硬盘
+* Delete: [TerminateDisks](https://cloud.tencent.com/document/api/362/16321) - 退还云硬盘
+* Delete: [TerminateInstances](https://cloud.tencent.com/document/api/213/15723) - 退还实例
 
 ## Import
 

@@ -32,4 +32,10 @@ In addition to all arguments above, the following attributes are exported:
 * `id` - ID of the resource.
 
 
+## API Reference
+
+This resource interacts with the following TencentCloud APIs:
+
+* Create: [DescribeAsyncRequestInfo](https://cloud.tencent.com/document/api/1140/58265) - 查询异步任务的执行结果
+* Create: [RotateProductSecret](https://cloud.tencent.com/document/api/1140/58262) - 轮转云产品凭据
 

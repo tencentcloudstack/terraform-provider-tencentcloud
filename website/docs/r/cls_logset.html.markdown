@@ -45,6 +45,17 @@ In addition to all arguments above, the following attributes are exported:
 * `role_name` - If assumer_uin is not empty, it indicates the service provider who creates the logset.
 * `topic_count` - Number of log topics in logset.
 
+## API Reference
+
+This resource interacts with the following TencentCloud APIs:
+
+* Create: [CreateLogset](https://cloud.tencent.com/document/api/614/58626) - 创建日志集
+* Create: [ModifyResourceTags](https://cloud.tencent.com/document/api/651/35322) - 批量修改资源关联的标签
+* Read: [DescribeLogsets](https://cloud.tencent.com/document/api/614/58624) - 获取日志集列表
+* Read: [DescribeResourceTagsByResourceIds](https://cloud.tencent.com/document/api/651/35319) - 批量查看资源关联的标签
+* Update: [ModifyLogset](https://cloud.tencent.com/document/api/614/58623) - 修改日志集
+* Update: [ModifyResourceTags](https://cloud.tencent.com/document/api/651/35322) - 批量修改资源关联的标签
+* Delete: [DeleteLogset](https://cloud.tencent.com/document/api/614/58625) - 删除日志集
 
 ## Import
 

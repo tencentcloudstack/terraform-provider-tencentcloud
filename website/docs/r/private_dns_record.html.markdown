@@ -71,6 +71,17 @@ In addition to all arguments above, the following attributes are exported:
 * `id` - ID of the resource.
 
 
+## API Reference
+
+This resource interacts with the following TencentCloud APIs:
+
+* Create: [CreatePrivateZoneRecord](https://cloud.tencent.com/document/api/1338/55945) - 添加私有域解析记录
+* Create: [DescribeRecord](https://cloud.tencent.com/document/api/1338/118984) - 根据id获取私有域记录
+* Create: [ModifyRecordsStatus](https://cloud.tencent.com/document/api/1338/81950) - 修改解析记录状态
+* Read: [DescribeRecord](https://cloud.tencent.com/document/api/1338/118984) - 根据id获取私有域记录
+* Update: [ModifyPrivateZoneRecord](https://cloud.tencent.com/document/api/1338/55934) - 修改私有域解析记录
+* Update: [ModifyRecordsStatus](https://cloud.tencent.com/document/api/1338/81950) - 修改解析记录状态
+* Delete: [DeletePrivateZoneRecord](https://cloud.tencent.com/document/api/1338/55943) - 删除私有域解析记录
 
 ## Import
 

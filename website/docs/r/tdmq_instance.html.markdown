@@ -39,6 +39,15 @@ In addition to all arguments above, the following attributes are exported:
 * `id` - ID of the resource.
 
 
+## API Reference
+
+This resource interacts with the following TencentCloud APIs:
+
+* Read: [DescribeClusters](https://cloud.tencent.com/document/api/1179/52183) - 获取虚拟集群列表
+* Read: [DescribeResourceTagsByResourceIds](https://cloud.tencent.com/document/api/651/35319) - 批量查看资源关联的标签
+* Update: [ModifyCluster](https://cloud.tencent.com/document/api/1179/52189) - 更新虚拟集群信息
+* Update: [ModifyResourceTags](https://cloud.tencent.com/document/api/651/35322) - 批量修改资源关联的标签
+* Delete: [DeleteCluster](https://cloud.tencent.com/document/api/1179/52185) - 删除集群
 
 ## Import
 

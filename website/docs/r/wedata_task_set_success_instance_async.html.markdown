@@ -34,4 +34,10 @@ In addition to all arguments above, the following attributes are exported:
 * `id` - ID of the resource.
 
 
+## API Reference
+
+This resource interacts with the following TencentCloud APIs:
+
+* Create: [GetOpsAsyncJob](https://cloud.tencent.com/document/api/1267/123587) - 查询运维中心异步操作详情
+* Create: [SetSuccessTaskInstancesAsync](https://cloud.tencent.com/document/api/1267/123567) - 实例批量置成功(异步)
 

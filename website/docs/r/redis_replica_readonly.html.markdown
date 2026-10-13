@@ -86,4 +86,15 @@ In addition to all arguments above, the following attributes are exported:
 * `id` - ID of the resource.
 
 
+## API Reference
+
+This resource interacts with the following TencentCloud APIs:
+
+* Create: [DescribeTaskInfo](https://cloud.tencent.com/document/api/239/30601) - Redis查询任务结果
+* Create: [DisableReplicaReadonly](https://cloud.tencent.com/document/api/239/34438) - 禁用读写分离
+* Create: [EnableReplicaReadonly](https://cloud.tencent.com/document/api/239/34437) - 启用读写分离
+* Read: [DescribeInstances](https://cloud.tencent.com/document/api/239/20018) - 查询Redis实例列表
+* Update: [DescribeTaskInfo](https://cloud.tencent.com/document/api/239/30601) - Redis查询任务结果
+* Update: [DisableReplicaReadonly](https://cloud.tencent.com/document/api/239/34438) - 禁用读写分离
+* Update: [EnableReplicaReadonly](https://cloud.tencent.com/document/api/239/34437) - 启用读写分离
 

@@ -60,6 +60,15 @@ The `life_cycle_rule` object exports the following:
 * `create_time` - rule create time.
 * `life_cycle_rule_id` - single rule id.
 
+## API Reference
+
+This resource interacts with the following TencentCloud APIs:
+
+* Create: [CreateLifeCycleRules](https://cloud.tencent.com/document/api/1105/52336) - 批量创建生命周期规则
+* Create: [DescribeLifeCycleRules](https://cloud.tencent.com/document/api/1105/52334) - 查看生命周期规则列表
+* Read: [DescribeLifeCycleRules](https://cloud.tencent.com/document/api/1105/52334) - 查看生命周期规则列表
+* Update: [ModifyLifeCycleRules](https://cloud.tencent.com/document/api/1105/52333) - 批量修改生命周期规则属性
+* Delete: [DeleteLifeCycleRules](https://cloud.tencent.com/document/api/1105/52335) - 批量删除生命周期规则
 
 ## Import
 

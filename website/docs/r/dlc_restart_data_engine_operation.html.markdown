@@ -34,4 +34,11 @@ In addition to all arguments above, the following attributes are exported:
 * `id` - ID of the resource.
 
 
+## API Reference
+
+This resource interacts with the following TencentCloud APIs:
+
+* Create: [DescribeDataEngine](https://cloud.tencent.com/document/api/1342/99274) - 获取数据引擎详细信息
+* Create: [DescribeDataEngines](https://cloud.tencent.com/document/api/1342/86308) - 查询DataEngines列表
+* Create: [RestartDataEngine](https://cloud.tencent.com/document/api/1342/99268) - 重启引擎
 

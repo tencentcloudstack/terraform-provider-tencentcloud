@@ -48,6 +48,17 @@ In addition to all arguments above, the following attributes are exported:
 * `resource_id` - The intranet retains the resource instance ID bound to the IPs.
 * `state` - Binding status.
 
+## API Reference
+
+This resource interacts with the following TencentCloud APIs:
+
+* Create: [CreateReserveIpAddresses](https://cloud.tencent.com/document/api/215/112867) - 创建保留内网IP
+* Create: [ModifyResourceTags](https://cloud.tencent.com/document/api/651/35322) - 批量修改资源关联的标签
+* Read: [DescribeReserveIpAddresses](https://cloud.tencent.com/document/api/215/112865) - 查询内网保留IP
+* Read: [DescribeResourceTagsByResourceIds](https://cloud.tencent.com/document/api/651/35319) - 批量查看资源关联的标签
+* Update: [ModifyReserveIpAddress](https://cloud.tencent.com/document/api/215/112864) - 修改内网保留IP
+* Update: [ModifyResourceTags](https://cloud.tencent.com/document/api/651/35322) - 批量修改资源关联的标签
+* Delete: [DeleteReserveIpAddresses](https://cloud.tencent.com/document/api/215/112866) - 删除内网保留IP
 
 ## Import
 

@@ -64,6 +64,13 @@ The `policies` object exports the following:
 * `add_time` - Role policy add time.
 * `role_policy_type` - Role policy type.
 
+## API Reference
+
+This resource interacts with the following TencentCloud APIs:
+
+* Create: [AddPermissionPolicyToRoleConfiguration](https://cloud.tencent.com/document/api/850/109938) - 为权限配置添加策略
+* Read: [ListPermissionPoliciesInRoleConfiguration](https://cloud.tencent.com/document/api/850/109934) - 获取权限配置中的策略列表
+* Delete: [RemovePermissionPolicyFromRoleConfiguration](https://cloud.tencent.com/document/api/850/109931) - 为权限配置移除策略
 
 ## Import
 

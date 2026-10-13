@@ -38,6 +38,14 @@ In addition to all arguments above, the following attributes are exported:
 * `id` - ID of the resource.
 
 
+## API Reference
+
+This resource interacts with the following TencentCloud APIs:
+
+* Create: [CreateLiveRecordRule](https://cloud.tencent.com/document/api/267/32615) - 创建录制规则
+* Read: [DescribeLiveRecordRules](https://cloud.tencent.com/document/api/267/32611) - 获取录制规则列表
+* Delete: [DeleteLiveRecordRule](https://cloud.tencent.com/document/api/267/32613) - 删除录制规则
+* Delete: [DescribeLiveRecordRules](https://cloud.tencent.com/document/api/267/32611) - 获取录制规则列表
 
 ## Import
 

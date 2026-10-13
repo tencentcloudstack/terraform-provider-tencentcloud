@@ -840,6 +840,17 @@ The `rules` object exports the following:
 * `rule_id` - Rule ID. Unique identifier of the rule.
 * `rule_priority` - Rule priority. only used as an output parameter.
 
+## API Reference
+
+This resource interacts with the following TencentCloud APIs:
+
+* Create: [DescribeZoneConfigImportResult](https://cloud.tencent.com/document/api/1552/113231) - 查询站点配置导入结果
+* Create: [ImportZoneConfig](https://cloud.tencent.com/document/api/1552/113229) - 导入站点配置
+* Read: [DescribeL7AccRules](https://cloud.tencent.com/document/api/1552/115820) - 查询七层加速规则
+* Update: [DescribeZoneConfigImportResult](https://cloud.tencent.com/document/api/1552/113231) - 查询站点配置导入结果
+* Update: [ImportZoneConfig](https://cloud.tencent.com/document/api/1552/113229) - 导入站点配置
+* Delete: [DescribeZoneConfigImportResult](https://cloud.tencent.com/document/api/1552/113231) - 查询站点配置导入结果
+* Delete: [ImportZoneConfig](https://cloud.tencent.com/document/api/1552/113229) - 导入站点配置
 
 ## Import
 

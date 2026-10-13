@@ -1277,6 +1277,29 @@ The `timeouts` block allows you to specify [timeouts](https://developer.hashicor
 * `create` - (Defaults to `30m`) Used when creating the resource.
 * `update` - (Defaults to `30m`) Used when updating the resource.
 * `delete` - (Defaults to `30m`) Used when deleting the resource.
+## API Reference
+
+This resource interacts with the following TencentCloud APIs:
+
+* Create: [CreateCluster](https://cloud.tencent.com/document/api/589/83953) - 创建EMR集群实例(新)
+* Create: [DescribeClusterFlowStatusDetail](https://cloud.tencent.com/document/api/589/107224) - 查询EMR集群任务运行详情状态
+* Create: [DescribeInstances](https://cloud.tencent.com/document/api/589/34266) - 查询集群实例信息
+* Create: [ScaleOutCluster](https://cloud.tencent.com/document/api/589/83952) - 扩容集群节点(新)
+* Read: [DescribeClusterNodes](https://cloud.tencent.com/document/api/589/41707) - 查询集群节点信息
+* Read: [DescribeInstances](https://cloud.tencent.com/document/api/589/34266) - 查询集群实例信息
+* Read: [DescribeMetaDBInfo](https://cloud.tencent.com/document/api/589/137077) - 获取集群db数据
+* Read: [DescribeNodeDataDisks](https://cloud.tencent.com/document/api/589/115191) - 查询节点数据盘信息
+* Update: [AttachDisks](https://cloud.tencent.com/document/api/589/115188) - 云盘挂载
+* Update: [DescribeClusterFlowStatusDetail](https://cloud.tencent.com/document/api/589/107224) - 查询EMR集群任务运行详情状态
+* Update: [InstallSoftware](https://cloud.tencent.com/document/api/589/130892) - 安装组件
+* Update: [ModifyInstanceBasic](https://cloud.tencent.com/document/api/589/115192) - 修改集群名称
+* Update: [ModifyResource](https://cloud.tencent.com/document/api/589/115187) - 变配实例
+* Update: [ModifyResourcesTags](https://cloud.tencent.com/document/api/589/96242) - 强制修改标签
+* Update: [ResizeDataDisks](https://cloud.tencent.com/document/api/589/115186) - 云数据盘扩容
+* Update: [ScaleOutCluster](https://cloud.tencent.com/document/api/589/83952) - 扩容集群节点(新)
+* Update: [TerminateClusterNodes](https://cloud.tencent.com/document/api/589/90010) - 销毁集群节点(新)
+* Delete: [DescribeInstances](https://cloud.tencent.com/document/api/589/34266) - 查询集群实例信息
+* Delete: [TerminateInstance](https://cloud.tencent.com/document/api/589/34260) - 销毁EMR实例
 
 ## Import
 

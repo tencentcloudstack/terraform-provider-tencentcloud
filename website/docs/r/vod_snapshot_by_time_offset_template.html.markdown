@@ -49,6 +49,14 @@ In addition to all arguments above, the following attributes are exported:
 - Custom: user-defined templates.
 * `update_time` - Last modified time of template in ISO date format.
 
+## API Reference
+
+This resource interacts with the following TencentCloud APIs:
+
+* Create: [CreateSnapshotByTimeOffsetTemplate](https://cloud.tencent.com/document/api/266/37786) - 创建指定时间点截图模板
+* Read: [DescribeSnapshotByTimeOffsetTemplates](https://cloud.tencent.com/document/api/266/37778) - 获取指定时间点截图模板列表
+* Update: [ModifySnapshotByTimeOffsetTemplate](https://cloud.tencent.com/document/api/266/37774) - 修改指定时间点截图模板
+* Delete: [DeleteSnapshotByTimeOffsetTemplate](https://cloud.tencent.com/document/api/266/37782) - 删除指定时间点截图模板
 
 ## Import
 

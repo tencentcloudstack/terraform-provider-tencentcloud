@@ -175,6 +175,21 @@ In addition to all arguments above, the following attributes are exported:
 * `access_info` - access address info.
 * `expire_time` - Expire time.
 
+## API Reference
+
+This resource interacts with the following TencentCloud APIs:
+
+* Create: [CreateInstanceNew](https://cloud.tencent.com/document/api/1299/84353) - 创建集群openApi
+* Create: [DescribeInstance](https://cloud.tencent.com/document/api/1299/84354) - 描述实例信息
+* Create: [ModifyResourceTags](https://cloud.tencent.com/document/api/651/35322) - 批量修改资源关联的标签
+* Read: [DescribeInstancesNew](https://cloud.tencent.com/document/api/1299/93328) - 获取实例简单信息列表
+* Read: [DescribeResourceTagsByResourceIds](https://cloud.tencent.com/document/api/651/35319) - 批量查看资源关联的标签
+* Update: [DescribeInstanceState](https://cloud.tencent.com/document/api/1299/89676) - 获取集群实例状态
+* Update: [ModifyResourceTags](https://cloud.tencent.com/document/api/651/35322) - 批量修改资源关联的标签
+* Update: [ResizeDisk](https://cloud.tencent.com/document/api/1299/86158) - 扩容磁盘容量
+* Delete: [DescribeInstance](https://cloud.tencent.com/document/api/1299/84354) - 描述实例信息
+* Delete: [DescribeInstancesNew](https://cloud.tencent.com/document/api/1299/93328) - 获取实例简单信息列表
+* Delete: [DestroyInstance](https://cloud.tencent.com/document/api/1299/86254) - 销毁集群api
 
 ## Import
 

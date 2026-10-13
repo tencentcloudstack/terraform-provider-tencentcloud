@@ -40,6 +40,19 @@ In addition to all arguments above, the following attributes are exported:
 * `id` - ID of the resource.
 
 
+## API Reference
+
+This resource interacts with the following TencentCloud APIs:
+
+* Create: [AllocateIp6AddressesBandwidth](https://cloud.tencent.com/document/api/215/40090) - 开通IPv6公网带宽
+* Create: [DescribeTaskResult](https://cloud.tencent.com/document/api/215/36271) - 查询异步任务执行结果
+* Read: [DescribeIp6Addresses](https://cloud.tencent.com/document/api/215/40089) - 查询传统弹性公网IPv6列表
+* Read: [DescribeResourceTagsByResourceIds](https://cloud.tencent.com/document/api/651/35319) - 批量查看资源关联的标签
+* Update: [DescribeTaskResult](https://cloud.tencent.com/document/api/215/36271) - 查询异步任务执行结果
+* Update: [ModifyIp6AddressesBandwidth](https://cloud.tencent.com/document/api/215/40088) - 调整传统弹性公网IPv6带宽
+* Update: [ModifyResourceTags](https://cloud.tencent.com/document/api/651/35322) - 批量修改资源关联的标签
+* Delete: [DescribeTaskResult](https://cloud.tencent.com/document/api/215/36271) - 查询异步任务执行结果
+* Delete: [ReleaseIp6AddressesBandwidth](https://cloud.tencent.com/document/api/215/40087) - 关闭IPv6公网带宽
 
 ## Import
 

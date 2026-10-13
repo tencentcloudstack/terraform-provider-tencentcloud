@@ -43,6 +43,20 @@ In addition to all arguments above, the following attributes are exported:
 * `id` - ID of the resource.
 
 
+## API Reference
+
+This resource interacts with the following TencentCloud APIs:
+
+* Create: [CreateSecurityPolicy](https://cloud.tencent.com/document/api/608/36970) - 创建安全策略
+* Create: [DescribeSecurityPolicyDetail](https://cloud.tencent.com/document/api/608/36959) - 获取安全策略详情
+* Create: [OpenSecurityPolicy](https://cloud.tencent.com/document/api/608/36951) - 开启安全策略
+* Read: [DescribeSecurityPolicyDetail](https://cloud.tencent.com/document/api/608/36959) - 获取安全策略详情
+* Update: [CloseSecurityPolicy](https://cloud.tencent.com/document/api/608/36972) - 关闭安全策略
+* Update: [DescribeSecurityPolicyDetail](https://cloud.tencent.com/document/api/608/36959) - 获取安全策略详情
+* Update: [OpenSecurityPolicy](https://cloud.tencent.com/document/api/608/36951) - 开启安全策略
+* Delete: [CloseSecurityPolicy](https://cloud.tencent.com/document/api/608/36972) - 关闭安全策略
+* Delete: [DeleteSecurityPolicy](https://cloud.tencent.com/document/api/608/36968) - 删除安全策略
+* Delete: [DescribeSecurityPolicyDetail](https://cloud.tencent.com/document/api/608/36959) - 获取安全策略详情
 
 ## Import
 

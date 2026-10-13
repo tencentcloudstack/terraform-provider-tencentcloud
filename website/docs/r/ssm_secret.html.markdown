@@ -101,6 +101,23 @@ In addition to all arguments above, the following attributes are exported:
 * `id` - ID of the resource.
 * `status` - Status of secret.
 
+## API Reference
+
+This resource interacts with the following TencentCloud APIs:
+
+* Create: [CreateSecret](https://cloud.tencent.com/document/api/1140/40529) - 创建凭据
+* Create: [DeleteSecretVersion](https://cloud.tencent.com/document/api/1140/40527) - 删除指定版本的凭据
+* Create: [DescribeSecret](https://cloud.tencent.com/document/api/1140/40526) - 获取凭据详细信息
+* Create: [DisableSecret](https://cloud.tencent.com/document/api/1140/40525) - 停用凭据
+* Create: [ModifyResourceTags](https://cloud.tencent.com/document/api/651/35322) - 批量修改资源关联的标签
+* Read: [DescribeResourceTagsByResourceIds](https://cloud.tencent.com/document/api/651/35319) - 批量查看资源关联的标签
+* Read: [DescribeSecret](https://cloud.tencent.com/document/api/1140/40526) - 获取凭据详细信息
+* Update: [DescribeSecret](https://cloud.tencent.com/document/api/1140/40526) - 获取凭据详细信息
+* Update: [ModifyResourceTags](https://cloud.tencent.com/document/api/651/35322) - 批量修改资源关联的标签
+* Update: [UpdateDescription](https://cloud.tencent.com/document/api/1140/40516) - 更新凭据描述信息
+* Delete: [DeleteSecret](https://cloud.tencent.com/document/api/1140/40528) - 删除凭据信息
+* Delete: [DescribeSecret](https://cloud.tencent.com/document/api/1140/40526) - 获取凭据详细信息
+* Delete: [DisableSecret](https://cloud.tencent.com/document/api/1140/40525) - 停用凭据
 
 ## Import
 

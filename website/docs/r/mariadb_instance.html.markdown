@@ -121,6 +121,24 @@ In addition to all arguments above, the following attributes are exported:
 * `wan_vip` - Extranet IP address, accessible from the public network.
 * `wan_vipv6` - Internet IPv6.
 
+## API Reference
+
+This resource interacts with the following TencentCloud APIs:
+
+* Create: [CreateDBInstance](https://cloud.tencent.com/document/api/237/16180) - 创建MariaDB包年包月实例
+* Create: [DescribeDBInstances](https://cloud.tencent.com/document/api/237/16184) - 查询实例列表
+* Create: [ModifyResourceTags](https://cloud.tencent.com/document/api/651/35322) - 批量修改资源关联的标签
+* Read: [DescribeDBInstanceDetail](https://cloud.tencent.com/document/api/237/89390) - 查询实例详细信息
+* Read: [DescribeDBInstances](https://cloud.tencent.com/document/api/237/16184) - 查询实例列表
+* Read: [DescribeResourceTagsByResourceIds](https://cloud.tencent.com/document/api/651/35319) - 批量查看资源关联的标签
+* Update: [DescribeFlow](https://cloud.tencent.com/document/api/237/16177) - 查询流程状态
+* Update: [ModifyDBInstanceName](https://cloud.tencent.com/document/api/237/16190) - 修改实例名称
+* Update: [ModifyDBInstancesProject](https://cloud.tencent.com/document/api/237/16176) - 修改实例所属项目
+* Update: [ModifyInstanceNetwork](https://cloud.tencent.com/document/api/237/81949) - 修改实例所属网络
+* Update: [ModifyResourceTags](https://cloud.tencent.com/document/api/651/35322) - 批量修改资源关联的标签
+* Delete: [DescribeDBInstances](https://cloud.tencent.com/document/api/237/16184) - 查询实例列表
+* Delete: [DestroyDBInstance](https://cloud.tencent.com/document/api/237/76451) - 销毁已隔离的包年包月实例
+* Delete: [IsolateDBInstance](https://cloud.tencent.com/document/api/237/82426) - 隔离MariaDB包年包月实例
 
 ## Import
 

@@ -37,6 +37,15 @@ In addition to all arguments above, the following attributes are exported:
 * `id` - ID of the resource.
 
 
+## API Reference
+
+This resource interacts with the following TencentCloud APIs:
+
+* Create: [DescribeGrafanaInstances](https://cloud.tencent.com/document/api/248/79208) - 列出用户所有的 Grafana 服务
+* Create: [UpdateGrafanaEnvironments](https://cloud.tencent.com/document/api/248/79192) - 更新 Grafana 环境变量
+* Read: [DescribeGrafanaEnvironments](https://cloud.tencent.com/document/api/248/79209) - 列出 Grafana 环境变量
+* Update: [DescribeGrafanaInstances](https://cloud.tencent.com/document/api/248/79208) - 列出用户所有的 Grafana 服务
+* Update: [UpdateGrafanaEnvironments](https://cloud.tencent.com/document/api/248/79192) - 更新 Grafana 环境变量
 
 ## Import
 

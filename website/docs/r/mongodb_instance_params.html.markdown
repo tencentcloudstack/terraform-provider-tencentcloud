@@ -46,4 +46,13 @@ In addition to all arguments above, the following attributes are exported:
 * `id` - ID of the resource.
 
 
+## API Reference
+
+This resource interacts with the following TencentCloud APIs:
+
+* Create: [DescribeInstanceParams](https://cloud.tencent.com/document/api/240/65903) - 获取当前实例可修改的参数列表
+* Create: [ModifyInstanceParams](https://cloud.tencent.com/document/api/240/107557) - 修改mongoDB实例参数
+* Read: [DescribeInstanceParams](https://cloud.tencent.com/document/api/240/65903) - 获取当前实例可修改的参数列表
+* Update: [DescribeInstanceParams](https://cloud.tencent.com/document/api/240/65903) - 获取当前实例可修改的参数列表
+* Update: [ModifyInstanceParams](https://cloud.tencent.com/document/api/240/107557) - 修改mongoDB实例参数
 

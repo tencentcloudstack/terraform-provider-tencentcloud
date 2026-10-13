@@ -32,4 +32,9 @@ In addition to all arguments above, the following attributes are exported:
 * `id` - ID of the resource.
 
 
+## API Reference
+
+This resource interacts with the following TencentCloud APIs:
+
+* Create: [ReturnNormalAddresses](https://cloud.tencent.com/document/api/215/83866) - 解绑并释放普通公网IP
 

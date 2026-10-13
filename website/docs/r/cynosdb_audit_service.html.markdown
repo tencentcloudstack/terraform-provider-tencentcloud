@@ -53,6 +53,16 @@ In addition to all arguments above, the following attributes are exported:
 * `id` - ID of the resource.
 
 
+## API Reference
+
+This resource interacts with the following TencentCloud APIs:
+
+* Create: [DescribeAuditInstanceList](https://cloud.tencent.com/document/api/1003/103372) - 获取审计实例列表
+* Create: [OpenAuditService](https://cloud.tencent.com/document/api/1003/84696) - 实例开通审计服务
+* Read: [DescribeAuditInstanceList](https://cloud.tencent.com/document/api/1003/103372) - 获取审计实例列表
+* Update: [ModifyAuditService](https://cloud.tencent.com/document/api/1003/84697) - 实例修改审计服务
+* Delete: [CloseAuditService](https://cloud.tencent.com/document/api/1003/84703) - 实例关闭审计服务
+* Delete: [DescribeAuditInstanceList](https://cloud.tencent.com/document/api/1003/103372) - 获取审计实例列表
 
 ## Import
 

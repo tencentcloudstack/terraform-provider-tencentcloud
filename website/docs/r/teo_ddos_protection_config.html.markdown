@@ -91,6 +91,13 @@ The `ddos_protection` object exports the following:
 <li>on: enabled;</li>.
 <li>off: closed.</li>.
 
+## API Reference
+
+This resource interacts with the following TencentCloud APIs:
+
+* Create: [ModifyDDoSProtection](https://cloud.tencent.com/document/api/1552/121630) - 修改站点的独立 DDoS 防护
+* Read: [DescribeDDoSProtection](https://cloud.tencent.com/document/api/1552/121631) - 查询站点的独立 DDoS 防护信息
+* Update: [ModifyDDoSProtection](https://cloud.tencent.com/document/api/1552/121630) - 修改站点的独立 DDoS 防护
 
 ## Import
 

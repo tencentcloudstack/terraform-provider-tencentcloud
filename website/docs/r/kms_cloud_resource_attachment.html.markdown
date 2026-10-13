@@ -40,6 +40,13 @@ In addition to all arguments above, the following attributes are exported:
 * `key_usage` - Key usage.
 * `owner` - owner.
 
+## API Reference
+
+This resource interacts with the following TencentCloud APIs:
+
+* Create: [BindCloudResource](https://cloud.tencent.com/document/api/573/46918) - 绑定密钥和云产品资源的使用关系
+* Read: [DescribeKey](https://cloud.tencent.com/document/api/573/34428) - 获取主密钥属性
+* Delete: [UnbindCloudResource](https://cloud.tencent.com/document/api/573/46917) - 解绑CMK和云资源的关联关系
 
 ## Import
 

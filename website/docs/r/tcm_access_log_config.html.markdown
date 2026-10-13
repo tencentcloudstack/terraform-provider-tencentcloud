@@ -84,6 +84,13 @@ In addition to all arguments above, the following attributes are exported:
 * `id` - ID of the resource.
 
 
+## API Reference
+
+This resource interacts with the following TencentCloud APIs:
+
+* Create: [ModifyAccessLogConfig](https://cloud.tencent.com/document/api/1261/83254) - 修改访问日志配置
+* Read: [DescribeAccessLogConfig](https://cloud.tencent.com/document/api/1261/83255) - 获取AccessLog配置
+* Update: [ModifyAccessLogConfig](https://cloud.tencent.com/document/api/1261/83254) - 修改访问日志配置
 
 ## Import
 

@@ -38,6 +38,15 @@ In addition to all arguments above, the following attributes are exported:
 * `provider_arn` - The ARN of the CAM SAML provider.
 * `update_time` - The last update time of the CAM SAML provider.
 
+## API Reference
+
+This resource interacts with the following TencentCloud APIs:
+
+* Create: [CreateSAMLProvider](https://cloud.tencent.com/document/api/598/34567) - 创建SAML身份提供商
+* Create: [GetSAMLProvider](https://cloud.tencent.com/document/api/598/34565) - 查询SAML身份提供商详情
+* Read: [GetSAMLProvider](https://cloud.tencent.com/document/api/598/34565) - 查询SAML身份提供商详情
+* Update: [UpdateSAMLProvider](https://cloud.tencent.com/document/api/598/34563) - 更新SAML身份提供商信息
+* Delete: [DeleteSAMLProvider](https://cloud.tencent.com/document/api/598/34566) - 删除SAML身份提供商
 
 ## Import
 

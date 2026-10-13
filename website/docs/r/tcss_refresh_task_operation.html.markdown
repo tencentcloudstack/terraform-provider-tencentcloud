@@ -42,4 +42,9 @@ In addition to all arguments above, the following attributes are exported:
 * `id` - ID of the resource.
 
 
+## API Reference
+
+This resource interacts with the following TencentCloud APIs:
+
+* Create: [CreateRefreshTask](https://cloud.tencent.com/document/api/1285/65453) - 下发刷新任务
 

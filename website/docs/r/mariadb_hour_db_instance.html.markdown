@@ -97,6 +97,24 @@ In addition to all arguments above, the following attributes are exported:
 * `id` - ID of the resource.
 
 
+## API Reference
+
+This resource interacts with the following TencentCloud APIs:
+
+* Create: [CreateHourDBInstance](https://cloud.tencent.com/document/api/237/67878) - 创建MariaDB按量计费实例
+* Create: [DescribeDBInstances](https://cloud.tencent.com/document/api/237/16184) - 查询实例列表
+* Create: [InitDBInstances](https://cloud.tencent.com/document/api/237/16185) - 初始化实例
+* Create: [ModifyResourceTags](https://cloud.tencent.com/document/api/651/35322) - 批量修改资源关联的标签
+* Read: [DescribeDBInstanceDetail](https://cloud.tencent.com/document/api/237/89390) - 查询实例详细信息
+* Read: [DescribeDBParameters](https://cloud.tencent.com/document/api/237/16154) - 查看数据库参数
+* Read: [DescribeResourceTagsByResourceIds](https://cloud.tencent.com/document/api/651/35319) - 批量查看资源关联的标签
+* Update: [DescribeFlow](https://cloud.tencent.com/document/api/237/16177) - 查询流程状态
+* Update: [ModifyDBInstanceName](https://cloud.tencent.com/document/api/237/16190) - 修改实例名称
+* Update: [ModifyDBInstancesProject](https://cloud.tencent.com/document/api/237/16176) - 修改实例所属项目
+* Update: [ModifyDBParameters](https://cloud.tencent.com/document/api/237/16153) - 修改数据库参数
+* Update: [ModifyInstanceNetwork](https://cloud.tencent.com/document/api/237/81949) - 修改实例所属网络
+* Update: [ModifyResourceTags](https://cloud.tencent.com/document/api/651/35322) - 批量修改资源关联的标签
+* Delete: [DestroyHourDBInstance](https://cloud.tencent.com/document/api/237/56487) - 销毁MariaDB按量计费实例
 
 ## Import
 

@@ -85,6 +85,13 @@ In addition to all arguments above, the following attributes are exported:
 * `id` - ID of the resource.
 
 
+## API Reference
+
+This resource interacts with the following TencentCloud APIs:
+
+* Create: [ModifyInstanceParam](https://cloud.tencent.com/document/api/238/59107) - 修改实例参数
+* Read: [DescribeInstanceParams](https://cloud.tencent.com/document/api/238/59108) - 查询实例的可设置参数列表
+* Update: [ModifyInstanceParam](https://cloud.tencent.com/document/api/238/59107) - 修改实例参数
 
 ## Import
 

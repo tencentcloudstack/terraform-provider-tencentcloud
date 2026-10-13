@@ -216,6 +216,14 @@ In addition to all arguments above, the following attributes are exported:
 * `mod_time` - Trigger last modified time.
 * `trigger_attribute` - Trigger description parameter, see the trigger description documentation for details: https://www.tencentcloud.com/document/product/583/34880.
 
+## API Reference
+
+This resource interacts with the following TencentCloud APIs:
+
+* Create: [CreateTrigger](https://cloud.tencent.com/document/api/583/18589) - 设置函数触发方式
+* Read: [ListTriggers](https://cloud.tencent.com/document/api/583/44268) - 获取函数触发器列表
+* Update: [UpdateTrigger](https://cloud.tencent.com/document/api/583/96828) - 更新触发器
+* Delete: [DeleteTrigger](https://cloud.tencent.com/document/api/583/18588) - 删除触发器
 
 ## Import
 

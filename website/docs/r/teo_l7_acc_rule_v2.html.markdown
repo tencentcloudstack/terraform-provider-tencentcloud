@@ -659,6 +659,14 @@ In addition to all arguments above, the following attributes are exported:
 * `rule_id` - Rule ID. Unique identifier of the rule.
 * `rule_priority` - Rule priority. only used as an output parameter.
 
+## API Reference
+
+This resource interacts with the following TencentCloud APIs:
+
+* Create: [CreateL7AccRules](https://cloud.tencent.com/document/api/1552/115822) - 创建七层加速规则
+* Read: [DescribeL7AccRules](https://cloud.tencent.com/document/api/1552/115820) - 查询七层加速规则
+* Update: [ModifyL7AccRule](https://cloud.tencent.com/document/api/1552/115818) - 修改七层加速规则
+* Delete: [DeleteL7AccRules](https://cloud.tencent.com/document/api/1552/115821) - 删除七层加速规则
 
 ## Import
 

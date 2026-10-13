@@ -54,6 +54,17 @@ In addition to all arguments above, the following attributes are exported:
 * `created_time` - Api app created time.
 * `modified_time` - Api app modified time.
 
+## API Reference
+
+This resource interacts with the following TencentCloud APIs:
+
+* Create: [CreateApiApp](https://cloud.tencent.com/document/api/628/58638) - 创建应用
+* Create: [ModifyResourceTags](https://cloud.tencent.com/document/api/651/35322) - 批量修改资源关联的标签
+* Read: [DescribeApiAppsStatus](https://cloud.tencent.com/document/api/628/58634) - 查询应用列表
+* Read: [DescribeResourceTagsByResourceIds](https://cloud.tencent.com/document/api/651/35319) - 批量查看资源关联的标签
+* Update: [ModifyApiApp](https://cloud.tencent.com/document/api/628/58631) - 修改应用
+* Update: [ModifyResourceTags](https://cloud.tencent.com/document/api/651/35322) - 批量修改资源关联的标签
+* Delete: [DeleteApiApp](https://cloud.tencent.com/document/api/628/58637) - 删除应用
 
 ## Import
 

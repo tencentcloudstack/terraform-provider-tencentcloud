@@ -63,6 +63,14 @@ In addition to all arguments above, the following attributes are exported:
 * `path` - The full path of the node, /aaa/bbb/ccc.ipynb, consists of the names of each node.
 * `script_id` - Script ID.
 
+## API Reference
+
+This resource interacts with the following TencentCloud APIs:
+
+* Create: [CreateSQLScript](https://cloud.tencent.com/document/api/1267/123609) - 新增SQL脚本
+* Read: [GetSQLScript](https://cloud.tencent.com/document/api/1267/123603) - 查看SQL脚本详情
+* Update: [UpdateSQLScript](https://cloud.tencent.com/document/api/1267/123594) - 更新SQL脚本和配置
+* Delete: [DeleteSQLScript](https://cloud.tencent.com/document/api/1267/123605) - 删除SQL脚本
 
 ## Import
 

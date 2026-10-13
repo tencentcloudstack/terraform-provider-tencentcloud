@@ -45,6 +45,14 @@ In addition to all arguments above, the following attributes are exported:
 * `id` - ID of the resource.
 
 
+## API Reference
+
+This resource interacts with the following TencentCloud APIs:
+
+* Create: [CreateAnimatedGraphicsTemplate](https://cloud.tencent.com/document/api/862/37609) - 创建转动图模板
+* Read: [DescribeAnimatedGraphicsTemplates](https://cloud.tencent.com/document/api/862/37597) - 获取转动图模板列表
+* Update: [ModifyAnimatedGraphicsTemplate](https://cloud.tencent.com/document/api/862/37591) - 修改转动图模板
+* Delete: [DeleteAnimatedGraphicsTemplate](https://cloud.tencent.com/document/api/862/37603) - 删除转动图模板
 
 ## Import
 

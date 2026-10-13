@@ -57,6 +57,14 @@ In addition to all arguments above, the following attributes are exported:
 * `uin` - User ID.
 * `updated_at` - Update time; type: Timestamp ISO8601.
 
+## API Reference
+
+This resource interacts with the following TencentCloud APIs:
+
+* Create: [CreateCronJob](https://cloud.tencent.com/document/api/1484/78094) - 创建定时任务
+* Read: [DescribeCronJobs](https://cloud.tencent.com/document/api/1484/78080) - 列出定时任务
+* Update: [UpdateCronJob](https://cloud.tencent.com/document/api/1484/78061) - 更新定时任务
+* Delete: [DeleteCronJobs](https://cloud.tencent.com/document/api/1484/78089) - 删除定时任务
 
 ## Import
 

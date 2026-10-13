@@ -38,4 +38,11 @@ In addition to all arguments above, the following attributes are exported:
 * `id` - ID of the resource.
 
 
+## API Reference
+
+This resource interacts with the following TencentCloud APIs:
+
+* Create: [ModifySpartaProtectionMode](https://cloud.tencent.com/document/api/627/96930) - 设置waf防护状态
+* Read: [DescribeSpartaProtectionInfo](https://cloud.tencent.com/document/api/627/100463) - waf斯巴达-获取防护域名信息
+* Update: [ModifySpartaProtectionMode](https://cloud.tencent.com/document/api/627/96930) - 设置waf防护状态
 

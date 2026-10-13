@@ -121,6 +121,14 @@ In addition to all arguments above, the following attributes are exported:
 * `updated_at` - Last modified time.
 * `updated_by` - Last Modified By.
 
+## API Reference
+
+This resource interacts with the following TencentCloud APIs:
+
+* Create: [CreateAlarmNotice](https://cloud.tencent.com/document/api/248/51288) - 创建通知模板
+* Read: [DescribeAlarmNotices](https://cloud.tencent.com/document/api/248/51280) - 查询通知模板列表
+* Update: [ModifyAlarmNotice](https://cloud.tencent.com/document/api/248/51277) - 修改通知模板
+* Delete: [DeleteAlarmNotices](https://cloud.tencent.com/document/api/248/51286) - 删除告警通知模板（批量）
 
 ## Import
 

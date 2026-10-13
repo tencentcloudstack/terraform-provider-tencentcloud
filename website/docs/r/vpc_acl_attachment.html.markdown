@@ -61,6 +61,13 @@ In addition to all arguments above, the following attributes are exported:
 * `id` - ID of the resource.
 
 
+## API Reference
+
+This resource interacts with the following TencentCloud APIs:
+
+* Create: [AssociateNetworkAclSubnets](https://cloud.tencent.com/document/api/215/42163) - 网络ACL关联子网
+* Read: [DescribeNetworkAcls](https://cloud.tencent.com/document/api/215/42160) - 查询网络ACL列表
+* Delete: [DisassociateNetworkAclSubnets](https://cloud.tencent.com/document/api/215/42159) - 网络ACL解关联子网
 
 ## Import
 

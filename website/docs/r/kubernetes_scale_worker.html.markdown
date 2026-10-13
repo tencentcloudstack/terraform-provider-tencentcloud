@@ -258,6 +258,17 @@ In addition to all arguments above, the following attributes are exported:
   * `instance_state` - State of the cvm.
   * `lan_ip` - LAN IP of the cvm.
 
+## API Reference
+
+This resource interacts with the following TencentCloud APIs:
+
+* Create: [CreateClusterInstances](https://cloud.tencent.com/document/api/457/36707) - 扩展集群节点
+* Create: [DescribeClusterInstances](https://cloud.tencent.com/document/api/457/31863) - 查询集群节点信息
+* Create: [DescribeClusters](https://cloud.tencent.com/document/api/457/31862) - 查询TKE集群列表
+* Read: [DescribeClusters](https://cloud.tencent.com/document/api/457/31862) - 查询TKE集群列表
+* Update: [DescribeInstances](https://cloud.tencent.com/document/api/213/15728) - 查看实例列表
+* Update: [ModifyInstancesChargeType](https://cloud.tencent.com/document/api/213/17964) - 修改实例计费模式
+* Delete: [DescribeClusters](https://cloud.tencent.com/document/api/457/31862) - 查询TKE集群列表
 
 ## Import
 

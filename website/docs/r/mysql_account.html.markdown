@@ -89,6 +89,20 @@ In addition to all arguments above, the following attributes are exported:
 * `id` - ID of the resource.
 
 
+## API Reference
+
+This resource interacts with the following TencentCloud APIs:
+
+* Create: [CreateAccounts](https://cloud.tencent.com/document/api/236/17502) - 创建云数据库的账户
+* Create: [DescribeAsyncRequestInfo](https://cloud.tencent.com/document/api/236/20410) - 查询异步任务的执行结果
+* Read: [DescribeAccounts](https://cloud.tencent.com/document/api/236/17499) - 查询云数据库的所有账号信息
+* Update: [DescribeAsyncRequestInfo](https://cloud.tencent.com/document/api/236/20410) - 查询异步任务的执行结果
+* Update: [ModifyAccountDescription](https://cloud.tencent.com/document/api/236/17498) - 修改云数据库实例账号的备注信息
+* Update: [ModifyAccountHost](https://cloud.tencent.com/document/api/236/60617) - 修改云数据库实例账号的主机
+* Update: [ModifyAccountMaxUserConnections](https://cloud.tencent.com/document/api/236/56200) - 修改账户最大可用连接数
+* Update: [ModifyAccountPassword](https://cloud.tencent.com/document/api/236/17497) - 修改云数据库实例账号的密码
+* Delete: [DeleteAccounts](https://cloud.tencent.com/document/api/236/17501) - 删除云数据库的账号
+* Delete: [DescribeAsyncRequestInfo](https://cloud.tencent.com/document/api/236/20410) - 查询异步任务的执行结果
 
 ## Import
 

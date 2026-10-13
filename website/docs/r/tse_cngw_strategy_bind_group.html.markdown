@@ -38,6 +38,15 @@ In addition to all arguments above, the following attributes are exported:
 * `id` - ID of the resource.
 * `status` - Binding status.
 
+## API Reference
+
+This resource interacts with the following TencentCloud APIs:
+
+* Create: [BindAutoScalerResourceStrategyToGroups](https://cloud.tencent.com/document/api/1364/103728) - 弹性伸缩策略批量绑定网关分组
+* Create: [UnbindAutoScalerResourceStrategyFromGroups](https://cloud.tencent.com/document/api/1364/103721) - 弹性伸缩策略批量解绑网关分组
+* Read: [DescribeAutoScalerResourceStrategyBindingGroups](https://cloud.tencent.com/document/api/1364/103724) - 查看弹性伸缩策略绑定的网关分组
+* Update: [BindAutoScalerResourceStrategyToGroups](https://cloud.tencent.com/document/api/1364/103728) - 弹性伸缩策略批量绑定网关分组
+* Update: [UnbindAutoScalerResourceStrategyFromGroups](https://cloud.tencent.com/document/api/1364/103721) - 弹性伸缩策略批量解绑网关分组
 
 ## Import
 

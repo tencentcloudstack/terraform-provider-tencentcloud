@@ -55,6 +55,15 @@ In addition to all arguments above, the following attributes are exported:
 * `id` - ID of the resource.
 
 
+## API Reference
+
+This resource interacts with the following TencentCloud APIs:
+
+* Create: [CreateFirewallTemplate](https://cloud.tencent.com/document/api/1207/96882) - 创建防火墙模板
+* Read: [DescribeFirewallTemplateRules](https://cloud.tencent.com/document/api/1207/96875) - 查询防火墙模板规则列表
+* Read: [DescribeFirewallTemplates](https://cloud.tencent.com/document/api/1207/96874) - 查询防火墙模板列表
+* Update: [ModifyFirewallTemplate](https://cloud.tencent.com/document/api/1207/96873) - 修改防火墙模板
+* Delete: [DeleteFirewallTemplate](https://cloud.tencent.com/document/api/1207/96880) - 删除防火墙模板
 
 ## Import
 

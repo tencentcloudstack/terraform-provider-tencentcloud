@@ -105,4 +105,15 @@ In addition to all arguments above, the following attributes are exported:
 * `id` - ID of the resource.
 * `group_id` - gateway group id.
 
+## API Reference
+
+This resource interacts with the following TencentCloud APIs:
+
+* Create: [CreateNativeGatewayServerGroup](https://cloud.tencent.com/document/api/1364/96756) - 创建云原生网关引擎分组
+* Create: [DescribeNativeGatewayServerGroups](https://cloud.tencent.com/document/api/1364/97280) - 查询云原生网关分组信息
+* Read: [DescribeNativeGatewayServerGroups](https://cloud.tencent.com/document/api/1364/97280) - 查询云原生网关分组信息
+* Update: [DescribeNativeGatewayServerGroups](https://cloud.tencent.com/document/api/1364/97280) - 查询云原生网关分组信息
+* Update: [ModifyNativeGatewayServerGroup](https://cloud.tencent.com/document/api/1364/96750) - 修改云原生API网关实例分组基础信息
+* Delete: [DeleteNativeGatewayServerGroup](https://cloud.tencent.com/document/api/1364/96754) - 删除网关实例分组
+* Delete: [DescribeNativeGatewayServerGroups](https://cloud.tencent.com/document/api/1364/97280) - 查询云原生网关分组信息
 

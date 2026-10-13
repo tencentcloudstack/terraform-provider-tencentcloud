@@ -146,6 +146,21 @@ In addition to all arguments above, the following attributes are exported:
 * `role_arn` - RoleArn Information for Roles.
 * `update_time` - The last update time of the CAM role.
 
+## API Reference
+
+This resource interacts with the following TencentCloud APIs:
+
+* Create: [CreateRole](https://cloud.tencent.com/document/api/598/36225) - 创建角色
+* Create: [DescribeRoleList](https://cloud.tencent.com/document/api/598/36223) - 获取角色列表
+* Create: [ModifyResourceTags](https://cloud.tencent.com/document/api/651/35322) - 批量修改资源关联的标签
+* Read: [DescribeResourceTagsByResourceIds](https://cloud.tencent.com/document/api/651/35319) - 批量查看资源关联的标签
+* Read: [DescribeRoleList](https://cloud.tencent.com/document/api/598/36223) - 获取角色列表
+* Update: [ModifyResourceTags](https://cloud.tencent.com/document/api/651/35322) - 批量修改资源关联的标签
+* Update: [UpdateAssumeRolePolicy](https://cloud.tencent.com/document/api/598/36219) - 修改角色信任策略
+* Update: [UpdateRoleConsoleLogin](https://cloud.tencent.com/document/api/598/43469) - 修改角色是否可登录
+* Update: [UpdateRoleDescription](https://cloud.tencent.com/document/api/598/36218) - 修改角色描述信息
+* Update: [UpdateRoleSessionDuration](https://cloud.tencent.com/document/api/598/113746) - 修改角色会话时长
+* Delete: [DeleteRole](https://cloud.tencent.com/document/api/598/36224) - 删除角色
 
 ## Import
 

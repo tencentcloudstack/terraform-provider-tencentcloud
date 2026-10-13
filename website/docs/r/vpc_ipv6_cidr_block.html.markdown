@@ -51,6 +51,13 @@ In addition to all arguments above, the following attributes are exported:
   * `isp_type` - Range of network operator types: 'BGP' - default, 'CMCC' - China Mobile, 'CTCC' - China Telecom, 'CUCC' - China Joint Debugging.
 * `ipv6_cidr_block` - Ipv6 cidr block.
 
+## API Reference
+
+This resource interacts with the following TencentCloud APIs:
+
+* Create: [AssignIpv6CidrBlock](https://cloud.tencent.com/document/api/215/34466) - 分配IPv6网段
+* Read: [DescribeVpcs](https://cloud.tencent.com/document/api/215/15778) - 查询VPC列表
+* Delete: [UnassignIpv6CidrBlock](https://cloud.tencent.com/document/api/215/34464) - 释放IPv6网段
 
 ## Import
 

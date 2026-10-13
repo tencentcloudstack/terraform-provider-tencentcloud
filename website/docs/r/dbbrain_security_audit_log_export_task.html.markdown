@@ -40,4 +40,12 @@ In addition to all arguments above, the following attributes are exported:
 * `id` - ID of the resource.
 * `async_request_id` - request of async id.
 
+## API Reference
+
+This resource interacts with the following TencentCloud APIs:
+
+* Create: [CreateSecurityAuditLogExportTask](https://cloud.tencent.com/document/api/1130/57801) - 创建安全审计日志导出任务
+* Create: [DescribeSecurityAuditLogExportTasks](https://cloud.tencent.com/document/api/1130/57795) - 查询安全审计日志导出任务列表
+* Read: [DescribeSecurityAuditLogExportTasks](https://cloud.tencent.com/document/api/1130/57795) - 查询安全审计日志导出任务列表
+* Delete: [DeleteSecurityAuditLogExportTasks](https://cloud.tencent.com/document/api/1130/57800) - 删除安全审计日志导出任务
 

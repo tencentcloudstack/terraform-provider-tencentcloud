@@ -60,6 +60,17 @@ The `data` object exports the following:
 
 * `order_index` - Rule priority.
 
+## API Reference
+
+This resource interacts with the following TencentCloud APIs:
+
+* Create: [AddEnterpriseSecurityGroupRules](https://cloud.tencent.com/document/api/1132/64234) - 创建新企业安全组规则
+* Create: [DescribeEnterpriseSGRuleProgress](https://cloud.tencent.com/document/api/1132/93416) - 查询新版安全组下发进度
+* Read: [DescribeEnterpriseSecurityGroupRuleList](https://cloud.tencent.com/document/api/1132/110987) - 查询新企业安全组规则列表
+* Update: [DescribeEnterpriseSGRuleProgress](https://cloud.tencent.com/document/api/1132/93416) - 查询新版安全组下发进度
+* Update: [ModifyEnterpriseSecurityGroupRule](https://cloud.tencent.com/document/api/1132/86971) - 编辑新企业安全组规则
+* Delete: [DescribeEnterpriseSGRuleProgress](https://cloud.tencent.com/document/api/1132/93416) - 查询新版安全组下发进度
+* Delete: [RemoveEnterpriseSecurityGroupRule](https://cloud.tencent.com/document/api/1132/64232) - 删除新企业安全组规则
 
 ## Import
 

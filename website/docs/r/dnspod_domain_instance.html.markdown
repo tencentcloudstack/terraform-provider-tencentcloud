@@ -55,6 +55,19 @@ In addition to all arguments above, the following attributes are exported:
 * `slave_dns` - Is secondary DNS enabled.
 * `updated_on` - Last modification time of the domain.
 
+## API Reference
+
+This resource interacts with the following TencentCloud APIs:
+
+* Create: [CreateDomain](https://cloud.tencent.com/document/api/1427/56184) - 添加域名
+* Create: [DescribeDomain](https://cloud.tencent.com/document/api/1427/56173) - 获取域名信息
+* Create: [ModifyDomainRemark](https://cloud.tencent.com/document/api/1427/56161) - 设置域名备注
+* Create: [ModifyDomainStatus](https://cloud.tencent.com/document/api/1427/56160) - 修改域名状态
+* Read: [DescribeDomain](https://cloud.tencent.com/document/api/1427/56173) - 获取域名信息
+* Update: [DescribeDomain](https://cloud.tencent.com/document/api/1427/56173) - 获取域名信息
+* Update: [ModifyDomainRemark](https://cloud.tencent.com/document/api/1427/56161) - 设置域名备注
+* Update: [ModifyDomainStatus](https://cloud.tencent.com/document/api/1427/56160) - 修改域名状态
+* Delete: [DeleteDomain](https://cloud.tencent.com/document/api/1427/56178) - 删除域名
 
 ## Import
 

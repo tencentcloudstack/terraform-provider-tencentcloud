@@ -45,4 +45,11 @@ In addition to all arguments above, the following attributes are exported:
 * `id` - ID of the resource.
 
 
+## API Reference
+
+This resource interacts with the following TencentCloud APIs:
+
+* Create: [ModifyAdvancedStoreLocation](https://cloud.tencent.com/document/api/1342/100577) - 修改高级设置
+* Read: [DescribeAdvancedStoreLocation](https://cloud.tencent.com/document/api/1342/100578) - 查询高级设置
+* Update: [ModifyAdvancedStoreLocation](https://cloud.tencent.com/document/api/1342/100577) - 修改高级设置
 

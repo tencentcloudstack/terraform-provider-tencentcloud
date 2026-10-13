@@ -49,4 +49,15 @@ In addition to all arguments above, the following attributes are exported:
 * `id` - ID of the resource.
 
 
+## API Reference
+
+This resource interacts with the following TencentCloud APIs:
+
+* Create: [CreateApplication](https://cloud.tencent.com/document/api/1371/60162) - 创建应用
+* Create: [ModifyResourceTags](https://cloud.tencent.com/document/api/651/35322) - 批量修改资源关联的标签
+* Read: [DescribeApplications](https://cloud.tencent.com/document/api/1371/78169) - 获取运行服务列表
+* Read: [DescribeResourceTagsByResourceIds](https://cloud.tencent.com/document/api/651/35319) - 批量查看资源关联的标签
+* Update: [ModifyApplicationInfo](https://cloud.tencent.com/document/api/1371/60160) - 修改应用基本信息
+* Update: [ModifyResourceTags](https://cloud.tencent.com/document/api/651/35322) - 批量修改资源关联的标签
+* Delete: [DeleteApplication](https://cloud.tencent.com/document/api/1371/66645) - 服务删除
 

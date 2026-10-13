@@ -142,4 +142,13 @@ The `timeouts` block allows you to specify [timeouts](https://developer.hashicor
 
 * `create` - (Defaults to `20m`) Used when creating the resource.
 * `delete` - (Defaults to `20m`) Used when deleting the resource.
+## API Reference
+
+This resource interacts with the following TencentCloud APIs:
+
+* Create: [CreateBackup](https://cloud.tencent.com/document/api/236/15844) - 创建云数据库备份
+* Create: [DescribeBackups](https://cloud.tencent.com/document/api/236/15842) - 查询数据备份文件列表
+* Read: [DescribeBackups](https://cloud.tencent.com/document/api/236/15842) - 查询数据备份文件列表
+* Delete: [DeleteBackup](https://cloud.tencent.com/document/api/236/15841) - 删除云数据库备份
+* Delete: [DescribeBackups](https://cloud.tencent.com/document/api/236/15842) - 查询数据备份文件列表
 

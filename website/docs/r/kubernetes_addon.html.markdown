@@ -61,6 +61,17 @@ The `timeouts` block allows you to specify [timeouts](https://developer.hashicor
 * `create` - (Defaults to `15m`) Used when creating the resource.
 * `update` - (Defaults to `15m`) Used when updating the resource.
 * `delete` - (Defaults to `15m`) Used when deleting the resource.
+## API Reference
+
+This resource interacts with the following TencentCloud APIs:
+
+* Create: [DescribeAddon](https://cloud.tencent.com/document/api/457/94183) - 获取addon列表
+* Create: [InstallAddon](https://cloud.tencent.com/document/api/457/94181) - 安装addon
+* Read: [DescribeAddon](https://cloud.tencent.com/document/api/457/94183) - 获取addon列表
+* Update: [DescribeAddon](https://cloud.tencent.com/document/api/457/94183) - 获取addon列表
+* Update: [UpdateAddon](https://cloud.tencent.com/document/api/457/94180) - 更新addon
+* Delete: [DeleteAddon](https://cloud.tencent.com/document/api/457/94184) - 删除addon
+* Delete: [DescribeAddon](https://cloud.tencent.com/document/api/457/94183) - 获取addon列表
 
 ## Import
 

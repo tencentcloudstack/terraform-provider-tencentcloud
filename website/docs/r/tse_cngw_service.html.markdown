@@ -131,6 +131,18 @@ The `targets` object of `upstream_info` exports the following:
 * `created_time` - created time.
 * `health` - health.
 
+## API Reference
+
+This resource interacts with the following TencentCloud APIs:
+
+* Create: [CreateCloudNativeAPIGatewayService](https://cloud.tencent.com/document/api/1364/94851) - 创建云原生网关服务
+* Create: [ModifyResourceTags](https://cloud.tencent.com/document/api/651/35322) - 批量修改资源关联的标签
+* Read: [DescribeOneCloudNativeAPIGatewayService](https://cloud.tencent.com/document/api/1364/94839) - 获取云原生网关服务详情
+* Read: [DescribeResourceTagsByResourceIds](https://cloud.tencent.com/document/api/651/35319) - 批量查看资源关联的标签
+* Update: [DescribeOneCloudNativeAPIGatewayService](https://cloud.tencent.com/document/api/1364/94839) - 获取云原生网关服务详情
+* Update: [ModifyCloudNativeAPIGatewayService](https://cloud.tencent.com/document/api/1364/94835) - 修改云原生网关服务
+* Update: [ModifyResourceTags](https://cloud.tencent.com/document/api/651/35322) - 批量修改资源关联的标签
+* Delete: [DeleteCloudNativeAPIGatewayService](https://cloud.tencent.com/document/api/1364/94846) - 删除云原生网关服务
 
 ## Import
 

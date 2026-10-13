@@ -34,6 +34,13 @@ In addition to all arguments above, the following attributes are exported:
 * `id` - ID of the resource.
 
 
+## API Reference
+
+This resource interacts with the following TencentCloud APIs:
+
+* Create: [UpdateSCIMSynchronizationStatus](https://cloud.tencent.com/document/api/850/112047) - 启用或禁用SCIM同步
+* Read: [GetSCIMSynchronizationStatus](https://cloud.tencent.com/document/api/850/112050) - 查询SCIM同步的状态
+* Update: [UpdateSCIMSynchronizationStatus](https://cloud.tencent.com/document/api/850/112047) - 启用或禁用SCIM同步
 
 ## Import
 

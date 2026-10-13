@@ -80,6 +80,27 @@ In addition to all arguments above, the following attributes are exported:
 * `public_ip` - The elastic IP address.
 * `status` - The EIP current status.
 
+## API Reference
+
+This resource interacts with the following TencentCloud APIs:
+
+* Create: [AllocateAddresses](https://cloud.tencent.com/document/api/215/16699) - 创建弹性公网IP
+* Create: [DescribeAddresses](https://cloud.tencent.com/document/api/215/16702) - 查询弹性公网IP列表
+* Create: [DescribeTaskResult](https://cloud.tencent.com/document/api/215/36271) - 查询异步任务执行结果
+* Read: [DescribeAddresses](https://cloud.tencent.com/document/api/215/16702) - 查询弹性公网IP列表
+* Read: [DescribeBandwidthPackages](https://cloud.tencent.com/document/api/215/19209) - 查询带宽包资源
+* Read: [DescribeResourceTagsByResourceIds](https://cloud.tencent.com/document/api/651/35319) - 批量查看资源关联的标签
+* Update: [ModifyAddressAttribute](https://cloud.tencent.com/document/api/215/16704) - 修改弹性公网IP属性
+* Update: [ModifyAddressInternetChargeType](https://cloud.tencent.com/document/api/215/43849) - 调整弹性公网ip计费模式
+* Update: [ModifyAddressesBandwidth](https://cloud.tencent.com/document/api/215/19214) - 调整弹性公网IP带宽
+* Update: [ModifyResourceTags](https://cloud.tencent.com/document/api/651/35322) - 批量修改资源关联的标签
+* Update: [RenewAddresses](https://cloud.tencent.com/document/api/215/49015) - 续费包月带宽弹性公网IP
+* Delete: [DescribeAddresses](https://cloud.tencent.com/document/api/215/16702) - 查询弹性公网IP列表
+* Delete: [DescribeNatGateways](https://cloud.tencent.com/document/api/215/36034) - 查询NAT网关
+* Delete: [DescribeTaskResult](https://cloud.tencent.com/document/api/215/36271) - 查询异步任务执行结果
+* Delete: [DisassociateAddress](https://cloud.tencent.com/document/api/215/16703) - 解绑弹性公网IP
+* Delete: [DisassociateNatGatewayAddress](https://cloud.tencent.com/document/api/215/36716) - NAT网关解绑弹性IP
+* Delete: [ReleaseAddresses](https://cloud.tencent.com/document/api/215/16705) - 释放弹性公网IP
 
 ## Import
 

@@ -130,6 +130,17 @@ The `timeouts` block allows you to specify [timeouts](https://developer.hashicor
 * `read` - (Defaults to `3m`) Used when reading the resource.
 * `update` - (Defaults to `20m`) Used when updating the resource.
 * `delete` - (Defaults to `20m`) Used when deleting the resource.
+## API Reference
+
+This resource interacts with the following TencentCloud APIs:
+
+* Create: [CreateAccelerationDomain](https://cloud.tencent.com/document/api/1552/86338) - 创建加速域名
+* Create: [ModifyAccelerationDomainStatuses](https://cloud.tencent.com/document/api/1552/86334) - 批量修改加速域名状态
+* Read: [DescribeAccelerationDomains](https://cloud.tencent.com/document/api/1552/86336) - 查询加速域名列表
+* Update: [ModifyAccelerationDomain](https://cloud.tencent.com/document/api/1552/86335) - 修改加速域名信息
+* Update: [ModifyAccelerationDomainStatuses](https://cloud.tencent.com/document/api/1552/86334) - 批量修改加速域名状态
+* Delete: [DeleteAccelerationDomains](https://cloud.tencent.com/document/api/1552/86337) - 批量删除加速域名
+* Delete: [ModifyAccelerationDomainStatuses](https://cloud.tencent.com/document/api/1552/86334) - 批量修改加速域名状态
 
 ## Import
 

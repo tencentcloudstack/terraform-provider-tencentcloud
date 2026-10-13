@@ -82,6 +82,13 @@ In addition to all arguments above, the following attributes are exported:
 * `uin` - User ID Note: this field may return null, indicating that a valid value cannot be obtained.
 * `updated_at` - Update time Note: this field may return null, indicating that a valid value cannot be obtained.
 
+## API Reference
+
+This resource interacts with the following TencentCloud APIs:
+
+* Create: [CreateAlertChannel](https://cloud.tencent.com/document/api/1484/78095) - 创建告警通知接收组
+* Read: [DescribeAlertChannels](https://cloud.tencent.com/document/api/1484/78084) - 查询告警通知接收组
+* Delete: [DeleteAlertChannel](https://cloud.tencent.com/document/api/1484/78090) - 删除告警通知接收组
 
 ## Import
 

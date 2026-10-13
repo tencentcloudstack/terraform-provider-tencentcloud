@@ -103,6 +103,15 @@ In addition to all arguments above, the following attributes are exported:
 * `id` - ID of the resource.
 
 
+## API Reference
+
+This resource interacts with the following TencentCloud APIs:
+
+* Create: [CreateApplicationAutoscaler](https://cloud.tencent.com/document/api/1371/78341) - 创建弹性伸缩策略组合
+* Read: [DescribeApplicationAutoscalerList](https://cloud.tencent.com/document/api/1371/78339) - 获取应用弹性策略组合
+* Update: [ModifyApplicationAutoscaler](https://cloud.tencent.com/document/api/1371/78338) - 修改弹性伸缩策略组合
+* Delete: [DeleteApplicationAutoscaler](https://cloud.tencent.com/document/api/1371/78340) - 删除应用弹性策略组合
+* Delete: [DisableApplicationAutoscaler](https://cloud.tencent.com/document/api/1371/78955) - 关闭应用弹性策略组合
 
 ## Import
 

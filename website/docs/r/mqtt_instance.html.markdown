@@ -133,4 +133,18 @@ In addition to all arguments above, the following attributes are exported:
 * `id` - ID of the resource.
 
 
+## API Reference
+
+This resource interacts with the following TencentCloud APIs:
+
+* Create: [CreateInstance](https://cloud.tencent.com/document/api/1778/116044) - 购买MQTT实例
+* Create: [DescribeInstance](https://cloud.tencent.com/document/api/1778/111030) - 查询MQTT实例详情信息
+* Create: [ModifyInstance](https://cloud.tencent.com/document/api/1778/116039) - 修改MQTT实例属性
+* Create: [ModifyResourceTags](https://cloud.tencent.com/document/api/651/35322) - 批量修改资源关联的标签
+* Read: [DescribeInstance](https://cloud.tencent.com/document/api/1778/111030) - 查询MQTT实例详情信息
+* Read: [DescribeResourceTagsByResourceIds](https://cloud.tencent.com/document/api/651/35319) - 批量查看资源关联的标签
+* Update: [ModifyInstance](https://cloud.tencent.com/document/api/1778/116039) - 修改MQTT实例属性
+* Update: [ModifyResourceTags](https://cloud.tencent.com/document/api/651/35322) - 批量修改资源关联的标签
+* Delete: [DeleteInstance](https://cloud.tencent.com/document/api/1778/116042) - 删除MQTT实例
+* Delete: [DescribeInstance](https://cloud.tencent.com/document/api/1778/111030) - 查询MQTT实例详情信息
 

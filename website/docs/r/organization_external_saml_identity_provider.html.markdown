@@ -51,4 +51,14 @@ In addition to all arguments above, the following attributes are exported:
 * `create_time` - Create time.
 * `update_time` - Update time.
 
+## API Reference
+
+This resource interacts with the following TencentCloud APIs:
+
+* Create: [AddExternalSAMLIdPCertificate](https://cloud.tencent.com/document/api/850/109966) - 添加SAML签名证书
+* Create: [SetExternalSAMLIdentityProvider](https://cloud.tencent.com/document/api/850/109960) - 配置SAML身份提供商信息
+* Read: [GetExternalSAMLIdentityProvider](https://cloud.tencent.com/document/api/850/109964) - 查询SAML身份提供商配置信息
+* Update: [AddExternalSAMLIdPCertificate](https://cloud.tencent.com/document/api/850/109966) - 添加SAML签名证书
+* Update: [RemoveExternalSAMLIdPCertificate](https://cloud.tencent.com/document/api/850/109961) - 移除SAML签名证书
+* Delete: [ClearExternalSAMLIdentityProvider](https://cloud.tencent.com/document/api/850/109965) - 清空SAML身份提供商配置信息
 

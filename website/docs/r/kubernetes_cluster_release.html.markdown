@@ -70,4 +70,15 @@ The `timeouts` block allows you to specify [timeouts](https://developer.hashicor
 
 * `create` - (Defaults to `30m`) Used when creating the resource.
 * `update` - (Defaults to `30m`) Used when updating the resource.
+## API Reference
+
+This resource interacts with the following TencentCloud APIs:
+
+* Create: [CreateClusterRelease](https://cloud.tencent.com/document/api/457/83554) - 集群安装应用
+* Create: [DescribeClusterPendingReleases](https://cloud.tencent.com/document/api/457/83758) - 查询集群安装中的应用列表
+* Create: [DescribeClusterReleaseDetails](https://cloud.tencent.com/document/api/457/83757) - 查询集群已安装应用详情
+* Read: [DescribeClusterReleaseDetails](https://cloud.tencent.com/document/api/457/83757) - 查询集群已安装应用详情
+* Update: [DescribeClusterReleases](https://cloud.tencent.com/document/api/457/83755) - 查询集群已安装应用列表
+* Update: [UpgradeClusterRelease](https://cloud.tencent.com/document/api/457/83752) - 集群升级应用
+* Delete: [UninstallClusterRelease](https://cloud.tencent.com/document/api/457/83753) - 集群删除应用
 

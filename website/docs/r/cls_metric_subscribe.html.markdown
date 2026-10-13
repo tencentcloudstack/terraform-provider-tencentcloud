@@ -101,6 +101,15 @@ In addition to all arguments above, the following attributes are exported:
 * `status` - Subscribe task running status. 0: creating, 1: paused, 2: running, 3: abnormal.
 * `task_id` - Subscribe task id.
 
+## API Reference
+
+This resource interacts with the following TencentCloud APIs:
+
+* Create: [CreateMetricSubscribe](https://cloud.tencent.com/document/api/614/126723) - 创建指标订阅配置
+* Create: [ModifyMetricSubscribe](https://cloud.tencent.com/document/api/614/126718) - 修改指标订阅配置
+* Read: [DescribeMetricSubscribes](https://cloud.tencent.com/document/api/614/126719) - 获取指标订阅配置
+* Update: [ModifyMetricSubscribe](https://cloud.tencent.com/document/api/614/126718) - 修改指标订阅配置
+* Delete: [DeleteMetricSubscribe](https://cloud.tencent.com/document/api/614/126722) - 删除指标订阅配置
 
 ## Import
 

@@ -32,6 +32,11 @@ In addition to all arguments above, the following attributes are exported:
 * `id` - ID of the resource.
 
 
+## API Reference
+
+This resource interacts with the following TencentCloud APIs:
+
+* Create: [UpdateCertificateRecordRollback](https://cloud.tencent.com/document/api/400/91647) - 云资源更新成功记录回滚
 
 ## Import
 

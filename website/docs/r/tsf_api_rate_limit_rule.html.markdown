@@ -42,6 +42,14 @@ In addition to all arguments above, the following attributes are exported:
 * `tsf_rule_id` - Tsf Rule ID.
 * `updated_time` - update time.
 
+## API Reference
+
+This resource interacts with the following TencentCloud APIs:
+
+* Create: [CreateApiRateLimitRuleWithDetailResp](https://cloud.tencent.com/document/api/649/89211) - 创建API限流规则返回详细信息
+* Read: [DescribeApiRateLimitRules](https://cloud.tencent.com/document/api/649/50635) - 查询API限流规则
+* Update: [UpdateApiRateLimitRule](https://cloud.tencent.com/document/api/649/50624) - 更新API限流规则
+* Delete: [DeleteApiRateLimitRule](https://cloud.tencent.com/document/api/649/89208) - 删除API限流规则
 
 ## Import
 

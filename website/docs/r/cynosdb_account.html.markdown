@@ -57,6 +57,18 @@ In addition to all arguments above, the following attributes are exported:
 * `id` - ID of the resource.
 
 
+## API Reference
+
+This resource interacts with the following TencentCloud APIs:
+
+* Create: [CreateAccounts](https://cloud.tencent.com/document/api/1003/71660) - 创建用户账号
+* Create: [DescribeTasks](https://cloud.tencent.com/document/api/1003/103866) - 查询任务列表
+* Read: [DescribeAccounts](https://cloud.tencent.com/document/api/1003/48075) - 查询数据库账号列表
+* Update: [ModifyAccountDescription](https://cloud.tencent.com/document/api/1003/92716) - 修改数据库账号描述信息
+* Update: [ModifyAccountHost](https://cloud.tencent.com/document/api/1003/92715) - 修改账号主机
+* Update: [ModifyAccountParams](https://cloud.tencent.com/document/api/1003/70112) - 修改账号配置
+* Update: [ResetAccountPassword](https://cloud.tencent.com/document/api/1003/83592) - 修改数据库账号密码
+* Delete: [DeleteAccounts](https://cloud.tencent.com/document/api/1003/92718) - 删除用户账号
 
 ## Import
 

@@ -36,6 +36,15 @@ In addition to all arguments above, the following attributes are exported:
 * `id` - ID of the resource.
 
 
+## API Reference
+
+This resource interacts with the following TencentCloud APIs:
+
+* Create: [CreateBlueprint](https://cloud.tencent.com/document/api/1207/54385) - 创建镜像
+* Create: [DescribeBlueprints](https://cloud.tencent.com/document/api/1207/47689) - 查询镜像信息
+* Read: [DescribeBlueprints](https://cloud.tencent.com/document/api/1207/47689) - 查询镜像信息
+* Update: [ModifyBlueprintAttribute](https://cloud.tencent.com/document/api/1207/54383) - 修改镜像属性
+* Delete: [DeleteBlueprints](https://cloud.tencent.com/document/api/1207/54384) - 删除镜像
 
 ## Import
 

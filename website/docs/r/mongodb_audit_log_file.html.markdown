@@ -69,6 +69,16 @@ In addition to all arguments above, the following attributes are exported:
   * `progress_rate` - Download progress.
   * `status` - File status. Valid values: `creating`, `failed`, `success`.
 
+## API Reference
+
+This resource interacts with the following TencentCloud APIs:
+
+* Create: [CreateAuditLogFile](https://cloud.tencent.com/document/api/240/125363) - 创建审计日志文件
+* Create: [DescribeAuditLogFiles](https://cloud.tencent.com/document/api/240/128357) - 查询审计日志文件
+* Read: [DescribeAuditLogFiles](https://cloud.tencent.com/document/api/240/128357) - 查询审计日志文件
+* Update: [DescribeAuditLogFiles](https://cloud.tencent.com/document/api/240/128357) - 查询审计日志文件
+* Delete: [DeleteAuditLogFile](https://cloud.tencent.com/document/api/240/125362) - 删除审计日志文件
+* Delete: [DescribeAuditLogFiles](https://cloud.tencent.com/document/api/240/128357) - 查询审计日志文件
 
 ## Import
 

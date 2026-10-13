@@ -122,6 +122,20 @@ In addition to all arguments above, the following attributes are exported:
 * `id` - ID of the resource.
 
 
+## API Reference
+
+This resource interacts with the following TencentCloud APIs:
+
+* Create: [CreateVpnGatewaySslServer](https://cloud.tencent.com/document/api/215/70289) - 创建SSL-VPN Server端
+* Create: [DescribeVpcTaskResult](https://cloud.tencent.com/document/api/215/59037) - 查询VPC异步任务执行结果
+* Create: [ModifyResourceTags](https://cloud.tencent.com/document/api/651/35322) - 批量修改资源关联的标签
+* Read: [DescribeResourceTagsByResourceIds](https://cloud.tencent.com/document/api/651/35319) - 批量查看资源关联的标签
+* Read: [DescribeVpnGatewaySslServers](https://cloud.tencent.com/document/api/215/70285) - 查询SSL-VPN SERVER 列表
+* Update: [DescribeVpcTaskResult](https://cloud.tencent.com/document/api/215/59037) - 查询VPC异步任务执行结果
+* Update: [ModifyResourceTags](https://cloud.tencent.com/document/api/651/35322) - 批量修改资源关联的标签
+* Update: [ModifyVpnGatewaySslServer](https://cloud.tencent.com/document/api/215/100955) - 修改SSL-VPN 服务端属性
+* Delete: [DeleteVpnGatewaySslServer](https://cloud.tencent.com/document/api/215/70287) - 删除SSL-VPN-SERVER
+* Delete: [DescribeVpcTaskResult](https://cloud.tencent.com/document/api/215/59037) - 查询VPC异步任务执行结果
 
 ## Import
 

@@ -202,6 +202,9 @@ In addition to all arguments above, the following attributes are exported:
 * `id` - ID of the resource.
 * `tmpl_id` - Template ID.
 
+## API Reference
+
+This resource interacts with the following TencentCloud APIs:
 
 ## Import
 

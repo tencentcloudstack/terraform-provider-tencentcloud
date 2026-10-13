@@ -42,6 +42,13 @@ In addition to all arguments above, the following attributes are exported:
 * `policy_name` - Policy name.
 * `update_time` - Update time.
 
+## API Reference
+
+This resource interacts with the following TencentCloud APIs:
+
+* Create: [BindOrganizationMemberAuthAccount](https://cloud.tencent.com/document/api/850/63308) - 绑定组织成员和组织管理员子账号的授权关系
+* Read: [DescribeOrganizationMemberAuthAccounts](https://cloud.tencent.com/document/api/850/82999) - 获取组织成员被绑定授权关系的子账号列表
+* Delete: [CancelOrganizationMemberAuthAccount](https://cloud.tencent.com/document/api/850/83000) - 取消组织成员和组织管理员子账号的授权关系
 
 ## Import
 

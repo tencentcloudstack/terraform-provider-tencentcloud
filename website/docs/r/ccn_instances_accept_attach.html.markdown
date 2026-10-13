@@ -48,4 +48,9 @@ In addition to all arguments above, the following attributes are exported:
 * `id` - ID of the resource.
 
 
+## API Reference
+
+This resource interacts with the following TencentCloud APIs:
+
+* Create: [AcceptAttachCcnInstances](https://cloud.tencent.com/document/api/215/20251) - 云联网接受关联实例
 

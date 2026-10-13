@@ -58,6 +58,19 @@ In addition to all arguments above, the following attributes are exported:
 * `create_time` - The time when the sub application was created.
 * `sub_app_id` - Sub application ID.
 
+## API Reference
+
+This resource interacts with the following TencentCloud APIs:
+
+* Create: [CreateSubAppId](https://cloud.tencent.com/document/api/266/43744) - 创建应用
+* Create: [DescribeSubAppIds](https://cloud.tencent.com/document/api/266/36304) - 查询应用列表
+* Create: [ModifySubAppIdStatus](https://cloud.tencent.com/document/api/266/36302) - 修改应用状态
+* Read: [DescribeSubAppIds](https://cloud.tencent.com/document/api/266/36304) - 查询应用列表
+* Update: [DescribeSubAppIds](https://cloud.tencent.com/document/api/266/36304) - 查询应用列表
+* Update: [ModifyResourceTags](https://cloud.tencent.com/document/api/651/35322) - 批量修改资源关联的标签
+* Update: [ModifySubAppIdInfo](https://cloud.tencent.com/document/api/266/36303) - 修改应用信息
+* Update: [ModifySubAppIdStatus](https://cloud.tencent.com/document/api/266/36302) - 修改应用状态
+* Delete: [ModifySubAppIdStatus](https://cloud.tencent.com/document/api/266/36302) - 修改应用状态
 
 ## Import
 

@@ -38,4 +38,13 @@ In addition to all arguments above, the following attributes are exported:
 * `id` - ID of the resource.
 * `global_status` - Global protection status.
 
+## API Reference
+
+This resource interacts with the following TencentCloud APIs:
+
+* Create: [CloseWafProtection](https://cloud.tencent.com/document/api/1364/101822) - 关闭 WAF 防护
+* Create: [OpenWafProtection](https://cloud.tencent.com/document/api/1364/101820) - 开启 WAF 防护
+* Read: [DescribeWafProtection](https://cloud.tencent.com/document/api/1364/101826) - 获取 WAF 防护状态
+* Update: [CloseWafProtection](https://cloud.tencent.com/document/api/1364/101822) - 关闭 WAF 防护
+* Update: [OpenWafProtection](https://cloud.tencent.com/document/api/1364/101820) - 开启 WAF 防护
 

@@ -55,4 +55,9 @@ In addition to all arguments above, the following attributes are exported:
   * `url` - Purge url.
 * `task_id` - Task id of last operation.
 
+## API Reference
+
+This resource interacts with the following TencentCloud APIs:
+
+* Read: [DescribePurgeTasks](https://cloud.tencent.com/document/api/228/37873) - 刷新历史查询
 

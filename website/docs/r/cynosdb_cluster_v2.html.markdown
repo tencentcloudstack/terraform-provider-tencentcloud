@@ -219,6 +219,62 @@ In addition to all arguments above, the following attributes are exported:
     * `instance_name` - Name of instance.
 * `storage_used` - Used storage of CynosDB cluster, unit in MB.
 
+## API Reference
+
+This resource interacts with the following TencentCloud APIs:
+
+* Create: [CreateClusters](https://cloud.tencent.com/document/api/1003/48087) - 购买新集群
+* Create: [DescribeClusterDetail](https://cloud.tencent.com/document/api/1003/48086) - 集群信息描述
+* Create: [DescribeClusterInstanceGrps](https://cloud.tencent.com/document/api/1003/48303) - 查询实例组（废弃）
+* Create: [DescribeClusters](https://cloud.tencent.com/document/api/1003/48085) - 查询集群列表
+* Create: [DescribeFlow](https://cloud.tencent.com/document/api/1003/86162) - 查询任务流信息
+* Create: [DescribeInstanceDetail](https://cloud.tencent.com/document/api/1003/48250) - 查询实例详情
+* Create: [DescribeInstances](https://cloud.tencent.com/document/api/1003/48334) - 查询实例的列表
+* Create: [DescribeResourcesByDealName](https://cloud.tencent.com/document/api/1003/52131) - 查询订单关联实例
+* Create: [ModifyDBInstanceSecurityGroups](https://cloud.tencent.com/document/api/1003/48096) - 修改实例绑定安全组
+* Create: [ModifyMaintainPeriodConfig](https://cloud.tencent.com/document/api/1003/48080) - 修改维护时间配置
+* Create: [ModifyResourceTags](https://cloud.tencent.com/document/api/651/35322) - 批量修改资源关联的标签
+* Create: [OpenClusterReadOnlyInstanceGroupAccess](https://cloud.tencent.com/document/api/1003/95782) - 开启只读实例组接入
+* Create: [PauseServerless](https://cloud.tencent.com/document/api/1003/70122) - 暂停serverless集群
+* Create: [ResumeServerless](https://cloud.tencent.com/document/api/1003/70121) - 恢复serverless集群
+* Read: [DescribeClusterDetail](https://cloud.tencent.com/document/api/1003/48086) - 集群信息描述
+* Read: [DescribeClusterInstanceGrps](https://cloud.tencent.com/document/api/1003/48303) - 查询实例组（废弃）
+* Read: [DescribeClusterParams](https://cloud.tencent.com/document/api/1003/79556) - 查询集群参数
+* Read: [DescribeClusters](https://cloud.tencent.com/document/api/1003/48085) - 查询集群列表
+* Read: [DescribeDBSecurityGroups](https://cloud.tencent.com/document/api/1003/48305) - 查询实例安全组信息
+* Read: [DescribeInstanceDetail](https://cloud.tencent.com/document/api/1003/48250) - 查询实例详情
+* Read: [DescribeInstances](https://cloud.tencent.com/document/api/1003/48334) - 查询实例的列表
+* Read: [DescribeMaintainPeriod](https://cloud.tencent.com/document/api/1003/48083) - 查询实例维护时间窗
+* Read: [DescribeResourceTagsByResourceIds](https://cloud.tencent.com/document/api/651/35319) - 批量查看资源关联的标签
+* Update: [AddClusterSlaveZone](https://cloud.tencent.com/document/api/1003/79555) - 开启多可用区部署
+* Update: [DescribeClusterDetail](https://cloud.tencent.com/document/api/1003/48086) - 集群信息描述
+* Update: [DescribeClusterInstanceGrps](https://cloud.tencent.com/document/api/1003/48303) - 查询实例组（废弃）
+* Update: [DescribeClusterParams](https://cloud.tencent.com/document/api/1003/79556) - 查询集群参数
+* Update: [DescribeClusters](https://cloud.tencent.com/document/api/1003/48085) - 查询集群列表
+* Update: [DescribeFlow](https://cloud.tencent.com/document/api/1003/86162) - 查询任务流信息
+* Update: [DescribeInstanceDetail](https://cloud.tencent.com/document/api/1003/48250) - 查询实例详情
+* Update: [DescribeInstances](https://cloud.tencent.com/document/api/1003/48334) - 查询实例的列表
+* Update: [ModifyClusterName](https://cloud.tencent.com/document/api/1003/71729) - 修改集群名称
+* Update: [ModifyClusterParam](https://cloud.tencent.com/document/api/1003/63365) - 修改集群参数
+* Update: [ModifyClusterSlaveZone](https://cloud.tencent.com/document/api/1003/79554) - 变更备可用区
+* Update: [ModifyClusterStorage](https://cloud.tencent.com/document/api/1003/80282) - 调整包年包月存储容量
+* Update: [ModifyDBInstanceSecurityGroups](https://cloud.tencent.com/document/api/1003/48096) - 修改实例绑定安全组
+* Update: [ModifyInstanceName](https://cloud.tencent.com/document/api/1003/71728) - 修改实例名称
+* Update: [ModifyMaintainPeriodConfig](https://cloud.tencent.com/document/api/1003/48080) - 修改维护时间配置
+* Update: [ModifyResourceTags](https://cloud.tencent.com/document/api/651/35322) - 批量修改资源关联的标签
+* Update: [OpenClusterReadOnlyInstanceGroupAccess](https://cloud.tencent.com/document/api/1003/95782) - 开启只读实例组接入
+* Update: [PauseServerless](https://cloud.tencent.com/document/api/1003/70122) - 暂停serverless集群
+* Update: [RemoveClusterSlaveZone](https://cloud.tencent.com/document/api/1003/79553) - 关闭多可用区部署
+* Update: [ResetAccountPassword](https://cloud.tencent.com/document/api/1003/83592) - 修改数据库账号密码
+* Update: [ResumeServerless](https://cloud.tencent.com/document/api/1003/70121) - 恢复serverless集群
+* Update: [SetRenewFlag](https://cloud.tencent.com/document/api/1003/48078) - 设置自动续费
+* Update: [SwitchClusterVpc](https://cloud.tencent.com/document/api/1003/86634) - 更换集群vpc
+* Update: [UpgradeClusterVersion](https://cloud.tencent.com/document/api/1003/92719) - 更新内核小版本
+* Update: [UpgradeInstance](https://cloud.tencent.com/document/api/1003/48077) - 实例变配
+* Delete: [DescribeClusterDetail](https://cloud.tencent.com/document/api/1003/48086) - 集群信息描述
+* Delete: [DescribeClusters](https://cloud.tencent.com/document/api/1003/48085) - 查询集群列表
+* Delete: [IsolateCluster](https://cloud.tencent.com/document/api/1003/48082) - 隔离集群
+* Delete: [OfflineCluster](https://cloud.tencent.com/document/api/1003/48079) - 销毁集群
 
 ## Import
 

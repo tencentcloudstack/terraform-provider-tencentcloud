@@ -64,6 +64,13 @@ The `default_settings` object of `capacity_global_config` exports the following:
 * `key` - Key, used for display. This configuration corresponds to the configuration item in the configuration file.
 * `prompt` - Prompt.
 
+## API Reference
+
+This resource interacts with the following TencentCloud APIs:
+
+* Create: [ModifyGlobalConfig](https://cloud.tencent.com/document/api/589/111204) - 修改YARN资源调度的全局配置
+* Read: [DescribeGlobalConfig](https://cloud.tencent.com/document/api/589/111205) - 查询YARN资源调度的全局配置
+* Update: [ModifyGlobalConfig](https://cloud.tencent.com/document/api/589/111204) - 修改YARN资源调度的全局配置
 
 ## Import
 

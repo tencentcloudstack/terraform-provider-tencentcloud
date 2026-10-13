@@ -152,6 +152,16 @@ In addition to all arguments above, the following attributes are exported:
 * `id` - ID of the resource.
 * `limit_rule_id` - Rate limit rule ID.
 
+## API Reference
+
+This resource interacts with the following TencentCloud APIs:
+
+* Create: [CreateRateLimitV2](https://cloud.tencent.com/document/api/627/125859) - 创建自研版限流规则
+* Create: [DescribeRateLimitsV2](https://cloud.tencent.com/document/api/627/125857) - 查询限流规则列表接口
+* Read: [DescribeRateLimitsV2](https://cloud.tencent.com/document/api/627/125857) - 查询限流规则列表接口
+* Update: [DescribeRateLimitsV2](https://cloud.tencent.com/document/api/627/125857) - 查询限流规则列表接口
+* Update: [UpdateRateLimitV2](https://cloud.tencent.com/document/api/627/125855) - 更新自研版限流规则
+* Delete: [DeleteRateLimitsV2](https://cloud.tencent.com/document/api/627/125858) - 删除自研版限流规则列表
 
 ## Import
 

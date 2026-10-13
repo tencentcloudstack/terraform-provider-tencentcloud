@@ -66,6 +66,15 @@ In addition to all arguments above, the following attributes are exported:
 * `id` - ID of the resource.
 
 
+## API Reference
+
+This resource interacts with the following TencentCloud APIs:
+
+* Create: [CreateEnvironment](https://cloud.tencent.com/document/api/1179/46081) - 创建命名空间
+* Read: [DescribeEnvironments](https://cloud.tencent.com/document/api/1179/46078) - 获取命名空间列表
+* Update: [ModifyEnvironmentAttributes](https://cloud.tencent.com/document/api/1179/46077) - 修改命名空间属性
+* Update: [ModifyResourceTags](https://cloud.tencent.com/document/api/651/35322) - 批量修改资源关联的标签
+* Delete: [DeleteEnvironments](https://cloud.tencent.com/document/api/1179/46080) - 删除命名空间
 
 ## Import
 

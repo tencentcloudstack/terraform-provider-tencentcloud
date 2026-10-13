@@ -42,6 +42,18 @@ In addition to all arguments above, the following attributes are exported:
 * `id` - ID of the resource.
 
 
+## API Reference
+
+This resource interacts with the following TencentCloud APIs:
+
+* Create: [CreateEventBus](https://cloud.tencent.com/document/api/1359/67686) - 创建事件集
+* Create: [ModifyResourceTags](https://cloud.tencent.com/document/api/651/35322) - 批量修改资源关联的标签
+* Read: [DescribeResourceTagsByResourceIds](https://cloud.tencent.com/document/api/651/35319) - 批量查看资源关联的标签
+* Read: [GetEventBus](https://cloud.tencent.com/document/api/1359/67684) - 获取事件集详情
+* Update: [GetEventBus](https://cloud.tencent.com/document/api/1359/67684) - 获取事件集详情
+* Update: [ModifyResourceTags](https://cloud.tencent.com/document/api/651/35322) - 批量修改资源关联的标签
+* Update: [UpdateEventBus](https://cloud.tencent.com/document/api/1359/67681) - 更新事件集
+* Delete: [DeleteEventBus](https://cloud.tencent.com/document/api/1359/67685) - 删除事件集
 
 ## Import
 

@@ -51,6 +51,15 @@ In addition to all arguments above, the following attributes are exported:
 * `id` - ID of the resource.
 
 
+## API Reference
+
+This resource interacts with the following TencentCloud APIs:
+
+* Create: [DescribePrefetchOriginLimit](https://cloud.tencent.com/document/api/1552/126842) - 查询预热回源限速限制
+* Create: [ModifyPrefetchOriginLimit](https://cloud.tencent.com/document/api/1552/126841) - 配置预热回源限速限制
+* Read: [DescribePrefetchOriginLimit](https://cloud.tencent.com/document/api/1552/126842) - 查询预热回源限速限制
+* Update: [ModifyPrefetchOriginLimit](https://cloud.tencent.com/document/api/1552/126841) - 配置预热回源限速限制
+* Delete: [ModifyPrefetchOriginLimit](https://cloud.tencent.com/document/api/1552/126841) - 配置预热回源限速限制
 
 ## Import
 

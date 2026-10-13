@@ -34,6 +34,16 @@ In addition to all arguments above, the following attributes are exported:
 * `id` - ID of the resource.
 
 
+## API Reference
+
+This resource interacts with the following TencentCloud APIs:
+
+* Create: [ReplaceRouteTableAssociation](https://cloud.tencent.com/document/api/215/15767) - 替换路由表绑定关系
+* Read: [DescribeSubnets](https://cloud.tencent.com/document/api/215/15784) - 查询子网列表
+* Update: [ReplaceRouteTableAssociation](https://cloud.tencent.com/document/api/215/15767) - 替换路由表绑定关系
+* Delete: [DescribeRouteTables](https://cloud.tencent.com/document/api/215/15763) - 查询路由表
+* Delete: [DescribeSubnets](https://cloud.tencent.com/document/api/215/15784) - 查询子网列表
+* Delete: [ReplaceRouteTableAssociation](https://cloud.tencent.com/document/api/215/15767) - 替换路由表绑定关系
 
 ## Import
 

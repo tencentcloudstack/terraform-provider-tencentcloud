@@ -55,4 +55,12 @@ In addition to all arguments above, the following attributes are exported:
 * `id` - ID of the resource.
 
 
+## API Reference
+
+This resource interacts with the following TencentCloud APIs:
+
+* Create: [CreateInboundEndpoint](https://cloud.tencent.com/document/api/1338/124334) - 创建入站终端节点
+* Read: [DescribeInboundEndpointList](https://cloud.tencent.com/document/api/1338/124328) - 获取入站终端节点列表
+* Update: [ModifyInboundEndpoint](https://cloud.tencent.com/document/api/1338/124326) - 修改入站终端节点
+* Delete: [DeleteInboundEndpoint](https://cloud.tencent.com/document/api/1338/124331) - 删除入站终端节点
 

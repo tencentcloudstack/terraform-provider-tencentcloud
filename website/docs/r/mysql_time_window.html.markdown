@@ -95,6 +95,14 @@ In addition to all arguments above, the following attributes are exported:
 * `id` - ID of the resource.
 
 
+## API Reference
+
+This resource interacts with the following TencentCloud APIs:
+
+* Create: [ModifyTimeWindow](https://cloud.tencent.com/document/api/236/33888) - 更新维护时间窗口
+* Read: [DescribeTimeWindow](https://cloud.tencent.com/document/api/236/33889) - 查询维护时间窗口
+* Update: [ModifyTimeWindow](https://cloud.tencent.com/document/api/236/33888) - 更新维护时间窗口
+* Delete: [DeleteTimeWindow](https://cloud.tencent.com/document/api/236/33890) - 删除维护时间窗口
 
 ## Import
 

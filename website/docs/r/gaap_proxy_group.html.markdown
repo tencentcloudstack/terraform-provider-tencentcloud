@@ -40,6 +40,14 @@ In addition to all arguments above, the following attributes are exported:
 * `id` - ID of the resource.
 
 
+## API Reference
+
+This resource interacts with the following TencentCloud APIs:
+
+* Create: [CreateProxyGroup](https://cloud.tencent.com/document/api/608/36949) - 创建通道组
+* Read: [DescribeProxyGroupDetails](https://cloud.tencent.com/document/api/608/36944) - 查询通道组详情
+* Update: [ModifyProxyGroupAttribute](https://cloud.tencent.com/document/api/608/36941) - 修改通道组属性
+* Delete: [DeleteProxyGroup](https://cloud.tencent.com/document/api/608/36947) - 删除通道组
 
 ## Import
 

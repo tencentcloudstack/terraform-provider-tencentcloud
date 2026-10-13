@@ -70,6 +70,17 @@ In addition to all arguments above, the following attributes are exported:
 
 * `id` - Resource identifier in the form `<secret_name>#<version_id>`.
 
+## API Reference
+
+This resource interacts with the following TencentCloud APIs:
+
+* Create: [PutSecretValue](https://cloud.tencent.com/document/api/1140/40518) - 增加新版本凭据
+* Read: [DescribeSecret](https://cloud.tencent.com/document/api/1140/40526) - 获取凭据详细信息
+* Read: [GetSecretValue](https://cloud.tencent.com/document/api/1140/40522) - 获取凭据明文
+* Read: [ListSecretVersionIds](https://cloud.tencent.com/document/api/1140/40520) - 获取指定凭据下的版本列表信息。
+* Update: [DescribeSecret](https://cloud.tencent.com/document/api/1140/40526) - 获取凭据详细信息
+* Update: [UpdateSecret](https://cloud.tencent.com/document/api/1140/40515) - 更新凭据内容
+* Delete: [DeleteSecretVersion](https://cloud.tencent.com/document/api/1140/40527) - 删除指定版本的凭据
 
 ## Import
 

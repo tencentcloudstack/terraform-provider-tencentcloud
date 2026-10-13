@@ -44,6 +44,13 @@ In addition to all arguments above, the following attributes are exported:
 * `id` - ID of the resource.
 
 
+## API Reference
+
+This resource interacts with the following TencentCloud APIs:
+
+* Create: [ModifyModuleStatus](https://cloud.tencent.com/document/api/627/99699) - 设置某个domain下基础安全模块的开关
+* Read: [DescribeModuleStatus](https://cloud.tencent.com/document/api/627/101340) - 查询waf各个模块接口的开关状态
+* Update: [ModifyModuleStatus](https://cloud.tencent.com/document/api/627/99699) - 设置某个domain下基础安全模块的开关
 
 ## Import
 

@@ -107,6 +107,14 @@ The `policy_set` object exports the following:
 * `source_id` - The ID of the work group, which applies only when the value of the `Source` field is `WORKGROUP`.
 * `source_name` - The name of the work group, which applies only when the value of the `Source` field is `WORKGROUP`.
 
+## API Reference
+
+This resource interacts with the following TencentCloud APIs:
+
+* Create: [AttachUserPolicy](https://cloud.tencent.com/document/api/1342/58468) - 绑定鉴权策略到用户
+* Create: [DescribeUserInfo](https://cloud.tencent.com/document/api/1342/99262) - 获取用户详细信息
+* Read: [DescribeUserInfo](https://cloud.tencent.com/document/api/1342/99262) - 获取用户详细信息
+* Delete: [DetachUserPolicy](https://cloud.tencent.com/document/api/1342/58458) - 解绑用户鉴权策略
 
 ## Import
 

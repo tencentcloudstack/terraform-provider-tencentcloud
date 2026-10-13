@@ -64,6 +64,13 @@ In addition to all arguments above, the following attributes are exported:
 * `key` - Unique project key (12 characters).
 * `project_status` - Project status (`1`: Creating; `2`: Running; `3`: Abnormal; `4`: Restarting; `5`: Stopping; `6`: Stopped; `7`: Terminating; `8`: Terminated).
 
+## API Reference
+
+This resource interacts with the following TencentCloud APIs:
+
+* Read: [DescribeProjects](https://cloud.tencent.com/document/api/1464/61475) - 获取 RUM 应用列表
+* Update: [ModifyProject](https://cloud.tencent.com/document/api/1464/69209) - 修改 RUM 应用信息
+* Delete: [DeleteProject](https://cloud.tencent.com/document/api/1464/69238) - 删除 RUM 应用
 
 ## Import
 

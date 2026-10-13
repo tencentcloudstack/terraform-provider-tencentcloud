@@ -32,4 +32,10 @@ In addition to all arguments above, the following attributes are exported:
 * `id` - ID of the resource.
 
 
+## API Reference
+
+This resource interacts with the following TencentCloud APIs:
+
+* Create: [CancelDcnJob](https://cloud.tencent.com/document/api/237/58911) - 取消DCN同步
+* Create: [DescribeFlow](https://cloud.tencent.com/document/api/237/16177) - 查询流程状态
 

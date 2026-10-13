@@ -59,6 +59,24 @@ In addition to all arguments above, the following attributes are exported:
 * `message_storage_location` - Message storage location.
 * `segment_bytes` - Number of bytes rolled by shard.
 
+## API Reference
+
+This resource interacts with the following TencentCloud APIs:
+
+* Create: [CreateTopic](https://cloud.tencent.com/document/api/597/40851) - 创建主题
+* Create: [CreateTopicIpWhiteList](https://cloud.tencent.com/document/api/597/40850) - 创建主题IP白名单
+* Create: [DescribeInstanceAttributes](https://cloud.tencent.com/document/api/597/40836) - 获取实例属性
+* Create: [DescribeTopicDetail](https://cloud.tencent.com/document/api/597/40845) - 获取主题列表详情
+* Read: [DescribeInstanceAttributes](https://cloud.tencent.com/document/api/597/40836) - 获取实例属性
+* Read: [DescribeTopicAttributes](https://cloud.tencent.com/document/api/597/40846) - 获取主题属性
+* Read: [DescribeTopicDetail](https://cloud.tencent.com/document/api/597/40845) - 获取主题列表详情
+* Update: [CreatePartition](https://cloud.tencent.com/document/api/597/40852) - 增加主题分区
+* Update: [DescribeInstanceAttributes](https://cloud.tencent.com/document/api/597/40836) - 获取实例属性
+* Update: [DescribeTopicDetail](https://cloud.tencent.com/document/api/597/40845) - 获取主题列表详情
+* Update: [ModifyTopicAttributes](https://cloud.tencent.com/document/api/597/40844) - 设置主题属性
+* Delete: [DeleteTopic](https://cloud.tencent.com/document/api/597/40849) - 删除主题
+* Delete: [DescribeInstanceAttributes](https://cloud.tencent.com/document/api/597/40836) - 获取实例属性
+* Delete: [DescribeTopicDetail](https://cloud.tencent.com/document/api/597/40845) - 获取主题列表详情
 
 ## Import
 

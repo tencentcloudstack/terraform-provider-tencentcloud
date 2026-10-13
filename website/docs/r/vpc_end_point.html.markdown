@@ -50,6 +50,15 @@ In addition to all arguments above, the following attributes are exported:
 * `end_point_owner` - APPID.
 * `state` - state of end point.
 
+## API Reference
+
+This resource interacts with the following TencentCloud APIs:
+
+* Create: [CreateVpcEndPoint](https://cloud.tencent.com/document/api/215/54685) - 创建终端节点
+* Create: [ModifyVpcEndPointAttribute](https://cloud.tencent.com/document/api/215/54674) - 修改终端节点属性
+* Read: [DescribeVpcEndPoint](https://cloud.tencent.com/document/api/215/54679) - 查询终端节点列表
+* Update: [ModifyVpcEndPointAttribute](https://cloud.tencent.com/document/api/215/54674) - 修改终端节点属性
+* Delete: [DeleteVpcEndPoint](https://cloud.tencent.com/document/api/215/54682) - 删除终端节点
 
 ## Import
 

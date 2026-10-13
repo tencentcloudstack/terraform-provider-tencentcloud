@@ -43,4 +43,9 @@ In addition to all arguments above, the following attributes are exported:
 * `id` - ID of the resource.
 
 
+## API Reference
+
+This resource interacts with the following TencentCloud APIs:
+
+* Create: [StartConfigRuleEvaluation](https://cloud.tencent.com/document/api/1579/129710) - 触发评估
 

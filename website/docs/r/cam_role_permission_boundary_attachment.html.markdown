@@ -56,6 +56,14 @@ In addition to all arguments above, the following attributes are exported:
 * `id` - ID of the resource.
 
 
+## API Reference
+
+This resource interacts with the following TencentCloud APIs:
+
+* Create: [PutRolePermissionsBoundary](https://cloud.tencent.com/document/api/598/46592) - 设置角色权限边界
+* Read: [GetRole](https://cloud.tencent.com/document/api/598/36221) - 获取角色详情
+* Read: [GetRolePermissionBoundary](https://cloud.tencent.com/document/api/598/66679) - 获取角色权限边界
+* Delete: [DeleteRolePermissionsBoundary](https://cloud.tencent.com/document/api/598/46593) - 删除角色权限边界
 
 ## Import
 

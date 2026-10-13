@@ -61,6 +61,13 @@ In addition to all arguments above, the following attributes are exported:
 * `id` - ID of the resource.
 
 
+## API Reference
+
+This resource interacts with the following TencentCloud APIs:
+
+* Create: [ModifyParameterTemplate](https://cloud.tencent.com/document/api/409/84066) - 修改参数模板
+* Read: [DescribeParameterTemplateAttributes](https://cloud.tencent.com/document/api/409/84068) - 查询参数模板详情
+* Update: [ModifyParameterTemplate](https://cloud.tencent.com/document/api/409/84066) - 修改参数模板
 
 ## Import
 

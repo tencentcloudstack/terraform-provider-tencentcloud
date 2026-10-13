@@ -34,6 +34,15 @@ In addition to all arguments above, the following attributes are exported:
 * `id` - ID of the resource.
 
 
+## API Reference
+
+This resource interacts with the following TencentCloud APIs:
+
+* Create: [DescribeHaVips](https://cloud.tencent.com/document/api/215/30650) - 查询HAVIP列表
+* Create: [HaVipAssociateAddressIp](https://cloud.tencent.com/document/api/215/30649) - HAVIP绑定EIP
+* Read: [DescribeHaVips](https://cloud.tencent.com/document/api/215/30650) - 查询HAVIP列表
+* Delete: [DescribeHaVips](https://cloud.tencent.com/document/api/215/30650) - 查询HAVIP列表
+* Delete: [HaVipDisassociateAddressIp](https://cloud.tencent.com/document/api/215/30648) - HAVIP解绑EIP
 
 ## Import
 

@@ -97,6 +97,17 @@ The `timeouts` block allows you to specify [timeouts](https://developer.hashicor
 * `create` - (Defaults to `30m`) Used when creating the resource.
 * `update` - (Defaults to `30m`) Used when updating the resource.
 * `delete` - (Defaults to `30m`) Used when deleting the resource.
+## API Reference
+
+This resource interacts with the following TencentCloud APIs:
+
+* Create: [DescribeOriginStreamInfo](https://cloud.tencent.com/document/api/267/130621) - 获取直播源站配置信息
+* Create: [ModifyOriginStreamInfo](https://cloud.tencent.com/document/api/267/130620) - 变更直播源站配置
+* Read: [DescribeOriginStreamInfo](https://cloud.tencent.com/document/api/267/130621) - 获取直播源站配置信息
+* Update: [DescribeOriginStreamInfo](https://cloud.tencent.com/document/api/267/130621) - 获取直播源站配置信息
+* Update: [ModifyOriginStreamInfo](https://cloud.tencent.com/document/api/267/130620) - 变更直播源站配置
+* Delete: [CloseSourceStream](https://cloud.tencent.com/document/api/267/130623) - 关闭回源客户源站
+* Delete: [DescribeOriginStreamInfo](https://cloud.tencent.com/document/api/267/130621) - 获取直播源站配置信息
 
 ## Import
 

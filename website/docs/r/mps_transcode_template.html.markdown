@@ -160,6 +160,14 @@ In addition to all arguments above, the following attributes are exported:
 * `id` - ID of the resource.
 
 
+## API Reference
+
+This resource interacts with the following TencentCloud APIs:
+
+* Create: [CreateTranscodeTemplate](https://cloud.tencent.com/document/api/862/37605) - 创建转码模板
+* Read: [DescribeTranscodeTemplates](https://cloud.tencent.com/document/api/862/37593) - 获取转码模板列表
+* Update: [ModifyTranscodeTemplate](https://cloud.tencent.com/document/api/862/37587) - 修改转码模板
+* Delete: [DeleteTranscodeTemplate](https://cloud.tencent.com/document/api/862/37599) - 删除转码模板
 
 ## Import
 

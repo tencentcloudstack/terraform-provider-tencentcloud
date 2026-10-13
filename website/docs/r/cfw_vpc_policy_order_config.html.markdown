@@ -77,6 +77,15 @@ In addition to all arguments above, the following attributes are exported:
 * `id` - ID of the resource.
 
 
+## API Reference
+
+This resource interacts with the following TencentCloud APIs:
+
+* Create: [DescribeVpcAcRule](https://cloud.tencent.com/document/api/1132/97844) - 查询内网间访问控制列表
+* Create: [ModifyVpcAcRule](https://cloud.tencent.com/document/api/1132/97842) - 修改VPC边界访问控制规则
+* Read: [DescribeVpcAcRule](https://cloud.tencent.com/document/api/1132/97844) - 查询内网间访问控制列表
+* Update: [DescribeVpcAcRule](https://cloud.tencent.com/document/api/1132/97844) - 查询内网间访问控制列表
+* Update: [ModifyVpcAcRule](https://cloud.tencent.com/document/api/1132/97842) - 修改VPC边界访问控制规则
 
 ## Import
 

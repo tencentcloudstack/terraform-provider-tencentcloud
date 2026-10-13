@@ -153,6 +153,29 @@ map[string]*schema.Schema{
 }
 ```
 
+## API Reference（资源关联的云 API）
+
+生成的资源文档包含一个可选的 "API Reference" 章节，列出该资源生命周期各阶段（Create/Read/Update/Delete）调用的云 API 及其官方文档链接。数据由两部分合成：
+
+1. **静态分析**（`apiref.go`）：用 `go/ast` 从 resource 生命周期函数出发，追踪 service 方法调用链（含递归展开、goroutine 委托、包级辅助函数、局部 client 变量），收集 `UseXxxClient().Action(...)` 调用；client accessor 名通过 `connectivity/client.go` 的 SDK import 路径映射为目录产品名。
+2. **API 目录快照**（`data/api-actions.json`）：腾讯云公开 API 目录的精简快照，提供 `(product, action) -> 中文名 + 文档 URL` 的查表。
+
+人工兑底：当静态分析无法覆盖（如 COS/CI 的 S3 兼容 REST API、目录未收录的老版本产品）或需要修正时，可在资源描述文件 `services/<product>/resource_tc_<name>.md` 中编写 "API" 段（位于正文与 "Example Usage" 之间），生成器会优先使用人工内容：
+
+```
+Use this resource to create dayu DDoS policy
+
+API
+
+* Create: CreateDDoSPolicy - https://cloud.tencent.com/document/product/1022/37825
+* Read: DescribeDDoSPolicy - https://cloud.tencent.com/document/product/1022/37826
+
+Example Usage
+...
+```
+
+快照刷新（暂未接入 CI，需手动）：从 https://main.qcloudimg.com/qcloud/main/scripts/release/common/api-all-actions.json 下载完整目录后，仅保留 product/action/name/url 四个字段重新生成 `data/api-actions.json`。
+
 ## 文档索引更新
 
 文档索引文件，即 website/tencentcloud.erb 的更新数据来源于 provider.go 的文件注释。

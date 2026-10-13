@@ -55,6 +55,14 @@ In addition to all arguments above, the following attributes are exported:
 * `status` - Mapping status.
 * `vpc_mapping_id` - Mapping rule primary key ID.
 
+## API Reference
+
+This resource interacts with the following TencentCloud APIs:
+
+* Create: [CreateDisasterRecoveryVpcMapping](https://cloud.tencent.com/document/api/1824/136780) - 创建VPC映射
+* Create: [DescribeVpcMappings](https://cloud.tencent.com/document/api/1824/136756) - 查询容灾站点vpc映射信息
+* Read: [DescribeVpcMappings](https://cloud.tencent.com/document/api/1824/136756) - 查询容灾站点vpc映射信息
+* Delete: [DeleteDisasterRecoveryVpcMapping](https://cloud.tencent.com/document/api/1824/136773) - 删除容灾站点对网络映射信息
 
 ## Import
 

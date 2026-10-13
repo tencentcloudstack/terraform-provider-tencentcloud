@@ -72,6 +72,15 @@ In addition to all arguments above, the following attributes are exported:
   * `port` - Port of target group instance. Only 6081 is supported.
   * `weight` - Weight of target group instance. Only 0 or 16 is supported, and non-0 is uniformly treated as 16.
 
+## API Reference
+
+This resource interacts with the following TencentCloud APIs:
+
+* Create: [CreateTargetGroup](https://cloud.tencent.com/document/api/1782/111697) - 创建目标组
+* Read: [DescribeTargetGroupInstances](https://cloud.tencent.com/document/api/1782/111693) - 获取目标组绑定的实例列表
+* Read: [DescribeTargetGroupList](https://cloud.tencent.com/document/api/1782/111692) - 获取目标组列表
+* Update: [ModifyTargetGroupAttribute](https://cloud.tencent.com/document/api/1782/111689) - 修改目标组属性
+* Delete: [DeleteTargetGroups](https://cloud.tencent.com/document/api/1782/111696) - 删除目标组
 
 ## Import
 

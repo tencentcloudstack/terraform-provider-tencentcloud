@@ -121,4 +121,12 @@ In addition to all arguments above, the following attributes are exported:
 * `download_url` - download url.
 * `file_size` - size of file(KB).
 
+## API Reference
+
+This resource interacts with the following TencentCloud APIs:
+
+* Create: [CreateAuditLogFile](https://cloud.tencent.com/document/api/236/45461) - 创建审计日志文件
+* Create: [DescribeAuditLogFiles](https://cloud.tencent.com/document/api/236/45454) - 查询审计日志文件
+* Read: [DescribeAuditLogFiles](https://cloud.tencent.com/document/api/236/45454) - 查询审计日志文件
+* Delete: [DeleteAuditLogFile](https://cloud.tencent.com/document/api/236/45458) - 删除审计日志文件
 

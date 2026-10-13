@@ -135,6 +135,16 @@ The `timeouts` block allows you to specify [timeouts](https://developer.hashicor
 * `create` - (Defaults to `30m`) Used when creating the resource.
 * `update` - (Defaults to `30m`) Used when updating the resource.
 * `delete` - (Defaults to `10m`) Used when deleting the resource.
+## API Reference
+
+This resource interacts with the following TencentCloud APIs:
+
+* Create: [CreateInstance](https://cloud.tencent.com/document/api/1709/117430) - 创建实例
+* Update: [ModifyDBInstanceSecurityGroups](https://cloud.tencent.com/document/api/1709/110881) - 修改云数据库安全组
+* Update: [ScaleOutInstance](https://cloud.tencent.com/document/api/1709/117424) - 增加节点数（水平扩容）
+* Update: [ScaleUpInstance](https://cloud.tencent.com/document/api/1709/117423) - 升配节点规格（垂直扩容）
+* Delete: [DestroyInstances](https://cloud.tencent.com/document/api/1709/117428) - 销毁实例
+* Delete: [IsolateInstance](https://cloud.tencent.com/document/api/1709/117427) - 隔离实例
 
 ## Import
 

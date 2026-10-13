@@ -71,6 +71,22 @@ In addition to all arguments above, the following attributes are exported:
 * `id` - ID of the resource.
 
 
+## API Reference
+
+This resource interacts with the following TencentCloud APIs:
+
+* Create: [CreateCLSDelivery](https://cloud.tencent.com/document/api/1003/106079) - 创建日志投递
+* Create: [DescribeInstanceCLSLogDelivery](https://cloud.tencent.com/document/api/1003/106077) - 查询实例日志投递信息
+* Create: [DescribeTasks](https://cloud.tencent.com/document/api/1003/103866) - 查询任务列表
+* Create: [StopCLSDelivery](https://cloud.tencent.com/document/api/1003/106075) - 停止日志投递
+* Read: [DescribeInstanceCLSLogDelivery](https://cloud.tencent.com/document/api/1003/106077) - 查询实例日志投递信息
+* Update: [DescribeTasks](https://cloud.tencent.com/document/api/1003/103866) - 查询任务列表
+* Update: [StartCLSDelivery](https://cloud.tencent.com/document/api/1003/106076) - 开启日志投递
+* Update: [StopCLSDelivery](https://cloud.tencent.com/document/api/1003/106075) - 停止日志投递
+* Delete: [DeleteCLSDelivery](https://cloud.tencent.com/document/api/1003/106078) - 删除日志投递
+* Delete: [DescribeInstanceCLSLogDelivery](https://cloud.tencent.com/document/api/1003/106077) - 查询实例日志投递信息
+* Delete: [DescribeTasks](https://cloud.tencent.com/document/api/1003/103866) - 查询任务列表
+* Delete: [StopCLSDelivery](https://cloud.tencent.com/document/api/1003/106075) - 停止日志投递
 
 ## Import
 

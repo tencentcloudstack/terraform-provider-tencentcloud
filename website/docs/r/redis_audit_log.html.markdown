@@ -40,6 +40,17 @@ In addition to all arguments above, the following attributes are exported:
 * `id` - ID of the resource.
 
 
+## API Reference
+
+This resource interacts with the following TencentCloud APIs:
+
+* Create: [DescribeLogInstanceList](https://cloud.tencent.com/document/api/239/129828) - 查询日志实例列表
+* Create: [OpenLog](https://cloud.tencent.com/document/api/239/129825) - 开启审计日志
+* Read: [DescribeLogInstanceList](https://cloud.tencent.com/document/api/239/129828) - 查询日志实例列表
+* Update: [DescribeLogInstanceList](https://cloud.tencent.com/document/api/239/129828) - 查询日志实例列表
+* Update: [ModifyLog](https://cloud.tencent.com/document/api/239/129826) - 修改审计日志
+* Delete: [CloseLog](https://cloud.tencent.com/document/api/239/129832) - 关闭审计日志
+* Delete: [DescribeLogInstanceList](https://cloud.tencent.com/document/api/239/129828) - 查询日志实例列表
 
 ## Import
 

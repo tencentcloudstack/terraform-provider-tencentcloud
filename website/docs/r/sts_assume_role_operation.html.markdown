@@ -53,4 +53,9 @@ In addition to all arguments above, the following attributes are exported:
 * `expiration` - Expiration time of the temporary access credential in ISO8601 format UTC time.
 * `expired_time` - Expiration time of the temporary access credential, returned as a Unix timestamp accurate to seconds.
 
+## API Reference
+
+This resource interacts with the following TencentCloud APIs:
+
+* Create: [AssumeRole](https://cloud.tencent.com/document/api/1312/48197) - 申请扮演角色临时访问凭证
 

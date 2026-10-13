@@ -81,6 +81,16 @@ In addition to all arguments above, the following attributes are exported:
 * `id` - ID of the resource.
 
 
+## API Reference
+
+This resource interacts with the following TencentCloud APIs:
+
+* Create: [DescribePrometheusInstanceInitStatus](https://cloud.tencent.com/document/api/248/85716) - 获取2.0实例初始化任务状态
+* Create: [ModifyRemoteURLs](https://cloud.tencent.com/document/api/248/114256) - 修改多写配置
+* Create: [RunPrometheusInstance](https://cloud.tencent.com/document/api/248/85710) - 初始化TMP实例
+* Read: [DescribeRemoteURLs](https://cloud.tencent.com/document/api/248/114257) - 获取多写配置详情
+* Update: [ModifyRemoteURLs](https://cloud.tencent.com/document/api/248/114256) - 修改多写配置
+* Delete: [ModifyRemoteURLs](https://cloud.tencent.com/document/api/248/114256) - 修改多写配置
 
 ## Import
 

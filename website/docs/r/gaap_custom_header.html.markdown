@@ -46,6 +46,14 @@ In addition to all arguments above, the following attributes are exported:
 * `id` - ID of the resource.
 
 
+## API Reference
+
+This resource interacts with the following TencentCloud APIs:
+
+* Create: [CreateCustomHeader](https://cloud.tencent.com/document/api/608/59242) - 创建自定义header
+* Read: [DescribeCustomHeader](https://cloud.tencent.com/document/api/608/59240) - 查询自定义header列表
+* Update: [CreateCustomHeader](https://cloud.tencent.com/document/api/608/59242) - 创建自定义header
+* Delete: [CreateCustomHeader](https://cloud.tencent.com/document/api/608/59242) - 创建自定义header
 
 ## Import
 

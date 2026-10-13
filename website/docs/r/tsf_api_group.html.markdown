@@ -64,6 +64,14 @@ In addition to all arguments above, the following attributes are exported:
 * `status` - Release status, drafted: Not published. released: released.
 * `updated_time` - Group update time such as: 2019-06-20 15:51:28.
 
+## API Reference
+
+This resource interacts with the following TencentCloud APIs:
+
+* Create: [CreateApiGroup](https://cloud.tencent.com/document/api/649/50641) - 创建API分组
+* Read: [DescribeApiGroup](https://cloud.tencent.com/document/api/649/50637) - 查询API分组
+* Update: [UpdateApiGroup](https://cloud.tencent.com/document/api/649/50625) - 更新Api分组
+* Delete: [DeleteApiGroup](https://cloud.tencent.com/document/api/649/50638) - 删除Api分组
 
 ## Import
 

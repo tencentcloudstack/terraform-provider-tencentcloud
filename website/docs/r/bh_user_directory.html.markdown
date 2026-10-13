@@ -63,6 +63,14 @@ In addition to all arguments above, the following attributes are exported:
 * `directory_id` - Directory ID.
 * `user_count` - Number of users included in the directory.
 
+## API Reference
+
+This resource interacts with the following TencentCloud APIs:
+
+* Create: [CreateUserDirectory](https://cloud.tencent.com/document/api/1025/125473) - 新建用户目录
+* Read: [DescribeUserDirectory](https://cloud.tencent.com/document/api/1025/125471) - 获取用户目录
+* Update: [ModifyUserDirectory](https://cloud.tencent.com/document/api/1025/125469) - 修改用户目录
+* Delete: [DeleteUserDirectory](https://cloud.tencent.com/document/api/1025/125472) - 删除用户目录
 
 ## Import
 

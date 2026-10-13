@@ -34,6 +34,12 @@ In addition to all arguments above, the following attributes are exported:
 * `id` - ID of the resource.
 
 
+## API Reference
+
+This resource interacts with the following TencentCloud APIs:
+
+* Read: [DescribeDCDBInstanceDetail](https://cloud.tencent.com/document/api/557/89385) - 获取实例详情
+* Update: [ModifyRealServerAccessStrategy](https://cloud.tencent.com/document/api/557/60074) - 修改RS的访问策略
 
 ## Import
 

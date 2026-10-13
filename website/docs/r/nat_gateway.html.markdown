@@ -132,6 +132,29 @@ In addition to all arguments above, the following attributes are exported:
 * `id` - ID of the resource.
 * `created_time` - Create time of the NAT gateway.
 
+## API Reference
+
+This resource interacts with the following TencentCloud APIs:
+
+* Create: [CreateNatGateway](https://cloud.tencent.com/document/api/215/36721) - 创建NAT网关
+* Create: [DescribeAddresses](https://cloud.tencent.com/document/api/215/16702) - 查询弹性公网IP列表
+* Create: [DescribeNatGateways](https://cloud.tencent.com/document/api/215/36034) - 查询NAT网关
+* Create: [DescribeResourceTagsByResourceIds](https://cloud.tencent.com/document/api/651/35319) - 批量查看资源关联的标签
+* Create: [ModifyResourceTags](https://cloud.tencent.com/document/api/651/35322) - 批量修改资源关联的标签
+* Read: [DescribeAddresses](https://cloud.tencent.com/document/api/215/16702) - 查询弹性公网IP列表
+* Read: [DescribeNatGateways](https://cloud.tencent.com/document/api/215/36034) - 查询NAT网关
+* Read: [DescribeResourceTagsByResourceIds](https://cloud.tencent.com/document/api/651/35319) - 批量查看资源关联的标签
+* Update: [AssociateNatGatewayAddress](https://cloud.tencent.com/document/api/215/36722) - NAT网关绑定弹性IP
+* Update: [DescribeAddresses](https://cloud.tencent.com/document/api/215/16702) - 查询弹性公网IP列表
+* Update: [DescribeNatGateways](https://cloud.tencent.com/document/api/215/36034) - 查询NAT网关
+* Update: [DescribeResourceTagsByResourceIds](https://cloud.tencent.com/document/api/651/35319) - 批量查看资源关联的标签
+* Update: [DescribeVpcTaskResult](https://cloud.tencent.com/document/api/215/59037) - 查询VPC异步任务执行结果
+* Update: [DisassociateNatGatewayAddress](https://cloud.tencent.com/document/api/215/36716) - NAT网关解绑弹性IP
+* Update: [ModifyNatGatewayAttribute](https://cloud.tencent.com/document/api/215/36715) - 修改NAT网关的属性
+* Update: [ModifyResourceTags](https://cloud.tencent.com/document/api/651/35322) - 批量修改资源关联的标签
+* Update: [ResetNatGatewayConnection](https://cloud.tencent.com/document/api/215/36713) - 调整NAT网关并发连接上限
+* Delete: [DeleteNatGateway](https://cloud.tencent.com/document/api/215/36719) - 删除NAT网关
+* Delete: [DescribeNatGateways](https://cloud.tencent.com/document/api/215/36034) - 查询NAT网关
 
 ## Import
 

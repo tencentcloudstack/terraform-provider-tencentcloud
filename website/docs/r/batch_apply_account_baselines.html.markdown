@@ -46,4 +46,9 @@ In addition to all arguments above, the following attributes are exported:
 * `id` - ID of the resource.
 
 
+## API Reference
+
+This resource interacts with the following TencentCloud APIs:
+
+* Create: [BatchApplyAccountBaselines](https://cloud.tencent.com/document/api/1708/110434) - 批量对存量账号应用基线
 

@@ -139,6 +139,14 @@ In addition to all arguments above, the following attributes are exported:
 * `id` - ID of the resource.
 
 
+## API Reference
+
+This resource interacts with the following TencentCloud APIs:
+
+* Create: [CreateAdaptiveDynamicStreamingTemplate](https://cloud.tencent.com/document/api/862/45749) - 创建转自适应码流模板
+* Read: [DescribeAdaptiveDynamicStreamingTemplates](https://cloud.tencent.com/document/api/862/45747) - 获取转自适应码流模板列表
+* Update: [ModifyAdaptiveDynamicStreamingTemplate](https://cloud.tencent.com/document/api/862/45746) - 修改转自适应码流模板
+* Delete: [DeleteAdaptiveDynamicStreamingTemplate](https://cloud.tencent.com/document/api/862/45748) - 删除转自适应码流模板
 
 ## Import
 

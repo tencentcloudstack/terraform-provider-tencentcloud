@@ -83,6 +83,14 @@ In addition to all arguments above, the following attributes are exported:
 * `id` - ID of the resource.
 * `track_id` - Whether the log list has come to an end. `true`: Yes. Pagination is not required.
 
+## API Reference
+
+This resource interacts with the following TencentCloud APIs:
+
+* Create: [CreateEventsAuditTrack](https://cloud.tencent.com/document/api/629/111894) - 创建全部事件跟踪集
+* Read: [DescribeAuditTrack](https://cloud.tencent.com/document/api/629/83247) - 查询操作审计跟踪集详情
+* Update: [ModifyEventsAuditTrack](https://cloud.tencent.com/document/api/629/111900) - 修改操作审计跟踪集（多事件）
+* Delete: [DeleteAuditTrack](https://cloud.tencent.com/document/api/629/70382) - 删除操作审计跟踪集
 
 ## Import
 

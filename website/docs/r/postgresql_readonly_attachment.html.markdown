@@ -34,4 +34,11 @@ In addition to all arguments above, the following attributes are exported:
 * `id` - ID of the resource.
 
 
+## API Reference
+
+This resource interacts with the following TencentCloud APIs:
+
+* Create: [AddDBInstanceToReadOnlyGroup](https://cloud.tencent.com/document/api/409/52603) - 添加只读实例到只读组
+* Read: [DescribeReadOnlyGroups](https://cloud.tencent.com/document/api/409/52599) - 查询只读组列表
+* Delete: [RemoveDBInstanceFromReadOnlyGroup](https://cloud.tencent.com/document/api/409/52595) - 将只读实例从只读组中移除
 

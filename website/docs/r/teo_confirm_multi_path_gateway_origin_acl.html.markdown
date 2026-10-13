@@ -64,6 +64,13 @@ The `timeouts` block allows you to specify [timeouts](https://developer.hashicor
 
 * `create` - (Defaults to `20m`) Used when creating the resource.
 * `update` - (Defaults to `20m`) Used when updating the resource.
+## API Reference
+
+This resource interacts with the following TencentCloud APIs:
+
+* Create: [ConfirmMultiPathGatewayOriginACL](https://cloud.tencent.com/document/api/1552/123860) - 确认多通道安全加速网关回源 IP 网段更新
+* Read: [DescribeMultiPathGatewayOriginACL](https://cloud.tencent.com/document/api/1552/123859) - 查询多通道安全加速网关源站防护详情
+* Update: [ConfirmMultiPathGatewayOriginACL](https://cloud.tencent.com/document/api/1552/123860) - 确认多通道安全加速网关回源 IP 网段更新
 
 ## Import
 

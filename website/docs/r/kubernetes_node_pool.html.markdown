@@ -468,6 +468,24 @@ The `timeouts` block allows you to specify [timeouts](https://developer.hashicor
 
 * `create` - (Defaults to `30m`) Used when creating the resource.
 * `update` - (Defaults to `30m`) Used when updating the resource.
+## API Reference
+
+This resource interacts with the following TencentCloud APIs:
+
+* Create: [CreateClusterNodePool](https://cloud.tencent.com/document/api/457/49436) - 创建节点池
+* Read: [DescribeClusterNodePoolDetail](https://cloud.tencent.com/document/api/457/49433) - 查询节点池详情
+* Read: [DescribeClusters](https://cloud.tencent.com/document/api/457/31862) - 查询TKE集群列表
+* Update: [DeleteMachine](https://cloud.tencent.com/document/api/296/19844) - 卸载主机安全客户端
+* Update: [DescribeAutoScalingActivities](https://cloud.tencent.com/document/api/377/31735) - 查询伸缩活动
+* Update: [DescribeClusterInstances](https://cloud.tencent.com/document/api/457/31863) - 查询集群节点信息
+* Update: [DescribeClusterNodePoolDetail](https://cloud.tencent.com/document/api/457/49433) - 查询节点池详情
+* Update: [DescribeClusters](https://cloud.tencent.com/document/api/457/31862) - 查询TKE集群列表
+* Update: [DescribeInstances](https://cloud.tencent.com/document/api/213/15728) - 查看实例列表
+* Update: [InvokeCommand](https://cloud.tencent.com/document/api/1340/52678) - 触发命令
+* Update: [ModifyClusterNodePool](https://cloud.tencent.com/document/api/457/49431) - 编辑节点池
+* Update: [ModifyLaunchConfigurationAttributes](https://cloud.tencent.com/document/api/377/31298) - 修改启动配置属性
+* Update: [ModifyNodePoolDesiredCapacityAboutAsg](https://cloud.tencent.com/document/api/457/51013) - 修改节点池关联伸缩组的期望实例数
+* Delete: [DeleteClusterNodePool](https://cloud.tencent.com/document/api/457/49434) - 删除节点池
 
 ## Import
 

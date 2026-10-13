@@ -39,6 +39,14 @@ In addition to all arguments above, the following attributes are exported:
 * `line_group_id` - Line group ID.
 * `updated_on` - Update time.
 
+## API Reference
+
+This resource interacts with the following TencentCloud APIs:
+
+* Create: [CreateLineGroup](https://cloud.tencent.com/document/api/1427/112219) - 创建域名的线路分组
+* Read: [DescribeLineGroupList](https://cloud.tencent.com/document/api/1427/112216) - 获取域名的线路分组列表
+* Update: [ModifyLineGroup](https://cloud.tencent.com/document/api/1427/112215) - 修改域名的线路分组
+* Delete: [DeleteLineGroup](https://cloud.tencent.com/document/api/1427/112217) - 删除域名的线路分组
 
 ## Import
 

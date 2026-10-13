@@ -34,6 +34,14 @@ In addition to all arguments above, the following attributes are exported:
 * `id` - ID of the resource.
 * `rule_id` - ID of the access white list rule.
 
+## API Reference
+
+This resource interacts with the following TencentCloud APIs:
+
+* Create: [CreateAccessWhiteListRule](https://cloud.tencent.com/document/api/1025/117905) - 添加访问白名单规则
+* Read: [DescribeAccessWhiteListRules](https://cloud.tencent.com/document/api/1025/117903) - 查询访问白名单规则列表
+* Update: [ModifyAccessWhiteListRule](https://cloud.tencent.com/document/api/1025/125045) - 修改访问白名单规则
+* Delete: [DeleteAccessWhiteListRules](https://cloud.tencent.com/document/api/1025/117904) - 删除访问白名单规则
 
 ## Import
 

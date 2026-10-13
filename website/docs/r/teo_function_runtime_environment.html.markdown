@@ -52,6 +52,14 @@ In addition to all arguments above, the following attributes are exported:
 * `id` - ID of the resource.
 
 
+## API Reference
+
+This resource interacts with the following TencentCloud APIs:
+
+* Create: [HandleFunctionRuntimeEnvironment](https://cloud.tencent.com/document/api/1552/111382) - 操作边缘函数运行环境
+* Read: [DescribeFunctionRuntimeEnvironment](https://cloud.tencent.com/document/api/1552/111384) - 查询边缘函数运行环境
+* Update: [HandleFunctionRuntimeEnvironment](https://cloud.tencent.com/document/api/1552/111382) - 操作边缘函数运行环境
+* Delete: [HandleFunctionRuntimeEnvironment](https://cloud.tencent.com/document/api/1552/111382) - 操作边缘函数运行环境
 
 ## Import
 

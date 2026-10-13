@@ -48,4 +48,9 @@ In addition to all arguments above, the following attributes are exported:
   * `identify_content` - File verification content.
   * `identify_path` - File verification path.
 
+## API Reference
+
+This resource interacts with the following TencentCloud APIs:
+
+* Create: [IdentifyZone](https://cloud.tencent.com/document/api/1552/80712) - 认证站点
 

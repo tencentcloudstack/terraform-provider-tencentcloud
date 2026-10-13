@@ -70,6 +70,16 @@ In addition to all arguments above, the following attributes are exported:
 * `min_add_bandwidth` - Additional bandwidth sets the lower limit.
 * `total_bandwidth` - Total bandwidth of the instance = additional bandwidth * number of shards + standard bandwidth * number of shards * (number of primary nodes + number of read-only replica nodes), the number of shards of the standard architecture = 1, in Mb/s.
 
+## API Reference
+
+This resource interacts with the following TencentCloud APIs:
+
+* Create: [DescribeTaskInfo](https://cloud.tencent.com/document/api/239/30601) - Redis查询任务结果
+* Create: [ModifyConnectionConfig](https://cloud.tencent.com/document/api/239/49639) - 修改实例连接数与带宽
+* Read: [DescribeBandwidthRange](https://cloud.tencent.com/document/api/239/90100) - 查询实例带宽信息
+* Read: [DescribeInstances](https://cloud.tencent.com/document/api/239/20018) - 查询Redis实例列表
+* Update: [DescribeTaskInfo](https://cloud.tencent.com/document/api/239/30601) - Redis查询任务结果
+* Update: [ModifyConnectionConfig](https://cloud.tencent.com/document/api/239/49639) - 修改实例连接数与带宽
 
 ## Import
 

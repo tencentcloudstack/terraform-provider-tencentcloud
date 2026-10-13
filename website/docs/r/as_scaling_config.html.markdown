@@ -304,6 +304,15 @@ In addition to all arguments above, the following attributes are exported:
 * `create_time` - The time when the launch configuration was created.
 * `status` - Current statues of a launch configuration.
 
+## API Reference
+
+This resource interacts with the following TencentCloud APIs:
+
+* Create: [CreateLaunchConfiguration](https://cloud.tencent.com/document/api/377/20447) - 创建启动配置
+* Read: [DescribeLaunchConfigurations](https://cloud.tencent.com/document/api/377/20445) - 查询启动配置
+* Update: [ModifyLaunchConfigurationAttributes](https://cloud.tencent.com/document/api/377/31298) - 修改启动配置属性
+* Update: [ModifyResourceTags](https://cloud.tencent.com/document/api/651/35322) - 批量修改资源关联的标签
+* Delete: [DeleteLaunchConfiguration](https://cloud.tencent.com/document/api/377/20446) - 删除启动配置
 
 ## Import
 

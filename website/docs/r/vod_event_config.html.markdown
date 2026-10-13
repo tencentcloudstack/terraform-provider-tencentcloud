@@ -48,6 +48,13 @@ In addition to all arguments above, the following attributes are exported:
 * `id` - ID of the resource.
 
 
+## API Reference
+
+This resource interacts with the following TencentCloud APIs:
+
+* Create: [ModifyEventConfig](https://cloud.tencent.com/document/api/266/55244) - 修改事件通知配置
+* Read: [DescribeEventConfig](https://cloud.tencent.com/document/api/266/55296) - 查询事件通知配置
+* Update: [ModifyEventConfig](https://cloud.tencent.com/document/api/266/55244) - 修改事件通知配置
 
 ## Import
 

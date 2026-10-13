@@ -40,6 +40,15 @@ In addition to all arguments above, the following attributes are exported:
 * `id` - ID of the resource.
 * `work_group_ids` - Collection of IDs of working groups bound to users.
 
+## API Reference
+
+This resource interacts with the following TencentCloud APIs:
+
+* Create: [CreateUser](https://cloud.tencent.com/document/api/1342/58465) - 创建用户
+* Read: [DescribeUsers](https://cloud.tencent.com/document/api/1342/58460) - 获取用户列表信息
+* Update: [ModifyUser](https://cloud.tencent.com/document/api/1342/58456) - 修改用户信息
+* Update: [ModifyUserType](https://cloud.tencent.com/document/api/1342/99259) - 修改用户类型
+* Delete: [DeleteUser](https://cloud.tencent.com/document/api/1342/58463) - 删除用户
 
 ## Import
 

@@ -51,6 +51,13 @@ In addition to all arguments above, the following attributes are exported:
 * `uin` - Account uin.
 * `wechat_flag` - Whether WeChat is allowed to receive notifications.
 
+## API Reference
+
+This resource interacts with the following TencentCloud APIs:
+
+* Create: [CreateMessageReceiver](https://cloud.tencent.com/document/api/598/96136) - 创建消息接收人
+* Read: [ListReceiver](https://cloud.tencent.com/document/api/598/110940) - 获取消息接收人列表
+* Delete: [DeleteMessageReceiver](https://cloud.tencent.com/document/api/598/110941) - 删除消息接收人
 
 ## Import
 

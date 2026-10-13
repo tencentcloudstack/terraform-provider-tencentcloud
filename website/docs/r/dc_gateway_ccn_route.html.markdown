@@ -52,6 +52,15 @@ In addition to all arguments above, the following attributes are exported:
 * `id` - ID of the resource.
 * `as_path` - As path list of the BGP.
 
+## API Reference
+
+This resource interacts with the following TencentCloud APIs:
+
+* Create: [CreateDirectConnectGatewayCcnRoutes](https://cloud.tencent.com/document/api/215/19191) - 创建专线网关云联网路由
+* Create: [DescribeDirectConnectGatewayCcnRoutes](https://cloud.tencent.com/document/api/215/19189) - 查询专线网关云联网路由
+* Read: [DescribeDirectConnectGatewayCcnRoutes](https://cloud.tencent.com/document/api/215/19189) - 查询专线网关云联网路由
+* Delete: [DeleteDirectConnectGatewayCcnRoutes](https://cloud.tencent.com/document/api/215/19190) - 删除专线网关云联网路由
+* Delete: [DescribeDirectConnectGatewayCcnRoutes](https://cloud.tencent.com/document/api/215/19189) - 查询专线网关云联网路由
 
 ## Import
 

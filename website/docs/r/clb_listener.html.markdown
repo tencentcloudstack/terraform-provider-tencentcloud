@@ -287,6 +287,14 @@ In addition to all arguments above, the following attributes are exported:
 * `id` - ID of the resource.
 * `listener_id` - ID of this CLB listener.
 
+## API Reference
+
+This resource interacts with the following TencentCloud APIs:
+
+* Create: [CreateListener](https://cloud.tencent.com/document/api/214/30693) - 创建负载均衡监听器
+* Read: [DescribeListeners](https://cloud.tencent.com/document/api/214/30686) - 查询负载均衡的监听器列表
+* Update: [ModifyListener](https://cloud.tencent.com/document/api/214/30681) - 修改负载均衡监听器属性
+* Delete: [DeleteListener](https://cloud.tencent.com/document/api/214/30690) - 删除负载均衡监听器
 
 ## Import
 

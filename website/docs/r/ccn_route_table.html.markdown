@@ -73,6 +73,14 @@ In addition to all arguments above, the following attributes are exported:
 * `create_time` - create time.
 * `is_default_table` - True: default routing table False: non default routing table.
 
+## API Reference
+
+This resource interacts with the following TencentCloud APIs:
+
+* Create: [CreateCcnRouteTables](https://cloud.tencent.com/document/api/215/108749) - 新建云联网路由表
+* Read: [DescribeCcnRouteTables](https://cloud.tencent.com/document/api/215/108745) - 查询云联网路由表信息
+* Update: [ModifyCcnRouteTables](https://cloud.tencent.com/document/api/215/108742) - 修改云联网路由表
+* Delete: [DeleteCcnRouteTables](https://cloud.tencent.com/document/api/215/108748) - 删除云联网路由表
 
 ## Import
 

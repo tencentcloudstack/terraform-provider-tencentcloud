@@ -108,6 +108,19 @@ In addition to all arguments above, the following attributes are exported:
 * `order_id` - Order ID returned.
 * `status` - SSL certificate status.
 
+## API Reference
+
+This resource interacts with the following TencentCloud APIs:
+
+* Create: [CreateCertificate](https://cloud.tencent.com/document/api/400/49427) - 购买付费证书
+* Read: [DescribeCertificateDetail](https://cloud.tencent.com/document/api/400/41673) - 获取证书详情
+* Update: [CertificateOrderSubmit](https://cloud.tencent.com/document/api/400/116032) - 付费证书提交订单
+* Update: [DescribeCertificateDetail](https://cloud.tencent.com/document/api/400/41673) - 获取证书详情
+* Update: [ModifyCertificateAlias](https://cloud.tencent.com/document/api/400/41669) - 修改证书备注
+* Update: [ModifyCertificateProject](https://cloud.tencent.com/document/api/400/41668) - 修改证书所属项目
+* Update: [SubmitCertificateInformation](https://cloud.tencent.com/document/api/400/41666) - 付费证书提交资料
+* Update: [UploadConfirmLetter](https://cloud.tencent.com/document/api/400/49425) - 上传证书确认函
+* Delete: [CancelCertificateOrder](https://cloud.tencent.com/document/api/400/41677) - 取消证书订单
 
 ## Import
 

@@ -229,4 +229,14 @@ In addition to all arguments above, the following attributes are exported:
 * `id` - ID of the resource.
 
 
+## API Reference
+
+This resource interacts with the following TencentCloud APIs:
+
+* Create: [CreateCLSLogConfig](https://cloud.tencent.com/document/api/457/102410) - 创建日志采集配置
+* Create: [DescribeLogConfigs](https://cloud.tencent.com/document/api/457/111168) - 查询日志采集规则
+* Read: [DescribeLogConfigs](https://cloud.tencent.com/document/api/457/111168) - 查询日志采集规则
+* Update: [ModifyLogConfig](https://cloud.tencent.com/document/api/457/130677) - 修改日志采集配置
+* Delete: [DeleteLogConfigs](https://cloud.tencent.com/document/api/457/111089) - 删除日志采集规则
+* Delete: [DescribeLogConfigs](https://cloud.tencent.com/document/api/457/111168) - 查询日志采集规则
 

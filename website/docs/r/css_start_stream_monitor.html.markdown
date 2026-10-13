@@ -34,6 +34,15 @@ In addition to all arguments above, the following attributes are exported:
 * `id` - ID of the resource.
 
 
+## API Reference
+
+This resource interacts with the following TencentCloud APIs:
+
+* Create: [DescribeLiveStreamMonitor](https://cloud.tencent.com/document/api/267/93519) - 查询直播流监播任务
+* Create: [StartLiveStreamMonitor](https://cloud.tencent.com/document/api/267/93515) - 启动直播流监播任务
+* Read: [DescribeLiveStreamMonitor](https://cloud.tencent.com/document/api/267/93519) - 查询直播流监播任务
+* Delete: [DescribeLiveStreamMonitor](https://cloud.tencent.com/document/api/267/93519) - 查询直播流监播任务
+* Delete: [StopLiveStreamMonitor](https://cloud.tencent.com/document/api/267/93514) - 停止直播流监播任务
 
 ## Import
 

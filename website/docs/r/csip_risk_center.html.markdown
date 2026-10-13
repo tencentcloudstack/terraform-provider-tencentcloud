@@ -149,4 +149,13 @@ In addition to all arguments above, the following attributes are exported:
 * `id` - ID of the resource.
 * `scan_from` - Request origin.
 
+## API Reference
+
+This resource interacts with the following TencentCloud APIs:
+
+* Create: [CreateRiskCenterScanTask](https://cloud.tencent.com/document/api/664/94177) - 创建风险中心扫描任务
+* Read: [DescribeScanTaskList](https://cloud.tencent.com/document/api/664/97683) - 获取扫描任务列表
+* Update: [ModifyRiskCenterScanTask](https://cloud.tencent.com/document/api/664/103117) - 修改风险中心扫描任务
+* Delete: [DeleteRiskScanTask](https://cloud.tencent.com/document/api/664/98745) - 删除风险中心扫描任务
+* Delete: [StopRiskCenterTask](https://cloud.tencent.com/document/api/664/98744) - 停止扫风险中心扫描任务
 

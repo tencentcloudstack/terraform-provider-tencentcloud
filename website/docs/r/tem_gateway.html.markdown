@@ -105,6 +105,12 @@ The `ingress` object exports the following:
 * `create_time` - creation time.
 * `vip` - gateway vip.
 
+## API Reference
+
+This resource interacts with the following TencentCloud APIs:
+
+* Read: [DescribeIngress](https://cloud.tencent.com/document/api/1371/60169) - 查询 Ingress 规则
+* Delete: [DeleteIngress](https://cloud.tencent.com/document/api/1371/60170) - 删除 Ingress 规则
 
 ## Import
 

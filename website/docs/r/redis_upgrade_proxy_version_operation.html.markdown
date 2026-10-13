@@ -38,4 +38,10 @@ In addition to all arguments above, the following attributes are exported:
 * `id` - ID of the resource.
 
 
+## API Reference
+
+This resource interacts with the following TencentCloud APIs:
+
+* Create: [DescribeTaskInfo](https://cloud.tencent.com/document/api/239/30601) - Redis查询任务结果
+* Create: [UpgradeProxyVersion](https://cloud.tencent.com/document/api/239/74597) - 实例proxy版本升级接口
 

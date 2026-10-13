@@ -50,6 +50,15 @@ In addition to all arguments above, the following attributes are exported:
 * `id` - ID of the resource.
 
 
+## API Reference
+
+This resource interacts with the following TencentCloud APIs:
+
+* Create: [CreateDBInstanceNetworkAccess](https://cloud.tencent.com/document/api/409/70581) - 创建实例网络
+* Create: [DescribeTasks](https://cloud.tencent.com/document/api/409/116177) - 查询任务列表
+* Read: [DescribeDBInstanceAttribute](https://cloud.tencent.com/document/api/409/16772) - 查询实例详情
+* Delete: [DeleteDBInstanceNetworkAccess](https://cloud.tencent.com/document/api/409/70579) - 删除实例网络
+* Delete: [DescribeTasks](https://cloud.tencent.com/document/api/409/116177) - 查询任务列表
 
 ## Import
 

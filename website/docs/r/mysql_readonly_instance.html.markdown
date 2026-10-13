@@ -148,6 +148,31 @@ In addition to all arguments above, the following attributes are exported:
 * `status` - Instance status. Valid values: `0`, `1`, `4`, `5`. `0` - Creating; `1` - Running; `4` - Isolating; `5` - Isolated.
 * `task_status` - Indicates which kind of operations is being executed.
 
+## API Reference
+
+This resource interacts with the following TencentCloud APIs:
+
+* Create: [CreateDBInstance](https://cloud.tencent.com/document/api/236/15871) - 创建云数据库实例（包年包月）
+* Create: [CreateDBInstanceHour](https://cloud.tencent.com/document/api/236/15865) - 创建云数据库实例（按量计费）
+* Create: [DescribeDBInstances](https://cloud.tencent.com/document/api/236/15872) - 查询实例列表
+* Create: [ModifyResourceTags](https://cloud.tencent.com/document/api/651/35322) - 批量修改资源关联的标签
+* Read: [DescribeDBInstances](https://cloud.tencent.com/document/api/236/15872) - 查询实例列表
+* Read: [DescribeDBSecurityGroups](https://cloud.tencent.com/document/api/236/15854) - 查询实例安全组信息
+* Read: [DescribeResourceTagsByResourceIds](https://cloud.tencent.com/document/api/651/35319) - 批量查看资源关联的标签
+* Update: [DescribeAsyncRequestInfo](https://cloud.tencent.com/document/api/236/20410) - 查询异步任务的执行结果
+* Update: [DescribeDBInstances](https://cloud.tencent.com/document/api/236/15872) - 查询实例列表
+* Update: [DisassociateSecurityGroups](https://cloud.tencent.com/document/api/236/15851) - 安全组批量解绑云资源
+* Update: [ModifyAutoRenewFlag](https://cloud.tencent.com/document/api/236/19652) - 修改云数据库实例的自动续费标记
+* Update: [ModifyDBInstanceName](https://cloud.tencent.com/document/api/236/15877) - 修改云数据库实例名
+* Update: [ModifyDBInstanceSecurityGroups](https://cloud.tencent.com/document/api/236/15853) - 修改云数据库安全组
+* Update: [ModifyDBInstanceVipVport](https://cloud.tencent.com/document/api/236/15867) - 修改云数据库实例的IP和端口号
+* Update: [ModifyInstanceDestroyProtect](https://cloud.tencent.com/document/api/236/135817) - 更新实例销毁保护状态
+* Update: [ModifyResourceTags](https://cloud.tencent.com/document/api/651/35322) - 批量修改资源关联的标签
+* Update: [UpgradeDBInstance](https://cloud.tencent.com/document/api/236/15876) - 调整云数据库实例的配置
+* Update: [UpgradeDBInstanceEngineVersion](https://cloud.tencent.com/document/api/236/15870) - 升级实例版本
+* Delete: [DescribeDBInstances](https://cloud.tencent.com/document/api/236/15872) - 查询实例列表
+* Delete: [IsolateDBInstance](https://cloud.tencent.com/document/api/236/15869) - 隔离云数据库实例
+* Delete: [OfflineIsolatedInstances](https://cloud.tencent.com/document/api/236/36197) - 下线隔离状态的云数据库实例
 
 ## Import
 

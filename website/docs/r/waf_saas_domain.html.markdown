@@ -232,6 +232,26 @@ The `ports` object exports the following:
 
 * `nginx_server_id` - Nginx server ID.
 
+## API Reference
+
+This resource interacts with the following TencentCloud APIs:
+
+* Create: [AddSpartaProtection](https://cloud.tencent.com/document/api/627/72689) - 添加SaaS型WAF防护域名
+* Create: [DescribeDomainVerifyResult](https://cloud.tencent.com/document/api/627/97869) - 获取添加域名操作的结果
+* Create: [DescribeDomains](https://cloud.tencent.com/document/api/627/72840) - 获取域名列表
+* Create: [ModifyApiAnalyzeStatus](https://cloud.tencent.com/document/api/627/97282) - api分析页面开关
+* Create: [ModifyBotStatus](https://cloud.tencent.com/document/api/627/97281) - Bot_V2 bot总开关更新
+* Create: [ModifyDomainsCLSStatus](https://cloud.tencent.com/document/api/627/96937) - 修改域名列表的访问日志开关
+* Create: [ModifyProtectionStatus](https://cloud.tencent.com/document/api/627/96931) - 开启、关闭WAF开关
+* Read: [DescribeDomainDetailsSaas](https://cloud.tencent.com/document/api/627/82938) - 查询单个Saas型WAF域名详情
+* Read: [DescribeDomains](https://cloud.tencent.com/document/api/627/72840) - 获取域名列表
+* Update: [DescribeDomainDetailsSaas](https://cloud.tencent.com/document/api/627/82938) - 查询单个Saas型WAF域名详情
+* Update: [ModifyApiAnalyzeStatus](https://cloud.tencent.com/document/api/627/97282) - api分析页面开关
+* Update: [ModifyBotStatus](https://cloud.tencent.com/document/api/627/97281) - Bot_V2 bot总开关更新
+* Update: [ModifyDomainsCLSStatus](https://cloud.tencent.com/document/api/627/96937) - 修改域名列表的访问日志开关
+* Update: [ModifyProtectionStatus](https://cloud.tencent.com/document/api/627/96931) - 开启、关闭WAF开关
+* Update: [ModifySpartaProtection](https://cloud.tencent.com/document/api/627/94309) - 编辑SaaS型WAF域名
+* Delete: [DeleteSpartaProtection](https://cloud.tencent.com/document/api/627/96949) - 删除SaaS型WAF防护域名
 
 ## Import
 

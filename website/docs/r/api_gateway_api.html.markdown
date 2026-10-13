@@ -219,4 +219,17 @@ In addition to all arguments above, the following attributes are exported:
 * `create_time` - Creation time in the format of YYYY-MM-DDThh:mm:ssZ according to ISO 8601 standard. UTC time is used.
 * `update_time` - Last modified time in the format of YYYY-MM-DDThh:mm:ssZ according to ISO 8601 standard. UTC time is used.
 
+## API Reference
+
+This resource interacts with the following TencentCloud APIs:
+
+* Create: [CreateApi](https://cloud.tencent.com/document/api/628/45243) - 创建API
+* Create: [DescribeService](https://cloud.tencent.com/document/api/628/45199) - 查询服务详情
+* Create: [ModifyApiEnvironmentStrategy](https://cloud.tencent.com/document/api/628/45179) - 修改API限流策略
+* Read: [DescribeApi](https://cloud.tencent.com/document/api/628/45241) - 查询API详情
+* Read: [DescribeApiEnvironmentStrategy](https://cloud.tencent.com/document/api/628/45181) - 展示API绑定的限流策略
+* Update: [ModifyApi](https://cloud.tencent.com/document/api/628/45238) - 修改API
+* Update: [ModifyApiEnvironmentStrategy](https://cloud.tencent.com/document/api/628/45179) - 修改API限流策略
+* Delete: [DeleteApi](https://cloud.tencent.com/document/api/628/45242) - 删除API
+* Delete: [ModifyApiEnvironmentStrategy](https://cloud.tencent.com/document/api/628/45179) - 修改API限流策略
 

@@ -35,6 +35,14 @@ In addition to all arguments above, the following attributes are exported:
 * `modify_time` - SCF namespace last modified time.
 * `type` - SCF namespace type.
 
+## API Reference
+
+This resource interacts with the following TencentCloud APIs:
+
+* Create: [CreateNamespace](https://cloud.tencent.com/document/api/583/37160) - 创建命名空间
+* Read: [ListNamespaces](https://cloud.tencent.com/document/api/583/37158) - 列出命名空间列表
+* Update: [UpdateNamespace](https://cloud.tencent.com/document/api/583/37157) - 更新命名空间
+* Delete: [DeleteNamespace](https://cloud.tencent.com/document/api/583/37159) - 删除命名空间
 
 ## Import
 

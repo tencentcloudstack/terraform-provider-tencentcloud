@@ -74,4 +74,11 @@ In addition to all arguments above, the following attributes are exported:
 * `id` - ID of the resource.
 
 
+## API Reference
+
+This resource interacts with the following TencentCloud APIs:
+
+* Create: [AddBandwidthPackageResources](https://cloud.tencent.com/document/api/215/19213) - 添加带宽包资源
+* Read: [DescribeBandwidthPackageResources](https://cloud.tencent.com/document/api/215/48944) - 查询共享带宽包内的资源
+* Delete: [RemoveBandwidthPackageResources](https://cloud.tencent.com/document/api/215/19207) - 删除带宽包资源
 

@@ -38,4 +38,9 @@ In addition to all arguments above, the following attributes are exported:
 * `id` - ID of the resource.
 
 
+## API Reference
+
+This resource interacts with the following TencentCloud APIs:
+
+* Create: [ApplyEmbedInterval](https://cloud.tencent.com/document/api/590/73725) - 申请延长Token可用时间接口
 

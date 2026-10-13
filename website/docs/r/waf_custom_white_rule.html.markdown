@@ -214,6 +214,16 @@ In addition to all arguments above, the following attributes are exported:
 * `id` - ID of the resource.
 * `rule_id` - rule ID.
 
+## API Reference
+
+This resource interacts with the following TencentCloud APIs:
+
+* Create: [AddCustomWhiteRule](https://cloud.tencent.com/document/api/627/90325) - 添加精准白名单规则
+* Create: [ModifyCustomWhiteRuleStatus](https://cloud.tencent.com/document/api/627/97631) - 开启或禁用精准白名单
+* Read: [DescribeCustomWhiteRule](https://cloud.tencent.com/document/api/627/88453) - 查询精准白名单规则
+* Update: [ModifyCustomWhiteRule](https://cloud.tencent.com/document/api/627/90323) - 编辑精准白名单
+* Update: [ModifyCustomWhiteRuleStatus](https://cloud.tencent.com/document/api/627/97631) - 开启或禁用精准白名单
+* Delete: [DeleteCustomWhiteRule](https://cloud.tencent.com/document/api/627/90324) - 删除精准白名单规则
 
 ## Import
 

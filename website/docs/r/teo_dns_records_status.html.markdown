@@ -50,6 +50,15 @@ In addition to all arguments above, the following attributes are exported:
 * `id` - ID of the resource.
 
 
+## API Reference
+
+This resource interacts with the following TencentCloud APIs:
+
+* Create: [DescribeDnsRecords](https://cloud.tencent.com/document/api/1552/80716) - 查询 DNS 记录列表
+* Create: [ModifyDnsRecordsStatus](https://cloud.tencent.com/document/api/1552/114251) - 批量修改 DNS 记录状态
+* Read: [DescribeDnsRecords](https://cloud.tencent.com/document/api/1552/80716) - 查询 DNS 记录列表
+* Update: [DescribeDnsRecords](https://cloud.tencent.com/document/api/1552/80716) - 查询 DNS 记录列表
+* Update: [ModifyDnsRecordsStatus](https://cloud.tencent.com/document/api/1552/114251) - 批量修改 DNS 记录状态
 
 ## Import
 

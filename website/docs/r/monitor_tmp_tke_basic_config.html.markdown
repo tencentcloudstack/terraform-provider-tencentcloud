@@ -199,4 +199,13 @@ In addition to all arguments above, the following attributes are exported:
 * `config_type` - config type, `service_monitors`, `pod_monitors`, `raw_jobs`.
 * `config` - Full configuration in yaml format.
 
+## API Reference
+
+This resource interacts with the following TencentCloud APIs:
+
+* Create: [DescribePrometheusConfig](https://cloud.tencent.com/document/api/248/85705) - 拉取Prometheus配置
+* Create: [ModifyPrometheusConfig](https://cloud.tencent.com/document/api/248/86031) - 修改prometheus配置
+* Read: [DescribePrometheusConfig](https://cloud.tencent.com/document/api/248/85705) - 拉取Prometheus配置
+* Update: [DescribePrometheusConfig](https://cloud.tencent.com/document/api/248/85705) - 拉取Prometheus配置
+* Update: [ModifyPrometheusConfig](https://cloud.tencent.com/document/api/248/86031) - 修改prometheus配置
 

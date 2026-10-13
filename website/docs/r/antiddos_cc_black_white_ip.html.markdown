@@ -51,6 +51,14 @@ In addition to all arguments above, the following attributes are exported:
 * `id` - ID of the resource.
 
 
+## API Reference
+
+This resource interacts with the following TencentCloud APIs:
+
+* Create: [CreateCcBlackWhiteIpList](https://cloud.tencent.com/document/api/297/95341) - 新建CC四层黑白名单
+* Create: [DescribeCcBlackWhiteIpList](https://cloud.tencent.com/document/api/297/95318) - 获取CC四层黑白名单列表
+* Read: [DescribeCcBlackWhiteIpList](https://cloud.tencent.com/document/api/297/95318) - 获取CC四层黑白名单列表
+* Delete: [DeleteCcBlackWhiteIpList](https://cloud.tencent.com/document/api/297/95328) - 删除CC四层黑白名单
 
 ## Import
 

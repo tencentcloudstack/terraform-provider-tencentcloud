@@ -117,4 +117,11 @@ In addition to all arguments above, the following attributes are exported:
 * `id` - ID of the resource.
 
 
+## API Reference
+
+This resource interacts with the following TencentCloud APIs:
+
+* Create: [DescribeAsyncRequestInfo](https://cloud.tencent.com/document/api/236/20410) - 查询异步任务的执行结果
+* Create: [StartBatchRollback](https://cloud.tencent.com/document/api/236/18725) - 回档数据库表
+* Read: [DescribeRollbackTaskDetail](https://cloud.tencent.com/document/api/236/44047) - 查询回档任务详情
 

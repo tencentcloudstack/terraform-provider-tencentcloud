@@ -45,4 +45,10 @@ In addition to all arguments above, the following attributes are exported:
 * `id` - ID of the resource.
 
 
+## API Reference
+
+This resource interacts with the following TencentCloud APIs:
+
+* Create: [StartStreamLinkFlow](https://cloud.tencent.com/document/api/862/82429) - 开启媒体传输流
+* Create: [StopStreamLinkFlow](https://cloud.tencent.com/document/api/862/82428) - 停止媒体传输流
 

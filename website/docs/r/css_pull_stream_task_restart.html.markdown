@@ -34,4 +34,10 @@ In addition to all arguments above, the following attributes are exported:
 * `id` - ID of the resource.
 
 
+## API Reference
+
+This resource interacts with the following TencentCloud APIs:
+
+* Create: [DescribeLivePullStreamTaskStatus](https://cloud.tencent.com/document/api/267/94221) - 查询直播拉流任务状态
+* Create: [RestartLivePullStreamTask](https://cloud.tencent.com/document/api/267/93478) - 重启直播拉流任务
 

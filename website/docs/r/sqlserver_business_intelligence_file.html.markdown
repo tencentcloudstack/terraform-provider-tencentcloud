@@ -77,6 +77,13 @@ In addition to all arguments above, the following attributes are exported:
 * `id` - ID of the resource.
 
 
+## API Reference
+
+This resource interacts with the following TencentCloud APIs:
+
+* Create: [CreateBusinessIntelligenceFile](https://cloud.tencent.com/document/api/238/80331) - 创建商业智能服务文件
+* Read: [DescribeBusinessIntelligenceFile](https://cloud.tencent.com/document/api/238/80329) - 查询商业智能服务需要的文件
+* Delete: [DeleteBusinessIntelligenceFile](https://cloud.tencent.com/document/api/238/80330) - 删除商业智能文件
 
 ## Import
 

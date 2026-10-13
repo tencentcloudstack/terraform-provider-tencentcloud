@@ -36,6 +36,13 @@ In addition to all arguments above, the following attributes are exported:
 * `id` - ID of the resource.
 
 
+## API Reference
+
+This resource interacts with the following TencentCloud APIs:
+
+* Create: [AssociateHaVipInstance](https://cloud.tencent.com/document/api/215/118882) - HAVIP绑定子机或网卡
+* Read: [DescribeHaVips](https://cloud.tencent.com/document/api/215/30650) - 查询HAVIP列表
+* Delete: [DisassociateHaVipInstance](https://cloud.tencent.com/document/api/215/118881) - HAVIP解绑定子机或网卡
 
 ## Import
 

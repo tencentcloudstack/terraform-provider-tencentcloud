@@ -41,6 +41,18 @@ In addition to all arguments above, the following attributes are exported:
 * `id` - ID of the resource.
 
 
+## API Reference
+
+This resource interacts with the following TencentCloud APIs:
+
+* Create: [AddRealServers](https://cloud.tencent.com/document/api/608/37014) - 添加源站
+* Create: [DescribeRealServers](https://cloud.tencent.com/document/api/608/37013) - 查询源站信息
+* Create: [ModifyResourceTags](https://cloud.tencent.com/document/api/651/35322) - 批量修改资源关联的标签
+* Read: [DescribeRealServers](https://cloud.tencent.com/document/api/608/37013) - 查询源站信息
+* Read: [DescribeResourceTagsByResourceIds](https://cloud.tencent.com/document/api/651/35319) - 批量查看资源关联的标签
+* Update: [ModifyRealServerName](https://cloud.tencent.com/document/api/608/37011) - 修改源站名称
+* Update: [ModifyResourceTags](https://cloud.tencent.com/document/api/651/35322) - 批量修改资源关联的标签
+* Delete: [RemoveRealServers](https://cloud.tencent.com/document/api/608/37010) - 删除源站
 
 ## Import
 

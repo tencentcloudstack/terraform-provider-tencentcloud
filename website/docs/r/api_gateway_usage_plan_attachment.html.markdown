@@ -113,6 +113,17 @@ In addition to all arguments above, the following attributes are exported:
 * `id` - ID of the resource.
 
 
+## API Reference
+
+This resource interacts with the following TencentCloud APIs:
+
+* Create: [BindEnvironment](https://cloud.tencent.com/document/api/628/45226) - 绑定使用计划到服务或API
+* Create: [BindSecretIds](https://cloud.tencent.com/document/api/628/45225) - 使用计划绑定密钥
+* Read: [DescribeApiUsagePlan](https://cloud.tencent.com/document/api/628/45240) - 查询 API 使用计划详情
+* Read: [DescribeServiceUsagePlan](https://cloud.tencent.com/document/api/628/45195) - 查询服务使用计划详情
+* Read: [DescribeUsagePlanSecretIds](https://cloud.tencent.com/document/api/628/45219) - 查询使用计划绑定密钥列表
+* Delete: [UnBindEnvironment](https://cloud.tencent.com/document/api/628/45216) - 从服务环境解绑使用计划
+* Delete: [UnBindSecretIds](https://cloud.tencent.com/document/api/628/45215) - 使用计划解绑密钥
 
 ## Import
 

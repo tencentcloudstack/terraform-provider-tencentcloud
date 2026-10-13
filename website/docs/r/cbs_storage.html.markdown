@@ -156,6 +156,26 @@ In addition to all arguments above, the following attributes are exported:
 * `attached` - Indicates whether the CBS is mounted the CVM.
 * `storage_status` - Status of CBS. Valid values: UNATTACHED, ATTACHING, ATTACHED, DETACHING, EXPANDING, ROLLBACKING, TORECYCLE and DUMPING.
 
+## API Reference
+
+This resource interacts with the following TencentCloud APIs:
+
+* Create: [CreateDisks](https://cloud.tencent.com/document/api/362/16312) - 创建云硬盘
+* Create: [DescribeDisks](https://cloud.tencent.com/document/api/362/16315) - 查询云硬盘列表
+* Create: [ModifyDiskBackupQuota](https://cloud.tencent.com/document/api/362/80276) - 调整云硬盘备份点配额
+* Read: [DescribeDisks](https://cloud.tencent.com/document/api/362/16315) - 查询云硬盘列表
+* Read: [DescribeResourceTagsByResourceIds](https://cloud.tencent.com/document/api/651/35319) - 批量查看资源关联的标签
+* Update: [ApplySnapshot](https://cloud.tencent.com/document/api/362/15643) - 回滚快照
+* Update: [DescribeDisks](https://cloud.tencent.com/document/api/362/16315) - 查询云硬盘列表
+* Update: [ModifyDiskAttributes](https://cloud.tencent.com/document/api/362/15659) - 修改云硬盘属性
+* Update: [ModifyDiskBackupQuota](https://cloud.tencent.com/document/api/362/80276) - 调整云硬盘备份点配额
+* Update: [ModifyDiskExtraPerformance](https://cloud.tencent.com/document/api/362/51483) - 调整云硬盘额外性能
+* Update: [ModifyDisksChargeType](https://cloud.tencent.com/document/api/362/38075) - 修改弹性云硬盘计费模式
+* Update: [ModifyDisksRenewFlag](https://cloud.tencent.com/document/api/362/15668) - 修改云硬盘续费标识
+* Update: [ModifyResourceTags](https://cloud.tencent.com/document/api/651/35322) - 批量修改资源关联的标签
+* Update: [ResizeDisk](https://cloud.tencent.com/document/api/362/16310) - 扩容云硬盘
+* Delete: [DescribeDisks](https://cloud.tencent.com/document/api/362/16315) - 查询云硬盘列表
+* Delete: [TerminateDisks](https://cloud.tencent.com/document/api/362/16321) - 退还云硬盘
 
 ## Import
 

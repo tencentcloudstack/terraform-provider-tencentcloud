@@ -97,4 +97,12 @@ In addition to all arguments above, the following attributes are exported:
 * `id` - ID of the resource.
 * `channel_id` - plugin id.
 
+## API Reference
+
+This resource interacts with the following TencentCloud APIs:
+
+* Create: [CreateGrafanaNotificationChannel](https://cloud.tencent.com/document/api/248/79217) - 创建 Grafana 告警通道
+* Read: [DescribeGrafanaChannels](https://cloud.tencent.com/document/api/248/80324) - 列出 Grafana 所有告警通道
+* Update: [UpdateGrafanaNotificationChannel](https://cloud.tencent.com/document/api/248/79190) - 更新 Grafana 告警通道
+* Delete: [DeleteGrafanaNotificationChannel](https://cloud.tencent.com/document/api/248/79213) - 删除 Grafana 告警通道
 

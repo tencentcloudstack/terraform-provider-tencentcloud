@@ -87,4 +87,15 @@ The `timeouts` block allows you to specify [timeouts](https://developer.hashicor
 * `create` - (Defaults to `20m`) Used when creating the resource.
 * `update` - (Defaults to `20m`) Used when updating the resource.
 * `delete` - (Defaults to `20m`) Used when deleting the resource.
+## API Reference
+
+This resource interacts with the following TencentCloud APIs:
+
+* Create: [CreateInstance](https://cloud.tencent.com/document/api/555/127790) - 创建实例
+* Create: [DescribeDealsByCond](https://cloud.tencent.com/document/api/555/19179) - 查询订单数据
+* Read: [DescribeRenewInstances](https://cloud.tencent.com/document/api/555/127836) - 查询续费实例
+* Update: [DescribeDealsByCond](https://cloud.tencent.com/document/api/555/19179) - 查询订单数据
+* Update: [RenewInstance](https://cloud.tencent.com/document/api/555/127788) - 续费实例
+* Delete: [DescribeDealsByCond](https://cloud.tencent.com/document/api/555/19179) - 查询订单数据
+* Delete: [RefundInstance](https://cloud.tencent.com/document/api/555/127789) - 退订实例
 

@@ -44,6 +44,18 @@ In addition to all arguments above, the following attributes are exported:
 * `snapshot_status` - Status of the snapshot.
 * `storage_size` - Volume of storage which this snapshot created from.
 
+## API Reference
+
+This resource interacts with the following TencentCloud APIs:
+
+* Create: [CreateSnapshot](https://cloud.tencent.com/document/api/362/15648) - 创建快照
+* Create: [DescribeSnapshots](https://cloud.tencent.com/document/api/362/15647) - 查询快照列表
+* Create: [ModifyResourceTags](https://cloud.tencent.com/document/api/651/35322) - 批量修改资源关联的标签
+* Read: [DescribeResourceTagsByResourceIds](https://cloud.tencent.com/document/api/651/35319) - 批量查看资源关联的标签
+* Read: [DescribeSnapshots](https://cloud.tencent.com/document/api/362/15647) - 查询快照列表
+* Update: [ModifyResourceTags](https://cloud.tencent.com/document/api/651/35322) - 批量修改资源关联的标签
+* Update: [ModifySnapshotAttribute](https://cloud.tencent.com/document/api/362/15650) - 修改快照信息
+* Delete: [DeleteSnapshots](https://cloud.tencent.com/document/api/362/15645) - 删除快照
 
 ## Import
 

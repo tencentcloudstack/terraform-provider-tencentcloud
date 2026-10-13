@@ -101,6 +101,14 @@ The `trigger_workflow_scheduler_configurations` object exports the following:
 
 * `trigger_id` - Trigger ID (UUID).
 
+## API Reference
+
+This resource interacts with the following TencentCloud APIs:
+
+* Create: [CreateTriggerWorkflow](https://cloud.tencent.com/document/api/1267/127267) - 创建调度工作流
+* Read: [GetTriggerWorkflow](https://cloud.tencent.com/document/api/1267/127255) - 获取调度工作流信息
+* Update: [UpdateTriggerWorkflow](https://cloud.tencent.com/document/api/1267/127241) - 更新调度工作流信息
+* Delete: [DeleteTriggerWorkflow](https://cloud.tencent.com/document/api/1267/127263) - 删除调度工作流
 
 ## Import
 

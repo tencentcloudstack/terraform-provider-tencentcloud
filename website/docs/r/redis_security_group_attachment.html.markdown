@@ -85,6 +85,13 @@ In addition to all arguments above, the following attributes are exported:
 * `id` - ID of the resource.
 
 
+## API Reference
+
+This resource interacts with the following TencentCloud APIs:
+
+* Create: [AssociateSecurityGroups](https://cloud.tencent.com/document/api/239/41260) - 绑定安全组
+* Read: [DescribeDBSecurityGroups](https://cloud.tencent.com/document/api/239/41259) - 查询实例安全组详情
+* Delete: [DisassociateSecurityGroups](https://cloud.tencent.com/document/api/239/41257) - 安全组批量解绑云资源
 
 ## Import
 

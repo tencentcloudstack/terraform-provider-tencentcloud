@@ -61,6 +61,12 @@ In addition to all arguments above, the following attributes are exported:
 * `id` - ID of the resource.
 * `agent_id` - Agent id.
 
+## API Reference
+
+This resource interacts with the following TencentCloud APIs:
+
+* Create: [CreatePrometheusAgent](https://cloud.tencent.com/document/api/248/76018) - 创建 Prometheus CVM Agent
+* Read: [DescribePrometheusAgents](https://cloud.tencent.com/document/api/248/76013) - 列出 Prometheus CVM Agent
 
 ## Import
 

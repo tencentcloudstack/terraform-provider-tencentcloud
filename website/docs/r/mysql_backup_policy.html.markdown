@@ -94,4 +94,11 @@ In addition to all arguments above, the following attributes are exported:
 * `id` - ID of the resource.
 
 
+## API Reference
+
+This resource interacts with the following TencentCloud APIs:
+
+* Read: [DescribeBackupConfig](https://cloud.tencent.com/document/api/236/15837) - 查询云数据库备份配置信息
+* Update: [ModifyBackupConfig](https://cloud.tencent.com/document/api/236/15839) - 修改数据库备份配置
+* Delete: [ModifyBackupConfig](https://cloud.tencent.com/document/api/236/15839) - 修改数据库备份配置
 

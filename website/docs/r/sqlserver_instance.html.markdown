@@ -83,6 +83,25 @@ In addition to all arguments above, the following attributes are exported:
 * `vip` - IP for private access.
 * `vport` - Port for private access.
 
+## API Reference
+
+This resource interacts with the following TencentCloud APIs:
+
+* Create: [CreateDBInstances](https://cloud.tencent.com/document/api/238/19973) - 创建高可用实例 (本地盘)
+* Create: [DescribeFlowStatus](https://cloud.tencent.com/document/api/238/19967) - 查询流程状态
+* Create: [DescribeOrders](https://cloud.tencent.com/document/api/238/19937) - 查询订单信息
+* Create: [ModifyDBInstanceName](https://cloud.tencent.com/document/api/238/19958) - 修改实例名字
+* Create: [ModifyResourceTags](https://cloud.tencent.com/document/api/651/35322) - 批量修改资源关联的标签
+* Read: [DescribeMaintenanceSpan](https://cloud.tencent.com/document/api/238/46283) - 查询该实例的可维护时间窗
+* Read: [DescribeResourceTagsByResourceIds](https://cloud.tencent.com/document/api/651/35319) - 批量查看资源关联的标签
+* Update: [DescribeFlowStatus](https://cloud.tencent.com/document/api/238/19967) - 查询流程状态
+* Update: [ModifyDBInstanceNetwork](https://cloud.tencent.com/document/api/238/52347) - 修改实例网络
+* Update: [ModifyDBInstanceProject](https://cloud.tencent.com/document/api/238/19957) - 修改数据库实例所属项目
+* Update: [ModifyMaintenanceSpan](https://cloud.tencent.com/document/api/238/46281) - 修改可维护时间窗
+* Update: [ModifyResourceTags](https://cloud.tencent.com/document/api/651/35322) - 批量修改资源关联的标签
+* Delete: [DeleteDBInstance](https://cloud.tencent.com/document/api/238/46806) - 立即下线实例
+* Delete: [DescribeDBInstances](https://cloud.tencent.com/document/api/238/19969) - 查询实例列表
+* Delete: [TerminateDBInstance](https://cloud.tencent.com/document/api/238/38210) - 主动隔离实例
 
 ## Import
 

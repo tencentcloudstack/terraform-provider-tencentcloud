@@ -103,6 +103,14 @@ In addition to all arguments above, the following attributes are exported:
 * `id` - ID of the resource.
 * `backup_migration_id` - Backup import task ID.
 
+## API Reference
+
+This resource interacts with the following TencentCloud APIs:
+
+* Create: [CreateBackupMigration](https://cloud.tencent.com/document/api/238/53193) - 创建备份导入任务
+* Read: [DescribeBackupMigration](https://cloud.tencent.com/document/api/238/53188) - 查询备份导入任务
+* Update: [ModifyBackupMigration](https://cloud.tencent.com/document/api/238/53183) - 修改备份导入任务
+* Delete: [DeleteBackupMigration](https://cloud.tencent.com/document/api/238/53191) - 删除备份导入任务
 
 ## Import
 

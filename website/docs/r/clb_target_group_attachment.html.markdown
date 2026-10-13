@@ -91,6 +91,16 @@ In addition to all arguments above, the following attributes are exported:
 * `id` - ID of the resource.
 
 
+## API Reference
+
+This resource interacts with the following TencentCloud APIs:
+
+* Create: [AssociateTargetGroups](https://cloud.tencent.com/document/api/214/40560) - 规则关联目标组
+* Create: [DescribeLoadBalancers](https://cloud.tencent.com/document/api/214/30685) - 查询负载均衡实例列表
+* Create: [DescribeTargetGroups](https://cloud.tencent.com/document/api/214/40554) - 查询目标组信息
+* Read: [DescribeTargetGroups](https://cloud.tencent.com/document/api/214/40554) - 查询目标组信息
+* Delete: [DescribeTargetGroups](https://cloud.tencent.com/document/api/214/40554) - 查询目标组信息
+* Delete: [DisassociateTargetGroups](https://cloud.tencent.com/document/api/214/40553) - 解除规则的目标组关联关系
 
 ## Import
 

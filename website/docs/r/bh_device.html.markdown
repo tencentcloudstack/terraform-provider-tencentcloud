@@ -56,6 +56,14 @@ In addition to all arguments above, the following attributes are exported:
 * `id` - ID of the resource.
 * `device_id` - ID of the device.
 
+## API Reference
+
+This resource interacts with the following TencentCloud APIs:
+
+* Create: [ImportExternalDevice](https://cloud.tencent.com/document/api/1025/86967) - 导入外部资产信息
+* Read: [DescribeDevices](https://cloud.tencent.com/document/api/1025/74415) - 查询资产列表
+* Update: [ModifyDevice](https://cloud.tencent.com/document/api/1025/86951) - 修改资产信息
+* Delete: [DeleteDevices](https://cloud.tencent.com/document/api/1025/86954) - 删除主机
 
 ## Import
 

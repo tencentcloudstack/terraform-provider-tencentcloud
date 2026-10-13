@@ -86,6 +86,14 @@ In addition to all arguments above, the following attributes are exported:
 * `id` - ID of the resource.
 
 
+## API Reference
+
+This resource interacts with the following TencentCloud APIs:
+
+* Create: [CreateMachineGroup](https://cloud.tencent.com/document/api/614/56440) - 创建机器组
+* Read: [DescribeMachineGroups](https://cloud.tencent.com/document/api/614/56438) - 获取机器组列表
+* Update: [ModifyMachineGroup](https://cloud.tencent.com/document/api/614/56436) - 修改机器组
+* Delete: [DeleteMachineGroup](https://cloud.tencent.com/document/api/614/56439) - 删除机器组
 
 ## Import
 

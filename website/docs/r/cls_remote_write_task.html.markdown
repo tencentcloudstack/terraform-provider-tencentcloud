@@ -68,6 +68,16 @@ In addition to all arguments above, the following attributes are exported:
 * `task_id` - RemoteWrite task ID.
 * `update_time` - Task update time.
 
+## API Reference
+
+This resource interacts with the following TencentCloud APIs:
+
+* Create: [CreateRemoteWriteTask](https://cloud.tencent.com/document/api/614/134203) - 创建RemoteWrite任务
+* Create: [DescribeRemoteWriteTasks](https://cloud.tencent.com/document/api/614/134201) - 获取RemoteWrite投递任务列表页
+* Read: [DescribeRemoteWriteTasks](https://cloud.tencent.com/document/api/614/134201) - 获取RemoteWrite投递任务列表页
+* Update: [DescribeRemoteWriteTasks](https://cloud.tencent.com/document/api/614/134201) - 获取RemoteWrite投递任务列表页
+* Update: [ModifyRemoteWriteTask](https://cloud.tencent.com/document/api/614/134200) - 修改RemoteWrite任务
+* Delete: [DeleteRemoteWriteTask](https://cloud.tencent.com/document/api/614/134202) - 删除RemoteWrite任务
 
 ## Import
 

@@ -46,4 +46,12 @@ In addition to all arguments above, the following attributes are exported:
 * `id` - ID of the resource.
 
 
+## API Reference
+
+This resource interacts with the following TencentCloud APIs:
+
+* Create: [AddSmsSign](https://cloud.tencent.com/document/api/382/55971) - 添加短信签名
+* Read: [DescribeSmsSignList](https://cloud.tencent.com/document/api/382/55969) - 短信签名状态查询
+* Update: [ModifySmsSign](https://cloud.tencent.com/document/api/382/55968) - 修改短信签名
+* Delete: [DeleteSmsSign](https://cloud.tencent.com/document/api/382/55970) - 删除短信签名
 

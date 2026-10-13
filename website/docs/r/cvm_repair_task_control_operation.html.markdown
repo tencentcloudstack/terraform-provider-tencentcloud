@@ -74,6 +74,11 @@ In addition to all arguments above, the following attributes are exported:
 * `id` - ID of the resource.
 
 
+## API Reference
+
+This resource interacts with the following TencentCloud APIs:
+
+* Create: [RepairTaskControl](https://cloud.tencent.com/document/api/213/88101) - 管理维修任务
 
 ## Import
 

@@ -34,4 +34,9 @@ In addition to all arguments above, the following attributes are exported:
 * `id` - ID of the resource.
 
 
+## API Reference
+
+This resource interacts with the following TencentCloud APIs:
+
+* Create: [RestartCronJobs](https://cloud.tencent.com/document/api/1484/78063) - 重启定时任务
 

@@ -36,6 +36,16 @@ In addition to all arguments above, the following attributes are exported:
 * `id` - ID of the resource.
 
 
+## API Reference
+
+This resource interacts with the following TencentCloud APIs:
+
+* Create: [BindSharedCNAME](https://cloud.tencent.com/document/api/1552/101363) - 绑定共享 CNAME
+* Create: [DescribeSharedCNAME](https://cloud.tencent.com/document/api/1552/130048) - 查询共享CNAME列表
+* Read: [DescribeSharedCNAME](https://cloud.tencent.com/document/api/1552/130048) - 查询共享CNAME列表
+* Update: [BindSharedCNAME](https://cloud.tencent.com/document/api/1552/101363) - 绑定共享 CNAME
+* Update: [DescribeSharedCNAME](https://cloud.tencent.com/document/api/1552/130048) - 查询共享CNAME列表
+* Delete: [BindSharedCNAME](https://cloud.tencent.com/document/api/1552/101363) - 绑定共享 CNAME
 
 ## Import
 

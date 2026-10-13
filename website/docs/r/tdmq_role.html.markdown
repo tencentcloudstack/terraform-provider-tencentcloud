@@ -44,4 +44,12 @@ In addition to all arguments above, the following attributes are exported:
 * `id` - ID of the resource.
 * `token` - Role token. This field is returned by the API and used for authentication.
 
+## API Reference
+
+This resource interacts with the following TencentCloud APIs:
+
+* Create: [CreateRole](https://cloud.tencent.com/document/api/1179/62401) - 创建角色
+* Read: [DescribeRoles](https://cloud.tencent.com/document/api/1179/62399) - 获取角色列表
+* Update: [ModifyRole](https://cloud.tencent.com/document/api/1179/62397) - 角色修改
+* Delete: [DeleteRoles](https://cloud.tencent.com/document/api/1179/62403) - 删除角色
 

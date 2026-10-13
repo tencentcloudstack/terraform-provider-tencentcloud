@@ -40,6 +40,13 @@ In addition to all arguments above, the following attributes are exported:
 * `id` - ID of the resource.
 
 
+## API Reference
+
+This resource interacts with the following TencentCloud APIs:
+
+* Create: [SwitchBackupStream](https://cloud.tencent.com/document/api/267/100420) - 直播备用流切换
+* Read: [DescribeBackupStreamList](https://cloud.tencent.com/document/api/267/100422) - 查询直播中的主备流
+* Update: [SwitchBackupStream](https://cloud.tencent.com/document/api/267/100420) - 直播备用流切换
 
 ## Import
 

@@ -197,4 +197,29 @@ The `timeouts` block allows you to specify [timeouts](https://developer.hashicor
 * `create` - (Defaults to `1h0m`) Used when creating the resource.
 * `update` - (Defaults to `1h0m`) Used when updating the resource.
 * `delete` - (Defaults to `1h0m`) Used when deleting the resource.
+## API Reference
+
+This resource interacts with the following TencentCloud APIs:
+
+* Create: [CloneDBInstance](https://cloud.tencent.com/document/api/409/68071) - 克隆实例
+* Create: [DescribeDBInstanceAttribute](https://cloud.tencent.com/document/api/409/16772) - 查询实例详情
+* Create: [ModifyResourceTags](https://cloud.tencent.com/document/api/651/35322) - 批量修改资源关联的标签
+* Read: [DescribeDBInstanceAttribute](https://cloud.tencent.com/document/api/409/16772) - 查询实例详情
+* Read: [DescribeDBInstanceSecurityGroups](https://cloud.tencent.com/document/api/409/84064) - 查询实例安全组
+* Read: [DescribeResourceTagsByResourceIds](https://cloud.tencent.com/document/api/651/35319) - 批量查看资源关联的标签
+* Update: [CreateDBInstanceNetworkAccess](https://cloud.tencent.com/document/api/409/70581) - 创建实例网络
+* Update: [DeleteDBInstanceNetworkAccess](https://cloud.tencent.com/document/api/409/70579) - 删除实例网络
+* Update: [DescribeDBInstanceAttribute](https://cloud.tencent.com/document/api/409/16772) - 查询实例详情
+* Update: [ModifyDBInstanceChargeType](https://cloud.tencent.com/document/api/409/90458) - 修改实例计费类型
+* Update: [ModifyDBInstanceDeletionProtection](https://cloud.tencent.com/document/api/409/125336) - 修改实例删除保护
+* Update: [ModifyDBInstanceDeployment](https://cloud.tencent.com/document/api/409/68066) - 修改实例部署方式
+* Update: [ModifyDBInstanceName](https://cloud.tencent.com/document/api/409/18101) - 修改实例名字
+* Update: [ModifyDBInstanceSecurityGroups](https://cloud.tencent.com/document/api/409/84063) - 修改实例的安全组
+* Update: [ModifyDBInstancesProject](https://cloud.tencent.com/document/api/409/18100) - 修改实例所属项目
+* Update: [ModifyResourceTags](https://cloud.tencent.com/document/api/651/35322) - 批量修改资源关联的标签
+* Update: [RenewInstance](https://cloud.tencent.com/document/api/409/18098) - 续费实例
+* Update: [SetAutoRenewFlag](https://cloud.tencent.com/document/api/409/18096) - 设置自动续费
+* Delete: [DescribeDBInstanceAttribute](https://cloud.tencent.com/document/api/409/16772) - 查询实例详情
+* Delete: [DestroyDBInstance](https://cloud.tencent.com/document/api/409/43352) - 销毁实例
+* Delete: [IsolateDBInstances](https://cloud.tencent.com/document/api/409/54790) - 隔离实例
 

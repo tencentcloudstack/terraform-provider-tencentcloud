@@ -65,6 +65,16 @@ The `addresses_extra` object exports the following:
 
 * `updated_time` - Update Time.
 
+## API Reference
+
+This resource interacts with the following TencentCloud APIs:
+
+* Create: [CreateAddressTemplate](https://cloud.tencent.com/document/api/215/16708) - 创建IP地址模板
+* Read: [DescribeAddressTemplates](https://cloud.tencent.com/document/api/215/16717) - 查询IP地址模板
+* Update: [ModifyAddressTemplateAttribute](https://cloud.tencent.com/document/api/215/16720) - 修改IP地址模板
+* Update: [ModifyResourceTags](https://cloud.tencent.com/document/api/651/35322) - 批量修改资源关联的标签
+* Delete: [DeleteAddressTemplate](https://cloud.tencent.com/document/api/215/16712) - 删除IP地址模板
+* Delete: [DescribeAddressTemplates](https://cloud.tencent.com/document/api/215/16717) - 查询IP地址模板
 
 ## Import
 

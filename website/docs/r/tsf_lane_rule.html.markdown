@@ -60,4 +60,13 @@ In addition to all arguments above, the following attributes are exported:
 * `rule_id` - Rule id.
 * `update_time` - update time.
 
+## API Reference
+
+This resource interacts with the following TencentCloud APIs:
+
+* Create: [CreateLaneRule](https://cloud.tencent.com/document/api/649/44507) - 创建灰度发布规则
+* Create: [ModifyLaneRule](https://cloud.tencent.com/document/api/649/44502) - 更新灰度发布规则
+* Read: [DescribeLaneRules](https://cloud.tencent.com/document/api/649/44505) - 查询灰度发布规则列表
+* Update: [ModifyLaneRule](https://cloud.tencent.com/document/api/649/44502) - 更新灰度发布规则
+* Delete: [DeleteLaneRule](https://cloud.tencent.com/document/api/649/63177) - 删除灰度发布规则
 

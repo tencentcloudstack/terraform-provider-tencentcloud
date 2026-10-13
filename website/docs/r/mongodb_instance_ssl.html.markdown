@@ -38,6 +38,15 @@ In addition to all arguments above, the following attributes are exported:
 * `expired_time` - Certificate expiration time, format: 2023-05-01 12:00:00. This field is only available when SSL is enabled.
 * `status` - SSL status. Valid values: `0` - SSL is disabled, `1` - SSL is enabled.
 
+## API Reference
+
+This resource interacts with the following TencentCloud APIs:
+
+* Read: [DescribeInstanceSSL](https://cloud.tencent.com/document/api/240/125487) - 查看实例SSL开启状态
+* Update: [DescribeAsyncRequestInfo](https://cloud.tencent.com/document/api/240/46601) - 查询异步任务状态接口
+* Update: [InstanceEnableSSL](https://cloud.tencent.com/document/api/240/125486) - 设置实例SSL状态
+* Delete: [DescribeAsyncRequestInfo](https://cloud.tencent.com/document/api/240/46601) - 查询异步任务状态接口
+* Delete: [InstanceEnableSSL](https://cloud.tencent.com/document/api/240/125486) - 设置实例SSL状态
 
 ## Import
 

@@ -145,4 +145,12 @@ In addition to all arguments above, the following attributes are exported:
 * `id` - ID of the resource.
 
 
+## API Reference
+
+This resource interacts with the following TencentCloud APIs:
+
+* Create: [CreatePrometheusTemp](https://cloud.tencent.com/document/api/248/85722) - 新建模板
+* Read: [DescribePrometheusTemp](https://cloud.tencent.com/document/api/248/85713) - 拉取模板列表
+* Update: [ModifyPrometheusTemp](https://cloud.tencent.com/document/api/248/85711) - 修改模板实例
+* Delete: [DeletePrometheusTemp](https://cloud.tencent.com/document/api/248/85721) - 删除模板实例
 

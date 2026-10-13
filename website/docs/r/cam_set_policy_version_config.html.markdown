@@ -34,6 +34,13 @@ In addition to all arguments above, the following attributes are exported:
 * `id` - ID of the resource.
 
 
+## API Reference
+
+This resource interacts with the following TencentCloud APIs:
+
+* Create: [SetDefaultPolicyVersion](https://cloud.tencent.com/document/api/598/43838) - 设置生效的策略版本
+* Read: [ListPolicyVersions](https://cloud.tencent.com/document/api/598/43839) - 获取策略版本列表
+* Update: [SetDefaultPolicyVersion](https://cloud.tencent.com/document/api/598/43838) - 设置生效的策略版本
 
 ## Import
 

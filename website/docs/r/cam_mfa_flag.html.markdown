@@ -60,6 +60,13 @@ In addition to all arguments above, the following attributes are exported:
 * `id` - ID of the resource.
 
 
+## API Reference
+
+This resource interacts with the following TencentCloud APIs:
+
+* Create: [SetMfaFlag](https://cloud.tencent.com/document/api/598/36227) - 设置子用户的登录保护和敏感操作校验方式
+* Read: [DescribeSafeAuthFlagColl](https://cloud.tencent.com/document/api/598/48602) - 获取子账号安全设置
+* Update: [SetMfaFlag](https://cloud.tencent.com/document/api/598/36227) - 设置子用户的登录保护和敏感操作校验方式
 
 ## Import
 

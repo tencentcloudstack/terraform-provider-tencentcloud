@@ -259,6 +259,30 @@ The `timeouts` block allows you to specify [timeouts](https://developer.hashicor
 
 * `create` - (Defaults to `1h0m`) Used when creating the resource.
 * `update` - (Defaults to `1h0m`) Used when updating the resource.
+## API Reference
+
+This resource interacts with the following TencentCloud APIs:
+
+* Create: [CreateReadOnlyDBInstance](https://cloud.tencent.com/document/api/409/52602) - 创建只读实例
+* Create: [DescribeDBInstanceAttribute](https://cloud.tencent.com/document/api/409/16772) - 查询实例详情
+* Create: [DescribeOrders](https://cloud.tencent.com/document/api/409/18104) - 查询订单信息
+* Create: [DescribeProductConfig](https://cloud.tencent.com/document/api/409/16776) - 查询售卖规格配置
+* Create: [ModifyResourceTags](https://cloud.tencent.com/document/api/651/35322) - 批量修改资源关联的标签
+* Read: [DescribeDBInstanceAttribute](https://cloud.tencent.com/document/api/409/16772) - 查询实例详情
+* Read: [DescribeDBInstanceSecurityGroups](https://cloud.tencent.com/document/api/409/84064) - 查询实例安全组
+* Read: [DescribeReadOnlyGroups](https://cloud.tencent.com/document/api/409/52599) - 查询只读组列表
+* Read: [DescribeResourceTagsByResourceIds](https://cloud.tencent.com/document/api/651/35319) - 批量查看资源关联的标签
+* Update: [DescribeDBInstanceAttribute](https://cloud.tencent.com/document/api/409/16772) - 查询实例详情
+* Update: [DescribeReadOnlyGroups](https://cloud.tencent.com/document/api/409/52599) - 查询只读组列表
+* Update: [ModifyDBInstanceName](https://cloud.tencent.com/document/api/409/18101) - 修改实例名字
+* Update: [ModifyDBInstanceReadOnlyGroup](https://cloud.tencent.com/document/api/409/52598) - 修改实例所属的只读组
+* Update: [ModifyDBInstanceSecurityGroups](https://cloud.tencent.com/document/api/236/15853) - 修改云数据库安全组
+* Update: [ModifyDBInstanceSpec](https://cloud.tencent.com/document/api/409/63689) - 修改实例规格
+* Update: [ModifyDBInstancesProject](https://cloud.tencent.com/document/api/409/18100) - 修改实例所属项目
+* Update: [ModifyResourceTags](https://cloud.tencent.com/document/api/651/35322) - 批量修改资源关联的标签
+* Delete: [DescribeDBInstanceAttribute](https://cloud.tencent.com/document/api/409/16772) - 查询实例详情
+* Delete: [DestroyDBInstance](https://cloud.tencent.com/document/api/409/43352) - 销毁实例
+* Delete: [IsolateDBInstances](https://cloud.tencent.com/document/api/409/54790) - 隔离实例
 
 ## Import
 

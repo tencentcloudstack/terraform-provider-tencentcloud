@@ -41,6 +41,13 @@ In addition to all arguments above, the following attributes are exported:
 * `ttl` - End time.
 * `wid` - Auto-Increment allowlist ID.
 
+## API Reference
+
+This resource interacts with the following TencentCloud APIs:
+
+* Create: [CreateWhitelist](https://cloud.tencent.com/document/api/1464/69243) - 创建白名单
+* Read: [DescribeWhitelists](https://cloud.tencent.com/document/api/1464/69211) - 获取白名单列表
+* Delete: [DeleteWhitelist](https://cloud.tencent.com/document/api/1464/69235) - 删除白名单
 
 ## Import
 

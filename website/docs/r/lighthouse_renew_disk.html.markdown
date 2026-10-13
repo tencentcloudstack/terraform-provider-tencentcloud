@@ -47,4 +47,10 @@ In addition to all arguments above, the following attributes are exported:
 * `id` - ID of the resource.
 
 
+## API Reference
+
+This resource interacts with the following TencentCloud APIs:
+
+* Create: [DescribeDisks](https://cloud.tencent.com/document/api/1207/66093) - 查询云硬盘
+* Create: [RenewDisks](https://cloud.tencent.com/document/api/1207/90903) - 续费云硬盘
 

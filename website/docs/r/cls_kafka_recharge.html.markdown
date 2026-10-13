@@ -96,6 +96,14 @@ In addition to all arguments above, the following attributes are exported:
 * `id` - ID of the resource.
 
 
+## API Reference
+
+This resource interacts with the following TencentCloud APIs:
+
+* Create: [CreateKafkaRecharge](https://cloud.tencent.com/document/api/614/94448) - 创建Kafka数据订阅任务
+* Read: [DescribeKafkaRecharges](https://cloud.tencent.com/document/api/614/94446) - 获取Kafka数据订阅任务列表
+* Update: [ModifyKafkaRecharge](https://cloud.tencent.com/document/api/614/94445) - 修改Kafka数据订阅任务
+* Delete: [DeleteKafkaRecharge](https://cloud.tencent.com/document/api/614/94447) - 删除Kafka数据订阅任务
 
 ## Import
 

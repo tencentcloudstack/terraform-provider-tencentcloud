@@ -34,6 +34,15 @@ In addition to all arguments above, the following attributes are exported:
 * `id` - ID of the resource.
 
 
+## API Reference
+
+This resource interacts with the following TencentCloud APIs:
+
+* Create: [AssociateInstancesKeyPairs](https://cloud.tencent.com/document/api/1207/55544) - 绑定密钥对
+* Create: [DescribeInstances](https://cloud.tencent.com/document/api/1207/47573) - 查看实例列表
+* Read: [DescribeKeyPairs](https://cloud.tencent.com/document/api/1207/55540) - 查询用户密钥对列表
+* Delete: [DescribeInstances](https://cloud.tencent.com/document/api/1207/47573) - 查看实例列表
+* Delete: [DisassociateInstancesKeyPairs](https://cloud.tencent.com/document/api/1207/55539) - 解绑密钥对
 
 ## Import
 

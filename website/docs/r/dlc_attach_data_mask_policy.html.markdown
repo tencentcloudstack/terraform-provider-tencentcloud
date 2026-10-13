@@ -66,4 +66,11 @@ In addition to all arguments above, the following attributes are exported:
 * `id` - ID of the resource.
 
 
+## API Reference
+
+This resource interacts with the following TencentCloud APIs:
+
+* Create: [AttachDataMaskPolicy](https://cloud.tencent.com/document/api/1342/122615) - 绑定数据脱敏策略
+* Read: [DescribeTable](https://cloud.tencent.com/document/api/1342/53768) - 查询表详情
+* Delete: [AttachDataMaskPolicy](https://cloud.tencent.com/document/api/1342/122615) - 绑定数据脱敏策略
 

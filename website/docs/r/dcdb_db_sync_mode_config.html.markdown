@@ -34,6 +34,15 @@ In addition to all arguments above, the following attributes are exported:
 * `id` - ID of the resource.
 
 
+## API Reference
+
+This resource interacts with the following TencentCloud APIs:
+
+* Create: [DescribeDBSyncMode](https://cloud.tencent.com/document/api/557/19991) - 查询同步模式
+* Create: [ModifyDBSyncMode](https://cloud.tencent.com/document/api/557/19981) - 修改同步模式
+* Read: [DescribeDBSyncMode](https://cloud.tencent.com/document/api/557/19991) - 查询同步模式
+* Update: [DescribeDBSyncMode](https://cloud.tencent.com/document/api/557/19991) - 查询同步模式
+* Update: [ModifyDBSyncMode](https://cloud.tencent.com/document/api/557/19981) - 修改同步模式
 
 ## Import
 

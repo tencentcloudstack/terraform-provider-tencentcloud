@@ -38,4 +38,9 @@ In addition to all arguments above, the following attributes are exported:
 * `id` - ID of the resource.
 
 
+## API Reference
+
+This resource interacts with the following TencentCloud APIs:
+
+* Create: [OverwriteWhiteBoxDeviceFingerprints](https://cloud.tencent.com/document/api/573/45805) - 覆盖指定密钥的设备指纹信息
 

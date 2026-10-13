@@ -56,6 +56,17 @@ In addition to all arguments above, the following attributes are exported:
 * `id` - ID of the resource.
 
 
+## API Reference
+
+This resource interacts with the following TencentCloud APIs:
+
+* Create: [BindDeviceResource](https://cloud.tencent.com/document/api/1025/74792) - 修改资产绑定的堡垒机服务
+* Create: [DescribeDevices](https://cloud.tencent.com/document/api/1025/74415) - 查询资产列表
+* Read: [DescribeDevices](https://cloud.tencent.com/document/api/1025/74415) - 查询资产列表
+* Update: [BindDeviceResource](https://cloud.tencent.com/document/api/1025/74792) - 修改资产绑定的堡垒机服务
+* Update: [DescribeDevices](https://cloud.tencent.com/document/api/1025/74415) - 查询资产列表
+* Delete: [BindDeviceResource](https://cloud.tencent.com/document/api/1025/74792) - 修改资产绑定的堡垒机服务
+* Delete: [DescribeDevices](https://cloud.tencent.com/document/api/1025/74415) - 查询资产列表
 
 ## Import
 

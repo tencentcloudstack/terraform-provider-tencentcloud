@@ -49,6 +49,14 @@ In addition to all arguments above, the following attributes are exported:
 * `id` - ID of the resource.
 
 
+## API Reference
+
+This resource interacts with the following TencentCloud APIs:
+
+* Create: [CreateLogConfig](https://cloud.tencent.com/document/api/1371/78465) - 创建日志收集配置
+* Read: [DescribeLogConfig](https://cloud.tencent.com/document/api/1371/78470) - 查询日志收集配置详情
+* Update: [ModifyLogConfig](https://cloud.tencent.com/document/api/1371/78467) - 编辑日志收集配置
+* Delete: [DestroyLogConfig](https://cloud.tencent.com/document/api/1371/78468) - 销毁日志收集配置
 
 ## Import
 

@@ -84,6 +84,18 @@ In addition to all arguments above, the following attributes are exported:
 * `docker_assistant_cidrs` - List of Docker Assistant CIDR.
 * `is_default` - Indicates whether it is the default VPC for this region.
 
+## API Reference
+
+This resource interacts with the following TencentCloud APIs:
+
+* Create: [CreateAssistantCidr](https://cloud.tencent.com/document/api/215/43276) - 创建辅助CIDR
+* Create: [CreateVpc](https://cloud.tencent.com/document/api/215/15774) - 创建VPC
+* Read: [DescribeRouteTables](https://cloud.tencent.com/document/api/215/15763) - 查询路由表
+* Read: [DescribeVpcs](https://cloud.tencent.com/document/api/215/15778) - 查询VPC列表
+* Update: [ModifyAssistantCidr](https://cloud.tencent.com/document/api/215/43272) - 修改辅助CIDR
+* Update: [ModifyResourceTags](https://cloud.tencent.com/document/api/651/35322) - 批量修改资源关联的标签
+* Update: [ModifyVpcAttribute](https://cloud.tencent.com/document/api/215/15773) - 修改VPC属性
+* Delete: [DeleteVpc](https://cloud.tencent.com/document/api/215/15775) - 删除VPC
 
 ## Import
 

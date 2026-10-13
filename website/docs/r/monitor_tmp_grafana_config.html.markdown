@@ -71,6 +71,13 @@ In addition to all arguments above, the following attributes are exported:
 * `id` - ID of the resource.
 
 
+## API Reference
+
+This resource interacts with the following TencentCloud APIs:
+
+* Create: [UpdateGrafanaConfig](https://cloud.tencent.com/document/api/248/79193) - 更新 Grafana 配置
+* Read: [DescribeGrafanaConfig](https://cloud.tencent.com/document/api/248/79210) - 列出 Grafana 的设置
+* Update: [UpdateGrafanaConfig](https://cloud.tencent.com/document/api/248/79193) - 更新 Grafana 配置
 
 ## Import
 

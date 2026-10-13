@@ -39,6 +39,14 @@ In addition to all arguments above, the following attributes are exported:
 * `path` - Node path.
 * `type` - Type. folder, script.
 
+## API Reference
+
+This resource interacts with the following TencentCloud APIs:
+
+* Create: [CreateCodeFolder](https://cloud.tencent.com/document/api/1267/123611) - 新建代码文件夹
+* Read: [GetCodeFolder](https://cloud.tencent.com/document/api/1267/124010) - 获取文件夹详情
+* Update: [UpdateCodeFolder](https://cloud.tencent.com/document/api/1267/123596) - 更新代码文件夹
+* Delete: [DeleteCodeFolder](https://cloud.tencent.com/document/api/1267/123607) - 删除代码文件夹
 
 ## Import
 

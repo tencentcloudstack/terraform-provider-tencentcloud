@@ -34,4 +34,10 @@ In addition to all arguments above, the following attributes are exported:
 * `id` - ID of the resource.
 
 
+## API Reference
+
+This resource interacts with the following TencentCloud APIs:
+
+* Create: [DescribeOrders](https://cloud.tencent.com/document/api/237/16186) - 查询订单信息
+* Create: [RenewDBInstance](https://cloud.tencent.com/document/api/237/16187) - 续费实例
 

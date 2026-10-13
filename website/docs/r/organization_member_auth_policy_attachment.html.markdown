@@ -42,6 +42,13 @@ In addition to all arguments above, the following attributes are exported:
 * `org_sub_account_name` - Org sub account name.
 * `policy_name` - Policy name.
 
+## API Reference
+
+This resource interacts with the following TencentCloud APIs:
+
+* Create: [BindOrganizationPolicySubAccount](https://cloud.tencent.com/document/api/850/116753) - 绑定成员访问授权策略和组织管理员子账号
+* Read: [DescribeOrganizationMembersAuthPolicy](https://cloud.tencent.com/document/api/850/122634) - 查询组织成员访问策略列表
+* Delete: [CancelOrganizationPolicySubAccount](https://cloud.tencent.com/document/api/850/116752) - 解绑成员访问授权策略和组织管理员子账号
 
 ## Import
 

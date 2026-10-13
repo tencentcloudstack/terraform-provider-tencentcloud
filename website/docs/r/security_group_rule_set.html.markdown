@@ -151,6 +151,15 @@ The `ingress` object exports the following:
 
 * `policy_index` - The security group rule index number, whose value dynamically changes with changes in security group rules.
 
+## API Reference
+
+This resource interacts with the following TencentCloud APIs:
+
+* Create: [ModifySecurityGroupPolicies](https://cloud.tencent.com/document/api/215/15810) - 重置安全组出站和入站规则
+* Read: [DescribeSecurityGroupPolicies](https://cloud.tencent.com/document/api/215/15804) - 查询安全组规则
+* Update: [DeleteSecurityGroupPolicies](https://cloud.tencent.com/document/api/215/15809) - 删除安全组规则
+* Update: [ModifySecurityGroupPolicies](https://cloud.tencent.com/document/api/215/15810) - 重置安全组出站和入站规则
+* Delete: [ModifySecurityGroupPolicies](https://cloud.tencent.com/document/api/215/15810) - 重置安全组出站和入站规则
 
 ## Import
 

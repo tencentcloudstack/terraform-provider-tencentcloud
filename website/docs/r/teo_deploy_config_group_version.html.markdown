@@ -67,4 +67,11 @@ The `config_group_version_infos` object exports the following:
 The `timeouts` block allows you to specify [timeouts](https://developer.hashicorp.com/terraform/language/resources/syntax#operation-timeouts) for certain actions:
 
 * `create` - (Defaults to `20m`) Used when creating the resource.
+## API Reference
+
+This resource interacts with the following TencentCloud APIs:
+
+* Create: [DeployConfigGroupVersion](https://cloud.tencent.com/document/api/1552/101866) - 发布配置组版本
+* Create: [DescribeEnvironments](https://cloud.tencent.com/document/api/1552/101862) - 查询环境信息
+* Read: [DescribeDeployHistory](https://cloud.tencent.com/document/api/1552/101863) - 查询版本发布历史
 

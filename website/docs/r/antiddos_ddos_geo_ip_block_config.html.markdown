@@ -44,6 +44,16 @@ In addition to all arguments above, the following attributes are exported:
 * `id` - ID of the resource.
 
 
+## API Reference
+
+This resource interacts with the following TencentCloud APIs:
+
+* Create: [CreateDDoSGeoIPBlockConfig](https://cloud.tencent.com/document/api/297/95336) - 添加DDoS防护的区域封禁配置
+* Create: [DescribeListDDoSGeoIPBlockConfig](https://cloud.tencent.com/document/api/297/95312) - 获取DDoS防护的区域封禁配置列表
+* Read: [DescribeListDDoSGeoIPBlockConfig](https://cloud.tencent.com/document/api/297/95312) - 获取DDoS防护的区域封禁配置列表
+* Update: [ModifyDDoSGeoIPBlockConfig](https://cloud.tencent.com/document/api/297/95303) - 修改DDoS防护的区域封禁配置
+* Delete: [DeleteDDoSGeoIPBlockConfig](https://cloud.tencent.com/document/api/297/95325) - 删除DDoS防护的区域封禁配置
+* Delete: [DescribeListDDoSGeoIPBlockConfig](https://cloud.tencent.com/document/api/297/95312) - 获取DDoS防护的区域封禁配置列表
 
 ## Import
 

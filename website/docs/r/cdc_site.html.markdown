@@ -87,6 +87,14 @@ In addition to all arguments above, the following attributes are exported:
 * `id` - ID of the resource.
 
 
+## API Reference
+
+This resource interacts with the following TencentCloud APIs:
+
+* Create: [CreateSite](https://cloud.tencent.com/document/api/1346/73768) - 创建站点
+* Read: [DescribeSitesDetail](https://cloud.tencent.com/document/api/1346/73755) - 查询站点详情
+* Update: [ModifySiteInfo](https://cloud.tencent.com/document/api/1346/73751) - 修改机房信息
+* Delete: [DeleteSites](https://cloud.tencent.com/document/api/1346/73766) - 删除站点
 
 ## Import
 

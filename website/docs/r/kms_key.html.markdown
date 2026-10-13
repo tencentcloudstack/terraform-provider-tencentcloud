@@ -111,6 +111,25 @@ In addition to all arguments above, the following attributes are exported:
 * `id` - ID of the resource.
 * `key_state` - State of CMK.
 
+## API Reference
+
+This resource interacts with the following TencentCloud APIs:
+
+* Create: [ArchiveKey](https://cloud.tencent.com/document/api/573/47985) - 密钥归档
+* Create: [CreateKey](https://cloud.tencent.com/document/api/573/34430) - 创建主密钥
+* Create: [DescribeKey](https://cloud.tencent.com/document/api/573/34428) - 获取主密钥属性
+* Create: [DisableKey](https://cloud.tencent.com/document/api/573/34426) - 禁用主密钥
+* Create: [EnableKeyRotation](https://cloud.tencent.com/document/api/573/34422) - 开启密钥轮换
+* Create: [ModifyResourceTags](https://cloud.tencent.com/document/api/651/35322) - 批量修改资源关联的标签
+* Read: [DescribeKey](https://cloud.tencent.com/document/api/573/34428) - 获取主密钥属性
+* Read: [DescribeResourceTagsByResourceIds](https://cloud.tencent.com/document/api/651/35319) - 批量查看资源关联的标签
+* Update: [DescribeKey](https://cloud.tencent.com/document/api/573/34428) - 获取主密钥属性
+* Update: [ModifyResourceTags](https://cloud.tencent.com/document/api/651/35322) - 批量修改资源关联的标签
+* Update: [UpdateAlias](https://cloud.tencent.com/document/api/573/34413) - 修改别名
+* Update: [UpdateKeyDescription](https://cloud.tencent.com/document/api/573/34412) - 修改主密钥描述信息
+* Delete: [DescribeKey](https://cloud.tencent.com/document/api/573/34428) - 获取主密钥属性
+* Delete: [DisableKey](https://cloud.tencent.com/document/api/573/34426) - 禁用主密钥
+* Delete: [ScheduleKeyDeletion](https://cloud.tencent.com/document/api/573/35985) - CMK计划删除接口
 
 ## Import
 

@@ -38,6 +38,14 @@ In addition to all arguments above, the following attributes are exported:
 * `id` - ID of the resource.
 * `task_id` - Task ID.
 
+## API Reference
+
+This resource interacts with the following TencentCloud APIs:
+
+* Create: [CreatePackageAndPay](https://cloud.tencent.com/document/api/1551/126465) - 购买套餐并支付
+* Read: [DescribeDetectTaskPackageList](https://cloud.tencent.com/document/api/1551/121138) - 获取探测任务套餐列表
+* Update: [CreatePackageAndPay](https://cloud.tencent.com/document/api/1551/126465) - 购买套餐并支付
+* Update: [ModifyPackageAutoRenew](https://cloud.tencent.com/document/api/1551/126464) - 设置自动续费
 
 ## Import
 

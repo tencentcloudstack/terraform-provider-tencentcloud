@@ -53,6 +53,13 @@ In addition to all arguments above, the following attributes are exported:
 * `id` - ID of the resource.
 
 
+## API Reference
+
+This resource interacts with the following TencentCloud APIs:
+
+* Create: [CreatePortAclConfig](https://cloud.tencent.com/document/api/297/95333) - 添加DDoS防护的端口acl策略
+* Read: [DescribeListPortAclList](https://cloud.tencent.com/document/api/297/95309) - 获取DDoS防护的端口acl策略列表
+* Delete: [DeletePortAclConfig](https://cloud.tencent.com/document/api/297/95322) - 删除DDoS防护的端口acl策略
 
 ## Import
 

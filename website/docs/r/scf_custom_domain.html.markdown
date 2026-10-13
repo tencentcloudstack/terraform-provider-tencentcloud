@@ -69,6 +69,14 @@ In addition to all arguments above, the following attributes are exported:
 * `id` - ID of the resource.
 
 
+## API Reference
+
+This resource interacts with the following TencentCloud APIs:
+
+* Create: [CreateCustomDomain](https://cloud.tencent.com/document/api/583/111926) - 创建云函数自定义域名
+* Read: [GetCustomDomain](https://cloud.tencent.com/document/api/583/111924) - 查看云函数自定义域名详情
+* Update: [UpdateCustomDomain](https://cloud.tencent.com/document/api/583/111922) - 更新云函数自定义域名
+* Delete: [DeleteCustomDomain](https://cloud.tencent.com/document/api/583/111925) - 删除云函数自定义域名
 
 ## Import
 

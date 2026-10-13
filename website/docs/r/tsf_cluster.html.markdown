@@ -94,4 +94,16 @@ In addition to all arguments above, the following attributes are exported:
 * `tsf_zone_name` - The name of the TSF availability zone to which the cluster belongs.
 * `update_time` - Update time.
 
+## API Reference
+
+This resource interacts with the following TencentCloud APIs:
+
+* Create: [CreateCluster](https://cloud.tencent.com/document/api/649/36049) - 创建集群
+* Create: [DescribeClusters](https://cloud.tencent.com/document/api/649/85857) - 获取集群列表
+* Create: [ModifyResourceTags](https://cloud.tencent.com/document/api/651/35322) - 批量修改资源关联的标签
+* Read: [DescribeClusters](https://cloud.tencent.com/document/api/649/85857) - 获取集群列表
+* Read: [DescribeResourceTagsByResourceIds](https://cloud.tencent.com/document/api/651/35319) - 批量查看资源关联的标签
+* Update: [ModifyCluster](https://cloud.tencent.com/document/api/649/85853) - 修改集群信息
+* Update: [ModifyResourceTags](https://cloud.tencent.com/document/api/651/35322) - 批量修改资源关联的标签
+* Delete: [DeleteCluster](https://cloud.tencent.com/document/api/649/85859) - 删除集群
 

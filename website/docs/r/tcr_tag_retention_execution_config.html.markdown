@@ -68,4 +68,13 @@ In addition to all arguments above, the following attributes are exported:
 * `id` - ID of the resource.
 * `execution_id` - execution id.
 
+## API Reference
+
+This resource interacts with the following TencentCloud APIs:
+
+* Create: [CreateTagRetentionExecution](https://cloud.tencent.com/document/api/1141/54804) - 手动执行版本保留
+* Create: [DescribeTagRetentionExecution](https://cloud.tencent.com/document/api/1141/54801) - 查询版本保留执行记录
+* Read: [DescribeTagRetentionExecution](https://cloud.tencent.com/document/api/1141/54801) - 查询版本保留执行记录
+* Update: [CreateTagRetentionExecution](https://cloud.tencent.com/document/api/1141/54804) - 手动执行版本保留
+* Update: [DescribeTagRetentionExecution](https://cloud.tencent.com/document/api/1141/54801) - 查询版本保留执行记录
 

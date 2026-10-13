@@ -441,6 +441,20 @@ In addition to all arguments above, the following attributes are exported:
 * `kibana_private_url` - Kibana private URL.
 * `kibana_url` - Kibana access URL.
 
+## API Reference
+
+This resource interacts with the following TencentCloud APIs:
+
+* Create: [CreateInstance](https://cloud.tencent.com/document/api/845/30633) - 创建ES集群实例
+* Create: [DescribeInstances](https://cloud.tencent.com/document/api/845/30631) - 查询ES集群实例
+* Create: [UpdateInstance](https://cloud.tencent.com/document/api/845/30629) - 更新ES集群实例
+* Read: [DescribeInstances](https://cloud.tencent.com/document/api/845/30631) - 查询ES集群实例
+* Update: [ModifyResourceTags](https://cloud.tencent.com/document/api/651/35322) - 批量修改资源关联的标签
+* Update: [UpdateInstance](https://cloud.tencent.com/document/api/845/30629) - 更新ES集群实例
+* Update: [UpgradeInstance](https://cloud.tencent.com/document/api/845/36270) - 升级ES集群版本
+* Update: [UpgradeLicense](https://cloud.tencent.com/document/api/845/36269) - 升级ES商业特性
+* Delete: [DeleteInstance](https://cloud.tencent.com/document/api/845/30632) - 销毁ES集群实例
+* Delete: [DescribeInstances](https://cloud.tencent.com/document/api/845/30631) - 查询ES集群实例
 
 ## Import
 

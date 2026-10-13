@@ -33,6 +33,15 @@ In addition to all arguments above, the following attributes are exported:
 * `id` - ID of the resource.
 * `user_group_id` - User group ID.
 
+## API Reference
+
+This resource interacts with the following TencentCloud APIs:
+
+* Create: [CreateUserGroup](https://cloud.tencent.com/document/api/1025/74798) - 新建用户组
+* Read: [DescribeDepartments](https://cloud.tencent.com/document/api/1025/126463) - 查询部门信息
+* Read: [DescribeUserGroups](https://cloud.tencent.com/document/api/1025/74794) - 查询用户组列表
+* Update: [ModifyUserGroup](https://cloud.tencent.com/document/api/1025/101605) - 修改用户组
+* Delete: [DeleteUserGroups](https://cloud.tencent.com/document/api/1025/74796) - 删除用户组
 
 ## Import
 

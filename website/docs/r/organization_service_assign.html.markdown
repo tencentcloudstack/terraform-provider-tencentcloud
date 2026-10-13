@@ -50,6 +50,13 @@ In addition to all arguments above, the following attributes are exported:
 * `id` - ID of the resource.
 
 
+## API Reference
+
+This resource interacts with the following TencentCloud APIs:
+
+* Create: [CreateOrgServiceAssign](https://cloud.tencent.com/document/api/850/109802) - 添加集团服务委派管理员
+* Read: [ListOrgServiceAssignMember](https://cloud.tencent.com/document/api/850/109803) - 获取集团服务委派管理员列表
+* Delete: [DeleteOrgServiceAssign](https://cloud.tencent.com/document/api/850/109801) - 删除集团服务委派管理员
 
 ## Import
 

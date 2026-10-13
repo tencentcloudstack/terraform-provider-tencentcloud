@@ -86,6 +86,15 @@ In addition to all arguments above, the following attributes are exported:
 * `id` - ID of the resource.
 
 
+## API Reference
+
+This resource interacts with the following TencentCloud APIs:
+
+* Create: [DescribeFlow](https://cloud.tencent.com/document/api/237/16177) - 查询流程状态
+* Create: [ModifyAccountPrivileges](https://cloud.tencent.com/document/api/237/56486) - 修改云数据库实例账号的权限信息
+* Read: [DescribeAccountPrivileges](https://cloud.tencent.com/document/api/237/16164) - 查询账号权限
+* Update: [DescribeFlow](https://cloud.tencent.com/document/api/237/16177) - 查询流程状态
+* Update: [ModifyAccountPrivileges](https://cloud.tencent.com/document/api/237/56486) - 修改云数据库实例账号的权限信息
 
 ## Import
 

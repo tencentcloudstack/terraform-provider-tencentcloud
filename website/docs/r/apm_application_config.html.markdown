@@ -214,6 +214,13 @@ In addition to all arguments above, the following attributes are exported:
 * `id` - ID of the resource.
 
 
+## API Reference
+
+This resource interacts with the following TencentCloud APIs:
+
+* Create: [ModifyApmApplicationConfig](https://cloud.tencent.com/document/api/1463/125072) - 修改应用配置（推荐）
+* Read: [DescribeApmApplicationConfig](https://cloud.tencent.com/document/api/1463/125073) - 查询应用配置（推荐）
+* Update: [ModifyApmApplicationConfig](https://cloud.tencent.com/document/api/1463/125072) - 修改应用配置（推荐）
 
 ## Import
 

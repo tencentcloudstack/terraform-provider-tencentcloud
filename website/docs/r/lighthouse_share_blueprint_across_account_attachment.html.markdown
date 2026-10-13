@@ -34,6 +34,17 @@ In addition to all arguments above, the following attributes are exported:
 * `id` - ID of the resource.
 
 
+## API Reference
+
+This resource interacts with the following TencentCloud APIs:
+
+* Create: [DescribeBlueprintsShareAcrossAccountInfos](https://cloud.tencent.com/document/api/1207/132389) - 查询镜像跨账号共享信息
+* Create: [ShareBlueprintAcrossAccounts](https://cloud.tencent.com/document/api/1207/101338) - 跨账号共享镜像
+* Read: [DescribeBlueprintsShareAcrossAccountInfos](https://cloud.tencent.com/document/api/1207/132389) - 查询镜像跨账号共享信息
+* Update: [CancelShareBlueprintAcrossAccounts](https://cloud.tencent.com/document/api/1207/101339) - 取消镜像跨账号共享
+* Update: [DescribeBlueprintsShareAcrossAccountInfos](https://cloud.tencent.com/document/api/1207/132389) - 查询镜像跨账号共享信息
+* Update: [ShareBlueprintAcrossAccounts](https://cloud.tencent.com/document/api/1207/101338) - 跨账号共享镜像
+* Delete: [CancelShareBlueprintAcrossAccounts](https://cloud.tencent.com/document/api/1207/101339) - 取消镜像跨账号共享
 
 ## Import
 

@@ -36,6 +36,14 @@ In addition to all arguments above, the following attributes are exported:
 * `id` - ID of the resource.
 
 
+## API Reference
+
+This resource interacts with the following TencentCloud APIs:
+
+* Create: [CreateUserStore](https://cloud.tencent.com/document/api/1441/94460) - 创建用户目录
+* Read: [ListUserStore](https://cloud.tencent.com/document/api/1441/94458) - 查询用户目录列表
+* Update: [UpdateUserStore](https://cloud.tencent.com/document/api/1441/94457) - 更新用户目录
+* Delete: [DeleteUserStore](https://cloud.tencent.com/document/api/1441/94459) - 删除用户目录
 
 ## Import
 

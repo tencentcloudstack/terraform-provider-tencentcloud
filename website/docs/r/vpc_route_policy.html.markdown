@@ -34,6 +34,14 @@ In addition to all arguments above, the following attributes are exported:
 * `id` - ID of the resource.
 * `route_policy_id` - Route policy ID.
 
+## API Reference
+
+This resource interacts with the following TencentCloud APIs:
+
+* Create: [CreateRoutePolicy](https://cloud.tencent.com/document/api/215/124430) - 创建路由策略及策略条目。
+* Read: [DescribeRoutePolicies](https://cloud.tencent.com/document/api/215/126466) - 用户查询路由策略列表
+* Update: [ModifyRoutePolicyAttribute](https://cloud.tencent.com/document/api/215/124423) - 修改路由策略属性
+* Delete: [DeleteRoutePolicy](https://cloud.tencent.com/document/api/215/124427) - 删除路由接收策略和条目。
 
 ## Import
 

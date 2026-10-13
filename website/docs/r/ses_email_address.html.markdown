@@ -47,6 +47,15 @@ In addition to all arguments above, the following attributes are exported:
 * `id` - ID of the resource.
 
 
+## API Reference
+
+This resource interacts with the following TencentCloud APIs:
+
+* Create: [CreateEmailAddress](https://cloud.tencent.com/document/api/1288/51052) - 新建发信地址
+* Create: [UpdateEmailSmtpPassWord](https://cloud.tencent.com/document/api/1288/84274) - 设置邮箱的smtp密码
+* Read: [ListEmailAddress](https://cloud.tencent.com/document/api/1288/51050) - 获取发信地址列表
+* Update: [UpdateEmailSmtpPassWord](https://cloud.tencent.com/document/api/1288/84274) - 设置邮箱的smtp密码
+* Delete: [DeleteEmailAddress](https://cloud.tencent.com/document/api/1288/51051) - 删除发信地址
 
 ## Import
 

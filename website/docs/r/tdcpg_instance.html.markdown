@@ -49,6 +49,18 @@ In addition to all arguments above, the following attributes are exported:
 * `id` - ID of the resource.
 
 
+## API Reference
+
+This resource interacts with the following TencentCloud APIs:
+
+* Create: [CreateClusterInstances](https://cloud.tencent.com/document/api/1556/70690) - 创建实例
+* Create: [DescribeResourcesByDealName](https://cloud.tencent.com/document/api/1556/70679) - 根据订单号获取资源信息
+* Read: [DescribeClusterInstances](https://cloud.tencent.com/document/api/1556/70688) - 查询实例
+* Update: [DescribeClusterInstances](https://cloud.tencent.com/document/api/1556/70688) - 查询实例
+* Update: [ModifyClusterInstancesSpec](https://cloud.tencent.com/document/api/1556/70686) - 修改实例规格
+* Delete: [DeleteClusterInstances](https://cloud.tencent.com/document/api/1556/70689) - 删除实例
+* Delete: [DescribeClusterInstances](https://cloud.tencent.com/document/api/1556/70688) - 查询实例
+* Delete: [IsolateClusterInstances](https://cloud.tencent.com/document/api/1556/70687) - 隔离实例
 
 ## Import
 

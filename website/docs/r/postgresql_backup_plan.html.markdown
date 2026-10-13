@@ -48,6 +48,15 @@ In addition to all arguments above, the following attributes are exported:
 * `id` - ID of the resource.
 * `plan_id` - Backup plan ID.
 
+## API Reference
+
+This resource interacts with the following TencentCloud APIs:
+
+* Create: [CreateBackupPlan](https://cloud.tencent.com/document/api/409/116174) - 创建备份计划
+* Create: [ModifyBackupPlan](https://cloud.tencent.com/document/api/409/68067) - 修改备份计划
+* Read: [DescribeBackupPlans](https://cloud.tencent.com/document/api/409/68069) - 查询备份计划
+* Update: [ModifyBackupPlan](https://cloud.tencent.com/document/api/409/68067) - 修改备份计划
+* Delete: [DeleteBackupPlan](https://cloud.tencent.com/document/api/409/116173) - 删除备份计划
 
 ## Import
 

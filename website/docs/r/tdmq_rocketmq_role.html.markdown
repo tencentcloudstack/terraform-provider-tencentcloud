@@ -43,6 +43,14 @@ In addition to all arguments above, the following attributes are exported:
 * `token` - Value of the role token.
 * `update_time` - Update time.
 
+## API Reference
+
+This resource interacts with the following TencentCloud APIs:
+
+* Create: [CreateRole](https://cloud.tencent.com/document/api/1179/62401) - 创建角色
+* Read: [DescribeRoles](https://cloud.tencent.com/document/api/1179/62399) - 获取角色列表
+* Update: [ModifyRole](https://cloud.tencent.com/document/api/1179/62397) - 角色修改
+* Delete: [DeleteRoles](https://cloud.tencent.com/document/api/1179/62403) - 删除角色
 
 ## Import
 

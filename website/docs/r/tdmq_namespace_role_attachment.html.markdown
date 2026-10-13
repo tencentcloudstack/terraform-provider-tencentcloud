@@ -63,4 +63,12 @@ In addition to all arguments above, the following attributes are exported:
 * `id` - ID of the resource.
 * `create_time` - Creation time of resource.
 
+## API Reference
+
+This resource interacts with the following TencentCloud APIs:
+
+* Create: [CreateEnvironmentRole](https://cloud.tencent.com/document/api/1179/62402) - 创建环境角色授权
+* Read: [DescribeEnvironmentRoles](https://cloud.tencent.com/document/api/1179/49051) - 获取命名空间角色列表
+* Update: [ModifyEnvironmentRole](https://cloud.tencent.com/document/api/1179/62398) - 修改环境角色授权
+* Delete: [DeleteEnvironmentRoles](https://cloud.tencent.com/document/api/1179/62400) - 删除环境角色授权
 

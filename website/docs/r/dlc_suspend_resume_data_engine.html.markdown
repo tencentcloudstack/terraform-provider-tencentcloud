@@ -34,4 +34,9 @@ In addition to all arguments above, the following attributes are exported:
 * `id` - ID of the resource.
 
 
+## API Reference
+
+This resource interacts with the following TencentCloud APIs:
+
+* Create: [SuspendResumeDataEngine](https://cloud.tencent.com/document/api/1342/85563) - 挂起或启动数据引擎
 

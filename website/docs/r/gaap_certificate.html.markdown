@@ -41,6 +41,14 @@ In addition to all arguments above, the following attributes are exported:
 * `issuer_cn` - Issuer name of the certificate.
 * `subject_cn` - Subject name of the certificate.
 
+## API Reference
+
+This resource interacts with the following TencentCloud APIs:
+
+* Create: [CreateCertificate](https://cloud.tencent.com/document/api/608/36980) - 创建证书
+* Read: [DescribeCertificateDetail](https://cloud.tencent.com/document/api/608/36978) - 查询证书详情
+* Update: [ModifyCertificateAttributes](https://cloud.tencent.com/document/api/608/36976) - 修改证书属性
+* Delete: [DeleteCertificate](https://cloud.tencent.com/document/api/608/36979) - 删除证书
 
 ## Import
 

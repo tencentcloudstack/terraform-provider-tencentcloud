@@ -40,6 +40,16 @@ In addition to all arguments above, the following attributes are exported:
 * `id` - ID of the resource.
 
 
+## API Reference
+
+This resource interacts with the following TencentCloud APIs:
+
+* Create: [CreateFunctionReplica](https://cloud.tencent.com/document/api/1552/132393) - 创建边缘函数副本
+* Create: [DescribeFunctionReplicas](https://cloud.tencent.com/document/api/1552/132391) - 查询边缘函数副本列表
+* Read: [DescribeFunctionReplicas](https://cloud.tencent.com/document/api/1552/132391) - 查询边缘函数副本列表
+* Update: [DescribeFunctionReplicas](https://cloud.tencent.com/document/api/1552/132391) - 查询边缘函数副本列表
+* Update: [ModifyFunctionReplica](https://cloud.tencent.com/document/api/1552/132390) - 编辑边缘函数副本
+* Delete: [DeleteFunctionReplica](https://cloud.tencent.com/document/api/1552/132392) - 删除边缘函数副本
 
 ## Import
 

@@ -96,6 +96,19 @@ In addition to all arguments above, the following attributes are exported:
 * `status` - Site status. Valid values: `active`: NS is switched; `pending`: NS is not switched; `moved`: NS is moved; `deactivated`: this site is blocked.
 * `zone_id` - Site ID.
 
+## API Reference
+
+This resource interacts with the following TencentCloud APIs:
+
+* Create: [CreateZone](https://cloud.tencent.com/document/api/1552/80719) - 创建站点
+* Create: [ModifyResourceTags](https://cloud.tencent.com/document/api/651/35322) - 批量修改资源关联的标签
+* Read: [DescribeResourceTagsByResourceIds](https://cloud.tencent.com/document/api/651/35319) - 批量查看资源关联的标签
+* Read: [DescribeZones](https://cloud.tencent.com/document/api/1552/80713) - 查询站点列表
+* Update: [ModifyResourceTags](https://cloud.tencent.com/document/api/651/35322) - 批量修改资源关联的标签
+* Update: [ModifyZone](https://cloud.tencent.com/document/api/1552/80709) - 修改站点
+* Update: [ModifyZoneStatus](https://cloud.tencent.com/document/api/1552/80707) - 切换站点状态
+* Update: [ModifyZoneWorkMode](https://cloud.tencent.com/document/api/1552/127806) - 修改站点工作模式
+* Delete: [DeleteZone](https://cloud.tencent.com/document/api/1552/80717) - 删除站点
 
 ## Import
 

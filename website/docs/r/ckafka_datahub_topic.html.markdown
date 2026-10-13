@@ -44,6 +44,17 @@ In addition to all arguments above, the following attributes are exported:
 * `id` - ID of the resource.
 
 
+## API Reference
+
+This resource interacts with the following TencentCloud APIs:
+
+* Create: [CreateDatahubTopic](https://cloud.tencent.com/document/api/597/89017) - 创建DIP主题
+* Create: [ModifyResourceTags](https://cloud.tencent.com/document/api/651/35322) - 批量修改资源关联的标签
+* Read: [DescribeDatahubTopic](https://cloud.tencent.com/document/api/597/86862) - 获取DIP主题属性
+* Read: [DescribeResourceTagsByResourceIds](https://cloud.tencent.com/document/api/651/35319) - 批量查看资源关联的标签
+* Update: [ModifyDatahubTopic](https://cloud.tencent.com/document/api/597/89542) - 修改DIP主题属性
+* Update: [ModifyResourceTags](https://cloud.tencent.com/document/api/651/35322) - 批量修改资源关联的标签
+* Delete: [DeleteDatahubTopic](https://cloud.tencent.com/document/api/597/77803) - 删除DIP主题
 
 ## Import
 

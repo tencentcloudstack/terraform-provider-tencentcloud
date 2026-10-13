@@ -96,6 +96,14 @@ In addition to all arguments above, the following attributes are exported:
 * `id` - ID of the resource.
 
 
+## API Reference
+
+This resource interacts with the following TencentCloud APIs:
+
+* Create: [CreateDatabase](https://cloud.tencent.com/document/api/409/111207) - 创建数据库
+* Read: [DescribeDatabases](https://cloud.tencent.com/document/api/409/43353) - 查询实例的数据库列表
+* Update: [ModifyDatabaseOwner](https://cloud.tencent.com/document/api/409/111206) - 修改数据库所有者
+* Delete: [DeleteDatabase](https://cloud.tencent.com/document/api/409/135858) - 删除数据库
 
 ## Import
 

@@ -216,6 +216,15 @@ In addition to all arguments above, the following attributes are exported:
 * `id` - ID of the resource.
 
 
+## API Reference
+
+This resource interacts with the following TencentCloud APIs:
+
+* Create: [CreateTargetGroup](https://cloud.tencent.com/document/api/214/40559) - 创建目标组
+* Read: [DescribeTargetGroupList](https://cloud.tencent.com/document/api/214/40555) - 获取目标组列表
+* Update: [ModifyResourceTags](https://cloud.tencent.com/document/api/651/35322) - 批量修改资源关联的标签
+* Update: [ModifyTargetGroupAttribute](https://cloud.tencent.com/document/api/214/40552) - 修改目标组属性
+* Delete: [DeleteTargetGroups](https://cloud.tencent.com/document/api/214/40558) - 删除目标组
 
 ## Import
 

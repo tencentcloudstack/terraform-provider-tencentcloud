@@ -79,6 +79,17 @@ In addition to all arguments above, the following attributes are exported:
 * `id` - ID of the resource.
 * `nat_instance_id` - Nat instance ID.
 
+## API Reference
+
+This resource interacts with the following TencentCloud APIs:
+
+* Create: [CreateNatFwInstanceWithDomain](https://cloud.tencent.com/document/api/1132/61923) - 创建防火墙实例和接入域名（Region参数必填）
+* Create: [DescribeNatFwInstancesInfo](https://cloud.tencent.com/document/api/1132/60237) - 获取租户所有NAT实例卡片信息
+* Read: [DescribeCfwEips](https://cloud.tencent.com/document/api/1132/54259) - 查询防火墙弹性公网IP
+* Read: [DescribeNatFwInstancesInfo](https://cloud.tencent.com/document/api/1132/60237) - 获取租户所有NAT实例卡片信息
+* Read: [DescribeNatFwVpcDnsLst](https://cloud.tencent.com/document/api/1132/60236) - 展示当前natfw 实例对应的vpc dns开关
+* Update: [ModifyNatInstance](https://cloud.tencent.com/document/api/1132/97914) - 编辑NAT防火墙
+* Delete: [DeleteNatFwInstance](https://cloud.tencent.com/document/api/1132/60235) - 销毁防火墙实例
 
 ## Import
 

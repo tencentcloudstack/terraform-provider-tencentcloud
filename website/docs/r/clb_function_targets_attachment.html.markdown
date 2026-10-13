@@ -63,6 +63,14 @@ In addition to all arguments above, the following attributes are exported:
 * `id` - ID of the resource.
 
 
+## API Reference
+
+This resource interacts with the following TencentCloud APIs:
+
+* Create: [RegisterFunctionTargets](https://cloud.tencent.com/document/api/214/84625) - 绑定云函数到转发规则上
+* Read: [DescribeTargets](https://cloud.tencent.com/document/api/214/30684) - 查询负载均衡绑定的后端服务列表
+* Update: [ModifyFunctionTargets](https://cloud.tencent.com/document/api/214/86609) - 修改转发规则绑定的云函数
+* Delete: [DeregisterFunctionTargets](https://cloud.tencent.com/document/api/214/84626) - 将云函数从转发规则上解绑
 
 ## Import
 

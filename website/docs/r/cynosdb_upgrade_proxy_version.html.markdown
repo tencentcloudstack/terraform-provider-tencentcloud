@@ -34,4 +34,14 @@ In addition to all arguments above, the following attributes are exported:
 * `id` - ID of the resource.
 
 
+## API Reference
+
+This resource interacts with the following TencentCloud APIs:
+
+* Create: [DescribeFlow](https://cloud.tencent.com/document/api/1003/86162) - 查询任务流信息
+* Create: [DescribeProxies](https://cloud.tencent.com/document/api/1003/94132) - 查询数据库代理列表
+* Create: [UpgradeProxyVersion](https://cloud.tencent.com/document/api/1003/94126) - 升级数据库代理版本
+* Read: [DescribeProxies](https://cloud.tencent.com/document/api/1003/94132) - 查询数据库代理列表
+* Update: [DescribeFlow](https://cloud.tencent.com/document/api/1003/86162) - 查询任务流信息
+* Update: [UpgradeProxyVersion](https://cloud.tencent.com/document/api/1003/94126) - 升级数据库代理版本
 

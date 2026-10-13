@@ -44,4 +44,15 @@ In addition to all arguments above, the following attributes are exported:
 * `id` - ID of the resource.
 
 
+## API Reference
+
+This resource interacts with the following TencentCloud APIs:
+
+* Create: [DescribeDBParams](https://cloud.tencent.com/document/api/878/116658) - 集群配置描述
+* Create: [DescribeInstanceState](https://cloud.tencent.com/document/api/878/100160) - 获取集群实例状态
+* Create: [ModifyDBParameters](https://cloud.tencent.com/document/api/878/116655) - 集群配置下发
+* Read: [DescribeDBParams](https://cloud.tencent.com/document/api/878/116658) - 集群配置描述
+* Update: [DescribeDBParams](https://cloud.tencent.com/document/api/878/116658) - 集群配置描述
+* Update: [DescribeInstanceState](https://cloud.tencent.com/document/api/878/100160) - 获取集群实例状态
+* Update: [ModifyDBParameters](https://cloud.tencent.com/document/api/878/116655) - 集群配置下发
 

@@ -36,4 +36,12 @@ In addition to all arguments above, the following attributes are exported:
 * `id` - ID of the resource.
 
 
+## API Reference
+
+This resource interacts with the following TencentCloud APIs:
+
+* Create: [CreateWorkflowFolder](https://cloud.tencent.com/document/api/1267/123638) - 创建工作流文件夹
+* Read: [ListWorkflowFolders](https://cloud.tencent.com/document/api/1267/123621) - 查看工作流文件夹列表
+* Update: [UpdateWorkflowFolder](https://cloud.tencent.com/document/api/1267/123614) - 更新工作流文件夹
+* Delete: [DeleteWorkflowFolder](https://cloud.tencent.com/document/api/1267/123633) - 删除工作流文件夹
 

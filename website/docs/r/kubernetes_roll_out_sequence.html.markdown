@@ -82,6 +82,16 @@ In addition to all arguments above, the following attributes are exported:
 * `id` - ID of the resource.
 * `sequence_id` - The ID of the roll-out sequence.
 
+## API Reference
+
+This resource interacts with the following TencentCloud APIs:
+
+* Create: [CreateRollOutSequence](https://cloud.tencent.com/document/api/457/125944) - 创建集群发布序列
+* Create: [DescribeRollOutSequences](https://cloud.tencent.com/document/api/457/125937) - 查询集群发布序列
+* Read: [DescribeRollOutSequences](https://cloud.tencent.com/document/api/457/125937) - 查询集群发布序列
+* Update: [DescribeRollOutSequences](https://cloud.tencent.com/document/api/457/125937) - 查询集群发布序列
+* Update: [ModifyRollOutSequence](https://cloud.tencent.com/document/api/457/125931) - 更新集群发布序列
+* Delete: [DeleteRollOutSequence](https://cloud.tencent.com/document/api/457/125941) - 删除集群发布序列
 
 ## Import
 

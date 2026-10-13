@@ -77,4 +77,10 @@ In addition to all arguments above, the following attributes are exported:
 * `id` - ID of the resource.
 
 
+## API Reference
+
+This resource interacts with the following TencentCloud APIs:
+
+* Create: [AssociateTargetGroups](https://cloud.tencent.com/document/api/1782/111698) - 负载均衡关联目标组
+* Delete: [DisassociateTargetGroups](https://cloud.tencent.com/document/api/1782/111690) - 解除负载均衡和目标组的关联关系
 

@@ -74,6 +74,11 @@ In addition to all arguments above, the following attributes are exported:
 * `id` - ID of the resource.
 
 
+## API Reference
+
+This resource interacts with the following TencentCloud APIs:
+
+* Create: [ScaleInInstances](https://cloud.tencent.com/document/api/377/56370) - 指定数量缩容实例
 
 ## Import
 

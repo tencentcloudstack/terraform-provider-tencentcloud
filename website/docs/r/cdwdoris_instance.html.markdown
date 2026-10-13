@@ -232,4 +232,21 @@ The `timeouts` block allows you to specify [timeouts](https://developer.hashicor
 * `create` - (Defaults to `30m`) Used when creating the resource.
 * `update` - (Defaults to `30m`) Used when updating the resource.
 * `delete` - (Defaults to `30m`) Used when deleting the resource.
+## API Reference
+
+This resource interacts with the following TencentCloud APIs:
+
+* Create: [CreateInstanceNew](https://cloud.tencent.com/document/api/1387/102611) - 集群创建
+* Create: [DescribeInstanceState](https://cloud.tencent.com/document/api/1387/102615) - 获取集群状态
+* Create: [ModifySecurityGroups](https://cloud.tencent.com/document/api/1387/109434) - 更改安全组
+* Create: [ModifyWorkloadGroupStatus](https://cloud.tencent.com/document/api/1387/109430) - 开启、关闭资源组
+* Read: [DescribeInstance](https://cloud.tencent.com/document/api/1387/102384) - 获取集群描述信息
+* Read: [DescribeWorkloadGroup](https://cloud.tencent.com/document/api/1387/109437) - 获取资源组信息
+* Update: [DescribeInstanceState](https://cloud.tencent.com/document/api/1387/102615) - 获取集群状态
+* Update: [ModifyInstance](https://cloud.tencent.com/document/api/1387/102612) - 修改集群名称
+* Update: [ModifySecurityGroups](https://cloud.tencent.com/document/api/1387/109434) - 更改安全组
+* Update: [ModifyWorkloadGroupStatus](https://cloud.tencent.com/document/api/1387/109430) - 开启、关闭资源组
+* Delete: [DescribeInstanceState](https://cloud.tencent.com/document/api/1387/102615) - 获取集群状态
+* Delete: [DescribeInstances](https://cloud.tencent.com/document/api/1387/102382) - 获取集群列表
+* Delete: [DestroyInstance](https://cloud.tencent.com/document/api/1387/102610) - 集群销毁
 

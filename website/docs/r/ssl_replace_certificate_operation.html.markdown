@@ -41,6 +41,11 @@ In addition to all arguments above, the following attributes are exported:
 * `id` - ID of the resource.
 
 
+## API Reference
+
+This resource interacts with the following TencentCloud APIs:
+
+* Create: [ReplaceCertificate](https://cloud.tencent.com/document/api/400/41667) - 重颁发证书
 
 ## Import
 

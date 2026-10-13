@@ -32,4 +32,12 @@ In addition to all arguments above, the following attributes are exported:
 * `id` - ID of the resource.
 * `status` - instance state.
 
+## API Reference
+
+This resource interacts with the following TencentCloud APIs:
+
+* Create: [DescribeFlow](https://cloud.tencent.com/document/api/1003/86162) - 查询任务流信息
+* Create: [RestartInstance](https://cloud.tencent.com/document/api/1003/86028) - 重启实例
+* Read: [DescribeInstanceDetail](https://cloud.tencent.com/document/api/1003/48250) - 查询实例详情
+* Read: [DescribeInstances](https://cloud.tencent.com/document/api/1003/48334) - 查询实例的列表
 

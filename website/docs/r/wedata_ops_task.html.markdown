@@ -38,4 +38,15 @@ In addition to all arguments above, the following attributes are exported:
 * `id` - ID of the resource.
 * `status` - Task status.
 
+## API Reference
+
+This resource interacts with the following TencentCloud APIs:
+
+* Create: [GetOpsAsyncJob](https://cloud.tencent.com/document/api/1267/123587) - 查询运维中心异步操作详情
+* Create: [PauseOpsTasksAsync](https://cloud.tencent.com/document/api/1267/123569) - 异步批量暂停任务
+* Create: [StartOpsTasks](https://cloud.tencent.com/document/api/1267/124031) - 异步批量启动任务
+* Read: [GetOpsTask](https://cloud.tencent.com/document/api/1267/123586) - 获取任务详情
+* Update: [GetOpsAsyncJob](https://cloud.tencent.com/document/api/1267/123587) - 查询运维中心异步操作详情
+* Update: [PauseOpsTasksAsync](https://cloud.tencent.com/document/api/1267/123569) - 异步批量暂停任务
+* Update: [StartOpsTasks](https://cloud.tencent.com/document/api/1267/124031) - 异步批量启动任务
 

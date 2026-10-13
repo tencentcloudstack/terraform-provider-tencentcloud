@@ -55,6 +55,14 @@ In addition to all arguments above, the following attributes are exported:
 * `id` - ID of the resource.
 * `line_id` - Line ID, returned after creation by cloud API.
 
+## API Reference
+
+This resource interacts with the following TencentCloud APIs:
+
+* Create: [CreateMultiPathGatewayLine](https://cloud.tencent.com/document/api/1552/121342) - 创建多通道安全加速网关线路
+* Read: [DescribeMultiPathGatewayLine](https://cloud.tencent.com/document/api/1552/121337) - 查询多通道安全加速网关线路详情
+* Update: [ModifyMultiPathGatewayLine](https://cloud.tencent.com/document/api/1552/121332) - 修改多通道安全加速网关线路信息
+* Delete: [DeleteMultiPathGatewayLine](https://cloud.tencent.com/document/api/1552/121339) - 删除多通道安全加速网关线路
 
 ## Import
 

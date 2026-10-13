@@ -34,6 +34,12 @@ In addition to all arguments above, the following attributes are exported:
 * `id` - ID of the resource.
 
 
+## API Reference
+
+This resource interacts with the following TencentCloud APIs:
+
+* Create: [DescribeFlow](https://cloud.tencent.com/document/api/1003/86162) - 查询任务流信息
+* Create: [ReloadBalanceProxyNode](https://cloud.tencent.com/document/api/1003/94128) - 负载均衡数据库代理
 
 ## Import
 

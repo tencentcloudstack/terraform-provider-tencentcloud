@@ -43,4 +43,10 @@ In addition to all arguments above, the following attributes are exported:
 * `status` - The import task status. Valid values: success, failure, doing.
 * `task_id` - The task ID of the import configuration operation.
 
+## API Reference
+
+This resource interacts with the following TencentCloud APIs:
+
+* Create: [DescribeZoneConfigImportResult](https://cloud.tencent.com/document/api/1552/113231) - 查询站点配置导入结果
+* Create: [ImportZoneConfig](https://cloud.tencent.com/document/api/1552/113229) - 导入站点配置
 

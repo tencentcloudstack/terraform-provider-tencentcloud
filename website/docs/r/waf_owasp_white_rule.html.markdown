@@ -152,4 +152,12 @@ In addition to all arguments above, the following attributes are exported:
 * `id` - ID of the resource.
 * `rule_id` - Rule ID.
 
+## API Reference
+
+This resource interacts with the following TencentCloud APIs:
+
+* Create: [CreateOwaspWhiteRule](https://cloud.tencent.com/document/api/627/122157) - 添加规则引擎白名单
+* Read: [DescribeOwaspWhiteRules](https://cloud.tencent.com/document/api/627/122155) - 获取用户规则引擎白名单
+* Update: [ModifyOwaspWhiteRule](https://cloud.tencent.com/document/api/627/122154) - 编辑规则引擎白名单
+* Delete: [DeleteOwaspWhiteRule](https://cloud.tencent.com/document/api/627/122156) - 删除用户规则引擎白名单
 

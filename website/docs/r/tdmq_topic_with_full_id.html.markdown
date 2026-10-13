@@ -62,6 +62,14 @@ In addition to all arguments above, the following attributes are exported:
 * `id` - ID of the resource.
 * `create_time` - Creation time of resource.
 
+## API Reference
+
+This resource interacts with the following TencentCloud APIs:
+
+* Create: [CreateTopic](https://cloud.tencent.com/document/api/1179/46088) - 新增主题
+* Read: [DescribeTopics](https://cloud.tencent.com/document/api/1179/46086) - 查询主题列表
+* Update: [ModifyTopic](https://cloud.tencent.com/document/api/1179/46085) - 修改主题
+* Delete: [DeleteTopics](https://cloud.tencent.com/document/api/1179/46087) - 删除主题
 
 ## Import
 

@@ -184,4 +184,20 @@ In addition to all arguments above, the following attributes are exported:
 * `instance_group_id` - Instance Group ID.
 * `proxy_group_id` - Proxy Group ID.
 
+## API Reference
+
+This resource interacts with the following TencentCloud APIs:
+
+* Create: [CreateProxyEndPoint](https://cloud.tencent.com/document/api/1003/94133) - 创建数据库代理连接点
+* Create: [DescribeFlow](https://cloud.tencent.com/document/api/1003/86162) - 查询任务流信息
+* Create: [DescribeProxies](https://cloud.tencent.com/document/api/1003/94132) - 查询数据库代理列表
+* Create: [ModifyVipVport](https://cloud.tencent.com/document/api/1003/86720) - 修改实例组ip，端口
+* Read: [DescribeProxies](https://cloud.tencent.com/document/api/1003/94132) - 查询数据库代理列表
+* Update: [DescribeFlow](https://cloud.tencent.com/document/api/1003/86162) - 查询任务流信息
+* Update: [ModifyProxyDesc](https://cloud.tencent.com/document/api/1003/94130) - 修改数据库代理描述
+* Update: [ModifyProxyRwSplit](https://cloud.tencent.com/document/api/1003/94129) - 配置数据库代理读写分离
+* Update: [ModifyVipVport](https://cloud.tencent.com/document/api/1003/86720) - 修改实例组ip，端口
+* Update: [SwitchProxyVpc](https://cloud.tencent.com/document/api/1003/83595) - 更换数据库代理vpc
+* Delete: [CloseProxy](https://cloud.tencent.com/document/api/1003/94135) - 关闭数据库代理
+* Delete: [DescribeFlow](https://cloud.tencent.com/document/api/1003/86162) - 查询任务流信息
 

@@ -43,6 +43,17 @@ In addition to all arguments above, the following attributes are exported:
 * `route_entry_ids` - ID list of the routing entries.
 * `subnet_ids` - ID list of the subnets associated with this route table.
 
+## API Reference
+
+This resource interacts with the following TencentCloud APIs:
+
+* Create: [CreateRouteTable](https://cloud.tencent.com/document/api/215/15768) - 创建路由表
+* Create: [ModifyResourceTags](https://cloud.tencent.com/document/api/651/35322) - 批量修改资源关联的标签
+* Read: [DescribeResourceTagsByResourceIds](https://cloud.tencent.com/document/api/651/35319) - 批量查看资源关联的标签
+* Read: [DescribeRouteTables](https://cloud.tencent.com/document/api/215/15763) - 查询路由表
+* Update: [ModifyResourceTags](https://cloud.tencent.com/document/api/651/35322) - 批量修改资源关联的标签
+* Update: [ModifyRouteTableAttribute](https://cloud.tencent.com/document/api/215/15766) - 修改路由表属性
+* Delete: [DeleteRouteTable](https://cloud.tencent.com/document/api/215/15771) - 删除路由表
 
 ## Import
 

@@ -107,6 +107,15 @@ In addition to all arguments above, the following attributes are exported:
 * `id` - ID of the resource.
 
 
+## API Reference
+
+This resource interacts with the following TencentCloud APIs:
+
+* Create: [RegisterTargetGroupInstances](https://cloud.tencent.com/document/api/1782/111687) - 目标组中添加实例
+* Read: [DescribeTargetGroupInstances](https://cloud.tencent.com/document/api/1782/111693) - 获取目标组绑定的实例列表
+* Update: [DeregisterTargetGroupInstances](https://cloud.tencent.com/document/api/1782/111695) - 解绑目标组中的实例
+* Update: [RegisterTargetGroupInstances](https://cloud.tencent.com/document/api/1782/111687) - 目标组中添加实例
+* Delete: [DeregisterTargetGroupInstances](https://cloud.tencent.com/document/api/1782/111695) - 解绑目标组中的实例
 
 ## Import
 

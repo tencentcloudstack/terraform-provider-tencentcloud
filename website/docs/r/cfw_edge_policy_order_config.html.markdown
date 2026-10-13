@@ -116,6 +116,15 @@ In addition to all arguments above, the following attributes are exported:
 * `id` - ID of the resource.
 
 
+## API Reference
+
+This resource interacts with the following TencentCloud APIs:
+
+* Create: [DescribeAclRule](https://cloud.tencent.com/document/api/1132/97845) - 查询互联网边界访问控制列表
+* Create: [ModifyAclRule](https://cloud.tencent.com/document/api/1132/97843) - 修改互联网边界访问控制规则
+* Read: [DescribeAclRule](https://cloud.tencent.com/document/api/1132/97845) - 查询互联网边界访问控制列表
+* Update: [DescribeAclRule](https://cloud.tencent.com/document/api/1132/97845) - 查询互联网边界访问控制列表
+* Update: [ModifyAclRule](https://cloud.tencent.com/document/api/1132/97843) - 修改互联网边界访问控制规则
 
 ## Import
 

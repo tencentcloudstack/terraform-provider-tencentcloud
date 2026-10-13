@@ -72,6 +72,15 @@ In addition to all arguments above, the following attributes are exported:
 * `id` - ID of the resource.
 
 
+## API Reference
+
+This resource interacts with the following TencentCloud APIs:
+
+* Create: [CreateSubscription](https://cloud.tencent.com/document/api/1179/46075) - 创建订阅关系
+* Read: [DescribeSubscriptions](https://cloud.tencent.com/document/api/1179/46072) - 获取消费订阅列表
+* Read: [DescribeTopics](https://cloud.tencent.com/document/api/1179/46086) - 查询主题列表
+* Delete: [DeleteSubscriptions](https://cloud.tencent.com/document/api/1179/46074) - 删除订阅关系
+* Delete: [DeleteTopics](https://cloud.tencent.com/document/api/1179/46087) - 删除主题
 
 ## Import
 

@@ -42,6 +42,16 @@ In addition to all arguments above, the following attributes are exported:
 * `id` - ID of the resource.
 
 
+## API Reference
+
+This resource interacts with the following TencentCloud APIs:
+
+* Create: [CreateOrModifyCloudNativeAPIGatewayIPRestriction](https://cloud.tencent.com/document/api/1364/125038) - 创建或编辑云原生网关访问控制
+* Create: [DescribeCloudNativeAPIGatewayIPRestriction](https://cloud.tencent.com/document/api/1364/125036) - 查询云原生网关访问控制
+* Read: [DescribeCloudNativeAPIGatewayIPRestriction](https://cloud.tencent.com/document/api/1364/125036) - 查询云原生网关访问控制
+* Update: [CreateOrModifyCloudNativeAPIGatewayIPRestriction](https://cloud.tencent.com/document/api/1364/125038) - 创建或编辑云原生网关访问控制
+* Update: [DescribeCloudNativeAPIGatewayIPRestriction](https://cloud.tencent.com/document/api/1364/125036) - 查询云原生网关访问控制
+* Delete: [DeleteCloudNativeAPIGatewayIPRestriction](https://cloud.tencent.com/document/api/1364/125037) - 删除云原生网关访问控制
 
 ## Import
 

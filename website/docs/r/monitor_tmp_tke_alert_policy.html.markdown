@@ -268,4 +268,12 @@ In addition to all arguments above, the following attributes are exported:
 * `id` - ID of the resource.
 
 
+## API Reference
+
+This resource interacts with the following TencentCloud APIs:
+
+* Create: [CreatePrometheusAlertPolicy](https://cloud.tencent.com/document/api/248/86045) - 创建Prometheus告警策略
+* Read: [DescribePrometheusAlertPolicy](https://cloud.tencent.com/document/api/248/85718) - 获取2.0实例告警策略列表
+* Update: [ModifyPrometheusAlertPolicy](https://cloud.tencent.com/document/api/248/86035) - 修改2.0实例告警策略
+* Delete: [DeletePrometheusAlertPolicy](https://cloud.tencent.com/document/api/248/86042) - 删除2.0实例告警策略
 

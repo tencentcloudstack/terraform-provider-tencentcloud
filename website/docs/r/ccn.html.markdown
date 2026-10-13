@@ -86,6 +86,20 @@ In addition to all arguments above, the following attributes are exported:
 * `instance_count` - Number of attached instances.
 * `state` - States of instance. Valid values: `ISOLATED`(arrears) and `AVAILABLE`.
 
+## API Reference
+
+This resource interacts with the following TencentCloud APIs:
+
+* Create: [CreateCcn](https://cloud.tencent.com/document/api/215/19204) - 创建CCN
+* Create: [ModifyCcnAttribute](https://cloud.tencent.com/document/api/215/19195) - 修改CCN属性
+* Create: [ModifyResourceTags](https://cloud.tencent.com/document/api/651/35322) - 批量修改资源关联的标签
+* Read: [DescribeCcns](https://cloud.tencent.com/document/api/215/19199) - 查询CCN列表
+* Read: [DescribeResourceTagsByResourceIds](https://cloud.tencent.com/document/api/651/35319) - 批量查看资源关联的标签
+* Update: [ModifyCcnAttribute](https://cloud.tencent.com/document/api/215/19195) - 修改CCN属性
+* Update: [ModifyCcnRegionBandwidthLimitsType](https://cloud.tencent.com/document/api/215/40485) - 后付费产品修改带宽限速策略
+* Update: [ModifyResourceTags](https://cloud.tencent.com/document/api/651/35322) - 批量修改资源关联的标签
+* Delete: [DeleteCcn](https://cloud.tencent.com/document/api/215/19203) - 删除CCN
+* Delete: [DescribeCcns](https://cloud.tencent.com/document/api/215/19199) - 查询CCN列表
 
 ## Import
 

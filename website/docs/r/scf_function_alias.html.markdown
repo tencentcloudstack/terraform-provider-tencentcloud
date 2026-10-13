@@ -84,6 +84,14 @@ In addition to all arguments above, the following attributes are exported:
 * `id` - ID of the resource.
 
 
+## API Reference
+
+This resource interacts with the following TencentCloud APIs:
+
+* Create: [CreateAlias](https://cloud.tencent.com/document/api/583/44164) - 创建函数版本别名
+* Read: [GetAlias](https://cloud.tencent.com/document/api/583/44163) - 获取别名详细信息
+* Update: [UpdateAlias](https://cloud.tencent.com/document/api/583/44161) - 更新别名的配置
+* Delete: [DeleteAlias](https://cloud.tencent.com/document/api/583/44048) - 删除别名
 
 ## Import
 

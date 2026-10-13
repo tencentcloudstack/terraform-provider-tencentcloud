@@ -148,6 +148,34 @@ The `security_policy` object exports the following:
 * `index` - Index of policy.
 * `version` - Version of policy.
 
+## API Reference
+
+This resource interacts with the following TencentCloud APIs:
+
+* Create: [CreateInstance](https://cloud.tencent.com/document/api/1141/41572) - 创建实例
+* Create: [CreateMultipleSecurityPolicy](https://cloud.tencent.com/document/api/1141/56524) - 创建实例公网访问多白名单策略
+* Create: [DescribeExternalEndpointStatus](https://cloud.tencent.com/document/api/1141/53642) - 查询实例公网访问入口状态
+* Create: [DescribeInstances](https://cloud.tencent.com/document/api/1141/41569) - 查询实例信息
+* Create: [ManageExternalEndpoint](https://cloud.tencent.com/document/api/1141/53597) - 管理实例公网访问
+* Create: [ModifyResourceTags](https://cloud.tencent.com/document/api/651/35322) - 批量修改资源关联的标签
+* Read: [DescribeExternalEndpointStatus](https://cloud.tencent.com/document/api/1141/53642) - 查询实例公网访问入口状态
+* Read: [DescribeInstances](https://cloud.tencent.com/document/api/1141/41569) - 查询实例信息
+* Read: [DescribeReplicationInstances](https://cloud.tencent.com/document/api/1141/49201) - 查询从实例列表
+* Read: [DescribeSecurityPolicies](https://cloud.tencent.com/document/api/1141/53906) - 查询实例公网访问白名单策略
+* Update: [CreateMultipleSecurityPolicy](https://cloud.tencent.com/document/api/1141/56524) - 创建实例公网访问多白名单策略
+* Update: [DeleteMultipleSecurityPolicy](https://cloud.tencent.com/document/api/1141/56523) - 删除实例公网访问多白名单策略
+* Update: [DescribeExternalEndpointStatus](https://cloud.tencent.com/document/api/1141/53642) - 查询实例公网访问入口状态
+* Update: [DescribeInstances](https://cloud.tencent.com/document/api/1141/41569) - 查询实例信息
+* Update: [ManageExternalEndpoint](https://cloud.tencent.com/document/api/1141/53597) - 管理实例公网访问
+* Update: [ModifyInstance](https://cloud.tencent.com/document/api/1141/60996) - 更新实例信息
+* Update: [ModifyResourceTags](https://cloud.tencent.com/document/api/651/35322) - 批量修改资源关联的标签
+* Update: [RenewInstance](https://cloud.tencent.com/document/api/1141/51792) - 续费实例
+* Delete: [DeleteInstance](https://cloud.tencent.com/document/api/1141/49983) - 删除实例
+* Delete: [DeleteNamespace](https://cloud.tencent.com/document/api/1141/42728) - 删除命名空间
+* Delete: [DeleteReplicationInstance](https://cloud.tencent.com/document/api/1141/79581) - 删除从实例
+* Delete: [DescribeInstances](https://cloud.tencent.com/document/api/1141/41569) - 查询实例信息
+* Delete: [DescribeNamespaces](https://cloud.tencent.com/document/api/1141/42765) - 查询命名空间信息
+* Delete: [DescribeReplicationInstances](https://cloud.tencent.com/document/api/1141/49201) - 查询从实例列表
 
 ## Import
 

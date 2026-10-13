@@ -47,6 +47,15 @@ In addition to all arguments above, the following attributes are exported:
 * `id` - ID of the resource.
 
 
+## API Reference
+
+This resource interacts with the following TencentCloud APIs:
+
+* Create: [DescribePublicNetwork](https://cloud.tencent.com/document/api/1364/103723) - 查询云原生API网关实例公网详情
+* Create: [ModifyNetworkAccessStrategy](https://cloud.tencent.com/document/api/1364/102775) - 修改云原生API网关实例Kong访问策略
+* Read: [DescribePublicNetwork](https://cloud.tencent.com/document/api/1364/103723) - 查询云原生API网关实例公网详情
+* Update: [DescribePublicNetwork](https://cloud.tencent.com/document/api/1364/103723) - 查询云原生API网关实例公网详情
+* Update: [ModifyNetworkAccessStrategy](https://cloud.tencent.com/document/api/1364/102775) - 修改云原生API网关实例Kong访问策略
 
 ## Import
 

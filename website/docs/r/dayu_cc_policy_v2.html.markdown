@@ -146,4 +146,50 @@ The `cc_precision_req_limits` object exports the following:
 * `instance_id` - Instance id.
 * `ip` - IP address.
 
+## API Reference
+
+This resource interacts with the following TencentCloud APIs:
+
+* Create: [CreateCCPrecisionPolicy](https://cloud.tencent.com/document/api/297/95392) - 新增CC精准防护策略
+* Create: [CreateCCReqLimitPolicy](https://cloud.tencent.com/document/api/297/95391) - 新增CC频率限制策略
+* Create: [CreateCcBlackWhiteIpList](https://cloud.tencent.com/document/api/297/95341) - 新建CC四层黑白名单
+* Create: [CreateCcGeoIPBlockConfig](https://cloud.tencent.com/document/api/297/95340) - 新建CC防护的地域封禁配置
+* Create: [DescribeListProtectThresholdConfigNew](https://cloud.tencent.com/document/api/297/126578) - 获取防护阈值各个配置列表
+* Create: [ModifyCCLevelPolicy](https://cloud.tencent.com/document/api/297/95380) - 修改CC的防护等级
+* Create: [ModifyCCThresholdPolicy](https://cloud.tencent.com/document/api/297/95377) - 修改CC清洗阈值
+* Read: [DescribeCCLevelList](https://cloud.tencent.com/document/api/297/95385) - 获取CC防护等级列表
+* Read: [DescribeCCPrecisionPlyList](https://cloud.tencent.com/document/api/297/95383) - 获取CC精准防护列表
+* Read: [DescribeCCReqLimitPolicyList](https://cloud.tencent.com/document/api/297/95382) - 获取CC频率限制策略列表
+* Read: [DescribeCCThresholdList](https://cloud.tencent.com/document/api/297/95381) - 获取CC清洗阈值列表
+* Read: [DescribeCcBlackWhiteIpList](https://cloud.tencent.com/document/api/297/95318) - 获取CC四层黑白名单列表
+* Read: [DescribeCcGeoIPBlockConfigList](https://cloud.tencent.com/document/api/297/95317) - 获取CC防护的区域封禁配置列表
+* Update: [CreateCCPrecisionPolicy](https://cloud.tencent.com/document/api/297/95392) - 新增CC精准防护策略
+* Update: [CreateCCReqLimitPolicy](https://cloud.tencent.com/document/api/297/95391) - 新增CC频率限制策略
+* Update: [CreateCcBlackWhiteIpList](https://cloud.tencent.com/document/api/297/95341) - 新建CC四层黑白名单
+* Update: [CreateCcGeoIPBlockConfig](https://cloud.tencent.com/document/api/297/95340) - 新建CC防护的地域封禁配置
+* Update: [DeleteCCLevelPolicy](https://cloud.tencent.com/document/api/297/95390) - 删除CC分级策略
+* Update: [DeleteCCPrecisionPolicy](https://cloud.tencent.com/document/api/297/95389) - 删除CC精准防护策略
+* Update: [DeleteCCRequestLimitPolicy](https://cloud.tencent.com/document/api/297/95388) - 删除CC频率限制策略
+* Update: [DeleteCCThresholdPolicy](https://cloud.tencent.com/document/api/297/95387) - 删除CC清洗阈值策略
+* Update: [DeleteCcBlackWhiteIpList](https://cloud.tencent.com/document/api/297/95328) - 删除CC四层黑白名单
+* Update: [DeleteCcGeoIPBlockConfig](https://cloud.tencent.com/document/api/297/95327) - 删除CC防护的区域封禁配置
+* Update: [DescribeCCPrecisionPlyList](https://cloud.tencent.com/document/api/297/95383) - 获取CC精准防护列表
+* Update: [DescribeCCReqLimitPolicyList](https://cloud.tencent.com/document/api/297/95382) - 获取CC频率限制策略列表
+* Update: [DescribeCCThresholdList](https://cloud.tencent.com/document/api/297/95381) - 获取CC清洗阈值列表
+* Update: [DescribeCcBlackWhiteIpList](https://cloud.tencent.com/document/api/297/95318) - 获取CC四层黑白名单列表
+* Update: [DescribeCcGeoIPBlockConfigList](https://cloud.tencent.com/document/api/297/95317) - 获取CC防护的区域封禁配置列表
+* Update: [DescribeListProtectThresholdConfigNew](https://cloud.tencent.com/document/api/297/126578) - 获取防护阈值各个配置列表
+* Update: [ModifyCCLevelPolicy](https://cloud.tencent.com/document/api/297/95380) - 修改CC的防护等级
+* Update: [ModifyCCThresholdPolicy](https://cloud.tencent.com/document/api/297/95377) - 修改CC清洗阈值
+* Delete: [DeleteCCLevelPolicy](https://cloud.tencent.com/document/api/297/95390) - 删除CC分级策略
+* Delete: [DeleteCCPrecisionPolicy](https://cloud.tencent.com/document/api/297/95389) - 删除CC精准防护策略
+* Delete: [DeleteCCThresholdPolicy](https://cloud.tencent.com/document/api/297/95387) - 删除CC清洗阈值策略
+* Delete: [DeleteCcBlackWhiteIpList](https://cloud.tencent.com/document/api/297/95328) - 删除CC四层黑白名单
+* Delete: [DeleteCcGeoIPBlockConfig](https://cloud.tencent.com/document/api/297/95327) - 删除CC防护的区域封禁配置
+* Delete: [DescribeCCLevelList](https://cloud.tencent.com/document/api/297/95385) - 获取CC防护等级列表
+* Delete: [DescribeCCPrecisionPlyList](https://cloud.tencent.com/document/api/297/95383) - 获取CC精准防护列表
+* Delete: [DescribeCCReqLimitPolicyList](https://cloud.tencent.com/document/api/297/95382) - 获取CC频率限制策略列表
+* Delete: [DescribeCCThresholdList](https://cloud.tencent.com/document/api/297/95381) - 获取CC清洗阈值列表
+* Delete: [DescribeCcBlackWhiteIpList](https://cloud.tencent.com/document/api/297/95318) - 获取CC四层黑白名单列表
+* Delete: [DescribeCcGeoIPBlockConfigList](https://cloud.tencent.com/document/api/297/95317) - 获取CC防护的区域封禁配置列表
 

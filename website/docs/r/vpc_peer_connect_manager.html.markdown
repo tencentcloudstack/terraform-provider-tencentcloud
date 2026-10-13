@@ -58,6 +58,14 @@ In addition to all arguments above, the following attributes are exported:
 * `id` - ID of the resource.
 
 
+## API Reference
+
+This resource interacts with the following TencentCloud APIs:
+
+* Create: [CreateVpcPeeringConnection](https://cloud.tencent.com/document/api/215/96025) - 创建私有网络对等连接
+* Read: [DescribeVpcPeeringConnections](https://cloud.tencent.com/document/api/215/96023) - 查询私有网络对等连接
+* Update: [ModifyVpcPeeringConnection](https://cloud.tencent.com/document/api/215/96022) - 修改私有网络对等连接属性
+* Delete: [DeleteVpcPeeringConnection](https://cloud.tencent.com/document/api/215/96024) - 删除私有网络对等连接
 
 ## Import
 

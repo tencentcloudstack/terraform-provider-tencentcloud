@@ -73,6 +73,14 @@ In addition to all arguments above, the following attributes are exported:
 * `rule_id` - rule ID.
 * `status` - usage status: enabled/disabled.
 
+## API Reference
+
+This resource interacts with the following TencentCloud APIs:
+
+* Create: [CreateUnitRuleWithDetailResp](https://cloud.tencent.com/document/api/649/89209) - 创建单元化规则返回详细信息
+* Read: [DescribeUnitRule](https://cloud.tencent.com/document/api/649/53899) - 查询单元化规则详情
+* Update: [UpdateUnitRule](https://cloud.tencent.com/document/api/649/53891) - 更新单元化规则
+* Delete: [DeleteUnitRule](https://cloud.tencent.com/document/api/649/53902) - 删除单元化规则
 
 ## Import
 

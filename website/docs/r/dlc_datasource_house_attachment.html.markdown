@@ -248,4 +248,13 @@ In addition to all arguments above, the following attributes are exported:
 * `id` - ID of the resource.
 
 
+## API Reference
+
+This resource interacts with the following TencentCloud APIs:
+
+* Create: [AssociateDatasourceHouse](https://cloud.tencent.com/document/api/1342/122147) - 绑定数据源与队列
+* Create: [DescribeNetworkConnections](https://cloud.tencent.com/document/api/1342/122146) - 查询网络配置列表
+* Read: [DescribeNetworkConnections](https://cloud.tencent.com/document/api/1342/122146) - 查询网络配置列表
+* Update: [UpdateNetworkConnection](https://cloud.tencent.com/document/api/1342/122144) - 更新网络配置
+* Delete: [UnboundDatasourceHouse](https://cloud.tencent.com/document/api/1342/122145) - 解绑数据源与队列
 
