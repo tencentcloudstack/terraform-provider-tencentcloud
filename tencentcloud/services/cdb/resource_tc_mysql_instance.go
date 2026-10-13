@@ -253,6 +253,13 @@ func TencentMsyqlBasicInfo() map[string]*schema.Schema {
 			Computed:    true,
 			Description: "Instance destroy protection status. Valid values: `on` (enable destroy protection), `off` (disable destroy protection).",
 		},
+		"disk_encryption": {
+			Type:        schema.TypeString,
+			Optional:    true,
+			ForceNew:    true,
+			Computed:    true,
+			Description: "Whether to enable disk encryption for the CDB instance. Valid value: `on` (enable disk encryption); otherwise disk encryption is not enabled. Only cloud-disk edition instances support this feature. This parameter can only be set at creation time and cannot be modified.",
+		},
 		// Computed values
 		"intranet_ip": {
 			Type:        schema.TypeString,
@@ -553,6 +560,15 @@ func mysqlAllInstanceRoleSet(ctx context.Context, requestInter interface{}, d *s
 			requestByMonth.DestroyProtect = destroyProtect
 		} else {
 			requestByUse.DestroyProtect = destroyProtect
+		}
+	}
+
+	if v, ok := d.GetOk("disk_encryption"); ok {
+		diskEncryption := helper.String(v.(string))
+		if okByMonth {
+			requestByMonth.DiskEncryption = diskEncryption
+		} else {
+			requestByUse.DiskEncryption = diskEncryption
 		}
 	}
 
@@ -984,6 +1000,9 @@ func tencentMsyqlBasicInfoRead(ctx context.Context, d *schema.ResourceData, meta
 	}
 	if mysqlInfo.DestroyProtect != nil {
 		_ = d.Set("destroy_protect", mysqlInfo.DestroyProtect)
+	}
+	if mysqlInfo.DiskEncryption != nil {
+		_ = d.Set("disk_encryption", mysqlInfo.DiskEncryption)
 	}
 
 	securityGroups, err := mysqlService.DescribeDBSecurityGroups(ctx, d.Id())

@@ -799,6 +799,7 @@ tencentcloud_mongodb_instance_ssl
 tencentcloud_mongodb_readonly_instance
 tencentcloud_mongodb_audit_log_file
 tencentcloud_mongodb_audit_service
+tencentcloud_mongodb_scale_up_db_instance_cpu
 
 TencentDB for MySQL(cdb)
 Data Source
@@ -2658,6 +2659,7 @@ tencentcloud_cdc_dedicated_cluster_image_cache
 
 CdwDoris
 Data Source
+tencentcloud_cdwdoris_instance_nodes
 tencentcloud_cdwdoris_instances
 Resource
 tencentcloud_cdwdoris_instance
@@ -2773,13 +2775,17 @@ tencentcloud_config_rule_evaluation_results
 tencentcloud_config_rules
 tencentcloud_config_discovered_resources
 tencentcloud_config_resource_types
+tencentcloud_config_list_aggregators
 
 Resource
 tencentcloud_config_compliance_pack
 tencentcloud_config_remediation
 tencentcloud_config_start_config_rule_evaluation_operation
 tencentcloud_config_deliver_config
+tencentcloud_config_update_config_deliver
+tencentcloud_config_update_aggregate_config_deliver
 tencentcloud_config_recorder_config
+tencentcloud_config_aggregator
 
 GS
 Data Source

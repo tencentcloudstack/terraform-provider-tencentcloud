@@ -233,6 +233,43 @@ resource "tencentcloud_mysql_instance" "example" {
 }
 ```
 
+### Create instance with disk encryption enabled
+
+```hcl
+resource "tencentcloud_mysql_instance" "example" {
+  internet_service  = 1
+  engine_version    = "5.7"
+  charge_type       = "POSTPAID"
+  root_password     = "PassWord123"
+  slave_deploy_mode = 0
+  availability_zone = data.tencentcloud_availability_zones_by_product.zones.zones.0.name
+  slave_sync_mode   = 1
+  instance_name     = "tf-example-mysql"
+  mem_size          = 4000
+  volume_size       = 200
+  vpc_id            = tencentcloud_vpc.vpc.id
+  subnet_id         = tencentcloud_subnet.subnet.id
+  intranet_port     = 3306
+  security_groups   = [tencentcloud_security_group.security_group.id]
+  disk_type         = "CLOUD_SSD"
+  disk_encryption   = "on"
+
+  tags = {
+    name = "test"
+  }
+
+  parameters = {
+    character_set_server = "utf8"
+    max_connections      = "1000"
+  }
+
+  timeouts {
+    create = "30m"
+    delete = "30m"
+  }
+}
+```
+
 ## Argument Reference
 
 The following arguments are supported:
@@ -253,6 +290,7 @@ The following arguments are supported:
 	- `CLOUD_NATIVE_CLUSTER`: cluster version standard type,
 	- `CLOUD_NATIVE_CLUSTER_EXCLUSIVE`: cluster version enhanced type.
 If it is not specified, it defaults to a universal instance.
+* `disk_encryption` - (Optional, String, ForceNew) Whether to enable disk encryption for the CDB instance. Valid value: `on` (enable disk encryption); otherwise disk encryption is not enabled. Only cloud-disk edition instances support this feature. This parameter can only be set at creation time and cannot be modified.
 * `disk_type` - (Optional, String, ForceNew) Disk Type: This parameter can be specified for Single-Node (Cloud Disk) or Cloud Disk Edition instances. `CLOUD_SSD` designates an SSD cloud disk; `CLOUD_HSSD` designates an Enhanced SSD cloud disk; and `CLOUD_PREMIUM` designates a High-Performance cloud disk. Note: The regions that support the disk types for Single-Node (Cloud Disk) and Cloud Disk Edition instances vary slightly; please refer to `Regions and Availability Zones` for specific support details.
 * `engine_type` - (Optional, String) Instance engine type. The default value is `InnoDB`. Supported values include `InnoDB` and `RocksDB`.
 * `engine_version` - (Optional, String) The version number of the database engine to use. Supported versions include 5.5/5.6/5.7/8.0/8.4, and default is 5.7. Upgrade the instance engine version to support 5.6/5.7 and switch immediately.

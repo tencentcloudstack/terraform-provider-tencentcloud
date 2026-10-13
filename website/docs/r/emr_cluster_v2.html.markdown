@@ -460,6 +460,503 @@ resource "tencentcloud_emr_cluster_v2" "example" {
 }
 ```
 
+### Create EMR cluster with meta database
+
+```hcl
+resource "tencentcloud_emr_cluster_v2" "example" {
+  product_version        = "EMR-V3.7.0"
+  enable_support_ha_flag = true
+  instance_name          = "tf-example"
+  instance_charge_type   = "POSTPAID_BY_HOUR"
+  need_master_wan        = "NEED_MASTER_WAN"
+
+  login_settings {
+    password = "Password@123"
+  }
+
+  scene_software_config {
+    scene_name = "Hadoop-Default"
+  }
+
+  meta_db_info {
+    meta_type = "EMR_DEFAULT_META"
+  }
+
+  tags {
+    tag_key   = "createBy"
+    tag_value = "Terraform"
+  }
+
+  security_group_ids = ["sg-37tigqat"]
+  sg_ip              = "10.0.0.0/8"
+
+  zone_resource_configuration {
+    virtual_private_cloud {
+      vpc_id    = "vpc-i5yyodl9"
+      subnet_id = "subnet-hhi88a58"
+    }
+
+    placement {
+      zone = "ap-guangzhou-6"
+    }
+
+    all_node_resource_spec {
+      master_resource_spec {
+        _node_index   = "master_node_1"
+        instance_type = "SA5.2XLARGE16"
+        system_disk {
+          disk_size = 100
+          disk_type = "CLOUD_HSSD"
+        }
+
+        data_disk {
+          _disk_index = "master_disk_1"
+          disk_size   = 100
+          disk_type   = "CLOUD_SSD"
+        }
+
+        data_disk {
+          _disk_index = "master_disk_2"
+          disk_size   = 200
+          disk_type   = "CLOUD_SSD"
+        }
+
+        software {
+          services = "RUNTIME-1.0.0"
+          roles    = ["Sysctl"]
+        }
+
+        software {
+          services = "FILEBEAT-7.2.0"
+          roles    = ["Filebeat"]
+        }
+
+        software {
+          services = "HDFS-3.3.4"
+          roles    = ["NameNode", "ZKFailoverController"]
+        }
+
+        software {
+          services = "YARN-3.3.4"
+          roles    = ["ResourceManager", "JobHistoryServer", "TimeLineServer"]
+        }
+
+        software {
+          services = "OPENLDAP-2.4.44"
+          roles    = ["slapd"]
+        }
+
+        software {
+          services = "KNOX-1.6.1"
+          roles    = ["gateway", "ldap"]
+        }
+
+        software {
+          services = "HIVE-3.1.3"
+          roles    = ["HiveMetaStore", "HiveServer2", "HiveWebHcat"]
+        }
+
+        software {
+          services = "HUE-4.10.0"
+          roles    = ["Hue"]
+        }
+
+        software {
+          services = "RANGER-2.3.0"
+          roles    = ["EmbeddedServer", "EnableUnixAuth", "Solr"]
+        }
+      }
+
+      master_resource_spec {
+        _node_index   = "master_node_2"
+        instance_type = "SA5.2XLARGE16"
+        system_disk {
+          disk_size = 100
+          disk_type = "CLOUD_HSSD"
+        }
+
+        data_disk {
+          _disk_index = "master_disk_1"
+          disk_size   = 100
+          disk_type   = "CLOUD_SSD"
+        }
+
+        data_disk {
+          _disk_index = "master_disk_2"
+          disk_size   = 200
+          disk_type   = "CLOUD_SSD"
+        }
+
+        software {
+          services = "RUNTIME-1.0.0"
+          roles    = ["Sysctl"]
+        }
+
+        software {
+          services = "FILEBEAT-7.2.0"
+          roles    = ["Filebeat"]
+        }
+
+        software {
+          services = "HDFS-3.3.4"
+          roles    = ["NameNode", "ZKFailoverController"]
+        }
+
+        software {
+          services = "YARN-3.3.4"
+          roles    = ["ResourceManager", "JobHistoryServer", "TimeLineServer"]
+        }
+
+        software {
+          services = "OPENLDAP-2.4.44"
+          roles    = ["slapd"]
+        }
+
+        software {
+          services = "KNOX-1.6.1"
+          roles    = ["gateway", "ldap"]
+        }
+
+        software {
+          services = "HIVE-3.1.3"
+          roles    = ["HiveMetaStore", "HiveServer2", "HiveWebHcat"]
+        }
+
+        software {
+          services = "HUE-4.10.0"
+          roles    = ["Hue"]
+        }
+
+        software {
+          services = "RANGER-2.3.0"
+          roles    = ["EmbeddedServer", "EnableUnixAuth", "Solr"]
+        }
+      }
+
+      core_resource_spec {
+        _node_index   = "core_node_1"
+        instance_type = "SA5.LARGE8"
+        system_disk {
+          disk_size = 100
+          disk_type = "CLOUD_HSSD"
+        }
+
+        data_disk {
+          _disk_index = "core_disk_1"
+          disk_size   = 100
+          disk_type   = "CLOUD_SSD"
+        }
+
+        data_disk {
+          _disk_index = "core_disk_2"
+          disk_size   = 100
+          disk_type   = "CLOUD_SSD"
+        }
+
+        software {
+          services = "RUNTIME-1.0.0"
+          roles    = ["Sysctl"]
+        }
+
+        software {
+          services = "FILEBEAT-7.2.0"
+          roles    = ["Filebeat"]
+        }
+
+        software {
+          services = "HDFS-3.3.4"
+          roles    = ["DataNode"]
+        }
+
+        software {
+          services = "YARN-3.3.4"
+          roles    = ["NodeManager"]
+        }
+      }
+
+      core_resource_spec {
+        _node_index   = "core_node_2"
+        instance_type = "SA5.LARGE8"
+        system_disk {
+          disk_size = 100
+          disk_type = "CLOUD_HSSD"
+        }
+
+        data_disk {
+          _disk_index = "core_disk_1"
+          disk_size   = 100
+          disk_type   = "CLOUD_SSD"
+        }
+
+        data_disk {
+          _disk_index = "core_disk_2"
+          disk_size   = 100
+          disk_type   = "CLOUD_SSD"
+        }
+
+        software {
+          services = "RUNTIME-1.0.0"
+          roles    = ["Sysctl"]
+        }
+
+        software {
+          services = "FILEBEAT-7.2.0"
+          roles    = ["Filebeat"]
+        }
+
+        software {
+          services = "HDFS-3.3.4"
+          roles    = ["DataNode"]
+        }
+
+        software {
+          services = "YARN-3.3.4"
+          roles    = ["NodeManager"]
+        }
+      }
+
+      core_resource_spec {
+        _node_index   = "core_node_3"
+        instance_type = "SA5.LARGE8"
+        system_disk {
+          disk_size = 100
+          disk_type = "CLOUD_HSSD"
+        }
+
+        data_disk {
+          _disk_index = "core_disk_1"
+          disk_size   = 100
+          disk_type   = "CLOUD_SSD"
+        }
+
+        data_disk {
+          _disk_index = "core_disk_2"
+          disk_size   = 100
+          disk_type   = "CLOUD_SSD"
+        }
+
+        software {
+          services = "RUNTIME-1.0.0"
+          roles    = ["Sysctl"]
+        }
+
+        software {
+          services = "FILEBEAT-7.2.0"
+          roles    = ["Filebeat"]
+        }
+
+        software {
+          services = "HDFS-3.3.4"
+          roles    = ["DataNode"]
+        }
+
+        software {
+          services = "YARN-3.3.4"
+          roles    = ["NodeManager"]
+        }
+      }
+
+      task_resource_spec {
+        _node_index   = "task_node_1"
+        instance_type = "SA5.LARGE8"
+        system_disk {
+          disk_size = 100
+          disk_type = "CLOUD_HSSD"
+        }
+
+        data_disk {
+          _disk_index = "task_disk_1"
+          disk_size   = 100
+          disk_type   = "CLOUD_SSD"
+        }
+
+        data_disk {
+          _disk_index = "task_disk_2"
+          disk_size   = 100
+          disk_type   = "CLOUD_SSD"
+        }
+
+        software {
+          services = "RUNTIME-1.0.0"
+          roles    = ["Sysctl"]
+        }
+
+        software {
+          services = "FILEBEAT-7.2.0"
+          roles    = ["Filebeat"]
+        }
+
+        software {
+          services = "YARN-3.3.4"
+          roles    = ["NodeManager"]
+        }
+      }
+
+      task_resource_spec {
+        _node_index   = "task_node_2"
+        instance_type = "SA5.LARGE8"
+        system_disk {
+          disk_size = 100
+          disk_type = "CLOUD_HSSD"
+        }
+
+        data_disk {
+          _disk_index = "task_disk_1"
+          disk_size   = 100
+          disk_type   = "CLOUD_SSD"
+        }
+
+        data_disk {
+          _disk_index = "task_disk_2"
+          disk_size   = 100
+          disk_type   = "CLOUD_SSD"
+        }
+
+        software {
+          services = "RUNTIME-1.0.0"
+          roles    = ["Sysctl"]
+        }
+
+        software {
+          services = "FILEBEAT-7.2.0"
+          roles    = ["Filebeat"]
+        }
+
+        software {
+          services = "YARN-3.3.4"
+          roles    = ["NodeManager"]
+        }
+      }
+
+      common_resource_spec {
+        _node_index   = "common_node_1"
+        instance_type = "SA5.LARGE8"
+        system_disk {
+          disk_size = 100
+          disk_type = "CLOUD_HSSD"
+        }
+
+        data_disk {
+          _disk_index = "common_disk_1"
+          disk_size   = 100
+          disk_type   = "CLOUD_SSD"
+        }
+
+        software {
+          services = "RUNTIME-1.0.0"
+          roles    = ["Sysctl"]
+        }
+
+        software {
+          services = "FILEBEAT-7.2.0"
+          roles    = ["Filebeat"]
+        }
+
+        software {
+          services = "HDFS-3.3.4"
+          roles    = ["JournalNode"]
+        }
+
+        software {
+          services = "ZOOKEEPER-3.8.4"
+          roles    = ["Zookeeper"]
+        }
+      }
+
+      common_resource_spec {
+        _node_index   = "common_node_2"
+        instance_type = "SA5.LARGE8"
+        system_disk {
+          disk_size = 100
+          disk_type = "CLOUD_HSSD"
+        }
+
+        data_disk {
+          _disk_index = "common_disk_1"
+          disk_size   = 100
+          disk_type   = "CLOUD_SSD"
+        }
+
+        software {
+          services = "RUNTIME-1.0.0"
+          roles    = ["Sysctl"]
+        }
+
+        software {
+          services = "FILEBEAT-7.2.0"
+          roles    = ["Filebeat"]
+        }
+
+        software {
+          services = "HDFS-3.3.4"
+          roles    = ["JournalNode"]
+        }
+
+        software {
+          services = "ZOOKEEPER-3.8.4"
+          roles    = ["Zookeeper"]
+        }
+      }
+
+      common_resource_spec {
+        _node_index   = "common_node_3"
+        instance_type = "SA5.LARGE8"
+        system_disk {
+          disk_size = 100
+          disk_type = "CLOUD_HSSD"
+        }
+
+        data_disk {
+          _disk_index = "common_disk_1"
+          disk_size   = 100
+          disk_type   = "CLOUD_SSD"
+        }
+
+        software {
+          services = "RUNTIME-1.0.0"
+          roles    = ["Sysctl"]
+        }
+
+        software {
+          services = "FILEBEAT-7.2.0"
+          roles    = ["Filebeat"]
+        }
+
+        software {
+          services = "HDFS-3.3.4"
+          roles    = ["JournalNode"]
+        }
+
+        software {
+          services = "ZOOKEEPER-3.8.4"
+          roles    = ["Zookeeper"]
+        }
+      }
+    }
+  }
+
+  meta_db_group_info {
+    meta_type            = "EMR_DEFAULT_META"
+    components           = ["RANGER"]
+    default_meta_version = "mysql8"
+  }
+
+  meta_db_group_info {
+    meta_type          = "USER_CUSTOM_META"
+    components         = ["HIVE"]
+    meta_data_jdbc_url = "jdbc:mysql://10.0.30.13:3306/hivemetastore"
+    meta_data_user     = "root"
+    meta_data_pass     = "Password@123"
+  }
+
+  meta_db_group_info {
+    meta_type              = "EMR_EXIST_META"
+    components             = ["HUE"]
+    unify_meta_instance_id = "cdb-jg8rqjn0"
+  }
+}
+```
+
 ## Argument Reference
 
 The following arguments are supported:
@@ -481,6 +978,7 @@ The following arguments are supported:
 * `enable_remote_login_flag` - (Optional, Bool, ForceNew) Whether to enable external remote login. Invalid when `security_group_ids` is set. Default is false.
 * `instance_charge_prepaid` - (Optional, List, ForceNew) Prepaid (monthly/yearly) billing parameters. Required when `instance_charge_type` is `PREPAID`.
 * `load_balancer_id` - (Optional, String, ForceNew) CLB instance ID, e.g., `lb-xxxxxxxx`.
+* `meta_db_group_info` - (Optional, List) Custom MetaDB group information of the cluster. It can only be set on create (CreateCluster) and cannot be changed afterwards. A component can belong to only one block. The query result (DescribeMetaDBInfo) is matched to the blocks by `components`, so the block order follows the configuration; fields that are not configured are filled in from the query result. When `meta_type` is `EMR_EXIST_META`, `unify_meta_instance_id` must be set; when `USER_CUSTOM_META`, `meta_data_jdbc_url`/`meta_data_user`/`meta_data_pass` must be set.
 * `meta_db_info` - (Optional, List, ForceNew) Metadata database information. When `meta_type` is `EMR_NEW_META`/`EMR_DEFAULT_META`, no extra fields are required; when `EMR_EXIT_META`, `unify_meta_instance_id` must be set; when `USER_CUSTOM_META`, `meta_data_jdbc_url`/`meta_data_user`/`meta_data_pass` must be set.
 * `need_cdb_audit` - (Optional, Int, ForceNew) Whether to enable database auditing.
 * `need_master_wan` - (Optional, String, ForceNew) Whether to enable master public network. Valid values: `NEED_MASTER_WAN` (default), `NOT_NEED_MASTER_WAN`.
@@ -568,6 +1066,16 @@ The `master_resource_spec` object of `all_node_resource_spec` supports the follo
 * `data_disk` - (Optional, Set) Cloud data disk specifications. `TypeSet` keyed by full content (including `_disk_index`); block order in HCL is irrelevant.
 * `instance_type` - (Optional, String) CVM instance type, e.g., `S6.2XLARGE32`, `SA4.8XLARGE64`.
 * `system_disk` - (Optional, List) System disk specifications.
+
+The `meta_db_group_info` object supports the following:
+
+* `components` - (Optional, Set) Components that use the MetaDB. A component can belong to only one `meta_db_group_info` block.
+* `default_meta_version` - (Optional, String) MetaDB version, e.g. `mysql8`.
+* `meta_data_jdbc_url` - (Optional, String) JDBC connection of the custom MetaDB, e.g. `jdbc:mysql://10.10.10.10:3306/dbname`.
+* `meta_data_pass` - (Optional, String) Password of the custom MetaDB. It is a write-only value: the API never returns it, so the state always keeps the configured value.
+* `meta_data_user` - (Optional, String) Username of the custom MetaDB.
+* `meta_type` - (Optional, String) Hive shared meta DB type. `EMR_DEFAULT_META`: created by the cluster by default; `EMR_EXIST_META`: use the specified EMR-MetaDB; `USER_CUSTOM_META`: use a custom MetaDB.
+* `unify_meta_instance_id` - (Optional, String) EMR-MetaDB instance ID, required when `meta_type` is `EMR_EXIST_META`.
 
 The `meta_db_info` object supports the following:
 
@@ -721,6 +1229,10 @@ The `master_resource_spec` object of `all_node_resource_spec` exports the follow
 * `emr_resource_id` - EMR node resource ID (read-only).
 * `order_no` - Machine instance ID (read-only).
 * `serial_no` - Serial number (read-only).
+
+The `meta_db_group_info` object exports the following:
+
+* `link_instance_id` - CDB instance ID.
 
 The `router_resource_spec` object of `all_node_resource_spec` exports the following:
 

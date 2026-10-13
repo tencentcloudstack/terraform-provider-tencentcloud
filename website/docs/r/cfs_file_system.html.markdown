@@ -26,6 +26,20 @@ resource "tencentcloud_cfs_file_system" "foo" {
 }
 ```
 
+### Encrypted Nfs CFS
+
+```hcl
+resource "tencentcloud_cfs_file_system" "foo" {
+  name              = "test_file_system"
+  availability_zone = "ap-guangzhou-3"
+  access_group_id   = "pgroup-7nx89k7l"
+  protocol          = "NFS"
+  vpc_id            = "vpc-ah9fbkap"
+  subnet_id         = "subnet-9mu2t9iw"
+  encrypted         = true
+}
+```
+
 ### High-Performance Nfs CFS
 
 ```hcl
@@ -91,6 +105,7 @@ The following arguments are supported:
 * `capacity` - (Optional, Int) File system capacity, in GiB (required for the Turbo series). For Standard Turbo, the minimum purchase required is 40,960 GiB (40 TiB) and the expansion increment is 20,480 GiB (20 TiB). For High-Performance Turbo, the minimum purchase required is 20,480 GiB (20 TiB) and the expansion increment is 10,240 GiB (10 TiB).
 * `ccn_id` - (Optional, String) CCN instance ID (required if the network type is CCN).
 * `cidr_block` - (Optional, String) CCN IP range used by the CFS (required if the network type is CCN), which cannot conflict with other IP ranges bound in CCN.
+* `encrypted` - (Optional, Bool, ForceNew) Indicates whether the cfs_file_system is encrypted. true means encrypted, false means not encrypted. Modifying this parameter will trigger a rebuild.
 * `mount_ip` - (Optional, String, ForceNew) IP of mount point.
 * `name` - (Optional, String) Name of a file system.
 * `net_interface` - (Optional, String) Network type, Default `VPC`. Valid values: `VPC` and `CCN`. Select `VPC` for a Standard or High-Performance file system, and `CCN` for a Standard Turbo or High-Performance Turbo one.
