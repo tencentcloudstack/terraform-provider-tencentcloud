@@ -327,7 +327,7 @@ func resourceTencentCloudClsDeliverTaskRead(d *schema.ResourceData, meta interfa
 	}
 
 	if respData == nil {
-		log.Printf("[CRUD] cls_deliver_task id=%s", d.Id())
+		log.Printf("[WARN]%s resource `tencentcloud_cls_deliver_task` %s does not exist", logId, taskId)
 		d.SetId("")
 		return nil
 	}
