@@ -210,6 +210,16 @@ func ResourceTencentCloudCdwdorisInstance() *schema.Resource {
 				Computed:    true,
 				Description: "Whether it is storage-compute separation. Default is false.",
 			},
+			"disk_encrypt": {
+				Type:        schema.TypeInt,
+				Optional:    true,
+				Description: "Disk encryption. Immutable after creation.",
+			},
+			"encrypt": {
+				Type:        schema.TypeInt,
+				Computed:    true,
+				Description: "Whether disk encryption is enabled. Read from InstanceInfo.MasterSummary.Encrypt / CoreSummary.Encrypt.",
+			},
 			"security_group_ids": {
 				Type:        schema.TypeList,
 				Optional:    true,
@@ -369,6 +379,10 @@ func resourceTencentCloudCdwdorisInstanceCreate(d *schema.ResourceData, meta int
 
 	if v, ok := d.GetOkExists("is_ssc"); ok {
 		request.IsSSC = helper.Bool(v.(bool))
+	}
+
+	if v, ok := d.GetOkExists("disk_encrypt"); ok {
+		request.DiskEncrypt = helper.IntInt64(v.(int))
 	}
 
 	err := resource.Retry(tccommon.WriteRetryTimeout, func() *resource.RetryError {
@@ -602,6 +616,12 @@ func resourceTencentCloudCdwdorisInstanceRead(d *schema.ResourceData, meta inter
 		_ = d.Set("ha_type", respData.HaType)
 	}
 
+	if respData.MasterSummary != nil && respData.MasterSummary.Encrypt != nil {
+		_ = d.Set("encrypt", respData.MasterSummary.Encrypt)
+	} else if respData.CoreSummary != nil && respData.CoreSummary.Encrypt != nil {
+		_ = d.Set("encrypt", respData.CoreSummary.Encrypt)
+	}
+
 	if respData.Tags != nil {
 		tagsList := make([]map[string]interface{}, 0, len(respData.Tags))
 		for _, tags := range respData.Tags {
@@ -664,7 +684,7 @@ func resourceTencentCloudCdwdorisInstanceUpdate(d *schema.ResourceData, meta int
 		instanceId = d.Id()
 	)
 
-	immutableArgs := []string{"zone", "fe_spec", "be_spec", "ha_flag", "user_vpc_id", "user_subnet_id", "product_version", "charge_type", "charge_properties", "doris_user_pwd", "tags", "case_sensitive", "enable_multi_zones", "user_multi_zone_infos", "is_ssc"}
+	immutableArgs := []string{"zone", "fe_spec", "be_spec", "ha_flag", "user_vpc_id", "user_subnet_id", "product_version", "charge_type", "charge_properties", "doris_user_pwd", "tags", "case_sensitive", "enable_multi_zones", "user_multi_zone_infos", "is_ssc", "disk_encrypt"}
 	for _, v := range immutableArgs {
 		if d.HasChange(v) {
 			return fmt.Errorf("argument `%s` cannot be changed", v)

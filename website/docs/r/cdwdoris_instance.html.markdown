@@ -181,6 +181,7 @@ The following arguments are supported:
 * `workload_group_status` - (Required, String) Whether to enable resource group. `open` - enable, `close` - disable.
 * `zone` - (Required, String) Availability zone.
 * `case_sensitive` - (Optional, Int) Whether the table name is case sensitive, 0 refers to sensitive, 1 refers to insensitive, compared in lowercase; 2 refers to insensitive, and the table name is changed to lowercase for storage.
+* `disk_encrypt` - (Optional, Int) Disk encryption. Immutable after creation.
 * `enable_multi_zones` - (Optional, Bool) Whether to enable multi-availability zone.
 * `ha_type` - (Optional, Int) High availability type: 0 indicates non-high availability (only one FE, FeSpec.CreateInstanceSpec.Count=1), 1 indicates read high availability (at least 3 FEs must be deployed, FeSpec.CreateInstanceSpec.Count>=3, and it must be an odd number), 2 indicates read and write high availability (at least 5 FEs must be deployed, FeSpec.CreateInstanceSpec.Count>=5, and it must be an odd number).
 * `is_ssc` - (Optional, Bool, ForceNew) Whether it is storage-compute separation. Default is false.
@@ -223,7 +224,7 @@ The `user_multi_zone_infos` object supports the following:
 In addition to all arguments above, the following attributes are exported:
 
 * `id` - ID of the resource.
-
+* `encrypt` - Whether disk encryption is enabled. Read from InstanceInfo.MasterSummary.Encrypt / CoreSummary.Encrypt.
 
 ## Timeouts
 
