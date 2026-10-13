@@ -20,6 +20,36 @@ import (
     "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/common/json"
 )
 
+type AIAnalysis struct {
+	// <p>是否开启告警AI诊断</p><p>默认值：false</p>
+	Enable *bool `json:"Enable,omitnil,omitempty" name:"Enable"`
+
+	// <p>是否显示诊断过程</p><p>默认值：false</p>
+	HideProcess *bool `json:"HideProcess,omitnil,omitempty" name:"HideProcess"`
+
+	// <p>AI诊断告警时给AI的提示词</p><p>参数格式：请详细诊断根因</p>
+	UserPrompt *string `json:"UserPrompt,omitnil,omitempty" name:"UserPrompt"`
+
+	// <p>AI 分析的数据范围</p>
+	AnalysisDataScope []*AIAnalysisDataScope `json:"AnalysisDataScope,omitnil,omitempty" name:"AnalysisDataScope"`
+}
+
+type AIAnalysisDataScope struct {
+	// <p>告警AI诊断时查询的数据范围（查询哪些日志主题）</p>
+	DataScopeEntry []*AIAnalysisDataScopeEntry `json:"DataScopeEntry,omitnil,omitempty" name:"DataScopeEntry"`
+
+	// <p>告警AI诊断的数据范围类型</p><p>枚举值：</p><ul><li>CLSLogTopic： 日志主题</li></ul><p>默认值：CLSLogTopic</p>
+	DataScopeType *string `json:"DataScopeType,omitnil,omitempty" name:"DataScopeType"`
+}
+
+type AIAnalysisDataScopeEntry struct {
+	// <p>值类型</p><p>枚举值：</p><ul><li>TopicId： 日志主题ID</li><li>Region： 地域</li></ul>
+	Key *string `json:"Key,omitnil,omitempty" name:"Key"`
+
+	// <p>Key如果设置为TopicId，Value是对应日志主题topic_id 在https://cloud.tencent.com/document/product/614/56454 查询，Key如果设置为Region，Value是地域的英文名，在https://cloud.tencent.com/document/product/614/18940查询。</p>
+	Value *string `json:"Value,omitnil,omitempty" name:"Value"`
+}
+
 type AccessControlRule struct {
 	// <p>网段或IP，支持IPv4或IPv6。</p>
 	// 注意：此字段可能返回 null，表示取不到有效值。
@@ -128,7 +158,7 @@ type AgentApplicationInfo struct {
 	// <p>应用名称</p>
 	ApplicationName *string `json:"ApplicationName,omitnil,omitempty" name:"ApplicationName"`
 
-	// <p>接入类型</p><p>枚举值：</p><ul><li>Langfuse：  Langfuse​ 是一款开源的 LLM（大语言模型）工程与可观测性平台（LLMOps Tool）</li></ul>
+	// <p>接入类型</p><p>枚举值：</p><ul><li>Langfuse：  Langfuse 是一款开源的 LLM（大语言模型）工程与可观测性平台（LLMOps Tool）</li></ul>
 	AccessType *string `json:"AccessType,omitnil,omitempty" name:"AccessType"`
 
 	// <p>应用下资源所属地域</p><p>例如：ap-guangzhou</p>
@@ -145,6 +175,21 @@ type AgentApplicationInfo struct {
 
 	// <p>更新时间</p><p>单位：秒</p><p>秒级时间戳</p>
 	UpdateTime *uint64 `json:"UpdateTime,omitnil,omitempty" name:"UpdateTime"`
+
+	// <p>日志集id</p>
+	LogsetId *string `json:"LogsetId,omitnil,omitempty" name:"LogsetId"`
+
+	// <p>服务方名称</p>
+	AssumerName *string `json:"AssumerName,omitnil,omitempty" name:"AssumerName"`
+
+	// <p>服务方子名称</p>
+	SubAssumerName *string `json:"SubAssumerName,omitnil,omitempty" name:"SubAssumerName"`
+
+	// <p>服务方Uin</p>
+	AssumerUin *uint64 `json:"AssumerUin,omitnil,omitempty" name:"AssumerUin"`
+
+	// <p>服务方使用的角色</p>
+	RoleName *string `json:"RoleName,omitnil,omitempty" name:"RoleName"`
 }
 
 type AgentTopicInfo struct {
@@ -185,73 +230,78 @@ type AlarmClassification struct {
 }
 
 type AlarmInfo struct {
-	// 告警策略名称。
+	// <p>告警策略名称。</p>
 	Name *string `json:"Name,omitnil,omitempty" name:"Name"`
 
-	// 监控对象列表。
+	// <p>监控对象列表。</p>
 	AlarmTargets []*AlarmTargetInfo `json:"AlarmTargets,omitnil,omitempty" name:"AlarmTargets"`
 
-	// 监控任务运行时间点。
+	// <p>监控任务运行时间点。</p>
 	MonitorTime *MonitorTime `json:"MonitorTime,omitnil,omitempty" name:"MonitorTime"`
 
-	// 是否触发告警的单触发条件。与MultiConditions参数互斥。
+	// <p>是否触发告警的单触发条件。与MultiConditions参数互斥。</p>
 	Condition *string `json:"Condition,omitnil,omitempty" name:"Condition"`
 
-	// 持续周期。持续满足触发条件TriggerCount个周期后，再进行告警；最小值为1，最大值为10。
+	// <p>持续周期。持续满足触发条件TriggerCount个周期后，再进行告警；最小值为1，最大值为10。</p>
 	TriggerCount *int64 `json:"TriggerCount,omitnil,omitempty" name:"TriggerCount"`
 
-	// 告警重复的周期。单位是min。取值范围是0~1440。
+	// <p>告警重复的周期。单位是min。取值范围是0~1440。</p>
 	AlarmPeriod *int64 `json:"AlarmPeriod,omitnil,omitempty" name:"AlarmPeriod"`
 
-	// 关联的告警通知渠道组列表。-通过[获取通知渠道组列表](https://cloud.tencent.com/document/product/614/56462)获取关联的告警通知渠道组列表，和MonitorNotice互斥
+	// <p>关联的告警通知渠道组列表。-通过<a href="https://cloud.tencent.com/document/product/614/56462">获取通知渠道组列表</a>获取关联的告警通知渠道组列表，和MonitorNotice互斥</p>
 	AlarmNoticeIds []*string `json:"AlarmNoticeIds,omitnil,omitempty" name:"AlarmNoticeIds"`
 
-	// 开启状态。
+	// <p>开启状态。</p>
 	Status *bool `json:"Status,omitnil,omitempty" name:"Status"`
 
-	// 告警策略ID。
+	// <p>告警策略ID。</p>
 	AlarmId *string `json:"AlarmId,omitnil,omitempty" name:"AlarmId"`
 
-	// 创建时间。格式： YYYY-MM-DD HH:MM:SS
+	// <p>创建时间。格式： YYYY-MM-DD HH:MM:SS</p>
 	CreateTime *string `json:"CreateTime,omitnil,omitempty" name:"CreateTime"`
 
-	// 最近更新时间。格式： YYYY-MM-DD HH:MM:SS
+	// <p>最近更新时间。格式： YYYY-MM-DD HH:MM:SS</p>
 	UpdateTime *string `json:"UpdateTime,omitnil,omitempty" name:"UpdateTime"`
 
-	// 自定义通知模板
+	// <p>自定义通知模板</p>
 	// 注意：此字段可能返回 null，表示取不到有效值。
 	MessageTemplate *string `json:"MessageTemplate,omitnil,omitempty" name:"MessageTemplate"`
 
-	// 自定义回调模板
+	// <p>自定义回调模板</p>
 	CallBack *CallBackInfo `json:"CallBack,omitnil,omitempty" name:"CallBack"`
 
-	// 多维分析设置
+	// <p>多维分析设置</p>
 	Analysis []*AnalysisDimensional `json:"Analysis,omitnil,omitempty" name:"Analysis"`
 
-	// 分组触发状态。true：开启，false：关闭（默认）
+	// <p>分组触发状态。true：开启，false：关闭（默认）</p>
 	GroupTriggerStatus *bool `json:"GroupTriggerStatus,omitnil,omitempty" name:"GroupTriggerStatus"`
 
-	// 分组触发条件。
+	// <p>分组触发条件。</p>
 	GroupTriggerCondition []*string `json:"GroupTriggerCondition,omitnil,omitempty" name:"GroupTriggerCondition"`
 
-	// 告警策略绑定的标签信息。
+	// <p>告警策略绑定的标签信息。</p>
 	Tags []*Tag `json:"Tags,omitnil,omitempty" name:"Tags"`
 
-	// 监控对象类型。0:执行语句共用监控对象;1:每个执行语句单独选择监控对象。 
+	// <p>监控对象类型。0:执行语句共用监控对象;1:每个执行语句单独选择监控对象。</p>
 	MonitorObjectType *uint64 `json:"MonitorObjectType,omitnil,omitempty" name:"MonitorObjectType"`
 
-	// 告警级别。0:警告(Warn);1:提醒(Info);2:紧急 (Critical)。
+	// <p>告警级别。0:警告(Warn);1:提醒(Info);2:紧急 (Critical)。</p>
 	AlarmLevel *uint64 `json:"AlarmLevel,omitnil,omitempty" name:"AlarmLevel"`
 
-	// 告警附加分类字段。
+	// <p>告警附加分类字段。</p>
 	Classifications []*AlarmClassification `json:"Classifications,omitnil,omitempty" name:"Classifications"`
 
-	// 多触发条件。与
-	// Condition互斥。
+	// <p>多触发条件。与<br>Condition互斥。</p>
 	MultiConditions []*MultiCondition `json:"MultiConditions,omitnil,omitempty" name:"MultiConditions"`
 
-	// 腾讯云可观测平台通知渠道相关信息，和AlarmNoticeIds互斥
+	// <p>腾讯云可观测平台通知渠道相关信息，和AlarmNoticeIds互斥</p>
 	MonitorNotice *MonitorNotice `json:"MonitorNotice,omitnil,omitempty" name:"MonitorNotice"`
+
+	// <p>AI分析内容</p>
+	AIAnalysis *AIAnalysis `json:"AIAnalysis,omitnil,omitempty" name:"AIAnalysis"`
+
+	// <p>最后修改人的uin信息</p>
+	SubUin *uint64 `json:"SubUin,omitnil,omitempty" name:"SubUin"`
 }
 
 type AlarmNotice struct {
@@ -669,6 +719,47 @@ type BaseMetricCollectConfig struct {
 	Configs []*MetricCollectConfig `json:"Configs,omitnil,omitempty" name:"Configs"`
 }
 
+type CLSDeliverTaskInfo struct {
+	// <p>任务id</p>
+	TaskId *string `json:"TaskId,omitnil,omitempty" name:"TaskId"`
+
+	// <p>任务名称</p>
+	TaskName *string `json:"TaskName,omitnil,omitempty" name:"TaskName"`
+
+	// <p>主账号id</p>
+	Uin *uint64 `json:"Uin,omitnil,omitempty" name:"Uin"`
+
+	// <p>源主题信息</p>
+	SourceTopicConfig *SourceTopicConfig `json:"SourceTopicConfig,omitnil,omitempty" name:"SourceTopicConfig"`
+
+	// <p>目标主题信息</p>
+	TargetTopicConfig *TargetTopicConfig `json:"TargetTopicConfig,omitnil,omitempty" name:"TargetTopicConfig"`
+
+	// <p>投递规则</p>
+	DeliverRule *DeliverRule `json:"DeliverRule,omitnil,omitempty" name:"DeliverRule"`
+
+	// <p>合规承诺</p>
+	Compliance *uint64 `json:"Compliance,omitnil,omitempty" name:"Compliance"`
+
+	// <p>任务状态。</p><p>枚举值：</p><ul><li>0： 运行中</li><li>1： 已暂停</li><li>2： 已完成</li><li>3： 异常</li></ul>
+	Status *uint64 `json:"Status,omitnil,omitempty" name:"Status"`
+
+	// <p>状态 </p><p>枚举值：</p><ul><li>0： 运行</li><li>1： 暂停</li></ul>
+	Enable *uint64 `json:"Enable,omitnil,omitempty" name:"Enable"`
+
+	// <p>任务进度百分比</p>
+	Progress *uint64 `json:"Progress,omitnil,omitempty" name:"Progress"`
+
+	// <p>是否开启投递服务日志。</p><p>枚举值：</p><ul><li>1： 关闭</li><li>2： 开启</li></ul>
+	HasServicesLog *uint64 `json:"HasServicesLog,omitnil,omitempty" name:"HasServicesLog"`
+
+	// <p>创建时间。</p><p>单位：秒级时间戳</p>
+	CreateTime *uint64 `json:"CreateTime,omitnil,omitempty" name:"CreateTime"`
+
+	// <p>更新时间</p><p>单位：秒级时间戳</p>
+	UpdateTime *uint64 `json:"UpdateTime,omitnil,omitempty" name:"UpdateTime"`
+}
+
 type CallBackInfo struct {
 	// 回调时的Body。
 	// 可将各类告警变量放在请求内容中，详见[帮助文档](https://cloud.tencent.com/document/product/614/74718)。
@@ -943,52 +1034,50 @@ func (r *CheckFunctionResponse) FromJsonString(s string) error {
 
 // Predefined struct for user
 type CheckRechargeKafkaServerRequestParams struct {
-	// 导入Kafka类型，0: 腾讯云CKafka；1: 用户自建Kafka。
+	// <p>导入Kafka类型，0: 腾讯云CKafka；1: 用户自建Kafka。</p>
 	KafkaType *uint64 `json:"KafkaType,omitnil,omitempty" name:"KafkaType"`
 
-	// 腾讯云CKafka实例ID。
-	// KafkaType为0时，KafkaInstance必填
-	// 
-	// - 通过 [获取实例列表信息](https://cloud.tencent.com/document/product/597/40835) 获取实例id。
+	// <p>腾讯云CKafka实例ID。<br>KafkaType为0时，KafkaInstance必填</p><ul><li>通过 <a href="https://cloud.tencent.com/document/product/597/40835">获取实例列表信息</a> 获取实例id。</li></ul>
 	KafkaInstance *string `json:"KafkaInstance,omitnil,omitempty" name:"KafkaInstance"`
 
-	// 服务地址。
-	// KafkaType为1时，ServerAddr必填
+	// <p>服务地址。<br>KafkaType为1时，ServerAddr必填</p>
 	ServerAddr *string `json:"ServerAddr,omitnil,omitempty" name:"ServerAddr"`
 
-	// ServerAddr是否为加密连接，默认值false。当KafkaType为1用户自建kafka时生效。
+	// <p>ServerAddr是否为加密连接，默认值false。当KafkaType为1用户自建kafka时生效。</p>
 	IsEncryptionAddr *bool `json:"IsEncryptionAddr,omitnil,omitempty" name:"IsEncryptionAddr"`
 
-	// 加密访问协议。KafkaType参数为1并且IsEncryptionAddr参数为true时必填。
+	// <p>加密访问协议。KafkaType参数为1并且IsEncryptionAddr参数为true时必填。</p>
 	Protocol *KafkaProtocolInfo `json:"Protocol,omitnil,omitempty" name:"Protocol"`
 
-	// 用户kafka拓展信息
+	// <p>网络信息参数</p>
+	NetworkInfo *NetworkInfo `json:"NetworkInfo,omitnil,omitempty" name:"NetworkInfo"`
+
+	// <p>用户kafka拓展信息</p>
 	UserKafkaMeta *UserKafkaMeta `json:"UserKafkaMeta,omitnil,omitempty" name:"UserKafkaMeta"`
 }
 
 type CheckRechargeKafkaServerRequest struct {
 	*tchttp.BaseRequest
 	
-	// 导入Kafka类型，0: 腾讯云CKafka；1: 用户自建Kafka。
+	// <p>导入Kafka类型，0: 腾讯云CKafka；1: 用户自建Kafka。</p>
 	KafkaType *uint64 `json:"KafkaType,omitnil,omitempty" name:"KafkaType"`
 
-	// 腾讯云CKafka实例ID。
-	// KafkaType为0时，KafkaInstance必填
-	// 
-	// - 通过 [获取实例列表信息](https://cloud.tencent.com/document/product/597/40835) 获取实例id。
+	// <p>腾讯云CKafka实例ID。<br>KafkaType为0时，KafkaInstance必填</p><ul><li>通过 <a href="https://cloud.tencent.com/document/product/597/40835">获取实例列表信息</a> 获取实例id。</li></ul>
 	KafkaInstance *string `json:"KafkaInstance,omitnil,omitempty" name:"KafkaInstance"`
 
-	// 服务地址。
-	// KafkaType为1时，ServerAddr必填
+	// <p>服务地址。<br>KafkaType为1时，ServerAddr必填</p>
 	ServerAddr *string `json:"ServerAddr,omitnil,omitempty" name:"ServerAddr"`
 
-	// ServerAddr是否为加密连接，默认值false。当KafkaType为1用户自建kafka时生效。
+	// <p>ServerAddr是否为加密连接，默认值false。当KafkaType为1用户自建kafka时生效。</p>
 	IsEncryptionAddr *bool `json:"IsEncryptionAddr,omitnil,omitempty" name:"IsEncryptionAddr"`
 
-	// 加密访问协议。KafkaType参数为1并且IsEncryptionAddr参数为true时必填。
+	// <p>加密访问协议。KafkaType参数为1并且IsEncryptionAddr参数为true时必填。</p>
 	Protocol *KafkaProtocolInfo `json:"Protocol,omitnil,omitempty" name:"Protocol"`
 
-	// 用户kafka拓展信息
+	// <p>网络信息参数</p>
+	NetworkInfo *NetworkInfo `json:"NetworkInfo,omitnil,omitempty" name:"NetworkInfo"`
+
+	// <p>用户kafka拓展信息</p>
 	UserKafkaMeta *UserKafkaMeta `json:"UserKafkaMeta,omitnil,omitempty" name:"UserKafkaMeta"`
 }
 
@@ -1009,6 +1098,7 @@ func (r *CheckRechargeKafkaServerRequest) FromJsonString(s string) error {
 	delete(f, "ServerAddr")
 	delete(f, "IsEncryptionAddr")
 	delete(f, "Protocol")
+	delete(f, "NetworkInfo")
 	delete(f, "UserKafkaMeta")
 	if len(f) > 0 {
 		return tcerr.NewTencentCloudSDKError("ClientError.BuildRequestError", "CheckRechargeKafkaServerRequest has unknown keys!", "")
@@ -1018,20 +1108,7 @@ func (r *CheckRechargeKafkaServerRequest) FromJsonString(s string) error {
 
 // Predefined struct for user
 type CheckRechargeKafkaServerResponseParams struct {
-	// Kafka集群可访问状态。
-	// 
-	// - 0：可正常访问 
-	// - -1：broker 连接失败
-	// - -2：sasl 鉴权失败
-	// - -3：ckafka 角色未授权
-	// - -4：topic 列表不存在
-	// - -5：topic 内暂无数据
-	// - -6：用户没有 ckafka 权限
-	// - -7：消费组已经存在
-	// - -8：kafka 实例不存在或已销毁
-	// - -9：Broker 列表为空
-	// - -10：Broker 地址格式不正确
-	// - -11：Broker 端口非整型
+	// <p>Kafka集群可访问状态。</p><ul><li>0：可正常访问 </li><li>-1：broker 连接失败</li><li>-2：sasl 鉴权失败</li><li>-3：ckafka 角色未授权</li><li>-4：topic 列表不存在</li><li>-5：topic 内暂无数据</li><li>-6：用户没有 ckafka 权限</li><li>-7：消费组已经存在</li><li>-8：kafka 实例不存在或已销毁</li><li>-9：Broker 列表为空</li><li>-10：Broker 地址格式不正确</li><li>-11：Broker 端口非整型</li></ul>
 	Status *int64 `json:"Status,omitnil,omitempty" name:"Status"`
 
 	// 唯一请求 ID，由服务端生成，每次请求都会返回（若请求因其他原因未能抵达服务端，则该次请求不会获得 RequestId）。定位问题时需要提供该次请求的 RequestId。
@@ -1187,6 +1264,9 @@ type CloudProductLogTaskInfo struct {
 
 	// <p>投递任务关联logset的标签信息</p>
 	LogsetTags []*Tag `json:"LogsetTags,omitnil,omitempty" name:"LogsetTags"`
+
+	// <p>应用id</p>
+	ApplicationId *string `json:"ApplicationId,omitnil,omitempty" name:"ApplicationId"`
 }
 
 type CollectConfig struct {
@@ -1648,6 +1728,9 @@ type ConsumerContent struct {
 
 	// <p>投递Json格式。</p><p>枚举值：</p><ul><li>0： 转义。示例：<br>日志原文：<code>{&quot;a&quot;:&quot;aa&quot;, &quot;b&quot;:{&quot;b1&quot;:&quot;b1b1&quot;, &quot;c1&quot;:&quot;c1c1&quot;}}</code><br>投递到Ckafka：<code>{&quot;a&quot;:&quot;aa&quot;,&quot;b&quot;:&quot;{\&quot;b1\&quot;:\&quot;b1b1\&quot;, \&quot;c1\&quot;:\&quot;c1c1\&quot;}&quot;}</code></li><li>1： 和原始日志一致，不转义。示例：<br>日志原文：<code>{&quot;a&quot;:&quot;aa&quot;, &quot;b&quot;:{&quot;b1&quot;:&quot;b1b1&quot;, &quot;c1&quot;:&quot;c1c1&quot;}}</code><br>投递到Ckafka：<code>{&quot;a&quot;:&quot;aa&quot;, &quot;b&quot;:{&quot;b1&quot;:&quot;b1b1&quot;, &quot;c1&quot;:&quot;c1c1&quot;}}</code></li></ul>
 	JsonType *int64 `json:"JsonType,omitnil,omitempty" name:"JsonType"`
+
+	// <p>数值类型自动转换开关</p><p>枚举值：</p><ul><li>true： JSON 结构中第一层级的 value 中的数字字符串（如 &quot;123&quot; ）会被自动转换为数值类型（int / float）。</li><li>false： JSON 结构中第一层级的 value 中的数字字符串（如 &quot;123&quot; ）为字符串。</li></ul><p>默认值：false</p>
+	AutoConvertNumber *bool `json:"AutoConvertNumber,omitnil,omitempty" name:"AutoConvertNumber"`
 }
 
 type ConsumerGroup struct {
@@ -1684,47 +1767,50 @@ type ConsumerGroupInfo struct {
 }
 
 type ConsumerInfo struct {
-	// 投递规则ID
+	// <p>投递规则ID</p>
 	ConsumerId *string `json:"ConsumerId,omitnil,omitempty" name:"ConsumerId"`
 
-	// 日志主题ID
+	// <p>日志主题ID</p>
 	TopicId *string `json:"TopicId,omitnil,omitempty" name:"TopicId"`
 
-	// 投递任务是否生效
+	// <p>投递任务是否生效</p>
 	Effective *bool `json:"Effective,omitnil,omitempty" name:"Effective"`
 
-	// CKafka的描述
+	// <p>CKafka的描述</p>
 	Ckafka *Ckafka `json:"Ckafka,omitnil,omitempty" name:"Ckafka"`
 
-	// 是否投递日志的元数据信息
+	// <p>是否投递日志的元数据信息</p>
 	NeedContent *bool `json:"NeedContent,omitnil,omitempty" name:"NeedContent"`
 
-	// 如果需要投递元数据信息，元数据信息的描述
+	// <p>如果需要投递元数据信息，元数据信息的描述</p>
 	// 注意：此字段可能返回 null，表示取不到有效值。
 	Content *ConsumerContent `json:"Content,omitnil,omitempty" name:"Content"`
 
-	// 压缩方式[0:NONE；2:SNAPPY；3:LZ4]
+	// <p>压缩方式[0:NONE；2:SNAPPY；3:LZ4]</p>
 	// 注意：此字段可能返回 null，表示取不到有效值。
 	Compression *int64 `json:"Compression,omitnil,omitempty" name:"Compression"`
 
-	// 投递任务创建毫秒时间戳
+	// <p>投递任务创建毫秒时间戳</p>
 	// 注意：此字段可能返回 null，表示取不到有效值。
 	CreateTime *uint64 `json:"CreateTime,omitnil,omitempty" name:"CreateTime"`
 
-	// 角色访问描述名 [创建角色](https://cloud.tencent.com/document/product/598/19381)	
+	// <p>角色访问描述名 <a href="https://cloud.tencent.com/document/product/598/19381">创建角色</a></p>
 	// 注意：此字段可能返回 null，表示取不到有效值。
 	RoleArn *string `json:"RoleArn,omitnil,omitempty" name:"RoleArn"`
 
-	// 外部ID
+	// <p>外部ID</p>
 	// 注意：此字段可能返回 null，表示取不到有效值。
 	ExternalId *string `json:"ExternalId,omitnil,omitempty" name:"ExternalId"`
 
-	// 任务运行状态。支持`0`,`1`,`2` - `0`: 停止 - `1`: 运行中 - `2`: 异常	
+	// <p>任务运行状态。支持<code>0</code>,<code>1</code>,<code>2</code> - <code>0</code>: 停止 - <code>1</code>: 运行中 - <code>2</code>: 异常</p>
 	// 注意：此字段可能返回 null，表示取不到有效值。
 	TaskStatus *uint64 `json:"TaskStatus,omitnil,omitempty" name:"TaskStatus"`
 
-	// 高级配置
+	// <p>高级配置</p>
 	AdvancedConfig *AdvancedConsumerConfiguration `json:"AdvancedConfig,omitnil,omitempty" name:"AdvancedConfig"`
+
+	// <p>日志预过滤-数据写入 ckafka 的原始数据进行预过滤处理</p>
+	DSLFilter *string `json:"DSLFilter,omitnil,omitempty" name:"DSLFilter"`
 }
 
 type ContainerFileInfo struct {
@@ -2380,6 +2466,98 @@ func (r *CreateAlarmShieldResponse) ToJsonString() string {
 // FromJsonString It is highly **NOT** recommended to use this function
 // because it has no param check, nor strict type check
 func (r *CreateAlarmShieldResponse) FromJsonString(s string) error {
+	return json.Unmarshal([]byte(s), &r)
+}
+
+// Predefined struct for user
+type CreateCLSDeliverTaskRequestParams struct {
+	// <p>任务名称</p><p>参数格式：<code>^[a-zA-Z0-9_-]{1,64}$</code></p>
+	TaskName *string `json:"TaskName,omitnil,omitempty" name:"TaskName"`
+
+	// <p>源主题信息</p>
+	SourceTopicConfig *SourceTopicConfig `json:"SourceTopicConfig,omitnil,omitempty" name:"SourceTopicConfig"`
+
+	// <p>目标主题信息</p>
+	TargetTopicConfig *TargetTopicConfig `json:"TargetTopicConfig,omitnil,omitempty" name:"TargetTopicConfig"`
+
+	// <p>投递规则</p>
+	DeliverRule *DeliverRule `json:"DeliverRule,omitnil,omitempty" name:"DeliverRule"`
+
+	// <p>合规承诺。</p><p>枚举值：</p><ul><li>1： 同意数据跨域传输条款</li></ul>
+	Compliance *uint64 `json:"Compliance,omitnil,omitempty" name:"Compliance"`
+
+	// <p>是否开启投递服务日志。</p><p>枚举值：</p><ul><li>1： 关闭</li><li>2： 开启</li></ul><p>默认值：2</p>
+	HasServicesLog *uint64 `json:"HasServicesLog,omitnil,omitempty" name:"HasServicesLog"`
+}
+
+type CreateCLSDeliverTaskRequest struct {
+	*tchttp.BaseRequest
+	
+	// <p>任务名称</p><p>参数格式：<code>^[a-zA-Z0-9_-]{1,64}$</code></p>
+	TaskName *string `json:"TaskName,omitnil,omitempty" name:"TaskName"`
+
+	// <p>源主题信息</p>
+	SourceTopicConfig *SourceTopicConfig `json:"SourceTopicConfig,omitnil,omitempty" name:"SourceTopicConfig"`
+
+	// <p>目标主题信息</p>
+	TargetTopicConfig *TargetTopicConfig `json:"TargetTopicConfig,omitnil,omitempty" name:"TargetTopicConfig"`
+
+	// <p>投递规则</p>
+	DeliverRule *DeliverRule `json:"DeliverRule,omitnil,omitempty" name:"DeliverRule"`
+
+	// <p>合规承诺。</p><p>枚举值：</p><ul><li>1： 同意数据跨域传输条款</li></ul>
+	Compliance *uint64 `json:"Compliance,omitnil,omitempty" name:"Compliance"`
+
+	// <p>是否开启投递服务日志。</p><p>枚举值：</p><ul><li>1： 关闭</li><li>2： 开启</li></ul><p>默认值：2</p>
+	HasServicesLog *uint64 `json:"HasServicesLog,omitnil,omitempty" name:"HasServicesLog"`
+}
+
+func (r *CreateCLSDeliverTaskRequest) ToJsonString() string {
+    b, _ := json.Marshal(r)
+    return string(b)
+}
+
+// FromJsonString It is highly **NOT** recommended to use this function
+// because it has no param check, nor strict type check
+func (r *CreateCLSDeliverTaskRequest) FromJsonString(s string) error {
+	f := make(map[string]interface{})
+	if err := json.Unmarshal([]byte(s), &f); err != nil {
+		return err
+	}
+	delete(f, "TaskName")
+	delete(f, "SourceTopicConfig")
+	delete(f, "TargetTopicConfig")
+	delete(f, "DeliverRule")
+	delete(f, "Compliance")
+	delete(f, "HasServicesLog")
+	if len(f) > 0 {
+		return tcerr.NewTencentCloudSDKError("ClientError.BuildRequestError", "CreateCLSDeliverTaskRequest has unknown keys!", "")
+	}
+	return json.Unmarshal([]byte(s), &r)
+}
+
+// Predefined struct for user
+type CreateCLSDeliverTaskResponseParams struct {
+	// <p>任务id</p>
+	TaskId *string `json:"TaskId,omitnil,omitempty" name:"TaskId"`
+
+	// 唯一请求 ID，由服务端生成，每次请求都会返回（若请求因其他原因未能抵达服务端，则该次请求不会获得 RequestId）。定位问题时需要提供该次请求的 RequestId。
+	RequestId *string `json:"RequestId,omitnil,omitempty" name:"RequestId"`
+}
+
+type CreateCLSDeliverTaskResponse struct {
+	*tchttp.BaseResponse
+	Response *CreateCLSDeliverTaskResponseParams `json:"Response"`
+}
+
+func (r *CreateCLSDeliverTaskResponse) ToJsonString() string {
+    b, _ := json.Marshal(r)
+    return string(b)
+}
+
+// FromJsonString It is highly **NOT** recommended to use this function
+// because it has no param check, nor strict type check
+func (r *CreateCLSDeliverTaskResponse) FromJsonString(s string) error {
 	return json.Unmarshal([]byte(s), &r)
 }
 
@@ -3173,65 +3351,63 @@ func (r *CreateConsumerGroupResponse) FromJsonString(s string) error {
 
 // Predefined struct for user
 type CreateConsumerRequestParams struct {
-	// 投递任务绑定的日志主题Id。
-	// - 通过 [获取日志主题列表](https://cloud.tencent.com/document/product/614/56454) 获取日志主题Id。
-	// - 通过 [创建日志主题](https://cloud.tencent.com/document/product/614/56456) 获取日志主题Id。
+	// <p>投递任务绑定的日志主题Id。</p><ul><li>通过 <a href="https://cloud.tencent.com/document/product/614/56454">获取日志主题列表</a> 获取日志主题Id。</li><li>通过 <a href="https://cloud.tencent.com/document/product/614/56456">创建日志主题</a> 获取日志主题Id。</li></ul>
 	TopicId *string `json:"TopicId,omitnil,omitempty" name:"TopicId"`
 
-	// 是否投递日志的元数据信息，默认为 true。
-	// 当NeedContent为true时：字段Content有效。
-	// 当NeedContent为false时：字段Content无效。
+	// <p>是否投递日志的元数据信息，默认为 true。<br>当NeedContent为true时：字段Content有效。<br>当NeedContent为false时：字段Content无效。</p>
 	NeedContent *bool `json:"NeedContent,omitnil,omitempty" name:"NeedContent"`
 
-	// 如果需要投递元数据信息，元数据信息的描述
+	// <p>如果需要投递元数据信息，元数据信息的描述</p>
 	Content *ConsumerContent `json:"Content,omitnil,omitempty" name:"Content"`
 
-	// CKafka的描述
+	// <p>CKafka的描述</p>
 	Ckafka *Ckafka `json:"Ckafka,omitnil,omitempty" name:"Ckafka"`
 
-	// 投递时压缩方式，取值0，2，3。[0：NONE；2：SNAPPY；3：LZ4]
+	// <p>投递时压缩方式，取值0，2，3。[0：NONE；2：SNAPPY；3：LZ4]</p>
 	Compression *int64 `json:"Compression,omitnil,omitempty" name:"Compression"`
 
-	// 角色访问描述名 [创建角色](https://cloud.tencent.com/document/product/598/19381)
+	// <p>角色访问描述名 <a href="https://cloud.tencent.com/document/product/598/19381">创建角色</a></p>
 	RoleArn *string `json:"RoleArn,omitnil,omitempty" name:"RoleArn"`
 
-	// 外部ID
+	// <p>外部ID</p>
 	ExternalId *string `json:"ExternalId,omitnil,omitempty" name:"ExternalId"`
 
-	// 高级配置项
+	// <p>高级配置项</p>
 	AdvancedConfig *AdvancedConsumerConfiguration `json:"AdvancedConfig,omitnil,omitempty" name:"AdvancedConfig"`
+
+	// <p>日志预过滤-数据写入 ckafka 的原始数据进行预过滤处理</p>
+	DSLFilter *string `json:"DSLFilter,omitnil,omitempty" name:"DSLFilter"`
 }
 
 type CreateConsumerRequest struct {
 	*tchttp.BaseRequest
 	
-	// 投递任务绑定的日志主题Id。
-	// - 通过 [获取日志主题列表](https://cloud.tencent.com/document/product/614/56454) 获取日志主题Id。
-	// - 通过 [创建日志主题](https://cloud.tencent.com/document/product/614/56456) 获取日志主题Id。
+	// <p>投递任务绑定的日志主题Id。</p><ul><li>通过 <a href="https://cloud.tencent.com/document/product/614/56454">获取日志主题列表</a> 获取日志主题Id。</li><li>通过 <a href="https://cloud.tencent.com/document/product/614/56456">创建日志主题</a> 获取日志主题Id。</li></ul>
 	TopicId *string `json:"TopicId,omitnil,omitempty" name:"TopicId"`
 
-	// 是否投递日志的元数据信息，默认为 true。
-	// 当NeedContent为true时：字段Content有效。
-	// 当NeedContent为false时：字段Content无效。
+	// <p>是否投递日志的元数据信息，默认为 true。<br>当NeedContent为true时：字段Content有效。<br>当NeedContent为false时：字段Content无效。</p>
 	NeedContent *bool `json:"NeedContent,omitnil,omitempty" name:"NeedContent"`
 
-	// 如果需要投递元数据信息，元数据信息的描述
+	// <p>如果需要投递元数据信息，元数据信息的描述</p>
 	Content *ConsumerContent `json:"Content,omitnil,omitempty" name:"Content"`
 
-	// CKafka的描述
+	// <p>CKafka的描述</p>
 	Ckafka *Ckafka `json:"Ckafka,omitnil,omitempty" name:"Ckafka"`
 
-	// 投递时压缩方式，取值0，2，3。[0：NONE；2：SNAPPY；3：LZ4]
+	// <p>投递时压缩方式，取值0，2，3。[0：NONE；2：SNAPPY；3：LZ4]</p>
 	Compression *int64 `json:"Compression,omitnil,omitempty" name:"Compression"`
 
-	// 角色访问描述名 [创建角色](https://cloud.tencent.com/document/product/598/19381)
+	// <p>角色访问描述名 <a href="https://cloud.tencent.com/document/product/598/19381">创建角色</a></p>
 	RoleArn *string `json:"RoleArn,omitnil,omitempty" name:"RoleArn"`
 
-	// 外部ID
+	// <p>外部ID</p>
 	ExternalId *string `json:"ExternalId,omitnil,omitempty" name:"ExternalId"`
 
-	// 高级配置项
+	// <p>高级配置项</p>
 	AdvancedConfig *AdvancedConsumerConfiguration `json:"AdvancedConfig,omitnil,omitempty" name:"AdvancedConfig"`
+
+	// <p>日志预过滤-数据写入 ckafka 的原始数据进行预过滤处理</p>
+	DSLFilter *string `json:"DSLFilter,omitnil,omitempty" name:"DSLFilter"`
 }
 
 func (r *CreateConsumerRequest) ToJsonString() string {
@@ -3254,6 +3430,7 @@ func (r *CreateConsumerRequest) FromJsonString(s string) error {
 	delete(f, "RoleArn")
 	delete(f, "ExternalId")
 	delete(f, "AdvancedConfig")
+	delete(f, "DSLFilter")
 	if len(f) > 0 {
 		return tcerr.NewTencentCloudSDKError("ClientError.BuildRequestError", "CreateConsumerRequest has unknown keys!", "")
 	}
@@ -4473,90 +4650,86 @@ func (r *CreateIndexResponse) FromJsonString(s string) error {
 
 // Predefined struct for user
 type CreateKafkaRechargeRequestParams struct {
-	// 导入CLS目标TopicId。
-	// - 通过 [获取日志主题列表](https://cloud.tencent.com/document/product/614/56454) 获取日志主题Id。
-	// - 通过 [创建日志主题](https://cloud.tencent.com/document/product/614/56456) 获取日志主题Id。
+	// <p>导入CLS目标TopicId。</p><ul><li>通过 <a href="https://cloud.tencent.com/document/product/614/56454">获取日志主题列表</a> 获取日志主题Id。</li><li>通过 <a href="https://cloud.tencent.com/document/product/614/56456">创建日志主题</a> 获取日志主题Id。</li></ul>
 	TopicId *string `json:"TopicId,omitnil,omitempty" name:"TopicId"`
 
-	// Kafka导入配置名称
+	// <p>Kafka导入配置名称</p>
 	Name *string `json:"Name,omitnil,omitempty" name:"Name"`
 
-	// 导入Kafka类型，0: 腾讯云CKafka，1: 用户自建Kafka
+	// <p>导入Kafka类型，0: 腾讯云CKafka，1: 用户自建Kafka</p>
 	KafkaType *uint64 `json:"KafkaType,omitnil,omitempty" name:"KafkaType"`
 
-	// 用户需要导入的Kafka相关topic列表，多个topic之间使用半角逗号隔开
+	// <p>用户需要导入的Kafka相关topic列表，多个topic之间使用半角逗号隔开</p>
 	UserKafkaTopics *string `json:"UserKafkaTopics,omitnil,omitempty" name:"UserKafkaTopics"`
 
-	// 导入数据位置，-2:最早（默认），-1：最晚
+	// <p>导入数据位置，-2:最早（默认），-1：最晚</p>
 	Offset *int64 `json:"Offset,omitnil,omitempty" name:"Offset"`
 
-	// 日志导入规则。
+	// <p>日志导入规则。</p>
 	LogRechargeRule *LogRechargeRuleInfo `json:"LogRechargeRule,omitnil,omitempty" name:"LogRechargeRule"`
 
-	// 腾讯云CKafka实例ID，KafkaType为0时必填。
-	// - 通过 [获取实例列表信息](https://cloud.tencent.com/document/product/597/40835) 获取实例id。
+	// <p>腾讯云CKafka实例ID，KafkaType为0时必填。</p><ul><li>通过 <a href="https://cloud.tencent.com/document/product/597/40835">获取实例列表信息</a> 获取实例id。</li></ul>
 	KafkaInstance *string `json:"KafkaInstance,omitnil,omitempty" name:"KafkaInstance"`
 
-	// 服务地址，KafkaType为1时必填。
+	// <p>服务地址，KafkaType为1时必填。</p>
 	ServerAddr *string `json:"ServerAddr,omitnil,omitempty" name:"ServerAddr"`
 
-	// ServerAddr是否为加密连接，KafkaType为1时必填。
+	// <p>ServerAddr是否为加密连接，KafkaType为1时必填。</p>
 	IsEncryptionAddr *bool `json:"IsEncryptionAddr,omitnil,omitempty" name:"IsEncryptionAddr"`
 
-	// 加密访问协议。
-	// KafkaType为1并且IsEncryptionAddr为true时Protocol必填。
+	// <p>加密访问协议。<br>KafkaType为1并且IsEncryptionAddr为true时Protocol必填。</p>
 	Protocol *KafkaProtocolInfo `json:"Protocol,omitnil,omitempty" name:"Protocol"`
 
-	// 用户Kafka消费组名称。
-	// - 消费组是 Kafka 提供的可扩展且具有容错性的消费者机制，一个消费组中存在多个消费者，组内的所有消费者共同消费订阅 Topic 中的消息。一个消费者可同时消费多个 Partition，但一个 Partition 只能被消费组内的一个消费者消费。
+	// <p>用户Kafka消费组名称。</p><ul><li>消费组是 Kafka 提供的可扩展且具有容错性的消费者机制，一个消费组中存在多个消费者，组内的所有消费者共同消费订阅 Topic 中的消息。一个消费者可同时消费多个 Partition，但一个 Partition 只能被消费组内的一个消费者消费。</li></ul>
 	ConsumerGroupName *string `json:"ConsumerGroupName,omitnil,omitempty" name:"ConsumerGroupName"`
 
-	// 用户kafka拓展信息
+	// <p>网络信息参数</p>
+	NetworkInfo *NetworkInfo `json:"NetworkInfo,omitnil,omitempty" name:"NetworkInfo"`
+
+	// <p>用户kafka拓展信息</p>
 	UserKafkaMeta *UserKafkaMeta `json:"UserKafkaMeta,omitnil,omitempty" name:"UserKafkaMeta"`
 }
 
 type CreateKafkaRechargeRequest struct {
 	*tchttp.BaseRequest
 	
-	// 导入CLS目标TopicId。
-	// - 通过 [获取日志主题列表](https://cloud.tencent.com/document/product/614/56454) 获取日志主题Id。
-	// - 通过 [创建日志主题](https://cloud.tencent.com/document/product/614/56456) 获取日志主题Id。
+	// <p>导入CLS目标TopicId。</p><ul><li>通过 <a href="https://cloud.tencent.com/document/product/614/56454">获取日志主题列表</a> 获取日志主题Id。</li><li>通过 <a href="https://cloud.tencent.com/document/product/614/56456">创建日志主题</a> 获取日志主题Id。</li></ul>
 	TopicId *string `json:"TopicId,omitnil,omitempty" name:"TopicId"`
 
-	// Kafka导入配置名称
+	// <p>Kafka导入配置名称</p>
 	Name *string `json:"Name,omitnil,omitempty" name:"Name"`
 
-	// 导入Kafka类型，0: 腾讯云CKafka，1: 用户自建Kafka
+	// <p>导入Kafka类型，0: 腾讯云CKafka，1: 用户自建Kafka</p>
 	KafkaType *uint64 `json:"KafkaType,omitnil,omitempty" name:"KafkaType"`
 
-	// 用户需要导入的Kafka相关topic列表，多个topic之间使用半角逗号隔开
+	// <p>用户需要导入的Kafka相关topic列表，多个topic之间使用半角逗号隔开</p>
 	UserKafkaTopics *string `json:"UserKafkaTopics,omitnil,omitempty" name:"UserKafkaTopics"`
 
-	// 导入数据位置，-2:最早（默认），-1：最晚
+	// <p>导入数据位置，-2:最早（默认），-1：最晚</p>
 	Offset *int64 `json:"Offset,omitnil,omitempty" name:"Offset"`
 
-	// 日志导入规则。
+	// <p>日志导入规则。</p>
 	LogRechargeRule *LogRechargeRuleInfo `json:"LogRechargeRule,omitnil,omitempty" name:"LogRechargeRule"`
 
-	// 腾讯云CKafka实例ID，KafkaType为0时必填。
-	// - 通过 [获取实例列表信息](https://cloud.tencent.com/document/product/597/40835) 获取实例id。
+	// <p>腾讯云CKafka实例ID，KafkaType为0时必填。</p><ul><li>通过 <a href="https://cloud.tencent.com/document/product/597/40835">获取实例列表信息</a> 获取实例id。</li></ul>
 	KafkaInstance *string `json:"KafkaInstance,omitnil,omitempty" name:"KafkaInstance"`
 
-	// 服务地址，KafkaType为1时必填。
+	// <p>服务地址，KafkaType为1时必填。</p>
 	ServerAddr *string `json:"ServerAddr,omitnil,omitempty" name:"ServerAddr"`
 
-	// ServerAddr是否为加密连接，KafkaType为1时必填。
+	// <p>ServerAddr是否为加密连接，KafkaType为1时必填。</p>
 	IsEncryptionAddr *bool `json:"IsEncryptionAddr,omitnil,omitempty" name:"IsEncryptionAddr"`
 
-	// 加密访问协议。
-	// KafkaType为1并且IsEncryptionAddr为true时Protocol必填。
+	// <p>加密访问协议。<br>KafkaType为1并且IsEncryptionAddr为true时Protocol必填。</p>
 	Protocol *KafkaProtocolInfo `json:"Protocol,omitnil,omitempty" name:"Protocol"`
 
-	// 用户Kafka消费组名称。
-	// - 消费组是 Kafka 提供的可扩展且具有容错性的消费者机制，一个消费组中存在多个消费者，组内的所有消费者共同消费订阅 Topic 中的消息。一个消费者可同时消费多个 Partition，但一个 Partition 只能被消费组内的一个消费者消费。
+	// <p>用户Kafka消费组名称。</p><ul><li>消费组是 Kafka 提供的可扩展且具有容错性的消费者机制，一个消费组中存在多个消费者，组内的所有消费者共同消费订阅 Topic 中的消息。一个消费者可同时消费多个 Partition，但一个 Partition 只能被消费组内的一个消费者消费。</li></ul>
 	ConsumerGroupName *string `json:"ConsumerGroupName,omitnil,omitempty" name:"ConsumerGroupName"`
 
-	// 用户kafka拓展信息
+	// <p>网络信息参数</p>
+	NetworkInfo *NetworkInfo `json:"NetworkInfo,omitnil,omitempty" name:"NetworkInfo"`
+
+	// <p>用户kafka拓展信息</p>
 	UserKafkaMeta *UserKafkaMeta `json:"UserKafkaMeta,omitnil,omitempty" name:"UserKafkaMeta"`
 }
 
@@ -4583,6 +4756,7 @@ func (r *CreateKafkaRechargeRequest) FromJsonString(s string) error {
 	delete(f, "IsEncryptionAddr")
 	delete(f, "Protocol")
 	delete(f, "ConsumerGroupName")
+	delete(f, "NetworkInfo")
 	delete(f, "UserKafkaMeta")
 	if len(f) > 0 {
 		return tcerr.NewTencentCloudSDKError("ClientError.BuildRequestError", "CreateKafkaRechargeRequest has unknown keys!", "")
@@ -4592,7 +4766,7 @@ func (r *CreateKafkaRechargeRequest) FromJsonString(s string) error {
 
 // Predefined struct for user
 type CreateKafkaRechargeResponseParams struct {
-	// Kafka导入配置ID
+	// <p>Kafka导入配置ID</p>
 	Id *string `json:"Id,omitnil,omitempty" name:"Id"`
 
 	// 唯一请求 ID，由服务端生成，每次请求都会返回（若请求因其他原因未能抵达服务端，则该次请求不会获得 RequestId）。定位问题时需要提供该次请求的 RequestId。
@@ -5673,6 +5847,179 @@ func (r *CreateRemoteWriteTaskResponse) ToJsonString() string {
 // FromJsonString It is highly **NOT** recommended to use this function
 // because it has no param check, nor strict type check
 func (r *CreateRemoteWriteTaskResponse) FromJsonString(s string) error {
+	return json.Unmarshal([]byte(s), &r)
+}
+
+// Predefined struct for user
+type CreateResourceGraphProductIngestTaskRequestParams struct {
+	// <p>资源图谱id</p>
+	ResourceGraphId *string `json:"ResourceGraphId,omitnil,omitempty" name:"ResourceGraphId"`
+
+	// <p>接入任务名称</p>
+	Name *string `json:"Name,omitnil,omitempty" name:"Name"`
+
+	// <p>待接入的云产品；支持tke、cdb、mongodb、redis</p>
+	CloudProduct *string `json:"CloudProduct,omitnil,omitempty" name:"CloudProduct"`
+
+	// <p>实例选择方案</p><p>枚举值：</p><ul><li>0： 所有示例</li><li>1： 按标签选择</li><li>2： 手动选择</li></ul>
+	SelectionMode *uint64 `json:"SelectionMode,omitnil,omitempty" name:"SelectionMode"`
+
+	// <p>实例id。当选择方式使用“指定实例”时，需要填写</p>
+	InstanceIds []*string `json:"InstanceIds,omitnil,omitempty" name:"InstanceIds"`
+
+	// <p>eBPF 采集规则</p>
+	EBPFCollectRule *EBPFCollectRule `json:"EBPFCollectRule,omitnil,omitempty" name:"EBPFCollectRule"`
+
+	// <p>标签。当实例选择方案使用“按标签选择”时，需要填写</p>
+	Tags []*Tag `json:"Tags,omitnil,omitempty" name:"Tags"`
+}
+
+type CreateResourceGraphProductIngestTaskRequest struct {
+	*tchttp.BaseRequest
+	
+	// <p>资源图谱id</p>
+	ResourceGraphId *string `json:"ResourceGraphId,omitnil,omitempty" name:"ResourceGraphId"`
+
+	// <p>接入任务名称</p>
+	Name *string `json:"Name,omitnil,omitempty" name:"Name"`
+
+	// <p>待接入的云产品；支持tke、cdb、mongodb、redis</p>
+	CloudProduct *string `json:"CloudProduct,omitnil,omitempty" name:"CloudProduct"`
+
+	// <p>实例选择方案</p><p>枚举值：</p><ul><li>0： 所有示例</li><li>1： 按标签选择</li><li>2： 手动选择</li></ul>
+	SelectionMode *uint64 `json:"SelectionMode,omitnil,omitempty" name:"SelectionMode"`
+
+	// <p>实例id。当选择方式使用“指定实例”时，需要填写</p>
+	InstanceIds []*string `json:"InstanceIds,omitnil,omitempty" name:"InstanceIds"`
+
+	// <p>eBPF 采集规则</p>
+	EBPFCollectRule *EBPFCollectRule `json:"EBPFCollectRule,omitnil,omitempty" name:"EBPFCollectRule"`
+
+	// <p>标签。当实例选择方案使用“按标签选择”时，需要填写</p>
+	Tags []*Tag `json:"Tags,omitnil,omitempty" name:"Tags"`
+}
+
+func (r *CreateResourceGraphProductIngestTaskRequest) ToJsonString() string {
+    b, _ := json.Marshal(r)
+    return string(b)
+}
+
+// FromJsonString It is highly **NOT** recommended to use this function
+// because it has no param check, nor strict type check
+func (r *CreateResourceGraphProductIngestTaskRequest) FromJsonString(s string) error {
+	f := make(map[string]interface{})
+	if err := json.Unmarshal([]byte(s), &f); err != nil {
+		return err
+	}
+	delete(f, "ResourceGraphId")
+	delete(f, "Name")
+	delete(f, "CloudProduct")
+	delete(f, "SelectionMode")
+	delete(f, "InstanceIds")
+	delete(f, "EBPFCollectRule")
+	delete(f, "Tags")
+	if len(f) > 0 {
+		return tcerr.NewTencentCloudSDKError("ClientError.BuildRequestError", "CreateResourceGraphProductIngestTaskRequest has unknown keys!", "")
+	}
+	return json.Unmarshal([]byte(s), &r)
+}
+
+// Predefined struct for user
+type CreateResourceGraphProductIngestTaskResponseParams struct {
+	// <p>接入任务id</p>
+	TaskId *string `json:"TaskId,omitnil,omitempty" name:"TaskId"`
+
+	// <p>接入任务状态</p><p>枚举值：</p><ul><li>0： 初始化中</li><li>1： 正常</li><li>2： 接入失败</li><li>3： 删除中</li><li>4： 已删除</li><li>5： 删除失败</li><li>6： 修改中</li><li>7： 修改失败</li></ul>
+	Status *int64 `json:"Status,omitnil,omitempty" name:"Status"`
+
+	// 唯一请求 ID，由服务端生成，每次请求都会返回（若请求因其他原因未能抵达服务端，则该次请求不会获得 RequestId）。定位问题时需要提供该次请求的 RequestId。
+	RequestId *string `json:"RequestId,omitnil,omitempty" name:"RequestId"`
+}
+
+type CreateResourceGraphProductIngestTaskResponse struct {
+	*tchttp.BaseResponse
+	Response *CreateResourceGraphProductIngestTaskResponseParams `json:"Response"`
+}
+
+func (r *CreateResourceGraphProductIngestTaskResponse) ToJsonString() string {
+    b, _ := json.Marshal(r)
+    return string(b)
+}
+
+// FromJsonString It is highly **NOT** recommended to use this function
+// because it has no param check, nor strict type check
+func (r *CreateResourceGraphProductIngestTaskResponse) FromJsonString(s string) error {
+	return json.Unmarshal([]byte(s), &r)
+}
+
+// Predefined struct for user
+type CreateResourceGraphRequestParams struct {
+	// <p>资源图谱名称</p>
+	Name *string `json:"Name,omitnil,omitempty" name:"Name"`
+
+	// <p>资源图谱描述</p>
+	Description *string `json:"Description,omitnil,omitempty" name:"Description"`
+
+	// <p>标签描述列表，通过指定该参数可以同时绑定标签到相应的主题。最大支持10个标签键值对，同一个资源只能绑定到同一个标签键下。</p>
+	Tags []*Tag `json:"Tags,omitnil,omitempty" name:"Tags"`
+}
+
+type CreateResourceGraphRequest struct {
+	*tchttp.BaseRequest
+	
+	// <p>资源图谱名称</p>
+	Name *string `json:"Name,omitnil,omitempty" name:"Name"`
+
+	// <p>资源图谱描述</p>
+	Description *string `json:"Description,omitnil,omitempty" name:"Description"`
+
+	// <p>标签描述列表，通过指定该参数可以同时绑定标签到相应的主题。最大支持10个标签键值对，同一个资源只能绑定到同一个标签键下。</p>
+	Tags []*Tag `json:"Tags,omitnil,omitempty" name:"Tags"`
+}
+
+func (r *CreateResourceGraphRequest) ToJsonString() string {
+    b, _ := json.Marshal(r)
+    return string(b)
+}
+
+// FromJsonString It is highly **NOT** recommended to use this function
+// because it has no param check, nor strict type check
+func (r *CreateResourceGraphRequest) FromJsonString(s string) error {
+	f := make(map[string]interface{})
+	if err := json.Unmarshal([]byte(s), &f); err != nil {
+		return err
+	}
+	delete(f, "Name")
+	delete(f, "Description")
+	delete(f, "Tags")
+	if len(f) > 0 {
+		return tcerr.NewTencentCloudSDKError("ClientError.BuildRequestError", "CreateResourceGraphRequest has unknown keys!", "")
+	}
+	return json.Unmarshal([]byte(s), &r)
+}
+
+// Predefined struct for user
+type CreateResourceGraphResponseParams struct {
+	// <p>资源图谱id</p>
+	ResourceGraphId *string `json:"ResourceGraphId,omitnil,omitempty" name:"ResourceGraphId"`
+
+	// 唯一请求 ID，由服务端生成，每次请求都会返回（若请求因其他原因未能抵达服务端，则该次请求不会获得 RequestId）。定位问题时需要提供该次请求的 RequestId。
+	RequestId *string `json:"RequestId,omitnil,omitempty" name:"RequestId"`
+}
+
+type CreateResourceGraphResponse struct {
+	*tchttp.BaseResponse
+	Response *CreateResourceGraphResponseParams `json:"Response"`
+}
+
+func (r *CreateResourceGraphResponse) ToJsonString() string {
+    b, _ := json.Marshal(r)
+    return string(b)
+}
+
+// FromJsonString It is highly **NOT** recommended to use this function
+// because it has no param check, nor strict type check
+func (r *CreateResourceGraphResponse) FromJsonString(s string) error {
 	return json.Unmarshal([]byte(s), &r)
 }
 
@@ -7232,6 +7579,60 @@ func (r *DeleteAlarmShieldResponse) ToJsonString() string {
 // FromJsonString It is highly **NOT** recommended to use this function
 // because it has no param check, nor strict type check
 func (r *DeleteAlarmShieldResponse) FromJsonString(s string) error {
+	return json.Unmarshal([]byte(s), &r)
+}
+
+// Predefined struct for user
+type DeleteCLSDeliverTaskRequestParams struct {
+	// <p>任务id</p>
+	TaskId *string `json:"TaskId,omitnil,omitempty" name:"TaskId"`
+}
+
+type DeleteCLSDeliverTaskRequest struct {
+	*tchttp.BaseRequest
+	
+	// <p>任务id</p>
+	TaskId *string `json:"TaskId,omitnil,omitempty" name:"TaskId"`
+}
+
+func (r *DeleteCLSDeliverTaskRequest) ToJsonString() string {
+    b, _ := json.Marshal(r)
+    return string(b)
+}
+
+// FromJsonString It is highly **NOT** recommended to use this function
+// because it has no param check, nor strict type check
+func (r *DeleteCLSDeliverTaskRequest) FromJsonString(s string) error {
+	f := make(map[string]interface{})
+	if err := json.Unmarshal([]byte(s), &f); err != nil {
+		return err
+	}
+	delete(f, "TaskId")
+	if len(f) > 0 {
+		return tcerr.NewTencentCloudSDKError("ClientError.BuildRequestError", "DeleteCLSDeliverTaskRequest has unknown keys!", "")
+	}
+	return json.Unmarshal([]byte(s), &r)
+}
+
+// Predefined struct for user
+type DeleteCLSDeliverTaskResponseParams struct {
+	// 唯一请求 ID，由服务端生成，每次请求都会返回（若请求因其他原因未能抵达服务端，则该次请求不会获得 RequestId）。定位问题时需要提供该次请求的 RequestId。
+	RequestId *string `json:"RequestId,omitnil,omitempty" name:"RequestId"`
+}
+
+type DeleteCLSDeliverTaskResponse struct {
+	*tchttp.BaseResponse
+	Response *DeleteCLSDeliverTaskResponseParams `json:"Response"`
+}
+
+func (r *DeleteCLSDeliverTaskResponse) ToJsonString() string {
+    b, _ := json.Marshal(r)
+    return string(b)
+}
+
+// FromJsonString It is highly **NOT** recommended to use this function
+// because it has no param check, nor strict type check
+func (r *DeleteCLSDeliverTaskResponse) FromJsonString(s string) error {
 	return json.Unmarshal([]byte(s), &r)
 }
 
@@ -9007,6 +9408,121 @@ func (r *DeleteRemoteWriteTaskResponse) FromJsonString(s string) error {
 }
 
 // Predefined struct for user
+type DeleteResourceGraphProductIngestTaskRequestParams struct {
+	// <p>资源图谱id</p>
+	ResourceGraphId *string `json:"ResourceGraphId,omitnil,omitempty" name:"ResourceGraphId"`
+
+	// <p>接入任务id</p>
+	TaskId *string `json:"TaskId,omitnil,omitempty" name:"TaskId"`
+}
+
+type DeleteResourceGraphProductIngestTaskRequest struct {
+	*tchttp.BaseRequest
+	
+	// <p>资源图谱id</p>
+	ResourceGraphId *string `json:"ResourceGraphId,omitnil,omitempty" name:"ResourceGraphId"`
+
+	// <p>接入任务id</p>
+	TaskId *string `json:"TaskId,omitnil,omitempty" name:"TaskId"`
+}
+
+func (r *DeleteResourceGraphProductIngestTaskRequest) ToJsonString() string {
+    b, _ := json.Marshal(r)
+    return string(b)
+}
+
+// FromJsonString It is highly **NOT** recommended to use this function
+// because it has no param check, nor strict type check
+func (r *DeleteResourceGraphProductIngestTaskRequest) FromJsonString(s string) error {
+	f := make(map[string]interface{})
+	if err := json.Unmarshal([]byte(s), &f); err != nil {
+		return err
+	}
+	delete(f, "ResourceGraphId")
+	delete(f, "TaskId")
+	if len(f) > 0 {
+		return tcerr.NewTencentCloudSDKError("ClientError.BuildRequestError", "DeleteResourceGraphProductIngestTaskRequest has unknown keys!", "")
+	}
+	return json.Unmarshal([]byte(s), &r)
+}
+
+// Predefined struct for user
+type DeleteResourceGraphProductIngestTaskResponseParams struct {
+	// 唯一请求 ID，由服务端生成，每次请求都会返回（若请求因其他原因未能抵达服务端，则该次请求不会获得 RequestId）。定位问题时需要提供该次请求的 RequestId。
+	RequestId *string `json:"RequestId,omitnil,omitempty" name:"RequestId"`
+}
+
+type DeleteResourceGraphProductIngestTaskResponse struct {
+	*tchttp.BaseResponse
+	Response *DeleteResourceGraphProductIngestTaskResponseParams `json:"Response"`
+}
+
+func (r *DeleteResourceGraphProductIngestTaskResponse) ToJsonString() string {
+    b, _ := json.Marshal(r)
+    return string(b)
+}
+
+// FromJsonString It is highly **NOT** recommended to use this function
+// because it has no param check, nor strict type check
+func (r *DeleteResourceGraphProductIngestTaskResponse) FromJsonString(s string) error {
+	return json.Unmarshal([]byte(s), &r)
+}
+
+// Predefined struct for user
+type DeleteResourceGraphRequestParams struct {
+	// <p>待删除的资源图谱id</p>
+	ResourceGraphId *string `json:"ResourceGraphId,omitnil,omitempty" name:"ResourceGraphId"`
+}
+
+type DeleteResourceGraphRequest struct {
+	*tchttp.BaseRequest
+	
+	// <p>待删除的资源图谱id</p>
+	ResourceGraphId *string `json:"ResourceGraphId,omitnil,omitempty" name:"ResourceGraphId"`
+}
+
+func (r *DeleteResourceGraphRequest) ToJsonString() string {
+    b, _ := json.Marshal(r)
+    return string(b)
+}
+
+// FromJsonString It is highly **NOT** recommended to use this function
+// because it has no param check, nor strict type check
+func (r *DeleteResourceGraphRequest) FromJsonString(s string) error {
+	f := make(map[string]interface{})
+	if err := json.Unmarshal([]byte(s), &f); err != nil {
+		return err
+	}
+	delete(f, "ResourceGraphId")
+	if len(f) > 0 {
+		return tcerr.NewTencentCloudSDKError("ClientError.BuildRequestError", "DeleteResourceGraphRequest has unknown keys!", "")
+	}
+	return json.Unmarshal([]byte(s), &r)
+}
+
+// Predefined struct for user
+type DeleteResourceGraphResponseParams struct {
+	// 唯一请求 ID，由服务端生成，每次请求都会返回（若请求因其他原因未能抵达服务端，则该次请求不会获得 RequestId）。定位问题时需要提供该次请求的 RequestId。
+	RequestId *string `json:"RequestId,omitnil,omitempty" name:"RequestId"`
+}
+
+type DeleteResourceGraphResponse struct {
+	*tchttp.BaseResponse
+	Response *DeleteResourceGraphResponseParams `json:"Response"`
+}
+
+func (r *DeleteResourceGraphResponse) ToJsonString() string {
+    b, _ := json.Marshal(r)
+    return string(b)
+}
+
+// FromJsonString It is highly **NOT** recommended to use this function
+// because it has no param check, nor strict type check
+func (r *DeleteResourceGraphResponse) FromJsonString(s string) error {
+	return json.Unmarshal([]byte(s), &r)
+}
+
+// Predefined struct for user
 type DeleteS3RechargeRequestParams struct {
 	// <p>导入任务Id</p>
 	TaskId *string `json:"TaskId,omitnil,omitempty" name:"TaskId"`
@@ -9431,6 +9947,11 @@ type DeliverConfig struct {
 	Scope *uint64 `json:"Scope,omitnil,omitempty" name:"Scope"`
 }
 
+type DeliverRule struct {
+	// <p>数据投递范围。</p><p>枚举值：</p><ul><li>1： 历史+新增数据</li><li>2： 自定义时间范围</li><li>3： 仅新增</li></ul><p>本次仅支持3新增数据。后续支持： 2自定义时间范围和1历史+新增数据</p>
+	DataScope *uint64 `json:"DataScope,omitnil,omitempty" name:"DataScope"`
+}
+
 type Delta struct {
 	// <p>角色</p><p>枚举值：</p><ul><li>user： 用户</li><li>assistant： AI助手</li></ul>
 	Role *string `json:"Role,omitnil,omitempty" name:"Role"`
@@ -9443,6 +9964,14 @@ type Delta struct {
 
 	// <p>模型生成的工具调用。仅支持输出参数返回。<br>对于每一次的输出值应该以Id为标识对Type、Name、Arguments字段进行合并。</p>
 	ToolCalls []*ToolCall `json:"ToolCalls,omitnil,omitempty" name:"ToolCalls"`
+}
+
+type DependencyTopology struct {
+	// 节点列表
+	Nodes []*TopologyNode `json:"Nodes,omitnil,omitempty" name:"Nodes"`
+
+	// 边列表
+	Edges []*TopologyEdge `json:"Edges,omitnil,omitempty" name:"Edges"`
 }
 
 // Predefined struct for user
@@ -10061,6 +10590,80 @@ func (r *DescribeAlertRecordHistoryResponse) ToJsonString() string {
 // FromJsonString It is highly **NOT** recommended to use this function
 // because it has no param check, nor strict type check
 func (r *DescribeAlertRecordHistoryResponse) FromJsonString(s string) error {
+	return json.Unmarshal([]byte(s), &r)
+}
+
+// Predefined struct for user
+type DescribeCLSDeliverTasksRequestParams struct {
+	// <ul><li>taskId 按照【任务id】进行过滤。 类型：String 必选：否  </li><li>taskName 按照【任务名称】进行过滤。 类型：String 必选：否  </li><li>sourceLogsetId 按照【源日志集】进行过滤。 类型：String 必选：否  </li><li>targetLogsetId 按照【目标日志集】进行过滤。 类型：String 必选：否<br>每次请求的Filters的上限为10，Filter.Values的上限为10。</li></ul>
+	Filters []*Filter `json:"Filters,omitnil,omitempty" name:"Filters"`
+
+	// <p>分页的偏移量，默认值为0。</p>
+	Offset *uint64 `json:"Offset,omitnil,omitempty" name:"Offset"`
+
+	// <p>分页单页限制数目，默认值为20，最大值100。</p>
+	Limit *uint64 `json:"Limit,omitnil,omitempty" name:"Limit"`
+}
+
+type DescribeCLSDeliverTasksRequest struct {
+	*tchttp.BaseRequest
+	
+	// <ul><li>taskId 按照【任务id】进行过滤。 类型：String 必选：否  </li><li>taskName 按照【任务名称】进行过滤。 类型：String 必选：否  </li><li>sourceLogsetId 按照【源日志集】进行过滤。 类型：String 必选：否  </li><li>targetLogsetId 按照【目标日志集】进行过滤。 类型：String 必选：否<br>每次请求的Filters的上限为10，Filter.Values的上限为10。</li></ul>
+	Filters []*Filter `json:"Filters,omitnil,omitempty" name:"Filters"`
+
+	// <p>分页的偏移量，默认值为0。</p>
+	Offset *uint64 `json:"Offset,omitnil,omitempty" name:"Offset"`
+
+	// <p>分页单页限制数目，默认值为20，最大值100。</p>
+	Limit *uint64 `json:"Limit,omitnil,omitempty" name:"Limit"`
+}
+
+func (r *DescribeCLSDeliverTasksRequest) ToJsonString() string {
+    b, _ := json.Marshal(r)
+    return string(b)
+}
+
+// FromJsonString It is highly **NOT** recommended to use this function
+// because it has no param check, nor strict type check
+func (r *DescribeCLSDeliverTasksRequest) FromJsonString(s string) error {
+	f := make(map[string]interface{})
+	if err := json.Unmarshal([]byte(s), &f); err != nil {
+		return err
+	}
+	delete(f, "Filters")
+	delete(f, "Offset")
+	delete(f, "Limit")
+	if len(f) > 0 {
+		return tcerr.NewTencentCloudSDKError("ClientError.BuildRequestError", "DescribeCLSDeliverTasksRequest has unknown keys!", "")
+	}
+	return json.Unmarshal([]byte(s), &r)
+}
+
+// Predefined struct for user
+type DescribeCLSDeliverTasksResponseParams struct {
+	// <p>投递任务信息列表</p>
+	Infos []*CLSDeliverTaskInfo `json:"Infos,omitnil,omitempty" name:"Infos"`
+
+	// <p>符合条件的任务总数。</p>
+	Total *uint64 `json:"Total,omitnil,omitempty" name:"Total"`
+
+	// 唯一请求 ID，由服务端生成，每次请求都会返回（若请求因其他原因未能抵达服务端，则该次请求不会获得 RequestId）。定位问题时需要提供该次请求的 RequestId。
+	RequestId *string `json:"RequestId,omitnil,omitempty" name:"RequestId"`
+}
+
+type DescribeCLSDeliverTasksResponse struct {
+	*tchttp.BaseResponse
+	Response *DescribeCLSDeliverTasksResponseParams `json:"Response"`
+}
+
+func (r *DescribeCLSDeliverTasksResponse) ToJsonString() string {
+    b, _ := json.Marshal(r)
+    return string(b)
+}
+
+// FromJsonString It is highly **NOT** recommended to use this function
+// because it has no param check, nor strict type check
+func (r *DescribeCLSDeliverTasksResponse) FromJsonString(s string) error {
 	return json.Unmarshal([]byte(s), &r)
 }
 
@@ -10819,6 +11422,9 @@ type DescribeConsumerOffsetsRequestParams struct {
 
 	// 分区id
 	PartitionId *string `json:"PartitionId,omitnil,omitempty" name:"PartitionId"`
+
+	// 获取offset方式。 0 表示 fetch_offset，1 表示 list_offset
+	OffsetType *int64 `json:"OffsetType,omitnil,omitempty" name:"OffsetType"`
 }
 
 type DescribeConsumerOffsetsRequest struct {
@@ -10838,6 +11444,9 @@ type DescribeConsumerOffsetsRequest struct {
 
 	// 分区id
 	PartitionId *string `json:"PartitionId,omitnil,omitempty" name:"PartitionId"`
+
+	// 获取offset方式。 0 表示 fetch_offset，1 表示 list_offset
+	OffsetType *int64 `json:"OffsetType,omitnil,omitempty" name:"OffsetType"`
 }
 
 func (r *DescribeConsumerOffsetsRequest) ToJsonString() string {
@@ -10857,6 +11466,7 @@ func (r *DescribeConsumerOffsetsRequest) FromJsonString(s string) error {
 	delete(f, "LogsetId")
 	delete(f, "TopicId")
 	delete(f, "PartitionId")
+	delete(f, "OffsetType")
 	if len(f) > 0 {
 		return tcerr.NewTencentCloudSDKError("ClientError.BuildRequestError", "DescribeConsumerOffsetsRequest has unknown keys!", "")
 	}
@@ -10944,18 +11554,14 @@ func (r *DescribeConsumerPreviewResponse) FromJsonString(s string) error {
 
 // Predefined struct for user
 type DescribeConsumerRequestParams struct {
-	// 投递任务绑定的日志主题Id。
-	// - 通过 [获取日志主题列表](https://cloud.tencent.com/document/product/614/56454) 获取日志主题Id。
-	// - 通过 [创建日志主题](https://cloud.tencent.com/document/product/614/56456) 获取日志主题Id。
+	// <p>投递任务绑定的日志主题Id。</p><ul><li>通过 <a href="https://cloud.tencent.com/document/product/614/56454">获取日志主题列表</a> 获取日志主题Id。</li><li>通过 <a href="https://cloud.tencent.com/document/product/614/56456">创建日志主题</a> 获取日志主题Id。</li></ul>
 	TopicId *string `json:"TopicId,omitnil,omitempty" name:"TopicId"`
 }
 
 type DescribeConsumerRequest struct {
 	*tchttp.BaseRequest
 	
-	// 投递任务绑定的日志主题Id。
-	// - 通过 [获取日志主题列表](https://cloud.tencent.com/document/product/614/56454) 获取日志主题Id。
-	// - 通过 [创建日志主题](https://cloud.tencent.com/document/product/614/56456) 获取日志主题Id。
+	// <p>投递任务绑定的日志主题Id。</p><ul><li>通过 <a href="https://cloud.tencent.com/document/product/614/56454">获取日志主题列表</a> 获取日志主题Id。</li><li>通过 <a href="https://cloud.tencent.com/document/product/614/56456">创建日志主题</a> 获取日志主题Id。</li></ul>
 	TopicId *string `json:"TopicId,omitnil,omitempty" name:"TopicId"`
 }
 
@@ -10980,21 +11586,39 @@ func (r *DescribeConsumerRequest) FromJsonString(s string) error {
 
 // Predefined struct for user
 type DescribeConsumerResponseParams struct {
-	// 投递任务是否生效
+	// <p>投递任务是否生效</p>
 	Effective *bool `json:"Effective,omitnil,omitempty" name:"Effective"`
 
-	// 是否投递日志的元数据信息
+	// <p>是否投递日志的元数据信息</p>
 	NeedContent *bool `json:"NeedContent,omitnil,omitempty" name:"NeedContent"`
 
-	// 如果需要投递元数据信息，元数据信息的描述
+	// <p>如果需要投递元数据信息，元数据信息的描述</p>
 	// 注意：此字段可能返回 null，表示取不到有效值。
 	Content *ConsumerContent `json:"Content,omitnil,omitempty" name:"Content"`
 
-	// CKafka的描述
+	// <p>CKafka的描述</p>
 	Ckafka *Ckafka `json:"Ckafka,omitnil,omitempty" name:"Ckafka"`
 
-	// 压缩方式[0:NONE；2:SNAPPY；3:LZ4]
+	// <p>压缩方式[0:NONE；2:SNAPPY；3:LZ4]</p>
 	Compression *int64 `json:"Compression,omitnil,omitempty" name:"Compression"`
+
+	// <p>任务创建时间</p>
+	CreateTime *uint64 `json:"CreateTime,omitnil,omitempty" name:"CreateTime"`
+
+	// <p>角色访问描述名 <a href="https://cloud.tencent.com/document/product/598/19381">创建角色</a></p>
+	RoleArn *string `json:"RoleArn,omitnil,omitempty" name:"RoleArn"`
+
+	// <p>外部ID</p>
+	ExternalId *string `json:"ExternalId,omitnil,omitempty" name:"ExternalId"`
+
+	// <p>任务运行状态。支持<code>0</code>,<code>1</code>,<code>2</code>  - <code>0</code>: 停止 - <code>1</code>: 运行中 - <code>2</code>: 异常</p>
+	TaskStatus *uint64 `json:"TaskStatus,omitnil,omitempty" name:"TaskStatus"`
+
+	// <p>高级配置</p>
+	AdvancedConfig *AdvancedConsumerConfiguration `json:"AdvancedConfig,omitnil,omitempty" name:"AdvancedConfig"`
+
+	// <p>日志预过滤-数据写入 ckafka 的原始数据进行预过滤处理</p>
+	DSLFilter *string `json:"DSLFilter,omitnil,omitempty" name:"DSLFilter"`
 
 	// 唯一请求 ID，由服务端生成，每次请求都会返回（若请求因其他原因未能抵达服务端，则该次请求不会获得 RequestId）。定位问题时需要提供该次请求的 RequestId。
 	RequestId *string `json:"RequestId,omitnil,omitempty" name:"RequestId"`
@@ -12486,6 +13110,12 @@ type DescribeKafkaConsumerResponseParams struct {
 
 	// <p>是否开启投递服务日志。1：关闭，2：开启。</p>
 	HasServicesLog *uint64 `json:"HasServicesLog,omitnil,omitempty" name:"HasServicesLog"`
+
+	// <p>外网消费开关。</p>
+	EnableInternetConsume *bool `json:"EnableInternetConsume,omitnil,omitempty" name:"EnableInternetConsume"`
+
+	// <p>内网消费开关。</p>
+	EnableIntranetConsume *bool `json:"EnableIntranetConsume,omitnil,omitempty" name:"EnableIntranetConsume"`
 
 	// <p>消费范围类型，0:最新，1:历史+最新</p>
 	ScopeType *uint64 `json:"ScopeType,omitnil,omitempty" name:"ScopeType"`
@@ -14193,6 +14823,755 @@ func (r *DescribeRemoteWriteTasksResponse) FromJsonString(s string) error {
 }
 
 // Predefined struct for user
+type DescribeResourceGraphDetailRequestParams struct {
+	// <p>资源图谱id</p>
+	ResourceGraphId *string `json:"ResourceGraphId,omitnil,omitempty" name:"ResourceGraphId"`
+}
+
+type DescribeResourceGraphDetailRequest struct {
+	*tchttp.BaseRequest
+	
+	// <p>资源图谱id</p>
+	ResourceGraphId *string `json:"ResourceGraphId,omitnil,omitempty" name:"ResourceGraphId"`
+}
+
+func (r *DescribeResourceGraphDetailRequest) ToJsonString() string {
+    b, _ := json.Marshal(r)
+    return string(b)
+}
+
+// FromJsonString It is highly **NOT** recommended to use this function
+// because it has no param check, nor strict type check
+func (r *DescribeResourceGraphDetailRequest) FromJsonString(s string) error {
+	f := make(map[string]interface{})
+	if err := json.Unmarshal([]byte(s), &f); err != nil {
+		return err
+	}
+	delete(f, "ResourceGraphId")
+	if len(f) > 0 {
+		return tcerr.NewTencentCloudSDKError("ClientError.BuildRequestError", "DescribeResourceGraphDetailRequest has unknown keys!", "")
+	}
+	return json.Unmarshal([]byte(s), &r)
+}
+
+// Predefined struct for user
+type DescribeResourceGraphDetailResponseParams struct {
+	// <p>资源图谱详情信息</p>
+	ResourceGraphDetailInfo *ResourceGraphDetailInfo `json:"ResourceGraphDetailInfo,omitnil,omitempty" name:"ResourceGraphDetailInfo"`
+
+	// 唯一请求 ID，由服务端生成，每次请求都会返回（若请求因其他原因未能抵达服务端，则该次请求不会获得 RequestId）。定位问题时需要提供该次请求的 RequestId。
+	RequestId *string `json:"RequestId,omitnil,omitempty" name:"RequestId"`
+}
+
+type DescribeResourceGraphDetailResponse struct {
+	*tchttp.BaseResponse
+	Response *DescribeResourceGraphDetailResponseParams `json:"Response"`
+}
+
+func (r *DescribeResourceGraphDetailResponse) ToJsonString() string {
+    b, _ := json.Marshal(r)
+    return string(b)
+}
+
+// FromJsonString It is highly **NOT** recommended to use this function
+// because it has no param check, nor strict type check
+func (r *DescribeResourceGraphDetailResponse) FromJsonString(s string) error {
+	return json.Unmarshal([]byte(s), &r)
+}
+
+// Predefined struct for user
+type DescribeResourceGraphEntitiesRequestParams struct {
+	// <p>资源图谱id</p>
+	ResourceGraphId *string `json:"ResourceGraphId,omitnil,omitempty" name:"ResourceGraphId"`
+
+	// <ul><li>Product 按【产品分组】精确匹配，可用参数：all / business_service / tke / cdb / redis / mongodb 。类型：String。必选：否</li><li>EntityClassName 按【实体类型】精确匹配，可用参数：all / app.service.application / tc.tke.cluster / tc.tkex.project / tc.cdb.instance / tc.redis.instance / tc.mongodb.instance / k8s.cluster / k8s.namespace / k8s.node / k8s.pod / k8s.ip / k8s.service / k8s.deployment / k8s.statefulset / k8s.statefulsetplus / k8s.daemonset / k8s.storageclass / k8s.persistentvolume / k8s.persistentvolumeclaim / k8s.secret。类型：String。必选：否</li><li>Name 按【实体名称】模糊匹配。类型：String。必选：否</li><li>ResourceId 按 【实体资源id】精确匹配。类型：String。必选：否</li></ul><p>注意：每次请求的 Filters 上限 10。</p>
+	Filters []*Filter `json:"Filters,omitnil,omitempty" name:"Filters"`
+
+	// <p>查询偏移</p>
+	NextCursor *string `json:"NextCursor,omitnil,omitempty" name:"NextCursor"`
+
+	// <p>分页单页数量，默认 20，最大 100</p>
+	Limit *uint64 `json:"Limit,omitnil,omitempty" name:"Limit"`
+
+	// <p>查询开始时间</p><p>单位：毫秒</p>
+	FromTime *uint64 `json:"FromTime,omitnil,omitempty" name:"FromTime"`
+
+	// <p>查询结束时间</p><p>单位：毫秒</p>
+	ToTime *uint64 `json:"ToTime,omitnil,omitempty" name:"ToTime"`
+}
+
+type DescribeResourceGraphEntitiesRequest struct {
+	*tchttp.BaseRequest
+	
+	// <p>资源图谱id</p>
+	ResourceGraphId *string `json:"ResourceGraphId,omitnil,omitempty" name:"ResourceGraphId"`
+
+	// <ul><li>Product 按【产品分组】精确匹配，可用参数：all / business_service / tke / cdb / redis / mongodb 。类型：String。必选：否</li><li>EntityClassName 按【实体类型】精确匹配，可用参数：all / app.service.application / tc.tke.cluster / tc.tkex.project / tc.cdb.instance / tc.redis.instance / tc.mongodb.instance / k8s.cluster / k8s.namespace / k8s.node / k8s.pod / k8s.ip / k8s.service / k8s.deployment / k8s.statefulset / k8s.statefulsetplus / k8s.daemonset / k8s.storageclass / k8s.persistentvolume / k8s.persistentvolumeclaim / k8s.secret。类型：String。必选：否</li><li>Name 按【实体名称】模糊匹配。类型：String。必选：否</li><li>ResourceId 按 【实体资源id】精确匹配。类型：String。必选：否</li></ul><p>注意：每次请求的 Filters 上限 10。</p>
+	Filters []*Filter `json:"Filters,omitnil,omitempty" name:"Filters"`
+
+	// <p>查询偏移</p>
+	NextCursor *string `json:"NextCursor,omitnil,omitempty" name:"NextCursor"`
+
+	// <p>分页单页数量，默认 20，最大 100</p>
+	Limit *uint64 `json:"Limit,omitnil,omitempty" name:"Limit"`
+
+	// <p>查询开始时间</p><p>单位：毫秒</p>
+	FromTime *uint64 `json:"FromTime,omitnil,omitempty" name:"FromTime"`
+
+	// <p>查询结束时间</p><p>单位：毫秒</p>
+	ToTime *uint64 `json:"ToTime,omitnil,omitempty" name:"ToTime"`
+}
+
+func (r *DescribeResourceGraphEntitiesRequest) ToJsonString() string {
+    b, _ := json.Marshal(r)
+    return string(b)
+}
+
+// FromJsonString It is highly **NOT** recommended to use this function
+// because it has no param check, nor strict type check
+func (r *DescribeResourceGraphEntitiesRequest) FromJsonString(s string) error {
+	f := make(map[string]interface{})
+	if err := json.Unmarshal([]byte(s), &f); err != nil {
+		return err
+	}
+	delete(f, "ResourceGraphId")
+	delete(f, "Filters")
+	delete(f, "NextCursor")
+	delete(f, "Limit")
+	delete(f, "FromTime")
+	delete(f, "ToTime")
+	if len(f) > 0 {
+		return tcerr.NewTencentCloudSDKError("ClientError.BuildRequestError", "DescribeResourceGraphEntitiesRequest has unknown keys!", "")
+	}
+	return json.Unmarshal([]byte(s), &r)
+}
+
+// Predefined struct for user
+type DescribeResourceGraphEntitiesResponseParams struct {
+	// <p>实体列表</p>
+	EntityInfos []*EntityInfo `json:"EntityInfos,omitnil,omitempty" name:"EntityInfos"`
+
+	// <p>是否还有下一页</p><p>枚举值：</p><ul><li>0： 没有下一页</li><li>1： 还有下一页</li></ul>
+	HasMore *uint64 `json:"HasMore,omitnil,omitempty" name:"HasMore"`
+
+	// <p>分页的游标，有值则下次分页请求原样带上，无值则表示无下一页</p>
+	NextCursor *string `json:"NextCursor,omitnil,omitempty" name:"NextCursor"`
+
+	// 唯一请求 ID，由服务端生成，每次请求都会返回（若请求因其他原因未能抵达服务端，则该次请求不会获得 RequestId）。定位问题时需要提供该次请求的 RequestId。
+	RequestId *string `json:"RequestId,omitnil,omitempty" name:"RequestId"`
+}
+
+type DescribeResourceGraphEntitiesResponse struct {
+	*tchttp.BaseResponse
+	Response *DescribeResourceGraphEntitiesResponseParams `json:"Response"`
+}
+
+func (r *DescribeResourceGraphEntitiesResponse) ToJsonString() string {
+    b, _ := json.Marshal(r)
+    return string(b)
+}
+
+// FromJsonString It is highly **NOT** recommended to use this function
+// because it has no param check, nor strict type check
+func (r *DescribeResourceGraphEntitiesResponse) FromJsonString(s string) error {
+	return json.Unmarshal([]byte(s), &r)
+}
+
+// Predefined struct for user
+type DescribeResourceGraphEntityDependencyRequestParams struct {
+	// <p>资源图谱id</p>
+	ResourceGraphId *string `json:"ResourceGraphId,omitnil,omitempty" name:"ResourceGraphId"`
+
+	// <p>实体id</p>
+	EntityId *string `json:"EntityId,omitnil,omitempty" name:"EntityId"`
+
+	// <p>距离Entity的深度</p>
+	Depth *int64 `json:"Depth,omitnil,omitempty" name:"Depth"`
+
+	// <p>返回数量</p>
+	Limit *int64 `json:"Limit,omitnil,omitempty" name:"Limit"`
+
+	// <p>查询范围-开始时间</p><p>单位：毫秒</p>
+	FromTime *uint64 `json:"FromTime,omitnil,omitempty" name:"FromTime"`
+
+	// <p>查询范围-结束时间</p><p>单位：毫秒</p>
+	ToTime *uint64 `json:"ToTime,omitnil,omitempty" name:"ToTime"`
+}
+
+type DescribeResourceGraphEntityDependencyRequest struct {
+	*tchttp.BaseRequest
+	
+	// <p>资源图谱id</p>
+	ResourceGraphId *string `json:"ResourceGraphId,omitnil,omitempty" name:"ResourceGraphId"`
+
+	// <p>实体id</p>
+	EntityId *string `json:"EntityId,omitnil,omitempty" name:"EntityId"`
+
+	// <p>距离Entity的深度</p>
+	Depth *int64 `json:"Depth,omitnil,omitempty" name:"Depth"`
+
+	// <p>返回数量</p>
+	Limit *int64 `json:"Limit,omitnil,omitempty" name:"Limit"`
+
+	// <p>查询范围-开始时间</p><p>单位：毫秒</p>
+	FromTime *uint64 `json:"FromTime,omitnil,omitempty" name:"FromTime"`
+
+	// <p>查询范围-结束时间</p><p>单位：毫秒</p>
+	ToTime *uint64 `json:"ToTime,omitnil,omitempty" name:"ToTime"`
+}
+
+func (r *DescribeResourceGraphEntityDependencyRequest) ToJsonString() string {
+    b, _ := json.Marshal(r)
+    return string(b)
+}
+
+// FromJsonString It is highly **NOT** recommended to use this function
+// because it has no param check, nor strict type check
+func (r *DescribeResourceGraphEntityDependencyRequest) FromJsonString(s string) error {
+	f := make(map[string]interface{})
+	if err := json.Unmarshal([]byte(s), &f); err != nil {
+		return err
+	}
+	delete(f, "ResourceGraphId")
+	delete(f, "EntityId")
+	delete(f, "Depth")
+	delete(f, "Limit")
+	delete(f, "FromTime")
+	delete(f, "ToTime")
+	if len(f) > 0 {
+		return tcerr.NewTencentCloudSDKError("ClientError.BuildRequestError", "DescribeResourceGraphEntityDependencyRequest has unknown keys!", "")
+	}
+	return json.Unmarshal([]byte(s), &r)
+}
+
+// Predefined struct for user
+type DescribeResourceGraphEntityDependencyResponseParams struct {
+	// <p>拓扑图（节点 + 边）</p>
+	Topology *DependencyTopology `json:"Topology,omitnil,omitempty" name:"Topology"`
+
+	// 唯一请求 ID，由服务端生成，每次请求都会返回（若请求因其他原因未能抵达服务端，则该次请求不会获得 RequestId）。定位问题时需要提供该次请求的 RequestId。
+	RequestId *string `json:"RequestId,omitnil,omitempty" name:"RequestId"`
+}
+
+type DescribeResourceGraphEntityDependencyResponse struct {
+	*tchttp.BaseResponse
+	Response *DescribeResourceGraphEntityDependencyResponseParams `json:"Response"`
+}
+
+func (r *DescribeResourceGraphEntityDependencyResponse) ToJsonString() string {
+    b, _ := json.Marshal(r)
+    return string(b)
+}
+
+// FromJsonString It is highly **NOT** recommended to use this function
+// because it has no param check, nor strict type check
+func (r *DescribeResourceGraphEntityDependencyResponse) FromJsonString(s string) error {
+	return json.Unmarshal([]byte(s), &r)
+}
+
+// Predefined struct for user
+type DescribeResourceGraphEntityDetailRequestParams struct {
+	// <p>实体 ID</p>
+	EntityId *string `json:"EntityId,omitnil,omitempty" name:"EntityId"`
+
+	// <p>资源图谱id</p>
+	ResourceGraphId *string `json:"ResourceGraphId,omitnil,omitempty" name:"ResourceGraphId"`
+
+	// <p>查询范围-开始时间</p><p>单位：毫秒</p>
+	FromTime *uint64 `json:"FromTime,omitnil,omitempty" name:"FromTime"`
+
+	// <p>查询范围-结束时间</p><p>单位：毫秒</p>
+	ToTime *uint64 `json:"ToTime,omitnil,omitempty" name:"ToTime"`
+}
+
+type DescribeResourceGraphEntityDetailRequest struct {
+	*tchttp.BaseRequest
+	
+	// <p>实体 ID</p>
+	EntityId *string `json:"EntityId,omitnil,omitempty" name:"EntityId"`
+
+	// <p>资源图谱id</p>
+	ResourceGraphId *string `json:"ResourceGraphId,omitnil,omitempty" name:"ResourceGraphId"`
+
+	// <p>查询范围-开始时间</p><p>单位：毫秒</p>
+	FromTime *uint64 `json:"FromTime,omitnil,omitempty" name:"FromTime"`
+
+	// <p>查询范围-结束时间</p><p>单位：毫秒</p>
+	ToTime *uint64 `json:"ToTime,omitnil,omitempty" name:"ToTime"`
+}
+
+func (r *DescribeResourceGraphEntityDetailRequest) ToJsonString() string {
+    b, _ := json.Marshal(r)
+    return string(b)
+}
+
+// FromJsonString It is highly **NOT** recommended to use this function
+// because it has no param check, nor strict type check
+func (r *DescribeResourceGraphEntityDetailRequest) FromJsonString(s string) error {
+	f := make(map[string]interface{})
+	if err := json.Unmarshal([]byte(s), &f); err != nil {
+		return err
+	}
+	delete(f, "EntityId")
+	delete(f, "ResourceGraphId")
+	delete(f, "FromTime")
+	delete(f, "ToTime")
+	if len(f) > 0 {
+		return tcerr.NewTencentCloudSDKError("ClientError.BuildRequestError", "DescribeResourceGraphEntityDetailRequest has unknown keys!", "")
+	}
+	return json.Unmarshal([]byte(s), &r)
+}
+
+// Predefined struct for user
+type DescribeResourceGraphEntityDetailResponseParams struct {
+	// <p>实体信息</p>
+	EntityInfo *EntityInfo `json:"EntityInfo,omitnil,omitempty" name:"EntityInfo"`
+
+	// 唯一请求 ID，由服务端生成，每次请求都会返回（若请求因其他原因未能抵达服务端，则该次请求不会获得 RequestId）。定位问题时需要提供该次请求的 RequestId。
+	RequestId *string `json:"RequestId,omitnil,omitempty" name:"RequestId"`
+}
+
+type DescribeResourceGraphEntityDetailResponse struct {
+	*tchttp.BaseResponse
+	Response *DescribeResourceGraphEntityDetailResponseParams `json:"Response"`
+}
+
+func (r *DescribeResourceGraphEntityDetailResponse) ToJsonString() string {
+    b, _ := json.Marshal(r)
+    return string(b)
+}
+
+// FromJsonString It is highly **NOT** recommended to use this function
+// because it has no param check, nor strict type check
+func (r *DescribeResourceGraphEntityDetailResponse) FromJsonString(s string) error {
+	return json.Unmarshal([]byte(s), &r)
+}
+
+// Predefined struct for user
+type DescribeResourceGraphFailureDetailRequestParams struct {
+	// <p>资源图谱id</p>
+	ResourceGraphId *string `json:"ResourceGraphId,omitnil,omitempty" name:"ResourceGraphId"`
+}
+
+type DescribeResourceGraphFailureDetailRequest struct {
+	*tchttp.BaseRequest
+	
+	// <p>资源图谱id</p>
+	ResourceGraphId *string `json:"ResourceGraphId,omitnil,omitempty" name:"ResourceGraphId"`
+}
+
+func (r *DescribeResourceGraphFailureDetailRequest) ToJsonString() string {
+    b, _ := json.Marshal(r)
+    return string(b)
+}
+
+// FromJsonString It is highly **NOT** recommended to use this function
+// because it has no param check, nor strict type check
+func (r *DescribeResourceGraphFailureDetailRequest) FromJsonString(s string) error {
+	f := make(map[string]interface{})
+	if err := json.Unmarshal([]byte(s), &f); err != nil {
+		return err
+	}
+	delete(f, "ResourceGraphId")
+	if len(f) > 0 {
+		return tcerr.NewTencentCloudSDKError("ClientError.BuildRequestError", "DescribeResourceGraphFailureDetailRequest has unknown keys!", "")
+	}
+	return json.Unmarshal([]byte(s), &r)
+}
+
+// Predefined struct for user
+type DescribeResourceGraphFailureDetailResponseParams struct {
+	// <p>失败详情信息</p>
+	ErrorMessage *string `json:"ErrorMessage,omitnil,omitempty" name:"ErrorMessage"`
+
+	// <p>最近一次失败时间</p><p>单位：秒</p>
+	LastFailedTime *int64 `json:"LastFailedTime,omitnil,omitempty" name:"LastFailedTime"`
+
+	// <p>重试次数</p>
+	RetryCount *int64 `json:"RetryCount,omitnil,omitempty" name:"RetryCount"`
+
+	// <p>首次失败时间</p><p>单位：秒</p>
+	FirstFailedAt *int64 `json:"FirstFailedAt,omitnil,omitempty" name:"FirstFailedAt"`
+
+	// <p>引起失败的操作</p>
+	Operation *string `json:"Operation,omitnil,omitempty" name:"Operation"`
+
+	// 唯一请求 ID，由服务端生成，每次请求都会返回（若请求因其他原因未能抵达服务端，则该次请求不会获得 RequestId）。定位问题时需要提供该次请求的 RequestId。
+	RequestId *string `json:"RequestId,omitnil,omitempty" name:"RequestId"`
+}
+
+type DescribeResourceGraphFailureDetailResponse struct {
+	*tchttp.BaseResponse
+	Response *DescribeResourceGraphFailureDetailResponseParams `json:"Response"`
+}
+
+func (r *DescribeResourceGraphFailureDetailResponse) ToJsonString() string {
+    b, _ := json.Marshal(r)
+    return string(b)
+}
+
+// FromJsonString It is highly **NOT** recommended to use this function
+// because it has no param check, nor strict type check
+func (r *DescribeResourceGraphFailureDetailResponse) FromJsonString(s string) error {
+	return json.Unmarshal([]byte(s), &r)
+}
+
+// Predefined struct for user
+type DescribeResourceGraphIngestTaskFailureDetailRequestParams struct {
+	// <p>资源图谱id</p>
+	ResourceGraphId *string `json:"ResourceGraphId,omitnil,omitempty" name:"ResourceGraphId"`
+
+	// <p>接入任务id</p>
+	TaskId *string `json:"TaskId,omitnil,omitempty" name:"TaskId"`
+}
+
+type DescribeResourceGraphIngestTaskFailureDetailRequest struct {
+	*tchttp.BaseRequest
+	
+	// <p>资源图谱id</p>
+	ResourceGraphId *string `json:"ResourceGraphId,omitnil,omitempty" name:"ResourceGraphId"`
+
+	// <p>接入任务id</p>
+	TaskId *string `json:"TaskId,omitnil,omitempty" name:"TaskId"`
+}
+
+func (r *DescribeResourceGraphIngestTaskFailureDetailRequest) ToJsonString() string {
+    b, _ := json.Marshal(r)
+    return string(b)
+}
+
+// FromJsonString It is highly **NOT** recommended to use this function
+// because it has no param check, nor strict type check
+func (r *DescribeResourceGraphIngestTaskFailureDetailRequest) FromJsonString(s string) error {
+	f := make(map[string]interface{})
+	if err := json.Unmarshal([]byte(s), &f); err != nil {
+		return err
+	}
+	delete(f, "ResourceGraphId")
+	delete(f, "TaskId")
+	if len(f) > 0 {
+		return tcerr.NewTencentCloudSDKError("ClientError.BuildRequestError", "DescribeResourceGraphIngestTaskFailureDetailRequest has unknown keys!", "")
+	}
+	return json.Unmarshal([]byte(s), &r)
+}
+
+// Predefined struct for user
+type DescribeResourceGraphIngestTaskFailureDetailResponseParams struct {
+	// <p>接入任务报错信息详情</p>
+	ErrorMessage *string `json:"ErrorMessage,omitnil,omitempty" name:"ErrorMessage"`
+
+	// <p>最近一次失败时间</p><p>单位：秒</p>
+	LastFailedTime *int64 `json:"LastFailedTime,omitnil,omitempty" name:"LastFailedTime"`
+
+	// <p>重试次数</p>
+	RetryCount *int64 `json:"RetryCount,omitnil,omitempty" name:"RetryCount"`
+
+	// <p>第一次失败时间</p><p>单位：秒</p>
+	FirstFailedAt *int64 `json:"FirstFailedAt,omitnil,omitempty" name:"FirstFailedAt"`
+
+	// <p>引起失败的操作</p>
+	Operation *string `json:"Operation,omitnil,omitempty" name:"Operation"`
+
+	// 唯一请求 ID，由服务端生成，每次请求都会返回（若请求因其他原因未能抵达服务端，则该次请求不会获得 RequestId）。定位问题时需要提供该次请求的 RequestId。
+	RequestId *string `json:"RequestId,omitnil,omitempty" name:"RequestId"`
+}
+
+type DescribeResourceGraphIngestTaskFailureDetailResponse struct {
+	*tchttp.BaseResponse
+	Response *DescribeResourceGraphIngestTaskFailureDetailResponseParams `json:"Response"`
+}
+
+func (r *DescribeResourceGraphIngestTaskFailureDetailResponse) ToJsonString() string {
+    b, _ := json.Marshal(r)
+    return string(b)
+}
+
+// FromJsonString It is highly **NOT** recommended to use this function
+// because it has no param check, nor strict type check
+func (r *DescribeResourceGraphIngestTaskFailureDetailResponse) FromJsonString(s string) error {
+	return json.Unmarshal([]byte(s), &r)
+}
+
+// Predefined struct for user
+type DescribeResourceGraphProductIngestTaskDetailRequestParams struct {
+	// <p>资源图谱id</p>
+	ResourceGraphId *string `json:"ResourceGraphId,omitnil,omitempty" name:"ResourceGraphId"`
+
+	// <p>接入任务id</p>
+	TaskId *string `json:"TaskId,omitnil,omitempty" name:"TaskId"`
+}
+
+type DescribeResourceGraphProductIngestTaskDetailRequest struct {
+	*tchttp.BaseRequest
+	
+	// <p>资源图谱id</p>
+	ResourceGraphId *string `json:"ResourceGraphId,omitnil,omitempty" name:"ResourceGraphId"`
+
+	// <p>接入任务id</p>
+	TaskId *string `json:"TaskId,omitnil,omitempty" name:"TaskId"`
+}
+
+func (r *DescribeResourceGraphProductIngestTaskDetailRequest) ToJsonString() string {
+    b, _ := json.Marshal(r)
+    return string(b)
+}
+
+// FromJsonString It is highly **NOT** recommended to use this function
+// because it has no param check, nor strict type check
+func (r *DescribeResourceGraphProductIngestTaskDetailRequest) FromJsonString(s string) error {
+	f := make(map[string]interface{})
+	if err := json.Unmarshal([]byte(s), &f); err != nil {
+		return err
+	}
+	delete(f, "ResourceGraphId")
+	delete(f, "TaskId")
+	if len(f) > 0 {
+		return tcerr.NewTencentCloudSDKError("ClientError.BuildRequestError", "DescribeResourceGraphProductIngestTaskDetailRequest has unknown keys!", "")
+	}
+	return json.Unmarshal([]byte(s), &r)
+}
+
+// Predefined struct for user
+type DescribeResourceGraphProductIngestTaskDetailResponseParams struct {
+	// <p>接入任务详情</p>
+	ProductIngestTaskDetail *ProductIngestTaskDetail `json:"ProductIngestTaskDetail,omitnil,omitempty" name:"ProductIngestTaskDetail"`
+
+	// 唯一请求 ID，由服务端生成，每次请求都会返回（若请求因其他原因未能抵达服务端，则该次请求不会获得 RequestId）。定位问题时需要提供该次请求的 RequestId。
+	RequestId *string `json:"RequestId,omitnil,omitempty" name:"RequestId"`
+}
+
+type DescribeResourceGraphProductIngestTaskDetailResponse struct {
+	*tchttp.BaseResponse
+	Response *DescribeResourceGraphProductIngestTaskDetailResponseParams `json:"Response"`
+}
+
+func (r *DescribeResourceGraphProductIngestTaskDetailResponse) ToJsonString() string {
+    b, _ := json.Marshal(r)
+    return string(b)
+}
+
+// FromJsonString It is highly **NOT** recommended to use this function
+// because it has no param check, nor strict type check
+func (r *DescribeResourceGraphProductIngestTaskDetailResponse) FromJsonString(s string) error {
+	return json.Unmarshal([]byte(s), &r)
+}
+
+// Predefined struct for user
+type DescribeResourceGraphProductIngestTaskListRequestParams struct {
+	// <p>资源图谱id</p>
+	ResourceGraphId *string `json:"ResourceGraphId,omitnil,omitempty" name:"ResourceGraphId"`
+
+	// <p>过滤条件</p><ul><li>taskId 按照【接入任务id】进行过滤，默认为模糊匹配。类型：String。必选：否 </li><li>product 按照【接入产品】进行过滤，默认为模糊匹配。类型：String。必选：否 </li><li>name 按照【接入任务名称】进行过滤，默认为模糊匹配。类型：String。必选：否 </li><li>status 按照【接入任务状态】进行过滤。类型：int。必选：否 ；0：初始化中；1：已接入；2：接入失败；3：删除中；5：删除失败<br>注意：每次请求的 Filters 的上限为10，Filter.Values 的上限为100。</li></ul>
+	Filters []*Filter `json:"Filters,omitnil,omitempty" name:"Filters"`
+
+	// <p>分页偏移量，默认 0</p>
+	Offset *uint64 `json:"Offset,omitnil,omitempty" name:"Offset"`
+
+	// <p>分页单页数量，默认 20，最大 100</p>
+	Limit *uint64 `json:"Limit,omitnil,omitempty" name:"Limit"`
+}
+
+type DescribeResourceGraphProductIngestTaskListRequest struct {
+	*tchttp.BaseRequest
+	
+	// <p>资源图谱id</p>
+	ResourceGraphId *string `json:"ResourceGraphId,omitnil,omitempty" name:"ResourceGraphId"`
+
+	// <p>过滤条件</p><ul><li>taskId 按照【接入任务id】进行过滤，默认为模糊匹配。类型：String。必选：否 </li><li>product 按照【接入产品】进行过滤，默认为模糊匹配。类型：String。必选：否 </li><li>name 按照【接入任务名称】进行过滤，默认为模糊匹配。类型：String。必选：否 </li><li>status 按照【接入任务状态】进行过滤。类型：int。必选：否 ；0：初始化中；1：已接入；2：接入失败；3：删除中；5：删除失败<br>注意：每次请求的 Filters 的上限为10，Filter.Values 的上限为100。</li></ul>
+	Filters []*Filter `json:"Filters,omitnil,omitempty" name:"Filters"`
+
+	// <p>分页偏移量，默认 0</p>
+	Offset *uint64 `json:"Offset,omitnil,omitempty" name:"Offset"`
+
+	// <p>分页单页数量，默认 20，最大 100</p>
+	Limit *uint64 `json:"Limit,omitnil,omitempty" name:"Limit"`
+}
+
+func (r *DescribeResourceGraphProductIngestTaskListRequest) ToJsonString() string {
+    b, _ := json.Marshal(r)
+    return string(b)
+}
+
+// FromJsonString It is highly **NOT** recommended to use this function
+// because it has no param check, nor strict type check
+func (r *DescribeResourceGraphProductIngestTaskListRequest) FromJsonString(s string) error {
+	f := make(map[string]interface{})
+	if err := json.Unmarshal([]byte(s), &f); err != nil {
+		return err
+	}
+	delete(f, "ResourceGraphId")
+	delete(f, "Filters")
+	delete(f, "Offset")
+	delete(f, "Limit")
+	if len(f) > 0 {
+		return tcerr.NewTencentCloudSDKError("ClientError.BuildRequestError", "DescribeResourceGraphProductIngestTaskListRequest has unknown keys!", "")
+	}
+	return json.Unmarshal([]byte(s), &r)
+}
+
+// Predefined struct for user
+type DescribeResourceGraphProductIngestTaskListResponseParams struct {
+	// <p>接入任务列表</p>
+	ProductIngestTaskItems []*ProductIngestTaskItem `json:"ProductIngestTaskItems,omitnil,omitempty" name:"ProductIngestTaskItems"`
+
+	// <p>筛选后总数</p>
+	TotalCount *uint64 `json:"TotalCount,omitnil,omitempty" name:"TotalCount"`
+
+	// 唯一请求 ID，由服务端生成，每次请求都会返回（若请求因其他原因未能抵达服务端，则该次请求不会获得 RequestId）。定位问题时需要提供该次请求的 RequestId。
+	RequestId *string `json:"RequestId,omitnil,omitempty" name:"RequestId"`
+}
+
+type DescribeResourceGraphProductIngestTaskListResponse struct {
+	*tchttp.BaseResponse
+	Response *DescribeResourceGraphProductIngestTaskListResponseParams `json:"Response"`
+}
+
+func (r *DescribeResourceGraphProductIngestTaskListResponse) ToJsonString() string {
+    b, _ := json.Marshal(r)
+    return string(b)
+}
+
+// FromJsonString It is highly **NOT** recommended to use this function
+// because it has no param check, nor strict type check
+func (r *DescribeResourceGraphProductIngestTaskListResponse) FromJsonString(s string) error {
+	return json.Unmarshal([]byte(s), &r)
+}
+
+// Predefined struct for user
+type DescribeResourceGraphTkeClusterStatusRequestParams struct {
+	// <p>待检测的tke集群id</p>
+	ClusterIds []*string `json:"ClusterIds,omitnil,omitempty" name:"ClusterIds"`
+}
+
+type DescribeResourceGraphTkeClusterStatusRequest struct {
+	*tchttp.BaseRequest
+	
+	// <p>待检测的tke集群id</p>
+	ClusterIds []*string `json:"ClusterIds,omitnil,omitempty" name:"ClusterIds"`
+}
+
+func (r *DescribeResourceGraphTkeClusterStatusRequest) ToJsonString() string {
+    b, _ := json.Marshal(r)
+    return string(b)
+}
+
+// FromJsonString It is highly **NOT** recommended to use this function
+// because it has no param check, nor strict type check
+func (r *DescribeResourceGraphTkeClusterStatusRequest) FromJsonString(s string) error {
+	f := make(map[string]interface{})
+	if err := json.Unmarshal([]byte(s), &f); err != nil {
+		return err
+	}
+	delete(f, "ClusterIds")
+	if len(f) > 0 {
+		return tcerr.NewTencentCloudSDKError("ClientError.BuildRequestError", "DescribeResourceGraphTkeClusterStatusRequest has unknown keys!", "")
+	}
+	return json.Unmarshal([]byte(s), &r)
+}
+
+// Predefined struct for user
+type DescribeResourceGraphTkeClusterStatusResponseParams struct {
+	// <p>已接入的tke集群信息</p>
+	ConnectedClusterInfos []*ResourceGraphTkeClusterInfo `json:"ConnectedClusterInfos,omitnil,omitempty" name:"ConnectedClusterInfos"`
+
+	// <p>未接入的tke集群id</p>
+	UnconnectedClusterIds []*string `json:"UnconnectedClusterIds,omitnil,omitempty" name:"UnconnectedClusterIds"`
+
+	// 唯一请求 ID，由服务端生成，每次请求都会返回（若请求因其他原因未能抵达服务端，则该次请求不会获得 RequestId）。定位问题时需要提供该次请求的 RequestId。
+	RequestId *string `json:"RequestId,omitnil,omitempty" name:"RequestId"`
+}
+
+type DescribeResourceGraphTkeClusterStatusResponse struct {
+	*tchttp.BaseResponse
+	Response *DescribeResourceGraphTkeClusterStatusResponseParams `json:"Response"`
+}
+
+func (r *DescribeResourceGraphTkeClusterStatusResponse) ToJsonString() string {
+    b, _ := json.Marshal(r)
+    return string(b)
+}
+
+// FromJsonString It is highly **NOT** recommended to use this function
+// because it has no param check, nor strict type check
+func (r *DescribeResourceGraphTkeClusterStatusResponse) FromJsonString(s string) error {
+	return json.Unmarshal([]byte(s), &r)
+}
+
+// Predefined struct for user
+type DescribeResourceGraphsRequestParams struct {
+	// <ul><li>ResourceGraphId 按【资源图谱 ID】精确匹配。类型：String。必选：否</li><li>Name 按【资源图谱名称】模糊匹配。类型：String。必选：否</li><li>Status 按【状态】模糊匹配。类型：int。必选：否；0：初始化中；1：就绪；2：创建失败；3：删除中；5：删除失败</li><li>tagKey 按照【标签键】进行过滤。类型：String。必选：否</li><li>tag:tagKey 按照【标签键值对】进行过滤。tagKey 使用具体的标签键进行替换，例如 tag:exampleKey。类型：String。必选：否</li></ul>注意：每次请求的 Filters 上限 10，Filter.Values 上限 100。
+	Filters []*Filter `json:"Filters,omitnil,omitempty" name:"Filters"`
+
+	// <p>分页偏移量</p><p>默认值：0</p>
+	Offset *uint64 `json:"Offset,omitnil,omitempty" name:"Offset"`
+
+	// <p>分页单页数量</p><p>取值范围：[0, 100]</p><p>默认值：20</p>
+	Limit *uint64 `json:"Limit,omitnil,omitempty" name:"Limit"`
+}
+
+type DescribeResourceGraphsRequest struct {
+	*tchttp.BaseRequest
+	
+	// <ul><li>ResourceGraphId 按【资源图谱 ID】精确匹配。类型：String。必选：否</li><li>Name 按【资源图谱名称】模糊匹配。类型：String。必选：否</li><li>Status 按【状态】模糊匹配。类型：int。必选：否；0：初始化中；1：就绪；2：创建失败；3：删除中；5：删除失败</li><li>tagKey 按照【标签键】进行过滤。类型：String。必选：否</li><li>tag:tagKey 按照【标签键值对】进行过滤。tagKey 使用具体的标签键进行替换，例如 tag:exampleKey。类型：String。必选：否</li></ul>注意：每次请求的 Filters 上限 10，Filter.Values 上限 100。
+	Filters []*Filter `json:"Filters,omitnil,omitempty" name:"Filters"`
+
+	// <p>分页偏移量</p><p>默认值：0</p>
+	Offset *uint64 `json:"Offset,omitnil,omitempty" name:"Offset"`
+
+	// <p>分页单页数量</p><p>取值范围：[0, 100]</p><p>默认值：20</p>
+	Limit *uint64 `json:"Limit,omitnil,omitempty" name:"Limit"`
+}
+
+func (r *DescribeResourceGraphsRequest) ToJsonString() string {
+    b, _ := json.Marshal(r)
+    return string(b)
+}
+
+// FromJsonString It is highly **NOT** recommended to use this function
+// because it has no param check, nor strict type check
+func (r *DescribeResourceGraphsRequest) FromJsonString(s string) error {
+	f := make(map[string]interface{})
+	if err := json.Unmarshal([]byte(s), &f); err != nil {
+		return err
+	}
+	delete(f, "Filters")
+	delete(f, "Offset")
+	delete(f, "Limit")
+	if len(f) > 0 {
+		return tcerr.NewTencentCloudSDKError("ClientError.BuildRequestError", "DescribeResourceGraphsRequest has unknown keys!", "")
+	}
+	return json.Unmarshal([]byte(s), &r)
+}
+
+// Predefined struct for user
+type DescribeResourceGraphsResponseParams struct {
+	// <p>资源图谱信息</p>
+	ResourceGraphInfos []*ResourceGraphInfo `json:"ResourceGraphInfos,omitnil,omitempty" name:"ResourceGraphInfos"`
+
+	// <p>总数</p>
+	TotalCount *uint64 `json:"TotalCount,omitnil,omitempty" name:"TotalCount"`
+
+	// 唯一请求 ID，由服务端生成，每次请求都会返回（若请求因其他原因未能抵达服务端，则该次请求不会获得 RequestId）。定位问题时需要提供该次请求的 RequestId。
+	RequestId *string `json:"RequestId,omitnil,omitempty" name:"RequestId"`
+}
+
+type DescribeResourceGraphsResponse struct {
+	*tchttp.BaseResponse
+	Response *DescribeResourceGraphsResponseParams `json:"Response"`
+}
+
+func (r *DescribeResourceGraphsResponse) ToJsonString() string {
+    b, _ := json.Marshal(r)
+    return string(b)
+}
+
+// FromJsonString It is highly **NOT** recommended to use this function
+// because it has no param check, nor strict type check
+func (r *DescribeResourceGraphsResponse) FromJsonString(s string) error {
+	return json.Unmarshal([]byte(s), &r)
+}
+
+// Predefined struct for user
 type DescribeS3RechargesRequestParams struct {
 	// <p>日志主题Id。</p><ul><li>通过<a href="https://cloud.tencent.com/document/api/614/56454">获取日志主题列表</a>获取日志主题Id。</li></ul>
 	TopicId *string `json:"TopicId,omitnil,omitempty" name:"TopicId"`
@@ -15312,6 +16691,98 @@ type DynamicIndex struct {
 	Status *bool `json:"Status,omitnil,omitempty" name:"Status"`
 }
 
+type EBPFCollectFilters struct {
+	// 进程名过滤
+	ProcessName *EBPFProcessNameFilter `json:"ProcessName,omitnil,omitempty" name:"ProcessName"`
+
+	// 目的端点过滤
+	DestEndpoint *EBPFDestEndpointFilter `json:"DestEndpoint,omitnil,omitempty" name:"DestEndpoint"`
+
+	// DNS 过滤
+	DNS *EBPFDNSFilter `json:"DNS,omitnil,omitempty" name:"DNS"`
+}
+
+type EBPFCollectRule struct {
+	// <p>采集规则名称</p>
+	RuleName *string `json:"RuleName,omitnil,omitempty" name:"RuleName"`
+
+	// <p>采集对象</p><p>枚举值：</p><ul><li>1： 所有进程</li></ul>
+	TrackTarget *int64 `json:"TrackTarget,omitnil,omitempty" name:"TrackTarget"`
+
+	// <p>三维过滤器</p>
+	Filters *EBPFCollectFilters `json:"Filters,omitnil,omitempty" name:"Filters"`
+}
+
+type EBPFDNSFilter struct {
+	// <p>过滤模式</p><p>枚举值：</p><ul><li>0： 不过滤</li><li>1： 白名单</li><li>2： 黑名单</li></ul>
+	Mode *int64 `json:"Mode,omitnil,omitempty" name:"Mode"`
+
+	// <p>域名列表，支持 *.example.com 通配</p>
+	Domains []*string `json:"Domains,omitnil,omitempty" name:"Domains"`
+}
+
+type EBPFDestEndpointFilter struct {
+	// <p>过滤模式</p><p>枚举值：</p><ul><li>0： 不过滤</li><li>1： 白名单</li><li>2： 黑名单</li></ul>
+	Mode *int64 `json:"Mode,omitnil,omitempty" name:"Mode"`
+
+	// <p>端点列表</p>
+	Endpoints []*EBPFEndpoint `json:"Endpoints,omitnil,omitempty" name:"Endpoints"`
+}
+
+type EBPFEndpoint struct {
+	// 目标 IP，支持 IPv4/IPv6
+	IP *string `json:"IP,omitnil,omitempty" name:"IP"`
+
+	// 目标端口（1-65535），为空表示仅按 IP 过滤
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	Port *uint64 `json:"Port,omitnil,omitempty" name:"Port"`
+}
+
+type EBPFProcessNameFilter struct {
+	// <p>过滤模式</p><p>枚举值：</p><ul><li>0： 不过滤</li><li>1： 白名单</li><li>2： 黑名单</li></ul>
+	Mode *int64 `json:"Mode,omitnil,omitempty" name:"Mode"`
+
+	// <p>进程名列表</p>
+	ProcessNames []*string `json:"ProcessNames,omitnil,omitempty" name:"ProcessNames"`
+}
+
+type EntityAttribute struct {
+	// 属性 key
+	Key *string `json:"Key,omitnil,omitempty" name:"Key"`
+
+	// 属性 value
+	Value *string `json:"Value,omitnil,omitempty" name:"Value"`
+}
+
+type EntityInfo struct {
+	// <p>实体 ID</p>
+	EntityId *string `json:"EntityId,omitnil,omitempty" name:"EntityId"`
+
+	// <p>实体所属域</p><p>默认值：实体所在域，如TC，App</p>
+	Domain *string `json:"Domain,omitnil,omitempty" name:"Domain"`
+
+	// <p>实体所属产品</p><p>参数格式：实体归属的产品，如CDB, Application</p>
+	Product *string `json:"Product,omitnil,omitempty" name:"Product"`
+
+	// <p>实体名称</p>
+	EntityName *string `json:"EntityName,omitnil,omitempty" name:"EntityName"`
+
+	// <p>实体类名称</p><p>参数格式：TC.CDB.Instance</p>
+	EntityClassName *string `json:"EntityClassName,omitnil,omitempty" name:"EntityClassName"`
+
+	// <p>动态属性（base 在前 + 字典序）</p>
+	Attributes []*EntityAttribute `json:"Attributes,omitnil,omitempty" name:"Attributes"`
+
+	// <p>标签列表</p>
+	Tags []*Tag `json:"Tags,omitnil,omitempty" name:"Tags"`
+
+	// <p>关联日志主题</p>
+	RelatedLogTopics []*RelatedTopicItem `json:"RelatedLogTopics,omitnil,omitempty" name:"RelatedLogTopics"`
+
+	// <p> 实体资源ID </p>
+	ResourceId *string `json:"ResourceId,omitnil,omitempty" name:"ResourceId"`
+}
+
 type EnvInfo struct {
 	// 环境变量名
 	Key *string `json:"Key,omitnil,omitempty" name:"Key"`
@@ -15773,78 +17244,58 @@ type FullTextInfo struct {
 
 // Predefined struct for user
 type GetAlarmLogRequestParams struct {
-	// 要查询的执行详情的起始时间，Unix时间戳，单位ms。
+	// <p>要查询的执行详情的起始时间，Unix时间戳，单位ms。</p>
 	From *int64 `json:"From,omitnil,omitempty" name:"From"`
 
-	// 要查询的执行详情的结束时间，Unix时间戳，单位ms。
+	// <p>要查询的执行详情的结束时间，Unix时间戳，单位ms。</p>
 	To *int64 `json:"To,omitnil,omitempty" name:"To"`
 
-	// 查询过滤条件，例如：
-	// - 按告警策略ID查询：`alert_id:"alarm-0745ec00-e605-xxxx-b50b-54afe61fc971"`
-	//    - 通过[获取告警策略列表](https://cloud.tencent.com/document/api/614/56461)获取告警策略ID
-	// - 按监控对象ID查询：`monitored_object:"823d8bfa-76a7-xxxx-8399-8cda74d4009b" `
-	//   - 通过[获取告警策略列表](https://cloud.tencent.com/document/api/614/56461)获取监控对象ID
-	// - 按告警策略ID及监控对象ID查询：`alert_id:"alarm-0745ec00-e605-xxxx-b50b-54afe61fc971" AND monitored_object:"823d8bfa-76a7-xxxx-8399-8cda74d4009b"`
-	// - 按告警策略ID及监控对象ID查询支持SQL语句：`(alert_id:"alarm-5ce45495-09e8-4d58-xxxx-768134bf330c") AND (monitored_object:"3c514e84-6f1f-46ec-xxxx-05de6163f7fe") AND NOT condition_evaluate_result: "Skip" AND condition_evaluate_result:[* TO *] | SELECT count(*) as top50StatisticsTotalCount, count_if(condition_evaluate_result='ProcessError') as top50StatisticsFailureCount, count_if(notification_send_result!='NotSend') as top50NoticeTotalCount, count_if(notification_send_result='SendPartFail' or notification_send_result='SendFail') as top50NoticeFailureCount, alert_id, alert_name, monitored_object, topic_type, happen_threshold, alert_threshold, notify_template group by alert_id, alert_name, monitored_object,topic_type, happen_threshold, alert_threshold, notify_template order by top50StatisticsTotalCount desc limit 1`
+	// <p>查询过滤条件，例如：</p><ul><li>按告警策略ID查询：<code>alert_id:&quot;alarm-0745ec00-e605-xxxx-b50b-54afe61fc971&quot;</code><ul><li>通过<a href="https://cloud.tencent.com/document/api/614/56461">获取告警策略列表</a>获取告警策略ID</li></ul></li><li>按监控对象ID查询：<code>monitored_object:&quot;823d8bfa-76a7-xxxx-8399-8cda74d4009b&quot;</code><ul><li>通过<a href="https://cloud.tencent.com/document/api/614/56461">获取告警策略列表</a>获取监控对象ID</li></ul></li><li>按告警策略ID及监控对象ID查询：<code>alert_id:&quot;alarm-0745ec00-e605-xxxx-b50b-54afe61fc971&quot; AND monitored_object:&quot;823d8bfa-76a7-xxxx-8399-8cda74d4009b&quot;</code></li><li>按告警策略ID及监控对象ID查询支持SQL语句：<code>(alert_id:&quot;alarm-5ce45495-0918-4d58-xxxx-768134bf330c&quot;) AND (monitored_object:&quot;3c514e84-6f1f-46ec-xxxx-05de6163f7fe&quot;) AND NOT condition_evaluate_result: &quot;Skip&quot; AND condition_evaluate_result:[* TO *] | SELECT count(*) as top50StatisticsTotalCount, count_if(condition_evaluate_result=&#39;ProcessError&#39;) as top50StatisticsFailureCount, count_if(notification_send_result!=&#39;NotSend&#39;) as top50NoticeTotalCount, count_if(notification_send_result=&#39;SendPartFail&#39; or notification_send_result=&#39;SendFail&#39;) as top50NoticeFailureCount, alert_id, alert_name, monitored_object, topic_type, happen_threshold, alert_threshold, notify_template group by alert_id, alert_name, monitored_object,topic_type, happen_threshold, alert_threshold, notify_template order by top50StatisticsTotalCount desc limit 1</code></li></ul><p>该查询语句走Lucene语法（已废弃）</p>
+	//
+	// Deprecated: Query is deprecated.
 	Query *string `json:"Query,omitnil,omitempty" name:"Query"`
 
-	// 单次查询返回的执行详情条数，最大值为1000
+	// <p>查询过滤条件，例如：- 按告警策略ID查询：<code>alert_id:&quot;alarm-0745ec00-e605-xxxx-b50b-54afe61fc971&quot;</code>   - 通过<a href="https://cloud.tencent.com/document/api/614/56461">获取告警策略列表</a>获取告警策略ID- 按监控对象ID查询：<code>monitored_object:&quot;823d8bfa-76a7-xxxx-8399-8cda74d4009b&quot;</code>  - 通过<a href="https://cloud.tencent.com/document/api/614/56461">获取告警策略列表</a>获取监控对象ID- 按告警策略ID及监控对象ID查询：<code>alert_id:&quot;alarm-0745ec00-e605-xxxx-b50b-54afe61fc971&quot; AND monitored_object:&quot;823d8bfa-76a7-xxxx-8399-8cda74d4009b&quot;</code>- 按告警策略ID及监控对象ID查询支持SQL语句：<code>(alert_id:&quot;alarm-5ce45495-0918-4d58-xxxx-768134bf330c&quot;) AND (monitored_object:&quot;3c514e84-6f1f-46ec-xxxx-05de6163f7fe&quot;) AND NOT condition_evaluate_result: &quot;Skip&quot; AND condition_evaluate_result:[* TO *] | SELECT count(*) as top50StatisticsTotalCount, count_if(condition_evaluate_result=&#39;ProcessError&#39;) as top50StatisticsFailureCount, count_if(notification_send_result!=&#39;NotSend&#39;) as top50NoticeTotalCount, count_if(notification_send_result=&#39;SendPartFail&#39; or notification_send_result=&#39;SendFail&#39;) as top50NoticeFailureCount, alert_id, alert_name, monitored_object, topic_type, happen_threshold, alert_threshold, notify_template group by alert_id, alert_name, monitored_object,topic_type, happen_threshold, alert_threshold, notify_template order by top50StatisticsTotalCount desc limit 1</code></p><p>该查询语句走CQL语法</p>
+	QueryString *string `json:"QueryString,omitnil,omitempty" name:"QueryString"`
+
+	// <p>单次查询返回的执行详情条数，最大值为1000</p>
 	Limit *int64 `json:"Limit,omitnil,omitempty" name:"Limit"`
 
-	// 透传上次接口返回的Context值，可获取后续更多日志，总计最多可获取1万条原始日志，过期时间1小时。
-	// 注意：
-	// * 透传该参数时，请勿修改除该参数外的其它参数
-	// * 仅当检索分析语句(Query)不包含SQL时有效，SQL获取后续结果参考<a href="https://cloud.tencent.com/document/product/614/58977" target="_blank">SQL LIMIT语法</a>
+	// <p>透传上次接口返回的Context值，可获取后续更多日志，总计最多可获取1万条原始日志，过期时间1小时。<br>注意：</p><ul><li>透传该参数时，请勿修改除该参数外的其它参数</li><li>仅当检索分析语句(Query)不包含SQL时有效，SQL获取后续结果参考<a href="https://cloud.tencent.com/document/product/614/58977" target="_blank">SQL LIMIT语法</a></li></ul>
 	Context *string `json:"Context,omitnil,omitempty" name:"Context"`
 
-	// 原始日志是否按时间排序返回；可选值：asc(升序)、desc(降序)，默认为 desc
-	// 注意：
-	// * 仅当检索分析语句(Query)不包含SQL时有效
-	// * SQL结果排序方式参考<a href="https://cloud.tencent.com/document/product/614/58978" target="_blank">SQL ORDER BY语法</a>
+	// <p>原始日志是否按时间排序返回；可选值：asc(升序)、desc(降序)，默认为 desc<br>注意：</p><ul><li>仅当检索分析语句(Query)不包含SQL时有效</li><li>SQL结果排序方式参考<a href="https://cloud.tencent.com/document/product/614/58978" target="_blank">SQL ORDER BY语法</a></li></ul>
 	Sort *string `json:"Sort,omitnil,omitempty" name:"Sort"`
 
-	// true：代表使用新的检索结果返回方式，输出参数AnalysisRecords和Columns有效；
-	// false：代表使用老的检索结果返回方式，输出AnalysisResults和ColNames有效；
-	// 两种返回方式在编码格式上有少量区别，建议使用true。
+	// <p>true：代表使用新的检索结果返回方式，输出参数AnalysisRecords和Columns有效；<br>false：代表使用老的检索结果返回方式，输出AnalysisResults和ColNames有效；<br>两种返回方式在编码格式上有少量区别，建议使用true。</p>
 	UseNewAnalysis *bool `json:"UseNewAnalysis,omitnil,omitempty" name:"UseNewAnalysis"`
 }
 
 type GetAlarmLogRequest struct {
 	*tchttp.BaseRequest
 	
-	// 要查询的执行详情的起始时间，Unix时间戳，单位ms。
+	// <p>要查询的执行详情的起始时间，Unix时间戳，单位ms。</p>
 	From *int64 `json:"From,omitnil,omitempty" name:"From"`
 
-	// 要查询的执行详情的结束时间，Unix时间戳，单位ms。
+	// <p>要查询的执行详情的结束时间，Unix时间戳，单位ms。</p>
 	To *int64 `json:"To,omitnil,omitempty" name:"To"`
 
-	// 查询过滤条件，例如：
-	// - 按告警策略ID查询：`alert_id:"alarm-0745ec00-e605-xxxx-b50b-54afe61fc971"`
-	//    - 通过[获取告警策略列表](https://cloud.tencent.com/document/api/614/56461)获取告警策略ID
-	// - 按监控对象ID查询：`monitored_object:"823d8bfa-76a7-xxxx-8399-8cda74d4009b" `
-	//   - 通过[获取告警策略列表](https://cloud.tencent.com/document/api/614/56461)获取监控对象ID
-	// - 按告警策略ID及监控对象ID查询：`alert_id:"alarm-0745ec00-e605-xxxx-b50b-54afe61fc971" AND monitored_object:"823d8bfa-76a7-xxxx-8399-8cda74d4009b"`
-	// - 按告警策略ID及监控对象ID查询支持SQL语句：`(alert_id:"alarm-5ce45495-09e8-4d58-xxxx-768134bf330c") AND (monitored_object:"3c514e84-6f1f-46ec-xxxx-05de6163f7fe") AND NOT condition_evaluate_result: "Skip" AND condition_evaluate_result:[* TO *] | SELECT count(*) as top50StatisticsTotalCount, count_if(condition_evaluate_result='ProcessError') as top50StatisticsFailureCount, count_if(notification_send_result!='NotSend') as top50NoticeTotalCount, count_if(notification_send_result='SendPartFail' or notification_send_result='SendFail') as top50NoticeFailureCount, alert_id, alert_name, monitored_object, topic_type, happen_threshold, alert_threshold, notify_template group by alert_id, alert_name, monitored_object,topic_type, happen_threshold, alert_threshold, notify_template order by top50StatisticsTotalCount desc limit 1`
+	// <p>查询过滤条件，例如：</p><ul><li>按告警策略ID查询：<code>alert_id:&quot;alarm-0745ec00-e605-xxxx-b50b-54afe61fc971&quot;</code><ul><li>通过<a href="https://cloud.tencent.com/document/api/614/56461">获取告警策略列表</a>获取告警策略ID</li></ul></li><li>按监控对象ID查询：<code>monitored_object:&quot;823d8bfa-76a7-xxxx-8399-8cda74d4009b&quot;</code><ul><li>通过<a href="https://cloud.tencent.com/document/api/614/56461">获取告警策略列表</a>获取监控对象ID</li></ul></li><li>按告警策略ID及监控对象ID查询：<code>alert_id:&quot;alarm-0745ec00-e605-xxxx-b50b-54afe61fc971&quot; AND monitored_object:&quot;823d8bfa-76a7-xxxx-8399-8cda74d4009b&quot;</code></li><li>按告警策略ID及监控对象ID查询支持SQL语句：<code>(alert_id:&quot;alarm-5ce45495-0918-4d58-xxxx-768134bf330c&quot;) AND (monitored_object:&quot;3c514e84-6f1f-46ec-xxxx-05de6163f7fe&quot;) AND NOT condition_evaluate_result: &quot;Skip&quot; AND condition_evaluate_result:[* TO *] | SELECT count(*) as top50StatisticsTotalCount, count_if(condition_evaluate_result=&#39;ProcessError&#39;) as top50StatisticsFailureCount, count_if(notification_send_result!=&#39;NotSend&#39;) as top50NoticeTotalCount, count_if(notification_send_result=&#39;SendPartFail&#39; or notification_send_result=&#39;SendFail&#39;) as top50NoticeFailureCount, alert_id, alert_name, monitored_object, topic_type, happen_threshold, alert_threshold, notify_template group by alert_id, alert_name, monitored_object,topic_type, happen_threshold, alert_threshold, notify_template order by top50StatisticsTotalCount desc limit 1</code></li></ul><p>该查询语句走Lucene语法（已废弃）</p>
 	Query *string `json:"Query,omitnil,omitempty" name:"Query"`
 
-	// 单次查询返回的执行详情条数，最大值为1000
+	// <p>查询过滤条件，例如：- 按告警策略ID查询：<code>alert_id:&quot;alarm-0745ec00-e605-xxxx-b50b-54afe61fc971&quot;</code>   - 通过<a href="https://cloud.tencent.com/document/api/614/56461">获取告警策略列表</a>获取告警策略ID- 按监控对象ID查询：<code>monitored_object:&quot;823d8bfa-76a7-xxxx-8399-8cda74d4009b&quot;</code>  - 通过<a href="https://cloud.tencent.com/document/api/614/56461">获取告警策略列表</a>获取监控对象ID- 按告警策略ID及监控对象ID查询：<code>alert_id:&quot;alarm-0745ec00-e605-xxxx-b50b-54afe61fc971&quot; AND monitored_object:&quot;823d8bfa-76a7-xxxx-8399-8cda74d4009b&quot;</code>- 按告警策略ID及监控对象ID查询支持SQL语句：<code>(alert_id:&quot;alarm-5ce45495-0918-4d58-xxxx-768134bf330c&quot;) AND (monitored_object:&quot;3c514e84-6f1f-46ec-xxxx-05de6163f7fe&quot;) AND NOT condition_evaluate_result: &quot;Skip&quot; AND condition_evaluate_result:[* TO *] | SELECT count(*) as top50StatisticsTotalCount, count_if(condition_evaluate_result=&#39;ProcessError&#39;) as top50StatisticsFailureCount, count_if(notification_send_result!=&#39;NotSend&#39;) as top50NoticeTotalCount, count_if(notification_send_result=&#39;SendPartFail&#39; or notification_send_result=&#39;SendFail&#39;) as top50NoticeFailureCount, alert_id, alert_name, monitored_object, topic_type, happen_threshold, alert_threshold, notify_template group by alert_id, alert_name, monitored_object,topic_type, happen_threshold, alert_threshold, notify_template order by top50StatisticsTotalCount desc limit 1</code></p><p>该查询语句走CQL语法</p>
+	QueryString *string `json:"QueryString,omitnil,omitempty" name:"QueryString"`
+
+	// <p>单次查询返回的执行详情条数，最大值为1000</p>
 	Limit *int64 `json:"Limit,omitnil,omitempty" name:"Limit"`
 
-	// 透传上次接口返回的Context值，可获取后续更多日志，总计最多可获取1万条原始日志，过期时间1小时。
-	// 注意：
-	// * 透传该参数时，请勿修改除该参数外的其它参数
-	// * 仅当检索分析语句(Query)不包含SQL时有效，SQL获取后续结果参考<a href="https://cloud.tencent.com/document/product/614/58977" target="_blank">SQL LIMIT语法</a>
+	// <p>透传上次接口返回的Context值，可获取后续更多日志，总计最多可获取1万条原始日志，过期时间1小时。<br>注意：</p><ul><li>透传该参数时，请勿修改除该参数外的其它参数</li><li>仅当检索分析语句(Query)不包含SQL时有效，SQL获取后续结果参考<a href="https://cloud.tencent.com/document/product/614/58977" target="_blank">SQL LIMIT语法</a></li></ul>
 	Context *string `json:"Context,omitnil,omitempty" name:"Context"`
 
-	// 原始日志是否按时间排序返回；可选值：asc(升序)、desc(降序)，默认为 desc
-	// 注意：
-	// * 仅当检索分析语句(Query)不包含SQL时有效
-	// * SQL结果排序方式参考<a href="https://cloud.tencent.com/document/product/614/58978" target="_blank">SQL ORDER BY语法</a>
+	// <p>原始日志是否按时间排序返回；可选值：asc(升序)、desc(降序)，默认为 desc<br>注意：</p><ul><li>仅当检索分析语句(Query)不包含SQL时有效</li><li>SQL结果排序方式参考<a href="https://cloud.tencent.com/document/product/614/58978" target="_blank">SQL ORDER BY语法</a></li></ul>
 	Sort *string `json:"Sort,omitnil,omitempty" name:"Sort"`
 
-	// true：代表使用新的检索结果返回方式，输出参数AnalysisRecords和Columns有效；
-	// false：代表使用老的检索结果返回方式，输出AnalysisResults和ColNames有效；
-	// 两种返回方式在编码格式上有少量区别，建议使用true。
+	// <p>true：代表使用新的检索结果返回方式，输出参数AnalysisRecords和Columns有效；<br>false：代表使用老的检索结果返回方式，输出AnalysisResults和ColNames有效；<br>两种返回方式在编码格式上有少量区别，建议使用true。</p>
 	UseNewAnalysis *bool `json:"UseNewAnalysis,omitnil,omitempty" name:"UseNewAnalysis"`
 }
 
@@ -15863,6 +17314,7 @@ func (r *GetAlarmLogRequest) FromJsonString(s string) error {
 	delete(f, "From")
 	delete(f, "To")
 	delete(f, "Query")
+	delete(f, "QueryString")
 	delete(f, "Limit")
 	delete(f, "Context")
 	delete(f, "Sort")
@@ -15875,36 +17327,32 @@ func (r *GetAlarmLogRequest) FromJsonString(s string) error {
 
 // Predefined struct for user
 type GetAlarmLogResponseParams struct {
-	// 加载后续详情的Context
+	// <p>加载后续详情的Context</p>
 	Context *string `json:"Context,omitnil,omitempty" name:"Context"`
 
-	// 指定时间范围内的告警执行详情是否完整返回
+	// <p>指定时间范围内的告警执行详情是否完整返回</p>
 	ListOver *bool `json:"ListOver,omitnil,omitempty" name:"ListOver"`
 
-	// 返回的结果是否为SQL分析结果
+	// <p>返回的结果是否为SQL分析结果</p>
 	Analysis *bool `json:"Analysis,omitnil,omitempty" name:"Analysis"`
 
-	// 分析结果的列名，如果Query语句有SQL查询，则返回查询字段的列名；
-	// 否则为空。
+	// <p>分析结果的列名，如果Query语句有SQL查询，则返回查询字段的列名；<br>否则为空。</p>
 	// 注意：此字段可能返回 null，表示取不到有效值。
 	ColNames []*string `json:"ColNames,omitnil,omitempty" name:"ColNames"`
 
-	// 执行详情查询结果。
-	// 当Query字段无SQL语句时，返回查询结果。
-	// 当Query字段有SQL语句时，可能返回null。
+	// <p>执行详情查询结果。<br>当Query字段无SQL语句时，返回查询结果。<br>当Query字段有SQL语句时，可能返回null。</p>
 	// 注意：此字段可能返回 null，表示取不到有效值。
 	Results []*LogInfo `json:"Results,omitnil,omitempty" name:"Results"`
 
-	// 执行详情统计分析结果。当Query字段有SQL语句时，返回SQL统计结果，否则可能返回null。
-	// 
+	// <p>执行详情统计分析结果。当Query字段有SQL语句时，返回SQL统计结果，否则可能返回null。</p>
 	// 注意：此字段可能返回 null，表示取不到有效值。
 	AnalysisResults []*LogItems `json:"AnalysisResults,omitnil,omitempty" name:"AnalysisResults"`
 
-	// 执行详情统计分析结果；UseNewAnalysis为true有效。
+	// <p>执行详情统计分析结果；UseNewAnalysis为true有效。</p>
 	// 注意：此字段可能返回 null，表示取不到有效值。
 	AnalysisRecords []*string `json:"AnalysisRecords,omitnil,omitempty" name:"AnalysisRecords"`
 
-	// 分析结果的列名， UseNewAnalysis为true有效
+	// <p>分析结果的列名， UseNewAnalysis为true有效</p>
 	// 注意：此字段可能返回 null，表示取不到有效值。
 	Columns []*Column `json:"Columns,omitnil,omitempty" name:"Columns"`
 
@@ -16223,120 +17671,101 @@ type JsonInfo struct {
 }
 
 type KafkaConsumerContent struct {
-	// 消费数据格式。 0：原始内容；1：JSON。
+	// <p>消费数据格式。 0：原始内容；1：JSON。</p>
 	Format *int64 `json:"Format,omitnil,omitempty" name:"Format"`
 
-	// 是否投递 TAG 信息
-	// Format为0时，此字段不需要赋值
+	// <p>是否投递 TAG 信息<br>Format为0时，此字段不需要赋值</p>
 	EnableTag *bool `json:"EnableTag,omitnil,omitempty" name:"EnableTag"`
 
-	// 元数据信息列表, 可选值为：\_\_SOURCE\_\_、\_\_FILENAME\_\_
-	// 、\_\_TIMESTAMP\_\_、\_\_HOSTNAME\_\_、\_\_PKGID\_\_
-	// Format为0时，此字段不需要赋值
+	// <p>元数据信息列表, 可选值为：__SOURCE__、__FILENAME__<br>、__TIMESTAMP__、__HOSTNAME__、__PKGID__<br>Format为0时，此字段不需要赋值</p>
 	MetaFields []*string `json:"MetaFields,omitnil,omitempty" name:"MetaFields"`
 
-	// tag数据处理方式：1:不平铺（默认值）；2:平铺。
-	// 
-	// 不平铺示例：
-	// TAG信息：`{"__TAG__":{"fieldA":200,"fieldB":"text"}}`
-	// 不平铺：`{"__TAG__":{"fieldA":200,"fieldB":"text"}}`
-	// 
-	// 平铺示例：
-	// TAG信息：`{"__TAG__":{"fieldA":200,"fieldB":"text"}}`
-	// 平铺：`{"__TAG__.fieldA":200,"__TAG__.fieldB":"text"}`
+	// <p>tag数据处理方式：1:不平铺（默认值）；2:平铺。</p><p>不平铺示例：<br>TAG信息：<code>{&quot;__TAG__&quot;:{&quot;fieldA&quot;:200,&quot;fieldB&quot;:&quot;text&quot;}}</code><br>不平铺：<code>{&quot;__TAG__&quot;:{&quot;fieldA&quot;:200,&quot;fieldB&quot;:&quot;text&quot;}}</code></p><p>平铺示例：<br>TAG信息：<code>{&quot;__TAG__&quot;:{&quot;fieldA&quot;:200,&quot;fieldB&quot;:&quot;text&quot;}}</code><br>平铺：<code>{&quot;__TAG__.fieldA&quot;:200,&quot;__TAG__.fieldB&quot;:&quot;text&quot;}</code></p>
 	TagTransaction *int64 `json:"TagTransaction,omitnil,omitempty" name:"TagTransaction"`
 
-	// 消费数据Json格式：
-	// 1：不转义（默认格式）
-	// 2：转义
-	// 
-	// 投递Json格式。
-	// JsonType为1：和原始日志一致，不转义。示例：
-	// 日志原文：`{"a":"aa", "b":{"b1":"b1b1", "c1":"c1c1"}}`
-	// 投递到Ckafka：`{"a":"aa", "b":{"b1":"b1b1", "c1":"c1c1"}}`
-	// 
-	// JsonType为2：转义。示例：
-	// 日志原文：`{"a":"aa", "b":{"b1":"b1b1", "c1":"c1c1"}}`
-	// 投递到Ckafka：`{"a":"aa","b":"{\"b1\":\"b1b1\", \"c1\":\"c1c1\"}"}`
+	// <p>消费数据Json格式：<br>1：不转义（默认格式）<br>2：转义</p><p>投递Json格式。<br>JsonType为1：和原始日志一致，不转义。示例：<br>日志原文：<code>{&quot;a&quot;:&quot;aa&quot;, &quot;b&quot;:{&quot;b1&quot;:&quot;b1b1&quot;, &quot;c1&quot;:&quot;c1c1&quot;}}</code><br>投递到Ckafka：<code>{&quot;a&quot;:&quot;aa&quot;, &quot;b&quot;:{&quot;b1&quot;:&quot;b1b1&quot;, &quot;c1&quot;:&quot;c1c1&quot;}}</code></p><p>JsonType为2：转义。示例：<br>日志原文：<code>{&quot;a&quot;:&quot;aa&quot;, &quot;b&quot;:{&quot;b1&quot;:&quot;b1b1&quot;, &quot;c1&quot;:&quot;c1c1&quot;}}</code><br>投递到Ckafka：<code>{&quot;a&quot;:&quot;aa&quot;,&quot;b&quot;:&quot;{\&quot;b1\&quot;:\&quot;b1b1\&quot;, \&quot;c1\&quot;:\&quot;c1c1\&quot;}&quot;}</code></p>
 	JsonType *int64 `json:"JsonType,omitnil,omitempty" name:"JsonType"`
+
+	// <p>数值类型自动转换开关</p><p>枚举值：</p><ul><li>true： JSON 结构中第一层级的 value 中的数字字符串（如 &quot;123&quot; ）会被自动转换为数值类型（int / float）。</li><li>false： JSON 结构中第一层级的 value 中的数字字符串（如 &quot;123&quot; ）为字符串。</li></ul><p>默认值：false</p>
+	AutoConvertNumber *bool `json:"AutoConvertNumber,omitnil,omitempty" name:"AutoConvertNumber"`
 }
 
 type KafkaProtocolInfo struct {
-	// 协议类型，支持的协议类型包括 plaintext、sasl_plaintext 或 sasl_ssl。建议使用 sasl_ssl，此协议会进行连接加密同时需要用户认证。
-	// 
-	// - 当IsEncryptionAddr为true时，Protocol必填。
-	// - 支持的协议类型如下：
-	//     - plaintext：纯文本无加密协议
-	//     - sasl_ssl：SASL 认证 + SSL 加密
-	//     - ssl：纯 SSL/TLS 加密协议
-	//     - sasl_plaintext：SASL 认证 + 非加密通道
+	// <p>协议类型，支持的协议类型包括 plaintext、sasl_plaintext 或 sasl_ssl。建议使用 sasl_ssl，此协议会进行连接加密同时需要用户认证。</p><ul><li>当IsEncryptionAddr为true时，Protocol必填。</li><li>支持的协议类型如下：<ul><li>plaintext：纯文本无加密协议</li><li>sasl_ssl：SASL 认证 + SSL 加密</li><li>ssl：纯 SSL/TLS 加密协议</li><li>sasl_plaintext：SASL 认证 + 非加密通道</li></ul></li></ul>
 	Protocol *string `json:"Protocol,omitnil,omitempty" name:"Protocol"`
 
-	// 加密类型，支持 PLAIN、SCRAM-SHA-256 或 SCRAM-SHA-512。
-	// 
-	// - 当Protocol为  `sasl_plaintext` 或 `sasl_ssl` 时 Mechanism 必填。
-	// - 支持加密类型如下
-	//     -  PLAIN：明文认证
-	//     -  SCRAM-SHA-256：基于挑战-响应机制，使用PBKDF2-HMAC-SHA256算法
-	//     -  SCRAM-SHA-512：增强版SCRAM，使用PBKDF2-HMAC-SHA512算法
+	// <p>加密类型，支持 PLAIN、SCRAM-SHA-256 或 SCRAM-SHA-512。</p><ul><li>当Protocol为  <code>sasl_plaintext</code> 或 <code>sasl_ssl</code> 时 Mechanism 必填。</li><li>支持加密类型如下<ul><li>PLAIN：明文认证</li><li>SCRAM-SHA-256：基于挑战-响应机制，使用PBKDF2-HMAC-SHA256算法</li><li>SCRAM-SHA-512：增强版SCRAM，使用PBKDF2-HMAC-SHA512算法</li></ul></li></ul>
 	Mechanism *string `json:"Mechanism,omitnil,omitempty" name:"Mechanism"`
 
-	// 用户名。
-	// 当Protocol为sasl_plaintext或sasl_ssl时必填
+	// <p>用户名。<br>当Protocol为sasl_plaintext或sasl_ssl时必填</p>
 	UserName *string `json:"UserName,omitnil,omitempty" name:"UserName"`
 
-	// 用户密码。
-	// 当Protocol为sasl_plaintext或sasl_ssl时必填
+	// <p>用户密码。<br>当Protocol为sasl_plaintext或sasl_ssl时必填</p>
 	Password *string `json:"Password,omitnil,omitempty" name:"Password"`
+
+	// <p>是否开启客户端证书验证</p>
+	EnableClientCertificate *uint64 `json:"EnableClientCertificate,omitnil,omitempty" name:"EnableClientCertificate"`
+
+	// <p>是否开启服务端证书验证</p>
+	EnableServerCertificate *uint64 `json:"EnableServerCertificate,omitnil,omitempty" name:"EnableServerCertificate"`
+
+	// <p>云托管CA证书id</p>
+	CACertificateId *string `json:"CACertificateId,omitnil,omitempty" name:"CACertificateId"`
+
+	// <p>云托管服务端证书id</p>
+	SVRCertificateId *string `json:"SVRCertificateId,omitnil,omitempty" name:"SVRCertificateId"`
 }
 
 type KafkaRechargeInfo struct {
-	// Kafka数据订阅配置的ID。
+	// <p>Kafka数据订阅配置的ID。</p>
 	Id *string `json:"Id,omitnil,omitempty" name:"Id"`
 
-	// 日志主题ID
+	// <p>日志主题ID</p>
 	TopicId *string `json:"TopicId,omitnil,omitempty" name:"TopicId"`
 
-	// Kafka导入任务名称
+	// <p>Kafka导入任务名称</p>
 	Name *string `json:"Name,omitnil,omitempty" name:"Name"`
 
-	// 导入Kafka类型，0: 腾讯云CKafka，1: 用户自建Kafka
+	// <p>导入Kafka类型，0: 腾讯云CKafka，1: 用户自建Kafka</p>
 	KafkaType *uint64 `json:"KafkaType,omitnil,omitempty" name:"KafkaType"`
 
-	// 腾讯云CKafka实例ID，KafkaType为0时必填
+	// <p>腾讯云CKafka实例ID，KafkaType为0时必填</p>
 	KafkaInstance *string `json:"KafkaInstance,omitnil,omitempty" name:"KafkaInstance"`
 
-	// 服务地址
+	// <p>服务地址</p>
 	ServerAddr *string `json:"ServerAddr,omitnil,omitempty" name:"ServerAddr"`
 
-	// ServerAddr是否为加密连接	
+	// <p>ServerAddr是否为加密连接</p>
 	IsEncryptionAddr *bool `json:"IsEncryptionAddr,omitnil,omitempty" name:"IsEncryptionAddr"`
 
-	// 加密访问协议，IsEncryptionAddr参数为true时必填
+	// <p>加密访问协议，IsEncryptionAddr参数为true时必填</p>
 	Protocol *KafkaProtocolInfo `json:"Protocol,omitnil,omitempty" name:"Protocol"`
 
-	// 用户需要导入的Kafka相关topic列表，多个topic之间使用半角逗号隔开
+	// <p>用户需要导入的Kafka相关topic列表，多个topic之间使用半角逗号隔开</p>
 	UserKafkaTopics *string `json:"UserKafkaTopics,omitnil,omitempty" name:"UserKafkaTopics"`
 
-	// 用户Kafka消费组名称	
+	// <p>用户Kafka消费组名称</p>
 	ConsumerGroupName *string `json:"ConsumerGroupName,omitnil,omitempty" name:"ConsumerGroupName"`
 
-	// 状态 ，1：运行中；2：暂停。
+	// <p>状态 ，1：运行中；2：暂停。</p>
 	Status *int64 `json:"Status,omitnil,omitempty" name:"Status"`
 
-	// 导入数据位置，-2:最早（默认），-1：最晚
+	// <p>导入数据位置，-2:最早（默认），-1：最晚</p>
 	Offset *int64 `json:"Offset,omitnil,omitempty" name:"Offset"`
 
-	// 创建时间。格式`YYYY-MM-DD HH:MM:SS`
+	// <p>创建时间。格式<code>YYYY-MM-DD HH:MM:SS</code></p>
 	CreateTime *string `json:"CreateTime,omitnil,omitempty" name:"CreateTime"`
 
-	// 更新时间。格式`YYYY-MM-DD HH:MM:SS`
+	// <p>更新时间。格式<code>YYYY-MM-DD HH:MM:SS</code></p>
 	UpdateTime *string `json:"UpdateTime,omitnil,omitempty" name:"UpdateTime"`
 
-	// 日志导入规则
+	// <p>日志导入规则</p>
 	LogRechargeRule *LogRechargeRuleInfo `json:"LogRechargeRule,omitnil,omitempty" name:"LogRechargeRule"`
 
-	// 用户kafka拓展信息
+	// <p>私有网络信息</p>
+	NetworkInfo *NetworkInfo `json:"NetworkInfo,omitnil,omitempty" name:"NetworkInfo"`
+
+	// <p>用户kafka拓展信息</p>
 	UserKafkaMeta *UserKafkaMeta `json:"UserKafkaMeta,omitnil,omitempty" name:"UserKafkaMeta"`
 }
 
@@ -16453,41 +17882,44 @@ type LogContextInfo struct {
 }
 
 type LogInfo struct {
-	// 日志时间，单位ms
+	// <p>日志时间，单位ms</p>
 	Time *int64 `json:"Time,omitnil,omitempty" name:"Time"`
 
-	// 日志主题ID
+	// <p>日志主题ID</p>
 	TopicId *string `json:"TopicId,omitnil,omitempty" name:"TopicId"`
 
-	// 日志主题名称
+	// <p>日志主题名称</p>
 	TopicName *string `json:"TopicName,omitnil,omitempty" name:"TopicName"`
 
-	// 日志来源IP
+	// <p>日志来源IP</p>
 	Source *string `json:"Source,omitnil,omitempty" name:"Source"`
 
-	// 日志文件名称
+	// <p>日志文件名称</p>
 	FileName *string `json:"FileName,omitnil,omitempty" name:"FileName"`
 
-	// 日志上报请求包的ID
+	// <p>日志上报请求包的ID</p>
 	PkgId *string `json:"PkgId,omitnil,omitempty" name:"PkgId"`
 
-	// 请求包内日志的ID
+	// <p>请求包内日志的ID</p>
 	PkgLogId *string `json:"PkgLogId,omitnil,omitempty" name:"PkgLogId"`
 
-	// 符合检索条件的关键词，一般用于高亮显示。仅支持键值检索，不支持全文检索	
+	// <p>符合检索条件的关键词，一般用于高亮显示。仅支持键值检索，不支持全文检索</p>
 	HighLights []*HighLightItem `json:"HighLights,omitnil,omitempty" name:"HighLights"`
 
-	// 日志内容的Json序列化字符串
+	// <p>日志内容的Json序列化字符串</p>
 	LogJson *string `json:"LogJson,omitnil,omitempty" name:"LogJson"`
 
-	// 日志来源主机名称
+	// <p>日志来源主机名称</p>
 	HostName *string `json:"HostName,omitnil,omitempty" name:"HostName"`
 
-	// 原始日志(仅在日志创建索引异常时有值)
+	// <p>原始日志(仅在日志创建索引异常时有值)</p>
 	RawLog *string `json:"RawLog,omitnil,omitempty" name:"RawLog"`
 
-	// 日志创建索引异常原因(仅在日志创建索引异常时有值)
+	// <p>日志创建索引异常原因(仅在日志创建索引异常时有值)</p>
 	IndexStatus *string `json:"IndexStatus,omitnil,omitempty" name:"IndexStatus"`
+
+	// <p>日志时间，单位ns</p><p>单位：纳秒</p>
+	TimeNanos *int64 `json:"TimeNanos,omitnil,omitempty" name:"TimeNanos"`
 }
 
 type LogItem struct {
@@ -17500,6 +18932,102 @@ func (r *ModifyAlarmShieldResponse) FromJsonString(s string) error {
 }
 
 // Predefined struct for user
+type ModifyCLSDeliverTaskRequestParams struct {
+	// <p>任务id</p>
+	TaskId *string `json:"TaskId,omitnil,omitempty" name:"TaskId"`
+
+	// <p>任务名称</p><p>参数格式：<code>^[a-zA-Z0-9_-]{1,64}$</code></p>
+	TaskName *string `json:"TaskName,omitnil,omitempty" name:"TaskName"`
+
+	// <p>源主题信息</p>
+	SourceTopicConfig *SourceTopicConfig `json:"SourceTopicConfig,omitnil,omitempty" name:"SourceTopicConfig"`
+
+	// <p>目标主题信息</p>
+	TargetTopicConfig *TargetTopicConfig `json:"TargetTopicConfig,omitnil,omitempty" name:"TargetTopicConfig"`
+
+	// <p>投递规则</p>
+	DeliverRule *DeliverRule `json:"DeliverRule,omitnil,omitempty" name:"DeliverRule"`
+
+	// <p>状态</p><p>枚举值：</p><ul><li>0： 运行</li><li>1： 暂停</li></ul>
+	Enable *uint64 `json:"Enable,omitnil,omitempty" name:"Enable"`
+
+	// <p>是否开启投递服务日志。</p><p>枚举值：</p><ul><li>1： 关闭</li><li>2： 开启</li></ul>
+	HasServicesLog *uint64 `json:"HasServicesLog,omitnil,omitempty" name:"HasServicesLog"`
+}
+
+type ModifyCLSDeliverTaskRequest struct {
+	*tchttp.BaseRequest
+	
+	// <p>任务id</p>
+	TaskId *string `json:"TaskId,omitnil,omitempty" name:"TaskId"`
+
+	// <p>任务名称</p><p>参数格式：<code>^[a-zA-Z0-9_-]{1,64}$</code></p>
+	TaskName *string `json:"TaskName,omitnil,omitempty" name:"TaskName"`
+
+	// <p>源主题信息</p>
+	SourceTopicConfig *SourceTopicConfig `json:"SourceTopicConfig,omitnil,omitempty" name:"SourceTopicConfig"`
+
+	// <p>目标主题信息</p>
+	TargetTopicConfig *TargetTopicConfig `json:"TargetTopicConfig,omitnil,omitempty" name:"TargetTopicConfig"`
+
+	// <p>投递规则</p>
+	DeliverRule *DeliverRule `json:"DeliverRule,omitnil,omitempty" name:"DeliverRule"`
+
+	// <p>状态</p><p>枚举值：</p><ul><li>0： 运行</li><li>1： 暂停</li></ul>
+	Enable *uint64 `json:"Enable,omitnil,omitempty" name:"Enable"`
+
+	// <p>是否开启投递服务日志。</p><p>枚举值：</p><ul><li>1： 关闭</li><li>2： 开启</li></ul>
+	HasServicesLog *uint64 `json:"HasServicesLog,omitnil,omitempty" name:"HasServicesLog"`
+}
+
+func (r *ModifyCLSDeliverTaskRequest) ToJsonString() string {
+    b, _ := json.Marshal(r)
+    return string(b)
+}
+
+// FromJsonString It is highly **NOT** recommended to use this function
+// because it has no param check, nor strict type check
+func (r *ModifyCLSDeliverTaskRequest) FromJsonString(s string) error {
+	f := make(map[string]interface{})
+	if err := json.Unmarshal([]byte(s), &f); err != nil {
+		return err
+	}
+	delete(f, "TaskId")
+	delete(f, "TaskName")
+	delete(f, "SourceTopicConfig")
+	delete(f, "TargetTopicConfig")
+	delete(f, "DeliverRule")
+	delete(f, "Enable")
+	delete(f, "HasServicesLog")
+	if len(f) > 0 {
+		return tcerr.NewTencentCloudSDKError("ClientError.BuildRequestError", "ModifyCLSDeliverTaskRequest has unknown keys!", "")
+	}
+	return json.Unmarshal([]byte(s), &r)
+}
+
+// Predefined struct for user
+type ModifyCLSDeliverTaskResponseParams struct {
+	// 唯一请求 ID，由服务端生成，每次请求都会返回（若请求因其他原因未能抵达服务端，则该次请求不会获得 RequestId）。定位问题时需要提供该次请求的 RequestId。
+	RequestId *string `json:"RequestId,omitnil,omitempty" name:"RequestId"`
+}
+
+type ModifyCLSDeliverTaskResponse struct {
+	*tchttp.BaseResponse
+	Response *ModifyCLSDeliverTaskResponseParams `json:"Response"`
+}
+
+func (r *ModifyCLSDeliverTaskResponse) ToJsonString() string {
+    b, _ := json.Marshal(r)
+    return string(b)
+}
+
+// FromJsonString It is highly **NOT** recommended to use this function
+// because it has no param check, nor strict type check
+func (r *ModifyCLSDeliverTaskResponse) FromJsonString(s string) error {
+	return json.Unmarshal([]byte(s), &r)
+}
+
+// Predefined struct for user
 type ModifyCloudProductLogCollectionRequestParams struct {
 	// <p>实例ID</p>
 	InstanceId *string `json:"InstanceId,omitnil,omitempty" name:"InstanceId"`
@@ -18240,71 +19768,69 @@ func (r *ModifyConsumerGroupResponse) FromJsonString(s string) error {
 
 // Predefined struct for user
 type ModifyConsumerRequestParams struct {
-	// 投递任务绑定的日志主题Id。
-	// - 通过 [获取日志主题列表](https://cloud.tencent.com/document/product/614/56454) 获取日志主题Id。
-	// - 通过 [创建日志主题](https://cloud.tencent.com/document/product/614/56456) 获取日志主题Id。
+	// <p>投递任务绑定的日志主题Id。</p><ul><li>通过 <a href="https://cloud.tencent.com/document/product/614/56454">获取日志主题列表</a> 获取日志主题Id。</li><li>通过 <a href="https://cloud.tencent.com/document/product/614/56456">创建日志主题</a> 获取日志主题Id。</li></ul>
 	TopicId *string `json:"TopicId,omitnil,omitempty" name:"TopicId"`
 
-	// 投递任务是否生效，默认不生效
+	// <p>投递任务是否生效，默认不生效</p>
 	Effective *bool `json:"Effective,omitnil,omitempty" name:"Effective"`
 
-	// 是否投递日志的元数据信息，默认为 true。
-	// 当NeedContent为true时：字段Content有效。
-	// 当NeedContent为false时：字段Content无效。
+	// <p>是否投递日志的元数据信息，默认为 true。<br>当NeedContent为true时：字段Content有效。<br>当NeedContent为false时：字段Content无效。</p>
 	NeedContent *bool `json:"NeedContent,omitnil,omitempty" name:"NeedContent"`
 
-	// 如果需要投递元数据信息，元数据信息的描述
+	// <p>如果需要投递元数据信息，元数据信息的描述</p>
 	Content *ConsumerContent `json:"Content,omitnil,omitempty" name:"Content"`
 
-	// CKafka的描述
+	// <p>CKafka的描述</p>
 	Ckafka *Ckafka `json:"Ckafka,omitnil,omitempty" name:"Ckafka"`
 
-	// 投递时压缩方式，取值0，2，3。[0：NONE；2：SNAPPY；3：LZ4]
+	// <p>投递时压缩方式，取值0，2，3。[0：NONE；2：SNAPPY；3：LZ4]</p>
 	Compression *int64 `json:"Compression,omitnil,omitempty" name:"Compression"`
 
-	// 角色访问描述名 [创建角色](https://cloud.tencent.com/document/product/598/19381)
+	// <p>角色访问描述名 <a href="https://cloud.tencent.com/document/product/598/19381">创建角色</a></p>
 	RoleArn *string `json:"RoleArn,omitnil,omitempty" name:"RoleArn"`
 
-	// 外部ID
+	// <p>外部ID</p>
 	ExternalId *string `json:"ExternalId,omitnil,omitempty" name:"ExternalId"`
 
-	// 高级配置
+	// <p>高级配置</p>
 	AdvancedConfig *AdvancedConsumerConfiguration `json:"AdvancedConfig,omitnil,omitempty" name:"AdvancedConfig"`
+
+	// <p>日志预过滤-数据写入 ckafka 的原始数据进行预过滤处理</p>
+	DSLFilter *string `json:"DSLFilter,omitnil,omitempty" name:"DSLFilter"`
 }
 
 type ModifyConsumerRequest struct {
 	*tchttp.BaseRequest
 	
-	// 投递任务绑定的日志主题Id。
-	// - 通过 [获取日志主题列表](https://cloud.tencent.com/document/product/614/56454) 获取日志主题Id。
-	// - 通过 [创建日志主题](https://cloud.tencent.com/document/product/614/56456) 获取日志主题Id。
+	// <p>投递任务绑定的日志主题Id。</p><ul><li>通过 <a href="https://cloud.tencent.com/document/product/614/56454">获取日志主题列表</a> 获取日志主题Id。</li><li>通过 <a href="https://cloud.tencent.com/document/product/614/56456">创建日志主题</a> 获取日志主题Id。</li></ul>
 	TopicId *string `json:"TopicId,omitnil,omitempty" name:"TopicId"`
 
-	// 投递任务是否生效，默认不生效
+	// <p>投递任务是否生效，默认不生效</p>
 	Effective *bool `json:"Effective,omitnil,omitempty" name:"Effective"`
 
-	// 是否投递日志的元数据信息，默认为 true。
-	// 当NeedContent为true时：字段Content有效。
-	// 当NeedContent为false时：字段Content无效。
+	// <p>是否投递日志的元数据信息，默认为 true。<br>当NeedContent为true时：字段Content有效。<br>当NeedContent为false时：字段Content无效。</p>
 	NeedContent *bool `json:"NeedContent,omitnil,omitempty" name:"NeedContent"`
 
-	// 如果需要投递元数据信息，元数据信息的描述
+	// <p>如果需要投递元数据信息，元数据信息的描述</p>
 	Content *ConsumerContent `json:"Content,omitnil,omitempty" name:"Content"`
 
-	// CKafka的描述
+	// <p>CKafka的描述</p>
 	Ckafka *Ckafka `json:"Ckafka,omitnil,omitempty" name:"Ckafka"`
 
-	// 投递时压缩方式，取值0，2，3。[0：NONE；2：SNAPPY；3：LZ4]
+	// <p>投递时压缩方式，取值0，2，3。[0：NONE；2：SNAPPY；3：LZ4]</p>
 	Compression *int64 `json:"Compression,omitnil,omitempty" name:"Compression"`
 
-	// 角色访问描述名 [创建角色](https://cloud.tencent.com/document/product/598/19381)
+	// <p>角色访问描述名 <a href="https://cloud.tencent.com/document/product/598/19381">创建角色</a></p>
 	RoleArn *string `json:"RoleArn,omitnil,omitempty" name:"RoleArn"`
 
-	// 外部ID
+	// <p>外部ID</p>
 	ExternalId *string `json:"ExternalId,omitnil,omitempty" name:"ExternalId"`
 
-	// 高级配置
+	// <p>高级配置</p>
 	AdvancedConfig *AdvancedConsumerConfiguration `json:"AdvancedConfig,omitnil,omitempty" name:"AdvancedConfig"`
+
+	// <p>日志预过滤-数据写入 ckafka 的原始数据进行预过滤处理</p>
+	DSLFilter *string `json:"DSLFilter,omitnil,omitempty" name:"DSLFilter"`
 }
 
 func (r *ModifyConsumerRequest) ToJsonString() string {
@@ -18328,6 +19854,7 @@ func (r *ModifyConsumerRequest) FromJsonString(s string) error {
 	delete(f, "RoleArn")
 	delete(f, "ExternalId")
 	delete(f, "AdvancedConfig")
+	delete(f, "DSLFilter")
 	if len(f) > 0 {
 		return tcerr.NewTencentCloudSDKError("ClientError.BuildRequestError", "ModifyConsumerRequest has unknown keys!", "")
 	}
@@ -19348,6 +20875,12 @@ type ModifyKafkaConsumerRequestParams struct {
 	// <p>是否开启投递服务日志。1：关闭，2：开启。</p>
 	HasServicesLog *uint64 `json:"HasServicesLog,omitnil,omitempty" name:"HasServicesLog"`
 
+	// <p>外网消费开关。</p>
+	EnableInternetConsume *bool `json:"EnableInternetConsume,omitnil,omitempty" name:"EnableInternetConsume"`
+
+	// <p>内网消费开关。</p>
+	EnableIntranetConsume *bool `json:"EnableIntranetConsume,omitnil,omitempty" name:"EnableIntranetConsume"`
+
 	// <p>消费范围类型，0:最新，1:历史+最新</p>
 	ScopeType *uint64 `json:"ScopeType,omitnil,omitempty" name:"ScopeType"`
 }
@@ -19366,6 +20899,12 @@ type ModifyKafkaConsumerRequest struct {
 
 	// <p>是否开启投递服务日志。1：关闭，2：开启。</p>
 	HasServicesLog *uint64 `json:"HasServicesLog,omitnil,omitempty" name:"HasServicesLog"`
+
+	// <p>外网消费开关。</p>
+	EnableInternetConsume *bool `json:"EnableInternetConsume,omitnil,omitempty" name:"EnableInternetConsume"`
+
+	// <p>内网消费开关。</p>
+	EnableIntranetConsume *bool `json:"EnableIntranetConsume,omitnil,omitempty" name:"EnableIntranetConsume"`
 
 	// <p>消费范围类型，0:最新，1:历史+最新</p>
 	ScopeType *uint64 `json:"ScopeType,omitnil,omitempty" name:"ScopeType"`
@@ -19387,6 +20926,8 @@ func (r *ModifyKafkaConsumerRequest) FromJsonString(s string) error {
 	delete(f, "Compression")
 	delete(f, "ConsumerContent")
 	delete(f, "HasServicesLog")
+	delete(f, "EnableInternetConsume")
+	delete(f, "EnableIntranetConsume")
 	delete(f, "ScopeType")
 	if len(f) > 0 {
 		return tcerr.NewTencentCloudSDKError("ClientError.BuildRequestError", "ModifyKafkaConsumerRequest has unknown keys!", "")
@@ -19418,100 +20959,92 @@ func (r *ModifyKafkaConsumerResponse) FromJsonString(s string) error {
 
 // Predefined struct for user
 type ModifyKafkaRechargeRequestParams struct {
-	// 导入配置Id。
-	// - 通过 [创建Kafka数据订阅任务](https://cloud.tencent.com/document/product/614/94448)获取Kafka导入配置Id。
-	// - 通过 [获取Kafka数据订阅任务列表](https://cloud.tencent.com/document/product/614/94446)获取Kafka导入配置Id。
+	// <p>导入配置Id。</p><ul><li>通过 <a href="https://cloud.tencent.com/document/product/614/94448">创建Kafka数据订阅任务</a>获取Kafka导入配置Id。</li><li>通过 <a href="https://cloud.tencent.com/document/product/614/94446">获取Kafka数据订阅任务列表</a>获取Kafka导入配置Id。</li></ul>
 	Id *string `json:"Id,omitnil,omitempty" name:"Id"`
 
-	// 导入CLS目标TopicId。
-	// - 通过 [获取日志主题列表](https://cloud.tencent.com/document/product/614/56454)获取日志主题Id。
-	// - 通过 [创建日志主题](https://cloud.tencent.com/document/product/614/56456)获取日志主题Id。
+	// <p>导入CLS目标TopicId。</p><ul><li>通过 <a href="https://cloud.tencent.com/document/product/614/56454">获取日志主题列表</a>获取日志主题Id。</li><li>通过 <a href="https://cloud.tencent.com/document/product/614/56456">创建日志主题</a>获取日志主题Id。</li></ul>
 	TopicId *string `json:"TopicId,omitnil,omitempty" name:"TopicId"`
 
-	// Kafka导入配置名称
+	// <p>Kafka导入配置名称</p>
 	Name *string `json:"Name,omitnil,omitempty" name:"Name"`
 
-	// 导入Kafka类型，0：腾讯云CKafka：1：用户自建Kafka。
+	// <p>导入Kafka类型，0：腾讯云CKafka：1：用户自建Kafka。</p>
 	KafkaType *uint64 `json:"KafkaType,omitnil,omitempty" name:"KafkaType"`
 
-	// 腾讯云CKafka实例ID，KafkaType为0时必填。
-	// - 通过 [获取实例列表信息](https://cloud.tencent.com/document/product/597/40835) 获取实例id。
+	// <p>腾讯云CKafka实例ID，KafkaType为0时必填。</p><ul><li>通过 <a href="https://cloud.tencent.com/document/product/597/40835">获取实例列表信息</a> 获取实例id。</li></ul>
 	KafkaInstance *string `json:"KafkaInstance,omitnil,omitempty" name:"KafkaInstance"`
 
-	// 服务地址，KafkaType为1时必填。
+	// <p>服务地址，KafkaType为1时必填。</p>
 	ServerAddr *string `json:"ServerAddr,omitnil,omitempty" name:"ServerAddr"`
 
-	// ServerAddr是否为加密连接，KafkaType为1时必填。
+	// <p>ServerAddr是否为加密连接，KafkaType为1时必填。</p>
 	IsEncryptionAddr *bool `json:"IsEncryptionAddr,omitnil,omitempty" name:"IsEncryptionAddr"`
 
-	// 加密访问协议，KafkaType参数为1并且IsEncryptionAddr参数为true时必填。
+	// <p>加密访问协议，KafkaType参数为1并且IsEncryptionAddr参数为true时必填。</p>
 	Protocol *KafkaProtocolInfo `json:"Protocol,omitnil,omitempty" name:"Protocol"`
 
-	// 用户需要导入的Kafka相关topic列表，多个topic之间使用半角逗号隔开。
-	// 
-	// - Kafka类型为腾讯云CKafka时：通过 [获取主题列表](https://cloud.tencent.com/document/product/597/40847) 获取TopicName。
+	// <p>用户需要导入的Kafka相关topic列表，多个topic之间使用半角逗号隔开。</p><ul><li>Kafka类型为腾讯云CKafka时：通过 <a href="https://cloud.tencent.com/document/product/597/40847">获取主题列表</a> 获取TopicName。</li></ul>
 	UserKafkaTopics *string `json:"UserKafkaTopics,omitnil,omitempty" name:"UserKafkaTopics"`
 
-	// 用户Kafka消费组名称
+	// <p>用户Kafka消费组名称</p>
 	ConsumerGroupName *string `json:"ConsumerGroupName,omitnil,omitempty" name:"ConsumerGroupName"`
 
-	// 日志导入规则
+	// <p>日志导入规则</p>
 	LogRechargeRule *LogRechargeRuleInfo `json:"LogRechargeRule,omitnil,omitempty" name:"LogRechargeRule"`
 
-	// 导入控制，1：暂停；2：启动。
+	// <p>导入控制，1：暂停；2：启动。</p>
 	StatusControl *uint64 `json:"StatusControl,omitnil,omitempty" name:"StatusControl"`
 
-	// 用户kafka拓展信息
+	// <p>私有网络信息参数</p>
+	NetworkInfo *NetworkInfo `json:"NetworkInfo,omitnil,omitempty" name:"NetworkInfo"`
+
+	// <p>用户kafka拓展信息</p>
 	UserKafkaMeta *UserKafkaMeta `json:"UserKafkaMeta,omitnil,omitempty" name:"UserKafkaMeta"`
 }
 
 type ModifyKafkaRechargeRequest struct {
 	*tchttp.BaseRequest
 	
-	// 导入配置Id。
-	// - 通过 [创建Kafka数据订阅任务](https://cloud.tencent.com/document/product/614/94448)获取Kafka导入配置Id。
-	// - 通过 [获取Kafka数据订阅任务列表](https://cloud.tencent.com/document/product/614/94446)获取Kafka导入配置Id。
+	// <p>导入配置Id。</p><ul><li>通过 <a href="https://cloud.tencent.com/document/product/614/94448">创建Kafka数据订阅任务</a>获取Kafka导入配置Id。</li><li>通过 <a href="https://cloud.tencent.com/document/product/614/94446">获取Kafka数据订阅任务列表</a>获取Kafka导入配置Id。</li></ul>
 	Id *string `json:"Id,omitnil,omitempty" name:"Id"`
 
-	// 导入CLS目标TopicId。
-	// - 通过 [获取日志主题列表](https://cloud.tencent.com/document/product/614/56454)获取日志主题Id。
-	// - 通过 [创建日志主题](https://cloud.tencent.com/document/product/614/56456)获取日志主题Id。
+	// <p>导入CLS目标TopicId。</p><ul><li>通过 <a href="https://cloud.tencent.com/document/product/614/56454">获取日志主题列表</a>获取日志主题Id。</li><li>通过 <a href="https://cloud.tencent.com/document/product/614/56456">创建日志主题</a>获取日志主题Id。</li></ul>
 	TopicId *string `json:"TopicId,omitnil,omitempty" name:"TopicId"`
 
-	// Kafka导入配置名称
+	// <p>Kafka导入配置名称</p>
 	Name *string `json:"Name,omitnil,omitempty" name:"Name"`
 
-	// 导入Kafka类型，0：腾讯云CKafka：1：用户自建Kafka。
+	// <p>导入Kafka类型，0：腾讯云CKafka：1：用户自建Kafka。</p>
 	KafkaType *uint64 `json:"KafkaType,omitnil,omitempty" name:"KafkaType"`
 
-	// 腾讯云CKafka实例ID，KafkaType为0时必填。
-	// - 通过 [获取实例列表信息](https://cloud.tencent.com/document/product/597/40835) 获取实例id。
+	// <p>腾讯云CKafka实例ID，KafkaType为0时必填。</p><ul><li>通过 <a href="https://cloud.tencent.com/document/product/597/40835">获取实例列表信息</a> 获取实例id。</li></ul>
 	KafkaInstance *string `json:"KafkaInstance,omitnil,omitempty" name:"KafkaInstance"`
 
-	// 服务地址，KafkaType为1时必填。
+	// <p>服务地址，KafkaType为1时必填。</p>
 	ServerAddr *string `json:"ServerAddr,omitnil,omitempty" name:"ServerAddr"`
 
-	// ServerAddr是否为加密连接，KafkaType为1时必填。
+	// <p>ServerAddr是否为加密连接，KafkaType为1时必填。</p>
 	IsEncryptionAddr *bool `json:"IsEncryptionAddr,omitnil,omitempty" name:"IsEncryptionAddr"`
 
-	// 加密访问协议，KafkaType参数为1并且IsEncryptionAddr参数为true时必填。
+	// <p>加密访问协议，KafkaType参数为1并且IsEncryptionAddr参数为true时必填。</p>
 	Protocol *KafkaProtocolInfo `json:"Protocol,omitnil,omitempty" name:"Protocol"`
 
-	// 用户需要导入的Kafka相关topic列表，多个topic之间使用半角逗号隔开。
-	// 
-	// - Kafka类型为腾讯云CKafka时：通过 [获取主题列表](https://cloud.tencent.com/document/product/597/40847) 获取TopicName。
+	// <p>用户需要导入的Kafka相关topic列表，多个topic之间使用半角逗号隔开。</p><ul><li>Kafka类型为腾讯云CKafka时：通过 <a href="https://cloud.tencent.com/document/product/597/40847">获取主题列表</a> 获取TopicName。</li></ul>
 	UserKafkaTopics *string `json:"UserKafkaTopics,omitnil,omitempty" name:"UserKafkaTopics"`
 
-	// 用户Kafka消费组名称
+	// <p>用户Kafka消费组名称</p>
 	ConsumerGroupName *string `json:"ConsumerGroupName,omitnil,omitempty" name:"ConsumerGroupName"`
 
-	// 日志导入规则
+	// <p>日志导入规则</p>
 	LogRechargeRule *LogRechargeRuleInfo `json:"LogRechargeRule,omitnil,omitempty" name:"LogRechargeRule"`
 
-	// 导入控制，1：暂停；2：启动。
+	// <p>导入控制，1：暂停；2：启动。</p>
 	StatusControl *uint64 `json:"StatusControl,omitnil,omitempty" name:"StatusControl"`
 
-	// 用户kafka拓展信息
+	// <p>私有网络信息参数</p>
+	NetworkInfo *NetworkInfo `json:"NetworkInfo,omitnil,omitempty" name:"NetworkInfo"`
+
+	// <p>用户kafka拓展信息</p>
 	UserKafkaMeta *UserKafkaMeta `json:"UserKafkaMeta,omitnil,omitempty" name:"UserKafkaMeta"`
 }
 
@@ -19539,6 +21072,7 @@ func (r *ModifyKafkaRechargeRequest) FromJsonString(s string) error {
 	delete(f, "ConsumerGroupName")
 	delete(f, "LogRechargeRule")
 	delete(f, "StatusControl")
+	delete(f, "NetworkInfo")
 	delete(f, "UserKafkaMeta")
 	if len(f) > 0 {
 		return tcerr.NewTencentCloudSDKError("ClientError.BuildRequestError", "ModifyKafkaRechargeRequest has unknown keys!", "")
@@ -20651,6 +22185,238 @@ func (r *ModifyRemoteWriteTaskResponse) FromJsonString(s string) error {
 }
 
 // Predefined struct for user
+type ModifyResourceGraphEntityTopicsRelationRequestParams struct {
+	// <p>资源图谱id</p>
+	ResourceGraphId *string `json:"ResourceGraphId,omitnil,omitempty" name:"ResourceGraphId"`
+
+	// <p>实体id</p><p>仅支持手动关联tke以下实体：node、pod、deployment、statefulset、daemonset</p>
+	EntityId *string `json:"EntityId,omitnil,omitempty" name:"EntityId"`
+
+	// <p>资源图谱实体关联的topic</p>
+	TopicInfos []*ResourceGraphEntityRelatedTopic `json:"TopicInfos,omitnil,omitempty" name:"TopicInfos"`
+}
+
+type ModifyResourceGraphEntityTopicsRelationRequest struct {
+	*tchttp.BaseRequest
+	
+	// <p>资源图谱id</p>
+	ResourceGraphId *string `json:"ResourceGraphId,omitnil,omitempty" name:"ResourceGraphId"`
+
+	// <p>实体id</p><p>仅支持手动关联tke以下实体：node、pod、deployment、statefulset、daemonset</p>
+	EntityId *string `json:"EntityId,omitnil,omitempty" name:"EntityId"`
+
+	// <p>资源图谱实体关联的topic</p>
+	TopicInfos []*ResourceGraphEntityRelatedTopic `json:"TopicInfos,omitnil,omitempty" name:"TopicInfos"`
+}
+
+func (r *ModifyResourceGraphEntityTopicsRelationRequest) ToJsonString() string {
+    b, _ := json.Marshal(r)
+    return string(b)
+}
+
+// FromJsonString It is highly **NOT** recommended to use this function
+// because it has no param check, nor strict type check
+func (r *ModifyResourceGraphEntityTopicsRelationRequest) FromJsonString(s string) error {
+	f := make(map[string]interface{})
+	if err := json.Unmarshal([]byte(s), &f); err != nil {
+		return err
+	}
+	delete(f, "ResourceGraphId")
+	delete(f, "EntityId")
+	delete(f, "TopicInfos")
+	if len(f) > 0 {
+		return tcerr.NewTencentCloudSDKError("ClientError.BuildRequestError", "ModifyResourceGraphEntityTopicsRelationRequest has unknown keys!", "")
+	}
+	return json.Unmarshal([]byte(s), &r)
+}
+
+// Predefined struct for user
+type ModifyResourceGraphEntityTopicsRelationResponseParams struct {
+	// 唯一请求 ID，由服务端生成，每次请求都会返回（若请求因其他原因未能抵达服务端，则该次请求不会获得 RequestId）。定位问题时需要提供该次请求的 RequestId。
+	RequestId *string `json:"RequestId,omitnil,omitempty" name:"RequestId"`
+}
+
+type ModifyResourceGraphEntityTopicsRelationResponse struct {
+	*tchttp.BaseResponse
+	Response *ModifyResourceGraphEntityTopicsRelationResponseParams `json:"Response"`
+}
+
+func (r *ModifyResourceGraphEntityTopicsRelationResponse) ToJsonString() string {
+    b, _ := json.Marshal(r)
+    return string(b)
+}
+
+// FromJsonString It is highly **NOT** recommended to use this function
+// because it has no param check, nor strict type check
+func (r *ModifyResourceGraphEntityTopicsRelationResponse) FromJsonString(s string) error {
+	return json.Unmarshal([]byte(s), &r)
+}
+
+// Predefined struct for user
+type ModifyResourceGraphProductIngestTaskRequestParams struct {
+	// <p>资源图谱id</p>
+	ResourceGraphId *string `json:"ResourceGraphId,omitnil,omitempty" name:"ResourceGraphId"`
+
+	// <p>待修改的任务id</p>
+	TaskId *string `json:"TaskId,omitnil,omitempty" name:"TaskId"`
+
+	// <p>实例选择方案</p><p>枚举值：</p><ul><li>0： 所有示例</li><li>1： 按标签选择</li><li>2： 手动选择</li></ul>
+	SelectionMode *uint64 `json:"SelectionMode,omitnil,omitempty" name:"SelectionMode"`
+
+	// <p>实例id。当选择方式使用“指定实例”时，需要填写</p>
+	InstanceIds []*string `json:"InstanceIds,omitnil,omitempty" name:"InstanceIds"`
+
+	// <p>eBPF 采集规则（仅 EBPF 产品）</p>
+	EBPFCollectRule *EBPFCollectRule `json:"EBPFCollectRule,omitnil,omitempty" name:"EBPFCollectRule"`
+
+	// <p>标签。当实例选择方案使用“按标签选择”时，需要填写</p>
+	Tags []*Tag `json:"Tags,omitnil,omitempty" name:"Tags"`
+}
+
+type ModifyResourceGraphProductIngestTaskRequest struct {
+	*tchttp.BaseRequest
+	
+	// <p>资源图谱id</p>
+	ResourceGraphId *string `json:"ResourceGraphId,omitnil,omitempty" name:"ResourceGraphId"`
+
+	// <p>待修改的任务id</p>
+	TaskId *string `json:"TaskId,omitnil,omitempty" name:"TaskId"`
+
+	// <p>实例选择方案</p><p>枚举值：</p><ul><li>0： 所有示例</li><li>1： 按标签选择</li><li>2： 手动选择</li></ul>
+	SelectionMode *uint64 `json:"SelectionMode,omitnil,omitempty" name:"SelectionMode"`
+
+	// <p>实例id。当选择方式使用“指定实例”时，需要填写</p>
+	InstanceIds []*string `json:"InstanceIds,omitnil,omitempty" name:"InstanceIds"`
+
+	// <p>eBPF 采集规则（仅 EBPF 产品）</p>
+	EBPFCollectRule *EBPFCollectRule `json:"EBPFCollectRule,omitnil,omitempty" name:"EBPFCollectRule"`
+
+	// <p>标签。当实例选择方案使用“按标签选择”时，需要填写</p>
+	Tags []*Tag `json:"Tags,omitnil,omitempty" name:"Tags"`
+}
+
+func (r *ModifyResourceGraphProductIngestTaskRequest) ToJsonString() string {
+    b, _ := json.Marshal(r)
+    return string(b)
+}
+
+// FromJsonString It is highly **NOT** recommended to use this function
+// because it has no param check, nor strict type check
+func (r *ModifyResourceGraphProductIngestTaskRequest) FromJsonString(s string) error {
+	f := make(map[string]interface{})
+	if err := json.Unmarshal([]byte(s), &f); err != nil {
+		return err
+	}
+	delete(f, "ResourceGraphId")
+	delete(f, "TaskId")
+	delete(f, "SelectionMode")
+	delete(f, "InstanceIds")
+	delete(f, "EBPFCollectRule")
+	delete(f, "Tags")
+	if len(f) > 0 {
+		return tcerr.NewTencentCloudSDKError("ClientError.BuildRequestError", "ModifyResourceGraphProductIngestTaskRequest has unknown keys!", "")
+	}
+	return json.Unmarshal([]byte(s), &r)
+}
+
+// Predefined struct for user
+type ModifyResourceGraphProductIngestTaskResponseParams struct {
+	// 唯一请求 ID，由服务端生成，每次请求都会返回（若请求因其他原因未能抵达服务端，则该次请求不会获得 RequestId）。定位问题时需要提供该次请求的 RequestId。
+	RequestId *string `json:"RequestId,omitnil,omitempty" name:"RequestId"`
+}
+
+type ModifyResourceGraphProductIngestTaskResponse struct {
+	*tchttp.BaseResponse
+	Response *ModifyResourceGraphProductIngestTaskResponseParams `json:"Response"`
+}
+
+func (r *ModifyResourceGraphProductIngestTaskResponse) ToJsonString() string {
+    b, _ := json.Marshal(r)
+    return string(b)
+}
+
+// FromJsonString It is highly **NOT** recommended to use this function
+// because it has no param check, nor strict type check
+func (r *ModifyResourceGraphProductIngestTaskResponse) FromJsonString(s string) error {
+	return json.Unmarshal([]byte(s), &r)
+}
+
+// Predefined struct for user
+type ModifyResourceGraphRequestParams struct {
+	// <p>待修改的资源图谱id</p>
+	ResourceGraphId *string `json:"ResourceGraphId,omitnil,omitempty" name:"ResourceGraphId"`
+
+	// <p>修改后的资源图谱名称</p>
+	Name *string `json:"Name,omitnil,omitempty" name:"Name"`
+
+	// <p>修改后的资源图谱描述</p>
+	Description *string `json:"Description,omitnil,omitempty" name:"Description"`
+
+	// <p>标签描述列表，通过指定该参数可以同时绑定标签到相应的主题。最大支持10个标签键值对，同一个资源只能绑定到同一个标签键下。</p>
+	Tags []*Tag `json:"Tags,omitnil,omitempty" name:"Tags"`
+}
+
+type ModifyResourceGraphRequest struct {
+	*tchttp.BaseRequest
+	
+	// <p>待修改的资源图谱id</p>
+	ResourceGraphId *string `json:"ResourceGraphId,omitnil,omitempty" name:"ResourceGraphId"`
+
+	// <p>修改后的资源图谱名称</p>
+	Name *string `json:"Name,omitnil,omitempty" name:"Name"`
+
+	// <p>修改后的资源图谱描述</p>
+	Description *string `json:"Description,omitnil,omitempty" name:"Description"`
+
+	// <p>标签描述列表，通过指定该参数可以同时绑定标签到相应的主题。最大支持10个标签键值对，同一个资源只能绑定到同一个标签键下。</p>
+	Tags []*Tag `json:"Tags,omitnil,omitempty" name:"Tags"`
+}
+
+func (r *ModifyResourceGraphRequest) ToJsonString() string {
+    b, _ := json.Marshal(r)
+    return string(b)
+}
+
+// FromJsonString It is highly **NOT** recommended to use this function
+// because it has no param check, nor strict type check
+func (r *ModifyResourceGraphRequest) FromJsonString(s string) error {
+	f := make(map[string]interface{})
+	if err := json.Unmarshal([]byte(s), &f); err != nil {
+		return err
+	}
+	delete(f, "ResourceGraphId")
+	delete(f, "Name")
+	delete(f, "Description")
+	delete(f, "Tags")
+	if len(f) > 0 {
+		return tcerr.NewTencentCloudSDKError("ClientError.BuildRequestError", "ModifyResourceGraphRequest has unknown keys!", "")
+	}
+	return json.Unmarshal([]byte(s), &r)
+}
+
+// Predefined struct for user
+type ModifyResourceGraphResponseParams struct {
+	// 唯一请求 ID，由服务端生成，每次请求都会返回（若请求因其他原因未能抵达服务端，则该次请求不会获得 RequestId）。定位问题时需要提供该次请求的 RequestId。
+	RequestId *string `json:"RequestId,omitnil,omitempty" name:"RequestId"`
+}
+
+type ModifyResourceGraphResponse struct {
+	*tchttp.BaseResponse
+	Response *ModifyResourceGraphResponseParams `json:"Response"`
+}
+
+func (r *ModifyResourceGraphResponse) ToJsonString() string {
+    b, _ := json.Marshal(r)
+    return string(b)
+}
+
+// FromJsonString It is highly **NOT** recommended to use this function
+// because it has no param check, nor strict type check
+func (r *ModifyResourceGraphResponse) FromJsonString(s string) error {
+	return json.Unmarshal([]byte(s), &r)
+}
+
+// Predefined struct for user
 type ModifyS3RechargeRequestParams struct {
 	// <p>导入任务Id</p>
 	TaskId *string `json:"TaskId,omitnil,omitempty" name:"TaskId"`
@@ -21741,6 +23507,26 @@ type NetworkApplicationInfo struct {
 	UpdateTime *uint64 `json:"UpdateTime,omitnil,omitempty" name:"UpdateTime"`
 }
 
+type NetworkInfo struct {
+	// <p>网络类型。 0：公网，1：内网</p>
+	NetworkType *uint64 `json:"NetworkType,omitnil,omitempty" name:"NetworkType"`
+
+	// <p>私有网络id</p>
+	VpcID *string `json:"VpcID,omitnil,omitempty" name:"VpcID"`
+
+	// <p>私有网络所属用户app id</p>
+	AppID *uint64 `json:"AppID,omitnil,omitempty" name:"AppID"`
+
+	// <p>网络服务类型。0：CVM，3：专线网关，11：云联网，1025：CLB</p>
+	VirtualGatewayType *uint64 `json:"VirtualGatewayType,omitnil,omitempty" name:"VirtualGatewayType"`
+
+	// <p>专线网关id或者云联网id</p>
+	VpcGatewayIndex *string `json:"VpcGatewayIndex,omitnil,omitempty" name:"VpcGatewayIndex"`
+
+	// <p>私有域名映射地址</p>
+	PrivateDomainNames []*PrivateDomainNames `json:"PrivateDomainNames,omitnil,omitempty" name:"PrivateDomainNames"`
+}
+
 type NoticeContent struct {
 	// 渠道类型
 	// 
@@ -22087,6 +23873,12 @@ type OpenKafkaConsumerRequestParams struct {
 	// <p>是否开启投递服务日志。1：关闭，2：开启。 默认值：2</p>
 	HasServicesLog *uint64 `json:"HasServicesLog,omitnil,omitempty" name:"HasServicesLog"`
 
+	// <p>外网消费开关，默认开启</p>
+	EnableInternetConsume *bool `json:"EnableInternetConsume,omitnil,omitempty" name:"EnableInternetConsume"`
+
+	// <p>内网消费开关，默认开启</p>
+	EnableIntranetConsume *bool `json:"EnableIntranetConsume,omitnil,omitempty" name:"EnableIntranetConsume"`
+
 	// <p>消费范围类型，0:最新；1:历史+最新；默认值:0</p>
 	ScopeType *uint64 `json:"ScopeType,omitnil,omitempty" name:"ScopeType"`
 }
@@ -22105,6 +23897,12 @@ type OpenKafkaConsumerRequest struct {
 
 	// <p>是否开启投递服务日志。1：关闭，2：开启。 默认值：2</p>
 	HasServicesLog *uint64 `json:"HasServicesLog,omitnil,omitempty" name:"HasServicesLog"`
+
+	// <p>外网消费开关，默认开启</p>
+	EnableInternetConsume *bool `json:"EnableInternetConsume,omitnil,omitempty" name:"EnableInternetConsume"`
+
+	// <p>内网消费开关，默认开启</p>
+	EnableIntranetConsume *bool `json:"EnableIntranetConsume,omitnil,omitempty" name:"EnableIntranetConsume"`
 
 	// <p>消费范围类型，0:最新；1:历史+最新；默认值:0</p>
 	ScopeType *uint64 `json:"ScopeType,omitnil,omitempty" name:"ScopeType"`
@@ -22126,6 +23924,8 @@ func (r *OpenKafkaConsumerRequest) FromJsonString(s string) error {
 	delete(f, "Compression")
 	delete(f, "ConsumerContent")
 	delete(f, "HasServicesLog")
+	delete(f, "EnableInternetConsume")
+	delete(f, "EnableIntranetConsume")
 	delete(f, "ScopeType")
 	if len(f) > 0 {
 		return tcerr.NewTencentCloudSDKError("ClientError.BuildRequestError", "OpenKafkaConsumerRequest has unknown keys!", "")
@@ -22209,88 +24009,80 @@ type PartitionOffsetInfo struct {
 
 // Predefined struct for user
 type PreviewKafkaRechargeRequestParams struct {
-	// 预览类型，1：源数据预览；2：导出结果预览。
+	// <p>预览类型，1：源数据预览；2：导出结果预览。</p>
 	PreviewType *uint64 `json:"PreviewType,omitnil,omitempty" name:"PreviewType"`
 
-	// 导入Kafka类型，0：腾讯云CKafka；1：用户自建Kafka。
+	// <p>导入Kafka类型，0：腾讯云CKafka；1：用户自建Kafka。</p>
 	KafkaType *uint64 `json:"KafkaType,omitnil,omitempty" name:"KafkaType"`
 
-	// 用户需要导入的Kafka相关topic列表，多个topic之间使用半角逗号隔开。
-	// 最多支持100个。
+	// <p>用户需要导入的Kafka相关topic列表，多个topic之间使用半角逗号隔开。<br>最多支持100个。</p>
 	UserKafkaTopics *string `json:"UserKafkaTopics,omitnil,omitempty" name:"UserKafkaTopics"`
 
-	// 导入数据位置，-2：最早；-1：最晚。
+	// <p>导入数据位置，-2：最早；-1：最晚。</p>
 	Offset *int64 `json:"Offset,omitnil,omitempty" name:"Offset"`
 
-	// 腾讯云CKafka实例ID，当KafkaType为0时参数KafkaInstance有效且必填。
-	// - 通过 [获取实例列表信息](https://cloud.tencent.com/document/product/597/40835) 获取实例id。
+	// <p>腾讯云CKafka实例ID，当KafkaType为0时参数KafkaInstance有效且必填。</p><ul><li>通过 <a href="https://cloud.tencent.com/document/product/597/40835">获取实例列表信息</a> 获取实例id。</li></ul>
 	KafkaInstance *string `json:"KafkaInstance,omitnil,omitempty" name:"KafkaInstance"`
 
-	// 服务地址。
-	// KafkaType为1时ServerAddr必填。
+	// <p>服务地址。<br>KafkaType为1时ServerAddr必填。</p>
 	ServerAddr *string `json:"ServerAddr,omitnil,omitempty" name:"ServerAddr"`
 
-	// ServerAddr是否为加密连接。
-	// KafkaType为1时有效。
+	// <p>ServerAddr是否为加密连接。<br>KafkaType为1时有效。</p>
 	IsEncryptionAddr *bool `json:"IsEncryptionAddr,omitnil,omitempty" name:"IsEncryptionAddr"`
 
-	// 加密访问协议。
-	// KafkaType为1并且IsEncryptionAddr为true时Protocol必填。
+	// <p>加密访问协议。<br>KafkaType为1并且IsEncryptionAddr为true时Protocol必填。</p>
 	Protocol *KafkaProtocolInfo `json:"Protocol,omitnil,omitempty" name:"Protocol"`
 
-	// 用户Kafka消费组。
-	// 
-	// - 消费组是 Kafka 提供的可扩展且具有容错性的消费者机制，一个消费组中存在多个消费者，组内的所有消费者共同消费订阅 Topic 中的消息。一个消费者可同时消费多个 Partition，但一个 Partition 只能被消费组内的一个消费者消费。
+	// <p>用户Kafka消费组。</p><ul><li>消费组是 Kafka 提供的可扩展且具有容错性的消费者机制，一个消费组中存在多个消费者，组内的所有消费者共同消费订阅 Topic 中的消息。一个消费者可同时消费多个 Partition，但一个 Partition 只能被消费组内的一个消费者消费。</li></ul>
 	ConsumerGroupName *string `json:"ConsumerGroupName,omitnil,omitempty" name:"ConsumerGroupName"`
 
-	// 日志导入规则
+	// <p>日志导入规则</p>
 	LogRechargeRule *LogRechargeRuleInfo `json:"LogRechargeRule,omitnil,omitempty" name:"LogRechargeRule"`
 
-	// 用户kafka拓展信息
+	// <p>网络连接参数</p>
+	NetworkInfo *NetworkInfo `json:"NetworkInfo,omitnil,omitempty" name:"NetworkInfo"`
+
+	// <p>用户kafka拓展信息</p>
 	UserKafkaMeta *UserKafkaMeta `json:"UserKafkaMeta,omitnil,omitempty" name:"UserKafkaMeta"`
 }
 
 type PreviewKafkaRechargeRequest struct {
 	*tchttp.BaseRequest
 	
-	// 预览类型，1：源数据预览；2：导出结果预览。
+	// <p>预览类型，1：源数据预览；2：导出结果预览。</p>
 	PreviewType *uint64 `json:"PreviewType,omitnil,omitempty" name:"PreviewType"`
 
-	// 导入Kafka类型，0：腾讯云CKafka；1：用户自建Kafka。
+	// <p>导入Kafka类型，0：腾讯云CKafka；1：用户自建Kafka。</p>
 	KafkaType *uint64 `json:"KafkaType,omitnil,omitempty" name:"KafkaType"`
 
-	// 用户需要导入的Kafka相关topic列表，多个topic之间使用半角逗号隔开。
-	// 最多支持100个。
+	// <p>用户需要导入的Kafka相关topic列表，多个topic之间使用半角逗号隔开。<br>最多支持100个。</p>
 	UserKafkaTopics *string `json:"UserKafkaTopics,omitnil,omitempty" name:"UserKafkaTopics"`
 
-	// 导入数据位置，-2：最早；-1：最晚。
+	// <p>导入数据位置，-2：最早；-1：最晚。</p>
 	Offset *int64 `json:"Offset,omitnil,omitempty" name:"Offset"`
 
-	// 腾讯云CKafka实例ID，当KafkaType为0时参数KafkaInstance有效且必填。
-	// - 通过 [获取实例列表信息](https://cloud.tencent.com/document/product/597/40835) 获取实例id。
+	// <p>腾讯云CKafka实例ID，当KafkaType为0时参数KafkaInstance有效且必填。</p><ul><li>通过 <a href="https://cloud.tencent.com/document/product/597/40835">获取实例列表信息</a> 获取实例id。</li></ul>
 	KafkaInstance *string `json:"KafkaInstance,omitnil,omitempty" name:"KafkaInstance"`
 
-	// 服务地址。
-	// KafkaType为1时ServerAddr必填。
+	// <p>服务地址。<br>KafkaType为1时ServerAddr必填。</p>
 	ServerAddr *string `json:"ServerAddr,omitnil,omitempty" name:"ServerAddr"`
 
-	// ServerAddr是否为加密连接。
-	// KafkaType为1时有效。
+	// <p>ServerAddr是否为加密连接。<br>KafkaType为1时有效。</p>
 	IsEncryptionAddr *bool `json:"IsEncryptionAddr,omitnil,omitempty" name:"IsEncryptionAddr"`
 
-	// 加密访问协议。
-	// KafkaType为1并且IsEncryptionAddr为true时Protocol必填。
+	// <p>加密访问协议。<br>KafkaType为1并且IsEncryptionAddr为true时Protocol必填。</p>
 	Protocol *KafkaProtocolInfo `json:"Protocol,omitnil,omitempty" name:"Protocol"`
 
-	// 用户Kafka消费组。
-	// 
-	// - 消费组是 Kafka 提供的可扩展且具有容错性的消费者机制，一个消费组中存在多个消费者，组内的所有消费者共同消费订阅 Topic 中的消息。一个消费者可同时消费多个 Partition，但一个 Partition 只能被消费组内的一个消费者消费。
+	// <p>用户Kafka消费组。</p><ul><li>消费组是 Kafka 提供的可扩展且具有容错性的消费者机制，一个消费组中存在多个消费者，组内的所有消费者共同消费订阅 Topic 中的消息。一个消费者可同时消费多个 Partition，但一个 Partition 只能被消费组内的一个消费者消费。</li></ul>
 	ConsumerGroupName *string `json:"ConsumerGroupName,omitnil,omitempty" name:"ConsumerGroupName"`
 
-	// 日志导入规则
+	// <p>日志导入规则</p>
 	LogRechargeRule *LogRechargeRuleInfo `json:"LogRechargeRule,omitnil,omitempty" name:"LogRechargeRule"`
 
-	// 用户kafka拓展信息
+	// <p>网络连接参数</p>
+	NetworkInfo *NetworkInfo `json:"NetworkInfo,omitnil,omitempty" name:"NetworkInfo"`
+
+	// <p>用户kafka拓展信息</p>
 	UserKafkaMeta *UserKafkaMeta `json:"UserKafkaMeta,omitnil,omitempty" name:"UserKafkaMeta"`
 }
 
@@ -22316,6 +24108,7 @@ func (r *PreviewKafkaRechargeRequest) FromJsonString(s string) error {
 	delete(f, "Protocol")
 	delete(f, "ConsumerGroupName")
 	delete(f, "LogRechargeRule")
+	delete(f, "NetworkInfo")
 	delete(f, "UserKafkaMeta")
 	if len(f) > 0 {
 		return tcerr.NewTencentCloudSDKError("ClientError.BuildRequestError", "PreviewKafkaRechargeRequest has unknown keys!", "")
@@ -22325,10 +24118,10 @@ func (r *PreviewKafkaRechargeRequest) FromJsonString(s string) error {
 
 // Predefined struct for user
 type PreviewKafkaRechargeResponseParams struct {
-	// 日志样例，PreviewType为2时返回
+	// <p>日志样例，PreviewType为2时返回</p>
 	LogSample *string `json:"LogSample,omitnil,omitempty" name:"LogSample"`
 
-	// 日志预览结果
+	// <p>日志预览结果</p>
 	LogData *string `json:"LogData,omitnil,omitempty" name:"LogData"`
 
 	// 唯一请求 ID，由服务端生成，每次请求都会返回（若请求因其他原因未能抵达服务端，则该次请求不会获得 RequestId）。定位问题时需要提供该次请求的 RequestId。
@@ -22376,6 +24169,55 @@ type PreviewLogStatistic struct {
 	//
 	// Deprecated: DstTopicName is deprecated.
 	DstTopicName *string `json:"DstTopicName,omitnil,omitempty" name:"DstTopicName"`
+}
+
+type PrivateDomainNames struct {
+	// 域名地址
+	DomainName *string `json:"DomainName,omitnil,omitempty" name:"DomainName"`
+
+	// ip地址
+	IpAddr *string `json:"IpAddr,omitnil,omitempty" name:"IpAddr"`
+}
+
+type ProductIngestTaskDetail struct {
+	// <p>接入任务id</p>
+	TaskId *string `json:"TaskId,omitnil,omitempty" name:"TaskId"`
+
+	// <p>接入任务信息</p>
+	ProductIngestTaskItem *ProductIngestTaskItem `json:"ProductIngestTaskItem,omitnil,omitempty" name:"ProductIngestTaskItem"`
+
+	// <p>接入实例选择方式</p><p>枚举值：</p><ul><li>0： 全部实例</li><li>1： 按标签筛选</li><li>2： 手动选择</li></ul>
+	SelectionMode *uint64 `json:"SelectionMode,omitnil,omitempty" name:"SelectionMode"`
+
+	// <p>所选实例id列表</p>
+	InstanceIds []*string `json:"InstanceIds,omitnil,omitempty" name:"InstanceIds"`
+
+	// <p>所选接入实例所处范围标签</p>
+	Tags []*Tag `json:"Tags,omitnil,omitempty" name:"Tags"`
+
+	// <p>eBPF 采集规则</p>
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	EBPFCollectRule *EBPFCollectRule `json:"EBPFCollectRule,omitnil,omitempty" name:"EBPFCollectRule"`
+}
+
+type ProductIngestTaskItem struct {
+	// <p>接入任务id</p>
+	TaskId *string `json:"TaskId,omitnil,omitempty" name:"TaskId"`
+
+	// <p>接入任务名称</p>
+	Name *string `json:"Name,omitnil,omitempty" name:"Name"`
+
+	// <p>产品分组</p>
+	Product *string `json:"Product,omitnil,omitempty" name:"Product"`
+
+	// <p>状态</p><p>枚举值：</p><ul><li>0： 接入中</li><li>1： 已接入</li><li>2： 接入失败</li><li>3： 删除中</li><li>4： 已删除</li><li>5： 删除失败</li></ul>
+	Status *int64 `json:"Status,omitnil,omitempty" name:"Status"`
+
+	// <p>接入任务创建时间</p><p>单位：ms</p>
+	CreateTime *uint64 `json:"CreateTime,omitnil,omitempty" name:"CreateTime"`
+
+	// <p>接入任务修改时间</p><p>单位：ms</p>
+	UpdateTime *uint64 `json:"UpdateTime,omitnil,omitempty" name:"UpdateTime"`
 }
 
 // Predefined struct for user
@@ -22729,6 +24571,39 @@ type Relabeling struct {
 	Modulus *uint64 `json:"Modulus,omitnil,omitempty" name:"Modulus"`
 }
 
+type RelatedTopicItem struct {
+	// <p>主题 ID</p>
+	TopicId *string `json:"TopicId,omitnil,omitempty" name:"TopicId"`
+
+	// <p>主题地域</p>
+	Region *string `json:"Region,omitnil,omitempty" name:"Region"`
+
+	// <p>日志类型</p><p>枚举值：</p><ul><li>Auditlog： 审计日志</li><li>Eventlog： 事件日志</li><li>ComponentLog： 组件日志</li></ul>
+	LogType *string `json:"LogType,omitnil,omitempty" name:"LogType"`
+
+	// <p>日志类型， 0: 日志主题 ; 1: 指标主题</p><p>枚举值：</p><ul><li>0： 日志主题</li><li>1： 指标主题</li></ul>
+	BizType *int64 `json:"BizType,omitnil,omitempty" name:"BizType"`
+}
+
+type RelationLogset struct {
+	// <p>日志集id</p>
+	LogsetId *string `json:"LogsetId,omitnil,omitempty" name:"LogsetId"`
+
+	// <p>日志集名称</p>
+	LogsetName *string `json:"LogsetName,omitnil,omitempty" name:"LogsetName"`
+}
+
+type RelationTopic struct {
+	// <p>日志主题id</p>
+	TopicId *string `json:"TopicId,omitnil,omitempty" name:"TopicId"`
+
+	// <p>日志主题名称</p>
+	TopicName *string `json:"TopicName,omitnil,omitempty" name:"TopicName"`
+
+	// <p>日志主题类型</p><p>枚举值：</p><ul><li>entity： 实体主题</li><li>relation： 关系主题</li><li>ebpf： ebpf采集主题</li></ul>
+	Type *string `json:"Type,omitnil,omitempty" name:"Type"`
+}
+
 type RemoteWriteAuthInfo struct {
 	// basic auth username
 	// 注意：此字段可能返回 null，表示取不到有效值。
@@ -22811,6 +24686,216 @@ type RemoteWriteInfo struct {
 	// <p>是否开启投递服务日志。1：关闭，2：开启。</p>
 	// 注意：此字段可能返回 null，表示取不到有效值。
 	HasServicesLog *uint64 `json:"HasServicesLog,omitnil,omitempty" name:"HasServicesLog"`
+}
+
+type ResourceGraphDetailInfo struct {
+	// <p>资源图谱id</p>
+	ResourceGraphId *string `json:"ResourceGraphId,omitnil,omitempty" name:"ResourceGraphId"`
+
+	// <p>工作区名称</p>
+	Name *string `json:"Name,omitnil,omitempty" name:"Name"`
+
+	// <p>工作区描述</p>
+	Description *string `json:"Description,omitnil,omitempty" name:"Description"`
+
+	// <p>工作区状态</p><p>枚举值：</p><ul><li>0： 初始化中</li><li>1： 成功</li><li>2： 失败</li><li>3： 删除中</li><li>4： 已删除</li><li>5： 删除失败</li></ul>
+	Status *int64 `json:"Status,omitnil,omitempty" name:"Status"`
+
+	// <p>已接入产品数量</p>
+	AccessCount *uint64 `json:"AccessCount,omitnil,omitempty" name:"AccessCount"`
+
+	// <p>接入的产品列表</p>
+	Products []*string `json:"Products,omitnil,omitempty" name:"Products"`
+
+	// <p>创建时间</p>
+	CreateTime *uint64 `json:"CreateTime,omitnil,omitempty" name:"CreateTime"`
+
+	// <p>更新时间</p>
+	UpdateTime *uint64 `json:"UpdateTime,omitnil,omitempty" name:"UpdateTime"`
+
+	// <p>关联的日志集</p>
+	RelationLogset *RelationLogset `json:"RelationLogset,omitnil,omitempty" name:"RelationLogset"`
+
+	// <p>关联的topic</p>
+	RelationTopics []*RelationTopic `json:"RelationTopics,omitnil,omitempty" name:"RelationTopics"`
+
+	// <p>工作区绑定的标签信息</p>
+	Tags []*Tag `json:"Tags,omitnil,omitempty" name:"Tags"`
+}
+
+type ResourceGraphEntityRelatedTopic struct {
+	// <p>日志主题id</p>
+	TopicId *string `json:"TopicId,omitnil,omitempty" name:"TopicId"`
+
+	// <p>日志主题所在地域</p>
+	Region *string `json:"Region,omitnil,omitempty" name:"Region"`
+
+	// <p>日志类型</p><p>枚举值：</p><ul><li>bussinesslog： 业务日志</li></ul>
+	LogType *string `json:"LogType,omitnil,omitempty" name:"LogType"`
+
+	// <p>日志类型</p><p>枚举值：</p><ul><li>0： 日志主题</li><li>1： 指标主题</li></ul>
+	BizType *int64 `json:"BizType,omitnil,omitempty" name:"BizType"`
+}
+
+type ResourceGraphInfo struct {
+	// <p>资源图谱id</p>
+	ResourceGraphId *string `json:"ResourceGraphId,omitnil,omitempty" name:"ResourceGraphId"`
+
+	// <p>工作区名称</p>
+	Name *string `json:"Name,omitnil,omitempty" name:"Name"`
+
+	// <p>工作区描述</p>
+	Description *string `json:"Description,omitnil,omitempty" name:"Description"`
+
+	// <p>工作区状态</p><p>枚举值：</p><ul><li>0： 初始化中</li><li>1： 成功</li><li>2： 失败</li><li>3： 删除中</li><li>4： 已删除</li><li>5： 删除失败</li></ul>
+	Status *int64 `json:"Status,omitnil,omitempty" name:"Status"`
+
+	// <p>创建时间</p>
+	CreateTime *uint64 `json:"CreateTime,omitnil,omitempty" name:"CreateTime"`
+
+	// <p>更新时间</p>
+	UpdateTime *uint64 `json:"UpdateTime,omitnil,omitempty" name:"UpdateTime"`
+
+	// <p>关联的日志集</p>
+	RelationLogset *RelationLogset `json:"RelationLogset,omitnil,omitempty" name:"RelationLogset"`
+
+	// <p>关联的topic</p>
+	RelationTopics []*RelationTopic `json:"RelationTopics,omitnil,omitempty" name:"RelationTopics"`
+
+	// <p>工作区绑定的标签信息</p>
+	Tags []*Tag `json:"Tags,omitnil,omitempty" name:"Tags"`
+}
+
+type ResourceGraphTkeClusterInfo struct {
+	// <p>tke集群id</p>
+	ClusterId *string `json:"ClusterId,omitnil,omitempty" name:"ClusterId"`
+
+	// <p>资源图谱id</p>
+	ResourceGraphId *string `json:"ResourceGraphId,omitnil,omitempty" name:"ResourceGraphId"`
+
+	// <p>资源图谱名称</p>
+	ResourceGraphName *string `json:"ResourceGraphName,omitnil,omitempty" name:"ResourceGraphName"`
+
+	// <p>资源图谱接入任务id</p>
+	TaskId *string `json:"TaskId,omitnil,omitempty" name:"TaskId"`
+
+	// <p>资源图谱接入任务名称</p>
+	TaskName *string `json:"TaskName,omitnil,omitempty" name:"TaskName"`
+}
+
+// Predefined struct for user
+type RetryResourceGraphProductIngestTaskRequestParams struct {
+	// <p>资源图谱id</p>
+	ResourceGraphId *string `json:"ResourceGraphId,omitnil,omitempty" name:"ResourceGraphId"`
+
+	// <p>接入任务id</p>
+	TaskId *string `json:"TaskId,omitnil,omitempty" name:"TaskId"`
+}
+
+type RetryResourceGraphProductIngestTaskRequest struct {
+	*tchttp.BaseRequest
+	
+	// <p>资源图谱id</p>
+	ResourceGraphId *string `json:"ResourceGraphId,omitnil,omitempty" name:"ResourceGraphId"`
+
+	// <p>接入任务id</p>
+	TaskId *string `json:"TaskId,omitnil,omitempty" name:"TaskId"`
+}
+
+func (r *RetryResourceGraphProductIngestTaskRequest) ToJsonString() string {
+    b, _ := json.Marshal(r)
+    return string(b)
+}
+
+// FromJsonString It is highly **NOT** recommended to use this function
+// because it has no param check, nor strict type check
+func (r *RetryResourceGraphProductIngestTaskRequest) FromJsonString(s string) error {
+	f := make(map[string]interface{})
+	if err := json.Unmarshal([]byte(s), &f); err != nil {
+		return err
+	}
+	delete(f, "ResourceGraphId")
+	delete(f, "TaskId")
+	if len(f) > 0 {
+		return tcerr.NewTencentCloudSDKError("ClientError.BuildRequestError", "RetryResourceGraphProductIngestTaskRequest has unknown keys!", "")
+	}
+	return json.Unmarshal([]byte(s), &r)
+}
+
+// Predefined struct for user
+type RetryResourceGraphProductIngestTaskResponseParams struct {
+	// 唯一请求 ID，由服务端生成，每次请求都会返回（若请求因其他原因未能抵达服务端，则该次请求不会获得 RequestId）。定位问题时需要提供该次请求的 RequestId。
+	RequestId *string `json:"RequestId,omitnil,omitempty" name:"RequestId"`
+}
+
+type RetryResourceGraphProductIngestTaskResponse struct {
+	*tchttp.BaseResponse
+	Response *RetryResourceGraphProductIngestTaskResponseParams `json:"Response"`
+}
+
+func (r *RetryResourceGraphProductIngestTaskResponse) ToJsonString() string {
+    b, _ := json.Marshal(r)
+    return string(b)
+}
+
+// FromJsonString It is highly **NOT** recommended to use this function
+// because it has no param check, nor strict type check
+func (r *RetryResourceGraphProductIngestTaskResponse) FromJsonString(s string) error {
+	return json.Unmarshal([]byte(s), &r)
+}
+
+// Predefined struct for user
+type RetryResourceGraphRequestParams struct {
+	// <p>资源图谱id</p>
+	ResourceGraphId *string `json:"ResourceGraphId,omitnil,omitempty" name:"ResourceGraphId"`
+}
+
+type RetryResourceGraphRequest struct {
+	*tchttp.BaseRequest
+	
+	// <p>资源图谱id</p>
+	ResourceGraphId *string `json:"ResourceGraphId,omitnil,omitempty" name:"ResourceGraphId"`
+}
+
+func (r *RetryResourceGraphRequest) ToJsonString() string {
+    b, _ := json.Marshal(r)
+    return string(b)
+}
+
+// FromJsonString It is highly **NOT** recommended to use this function
+// because it has no param check, nor strict type check
+func (r *RetryResourceGraphRequest) FromJsonString(s string) error {
+	f := make(map[string]interface{})
+	if err := json.Unmarshal([]byte(s), &f); err != nil {
+		return err
+	}
+	delete(f, "ResourceGraphId")
+	if len(f) > 0 {
+		return tcerr.NewTencentCloudSDKError("ClientError.BuildRequestError", "RetryResourceGraphRequest has unknown keys!", "")
+	}
+	return json.Unmarshal([]byte(s), &r)
+}
+
+// Predefined struct for user
+type RetryResourceGraphResponseParams struct {
+	// 唯一请求 ID，由服务端生成，每次请求都会返回（若请求因其他原因未能抵达服务端，则该次请求不会获得 RequestId）。定位问题时需要提供该次请求的 RequestId。
+	RequestId *string `json:"RequestId,omitnil,omitempty" name:"RequestId"`
+}
+
+type RetryResourceGraphResponse struct {
+	*tchttp.BaseResponse
+	Response *RetryResourceGraphResponseParams `json:"Response"`
+}
+
+func (r *RetryResourceGraphResponse) ToJsonString() string {
+    b, _ := json.Marshal(r)
+    return string(b)
+}
+
+// FromJsonString It is highly **NOT** recommended to use this function
+// because it has no param check, nor strict type check
+func (r *RetryResourceGraphResponse) FromJsonString(s string) error {
+	return json.Unmarshal([]byte(s), &r)
 }
 
 // Predefined struct for user
@@ -23847,6 +25932,22 @@ type ShipperTaskInfo struct {
 	Message *string `json:"Message,omitnil,omitempty" name:"Message"`
 }
 
+type SourceTopicConfig struct {
+	// <p>日志主题筛选方式。</p><p>枚举值：</p><ul><li>1： 静态选择</li></ul>
+	TopicFilterType *uint64 `json:"TopicFilterType,omitnil,omitempty" name:"TopicFilterType"`
+
+	// <p>源日志集id</p>
+	LogsetId *string `json:"LogsetId,omitnil,omitempty" name:"LogsetId"`
+
+	// <p>源日志主题列表</p><p>TopicFilterType=1时必填</p>
+	Topics []*SourceTopicInfo `json:"Topics,omitnil,omitempty" name:"Topics"`
+}
+
+type SourceTopicInfo struct {
+	// <p>日志主题id</p>
+	TopicId *string `json:"TopicId,omitnil,omitempty" name:"TopicId"`
+}
+
 // Predefined struct for user
 type SplitPartitionRequestParams struct {
 	// 日志主题Id
@@ -23991,6 +26092,26 @@ type Tag struct {
 
 	// 标签值
 	Value *string `json:"Value,omitnil,omitempty" name:"Value"`
+}
+
+type TargetTopicConfig struct {
+	// <p>目标账号类型。</p><p>枚举值：</p><ul><li>1： 当前主账号</li><li>2： 其他主账号</li></ul>
+	AccountType *uint64 `json:"AccountType,omitnil,omitempty" name:"AccountType"`
+
+	// <p>目标地域</p><p>参数格式：ap-guangzhou</p>
+	Region *string `json:"Region,omitnil,omitempty" name:"Region"`
+
+	// <p>目标日志集id</p>
+	LogsetId *string `json:"LogsetId,omitnil,omitempty" name:"LogsetId"`
+
+	// <p>目标日志主题id</p>
+	TopicId *string `json:"TopicId,omitnil,omitempty" name:"TopicId"`
+
+	// <p>角色ARN</p><p>AccountType=2时必填</p>
+	RoleArn *string `json:"RoleArn,omitnil,omitempty" name:"RoleArn"`
+
+	// <p>外部ID</p><p>AccountType=2时必填</p>
+	ExternalId *string `json:"ExternalId,omitnil,omitempty" name:"ExternalId"`
 }
 
 type ToolCall struct {
@@ -24160,6 +26281,37 @@ type TopicPartitionOffsetInfo struct {
 	// 分区点位信息
 	// 注意：此字段可能返回 null，表示取不到有效值。
 	PartitionOffsets []*PartitionOffsetInfo `json:"PartitionOffsets,omitnil,omitempty" name:"PartitionOffsets"`
+}
+
+type TopologyEdge struct {
+	// <p>源实体 ID</p>
+	SrcEntityId *string `json:"SrcEntityId,omitnil,omitempty" name:"SrcEntityId"`
+
+	// <p>目的实体 ID</p>
+	DstEntityId *string `json:"DstEntityId,omitnil,omitempty" name:"DstEntityId"`
+
+	// <p>关系类型：contains / same_as / calls</p><p>枚举值：</p><ul><li>contains： 包含关系，A 包含 B</li><li>same_as： 等价关系，A 等价 B</li><li>calls： 调用关系， A 调用 B</li></ul><p>默认值：-</p>
+	RelationType *string `json:"RelationType,omitnil,omitempty" name:"RelationType"`
+}
+
+type TopologyNode struct {
+	// <p>实体 ID</p>
+	EntityId *string `json:"EntityId,omitnil,omitempty" name:"EntityId"`
+
+	// <p>实体名称</p>
+	Name *string `json:"Name,omitnil,omitempty" name:"Name"`
+
+	// <p>实体所属域</p>
+	Domain *string `json:"Domain,omitnil,omitempty" name:"Domain"`
+
+	// <p>实体所在产品</p>
+	Product *string `json:"Product,omitnil,omitempty" name:"Product"`
+
+	// <p>实体类型</p>
+	EntityClassName *string `json:"EntityClassName,omitnil,omitempty" name:"EntityClassName"`
+
+	// <p>距离中心节点深度</p>
+	Depth *int64 `json:"Depth,omitnil,omitempty" name:"Depth"`
 }
 
 // Predefined struct for user
