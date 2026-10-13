@@ -1,8 +1,10 @@
 package mongodb_test
 
 import (
+	"context"
 	"fmt"
 	"testing"
+	"time"
 
 	"github.com/agiledragon/gomonkey/v2"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
@@ -39,12 +41,28 @@ func TestMongodbScaleUpDbInstanceCpu_Create_Success(t *testing.T) {
 	mongodbClient := &mongodb_sdk.Client{}
 	patches.ApplyMethodReturn(newMockMetaForScaleUpCpu().client, "UseMongodbClient", mongodbClient)
 
-	var scaleUpCallCount int
-	patches.ApplyMethodFunc(mongodbClient, "ScaleUpDBInstanceCpu", func(request *mongodb_sdk.ScaleUpDBInstanceCpuRequest) (*mongodb_sdk.ScaleUpDBInstanceCpuResponse, error) {
+	var (
+		scaleUpCallCount       int
+		describeAsyncCallCount int
+		waitedFlowId           string
+	)
+	patches.ApplyMethodFunc(mongodbClient, "ScaleUpDBInstanceCpuWithContext", func(ctx context.Context, request *mongodb_sdk.ScaleUpDBInstanceCpuRequest) (*mongodb_sdk.ScaleUpDBInstanceCpuResponse, error) {
 		scaleUpCallCount++
 		resp := mongodb_sdk.NewScaleUpDBInstanceCpuResponse()
 		resp.Response = &mongodb_sdk.ScaleUpDBInstanceCpuResponseParams{
 			FlowId:    ptrInt64ScaleUp(12345),
+			RequestId: ptrStrScaleUp("fake-request-id"),
+		}
+		return resp, nil
+	})
+
+	// Create waits on the flow ID returned by ScaleUpDBInstanceCpu.
+	patches.ApplyMethodFunc(mongodbClient, "DescribeAsyncRequestInfo", func(request *mongodb_sdk.DescribeAsyncRequestInfoRequest) (*mongodb_sdk.DescribeAsyncRequestInfoResponse, error) {
+		describeAsyncCallCount++
+		waitedFlowId = *request.AsyncRequestId
+		resp := mongodb_sdk.NewDescribeAsyncRequestInfoResponse()
+		resp.Response = &mongodb_sdk.DescribeAsyncRequestInfoResponseParams{
+			Status:    ptrStrScaleUp(mongodb.MONGODB_TASK_SUCCESS),
 			RequestId: ptrStrScaleUp("fake-request-id"),
 		}
 		return resp, nil
@@ -77,9 +95,10 @@ func TestMongodbScaleUpDbInstanceCpu_Create_Success(t *testing.T) {
 	assert.NoError(t, err)
 	assert.Equal(t, "cmgo-test1234", d.Id())
 	assert.Equal(t, 1, scaleUpCallCount)
-	assert.Equal(t, 12345, d.Get("flow_id"))
+	assert.Equal(t, 1, describeAsyncCallCount)
+	assert.Equal(t, "12345", waitedFlowId)
 	assert.Equal(t, true, d.Get("is_scaled"))
-	assert.Equal(t, int64(4), d.Get("extra_cpu"))
+	assert.Equal(t, 4, d.Get("extra_cpu"))
 }
 
 func TestMongodbScaleUpDbInstanceCpu_Read_Success(t *testing.T) {
@@ -120,7 +139,7 @@ func TestMongodbScaleUpDbInstanceCpu_Read_Success(t *testing.T) {
 	assert.Equal(t, true, d.Get("is_scaled"))
 	assert.Equal(t, false, d.Get("is_locked"))
 	assert.Equal(t, 24, d.Get("max_extra_cpu"))
-	assert.Equal(t, int64(4), d.Get("extra_cpu"))
+	assert.Equal(t, 4, d.Get("extra_cpu"))
 	assert.Equal(t, 1, d.Get("trigger_type"))
 	assert.Equal(t, "2024-01-01 00:00:00", d.Get("scale_up_time"))
 }
@@ -150,53 +169,26 @@ func TestMongodbScaleUpDbInstanceCpu_Read_EmptyResponse(t *testing.T) {
 	assert.Equal(t, "", d.Id())
 }
 
-func TestMongodbScaleUpDbInstanceCpu_Update_Success(t *testing.T) {
-	patches := gomonkey.NewPatches()
-	defer patches.Reset()
-
-	mongodbClient := &mongodb_sdk.Client{}
-	patches.ApplyMethodReturn(newMockMetaForScaleUpCpu().client, "UseMongodbClient", mongodbClient)
-
-	var scaleUpCallCount int
-	patches.ApplyMethodFunc(mongodbClient, "ScaleUpDBInstanceCpu", func(request *mongodb_sdk.ScaleUpDBInstanceCpuRequest) (*mongodb_sdk.ScaleUpDBInstanceCpuResponse, error) {
-		scaleUpCallCount++
-		resp := mongodb_sdk.NewScaleUpDBInstanceCpuResponse()
-		resp.Response = &mongodb_sdk.ScaleUpDBInstanceCpuResponseParams{
-			FlowId:    ptrInt64ScaleUp(67890),
-			RequestId: ptrStrScaleUp("fake-request-id"),
-		}
-		return resp, nil
-	})
-
-	patches.ApplyMethodFunc(mongodbClient, "CheckDBInstanceElasticCpuScalable", func(request *mongodb_sdk.CheckDBInstanceElasticCpuScalableRequest) (*mongodb_sdk.CheckDBInstanceElasticCpuScalableResponse, error) {
-		resp := mongodb_sdk.NewCheckDBInstanceElasticCpuScalableResponse()
-		resp.Response = &mongodb_sdk.CheckDBInstanceElasticCpuScalableResponseParams{
-			Scalable:    ptrBoolScaleUp(true),
-			IsScaled:    ptrBoolScaleUp(true),
-			IsLocked:    ptrBoolScaleUp(false),
-			Reason:      ptrStrScaleUp(""),
-			MaxExtraCpu: ptrInt64ScaleUp(24),
-			ExtraCpu:    ptrInt64ScaleUp(8),
-			TriggerType: ptrInt64ScaleUp(1),
-			ScaleUpTime: ptrStrScaleUp("2024-01-01 00:00:00"),
-			RequestId:   ptrStrScaleUp("fake-request-id"),
-		}
-		return resp, nil
-	})
-
-	meta := newMockMetaForScaleUpCpu()
+func TestMongodbScaleUpDbInstanceCpu_SchemaImmutable(t *testing.T) {
 	res := mongodb.ResourceTencentCloudMongodbScaleUpDbInstanceCpu()
-	d := schema.TestResourceDataRaw(t, res.Schema, map[string]interface{}{
-		"instance_id": "cmgo-test1234",
-		"extra_cpu":   8,
-	})
-	d.SetId("cmgo-test1234")
 
-	err := res.Update(d, meta)
-	assert.NoError(t, err)
-	assert.Equal(t, 1, scaleUpCallCount)
-	assert.Equal(t, 67890, d.Get("flow_id"))
-	assert.Equal(t, int64(8), d.Get("extra_cpu"))
+	// Both fields are mandatory inputs, and extra_cpu can only be set on create:
+	// changing it forces a replacement, and the resource deliberately exposes no
+	// Update handler.
+	assert.True(t, res.Schema["extra_cpu"].Required)
+	assert.True(t, res.Schema["instance_id"].Required)
+	assert.False(t, res.Schema["extra_cpu"].Computed)
+	assert.True(t, res.Schema["extra_cpu"].ForceNew)
+	assert.True(t, res.Schema["instance_id"].ForceNew)
+	assert.Nil(t, res.Update)
+
+	// Create and Delete both wait for the scale flow to finish, so the timeouts
+	// must stay declared.
+	assert.NotNil(t, res.Timeouts)
+	assert.NotNil(t, res.Timeouts.Create)
+	assert.Equal(t, 30*time.Minute, *res.Timeouts.Create)
+	assert.NotNil(t, res.Timeouts.Delete)
+	assert.Equal(t, 30*time.Minute, *res.Timeouts.Delete)
 }
 
 func TestMongodbScaleUpDbInstanceCpu_Delete_Success(t *testing.T) {
@@ -206,8 +198,12 @@ func TestMongodbScaleUpDbInstanceCpu_Delete_Success(t *testing.T) {
 	mongodbClient := &mongodb_sdk.Client{}
 	patches.ApplyMethodReturn(newMockMetaForScaleUpCpu().client, "UseMongodbClient", mongodbClient)
 
-	var scaleDownCallCount int
-	patches.ApplyMethodFunc(mongodbClient, "ScaleDownDBInstanceCpu", func(request *mongodb_sdk.ScaleDownDBInstanceCpuRequest) (*mongodb_sdk.ScaleDownDBInstanceCpuResponse, error) {
+	var (
+		scaleDownCallCount     int
+		describeAsyncCallCount int
+		waitedFlowId           string
+	)
+	patches.ApplyMethodFunc(mongodbClient, "ScaleDownDBInstanceCpuWithContext", func(ctx context.Context, request *mongodb_sdk.ScaleDownDBInstanceCpuRequest) (*mongodb_sdk.ScaleDownDBInstanceCpuResponse, error) {
 		scaleDownCallCount++
 		resp := mongodb_sdk.NewScaleDownDBInstanceCpuResponse()
 		resp.Response = &mongodb_sdk.ScaleDownDBInstanceCpuResponseParams{
@@ -217,18 +213,14 @@ func TestMongodbScaleUpDbInstanceCpu_Delete_Success(t *testing.T) {
 		return resp, nil
 	})
 
-	patches.ApplyMethodFunc(mongodbClient, "CheckDBInstanceElasticCpuScalable", func(request *mongodb_sdk.CheckDBInstanceElasticCpuScalableRequest) (*mongodb_sdk.CheckDBInstanceElasticCpuScalableResponse, error) {
-		resp := mongodb_sdk.NewCheckDBInstanceElasticCpuScalableResponse()
-		resp.Response = &mongodb_sdk.CheckDBInstanceElasticCpuScalableResponseParams{
-			Scalable:    ptrBoolScaleUp(true),
-			IsScaled:    ptrBoolScaleUp(false),
-			IsLocked:    ptrBoolScaleUp(false),
-			Reason:      ptrStrScaleUp(""),
-			MaxExtraCpu: ptrInt64ScaleUp(24),
-			ExtraCpu:    ptrInt64ScaleUp(0),
-			TriggerType: ptrInt64ScaleUp(0),
-			ScaleUpTime: ptrStrScaleUp(""),
-			RequestId:   ptrStrScaleUp("fake-request-id"),
+	// Delete waits on the flow ID returned by ScaleDownDBInstanceCpu.
+	patches.ApplyMethodFunc(mongodbClient, "DescribeAsyncRequestInfo", func(request *mongodb_sdk.DescribeAsyncRequestInfoRequest) (*mongodb_sdk.DescribeAsyncRequestInfoResponse, error) {
+		describeAsyncCallCount++
+		waitedFlowId = *request.AsyncRequestId
+		resp := mongodb_sdk.NewDescribeAsyncRequestInfoResponse()
+		resp.Response = &mongodb_sdk.DescribeAsyncRequestInfoResponseParams{
+			Status:    ptrStrScaleUp(mongodb.MONGODB_TASK_SUCCESS),
+			RequestId: ptrStrScaleUp("fake-request-id"),
 		}
 		return resp, nil
 	})
@@ -243,6 +235,8 @@ func TestMongodbScaleUpDbInstanceCpu_Delete_Success(t *testing.T) {
 	err := res.Delete(d, meta)
 	assert.NoError(t, err)
 	assert.Equal(t, 1, scaleDownCallCount)
+	assert.Equal(t, 1, describeAsyncCallCount)
+	assert.Equal(t, "99999", waitedFlowId)
 }
 
 func TestMongodbScaleUpDbInstanceCpu_Delete_NotScaledTolerance(t *testing.T) {
@@ -252,7 +246,7 @@ func TestMongodbScaleUpDbInstanceCpu_Delete_NotScaledTolerance(t *testing.T) {
 	mongodbClient := &mongodb_sdk.Client{}
 	patches.ApplyMethodReturn(newMockMetaForScaleUpCpu().client, "UseMongodbClient", mongodbClient)
 
-	patches.ApplyMethodFunc(mongodbClient, "ScaleDownDBInstanceCpu", func(request *mongodb_sdk.ScaleDownDBInstanceCpuRequest) (*mongodb_sdk.ScaleDownDBInstanceCpuResponse, error) {
+	patches.ApplyMethodFunc(mongodbClient, "ScaleDownDBInstanceCpuWithContext", func(ctx context.Context, request *mongodb_sdk.ScaleDownDBInstanceCpuRequest) (*mongodb_sdk.ScaleDownDBInstanceCpuResponse, error) {
 		return nil, fmt.Errorf("instance is not in scaled state")
 	})
 

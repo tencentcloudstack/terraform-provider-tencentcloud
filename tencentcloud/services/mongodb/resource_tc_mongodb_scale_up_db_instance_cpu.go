@@ -7,46 +7,42 @@ import (
 	"strings"
 	"time"
 
+	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
+	mongodbv20190725 "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/mongodb/v20190725"
 
 	tccommon "github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/common"
+	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/internal/helper"
 )
 
 func ResourceTencentCloudMongodbScaleUpDbInstanceCpu() *schema.Resource {
 	return &schema.Resource{
 		Create: resourceTencentCloudMongodbScaleUpDbInstanceCpuCreate,
 		Read:   resourceTencentCloudMongodbScaleUpDbInstanceCpuRead,
-		Update: resourceTencentCloudMongodbScaleUpDbInstanceCpuUpdate,
 		Delete: resourceTencentCloudMongodbScaleUpDbInstanceCpuDelete,
 		Importer: &schema.ResourceImporter{
 			State: schema.ImportStatePassthrough,
 		},
 		Timeouts: &schema.ResourceTimeout{
-			Create: schema.DefaultTimeout(10 * time.Minute),
-			Update: schema.DefaultTimeout(10 * time.Minute),
-			Delete: schema.DefaultTimeout(10 * time.Minute),
+			Create: schema.DefaultTimeout(30 * time.Minute),
+			Delete: schema.DefaultTimeout(30 * time.Minute),
 		},
 		Schema: map[string]*schema.Schema{
 			"instance_id": {
 				Type:        schema.TypeString,
-				Optional:    true,
+				Required:    true,
 				ForceNew:    true,
 				Description: "MongoDB instance ID, for example: cmgo-p8vnipr5.",
 			},
 
 			"extra_cpu": {
 				Type:        schema.TypeInt,
-				Optional:    true,
-				Computed:    true,
-				Description: "Number of CPU cores to scale up (increment). Each node will increase by this number of cores.",
+				Required:    true,
+				ForceNew:    true,
+				Description: "Number of CPU cores to scale up (increment). Each node will increase by this number of cores. It cannot be changed after creation.",
 			},
 
-			"flow_id": {
-				Type:        schema.TypeInt,
-				Computed:    true,
-				Description: "Task flow ID.",
-			},
-
+			// computed
 			"scalable": {
 				Type:        schema.TypeBool,
 				Computed:    true,
@@ -98,38 +94,55 @@ func resourceTencentCloudMongodbScaleUpDbInstanceCpuCreate(d *schema.ResourceDat
 
 	var (
 		logId      = tccommon.GetLogId(tccommon.ContextNil)
-		ctx        = context.WithValue(context.TODO(), tccommon.LogIdKey, logId)
+		ctx        = tccommon.NewResourceLifeCycleHandleFuncContext(context.Background(), logId, d, meta)
 		service    = MongodbService{client: meta.(tccommon.ProviderMeta).GetAPIV3Conn()}
+		request    = mongodbv20190725.NewScaleUpDBInstanceCpuRequest()
+		response   = mongodbv20190725.NewScaleUpDBInstanceCpuResponse()
 		instanceId string
-		extraCpu   int64
+		flowId     string
 	)
 
 	if v, ok := d.GetOk("instance_id"); ok {
 		instanceId = v.(string)
-	} else {
-		return fmt.Errorf("instance_id is required")
+		request.InstanceId = helper.String(instanceId)
 	}
 
-	if v, ok := d.GetOk("extra_cpu"); ok {
-		extraCpu = int64(v.(int))
+	if v, ok := d.GetOkExists("extra_cpu"); ok {
+		request.ExtraCpu = helper.IntInt64(v.(int))
 	}
 
-	flowId, err := service.ScaleUpDBInstanceCpu(ctx, instanceId, extraCpu)
-	if err != nil {
-		log.Printf("[CRITAL]%s create mongodb scale_up_db_instance_cpu failed, reason: %v", logId, err)
-		return err
+	reqErr := resource.Retry(tccommon.WriteRetryTimeout, func() *resource.RetryError {
+		result, e := meta.(tccommon.ProviderMeta).GetAPIV3Conn().UseMongodbClient().ScaleUpDBInstanceCpuWithContext(ctx, request)
+		if e != nil {
+			return tccommon.RetryError(e)
+		} else {
+			log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), result.ToJsonString())
+		}
+
+		if result == nil || result.Response == nil {
+			return resource.NonRetryableError(fmt.Errorf("ScaleUpDBInstanceCpu failed, Response is nil."))
+		}
+
+		response = result
+		return nil
+	})
+
+	if reqErr != nil {
+		log.Printf("[CRITAL]%s create mongodb scale_up_db_instance_cpu failed, reason:%+v", logId, reqErr)
+		return reqErr
 	}
 
-	if flowId == nil {
-		return fmt.Errorf("ScaleUpDBInstanceCpu FlowId is nil, logId=%s", logId)
+	if response.Response.FlowId != nil {
+		flowId = helper.Int64ToStr(*response.Response.FlowId)
 	}
 
-	log.Printf("[INFO]%s mongodb scale_up_db_instance_cpu created, instanceId=%s, flowId=%d", logId, instanceId, *flowId)
 	d.SetId(instanceId)
-	_ = d.Set("flow_id", *flowId)
 
-	if err = service.WaitMongodbScaleUpDbInstanceCpuComplete(ctx, instanceId, true); err != nil {
-		log.Printf("[CRITAL]%s wait mongodb scale_up_db_instance_cpu scale up complete failed, reason: %v", logId, err)
+	// ScaleUpDBInstanceCpu is asynchronous: the returned flow ID is polled until
+	// the task finishes, so the resource is only reported as created once the
+	// instance is really scaled up.
+	if err := service.DescribeAsyncRequestInfo(ctx, flowId, d.Timeout(schema.TimeoutCreate)); err != nil {
+		log.Printf("[CRITAL]%s wait mongodb scale_up_db_instance_cpu scale up complete failed, reason:%+v", logId, err)
 		return err
 	}
 
@@ -142,93 +155,57 @@ func resourceTencentCloudMongodbScaleUpDbInstanceCpuRead(d *schema.ResourceData,
 
 	var (
 		logId      = tccommon.GetLogId(tccommon.ContextNil)
-		ctx        = context.WithValue(context.TODO(), tccommon.LogIdKey, logId)
+		ctx        = tccommon.NewResourceLifeCycleHandleFuncContext(context.Background(), logId, d, meta)
 		service    = MongodbService{client: meta.(tccommon.ProviderMeta).GetAPIV3Conn()}
 		instanceId = d.Id()
 	)
 
-	response, err := service.CheckDBInstanceElasticCpuScalable(ctx, instanceId)
+	respData, err := service.DescribeMongodbScaleUpDbInstanceCpuById(ctx, instanceId)
 	if err != nil {
 		return err
 	}
 
-	if response == nil || response.Response == nil {
-		log.Printf("[CRUD] tencentcloud_mongodb_scale_up_db_instance_cpu id=%s", d.Id())
+	if respData == nil {
+		log.Printf("[WARN]%s resource `tencentcloud_mongodb_scale_up_db_instance_cpu` [%s] not found, please check if it has been deleted.\n", logId, d.Id())
 		d.SetId("")
 		return nil
 	}
 
 	_ = d.Set("instance_id", instanceId)
 
-	if response.Response.Scalable != nil {
-		_ = d.Set("scalable", *response.Response.Scalable)
+	if respData.Scalable != nil {
+		_ = d.Set("scalable", respData.Scalable)
 	}
 
-	if response.Response.IsScaled != nil {
-		_ = d.Set("is_scaled", *response.Response.IsScaled)
+	if respData.IsScaled != nil {
+		_ = d.Set("is_scaled", respData.IsScaled)
 	}
 
-	if response.Response.IsLocked != nil {
-		_ = d.Set("is_locked", *response.Response.IsLocked)
+	if respData.IsLocked != nil {
+		_ = d.Set("is_locked", respData.IsLocked)
 	}
 
-	if response.Response.Reason != nil {
-		_ = d.Set("reason", *response.Response.Reason)
+	if respData.Reason != nil {
+		_ = d.Set("reason", respData.Reason)
 	}
 
-	if response.Response.MaxExtraCpu != nil {
-		_ = d.Set("max_extra_cpu", *response.Response.MaxExtraCpu)
+	if respData.MaxExtraCpu != nil {
+		_ = d.Set("max_extra_cpu", respData.MaxExtraCpu)
 	}
 
-	if response.Response.ExtraCpu != nil {
-		_ = d.Set("extra_cpu", *response.Response.ExtraCpu)
+	if respData.ExtraCpu != nil {
+		_ = d.Set("extra_cpu", respData.ExtraCpu)
 	}
 
-	if response.Response.TriggerType != nil {
-		_ = d.Set("trigger_type", *response.Response.TriggerType)
+	if respData.TriggerType != nil {
+		_ = d.Set("trigger_type", respData.TriggerType)
 	}
 
-	if response.Response.ScaleUpTime != nil {
-		_ = d.Set("scale_up_time", *response.Response.ScaleUpTime)
+	if respData.ScaleUpTime != nil {
+		_ = d.Set("scale_up_time", respData.ScaleUpTime)
 	}
 
 	return nil
-}
-
-func resourceTencentCloudMongodbScaleUpDbInstanceCpuUpdate(d *schema.ResourceData, meta interface{}) error {
-	defer tccommon.LogElapsed("resource.tencentcloud_mongodb_scale_up_db_instance_cpu.update")()
-	defer tccommon.InconsistentCheck(d, meta)()
-
-	var (
-		logId      = tccommon.GetLogId(tccommon.ContextNil)
-		ctx        = context.WithValue(context.TODO(), tccommon.LogIdKey, logId)
-		service    = MongodbService{client: meta.(tccommon.ProviderMeta).GetAPIV3Conn()}
-		instanceId = d.Id()
-	)
-
-	if d.HasChange("extra_cpu") {
-		var extraCpu int64
-		if v, ok := d.GetOk("extra_cpu"); ok {
-			extraCpu = int64(v.(int))
-		}
-
-		flowId, err := service.ScaleUpDBInstanceCpu(ctx, instanceId, extraCpu)
-		if err != nil {
-			log.Printf("[CRITAL]%s update mongodb scale_up_db_instance_cpu failed, reason: %v", logId, err)
-			return err
-		}
-
-		if flowId != nil {
-			_ = d.Set("flow_id", *flowId)
-		}
-
-		if err = service.WaitMongodbScaleUpDbInstanceCpuComplete(ctx, instanceId, true); err != nil {
-			log.Printf("[CRITAL]%s wait mongodb scale_up_db_instance_cpu scale up complete failed, reason: %v", logId, err)
-			return err
-		}
-	}
-
-	return resourceTencentCloudMongodbScaleUpDbInstanceCpuRead(d, meta)
 }
 
 func resourceTencentCloudMongodbScaleUpDbInstanceCpuDelete(d *schema.ResourceData, meta interface{}) error {
@@ -237,24 +214,52 @@ func resourceTencentCloudMongodbScaleUpDbInstanceCpuDelete(d *schema.ResourceDat
 
 	var (
 		logId      = tccommon.GetLogId(tccommon.ContextNil)
-		ctx        = context.WithValue(context.TODO(), tccommon.LogIdKey, logId)
+		ctx        = tccommon.NewResourceLifeCycleHandleFuncContext(context.Background(), logId, d, meta)
 		service    = MongodbService{client: meta.(tccommon.ProviderMeta).GetAPIV3Conn()}
+		request    = mongodbv20190725.NewScaleDownDBInstanceCpuRequest()
+		response   = mongodbv20190725.NewScaleDownDBInstanceCpuResponse()
 		instanceId = d.Id()
+		flowId     string
 	)
 
-	_, err := service.ScaleDownDBInstanceCpu(ctx, instanceId)
-	if err != nil {
-		if strings.Contains(err.Error(), "not") || strings.Contains(err.Error(), "NoChange") ||
-			strings.Contains(err.Error(), "not scaled") || strings.Contains(err.Error(), "not in scaled") {
-			log.Printf("[INFO]%s mongodb scale_up_db_instance_cpu instance %s not in scaled state, treat as deleted, reason: %v", logId, instanceId, err)
+	request.InstanceId = helper.String(instanceId)
+	reqErr := resource.Retry(tccommon.WriteRetryTimeout, func() *resource.RetryError {
+		result, e := meta.(tccommon.ProviderMeta).GetAPIV3Conn().UseMongodbClient().ScaleDownDBInstanceCpuWithContext(ctx, request)
+		if e != nil {
+			return tccommon.RetryError(e)
+		} else {
+			log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), result.ToJsonString())
+		}
+
+		if result == nil || result.Response == nil {
+			return resource.NonRetryableError(fmt.Errorf("ScaleDownDBInstanceCpu failed, Response is nil."))
+		}
+
+		response = result
+		return nil
+	})
+
+	if reqErr != nil {
+		// The instance may already be out of the scaled state, for example when the
+		// scale-up was disabled manually; destroying the resource is then a no-op.
+		if strings.Contains(reqErr.Error(), "not scaled") || strings.Contains(reqErr.Error(), "not in scaled") {
+			log.Printf("[INFO]%s mongodb scale_up_db_instance_cpu instance [%s] is not in scaled state, treat as deleted, reason:%+v", logId, instanceId, reqErr)
 			return nil
 		}
-		log.Printf("[CRITAL]%s delete mongodb scale_up_db_instance_cpu failed, reason: %v", logId, err)
-		return err
+
+		log.Printf("[CRITAL]%s delete mongodb scale_up_db_instance_cpu failed, reason:%+v", logId, reqErr)
+		return reqErr
 	}
 
-	if err = service.WaitMongodbScaleUpDbInstanceCpuComplete(ctx, instanceId, false); err != nil {
-		log.Printf("[CRITAL]%s wait mongodb scale_up_db_instance_cpu scale down complete failed, reason: %v", logId, err)
+	if response.Response.FlowId != nil {
+		flowId = helper.Int64ToStr(*response.Response.FlowId)
+	}
+
+	// ScaleDownDBInstanceCpu is asynchronous: the returned flow ID is polled until
+	// the task finishes, so the resource is only reported as destroyed once the
+	// instance is really scaled down.
+	if err := service.DescribeAsyncRequestInfo(ctx, flowId, d.Timeout(schema.TimeoutDelete)); err != nil {
+		log.Printf("[CRITAL]%s wait mongodb scale_up_db_instance_cpu scale down complete failed, reason:%+v", logId, err)
 		return err
 	}
 

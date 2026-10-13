@@ -16,9 +16,23 @@ Provides a resource to manage MongoDB instance elastic CPU scale-up.
 ## Example Usage
 
 ```hcl
+resource "tencentcloud_mongodb_instance" "example" {
+  instance_name  = "tf-example"
+  cpu            = 2
+  memory         = 4
+  volume         = 100
+  engine_version = "MONGO_80_WT"
+  machine_type   = "GE.LD.T1"
+  available_zone = "ap-guangzhou-6"
+  vpc_id         = "vpc-i5yyodl9"
+  subnet_id      = "subnet-hhi88a58"
+  project_id     = 0
+  password       = "Password@2026"
+}
+
 resource "tencentcloud_mongodb_scale_up_db_instance_cpu" "example" {
-  instance_id = "cmgo-p8vnipr5"
-  extra_cpu   = 4
+  instance_id = tencentcloud_mongodb_instance.example.id
+  extra_cpu   = 2
 }
 ```
 
@@ -26,15 +40,14 @@ resource "tencentcloud_mongodb_scale_up_db_instance_cpu" "example" {
 
 The following arguments are supported:
 
-* `extra_cpu` - (Optional, Int) Number of CPU cores to scale up (increment). Each node will increase by this number of cores.
-* `instance_id` - (Optional, String, ForceNew) MongoDB instance ID, for example: cmgo-p8vnipr5.
+* `extra_cpu` - (Required, Int, ForceNew) Number of CPU cores to scale up (increment). Each node will increase by this number of cores. It cannot be changed after creation.
+* `instance_id` - (Required, String, ForceNew) MongoDB instance ID, for example: cmgo-p8vnipr5.
 
 ## Attributes Reference
 
 In addition to all arguments above, the following attributes are exported:
 
 * `id` - ID of the resource.
-* `flow_id` - Task flow ID.
 * `is_locked` - Whether the instance is locked (a flow is in progress).
 * `is_scaled` - Whether the instance is currently in scaled state.
 * `max_extra_cpu` - Maximum number of CPU cores that can be scaled up, MIN(minimum shard CPU cores, 24).
@@ -47,9 +60,8 @@ In addition to all arguments above, the following attributes are exported:
 
 The `timeouts` block allows you to specify [timeouts](https://developer.hashicorp.com/terraform/language/resources/syntax#operation-timeouts) for certain actions:
 
-* `create` - (Defaults to `10m`) Used when creating the resource.
-* `update` - (Defaults to `10m`) Used when updating the resource.
-* `delete` - (Defaults to `10m`) Used when deleting the resource.
+* `create` - (Defaults to `30m`) Used when creating the resource.
+* `delete` - (Defaults to `30m`) Used when deleting the resource.
 
 ## Import
 
