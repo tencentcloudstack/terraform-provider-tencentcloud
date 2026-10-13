@@ -51,10 +51,6 @@ type apiRef struct {
 	URL     string `json:"url"`
 }
 
-// resourceAPIRefs maps a terraform resource name (tencentcloud_xxx) to the
-// cloud APIs invoked by each lifecycle phase.
-type resourceAPIRefs map[string]map[string][]apiRef
-
 //go:embed data/api-actions.json
 var apiActionsFS embed.FS
 
@@ -557,15 +553,6 @@ func renderAPIRefs(refs map[string][]apiRef) string {
 		}
 	}
 	return strings.TrimRight(b.String(), "\n")
-}
-
-// dumpJSON writes the full resource -> API mapping to a debug JSON file.
-func dumpJSON(path string, all resourceAPIRefs) error {
-	raw, err := json.MarshalIndent(all, "", "  ")
-	if err != nil {
-		return err
-	}
-	return os.WriteFile(path, raw, 0o644)
 }
 
 // inferLocalTypes records variable -> struct-type bindings from composite

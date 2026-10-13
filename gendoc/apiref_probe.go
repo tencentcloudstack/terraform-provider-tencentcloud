@@ -1,11 +1,12 @@
 package main
 
-// apiref_probe.go — PoC verification entry. Run with:
+// apiref_probe.go — verification entry. Run with:
 //
-//	go run . -probe=vpc
+//	go run . -probe=vpc         (single resource)
+//	go run . -probe=all         (coverage stats)
 //
-// It prints the lifecycle -> cloud API mapping for a single resource
-// without touching the normal doc generation pipeline.
+// It prints the lifecycle -> cloud API mapping without touching the
+// normal doc generation pipeline.
 
 import (
 	"fmt"
