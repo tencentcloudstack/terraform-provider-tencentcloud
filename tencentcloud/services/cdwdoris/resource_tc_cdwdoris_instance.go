@@ -213,12 +213,9 @@ func ResourceTencentCloudCdwdorisInstance() *schema.Resource {
 			"disk_encrypt": {
 				Type:        schema.TypeInt,
 				Optional:    true,
-				Description: "Disk encryption. Immutable after creation.",
-			},
-			"encrypt": {
-				Type:        schema.TypeInt,
+				ForceNew:    true,
 				Computed:    true,
-				Description: "Whether disk encryption is enabled. Read from InstanceInfo.MasterSummary.Encrypt / CoreSummary.Encrypt.",
+				Description: "Disk encryption. Immutable after creation. `0` - disable, `1` - enable. Default is `0`.",
 			},
 			"security_group_ids": {
 				Type:        schema.TypeList,
@@ -570,6 +567,7 @@ func resourceTencentCloudCdwdorisInstanceRead(d *schema.ResourceData, meta inter
 		_ = d.Set("user_subnet_id", respData.SubnetId)
 	}
 
+	var diskEncrypt *int64
 	if respData.MasterSummary != nil {
 		masterSummaryMap := map[string]interface{}{}
 		if respData.MasterSummary.Spec != nil {
@@ -582,6 +580,10 @@ func resourceTencentCloudCdwdorisInstanceRead(d *schema.ResourceData, meta inter
 
 		if respData.MasterSummary.Disk != nil {
 			masterSummaryMap["disk_size"] = respData.MasterSummary.Disk
+		}
+
+		if respData.MasterSummary.Encrypt != nil {
+			diskEncrypt = respData.MasterSummary.Encrypt
 		}
 
 		_ = d.Set("fe_spec", []interface{}{masterSummaryMap})
@@ -601,7 +603,15 @@ func resourceTencentCloudCdwdorisInstanceRead(d *schema.ResourceData, meta inter
 			coreSummaryMap["disk_size"] = respData.CoreSummary.Disk
 		}
 
+		if respData.CoreSummary.Encrypt != nil {
+			diskEncrypt = respData.CoreSummary.Encrypt
+		}
+
 		_ = d.Set("be_spec", []interface{}{coreSummaryMap})
+	}
+
+	if diskEncrypt != nil {
+		_ = d.Set("disk_encrypt", diskEncrypt)
 	}
 
 	if respData.HA != nil {
@@ -614,12 +624,6 @@ func resourceTencentCloudCdwdorisInstanceRead(d *schema.ResourceData, meta inter
 
 	if respData.HaType != nil {
 		_ = d.Set("ha_type", respData.HaType)
-	}
-
-	if respData.MasterSummary != nil && respData.MasterSummary.Encrypt != nil {
-		_ = d.Set("encrypt", respData.MasterSummary.Encrypt)
-	} else if respData.CoreSummary != nil && respData.CoreSummary.Encrypt != nil {
-		_ = d.Set("encrypt", respData.CoreSummary.Encrypt)
 	}
 
 	if respData.Tags != nil {
