@@ -129,6 +129,8 @@ resource "tencentcloud_instance" "example" {
   instance_charge_type                    = "PREPAID"
   instance_charge_type_prepaid_period     = 1
   instance_charge_type_prepaid_renew_flag = "NOTIFY_AND_MANUAL_RENEW"
+  delete_with_instance                    = false
+  delete_with_instance_prepaid            = true
   force_delete                            = true
   data_disks {
     data_disk_type = "CLOUD_PREMIUM"
