@@ -64,8 +64,8 @@ resource "tencentcloud_private_dns_zone" "example" {
 
 Import
 
-Private Dns Zone can be imported, e.g.
+Private Dns Zone can be imported by id, e.g.
 
 ```
-$ terraform import tencentcloud_private_dns_zone.example zone-6xg5xgky
+terraform import tencentcloud_private_dns_zone.example zone-6xg5xgky
 ```
