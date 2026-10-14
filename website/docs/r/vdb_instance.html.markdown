@@ -112,6 +112,7 @@ In addition to all arguments above, the following attributes are exported:
 * `isolate_at` - Isolation time.
 * `networks` - Network information.
   * `expire_time` - Old IP expiration time.
+  * `is_ssl` - Whether it is an SSL network.
   * `port` - Internal port.
   * `preserve_duration` - Old IP preservation duration in days.
   * `subnet_id` - Subnet ID.

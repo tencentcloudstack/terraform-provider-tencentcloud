@@ -239,6 +239,11 @@ func ResourceTencentCloudVdbInstance() *schema.Resource {
 							Computed:    true,
 							Description: "Old IP expiration time.",
 						},
+						"is_ssl": {
+							Type:        schema.TypeBool,
+							Computed:    true,
+							Description: "Whether it is an SSL network.",
+						},
 					},
 				},
 			},
@@ -394,6 +399,8 @@ func resourceTencentCloudVdbInstanceCreate(d *schema.ResourceData, meta interfac
 		return reqErr
 	}
 
+	log.Printf("[INFO]%s create vdb instance done, logId=%s, current d.Id()=%s", logId, logId, d.Id())
+
 	if response.Response.InstanceIds == nil || len(response.Response.InstanceIds) == 0 {
 		return fmt.Errorf("InstanceIds is empty")
 	}
@@ -426,7 +433,7 @@ func resourceTencentCloudVdbInstanceRead(d *schema.ResourceData, meta interface{
 	}
 
 	if instance == nil {
-		log.Printf("[WARN]%s resource `tencentcloud_vdb_instance` [%s] not found, please check if it has been deleted.\n", logId, d.Id())
+		log.Printf("[CRUD] vdb_instance id=%s", d.Id())
 		d.SetId("")
 		return nil
 	}
@@ -548,6 +555,9 @@ func resourceTencentCloudVdbInstanceRead(d *schema.ResourceData, meta interface{
 			}
 			if n.ExpireTime != nil {
 				networkMap["expire_time"] = n.ExpireTime
+			}
+			if n.IsSSL != nil {
+				networkMap["is_ssl"] = n.IsSSL
 			}
 			networksList = append(networksList, networkMap)
 		}
