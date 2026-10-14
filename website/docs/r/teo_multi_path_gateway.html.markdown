@@ -68,7 +68,7 @@ The `timeouts` block allows you to specify [timeouts](https://developer.hashicor
 
 This resource interacts with the following TencentCloud APIs:
 
-* Create: [CreateMultiPathGateway](https://cloud.tencent.com/document/api/1552/121343) - Create a multi-channel security acceleration gateway via this API, including Cloud Gateway (gateway created and managed by Tencent Cloud) and private gateway (gateway deployed by users). Query the status using DescribeMultiPathGateway, and creation is successful if the status is online.
+* Create: [CreateMultiPathGateway](https://cloud.tencent.com/document/api/1552/121343) - Create a multi-channel security acceleration gateway via this API, including Cloud Gateway (gateway created and managed by Tencent Cloud) and private gateway (gateway deployed by users).
 * Create: [DescribeMultiPathGateways](https://cloud.tencent.com/document/api/1552/121334) - Query the multi-channel security acceleration gateway list created by the user through this interface. Supports pagination.
 * Read: [DescribeMultiPathGateways](https://cloud.tencent.com/document/api/1552/121334) - Query the multi-channel security acceleration gateway list created by the user through this interface. Supports pagination.
 * Update: [DescribeMultiPathGateways](https://cloud.tencent.com/document/api/1552/121334) - Query the multi-channel security acceleration gateway list created by the user through this interface. Supports pagination.

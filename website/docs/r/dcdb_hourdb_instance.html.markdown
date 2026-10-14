@@ -71,7 +71,7 @@ In addition to all arguments above, the following attributes are exported:
 
 This resource interacts with the following TencentCloud APIs:
 
-* Create: [CloseDBExtranetAccess](https://cloud.tencent.com/document/api/557/19998) - This API is used to disable public network access for a TencentDB instance, which will make the public IP address inaccessible. The `DescribeDCDBInstances` API will not return the public domain name and port information of the corresponding instance.
+* Create: [CloseDBExtranetAccess](https://cloud.tencent.com/document/api/557/19998) - This API is used to disable public network access for a TencentDB instance, which will make the public IP address inaccessible.
 * Create: [CreateHourDCDBInstance](https://cloud.tencent.com/document/api/557/70249) - This API is used to create a pay-as-you-go TDSQL instance.
 * Create: [DescribeDCDBInstances](https://cloud.tencent.com/document/api/557/16140) - This API is used to query the list of TencentDB instances. It supports filtering instances by project ID, instance ID, private network address, and instance name.
 * Create: [DescribeDcnDetail](https://cloud.tencent.com/document/api/557/56346) - This API is used to query the disaster recovery details of an instance.
@@ -83,7 +83,7 @@ This resource interacts with the following TencentCloud APIs:
 * Read: [DescribeDCDBInstanceDetail](https://cloud.tencent.com/document/api/557/89385) - This API is used to get the details of a TDSQL instance.
 * Read: [DescribeDCDBInstances](https://cloud.tencent.com/document/api/557/16140) - This API is used to query the list of TencentDB instances. It supports filtering instances by project ID, instance ID, private network address, and instance name.
 * Read: [DescribeDcnDetail](https://cloud.tencent.com/document/api/557/56346) - This API is used to query the disaster recovery details of an instance.
-* Update: [CloseDBExtranetAccess](https://cloud.tencent.com/document/api/557/19998) - This API is used to disable public network access for a TencentDB instance, which will make the public IP address inaccessible. The `DescribeDCDBInstances` API will not return the public domain name and port information of the corresponding instance.
+* Update: [CloseDBExtranetAccess](https://cloud.tencent.com/document/api/557/19998) - This API is used to disable public network access for a TencentDB instance, which will make the public IP address inaccessible.
 * Update: [DescribeDCDBInstances](https://cloud.tencent.com/document/api/557/16140) - This API is used to query the list of TencentDB instances. It supports filtering instances by project ID, instance ID, private network address, and instance name.
 * Update: [DescribeFlow](https://cloud.tencent.com/document/api/557/56485) - This API is used to query task status.
 * Update: [ModifyDBInstanceName](https://cloud.tencent.com/document/api/557/73095) - This API is used to modify instance name.

@@ -59,5 +59,5 @@ In addition to all arguments above, the following attributes are exported:
 This resource interacts with the following TencentCloud APIs:
 
 * Create: [CreateRoInstanceIp](https://cloud.tencent.com/document/api/236/46596) - This API is used to create a VIP exclusive to a TencentDB read-only instance.
-* Read: [DescribeDBInstances](https://cloud.tencent.com/document/api/236/15872) - This API is used to query the list of TencentDB for MySQL instances. It supports filtering instances by conditions such as project ID, instance ID, access address, and instance status. It also supports querying the list of information about primary instances, disaster recovery instances, and read-only instances.
+* Read: [DescribeDBInstances](https://cloud.tencent.com/document/api/236/15872) - This API is used to query the list of TencentDB for MySQL instances. It supports filtering instances by conditions such as project ID, instance ID, access address, and instance status.
 

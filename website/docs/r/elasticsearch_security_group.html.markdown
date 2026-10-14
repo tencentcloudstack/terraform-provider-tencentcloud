@@ -42,7 +42,7 @@ In addition to all arguments above, the following attributes are exported:
 This resource interacts with the following TencentCloud APIs:
 
 * Create: [ModifyEsVipSecurityGroup](https://cloud.tencent.com/document/api/845/94985)
-* Read: [DescribeInstances](https://cloud.tencent.com/document/api/845/30631) - This API is used to query all eligible instances in the current region under the current account.
+* Read: [DescribeInstances](https://cloud.tencent.com/document/api/845/30631) - Query all instances meeting conditions for the user in that region
 * Update: [ModifyEsVipSecurityGroup](https://cloud.tencent.com/document/api/845/94985)
 
 ## Import

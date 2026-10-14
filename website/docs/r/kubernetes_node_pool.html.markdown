@@ -481,7 +481,7 @@ This resource interacts with the following TencentCloud APIs:
 * Update: [DescribeClusterNodePoolDetail](https://cloud.tencent.com/document/api/457/49433) - This API is used to query detailed information of a node pool.
 * Update: [DescribeClusters](https://cloud.tencent.com/document/api/457/31862) - This API is used to query clusters list.
 * Update: [DescribeInstances](https://cloud.tencent.com/document/api/213/15728) - This API is used to query the details of instances.
-* Update: [InvokeCommand](https://cloud.tencent.com/document/api/1340/52678) - This API is used to trigger a command on the specified instance and returns the execution activity ID (inv-xxxxxxxx) on success. Each execution activity has one or more execution tasks (invt-xxxxxxxx) and each execution task indicates an execution record on a CVM or Lighthouse instance.
+* Update: [InvokeCommand](https://cloud.tencent.com/document/api/1340/52678) - This API is used to trigger a command on the specified instance and returns the execution activity ID (inv-xxxxxxxx) on success.
 * Update: [ModifyClusterNodePool](https://cloud.tencent.com/document/api/457/49431) - This API is used to edit a node pool.
 * Update: [ModifyLaunchConfigurationAttributes](https://cloud.tencent.com/document/api/377/31298) - This API (ModifyLaunchConfigurationAttributes) is used to modify part of a launch configuration's attributes.
 * Update: [ModifyNodePoolDesiredCapacityAboutAsg](https://cloud.tencent.com/document/api/457/51013)

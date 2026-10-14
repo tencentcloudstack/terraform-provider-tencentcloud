@@ -54,7 +54,7 @@ In addition to all arguments above, the following attributes are exported:
 
 This resource interacts with the following TencentCloud APIs:
 
-* Create: [CreateNetworkAcl](https://cloud.tencent.com/document/api/215/42162) - This API is used to create a <a href="https://intl.cloud.tencent.com/document/product/215/20088?from_cn_redirect=1">network ACL</a>.
+* Create: [CreateNetworkAcl](https://cloud.tencent.com/document/api/215/42162) - This API is used to create a network ACL.
 * Create: [ModifyNetworkAclEntries](https://cloud.tencent.com/document/api/215/42107) - This API is used to modify (add or delete) the inbound and outbound rules of a network ACL. In `NetworkAclEntrySet` parameters,
 * Create: [ModifyResourceTags](https://cloud.tencent.com/document/api/651/35322) - This API is used to modify all tags associated with a resource.
 * Read: [DescribeNetworkAcls](https://cloud.tencent.com/document/api/215/42160) - This API is used to query a list of network ACLs.

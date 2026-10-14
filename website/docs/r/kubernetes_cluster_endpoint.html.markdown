@@ -83,7 +83,7 @@ This resource interacts with the following TencentCloud APIs:
 
 * Create: [DescribeClusterInstances](https://cloud.tencent.com/document/api/457/31863) - This API is used to query the information of node instances in a cluster.
 * Create: [DescribeClusterVirtualNode](https://cloud.tencent.com/document/api/457/85351) - This API is used to view the Super Node list.
-* Read: [DescribeClusterKubeconfig](https://cloud.tencent.com/document/api/457/48149) - This API is used to obtain the cluster kubeconfig file. Different sub-accounts have their own kubeconfig files. The kubeconfig file contains the kube-apiserver client certificate of the corresponding sub-account. By default, the client certificate is created when this API is called for the first time, and the certificate is valid for 20 years with no permissions granted. For the cluster owner or primary account, the cluster-admin permission is granted by default.
+* Read: [DescribeClusterKubeconfig](https://cloud.tencent.com/document/api/457/48149) - This API is used to obtain the cluster kubeconfig file. Different sub-accounts have their own kubeconfig files. The kubeconfig file contains the kube-apiserver client certificate of the corresponding sub-account.
 * Read: [DescribeClusterSecurity](https://cloud.tencent.com/document/api/457/36703) - This API is used to query the key information of a cluster.
 * Read: [DescribeClusters](https://cloud.tencent.com/document/api/457/31862) - This API is used to query clusters list.
 * Update: [ModifyClusterEndpointSP](https://cloud.tencent.com/document/api/457/39408) - Modify the security policy of the external port of the managed cluster (the old way, only the external port of the managed cluster is supported)

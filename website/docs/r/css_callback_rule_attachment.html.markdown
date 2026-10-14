@@ -40,7 +40,7 @@ In addition to all arguments above, the following attributes are exported:
 
 This resource interacts with the following TencentCloud APIs:
 
-* Create: [CreateLiveCallbackRule](https://cloud.tencent.com/document/api/267/32638) - To create a callback rule, you need to first call the [CreateLiveCallbackTemplate](https://intl.cloud.tencent.com/document/product/267/32637?from_cn_redirect=1) API to create a callback template and bind the returned template ID to the domain name/path.
+* Create: [CreateLiveCallbackRule](https://cloud.tencent.com/document/api/267/32638) - To create a callback rule, you need to first call the [CreateLiveCallbackTemplate](https://intl.cloud.tencent.com/document/product/267/32637?
 * Read: [DescribeLiveCallbackRules](https://cloud.tencent.com/document/api/267/32634) - This API is used to get the callback rule list.
 * Delete: [DeleteLiveCallbackRule](https://cloud.tencent.com/document/api/267/32636) - This API is used to delete a callback rule.
 * Delete: [DescribeLiveCallbackRules](https://cloud.tencent.com/document/api/267/32634) - This API is used to get the callback rule list.

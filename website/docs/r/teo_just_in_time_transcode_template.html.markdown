@@ -80,10 +80,10 @@ In addition to all arguments above, the following attributes are exported:
 
 This resource interacts with the following TencentCloud APIs:
 
-* Create: [CreateJustInTimeTranscodeTemplate](https://cloud.tencent.com/document/api/1552/122116) - JIT transcoding already provides preset transcoding templates to meet most needs. If there are personalized transcoding requirements, you can create custom transcoding templates through this API, with up to 100 custom transcoding templates allowed.
-* Create: [DescribeJustInTimeTranscodeTemplates](https://cloud.tencent.com/document/api/1552/122114) - This API is used to search the transcoding template detail list according to the name, template type, or unique identifier of the just-in-time transcoding template. The returned results include all eligible custom templates and preset templates.
-* Read: [DescribeJustInTimeTranscodeTemplates](https://cloud.tencent.com/document/api/1552/122114) - This API is used to search the transcoding template detail list according to the name, template type, or unique identifier of the just-in-time transcoding template. The returned results include all eligible custom templates and preset templates.
-* Update: [DescribeJustInTimeTranscodeTemplates](https://cloud.tencent.com/document/api/1552/122114) - This API is used to search the transcoding template detail list according to the name, template type, or unique identifier of the just-in-time transcoding template. The returned results include all eligible custom templates and preset templates.
+* Create: [CreateJustInTimeTranscodeTemplate](https://cloud.tencent.com/document/api/1552/122116) - JIT transcoding already provides preset transcoding templates to meet most needs. If there are personalized transcoding requirements, you can create custom transcoding templates through this API, with up to 100 custom transcoding templates ...
+* Create: [DescribeJustInTimeTranscodeTemplates](https://cloud.tencent.com/document/api/1552/122114) - This API is used to search the transcoding template detail list according to the name, template type, or unique identifier of the just-in-time transcoding template.
+* Read: [DescribeJustInTimeTranscodeTemplates](https://cloud.tencent.com/document/api/1552/122114) - This API is used to search the transcoding template detail list according to the name, template type, or unique identifier of the just-in-time transcoding template.
+* Update: [DescribeJustInTimeTranscodeTemplates](https://cloud.tencent.com/document/api/1552/122114) - This API is used to search the transcoding template detail list according to the name, template type, or unique identifier of the just-in-time transcoding template.
 * Delete: [DeleteJustInTimeTranscodeTemplates](https://cloud.tencent.com/document/api/1552/122115) - This API is used to delete the appropriate just in time transcoding template based on the unique template identifier under the site ID.
 
 ## Import

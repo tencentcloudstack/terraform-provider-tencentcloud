@@ -116,7 +116,7 @@ This resource interacts with the following TencentCloud APIs:
 * Update: [DescribeClusters](https://cloud.tencent.com/document/api/596/41489) - This API is used to query the TcaplusDB cluster list, including cluster details.
 * Update: [ModifyClusterMachine](https://cloud.tencent.com/document/api/596/50731) - This API is used to modify the machines of a dedicated cluster.
 * Update: [ModifyClusterName](https://cloud.tencent.com/document/api/596/41488) - This API is used to rename a specified cluster.
-* Update: [ModifyClusterPassword](https://cloud.tencent.com/document/api/596/41487) - This API is used to change the password of a specified cluster. The backend will allow the TcaplusDB SDK to access databases with both old and new passwords before the old password expires. You cannot submit a new password change request before the old password expires or submit a request to modify the expiration time of the old password after the old password expires.
+* Update: [ModifyClusterPassword](https://cloud.tencent.com/document/api/596/41487) - This API is used to change the password of a specified cluster. The backend will allow the TcaplusDB SDK to access databases with both old and new passwords before the old password expires.
 * Update: [ModifyClusterTags](https://cloud.tencent.com/document/api/596/45081) - This API is used to modify cluster tags.
 * Delete: [DeleteCluster](https://cloud.tencent.com/document/api/596/41490) - This API is used to delete a TcaplusDB cluster, which will succeed only after all resources (including table groups and tables) in the cluster are released.
 * Delete: [DescribeClusters](https://cloud.tencent.com/document/api/596/41489) - This API is used to query the TcaplusDB cluster list, including cluster details.

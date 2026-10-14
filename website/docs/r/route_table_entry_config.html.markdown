@@ -55,10 +55,10 @@ In addition to all arguments above, the following attributes are exported:
 This resource interacts with the following TencentCloud APIs:
 
 * Create: [DisableRoutes](https://cloud.tencent.com/document/api/215/19216) - This API is used to disable enabled subnet routes.
-* Create: [EnableRoutes](https://cloud.tencent.com/document/api/215/19215) - This API is used to enable disabled subnet routes.<br />
+* Create: [EnableRoutes](https://cloud.tencent.com/document/api/215/19215) - This API is used to enable disabled subnet routes.
 * Read: [DescribeRouteTables](https://cloud.tencent.com/document/api/215/15763) - This API is used to query route tables.
 * Update: [DisableRoutes](https://cloud.tencent.com/document/api/215/19216) - This API is used to disable enabled subnet routes.
-* Update: [EnableRoutes](https://cloud.tencent.com/document/api/215/19215) - This API is used to enable disabled subnet routes.<br />
+* Update: [EnableRoutes](https://cloud.tencent.com/document/api/215/19215) - This API is used to enable disabled subnet routes.
 
 ## Import
 

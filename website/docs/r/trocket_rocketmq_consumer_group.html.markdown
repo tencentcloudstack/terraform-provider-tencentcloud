@@ -90,7 +90,7 @@ This resource interacts with the following TencentCloud APIs:
 * Read: [DescribeResourceTagsByResourceIds](https://cloud.tencent.com/document/api/651/35319) - This API is used to query the tag key-value pairs associated with an existing resource.
 * Update: [ModifyConsumerGroup](https://cloud.tencent.com/document/api/1493/97940) - Modify consumer group attributes.
 * Update: [ModifyResourceTags](https://cloud.tencent.com/document/api/651/35322) - This API is used to modify all tags associated with a resource.
-* Delete: [DeleteConsumerGroup](https://cloud.tencent.com/document/api/1493/97942) - This API is used to delete a consumer group. After a consumer group is deleted, all configurations and related data of the consumer group are cleared and cannot be restored. After deletion, online consumer clients report errors. It is recommended to take clients offline in advance.
+* Delete: [DeleteConsumerGroup](https://cloud.tencent.com/document/api/1493/97942) - This API is used to delete a consumer group. After a consumer group is deleted, all configurations and related data of the consumer group are cleared and cannot be restored. After deletion, online consumer clients report errors.
 
 ## Import
 

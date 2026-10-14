@@ -440,6 +440,8 @@ func genDoc(product, dtype, fpath, name string, resource *schema.Resource) {
 		analyzer := getSharedAPIAnalyzer()
 		if dtype == "resource" {
 			data["api"] = renderResourceAPISection(analyzer, repoRoot, name, resource, manualAPI)
+		} else if manualAPI != "" {
+			data["api"] = manualAPI
 		} else {
 			data["api"] = renderAPIRefsFor("data_source", map[string][]apiRef{"Read": analyzer.readDataSourceAPIs(repoRoot, name, resource)})
 		}

@@ -71,7 +71,7 @@ This resource interacts with the following TencentCloud APIs:
 * Create: [CreateRole](https://cloud.tencent.com/document/api/1493/98864) - This API is used to add a role.
 * Read: [DescribeRoleList](https://cloud.tencent.com/document/api/1493/98862) - This API is used to query the list of roles. Filter parameter usage instructions are as follows:.
 * Update: [ModifyRole](https://cloud.tencent.com/document/api/1493/98861) - This API is used to modify a role.
-* Delete: [DeleteRole](https://cloud.tencent.com/document/api/1493/98863) - This API is used to delete a role. Make sure that the related information on this role is not used in the current code. After the role is deleted, the keys (AccessKey and SecretKey) used to produce or consume messages with this role become invalid immediately.
+* Delete: [DeleteRole](https://cloud.tencent.com/document/api/1493/98863) - This API is used to delete a role. Make sure that the related information on this role is not used in the current code. After the role is deleted, the keys (AccessKey and SecretKey) used to produce or consume messages with this role become ...
 
 ## Import
 

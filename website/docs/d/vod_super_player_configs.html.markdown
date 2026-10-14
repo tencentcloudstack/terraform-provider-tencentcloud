@@ -74,5 +74,5 @@ In addition to all arguments above, the following attributes are exported:
 
 This data source queries the following TencentCloud APIs:
 
-* Read: [DescribeSuperPlayerConfigs](https://cloud.tencent.com/document/api/266/43064) - This API is <font color='red'>no longer maintained</font>. The new version of player signature no longer uses player configuration templates. For details, please see [Player Signature](https://www.tencentcloud.com/document/product/266/45554?from_cn_redirect=1).
+* Read: [DescribeSuperPlayerConfigs](https://cloud.tencent.com/document/api/266/43064) - This API is no longer maintained. The new version of player signature no longer uses player configuration templates. For details, please see [Player Signature](https://www.tencentcloud.com/document/product/266/45554?from_cn_redirect=1).
 

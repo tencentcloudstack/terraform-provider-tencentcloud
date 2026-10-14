@@ -86,12 +86,12 @@ In addition to all arguments above, the following attributes are exported:
 
 This resource interacts with the following TencentCloud APIs:
 
-* Create: [AssignIpv6Addresses](https://cloud.tencent.com/document/api/215/34469) - This API is used to apply for an IPv6 address for the ENI. <br />
+* Create: [AssignIpv6Addresses](https://cloud.tencent.com/document/api/215/34469) - This API is used to apply for an IPv6 address for the ENI.
 * Create: [DescribeVpcTaskResult](https://cloud.tencent.com/document/api/215/59037) - This API is used to query the execution result of a VPC task.
 * Read: [DescribeNetworkInterfaces](https://cloud.tencent.com/document/api/215/15817) - This API (DescribeNetworkInterfaces) is used to query the ENI list.
 * Delete: [DescribeNetworkInterfaces](https://cloud.tencent.com/document/api/215/15817) - This API (DescribeNetworkInterfaces) is used to query the ENI list.
 * Delete: [DescribeVpcTaskResult](https://cloud.tencent.com/document/api/215/59037) - This API is used to query the execution result of a VPC task.
-* Delete: [UnassignIpv6Addresses](https://cloud.tencent.com/document/api/215/34467) - This API is used to release the IPv6 addresses of an ENI. <br />
+* Delete: [UnassignIpv6Addresses](https://cloud.tencent.com/document/api/215/34467) - This API is used to release the IPv6 addresses of an ENI.
 
 ## Import
 

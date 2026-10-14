@@ -1291,7 +1291,7 @@ This resource interacts with the following TencentCloud APIs:
 * Read: [DescribeNodeDataDisks](https://cloud.tencent.com/document/api/589/115191) - This API is used to query data disk information of a node.
 * Update: [AttachDisks](https://cloud.tencent.com/document/api/589/115188) - This API is used to mount a cloud disk.
 * Update: [DescribeClusterFlowStatusDetail](https://cloud.tencent.com/document/api/589/107224) - This API is used to query the running status details of an EMR cluster task.
-* Update: [InstallSoftware](https://cloud.tencent.com/document/api/589/130892) - This API is used to install a component. For components dependent on the MetaDB, a CDB order may be required. The components that can be installed on the current cluster and the components that might require a CDB order can be viewed via InstallSoftWareInfo.
+* Update: [InstallSoftware](https://cloud.tencent.com/document/api/589/130892) - This API is used to install a component. For components dependent on the MetaDB, a CDB order may be required. The components that can be installed on the current cluster and the components that might require a CDB order can be viewed via ...
 * Update: [ModifyInstanceBasic](https://cloud.tencent.com/document/api/589/115192) - This API is used to modify the cluster name.
 * Update: [ModifyResource](https://cloud.tencent.com/document/api/589/115187) - This API is used to change the instance configuration.
 * Update: [ModifyResourcesTags](https://cloud.tencent.com/document/api/589/96242) - This API is used to forcibly modify a tag.

@@ -44,7 +44,7 @@ In addition to all arguments above, the following attributes are exported:
 
 This resource interacts with the following TencentCloud APIs:
 
-* Create: [CreateBackupStorageLocation](https://cloud.tencent.com/document/api/457/90380) - This API is used to create a backup repository. You can specify the storage type (such as COS), the bucket region and the name. Up to 100 repositories can be created. Note that the settings of this API apply globally. You only need to create one backup repository, and back up TKE clusters in different regions in it.
+* Create: [CreateBackupStorageLocation](https://cloud.tencent.com/document/api/457/90380) - This API is used to create a backup repository. You can specify the storage type (such as COS), the bucket region and the name. Up to 100 repositories can be created. Note that the settings of this API apply globally.
 * Read: [DescribeBackupStorageLocations](https://cloud.tencent.com/document/api/457/90378) - This API is used to query backup repositories.
 * Delete: [DeleteBackupStorageLocation](https://cloud.tencent.com/document/api/457/90379) - This API is used to delete a backup repository.
 

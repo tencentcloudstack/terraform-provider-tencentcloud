@@ -77,7 +77,7 @@ In addition to all arguments above, the following attributes are exported:
 
 This resource interacts with the following TencentCloud APIs:
 
-* Create: [CreateCLSIndex](https://cloud.tencent.com/document/api/1552/104113) - This API is used to create key-value indexes for relevant delivered log fields in the corresponding Tencent Cloud CLS log topic for a specified real-time log delivery task (task-id). If such indexes have been created in CLS, this API will append indexes through merging.
+* Create: [CreateCLSIndex](https://cloud.tencent.com/document/api/1552/104113) - This API is used to create key-value indexes for relevant delivered log fields in the corresponding Tencent Cloud CLS log topic for a specified real-time log delivery task (task-id).
 
 ## Import
 

@@ -86,7 +86,7 @@ This resource interacts with the following TencentCloud APIs:
 
 * Create: [DescribeAsyncRequestInfo](https://cloud.tencent.com/document/api/236/20410) - This API (DescribeAsyncRequestInfo) is used to query the async task execution result of a TencentDB instance.
 * Create: [RestartDBInstances](https://cloud.tencent.com/document/api/236/17488) - This API is used to restart cloud database instances.
-* Read: [DescribeDBInstances](https://cloud.tencent.com/document/api/236/15872) - This API is used to query the list of TencentDB for MySQL instances. It supports filtering instances by conditions such as project ID, instance ID, access address, and instance status. It also supports querying the list of information about primary instances, disaster recovery instances, and read-only instances.
+* Read: [DescribeDBInstances](https://cloud.tencent.com/document/api/236/15872) - This API is used to query the list of TencentDB for MySQL instances. It supports filtering instances by conditions such as project ID, instance ID, access address, and instance status.
 
 ## Import
 

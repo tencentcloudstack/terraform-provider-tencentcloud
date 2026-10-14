@@ -50,9 +50,9 @@ In addition to all arguments above, the following attributes are exported:
 
 This resource interacts with the following TencentCloud APIs:
 
-* Create: [CreateBoundIP](https://cloud.tencent.com/document/api/297/95349) - This API is used to bind an IP to an Anti-DDoS Pro instance Both single IP instances and multi-IP instances are available. Note that you should wait until the current binding or unbinding completes before using this async API for new operations.
+* Create: [CreateBoundIP](https://cloud.tencent.com/document/api/297/95349) - This API is used to bind an IP to an Anti-DDoS Pro instance Both single IP instances and multi-IP instances are available.
 * Create: [DescribeListBGPInstances](https://cloud.tencent.com/document/api/297/95346) - This API is used to get the list of Anti-DDoS Pro instances.
 * Read: [DescribeListBGPInstances](https://cloud.tencent.com/document/api/297/95346) - This API is used to get the list of Anti-DDoS Pro instances.
-* Delete: [CreateBoundIP](https://cloud.tencent.com/document/api/297/95349) - This API is used to bind an IP to an Anti-DDoS Pro instance Both single IP instances and multi-IP instances are available. Note that you should wait until the current binding or unbinding completes before using this async API for new operations.
+* Delete: [CreateBoundIP](https://cloud.tencent.com/document/api/297/95349) - This API is used to bind an IP to an Anti-DDoS Pro instance Both single IP instances and multi-IP instances are available.
 * Delete: [DescribeListBGPInstances](https://cloud.tencent.com/document/api/297/95346) - This API is used to get the list of Anti-DDoS Pro instances.
 

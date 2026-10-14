@@ -167,7 +167,7 @@ This resource interacts with the following TencentCloud APIs:
 * Read: [DescribeResourceTagsByResourceIds](https://cloud.tencent.com/document/api/651/35319) - This API is used to query the tag key-value pairs associated with an existing resource.
 * Update: [ApplySnapshot](https://cloud.tencent.com/document/api/362/15643) - This API (ApplySnapshot) is used to roll back a snapshot to the original cloud disk.
 * Update: [DescribeDisks](https://cloud.tencent.com/document/api/362/16315) - This API (DescribeDisks) is used to query the list of cloud disks.
-* Update: [ModifyDiskAttributes](https://cloud.tencent.com/document/api/362/15659) - This API is used to modify only the Project ID of elastic cloud disks. The Project ID of a cloud disk created with a host is linked to the host. Whether a cloud disk is elastic can be checked through the [DescribeDisks](https://www.tencentcloud.com/document/product/362/16315?from_cn_redirect=1) API. See the Portable field explanation in the output parameters.
+* Update: [ModifyDiskAttributes](https://cloud.tencent.com/document/api/362/15659) - This API is used to modify only the Project ID of elastic cloud disks. The Project ID of a cloud disk created with a host is linked to the host. Whether a cloud disk is elastic can be checked through the [DescribeDisks](https://www.
 * Update: [ModifyDiskBackupQuota](https://cloud.tencent.com/document/api/362/80276) - This API is used to modify the cloud disk backup point quota.
 * Update: [ModifyDiskExtraPerformance](https://cloud.tencent.com/document/api/362/51483) - This API is used to adjust extra performance for Enhanced SSD (CLOUD_HSSD) and ulTra SSD.
 * Update: [ModifyDisksChargeType](https://cloud.tencent.com/document/api/362/38075)

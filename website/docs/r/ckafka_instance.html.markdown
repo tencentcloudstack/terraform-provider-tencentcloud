@@ -195,7 +195,7 @@ In addition to all arguments above, the following attributes are exported:
 This resource interacts with the following TencentCloud APIs:
 
 * Create: [CreateInstancePre](https://cloud.tencent.com/document/api/597/45847) - This API is used to create prepaid yearly/monthly subscribed instances. It only supports creating Pro Edition instances.
-* Create: [CreatePostPaidInstance](https://cloud.tencent.com/document/api/597/94259) - This API is used to replace `CreateInstancePost`  to create a pay-as-you-go instance.  You can call this API via SDK or the TencentCloud API console to create a pay-as-you-go CKafka instance,  which is an alternate option for making a purchase in the console.
+* Create: [CreatePostPaidInstance](https://cloud.tencent.com/document/api/597/94259) - This API is used to replace `CreateInstancePost`  to create a pay-as-you-go instance.  You can call this API via SDK or the TencentCloud API console to create a pay-as-you-go CKafka instance,  which is an alternate option for making a ...
 * Create: [DescribeInstanceAttributes](https://cloud.tencent.com/document/api/597/40836) - This API is used to obtain instance attributes.
 * Create: [DescribeInstancesDetail](https://cloud.tencent.com/document/api/597/40834) - This API is used to get instance list details under a user account.
 * Create: [DescribeResourceTagsByResourceIds](https://cloud.tencent.com/document/api/651/35319) - This API is used to query the tag key-value pairs associated with an existing resource.
@@ -212,7 +212,7 @@ This resource interacts with the following TencentCloud APIs:
 * Update: [ModifyInstancePre](https://cloud.tencent.com/document/api/597/73693) - This API is used to change the configuration of prepaid instances, adjust disks, modify bandwidth, and manage partitions.
 * Update: [ModifyResourceTags](https://cloud.tencent.com/document/api/651/35322) - This API is used to modify all tags associated with a resource.
 * Delete: [DeleteInstancePost](https://cloud.tencent.com/document/api/597/98200) - This API is used to delete post-payment instances. It directly performs instance termination by calling API deletion without associating connectors and tasks in pre-check.
-* Delete: [DeleteInstancePre](https://cloud.tencent.com/document/api/597/65806) - This API is used to delete prepaid instances. It performs isolation and deletion actions on the instance. After successful execution, the instance will be directly deleted and terminated. By calling API deletion, it directly performs instance termination without associating connectors and tasks in pre-check.
+* Delete: [DeleteInstancePre](https://cloud.tencent.com/document/api/597/65806) - This API is used to delete prepaid instances. It performs isolation and deletion actions on the instance. After successful execution, the instance will be directly deleted and terminated.
 * Delete: [DescribeInstancesDetail](https://cloud.tencent.com/document/api/597/40834) - This API is used to get instance list details under a user account.
 
 ## Import

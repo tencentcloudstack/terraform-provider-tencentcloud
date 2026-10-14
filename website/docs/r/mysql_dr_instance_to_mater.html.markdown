@@ -86,7 +86,7 @@ This resource interacts with the following TencentCloud APIs:
 
 * Create: [DescribeAsyncRequestInfo](https://cloud.tencent.com/document/api/236/20410) - This API (DescribeAsyncRequestInfo) is used to query the async task execution result of a TencentDB instance.
 * Create: [SwitchDrInstanceToMaster](https://cloud.tencent.com/document/api/236/52562) - This API is used to switch a cloud database disaster recovery instance to primary instance. Note that the request must be sent to the region where the disaster recovery instance is located.
-* Read: [DescribeDBInstances](https://cloud.tencent.com/document/api/236/15872) - This API is used to query the list of TencentDB for MySQL instances. It supports filtering instances by conditions such as project ID, instance ID, access address, and instance status. It also supports querying the list of information about primary instances, disaster recovery instances, and read-only instances.
+* Read: [DescribeDBInstances](https://cloud.tencent.com/document/api/236/15872) - This API is used to query the list of TencentDB for MySQL instances. It supports filtering instances by conditions such as project ID, instance ID, access address, and instance status.
 * Update: [DescribeAsyncRequestInfo](https://cloud.tencent.com/document/api/236/20410) - This API (DescribeAsyncRequestInfo) is used to query the async task execution result of a TencentDB instance.
 * Update: [SwitchDrInstanceToMaster](https://cloud.tencent.com/document/api/236/52562) - This API is used to switch a cloud database disaster recovery instance to primary instance. Note that the request must be sent to the region where the disaster recovery instance is located.
 

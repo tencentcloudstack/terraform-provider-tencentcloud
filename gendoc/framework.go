@@ -224,11 +224,11 @@ func genFrameworkDoc(servicesRoot string, dtype fwDocType, name, product string,
 		desc = strings.TrimSpace(desc[:i])
 	}
 
-	// Optional manual API section (resource only); overrides the
-	// auto-extracted mapping. The section sits before "Example Usage", so
-	// cut the span [apiPos, examplePos) and join the rest back together.
+	// Optional manual API section; overrides the auto-extracted mapping.
+	// The section sits before "Example Usage", so cut the span
+	// [apiPos, examplePos) and join the rest back together.
 	manualAPI := ""
-	if dtype == fwResource {
+	if dtype == fwResource || dtype == fwDataSrc || dtype == fwAction || dtype == fwEphemeral {
 		if apiPos := strings.Index(desc, "\nAPI\n"); apiPos != -1 {
 			examplePos := strings.Index(desc, "\nExample Usage\n")
 			apiEnd := len(desc)
@@ -279,9 +279,9 @@ func genFrameworkDoc(servicesRoot string, dtype fwDocType, name, product string,
 		"api":               "",
 	}
 
-	// API Reference section for framework resources, actions and
-	// ephemeral resources.
-	if dtype == fwResource || dtype == fwAction || dtype == fwEphemeral {
+	// API Reference section for framework resources, data sources,
+	// actions and ephemeral resources.
+	if dtype == fwResource || dtype == fwDataSrc || dtype == fwAction || dtype == fwEphemeral {
 		analyzer := getSharedAPIAnalyzer()
 		switch {
 		case manualAPI != "":

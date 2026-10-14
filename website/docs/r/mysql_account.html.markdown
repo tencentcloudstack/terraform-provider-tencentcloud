@@ -93,7 +93,7 @@ In addition to all arguments above, the following attributes are exported:
 
 This resource interacts with the following TencentCloud APIs:
 
-* Create: [CreateAccounts](https://cloud.tencent.com/document/api/236/17502) - This API is used to create cloud database accounts. It requires specifying a new account name and domain name as well as the corresponding password. You can also set the account's remark information and maximum number of available connections.
+* Create: [CreateAccounts](https://cloud.tencent.com/document/api/236/17502) - This API is used to create cloud database accounts. It requires specifying a new account name and domain name as well as the corresponding password.
 * Create: [DescribeAsyncRequestInfo](https://cloud.tencent.com/document/api/236/20410) - This API (DescribeAsyncRequestInfo) is used to query the async task execution result of a TencentDB instance.
 * Read: [DescribeAccounts](https://cloud.tencent.com/document/api/236/17499) - This API is used to query ALL account information of the cloud database.
 * Update: [DescribeAsyncRequestInfo](https://cloud.tencent.com/document/api/236/20410) - This API (DescribeAsyncRequestInfo) is used to query the async task execution result of a TencentDB instance.

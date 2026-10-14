@@ -59,14 +59,14 @@ In addition to all arguments above, the following attributes are exported:
 This resource interacts with the following TencentCloud APIs:
 
 * Create: [CloseProxies](https://cloud.tencent.com/document/api/608/36973) - This API (CloseProxies) is used to disable connections. If disabled, no traffic will be generated, but the basic configuration fee will still be incurred.
-* Create: [CreateProxy](https://cloud.tencent.com/document/api/608/36971) - This API is used to create/replicate an acceleration connection with the specified configuration. To replicate a connection, the basic configuration parameters need to be set for the new connection, and `ClonedProxyId` is needed to identify the replicated connection.
+* Create: [CreateProxy](https://cloud.tencent.com/document/api/608/36971) - This API is used to create/replicate an acceleration connection with the specified configuration. To replicate a connection, the basic configuration parameters need to be set for the new connection, and `ClonedProxyId` is needed to ...
 * Create: [DescribeProxies](https://cloud.tencent.com/document/api/608/36963) - This API (DescribeProxies) is used to query the connection instance list.
 * Read: [DescribeProxies](https://cloud.tencent.com/document/api/608/36963) - This API (DescribeProxies) is used to query the connection instance list.
 * Update: [CloseProxies](https://cloud.tencent.com/document/api/608/36973) - This API (CloseProxies) is used to disable connections. If disabled, no traffic will be generated, but the basic configuration fee will still be incurred.
 * Update: [DescribeProxies](https://cloud.tencent.com/document/api/608/36963) - This API (DescribeProxies) is used to query the connection instance list.
 * Update: [ModifyProxiesAttribute](https://cloud.tencent.com/document/api/608/36956) - This API (ModifyProxiesAttribute) is used to modify instance attributes (currently only supports modifying connection name).
 * Update: [ModifyProxiesProject](https://cloud.tencent.com/document/api/608/36955) - This API (ModifyProxiesProject) is used to modify the project to which a connection belongs.
-* Update: [ModifyProxyConfiguration](https://cloud.tencent.com/document/api/608/36954) - This API (ModifyProxyConfiguration) is used to modify connection configurations. You can expand or reduce the capacity based on current business requirements. It only supports connections with a Scalarable of 1. Scalarable can be obtained via DescribeProxies API.
+* Update: [ModifyProxyConfiguration](https://cloud.tencent.com/document/api/608/36954) - This API (ModifyProxyConfiguration) is used to modify connection configurations. You can expand or reduce the capacity based on current business requirements. It only supports connections with a Scalarable of 1.
 * Update: [ModifyResourceTags](https://cloud.tencent.com/document/api/651/35322) - This API is used to modify all tags associated with a resource.
 * Update: [OpenProxies](https://cloud.tencent.com/document/api/608/36952) - This API (OpenProxies) is used to enable one or more connections.
 * Delete: [DescribeProxies](https://cloud.tencent.com/document/api/608/36963) - This API (DescribeProxies) is used to query the connection instance list.

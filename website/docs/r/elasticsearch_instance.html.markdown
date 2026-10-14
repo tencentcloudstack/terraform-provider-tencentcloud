@@ -445,16 +445,16 @@ In addition to all arguments above, the following attributes are exported:
 
 This resource interacts with the following TencentCloud APIs:
 
-* Create: [CreateInstance](https://cloud.tencent.com/document/api/845/30633) - This API is used to create an ES cluster instance with the specified specification.
-* Create: [DescribeInstances](https://cloud.tencent.com/document/api/845/30631) - This API is used to query all eligible instances in the current region under the current account.
-* Create: [UpdateInstance](https://cloud.tencent.com/document/api/845/30629) - This API is used for operations such as modifying node specification, renaming an instance, modifying configuration, resetting password, and setting Kibana blocklist/allowlist. `InstanceId` is required, while `ForceRestart` is optional. Other parameters or parameter combinations and their meanings are as follows:
-* Read: [DescribeInstances](https://cloud.tencent.com/document/api/845/30631) - This API is used to query all eligible instances in the current region under the current account.
+* Create: [CreateInstance](https://cloud.tencent.com/document/api/845/30633) - Create an ES cluster instance with the specified specification.
+* Create: [DescribeInstances](https://cloud.tencent.com/document/api/845/30631) - Query all instances meeting conditions for the user in that region
+* Create: [UpdateInstance](https://cloud.tencent.com/document/api/845/30629) - Perform operations on the cluster, such as node specification change, instance name modification, configuration modification, password resetting, and Kibana blocklist/allowlist addition.
+* Read: [DescribeInstances](https://cloud.tencent.com/document/api/845/30631) - Query all instances meeting conditions for the user in that region
 * Update: [ModifyResourceTags](https://cloud.tencent.com/document/api/651/35322) - This API is used to modify all tags associated with a resource.
-* Update: [UpdateInstance](https://cloud.tencent.com/document/api/845/30629) - This API is used for operations such as modifying node specification, renaming an instance, modifying configuration, resetting password, and setting Kibana blocklist/allowlist. `InstanceId` is required, while `ForceRestart` is optional. Other parameters or parameter combinations and their meanings are as follows:
-* Update: [UpgradeInstance](https://cloud.tencent.com/document/api/845/36270) - This API is used to upgrade ES cluster version
-* Update: [UpgradeLicense](https://cloud.tencent.com/document/api/845/36269) - This API is used to upgrade ES X-Pack.
-* Delete: [DeleteInstance](https://cloud.tencent.com/document/api/845/30632) - This API is used to terminate a cluster instance.
-* Delete: [DescribeInstances](https://cloud.tencent.com/document/api/845/30631) - This API is used to query all eligible instances in the current region under the current account.
+* Update: [UpdateInstance](https://cloud.tencent.com/document/api/845/30629) - Perform operations on the cluster, such as node specification change, instance name modification, configuration modification, password resetting, and Kibana blocklist/allowlist addition.
+* Update: [UpgradeInstance](https://cloud.tencent.com/document/api/845/36270) - Upgrades the edition of an ES cluster
+* Update: [UpgradeLicense](https://cloud.tencent.com/document/api/845/36269) - Upgrade ES commercial features
+* Delete: [DeleteInstance](https://cloud.tencent.com/document/api/845/30632)
+* Delete: [DescribeInstances](https://cloud.tencent.com/document/api/845/30631) - Query all instances meeting conditions for the user in that region
 
 ## Import
 

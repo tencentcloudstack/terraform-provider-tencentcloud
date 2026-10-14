@@ -77,7 +77,7 @@ In addition to all arguments above, the following attributes are exported:
 
 This resource interacts with the following TencentCloud APIs:
 
-* Create: [CreateSLInstance](https://cloud.tencent.com/document/api/589/110872) - This API is used to create a Serverless instance, for example, HBase, StarRocks, and TCBase instances.- This API is successfully called, and a Serverless instance is created. If the instance creation request succeeds, InstanceId of the instance and RequestID of the request are returned.
+* Create: [CreateSLInstance](https://cloud.tencent.com/document/api/589/110872) - This API is used to create a Serverless instance, for example, HBase, StarRocks, and TCBase instances.- This API is successfully called, and a Serverless instance is created.
 * Create: [DescribeSLInstance](https://cloud.tencent.com/document/api/589/110871) - This API is used to query basic information of a Serverless HBase instance.
 * Create: [DescribeSLInstanceList](https://cloud.tencent.com/document/api/589/110870) - This API is used to query detailed information of the Serverless HBase instance list.
 * Read: [DescribeSLInstance](https://cloud.tencent.com/document/api/589/110871) - This API is used to query basic information of a Serverless HBase instance.

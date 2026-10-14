@@ -246,18 +246,18 @@ The `intranet_config` object exports the following:
 This resource interacts with the following TencentCloud APIs:
 
 * Create: [CreateFunction](https://cloud.tencent.com/document/api/583/18586)
-* Create: [CreateTrigger](https://cloud.tencent.com/document/api/583/18589) - This API is used to create a trigger based on the input parameters.
+* Create: [CreateTrigger](https://cloud.tencent.com/document/api/583/18589) - This API is used to set up alarms for the new trigger mode based on parameters.
 * Create: [GetFunction](https://cloud.tencent.com/document/api/583/18584)
 * Create: [GetSecretValue](https://cloud.tencent.com/document/api/1140/40522) - For user-defined credentials, this API is used to get the plaintext information of a credential by specifying the credential name and version.
-* Create: [UpdateFunctionConfiguration](https://cloud.tencent.com/document/api/583/18580) - This API is used to update the function configuration based on the input parameters.
+* Create: [UpdateFunctionConfiguration](https://cloud.tencent.com/document/api/583/18580) - This API is used to update function configurations based on input parameters.
 * Read: [GetFunction](https://cloud.tencent.com/document/api/583/18584)
-* Update: [CreateTrigger](https://cloud.tencent.com/document/api/583/18589) - This API is used to create a trigger based on the input parameters.
-* Update: [DeleteTrigger](https://cloud.tencent.com/document/api/583/18588) - This API is used to delete an existing trigger based on the input parameters.
+* Update: [CreateTrigger](https://cloud.tencent.com/document/api/583/18589) - This API is used to set up alarms for the new trigger mode based on parameters.
+* Update: [DeleteTrigger](https://cloud.tencent.com/document/api/583/18588) - This API is used to delete existing trigger modes based on parameters.
 * Update: [GetFunction](https://cloud.tencent.com/document/api/583/18584)
 * Update: [GetSecretValue](https://cloud.tencent.com/document/api/1140/40522) - For user-defined credentials, this API is used to get the plaintext information of a credential by specifying the credential name and version.
 * Update: [ModifyResourceTags](https://cloud.tencent.com/document/api/651/35322) - This API is used to modify all tags associated with a resource.
 * Update: [UpdateFunctionCode](https://cloud.tencent.com/document/api/583/18581) - This API is used to update the function code based on the input parameters.
-* Update: [UpdateFunctionConfiguration](https://cloud.tencent.com/document/api/583/18580) - This API is used to update the function configuration based on the input parameters.
+* Update: [UpdateFunctionConfiguration](https://cloud.tencent.com/document/api/583/18580) - This API is used to update function configurations based on input parameters.
 * Delete: [DeleteFunction](https://cloud.tencent.com/document/api/583/18585) - This API is used to delete a function based on the input parameters.
 * Delete: [GetFunction](https://cloud.tencent.com/document/api/583/18584)
 

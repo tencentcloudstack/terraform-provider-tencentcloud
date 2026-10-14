@@ -79,7 +79,7 @@ This resource interacts with the following TencentCloud APIs:
 * Read: [GetSecretValue](https://cloud.tencent.com/document/api/1140/40522) - For user-defined credentials, this API is used to get the plaintext information of a credential by specifying the credential name and version.
 * Read: [ListSecretVersionIds](https://cloud.tencent.com/document/api/1140/40520) - This API is used to obtain list of versions of a Secret.
 * Update: [DescribeSecret](https://cloud.tencent.com/document/api/1140/40526) - This API is used to obtain the detailed attribute information of a Secret.
-* Update: [UpdateSecret](https://cloud.tencent.com/document/api/1140/40515) - This API is used to update the credential content of the specified credential name and version number. Calling this API will encrypt the content of the new credential and overwrite the old content. Only credentials in `Enabled` or `Disabled` status can be updated.
+* Update: [UpdateSecret](https://cloud.tencent.com/document/api/1140/40515) - This API is used to update the credential content of the specified credential name and version number. Calling this API will encrypt the content of the new credential and overwrite the old content.
 * Delete: [DeleteSecretVersion](https://cloud.tencent.com/document/api/1140/40527) - This API is used to directly delete a single credential version under the specified credential. The deletion takes effect immediately, and the credential version in all status can be deleted.
 
 ## Import

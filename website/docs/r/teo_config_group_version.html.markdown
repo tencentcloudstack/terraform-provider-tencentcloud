@@ -377,7 +377,7 @@ In addition to all arguments above, the following attributes are exported:
 This resource interacts with the following TencentCloud APIs:
 
 * Create: [CreateConfigGroupVersion](https://cloud.tencent.com/document/api/1552/101867) - This API is used to create a new version for the specified configuration group in version management mode. The version management feature is currently undergoing beta testing and is accessible only to users on the whitelist.
-* Read: [DescribeConfigGroupVersionDetail](https://cloud.tencent.com/document/api/1552/101865) - This API is used to obtain detailed information about a version in version management mode. The response includes the version ID, description, status, creation time, configuration group information, and the content of the version configuration file. The version management feature is currently undergoing beta testing and is accessible only to users on the whitelist.
+* Read: [DescribeConfigGroupVersionDetail](https://cloud.tencent.com/document/api/1552/101865) - This API is used to obtain detailed information about a version in version management mode. The response includes the version ID, description, status, creation time, configuration group information, and the content of the version ...
 
 ## Import
 

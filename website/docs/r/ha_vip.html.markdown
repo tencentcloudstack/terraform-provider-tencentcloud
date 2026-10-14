@@ -52,7 +52,7 @@ This resource interacts with the following TencentCloud APIs:
 * Read: [DescribeHaVips](https://cloud.tencent.com/document/api/215/30650) - This API (DescribeHaVips) is used to query the list of highly available virtual IPs (HAVIP).
 * Update: [DescribeHaVips](https://cloud.tencent.com/document/api/215/30650) - This API (DescribeHaVips) is used to query the list of highly available virtual IPs (HAVIP).
 * Update: [ModifyHaVipAttribute](https://cloud.tencent.com/document/api/215/30647) - This API (ModifyHaVipAttribute) is used to modify HAVIP attributes.
-* Delete: [DeleteHaVip](https://cloud.tencent.com/document/api/215/30651) - This API is used to delete an HAVIP. <br />
+* Delete: [DeleteHaVip](https://cloud.tencent.com/document/api/215/30651) - This API is used to delete an HAVIP.
 * Delete: [DescribeHaVips](https://cloud.tencent.com/document/api/215/30650) - This API (DescribeHaVips) is used to query the list of highly available virtual IPs (HAVIP).
 
 ## Import

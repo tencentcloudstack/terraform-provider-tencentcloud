@@ -160,7 +160,7 @@ In addition to all arguments above, the following attributes are exported:
 
 This resource interacts with the following TencentCloud APIs:
 
-* Create: [AttachCcnInstances](https://cloud.tencent.com/document/api/215/19205) - This API is used to add a network instance to a CCN instance. Network instances include VPCs and Direct Connect gateways. <br />
+* Create: [AttachCcnInstances](https://cloud.tencent.com/document/api/215/19205) - This API is used to add a network instance to a CCN instance. Network instances include VPCs and Direct Connect gateways.
 * Create: [DescribeCcnAttachedInstances](https://cloud.tencent.com/document/api/215/19202) - This API (DescribeCcnAttachedInstances) is used to query the network instances associated with the CCN instance.
 * Create: [DescribeCcnRoutes](https://cloud.tencent.com/document/api/215/19200) - This API (DescribeCcnRoutes) is used to query routes that have been added to a CCN.
 * Create: [DescribeCcns](https://cloud.tencent.com/document/api/215/19199) - This API (DescribeCcns) is used to query the CCN list.
@@ -173,5 +173,5 @@ This resource interacts with the following TencentCloud APIs:
 * Update: [ModifyCcnAttachedInstancesAttribute](https://cloud.tencent.com/document/api/215/54517) - This API is used to modify CCN-associated instance attributes. Currently, only the `description` can be modified.
 * Delete: [DescribeCcnAttachedInstances](https://cloud.tencent.com/document/api/215/19202) - This API (DescribeCcnAttachedInstances) is used to query the network instances associated with the CCN instance.
 * Delete: [DescribeCcns](https://cloud.tencent.com/document/api/215/19199) - This API (DescribeCcns) is used to query the CCN list.
-* Delete: [DetachCcnInstances](https://cloud.tencent.com/document/api/215/19198) - This API (DetachCcnInstances) is used to unbind a specified network instance from a CCN instance.<br />
+* Delete: [DetachCcnInstances](https://cloud.tencent.com/document/api/215/19198) - This API (DetachCcnInstances) is used to unbind a specified network instance from a CCN instance.
 

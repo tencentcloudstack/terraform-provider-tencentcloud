@@ -4,15 +4,11 @@ package main
 // international SDK (TencentCloud/tencentcloud-sdk-go-intl-en).
 //
 // The snapshot gendoc/data/api-actions-en.json maps
-// (product, action) -> first prose line of the method's doc comment.
-// Refresh it with:
-//
-//	make doc-refresh-en
-//
-// which downloads the SDK master tarball (~6 MB), re-extracts the
-// descriptions and atomically rewrites the snapshot. Doc rendering prefers
-// the English description; entries without one degrade to the bare action
-// name so that no Chinese ever reaches the generated docs.
+// (product, action) -> first prose line of the method's doc comment plus
+// the official doc URL from the public catalog. Refresh both snapshots
+// with 'make doc-refresh'. Doc rendering prefers the English description;
+// entries without one degrade to the bare action name so that no Chinese
+// ever reaches the generated docs.
 
 import (
 	"archive/tar"
@@ -50,6 +46,33 @@ var blockRe = regexp.MustCompile(`(?m)^// ([A-Z][A-Za-z0-9]*)$\n(//[^\n]*\n)+`)
 
 // ecRe matches SDK error-code comment lines: `NAME = "Namespace.Name"`.
 var ecRe = regexp.MustCompile(`^[A-Z][A-Z0-9_]*\s*=\s*"`)
+
+// htmlTagRe matches inline HTML tags that leak from the SDK docs.
+var htmlTagRe = regexp.MustCompile(`</?[a-zA-Z][^>]*>`)
+
+// maxDescLen bounds a description to keep the generated doc readable.
+const maxDescLen = 240
+
+// cleanDesc strips inline HTML tags and collapses whitespace. Descriptions
+// that grow beyond maxDescLen are cut at the last sentence end before the
+// cap (falling back to a hard cut).
+func cleanDesc(s string) string {
+	if strings.Contains(s, "<") {
+		s = htmlTagRe.ReplaceAllString(s, "")
+	}
+	s = strings.TrimSpace(s)
+	if len(s) <= maxDescLen {
+		return s
+	}
+	cut := s[:maxDescLen]
+	if i := strings.LastIndexAny(cut, ".!?"); i > maxDescLen/2 {
+		return strings.TrimSpace(cut[:i+1])
+	}
+	if i := strings.LastIndex(cut, " "); i > 0 {
+		return strings.TrimSpace(cut[:i]) + " ..."
+	}
+	return cut + " ..."
+}
 
 // isProseDesc reports whether s reads like a prose description line
 // (uppercase-initial sentence) rather than an error-code entry.
@@ -131,6 +154,10 @@ func extractENFromClient(src string) map[string]string {
 			desc = t
 			break
 		}
+		if desc == "" {
+			continue
+		}
+		desc = cleanDesc(desc)
 		if desc == "" {
 			continue
 		}

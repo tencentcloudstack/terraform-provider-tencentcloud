@@ -150,7 +150,7 @@ In addition to all arguments above, the following attributes are exported:
 
 This resource interacts with the following TencentCloud APIs:
 
-* Create: [CreateExporterIntegration](https://cloud.tencent.com/document/api/248/76019) - Create an exporter integration in the integration center. Due to the considerable number of integrations, it is advisable to create through the console.  **Prerequisite:** Authorized to create a managed EKS cluster.  **Verification method:** 1. Confirm on the console interface. If no authorization notification appears, it indicates authorization is granted. 2. Query the cluster status via the `DescribePrometheusInstanceInitStatus` API. If the managed cluster does not exist, create it using the `RunPrometheusInstance` API.
+* Create: [CreateExporterIntegration](https://cloud.tencent.com/document/api/248/76019) - Create an exporter integration in the integration center. Due to the considerable number of integrations, it is advisable to create through the console.  **Prerequisite:** Authorized to create a managed EKS cluster.
 * Create: [DescribeExporterIntegrations](https://cloud.tencent.com/document/api/248/76014) - This API is used to query the list of exporter integrations.
 * Create: [DescribePrometheusInstanceInitStatus](https://cloud.tencent.com/document/api/248/85716) - This API is used to get the initialization task status of a v2.0 instance.
 * Create: [RunPrometheusInstance](https://cloud.tencent.com/document/api/248/85710) - This API is used to initialize a TMP instance, which is called when the integration center is enabled.

@@ -3,10 +3,10 @@ package main
 // apiref_refresh.go — refreshes the bundled API catalog snapshots from
 // TencentCloud's public endpoints. Run with:
 //
-//	go run ./gendoc -refresh-data
+//	go run ./gendoc -refresh
 //
-// or via `make doc-refresh-data`. The download is ~5 MB; only four fields
-// (product/action/name/url) are kept so the snapshot stays small.
+// or via `make doc-refresh`. Only a few fields (product/action/name/url)
+// are kept so the snapshots stay small.
 
 import (
 	"compress/gzip"

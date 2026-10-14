@@ -96,7 +96,7 @@ This resource interacts with the following TencentCloud APIs:
 * Read: [DescribeDBInstances](https://cloud.tencent.com/document/api/238/19969) - This API is used to query the list of instances.
 * Read: [DescribeMaintenanceSpan](https://cloud.tencent.com/document/api/238/46283) - This API is used to query the maintenance time window of an instance based on its instance ID.
 * Update: [ModifyDBInstanceName](https://cloud.tencent.com/document/api/238/19958) - This API is used to rename an instance.
-* Delete: [DeleteDBInstance](https://cloud.tencent.com/document/api/238/46806) - This API is used to release SQL server instances (eliminated immediately) in the recycle bin. The released instances will be physically terminated after being retained for a period of time. Their publish-subscribe relationships will be automatically disassociated, and their RO replicas will be automatically released.
+* Delete: [DeleteDBInstance](https://cloud.tencent.com/document/api/238/46806) - This API is used to release SQL server instances (eliminated immediately) in the recycle bin. The released instances will be physically terminated after being retained for a period of time.
 * Delete: [TerminateDBInstance](https://cloud.tencent.com/document/api/238/38210) - This API is used to isolate an instance to move it into a recycle bin.
 
 ## Import

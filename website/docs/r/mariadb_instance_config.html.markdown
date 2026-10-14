@@ -43,12 +43,12 @@ In addition to all arguments above, the following attributes are exported:
 
 This resource interacts with the following TencentCloud APIs:
 
-* Create: [CloseDBExtranetAccess](https://cloud.tencent.com/document/api/237/16179) - This API is used to disable public network access for a TencentDB instance, which will make the public IP address inaccessible. The `DescribeDCDBInstances` API will not return the public domain name and port information of the corresponding instance.
+* Create: [CloseDBExtranetAccess](https://cloud.tencent.com/document/api/237/16179) - This API is used to disable public network access for a TencentDB instance, which will make the public IP address inaccessible.
 * Create: [DescribeFlow](https://cloud.tencent.com/document/api/237/16177)
 * Create: [ModifyRealServerAccessStrategy](https://cloud.tencent.com/document/api/237/60076)
 * Create: [OpenDBExtranetAccess](https://cloud.tencent.com/document/api/237/16174)
 * Read: [DescribeDBInstanceDetail](https://cloud.tencent.com/document/api/237/89390) - This API is used to query the details of a specified instance.
-* Update: [CloseDBExtranetAccess](https://cloud.tencent.com/document/api/237/16179) - This API is used to disable public network access for a TencentDB instance, which will make the public IP address inaccessible. The `DescribeDCDBInstances` API will not return the public domain name and port information of the corresponding instance.
+* Update: [CloseDBExtranetAccess](https://cloud.tencent.com/document/api/237/16179) - This API is used to disable public network access for a TencentDB instance, which will make the public IP address inaccessible.
 * Update: [DescribeFlow](https://cloud.tencent.com/document/api/237/16177)
 * Update: [ModifyRealServerAccessStrategy](https://cloud.tencent.com/document/api/237/60076)
 * Update: [OpenDBExtranetAccess](https://cloud.tencent.com/document/api/237/16174)

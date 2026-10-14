@@ -266,7 +266,7 @@ This resource interacts with the following TencentCloud APIs:
 * Create: [CreateReadOnlyDBInstance](https://cloud.tencent.com/document/api/409/52602) - This API is used to create read-only replicas.
 * Create: [DescribeDBInstanceAttribute](https://cloud.tencent.com/document/api/409/16772) - This API is used to query the details of one instance.
 * Create: [DescribeOrders](https://cloud.tencent.com/document/api/409/18104) - This API is used to query the order information.
-* Create: [DescribeProductConfig](https://cloud.tencent.com/document/api/409/16776) - This api is used to query sales specification configuration. This interface belongs to the early stage and has stopped feature iteration. It is recommended to use the new api [DescribeClasses](https://www.tencentcloud.com/document/api/409/89019?from_cn_redirect=1) as an alternative.
+* Create: [DescribeProductConfig](https://cloud.tencent.com/document/api/409/16776) - This api is used to query sales specification configuration. This interface belongs to the early stage and has stopped feature iteration. It is recommended to use the new api [DescribeClasses](https://www.tencentcloud.
 * Create: [ModifyResourceTags](https://cloud.tencent.com/document/api/651/35322) - This API is used to modify all tags associated with a resource.
 * Read: [DescribeDBInstanceAttribute](https://cloud.tencent.com/document/api/409/16772) - This API is used to query the details of one instance.
 * Read: [DescribeDBInstanceSecurityGroups](https://cloud.tencent.com/document/api/409/84064) - This API is used to query the security group of an instance.
@@ -281,7 +281,7 @@ This resource interacts with the following TencentCloud APIs:
 * Update: [ModifyDBInstancesProject](https://cloud.tencent.com/document/api/409/18100) - This API is used to modify the project of an instance.
 * Update: [ModifyResourceTags](https://cloud.tencent.com/document/api/651/35322) - This API is used to modify all tags associated with a resource.
 * Delete: [DescribeDBInstanceAttribute](https://cloud.tencent.com/document/api/409/16772) - This API is used to query the details of one instance.
-* Delete: [DestroyDBInstance](https://cloud.tencent.com/document/api/409/43352) - This API is used to terminate an isolated instance by specifying the `DBInstanceId` parameter. The data of a terminated instance will be deleted and cannot be recovered. Be cautious with this API calling. Only the instance in isolation can be terminated.
+* Delete: [DestroyDBInstance](https://cloud.tencent.com/document/api/409/43352) - This API is used to terminate an isolated instance by specifying the `DBInstanceId` parameter. The data of a terminated instance will be deleted and cannot be recovered. Be cautious with this API calling.
 * Delete: [IsolateDBInstances](https://cloud.tencent.com/document/api/409/54790) - This API is used to isolate an instance.
 
 ## Import

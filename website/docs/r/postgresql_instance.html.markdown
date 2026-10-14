@@ -394,7 +394,7 @@ This resource interacts with the following TencentCloud APIs:
 * Create: [CreateInstances](https://cloud.tencent.com/document/api/409/56107) - This API is used to create one or more PostgreSQL instances. Instances created through this interface do not need to be initialized and can be used directly.
 * Create: [DescribeDBInstanceAttribute](https://cloud.tencent.com/document/api/409/16772) - This API is used to query the details of one instance.
 * Create: [DescribeOrders](https://cloud.tencent.com/document/api/409/18104) - This API is used to query the order information.
-* Create: [DescribeProductConfig](https://cloud.tencent.com/document/api/409/16776) - This api is used to query sales specification configuration. This interface belongs to the early stage and has stopped feature iteration. It is recommended to use the new api [DescribeClasses](https://www.tencentcloud.com/document/api/409/89019?from_cn_redirect=1) as an alternative.
+* Create: [DescribeProductConfig](https://cloud.tencent.com/document/api/409/16776) - This api is used to query sales specification configuration. This interface belongs to the early stage and has stopped feature iteration. It is recommended to use the new api [DescribeClasses](https://www.tencentcloud.
 * Create: [ModifyBackupPlan](https://cloud.tencent.com/document/api/409/68067) - This API is used to modify the backup plan of an instance, such as modifying the backup start time. By default, a full backup starts at midnight every day and the generated backup files will be retained for seven days.
 * Create: [ModifyDBInstanceName](https://cloud.tencent.com/document/api/409/18101) - This API is used to rename a TencentDB for PostgreSQL instance.
 * Create: [ModifyDBInstanceParameters](https://cloud.tencent.com/document/api/409/63342) - This API is used to modify instance parameters.
@@ -433,7 +433,7 @@ This resource interacts with the following TencentCloud APIs:
 * Update: [UpgradeDBInstanceKernelVersion](https://cloud.tencent.com/document/api/409/89029) - This API is used to upgrade the kernel version of an instance.
 * Update: [UpgradeDBInstanceMajorVersion](https://cloud.tencent.com/document/api/409/99280) - This API is used to upgrade the major kernel version of an instance, for example, from PostgreSQL 12 to PostgreSQL 15.
 * Delete: [DescribeDBInstanceAttribute](https://cloud.tencent.com/document/api/409/16772) - This API is used to query the details of one instance.
-* Delete: [DestroyDBInstance](https://cloud.tencent.com/document/api/409/43352) - This API is used to terminate an isolated instance by specifying the `DBInstanceId` parameter. The data of a terminated instance will be deleted and cannot be recovered. Be cautious with this API calling. Only the instance in isolation can be terminated.
+* Delete: [DestroyDBInstance](https://cloud.tencent.com/document/api/409/43352) - This API is used to terminate an isolated instance by specifying the `DBInstanceId` parameter. The data of a terminated instance will be deleted and cannot be recovered. Be cautious with this API calling.
 * Delete: [IsolateDBInstances](https://cloud.tencent.com/document/api/409/54790) - This API is used to isolate an instance.
 
 ## Import

@@ -236,7 +236,7 @@ This resource interacts with the following TencentCloud APIs:
 * Create: [DescribeIndex](https://cloud.tencent.com/document/api/614/56443) - This API is used to get the index configuration information.
 * Read: [DescribeIndex](https://cloud.tencent.com/document/api/614/56443) - This API is used to get the index configuration information.
 * Update: [DescribeIndex](https://cloud.tencent.com/document/api/614/56443) - This API is used to get the index configuration information.
-* Update: [ModifyIndex](https://cloud.tencent.com/document/api/614/56442) - This API is used to modify the index configuration. It is subject to the default request frequency limit, and the number of concurrent requests to the same log topic cannot exceed 1, i.e., the index configuration of only one log topic can be modified at a time.
+* Update: [ModifyIndex](https://cloud.tencent.com/document/api/614/56442) - This API is used to modify the index configuration. It is subject to the default request frequency limit, and the number of concurrent requests to the same log topic cannot exceed 1, i.e.
 * Delete: [DeleteIndex](https://cloud.tencent.com/document/api/614/56444) - This API is used to delete the index configuration of a log topic. After deleting, you cannot retrieve or query the collected logs.
 
 ## Import

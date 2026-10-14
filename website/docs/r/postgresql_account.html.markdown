@@ -95,7 +95,7 @@ This resource interacts with the following TencentCloud APIs:
 * Update: [ModifyAccountRemark](https://cloud.tencent.com/document/api/409/18108) - This API is used to modify account remarks.
 * Update: [ResetAccountPassword](https://cloud.tencent.com/document/api/409/18107) - This API is used to reset the account password of an instance.
 * Update: [UnlockAccount](https://cloud.tencent.com/document/api/409/109066) - This API is used to unlock a database account. The account can log in to the database after being unlocked.
-* Delete: [DeleteAccount](https://cloud.tencent.com/document/api/409/109070) - This API is used to delete a database account. Oid and UserName must be input simultaneously to avoid accidental deletion. Note: This API is reentrant. If the account no longer exists, calling this API to delete it will not trigger an error.
+* Delete: [DeleteAccount](https://cloud.tencent.com/document/api/409/109070) - This API is used to delete a database account. Oid and UserName must be input simultaneously to avoid accidental deletion. Note: This API is reentrant.
 
 ## Import
 

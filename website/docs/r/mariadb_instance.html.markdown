@@ -138,7 +138,7 @@ This resource interacts with the following TencentCloud APIs:
 * Update: [ModifyResourceTags](https://cloud.tencent.com/document/api/651/35322) - This API is used to modify all tags associated with a resource.
 * Delete: [DescribeDBInstances](https://cloud.tencent.com/document/api/237/16184) - This API is used to query the TencentDB instance list. It supports filtering instances by project ID, instance ID, private address, and instance name.
 * Delete: [DestroyDBInstance](https://cloud.tencent.com/document/api/237/76451) - This API is used to terminate an isolated yearly/monthly subscribed instance.
-* Delete: [IsolateDBInstance](https://cloud.tencent.com/document/api/237/82426) - This API is used to isolate a yearly/monthly subscribed TencentDB for MariaDB instance, which will no longer be accessible via IP and port.  The isolated instance can be started up in the recycle bin.  If it is isolated due to overdue payments, top up your account as soon as possible.
+* Delete: [IsolateDBInstance](https://cloud.tencent.com/document/api/237/82426) - This API is used to isolate a yearly/monthly subscribed TencentDB for MariaDB instance, which will no longer be accessible via IP and port.  The isolated instance can be started up in the recycle bin.
 
 ## Import
 

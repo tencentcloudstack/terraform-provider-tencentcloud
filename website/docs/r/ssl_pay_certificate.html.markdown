@@ -118,7 +118,7 @@ This resource interacts with the following TencentCloud APIs:
 * Update: [DescribeCertificateDetail](https://cloud.tencent.com/document/api/400/41673) - This API is used to get certificate details.
 * Update: [ModifyCertificateAlias](https://cloud.tencent.com/document/api/400/41669) - This API is used to modify a certificate alias by passing in the certificate ID and new alias.
 * Update: [ModifyCertificateProject](https://cloud.tencent.com/document/api/400/41668) - This API is used to modify the projects of multiple certificates.
-* Update: [SubmitCertificateInformation](https://cloud.tencent.com/document/api/400/41666) - Submit documentation for paid certificates; This API does not maintain new features, and you can use the new API to submit documentation. [CertificateInfoSubmit](https://intl.cloud.tencent.com/document/product/400/116033?from_cn_redirect=1).
+* Update: [SubmitCertificateInformation](https://cloud.tencent.com/document/api/400/41666) - Submit documentation for paid certificates; This API does not maintain new features, and you can use the new API to submit documentation. [CertificateInfoSubmit](https://intl.cloud.tencent.com/document/product/400/116033?
 * Update: [UploadConfirmLetter](https://cloud.tencent.com/document/api/400/49425) - This API is used to upload the confirmation letter for a certificate.
 * Delete: [CancelCertificateOrder](https://cloud.tencent.com/document/api/400/41677) - This API is used to cancel a certificate order.
 

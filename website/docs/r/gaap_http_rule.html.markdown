@@ -112,7 +112,7 @@ This resource interacts with the following TencentCloud APIs:
 * Update: [BindRuleRealServers](https://cloud.tencent.com/document/api/608/36992) - This API is used to bind an origin server to the forwarding rules of layer-7 listeners. Note: This API unbinds all previously bound origin servers before binding those selected.
 * Update: [ModifyRuleAttribute](https://cloud.tencent.com/document/api/608/36983) - This API (ModifyRuleAttribute) is used to modify forwarding rule information, including health check configuration and forwarding policies.
 * Delete: [DeleteRule](https://cloud.tencent.com/document/api/608/36988) - This API (DeleteRule) is used to delete the forwarding rules of HTTP/HTTPS listeners.
-* Delete: [DescribeRules](https://cloud.tencent.com/document/api/608/36986) - This API (DescribeRules) is used to query all rule information of a listener, including the domain names, paths, and list of bound origin servers. For version 3.0 connections, this API returns the advanced authentication configuration information of the domain name.
+* Delete: [DescribeRules](https://cloud.tencent.com/document/api/608/36986) - This API (DescribeRules) is used to query all rule information of a listener, including the domain names, paths, and list of bound origin servers. For version 3.
 
 ## Import
 

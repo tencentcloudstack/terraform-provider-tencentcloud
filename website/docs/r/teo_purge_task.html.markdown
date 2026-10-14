@@ -90,6 +90,6 @@ The `timeouts` block allows you to specify [timeouts](https://developer.hashicor
 
 This resource interacts with the following TencentCloud APIs:
 
-* Create: [CreatePurgeTask](https://cloud.tencent.com/document/api/1552/80703) - When there are resources updated on the origin with the TTL remaining valid, users cannot access the latest resources. In this case, you can purge the cache using this API. There are two methods: <li>Delete: This method deletes the node cache without verification and retrieves the latest resources from the origin when receiving a request.</li><li>Invalidate: This method marks the node cache as invalid and sends a request with the If-None-Match and If-Modified-Since headers to the origin. If the origin responses with 200, the latest resources are retrieved to be cached on the node. If a 304 response is returned, the latest resources are not cached on the node.
+* Create: [CreatePurgeTask](https://cloud.tencent.com/document/api/1552/80703) - When there are resources updated on the origin with the TTL remaining valid, users cannot access the latest resources. In this case, you can purge the cache using this API.
 * Create: [DescribePurgeTasks](https://cloud.tencent.com/document/api/1552/80699) - DescribePurgeTasks is used to query the submitted URL refreshing and directory refreshing records and execution progress. This interface can be used to query the tasks submitted by the CreatePurgeTasks API.
 

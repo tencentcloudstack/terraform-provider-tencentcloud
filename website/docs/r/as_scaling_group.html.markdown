@@ -192,7 +192,7 @@ This resource interacts with the following TencentCloud APIs:
 * Update: [ModifyAutoScalingGroup](https://cloud.tencent.com/document/api/377/20433) - This API (ModifyAutoScalingGroup) is used to modify an auto scaling group.
 * Update: [ModifyLoadBalancers](https://cloud.tencent.com/document/api/377/32868) - This API is used to modify the cloud load balancers of a scaling group.
 * Update: [ModifyResourceTags](https://cloud.tencent.com/document/api/651/35322) - This API is used to modify all tags associated with a resource.
-* Delete: [DeleteAutoScalingGroup](https://cloud.tencent.com/document/api/377/20439) - This API is used to delete an auto-scaling group. Make sure that there are no `IN_SERVICE` instances in the group, and there are no ongoing scaling activities. When you delete a scaling group, instances in the status of `CREATION_FAILED`, `TERMINATION_FAILED` and `DETACH_FAILED` are not terminated.
+* Delete: [DeleteAutoScalingGroup](https://cloud.tencent.com/document/api/377/20439) - This API is used to delete an auto-scaling group. Make sure that there are no `IN_SERVICE` instances in the group, and there are no ongoing scaling activities.
 * Delete: [DescribeAutoScalingGroups](https://cloud.tencent.com/document/api/377/20438) - This API (DescribeAutoScalingGroups) is used to query the information of auto scaling groups.
 * Delete: [ModifyAutoScalingGroup](https://cloud.tencent.com/document/api/377/20433) - This API (ModifyAutoScalingGroup) is used to modify an auto scaling group.
 

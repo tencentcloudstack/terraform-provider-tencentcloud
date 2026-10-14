@@ -59,7 +59,7 @@ This resource interacts with the following TencentCloud APIs:
 * Create: [DescribePublicNetwork](https://cloud.tencent.com/document/api/1364/103723) - Query the public network details of a cloud native API gateway instance
 * Read: [DescribePublicNetwork](https://cloud.tencent.com/document/api/1364/103723) - Query the public network details of a cloud native API gateway instance
 * Update: [DescribePublicNetwork](https://cloud.tencent.com/document/api/1364/103723) - Query the public network details of a cloud native API gateway instance
-* Update: [ModifyNetworkBasicInfo](https://cloud.tencent.com/document/api/1364/102774) - This API is used to modify the basic information of a cloud native API gateway instance network, such as bandwidth and description, as well as specification upgrade. Only modification of client public network or private network information is supported.
+* Update: [ModifyNetworkBasicInfo](https://cloud.tencent.com/document/api/1364/102774) - This API is used to modify the basic information of a cloud native API gateway instance network, such as bandwidth and description, as well as specification upgrade.
 * Delete: [DeleteCloudNativeAPIGatewayPublicNetwork](https://cloud.tencent.com/document/api/1364/102777) - Delete public network configuration
 * Delete: [DescribePublicNetwork](https://cloud.tencent.com/document/api/1364/103723) - Query the public network details of a cloud native API gateway instance
 

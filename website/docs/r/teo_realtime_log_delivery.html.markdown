@@ -148,7 +148,7 @@ This resource interacts with the following TencentCloud APIs:
 
 * Create: [CreateRealtimeLogDeliveryTask](https://cloud.tencent.com/document/api/1552/104112) - This API is used to create a real-time log delivery task. The following limits apply:
 * Read: [DescribeRealtimeLogDeliveryTasks](https://cloud.tencent.com/document/api/1552/104110) - This API is used to query the real-time log delivery task list.
-* Update: [ModifyRealtimeLogDeliveryTask](https://cloud.tencent.com/document/api/1552/104109) - This API is used to modify the real-time log delivery task configuration. This API has the following restrictions:<li>Does not support modifying the destination type of the real-time log delivery task (TaskType);</li><li>Does not support modifying the data delivery type (LogType);</li><li>Does not support modifying the data delivery area (Area);</li><li>Does not support modifying the detailed destination configuration, such as log set and log topic, when the destination of the original real-time log delivery task is Tencent Cloud CLS.</li>
+* Update: [ModifyRealtimeLogDeliveryTask](https://cloud.tencent.com/document/api/1552/104109) - This API is used to modify the real-time log delivery task configuration. This API has the following restrictions:Does not support modifying the destination type of the real-time log delivery task (TaskType);Does not support modifying the ...
 * Delete: [DeleteRealtimeLogDeliveryTask](https://cloud.tencent.com/document/api/1552/104111) - This API is used to delete a real-time log delivery task.
 
 ## Import

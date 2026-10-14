@@ -220,10 +220,10 @@ In addition to all arguments above, the following attributes are exported:
 
 This resource interacts with the following TencentCloud APIs:
 
-* Create: [CreateTrigger](https://cloud.tencent.com/document/api/583/18589) - This API is used to create a trigger based on the input parameters.
+* Create: [CreateTrigger](https://cloud.tencent.com/document/api/583/18589) - This API is used to set up alarms for the new trigger mode based on parameters.
 * Read: [ListTriggers](https://cloud.tencent.com/document/api/583/44268) - This API is used to get the function trigger list.
 * Update: [UpdateTrigger](https://cloud.tencent.com/document/api/583/96828)
-* Delete: [DeleteTrigger](https://cloud.tencent.com/document/api/583/18588) - This API is used to delete an existing trigger based on the input parameters.
+* Delete: [DeleteTrigger](https://cloud.tencent.com/document/api/583/18588) - This API is used to delete existing trigger modes based on parameters.
 
 ## Import
 

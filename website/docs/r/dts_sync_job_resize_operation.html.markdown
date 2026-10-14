@@ -39,5 +39,5 @@ In addition to all arguments above, the following attributes are exported:
 This resource interacts with the following TencentCloud APIs:
 
 * Create: [DescribeSyncJobs](https://cloud.tencent.com/document/api/571/82103) - This API is used to query the information of a sync task.
-* Create: [ResizeSyncJob](https://cloud.tencent.com/document/api/571/82099) - This API is used to adjust the specification of a pay-as-you-go sync task. After this API is called, the backend needs to take about 3-5 minutes to implement the adjustment. You can call the `DescribeSyncJobs` API to query the latest task status.
+* Create: [ResizeSyncJob](https://cloud.tencent.com/document/api/571/82099) - This API is used to adjust the specification of a pay-as-you-go sync task. After this API is called, the backend needs to take about 3-5 minutes to implement the adjustment.
 

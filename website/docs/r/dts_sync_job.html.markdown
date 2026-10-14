@@ -65,10 +65,10 @@ This resource interacts with the following TencentCloud APIs:
 
 * Create: [CreateSyncJob](https://cloud.tencent.com/document/api/571/82105) - This API is used to create a sync task.
 * Read: [DescribeSyncJobs](https://cloud.tencent.com/document/api/571/82103) - This API is used to query the information of a sync task.
-* Update: [ResizeSyncJob](https://cloud.tencent.com/document/api/571/82099) - This API is used to adjust the specification of a pay-as-you-go sync task. After this API is called, the backend needs to take about 3-5 minutes to implement the adjustment. You can call the `DescribeSyncJobs` API to query the latest task status.
+* Update: [ResizeSyncJob](https://cloud.tencent.com/document/api/571/82099) - This API is used to adjust the specification of a pay-as-you-go sync task. After this API is called, the backend needs to take about 3-5 minutes to implement the adjustment.
 * Delete: [DescribeSyncJobs](https://cloud.tencent.com/document/api/571/82103) - This API is used to query the information of a sync task.
-* Delete: [DestroySyncJob](https://cloud.tencent.com/document/api/571/82102) - This API is used to delete a sync task. Only tasks in **Isolated** status can be completely deleted. After deletion, you can call the `DescribeSyncJobs` API to get the task list. If the deleted task is not in the list, it is deleted successfully.
-* Delete: [IsolateSyncJob](https://cloud.tencent.com/document/api/571/82101) - This API is used to isolate a sync task. After the task is isolated, you can call the `DescribeSyncJobs` API to query its status, call `RecoverSyncJob` to recover it, or directly delete it. For a free task, calling this API will directly delete it permanently.
+* Delete: [DestroySyncJob](https://cloud.tencent.com/document/api/571/82102) - This API is used to delete a sync task. Only tasks in **Isolated** status can be completely deleted. After deletion, you can call the `DescribeSyncJobs` API to get the task list.
+* Delete: [IsolateSyncJob](https://cloud.tencent.com/document/api/571/82101) - This API is used to isolate a sync task. After the task is isolated, you can call the `DescribeSyncJobs` API to query its status, call `RecoverSyncJob` to recover it, or directly delete it.
 
 ## Import
 

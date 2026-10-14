@@ -99,9 +99,9 @@ In addition to all arguments above, the following attributes are exported:
 
 This resource interacts with the following TencentCloud APIs:
 
-* Create: [CreateFunctionRule](https://cloud.tencent.com/document/api/1552/111388) - This API is used to create trigger rules for edge functions. It supports determining whether to execute the function via customized filter conditions. When execution is required, it provides multiple ways to select the target function, including directly specifying, selecting based on client region, and selecting based on weight.
+* Create: [CreateFunctionRule](https://cloud.tencent.com/document/api/1552/111388) - This API is used to create trigger rules for edge functions. It supports determining whether to execute the function via customized filter conditions.
 * Read: [DescribeFunctionRules](https://cloud.tencent.com/document/api/1552/111385) - This API is used to query the list of trigger rules for an edge function. It supports filtering by rule ID, function ID, rule description, and so on.
-* Update: [ModifyFunctionRule](https://cloud.tencent.com/document/api/1552/111380) - This API is used to modify a trigger rule for an edge function. It supports modifying rule conditions, execution functions, and description. You can first use the DescribeFunctionRules API to get the RuleId of the rule that needs to be modified, then input the modified rule content. The original rule content will be overwritten.
+* Update: [ModifyFunctionRule](https://cloud.tencent.com/document/api/1552/111380) - This API is used to modify a trigger rule for an edge function. It supports modifying rule conditions, execution functions, and description.
 * Delete: [DeleteFunctionRules](https://cloud.tencent.com/document/api/1552/111386) - This API is used to delete a trigger rule for an edge function.
 
 ## Import

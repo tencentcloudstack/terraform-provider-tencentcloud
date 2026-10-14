@@ -44,7 +44,7 @@ In addition to all arguments above, the following attributes are exported:
 
 This resource interacts with the following TencentCloud APIs:
 
-* Create: [CreateFunctionReplica](https://cloud.tencent.com/document/api/1552/132393) - This API is used to create copies of specified edge functions. After creating copies, when client requests match configured trigger rules or the default domain name, you can access specific function copies by adding EO-Function-Replica-Name:[copy name] to the request header. Each function supports creating two copies by default.
+* Create: [CreateFunctionReplica](https://cloud.tencent.com/document/api/1552/132393) - This API is used to create copies of specified edge functions. After creating copies, when client requests match configured trigger rules or the default domain name, you can access specific function copies by adding ...
 * Create: [DescribeFunctionReplicas](https://cloud.tencent.com/document/api/1552/132391) - This API is used to query the replica list of edge functions.
 * Read: [DescribeFunctionReplicas](https://cloud.tencent.com/document/api/1552/132391) - This API is used to query the replica list of edge functions.
 * Update: [DescribeFunctionReplicas](https://cloud.tencent.com/document/api/1552/132391) - This API is used to query the replica list of edge functions.
