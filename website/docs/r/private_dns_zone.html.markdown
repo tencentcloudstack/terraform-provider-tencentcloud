@@ -44,6 +44,11 @@ resource "tencentcloud_private_dns_zone" "example" {
 ### Create a Private Dns Zone domain and bind associated accounts'VPC
 
 ```hcl
+resource "tencentcloud_vpc" "vpc" {
+  name       = "vpc-example"
+  cidr_block = "10.0.0.0/16"
+}
+
 resource "tencentcloud_private_dns_zone" "example" {
   domain = "domain.com"
   remark = "remark."
@@ -57,7 +62,6 @@ resource "tencentcloud_private_dns_zone" "example" {
     uin         = "123456789"
     uniq_vpc_id = "vpc-adsebmya"
     region      = "ap-guangzhou"
-    vpc_name    = "vpc-name"
   }
 
   dns_forward_status   = "DISABLED"
@@ -87,7 +91,7 @@ The `account_vpc_set` object supports the following:
 * `region` - (Required, String) Region.
 * `uin` - (Required, String) UIN of the VPC account.
 * `uniq_vpc_id` - (Required, String) VPC ID.
-* `vpc_name` - (Required, String) VPC NAME.
+* `vpc_name` - (Optional, String, **Deprecated**) It has been deprecated from version 1.83.35. Please do not re-enter this field as entering a value will be ignored. VPC NAME.
 
 The `tag_set` object supports the following:
 

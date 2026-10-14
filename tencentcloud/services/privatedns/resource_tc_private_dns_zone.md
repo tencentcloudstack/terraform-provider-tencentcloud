@@ -33,6 +33,11 @@ resource "tencentcloud_private_dns_zone" "example" {
 Create a Private Dns Zone domain and bind associated accounts'VPC
 
 ```hcl
+resource "tencentcloud_vpc" "vpc" {
+  name       = "vpc-example"
+  cidr_block = "10.0.0.0/16"
+}
+
 resource "tencentcloud_private_dns_zone" "example" {
   domain = "domain.com"
   remark = "remark."
@@ -46,7 +51,6 @@ resource "tencentcloud_private_dns_zone" "example" {
     uin         = "123456789"
     uniq_vpc_id = "vpc-adsebmya"
     region      = "ap-guangzhou"
-    vpc_name    = "vpc-name"
   }
 
   dns_forward_status   = "DISABLED"
