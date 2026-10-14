@@ -159,22 +159,15 @@ func minEN(a, b int) int {
 }
 
 // refreshENData downloads the intl SDK master tarball, extracts the English
-// action descriptions, merges the official doc URLs from the public catalog
-// and rewrites gendoc/data/api-actions-en.json atomically (the old snapshot
-// survives any failure).
-func refreshENData() error {
-	// Doc URLs live in the public catalog; fetch it best-effort. Without
-	// it the snapshot still carries descriptions, just without URLs.
+// action descriptions, merges the doc URLs from rawActions (the raw catalog
+// fetched by refreshData) and rewrites gendoc/data/api-actions-en.json
+// atomically (the old snapshot survives any failure).
+func refreshENData(rawActions []rawAction) error {
 	urls := map[string]string{}
-	var rawActions []rawAction
-	if err := fetchJSON(nil, actionsURL, &rawActions); err == nil {
-		for _, a := range rawActions {
-			if a.ActionCNDocUr != "" {
-				urls[strings.ToLower(a.Product)+"."+a.Action] = a.ActionCNDocUr
-			}
+	for _, a := range rawActions {
+		if a.ActionCNDocUr != "" {
+			urls[strings.ToLower(a.Product)+"."+a.Action] = a.ActionCNDocUr
 		}
-	} else {
-		message("[WARN]catalog fetch for doc URLs failed (%v); writing descriptions without URLs\n", err)
 	}
 
 	client := &http.Client{Timeout: 5 * time.Minute}

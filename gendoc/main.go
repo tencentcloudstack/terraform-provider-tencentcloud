@@ -36,19 +36,15 @@ var (
 func main() {
 	flags := parseModeFlags(os.Args[1:])
 
-	// Snapshot refresh mode: download the latest public API catalog and
-	// rewrite gendoc/data/*.json, then exit.
-	if flags.refreshData {
-		if err := refreshData(); err != nil {
+	// Snapshot refresh mode: refresh all bundled snapshots (catalog,
+	// products, English descriptions) and exit.
+	if flags.refresh {
+		rawActions, err := refreshData()
+		if err != nil {
 			fmt.Fprintf(os.Stderr, "[FAIL!]refresh catalog data: %v\n", err)
 			os.Exit(1)
 		}
-		return
-	}
-
-	// English description refresh: re-extract from the intl SDK tarball.
-	if flags.refreshEN {
-		if err := refreshENData(); err != nil {
+		if err := refreshENData(rawActions); err != nil {
 			fmt.Fprintf(os.Stderr, "[FAIL!]refresh English descriptions: %v\n", err)
 			os.Exit(1)
 		}

@@ -170,17 +170,12 @@ resource、data source、action 与 ephemeral resource 的文档均包含一个�
 **完全离线**：`make doc` 只读取仓库内的两个快照（`data/api-actions.json` 目录、`data/api-actions-en.json` 英文描述与文档链接），不发起任何网络请求，构建结果可复现。快照通过以下命令手动刷新：
 
 ```
-make doc-refresh-data   # 刷新 API 目录（文档链接）
-make doc-refresh-en     # 重新提取英文描述并合并文档链接（~6MB 下载）
+make doc-refresh        # 一次性刷新全部快照（API 目录 + 英文描述，~11MB 下载）
 ```
 
 覆盖率：resource 95.7%（1302/1360）、data source 97.3%（923/949）、action 与 ephemeral 全覆盖；未覆盖项均为 S3 兼容 REST 接口（cos/ci）、已下线产品（dayu）或目录未收录的新版本 API，可用下述人工段兜底。
 
-**英文描述与文档链接**：API Reference 中的描述为英文（取自官方国际版 SDK [tencentcloud-sdk-go-intl-en](https://github.com/TencentCloud/tencentcloud-sdk-go-intl-en) 的方法注释），生成的文档不会包含中文。intl SDK 未覆盖的条目（约 20%）降级为仅显示 Action 名与文档链接。刷新英文描述快照：
-
-```
-make doc-refresh-en   # 下载 intl SDK master tarball (~6MB) 并重写 gendoc/data/api-actions-en.json
-```
+**英文描述与文档链接**：API Reference 中的描述为英文（取自官方国际版 SDK [tencentcloud-sdk-go-intl-en](https://github.com/TencentCloud/tencentcloud-sdk-go-intl-en) 的方法注释），生成的文档不会包含中文。intl SDK 未覆盖的条目（约 20%）降级为仅显示 Action 名与文档链接。刷新方式见下文 `make doc-refresh`。
 
 人工兑底：当静态分析无法覆盖（如 COS/CI 的 S3 兼容 REST API、目录未收录的老版本产品）或需要修正时，可在资源描述文件 `services/<product>/resource_tc_<name>.md` 中编写 "API" 段（位于正文与 "Example Usage" 之间），生成器会优先使用人工内容：
 
@@ -199,11 +194,11 @@ Example Usage
 快照刷新（暂未接入 CI，需手动）：
 
 ```
-make doc-refresh-data   # 下载最新目录并重写 gendoc/data/*.json
+make doc-refresh        # 下载最新数据并重写 gendoc/data/*.json
 make doc                # 用新数据重新生成文档
 ```
 
-`-refresh-data` 会从腾讯云公开端点下载完整目录（约 6 MB），仅保留 product/action/name/url 四个字段后原子重写 `data/api-actions.json` 与 `data/api-products.json`。若下载失败，旧快照保持不变。刷新后建议检查 `git diff gendoc/data/` 确认变更合理，再随代码一并提交。
+`-refresh` 会从腾讯云公开端点下载 API 目录（约 6 MB）并从 GitHub 下载国际版 SDK tarball（约 6 MB），提取英文描述后原子重写 `data/` 下的三个快照。任一步骤失败时对应旧快照保持不变。刷新后建议检查 `git diff gendoc/data/` 确认变更合理，再随代码一并提交。
 
 ## 文档索引更新
 

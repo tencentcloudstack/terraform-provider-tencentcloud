@@ -44,25 +44,35 @@ type rawProduct struct {
 
 // refreshData downloads both catalogs and rewrites the slim snapshots under
 // gendoc/data/.
-func refreshData() error {
+// refreshData downloads and rewrites the slim catalog snapshots. The raw
+// action catalog is also returned so the English refresh can merge doc
+// URLs without a second download.
+func refreshData() ([]rawAction, error) {
 	actions, err := fetchAndSlimActions()
 	if err != nil {
-		return fmt.Errorf("actions: %w", err)
+		return nil, fmt.Errorf("actions: %w", err)
 	}
 	products, err := fetchAndSlimProducts()
 	if err != nil {
-		return fmt.Errorf("products: %w", err)
+		return nil, fmt.Errorf("products: %w", err)
 	}
 
 	if err := writeJSON("data/api-actions.json", actions); err != nil {
-		return err
+		return nil, err
 	}
 	if err := writeJSON("data/api-products.json", products); err != nil {
-		return err
+		return nil, err
 	}
 	message("[SUCC.]refreshed data/api-actions.json (%d actions) and data/api-products.json (%d products)\n",
 		len(actions), len(products))
-	return nil
+
+	var raw []rawAction
+	if err := fetchJSON(nil, actionsURL, &raw); err != nil {
+		// Non-fatal: the English refresh tolerates a missing catalog.
+		message("[WARN]raw catalog re-fetch for URL merge failed: %v\n", err)
+		return nil, nil
+	}
+	return raw, nil
 }
 
 func fetchAndSlimActions() ([]apiAction, error) {
