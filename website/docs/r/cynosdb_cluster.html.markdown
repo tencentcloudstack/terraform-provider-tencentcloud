@@ -117,7 +117,7 @@ resource "tencentcloud_cynosdb_cluster" "example" {
 }
 ```
 
-### API.
+### ) is not supported.
 
 Create a multiple availability zone SERVERLESS CynosDB cluster
 

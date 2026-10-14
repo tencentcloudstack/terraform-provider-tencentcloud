@@ -6,6 +6,7 @@ import (
 	"strings"
 	"testing"
 
+	"github.com/agiledragon/gomonkey/v2"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/terraform"
@@ -15,6 +16,7 @@ import (
 
 	tcacctest "github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/acctest"
 	tccommon "github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/common"
+	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/connectivity"
 	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/internal/helper"
 	svccynosdb "github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/services/cynosdb"
 )
@@ -713,14 +715,130 @@ func TestUnitCynosdbCluster_ImmutableFields(t *testing.T) {
 		"max_cpu",
 		"auto_pause",
 		"auto_pause_delay",
-		"storage_pay_mode",
 		"prarm_template_id",
 		"param_template_id",
-		"SyncWay",
-		"SemiSyncTimeout",
+		"sync_way",
+		"semi_sync_timeout",
 	}
 
-	assert.Contains(t, immutableArgs, "SyncWay")
-	assert.Contains(t, immutableArgs, "SemiSyncTimeout")
-	assert.Equal(t, 10, len(immutableArgs))
+	// storage_pay_mode was removed from immutableArgs to support transfer from prepaid to postpaid
+	assert.NotContains(t, immutableArgs, "storage_pay_mode")
+	assert.Contains(t, immutableArgs, "sync_way")
+	assert.Contains(t, immutableArgs, "semi_sync_timeout")
+	assert.Equal(t, 9, len(immutableArgs))
+}
+
+type mockMetaCynosdbCluster struct {
+	client *connectivity.TencentCloudClient
+}
+
+func (m *mockMetaCynosdbCluster) GetAPIV3Conn() *connectivity.TencentCloudClient {
+	return m.client
+}
+
+var _ tccommon.ProviderMeta = &mockMetaCynosdbCluster{}
+
+func newMockMetaCynosdbCluster() *mockMetaCynosdbCluster {
+	return &mockMetaCynosdbCluster{client: &connectivity.TencentCloudClient{Region: "ap-guangzhou"}}
+}
+
+// go test ./tencentcloud/services/cynosdb/ -run "TestUnitCynosdbCluster_TransferStoragePrepayToPostpay" -v -count=1 -gcflags="all=-l"
+func TestUnitCynosdbCluster_TransferStoragePrepayToPostpay(t *testing.T) {
+	patches := gomonkey.NewPatches()
+	defer patches.Reset()
+
+	meta := newMockMetaCynosdbCluster()
+	cynosdbClient := &cynosdb.Client{}
+	patches.ApplyMethodReturn(meta.client, "UseCynosdbClient", cynosdbClient)
+
+	clusterId := "cynosdbmysql-abcdefgh"
+	transferCalled := false
+	patches.ApplyMethodFunc(cynosdbClient, "TransferStoragePrepayToPostpay", func(request *cynosdb.TransferStoragePrepayToPostpayRequest) (*cynosdb.TransferStoragePrepayToPostpayResponse, error) {
+		assert.Equal(t, clusterId, *request.ClusterId)
+		transferCalled = true
+		resp := &cynosdb.TransferStoragePrepayToPostpayResponse{}
+		resp.Response = &cynosdb.TransferStoragePrepayToPostpayResponseParams{
+			BigDealIds:  []*string{helper.String("2023101400001")},
+			DealNames:   []*string{helper.String("2023101400002")},
+			ResourceIds: []*string{helper.String(clusterId)},
+			ClusterIds:  []*string{helper.String(clusterId)},
+			RequestId:   helper.String("fake-request-id"),
+		}
+		return resp, nil
+	})
+
+	logId := tccommon.GetLogId(tccommon.ContextNil)
+	ctx := context.WithValue(context.TODO(), tccommon.LogIdKey, logId)
+	cynosdbService := svccynosdb.NewCynosdbService(meta.client)
+
+	dealNames, err := cynosdbService.TransferStoragePrepayToPostpay(ctx, clusterId)
+	assert.NoError(t, err)
+	assert.True(t, transferCalled)
+	assert.Equal(t, 1, len(dealNames))
+	assert.Equal(t, "2023101400002", *dealNames[0])
+}
+
+// go test ./tencentcloud/services/cynosdb/ -run "TestUnitCynosdbCluster_StoragePayModeRejectReverse" -v -count=1 -gcflags="all=-l"
+func TestUnitCynosdbCluster_StoragePayModeRejectReverse(t *testing.T) {
+	patches := gomonkey.NewPatches()
+	defer patches.Reset()
+
+	meta := newMockMetaCynosdbCluster()
+	cynosdbClient := &cynosdb.Client{}
+	patches.ApplyMethodReturn(meta.client, "UseCynosdbClient", cynosdbClient)
+
+	// ensure TransferStoragePrepayToPostpay is never called for the reverse direction
+	transferCalled := false
+	patches.ApplyMethodFunc(cynosdbClient, "TransferStoragePrepayToPostpay", func(request *cynosdb.TransferStoragePrepayToPostpayRequest) (*cynosdb.TransferStoragePrepayToPostpayResponse, error) {
+		transferCalled = true
+		resp := &cynosdb.TransferStoragePrepayToPostpayResponse{}
+		resp.Response = &cynosdb.TransferStoragePrepayToPostpayResponseParams{}
+		return resp, nil
+	})
+
+	res := svccynosdb.ResourceTencentCloudCynosdbCluster()
+
+	clusterId := "cynosdbmysql-abcdefgh"
+	state := &terraform.InstanceState{
+		ID: clusterId,
+		Attributes: map[string]string{
+			"id":               clusterId,
+			"cluster_name":     "tf-cynosdb",
+			"available_zone":   "ap-guangzhou-4",
+			"vpc_id":           "vpc-m0d2dbnn",
+			"subnet_id":        "subnet-j10lsueq",
+			"db_type":          "MYSQL",
+			"db_version":       "5.7",
+			"db_mode":          "NORMAL",
+			"password":         "cynosDB@123",
+			"instance_count":   "1",
+			"storage_pay_mode": "0",
+		},
+	}
+
+	// new config flips storage_pay_mode from 0 (postpaid) to 1 (prepaid), which must be rejected
+	rawConfig := terraform.NewResourceConfigRaw(map[string]interface{}{
+		"cluster_name":     "tf-cynosdb",
+		"available_zone":   "ap-guangzhou-4",
+		"vpc_id":           "vpc-m0d2dbnn",
+		"subnet_id":        "subnet-j10lsueq",
+		"db_type":          "MYSQL",
+		"db_version":       "5.7",
+		"db_mode":          "NORMAL",
+		"password":         "cynosDB@123",
+		"instance_count":   1,
+		"storage_pay_mode": 1,
+	})
+
+	diff, err := res.Diff(nil, state, rawConfig, meta)
+	assert.NoError(t, err)
+	assert.NotNil(t, diff)
+
+	d, err := schema.InternalMap(res.Schema).Data(state, diff)
+	assert.NoError(t, err)
+
+	err = res.Update(d, meta)
+	assert.Error(t, err)
+	assert.False(t, transferCalled)
+	assert.Contains(t, err.Error(), "storage_pay_mode only supports transfer from prepaid(1) to postpaid(0)")
 }

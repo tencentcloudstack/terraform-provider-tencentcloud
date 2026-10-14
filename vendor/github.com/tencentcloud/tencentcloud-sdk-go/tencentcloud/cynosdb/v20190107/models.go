@@ -293,32 +293,32 @@ func (r *ActivateLibraDBInstanceResponse) FromJsonString(s string) error {
 
 // Predefined struct for user
 type AddClusterSlaveZoneRequestParams struct {
-	// 集群ID
+	// <p>集群ID</p>
 	ClusterId *string `json:"ClusterId,omitnil,omitempty" name:"ClusterId"`
 
-	// 从可用区
+	// <p>备可用区</p>
 	SlaveZone *string `json:"SlaveZone,omitnil,omitempty" name:"SlaveZone"`
 
-	// binlog同步方式。默认值：async。可选值：sync、semisync、async
+	// <p>binlog同步方式。默认值：async。可选值：sync、semisync、async</p>
 	BinlogSyncWay *string `json:"BinlogSyncWay,omitnil,omitempty" name:"BinlogSyncWay"`
 
-	// 半同步超时时间，单位ms。为保证业务稳定性，半同步复制存在退化逻辑，当主可用区集群在等待备可用区集群确认事务时若超过该超时时间，复制方式将降为异步复制。最低设置为1000ms，最高支持4294967295ms，默认10000ms。
+	// <p>半同步超时时间，单位ms。为保证业务稳定性，半同步复制存在退化逻辑，当主可用区集群在等待备可用区集群确认事务时若超过该超时时间，复制方式将降为异步复制。最低设置为1000ms，最高支持4294967295ms，默认10000ms。</p>
 	SemiSyncTimeout *int64 `json:"SemiSyncTimeout,omitnil,omitempty" name:"SemiSyncTimeout"`
 }
 
 type AddClusterSlaveZoneRequest struct {
 	*tchttp.BaseRequest
 	
-	// 集群ID
+	// <p>集群ID</p>
 	ClusterId *string `json:"ClusterId,omitnil,omitempty" name:"ClusterId"`
 
-	// 从可用区
+	// <p>备可用区</p>
 	SlaveZone *string `json:"SlaveZone,omitnil,omitempty" name:"SlaveZone"`
 
-	// binlog同步方式。默认值：async。可选值：sync、semisync、async
+	// <p>binlog同步方式。默认值：async。可选值：sync、semisync、async</p>
 	BinlogSyncWay *string `json:"BinlogSyncWay,omitnil,omitempty" name:"BinlogSyncWay"`
 
-	// 半同步超时时间，单位ms。为保证业务稳定性，半同步复制存在退化逻辑，当主可用区集群在等待备可用区集群确认事务时若超过该超时时间，复制方式将降为异步复制。最低设置为1000ms，最高支持4294967295ms，默认10000ms。
+	// <p>半同步超时时间，单位ms。为保证业务稳定性，半同步复制存在退化逻辑，当主可用区集群在等待备可用区集群确认事务时若超过该超时时间，复制方式将降为异步复制。最低设置为1000ms，最高支持4294967295ms，默认10000ms。</p>
 	SemiSyncTimeout *int64 `json:"SemiSyncTimeout,omitnil,omitempty" name:"SemiSyncTimeout"`
 }
 
@@ -346,7 +346,7 @@ func (r *AddClusterSlaveZoneRequest) FromJsonString(s string) error {
 
 // Predefined struct for user
 type AddClusterSlaveZoneResponseParams struct {
-	// 异步FlowId
+	// <p>异步FlowId</p>
 	FlowId *int64 `json:"FlowId,omitnil,omitempty" name:"FlowId"`
 
 	// 唯一请求 ID，由服务端生成，每次请求都会返回（若请求因其他原因未能抵达服务端，则该次请求不会获得 RequestId）。定位问题时需要提供该次请求的 RequestId。
@@ -386,7 +386,7 @@ type AddInstancesRequestParams struct {
 	// <p>实例机器类型，支持值如下：</p><ul><li>common：表示通用型</li><li>exclusive：表示独享型</li></ul>
 	DeviceType *string `json:"DeviceType,omitnil,omitempty" name:"DeviceType"`
 
-	// <p>实例组ID，在已有RO组中新增实例时使用，不传则新增RO组。当前版本不建议传输该值。</p>
+	// <p>当前字段已废弃。当前版本不再传输该值。</p>
 	//
 	// Deprecated: InstanceGrpId is deprecated.
 	InstanceGrpId *string `json:"InstanceGrpId,omitnil,omitempty" name:"InstanceGrpId"`
@@ -446,7 +446,7 @@ type AddInstancesRequest struct {
 	// <p>实例机器类型，支持值如下：</p><ul><li>common：表示通用型</li><li>exclusive：表示独享型</li></ul>
 	DeviceType *string `json:"DeviceType,omitnil,omitempty" name:"DeviceType"`
 
-	// <p>实例组ID，在已有RO组中新增实例时使用，不传则新增RO组。当前版本不建议传输该值。</p>
+	// <p>当前字段已废弃。当前版本不再传输该值。</p>
 	InstanceGrpId *string `json:"InstanceGrpId,omitnil,omitempty" name:"InstanceGrpId"`
 
 	// <p>所属VPC网络ID。</p>
@@ -1314,6 +1314,9 @@ type BackupFileInfo struct {
 
 	// <p>备份文件备注</p>
 	BackupName *string `json:"BackupName,omitnil,omitempty" name:"BackupName"`
+
+	// <p>备份文件所在地域</p>
+	ExistRegions []*BackupRegionAndIds `json:"ExistRegions,omitnil,omitempty" name:"ExistRegions"`
 
 	// <p>投递状态</p>
 	CopyStatus *string `json:"CopyStatus,omitnil,omitempty" name:"CopyStatus"`
@@ -5372,6 +5375,12 @@ type CynosdbClusterDetail struct {
 
 	// <p>实例当前所在可用区</p>
 	RealZone *string `json:"RealZone,omitnil,omitempty" name:"RealZone"`
+
+	// <p>超限开启状态</p><p>枚举值：</p><ul><li>yes： 超限开启</li><li>no： 超限关闭</li></ul><p>默认值：no</p>
+	StorageOverUse *string `json:"StorageOverUse,omitnil,omitempty" name:"StorageOverUse"`
+
+	// <p>自动扩容开启状态</p><p>枚举值：</p><ul><li>yes： 已开启</li><li>no： 关闭</li></ul><p>默认值：no</p>
+	StorageAutoExpand *string `json:"StorageAutoExpand,omitnil,omitempty" name:"StorageAutoExpand"`
 }
 
 type CynosdbErrorLogItem struct {
@@ -5413,7 +5422,7 @@ type CynosdbInstance struct {
 	// <p>集群主可用区</p>
 	Zone *string `json:"Zone,omitnil,omitempty" name:"Zone"`
 
-	// <p>实例状态</p>
+	// <p>实例状态</p><p>枚举值：</p><ul><li>creating： 创建中</li><li>running： 运行中</li><li>isolating： 隔离中</li><li>isolated： 已隔离</li><li>activating： 从回收站重新恢复</li><li>offlining： 下线中</li><li>offlined： 已下线</li><li>deleting： 删除中</li><li>deleted： 已删除</li></ul>
 	Status *string `json:"Status,omitnil,omitempty" name:"Status"`
 
 	// <p>实例状态中文描述</p>
@@ -5678,6 +5687,15 @@ type CynosdbInstanceDetail struct {
 
 	// <p>集群的读写实例所在可用区</p>
 	MasterZone *string `json:"MasterZone,omitnil,omitempty" name:"MasterZone"`
+
+	// <p>实例的真实可用区</p>
+	RealZone *string `json:"RealZone,omitnil,omitempty" name:"RealZone"`
+
+	// <p>备可用区列表</p>
+	SlaveZones []*string `json:"SlaveZones,omitnil,omitempty" name:"SlaveZones"`
+
+	// <p>存储版本</p><p>枚举值：</p><ul><li>1.0： 1.0版本存储</li><li>2.0： 2.0版本存储</li></ul>
+	StorageVersion *string `json:"StorageVersion,omitnil,omitempty" name:"StorageVersion"`
 }
 
 type CynosdbInstanceGroup struct {
@@ -5948,6 +5966,9 @@ func (r *DeleteAccountsRequest) FromJsonString(s string) error {
 
 // Predefined struct for user
 type DeleteAccountsResponseParams struct {
+	// <p>任务 ID</p>
+	TaskId *int64 `json:"TaskId,omitnil,omitempty" name:"TaskId"`
+
 	// 唯一请求 ID，由服务端生成，每次请求都会返回（若请求因其他原因未能抵达服务端，则该次请求不会获得 RequestId）。定位问题时需要提供该次请求的 RequestId。
 	RequestId *string `json:"RequestId,omitnil,omitempty" name:"RequestId"`
 }
@@ -6817,13 +6838,13 @@ type DescribeAccountPrivilegesRequestParams struct {
 	// 主机
 	Host *string `json:"Host,omitnil,omitempty" name:"Host"`
 
-	// 数据库名，为*时，忽略Type/TableName, 表示修改用户全局权限；
+	// 数据库名。为*时，忽略Type/TableName，表示查询用户全局权限；不传时默认为*。
 	Db *string `json:"Db,omitnil,omitempty" name:"Db"`
 
-	// 指定数据库下的对象类型，可选"table"，"*"
+	// 指定数据库下的对象类型，可选"table"、"*"。不传时默认为*；Type为table时，必须指定TableName。
 	Type *string `json:"Type,omitnil,omitempty" name:"Type"`
 
-	// 当Type="table"时，用来指定表名
+	// 当Type="table"时，用来指定表名；Type为table时必填。
 	TableName *string `json:"TableName,omitnil,omitempty" name:"TableName"`
 }
 
@@ -6839,13 +6860,13 @@ type DescribeAccountPrivilegesRequest struct {
 	// 主机
 	Host *string `json:"Host,omitnil,omitempty" name:"Host"`
 
-	// 数据库名，为*时，忽略Type/TableName, 表示修改用户全局权限；
+	// 数据库名。为*时，忽略Type/TableName，表示查询用户全局权限；不传时默认为*。
 	Db *string `json:"Db,omitnil,omitempty" name:"Db"`
 
-	// 指定数据库下的对象类型，可选"table"，"*"
+	// 指定数据库下的对象类型，可选"table"、"*"。不传时默认为*；Type为table时，必须指定TableName。
 	Type *string `json:"Type,omitnil,omitempty" name:"Type"`
 
-	// 当Type="table"时，用来指定表名
+	// 当Type="table"时，用来指定表名；Type为table时必填。
 	TableName *string `json:"TableName,omitnil,omitempty" name:"TableName"`
 }
 
@@ -8796,32 +8817,32 @@ func (r *DescribeClusterDatabasesResponse) FromJsonString(s string) error {
 
 // Predefined struct for user
 type DescribeClusterDetailDatabasesRequestParams struct {
-	// 集群ID
+	// <p>集群ID</p>
 	ClusterId *string `json:"ClusterId,omitnil,omitempty" name:"ClusterId"`
 
-	// 偏移量，默认0
+	// <p>偏移量，默认0</p>
 	Offset *int64 `json:"Offset,omitnil,omitempty" name:"Offset"`
 
-	// 返回数量，默认20,最大100
+	// <p>返回数量，默认20,最大100</p>
 	Limit *int64 `json:"Limit,omitnil,omitempty" name:"Limit"`
 
-	// 数据库名称
+	// <p>数据库名称，通过该字段进行子串匹配</p>
 	DbName *string `json:"DbName,omitnil,omitempty" name:"DbName"`
 }
 
 type DescribeClusterDetailDatabasesRequest struct {
 	*tchttp.BaseRequest
 	
-	// 集群ID
+	// <p>集群ID</p>
 	ClusterId *string `json:"ClusterId,omitnil,omitempty" name:"ClusterId"`
 
-	// 偏移量，默认0
+	// <p>偏移量，默认0</p>
 	Offset *int64 `json:"Offset,omitnil,omitempty" name:"Offset"`
 
-	// 返回数量，默认20,最大100
+	// <p>返回数量，默认20,最大100</p>
 	Limit *int64 `json:"Limit,omitnil,omitempty" name:"Limit"`
 
-	// 数据库名称
+	// <p>数据库名称，通过该字段进行子串匹配</p>
 	DbName *string `json:"DbName,omitnil,omitempty" name:"DbName"`
 }
 
@@ -8849,10 +8870,10 @@ func (r *DescribeClusterDetailDatabasesRequest) FromJsonString(s string) error {
 
 // Predefined struct for user
 type DescribeClusterDetailDatabasesResponseParams struct {
-	// 数据库信息
+	// <p>数据库信息</p>
 	DbInfos []*DbInfo `json:"DbInfos,omitnil,omitempty" name:"DbInfos"`
 
-	// 总数
+	// <p>总数</p>
 	TotalCount *int64 `json:"TotalCount,omitnil,omitempty" name:"TotalCount"`
 
 	// 唯一请求 ID，由服务端生成，每次请求都会返回（若请求因其他原因未能抵达服务端，则该次请求不会获得 RequestId）。定位问题时需要提供该次请求的 RequestId。
@@ -9578,6 +9599,72 @@ func (r *DescribeClusterServerlessScalePlansResponse) ToJsonString() string {
 // FromJsonString It is highly **NOT** recommended to use this function
 // because it has no param check, nor strict type check
 func (r *DescribeClusterServerlessScalePlansResponse) FromJsonString(s string) error {
+	return json.Unmarshal([]byte(s), &r)
+}
+
+// Predefined struct for user
+type DescribeClusterStorageAutoExpandRequestParams struct {
+	// <p>集群ID</p>
+	ClusterId *string `json:"ClusterId,omitnil,omitempty" name:"ClusterId"`
+}
+
+type DescribeClusterStorageAutoExpandRequest struct {
+	*tchttp.BaseRequest
+	
+	// <p>集群ID</p>
+	ClusterId *string `json:"ClusterId,omitnil,omitempty" name:"ClusterId"`
+}
+
+func (r *DescribeClusterStorageAutoExpandRequest) ToJsonString() string {
+    b, _ := json.Marshal(r)
+    return string(b)
+}
+
+// FromJsonString It is highly **NOT** recommended to use this function
+// because it has no param check, nor strict type check
+func (r *DescribeClusterStorageAutoExpandRequest) FromJsonString(s string) error {
+	f := make(map[string]interface{})
+	if err := json.Unmarshal([]byte(s), &f); err != nil {
+		return err
+	}
+	delete(f, "ClusterId")
+	if len(f) > 0 {
+		return tcerr.NewTencentCloudSDKError("ClientError.BuildRequestError", "DescribeClusterStorageAutoExpandRequest has unknown keys!", "")
+	}
+	return json.Unmarshal([]byte(s), &r)
+}
+
+// Predefined struct for user
+type DescribeClusterStorageAutoExpandResponseParams struct {
+	// <p>存储使用率阈值</p>
+	StorageUsageThreshold *int64 `json:"StorageUsageThreshold,omitnil,omitempty" name:"StorageUsageThreshold"`
+
+	// <p>扩容步长</p>
+	ExpandStep *int64 `json:"ExpandStep,omitnil,omitempty" name:"ExpandStep"`
+
+	// <p>最大存储上限</p>
+	MaxStorageLimit *int64 `json:"MaxStorageLimit,omitnil,omitempty" name:"MaxStorageLimit"`
+
+	// <p>是否开启：yes-开启，no-关闭</p>
+	StorageAutoExpand *string `json:"StorageAutoExpand,omitnil,omitempty" name:"StorageAutoExpand"`
+
+	// 唯一请求 ID，由服务端生成，每次请求都会返回（若请求因其他原因未能抵达服务端，则该次请求不会获得 RequestId）。定位问题时需要提供该次请求的 RequestId。
+	RequestId *string `json:"RequestId,omitnil,omitempty" name:"RequestId"`
+}
+
+type DescribeClusterStorageAutoExpandResponse struct {
+	*tchttp.BaseResponse
+	Response *DescribeClusterStorageAutoExpandResponseParams `json:"Response"`
+}
+
+func (r *DescribeClusterStorageAutoExpandResponse) ToJsonString() string {
+    b, _ := json.Marshal(r)
+    return string(b)
+}
+
+// FromJsonString It is highly **NOT** recommended to use this function
+// because it has no param check, nor strict type check
+func (r *DescribeClusterStorageAutoExpandResponse) FromJsonString(s string) error {
 	return json.Unmarshal([]byte(s), &r)
 }
 
@@ -10414,8 +10501,11 @@ type DescribeInstanceSpecsRequestParams struct {
 	// <p>实例机器类型</p>
 	DeviceType *string `json:"DeviceType,omitnil,omitempty" name:"DeviceType"`
 
-	// <p>集群级别，可空。例如 P0, P1</p>
+	// <p>集群级别。例如 P0, P1。若未指定可用区，针对于不支持亲和性的可用区将降级查询非亲和性资源。</p>
 	ClusterLevel *string `json:"ClusterLevel,omitnil,omitempty" name:"ClusterLevel"`
+
+	// <p>可用区</p>
+	Zone *string `json:"Zone,omitnil,omitempty" name:"Zone"`
 }
 
 type DescribeInstanceSpecsRequest struct {
@@ -10430,8 +10520,11 @@ type DescribeInstanceSpecsRequest struct {
 	// <p>实例机器类型</p>
 	DeviceType *string `json:"DeviceType,omitnil,omitempty" name:"DeviceType"`
 
-	// <p>集群级别，可空。例如 P0, P1</p>
+	// <p>集群级别。例如 P0, P1。若未指定可用区，针对于不支持亲和性的可用区将降级查询非亲和性资源。</p>
 	ClusterLevel *string `json:"ClusterLevel,omitnil,omitempty" name:"ClusterLevel"`
+
+	// <p>可用区</p>
+	Zone *string `json:"Zone,omitnil,omitempty" name:"Zone"`
 }
 
 func (r *DescribeInstanceSpecsRequest) ToJsonString() string {
@@ -10450,6 +10543,7 @@ func (r *DescribeInstanceSpecsRequest) FromJsonString(s string) error {
 	delete(f, "IncludeZoneStocks")
 	delete(f, "DeviceType")
 	delete(f, "ClusterLevel")
+	delete(f, "Zone")
 	if len(f) > 0 {
 		return tcerr.NewTencentCloudSDKError("ClientError.BuildRequestError", "DescribeInstanceSpecsRequest has unknown keys!", "")
 	}
@@ -17789,6 +17883,70 @@ func (r *ModifyClusterGlobalEncryptionResponse) FromJsonString(s string) error {
 }
 
 // Predefined struct for user
+type ModifyClusterLevelRequestParams struct {
+	// <p>集群ID</p>
+	ClusterId *string `json:"ClusterId,omitnil,omitempty" name:"ClusterId"`
+
+	// <p>集群级别</p>
+	ClusterLevel *string `json:"ClusterLevel,omitnil,omitempty" name:"ClusterLevel"`
+}
+
+type ModifyClusterLevelRequest struct {
+	*tchttp.BaseRequest
+	
+	// <p>集群ID</p>
+	ClusterId *string `json:"ClusterId,omitnil,omitempty" name:"ClusterId"`
+
+	// <p>集群级别</p>
+	ClusterLevel *string `json:"ClusterLevel,omitnil,omitempty" name:"ClusterLevel"`
+}
+
+func (r *ModifyClusterLevelRequest) ToJsonString() string {
+    b, _ := json.Marshal(r)
+    return string(b)
+}
+
+// FromJsonString It is highly **NOT** recommended to use this function
+// because it has no param check, nor strict type check
+func (r *ModifyClusterLevelRequest) FromJsonString(s string) error {
+	f := make(map[string]interface{})
+	if err := json.Unmarshal([]byte(s), &f); err != nil {
+		return err
+	}
+	delete(f, "ClusterId")
+	delete(f, "ClusterLevel")
+	if len(f) > 0 {
+		return tcerr.NewTencentCloudSDKError("ClientError.BuildRequestError", "ModifyClusterLevelRequest has unknown keys!", "")
+	}
+	return json.Unmarshal([]byte(s), &r)
+}
+
+// Predefined struct for user
+type ModifyClusterLevelResponseParams struct {
+	// <p>任务ID</p>
+	TaskId *int64 `json:"TaskId,omitnil,omitempty" name:"TaskId"`
+
+	// 唯一请求 ID，由服务端生成，每次请求都会返回（若请求因其他原因未能抵达服务端，则该次请求不会获得 RequestId）。定位问题时需要提供该次请求的 RequestId。
+	RequestId *string `json:"RequestId,omitnil,omitempty" name:"RequestId"`
+}
+
+type ModifyClusterLevelResponse struct {
+	*tchttp.BaseResponse
+	Response *ModifyClusterLevelResponseParams `json:"Response"`
+}
+
+func (r *ModifyClusterLevelResponse) ToJsonString() string {
+    b, _ := json.Marshal(r)
+    return string(b)
+}
+
+// FromJsonString It is highly **NOT** recommended to use this function
+// because it has no param check, nor strict type check
+func (r *ModifyClusterLevelResponse) FromJsonString(s string) error {
+	return json.Unmarshal([]byte(s), &r)
+}
+
+// Predefined struct for user
 type ModifyClusterNameRequestParams struct {
 	// 集群ID
 	ClusterId *string `json:"ClusterId,omitnil,omitempty" name:"ClusterId"`
@@ -18209,38 +18367,38 @@ func (r *ModifyClusterReadOnlyResponse) FromJsonString(s string) error {
 
 // Predefined struct for user
 type ModifyClusterSlaveZoneRequestParams struct {
-	// 集群Id
+	// <p>集群Id</p>
 	ClusterId *string `json:"ClusterId,omitnil,omitempty" name:"ClusterId"`
 
-	// 旧从可用区
+	// <p>旧备可用区</p>
 	OldSlaveZone *string `json:"OldSlaveZone,omitnil,omitempty" name:"OldSlaveZone"`
 
-	// 新从可用区
+	// <p>新备可用区</p>
 	NewSlaveZone *string `json:"NewSlaveZone,omitnil,omitempty" name:"NewSlaveZone"`
 
-	// binlog同步方式。默认值：async。可选值：sync、semisync、async
+	// <p>binlog同步方式。默认值：async。可选值：sync、semisync、async</p>
 	BinlogSyncWay *string `json:"BinlogSyncWay,omitnil,omitempty" name:"BinlogSyncWay"`
 
-	// 半同步超时时间，单位ms。为保证业务稳定性，半同步复制存在退化逻辑，当主可用区集群在等待备可用区集群确认事务时若超过该超时时间，复制方式将降为异步复制。最低设置为1000ms，最高支持4294967295ms，默认10000ms。
+	// <p>半同步超时时间，单位ms。为保证业务稳定性，半同步复制存在退化逻辑，当主可用区集群在等待备可用区集群确认事务时若超过该超时时间，复制方式将降为异步复制。最低设置为1000ms，最高支持4294967295ms，默认10000ms。</p>
 	SemiSyncTimeout *int64 `json:"SemiSyncTimeout,omitnil,omitempty" name:"SemiSyncTimeout"`
 }
 
 type ModifyClusterSlaveZoneRequest struct {
 	*tchttp.BaseRequest
 	
-	// 集群Id
+	// <p>集群Id</p>
 	ClusterId *string `json:"ClusterId,omitnil,omitempty" name:"ClusterId"`
 
-	// 旧从可用区
+	// <p>旧备可用区</p>
 	OldSlaveZone *string `json:"OldSlaveZone,omitnil,omitempty" name:"OldSlaveZone"`
 
-	// 新从可用区
+	// <p>新备可用区</p>
 	NewSlaveZone *string `json:"NewSlaveZone,omitnil,omitempty" name:"NewSlaveZone"`
 
-	// binlog同步方式。默认值：async。可选值：sync、semisync、async
+	// <p>binlog同步方式。默认值：async。可选值：sync、semisync、async</p>
 	BinlogSyncWay *string `json:"BinlogSyncWay,omitnil,omitempty" name:"BinlogSyncWay"`
 
-	// 半同步超时时间，单位ms。为保证业务稳定性，半同步复制存在退化逻辑，当主可用区集群在等待备可用区集群确认事务时若超过该超时时间，复制方式将降为异步复制。最低设置为1000ms，最高支持4294967295ms，默认10000ms。
+	// <p>半同步超时时间，单位ms。为保证业务稳定性，半同步复制存在退化逻辑，当主可用区集群在等待备可用区集群确认事务时若超过该超时时间，复制方式将降为异步复制。最低设置为1000ms，最高支持4294967295ms，默认10000ms。</p>
 	SemiSyncTimeout *int64 `json:"SemiSyncTimeout,omitnil,omitempty" name:"SemiSyncTimeout"`
 }
 
@@ -18269,7 +18427,7 @@ func (r *ModifyClusterSlaveZoneRequest) FromJsonString(s string) error {
 
 // Predefined struct for user
 type ModifyClusterSlaveZoneResponseParams struct {
-	// 异步FlowId
+	// <p>异步FlowId</p>
 	FlowId *int64 `json:"FlowId,omitnil,omitempty" name:"FlowId"`
 
 	// 唯一请求 ID，由服务端生成，每次请求都会返回（若请求因其他原因未能抵达服务端，则该次请求不会获得 RequestId）。定位问题时需要提供该次请求的 RequestId。
@@ -18466,13 +18624,13 @@ func (r *ModifyDBInstanceSecurityGroupsResponse) FromJsonString(s string) error 
 }
 
 type ModifyDbVersionData struct {
-	// 修改前版本
+	// <p>修改前版本</p>
 	OldVersion *string `json:"OldVersion,omitnil,omitempty" name:"OldVersion"`
 
-	// 修改后版本
+	// <p>修改后版本</p>
 	NewVersion *string `json:"NewVersion,omitnil,omitempty" name:"NewVersion"`
 
-	// 升级方式
+	// <p>升级方式</p>
 	UpgradeType *string `json:"UpgradeType,omitnil,omitempty" name:"UpgradeType"`
 }
 
@@ -21387,6 +21545,10 @@ type Package struct {
 	// CCU-计算资源包，DISK-存储资源包
 	PackageType *string `json:"PackageType,omitnil,omitempty" name:"PackageType"`
 
+	// 资源包套餐版本
+	// base-基础，common-通用，enterprise-企业
+	PackageVersion *string `json:"PackageVersion,omitnil,omitempty" name:"PackageVersion"`
+
 	// 资源包使用地域
 	// china-中国内地通用，overseas-港澳台及海外通用
 	PackageRegion *string `json:"PackageRegion,omitnil,omitempty" name:"PackageRegion"`
@@ -22236,20 +22398,20 @@ func (r *ReloadBalanceProxyNodeResponse) FromJsonString(s string) error {
 
 // Predefined struct for user
 type RemoveClusterSlaveZoneRequestParams struct {
-	// 集群ID
+	// <p>集群ID</p>
 	ClusterId *string `json:"ClusterId,omitnil,omitempty" name:"ClusterId"`
 
-	// 从可用区
+	// <p>备可用区</p>
 	SlaveZone *string `json:"SlaveZone,omitnil,omitempty" name:"SlaveZone"`
 }
 
 type RemoveClusterSlaveZoneRequest struct {
 	*tchttp.BaseRequest
 	
-	// 集群ID
+	// <p>集群ID</p>
 	ClusterId *string `json:"ClusterId,omitnil,omitempty" name:"ClusterId"`
 
-	// 从可用区
+	// <p>备可用区</p>
 	SlaveZone *string `json:"SlaveZone,omitnil,omitempty" name:"SlaveZone"`
 }
 
@@ -22275,7 +22437,7 @@ func (r *RemoveClusterSlaveZoneRequest) FromJsonString(s string) error {
 
 // Predefined struct for user
 type RemoveClusterSlaveZoneResponseParams struct {
-	// 异步FlowId
+	// <p>异步FlowId</p>
 	FlowId *int64 `json:"FlowId,omitnil,omitempty" name:"FlowId"`
 
 	// 唯一请求 ID，由服务端生成，每次请求都会返回（若请求因其他原因未能抵达服务端，则该次请求不会获得 RequestId）。定位问题时需要提供该次请求的 RequestId。
@@ -24780,12 +24942,15 @@ type TradePrice struct {
 
 // Predefined struct for user
 type TransferClusterPrepayToPostpayRequestParams struct {
-
+	// <p>集群id</p>
+	ClusterId *string `json:"ClusterId,omitnil,omitempty" name:"ClusterId"`
 }
 
 type TransferClusterPrepayToPostpayRequest struct {
 	*tchttp.BaseRequest
 	
+	// <p>集群id</p>
+	ClusterId *string `json:"ClusterId,omitnil,omitempty" name:"ClusterId"`
 }
 
 func (r *TransferClusterPrepayToPostpayRequest) ToJsonString() string {
@@ -24800,7 +24965,7 @@ func (r *TransferClusterPrepayToPostpayRequest) FromJsonString(s string) error {
 	if err := json.Unmarshal([]byte(s), &f); err != nil {
 		return err
 	}
-	
+	delete(f, "ClusterId")
 	if len(f) > 0 {
 		return tcerr.NewTencentCloudSDKError("ClientError.BuildRequestError", "TransferClusterPrepayToPostpayRequest has unknown keys!", "")
 	}
@@ -24809,6 +24974,26 @@ func (r *TransferClusterPrepayToPostpayRequest) FromJsonString(s string) error {
 
 // Predefined struct for user
 type TransferClusterPrepayToPostpayResponseParams struct {
+	// <p>预付费总订单号</p>
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	BigDealIds []*string `json:"BigDealIds,omitnil,omitempty" name:"BigDealIds"`
+
+	// <p>冻结流水</p>
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	TranId *string `json:"TranId,omitnil,omitempty" name:"TranId"`
+
+	// <p>订单号</p>
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	DealNames []*string `json:"DealNames,omitnil,omitempty" name:"DealNames"`
+
+	// <p>资源id</p>
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	ResourceIds []*string `json:"ResourceIds,omitnil,omitempty" name:"ResourceIds"`
+
+	// <p>集群id</p>
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	ClusterIds []*string `json:"ClusterIds,omitnil,omitempty" name:"ClusterIds"`
+
 	// 唯一请求 ID，由服务端生成，每次请求都会返回（若请求因其他原因未能抵达服务端，则该次请求不会获得 RequestId）。定位问题时需要提供该次请求的 RequestId。
 	RequestId *string `json:"RequestId,omitnil,omitempty" name:"RequestId"`
 }
@@ -24923,12 +25108,15 @@ func (r *TransferClusterZoneResponse) FromJsonString(s string) error {
 
 // Predefined struct for user
 type TransferStoragePrepayToPostpayRequestParams struct {
-
+	// <p>集群id</p>
+	ClusterId *string `json:"ClusterId,omitnil,omitempty" name:"ClusterId"`
 }
 
 type TransferStoragePrepayToPostpayRequest struct {
 	*tchttp.BaseRequest
 	
+	// <p>集群id</p>
+	ClusterId *string `json:"ClusterId,omitnil,omitempty" name:"ClusterId"`
 }
 
 func (r *TransferStoragePrepayToPostpayRequest) ToJsonString() string {
@@ -24943,7 +25131,7 @@ func (r *TransferStoragePrepayToPostpayRequest) FromJsonString(s string) error {
 	if err := json.Unmarshal([]byte(s), &f); err != nil {
 		return err
 	}
-	
+	delete(f, "ClusterId")
 	if len(f) > 0 {
 		return tcerr.NewTencentCloudSDKError("ClientError.BuildRequestError", "TransferStoragePrepayToPostpayRequest has unknown keys!", "")
 	}
@@ -24952,6 +25140,22 @@ func (r *TransferStoragePrepayToPostpayRequest) FromJsonString(s string) error {
 
 // Predefined struct for user
 type TransferStoragePrepayToPostpayResponseParams struct {
+	// <p>预付费总订单号</p>
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	BigDealIds []*string `json:"BigDealIds,omitnil,omitempty" name:"BigDealIds"`
+
+	// <p>订单号</p>
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	DealNames []*string `json:"DealNames,omitnil,omitempty" name:"DealNames"`
+
+	// <p>资源id</p>
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	ResourceIds []*string `json:"ResourceIds,omitnil,omitempty" name:"ResourceIds"`
+
+	// <p>集群id</p>
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	ClusterIds []*string `json:"ClusterIds,omitnil,omitempty" name:"ClusterIds"`
+
 	// 唯一请求 ID，由服务端生成，每次请求都会返回（若请求因其他原因未能抵达服务端，则该次请求不会获得 RequestId）。定位问题时需要提供该次请求的 RequestId。
 	RequestId *string `json:"RequestId,omitnil,omitempty" name:"RequestId"`
 }
@@ -25049,26 +25253,26 @@ type UpgradeAnalysisInstanceVersionInfo struct {
 
 // Predefined struct for user
 type UpgradeClusterVersionRequestParams struct {
-	// 集群id
+	// <p>集群id</p>
 	ClusterId *string `json:"ClusterId,omitnil,omitempty" name:"ClusterId"`
 
-	// 内核版本
+	// <p>内核版本</p>
 	CynosVersion *string `json:"CynosVersion,omitnil,omitempty" name:"CynosVersion"`
 
-	// 升级时间类型，可选：upgradeImmediate,upgradeInMaintain
+	// <p>升级时间类型，可选：upgradeImmediate,upgradeInMaintain</p>
 	UpgradeType *string `json:"UpgradeType,omitnil,omitempty" name:"UpgradeType"`
 }
 
 type UpgradeClusterVersionRequest struct {
 	*tchttp.BaseRequest
 	
-	// 集群id
+	// <p>集群id</p>
 	ClusterId *string `json:"ClusterId,omitnil,omitempty" name:"ClusterId"`
 
-	// 内核版本
+	// <p>内核版本</p>
 	CynosVersion *string `json:"CynosVersion,omitnil,omitempty" name:"CynosVersion"`
 
-	// 升级时间类型，可选：upgradeImmediate,upgradeInMaintain
+	// <p>升级时间类型，可选：upgradeImmediate,upgradeInMaintain</p>
 	UpgradeType *string `json:"UpgradeType,omitnil,omitempty" name:"UpgradeType"`
 }
 
@@ -25095,8 +25299,11 @@ func (r *UpgradeClusterVersionRequest) FromJsonString(s string) error {
 
 // Predefined struct for user
 type UpgradeClusterVersionResponseParams struct {
-	// 异步任务id
+	// <p>异步任务id</p>
 	FlowId *int64 `json:"FlowId,omitnil,omitempty" name:"FlowId"`
+
+	// <p>任务 ID</p>
+	TaskId *int64 `json:"TaskId,omitnil,omitempty" name:"TaskId"`
 
 	// 唯一请求 ID，由服务端生成，每次请求都会返回（若请求因其他原因未能抵达服务端，则该次请求不会获得 RequestId）。定位问题时需要提供该次请求的 RequestId。
 	RequestId *string `json:"RequestId,omitnil,omitempty" name:"RequestId"`

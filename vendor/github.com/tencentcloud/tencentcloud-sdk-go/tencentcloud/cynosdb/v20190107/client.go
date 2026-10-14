@@ -3840,7 +3840,10 @@ func NewDescribeAuditInstanceListResponse() (response *DescribeAuditInstanceList
 // 本接口（DescribeAuditInstanceList）用于获取数据库审计的实例列表。
 //
 // 可能返回的错误码:
+//  AUTHFAILURE_UNAUTHORIZEDOPERATION = "AuthFailure.UnauthorizedOperation"
 //  INTERNALERROR_HTTPERROR = "InternalError.HttpError"
+//  OPERATIONDENIED_ACCOUNTOPERATIONDENIED = "OperationDenied.AccountOperationDenied"
+//  OPERATIONDENIED_RESOURCENOTFUNDERROR = "OperationDenied.ResourceNotFundError"
 func (c *Client) DescribeAuditInstanceList(request *DescribeAuditInstanceListRequest) (response *DescribeAuditInstanceListResponse, err error) {
     return c.DescribeAuditInstanceListWithContext(context.Background(), request)
 }
@@ -3849,7 +3852,10 @@ func (c *Client) DescribeAuditInstanceList(request *DescribeAuditInstanceListReq
 // 本接口（DescribeAuditInstanceList）用于获取数据库审计的实例列表。
 //
 // 可能返回的错误码:
+//  AUTHFAILURE_UNAUTHORIZEDOPERATION = "AuthFailure.UnauthorizedOperation"
 //  INTERNALERROR_HTTPERROR = "InternalError.HttpError"
+//  OPERATIONDENIED_ACCOUNTOPERATIONDENIED = "OperationDenied.AccountOperationDenied"
+//  OPERATIONDENIED_RESOURCENOTFUNDERROR = "OperationDenied.ResourceNotFundError"
 func (c *Client) DescribeAuditInstanceListWithContext(ctx context.Context, request *DescribeAuditInstanceListRequest) (response *DescribeAuditInstanceListResponse, err error) {
     if request == nil {
         request = NewDescribeAuditInstanceListRequest()
@@ -5891,6 +5897,80 @@ func (c *Client) DescribeClusterServerlessScalePlansWithContext(ctx context.Cont
     request.SetContext(ctx)
     
     response = NewDescribeClusterServerlessScalePlansResponse()
+    err = c.Send(request, response)
+    return
+}
+
+func NewDescribeClusterStorageAutoExpandRequest() (request *DescribeClusterStorageAutoExpandRequest) {
+    request = &DescribeClusterStorageAutoExpandRequest{
+        BaseRequest: &tchttp.BaseRequest{},
+    }
+    
+    request.Init().WithApiInfo("cynosdb", APIVersion, "DescribeClusterStorageAutoExpand")
+    
+    
+    return
+}
+
+func NewDescribeClusterStorageAutoExpandResponse() (response *DescribeClusterStorageAutoExpandResponse) {
+    response = &DescribeClusterStorageAutoExpandResponse{
+        BaseResponse: &tchttp.BaseResponse{},
+    } 
+    return
+
+}
+
+// DescribeClusterStorageAutoExpand
+// 本接口（DescribeClusterStorageAutoExpand）用于查询自动库容配置。
+//
+// 可能返回的错误码:
+//  FAILEDOPERATION_DATABASEACCESSERROR = "FailedOperation.DatabaseAccessError"
+//  FAILEDOPERATION_FLOWCREATEERROR = "FailedOperation.FlowCreateError"
+//  FAILEDOPERATION_TRADECREATEORDERERROR = "FailedOperation.TradeCreateOrderError"
+//  INTERNALERROR_DBOPERATIONFAILED = "InternalError.DbOperationFailed"
+//  INTERNALERROR_UNKNOWNERROR = "InternalError.UnknownError"
+//  INVALIDPARAMETERVALUE_CLUSTERNOTFOUND = "InvalidParameterValue.ClusterNotFound"
+//  INVALIDPARAMETERVALUE_INVALIDPARAMETERVALUEERROR = "InvalidParameterValue.InvalidParameterValueError"
+//  INVALIDPARAMETERVALUE_INVALIDREGIONIDERROR = "InvalidParameterValue.InvalidRegionIdError"
+//  OPERATIONDENIED_CLUSTEROPNOTALLOWEDERROR = "OperationDenied.ClusterOpNotAllowedError"
+//  RESOURCENOTFOUND_CLUSTERNOTFOUNDERROR = "ResourceNotFound.ClusterNotFoundError"
+//  RESOURCEUNAVAILABLE_INSTANCELOCKFAIL = "ResourceUnavailable.InstanceLockFail"
+//  RESOURCEUNAVAILABLE_INSTANCESTATUSABNORMAL = "ResourceUnavailable.InstanceStatusAbnormal"
+//  UNAUTHORIZEDOPERATION_PERMISSIONDENIED = "UnauthorizedOperation.PermissionDenied"
+func (c *Client) DescribeClusterStorageAutoExpand(request *DescribeClusterStorageAutoExpandRequest) (response *DescribeClusterStorageAutoExpandResponse, err error) {
+    return c.DescribeClusterStorageAutoExpandWithContext(context.Background(), request)
+}
+
+// DescribeClusterStorageAutoExpand
+// 本接口（DescribeClusterStorageAutoExpand）用于查询自动库容配置。
+//
+// 可能返回的错误码:
+//  FAILEDOPERATION_DATABASEACCESSERROR = "FailedOperation.DatabaseAccessError"
+//  FAILEDOPERATION_FLOWCREATEERROR = "FailedOperation.FlowCreateError"
+//  FAILEDOPERATION_TRADECREATEORDERERROR = "FailedOperation.TradeCreateOrderError"
+//  INTERNALERROR_DBOPERATIONFAILED = "InternalError.DbOperationFailed"
+//  INTERNALERROR_UNKNOWNERROR = "InternalError.UnknownError"
+//  INVALIDPARAMETERVALUE_CLUSTERNOTFOUND = "InvalidParameterValue.ClusterNotFound"
+//  INVALIDPARAMETERVALUE_INVALIDPARAMETERVALUEERROR = "InvalidParameterValue.InvalidParameterValueError"
+//  INVALIDPARAMETERVALUE_INVALIDREGIONIDERROR = "InvalidParameterValue.InvalidRegionIdError"
+//  OPERATIONDENIED_CLUSTEROPNOTALLOWEDERROR = "OperationDenied.ClusterOpNotAllowedError"
+//  RESOURCENOTFOUND_CLUSTERNOTFOUNDERROR = "ResourceNotFound.ClusterNotFoundError"
+//  RESOURCEUNAVAILABLE_INSTANCELOCKFAIL = "ResourceUnavailable.InstanceLockFail"
+//  RESOURCEUNAVAILABLE_INSTANCESTATUSABNORMAL = "ResourceUnavailable.InstanceStatusAbnormal"
+//  UNAUTHORIZEDOPERATION_PERMISSIONDENIED = "UnauthorizedOperation.PermissionDenied"
+func (c *Client) DescribeClusterStorageAutoExpandWithContext(ctx context.Context, request *DescribeClusterStorageAutoExpandRequest) (response *DescribeClusterStorageAutoExpandResponse, err error) {
+    if request == nil {
+        request = NewDescribeClusterStorageAutoExpandRequest()
+    }
+    c.InitBaseRequest(&request.BaseRequest, "cynosdb", APIVersion, "DescribeClusterStorageAutoExpand")
+    
+    if c.GetCredential() == nil {
+        return nil, errors.New("DescribeClusterStorageAutoExpand require credential")
+    }
+
+    request.SetContext(ctx)
+    
+    response = NewDescribeClusterStorageAutoExpandResponse()
     err = c.Send(request, response)
     return
 }
@@ -11355,6 +11435,56 @@ func (c *Client) ModifyClusterGlobalEncryptionWithContext(ctx context.Context, r
     return
 }
 
+func NewModifyClusterLevelRequest() (request *ModifyClusterLevelRequest) {
+    request = &ModifyClusterLevelRequest{
+        BaseRequest: &tchttp.BaseRequest{},
+    }
+    
+    request.Init().WithApiInfo("cynosdb", APIVersion, "ModifyClusterLevel")
+    
+    
+    return
+}
+
+func NewModifyClusterLevelResponse() (response *ModifyClusterLevelResponse) {
+    response = &ModifyClusterLevelResponse{
+        BaseResponse: &tchttp.BaseResponse{},
+    } 
+    return
+
+}
+
+// ModifyClusterLevel
+// 修改集群级别
+//
+// 可能返回的错误码:
+//  UNAUTHORIZEDOPERATION_ROLEUNAUTHORIZED = "UnauthorizedOperation.RoleUnauthorized"
+func (c *Client) ModifyClusterLevel(request *ModifyClusterLevelRequest) (response *ModifyClusterLevelResponse, err error) {
+    return c.ModifyClusterLevelWithContext(context.Background(), request)
+}
+
+// ModifyClusterLevel
+// 修改集群级别
+//
+// 可能返回的错误码:
+//  UNAUTHORIZEDOPERATION_ROLEUNAUTHORIZED = "UnauthorizedOperation.RoleUnauthorized"
+func (c *Client) ModifyClusterLevelWithContext(ctx context.Context, request *ModifyClusterLevelRequest) (response *ModifyClusterLevelResponse, err error) {
+    if request == nil {
+        request = NewModifyClusterLevelRequest()
+    }
+    c.InitBaseRequest(&request.BaseRequest, "cynosdb", APIVersion, "ModifyClusterLevel")
+    
+    if c.GetCredential() == nil {
+        return nil, errors.New("ModifyClusterLevel require credential")
+    }
+
+    request.SetContext(ctx)
+    
+    response = NewModifyClusterLevelResponse()
+    err = c.Send(request, response)
+    return
+}
+
 func NewModifyClusterNameRequest() (request *ModifyClusterNameRequest) {
     request = &ModifyClusterNameRequest{
         BaseRequest: &tchttp.BaseRequest{},
@@ -13706,6 +13836,7 @@ func NewOpenAuditServiceResponse() (response *OpenAuditServiceResponse) {
 //  INTERNALERROR_UNKNOWNERROR = "InternalError.UnknownError"
 //  INVALIDPARAMETER_EXCEPTIONPARAM = "InvalidParameter.ExceptionParam"
 //  INVALIDPARAMETER_INVALIDPARAMETERERROR = "InvalidParameter.InvalidParameterError"
+//  OPERATIONDENIED_UNSUPPORTOPENAUDITERROR = "OperationDenied.UnsupportOpenAuditError"
 func (c *Client) OpenAuditService(request *OpenAuditServiceRequest) (response *OpenAuditServiceResponse, err error) {
     return c.OpenAuditServiceWithContext(context.Background(), request)
 }
@@ -13720,6 +13851,7 @@ func (c *Client) OpenAuditService(request *OpenAuditServiceRequest) (response *O
 //  INTERNALERROR_UNKNOWNERROR = "InternalError.UnknownError"
 //  INVALIDPARAMETER_EXCEPTIONPARAM = "InvalidParameter.ExceptionParam"
 //  INVALIDPARAMETER_INVALIDPARAMETERERROR = "InvalidParameter.InvalidParameterError"
+//  OPERATIONDENIED_UNSUPPORTOPENAUDITERROR = "OperationDenied.UnsupportOpenAuditError"
 func (c *Client) OpenAuditServiceWithContext(ctx context.Context, request *OpenAuditServiceRequest) (response *OpenAuditServiceResponse, err error) {
     if request == nil {
         request = NewOpenAuditServiceRequest()
@@ -15727,8 +15859,10 @@ func NewSwitchClusterVpcResponse() (response *SwitchClusterVpcResponse) {
 //  FAILEDOPERATION_FLOWCREATEERROR = "FailedOperation.FlowCreateError"
 //  FAILEDOPERATION_OPERATIONFAILEDERROR = "FailedOperation.OperationFailedError"
 //  INTERNALERROR_SYSTEMERROR = "InternalError.SystemError"
+//  INVALIDPARAMETERVALUE_INTERNALDOMAINRESERVETOOSHORTERROR = "InvalidParameterValue.InternalDomainReserveTooShortError"
 //  INVALIDPARAMETERVALUE_INVALIDPARAMETERVALUEERROR = "InvalidParameterValue.InvalidParameterValueError"
 //  INVALIDPARAMETERVALUE_PARAMERROR = "InvalidParameterValue.ParamError"
+//  INVALIDPARAMETERVALUE_SUBNETUNCHANGEDERROR = "InvalidParameterValue.SubnetUnchangedError"
 //  OPERATIONDENIED_USERRESOURCETASKCONFLICTERROR = "OperationDenied.UserResourceTaskConflictError"
 //  RESOURCENOTFOUND_CLUSTERNOTFOUNDERROR = "ResourceNotFound.ClusterNotFoundError"
 //  UNAUTHORIZEDOPERATION_PERMISSIONDENIED = "UnauthorizedOperation.PermissionDenied"
@@ -15745,8 +15879,10 @@ func (c *Client) SwitchClusterVpc(request *SwitchClusterVpcRequest) (response *S
 //  FAILEDOPERATION_FLOWCREATEERROR = "FailedOperation.FlowCreateError"
 //  FAILEDOPERATION_OPERATIONFAILEDERROR = "FailedOperation.OperationFailedError"
 //  INTERNALERROR_SYSTEMERROR = "InternalError.SystemError"
+//  INVALIDPARAMETERVALUE_INTERNALDOMAINRESERVETOOSHORTERROR = "InvalidParameterValue.InternalDomainReserveTooShortError"
 //  INVALIDPARAMETERVALUE_INVALIDPARAMETERVALUEERROR = "InvalidParameterValue.InvalidParameterValueError"
 //  INVALIDPARAMETERVALUE_PARAMERROR = "InvalidParameterValue.ParamError"
+//  INVALIDPARAMETERVALUE_SUBNETUNCHANGEDERROR = "InvalidParameterValue.SubnetUnchangedError"
 //  OPERATIONDENIED_USERRESOURCETASKCONFLICTERROR = "OperationDenied.UserResourceTaskConflictError"
 //  RESOURCENOTFOUND_CLUSTERNOTFOUNDERROR = "ResourceNotFound.ClusterNotFoundError"
 //  UNAUTHORIZEDOPERATION_PERMISSIONDENIED = "UnauthorizedOperation.PermissionDenied"
@@ -15918,17 +16054,10 @@ func NewTransferClusterPrepayToPostpayResponse() (response *TransferClusterPrepa
 // 本接口（TransferClusterPrepayToPostpay）用于将预付费集群转为后付费集群
 //
 // 可能返回的错误码:
-//  FAILEDOPERATION_CHECKVPCANDSUBNETERROR = "FailedOperation.CheckVpcAndSubnetError"
-//  FAILEDOPERATION_DATABASEACCESSERROR = "FailedOperation.DatabaseAccessError"
-//  FAILEDOPERATION_FLOWCREATEERROR = "FailedOperation.FlowCreateError"
+//  FAILEDOPERATION_BATCHGETINSTANCEERROR = "FailedOperation.BatchGetInstanceError"
 //  FAILEDOPERATION_OPERATIONFAILEDERROR = "FailedOperation.OperationFailedError"
-//  FAILEDOPERATION_PROXYCHECKERROR = "FailedOperation.ProxyCheckError"
-//  INTERNALERROR_SYSTEMERROR = "InternalError.SystemError"
-//  INVALIDPARAMETERVALUE_INVALIDPARAMETERVALUEERROR = "InvalidParameterValue.InvalidParameterValueError"
-//  INVALIDPARAMETERVALUE_PARAMERROR = "InvalidParameterValue.ParamError"
-//  OPERATIONDENIED_USERRESOURCETASKCONFLICTERROR = "OperationDenied.UserResourceTaskConflictError"
+//  OPERATIONDENIED_CLUSTERSTATUSDENIEDERROR = "OperationDenied.ClusterStatusDeniedError"
 //  RESOURCENOTFOUND_CLUSTERNOTFOUNDERROR = "ResourceNotFound.ClusterNotFoundError"
-//  UNAUTHORIZEDOPERATION_PERMISSIONDENIED = "UnauthorizedOperation.PermissionDenied"
 func (c *Client) TransferClusterPrepayToPostpay(request *TransferClusterPrepayToPostpayRequest) (response *TransferClusterPrepayToPostpayResponse, err error) {
     return c.TransferClusterPrepayToPostpayWithContext(context.Background(), request)
 }
@@ -15937,17 +16066,10 @@ func (c *Client) TransferClusterPrepayToPostpay(request *TransferClusterPrepayTo
 // 本接口（TransferClusterPrepayToPostpay）用于将预付费集群转为后付费集群
 //
 // 可能返回的错误码:
-//  FAILEDOPERATION_CHECKVPCANDSUBNETERROR = "FailedOperation.CheckVpcAndSubnetError"
-//  FAILEDOPERATION_DATABASEACCESSERROR = "FailedOperation.DatabaseAccessError"
-//  FAILEDOPERATION_FLOWCREATEERROR = "FailedOperation.FlowCreateError"
+//  FAILEDOPERATION_BATCHGETINSTANCEERROR = "FailedOperation.BatchGetInstanceError"
 //  FAILEDOPERATION_OPERATIONFAILEDERROR = "FailedOperation.OperationFailedError"
-//  FAILEDOPERATION_PROXYCHECKERROR = "FailedOperation.ProxyCheckError"
-//  INTERNALERROR_SYSTEMERROR = "InternalError.SystemError"
-//  INVALIDPARAMETERVALUE_INVALIDPARAMETERVALUEERROR = "InvalidParameterValue.InvalidParameterValueError"
-//  INVALIDPARAMETERVALUE_PARAMERROR = "InvalidParameterValue.ParamError"
-//  OPERATIONDENIED_USERRESOURCETASKCONFLICTERROR = "OperationDenied.UserResourceTaskConflictError"
+//  OPERATIONDENIED_CLUSTERSTATUSDENIEDERROR = "OperationDenied.ClusterStatusDeniedError"
 //  RESOURCENOTFOUND_CLUSTERNOTFOUNDERROR = "ResourceNotFound.ClusterNotFoundError"
-//  UNAUTHORIZEDOPERATION_PERMISSIONDENIED = "UnauthorizedOperation.PermissionDenied"
 func (c *Client) TransferClusterPrepayToPostpayWithContext(ctx context.Context, request *TransferClusterPrepayToPostpayRequest) (response *TransferClusterPrepayToPostpayResponse, err error) {
     if request == nil {
         request = NewTransferClusterPrepayToPostpayRequest()
@@ -15988,17 +16110,10 @@ func NewTransferClusterZoneResponse() (response *TransferClusterZoneResponse) {
 // 本接口（TransferClusterZone）用于发起跨可用区迁移。
 //
 // 可能返回的错误码:
-//  FAILEDOPERATION_CHECKVPCANDSUBNETERROR = "FailedOperation.CheckVpcAndSubnetError"
-//  FAILEDOPERATION_DATABASEACCESSERROR = "FailedOperation.DatabaseAccessError"
-//  FAILEDOPERATION_FLOWCREATEERROR = "FailedOperation.FlowCreateError"
+//  FAILEDOPERATION_BATCHGETINSTANCEERROR = "FailedOperation.BatchGetInstanceError"
 //  FAILEDOPERATION_OPERATIONFAILEDERROR = "FailedOperation.OperationFailedError"
-//  FAILEDOPERATION_PROXYCHECKERROR = "FailedOperation.ProxyCheckError"
-//  INTERNALERROR_SYSTEMERROR = "InternalError.SystemError"
-//  INVALIDPARAMETERVALUE_INVALIDPARAMETERVALUEERROR = "InvalidParameterValue.InvalidParameterValueError"
-//  INVALIDPARAMETERVALUE_PARAMERROR = "InvalidParameterValue.ParamError"
-//  OPERATIONDENIED_USERRESOURCETASKCONFLICTERROR = "OperationDenied.UserResourceTaskConflictError"
+//  OPERATIONDENIED_CLUSTERSTATUSDENIEDERROR = "OperationDenied.ClusterStatusDeniedError"
 //  RESOURCENOTFOUND_CLUSTERNOTFOUNDERROR = "ResourceNotFound.ClusterNotFoundError"
-//  UNAUTHORIZEDOPERATION_PERMISSIONDENIED = "UnauthorizedOperation.PermissionDenied"
 func (c *Client) TransferClusterZone(request *TransferClusterZoneRequest) (response *TransferClusterZoneResponse, err error) {
     return c.TransferClusterZoneWithContext(context.Background(), request)
 }
@@ -16007,17 +16122,10 @@ func (c *Client) TransferClusterZone(request *TransferClusterZoneRequest) (respo
 // 本接口（TransferClusterZone）用于发起跨可用区迁移。
 //
 // 可能返回的错误码:
-//  FAILEDOPERATION_CHECKVPCANDSUBNETERROR = "FailedOperation.CheckVpcAndSubnetError"
-//  FAILEDOPERATION_DATABASEACCESSERROR = "FailedOperation.DatabaseAccessError"
-//  FAILEDOPERATION_FLOWCREATEERROR = "FailedOperation.FlowCreateError"
+//  FAILEDOPERATION_BATCHGETINSTANCEERROR = "FailedOperation.BatchGetInstanceError"
 //  FAILEDOPERATION_OPERATIONFAILEDERROR = "FailedOperation.OperationFailedError"
-//  FAILEDOPERATION_PROXYCHECKERROR = "FailedOperation.ProxyCheckError"
-//  INTERNALERROR_SYSTEMERROR = "InternalError.SystemError"
-//  INVALIDPARAMETERVALUE_INVALIDPARAMETERVALUEERROR = "InvalidParameterValue.InvalidParameterValueError"
-//  INVALIDPARAMETERVALUE_PARAMERROR = "InvalidParameterValue.ParamError"
-//  OPERATIONDENIED_USERRESOURCETASKCONFLICTERROR = "OperationDenied.UserResourceTaskConflictError"
+//  OPERATIONDENIED_CLUSTERSTATUSDENIEDERROR = "OperationDenied.ClusterStatusDeniedError"
 //  RESOURCENOTFOUND_CLUSTERNOTFOUNDERROR = "ResourceNotFound.ClusterNotFoundError"
-//  UNAUTHORIZEDOPERATION_PERMISSIONDENIED = "UnauthorizedOperation.PermissionDenied"
 func (c *Client) TransferClusterZoneWithContext(ctx context.Context, request *TransferClusterZoneRequest) (response *TransferClusterZoneResponse, err error) {
     if request == nil {
         request = NewTransferClusterZoneRequest()
