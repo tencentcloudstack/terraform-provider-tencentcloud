@@ -72,7 +72,7 @@ func ResourceTencentCloudDtsSyncJob() *schema.Resource {
 				Type:        schema.TypeSet,
 				Optional:    true,
 				Computed:    true,
-				Description: "Tag information.",
+				Description: "Tag information.Cannot be modified.",
 				Elem: &schema.Resource{
 					Schema: map[string]*schema.Schema{
 						"tag_key": {
