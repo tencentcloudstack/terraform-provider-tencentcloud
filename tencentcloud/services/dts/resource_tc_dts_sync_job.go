@@ -69,7 +69,7 @@ func ResourceTencentCloudDtsSyncJob() *schema.Resource {
 			},
 
 			"tags": {
-				Type:        schema.TypeList,
+				Type:        schema.TypeSet,
 				Optional:    true,
 				Computed:    true,
 				ForceNew:    true,
@@ -166,7 +166,7 @@ func resourceTencentCloudDtsSyncJobCreate(d *schema.ResourceData, meta interface
 	}
 
 	if v, ok := d.GetOk("tags"); ok {
-		for _, item := range v.([]interface{}) {
+		for _, item := range v.(*schema.Set).List() {
 			dMap := item.(map[string]interface{})
 			tagItem := dts.TagItem{}
 			if v, ok := dMap["tag_key"]; ok {
