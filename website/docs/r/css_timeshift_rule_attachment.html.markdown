@@ -42,7 +42,7 @@ In addition to all arguments above, the following attributes are exported:
 
 This resource interacts with the following TencentCloud APIs:
 
-* Create: [CreateLiveTimeShiftRule](https://www.tencentcloud.com/document/product/267/53726) - This API is used to create a time shifting rule. You need to first call the [CreateLiveTranscodeTemplate](https://intl.cloud.tencent.com/document/product/267/86169?
+* Create: [CreateLiveTimeShiftRule](https://www.tencentcloud.com/document/product/267/53726) - This API is used to create a time shifting rule. You need to first call the [CreateLiveTranscodeTemplate](https://intl.cloud.tencent.com/document/product/267/86169?from_cn_redirect=1) API to create a time shifting template, and then call t
 * Read: [DescribeLiveTimeShiftRules](https://www.tencentcloud.com/document/product/267/53722) - This API is used to query time shifting rules.
 * Delete: [DeleteLiveTimeShiftRule](https://www.tencentcloud.com/document/product/267/53724) - This API is used to delete a time shifting rule.
 * Delete: [DescribeLiveTimeShiftRules](https://www.tencentcloud.com/document/product/267/53722) - This API is used to query time shifting rules.

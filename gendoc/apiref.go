@@ -21,7 +21,6 @@ package main
 // list) maps client accessor name -> catalog product.
 
 import (
-	"encoding/json"
 	"fmt"
 	"go/ast"
 	"go/parser"
@@ -86,7 +85,12 @@ type apiAnalyzer struct {
 	// methodIndex maps method name -> declared service methods (a name may
 	// exist on several service structs, hence a list).
 	methodIndex map[string][]serviceMethod
-	// serviceCtors maps NewXxxService constructor name -> returned type.
+	// serviceCtors maps NewXxxService constructor name -> returned struct
+	// type name. The key carries no package qualifier: this assumes that a
+	// constructor name maps to exactly one type across all services
+	// packages (true at the time of writing — 84 constructors, 0
+	// collisions). If a same-name constructor ever returns different types
+	// per package, type inference here must become package-aware.
 	serviceCtors map[string]string
 
 	// parsedFiles caches ASTs by path.
@@ -928,18 +932,4 @@ func (a *apiAnalyzer) readDataSourceAPIs(repoRoot, name string, ds *schema.Resou
 		return nil
 	}
 	return a.analyzeLifecycle(fd)
-}
-
-// loadSnapshotCatalogEntries returns the slim catalog entries from the
-// embedded snapshot (for tests and tooling).
-func loadSnapshotCatalogEntries() []apiAction {
-	raw, err := apiActionsFS.ReadFile("data/api-actions.json")
-	if err != nil {
-		return nil
-	}
-	var actions []apiAction
-	if err := json.Unmarshal(raw, &actions); err != nil {
-		return nil
-	}
-	return actions
 }

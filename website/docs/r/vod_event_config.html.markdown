@@ -52,9 +52,9 @@ In addition to all arguments above, the following attributes are exported:
 
 This resource interacts with the following TencentCloud APIs:
 
-* Create: [ModifyEventConfig](https://www.tencentcloud.com/document/product/266/57589) - Tencent Cloud VOD provides customers with media upload, media management, media processing, and other services. During or after the execution of these services, Tencent Cloud VOD also provides various event notifications, allowing ...
+* Create: [ModifyEventConfig](https://www.tencentcloud.com/document/product/266/57589) - Tencent Cloud VOD provides customers with media upload, media management, media processing, and other services. During or after the execution of these services, Tencent Cloud VOD also provides various event notifications, allowing develope
 * Read: [DescribeEventConfig](https://www.tencentcloud.com/document/product/266/64486) - Tencent Cloud Video on Demand (VOD) provides customers with media upload, media management, media processing, and other services.
-* Update: [ModifyEventConfig](https://www.tencentcloud.com/document/product/266/57589) - Tencent Cloud VOD provides customers with media upload, media management, media processing, and other services. During or after the execution of these services, Tencent Cloud VOD also provides various event notifications, allowing ...
+* Update: [ModifyEventConfig](https://www.tencentcloud.com/document/product/266/57589) - Tencent Cloud VOD provides customers with media upload, media management, media processing, and other services. During or after the execution of these services, Tencent Cloud VOD also provides various event notifications, allowing develope
 
 ## Import
 

@@ -80,7 +80,7 @@ In addition to all arguments above, the following attributes are exported:
 
 This resource interacts with the following TencentCloud APIs:
 
-* Create: [CreateJustInTimeTranscodeTemplate](https://cloud.tencent.com/document/api/1552/122116) - JIT transcoding already provides preset transcoding templates to meet most needs. If there are personalized transcoding requirements, you can create custom transcoding templates through this API, with up to 100 custom transcoding templates ...
+* Create: [CreateJustInTimeTranscodeTemplate](https://cloud.tencent.com/document/api/1552/122116) - JIT transcoding already provides preset transcoding templates to meet most needs. If there are personalized transcoding requirements, you can create custom transcoding templates through this API, with up to 100 custom transcoding templates
 * Create: [DescribeJustInTimeTranscodeTemplates](https://cloud.tencent.com/document/api/1552/122114) - This API is used to search the transcoding template detail list according to the name, template type, or unique identifier of the just-in-time transcoding template.
 * Read: [DescribeJustInTimeTranscodeTemplates](https://cloud.tencent.com/document/api/1552/122114) - This API is used to search the transcoding template detail list according to the name, template type, or unique identifier of the just-in-time transcoding template.
 * Update: [DescribeJustInTimeTranscodeTemplates](https://cloud.tencent.com/document/api/1552/122114) - This API is used to search the transcoding template detail list according to the name, template type, or unique identifier of the just-in-time transcoding template.

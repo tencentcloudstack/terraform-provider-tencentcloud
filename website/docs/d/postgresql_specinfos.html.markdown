@@ -46,5 +46,5 @@ In addition to all arguments above, the following attributes are exported:
 
 This data source queries the following TencentCloud APIs:
 
-* Read: [DescribeProductConfig](https://www.tencentcloud.com/document/product/409/16776) - This api is used to query sales specification configuration. This interface belongs to the early stage and has stopped feature iteration. It is recommended to use the new api [DescribeClasses](https://www.tencentcloud.
+* Read: [DescribeProductConfig](https://www.tencentcloud.com/document/product/409/16776) - This api is used to query sales specification configuration. This interface belongs to the early stage and has stopped feature iteration. It is recommended to use the new api [DescribeClasses]
 

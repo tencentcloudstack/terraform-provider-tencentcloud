@@ -52,7 +52,7 @@ In addition to all arguments above, the following attributes are exported:
 
 This resource interacts with the following TencentCloud APIs:
 
-* Create: [CreateLiveCallbackTemplate](https://www.tencentcloud.com/document/product/267/30815) - This API is used to create a callback template. Up to 50 templates can be created. After the template ID is returned, you need to call the [CreateLiveCallbackRule](https://intl.cloud.tencent.com/document/product/267/32638?
+* Create: [CreateLiveCallbackTemplate](https://www.tencentcloud.com/document/product/267/30815) - This API is used to create a callback template. Up to 50 templates can be created. After the template ID is returned, you need to call the [CreateLiveCallbackRule]
 * Read: [DescribeLiveCallbackTemplate](https://www.tencentcloud.com/document/product/267/30811) - This API is used to get a single callback template.
 * Update: [ModifyLiveCallbackTemplate](https://www.tencentcloud.com/document/product/267/30809) - This API is used to modify a callback template.
 * Delete: [DeleteLiveCallbackTemplate](https://www.tencentcloud.com/document/product/267/30813) - This API deletes a callback template.

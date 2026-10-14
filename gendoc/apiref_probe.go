@@ -24,6 +24,10 @@ import (
 
 // probeAllResource prints the lifecycle -> cloud API mapping for one resource.
 func probeAllResource(repoRoot string) {
+	if fi, err := os.Stat(filepath.Join(repoRoot, "tencentcloud", "services")); err != nil || !fi.IsDir() {
+		fmt.Fprintf(os.Stderr, "repo root %s does not look like this repository (run from gendoc/)\n", repoRoot)
+		os.Exit(1)
+	}
 	analyzer, err := newAPIAnalyzer(repoRoot, loadSnapshotCatalogOnly())
 	if err != nil {
 		fmt.Fprintf(os.Stderr, "init analyzer: %v\n", err)

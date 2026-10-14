@@ -1082,7 +1082,6 @@ This resource interacts with the following TencentCloud APIs:
 * Create: [CreateCluster](https://www.tencentcloud.com/document/product/457/32027) - This API is used to create a cluster.
 * Read: [DescribeClusterExtraArgs](https://cloud.tencent.com/document/api/457/101764) - This API is used to query custom parameters of a cluster.
 * Read: [DescribeClusterInstances](https://www.tencentcloud.com/document/product/457/66315) - This API is used to query the information of node instances in a cluster.
-* Read: [DescribeClusterSecurity](https://cloud.tencent.com/document/api/457/36703) - This API is used to query the key information of a cluster.
 * Read: [DescribeClusters](https://www.tencentcloud.com/document/product/457/32025) - This API is used to query clusters list.
 * Update: [AddVpcCniSubnets](https://www.tencentcloud.com/document/product/457/40679) - This API is used to add subnets in the container network for a VPC-CNI cluster.
 * Update: [DescribeBatchModifyTagsStatus](https://cloud.tencent.com/document/api/457/111753) - This API is used to query batch modification Tag status.

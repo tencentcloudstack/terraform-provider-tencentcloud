@@ -59,7 +59,7 @@ In addition to all arguments above, the following attributes are exported:
 This resource interacts with the following TencentCloud APIs:
 
 * Create: [CloseProxies](https://www.tencentcloud.com/document/product/608/33111) - This API (CloseProxies) is used to disable connections. If disabled, no traffic will be generated, but the basic configuration fee will still be incurred.
-* Create: [CreateProxy](https://www.tencentcloud.com/document/product/608/33109) - This API is used to create/replicate an acceleration connection with the specified configuration. To replicate a connection, the basic configuration parameters need to be set for the new connection, and `ClonedProxyId` is needed to ...
+* Create: [CreateProxy](https://www.tencentcloud.com/document/product/608/33109) - This API is used to create/replicate an acceleration connection with the specified configuration. To replicate a connection, the basic configuration parameters need to be set for the new connection, and `ClonedProxyId` is needed to identif
 * Create: [DescribeProxies](https://www.tencentcloud.com/document/product/608/33101) - This API (DescribeProxies) is used to query the connection instance list.
 * Read: [DescribeProxies](https://www.tencentcloud.com/document/product/608/33101) - This API (DescribeProxies) is used to query the connection instance list.
 * Update: [CloseProxies](https://www.tencentcloud.com/document/product/608/33111) - This API (CloseProxies) is used to disable connections. If disabled, no traffic will be generated, but the basic configuration fee will still be incurred.

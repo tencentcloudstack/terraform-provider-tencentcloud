@@ -38,9 +38,9 @@ In addition to all arguments above, the following attributes are exported:
 
 This resource interacts with the following TencentCloud APIs:
 
-* Create: [ModifyLoadBalancerSla](https://www.tencentcloud.com/document/product/214/43786) - This API is used to adjust the performance capacity specification of usage-based billing mode instances, for example, upgrading from shared type to performance capacity type, or adjusting the specification of performance and capacity ...
+* Create: [ModifyLoadBalancerSla](https://www.tencentcloud.com/document/product/214/43786) - This API is used to adjust the performance capacity specification of usage-based billing mode instances, for example, upgrading from shared type to performance capacity type, or adjusting the specification of performance and capacity insta
 * Read: [DescribeLoadBalancers](https://www.tencentcloud.com/document/product/214/33830) - This API is used to query the list of CLB instances in a region.
-* Update: [ModifyLoadBalancerSla](https://www.tencentcloud.com/document/product/214/43786) - This API is used to adjust the performance capacity specification of usage-based billing mode instances, for example, upgrading from shared type to performance capacity type, or adjusting the specification of performance and capacity ...
+* Update: [ModifyLoadBalancerSla](https://www.tencentcloud.com/document/product/214/43786) - This API is used to adjust the performance capacity specification of usage-based billing mode instances, for example, upgrading from shared type to performance capacity type, or adjusting the specification of performance and capacity insta
 
 ## Import
 

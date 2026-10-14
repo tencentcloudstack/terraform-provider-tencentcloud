@@ -23,6 +23,7 @@ import (
 	"regexp"
 	"strings"
 	"time"
+	"unicode/utf8"
 )
 
 //go:embed data/api-actions-en.json
@@ -61,18 +62,46 @@ func cleanDesc(s string) string {
 		s = htmlTagRe.ReplaceAllString(s, "")
 	}
 	s = strings.TrimSpace(s)
-	if len(s) <= maxDescLen {
+	if utf8.RuneCountInString(s) <= maxDescLen {
 		return s
 	}
-	cut := s[:maxDescLen]
+	// Cut by runes (a byte slice cut would split multi-byte characters).
+	runes := []rune(s)
+	cut := string(runes[:maxDescLen])
+	// Prefer the last sentence end; the result must keep parentheses and
+	// markdown links balanced, otherwise trim back to a safe point.
+	try := func(c string) (string, bool) {
+		c = strings.TrimSpace(c)
+		if c == "" {
+			return "", false
+		}
+		if strings.Count(c, "(") != strings.Count(c, ")") ||
+			strings.Count(c, "[") != strings.Count(c, "]") ||
+			strings.HasSuffix(c, "[") || strings.HasSuffix(c, "(") {
+			return "", false
+		}
+		return c, true
+	}
+	// Sentence boundary within the cut.
 	if i := strings.LastIndexAny(cut, ".!?"); i > maxDescLen/2 {
-		return strings.TrimSpace(cut[:i+1])
+		if c, ok := try(cut[:i+1]); ok {
+			return c
+		}
 	}
-	if i := strings.LastIndex(cut, " "); i > 0 {
-		return strings.TrimSpace(cut[:i]) + " ..."
+	// Walk back rune by rune until balanced.
+	for i := maxDescLen - 1; i > maxDescLen/2; i-- {
+		if c, ok := try(string(runes[:i])); ok {
+			return c
+		}
 	}
-	return cut + " ..."
+	// Give up on balance: drop the description entirely rather than emit
+	// broken markdown.
+	return ""
 }
+
+// wrapArtifactRe collapses artifacts of SDK comment line wraps inside a
+// markdown link: "[Foo ](url)" -> "[Foo](url)".
+var wrapArtifactRe = regexp.MustCompile(`(\[[^\]\n]*?)\s*\]\s*\(([^)\n]*)\)`)
 
 // isProseDesc reports whether s reads like a prose description line
 // (uppercase-initial sentence) rather than an error-code entry.
@@ -139,7 +168,8 @@ func extractENFromClient(src string) map[string]string {
 		line1End := strings.Index(src[loc[0]:], "\n")
 		rest := src[loc[0]+line1End+1 : loc[1]]
 		lines := strings.Split(strings.TrimSuffix(rest, "\n"), "\n")
-		desc := ""
+		var descLines []string
+		balanced := false
 		for _, ln := range lines {
 			t := strings.TrimSpace(strings.TrimPrefix(ln, "//"))
 			if t == "" {
@@ -148,19 +178,31 @@ func extractENFromClient(src string) map[string]string {
 			if strings.HasPrefix(t, "error code that may be returned") {
 				break
 			}
-			if ecRe.MatchString(t) || !isProseDesc(t) {
+			if ecRe.MatchString(t) {
 				continue
 			}
-			desc = t
-			break
+			if len(descLines) == 0 && !isProseDesc(t) {
+				continue
+			}
+			descLines = append(descLines, t)
+			// The SDK wraps long descriptions across comment lines and a
+			// markdown link may straddle the wrap; keep merging until the
+			// brackets balance.
+			if strings.Count(t, "[") == strings.Count(t, "]") &&
+				strings.Count(t, "(") == strings.Count(t, ")") {
+				balanced = true
+				break
+			}
 		}
+		joined := strings.Join(descLines, " ")
+		// The SDK line-wrap can split a markdown link as "[Foo " + "](url)";
+		// collapse the wrap artifacts so the link stays intact.
+		joined = wrapArtifactRe.ReplaceAllString(joined, "$1]($2)")
+		desc := cleanDesc(joined)
 		if desc == "" {
 			continue
 		}
-		desc = cleanDesc(desc)
-		if desc == "" {
-			continue
-		}
+		_ = balanced
 		// Anchor to the method declaration that follows this comment.
 		// The error-code list can be long, so scan a generous window.
 		tail := src[loc[1]:minEN(len(src), loc[1]+16384)]
@@ -203,14 +245,10 @@ func refreshENData(rawActions []rawAction) error {
 	if err != nil {
 		message("[WARN]international doc URLs unavailable (%v); using Chinese-site URLs only\n", err)
 	} else {
-		replaced := 0
 		for key, u := range intlURLs {
-			if _, cn := urls[key]; cn {
-				replaced++
-			}
 			urls[key] = u
 		}
-		message("[SUCC.]international doc URLs: %d entries (%d replaced Chinese URLs)\n", len(intlURLs), replaced)
+		message("[SUCC.]international doc URLs: %d entries override Chinese URLs where present\n", len(intlURLs))
 	}
 
 	client := &http.Client{Timeout: 5 * time.Minute}

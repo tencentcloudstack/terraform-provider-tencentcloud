@@ -78,7 +78,7 @@ In addition to all arguments above, the following attributes are exported:
 
 This resource interacts with the following TencentCloud APIs:
 
-* Create: [CreateLiveTranscodeTemplate](https://www.tencentcloud.com/document/product/267/30790) - This API is used to create a transcoding template. Up to 50 transcoding templates can be created in total. To use a template, you need to call [CreateLiveTranscodeRule](https://intl.cloud.tencent.com/document/product/267/32647?
+* Create: [CreateLiveTranscodeTemplate](https://www.tencentcloud.com/document/product/267/30790) - This API is used to create a transcoding template. Up to 50 transcoding templates can be created in total. To use a template, you need to call [CreateLiveTranscodeRule]
 * Read: [DescribeLiveTranscodeTemplate](https://www.tencentcloud.com/document/product/267/30786) - This API is used to get a single transcoding template.
 * Update: [ModifyLiveTranscodeTemplate](https://www.tencentcloud.com/document/product/267/30784) - This API is used to modify the transcoding template configuration.
 * Delete: [DeleteLiveTranscodeTemplate](https://www.tencentcloud.com/document/product/267/30788) - This API is used to delete a transcoding template.

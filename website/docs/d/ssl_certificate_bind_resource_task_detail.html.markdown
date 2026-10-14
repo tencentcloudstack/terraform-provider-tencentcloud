@@ -258,5 +258,5 @@ In addition to all arguments above, the following attributes are exported:
 
 This data source queries the following TencentCloud APIs:
 
-* Read: [DescribeCertificateBindResourceTaskDetail](https://cloud.tencent.com/document/api/400/97758) - Query the task result of CreateCertificateBindResourceSyncTask, return the asynchronous task result of binding cloud resources with the certificate, support the following cloud resources: clb, cdn, waf, live, vod, ddos, tke, apigateway, ...
+* Read: [DescribeCertificateBindResourceTaskDetail](https://cloud.tencent.com/document/api/400/97758) - Query the task result of CreateCertificateBindResourceSyncTask, return the asynchronous task result of binding cloud resources with the certificate, support the following cloud resources: clb, cdn, waf, live, vod, ddos, tke, apigateway, tc
 

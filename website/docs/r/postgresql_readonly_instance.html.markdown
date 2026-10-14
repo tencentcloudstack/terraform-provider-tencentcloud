@@ -266,7 +266,7 @@ This resource interacts with the following TencentCloud APIs:
 * Create: [CreateReadOnlyDBInstance](https://www.tencentcloud.com/document/product/409/39728) - This API is used to create read-only replicas.
 * Create: [DescribeDBInstanceAttribute](https://www.tencentcloud.com/document/product/409/16772) - This API is used to query the details of one instance.
 * Create: [DescribeOrders](https://www.tencentcloud.com/document/product/409/18104) - This API is used to query the order information.
-* Create: [DescribeProductConfig](https://www.tencentcloud.com/document/product/409/16776) - This api is used to query sales specification configuration. This interface belongs to the early stage and has stopped feature iteration. It is recommended to use the new api [DescribeClasses](https://www.tencentcloud.
+* Create: [DescribeProductConfig](https://www.tencentcloud.com/document/product/409/16776) - This api is used to query sales specification configuration. This interface belongs to the early stage and has stopped feature iteration. It is recommended to use the new api [DescribeClasses]
 * Create: [ModifyResourceTags](https://www.tencentcloud.com/document/product/651/33012) - This API is used to modify all tags associated with a resource.
 * Read: [DescribeDBInstanceAttribute](https://www.tencentcloud.com/document/product/409/16772) - This API is used to query the details of one instance.
 * Read: [DescribeDBInstanceSecurityGroups](https://www.tencentcloud.com/document/product/409/52648) - This API is used to query the security group of an instance.

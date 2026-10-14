@@ -19,7 +19,6 @@ var apiActionsFS embed.FS
 // catalog holds the resolved action index shared by all doc renders.
 type catalog struct {
 	actionIdx map[string]apiAction
-	source    string // "live" or "snapshot"
 }
 
 // loadCatalog returns the embedded snapshot catalog. Doc generation is
@@ -29,9 +28,9 @@ func loadCatalog() *catalog {
 	idx, err := loadSnapshotCatalog()
 	if err != nil {
 		message("[WARN]bundled snapshot unavailable (%v); API Reference sections will be empty\n", err)
-		return &catalog{actionIdx: map[string]apiAction{}, source: "none"}
+		return &catalog{actionIdx: map[string]apiAction{}}
 	}
-	return &catalog{actionIdx: idx, source: "snapshot"}
+	return &catalog{actionIdx: idx}
 }
 
 // loadSnapshotCatalogOnly returns a snapshot-backed catalog, never touching
@@ -39,9 +38,9 @@ func loadCatalog() *catalog {
 func loadSnapshotCatalogOnly() *catalog {
 	idx, err := loadSnapshotCatalog()
 	if err != nil {
-		return &catalog{actionIdx: map[string]apiAction{}, source: "none"}
+		return &catalog{actionIdx: map[string]apiAction{}}
 	}
-	return &catalog{actionIdx: idx, source: "snapshot"}
+	return &catalog{actionIdx: idx}
 }
 
 // loadSnapshotCatalog builds the lookup index from the embedded snapshot.

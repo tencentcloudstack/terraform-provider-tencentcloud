@@ -195,7 +195,7 @@ In addition to all arguments above, the following attributes are exported:
 This resource interacts with the following TencentCloud APIs:
 
 * Create: [CreateInstancePre](https://www.tencentcloud.com/document/product/597/74261) - This API is used to create prepaid yearly/monthly subscribed instances. It only supports creating Pro Edition instances.
-* Create: [CreatePostPaidInstance](https://www.tencentcloud.com/document/product/597/55882) - This API is used to replace `CreateInstancePost`  to create a pay-as-you-go instance.  You can call this API via SDK or the TencentCloud API console to create a pay-as-you-go CKafka instance,  which is an alternate option for making a ...
+* Create: [CreatePostPaidInstance](https://www.tencentcloud.com/document/product/597/55882) - This API is used to replace `CreateInstancePost`  to create a pay-as-you-go instance.  You can call this API via SDK or the TencentCloud API console to create a pay-as-you-go CKafka instance,  which is an alternate option for making a purc
 * Create: [DescribeInstanceAttributes](https://www.tencentcloud.com/document/product/597/35358) - This API is used to obtain instance attributes.
 * Create: [DescribeInstancesDetail](https://www.tencentcloud.com/document/product/597/35356) - This API is used to get instance list details under a user account.
 * Create: [DescribeResourceTagsByResourceIds](https://www.tencentcloud.com/document/product/651/33022) - This API is used to query the tag key-value pairs associated with an existing resource.

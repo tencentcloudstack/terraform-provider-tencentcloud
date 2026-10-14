@@ -30,45 +30,9 @@ import (
 var cnDocCatRe = regexp.MustCompile(`cloud\.tencent\.com/document/api/(\d+)/`)
 
 const (
-	intlBase     = "https://www.tencentcloud.com"
-	intlCatByURL = intlBase + "/document/api/mid/getCategoryByLang"
-	intlCatURL   = intlBase + "/document/api/mid/getCatalogue"
+	intlBase   = "https://www.tencentcloud.com"
+	intlCatURL = intlBase + "/document/api/mid/getCatalogue"
 )
-
-// intlGetJSON performs a POST to one of the documentation-site endpoints.
-// The site fingerprints TLS and serves a JS challenge to non-browser
-// clients; Go's HTTP stack is rejected while curl is accepted, so the
-// request shells out to curl. curl must be on PATH.
-func intlGetJSON(url string, payload interface{}, out interface{}) error {
-	body, err := json.Marshal(payload)
-	if err != nil {
-		return err
-	}
-	cmd := exec.Command("curl", "-s", "--max-time", "30",
-		"-X", "POST", url,
-		"-H", "Content-Type: application/json",
-		"-H", "User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0 Safari/537.36",
-		"-H", "Referer: "+intlBase+"/document/product/213/33258",
-		"-d", string(body))
-	var stdout, stderr strings.Builder
-	cmd.Stdout = &stdout
-	cmd.Stderr = &stderr
-	if err := cmd.Run(); err != nil {
-		return fmt.Errorf("curl: %w: %s", err, strings.TrimSpace(stderr.String()))
-	}
-	var envelope struct {
-		Code int             `json:"code"`
-		Msg  string          `json:"msg"`
-		Data json.RawMessage `json:"data"`
-	}
-	if err := json.Unmarshal([]byte(stdout.String()), &envelope); err != nil {
-		return fmt.Errorf("response is not JSON (challenge page?): %w", err)
-	}
-	if err := json.Unmarshal(envelope.Data, out); err != nil {
-		return fmt.Errorf("decode data: %w", err)
-	}
-	return nil
-}
 
 // intlNode is one node of the getCatalogue doc tree.
 type intlNode struct {
@@ -78,9 +42,9 @@ type intlNode struct {
 	Children []intlNode `json:"children"`
 }
 
-// fetchCatalogue fetches and decodes the doc tree of one categoryId.
-// It shells out to curl directly (see intlGetJSON for why) and decodes in
-// one step.
+// fetchCatalogue fetches and decodes the doc tree of one categoryId via
+// curl: the doc site fingerprints TLS and serves a JS challenge to Go's
+// HTTP stack, while curl is accepted (curl must be on PATH).
 func fetchCatalogue(catID string) ([]intlNode, error) {
 	payload := fmt.Sprintf(`{"lang":"en","categoryId":%q}`, catID)
 	cmd := exec.Command("curl", "-s", "--max-time", "30",

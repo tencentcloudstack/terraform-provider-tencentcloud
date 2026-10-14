@@ -63,7 +63,7 @@ In addition to all arguments above, the following attributes are exported:
 This resource interacts with the following TencentCloud APIs:
 
 * Create: [ModifyFunctionComponentBindings](https://cloud.tencent.com/document/api/1552/130179) - This API is used to modify the binding relationship between edge functions and components, supporting four operation modes: bind, bind-override, unbind, and rebind.
-* Read: [DescribeFunctionComponentBindings](https://cloud.tencent.com/document/api/1552/130180) - This API is used to query the component binding list of a specified edge function. It supports pagination and conditional filtering, and returns detailed information such as bound component types, variable names, and configuration ...
+* Read: [DescribeFunctionComponentBindings](https://cloud.tencent.com/document/api/1552/130180) - This API is used to query the component binding list of a specified edge function. It supports pagination and conditional filtering, and returns detailed information such as bound component types, variable names, and configuration paramete
 * Update: [ModifyFunctionComponentBindings](https://cloud.tencent.com/document/api/1552/130179) - This API is used to modify the binding relationship between edge functions and components, supporting four operation modes: bind, bind-override, unbind, and rebind.
 * Delete: [ModifyFunctionComponentBindings](https://cloud.tencent.com/document/api/1552/130179) - This API is used to modify the binding relationship between edge functions and components, supporting four operation modes: bind, bind-override, unbind, and rebind.
 

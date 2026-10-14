@@ -100,7 +100,7 @@ In addition to all arguments above, the following attributes are exported:
 
 This resource interacts with the following TencentCloud APIs:
 
-* Create: [CreateZone](https://cloud.tencent.com/document/api/1552/80719) - This API is used to create a site. After you create the site, you can connect it to EdgeOne via the CNAME or NS (see [Quick Start](https://intl.cloud.tencent.com/document/product/1552/87601?
+* Create: [CreateZone](https://cloud.tencent.com/document/api/1552/80719) - This API is used to create a site. After you create the site, you can connect it to EdgeOne via the CNAME or NS (see [Quick Start](https://intl.cloud.tencent.com/document/product/1552/87601?from_cn_redirect=1)), or connect it without a dom
 * Create: [ModifyResourceTags](https://www.tencentcloud.com/document/product/651/33012) - This API is used to modify all tags associated with a resource.
 * Read: [DescribeResourceTagsByResourceIds](https://www.tencentcloud.com/document/product/651/33022) - This API is used to query the tag key-value pairs associated with an existing resource.
 * Read: [DescribeZones](https://cloud.tencent.com/document/api/1552/80713) - This API is used to query the information of sites that you have access to. You can filter sites based on different query criteria.

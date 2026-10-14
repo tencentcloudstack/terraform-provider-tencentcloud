@@ -42,7 +42,7 @@ In addition to all arguments above, the following attributes are exported:
 
 This resource interacts with the following TencentCloud APIs:
 
-* Create: [CreateLiveSnapshotRule](https://www.tencentcloud.com/document/product/267/30835) - This API is used to create a screencapturing rule. You need to first call the [CreateLiveSnapshotTemplate](https://intl.cloud.tencent.com/document/product/267/32624?
+* Create: [CreateLiveSnapshotRule](https://www.tencentcloud.com/document/product/267/30835) - This API is used to create a screencapturing rule. You need to first call the [CreateLiveSnapshotTemplate](https://intl.cloud.tencent.com/document/product/267/32624?from_cn_redirect=1) API to create a screencapturing template to bind the r
 * Read: [DescribeLiveSnapshotRules](https://www.tencentcloud.com/document/product/267/30831) - This API is used to get the screencapturing rule list.
 * Delete: [DeleteLiveSnapshotRule](https://www.tencentcloud.com/document/product/267/30833) - This API is used to delete a screencapturing rule.
 * Delete: [DescribeLiveSnapshotRules](https://www.tencentcloud.com/document/product/267/30831) - This API is used to get the screencapturing rule list.

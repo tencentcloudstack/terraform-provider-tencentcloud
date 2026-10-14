@@ -201,7 +201,7 @@ In addition to all arguments above, the following attributes are exported:
 
 This resource interacts with the following TencentCloud APIs:
 
-* Create: [CreateDBInstance](https://cloud.tencent.com/document/api/240/38571) - This API is used to create a yearly/monthly subscription TencentDB for MongoDB instance. The [DescribeSpecInfo](https://www.tencentcloud.
+* Create: [CreateDBInstance](https://cloud.tencent.com/document/api/240/38571) - This API is used to create a yearly/monthly subscription TencentDB for MongoDB instance. The [DescribeSpecInfo](https://www.tencentcloud.com/document/product/240/34701) API can be called to query and obtain the supported sales specificatio
 * Create: [CreateDBInstanceHour](https://www.tencentcloud.com/document/product/240/34704) - This API is used to create a pay-as-you-go TencentDB for MongoDB instance.
 * Create: [DescribeDBInstances](https://www.tencentcloud.com/document/product/240/34702) - This API is used to query the list of TencentDB for MongoDB instances. It supports filtering primary instances, disaster recovery instances, and read-only instances by project ID, instance ID, instance status, and other conditions.
 * Create: [ModifyResourceTags](https://www.tencentcloud.com/document/product/651/33012) - This API is used to modify all tags associated with a resource.
@@ -217,7 +217,7 @@ This resource interacts with the following TencentCloud APIs:
 * Update: [DescribeDBInstanceDeal](https://www.tencentcloud.com/document/product/240/37330) - This API is used to get order details of purchase, renewal, and specification adjustment of a MongoDB instance.
 * Update: [ModifyDBInstanceNetworkAddress](https://www.tencentcloud.com/document/product/240/46544) - This API is used to modify the network information on a TencentDB for MongoDB instance. It supports switching from a basic network to a VPC network or from one VPC network to another VPC network.
 * Update: [ModifyDBInstanceSecurityGroup](https://www.tencentcloud.com/document/product/240/45894) - This API is used to modify security groups bound to an instance.
-* Update: [ModifyDBInstanceSpec](https://www.tencentcloud.com/document/product/240/34699) - This API is used to adjust the TencentDB for MongoDB instance configuration. The [DescribeSpecInfo](https://www.tencentcloud.com/document/product/240/38567?
+* Update: [ModifyDBInstanceSpec](https://www.tencentcloud.com/document/product/240/34699) - This API is used to adjust the TencentDB for MongoDB instance configuration. The [DescribeSpecInfo](https://www.tencentcloud.com/document/product/240/38567?from_cn_redirect=1) API can be called to query and obtain the supported sales speci
 * Update: [ModifyInstanceAz](https://www.tencentcloud.com/document/product/240/79881) - This API is used to adjust the availability zone distribution of MongoDB cloud database nodes. You can specify the primary AZ and total availability zone distribution info to complete node distribution adjustment.
 * Update: [ModifyResourceTags](https://www.tencentcloud.com/document/product/651/33012) - This API is used to modify all tags associated with a resource.
 * Update: [RenameInstance](https://www.tencentcloud.com/document/product/240/34697) - This API is used to rename a TencentDB instance.

@@ -59,7 +59,7 @@ In addition to all arguments above, the following attributes are exported:
 
 This resource interacts with the following TencentCloud APIs:
 
-* Create: [CreateDisasterRecoverGroup](https://www.tencentcloud.com/document/product/213/33264) - This API is used to create a [spread placement group](https://intl.cloud.tencent.com/document/product/213/15486?from_cn_redirect=1). After you create one, you can specify it for an instance when you [create the instance](https://intl.cloud.
+* Create: [CreateDisasterRecoverGroup](https://www.tencentcloud.com/document/product/213/33264) - This API is used to create a [spread placement group](https://intl.cloud.tencent.com/document/product/213/15486?from_cn_redirect=1). After you create one, you can specify it for an instance when you [create the instance]
 * Read: [DescribeDisasterRecoverGroups](https://www.tencentcloud.com/document/product/213/33261) - This API is used to query the information on [spread placement groups](https://intl.cloud.tencent.com/document/product/213/15486?from_cn_redirect=1).
 * Update: [ModifyDisasterRecoverGroupAttribute](https://www.tencentcloud.com/document/product/213/33247) - This API is used to modify the attributes of [spread placement groups](https://intl.cloud.tencent.com/document/product/213/15486?from_cn_redirect=1).
 * Update: [ModifyResourceTags](https://www.tencentcloud.com/document/product/651/33012) - This API is used to modify all tags associated with a resource.

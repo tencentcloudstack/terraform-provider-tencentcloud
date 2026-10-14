@@ -5,6 +5,7 @@ import (
 	"path/filepath"
 	"strings"
 	"testing"
+	"unicode/utf8"
 )
 
 func TestRenderAPIRefs(t *testing.T) {
@@ -137,5 +138,57 @@ func TestRenderAPIRefsSkipsEmptyVerbLists(t *testing.T) {
 	refs := map[string][]apiRef{"Read": nil}
 	if got := renderAPIRefsFor("resource", refs); got != "" {
 		t.Errorf("expected empty, got %q", got)
+	}
+}
+
+func TestCleanDescTruncation(t *testing.T) {
+	// A description whose cut point lands inside a markdown link must not
+	// produce broken markdown (P3: unbalanced parentheses).
+	long := "This API is used to do something. See [RunInstances](https://intl.cloud.tencent.com/document/product/213/33237) for more information about the instance launch flow and the parameters that it accepts."
+	got := cleanDesc(long)
+	if strings.Count(got, "(") != strings.Count(got, ")") {
+		t.Errorf("unbalanced parens: %q", got)
+	}
+	if strings.Count(got, "[") != strings.Count(got, "]") {
+		t.Errorf("unbalanced brackets: %q", got)
+	}
+	if utf8.RuneCountInString(got) > maxDescLen {
+		t.Errorf("too long: %d runes", utf8.RuneCountInString(got))
+	}
+	// Multi-byte characters must not be split mid-rune.
+	multi := strings.Repeat("描述文字", 200)
+	got2 := cleanDesc(multi)
+	if strings.HasSuffix(got2, "\ufffd") {
+		t.Error("split a multi-byte rune")
+	}
+}
+
+func TestCleanDescShort(t *testing.T) {
+	s := "Short description."
+	if got := cleanDesc(s); got != s {
+		t.Errorf("short desc changed: %q", got)
+	}
+}
+
+func TestCleanDescTeoCase(t *testing.T) {
+	// Reproduce the teo.DescribeSecurityIPGroupInfo leftover: the sentence
+	// boundary cut must not leave an unclosed "[" in the output.
+	long := "The API is deprecated and will be discontinued on June 30, 2024. Please use the API [DescribeSecurityIPGroups](https://www.tencentcloud.com/document/product/1552/81890) instead to manage security IP groups for the web/mini-program business."
+	got := cleanDesc(long)
+	t.Logf("got: %q", got)
+	if strings.Count(got, "[") != strings.Count(got, "]") {
+		t.Errorf("unbalanced brackets: %q", got)
+	}
+}
+
+func TestCleanDescURLPeriod(t *testing.T) {
+	// The sentence's link URL exceeds the cap: the last "." inside the cut
+	// is a dot inside the URL, and the sentence boundary fallback must
+	// still avoid emitting an unclosed "[".
+	long := "This API is on an earlier version and will be discontinued in a future release. If you want to call it, please switch to the latest version. For details, see [ModifyL4ProxyRulesStatus](https://www.tencentcloud.com/document/product/1552/81891) which replaces this deprecated interface for all web and mini-program businesses worldwide."
+	got := cleanDesc(long)
+	t.Logf("got: %q", got)
+	if strings.Count(got, "[") != strings.Count(got, "]") {
+		t.Errorf("unbalanced brackets: %q", got)
 	}
 }
