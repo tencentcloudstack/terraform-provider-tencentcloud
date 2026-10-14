@@ -72,7 +72,6 @@ func ResourceTencentCloudDtsSyncJob() *schema.Resource {
 				Type:        schema.TypeSet,
 				Optional:    true,
 				Computed:    true,
-				ForceNew:    true,
 				Description: "Tag information.",
 				Elem: &schema.Resource{
 					Schema: map[string]*schema.Schema{
@@ -323,6 +322,10 @@ func resourceTencentCloudDtsSyncJobUpdate(d *schema.ResourceData, meta interface
 		logId     = tccommon.GetLogId(tccommon.ContextNil)
 		syncJobId = d.Id()
 	)
+
+	if d.HasChange("tags") {
+		return fmt.Errorf("tags cannot be updated, please delete and recreate the resource to modify tags")
+	}
 
 	if d.HasChange("instance_class") {
 		request := dts.NewResizeSyncJobRequest()
