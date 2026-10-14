@@ -36,7 +36,7 @@ In addition to all arguments above, the following attributes are exported:
 
 This resource interacts with the following TencentCloud APIs:
 
-* Create: [CompleteCertificate](https://cloud.tencent.com/document/api/400/49322) - 主动触发证书验证
+* Create: [CompleteCertificate](https://cloud.tencent.com/document/api/400/49322)
 
 ## Import
 

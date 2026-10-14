@@ -43,12 +43,12 @@ In addition to all arguments above, the following attributes are exported:
 
 This resource interacts with the following TencentCloud APIs:
 
-* Create: [CreateEdgeKVNamespace](https://cloud.tencent.com/document/api/1552/130189) - 创建 KV 命名空间
-* Create: [DescribeEdgeKVNamespaces](https://cloud.tencent.com/document/api/1552/130187) - 查询 KV 命名空间
-* Read: [DescribeEdgeKVNamespaces](https://cloud.tencent.com/document/api/1552/130187) - 查询 KV 命名空间
-* Update: [DescribeEdgeKVNamespaces](https://cloud.tencent.com/document/api/1552/130187) - 查询 KV 命名空间
-* Update: [ModifyEdgeKVNamespace](https://cloud.tencent.com/document/api/1552/130182) - 修改 KV 命名空间
-* Delete: [DeleteEdgeKVNamespace](https://cloud.tencent.com/document/api/1552/130188) - 删除 KV 命名空间
+* Create: [CreateEdgeKVNamespace](https://cloud.tencent.com/document/api/1552/130189) - This API is used to create a KV namespace in the specified site.
+* Create: [DescribeEdgeKVNamespaces](https://cloud.tencent.com/document/api/1552/130187) - This API is used to query the KV namespace list of a specified site, supporting pagination, sorting and conditional filtering. It returns the basic info, capacity utilization and reference relationship of namespaces. If data not found, return an empty array.
+* Read: [DescribeEdgeKVNamespaces](https://cloud.tencent.com/document/api/1552/130187) - This API is used to query the KV namespace list of a specified site, supporting pagination, sorting and conditional filtering. It returns the basic info, capacity utilization and reference relationship of namespaces. If data not found, return an empty array.
+* Update: [DescribeEdgeKVNamespaces](https://cloud.tencent.com/document/api/1552/130187) - This API is used to query the KV namespace list of a specified site, supporting pagination, sorting and conditional filtering. It returns the basic info, capacity utilization and reference relationship of namespaces. If data not found, return an empty array.
+* Update: [ModifyEdgeKVNamespace](https://cloud.tencent.com/document/api/1552/130182) - This API is used to modify the attribute information of a specified KV namespace. Currently supported is namespace description modification.
+* Delete: [DeleteEdgeKVNamespace](https://cloud.tencent.com/document/api/1552/130188) - This API is used to delete specified KV namespace. Once deleted, all keys in namespace will be cleared and cannot be recovered. If the namespace is being referred by edge function, you need to unbind relationship before it can only be deleted.
 
 ## Import
 

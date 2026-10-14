@@ -38,5 +38,5 @@ In addition to all arguments above, the following attributes are exported:
 
 This data source queries the following TencentCloud APIs:
 
-* Read: [DescribeFileDownloadUrl](https://cloud.tencent.com/document/api/237/66230) - 获取备份或日志的下载连接
+* Read: [DescribeFileDownloadUrl](https://cloud.tencent.com/document/api/237/66230) - This API is used to get the download URL of a specific backup or log file of a database.
 

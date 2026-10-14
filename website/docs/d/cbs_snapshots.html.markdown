@@ -80,5 +80,5 @@ In addition to all arguments above, the following attributes are exported:
 
 This data source queries the following TencentCloud APIs:
 
-* Read: [DescribeSnapshots](https://cloud.tencent.com/document/api/362/15647) - 查询快照列表
+* Read: [DescribeSnapshots](https://cloud.tencent.com/document/api/362/15647) - This API (DescribeSnapshots) is used to query the details of snapshots.
 

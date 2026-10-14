@@ -74,12 +74,12 @@ In addition to all arguments above, the following attributes are exported:
 
 This resource interacts with the following TencentCloud APIs:
 
-* Create: [DescribeTaskInfo](https://cloud.tencent.com/document/api/239/30601) - Redis查询任务结果
-* Create: [ModifyConnectionConfig](https://cloud.tencent.com/document/api/239/49639) - 修改实例连接数与带宽
-* Read: [DescribeBandwidthRange](https://cloud.tencent.com/document/api/239/90100) - 查询实例带宽信息
-* Read: [DescribeInstances](https://cloud.tencent.com/document/api/239/20018) - 查询Redis实例列表
-* Update: [DescribeTaskInfo](https://cloud.tencent.com/document/api/239/30601) - Redis查询任务结果
-* Update: [ModifyConnectionConfig](https://cloud.tencent.com/document/api/239/49639) - 修改实例连接数与带宽
+* Create: [DescribeTaskInfo](https://cloud.tencent.com/document/api/239/30601) - This API is used to get the execution of a specified task.
+* Create: [ModifyConnectionConfig](https://cloud.tencent.com/document/api/239/49639) - This API is used to modify the connection configuration of an instance, including the bandwidth and maximum number of connections.
+* Read: [DescribeBandwidthRange](https://cloud.tencent.com/document/api/239/90100) - This API is used to query the information of instance bandwidth.
+* Read: [DescribeInstances](https://cloud.tencent.com/document/api/239/20018) - This API is used to query the list of Redis instances.
+* Update: [DescribeTaskInfo](https://cloud.tencent.com/document/api/239/30601) - This API is used to get the execution of a specified task.
+* Update: [ModifyConnectionConfig](https://cloud.tencent.com/document/api/239/49639) - This API is used to modify the connection configuration of an instance, including the bandwidth and maximum number of connections.
 
 ## Import
 

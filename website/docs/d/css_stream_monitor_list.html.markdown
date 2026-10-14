@@ -65,5 +65,5 @@ In addition to all arguments above, the following attributes are exported:
 
 This data source queries the following TencentCloud APIs:
 
-* Read: [DescribeLiveStreamMonitorList](https://cloud.tencent.com/document/api/267/93518) - 查询直播流监播任务配置列表
+* Read: [DescribeLiveStreamMonitorList](https://cloud.tencent.com/document/api/267/93518)
 

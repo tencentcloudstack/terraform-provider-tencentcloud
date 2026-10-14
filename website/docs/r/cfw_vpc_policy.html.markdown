@@ -60,10 +60,10 @@ In addition to all arguments above, the following attributes are exported:
 
 This resource interacts with the following TencentCloud APIs:
 
-* Create: [AddVpcAcRule](https://cloud.tencent.com/document/api/1132/97846) - 新增VPC边界访问控制规则
-* Read: [DescribeVpcAcRule](https://cloud.tencent.com/document/api/1132/97844) - 查询内网间访问控制列表
-* Update: [ModifyVpcAcRule](https://cloud.tencent.com/document/api/1132/97842) - 修改VPC边界访问控制规则
-* Delete: [RemoveVpcAcRule](https://cloud.tencent.com/document/api/1132/97837) - 删除VPC边界访问控制规则
+* Create: [AddVpcAcRule](https://cloud.tencent.com/document/api/1132/97846)
+* Read: [DescribeVpcAcRule](https://cloud.tencent.com/document/api/1132/97844)
+* Update: [ModifyVpcAcRule](https://cloud.tencent.com/document/api/1132/97842)
+* Delete: [RemoveVpcAcRule](https://cloud.tencent.com/document/api/1132/97837)
 
 ## Import
 

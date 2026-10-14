@@ -42,10 +42,10 @@ In addition to all arguments above, the following attributes are exported:
 
 This resource interacts with the following TencentCloud APIs:
 
-* Create: [CreateDomainCustomLine](https://cloud.tencent.com/document/api/1427/101085) - 创建域名的自定义线路
-* Read: [DescribeDomainCustomLineList](https://cloud.tencent.com/document/api/1427/101083) - 获取域名的自定义线路列表
-* Update: [ModifyDomainCustomLine](https://cloud.tencent.com/document/api/1427/101082) - 修改域名的自定义线路
-* Delete: [DeleteDomainCustomLine](https://cloud.tencent.com/document/api/1427/101084) - 删除域名的自定义线路
+* Create: [CreateDomainCustomLine](https://cloud.tencent.com/document/api/1427/101085)
+* Read: [DescribeDomainCustomLineList](https://cloud.tencent.com/document/api/1427/101083)
+* Update: [ModifyDomainCustomLine](https://cloud.tencent.com/document/api/1427/101082)
+* Delete: [DeleteDomainCustomLine](https://cloud.tencent.com/document/api/1427/101084)
 
 ## Import
 

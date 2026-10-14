@@ -103,6 +103,6 @@ In addition to all arguments above, the following attributes are exported:
 
 This resource interacts with the following TencentCloud APIs:
 
-* Create: [DescribeAsyncRequestInfo](https://cloud.tencent.com/document/api/236/20410) - 查询异步任务的执行结果
-* Create: [StartReplication](https://cloud.tencent.com/document/api/236/66849) - 开启复制
+* Create: [DescribeAsyncRequestInfo](https://cloud.tencent.com/document/api/236/20410) - This API (DescribeAsyncRequestInfo) is used to query the async task execution result of a TencentDB instance.
+* Create: [StartReplication](https://cloud.tencent.com/document/api/236/66849) - This API is used to enable RO replication and sync data from the primary instance.
 

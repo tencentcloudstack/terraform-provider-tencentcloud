@@ -59,21 +59,21 @@ In addition to all arguments above, the following attributes are exported:
 
 This resource interacts with the following TencentCloud APIs:
 
-* Create: [CreateHTTPListener](https://cloud.tencent.com/document/api/608/37007) - 创建HTTP监听器
-* Create: [CreateHTTPSListener](https://cloud.tencent.com/document/api/608/37006) - 创建HTTPS监听器
-* Create: [DescribeProxyDetail](https://cloud.tencent.com/document/api/608/36960) - 查询通道详情
-* Create: [DescribeProxyGroupDetails](https://cloud.tencent.com/document/api/608/36944) - 查询通道组详情
-* Create: [SetTlsVersion](https://cloud.tencent.com/document/api/608/107933) - 设置监听器TLS配置
-* Read: [DescribeHTTPListeners](https://cloud.tencent.com/document/api/608/37002) - 查询HTTP监听器信息
-* Read: [DescribeHTTPSListeners](https://cloud.tencent.com/document/api/608/37001) - 查询HTTPS监听器信息
-* Update: [DescribeProxyDetail](https://cloud.tencent.com/document/api/608/36960) - 查询通道详情
-* Update: [DescribeProxyGroupDetails](https://cloud.tencent.com/document/api/608/36944) - 查询通道组详情
-* Update: [ModifyHTTPListenerAttribute](https://cloud.tencent.com/document/api/608/36997) - 修改HTTP监听器配置
-* Update: [ModifyHTTPSListenerAttribute](https://cloud.tencent.com/document/api/608/36996) - 修改HTTPS监听器配置
-* Update: [SetTlsVersion](https://cloud.tencent.com/document/api/608/107933) - 设置监听器TLS配置
-* Delete: [DeleteListeners](https://cloud.tencent.com/document/api/608/37003) - 删除通道监听器
-* Delete: [DescribeHTTPListeners](https://cloud.tencent.com/document/api/608/37002) - 查询HTTP监听器信息
-* Delete: [DescribeHTTPSListeners](https://cloud.tencent.com/document/api/608/37001) - 查询HTTPS监听器信息
+* Create: [CreateHTTPListener](https://cloud.tencent.com/document/api/608/37007) - This API (CreateHTTPListener) is used to create an HTTP listener in the connection instance.
+* Create: [CreateHTTPSListener](https://cloud.tencent.com/document/api/608/37006) - This API (CreateHTTPListener) is used to create an HTTPS listener in the connection instance.
+* Create: [DescribeProxyDetail](https://cloud.tencent.com/document/api/608/36960) - This API (DescribeProxyDetail) is used to query connection details.
+* Create: [DescribeProxyGroupDetails](https://cloud.tencent.com/document/api/608/36944) - This API (DescribeProxyGroupDetails) is used to query connection group details.
+* Create: [SetTlsVersion](https://cloud.tencent.com/document/api/608/107933)
+* Read: [DescribeHTTPListeners](https://cloud.tencent.com/document/api/608/37002) - This API (DescribeHTTPListeners) is used to query HTTP listener information.
+* Read: [DescribeHTTPSListeners](https://cloud.tencent.com/document/api/608/37001) - This API (DescribeHTTPSListeners) is used to query HTTPS listener information.
+* Update: [DescribeProxyDetail](https://cloud.tencent.com/document/api/608/36960) - This API (DescribeProxyDetail) is used to query connection details.
+* Update: [DescribeProxyGroupDetails](https://cloud.tencent.com/document/api/608/36944) - This API (DescribeProxyGroupDetails) is used to query connection group details.
+* Update: [ModifyHTTPListenerAttribute](https://cloud.tencent.com/document/api/608/36997) - This API (ModifyHTTPListenerAttribute) is used to modify the HTTP listener configuration information of a connection. Currently only supports modifying listener name.
+* Update: [ModifyHTTPSListenerAttribute](https://cloud.tencent.com/document/api/608/36996) - This API (ModifyHTTPSListenerAttribute) is used to modify HTTPS listener configurations. It currently do not support connection groups and connections of version 1.0.
+* Update: [SetTlsVersion](https://cloud.tencent.com/document/api/608/107933)
+* Delete: [DeleteListeners](https://cloud.tencent.com/document/api/608/37003) - This API (DeleteListeners) is used to batch delete the listeners of a connection or connection group, including layer-4/7 listeners.
+* Delete: [DescribeHTTPListeners](https://cloud.tencent.com/document/api/608/37002) - This API (DescribeHTTPListeners) is used to query HTTP listener information.
+* Delete: [DescribeHTTPSListeners](https://cloud.tencent.com/document/api/608/37001) - This API (DescribeHTTPSListeners) is used to query HTTPS listener information.
 
 ## Import
 

@@ -38,5 +38,5 @@ In addition to all arguments above, the following attributes are exported:
 
 This resource interacts with the following TencentCloud APIs:
 
-* Create: [CancelUpgradePlan](https://cloud.tencent.com/document/api/457/125947) - 取消集群升级计划
+* Create: [CancelUpgradePlan](https://cloud.tencent.com/document/api/457/125947)
 

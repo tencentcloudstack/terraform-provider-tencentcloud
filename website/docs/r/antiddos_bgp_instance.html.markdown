@@ -140,8 +140,8 @@ In addition to all arguments above, the following attributes are exported:
 
 This resource interacts with the following TencentCloud APIs:
 
-* Create: [CreateBgpInstance](https://cloud.tencent.com/document/api/297/126515) - 购买高防包
-* Read: [DescribeBgpInstances](https://cloud.tencent.com/document/api/297/126514) - 查询高防包资源列表
+* Create: [CreateBgpInstance](https://cloud.tencent.com/document/api/297/126515) - This API is used to purchase Anti-DDoS packages.
+* Read: [DescribeBgpInstances](https://cloud.tencent.com/document/api/297/126514)
 
 ## Import
 

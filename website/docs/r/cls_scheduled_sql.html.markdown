@@ -97,10 +97,10 @@ In addition to all arguments above, the following attributes are exported:
 
 This resource interacts with the following TencentCloud APIs:
 
-* Create: [CreateScheduledSql](https://cloud.tencent.com/document/api/614/95138) - 创建定时SQL分析任务
-* Read: [DescribeScheduledSqlInfo](https://cloud.tencent.com/document/api/614/95519) - 获取定时SQL分析任务列表
-* Update: [ModifyScheduledSql](https://cloud.tencent.com/document/api/614/95518) - 修改定时SQL分析任务
-* Delete: [DeleteScheduledSql](https://cloud.tencent.com/document/api/614/95520) - 删除定时SQL分析任务
+* Create: [CreateScheduledSql](https://cloud.tencent.com/document/api/614/95138) - This API is used to create a scheduled SQL analysis task.
+* Read: [DescribeScheduledSqlInfo](https://cloud.tencent.com/document/api/614/95519) - This API is used to access the scheduled SQL analysis task list.
+* Update: [ModifyScheduledSql](https://cloud.tencent.com/document/api/614/95518) - This API is used to modify a scheduled SQL analysis task.
+* Delete: [DeleteScheduledSql](https://cloud.tencent.com/document/api/614/95520) - This API is used to delete a scheduled SQL analysis task.
 
 ## Import
 

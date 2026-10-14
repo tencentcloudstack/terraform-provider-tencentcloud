@@ -57,10 +57,10 @@ In addition to all arguments above, the following attributes are exported:
 
 This resource interacts with the following TencentCloud APIs:
 
-* Create: [CreateRocketMQTopic](https://cloud.tencent.com/document/api/1179/63426) - 批量创建 RocketMQ 主题
-* Read: [DescribeRocketMQTopics](https://cloud.tencent.com/document/api/1179/63418) - 查询 RocketMQ 主题列表
-* Update: [ModifyRocketMQTopic](https://cloud.tencent.com/document/api/1179/63414) - 修改 RocketMQ 主题属性
-* Delete: [DeleteRocketMQTopic](https://cloud.tencent.com/document/api/1179/63423) - 删除 RocketMQ 主题
+* Create: [CreateRocketMQTopic](https://cloud.tencent.com/document/api/1179/63426) - Create RocketMQ topics in batches.
+* Read: [DescribeRocketMQTopics](https://cloud.tencent.com/document/api/1179/63418) - Query the RocketMQ topic list.
+* Update: [ModifyRocketMQTopic](https://cloud.tencent.com/document/api/1179/63414) - This API is used to modify RocketMQ topic attributes.
+* Delete: [DeleteRocketMQTopic](https://cloud.tencent.com/document/api/1179/63423) - Delete a RocketMQ topic.
 
 ## Import
 

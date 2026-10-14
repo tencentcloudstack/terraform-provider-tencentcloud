@@ -45,5 +45,5 @@ In addition to all arguments above, the following attributes are exported:
 
 This data source queries the following TencentCloud APIs:
 
-* Read: [DescribeDatahubGroupOffsets](https://cloud.tencent.com/document/api/597/77792) - 获取Datahub消费分组offset
+* Read: [DescribeDatahubGroupOffsets](https://cloud.tencent.com/document/api/597/77792)
 

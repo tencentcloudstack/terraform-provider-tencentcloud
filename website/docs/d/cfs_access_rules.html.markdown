@@ -43,5 +43,5 @@ In addition to all arguments above, the following attributes are exported:
 
 This data source queries the following TencentCloud APIs:
 
-* Read: [DescribeCfsRules](https://cloud.tencent.com/document/api/582/38156) - 查询权限组规则
+* Read: [DescribeCfsRules](https://cloud.tencent.com/document/api/582/38156) - This API is used to query the list of permission group rules.
 

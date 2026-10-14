@@ -73,5 +73,5 @@ In addition to all arguments above, the following attributes are exported:
 
 This data source queries the following TencentCloud APIs:
 
-* Read: [DescribeClusterFlowStatusDetail](https://cloud.tencent.com/document/api/589/107224) - 查询EMR集群任务运行详情状态
+* Read: [DescribeClusterFlowStatusDetail](https://cloud.tencent.com/document/api/589/107224) - This API is used to query the running status details of an EMR cluster task.
 

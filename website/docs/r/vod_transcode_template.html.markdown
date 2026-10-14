@@ -106,10 +106,10 @@ In addition to all arguments above, the following attributes are exported:
 
 This resource interacts with the following TencentCloud APIs:
 
-* Create: [CreateTranscodeTemplate](https://cloud.tencent.com/document/api/266/33773) - 创建转码模板
-* Read: [DescribeTranscodeTemplates](https://cloud.tencent.com/document/api/266/33769) - 获取转码模板列表
-* Update: [ModifyTranscodeTemplate](https://cloud.tencent.com/document/api/266/33767) - 修改转码模板
-* Delete: [DeleteTranscodeTemplate](https://cloud.tencent.com/document/api/266/33771) - 删除转码模板
+* Create: [CreateTranscodeTemplate](https://cloud.tencent.com/document/api/266/33773) - This API is used to create custom transcoding templates. Maximum quantity: 100.
+* Read: [DescribeTranscodeTemplates](https://cloud.tencent.com/document/api/266/33769) - This API is used to retrieve the transcoding template detail list based on the transcoding template unique identifier. The returned results include all eligible custom templates and [system preset transcoding templates](https://www.tencentcloud.com/document/product/266/33476?from_cn_redirect=1#.E9.A2.84.E7.BD.AE.E8.BD.AC.E7.A0.81.E6.A8.A1.E6.9D.BF).
+* Update: [ModifyTranscodeTemplate](https://cloud.tencent.com/document/api/266/33767) - Modify the information of a custom transcoding template.
+* Delete: [DeleteTranscodeTemplate](https://cloud.tencent.com/document/api/266/33771) - This API is used to delete a custom transcoding template.
 
 ## Import
 

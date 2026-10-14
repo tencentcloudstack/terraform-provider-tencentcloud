@@ -49,5 +49,5 @@ In addition to all arguments above, the following attributes are exported:
 
 This data source queries the following TencentCloud APIs:
 
-* Read: [DescribeListenerRealServers](https://cloud.tencent.com/document/api/608/37000) - 查询监听器源站列表
+* Read: [DescribeListenerRealServers](https://cloud.tencent.com/document/api/608/37000) - This API (DescribeListenerRealServers) is used to query the origin server list of TCP/UDP listeners, including the list of bound origin servers and origin servers that can be bound.
 

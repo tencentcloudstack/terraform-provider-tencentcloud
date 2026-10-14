@@ -48,5 +48,5 @@ In addition to all arguments above, the following attributes are exported:
 
 This data source queries the following TencentCloud APIs:
 
-* Read: [ExportZoneConfig](https://cloud.tencent.com/document/api/1552/113230) - 导出站点配置
+* Read: [ExportZoneConfig](https://cloud.tencent.com/document/api/1552/113230) - This API is used to export site configuration based on desired configuration items. The exported configuration is used for import via the site configuration import API.
 

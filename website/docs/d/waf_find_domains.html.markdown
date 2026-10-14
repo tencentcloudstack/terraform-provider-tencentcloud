@@ -58,5 +58,5 @@ In addition to all arguments above, the following attributes are exported:
 
 This data source queries the following TencentCloud APIs:
 
-* Read: [DescribeFindDomainList](https://cloud.tencent.com/document/api/627/96945) - 获取发现域名列表接口
+* Read: [DescribeFindDomainList](https://cloud.tencent.com/document/api/627/96945) - Obtain discovered domain name list API
 

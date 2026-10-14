@@ -51,5 +51,5 @@ In addition to all arguments above, the following attributes are exported:
 
 This data source queries the following TencentCloud APIs:
 
-* Read: [DescribeTimeShiftRecordDetail](https://cloud.tencent.com/document/api/267/86091) - 查询时移流录制详情
+* Read: [DescribeTimeShiftRecordDetail](https://cloud.tencent.com/document/api/267/86091) - This API is used to query the time shifting details of a specific time period (up to 24 hours). You need to call `DescribeTimeShiftStreamList` first to get the request parameters of this API.
 

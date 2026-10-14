@@ -50,5 +50,5 @@ In addition to all arguments above, the following attributes are exported:
 
 This data source queries the following TencentCloud APIs:
 
-* Read: [DescribeBackupSummaries](https://cloud.tencent.com/document/api/236/41228) - 查询备份实时统计
+* Read: [DescribeBackupSummaries](https://cloud.tencent.com/document/api/236/41228) - This API is used to query backup statistics, return the occupied capacity of backups by instance as well as the count and capacity of data backup and log backup for each instance (in bytes).
 

@@ -65,5 +65,5 @@ In addition to all arguments above, the following attributes are exported:
 
 This data source queries the following TencentCloud APIs:
 
-* Read: [DescribeGroupGateways](https://cloud.tencent.com/document/api/649/50630) - 查询某个网关绑定的API 分组信息列表
+* Read: [DescribeGroupGateways](https://cloud.tencent.com/document/api/649/50630)
 

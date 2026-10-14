@@ -38,9 +38,9 @@ In addition to all arguments above, the following attributes are exported:
 
 This resource interacts with the following TencentCloud APIs:
 
-* Create: [UpdateGrafanaWhiteList](https://cloud.tencent.com/document/api/248/79189) - 更新 Grafana 白名单
-* Read: [DescribeGrafanaWhiteList](https://cloud.tencent.com/document/api/248/79205) - 列出 Grafana 白名单
-* Update: [UpdateGrafanaWhiteList](https://cloud.tencent.com/document/api/248/79189) - 更新 Grafana 白名单
+* Create: [UpdateGrafanaWhiteList](https://cloud.tencent.com/document/api/248/79189) - This API is used to update the Grafana allowlist.
+* Read: [DescribeGrafanaWhiteList](https://cloud.tencent.com/document/api/248/79205) - This API is used to list the Grafana allowlist.
+* Update: [UpdateGrafanaWhiteList](https://cloud.tencent.com/document/api/248/79189) - This API is used to update the Grafana allowlist.
 
 ## Import
 

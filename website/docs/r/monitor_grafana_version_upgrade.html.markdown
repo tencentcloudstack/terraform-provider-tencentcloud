@@ -38,11 +38,11 @@ In addition to all arguments above, the following attributes are exported:
 
 This resource interacts with the following TencentCloud APIs:
 
-* Create: [DescribeGrafanaInstances](https://cloud.tencent.com/document/api/248/79208) - 列出用户所有的 Grafana 服务
-* Create: [UpgradeGrafanaInstance](https://cloud.tencent.com/document/api/248/79187) - 升级 Grafana 实例
-* Read: [DescribeGrafanaInstances](https://cloud.tencent.com/document/api/248/79208) - 列出用户所有的 Grafana 服务
-* Update: [DescribeGrafanaInstances](https://cloud.tencent.com/document/api/248/79208) - 列出用户所有的 Grafana 服务
-* Update: [UpgradeGrafanaInstance](https://cloud.tencent.com/document/api/248/79187) - 升级 Grafana 实例
+* Create: [DescribeGrafanaInstances](https://cloud.tencent.com/document/api/248/79208) - This API is used to list all Grafana instances under a user account.
+* Create: [UpgradeGrafanaInstance](https://cloud.tencent.com/document/api/248/79187) - This API is used to upgrade a Grafana instance.
+* Read: [DescribeGrafanaInstances](https://cloud.tencent.com/document/api/248/79208) - This API is used to list all Grafana instances under a user account.
+* Update: [DescribeGrafanaInstances](https://cloud.tencent.com/document/api/248/79208) - This API is used to list all Grafana instances under a user account.
+* Update: [UpgradeGrafanaInstance](https://cloud.tencent.com/document/api/248/79187) - This API is used to upgrade a Grafana instance.
 
 ## Import
 

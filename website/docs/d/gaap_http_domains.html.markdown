@@ -71,5 +71,5 @@ In addition to all arguments above, the following attributes are exported:
 
 This data source queries the following TencentCloud APIs:
 
-* Read: [DescribeRules](https://cloud.tencent.com/document/api/608/36986) - 查询转发规则信息
+* Read: [DescribeRules](https://cloud.tencent.com/document/api/608/36986) - This API (DescribeRules) is used to query all rule information of a listener, including the domain names, paths, and list of bound origin servers. For version 3.0 connections, this API returns the advanced authentication configuration information of the domain name.
 

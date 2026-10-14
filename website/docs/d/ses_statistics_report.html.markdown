@@ -59,5 +59,5 @@ In addition to all arguments above, the following attributes are exported:
 
 This data source queries the following TencentCloud APIs:
 
-* Read: [GetStatisticsReport](https://cloud.tencent.com/document/api/1288/51036) - 获取发送统计数据
+* Read: [GetStatisticsReport](https://cloud.tencent.com/document/api/1288/51036) - This API is used to get the email sending statistics over a recent period, including data on sent emails, delivery success rate, open rate, bounce rate, and so on.
 

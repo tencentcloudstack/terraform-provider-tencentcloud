@@ -36,6 +36,6 @@ In addition to all arguments above, the following attributes are exported:
 
 This resource interacts with the following TencentCloud APIs:
 
-* Create: [CancelDcnJob](https://cloud.tencent.com/document/api/237/58911) - 取消DCN同步
-* Create: [DescribeFlow](https://cloud.tencent.com/document/api/237/16177) - 查询流程状态
+* Create: [CancelDcnJob](https://cloud.tencent.com/document/api/237/58911) - This API is used to cancel DCN synchronization.
+* Create: [DescribeFlow](https://cloud.tencent.com/document/api/237/16177)
 

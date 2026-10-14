@@ -100,5 +100,5 @@ In addition to all arguments above, the following attributes are exported:
 
 This data source queries the following TencentCloud APIs:
 
-* Read: [DescribeInstanceSlowQueries](https://cloud.tencent.com/document/api/1003/76369) - 查询实例慢日志详情
+* Read: [DescribeInstanceSlowQueries](https://cloud.tencent.com/document/api/1003/76369) - This API is used to query the slow log details of an instance. Subject to platform return size limits, return results may be truncated if they are too large.
 

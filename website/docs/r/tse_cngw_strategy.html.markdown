@@ -173,10 +173,10 @@ Note: This field may return null, indicating that a valid value is not available
 
 This resource interacts with the following TencentCloud APIs:
 
-* Create: [CreateAutoScalerResourceStrategy](https://cloud.tencent.com/document/api/1364/103727) - 创建弹性伸缩策略
-* Read: [DescribeAutoScalerResourceStrategies](https://cloud.tencent.com/document/api/1364/103725) - 查看弹性伸缩策略列表
-* Update: [ModifyAutoScalerResourceStrategy](https://cloud.tencent.com/document/api/1364/103722) - 更新弹性伸缩策略
-* Delete: [DeleteAutoScalerResourceStrategy](https://cloud.tencent.com/document/api/1364/103726) - 删除弹性伸缩策略
+* Create: [CreateAutoScalerResourceStrategy](https://cloud.tencent.com/document/api/1364/103727)
+* Read: [DescribeAutoScalerResourceStrategies](https://cloud.tencent.com/document/api/1364/103725) - View AS policy list
+* Update: [ModifyAutoScalerResourceStrategy](https://cloud.tencent.com/document/api/1364/103722)
+* Delete: [DeleteAutoScalerResourceStrategy](https://cloud.tencent.com/document/api/1364/103726)
 
 ## Import
 

@@ -38,5 +38,5 @@ In addition to all arguments above, the following attributes are exported:
 
 This data source queries the following TencentCloud APIs:
 
-* Read: [DescribePendingRiskInfo](https://cloud.tencent.com/document/api/297/95351) - 查询账号维度待处理风险信息
+* Read: [DescribePendingRiskInfo](https://cloud.tencent.com/document/api/297/95351) - This API is used to query the information of pending risks at the account level.
 

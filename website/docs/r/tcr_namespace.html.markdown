@@ -70,12 +70,12 @@ In addition to all arguments above, the following attributes are exported:
 
 This resource interacts with the following TencentCloud APIs:
 
-* Create: [CreateNamespace](https://cloud.tencent.com/document/api/1141/42729) - 创建命名空间
-* Read: [DescribeNamespaces](https://cloud.tencent.com/document/api/1141/42765) - 查询命名空间信息
-* Update: [ModifyNamespace](https://cloud.tencent.com/document/api/1141/42727) - 更新命名空间信息
-* Update: [ModifyResourceTags](https://cloud.tencent.com/document/api/651/35322) - 批量修改资源关联的标签
-* Delete: [DeleteNamespace](https://cloud.tencent.com/document/api/1141/42728) - 删除命名空间
-* Delete: [DescribeNamespaces](https://cloud.tencent.com/document/api/1141/42765) - 查询命名空间信息
+* Create: [CreateNamespace](https://cloud.tencent.com/document/api/1141/42729) - This API is used to create a namespace in an Enterprise Edition instance.
+* Read: [DescribeNamespaces](https://cloud.tencent.com/document/api/1141/42765) - This API is used to query the namespace list or the information of the specified namespace.
+* Update: [ModifyNamespace](https://cloud.tencent.com/document/api/1141/42727) - This API is used to update the information of a namespace. Currently, only the namespace access level can be modified.
+* Update: [ModifyResourceTags](https://cloud.tencent.com/document/api/651/35322) - This API is used to modify all tags associated with a resource.
+* Delete: [DeleteNamespace](https://cloud.tencent.com/document/api/1141/42728) - This API is used to delete a namespace.
+* Delete: [DescribeNamespaces](https://cloud.tencent.com/document/api/1141/42765) - This API is used to query the namespace list or the information of the specified namespace.
 
 ## Import
 

@@ -83,5 +83,5 @@ In addition to all arguments above, the following attributes are exported:
 
 This data source queries the following TencentCloud APIs:
 
-* Read: [ListRules](https://cloud.tencent.com/document/api/1359/67694) - 获取事件规则列表
+* Read: [ListRules](https://cloud.tencent.com/document/api/1359/67694) - This API is used to get the list of event rules.
 

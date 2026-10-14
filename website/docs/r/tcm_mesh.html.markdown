@@ -198,12 +198,12 @@ In addition to all arguments above, the following attributes are exported:
 
 This resource interacts with the following TencentCloud APIs:
 
-* Create: [CreateMesh](https://cloud.tencent.com/document/api/1261/81314) - 创建网格
-* Create: [DescribeMesh](https://cloud.tencent.com/document/api/1261/63842) - 查询网格详情
-* Read: [DescribeMesh](https://cloud.tencent.com/document/api/1261/63842) - 查询网格详情
-* Update: [ModifyMesh](https://cloud.tencent.com/document/api/1261/81312) - 修改网格
-* Delete: [DeleteMesh](https://cloud.tencent.com/document/api/1261/81313) - 删除网格
-* Delete: [DescribeMesh](https://cloud.tencent.com/document/api/1261/63842) - 查询网格详情
+* Create: [CreateMesh](https://cloud.tencent.com/document/api/1261/81314)
+* Create: [DescribeMesh](https://cloud.tencent.com/document/api/1261/63842)
+* Read: [DescribeMesh](https://cloud.tencent.com/document/api/1261/63842)
+* Update: [ModifyMesh](https://cloud.tencent.com/document/api/1261/81312)
+* Delete: [DeleteMesh](https://cloud.tencent.com/document/api/1261/81313)
+* Delete: [DescribeMesh](https://cloud.tencent.com/document/api/1261/63842)
 
 ## Import
 

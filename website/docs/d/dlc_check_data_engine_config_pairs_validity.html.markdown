@@ -44,5 +44,5 @@ In addition to all arguments above, the following attributes are exported:
 
 This data source queries the following TencentCloud APIs:
 
-* Read: [CheckDataEngineConfigPairsValidity](https://cloud.tencent.com/document/api/1342/99277) - 检查引擎用户自定义参数的有效性
+* Read: [CheckDataEngineConfigPairsValidity](https://cloud.tencent.com/document/api/1342/99277) - This API is used to check the validity of the engine's user-defined parameters.
 

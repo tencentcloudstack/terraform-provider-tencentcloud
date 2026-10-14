@@ -52,5 +52,5 @@ In addition to all arguments above, the following attributes are exported:
 
 This data source queries the following TencentCloud APIs:
 
-* Read: [DescribeCvmQuota](https://cloud.tencent.com/document/api/589/59472) - 查询账户的CVM配额
+* Read: [DescribeCvmQuota](https://cloud.tencent.com/document/api/589/59472)
 

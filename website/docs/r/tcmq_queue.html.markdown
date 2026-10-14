@@ -51,10 +51,10 @@ In addition to all arguments above, the following attributes are exported:
 
 This resource interacts with the following TencentCloud APIs:
 
-* Create: [CreateCmqQueue](https://cloud.tencent.com/document/api/1179/55917) - 创建cmq队列接口
-* Read: [DescribeCmqQueueDetail](https://cloud.tencent.com/document/api/1179/55910) - 查询cmq队列详情
-* Update: [ModifyCmqQueueAttribute](https://cloud.tencent.com/document/api/1179/55905) - 修改cmq队列属性
-* Delete: [DeleteCmqQueue](https://cloud.tencent.com/document/api/1179/55914) - 删除cmq队列
+* Create: [CreateCmqQueue](https://cloud.tencent.com/document/api/1179/55917) - This API is used to create a CMQ queue.
+* Read: [DescribeCmqQueueDetail](https://cloud.tencent.com/document/api/1179/55910) - This API is used to query the details of a CMQ queue.
+* Update: [ModifyCmqQueueAttribute](https://cloud.tencent.com/document/api/1179/55905) - This API is used to modify the attributes of a CMQ queue.
+* Delete: [DeleteCmqQueue](https://cloud.tencent.com/document/api/1179/55914) - This API is used to delete a CMQ queue.
 
 ## Import
 

@@ -38,6 +38,6 @@ In addition to all arguments above, the following attributes are exported:
 
 This resource interacts with the following TencentCloud APIs:
 
-* Create: [DescribeInstances](https://cloud.tencent.com/document/api/239/20018) - 查询Redis实例列表
-* Create: [StartupInstance](https://cloud.tencent.com/document/api/239/39415) - 实例解隔离
+* Create: [DescribeInstances](https://cloud.tencent.com/document/api/239/20018) - This API is used to query the list of Redis instances.
+* Create: [StartupInstance](https://cloud.tencent.com/document/api/239/39415) - This API is used to deisolate instances.
 

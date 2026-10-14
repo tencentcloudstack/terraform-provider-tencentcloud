@@ -44,5 +44,5 @@ In addition to all arguments above, the following attributes are exported:
 
 This data source queries the following TencentCloud APIs:
 
-* Read: [DescribeOrganizationNodes](https://cloud.tencent.com/document/api/850/82926) - 获取组织节点列表
+* Read: [DescribeOrganizationNodes](https://cloud.tencent.com/document/api/850/82926) - This API is used to get the list of organization nodes.
 

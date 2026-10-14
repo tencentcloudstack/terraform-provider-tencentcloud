@@ -87,10 +87,10 @@ In addition to all arguments above, the following attributes are exported:
 
 This resource interacts with the following TencentCloud APIs:
 
-* Create: [CreateEventsAuditTrack](https://cloud.tencent.com/document/api/629/111894) - 创建全部事件跟踪集
-* Read: [DescribeAuditTrack](https://cloud.tencent.com/document/api/629/83247) - 查询操作审计跟踪集详情
-* Update: [ModifyEventsAuditTrack](https://cloud.tencent.com/document/api/629/111900) - 修改操作审计跟踪集（多事件）
-* Delete: [DeleteAuditTrack](https://cloud.tencent.com/document/api/629/70382) - 删除操作审计跟踪集
+* Create: [CreateEventsAuditTrack](https://cloud.tencent.com/document/api/629/111894)
+* Read: [DescribeAuditTrack](https://cloud.tencent.com/document/api/629/83247) - This API is used to query the CloudAudit tracking set details.
+* Update: [ModifyEventsAuditTrack](https://cloud.tencent.com/document/api/629/111900)
+* Delete: [DeleteAuditTrack](https://cloud.tencent.com/document/api/629/70382) - This API is used to delete a CloudAudit tracking set.
 
 ## Import
 

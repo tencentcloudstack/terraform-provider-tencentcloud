@@ -89,5 +89,5 @@ Default is disable.
 
 This data source queries the following TencentCloud APIs:
 
-* Read: [DescribeBgpInstances](https://cloud.tencent.com/document/api/297/126514) - 查询高防包资源列表
+* Read: [DescribeBgpInstances](https://cloud.tencent.com/document/api/297/126514)
 

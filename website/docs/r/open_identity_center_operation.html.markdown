@@ -36,5 +36,5 @@ In addition to all arguments above, the following attributes are exported:
 
 This resource interacts with the following TencentCloud APIs:
 
-* Create: [OpenIdentityCenter](https://cloud.tencent.com/document/api/850/109941) - 开通集团账号身份中心服务
+* Create: [OpenIdentityCenter](https://cloud.tencent.com/document/api/850/109941) - This API is used to activate Identity Center service (CIC).
 

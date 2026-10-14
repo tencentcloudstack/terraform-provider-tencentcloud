@@ -54,11 +54,11 @@ In addition to all arguments above, the following attributes are exported:
 
 This resource interacts with the following TencentCloud APIs:
 
-* Create: [DescribeDnsRecords](https://cloud.tencent.com/document/api/1552/80716) - 查询 DNS 记录列表
-* Create: [ModifyDnsRecordsStatus](https://cloud.tencent.com/document/api/1552/114251) - 批量修改 DNS 记录状态
-* Read: [DescribeDnsRecords](https://cloud.tencent.com/document/api/1552/80716) - 查询 DNS 记录列表
-* Update: [DescribeDnsRecords](https://cloud.tencent.com/document/api/1552/80716) - 查询 DNS 记录列表
-* Update: [ModifyDnsRecordsStatus](https://cloud.tencent.com/document/api/1552/114251) - 批量修改 DNS 记录状态
+* Create: [DescribeDnsRecords](https://cloud.tencent.com/document/api/1552/80716) - This API is used to query DNS records. Paging, sorting and filtering are supported.
+* Create: [ModifyDnsRecordsStatus](https://cloud.tencent.com/document/api/1552/114251) - You can batch modify the status of DNS records through this API, enabling and disabling records in bulk.
+* Read: [DescribeDnsRecords](https://cloud.tencent.com/document/api/1552/80716) - This API is used to query DNS records. Paging, sorting and filtering are supported.
+* Update: [DescribeDnsRecords](https://cloud.tencent.com/document/api/1552/80716) - This API is used to query DNS records. Paging, sorting and filtering are supported.
+* Update: [ModifyDnsRecordsStatus](https://cloud.tencent.com/document/api/1552/114251) - You can batch modify the status of DNS records through this API, enabling and disabling records in bulk.
 
 ## Import
 

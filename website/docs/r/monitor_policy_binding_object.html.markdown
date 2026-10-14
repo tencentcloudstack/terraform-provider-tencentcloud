@@ -89,13 +89,13 @@ The `dimensions` object exports the following:
 
 This resource interacts with the following TencentCloud APIs:
 
-* Create: [BindingPolicyObject](https://cloud.tencent.com/document/api/248/40421) - 绑定策略对象
-* Create: [DescribeAlarmPolicy](https://cloud.tencent.com/document/api/248/51278) - 获取单个告警策略详情
-* Read: [DescribeAlarmPolicy](https://cloud.tencent.com/document/api/248/51278) - 获取单个告警策略详情
-* Read: [DescribeBindingPolicyObjectList](https://cloud.tencent.com/document/api/248/40570) - 获取已绑定对象列表
-* Read: [DescribePolicyObjectCount](https://cloud.tencent.com/document/api/248/118054) - 查询策略组在每个地域下面绑定的对象数统计
-* Delete: [DescribeAlarmPolicy](https://cloud.tencent.com/document/api/248/51278) - 获取单个告警策略详情
-* Delete: [DescribePolicyObjectCount](https://cloud.tencent.com/document/api/248/118054) - 查询策略组在每个地域下面绑定的对象数统计
+* Create: [BindingPolicyObject](https://cloud.tencent.com/document/api/248/40421) - This API is used to bind an alarm policy to a specific object.
+* Create: [DescribeAlarmPolicy](https://cloud.tencent.com/document/api/248/51278) - This API is used to get the details of a single alarm policy.
+* Read: [DescribeAlarmPolicy](https://cloud.tencent.com/document/api/248/51278) - This API is used to get the details of a single alarm policy.
+* Read: [DescribeBindingPolicyObjectList](https://cloud.tencent.com/document/api/248/40570) - This API is used to get the bound object list.
+* Read: [DescribePolicyObjectCount](https://cloud.tencent.com/document/api/248/118054)
+* Delete: [DescribeAlarmPolicy](https://cloud.tencent.com/document/api/248/51278) - This API is used to get the details of a single alarm policy.
+* Delete: [DescribePolicyObjectCount](https://cloud.tencent.com/document/api/248/118054)
 
 ## Import
 

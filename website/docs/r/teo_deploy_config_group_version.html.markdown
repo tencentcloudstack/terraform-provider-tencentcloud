@@ -71,7 +71,7 @@ The `timeouts` block allows you to specify [timeouts](https://developer.hashicor
 
 This resource interacts with the following TencentCloud APIs:
 
-* Create: [DeployConfigGroupVersion](https://cloud.tencent.com/document/api/1552/101866) - 发布配置组版本
-* Create: [DescribeEnvironments](https://cloud.tencent.com/document/api/1552/101862) - 查询环境信息
-* Read: [DescribeDeployHistory](https://cloud.tencent.com/document/api/1552/101863) - 查询版本发布历史
+* Create: [DeployConfigGroupVersion](https://cloud.tencent.com/document/api/1552/101866) - This API is used to release versions in version management mode. Users can deploy the version to either the testing environment or the production environment by specifying the EnvId parameter. The version management feature is currently undergoing beta testing and is accessible only to users on the whitelist.
+* Create: [DescribeEnvironments](https://cloud.tencent.com/document/api/1552/101862) - This API is used to query environment information in version management mode. The response includes the environment ID, type, and current effective version. The version management feature is currently undergoing beta testing and is accessible only to users on the whitelist.
+* Read: [DescribeDeployHistory](https://cloud.tencent.com/document/api/1552/101863) - This API is used to query the release history of versions in the production or test environment in version management mode. The version management feature is currently undergoing beta testing and is accessible only to users on the whitelist.
 

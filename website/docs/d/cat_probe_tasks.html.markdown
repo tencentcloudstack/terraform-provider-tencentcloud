@@ -98,5 +98,5 @@ In addition to all arguments above, the following attributes are exported:
 
 This data source queries the following TencentCloud APIs:
 
-* Read: [DescribeProbeTasks](https://cloud.tencent.com/document/api/280/66212) - 分页查询拨测任务列表
+* Read: [DescribeProbeTasks](https://cloud.tencent.com/document/api/280/66212)
 

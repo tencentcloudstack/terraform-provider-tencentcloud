@@ -105,13 +105,13 @@ In addition to all arguments above, the following attributes are exported:
 
 This resource interacts with the following TencentCloud APIs:
 
-* Create: [AttachInstances](https://cloud.tencent.com/document/api/377/20441) - 添加 CVM 实例到伸缩组
-* Create: [DescribeAutoScalingActivities](https://cloud.tencent.com/document/api/377/31735) - 查询伸缩活动
-* Read: [DescribeAutoScalingInstances](https://cloud.tencent.com/document/api/377/20437) - 查询实例
-* Update: [AttachInstances](https://cloud.tencent.com/document/api/377/20441) - 添加 CVM 实例到伸缩组
-* Update: [DescribeAutoScalingActivities](https://cloud.tencent.com/document/api/377/31735) - 查询伸缩活动
-* Update: [DetachInstances](https://cloud.tencent.com/document/api/377/20436) - 从伸缩组移出 CVM 实例
-* Delete: [DescribeAutoScalingActivities](https://cloud.tencent.com/document/api/377/31735) - 查询伸缩活动
-* Delete: [DescribeAutoScalingInstances](https://cloud.tencent.com/document/api/377/20437) - 查询实例
-* Delete: [DetachInstances](https://cloud.tencent.com/document/api/377/20436) - 从伸缩组移出 CVM 实例
+* Create: [AttachInstances](https://cloud.tencent.com/document/api/377/20441) - This interface (AttachInstances) is used to add CVM instances to a scaling group.
+* Create: [DescribeAutoScalingActivities](https://cloud.tencent.com/document/api/377/31735) - This API is used to query the scaling activities of the scaling group. Currently, only scaling operations from the past two years are saved.
+* Read: [DescribeAutoScalingInstances](https://cloud.tencent.com/document/api/377/20437) - This API (DescribeAutoScalingInstances) is used to query the information of instances associated with AS.
+* Update: [AttachInstances](https://cloud.tencent.com/document/api/377/20441) - This interface (AttachInstances) is used to add CVM instances to a scaling group.
+* Update: [DescribeAutoScalingActivities](https://cloud.tencent.com/document/api/377/31735) - This API is used to query the scaling activities of the scaling group. Currently, only scaling operations from the past two years are saved.
+* Update: [DetachInstances](https://cloud.tencent.com/document/api/377/20436) - This API is used to remove CVM instances from a scaling group. Instances removed via this API will not be terminated.
+* Delete: [DescribeAutoScalingActivities](https://cloud.tencent.com/document/api/377/31735) - This API is used to query the scaling activities of the scaling group. Currently, only scaling operations from the past two years are saved.
+* Delete: [DescribeAutoScalingInstances](https://cloud.tencent.com/document/api/377/20437) - This API (DescribeAutoScalingInstances) is used to query the information of instances associated with AS.
+* Delete: [DetachInstances](https://cloud.tencent.com/document/api/377/20436) - This API is used to remove CVM instances from a scaling group. Instances removed via this API will not be terminated.
 

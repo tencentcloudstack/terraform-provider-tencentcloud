@@ -88,14 +88,14 @@ In addition to all arguments above, the following attributes are exported:
 
 This resource interacts with the following TencentCloud APIs:
 
-* Create: [CreateAccount](https://cloud.tencent.com/document/api/409/109071) - 创建数据库账号
-* Create: [LockAccount](https://cloud.tencent.com/document/api/409/109068) - 锁定数据库账号
-* Read: [DescribeAccounts](https://cloud.tencent.com/document/api/409/18109) - 查询实例的数据库账号列表
-* Update: [LockAccount](https://cloud.tencent.com/document/api/409/109068) - 锁定数据库账号
-* Update: [ModifyAccountRemark](https://cloud.tencent.com/document/api/409/18108) - 修改账号备注
-* Update: [ResetAccountPassword](https://cloud.tencent.com/document/api/409/18107) - 重置账户密码
-* Update: [UnlockAccount](https://cloud.tencent.com/document/api/409/109066) - 解除数据库账号锁定
-* Delete: [DeleteAccount](https://cloud.tencent.com/document/api/409/109070) - 删除数据库账号
+* Create: [CreateAccount](https://cloud.tencent.com/document/api/409/109071) - This API is used to create a data account. The returned Oid is the unique identifier of the account, which matches the oid recorded in the database system table pg_roles.
+* Create: [LockAccount](https://cloud.tencent.com/document/api/409/109068) - This API is used to lock a database account. After being locked, the current connection will disconnect and unable to establish a new connection.
+* Read: [DescribeAccounts](https://cloud.tencent.com/document/api/409/18109) - This API is used to query the list of the database accounts for an instance.
+* Update: [LockAccount](https://cloud.tencent.com/document/api/409/109068) - This API is used to lock a database account. After being locked, the current connection will disconnect and unable to establish a new connection.
+* Update: [ModifyAccountRemark](https://cloud.tencent.com/document/api/409/18108) - This API is used to modify account remarks.
+* Update: [ResetAccountPassword](https://cloud.tencent.com/document/api/409/18107) - This API is used to reset the account password of an instance.
+* Update: [UnlockAccount](https://cloud.tencent.com/document/api/409/109066) - This API is used to unlock a database account. The account can log in to the database after being unlocked.
+* Delete: [DeleteAccount](https://cloud.tencent.com/document/api/409/109070) - This API is used to delete a database account. Oid and UserName must be input simultaneously to avoid accidental deletion. Note: This API is reentrant. If the account no longer exists, calling this API to delete it will not trigger an error.
 
 ## Import
 

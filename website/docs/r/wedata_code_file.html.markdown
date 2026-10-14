@@ -61,10 +61,10 @@ In addition to all arguments above, the following attributes are exported:
 
 This resource interacts with the following TencentCloud APIs:
 
-* Create: [CreateCodeFile](https://cloud.tencent.com/document/api/1267/123612) - 新建代码文件
-* Read: [GetCodeFile](https://cloud.tencent.com/document/api/1267/123604) - 查看代码文件详情
-* Update: [UpdateCodeFile](https://cloud.tencent.com/document/api/1267/123597) - 更新代码文件
-* Delete: [DeleteCodeFile](https://cloud.tencent.com/document/api/1267/123608) - 删除代码文件
+* Create: [CreateCodeFile](https://cloud.tencent.com/document/api/1267/123612) - This API is used to create a code file.
+* Read: [GetCodeFile](https://cloud.tencent.com/document/api/1267/123604) - This API is used to view code file details.
+* Update: [UpdateCodeFile](https://cloud.tencent.com/document/api/1267/123597) - This API is used to update a code file.
+* Delete: [DeleteCodeFile](https://cloud.tencent.com/document/api/1267/123608) - This API is used to delete a code file.
 
 ## Import
 

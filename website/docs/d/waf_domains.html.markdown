@@ -91,5 +91,5 @@ In addition to all arguments above, the following attributes are exported:
 
 This data source queries the following TencentCloud APIs:
 
-* Read: [DescribeDomains](https://cloud.tencent.com/document/api/627/72840) - 获取域名列表
+* Read: [DescribeDomains](https://cloud.tencent.com/document/api/627/72840) - Query detailed information of all user domains
 

@@ -43,5 +43,5 @@ In addition to all arguments above, the following attributes are exported:
 
 This data source queries the following TencentCloud APIs:
 
-* Read: [DescribeApiVersions](https://cloud.tencent.com/document/api/649/45537) - 查询API版本
+* Read: [DescribeApiVersions](https://cloud.tencent.com/document/api/649/45537)
 

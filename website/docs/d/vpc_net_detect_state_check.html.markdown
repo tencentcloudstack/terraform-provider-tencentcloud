@@ -52,5 +52,5 @@ In addition to all arguments above, the following attributes are exported:
 
 This data source queries the following TencentCloud APIs:
 
-* Read: [CheckNetDetectState](https://cloud.tencent.com/document/api/215/38700) - 验证网络探测
+* Read: [CheckNetDetectState](https://cloud.tencent.com/document/api/215/38700) - This API is used to verify the network detection status.
 

@@ -135,13 +135,13 @@ The `timeouts` block allows you to specify [timeouts](https://developer.hashicor
 
 This resource interacts with the following TencentCloud APIs:
 
-* Create: [AddLibraDBInstances](https://cloud.tencent.com/document/api/1003/131941) - 创建只读分析引擎
-* Create: [DescribeLibraDBInstanceDetail](https://cloud.tencent.com/document/api/1003/128085) - 查询只读分析引擎实例详情
-* Read: [DescribeLibraDBInstanceDetail](https://cloud.tencent.com/document/api/1003/128085) - 查询只读分析引擎实例详情
-* Update: [DescribeLibraDBInstanceDetail](https://cloud.tencent.com/document/api/1003/128085) - 查询只读分析引擎实例详情
-* Delete: [DescribeFlow](https://cloud.tencent.com/document/api/1003/86162) - 查询任务流信息
-* Delete: [IsolateLibraDBInstance](https://cloud.tencent.com/document/api/1003/128081) - 隔离只读分析引擎
-* Delete: [OfflineLibraDBInstance](https://cloud.tencent.com/document/api/1003/128079) - 下线只读分析引擎
+* Create: [AddLibraDBInstances](https://cloud.tencent.com/document/api/1003/131941) - This API is used to add read-only analysis engine to a cluster.
+* Create: [DescribeLibraDBInstanceDetail](https://cloud.tencent.com/document/api/1003/128085) - This API is used to query read-only analysis engine details.
+* Read: [DescribeLibraDBInstanceDetail](https://cloud.tencent.com/document/api/1003/128085) - This API is used to query read-only analysis engine details.
+* Update: [DescribeLibraDBInstanceDetail](https://cloud.tencent.com/document/api/1003/128085) - This API is used to query read-only analysis engine details.
+* Delete: [DescribeFlow](https://cloud.tencent.com/document/api/1003/86162) - This API is used to query task flow information.
+* Delete: [IsolateLibraDBInstance](https://cloud.tencent.com/document/api/1003/128081) - This API is used to isolate read-only analysis engine instances.
+* Delete: [OfflineLibraDBInstance](https://cloud.tencent.com/document/api/1003/128079) - This API is used to decommission a read-only analysis engine instance.
 
 ## Import
 

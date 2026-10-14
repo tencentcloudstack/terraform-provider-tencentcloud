@@ -98,9 +98,9 @@ In addition to all arguments above, the following attributes are exported:
 
 This resource interacts with the following TencentCloud APIs:
 
-* Create: [ChangeReplicaToMaster](https://cloud.tencent.com/document/api/239/56698) - 副本组提主
-* Create: [DescribeTaskInfo](https://cloud.tencent.com/document/api/239/30601) - Redis查询任务结果
-* Read: [DescribeInstanceZoneInfo](https://cloud.tencent.com/document/api/239/50312) - 查询Redis节点详细信息
-* Update: [ChangeReplicaToMaster](https://cloud.tencent.com/document/api/239/56698) - 副本组提主
-* Update: [DescribeTaskInfo](https://cloud.tencent.com/document/api/239/30601) - Redis查询任务结果
+* Create: [ChangeReplicaToMaster](https://cloud.tencent.com/document/api/239/56698) - This API is used to promote a replica node group to a master node group or a replica node to a master node for an instance.
+* Create: [DescribeTaskInfo](https://cloud.tencent.com/document/api/239/30601) - This API is used to get the execution of a specified task.
+* Read: [DescribeInstanceZoneInfo](https://cloud.tencent.com/document/api/239/50312) - This API is used to query the details of a Redis node.
+* Update: [ChangeReplicaToMaster](https://cloud.tencent.com/document/api/239/56698) - This API is used to promote a replica node group to a master node group or a replica node to a master node for an instance.
+* Update: [DescribeTaskInfo](https://cloud.tencent.com/document/api/239/30601) - This API is used to get the execution of a specified task.
 

@@ -56,11 +56,11 @@ In addition to all arguments above, the following attributes are exported:
 
 This resource interacts with the following TencentCloud APIs:
 
-* Create: [CreateDirectConnectGatewayCcnRoutes](https://cloud.tencent.com/document/api/215/19191) - 创建专线网关云联网路由
-* Create: [DescribeDirectConnectGatewayCcnRoutes](https://cloud.tencent.com/document/api/215/19189) - 查询专线网关云联网路由
-* Read: [DescribeDirectConnectGatewayCcnRoutes](https://cloud.tencent.com/document/api/215/19189) - 查询专线网关云联网路由
-* Delete: [DeleteDirectConnectGatewayCcnRoutes](https://cloud.tencent.com/document/api/215/19190) - 删除专线网关云联网路由
-* Delete: [DescribeDirectConnectGatewayCcnRoutes](https://cloud.tencent.com/document/api/215/19189) - 查询专线网关云联网路由
+* Create: [CreateDirectConnectGatewayCcnRoutes](https://cloud.tencent.com/document/api/215/19191) - This API (CreateDirectConnectGatewayCcnRoutes) is used to create the CCN route (IDC IP range) of a Direct Connect gateway.
+* Create: [DescribeDirectConnectGatewayCcnRoutes](https://cloud.tencent.com/document/api/215/19189) - This API (DescribeDirectConnectGatewayCcnRoutes) is used to query the CCN routes (IDC IP range) of the Direct Connect gateway.
+* Read: [DescribeDirectConnectGatewayCcnRoutes](https://cloud.tencent.com/document/api/215/19189) - This API (DescribeDirectConnectGatewayCcnRoutes) is used to query the CCN routes (IDC IP range) of the Direct Connect gateway.
+* Delete: [DeleteDirectConnectGatewayCcnRoutes](https://cloud.tencent.com/document/api/215/19190) - This API (DeleteDirectConnectGatewayCcnRoutes) is used to delete the CCN routes (IDC IP range) of a Direct Connect gateway.
+* Delete: [DescribeDirectConnectGatewayCcnRoutes](https://cloud.tencent.com/document/api/215/19189) - This API (DescribeDirectConnectGatewayCcnRoutes) is used to query the CCN routes (IDC IP range) of the Direct Connect gateway.
 
 ## Import
 

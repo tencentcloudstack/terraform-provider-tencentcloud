@@ -46,15 +46,15 @@ In addition to all arguments above, the following attributes are exported:
 
 This resource interacts with the following TencentCloud APIs:
 
-* Create: [CreateWhiteBoxKey](https://cloud.tencent.com/document/api/573/43443) - 创建白盒密钥
-* Create: [DisableWhiteBoxKey](https://cloud.tencent.com/document/api/573/43437) - 禁用白盒密钥
-* Create: [ModifyResourceTags](https://cloud.tencent.com/document/api/651/35322) - 批量修改资源关联的标签
-* Read: [DescribeResourceTagsByResourceIds](https://cloud.tencent.com/document/api/651/35319) - 批量查看资源关联的标签
-* Read: [DescribeWhiteBoxKey](https://cloud.tencent.com/document/api/573/43440) - 展示白盒密钥的信息
-* Update: [DisableWhiteBoxKey](https://cloud.tencent.com/document/api/573/43437) - 禁用白盒密钥
-* Update: [EnableWhiteBoxKey](https://cloud.tencent.com/document/api/573/43435) - 启用白盒密钥
-* Update: [ModifyResourceTags](https://cloud.tencent.com/document/api/651/35322) - 批量修改资源关联的标签
-* Delete: [DeleteWhiteBoxKey](https://cloud.tencent.com/document/api/573/43442) - 删除白盒密钥
+* Create: [CreateWhiteBoxKey](https://cloud.tencent.com/document/api/573/43443) - This API is used to create a white-box key. Up to 50 ones can be created.
+* Create: [DisableWhiteBoxKey](https://cloud.tencent.com/document/api/573/43437) - This API is used to disable a white-box key.
+* Create: [ModifyResourceTags](https://cloud.tencent.com/document/api/651/35322) - This API is used to modify all tags associated with a resource.
+* Read: [DescribeResourceTagsByResourceIds](https://cloud.tencent.com/document/api/651/35319) - This API is used to query the tag key-value pairs associated with an existing resource.
+* Read: [DescribeWhiteBoxKey](https://cloud.tencent.com/document/api/573/43440) - This API is used to display white-box key information.
+* Update: [DisableWhiteBoxKey](https://cloud.tencent.com/document/api/573/43437) - This API is used to disable a white-box key.
+* Update: [EnableWhiteBoxKey](https://cloud.tencent.com/document/api/573/43435) - This API is used to enable a white-box key.
+* Update: [ModifyResourceTags](https://cloud.tencent.com/document/api/651/35322) - This API is used to modify all tags associated with a resource.
+* Delete: [DeleteWhiteBoxKey](https://cloud.tencent.com/document/api/573/43442) - This API is used to delete a white-box key. Note: only disabled white-box keys can be deleted.
 
 ## Import
 

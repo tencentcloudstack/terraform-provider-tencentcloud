@@ -912,9 +912,9 @@ In addition to all arguments above, the following attributes are exported:
 
 This resource interacts with the following TencentCloud APIs:
 
-* Create: [ModifyBotIdRule](https://cloud.tencent.com/document/api/627/125860) - 修改Bot-ID规则配置
-* Read: [DescribeBotIdRule](https://cloud.tencent.com/document/api/627/127099) - 获取BotId规则列表
-* Update: [ModifyBotIdRule](https://cloud.tencent.com/document/api/627/125860) - 修改Bot-ID规则配置
+* Create: [ModifyBotIdRule](https://cloud.tencent.com/document/api/627/125860)
+* Read: [DescribeBotIdRule](https://cloud.tencent.com/document/api/627/127099)
+* Update: [ModifyBotIdRule](https://cloud.tencent.com/document/api/627/125860)
 
 ## Import
 

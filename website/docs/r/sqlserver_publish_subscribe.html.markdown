@@ -136,20 +136,20 @@ In addition to all arguments above, the following attributes are exported:
 
 This resource interacts with the following TencentCloud APIs:
 
-* Create: [CreatePublishSubscribe](https://cloud.tencent.com/document/api/238/46285) - 创建发布订阅
-* Create: [DescribeDBInstances](https://cloud.tencent.com/document/api/238/19969) - 查询实例列表
-* Create: [DescribeFlowStatus](https://cloud.tencent.com/document/api/238/19967) - 查询流程状态
-* Create: [DescribePublishSubscribe](https://cloud.tencent.com/document/api/238/46282) - 查询订阅发布
-* Read: [DescribePublishSubscribe](https://cloud.tencent.com/document/api/238/46282) - 查询订阅发布
-* Update: [DeleteDB](https://cloud.tencent.com/document/api/238/19971) - 删除数据库
-* Update: [DeletePublishSubscribe](https://cloud.tencent.com/document/api/238/46284) - 删除发布订阅
-* Update: [DescribeFlowStatus](https://cloud.tencent.com/document/api/238/19967) - 查询流程状态
-* Update: [DescribePublishSubscribe](https://cloud.tencent.com/document/api/238/46282) - 查询订阅发布
-* Update: [ModifyPublishSubscribeName](https://cloud.tencent.com/document/api/238/46280) - 修改发布订阅的名称
-* Delete: [DeleteDB](https://cloud.tencent.com/document/api/238/19971) - 删除数据库
-* Delete: [DeletePublishSubscribe](https://cloud.tencent.com/document/api/238/46284) - 删除发布订阅
-* Delete: [DescribeFlowStatus](https://cloud.tencent.com/document/api/238/19967) - 查询流程状态
-* Delete: [DescribePublishSubscribe](https://cloud.tencent.com/document/api/238/46282) - 查询订阅发布
+* Create: [CreatePublishSubscribe](https://cloud.tencent.com/document/api/238/46285) - This API is used to create a publish/subscribe relationship between two databases. A subscriber cannot act as a publisher, and a publisher can have multiple subscriber instances.
+* Create: [DescribeDBInstances](https://cloud.tencent.com/document/api/238/19969) - This API is used to query the list of instances.
+* Create: [DescribeFlowStatus](https://cloud.tencent.com/document/api/238/19967) - This API is used to query flow status.
+* Create: [DescribePublishSubscribe](https://cloud.tencent.com/document/api/238/46282) - This API is used to query the publish/subscribe relationship list.
+* Read: [DescribePublishSubscribe](https://cloud.tencent.com/document/api/238/46282) - This API is used to query the publish/subscribe relationship list.
+* Update: [DeleteDB](https://cloud.tencent.com/document/api/238/19971) - This API is used to drop a database.
+* Update: [DeletePublishSubscribe](https://cloud.tencent.com/document/api/238/46284) - This API is used to delete the publish/subscribe relationship between two databases.
+* Update: [DescribeFlowStatus](https://cloud.tencent.com/document/api/238/19967) - This API is used to query flow status.
+* Update: [DescribePublishSubscribe](https://cloud.tencent.com/document/api/238/46282) - This API is used to query the publish/subscribe relationship list.
+* Update: [ModifyPublishSubscribeName](https://cloud.tencent.com/document/api/238/46280) - This API is used to modify the publish/subscribe names.
+* Delete: [DeleteDB](https://cloud.tencent.com/document/api/238/19971) - This API is used to drop a database.
+* Delete: [DeletePublishSubscribe](https://cloud.tencent.com/document/api/238/46284) - This API is used to delete the publish/subscribe relationship between two databases.
+* Delete: [DescribeFlowStatus](https://cloud.tencent.com/document/api/238/19967) - This API is used to query flow status.
+* Delete: [DescribePublishSubscribe](https://cloud.tencent.com/document/api/238/46282) - This API is used to query the publish/subscribe relationship list.
 
 ## Import
 

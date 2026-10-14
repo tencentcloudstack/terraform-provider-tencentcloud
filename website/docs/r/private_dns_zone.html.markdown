@@ -110,18 +110,18 @@ In addition to all arguments above, the following attributes are exported:
 
 This resource interacts with the following TencentCloud APIs:
 
-* Create: [CreatePrivateZone](https://cloud.tencent.com/document/api/1338/55946) - 创建私有域
-* Create: [DescribePrivateZone](https://cloud.tencent.com/document/api/1338/55940) - 获取私有域信息
-* Create: [DescribeResourceTagsByResourceIds](https://cloud.tencent.com/document/api/651/35319) - 批量查看资源关联的标签
-* Create: [ModifyResourceTags](https://cloud.tencent.com/document/api/651/35322) - 批量修改资源关联的标签
-* Read: [DescribePrivateZone](https://cloud.tencent.com/document/api/1338/55940) - 获取私有域信息
-* Read: [DescribeResourceTagsByResourceIds](https://cloud.tencent.com/document/api/651/35319) - 批量查看资源关联的标签
-* Update: [DescribePrivateZone](https://cloud.tencent.com/document/api/1338/55940) - 获取私有域信息
-* Update: [DescribeResourceTagsByResourceIds](https://cloud.tencent.com/document/api/651/35319) - 批量查看资源关联的标签
-* Update: [ModifyPrivateZone](https://cloud.tencent.com/document/api/1338/55935) - 修改私有域
-* Update: [ModifyPrivateZoneVpc](https://cloud.tencent.com/document/api/1338/55933) - 修改私有域关联的VPC
-* Update: [ModifyResourceTags](https://cloud.tencent.com/document/api/651/35322) - 批量修改资源关联的标签
-* Delete: [DeletePrivateZone](https://cloud.tencent.com/document/api/1338/55944) - 删除私有域
+* Create: [CreatePrivateZone](https://cloud.tencent.com/document/api/1338/55946) - This API is used to create a private domain.
+* Create: [DescribePrivateZone](https://cloud.tencent.com/document/api/1338/55940)
+* Create: [DescribeResourceTagsByResourceIds](https://cloud.tencent.com/document/api/651/35319) - This API is used to query the tag key-value pairs associated with an existing resource.
+* Create: [ModifyResourceTags](https://cloud.tencent.com/document/api/651/35322) - This API is used to modify all tags associated with a resource.
+* Read: [DescribePrivateZone](https://cloud.tencent.com/document/api/1338/55940)
+* Read: [DescribeResourceTagsByResourceIds](https://cloud.tencent.com/document/api/651/35319) - This API is used to query the tag key-value pairs associated with an existing resource.
+* Update: [DescribePrivateZone](https://cloud.tencent.com/document/api/1338/55940)
+* Update: [DescribeResourceTagsByResourceIds](https://cloud.tencent.com/document/api/651/35319) - This API is used to query the tag key-value pairs associated with an existing resource.
+* Update: [ModifyPrivateZone](https://cloud.tencent.com/document/api/1338/55935) - This API is used to modify a private domain.
+* Update: [ModifyPrivateZoneVpc](https://cloud.tencent.com/document/api/1338/55933) - This API is used to modify the VPC associated with a private domain.
+* Update: [ModifyResourceTags](https://cloud.tencent.com/document/api/651/35322) - This API is used to modify all tags associated with a resource.
+* Delete: [DeletePrivateZone](https://cloud.tencent.com/document/api/1338/55944)
 
 ## Import
 

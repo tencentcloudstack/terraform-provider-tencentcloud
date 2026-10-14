@@ -36,5 +36,5 @@ In addition to all arguments above, the following attributes are exported:
 
 This data source queries the following TencentCloud APIs:
 
-* Read: [DescribeInstanceVncUrl](https://cloud.tencent.com/document/api/1207/55553) - 查询实例管理终端地址
+* Read: [DescribeInstanceVncUrl](https://cloud.tencent.com/document/api/1207/55553) - This API is used to query the URL for VNC login.
 

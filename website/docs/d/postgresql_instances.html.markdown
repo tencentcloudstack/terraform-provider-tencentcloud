@@ -170,7 +170,7 @@ Default value: 0.
 
 This data source queries the following TencentCloud APIs:
 
-* Read: [DescribeAccounts](https://cloud.tencent.com/document/api/409/18109) - 查询实例的数据库账号列表
-* Read: [DescribeDBInstances](https://cloud.tencent.com/document/api/409/16773) - 查询实例列表
-* Read: [DescribeResourceTagsByResourceIds](https://cloud.tencent.com/document/api/651/35319) - 批量查看资源关联的标签
+* Read: [DescribeAccounts](https://cloud.tencent.com/document/api/409/18109) - This API is used to query the list of the database accounts for an instance.
+* Read: [DescribeDBInstances](https://cloud.tencent.com/document/api/409/16773) - This API is used to query the details of one or more instances.
+* Read: [DescribeResourceTagsByResourceIds](https://cloud.tencent.com/document/api/651/35319) - This API is used to query the tag key-value pairs associated with an existing resource.
 

@@ -120,12 +120,12 @@ In addition to all arguments above, the following attributes are exported:
 
 This resource interacts with the following TencentCloud APIs:
 
-* Create: [CreateDataEngine](https://cloud.tencent.com/document/api/1342/87875) - 创建数据引擎.
-* Create: [DescribeDataEngine](https://cloud.tencent.com/document/api/1342/99274) - 获取数据引擎详细信息
-* Read: [DescribeDataEngines](https://cloud.tencent.com/document/api/1342/86308) - 查询DataEngines列表
-* Update: [DescribeDataEngine](https://cloud.tencent.com/document/api/1342/99274) - 获取数据引擎详细信息
-* Update: [UpdateDataEngine](https://cloud.tencent.com/document/api/1342/99271) - 更新数据引擎配置
-* Delete: [DeleteDataEngine](https://cloud.tencent.com/document/api/1342/99279) - 删除数据引擎
+* Create: [CreateDataEngine](https://cloud.tencent.com/document/api/1342/87875) - This API is used to create a data engine.
+* Create: [DescribeDataEngine](https://cloud.tencent.com/document/api/1342/99274) - This API is used to obtain detailed data engine information based on names.
+* Read: [DescribeDataEngines](https://cloud.tencent.com/document/api/1342/86308)
+* Update: [DescribeDataEngine](https://cloud.tencent.com/document/api/1342/99274) - This API is used to obtain detailed data engine information based on names.
+* Update: [UpdateDataEngine](https://cloud.tencent.com/document/api/1342/99271) - This API is used to upgrade data engine configuration.
+* Delete: [DeleteDataEngine](https://cloud.tencent.com/document/api/1342/99279) - This API is used to delete the data engine.
 
 ## Import
 

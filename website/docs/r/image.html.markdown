@@ -61,15 +61,15 @@ In addition to all arguments above, the following attributes are exported:
 
 This resource interacts with the following TencentCloud APIs:
 
-* Create: [CreateImage](https://cloud.tencent.com/document/api/213/16726) - 创建镜像
-* Create: [DescribeImages](https://cloud.tencent.com/document/api/213/15715) - 查看镜像列表
-* Create: [ModifyResourceTags](https://cloud.tencent.com/document/api/651/35322) - 批量修改资源关联的标签
-* Read: [DescribeImages](https://cloud.tencent.com/document/api/213/15715) - 查看镜像列表
-* Read: [DescribeResourceTagsByResourceIds](https://cloud.tencent.com/document/api/651/35319) - 批量查看资源关联的标签
-* Update: [ModifyImageAttribute](https://cloud.tencent.com/document/api/213/15713) - 修改镜像属性
-* Update: [ModifyResourceTags](https://cloud.tencent.com/document/api/651/35322) - 批量修改资源关联的标签
-* Delete: [DeleteImages](https://cloud.tencent.com/document/api/213/15716) - 删除镜像
-* Delete: [DescribeImages](https://cloud.tencent.com/document/api/213/15715) - 查看镜像列表
+* Create: [CreateImage](https://cloud.tencent.com/document/api/213/16726) - This API is used to create a new image with the system disk of an instance. The image can be used to create new instances.
+* Create: [DescribeImages](https://cloud.tencent.com/document/api/213/15715) - This API is used to view the list of images.
+* Create: [ModifyResourceTags](https://cloud.tencent.com/document/api/651/35322) - This API is used to modify all tags associated with a resource.
+* Read: [DescribeImages](https://cloud.tencent.com/document/api/213/15715) - This API is used to view the list of images.
+* Read: [DescribeResourceTagsByResourceIds](https://cloud.tencent.com/document/api/651/35319) - This API is used to query the tag key-value pairs associated with an existing resource.
+* Update: [ModifyImageAttribute](https://cloud.tencent.com/document/api/213/15713) - This API is used to modify image attributes.
+* Update: [ModifyResourceTags](https://cloud.tencent.com/document/api/651/35322) - This API is used to modify all tags associated with a resource.
+* Delete: [DeleteImages](https://cloud.tencent.com/document/api/213/15716) - This API is used to delete one or more images.
+* Delete: [DescribeImages](https://cloud.tencent.com/document/api/213/15715) - This API is used to view the list of images.
 
 ## Import
 

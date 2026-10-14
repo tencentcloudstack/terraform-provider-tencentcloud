@@ -47,9 +47,9 @@ In addition to all arguments above, the following attributes are exported:
 
 This resource interacts with the following TencentCloud APIs:
 
-* Create: [ModifyBotStatus](https://cloud.tencent.com/document/api/627/97281) - Bot_V2 bot总开关更新
-* Read: [DescribeBotSceneOverview](https://cloud.tencent.com/document/api/627/118058) - 获取Bot场景全局概览
-* Update: [ModifyBotStatus](https://cloud.tencent.com/document/api/627/97281) - Bot_V2 bot总开关更新
+* Create: [ModifyBotStatus](https://cloud.tencent.com/document/api/627/97281) - Bot_V2 bot master switch update
+* Read: [DescribeBotSceneOverview](https://cloud.tencent.com/document/api/627/118058)
+* Update: [ModifyBotStatus](https://cloud.tencent.com/document/api/627/97281) - Bot_V2 bot master switch update
 
 ## Import
 

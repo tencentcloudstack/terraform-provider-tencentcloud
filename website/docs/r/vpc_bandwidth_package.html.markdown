@@ -78,15 +78,15 @@ In addition to all arguments above, the following attributes are exported:
 
 This resource interacts with the following TencentCloud APIs:
 
-* Create: [CreateBandwidthPackage](https://cloud.tencent.com/document/api/215/19212) - 创建共享带宽包
-* Create: [DescribeBandwidthPackages](https://cloud.tencent.com/document/api/215/19209) - 查询带宽包资源
-* Create: [ModifyResourceTags](https://cloud.tencent.com/document/api/651/35322) - 批量修改资源关联的标签
-* Read: [DescribeBandwidthPackages](https://cloud.tencent.com/document/api/215/19209) - 查询带宽包资源
-* Read: [DescribeResourceTagsByResourceIds](https://cloud.tencent.com/document/api/651/35319) - 批量查看资源关联的标签
-* Update: [ModifyBandwidthPackageAttribute](https://cloud.tencent.com/document/api/215/19208) - 修改带宽包属性
-* Update: [ModifyBandwidthPackageBandwidth](https://cloud.tencent.com/document/api/215/112463) - 调整共享带宽包带宽
-* Update: [ModifyResourceTags](https://cloud.tencent.com/document/api/651/35322) - 批量修改资源关联的标签
-* Delete: [DeleteBandwidthPackage](https://cloud.tencent.com/document/api/215/19211) - 删除共享带宽包
+* Create: [CreateBandwidthPackage](https://cloud.tencent.com/document/api/215/19212) - This API is used to create a [device bandwidth package](https://intl.cloud.tencent.com/document/product/684/15245?from_cn_redirect=1#bwptype) or an [IP bandwidth package](https://intl.cloud.tencent.com/document/product/684/15245?from_cn_redirect=1#bwptype).
+* Create: [DescribeBandwidthPackages](https://cloud.tencent.com/document/api/215/19209) - This API is used to query bandwidth package information, including the unique ID of the bandwidth package, the type, the billing mode, the name, and the resource information.
+* Create: [ModifyResourceTags](https://cloud.tencent.com/document/api/651/35322) - This API is used to modify all tags associated with a resource.
+* Read: [DescribeBandwidthPackages](https://cloud.tencent.com/document/api/215/19209) - This API is used to query bandwidth package information, including the unique ID of the bandwidth package, the type, the billing mode, the name, and the resource information.
+* Read: [DescribeResourceTagsByResourceIds](https://cloud.tencent.com/document/api/651/35319) - This API is used to query the tag key-value pairs associated with an existing resource.
+* Update: [ModifyBandwidthPackageAttribute](https://cloud.tencent.com/document/api/215/19208) - This API is used to modify the attributes of a bandwidth package, including the bandwidth package name, and so on.
+* Update: [ModifyBandwidthPackageBandwidth](https://cloud.tencent.com/document/api/215/112463) - This API is used to adjust the bandwidth of a [bandwidth package](https://www.tencentcloud.com/document/product/684/15245).
+* Update: [ModifyResourceTags](https://cloud.tencent.com/document/api/651/35322) - This API is used to modify all tags associated with a resource.
+* Delete: [DeleteBandwidthPackage](https://cloud.tencent.com/document/api/215/19211) - This API is used to delete bandwidth packages, including [device bandwidth packages](https://intl.cloud.tencent.com/document/product/684/15246?from_cn_redirect=1#.E8.AE.BE.E5.A4.87.E5.B8.A6.E5.AE.BD.E5.8C.85) and [IP bandwidth packages](https://intl.cloud.tencent.com/document/product/684/15246?from_cn_redirect=1#ip-.E5.B8.A6.E5.AE.BD.E5.8C.85).
 
 ## Import
 

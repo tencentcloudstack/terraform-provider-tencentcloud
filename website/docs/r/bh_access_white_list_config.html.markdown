@@ -38,11 +38,11 @@ In addition to all arguments above, the following attributes are exported:
 
 This resource interacts with the following TencentCloud APIs:
 
-* Create: [ModifyAccessWhiteListAutoStatus](https://cloud.tencent.com/document/api/1025/125046) - 修改访问白名单自动添加IP状态
-* Create: [ModifyAccessWhiteListStatus](https://cloud.tencent.com/document/api/1025/125044) - 修改访问白名单状态
-* Read: [DescribeAccessWhiteListRules](https://cloud.tencent.com/document/api/1025/117903) - 查询访问白名单规则列表
-* Update: [ModifyAccessWhiteListAutoStatus](https://cloud.tencent.com/document/api/1025/125046) - 修改访问白名单自动添加IP状态
-* Update: [ModifyAccessWhiteListStatus](https://cloud.tencent.com/document/api/1025/125044) - 修改访问白名单状态
+* Create: [ModifyAccessWhiteListAutoStatus](https://cloud.tencent.com/document/api/1025/125046)
+* Create: [ModifyAccessWhiteListStatus](https://cloud.tencent.com/document/api/1025/125044)
+* Read: [DescribeAccessWhiteListRules](https://cloud.tencent.com/document/api/1025/117903)
+* Update: [ModifyAccessWhiteListAutoStatus](https://cloud.tencent.com/document/api/1025/125046)
+* Update: [ModifyAccessWhiteListStatus](https://cloud.tencent.com/document/api/1025/125044)
 
 ## Import
 

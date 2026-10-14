@@ -38,5 +38,5 @@ In addition to all arguments above, the following attributes are exported:
 
 This resource interacts with the following TencentCloud APIs:
 
-* Create: [SetDefaultAlarmPolicy](https://cloud.tencent.com/document/api/248/51271) - 设为默认告警策略
+* Create: [SetDefaultAlarmPolicy](https://cloud.tencent.com/document/api/248/51271) - This API is used to set an alarm policy as the default policy in the current policy type under the current project.
 

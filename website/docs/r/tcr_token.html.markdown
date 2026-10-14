@@ -53,12 +53,12 @@ In addition to all arguments above, the following attributes are exported:
 
 This resource interacts with the following TencentCloud APIs:
 
-* Create: [CreateInstanceToken](https://cloud.tencent.com/document/api/1141/41571) - 创建实例访问凭证
-* Create: [ModifyInstanceToken](https://cloud.tencent.com/document/api/1141/42910) - 更新实例长期访问凭证
-* Read: [DescribeInstanceToken](https://cloud.tencent.com/document/api/1141/42911) - 查询长期访问凭证信息
-* Update: [ModifyInstanceToken](https://cloud.tencent.com/document/api/1141/42910) - 更新实例长期访问凭证
-* Delete: [DeleteInstanceToken](https://cloud.tencent.com/document/api/1141/42912) - 删除长期访问凭证
-* Delete: [DescribeInstanceToken](https://cloud.tencent.com/document/api/1141/42911) - 查询长期访问凭证信息
+* Create: [CreateInstanceToken](https://cloud.tencent.com/document/api/1141/41571) - This API is used to create a temporary or long-term instance access credential.
+* Create: [ModifyInstanceToken](https://cloud.tencent.com/document/api/1141/42910) - This API is used to update the status of the specified long-term access credential in an instance.
+* Read: [DescribeInstanceToken](https://cloud.tencent.com/document/api/1141/42911) - This API is used to query the information of long-term access credentials.
+* Update: [ModifyInstanceToken](https://cloud.tencent.com/document/api/1141/42910) - This API is used to update the status of the specified long-term access credential in an instance.
+* Delete: [DeleteInstanceToken](https://cloud.tencent.com/document/api/1141/42912) - This API is used to delete a long-term access credential.
+* Delete: [DescribeInstanceToken](https://cloud.tencent.com/document/api/1141/42911) - This API is used to query the information of long-term access credentials.
 
 ## Import
 

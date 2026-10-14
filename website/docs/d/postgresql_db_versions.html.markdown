@@ -60,5 +60,5 @@ TDE: Supports data encryption.
 
 This data source queries the following TencentCloud APIs:
 
-* Read: [DescribeDBVersions](https://cloud.tencent.com/document/api/409/89018) - 查询支持的数据库版本
+* Read: [DescribeDBVersions](https://cloud.tencent.com/document/api/409/89018) - This API is used to query the list of supported database versions.
 

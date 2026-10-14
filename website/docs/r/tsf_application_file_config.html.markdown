@@ -55,7 +55,7 @@ In addition to all arguments above, the following attributes are exported:
 
 This resource interacts with the following TencentCloud APIs:
 
-* Create: [CreateFileConfigWithDetailResp](https://cloud.tencent.com/document/api/649/90301) - 创建文件配置项并返回详细信息
-* Read: [DescribeFileConfigs](https://cloud.tencent.com/document/api/649/58593) - 查询文件配置项列表
-* Delete: [DeleteFileConfig](https://cloud.tencent.com/document/api/649/86369) - 删除文件配置项
+* Create: [CreateFileConfigWithDetailResp](https://cloud.tencent.com/document/api/649/90301)
+* Read: [DescribeFileConfigs](https://cloud.tencent.com/document/api/649/58593)
+* Delete: [DeleteFileConfig](https://cloud.tencent.com/document/api/649/86369)
 

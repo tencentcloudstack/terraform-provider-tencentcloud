@@ -77,10 +77,10 @@ In addition to all arguments above, the following attributes are exported:
 
 This resource interacts with the following TencentCloud APIs:
 
-* Create: [CreateEmailTemplate](https://cloud.tencent.com/document/api/1288/51042) - 创建邮件模板
-* Read: [GetEmailTemplate](https://cloud.tencent.com/document/api/1288/51040) - 获取模板详情
-* Update: [UpdateEmailTemplate](https://cloud.tencent.com/document/api/1288/51038) - 更新邮件模板
-* Delete: [DeleteEmailTemplate](https://cloud.tencent.com/document/api/1288/51041) - 删除发信模板
+* Create: [CreateEmailTemplate](https://cloud.tencent.com/document/api/1288/51042) - This API is used to create a TEXT or HTML email template. To create an HTML template, ensure that it does not include external CSS files. You can use {{variable name}} to specify a variable in the template.
+* Read: [GetEmailTemplate](https://cloud.tencent.com/document/api/1288/51040) - This API is used to get the details of a template.
+* Update: [UpdateEmailTemplate](https://cloud.tencent.com/document/api/1288/51038) - This API is used to update an email template. An updated template must be approved again before it can be used.
+* Delete: [DeleteEmailTemplate](https://cloud.tencent.com/document/api/1288/51041) - This API is used to delete an email template.
 
 ## Import
 

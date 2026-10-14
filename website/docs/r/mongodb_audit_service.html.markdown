@@ -78,14 +78,14 @@ The `timeouts` block allows you to specify [timeouts](https://developer.hashicor
 
 This resource interacts with the following TencentCloud APIs:
 
-* Create: [DescribeAuditConfig](https://cloud.tencent.com/document/api/240/128358) - 查询审计服务配置
-* Create: [DescribeAuditInstanceList](https://cloud.tencent.com/document/api/240/125361) - 查询审计实例
-* Create: [OpenAuditService](https://cloud.tencent.com/document/api/240/125359) - 开通审计
-* Read: [DescribeAuditConfig](https://cloud.tencent.com/document/api/240/128358) - 查询审计服务配置
-* Update: [DescribeAuditConfig](https://cloud.tencent.com/document/api/240/128358) - 查询审计服务配置
-* Update: [ModifyAuditService](https://cloud.tencent.com/document/api/240/125360) - 修改审计配置
-* Delete: [CloseAuditService](https://cloud.tencent.com/document/api/240/128359) - 关闭审计
-* Delete: [DescribeAuditInstanceList](https://cloud.tencent.com/document/api/240/125361) - 查询审计实例
+* Create: [DescribeAuditConfig](https://cloud.tencent.com/document/api/240/128358) - This API is used to query the service configurations for a TencentDB audit policy, including the audit log retention period.
+* Create: [DescribeAuditInstanceList](https://cloud.tencent.com/document/api/240/125361)
+* Create: [OpenAuditService](https://cloud.tencent.com/document/api/240/125359)
+* Read: [DescribeAuditConfig](https://cloud.tencent.com/document/api/240/128358) - This API is used to query the service configurations for a TencentDB audit policy, including the audit log retention period.
+* Update: [DescribeAuditConfig](https://cloud.tencent.com/document/api/240/128358) - This API is used to query the service configurations for a TencentDB audit policy, including the audit log retention period.
+* Update: [ModifyAuditService](https://cloud.tencent.com/document/api/240/125360)
+* Delete: [CloseAuditService](https://cloud.tencent.com/document/api/240/128359) - This API is used to close the audit service.
+* Delete: [DescribeAuditInstanceList](https://cloud.tencent.com/document/api/240/125361)
 
 ## Import
 

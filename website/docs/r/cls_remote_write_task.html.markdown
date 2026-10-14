@@ -72,12 +72,12 @@ In addition to all arguments above, the following attributes are exported:
 
 This resource interacts with the following TencentCloud APIs:
 
-* Create: [CreateRemoteWriteTask](https://cloud.tencent.com/document/api/614/134203) - 创建RemoteWrite任务
-* Create: [DescribeRemoteWriteTasks](https://cloud.tencent.com/document/api/614/134201) - 获取RemoteWrite投递任务列表页
-* Read: [DescribeRemoteWriteTasks](https://cloud.tencent.com/document/api/614/134201) - 获取RemoteWrite投递任务列表页
-* Update: [DescribeRemoteWriteTasks](https://cloud.tencent.com/document/api/614/134201) - 获取RemoteWrite投递任务列表页
-* Update: [ModifyRemoteWriteTask](https://cloud.tencent.com/document/api/614/134200) - 修改RemoteWrite任务
-* Delete: [DeleteRemoteWriteTask](https://cloud.tencent.com/document/api/614/134202) - 删除RemoteWrite任务
+* Create: [CreateRemoteWriteTask](https://cloud.tencent.com/document/api/614/134203) - This API is used to create a remote write delivery task.
+* Create: [DescribeRemoteWriteTasks](https://cloud.tencent.com/document/api/614/134201) - This API is used to obtain the list of RemoteWrite delivery tasks.
+* Read: [DescribeRemoteWriteTasks](https://cloud.tencent.com/document/api/614/134201) - This API is used to obtain the list of RemoteWrite delivery tasks.
+* Update: [DescribeRemoteWriteTasks](https://cloud.tencent.com/document/api/614/134201) - This API is used to obtain the list of RemoteWrite delivery tasks.
+* Update: [ModifyRemoteWriteTask](https://cloud.tencent.com/document/api/614/134200) - This API is used to modify a RemoteWrite task.
+* Delete: [DeleteRemoteWriteTask](https://cloud.tencent.com/document/api/614/134202) - This API is used to delete a RemoteWrite task.
 
 ## Import
 

@@ -40,12 +40,12 @@ In addition to all arguments above, the following attributes are exported:
 
 This resource interacts with the following TencentCloud APIs:
 
-* Create: [BindSharedCNAME](https://cloud.tencent.com/document/api/1552/101363) - 绑定共享 CNAME
-* Create: [DescribeSharedCNAME](https://cloud.tencent.com/document/api/1552/130048) - 查询共享CNAME列表
-* Read: [DescribeSharedCNAME](https://cloud.tencent.com/document/api/1552/130048) - 查询共享CNAME列表
-* Update: [BindSharedCNAME](https://cloud.tencent.com/document/api/1552/101363) - 绑定共享 CNAME
-* Update: [DescribeSharedCNAME](https://cloud.tencent.com/document/api/1552/130048) - 查询共享CNAME列表
-* Delete: [BindSharedCNAME](https://cloud.tencent.com/document/api/1552/101363) - 绑定共享 CNAME
+* Create: [BindSharedCNAME](https://cloud.tencent.com/document/api/1552/101363) - This API is used to bind/unbind a domain name to/from a shared CNAME. It is now only available to beta users.
+* Create: [DescribeSharedCNAME](https://cloud.tencent.com/document/api/1552/130048) - Query the shared CNAME list, support fuzzy search, paginate, and sort.
+* Read: [DescribeSharedCNAME](https://cloud.tencent.com/document/api/1552/130048) - Query the shared CNAME list, support fuzzy search, paginate, and sort.
+* Update: [BindSharedCNAME](https://cloud.tencent.com/document/api/1552/101363) - This API is used to bind/unbind a domain name to/from a shared CNAME. It is now only available to beta users.
+* Update: [DescribeSharedCNAME](https://cloud.tencent.com/document/api/1552/130048) - Query the shared CNAME list, support fuzzy search, paginate, and sort.
+* Delete: [BindSharedCNAME](https://cloud.tencent.com/document/api/1552/101363) - This API is used to bind/unbind a domain name to/from a shared CNAME. It is now only available to beta users.
 
 ## Import
 

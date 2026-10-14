@@ -241,10 +241,10 @@ In addition to all arguments above, the following attributes are exported:
 
 This resource interacts with the following TencentCloud APIs:
 
-* Create: [CreateNetDetect](https://cloud.tencent.com/document/api/215/38699) - 创建网络探测
-* Read: [DescribeNetDetects](https://cloud.tencent.com/document/api/215/38696) - 查询网络探测列表
-* Update: [ModifyNetDetect](https://cloud.tencent.com/document/api/215/38695) - 修改网络探测
-* Delete: [DeleteNetDetect](https://cloud.tencent.com/document/api/215/38698) - 删除网络探测
+* Create: [CreateNetDetect](https://cloud.tencent.com/document/api/215/38699) - This API is used to create a network probe.
+* Read: [DescribeNetDetects](https://cloud.tencent.com/document/api/215/38696) - This API (DescribeNetDetects) is used to query the list of network detection instances.
+* Update: [ModifyNetDetect](https://cloud.tencent.com/document/api/215/38695) - This API (ModifyNetDetect) is used to modify network detection parameters.
+* Delete: [DeleteNetDetect](https://cloud.tencent.com/document/api/215/38698) - This API is used to delete a network probe.
 
 ## Import
 

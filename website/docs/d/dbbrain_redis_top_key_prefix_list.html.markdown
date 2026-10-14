@@ -46,5 +46,5 @@ In addition to all arguments above, the following attributes are exported:
 
 This data source queries the following TencentCloud APIs:
 
-* Read: [DescribeRedisTopKeyPrefixList](https://cloud.tencent.com/document/api/1130/80213) - 查询redis实例top key前缀列表
+* Read: [DescribeRedisTopKeyPrefixList](https://cloud.tencent.com/document/api/1130/80213) - This API is used to query the list of top key prefixes for Redis instances.
 

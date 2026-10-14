@@ -43,9 +43,9 @@ In addition to all arguments above, the following attributes are exported:
 
 This resource interacts with the following TencentCloud APIs:
 
-* Create: [ModifyFunctionRulePriority](https://cloud.tencent.com/document/api/1552/111379) - 修改边缘函数触发规则优先级
-* Read: [DescribeFunctionRules](https://cloud.tencent.com/document/api/1552/111385) - 查询边缘函数触发规则
-* Update: [ModifyFunctionRulePriority](https://cloud.tencent.com/document/api/1552/111379) - 修改边缘函数触发规则优先级
+* Create: [ModifyFunctionRulePriority](https://cloud.tencent.com/document/api/1552/111379) - This API is used to modify the priority of trigger rules for an edge function.
+* Read: [DescribeFunctionRules](https://cloud.tencent.com/document/api/1552/111385) - This API is used to query the list of trigger rules for an edge function. It supports filtering by rule ID, function ID, rule description, and so on.
+* Update: [ModifyFunctionRulePriority](https://cloud.tencent.com/document/api/1552/111379) - This API is used to modify the priority of trigger rules for an edge function.
 
 ## Import
 

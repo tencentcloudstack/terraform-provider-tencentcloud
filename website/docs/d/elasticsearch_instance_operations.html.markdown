@@ -72,5 +72,5 @@ In addition to all arguments above, the following attributes are exported:
 
 This data source queries the following TencentCloud APIs:
 
-* Read: [DescribeInstanceOperations](https://cloud.tencent.com/document/api/845/33759) - 查询实例操作记录
+* Read: [DescribeInstanceOperations](https://cloud.tencent.com/document/api/845/33759) - This API is used to query the operation history of an instance by specified criteria.
 

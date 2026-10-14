@@ -54,10 +54,10 @@ The `js_injection_rules` object exports the following:
 
 This resource interacts with the following TencentCloud APIs:
 
-* Create: [CreateSecurityJSInjectionRule](https://cloud.tencent.com/document/api/1552/122111) - 创建 JavaScript 注入规则
-* Read: [DescribeSecurityJSInjectionRule](https://cloud.tencent.com/document/api/1552/122106) - 查询 JavaScript 注入规则
-* Update: [ModifySecurityJSInjectionRule](https://cloud.tencent.com/document/api/1552/122104) - 修改 JavaScript 注入规则
-* Delete: [DeleteSecurityJSInjectionRule](https://cloud.tencent.com/document/api/1552/122109) - 删除 JavaScript 注入规则
+* Create: [CreateSecurityJSInjectionRule](https://cloud.tencent.com/document/api/1552/122111) - This API is used to create a JavaScript injection rule.
+* Read: [DescribeSecurityJSInjectionRule](https://cloud.tencent.com/document/api/1552/122106) - This API is used to query JavaScript injection rules.
+* Update: [ModifySecurityJSInjectionRule](https://cloud.tencent.com/document/api/1552/122104) - This API is used to modify JavaScript injection rules.
+* Delete: [DeleteSecurityJSInjectionRule](https://cloud.tencent.com/document/api/1552/122109) - This API is used to delete JavaScript injection rules.
 
 ## Import
 

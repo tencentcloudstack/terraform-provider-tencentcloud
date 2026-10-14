@@ -38,12 +38,12 @@ In addition to all arguments above, the following attributes are exported:
 
 This resource interacts with the following TencentCloud APIs:
 
-* Create: [ReplaceRouteTableAssociation](https://cloud.tencent.com/document/api/215/15767) - 替换路由表绑定关系
-* Read: [DescribeSubnets](https://cloud.tencent.com/document/api/215/15784) - 查询子网列表
-* Update: [ReplaceRouteTableAssociation](https://cloud.tencent.com/document/api/215/15767) - 替换路由表绑定关系
-* Delete: [DescribeRouteTables](https://cloud.tencent.com/document/api/215/15763) - 查询路由表
-* Delete: [DescribeSubnets](https://cloud.tencent.com/document/api/215/15784) - 查询子网列表
-* Delete: [ReplaceRouteTableAssociation](https://cloud.tencent.com/document/api/215/15767) - 替换路由表绑定关系
+* Create: [ReplaceRouteTableAssociation](https://cloud.tencent.com/document/api/215/15767) - This API (ReplaceRouteTableAssociation) is used to modify the route table associated with a subnet.
+* Read: [DescribeSubnets](https://cloud.tencent.com/document/api/215/15784) - This API (DescribeSubnets) is used to query the list of subnets.
+* Update: [ReplaceRouteTableAssociation](https://cloud.tencent.com/document/api/215/15767) - This API (ReplaceRouteTableAssociation) is used to modify the route table associated with a subnet.
+* Delete: [DescribeRouteTables](https://cloud.tencent.com/document/api/215/15763) - This API is used to query route tables.
+* Delete: [DescribeSubnets](https://cloud.tencent.com/document/api/215/15784) - This API (DescribeSubnets) is used to query the list of subnets.
+* Delete: [ReplaceRouteTableAssociation](https://cloud.tencent.com/document/api/215/15767) - This API (ReplaceRouteTableAssociation) is used to modify the route table associated with a subnet.
 
 ## Import
 

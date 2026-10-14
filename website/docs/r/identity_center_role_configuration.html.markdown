@@ -44,10 +44,10 @@ In addition to all arguments above, the following attributes are exported:
 
 This resource interacts with the following TencentCloud APIs:
 
-* Create: [CreateRoleConfiguration](https://cloud.tencent.com/document/api/850/109937) - 创建权限配置
-* Read: [GetRoleConfiguration](https://cloud.tencent.com/document/api/850/109935) - 查询权限配置信息
-* Update: [UpdateRoleConfiguration](https://cloud.tencent.com/document/api/850/109930) - 修改权限配置信息
-* Delete: [DeleteRoleConfiguration](https://cloud.tencent.com/document/api/850/109936) - 删除权限配置信息
+* Create: [CreateRoleConfiguration](https://cloud.tencent.com/document/api/850/109937) - This API is used to create permission configurations.
+* Read: [GetRoleConfiguration](https://cloud.tencent.com/document/api/850/109935) - This API is used to query the permission configuration information.
+* Update: [UpdateRoleConfiguration](https://cloud.tencent.com/document/api/850/109930) - This API is used to modify the permission configuration information.
+* Delete: [DeleteRoleConfiguration](https://cloud.tencent.com/document/api/850/109936) - This API is used to delete the permission configuration information.
 
 ## Import
 

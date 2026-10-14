@@ -42,5 +42,5 @@ In addition to all arguments above, the following attributes are exported:
 
 This data source queries the following TencentCloud APIs:
 
-* Read: [ListRoleConfigurationProvisionings](https://cloud.tencent.com/document/api/850/109933) - 查询权限配置部署列表
+* Read: [ListRoleConfigurationProvisionings](https://cloud.tencent.com/document/api/850/109933) - This API is used to query the permission configuration deployment list.
 

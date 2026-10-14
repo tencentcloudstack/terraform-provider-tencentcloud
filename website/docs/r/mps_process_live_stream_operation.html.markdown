@@ -124,5 +124,5 @@ In addition to all arguments above, the following attributes are exported:
 
 This resource interacts with the following TencentCloud APIs:
 
-* Create: [ProcessLiveStream](https://cloud.tencent.com/document/api/862/39227) - 对直播流发起处理
+* Create: [ProcessLiveStream](https://cloud.tencent.com/document/api/862/39227) - This API is used to initiate processing tasks on a live stream. Features include:
 

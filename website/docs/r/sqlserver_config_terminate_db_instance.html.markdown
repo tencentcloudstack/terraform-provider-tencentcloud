@@ -79,9 +79,9 @@ In addition to all arguments above, the following attributes are exported:
 
 This resource interacts with the following TencentCloud APIs:
 
-* Create: [TerminateDBInstance](https://cloud.tencent.com/document/api/238/38210) - 主动隔离实例
-* Read: [DescribeDBInstances](https://cloud.tencent.com/document/api/238/19969) - 查询实例列表
-* Update: [TerminateDBInstance](https://cloud.tencent.com/document/api/238/38210) - 主动隔离实例
+* Create: [TerminateDBInstance](https://cloud.tencent.com/document/api/238/38210) - This API is used to isolate an instance to move it into a recycle bin.
+* Read: [DescribeDBInstances](https://cloud.tencent.com/document/api/238/19969) - This API is used to query the list of instances.
+* Update: [TerminateDBInstance](https://cloud.tencent.com/document/api/238/38210) - This API is used to isolate an instance to move it into a recycle bin.
 
 ## Import
 

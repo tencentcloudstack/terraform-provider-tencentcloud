@@ -66,5 +66,5 @@ In addition to all arguments above, the following attributes are exported:
 
 This data source queries the following TencentCloud APIs:
 
-* Read: [DescribeEvents](https://cloud.tencent.com/document/api/629/54488) - 查询操作审计日志
+* Read: [DescribeEvents](https://cloud.tencent.com/document/api/629/54488) - This API is used to query CloudAudit logs.
 

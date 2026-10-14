@@ -38,9 +38,9 @@ In addition to all arguments above, the following attributes are exported:
 
 This resource interacts with the following TencentCloud APIs:
 
-* Create: [AssociateResourceGroupToProject](https://cloud.tencent.com/document/api/1267/123985) - 关联资源组到某个项目
-* Read: [ListResourceGroups](https://cloud.tencent.com/document/api/1267/123980) - 查看资源组列表
-* Delete: [DissociateResourceGroupFromProject](https://cloud.tencent.com/document/api/1267/123982) - 解绑项目关联的资源组
+* Create: [AssociateResourceGroupToProject](https://cloud.tencent.com/document/api/1267/123985) - This API is used to bind the designated execution resource group to the project.
+* Read: [ListResourceGroups](https://cloud.tencent.com/document/api/1267/123980) - This API is used to query the execution resource group list.
+* Delete: [DissociateResourceGroupFromProject](https://cloud.tencent.com/document/api/1267/123982) - This API is used to unbind the designated execution resource group from the project.
 
 ## Import
 

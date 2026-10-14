@@ -41,6 +41,6 @@ In addition to all arguments above, the following attributes are exported:
 
 This data source queries the following TencentCloud APIs:
 
-* Read: [DescribeSecurityGroupPolicies](https://cloud.tencent.com/document/api/215/15804) - 查询安全组规则
-* Read: [DescribeSecurityGroups](https://cloud.tencent.com/document/api/215/15808) - 查看安全组
+* Read: [DescribeSecurityGroupPolicies](https://cloud.tencent.com/document/api/215/15804) - This API (DescribeSecurityGroupPolicies) is used to query security group policies.
+* Read: [DescribeSecurityGroups](https://cloud.tencent.com/document/api/215/15808) - This API (DescribeSecurityGroups) is used to query security groups.
 

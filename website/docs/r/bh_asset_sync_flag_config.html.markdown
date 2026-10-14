@@ -36,9 +36,9 @@ In addition to all arguments above, the following attributes are exported:
 
 This resource interacts with the following TencentCloud APIs:
 
-* Create: [ModifyAssetSyncFlag](https://cloud.tencent.com/document/api/1025/125049) - 修改资产自动同步开关
-* Read: [DescribeAssetSyncFlag](https://cloud.tencent.com/document/api/1025/125051) - 查询资产自动同步开关
-* Update: [ModifyAssetSyncFlag](https://cloud.tencent.com/document/api/1025/125049) - 修改资产自动同步开关
+* Create: [ModifyAssetSyncFlag](https://cloud.tencent.com/document/api/1025/125049)
+* Read: [DescribeAssetSyncFlag](https://cloud.tencent.com/document/api/1025/125051)
+* Update: [ModifyAssetSyncFlag](https://cloud.tencent.com/document/api/1025/125049)
 
 ## Import
 

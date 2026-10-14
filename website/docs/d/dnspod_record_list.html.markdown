@@ -115,5 +115,5 @@ In addition to all arguments above, the following attributes are exported:
 
 This data source queries the following TencentCloud APIs:
 
-* Read: [DescribeRecordFilterList](https://cloud.tencent.com/document/api/1427/95521) - 获取域名的解析记录筛选列表
+* Read: [DescribeRecordFilterList](https://cloud.tencent.com/document/api/1427/95521)
 

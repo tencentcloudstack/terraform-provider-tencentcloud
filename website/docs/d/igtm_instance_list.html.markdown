@@ -89,5 +89,5 @@ UNKNOWN: Unknown.
 
 This data source queries the following TencentCloud APIs:
 
-* Read: [DescribeInstanceList](https://cloud.tencent.com/document/api/1551/120454) - 获取实例列表
+* Read: [DescribeInstanceList](https://cloud.tencent.com/document/api/1551/120454)
 

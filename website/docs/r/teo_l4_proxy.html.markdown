@@ -53,12 +53,12 @@ In addition to all arguments above, the following attributes are exported:
 
 This resource interacts with the following TencentCloud APIs:
 
-* Create: [CreateL4Proxy](https://cloud.tencent.com/document/api/1552/103417) - 创建四层代理实例
-* Read: [DescribeL4Proxy](https://cloud.tencent.com/document/api/1552/103413) - 查询四层代理实例列表
-* Update: [ModifyL4Proxy](https://cloud.tencent.com/document/api/1552/103411) - 修改四层代理实例
-* Delete: [DeleteL4Proxy](https://cloud.tencent.com/document/api/1552/103415) - 删除四层代理实例
-* Delete: [DescribeL4Proxy](https://cloud.tencent.com/document/api/1552/103413) - 查询四层代理实例列表
-* Delete: [ModifyL4ProxyStatus](https://cloud.tencent.com/document/api/1552/103408) - 修改四层代理实例状态
+* Create: [CreateL4Proxy](https://cloud.tencent.com/document/api/1552/103417) - This API is used to create Layer 4 proxy instances.
+* Read: [DescribeL4Proxy](https://cloud.tencent.com/document/api/1552/103413) - This API is used to query a Layer 4 proxy instance list.
+* Update: [ModifyL4Proxy](https://cloud.tencent.com/document/api/1552/103411) - This API is used to modify the configuration of a Layer 4 proxy instance.
+* Delete: [DeleteL4Proxy](https://cloud.tencent.com/document/api/1552/103415) - This API is used to delete a Layer 4 proxy instance.
+* Delete: [DescribeL4Proxy](https://cloud.tencent.com/document/api/1552/103413) - This API is used to query a Layer 4 proxy instance list.
+* Delete: [ModifyL4ProxyStatus](https://cloud.tencent.com/document/api/1552/103408) - This API is used to enable or disable a Layer 4 proxy instance.
 
 ## Import
 

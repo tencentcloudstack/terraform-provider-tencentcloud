@@ -76,8 +76,8 @@ In addition to all arguments above, the following attributes are exported:
 
 This resource interacts with the following TencentCloud APIs:
 
-* Create: [CreateApplication](https://cloud.tencent.com/document/api/649/36094) - 创建应用
-* Read: [DescribeApplication](https://cloud.tencent.com/document/api/649/36092) - 获取应用详情
-* Update: [ModifyApplication](https://cloud.tencent.com/document/api/649/85854) - 修改应用
-* Delete: [DeleteApplication](https://cloud.tencent.com/document/api/649/36093) - 删除应用
+* Create: [CreateApplication](https://cloud.tencent.com/document/api/649/36094)
+* Read: [DescribeApplication](https://cloud.tencent.com/document/api/649/36092)
+* Update: [ModifyApplication](https://cloud.tencent.com/document/api/649/85854)
+* Delete: [DeleteApplication](https://cloud.tencent.com/document/api/649/36093)
 

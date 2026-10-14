@@ -46,5 +46,5 @@ In addition to all arguments above, the following attributes are exported:
 
 This data source queries the following TencentCloud APIs:
 
-* Read: [DescribeProductInfo](https://cloud.tencent.com/document/api/239/30600) - 查询产品售卖规格
+* Read: [DescribeProductInfo](https://cloud.tencent.com/document/api/239/30600) - This API is used to query purchasable TencentDB for Redis specifications in all regions.
 

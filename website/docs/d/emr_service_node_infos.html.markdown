@@ -98,5 +98,5 @@ In addition to all arguments above, the following attributes are exported:
 
 This data source queries the following TencentCloud APIs:
 
-* Read: [DescribeServiceNodeInfos](https://cloud.tencent.com/document/api/589/109835) - 查询服务进程信息
+* Read: [DescribeServiceNodeInfos](https://cloud.tencent.com/document/api/589/109835) - This API is used to query service process information.
 

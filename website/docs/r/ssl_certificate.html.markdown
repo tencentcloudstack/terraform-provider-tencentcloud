@@ -82,15 +82,15 @@ In addition to all arguments above, the following attributes are exported:
 
 This resource interacts with the following TencentCloud APIs:
 
-* Create: [DescribeCertificateDetail](https://cloud.tencent.com/document/api/400/41673) - 获取证书详情
-* Create: [ModifyResourceTags](https://cloud.tencent.com/document/api/651/35322) - 批量修改资源关联的标签
-* Create: [UploadCertificate](https://cloud.tencent.com/document/api/400/41665) - 上传证书
-* Read: [DescribeCertificateDetail](https://cloud.tencent.com/document/api/400/41673) - 获取证书详情
-* Read: [DescribeResourceTagsByResourceIds](https://cloud.tencent.com/document/api/651/35319) - 批量查看资源关联的标签
-* Update: [ModifyCertificateAlias](https://cloud.tencent.com/document/api/400/41669) - 修改证书备注
-* Update: [ModifyCertificateProject](https://cloud.tencent.com/document/api/400/41668) - 修改证书所属项目
-* Update: [ModifyResourceTags](https://cloud.tencent.com/document/api/651/35322) - 批量修改资源关联的标签
-* Delete: [DeleteCertificate](https://cloud.tencent.com/document/api/400/41675) - 删除证书
+* Create: [DescribeCertificateDetail](https://cloud.tencent.com/document/api/400/41673) - This API is used to get certificate details.
+* Create: [ModifyResourceTags](https://cloud.tencent.com/document/api/651/35322) - This API is used to modify all tags associated with a resource.
+* Create: [UploadCertificate](https://cloud.tencent.com/document/api/400/41665) - This API is used to upload a certificate.
+* Read: [DescribeCertificateDetail](https://cloud.tencent.com/document/api/400/41673) - This API is used to get certificate details.
+* Read: [DescribeResourceTagsByResourceIds](https://cloud.tencent.com/document/api/651/35319) - This API is used to query the tag key-value pairs associated with an existing resource.
+* Update: [ModifyCertificateAlias](https://cloud.tencent.com/document/api/400/41669) - This API is used to modify a certificate alias by passing in the certificate ID and new alias.
+* Update: [ModifyCertificateProject](https://cloud.tencent.com/document/api/400/41668) - This API is used to modify the projects of multiple certificates.
+* Update: [ModifyResourceTags](https://cloud.tencent.com/document/api/651/35322) - This API is used to modify all tags associated with a resource.
+* Delete: [DeleteCertificate](https://cloud.tencent.com/document/api/400/41675) - This API is used to delete a certificate.
 
 ## Import
 

@@ -39,5 +39,5 @@ In addition to all arguments above, the following attributes are exported:
 
 This data source queries the following TencentCloud APIs:
 
-* Read: [DescribeCcnRouteTableInputPolicys](https://cloud.tencent.com/document/api/215/108746) - 查询云联网路由接收策略
+* Read: [DescribeCcnRouteTableInputPolicys](https://cloud.tencent.com/document/api/215/108746)
 

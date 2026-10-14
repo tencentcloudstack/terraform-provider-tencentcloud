@@ -51,9 +51,9 @@ In addition to all arguments above, the following attributes are exported:
 
 This resource interacts with the following TencentCloud APIs:
 
-* Create: [CreateEmailIdentity](https://cloud.tencent.com/document/api/1288/51048) - 新建发信域名
-* Read: [GetEmailIdentity](https://cloud.tencent.com/document/api/1288/51046) - 获取域名配置详情
-* Delete: [DeleteEmailIdentity](https://cloud.tencent.com/document/api/1288/51047) - 删除发信域名
+* Create: [CreateEmailIdentity](https://cloud.tencent.com/document/api/1288/51048) - This API is used to create a sender domain. Before you can send an email using Tencent Cloud SES, you must create a sender domain as your identity. It can be the domain of your website or mobile app. You must verify the domain to prove that you own it and authorize Tencent Cloud SES to use it to send emails.
+* Read: [GetEmailIdentity](https://cloud.tencent.com/document/api/1288/51046) - This API is used to get the configuration details of a sender domain.
+* Delete: [DeleteEmailIdentity](https://cloud.tencent.com/document/api/1288/51047) - Delete the sender domain name. Once deleted, that domain name cannot be used anymore to send email.
 
 ## Import
 

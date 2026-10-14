@@ -40,5 +40,5 @@ In addition to all arguments above, the following attributes are exported:
 
 This data source queries the following TencentCloud APIs:
 
-* Read: [DescribeGrafanaVersions](https://cloud.tencent.com/document/api/248/136526) - 列出 Grafana 版本
+* Read: [DescribeGrafanaVersions](https://cloud.tencent.com/document/api/248/136526)
 

@@ -45,5 +45,5 @@ In addition to all arguments above, the following attributes are exported:
 
 This data source queries the following TencentCloud APIs:
 
-* Read: [ListAggregators](https://cloud.tencent.com/document/api/1579/129703) - 账号组列表
+* Read: [ListAggregators](https://cloud.tencent.com/document/api/1579/129703)
 

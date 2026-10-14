@@ -55,5 +55,5 @@ In addition to all arguments above, the following attributes are exported:
 
 This data source queries the following TencentCloud APIs:
 
-* Read: [DescribeInstanceNodes](https://cloud.tencent.com/document/api/1299/102819) - 获取实例节点信息列表
+* Read: [DescribeInstanceNodes](https://cloud.tencent.com/document/api/1299/102819)
 

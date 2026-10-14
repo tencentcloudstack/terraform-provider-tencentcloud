@@ -48,5 +48,5 @@ In addition to all arguments above, the following attributes are exported:
 
 This data source queries the following TencentCloud APIs:
 
-* Read: [DescribeClasses](https://cloud.tencent.com/document/api/409/89019) - 查询售卖规格
+* Read: [DescribeClasses](https://cloud.tencent.com/document/api/409/89019) - This API is used to query purchasable instance specifications.
 

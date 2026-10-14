@@ -142,15 +142,15 @@ In addition to all arguments above, the following attributes are exported:
 
 This resource interacts with the following TencentCloud APIs:
 
-* Create: [AttachCcnInstances](https://cloud.tencent.com/document/api/215/19205) - 云联网关联实例
-* Create: [DescribeCcnAttachedInstances](https://cloud.tencent.com/document/api/215/19202) - 查询云联网关联实例列表
-* Create: [DescribeCcnRoutes](https://cloud.tencent.com/document/api/215/19200) - 查询云联网路由条目
-* Read: [DescribeCcnAttachedInstances](https://cloud.tencent.com/document/api/215/19202) - 查询云联网关联实例列表
-* Read: [DescribeCcnRoutes](https://cloud.tencent.com/document/api/215/19200) - 查询云联网路由条目
-* Update: [DescribeCcnAttachedInstances](https://cloud.tencent.com/document/api/215/19202) - 查询云联网关联实例列表
-* Update: [DescribeCcnRoutes](https://cloud.tencent.com/document/api/215/19200) - 查询云联网路由条目
-* Update: [ModifyCcnAttachedInstancesAttribute](https://cloud.tencent.com/document/api/215/54517) - 修改CCN关联实例属性
-* Delete: [DetachCcnInstances](https://cloud.tencent.com/document/api/215/19198) - 云联网解关联实例
+* Create: [AttachCcnInstances](https://cloud.tencent.com/document/api/215/19205) - This API is used to add a network instance to a CCN instance. Network instances include VPCs and Direct Connect gateways. <br />
+* Create: [DescribeCcnAttachedInstances](https://cloud.tencent.com/document/api/215/19202) - This API (DescribeCcnAttachedInstances) is used to query the network instances associated with the CCN instance.
+* Create: [DescribeCcnRoutes](https://cloud.tencent.com/document/api/215/19200) - This API (DescribeCcnRoutes) is used to query routes that have been added to a CCN.
+* Read: [DescribeCcnAttachedInstances](https://cloud.tencent.com/document/api/215/19202) - This API (DescribeCcnAttachedInstances) is used to query the network instances associated with the CCN instance.
+* Read: [DescribeCcnRoutes](https://cloud.tencent.com/document/api/215/19200) - This API (DescribeCcnRoutes) is used to query routes that have been added to a CCN.
+* Update: [DescribeCcnAttachedInstances](https://cloud.tencent.com/document/api/215/19202) - This API (DescribeCcnAttachedInstances) is used to query the network instances associated with the CCN instance.
+* Update: [DescribeCcnRoutes](https://cloud.tencent.com/document/api/215/19200) - This API (DescribeCcnRoutes) is used to query routes that have been added to a CCN.
+* Update: [ModifyCcnAttachedInstancesAttribute](https://cloud.tencent.com/document/api/215/54517) - This API is used to modify CCN-associated instance attributes. Currently, only the `description` can be modified.
+* Delete: [DetachCcnInstances](https://cloud.tencent.com/document/api/215/19198) - This API (DetachCcnInstances) is used to unbind a specified network instance from a CCN instance.<br />
 
 ## Import
 

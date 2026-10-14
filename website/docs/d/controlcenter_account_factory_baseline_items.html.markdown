@@ -45,5 +45,5 @@ In addition to all arguments above, the following attributes are exported:
 
 This data source queries the following TencentCloud APIs:
 
-* Read: [ListAccountFactoryBaselineItems](https://cloud.tencent.com/document/api/1708/116708) - 获取账号工厂系统基线项
+* Read: [ListAccountFactoryBaselineItems](https://cloud.tencent.com/document/api/1708/116708) - This API is used to obtain account factory system baseline items.
 

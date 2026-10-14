@@ -46,6 +46,6 @@ In addition to all arguments above, the following attributes are exported:
 
 This data source queries the following TencentCloud APIs:
 
-* Read: [DescribeProductConfig](https://cloud.tencent.com/document/api/238/19966) - 查询售卖规格配置
-* Read: [DescribeZones](https://cloud.tencent.com/document/api/238/19963) - 查询售卖可用区
+* Read: [DescribeProductConfig](https://cloud.tencent.com/document/api/238/19966) - This API is used to query purchasable specification configuration.
+* Read: [DescribeZones](https://cloud.tencent.com/document/api/238/19963) - This API is used to query currently purchasable AZs.
 

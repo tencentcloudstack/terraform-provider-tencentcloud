@@ -113,6 +113,6 @@ In addition to all arguments above, the following attributes are exported:
 
 This resource interacts with the following TencentCloud APIs:
 
-* Create: [DescribeAutoScalingActivities](https://cloud.tencent.com/document/api/377/31735) - 查询伸缩活动
-* Create: [StopAutoScalingInstances](https://cloud.tencent.com/document/api/377/40286) - 关闭伸缩组内 CVM 实例
+* Create: [DescribeAutoScalingActivities](https://cloud.tencent.com/document/api/377/31735) - This API is used to query the scaling activities of the scaling group. Currently, only scaling operations from the past two years are saved.
+* Create: [StopAutoScalingInstances](https://cloud.tencent.com/document/api/377/40286) - This API is used to shut down CVM instances in a scaling group.
 

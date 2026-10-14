@@ -33,5 +33,5 @@ In addition to all arguments above, the following attributes are exported:
 
 This data source queries the following TencentCloud APIs:
 
-* Read: [DescribeTCLakeMetaInstance](https://cloud.tencent.com/document/api/1342/131534) - 查询TCLake开通状态
+* Read: [DescribeTCLakeMetaInstance](https://cloud.tencent.com/document/api/1342/131534)
 

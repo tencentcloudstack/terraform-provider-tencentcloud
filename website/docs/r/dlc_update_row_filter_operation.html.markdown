@@ -67,5 +67,5 @@ In addition to all arguments above, the following attributes are exported:
 
 This resource interacts with the following TencentCloud APIs:
 
-* Create: [UpdateRowFilter](https://cloud.tencent.com/document/api/1342/87871) - 更新行过滤规则
+* Create: [UpdateRowFilter](https://cloud.tencent.com/document/api/1342/87871) - This API is used to update row filters. Please note that it updates filters only but not catalogs, databases, or tables.
 

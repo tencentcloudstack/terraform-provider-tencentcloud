@@ -38,8 +38,8 @@ In addition to all arguments above, the following attributes are exported:
 
 This resource interacts with the following TencentCloud APIs:
 
-* Read: [DescribeDCDBInstanceDetail](https://cloud.tencent.com/document/api/557/89385) - 获取实例详情
-* Update: [ModifyRealServerAccessStrategy](https://cloud.tencent.com/document/api/557/60074) - 修改RS的访问策略
+* Read: [DescribeDCDBInstanceDetail](https://cloud.tencent.com/document/api/557/89385) - This API is used to get the details of a TDSQL instance.
+* Update: [ModifyRealServerAccessStrategy](https://cloud.tencent.com/document/api/557/60074)
 
 ## Import
 

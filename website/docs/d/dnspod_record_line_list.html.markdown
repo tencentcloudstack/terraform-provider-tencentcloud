@@ -47,5 +47,5 @@ In addition to all arguments above, the following attributes are exported:
 
 This data source queries the following TencentCloud APIs:
 
-* Read: [DescribeRecordLineList](https://cloud.tencent.com/document/api/1427/56167) - 获取等级允许的线路
+* Read: [DescribeRecordLineList](https://cloud.tencent.com/document/api/1427/56167) - This API is used to get the split zones allowed by the domain level.
 

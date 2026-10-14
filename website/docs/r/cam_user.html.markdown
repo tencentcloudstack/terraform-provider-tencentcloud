@@ -61,15 +61,15 @@ In addition to all arguments above, the following attributes are exported:
 
 This resource interacts with the following TencentCloud APIs:
 
-* Create: [AddUser](https://cloud.tencent.com/document/api/598/34595) - 创建子用户
-* Create: [GetUser](https://cloud.tencent.com/document/api/598/34590) - 查询子用户
-* Create: [ModifyResourceTags](https://cloud.tencent.com/document/api/651/35322) - 批量修改资源关联的标签
-* Read: [DescribeResourceTagsByResourceIds](https://cloud.tencent.com/document/api/651/35319) - 批量查看资源关联的标签
-* Read: [GetUser](https://cloud.tencent.com/document/api/598/34590) - 查询子用户
-* Update: [GetUser](https://cloud.tencent.com/document/api/598/34590) - 查询子用户
-* Update: [ModifyResourceTags](https://cloud.tencent.com/document/api/651/35322) - 批量修改资源关联的标签
-* Update: [UpdateUser](https://cloud.tencent.com/document/api/598/34583) - 更新子用户
-* Delete: [DeleteUser](https://cloud.tencent.com/document/api/598/34592) - 删除子用户
+* Create: [AddUser](https://cloud.tencent.com/document/api/598/34595) - This API is used to create a sub-user.
+* Create: [GetUser](https://cloud.tencent.com/document/api/598/34590) - This API is used to query sub-users.
+* Create: [ModifyResourceTags](https://cloud.tencent.com/document/api/651/35322) - This API is used to modify all tags associated with a resource.
+* Read: [DescribeResourceTagsByResourceIds](https://cloud.tencent.com/document/api/651/35319) - This API is used to query the tag key-value pairs associated with an existing resource.
+* Read: [GetUser](https://cloud.tencent.com/document/api/598/34590) - This API is used to query sub-users.
+* Update: [GetUser](https://cloud.tencent.com/document/api/598/34590) - This API is used to query sub-users.
+* Update: [ModifyResourceTags](https://cloud.tencent.com/document/api/651/35322) - This API is used to modify all tags associated with a resource.
+* Update: [UpdateUser](https://cloud.tencent.com/document/api/598/34583) - This API is used to update a sub-user.
+* Delete: [DeleteUser](https://cloud.tencent.com/document/api/598/34592) - This API is used to delete a sub-user.
 
 ## Import
 

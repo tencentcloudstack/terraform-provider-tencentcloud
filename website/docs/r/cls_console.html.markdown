@@ -225,10 +225,10 @@ In addition to all arguments above, the following attributes are exported:
 
 This resource interacts with the following TencentCloud APIs:
 
-* Create: [CreateConsole](https://cloud.tencent.com/document/api/614/129856) - 创建DataSight控制台
-* Read: [DescribeConsoles](https://cloud.tencent.com/document/api/614/129854) - 查询DataSight控制台实例列表
-* Update: [ModifyConsole](https://cloud.tencent.com/document/api/614/129853) - 编辑DataSight控制台
-* Delete: [DeleteConsole](https://cloud.tencent.com/document/api/614/129855) - 删除DataSight控制台
+* Create: [CreateConsole](https://cloud.tencent.com/document/api/614/129856) - This API is used to create the DataSight Console
+* Read: [DescribeConsoles](https://cloud.tencent.com/document/api/614/129854) - Query the DataSight console instance list
+* Update: [ModifyConsole](https://cloud.tencent.com/document/api/614/129853) - This API is used to edit the DataSight Console
+* Delete: [DeleteConsole](https://cloud.tencent.com/document/api/614/129855) - This API is used to delete the DataSight Console
 
 ## Import
 

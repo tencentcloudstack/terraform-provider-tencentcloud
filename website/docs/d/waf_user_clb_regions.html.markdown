@@ -38,5 +38,5 @@ In addition to all arguments above, the following attributes are exported:
 
 This data source queries the following TencentCloud APIs:
 
-* Read: [DescribeUserClbWafRegions](https://cloud.tencent.com/document/api/627/53600) - 获取对客户已经开放的负载均衡型WAF(clb-waf)的地域
+* Read: [DescribeUserClbWafRegions](https://cloud.tencent.com/document/api/627/53600) - During the addition and modification of Domain Configuration for CLB-type WAF, it is required to display the supported region list for CLB-type WAF (clb-waf) through DescribeUserClbWafRegions to obtain the currently available region list for the customer.
 

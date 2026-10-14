@@ -50,5 +50,5 @@ In addition to all arguments above, the following attributes are exported:
 
 This data source queries the following TencentCloud APIs:
 
-* Read: [CheckProxyCreate](https://cloud.tencent.com/document/api/608/36974) - 查询通道是否可以创建
+* Read: [CheckProxyCreate](https://cloud.tencent.com/document/api/608/36974) - This API (CheckProxyCreate) is used to query whether an acceleration connection with the specified configuration can be created.
 

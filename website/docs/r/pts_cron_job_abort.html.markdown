@@ -38,5 +38,5 @@ In addition to all arguments above, the following attributes are exported:
 
 This resource interacts with the following TencentCloud APIs:
 
-* Create: [AbortCronJobs](https://cloud.tencent.com/document/api/1484/78099) - 停止定时任务
+* Create: [AbortCronJobs](https://cloud.tencent.com/document/api/1484/78099) - This API is used to stop cron jobs.
 

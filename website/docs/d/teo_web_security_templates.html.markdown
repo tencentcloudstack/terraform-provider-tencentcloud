@@ -43,5 +43,5 @@ In addition to all arguments above, the following attributes are exported:
 
 This data source queries the following TencentCloud APIs:
 
-* Read: [DescribeWebSecurityTemplates](https://cloud.tencent.com/document/api/1552/121061) - 查询安全策略配置模板列表
+* Read: [DescribeWebSecurityTemplates](https://cloud.tencent.com/document/api/1552/121061) - This API is used to query the security policy configuration template list.
 

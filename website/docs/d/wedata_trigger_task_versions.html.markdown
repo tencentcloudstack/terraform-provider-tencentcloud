@@ -40,5 +40,5 @@ In addition to all arguments above, the following attributes are exported:
 
 This data source queries the following TencentCloud APIs:
 
-* Read: [ListTriggerTaskVersions](https://cloud.tencent.com/document/api/1267/127251) - 查看工作流调度任务版本列表
+* Read: [ListTriggerTaskVersions](https://cloud.tencent.com/document/api/1267/127251) - Task save version list.
 

@@ -68,13 +68,13 @@ The `timeouts` block allows you to specify [timeouts](https://developer.hashicor
 
 This resource interacts with the following TencentCloud APIs:
 
-* Create: [CreateMultiPathGateway](https://cloud.tencent.com/document/api/1552/121343) - 创建多通道安全加速网关
-* Create: [DescribeMultiPathGateways](https://cloud.tencent.com/document/api/1552/121334) - 查询多通道安全加速网关列表
-* Read: [DescribeMultiPathGateways](https://cloud.tencent.com/document/api/1552/121334) - 查询多通道安全加速网关列表
-* Update: [DescribeMultiPathGateways](https://cloud.tencent.com/document/api/1552/121334) - 查询多通道安全加速网关列表
-* Update: [ModifyMultiPathGateway](https://cloud.tencent.com/document/api/1552/121333) - 修改多通道安全加速网关信息
-* Update: [ModifyMultiPathGatewayStatus](https://cloud.tencent.com/document/api/1552/123858) - 修改多通道安全加速网关状态
-* Delete: [DeleteMultiPathGateway](https://cloud.tencent.com/document/api/1552/121340) - 删除多通道安全加速网关
+* Create: [CreateMultiPathGateway](https://cloud.tencent.com/document/api/1552/121343) - Create a multi-channel security acceleration gateway via this API, including Cloud Gateway (gateway created and managed by Tencent Cloud) and private gateway (gateway deployed by users). Query the status using DescribeMultiPathGateway, and creation is successful if the status is online.
+* Create: [DescribeMultiPathGateways](https://cloud.tencent.com/document/api/1552/121334) - Query the multi-channel security acceleration gateway list created by the user through this interface. Supports pagination.
+* Read: [DescribeMultiPathGateways](https://cloud.tencent.com/document/api/1552/121334) - Query the multi-channel security acceleration gateway list created by the user through this interface. Supports pagination.
+* Update: [DescribeMultiPathGateways](https://cloud.tencent.com/document/api/1552/121334) - Query the multi-channel security acceleration gateway list created by the user through this interface. Supports pagination.
+* Update: [ModifyMultiPathGateway](https://cloud.tencent.com/document/api/1552/121333) - This API is used to modify multi-channel security acceleration gateway information, such as name, gateway ID, IP and port.
+* Update: [ModifyMultiPathGatewayStatus](https://cloud.tencent.com/document/api/1552/123858) - This API is used to update the status of a multi-channel security gateway.
+* Delete: [DeleteMultiPathGateway](https://cloud.tencent.com/document/api/1552/121340) - This API is used to delete a multi-channel security acceleration gateway, including private gateways and Cloud Gateways.
 
 ## Import
 

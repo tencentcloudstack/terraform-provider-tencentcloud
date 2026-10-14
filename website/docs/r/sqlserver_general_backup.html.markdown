@@ -91,11 +91,11 @@ In addition to all arguments above, the following attributes are exported:
 
 This resource interacts with the following TencentCloud APIs:
 
-* Create: [CreateBackup](https://cloud.tencent.com/document/api/238/19946) - 创建备份
-* Create: [DescribeBackupByFlowId](https://cloud.tencent.com/document/api/238/47203) - 根据流程ID查询备份信息
-* Read: [DescribeBackups](https://cloud.tencent.com/document/api/238/19943) - 查询备份列表
-* Update: [ModifyBackupName](https://cloud.tencent.com/document/api/238/47202) - 修改备份名称
-* Delete: [RemoveBackups](https://cloud.tencent.com/document/api/238/46287) - 删除手动备份
+* Create: [CreateBackup](https://cloud.tencent.com/document/api/238/19946) - This API is used to create a backup.
+* Create: [DescribeBackupByFlowId](https://cloud.tencent.com/document/api/238/47203) - This API is used to query the created backup details through the backup creation process ID. The process ID can be obtained through the CreateBackup API.
+* Read: [DescribeBackups](https://cloud.tencent.com/document/api/238/19943) - This API is used to query the list of backups.
+* Update: [ModifyBackupName](https://cloud.tencent.com/document/api/238/47202) - This API is used to modify the name of a backup task.
+* Delete: [RemoveBackups](https://cloud.tencent.com/document/api/238/46287) - This API is used to delete backup files created by users manually. The backup policy to be deleted can be instance backup or multi-database backup.
 
 ## Import
 

@@ -105,5 +105,5 @@ In addition to all arguments above, the following attributes are exported:
 
 This data source queries the following TencentCloud APIs:
 
-* Read: [DescribeClusterInstanceGrps](https://cloud.tencent.com/document/api/1003/48303) - 查询实例组（废弃）
+* Read: [DescribeClusterInstanceGrps](https://cloud.tencent.com/document/api/1003/48303) - This API is used to query instance groups.
 

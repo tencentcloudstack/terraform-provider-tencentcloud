@@ -66,18 +66,18 @@ In addition to all arguments above, the following attributes are exported:
 
 This resource interacts with the following TencentCloud APIs:
 
-* Create: [CreateDomain](https://cloud.tencent.com/document/api/608/36991) - 创建HTTPS监听器的访问域名
-* Create: [DescribeHTTPListeners](https://cloud.tencent.com/document/api/608/37002) - 查询HTTP监听器信息
-* Create: [DescribeHTTPSListeners](https://cloud.tencent.com/document/api/608/37001) - 查询HTTPS监听器信息
-* Create: [DescribeRules](https://cloud.tencent.com/document/api/608/36986) - 查询转发规则信息
-* Create: [SetAuthentication](https://cloud.tencent.com/document/api/608/36982) - 认证高级配置
-* Read: [DescribeRules](https://cloud.tencent.com/document/api/608/36986) - 查询转发规则信息
-* Update: [DescribeHTTPSListeners](https://cloud.tencent.com/document/api/608/37001) - 查询HTTPS监听器信息
-* Update: [ModifyCertificate](https://cloud.tencent.com/document/api/608/36985) - 修改域名对应的证书
-* Update: [ModifyDomain](https://cloud.tencent.com/document/api/608/36984) - 更新监听器转发规则域名
-* Update: [SetAuthentication](https://cloud.tencent.com/document/api/608/36982) - 认证高级配置
-* Delete: [DeleteDomain](https://cloud.tencent.com/document/api/608/36989) - 根据域名删除转发规则
-* Delete: [DescribeRules](https://cloud.tencent.com/document/api/608/36986) - 查询转发规则信息
+* Create: [CreateDomain](https://cloud.tencent.com/document/api/608/36991) - This API (CreateDomain) is used to create the access domain name for the HTTP/HTTPS listener. Clients request the backend data by accessing this domain.
+* Create: [DescribeHTTPListeners](https://cloud.tencent.com/document/api/608/37002) - This API (DescribeHTTPListeners) is used to query HTTP listener information.
+* Create: [DescribeHTTPSListeners](https://cloud.tencent.com/document/api/608/37001) - This API (DescribeHTTPSListeners) is used to query HTTPS listener information.
+* Create: [DescribeRules](https://cloud.tencent.com/document/api/608/36986) - This API (DescribeRules) is used to query all rule information of a listener, including the domain names, paths, and list of bound origin servers. For version 3.0 connections, this API returns the advanced authentication configuration information of the domain name.
+* Create: [SetAuthentication](https://cloud.tencent.com/document/api/608/36982) - This API (SetAuthentication) is used for the advanced authentication configuration of connections, including authentication methods and their certificates. If only supports connections of version 3.0.
+* Read: [DescribeRules](https://cloud.tencent.com/document/api/608/36986) - This API (DescribeRules) is used to query all rule information of a listener, including the domain names, paths, and list of bound origin servers. For version 3.0 connections, this API returns the advanced authentication configuration information of the domain name.
+* Update: [DescribeHTTPSListeners](https://cloud.tencent.com/document/api/608/37001) - This API (DescribeHTTPSListeners) is used to query HTTPS listener information.
+* Update: [ModifyCertificate](https://cloud.tencent.com/document/api/608/36985) - This API (ModifyCertificate) is used to modify a domain name certificate of a listener. domain name certificate. This API is only applicable to connections of version 3.0.
+* Update: [ModifyDomain](https://cloud.tencent.com/document/api/608/36984) - This API (ModifyDomain) is used to modify domain names of listeners. For connections of version 3.0, it supports modifying certificates of the domain names.
+* Update: [SetAuthentication](https://cloud.tencent.com/document/api/608/36982) - This API (SetAuthentication) is used for the advanced authentication configuration of connections, including authentication methods and their certificates. If only supports connections of version 3.0.
+* Delete: [DeleteDomain](https://cloud.tencent.com/document/api/608/36989) - This API (DeleteDomain) is only applicable to layer-7 listeners. It is used to delete the domain names of this listener, and all the rules under the domain name. All rules bound to the origin server are unbound automatically.
+* Delete: [DescribeRules](https://cloud.tencent.com/document/api/608/36986) - This API (DescribeRules) is used to query all rule information of a listener, including the domain names, paths, and list of bound origin servers. For version 3.0 connections, this API returns the advanced authentication configuration information of the domain name.
 
 ## Import
 

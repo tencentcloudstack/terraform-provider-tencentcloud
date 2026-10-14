@@ -64,6 +64,6 @@ In addition to all arguments above, the following attributes are exported:
 
 This data source queries the following TencentCloud APIs:
 
-* Read: [DescribeResourceTagsByResourceIds](https://cloud.tencent.com/document/api/651/35319) - 批量查看资源关联的标签
-* Read: [DescribeVpnGateways](https://cloud.tencent.com/document/api/215/17514) - 查询VPN网关
+* Read: [DescribeResourceTagsByResourceIds](https://cloud.tencent.com/document/api/651/35319) - This API is used to query the tag key-value pairs associated with an existing resource.
+* Read: [DescribeVpnGateways](https://cloud.tencent.com/document/api/215/17514) - This API (DescribeVpnGateways) is used to query the VPN gateway list.
 

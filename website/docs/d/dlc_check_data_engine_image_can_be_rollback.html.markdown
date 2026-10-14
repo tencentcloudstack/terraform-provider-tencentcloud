@@ -38,5 +38,5 @@ In addition to all arguments above, the following attributes are exported:
 
 This data source queries the following TencentCloud APIs:
 
-* Read: [CheckDataEngineImageCanBeRollback](https://cloud.tencent.com/document/api/1342/99276) - 查看集群是否能回滚
+* Read: [CheckDataEngineImageCanBeRollback](https://cloud.tencent.com/document/api/1342/99276) - This API is used to check whether the cluster can be rolled back.
 

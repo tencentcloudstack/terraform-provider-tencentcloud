@@ -45,5 +45,5 @@ In addition to all arguments above, the following attributes are exported:
 
 This data source queries the following TencentCloud APIs:
 
-* Read: [DescribeDefaultParams](https://cloud.tencent.com/document/api/236/32662) - 查询默认的可设置参数列表
+* Read: [DescribeDefaultParams](https://cloud.tencent.com/document/api/236/32662) - This API (DescribeDefaultParams) is used to query the list of default configurable parameters.
 

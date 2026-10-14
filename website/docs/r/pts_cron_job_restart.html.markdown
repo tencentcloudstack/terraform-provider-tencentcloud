@@ -38,5 +38,5 @@ In addition to all arguments above, the following attributes are exported:
 
 This resource interacts with the following TencentCloud APIs:
 
-* Create: [RestartCronJobs](https://cloud.tencent.com/document/api/1484/78063) - 重启定时任务
+* Create: [RestartCronJobs](https://cloud.tencent.com/document/api/1484/78063) - This API is used to restart cron jobs that have been aborted.
 

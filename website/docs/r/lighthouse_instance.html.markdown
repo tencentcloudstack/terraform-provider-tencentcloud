@@ -148,18 +148,18 @@ In addition to all arguments above, the following attributes are exported:
 
 This resource interacts with the following TencentCloud APIs:
 
-* Create: [CreateInstances](https://cloud.tencent.com/document/api/1207/69573) - 创建实例
-* Create: [DescribeInstances](https://cloud.tencent.com/document/api/1207/47573) - 查看实例列表
-* Read: [DescribeInstances](https://cloud.tencent.com/document/api/1207/47573) - 查看实例列表
-* Update: [DescribeInstances](https://cloud.tencent.com/document/api/1207/47573) - 查看实例列表
-* Update: [ModifyInstancesAttribute](https://cloud.tencent.com/document/api/1207/55548) - 修改实例的属性
-* Update: [ModifyInstancesBundle](https://cloud.tencent.com/document/api/1207/82998) - 变更实例套餐
-* Update: [ModifyInstancesRenewFlag](https://cloud.tencent.com/document/api/1207/55547) - 修改实例续费标识
-* Update: [ResetInstance](https://cloud.tencent.com/document/api/1207/47571) - 重装系统
-* Update: [ResetInstancesPassword](https://cloud.tencent.com/document/api/1207/55546) - 重置实例密码
-* Delete: [DescribeInstances](https://cloud.tencent.com/document/api/1207/47573) - 查看实例列表
-* Delete: [IsolateInstances](https://cloud.tencent.com/document/api/1207/73214) - 隔离实例
-* Delete: [TerminateInstances](https://cloud.tencent.com/document/api/1207/55545) - 销毁实例
+* Create: [CreateInstances](https://cloud.tencent.com/document/api/1207/69573) - This API is used to create one or more Lighthouse instances.
+* Create: [DescribeInstances](https://cloud.tencent.com/document/api/1207/47573) - This API is used to query the details of one or multiple instances.
+* Read: [DescribeInstances](https://cloud.tencent.com/document/api/1207/47573) - This API is used to query the details of one or multiple instances.
+* Update: [DescribeInstances](https://cloud.tencent.com/document/api/1207/47573) - This API is used to query the details of one or multiple instances.
+* Update: [ModifyInstancesAttribute](https://cloud.tencent.com/document/api/1207/55548) - This API is used to modify an instance attribute.
+* Update: [ModifyInstancesBundle](https://cloud.tencent.com/document/api/1207/82998) - This API is used change one or more Lighthouse instance bundles.
+* Update: [ModifyInstancesRenewFlag](https://cloud.tencent.com/document/api/1207/55547) - This API is used to change the auto-renewal setting of monthly-subscribed instances.
+* Update: [ResetInstance](https://cloud.tencent.com/document/api/1207/47571) - This API is used to reinstall the image on the specified instance.
+* Update: [ResetInstancesPassword](https://cloud.tencent.com/document/api/1207/55546) - This API is used to reset the password of the instance OS to a user-specified password.
+* Delete: [DescribeInstances](https://cloud.tencent.com/document/api/1207/47573) - This API is used to query the details of one or multiple instances.
+* Delete: [IsolateInstances](https://cloud.tencent.com/document/api/1207/73214) - This API is used to return one or more Lighthouse instances.
+* Delete: [TerminateInstances](https://cloud.tencent.com/document/api/1207/55545) - This API is used to terminate one or more instances.
 
 ## Import
 

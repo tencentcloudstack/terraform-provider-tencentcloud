@@ -48,5 +48,5 @@ In addition to all arguments above, the following attributes are exported:
 
 This data source queries the following TencentCloud APIs:
 
-* Read: [DescribeGroupOffsets](https://cloud.tencent.com/document/api/597/40837) - 获取消费分组offset
+* Read: [DescribeGroupOffsets](https://cloud.tencent.com/document/api/597/40837) - This API is used to get the consumer group offset.
 

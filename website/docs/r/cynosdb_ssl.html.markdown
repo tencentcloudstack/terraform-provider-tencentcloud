@@ -40,15 +40,15 @@ In addition to all arguments above, the following attributes are exported:
 
 This resource interacts with the following TencentCloud APIs:
 
-* Create: [CloseSSL](https://cloud.tencent.com/document/api/1003/118379) - 关闭SSL加密
-* Create: [DescribeSSLStatus](https://cloud.tencent.com/document/api/1003/118100) - 查询实例SSL状态
-* Create: [DescribeTasks](https://cloud.tencent.com/document/api/1003/103866) - 查询任务列表
-* Create: [OpenSSL](https://cloud.tencent.com/document/api/1003/118099) - 开启SSL加密
-* Read: [DescribeSSLStatus](https://cloud.tencent.com/document/api/1003/118100) - 查询实例SSL状态
-* Update: [CloseSSL](https://cloud.tencent.com/document/api/1003/118379) - 关闭SSL加密
-* Update: [DescribeSSLStatus](https://cloud.tencent.com/document/api/1003/118100) - 查询实例SSL状态
-* Update: [DescribeTasks](https://cloud.tencent.com/document/api/1003/103866) - 查询任务列表
-* Update: [OpenSSL](https://cloud.tencent.com/document/api/1003/118099) - 开启SSL加密
+* Create: [CloseSSL](https://cloud.tencent.com/document/api/1003/118379) - This API is used to disable SSL encryption.
+* Create: [DescribeSSLStatus](https://cloud.tencent.com/document/api/1003/118100)
+* Create: [DescribeTasks](https://cloud.tencent.com/document/api/1003/103866) - This API is used to query task lists.
+* Create: [OpenSSL](https://cloud.tencent.com/document/api/1003/118099)
+* Read: [DescribeSSLStatus](https://cloud.tencent.com/document/api/1003/118100)
+* Update: [CloseSSL](https://cloud.tencent.com/document/api/1003/118379) - This API is used to disable SSL encryption.
+* Update: [DescribeSSLStatus](https://cloud.tencent.com/document/api/1003/118100)
+* Update: [DescribeTasks](https://cloud.tencent.com/document/api/1003/103866) - This API is used to query task lists.
+* Update: [OpenSSL](https://cloud.tencent.com/document/api/1003/118099)
 
 ## Import
 

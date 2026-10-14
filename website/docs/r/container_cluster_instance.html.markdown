@@ -81,12 +81,12 @@ In addition to all arguments above, the following attributes are exported:
 
 This resource interacts with the following TencentCloud APIs:
 
-* Create: [CreateClusterInstances](https://cloud.tencent.com/document/api/457/36707) - 扩展集群节点
-* Create: [DescribeClusterInstances](https://cloud.tencent.com/document/api/457/31863) - 查询集群节点信息
-* Create: [DescribeInstances](https://cloud.tencent.com/document/api/213/15728) - 查看实例列表
-* Create: [DescribeZones](https://cloud.tencent.com/document/api/213/15707) - 查询可用区列表
-* Read: [DescribeClusterInstances](https://cloud.tencent.com/document/api/457/31863) - 查询集群节点信息
-* Read: [DescribeInstances](https://cloud.tencent.com/document/api/213/15728) - 查看实例列表
-* Delete: [DeleteClusterInstances](https://cloud.tencent.com/document/api/457/31864) - 删除集群中的节点
-* Delete: [DescribeClusterInstances](https://cloud.tencent.com/document/api/457/31863) - 查询集群节点信息
+* Create: [CreateClusterInstances](https://cloud.tencent.com/document/api/457/36707) - This API is used to create one or more nodes in a cluster.
+* Create: [DescribeClusterInstances](https://cloud.tencent.com/document/api/457/31863) - This API is used to query information of node instances in a cluster.
+* Create: [DescribeInstances](https://cloud.tencent.com/document/api/213/15728) - This API is used to query the details of instances.
+* Create: [DescribeZones](https://cloud.tencent.com/document/api/213/15707) - This API is used to query availability zones.
+* Read: [DescribeClusterInstances](https://cloud.tencent.com/document/api/457/31863) - This API is used to query information of node instances in a cluster.
+* Read: [DescribeInstances](https://cloud.tencent.com/document/api/213/15728) - This API is used to query the details of instances.
+* Delete: [DeleteClusterInstances](https://cloud.tencent.com/document/api/457/31864) - This API is used to delete one or more nodes from a cluster.
+* Delete: [DescribeClusterInstances](https://cloud.tencent.com/document/api/457/31863) - This API is used to query information of node instances in a cluster.
 

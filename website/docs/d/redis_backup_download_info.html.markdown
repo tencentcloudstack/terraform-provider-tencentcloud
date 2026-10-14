@@ -60,5 +60,5 @@ In addition to all arguments above, the following attributes are exported:
 
 This data source queries the following TencentCloud APIs:
 
-* Read: [DescribeBackupUrl](https://cloud.tencent.com/document/api/239/34443) - 查询备份Rdb下载地址
+* Read: [DescribeBackupUrl](https://cloud.tencent.com/document/api/239/34443) - This API is used to query the download address of a backup RDB file.
 

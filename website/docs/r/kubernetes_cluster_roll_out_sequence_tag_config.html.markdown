@@ -52,10 +52,10 @@ In addition to all arguments above, the following attributes are exported:
 
 This resource interacts with the following TencentCloud APIs:
 
-* Create: [ModifyClusterRollOutSequenceTags](https://cloud.tencent.com/document/api/457/125933) - 更新集群发布序列标签
-* Read: [DescribeClusterRollOutSequenceTags](https://cloud.tencent.com/document/api/457/125939) - 查询集群发布序列标签
-* Update: [ModifyClusterRollOutSequenceTags](https://cloud.tencent.com/document/api/457/125933) - 更新集群发布序列标签
-* Delete: [ModifyClusterRollOutSequenceTags](https://cloud.tencent.com/document/api/457/125933) - 更新集群发布序列标签
+* Create: [ModifyClusterRollOutSequenceTags](https://cloud.tencent.com/document/api/457/125933)
+* Read: [DescribeClusterRollOutSequenceTags](https://cloud.tencent.com/document/api/457/125939)
+* Update: [ModifyClusterRollOutSequenceTags](https://cloud.tencent.com/document/api/457/125933)
+* Delete: [ModifyClusterRollOutSequenceTags](https://cloud.tencent.com/document/api/457/125933)
 
 ## Import
 

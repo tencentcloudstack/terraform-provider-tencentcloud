@@ -49,5 +49,5 @@ In addition to all arguments above, the following attributes are exported:
 
 This data source queries the following TencentCloud APIs:
 
-* Read: [DescribeShipperTasks](https://cloud.tencent.com/document/api/614/58745) - 获取投递任务列表
+* Read: [DescribeShipperTasks](https://cloud.tencent.com/document/api/614/58745) - This API is used to get the list of shipping tasks.
 

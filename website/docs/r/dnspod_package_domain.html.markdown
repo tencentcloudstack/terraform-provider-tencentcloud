@@ -38,10 +38,10 @@ In addition to all arguments above, the following attributes are exported:
 
 This resource interacts with the following TencentCloud APIs:
 
-* Create: [ModifyPackageDomain](https://cloud.tencent.com/document/api/1427/126200) - 套餐绑定、解绑、更换域名
-* Read: [DescribeDomainVipList](https://cloud.tencent.com/document/api/1427/119491) - 获取套餐列表
-* Update: [ModifyPackageDomain](https://cloud.tencent.com/document/api/1427/126200) - 套餐绑定、解绑、更换域名
-* Delete: [ModifyPackageDomain](https://cloud.tencent.com/document/api/1427/126200) - 套餐绑定、解绑、更换域名
+* Create: [ModifyPackageDomain](https://cloud.tencent.com/document/api/1427/126200)
+* Read: [DescribeDomainVipList](https://cloud.tencent.com/document/api/1427/119491)
+* Update: [ModifyPackageDomain](https://cloud.tencent.com/document/api/1427/126200)
+* Delete: [ModifyPackageDomain](https://cloud.tencent.com/document/api/1427/126200)
 
 ## Import
 

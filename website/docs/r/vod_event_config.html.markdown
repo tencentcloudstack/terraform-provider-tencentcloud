@@ -52,9 +52,9 @@ In addition to all arguments above, the following attributes are exported:
 
 This resource interacts with the following TencentCloud APIs:
 
-* Create: [ModifyEventConfig](https://cloud.tencent.com/document/api/266/55244) - 修改事件通知配置
-* Read: [DescribeEventConfig](https://cloud.tencent.com/document/api/266/55296) - 查询事件通知配置
-* Update: [ModifyEventConfig](https://cloud.tencent.com/document/api/266/55244) - 修改事件通知配置
+* Create: [ModifyEventConfig](https://cloud.tencent.com/document/api/266/55244) - Tencent Cloud VOD provides customers with media upload, media management, media processing, and other services. During or after the execution of these services, Tencent Cloud VOD also provides various event notifications, allowing developers to sense the service processing status and perform the next business operation.
+* Read: [DescribeEventConfig](https://cloud.tencent.com/document/api/266/55296) - Tencent Cloud Video on Demand (VOD) provides customers with media upload, media management, media processing, and other services. During or after these services are executed, VOD also provides various event notifications, helping developers detect service processing status and perform next business operations.
+* Update: [ModifyEventConfig](https://cloud.tencent.com/document/api/266/55244) - Tencent Cloud VOD provides customers with media upload, media management, media processing, and other services. During or after the execution of these services, Tencent Cloud VOD also provides various event notifications, allowing developers to sense the service processing status and perform the next business operation.
 
 ## Import
 

@@ -42,12 +42,12 @@ In addition to all arguments above, the following attributes are exported:
 
 This resource interacts with the following TencentCloud APIs:
 
-* Create: [EdgeKVGet](https://cloud.tencent.com/document/api/1552/130185) - 查询 KV 数据
-* Create: [EdgeKVPut](https://cloud.tencent.com/document/api/1552/130183) - 写入 KV 数据
-* Read: [EdgeKVGet](https://cloud.tencent.com/document/api/1552/130185) - 查询 KV 数据
-* Update: [EdgeKVGet](https://cloud.tencent.com/document/api/1552/130185) - 查询 KV 数据
-* Update: [EdgeKVPut](https://cloud.tencent.com/document/api/1552/130183) - 写入 KV 数据
-* Delete: [EdgeKVDelete](https://cloud.tencent.com/document/api/1552/130186) - 删除 KV 数据
+* Create: [EdgeKVGet](https://cloud.tencent.com/document/api/1552/130185) - This API is used to batch read key values from a specified namespace, supporting a single query of up to 20 keys.
+* Create: [EdgeKVPut](https://cloud.tencent.com/document/api/1552/130183) - This API is used to write key-value pair data to a specified namespace and supports setting expiration time. If the key already exists, it overwrites the original value. If Not Exist, it creates a new key-value pair.
+* Read: [EdgeKVGet](https://cloud.tencent.com/document/api/1552/130185) - This API is used to batch read key values from a specified namespace, supporting a single query of up to 20 keys.
+* Update: [EdgeKVGet](https://cloud.tencent.com/document/api/1552/130185) - This API is used to batch read key values from a specified namespace, supporting a single query of up to 20 keys.
+* Update: [EdgeKVPut](https://cloud.tencent.com/document/api/1552/130183) - This API is used to write key-value pair data to a specified namespace and supports setting expiration time. If the key already exists, it overwrites the original value. If Not Exist, it creates a new key-value pair.
+* Delete: [EdgeKVDelete](https://cloud.tencent.com/document/api/1552/130186) - This API is used to delete one or more key-value pair data in the specified namespace, with batch deletion supported. Data cannot be recovered after deletion.
 
 ## Import
 

@@ -62,10 +62,10 @@ In addition to all arguments above, the following attributes are exported:
 
 This resource interacts with the following TencentCloud APIs:
 
-* Create: [ModifyFunctionComponentBindings](https://cloud.tencent.com/document/api/1552/130179) - 修改函数组件绑定
-* Read: [DescribeFunctionComponentBindings](https://cloud.tencent.com/document/api/1552/130180) - 查询函数组件绑定列表
-* Update: [ModifyFunctionComponentBindings](https://cloud.tencent.com/document/api/1552/130179) - 修改函数组件绑定
-* Delete: [ModifyFunctionComponentBindings](https://cloud.tencent.com/document/api/1552/130179) - 修改函数组件绑定
+* Create: [ModifyFunctionComponentBindings](https://cloud.tencent.com/document/api/1552/130179) - This API is used to modify the binding relationship between edge functions and components, supporting four operation modes: bind, bind-override, unbind, and rebind. By specifying the operation type and component list, you can manage the component binding of functions.
+* Read: [DescribeFunctionComponentBindings](https://cloud.tencent.com/document/api/1552/130180) - This API is used to query the component binding list of a specified edge function. It supports pagination and conditional filtering, and returns detailed information such as bound component types, variable names, and configuration parameters. Currently supported bound component types include KV namespace (kv_namespace).
+* Update: [ModifyFunctionComponentBindings](https://cloud.tencent.com/document/api/1552/130179) - This API is used to modify the binding relationship between edge functions and components, supporting four operation modes: bind, bind-override, unbind, and rebind. By specifying the operation type and component list, you can manage the component binding of functions.
+* Delete: [ModifyFunctionComponentBindings](https://cloud.tencent.com/document/api/1552/130179) - This API is used to modify the binding relationship between edge functions and components, supporting four operation modes: bind, bind-override, unbind, and rebind. By specifying the operation type and component list, you can manage the component binding of functions.
 
 ## Import
 

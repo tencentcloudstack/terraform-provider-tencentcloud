@@ -42,7 +42,7 @@ In addition to all arguments above, the following attributes are exported:
 
 This resource interacts with the following TencentCloud APIs:
 
-* Delete: [DeleteEndPoint](https://cloud.tencent.com/document/api/1338/124333) - 删除终端节点
+* Delete: [DeleteEndPoint](https://cloud.tencent.com/document/api/1338/124333)
 
 ## Import
 

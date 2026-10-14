@@ -54,11 +54,11 @@ In addition to all arguments above, the following attributes are exported:
 
 This resource interacts with the following TencentCloud APIs:
 
-* Create: [CreateDBInstanceNetworkAccess](https://cloud.tencent.com/document/api/409/70581) - 创建实例网络
-* Create: [DescribeTasks](https://cloud.tencent.com/document/api/409/116177) - 查询任务列表
-* Read: [DescribeDBInstanceAttribute](https://cloud.tencent.com/document/api/409/16772) - 查询实例详情
-* Delete: [DeleteDBInstanceNetworkAccess](https://cloud.tencent.com/document/api/409/70579) - 删除实例网络
-* Delete: [DescribeTasks](https://cloud.tencent.com/document/api/409/116177) - 查询任务列表
+* Create: [CreateDBInstanceNetworkAccess](https://cloud.tencent.com/document/api/409/70581) - This API is used to create instance networks. Each instance allows a maximum of 2 network configurations and a minimum of 1.
+* Create: [DescribeTasks](https://cloud.tencent.com/document/api/409/116177) - This API is used to query the task list and show the progress of async task execution.
+* Read: [DescribeDBInstanceAttribute](https://cloud.tencent.com/document/api/409/16772) - This API is used to query the details of one instance.
+* Delete: [DeleteDBInstanceNetworkAccess](https://cloud.tencent.com/document/api/409/70579) - This API is used to delete a network from an instance while keeping at least one network.
+* Delete: [DescribeTasks](https://cloud.tencent.com/document/api/409/116177) - This API is used to query the task list and show the progress of async task execution.
 
 ## Import
 

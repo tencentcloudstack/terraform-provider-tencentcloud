@@ -78,5 +78,5 @@ In addition to all arguments above, the following attributes are exported:
 
 This data source queries the following TencentCloud APIs:
 
-* Read: [DescribeDirectConnectGatewayCcnRoutes](https://cloud.tencent.com/document/api/215/19189) - 查询专线网关云联网路由
+* Read: [DescribeDirectConnectGatewayCcnRoutes](https://cloud.tencent.com/document/api/215/19189) - This API (DescribeDirectConnectGatewayCcnRoutes) is used to query the CCN routes (IDC IP range) of the Direct Connect gateway.
 

@@ -38,6 +38,6 @@ In addition to all arguments above, the following attributes are exported:
 
 This resource interacts with the following TencentCloud APIs:
 
-* Create: [DescribeLogstashPipelines](https://cloud.tencent.com/document/api/845/77238) - 获取Logstash实例管道列表
-* Create: [StopLogstashPipelines](https://cloud.tencent.com/document/api/845/77234) - 停止Logstash管道
+* Create: [DescribeLogstashPipelines](https://cloud.tencent.com/document/api/845/77238)
+* Create: [StopLogstashPipelines](https://cloud.tencent.com/document/api/845/77234)
 

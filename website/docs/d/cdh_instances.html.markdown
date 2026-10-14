@@ -64,5 +64,5 @@ In addition to all arguments above, the following attributes are exported:
 
 This data source queries the following TencentCloud APIs:
 
-* Read: [DescribeHosts](https://cloud.tencent.com/document/api/213/16474) - 查看CDH实例列表
+* Read: [DescribeHosts](https://cloud.tencent.com/document/api/213/16474) - This API is used to query the details of CDH instances.
 

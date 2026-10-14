@@ -56,6 +56,6 @@ In addition to all arguments above, the following attributes are exported:
 
 This data source queries the following TencentCloud APIs:
 
-* Read: [DescribeInstanceAttributes](https://cloud.tencent.com/document/api/597/40836) - 获取实例属性
-* Read: [DescribeTopicDetail](https://cloud.tencent.com/document/api/597/40845) - 获取主题列表详情
+* Read: [DescribeInstanceAttributes](https://cloud.tencent.com/document/api/597/40836) - This API is used to obtain instance attributes.
+* Read: [DescribeTopicDetail](https://cloud.tencent.com/document/api/597/40845) - This API is used to get topic list details (only for call in the console).
 

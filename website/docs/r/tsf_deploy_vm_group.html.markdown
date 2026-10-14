@@ -121,7 +121,7 @@ In addition to all arguments above, the following attributes are exported:
 
 This resource interacts with the following TencentCloud APIs:
 
-* Create: [DeployGroup](https://cloud.tencent.com/document/api/649/36070) - 部署虚拟机部署组应用
-* Create: [DescribeGroupAttribute](https://cloud.tencent.com/document/api/649/64979) - 获取部署组其他属性
-* Read: [DescribeGroup](https://cloud.tencent.com/document/api/649/36067) - 查询虚拟机部署组详情
+* Create: [DeployGroup](https://cloud.tencent.com/document/api/649/36070)
+* Create: [DescribeGroupAttribute](https://cloud.tencent.com/document/api/649/64979)
+* Read: [DescribeGroup](https://cloud.tencent.com/document/api/649/36067)
 

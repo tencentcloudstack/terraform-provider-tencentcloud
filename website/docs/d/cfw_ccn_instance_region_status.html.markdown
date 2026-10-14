@@ -49,5 +49,5 @@ In addition to all arguments above, the following attributes are exported:
 
 This data source queries the following TencentCloud APIs:
 
-* Read: [DescribeCcnInstanceRegionStatus](https://cloud.tencent.com/document/api/1132/127059) - 查询CCN关联传入实例的地域防火墙引流网络部署状态
+* Read: [DescribeCcnInstanceRegionStatus](https://cloud.tencent.com/document/api/1132/127059)
 

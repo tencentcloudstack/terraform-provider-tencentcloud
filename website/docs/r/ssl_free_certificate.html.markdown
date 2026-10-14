@@ -75,11 +75,11 @@ In addition to all arguments above, the following attributes are exported:
 
 This resource interacts with the following TencentCloud APIs:
 
-* Create: [ApplyCertificate](https://cloud.tencent.com/document/api/400/41678) - 免费证书申请
-* Read: [DescribeCertificateDetail](https://cloud.tencent.com/document/api/400/41673) - 获取证书详情
-* Update: [ModifyCertificateAlias](https://cloud.tencent.com/document/api/400/41669) - 修改证书备注
-* Update: [ModifyCertificateProject](https://cloud.tencent.com/document/api/400/41668) - 修改证书所属项目
-* Delete: [DeleteCertificate](https://cloud.tencent.com/document/api/400/41675) - 删除证书
+* Create: [ApplyCertificate](https://cloud.tencent.com/document/api/400/41678) - This API is used to apply for a free certificate.
+* Read: [DescribeCertificateDetail](https://cloud.tencent.com/document/api/400/41673) - This API is used to get certificate details.
+* Update: [ModifyCertificateAlias](https://cloud.tencent.com/document/api/400/41669) - This API is used to modify a certificate alias by passing in the certificate ID and new alias.
+* Update: [ModifyCertificateProject](https://cloud.tencent.com/document/api/400/41668) - This API is used to modify the projects of multiple certificates.
+* Delete: [DeleteCertificate](https://cloud.tencent.com/document/api/400/41675) - This API is used to delete a certificate.
 
 ## Import
 

@@ -105,16 +105,16 @@ In addition to all arguments above, the following attributes are exported:
 
 This resource interacts with the following TencentCloud APIs:
 
-* Create: [AddReplicationInstance](https://cloud.tencent.com/document/api/239/68401) - 添加复制组成员
-* Create: [DescribeTaskInfo](https://cloud.tencent.com/document/api/239/30601) - Redis查询任务结果
-* Read: [DescribeReplicationGroup](https://cloud.tencent.com/document/api/239/71554) - 查询复制组
-* Update: [AddReplicationInstance](https://cloud.tencent.com/document/api/239/68401) - 添加复制组成员
-* Update: [ChangeMasterInstance](https://cloud.tencent.com/document/api/239/77862) - 复制组实例切主
-* Update: [DescribeTaskInfo](https://cloud.tencent.com/document/api/239/30601) - Redis查询任务结果
-* Update: [RemoveReplicationInstance](https://cloud.tencent.com/document/api/239/90099) - 移除复制组成员
-* Delete: [DescribeReplicationGroup](https://cloud.tencent.com/document/api/239/71554) - 查询复制组
-* Delete: [DescribeTaskInfo](https://cloud.tencent.com/document/api/239/30601) - Redis查询任务结果
-* Delete: [RemoveReplicationInstance](https://cloud.tencent.com/document/api/239/90099) - 移除复制组成员
+* Create: [AddReplicationInstance](https://cloud.tencent.com/document/api/239/68401) - This API is used to add an instance member to the global replication group.
+* Create: [DescribeTaskInfo](https://cloud.tencent.com/document/api/239/30601) - This API is used to get the execution of a specified task.
+* Read: [DescribeReplicationGroup](https://cloud.tencent.com/document/api/239/71554) - This API is used to query a replication group.
+* Update: [AddReplicationInstance](https://cloud.tencent.com/document/api/239/68401) - This API is used to add an instance member to the global replication group.
+* Update: [ChangeMasterInstance](https://cloud.tencent.com/document/api/239/77862) - This API is used to set a read-only instance in a replication group as a master instance.
+* Update: [DescribeTaskInfo](https://cloud.tencent.com/document/api/239/30601) - This API is used to get the execution of a specified task.
+* Update: [RemoveReplicationInstance](https://cloud.tencent.com/document/api/239/90099) - This API is used to remove instances from a replication group.
+* Delete: [DescribeReplicationGroup](https://cloud.tencent.com/document/api/239/71554) - This API is used to query a replication group.
+* Delete: [DescribeTaskInfo](https://cloud.tencent.com/document/api/239/30601) - This API is used to get the execution of a specified task.
+* Delete: [RemoveReplicationInstance](https://cloud.tencent.com/document/api/239/90099) - This API is used to remove instances from a replication group.
 
 ## Import
 

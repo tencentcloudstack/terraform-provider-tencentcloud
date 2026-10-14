@@ -236,17 +236,17 @@ The `timeouts` block allows you to specify [timeouts](https://developer.hashicor
 
 This resource interacts with the following TencentCloud APIs:
 
-* Create: [CreateInstanceNew](https://cloud.tencent.com/document/api/1387/102611) - 集群创建
-* Create: [DescribeInstanceState](https://cloud.tencent.com/document/api/1387/102615) - 获取集群状态
-* Create: [ModifySecurityGroups](https://cloud.tencent.com/document/api/1387/109434) - 更改安全组
-* Create: [ModifyWorkloadGroupStatus](https://cloud.tencent.com/document/api/1387/109430) - 开启、关闭资源组
-* Read: [DescribeInstance](https://cloud.tencent.com/document/api/1387/102384) - 获取集群描述信息
-* Read: [DescribeWorkloadGroup](https://cloud.tencent.com/document/api/1387/109437) - 获取资源组信息
-* Update: [DescribeInstanceState](https://cloud.tencent.com/document/api/1387/102615) - 获取集群状态
-* Update: [ModifyInstance](https://cloud.tencent.com/document/api/1387/102612) - 修改集群名称
-* Update: [ModifySecurityGroups](https://cloud.tencent.com/document/api/1387/109434) - 更改安全组
-* Update: [ModifyWorkloadGroupStatus](https://cloud.tencent.com/document/api/1387/109430) - 开启、关闭资源组
-* Delete: [DescribeInstanceState](https://cloud.tencent.com/document/api/1387/102615) - 获取集群状态
-* Delete: [DescribeInstances](https://cloud.tencent.com/document/api/1387/102382) - 获取集群列表
-* Delete: [DestroyInstance](https://cloud.tencent.com/document/api/1387/102610) - 集群销毁
+* Create: [CreateInstanceNew](https://cloud.tencent.com/document/api/1387/102611) - This API is used to create clusters.
+* Create: [DescribeInstanceState](https://cloud.tencent.com/document/api/1387/102615) - This API is used to display cluster status, process progress, etc. in the cluster details page.
+* Create: [ModifySecurityGroups](https://cloud.tencent.com/document/api/1387/109434) - This API is used to edit security groups.
+* Create: [ModifyWorkloadGroupStatus](https://cloud.tencent.com/document/api/1387/109430) - This API is used to enable or disable resource groups.
+* Read: [DescribeInstance](https://cloud.tencent.com/document/api/1387/102384) - This API is used to query the specific information of a cluster based on the cluster ID.
+* Read: [DescribeWorkloadGroup](https://cloud.tencent.com/document/api/1387/109437) - This API is used to obtain resource group information.
+* Update: [DescribeInstanceState](https://cloud.tencent.com/document/api/1387/102615) - This API is used to display cluster status, process progress, etc. in the cluster details page.
+* Update: [ModifyInstance](https://cloud.tencent.com/document/api/1387/102612) - This API is used to modify the cluster's name.
+* Update: [ModifySecurityGroups](https://cloud.tencent.com/document/api/1387/109434) - This API is used to edit security groups.
+* Update: [ModifyWorkloadGroupStatus](https://cloud.tencent.com/document/api/1387/109430) - This API is used to enable or disable resource groups.
+* Delete: [DescribeInstanceState](https://cloud.tencent.com/document/api/1387/102615) - This API is used to display cluster status, process progress, etc. in the cluster details page.
+* Delete: [DescribeInstances](https://cloud.tencent.com/document/api/1387/102382) - This API is used to get the list of clusters.
+* Delete: [DestroyInstance](https://cloud.tencent.com/document/api/1387/102610) - This API is used to terminate clusters.
 

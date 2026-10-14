@@ -65,12 +65,12 @@ In addition to all arguments above, the following attributes are exported:
 
 This resource interacts with the following TencentCloud APIs:
 
-* Create: [CreateDisks](https://cloud.tencent.com/document/api/1207/90853) - 创建云硬盘
-* Create: [DescribeDisks](https://cloud.tencent.com/document/api/1207/66093) - 查询云硬盘
-* Read: [DescribeDisks](https://cloud.tencent.com/document/api/1207/66093) - 查询云硬盘
-* Update: [ModifyDisksAttribute](https://cloud.tencent.com/document/api/1207/66087) - 修改云硬盘属性
-* Update: [ModifyDisksRenewFlag](https://cloud.tencent.com/document/api/1207/66086) - 修改云硬盘续费标识
-* Delete: [DescribeDisks](https://cloud.tencent.com/document/api/1207/66093) - 查询云硬盘
-* Delete: [IsolateDisks](https://cloud.tencent.com/document/api/1207/90904) - 隔离云硬盘
-* Delete: [TerminateDisks](https://cloud.tencent.com/document/api/1207/66085) - 销毁云硬盘
+* Create: [CreateDisks](https://cloud.tencent.com/document/api/1207/90853) - This API is used to create one or more cloud disks.
+* Create: [DescribeDisks](https://cloud.tencent.com/document/api/1207/66093) - This API is used to query the information of one or more cloud disks.
+* Read: [DescribeDisks](https://cloud.tencent.com/document/api/1207/66093) - This API is used to query the information of one or more cloud disks.
+* Update: [ModifyDisksAttribute](https://cloud.tencent.com/document/api/1207/66087) - This API is used to modify cloud disk attributes.
+* Update: [ModifyDisksRenewFlag](https://cloud.tencent.com/document/api/1207/66086) - This API is used to modify the configuration of auto-renewal of cloud disks.
+* Delete: [DescribeDisks](https://cloud.tencent.com/document/api/1207/66093) - This API is used to query the information of one or more cloud disks.
+* Delete: [IsolateDisks](https://cloud.tencent.com/document/api/1207/90904) - This API is used to return one or more Lighthouse cloud disks.
+* Delete: [TerminateDisks](https://cloud.tencent.com/document/api/1207/66085) - This API is used to terminate one or more cloud disk.
 

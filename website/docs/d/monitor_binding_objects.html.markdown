@@ -44,5 +44,5 @@ In addition to all arguments above, the following attributes are exported:
 
 This data source queries the following TencentCloud APIs:
 
-* Read: [DescribeBindingPolicyObjectList](https://cloud.tencent.com/document/api/248/40570) - 获取已绑定对象列表
+* Read: [DescribeBindingPolicyObjectList](https://cloud.tencent.com/document/api/248/40570) - This API is used to get the bound object list.
 

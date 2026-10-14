@@ -38,8 +38,8 @@ In addition to all arguments above, the following attributes are exported:
 
 This resource interacts with the following TencentCloud APIs:
 
-* Create: [DescribeFlow](https://cloud.tencent.com/document/api/1003/86162) - 查询任务流信息
-* Create: [ReloadBalanceProxyNode](https://cloud.tencent.com/document/api/1003/94128) - 负载均衡数据库代理
+* Create: [DescribeFlow](https://cloud.tencent.com/document/api/1003/86162) - This API is used to query task flow information.
+* Create: [ReloadBalanceProxyNode](https://cloud.tencent.com/document/api/1003/94128) - This API is used to reload the database proxy of Cloud Load Balancer.
 
 ## Import
 

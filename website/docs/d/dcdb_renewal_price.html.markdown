@@ -41,5 +41,5 @@ In addition to all arguments above, the following attributes are exported:
 
 This data source queries the following TencentCloud APIs:
 
-* Read: [DescribeDCDBRenewalPrice](https://cloud.tencent.com/document/api/557/16138) - 续费实例询价
+* Read: [DescribeDCDBRenewalPrice](https://cloud.tencent.com/document/api/557/16138)
 

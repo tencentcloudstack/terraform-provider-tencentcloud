@@ -49,5 +49,5 @@ In addition to all arguments above, the following attributes are exported:
 
 This resource interacts with the following TencentCloud APIs:
 
-* Create: [RebalanceReadOnlyGroup](https://cloud.tencent.com/document/api/409/52596) - 均衡只读组内实例的负载
+* Create: [RebalanceReadOnlyGroup](https://cloud.tencent.com/document/api/409/52596) - This API is used to rebalance the loads of read-only replicas in an RO group. Please note that connections to those read-only replicas will be interrupted transiently; therefore, you should ensure that your application can reconnect to the databases. This operation should be performed with caution.
 

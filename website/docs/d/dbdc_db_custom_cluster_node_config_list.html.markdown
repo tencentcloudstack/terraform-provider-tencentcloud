@@ -48,5 +48,5 @@ In addition to all arguments above, the following attributes are exported:
 
 This data source queries the following TencentCloud APIs:
 
-* Read: [DescribeDBCustomClusterNodeConfig](https://cloud.tencent.com/document/api/1322/135268) - 查询集群内节点的配置信息
+* Read: [DescribeDBCustomClusterNodeConfig](https://cloud.tencent.com/document/api/1322/135268)
 

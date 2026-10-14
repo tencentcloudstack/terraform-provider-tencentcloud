@@ -133,15 +133,15 @@ The `timeouts` block allows you to specify [timeouts](https://developer.hashicor
 
 This resource interacts with the following TencentCloud APIs:
 
-* Create: [AddNodesToDBCustomCluster](https://cloud.tencent.com/document/api/1322/132932) - 添加节点到集群
-* Create: [DescribeDBCustomClusterNodeConfig](https://cloud.tencent.com/document/api/1322/135268) - 查询集群内节点的配置信息
-* Create: [DescribeDBCustomClusterNodes](https://cloud.tencent.com/document/api/1322/132926) - 查询集群的节点列表
-* Read: [DescribeDBCustomClusterNodeConfig](https://cloud.tencent.com/document/api/1322/135268) - 查询集群内节点的配置信息
-* Read: [DescribeDBCustomClusterNodes](https://cloud.tencent.com/document/api/1322/132926) - 查询集群的节点列表
-* Update: [DescribeDBCustomClusterNodeConfig](https://cloud.tencent.com/document/api/1322/135268) - 查询集群内节点的配置信息
-* Update: [DescribeDBCustomClusterNodes](https://cloud.tencent.com/document/api/1322/132926) - 查询集群的节点列表
-* Update: [ModifyDBCustomClusterNodeConfig](https://cloud.tencent.com/document/api/1322/135265) - 修改集群中节点的配置
-* Delete: [RemoveNodesFromDBCustomCluster](https://cloud.tencent.com/document/api/1322/132916) - 移出集群中的节点
+* Create: [AddNodesToDBCustomCluster](https://cloud.tencent.com/document/api/1322/132932)
+* Create: [DescribeDBCustomClusterNodeConfig](https://cloud.tencent.com/document/api/1322/135268)
+* Create: [DescribeDBCustomClusterNodes](https://cloud.tencent.com/document/api/1322/132926)
+* Read: [DescribeDBCustomClusterNodeConfig](https://cloud.tencent.com/document/api/1322/135268)
+* Read: [DescribeDBCustomClusterNodes](https://cloud.tencent.com/document/api/1322/132926)
+* Update: [DescribeDBCustomClusterNodeConfig](https://cloud.tencent.com/document/api/1322/135268)
+* Update: [DescribeDBCustomClusterNodes](https://cloud.tencent.com/document/api/1322/132926)
+* Update: [ModifyDBCustomClusterNodeConfig](https://cloud.tencent.com/document/api/1322/135265)
+* Delete: [RemoveNodesFromDBCustomCluster](https://cloud.tencent.com/document/api/1322/132916)
 
 ## Import
 

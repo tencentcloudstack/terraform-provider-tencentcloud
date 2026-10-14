@@ -428,17 +428,17 @@ In addition to all arguments above, the following attributes are exported:
 
 This resource interacts with the following TencentCloud APIs:
 
-* Create: [BindingPolicyTag](https://cloud.tencent.com/document/api/248/67219) - 策略绑定标签
-* Create: [CreateAlarmPolicy](https://cloud.tencent.com/document/api/248/51287) - 创建腾讯云可观测平台告警策略
-* Create: [DescribeAlarmPolicy](https://cloud.tencent.com/document/api/248/51278) - 获取单个告警策略详情
-* Read: [DescribeAlarmPolicy](https://cloud.tencent.com/document/api/248/51278) - 获取单个告警策略详情
-* Update: [DescribeAlarmPolicy](https://cloud.tencent.com/document/api/248/51278) - 获取单个告警策略详情
-* Update: [ModifyAlarmPolicyCondition](https://cloud.tencent.com/document/api/248/51276) - 修改告警策略触发条件
-* Update: [ModifyAlarmPolicyInfo](https://cloud.tencent.com/document/api/248/51275) - 修改告警策略基本信息
-* Update: [ModifyAlarmPolicyNotice](https://cloud.tencent.com/document/api/248/51274) - 修改告警策略绑定的告警通知模板
-* Update: [ModifyAlarmPolicyStatus](https://cloud.tencent.com/document/api/248/51273) - 启停告警策略
-* Update: [ModifyAlarmPolicyTasks](https://cloud.tencent.com/document/api/248/51272) - 修改告警策略的触发任务
-* Delete: [DeleteAlarmPolicy](https://cloud.tencent.com/document/api/248/51285) - 删除告警策略
+* Create: [BindingPolicyTag](https://cloud.tencent.com/document/api/248/67219)
+* Create: [CreateAlarmPolicy](https://cloud.tencent.com/document/api/248/51287) - This API is used to create an alarm policy.
+* Create: [DescribeAlarmPolicy](https://cloud.tencent.com/document/api/248/51278) - This API is used to get the details of a single alarm policy.
+* Read: [DescribeAlarmPolicy](https://cloud.tencent.com/document/api/248/51278) - This API is used to get the details of a single alarm policy.
+* Update: [DescribeAlarmPolicy](https://cloud.tencent.com/document/api/248/51278) - This API is used to get the details of a single alarm policy.
+* Update: [ModifyAlarmPolicyCondition](https://cloud.tencent.com/document/api/248/51276) - This API is used to modify the trigger condition of an alarm policy.
+* Update: [ModifyAlarmPolicyInfo](https://cloud.tencent.com/document/api/248/51275) - This API is used to edit the basic information of a v2.0 alarm policy, including policy name and remarks.
+* Update: [ModifyAlarmPolicyNotice](https://cloud.tencent.com/document/api/248/51274) - This API is used to modify the alarm notification template bound to an alarm policy.
+* Update: [ModifyAlarmPolicyStatus](https://cloud.tencent.com/document/api/248/51273) - This API is used to enable/disable an alarm policy.
+* Update: [ModifyAlarmPolicyTasks](https://cloud.tencent.com/document/api/248/51272) - This API is used to modify the tasks triggered by alarm policy, which are listed by the value of the `TriggerTasks` field. If an empty array is passed in for `TriggerTasks`, it means unbinding all the trigger tasks from the policy.
+* Delete: [DeleteAlarmPolicy](https://cloud.tencent.com/document/api/248/51285) - This API is used to delete an alarm policy.
 
 ## Import
 

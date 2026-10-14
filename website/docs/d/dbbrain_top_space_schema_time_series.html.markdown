@@ -52,5 +52,5 @@ In addition to all arguments above, the following attributes are exported:
 
 This data source queries the following TencentCloud APIs:
 
-* Read: [DescribeTopSpaceSchemaTimeSeries](https://cloud.tencent.com/document/api/1130/57794) - 获取Top库在指定时间段内的每日空间统计信息
+* Read: [DescribeTopSpaceSchemaTimeSeries](https://cloud.tencent.com/document/api/1130/57794) - This API is used to query the daily space data of top databases consuming the most instance space. The data is daily collected by DBbrain during a specified time period. The return results are sorted by size by default.
 

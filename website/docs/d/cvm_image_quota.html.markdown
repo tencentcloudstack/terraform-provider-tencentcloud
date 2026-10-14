@@ -34,5 +34,5 @@ In addition to all arguments above, the following attributes are exported:
 
 This data source queries the following TencentCloud APIs:
 
-* Read: [DescribeImageQuota](https://cloud.tencent.com/document/api/213/15719) - 查询镜像配额上限
+* Read: [DescribeImageQuota](https://cloud.tencent.com/document/api/213/15719) - This API is used to query the image quota of an user account.
 

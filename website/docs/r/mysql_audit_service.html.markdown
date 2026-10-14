@@ -59,12 +59,12 @@ In addition to all arguments above, the following attributes are exported:
 
 This resource interacts with the following TencentCloud APIs:
 
-* Create: [DescribeAuditInstanceList](https://cloud.tencent.com/document/api/236/101813) - 获取审计实例列表
-* Create: [OpenAuditService](https://cloud.tencent.com/document/api/236/76408) - 开通审计服务
-* Read: [DescribeAuditInstanceList](https://cloud.tencent.com/document/api/236/101813) - 获取审计实例列表
-* Update: [ModifyAuditService](https://cloud.tencent.com/document/api/236/101809) - 实例修改审计服务
-* Delete: [CloseAuditService](https://cloud.tencent.com/document/api/236/101816) - 实例关闭审计服务
-* Delete: [DescribeAuditInstanceList](https://cloud.tencent.com/document/api/236/101813) - 获取审计实例列表
+* Create: [DescribeAuditInstanceList](https://cloud.tencent.com/document/api/236/101813) - This API is used to obtain the list of audit instances.
+* Create: [OpenAuditService](https://cloud.tencent.com/document/api/236/76408) - This API is used to activate audit service for CDB instance.
+* Read: [DescribeAuditInstanceList](https://cloud.tencent.com/document/api/236/101813) - This API is used to obtain the list of audit instances.
+* Update: [ModifyAuditService](https://cloud.tencent.com/document/api/236/101809) - This API is used to modify the service configurations for a TencentDB instance, including the audit log retention period and the audit rules.
+* Delete: [CloseAuditService](https://cloud.tencent.com/document/api/236/101816) - This API is used to disable the audit service for an instance.
+* Delete: [DescribeAuditInstanceList](https://cloud.tencent.com/document/api/236/101813) - This API is used to obtain the list of audit instances.
 
 ## Import
 

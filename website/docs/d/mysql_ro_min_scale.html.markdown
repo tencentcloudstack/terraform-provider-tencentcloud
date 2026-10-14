@@ -39,5 +39,5 @@ In addition to all arguments above, the following attributes are exported:
 
 This data source queries the following TencentCloud APIs:
 
-* Read: [DescribeRoMinScale](https://cloud.tencent.com/document/api/236/46009) - 获取只读实例购买或升级的最小规格
+* Read: [DescribeRoMinScale](https://cloud.tencent.com/document/api/236/46009) - This API is used to query the minimum specification of a read-only instance that can be purchased or upgraded to.
 

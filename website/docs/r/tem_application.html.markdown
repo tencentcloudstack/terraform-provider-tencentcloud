@@ -53,11 +53,11 @@ In addition to all arguments above, the following attributes are exported:
 
 This resource interacts with the following TencentCloud APIs:
 
-* Create: [CreateApplication](https://cloud.tencent.com/document/api/1371/60162) - 创建应用
-* Create: [ModifyResourceTags](https://cloud.tencent.com/document/api/651/35322) - 批量修改资源关联的标签
-* Read: [DescribeApplications](https://cloud.tencent.com/document/api/1371/78169) - 获取运行服务列表
-* Read: [DescribeResourceTagsByResourceIds](https://cloud.tencent.com/document/api/651/35319) - 批量查看资源关联的标签
-* Update: [ModifyApplicationInfo](https://cloud.tencent.com/document/api/1371/60160) - 修改应用基本信息
-* Update: [ModifyResourceTags](https://cloud.tencent.com/document/api/651/35322) - 批量修改资源关联的标签
-* Delete: [DeleteApplication](https://cloud.tencent.com/document/api/1371/66645) - 服务删除
+* Create: [CreateApplication](https://cloud.tencent.com/document/api/1371/60162) - This API is used to create an application.
+* Create: [ModifyResourceTags](https://cloud.tencent.com/document/api/651/35322) - This API is used to modify all tags associated with a resource.
+* Read: [DescribeApplications](https://cloud.tencent.com/document/api/1371/78169) - This API is to query the list of running applications.
+* Read: [DescribeResourceTagsByResourceIds](https://cloud.tencent.com/document/api/651/35319) - This API is used to query the tag key-value pairs associated with an existing resource.
+* Update: [ModifyApplicationInfo](https://cloud.tencent.com/document/api/1371/60160) - This API is used to modify the basic information of an application.
+* Update: [ModifyResourceTags](https://cloud.tencent.com/document/api/651/35322) - This API is used to modify all tags associated with a resource.
+* Delete: [DeleteApplication](https://cloud.tencent.com/document/api/1371/66645) - This API is used to delete an application.
 

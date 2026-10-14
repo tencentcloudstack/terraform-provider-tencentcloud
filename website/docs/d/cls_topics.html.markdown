@@ -75,5 +75,5 @@ In addition to all arguments above, the following attributes are exported:
 
 This data source queries the following TencentCloud APIs:
 
-* Read: [DescribeTopics](https://cloud.tencent.com/document/api/614/56454) - 获取主题列表
+* Read: [DescribeTopics](https://cloud.tencent.com/document/api/614/56454) - This API is used to obtain logs or metric topic lists and supports pagination.
 

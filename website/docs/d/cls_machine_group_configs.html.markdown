@@ -87,5 +87,5 @@ In addition to all arguments above, the following attributes are exported:
 
 This data source queries the following TencentCloud APIs:
 
-* Read: [DescribeMachineGroupConfigs](https://cloud.tencent.com/document/api/614/58615) - 获取机器组绑定的采集规则配置
+* Read: [DescribeMachineGroupConfigs](https://cloud.tencent.com/document/api/614/58615) - This API is used to get the collection rule configuration bound to a machine group.
 

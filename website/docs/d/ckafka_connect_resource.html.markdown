@@ -146,5 +146,5 @@ In addition to all arguments above, the following attributes are exported:
 
 This data source queries the following TencentCloud APIs:
 
-* Read: [DescribeConnectResources](https://cloud.tencent.com/document/api/597/77797) - 查询连接器连接列表
+* Read: [DescribeConnectResources](https://cloud.tencent.com/document/api/597/77797)
 

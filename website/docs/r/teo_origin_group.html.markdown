@@ -96,10 +96,10 @@ In addition to all arguments above, the following attributes are exported:
 
 This resource interacts with the following TencentCloud APIs:
 
-* Create: [CreateOriginGroup](https://cloud.tencent.com/document/api/1552/80598) - 创建源站组
-* Read: [DescribeOriginGroup](https://cloud.tencent.com/document/api/1552/80594) - 获取源站组列表
-* Update: [ModifyOriginGroup](https://cloud.tencent.com/document/api/1552/80592) - 修改源站组
-* Delete: [DeleteOriginGroup](https://cloud.tencent.com/document/api/1552/80596) - 删除源站组
+* Create: [CreateOriginGroup](https://cloud.tencent.com/document/api/1552/80598) - This API is used to create an origin group.
+* Read: [DescribeOriginGroup](https://cloud.tencent.com/document/api/1552/80594) - This API is used to get the list of origin groups.
+* Update: [ModifyOriginGroup](https://cloud.tencent.com/document/api/1552/80592) - This API is used to modify an origin group.
+* Delete: [DeleteOriginGroup](https://cloud.tencent.com/document/api/1552/80596) - This API is used to delete an origin group.
 
 ## Import
 

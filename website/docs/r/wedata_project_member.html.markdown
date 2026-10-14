@@ -68,11 +68,11 @@ In addition to all arguments above, the following attributes are exported:
 
 This resource interacts with the following TencentCloud APIs:
 
-* Create: [CreateProjectMember](https://cloud.tencent.com/document/api/1267/123974) - 创建项目成员
-* Read: [ListProjectMembers](https://cloud.tencent.com/document/api/1267/123964) - 查看项目成员列表
-* Update: [GrantMemberProjectRole](https://cloud.tencent.com/document/api/1267/123966) - 授予项目成员项目角色
-* Update: [RemoveMemberProjectRole](https://cloud.tencent.com/document/api/1267/123960) - 撤销项目成员项目角色
-* Delete: [DeleteProjectMember](https://cloud.tencent.com/document/api/1267/123972) - 移除项目成员
+* Create: [CreateProjectMember](https://cloud.tencent.com/document/api/1267/123974) - Add project user role.
+* Read: [ListProjectMembers](https://cloud.tencent.com/document/api/1267/123964) - This API is used to obtain the user under the project with pagination return.
+* Update: [GrantMemberProjectRole](https://cloud.tencent.com/document/api/1267/123966) - Modify project user roles.
+* Update: [RemoveMemberProjectRole](https://cloud.tencent.com/document/api/1267/123960) - Delete project user roles.
+* Delete: [DeleteProjectMember](https://cloud.tencent.com/document/api/1267/123972) - This API is used to delete project users.
 
 ## Import
 

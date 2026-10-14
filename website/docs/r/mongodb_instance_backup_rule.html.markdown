@@ -57,11 +57,11 @@ In addition to all arguments above, the following attributes are exported:
 
 This resource interacts with the following TencentCloud APIs:
 
-* Create: [DescribeBackupRules](https://cloud.tencent.com/document/api/240/107169) - 获取云数据库实例自动备份配置
-* Create: [SetBackupRules](https://cloud.tencent.com/document/api/240/107166) - 设置云数据库实例的自动备份规则
-* Read: [DescribeBackupRules](https://cloud.tencent.com/document/api/240/107169) - 获取云数据库实例自动备份配置
-* Update: [DescribeBackupRules](https://cloud.tencent.com/document/api/240/107169) - 获取云数据库实例自动备份配置
-* Update: [SetBackupRules](https://cloud.tencent.com/document/api/240/107166) - 设置云数据库实例的自动备份规则
+* Create: [DescribeBackupRules](https://cloud.tencent.com/document/api/240/107169) - This API is used to obtain the automatic backup configuration information of an instance.
+* Create: [SetBackupRules](https://cloud.tencent.com/document/api/240/107166)
+* Read: [DescribeBackupRules](https://cloud.tencent.com/document/api/240/107169) - This API is used to obtain the automatic backup configuration information of an instance.
+* Update: [DescribeBackupRules](https://cloud.tencent.com/document/api/240/107169) - This API is used to obtain the automatic backup configuration information of an instance.
+* Update: [SetBackupRules](https://cloud.tencent.com/document/api/240/107166)
 
 ## Import
 

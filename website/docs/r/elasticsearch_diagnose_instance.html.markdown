@@ -40,5 +40,5 @@ In addition to all arguments above, the following attributes are exported:
 
 This resource interacts with the following TencentCloud APIs:
 
-* Create: [DiagnoseInstance](https://cloud.tencent.com/document/api/845/55630) - 智能运维诊断集群
+* Create: [DiagnoseInstance](https://cloud.tencent.com/document/api/845/55630)
 

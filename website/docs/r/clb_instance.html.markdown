@@ -674,26 +674,26 @@ The `timeouts` block allows you to specify [timeouts](https://developer.hashicor
 
 This resource interacts with the following TencentCloud APIs:
 
-* Create: [CreateLoadBalancer](https://cloud.tencent.com/document/api/214/30692) - 购买负载均衡实例
-* Create: [DescribeAddresses](https://cloud.tencent.com/document/api/215/16702) - 查询弹性公网IP列表
-* Create: [DescribeLoadBalancers](https://cloud.tencent.com/document/api/214/30685) - 查询负载均衡实例列表
-* Create: [DescribeResourceTagsByResourceIds](https://cloud.tencent.com/document/api/651/35319) - 批量查看资源关联的标签
-* Create: [ModifyLoadBalancerAttributes](https://cloud.tencent.com/document/api/214/30680) - 修改负载均衡实例的属性
-* Create: [SetLoadBalancerClsLog](https://cloud.tencent.com/document/api/214/43266) - 设置负载均衡的日志服务主题
-* Create: [SetLoadBalancerSecurityGroups](https://cloud.tencent.com/document/api/214/34903) - 设置负载均衡实例的安全组
-* Read: [DescribeAddresses](https://cloud.tencent.com/document/api/215/16702) - 查询弹性公网IP列表
-* Read: [DescribeLoadBalancers](https://cloud.tencent.com/document/api/214/30685) - 查询负载均衡实例列表
-* Read: [DescribeResourceTagsByResourceIds](https://cloud.tencent.com/document/api/651/35319) - 批量查看资源关联的标签
-* Update: [AssociateAddress](https://cloud.tencent.com/document/api/215/16700) - 绑定弹性公网IP
-* Update: [DescribeAddresses](https://cloud.tencent.com/document/api/215/16702) - 查询弹性公网IP列表
-* Update: [DisassociateAddress](https://cloud.tencent.com/document/api/215/16703) - 解绑弹性公网IP
-* Update: [ModifyLoadBalancerAttributes](https://cloud.tencent.com/document/api/214/30680) - 修改负载均衡实例的属性
-* Update: [ModifyLoadBalancerSla](https://cloud.tencent.com/document/api/214/63892) - 调整实例的性能容量型规格
-* Update: [ModifyLoadBalancersProject](https://cloud.tencent.com/document/api/214/96177) - 修改负载均衡所属项目
-* Update: [ModifyResourceTags](https://cloud.tencent.com/document/api/651/35322) - 批量修改资源关联的标签
-* Update: [SetLoadBalancerClsLog](https://cloud.tencent.com/document/api/214/43266) - 设置负载均衡的日志服务主题
-* Update: [SetLoadBalancerSecurityGroups](https://cloud.tencent.com/document/api/214/34903) - 设置负载均衡实例的安全组
-* Delete: [DeleteLoadBalancer](https://cloud.tencent.com/document/api/214/30689) - 删除负载均衡实例
+* Create: [CreateLoadBalancer](https://cloud.tencent.com/document/api/214/30692) - This API (CreateLoadBalancer) is used to create a CLB instance. To use the CLB service, you first need to purchase one or more instances. After this API is called successfully, a unique instance ID will be returned. There are two types of instances: public network and private network. For more information, see the product types in the product documentation.
+* Create: [DescribeAddresses](https://cloud.tencent.com/document/api/215/16702) - This API (DescribeAddresses) is used to query the information of one or multiple [Elastic IPs](https://intl.cloud.tencent.com/document/product/213/1941?from_cn_redirect=1).
+* Create: [DescribeLoadBalancers](https://cloud.tencent.com/document/api/214/30685) - This API is used to query the list of CLB instances in a region.
+* Create: [DescribeResourceTagsByResourceIds](https://cloud.tencent.com/document/api/651/35319) - This API is used to query the tag key-value pairs associated with an existing resource.
+* Create: [ModifyLoadBalancerAttributes](https://cloud.tencent.com/document/api/214/30680) - This API is used to modify the attributes of a CLB instance, such as name and cross-region attributes.
+* Create: [SetLoadBalancerClsLog](https://cloud.tencent.com/document/api/214/43266) - This API is used to add, delete, and update the CLS topic of a CLB instance.
+* Create: [SetLoadBalancerSecurityGroups](https://cloud.tencent.com/document/api/214/34903) - This API is used to bind or unbind security groups for a public network load balancing instance. To query currently bound security groups of a load balancing instance, use the [DescribeLoadBalancers]((https://www.tencentcloud.com/document/product/1108/48459?from_cn_redirect=1)) API. This API follows set semantics.
+* Read: [DescribeAddresses](https://cloud.tencent.com/document/api/215/16702) - This API (DescribeAddresses) is used to query the information of one or multiple [Elastic IPs](https://intl.cloud.tencent.com/document/product/213/1941?from_cn_redirect=1).
+* Read: [DescribeLoadBalancers](https://cloud.tencent.com/document/api/214/30685) - This API is used to query the list of CLB instances in a region.
+* Read: [DescribeResourceTagsByResourceIds](https://cloud.tencent.com/document/api/651/35319) - This API is used to query the tag key-value pairs associated with an existing resource.
+* Update: [AssociateAddress](https://cloud.tencent.com/document/api/215/16700) - This API is used to bind an [Elastic IP](https://intl.cloud.tencent.com/document/product/213/1941?from_cn_redirect=1) (EIP for short) to the specified private IP of an instance or ENI.
+* Update: [DescribeAddresses](https://cloud.tencent.com/document/api/215/16702) - This API (DescribeAddresses) is used to query the information of one or multiple [Elastic IPs](https://intl.cloud.tencent.com/document/product/213/1941?from_cn_redirect=1).
+* Update: [DisassociateAddress](https://cloud.tencent.com/document/api/215/16703) - This API is used to unbind an [Elastic IP](https://intl.cloud.tencent.com/document/product/213/1941?from_cn_redirect=1) (EIP for short).
+* Update: [ModifyLoadBalancerAttributes](https://cloud.tencent.com/document/api/214/30680) - This API is used to modify the attributes of a CLB instance, such as name and cross-region attributes.
+* Update: [ModifyLoadBalancerSla](https://cloud.tencent.com/document/api/214/63892) - This API is used to adjust the performance capacity specification of usage-based billing mode instances, for example, upgrading from shared type to performance capacity type, or adjusting the specification of performance and capacity instances.
+* Update: [ModifyLoadBalancersProject](https://cloud.tencent.com/document/api/214/96177) - This API is used to modify the projects of CLB instances.
+* Update: [ModifyResourceTags](https://cloud.tencent.com/document/api/651/35322) - This API is used to modify all tags associated with a resource.
+* Update: [SetLoadBalancerClsLog](https://cloud.tencent.com/document/api/214/43266) - This API is used to add, delete, and update the CLS topic of a CLB instance.
+* Update: [SetLoadBalancerSecurityGroups](https://cloud.tencent.com/document/api/214/34903) - This API is used to bind or unbind security groups for a public network load balancing instance. To query currently bound security groups of a load balancing instance, use the [DescribeLoadBalancers]((https://www.tencentcloud.com/document/product/1108/48459?from_cn_redirect=1)) API. This API follows set semantics.
+* Delete: [DeleteLoadBalancer](https://cloud.tencent.com/document/api/214/30689) - This API is used to delete one or more specified CLB instances. After successful deletion, the listeners and forwarding rules under the CLB instance will be deleted together, and the backend service will be unbound.
 
 ## Import
 

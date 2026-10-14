@@ -46,5 +46,5 @@ In addition to all arguments above, the following attributes are exported:
 
 This data source queries the following TencentCloud APIs:
 
-* Read: [DescribeClusterLevelAttribute](https://cloud.tencent.com/document/api/457/72007) - 获取集群规模
+* Read: [DescribeClusterLevelAttribute](https://cloud.tencent.com/document/api/457/72007) - This API is used to obtain the cluster model.
 

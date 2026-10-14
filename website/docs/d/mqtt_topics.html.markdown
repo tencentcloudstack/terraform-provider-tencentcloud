@@ -36,5 +36,5 @@ In addition to all arguments above, the following attributes are exported:
 
 This data source queries the following TencentCloud APIs:
 
-* Read: [DescribeTopicList](https://cloud.tencent.com/document/api/1778/111082) - 查询MQTT主题列表
+* Read: [DescribeTopicList](https://cloud.tencent.com/document/api/1778/111082)
 

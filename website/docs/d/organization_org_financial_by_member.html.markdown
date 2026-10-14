@@ -46,5 +46,5 @@ In addition to all arguments above, the following attributes are exported:
 
 This data source queries the following TencentCloud APIs:
 
-* Read: [DescribeOrganizationFinancialByMember](https://cloud.tencent.com/document/api/850/93482) - 以成员维度获取组织财务信息
+* Read: [DescribeOrganizationFinancialByMember](https://cloud.tencent.com/document/api/850/93482)
 

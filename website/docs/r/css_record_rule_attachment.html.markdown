@@ -42,10 +42,10 @@ In addition to all arguments above, the following attributes are exported:
 
 This resource interacts with the following TencentCloud APIs:
 
-* Create: [CreateLiveRecordRule](https://cloud.tencent.com/document/api/267/32615) - 创建录制规则
-* Read: [DescribeLiveRecordRules](https://cloud.tencent.com/document/api/267/32611) - 获取录制规则列表
-* Delete: [DeleteLiveRecordRule](https://cloud.tencent.com/document/api/267/32613) - 删除录制规则
-* Delete: [DescribeLiveRecordRules](https://cloud.tencent.com/document/api/267/32611) - 获取录制规则列表
+* Create: [CreateLiveRecordRule](https://cloud.tencent.com/document/api/267/32615) - To create a recording rule, you need to first call the [CreateLiveRecordTemplate](https://intl.cloud.tencent.com/document/product/267/32614?from_cn_redirect=1) API to create a recording template and bind the returned template ID to the stream.
+* Read: [DescribeLiveRecordRules](https://cloud.tencent.com/document/api/267/32611) - This API is used to get the list of recording rules.
+* Delete: [DeleteLiveRecordRule](https://cloud.tencent.com/document/api/267/32613) - This API is used to delete a recording rule.
+* Delete: [DescribeLiveRecordRules](https://cloud.tencent.com/document/api/267/32611) - This API is used to get the list of recording rules.
 
 ## Import
 

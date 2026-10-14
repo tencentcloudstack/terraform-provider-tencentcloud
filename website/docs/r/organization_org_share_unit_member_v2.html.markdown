@@ -62,12 +62,12 @@ In addition to all arguments above, the following attributes are exported:
 
 This resource interacts with the following TencentCloud APIs:
 
-* Create: [AddShareUnitMembers](https://cloud.tencent.com/document/api/850/103055) - 添加共享单元成员
-* Read: [DescribeShareUnitMembers](https://cloud.tencent.com/document/api/850/103049) - 获取共享单元成员列表
-* Update: [AddShareUnitMembers](https://cloud.tencent.com/document/api/850/103055) - 添加共享单元成员
-* Update: [DeleteShareUnitMembers](https://cloud.tencent.com/document/api/850/103052) - 删除共享单元成员
-* Delete: [DeleteShareUnitMembers](https://cloud.tencent.com/document/api/850/103052) - 删除共享单元成员
-* Delete: [DescribeShareUnitMembers](https://cloud.tencent.com/document/api/850/103049) - 获取共享单元成员列表
+* Create: [AddShareUnitMembers](https://cloud.tencent.com/document/api/850/103055) - This API is used to add a shared unit member.
+* Read: [DescribeShareUnitMembers](https://cloud.tencent.com/document/api/850/103049) - This API is used to obtain the member list of a shared unit.
+* Update: [AddShareUnitMembers](https://cloud.tencent.com/document/api/850/103055) - This API is used to add a shared unit member.
+* Update: [DeleteShareUnitMembers](https://cloud.tencent.com/document/api/850/103052) - This API is used to delete a shared unit member.
+* Delete: [DeleteShareUnitMembers](https://cloud.tencent.com/document/api/850/103052) - This API is used to delete a shared unit member.
+* Delete: [DescribeShareUnitMembers](https://cloud.tencent.com/document/api/850/103049) - This API is used to obtain the member list of a shared unit.
 
 ## Import
 

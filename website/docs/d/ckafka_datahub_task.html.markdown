@@ -557,5 +557,5 @@ In addition to all arguments above, the following attributes are exported:
 
 This data source queries the following TencentCloud APIs:
 
-* Read: [DescribeDatahubTasks](https://cloud.tencent.com/document/api/597/77795) - 查询连接器任务列表
+* Read: [DescribeDatahubTasks](https://cloud.tencent.com/document/api/597/77795)
 

@@ -54,12 +54,12 @@ In addition to all arguments above, the following attributes are exported:
 
 This resource interacts with the following TencentCloud APIs:
 
-* Create: [CreateAccountUser](https://cloud.tencent.com/document/api/240/84704) - 创建账号
-* Create: [DescribeAsyncRequestInfo](https://cloud.tencent.com/document/api/240/46601) - 查询异步任务状态接口
-* Read: [DescribeAccountUsers](https://cloud.tencent.com/document/api/240/80800) - 全部账号列表
-* Update: [DescribeAsyncRequestInfo](https://cloud.tencent.com/document/api/240/46601) - 查询异步任务状态接口
-* Update: [ResetDBInstancePassword](https://cloud.tencent.com/document/api/240/46598) - 修改实例用户的密码
-* Update: [SetAccountUserPrivilege](https://cloud.tencent.com/document/api/240/67357) - 设置账户权限
-* Delete: [DeleteAccountUser](https://cloud.tencent.com/document/api/240/90048) - 删除账号
-* Delete: [DescribeAsyncRequestInfo](https://cloud.tencent.com/document/api/240/46601) - 查询异步任务状态接口
+* Create: [CreateAccountUser](https://cloud.tencent.com/document/api/240/84704) - This API is used to customize an account to access the instance.
+* Create: [DescribeAsyncRequestInfo](https://cloud.tencent.com/document/api/240/46601) - This API is used to query the asynchronous task status.
+* Read: [DescribeAccountUsers](https://cloud.tencent.com/document/api/240/80800) - This API is used to obtain all accounts of the current instance.
+* Update: [DescribeAsyncRequestInfo](https://cloud.tencent.com/document/api/240/46601) - This API is used to query the asynchronous task status.
+* Update: [ResetDBInstancePassword](https://cloud.tencent.com/document/api/240/46598) - This API is used to reset the instance access password.
+* Update: [SetAccountUserPrivilege](https://cloud.tencent.com/document/api/240/67357) - This API is used to set the account permissions of an instance.
+* Delete: [DeleteAccountUser](https://cloud.tencent.com/document/api/240/90048) - This API is used to delete a custom account of an instance.
+* Delete: [DescribeAsyncRequestInfo](https://cloud.tencent.com/document/api/240/46601) - This API is used to query the asynchronous task status.
 

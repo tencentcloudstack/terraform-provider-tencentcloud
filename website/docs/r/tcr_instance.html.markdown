@@ -152,30 +152,30 @@ The `security_policy` object exports the following:
 
 This resource interacts with the following TencentCloud APIs:
 
-* Create: [CreateInstance](https://cloud.tencent.com/document/api/1141/41572) - 创建实例
-* Create: [CreateMultipleSecurityPolicy](https://cloud.tencent.com/document/api/1141/56524) - 创建实例公网访问多白名单策略
-* Create: [DescribeExternalEndpointStatus](https://cloud.tencent.com/document/api/1141/53642) - 查询实例公网访问入口状态
-* Create: [DescribeInstances](https://cloud.tencent.com/document/api/1141/41569) - 查询实例信息
-* Create: [ManageExternalEndpoint](https://cloud.tencent.com/document/api/1141/53597) - 管理实例公网访问
-* Create: [ModifyResourceTags](https://cloud.tencent.com/document/api/651/35322) - 批量修改资源关联的标签
-* Read: [DescribeExternalEndpointStatus](https://cloud.tencent.com/document/api/1141/53642) - 查询实例公网访问入口状态
-* Read: [DescribeInstances](https://cloud.tencent.com/document/api/1141/41569) - 查询实例信息
-* Read: [DescribeReplicationInstances](https://cloud.tencent.com/document/api/1141/49201) - 查询从实例列表
-* Read: [DescribeSecurityPolicies](https://cloud.tencent.com/document/api/1141/53906) - 查询实例公网访问白名单策略
-* Update: [CreateMultipleSecurityPolicy](https://cloud.tencent.com/document/api/1141/56524) - 创建实例公网访问多白名单策略
-* Update: [DeleteMultipleSecurityPolicy](https://cloud.tencent.com/document/api/1141/56523) - 删除实例公网访问多白名单策略
-* Update: [DescribeExternalEndpointStatus](https://cloud.tencent.com/document/api/1141/53642) - 查询实例公网访问入口状态
-* Update: [DescribeInstances](https://cloud.tencent.com/document/api/1141/41569) - 查询实例信息
-* Update: [ManageExternalEndpoint](https://cloud.tencent.com/document/api/1141/53597) - 管理实例公网访问
-* Update: [ModifyInstance](https://cloud.tencent.com/document/api/1141/60996) - 更新实例信息
-* Update: [ModifyResourceTags](https://cloud.tencent.com/document/api/651/35322) - 批量修改资源关联的标签
-* Update: [RenewInstance](https://cloud.tencent.com/document/api/1141/51792) - 续费实例
-* Delete: [DeleteInstance](https://cloud.tencent.com/document/api/1141/49983) - 删除实例
-* Delete: [DeleteNamespace](https://cloud.tencent.com/document/api/1141/42728) - 删除命名空间
-* Delete: [DeleteReplicationInstance](https://cloud.tencent.com/document/api/1141/79581) - 删除从实例
-* Delete: [DescribeInstances](https://cloud.tencent.com/document/api/1141/41569) - 查询实例信息
-* Delete: [DescribeNamespaces](https://cloud.tencent.com/document/api/1141/42765) - 查询命名空间信息
-* Delete: [DescribeReplicationInstances](https://cloud.tencent.com/document/api/1141/49201) - 查询从实例列表
+* Create: [CreateInstance](https://cloud.tencent.com/document/api/1141/41572) - This API is used to create an instance.
+* Create: [CreateMultipleSecurityPolicy](https://cloud.tencent.com/document/api/1141/56524) - This API is used to create multiple public network access allowlist policies of the TCR instance.
+* Create: [DescribeExternalEndpointStatus](https://cloud.tencent.com/document/api/1141/53642) - This API is used to query the public network access entry status of an instance.
+* Create: [DescribeInstances](https://cloud.tencent.com/document/api/1141/41569) - This API is used to query the instance information.
+* Create: [ManageExternalEndpoint](https://cloud.tencent.com/document/api/1141/53597) - This API is used to manage the public network access of an instance.
+* Create: [ModifyResourceTags](https://cloud.tencent.com/document/api/651/35322) - This API is used to modify all tags associated with a resource.
+* Read: [DescribeExternalEndpointStatus](https://cloud.tencent.com/document/api/1141/53642) - This API is used to query the public network access entry status of an instance.
+* Read: [DescribeInstances](https://cloud.tencent.com/document/api/1141/41569) - This API is used to query the instance information.
+* Read: [DescribeReplicationInstances](https://cloud.tencent.com/document/api/1141/49201) - This API is used to query the list of replication instances.
+* Read: [DescribeSecurityPolicies](https://cloud.tencent.com/document/api/1141/53906) - This API is used to query the public network access allowlist policies of an instance.
+* Update: [CreateMultipleSecurityPolicy](https://cloud.tencent.com/document/api/1141/56524) - This API is used to create multiple public network access allowlist policies of the TCR instance.
+* Update: [DeleteMultipleSecurityPolicy](https://cloud.tencent.com/document/api/1141/56523) - This API is used to delete multiple public network access allowlist policies of the instance.
+* Update: [DescribeExternalEndpointStatus](https://cloud.tencent.com/document/api/1141/53642) - This API is used to query the public network access entry status of an instance.
+* Update: [DescribeInstances](https://cloud.tencent.com/document/api/1141/41569) - This API is used to query the instance information.
+* Update: [ManageExternalEndpoint](https://cloud.tencent.com/document/api/1141/53597) - This API is used to manage the public network access of an instance.
+* Update: [ModifyInstance](https://cloud.tencent.com/document/api/1141/60996) - This API is used to update instance information.
+* Update: [ModifyResourceTags](https://cloud.tencent.com/document/api/651/35322) - This API is used to modify all tags associated with a resource.
+* Update: [RenewInstance](https://cloud.tencent.com/document/api/1141/51792) - This API is used to renew a prepaid instance or change the billing mode from pay-as-you-go billing to monthly subscription billing.
+* Delete: [DeleteInstance](https://cloud.tencent.com/document/api/1141/49983) - This API is used to delete a TCR Enterprise Edition instance.
+* Delete: [DeleteNamespace](https://cloud.tencent.com/document/api/1141/42728) - This API is used to delete a namespace.
+* Delete: [DeleteReplicationInstance](https://cloud.tencent.com/document/api/1141/79581) - This API is used to delete a replica instance.
+* Delete: [DescribeInstances](https://cloud.tencent.com/document/api/1141/41569) - This API is used to query the instance information.
+* Delete: [DescribeNamespaces](https://cloud.tencent.com/document/api/1141/42765) - This API is used to query the namespace list or the information of the specified namespace.
+* Delete: [DescribeReplicationInstances](https://cloud.tencent.com/document/api/1141/49201) - This API is used to query the list of replication instances.
 
 ## Import
 

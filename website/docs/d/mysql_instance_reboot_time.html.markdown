@@ -38,5 +38,5 @@ In addition to all arguments above, the following attributes are exported:
 
 This data source queries the following TencentCloud APIs:
 
-* Read: [DescribeDBInstanceRebootTime](https://cloud.tencent.com/document/api/236/15874) - 查询云数据库实例的预期重启时间
+* Read: [DescribeDBInstanceRebootTime](https://cloud.tencent.com/document/api/236/15874) - This API is used to query the expected time required to restart a cloud database instance.
 

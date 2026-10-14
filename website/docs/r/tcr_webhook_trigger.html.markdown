@@ -114,13 +114,13 @@ The `trigger` object exports the following:
 
 This resource interacts with the following TencentCloud APIs:
 
-* Create: [CreateWebhookTrigger](https://cloud.tencent.com/document/api/1141/43531) - 创建触发器
-* Create: [ModifyResourceTags](https://cloud.tencent.com/document/api/651/35322) - 批量修改资源关联的标签
-* Read: [DescribeResourceTagsByResourceIds](https://cloud.tencent.com/document/api/651/35319) - 批量查看资源关联的标签
-* Read: [DescribeWebhookTrigger](https://cloud.tencent.com/document/api/1141/43529) - 查询触发器
-* Update: [ModifyResourceTags](https://cloud.tencent.com/document/api/651/35322) - 批量修改资源关联的标签
-* Update: [ModifyWebhookTrigger](https://cloud.tencent.com/document/api/1141/43527) - 更新触发器
-* Delete: [DeleteWebhookTrigger](https://cloud.tencent.com/document/api/1141/43530) - 删除触发器
+* Create: [CreateWebhookTrigger](https://cloud.tencent.com/document/api/1141/43531) - This API is used to create a trigger.
+* Create: [ModifyResourceTags](https://cloud.tencent.com/document/api/651/35322) - This API is used to modify all tags associated with a resource.
+* Read: [DescribeResourceTagsByResourceIds](https://cloud.tencent.com/document/api/651/35319) - This API is used to query the tag key-value pairs associated with an existing resource.
+* Read: [DescribeWebhookTrigger](https://cloud.tencent.com/document/api/1141/43529) - This API is used to query triggers.
+* Update: [ModifyResourceTags](https://cloud.tencent.com/document/api/651/35322) - This API is used to modify all tags associated with a resource.
+* Update: [ModifyWebhookTrigger](https://cloud.tencent.com/document/api/1141/43527) - This API is used to update a trigger.
+* Delete: [DeleteWebhookTrigger](https://cloud.tencent.com/document/api/1141/43530) - This API is used to delete a trigger.
 
 ## Import
 

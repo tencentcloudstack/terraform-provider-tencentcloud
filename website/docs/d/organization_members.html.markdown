@@ -70,5 +70,5 @@ In addition to all arguments above, the following attributes are exported:
 
 This data source queries the following TencentCloud APIs:
 
-* Read: [DescribeOrganizationMembers](https://cloud.tencent.com/document/api/850/67220) - 获取企业组织成员列表
+* Read: [DescribeOrganizationMembers](https://cloud.tencent.com/document/api/850/67220) - This API is used to get the list of organization members.
 

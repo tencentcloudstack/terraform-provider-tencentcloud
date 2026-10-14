@@ -1541,11 +1541,11 @@ The `rules` object of `rate_limiting_rules` exports the following:
 
 This resource interacts with the following TencentCloud APIs:
 
-* Create: [CreateWebSecurityTemplate](https://cloud.tencent.com/document/api/1552/121063) - 创建安全策略配置模板
-* Read: [DescribeWebSecurityTemplate](https://cloud.tencent.com/document/api/1552/121062) - 查询安全策略配置模板详情
-* Read: [DescribeWebSecurityTemplates](https://cloud.tencent.com/document/api/1552/121061) - 查询安全策略配置模板列表
-* Update: [ModifyWebSecurityTemplate](https://cloud.tencent.com/document/api/1552/121060) - 修改安全策略配置模板
-* Delete: [DeleteWebSecurityTemplate](https://cloud.tencent.com/document/api/1552/121064) - 删除安全策略配置模板
+* Create: [CreateWebSecurityTemplate](https://cloud.tencent.com/document/api/1552/121063) - This API is used to create a security policy configuration template.
+* Read: [DescribeWebSecurityTemplate](https://cloud.tencent.com/document/api/1552/121062) - This API is used to query security policy configuration template details.
+* Read: [DescribeWebSecurityTemplates](https://cloud.tencent.com/document/api/1552/121061) - This API is used to query the security policy configuration template list.
+* Update: [ModifyWebSecurityTemplate](https://cloud.tencent.com/document/api/1552/121060) - This API is used to modify the security policy configuration template.
+* Delete: [DeleteWebSecurityTemplate](https://cloud.tencent.com/document/api/1552/121064) - This API is used to delete a security policy configuration template.
 
 ## Import
 

@@ -38,5 +38,5 @@ In addition to all arguments above, the following attributes are exported:
 
 This resource interacts with the following TencentCloud APIs:
 
-* Create: [RenewCkafkaInstance](https://cloud.tencent.com/document/api/597/90290) - 续费Ckafka实例
+* Create: [RenewCkafkaInstance](https://cloud.tencent.com/document/api/597/90290)
 

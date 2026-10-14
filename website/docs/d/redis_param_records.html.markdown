@@ -41,5 +41,5 @@ In addition to all arguments above, the following attributes are exported:
 
 This data source queries the following TencentCloud APIs:
 
-* Read: [DescribeInstanceParamRecords](https://cloud.tencent.com/document/api/239/34449) - 查询参数修改历史列表
+* Read: [DescribeInstanceParamRecords](https://cloud.tencent.com/document/api/239/34449) - This API is used to query the parameter modification record list.
 

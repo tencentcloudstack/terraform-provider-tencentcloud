@@ -62,5 +62,5 @@ In addition to all arguments above, the following attributes are exported:
 
 This data source queries the following TencentCloud APIs:
 
-* Read: [DescribeSqlFilters](https://cloud.tencent.com/document/api/1130/72831) - 查询实例SQL限流任务列表
+* Read: [DescribeSqlFilters](https://cloud.tencent.com/document/api/1130/72831)
 

@@ -33,5 +33,5 @@ The following arguments are supported:
 
 This data source queries the following TencentCloud APIs:
 
-* Read: [DescribeTenantCcns](https://cloud.tencent.com/document/api/215/71324) - 查询租户云联网实例
+* Read: [DescribeTenantCcns](https://cloud.tencent.com/document/api/215/71324)
 

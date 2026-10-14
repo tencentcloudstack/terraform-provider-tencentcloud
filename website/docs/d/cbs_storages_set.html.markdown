@@ -69,5 +69,5 @@ In addition to all arguments above, the following attributes are exported:
 
 This data source queries the following TencentCloud APIs:
 
-* Read: [DescribeDisks](https://cloud.tencent.com/document/api/362/16315) - 查询云硬盘列表
+* Read: [DescribeDisks](https://cloud.tencent.com/document/api/362/16315) - This API (DescribeDisks) is used to query the list of cloud disks.
 

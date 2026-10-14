@@ -58,12 +58,12 @@ In addition to all arguments above, the following attributes are exported:
 
 This resource interacts with the following TencentCloud APIs:
 
-* Create: [CreateWorkflowPermissions](https://cloud.tencent.com/document/api/1267/127266) - 配置工作流文件夹权限
-* Read: [ListWorkflowPermissions](https://cloud.tencent.com/document/api/1267/127247) - 获取工作流文件夹权限列表
-* Update: [CreateWorkflowPermissions](https://cloud.tencent.com/document/api/1267/127266) - 配置工作流文件夹权限
-* Update: [DeleteWorkflowPermissions](https://cloud.tencent.com/document/api/1267/127262) - 删除工作流文件夹权限
-* Delete: [DeleteWorkflowPermissions](https://cloud.tencent.com/document/api/1267/127262) - 删除工作流文件夹权限
-* Delete: [ListWorkflowPermissions](https://cloud.tencent.com/document/api/1267/127247) - 获取工作流文件夹权限列表
+* Create: [CreateWorkflowPermissions](https://cloud.tencent.com/document/api/1267/127266) - This API is used to configure data development permissions.
+* Read: [ListWorkflowPermissions](https://cloud.tencent.com/document/api/1267/127247) - Query workflow authorization permissions.
+* Update: [CreateWorkflowPermissions](https://cloud.tencent.com/document/api/1267/127266) - This API is used to configure data development permissions.
+* Update: [DeleteWorkflowPermissions](https://cloud.tencent.com/document/api/1267/127262) - This API is used to delete workflow folder permissions.
+* Delete: [DeleteWorkflowPermissions](https://cloud.tencent.com/document/api/1267/127262) - This API is used to delete workflow folder permissions.
+* Delete: [ListWorkflowPermissions](https://cloud.tencent.com/document/api/1267/127247) - Query workflow authorization permissions.
 
 ## Import
 

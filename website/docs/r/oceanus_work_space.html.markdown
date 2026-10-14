@@ -47,10 +47,10 @@ In addition to all arguments above, the following attributes are exported:
 
 This resource interacts with the following TencentCloud APIs:
 
-* Create: [CreateWorkSpace](https://cloud.tencent.com/document/api/849/100451) - 创建工作空间
-* Read: [DescribeWorkSpaces](https://cloud.tencent.com/document/api/849/94138) - 授权工作空间列表
-* Update: [ModifyWorkSpace](https://cloud.tencent.com/document/api/849/100450) - 修改工作空间
-* Delete: [DeleteWorkSpace](https://cloud.tencent.com/document/api/849/100579) - 删除工作空间
+* Create: [CreateWorkSpace](https://cloud.tencent.com/document/api/849/100451)
+* Read: [DescribeWorkSpaces](https://cloud.tencent.com/document/api/849/94138)
+* Update: [ModifyWorkSpace](https://cloud.tencent.com/document/api/849/100450)
+* Delete: [DeleteWorkSpace](https://cloud.tencent.com/document/api/849/100579)
 
 ## Import
 

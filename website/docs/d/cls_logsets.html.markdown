@@ -86,5 +86,5 @@ In addition to all arguments above, the following attributes are exported:
 
 This data source queries the following TencentCloud APIs:
 
-* Read: [DescribeLogsets](https://cloud.tencent.com/document/api/614/58624) - 获取日志集列表
+* Read: [DescribeLogsets](https://cloud.tencent.com/document/api/614/58624) - This API is used to get the list of logsets.
 

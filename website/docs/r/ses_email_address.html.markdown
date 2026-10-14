@@ -51,11 +51,11 @@ In addition to all arguments above, the following attributes are exported:
 
 This resource interacts with the following TencentCloud APIs:
 
-* Create: [CreateEmailAddress](https://cloud.tencent.com/document/api/1288/51052) - 新建发信地址
-* Create: [UpdateEmailSmtpPassWord](https://cloud.tencent.com/document/api/1288/84274) - 设置邮箱的smtp密码
-* Read: [ListEmailAddress](https://cloud.tencent.com/document/api/1288/51050) - 获取发信地址列表
-* Update: [UpdateEmailSmtpPassWord](https://cloud.tencent.com/document/api/1288/84274) - 设置邮箱的smtp密码
-* Delete: [DeleteEmailAddress](https://cloud.tencent.com/document/api/1288/51051) - 删除发信地址
+* Create: [CreateEmailAddress](https://cloud.tencent.com/document/api/1288/51052) - After the sender domain is verified, you need a sender address to send emails. For example, if your sender domain is mail.qcloud.com, your sender address can be service@mail.qcloud.com. If you want to display your name (such as "Tencent Cloud") in the inbox list of the recipients, the sender address should be in the format of `Tencent Cloud <email address>`. Please note that there must be a space between your name and the first angle bracket.
+* Create: [UpdateEmailSmtpPassWord](https://cloud.tencent.com/document/api/1288/84274) - This API is used to set the SMTP password. Initially, no SMTP password is set for your email address, so emails cannot be sent over SMTP. To send emails over SMTP, you must set the SMTP password. The set password can be changed subsequently.
+* Read: [ListEmailAddress](https://cloud.tencent.com/document/api/1288/51050) - This API is used to get the list of sender addresses.
+* Update: [UpdateEmailSmtpPassWord](https://cloud.tencent.com/document/api/1288/84274) - This API is used to set the SMTP password. Initially, no SMTP password is set for your email address, so emails cannot be sent over SMTP. To send emails over SMTP, you must set the SMTP password. The set password can be changed subsequently.
+* Delete: [DeleteEmailAddress](https://cloud.tencent.com/document/api/1288/51051) - This API is used to delete a sender address.
 
 ## Import
 

@@ -37,5 +37,5 @@ In addition to all arguments above, the following attributes are exported:
 
 This data source queries the following TencentCloud APIs:
 
-* Read: [DescribeBandwidthPackageQuota](https://cloud.tencent.com/document/api/215/19210) - 查询带宽包配额
+* Read: [DescribeBandwidthPackageQuota](https://cloud.tencent.com/document/api/215/19210) - This API is used to query the maximum and used number of bandwidth packages under the account in the current region.
 

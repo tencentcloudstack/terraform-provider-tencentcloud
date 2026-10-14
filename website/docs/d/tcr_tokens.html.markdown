@@ -41,5 +41,5 @@ In addition to all arguments above, the following attributes are exported:
 
 This data source queries the following TencentCloud APIs:
 
-* Read: [DescribeInstanceToken](https://cloud.tencent.com/document/api/1141/42911) - 查询长期访问凭证信息
+* Read: [DescribeInstanceToken](https://cloud.tencent.com/document/api/1141/42911) - This API is used to query the information of long-term access credentials.
 

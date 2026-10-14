@@ -71,14 +71,14 @@ In addition to all arguments above, the following attributes are exported:
 
 This resource interacts with the following TencentCloud APIs:
 
-* Create: [DescribeInstances](https://cloud.tencent.com/document/api/1141/41569) - 查询实例信息
-* Create: [DescribeInternalEndpoints](https://cloud.tencent.com/document/api/1141/50734) - 查询实例内网访问VPC链接
-* Create: [ManageInternalEndpoint](https://cloud.tencent.com/document/api/1141/50733) - 管理实例内网访问VPC链接
-* Read: [DescribeInstances](https://cloud.tencent.com/document/api/1141/41569) - 查询实例信息
-* Read: [DescribeInternalEndpoints](https://cloud.tencent.com/document/api/1141/50734) - 查询实例内网访问VPC链接
-* Delete: [DescribeInstances](https://cloud.tencent.com/document/api/1141/41569) - 查询实例信息
-* Delete: [DescribeInternalEndpoints](https://cloud.tencent.com/document/api/1141/50734) - 查询实例内网访问VPC链接
-* Delete: [ManageInternalEndpoint](https://cloud.tencent.com/document/api/1141/50733) - 管理实例内网访问VPC链接
+* Create: [DescribeInstances](https://cloud.tencent.com/document/api/1141/41569) - This API is used to query the instance information.
+* Create: [DescribeInternalEndpoints](https://cloud.tencent.com/document/api/1141/50734) - This API is used to query the VPC URLs for private network access to an instance.
+* Create: [ManageInternalEndpoint](https://cloud.tencent.com/document/api/1141/50733) - This API is used to manage VPC URLs for private network access to an instance.
+* Read: [DescribeInstances](https://cloud.tencent.com/document/api/1141/41569) - This API is used to query the instance information.
+* Read: [DescribeInternalEndpoints](https://cloud.tencent.com/document/api/1141/50734) - This API is used to query the VPC URLs for private network access to an instance.
+* Delete: [DescribeInstances](https://cloud.tencent.com/document/api/1141/41569) - This API is used to query the instance information.
+* Delete: [DescribeInternalEndpoints](https://cloud.tencent.com/document/api/1141/50734) - This API is used to query the VPC URLs for private network access to an instance.
+* Delete: [ManageInternalEndpoint](https://cloud.tencent.com/document/api/1141/50733) - This API is used to manage VPC URLs for private network access to an instance.
 
 ## Import
 

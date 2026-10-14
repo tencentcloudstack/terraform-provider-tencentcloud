@@ -70,5 +70,5 @@ In addition to all arguments above, the following attributes are exported:
 
 This resource interacts with the following TencentCloud APIs:
 
-* Create: [PutEvents](https://cloud.tencent.com/document/api/1359/68465) - 事件投递
+* Create: [PutEvents](https://cloud.tencent.com/document/api/1359/68465)
 

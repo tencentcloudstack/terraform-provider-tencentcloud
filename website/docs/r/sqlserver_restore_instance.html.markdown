@@ -50,13 +50,13 @@ In addition to all arguments above, the following attributes are exported:
 
 This resource interacts with the following TencentCloud APIs:
 
-* Create: [DescribeFlowStatus](https://cloud.tencent.com/document/api/238/19967) - 查询流程状态
-* Create: [RestoreInstance](https://cloud.tencent.com/document/api/238/19950) - 按照备份集回档数据库
-* Read: [DescribeDBs](https://cloud.tencent.com/document/api/238/19968) - 查询数据库列表（已废弃）
-* Update: [DescribeFlowStatus](https://cloud.tencent.com/document/api/238/19967) - 查询流程状态
-* Update: [RestoreInstance](https://cloud.tencent.com/document/api/238/19950) - 按照备份集回档数据库
-* Delete: [DeleteDB](https://cloud.tencent.com/document/api/238/19971) - 删除数据库
-* Delete: [DescribeFlowStatus](https://cloud.tencent.com/document/api/238/19967) - 查询流程状态
+* Create: [DescribeFlowStatus](https://cloud.tencent.com/document/api/238/19967) - This API is used to query flow status.
+* Create: [RestoreInstance](https://cloud.tencent.com/document/api/238/19950) - This API is used to roll back the database by backup set.
+* Read: [DescribeDBs](https://cloud.tencent.com/document/api/238/19968) - This API is used to query the list of databases
+* Update: [DescribeFlowStatus](https://cloud.tencent.com/document/api/238/19967) - This API is used to query flow status.
+* Update: [RestoreInstance](https://cloud.tencent.com/document/api/238/19950) - This API is used to roll back the database by backup set.
+* Delete: [DeleteDB](https://cloud.tencent.com/document/api/238/19971) - This API is used to drop a database.
+* Delete: [DescribeFlowStatus](https://cloud.tencent.com/document/api/238/19967) - This API is used to query flow status.
 
 ## Import
 

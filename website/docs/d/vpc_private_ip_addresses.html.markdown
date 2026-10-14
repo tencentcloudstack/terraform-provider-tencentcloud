@@ -42,5 +42,5 @@ In addition to all arguments above, the following attributes are exported:
 
 This data source queries the following TencentCloud APIs:
 
-* Read: [DescribeVpcPrivateIpAddresses](https://cloud.tencent.com/document/api/215/32884) - 查询VPC内网IP信息
+* Read: [DescribeVpcPrivateIpAddresses](https://cloud.tencent.com/document/api/215/32884) - This API (DescribeVpcPrivateIpAddresses) is used to query the private IP information of a VPC.<br />
 

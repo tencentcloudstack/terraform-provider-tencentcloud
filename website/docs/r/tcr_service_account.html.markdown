@@ -100,15 +100,15 @@ In addition to all arguments above, the following attributes are exported:
 
 This resource interacts with the following TencentCloud APIs:
 
-* Create: [CreateServiceAccount](https://cloud.tencent.com/document/api/1141/94608) - 创建服务级账号
-* Create: [ModifyResourceTags](https://cloud.tencent.com/document/api/651/35322) - 批量修改资源关联的标签
-* Create: [ModifyServiceAccountPassword](https://cloud.tencent.com/document/api/1141/103857) - 更新服务级账号密码
-* Read: [DescribeResourceTagsByResourceIds](https://cloud.tencent.com/document/api/651/35319) - 批量查看资源关联的标签
-* Read: [DescribeServiceAccounts](https://cloud.tencent.com/document/api/1141/94606) - 查询服务级账号
-* Update: [ModifyResourceTags](https://cloud.tencent.com/document/api/651/35322) - 批量修改资源关联的标签
-* Update: [ModifyServiceAccount](https://cloud.tencent.com/document/api/1141/94605) - 更新服务级账号
-* Update: [ModifyServiceAccountPassword](https://cloud.tencent.com/document/api/1141/103857) - 更新服务级账号密码
-* Delete: [DeleteServiceAccount](https://cloud.tencent.com/document/api/1141/94607) - 删除服务级账号
+* Create: [CreateServiceAccount](https://cloud.tencent.com/document/api/1141/94608) - This API is used to create a service level account.
+* Create: [ModifyResourceTags](https://cloud.tencent.com/document/api/651/35322) - This API is used to modify all tags associated with a resource.
+* Create: [ModifyServiceAccountPassword](https://cloud.tencent.com/document/api/1141/103857) - This API is used to update the password for a service level account.
+* Read: [DescribeResourceTagsByResourceIds](https://cloud.tencent.com/document/api/651/35319) - This API is used to query the tag key-value pairs associated with an existing resource.
+* Read: [DescribeServiceAccounts](https://cloud.tencent.com/document/api/1141/94606) - This API is used to query service accounts.
+* Update: [ModifyResourceTags](https://cloud.tencent.com/document/api/651/35322) - This API is used to modify all tags associated with a resource.
+* Update: [ModifyServiceAccount](https://cloud.tencent.com/document/api/1141/94605) - This API is used to update a service account.
+* Update: [ModifyServiceAccountPassword](https://cloud.tencent.com/document/api/1141/103857) - This API is used to update the password for a service level account.
+* Delete: [DeleteServiceAccount](https://cloud.tencent.com/document/api/1141/94607) - This API is used to delete a service account.
 
 ## Import
 

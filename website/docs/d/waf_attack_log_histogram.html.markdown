@@ -59,5 +59,5 @@ In addition to all arguments above, the following attributes are exported:
 
 This data source queries the following TencentCloud APIs:
 
-* Read: [GetAttackHistogram](https://cloud.tencent.com/document/api/627/95692) - 攻击日志统计
+* Read: [GetAttackHistogram](https://cloud.tencent.com/document/api/627/95692) - This API is used to generate a bar chart for the generation time of attack logs.
 

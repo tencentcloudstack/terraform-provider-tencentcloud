@@ -54,5 +54,5 @@ In addition to all arguments above, the following attributes are exported:
 
 This data source queries the following TencentCloud APIs:
 
-* Read: [DescribeNatFwClusterRegionStatus](https://cloud.tencent.com/document/api/1132/132584) - 查询NAT防火墙引流集群地域状态
+* Read: [DescribeNatFwClusterRegionStatus](https://cloud.tencent.com/document/api/1132/132584)
 

@@ -54,5 +54,5 @@ In addition to all arguments above, the following attributes are exported:
 
 This data source queries the following TencentCloud APIs:
 
-* Read: [DescribeMySqlProcessList](https://cloud.tencent.com/document/api/1130/57824) - 查询实时线程列表
+* Read: [DescribeMySqlProcessList](https://cloud.tencent.com/document/api/1130/57824) - This API is used to query the real-time thread list of a relational database.
 

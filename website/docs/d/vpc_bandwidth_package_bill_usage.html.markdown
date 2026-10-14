@@ -37,5 +37,5 @@ In addition to all arguments above, the following attributes are exported:
 
 This data source queries the following TencentCloud APIs:
 
-* Read: [DescribeBandwidthPackageBillUsage](https://cloud.tencent.com/document/api/215/48945) - 查询后付费共享带宽包当前的用量
+* Read: [DescribeBandwidthPackageBillUsage](https://cloud.tencent.com/document/api/215/48945) - This API is used to query the current billable usage of a pay-as-you-go bandwidth package.
 

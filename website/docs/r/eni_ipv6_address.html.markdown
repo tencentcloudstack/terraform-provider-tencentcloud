@@ -86,12 +86,12 @@ In addition to all arguments above, the following attributes are exported:
 
 This resource interacts with the following TencentCloud APIs:
 
-* Create: [AssignIpv6Addresses](https://cloud.tencent.com/document/api/215/34469) - 分配IPv6地址
-* Create: [DescribeVpcTaskResult](https://cloud.tencent.com/document/api/215/59037) - 查询VPC异步任务执行结果
-* Read: [DescribeNetworkInterfaces](https://cloud.tencent.com/document/api/215/15817) - 查询弹性网卡列表
-* Delete: [DescribeNetworkInterfaces](https://cloud.tencent.com/document/api/215/15817) - 查询弹性网卡列表
-* Delete: [DescribeVpcTaskResult](https://cloud.tencent.com/document/api/215/59037) - 查询VPC异步任务执行结果
-* Delete: [UnassignIpv6Addresses](https://cloud.tencent.com/document/api/215/34467) - 释放IPv6地址
+* Create: [AssignIpv6Addresses](https://cloud.tencent.com/document/api/215/34469) - This API is used to apply for an IPv6 address for the ENI. <br />
+* Create: [DescribeVpcTaskResult](https://cloud.tencent.com/document/api/215/59037) - This API is used to query the execution result of a VPC task.
+* Read: [DescribeNetworkInterfaces](https://cloud.tencent.com/document/api/215/15817) - This API (DescribeNetworkInterfaces) is used to query the ENI list.
+* Delete: [DescribeNetworkInterfaces](https://cloud.tencent.com/document/api/215/15817) - This API (DescribeNetworkInterfaces) is used to query the ENI list.
+* Delete: [DescribeVpcTaskResult](https://cloud.tencent.com/document/api/215/59037) - This API is used to query the execution result of a VPC task.
+* Delete: [UnassignIpv6Addresses](https://cloud.tencent.com/document/api/215/34467) - This API is used to release the IPv6 addresses of an ENI. <br />
 
 ## Import
 

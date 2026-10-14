@@ -44,10 +44,10 @@ In addition to all arguments above, the following attributes are exported:
 
 This resource interacts with the following TencentCloud APIs:
 
-* Create: [ModifyApiSecSensitiveRule](https://cloud.tencent.com/document/api/627/125861) - 修改api安全配置规则
-* Read: [DescribeApiSecSensitiveRuleList](https://cloud.tencent.com/document/api/627/129030) - 获取api安全配置规则列表
-* Update: [ModifyApiSecSensitiveRule](https://cloud.tencent.com/document/api/627/125861) - 修改api安全配置规则
-* Delete: [ModifyApiSecSensitiveRule](https://cloud.tencent.com/document/api/627/125861) - 修改api安全配置规则
+* Create: [ModifyApiSecSensitiveRule](https://cloud.tencent.com/document/api/627/125861)
+* Read: [DescribeApiSecSensitiveRuleList](https://cloud.tencent.com/document/api/627/129030)
+* Update: [ModifyApiSecSensitiveRule](https://cloud.tencent.com/document/api/627/125861)
+* Delete: [ModifyApiSecSensitiveRule](https://cloud.tencent.com/document/api/627/125861)
 
 ## Import
 

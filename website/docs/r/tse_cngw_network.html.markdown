@@ -55,11 +55,11 @@ In addition to all arguments above, the following attributes are exported:
 
 This resource interacts with the following TencentCloud APIs:
 
-* Create: [CreateCloudNativeAPIGatewayPublicNetwork](https://cloud.tencent.com/document/api/1364/102778) - 创建公网网络配置
-* Create: [DescribePublicNetwork](https://cloud.tencent.com/document/api/1364/103723) - 查询云原生API网关实例公网详情
-* Read: [DescribePublicNetwork](https://cloud.tencent.com/document/api/1364/103723) - 查询云原生API网关实例公网详情
-* Update: [DescribePublicNetwork](https://cloud.tencent.com/document/api/1364/103723) - 查询云原生API网关实例公网详情
-* Update: [ModifyNetworkBasicInfo](https://cloud.tencent.com/document/api/1364/102774) - 修改云原生API网关实例网络基本信息
-* Delete: [DeleteCloudNativeAPIGatewayPublicNetwork](https://cloud.tencent.com/document/api/1364/102777) - 删除公网网络配置
-* Delete: [DescribePublicNetwork](https://cloud.tencent.com/document/api/1364/103723) - 查询云原生API网关实例公网详情
+* Create: [CreateCloudNativeAPIGatewayPublicNetwork](https://cloud.tencent.com/document/api/1364/102778) - Create a public network configuration
+* Create: [DescribePublicNetwork](https://cloud.tencent.com/document/api/1364/103723) - Query the public network details of a cloud native API gateway instance
+* Read: [DescribePublicNetwork](https://cloud.tencent.com/document/api/1364/103723) - Query the public network details of a cloud native API gateway instance
+* Update: [DescribePublicNetwork](https://cloud.tencent.com/document/api/1364/103723) - Query the public network details of a cloud native API gateway instance
+* Update: [ModifyNetworkBasicInfo](https://cloud.tencent.com/document/api/1364/102774) - This API is used to modify the basic information of a cloud native API gateway instance network, such as bandwidth and description, as well as specification upgrade. Only modification of client public network or private network information is supported.
+* Delete: [DeleteCloudNativeAPIGatewayPublicNetwork](https://cloud.tencent.com/document/api/1364/102777) - Delete public network configuration
+* Delete: [DescribePublicNetwork](https://cloud.tencent.com/document/api/1364/103723) - Query the public network details of a cloud native API gateway instance
 

@@ -46,14 +46,14 @@ In addition to all arguments above, the following attributes are exported:
 
 This resource interacts with the following TencentCloud APIs:
 
-* Create: [CreateEnvironment](https://cloud.tencent.com/document/api/1371/60150) - 创建环境
-* Create: [DescribeEnvironmentStatus](https://cloud.tencent.com/document/api/1371/78168) - 获取环境状态
-* Create: [ModifyResourceTags](https://cloud.tencent.com/document/api/651/35322) - 批量修改资源关联的标签
-* Read: [DescribeEnvironment](https://cloud.tencent.com/document/api/1371/78842) - 获取环境基础信息
-* Read: [DescribeResourceTagsByResourceIds](https://cloud.tencent.com/document/api/651/35319) - 批量查看资源关联的标签
-* Update: [ModifyEnvironment](https://cloud.tencent.com/document/api/1371/60148) - 编辑环境
-* Update: [ModifyResourceTags](https://cloud.tencent.com/document/api/651/35322) - 批量修改资源关联的标签
-* Delete: [DestroyEnvironment](https://cloud.tencent.com/document/api/1371/77632) - 销毁环境
+* Create: [CreateEnvironment](https://cloud.tencent.com/document/api/1371/60150) - This API is used to create an environment.
+* Create: [DescribeEnvironmentStatus](https://cloud.tencent.com/document/api/1371/78168) - This API is used to obtain the environment status.
+* Create: [ModifyResourceTags](https://cloud.tencent.com/document/api/651/35322) - This API is used to modify all tags associated with a resource.
+* Read: [DescribeEnvironment](https://cloud.tencent.com/document/api/1371/78842) - This API is used to obtain the basic information of an environment.
+* Read: [DescribeResourceTagsByResourceIds](https://cloud.tencent.com/document/api/651/35319) - This API is used to query the tag key-value pairs associated with an existing resource.
+* Update: [ModifyEnvironment](https://cloud.tencent.com/document/api/1371/60148) - This API is used to edit an environment.
+* Update: [ModifyResourceTags](https://cloud.tencent.com/document/api/651/35322) - This API is used to modify all tags associated with a resource.
+* Delete: [DestroyEnvironment](https://cloud.tencent.com/document/api/1371/77632) - This API is used to terminate an environment.
 
 ## Import
 

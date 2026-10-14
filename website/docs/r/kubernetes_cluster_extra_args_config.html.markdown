@@ -60,11 +60,11 @@ The `timeouts` block allows you to specify [timeouts](https://developer.hashicor
 
 This resource interacts with the following TencentCloud APIs:
 
-* Create: [DescribeTasks](https://cloud.tencent.com/document/api/457/125020) - 查询任务相关信息
-* Create: [ModifyClusterExtraArgs](https://cloud.tencent.com/document/api/457/125019) - 更新集群自定义参数
-* Read: [DescribeClusterExtraArgs](https://cloud.tencent.com/document/api/457/101764) - 查询集群自定义参数
-* Update: [DescribeTasks](https://cloud.tencent.com/document/api/457/125020) - 查询任务相关信息
-* Update: [ModifyClusterExtraArgs](https://cloud.tencent.com/document/api/457/125019) - 更新集群自定义参数
+* Create: [DescribeTasks](https://cloud.tencent.com/document/api/457/125020)
+* Create: [ModifyClusterExtraArgs](https://cloud.tencent.com/document/api/457/125019)
+* Read: [DescribeClusterExtraArgs](https://cloud.tencent.com/document/api/457/101764) - This API is used to query custom parameters of a cluster.
+* Update: [DescribeTasks](https://cloud.tencent.com/document/api/457/125020)
+* Update: [ModifyClusterExtraArgs](https://cloud.tencent.com/document/api/457/125019)
 
 ## Import
 

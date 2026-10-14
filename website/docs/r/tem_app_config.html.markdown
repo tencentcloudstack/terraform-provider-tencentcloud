@@ -52,10 +52,10 @@ In addition to all arguments above, the following attributes are exported:
 
 This resource interacts with the following TencentCloud APIs:
 
-* Create: [CreateConfigData](https://cloud.tencent.com/document/api/1371/78337) - 创建配置
-* Read: [DescribeConfigData](https://cloud.tencent.com/document/api/1371/78336) - 查询配置详情
-* Update: [ModifyConfigData](https://cloud.tencent.com/document/api/1371/78333) - 编辑配置
-* Delete: [DestroyConfigData](https://cloud.tencent.com/document/api/1371/78334) - 销毁配置
+* Create: [CreateConfigData](https://cloud.tencent.com/document/api/1371/78337) - This API is used to create a configuration.
+* Read: [DescribeConfigData](https://cloud.tencent.com/document/api/1371/78336) - This API is used to query details of a configuration.
+* Update: [ModifyConfigData](https://cloud.tencent.com/document/api/1371/78333) - This API is used to modify a configuration.
+* Delete: [DestroyConfigData](https://cloud.tencent.com/document/api/1371/78334) - This API is used to terminate a configuration.
 
 ## Import
 

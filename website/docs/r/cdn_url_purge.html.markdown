@@ -59,5 +59,5 @@ In addition to all arguments above, the following attributes are exported:
 
 This resource interacts with the following TencentCloud APIs:
 
-* Read: [DescribePurgeTasks](https://cloud.tencent.com/document/api/228/37873) - 刷新历史查询
+* Read: [DescribePurgeTasks](https://cloud.tencent.com/document/api/228/37873) - This API is used to query the record and progress of URL or directory purge tasks submitted via the `PurgePathCache` or `PurgeUrlsCache` APIs.
 

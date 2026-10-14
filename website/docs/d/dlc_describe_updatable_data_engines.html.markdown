@@ -53,5 +53,5 @@ In addition to all arguments above, the following attributes are exported:
 
 This data source queries the following TencentCloud APIs:
 
-* Read: [DescribeUpdatableDataEngines](https://cloud.tencent.com/document/api/1342/101606) - 查询可更新配置的引擎列表
+* Read: [DescribeUpdatableDataEngines](https://cloud.tencent.com/document/api/1342/101606) - This API is used to query the list of engines that are able to upgrade their configuration.
 

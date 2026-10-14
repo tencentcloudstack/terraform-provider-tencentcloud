@@ -105,5 +105,5 @@ In addition to all arguments above, the following attributes are exported:
 
 This resource interacts with the following TencentCloud APIs:
 
-* Create: [BalanceRoGroupLoad](https://cloud.tencent.com/document/api/236/40940) - 均衡RO组内实例的负载
+* Create: [BalanceRoGroupLoad](https://cloud.tencent.com/document/api/236/40940) - This API is used to rebalance the loads of instances in an RO group. Please note that the database connections to those instances will be interrupted transiently; therefore, you should ensure that your application can reconnect to the databases. This operation should be performed with caution.
 

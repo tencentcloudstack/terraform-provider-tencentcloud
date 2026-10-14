@@ -38,9 +38,9 @@ In addition to all arguments above, the following attributes are exported:
 
 This resource interacts with the following TencentCloud APIs:
 
-* Create: [ModifySnapshotConfig](https://cloud.tencent.com/document/api/1427/83176) - 修改快照配置
-* Read: [DescribeSnapshotConfig](https://cloud.tencent.com/document/api/1427/83181) - 查询解析快照配置
-* Update: [ModifySnapshotConfig](https://cloud.tencent.com/document/api/1427/83176) - 修改快照配置
+* Create: [ModifySnapshotConfig](https://cloud.tencent.com/document/api/1427/83176)
+* Read: [DescribeSnapshotConfig](https://cloud.tencent.com/document/api/1427/83181)
+* Update: [ModifySnapshotConfig](https://cloud.tencent.com/document/api/1427/83176)
 
 ## Import
 

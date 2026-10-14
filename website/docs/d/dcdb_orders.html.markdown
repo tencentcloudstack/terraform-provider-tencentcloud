@@ -42,5 +42,5 @@ In addition to all arguments above, the following attributes are exported:
 
 This data source queries the following TencentCloud APIs:
 
-* Read: [DescribeOrders](https://cloud.tencent.com/document/api/557/16139) - 查询订单信息
+* Read: [DescribeOrders](https://cloud.tencent.com/document/api/557/16139) - This API is used to query TDSQL order information. You can pass in an order ID to query the TDSQL instance associated with the order and the corresponding task process ID.
 

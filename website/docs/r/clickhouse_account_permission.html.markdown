@@ -67,10 +67,10 @@ In addition to all arguments above, the following attributes are exported:
 
 This resource interacts with the following TencentCloud APIs:
 
-* Create: [ModifyUserNewPrivilege](https://cloud.tencent.com/document/api/1299/83422) - 新增、修改集群账号cluster权限（新版）
-* Read: [DescribeCkSqlApis](https://cloud.tencent.com/document/api/1299/83428) - 查询集群用户相关信息
-* Update: [ModifyUserNewPrivilege](https://cloud.tencent.com/document/api/1299/83422) - 新增、修改集群账号cluster权限（新版）
-* Delete: [DescribeCkSqlApis](https://cloud.tencent.com/document/api/1299/83428) - 查询集群用户相关信息
+* Create: [ModifyUserNewPrivilege](https://cloud.tencent.com/document/api/1299/83422)
+* Read: [DescribeCkSqlApis](https://cloud.tencent.com/document/api/1299/83428)
+* Update: [ModifyUserNewPrivilege](https://cloud.tencent.com/document/api/1299/83422)
+* Delete: [DescribeCkSqlApis](https://cloud.tencent.com/document/api/1299/83428)
 
 ## Import
 

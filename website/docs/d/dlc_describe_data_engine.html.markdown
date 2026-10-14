@@ -109,5 +109,5 @@ In addition to all arguments above, the following attributes are exported:
 
 This data source queries the following TencentCloud APIs:
 
-* Read: [DescribeDataEngines](https://cloud.tencent.com/document/api/1342/86308) - 查询DataEngines列表
+* Read: [DescribeDataEngines](https://cloud.tencent.com/document/api/1342/86308)
 

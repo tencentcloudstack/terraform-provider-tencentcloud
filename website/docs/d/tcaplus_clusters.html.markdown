@@ -57,5 +57,5 @@ In addition to all arguments above, the following attributes are exported:
 
 This data source queries the following TencentCloud APIs:
 
-* Read: [DescribeClusters](https://cloud.tencent.com/document/api/596/41489) - 查询集群信息列表
+* Read: [DescribeClusters](https://cloud.tencent.com/document/api/596/41489) - This API is used to query the TcaplusDB cluster list, including cluster details.
 

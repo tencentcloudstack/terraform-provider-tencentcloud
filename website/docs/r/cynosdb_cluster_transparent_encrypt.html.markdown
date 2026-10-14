@@ -48,13 +48,13 @@ In addition to all arguments above, the following attributes are exported:
 
 This resource interacts with the following TencentCloud APIs:
 
-* Create: [DescribeTasks](https://cloud.tencent.com/document/api/1003/103866) - 查询任务列表
-* Create: [ModifyClusterGlobalEncryption](https://cloud.tencent.com/document/api/1003/126134) - 开关全局加密
-* Create: [OpenClusterTransparentEncrypt](https://cloud.tencent.com/document/api/1003/113593) - 开通集群透明加密
-* Read: [DescribeClusterTransparentEncryptInfo](https://cloud.tencent.com/document/api/1003/113594) - 查询集群透明加密信息
-* Update: [DescribeTasks](https://cloud.tencent.com/document/api/1003/103866) - 查询任务列表
-* Update: [ModifyClusterGlobalEncryption](https://cloud.tencent.com/document/api/1003/126134) - 开关全局加密
-* Update: [OpenClusterTransparentEncrypt](https://cloud.tencent.com/document/api/1003/113593) - 开通集群透明加密
+* Create: [DescribeTasks](https://cloud.tencent.com/document/api/1003/103866) - This API is used to query task lists.
+* Create: [ModifyClusterGlobalEncryption](https://cloud.tencent.com/document/api/1003/126134)
+* Create: [OpenClusterTransparentEncrypt](https://cloud.tencent.com/document/api/1003/113593) - Enable transparent data encryption for the cluster.
+* Read: [DescribeClusterTransparentEncryptInfo](https://cloud.tencent.com/document/api/1003/113594) - This API is used to query cluster transparent encryption information.
+* Update: [DescribeTasks](https://cloud.tencent.com/document/api/1003/103866) - This API is used to query task lists.
+* Update: [ModifyClusterGlobalEncryption](https://cloud.tencent.com/document/api/1003/126134)
+* Update: [OpenClusterTransparentEncrypt](https://cloud.tencent.com/document/api/1003/113593) - Enable transparent data encryption for the cluster.
 
 ## Import
 

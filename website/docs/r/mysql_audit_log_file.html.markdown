@@ -125,8 +125,8 @@ In addition to all arguments above, the following attributes are exported:
 
 This resource interacts with the following TencentCloud APIs:
 
-* Create: [CreateAuditLogFile](https://cloud.tencent.com/document/api/236/45461) - 创建审计日志文件
-* Create: [DescribeAuditLogFiles](https://cloud.tencent.com/document/api/236/45454) - 查询审计日志文件
-* Read: [DescribeAuditLogFiles](https://cloud.tencent.com/document/api/236/45454) - 查询审计日志文件
-* Delete: [DeleteAuditLogFile](https://cloud.tencent.com/document/api/236/45458) - 删除审计日志文件
+* Create: [CreateAuditLogFile](https://cloud.tencent.com/document/api/236/45461) - This API is used to create an audit log file for a TencentDB instance.
+* Create: [DescribeAuditLogFiles](https://cloud.tencent.com/document/api/236/45454) - This API is used to query the audit log files of a TencentDB instance.
+* Read: [DescribeAuditLogFiles](https://cloud.tencent.com/document/api/236/45454) - This API is used to query the audit log files of a TencentDB instance.
+* Delete: [DeleteAuditLogFile](https://cloud.tencent.com/document/api/236/45458) - This API is used to delete an audit log file of a TencentDB instance.
 

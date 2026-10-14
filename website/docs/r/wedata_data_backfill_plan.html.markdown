@@ -95,10 +95,10 @@ In addition to all arguments above, the following attributes are exported:
 
 This resource interacts with the following TencentCloud APIs:
 
-* Create: [CreateDataBackfillPlan](https://cloud.tencent.com/document/api/1267/123592) - 创建数据补录计划
-* Read: [GetDataBackfillPlan](https://cloud.tencent.com/document/api/1267/124032) - 查看补录计划配置详情
-* Delete: [DeleteDataBackfillPlanAsync](https://cloud.tencent.com/document/api/1267/127220) - 异步删除补录计划
-* Delete: [GetOpsAsyncJob](https://cloud.tencent.com/document/api/1267/123587) - 查询运维中心异步操作详情
+* Create: [CreateDataBackfillPlan](https://cloud.tencent.com/document/api/1267/123592) - This API is used to create a data backfill plan.
+* Read: [GetDataBackfillPlan](https://cloud.tencent.com/document/api/1267/124032) - Retrieve supplementary plan details.
+* Delete: [DeleteDataBackfillPlanAsync](https://cloud.tencent.com/document/api/1267/127220) - Delete a replenishment plan.
+* Delete: [GetOpsAsyncJob](https://cloud.tencent.com/document/api/1267/123587) - This API is used to query async operation details in Ops center.
 
 ## Import
 

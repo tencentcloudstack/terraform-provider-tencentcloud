@@ -37,7 +37,7 @@ In addition to all arguments above, the following attributes are exported:
 
 This resource interacts with the following TencentCloud APIs:
 
-* Create: [UpdateCertificateRecordRetry](https://cloud.tencent.com/document/api/400/91648) - 云资源更新失败重试部署记录
+* Create: [UpdateCertificateRecordRetry](https://cloud.tencent.com/document/api/400/91648) - Cloud resource update deployment retry record
 
 ## Import
 

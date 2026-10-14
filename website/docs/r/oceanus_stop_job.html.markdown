@@ -46,5 +46,5 @@ In addition to all arguments above, the following attributes are exported:
 
 This resource interacts with the following TencentCloud APIs:
 
-* Create: [StopJobs](https://cloud.tencent.com/document/api/849/52006) - 停止作业
+* Create: [StopJobs](https://cloud.tencent.com/document/api/849/52006)
 

@@ -36,5 +36,5 @@ In addition to all arguments above, the following attributes are exported:
 
 This data source queries the following TencentCloud APIs:
 
-* Read: [DescribeWhiteBoxDecryptKey](https://cloud.tencent.com/document/api/573/43441) - 获取白盒解密密钥
+* Read: [DescribeWhiteBoxDecryptKey](https://cloud.tencent.com/document/api/573/43441) - This API is used to get a white-box decryption key.
 

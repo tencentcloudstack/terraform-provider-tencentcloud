@@ -71,5 +71,5 @@ In addition to all arguments above, the following attributes are exported:
 
 This data source queries the following TencentCloud APIs:
 
-* Read: [DescribePeakPoints](https://cloud.tencent.com/document/api/627/90250) - 查询业务和攻击概要趋势
+* Read: [DescribePeakPoints](https://cloud.tencent.com/document/api/627/90250) - Query business and attack summary trends
 

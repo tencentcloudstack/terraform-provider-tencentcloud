@@ -38,5 +38,5 @@ In addition to all arguments above, the following attributes are exported:
 
 This data source queries the following TencentCloud APIs:
 
-* Read: [DescribeBinlogDownloadUrl](https://cloud.tencent.com/document/api/1003/76373) - 查询 Binlog下载地址
+* Read: [DescribeBinlogDownloadUrl](https://cloud.tencent.com/document/api/1003/76373) - This API is used to query the download address of Binlog.
 

@@ -58,13 +58,13 @@ In addition to all arguments above, the following attributes are exported:
 
 This resource interacts with the following TencentCloud APIs:
 
-* Create: [DescribeInstanceParams](https://cloud.tencent.com/document/api/239/34448) - 查询实例的参数列表
-* Create: [DescribeTaskInfo](https://cloud.tencent.com/document/api/239/30601) - Redis查询任务结果
-* Create: [ModifyInstanceParams](https://cloud.tencent.com/document/api/239/34445) - 修改实例参数
-* Read: [DescribeInstanceParams](https://cloud.tencent.com/document/api/239/34448) - 查询实例的参数列表
-* Update: [DescribeInstanceParams](https://cloud.tencent.com/document/api/239/34448) - 查询实例的参数列表
-* Update: [DescribeTaskInfo](https://cloud.tencent.com/document/api/239/30601) - Redis查询任务结果
-* Update: [ModifyInstanceParams](https://cloud.tencent.com/document/api/239/34445) - 修改实例参数
+* Create: [DescribeInstanceParams](https://cloud.tencent.com/document/api/239/34448) - This API is used to query the parameter list of an instance.
+* Create: [DescribeTaskInfo](https://cloud.tencent.com/document/api/239/30601) - This API is used to get the execution of a specified task.
+* Create: [ModifyInstanceParams](https://cloud.tencent.com/document/api/239/34445) - This API is used to modify the parameter configuration of a Redis instance.
+* Read: [DescribeInstanceParams](https://cloud.tencent.com/document/api/239/34448) - This API is used to query the parameter list of an instance.
+* Update: [DescribeInstanceParams](https://cloud.tencent.com/document/api/239/34448) - This API is used to query the parameter list of an instance.
+* Update: [DescribeTaskInfo](https://cloud.tencent.com/document/api/239/30601) - This API is used to get the execution of a specified task.
+* Update: [ModifyInstanceParams](https://cloud.tencent.com/document/api/239/34445) - This API is used to modify the parameter configuration of a Redis instance.
 
 ## Import
 

@@ -61,5 +61,5 @@ In addition to all arguments above, the following attributes are exported:
 
 This data source queries the following TencentCloud APIs:
 
-* Read: [DescribeManagerDetail](https://cloud.tencent.com/document/api/400/52673) - 查询管理人详情
+* Read: [DescribeManagerDetail](https://cloud.tencent.com/document/api/400/52673)
 

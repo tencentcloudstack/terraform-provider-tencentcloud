@@ -56,10 +56,10 @@ In addition to all arguments above, the following attributes are exported:
 
 This resource interacts with the following TencentCloud APIs:
 
-* Create: [AttachRolePolicy](https://cloud.tencent.com/document/api/598/36226) - 绑定权限策略到角色
-* Create: [ListAttachedRolePolicies](https://cloud.tencent.com/document/api/598/36220) - 获取角色绑定的策略列表
-* Read: [ListAttachedRolePolicies](https://cloud.tencent.com/document/api/598/36220) - 获取角色绑定的策略列表
-* Delete: [DetachRolePolicy](https://cloud.tencent.com/document/api/598/36222) - 解绑角色的策略
+* Create: [AttachRolePolicy](https://cloud.tencent.com/document/api/598/36226) - This API (AttachRolePolicy) is used to associate a policy with a role.
+* Create: [ListAttachedRolePolicies](https://cloud.tencent.com/document/api/598/36220) - This API (ListAttachedRolePolicies) is used to obtain the list of the policies associated with a role.
+* Read: [ListAttachedRolePolicies](https://cloud.tencent.com/document/api/598/36220) - This API (ListAttachedRolePolicies) is used to obtain the list of the policies associated with a role.
+* Delete: [DetachRolePolicy](https://cloud.tencent.com/document/api/598/36222) - This API (DetachRolePolicy) is used to unassociate a policy and a role.
 
 ## Import
 

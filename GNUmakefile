@@ -195,6 +195,11 @@ doc-refresh-data:
 	cd gendoc && go run ./... -refresh-data && cd ..
 	@echo "==> Done. Re-run 'make doc' to regenerate docs with the new data."
 
+doc-refresh-en:
+	@echo "==> Refreshing English action descriptions (gendoc/data/api-actions-en.json)..."
+	cd gendoc && go run ./... -refresh-en && cd ..
+	@echo "==> Done. Re-run 'make doc' to regenerate docs with the new descriptions."
+
 doc-faster:
 	@echo "==> [Faster]Generating doc..."
 	@if [ ! -f gendoc/gendoc ]; then \
@@ -252,6 +257,6 @@ endif
 changelog:
 	./scripts/generate-changelog.sh
 
-.PHONY: build sweep test testacc fmt fmtcheck lint tools tfproviderlint-install tfproviderlint-local golangci-lint-install golangci-lint-local test-compile doc doc-refresh-data hooks website website-lint website-test check-mux
+.PHONY: build sweep test testacc fmt fmtcheck lint tools tfproviderlint-install tfproviderlint-local golangci-lint-install golangci-lint-local test-compile doc doc-refresh-data doc-refresh-en hooks website website-lint website-test check-mux
 
 ready: doc fmt-faster

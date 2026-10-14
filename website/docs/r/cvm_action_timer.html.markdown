@@ -96,7 +96,7 @@ In addition to all arguments above, the following attributes are exported:
 
 This resource interacts with the following TencentCloud APIs:
 
-* Create: [ImportInstancesActionTimer](https://cloud.tencent.com/document/api/213/103949) - 导入定时任务
-* Read: [DescribeInstancesActionTimer](https://cloud.tencent.com/document/api/213/103950) - 查询定时任务信息
-* Delete: [DeleteInstancesActionTimer](https://cloud.tencent.com/document/api/213/103951) - 删除定时任务
+* Create: [ImportInstancesActionTimer](https://cloud.tencent.com/document/api/213/103949)
+* Read: [DescribeInstancesActionTimer](https://cloud.tencent.com/document/api/213/103950)
+* Delete: [DeleteInstancesActionTimer](https://cloud.tencent.com/document/api/213/103951)
 

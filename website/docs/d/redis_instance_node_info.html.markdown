@@ -45,5 +45,5 @@ In addition to all arguments above, the following attributes are exported:
 
 This data source queries the following TencentCloud APIs:
 
-* Read: [DescribeInstanceNodeInfo](https://cloud.tencent.com/document/api/239/48603) - 查询实例节点信息
+* Read: [DescribeInstanceNodeInfo](https://cloud.tencent.com/document/api/239/48603) - This API is used to query the information of an instance node.
 

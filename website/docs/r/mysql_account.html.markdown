@@ -93,16 +93,16 @@ In addition to all arguments above, the following attributes are exported:
 
 This resource interacts with the following TencentCloud APIs:
 
-* Create: [CreateAccounts](https://cloud.tencent.com/document/api/236/17502) - 创建云数据库的账户
-* Create: [DescribeAsyncRequestInfo](https://cloud.tencent.com/document/api/236/20410) - 查询异步任务的执行结果
-* Read: [DescribeAccounts](https://cloud.tencent.com/document/api/236/17499) - 查询云数据库的所有账号信息
-* Update: [DescribeAsyncRequestInfo](https://cloud.tencent.com/document/api/236/20410) - 查询异步任务的执行结果
-* Update: [ModifyAccountDescription](https://cloud.tencent.com/document/api/236/17498) - 修改云数据库实例账号的备注信息
-* Update: [ModifyAccountHost](https://cloud.tencent.com/document/api/236/60617) - 修改云数据库实例账号的主机
-* Update: [ModifyAccountMaxUserConnections](https://cloud.tencent.com/document/api/236/56200) - 修改账户最大可用连接数
-* Update: [ModifyAccountPassword](https://cloud.tencent.com/document/api/236/17497) - 修改云数据库实例账号的密码
-* Delete: [DeleteAccounts](https://cloud.tencent.com/document/api/236/17501) - 删除云数据库的账号
-* Delete: [DescribeAsyncRequestInfo](https://cloud.tencent.com/document/api/236/20410) - 查询异步任务的执行结果
+* Create: [CreateAccounts](https://cloud.tencent.com/document/api/236/17502) - This API is used to create cloud database accounts. It requires specifying a new account name and domain name as well as the corresponding password. You can also set the account's remark information and maximum number of available connections.
+* Create: [DescribeAsyncRequestInfo](https://cloud.tencent.com/document/api/236/20410) - This API (DescribeAsyncRequestInfo) is used to query the async task execution result of a TencentDB instance.
+* Read: [DescribeAccounts](https://cloud.tencent.com/document/api/236/17499) - This API is used to query ALL account information of the cloud database.
+* Update: [DescribeAsyncRequestInfo](https://cloud.tencent.com/document/api/236/20410) - This API (DescribeAsyncRequestInfo) is used to query the async task execution result of a TencentDB instance.
+* Update: [ModifyAccountDescription](https://cloud.tencent.com/document/api/236/17498) - This API (ModifyAccountDescription) is used to modify the remarks of a TencentDB instance account.
+* Update: [ModifyAccountHost](https://cloud.tencent.com/document/api/236/60617)
+* Update: [ModifyAccountMaxUserConnections](https://cloud.tencent.com/document/api/236/56200) - This API is used to modify the maximum number of available connections for a cloud database account.
+* Update: [ModifyAccountPassword](https://cloud.tencent.com/document/api/236/17497) - This API (ModifyAccountPassword) is used to modify the password of a TencentDB instance account.
+* Delete: [DeleteAccounts](https://cloud.tencent.com/document/api/236/17501) - This API is used to delete CDB accounts.
+* Delete: [DescribeAsyncRequestInfo](https://cloud.tencent.com/document/api/236/20410) - This API (DescribeAsyncRequestInfo) is used to query the async task execution result of a TencentDB instance.
 
 ## Import
 

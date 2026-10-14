@@ -112,10 +112,10 @@ In addition to all arguments above, the following attributes are exported:
 
 This resource interacts with the following TencentCloud APIs:
 
-* Create: [CreatePrometheusAlertGroup](https://cloud.tencent.com/document/api/248/102990) - 创建Prometheus告警规则分组
-* Read: [DescribePrometheusAlertGroups](https://cloud.tencent.com/document/api/248/102988) - 列出Prometheus告警分组
-* Update: [UpdatePrometheusAlertGroup](https://cloud.tencent.com/document/api/248/102987) - 更新Prometheus告警规则分组
-* Delete: [DeletePrometheusAlertGroups](https://cloud.tencent.com/document/api/248/102989) - 删除Prometheus告警规则分组
+* Create: [CreatePrometheusAlertGroup](https://cloud.tencent.com/document/api/248/102990) - This API is used to create a Prometheus alert rule groups.
+* Read: [DescribePrometheusAlertGroups](https://cloud.tencent.com/document/api/248/102988) - This API is used to query alarm groups under a given prometheus.
+* Update: [UpdatePrometheusAlertGroup](https://cloud.tencent.com/document/api/248/102987) - This API is used to update Prometheus alert rule groups.
+* Delete: [DeletePrometheusAlertGroups](https://cloud.tencent.com/document/api/248/102989) - This API is used to delete Prometheus alert rule groups.
 
 ## Import
 

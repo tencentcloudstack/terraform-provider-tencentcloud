@@ -64,10 +64,10 @@ In addition to all arguments above, the following attributes are exported:
 
 This resource interacts with the following TencentCloud APIs:
 
-* Create: [CreateBlockIgnoreRuleList](https://cloud.tencent.com/document/api/1132/97724) - 批量添加入侵防御封禁列表、放通列表规则
-* Read: [DescribeBlockIgnoreList](https://cloud.tencent.com/document/api/1132/86691) - 查询入侵防御放通封禁列表
-* Update: [ModifyBlockIgnoreRule](https://cloud.tencent.com/document/api/1132/97852) - 编辑单条入侵防御封禁列表、放通列表规则
-* Delete: [DeleteBlockIgnoreRuleList](https://cloud.tencent.com/document/api/1132/97856) - 批量删除入侵防御封禁列表、放通列表规则
+* Create: [CreateBlockIgnoreRuleList](https://cloud.tencent.com/document/api/1132/97724)
+* Read: [DescribeBlockIgnoreList](https://cloud.tencent.com/document/api/1132/86691) - This API is used to get allowlists or blocklists for intrusion prevention.
+* Update: [ModifyBlockIgnoreRule](https://cloud.tencent.com/document/api/1132/97852)
+* Delete: [DeleteBlockIgnoreRuleList](https://cloud.tencent.com/document/api/1132/97856)
 
 ## Import
 

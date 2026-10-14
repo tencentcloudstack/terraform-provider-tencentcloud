@@ -41,9 +41,9 @@ In addition to all arguments above, the following attributes are exported:
 
 This resource interacts with the following TencentCloud APIs:
 
-* Create: [EnablePolicyType](https://cloud.tencent.com/document/api/850/105312) - 启用策略类型
-* Read: [DescribePolicyConfig](https://cloud.tencent.com/document/api/850/105315) - 查看企业组织策略配置
-* Delete: [DisablePolicyType](https://cloud.tencent.com/document/api/850/105313) - 禁用策略类型
+* Create: [EnablePolicyType](https://cloud.tencent.com/document/api/850/105312) - This API is used to enable a policy type.
+* Read: [DescribePolicyConfig](https://cloud.tencent.com/document/api/850/105315) - This API is used to query enterprise organization policy configurations.
+* Delete: [DisablePolicyType](https://cloud.tencent.com/document/api/850/105313) - This API is used to disable a policy type.
 
 ## Import
 

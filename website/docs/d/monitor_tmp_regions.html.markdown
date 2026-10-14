@@ -43,5 +43,5 @@ In addition to all arguments above, the following attributes are exported:
 
 This data source queries the following TencentCloud APIs:
 
-* Read: [DescribePrometheusRegions](https://cloud.tencent.com/document/api/248/97797) - 列出 Prometheus 服务所有可用的地域
+* Read: [DescribePrometheusRegions](https://cloud.tencent.com/document/api/248/97797)
 

@@ -50,5 +50,5 @@ The following arguments are supported:
 
 This data source queries the following TencentCloud APIs:
 
-* Read: [DescribeCrossBorderCompliance](https://cloud.tencent.com/document/api/215/47838) - 查询合规化审批单
+* Read: [DescribeCrossBorderCompliance](https://cloud.tencent.com/document/api/215/47838) - This API is used to query the compliance review requests created by the user.
 

@@ -44,6 +44,6 @@ In addition to all arguments above, the following attributes are exported:
 
 This resource interacts with the following TencentCloud APIs:
 
-* Create: [DescribeImages](https://cloud.tencent.com/document/api/213/15715) - 查看镜像列表
-* Create: [ExportImages](https://cloud.tencent.com/document/api/213/73474) - 导出自定义镜像
+* Create: [DescribeImages](https://cloud.tencent.com/document/api/213/15715) - This API is used to view the list of images.
+* Create: [ExportImages](https://cloud.tencent.com/document/api/213/73474) - This API is used to export custom images to the specified COS bucket.
 

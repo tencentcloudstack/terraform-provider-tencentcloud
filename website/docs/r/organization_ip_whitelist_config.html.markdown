@@ -42,10 +42,10 @@ In addition to all arguments above, the following attributes are exported:
 
 This resource interacts with the following TencentCloud APIs:
 
-* Create: [UpdateIPWhitelist](https://cloud.tencent.com/document/api/850/130525) - 更新新建ip白名单
-* Read: [GetIPWhitelist](https://cloud.tencent.com/document/api/850/131130) - 获取ip白名单
-* Update: [UpdateIPWhitelist](https://cloud.tencent.com/document/api/850/130525) - 更新新建ip白名单
-* Delete: [UpdateIPWhitelist](https://cloud.tencent.com/document/api/850/130525) - 更新新建ip白名单
+* Create: [UpdateIPWhitelist](https://cloud.tencent.com/document/api/850/130525)
+* Read: [GetIPWhitelist](https://cloud.tencent.com/document/api/850/131130)
+* Update: [UpdateIPWhitelist](https://cloud.tencent.com/document/api/850/130525)
+* Delete: [UpdateIPWhitelist](https://cloud.tencent.com/document/api/850/130525)
 
 ## Import
 

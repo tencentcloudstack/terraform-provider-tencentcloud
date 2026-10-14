@@ -201,8 +201,8 @@ The `timeouts` block allows you to specify [timeouts](https://developer.hashicor
 
 This resource interacts with the following TencentCloud APIs:
 
-* Read: [DescribeAccelerationDomains](https://cloud.tencent.com/document/api/1552/86336) - 查询加速域名列表
-* Update: [ModifyHostsCertificate](https://cloud.tencent.com/document/api/1552/80764) - 配置域名证书
+* Read: [DescribeAccelerationDomains](https://cloud.tencent.com/document/api/1552/86336) - This API is used to query domain name information of a site, including the acceleration domain name, origin, and domain name status. You can query the information of all domain names, or specific domain names by specifying filters information.
+* Update: [ModifyHostsCertificate](https://cloud.tencent.com/document/api/1552/80764) - This API is used to modify the certificate of a domain name.
 
 ## Import
 

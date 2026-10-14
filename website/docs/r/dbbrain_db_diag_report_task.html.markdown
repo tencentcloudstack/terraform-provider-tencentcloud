@@ -46,8 +46,8 @@ In addition to all arguments above, the following attributes are exported:
 
 This resource interacts with the following TencentCloud APIs:
 
-* Create: [CreateDBDiagReportTask](https://cloud.tencent.com/document/api/1130/57802) - 创建健康报告生成任务
-* Create: [DescribeDBDiagReportTasks](https://cloud.tencent.com/document/api/1130/57805) - 查询健康报告生成任务列表
-* Read: [DescribeDBDiagReportTasks](https://cloud.tencent.com/document/api/1130/57805) - 查询健康报告生成任务列表
-* Delete: [DeleteDBDiagReportTasks](https://cloud.tencent.com/document/api/1130/90009) - 删除健康报告生成任务
+* Create: [CreateDBDiagReportTask](https://cloud.tencent.com/document/api/1130/57802) - This API is used to create a health report and send it via email as configured.
+* Create: [DescribeDBDiagReportTasks](https://cloud.tencent.com/document/api/1130/57805) - This API is used to query the list of health report generation tasks.
+* Read: [DescribeDBDiagReportTasks](https://cloud.tencent.com/document/api/1130/57805) - This API is used to query the list of health report generation tasks.
+* Delete: [DeleteDBDiagReportTasks](https://cloud.tencent.com/document/api/1130/90009) - This API is used to delete health report generation tasks by task ID.
 

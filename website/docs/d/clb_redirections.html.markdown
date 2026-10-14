@@ -50,5 +50,5 @@ In addition to all arguments above, the following attributes are exported:
 
 This data source queries the following TencentCloud APIs:
 
-* Read: [DescribeRewrite](https://cloud.tencent.com/document/api/214/34899) - 查询负载均衡转发规则的重定向关系
+* Read: [DescribeRewrite](https://cloud.tencent.com/document/api/214/34899) - This API (DescribeRewrite) is used to query the redirection relationship between the forwarding rules of a CLB instance by instance ID. If no listener ID or forwarding rule ID is specified, all redirection relationships in the instance will be returned.
 

@@ -55,10 +55,10 @@ In addition to all arguments above, the following attributes are exported:
 
 This resource interacts with the following TencentCloud APIs:
 
-* Create: [CreateImageSpriteTemplate](https://cloud.tencent.com/document/api/862/37608) - 创建雪碧图模板
-* Read: [DescribeImageSpriteTemplates](https://cloud.tencent.com/document/api/862/37596) - 获取雪碧图模板列表
-* Update: [ModifyImageSpriteTemplate](https://cloud.tencent.com/document/api/862/37590) - 修改雪碧图模板
-* Delete: [DeleteImageSpriteTemplate](https://cloud.tencent.com/document/api/862/37602) - 删除雪碧图模板
+* Create: [CreateImageSpriteTemplate](https://cloud.tencent.com/document/api/862/37608) - This API is used to create a custom image sprite generating template. Up to 16 templates can be created.
+* Read: [DescribeImageSpriteTemplates](https://cloud.tencent.com/document/api/862/37596) - This API is used to query the list of image sprite generating templates and supports paged queries by filters.
+* Update: [ModifyImageSpriteTemplate](https://cloud.tencent.com/document/api/862/37590) - This API is used to modify a custom image sprite generating template.
+* Delete: [DeleteImageSpriteTemplate](https://cloud.tencent.com/document/api/862/37602) - This API is used to delete a sprite sheet template.
 
 ## Import
 

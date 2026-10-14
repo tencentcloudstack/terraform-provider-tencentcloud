@@ -38,11 +38,11 @@ In addition to all arguments above, the following attributes are exported:
 
 This resource interacts with the following TencentCloud APIs:
 
-* Create: [DescribeContainerGroupAttribute](https://cloud.tencent.com/document/api/649/93216) - 获取部署组其他字段-用于前端并发调用
-* Create: [StartContainerGroup](https://cloud.tencent.com/document/api/649/36058) - 启动容器部署组
-* Create: [StopContainerGroup](https://cloud.tencent.com/document/api/649/36056) - 停止容器部署组
-* Read: [DescribeContainerGroupAttribute](https://cloud.tencent.com/document/api/649/93216) - 获取部署组其他字段-用于前端并发调用
-* Update: [DescribeContainerGroupAttribute](https://cloud.tencent.com/document/api/649/93216) - 获取部署组其他字段-用于前端并发调用
-* Update: [StartContainerGroup](https://cloud.tencent.com/document/api/649/36058) - 启动容器部署组
-* Update: [StopContainerGroup](https://cloud.tencent.com/document/api/649/36056) - 停止容器部署组
+* Create: [DescribeContainerGroupAttribute](https://cloud.tencent.com/document/api/649/93216)
+* Create: [StartContainerGroup](https://cloud.tencent.com/document/api/649/36058)
+* Create: [StopContainerGroup](https://cloud.tencent.com/document/api/649/36056)
+* Read: [DescribeContainerGroupAttribute](https://cloud.tencent.com/document/api/649/93216)
+* Update: [DescribeContainerGroupAttribute](https://cloud.tencent.com/document/api/649/93216)
+* Update: [StartContainerGroup](https://cloud.tencent.com/document/api/649/36058)
+* Update: [StopContainerGroup](https://cloud.tencent.com/document/api/649/36056)
 

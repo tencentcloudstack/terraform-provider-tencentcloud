@@ -60,5 +60,5 @@ In addition to all arguments above, the following attributes are exported:
 
 This data source queries the following TencentCloud APIs:
 
-* Read: [DescribeSnapshotByTimeOffsetTemplates](https://cloud.tencent.com/document/api/266/37778) - 获取指定时间点截图模板列表
+* Read: [DescribeSnapshotByTimeOffsetTemplates](https://cloud.tencent.com/document/api/266/37778) - This API is used to query specified time point screenshot templates based on conditions with paging.
 

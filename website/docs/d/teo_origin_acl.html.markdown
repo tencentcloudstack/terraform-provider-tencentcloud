@@ -85,5 +85,5 @@ Note: This field may return null, which indicates a failure to obtain a valid va
 
 This data source queries the following TencentCloud APIs:
 
-* Read: [DescribeOriginACL](https://cloud.tencent.com/document/api/1552/120408) - 查询源站防护详情
+* Read: [DescribeOriginACL](https://cloud.tencent.com/document/api/1552/120408) - This API is used to query the binding relationship between L7 acceleration domains/L4 proxy instances and origin ACLs under a site, as well as IP range details. If you want to periodically obtain the latest version of origin IP ranges through an automation script, you can poll this API at a low-frequency (recommended every three days). If the NextOriginACL field has a return value, synchronize the latest origin IP ranges to the origin server firewall configuration.
 

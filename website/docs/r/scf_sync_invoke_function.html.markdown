@@ -43,5 +43,5 @@ In addition to all arguments above, the following attributes are exported:
 
 This resource interacts with the following TencentCloud APIs:
 
-* Create: [InvokeFunction](https://cloud.tencent.com/document/api/583/58400) - 同步Invoke调用接口
+* Create: [InvokeFunction](https://cloud.tencent.com/document/api/583/58400) - This API is used to invoke functions synchronously.
 

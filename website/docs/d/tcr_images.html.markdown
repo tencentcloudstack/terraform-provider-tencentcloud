@@ -52,5 +52,5 @@ In addition to all arguments above, the following attributes are exported:
 
 This data source queries the following TencentCloud APIs:
 
-* Read: [DescribeImages](https://cloud.tencent.com/document/api/1141/42723) - 查询容器镜像信息
+* Read: [DescribeImages](https://cloud.tencent.com/document/api/1141/42723) - This API is used to query the list of image tags or the information of the specified container image.
 

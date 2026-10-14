@@ -41,6 +41,6 @@ In addition to all arguments above, the following attributes are exported:
 
 This data source queries the following TencentCloud APIs:
 
-* Read: [DescribeInstanceAttributes](https://cloud.tencent.com/document/api/597/40836) - 获取实例属性
-* Read: [DescribeUser](https://cloud.tencent.com/document/api/597/40855) - 根据实例id查询用户信息
+* Read: [DescribeInstanceAttributes](https://cloud.tencent.com/document/api/597/40836) - This API is used to obtain instance attributes.
+* Read: [DescribeUser](https://cloud.tencent.com/document/api/597/40855) - This API is used to query user information.
 

@@ -40,5 +40,5 @@ In addition to all arguments above, the following attributes are exported:
 
 This resource interacts with the following TencentCloud APIs:
 
-* Create: [EnableVpcEndPointConnect](https://cloud.tencent.com/document/api/215/54675) - 是否接受终端节点连接请求
+* Create: [EnableVpcEndPointConnect](https://cloud.tencent.com/document/api/215/54675) - This API is used to determine whether to accept the request of connecting with an endpoint.
 

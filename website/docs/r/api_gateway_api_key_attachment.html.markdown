@@ -50,12 +50,12 @@ In addition to all arguments above, the following attributes are exported:
 
 This resource interacts with the following TencentCloud APIs:
 
-* Create: [BindSecretIds](https://cloud.tencent.com/document/api/628/45225) - 使用计划绑定密钥
-* Create: [DescribeApiKeysStatus](https://cloud.tencent.com/document/api/628/45210) - 查询密钥列表
-* Create: [DescribeUsagePlan](https://cloud.tencent.com/document/api/628/45221) - 查询使用计划详情
-* Read: [DescribeUsagePlan](https://cloud.tencent.com/document/api/628/45221) - 查询使用计划详情
-* Delete: [DescribeUsagePlan](https://cloud.tencent.com/document/api/628/45221) - 查询使用计划详情
-* Delete: [UnBindSecretIds](https://cloud.tencent.com/document/api/628/45215) - 使用计划解绑密钥
+* Create: [BindSecretIds](https://cloud.tencent.com/document/api/628/45225) - This API is used to bind a key to a usage plan.
+* Create: [DescribeApiKeysStatus](https://cloud.tencent.com/document/api/628/45210) - This API is used to query the information of one or more API keys.
+* Create: [DescribeUsagePlan](https://cloud.tencent.com/document/api/628/45221) - This API is used to query the details of a usage plan, such as its name, QPS, creation time, and bound environment.
+* Read: [DescribeUsagePlan](https://cloud.tencent.com/document/api/628/45221) - This API is used to query the details of a usage plan, such as its name, QPS, creation time, and bound environment.
+* Delete: [DescribeUsagePlan](https://cloud.tencent.com/document/api/628/45221) - This API is used to query the details of a usage plan, such as its name, QPS, creation time, and bound environment.
+* Delete: [UnBindSecretIds](https://cloud.tencent.com/document/api/628/45215) - This API is used to unbind a key from a usage plan.
 
 ## Import
 

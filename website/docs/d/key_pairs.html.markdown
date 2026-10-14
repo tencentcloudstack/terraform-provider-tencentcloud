@@ -53,5 +53,5 @@ In addition to all arguments above, the following attributes are exported:
 
 This data source queries the following TencentCloud APIs:
 
-* Read: [DescribeKeyPairs](https://cloud.tencent.com/document/api/213/15699) - 查询密钥对列表
+* Read: [DescribeKeyPairs](https://cloud.tencent.com/document/api/213/15699) - This API is used to query key pairs.
 

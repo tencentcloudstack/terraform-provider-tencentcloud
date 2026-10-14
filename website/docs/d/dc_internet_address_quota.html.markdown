@@ -37,5 +37,5 @@ In addition to all arguments above, the following attributes are exported:
 
 This data source queries the following TencentCloud APIs:
 
-* Read: [DescribeInternetAddressQuota](https://cloud.tencent.com/document/api/216/51489) - 获取互联网公网地址配额
+* Read: [DescribeInternetAddressQuota](https://cloud.tencent.com/document/api/216/51489) - This API is used to obtain the public IP quota of internet tunnels.
 

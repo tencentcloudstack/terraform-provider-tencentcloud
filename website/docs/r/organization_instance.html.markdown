@@ -52,14 +52,14 @@ In addition to all arguments above, the following attributes are exported:
 
 This resource interacts with the following TencentCloud APIs:
 
-* Create: [CreateOrganization](https://cloud.tencent.com/document/api/850/98673) - 创建企业组织
-* Create: [DescribeOrganization](https://cloud.tencent.com/document/api/850/67059) - 获取企业组织信息
-* Create: [UpdateOrganizationNode](https://cloud.tencent.com/document/api/850/82924) - 更新企业组织节点
-* Read: [DescribeOrganization](https://cloud.tencent.com/document/api/850/67059) - 获取企业组织信息
-* Read: [DescribeOrganizationNodes](https://cloud.tencent.com/document/api/850/82926) - 获取组织节点列表
-* Update: [DescribeOrganization](https://cloud.tencent.com/document/api/850/67059) - 获取企业组织信息
-* Update: [UpdateOrganizationNode](https://cloud.tencent.com/document/api/850/82924) - 更新企业组织节点
-* Delete: [DeleteOrganization](https://cloud.tencent.com/document/api/850/98672) - 删除企业组织
+* Create: [CreateOrganization](https://cloud.tencent.com/document/api/850/98673) - This API is used to create an organization.
+* Create: [DescribeOrganization](https://cloud.tencent.com/document/api/850/67059) - This API is used to get the organization information.
+* Create: [UpdateOrganizationNode](https://cloud.tencent.com/document/api/850/82924) - This API is used to update organizational units.
+* Read: [DescribeOrganization](https://cloud.tencent.com/document/api/850/67059) - This API is used to get the organization information.
+* Read: [DescribeOrganizationNodes](https://cloud.tencent.com/document/api/850/82926) - This API is used to get the list of organization nodes.
+* Update: [DescribeOrganization](https://cloud.tencent.com/document/api/850/67059) - This API is used to get the organization information.
+* Update: [UpdateOrganizationNode](https://cloud.tencent.com/document/api/850/82924) - This API is used to update organizational units.
+* Delete: [DeleteOrganization](https://cloud.tencent.com/document/api/850/98672) - This API is used to delete an organization.
 
 ## Import
 

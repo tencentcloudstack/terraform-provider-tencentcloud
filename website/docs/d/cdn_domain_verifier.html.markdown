@@ -55,6 +55,6 @@ In addition to all arguments above, the following attributes are exported:
 
 This data source queries the following TencentCloud APIs:
 
-* Read: [CreateVerifyRecord](https://cloud.tencent.com/document/api/228/48118) - 生成解析记录
-* Read: [VerifyDomainRecord](https://cloud.tencent.com/document/api/228/48117) - 验证域名解析
+* Read: [CreateVerifyRecord](https://cloud.tencent.com/document/api/228/48118)
+* Read: [VerifyDomainRecord](https://cloud.tencent.com/document/api/228/48117)
 

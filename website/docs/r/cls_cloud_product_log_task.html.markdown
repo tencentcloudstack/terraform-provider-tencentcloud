@@ -66,14 +66,14 @@ In addition to all arguments above, the following attributes are exported:
 
 This resource interacts with the following TencentCloud APIs:
 
-* Create: [CreateCloudProductLogCollection](https://cloud.tencent.com/document/api/614/117421) - 创建云产品日志投递
-* Create: [DescribeCloudProductLogTasks](https://cloud.tencent.com/document/api/614/117419) - 查看云产品日志投递任务列表
-* Read: [DescribeCloudProductLogTasks](https://cloud.tencent.com/document/api/614/117419) - 查看云产品日志投递任务列表
-* Update: [ModifyCloudProductLogCollection](https://cloud.tencent.com/document/api/614/117418) - 修改云产品日志投递
-* Delete: [DeleteCloudProductLogCollection](https://cloud.tencent.com/document/api/614/117420) - 删除云产品日志投递
-* Delete: [DeleteLogset](https://cloud.tencent.com/document/api/614/58625) - 删除日志集
-* Delete: [DeleteTopic](https://cloud.tencent.com/document/api/614/56455) - 删除主题
-* Delete: [DescribeCloudProductLogTasks](https://cloud.tencent.com/document/api/614/117419) - 查看云产品日志投递任务列表
+* Create: [CreateCloudProductLogCollection](https://cloud.tencent.com/document/api/614/117421) - Cloud product integration uses internal APIs
+* Create: [DescribeCloudProductLogTasks](https://cloud.tencent.com/document/api/614/117419) - Cloud product integration uses relevant APIs
+* Read: [DescribeCloudProductLogTasks](https://cloud.tencent.com/document/api/614/117419) - Cloud product integration uses relevant APIs
+* Update: [ModifyCloudProductLogCollection](https://cloud.tencent.com/document/api/614/117418) - Cloud product integration uses internal APIs
+* Delete: [DeleteCloudProductLogCollection](https://cloud.tencent.com/document/api/614/117420) - Cloud product integration uses internal APIs
+* Delete: [DeleteLogset](https://cloud.tencent.com/document/api/614/58625) - This API is used to delete a logset.
+* Delete: [DeleteTopic](https://cloud.tencent.com/document/api/614/56455) - This API is used to delete logs or metric topics.
+* Delete: [DescribeCloudProductLogTasks](https://cloud.tencent.com/document/api/614/117419) - Cloud product integration uses relevant APIs
 
 ## Import
 

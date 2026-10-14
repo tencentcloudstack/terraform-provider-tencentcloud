@@ -81,5 +81,5 @@ In addition to all arguments above, the following attributes are exported:
 
 This data source queries the following TencentCloud APIs:
 
-* Read: [DescribeAlarmNotices](https://cloud.tencent.com/document/api/248/51280) - 查询通知模板列表
+* Read: [DescribeAlarmNotices](https://cloud.tencent.com/document/api/248/51280) - This API is used to query the list of notification templates.
 

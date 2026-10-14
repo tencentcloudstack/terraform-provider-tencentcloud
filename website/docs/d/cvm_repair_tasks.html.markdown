@@ -84,5 +84,5 @@ In addition to all arguments above, the following attributes are exported:
 
 This data source queries the following TencentCloud APIs:
 
-* Read: [DescribeTaskInfo](https://cloud.tencent.com/document/api/213/87933) - 查询维修任务列表
+* Read: [DescribeTaskInfo](https://cloud.tencent.com/document/api/213/87933)
 

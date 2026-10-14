@@ -149,8 +149,8 @@ In addition to all arguments above, the following attributes are exported:
 
 This resource interacts with the following TencentCloud APIs:
 
-* Create: [CreatePrometheusTemp](https://cloud.tencent.com/document/api/248/85722) - 新建模板
-* Read: [DescribePrometheusTemp](https://cloud.tencent.com/document/api/248/85713) - 拉取模板列表
-* Update: [ModifyPrometheusTemp](https://cloud.tencent.com/document/api/248/85711) - 修改模板实例
-* Delete: [DeletePrometheusTemp](https://cloud.tencent.com/document/api/248/85721) - 删除模板实例
+* Create: [CreatePrometheusTemp](https://cloud.tencent.com/document/api/248/85722) - This API is used to create a TMP template.
+* Read: [DescribePrometheusTemp](https://cloud.tencent.com/document/api/248/85713) - This API is used to get the list of templates, where the default template is always on top.
+* Update: [ModifyPrometheusTemp](https://cloud.tencent.com/document/api/248/85711) - This API is used to modify a template.
+* Delete: [DeletePrometheusTemp](https://cloud.tencent.com/document/api/248/85721) - This API is used to delete a TMP template.
 

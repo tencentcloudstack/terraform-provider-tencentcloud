@@ -76,5 +76,5 @@ REFUNDED: Refunded.
 
 This data source queries the following TencentCloud APIs:
 
-* Read: [DescribeDetectTaskPackageList](https://cloud.tencent.com/document/api/1551/121138) - 获取探测任务套餐列表
+* Read: [DescribeDetectTaskPackageList](https://cloud.tencent.com/document/api/1551/121138)
 

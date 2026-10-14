@@ -39,5 +39,5 @@ In addition to all arguments above, the following attributes are exported:
 
 This data source queries the following TencentCloud APIs:
 
-* Read: [DescribeSecurityIPGroupContent](https://cloud.tencent.com/document/api/1552/122107) - 分页查询 IP 组中的 IP 列表
+* Read: [DescribeSecurityIPGroupContent](https://cloud.tencent.com/document/api/1552/122107) - This API is used to perform a paging query for the IP address list in a designated IP group. When the number of IP addresses in the group exceeds 2000, you can use this API to perform a paging query to obtain the complete IP address list.
 

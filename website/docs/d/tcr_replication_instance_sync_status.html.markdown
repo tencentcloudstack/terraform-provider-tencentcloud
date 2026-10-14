@@ -50,5 +50,5 @@ In addition to all arguments above, the following attributes are exported:
 
 This data source queries the following TencentCloud APIs:
 
-* Read: [DescribeReplicationInstanceSyncStatus](https://cloud.tencent.com/document/api/1141/55297) - 查询从实例同步状态
+* Read: [DescribeReplicationInstanceSyncStatus](https://cloud.tencent.com/document/api/1141/55297) - This API is used to query the synchronization status of a replication instance.
 

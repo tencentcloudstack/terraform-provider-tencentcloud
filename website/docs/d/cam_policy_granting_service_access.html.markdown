@@ -51,5 +51,5 @@ In addition to all arguments above, the following attributes are exported:
 
 This data source queries the following TencentCloud APIs:
 
-* Read: [ListPoliciesGrantingServiceAccess](https://cloud.tencent.com/document/api/598/58191) - 获取所有已授权服务
+* Read: [ListPoliciesGrantingServiceAccess](https://cloud.tencent.com/document/api/598/58191)
 

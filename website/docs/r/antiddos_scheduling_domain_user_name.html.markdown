@@ -38,9 +38,9 @@ In addition to all arguments above, the following attributes are exported:
 
 This resource interacts with the following TencentCloud APIs:
 
-* Create: [ModifyDomainUsrName](https://cloud.tencent.com/document/api/297/95363) - 修改智能解析域名名称
-* Read: [DescribeListSchedulingDomain](https://cloud.tencent.com/document/api/297/95364) - 获取智能调度域名列表
-* Update: [ModifyDomainUsrName](https://cloud.tencent.com/document/api/297/95363) - 修改智能解析域名名称
+* Create: [ModifyDomainUsrName](https://cloud.tencent.com/document/api/297/95363) - This API is used to modify intelligent scheduling domain names.
+* Read: [DescribeListSchedulingDomain](https://cloud.tencent.com/document/api/297/95364) - This API is used to get a list of intelligent scheduling domain names.
+* Update: [ModifyDomainUsrName](https://cloud.tencent.com/document/api/297/95363) - This API is used to modify intelligent scheduling domain names.
 
 ## Import
 

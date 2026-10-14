@@ -46,12 +46,12 @@ In addition to all arguments above, the following attributes are exported:
 
 This resource interacts with the following TencentCloud APIs:
 
-* Create: [CreateOrModifyCloudNativeAPIGatewayIPRestriction](https://cloud.tencent.com/document/api/1364/125038) - 创建或编辑云原生网关访问控制
-* Create: [DescribeCloudNativeAPIGatewayIPRestriction](https://cloud.tencent.com/document/api/1364/125036) - 查询云原生网关访问控制
-* Read: [DescribeCloudNativeAPIGatewayIPRestriction](https://cloud.tencent.com/document/api/1364/125036) - 查询云原生网关访问控制
-* Update: [CreateOrModifyCloudNativeAPIGatewayIPRestriction](https://cloud.tencent.com/document/api/1364/125038) - 创建或编辑云原生网关访问控制
-* Update: [DescribeCloudNativeAPIGatewayIPRestriction](https://cloud.tencent.com/document/api/1364/125036) - 查询云原生网关访问控制
-* Delete: [DeleteCloudNativeAPIGatewayIPRestriction](https://cloud.tencent.com/document/api/1364/125037) - 删除云原生网关访问控制
+* Create: [CreateOrModifyCloudNativeAPIGatewayIPRestriction](https://cloud.tencent.com/document/api/1364/125038)
+* Create: [DescribeCloudNativeAPIGatewayIPRestriction](https://cloud.tencent.com/document/api/1364/125036)
+* Read: [DescribeCloudNativeAPIGatewayIPRestriction](https://cloud.tencent.com/document/api/1364/125036)
+* Update: [CreateOrModifyCloudNativeAPIGatewayIPRestriction](https://cloud.tencent.com/document/api/1364/125038)
+* Update: [DescribeCloudNativeAPIGatewayIPRestriction](https://cloud.tencent.com/document/api/1364/125036)
+* Delete: [DeleteCloudNativeAPIGatewayIPRestriction](https://cloud.tencent.com/document/api/1364/125037)
 
 ## Import
 

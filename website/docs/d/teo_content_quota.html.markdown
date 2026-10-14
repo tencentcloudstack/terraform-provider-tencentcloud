@@ -45,5 +45,5 @@ In addition to all arguments above, the following attributes are exported:
 
 This data source queries the following TencentCloud APIs:
 
-* Read: [DescribeContentQuota](https://cloud.tencent.com/document/api/1552/80701) - 查询内容管理接口配额
+* Read: [DescribeContentQuota](https://cloud.tencent.com/document/api/1552/80701) - This API is used to query content management quotas.
 

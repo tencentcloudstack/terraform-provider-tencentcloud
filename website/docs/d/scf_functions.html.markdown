@@ -101,6 +101,6 @@ In addition to all arguments above, the following attributes are exported:
 
 This data source queries the following TencentCloud APIs:
 
-* Read: [GetFunction](https://cloud.tencent.com/document/api/583/18584) - 获取函数详细信息
-* Read: [ListFunctions](https://cloud.tencent.com/document/api/583/18582) - 获取函数列表
+* Read: [GetFunction](https://cloud.tencent.com/document/api/583/18584)
+* Read: [ListFunctions](https://cloud.tencent.com/document/api/583/18582) - This API is used to return relevant function information based on the input query parameters.
 

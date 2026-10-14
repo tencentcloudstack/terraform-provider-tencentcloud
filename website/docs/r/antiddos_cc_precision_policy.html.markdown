@@ -65,11 +65,11 @@ In addition to all arguments above, the following attributes are exported:
 
 This resource interacts with the following TencentCloud APIs:
 
-* Create: [CreateCCPrecisionPolicy](https://cloud.tencent.com/document/api/297/95392) - 新增CC精准防护策略
-* Create: [DescribeCCPrecisionPlyList](https://cloud.tencent.com/document/api/297/95383) - 获取CC精准防护列表
-* Read: [DescribeCCPrecisionPlyList](https://cloud.tencent.com/document/api/297/95383) - 获取CC精准防护列表
-* Update: [ModifyCCPrecisionPolicy](https://cloud.tencent.com/document/api/297/95379) - 修改CC精准防护策略
-* Delete: [DeleteCCPrecisionPolicy](https://cloud.tencent.com/document/api/297/95389) - 删除CC精准防护策略
+* Create: [CreateCCPrecisionPolicy](https://cloud.tencent.com/document/api/297/95392) - This API is used to create a CC precise protection policy.
+* Create: [DescribeCCPrecisionPlyList](https://cloud.tencent.com/document/api/297/95383) - This API is used to obtain the list of CC precise protection policies.
+* Read: [DescribeCCPrecisionPlyList](https://cloud.tencent.com/document/api/297/95383) - This API is used to obtain the list of CC precise protection policies.
+* Update: [ModifyCCPrecisionPolicy](https://cloud.tencent.com/document/api/297/95379) - This API is used to modify a CC precise protection policy.
+* Delete: [DeleteCCPrecisionPolicy](https://cloud.tencent.com/document/api/297/95389) - This API is used to delete a CC precise protection policy.
 
 ## Import
 

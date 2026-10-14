@@ -80,11 +80,11 @@ In addition to all arguments above, the following attributes are exported:
 
 This resource interacts with the following TencentCloud APIs:
 
-* Create: [CreateAcl](https://cloud.tencent.com/document/api/1025/74411) - 新建访问权限
-* Read: [DescribeAcls](https://cloud.tencent.com/document/api/1025/74409) - 查询访问权限列表
-* Read: [DescribeDepartments](https://cloud.tencent.com/document/api/1025/126463) - 查询部门信息
-* Update: [ModifyAcl](https://cloud.tencent.com/document/api/1025/74408) - 修改访问权限
-* Delete: [DeleteAcls](https://cloud.tencent.com/document/api/1025/74410) - 删除访问权限
+* Create: [CreateAcl](https://cloud.tencent.com/document/api/1025/74411)
+* Read: [DescribeAcls](https://cloud.tencent.com/document/api/1025/74409)
+* Read: [DescribeDepartments](https://cloud.tencent.com/document/api/1025/126463)
+* Update: [ModifyAcl](https://cloud.tencent.com/document/api/1025/74408)
+* Delete: [DeleteAcls](https://cloud.tencent.com/document/api/1025/74410)
 
 ## Import
 

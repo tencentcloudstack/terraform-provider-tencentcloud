@@ -62,21 +62,21 @@ In addition to all arguments above, the following attributes are exported:
 
 This resource interacts with the following TencentCloud APIs:
 
-* Create: [AddInstances](https://cloud.tencent.com/document/api/1003/48088) - 集群添加实例
-* Create: [DescribeResourcesByDealName](https://cloud.tencent.com/document/api/1003/52131) - 查询订单关联实例
-* Create: [ModifyMaintainPeriodConfig](https://cloud.tencent.com/document/api/1003/48080) - 修改维护时间配置
-* Read: [DescribeInstanceDetail](https://cloud.tencent.com/document/api/1003/48250) - 查询实例详情
-* Read: [DescribeInstances](https://cloud.tencent.com/document/api/1003/48334) - 查询实例的列表
-* Read: [DescribeMaintainPeriod](https://cloud.tencent.com/document/api/1003/48083) - 查询实例维护时间窗
-* Update: [DescribeInstanceDetail](https://cloud.tencent.com/document/api/1003/48250) - 查询实例详情
-* Update: [DescribeInstances](https://cloud.tencent.com/document/api/1003/48334) - 查询实例的列表
-* Update: [ModifyInstanceName](https://cloud.tencent.com/document/api/1003/71728) - 修改实例名称
-* Update: [ModifyMaintainPeriodConfig](https://cloud.tencent.com/document/api/1003/48080) - 修改维护时间配置
-* Update: [UpgradeInstance](https://cloud.tencent.com/document/api/1003/48077) - 实例变配
-* Delete: [DescribeInstanceDetail](https://cloud.tencent.com/document/api/1003/48250) - 查询实例详情
-* Delete: [DescribeInstances](https://cloud.tencent.com/document/api/1003/48334) - 查询实例的列表
-* Delete: [IsolateInstance](https://cloud.tencent.com/document/api/1003/48081) - 隔离实例
-* Delete: [OfflineInstance](https://cloud.tencent.com/document/api/1003/48249) - 销毁实例
+* Create: [AddInstances](https://cloud.tencent.com/document/api/1003/48088) - This API is used to add instances to a cluster.
+* Create: [DescribeResourcesByDealName](https://cloud.tencent.com/document/api/1003/52131) - This interface (DescribeResourcesByDealName) is used to query order-associated instances.
+* Create: [ModifyMaintainPeriodConfig](https://cloud.tencent.com/document/api/1003/48080) - This API is used to modify maintenance time configuration.
+* Read: [DescribeInstanceDetail](https://cloud.tencent.com/document/api/1003/48250) - This API is used to query instance details.
+* Read: [DescribeInstances](https://cloud.tencent.com/document/api/1003/48334) - This API is used to query the list of instances.
+* Read: [DescribeMaintainPeriod](https://cloud.tencent.com/document/api/1003/48083) - This interface (DescribeMaintainPeriod) is used to query the instance maintenance window.
+* Update: [DescribeInstanceDetail](https://cloud.tencent.com/document/api/1003/48250) - This API is used to query instance details.
+* Update: [DescribeInstances](https://cloud.tencent.com/document/api/1003/48334) - This API is used to query the list of instances.
+* Update: [ModifyInstanceName](https://cloud.tencent.com/document/api/1003/71728) - This API is used to modify instance name.
+* Update: [ModifyMaintainPeriodConfig](https://cloud.tencent.com/document/api/1003/48080) - This API is used to modify maintenance time configuration.
+* Update: [UpgradeInstance](https://cloud.tencent.com/document/api/1003/48077) - This interface (UpgradeInstance) is used to upgrade instances.
+* Delete: [DescribeInstanceDetail](https://cloud.tencent.com/document/api/1003/48250) - This API is used to query instance details.
+* Delete: [DescribeInstances](https://cloud.tencent.com/document/api/1003/48334) - This API is used to query the list of instances.
+* Delete: [IsolateInstance](https://cloud.tencent.com/document/api/1003/48081) - This API is used to isolate an instance.
+* Delete: [OfflineInstance](https://cloud.tencent.com/document/api/1003/48249) - This interface (OfflineInstance) is used to terminate an instance.
 
 ## Import
 

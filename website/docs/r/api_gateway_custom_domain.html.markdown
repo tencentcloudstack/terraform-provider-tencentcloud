@@ -50,9 +50,9 @@ In addition to all arguments above, the following attributes are exported:
 
 This resource interacts with the following TencentCloud APIs:
 
-* Create: [BindSubDomain](https://cloud.tencent.com/document/api/628/45188) - 服务绑定自定义域名
-* Read: [DescribeServiceSubDomainMappings](https://cloud.tencent.com/document/api/628/45186) - 查询自定义域名的路径映射
-* Read: [DescribeServiceSubDomains](https://cloud.tencent.com/document/api/628/45185) - 查询自定义域名列表
-* Update: [ModifySubDomain](https://cloud.tencent.com/document/api/628/45184) - 服务修改自定义域名
-* Delete: [UnBindSubDomain](https://cloud.tencent.com/document/api/628/45183) - 服务解绑自定义域名
+* Create: [BindSubDomain](https://cloud.tencent.com/document/api/628/45188) - This API is used to bind a custom domain name to a service.
+* Read: [DescribeServiceSubDomainMappings](https://cloud.tencent.com/document/api/628/45186) - This API is used to query the path mappings of a custom domain name.
+* Read: [DescribeServiceSubDomains](https://cloud.tencent.com/document/api/628/45185) - This API is used to query the list of custom domain names.
+* Update: [ModifySubDomain](https://cloud.tencent.com/document/api/628/45184) - This API is used to modify the path mapping in the custom domain name settings of a service. The path mapping rule can be modified before it is bound to the custom domain name.
+* Delete: [UnBindSubDomain](https://cloud.tencent.com/document/api/628/45183) - This API is used to unbind a custom domain name.
 

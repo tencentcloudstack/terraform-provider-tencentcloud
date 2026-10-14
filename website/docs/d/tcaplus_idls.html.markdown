@@ -37,5 +37,5 @@ In addition to all arguments above, the following attributes are exported:
 
 This data source queries the following TencentCloud APIs:
 
-* Read: [DescribeIdlFileInfos](https://cloud.tencent.com/document/api/596/39665) - 查询表描述文件详情
+* Read: [DescribeIdlFileInfos](https://cloud.tencent.com/document/api/596/39665) - This API is used to query table description file details.
 

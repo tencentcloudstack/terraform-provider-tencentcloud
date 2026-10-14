@@ -61,5 +61,5 @@ In addition to all arguments above, the following attributes are exported:
 
 This data source queries the following TencentCloud APIs:
 
-* Read: [ListKeyDetail](https://cloud.tencent.com/document/api/573/34416) - 获取主密钥列表详情
+* Read: [ListKeyDetail](https://cloud.tencent.com/document/api/573/34416) - Get the master key list details according to the specified Offset and Limit.
 

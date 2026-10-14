@@ -102,11 +102,11 @@ In addition to all arguments above, the following attributes are exported:
 
 This resource interacts with the following TencentCloud APIs:
 
-* Create: [DescribeFlowStatus](https://cloud.tencent.com/document/api/238/19967) - 查询流程状态
-* Create: [ModifyDatabaseCDC](https://cloud.tencent.com/document/api/238/59033) - 开启&关闭数据库CDC
-* Read: [DescribeDBsNormal](https://cloud.tencent.com/document/api/238/59034) - 查询数据库配置信息（已废弃）
-* Update: [DescribeFlowStatus](https://cloud.tencent.com/document/api/238/19967) - 查询流程状态
-* Update: [ModifyDatabaseCDC](https://cloud.tencent.com/document/api/238/59033) - 开启&关闭数据库CDC
+* Create: [DescribeFlowStatus](https://cloud.tencent.com/document/api/238/19967) - This API is used to query flow status.
+* Create: [ModifyDatabaseCDC](https://cloud.tencent.com/document/api/238/59033) - This API is used to enable or disable the change data capture (CDC) feature.
+* Read: [DescribeDBsNormal](https://cloud.tencent.com/document/api/238/59034) - This API is used to query database configurations. It does not return information of the accounts that have permissions to operate the database.
+* Update: [DescribeFlowStatus](https://cloud.tencent.com/document/api/238/19967) - This API is used to query flow status.
+* Update: [ModifyDatabaseCDC](https://cloud.tencent.com/document/api/238/59033) - This API is used to enable or disable the change data capture (CDC) feature.
 
 ## Import
 

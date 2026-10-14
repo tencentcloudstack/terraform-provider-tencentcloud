@@ -108,10 +108,10 @@ In addition to all arguments above, the following attributes are exported:
 
 This resource interacts with the following TencentCloud APIs:
 
-* Create: [CreateAlertRule](https://cloud.tencent.com/document/api/248/55635) - 创建告警规则
-* Read: [DescribeAlertRules](https://cloud.tencent.com/document/api/248/55633) - 报警规则查询
-* Update: [UpdateAlertRule](https://cloud.tencent.com/document/api/248/55632) - 更新告警规则
-* Delete: [DeleteAlertRules](https://cloud.tencent.com/document/api/248/55634) - 删除报警规则
+* Create: [CreateAlertRule](https://cloud.tencent.com/document/api/248/55635) - This API is used to create a Prometheus alerting rule.
+* Read: [DescribeAlertRules](https://cloud.tencent.com/document/api/248/55633) - This API is used to query a Prometheus alerting rule.
+* Update: [UpdateAlertRule](https://cloud.tencent.com/document/api/248/55632) - This API is used to update a Prometheus alerting rule.
+* Delete: [DeleteAlertRules](https://cloud.tencent.com/document/api/248/55634) - This API is used to batch delete Prometheus alerting rules.
 
 ## Import
 

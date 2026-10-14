@@ -38,5 +38,5 @@ In addition to all arguments above, the following attributes are exported:
 
 This data source queries the following TencentCloud APIs:
 
-* Read: [DescribeDeliveryConfigByGroupId](https://cloud.tencent.com/document/api/649/75775) - 用部署组id获取绑定信息
+* Read: [DescribeDeliveryConfigByGroupId](https://cloud.tencent.com/document/api/649/75775)
 

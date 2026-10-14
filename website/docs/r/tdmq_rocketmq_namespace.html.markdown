@@ -48,10 +48,10 @@ In addition to all arguments above, the following attributes are exported:
 
 This resource interacts with the following TencentCloud APIs:
 
-* Create: [CreateRocketMQNamespace](https://cloud.tencent.com/document/api/1179/63427) - 创建 RocketMQ 命名空间
-* Read: [DescribeRocketMQNamespaces](https://cloud.tencent.com/document/api/1179/63419) - 查询 RocketMQ 命名空间列表
-* Update: [ModifyRocketMQNamespace](https://cloud.tencent.com/document/api/1179/63415) - 修改 RocketMQ 命名空间
-* Delete: [DeleteRocketMQNamespace](https://cloud.tencent.com/document/api/1179/63412) - 删除 RocketMQ 命名空间
+* Create: [CreateRocketMQNamespace](https://cloud.tencent.com/document/api/1179/63427) - This API is used to create a RocketMQ namespace.
+* Read: [DescribeRocketMQNamespaces](https://cloud.tencent.com/document/api/1179/63419) - Query the RocketMQ namespace list.
+* Update: [ModifyRocketMQNamespace](https://cloud.tencent.com/document/api/1179/63415) - This API is used to update a RocketMQ namespace.
+* Delete: [DeleteRocketMQNamespace](https://cloud.tencent.com/document/api/1179/63412) - This API is used to delete a RocketMQ namespace.
 
 ## Import
 

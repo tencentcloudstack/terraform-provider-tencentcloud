@@ -38,5 +38,5 @@ In addition to all arguments above, the following attributes are exported:
 
 This data source queries the following TencentCloud APIs:
 
-* Read: [GetCallerIdentity](https://cloud.tencent.com/document/api/1312/66098) - 获取当前调用者的身份信息
+* Read: [GetCallerIdentity](https://cloud.tencent.com/document/api/1312/66098) - This API is used to get the identity information of the current caller.
 

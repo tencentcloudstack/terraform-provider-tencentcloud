@@ -75,5 +75,5 @@ In addition to all arguments above, the following attributes are exported:
 
 This data source queries the following TencentCloud APIs:
 
-* Read: [DescribeMachineGroups](https://cloud.tencent.com/document/api/614/56438) - 获取机器组列表
+* Read: [DescribeMachineGroups](https://cloud.tencent.com/document/api/614/56438) - This API is used to get the list of machine groups.
 

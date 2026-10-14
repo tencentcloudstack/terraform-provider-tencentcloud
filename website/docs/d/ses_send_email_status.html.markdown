@@ -52,5 +52,5 @@ In addition to all arguments above, the following attributes are exported:
 
 This data source queries the following TencentCloud APIs:
 
-* Read: [GetSendEmailStatus](https://cloud.tencent.com/document/api/1288/51832) - 获取邮件发送的状态
+* Read: [GetSendEmailStatus](https://cloud.tencent.com/document/api/1288/51832) - Search the email sending status. Only support querying data within 30 days.
 

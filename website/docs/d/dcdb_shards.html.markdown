@@ -61,5 +61,5 @@ In addition to all arguments above, the following attributes are exported:
 
 This data source queries the following TencentCloud APIs:
 
-* Read: [DescribeDCDBShards](https://cloud.tencent.com/document/api/557/19990) - 查询分片信息
+* Read: [DescribeDCDBShards](https://cloud.tencent.com/document/api/557/19990) - This API is used to query the information of shards of a TencentDB instance.
 

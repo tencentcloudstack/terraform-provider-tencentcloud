@@ -51,8 +51,8 @@ In addition to all arguments above, the following attributes are exported:
 
 This resource interacts with the following TencentCloud APIs:
 
-* Create: [CreateConfigTemplateWithDetailResp](https://cloud.tencent.com/document/api/649/89213) - 创建参数模板返回详细信息
-* Read: [DescribeConfigTemplate](https://cloud.tencent.com/document/api/649/85856) - 查询配置模板详情
-* Update: [UpdateConfigTemplate](https://cloud.tencent.com/document/api/649/85849) - 更新参数模板
-* Delete: [DeleteConfigTemplate](https://cloud.tencent.com/document/api/649/85858) - 删除配置模板
+* Create: [CreateConfigTemplateWithDetailResp](https://cloud.tencent.com/document/api/649/89213)
+* Read: [DescribeConfigTemplate](https://cloud.tencent.com/document/api/649/85856)
+* Update: [UpdateConfigTemplate](https://cloud.tencent.com/document/api/649/85849)
+* Delete: [DeleteConfigTemplate](https://cloud.tencent.com/document/api/649/85858)
 

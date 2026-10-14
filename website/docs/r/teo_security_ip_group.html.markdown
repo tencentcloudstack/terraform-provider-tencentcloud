@@ -53,10 +53,10 @@ The `ip_group` object exports the following:
 
 This resource interacts with the following TencentCloud APIs:
 
-* Create: [CreateSecurityIPGroup](https://cloud.tencent.com/document/api/1552/90651) - 创建安全 IP 组
-* Read: [DescribeSecurityIPGroup](https://cloud.tencent.com/document/api/1552/105866) - 查询安全 IP 组
-* Update: [ModifySecurityIPGroup](https://cloud.tencent.com/document/api/1552/90649) - 修改安全 IP 组
-* Delete: [DeleteSecurityIPGroup](https://cloud.tencent.com/document/api/1552/90650) - 删除安全 IP 组
+* Create: [CreateSecurityIPGroup](https://cloud.tencent.com/document/api/1552/90651) - This API is used to create a security IP group.
+* Read: [DescribeSecurityIPGroup](https://cloud.tencent.com/document/api/1552/105866) - This API is used to query the configuration information of a security IP group, including the ID, name and content of the security IP group. The query result of this API only returns up to 2000 IPs or CIDR blocks for each IP group. If there is a very large IP group exceeding 2000 IPs or CIDR blocks, call DescribeSecurityIPGroupContent to perform a paging query.
+* Update: [ModifySecurityIPGroup](https://cloud.tencent.com/document/api/1552/90649) - This API is used to modify a security IP group.
+* Delete: [DeleteSecurityIPGroup](https://cloud.tencent.com/document/api/1552/90650) - This API is used to delete a specified security IP group. Note that the security IP group cannot be deleted if it is referenced in a rule.
 
 ## Import
 

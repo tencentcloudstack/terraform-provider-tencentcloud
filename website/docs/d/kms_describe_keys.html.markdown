@@ -52,5 +52,5 @@ In addition to all arguments above, the following attributes are exported:
 
 This data source queries the following TencentCloud APIs:
 
-* Read: [DescribeKeys](https://cloud.tencent.com/document/api/573/34427) - 获取多个主密钥属性
+* Read: [DescribeKeys](https://cloud.tencent.com/document/api/573/34427) - This API is used to get the attribute information of CMKs in batches.
 

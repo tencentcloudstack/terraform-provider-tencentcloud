@@ -100,15 +100,15 @@ In addition to all arguments above, the following attributes are exported:
 
 This resource interacts with the following TencentCloud APIs:
 
-* Create: [CreateZone](https://cloud.tencent.com/document/api/1552/80719) - 创建站点
-* Create: [ModifyResourceTags](https://cloud.tencent.com/document/api/651/35322) - 批量修改资源关联的标签
-* Read: [DescribeResourceTagsByResourceIds](https://cloud.tencent.com/document/api/651/35319) - 批量查看资源关联的标签
-* Read: [DescribeZones](https://cloud.tencent.com/document/api/1552/80713) - 查询站点列表
-* Update: [ModifyResourceTags](https://cloud.tencent.com/document/api/651/35322) - 批量修改资源关联的标签
-* Update: [ModifyZone](https://cloud.tencent.com/document/api/1552/80709) - 修改站点
-* Update: [ModifyZoneStatus](https://cloud.tencent.com/document/api/1552/80707) - 切换站点状态
-* Update: [ModifyZoneWorkMode](https://cloud.tencent.com/document/api/1552/127806) - 修改站点工作模式
-* Delete: [DeleteZone](https://cloud.tencent.com/document/api/1552/80717) - 删除站点
+* Create: [CreateZone](https://cloud.tencent.com/document/api/1552/80719) - This API is used to access a new site.
+* Create: [ModifyResourceTags](https://cloud.tencent.com/document/api/651/35322) - This API is used to modify all tags associated with a resource.
+* Read: [DescribeResourceTagsByResourceIds](https://cloud.tencent.com/document/api/651/35319) - This API is used to query the tag key-value pairs associated with an existing resource.
+* Read: [DescribeZones](https://cloud.tencent.com/document/api/1552/80713) - This API is used to query the list of user sites.
+* Update: [ModifyResourceTags](https://cloud.tencent.com/document/api/651/35322) - This API is used to modify all tags associated with a resource.
+* Update: [ModifyZone](https://cloud.tencent.com/document/api/1552/80709) - This API is used to modify the site information.
+* Update: [ModifyZoneStatus](https://cloud.tencent.com/document/api/1552/80707) - This API is used to change the site status.
+* Update: [ModifyZoneWorkMode](https://cloud.tencent.com/document/api/1552/127806) - This API is used to modify the working mode of configuration modules under a site. Configuration modules can enable version management mode or immediate effect mode by configuration group dimension. For details, refer to [version management](https://www.tencentcloud.com/document/product/1145/67719).
+* Delete: [DeleteZone](https://cloud.tencent.com/document/api/1552/80717) - This API is used to delete a site.
 
 ## Import
 

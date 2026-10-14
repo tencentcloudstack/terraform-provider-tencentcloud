@@ -60,12 +60,12 @@ In addition to all arguments above, the following attributes are exported:
 
 This resource interacts with the following TencentCloud APIs:
 
-* Create: [CreateApplicationProxyRule](https://cloud.tencent.com/document/api/1552/80693) - 创建应用代理规则（旧）
-* Read: [DescribeApplicationProxies](https://cloud.tencent.com/document/api/1552/80690) - 查询应用代理列表（旧）
-* Update: [ModifyApplicationProxyRule](https://cloud.tencent.com/document/api/1552/80688) - 修改应用代理规则（旧）
-* Update: [ModifyApplicationProxyRuleStatus](https://cloud.tencent.com/document/api/1552/80687) - 修改应用代理规则的状态（旧）
-* Delete: [DeleteApplicationProxyRule](https://cloud.tencent.com/document/api/1552/80691) - 删除应用代理规则（旧）
-* Delete: [ModifyApplicationProxyRuleStatus](https://cloud.tencent.com/document/api/1552/80687) - 修改应用代理规则的状态（旧）
+* Create: [CreateApplicationProxyRule](https://cloud.tencent.com/document/api/1552/80693) - This API is used to create an application proxy rule.
+* Read: [DescribeApplicationProxies](https://cloud.tencent.com/document/api/1552/80690) - This API is on an earlier version. If you want to call it, please switch to the latest version. In the latest version, this API has been split into two APIs: one for querying the Layer 4 proxy instance list and the other for querying Layer 4 forwarding rules. For details, see [DescribeL4Proxy] (https://intl.cloud.tencent.com/document/product/1552/103413?from_cn_redirect=1) and [DescribeL4ProxyRules] (https://intl.cloud.tencent.com/document/product/1552/103412?from_cn_redirect=1).
+* Update: [ModifyApplicationProxyRule](https://cloud.tencent.com/document/api/1552/80688) - This API is used to modify an application proxy rule.
+* Update: [ModifyApplicationProxyRuleStatus](https://cloud.tencent.com/document/api/1552/80687) - This API is used to modify the status of an application proxy rule.
+* Delete: [DeleteApplicationProxyRule](https://cloud.tencent.com/document/api/1552/80691) - This API is used to delete an application proxy rule.
+* Delete: [ModifyApplicationProxyRuleStatus](https://cloud.tencent.com/document/api/1552/80687) - This API is used to modify the status of an application proxy rule.
 
 ## Import
 

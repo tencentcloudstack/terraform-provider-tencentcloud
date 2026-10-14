@@ -33,5 +33,5 @@ In addition to all arguments above, the following attributes are exported:
 
 This data source queries the following TencentCloud APIs:
 
-* Read: [DescribeNetworkAccountType](https://cloud.tencent.com/document/api/215/86509) - 查询用户网络类型
+* Read: [DescribeNetworkAccountType](https://cloud.tencent.com/document/api/215/86509)
 

@@ -52,5 +52,5 @@ In addition to all arguments above, the following attributes are exported:
 
 This data source queries the following TencentCloud APIs:
 
-* Read: [DescribeCrossBorderFlowMonitor](https://cloud.tencent.com/document/api/215/80526) - 查询跨境带宽监控数据
+* Read: [DescribeCrossBorderFlowMonitor](https://cloud.tencent.com/document/api/215/80526)
 

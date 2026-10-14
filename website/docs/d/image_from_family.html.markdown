@@ -36,5 +36,5 @@ In addition to all arguments above, the following attributes are exported:
 
 This data source queries the following TencentCloud APIs:
 
-* Read: [DescribeImageFromFamily](https://cloud.tencent.com/document/api/213/111405) - 查询镜像族内可用镜像
+* Read: [DescribeImageFromFamily](https://cloud.tencent.com/document/api/213/111405) - This API is used to view information about available images within an image family.
 

@@ -39,5 +39,5 @@ In addition to all arguments above, the following attributes are exported:
 
 This data source queries the following TencentCloud APIs:
 
-* Read: [DescribeConfigGroupVersionDetail](https://cloud.tencent.com/document/api/1552/101865) - 查询配置组版本详情
+* Read: [DescribeConfigGroupVersionDetail](https://cloud.tencent.com/document/api/1552/101865) - This API is used to obtain detailed information about a version in version management mode. The response includes the version ID, description, status, creation time, configuration group information, and the content of the version configuration file. The version management feature is currently undergoing beta testing and is accessible only to users on the whitelist.
 

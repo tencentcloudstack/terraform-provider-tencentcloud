@@ -44,5 +44,5 @@ In addition to all arguments above, the following attributes are exported:
 
 This data source queries the following TencentCloud APIs:
 
-* Read: [ListEntitiesForPolicy](https://cloud.tencent.com/document/api/598/34571) - 查询策略关联的实体列表
+* Read: [ListEntitiesForPolicy](https://cloud.tencent.com/document/api/598/34571) - This API (ListEntitiesForPolicy) is used to query the list of entities associated with a policy.
 

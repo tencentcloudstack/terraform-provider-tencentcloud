@@ -38,9 +38,9 @@ In addition to all arguments above, the following attributes are exported:
 
 This resource interacts with the following TencentCloud APIs:
 
-* Create: [AddShareUnitNode](https://cloud.tencent.com/document/api/850/129065) - 添加共享单元部门
-* Read: [DescribeShareUnitNodes](https://cloud.tencent.com/document/api/850/129063) - 获取共享单元部门列表
-* Delete: [DeleteShareUnitNode](https://cloud.tencent.com/document/api/850/129064) - 删除共享单元部门
+* Create: [AddShareUnitNode](https://cloud.tencent.com/document/api/850/129065) - Add a shared unit department.
+* Read: [DescribeShareUnitNodes](https://cloud.tencent.com/document/api/850/129063) - This API is used to obtain a list of shared unit departments.
+* Delete: [DeleteShareUnitNode](https://cloud.tencent.com/document/api/850/129064) - Delete a shared unit department.
 
 ## Import
 

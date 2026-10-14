@@ -89,13 +89,13 @@ In addition to all arguments above, the following attributes are exported:
 
 This resource interacts with the following TencentCloud APIs:
 
-* Create: [CreateSplunkDeliver](https://cloud.tencent.com/document/api/614/126749) - 创建Splunk投递任务
-* Create: [DescribeSplunkDelivers](https://cloud.tencent.com/document/api/614/126747) - 获取Splunk投递任务列表
-* Create: [ModifySplunkDeliver](https://cloud.tencent.com/document/api/614/126745) - 修改splunk任务投递信息
-* Read: [DescribeSplunkDelivers](https://cloud.tencent.com/document/api/614/126747) - 获取Splunk投递任务列表
-* Update: [DescribeSplunkDelivers](https://cloud.tencent.com/document/api/614/126747) - 获取Splunk投递任务列表
-* Update: [ModifySplunkDeliver](https://cloud.tencent.com/document/api/614/126745) - 修改splunk任务投递信息
-* Delete: [DeleteSplunkDeliver](https://cloud.tencent.com/document/api/614/126748) - 删除Splunk投递任务
+* Create: [CreateSplunkDeliver](https://cloud.tencent.com/document/api/614/126749) - Create a Splunk delivery task
+* Create: [DescribeSplunkDelivers](https://cloud.tencent.com/document/api/614/126747) - Retrieve the Splunk delivery task list
+* Create: [ModifySplunkDeliver](https://cloud.tencent.com/document/api/614/126745) - Modify information related to splunk delivery task
+* Read: [DescribeSplunkDelivers](https://cloud.tencent.com/document/api/614/126747) - Retrieve the Splunk delivery task list
+* Update: [DescribeSplunkDelivers](https://cloud.tencent.com/document/api/614/126747) - Retrieve the Splunk delivery task list
+* Update: [ModifySplunkDeliver](https://cloud.tencent.com/document/api/614/126745) - Modify information related to splunk delivery task
+* Delete: [DeleteSplunkDeliver](https://cloud.tencent.com/document/api/614/126748) - Delete a Splunk delivery task
 
 ## Import
 

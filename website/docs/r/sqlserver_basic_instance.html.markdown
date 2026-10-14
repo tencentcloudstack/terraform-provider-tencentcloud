@@ -137,28 +137,28 @@ In addition to all arguments above, the following attributes are exported:
 
 This resource interacts with the following TencentCloud APIs:
 
-* Create: [CreateBasicDBInstances](https://cloud.tencent.com/document/api/238/46808) - 创建基础版实例 (云盘)
-* Create: [DescribeFlowStatus](https://cloud.tencent.com/document/api/238/19967) - 查询流程状态
-* Create: [DescribeOrders](https://cloud.tencent.com/document/api/238/19937) - 查询订单信息
-* Create: [ModifyDBInstanceName](https://cloud.tencent.com/document/api/238/19958) - 修改实例名字
-* Create: [ModifyResourceTags](https://cloud.tencent.com/document/api/651/35322) - 批量修改资源关联的标签
-* Read: [DescribeDBInstances](https://cloud.tencent.com/document/api/238/19969) - 查询实例列表
-* Read: [DescribeDBInstancesAttribute](https://cloud.tencent.com/document/api/238/90299) - 查询实例附属属性
-* Read: [DescribeDBSecurityGroups](https://cloud.tencent.com/document/api/238/46812) - 查询实例安全组信息
-* Read: [DescribeMaintenanceSpan](https://cloud.tencent.com/document/api/238/46283) - 查询该实例的可维护时间窗
-* Read: [DescribeResourceTagsByResourceIds](https://cloud.tencent.com/document/api/651/35319) - 批量查看资源关联的标签
-* Update: [AssociateSecurityGroups](https://cloud.tencent.com/document/api/238/46813) - 安全组批量绑定云资源
-* Update: [DescribeDBInstances](https://cloud.tencent.com/document/api/238/19969) - 查询实例列表
-* Update: [DisassociateSecurityGroups](https://cloud.tencent.com/document/api/238/46810) - 安全组批量解绑云资源
-* Update: [ModifyDBInstanceName](https://cloud.tencent.com/document/api/238/19958) - 修改实例名字
-* Update: [ModifyDBInstanceProject](https://cloud.tencent.com/document/api/238/19957) - 修改数据库实例所属项目
-* Update: [ModifyDBInstanceRenewFlag](https://cloud.tencent.com/document/api/238/19956) - 修改实例续费标记
-* Update: [ModifyMaintenanceSpan](https://cloud.tencent.com/document/api/238/46281) - 修改可维护时间窗
-* Update: [ModifyResourceTags](https://cloud.tencent.com/document/api/651/35322) - 批量修改资源关联的标签
-* Update: [UpgradeDBInstance](https://cloud.tencent.com/document/api/238/19948) - 升级实例
-* Delete: [DeleteDBInstance](https://cloud.tencent.com/document/api/238/46806) - 立即下线实例
-* Delete: [DescribeDBInstances](https://cloud.tencent.com/document/api/238/19969) - 查询实例列表
-* Delete: [TerminateDBInstance](https://cloud.tencent.com/document/api/238/38210) - 主动隔离实例
+* Create: [CreateBasicDBInstances](https://cloud.tencent.com/document/api/238/46808) - This API is used to create basic edition instances (cloud disk).
+* Create: [DescribeFlowStatus](https://cloud.tencent.com/document/api/238/19967) - This API is used to query flow status.
+* Create: [DescribeOrders](https://cloud.tencent.com/document/api/238/19937) - This API is used to query order information.
+* Create: [ModifyDBInstanceName](https://cloud.tencent.com/document/api/238/19958) - This API is used to rename an instance.
+* Create: [ModifyResourceTags](https://cloud.tencent.com/document/api/651/35322) - This API is used to modify all tags associated with a resource.
+* Read: [DescribeDBInstances](https://cloud.tencent.com/document/api/238/19969) - This API is used to query the list of instances.
+* Read: [DescribeDBInstancesAttribute](https://cloud.tencent.com/document/api/238/90299) - This API is used to query the attributes of an instance.
+* Read: [DescribeDBSecurityGroups](https://cloud.tencent.com/document/api/238/46812) - This API is used to query the security group details of instances.
+* Read: [DescribeMaintenanceSpan](https://cloud.tencent.com/document/api/238/46283) - This API is used to query the maintenance time window of an instance based on its instance ID.
+* Read: [DescribeResourceTagsByResourceIds](https://cloud.tencent.com/document/api/651/35319) - This API is used to query the tag key-value pairs associated with an existing resource.
+* Update: [AssociateSecurityGroups](https://cloud.tencent.com/document/api/238/46813) - This API is used to bind security groups to instances in batches.
+* Update: [DescribeDBInstances](https://cloud.tencent.com/document/api/238/19969) - This API is used to query the list of instances.
+* Update: [DisassociateSecurityGroups](https://cloud.tencent.com/document/api/238/46810) - This API is used to unbind security groups from instances in batches.
+* Update: [ModifyDBInstanceName](https://cloud.tencent.com/document/api/238/19958) - This API is used to rename an instance.
+* Update: [ModifyDBInstanceProject](https://cloud.tencent.com/document/api/238/19957) - This API is used to modify the project to which a database instance belongs.
+* Update: [ModifyDBInstanceRenewFlag](https://cloud.tencent.com/document/api/238/19956) - This API is used to modify the instance renewal flag.
+* Update: [ModifyMaintenanceSpan](https://cloud.tencent.com/document/api/238/46281) - This API is used to modify the maintenance window of the instance.
+* Update: [ModifyResourceTags](https://cloud.tencent.com/document/api/651/35322) - This API is used to modify all tags associated with a resource.
+* Update: [UpgradeDBInstance](https://cloud.tencent.com/document/api/238/19948) - This API is used to upgrade an instance.
+* Delete: [DeleteDBInstance](https://cloud.tencent.com/document/api/238/46806) - This API is used to release SQL server instances (eliminated immediately) in the recycle bin. The released instances will be physically terminated after being retained for a period of time. Their publish-subscribe relationships will be automatically disassociated, and their RO replicas will be automatically released.
+* Delete: [DescribeDBInstances](https://cloud.tencent.com/document/api/238/19969) - This API is used to query the list of instances.
+* Delete: [TerminateDBInstance](https://cloud.tencent.com/document/api/238/38210) - This API is used to isolate an instance to move it into a recycle bin.
 
 ## Import
 

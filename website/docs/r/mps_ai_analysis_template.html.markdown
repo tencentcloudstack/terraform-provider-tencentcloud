@@ -73,10 +73,10 @@ In addition to all arguments above, the following attributes are exported:
 
 This resource interacts with the following TencentCloud APIs:
 
-* Create: [CreateAIAnalysisTemplate](https://cloud.tencent.com/document/api/862/40249) - 创建内容分析模板
-* Read: [DescribeAIAnalysisTemplates](https://cloud.tencent.com/document/api/862/40247) - 获取内容分析模板列表
-* Update: [ModifyAIAnalysisTemplate](https://cloud.tencent.com/document/api/862/40246) - 修改内容分析模板
-* Delete: [DeleteAIAnalysisTemplate](https://cloud.tencent.com/document/api/862/40248) - 删除内容分析模板
+* Create: [CreateAIAnalysisTemplate](https://cloud.tencent.com/document/api/862/40249) - This API is used to create a user-defined content analysis template. Up to 50 templates can be created.
+* Read: [DescribeAIAnalysisTemplates](https://cloud.tencent.com/document/api/862/40247) - This API is used to get the list of content analysis templates based on unique template ID. The returned result includes all eligible custom and preset video content analysis templates.
+* Update: [ModifyAIAnalysisTemplate](https://cloud.tencent.com/document/api/862/40246) - This API is used to modify a custom content analysis template.
+* Delete: [DeleteAIAnalysisTemplate](https://cloud.tencent.com/document/api/862/40248) - This API is used to delete a custom content analysis template.
 
 ## Import
 

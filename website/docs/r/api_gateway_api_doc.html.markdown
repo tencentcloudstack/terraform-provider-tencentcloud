@@ -51,10 +51,10 @@ In addition to all arguments above, the following attributes are exported:
 
 This resource interacts with the following TencentCloud APIs:
 
-* Create: [CreateAPIDoc](https://cloud.tencent.com/document/api/628/54951) - 创建 API 文档
-* Create: [DescribeAPIDocDetail](https://cloud.tencent.com/document/api/628/54949) - 查询 API 文档详情
-* Read: [DescribeAPIDocDetail](https://cloud.tencent.com/document/api/628/54949) - 查询 API 文档详情
-* Update: [DescribeAPIDocDetail](https://cloud.tencent.com/document/api/628/54949) - 查询 API 文档详情
-* Update: [ModifyAPIDoc](https://cloud.tencent.com/document/api/628/54947) - 修改 API 文档
-* Delete: [DeleteAPIDoc](https://cloud.tencent.com/document/api/628/54950) - 删除 API 文档
+* Create: [CreateAPIDoc](https://cloud.tencent.com/document/api/628/54951) - This API is used to create an API document.
+* Create: [DescribeAPIDocDetail](https://cloud.tencent.com/document/api/628/54949) - This API is used to query the details of an API document.
+* Read: [DescribeAPIDocDetail](https://cloud.tencent.com/document/api/628/54949) - This API is used to query the details of an API document.
+* Update: [DescribeAPIDocDetail](https://cloud.tencent.com/document/api/628/54949) - This API is used to query the details of an API document.
+* Update: [ModifyAPIDoc](https://cloud.tencent.com/document/api/628/54947) - This API is used to modify an API document.
+* Delete: [DeleteAPIDoc](https://cloud.tencent.com/document/api/628/54950) - This API is used to delete an API document.
 

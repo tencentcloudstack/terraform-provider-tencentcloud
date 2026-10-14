@@ -51,5 +51,5 @@ In addition to all arguments above, the following attributes are exported:
 
 This data source queries the following TencentCloud APIs:
 
-* Read: [DescribeRoleList](https://cloud.tencent.com/document/api/598/36223) - 获取角色列表
+* Read: [DescribeRoleList](https://cloud.tencent.com/document/api/598/36223) - This API (DescribeRoleList) is used to get the role list under the account.
 

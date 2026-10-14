@@ -40,10 +40,10 @@ In addition to all arguments above, the following attributes are exported:
 
 This resource interacts with the following TencentCloud APIs:
 
-* Create: [CreateMountPoint](https://cloud.tencent.com/document/api/1105/51154) - 创建挂载点
-* Read: [DescribeMountPoint](https://cloud.tencent.com/document/api/1105/51153) - 查看挂载点详细信息
-* Update: [ModifyMountPoint](https://cloud.tencent.com/document/api/1105/51150) - 修改挂载点属性
-* Delete: [DeleteMountPoint](https://cloud.tencent.com/document/api/1105/52342) - 删除挂载点
+* Create: [CreateMountPoint](https://cloud.tencent.com/document/api/1105/51154) - This API is used to create a mount point for a successfully created file system.
+* Read: [DescribeMountPoint](https://cloud.tencent.com/document/api/1105/51153) - This API is used to view the details of a mount point.
+* Update: [ModifyMountPoint](https://cloud.tencent.com/document/api/1105/51150) - This API is used to modify the attributes of a mount point.
+* Delete: [DeleteMountPoint](https://cloud.tencent.com/document/api/1105/52342) - This API is used to delete a mount point.
 
 ## Import
 

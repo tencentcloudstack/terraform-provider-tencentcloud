@@ -44,5 +44,5 @@ In addition to all arguments above, the following attributes are exported:
 
 This data source queries the following TencentCloud APIs:
 
-* Read: [DescribeSqlTemplate](https://cloud.tencent.com/document/api/1130/72830) - 查询SQL模板
+* Read: [DescribeSqlTemplate](https://cloud.tencent.com/document/api/1130/72830)
 

@@ -86,8 +86,8 @@ In addition to all arguments above, the following attributes are exported:
 
 This resource interacts with the following TencentCloud APIs:
 
-* Create: [CreateNotificationConfiguration](https://cloud.tencent.com/document/api/377/33185) - 创建通知
-* Read: [DescribeNotificationConfigurations](https://cloud.tencent.com/document/api/377/33183) - 查询通知
-* Update: [ModifyNotificationConfiguration](https://cloud.tencent.com/document/api/377/33182) - 修改通知
-* Delete: [DeleteNotificationConfiguration](https://cloud.tencent.com/document/api/377/33184) - 删除通知
+* Create: [CreateNotificationConfiguration](https://cloud.tencent.com/document/api/377/33185) - This API is used to create a notification.
+* Read: [DescribeNotificationConfigurations](https://cloud.tencent.com/document/api/377/33183) - This API (DescribeNotificationConfigurations) is used to query the information of one or more notifications.
+* Update: [ModifyNotificationConfiguration](https://cloud.tencent.com/document/api/377/33182) - This API is used to modify a notification policy.
+* Delete: [DeleteNotificationConfiguration](https://cloud.tencent.com/document/api/377/33184) - This API (DeleteNotificationConfiguration) is used to delete the specified notification.
 

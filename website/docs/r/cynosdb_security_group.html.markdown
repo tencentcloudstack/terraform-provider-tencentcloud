@@ -43,21 +43,21 @@ In addition to all arguments above, the following attributes are exported:
 
 This resource interacts with the following TencentCloud APIs:
 
-* Create: [DescribeClusterDetail](https://cloud.tencent.com/document/api/1003/48086) - 集群信息描述
-* Create: [DescribeClusterInstanceGrps](https://cloud.tencent.com/document/api/1003/48303) - 查询实例组（废弃）
-* Create: [DescribeClusters](https://cloud.tencent.com/document/api/1003/48085) - 查询集群列表
-* Create: [ModifyDBInstanceSecurityGroups](https://cloud.tencent.com/document/api/1003/48096) - 修改实例绑定安全组
-* Read: [DescribeClusterInstanceGrps](https://cloud.tencent.com/document/api/1003/48303) - 查询实例组（废弃）
-* Read: [DescribeDBSecurityGroups](https://cloud.tencent.com/document/api/1003/48305) - 查询实例安全组信息
-* Update: [DescribeClusterDetail](https://cloud.tencent.com/document/api/1003/48086) - 集群信息描述
-* Update: [DescribeClusterInstanceGrps](https://cloud.tencent.com/document/api/1003/48303) - 查询实例组（废弃）
-* Update: [DescribeClusters](https://cloud.tencent.com/document/api/1003/48085) - 查询集群列表
-* Update: [ModifyDBInstanceSecurityGroups](https://cloud.tencent.com/document/api/1003/48096) - 修改实例绑定安全组
-* Delete: [DescribeClusterDetail](https://cloud.tencent.com/document/api/1003/48086) - 集群信息描述
-* Delete: [DescribeClusterInstanceGrps](https://cloud.tencent.com/document/api/1003/48303) - 查询实例组（废弃）
-* Delete: [DescribeClusters](https://cloud.tencent.com/document/api/1003/48085) - 查询集群列表
-* Delete: [DescribeDBSecurityGroups](https://cloud.tencent.com/document/api/1003/48305) - 查询实例安全组信息
-* Delete: [DisassociateSecurityGroups](https://cloud.tencent.com/document/api/1003/70117) - 安全组批量解绑云资源
+* Create: [DescribeClusterDetail](https://cloud.tencent.com/document/api/1003/48086) - This API is used to display cluster details.
+* Create: [DescribeClusterInstanceGrps](https://cloud.tencent.com/document/api/1003/48303) - This API is used to query instance groups.
+* Create: [DescribeClusters](https://cloud.tencent.com/document/api/1003/48085) - This API is used to describe clusters.
+* Create: [ModifyDBInstanceSecurityGroups](https://cloud.tencent.com/document/api/1003/48096) - This API is used to modify the security group bound to the instance.
+* Read: [DescribeClusterInstanceGrps](https://cloud.tencent.com/document/api/1003/48303) - This API is used to query instance groups.
+* Read: [DescribeDBSecurityGroups](https://cloud.tencent.com/document/api/1003/48305) - This API is used to query instance security group information.
+* Update: [DescribeClusterDetail](https://cloud.tencent.com/document/api/1003/48086) - This API is used to display cluster details.
+* Update: [DescribeClusterInstanceGrps](https://cloud.tencent.com/document/api/1003/48303) - This API is used to query instance groups.
+* Update: [DescribeClusters](https://cloud.tencent.com/document/api/1003/48085) - This API is used to describe clusters.
+* Update: [ModifyDBInstanceSecurityGroups](https://cloud.tencent.com/document/api/1003/48096) - This API is used to modify the security group bound to the instance.
+* Delete: [DescribeClusterDetail](https://cloud.tencent.com/document/api/1003/48086) - This API is used to display cluster details.
+* Delete: [DescribeClusterInstanceGrps](https://cloud.tencent.com/document/api/1003/48303) - This API is used to query instance groups.
+* Delete: [DescribeClusters](https://cloud.tencent.com/document/api/1003/48085) - This API is used to describe clusters.
+* Delete: [DescribeDBSecurityGroups](https://cloud.tencent.com/document/api/1003/48305) - This API is used to query instance security group information.
+* Delete: [DisassociateSecurityGroups](https://cloud.tencent.com/document/api/1003/70117) - This API is used to unbind cloud resources from security groups in batches.
 
 ## Import
 

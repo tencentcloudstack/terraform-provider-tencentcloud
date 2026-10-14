@@ -53,5 +53,5 @@ In addition to all arguments above, the following attributes are exported:
 
 This data source queries the following TencentCloud APIs:
 
-* Read: [ListAsyncEvents](https://cloud.tencent.com/document/api/583/52501) - 拉取函数异步事件列表
+* Read: [ListAsyncEvents](https://cloud.tencent.com/document/api/583/52501) - This API is used to pull the list of async function events.
 

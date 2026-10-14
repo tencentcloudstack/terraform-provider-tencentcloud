@@ -42,5 +42,5 @@ In addition to all arguments above, the following attributes are exported:
 
 This data source queries the following TencentCloud APIs:
 
-* Read: [DescribeAccessRegions](https://cloud.tencent.com/document/api/608/36966) - 查询加速区域
+* Read: [DescribeAccessRegions](https://cloud.tencent.com/document/api/608/36966) - This API (DescribeAccessRegions) is used to query acceleration region (client access region).
 

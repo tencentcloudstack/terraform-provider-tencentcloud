@@ -64,5 +64,5 @@ In addition to all arguments above, the following attributes are exported:
 
 This data source queries the following TencentCloud APIs:
 
-* Read: [DescribeDBInstanceSecurityGroups](https://cloud.tencent.com/document/api/409/84064) - 查询实例安全组
+* Read: [DescribeDBInstanceSecurityGroups](https://cloud.tencent.com/document/api/409/84064) - This API is used to query the security group of an instance.
 

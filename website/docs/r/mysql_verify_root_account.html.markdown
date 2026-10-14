@@ -87,6 +87,6 @@ In addition to all arguments above, the following attributes are exported:
 
 This resource interacts with the following TencentCloud APIs:
 
-* Create: [DescribeAsyncRequestInfo](https://cloud.tencent.com/document/api/236/20410) - 查询异步任务的执行结果
-* Create: [VerifyRootAccount](https://cloud.tencent.com/document/api/236/17495) - 验证root账号权限
+* Create: [DescribeAsyncRequestInfo](https://cloud.tencent.com/document/api/236/20410) - This API (DescribeAsyncRequestInfo) is used to query the async task execution result of a TencentDB instance.
+* Create: [VerifyRootAccount](https://cloud.tencent.com/document/api/236/17495)
 

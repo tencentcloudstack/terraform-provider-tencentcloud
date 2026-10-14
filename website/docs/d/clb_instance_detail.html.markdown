@@ -90,5 +90,5 @@ In addition to all arguments above, the following attributes are exported:
 
 This data source queries the following TencentCloud APIs:
 
-* Read: [DescribeLoadBalancersDetail](https://cloud.tencent.com/document/api/214/46916) - 查询负载均衡详细信息
+* Read: [DescribeLoadBalancersDetail](https://cloud.tencent.com/document/api/214/46916) - This API is used to query CLB instance details, including listener, rules, and target real servers.
 

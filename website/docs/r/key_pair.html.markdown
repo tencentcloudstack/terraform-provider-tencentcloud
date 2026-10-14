@@ -54,16 +54,16 @@ In addition to all arguments above, the following attributes are exported:
 
 This resource interacts with the following TencentCloud APIs:
 
-* Create: [CreateKeyPair](https://cloud.tencent.com/document/api/213/15702) - 创建密钥对
-* Create: [ImportKeyPair](https://cloud.tencent.com/document/api/213/15703) - 导入密钥对
-* Create: [ModifyResourceTags](https://cloud.tencent.com/document/api/651/35322) - 批量修改资源关联的标签
-* Read: [DescribeKeyPairs](https://cloud.tencent.com/document/api/213/15699) - 查询密钥对列表
-* Read: [DescribeResourceTagsByResourceIds](https://cloud.tencent.com/document/api/651/35319) - 批量查看资源关联的标签
-* Update: [ModifyKeyPairAttribute](https://cloud.tencent.com/document/api/213/15701) - 修改密钥对属性
-* Update: [ModifyResourceTags](https://cloud.tencent.com/document/api/651/35322) - 批量修改资源关联的标签
-* Delete: [DeleteKeyPairs](https://cloud.tencent.com/document/api/213/15700) - 删除密钥对
-* Delete: [DescribeKeyPairs](https://cloud.tencent.com/document/api/213/15699) - 查询密钥对列表
-* Delete: [DisassociateInstancesKeyPairs](https://cloud.tencent.com/document/api/213/15697) - 解绑密钥对
+* Create: [CreateKeyPair](https://cloud.tencent.com/document/api/213/15702) - This API is used to create an `OpenSSH RSA` key pair, which you can use to log in to a `Linux` instance.
+* Create: [ImportKeyPair](https://cloud.tencent.com/document/api/213/15703) - This API is used to import key pairs.
+* Create: [ModifyResourceTags](https://cloud.tencent.com/document/api/651/35322) - This API is used to modify all tags associated with a resource.
+* Read: [DescribeKeyPairs](https://cloud.tencent.com/document/api/213/15699) - This API is used to query key pairs.
+* Read: [DescribeResourceTagsByResourceIds](https://cloud.tencent.com/document/api/651/35319) - This API is used to query the tag key-value pairs associated with an existing resource.
+* Update: [ModifyKeyPairAttribute](https://cloud.tencent.com/document/api/213/15701) - This API is used to modify attributes of a key pair.
+* Update: [ModifyResourceTags](https://cloud.tencent.com/document/api/651/35322) - This API is used to modify all tags associated with a resource.
+* Delete: [DeleteKeyPairs](https://cloud.tencent.com/document/api/213/15700) - This API is used to delete the key pairs hosted in Tencent Cloud.
+* Delete: [DescribeKeyPairs](https://cloud.tencent.com/document/api/213/15699) - This API is used to query key pairs.
+* Delete: [DisassociateInstancesKeyPairs](https://cloud.tencent.com/document/api/213/15697) - This API is used to unbind one or more key pairs from one or more instances.
 
 ## Import
 

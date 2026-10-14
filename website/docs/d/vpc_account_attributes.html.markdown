@@ -35,5 +35,5 @@ In addition to all arguments above, the following attributes are exported:
 
 This data source queries the following TencentCloud APIs:
 
-* Read: [DescribeAccountAttributes](https://cloud.tencent.com/document/api/215/17875) - 查询账户属性
+* Read: [DescribeAccountAttributes](https://cloud.tencent.com/document/api/215/17875) - This API (DescribeAccountAttributes) is used to query your account attributes.
 

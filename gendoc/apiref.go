@@ -74,6 +74,8 @@ type apiAnalyzer struct {
 	clientProd map[string]string
 	// actionIdx maps "<product>.<action>" -> catalog entry.
 	actionIdx map[string]apiAction
+	// enIndex maps "<lowercase product>.<action>" -> English description.
+	enIndex map[string]string
 	// knownClients is the set of lowercase accessor names with a product.
 	knownClients map[string]bool
 
@@ -93,6 +95,7 @@ func newAPIAnalyzer(repoRoot string, cat *catalog) (*apiAnalyzer, error) {
 	if cat == nil {
 		cat = loadCatalog(nil)
 	}
+	enIndex := loadENIndex()
 	known := map[string]bool{}
 	for c := range clientProd {
 		known[c] = true
@@ -103,6 +106,7 @@ func newAPIAnalyzer(repoRoot string, cat *catalog) (*apiAnalyzer, error) {
 		servicesRoot: filepath.Join(repoRoot, "tencentcloud", "services"),
 		clientProd:   clientProd,
 		actionIdx:    cat.actionIdx,
+		enIndex:      enIndex,
 		knownClients: known,
 		methodIndex:  map[string][]serviceMethod{},
 		parsedFiles:  map[string]*ast.File{},
@@ -394,7 +398,9 @@ type apiCallKey struct {
 	action string // SDK method == cloud API action (e.g. "CreateVpc")
 }
 
-// resolveAPI turns a call key into a catalog-backed apiRef. Returns nil when
+// resolveAPI turns a call key into a catalog-backed apiRef. The Name field
+// carries the English description when the intl SDK snapshot has one;
+// generated docs never contain the Chinese catalog names. Returns nil when
 // the (client, action) pair has no catalog entry.
 func (a *apiAnalyzer) resolveAPI(k apiCallKey) *apiRef {
 	prod := a.clientProd[k.client]
@@ -405,7 +411,12 @@ func (a *apiAnalyzer) resolveAPI(k apiCallKey) *apiRef {
 	if !ok {
 		return nil
 	}
-	return &apiRef{Product: prod, Action: act.Action, Name: act.Name, URL: act.URL}
+	return &apiRef{
+		Product: prod,
+		Action:  act.Action,
+		Name:    a.enIndex[strings.ToLower(prod)+"."+act.Action],
+		URL:     act.URL,
+	}
 }
 
 // recvTypeName extracts the receiver type name from a receiver field type
@@ -545,9 +556,12 @@ func renderAPIRefsLead(lead string, dtype string, refs map[string][]apiRef) stri
 		list := refs[v]
 		sort.Slice(list, func(i, j int) bool { return list[i].Action < list[j].Action })
 		for _, r := range list {
-			if r.URL != "" {
+			switch {
+			case r.URL != "" && r.Name != "":
 				fmt.Fprintf(&b, "* %s: [%s](%s) - %s\n", v, r.Action, r.URL, r.Name)
-			} else {
+			case r.URL != "":
+				fmt.Fprintf(&b, "* %s: [%s](%s)\n", v, r.Action, r.URL)
+			default:
 				fmt.Fprintf(&b, "* %s: `%s`\n", v, r.Action)
 			}
 		}

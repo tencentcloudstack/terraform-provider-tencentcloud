@@ -108,21 +108,21 @@ In addition to all arguments above, the following attributes are exported:
 
 This resource interacts with the following TencentCloud APIs:
 
-* Create: [CreateCloudDBInstances](https://cloud.tencent.com/document/api/238/91710) - 创建高可用实例 (云盘)
-* Create: [DescribeFlowStatus](https://cloud.tencent.com/document/api/238/19967) - 查询流程状态
-* Create: [DescribeOrders](https://cloud.tencent.com/document/api/238/19937) - 查询订单信息
-* Create: [ModifyDBInstanceName](https://cloud.tencent.com/document/api/238/19958) - 修改实例名字
-* Read: [DescribeDBInstances](https://cloud.tencent.com/document/api/238/19969) - 查询实例列表
-* Read: [DescribeDBInstancesAttribute](https://cloud.tencent.com/document/api/238/90299) - 查询实例附属属性
-* Read: [DescribeDBSecurityGroups](https://cloud.tencent.com/document/api/238/46812) - 查询实例安全组信息
-* Read: [DescribeMaintenanceSpan](https://cloud.tencent.com/document/api/238/46283) - 查询该实例的可维护时间窗
-* Update: [DescribeFlowStatus](https://cloud.tencent.com/document/api/238/19967) - 查询流程状态
-* Update: [DescribeOrders](https://cloud.tencent.com/document/api/238/19937) - 查询订单信息
-* Update: [ModifyDBInstanceName](https://cloud.tencent.com/document/api/238/19958) - 修改实例名字
-* Update: [UpgradeDBInstance](https://cloud.tencent.com/document/api/238/19948) - 升级实例
-* Delete: [DeleteDBInstance](https://cloud.tencent.com/document/api/238/46806) - 立即下线实例
-* Delete: [DescribeDBInstances](https://cloud.tencent.com/document/api/238/19969) - 查询实例列表
-* Delete: [TerminateDBInstance](https://cloud.tencent.com/document/api/238/38210) - 主动隔离实例
+* Create: [CreateCloudDBInstances](https://cloud.tencent.com/document/api/238/91710) - This API is used to create high-availability instances (cloud disk).
+* Create: [DescribeFlowStatus](https://cloud.tencent.com/document/api/238/19967) - This API is used to query flow status.
+* Create: [DescribeOrders](https://cloud.tencent.com/document/api/238/19937) - This API is used to query order information.
+* Create: [ModifyDBInstanceName](https://cloud.tencent.com/document/api/238/19958) - This API is used to rename an instance.
+* Read: [DescribeDBInstances](https://cloud.tencent.com/document/api/238/19969) - This API is used to query the list of instances.
+* Read: [DescribeDBInstancesAttribute](https://cloud.tencent.com/document/api/238/90299) - This API is used to query the attributes of an instance.
+* Read: [DescribeDBSecurityGroups](https://cloud.tencent.com/document/api/238/46812) - This API is used to query the security group details of instances.
+* Read: [DescribeMaintenanceSpan](https://cloud.tencent.com/document/api/238/46283) - This API is used to query the maintenance time window of an instance based on its instance ID.
+* Update: [DescribeFlowStatus](https://cloud.tencent.com/document/api/238/19967) - This API is used to query flow status.
+* Update: [DescribeOrders](https://cloud.tencent.com/document/api/238/19937) - This API is used to query order information.
+* Update: [ModifyDBInstanceName](https://cloud.tencent.com/document/api/238/19958) - This API is used to rename an instance.
+* Update: [UpgradeDBInstance](https://cloud.tencent.com/document/api/238/19948) - This API is used to upgrade an instance.
+* Delete: [DeleteDBInstance](https://cloud.tencent.com/document/api/238/46806) - This API is used to release SQL server instances (eliminated immediately) in the recycle bin. The released instances will be physically terminated after being retained for a period of time. Their publish-subscribe relationships will be automatically disassociated, and their RO replicas will be automatically released.
+* Delete: [DescribeDBInstances](https://cloud.tencent.com/document/api/238/19969) - This API is used to query the list of instances.
+* Delete: [TerminateDBInstance](https://cloud.tencent.com/document/api/238/38210) - This API is used to isolate an instance to move it into a recycle bin.
 
 ## Import
 

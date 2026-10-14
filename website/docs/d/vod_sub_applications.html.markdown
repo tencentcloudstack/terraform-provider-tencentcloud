@@ -100,5 +100,5 @@ In addition to all arguments above, the following attributes are exported:
 
 This data source queries the following TencentCloud APIs:
 
-* Read: [DescribeSubAppIds](https://cloud.tencent.com/document/api/266/36304) - 查询应用列表
+* Read: [DescribeSubAppIds](https://cloud.tencent.com/document/api/266/36304) - This API is used to get the application list of the current account.
 

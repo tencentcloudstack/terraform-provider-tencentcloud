@@ -38,5 +38,5 @@ In addition to all arguments above, the following attributes are exported:
 
 This data source queries the following TencentCloud APIs:
 
-* Read: [DescribeRegions](https://cloud.tencent.com/document/api/409/16768) - 查询售卖地域
+* Read: [DescribeRegions](https://cloud.tencent.com/document/api/409/16768) - This API is used to query the purchasable regions.
 

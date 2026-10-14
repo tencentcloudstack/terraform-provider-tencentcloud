@@ -65,9 +65,9 @@ In addition to all arguments above, the following attributes are exported:
 
 This resource interacts with the following TencentCloud APIs:
 
-* Create: [CreateDomainErrorPageInfo](https://cloud.tencent.com/document/api/608/39347) - 定制域名指定错误码的错误响应
-* Create: [DescribeDomainErrorPageInfoByIds](https://cloud.tencent.com/document/api/608/40489) - 根据定制错误ID查询错误响应
-* Read: [DescribeDomainErrorPageInfo](https://cloud.tencent.com/document/api/608/39345) - 查询目前定制域名的错误响应
-* Delete: [DeleteDomainErrorPageInfo](https://cloud.tencent.com/document/api/608/39346) - 删除域名的定制错误
-* Delete: [DescribeDomainErrorPageInfoByIds](https://cloud.tencent.com/document/api/608/40489) - 根据定制错误ID查询错误响应
+* Create: [CreateDomainErrorPageInfo](https://cloud.tencent.com/document/api/608/39347) - This API is used to customize the error code of an error response to the specified domain name.
+* Create: [DescribeDomainErrorPageInfoByIds](https://cloud.tencent.com/document/api/608/40489) - This API is used to query the corresponding error response by a custom error ID.
+* Read: [DescribeDomainErrorPageInfo](https://cloud.tencent.com/document/api/608/39345) - This API is used to query the custom error response to a domain name.
+* Delete: [DeleteDomainErrorPageInfo](https://cloud.tencent.com/document/api/608/39346) - This API is used to delete a custom error code for a domain name.
+* Delete: [DescribeDomainErrorPageInfoByIds](https://cloud.tencent.com/document/api/608/40489) - This API is used to query the corresponding error response by a custom error ID.
 

@@ -38,6 +38,6 @@ In addition to all arguments above, the following attributes are exported:
 
 This resource interacts with the following TencentCloud APIs:
 
-* Create: [GetOpsAsyncJob](https://cloud.tencent.com/document/api/1267/123587) - 查询运维中心异步操作详情
-* Create: [KillTaskInstancesAsync](https://cloud.tencent.com/document/api/1267/123581) - 实例批量终止操作(异步)
+* Create: [GetOpsAsyncJob](https://cloud.tencent.com/document/api/1267/123587) - This API is used to query async operation details in Ops center.
+* Create: [KillTaskInstancesAsync](https://cloud.tencent.com/document/api/1267/123581) - This API is used to terminate instances in batches asynchronously.
 

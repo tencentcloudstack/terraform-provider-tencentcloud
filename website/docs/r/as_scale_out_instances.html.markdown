@@ -78,7 +78,7 @@ In addition to all arguments above, the following attributes are exported:
 
 This resource interacts with the following TencentCloud APIs:
 
-* Create: [ScaleOutInstances](https://cloud.tencent.com/document/api/377/56369) - 指定数量扩容实例
+* Create: [ScaleOutInstances](https://cloud.tencent.com/document/api/377/56369) - This API is used to add the specified number of instances to a scaling group. It returns the scaling activity ID `ActivityId`.
 
 ## Import
 

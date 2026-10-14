@@ -40,5 +40,5 @@ In addition to all arguments above, the following attributes are exported:
 
 This data source queries the following TencentCloud APIs:
 
-* Read: [DescribeServiceEnvironmentList](https://cloud.tencent.com/document/api/628/45198) - 查询服务环境列表
+* Read: [DescribeServiceEnvironmentList](https://cloud.tencent.com/document/api/628/45198) - This API is used to query the list of environments under a service. All environments and their statuses under the queried service will be returned.
 

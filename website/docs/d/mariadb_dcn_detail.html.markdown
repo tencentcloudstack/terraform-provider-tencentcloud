@@ -63,5 +63,5 @@ In addition to all arguments above, the following attributes are exported:
 
 This data source queries the following TencentCloud APIs:
 
-* Read: [DescribeDcnDetail](https://cloud.tencent.com/document/api/237/56347) - 获取实例灾备详情
+* Read: [DescribeDcnDetail](https://cloud.tencent.com/document/api/237/56347) - This API is used to query the disaster recovery details of an instance.
 

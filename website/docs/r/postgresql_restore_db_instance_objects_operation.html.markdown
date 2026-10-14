@@ -60,6 +60,6 @@ The `timeouts` block allows you to specify [timeouts](https://developer.hashicor
 
 This resource interacts with the following TencentCloud APIs:
 
-* Create: [DescribeTasks](https://cloud.tencent.com/document/api/409/116177) - 查询任务列表
-* Create: [RestoreDBInstanceObjects](https://cloud.tencent.com/document/api/409/107100) - 恢复数据库对象
+* Create: [DescribeTasks](https://cloud.tencent.com/document/api/409/116177) - This API is used to query the task list and show the progress of async task execution.
+* Create: [RestoreDBInstanceObjects](https://cloud.tencent.com/document/api/409/107100) - This API is used to recover database-related objects such as databases and tables on the original instance based on the backup set or recovery target time.
 

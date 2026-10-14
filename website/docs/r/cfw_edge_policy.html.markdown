@@ -76,10 +76,10 @@ In addition to all arguments above, the following attributes are exported:
 
 This resource interacts with the following TencentCloud APIs:
 
-* Create: [AddAclRule](https://cloud.tencent.com/document/api/1132/97847) - 新增互联网边界访问控制规则
-* Read: [DescribeAclRule](https://cloud.tencent.com/document/api/1132/97845) - 查询互联网边界访问控制列表
-* Update: [ModifyAclRule](https://cloud.tencent.com/document/api/1132/97843) - 修改互联网边界访问控制规则
-* Delete: [RemoveAclRule](https://cloud.tencent.com/document/api/1132/97838) - 删除互联网边界访问控制规则
+* Create: [AddAclRule](https://cloud.tencent.com/document/api/1132/97847) - Add one or more Internet Boundary Access Control Rules.
+* Read: [DescribeAclRule](https://cloud.tencent.com/document/api/1132/97845)
+* Update: [ModifyAclRule](https://cloud.tencent.com/document/api/1132/97843)
+* Delete: [RemoveAclRule](https://cloud.tencent.com/document/api/1132/97838)
 
 ## Import
 

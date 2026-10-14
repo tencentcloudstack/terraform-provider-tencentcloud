@@ -88,7 +88,7 @@ The `timeouts` block allows you to specify [timeouts](https://developer.hashicor
 
 This resource interacts with the following TencentCloud APIs:
 
-* Create: [EnableEncryptionProtection](https://cloud.tencent.com/document/api/457/94083) - 开启加密数据保护
-* Read: [DescribeEncryptionStatus](https://cloud.tencent.com/document/api/457/94085) - 查询信息加密状态
-* Delete: [DisableEncryptionProtection](https://cloud.tencent.com/document/api/457/94084) - 关闭加密信息保护
+* Create: [EnableEncryptionProtection](https://cloud.tencent.com/document/api/457/94083) - This API is used to enable Encrypted Data Protection, which requires enabling KMS capability and completing KMS authorization.
+* Read: [DescribeEncryptionStatus](https://cloud.tencent.com/document/api/457/94085) - This API is used to query the encryption status of etcd data.
+* Delete: [DisableEncryptionProtection](https://cloud.tencent.com/document/api/457/94084) - This API is used to disable encryption protection.
 

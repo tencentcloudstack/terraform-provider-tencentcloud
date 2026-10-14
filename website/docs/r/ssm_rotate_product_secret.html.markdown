@@ -36,6 +36,6 @@ In addition to all arguments above, the following attributes are exported:
 
 This resource interacts with the following TencentCloud APIs:
 
-* Create: [DescribeAsyncRequestInfo](https://cloud.tencent.com/document/api/1140/58265) - 查询异步任务的执行结果
-* Create: [RotateProductSecret](https://cloud.tencent.com/document/api/1140/58262) - 轮转云产品凭据
+* Create: [DescribeAsyncRequestInfo](https://cloud.tencent.com/document/api/1140/58265) - This API is used to query the execution result of an async task.
+* Create: [RotateProductSecret](https://cloud.tencent.com/document/api/1140/58262) - This API is used to rotate secrets for Tencent Cloud services or Tencent Cloud API key pairs.
 

@@ -157,13 +157,13 @@ The `timeouts` block allows you to specify [timeouts](https://developer.hashicor
 
 This resource interacts with the following TencentCloud APIs:
 
-* Create: [CreateCloneInstance](https://cloud.tencent.com/document/api/236/50424) - 创建克隆实例
-* Create: [DescribeAsyncRequestInfo](https://cloud.tencent.com/document/api/236/20410) - 查询异步任务的执行结果
-* Create: [DescribeCloneList](https://cloud.tencent.com/document/api/236/50423) - 查询克隆任务列表
-* Read: [DescribeDBInstances](https://cloud.tencent.com/document/api/236/15872) - 查询实例列表
-* Update: [DescribeAsyncRequestInfo](https://cloud.tencent.com/document/api/236/20410) - 查询异步任务的执行结果
-* Update: [UpgradeDBInstance](https://cloud.tencent.com/document/api/236/15876) - 调整云数据库实例的配置
-* Delete: [DescribeDBInstances](https://cloud.tencent.com/document/api/236/15872) - 查询实例列表
-* Delete: [IsolateDBInstance](https://cloud.tencent.com/document/api/236/15869) - 隔离云数据库实例
-* Delete: [OfflineIsolatedInstances](https://cloud.tencent.com/document/api/236/36197) - 下线隔离状态的云数据库实例
+* Create: [CreateCloneInstance](https://cloud.tencent.com/document/api/236/50424) - This API is used to create a clone instance from the source instance. You can specify a physical backup file or a rollback time point for the clone instance.
+* Create: [DescribeAsyncRequestInfo](https://cloud.tencent.com/document/api/236/20410) - This API (DescribeAsyncRequestInfo) is used to query the async task execution result of a TencentDB instance.
+* Create: [DescribeCloneList](https://cloud.tencent.com/document/api/236/50423) - This API is used to query the clone task list of a user instance.
+* Read: [DescribeDBInstances](https://cloud.tencent.com/document/api/236/15872) - This API is used to query the list of TencentDB for MySQL instances. It supports filtering instances by conditions such as project ID, instance ID, access address, and instance status. It also supports querying the list of information about primary instances, disaster recovery instances, and read-only instances.
+* Update: [DescribeAsyncRequestInfo](https://cloud.tencent.com/document/api/236/20410) - This API (DescribeAsyncRequestInfo) is used to query the async task execution result of a TencentDB instance.
+* Update: [UpgradeDBInstance](https://cloud.tencent.com/document/api/236/15876) - This API is used to upgrade or downgrade the configuration of a cloud database instance. Supported instance types include primary instance, disaster recovery instance and read-only instance. If you need to migrate business, fill in the instance specification (CPU, memory), otherwise the system will use the minimum allowed specification by default.
+* Delete: [DescribeDBInstances](https://cloud.tencent.com/document/api/236/15872) - This API is used to query the list of TencentDB for MySQL instances. It supports filtering instances by conditions such as project ID, instance ID, access address, and instance status. It also supports querying the list of information about primary instances, disaster recovery instances, and read-only instances.
+* Delete: [IsolateDBInstance](https://cloud.tencent.com/document/api/236/15869) - This API is used to isolate a cloud database instance. After an instance is isolated, you cannot access the database via IP and port. The isolated instance can be started in the recycle bin. If the instance is isolated due to arrears, please recharge as soon as possible.
+* Delete: [OfflineIsolatedInstances](https://cloud.tencent.com/document/api/236/36197) - This api is used to deactivate cloud database instances in quarantined state now. The instance Status for row operations must be quarantined state, such as instances with Status value 5 queried through the query instance list api.
 

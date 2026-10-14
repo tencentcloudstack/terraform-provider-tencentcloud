@@ -44,5 +44,5 @@ In addition to all arguments above, the following attributes are exported:
 
 This data source queries the following TencentCloud APIs:
 
-* Read: [SearchClusterTables](https://cloud.tencent.com/document/api/1003/83593) - 搜索集群数据表列表
+* Read: [SearchClusterTables](https://cloud.tencent.com/document/api/1003/83593) - This API is used to search cluster data table lists.
 

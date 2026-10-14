@@ -46,5 +46,5 @@ In addition to all arguments above, the following attributes are exported:
 
 This data source queries the following TencentCloud APIs:
 
-* Read: [DescribeBackupStreamList](https://cloud.tencent.com/document/api/267/100422) - 查询直播中的主备流
+* Read: [DescribeBackupStreamList](https://cloud.tencent.com/document/api/267/100422)
 

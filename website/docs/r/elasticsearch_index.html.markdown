@@ -42,10 +42,10 @@ In addition to all arguments above, the following attributes are exported:
 
 This resource interacts with the following TencentCloud APIs:
 
-* Create: [CreateIndex](https://cloud.tencent.com/document/api/845/74384) - 创建索引
-* Read: [DescribeIndexMeta](https://cloud.tencent.com/document/api/845/74381) - 获取索引元数据
-* Update: [UpdateIndex](https://cloud.tencent.com/document/api/845/74380) - 更新索引
-* Delete: [DeleteIndex](https://cloud.tencent.com/document/api/845/74383) - 删除索引
+* Create: [CreateIndex](https://cloud.tencent.com/document/api/845/74384) - This API is used to create indices.
+* Read: [DescribeIndexMeta](https://cloud.tencent.com/document/api/845/74381) - This API is used to obtain index metadata.
+* Update: [UpdateIndex](https://cloud.tencent.com/document/api/845/74380) - This API is used to update indices.
+* Delete: [DeleteIndex](https://cloud.tencent.com/document/api/845/74383) - This API is used to delete indices.
 
 ## Import
 

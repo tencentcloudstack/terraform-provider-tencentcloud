@@ -52,6 +52,6 @@ In addition to all arguments above, the following attributes are exported:
 
 This resource interacts with the following TencentCloud APIs:
 
-* Create: [DescribeImages](https://cloud.tencent.com/document/api/213/15715) - 查看镜像列表
-* Create: [SyncImages](https://cloud.tencent.com/document/api/213/15711) - 同步镜像
+* Create: [DescribeImages](https://cloud.tencent.com/document/api/213/15715) - This API is used to view the list of images.
+* Create: [SyncImages](https://cloud.tencent.com/document/api/213/15711) - This API is used to synchronize custom images to other regions.
 

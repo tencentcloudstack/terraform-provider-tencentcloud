@@ -104,5 +104,5 @@ In addition to all arguments above, the following attributes are exported:
 
 This data source queries the following TencentCloud APIs:
 
-* Read: [DescribeConditionsTemplateList](https://cloud.tencent.com/document/api/248/70250) - 获取条件模板列表
+* Read: [DescribeConditionsTemplateList](https://cloud.tencent.com/document/api/248/70250) - This API is used to get the trigger condition template.
 

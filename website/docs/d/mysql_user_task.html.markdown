@@ -56,5 +56,5 @@ In addition to all arguments above, the following attributes are exported:
 
 This data source queries the following TencentCloud APIs:
 
-* Read: [DescribeTasks](https://cloud.tencent.com/document/api/236/15848) - 查询云数据库实例任务列表
+* Read: [DescribeTasks](https://cloud.tencent.com/document/api/236/15848) - This API (DescribeTasks) is used to query the list of tasks for a TencentDB instance.
 

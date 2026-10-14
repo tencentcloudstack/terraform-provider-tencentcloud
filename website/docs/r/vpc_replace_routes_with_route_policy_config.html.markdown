@@ -51,7 +51,7 @@ In addition to all arguments above, the following attributes are exported:
 
 This resource interacts with the following TencentCloud APIs:
 
-* Create: [ReplaceRoutesWithRoutePolicy](https://cloud.tencent.com/document/api/215/127350) - 匹配路由接收策略
-* Read: [DescribeRouteTables](https://cloud.tencent.com/document/api/215/15763) - 查询路由表
-* Update: [ReplaceRoutesWithRoutePolicy](https://cloud.tencent.com/document/api/215/127350) - 匹配路由接收策略
+* Create: [ReplaceRoutesWithRoutePolicy](https://cloud.tencent.com/document/api/215/127350) - This API (ReplaceRoutes) modifies the specified routing policy (Route) based on the routing policy ID (RouteId), supporting batch modifications.
+* Read: [DescribeRouteTables](https://cloud.tencent.com/document/api/215/15763) - This API is used to query route tables.
+* Update: [ReplaceRoutesWithRoutePolicy](https://cloud.tencent.com/document/api/215/127350) - This API (ReplaceRoutes) modifies the specified routing policy (Route) based on the routing policy ID (RouteId), supporting batch modifications.
 

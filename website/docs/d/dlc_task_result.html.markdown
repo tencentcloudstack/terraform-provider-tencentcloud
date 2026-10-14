@@ -40,5 +40,5 @@ Note: This field may return null, indicating that no valid values can be obtaine
 
 This data source queries the following TencentCloud APIs:
 
-* Read: [DescribeTaskResult](https://cloud.tencent.com/document/api/1342/66644) - 查询任务结果(用于: SparkSQL、PrestoSQL)
+* Read: [DescribeTaskResult](https://cloud.tencent.com/document/api/1342/66644) - This API is used to query the result of a task.
 

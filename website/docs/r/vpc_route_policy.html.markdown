@@ -38,10 +38,10 @@ In addition to all arguments above, the following attributes are exported:
 
 This resource interacts with the following TencentCloud APIs:
 
-* Create: [CreateRoutePolicy](https://cloud.tencent.com/document/api/215/124430) - 创建路由策略及策略条目。
-* Read: [DescribeRoutePolicies](https://cloud.tencent.com/document/api/215/126466) - 用户查询路由策略列表
-* Update: [ModifyRoutePolicyAttribute](https://cloud.tencent.com/document/api/215/124423) - 修改路由策略属性
-* Delete: [DeleteRoutePolicy](https://cloud.tencent.com/document/api/215/124427) - 删除路由接收策略和条目。
+* Create: [CreateRoutePolicy](https://cloud.tencent.com/document/api/215/124430) - This API is used to create a VPC route reception policy, including name, description and policy entries.
+* Read: [DescribeRoutePolicies](https://cloud.tencent.com/document/api/215/126466)
+* Update: [ModifyRoutePolicyAttribute](https://cloud.tencent.com/document/api/215/124423) - This API is used to modify the route reception policy attribute.
+* Delete: [DeleteRoutePolicy](https://cloud.tencent.com/document/api/215/124427) - This API is used to delete a route reception policy and entries.
 
 ## Import
 

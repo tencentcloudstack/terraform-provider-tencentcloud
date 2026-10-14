@@ -40,10 +40,10 @@ In addition to all arguments above, the following attributes are exported:
 
 This resource interacts with the following TencentCloud APIs:
 
-* Create: [CreateRoutePolicyAssociations](https://cloud.tencent.com/document/api/215/124429) - 创建路由接收策略绑定
-* Read: [DescribeRoutePolicies](https://cloud.tencent.com/document/api/215/126466) - 用户查询路由策略列表
-* Update: [ResetRoutePolicyAssociations](https://cloud.tencent.com/document/api/215/124420) - 重置路由策略绑定
-* Delete: [DeleteRoutePolicyAssociations](https://cloud.tencent.com/document/api/215/124426) - 删除路由接收策略绑定
+* Create: [CreateRoutePolicyAssociations](https://cloud.tencent.com/document/api/215/124429) - This API is used to create route reception policy bindings (the binding relationship between policy instances and route table instances as well as set priorities).
+* Read: [DescribeRoutePolicies](https://cloud.tencent.com/document/api/215/126466)
+* Update: [ResetRoutePolicyAssociations](https://cloud.tencent.com/document/api/215/124420) - This API is used to unbind the routing policy instance already bound to a specific route table instance, set up alarms for the new binding routing policy and priority.
+* Delete: [DeleteRoutePolicyAssociations](https://cloud.tencent.com/document/api/215/124426) - This API is used to delete route reception policy bindings (the binding relationship between route reception policy objects and route tables).
 
 ## Import
 

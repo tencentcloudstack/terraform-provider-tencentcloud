@@ -79,14 +79,14 @@ The `timeouts` block allows you to specify [timeouts](https://developer.hashicor
 
 This resource interacts with the following TencentCloud APIs:
 
-* Create: [CreateAliasDomain](https://cloud.tencent.com/document/api/1552/81247) - 创建别称域名
-* Create: [DescribeAliasDomains](https://cloud.tencent.com/document/api/1552/81245) - 查询别称域名信息列表
-* Create: [ModifyAliasDomainStatus](https://cloud.tencent.com/document/api/1552/81243) - 修改别称域名状态
-* Read: [DescribeAliasDomains](https://cloud.tencent.com/document/api/1552/81245) - 查询别称域名信息列表
-* Update: [DescribeAliasDomains](https://cloud.tencent.com/document/api/1552/81245) - 查询别称域名信息列表
-* Update: [ModifyAliasDomain](https://cloud.tencent.com/document/api/1552/81244) - 修改别称域名
-* Update: [ModifyAliasDomainStatus](https://cloud.tencent.com/document/api/1552/81243) - 修改别称域名状态
-* Delete: [DeleteAliasDomain](https://cloud.tencent.com/document/api/1552/81246) - 删除别称域名
-* Delete: [DescribeAliasDomains](https://cloud.tencent.com/document/api/1552/81245) - 查询别称域名信息列表
-* Delete: [ModifyAliasDomainStatus](https://cloud.tencent.com/document/api/1552/81243) - 修改别称域名状态
+* Create: [CreateAliasDomain](https://cloud.tencent.com/document/api/1552/81247) - This API is used to create an alias domain name.
+* Create: [DescribeAliasDomains](https://cloud.tencent.com/document/api/1552/81245) - This API is used to query the alias domain name information list.
+* Create: [ModifyAliasDomainStatus](https://cloud.tencent.com/document/api/1552/81243) - This API is used to modify the status of an alias domain name.
+* Read: [DescribeAliasDomains](https://cloud.tencent.com/document/api/1552/81245) - This API is used to query the alias domain name information list.
+* Update: [DescribeAliasDomains](https://cloud.tencent.com/document/api/1552/81245) - This API is used to query the alias domain name information list.
+* Update: [ModifyAliasDomain](https://cloud.tencent.com/document/api/1552/81244) - This API is used to modify an alias domain name.
+* Update: [ModifyAliasDomainStatus](https://cloud.tencent.com/document/api/1552/81243) - This API is used to modify the status of an alias domain name.
+* Delete: [DeleteAliasDomain](https://cloud.tencent.com/document/api/1552/81246) - This API is used to delete an alias domain name.
+* Delete: [DescribeAliasDomains](https://cloud.tencent.com/document/api/1552/81245) - This API is used to query the alias domain name information list.
+* Delete: [ModifyAliasDomainStatus](https://cloud.tencent.com/document/api/1552/81243) - This API is used to modify the status of an alias domain name.
 

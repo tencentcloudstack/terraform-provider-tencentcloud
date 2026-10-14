@@ -44,5 +44,5 @@ In addition to all arguments above, the following attributes are exported:
 
 This data source queries the following TencentCloud APIs:
 
-* Read: [DescribeIdleLoadBalancers](https://cloud.tencent.com/document/api/214/79718) - 查询负载均衡闲置实例
+* Read: [DescribeIdleLoadBalancers](https://cloud.tencent.com/document/api/214/79718) - Idle CLB instances are pay-as-you-go load balancers that, within seven days after the creation, do not have rules configured or the configured rules are not associated with any servers.
 

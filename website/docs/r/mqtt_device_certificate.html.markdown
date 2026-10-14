@@ -74,13 +74,13 @@ In addition to all arguments above, the following attributes are exported:
 
 This resource interacts with the following TencentCloud APIs:
 
-* Create: [RegisterDeviceCertificate](https://cloud.tencent.com/document/api/1778/111071) - 注册设备证书
-* Read: [DescribeDeviceCertificate](https://cloud.tencent.com/document/api/1778/113748) - 查询设备证书详情
-* Update: [ActivateDeviceCertificate](https://cloud.tencent.com/document/api/1778/113648) - 生效设备证书
-* Update: [DeactivateDeviceCertificate](https://cloud.tencent.com/document/api/1778/113750) - 失效设备证书
-* Delete: [DeactivateDeviceCertificate](https://cloud.tencent.com/document/api/1778/113750) - 失效设备证书
-* Delete: [DeleteDeviceCertificate](https://cloud.tencent.com/document/api/1778/113749) - 删除设备证书
-* Delete: [DescribeDeviceCertificate](https://cloud.tencent.com/document/api/1778/113748) - 查询设备证书详情
+* Create: [RegisterDeviceCertificate](https://cloud.tencent.com/document/api/1778/111071)
+* Read: [DescribeDeviceCertificate](https://cloud.tencent.com/document/api/1778/113748) - This API is used to query device certificate details.
+* Update: [ActivateDeviceCertificate](https://cloud.tencent.com/document/api/1778/113648)
+* Update: [DeactivateDeviceCertificate](https://cloud.tencent.com/document/api/1778/113750)
+* Delete: [DeactivateDeviceCertificate](https://cloud.tencent.com/document/api/1778/113750)
+* Delete: [DeleteDeviceCertificate](https://cloud.tencent.com/document/api/1778/113749)
+* Delete: [DescribeDeviceCertificate](https://cloud.tencent.com/document/api/1778/113748) - This API is used to query device certificate details.
 
 ## Import
 

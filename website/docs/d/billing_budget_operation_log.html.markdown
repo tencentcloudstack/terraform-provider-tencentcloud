@@ -50,5 +50,5 @@ In addition to all arguments above, the following attributes are exported:
 
 This data source queries the following TencentCloud APIs:
 
-* Read: [DescribeBudgetOperationLog](https://cloud.tencent.com/document/api/555/123658) - 获取预算修改记录
+* Read: [DescribeBudgetOperationLog](https://cloud.tencent.com/document/api/555/123658) - Query budget modification records
 

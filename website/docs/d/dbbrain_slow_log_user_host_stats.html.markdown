@@ -46,5 +46,5 @@ In addition to all arguments above, the following attributes are exported:
 
 This data source queries the following TencentCloud APIs:
 
-* Read: [DescribeSlowLogUserHostStats](https://cloud.tencent.com/document/api/1130/57783) - 获取慢日志来源地址统计分布图
+* Read: [DescribeSlowLogUserHostStats](https://cloud.tencent.com/document/api/1130/57783) - This API is used to obtain the statistical distribution chart of slow log source addresses.
 

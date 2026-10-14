@@ -53,11 +53,11 @@ In addition to all arguments above, the following attributes are exported:
 
 This resource interacts with the following TencentCloud APIs:
 
-* Create: [DescribeTasks](https://cloud.tencent.com/document/api/409/116177) - 查询任务列表
-* Create: [ModifyDBInstanceSSLConfig](https://cloud.tencent.com/document/api/409/116171) - 修改实例SSL配置
-* Read: [DescribeDBInstanceSSLConfig](https://cloud.tencent.com/document/api/409/116172) - 查询实例SSL配置
-* Update: [DescribeTasks](https://cloud.tencent.com/document/api/409/116177) - 查询任务列表
-* Update: [ModifyDBInstanceSSLConfig](https://cloud.tencent.com/document/api/409/116171) - 修改实例SSL配置
+* Create: [DescribeTasks](https://cloud.tencent.com/document/api/409/116177) - This API is used to query the task list and show the progress of async task execution.
+* Create: [ModifyDBInstanceSSLConfig](https://cloud.tencent.com/document/api/409/116171) - This API is used to modify the SSL configuration of an instance, including enabling, disabling, and modifying the connection address protected by an SSL certificate.
+* Read: [DescribeDBInstanceSSLConfig](https://cloud.tencent.com/document/api/409/116172) - This API is used to query the SSL status of an instance.
+* Update: [DescribeTasks](https://cloud.tencent.com/document/api/409/116177) - This API is used to query the task list and show the progress of async task execution.
+* Update: [ModifyDBInstanceSSLConfig](https://cloud.tencent.com/document/api/409/116171) - This API is used to modify the SSL configuration of an instance, including enabling, disabling, and modifying the connection address protected by an SSL certificate.
 
 ## Import
 

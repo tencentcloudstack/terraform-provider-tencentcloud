@@ -71,10 +71,10 @@ In addition to all arguments above, the following attributes are exported:
 
 This resource interacts with the following TencentCloud APIs:
 
-* Create: [DescribeLicenseBindSchedule](https://cloud.tencent.com/document/api/296/80399) - 查询授权绑定进度
-* Create: [ModifyLicenseBinds](https://cloud.tencent.com/document/api/296/80394) - 授权批量绑定
-* Read: [DescribeLicenseBindList](https://cloud.tencent.com/document/api/296/80400) - 查看授权绑定列表
-* Delete: [ModifyLicenseUnBinds](https://cloud.tencent.com/document/api/296/80393) - 授权批量解绑
+* Create: [DescribeLicenseBindSchedule](https://cloud.tencent.com/document/api/296/80399) - This API is used to query the binding task progress of the authorization.
+* Create: [ModifyLicenseBinds](https://cloud.tencent.com/document/api/296/80394) - This API is used to bind machines to an authorization in batches.
+* Read: [DescribeLicenseBindList](https://cloud.tencent.com/document/api/296/80400) - This API is used to obtain the list of authorized machines bound to an authorization under the Settings Center-Authorization Management.
+* Delete: [ModifyLicenseUnBinds](https://cloud.tencent.com/document/api/296/80393) - This API is used to unbind machines from an authorization in batches.
 
 ## Import
 

@@ -124,5 +124,5 @@ In addition to all arguments above, the following attributes are exported:
 
 This resource interacts with the following TencentCloud APIs:
 
-* Create: [SetInstancesProtection](https://cloud.tencent.com/document/api/377/33175) - 设置实例保护
+* Create: [SetInstancesProtection](https://cloud.tencent.com/document/api/377/33175) - This API is used to enable scale-in protection for an instance.
 

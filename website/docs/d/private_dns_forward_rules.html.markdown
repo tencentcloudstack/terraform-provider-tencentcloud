@@ -77,5 +77,5 @@ In addition to all arguments above, the following attributes are exported:
 
 This data source queries the following TencentCloud APIs:
 
-* Read: [DescribeForwardRuleList](https://cloud.tencent.com/document/api/1338/124329) - 查询转发规则列表
+* Read: [DescribeForwardRuleList](https://cloud.tencent.com/document/api/1338/124329) - This API is used to query the forwarding rule list.
 

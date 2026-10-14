@@ -51,5 +51,5 @@ In addition to all arguments above, the following attributes are exported:
 
 This data source queries the following TencentCloud APIs:
 
-* Read: [DescribeInstancePluginList](https://cloud.tencent.com/document/api/845/100953) - 查询实例插件列表
+* Read: [DescribeInstancePluginList](https://cloud.tencent.com/document/api/845/100953)
 

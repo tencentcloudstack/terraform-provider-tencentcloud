@@ -41,5 +41,5 @@ In addition to all arguments above, the following attributes are exported:
 
 This data source queries the following TencentCloud APIs:
 
-* Read: [DescribeCountryAreaMapping](https://cloud.tencent.com/document/api/608/36946) - 获取国家地区编码映射表
+* Read: [DescribeCountryAreaMapping](https://cloud.tencent.com/document/api/608/36946) - This API (DescribeCountryAreaMapping) is used to obtain the country/region code mapping table.
 

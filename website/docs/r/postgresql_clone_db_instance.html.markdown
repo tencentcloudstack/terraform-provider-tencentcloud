@@ -201,25 +201,25 @@ The `timeouts` block allows you to specify [timeouts](https://developer.hashicor
 
 This resource interacts with the following TencentCloud APIs:
 
-* Create: [CloneDBInstance](https://cloud.tencent.com/document/api/409/68071) - 克隆实例
-* Create: [DescribeDBInstanceAttribute](https://cloud.tencent.com/document/api/409/16772) - 查询实例详情
-* Create: [ModifyResourceTags](https://cloud.tencent.com/document/api/651/35322) - 批量修改资源关联的标签
-* Read: [DescribeDBInstanceAttribute](https://cloud.tencent.com/document/api/409/16772) - 查询实例详情
-* Read: [DescribeDBInstanceSecurityGroups](https://cloud.tencent.com/document/api/409/84064) - 查询实例安全组
-* Read: [DescribeResourceTagsByResourceIds](https://cloud.tencent.com/document/api/651/35319) - 批量查看资源关联的标签
-* Update: [CreateDBInstanceNetworkAccess](https://cloud.tencent.com/document/api/409/70581) - 创建实例网络
-* Update: [DeleteDBInstanceNetworkAccess](https://cloud.tencent.com/document/api/409/70579) - 删除实例网络
-* Update: [DescribeDBInstanceAttribute](https://cloud.tencent.com/document/api/409/16772) - 查询实例详情
-* Update: [ModifyDBInstanceChargeType](https://cloud.tencent.com/document/api/409/90458) - 修改实例计费类型
-* Update: [ModifyDBInstanceDeletionProtection](https://cloud.tencent.com/document/api/409/125336) - 修改实例删除保护
-* Update: [ModifyDBInstanceDeployment](https://cloud.tencent.com/document/api/409/68066) - 修改实例部署方式
-* Update: [ModifyDBInstanceName](https://cloud.tencent.com/document/api/409/18101) - 修改实例名字
-* Update: [ModifyDBInstanceSecurityGroups](https://cloud.tencent.com/document/api/409/84063) - 修改实例的安全组
-* Update: [ModifyDBInstancesProject](https://cloud.tencent.com/document/api/409/18100) - 修改实例所属项目
-* Update: [ModifyResourceTags](https://cloud.tencent.com/document/api/651/35322) - 批量修改资源关联的标签
-* Update: [RenewInstance](https://cloud.tencent.com/document/api/409/18098) - 续费实例
-* Update: [SetAutoRenewFlag](https://cloud.tencent.com/document/api/409/18096) - 设置自动续费
-* Delete: [DescribeDBInstanceAttribute](https://cloud.tencent.com/document/api/409/16772) - 查询实例详情
-* Delete: [DestroyDBInstance](https://cloud.tencent.com/document/api/409/43352) - 销毁实例
-* Delete: [IsolateDBInstances](https://cloud.tencent.com/document/api/409/54790) - 隔离实例
+* Create: [CloneDBInstance](https://cloud.tencent.com/document/api/409/68071) - This API is used to clone an instance by specifying a backup set or a point in time.
+* Create: [DescribeDBInstanceAttribute](https://cloud.tencent.com/document/api/409/16772) - This API is used to query the details of one instance.
+* Create: [ModifyResourceTags](https://cloud.tencent.com/document/api/651/35322) - This API is used to modify all tags associated with a resource.
+* Read: [DescribeDBInstanceAttribute](https://cloud.tencent.com/document/api/409/16772) - This API is used to query the details of one instance.
+* Read: [DescribeDBInstanceSecurityGroups](https://cloud.tencent.com/document/api/409/84064) - This API is used to query the security group of an instance.
+* Read: [DescribeResourceTagsByResourceIds](https://cloud.tencent.com/document/api/651/35319) - This API is used to query the tag key-value pairs associated with an existing resource.
+* Update: [CreateDBInstanceNetworkAccess](https://cloud.tencent.com/document/api/409/70581) - This API is used to create instance networks. Each instance allows a maximum of 2 network configurations and a minimum of 1.
+* Update: [DeleteDBInstanceNetworkAccess](https://cloud.tencent.com/document/api/409/70579) - This API is used to delete a network from an instance while keeping at least one network.
+* Update: [DescribeDBInstanceAttribute](https://cloud.tencent.com/document/api/409/16772) - This API is used to query the details of one instance.
+* Update: [ModifyDBInstanceChargeType](https://cloud.tencent.com/document/api/409/90458) - This API is used to switch the instance billing mode from pay-as-you-go to yearly/monthly subscription.
+* Update: [ModifyDBInstanceDeletionProtection](https://cloud.tencent.com/document/api/409/125336) - This interface (DeletionProtection) is used to enable or disable instance destruction protection.
+* Update: [ModifyDBInstanceDeployment](https://cloud.tencent.com/document/api/409/68066) - This API is used to modify the AZs where the nodes of a source instance reside.
+* Update: [ModifyDBInstanceName](https://cloud.tencent.com/document/api/409/18101) - This API is used to rename a TencentDB for PostgreSQL instance.
+* Update: [ModifyDBInstanceSecurityGroups](https://cloud.tencent.com/document/api/409/84063) - This API is used to modify the security group of an instance.
+* Update: [ModifyDBInstancesProject](https://cloud.tencent.com/document/api/409/18100) - This API is used to modify the project of an instance.
+* Update: [ModifyResourceTags](https://cloud.tencent.com/document/api/651/35322) - This API is used to modify all tags associated with a resource.
+* Update: [RenewInstance](https://cloud.tencent.com/document/api/409/18098) - This API is used to renew an instance.
+* Update: [SetAutoRenewFlag](https://cloud.tencent.com/document/api/409/18096) - This API is used to set auto-renewal.
+* Delete: [DescribeDBInstanceAttribute](https://cloud.tencent.com/document/api/409/16772) - This API is used to query the details of one instance.
+* Delete: [DestroyDBInstance](https://cloud.tencent.com/document/api/409/43352) - This API is used to terminate an isolated instance by specifying the `DBInstanceId` parameter. The data of a terminated instance will be deleted and cannot be recovered. Be cautious with this API calling. Only the instance in isolation can be terminated.
+* Delete: [IsolateDBInstances](https://cloud.tencent.com/document/api/409/54790) - This API is used to isolate an instance.
 

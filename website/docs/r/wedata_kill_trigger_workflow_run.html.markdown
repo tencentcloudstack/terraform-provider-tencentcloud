@@ -54,5 +54,5 @@ In addition to all arguments above, the following attributes are exported:
 
 This resource interacts with the following TencentCloud APIs:
 
-* Create: [KillTriggerWorkflowRuns](https://cloud.tencent.com/document/api/1267/127216) - 终止运行
+* Create: [KillTriggerWorkflowRuns](https://cloud.tencent.com/document/api/1267/127216)
 

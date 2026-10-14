@@ -55,10 +55,10 @@ In addition to all arguments above, the following attributes are exported:
 
 This resource interacts with the following TencentCloud APIs:
 
-* Create: [CreateCcBlackWhiteIpList](https://cloud.tencent.com/document/api/297/95341) - 新建CC四层黑白名单
-* Create: [DescribeCcBlackWhiteIpList](https://cloud.tencent.com/document/api/297/95318) - 获取CC四层黑白名单列表
-* Read: [DescribeCcBlackWhiteIpList](https://cloud.tencent.com/document/api/297/95318) - 获取CC四层黑白名单列表
-* Delete: [DeleteCcBlackWhiteIpList](https://cloud.tencent.com/document/api/297/95328) - 删除CC四层黑白名单
+* Create: [CreateCcBlackWhiteIpList](https://cloud.tencent.com/document/api/297/95341) - This API is used to create a layer 4 access control list to prevent CC attacks.
+* Create: [DescribeCcBlackWhiteIpList](https://cloud.tencent.com/document/api/297/95318) - This API is used to obtain the layer-4 access control list.
+* Read: [DescribeCcBlackWhiteIpList](https://cloud.tencent.com/document/api/297/95318) - This API is used to obtain the layer-4 access control list.
+* Delete: [DeleteCcBlackWhiteIpList](https://cloud.tencent.com/document/api/297/95328) - This API is used to delete a layer-4 access control list.
 
 ## Import
 

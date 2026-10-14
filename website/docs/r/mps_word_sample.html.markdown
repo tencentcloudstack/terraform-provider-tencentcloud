@@ -40,10 +40,10 @@ In addition to all arguments above, the following attributes are exported:
 
 This resource interacts with the following TencentCloud APIs:
 
-* Create: [CreateWordSamples](https://cloud.tencent.com/document/api/862/39444) - 创建关键词样本
-* Read: [DescribeWordSamples](https://cloud.tencent.com/document/api/862/39440) - 获取关键词样本列表
-* Update: [ModifyWordSample](https://cloud.tencent.com/document/api/862/39438) - 修改关键词样本
-* Delete: [DeleteWordSamples](https://cloud.tencent.com/document/api/862/39442) - 删除关键词样本
+* Create: [CreateWordSamples](https://cloud.tencent.com/document/api/862/39444) - This API is used to create keyword samples in batches for video processing operations such as content recognition and inappropriate information detection with the help of the OCR and ASR technologies.
+* Read: [DescribeWordSamples](https://cloud.tencent.com/document/api/862/39440) - This API is used to perform paged queries of keyword sample information by use case, keyword, and tag.
+* Update: [ModifyWordSample](https://cloud.tencent.com/document/api/862/39438) - This API is used to modify the use case and tag of a keyword. The keyword itself cannot be modified, but you can delete it and create another one if needed.
+* Delete: [DeleteWordSamples](https://cloud.tencent.com/document/api/862/39442) - This API is used to delete keyword samples in batches.
 
 ## Import
 

@@ -41,5 +41,5 @@ In addition to all arguments above, the following attributes are exported:
 
 This data source queries the following TencentCloud APIs:
 
-* Read: [DescribeSecurityGroupLimits](https://cloud.tencent.com/document/api/215/41428) - 查询用户安全组配额
+* Read: [DescribeSecurityGroupLimits](https://cloud.tencent.com/document/api/215/41428)
 

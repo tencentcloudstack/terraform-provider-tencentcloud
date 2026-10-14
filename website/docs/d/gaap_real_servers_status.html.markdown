@@ -40,5 +40,5 @@ In addition to all arguments above, the following attributes are exported:
 
 This data source queries the following TencentCloud APIs:
 
-* Read: [DescribeRealServersStatus](https://cloud.tencent.com/document/api/608/37012) - 查询源站绑定状态
+* Read: [DescribeRealServersStatus](https://cloud.tencent.com/document/api/608/37012) - This API (DescribeRealServersStatus) is used to query whether an origin server has been bound to a rule or listener.
 

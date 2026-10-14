@@ -52,11 +52,11 @@ In addition to all arguments above, the following attributes are exported:
 
 This resource interacts with the following TencentCloud APIs:
 
-* Create: [CreateBackupPlan](https://cloud.tencent.com/document/api/409/116174) - 创建备份计划
-* Create: [ModifyBackupPlan](https://cloud.tencent.com/document/api/409/68067) - 修改备份计划
-* Read: [DescribeBackupPlans](https://cloud.tencent.com/document/api/409/68069) - 查询备份计划
-* Update: [ModifyBackupPlan](https://cloud.tencent.com/document/api/409/68067) - 修改备份计划
-* Delete: [DeleteBackupPlan](https://cloud.tencent.com/document/api/409/116173) - 删除备份计划
+* Create: [CreateBackupPlan](https://cloud.tencent.com/document/api/409/116174) - This API is used to create a backup policy.
+* Create: [ModifyBackupPlan](https://cloud.tencent.com/document/api/409/68067) - This API is used to modify the backup plan of an instance, such as modifying the backup start time. By default, a full backup starts at midnight every day and the generated backup files will be retained for seven days.
+* Read: [DescribeBackupPlans](https://cloud.tencent.com/document/api/409/68069) - This API is used to query all backup plans of an instance.
+* Update: [ModifyBackupPlan](https://cloud.tencent.com/document/api/409/68067) - This API is used to modify the backup plan of an instance, such as modifying the backup start time. By default, a full backup starts at midnight every day and the generated backup files will be retained for seven days.
+* Delete: [DeleteBackupPlan](https://cloud.tencent.com/document/api/409/116173) - This API is used to delete a backup policy.
 
 ## Import
 

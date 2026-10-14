@@ -61,14 +61,14 @@ In addition to all arguments above, the following attributes are exported:
 
 This resource interacts with the following TencentCloud APIs:
 
-* Create: [CreateCluster](https://cloud.tencent.com/document/api/1556/70670) - 创建集群
-* Create: [DescribeResourcesByDealName](https://cloud.tencent.com/document/api/1556/70679) - 根据订单号获取资源信息
-* Read: [DescribeClusterInstances](https://cloud.tencent.com/document/api/1556/70688) - 查询实例
-* Read: [DescribeClusters](https://cloud.tencent.com/document/api/1556/70668) - 查询集群
-* Update: [ModifyClusterName](https://cloud.tencent.com/document/api/1556/70666) - 修改集群名字
-* Delete: [DeleteCluster](https://cloud.tencent.com/document/api/1556/70669) - 删除集群
-* Delete: [DescribeClusters](https://cloud.tencent.com/document/api/1556/70668) - 查询集群
-* Delete: [IsolateCluster](https://cloud.tencent.com/document/api/1556/70667) - 隔离集群
+* Create: [CreateCluster](https://cloud.tencent.com/document/api/1556/70670)
+* Create: [DescribeResourcesByDealName](https://cloud.tencent.com/document/api/1556/70679)
+* Read: [DescribeClusterInstances](https://cloud.tencent.com/document/api/1556/70688)
+* Read: [DescribeClusters](https://cloud.tencent.com/document/api/1556/70668)
+* Update: [ModifyClusterName](https://cloud.tencent.com/document/api/1556/70666)
+* Delete: [DeleteCluster](https://cloud.tencent.com/document/api/1556/70669)
+* Delete: [DescribeClusters](https://cloud.tencent.com/document/api/1556/70668)
+* Delete: [IsolateCluster](https://cloud.tencent.com/document/api/1556/70667)
 
 ## Import
 

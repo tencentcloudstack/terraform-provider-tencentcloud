@@ -36,5 +36,5 @@ In addition to all arguments above, the following attributes are exported:
 
 This data source queries the following TencentCloud APIs:
 
-* Read: [DescribeRecordType](https://cloud.tencent.com/document/api/1427/56165) - 获取等级允许的记录类型
+* Read: [DescribeRecordType](https://cloud.tencent.com/document/api/1427/56165) - This API is used to get the record type allowed by the domain level.
 

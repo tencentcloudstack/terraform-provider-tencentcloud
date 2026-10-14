@@ -93,5 +93,5 @@ In addition to all arguments above, the following attributes are exported:
 
 This data source queries the following TencentCloud APIs:
 
-* Read: [DescribeAndroidInstances](https://cloud.tencent.com/document/api/1162/117264) - 查询安卓实例
+* Read: [DescribeAndroidInstances](https://cloud.tencent.com/document/api/1162/117264)
 

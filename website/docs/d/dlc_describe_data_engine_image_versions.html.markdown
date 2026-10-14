@@ -49,5 +49,5 @@ In addition to all arguments above, the following attributes are exported:
 
 This data source queries the following TencentCloud APIs:
 
-* Read: [DescribeDataEngineImageVersions](https://cloud.tencent.com/document/api/1342/99270) - 获取独享集群大版本镜像列表
+* Read: [DescribeDataEngineImageVersions](https://cloud.tencent.com/document/api/1342/99270) - This API is used to obtain the major version image list of exclusive clusters.
 

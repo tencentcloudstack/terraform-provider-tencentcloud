@@ -58,5 +58,5 @@ In addition to all arguments above, the following attributes are exported:
 
 This data source queries the following TencentCloud APIs:
 
-* Read: [ListQualityRuleTemplates](https://cloud.tencent.com/document/api/1267/127222) - 质量规则模版查询接口
+* Read: [ListQualityRuleTemplates](https://cloud.tencent.com/document/api/1267/127222)
 

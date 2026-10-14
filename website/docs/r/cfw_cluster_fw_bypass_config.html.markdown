@@ -54,11 +54,11 @@ In addition to all arguments above, the following attributes are exported:
 
 This resource interacts with the following TencentCloud APIs:
 
-* Create: [DescribeClusterNatCcnFwSwitchList](https://cloud.tencent.com/document/api/1132/132581) - 查询NAT CCN集群模式防火墙开关列表
-* Create: [ModifyClusterFwBypass](https://cloud.tencent.com/document/api/1132/132579) - 修改集群防火墙Bypass状态
-* Read: [DescribeClusterNatCcnFwSwitchList](https://cloud.tencent.com/document/api/1132/132581) - 查询NAT CCN集群模式防火墙开关列表
-* Update: [DescribeClusterNatCcnFwSwitchList](https://cloud.tencent.com/document/api/1132/132581) - 查询NAT CCN集群模式防火墙开关列表
-* Update: [ModifyClusterFwBypass](https://cloud.tencent.com/document/api/1132/132579) - 修改集群防火墙Bypass状态
+* Create: [DescribeClusterNatCcnFwSwitchList](https://cloud.tencent.com/document/api/1132/132581)
+* Create: [ModifyClusterFwBypass](https://cloud.tencent.com/document/api/1132/132579)
+* Read: [DescribeClusterNatCcnFwSwitchList](https://cloud.tencent.com/document/api/1132/132581)
+* Update: [DescribeClusterNatCcnFwSwitchList](https://cloud.tencent.com/document/api/1132/132581)
+* Update: [ModifyClusterFwBypass](https://cloud.tencent.com/document/api/1132/132579)
 
 ## Import
 

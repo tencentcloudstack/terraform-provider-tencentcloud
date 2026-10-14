@@ -65,5 +65,5 @@ In addition to all arguments above, the following attributes are exported:
 
 This data source queries the following TencentCloud APIs:
 
-* Read: [ListSystemRules](https://cloud.tencent.com/document/api/1579/129714) - 获取预设规则列表
+* Read: [ListSystemRules](https://cloud.tencent.com/document/api/1579/129714)
 

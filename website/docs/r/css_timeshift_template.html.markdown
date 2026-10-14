@@ -48,10 +48,10 @@ In addition to all arguments above, the following attributes are exported:
 
 This resource interacts with the following TencentCloud APIs:
 
-* Create: [CreateLiveTimeShiftTemplate](https://cloud.tencent.com/document/api/267/86169) - 创建直播时移模板
-* Read: [DescribeLiveTimeShiftTemplates](https://cloud.tencent.com/document/api/267/86165) - 获取直播时移模板
-* Update: [ModifyLiveTimeShiftTemplate](https://cloud.tencent.com/document/api/267/86164) - 修改直播时移模板
-* Delete: [DeleteLiveTimeShiftTemplate](https://cloud.tencent.com/document/api/267/86167) - 删除直播时移模板
+* Create: [CreateLiveTimeShiftTemplate](https://cloud.tencent.com/document/api/267/86169) - This API is used to create a time shifting template.
+* Read: [DescribeLiveTimeShiftTemplates](https://cloud.tencent.com/document/api/267/86165) - This API is used to query time shifting templates.
+* Update: [ModifyLiveTimeShiftTemplate](https://cloud.tencent.com/document/api/267/86164) - This API is used to modify a time shifting template.
+* Delete: [DeleteLiveTimeShiftTemplate](https://cloud.tencent.com/document/api/267/86167) - This API is used to delete a time shifting template.
 
 ## Import
 

@@ -59,12 +59,12 @@ The `timeouts` block allows you to specify [timeouts](https://developer.hashicor
 
 This resource interacts with the following TencentCloud APIs:
 
-* Create: [CreateDBCustomDisasterRecoverGroup](https://cloud.tencent.com/document/api/1322/137569) - 创建置放群组
-* Create: [DescribeDBCustomDisasterRecoverGroups](https://cloud.tencent.com/document/api/1322/137565) - 查询置放群组列表
-* Read: [DescribeDBCustomDisasterRecoverGroups](https://cloud.tencent.com/document/api/1322/137565) - 查询置放群组列表
-* Update: [ModifyDBCustomDisasterRecoverGroupAttribute](https://cloud.tencent.com/document/api/1322/137564) - 修改置放群组的属性
-* Update: [ModifyDBCustomDisasterRecoverGroupTags](https://cloud.tencent.com/document/api/1322/137563) - 修改置放群组绑定的标签
-* Delete: [DeleteDBCustomDisasterRecoverGroups](https://cloud.tencent.com/document/api/1322/137568) - 删除置放群组
+* Create: [CreateDBCustomDisasterRecoverGroup](https://cloud.tencent.com/document/api/1322/137569)
+* Create: [DescribeDBCustomDisasterRecoverGroups](https://cloud.tencent.com/document/api/1322/137565)
+* Read: [DescribeDBCustomDisasterRecoverGroups](https://cloud.tencent.com/document/api/1322/137565)
+* Update: [ModifyDBCustomDisasterRecoverGroupAttribute](https://cloud.tencent.com/document/api/1322/137564)
+* Update: [ModifyDBCustomDisasterRecoverGroupTags](https://cloud.tencent.com/document/api/1322/137563)
+* Delete: [DeleteDBCustomDisasterRecoverGroups](https://cloud.tencent.com/document/api/1322/137568)
 
 ## Import
 

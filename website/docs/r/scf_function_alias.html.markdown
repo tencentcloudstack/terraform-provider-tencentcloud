@@ -88,10 +88,10 @@ In addition to all arguments above, the following attributes are exported:
 
 This resource interacts with the following TencentCloud APIs:
 
-* Create: [CreateAlias](https://cloud.tencent.com/document/api/583/44164) - 创建函数版本别名
-* Read: [GetAlias](https://cloud.tencent.com/document/api/583/44163) - 获取别名详细信息
-* Update: [UpdateAlias](https://cloud.tencent.com/document/api/583/44161) - 更新别名的配置
-* Delete: [DeleteAlias](https://cloud.tencent.com/document/api/583/44048) - 删除别名
+* Create: [CreateAlias](https://cloud.tencent.com/document/api/583/44164) - This API is used to create an alias for a function version. You can use the alias to mark a specific function version such as DEV/RELEASE. You can also modify the version pointed to by the alias at any time.
+* Read: [GetAlias](https://cloud.tencent.com/document/api/583/44163) - This API is used to get the alias details such as the name, description, version, and routing information.
+* Update: [UpdateAlias](https://cloud.tencent.com/document/api/583/44161) - This API is used to update the configuration of an alias.
+* Delete: [DeleteAlias](https://cloud.tencent.com/document/api/583/44048) - This API is used to delete an alias of a function version.
 
 ## Import
 

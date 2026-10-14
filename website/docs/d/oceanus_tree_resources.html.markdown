@@ -50,5 +50,5 @@ In addition to all arguments above, the following attributes are exported:
 
 This data source queries the following TencentCloud APIs:
 
-* Read: [DescribeTreeResources](https://cloud.tencent.com/document/api/849/79568) - 查询树状结构资源列表
+* Read: [DescribeTreeResources](https://cloud.tencent.com/document/api/849/79568)
 

@@ -42,5 +42,5 @@ In addition to all arguments above, the following attributes are exported:
 
 This data source queries the following TencentCloud APIs:
 
-* Read: [DescribeUserDomainInfo](https://cloud.tencent.com/document/api/627/96940) - 查询saas和clb的域名信息
+* Read: [DescribeUserDomainInfo](https://cloud.tencent.com/document/api/627/96940) - Query Domain Information for SaaS and CLB
 

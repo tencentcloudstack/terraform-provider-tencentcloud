@@ -571,45 +571,45 @@ The `timeouts` block allows you to specify [timeouts](https://developer.hashicor
 
 This resource interacts with the following TencentCloud APIs:
 
-* Create: [DescribeDisks](https://cloud.tencent.com/document/api/362/16315) - 查询云硬盘列表
-* Create: [DescribeImages](https://cloud.tencent.com/document/api/213/15715) - 查看镜像列表
-* Create: [DescribeInstances](https://cloud.tencent.com/document/api/213/15728) - 查看实例列表
-* Create: [DescribeInstancesAttributes](https://cloud.tencent.com/document/api/213/116941) - 批量获取指定实例属性
-* Create: [DescribeResourceTagsByResourceIds](https://cloud.tencent.com/document/api/651/35319) - 批量查看资源关联的标签
-* Create: [ModifyInstancesDisasterRecoverGroup](https://cloud.tencent.com/document/api/213/115717) - 调整实例分散置放群组
-* Create: [RunInstances](https://cloud.tencent.com/document/api/213/15730) - 创建实例
-* Create: [StopInstances](https://cloud.tencent.com/document/api/213/15743) - 关闭实例
-* Read: [DescribeDisks](https://cloud.tencent.com/document/api/362/16315) - 查询云硬盘列表
-* Read: [DescribeImages](https://cloud.tencent.com/document/api/213/15715) - 查看镜像列表
-* Read: [DescribeInstances](https://cloud.tencent.com/document/api/213/15728) - 查看实例列表
-* Read: [DescribeInstancesAttributes](https://cloud.tencent.com/document/api/213/116941) - 批量获取指定实例属性
-* Read: [DescribeResourceTagsByResourceIds](https://cloud.tencent.com/document/api/651/35319) - 批量查看资源关联的标签
-* Update: [AssociateInstancesKeyPairs](https://cloud.tencent.com/document/api/213/15698) - 绑定密钥对
-* Update: [DescribeDisks](https://cloud.tencent.com/document/api/362/16315) - 查询云硬盘列表
-* Update: [DescribeImages](https://cloud.tencent.com/document/api/213/15715) - 查看镜像列表
-* Update: [DescribeInstances](https://cloud.tencent.com/document/api/213/15728) - 查看实例列表
-* Update: [DescribeInstancesAttributes](https://cloud.tencent.com/document/api/213/116941) - 批量获取指定实例属性
-* Update: [DescribeResourceTagsByResourceIds](https://cloud.tencent.com/document/api/651/35319) - 批量查看资源关联的标签
-* Update: [DisassociateInstancesKeyPairs](https://cloud.tencent.com/document/api/213/15697) - 解绑密钥对
-* Update: [ModifyDiskAttributes](https://cloud.tencent.com/document/api/362/15659) - 修改云硬盘属性
-* Update: [ModifyInstancesAttribute](https://cloud.tencent.com/document/api/213/15739) - 修改实例的属性
-* Update: [ModifyInstancesChargeType](https://cloud.tencent.com/document/api/213/17964) - 修改实例计费模式
-* Update: [ModifyInstancesDisasterRecoverGroup](https://cloud.tencent.com/document/api/213/115717) - 调整实例分散置放群组
-* Update: [ModifyInstancesProject](https://cloud.tencent.com/document/api/213/15746) - 修改实例所属项目
-* Update: [ModifyInstancesRenewFlag](https://cloud.tencent.com/document/api/213/15752) - 修改实例续费标识
-* Update: [ModifyInstancesVpcAttribute](https://cloud.tencent.com/document/api/213/15750) - 修改实例vpc的属性
-* Update: [ModifyResourceTags](https://cloud.tencent.com/document/api/651/35322) - 批量修改资源关联的标签
-* Update: [ResetInstance](https://cloud.tencent.com/document/api/213/15724) - 重装实例
-* Update: [ResetInstancesInternetMaxBandwidth](https://cloud.tencent.com/document/api/213/15721) - 调整实例带宽上限
-* Update: [ResetInstancesPassword](https://cloud.tencent.com/document/api/213/15736) - 重置实例密码
-* Update: [ResetInstancesType](https://cloud.tencent.com/document/api/213/15744) - 调整实例配置
-* Update: [ResizeDisk](https://cloud.tencent.com/document/api/362/16310) - 扩容云硬盘
-* Update: [ResizeInstanceDisks](https://cloud.tencent.com/document/api/213/15731) - 扩容实例磁盘
-* Delete: [DescribeDisks](https://cloud.tencent.com/document/api/362/16315) - 查询云硬盘列表
-* Delete: [DescribeInstances](https://cloud.tencent.com/document/api/213/15728) - 查看实例列表
-* Delete: [DetachDisks](https://cloud.tencent.com/document/api/362/16316) - 卸载云硬盘
-* Delete: [TerminateDisks](https://cloud.tencent.com/document/api/362/16321) - 退还云硬盘
-* Delete: [TerminateInstances](https://cloud.tencent.com/document/api/213/15723) - 退还实例
+* Create: [DescribeDisks](https://cloud.tencent.com/document/api/362/16315) - This API (DescribeDisks) is used to query the list of cloud disks.
+* Create: [DescribeImages](https://cloud.tencent.com/document/api/213/15715) - This API is used to view the list of images.
+* Create: [DescribeInstances](https://cloud.tencent.com/document/api/213/15728) - This API is used to query the details of instances.
+* Create: [DescribeInstancesAttributes](https://cloud.tencent.com/document/api/213/116941) - This API is used to obtain the attributes of specified instances. Currently, it supports querying the custom data UserData of instances.
+* Create: [DescribeResourceTagsByResourceIds](https://cloud.tencent.com/document/api/651/35319) - This API is used to query the tag key-value pairs associated with an existing resource.
+* Create: [ModifyInstancesDisasterRecoverGroup](https://cloud.tencent.com/document/api/213/115717) - This API is used to adjust the placement group of an instance.
+* Create: [RunInstances](https://cloud.tencent.com/document/api/213/15730)
+* Create: [StopInstances](https://cloud.tencent.com/document/api/213/15743) - This API is used to shut down instances.
+* Read: [DescribeDisks](https://cloud.tencent.com/document/api/362/16315) - This API (DescribeDisks) is used to query the list of cloud disks.
+* Read: [DescribeImages](https://cloud.tencent.com/document/api/213/15715) - This API is used to view the list of images.
+* Read: [DescribeInstances](https://cloud.tencent.com/document/api/213/15728) - This API is used to query the details of instances.
+* Read: [DescribeInstancesAttributes](https://cloud.tencent.com/document/api/213/116941) - This API is used to obtain the attributes of specified instances. Currently, it supports querying the custom data UserData of instances.
+* Read: [DescribeResourceTagsByResourceIds](https://cloud.tencent.com/document/api/651/35319) - This API is used to query the tag key-value pairs associated with an existing resource.
+* Update: [AssociateInstancesKeyPairs](https://cloud.tencent.com/document/api/213/15698) - This API is used to associate key pairs with instances.
+* Update: [DescribeDisks](https://cloud.tencent.com/document/api/362/16315) - This API (DescribeDisks) is used to query the list of cloud disks.
+* Update: [DescribeImages](https://cloud.tencent.com/document/api/213/15715) - This API is used to view the list of images.
+* Update: [DescribeInstances](https://cloud.tencent.com/document/api/213/15728) - This API is used to query the details of instances.
+* Update: [DescribeInstancesAttributes](https://cloud.tencent.com/document/api/213/116941) - This API is used to obtain the attributes of specified instances. Currently, it supports querying the custom data UserData of instances.
+* Update: [DescribeResourceTagsByResourceIds](https://cloud.tencent.com/document/api/651/35319) - This API is used to query the tag key-value pairs associated with an existing resource.
+* Update: [DisassociateInstancesKeyPairs](https://cloud.tencent.com/document/api/213/15697) - This API is used to unbind one or more key pairs from one or more instances.
+* Update: [ModifyDiskAttributes](https://cloud.tencent.com/document/api/362/15659) - This API is used to modify only the Project ID of elastic cloud disks. The Project ID of a cloud disk created with a host is linked to the host. Whether a cloud disk is elastic can be checked through the [DescribeDisks](https://www.tencentcloud.com/document/product/362/16315?from_cn_redirect=1) API. See the Portable field explanation in the output parameters.
+* Update: [ModifyInstancesAttribute](https://cloud.tencent.com/document/api/213/15739) - This API is used to modify instance attributes.
+* Update: [ModifyInstancesChargeType](https://cloud.tencent.com/document/api/213/17964) - This API is used to switch the billing mode of an instance.
+* Update: [ModifyInstancesDisasterRecoverGroup](https://cloud.tencent.com/document/api/213/115717) - This API is used to adjust the placement group of an instance.
+* Update: [ModifyInstancesProject](https://cloud.tencent.com/document/api/213/15746) - This API is used to change the project to which an instance is assigned.
+* Update: [ModifyInstancesRenewFlag](https://cloud.tencent.com/document/api/213/15752) - This API is used to modify the renewal flag of monthly subscription instances.
+* Update: [ModifyInstancesVpcAttribute](https://cloud.tencent.com/document/api/213/15750) - This API is used to modify the VPC attributes of an instance, such as the VPC IP address.
+* Update: [ModifyResourceTags](https://cloud.tencent.com/document/api/651/35322) - This API is used to modify all tags associated with a resource.
+* Update: [ResetInstance](https://cloud.tencent.com/document/api/213/15724) - This API (ResetInstance) is used to reinstall the operating system on a specified instance.
+* Update: [ResetInstancesInternetMaxBandwidth](https://cloud.tencent.com/document/api/213/15721) - This API is used to change the public bandwidth cap of an instance.
+* Update: [ResetInstancesPassword](https://cloud.tencent.com/document/api/213/15736) - This API is used to reset the password of the operating system instances to a user-specified password.
+* Update: [ResetInstancesType](https://cloud.tencent.com/document/api/213/15744) - This API is used to change the model of an instance.
+* Update: [ResizeDisk](https://cloud.tencent.com/document/api/362/16310) - This API is used to expand cloud disks.
+* Update: [ResizeInstanceDisks](https://cloud.tencent.com/document/api/213/15731) - This API (ResizeInstanceDisks) is used to expand the data disks of an instance.
+* Delete: [DescribeDisks](https://cloud.tencent.com/document/api/362/16315) - This API (DescribeDisks) is used to query the list of cloud disks.
+* Delete: [DescribeInstances](https://cloud.tencent.com/document/api/213/15728) - This API is used to query the details of instances.
+* Delete: [DetachDisks](https://cloud.tencent.com/document/api/362/16316) - This API is used to unmount one or more cloud disks.
+* Delete: [TerminateDisks](https://cloud.tencent.com/document/api/362/16321) - This API is used to return cloud disks.
+* Delete: [TerminateInstances](https://cloud.tencent.com/document/api/213/15723) - This API is used to return instances.
 
 ## Import
 

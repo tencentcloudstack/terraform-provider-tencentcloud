@@ -106,9 +106,9 @@ In addition to all arguments above, the following attributes are exported:
 
 This resource interacts with the following TencentCloud APIs:
 
-* Create: [DescribeAsyncRequestInfo](https://cloud.tencent.com/document/api/236/20410) - 查询异步任务的执行结果
-* Create: [ModifyInstancePasswordComplexity](https://cloud.tencent.com/document/api/236/78162) - 修改实例密码复杂度
-* Read: [DescribeInstanceParams](https://cloud.tencent.com/document/api/236/20411) - 查询实例的可设置参数列表
-* Update: [DescribeAsyncRequestInfo](https://cloud.tencent.com/document/api/236/20410) - 查询异步任务的执行结果
-* Update: [ModifyInstancePasswordComplexity](https://cloud.tencent.com/document/api/236/78162) - 修改实例密码复杂度
+* Create: [DescribeAsyncRequestInfo](https://cloud.tencent.com/document/api/236/20410) - This API (DescribeAsyncRequestInfo) is used to query the async task execution result of a TencentDB instance.
+* Create: [ModifyInstancePasswordComplexity](https://cloud.tencent.com/document/api/236/78162) - This API is used to modify the password complexity of a cloud database instance.
+* Read: [DescribeInstanceParams](https://cloud.tencent.com/document/api/236/20411) - This API (DescribeInstanceParams) is used to query the list of parameters for an instance.
+* Update: [DescribeAsyncRequestInfo](https://cloud.tencent.com/document/api/236/20410) - This API (DescribeAsyncRequestInfo) is used to query the async task execution result of a TencentDB instance.
+* Update: [ModifyInstancePasswordComplexity](https://cloud.tencent.com/document/api/236/78162) - This API is used to modify the password complexity of a cloud database instance.
 

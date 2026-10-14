@@ -54,9 +54,9 @@ In addition to all arguments above, the following attributes are exported:
 
 This resource interacts with the following TencentCloud APIs:
 
-* Create: [UpdateTrigger](https://cloud.tencent.com/document/api/583/96828) - 更新触发器
-* Read: [ListTriggers](https://cloud.tencent.com/document/api/583/44268) - 获取函数触发器列表
-* Update: [UpdateTrigger](https://cloud.tencent.com/document/api/583/96828) - 更新触发器
+* Create: [UpdateTrigger](https://cloud.tencent.com/document/api/583/96828)
+* Read: [ListTriggers](https://cloud.tencent.com/document/api/583/44268) - This API is used to get the function trigger list.
+* Update: [UpdateTrigger](https://cloud.tencent.com/document/api/583/96828)
 
 ## Import
 

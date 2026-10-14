@@ -245,21 +245,21 @@ The `intranet_config` object exports the following:
 
 This resource interacts with the following TencentCloud APIs:
 
-* Create: [CreateFunction](https://cloud.tencent.com/document/api/583/18586) - 创建函数
-* Create: [CreateTrigger](https://cloud.tencent.com/document/api/583/18589) - 设置函数触发方式
-* Create: [GetFunction](https://cloud.tencent.com/document/api/583/18584) - 获取函数详细信息
-* Create: [GetSecretValue](https://cloud.tencent.com/document/api/1140/40522) - 获取凭据明文
-* Create: [UpdateFunctionConfiguration](https://cloud.tencent.com/document/api/583/18580) - 更新函数配置
-* Read: [GetFunction](https://cloud.tencent.com/document/api/583/18584) - 获取函数详细信息
-* Update: [CreateTrigger](https://cloud.tencent.com/document/api/583/18589) - 设置函数触发方式
-* Update: [DeleteTrigger](https://cloud.tencent.com/document/api/583/18588) - 删除触发器
-* Update: [GetFunction](https://cloud.tencent.com/document/api/583/18584) - 获取函数详细信息
-* Update: [GetSecretValue](https://cloud.tencent.com/document/api/1140/40522) - 获取凭据明文
-* Update: [ModifyResourceTags](https://cloud.tencent.com/document/api/651/35322) - 批量修改资源关联的标签
-* Update: [UpdateFunctionCode](https://cloud.tencent.com/document/api/583/18581) - 更新函数代码
-* Update: [UpdateFunctionConfiguration](https://cloud.tencent.com/document/api/583/18580) - 更新函数配置
-* Delete: [DeleteFunction](https://cloud.tencent.com/document/api/583/18585) - 删除函数
-* Delete: [GetFunction](https://cloud.tencent.com/document/api/583/18584) - 获取函数详细信息
+* Create: [CreateFunction](https://cloud.tencent.com/document/api/583/18586)
+* Create: [CreateTrigger](https://cloud.tencent.com/document/api/583/18589) - This API is used to create a trigger based on the input parameters.
+* Create: [GetFunction](https://cloud.tencent.com/document/api/583/18584)
+* Create: [GetSecretValue](https://cloud.tencent.com/document/api/1140/40522) - For user-defined credentials, this API is used to get the plaintext information of a credential by specifying the credential name and version.
+* Create: [UpdateFunctionConfiguration](https://cloud.tencent.com/document/api/583/18580) - This API is used to update the function configuration based on the input parameters.
+* Read: [GetFunction](https://cloud.tencent.com/document/api/583/18584)
+* Update: [CreateTrigger](https://cloud.tencent.com/document/api/583/18589) - This API is used to create a trigger based on the input parameters.
+* Update: [DeleteTrigger](https://cloud.tencent.com/document/api/583/18588) - This API is used to delete an existing trigger based on the input parameters.
+* Update: [GetFunction](https://cloud.tencent.com/document/api/583/18584)
+* Update: [GetSecretValue](https://cloud.tencent.com/document/api/1140/40522) - For user-defined credentials, this API is used to get the plaintext information of a credential by specifying the credential name and version.
+* Update: [ModifyResourceTags](https://cloud.tencent.com/document/api/651/35322) - This API is used to modify all tags associated with a resource.
+* Update: [UpdateFunctionCode](https://cloud.tencent.com/document/api/583/18581) - This API is used to update the function code based on the input parameters.
+* Update: [UpdateFunctionConfiguration](https://cloud.tencent.com/document/api/583/18580) - This API is used to update the function configuration based on the input parameters.
+* Delete: [DeleteFunction](https://cloud.tencent.com/document/api/583/18585) - This API is used to delete a function based on the input parameters.
+* Delete: [GetFunction](https://cloud.tencent.com/document/api/583/18584)
 
 ## Import
 

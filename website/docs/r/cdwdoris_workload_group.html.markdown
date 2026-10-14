@@ -110,10 +110,10 @@ In addition to all arguments above, the following attributes are exported:
 
 This resource interacts with the following TencentCloud APIs:
 
-* Create: [CreateWorkloadGroup](https://cloud.tencent.com/document/api/1387/109440) - 创建资源组
-* Read: [DescribeWorkloadGroup](https://cloud.tencent.com/document/api/1387/109437) - 获取资源组信息
-* Update: [ModifyWorkloadGroup](https://cloud.tencent.com/document/api/1387/109431) - 修改资源组信息
-* Delete: [DeleteWorkloadGroup](https://cloud.tencent.com/document/api/1387/109439) - 删除资源组
+* Create: [CreateWorkloadGroup](https://cloud.tencent.com/document/api/1387/109440) - This API is used to create resource groups.
+* Read: [DescribeWorkloadGroup](https://cloud.tencent.com/document/api/1387/109437) - This API is used to obtain resource group information.
+* Update: [ModifyWorkloadGroup](https://cloud.tencent.com/document/api/1387/109431) - This API is used to modify the resource group information.
+* Delete: [DeleteWorkloadGroup](https://cloud.tencent.com/document/api/1387/109439) - This API is used to delete resource groups.
 
 ## Import
 

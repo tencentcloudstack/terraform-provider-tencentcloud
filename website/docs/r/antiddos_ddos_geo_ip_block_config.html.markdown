@@ -48,12 +48,12 @@ In addition to all arguments above, the following attributes are exported:
 
 This resource interacts with the following TencentCloud APIs:
 
-* Create: [CreateDDoSGeoIPBlockConfig](https://cloud.tencent.com/document/api/297/95336) - 添加DDoS防护的区域封禁配置
-* Create: [DescribeListDDoSGeoIPBlockConfig](https://cloud.tencent.com/document/api/297/95312) - 获取DDoS防护的区域封禁配置列表
-* Read: [DescribeListDDoSGeoIPBlockConfig](https://cloud.tencent.com/document/api/297/95312) - 获取DDoS防护的区域封禁配置列表
-* Update: [ModifyDDoSGeoIPBlockConfig](https://cloud.tencent.com/document/api/297/95303) - 修改DDoS防护的区域封禁配置
-* Delete: [DeleteDDoSGeoIPBlockConfig](https://cloud.tencent.com/document/api/297/95325) - 删除DDoS防护的区域封禁配置
-* Delete: [DescribeListDDoSGeoIPBlockConfig](https://cloud.tencent.com/document/api/297/95312) - 获取DDoS防护的区域封禁配置列表
+* Create: [CreateDDoSGeoIPBlockConfig](https://cloud.tencent.com/document/api/297/95336) - This API is used to add an Anti-DDoS region blocking configuration.
+* Create: [DescribeListDDoSGeoIPBlockConfig](https://cloud.tencent.com/document/api/297/95312) - This API is used to get a list of Anti-DDoS region blocking configurations.
+* Read: [DescribeListDDoSGeoIPBlockConfig](https://cloud.tencent.com/document/api/297/95312) - This API is used to get a list of Anti-DDoS region blocking configurations.
+* Update: [ModifyDDoSGeoIPBlockConfig](https://cloud.tencent.com/document/api/297/95303) - This API is used to modify Anti-DDoS region blocking configurations.
+* Delete: [DeleteDDoSGeoIPBlockConfig](https://cloud.tencent.com/document/api/297/95325) - This API is used to delete Anti-DDoS region blocking configurations.
+* Delete: [DescribeListDDoSGeoIPBlockConfig](https://cloud.tencent.com/document/api/297/95312) - This API is used to get a list of Anti-DDoS region blocking configurations.
 
 ## Import
 

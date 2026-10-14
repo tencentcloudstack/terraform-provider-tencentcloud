@@ -38,11 +38,11 @@ In addition to all arguments above, the following attributes are exported:
 
 This resource interacts with the following TencentCloud APIs:
 
-* Create: [DescribeGroupAttribute](https://cloud.tencent.com/document/api/649/64979) - 获取部署组其他属性
-* Create: [StartGroup](https://cloud.tencent.com/document/api/649/36057) - 启动虚拟机部署组
-* Create: [StopGroup](https://cloud.tencent.com/document/api/649/36055) - 停止虚拟机部署组
-* Read: [DescribeGroupAttribute](https://cloud.tencent.com/document/api/649/64979) - 获取部署组其他属性
-* Update: [DescribeGroupAttribute](https://cloud.tencent.com/document/api/649/64979) - 获取部署组其他属性
-* Update: [StartGroup](https://cloud.tencent.com/document/api/649/36057) - 启动虚拟机部署组
-* Update: [StopGroup](https://cloud.tencent.com/document/api/649/36055) - 停止虚拟机部署组
+* Create: [DescribeGroupAttribute](https://cloud.tencent.com/document/api/649/64979)
+* Create: [StartGroup](https://cloud.tencent.com/document/api/649/36057)
+* Create: [StopGroup](https://cloud.tencent.com/document/api/649/36055)
+* Read: [DescribeGroupAttribute](https://cloud.tencent.com/document/api/649/64979)
+* Update: [DescribeGroupAttribute](https://cloud.tencent.com/document/api/649/64979)
+* Update: [StartGroup](https://cloud.tencent.com/document/api/649/36057)
+* Update: [StopGroup](https://cloud.tencent.com/document/api/649/36055)
 

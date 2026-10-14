@@ -157,9 +157,9 @@ The `snapshot_secondary_backup_config` object exports the following:
 
 This resource interacts with the following TencentCloud APIs:
 
-* Create: [ModifyBackupConfig](https://cloud.tencent.com/document/api/1003/48090) - 修改备份配置
-* Read: [DescribeBackupConfig](https://cloud.tencent.com/document/api/1003/48094) - 查询备份配置信息
-* Update: [ModifyBackupConfig](https://cloud.tencent.com/document/api/1003/48090) - 修改备份配置
+* Create: [ModifyBackupConfig](https://cloud.tencent.com/document/api/1003/48090) - This API is used to modify the backup configuration of a specified cluster.
+* Read: [DescribeBackupConfig](https://cloud.tencent.com/document/api/1003/48094) - This API is used to obtain the backup configuration information of a specified cluster, including the full backup time period and the backup file retention time.
+* Update: [ModifyBackupConfig](https://cloud.tencent.com/document/api/1003/48090) - This API is used to modify the backup configuration of a specified cluster.
 
 ## Import
 

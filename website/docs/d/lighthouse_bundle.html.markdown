@@ -69,5 +69,5 @@ In addition to all arguments above, the following attributes are exported:
 
 This data source queries the following TencentCloud APIs:
 
-* Read: [DescribeBundles](https://cloud.tencent.com/document/api/1207/47575) - 查询套餐
+* Read: [DescribeBundles](https://cloud.tencent.com/document/api/1207/47575) - This API is used to query the information of a package.
 

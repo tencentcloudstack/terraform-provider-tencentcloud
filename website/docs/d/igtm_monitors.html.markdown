@@ -80,5 +80,5 @@ ENABLED DISABLED.
 
 This data source queries the following TencentCloud APIs:
 
-* Read: [DescribeMonitors](https://cloud.tencent.com/document/api/1551/120446) - 获取所有监控器
+* Read: [DescribeMonitors](https://cloud.tencent.com/document/api/1551/120446)
 

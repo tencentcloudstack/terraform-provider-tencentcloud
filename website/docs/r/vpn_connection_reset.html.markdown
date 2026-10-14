@@ -38,5 +38,5 @@ In addition to all arguments above, the following attributes are exported:
 
 This resource interacts with the following TencentCloud APIs:
 
-* Create: [ResetVpnConnection](https://cloud.tencent.com/document/api/215/17505) - 重置VPN通道
+* Create: [ResetVpnConnection](https://cloud.tencent.com/document/api/215/17505) - The API is used to reset a VPN tunnel.
 

@@ -76,5 +76,5 @@ In addition to all arguments above, the following attributes are exported:
 
 This data source queries the following TencentCloud APIs:
 
-* Read: [DescribeDedicatedClusters](https://cloud.tencent.com/document/api/1346/73758) - 查询专用集群列表
+* Read: [DescribeDedicatedClusters](https://cloud.tencent.com/document/api/1346/73758) - This API is used to query the CDC list.
 

@@ -45,5 +45,5 @@ In addition to all arguments above, the following attributes are exported:
 
 This data source queries the following TencentCloud APIs:
 
-* Read: [DescribeUpgradeTaskDetail](https://cloud.tencent.com/document/api/457/125936) - 查询计划升级任务详情
+* Read: [DescribeUpgradeTaskDetail](https://cloud.tencent.com/document/api/457/125936)
 

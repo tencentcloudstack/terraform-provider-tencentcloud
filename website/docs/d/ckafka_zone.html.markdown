@@ -72,5 +72,5 @@ In addition to all arguments above, the following attributes are exported:
 
 This data source queries the following TencentCloud APIs:
 
-* Read: [DescribeCkafkaZone](https://cloud.tencent.com/document/api/597/55246) - 查看可用区列表
+* Read: [DescribeCkafkaZone](https://cloud.tencent.com/document/api/597/55246) - This API is used to view the AZ list of Ckafka.
 

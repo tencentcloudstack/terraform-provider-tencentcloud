@@ -124,5 +124,5 @@ In addition to all arguments above, the following attributes are exported:
 
 This data source queries the following TencentCloud APIs:
 
-* Read: [DescribeServiceForApiApp](https://cloud.tencent.com/document/api/628/58632) - 应用使用者查询服务详情
+* Read: [DescribeServiceForApiApp](https://cloud.tencent.com/document/api/628/58632) - This API is used to query the details of a service, such as its description, domain name, and protocol.
 

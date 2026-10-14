@@ -70,12 +70,12 @@ In addition to all arguments above, the following attributes are exported:
 
 This resource interacts with the following TencentCloud APIs:
 
-* Create: [DescribeFlowStatus](https://cloud.tencent.com/document/api/238/19967) - 查询流程状态
-* Create: [ModifyCloseWanIp](https://cloud.tencent.com/document/api/238/101718) - 关闭实例外网
-* Create: [ModifyOpenWanIp](https://cloud.tencent.com/document/api/238/101717) - 开通实例外网
-* Read: [DescribeDBInstances](https://cloud.tencent.com/document/api/238/19969) - 查询实例列表
-* Read: [DescribeReadOnlyGroupList](https://cloud.tencent.com/document/api/238/46771) - 查询只读组列表
-* Update: [DescribeFlowStatus](https://cloud.tencent.com/document/api/238/19967) - 查询流程状态
-* Update: [ModifyCloseWanIp](https://cloud.tencent.com/document/api/238/101718) - 关闭实例外网
-* Update: [ModifyOpenWanIp](https://cloud.tencent.com/document/api/238/101717) - 开通实例外网
+* Create: [DescribeFlowStatus](https://cloud.tencent.com/document/api/238/19967) - This API is used to query flow status.
+* Create: [ModifyCloseWanIp](https://cloud.tencent.com/document/api/238/101718) - This API is used to disable the public network for the instance.
+* Create: [ModifyOpenWanIp](https://cloud.tencent.com/document/api/238/101717) - This API is used to enable the public network for the instance.
+* Read: [DescribeDBInstances](https://cloud.tencent.com/document/api/238/19969) - This API is used to query the list of instances.
+* Read: [DescribeReadOnlyGroupList](https://cloud.tencent.com/document/api/238/46771) - This API is used to query the read-only group list.
+* Update: [DescribeFlowStatus](https://cloud.tencent.com/document/api/238/19967) - This API is used to query flow status.
+* Update: [ModifyCloseWanIp](https://cloud.tencent.com/document/api/238/101718) - This API is used to disable the public network for the instance.
+* Update: [ModifyOpenWanIp](https://cloud.tencent.com/document/api/238/101717) - This API is used to enable the public network for the instance.
 

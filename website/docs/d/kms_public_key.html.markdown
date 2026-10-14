@@ -45,5 +45,5 @@ In addition to all arguments above, the following attributes are exported:
 
 This data source queries the following TencentCloud APIs:
 
-* Read: [GetPublicKey](https://cloud.tencent.com/document/api/573/42140) - 获取非对称密钥的公钥
+* Read: [GetPublicKey](https://cloud.tencent.com/document/api/573/42140) - This API is used to get the public key of an asymmetric KMS key (which must be enabled). With the public key, you can encrypt messages and verify signatures.
 

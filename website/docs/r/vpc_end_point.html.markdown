@@ -54,11 +54,11 @@ In addition to all arguments above, the following attributes are exported:
 
 This resource interacts with the following TencentCloud APIs:
 
-* Create: [CreateVpcEndPoint](https://cloud.tencent.com/document/api/215/54685) - 创建终端节点
-* Create: [ModifyVpcEndPointAttribute](https://cloud.tencent.com/document/api/215/54674) - 修改终端节点属性
-* Read: [DescribeVpcEndPoint](https://cloud.tencent.com/document/api/215/54679) - 查询终端节点列表
-* Update: [ModifyVpcEndPointAttribute](https://cloud.tencent.com/document/api/215/54674) - 修改终端节点属性
-* Delete: [DeleteVpcEndPoint](https://cloud.tencent.com/document/api/215/54682) - 删除终端节点
+* Create: [CreateVpcEndPoint](https://cloud.tencent.com/document/api/215/54685) - This API is used to create an endpoint.
+* Create: [ModifyVpcEndPointAttribute](https://cloud.tencent.com/document/api/215/54674) - This API is used to modify endpoint attributes.
+* Read: [DescribeVpcEndPoint](https://cloud.tencent.com/document/api/215/54679) - This API is used to query the endpoint list.
+* Update: [ModifyVpcEndPointAttribute](https://cloud.tencent.com/document/api/215/54674) - This API is used to modify endpoint attributes.
+* Delete: [DeleteVpcEndPoint](https://cloud.tencent.com/document/api/215/54682) - This API is used to delete an endpoint.
 
 ## Import
 

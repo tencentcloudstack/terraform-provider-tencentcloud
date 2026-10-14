@@ -46,6 +46,15 @@ func main() {
 		return
 	}
 
+	// English description refresh: re-extract from the intl SDK tarball.
+	if flags.refreshEN {
+		if err := refreshENData(); err != nil {
+			fmt.Fprintf(os.Stderr, "[FAIL!]refresh English descriptions: %v\n", err)
+			os.Exit(1)
+		}
+		return
+	}
+
 	// Probe mode: print the API call chain of one resource and exit.
 	if res := flags.probe; res != "" {
 		repoRoot, _ := filepath.Abs("..")

@@ -52,5 +52,5 @@ In addition to all arguments above, the following attributes are exported:
 
 This resource interacts with the following TencentCloud APIs:
 
-* Create: [ResetAttachCcnInstances](https://cloud.tencent.com/document/api/215/20249) - 重新申请关联实例
+* Create: [ResetAttachCcnInstances](https://cloud.tencent.com/document/api/215/20249) - This API (ResetAttachCcnInstances) is used to re-apply for the association operation when the application for cross-account instance association expires.
 

@@ -38,9 +38,9 @@ In addition to all arguments above, the following attributes are exported:
 
 This resource interacts with the following TencentCloud APIs:
 
-* Create: [ModifyLogFileRetentionPeriod](https://cloud.tencent.com/document/api/237/16151) - 修改备份日志保存天数
-* Read: [DescribeLogFileRetentionPeriod](https://cloud.tencent.com/document/api/237/16152) - 查看备份日志备份天数
-* Update: [ModifyLogFileRetentionPeriod](https://cloud.tencent.com/document/api/237/16151) - 修改备份日志保存天数
+* Create: [ModifyLogFileRetentionPeriod](https://cloud.tencent.com/document/api/237/16151)
+* Read: [DescribeLogFileRetentionPeriod](https://cloud.tencent.com/document/api/237/16152) - This API is used to view the backup log retention days.
+* Update: [ModifyLogFileRetentionPeriod](https://cloud.tencent.com/document/api/237/16151)
 
 ## Import
 

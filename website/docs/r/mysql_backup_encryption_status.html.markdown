@@ -97,9 +97,9 @@ In addition to all arguments above, the following attributes are exported:
 
 This resource interacts with the following TencentCloud APIs:
 
-* Create: [ModifyBackupEncryptionStatus](https://cloud.tencent.com/document/api/236/86507) - 设置实例备份文件是否加密
-* Read: [DescribeBackupEncryptionStatus](https://cloud.tencent.com/document/api/236/86508) - 查询实例默认备份加密状态
-* Update: [ModifyBackupEncryptionStatus](https://cloud.tencent.com/document/api/236/86507) - 设置实例备份文件是否加密
+* Create: [ModifyBackupEncryptionStatus](https://cloud.tencent.com/document/api/236/86507) - This API is used to set the encryption status of an instance backup.
+* Read: [DescribeBackupEncryptionStatus](https://cloud.tencent.com/document/api/236/86508) - This API is used to query the default encryption status of an instance backup.
+* Update: [ModifyBackupEncryptionStatus](https://cloud.tencent.com/document/api/236/86507) - This API is used to set the encryption status of an instance backup.
 
 ## Import
 

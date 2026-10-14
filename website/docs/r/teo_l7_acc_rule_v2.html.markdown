@@ -663,10 +663,10 @@ In addition to all arguments above, the following attributes are exported:
 
 This resource interacts with the following TencentCloud APIs:
 
-* Create: [CreateL7AccRules](https://cloud.tencent.com/document/api/1552/115822) - 创建七层加速规则
-* Read: [DescribeL7AccRules](https://cloud.tencent.com/document/api/1552/115820) - 查询七层加速规则
-* Update: [ModifyL7AccRule](https://cloud.tencent.com/document/api/1552/115818) - 修改七层加速规则
-* Delete: [DeleteL7AccRules](https://cloud.tencent.com/document/api/1552/115821) - 删除七层加速规则
+* Create: [CreateL7AccRules](https://cloud.tencent.com/document/api/1552/115822) - This API is used to create rules in the [rule engine](https://intl.cloud.tencent.com/document/product/1552/70901?from_cn_redirect=1). Batch creation is supported.
+* Read: [DescribeL7AccRules](https://cloud.tencent.com/document/api/1552/115820) - This API is used to query the rule list of the rule engine (https://intl.cloud.tencent.com/document/product/1552/70901?from_cn_redirect=1).
+* Update: [ModifyL7AccRule](https://cloud.tencent.com/document/api/1552/115818) - This API is used to modify rules in the [rule engine](https://intl.cloud.tencent.com/document/product/1552/70901?from_cn_redirect=1), supporting only one rule modification per request.
+* Delete: [DeleteL7AccRules](https://cloud.tencent.com/document/api/1552/115821) - This API is used to delete rules of the [rule engine](https://intl.cloud.tencent.com/document/product/1552/70901?from_cn_redirect=1), supporting batch deletion.
 
 ## Import
 

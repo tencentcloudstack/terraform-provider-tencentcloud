@@ -85,14 +85,14 @@ In addition to all arguments above, the following attributes are exported:
 
 This resource interacts with the following TencentCloud APIs:
 
-* Create: [CreateTableGroup](https://cloud.tencent.com/document/api/596/41495) - 新建表格组
-* Read: [DescribeTableGroupTags](https://cloud.tencent.com/document/api/596/45084) - 获取表格组关联的标签列表
-* Read: [DescribeTableGroups](https://cloud.tencent.com/document/api/596/41493) - 查询表格组列表
-* Update: [DescribeTasks](https://cloud.tencent.com/document/api/596/39677) - 查询任务列表
-* Update: [ModifyTableGroupName](https://cloud.tencent.com/document/api/596/41492) - 修改表格组名称
-* Update: [ModifyTableGroupTags](https://cloud.tencent.com/document/api/596/45083) - 修改表格组标签
-* Delete: [DeleteTableGroup](https://cloud.tencent.com/document/api/596/41494) - 删除表格组
-* Delete: [DescribeTableGroups](https://cloud.tencent.com/document/api/596/41493) - 查询表格组列表
+* Create: [CreateTableGroup](https://cloud.tencent.com/document/api/596/41495) - This API is used to create a table group in a TcaplusDB cluster.
+* Read: [DescribeTableGroupTags](https://cloud.tencent.com/document/api/596/45084) - This API is used to get the associated tag list of a table group.
+* Read: [DescribeTableGroups](https://cloud.tencent.com/document/api/596/41493) - This API is used to query the table group list.
+* Update: [DescribeTasks](https://cloud.tencent.com/document/api/596/39677) - This API is used to query the task list.
+* Update: [ModifyTableGroupName](https://cloud.tencent.com/document/api/596/41492) - This API is used to rename a TcaplusDB table group.
+* Update: [ModifyTableGroupTags](https://cloud.tencent.com/document/api/596/45083) - This API is used to modify table group tags.
+* Delete: [DeleteTableGroup](https://cloud.tencent.com/document/api/596/41494) - This API is used to delete a table group.
+* Delete: [DescribeTableGroups](https://cloud.tencent.com/document/api/596/41493) - This API is used to query the table group list.
 
 ## Import
 

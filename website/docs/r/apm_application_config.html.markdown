@@ -218,9 +218,9 @@ In addition to all arguments above, the following attributes are exported:
 
 This resource interacts with the following TencentCloud APIs:
 
-* Create: [ModifyApmApplicationConfig](https://cloud.tencent.com/document/api/1463/125072) - 修改应用配置（推荐）
-* Read: [DescribeApmApplicationConfig](https://cloud.tencent.com/document/api/1463/125073) - 查询应用配置（推荐）
-* Update: [ModifyApmApplicationConfig](https://cloud.tencent.com/document/api/1463/125072) - 修改应用配置（推荐）
+* Create: [ModifyApmApplicationConfig](https://cloud.tencent.com/document/api/1463/125072)
+* Read: [DescribeApmApplicationConfig](https://cloud.tencent.com/document/api/1463/125073) - This API is used to query application configuration.
+* Update: [ModifyApmApplicationConfig](https://cloud.tencent.com/document/api/1463/125072)
 
 ## Import
 

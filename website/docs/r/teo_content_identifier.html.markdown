@@ -53,10 +53,10 @@ In addition to all arguments above, the following attributes are exported:
 
 This resource interacts with the following TencentCloud APIs:
 
-* Create: [CreateContentIdentifier](https://cloud.tencent.com/document/api/1552/114249) - 创建内容标识符
-* Read: [DescribeContentIdentifiers](https://cloud.tencent.com/document/api/1552/114247) - 批量查询内容标识符
-* Update: [ModifyContentIdentifier](https://cloud.tencent.com/document/api/1552/114246) - 修改内容标识符
-* Delete: [DeleteContentIdentifier](https://cloud.tencent.com/document/api/1552/114248) - 删除内容标识符
+* Create: [CreateContentIdentifier](https://cloud.tencent.com/document/api/1552/114249) - This API is used to create content identifiers, where you can set descriptions, tags, and other information. It is also necessary to bind an enterprise edition package for billing data statistics. A content identifier can only bind one billing package, while a billing package can bind multiple content identifiers. This feature is only available to the allowlist.
+* Read: [DescribeContentIdentifiers](https://cloud.tencent.com/document/api/1552/114247) - Batch query content identifiers, which can be filtered by ID, description, status, or Tag. Deleted content identifiers queried by status are retained for only three months. This feature is only open to the allowlist.
+* Update: [ModifyContentIdentifier](https://cloud.tencent.com/document/api/1552/114246) - Modify content identifier, only description modification is supported. This feature is only open to the allowlist.
+* Delete: [DeleteContentIdentifier](https://cloud.tencent.com/document/api/1552/114248) - Delete the specified content identifier. This feature is only available to the allowlist.
 
 ## Import
 

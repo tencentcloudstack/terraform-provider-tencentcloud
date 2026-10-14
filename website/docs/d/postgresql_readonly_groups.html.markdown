@@ -154,5 +154,5 @@ In addition to all arguments above, the following attributes are exported:
 
 This data source queries the following TencentCloud APIs:
 
-* Read: [DescribeReadOnlyGroups](https://cloud.tencent.com/document/api/409/52599) - 查询只读组列表
+* Read: [DescribeReadOnlyGroups](https://cloud.tencent.com/document/api/409/52599) - This API is used to query the list of RO groups.
 

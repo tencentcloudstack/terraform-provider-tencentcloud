@@ -203,9 +203,9 @@ In addition to all arguments above, the following attributes are exported:
 
 This resource interacts with the following TencentCloud APIs:
 
-* Create: [DescribePrometheusConfig](https://cloud.tencent.com/document/api/248/85705) - 拉取Prometheus配置
-* Create: [ModifyPrometheusConfig](https://cloud.tencent.com/document/api/248/86031) - 修改prometheus配置
-* Read: [DescribePrometheusConfig](https://cloud.tencent.com/document/api/248/85705) - 拉取Prometheus配置
-* Update: [DescribePrometheusConfig](https://cloud.tencent.com/document/api/248/85705) - 拉取Prometheus配置
-* Update: [ModifyPrometheusConfig](https://cloud.tencent.com/document/api/248/86031) - 修改prometheus配置
+* Create: [DescribePrometheusConfig](https://cloud.tencent.com/document/api/248/85705) - This API is used to get the Prometheus configuration.
+* Create: [ModifyPrometheusConfig](https://cloud.tencent.com/document/api/248/86031) - This API is used to modify the Prometheus configuration. If there are no configuration items, one will be added.
+* Read: [DescribePrometheusConfig](https://cloud.tencent.com/document/api/248/85705) - This API is used to get the Prometheus configuration.
+* Update: [DescribePrometheusConfig](https://cloud.tencent.com/document/api/248/85705) - This API is used to get the Prometheus configuration.
+* Update: [ModifyPrometheusConfig](https://cloud.tencent.com/document/api/248/86031) - This API is used to modify the Prometheus configuration. If there are no configuration items, one will be added.
 

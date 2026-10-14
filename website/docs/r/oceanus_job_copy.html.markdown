@@ -48,7 +48,7 @@ In addition to all arguments above, the following attributes are exported:
 
 This resource interacts with the following TencentCloud APIs:
 
-* Create: [CopyJobs](https://cloud.tencent.com/document/api/849/77740) - 复制作业
-* Read: [DescribeJobs](https://cloud.tencent.com/document/api/849/52008) - 查询作业
-* Delete: [DeleteJobs](https://cloud.tencent.com/document/api/849/76834) - 删除作业
+* Create: [CopyJobs](https://cloud.tencent.com/document/api/849/77740)
+* Read: [DescribeJobs](https://cloud.tencent.com/document/api/849/52008)
+* Delete: [DeleteJobs](https://cloud.tencent.com/document/api/849/76834)
 

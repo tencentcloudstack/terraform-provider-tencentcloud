@@ -37,5 +37,5 @@ In addition to all arguments above, the following attributes are exported:
 
 This data source queries the following TencentCloud APIs:
 
-* Read: [DescribeDBCustomZones](https://cloud.tencent.com/document/api/1322/135271) - 查询指定地域的可用区列表
+* Read: [DescribeDBCustomZones](https://cloud.tencent.com/document/api/1322/135271)
 

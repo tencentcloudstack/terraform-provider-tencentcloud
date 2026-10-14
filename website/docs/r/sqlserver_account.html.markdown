@@ -94,14 +94,14 @@ The `timeouts` block allows you to specify [timeouts](https://developer.hashicor
 
 This resource interacts with the following TencentCloud APIs:
 
-* Create: [CreateAccount](https://cloud.tencent.com/document/api/238/19975) - 创建实例账号
-* Create: [DescribeFlowStatus](https://cloud.tencent.com/document/api/238/19967) - 查询流程状态
-* Read: [DescribeAccounts](https://cloud.tencent.com/document/api/238/19970) - 拉取实例账户列表
-* Update: [DescribeAccounts](https://cloud.tencent.com/document/api/238/19970) - 拉取实例账户列表
-* Update: [ModifyAccountRemark](https://cloud.tencent.com/document/api/238/19935) - 修改账户备注
-* Update: [ResetAccountPassword](https://cloud.tencent.com/document/api/238/19952) - 重置账户密码
-* Delete: [DeleteAccount](https://cloud.tencent.com/document/api/238/19972) - 删除实例账号
-* Delete: [DescribeAccounts](https://cloud.tencent.com/document/api/238/19970) - 拉取实例账户列表
+* Create: [CreateAccount](https://cloud.tencent.com/document/api/238/19975) - This API is used to create an instance account.
+* Create: [DescribeFlowStatus](https://cloud.tencent.com/document/api/238/19967) - This API is used to query flow status.
+* Read: [DescribeAccounts](https://cloud.tencent.com/document/api/238/19970) - This API is used to pull the list of instance accounts.
+* Update: [DescribeAccounts](https://cloud.tencent.com/document/api/238/19970) - This API is used to pull the list of instance accounts.
+* Update: [ModifyAccountRemark](https://cloud.tencent.com/document/api/238/19935) - This API is used to modify account remarks.
+* Update: [ResetAccountPassword](https://cloud.tencent.com/document/api/238/19952) - This API is used to reset the account password of an instance.
+* Delete: [DeleteAccount](https://cloud.tencent.com/document/api/238/19972) - This API is used to delete an instance account.
+* Delete: [DescribeAccounts](https://cloud.tencent.com/document/api/238/19970) - This API is used to pull the list of instance accounts.
 
 ## Import
 

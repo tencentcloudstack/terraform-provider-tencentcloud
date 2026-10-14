@@ -90,6 +90,6 @@ The `timeouts` block allows you to specify [timeouts](https://developer.hashicor
 
 This resource interacts with the following TencentCloud APIs:
 
-* Create: [CreatePurgeTask](https://cloud.tencent.com/document/api/1552/80703) - 创建清除缓存任务
-* Create: [DescribePurgeTasks](https://cloud.tencent.com/document/api/1552/80699) - 查询清除缓存历史记录
+* Create: [CreatePurgeTask](https://cloud.tencent.com/document/api/1552/80703) - This API is used to create a cache purging task.
+* Create: [DescribePurgeTasks](https://cloud.tencent.com/document/api/1552/80699) - This API is used to query the cache purging history.
 

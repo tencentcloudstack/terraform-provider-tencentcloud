@@ -90,10 +90,10 @@ In addition to all arguments above, the following attributes are exported:
 
 This resource interacts with the following TencentCloud APIs:
 
-* Create: [CreateMachineGroup](https://cloud.tencent.com/document/api/614/56440) - 创建机器组
-* Read: [DescribeMachineGroups](https://cloud.tencent.com/document/api/614/56438) - 获取机器组列表
-* Update: [ModifyMachineGroup](https://cloud.tencent.com/document/api/614/56436) - 修改机器组
-* Delete: [DeleteMachineGroup](https://cloud.tencent.com/document/api/614/56439) - 删除机器组
+* Create: [CreateMachineGroup](https://cloud.tencent.com/document/api/614/56440) - This API is used to create a machine group.
+* Read: [DescribeMachineGroups](https://cloud.tencent.com/document/api/614/56438) - This API is used to get the list of machine groups.
+* Update: [ModifyMachineGroup](https://cloud.tencent.com/document/api/614/56436) - Note: Modifying the interface will directly overwrite historical data and change it to valid input parameters this time. Please be cautious when calling this API.
+* Delete: [DeleteMachineGroup](https://cloud.tencent.com/document/api/614/56439) - This API is used to delete a machine group.
 
 ## Import
 

@@ -68,5 +68,5 @@ In addition to all arguments above, the following attributes are exported:
 
 This data source queries the following TencentCloud APIs:
 
-* Read: [DescribeSubdomainAnalytics](https://cloud.tencent.com/document/api/1427/75752) - 子域名解析量统计
+* Read: [DescribeSubdomainAnalytics](https://cloud.tencent.com/document/api/1427/75752) - This API is used to collect statistics on the DNS query volume of a subdomain. It helps you understand the traffic and time period distribution and allows you to view statistics in the last three months. It is available only for domains under a paid plan.
 

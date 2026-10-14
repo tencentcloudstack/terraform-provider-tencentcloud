@@ -78,5 +78,5 @@ In addition to all arguments above, the following attributes are exported:
 
 This data source queries the following TencentCloud APIs:
 
-* Read: [DescribeVpcResourceDashboard](https://cloud.tencent.com/document/api/215/43355) - 查看VPC资源信息
+* Read: [DescribeVpcResourceDashboard](https://cloud.tencent.com/document/api/215/43355)
 

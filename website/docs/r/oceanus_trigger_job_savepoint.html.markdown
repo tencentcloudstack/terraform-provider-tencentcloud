@@ -40,5 +40,5 @@ In addition to all arguments above, the following attributes are exported:
 
 This resource interacts with the following TencentCloud APIs:
 
-* Create: [TriggerJobSavepoint](https://cloud.tencent.com/document/api/849/75095) - 触发Savepoint
+* Create: [TriggerJobSavepoint](https://cloud.tencent.com/document/api/849/75095)
 

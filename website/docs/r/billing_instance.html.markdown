@@ -91,11 +91,11 @@ The `timeouts` block allows you to specify [timeouts](https://developer.hashicor
 
 This resource interacts with the following TencentCloud APIs:
 
-* Create: [CreateInstance](https://cloud.tencent.com/document/api/555/127790) - 创建实例
-* Create: [DescribeDealsByCond](https://cloud.tencent.com/document/api/555/19179) - 查询订单数据
-* Read: [DescribeRenewInstances](https://cloud.tencent.com/document/api/555/127836) - 查询续费实例
-* Update: [DescribeDealsByCond](https://cloud.tencent.com/document/api/555/19179) - 查询订单数据
-* Update: [RenewInstance](https://cloud.tencent.com/document/api/555/127788) - 续费实例
-* Delete: [DescribeDealsByCond](https://cloud.tencent.com/document/api/555/19179) - 查询订单数据
-* Delete: [RefundInstance](https://cloud.tencent.com/document/api/555/127789) - 退订实例
+* Create: [CreateInstance](https://cloud.tencent.com/document/api/555/127790) - Creating an instance resource will generate an order for the newly purchased instance resource and automatically complete the payment using the balance of the Tencent Cloud account. The account calling this API must be granted the finace:trade permission; otherwise, the payment will fail.
+* Create: [DescribeDealsByCond](https://cloud.tencent.com/document/api/555/19179)
+* Read: [DescribeRenewInstances](https://cloud.tencent.com/document/api/555/127836)
+* Update: [DescribeDealsByCond](https://cloud.tencent.com/document/api/555/19179)
+* Update: [RenewInstance](https://cloud.tencent.com/document/api/555/127788) - Renewing an instance: when calling this API to renew a server, ensure that your Tencent Cloud account has sufficient balance; otherwise, the renewal will fail. The account calling this API must be granted the finace:tradepermission; otherwise, the renewal will fail.
+* Delete: [DescribeDealsByCond](https://cloud.tencent.com/document/api/555/19179)
+* Delete: [RefundInstance](https://cloud.tencent.com/document/api/555/127789) - To unsubscribe from an unneeded instance, only the actual payment amount will be refunded, any used vouchers will not be returned. The refunded amount will be credited to your Tencent Cloud account balance by default.The account calling this API must be granted the finace:RefundInstance permission; otherwise, the refund process will fail.
 

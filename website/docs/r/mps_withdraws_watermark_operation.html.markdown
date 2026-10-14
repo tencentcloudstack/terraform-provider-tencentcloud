@@ -103,5 +103,5 @@ In addition to all arguments above, the following attributes are exported:
 
 This resource interacts with the following TencentCloud APIs:
 
-* Create: [WithdrawsWatermark](https://cloud.tencent.com/document/api/862/87934) - 提取盲水印
+* Create: [WithdrawsWatermark](https://cloud.tencent.com/document/api/862/87934)
 

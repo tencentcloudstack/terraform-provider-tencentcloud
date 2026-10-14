@@ -43,5 +43,5 @@ In addition to all arguments above, the following attributes are exported:
 
 This data source queries the following TencentCloud APIs:
 
-* Read: [DescribeLivePullStreamTaskStatus](https://cloud.tencent.com/document/api/267/94221) - 查询直播拉流任务状态
+* Read: [DescribeLivePullStreamTaskStatus](https://cloud.tencent.com/document/api/267/94221)
 

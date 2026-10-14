@@ -51,5 +51,5 @@ In addition to all arguments above, the following attributes are exported:
 
 This data source queries the following TencentCloud APIs:
 
-* Read: [DescribeScalingPolicies](https://cloud.tencent.com/document/api/377/33178) - 查询告警触发策略
+* Read: [DescribeScalingPolicies](https://cloud.tencent.com/document/api/377/33178) - This API (DescribeScalingPolicies) is used to query alarm trigger policies.
 

@@ -71,11 +71,11 @@ In addition to all arguments above, the following attributes are exported:
 
 This resource interacts with the following TencentCloud APIs:
 
-* Create: [CreateSqlFilter](https://cloud.tencent.com/document/api/1130/72835) - 创建实例SQL限流任务
-* Create: [VerifyUserAccount](https://cloud.tencent.com/document/api/1130/72828) - 验证用户数据库账号权限
-* Read: [DescribeSqlFilters](https://cloud.tencent.com/document/api/1130/72831) - 查询实例SQL限流任务列表
-* Update: [ModifySqlFilters](https://cloud.tencent.com/document/api/1130/72829) - 更改实例限流任务状态
-* Update: [VerifyUserAccount](https://cloud.tencent.com/document/api/1130/72828) - 验证用户数据库账号权限
-* Delete: [DeleteSqlFilters](https://cloud.tencent.com/document/api/1130/72834) - 删除实例SQL限流任务
-* Delete: [VerifyUserAccount](https://cloud.tencent.com/document/api/1130/72828) - 验证用户数据库账号权限
+* Create: [CreateSqlFilter](https://cloud.tencent.com/document/api/1130/72835)
+* Create: [VerifyUserAccount](https://cloud.tencent.com/document/api/1130/72828)
+* Read: [DescribeSqlFilters](https://cloud.tencent.com/document/api/1130/72831)
+* Update: [ModifySqlFilters](https://cloud.tencent.com/document/api/1130/72829)
+* Update: [VerifyUserAccount](https://cloud.tencent.com/document/api/1130/72828)
+* Delete: [DeleteSqlFilters](https://cloud.tencent.com/document/api/1130/72834)
+* Delete: [VerifyUserAccount](https://cloud.tencent.com/document/api/1130/72828)
 

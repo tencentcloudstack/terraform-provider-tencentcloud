@@ -51,5 +51,5 @@ In addition to all arguments above, the following attributes are exported:
 
 This data source queries the following TencentCloud APIs:
 
-* Read: [DescribeJobEvents](https://cloud.tencent.com/document/api/849/102554) - 获取指定作业的事件
+* Read: [DescribeJobEvents](https://cloud.tencent.com/document/api/849/102554)
 

@@ -54,12 +54,12 @@ In addition to all arguments above, the following attributes are exported:
 
 This resource interacts with the following TencentCloud APIs:
 
-* Create: [CreateUsagePlan](https://cloud.tencent.com/document/api/628/45224) - 创建使用计划
-* Create: [DescribeUsagePlan](https://cloud.tencent.com/document/api/628/45221) - 查询使用计划详情
-* Read: [DescribeUsagePlan](https://cloud.tencent.com/document/api/628/45221) - 查询使用计划详情
-* Read: [DescribeUsagePlanEnvironments](https://cloud.tencent.com/document/api/628/45220) - 查询使用计划绑定环境列表
-* Update: [ModifyUsagePlan](https://cloud.tencent.com/document/api/628/45217) - 修改使用计划
-* Delete: [DeleteUsagePlan](https://cloud.tencent.com/document/api/628/45223) - 删除使用计划
+* Create: [CreateUsagePlan](https://cloud.tencent.com/document/api/628/45224) - This API is used to create a usage plan.
+* Create: [DescribeUsagePlan](https://cloud.tencent.com/document/api/628/45221) - This API is used to query the details of a usage plan, such as its name, QPS, creation time, and bound environment.
+* Read: [DescribeUsagePlan](https://cloud.tencent.com/document/api/628/45221) - This API is used to query the details of a usage plan, such as its name, QPS, creation time, and bound environment.
+* Read: [DescribeUsagePlanEnvironments](https://cloud.tencent.com/document/api/628/45220) - This API is used to query the list of environments bound to a usage plan.
+* Update: [ModifyUsagePlan](https://cloud.tencent.com/document/api/628/45217) - This API is used to modify the name, description, and QPS of a usage plan.
+* Delete: [DeleteUsagePlan](https://cloud.tencent.com/document/api/628/45223) - This API is used to delete a usage plan.
 
 ## Import
 

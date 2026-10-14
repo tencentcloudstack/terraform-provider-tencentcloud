@@ -115,13 +115,13 @@ In addition to all arguments above, the following attributes are exported:
 
 This resource interacts with the following TencentCloud APIs:
 
-* Create: [CreateNatGatewayDestinationIpPortTranslationNatRule](https://cloud.tencent.com/document/api/215/36720) - 创建NAT网关端口转发规则
-* Create: [DescribeNatGatewayDestinationIpPortTranslationNatRules](https://cloud.tencent.com/document/api/215/36717) - 查询NAT网关端口转发规则
-* Read: [DescribeNatGatewayDestinationIpPortTranslationNatRules](https://cloud.tencent.com/document/api/215/36717) - 查询NAT网关端口转发规则
-* Update: [DescribeNatGatewayDestinationIpPortTranslationNatRules](https://cloud.tencent.com/document/api/215/36717) - 查询NAT网关端口转发规则
-* Update: [ModifyNatGatewayDestinationIpPortTranslationNatRule](https://cloud.tencent.com/document/api/215/36714) - 修改NAT网关端口转发规则
-* Delete: [DeleteNatGatewayDestinationIpPortTranslationNatRule](https://cloud.tencent.com/document/api/215/36718) - 删除NAT网关端口转发规则
-* Delete: [DescribeNatGatewayDestinationIpPortTranslationNatRules](https://cloud.tencent.com/document/api/215/36717) - 查询NAT网关端口转发规则
+* Create: [CreateNatGatewayDestinationIpPortTranslationNatRule](https://cloud.tencent.com/document/api/215/36720) - This API is used to create the port forwarding rules of a NAT gateway.
+* Create: [DescribeNatGatewayDestinationIpPortTranslationNatRules](https://cloud.tencent.com/document/api/215/36717) - This API is used to query the array of objects of a NAT gateway's port forwarding rules.
+* Read: [DescribeNatGatewayDestinationIpPortTranslationNatRules](https://cloud.tencent.com/document/api/215/36717) - This API is used to query the array of objects of a NAT gateway's port forwarding rules.
+* Update: [DescribeNatGatewayDestinationIpPortTranslationNatRules](https://cloud.tencent.com/document/api/215/36717) - This API is used to query the array of objects of a NAT gateway's port forwarding rules.
+* Update: [ModifyNatGatewayDestinationIpPortTranslationNatRule](https://cloud.tencent.com/document/api/215/36714) - This API is used to modify the port forwarding rule of a NAT gateway.
+* Delete: [DeleteNatGatewayDestinationIpPortTranslationNatRule](https://cloud.tencent.com/document/api/215/36718) - This API is used to delete the port forwarding rule of a NAT gateway.
+* Delete: [DescribeNatGatewayDestinationIpPortTranslationNatRules](https://cloud.tencent.com/document/api/215/36717) - This API is used to query the array of objects of a NAT gateway's port forwarding rules.
 
 ## Import
 

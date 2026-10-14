@@ -38,11 +38,11 @@ In addition to all arguments above, the following attributes are exported:
 
 This resource interacts with the following TencentCloud APIs:
 
-* Create: [DescribeHaVips](https://cloud.tencent.com/document/api/215/30650) - 查询HAVIP列表
-* Create: [HaVipAssociateAddressIp](https://cloud.tencent.com/document/api/215/30649) - HAVIP绑定EIP
-* Read: [DescribeHaVips](https://cloud.tencent.com/document/api/215/30650) - 查询HAVIP列表
-* Delete: [DescribeHaVips](https://cloud.tencent.com/document/api/215/30650) - 查询HAVIP列表
-* Delete: [HaVipDisassociateAddressIp](https://cloud.tencent.com/document/api/215/30648) - HAVIP解绑EIP
+* Create: [DescribeHaVips](https://cloud.tencent.com/document/api/215/30650) - This API (DescribeHaVips) is used to query the list of highly available virtual IPs (HAVIP).
+* Create: [HaVipAssociateAddressIp](https://cloud.tencent.com/document/api/215/30649) - This API is used to bind an EIP to an HAVIP. <br />
+* Read: [DescribeHaVips](https://cloud.tencent.com/document/api/215/30650) - This API (DescribeHaVips) is used to query the list of highly available virtual IPs (HAVIP).
+* Delete: [DescribeHaVips](https://cloud.tencent.com/document/api/215/30650) - This API (DescribeHaVips) is used to query the list of highly available virtual IPs (HAVIP).
+* Delete: [HaVipDisassociateAddressIp](https://cloud.tencent.com/document/api/215/30648) - This API is used to unbind an EIP from an HAVIP. <br />
 
 ## Import
 

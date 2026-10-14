@@ -35,5 +35,5 @@ In addition to all arguments above, the following attributes are exported:
 
 This data source queries the following TencentCloud APIs:
 
-* Read: [GetServiceStatus](https://cloud.tencent.com/document/api/1140/40521) - 获取用户服务开通状态
+* Read: [GetServiceStatus](https://cloud.tencent.com/document/api/1140/40521) - This API is used to obtain the SecretsManager service status of a user.
 

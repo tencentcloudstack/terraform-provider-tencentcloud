@@ -90,11 +90,11 @@ In addition to all arguments above, the following attributes are exported:
 
 This resource interacts with the following TencentCloud APIs:
 
-* Create: [DescribeFlow](https://cloud.tencent.com/document/api/237/16177) - 查询流程状态
-* Create: [ModifyAccountPrivileges](https://cloud.tencent.com/document/api/237/56486) - 修改云数据库实例账号的权限信息
-* Read: [DescribeAccountPrivileges](https://cloud.tencent.com/document/api/237/16164) - 查询账号权限
-* Update: [DescribeFlow](https://cloud.tencent.com/document/api/237/16177) - 查询流程状态
-* Update: [ModifyAccountPrivileges](https://cloud.tencent.com/document/api/237/56486) - 修改云数据库实例账号的权限信息
+* Create: [DescribeFlow](https://cloud.tencent.com/document/api/237/16177)
+* Create: [ModifyAccountPrivileges](https://cloud.tencent.com/document/api/237/56486) - This API is used to modify the permissions of a TencentDB instance account. \n\n**Note**\n-Only the SELECT permission (that is, set the permission parameter to `["SELECT"]`) of the system database `mysql` can be granted.An error will be reported if read-write permissions are granted to a read-only account. If the parameter is not passed in, no change will be made to the granted table permissions. To clear the granted view permissions, set `Privileges` to an empty array.
+* Read: [DescribeAccountPrivileges](https://cloud.tencent.com/document/api/237/16164) - This API is used to query the permissions of a TencentDB account.
+* Update: [DescribeFlow](https://cloud.tencent.com/document/api/237/16177)
+* Update: [ModifyAccountPrivileges](https://cloud.tencent.com/document/api/237/56486) - This API is used to modify the permissions of a TencentDB instance account. \n\n**Note**\n-Only the SELECT permission (that is, set the permission parameter to `["SELECT"]`) of the system database `mysql` can be granted.An error will be reported if read-write permissions are granted to a read-only account. If the parameter is not passed in, no change will be made to the granted table permissions. To clear the granted view permissions, set `Privileges` to an empty array.
 
 ## Import
 

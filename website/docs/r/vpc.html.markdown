@@ -88,14 +88,14 @@ In addition to all arguments above, the following attributes are exported:
 
 This resource interacts with the following TencentCloud APIs:
 
-* Create: [CreateAssistantCidr](https://cloud.tencent.com/document/api/215/43276) - 创建辅助CIDR
-* Create: [CreateVpc](https://cloud.tencent.com/document/api/215/15774) - 创建VPC
-* Read: [DescribeRouteTables](https://cloud.tencent.com/document/api/215/15763) - 查询路由表
-* Read: [DescribeVpcs](https://cloud.tencent.com/document/api/215/15778) - 查询VPC列表
-* Update: [ModifyAssistantCidr](https://cloud.tencent.com/document/api/215/43272) - 修改辅助CIDR
-* Update: [ModifyResourceTags](https://cloud.tencent.com/document/api/651/35322) - 批量修改资源关联的标签
-* Update: [ModifyVpcAttribute](https://cloud.tencent.com/document/api/215/15773) - 修改VPC属性
-* Delete: [DeleteVpc](https://cloud.tencent.com/document/api/215/15775) - 删除VPC
+* Create: [CreateAssistantCidr](https://cloud.tencent.com/document/api/215/43276) - This API is used to batch create secondary CIDR blocks.
+* Create: [CreateVpc](https://cloud.tencent.com/document/api/215/15774) - This API is used to create a VPC instance.
+* Read: [DescribeRouteTables](https://cloud.tencent.com/document/api/215/15763) - This API is used to query route tables.
+* Read: [DescribeVpcs](https://cloud.tencent.com/document/api/215/15778) - This API (DescribeVpcs) is used to query the VPC list.
+* Update: [ModifyAssistantCidr](https://cloud.tencent.com/document/api/215/43272) - This API is used to batch modify (add or delete) secondary CIDR blocks.
+* Update: [ModifyResourceTags](https://cloud.tencent.com/document/api/651/35322) - This API is used to modify all tags associated with a resource.
+* Update: [ModifyVpcAttribute](https://cloud.tencent.com/document/api/215/15773) - This API (ModifyVpcAttribute) is used to modify VPC attributes.
+* Delete: [DeleteVpc](https://cloud.tencent.com/document/api/215/15775) - This API (DeleteVpc) is used to delete VPCs.
 
 ## Import
 

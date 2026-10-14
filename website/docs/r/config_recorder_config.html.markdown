@@ -58,13 +58,13 @@ In addition to all arguments above, the following attributes are exported:
 
 This resource interacts with the following TencentCloud APIs:
 
-* Create: [CloseConfigRecorder](https://cloud.tencent.com/document/api/1579/129701) - 关闭监控
-* Create: [OpenConfigRecorder](https://cloud.tencent.com/document/api/1579/129753) - 开启监控
-* Create: [UpdateConfigRecorder](https://cloud.tencent.com/document/api/1579/129697) - 编辑监控范围
-* Read: [DescribeConfigRecorder](https://cloud.tencent.com/document/api/1579/129700) - 获取监控详情
-* Update: [CloseConfigRecorder](https://cloud.tencent.com/document/api/1579/129701) - 关闭监控
-* Update: [OpenConfigRecorder](https://cloud.tencent.com/document/api/1579/129753) - 开启监控
-* Update: [UpdateConfigRecorder](https://cloud.tencent.com/document/api/1579/129697) - 编辑监控范围
+* Create: [CloseConfigRecorder](https://cloud.tencent.com/document/api/1579/129701)
+* Create: [OpenConfigRecorder](https://cloud.tencent.com/document/api/1579/129753)
+* Create: [UpdateConfigRecorder](https://cloud.tencent.com/document/api/1579/129697)
+* Read: [DescribeConfigRecorder](https://cloud.tencent.com/document/api/1579/129700)
+* Update: [CloseConfigRecorder](https://cloud.tencent.com/document/api/1579/129701)
+* Update: [OpenConfigRecorder](https://cloud.tencent.com/document/api/1579/129753)
+* Update: [UpdateConfigRecorder](https://cloud.tencent.com/document/api/1579/129697)
 
 ## Import
 

@@ -106,11 +106,11 @@ The `vpc_fw_instances` object exports the following:
 
 This resource interacts with the following TencentCloud APIs:
 
-* Create: [CreateVpcFwGroup](https://cloud.tencent.com/document/api/1132/97855) - 创建VPC间防火墙(防火墙组)
-* Create: [DescribeFwGroupInstanceInfo](https://cloud.tencent.com/document/api/1132/97853) - 获取租户所有VPC防火墙(组)及VPC防火墙实例卡片信息
-* Read: [DescribeFwGroupInstanceInfo](https://cloud.tencent.com/document/api/1132/97853) - 获取租户所有VPC防火墙(组)及VPC防火墙实例卡片信息
-* Update: [ModifyVpcFwGroup](https://cloud.tencent.com/document/api/1132/97849) - 编辑VPC间防火墙(防火墙组)
-* Delete: [DeleteVpcFwGroup](https://cloud.tencent.com/document/api/1132/97854) - 删除防火墙(组)，或者删除其中实例
+* Create: [CreateVpcFwGroup](https://cloud.tencent.com/document/api/1132/97855)
+* Create: [DescribeFwGroupInstanceInfo](https://cloud.tencent.com/document/api/1132/97853)
+* Read: [DescribeFwGroupInstanceInfo](https://cloud.tencent.com/document/api/1132/97853)
+* Update: [ModifyVpcFwGroup](https://cloud.tencent.com/document/api/1132/97849)
+* Delete: [DeleteVpcFwGroup](https://cloud.tencent.com/document/api/1132/97854)
 
 ## Import
 

@@ -53,5 +53,5 @@ In addition to all arguments above, the following attributes are exported:
 
 This data source queries the following TencentCloud APIs:
 
-* Read: [DescribeDCDBPrice](https://cloud.tencent.com/document/api/557/16131) - 新购分布式数据库实例询价
+* Read: [DescribeDCDBPrice](https://cloud.tencent.com/document/api/557/16131) - This API is used to query the price of an instance before you purchase it.
 

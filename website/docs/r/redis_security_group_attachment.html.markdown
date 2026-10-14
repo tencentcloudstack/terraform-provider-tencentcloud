@@ -89,9 +89,9 @@ In addition to all arguments above, the following attributes are exported:
 
 This resource interacts with the following TencentCloud APIs:
 
-* Create: [AssociateSecurityGroups](https://cloud.tencent.com/document/api/239/41260) - 绑定安全组
-* Read: [DescribeDBSecurityGroups](https://cloud.tencent.com/document/api/239/41259) - 查询实例安全组详情
-* Delete: [DisassociateSecurityGroups](https://cloud.tencent.com/document/api/239/41257) - 安全组批量解绑云资源
+* Create: [AssociateSecurityGroups](https://cloud.tencent.com/document/api/239/41260) - This API is used to bind a security group to one or more database instances. When you create an instance without configuring a security group, it is recommended to bind a security group through this API.
+* Read: [DescribeDBSecurityGroups](https://cloud.tencent.com/document/api/239/41259) - This API is used to query the security group details of an instance.
+* Delete: [DisassociateSecurityGroups](https://cloud.tencent.com/document/api/239/41257) - This API is used to unbind security groups from instances in batches.
 
 ## Import
 

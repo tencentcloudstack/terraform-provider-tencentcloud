@@ -66,6 +66,6 @@ In addition to all arguments above, the following attributes are exported:
 
 This resource interacts with the following TencentCloud APIs:
 
-* Create: [GetSecretValue](https://cloud.tencent.com/document/api/1140/40522) - 获取凭据明文
-* Update: [GetSecretValue](https://cloud.tencent.com/document/api/1140/40522) - 获取凭据明文
+* Create: [GetSecretValue](https://cloud.tencent.com/document/api/1140/40522) - For user-defined credentials, this API is used to get the plaintext information of a credential by specifying the credential name and version.
+* Update: [GetSecretValue](https://cloud.tencent.com/document/api/1140/40522) - For user-defined credentials, this API is used to get the plaintext information of a credential by specifying the credential name and version.
 

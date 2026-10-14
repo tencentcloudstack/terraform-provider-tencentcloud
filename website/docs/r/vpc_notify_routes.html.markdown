@@ -48,9 +48,9 @@ In addition to all arguments above, the following attributes are exported:
 
 This resource interacts with the following TencentCloud APIs:
 
-* Create: [NotifyRoutes](https://cloud.tencent.com/document/api/215/52618) - 发布路由至云联网
-* Read: [DescribeRouteTables](https://cloud.tencent.com/document/api/215/15763) - 查询路由表
-* Delete: [WithdrawNotifyRoutes](https://cloud.tencent.com/document/api/215/52617) - 从云联网撤销路由
+* Create: [NotifyRoutes](https://cloud.tencent.com/document/api/215/52618) - This API is used to publish a route to CCN. This can also be done by clicking "Publish to CCN" in the operation column on the page of route table list.
+* Read: [DescribeRouteTables](https://cloud.tencent.com/document/api/215/15763) - This API is used to query route tables.
+* Delete: [WithdrawNotifyRoutes](https://cloud.tencent.com/document/api/215/52617) - This API is used to withdraw a route from CCN.
 
 ## Import
 

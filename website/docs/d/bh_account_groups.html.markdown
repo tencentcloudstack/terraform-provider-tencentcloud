@@ -62,5 +62,5 @@ In addition to all arguments above, the following attributes are exported:
 
 This data source queries the following TencentCloud APIs:
 
-* Read: [DescribeAccountGroups](https://cloud.tencent.com/document/api/1025/125477) - 获取账号组信息
+* Read: [DescribeAccountGroups](https://cloud.tencent.com/document/api/1025/125477)
 

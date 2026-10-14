@@ -79,14 +79,14 @@ In addition to all arguments above, the following attributes are exported:
 
 This resource interacts with the following TencentCloud APIs:
 
-* Create: [ModifyInstanceLogDelivery](https://cloud.tencent.com/document/api/239/110877) - 修改实例日志投递配置
-* Read: [DescribeInstanceLogDelivery](https://cloud.tencent.com/document/api/239/110878) - 查询实例日志投递配置
-* Read: [DescribeLogsets](https://cloud.tencent.com/document/api/614/58624) - 获取日志集列表
-* Read: [DescribeTopics](https://cloud.tencent.com/document/api/614/56454) - 获取主题列表
-* Update: [ModifyInstanceLogDelivery](https://cloud.tencent.com/document/api/239/110877) - 修改实例日志投递配置
-* Delete: [DeleteLogset](https://cloud.tencent.com/document/api/614/58625) - 删除日志集
-* Delete: [DeleteTopic](https://cloud.tencent.com/document/api/614/56455) - 删除主题
-* Delete: [ModifyInstanceLogDelivery](https://cloud.tencent.com/document/api/239/110877) - 修改实例日志投递配置
+* Create: [ModifyInstanceLogDelivery](https://cloud.tencent.com/document/api/239/110877) - This API is used to enable or disable the shipping of instance logs to CLS.
+* Read: [DescribeInstanceLogDelivery](https://cloud.tencent.com/document/api/239/110878) - This API is used to query the instance log shipping configuration.
+* Read: [DescribeLogsets](https://cloud.tencent.com/document/api/614/58624) - This API is used to get the list of logsets.
+* Read: [DescribeTopics](https://cloud.tencent.com/document/api/614/56454) - This API is used to obtain logs or metric topic lists and supports pagination.
+* Update: [ModifyInstanceLogDelivery](https://cloud.tencent.com/document/api/239/110877) - This API is used to enable or disable the shipping of instance logs to CLS.
+* Delete: [DeleteLogset](https://cloud.tencent.com/document/api/614/58625) - This API is used to delete a logset.
+* Delete: [DeleteTopic](https://cloud.tencent.com/document/api/614/56455) - This API is used to delete logs or metric topics.
+* Delete: [ModifyInstanceLogDelivery](https://cloud.tencent.com/document/api/239/110877) - This API is used to enable or disable the shipping of instance logs to CLS.
 
 ## Import
 

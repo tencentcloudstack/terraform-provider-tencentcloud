@@ -38,5 +38,5 @@ In addition to all arguments above, the following attributes are exported:
 
 This data source queries the following TencentCloud APIs:
 
-* Read: [DescribeImageSharePermission](https://cloud.tencent.com/document/api/213/15712) - 查看镜像分享信息
+* Read: [DescribeImageSharePermission](https://cloud.tencent.com/document/api/213/15712) - This API is used to query image sharing information.
 

@@ -68,5 +68,5 @@ In addition to all arguments above, the following attributes are exported:
 
 This data source queries the following TencentCloud APIs:
 
-* Read: [DescribeStrategyList](https://cloud.tencent.com/document/api/1551/120439) - 策略列表
+* Read: [DescribeStrategyList](https://cloud.tencent.com/document/api/1551/120439)
 

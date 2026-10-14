@@ -82,10 +82,10 @@ In addition to all arguments above, the following attributes are exported:
 
 This resource interacts with the following TencentCloud APIs:
 
-* Create: [CreateWatermarkTemplate](https://cloud.tencent.com/document/api/266/33772) - 创建水印模板
-* Read: [DescribeWatermarkTemplates](https://cloud.tencent.com/document/api/266/33768) - 获取水印模板列表
-* Update: [ModifyWatermarkTemplate](https://cloud.tencent.com/document/api/266/33766) - 修改水印模板
-* Delete: [DeleteWatermarkTemplate](https://cloud.tencent.com/document/api/266/33770) - 删除水印模板
+* Create: [CreateWatermarkTemplate](https://cloud.tencent.com/document/api/266/33772) - This API is used to create a user-defined watermark template with an upper limit of 1000.
+* Read: [DescribeWatermarkTemplates](https://cloud.tencent.com/document/api/266/33768) - This API is used to query user-customized watermark templates, and the pagination query is supported based on conditions.
+* Update: [ModifyWatermarkTemplate](https://cloud.tencent.com/document/api/266/33766) - This API is used to modify a user-defined watermark template. The watermark type cannot be modified.
+* Delete: [DeleteWatermarkTemplate](https://cloud.tencent.com/document/api/266/33770) - This API is used to delete a user-customized watermark template.
 
 ## Import
 

@@ -60,5 +60,5 @@ In addition to all arguments above, the following attributes are exported:
 
 This resource interacts with the following TencentCloud APIs:
 
-* Read: [DescribePushTasks](https://cloud.tencent.com/document/api/228/37872) - 预热历史查询
+* Read: [DescribePushTasks](https://cloud.tencent.com/document/api/228/37872) - This API is used to query the submission record and progress of prefetch tasks.
 

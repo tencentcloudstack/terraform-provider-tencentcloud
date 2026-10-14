@@ -60,5 +60,5 @@ In addition to all arguments above, the following attributes are exported:
 
 This data source queries the following TencentCloud APIs:
 
-* Read: [DescribeParamTemplates](https://cloud.tencent.com/document/api/1003/77805) - 查询参数模板信息
+* Read: [DescribeParamTemplates](https://cloud.tencent.com/document/api/1003/77805) - This API is used to query all parameter template information under the user-specified product.
 

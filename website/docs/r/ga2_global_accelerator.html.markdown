@@ -77,14 +77,14 @@ The `timeouts` block allows you to specify [timeouts](https://developer.hashicor
 
 This resource interacts with the following TencentCloud APIs:
 
-* Create: [CreateGlobalAccelerator](https://cloud.tencent.com/document/api/1817/130044) - 创建全球加速实例
-* Create: [DescribeTaskResult](https://cloud.tencent.com/document/api/1817/131942) - 查询异步任务结果
-* Read: [DescribeGlobalAccelerators](https://cloud.tencent.com/document/api/1817/130161) - 查询全球加速实例
-* Update: [DescribeTaskResult](https://cloud.tencent.com/document/api/1817/131942) - 查询异步任务结果
-* Update: [ModifyGlobalAccelerator](https://cloud.tencent.com/document/api/1817/130156) - 修改全球加速实例
-* Update: [ModifyResourceTags](https://cloud.tencent.com/document/api/651/35322) - 批量修改资源关联的标签
-* Delete: [DeleteGlobalAccelerator](https://cloud.tencent.com/document/api/1817/130167) - 删除全球加速实例
-* Delete: [DescribeTaskResult](https://cloud.tencent.com/document/api/1817/131942) - 查询异步任务结果
+* Create: [CreateGlobalAccelerator](https://cloud.tencent.com/document/api/1817/130044) - This API is used to create a global acceleration instance.
+* Create: [DescribeTaskResult](https://cloud.tencent.com/document/api/1817/131942) - Query asynchronous task result
+* Read: [DescribeGlobalAccelerators](https://cloud.tencent.com/document/api/1817/130161) - Modify a global acceleration instance
+* Update: [DescribeTaskResult](https://cloud.tencent.com/document/api/1817/131942) - Query asynchronous task result
+* Update: [ModifyGlobalAccelerator](https://cloud.tencent.com/document/api/1817/130156) - Modify a global acceleration instance
+* Update: [ModifyResourceTags](https://cloud.tencent.com/document/api/651/35322) - This API is used to modify all tags associated with a resource.
+* Delete: [DeleteGlobalAccelerator](https://cloud.tencent.com/document/api/1817/130167) - Deletes a global acceleration instance
+* Delete: [DescribeTaskResult](https://cloud.tencent.com/document/api/1817/131942) - Query asynchronous task result
 
 ## Import
 

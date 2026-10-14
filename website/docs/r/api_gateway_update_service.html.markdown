@@ -40,5 +40,5 @@ In addition to all arguments above, the following attributes are exported:
 
 This resource interacts with the following TencentCloud APIs:
 
-* Create: [UpdateService](https://cloud.tencent.com/document/api/628/45190) - 更新服务版本
+* Create: [UpdateService](https://cloud.tencent.com/document/api/628/45190) - This API is used to switch the running version of a service published in an environment to a specified version. After you create a service by using API Gateway and publish it to an environment, multiple versions will be generated during development. In this case, you can call this API to switch versions.
 

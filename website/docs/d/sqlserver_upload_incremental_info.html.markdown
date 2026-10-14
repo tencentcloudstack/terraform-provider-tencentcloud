@@ -47,5 +47,5 @@ In addition to all arguments above, the following attributes are exported:
 
 This data source queries the following TencentCloud APIs:
 
-* Read: [DescribeUploadIncrementalInfo](https://cloud.tencent.com/document/api/238/53184) - 查询增量备份上传权限
+* Read: [DescribeUploadIncrementalInfo](https://cloud.tencent.com/document/api/238/53184) - This API is used to query upload permissions for incremental backups.
 

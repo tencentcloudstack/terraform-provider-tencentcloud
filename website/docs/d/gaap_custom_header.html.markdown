@@ -38,5 +38,5 @@ In addition to all arguments above, the following attributes are exported:
 
 This data source queries the following TencentCloud APIs:
 
-* Read: [DescribeCustomHeader](https://cloud.tencent.com/document/api/608/59240) - 查询自定义header列表
+* Read: [DescribeCustomHeader](https://cloud.tencent.com/document/api/608/59240) - This API is used to query the list of custom headers.
 

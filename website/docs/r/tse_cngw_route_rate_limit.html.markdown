@@ -180,10 +180,10 @@ In addition to all arguments above, the following attributes are exported:
 
 This resource interacts with the following TencentCloud APIs:
 
-* Create: [CreateCloudNativeAPIGatewayRouteRateLimit](https://cloud.tencent.com/document/api/1364/94852) - 创建云原生网关限流插件(路由)
-* Read: [DescribeCloudNativeAPIGatewayRouteRateLimit](https://cloud.tencent.com/document/api/1364/94843) - 查询云原生网关的限流插件(路由)
-* Update: [ModifyCloudNativeAPIGatewayRouteRateLimit](https://cloud.tencent.com/document/api/1364/94836) - 修改云原生网关限流插件(路由)
-* Delete: [DeleteCloudNativeAPIGatewayRouteRateLimit](https://cloud.tencent.com/document/api/1364/94847) - 删除云原生网关的限流插件(路由)
+* Create: [CreateCloudNativeAPIGatewayRouteRateLimit](https://cloud.tencent.com/document/api/1364/94852) - This API is used to create a cloud-native gateway traffic throttling plugin.
+* Read: [DescribeCloudNativeAPIGatewayRouteRateLimit](https://cloud.tencent.com/document/api/1364/94843) - Query the traffic throttling plugin of a cloud-native gateway (Route).
+* Update: [ModifyCloudNativeAPIGatewayRouteRateLimit](https://cloud.tencent.com/document/api/1364/94836) - This API is used to modify the traffic throttling plugin of a cloud-native gateway (Route).
+* Delete: [DeleteCloudNativeAPIGatewayRouteRateLimit](https://cloud.tencent.com/document/api/1364/94847) - This API is used to delete a traffic throttling plugin of a cloud-native gateway (Route).
 
 ## Import
 

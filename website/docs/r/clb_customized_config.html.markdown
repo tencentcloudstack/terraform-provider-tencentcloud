@@ -55,13 +55,13 @@ In addition to all arguments above, the following attributes are exported:
 
 This resource interacts with the following TencentCloud APIs:
 
-* Create: [DescribeCustomizedConfigAssociateList](https://cloud.tencent.com/document/api/214/60010) - 拉取配置绑定的server或location
-* Create: [DescribeCustomizedConfigList](https://cloud.tencent.com/document/api/214/60009) - 拉取配置列表
-* Create: [SetCustomizedConfigForLoadBalancer](https://cloud.tencent.com/document/api/214/60008) - 负载均衡维度的个性化配置相关操作
-* Read: [DescribeCustomizedConfigAssociateList](https://cloud.tencent.com/document/api/214/60010) - 拉取配置绑定的server或location
-* Read: [DescribeCustomizedConfigList](https://cloud.tencent.com/document/api/214/60009) - 拉取配置列表
-* Update: [SetCustomizedConfigForLoadBalancer](https://cloud.tencent.com/document/api/214/60008) - 负载均衡维度的个性化配置相关操作
-* Delete: [SetCustomizedConfigForLoadBalancer](https://cloud.tencent.com/document/api/214/60008) - 负载均衡维度的个性化配置相关操作
+* Create: [DescribeCustomizedConfigAssociateList](https://cloud.tencent.com/document/api/214/60010) - This API is used to query the configured location, bound server or bound CLB instance. If there are domain names, the result will be filtered by domain name.
+* Create: [DescribeCustomizedConfigList](https://cloud.tencent.com/document/api/214/60009) - This API is used to pull custom configuration lists to return the user configuration of `AppId`.
+* Create: [SetCustomizedConfigForLoadBalancer](https://cloud.tencent.com/document/api/214/60008) - This API is used to create or manage a user-defined CLB configuration template.
+* Read: [DescribeCustomizedConfigAssociateList](https://cloud.tencent.com/document/api/214/60010) - This API is used to query the configured location, bound server or bound CLB instance. If there are domain names, the result will be filtered by domain name.
+* Read: [DescribeCustomizedConfigList](https://cloud.tencent.com/document/api/214/60009) - This API is used to pull custom configuration lists to return the user configuration of `AppId`.
+* Update: [SetCustomizedConfigForLoadBalancer](https://cloud.tencent.com/document/api/214/60008) - This API is used to create or manage a user-defined CLB configuration template.
+* Delete: [SetCustomizedConfigForLoadBalancer](https://cloud.tencent.com/document/api/214/60008) - This API is used to create or manage a user-defined CLB configuration template.
 
 ## Import
 

@@ -36,5 +36,5 @@ In addition to all arguments above, the following attributes are exported:
 
 This resource interacts with the following TencentCloud APIs:
 
-* Create: [RejectVpcPeeringConnection](https://cloud.tencent.com/document/api/215/96021) - 驳回对等连接
+* Create: [RejectVpcPeeringConnection](https://cloud.tencent.com/document/api/215/96021)
 

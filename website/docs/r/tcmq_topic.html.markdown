@@ -40,10 +40,10 @@ In addition to all arguments above, the following attributes are exported:
 
 This resource interacts with the following TencentCloud APIs:
 
-* Create: [CreateCmqTopic](https://cloud.tencent.com/document/api/1179/55915) - 创建cmq主题
-* Read: [DescribeCmqTopicDetail](https://cloud.tencent.com/document/api/1179/55907) - 查询cmq主题详情
-* Update: [ModifyCmqTopicAttribute](https://cloud.tencent.com/document/api/1179/55903) - 修改cmq主题属性
-* Delete: [DeleteCmqTopic](https://cloud.tencent.com/document/api/1179/55912) - 删除cmq主题
+* Create: [CreateCmqTopic](https://cloud.tencent.com/document/api/1179/55915) - This API is used to create a CMQ topic.
+* Read: [DescribeCmqTopicDetail](https://cloud.tencent.com/document/api/1179/55907) - This API is used to query the details of a CMQ topic.
+* Update: [ModifyCmqTopicAttribute](https://cloud.tencent.com/document/api/1179/55903) - This API is used to modify the attributes of a CMQ topic.
+* Delete: [DeleteCmqTopic](https://cloud.tencent.com/document/api/1179/55912) - This API is used to delete a CMQ topic.
 
 ## Import
 

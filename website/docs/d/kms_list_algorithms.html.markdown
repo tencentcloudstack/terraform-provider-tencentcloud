@@ -41,5 +41,5 @@ In addition to all arguments above, the following attributes are exported:
 
 This data source queries the following TencentCloud APIs:
 
-* Read: [ListAlgorithms](https://cloud.tencent.com/document/api/573/42143) - 列出当前Region支持的加密方式
+* Read: [ListAlgorithms](https://cloud.tencent.com/document/api/573/42143) - This API is used to list the encryption methods supported in the current region.
 

@@ -50,10 +50,10 @@ In addition to all arguments above, the following attributes are exported:
 
 This resource interacts with the following TencentCloud APIs:
 
-* Create: [CreateCustomHeader](https://cloud.tencent.com/document/api/608/59242) - 创建自定义header
-* Read: [DescribeCustomHeader](https://cloud.tencent.com/document/api/608/59240) - 查询自定义header列表
-* Update: [CreateCustomHeader](https://cloud.tencent.com/document/api/608/59242) - 创建自定义header
-* Delete: [CreateCustomHeader](https://cloud.tencent.com/document/api/608/59242) - 创建自定义header
+* Create: [CreateCustomHeader](https://cloud.tencent.com/document/api/608/59242) - This API is used to create a custom header of the HTTP/HTTPS listener. When client requests reach the listener, they will be forwarded to the origin with this custom hearer.
+* Read: [DescribeCustomHeader](https://cloud.tencent.com/document/api/608/59240) - This API is used to query the list of custom headers.
+* Update: [CreateCustomHeader](https://cloud.tencent.com/document/api/608/59242) - This API is used to create a custom header of the HTTP/HTTPS listener. When client requests reach the listener, they will be forwarded to the origin with this custom hearer.
+* Delete: [CreateCustomHeader](https://cloud.tencent.com/document/api/608/59242) - This API is used to create a custom header of the HTTP/HTTPS listener. When client requests reach the listener, they will be forwarded to the origin with this custom hearer.
 
 ## Import
 

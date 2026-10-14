@@ -62,5 +62,5 @@ In addition to all arguments above, the following attributes are exported:
 
 This data source queries the following TencentCloud APIs:
 
-* Read: [DescribeDBCustomImages](https://cloud.tencent.com/document/api/1322/132924) - 查询可用的系统镜像列表
+* Read: [DescribeDBCustomImages](https://cloud.tencent.com/document/api/1322/132924)
 

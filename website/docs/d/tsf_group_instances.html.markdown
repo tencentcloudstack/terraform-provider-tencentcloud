@@ -83,5 +83,5 @@ In addition to all arguments above, the following attributes are exported:
 
 This data source queries the following TencentCloud APIs:
 
-* Read: [DescribeGroupInstances](https://cloud.tencent.com/document/api/649/36066) - 查询虚拟机部署组云主机列表
+* Read: [DescribeGroupInstances](https://cloud.tencent.com/document/api/649/36066)
 

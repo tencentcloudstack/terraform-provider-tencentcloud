@@ -91,10 +91,10 @@ In addition to all arguments above, the following attributes are exported:
 
 This resource interacts with the following TencentCloud APIs:
 
-* Create: [CreateSite](https://cloud.tencent.com/document/api/1346/73768) - 创建站点
-* Read: [DescribeSitesDetail](https://cloud.tencent.com/document/api/1346/73755) - 查询站点详情
-* Update: [ModifySiteInfo](https://cloud.tencent.com/document/api/1346/73751) - 修改机房信息
-* Delete: [DeleteSites](https://cloud.tencent.com/document/api/1346/73766) - 删除站点
+* Create: [CreateSite](https://cloud.tencent.com/document/api/1346/73768) - This API is used to create a site.
+* Read: [DescribeSitesDetail](https://cloud.tencent.com/document/api/1346/73755) - This API is used to query site details.
+* Update: [ModifySiteInfo](https://cloud.tencent.com/document/api/1346/73751) - This API is used to modify the equipment room information.
+* Delete: [DeleteSites](https://cloud.tencent.com/document/api/1346/73766) - This API is used to delete a site.
 
 ## Import
 

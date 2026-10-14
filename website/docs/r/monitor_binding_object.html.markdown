@@ -68,12 +68,12 @@ The `dimensions` object exports the following:
 
 This resource interacts with the following TencentCloud APIs:
 
-* Create: [BindingPolicyObject](https://cloud.tencent.com/document/api/248/40421) - 绑定策略对象
-* Create: [DescribeBindingPolicyObjectList](https://cloud.tencent.com/document/api/248/40570) - 获取已绑定对象列表
-* Create: [DescribePolicyGroupList](https://cloud.tencent.com/document/api/248/40945) - 获取基础策略告警组列表
-* Read: [DescribeBindingPolicyObjectList](https://cloud.tencent.com/document/api/248/40570) - 获取已绑定对象列表
-* Read: [DescribePolicyGroupList](https://cloud.tencent.com/document/api/248/40945) - 获取基础策略告警组列表
-* Delete: [DescribeBindingPolicyObjectList](https://cloud.tencent.com/document/api/248/40570) - 获取已绑定对象列表
-* Delete: [DescribePolicyGroupList](https://cloud.tencent.com/document/api/248/40945) - 获取基础策略告警组列表
-* Delete: [UnBindingPolicyObject](https://cloud.tencent.com/document/api/248/40567) - 删除策略的关联对象
+* Create: [BindingPolicyObject](https://cloud.tencent.com/document/api/248/40421) - This API is used to bind an alarm policy to a specific object.
+* Create: [DescribeBindingPolicyObjectList](https://cloud.tencent.com/document/api/248/40570) - This API is used to get the bound object list.
+* Create: [DescribePolicyGroupList](https://cloud.tencent.com/document/api/248/40945) - This API is used to get the list of basic policy alarm groups.
+* Read: [DescribeBindingPolicyObjectList](https://cloud.tencent.com/document/api/248/40570) - This API is used to get the bound object list.
+* Read: [DescribePolicyGroupList](https://cloud.tencent.com/document/api/248/40945) - This API is used to get the list of basic policy alarm groups.
+* Delete: [DescribeBindingPolicyObjectList](https://cloud.tencent.com/document/api/248/40570) - This API is used to get the bound object list.
+* Delete: [DescribePolicyGroupList](https://cloud.tencent.com/document/api/248/40945) - This API is used to get the list of basic policy alarm groups.
+* Delete: [UnBindingPolicyObject](https://cloud.tencent.com/document/api/248/40567) - This API is used to delete an object that is bound to a policy.
 

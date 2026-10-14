@@ -40,9 +40,9 @@ In addition to all arguments above, the following attributes are exported:
 
 This resource interacts with the following TencentCloud APIs:
 
-* Create: [ApplyInternetAddress](https://cloud.tencent.com/document/api/216/51491) - 申请互联网地址
-* Read: [DescribeInternetAddress](https://cloud.tencent.com/document/api/216/51490) - 获取用户互联网公网地址信息
-* Delete: [ReleaseInternetAddress](https://cloud.tencent.com/document/api/216/51485) - 释放互联网地址
+* Create: [ApplyInternetAddress](https://cloud.tencent.com/document/api/216/51491) - This API is used to apply for an internet tunnel's CIDR block.
+* Read: [DescribeInternetAddress](https://cloud.tencent.com/document/api/216/51490) - This API is used to obtain the public IP address of an internet tunnel.
+* Delete: [ReleaseInternetAddress](https://cloud.tencent.com/document/api/216/51485) - This API is used to release an IP address of internet tunnels.
 
 ## Import
 

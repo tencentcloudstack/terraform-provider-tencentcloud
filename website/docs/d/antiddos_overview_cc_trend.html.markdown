@@ -45,5 +45,5 @@ In addition to all arguments above, the following attributes are exported:
 
 This data source queries the following TencentCloud APIs:
 
-* Read: [DescribeOverviewCCTrend](https://cloud.tencent.com/document/api/297/95355) - 获取防护概览趋势图
+* Read: [DescribeOverviewCCTrend](https://cloud.tencent.com/document/api/297/95355)
 

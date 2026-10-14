@@ -57,12 +57,12 @@ In addition to all arguments above, the following attributes are exported:
 
 This resource interacts with the following TencentCloud APIs:
 
-* Create: [DescribeKafkaConsumer](https://cloud.tencent.com/document/api/614/95719) - 获取Kafka协议消费信息
-* Create: [OpenKafkaConsumer](https://cloud.tencent.com/document/api/614/72339) - 打开Kafka协议消费
-* Read: [DescribeKafkaConsumer](https://cloud.tencent.com/document/api/614/95719) - 获取Kafka协议消费信息
-* Update: [DescribeKafkaConsumer](https://cloud.tencent.com/document/api/614/95719) - 获取Kafka协议消费信息
-* Update: [ModifyKafkaConsumer](https://cloud.tencent.com/document/api/614/95720) - 修改Kafka协议消费信息
-* Delete: [CloseKafkaConsumer](https://cloud.tencent.com/document/api/614/72340) - 关闭Kafka协议消费
+* Create: [DescribeKafkaConsumer](https://cloud.tencent.com/document/api/614/95719) - This API is used to access Kafka protocol consumption information.
+* Create: [OpenKafkaConsumer](https://cloud.tencent.com/document/api/614/72339) - This API is used to enable the Kafka consumption feature.
+* Read: [DescribeKafkaConsumer](https://cloud.tencent.com/document/api/614/95719) - This API is used to access Kafka protocol consumption information.
+* Update: [DescribeKafkaConsumer](https://cloud.tencent.com/document/api/614/95719) - This API is used to access Kafka protocol consumption information.
+* Update: [ModifyKafkaConsumer](https://cloud.tencent.com/document/api/614/95720) - This API is used to modify Kafka protocol consumption information.
+* Delete: [CloseKafkaConsumer](https://cloud.tencent.com/document/api/614/72340) - This API is used to disable Kafka consumption.
 
 ## Import
 

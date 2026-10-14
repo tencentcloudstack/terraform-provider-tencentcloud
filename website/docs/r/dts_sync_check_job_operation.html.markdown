@@ -36,6 +36,6 @@ In addition to all arguments above, the following attributes are exported:
 
 This resource interacts with the following TencentCloud APIs:
 
-* Create: [CreateCheckSyncJob](https://cloud.tencent.com/document/api/571/82106) - 校验同步任务
-* Create: [DescribeCheckSyncJobResult](https://cloud.tencent.com/document/api/571/82104) - 查询同步校验任务结果
+* Create: [CreateCheckSyncJob](https://cloud.tencent.com/document/api/571/82106) - This API is used to verify a sync task by checking required parameters and peripheral configuration.
+* Create: [DescribeCheckSyncJobResult](https://cloud.tencent.com/document/api/571/82104) - This API is used to query the result of the sync check task and check the required parameters and peripheral configurations.
 

@@ -43,5 +43,5 @@ In addition to all arguments above, the following attributes are exported:
 
 This data source queries the following TencentCloud APIs:
 
-* Read: [DescribeProxyAndStatisticsListeners](https://cloud.tencent.com/document/api/608/36961) - 查询统计通道和监听器信息
+* Read: [DescribeProxyAndStatisticsListeners](https://cloud.tencent.com/document/api/608/36961) - This is an internal API. It is used to query the information of connections and listeners from which the statistics can be derived.
 

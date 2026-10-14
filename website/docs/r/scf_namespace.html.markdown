@@ -39,10 +39,10 @@ In addition to all arguments above, the following attributes are exported:
 
 This resource interacts with the following TencentCloud APIs:
 
-* Create: [CreateNamespace](https://cloud.tencent.com/document/api/583/37160) - 创建命名空间
-* Read: [ListNamespaces](https://cloud.tencent.com/document/api/583/37158) - 列出命名空间列表
-* Update: [UpdateNamespace](https://cloud.tencent.com/document/api/583/37157) - 更新命名空间
-* Delete: [DeleteNamespace](https://cloud.tencent.com/document/api/583/37159) - 删除命名空间
+* Create: [CreateNamespace](https://cloud.tencent.com/document/api/583/37160) - This API is used to create a namespace based on the input parameters.
+* Read: [ListNamespaces](https://cloud.tencent.com/document/api/583/37158) - This API is used to display a namespace list.
+* Update: [UpdateNamespace](https://cloud.tencent.com/document/api/583/37157) - This API is used to update a namespace.
+* Delete: [DeleteNamespace](https://cloud.tencent.com/document/api/583/37159) - This API is used to delete the specific namespace according to the parameters passed in.
 
 ## Import
 

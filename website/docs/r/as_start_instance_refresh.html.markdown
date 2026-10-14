@@ -71,6 +71,6 @@ The `timeouts` block allows you to specify [timeouts](https://developer.hashicor
 
 This resource interacts with the following TencentCloud APIs:
 
-* Create: [DescribeRefreshActivities](https://cloud.tencent.com/document/api/377/99175) - 查询实例刷新活动
-* Create: [StartInstanceRefresh](https://cloud.tencent.com/document/api/377/99172) - 启动实例刷新
+* Create: [DescribeRefreshActivities](https://cloud.tencent.com/document/api/377/99175) - This API (DescribeRefreshActivities) is used to query the instance refresh activity records of a scaling group.
+* Create: [StartInstanceRefresh](https://cloud.tencent.com/document/api/377/99172) - This API is used to refresh running CVM instances in the scaling group and return the RefreshActivityId for the instance refresh activity based on parameters in the launch configuration.
 

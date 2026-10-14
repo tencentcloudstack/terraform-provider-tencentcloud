@@ -55,5 +55,5 @@ In addition to all arguments above, the following attributes are exported:
 
 This data source queries the following TencentCloud APIs:
 
-* Read: [GetAttackTotalCount](https://cloud.tencent.com/document/api/627/96829) - 攻击总次数
+* Read: [GetAttackTotalCount](https://cloud.tencent.com/document/api/627/96829) - Display total attack count by querying based on conditions
 

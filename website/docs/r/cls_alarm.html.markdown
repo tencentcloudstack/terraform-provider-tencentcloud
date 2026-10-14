@@ -270,13 +270,13 @@ In addition to all arguments above, the following attributes are exported:
 
 This resource interacts with the following TencentCloud APIs:
 
-* Create: [CreateAlarm](https://cloud.tencent.com/document/api/614/56466) - 创建告警策略
-* Create: [ModifyResourceTags](https://cloud.tencent.com/document/api/651/35322) - 批量修改资源关联的标签
-* Read: [DescribeAlarms](https://cloud.tencent.com/document/api/614/56461) - 获取告警策略列表
-* Read: [DescribeResourceTagsByResourceIds](https://cloud.tencent.com/document/api/651/35319) - 批量查看资源关联的标签
-* Update: [ModifyAlarm](https://cloud.tencent.com/document/api/614/56459) - 修改告警策略
-* Update: [ModifyResourceTags](https://cloud.tencent.com/document/api/651/35322) - 批量修改资源关联的标签
-* Delete: [DeleteAlarm](https://cloud.tencent.com/document/api/614/56464) - 删除告警策略
+* Create: [CreateAlarm](https://cloud.tencent.com/document/api/614/56466) - This API is used to create an alarm policy.
+* Create: [ModifyResourceTags](https://cloud.tencent.com/document/api/651/35322) - This API is used to modify all tags associated with a resource.
+* Read: [DescribeAlarms](https://cloud.tencent.com/document/api/614/56461) - This API is used to get the alarm policy list.
+* Read: [DescribeResourceTagsByResourceIds](https://cloud.tencent.com/document/api/651/35319) - This API is used to query the tag key-value pairs associated with an existing resource.
+* Update: [ModifyAlarm](https://cloud.tencent.com/document/api/614/56459) - This API is used to modify an alarm policy. At least one valid configuration item needs to be modified.
+* Update: [ModifyResourceTags](https://cloud.tencent.com/document/api/651/35322) - This API is used to modify all tags associated with a resource.
+* Delete: [DeleteAlarm](https://cloud.tencent.com/document/api/614/56464) - This API is used to delete an alarm policy.
 
 ## Import
 

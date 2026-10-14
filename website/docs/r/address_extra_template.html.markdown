@@ -69,12 +69,12 @@ The `addresses_extra` object exports the following:
 
 This resource interacts with the following TencentCloud APIs:
 
-* Create: [CreateAddressTemplate](https://cloud.tencent.com/document/api/215/16708) - 创建IP地址模板
-* Read: [DescribeAddressTemplates](https://cloud.tencent.com/document/api/215/16717) - 查询IP地址模板
-* Update: [ModifyAddressTemplateAttribute](https://cloud.tencent.com/document/api/215/16720) - 修改IP地址模板
-* Update: [ModifyResourceTags](https://cloud.tencent.com/document/api/651/35322) - 批量修改资源关联的标签
-* Delete: [DeleteAddressTemplate](https://cloud.tencent.com/document/api/215/16712) - 删除IP地址模板
-* Delete: [DescribeAddressTemplates](https://cloud.tencent.com/document/api/215/16717) - 查询IP地址模板
+* Create: [CreateAddressTemplate](https://cloud.tencent.com/document/api/215/16708) - This API is used to create an IP address template.
+* Read: [DescribeAddressTemplates](https://cloud.tencent.com/document/api/215/16717) - This API (DescribeAddressTemplates) is used to query an IP address template.
+* Update: [ModifyAddressTemplateAttribute](https://cloud.tencent.com/document/api/215/16720) - This API (ModifyAddressTemplateAttribute) is used to modify an IP address template.
+* Update: [ModifyResourceTags](https://cloud.tencent.com/document/api/651/35322) - This API is used to modify all tags associated with a resource.
+* Delete: [DeleteAddressTemplate](https://cloud.tencent.com/document/api/215/16712) - This API (DeleteAddressTemplate) is used to delete an IP address template.
+* Delete: [DescribeAddressTemplates](https://cloud.tencent.com/document/api/215/16717) - This API (DescribeAddressTemplates) is used to query an IP address template.
 
 ## Import
 

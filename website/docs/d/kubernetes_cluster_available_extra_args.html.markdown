@@ -73,5 +73,5 @@ In addition to all arguments above, the following attributes are exported:
 
 This data source queries the following TencentCloud APIs:
 
-* Read: [DescribeClusterAvailableExtraArgs](https://cloud.tencent.com/document/api/457/125021) - 查询集群可用的自定义参数
+* Read: [DescribeClusterAvailableExtraArgs](https://cloud.tencent.com/document/api/457/125021)
 

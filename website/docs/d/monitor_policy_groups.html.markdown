@@ -87,5 +87,5 @@ In addition to all arguments above, the following attributes are exported:
 
 This data source queries the following TencentCloud APIs:
 
-* Read: [DescribePolicyGroupList](https://cloud.tencent.com/document/api/248/40945) - 获取基础策略告警组列表
+* Read: [DescribePolicyGroupList](https://cloud.tencent.com/document/api/248/40945) - This API is used to get the list of basic policy alarm groups.
 

@@ -88,18 +88,18 @@ In addition to all arguments above, the following attributes are exported:
 
 This resource interacts with the following TencentCloud APIs:
 
-* Create: [CreateProbeTasks](https://cloud.tencent.com/document/api/280/66213) - 批量创建拨测任务
-* Create: [DescribeProbeTasks](https://cloud.tencent.com/document/api/280/66212) - 分页查询拨测任务列表
-* Create: [ModifyResourceTags](https://cloud.tencent.com/document/api/651/35322) - 批量修改资源关联的标签
-* Read: [DescribeProbeTasks](https://cloud.tencent.com/document/api/280/66212) - 分页查询拨测任务列表
-* Read: [DescribeResourceTagsByResourceIds](https://cloud.tencent.com/document/api/651/35319) - 批量查看资源关联的标签
-* Update: [ModifyResourceTags](https://cloud.tencent.com/document/api/651/35322) - 批量修改资源关联的标签
-* Update: [ResumeProbeTask](https://cloud.tencent.com/document/api/280/66203) - 恢复拨测任务
-* Update: [SuspendProbeTask](https://cloud.tencent.com/document/api/280/66202) - 暂停任务
-* Update: [UpdateProbeTaskAttributes](https://cloud.tencent.com/document/api/280/82588) - 更新探测任务属性
-* Update: [UpdateProbeTaskConfigurationList](https://cloud.tencent.com/document/api/280/66201) - 批量更新拨测任务配置
-* Delete: [DeleteProbeTask](https://cloud.tencent.com/document/api/280/66206) - 删除任务
-* Delete: [DescribeProbeTasks](https://cloud.tencent.com/document/api/280/66212) - 分页查询拨测任务列表
+* Create: [CreateProbeTasks](https://cloud.tencent.com/document/api/280/66213)
+* Create: [DescribeProbeTasks](https://cloud.tencent.com/document/api/280/66212)
+* Create: [ModifyResourceTags](https://cloud.tencent.com/document/api/651/35322) - This API is used to modify all tags associated with a resource.
+* Read: [DescribeProbeTasks](https://cloud.tencent.com/document/api/280/66212)
+* Read: [DescribeResourceTagsByResourceIds](https://cloud.tencent.com/document/api/651/35319) - This API is used to query the tag key-value pairs associated with an existing resource.
+* Update: [ModifyResourceTags](https://cloud.tencent.com/document/api/651/35322) - This API is used to modify all tags associated with a resource.
+* Update: [ResumeProbeTask](https://cloud.tencent.com/document/api/280/66203)
+* Update: [SuspendProbeTask](https://cloud.tencent.com/document/api/280/66202)
+* Update: [UpdateProbeTaskAttributes](https://cloud.tencent.com/document/api/280/82588)
+* Update: [UpdateProbeTaskConfigurationList](https://cloud.tencent.com/document/api/280/66201)
+* Delete: [DeleteProbeTask](https://cloud.tencent.com/document/api/280/66206)
+* Delete: [DescribeProbeTasks](https://cloud.tencent.com/document/api/280/66212)
 
 ## Import
 

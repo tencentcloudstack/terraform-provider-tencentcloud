@@ -56,13 +56,13 @@ In addition to all arguments above, the following attributes are exported:
 
 This resource interacts with the following TencentCloud APIs:
 
-* Create: [CreateVpnGatewaySslClient](https://cloud.tencent.com/document/api/215/70290) - 创建SSL-VPN-CLIENT
-* Create: [DescribeVpcTaskResult](https://cloud.tencent.com/document/api/215/59037) - 查询VPC异步任务执行结果
-* Read: [DescribeResourceTagsByResourceIds](https://cloud.tencent.com/document/api/651/35319) - 批量查看资源关联的标签
-* Read: [DescribeVpnGatewaySslClients](https://cloud.tencent.com/document/api/215/70286) - 查询SSL-VPN-CLIENT 列表
-* Update: [ModifyResourceTags](https://cloud.tencent.com/document/api/651/35322) - 批量修改资源关联的标签
-* Delete: [DeleteVpnGatewaySslClient](https://cloud.tencent.com/document/api/215/70288) - 删除SSL-VPN-CLIENT
-* Delete: [DescribeVpcTaskResult](https://cloud.tencent.com/document/api/215/59037) - 查询VPC异步任务执行结果
+* Create: [CreateVpnGatewaySslClient](https://cloud.tencent.com/document/api/215/70290)
+* Create: [DescribeVpcTaskResult](https://cloud.tencent.com/document/api/215/59037) - This API is used to query the execution result of a VPC task.
+* Read: [DescribeResourceTagsByResourceIds](https://cloud.tencent.com/document/api/651/35319) - This API is used to query the tag key-value pairs associated with an existing resource.
+* Read: [DescribeVpnGatewaySslClients](https://cloud.tencent.com/document/api/215/70286)
+* Update: [ModifyResourceTags](https://cloud.tencent.com/document/api/651/35322) - This API is used to modify all tags associated with a resource.
+* Delete: [DeleteVpnGatewaySslClient](https://cloud.tencent.com/document/api/215/70288)
+* Delete: [DescribeVpcTaskResult](https://cloud.tencent.com/document/api/215/59037) - This API is used to query the execution result of a VPC task.
 
 ## Import
 

@@ -54,5 +54,5 @@ In addition to all arguments above, the following attributes are exported:
 
 This data source queries the following TencentCloud APIs:
 
-* Read: [DescribePodInstances](https://cloud.tencent.com/document/api/649/43108) - 获取部署组实例列表
+* Read: [DescribePodInstances](https://cloud.tencent.com/document/api/649/43108)
 

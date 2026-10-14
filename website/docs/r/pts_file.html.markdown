@@ -71,9 +71,9 @@ In addition to all arguments above, the following attributes are exported:
 
 This resource interacts with the following TencentCloud APIs:
 
-* Create: [CreateFile](https://cloud.tencent.com/document/api/1484/78093) - 创建文件
-* Read: [DescribeFiles](https://cloud.tencent.com/document/api/1484/78079) - 查询文件列表
-* Delete: [DeleteFiles](https://cloud.tencent.com/document/api/1484/78088) - 删除文件
+* Create: [CreateFile](https://cloud.tencent.com/document/api/1484/78093) - This API is used to create a file.
+* Read: [DescribeFiles](https://cloud.tencent.com/document/api/1484/78079) - This API is used to query file list.
+* Delete: [DeleteFiles](https://cloud.tencent.com/document/api/1484/78088) - This API is used to delete files.
 
 ## Import
 

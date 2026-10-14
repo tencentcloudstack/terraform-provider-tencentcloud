@@ -114,17 +114,17 @@ In addition to all arguments above, the following attributes are exported:
 
 This resource interacts with the following TencentCloud APIs:
 
-* Create: [CreateReadOnlyDBInstances](https://cloud.tencent.com/document/api/238/46807) - 创建只读实例 (本地盘)
-* Create: [DescribeFlowStatus](https://cloud.tencent.com/document/api/238/19967) - 查询流程状态
-* Create: [DescribeOrders](https://cloud.tencent.com/document/api/238/19937) - 查询订单信息
-* Create: [ModifyDBInstanceName](https://cloud.tencent.com/document/api/238/19958) - 修改实例名字
-* Create: [ModifyResourceTags](https://cloud.tencent.com/document/api/651/35322) - 批量修改资源关联的标签
-* Read: [DescribeReadOnlyGroupByReadOnlyInstance](https://cloud.tencent.com/document/api/238/46773) - 通过只读实例查询只读组
-* Read: [DescribeReadOnlyGroupList](https://cloud.tencent.com/document/api/238/46771) - 查询只读组列表
-* Read: [DescribeResourceTagsByResourceIds](https://cloud.tencent.com/document/api/651/35319) - 批量查看资源关联的标签
-* Delete: [DeleteDBInstance](https://cloud.tencent.com/document/api/238/46806) - 立即下线实例
-* Delete: [DescribeDBInstances](https://cloud.tencent.com/document/api/238/19969) - 查询实例列表
-* Delete: [TerminateDBInstance](https://cloud.tencent.com/document/api/238/38210) - 主动隔离实例
+* Create: [CreateReadOnlyDBInstances](https://cloud.tencent.com/document/api/238/46807) - This API is used to create read-only instances (local disk).
+* Create: [DescribeFlowStatus](https://cloud.tencent.com/document/api/238/19967) - This API is used to query flow status.
+* Create: [DescribeOrders](https://cloud.tencent.com/document/api/238/19937) - This API is used to query order information.
+* Create: [ModifyDBInstanceName](https://cloud.tencent.com/document/api/238/19958) - This API is used to rename an instance.
+* Create: [ModifyResourceTags](https://cloud.tencent.com/document/api/651/35322) - This API is used to modify all tags associated with a resource.
+* Read: [DescribeReadOnlyGroupByReadOnlyInstance](https://cloud.tencent.com/document/api/238/46773) - This API is used to query the read-only group where the read-only instance is located by its ID.
+* Read: [DescribeReadOnlyGroupList](https://cloud.tencent.com/document/api/238/46771) - This API is used to query the read-only group list.
+* Read: [DescribeResourceTagsByResourceIds](https://cloud.tencent.com/document/api/651/35319) - This API is used to query the tag key-value pairs associated with an existing resource.
+* Delete: [DeleteDBInstance](https://cloud.tencent.com/document/api/238/46806) - This API is used to release SQL server instances (eliminated immediately) in the recycle bin. The released instances will be physically terminated after being retained for a period of time. Their publish-subscribe relationships will be automatically disassociated, and their RO replicas will be automatically released.
+* Delete: [DescribeDBInstances](https://cloud.tencent.com/document/api/238/19969) - This API is used to query the list of instances.
+* Delete: [TerminateDBInstance](https://cloud.tencent.com/document/api/238/38210) - This API is used to isolate an instance to move it into a recycle bin.
 
 ## Import
 

@@ -472,20 +472,20 @@ The `timeouts` block allows you to specify [timeouts](https://developer.hashicor
 
 This resource interacts with the following TencentCloud APIs:
 
-* Create: [CreateClusterNodePool](https://cloud.tencent.com/document/api/457/49436) - 创建节点池
-* Read: [DescribeClusterNodePoolDetail](https://cloud.tencent.com/document/api/457/49433) - 查询节点池详情
-* Read: [DescribeClusters](https://cloud.tencent.com/document/api/457/31862) - 查询TKE集群列表
-* Update: [DeleteMachine](https://cloud.tencent.com/document/api/296/19844) - 卸载主机安全客户端
-* Update: [DescribeAutoScalingActivities](https://cloud.tencent.com/document/api/377/31735) - 查询伸缩活动
-* Update: [DescribeClusterInstances](https://cloud.tencent.com/document/api/457/31863) - 查询集群节点信息
-* Update: [DescribeClusterNodePoolDetail](https://cloud.tencent.com/document/api/457/49433) - 查询节点池详情
-* Update: [DescribeClusters](https://cloud.tencent.com/document/api/457/31862) - 查询TKE集群列表
-* Update: [DescribeInstances](https://cloud.tencent.com/document/api/213/15728) - 查看实例列表
-* Update: [InvokeCommand](https://cloud.tencent.com/document/api/1340/52678) - 触发命令
-* Update: [ModifyClusterNodePool](https://cloud.tencent.com/document/api/457/49431) - 编辑节点池
-* Update: [ModifyLaunchConfigurationAttributes](https://cloud.tencent.com/document/api/377/31298) - 修改启动配置属性
-* Update: [ModifyNodePoolDesiredCapacityAboutAsg](https://cloud.tencent.com/document/api/457/51013) - 修改节点池关联伸缩组的期望实例数
-* Delete: [DeleteClusterNodePool](https://cloud.tencent.com/document/api/457/49434) - 删除节点池
+* Create: [CreateClusterNodePool](https://cloud.tencent.com/document/api/457/49436) - This API is used to create a node pool.
+* Read: [DescribeClusterNodePoolDetail](https://cloud.tencent.com/document/api/457/49433) - This API is used to query detailed information of a node pool.
+* Read: [DescribeClusters](https://cloud.tencent.com/document/api/457/31862) - This API is used to query clusters list.
+* Update: [DeleteMachine](https://cloud.tencent.com/document/api/296/19844) - This API is used to uninstall the CWPP client.
+* Update: [DescribeAutoScalingActivities](https://cloud.tencent.com/document/api/377/31735) - This API is used to query the scaling activities of the scaling group. Currently, only scaling operations from the past two years are saved.
+* Update: [DescribeClusterInstances](https://cloud.tencent.com/document/api/457/31863) - This API is used to query information of node instances in a cluster.
+* Update: [DescribeClusterNodePoolDetail](https://cloud.tencent.com/document/api/457/49433) - This API is used to query detailed information of a node pool.
+* Update: [DescribeClusters](https://cloud.tencent.com/document/api/457/31862) - This API is used to query clusters list.
+* Update: [DescribeInstances](https://cloud.tencent.com/document/api/213/15728) - This API is used to query the details of instances.
+* Update: [InvokeCommand](https://cloud.tencent.com/document/api/1340/52678) - This API is used to trigger a command on the specified instance and returns the execution activity ID (inv-xxxxxxxx) on success. Each execution activity has one or more execution tasks (invt-xxxxxxxx) and each execution task indicates an execution record on a CVM or Lighthouse instance.
+* Update: [ModifyClusterNodePool](https://cloud.tencent.com/document/api/457/49431) - This API is used to edit a node pool.
+* Update: [ModifyLaunchConfigurationAttributes](https://cloud.tencent.com/document/api/377/31298) - This API (ModifyLaunchConfigurationAttributes) is used to modify part of a launch configuration's attributes.
+* Update: [ModifyNodePoolDesiredCapacityAboutAsg](https://cloud.tencent.com/document/api/457/51013)
+* Delete: [DeleteClusterNodePool](https://cloud.tencent.com/document/api/457/49434) - This API is used to delete a node pool.
 
 ## Import
 

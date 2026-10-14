@@ -45,5 +45,5 @@ In addition to all arguments above, the following attributes are exported:
 
 This data source queries the following TencentCloud APIs:
 
-* Read: [DescribeUpgradePrice](https://cloud.tencent.com/document/api/237/16183) - 变配实例询价
+* Read: [DescribeUpgradePrice](https://cloud.tencent.com/document/api/237/16183)
 

@@ -53,10 +53,10 @@ The `access_rule` object exports the following:
 
 This resource interacts with the following TencentCloud APIs:
 
-* Create: [CreateAccessRules](https://cloud.tencent.com/document/api/1105/52339) - 批量创建权限规则
-* Read: [DescribeAccessRules](https://cloud.tencent.com/document/api/1105/51138) - 查看权限规则列表
-* Update: [ModifyAccessRules](https://cloud.tencent.com/document/api/1105/52337) - 批量修改权限规则属性
-* Delete: [DeleteAccessRules](https://cloud.tencent.com/document/api/1105/52338) - 批量删除权限规则
+* Create: [CreateAccessRules](https://cloud.tencent.com/document/api/1105/52339) - This API is used to batch create permission rules. You don't need to enter the permission rule IDs and creation time.
+* Read: [DescribeAccessRules](https://cloud.tencent.com/document/api/1105/51138) - This API is used to view the list of permission rules by permission group ID.
+* Update: [ModifyAccessRules](https://cloud.tencent.com/document/api/1105/52337) - This API is used to batch modify the attributes of permission rules, such as address, access mode, and priority. You must specify the permission rule IDs.
+* Delete: [DeleteAccessRules](https://cloud.tencent.com/document/api/1105/52338) - This API is used to batch delete permission rules.
 
 ## Import
 

@@ -60,5 +60,5 @@ In addition to all arguments above, the following attributes are exported:
 
 This data source queries the following TencentCloud APIs:
 
-* Read: [DescribeDataWebVitalsPage](https://cloud.tencent.com/document/api/1464/69223) - 获取DescribeDataWebVitalsPage信息
+* Read: [DescribeDataWebVitalsPage](https://cloud.tencent.com/document/api/1464/69223) - This API is used to get the DescribeDataWebVitalsPage information, which is about core user activities.
 

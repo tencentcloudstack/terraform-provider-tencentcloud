@@ -62,15 +62,15 @@ In addition to all arguments above, the following attributes are exported:
 
 This resource interacts with the following TencentCloud APIs:
 
-* Create: [CreateSubAppId](https://cloud.tencent.com/document/api/266/43744) - 创建应用
-* Create: [DescribeSubAppIds](https://cloud.tencent.com/document/api/266/36304) - 查询应用列表
-* Create: [ModifySubAppIdStatus](https://cloud.tencent.com/document/api/266/36302) - 修改应用状态
-* Read: [DescribeSubAppIds](https://cloud.tencent.com/document/api/266/36304) - 查询应用列表
-* Update: [DescribeSubAppIds](https://cloud.tencent.com/document/api/266/36304) - 查询应用列表
-* Update: [ModifyResourceTags](https://cloud.tencent.com/document/api/651/35322) - 批量修改资源关联的标签
-* Update: [ModifySubAppIdInfo](https://cloud.tencent.com/document/api/266/36303) - 修改应用信息
-* Update: [ModifySubAppIdStatus](https://cloud.tencent.com/document/api/266/36302) - 修改应用状态
-* Delete: [ModifySubAppIdStatus](https://cloud.tencent.com/document/api/266/36302) - 修改应用状态
+* Create: [CreateSubAppId](https://cloud.tencent.com/document/api/266/43744) - This API is used to create a VOD application.
+* Create: [DescribeSubAppIds](https://cloud.tencent.com/document/api/266/36304) - This API is used to get the application list of the current account.
+* Create: [ModifySubAppIdStatus](https://cloud.tencent.com/document/api/266/36302) - This API is used to enable or disable an application. A disabled application will have its corresponding domain blocked and console access restricted.
+* Read: [DescribeSubAppIds](https://cloud.tencent.com/document/api/266/36304) - This API is used to get the application list of the current account.
+* Update: [DescribeSubAppIds](https://cloud.tencent.com/document/api/266/36304) - This API is used to get the application list of the current account.
+* Update: [ModifyResourceTags](https://cloud.tencent.com/document/api/651/35322) - This API is used to modify all tags associated with a resource.
+* Update: [ModifySubAppIdInfo](https://cloud.tencent.com/document/api/266/36303) - This API is used to change application information, but the default application info is not allowed to be modified.
+* Update: [ModifySubAppIdStatus](https://cloud.tencent.com/document/api/266/36302) - This API is used to enable or disable an application. A disabled application will have its corresponding domain blocked and console access restricted.
+* Delete: [ModifySubAppIdStatus](https://cloud.tencent.com/document/api/266/36302) - This API is used to enable or disable an application. A disabled application will have its corresponding domain blocked and console access restricted.
 
 ## Import
 

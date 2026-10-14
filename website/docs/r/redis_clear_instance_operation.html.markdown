@@ -73,6 +73,6 @@ In addition to all arguments above, the following attributes are exported:
 
 This resource interacts with the following TencentCloud APIs:
 
-* Create: [ClearInstance](https://cloud.tencent.com/document/api/239/20021) - 清空Redis实例
-* Create: [DescribeTaskInfo](https://cloud.tencent.com/document/api/239/30601) - Redis查询任务结果
+* Create: [ClearInstance](https://cloud.tencent.com/document/api/239/20021) - This API is used to clear instance data.
+* Create: [DescribeTaskInfo](https://cloud.tencent.com/document/api/239/30601) - This API is used to get the execution of a specified task.
 

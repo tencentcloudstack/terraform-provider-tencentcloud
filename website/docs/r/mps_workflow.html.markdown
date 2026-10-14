@@ -492,10 +492,10 @@ In addition to all arguments above, the following attributes are exported:
 
 This resource interacts with the following TencentCloud APIs:
 
-* Create: [CreateWorkflow](https://cloud.tencent.com/document/api/862/37583) - 创建工作流
-* Read: [DescribeWorkflows](https://cloud.tencent.com/document/api/862/37581) - 获取工作流列表
-* Update: [ResetWorkflow](https://cloud.tencent.com/document/api/862/37585) - 重设工作流
-* Delete: [DeleteWorkflow](https://cloud.tencent.com/document/api/862/37582) - 删除工作流
+* Create: [CreateWorkflow](https://cloud.tencent.com/document/api/862/37583) - This API is used to create a workflow for media files uploaded to a specified COS bucket. A workflow may include the following tasks:
+* Read: [DescribeWorkflows](https://cloud.tencent.com/document/api/862/37581) - This API is used to get the list of workflow details by workflow ID.
+* Update: [ResetWorkflow](https://cloud.tencent.com/document/api/862/37585) - This API is used to reset a workflow that already exists and is in disable status.
+* Delete: [DeleteWorkflow](https://cloud.tencent.com/document/api/862/37582) - Delete workflow. For enabled workflows, they must be disabled before they can be deleted.
 
 ## Import
 

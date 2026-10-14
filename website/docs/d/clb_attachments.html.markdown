@@ -49,6 +49,6 @@ In addition to all arguments above, the following attributes are exported:
 
 This data source queries the following TencentCloud APIs:
 
-* Read: [DescribeListeners](https://cloud.tencent.com/document/api/214/30686) - 查询负载均衡的监听器列表
-* Read: [DescribeTargets](https://cloud.tencent.com/document/api/214/30684) - 查询负载均衡绑定的后端服务列表
+* Read: [DescribeListeners](https://cloud.tencent.com/document/api/214/30686) - This API is used to get the list of listeners by CLB ID, listener protocol, or listener port. If no filter is specified, all listeners for the CLB instance will be returned.
+* Read: [DescribeTargets](https://cloud.tencent.com/document/api/214/30684) - This API (DescribeTargets) is used to query the list of real servers bound to some listeners of a CLB instance.
 

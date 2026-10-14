@@ -92,9 +92,9 @@ In addition to all arguments above, the following attributes are exported:
 
 This resource interacts with the following TencentCloud APIs:
 
-* Create: [BindApiApp](https://cloud.tencent.com/document/api/628/58639) - 绑定应用到API
-* Read: [DescribeApiAppBindApisStatus](https://cloud.tencent.com/document/api/628/58635) - 查询应用绑定的Api列表
-* Delete: [UnbindApiApp](https://cloud.tencent.com/document/api/628/58630) - 解除应用和API绑定关系
+* Create: [BindApiApp](https://cloud.tencent.com/document/api/628/58639) - This API is used to bind an application to an API.
+* Read: [DescribeApiAppBindApisStatus](https://cloud.tencent.com/document/api/628/58635) - This API is used to query the list of APIs bound to an application.
+* Delete: [UnbindApiApp](https://cloud.tencent.com/document/api/628/58630) - This API is used to unbind an application from an API.
 
 ## Import
 

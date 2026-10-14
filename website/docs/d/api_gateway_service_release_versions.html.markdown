@@ -38,5 +38,5 @@ In addition to all arguments above, the following attributes are exported:
 
 This data source queries the following TencentCloud APIs:
 
-* Read: [DescribeServiceReleaseVersion](https://cloud.tencent.com/document/api/628/45196) - 查询服务已发布的版本
+* Read: [DescribeServiceReleaseVersion](https://cloud.tencent.com/document/api/628/45196) - This API is used to query the list of all published versions under a service.
 

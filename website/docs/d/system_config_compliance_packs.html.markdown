@@ -46,5 +46,5 @@ In addition to all arguments above, the following attributes are exported:
 
 This data source queries the following TencentCloud APIs:
 
-* Read: [ListSystemCompliancePacks](https://cloud.tencent.com/document/api/1579/129740) - 获取系统合规包列表
+* Read: [ListSystemCompliancePacks](https://cloud.tencent.com/document/api/1579/129740)
 

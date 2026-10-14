@@ -43,19 +43,19 @@ In addition to all arguments above, the following attributes are exported:
 
 This resource interacts with the following TencentCloud APIs:
 
-* Create: [CreateCustomerGateway](https://cloud.tencent.com/document/api/215/17523) - 创建对端网关
-* Create: [DescribeCustomerGateways](https://cloud.tencent.com/document/api/215/17516) - 查询对端网关
-* Create: [DescribeResourceTagsByResourceIds](https://cloud.tencent.com/document/api/651/35319) - 批量查看资源关联的标签
-* Create: [ModifyResourceTags](https://cloud.tencent.com/document/api/651/35322) - 批量修改资源关联的标签
-* Read: [DescribeCustomerGateways](https://cloud.tencent.com/document/api/215/17516) - 查询对端网关
-* Read: [DescribeResourceTagsByResourceIds](https://cloud.tencent.com/document/api/651/35319) - 批量查看资源关联的标签
-* Update: [DescribeCustomerGateways](https://cloud.tencent.com/document/api/215/17516) - 查询对端网关
-* Update: [DescribeResourceTagsByResourceIds](https://cloud.tencent.com/document/api/651/35319) - 批量查看资源关联的标签
-* Update: [ModifyCustomerGatewayAttribute](https://cloud.tencent.com/document/api/215/17509) - 修改对端网关
-* Update: [ModifyResourceTags](https://cloud.tencent.com/document/api/651/35322) - 批量修改资源关联的标签
-* Delete: [DeleteCustomerGateway](https://cloud.tencent.com/document/api/215/17520) - 删除对端网关
-* Delete: [DescribeCustomerGateways](https://cloud.tencent.com/document/api/215/17516) - 查询对端网关
-* Delete: [DescribeVpnConnections](https://cloud.tencent.com/document/api/215/17515) - 查询VPN通道列表
+* Create: [CreateCustomerGateway](https://cloud.tencent.com/document/api/215/17523) - This API (CreateCustomerGateway) is used to create customer gateways.
+* Create: [DescribeCustomerGateways](https://cloud.tencent.com/document/api/215/17516) - This API (DescribeCustomerGateways) is used to query the customer gateway list.
+* Create: [DescribeResourceTagsByResourceIds](https://cloud.tencent.com/document/api/651/35319) - This API is used to query the tag key-value pairs associated with an existing resource.
+* Create: [ModifyResourceTags](https://cloud.tencent.com/document/api/651/35322) - This API is used to modify all tags associated with a resource.
+* Read: [DescribeCustomerGateways](https://cloud.tencent.com/document/api/215/17516) - This API (DescribeCustomerGateways) is used to query the customer gateway list.
+* Read: [DescribeResourceTagsByResourceIds](https://cloud.tencent.com/document/api/651/35319) - This API is used to query the tag key-value pairs associated with an existing resource.
+* Update: [DescribeCustomerGateways](https://cloud.tencent.com/document/api/215/17516) - This API (DescribeCustomerGateways) is used to query the customer gateway list.
+* Update: [DescribeResourceTagsByResourceIds](https://cloud.tencent.com/document/api/651/35319) - This API is used to query the tag key-value pairs associated with an existing resource.
+* Update: [ModifyCustomerGatewayAttribute](https://cloud.tencent.com/document/api/215/17509) - This API (ModifyCustomerGatewayAttribute) is used to modify the customer gateway information.
+* Update: [ModifyResourceTags](https://cloud.tencent.com/document/api/651/35322) - This API is used to modify all tags associated with a resource.
+* Delete: [DeleteCustomerGateway](https://cloud.tencent.com/document/api/215/17520) - This API (DeleteCustomerGateway) is used to delete customer gateways.
+* Delete: [DescribeCustomerGateways](https://cloud.tencent.com/document/api/215/17516) - This API (DescribeCustomerGateways) is used to query the customer gateway list.
+* Delete: [DescribeVpnConnections](https://cloud.tencent.com/document/api/215/17515) - This API is used to used to query the list of VPN tunnels.
 
 ## Import
 

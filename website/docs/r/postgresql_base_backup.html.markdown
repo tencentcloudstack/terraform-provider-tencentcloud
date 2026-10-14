@@ -60,15 +60,15 @@ The `timeouts` block allows you to specify [timeouts](https://developer.hashicor
 
 This resource interacts with the following TencentCloud APIs:
 
-* Create: [CreateBaseBackup](https://cloud.tencent.com/document/api/409/89028) - 创建实例数据备份
-* Create: [DescribeBaseBackups](https://cloud.tencent.com/document/api/409/89022) - 查询数据备份列表
-* Create: [ModifyBaseBackupExpireTime](https://cloud.tencent.com/document/api/409/89020) - 修改数据备份过期时间
-* Create: [ModifyResourceTags](https://cloud.tencent.com/document/api/651/35322) - 批量修改资源关联的标签
-* Read: [DescribeBaseBackups](https://cloud.tencent.com/document/api/409/89022) - 查询数据备份列表
-* Read: [DescribeResourceTagsByResourceIds](https://cloud.tencent.com/document/api/651/35319) - 批量查看资源关联的标签
-* Update: [ModifyBaseBackupExpireTime](https://cloud.tencent.com/document/api/409/89020) - 修改数据备份过期时间
-* Update: [ModifyResourceTags](https://cloud.tencent.com/document/api/651/35322) - 批量修改资源关联的标签
-* Delete: [DeleteBaseBackup](https://cloud.tencent.com/document/api/409/89027) - 删除实例数据备份
+* Create: [CreateBaseBackup](https://cloud.tencent.com/document/api/409/89028) - This API is used to create a data backup of an instance.
+* Create: [DescribeBaseBackups](https://cloud.tencent.com/document/api/409/89022) - This API is used to query the list of data backups.
+* Create: [ModifyBaseBackupExpireTime](https://cloud.tencent.com/document/api/409/89020) - This API is used to modify the expiration time of a specified data backup for an instance.
+* Create: [ModifyResourceTags](https://cloud.tencent.com/document/api/651/35322) - This API is used to modify all tags associated with a resource.
+* Read: [DescribeBaseBackups](https://cloud.tencent.com/document/api/409/89022) - This API is used to query the list of data backups.
+* Read: [DescribeResourceTagsByResourceIds](https://cloud.tencent.com/document/api/651/35319) - This API is used to query the tag key-value pairs associated with an existing resource.
+* Update: [ModifyBaseBackupExpireTime](https://cloud.tencent.com/document/api/409/89020) - This API is used to modify the expiration time of a specified data backup for an instance.
+* Update: [ModifyResourceTags](https://cloud.tencent.com/document/api/651/35322) - This API is used to modify all tags associated with a resource.
+* Delete: [DeleteBaseBackup](https://cloud.tencent.com/document/api/409/89027) - This API is used to delete a specified data backup for an instance.
 
 ## Import
 

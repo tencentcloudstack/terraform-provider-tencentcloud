@@ -60,5 +60,5 @@ In addition to all arguments above, the following attributes are exported:
 
 This data source queries the following TencentCloud APIs:
 
-* Read: [ListTriggers](https://cloud.tencent.com/document/api/583/44268) - 获取函数触发器列表
+* Read: [ListTriggers](https://cloud.tencent.com/document/api/583/44268) - This API is used to get the function trigger list.
 

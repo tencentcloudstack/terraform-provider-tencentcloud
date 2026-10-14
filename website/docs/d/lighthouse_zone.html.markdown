@@ -47,5 +47,5 @@ In addition to all arguments above, the following attributes are exported:
 
 This data source queries the following TencentCloud APIs:
 
-* Read: [DescribeZones](https://cloud.tencent.com/document/api/1207/57513) - 查询可用区列表
+* Read: [DescribeZones](https://cloud.tencent.com/document/api/1207/57513) - This API is used to query the list of AZs in a region.
 

@@ -75,10 +75,10 @@ The `client_attesters` object exports the following:
 
 This resource interacts with the following TencentCloud APIs:
 
-* Create: [CreateSecurityClientAttester](https://cloud.tencent.com/document/api/1552/122112) - 创建客户端认证选项
-* Read: [DescribeSecurityClientAttester](https://cloud.tencent.com/document/api/1552/122108) - 查询客户端认证选项
-* Update: [ModifySecurityClientAttester](https://cloud.tencent.com/document/api/1552/122105) - 修改客户端认证选项
-* Delete: [DeleteSecurityClientAttester](https://cloud.tencent.com/document/api/1552/122110) - 删除客户端认证选项
+* Create: [CreateSecurityClientAttester](https://cloud.tencent.com/document/api/1552/122112) - This API is used to create client authentication options.
+* Read: [DescribeSecurityClientAttester](https://cloud.tencent.com/document/api/1552/122108) - This API is used to query client authentication option configuration.
+* Update: [ModifySecurityClientAttester](https://cloud.tencent.com/document/api/1552/122105) - This API is used to modify client authentication options.
+* Delete: [DeleteSecurityClientAttester](https://cloud.tencent.com/document/api/1552/122110) - This API is used to delete client authentication options.
 
 ## Import
 

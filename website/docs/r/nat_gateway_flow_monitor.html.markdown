@@ -38,13 +38,13 @@ In addition to all arguments above, the following attributes are exported:
 
 This resource interacts with the following TencentCloud APIs:
 
-* Create: [CheckGatewayFlowMonitor](https://cloud.tencent.com/document/api/215/116856) - 查询网关是否启用流量监控
-* Create: [DisableGatewayFlowMonitor](https://cloud.tencent.com/document/api/215/43270) - 关闭网关流量监控
-* Create: [EnableGatewayFlowMonitor](https://cloud.tencent.com/document/api/215/43269) - 开启网关流量监控
-* Read: [CheckGatewayFlowMonitor](https://cloud.tencent.com/document/api/215/116856) - 查询网关是否启用流量监控
-* Update: [CheckGatewayFlowMonitor](https://cloud.tencent.com/document/api/215/116856) - 查询网关是否启用流量监控
-* Update: [DisableGatewayFlowMonitor](https://cloud.tencent.com/document/api/215/43270) - 关闭网关流量监控
-* Update: [EnableGatewayFlowMonitor](https://cloud.tencent.com/document/api/215/43269) - 开启网关流量监控
+* Create: [CheckGatewayFlowMonitor](https://cloud.tencent.com/document/api/215/116856) - This API is used to query whether the gateway traffic monitoring is enabled.
+* Create: [DisableGatewayFlowMonitor](https://cloud.tencent.com/document/api/215/43270) - This API is used to disable gateway traffic monitor.
+* Create: [EnableGatewayFlowMonitor](https://cloud.tencent.com/document/api/215/43269) - This API is used to enable gateway traffic monitor.
+* Read: [CheckGatewayFlowMonitor](https://cloud.tencent.com/document/api/215/116856) - This API is used to query whether the gateway traffic monitoring is enabled.
+* Update: [CheckGatewayFlowMonitor](https://cloud.tencent.com/document/api/215/116856) - This API is used to query whether the gateway traffic monitoring is enabled.
+* Update: [DisableGatewayFlowMonitor](https://cloud.tencent.com/document/api/215/43270) - This API is used to disable gateway traffic monitor.
+* Update: [EnableGatewayFlowMonitor](https://cloud.tencent.com/document/api/215/43269) - This API is used to enable gateway traffic monitor.
 
 ## Import
 

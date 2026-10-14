@@ -93,15 +93,15 @@ The `timeouts` block allows you to specify [timeouts](https://developer.hashicor
 
 This resource interacts with the following TencentCloud APIs:
 
-* Create: [CreateGlobalAcceleratorAclRule](https://cloud.tencent.com/document/api/1817/134622) - 创建ACL规则
-* Create: [DescribeTaskResult](https://cloud.tencent.com/document/api/1817/131942) - 查询异步任务结果
-* Read: [DescribeGlobalAcceleratorAclRules](https://cloud.tencent.com/document/api/1817/134687) - 查询ACL规则
-* Update: [CreateGlobalAcceleratorAclRule](https://cloud.tencent.com/document/api/1817/134622) - 创建ACL规则
-* Update: [DeleteGlobalAcceleratorAclRule](https://cloud.tencent.com/document/api/1817/134620) - 删除ACL规则
-* Update: [DescribeTaskResult](https://cloud.tencent.com/document/api/1817/131942) - 查询异步任务结果
-* Update: [ModifyGlobalAcceleratorAclRule](https://cloud.tencent.com/document/api/1817/134618) - 修改ACL规则
-* Delete: [DeleteGlobalAcceleratorAclRule](https://cloud.tencent.com/document/api/1817/134620) - 删除ACL规则
-* Delete: [DescribeTaskResult](https://cloud.tencent.com/document/api/1817/131942) - 查询异步任务结果
+* Create: [CreateGlobalAcceleratorAclRule](https://cloud.tencent.com/document/api/1817/134622) - Create an ACL rule
+* Create: [DescribeTaskResult](https://cloud.tencent.com/document/api/1817/131942) - Query asynchronous task result
+* Read: [DescribeGlobalAcceleratorAclRules](https://cloud.tencent.com/document/api/1817/134687)
+* Update: [CreateGlobalAcceleratorAclRule](https://cloud.tencent.com/document/api/1817/134622) - Create an ACL rule
+* Update: [DeleteGlobalAcceleratorAclRule](https://cloud.tencent.com/document/api/1817/134620)
+* Update: [DescribeTaskResult](https://cloud.tencent.com/document/api/1817/131942) - Query asynchronous task result
+* Update: [ModifyGlobalAcceleratorAclRule](https://cloud.tencent.com/document/api/1817/134618)
+* Delete: [DeleteGlobalAcceleratorAclRule](https://cloud.tencent.com/document/api/1817/134620)
+* Delete: [DescribeTaskResult](https://cloud.tencent.com/document/api/1817/131942) - Query asynchronous task result
 
 ## Import
 

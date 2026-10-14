@@ -143,11 +143,11 @@ In addition to all arguments above, the following attributes are exported:
 
 This resource interacts with the following TencentCloud APIs:
 
-* Create: [DisableFlowLogs](https://cloud.tencent.com/document/api/215/73922) - 停止流日志
-* Create: [EnableFlowLogs](https://cloud.tencent.com/document/api/215/73921) - 启动流日志
-* Read: [DescribeFlowLogs](https://cloud.tencent.com/document/api/215/35012) - 查询流日志集合
-* Update: [DisableFlowLogs](https://cloud.tencent.com/document/api/215/73922) - 停止流日志
-* Update: [EnableFlowLogs](https://cloud.tencent.com/document/api/215/73921) - 启动流日志
+* Create: [DisableFlowLogs](https://cloud.tencent.com/document/api/215/73922) - This API is used to disable flow log.
+* Create: [EnableFlowLogs](https://cloud.tencent.com/document/api/215/73921) - This API is used to enable flow log.
+* Read: [DescribeFlowLogs](https://cloud.tencent.com/document/api/215/35012) - This API is used to query all the flow logs of the current account.
+* Update: [DisableFlowLogs](https://cloud.tencent.com/document/api/215/73922) - This API is used to disable flow log.
+* Update: [EnableFlowLogs](https://cloud.tencent.com/document/api/215/73921) - This API is used to enable flow log.
 
 ## Import
 

@@ -62,5 +62,5 @@ In addition to all arguments above, the following attributes are exported:
 
 This data source queries the following TencentCloud APIs:
 
-* Read: [DescribeHostTkeInstanceList](https://cloud.tencent.com/document/api/400/91654) - 查询证书tke云资源部署实例列表
+* Read: [DescribeHostTkeInstanceList](https://cloud.tencent.com/document/api/400/91654)
 

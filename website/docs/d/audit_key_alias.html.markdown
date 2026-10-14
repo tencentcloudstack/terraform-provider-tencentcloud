@@ -38,5 +38,5 @@ In addition to all arguments above, the following attributes are exported:
 
 This data source queries the following TencentCloud APIs:
 
-* Read: [ListKeyAliasByRegion](https://cloud.tencent.com/document/api/629/48173) - 根据地域获取KMS密钥别名
+* Read: [ListKeyAliasByRegion](https://cloud.tencent.com/document/api/629/48173)
 

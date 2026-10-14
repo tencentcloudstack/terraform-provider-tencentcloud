@@ -65,11 +65,11 @@ In addition to all arguments above, the following attributes are exported:
 
 This resource interacts with the following TencentCloud APIs:
 
-* Create: [DescribeFlowStatus](https://cloud.tencent.com/document/api/238/19967) - 查询流程状态
-* Create: [ModifyDBInstanceSSL](https://cloud.tencent.com/document/api/238/102112) - 开启\关闭\更新SSL加密
-* Read: [DescribeDBInstancesAttribute](https://cloud.tencent.com/document/api/238/90299) - 查询实例附属属性
-* Update: [DescribeFlowStatus](https://cloud.tencent.com/document/api/238/19967) - 查询流程状态
-* Update: [ModifyDBInstanceSSL](https://cloud.tencent.com/document/api/238/102112) - 开启\关闭\更新SSL加密
+* Create: [DescribeFlowStatus](https://cloud.tencent.com/document/api/238/19967) - This API is used to query flow status.
+* Create: [ModifyDBInstanceSSL](https://cloud.tencent.com/document/api/238/102112) - This API is used to enable/disable/update SSL encryption.
+* Read: [DescribeDBInstancesAttribute](https://cloud.tencent.com/document/api/238/90299) - This API is used to query the attributes of an instance.
+* Update: [DescribeFlowStatus](https://cloud.tencent.com/document/api/238/19967) - This API is used to query flow status.
+* Update: [ModifyDBInstanceSSL](https://cloud.tencent.com/document/api/238/102112) - This API is used to enable/disable/update SSL encryption.
 
 ## Import
 

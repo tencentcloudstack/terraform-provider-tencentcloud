@@ -106,7 +106,7 @@ In addition to all arguments above, the following attributes are exported:
 
 This resource interacts with the following TencentCloud APIs:
 
-* Create: [CreateDisks](https://cloud.tencent.com/document/api/362/16312) - 创建云硬盘
-* Read: [DescribeDisks](https://cloud.tencent.com/document/api/362/16315) - 查询云硬盘列表
-* Delete: [TerminateDisks](https://cloud.tencent.com/document/api/362/16321) - 退还云硬盘
+* Create: [CreateDisks](https://cloud.tencent.com/document/api/362/16312) - This API is used to create cloud disks.
+* Read: [DescribeDisks](https://cloud.tencent.com/document/api/362/16315) - This API (DescribeDisks) is used to query the list of cloud disks.
+* Delete: [TerminateDisks](https://cloud.tencent.com/document/api/362/16321) - This API is used to return cloud disks.
 

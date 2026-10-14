@@ -66,7 +66,7 @@ In addition to all arguments above, the following attributes are exported:
 
 This resource interacts with the following TencentCloud APIs:
 
-* Create: [AddClusterInstances](https://cloud.tencent.com/document/api/649/41225) - 集群添加云主机
-* Read: [DescribeClusterInstances](https://cloud.tencent.com/document/api/649/36048) - 查询集群实例
-* Delete: [RemoveInstances](https://cloud.tencent.com/document/api/649/36046) - 移除云主机
+* Create: [AddClusterInstances](https://cloud.tencent.com/document/api/649/41225)
+* Read: [DescribeClusterInstances](https://cloud.tencent.com/document/api/649/36048)
+* Delete: [RemoveInstances](https://cloud.tencent.com/document/api/649/36046)
 

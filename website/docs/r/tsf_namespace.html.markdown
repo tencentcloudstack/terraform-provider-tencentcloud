@@ -57,8 +57,8 @@ In addition to all arguments above, the following attributes are exported:
 
 This resource interacts with the following TencentCloud APIs:
 
-* Create: [CreateNamespace](https://cloud.tencent.com/document/api/649/36098) - 创建命名空间
-* Read: [DescribeSimpleNamespaces](https://cloud.tencent.com/document/api/649/36096) - 查询简单命名空间列表
-* Update: [ModifyNamespace](https://cloud.tencent.com/document/api/649/85851) - 修改命名空间
-* Delete: [DeleteNamespace](https://cloud.tencent.com/document/api/649/36097) - 删除命名空间
+* Create: [CreateNamespace](https://cloud.tencent.com/document/api/649/36098)
+* Read: [DescribeSimpleNamespaces](https://cloud.tencent.com/document/api/649/36096)
+* Update: [ModifyNamespace](https://cloud.tencent.com/document/api/649/85851)
+* Delete: [DeleteNamespace](https://cloud.tencent.com/document/api/649/36097)
 

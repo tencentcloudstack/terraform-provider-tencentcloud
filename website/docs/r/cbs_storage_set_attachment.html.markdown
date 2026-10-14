@@ -38,7 +38,7 @@ In addition to all arguments above, the following attributes are exported:
 
 This resource interacts with the following TencentCloud APIs:
 
-* Create: [AttachDisks](https://cloud.tencent.com/document/api/362/16313) - 挂载云硬盘
-* Read: [DescribeDisks](https://cloud.tencent.com/document/api/362/16315) - 查询云硬盘列表
-* Delete: [DetachDisks](https://cloud.tencent.com/document/api/362/16316) - 卸载云硬盘
+* Create: [AttachDisks](https://cloud.tencent.com/document/api/362/16313) - This API is used to mount one or more cloud disks.
+* Read: [DescribeDisks](https://cloud.tencent.com/document/api/362/16315) - This API (DescribeDisks) is used to query the list of cloud disks.
+* Delete: [DetachDisks](https://cloud.tencent.com/document/api/362/16316) - This API is used to unmount one or more cloud disks.
 

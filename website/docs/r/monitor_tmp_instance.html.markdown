@@ -69,16 +69,16 @@ In addition to all arguments above, the following attributes are exported:
 
 This resource interacts with the following TencentCloud APIs:
 
-* Create: [CreatePrometheusMultiTenantInstancePostPayMode](https://cloud.tencent.com/document/api/248/76097) - 创建按量 Prometheus 实例
-* Create: [DescribePrometheusInstances](https://cloud.tencent.com/document/api/248/66097) - 查看 Prometheus 实例列表
-* Create: [ModifyResourceTags](https://cloud.tencent.com/document/api/651/35322) - 批量修改资源关联的标签
-* Read: [DescribePrometheusInstances](https://cloud.tencent.com/document/api/248/66097) - 查看 Prometheus 实例列表
-* Read: [DescribeResourceTagsByResourceIds](https://cloud.tencent.com/document/api/651/35319) - 批量查看资源关联的标签
-* Update: [ModifyPrometheusInstanceAttributes](https://cloud.tencent.com/document/api/248/76009) - 修改 Prometheus 实例相关属性
-* Update: [ModifyResourceTags](https://cloud.tencent.com/document/api/651/35322) - 批量修改资源关联的标签
-* Delete: [DescribePrometheusInstances](https://cloud.tencent.com/document/api/248/66097) - 查看 Prometheus 实例列表
-* Delete: [DestroyPrometheusInstance](https://cloud.tencent.com/document/api/248/76011) - 强制释放 Prometheus 实例
-* Delete: [TerminatePrometheusInstances](https://cloud.tencent.com/document/api/248/76008) - 销毁按量 Prometheus 实例
+* Create: [CreatePrometheusMultiTenantInstancePostPayMode](https://cloud.tencent.com/document/api/248/76097) - This API is used to create a pay-as-you-go Prometheus instance.
+* Create: [DescribePrometheusInstances](https://cloud.tencent.com/document/api/248/66097) - This API is used to query the details of one or multiple instances.
+* Create: [ModifyResourceTags](https://cloud.tencent.com/document/api/651/35322) - This API is used to modify all tags associated with a resource.
+* Read: [DescribePrometheusInstances](https://cloud.tencent.com/document/api/248/66097) - This API is used to query the details of one or multiple instances.
+* Read: [DescribeResourceTagsByResourceIds](https://cloud.tencent.com/document/api/651/35319) - This API is used to query the tag key-value pairs associated with an existing resource.
+* Update: [ModifyPrometheusInstanceAttributes](https://cloud.tencent.com/document/api/248/76009) - This API is used to modify the attributes of a Prometheus instance.
+* Update: [ModifyResourceTags](https://cloud.tencent.com/document/api/651/35322) - This API is used to modify all tags associated with a resource.
+* Delete: [DescribePrometheusInstances](https://cloud.tencent.com/document/api/248/66097) - This API is used to query the details of one or multiple instances.
+* Delete: [DestroyPrometheusInstance](https://cloud.tencent.com/document/api/248/76011) - This API is used to delete the data of a Prometheus instance. The specified instance must be terminated first.
+* Delete: [TerminatePrometheusInstances](https://cloud.tencent.com/document/api/248/76008) - This API is used to terminate a pay-as-you-go Prometheus instance.
 
 ## Import
 

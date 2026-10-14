@@ -38,5 +38,5 @@ In addition to all arguments above, the following attributes are exported:
 
 This resource interacts with the following TencentCloud APIs:
 
-* Create: [ModifyUserType](https://cloud.tencent.com/document/api/1342/99259) - 修改用户类型
+* Create: [ModifyUserType](https://cloud.tencent.com/document/api/1342/99259) - This API is used to modify the types of users. Only users who are also administrators can call this API to conduct the operation.
 

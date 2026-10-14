@@ -55,5 +55,5 @@ In addition to all arguments above, the following attributes are exported:
 
 This data source queries the following TencentCloud APIs:
 
-* Read: [DescribeRocketMQNamespaces](https://cloud.tencent.com/document/api/1179/63419) - 查询 RocketMQ 命名空间列表
+* Read: [DescribeRocketMQNamespaces](https://cloud.tencent.com/document/api/1179/63419) - Query the RocketMQ namespace list.
 

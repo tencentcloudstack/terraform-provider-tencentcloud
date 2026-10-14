@@ -254,5 +254,5 @@ In addition to all arguments above, the following attributes are exported:
 
 This data source queries the following TencentCloud APIs:
 
-* Read: [DescribeAlarmPolicies](https://cloud.tencent.com/document/api/248/51279) - 查询告警策略列表（支持按实例等条件筛选）
+* Read: [DescribeAlarmPolicies](https://cloud.tencent.com/document/api/248/51279) - This API is used to query the list of alarm policies.
 

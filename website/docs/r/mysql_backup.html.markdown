@@ -146,9 +146,9 @@ The `timeouts` block allows you to specify [timeouts](https://developer.hashicor
 
 This resource interacts with the following TencentCloud APIs:
 
-* Create: [CreateBackup](https://cloud.tencent.com/document/api/236/15844) - 创建云数据库备份
-* Create: [DescribeBackups](https://cloud.tencent.com/document/api/236/15842) - 查询数据备份文件列表
-* Read: [DescribeBackups](https://cloud.tencent.com/document/api/236/15842) - 查询数据备份文件列表
-* Delete: [DeleteBackup](https://cloud.tencent.com/document/api/236/15841) - 删除云数据库备份
-* Delete: [DescribeBackups](https://cloud.tencent.com/document/api/236/15842) - 查询数据备份文件列表
+* Create: [CreateBackup](https://cloud.tencent.com/document/api/236/15844) - This API is used to create a database backup.
+* Create: [DescribeBackups](https://cloud.tencent.com/document/api/236/15842) - This API (DescribeBackups) is used to query the backups of a TencentDB instance.
+* Read: [DescribeBackups](https://cloud.tencent.com/document/api/236/15842) - This API (DescribeBackups) is used to query the backups of a TencentDB instance.
+* Delete: [DeleteBackup](https://cloud.tencent.com/document/api/236/15841) - This API is used to delete database backups. It only supports deleting manually initiated backups.
+* Delete: [DescribeBackups](https://cloud.tencent.com/document/api/236/15842) - This API (DescribeBackups) is used to query the backups of a TencentDB instance.
 

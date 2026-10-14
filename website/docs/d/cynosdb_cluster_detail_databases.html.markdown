@@ -53,5 +53,5 @@ In addition to all arguments above, the following attributes are exported:
 
 This data source queries the following TencentCloud APIs:
 
-* Read: [DescribeClusterDetailDatabases](https://cloud.tencent.com/document/api/1003/92734) - 查询数据库列表
+* Read: [DescribeClusterDetailDatabases](https://cloud.tencent.com/document/api/1003/92734) - This API is used to query database list.
 

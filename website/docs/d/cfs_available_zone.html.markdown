@@ -48,5 +48,5 @@ In addition to all arguments above, the following attributes are exported:
 
 This data source queries the following TencentCloud APIs:
 
-* Read: [DescribeAvailableZoneInfo](https://cloud.tencent.com/document/api/582/38171) - 查询区域可用情况
+* Read: [DescribeAvailableZoneInfo](https://cloud.tencent.com/document/api/582/38171) - This API is used to query the availability of a region.
 

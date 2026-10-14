@@ -38,6 +38,6 @@ In addition to all arguments above, the following attributes are exported:
 
 This resource interacts with the following TencentCloud APIs:
 
-* Create: [ApplyInstanceSnapshot](https://cloud.tencent.com/document/api/1207/54391) - 回滚实例快照
-* Create: [DescribeSnapshots](https://cloud.tencent.com/document/api/1207/54388) - 查看快照列表
+* Create: [ApplyInstanceSnapshot](https://cloud.tencent.com/document/api/1207/54391) - This API is used to roll back the system disk snapshot of the specified instance.
+* Create: [DescribeSnapshots](https://cloud.tencent.com/document/api/1207/54388) - This API is used to query the list of snapshots.
 

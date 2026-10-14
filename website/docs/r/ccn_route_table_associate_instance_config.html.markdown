@@ -102,8 +102,8 @@ In addition to all arguments above, the following attributes are exported:
 
 This resource interacts with the following TencentCloud APIs:
 
-* Create: [AssociateInstancesToCcnRouteTable](https://cloud.tencent.com/document/api/215/108751) - 关联云联网实例到指定的云联网路由表
-* Update: [AssociateInstancesToCcnRouteTable](https://cloud.tencent.com/document/api/215/108751) - 关联云联网实例到指定的云联网路由表
+* Create: [AssociateInstancesToCcnRouteTable](https://cloud.tencent.com/document/api/215/108751)
+* Update: [AssociateInstancesToCcnRouteTable](https://cloud.tencent.com/document/api/215/108751)
 
 ## Import
 

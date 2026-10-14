@@ -94,14 +94,14 @@ In addition to all arguments above, the following attributes are exported:
 
 This resource interacts with the following TencentCloud APIs:
 
-* Create: [RegisterCaCertificate](https://cloud.tencent.com/document/api/1778/116205) - 注册CA证书
-* Read: [DescribeCaCertificate](https://cloud.tencent.com/document/api/1778/116207) - 查询Ca证书详情
-* Read: [DescribeCaCertificates](https://cloud.tencent.com/document/api/1778/116206) - 查询集群CA证书列表
-* Update: [ActivateCaCertificate](https://cloud.tencent.com/document/api/1778/116210) - 激活Ca证书
-* Update: [DeactivateCaCertificate](https://cloud.tencent.com/document/api/1778/116209) - 失效Ca证书
-* Delete: [DeactivateCaCertificate](https://cloud.tencent.com/document/api/1778/116209) - 失效Ca证书
-* Delete: [DeleteCaCertificate](https://cloud.tencent.com/document/api/1778/116208) - 删除Ca证书
-* Delete: [DescribeCaCertificate](https://cloud.tencent.com/document/api/1778/116207) - 查询Ca证书详情
+* Create: [RegisterCaCertificate](https://cloud.tencent.com/document/api/1778/116205)
+* Read: [DescribeCaCertificate](https://cloud.tencent.com/document/api/1778/116207)
+* Read: [DescribeCaCertificates](https://cloud.tencent.com/document/api/1778/116206)
+* Update: [ActivateCaCertificate](https://cloud.tencent.com/document/api/1778/116210)
+* Update: [DeactivateCaCertificate](https://cloud.tencent.com/document/api/1778/116209)
+* Delete: [DeactivateCaCertificate](https://cloud.tencent.com/document/api/1778/116209)
+* Delete: [DeleteCaCertificate](https://cloud.tencent.com/document/api/1778/116208)
+* Delete: [DescribeCaCertificate](https://cloud.tencent.com/document/api/1778/116207)
 
 ## Import
 

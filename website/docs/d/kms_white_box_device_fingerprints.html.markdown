@@ -38,5 +38,5 @@ In addition to all arguments above, the following attributes are exported:
 
 This data source queries the following TencentCloud APIs:
 
-* Read: [DescribeWhiteBoxDeviceFingerprints](https://cloud.tencent.com/document/api/573/45806) - 获取指定密钥的设备指纹列表
+* Read: [DescribeWhiteBoxDeviceFingerprints](https://cloud.tencent.com/document/api/573/45806) - This API is used to get the device fingerprint list of a specified key.
 

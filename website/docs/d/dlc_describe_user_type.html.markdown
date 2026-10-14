@@ -36,5 +36,5 @@ In addition to all arguments above, the following attributes are exported:
 
 This data source queries the following TencentCloud APIs:
 
-* Read: [DescribeUserType](https://cloud.tencent.com/document/api/1342/99261) - 获取用户类型
+* Read: [DescribeUserType](https://cloud.tencent.com/document/api/1342/99261) - This API is used to get the types of users.
 

@@ -44,6 +44,6 @@ In addition to all arguments above, the following attributes are exported:
 
 This resource interacts with the following TencentCloud APIs:
 
-* Create: [DescribeTaskInfo](https://cloud.tencent.com/document/api/239/30601) - Redis查询任务结果
-* Create: [ManualBackupInstance](https://cloud.tencent.com/document/api/239/20010) - 手动备份Redis实例
+* Create: [DescribeTaskInfo](https://cloud.tencent.com/document/api/239/30601) - This API is used to get the execution of a specified task.
+* Create: [ManualBackupInstance](https://cloud.tencent.com/document/api/239/20010) - This API is used to manually back up a Redis instance.
 

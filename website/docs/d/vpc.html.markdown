@@ -51,5 +51,5 @@ In addition to all arguments above, the following attributes are exported:
 
 This data source queries the following TencentCloud APIs:
 
-* Read: [DescribeVpcs](https://cloud.tencent.com/document/api/215/15778) - 查询VPC列表
+* Read: [DescribeVpcs](https://cloud.tencent.com/document/api/215/15778) - This API (DescribeVpcs) is used to query the VPC list.
 

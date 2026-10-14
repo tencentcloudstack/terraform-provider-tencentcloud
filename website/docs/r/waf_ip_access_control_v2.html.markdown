@@ -92,10 +92,10 @@ In addition to all arguments above, the following attributes are exported:
 
 This resource interacts with the following TencentCloud APIs:
 
-* Create: [CreateIpAccessControl](https://cloud.tencent.com/document/api/627/105915) - IP黑白名单新增接口
-* Read: [DescribeIpAccessControl](https://cloud.tencent.com/document/api/627/72645) - IP黑白名单查询
-* Update: [ModifyIpAccessControl](https://cloud.tencent.com/document/api/627/105912) - IP黑白名单编辑接口
-* Delete: [DeleteIpAccessControlV2](https://cloud.tencent.com/document/api/627/105914) - IP黑白名单删除接口
+* Create: [CreateIpAccessControl](https://cloud.tencent.com/document/api/627/105915) - This API is used to add WAF IP allowlists/blocklists.
+* Read: [DescribeIpAccessControl](https://cloud.tencent.com/document/api/627/72645) - WAF IP blocklist/allowlist query
+* Update: [ModifyIpAccessControl](https://cloud.tencent.com/document/api/627/105912) - This API is used to edit WAF IP allowlists/blocklists.
+* Delete: [DeleteIpAccessControlV2](https://cloud.tencent.com/document/api/627/105914) - This API is used to delete latest versions of WAF IP allowlists/blocklists.
 
 ## Import
 

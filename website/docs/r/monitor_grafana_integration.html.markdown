@@ -71,8 +71,8 @@ In addition to all arguments above, the following attributes are exported:
 
 This resource interacts with the following TencentCloud APIs:
 
-* Create: [CreateGrafanaIntegration](https://cloud.tencent.com/document/api/248/79218) - 创建 Grafana 集成配置
-* Read: [DescribeGrafanaIntegrations](https://cloud.tencent.com/document/api/248/79207) - 列出 Grafana 已安装的集成
-* Update: [UpdateGrafanaIntegration](https://cloud.tencent.com/document/api/248/79191) - 更新 Grafana 集成配置
-* Delete: [DeleteGrafanaIntegration](https://cloud.tencent.com/document/api/248/79214) - 删除 Grafana 集成配置
+* Create: [CreateGrafanaIntegration](https://cloud.tencent.com/document/api/248/79218) - This API is used to create a Grafana integration configuration.
+* Read: [DescribeGrafanaIntegrations](https://cloud.tencent.com/document/api/248/79207) - This API is used to list installed Grafana integrations.
+* Update: [UpdateGrafanaIntegration](https://cloud.tencent.com/document/api/248/79191) - This API is used to update the Grafana integration configuration.
+* Delete: [DeleteGrafanaIntegration](https://cloud.tencent.com/document/api/248/79214) - This API is used to delete a Grafana integration configuration.
 

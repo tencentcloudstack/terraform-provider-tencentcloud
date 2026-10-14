@@ -53,5 +53,5 @@ In addition to all arguments above, the following attributes are exported:
 
 This data source queries the following TencentCloud APIs:
 
-* Read: [DescribeRocketMQMsg](https://cloud.tencent.com/document/api/1179/91055) - 查询 RocketMQ 消息详情
+* Read: [DescribeRocketMQMsg](https://cloud.tencent.com/document/api/1179/91055) - Query RocketMQ message details.
 

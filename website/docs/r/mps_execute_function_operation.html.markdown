@@ -38,5 +38,5 @@ In addition to all arguments above, the following attributes are exported:
 
 This resource interacts with the following TencentCloud APIs:
 
-* Create: [ExecuteFunction](https://cloud.tencent.com/document/api/862/48427) - 执行定制 API
+* Create: [ExecuteFunction](https://cloud.tencent.com/document/api/862/48427) - This interface is only used for custom development in special scenarios. Unless a Media Processing Service customer service representative proactively informs you that you need to use this interface, do not call it in other cases.
 

@@ -45,5 +45,5 @@ In addition to all arguments above, the following attributes are exported:
 
 This data source queries the following TencentCloud APIs:
 
-* Read: [DescribeBinlogs](https://cloud.tencent.com/document/api/1003/76371) - 查询 Binlog 列表
+* Read: [DescribeBinlogs](https://cloud.tencent.com/document/api/1003/76371) - This interface (DescribeBinlogs) queries the cluster binlog list.
 

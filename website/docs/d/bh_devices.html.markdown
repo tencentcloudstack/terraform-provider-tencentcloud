@@ -204,5 +204,5 @@ In addition to all arguments above, the following attributes are exported:
 
 This data source queries the following TencentCloud APIs:
 
-* Read: [DescribeDevices](https://cloud.tencent.com/document/api/1025/74415) - 查询资产列表
+* Read: [DescribeDevices](https://cloud.tencent.com/document/api/1025/74415)
 

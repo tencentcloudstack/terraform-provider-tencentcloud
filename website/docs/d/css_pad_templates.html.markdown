@@ -43,5 +43,5 @@ In addition to all arguments above, the following attributes are exported:
 
 This data source queries the following TencentCloud APIs:
 
-* Read: [DescribeLivePadTemplates](https://cloud.tencent.com/document/api/267/93524) - 获取直播垫片模板
+* Read: [DescribeLivePadTemplates](https://cloud.tencent.com/document/api/267/93524)
 

@@ -42,10 +42,10 @@ In addition to all arguments above, the following attributes are exported:
 
 This resource interacts with the following TencentCloud APIs:
 
-* Create: [UpdateDiagnoseSettings](https://cloud.tencent.com/document/api/845/55629) - 更新智能运维配置
-* Read: [GetDiagnoseSettings](https://cloud.tencent.com/document/api/845/100952) - 查看智能运维配置
-* Update: [UpdateDiagnoseSettings](https://cloud.tencent.com/document/api/845/55629) - 更新智能运维配置
-* Delete: [UpdateDiagnoseSettings](https://cloud.tencent.com/document/api/845/55629) - 更新智能运维配置
+* Create: [UpdateDiagnoseSettings](https://cloud.tencent.com/document/api/845/55629)
+* Read: [GetDiagnoseSettings](https://cloud.tencent.com/document/api/845/100952)
+* Update: [UpdateDiagnoseSettings](https://cloud.tencent.com/document/api/845/55629)
+* Delete: [UpdateDiagnoseSettings](https://cloud.tencent.com/document/api/845/55629)
 
 ## Import
 

@@ -74,5 +74,5 @@ In addition to all arguments above, the following attributes are exported:
 
 This data source queries the following TencentCloud APIs:
 
-* Read: [DescribeRedisClusters](https://cloud.tencent.com/document/api/239/109628) - 查询Redis独享集群列表
+* Read: [DescribeRedisClusters](https://cloud.tencent.com/document/api/239/109628) - This API is used to query the list of dedicated Redis clusters.
 

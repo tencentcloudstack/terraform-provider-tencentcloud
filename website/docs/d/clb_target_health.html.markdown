@@ -53,5 +53,5 @@ In addition to all arguments above, the following attributes are exported:
 
 This data source queries the following TencentCloud APIs:
 
-* Read: [DescribeTargetHealth](https://cloud.tencent.com/document/api/214/34898) - 获取负载均衡后端服务的健康检查状态
+* Read: [DescribeTargetHealth](https://cloud.tencent.com/document/api/214/34898) - This API (DescribeTargetHealth) is used to query the health check result of a real server of a CLB instance.
 

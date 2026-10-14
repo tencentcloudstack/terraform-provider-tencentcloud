@@ -77,13 +77,13 @@ In addition to all arguments above, the following attributes are exported:
 
 This resource interacts with the following TencentCloud APIs:
 
-* Create: [DescribeClusterNatCcnFwSwitchList](https://cloud.tencent.com/document/api/1132/132581) - 查询NAT CCN集群模式防火墙开关列表
-* Create: [OpenClusterNatFwSwitch](https://cloud.tencent.com/document/api/1132/132577) - 开启NAT CCN集群模式防火墙开关
-* Read: [DescribeNatCcnFwSwitch](https://cloud.tencent.com/document/api/1132/132580) - 查询NAT CCN防火墙开关配置
-* Update: [DescribeClusterNatCcnFwSwitchList](https://cloud.tencent.com/document/api/1132/132581) - 查询NAT CCN集群模式防火墙开关列表
-* Update: [ModifyClusterNatFwSwitch](https://cloud.tencent.com/document/api/1132/132578) - 修改NAT CCN集群模式防火墙开关配置
-* Delete: [CloseClusterNatFwSwitch](https://cloud.tencent.com/document/api/1132/132582) - 关闭NAT CCN集群模式防火墙开关
-* Delete: [DescribeClusterNatCcnFwSwitchList](https://cloud.tencent.com/document/api/1132/132581) - 查询NAT CCN集群模式防火墙开关列表
+* Create: [DescribeClusterNatCcnFwSwitchList](https://cloud.tencent.com/document/api/1132/132581)
+* Create: [OpenClusterNatFwSwitch](https://cloud.tencent.com/document/api/1132/132577)
+* Read: [DescribeNatCcnFwSwitch](https://cloud.tencent.com/document/api/1132/132580)
+* Update: [DescribeClusterNatCcnFwSwitchList](https://cloud.tencent.com/document/api/1132/132581)
+* Update: [ModifyClusterNatFwSwitch](https://cloud.tencent.com/document/api/1132/132578)
+* Delete: [CloseClusterNatFwSwitch](https://cloud.tencent.com/document/api/1132/132582)
+* Delete: [DescribeClusterNatCcnFwSwitchList](https://cloud.tencent.com/document/api/1132/132581)
 
 ## Import
 

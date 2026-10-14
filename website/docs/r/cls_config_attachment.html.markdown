@@ -33,9 +33,9 @@ In addition to all arguments above, the following attributes are exported:
 
 This resource interacts with the following TencentCloud APIs:
 
-* Create: [ApplyConfigToMachineGroup](https://cloud.tencent.com/document/api/614/58621) - 应用采集配置到指定机器组
-* Read: [DescribeConfigMachineGroups](https://cloud.tencent.com/document/api/614/58617) - 获取采集规则配置所绑定的机器组
-* Delete: [DeleteConfigFromMachineGroup](https://cloud.tencent.com/document/api/614/58618) - 删除应用到机器组的采集配置
+* Create: [ApplyConfigToMachineGroup](https://cloud.tencent.com/document/api/614/58621) - This API is used to apply the collection configuration to a specified machine group.
+* Read: [DescribeConfigMachineGroups](https://cloud.tencent.com/document/api/614/58617) - This API is used to get the machine group bound to collection rule configuration.
+* Delete: [DeleteConfigFromMachineGroup](https://cloud.tencent.com/document/api/614/58618) - This API is used to delete the collection configuration applied to a machine group.
 
 ## Import
 

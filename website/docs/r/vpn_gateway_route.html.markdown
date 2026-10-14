@@ -49,10 +49,10 @@ In addition to all arguments above, the following attributes are exported:
 
 This resource interacts with the following TencentCloud APIs:
 
-* Create: [CreateVpnGatewayRoutes](https://cloud.tencent.com/document/api/215/57678) - 创建VPN网关路由
-* Read: [DescribeVpnGatewayRoutes](https://cloud.tencent.com/document/api/215/57676) - 查询VPN网关路由
-* Update: [ModifyVpnGatewayRoutes](https://cloud.tencent.com/document/api/215/57675) - 修改VPN路由状态
-* Delete: [DeleteVpnGatewayRoutes](https://cloud.tencent.com/document/api/215/57677) - 删除VPN网关路由
+* Create: [CreateVpnGatewayRoutes](https://cloud.tencent.com/document/api/215/57678) - This API is used to create destination routes of a route-based VPN gateway.
+* Read: [DescribeVpnGatewayRoutes](https://cloud.tencent.com/document/api/215/57676) - This API is used to query VPN gateway routes.
+* Update: [ModifyVpnGatewayRoutes](https://cloud.tencent.com/document/api/215/57675) - This API is used to modify VPN gateway routes.
+* Delete: [DeleteVpnGatewayRoutes](https://cloud.tencent.com/document/api/215/57677) - This API is used to delete routes of a VPN gateway.
 
 ## Import
 

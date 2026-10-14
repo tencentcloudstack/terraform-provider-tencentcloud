@@ -48,14 +48,14 @@ In addition to all arguments above, the following attributes are exported:
 
 This resource interacts with the following TencentCloud APIs:
 
-* Create: [CreateSnapshot](https://cloud.tencent.com/document/api/362/15648) - 创建快照
-* Create: [DescribeSnapshots](https://cloud.tencent.com/document/api/362/15647) - 查询快照列表
-* Create: [ModifyResourceTags](https://cloud.tencent.com/document/api/651/35322) - 批量修改资源关联的标签
-* Read: [DescribeResourceTagsByResourceIds](https://cloud.tencent.com/document/api/651/35319) - 批量查看资源关联的标签
-* Read: [DescribeSnapshots](https://cloud.tencent.com/document/api/362/15647) - 查询快照列表
-* Update: [ModifyResourceTags](https://cloud.tencent.com/document/api/651/35322) - 批量修改资源关联的标签
-* Update: [ModifySnapshotAttribute](https://cloud.tencent.com/document/api/362/15650) - 修改快照信息
-* Delete: [DeleteSnapshots](https://cloud.tencent.com/document/api/362/15645) - 删除快照
+* Create: [CreateSnapshot](https://cloud.tencent.com/document/api/362/15648) - This API is used to create a snapshot for the specified cloud disk.
+* Create: [DescribeSnapshots](https://cloud.tencent.com/document/api/362/15647) - This API (DescribeSnapshots) is used to query the details of snapshots.
+* Create: [ModifyResourceTags](https://cloud.tencent.com/document/api/651/35322) - This API is used to modify all tags associated with a resource.
+* Read: [DescribeResourceTagsByResourceIds](https://cloud.tencent.com/document/api/651/35319) - This API is used to query the tag key-value pairs associated with an existing resource.
+* Read: [DescribeSnapshots](https://cloud.tencent.com/document/api/362/15647) - This API (DescribeSnapshots) is used to query the details of snapshots.
+* Update: [ModifyResourceTags](https://cloud.tencent.com/document/api/651/35322) - This API is used to modify all tags associated with a resource.
+* Update: [ModifySnapshotAttribute](https://cloud.tencent.com/document/api/362/15650) - This API is used to modify the attributes of a specified snapshot.
+* Delete: [DeleteSnapshots](https://cloud.tencent.com/document/api/362/15645) - This API is used to delete snapshots.
 
 ## Import
 

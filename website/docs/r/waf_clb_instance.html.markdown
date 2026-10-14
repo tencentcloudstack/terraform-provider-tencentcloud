@@ -84,12 +84,12 @@ In addition to all arguments above, the following attributes are exported:
 
 This resource interacts with the following TencentCloud APIs:
 
-* Create: [GenerateDealsAndPayNew](https://cloud.tencent.com/document/api/627/98468) - 计费资源购买、续费下单接口
-* Create: [ModifyInstanceQpsLimit](https://cloud.tencent.com/document/api/627/98580) - 设置套餐实例的弹性qps上限
-* Create: [SwitchElasticMode](https://cloud.tencent.com/document/api/627/98703) - 切换弹性QPS的开关
-* Read: [DescribeInstances](https://cloud.tencent.com/document/api/627/75922) - 查询用户所有实例的详细信息
-* Update: [ModifyInstanceName](https://cloud.tencent.com/document/api/627/98581) - 修改实例名称
-* Update: [ModifyInstanceQpsLimit](https://cloud.tencent.com/document/api/627/98580) - 设置套餐实例的弹性qps上限
-* Update: [ModifyInstanceRenewFlag](https://cloud.tencent.com/document/api/627/98579) - 修改实例的自动续费开关
-* Update: [SwitchElasticMode](https://cloud.tencent.com/document/api/627/98703) - 切换弹性QPS的开关
+* Create: [GenerateDealsAndPayNew](https://cloud.tencent.com/document/api/627/98468) - Billing Resource Purchase, Renewal Order API
+* Create: [ModifyInstanceQpsLimit](https://cloud.tencent.com/document/api/627/98580) - Set elastic QPS limit for package instances
+* Create: [SwitchElasticMode](https://cloud.tencent.com/document/api/627/98703)
+* Read: [DescribeInstances](https://cloud.tencent.com/document/api/627/75922) - Query detailed information of all user instances
+* Update: [ModifyInstanceName](https://cloud.tencent.com/document/api/627/98581)
+* Update: [ModifyInstanceQpsLimit](https://cloud.tencent.com/document/api/627/98580) - Set elastic QPS limit for package instances
+* Update: [ModifyInstanceRenewFlag](https://cloud.tencent.com/document/api/627/98579) - Enable or disable auto-renewal for instance
+* Update: [SwitchElasticMode](https://cloud.tencent.com/document/api/627/98703)
 

@@ -42,5 +42,5 @@ In addition to all arguments above, the following attributes are exported:
 
 This data source queries the following TencentCloud APIs:
 
-* Read: [GetInstanceQpsLimit](https://cloud.tencent.com/document/api/627/98204) - 获取套餐实例的弹性qps上限
+* Read: [GetInstanceQpsLimit](https://cloud.tencent.com/document/api/627/98204) - Obtain the elastic QPS limit of package instances
 

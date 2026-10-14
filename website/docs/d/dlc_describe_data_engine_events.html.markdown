@@ -40,5 +40,5 @@ In addition to all arguments above, the following attributes are exported:
 
 This data source queries the following TencentCloud APIs:
 
-* Read: [DescribeDataEngineEvents](https://cloud.tencent.com/document/api/1342/101534) - 查询扩缩容日志
+* Read: [DescribeDataEngineEvents](https://cloud.tencent.com/document/api/1342/101534)
 

@@ -81,5 +81,5 @@ Loopback addresses, reserved addresses, internal network addresses and Tencent r
 
 This data source queries the following TencentCloud APIs:
 
-* Read: [DescribeAddressPoolList](https://cloud.tencent.com/document/api/1551/120460) - 地址池列表
+* Read: [DescribeAddressPoolList](https://cloud.tencent.com/document/api/1551/120460)
 

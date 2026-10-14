@@ -38,9 +38,9 @@ In addition to all arguments above, the following attributes are exported:
 
 This resource interacts with the following TencentCloud APIs:
 
-* Create: [ModifyWebshellStatus](https://cloud.tencent.com/document/api/627/99702) - 设置webshell状态
-* Read: [DescribeWebshellStatus](https://cloud.tencent.com/document/api/627/100464) - 获取域名webshell状态
-* Update: [ModifyWebshellStatus](https://cloud.tencent.com/document/api/627/99702) - 设置webshell状态
+* Create: [ModifyWebshellStatus](https://cloud.tencent.com/document/api/627/99702) - Set the Webshell status of a domain.
+* Read: [DescribeWebshellStatus](https://cloud.tencent.com/document/api/627/100464) - Obtain the webshell status of a domain
+* Update: [ModifyWebshellStatus](https://cloud.tencent.com/document/api/627/99702) - Set the Webshell status of a domain.
 
 ## Import
 

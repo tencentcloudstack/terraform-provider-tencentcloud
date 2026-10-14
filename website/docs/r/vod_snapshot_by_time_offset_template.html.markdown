@@ -53,10 +53,10 @@ In addition to all arguments above, the following attributes are exported:
 
 This resource interacts with the following TencentCloud APIs:
 
-* Create: [CreateSnapshotByTimeOffsetTemplate](https://cloud.tencent.com/document/api/266/37786) - 创建指定时间点截图模板
-* Read: [DescribeSnapshotByTimeOffsetTemplates](https://cloud.tencent.com/document/api/266/37778) - 获取指定时间点截图模板列表
-* Update: [ModifySnapshotByTimeOffsetTemplate](https://cloud.tencent.com/document/api/266/37774) - 修改指定时间点截图模板
-* Delete: [DeleteSnapshotByTimeOffsetTemplate](https://cloud.tencent.com/document/api/266/37782) - 删除指定时间点截图模板
+* Create: [CreateSnapshotByTimeOffsetTemplate](https://cloud.tencent.com/document/api/266/37786) - This API is used to create user-customized specified time point screenshot templates. Maximum quantity: 16.
+* Read: [DescribeSnapshotByTimeOffsetTemplates](https://cloud.tencent.com/document/api/266/37778) - This API is used to query specified time point screenshot templates based on conditions with paging.
+* Update: [ModifySnapshotByTimeOffsetTemplate](https://cloud.tencent.com/document/api/266/37774) - Modify a user-customized specified time point screenshot template.
+* Delete: [DeleteSnapshotByTimeOffsetTemplate](https://cloud.tencent.com/document/api/266/37782) - This API is used to delete a user-customized specified time point screenshot template.
 
 ## Import
 

@@ -91,5 +91,5 @@ In addition to all arguments above, the following attributes are exported:
 
 This data source queries the following TencentCloud APIs:
 
-* Read: [DescribeNativeGatewayServerGroups](https://cloud.tencent.com/document/api/1364/97280) - 查询云原生网关分组信息
+* Read: [DescribeNativeGatewayServerGroups](https://cloud.tencent.com/document/api/1364/97280) - Query cloud native gateway group information
 

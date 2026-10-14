@@ -175,8 +175,8 @@ In addition to all arguments above, the following attributes are exported:
 
 This resource interacts with the following TencentCloud APIs:
 
-* Create: [CreateQualityRule](https://cloud.tencent.com/document/api/1267/127352) - 质量创建规则接口
-* Read: [ListQualityRules](https://cloud.tencent.com/document/api/1267/127226) - 质量分页查询规则
-* Update: [ModifyQualityRule](https://cloud.tencent.com/document/api/1267/127225) - 质量更新规则接口
-* Delete: [DeleteQualityRule](https://cloud.tencent.com/document/api/1267/127230) - 质量删除规则接口
+* Create: [CreateQualityRule](https://cloud.tencent.com/document/api/1267/127352)
+* Read: [ListQualityRules](https://cloud.tencent.com/document/api/1267/127226)
+* Update: [ModifyQualityRule](https://cloud.tencent.com/document/api/1267/127225)
+* Delete: [DeleteQualityRule](https://cloud.tencent.com/document/api/1267/127230)
 

@@ -38,7 +38,7 @@ In addition to all arguments above, the following attributes are exported:
 
 This resource interacts with the following TencentCloud APIs:
 
-* Create: [UploadRevokeLetter](https://cloud.tencent.com/document/api/400/49424) - 上传证书吊销确认函
+* Create: [UploadRevokeLetter](https://cloud.tencent.com/document/api/400/49424)
 
 ## Import
 

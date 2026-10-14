@@ -92,11 +92,11 @@ In addition to all arguments above, the following attributes are exported:
 
 This resource interacts with the following TencentCloud APIs:
 
-* Create: [AssociateCustomizedConfig](https://cloud.tencent.com/document/api/214/116389) - 关联个性化配置
-* Read: [DescribeCustomizedConfigAssociateList](https://cloud.tencent.com/document/api/214/60010) - 拉取配置绑定的server或location
-* Update: [AssociateCustomizedConfig](https://cloud.tencent.com/document/api/214/116389) - 关联个性化配置
-* Update: [DisassociateCustomizedConfig](https://cloud.tencent.com/document/api/214/116387) - 去关联个性化配置
-* Delete: [DisassociateCustomizedConfig](https://cloud.tencent.com/document/api/214/116387) - 去关联个性化配置
+* Create: [AssociateCustomizedConfig](https://cloud.tencent.com/document/api/214/116389) - This API is used to associate configurations with a server or location based on the configuration type. It is preparing for decommissioning, please use SetCustomizedConfigForLoadBalancer.
+* Read: [DescribeCustomizedConfigAssociateList](https://cloud.tencent.com/document/api/214/60010) - This API is used to query the configured location, bound server or bound CLB instance. If there are domain names, the result will be filtered by domain name.
+* Update: [AssociateCustomizedConfig](https://cloud.tencent.com/document/api/214/116389) - This API is used to associate configurations with a server or location based on the configuration type. It is preparing for decommissioning, please use SetCustomizedConfigForLoadBalancer.
+* Update: [DisassociateCustomizedConfig](https://cloud.tencent.com/document/api/214/116387) - This API is used to disassociate personalized configurations and prepare for decommissioning. Please use SetCustomizedConfigForLoadBalancer.
+* Delete: [DisassociateCustomizedConfig](https://cloud.tencent.com/document/api/214/116387) - This API is used to disassociate personalized configurations and prepare for decommissioning. Please use SetCustomizedConfigForLoadBalancer.
 
 ## Import
 

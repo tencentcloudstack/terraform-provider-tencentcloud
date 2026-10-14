@@ -46,5 +46,5 @@ In addition to all arguments above, the following attributes are exported:
 
 This data source queries the following TencentCloud APIs:
 
-* Read: [DescribeBasicDeviceStatus](https://cloud.tencent.com/document/api/297/95386) - 获取基础防护攻击状态
+* Read: [DescribeBasicDeviceStatus](https://cloud.tencent.com/document/api/297/95386) - This API is used to querying the status of Anti-DDoS IP.
 

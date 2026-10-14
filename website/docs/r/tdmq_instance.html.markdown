@@ -43,11 +43,11 @@ In addition to all arguments above, the following attributes are exported:
 
 This resource interacts with the following TencentCloud APIs:
 
-* Read: [DescribeClusters](https://cloud.tencent.com/document/api/1179/52183) - 获取虚拟集群列表
-* Read: [DescribeResourceTagsByResourceIds](https://cloud.tencent.com/document/api/651/35319) - 批量查看资源关联的标签
-* Update: [ModifyCluster](https://cloud.tencent.com/document/api/1179/52189) - 更新虚拟集群信息
-* Update: [ModifyResourceTags](https://cloud.tencent.com/document/api/651/35322) - 批量修改资源关联的标签
-* Delete: [DeleteCluster](https://cloud.tencent.com/document/api/1179/52185) - 删除集群
+* Read: [DescribeClusters](https://cloud.tencent.com/document/api/1179/52183) - This API is used to get the list of clusters.
+* Read: [DescribeResourceTagsByResourceIds](https://cloud.tencent.com/document/api/651/35319) - This API is used to query the tag key-value pairs associated with an existing resource.
+* Update: [ModifyCluster](https://cloud.tencent.com/document/api/1179/52189) - This API is used to update a cluster.
+* Update: [ModifyResourceTags](https://cloud.tencent.com/document/api/651/35322) - This API is used to modify all tags associated with a resource.
+* Delete: [DeleteCluster](https://cloud.tencent.com/document/api/1179/52185) - This API is used to delete a cluster.
 
 ## Import
 

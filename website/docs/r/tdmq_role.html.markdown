@@ -48,8 +48,8 @@ In addition to all arguments above, the following attributes are exported:
 
 This resource interacts with the following TencentCloud APIs:
 
-* Create: [CreateRole](https://cloud.tencent.com/document/api/1179/62401) - 创建角色
-* Read: [DescribeRoles](https://cloud.tencent.com/document/api/1179/62399) - 获取角色列表
-* Update: [ModifyRole](https://cloud.tencent.com/document/api/1179/62397) - 角色修改
-* Delete: [DeleteRoles](https://cloud.tencent.com/document/api/1179/62403) - 删除角色
+* Create: [CreateRole](https://cloud.tencent.com/document/api/1179/62401) - This API is used to create a role.
+* Read: [DescribeRoles](https://cloud.tencent.com/document/api/1179/62399) - This API is used to get the list of roles.
+* Update: [ModifyRole](https://cloud.tencent.com/document/api/1179/62397) - This API is used to modify a role.
+* Delete: [DeleteRoles](https://cloud.tencent.com/document/api/1179/62403) - This API is used to delete one or multiple roles.
 

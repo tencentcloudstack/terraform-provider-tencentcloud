@@ -112,5 +112,5 @@ In addition to all arguments above, the following attributes are exported:
 
 This resource interacts with the following TencentCloud APIs:
 
-* Create: [RemoveInstances](https://cloud.tencent.com/document/api/377/20431) - 从伸缩组中删除 CVM 实例
+* Create: [RemoveInstances](https://cloud.tencent.com/document/api/377/20431) - This API is used to delete CVM instances from a scaling group. Instances that are automatically created through AS will be terminated, while those manually added to the scaling group will be removed and retained.
 

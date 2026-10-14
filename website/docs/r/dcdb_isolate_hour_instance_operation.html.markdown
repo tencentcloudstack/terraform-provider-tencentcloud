@@ -36,5 +36,5 @@ In addition to all arguments above, the following attributes are exported:
 
 This resource interacts with the following TencentCloud APIs:
 
-* Create: [IsolateHourDCDBInstance](https://cloud.tencent.com/document/api/557/70420) - 隔离TDSQL按量计费实例
+* Create: [IsolateHourDCDBInstance](https://cloud.tencent.com/document/api/557/70420) - This API is used to isolate a pay-as-you-go TDSQL instance.
 

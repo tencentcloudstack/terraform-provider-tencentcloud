@@ -75,13 +75,13 @@ In addition to all arguments above, the following attributes are exported:
 
 This resource interacts with the following TencentCloud APIs:
 
-* Create: [CreatePrivateZoneRecord](https://cloud.tencent.com/document/api/1338/55945) - 添加私有域解析记录
-* Create: [DescribeRecord](https://cloud.tencent.com/document/api/1338/118984) - 根据id获取私有域记录
-* Create: [ModifyRecordsStatus](https://cloud.tencent.com/document/api/1338/81950) - 修改解析记录状态
-* Read: [DescribeRecord](https://cloud.tencent.com/document/api/1338/118984) - 根据id获取私有域记录
-* Update: [ModifyPrivateZoneRecord](https://cloud.tencent.com/document/api/1338/55934) - 修改私有域解析记录
-* Update: [ModifyRecordsStatus](https://cloud.tencent.com/document/api/1338/81950) - 修改解析记录状态
-* Delete: [DeletePrivateZoneRecord](https://cloud.tencent.com/document/api/1338/55943) - 删除私有域解析记录
+* Create: [CreatePrivateZoneRecord](https://cloud.tencent.com/document/api/1338/55945) - This API is used to add a DNS record for a private domain.
+* Create: [DescribeRecord](https://cloud.tencent.com/document/api/1338/118984) - This API is used to obtain the private domain records.
+* Create: [ModifyRecordsStatus](https://cloud.tencent.com/document/api/1338/81950) - This API is used to modify the DNS record status.
+* Read: [DescribeRecord](https://cloud.tencent.com/document/api/1338/118984) - This API is used to obtain the private domain records.
+* Update: [ModifyPrivateZoneRecord](https://cloud.tencent.com/document/api/1338/55934) - This API is used to modify a DNS record for a private domain.
+* Update: [ModifyRecordsStatus](https://cloud.tencent.com/document/api/1338/81950) - This API is used to modify the DNS record status.
+* Delete: [DeletePrivateZoneRecord](https://cloud.tencent.com/document/api/1338/55943) - This API is used to delete the private DNS records.
 
 ## Import
 

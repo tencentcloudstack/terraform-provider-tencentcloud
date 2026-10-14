@@ -70,11 +70,11 @@ In addition to all arguments above, the following attributes are exported:
 
 This resource interacts with the following TencentCloud APIs:
 
-* Create: [DescribeResourcePoolPacks](https://cloud.tencent.com/document/api/213/129952) - 查询实例资源池预扣包列表
-* Create: [PurchaseResourcePoolPacks](https://cloud.tencent.com/document/api/213/129950) - 创建实例资源池预扣包
-* Read: [DescribeResourcePoolPacks](https://cloud.tencent.com/document/api/213/129952) - 查询实例资源池预扣包列表
-* Delete: [DescribeResourcePoolPacks](https://cloud.tencent.com/document/api/213/129952) - 查询实例资源池预扣包列表
-* Delete: [TerminateResourcePoolPacks](https://cloud.tencent.com/document/api/213/129949) - 销毁实例资源池预扣包
+* Create: [DescribeResourcePoolPacks](https://cloud.tencent.com/document/api/213/129952)
+* Create: [PurchaseResourcePoolPacks](https://cloud.tencent.com/document/api/213/129950)
+* Read: [DescribeResourcePoolPacks](https://cloud.tencent.com/document/api/213/129952)
+* Delete: [DescribeResourcePoolPacks](https://cloud.tencent.com/document/api/213/129952)
+* Delete: [TerminateResourcePoolPacks](https://cloud.tencent.com/document/api/213/129949)
 
 ## Import
 

@@ -60,5 +60,5 @@ In addition to all arguments above, the following attributes are exported:
 
 This data source queries the following TencentCloud APIs:
 
-* Read: [DescribeNatGatewayDestinationIpPortTranslationNatRules](https://cloud.tencent.com/document/api/215/36717) - 查询NAT网关端口转发规则
+* Read: [DescribeNatGatewayDestinationIpPortTranslationNatRules](https://cloud.tencent.com/document/api/215/36717) - This API is used to query the array of objects of a NAT gateway's port forwarding rules.
 

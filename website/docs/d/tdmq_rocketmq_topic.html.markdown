@@ -65,5 +65,5 @@ In addition to all arguments above, the following attributes are exported:
 
 This data source queries the following TencentCloud APIs:
 
-* Read: [DescribeRocketMQTopics](https://cloud.tencent.com/document/api/1179/63418) - 查询 RocketMQ 主题列表
+* Read: [DescribeRocketMQTopics](https://cloud.tencent.com/document/api/1179/63418) - Query the RocketMQ topic list.
 

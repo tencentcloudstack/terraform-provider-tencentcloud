@@ -310,9 +310,9 @@ In addition to all arguments above, the following attributes are exported:
 
 This resource interacts with the following TencentCloud APIs:
 
-* Create: [ModifyZoneSetting](https://cloud.tencent.com/document/api/1552/80614) - 修改站点配置（旧）
-* Read: [DescribeZoneSetting](https://cloud.tencent.com/document/api/1552/80617) - 查询站点配置（旧）
-* Update: [ModifyZoneSetting](https://cloud.tencent.com/document/api/1552/80614) - 修改站点配置（旧）
+* Create: [ModifyZoneSetting](https://cloud.tencent.com/document/api/1552/80614) - This API is used to modify the site configuration.
+* Read: [DescribeZoneSetting](https://cloud.tencent.com/document/api/1552/80617) - This API is used to query the site configuration.
+* Update: [ModifyZoneSetting](https://cloud.tencent.com/document/api/1552/80614) - This API is used to modify the site configuration.
 
 ## Import
 

@@ -48,5 +48,5 @@ In addition to all arguments above, the following attributes are exported:
 
 This data source queries the following TencentCloud APIs:
 
-* Read: [DescribeDBParameters](https://cloud.tencent.com/document/api/557/19992) - 查看数据库参数
+* Read: [DescribeDBParameters](https://cloud.tencent.com/document/api/557/19992) - This API is used to get the current parameter settings of a database.
 

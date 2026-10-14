@@ -62,5 +62,5 @@ In addition to all arguments above, the following attributes are exported:
 
 This data source queries the following TencentCloud APIs:
 
-* Read: [EdgeKVList](https://cloud.tencent.com/document/api/1552/130184) - 查询 KV 键名列表
+* Read: [EdgeKVList](https://cloud.tencent.com/document/api/1552/130184) - This API is used to list all keys in the specified namespace with prefix filtering support. It implements cursor traversal through Cursor and returns the next cursor to proceed with querying. Suitable for traversal of all keys in the namespace.
 

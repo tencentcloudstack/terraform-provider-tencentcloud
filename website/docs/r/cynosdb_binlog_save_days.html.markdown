@@ -38,9 +38,9 @@ In addition to all arguments above, the following attributes are exported:
 
 This resource interacts with the following TencentCloud APIs:
 
-* Create: [ModifyBinlogSaveDays](https://cloud.tencent.com/document/api/1003/92725) - 修改Binlog保留天数
-* Read: [DescribeBinlogSaveDays](https://cloud.tencent.com/document/api/1003/76372) - 查询Binlog保留天数
-* Update: [ModifyBinlogSaveDays](https://cloud.tencent.com/document/api/1003/92725) - 修改Binlog保留天数
+* Create: [ModifyBinlogSaveDays](https://cloud.tencent.com/document/api/1003/92725) - This API is used to modify the binlog retention period in days.
+* Read: [DescribeBinlogSaveDays](https://cloud.tencent.com/document/api/1003/76372) - This API is used to query the binlog retention period of a cluster in days.
+* Update: [ModifyBinlogSaveDays](https://cloud.tencent.com/document/api/1003/92725) - This API is used to modify the binlog retention period in days.
 
 ## Import
 

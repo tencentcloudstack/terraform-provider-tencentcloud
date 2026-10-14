@@ -45,10 +45,10 @@ In addition to all arguments above, the following attributes are exported:
 
 This resource interacts with the following TencentCloud APIs:
 
-* Create: [CreateLocalGateway](https://cloud.tencent.com/document/api/215/54630) - 创建本地网关
-* Read: [DescribeLocalGateway](https://cloud.tencent.com/document/api/215/54628) - 查询本地网关
-* Update: [ModifyLocalGateway](https://cloud.tencent.com/document/api/215/54627) - 修改本地网关
-* Delete: [DeleteLocalGateway](https://cloud.tencent.com/document/api/215/54629) - 删除本地网关
+* Create: [CreateLocalGateway](https://cloud.tencent.com/document/api/215/54630) - This API is used to create a local gateway for a CDC instance.
+* Read: [DescribeLocalGateway](https://cloud.tencent.com/document/api/215/54628) - This API is used to query local gateways of a CDC instance.
+* Update: [ModifyLocalGateway](https://cloud.tencent.com/document/api/215/54627) - This API is used to modify the local gateway of a CDC instance.
+* Delete: [DeleteLocalGateway](https://cloud.tencent.com/document/api/215/54629) - This API is used to delete the local gateway of a CDC instance.
 
 ## Import
 

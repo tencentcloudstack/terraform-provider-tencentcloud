@@ -59,12 +59,12 @@ In addition to all arguments above, the following attributes are exported:
 
 This resource interacts with the following TencentCloud APIs:
 
-* Create: [AddAntiInfoLeakRules](https://cloud.tencent.com/document/api/627/97643) - 添加信息防泄漏规则
-* Create: [ModifyAntiInfoLeakRuleStatus](https://cloud.tencent.com/document/api/627/97633) - 信息防泄漏切换规则开关
-* Read: [DescribeAntiInfoLeakageRules](https://cloud.tencent.com/document/api/627/97638) - 获取信息防泄漏规则列表
-* Update: [ModifyAntiInfoLeakRuleStatus](https://cloud.tencent.com/document/api/627/97633) - 信息防泄漏切换规则开关
-* Update: [ModifyAntiInfoLeakRules](https://cloud.tencent.com/document/api/627/97632) - 编辑信息防泄漏规则
-* Delete: [DeleteAntiInfoLeakRule](https://cloud.tencent.com/document/api/627/97649) - 信息防泄漏删除规则
+* Create: [AddAntiInfoLeakRules](https://cloud.tencent.com/document/api/627/97643) - Add information leakage prevention rule
+* Create: [ModifyAntiInfoLeakRuleStatus](https://cloud.tencent.com/document/api/627/97633) - Information leakage prevention toggle rule switch
+* Read: [DescribeAntiInfoLeakageRules](https://cloud.tencent.com/document/api/627/97638) - Obtain the information leakage prevention rule list
+* Update: [ModifyAntiInfoLeakRuleStatus](https://cloud.tencent.com/document/api/627/97633) - Information leakage prevention toggle rule switch
+* Update: [ModifyAntiInfoLeakRules](https://cloud.tencent.com/document/api/627/97632) - Edit an information leakage prevention rule
+* Delete: [DeleteAntiInfoLeakRule](https://cloud.tencent.com/document/api/627/97649) - Delete information leakage prevention rule
 
 ## Import
 

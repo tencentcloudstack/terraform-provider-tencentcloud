@@ -51,5 +51,5 @@ In addition to all arguments above, the following attributes are exported:
 
 This data source queries the following TencentCloud APIs:
 
-* Read: [DescribeSlowLogTimeSeriesStats](https://cloud.tencent.com/document/api/1130/57785) - 获取慢日志统计柱状图
+* Read: [DescribeSlowLogTimeSeriesStats](https://cloud.tencent.com/document/api/1130/57785) - This API is used to get the slow log statistics histogram.
 

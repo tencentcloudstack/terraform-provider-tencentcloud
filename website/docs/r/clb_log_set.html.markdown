@@ -38,10 +38,10 @@ In addition to all arguments above, the following attributes are exported:
 
 This resource interacts with the following TencentCloud APIs:
 
-* Create: [CreateClsLogSet](https://cloud.tencent.com/document/api/214/46803) - 创建CLB专有日志集
-* Create: [DescribeClsLogSet](https://cloud.tencent.com/document/api/214/46801) - 获取用户的CLB专有日志集
-* Read: [DescribeLogsets](https://cloud.tencent.com/document/api/614/58624) - 获取日志集列表
-* Delete: [DeleteLogset](https://cloud.tencent.com/document/api/614/58625) - 删除日志集
+* Create: [CreateClsLogSet](https://cloud.tencent.com/document/api/214/46803) - This API is used to create a CLB exclusive logset for storing CLB logs.
+* Create: [DescribeClsLogSet](https://cloud.tencent.com/document/api/214/46801) - This API is used to get the CLB exclusive logset.
+* Read: [DescribeLogsets](https://cloud.tencent.com/document/api/614/58624) - This API is used to get the list of logsets.
+* Delete: [DeleteLogset](https://cloud.tencent.com/document/api/614/58625) - This API is used to delete a logset.
 
 ## Import
 

@@ -80,10 +80,10 @@ In addition to all arguments above, the following attributes are exported:
 
 This resource interacts with the following TencentCloud APIs:
 
-* Create: [CreateParamTemplate](https://cloud.tencent.com/document/api/239/58752) - 创建参数模板
-* Read: [DescribeParamTemplateInfo](https://cloud.tencent.com/document/api/239/58748) - 查询参数模板详情
-* Update: [ModifyParamTemplate](https://cloud.tencent.com/document/api/239/58749) - 修改参数模板
-* Delete: [DeleteParamTemplate](https://cloud.tencent.com/document/api/239/58751) - 删除参数模板
+* Create: [CreateParamTemplate](https://cloud.tencent.com/document/api/239/58752) - This API is used to create a parameter template.
+* Read: [DescribeParamTemplateInfo](https://cloud.tencent.com/document/api/239/58748) - This API is used to query the details of a parameter template.
+* Update: [ModifyParamTemplate](https://cloud.tencent.com/document/api/239/58749) - This API is used to modify the parameter template.
+* Delete: [DeleteParamTemplate](https://cloud.tencent.com/document/api/239/58751) - This API is used to delete a parameter template.
 
 ## Import
 

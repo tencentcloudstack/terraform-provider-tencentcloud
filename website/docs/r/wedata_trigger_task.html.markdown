@@ -178,10 +178,10 @@ The `trigger_task_configuration` object exports the following:
 
 This resource interacts with the following TencentCloud APIs:
 
-* Create: [CreateTriggerTask](https://cloud.tencent.com/document/api/1267/127268) - 创建工作流调度任务
-* Read: [GetTriggerTask](https://cloud.tencent.com/document/api/1267/127258) - 获取工作流调度任务详情信息
-* Update: [UpdateTriggerTask](https://cloud.tencent.com/document/api/1267/127243) - 更新工作流调度任务
-* Delete: [DeleteTriggerTask](https://cloud.tencent.com/document/api/1267/127264) - 删除工作流调度任务
+* Create: [CreateTriggerTask](https://cloud.tencent.com/document/api/1267/127268) - This API is used to create a task.
+* Read: [GetTriggerTask](https://cloud.tencent.com/document/api/1267/127258) - This API is used to retrieve task details.
+* Update: [UpdateTriggerTask](https://cloud.tencent.com/document/api/1267/127243) - This API is used to update a task.
+* Delete: [DeleteTriggerTask](https://cloud.tencent.com/document/api/1267/127264) - Delete a workflow scheduling task.
 
 ## Import
 

@@ -82,13 +82,13 @@ In addition to all arguments above, the following attributes are exported:
 
 This resource interacts with the following TencentCloud APIs:
 
-* Create: [DescribeClusterAuthenticationOptions](https://cloud.tencent.com/document/api/457/62278) - 查看集群认证配置
-* Create: [ModifyClusterAuthenticationOptions](https://cloud.tencent.com/document/api/457/62277) - 修改集群认证配置
-* Read: [DescribeClusterAuthenticationOptions](https://cloud.tencent.com/document/api/457/62278) - 查看集群认证配置
-* Update: [DescribeClusterAuthenticationOptions](https://cloud.tencent.com/document/api/457/62278) - 查看集群认证配置
-* Update: [ModifyClusterAuthenticationOptions](https://cloud.tencent.com/document/api/457/62277) - 修改集群认证配置
-* Delete: [DescribeClusterAuthenticationOptions](https://cloud.tencent.com/document/api/457/62278) - 查看集群认证配置
-* Delete: [ModifyClusterAuthenticationOptions](https://cloud.tencent.com/document/api/457/62277) - 修改集群认证配置
+* Create: [DescribeClusterAuthenticationOptions](https://cloud.tencent.com/document/api/457/62278) - This API is used to query cluster authentication configuration.
+* Create: [ModifyClusterAuthenticationOptions](https://cloud.tencent.com/document/api/457/62277) - This API is used to modify cluster authentication configuration.
+* Read: [DescribeClusterAuthenticationOptions](https://cloud.tencent.com/document/api/457/62278) - This API is used to query cluster authentication configuration.
+* Update: [DescribeClusterAuthenticationOptions](https://cloud.tencent.com/document/api/457/62278) - This API is used to query cluster authentication configuration.
+* Update: [ModifyClusterAuthenticationOptions](https://cloud.tencent.com/document/api/457/62277) - This API is used to modify cluster authentication configuration.
+* Delete: [DescribeClusterAuthenticationOptions](https://cloud.tencent.com/document/api/457/62278) - This API is used to query cluster authentication configuration.
+* Delete: [ModifyClusterAuthenticationOptions](https://cloud.tencent.com/document/api/457/62277) - This API is used to modify cluster authentication configuration.
 
 ## Import
 

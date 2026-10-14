@@ -72,5 +72,5 @@ In addition to all arguments above, the following attributes are exported:
 
 This data source queries the following TencentCloud APIs:
 
-* Read: [DescribeGroups](https://cloud.tencent.com/document/api/649/36065) - 获取虚拟机部署组列表
+* Read: [DescribeGroups](https://cloud.tencent.com/document/api/649/36065)
 

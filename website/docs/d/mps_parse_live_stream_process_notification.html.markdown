@@ -30,5 +30,5 @@ The following arguments are supported:
 
 This data source queries the following TencentCloud APIs:
 
-* Read: [ParseLiveStreamProcessNotification](https://cloud.tencent.com/document/api/862/39229) - 解析直播流处理结果
+* Read: [ParseLiveStreamProcessNotification](https://cloud.tencent.com/document/api/862/39229) - After receiving the message from CMQ, parse out the content of the MPS live stream processing event notification from the msgBody field of the message.
 

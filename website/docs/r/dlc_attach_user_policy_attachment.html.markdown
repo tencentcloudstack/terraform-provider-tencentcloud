@@ -111,10 +111,10 @@ The `policy_set` object exports the following:
 
 This resource interacts with the following TencentCloud APIs:
 
-* Create: [AttachUserPolicy](https://cloud.tencent.com/document/api/1342/58468) - 绑定鉴权策略到用户
-* Create: [DescribeUserInfo](https://cloud.tencent.com/document/api/1342/99262) - 获取用户详细信息
-* Read: [DescribeUserInfo](https://cloud.tencent.com/document/api/1342/99262) - 获取用户详细信息
-* Delete: [DetachUserPolicy](https://cloud.tencent.com/document/api/1342/58458) - 解绑用户鉴权策略
+* Create: [AttachUserPolicy](https://cloud.tencent.com/document/api/1342/58468) - This API is used to bind the authentication policy to the user.
+* Create: [DescribeUserInfo](https://cloud.tencent.com/document/api/1342/99262) - This API is used to get detailed user information.
+* Read: [DescribeUserInfo](https://cloud.tencent.com/document/api/1342/99262) - This API is used to get detailed user information.
+* Delete: [DetachUserPolicy](https://cloud.tencent.com/document/api/1342/58458) - This API is used to unbind the authentication policy from the user.
 
 ## Import
 

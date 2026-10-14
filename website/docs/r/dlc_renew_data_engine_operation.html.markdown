@@ -44,5 +44,5 @@ In addition to all arguments above, the following attributes are exported:
 
 This resource interacts with the following TencentCloud APIs:
 
-* Create: [RenewDataEngine](https://cloud.tencent.com/document/api/1342/99272) - 续费包年包月数据引擎
+* Create: [RenewDataEngine](https://cloud.tencent.com/document/api/1342/99272) - This API is used to renew the data engine.
 

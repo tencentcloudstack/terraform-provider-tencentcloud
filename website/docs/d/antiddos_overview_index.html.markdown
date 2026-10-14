@@ -47,5 +47,5 @@ In addition to all arguments above, the following attributes are exported:
 
 This data source queries the following TencentCloud APIs:
 
-* Read: [DescribeOverviewIndex](https://cloud.tencent.com/document/api/297/95352) - 拉取防护概览指标
+* Read: [DescribeOverviewIndex](https://cloud.tencent.com/document/api/297/95352)
 

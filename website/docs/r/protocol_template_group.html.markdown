@@ -38,11 +38,11 @@ In addition to all arguments above, the following attributes are exported:
 
 This resource interacts with the following TencentCloud APIs:
 
-* Create: [CreateServiceTemplateGroup](https://cloud.tencent.com/document/api/215/16711) - 创建协议端口模板集合
-* Read: [DescribeServiceTemplateGroups](https://cloud.tencent.com/document/api/215/16718) - 查询协议端口模板集合
-* Update: [ModifyServiceTemplateGroupAttribute](https://cloud.tencent.com/document/api/215/16723) - 修改协议端口模板集合
-* Delete: [DeleteServiceTemplateGroup](https://cloud.tencent.com/document/api/215/16715) - 删除协议端口模板集合
-* Delete: [DescribeServiceTemplateGroups](https://cloud.tencent.com/document/api/215/16718) - 查询协议端口模板集合
+* Create: [CreateServiceTemplateGroup](https://cloud.tencent.com/document/api/215/16711) - This API (CreateServiceTemplateGroup) is used to create a protocol port template group.
+* Read: [DescribeServiceTemplateGroups](https://cloud.tencent.com/document/api/215/16718) - This API (DescribeServiceTemplateGroups) is used to query a protocol port template group.
+* Update: [ModifyServiceTemplateGroupAttribute](https://cloud.tencent.com/document/api/215/16723) - This API (ModifyServiceTemplateGroupAttribute) is used to modify a protocol port template group.
+* Delete: [DeleteServiceTemplateGroup](https://cloud.tencent.com/document/api/215/16715) - This API (DeleteServiceTemplateGroup) is used to delete a protocol port template group.
+* Delete: [DescribeServiceTemplateGroups](https://cloud.tencent.com/document/api/215/16718) - This API (DescribeServiceTemplateGroups) is used to query a protocol port template group.
 
 ## Import
 

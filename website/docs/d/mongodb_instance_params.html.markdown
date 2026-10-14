@@ -72,5 +72,5 @@ In addition to all arguments above, the following attributes are exported:
 
 This data source queries the following TencentCloud APIs:
 
-* Read: [DescribeInstanceParams](https://cloud.tencent.com/document/api/240/65903) - 获取当前实例可修改的参数列表
+* Read: [DescribeInstanceParams](https://cloud.tencent.com/document/api/240/65903) - This API is used to query the list of parameters that can be modified for the current instance.
 

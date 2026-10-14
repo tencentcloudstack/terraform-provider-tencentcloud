@@ -86,15 +86,15 @@ In addition to all arguments above, the following attributes are exported:
 
 This resource interacts with the following TencentCloud APIs:
 
-* Create: [CreateDB](https://cloud.tencent.com/document/api/238/19974) - 创建数据库
-* Create: [DescribeDBInstances](https://cloud.tencent.com/document/api/238/19969) - 查询实例列表
-* Create: [DescribeFlowStatus](https://cloud.tencent.com/document/api/238/19967) - 查询流程状态
-* Read: [DescribeDBs](https://cloud.tencent.com/document/api/238/19968) - 查询数据库列表（已废弃）
-* Update: [ModifyDBRemark](https://cloud.tencent.com/document/api/238/19954) - 修改数据库备注
-* Delete: [DeleteDB](https://cloud.tencent.com/document/api/238/19971) - 删除数据库
-* Delete: [DescribeDBInstances](https://cloud.tencent.com/document/api/238/19969) - 查询实例列表
-* Delete: [DescribeDBs](https://cloud.tencent.com/document/api/238/19968) - 查询数据库列表（已废弃）
-* Delete: [DescribeFlowStatus](https://cloud.tencent.com/document/api/238/19967) - 查询流程状态
+* Create: [CreateDB](https://cloud.tencent.com/document/api/238/19974) - This API is used to create a database.
+* Create: [DescribeDBInstances](https://cloud.tencent.com/document/api/238/19969) - This API is used to query the list of instances.
+* Create: [DescribeFlowStatus](https://cloud.tencent.com/document/api/238/19967) - This API is used to query flow status.
+* Read: [DescribeDBs](https://cloud.tencent.com/document/api/238/19968) - This API is used to query the list of databases
+* Update: [ModifyDBRemark](https://cloud.tencent.com/document/api/238/19954) - This API is used to modify database remarks.
+* Delete: [DeleteDB](https://cloud.tencent.com/document/api/238/19971) - This API is used to drop a database.
+* Delete: [DescribeDBInstances](https://cloud.tencent.com/document/api/238/19969) - This API is used to query the list of instances.
+* Delete: [DescribeDBs](https://cloud.tencent.com/document/api/238/19968) - This API is used to query the list of databases
+* Delete: [DescribeFlowStatus](https://cloud.tencent.com/document/api/238/19967) - This API is used to query flow status.
 
 ## Import
 

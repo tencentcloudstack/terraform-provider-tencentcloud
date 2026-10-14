@@ -86,10 +86,10 @@ The `instances` object exports the following:
 
 This resource interacts with the following TencentCloud APIs:
 
-* Create: [AttachSnapshotInstances](https://cloud.tencent.com/document/api/215/85159) - 快照策略关联实例
-* Read: [DescribeSnapshotAttachedInstances](https://cloud.tencent.com/document/api/215/85155) - 查询快照策略关联实例列表
-* Delete: [DescribeSnapshotAttachedInstances](https://cloud.tencent.com/document/api/215/85155) - 查询快照策略关联实例列表
-* Delete: [DetachSnapshotInstances](https://cloud.tencent.com/document/api/215/85152) - 快照策略解关联实例
+* Create: [AttachSnapshotInstances](https://cloud.tencent.com/document/api/215/85159) - This API is used to associate a snapshot policy with specified instances.
+* Read: [DescribeSnapshotAttachedInstances](https://cloud.tencent.com/document/api/215/85155) - This API is used to query instances associated with a snapshot policy.
+* Delete: [DescribeSnapshotAttachedInstances](https://cloud.tencent.com/document/api/215/85155) - This API is used to query instances associated with a snapshot policy.
+* Delete: [DetachSnapshotInstances](https://cloud.tencent.com/document/api/215/85152) - This API is used to disassociate a snapshot policy with instances.
 
 ## Import
 

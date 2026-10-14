@@ -34,5 +34,5 @@ In addition to all arguments above, the following attributes are exported:
 
 This data source queries the following TencentCloud APIs:
 
-* Read: [DescribeBlackHeader](https://cloud.tencent.com/document/api/608/59241) - 查询禁用自定义header 名称列表
+* Read: [DescribeBlackHeader](https://cloud.tencent.com/document/api/608/59241) - This API is used to query names of blocked custom headers.
 

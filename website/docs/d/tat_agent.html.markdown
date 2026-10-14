@@ -52,5 +52,5 @@ In addition to all arguments above, the following attributes are exported:
 
 This data source queries the following TencentCloud APIs:
 
-* Read: [DescribeAutomationAgentStatus](https://cloud.tencent.com/document/api/1340/52682) - 查询客户端状态
+* Read: [DescribeAutomationAgentStatus](https://cloud.tencent.com/document/api/1340/52682) - This API is used to query the status of the TAT agent.
 

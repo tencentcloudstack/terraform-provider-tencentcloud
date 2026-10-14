@@ -75,9 +75,9 @@ In addition to all arguments above, the following attributes are exported:
 
 This resource interacts with the following TencentCloud APIs:
 
-* Create: [UpdateGrafanaConfig](https://cloud.tencent.com/document/api/248/79193) - 更新 Grafana 配置
-* Read: [DescribeGrafanaConfig](https://cloud.tencent.com/document/api/248/79210) - 列出 Grafana 的设置
-* Update: [UpdateGrafanaConfig](https://cloud.tencent.com/document/api/248/79193) - 更新 Grafana 配置
+* Create: [UpdateGrafanaConfig](https://cloud.tencent.com/document/api/248/79193) - This API is used to update the Grafana configuration.
+* Read: [DescribeGrafanaConfig](https://cloud.tencent.com/document/api/248/79210) - This API is used to list Grafana settings, i.e., the `grafana.ini` file content.
+* Update: [UpdateGrafanaConfig](https://cloud.tencent.com/document/api/248/79193) - This API is used to update the Grafana configuration.
 
 ## Import
 

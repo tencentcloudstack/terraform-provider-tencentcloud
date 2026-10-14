@@ -111,12 +111,12 @@ In addition to all arguments above, the following attributes are exported:
 
 This resource interacts with the following TencentCloud APIs:
 
-* Create: [CreatePrivateNatGatewayTranslationNatRule](https://cloud.tencent.com/document/api/215/107901) - 创建私网NAT网关源端转换规则
-* Read: [DescribePrivateNatGatewayTranslationNatRules](https://cloud.tencent.com/document/api/215/107892) - 查询私网NAT网关源端转换规则
-* Update: [CreatePrivateNatGatewayTranslationNatRule](https://cloud.tencent.com/document/api/215/107901) - 创建私网NAT网关源端转换规则
-* Update: [DeletePrivateNatGatewayTranslationNatRule](https://cloud.tencent.com/document/api/215/107897) - 删除私网NAT网关源端转换规则
-* Delete: [DeletePrivateNatGatewayTranslationNatRule](https://cloud.tencent.com/document/api/215/107897) - 删除私网NAT网关源端转换规则
-* Delete: [DescribePrivateNatGatewayTranslationNatRules](https://cloud.tencent.com/document/api/215/107892) - 查询私网NAT网关源端转换规则
+* Create: [CreatePrivateNatGatewayTranslationNatRule](https://cloud.tencent.com/document/api/215/107901)
+* Read: [DescribePrivateNatGatewayTranslationNatRules](https://cloud.tencent.com/document/api/215/107892)
+* Update: [CreatePrivateNatGatewayTranslationNatRule](https://cloud.tencent.com/document/api/215/107901)
+* Update: [DeletePrivateNatGatewayTranslationNatRule](https://cloud.tencent.com/document/api/215/107897)
+* Delete: [DeletePrivateNatGatewayTranslationNatRule](https://cloud.tencent.com/document/api/215/107897)
+* Delete: [DescribePrivateNatGatewayTranslationNatRules](https://cloud.tencent.com/document/api/215/107892)
 
 ## Import
 

@@ -83,11 +83,11 @@ In addition to all arguments above, the following attributes are exported:
 
 This resource interacts with the following TencentCloud APIs:
 
-* Create: [CreateProject](https://cloud.tencent.com/document/api/1267/123975) - 新建项目
-* Create: [DisableProject](https://cloud.tencent.com/document/api/1267/123971) - 禁用项目
-* Read: [GetProject](https://cloud.tencent.com/document/api/1267/123967) - 查看项目详情
-* Update: [DisableProject](https://cloud.tencent.com/document/api/1267/123971) - 禁用项目
-* Update: [EnableProject](https://cloud.tencent.com/document/api/1267/123970) - 激活项目
-* Update: [UpdateProject](https://cloud.tencent.com/document/api/1267/123958) - 更新项目
-* Delete: [DeleteProject](https://cloud.tencent.com/document/api/1267/127290) - 删除项目
+* Create: [CreateProject](https://cloud.tencent.com/document/api/1267/123975) - Create a project with cluster information upon creation.
+* Create: [DisableProject](https://cloud.tencent.com/document/api/1267/123971)
+* Read: [GetProject](https://cloud.tencent.com/document/api/1267/123967) - This API is used to get project information.
+* Update: [DisableProject](https://cloud.tencent.com/document/api/1267/123971)
+* Update: [EnableProject](https://cloud.tencent.com/document/api/1267/123970)
+* Update: [UpdateProject](https://cloud.tencent.com/document/api/1267/123958) - This API is used to modify project basic information.
+* Delete: [DeleteProject](https://cloud.tencent.com/document/api/1267/127290) - This API is used to delete a project.
 

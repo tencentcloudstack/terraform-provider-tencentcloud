@@ -48,11 +48,11 @@ In addition to all arguments above, the following attributes are exported:
 
 This resource interacts with the following TencentCloud APIs:
 
-* Create: [DescribeDBParams](https://cloud.tencent.com/document/api/878/116658) - 集群配置描述
-* Create: [DescribeInstanceState](https://cloud.tencent.com/document/api/878/100160) - 获取集群实例状态
-* Create: [ModifyDBParameters](https://cloud.tencent.com/document/api/878/116655) - 集群配置下发
-* Read: [DescribeDBParams](https://cloud.tencent.com/document/api/878/116658) - 集群配置描述
-* Update: [DescribeDBParams](https://cloud.tencent.com/document/api/878/116658) - 集群配置描述
-* Update: [DescribeInstanceState](https://cloud.tencent.com/document/api/878/100160) - 获取集群实例状态
-* Update: [ModifyDBParameters](https://cloud.tencent.com/document/api/878/116655) - 集群配置下发
+* Create: [DescribeDBParams](https://cloud.tencent.com/document/api/878/116658) - This API is used to describe instance configurations.
+* Create: [DescribeInstanceState](https://cloud.tencent.com/document/api/878/100160) - This API is used to display instance status, process progress, etc., in the instance details page.
+* Create: [ModifyDBParameters](https://cloud.tencent.com/document/api/878/116655) - This API is used to modify instance configurations
+* Read: [DescribeDBParams](https://cloud.tencent.com/document/api/878/116658) - This API is used to describe instance configurations.
+* Update: [DescribeDBParams](https://cloud.tencent.com/document/api/878/116658) - This API is used to describe instance configurations.
+* Update: [DescribeInstanceState](https://cloud.tencent.com/document/api/878/100160) - This API is used to display instance status, process progress, etc., in the instance details page.
+* Update: [ModifyDBParameters](https://cloud.tencent.com/document/api/878/116655) - This API is used to modify instance configurations
 

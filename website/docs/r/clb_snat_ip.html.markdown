@@ -54,12 +54,12 @@ In addition to all arguments above, the following attributes are exported:
 
 This resource interacts with the following TencentCloud APIs:
 
-* Create: [CreateLoadBalancerSnatIps](https://cloud.tencent.com/document/api/214/41505) - 添加SnatIp
-* Read: [DescribeLoadBalancers](https://cloud.tencent.com/document/api/214/30685) - 查询负载均衡实例列表
-* Update: [CreateLoadBalancerSnatIps](https://cloud.tencent.com/document/api/214/41505) - 添加SnatIp
-* Update: [DeleteLoadBalancerSnatIps](https://cloud.tencent.com/document/api/214/41503) - 删除SnatIp
-* Delete: [DeleteLoadBalancerSnatIps](https://cloud.tencent.com/document/api/214/41503) - 删除SnatIp
-* Delete: [DescribeLoadBalancers](https://cloud.tencent.com/document/api/214/30685) - 查询负载均衡实例列表
+* Create: [CreateLoadBalancerSnatIps](https://cloud.tencent.com/document/api/214/41505) - This API is used to add SnatIp for SnatPro Cloud Load Balancer. If SnatPro is not enabled, it will be auto on after adding SnatIp.
+* Read: [DescribeLoadBalancers](https://cloud.tencent.com/document/api/214/30685) - This API is used to query the list of CLB instances in a region.
+* Update: [CreateLoadBalancerSnatIps](https://cloud.tencent.com/document/api/214/41505) - This API is used to add SnatIp for SnatPro Cloud Load Balancer. If SnatPro is not enabled, it will be auto on after adding SnatIp.
+* Update: [DeleteLoadBalancerSnatIps](https://cloud.tencent.com/document/api/214/41503) - This API is used to delete the SnatIp of the SnatPro load balancing.
+* Delete: [DeleteLoadBalancerSnatIps](https://cloud.tencent.com/document/api/214/41503) - This API is used to delete the SnatIp of the SnatPro load balancing.
+* Delete: [DescribeLoadBalancers](https://cloud.tencent.com/document/api/214/30685) - This API is used to query the list of CLB instances in a region.
 
 ## Import
 

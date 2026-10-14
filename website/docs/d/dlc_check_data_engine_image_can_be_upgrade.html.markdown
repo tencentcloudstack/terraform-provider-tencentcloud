@@ -37,5 +37,5 @@ In addition to all arguments above, the following attributes are exported:
 
 This data source queries the following TencentCloud APIs:
 
-* Read: [CheckDataEngineImageCanBeUpgrade](https://cloud.tencent.com/document/api/1342/99275) - 查看集群镜像是否能够升级
+* Read: [CheckDataEngineImageCanBeUpgrade](https://cloud.tencent.com/document/api/1342/99275) - This API is used to check whether the cluster image can be upgraded.
 

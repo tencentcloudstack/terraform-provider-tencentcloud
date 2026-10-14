@@ -719,18 +719,18 @@ The `server_certificate_config` object of `https_config` exports the following:
 
 This resource interacts with the following TencentCloud APIs:
 
-* Create: [AddCdnDomain](https://cloud.tencent.com/document/api/228/41123) - 新增加速域名
-* Create: [DescribeDomainsConfig](https://cloud.tencent.com/document/api/228/41117) - 查询域名详细配置
-* Create: [ModifyResourceTags](https://cloud.tencent.com/document/api/651/35322) - 批量修改资源关联的标签
-* Read: [DescribeDomainsConfig](https://cloud.tencent.com/document/api/228/41117) - 查询域名详细配置
-* Read: [DescribeResourceTagsByResourceIds](https://cloud.tencent.com/document/api/651/35319) - 批量查看资源关联的标签
-* Update: [DescribeDomainsConfig](https://cloud.tencent.com/document/api/228/41117) - 查询域名详细配置
-* Update: [ModifyResourceTags](https://cloud.tencent.com/document/api/651/35322) - 批量修改资源关联的标签
-* Update: [UpdateDomainConfig](https://cloud.tencent.com/document/api/228/41116) - 更新加速域名配置
-* Delete: [DeleteCdnDomain](https://cloud.tencent.com/document/api/228/41122) - 删除加速域名
-* Delete: [DescribeDomainsConfig](https://cloud.tencent.com/document/api/228/41117) - 查询域名详细配置
-* Delete: [ModifyResourceTags](https://cloud.tencent.com/document/api/651/35322) - 批量修改资源关联的标签
-* Delete: [StopCdnDomain](https://cloud.tencent.com/document/api/228/41120) - 停用加速域名
+* Create: [AddCdnDomain](https://cloud.tencent.com/document/api/228/41123) - This API is used to add a CDN acceleration domain name. Up to 100 domain names can be added per minute.
+* Create: [DescribeDomainsConfig](https://cloud.tencent.com/document/api/228/41117) - This API is used to query the complete configuration information of CDN acceleration domain names (inside and outside mainland China).
+* Create: [ModifyResourceTags](https://cloud.tencent.com/document/api/651/35322) - This API is used to modify all tags associated with a resource.
+* Read: [DescribeDomainsConfig](https://cloud.tencent.com/document/api/228/41117) - This API is used to query the complete configuration information of CDN acceleration domain names (inside and outside mainland China).
+* Read: [DescribeResourceTagsByResourceIds](https://cloud.tencent.com/document/api/651/35319) - This API is used to query the tag key-value pairs associated with an existing resource.
+* Update: [DescribeDomainsConfig](https://cloud.tencent.com/document/api/228/41117) - This API is used to query the complete configuration information of CDN acceleration domain names (inside and outside mainland China).
+* Update: [ModifyResourceTags](https://cloud.tencent.com/document/api/651/35322) - This API is used to modify all tags associated with a resource.
+* Update: [UpdateDomainConfig](https://cloud.tencent.com/document/api/228/41116) - This API is used to modify the configuration message of a CDN acceleration domain name.
+* Delete: [DeleteCdnDomain](https://cloud.tencent.com/document/api/228/41122) - This API is used to delete a specified acceleration domain name.
+* Delete: [DescribeDomainsConfig](https://cloud.tencent.com/document/api/228/41117) - This API is used to query the complete configuration information of CDN acceleration domain names (inside and outside mainland China).
+* Delete: [ModifyResourceTags](https://cloud.tencent.com/document/api/651/35322) - This API is used to modify all tags associated with a resource.
+* Delete: [StopCdnDomain](https://cloud.tencent.com/document/api/228/41120) - This API is used to suspend the acceleration service for a domain name.
 
 ## Import
 

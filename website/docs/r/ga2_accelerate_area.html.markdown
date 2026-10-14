@@ -83,14 +83,14 @@ The `timeouts` block allows you to specify [timeouts](https://developer.hashicor
 
 This resource interacts with the following TencentCloud APIs:
 
-* Create: [CreateAccelerateAreas](https://cloud.tencent.com/document/api/1817/130174) - 创建加速地域
-* Create: [DescribeAccelerateAreas](https://cloud.tencent.com/document/api/1817/130165) - 查询加速地域
-* Create: [DescribeTaskResult](https://cloud.tencent.com/document/api/1817/131942) - 查询异步任务结果
-* Read: [DescribeAccelerateAreas](https://cloud.tencent.com/document/api/1817/130165) - 查询加速地域
-* Update: [DescribeTaskResult](https://cloud.tencent.com/document/api/1817/131942) - 查询异步任务结果
-* Update: [ModifyAccelerateAreas](https://cloud.tencent.com/document/api/1817/130159) - 修改加速地域
-* Delete: [DeleteAccelerateAreas](https://cloud.tencent.com/document/api/1817/130170) - 删除加速地域
-* Delete: [DescribeTaskResult](https://cloud.tencent.com/document/api/1817/131942) - 查询异步任务结果
+* Create: [CreateAccelerateAreas](https://cloud.tencent.com/document/api/1817/130174) - This API is used to create an acceleration region.
+* Create: [DescribeAccelerateAreas](https://cloud.tencent.com/document/api/1817/130165)
+* Create: [DescribeTaskResult](https://cloud.tencent.com/document/api/1817/131942) - Query asynchronous task result
+* Read: [DescribeAccelerateAreas](https://cloud.tencent.com/document/api/1817/130165)
+* Update: [DescribeTaskResult](https://cloud.tencent.com/document/api/1817/131942) - Query asynchronous task result
+* Update: [ModifyAccelerateAreas](https://cloud.tencent.com/document/api/1817/130159)
+* Delete: [DeleteAccelerateAreas](https://cloud.tencent.com/document/api/1817/130170) - Delete an acceleration region
+* Delete: [DescribeTaskResult](https://cloud.tencent.com/document/api/1817/131942) - Query asynchronous task result
 
 ## Import
 

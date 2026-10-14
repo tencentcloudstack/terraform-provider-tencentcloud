@@ -63,12 +63,12 @@ In addition to all arguments above, the following attributes are exported:
 
 This resource interacts with the following TencentCloud APIs:
 
-* Create: [CreatePolicy](https://cloud.tencent.com/document/api/598/34578) - 创建策略
-* Create: [GetPolicy](https://cloud.tencent.com/document/api/598/34574) - 查看策略详情
-* Read: [GetPolicy](https://cloud.tencent.com/document/api/598/34574) - 查看策略详情
-* Update: [ModifyResourceTags](https://cloud.tencent.com/document/api/651/35322) - 批量修改资源关联的标签
-* Update: [UpdatePolicy](https://cloud.tencent.com/document/api/598/34569) - 更新策略信息
-* Delete: [DeletePolicy](https://cloud.tencent.com/document/api/598/34577) - 删除策略
+* Create: [CreatePolicy](https://cloud.tencent.com/document/api/598/34578) - This API (CreatePolicy) is used to create a policy.
+* Create: [GetPolicy](https://cloud.tencent.com/document/api/598/34574) - This API (GetPolicy) is used to query and view policy details.
+* Read: [GetPolicy](https://cloud.tencent.com/document/api/598/34574) - This API (GetPolicy) is used to query and view policy details.
+* Update: [ModifyResourceTags](https://cloud.tencent.com/document/api/651/35322) - This API is used to modify all tags associated with a resource.
+* Update: [UpdatePolicy](https://cloud.tencent.com/document/api/598/34569) - This API is used to update a policy.
+* Delete: [DeletePolicy](https://cloud.tencent.com/document/api/598/34577) - This API (DeletePolicy) is used to delete a policy.
 
 ## Import
 

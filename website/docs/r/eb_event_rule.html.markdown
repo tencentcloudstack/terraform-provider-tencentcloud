@@ -65,13 +65,13 @@ In addition to all arguments above, the following attributes are exported:
 
 This resource interacts with the following TencentCloud APIs:
 
-* Create: [CreateRule](https://cloud.tencent.com/document/api/1359/67697) - 创建事件规则
-* Create: [ModifyResourceTags](https://cloud.tencent.com/document/api/651/35322) - 批量修改资源关联的标签
-* Read: [DescribeResourceTagsByResourceIds](https://cloud.tencent.com/document/api/651/35319) - 批量查看资源关联的标签
-* Read: [GetRule](https://cloud.tencent.com/document/api/1359/67695) - 获取事件规则详情
-* Update: [ModifyResourceTags](https://cloud.tencent.com/document/api/651/35322) - 批量修改资源关联的标签
-* Update: [UpdateRule](https://cloud.tencent.com/document/api/1359/67693) - 更新事件规则
-* Delete: [DeleteRule](https://cloud.tencent.com/document/api/1359/67696) - 删除事件规则
+* Create: [CreateRule](https://cloud.tencent.com/document/api/1359/67697) - This API is used to create an event rule.
+* Create: [ModifyResourceTags](https://cloud.tencent.com/document/api/651/35322) - This API is used to modify all tags associated with a resource.
+* Read: [DescribeResourceTagsByResourceIds](https://cloud.tencent.com/document/api/651/35319) - This API is used to query the tag key-value pairs associated with an existing resource.
+* Read: [GetRule](https://cloud.tencent.com/document/api/1359/67695) - This API is used to get the details of an event rule.
+* Update: [ModifyResourceTags](https://cloud.tencent.com/document/api/651/35322) - This API is used to modify all tags associated with a resource.
+* Update: [UpdateRule](https://cloud.tencent.com/document/api/1359/67693) - This API is used to update an event rule.
+* Delete: [DeleteRule](https://cloud.tencent.com/document/api/1359/67696) - This API is used to delete an event rule.
 
 ## Import
 

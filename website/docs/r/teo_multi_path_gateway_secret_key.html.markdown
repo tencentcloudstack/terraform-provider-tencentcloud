@@ -38,13 +38,13 @@ In addition to all arguments above, the following attributes are exported:
 
 This resource interacts with the following TencentCloud APIs:
 
-* Create: [CreateMultiPathGatewaySecretKey](https://cloud.tencent.com/document/api/1552/121341) - 创建多通道安全加速网关密钥
-* Create: [DescribeMultiPathGatewaySecretKey](https://cloud.tencent.com/document/api/1552/121335) - 查询多通道安全加速网关接入密钥
-* Create: [ModifyMultiPathGatewaySecretKey](https://cloud.tencent.com/document/api/1552/121331) - 修改多通道安全加速网关接入密钥
-* Read: [DescribeMultiPathGatewaySecretKey](https://cloud.tencent.com/document/api/1552/121335) - 查询多通道安全加速网关接入密钥
-* Update: [CreateMultiPathGatewaySecretKey](https://cloud.tencent.com/document/api/1552/121341) - 创建多通道安全加速网关密钥
-* Update: [DescribeMultiPathGatewaySecretKey](https://cloud.tencent.com/document/api/1552/121335) - 查询多通道安全加速网关接入密钥
-* Update: [ModifyMultiPathGatewaySecretKey](https://cloud.tencent.com/document/api/1552/121331) - 修改多通道安全加速网关接入密钥
+* Create: [CreateMultiPathGatewaySecretKey](https://cloud.tencent.com/document/api/1552/121341) - This API creates an access key for the multi-channel security acceleration gateway. Customers use the access key to sign requests for accessing the gateway. Each site can have only one key, which is applicable to all gateways under that site. Query the key via the DescribeMultiPathGatewaySecretKey API.
+* Create: [DescribeMultiPathGatewaySecretKey](https://cloud.tencent.com/document/api/1552/121335) - This API is used to query keys for integrating multi-channel security acceleration gateways. Customers access multi-channel security acceleration gateways based on key signature.
+* Create: [ModifyMultiPathGatewaySecretKey](https://cloud.tencent.com/document/api/1552/121331) - This API is used to modify the access key for the multi-channel security acceleration gateway.The access key is used by customers to sign requests for gateway access. The original key becomes invalid after modification.
+* Read: [DescribeMultiPathGatewaySecretKey](https://cloud.tencent.com/document/api/1552/121335) - This API is used to query keys for integrating multi-channel security acceleration gateways. Customers access multi-channel security acceleration gateways based on key signature.
+* Update: [CreateMultiPathGatewaySecretKey](https://cloud.tencent.com/document/api/1552/121341) - This API creates an access key for the multi-channel security acceleration gateway. Customers use the access key to sign requests for accessing the gateway. Each site can have only one key, which is applicable to all gateways under that site. Query the key via the DescribeMultiPathGatewaySecretKey API.
+* Update: [DescribeMultiPathGatewaySecretKey](https://cloud.tencent.com/document/api/1552/121335) - This API is used to query keys for integrating multi-channel security acceleration gateways. Customers access multi-channel security acceleration gateways based on key signature.
+* Update: [ModifyMultiPathGatewaySecretKey](https://cloud.tencent.com/document/api/1552/121331) - This API is used to modify the access key for the multi-channel security acceleration gateway.The access key is used by customers to sign requests for gateway access. The original key becomes invalid after modification.
 
 ## Import
 

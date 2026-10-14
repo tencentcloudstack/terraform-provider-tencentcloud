@@ -38,10 +38,10 @@ In addition to all arguments above, the following attributes are exported:
 
 This resource interacts with the following TencentCloud APIs:
 
-* Create: [CreateDeviceGroup](https://cloud.tencent.com/document/api/1025/74790) - 新建资产组
-* Read: [DescribeDeviceGroups](https://cloud.tencent.com/document/api/1025/74786) - 查询资产组列表
-* Update: [ModifyDeviceGroup](https://cloud.tencent.com/document/api/1025/86966) - 修改资产组
-* Delete: [DeleteDeviceGroups](https://cloud.tencent.com/document/api/1025/74788) - 删除资产组
+* Create: [CreateDeviceGroup](https://cloud.tencent.com/document/api/1025/74790)
+* Read: [DescribeDeviceGroups](https://cloud.tencent.com/document/api/1025/74786)
+* Update: [ModifyDeviceGroup](https://cloud.tencent.com/document/api/1025/86966)
+* Delete: [DeleteDeviceGroups](https://cloud.tencent.com/document/api/1025/74788)
 
 ## Import
 

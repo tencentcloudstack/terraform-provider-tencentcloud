@@ -47,16 +47,16 @@ In addition to all arguments above, the following attributes are exported:
 
 This resource interacts with the following TencentCloud APIs:
 
-* Create: [CreateSecurityPolicy](https://cloud.tencent.com/document/api/608/36970) - 创建安全策略
-* Create: [DescribeSecurityPolicyDetail](https://cloud.tencent.com/document/api/608/36959) - 获取安全策略详情
-* Create: [OpenSecurityPolicy](https://cloud.tencent.com/document/api/608/36951) - 开启安全策略
-* Read: [DescribeSecurityPolicyDetail](https://cloud.tencent.com/document/api/608/36959) - 获取安全策略详情
-* Update: [CloseSecurityPolicy](https://cloud.tencent.com/document/api/608/36972) - 关闭安全策略
-* Update: [DescribeSecurityPolicyDetail](https://cloud.tencent.com/document/api/608/36959) - 获取安全策略详情
-* Update: [OpenSecurityPolicy](https://cloud.tencent.com/document/api/608/36951) - 开启安全策略
-* Delete: [CloseSecurityPolicy](https://cloud.tencent.com/document/api/608/36972) - 关闭安全策略
-* Delete: [DeleteSecurityPolicy](https://cloud.tencent.com/document/api/608/36968) - 删除安全策略
-* Delete: [DescribeSecurityPolicyDetail](https://cloud.tencent.com/document/api/608/36959) - 获取安全策略详情
+* Create: [CreateSecurityPolicy](https://cloud.tencent.com/document/api/608/36970) - This API is used to create security policies.
+* Create: [DescribeSecurityPolicyDetail](https://cloud.tencent.com/document/api/608/36959) - This API is used to obtain security policy details.
+* Create: [OpenSecurityPolicy](https://cloud.tencent.com/document/api/608/36951) - This API is used to enable a security policy.
+* Read: [DescribeSecurityPolicyDetail](https://cloud.tencent.com/document/api/608/36959) - This API is used to obtain security policy details.
+* Update: [CloseSecurityPolicy](https://cloud.tencent.com/document/api/608/36972) - This API is used to disable a security policy.
+* Update: [DescribeSecurityPolicyDetail](https://cloud.tencent.com/document/api/608/36959) - This API is used to obtain security policy details.
+* Update: [OpenSecurityPolicy](https://cloud.tencent.com/document/api/608/36951) - This API is used to enable a security policy.
+* Delete: [CloseSecurityPolicy](https://cloud.tencent.com/document/api/608/36972) - This API is used to disable a security policy.
+* Delete: [DeleteSecurityPolicy](https://cloud.tencent.com/document/api/608/36968) - This API is used to delete a security policy.
+* Delete: [DescribeSecurityPolicyDetail](https://cloud.tencent.com/document/api/608/36959) - This API is used to obtain security policy details.
 
 ## Import
 

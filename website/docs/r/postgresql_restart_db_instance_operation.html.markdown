@@ -36,6 +36,6 @@ In addition to all arguments above, the following attributes are exported:
 
 This resource interacts with the following TencentCloud APIs:
 
-* Create: [DescribeDBInstanceAttribute](https://cloud.tencent.com/document/api/409/16772) - 查询实例详情
-* Create: [RestartDBInstance](https://cloud.tencent.com/document/api/409/18097) - 重启实例
+* Create: [DescribeDBInstanceAttribute](https://cloud.tencent.com/document/api/409/16772) - This API is used to query the details of one instance.
+* Create: [RestartDBInstance](https://cloud.tencent.com/document/api/409/18097) - This API is used to restart an instance.
 

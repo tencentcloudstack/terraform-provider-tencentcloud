@@ -49,14 +49,14 @@ In addition to all arguments above, the following attributes are exported:
 
 This resource interacts with the following TencentCloud APIs:
 
-* Create: [CreateLicenseOrder](https://cloud.tencent.com/document/api/296/80402) - 创建授权订单
-* Create: [ModifyLicenseOrder](https://cloud.tencent.com/document/api/296/98700) - 编辑授权订单
-* Create: [ModifyResourceTags](https://cloud.tencent.com/document/api/651/35322) - 批量修改资源关联的标签
-* Read: [DescribeLicenseList](https://cloud.tencent.com/document/api/296/80397) - 获取授权订单列表
-* Read: [DescribeResourceTagsByResourceIds](https://cloud.tencent.com/document/api/651/35319) - 批量查看资源关联的标签
-* Update: [ModifyLicenseOrder](https://cloud.tencent.com/document/api/296/98700) - 编辑授权订单
-* Update: [ModifyResourceTags](https://cloud.tencent.com/document/api/651/35322) - 批量修改资源关联的标签
-* Delete: [DestroyOrder](https://cloud.tencent.com/document/api/296/80396) - 销毁订单
+* Create: [CreateLicenseOrder](https://cloud.tencent.com/document/api/296/80402) - This API is used to create Professional/Flagship edition orders
+* Create: [ModifyLicenseOrder](https://cloud.tencent.com/document/api/296/98700) - This API is used to edit CWPP - pay-as-you-go authorization orders.
+* Create: [ModifyResourceTags](https://cloud.tencent.com/document/api/651/35322) - This API is used to modify all tags associated with a resource.
+* Read: [DescribeLicenseList](https://cloud.tencent.com/document/api/296/80397) - This API is used to obtain all authorization orders of a user.
+* Read: [DescribeResourceTagsByResourceIds](https://cloud.tencent.com/document/api/651/35319) - This API is used to query the tag key-value pairs associated with an existing resource.
+* Update: [ModifyLicenseOrder](https://cloud.tencent.com/document/api/296/98700) - This API is used to edit CWPP - pay-as-you-go authorization orders.
+* Update: [ModifyResourceTags](https://cloud.tencent.com/document/api/651/35322) - This API is used to modify all tags associated with a resource.
+* Delete: [DestroyOrder](https://cloud.tencent.com/document/api/296/80396) - This API is used to terminate resources.
 
 ## Import
 

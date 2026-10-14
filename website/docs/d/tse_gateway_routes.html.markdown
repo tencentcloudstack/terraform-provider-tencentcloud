@@ -59,5 +59,5 @@ In addition to all arguments above, the following attributes are exported:
 
 This data source queries the following TencentCloud APIs:
 
-* Read: [DescribeCloudNativeAPIGatewayRoutes](https://cloud.tencent.com/document/api/1364/94842) - 查询云原生网关路由列表
+* Read: [DescribeCloudNativeAPIGatewayRoutes](https://cloud.tencent.com/document/api/1364/94842) - Query the routing list of the cloud-native gateway
 

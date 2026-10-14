@@ -49,5 +49,5 @@ In addition to all arguments above, the following attributes are exported:
 
 This data source queries the following TencentCloud APIs:
 
-* Read: [DescribeOIDCConfig](https://cloud.tencent.com/document/api/598/73471) - 查询角色OIDC配置
+* Read: [DescribeOIDCConfig](https://cloud.tencent.com/document/api/598/73471) - This API is used to query role OIDC configurations.
 

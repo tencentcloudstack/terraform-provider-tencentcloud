@@ -44,5 +44,5 @@ In addition to all arguments above, the following attributes are exported:
 
 This data source queries the following TencentCloud APIs:
 
-* Read: [DescribeDBFeatures](https://cloud.tencent.com/document/api/236/85925) - 查询实例版本属性
+* Read: [DescribeDBFeatures](https://cloud.tencent.com/document/api/236/85925) - This API is used to query cloud database version attributes, including whether database encryption and database audit are supported, and other features.
 

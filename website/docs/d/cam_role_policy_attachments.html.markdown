@@ -52,5 +52,5 @@ In addition to all arguments above, the following attributes are exported:
 
 This data source queries the following TencentCloud APIs:
 
-* Read: [ListAttachedRolePolicies](https://cloud.tencent.com/document/api/598/36220) - 获取角色绑定的策略列表
+* Read: [ListAttachedRolePolicies](https://cloud.tencent.com/document/api/598/36220) - This API (ListAttachedRolePolicies) is used to obtain the list of the policies associated with a role.
 

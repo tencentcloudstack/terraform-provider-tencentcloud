@@ -61,11 +61,11 @@ In addition to all arguments above, the following attributes are exported:
 
 This resource interacts with the following TencentCloud APIs:
 
-* Create: [ModifySecurityGroupPolicies](https://cloud.tencent.com/document/api/215/15810) - 重置安全组出站和入站规则
-* Read: [DescribeSecurityGroupPolicies](https://cloud.tencent.com/document/api/215/15804) - 查询安全组规则
-* Update: [DeleteSecurityGroupPolicies](https://cloud.tencent.com/document/api/215/15809) - 删除安全组规则
-* Update: [ModifySecurityGroupPolicies](https://cloud.tencent.com/document/api/215/15810) - 重置安全组出站和入站规则
-* Delete: [ModifySecurityGroupPolicies](https://cloud.tencent.com/document/api/215/15810) - 重置安全组出站和入站规则
+* Create: [ModifySecurityGroupPolicies](https://cloud.tencent.com/document/api/215/15810) - This API is used to reset the `Egress` and `Ingress` rules (SecurityGroupPolicy) of a security group.
+* Read: [DescribeSecurityGroupPolicies](https://cloud.tencent.com/document/api/215/15804) - This API (DescribeSecurityGroupPolicies) is used to query security group policies.
+* Update: [DeleteSecurityGroupPolicies](https://cloud.tencent.com/document/api/215/15809) - This API (DeleteSecurityGroupPolicies) is used to delete security group policies (SecurityGroupPolicy).
+* Update: [ModifySecurityGroupPolicies](https://cloud.tencent.com/document/api/215/15810) - This API is used to reset the `Egress` and `Ingress` rules (SecurityGroupPolicy) of a security group.
+* Delete: [ModifySecurityGroupPolicies](https://cloud.tencent.com/document/api/215/15810) - This API is used to reset the `Egress` and `Ingress` rules (SecurityGroupPolicy) of a security group.
 
 ## Import
 

@@ -107,11 +107,11 @@ In addition to all arguments above, the following attributes are exported:
 
 This resource interacts with the following TencentCloud APIs:
 
-* Create: [CreateApplicationAutoscaler](https://cloud.tencent.com/document/api/1371/78341) - 创建弹性伸缩策略组合
-* Read: [DescribeApplicationAutoscalerList](https://cloud.tencent.com/document/api/1371/78339) - 获取应用弹性策略组合
-* Update: [ModifyApplicationAutoscaler](https://cloud.tencent.com/document/api/1371/78338) - 修改弹性伸缩策略组合
-* Delete: [DeleteApplicationAutoscaler](https://cloud.tencent.com/document/api/1371/78340) - 删除应用弹性策略组合
-* Delete: [DisableApplicationAutoscaler](https://cloud.tencent.com/document/api/1371/78955) - 关闭应用弹性策略组合
+* Create: [CreateApplicationAutoscaler](https://cloud.tencent.com/document/api/1371/78341) - This API is used to create a scaling rule.
+* Read: [DescribeApplicationAutoscalerList](https://cloud.tencent.com/document/api/1371/78339) - This API is used to query the scaling rules of an application.
+* Update: [ModifyApplicationAutoscaler](https://cloud.tencent.com/document/api/1371/78338) - This API is used to modify a scaling rule.
+* Delete: [DeleteApplicationAutoscaler](https://cloud.tencent.com/document/api/1371/78340) - This API is used to delete a scaling rule.
+* Delete: [DisableApplicationAutoscaler](https://cloud.tencent.com/document/api/1371/78955) - This API is used to disable a scaling rule.
 
 ## Import
 

@@ -137,14 +137,14 @@ In addition to all arguments above, the following attributes are exported:
 
 This resource interacts with the following TencentCloud APIs:
 
-* Create: [CreateInstance](https://cloud.tencent.com/document/api/1778/116044) - 购买MQTT实例
-* Create: [DescribeInstance](https://cloud.tencent.com/document/api/1778/111030) - 查询MQTT实例详情信息
-* Create: [ModifyInstance](https://cloud.tencent.com/document/api/1778/116039) - 修改MQTT实例属性
-* Create: [ModifyResourceTags](https://cloud.tencent.com/document/api/651/35322) - 批量修改资源关联的标签
-* Read: [DescribeInstance](https://cloud.tencent.com/document/api/1778/111030) - 查询MQTT实例详情信息
-* Read: [DescribeResourceTagsByResourceIds](https://cloud.tencent.com/document/api/651/35319) - 批量查看资源关联的标签
-* Update: [ModifyInstance](https://cloud.tencent.com/document/api/1778/116039) - 修改MQTT实例属性
-* Update: [ModifyResourceTags](https://cloud.tencent.com/document/api/651/35322) - 批量修改资源关联的标签
-* Delete: [DeleteInstance](https://cloud.tencent.com/document/api/1778/116042) - 删除MQTT实例
-* Delete: [DescribeInstance](https://cloud.tencent.com/document/api/1778/111030) - 查询MQTT实例详情信息
+* Create: [CreateInstance](https://cloud.tencent.com/document/api/1778/116044) - This API is used to purchase a new MQTT instance.
+* Create: [DescribeInstance](https://cloud.tencent.com/document/api/1778/111030) - This API is used to query instance information.
+* Create: [ModifyInstance](https://cloud.tencent.com/document/api/1778/116039) - This API is used to modify instance attributes. Only running clusters can call this API to perform configuration change.
+* Create: [ModifyResourceTags](https://cloud.tencent.com/document/api/651/35322) - This API is used to modify all tags associated with a resource.
+* Read: [DescribeInstance](https://cloud.tencent.com/document/api/1778/111030) - This API is used to query instance information.
+* Read: [DescribeResourceTagsByResourceIds](https://cloud.tencent.com/document/api/651/35319) - This API is used to query the tag key-value pairs associated with an existing resource.
+* Update: [ModifyInstance](https://cloud.tencent.com/document/api/1778/116039) - This API is used to modify instance attributes. Only running clusters can call this API to perform configuration change.
+* Update: [ModifyResourceTags](https://cloud.tencent.com/document/api/651/35322) - This API is used to modify all tags associated with a resource.
+* Delete: [DeleteInstance](https://cloud.tencent.com/document/api/1778/116042) - This API is used to delete an MQTT instance.
+* Delete: [DescribeInstance](https://cloud.tencent.com/document/api/1778/111030) - This API is used to query instance information.
 

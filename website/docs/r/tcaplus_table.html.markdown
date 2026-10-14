@@ -124,13 +124,13 @@ In addition to all arguments above, the following attributes are exported:
 
 This resource interacts with the following TencentCloud APIs:
 
-* Create: [CreateTables](https://cloud.tencent.com/document/api/596/39667) - 批量创建表
-* Create: [DescribeTasks](https://cloud.tencent.com/document/api/596/39677) - 查询任务列表
-* Read: [DescribeTables](https://cloud.tencent.com/document/api/596/39664) - 查询表详情
-* Update: [DescribeTasks](https://cloud.tencent.com/document/api/596/39677) - 查询任务列表
-* Update: [ModifyTableMemos](https://cloud.tencent.com/document/api/596/39662) - 修改表备注信息
-* Update: [ModifyTables](https://cloud.tencent.com/document/api/596/39660) - 批量修改表结构
-* Delete: [DeleteTables](https://cloud.tencent.com/document/api/596/39666) - 删除表
-* Delete: [DescribeTables](https://cloud.tencent.com/document/api/596/39664) - 查询表详情
-* Delete: [DescribeTasks](https://cloud.tencent.com/document/api/596/39677) - 查询任务列表
+* Create: [CreateTables](https://cloud.tencent.com/document/api/596/39667) - This API is used to create tables in batches based on the selected IDL file list.
+* Create: [DescribeTasks](https://cloud.tencent.com/document/api/596/39677) - This API is used to query the task list.
+* Read: [DescribeTables](https://cloud.tencent.com/document/api/596/39664) - This API is used to query table details.
+* Update: [DescribeTasks](https://cloud.tencent.com/document/api/596/39677) - This API is used to query the task list.
+* Update: [ModifyTableMemos](https://cloud.tencent.com/document/api/596/39662) - This API is used to modify table remarks.
+* Update: [ModifyTables](https://cloud.tencent.com/document/api/596/39660) - This API is used to modify specified tables in batches based on the selected table definition IDL file.
+* Delete: [DeleteTables](https://cloud.tencent.com/document/api/596/39666) - This API is used to drop a specified table. Calling this API for the first time means to move the table to the recycle bin, while calling it again means to drop the table completely from the recycle bin.
+* Delete: [DescribeTables](https://cloud.tencent.com/document/api/596/39664) - This API is used to query table details.
+* Delete: [DescribeTasks](https://cloud.tencent.com/document/api/596/39677) - This API is used to query the task list.
 

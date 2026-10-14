@@ -64,11 +64,11 @@ The `life_cycle_rule` object exports the following:
 
 This resource interacts with the following TencentCloud APIs:
 
-* Create: [CreateLifeCycleRules](https://cloud.tencent.com/document/api/1105/52336) - 批量创建生命周期规则
-* Create: [DescribeLifeCycleRules](https://cloud.tencent.com/document/api/1105/52334) - 查看生命周期规则列表
-* Read: [DescribeLifeCycleRules](https://cloud.tencent.com/document/api/1105/52334) - 查看生命周期规则列表
-* Update: [ModifyLifeCycleRules](https://cloud.tencent.com/document/api/1105/52333) - 批量修改生命周期规则属性
-* Delete: [DeleteLifeCycleRules](https://cloud.tencent.com/document/api/1105/52335) - 批量删除生命周期规则
+* Create: [CreateLifeCycleRules](https://cloud.tencent.com/document/api/1105/52336) - This API is used to batch create lifecycle rules. You don't need to enter the lifecycle rule IDs and creation time.
+* Create: [DescribeLifeCycleRules](https://cloud.tencent.com/document/api/1105/52334) - This API is used to view the list of lifecycle rules by file system ID.
+* Read: [DescribeLifeCycleRules](https://cloud.tencent.com/document/api/1105/52334) - This API is used to view the list of lifecycle rules by file system ID.
+* Update: [ModifyLifeCycleRules](https://cloud.tencent.com/document/api/1105/52333) - This API is used to batch modify the attributes of lifecycle rules, such as name, path, transition list, and status. You must specify the lifecycle rule IDs.
+* Delete: [DeleteLifeCycleRules](https://cloud.tencent.com/document/api/1105/52335) - This API is used to batch delete lifecycle rules.
 
 ## Import
 

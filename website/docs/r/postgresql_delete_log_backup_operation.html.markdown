@@ -38,5 +38,5 @@ In addition to all arguments above, the following attributes are exported:
 
 This resource interacts with the following TencentCloud APIs:
 
-* Create: [DeleteLogBackup](https://cloud.tencent.com/document/api/409/89026) - 删除实例日志备份
+* Create: [DeleteLogBackup](https://cloud.tencent.com/document/api/409/89026) - This API is used to delete the specified log backup of an instance.
 

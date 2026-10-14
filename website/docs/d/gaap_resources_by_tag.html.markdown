@@ -41,5 +41,5 @@ In addition to all arguments above, the following attributes are exported:
 
 This data source queries the following TencentCloud APIs:
 
-* Read: [DescribeResourcesByTag](https://cloud.tencent.com/document/api/608/37016) - 根据标签拉取资源列表
+* Read: [DescribeResourcesByTag](https://cloud.tencent.com/document/api/608/37016) - This API (DescribeResourcesByTag) is used to query corresponding resource information by tags, including connection, connection group, and origin server.
 

@@ -112,5 +112,5 @@ In addition to all arguments above, the following attributes are exported:
 
 This data source queries the following TencentCloud APIs:
 
-* Read: [DescribeAllPluginApis](https://cloud.tencent.com/document/api/628/58274) - 展示插件相关的API列表
+* Read: [DescribeAllPluginApis](https://cloud.tencent.com/document/api/628/58274) - This API is used to list all APIs that can use this plugin, no matter whether the API is bound with the plugin.
 

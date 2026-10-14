@@ -86,5 +86,5 @@ In addition to all arguments above, the following attributes are exported:
 
 This data source queries the following TencentCloud APIs:
 
-* Read: [DescribeModifyInstanceBundles](https://cloud.tencent.com/document/api/1207/55550) - 查询实例可变更套餐列表
+* Read: [DescribeModifyInstanceBundles](https://cloud.tencent.com/document/api/1207/55550) - This API is used to query the list of package options of an instance.
 

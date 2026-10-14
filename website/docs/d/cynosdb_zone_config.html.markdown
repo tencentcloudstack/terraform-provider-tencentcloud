@@ -43,5 +43,5 @@ In addition to all arguments above, the following attributes are exported:
 
 This data source queries the following TencentCloud APIs:
 
-* Read: [DescribeInstanceSpecs](https://cloud.tencent.com/document/api/1003/48084) - 查询购买页可购买的实例规格
+* Read: [DescribeInstanceSpecs](https://cloud.tencent.com/document/api/1003/48084) - This interface (DescribeInstanceSpecs) is used to query the instance specifications available for purchase on the query purchase page.
 

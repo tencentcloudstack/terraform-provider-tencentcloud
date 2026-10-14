@@ -49,5 +49,5 @@ In addition to all arguments above, the following attributes are exported:
 
 This data source queries the following TencentCloud APIs:
 
-* Read: [ListUpstreamTaskInstances](https://cloud.tencent.com/document/api/1267/123570) - 获取实例直接上游
+* Read: [ListUpstreamTaskInstances](https://cloud.tencent.com/document/api/1267/123570) - This API is used to get the direct upstream of an instance.
 

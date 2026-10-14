@@ -38,5 +38,5 @@ In addition to all arguments above, the following attributes are exported:
 
 This data source queries the following TencentCloud APIs:
 
-* Read: [DescribeSessionImageVersion](https://cloud.tencent.com/document/api/1342/122136) - 获取内置镜像信息
+* Read: [DescribeSessionImageVersion](https://cloud.tencent.com/document/api/1342/122136) - This API is used to retrieve all built-in images of all minor versions under a specified major version.
 

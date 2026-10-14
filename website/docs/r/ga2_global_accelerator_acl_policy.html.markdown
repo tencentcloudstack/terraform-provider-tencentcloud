@@ -57,15 +57,15 @@ The `timeouts` block allows you to specify [timeouts](https://developer.hashicor
 
 This resource interacts with the following TencentCloud APIs:
 
-* Create: [CreateGlobalAcceleratorAclPolicy](https://cloud.tencent.com/document/api/1817/134623) - 创建访问控制策略
-* Create: [DescribeTaskResult](https://cloud.tencent.com/document/api/1817/131942) - 查询异步任务结果
-* Create: [ModifyGlobalAcceleratorAclPolicy](https://cloud.tencent.com/document/api/1817/134619) - 修改访问控制策略
-* Read: [DescribeGlobalAcceleratorAclPolicies](https://cloud.tencent.com/document/api/1817/134688) - 查看访控制策略
-* Update: [DescribeTaskResult](https://cloud.tencent.com/document/api/1817/131942) - 查询异步任务结果
-* Update: [ModifyGlobalAcceleratorAclPolicy](https://cloud.tencent.com/document/api/1817/134619) - 修改访问控制策略
-* Delete: [DeleteGlobalAcceleratorAclPolicy](https://cloud.tencent.com/document/api/1817/134621) - 删除访控制策略
-* Delete: [DescribeTaskResult](https://cloud.tencent.com/document/api/1817/131942) - 查询异步任务结果
-* Delete: [ModifyGlobalAcceleratorAclPolicy](https://cloud.tencent.com/document/api/1817/134619) - 修改访问控制策略
+* Create: [CreateGlobalAcceleratorAclPolicy](https://cloud.tencent.com/document/api/1817/134623) - Create access control policy
+* Create: [DescribeTaskResult](https://cloud.tencent.com/document/api/1817/131942) - Query asynchronous task result
+* Create: [ModifyGlobalAcceleratorAclPolicy](https://cloud.tencent.com/document/api/1817/134619) - Modify the status of an access control policy
+* Read: [DescribeGlobalAcceleratorAclPolicies](https://cloud.tencent.com/document/api/1817/134688) - View the access control policy
+* Update: [DescribeTaskResult](https://cloud.tencent.com/document/api/1817/131942) - Query asynchronous task result
+* Update: [ModifyGlobalAcceleratorAclPolicy](https://cloud.tencent.com/document/api/1817/134619) - Modify the status of an access control policy
+* Delete: [DeleteGlobalAcceleratorAclPolicy](https://cloud.tencent.com/document/api/1817/134621) - Delete access control policy
+* Delete: [DescribeTaskResult](https://cloud.tencent.com/document/api/1817/131942) - Query asynchronous task result
+* Delete: [ModifyGlobalAcceleratorAclPolicy](https://cloud.tencent.com/document/api/1817/134619) - Modify the status of an access control policy
 
 ## Import
 

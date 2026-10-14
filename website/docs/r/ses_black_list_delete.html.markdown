@@ -38,5 +38,5 @@ In addition to all arguments above, the following attributes are exported:
 
 This resource interacts with the following TencentCloud APIs:
 
-* Create: [DeleteBlackList](https://cloud.tencent.com/document/api/1288/51032) - 删除收件人黑名单
+* Create: [DeleteBlackList](https://cloud.tencent.com/document/api/1288/51032) - This API is used to unblocklist email addresses. If you confirm that a blocklisted recipient address is valid and active, you can remove it from Tencent Cloud’s address blocklist database.
 

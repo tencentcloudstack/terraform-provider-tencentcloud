@@ -64,5 +64,5 @@ In addition to all arguments above, the following attributes are exported:
 
 This data source queries the following TencentCloud APIs:
 
-* Read: [DescribeDirectConnectGateways](https://cloud.tencent.com/document/api/215/30644) - 查询专线网关
+* Read: [DescribeDirectConnectGateways](https://cloud.tencent.com/document/api/215/30644) - This API is used to query direct connect gateways.
 

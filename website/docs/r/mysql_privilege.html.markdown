@@ -145,12 +145,12 @@ In addition to all arguments above, the following attributes are exported:
 
 This resource interacts with the following TencentCloud APIs:
 
-* Create: [DescribeAsyncRequestInfo](https://cloud.tencent.com/document/api/236/20410) - 查询异步任务的执行结果
-* Create: [ModifyAccountPrivileges](https://cloud.tencent.com/document/api/236/17496) - 修改云数据库实例账号的权限
-* Read: [DescribeAccountPrivileges](https://cloud.tencent.com/document/api/236/17500) - 查询云数据库账户的权限信息
-* Read: [DescribeAccounts](https://cloud.tencent.com/document/api/236/17499) - 查询云数据库的所有账号信息
-* Update: [DescribeAsyncRequestInfo](https://cloud.tencent.com/document/api/236/20410) - 查询异步任务的执行结果
-* Update: [ModifyAccountPrivileges](https://cloud.tencent.com/document/api/236/17496) - 修改云数据库实例账号的权限
-* Delete: [DescribeAsyncRequestInfo](https://cloud.tencent.com/document/api/236/20410) - 查询异步任务的执行结果
-* Delete: [ModifyAccountPrivileges](https://cloud.tencent.com/document/api/236/17496) - 修改云数据库实例账号的权限
+* Create: [DescribeAsyncRequestInfo](https://cloud.tencent.com/document/api/236/20410) - This API (DescribeAsyncRequestInfo) is used to query the async task execution result of a TencentDB instance.
+* Create: [ModifyAccountPrivileges](https://cloud.tencent.com/document/api/236/17496) - This API is used to modify the permissions of a TencentDB instance account.
+* Read: [DescribeAccountPrivileges](https://cloud.tencent.com/document/api/236/17500) - This API is used to query the permission information supported by a cloud database account.
+* Read: [DescribeAccounts](https://cloud.tencent.com/document/api/236/17499) - This API is used to query ALL account information of the cloud database.
+* Update: [DescribeAsyncRequestInfo](https://cloud.tencent.com/document/api/236/20410) - This API (DescribeAsyncRequestInfo) is used to query the async task execution result of a TencentDB instance.
+* Update: [ModifyAccountPrivileges](https://cloud.tencent.com/document/api/236/17496) - This API is used to modify the permissions of a TencentDB instance account.
+* Delete: [DescribeAsyncRequestInfo](https://cloud.tencent.com/document/api/236/20410) - This API (DescribeAsyncRequestInfo) is used to query the async task execution result of a TencentDB instance.
+* Delete: [ModifyAccountPrivileges](https://cloud.tencent.com/document/api/236/17496) - This API is used to modify the permissions of a TencentDB instance account.
 

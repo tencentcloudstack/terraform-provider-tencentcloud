@@ -37,5 +37,5 @@ The following arguments are supported:
 
 This action invokes the following TencentCloud APIs:
 
-* Invoke: [RunCopyPairTasks](https://cloud.tencent.com/document/api/1824/136749) - 启动复制对
+* Invoke: [RunCopyPairTasks](https://cloud.tencent.com/document/api/1824/136749)
 

@@ -43,5 +43,5 @@ In addition to all arguments above, the following attributes are exported:
 
 This data source queries the following TencentCloud APIs:
 
-* Read: [DescribeBinlogBackupOverview](https://cloud.tencent.com/document/api/236/41227) - 查询日志备份概览
+* Read: [DescribeBinlogBackupOverview](https://cloud.tencent.com/document/api/236/41227) - This API is used to query the log backup overview of a user in the current region.
 

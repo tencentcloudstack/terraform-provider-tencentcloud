@@ -46,5 +46,5 @@ In addition to all arguments above, the following attributes are exported:
 
 This data source queries the following TencentCloud APIs:
 
-* Read: [DescribeDBXlogs](https://cloud.tencent.com/document/api/409/18091) - 获取实例Xlog列表
+* Read: [DescribeDBXlogs](https://cloud.tencent.com/document/api/409/18091) - This api is used to get instance Xlog list. This interface belongs to early api and has stopped feature iteration. We recommend using api [DescribeLogBackups](https://www.tencentcloud.com/document/api/409/89021?from_cn_redirect=1) as substitution.
 

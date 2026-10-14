@@ -77,17 +77,17 @@ In addition to all arguments above, the following attributes are exported:
 
 This resource interacts with the following TencentCloud APIs:
 
-* Create: [CreateSLInstance](https://cloud.tencent.com/document/api/589/110872) - Serverless HBase创建实例
-* Create: [DescribeSLInstance](https://cloud.tencent.com/document/api/589/110871) - Serverless HBase查询实例信息
-* Create: [DescribeSLInstanceList](https://cloud.tencent.com/document/api/589/110870) - Serverless HBase查询实例列表
-* Read: [DescribeSLInstance](https://cloud.tencent.com/document/api/589/110871) - Serverless HBase查询实例信息
-* Update: [DescribeSLInstance](https://cloud.tencent.com/document/api/589/110871) - Serverless HBase查询实例信息
-* Update: [DescribeSLInstanceList](https://cloud.tencent.com/document/api/589/110870) - Serverless HBase查询实例列表
-* Update: [ModifyResourceTags](https://cloud.tencent.com/document/api/651/35322) - 批量修改资源关联的标签
-* Update: [ModifySLInstance](https://cloud.tencent.com/document/api/589/110869) - Serverless HBase变配实例
-* Update: [ModifySLInstanceBasic](https://cloud.tencent.com/document/api/589/116586) - Serverless HBase修改实例名称
-* Delete: [DescribeSLInstanceList](https://cloud.tencent.com/document/api/589/110870) - Serverless HBase查询实例列表
-* Delete: [TerminateSLInstance](https://cloud.tencent.com/document/api/589/110868) - Serverless HBase销毁实例
+* Create: [CreateSLInstance](https://cloud.tencent.com/document/api/589/110872) - This API is used to create a Serverless instance, for example, HBase, StarRocks, and TCBase instances.- This API is successfully called, and a Serverless instance is created. If the instance creation request succeeds, InstanceId of the instance and RequestID of the request are returned.
+* Create: [DescribeSLInstance](https://cloud.tencent.com/document/api/589/110871) - This API is used to query basic information of a Serverless HBase instance.
+* Create: [DescribeSLInstanceList](https://cloud.tencent.com/document/api/589/110870) - This API is used to query detailed information of the Serverless HBase instance list.
+* Read: [DescribeSLInstance](https://cloud.tencent.com/document/api/589/110871) - This API is used to query basic information of a Serverless HBase instance.
+* Update: [DescribeSLInstance](https://cloud.tencent.com/document/api/589/110871) - This API is used to query basic information of a Serverless HBase instance.
+* Update: [DescribeSLInstanceList](https://cloud.tencent.com/document/api/589/110870) - This API is used to query detailed information of the Serverless HBase instance list.
+* Update: [ModifyResourceTags](https://cloud.tencent.com/document/api/651/35322) - This API is used to modify all tags associated with a resource.
+* Update: [ModifySLInstance](https://cloud.tencent.com/document/api/589/110869) - This API is used to change the configuration of a Serverless HBase instance.
+* Update: [ModifySLInstanceBasic](https://cloud.tencent.com/document/api/589/116586) - This API is used to modify the Serverless HBase instance name.
+* Delete: [DescribeSLInstanceList](https://cloud.tencent.com/document/api/589/110870) - This API is used to query detailed information of the Serverless HBase instance list.
+* Delete: [TerminateSLInstance](https://cloud.tencent.com/document/api/589/110868) - This API is used to terminate a Serverless HBase instance.
 
 ## Import
 

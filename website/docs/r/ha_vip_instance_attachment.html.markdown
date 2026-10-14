@@ -40,9 +40,9 @@ In addition to all arguments above, the following attributes are exported:
 
 This resource interacts with the following TencentCloud APIs:
 
-* Create: [AssociateHaVipInstance](https://cloud.tencent.com/document/api/215/118882) - HAVIP绑定子机或网卡
-* Read: [DescribeHaVips](https://cloud.tencent.com/document/api/215/30650) - 查询HAVIP列表
-* Delete: [DisassociateHaVipInstance](https://cloud.tencent.com/document/api/215/118881) - HAVIP解绑定子机或网卡
+* Create: [AssociateHaVipInstance](https://cloud.tencent.com/document/api/215/118882)
+* Read: [DescribeHaVips](https://cloud.tencent.com/document/api/215/30650) - This API (DescribeHaVips) is used to query the list of highly available virtual IPs (HAVIP).
+* Delete: [DisassociateHaVipInstance](https://cloud.tencent.com/document/api/215/118881)
 
 ## Import
 

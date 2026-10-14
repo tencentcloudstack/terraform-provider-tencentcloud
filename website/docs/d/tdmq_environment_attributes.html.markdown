@@ -59,5 +59,5 @@ In addition to all arguments above, the following attributes are exported:
 
 This data source queries the following TencentCloud APIs:
 
-* Read: [DescribeEnvironmentAttributes](https://cloud.tencent.com/document/api/1179/46079) - 获取命名空间属性
+* Read: [DescribeEnvironmentAttributes](https://cloud.tencent.com/document/api/1179/46079) - This API is used to get the attributes of the specified namespace.
 

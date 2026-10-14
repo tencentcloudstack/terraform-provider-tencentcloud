@@ -38,5 +38,5 @@ In addition to all arguments above, the following attributes are exported:
 
 This data source queries the following TencentCloud APIs:
 
-* Read: [ListPlatformEventPatterns](https://cloud.tencent.com/document/api/1359/97861) - 获取平台产品事件匹配规则
+* Read: [ListPlatformEventPatterns](https://cloud.tencent.com/document/api/1359/97861)
 

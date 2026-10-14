@@ -36,9 +36,9 @@ In addition to all arguments above, the following attributes are exported:
 
 This resource interacts with the following TencentCloud APIs:
 
-* Create: [ModifyIpsModeSwitch](https://cloud.tencent.com/document/api/1132/127532) - 修改IPS的防护模式
-* Read: [DescribeIpsModeSwitch](https://cloud.tencent.com/document/api/1132/127533) - 获取入侵防御防护模式
-* Update: [ModifyIpsModeSwitch](https://cloud.tencent.com/document/api/1132/127532) - 修改IPS的防护模式
+* Create: [ModifyIpsModeSwitch](https://cloud.tencent.com/document/api/1132/127532)
+* Read: [DescribeIpsModeSwitch](https://cloud.tencent.com/document/api/1132/127533)
+* Update: [ModifyIpsModeSwitch](https://cloud.tencent.com/document/api/1132/127532)
 
 ## Import
 

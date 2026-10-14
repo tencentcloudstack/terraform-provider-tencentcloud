@@ -68,5 +68,5 @@ In addition to all arguments above, the following attributes are exported:
 
 This data source queries the following TencentCloud APIs:
 
-* Read: [DescribeDBDiagEvents](https://cloud.tencent.com/document/api/1130/65947) - 获取诊断事件列表
+* Read: [DescribeDBDiagEvents](https://cloud.tencent.com/document/api/1130/65947) - This API is used to obtain the diagnosis event list in a specified time period by risk level, instance ID, etc.
 

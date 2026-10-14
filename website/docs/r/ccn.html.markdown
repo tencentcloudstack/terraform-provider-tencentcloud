@@ -90,16 +90,16 @@ In addition to all arguments above, the following attributes are exported:
 
 This resource interacts with the following TencentCloud APIs:
 
-* Create: [CreateCcn](https://cloud.tencent.com/document/api/215/19204) - 创建CCN
-* Create: [ModifyCcnAttribute](https://cloud.tencent.com/document/api/215/19195) - 修改CCN属性
-* Create: [ModifyResourceTags](https://cloud.tencent.com/document/api/651/35322) - 批量修改资源关联的标签
-* Read: [DescribeCcns](https://cloud.tencent.com/document/api/215/19199) - 查询CCN列表
-* Read: [DescribeResourceTagsByResourceIds](https://cloud.tencent.com/document/api/651/35319) - 批量查看资源关联的标签
-* Update: [ModifyCcnAttribute](https://cloud.tencent.com/document/api/215/19195) - 修改CCN属性
-* Update: [ModifyCcnRegionBandwidthLimitsType](https://cloud.tencent.com/document/api/215/40485) - 后付费产品修改带宽限速策略
-* Update: [ModifyResourceTags](https://cloud.tencent.com/document/api/651/35322) - 批量修改资源关联的标签
-* Delete: [DeleteCcn](https://cloud.tencent.com/document/api/215/19203) - 删除CCN
-* Delete: [DescribeCcns](https://cloud.tencent.com/document/api/215/19199) - 查询CCN列表
+* Create: [CreateCcn](https://cloud.tencent.com/document/api/215/19204) - This API is used to create a CCN instance.
+* Create: [ModifyCcnAttribute](https://cloud.tencent.com/document/api/215/19195) - This API (ModifyCcnAttribute) is used to modify CCN attributes.
+* Create: [ModifyResourceTags](https://cloud.tencent.com/document/api/651/35322) - This API is used to modify all tags associated with a resource.
+* Read: [DescribeCcns](https://cloud.tencent.com/document/api/215/19199) - This API (DescribeCcns) is used to query the CCN list.
+* Read: [DescribeResourceTagsByResourceIds](https://cloud.tencent.com/document/api/651/35319) - This API is used to query the tag key-value pairs associated with an existing resource.
+* Update: [ModifyCcnAttribute](https://cloud.tencent.com/document/api/215/19195) - This API (ModifyCcnAttribute) is used to modify CCN attributes.
+* Update: [ModifyCcnRegionBandwidthLimitsType](https://cloud.tencent.com/document/api/215/40485) - This API is used to modify the bandwidth limit policy of a postpaid CCN instance.
+* Update: [ModifyResourceTags](https://cloud.tencent.com/document/api/651/35322) - This API is used to modify all tags associated with a resource.
+* Delete: [DeleteCcn](https://cloud.tencent.com/document/api/215/19203) - This API (DeleteCcn) is used to delete CCNs.
+* Delete: [DescribeCcns](https://cloud.tencent.com/document/api/215/19199) - This API (DescribeCcns) is used to query the CCN list.
 
 ## Import
 

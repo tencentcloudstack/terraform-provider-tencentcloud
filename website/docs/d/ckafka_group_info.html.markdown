@@ -52,5 +52,5 @@ In addition to all arguments above, the following attributes are exported:
 
 This data source queries the following TencentCloud APIs:
 
-* Read: [DescribeGroupInfo](https://cloud.tencent.com/document/api/597/40838) - 获取消费分组信息
+* Read: [DescribeGroupInfo](https://cloud.tencent.com/document/api/597/40838) - This API is used to get consumer group information.
 

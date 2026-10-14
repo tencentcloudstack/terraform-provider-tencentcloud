@@ -53,5 +53,5 @@ In addition to all arguments above, the following attributes are exported:
 
 This data source queries the following TencentCloud APIs:
 
-* Read: [DescribeProjectSecurityGroups](https://cloud.tencent.com/document/api/238/46811) - 查询项目安全组信息
+* Read: [DescribeProjectSecurityGroups](https://cloud.tencent.com/document/api/238/46811) - This API is used to query security group details of a project.
 

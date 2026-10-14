@@ -46,5 +46,5 @@ In addition to all arguments above, the following attributes are exported:
 
 This data source queries the following TencentCloud APIs:
 
-* Read: [DescribeClassicLinkInstances](https://cloud.tencent.com/document/api/215/15776) - 查询基础网络互通列表
+* Read: [DescribeClassicLinkInstances](https://cloud.tencent.com/document/api/215/15776) - This API (DescribeClassicLinkInstances) is used to query the Classiclink instances list.
 

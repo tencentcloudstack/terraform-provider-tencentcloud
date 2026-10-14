@@ -42,9 +42,9 @@ In addition to all arguments above, the following attributes are exported:
 
 This resource interacts with the following TencentCloud APIs:
 
-* Create: [EnableOptimalSwitching](https://cloud.tencent.com/document/api/267/100421) - 启用择优调度
-* Read: [DescribeBackupStreamList](https://cloud.tencent.com/document/api/267/100422) - 查询直播中的主备流
-* Update: [EnableOptimalSwitching](https://cloud.tencent.com/document/api/267/100421) - 启用择优调度
+* Create: [EnableOptimalSwitching](https://cloud.tencent.com/document/api/267/100421)
+* Read: [DescribeBackupStreamList](https://cloud.tencent.com/document/api/267/100422)
+* Update: [EnableOptimalSwitching](https://cloud.tencent.com/document/api/267/100421)
 
 ## Import
 

@@ -58,5 +58,5 @@ Note: This field may return null, indicating that no valid values can be obtaine
 
 This data source queries the following TencentCloud APIs:
 
-* Read: [ListOrganizationService](https://cloud.tencent.com/document/api/850/109561) - 获取集团服务设置列表
+* Read: [ListOrganizationService](https://cloud.tencent.com/document/api/850/109561) - This API is used to obtain the list of organization service settings.
 

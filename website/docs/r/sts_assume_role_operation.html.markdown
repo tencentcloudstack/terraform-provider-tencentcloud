@@ -57,5 +57,5 @@ In addition to all arguments above, the following attributes are exported:
 
 This resource interacts with the following TencentCloud APIs:
 
-* Create: [AssumeRole](https://cloud.tencent.com/document/api/1312/48197) - 申请扮演角色临时访问凭证
+* Create: [AssumeRole](https://cloud.tencent.com/document/api/1312/48197) - This API is used to request temporary access credentials for assuming a role.
 

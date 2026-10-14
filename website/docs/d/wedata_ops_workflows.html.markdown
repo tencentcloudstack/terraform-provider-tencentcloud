@@ -51,5 +51,5 @@ In addition to all arguments above, the following attributes are exported:
 
 This data source queries the following TencentCloud APIs:
 
-* Read: [ListOpsWorkflows](https://cloud.tencent.com/document/api/1267/123574) - 获取工作流列表
+* Read: [ListOpsWorkflows](https://cloud.tencent.com/document/api/1267/123574) - Get Workflows under a Project by Project ID.
 

@@ -44,5 +44,5 @@ In addition to all arguments above, the following attributes are exported:
 
 This data source queries the following TencentCloud APIs:
 
-* Read: [DescribeRegions](https://cloud.tencent.com/document/api/1596/77930) - 查询产品支持的地域列表
+* Read: [DescribeRegions](https://cloud.tencent.com/document/api/1596/77930) - This interface (DescribeRegions) is used for querying the supported regions of each product.
 

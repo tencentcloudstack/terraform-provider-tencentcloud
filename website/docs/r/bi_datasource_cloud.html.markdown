@@ -74,8 +74,8 @@ In addition to all arguments above, the following attributes are exported:
 
 This resource interacts with the following TencentCloud APIs:
 
-* Create: [CreateDatasourceCloud](https://cloud.tencent.com/document/api/590/98853) - 创建云数据库
-* Read: [DescribeDatasourceList](https://cloud.tencent.com/document/api/590/98840) - 查询数据源列表
-* Update: [ModifyDatasourceCloud](https://cloud.tencent.com/document/api/590/98850) - 更新云数据库
-* Delete: [DeleteDatasource](https://cloud.tencent.com/document/api/590/98852) - 删除数据源
+* Create: [CreateDatasourceCloud](https://cloud.tencent.com/document/api/590/98853) - This API is used to create a cloud database.
+* Read: [DescribeDatasourceList](https://cloud.tencent.com/document/api/590/98840) - This API is used to query a data source list.
+* Update: [ModifyDatasourceCloud](https://cloud.tencent.com/document/api/590/98850) - This API is used to update a cloud database.
+* Delete: [DeleteDatasource](https://cloud.tencent.com/document/api/590/98852) - This API is used to delete a data source.
 

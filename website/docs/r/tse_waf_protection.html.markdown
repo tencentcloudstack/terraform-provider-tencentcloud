@@ -42,9 +42,9 @@ In addition to all arguments above, the following attributes are exported:
 
 This resource interacts with the following TencentCloud APIs:
 
-* Create: [CloseWafProtection](https://cloud.tencent.com/document/api/1364/101822) - 关闭 WAF 防护
-* Create: [OpenWafProtection](https://cloud.tencent.com/document/api/1364/101820) - 开启 WAF 防护
-* Read: [DescribeWafProtection](https://cloud.tencent.com/document/api/1364/101826) - 获取 WAF 防护状态
-* Update: [CloseWafProtection](https://cloud.tencent.com/document/api/1364/101822) - 关闭 WAF 防护
-* Update: [OpenWafProtection](https://cloud.tencent.com/document/api/1364/101820) - 开启 WAF 防护
+* Create: [CloseWafProtection](https://cloud.tencent.com/document/api/1364/101822)
+* Create: [OpenWafProtection](https://cloud.tencent.com/document/api/1364/101820)
+* Read: [DescribeWafProtection](https://cloud.tencent.com/document/api/1364/101826) - Query WAF protection status
+* Update: [CloseWafProtection](https://cloud.tencent.com/document/api/1364/101822)
+* Update: [OpenWafProtection](https://cloud.tencent.com/document/api/1364/101820)
 

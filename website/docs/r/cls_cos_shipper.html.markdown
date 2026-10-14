@@ -181,10 +181,10 @@ In addition to all arguments above, the following attributes are exported:
 
 This resource interacts with the following TencentCloud APIs:
 
-* Create: [CreateShipper](https://cloud.tencent.com/document/api/614/58747) - 新建投递到COS的任务
-* Read: [DescribeShippers](https://cloud.tencent.com/document/api/614/58744) - 获取投递到COS的任务配置信息
-* Update: [ModifyShipper](https://cloud.tencent.com/document/api/614/58743) - 修改投递COS任务
-* Delete: [DeleteShipper](https://cloud.tencent.com/document/api/614/58746) - 删除投递COS任务
+* Create: [CreateShipper](https://cloud.tencent.com/document/api/614/58747) - This API is used to create a task to ship to COS. Note: To use this API, you need to check whether you have configured the role and permission for shipping to COS. If not, see **Viewing and Configuring Shipping Authorization** at https://intl.cloud.tencent.com/document/product/614/71623.?from_cn_redirect=1
+* Read: [DescribeShippers](https://cloud.tencent.com/document/api/614/58744) - This API is used to get the configuration of the task shipped to COS.
+* Update: [ModifyShipper](https://cloud.tencent.com/document/api/614/58743) - This API is used to modify an existing shipping rule. To use this API, you need to grant CLS the write permission of the specified bucket.
+* Delete: [DeleteShipper](https://cloud.tencent.com/document/api/614/58746) - This API is used to delete a COS shipping task.
 
 ## Import
 

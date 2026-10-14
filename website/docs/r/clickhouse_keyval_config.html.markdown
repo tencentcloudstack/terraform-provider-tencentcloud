@@ -46,13 +46,13 @@ In addition to all arguments above, the following attributes are exported:
 
 This resource interacts with the following TencentCloud APIs:
 
-* Create: [DescribeInstanceState](https://cloud.tencent.com/document/api/1299/89676) - 获取集群实例状态
-* Create: [ModifyInstanceKeyValConfigs](https://cloud.tencent.com/document/api/1299/86159) - KV模式修改配置接口
-* Read: [DescribeInstanceKeyValConfigs](https://cloud.tencent.com/document/api/1299/86160) - 在集群详情页面获取所有参数列表
-* Update: [DescribeInstanceState](https://cloud.tencent.com/document/api/1299/89676) - 获取集群实例状态
-* Update: [ModifyInstanceKeyValConfigs](https://cloud.tencent.com/document/api/1299/86159) - KV模式修改配置接口
-* Delete: [DescribeInstanceState](https://cloud.tencent.com/document/api/1299/89676) - 获取集群实例状态
-* Delete: [ModifyInstanceKeyValConfigs](https://cloud.tencent.com/document/api/1299/86159) - KV模式修改配置接口
+* Create: [DescribeInstanceState](https://cloud.tencent.com/document/api/1299/89676)
+* Create: [ModifyInstanceKeyValConfigs](https://cloud.tencent.com/document/api/1299/86159)
+* Read: [DescribeInstanceKeyValConfigs](https://cloud.tencent.com/document/api/1299/86160)
+* Update: [DescribeInstanceState](https://cloud.tencent.com/document/api/1299/89676)
+* Update: [ModifyInstanceKeyValConfigs](https://cloud.tencent.com/document/api/1299/86159)
+* Delete: [DescribeInstanceState](https://cloud.tencent.com/document/api/1299/89676)
+* Delete: [ModifyInstanceKeyValConfigs](https://cloud.tencent.com/document/api/1299/86159)
 
 ## Import
 

@@ -68,5 +68,5 @@ In addition to all arguments above, the following attributes are exported:
 
 This data source queries the following TencentCloud APIs:
 
-* Read: [DescribeRocketMQClusters](https://cloud.tencent.com/document/api/1179/63421) - 查询 RocketMQ 虚拟集群列表
+* Read: [DescribeRocketMQClusters](https://cloud.tencent.com/document/api/1179/63421) - Query the RocketMQ virtual cluster list.
 

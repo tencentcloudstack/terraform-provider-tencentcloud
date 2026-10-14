@@ -78,11 +78,11 @@ In addition to all arguments above, the following attributes are exported:
 
 This resource interacts with the following TencentCloud APIs:
 
-* Create: [CreatePacketFilterConfig](https://cloud.tencent.com/document/api/297/95334) - 添加DDoS防护的特征过滤规则
-* Create: [DescribeListPacketFilterConfig](https://cloud.tencent.com/document/api/297/95310) - 获取DDoS防护的特征过滤规则列表
-* Read: [DescribeListPacketFilterConfig](https://cloud.tencent.com/document/api/297/95310) - 获取DDoS防护的特征过滤规则列表
-* Delete: [DeletePacketFilterConfig](https://cloud.tencent.com/document/api/297/95323) - 删除DDoS防护的特征过滤规则
-* Delete: [DescribeListPacketFilterConfig](https://cloud.tencent.com/document/api/297/95310) - 获取DDoS防护的特征过滤规则列表
+* Create: [CreatePacketFilterConfig](https://cloud.tencent.com/document/api/297/95334) - This API is used to add Anti-DDoS feature filtering rules.
+* Create: [DescribeListPacketFilterConfig](https://cloud.tencent.com/document/api/297/95310) - This API is used to get a list of Anti-DDoS feature filtering rules.
+* Read: [DescribeListPacketFilterConfig](https://cloud.tencent.com/document/api/297/95310) - This API is used to get a list of Anti-DDoS feature filtering rules.
+* Delete: [DeletePacketFilterConfig](https://cloud.tencent.com/document/api/297/95323) - This API is used to delete Anti-DDoS feature filtering rules.
+* Delete: [DescribeListPacketFilterConfig](https://cloud.tencent.com/document/api/297/95310) - This API is used to get a list of Anti-DDoS feature filtering rules.
 
 ## Import
 

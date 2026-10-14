@@ -43,5 +43,5 @@ In addition to all arguments above, the following attributes are exported:
 
 This data source queries the following TencentCloud APIs:
 
-* Read: [DescribeNatGatewayDirectConnectGatewayRoute](https://cloud.tencent.com/document/api/215/62616) - 查询专线绑定NAT路由
+* Read: [DescribeNatGatewayDirectConnectGatewayRoute](https://cloud.tencent.com/document/api/215/62616) - This API is used to query the routes between a NAT gateway and Direct Connect.
 

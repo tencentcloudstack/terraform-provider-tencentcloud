@@ -43,5 +43,5 @@ In addition to all arguments above, the following attributes are exported:
 
 This data source queries the following TencentCloud APIs:
 
-* Read: [DescribeFwEdgeIps](https://cloud.tencent.com/document/api/1132/97841) - 串行防火墙开关列表
+* Read: [DescribeFwEdgeIps](https://cloud.tencent.com/document/api/1132/97841)
 

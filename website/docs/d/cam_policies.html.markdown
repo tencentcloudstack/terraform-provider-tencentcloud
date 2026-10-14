@@ -61,5 +61,5 @@ In addition to all arguments above, the following attributes are exported:
 
 This data source queries the following TencentCloud APIs:
 
-* Read: [ListPolicies](https://cloud.tencent.com/document/api/598/34570) - 查询策略列表
+* Read: [ListPolicies](https://cloud.tencent.com/document/api/598/34570) - This API is used to query the policy list.
 

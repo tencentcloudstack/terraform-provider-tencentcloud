@@ -138,11 +138,11 @@ In addition to all arguments above, the following attributes are exported:
 
 This resource interacts with the following TencentCloud APIs:
 
-* Create: [DisableWorkflow](https://cloud.tencent.com/document/api/862/37580) - 禁用工作流
-* Create: [EnableWorkflow](https://cloud.tencent.com/document/api/862/37579) - 启用工作流
-* Read: [DescribeWorkflows](https://cloud.tencent.com/document/api/862/37581) - 获取工作流列表
-* Update: [DisableWorkflow](https://cloud.tencent.com/document/api/862/37580) - 禁用工作流
-* Update: [EnableWorkflow](https://cloud.tencent.com/document/api/862/37579) - 启用工作流
+* Create: [DisableWorkflow](https://cloud.tencent.com/document/api/862/37580) - This API is used to disable a workflow.
+* Create: [EnableWorkflow](https://cloud.tencent.com/document/api/862/37579)
+* Read: [DescribeWorkflows](https://cloud.tencent.com/document/api/862/37581) - This API is used to get the list of workflow details by workflow ID.
+* Update: [DisableWorkflow](https://cloud.tencent.com/document/api/862/37580) - This API is used to disable a workflow.
+* Update: [EnableWorkflow](https://cloud.tencent.com/document/api/862/37579)
 
 ## Import
 

@@ -40,9 +40,9 @@ In addition to all arguments above, the following attributes are exported:
 
 This resource interacts with the following TencentCloud APIs:
 
-* Create: [ModifyDomainPostAction](https://cloud.tencent.com/document/api/627/103434) - 修改域名投递状态
-* Read: [DescribeDomains](https://cloud.tencent.com/document/api/627/72840) - 获取域名列表
-* Update: [ModifyDomainPostAction](https://cloud.tencent.com/document/api/627/103434) - 修改域名投递状态
+* Create: [ModifyDomainPostAction](https://cloud.tencent.com/document/api/627/103434) - This API is used to modify the domain shipping status.
+* Read: [DescribeDomains](https://cloud.tencent.com/document/api/627/72840) - Query detailed information of all user domains
+* Update: [ModifyDomainPostAction](https://cloud.tencent.com/document/api/627/103434) - This API is used to modify the domain shipping status.
 
 ## Import
 

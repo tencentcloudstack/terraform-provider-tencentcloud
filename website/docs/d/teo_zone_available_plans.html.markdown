@@ -47,5 +47,5 @@ In addition to all arguments above, the following attributes are exported:
 
 This data source queries the following TencentCloud APIs:
 
-* Read: [DescribeAvailablePlans](https://cloud.tencent.com/document/api/1552/80606) - 查询当前账户可购买套餐信息列表
+* Read: [DescribeAvailablePlans](https://cloud.tencent.com/document/api/1552/80606) - This API is used to query plan options available for purchase.
 

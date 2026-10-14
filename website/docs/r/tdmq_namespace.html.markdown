@@ -70,11 +70,11 @@ In addition to all arguments above, the following attributes are exported:
 
 This resource interacts with the following TencentCloud APIs:
 
-* Create: [CreateEnvironment](https://cloud.tencent.com/document/api/1179/46081) - 创建命名空间
-* Read: [DescribeEnvironments](https://cloud.tencent.com/document/api/1179/46078) - 获取命名空间列表
-* Update: [ModifyEnvironmentAttributes](https://cloud.tencent.com/document/api/1179/46077) - 修改命名空间属性
-* Update: [ModifyResourceTags](https://cloud.tencent.com/document/api/651/35322) - 批量修改资源关联的标签
-* Delete: [DeleteEnvironments](https://cloud.tencent.com/document/api/1179/46080) - 删除命名空间
+* Create: [CreateEnvironment](https://cloud.tencent.com/document/api/1179/46081) - This API is used to create a TDMQ namespace.
+* Read: [DescribeEnvironments](https://cloud.tencent.com/document/api/1179/46078) - This API is used to get the list of namespaces under a tenant.
+* Update: [ModifyEnvironmentAttributes](https://cloud.tencent.com/document/api/1179/46077) - This API is used to modify the attributes of the specified namespace.
+* Update: [ModifyResourceTags](https://cloud.tencent.com/document/api/651/35322) - This API is used to modify all tags associated with a resource.
+* Delete: [DeleteEnvironments](https://cloud.tencent.com/document/api/1179/46080) - This API is used to batch delete namespaces under a tenant.
 
 ## Import
 

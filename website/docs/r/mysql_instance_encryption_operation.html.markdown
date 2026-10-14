@@ -88,7 +88,7 @@ In addition to all arguments above, the following attributes are exported:
 
 This resource interacts with the following TencentCloud APIs:
 
-* Create: [DescribeDBInstanceInfo](https://cloud.tencent.com/document/api/236/44160) - 查询实例基本信息
-* Create: [OpenDBInstanceEncryption](https://cloud.tencent.com/document/api/236/86608) - 启用数据存储加密
-* Read: [DescribeDBInstanceInfo](https://cloud.tencent.com/document/api/236/44160) - 查询实例基本信息
+* Create: [DescribeDBInstanceInfo](https://cloud.tencent.com/document/api/236/44160) - This API is used to query the basic information of an instance, including instance ID, instance name, and whether encryption is enabled. Querying read-only instances is not supported.
+* Create: [OpenDBInstanceEncryption](https://cloud.tencent.com/document/api/236/86608) - This API is used to enable data storage encryption for instance and support users to specify custom keys.
+* Read: [DescribeDBInstanceInfo](https://cloud.tencent.com/document/api/236/44160) - This API is used to query the basic information of an instance, including instance ID, instance name, and whether encryption is enabled. Querying read-only instances is not supported.
 

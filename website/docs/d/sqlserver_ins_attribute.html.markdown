@@ -51,5 +51,5 @@ Note: This field may return null, indicating that a valid value cannot be obtain
 
 This data source queries the following TencentCloud APIs:
 
-* Read: [DescribeDBInstancesAttribute](https://cloud.tencent.com/document/api/238/90299) - 查询实例附属属性
+* Read: [DescribeDBInstancesAttribute](https://cloud.tencent.com/document/api/238/90299) - This API is used to query the attributes of an instance.
 

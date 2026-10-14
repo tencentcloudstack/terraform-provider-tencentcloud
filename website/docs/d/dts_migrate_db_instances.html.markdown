@@ -61,5 +61,5 @@ In addition to all arguments above, the following attributes are exported:
 
 This data source queries the following TencentCloud APIs:
 
-* Read: [DescribeMigrateDBInstances](https://cloud.tencent.com/document/api/571/82087) - 查询可迁移的实例列表
+* Read: [DescribeMigrateDBInstances](https://cloud.tencent.com/document/api/571/82087) - This API is used to query migratable database instances.
 

@@ -107,21 +107,21 @@ In addition to all arguments above, the following attributes are exported:
 
 This resource interacts with the following TencentCloud APIs:
 
-* Create: [CreateService](https://cloud.tencent.com/document/api/628/45201) - 创建服务
-* Create: [DescribeService](https://cloud.tencent.com/document/api/628/45199) - 查询服务详情
-* Create: [ModifyResourceTags](https://cloud.tencent.com/document/api/651/35322) - 批量修改资源关联的标签
-* Create: [ModifyServiceEnvironmentStrategy](https://cloud.tencent.com/document/api/628/45178) - 修改服务限流策略
-* Read: [DescribeApiUsagePlan](https://cloud.tencent.com/document/api/628/45240) - 查询 API 使用计划详情
-* Read: [DescribeResourceTagsByResourceIds](https://cloud.tencent.com/document/api/651/35319) - 批量查看资源关联的标签
-* Read: [DescribeService](https://cloud.tencent.com/document/api/628/45199) - 查询服务详情
-* Read: [DescribeServiceEnvironmentStrategy](https://cloud.tencent.com/document/api/628/45180) - 展示服务限流策略
-* Read: [DescribeServiceUsagePlan](https://cloud.tencent.com/document/api/628/45195) - 查询服务使用计划详情
-* Update: [ModifyResourceTags](https://cloud.tencent.com/document/api/651/35322) - 批量修改资源关联的标签
-* Update: [ModifyService](https://cloud.tencent.com/document/api/628/45193) - 修改服务
-* Update: [ModifyServiceEnvironmentStrategy](https://cloud.tencent.com/document/api/628/45178) - 修改服务限流策略
-* Delete: [DeleteService](https://cloud.tencent.com/document/api/628/45200) - 删除服务
-* Delete: [ModifyResourceTags](https://cloud.tencent.com/document/api/651/35322) - 批量修改资源关联的标签
-* Delete: [UnReleaseService](https://cloud.tencent.com/document/api/628/45191) - 下线服务
+* Create: [CreateService](https://cloud.tencent.com/document/api/628/45201) - This API is used to create a service.
+* Create: [DescribeService](https://cloud.tencent.com/document/api/628/45199) - This API is used to query the details of a service, such as its description, domain name, protocol, creation time, and releases.
+* Create: [ModifyResourceTags](https://cloud.tencent.com/document/api/651/35322) - This API is used to modify all tags associated with a resource.
+* Create: [ModifyServiceEnvironmentStrategy](https://cloud.tencent.com/document/api/628/45178) - This API is used to modify a service throttling policy.
+* Read: [DescribeApiUsagePlan](https://cloud.tencent.com/document/api/628/45240) - This API is used to query the details of API usage plans in a service.
+* Read: [DescribeResourceTagsByResourceIds](https://cloud.tencent.com/document/api/651/35319) - This API is used to query the tag key-value pairs associated with an existing resource.
+* Read: [DescribeService](https://cloud.tencent.com/document/api/628/45199) - This API is used to query the details of a service, such as its description, domain name, protocol, creation time, and releases.
+* Read: [DescribeServiceEnvironmentStrategy](https://cloud.tencent.com/document/api/628/45180) - This API is used to display a service throttling policy.
+* Read: [DescribeServiceUsagePlan](https://cloud.tencent.com/document/api/628/45195) - This API is used to query the details of usage plans in a service.
+* Update: [ModifyResourceTags](https://cloud.tencent.com/document/api/651/35322) - This API is used to modify all tags associated with a resource.
+* Update: [ModifyService](https://cloud.tencent.com/document/api/628/45193) - This API is used to modify the relevant information of a service. After a service is created, its name, description, and service type can be modified.
+* Update: [ModifyServiceEnvironmentStrategy](https://cloud.tencent.com/document/api/628/45178) - This API is used to modify a service throttling policy.
+* Delete: [DeleteService](https://cloud.tencent.com/document/api/628/45200) - This API is used to delete a service in API Gateway.
+* Delete: [ModifyResourceTags](https://cloud.tencent.com/document/api/651/35322) - This API is used to modify all tags associated with a resource.
+* Delete: [UnReleaseService](https://cloud.tencent.com/document/api/628/45191) - This API is used to deactivate a service.
 
 ## Import
 

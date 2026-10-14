@@ -38,6 +38,6 @@ In addition to all arguments above, the following attributes are exported:
 
 This resource interacts with the following TencentCloud APIs:
 
-* Create: [GetEmailIdentity](https://cloud.tencent.com/document/api/1288/51046) - 获取域名配置详情
-* Create: [UpdateEmailIdentity](https://cloud.tencent.com/document/api/1288/51044) - 请求验证
+* Create: [GetEmailIdentity](https://cloud.tencent.com/document/api/1288/51046) - This API is used to get the configuration details of a sender domain.
+* Create: [UpdateEmailIdentity](https://cloud.tencent.com/document/api/1288/51044) - This API is used to verify whether your DNS configuration is correct.
 

@@ -40,11 +40,11 @@ In addition to all arguments above, the following attributes are exported:
 
 This resource interacts with the following TencentCloud APIs:
 
-* Create: [CreateBlueprint](https://cloud.tencent.com/document/api/1207/54385) - 创建镜像
-* Create: [DescribeBlueprints](https://cloud.tencent.com/document/api/1207/47689) - 查询镜像信息
-* Read: [DescribeBlueprints](https://cloud.tencent.com/document/api/1207/47689) - 查询镜像信息
-* Update: [ModifyBlueprintAttribute](https://cloud.tencent.com/document/api/1207/54383) - 修改镜像属性
-* Delete: [DeleteBlueprints](https://cloud.tencent.com/document/api/1207/54384) - 删除镜像
+* Create: [CreateBlueprint](https://cloud.tencent.com/document/api/1207/54385) - This API is used to create an image.
+* Create: [DescribeBlueprints](https://cloud.tencent.com/document/api/1207/47689) - This API is used to query the information of an image.
+* Read: [DescribeBlueprints](https://cloud.tencent.com/document/api/1207/47689) - This API is used to query the information of an image.
+* Update: [ModifyBlueprintAttribute](https://cloud.tencent.com/document/api/1207/54383) - This API is used to modify an image attribute.
+* Delete: [DeleteBlueprints](https://cloud.tencent.com/document/api/1207/54384) - This API is used to delete an image.
 
 ## Import
 

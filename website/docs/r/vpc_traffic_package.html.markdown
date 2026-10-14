@@ -38,9 +38,9 @@ In addition to all arguments above, the following attributes are exported:
 
 This resource interacts with the following TencentCloud APIs:
 
-* Create: [CreateTrafficPackages](https://cloud.tencent.com/document/api/215/85309) - 创建共享流量包
-* Read: [DescribeTrafficPackages](https://cloud.tencent.com/document/api/215/80090) - 查询共享流量包
-* Delete: [DeleteTrafficPackages](https://cloud.tencent.com/document/api/215/91087) - 删除共享流量包
+* Create: [CreateTrafficPackages](https://cloud.tencent.com/document/api/215/85309)
+* Read: [DescribeTrafficPackages](https://cloud.tencent.com/document/api/215/80090) - This API is used to query the details of shared traffic packages.
+* Delete: [DeleteTrafficPackages](https://cloud.tencent.com/document/api/215/91087) - This API is used to delete traffic packages. Note that only non-valid traffic packages can be deleted.
 
 ## Import
 

@@ -39,5 +39,5 @@ In addition to all arguments above, the following attributes are exported:
 
 This data source queries the following TencentCloud APIs:
 
-* Read: [DescribeInstancesDiskNum](https://cloud.tencent.com/document/api/1207/66083) - 查询实例挂载云硬盘数量
+* Read: [DescribeInstancesDiskNum](https://cloud.tencent.com/document/api/1207/66083) - This API is used to query the number of cloud disks attached to instances.
 

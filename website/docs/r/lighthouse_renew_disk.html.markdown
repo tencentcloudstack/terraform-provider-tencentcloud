@@ -51,6 +51,6 @@ In addition to all arguments above, the following attributes are exported:
 
 This resource interacts with the following TencentCloud APIs:
 
-* Create: [DescribeDisks](https://cloud.tencent.com/document/api/1207/66093) - 查询云硬盘
-* Create: [RenewDisks](https://cloud.tencent.com/document/api/1207/90903) - 续费云硬盘
+* Create: [DescribeDisks](https://cloud.tencent.com/document/api/1207/66093) - This API is used to query the information of one or more cloud disks.
+* Create: [RenewDisks](https://cloud.tencent.com/document/api/1207/90903) - This API is used to renew one or more Lighthouse cloud disks.
 

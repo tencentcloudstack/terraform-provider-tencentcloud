@@ -42,5 +42,5 @@ In addition to all arguments above, the following attributes are exported:
 
 This data source queries the following TencentCloud APIs:
 
-* Read: [DescribeBackupOverview](https://cloud.tencent.com/document/api/236/41229) - 查询备份概览
+* Read: [DescribeBackupOverview](https://cloud.tencent.com/document/api/236/41229) - This API is used to query the backup overview of a user. It will return the user's current total number of backups, total capacity used by backups, capacity in the free tier, and paid capacity (all capacity values are in bytes).
 

@@ -45,5 +45,5 @@ In addition to all arguments above, the following attributes are exported:
 
 This data source queries the following TencentCloud APIs:
 
-* Read: [DescribeZones](https://cloud.tencent.com/document/api/1596/77929) - 查询产品可用区列表
+* Read: [DescribeZones](https://cloud.tencent.com/document/api/1596/77929) - This interface (DescribeZones) is used for querying product availability zone information.
 

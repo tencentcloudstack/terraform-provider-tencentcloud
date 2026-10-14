@@ -45,10 +45,10 @@ In addition to all arguments above, the following attributes are exported:
 
 This resource interacts with the following TencentCloud APIs:
 
-* Create: [CreatePlugin](https://cloud.tencent.com/document/api/628/58234) - 创建插件
-* Read: [DescribePlugins](https://cloud.tencent.com/document/api/628/52505) - 查询插件列表和详情
-* Update: [ModifyPlugin](https://cloud.tencent.com/document/api/628/58270) - 修改插件
-* Delete: [DeletePlugin](https://cloud.tencent.com/document/api/628/58275) - 删除插件
+* Create: [CreatePlugin](https://cloud.tencent.com/document/api/628/58234) - This API is used to create an API Gateway plugin.
+* Read: [DescribePlugins](https://cloud.tencent.com/document/api/628/52505)
+* Update: [ModifyPlugin](https://cloud.tencent.com/document/api/628/58270) - This API is used to modify a plugin.
+* Delete: [DeletePlugin](https://cloud.tencent.com/document/api/628/58275) - This API is used to delete an API Gateway plugin.
 
 ## Import
 

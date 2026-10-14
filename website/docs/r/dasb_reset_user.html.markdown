@@ -36,5 +36,5 @@ In addition to all arguments above, the following attributes are exported:
 
 This resource interacts with the following TencentCloud APIs:
 
-* Create: [ResetUser](https://cloud.tencent.com/document/api/1025/86960) - 重置用户
+* Create: [ResetUser](https://cloud.tencent.com/document/api/1025/86960)
 

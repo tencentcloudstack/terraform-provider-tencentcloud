@@ -68,9 +68,9 @@ The `timeouts` block allows you to specify [timeouts](https://developer.hashicor
 
 This resource interacts with the following TencentCloud APIs:
 
-* Create: [ConfirmMultiPathGatewayOriginACL](https://cloud.tencent.com/document/api/1552/123860) - 确认多通道安全加速网关回源 IP 网段更新
-* Read: [DescribeMultiPathGatewayOriginACL](https://cloud.tencent.com/document/api/1552/123859) - 查询多通道安全加速网关源站防护详情
-* Update: [ConfirmMultiPathGatewayOriginACL](https://cloud.tencent.com/document/api/1552/123860) - 确认多通道安全加速网关回源 IP 网段更新
+* Create: [ConfirmMultiPathGatewayOriginACL](https://cloud.tencent.com/document/api/1552/123860) - This API is used to confirm the latest origin IP range is updated to the origin server firewall when the multi-channel security acceleration gateway's origin IP range changes.
+* Read: [DescribeMultiPathGatewayOriginACL](https://cloud.tencent.com/document/api/1552/123859) - This API is used to query the binding relationship between a multi-channel security acceleration gateway instance and the origin server IP range, as well as the IP range details. If the MultiPathGatewayNextOriginACL field has a return value, the latest origin server IP range must be synchronized to the origin server firewall configuration.
+* Update: [ConfirmMultiPathGatewayOriginACL](https://cloud.tencent.com/document/api/1552/123860) - This API is used to confirm the latest origin IP range is updated to the origin server firewall when the multi-channel security acceleration gateway's origin IP range changes.
 
 ## Import
 

@@ -99,5 +99,5 @@ In addition to all arguments above, the following attributes are exported:
 
 This data source queries the following TencentCloud APIs:
 
-* Read: [DescribeMediaMetaData](https://cloud.tencent.com/document/api/862/40637) - 获取媒体元信息
+* Read: [DescribeMediaMetaData](https://cloud.tencent.com/document/api/862/40637) - This API is used to obtain media meta information, including video image width, height, encoding format, duration, and frame rate.
 

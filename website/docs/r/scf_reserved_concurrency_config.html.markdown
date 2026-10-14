@@ -40,9 +40,9 @@ In addition to all arguments above, the following attributes are exported:
 
 This resource interacts with the following TencentCloud APIs:
 
-* Create: [PutReservedConcurrencyConfig](https://cloud.tencent.com/document/api/583/51245) - 设置最大独占配额
-* Read: [GetReservedConcurrencyConfig](https://cloud.tencent.com/document/api/583/51247) - 获取函数最大独占配额详情
-* Delete: [DeleteReservedConcurrencyConfig](https://cloud.tencent.com/document/api/583/51249) - 删除函数最大独占配额
+* Create: [PutReservedConcurrencyConfig](https://cloud.tencent.com/document/api/583/51245) - This API is used to configure the reserved quota of a function.
+* Read: [GetReservedConcurrencyConfig](https://cloud.tencent.com/document/api/583/51247) - This API is used to obtain the reserved quota details of a function.
+* Delete: [DeleteReservedConcurrencyConfig](https://cloud.tencent.com/document/api/583/51249) - This API is used to delete the configuration of reserved quota.
 
 ## Import
 

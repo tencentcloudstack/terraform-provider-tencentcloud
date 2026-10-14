@@ -62,12 +62,12 @@ In addition to all arguments above, the following attributes are exported:
 
 This resource interacts with the following TencentCloud APIs:
 
-* Create: [CreateUserSyncProvisioning](https://cloud.tencent.com/document/api/850/109950) - 创建CAM用户同步
-* Create: [GetProvisioningTaskStatus](https://cloud.tencent.com/document/api/850/109948) - 查询用户同步异步任务的状态
-* Read: [GetUserSyncProvisioning](https://cloud.tencent.com/document/api/850/109947) - 查询CAM用户同步
-* Update: [UpdateUserSyncProvisioning](https://cloud.tencent.com/document/api/850/109945) - 更新CAM用户同步
-* Delete: [DeleteUserSyncProvisioning](https://cloud.tencent.com/document/api/850/109949) - 删除CAM用户同步
-* Delete: [GetProvisioningTaskStatus](https://cloud.tencent.com/document/api/850/109948) - 查询用户同步异步任务的状态
+* Create: [CreateUserSyncProvisioning](https://cloud.tencent.com/document/api/850/109950) - This API is used to create sub-user synchronization tasks.
+* Create: [GetProvisioningTaskStatus](https://cloud.tencent.com/document/api/850/109948) - This API is used to query the status of async tasks of user synchronization.
+* Read: [GetUserSyncProvisioning](https://cloud.tencent.com/document/api/850/109947) - This API is used to query the CAM user synchronization.
+* Update: [UpdateUserSyncProvisioning](https://cloud.tencent.com/document/api/850/109945) - This API is used to create sub-user synchronization tasks.
+* Delete: [DeleteUserSyncProvisioning](https://cloud.tencent.com/document/api/850/109949) - This API is used to delete sub-user synchronization tasks.
+* Delete: [GetProvisioningTaskStatus](https://cloud.tencent.com/document/api/850/109948) - This API is used to query the status of async tasks of user synchronization.
 
 ## Import
 

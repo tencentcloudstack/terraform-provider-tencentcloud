@@ -87,5 +87,5 @@ In addition to all arguments above, the following attributes are exported:
 
 This data source queries the following TencentCloud APIs:
 
-* Read: [DescribeViews](https://cloud.tencent.com/document/api/845/66674) - 查询集群视图
+* Read: [DescribeViews](https://cloud.tencent.com/document/api/845/66674) - This API is used to query view data from three dimensions: cluster, node, and Kibana.
 

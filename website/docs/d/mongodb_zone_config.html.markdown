@@ -47,5 +47,5 @@ In addition to all arguments above, the following attributes are exported:
 
 This data source queries the following TencentCloud APIs:
 
-* Read: [DescribeSpecInfo](https://cloud.tencent.com/document/api/240/38567) - 查询云数据库的售卖规格
+* Read: [DescribeSpecInfo](https://cloud.tencent.com/document/api/240/38567) - This API is used to query the sales specification of an instance.
 

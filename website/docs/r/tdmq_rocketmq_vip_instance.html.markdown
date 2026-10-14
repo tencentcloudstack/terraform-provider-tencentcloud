@@ -95,13 +95,13 @@ In addition to all arguments above, the following attributes are exported:
 
 This resource interacts with the following TencentCloud APIs:
 
-* Create: [CreateRocketMQVipInstance](https://cloud.tencent.com/document/api/1179/95721) - 创建 RocketMQ 专享或通用集群
-* Create: [DescribeRocketMQVipInstances](https://cloud.tencent.com/document/api/1179/80903) - 查询 RocketMQ 专享和通用集群列表
-* Read: [DescribeRocketMQVipInstanceDetail](https://cloud.tencent.com/document/api/1179/86725) - 查询 RocketMQ 专享或通用集群信息
-* Read: [DescribeRocketMQVipInstances](https://cloud.tencent.com/document/api/1179/80903) - 查询 RocketMQ 专享和通用集群列表
-* Update: [DescribeRocketMQVipInstances](https://cloud.tencent.com/document/api/1179/80903) - 查询 RocketMQ 专享和通用集群列表
-* Update: [ModifyRocketMQCluster](https://cloud.tencent.com/document/api/1179/63417) - 修改 RocketMQ 虚拟集群属性
-* Update: [ModifyRocketMQInstanceSpec](https://cloud.tencent.com/document/api/1179/90461) - 修改 RocketMQ 专享集群规格
-* Delete: [DeleteRocketMQVipInstance](https://cloud.tencent.com/document/api/1179/95802) - 删除 RocketMQ 专享或通用集群
-* Delete: [DescribeRocketMQVipInstanceDetail](https://cloud.tencent.com/document/api/1179/86725) - 查询 RocketMQ 专享或通用集群信息
+* Create: [CreateRocketMQVipInstance](https://cloud.tencent.com/document/api/1179/95721) - This API is used to create a RocketMQ 4.x cluster.
+* Create: [DescribeRocketMQVipInstances](https://cloud.tencent.com/document/api/1179/80903) - Query the RocketMQ 4.x cluster list.
+* Read: [DescribeRocketMQVipInstanceDetail](https://cloud.tencent.com/document/api/1179/86725) - Query RocketMQ cluster info.
+* Read: [DescribeRocketMQVipInstances](https://cloud.tencent.com/document/api/1179/80903) - Query the RocketMQ 4.x cluster list.
+* Update: [DescribeRocketMQVipInstances](https://cloud.tencent.com/document/api/1179/80903) - Query the RocketMQ 4.x cluster list.
+* Update: [ModifyRocketMQCluster](https://cloud.tencent.com/document/api/1179/63417) - This API is used to modify the attributes of a RocketMQ cluster.
+* Update: [ModifyRocketMQInstanceSpec](https://cloud.tencent.com/document/api/1179/90461) - This API is used to modify the RocketMQ dedicated cluster configuration, supporting upgrades of instance specification, number of nodes and storage, as well as downgrades of instance specification. After initiating order and completing payment, it will enter the instance configuration change process. You can check whether the change is completed via [DescribeRocketMQVipInstances](https://www.tencentcloud.com/document/api/1179/80903?from_cn_redirect=1).
+* Delete: [DeleteRocketMQVipInstance](https://cloud.tencent.com/document/api/1179/95802) - This API is used to delete a RocketMQ dedicated or generic cluster.
+* Delete: [DescribeRocketMQVipInstanceDetail](https://cloud.tencent.com/document/api/1179/86725) - Query RocketMQ cluster info.
 

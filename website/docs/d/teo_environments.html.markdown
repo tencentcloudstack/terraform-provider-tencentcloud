@@ -49,5 +49,5 @@ In addition to all arguments above, the following attributes are exported:
 
 This data source queries the following TencentCloud APIs:
 
-* Read: [DescribeEnvironments](https://cloud.tencent.com/document/api/1552/101862) - 查询环境信息
+* Read: [DescribeEnvironments](https://cloud.tencent.com/document/api/1552/101862) - This API is used to query environment information in version management mode. The response includes the environment ID, type, and current effective version. The version management feature is currently undergoing beta testing and is accessible only to users on the whitelist.
 

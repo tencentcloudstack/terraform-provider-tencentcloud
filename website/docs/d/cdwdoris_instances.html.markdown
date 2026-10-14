@@ -151,5 +151,5 @@ In addition to all arguments above, the following attributes are exported:
 
 This data source queries the following TencentCloud APIs:
 
-* Read: [DescribeInstances](https://cloud.tencent.com/document/api/1387/102382) - 获取集群列表
+* Read: [DescribeInstances](https://cloud.tencent.com/document/api/1387/102382) - This API is used to get the list of clusters.
 

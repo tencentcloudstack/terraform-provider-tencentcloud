@@ -283,37 +283,36 @@ func genFrameworkDoc(servicesRoot string, dtype fwDocType, name, product string,
 	// ephemeral resources.
 	if dtype == fwResource || dtype == fwAction || dtype == fwEphemeral {
 		analyzer := getSharedAPIAnalyzer()
-		repoRoot, _ := filepath.Abs("..")
-		if manualAPI != "" {
+		switch {
+		case manualAPI != "":
 			out["api"] = manualAPI
-			return
-		}
-		if analyzer == nil {
-			return
-		}
-		if dtype == fwResource {
-			resFile := findResourceFile(repoRoot, name)
-			if resFile == "" {
-				return
-			}
-			// Framework resources keep their CRUD in Create/Read/Update/
-			// Delete methods on the resource struct; resolve the receiver
-			// type from the declaring file.
-			recv := frameworkResourceRecvType(analyzer, resFile, name)
-			if recv == "" {
-				return
-			}
-			refsByVerb := map[string][]apiRef{}
-			for _, verb := range []string{"Create", "Read", "Update", "Delete"} {
-				fd := analyzer.lookupMethodByReceiver(recv, verb)
-				if fd != nil {
-					refsByVerb[verb] = analyzer.analyzeLifecycle(fd)
+		case analyzer == nil:
+			// leave empty
+		default:
+			repoRoot, _ := filepath.Abs("..")
+			if dtype == fwResource {
+				resFile := findResourceFile(repoRoot, name)
+				// Framework resources keep their CRUD in Create/Read/
+				// Update/Delete methods on the resource struct; resolve
+				// the receiver type from the declaring file.
+				var refsByVerb map[string][]apiRef
+				if resFile != "" {
+					recv := frameworkResourceRecvType(analyzer, resFile, name)
+					if recv != "" {
+						refsByVerb = map[string][]apiRef{}
+						for _, verb := range []string{"Create", "Read", "Update", "Delete"} {
+							fd := analyzer.lookupMethodByReceiver(recv, verb)
+							if fd != nil {
+								refsByVerb[verb] = analyzer.analyzeLifecycle(fd)
+							}
+						}
+					}
 				}
+				out["api"] = renderAPIRefsFor(string(dtype), dedupVerbRefs(refsByVerb))
+			} else {
+				out["api"] = renderFrameworkRefAPISection(analyzer, repoRoot, name, string(dtype))
 			}
-			out["api"] = renderAPIRefsFor(string(dtype), dedupVerbRefs(refsByVerb))
-			return
 		}
-		out["api"] = renderFrameworkRefAPISection(analyzer, repoRoot, name, string(dtype))
 	}
 
 	outPath := filepath.Join(docRoot, dtype.outputDir(), fmt.Sprintf("%s.html.markdown", resName))

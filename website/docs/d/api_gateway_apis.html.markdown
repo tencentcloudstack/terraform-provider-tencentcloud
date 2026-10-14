@@ -108,6 +108,6 @@ In addition to all arguments above, the following attributes are exported:
 
 This data source queries the following TencentCloud APIs:
 
-* Read: [DescribeApi](https://cloud.tencent.com/document/api/628/45241) - 查询API详情
-* Read: [DescribeApisStatus](https://cloud.tencent.com/document/api/628/45239) - 查询 API 接口列表
+* Read: [DescribeApi](https://cloud.tencent.com/document/api/628/45241) - This API (`DescribeApi`) is used to query the details of the APIs users manage via Tencent Cloud API Gateway.
+* Read: [DescribeApisStatus](https://cloud.tencent.com/document/api/628/45239) - This API is used to view a certain API or the list of all APIs under a service and relevant information.
 

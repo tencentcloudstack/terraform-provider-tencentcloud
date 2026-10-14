@@ -40,5 +40,5 @@ In addition to all arguments above, the following attributes are exported:
 
 This data source queries the following TencentCloud APIs:
 
-* Read: [DescribeShareUnitResources](https://cloud.tencent.com/document/api/850/103048) - 获取共享单元资源列表
+* Read: [DescribeShareUnitResources](https://cloud.tencent.com/document/api/850/103048) - This API is used to obtain the resource list of a shared unit.
 

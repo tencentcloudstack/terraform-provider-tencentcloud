@@ -40,5 +40,5 @@ In addition to all arguments above, the following attributes are exported:
 
 This data source queries the following TencentCloud APIs:
 
-* Read: [DescribeOrganizationAuthNode](https://cloud.tencent.com/document/api/850/82927) - 获取已设置管理员的互信主体关系列表
+* Read: [DescribeOrganizationAuthNode](https://cloud.tencent.com/document/api/850/82927)
 

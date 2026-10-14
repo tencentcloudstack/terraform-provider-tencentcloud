@@ -227,10 +227,10 @@ The `agents` object exports the following:
 
 This resource interacts with the following TencentCloud APIs:
 
-* Create: [CreatePrometheusClusterAgent](https://cloud.tencent.com/document/api/248/86044) - 2.0实例关联集群
-* Create: [DescribePrometheusClusterAgents](https://cloud.tencent.com/document/api/248/86040) - 获取TMP实例关联集群列表
-* Read: [DescribePrometheusClusterAgents](https://cloud.tencent.com/document/api/248/86040) - 获取TMP实例关联集群列表
-* Update: [ModifyPrometheusAgentExternalLabels](https://cloud.tencent.com/document/api/248/86036) - 修改被关联集群的external labels
-* Delete: [DeletePrometheusClusterAgent](https://cloud.tencent.com/document/api/248/86041) - 解除TMP实例的集群关联
-* Delete: [DescribePrometheusClusterAgents](https://cloud.tencent.com/document/api/248/86040) - 获取TMP实例关联集群列表
+* Create: [CreatePrometheusClusterAgent](https://cloud.tencent.com/document/api/248/86044) - This API is used to associate a cluster with a Cloud Monitor (CM)-integrated Tencent Managed Service for Prometheus (TMP) 2.0 instance.
+* Create: [DescribePrometheusClusterAgents](https://cloud.tencent.com/document/api/248/86040) - This API is used to get the list of clusters associated with the TMP instance.
+* Read: [DescribePrometheusClusterAgents](https://cloud.tencent.com/document/api/248/86040) - This API is used to get the list of clusters associated with the TMP instance.
+* Update: [ModifyPrometheusAgentExternalLabels](https://cloud.tencent.com/document/api/248/86036) - This API is used to modify the external labels of the associated cluster.
+* Delete: [DeletePrometheusClusterAgent](https://cloud.tencent.com/document/api/248/86041) - This API is used to disassociate a TMP instance from a cluster.
+* Delete: [DescribePrometheusClusterAgents](https://cloud.tencent.com/document/api/248/86040) - This API is used to get the list of clusters associated with the TMP instance.
 

@@ -76,12 +76,12 @@ In addition to all arguments above, the following attributes are exported:
 
 This resource interacts with the following TencentCloud APIs:
 
-* Create: [CreateGatewayLoadBalancer](https://cloud.tencent.com/document/api/1782/111685) - 购买网关负载均衡实例
-* Create: [DescribeTaskStatus](https://cloud.tencent.com/document/api/1782/111700) - 查询异步任务状态
-* Read: [DescribeGatewayLoadBalancers](https://cloud.tencent.com/document/api/1782/111683) - 查询网关负载均衡实例列表
-* Update: [ModifyGatewayLoadBalancerAttribute](https://cloud.tencent.com/document/api/1782/111681) - 修改网关负载均衡实例的属性
-* Delete: [DeleteGatewayLoadBalancer](https://cloud.tencent.com/document/api/1782/111684) - 删除网关负载均衡实例
-* Delete: [DescribeTaskStatus](https://cloud.tencent.com/document/api/1782/111700) - 查询异步任务状态
+* Create: [CreateGatewayLoadBalancer](https://cloud.tencent.com/document/api/1782/111685) - This API is used to create a GWLB instance. To use the GWLB service, you must purchase one or more GWLB instances. After this API is called successfully, a unique ID for the GWLB instance will be returned.Note: The default purchase quota for each account in each region is 10.This is an async API. After the API is called successfully, you can use the DescribeGatewayLoadBalancers API to query the status of the GWLB instance (such as creating and normal) to determine whether the creation is successful.
+* Create: [DescribeTaskStatus](https://cloud.tencent.com/document/api/1782/111700) - This API is used to query the execution status of an async task. After non-query APIs (for example, used to create/delete CLB instances) are called successfully, this API needs to be used to query whether the task is successful.
+* Read: [DescribeGatewayLoadBalancers](https://cloud.tencent.com/document/api/1782/111683) - This API is used to query the list of GWLB instances in a region.
+* Update: [ModifyGatewayLoadBalancerAttribute](https://cloud.tencent.com/document/api/1782/111681) - This API is used to modify the attributes of a CLB instance. It supports modifying the name and bandwidth cap of the CLB instance.
+* Delete: [DeleteGatewayLoadBalancer](https://cloud.tencent.com/document/api/1782/111684) - This API is used to delete one or more specified GWLB instances. After successful deletion, the GWLB instances will be unbound from the backend service.This is an async API. After the API return succeeds, you can call the DescribeTaskStatus API with the returned RequestId as an input parameter to check whether this task is successful.
+* Delete: [DescribeTaskStatus](https://cloud.tencent.com/document/api/1782/111700) - This API is used to query the execution status of an async task. After non-query APIs (for example, used to create/delete CLB instances) are called successfully, this API needs to be used to query whether the task is successful.
 
 ## Import
 

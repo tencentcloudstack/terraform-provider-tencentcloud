@@ -54,17 +54,17 @@ In addition to all arguments above, the following attributes are exported:
 
 This resource interacts with the following TencentCloud APIs:
 
-* Create: [CreateNetworkAcl](https://cloud.tencent.com/document/api/215/42162) - 创建网络ACL
-* Create: [ModifyNetworkAclEntries](https://cloud.tencent.com/document/api/215/42107) - 修改网络ACL规则
-* Create: [ModifyResourceTags](https://cloud.tencent.com/document/api/651/35322) - 批量修改资源关联的标签
-* Read: [DescribeNetworkAcls](https://cloud.tencent.com/document/api/215/42160) - 查询网络ACL列表
-* Read: [DescribeResourceTagsByResourceIds](https://cloud.tencent.com/document/api/651/35319) - 批量查看资源关联的标签
-* Update: [ModifyNetworkAclAttribute](https://cloud.tencent.com/document/api/215/42158) - 修改网络ACL属性
-* Update: [ModifyNetworkAclEntries](https://cloud.tencent.com/document/api/215/42107) - 修改网络ACL规则
-* Update: [ModifyResourceTags](https://cloud.tencent.com/document/api/651/35322) - 批量修改资源关联的标签
-* Delete: [DeleteNetworkAcl](https://cloud.tencent.com/document/api/215/42161) - 删除网络ACL
-* Delete: [DescribeNetworkAcls](https://cloud.tencent.com/document/api/215/42160) - 查询网络ACL列表
-* Delete: [DisassociateNetworkAclSubnets](https://cloud.tencent.com/document/api/215/42159) - 网络ACL解关联子网
+* Create: [CreateNetworkAcl](https://cloud.tencent.com/document/api/215/42162) - This API is used to create a <a href="https://intl.cloud.tencent.com/document/product/215/20088?from_cn_redirect=1">network ACL</a>.
+* Create: [ModifyNetworkAclEntries](https://cloud.tencent.com/document/api/215/42107) - This API is used to modify (add or delete) the inbound and outbound rules of a network ACL. In `NetworkAclEntrySet` parameters,
+* Create: [ModifyResourceTags](https://cloud.tencent.com/document/api/651/35322) - This API is used to modify all tags associated with a resource.
+* Read: [DescribeNetworkAcls](https://cloud.tencent.com/document/api/215/42160) - This API is used to query a list of network ACLs.
+* Read: [DescribeResourceTagsByResourceIds](https://cloud.tencent.com/document/api/651/35319) - This API is used to query the tag key-value pairs associated with an existing resource.
+* Update: [ModifyNetworkAclAttribute](https://cloud.tencent.com/document/api/215/42158) - This API is used to modify the attributes of a network ACL.
+* Update: [ModifyNetworkAclEntries](https://cloud.tencent.com/document/api/215/42107) - This API is used to modify (add or delete) the inbound and outbound rules of a network ACL. In `NetworkAclEntrySet` parameters,
+* Update: [ModifyResourceTags](https://cloud.tencent.com/document/api/651/35322) - This API is used to modify all tags associated with a resource.
+* Delete: [DeleteNetworkAcl](https://cloud.tencent.com/document/api/215/42161) - This API is used to delete a network ACL.
+* Delete: [DescribeNetworkAcls](https://cloud.tencent.com/document/api/215/42160) - This API is used to query a list of network ACLs.
+* Delete: [DisassociateNetworkAclSubnets](https://cloud.tencent.com/document/api/215/42159) - This API is used to disassociate a network ACL from subnets in a VPC instance.
 
 ## Import
 

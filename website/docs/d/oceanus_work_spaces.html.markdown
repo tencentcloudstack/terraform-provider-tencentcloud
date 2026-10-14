@@ -92,5 +92,5 @@ In addition to all arguments above, the following attributes are exported:
 
 This data source queries the following TencentCloud APIs:
 
-* Read: [DescribeWorkSpaces](https://cloud.tencent.com/document/api/849/94138) - 授权工作空间列表
+* Read: [DescribeWorkSpaces](https://cloud.tencent.com/document/api/849/94138)
 

@@ -33,5 +33,5 @@ In addition to all arguments above, the following attributes are exported:
 
 This data source queries the following TencentCloud APIs:
 
-* Read: [DescribeSupportedProducts](https://cloud.tencent.com/document/api/1140/58268) - 查询支持的云产品列表
+* Read: [DescribeSupportedProducts](https://cloud.tencent.com/document/api/1140/58268) - This API is used to query the list of supported Tencent Cloud services.
 

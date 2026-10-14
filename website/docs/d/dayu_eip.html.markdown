@@ -39,5 +39,5 @@ In addition to all arguments above, the following attributes are exported:
 
 This data source queries the following TencentCloud APIs:
 
-* Read: [DescribeListBGPIPInstances](https://cloud.tencent.com/document/api/297/95347) - 获取高防IP资产实例列表
+* Read: [DescribeListBGPIPInstances](https://cloud.tencent.com/document/api/297/95347) - This API is used to get a list of Anti-DDoS Advanced instances.
 

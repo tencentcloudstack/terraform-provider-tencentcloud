@@ -54,5 +54,5 @@ In addition to all arguments above, the following attributes are exported:
 
 This data source queries the following TencentCloud APIs:
 
-* Read: [DescribeLiveDomains](https://cloud.tencent.com/document/api/267/33856) - 查询域名列表
+* Read: [DescribeLiveDomains](https://cloud.tencent.com/document/api/267/33856) - This API is used to query domain names by domain name status and type.
 

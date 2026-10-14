@@ -61,14 +61,14 @@ The `timeouts` block allows you to specify [timeouts](https://developer.hashicor
 
 This resource interacts with the following TencentCloud APIs:
 
-* Create: [CreateSecurityGroup](https://cloud.tencent.com/document/api/215/15806) - 创建安全组
-* Create: [ModifyResourceTags](https://cloud.tencent.com/document/api/651/35322) - 批量修改资源关联的标签
-* Read: [DescribeResourceTagsByResourceIds](https://cloud.tencent.com/document/api/651/35319) - 批量查看资源关联的标签
-* Read: [DescribeSecurityGroups](https://cloud.tencent.com/document/api/215/15808) - 查看安全组
-* Update: [ModifyResourceTags](https://cloud.tencent.com/document/api/651/35322) - 批量修改资源关联的标签
-* Update: [ModifySecurityGroupAttribute](https://cloud.tencent.com/document/api/215/15805) - 修改安全组属性
-* Delete: [DeleteSecurityGroup](https://cloud.tencent.com/document/api/215/15803) - 删除安全组
-* Delete: [DescribeSecurityGroupAssociationStatistics](https://cloud.tencent.com/document/api/215/17799) - 查询安全组关联实例统计
+* Create: [CreateSecurityGroup](https://cloud.tencent.com/document/api/215/15806) - This API is used to create a security group (SecurityGroup).
+* Create: [ModifyResourceTags](https://cloud.tencent.com/document/api/651/35322) - This API is used to modify all tags associated with a resource.
+* Read: [DescribeResourceTagsByResourceIds](https://cloud.tencent.com/document/api/651/35319) - This API is used to query the tag key-value pairs associated with an existing resource.
+* Read: [DescribeSecurityGroups](https://cloud.tencent.com/document/api/215/15808) - This API (DescribeSecurityGroups) is used to query security groups.
+* Update: [ModifyResourceTags](https://cloud.tencent.com/document/api/651/35322) - This API is used to modify all tags associated with a resource.
+* Update: [ModifySecurityGroupAttribute](https://cloud.tencent.com/document/api/215/15805) - This API (ModifySecurityGroupAttribute) is used to modify the attributes of a security group (SecurityGroupPolicy).
+* Delete: [DeleteSecurityGroup](https://cloud.tencent.com/document/api/215/15803) - This API (DeleteSecurityGroup) is used to delete security groups (SecurityGroup).
+* Delete: [DescribeSecurityGroupAssociationStatistics](https://cloud.tencent.com/document/api/215/17799) - This API (DescribeSecurityGroupAssociationStatistics) is used to query statistics on the instances associated with a security group.
 
 ## Import
 

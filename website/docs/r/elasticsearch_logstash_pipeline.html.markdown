@@ -72,13 +72,13 @@ In addition to all arguments above, the following attributes are exported:
 
 This resource interacts with the following TencentCloud APIs:
 
-* Create: [DescribeLogstashPipelines](https://cloud.tencent.com/document/api/845/77238) - 获取Logstash实例管道列表
-* Create: [SaveAndDeployLogstashPipeline](https://cloud.tencent.com/document/api/845/77236) - 保存并部署管道
-* Read: [DescribeLogstashPipelines](https://cloud.tencent.com/document/api/845/77238) - 获取Logstash实例管道列表
-* Update: [DescribeLogstashPipelines](https://cloud.tencent.com/document/api/845/77238) - 获取Logstash实例管道列表
-* Update: [SaveAndDeployLogstashPipeline](https://cloud.tencent.com/document/api/845/77236) - 保存并部署管道
-* Delete: [DeleteLogstashPipelines](https://cloud.tencent.com/document/api/845/77242) - 删除Logstash管道
-* Delete: [DescribeLogstashPipelines](https://cloud.tencent.com/document/api/845/77238) - 获取Logstash实例管道列表
+* Create: [DescribeLogstashPipelines](https://cloud.tencent.com/document/api/845/77238)
+* Create: [SaveAndDeployLogstashPipeline](https://cloud.tencent.com/document/api/845/77236)
+* Read: [DescribeLogstashPipelines](https://cloud.tencent.com/document/api/845/77238)
+* Update: [DescribeLogstashPipelines](https://cloud.tencent.com/document/api/845/77238)
+* Update: [SaveAndDeployLogstashPipeline](https://cloud.tencent.com/document/api/845/77236)
+* Delete: [DeleteLogstashPipelines](https://cloud.tencent.com/document/api/845/77242)
+* Delete: [DescribeLogstashPipelines](https://cloud.tencent.com/document/api/845/77238)
 
 ## Import
 

@@ -50,8 +50,8 @@ In addition to all arguments above, the following attributes are exported:
 
 This resource interacts with the following TencentCloud APIs:
 
-* Create: [AddSmsSign](https://cloud.tencent.com/document/api/382/55971) - 添加短信签名
-* Read: [DescribeSmsSignList](https://cloud.tencent.com/document/api/382/55969) - 短信签名状态查询
-* Update: [ModifySmsSign](https://cloud.tencent.com/document/api/382/55968) - 修改短信签名
-* Delete: [DeleteSmsSign](https://cloud.tencent.com/document/api/382/55970) - 删除短信签名
+* Create: [AddSmsSign](https://cloud.tencent.com/document/api/382/55971) - This API is used to add an SMS signature. Please read the [Tencent Cloud SMS Signature Review Standards](https://intl.cloud.tencent.com/document/product/382/39022?from_cn_redirect=1) before starting an application.
+* Read: [DescribeSmsSignList](https://cloud.tencent.com/document/api/382/55969) - This API is used to query the status of SMS signatures.
+* Update: [ModifySmsSign](https://cloud.tencent.com/document/api/382/55968) - This API is used to modify an SMS signature. Please read the [Tencent Cloud SMS Signature Review Standards](https://intl.cloud.tencent.com/document/product/382/39022?from_cn_redirect=1) before making a modification.
+* Delete: [DeleteSmsSign](https://cloud.tencent.com/document/api/382/55970)
 

@@ -38,9 +38,9 @@ In addition to all arguments above, the following attributes are exported:
 
 This resource interacts with the following TencentCloud APIs:
 
-* Create: [BindAutoSnapshotPolicy](https://cloud.tencent.com/document/api/582/80211) - 文件系统绑定快照策略
-* Read: [DescribeAutoSnapshotPolicies](https://cloud.tencent.com/document/api/582/80208) - 查询文件系统快照策略列表信息
-* Delete: [UnbindAutoSnapshotPolicy](https://cloud.tencent.com/document/api/582/80204) - 解绑快照策略
+* Create: [BindAutoSnapshotPolicy](https://cloud.tencent.com/document/api/582/80211) - This API is used to bind one or multiple file systems to a snapshot policy. A file system can be bound to only one policy.
+* Read: [DescribeAutoSnapshotPolicies](https://cloud.tencent.com/document/api/582/80208) - This API is used to query the list of scheduled snapshot policies of a file system.
+* Delete: [UnbindAutoSnapshotPolicy](https://cloud.tencent.com/document/api/582/80204) - This API is used to unbind a snapshot policy from a file system.
 
 ## Import
 

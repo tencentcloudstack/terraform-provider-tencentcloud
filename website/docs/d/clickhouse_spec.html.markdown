@@ -89,5 +89,5 @@ In addition to all arguments above, the following attributes are exported:
 
 This data source queries the following TencentCloud APIs:
 
-* Read: [DescribeSpec](https://cloud.tencent.com/document/api/1299/83510) - 获取集群规格
+* Read: [DescribeSpec](https://cloud.tencent.com/document/api/1299/83510)
 

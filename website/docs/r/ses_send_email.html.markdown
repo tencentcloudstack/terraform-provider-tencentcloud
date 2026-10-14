@@ -66,5 +66,5 @@ In addition to all arguments above, the following attributes are exported:
 
 This resource interacts with the following TencentCloud APIs:
 
-* Create: [SendEmail](https://cloud.tencent.com/document/api/1288/51034) - 发送邮件
+* Create: [SendEmail](https://cloud.tencent.com/document/api/1288/51034) - This API is used to send an HTML or TEXT email triggered for authentication or transaction. By default, you can send emails using a template only.
 

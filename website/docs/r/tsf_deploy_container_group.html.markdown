@@ -227,8 +227,8 @@ In addition to all arguments above, the following attributes are exported:
 
 This resource interacts with the following TencentCloud APIs:
 
-* Create: [DeployContainerGroup](https://cloud.tencent.com/document/api/649/36071) - 部署容器应用
-* Create: [DescribeContainerGroupAttribute](https://cloud.tencent.com/document/api/649/93216) - 获取部署组其他字段-用于前端并发调用
-* Read: [DescribeContainerGroupDeployInfo](https://cloud.tencent.com/document/api/649/67221) - 获取部署组详情
-* Update: [ModifyContainerReplicas](https://cloud.tencent.com/document/api/649/36061) - 修改容器部署组实例数
+* Create: [DeployContainerGroup](https://cloud.tencent.com/document/api/649/36071)
+* Create: [DescribeContainerGroupAttribute](https://cloud.tencent.com/document/api/649/93216)
+* Read: [DescribeContainerGroupDeployInfo](https://cloud.tencent.com/document/api/649/67221)
+* Update: [ModifyContainerReplicas](https://cloud.tencent.com/document/api/649/36061)
 

@@ -58,9 +58,9 @@ In addition to all arguments above, the following attributes are exported:
 
 This resource interacts with the following TencentCloud APIs:
 
-* Create: [DescribeFwEdgeIps](https://cloud.tencent.com/document/api/1132/97841) - 串行防火墙开关列表
-* Create: [ModifyEdgeIpSwitch](https://cloud.tencent.com/document/api/1132/97839) - 修改边界防火墙开关(旁路、串行)
-* Read: [DescribeFwEdgeIps](https://cloud.tencent.com/document/api/1132/97841) - 串行防火墙开关列表
-* Update: [DescribeFwEdgeIps](https://cloud.tencent.com/document/api/1132/97841) - 串行防火墙开关列表
-* Update: [ModifyEdgeIpSwitch](https://cloud.tencent.com/document/api/1132/97839) - 修改边界防火墙开关(旁路、串行)
+* Create: [DescribeFwEdgeIps](https://cloud.tencent.com/document/api/1132/97841)
+* Create: [ModifyEdgeIpSwitch](https://cloud.tencent.com/document/api/1132/97839)
+* Read: [DescribeFwEdgeIps](https://cloud.tencent.com/document/api/1132/97841)
+* Update: [DescribeFwEdgeIps](https://cloud.tencent.com/document/api/1132/97841)
+* Update: [ModifyEdgeIpSwitch](https://cloud.tencent.com/document/api/1132/97839)
 

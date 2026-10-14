@@ -223,6 +223,6 @@ In addition to all arguments above, the following attributes are exported:
 
 This data source queries the following TencentCloud APIs:
 
-* Read: [DescribeDiskConfigQuota](https://cloud.tencent.com/document/api/362/16318) - 查询云硬盘配额
-* Read: [DescribeZoneInstanceConfigInfos](https://cloud.tencent.com/document/api/213/17378) - 获取可用区机型配置信息
+* Read: [DescribeDiskConfigQuota](https://cloud.tencent.com/document/api/362/16318) - This API (DescribeDiskConfigQuota) is used to query the cloud disk quota.
+* Read: [DescribeZoneInstanceConfigInfos](https://cloud.tencent.com/document/api/213/17378) - This API is used to query the configurations of models in an availability zone.
 

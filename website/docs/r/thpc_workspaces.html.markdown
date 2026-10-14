@@ -329,20 +329,20 @@ The `system_disk` object exports the following:
 
 This resource interacts with the following TencentCloud APIs:
 
-* Create: [CreateWorkspaces](https://cloud.tencent.com/document/api/1527/110698) - 创建工作空间
-* Create: [DescribeWorkspaces](https://cloud.tencent.com/document/api/1527/110754) - 查询工作空间列表
-* Read: [DescribeInstanceAttributes](https://cloud.tencent.com/document/api/597/40836) - 获取实例属性
-* Read: [DescribeWorkspaces](https://cloud.tencent.com/document/api/1527/110754) - 查询工作空间列表
-* Update: [AssociateInstancesKeyPairs](https://cloud.tencent.com/document/api/213/15698) - 绑定密钥对
-* Update: [DescribeDisks](https://cloud.tencent.com/document/api/362/16315) - 查询云硬盘列表
-* Update: [DescribeInstanceAttributes](https://cloud.tencent.com/document/api/597/40836) - 获取实例属性
-* Update: [DisassociateInstancesKeyPairs](https://cloud.tencent.com/document/api/213/15697) - 解绑密钥对
-* Update: [ModifyPassword](https://cloud.tencent.com/document/api/597/40854) - 修改密码
-* Update: [ModifyWorkspacesAttribute](https://cloud.tencent.com/document/api/1527/110753) - 修改工作空间的属性
-* Update: [ResizeDisk](https://cloud.tencent.com/document/api/362/16310) - 扩容云硬盘
-* Update: [ResizeInstanceDisks](https://cloud.tencent.com/document/api/213/15731) - 扩容实例磁盘
-* Delete: [DescribeWorkspaces](https://cloud.tencent.com/document/api/1527/110754) - 查询工作空间列表
-* Delete: [TerminateWorkspaces](https://cloud.tencent.com/document/api/1527/110752) - 销毁工作空间
+* Create: [CreateWorkspaces](https://cloud.tencent.com/document/api/1527/110698)
+* Create: [DescribeWorkspaces](https://cloud.tencent.com/document/api/1527/110754)
+* Read: [DescribeInstanceAttributes](https://cloud.tencent.com/document/api/597/40836) - This API is used to obtain instance attributes.
+* Read: [DescribeWorkspaces](https://cloud.tencent.com/document/api/1527/110754)
+* Update: [AssociateInstancesKeyPairs](https://cloud.tencent.com/document/api/213/15698) - This API is used to associate key pairs with instances.
+* Update: [DescribeDisks](https://cloud.tencent.com/document/api/362/16315) - This API (DescribeDisks) is used to query the list of cloud disks.
+* Update: [DescribeInstanceAttributes](https://cloud.tencent.com/document/api/597/40836) - This API is used to obtain instance attributes.
+* Update: [DisassociateInstancesKeyPairs](https://cloud.tencent.com/document/api/213/15697) - This API is used to unbind one or more key pairs from one or more instances.
+* Update: [ModifyPassword](https://cloud.tencent.com/document/api/597/40854) - This API is used to change the password.
+* Update: [ModifyWorkspacesAttribute](https://cloud.tencent.com/document/api/1527/110753)
+* Update: [ResizeDisk](https://cloud.tencent.com/document/api/362/16310) - This API is used to expand cloud disks.
+* Update: [ResizeInstanceDisks](https://cloud.tencent.com/document/api/213/15731) - This API (ResizeInstanceDisks) is used to expand the data disks of an instance.
+* Delete: [DescribeWorkspaces](https://cloud.tencent.com/document/api/1527/110754)
+* Delete: [TerminateWorkspaces](https://cloud.tencent.com/document/api/1527/110752)
 
 ## Import
 

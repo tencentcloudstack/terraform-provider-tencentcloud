@@ -125,20 +125,20 @@ In addition to all arguments above, the following attributes are exported:
 
 This resource interacts with the following TencentCloud APIs:
 
-* Create: [CreateDBInstance](https://cloud.tencent.com/document/api/237/16180) - 创建MariaDB包年包月实例
-* Create: [DescribeDBInstances](https://cloud.tencent.com/document/api/237/16184) - 查询实例列表
-* Create: [ModifyResourceTags](https://cloud.tencent.com/document/api/651/35322) - 批量修改资源关联的标签
-* Read: [DescribeDBInstanceDetail](https://cloud.tencent.com/document/api/237/89390) - 查询实例详细信息
-* Read: [DescribeDBInstances](https://cloud.tencent.com/document/api/237/16184) - 查询实例列表
-* Read: [DescribeResourceTagsByResourceIds](https://cloud.tencent.com/document/api/651/35319) - 批量查看资源关联的标签
-* Update: [DescribeFlow](https://cloud.tencent.com/document/api/237/16177) - 查询流程状态
-* Update: [ModifyDBInstanceName](https://cloud.tencent.com/document/api/237/16190) - 修改实例名称
-* Update: [ModifyDBInstancesProject](https://cloud.tencent.com/document/api/237/16176) - 修改实例所属项目
-* Update: [ModifyInstanceNetwork](https://cloud.tencent.com/document/api/237/81949) - 修改实例所属网络
-* Update: [ModifyResourceTags](https://cloud.tencent.com/document/api/651/35322) - 批量修改资源关联的标签
-* Delete: [DescribeDBInstances](https://cloud.tencent.com/document/api/237/16184) - 查询实例列表
-* Delete: [DestroyDBInstance](https://cloud.tencent.com/document/api/237/76451) - 销毁已隔离的包年包月实例
-* Delete: [IsolateDBInstance](https://cloud.tencent.com/document/api/237/82426) - 隔离MariaDB包年包月实例
+* Create: [CreateDBInstance](https://cloud.tencent.com/document/api/237/16180) - This API is used to create a yearly/monthly subscribed TencentDB for MariaDB instance by passing in information such as instance specifications, database version number, validity period, and quantity.
+* Create: [DescribeDBInstances](https://cloud.tencent.com/document/api/237/16184) - This API is used to query the TencentDB instance list. It supports filtering instances by project ID, instance ID, private address, and instance name.
+* Create: [ModifyResourceTags](https://cloud.tencent.com/document/api/651/35322) - This API is used to modify all tags associated with a resource.
+* Read: [DescribeDBInstanceDetail](https://cloud.tencent.com/document/api/237/89390) - This API is used to query the details of a specified instance.
+* Read: [DescribeDBInstances](https://cloud.tencent.com/document/api/237/16184) - This API is used to query the TencentDB instance list. It supports filtering instances by project ID, instance ID, private address, and instance name.
+* Read: [DescribeResourceTagsByResourceIds](https://cloud.tencent.com/document/api/651/35319) - This API is used to query the tag key-value pairs associated with an existing resource.
+* Update: [DescribeFlow](https://cloud.tencent.com/document/api/237/16177)
+* Update: [ModifyDBInstanceName](https://cloud.tencent.com/document/api/237/16190)
+* Update: [ModifyDBInstancesProject](https://cloud.tencent.com/document/api/237/16176) - This API is used to modify the project to which TencentDB instances belong.
+* Update: [ModifyInstanceNetwork](https://cloud.tencent.com/document/api/237/81949) - This API is used to modify instance network.
+* Update: [ModifyResourceTags](https://cloud.tencent.com/document/api/651/35322) - This API is used to modify all tags associated with a resource.
+* Delete: [DescribeDBInstances](https://cloud.tencent.com/document/api/237/16184) - This API is used to query the TencentDB instance list. It supports filtering instances by project ID, instance ID, private address, and instance name.
+* Delete: [DestroyDBInstance](https://cloud.tencent.com/document/api/237/76451) - This API is used to terminate an isolated yearly/monthly subscribed instance.
+* Delete: [IsolateDBInstance](https://cloud.tencent.com/document/api/237/82426) - This API is used to isolate a yearly/monthly subscribed TencentDB for MariaDB instance, which will no longer be accessible via IP and port.  The isolated instance can be started up in the recycle bin.  If it is isolated due to overdue payments, top up your account as soon as possible.
 
 ## Import
 

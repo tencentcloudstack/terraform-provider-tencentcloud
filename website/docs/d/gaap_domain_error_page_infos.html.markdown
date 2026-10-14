@@ -47,5 +47,5 @@ In addition to all arguments above, the following attributes are exported:
 
 This data source queries the following TencentCloud APIs:
 
-* Read: [DescribeDomainErrorPageInfoByIds](https://cloud.tencent.com/document/api/608/40489) - 根据定制错误ID查询错误响应
+* Read: [DescribeDomainErrorPageInfoByIds](https://cloud.tencent.com/document/api/608/40489) - This API is used to query the corresponding error response by a custom error ID.
 

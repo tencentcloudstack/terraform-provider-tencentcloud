@@ -84,9 +84,9 @@ In addition to all arguments above, the following attributes are exported:
 
 This resource interacts with the following TencentCloud APIs:
 
-* Create: [UpdateAddon](https://cloud.tencent.com/document/api/457/94180) - 更新addon
-* Read: [DescribeAddon](https://cloud.tencent.com/document/api/457/94183) - 获取addon列表
-* Update: [UpdateAddon](https://cloud.tencent.com/document/api/457/94180) - 更新addon
+* Create: [UpdateAddon](https://cloud.tencent.com/document/api/457/94180) - This API is used to update parameters and version of an add-on.
+* Read: [DescribeAddon](https://cloud.tencent.com/document/api/457/94183) - This API is used to query the list of add-ons.
+* Update: [UpdateAddon](https://cloud.tencent.com/document/api/457/94180) - This API is used to update parameters and version of an add-on.
 
 ## Import
 

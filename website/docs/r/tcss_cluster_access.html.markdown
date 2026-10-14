@@ -52,14 +52,14 @@ The `timeouts` block allows you to specify [timeouts](https://developer.hashicor
 
 This resource interacts with the following TencentCloud APIs:
 
-* Create: [CreateClusterAccess](https://cloud.tencent.com/document/api/1285/123910) - 创建集群接入
-* Create: [DescribeUserCluster](https://cloud.tencent.com/document/api/1285/65442) - 用户集群资产查询
-* Create: [ModifyDefendStatus](https://cloud.tencent.com/document/api/1285/123911) - 修改防护状态
-* Read: [DescribeUserCluster](https://cloud.tencent.com/document/api/1285/65442) - 用户集群资产查询
-* Update: [DescribeUserCluster](https://cloud.tencent.com/document/api/1285/65442) - 用户集群资产查询
-* Update: [ModifyDefendStatus](https://cloud.tencent.com/document/api/1285/123911) - 修改防护状态
-* Delete: [DescribeUserCluster](https://cloud.tencent.com/document/api/1285/65442) - 用户集群资产查询
-* Delete: [UninstallClusterContainerSecurity](https://cloud.tencent.com/document/api/1285/124705) - 卸载集群容器安全
+* Create: [CreateClusterAccess](https://cloud.tencent.com/document/api/1285/123910)
+* Create: [DescribeUserCluster](https://cloud.tencent.com/document/api/1285/65442) - This API is used to query the information of a cluster on the Security Dashboard and Cluster Security pages.
+* Create: [ModifyDefendStatus](https://cloud.tencent.com/document/api/1285/123911) - This API is used to modify the protection status.
+* Read: [DescribeUserCluster](https://cloud.tencent.com/document/api/1285/65442) - This API is used to query the information of a cluster on the Security Dashboard and Cluster Security pages.
+* Update: [DescribeUserCluster](https://cloud.tencent.com/document/api/1285/65442) - This API is used to query the information of a cluster on the Security Dashboard and Cluster Security pages.
+* Update: [ModifyDefendStatus](https://cloud.tencent.com/document/api/1285/123911) - This API is used to modify the protection status.
+* Delete: [DescribeUserCluster](https://cloud.tencent.com/document/api/1285/65442) - This API is used to query the information of a cluster on the Security Dashboard and Cluster Security pages.
+* Delete: [UninstallClusterContainerSecurity](https://cloud.tencent.com/document/api/1285/124705) - Uninstall cluster container security.
 
 ## Import
 

@@ -81,9 +81,9 @@ In addition to all arguments above, the following attributes are exported:
 
 This resource interacts with the following TencentCloud APIs:
 
-* Create: [CreateBusinessIntelligenceFile](https://cloud.tencent.com/document/api/238/80331) - 创建商业智能服务文件
-* Read: [DescribeBusinessIntelligenceFile](https://cloud.tencent.com/document/api/238/80329) - 查询商业智能服务需要的文件
-* Delete: [DeleteBusinessIntelligenceFile](https://cloud.tencent.com/document/api/238/80330) - 删除商业智能文件
+* Create: [CreateBusinessIntelligenceFile](https://cloud.tencent.com/document/api/238/80331) - This API is used to add a business intelligence service file.
+* Read: [DescribeBusinessIntelligenceFile](https://cloud.tencent.com/document/api/238/80329) - This API is used to query the files required by business intelligence service.
+* Delete: [DeleteBusinessIntelligenceFile](https://cloud.tencent.com/document/api/238/80330) - This API is used to delete a business intelligence service file.
 
 ## Import
 

@@ -140,7 +140,7 @@ In addition to all arguments above, the following attributes are exported:
 
 This resource interacts with the following TencentCloud APIs:
 
-* Create: [RegisterLineage](https://cloud.tencent.com/document/api/1267/123987) - 血缘注册
-* Read: [ListLineage](https://cloud.tencent.com/document/api/1267/123991) - 查询血缘列表
-* Delete: [DeleteLineage](https://cloud.tencent.com/document/api/1267/123997) - 血缘删除
+* Create: [RegisterLineage](https://cloud.tencent.com/document/api/1267/123987)
+* Read: [ListLineage](https://cloud.tencent.com/document/api/1267/123991) - This API is used to obtain asset lineage information.
+* Delete: [DeleteLineage](https://cloud.tencent.com/document/api/1267/123997)
 

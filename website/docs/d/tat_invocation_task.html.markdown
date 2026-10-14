@@ -75,5 +75,5 @@ In addition to all arguments above, the following attributes are exported:
 
 This data source queries the following TencentCloud APIs:
 
-* Read: [DescribeInvocationTasks](https://cloud.tencent.com/document/api/1340/52680) - 查询执行任务
+* Read: [DescribeInvocationTasks](https://cloud.tencent.com/document/api/1340/52680) - This API is used to query execution task details.
 

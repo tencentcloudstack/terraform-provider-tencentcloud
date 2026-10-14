@@ -44,5 +44,5 @@ In addition to all arguments above, the following attributes are exported:
 
 This data source queries the following TencentCloud APIs:
 
-* Read: [ListReceivers](https://cloud.tencent.com/document/api/1288/68358) - 查询收件人列表
+* Read: [ListReceivers](https://cloud.tencent.com/document/api/1288/68358) - This API is used to query recipient groups. It supports pagination, fuzzy query, and query by status.
 

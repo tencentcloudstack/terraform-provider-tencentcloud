@@ -59,10 +59,10 @@ In addition to all arguments above, the following attributes are exported:
 
 This resource interacts with the following TencentCloud APIs:
 
-* Create: [CreateMultiPathGatewayLine](https://cloud.tencent.com/document/api/1552/121342) - 创建多通道安全加速网关线路
-* Read: [DescribeMultiPathGatewayLine](https://cloud.tencent.com/document/api/1552/121337) - 查询多通道安全加速网关线路详情
-* Update: [ModifyMultiPathGatewayLine](https://cloud.tencent.com/document/api/1552/121332) - 修改多通道安全加速网关线路信息
-* Delete: [DeleteMultiPathGatewayLine](https://cloud.tencent.com/document/api/1552/121339) - 删除多通道安全加速网关线路
+* Create: [CreateMultiPathGatewayLine](https://cloud.tencent.com/document/api/1552/121342) - This API is used to create lines integrated with the multi-channel security acceleration gateway, including EdgeOne Layer-4 proxy and custom lines.
+* Read: [DescribeMultiPathGatewayLine](https://cloud.tencent.com/document/api/1552/121337) - Use this API to query the lines integrated with the multi-channel security acceleration gateway, including direct connection lines, EdgeOne Layer-4 proxy lines, and custom lines.
+* Update: [ModifyMultiPathGatewayLine](https://cloud.tencent.com/document/api/1552/121332) - This API is used to modify the access lines of the multi-channel security acceleration gateway, including EdgeOne Layer-4 proxy lines and custom lines.
+* Delete: [DeleteMultiPathGatewayLine](https://cloud.tencent.com/document/api/1552/121339) - This API is used to delete lines integrated with the multi-channel security acceleration gateway. Only custom lines support deletion.
 
 ## Import
 

@@ -63,8 +63,8 @@ In addition to all arguments above, the following attributes are exported:
 
 This resource interacts with the following TencentCloud APIs:
 
-* Create: [CreateLane](https://cloud.tencent.com/document/api/649/44508) - 创建泳道配置
-* Read: [DescribeLanes](https://cloud.tencent.com/document/api/649/44504) - 查询泳道配置列表
-* Update: [ModifyLane](https://cloud.tencent.com/document/api/649/44503) - 更新泳道配置信息
-* Delete: [DeleteLane](https://cloud.tencent.com/document/api/649/44506) - 删除泳道配置
+* Create: [CreateLane](https://cloud.tencent.com/document/api/649/44508)
+* Read: [DescribeLanes](https://cloud.tencent.com/document/api/649/44504)
+* Update: [ModifyLane](https://cloud.tencent.com/document/api/649/44503)
+* Delete: [DeleteLane](https://cloud.tencent.com/document/api/649/44506)
 

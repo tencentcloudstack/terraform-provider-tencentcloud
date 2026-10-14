@@ -45,7 +45,7 @@ In addition to all arguments above, the following attributes are exported:
 
 This resource interacts with the following TencentCloud APIs:
 
-* Create: [ReplaceCertificate](https://cloud.tencent.com/document/api/400/41667) - 重颁发证书
+* Create: [ReplaceCertificate](https://cloud.tencent.com/document/api/400/41667) - This API is used to reissue a certificate. Note that if you have applied for a free certificate, only an RSA-2048 certificate will be reissued, and the certificate can be reissued only once.
 
 ## Import
 

@@ -89,13 +89,13 @@ The `timeouts` block allows you to specify [timeouts](https://developer.hashicor
 
 This resource interacts with the following TencentCloud APIs:
 
-* Create: [AddClusterSlaveZone](https://cloud.tencent.com/document/api/1003/79555) - 开启多可用区部署
-* Create: [DescribeFlow](https://cloud.tencent.com/document/api/1003/86162) - 查询任务流信息
-* Read: [DescribeClusterDetail](https://cloud.tencent.com/document/api/1003/48086) - 集群信息描述
-* Update: [DescribeFlow](https://cloud.tencent.com/document/api/1003/86162) - 查询任务流信息
-* Update: [ModifyClusterSlaveZone](https://cloud.tencent.com/document/api/1003/79554) - 变更备可用区
-* Delete: [DescribeFlow](https://cloud.tencent.com/document/api/1003/86162) - 查询任务流信息
-* Delete: [RemoveClusterSlaveZone](https://cloud.tencent.com/document/api/1003/79553) - 关闭多可用区部署
+* Create: [AddClusterSlaveZone](https://cloud.tencent.com/document/api/1003/79555) - This interface (AddClusterSlaveZone) is used to enable multi-az deployment for a cluster.
+* Create: [DescribeFlow](https://cloud.tencent.com/document/api/1003/86162) - This API is used to query task flow information.
+* Read: [DescribeClusterDetail](https://cloud.tencent.com/document/api/1003/48086) - This API is used to display cluster details.
+* Update: [DescribeFlow](https://cloud.tencent.com/document/api/1003/86162) - This API is used to query task flow information.
+* Update: [ModifyClusterSlaveZone](https://cloud.tencent.com/document/api/1003/79554) - This API is used to modify the slave availability zone of a cluster.
+* Delete: [DescribeFlow](https://cloud.tencent.com/document/api/1003/86162) - This API is used to query task flow information.
+* Delete: [RemoveClusterSlaveZone](https://cloud.tencent.com/document/api/1003/79553) - This API is used to disable multi-AZ deployment for a cluster.
 
 ## Import
 

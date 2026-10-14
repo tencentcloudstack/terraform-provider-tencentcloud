@@ -38,7 +38,7 @@ In addition to all arguments above, the following attributes are exported:
 
 This resource interacts with the following TencentCloud APIs:
 
-* Read: [DescribeDomain](https://cloud.tencent.com/document/api/1427/56173) - 获取域名信息
+* Read: [DescribeDomain](https://cloud.tencent.com/document/api/1427/56173) - This API is used to get the information of a domain.
 
 ## Import
 

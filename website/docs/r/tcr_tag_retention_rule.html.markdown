@@ -103,13 +103,13 @@ In addition to all arguments above, the following attributes are exported:
 
 This resource interacts with the following TencentCloud APIs:
 
-* Create: [CreateTagRetentionRule](https://cloud.tencent.com/document/api/1141/54803) - 创建版本保留规则
-* Create: [DescribeNamespaces](https://cloud.tencent.com/document/api/1141/42765) - 查询命名空间信息
-* Create: [DescribeTagRetentionRules](https://cloud.tencent.com/document/api/1141/54799) - 查询镜像版本保留规则
-* Read: [DescribeTagRetentionRules](https://cloud.tencent.com/document/api/1141/54799) - 查询镜像版本保留规则
-* Update: [DescribeNamespaces](https://cloud.tencent.com/document/api/1141/42765) - 查询命名空间信息
-* Update: [ModifyTagRetentionRule](https://cloud.tencent.com/document/api/1141/54798) - 更新版本保留规则
-* Delete: [DeleteTagRetentionRule](https://cloud.tencent.com/document/api/1141/54802) - 删除版本保留规则
+* Create: [CreateTagRetentionRule](https://cloud.tencent.com/document/api/1141/54803) - This API is used to create a tag retention rule.
+* Create: [DescribeNamespaces](https://cloud.tencent.com/document/api/1141/42765) - This API is used to query the namespace list or the information of the specified namespace.
+* Create: [DescribeTagRetentionRules](https://cloud.tencent.com/document/api/1141/54799) - This API is used to query tag retention rules.
+* Read: [DescribeTagRetentionRules](https://cloud.tencent.com/document/api/1141/54799) - This API is used to query tag retention rules.
+* Update: [DescribeNamespaces](https://cloud.tencent.com/document/api/1141/42765) - This API is used to query the namespace list or the information of the specified namespace.
+* Update: [ModifyTagRetentionRule](https://cloud.tencent.com/document/api/1141/54798) - This API is used to update a tag retention rule.
+* Delete: [DeleteTagRetentionRule](https://cloud.tencent.com/document/api/1141/54802) - This API is used to delete a tag retention rule.
 
 ## Import
 

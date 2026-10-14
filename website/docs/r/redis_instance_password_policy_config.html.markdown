@@ -77,11 +77,11 @@ In addition to all arguments above, the following attributes are exported:
 
 This resource interacts with the following TencentCloud APIs:
 
-* Create: [DescribeInstancePasswordPolicy](https://cloud.tencent.com/document/api/239/136865) - 查询实例当前密码复杂度配置
-* Create: [ModifyInstancePasswordPolicy](https://cloud.tencent.com/document/api/239/136700) - 修改存量实例密码复杂度
-* Read: [DescribeInstancePasswordPolicy](https://cloud.tencent.com/document/api/239/136865) - 查询实例当前密码复杂度配置
-* Update: [DescribeInstancePasswordPolicy](https://cloud.tencent.com/document/api/239/136865) - 查询实例当前密码复杂度配置
-* Update: [ModifyInstancePasswordPolicy](https://cloud.tencent.com/document/api/239/136700) - 修改存量实例密码复杂度
+* Create: [DescribeInstancePasswordPolicy](https://cloud.tencent.com/document/api/239/136865)
+* Create: [ModifyInstancePasswordPolicy](https://cloud.tencent.com/document/api/239/136700)
+* Read: [DescribeInstancePasswordPolicy](https://cloud.tencent.com/document/api/239/136865)
+* Update: [DescribeInstancePasswordPolicy](https://cloud.tencent.com/document/api/239/136865)
+* Update: [ModifyInstancePasswordPolicy](https://cloud.tencent.com/document/api/239/136700)
 
 ## Import
 

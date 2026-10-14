@@ -52,5 +52,5 @@ In addition to all arguments above, the following attributes are exported:
 
 This data source queries the following TencentCloud APIs:
 
-* Read: [DescribeCertificates](https://cloud.tencent.com/document/api/608/36977) - 查询服务器证书列表
+* Read: [DescribeCertificates](https://cloud.tencent.com/document/api/608/36977) - This API (DescribeCertificates) is used to query the list of available certificates.
 

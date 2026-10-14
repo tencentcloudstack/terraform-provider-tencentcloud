@@ -40,5 +40,5 @@ In addition to all arguments above, the following attributes are exported:
 
 This data source queries the following TencentCloud APIs:
 
-* Read: [DescribeAddressTemplates](https://cloud.tencent.com/document/api/215/16717) - 查询IP地址模板
+* Read: [DescribeAddressTemplates](https://cloud.tencent.com/document/api/215/16717) - This API (DescribeAddressTemplates) is used to query an IP address template.
 

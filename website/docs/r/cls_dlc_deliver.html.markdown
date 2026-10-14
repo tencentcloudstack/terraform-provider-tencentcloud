@@ -139,10 +139,10 @@ In addition to all arguments above, the following attributes are exported:
 
 This resource interacts with the following TencentCloud APIs:
 
-* Create: [CreateDlcDeliver](https://cloud.tencent.com/document/api/614/125886) - 创建DLC投递任务
-* Read: [DescribeDlcDelivers](https://cloud.tencent.com/document/api/614/125884) - 获取DLC投递任务列表
-* Update: [ModifyDlcDeliver](https://cloud.tencent.com/document/api/614/125883) - 修改DLC投递任务
-* Delete: [DeleteDlcDeliver](https://cloud.tencent.com/document/api/614/125885) - 删除DLC投递任务
+* Create: [CreateDlcDeliver](https://cloud.tencent.com/document/api/614/125886) - Create a DLC delivery task
+* Read: [DescribeDlcDelivers](https://cloud.tencent.com/document/api/614/125884) - This API is used to search alarm channel callback configuration lists.
+* Update: [ModifyDlcDeliver](https://cloud.tencent.com/document/api/614/125883) - Modify a DLC delivery task
+* Delete: [DeleteDlcDeliver](https://cloud.tencent.com/document/api/614/125885) - Delete a DLC delivery task
 
 ## Import
 

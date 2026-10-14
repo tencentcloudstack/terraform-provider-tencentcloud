@@ -43,5 +43,5 @@ In addition to all arguments above, the following attributes are exported:
 
 This data source queries the following TencentCloud APIs:
 
-* Read: [DescribeShardSpec](https://cloud.tencent.com/document/api/557/16134) - 查询分布式数据库可售卖分片规格
+* Read: [DescribeShardSpec](https://cloud.tencent.com/document/api/557/16134)
 

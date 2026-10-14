@@ -55,5 +55,5 @@ In addition to all arguments above, the following attributes are exported:
 
 This resource interacts with the following TencentCloud APIs:
 
-* Create: [RunJobs](https://cloud.tencent.com/document/api/849/52007) - 运行作业
+* Create: [RunJobs](https://cloud.tencent.com/document/api/849/52007)
 

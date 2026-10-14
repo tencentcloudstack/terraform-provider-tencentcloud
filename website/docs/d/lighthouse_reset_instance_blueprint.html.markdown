@@ -69,5 +69,5 @@ In addition to all arguments above, the following attributes are exported:
 
 This data source queries the following TencentCloud APIs:
 
-* Read: [DescribeResetInstanceBlueprints](https://cloud.tencent.com/document/api/1207/55549) - 查询重置实例的镜像信息
+* Read: [DescribeResetInstanceBlueprints](https://cloud.tencent.com/document/api/1207/55549) - This API is used to query the image information of a reset instance.
 

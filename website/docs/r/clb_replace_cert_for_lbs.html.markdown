@@ -100,5 +100,5 @@ In addition to all arguments above, the following attributes are exported:
 
 This resource interacts with the following TencentCloud APIs:
 
-* Create: [ReplaceCertForLoadBalancers](https://cloud.tencent.com/document/api/214/36907) - 替换负载均衡实例所关联的证书
+* Create: [ReplaceCertForLoadBalancers](https://cloud.tencent.com/document/api/214/36907) - This API (ReplaceCertForLoadBalancers) is used to replace the certificate associated with a CLB instance. A new certificates can be associated with a CLB only after the original certificate is disassociated from it.
 

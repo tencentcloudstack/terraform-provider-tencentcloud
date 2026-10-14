@@ -183,11 +183,11 @@ In addition to all arguments above, the following attributes are exported:
 
 This resource interacts with the following TencentCloud APIs:
 
-* Create: [DisableSchedule](https://cloud.tencent.com/document/api/862/88058) - 禁用编排
-* Create: [EnableSchedule](https://cloud.tencent.com/document/api/862/88057) - 启用编排
-* Read: [DescribeSchedules](https://cloud.tencent.com/document/api/862/88059) - 查询编排
-* Update: [DisableSchedule](https://cloud.tencent.com/document/api/862/88058) - 禁用编排
-* Update: [EnableSchedule](https://cloud.tencent.com/document/api/862/88057) - 启用编排
+* Create: [DisableSchedule](https://cloud.tencent.com/document/api/862/88058) - Disable automated trigger orchestration tasks.
+* Create: [EnableSchedule](https://cloud.tencent.com/document/api/862/88057) - Enable automated trigger orchestration tasks.
+* Read: [DescribeSchedules](https://cloud.tencent.com/document/api/862/88059) - This API is used to query a scheme.
+* Update: [DisableSchedule](https://cloud.tencent.com/document/api/862/88058) - Disable automated trigger orchestration tasks.
+* Update: [EnableSchedule](https://cloud.tencent.com/document/api/862/88057) - Enable automated trigger orchestration tasks.
 
 ## Import
 

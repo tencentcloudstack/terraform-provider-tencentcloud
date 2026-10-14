@@ -116,10 +116,10 @@ In addition to all arguments above, the following attributes are exported:
 
 This resource interacts with the following TencentCloud APIs:
 
-* Create: [AddAttackWhiteRule](https://cloud.tencent.com/document/api/627/100203) - 增加规则引擎白名单
-* Read: [DescribeAttackWhiteRule](https://cloud.tencent.com/document/api/627/100201) - 获取用户规则白名单列表
-* Update: [ModifyAttackWhiteRule](https://cloud.tencent.com/document/api/627/100200) - 修改规则引擎白名单
-* Delete: [DeleteAttackWhiteRule](https://cloud.tencent.com/document/api/627/100202) - 删除规则引擎白名单
+* Create: [AddAttackWhiteRule](https://cloud.tencent.com/document/api/627/100203)
+* Read: [DescribeAttackWhiteRule](https://cloud.tencent.com/document/api/627/100201)
+* Update: [ModifyAttackWhiteRule](https://cloud.tencent.com/document/api/627/100200)
+* Delete: [DeleteAttackWhiteRule](https://cloud.tencent.com/document/api/627/100202)
 
 ## Import
 

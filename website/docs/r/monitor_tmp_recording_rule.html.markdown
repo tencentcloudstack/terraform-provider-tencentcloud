@@ -76,10 +76,10 @@ In addition to all arguments above, the following attributes are exported:
 
 This resource interacts with the following TencentCloud APIs:
 
-* Create: [CreateRecordingRule](https://cloud.tencent.com/document/api/248/76041) - 创建预聚合规则
-* Read: [DescribeRecordingRules](https://cloud.tencent.com/document/api/248/76039) - 查询预聚合规则
-* Update: [UpdateRecordingRule](https://cloud.tencent.com/document/api/248/76038) - 更新预聚合规则
-* Delete: [DeleteRecordingRules](https://cloud.tencent.com/document/api/248/76040) - 删除预聚合规则
+* Create: [CreateRecordingRule](https://cloud.tencent.com/document/api/248/76041) - This API is used to create a Prometheus recording rule.
+* Read: [DescribeRecordingRules](https://cloud.tencent.com/document/api/248/76039) - This API is used to query Prometheus recording rules by filter.
+* Update: [UpdateRecordingRule](https://cloud.tencent.com/document/api/248/76038) - This API is used to update a Prometheus recording rule.
+* Delete: [DeleteRecordingRules](https://cloud.tencent.com/document/api/248/76040) - This API is used to batch delete Prometheus recording rules.
 
 ## Import
 

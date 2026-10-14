@@ -236,22 +236,22 @@ The `ports` object exports the following:
 
 This resource interacts with the following TencentCloud APIs:
 
-* Create: [AddSpartaProtection](https://cloud.tencent.com/document/api/627/72689) - 添加SaaS型WAF防护域名
-* Create: [DescribeDomainVerifyResult](https://cloud.tencent.com/document/api/627/97869) - 获取添加域名操作的结果
-* Create: [DescribeDomains](https://cloud.tencent.com/document/api/627/72840) - 获取域名列表
-* Create: [ModifyApiAnalyzeStatus](https://cloud.tencent.com/document/api/627/97282) - api分析页面开关
-* Create: [ModifyBotStatus](https://cloud.tencent.com/document/api/627/97281) - Bot_V2 bot总开关更新
-* Create: [ModifyDomainsCLSStatus](https://cloud.tencent.com/document/api/627/96937) - 修改域名列表的访问日志开关
-* Create: [ModifyProtectionStatus](https://cloud.tencent.com/document/api/627/96931) - 开启、关闭WAF开关
-* Read: [DescribeDomainDetailsSaas](https://cloud.tencent.com/document/api/627/82938) - 查询单个Saas型WAF域名详情
-* Read: [DescribeDomains](https://cloud.tencent.com/document/api/627/72840) - 获取域名列表
-* Update: [DescribeDomainDetailsSaas](https://cloud.tencent.com/document/api/627/82938) - 查询单个Saas型WAF域名详情
-* Update: [ModifyApiAnalyzeStatus](https://cloud.tencent.com/document/api/627/97282) - api分析页面开关
-* Update: [ModifyBotStatus](https://cloud.tencent.com/document/api/627/97281) - Bot_V2 bot总开关更新
-* Update: [ModifyDomainsCLSStatus](https://cloud.tencent.com/document/api/627/96937) - 修改域名列表的访问日志开关
-* Update: [ModifyProtectionStatus](https://cloud.tencent.com/document/api/627/96931) - 开启、关闭WAF开关
-* Update: [ModifySpartaProtection](https://cloud.tencent.com/document/api/627/94309) - 编辑SaaS型WAF域名
-* Delete: [DeleteSpartaProtection](https://cloud.tencent.com/document/api/627/96949) - 删除SaaS型WAF防护域名
+* Create: [AddSpartaProtection](https://cloud.tencent.com/document/api/627/72689) - Add SaaS WAF protection domain
+* Create: [DescribeDomainVerifyResult](https://cloud.tencent.com/document/api/627/97869) - Obtain the result of adding domain operation
+* Create: [DescribeDomains](https://cloud.tencent.com/document/api/627/72840) - Query detailed information of all user domains
+* Create: [ModifyApiAnalyzeStatus](https://cloud.tencent.com/document/api/627/97282) - API analysis page switch
+* Create: [ModifyBotStatus](https://cloud.tencent.com/document/api/627/97281) - Bot_V2 bot master switch update
+* Create: [ModifyDomainsCLSStatus](https://cloud.tencent.com/document/api/627/96937) - Enable or disable access log for domain list
+* Create: [ModifyProtectionStatus](https://cloud.tencent.com/document/api/627/96931) - This API is used to obtain the enabling status of the basic security protection module of WAF.
+* Read: [DescribeDomainDetailsSaas](https://cloud.tencent.com/document/api/627/82938) - Query individual SaaS WAF domain details
+* Read: [DescribeDomains](https://cloud.tencent.com/document/api/627/72840) - Query detailed information of all user domains
+* Update: [DescribeDomainDetailsSaas](https://cloud.tencent.com/document/api/627/82938) - Query individual SaaS WAF domain details
+* Update: [ModifyApiAnalyzeStatus](https://cloud.tencent.com/document/api/627/97282) - API analysis page switch
+* Update: [ModifyBotStatus](https://cloud.tencent.com/document/api/627/97281) - Bot_V2 bot master switch update
+* Update: [ModifyDomainsCLSStatus](https://cloud.tencent.com/document/api/627/96937) - Enable or disable access log for domain list
+* Update: [ModifyProtectionStatus](https://cloud.tencent.com/document/api/627/96931) - This API is used to obtain the enabling status of the basic security protection module of WAF.
+* Update: [ModifySpartaProtection](https://cloud.tencent.com/document/api/627/94309) - This API is used to edit the configuration of domain names protected by SaaS WAF.
+* Delete: [DeleteSpartaProtection](https://cloud.tencent.com/document/api/627/96949) - This API is used to delete a domain name protected by SaaS WAF.
 
 ## Import
 

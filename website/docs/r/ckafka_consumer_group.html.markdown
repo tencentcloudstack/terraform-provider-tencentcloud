@@ -40,9 +40,9 @@ In addition to all arguments above, the following attributes are exported:
 
 This resource interacts with the following TencentCloud APIs:
 
-* Create: [CreateConsumer](https://cloud.tencent.com/document/api/597/70173) - 创建消费者组
-* Read: [DescribeConsumerGroup](https://cloud.tencent.com/document/api/597/40841) - 查询消费分组信息
-* Delete: [DeleteGroup](https://cloud.tencent.com/document/api/597/69059) - 删除消费组
+* Create: [CreateConsumer](https://cloud.tencent.com/document/api/597/70173) - This API is used to create a consumer group.
+* Read: [DescribeConsumerGroup](https://cloud.tencent.com/document/api/597/40841) - This API is used to query consumer group information.
+* Delete: [DeleteGroup](https://cloud.tencent.com/document/api/597/69059)
 
 ## Import
 

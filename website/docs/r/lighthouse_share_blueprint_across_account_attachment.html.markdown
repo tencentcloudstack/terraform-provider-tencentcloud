@@ -38,13 +38,13 @@ In addition to all arguments above, the following attributes are exported:
 
 This resource interacts with the following TencentCloud APIs:
 
-* Create: [DescribeBlueprintsShareAcrossAccountInfos](https://cloud.tencent.com/document/api/1207/132389) - 查询镜像跨账号共享信息
-* Create: [ShareBlueprintAcrossAccounts](https://cloud.tencent.com/document/api/1207/101338) - 跨账号共享镜像
-* Read: [DescribeBlueprintsShareAcrossAccountInfos](https://cloud.tencent.com/document/api/1207/132389) - 查询镜像跨账号共享信息
-* Update: [CancelShareBlueprintAcrossAccounts](https://cloud.tencent.com/document/api/1207/101339) - 取消镜像跨账号共享
-* Update: [DescribeBlueprintsShareAcrossAccountInfos](https://cloud.tencent.com/document/api/1207/132389) - 查询镜像跨账号共享信息
-* Update: [ShareBlueprintAcrossAccounts](https://cloud.tencent.com/document/api/1207/101338) - 跨账号共享镜像
-* Delete: [CancelShareBlueprintAcrossAccounts](https://cloud.tencent.com/document/api/1207/101339) - 取消镜像跨账号共享
+* Create: [DescribeBlueprintsShareAcrossAccountInfos](https://cloud.tencent.com/document/api/1207/132389)
+* Create: [ShareBlueprintAcrossAccounts](https://cloud.tencent.com/document/api/1207/101338) - This API is used to share an image across accounts.
+* Read: [DescribeBlueprintsShareAcrossAccountInfos](https://cloud.tencent.com/document/api/1207/132389)
+* Update: [CancelShareBlueprintAcrossAccounts](https://cloud.tencent.com/document/api/1207/101339) - This API is used to cancel image sharing across accounts.
+* Update: [DescribeBlueprintsShareAcrossAccountInfos](https://cloud.tencent.com/document/api/1207/132389)
+* Update: [ShareBlueprintAcrossAccounts](https://cloud.tencent.com/document/api/1207/101338) - This API is used to share an image across accounts.
+* Delete: [CancelShareBlueprintAcrossAccounts](https://cloud.tencent.com/document/api/1207/101339) - This API is used to cancel image sharing across accounts.
 
 ## Import
 

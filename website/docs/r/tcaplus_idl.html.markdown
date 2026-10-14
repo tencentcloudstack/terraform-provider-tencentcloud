@@ -111,7 +111,7 @@ In addition to all arguments above, the following attributes are exported:
 
 This resource interacts with the following TencentCloud APIs:
 
-* Create: [VerifyIdlFiles](https://cloud.tencent.com/document/api/596/39657) - 上传并校验创建表格文件
-* Read: [VerifyIdlFiles](https://cloud.tencent.com/document/api/596/39657) - 上传并校验创建表格文件
-* Delete: [DeleteIdlFiles](https://cloud.tencent.com/document/api/596/39683) - 删除IDL描述文件
+* Create: [VerifyIdlFiles](https://cloud.tencent.com/document/api/596/39657) - This API is used to upload and verify a table creation file and return the definition of tables that are verified to be valid.
+* Read: [VerifyIdlFiles](https://cloud.tencent.com/document/api/596/39657) - This API is used to upload and verify a table creation file and return the definition of tables that are verified to be valid.
+* Delete: [DeleteIdlFiles](https://cloud.tencent.com/document/api/596/39683) - This API is used to delete a target IDL file by specifying the cluster ID and information of the file to be deleted. If the file is associated with a table, deletion will fail.
 

@@ -90,13 +90,13 @@ In addition to all arguments above, the following attributes are exported:
 
 This resource interacts with the following TencentCloud APIs:
 
-* Create: [CloneDB](https://cloud.tencent.com/document/api/238/52563) - 克隆数据库
-* Create: [DescribeFlowStatus](https://cloud.tencent.com/document/api/238/19967) - 查询流程状态
-* Read: [DescribeDBsNormal](https://cloud.tencent.com/document/api/238/59034) - 查询数据库配置信息（已废弃）
-* Update: [DescribeFlowStatus](https://cloud.tencent.com/document/api/238/19967) - 查询流程状态
-* Update: [ModifyDBName](https://cloud.tencent.com/document/api/238/19955) - 更新数据库名
-* Delete: [DeleteDB](https://cloud.tencent.com/document/api/238/19971) - 删除数据库
-* Delete: [DescribeFlowStatus](https://cloud.tencent.com/document/api/238/19967) - 查询流程状态
+* Create: [CloneDB](https://cloud.tencent.com/document/api/238/52563) - This API is used to clone and rename databases of an instance. The clones are still in the instance from which they are cloned.
+* Create: [DescribeFlowStatus](https://cloud.tencent.com/document/api/238/19967) - This API is used to query flow status.
+* Read: [DescribeDBsNormal](https://cloud.tencent.com/document/api/238/59034) - This API is used to query database configurations. It does not return information of the accounts that have permissions to operate the database.
+* Update: [DescribeFlowStatus](https://cloud.tencent.com/document/api/238/19967) - This API is used to query flow status.
+* Update: [ModifyDBName](https://cloud.tencent.com/document/api/238/19955) - This API is used to rename a database.
+* Delete: [DeleteDB](https://cloud.tencent.com/document/api/238/19971) - This API is used to drop a database.
+* Delete: [DescribeFlowStatus](https://cloud.tencent.com/document/api/238/19967) - This API is used to query flow status.
 
 ## Import
 

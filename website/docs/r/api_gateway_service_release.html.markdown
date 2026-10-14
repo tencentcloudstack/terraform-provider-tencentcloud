@@ -83,10 +83,10 @@ In addition to all arguments above, the following attributes are exported:
 
 This resource interacts with the following TencentCloud APIs:
 
-* Create: [DescribeService](https://cloud.tencent.com/document/api/628/45199) - 查询服务详情
-* Create: [ReleaseService](https://cloud.tencent.com/document/api/628/45192) - 发布服务
-* Read: [DescribeServiceEnvironmentReleaseHistory](https://cloud.tencent.com/document/api/628/45197) - 查询服务环境的发布历史
-* Delete: [UnReleaseService](https://cloud.tencent.com/document/api/628/45191) - 下线服务
+* Create: [DescribeService](https://cloud.tencent.com/document/api/628/45199) - This API is used to query the details of a service, such as its description, domain name, protocol, creation time, and releases.
+* Create: [ReleaseService](https://cloud.tencent.com/document/api/628/45192) - This API is used to publish a service.
+* Read: [DescribeServiceEnvironmentReleaseHistory](https://cloud.tencent.com/document/api/628/45197) - This API is used to query the release history in a service environment.
+* Delete: [UnReleaseService](https://cloud.tencent.com/document/api/628/45191) - This API is used to deactivate a service.
 
 ## Import
 

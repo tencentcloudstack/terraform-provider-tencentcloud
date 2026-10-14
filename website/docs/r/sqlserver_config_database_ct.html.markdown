@@ -92,11 +92,11 @@ In addition to all arguments above, the following attributes are exported:
 
 This resource interacts with the following TencentCloud APIs:
 
-* Create: [DescribeFlowStatus](https://cloud.tencent.com/document/api/238/19967) - 查询流程状态
-* Create: [ModifyDatabaseCT](https://cloud.tencent.com/document/api/238/59032) - 启用&禁用数据库CT
-* Read: [DescribeDBsNormal](https://cloud.tencent.com/document/api/238/59034) - 查询数据库配置信息（已废弃）
-* Update: [DescribeFlowStatus](https://cloud.tencent.com/document/api/238/19967) - 查询流程状态
-* Update: [ModifyDatabaseCT](https://cloud.tencent.com/document/api/238/59032) - 启用&禁用数据库CT
+* Create: [DescribeFlowStatus](https://cloud.tencent.com/document/api/238/19967) - This API is used to query flow status.
+* Create: [ModifyDatabaseCT](https://cloud.tencent.com/document/api/238/59032) - This API is used to enable or disable the change tracking (CT) feature.
+* Read: [DescribeDBsNormal](https://cloud.tencent.com/document/api/238/59034) - This API is used to query database configurations. It does not return information of the accounts that have permissions to operate the database.
+* Update: [DescribeFlowStatus](https://cloud.tencent.com/document/api/238/19967) - This API is used to query flow status.
+* Update: [ModifyDatabaseCT](https://cloud.tencent.com/document/api/238/59032) - This API is used to enable or disable the change tracking (CT) feature.
 
 ## Import
 

@@ -52,5 +52,5 @@ In addition to all arguments above, the following attributes are exported:
 
 This data source queries the following TencentCloud APIs:
 
-* Read: [ListAttachedGroupPolicies](https://cloud.tencent.com/document/api/598/34573) - 查询用户组关联的策略列表
+* Read: [ListAttachedGroupPolicies](https://cloud.tencent.com/document/api/598/34573) - This API (ListAttachedGroupPolicies) is used to query the list of policies associated with a user group.
 

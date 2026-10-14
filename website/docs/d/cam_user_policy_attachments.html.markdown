@@ -54,6 +54,6 @@ In addition to all arguments above, the following attributes are exported:
 
 This data source queries the following TencentCloud APIs:
 
-* Read: [GetUser](https://cloud.tencent.com/document/api/598/34590) - 查询子用户
-* Read: [ListAttachedUserPolicies](https://cloud.tencent.com/document/api/598/34572) - 查询子账号关联的策略列表
+* Read: [GetUser](https://cloud.tencent.com/document/api/598/34590) - This API is used to query sub-users.
+* Read: [ListAttachedUserPolicies](https://cloud.tencent.com/document/api/598/34572) - This API (ListAttachedUserPolicies) is used to query the list of policies associated with a sub-account.
 

@@ -78,7 +78,7 @@ In addition to all arguments above, the following attributes are exported:
 
 This resource interacts with the following TencentCloud APIs:
 
-* Create: [RepairTaskControl](https://cloud.tencent.com/document/api/213/88101) - 管理维修任务
+* Create: [RepairTaskControl](https://cloud.tencent.com/document/api/213/88101)
 
 ## Import
 

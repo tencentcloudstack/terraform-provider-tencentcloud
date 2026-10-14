@@ -52,5 +52,5 @@ In addition to all arguments above, the following attributes are exported:
 
 This data source queries the following TencentCloud APIs:
 
-* Read: [DescribeInstanceLogs](https://cloud.tencent.com/document/api/845/33760) - 查询ES集群日志
+* Read: [DescribeInstanceLogs](https://cloud.tencent.com/document/api/845/33760) - This API is used to query the eligible ES cluster logs in the current region.
 

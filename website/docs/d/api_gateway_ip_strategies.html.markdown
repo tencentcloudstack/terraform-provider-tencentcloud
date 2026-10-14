@@ -84,6 +84,6 @@ In addition to all arguments above, the following attributes are exported:
 
 This data source queries the following TencentCloud APIs:
 
-* Read: [DescribeIPStrategy](https://cloud.tencent.com/document/api/628/45232) - 查询IP策略详情
-* Read: [DescribeIPStrategysStatus](https://cloud.tencent.com/document/api/628/45230) - 查询服务IP策略列表（旧）
+* Read: [DescribeIPStrategy](https://cloud.tencent.com/document/api/628/45232) - This API is used to query IP policy details.
+* Read: [DescribeIPStrategysStatus](https://cloud.tencent.com/document/api/628/45230) - This API is used to query the list of service IP policies.
 

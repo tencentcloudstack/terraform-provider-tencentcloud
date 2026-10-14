@@ -59,15 +59,15 @@ In addition to all arguments above, the following attributes are exported:
 
 This resource interacts with the following TencentCloud APIs:
 
-* Create: [CreateDomain](https://cloud.tencent.com/document/api/1427/56184) - 添加域名
-* Create: [DescribeDomain](https://cloud.tencent.com/document/api/1427/56173) - 获取域名信息
-* Create: [ModifyDomainRemark](https://cloud.tencent.com/document/api/1427/56161) - 设置域名备注
-* Create: [ModifyDomainStatus](https://cloud.tencent.com/document/api/1427/56160) - 修改域名状态
-* Read: [DescribeDomain](https://cloud.tencent.com/document/api/1427/56173) - 获取域名信息
-* Update: [DescribeDomain](https://cloud.tencent.com/document/api/1427/56173) - 获取域名信息
-* Update: [ModifyDomainRemark](https://cloud.tencent.com/document/api/1427/56161) - 设置域名备注
-* Update: [ModifyDomainStatus](https://cloud.tencent.com/document/api/1427/56160) - 修改域名状态
-* Delete: [DeleteDomain](https://cloud.tencent.com/document/api/1427/56178) - 删除域名
+* Create: [CreateDomain](https://cloud.tencent.com/document/api/1427/56184) - This API is used to add a domain.
+* Create: [DescribeDomain](https://cloud.tencent.com/document/api/1427/56173) - This API is used to get the information of a domain.
+* Create: [ModifyDomainRemark](https://cloud.tencent.com/document/api/1427/56161) - This API is used to set the remarks of a domain.
+* Create: [ModifyDomainStatus](https://cloud.tencent.com/document/api/1427/56160) - This API is used to modify the status of a domain.
+* Read: [DescribeDomain](https://cloud.tencent.com/document/api/1427/56173) - This API is used to get the information of a domain.
+* Update: [DescribeDomain](https://cloud.tencent.com/document/api/1427/56173) - This API is used to get the information of a domain.
+* Update: [ModifyDomainRemark](https://cloud.tencent.com/document/api/1427/56161) - This API is used to set the remarks of a domain.
+* Update: [ModifyDomainStatus](https://cloud.tencent.com/document/api/1427/56160) - This API is used to modify the status of a domain.
+* Delete: [DeleteDomain](https://cloud.tencent.com/document/api/1427/56178) - This API is used to delete a domain.
 
 ## Import
 

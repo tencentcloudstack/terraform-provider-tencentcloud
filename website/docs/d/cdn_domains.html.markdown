@@ -87,6 +87,6 @@ In addition to all arguments above, the following attributes are exported:
 
 This data source queries the following TencentCloud APIs:
 
-* Read: [DescribeDomainsConfig](https://cloud.tencent.com/document/api/228/41117) - 查询域名详细配置
-* Read: [DescribeResourceTagsByResourceIds](https://cloud.tencent.com/document/api/651/35319) - 批量查看资源关联的标签
+* Read: [DescribeDomainsConfig](https://cloud.tencent.com/document/api/228/41117) - This API is used to query the complete configuration information of CDN acceleration domain names (inside and outside mainland China).
+* Read: [DescribeResourceTagsByResourceIds](https://cloud.tencent.com/document/api/651/35319) - This API is used to query the tag key-value pairs associated with an existing resource.
 

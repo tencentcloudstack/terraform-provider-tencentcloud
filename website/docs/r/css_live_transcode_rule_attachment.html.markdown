@@ -65,9 +65,9 @@ In addition to all arguments above, the following attributes are exported:
 
 This resource interacts with the following TencentCloud APIs:
 
-* Create: [CreateLiveTranscodeRule](https://cloud.tencent.com/document/api/267/32647) - 创建转码规则
-* Read: [DescribeLiveTranscodeRules](https://cloud.tencent.com/document/api/267/32643) - 获取转码规则列表
-* Delete: [DeleteLiveTranscodeRule](https://cloud.tencent.com/document/api/267/32645) - 删除转码规则
+* Create: [CreateLiveTranscodeRule](https://cloud.tencent.com/document/api/267/32647) - This API is used to create a transcoding rule that binds a template ID to a stream. Up to 50 transcoding rules can be created in total. Before you call this API, you need to first call [CreateLiveTranscodeTemplate](https://intl.cloud.tencent.com/document/product/267/32646?from_cn_redirect=1) to get the template ID.
+* Read: [DescribeLiveTranscodeRules](https://cloud.tencent.com/document/api/267/32643) - This API is used to get the list of transcoding rules.
+* Delete: [DeleteLiveTranscodeRule](https://cloud.tencent.com/document/api/267/32645) - This API is used to delete a transcoding rule.
 
 ## Import
 

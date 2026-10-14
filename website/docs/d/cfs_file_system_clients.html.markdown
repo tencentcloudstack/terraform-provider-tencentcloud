@@ -42,5 +42,5 @@ In addition to all arguments above, the following attributes are exported:
 
 This data source queries the following TencentCloud APIs:
 
-* Read: [DescribeCfsFileSystemClients](https://cloud.tencent.com/document/api/582/47581) - 查询文件系统客户端
+* Read: [DescribeCfsFileSystemClients](https://cloud.tencent.com/document/api/582/47581) - This API is used to query clients on which this file system is mounted. To do so, the client needs to have the CFS monitoring plugin installed.
 

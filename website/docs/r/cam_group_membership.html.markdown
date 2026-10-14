@@ -63,10 +63,10 @@ In addition to all arguments above, the following attributes are exported:
 
 This resource interacts with the following TencentCloud APIs:
 
-* Create: [AddUserToGroup](https://cloud.tencent.com/document/api/598/34594) - 用户加入到用户组
-* Create: [ListUsersForGroup](https://cloud.tencent.com/document/api/598/34586) - 查询用户组关联的用户列表
-* Read: [ListUsersForGroup](https://cloud.tencent.com/document/api/598/34586) - 查询用户组关联的用户列表
-* Delete: [RemoveUserFromGroup](https://cloud.tencent.com/document/api/598/34585) - 从用户组删除用户
+* Create: [AddUserToGroup](https://cloud.tencent.com/document/api/598/34594) - This API is used to add users to a user group.
+* Create: [ListUsersForGroup](https://cloud.tencent.com/document/api/598/34586) - This API is used to query the list of users associated with a user group.
+* Read: [ListUsersForGroup](https://cloud.tencent.com/document/api/598/34586) - This API is used to query the list of users associated with a user group.
+* Delete: [RemoveUserFromGroup](https://cloud.tencent.com/document/api/598/34585) - This API is used to delete users from a user group.
 
 ## Import
 

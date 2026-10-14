@@ -35,5 +35,5 @@ In addition to all arguments above, the following attributes are exported:
 
 This data source queries the following TencentCloud APIs:
 
-* Read: [DescribeTlsVersion](https://cloud.tencent.com/document/api/627/96941) - 查询SaaS型WAF支持的TLS版本
+* Read: [DescribeTlsVersion](https://cloud.tencent.com/document/api/627/96941) - This API is used to query TLS versions supported by SaaS WAF.
 

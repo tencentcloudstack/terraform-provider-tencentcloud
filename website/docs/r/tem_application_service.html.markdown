@@ -65,12 +65,12 @@ The `service` object exports the following:
 
 This resource interacts with the following TencentCloud APIs:
 
-* Create: [CreateApplicationService](https://cloud.tencent.com/document/api/1371/81051) - 新增访问方式
-* Create: [DescribeApplicationServiceList](https://cloud.tencent.com/document/api/1371/81049) - 查询应用访问方式列表
-* Read: [DescribeApplicationServiceList](https://cloud.tencent.com/document/api/1371/81049) - 查询应用访问方式列表
-* Update: [DescribeApplicationServiceList](https://cloud.tencent.com/document/api/1371/81049) - 查询应用访问方式列表
-* Update: [ModifyApplicationService](https://cloud.tencent.com/document/api/1371/81048) - 修改服务访问方式列表
-* Delete: [DeleteApplicationService](https://cloud.tencent.com/document/api/1371/81050) - 删除一条访问方式
+* Create: [CreateApplicationService](https://cloud.tencent.com/document/api/1371/81051) - This API is used to create an access policy.
+* Create: [DescribeApplicationServiceList](https://cloud.tencent.com/document/api/1371/81049) - This API is used to query the list of access policies.
+* Read: [DescribeApplicationServiceList](https://cloud.tencent.com/document/api/1371/81049) - This API is used to query the list of access policies.
+* Update: [DescribeApplicationServiceList](https://cloud.tencent.com/document/api/1371/81049) - This API is used to query the list of access policies.
+* Update: [ModifyApplicationService](https://cloud.tencent.com/document/api/1371/81048) - This API is used to modify an access policy.
+* Delete: [DeleteApplicationService](https://cloud.tencent.com/document/api/1371/81050) - This API is used to delete an access policy.
 
 ## Import
 

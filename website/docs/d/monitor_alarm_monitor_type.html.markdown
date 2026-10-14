@@ -38,5 +38,5 @@ In addition to all arguments above, the following attributes are exported:
 
 This data source queries the following TencentCloud APIs:
 
-* Read: [DescribeMonitorTypes](https://cloud.tencent.com/document/api/248/49979) - 查询监控类型
+* Read: [DescribeMonitorTypes](https://cloud.tencent.com/document/api/248/49979) - This API is used to list all the monitoring types supported by CM.
 

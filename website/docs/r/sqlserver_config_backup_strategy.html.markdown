@@ -136,9 +136,9 @@ In addition to all arguments above, the following attributes are exported:
 
 This resource interacts with the following TencentCloud APIs:
 
-* Create: [ModifyBackupStrategy](https://cloud.tencent.com/document/api/238/46288) - 设置备份策略
-* Read: [DescribeDBInstances](https://cloud.tencent.com/document/api/238/19969) - 查询实例列表
-* Update: [ModifyBackupStrategy](https://cloud.tencent.com/document/api/238/46288) - 设置备份策略
+* Create: [ModifyBackupStrategy](https://cloud.tencent.com/document/api/238/46288) - This API is used to modify the backup policy.
+* Read: [DescribeDBInstances](https://cloud.tencent.com/document/api/238/19969) - This API is used to query the list of instances.
+* Update: [ModifyBackupStrategy](https://cloud.tencent.com/document/api/238/46288) - This API is used to modify the backup policy.
 
 ## Import
 

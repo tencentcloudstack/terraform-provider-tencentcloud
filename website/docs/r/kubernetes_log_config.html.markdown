@@ -233,10 +233,10 @@ In addition to all arguments above, the following attributes are exported:
 
 This resource interacts with the following TencentCloud APIs:
 
-* Create: [CreateCLSLogConfig](https://cloud.tencent.com/document/api/457/102410) - 创建日志采集配置
-* Create: [DescribeLogConfigs](https://cloud.tencent.com/document/api/457/111168) - 查询日志采集规则
-* Read: [DescribeLogConfigs](https://cloud.tencent.com/document/api/457/111168) - 查询日志采集规则
-* Update: [ModifyLogConfig](https://cloud.tencent.com/document/api/457/130677) - 修改日志采集配置
-* Delete: [DeleteLogConfigs](https://cloud.tencent.com/document/api/457/111089) - 删除日志采集规则
-* Delete: [DescribeLogConfigs](https://cloud.tencent.com/document/api/457/111168) - 查询日志采集规则
+* Create: [CreateCLSLogConfig](https://cloud.tencent.com/document/api/457/102410) - This API is used to create log collection configuration.
+* Create: [DescribeLogConfigs](https://cloud.tencent.com/document/api/457/111168) - This API is used to query the log collection rules.
+* Read: [DescribeLogConfigs](https://cloud.tencent.com/document/api/457/111168) - This API is used to query the log collection rules.
+* Update: [ModifyLogConfig](https://cloud.tencent.com/document/api/457/130677)
+* Delete: [DeleteLogConfigs](https://cloud.tencent.com/document/api/457/111089) - This API is used to delete collection rules within the cluster.
+* Delete: [DescribeLogConfigs](https://cloud.tencent.com/document/api/457/111168) - This API is used to query the log collection rules.
 

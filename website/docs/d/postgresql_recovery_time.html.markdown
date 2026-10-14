@@ -37,5 +37,5 @@ In addition to all arguments above, the following attributes are exported:
 
 This data source queries the following TencentCloud APIs:
 
-* Read: [DescribeAvailableRecoveryTime](https://cloud.tencent.com/document/api/409/68070) - 查询实例可恢复的时间范围
+* Read: [DescribeAvailableRecoveryTime](https://cloud.tencent.com/document/api/409/68070) - This API is used to query the available restoration time of an instance.
 

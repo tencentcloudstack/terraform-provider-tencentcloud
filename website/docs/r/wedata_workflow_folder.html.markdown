@@ -40,8 +40,8 @@ In addition to all arguments above, the following attributes are exported:
 
 This resource interacts with the following TencentCloud APIs:
 
-* Create: [CreateWorkflowFolder](https://cloud.tencent.com/document/api/1267/123638) - 创建工作流文件夹
-* Read: [ListWorkflowFolders](https://cloud.tencent.com/document/api/1267/123621) - 查看工作流文件夹列表
-* Update: [UpdateWorkflowFolder](https://cloud.tencent.com/document/api/1267/123614) - 更新工作流文件夹
-* Delete: [DeleteWorkflowFolder](https://cloud.tencent.com/document/api/1267/123633) - 删除工作流文件夹
+* Create: [CreateWorkflowFolder](https://cloud.tencent.com/document/api/1267/123638) - This API is used to create a workflow folder.
+* Read: [ListWorkflowFolders](https://cloud.tencent.com/document/api/1267/123621) - This API is used to query the folder list.
+* Update: [UpdateWorkflowFolder](https://cloud.tencent.com/document/api/1267/123614)
+* Delete: [DeleteWorkflowFolder](https://cloud.tencent.com/document/api/1267/123633) - This API is used to delete a data development folder
 

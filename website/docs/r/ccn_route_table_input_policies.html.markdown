@@ -118,9 +118,9 @@ In addition to all arguments above, the following attributes are exported:
 
 This resource interacts with the following TencentCloud APIs:
 
-* Create: [ReplaceCcnRouteTableInputPolicys](https://cloud.tencent.com/document/api/215/108739) - 替换云联网路由接收策略
-* Read: [DescribeCcnRouteTableInputPolicys](https://cloud.tencent.com/document/api/215/108746) - 查询云联网路由接收策略
-* Update: [ReplaceCcnRouteTableInputPolicys](https://cloud.tencent.com/document/api/215/108739) - 替换云联网路由接收策略
+* Create: [ReplaceCcnRouteTableInputPolicys](https://cloud.tencent.com/document/api/215/108739)
+* Read: [DescribeCcnRouteTableInputPolicys](https://cloud.tencent.com/document/api/215/108746)
+* Update: [ReplaceCcnRouteTableInputPolicys](https://cloud.tencent.com/document/api/215/108739)
 
 ## Import
 

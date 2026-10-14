@@ -52,10 +52,10 @@ In addition to all arguments above, the following attributes are exported:
 
 This resource interacts with the following TencentCloud APIs:
 
-* Create: [CreateLiveCallbackTemplate](https://cloud.tencent.com/document/api/267/32637) - 创建回调模板
-* Read: [DescribeLiveCallbackTemplate](https://cloud.tencent.com/document/api/267/32633) - 获取直播单个回调模板
-* Update: [ModifyLiveCallbackTemplate](https://cloud.tencent.com/document/api/267/32631) - 修改回调模板
-* Delete: [DeleteLiveCallbackTemplate](https://cloud.tencent.com/document/api/267/32635) - 删除回调模板
+* Create: [CreateLiveCallbackTemplate](https://cloud.tencent.com/document/api/267/32637) - This API is used to create a callback template. Up to 50 templates can be created. After the template ID is returned, you need to call the [CreateLiveCallbackRule](https://intl.cloud.tencent.com/document/product/267/32638?from_cn_redirect=1) API to bind the template ID to a domain name/path.
+* Read: [DescribeLiveCallbackTemplate](https://cloud.tencent.com/document/api/267/32633) - This API is used to get a single callback template.
+* Update: [ModifyLiveCallbackTemplate](https://cloud.tencent.com/document/api/267/32631) - This API is used to modify a callback template.
+* Delete: [DeleteLiveCallbackTemplate](https://cloud.tencent.com/document/api/267/32635) - This API deletes a callback template.
 
 ## Import
 

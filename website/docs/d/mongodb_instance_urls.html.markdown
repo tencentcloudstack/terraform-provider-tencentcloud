@@ -36,5 +36,5 @@ In addition to all arguments above, the following attributes are exported:
 
 This data source queries the following TencentCloud APIs:
 
-* Read: [DescribeDBInstanceURL](https://cloud.tencent.com/document/api/240/116065) - 获取实例连接的URI
+* Read: [DescribeDBInstanceURL](https://cloud.tencent.com/document/api/240/116065)
 

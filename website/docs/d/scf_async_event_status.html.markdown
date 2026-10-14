@@ -39,5 +39,5 @@ In addition to all arguments above, the following attributes are exported:
 
 This data source queries the following TencentCloud APIs:
 
-* Read: [GetAsyncEventStatus](https://cloud.tencent.com/document/api/583/65704) - 获取函数异步事件状态
+* Read: [GetAsyncEventStatus](https://cloud.tencent.com/document/api/583/65704) - This API is used to get the status of an async function execution event. The event status is retained for 3*24 hours, counting from the completion of the event.
 

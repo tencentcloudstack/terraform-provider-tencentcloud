@@ -48,9 +48,9 @@ In addition to all arguments above, the following attributes are exported:
 
 This resource interacts with the following TencentCloud APIs:
 
-* Create: [ModifyModuleStatus](https://cloud.tencent.com/document/api/627/99699) - 设置某个domain下基础安全模块的开关
-* Read: [DescribeModuleStatus](https://cloud.tencent.com/document/api/627/101340) - 查询waf各个模块接口的开关状态
-* Update: [ModifyModuleStatus](https://cloud.tencent.com/document/api/627/99699) - 设置某个domain下基础安全模块的开关
+* Create: [ModifyModuleStatus](https://cloud.tencent.com/document/api/627/99699) - Set the switch for the basic security module under a certain domain
+* Read: [DescribeModuleStatus](https://cloud.tencent.com/document/api/627/101340) - Query the switch status of each WAF basic security module, check if each module is enabled
+* Update: [ModifyModuleStatus](https://cloud.tencent.com/document/api/627/99699) - Set the switch for the basic security module under a certain domain
 
 ## Import
 

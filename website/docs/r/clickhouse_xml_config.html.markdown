@@ -48,11 +48,11 @@ In addition to all arguments above, the following attributes are exported:
 
 This resource interacts with the following TencentCloud APIs:
 
-* Create: [DescribeInstanceState](https://cloud.tencent.com/document/api/1299/89676) - 获取集群实例状态
-* Create: [ModifyClusterConfigs](https://cloud.tencent.com/document/api/1299/83423) - 修改集群配置文件接口
-* Read: [DescribeClusterConfigs](https://cloud.tencent.com/document/api/1299/86161) - 获取集群配置文件内容
-* Update: [DescribeInstanceState](https://cloud.tencent.com/document/api/1299/89676) - 获取集群实例状态
-* Update: [ModifyClusterConfigs](https://cloud.tencent.com/document/api/1299/83423) - 修改集群配置文件接口
+* Create: [DescribeInstanceState](https://cloud.tencent.com/document/api/1299/89676)
+* Create: [ModifyClusterConfigs](https://cloud.tencent.com/document/api/1299/83423)
+* Read: [DescribeClusterConfigs](https://cloud.tencent.com/document/api/1299/86161)
+* Update: [DescribeInstanceState](https://cloud.tencent.com/document/api/1299/89676)
+* Update: [ModifyClusterConfigs](https://cloud.tencent.com/document/api/1299/83423)
 
 ## Import
 

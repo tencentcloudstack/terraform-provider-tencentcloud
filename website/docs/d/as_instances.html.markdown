@@ -71,5 +71,5 @@ In addition to all arguments above, the following attributes are exported:
 
 This data source queries the following TencentCloud APIs:
 
-* Read: [DescribeAutoScalingInstances](https://cloud.tencent.com/document/api/377/20437) - 查询实例
+* Read: [DescribeAutoScalingInstances](https://cloud.tencent.com/document/api/377/20437) - This API (DescribeAutoScalingInstances) is used to query the information of instances associated with AS.
 

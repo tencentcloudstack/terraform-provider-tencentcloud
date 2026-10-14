@@ -99,20 +99,20 @@ In addition to all arguments above, the following attributes are exported:
 
 This resource interacts with the following TencentCloud APIs:
 
-* Create: [DescribeAccounts](https://cloud.tencent.com/document/api/238/19970) - 拉取实例账户列表
-* Create: [DescribeDBs](https://cloud.tencent.com/document/api/238/19968) - 查询数据库列表（已废弃）
-* Create: [DescribeFlowStatus](https://cloud.tencent.com/document/api/238/19967) - 查询流程状态
-* Create: [ModifyAccountPrivilege](https://cloud.tencent.com/document/api/238/19959) - 修改实例账户权限
-* Read: [DescribeAccounts](https://cloud.tencent.com/document/api/238/19970) - 拉取实例账户列表
-* Read: [DescribeDBs](https://cloud.tencent.com/document/api/238/19968) - 查询数据库列表（已废弃）
-* Update: [DescribeAccounts](https://cloud.tencent.com/document/api/238/19970) - 拉取实例账户列表
-* Update: [DescribeDBs](https://cloud.tencent.com/document/api/238/19968) - 查询数据库列表（已废弃）
-* Update: [DescribeFlowStatus](https://cloud.tencent.com/document/api/238/19967) - 查询流程状态
-* Update: [ModifyAccountPrivilege](https://cloud.tencent.com/document/api/238/19959) - 修改实例账户权限
-* Delete: [DescribeAccounts](https://cloud.tencent.com/document/api/238/19970) - 拉取实例账户列表
-* Delete: [DescribeDBs](https://cloud.tencent.com/document/api/238/19968) - 查询数据库列表（已废弃）
-* Delete: [DescribeFlowStatus](https://cloud.tencent.com/document/api/238/19967) - 查询流程状态
-* Delete: [ModifyAccountPrivilege](https://cloud.tencent.com/document/api/238/19959) - 修改实例账户权限
+* Create: [DescribeAccounts](https://cloud.tencent.com/document/api/238/19970) - This API is used to pull the list of instance accounts.
+* Create: [DescribeDBs](https://cloud.tencent.com/document/api/238/19968) - This API is used to query the list of databases
+* Create: [DescribeFlowStatus](https://cloud.tencent.com/document/api/238/19967) - This API is used to query flow status.
+* Create: [ModifyAccountPrivilege](https://cloud.tencent.com/document/api/238/19959) - This API is used to modify instance account permissions.
+* Read: [DescribeAccounts](https://cloud.tencent.com/document/api/238/19970) - This API is used to pull the list of instance accounts.
+* Read: [DescribeDBs](https://cloud.tencent.com/document/api/238/19968) - This API is used to query the list of databases
+* Update: [DescribeAccounts](https://cloud.tencent.com/document/api/238/19970) - This API is used to pull the list of instance accounts.
+* Update: [DescribeDBs](https://cloud.tencent.com/document/api/238/19968) - This API is used to query the list of databases
+* Update: [DescribeFlowStatus](https://cloud.tencent.com/document/api/238/19967) - This API is used to query flow status.
+* Update: [ModifyAccountPrivilege](https://cloud.tencent.com/document/api/238/19959) - This API is used to modify instance account permissions.
+* Delete: [DescribeAccounts](https://cloud.tencent.com/document/api/238/19970) - This API is used to pull the list of instance accounts.
+* Delete: [DescribeDBs](https://cloud.tencent.com/document/api/238/19968) - This API is used to query the list of databases
+* Delete: [DescribeFlowStatus](https://cloud.tencent.com/document/api/238/19967) - This API is used to query flow status.
+* Delete: [ModifyAccountPrivilege](https://cloud.tencent.com/document/api/238/19959) - This API is used to modify instance account permissions.
 
 ## Import
 

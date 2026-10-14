@@ -101,5 +101,5 @@ In addition to all arguments above, the following attributes are exported:
 
 This data source queries the following TencentCloud APIs:
 
-* Read: [DescribeAlarmHistories](https://cloud.tencent.com/document/api/248/48684) - 查询告警历史
+* Read: [DescribeAlarmHistories](https://cloud.tencent.com/document/api/248/48684) - This API is used to query the alarm records.
 

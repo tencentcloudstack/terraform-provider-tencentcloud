@@ -45,5 +45,5 @@ In addition to all arguments above, the following attributes are exported:
 
 This data source queries the following TencentCloud APIs:
 
-* Read: [DescribeResourceRelatedJobs](https://cloud.tencent.com/document/api/849/54669) - 获取资源关联作业信息
+* Read: [DescribeResourceRelatedJobs](https://cloud.tencent.com/document/api/849/54669)
 

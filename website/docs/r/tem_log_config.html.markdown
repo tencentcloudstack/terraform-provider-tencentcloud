@@ -53,10 +53,10 @@ In addition to all arguments above, the following attributes are exported:
 
 This resource interacts with the following TencentCloud APIs:
 
-* Create: [CreateLogConfig](https://cloud.tencent.com/document/api/1371/78465) - 创建日志收集配置
-* Read: [DescribeLogConfig](https://cloud.tencent.com/document/api/1371/78470) - 查询日志收集配置详情
-* Update: [ModifyLogConfig](https://cloud.tencent.com/document/api/1371/78467) - 编辑日志收集配置
-* Delete: [DestroyLogConfig](https://cloud.tencent.com/document/api/1371/78468) - 销毁日志收集配置
+* Create: [CreateLogConfig](https://cloud.tencent.com/document/api/1371/78465) - This API is used to create a log collecting configuration.
+* Read: [DescribeLogConfig](https://cloud.tencent.com/document/api/1371/78470) - This API is used to query details of a log collecting configuration.
+* Update: [ModifyLogConfig](https://cloud.tencent.com/document/api/1371/78467) - This API is used to modify a log collecting configuration.
+* Delete: [DestroyLogConfig](https://cloud.tencent.com/document/api/1371/78468) - This API is used to terminate a log collecting configuration.
 
 ## Import
 

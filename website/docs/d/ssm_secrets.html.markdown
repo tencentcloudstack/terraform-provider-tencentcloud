@@ -83,5 +83,5 @@ In addition to all arguments above, the following attributes are exported:
 
 This data source queries the following TencentCloud APIs:
 
-* Read: [ListSecrets](https://cloud.tencent.com/document/api/1140/40519) - 获取凭据的详细信息列表
+* Read: [ListSecrets](https://cloud.tencent.com/document/api/1140/40519) - This API is used to obtain the detailed information list of all Secrets. You can specify the filter fields and sorting order as needed.
 

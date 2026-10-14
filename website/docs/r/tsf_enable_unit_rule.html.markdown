@@ -38,11 +38,11 @@ In addition to all arguments above, the following attributes are exported:
 
 This resource interacts with the following TencentCloud APIs:
 
-* Create: [DisableUnitRule](https://cloud.tencent.com/document/api/649/53895) - 禁用单元化规则
-* Create: [EnableUnitRule](https://cloud.tencent.com/document/api/649/53893) - 启用单元化规则
-* Read: [DescribeUnitRule](https://cloud.tencent.com/document/api/649/53899) - 查询单元化规则详情
-* Update: [DisableUnitRule](https://cloud.tencent.com/document/api/649/53895) - 禁用单元化规则
-* Update: [EnableUnitRule](https://cloud.tencent.com/document/api/649/53893) - 启用单元化规则
+* Create: [DisableUnitRule](https://cloud.tencent.com/document/api/649/53895)
+* Create: [EnableUnitRule](https://cloud.tencent.com/document/api/649/53893)
+* Read: [DescribeUnitRule](https://cloud.tencent.com/document/api/649/53899)
+* Update: [DisableUnitRule](https://cloud.tencent.com/document/api/649/53895)
+* Update: [EnableUnitRule](https://cloud.tencent.com/document/api/649/53893)
 
 ## Import
 

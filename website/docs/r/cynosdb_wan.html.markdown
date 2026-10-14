@@ -41,11 +41,11 @@ In addition to all arguments above, the following attributes are exported:
 
 This resource interacts with the following TencentCloud APIs:
 
-* Create: [DescribeFlow](https://cloud.tencent.com/document/api/1003/86162) - 查询任务流信息
-* Create: [OpenWan](https://cloud.tencent.com/document/api/1003/92732) - 开通外网
-* Read: [DescribeClusterInstanceGrps](https://cloud.tencent.com/document/api/1003/48303) - 查询实例组（废弃）
-* Delete: [CloseWan](https://cloud.tencent.com/document/api/1003/92737) - 关闭外网
-* Delete: [DescribeFlow](https://cloud.tencent.com/document/api/1003/86162) - 查询任务流信息
+* Create: [DescribeFlow](https://cloud.tencent.com/document/api/1003/86162) - This API is used to query task flow information.
+* Create: [OpenWan](https://cloud.tencent.com/document/api/1003/92732) - This interface (OpenWan) is used to enable external network.
+* Read: [DescribeClusterInstanceGrps](https://cloud.tencent.com/document/api/1003/48303) - This API is used to query instance groups.
+* Delete: [CloseWan](https://cloud.tencent.com/document/api/1003/92737) - This interface (CloseWan) is used to disable public network.
+* Delete: [DescribeFlow](https://cloud.tencent.com/document/api/1003/86162) - This API is used to query task flow information.
 
 ## Import
 
