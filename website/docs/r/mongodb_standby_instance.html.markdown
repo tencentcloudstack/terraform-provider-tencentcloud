@@ -99,23 +99,23 @@ In addition to all arguments above, the following attributes are exported:
 This resource interacts with the following TencentCloud APIs:
 
 * Create: [CreateDBInstance](https://cloud.tencent.com/document/api/240/38571) - This API is used to create a yearly/monthly subscription TencentDB for MongoDB instance. The [DescribeSpecInfo](https://www.tencentcloud.
-* Create: [CreateDBInstanceHour](https://cloud.tencent.com/document/api/240/38570) - This API is used to create a pay-as-you-go TencentDB for MongoDB instance.
-* Create: [DescribeDBInstances](https://cloud.tencent.com/document/api/240/38568) - This API is used to query the list of TencentDB for MongoDB instances. It supports filtering primary instances, disaster recovery instances, and read-only instances by project ID, instance ID, instance status, and other conditions.
-* Create: [ModifyResourceTags](https://cloud.tencent.com/document/api/651/35322) - This API is used to modify all tags associated with a resource.
-* Create: [RenameInstance](https://cloud.tencent.com/document/api/240/38563) - This API is used to rename a TencentDB instance.
-* Read: [DescribeDBInstances](https://cloud.tencent.com/document/api/240/38568) - This API is used to query the list of TencentDB for MongoDB instances. It supports filtering primary instances, disaster recovery instances, and read-only instances by project ID, instance ID, instance status, and other conditions.
-* Read: [DescribeSecurityGroup](https://cloud.tencent.com/document/api/240/55675) - This API is used to query security groups bound to an instance.
+* Create: [CreateDBInstanceHour](https://www.tencentcloud.com/document/product/240/34704) - This API is used to create a pay-as-you-go TencentDB for MongoDB instance.
+* Create: [DescribeDBInstances](https://www.tencentcloud.com/document/product/240/34702) - This API is used to query the list of TencentDB for MongoDB instances. It supports filtering primary instances, disaster recovery instances, and read-only instances by project ID, instance ID, instance status, and other conditions.
+* Create: [ModifyResourceTags](https://www.tencentcloud.com/document/product/651/33012) - This API is used to modify all tags associated with a resource.
+* Create: [RenameInstance](https://www.tencentcloud.com/document/product/240/34697) - This API is used to rename a TencentDB instance.
+* Read: [DescribeDBInstances](https://www.tencentcloud.com/document/product/240/34702) - This API is used to query the list of TencentDB for MongoDB instances. It supports filtering primary instances, disaster recovery instances, and read-only instances by project ID, instance ID, instance status, and other conditions.
+* Read: [DescribeSecurityGroup](https://www.tencentcloud.com/document/product/240/40341) - This API is used to query security groups bound to an instance.
 * Read: [DescribeTransparentDataEncryptionStatus](https://cloud.tencent.com/document/api/240/107168)
-* Update: [AssignProject](https://cloud.tencent.com/document/api/240/38572) - This API is used to specify the project of a TencentDB for MongoDB instance.
-* Update: [DescribeDBInstanceDeal](https://cloud.tencent.com/document/api/240/43667) - This API is used to get order details of purchase, renewal, and specification adjustment of a MongoDB instance.
-* Update: [ModifyDBInstanceSecurityGroup](https://cloud.tencent.com/document/api/240/70577) - This API is used to modify security groups bound to an instance.
-* Update: [ModifyDBInstanceSpec](https://cloud.tencent.com/document/api/240/38565) - This API is used to adjust the TencentDB for MongoDB instance configuration. The [DescribeSpecInfo](https://www.tencentcloud.com/document/product/240/38567?
-* Update: [ModifyResourceTags](https://cloud.tencent.com/document/api/651/35322) - This API is used to modify all tags associated with a resource.
-* Update: [RenameInstance](https://cloud.tencent.com/document/api/240/38563) - This API is used to rename a TencentDB instance.
-* Update: [RenewDBInstances](https://cloud.tencent.com/document/api/240/43595) - This API is used to renew a monthly subscription TencentDB instance. Only monthly subscription instances are supported, while pay-as-you-go instances do not need to be renewed.
-* Delete: [DescribeDBInstances](https://cloud.tencent.com/document/api/240/38568) - This API is used to query the list of TencentDB for MongoDB instances. It supports filtering primary instances, disaster recovery instances, and read-only instances by project ID, instance ID, instance status, and other conditions.
-* Delete: [IsolateDBInstance](https://cloud.tencent.com/document/api/240/38566) - This API is used to isolate a pay-as-you-go TencentDB for MongoDB instance. After isolation, the instance is retained in the recycle bin, and data cannot be written into it.
-* Delete: [OfflineIsolatedDBInstance](https://cloud.tencent.com/document/api/240/38564) - This API is used to deactivate isolated TencentDB instances immediately. The instances must be in isolated status.
+* Update: [AssignProject](https://www.tencentcloud.com/document/product/240/34705) - This API is used to specify the project of a TencentDB for MongoDB instance.
+* Update: [DescribeDBInstanceDeal](https://www.tencentcloud.com/document/product/240/37330) - This API is used to get order details of purchase, renewal, and specification adjustment of a MongoDB instance.
+* Update: [ModifyDBInstanceSecurityGroup](https://www.tencentcloud.com/document/product/240/45894) - This API is used to modify security groups bound to an instance.
+* Update: [ModifyDBInstanceSpec](https://www.tencentcloud.com/document/product/240/34699) - This API is used to adjust the TencentDB for MongoDB instance configuration. The [DescribeSpecInfo](https://www.tencentcloud.com/document/product/240/38567?
+* Update: [ModifyResourceTags](https://www.tencentcloud.com/document/product/651/33012) - This API is used to modify all tags associated with a resource.
+* Update: [RenameInstance](https://www.tencentcloud.com/document/product/240/34697) - This API is used to rename a TencentDB instance.
+* Update: [RenewDBInstances](https://www.tencentcloud.com/document/product/240/37326) - This API is used to renew a monthly subscription TencentDB instance. Only monthly subscription instances are supported, while pay-as-you-go instances do not need to be renewed.
+* Delete: [DescribeDBInstances](https://www.tencentcloud.com/document/product/240/34702) - This API is used to query the list of TencentDB for MongoDB instances. It supports filtering primary instances, disaster recovery instances, and read-only instances by project ID, instance ID, instance status, and other conditions.
+* Delete: [IsolateDBInstance](https://www.tencentcloud.com/document/product/240/34700) - This API is used to isolate a pay-as-you-go TencentDB for MongoDB instance. After isolation, the instance is retained in the recycle bin, and data cannot be written into it.
+* Delete: [OfflineIsolatedDBInstance](https://www.tencentcloud.com/document/product/240/34698) - This API is used to deactivate isolated TencentDB instances immediately. The instances must be in isolated status.
 
 ## Import
 

@@ -70,5 +70,5 @@ In addition to all arguments above, the following attributes are exported:
 
 This data source queries the following TencentCloud APIs:
 
-* Read: [DescribeHaVips](https://cloud.tencent.com/document/api/215/30650) - This API (DescribeHaVips) is used to query the list of highly available virtual IPs (HAVIP).
+* Read: [DescribeHaVips](https://www.tencentcloud.com/document/product/215/34762) - This API (DescribeHaVips) is used to query the list of highly available virtual IPs (HAVIP).
 

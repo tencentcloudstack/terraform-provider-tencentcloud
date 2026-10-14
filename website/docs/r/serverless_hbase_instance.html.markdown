@@ -83,7 +83,7 @@ This resource interacts with the following TencentCloud APIs:
 * Read: [DescribeSLInstance](https://cloud.tencent.com/document/api/589/110871) - This API is used to query basic information of a Serverless HBase instance.
 * Update: [DescribeSLInstance](https://cloud.tencent.com/document/api/589/110871) - This API is used to query basic information of a Serverless HBase instance.
 * Update: [DescribeSLInstanceList](https://cloud.tencent.com/document/api/589/110870) - This API is used to query detailed information of the Serverless HBase instance list.
-* Update: [ModifyResourceTags](https://cloud.tencent.com/document/api/651/35322) - This API is used to modify all tags associated with a resource.
+* Update: [ModifyResourceTags](https://www.tencentcloud.com/document/product/651/33012) - This API is used to modify all tags associated with a resource.
 * Update: [ModifySLInstance](https://cloud.tencent.com/document/api/589/110869) - This API is used to change the configuration of a Serverless HBase instance.
 * Update: [ModifySLInstanceBasic](https://cloud.tencent.com/document/api/589/116586) - This API is used to modify the Serverless HBase instance name.
 * Delete: [DescribeSLInstanceList](https://cloud.tencent.com/document/api/589/110870) - This API is used to query detailed information of the Serverless HBase instance list.

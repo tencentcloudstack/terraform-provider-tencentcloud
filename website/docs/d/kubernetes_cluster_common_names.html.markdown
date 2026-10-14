@@ -53,5 +53,5 @@ In addition to all arguments above, the following attributes are exported:
 
 This data source queries the following TencentCloud APIs:
 
-* Read: [DescribeClusterCommonNames](https://cloud.tencent.com/document/api/457/55721) - This API is used to obtain the CommonName from the kube-apiserver client certificate that corresponding to the sub-account in RBAC authorization mode.
+* Read: [DescribeClusterCommonNames](https://www.tencentcloud.com/document/product/457/41571) - This API is used to obtain the CommonName from the kube-apiserver client certificate that corresponding to the sub-account in RBAC authorization mode.
 

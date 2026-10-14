@@ -55,10 +55,10 @@ In addition to all arguments above, the following attributes are exported:
 
 This resource interacts with the following TencentCloud APIs:
 
-* Create: [CreateWebCallback](https://cloud.tencent.com/document/api/614/115231) - This API is used to create alarm channel callback configurations.
-* Read: [DescribeWebCallbacks](https://cloud.tencent.com/document/api/614/115229) - This API is used to search alarm channel callback configuration lists.
-* Update: [ModifyWebCallback](https://cloud.tencent.com/document/api/614/115228) - This API is used to modify alarm channel callback configurations.
-* Delete: [DeleteWebCallback](https://cloud.tencent.com/document/api/614/115230) - This API is used to delete alarm channel callback configurations.
+* Create: [CreateWebCallback](https://www.tencentcloud.com/document/product/614/80578) - This API is used to create alarm channel callback configurations.
+* Read: [DescribeWebCallbacks](https://www.tencentcloud.com/document/product/614/80574) - This API is used to search alarm channel callback configuration lists.
+* Update: [ModifyWebCallback](https://www.tencentcloud.com/document/product/614/80572) - This API is used to modify alarm channel callback configurations.
+* Delete: [DeleteWebCallback](https://www.tencentcloud.com/document/product/614/80576) - This API is used to delete alarm channel callback configurations.
 
 ## Import
 

@@ -54,5 +54,5 @@ In addition to all arguments above, the following attributes are exported:
 
 This data source queries the following TencentCloud APIs:
 
-* Read: [DescribeCurrentOp](https://cloud.tencent.com/document/api/240/48120) - This API is used to query the operation currently being performed on a TencentDB for MongoDB instance.
+* Read: [DescribeCurrentOp](https://www.tencentcloud.com/document/product/240/74802) - This API is used to query the operation currently being performed on a TencentDB for MongoDB instance.
 

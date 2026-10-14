@@ -69,14 +69,14 @@ In addition to all arguments above, the following attributes are exported:
 
 This resource interacts with the following TencentCloud APIs:
 
-* Create: [AllocateIPv6Addresses](https://cloud.tencent.com/document/api/215/113679) - This API is used to apply for one or more Elastic IPv6 (EIPv6) instances.
-* Create: [DescribeTaskResult](https://cloud.tencent.com/document/api/215/36271) - This API is used to query the EIP async job execution results.
-* Read: [DescribeIPv6Addresses](https://cloud.tencent.com/document/api/215/113677) - This API is used to query detailed information of one or more EIPv6 instances.
-* Read: [DescribeResourceTagsByResourceIds](https://cloud.tencent.com/document/api/651/35319) - This API is used to query the tag key-value pairs associated with an existing resource.
-* Update: [ModifyIPv6AddressesAttributes](https://cloud.tencent.com/document/api/215/113675) - This API is used to modify the name of an EIPv6 instance.
-* Update: [ModifyIPv6AddressesBandwidth](https://cloud.tencent.com/document/api/215/113674) - This API is used to modify the bandwidth cap of an EIPv6 instance.
-* Update: [ModifyResourceTags](https://cloud.tencent.com/document/api/651/35322) - This API is used to modify all tags associated with a resource.
-* Delete: [ReleaseIPv6Addresses](https://cloud.tencent.com/document/api/215/113673) - This API is used to release one or more EIPv6 instances.
+* Create: [AllocateIPv6Addresses](https://www.tencentcloud.com/document/product/215/68132) - This API is used to apply for one or more Elastic IPv6 (EIPv6) instances.
+* Create: [DescribeTaskResult](https://www.tencentcloud.com/document/product/215/34772) - This API is used to query the EIP async job execution results.
+* Read: [DescribeIPv6Addresses](https://www.tencentcloud.com/document/product/215/68129) - This API is used to query detailed information of one or more EIPv6 instances.
+* Read: [DescribeResourceTagsByResourceIds](https://www.tencentcloud.com/document/product/651/33022) - This API is used to query the tag key-value pairs associated with an existing resource.
+* Update: [ModifyIPv6AddressesAttributes](https://www.tencentcloud.com/document/product/215/68126) - This API is used to modify the name of an EIPv6 instance.
+* Update: [ModifyIPv6AddressesBandwidth](https://www.tencentcloud.com/document/product/215/68125) - This API is used to modify the bandwidth cap of an EIPv6 instance.
+* Update: [ModifyResourceTags](https://www.tencentcloud.com/document/product/651/33012) - This API is used to modify all tags associated with a resource.
+* Delete: [ReleaseIPv6Addresses](https://www.tencentcloud.com/document/product/215/68123) - This API is used to release one or more EIPv6 instances.
 
 ## Import
 

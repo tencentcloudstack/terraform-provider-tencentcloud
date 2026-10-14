@@ -45,8 +45,8 @@ In addition to all arguments above, the following attributes are exported:
 
 This resource interacts with the following TencentCloud APIs:
 
-* Create: [CreateLoadBalancer](https://cloud.tencent.com/document/api/214/30692) - This API is used to create a Cloud Load Balancer instance (this interface supports only pay-as-you-go CLB instances. For annual/monthly subscription, proceed to purchase through the console).
-* Read: [DescribeLoadBalancers](https://cloud.tencent.com/document/api/214/30685) - This API is used to query the list of CLB instances in a region.
-* Update: [ModifyLoadBalancerAttributes](https://cloud.tencent.com/document/api/214/30680) - This API is used to modify the attributes of a CLB instance, such as name and cross-region attributes.
-* Delete: [DeleteLoadBalancer](https://cloud.tencent.com/document/api/214/30689) - This API is used to delete one or more specified CLB instances. After successful deletion, the listeners and forwarding rules under the CLB instance will be deleted together, and the backend service will be unbound.
+* Create: [CreateLoadBalancer](https://www.tencentcloud.com/document/product/214/33841) - This API is used to create a Cloud Load Balancer instance (this interface supports only pay-as-you-go CLB instances. For annual/monthly subscription, proceed to purchase through the console).
+* Read: [DescribeLoadBalancers](https://www.tencentcloud.com/document/product/214/33830) - This API is used to query the list of CLB instances in a region.
+* Update: [ModifyLoadBalancerAttributes](https://www.tencentcloud.com/document/product/214/33817) - This API is used to modify the attributes of a CLB instance, such as name and cross-region attributes.
+* Delete: [DeleteLoadBalancer](https://www.tencentcloud.com/document/product/214/33837) - This API is used to delete one or more specified CLB instances. After successful deletion, the listeners and forwarding rules under the CLB instance will be deleted together, and the backend service will be unbound.
 

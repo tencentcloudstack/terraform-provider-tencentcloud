@@ -264,13 +264,13 @@ In addition to all arguments above, the following attributes are exported:
 
 This resource interacts with the following TencentCloud APIs:
 
-* Create: [CreateAlarmNotice](https://cloud.tencent.com/document/api/614/56465) - This API is used to create a notification channel group with two configuration modes to choose from.
-* Create: [ModifyResourceTags](https://cloud.tencent.com/document/api/651/35322) - This API is used to modify all tags associated with a resource.
-* Read: [DescribeAlarmNotices](https://cloud.tencent.com/document/api/614/56462) - This API is used to get the notification group list.
-* Read: [DescribeResourceTagsByResourceIds](https://cloud.tencent.com/document/api/651/35319) - This API is used to query the tag key-value pairs associated with an existing resource.
-* Update: [ModifyAlarmNotice](https://cloud.tencent.com/document/api/614/56458) - This API is used to modify a notification group.
-* Update: [ModifyResourceTags](https://cloud.tencent.com/document/api/651/35322) - This API is used to modify all tags associated with a resource.
-* Delete: [DeleteAlarmNotice](https://cloud.tencent.com/document/api/614/56463) - This API is used to delete a notification group.
+* Create: [CreateAlarmNotice](https://www.tencentcloud.com/document/product/614/42829) - This API is used to create a notification channel group with two configuration modes to choose from.
+* Create: [ModifyResourceTags](https://www.tencentcloud.com/document/product/651/33012) - This API is used to modify all tags associated with a resource.
+* Read: [DescribeAlarmNotices](https://www.tencentcloud.com/document/product/614/42826) - This API is used to get the notification group list.
+* Read: [DescribeResourceTagsByResourceIds](https://www.tencentcloud.com/document/product/651/33022) - This API is used to query the tag key-value pairs associated with an existing resource.
+* Update: [ModifyAlarmNotice](https://www.tencentcloud.com/document/product/614/42822) - This API is used to modify a notification group.
+* Update: [ModifyResourceTags](https://www.tencentcloud.com/document/product/651/33012) - This API is used to modify all tags associated with a resource.
+* Delete: [DeleteAlarmNotice](https://www.tencentcloud.com/document/product/614/42827) - This API is used to delete a notification group.
 
 ## Import
 

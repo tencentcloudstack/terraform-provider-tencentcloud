@@ -48,12 +48,12 @@ In addition to all arguments above, the following attributes are exported:
 
 This resource interacts with the following TencentCloud APIs:
 
-* Create: [CreateDatahubTopic](https://cloud.tencent.com/document/api/597/89017) - This API is used to create a DIP topic.
-* Create: [ModifyResourceTags](https://cloud.tencent.com/document/api/651/35322) - This API is used to modify all tags associated with a resource.
-* Read: [DescribeDatahubTopic](https://cloud.tencent.com/document/api/597/86862) - This API is used to retrieve DIP topic attributes.
-* Read: [DescribeResourceTagsByResourceIds](https://cloud.tencent.com/document/api/651/35319) - This API is used to query the tag key-value pairs associated with an existing resource.
-* Update: [ModifyDatahubTopic](https://cloud.tencent.com/document/api/597/89542) - This API is used to modify DIP topic attributes.
-* Update: [ModifyResourceTags](https://cloud.tencent.com/document/api/651/35322) - This API is used to modify all tags associated with a resource.
+* Create: [CreateDatahubTopic](https://www.tencentcloud.com/document/product/597/54303) - This API is used to create a DIP topic.
+* Create: [ModifyResourceTags](https://www.tencentcloud.com/document/product/651/33012) - This API is used to modify all tags associated with a resource.
+* Read: [DescribeDatahubTopic](https://www.tencentcloud.com/document/product/597/54002) - This API is used to retrieve DIP topic attributes.
+* Read: [DescribeResourceTagsByResourceIds](https://www.tencentcloud.com/document/product/651/33022) - This API is used to query the tag key-value pairs associated with an existing resource.
+* Update: [ModifyDatahubTopic](https://www.tencentcloud.com/document/product/597/54582) - This API is used to modify DIP topic attributes.
+* Update: [ModifyResourceTags](https://www.tencentcloud.com/document/product/651/33012) - This API is used to modify all tags associated with a resource.
 * Delete: [DeleteDatahubTopic](https://cloud.tencent.com/document/api/597/77803)
 
 ## Import

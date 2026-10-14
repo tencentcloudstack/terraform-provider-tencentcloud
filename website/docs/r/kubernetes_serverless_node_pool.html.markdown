@@ -144,12 +144,12 @@ In addition to all arguments above, the following attributes are exported:
 
 This resource interacts with the following TencentCloud APIs:
 
-* Create: [CreateClusterVirtualNodePool](https://cloud.tencent.com/document/api/457/85354) - This API is used to create the Super Node Pool.
-* Create: [DescribeClusterVirtualNodePools](https://cloud.tencent.com/document/api/457/85350) - This API is used to view the Super Node Pool list.
-* Read: [DescribeClusterVirtualNodePools](https://cloud.tencent.com/document/api/457/85350) - This API is used to view the Super Node Pool list.
-* Update: [ModifyClusterVirtualNodePool](https://cloud.tencent.com/document/api/457/85348) - This API is used to modify the Super Node Pool.
-* Delete: [DeleteClusterVirtualNodePool](https://cloud.tencent.com/document/api/457/85352) - This API is used to delete the Super Node Pool.
-* Delete: [DescribeClusterVirtualNodePools](https://cloud.tencent.com/document/api/457/85350) - This API is used to view the Super Node Pool list.
+* Create: [CreateClusterVirtualNodePool](https://www.tencentcloud.com/document/product/457/53275) - This API is used to create the Super Node Pool.
+* Create: [DescribeClusterVirtualNodePools](https://www.tencentcloud.com/document/product/457/53271) - This API is used to view the Super Node Pool list.
+* Read: [DescribeClusterVirtualNodePools](https://www.tencentcloud.com/document/product/457/53271) - This API is used to view the Super Node Pool list.
+* Update: [ModifyClusterVirtualNodePool](https://www.tencentcloud.com/document/product/457/53269) - This API is used to modify the Super Node Pool.
+* Delete: [DeleteClusterVirtualNodePool](https://www.tencentcloud.com/document/product/457/53273) - This API is used to delete the Super Node Pool.
+* Delete: [DescribeClusterVirtualNodePools](https://www.tencentcloud.com/document/product/457/53271) - This API is used to view the Super Node Pool list.
 
 ## Import
 

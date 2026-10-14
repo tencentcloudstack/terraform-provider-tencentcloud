@@ -50,13 +50,13 @@ In addition to all arguments above, the following attributes are exported:
 
 This resource interacts with the following TencentCloud APIs:
 
-* Create: [CloseSSL](https://cloud.tencent.com/document/api/236/105850) - This API is used to close the SSL connectivity function.
-* Create: [DescribeSSLStatus](https://cloud.tencent.com/document/api/236/105849) - This API is used to query SSL activation status. If SSL has been enabled, it will synchronously return the certificate download URL.
-* Create: [OpenSSL](https://cloud.tencent.com/document/api/236/105848) - This API is used to enable SSL connectivity function.
-* Read: [DescribeSSLStatus](https://cloud.tencent.com/document/api/236/105849) - This API is used to query SSL activation status. If SSL has been enabled, it will synchronously return the certificate download URL.
-* Update: [CloseSSL](https://cloud.tencent.com/document/api/236/105850) - This API is used to close the SSL connectivity function.
-* Update: [DescribeSSLStatus](https://cloud.tencent.com/document/api/236/105849) - This API is used to query SSL activation status. If SSL has been enabled, it will synchronously return the certificate download URL.
-* Update: [OpenSSL](https://cloud.tencent.com/document/api/236/105848) - This API is used to enable SSL connectivity function.
+* Create: [CloseSSL](https://www.tencentcloud.com/document/product/236/80220) - This API is used to close the SSL connectivity function.
+* Create: [DescribeSSLStatus](https://www.tencentcloud.com/document/product/236/78957) - This API is used to query SSL activation status. If SSL has been enabled, it will synchronously return the certificate download URL.
+* Create: [OpenSSL](https://www.tencentcloud.com/document/product/236/80219) - This API is used to enable SSL connectivity function.
+* Read: [DescribeSSLStatus](https://www.tencentcloud.com/document/product/236/78957) - This API is used to query SSL activation status. If SSL has been enabled, it will synchronously return the certificate download URL.
+* Update: [CloseSSL](https://www.tencentcloud.com/document/product/236/80220) - This API is used to close the SSL connectivity function.
+* Update: [DescribeSSLStatus](https://www.tencentcloud.com/document/product/236/78957) - This API is used to query SSL activation status. If SSL has been enabled, it will synchronously return the certificate download URL.
+* Update: [OpenSSL](https://www.tencentcloud.com/document/product/236/80219) - This API is used to enable SSL connectivity function.
 
 ## Import
 

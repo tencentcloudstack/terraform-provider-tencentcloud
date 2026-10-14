@@ -82,7 +82,7 @@ In addition to all arguments above, the following attributes are exported:
 This resource interacts with the following TencentCloud APIs:
 
 * Create: [RenewDBInstance](https://cloud.tencent.com/document/api/238/19953) - This API is used to renew instances. For pay-as-you-go instances, the billing method will change to monthly subscription after renewal. You can call the InquiryPriceRenewDBInstance API for the renewal price of pay-as-you-go instances.
-* Read: [DescribeDBInstances](https://cloud.tencent.com/document/api/238/19969) - This API is used to query the list of instances.
+* Read: [DescribeDBInstances](https://www.tencentcloud.com/document/product/238/32115) - This API is used to query the list of instances.
 * Update: [RenewDBInstance](https://cloud.tencent.com/document/api/238/19953) - This API is used to renew instances. For pay-as-you-go instances, the billing method will change to monthly subscription after renewal. You can call the InquiryPriceRenewDBInstance API for the renewal price of pay-as-you-go instances.
 
 ## Import

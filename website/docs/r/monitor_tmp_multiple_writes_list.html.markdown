@@ -85,9 +85,9 @@ In addition to all arguments above, the following attributes are exported:
 
 This resource interacts with the following TencentCloud APIs:
 
-* Create: [DescribePrometheusInstanceInitStatus](https://cloud.tencent.com/document/api/248/85716) - This API is used to get the initialization task status of a v2.0 instance.
+* Create: [DescribePrometheusInstanceInitStatus](https://www.tencentcloud.com/document/product/248/53321) - This API is used to get the initialization task status of a v2.0 instance.
 * Create: [ModifyRemoteURLs](https://cloud.tencent.com/document/api/248/114256)
-* Create: [RunPrometheusInstance](https://cloud.tencent.com/document/api/248/85710) - This API is used to initialize a TMP instance, which is called when the integration center is enabled.
+* Create: [RunPrometheusInstance](https://www.tencentcloud.com/document/product/248/53315) - This API is used to initialize a TMP instance, which is called when the integration center is enabled.
 * Read: [DescribeRemoteURLs](https://cloud.tencent.com/document/api/248/114257)
 * Update: [ModifyRemoteURLs](https://cloud.tencent.com/document/api/248/114256)
 * Delete: [ModifyRemoteURLs](https://cloud.tencent.com/document/api/248/114256)

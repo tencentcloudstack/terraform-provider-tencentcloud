@@ -38,11 +38,11 @@ In addition to all arguments above, the following attributes are exported:
 
 This resource interacts with the following TencentCloud APIs:
 
-* Create: [CreateGroup](https://cloud.tencent.com/document/api/598/34582) - This API is used to create a user group.
-* Create: [GetGroup](https://cloud.tencent.com/document/api/598/34591) - This API is used to query user group details.
-* Read: [GetGroup](https://cloud.tencent.com/document/api/598/34591) - This API is used to query user group details.
-* Update: [UpdateGroup](https://cloud.tencent.com/document/api/598/34584) - This API is used to update a user group.
-* Delete: [DeleteGroup](https://cloud.tencent.com/document/api/598/34593) - This API is used to delete a user group.
+* Create: [CreateGroup](https://www.tencentcloud.com/document/product/598/32263) - This API is used to create a user group.
+* Create: [GetGroup](https://www.tencentcloud.com/document/product/598/32260) - This API is used to query user group details.
+* Read: [GetGroup](https://www.tencentcloud.com/document/product/598/32260) - This API is used to query user group details.
+* Update: [UpdateGroup](https://www.tencentcloud.com/document/product/598/32253) - This API is used to update a user group.
+* Delete: [DeleteGroup](https://www.tencentcloud.com/document/product/598/32262) - This API is used to delete a user group.
 
 ## Import
 

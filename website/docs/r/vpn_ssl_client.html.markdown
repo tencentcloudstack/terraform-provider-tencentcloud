@@ -57,12 +57,12 @@ In addition to all arguments above, the following attributes are exported:
 This resource interacts with the following TencentCloud APIs:
 
 * Create: [CreateVpnGatewaySslClient](https://cloud.tencent.com/document/api/215/70290)
-* Create: [DescribeVpcTaskResult](https://cloud.tencent.com/document/api/215/59037) - This API is used to query the execution result of a VPC task.
-* Read: [DescribeResourceTagsByResourceIds](https://cloud.tencent.com/document/api/651/35319) - This API is used to query the tag key-value pairs associated with an existing resource.
+* Create: [DescribeVpcTaskResult](https://www.tencentcloud.com/document/product/215/41567) - This API is used to query the execution result of a VPC task.
+* Read: [DescribeResourceTagsByResourceIds](https://www.tencentcloud.com/document/product/651/33022) - This API is used to query the tag key-value pairs associated with an existing resource.
 * Read: [DescribeVpnGatewaySslClients](https://cloud.tencent.com/document/api/215/70286)
-* Update: [ModifyResourceTags](https://cloud.tencent.com/document/api/651/35322) - This API is used to modify all tags associated with a resource.
+* Update: [ModifyResourceTags](https://www.tencentcloud.com/document/product/651/33012) - This API is used to modify all tags associated with a resource.
 * Delete: [DeleteVpnGatewaySslClient](https://cloud.tencent.com/document/api/215/70288)
-* Delete: [DescribeVpcTaskResult](https://cloud.tencent.com/document/api/215/59037) - This API is used to query the execution result of a VPC task.
+* Delete: [DescribeVpcTaskResult](https://www.tencentcloud.com/document/product/215/41567) - This API is used to query the execution result of a VPC task.
 
 ## Import
 

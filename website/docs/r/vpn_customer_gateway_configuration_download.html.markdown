@@ -52,5 +52,5 @@ In addition to all arguments above, the following attributes are exported:
 
 This resource interacts with the following TencentCloud APIs:
 
-* Create: [DownloadCustomerGatewayConfiguration](https://cloud.tencent.com/document/api/215/17513) - This API is used to download VPN tunnel configurations.
+* Create: [DownloadCustomerGatewayConfiguration](https://www.tencentcloud.com/document/product/215/17513) - This API is used to download VPN tunnel configurations.
 

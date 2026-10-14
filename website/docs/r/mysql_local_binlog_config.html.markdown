@@ -88,9 +88,9 @@ In addition to all arguments above, the following attributes are exported:
 
 This resource interacts with the following TencentCloud APIs:
 
-* Create: [ModifyLocalBinlogConfig](https://cloud.tencent.com/document/api/236/68173) - This API is used to modify the local binlog retention policy of an instance.
-* Read: [DescribeLocalBinlogConfig](https://cloud.tencent.com/document/api/236/68174) - This API is used to query the retention policy of local binlog of an instance.
-* Update: [ModifyLocalBinlogConfig](https://cloud.tencent.com/document/api/236/68173) - This API is used to modify the local binlog retention policy of an instance.
+* Create: [ModifyLocalBinlogConfig](https://www.tencentcloud.com/document/product/236/45200) - This API is used to modify the local binlog retention policy of an instance.
+* Read: [DescribeLocalBinlogConfig](https://www.tencentcloud.com/document/product/236/45201) - This API is used to query the retention policy of local binlog of an instance.
+* Update: [ModifyLocalBinlogConfig](https://www.tencentcloud.com/document/product/236/45200) - This API is used to modify the local binlog retention policy of an instance.
 
 ## Import
 

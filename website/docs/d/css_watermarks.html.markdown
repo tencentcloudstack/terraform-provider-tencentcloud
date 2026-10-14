@@ -43,5 +43,5 @@ In addition to all arguments above, the following attributes are exported:
 
 This data source queries the following TencentCloud APIs:
 
-* Read: [DescribeLiveWatermarks](https://cloud.tencent.com/document/api/267/30152) - This API is used to query the watermark list.
+* Read: [DescribeLiveWatermarks](https://www.tencentcloud.com/document/product/267/30820) - This API is used to query the watermark list.
 

@@ -40,5 +40,5 @@ In addition to all arguments above, the following attributes are exported:
 
 This data source queries the following TencentCloud APIs:
 
-* Read: [DescribeCkafkaVersion](https://cloud.tencent.com/document/api/597/125479) - This API is used to query instance version information.
+* Read: [DescribeCkafkaVersion](https://www.tencentcloud.com/document/product/597/74424) - This API is used to query instance version information.
 

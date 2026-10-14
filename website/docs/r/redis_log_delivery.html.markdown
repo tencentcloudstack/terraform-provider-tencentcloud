@@ -79,14 +79,14 @@ In addition to all arguments above, the following attributes are exported:
 
 This resource interacts with the following TencentCloud APIs:
 
-* Create: [ModifyInstanceLogDelivery](https://cloud.tencent.com/document/api/239/110877) - This API is used to enable or disable the shipping of instance logs to CLS.
-* Read: [DescribeInstanceLogDelivery](https://cloud.tencent.com/document/api/239/110878) - This API is used to query the instance log shipping configuration.
-* Read: [DescribeLogsets](https://cloud.tencent.com/document/api/614/58624) - This API is used to get the list of logsets.
-* Read: [DescribeTopics](https://cloud.tencent.com/document/api/614/56454) - This API is used to obtain logs or metric topic lists and supports pagination.
-* Update: [ModifyInstanceLogDelivery](https://cloud.tencent.com/document/api/239/110877) - This API is used to enable or disable the shipping of instance logs to CLS.
-* Delete: [DeleteLogset](https://cloud.tencent.com/document/api/614/58625) - This API is used to delete a logset.
-* Delete: [DeleteTopic](https://cloud.tencent.com/document/api/614/56455) - This API is used to delete logs or metric topics.
-* Delete: [ModifyInstanceLogDelivery](https://cloud.tencent.com/document/api/239/110877) - This API is used to enable or disable the shipping of instance logs to CLS.
+* Create: [ModifyInstanceLogDelivery](https://www.tencentcloud.com/document/product/239/66802) - This API is used to enable or disable the shipping of instance logs to CLS.
+* Read: [DescribeInstanceLogDelivery](https://www.tencentcloud.com/document/product/239/66803) - This API is used to query the instance log shipping configuration.
+* Read: [DescribeLogsets](https://www.tencentcloud.com/document/product/614/42778) - This API is used to get the list of logsets.
+* Read: [DescribeTopics](https://www.tencentcloud.com/document/product/614/42783) - This API is used to obtain logs or metric topic lists and supports pagination.
+* Update: [ModifyInstanceLogDelivery](https://www.tencentcloud.com/document/product/239/66802) - This API is used to enable or disable the shipping of instance logs to CLS.
+* Delete: [DeleteLogset](https://www.tencentcloud.com/document/product/614/42779) - This API is used to delete a logset.
+* Delete: [DeleteTopic](https://www.tencentcloud.com/document/product/614/42784) - This API is used to delete logs or metric topics.
+* Delete: [ModifyInstanceLogDelivery](https://www.tencentcloud.com/document/product/239/66802) - This API is used to enable or disable the shipping of instance logs to CLS.
 
 ## Import
 

@@ -57,5 +57,5 @@ In addition to all arguments above, the following attributes are exported:
 
 This data source queries the following TencentCloud APIs:
 
-* Read: [DescribeResources](https://cloud.tencent.com/document/api/214/70213) - This API is used to query the list of AZs and resources supported for the user in the current region.
+* Read: [DescribeResources](https://www.tencentcloud.com/document/product/214/51214) - This API is used to query the list of AZs and resources supported for the user in the current region.
 

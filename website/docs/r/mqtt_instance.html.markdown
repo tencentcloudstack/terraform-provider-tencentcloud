@@ -140,11 +140,11 @@ This resource interacts with the following TencentCloud APIs:
 * Create: [CreateInstance](https://cloud.tencent.com/document/api/1778/116044) - This API is used to purchase a new MQTT instance.
 * Create: [DescribeInstance](https://cloud.tencent.com/document/api/1778/111030) - This API is used to query instance information.
 * Create: [ModifyInstance](https://cloud.tencent.com/document/api/1778/116039) - This API is used to modify instance attributes. Only running clusters can call this API to perform configuration change.
-* Create: [ModifyResourceTags](https://cloud.tencent.com/document/api/651/35322) - This API is used to modify all tags associated with a resource.
+* Create: [ModifyResourceTags](https://www.tencentcloud.com/document/product/651/33012) - This API is used to modify all tags associated with a resource.
 * Read: [DescribeInstance](https://cloud.tencent.com/document/api/1778/111030) - This API is used to query instance information.
-* Read: [DescribeResourceTagsByResourceIds](https://cloud.tencent.com/document/api/651/35319) - This API is used to query the tag key-value pairs associated with an existing resource.
+* Read: [DescribeResourceTagsByResourceIds](https://www.tencentcloud.com/document/product/651/33022) - This API is used to query the tag key-value pairs associated with an existing resource.
 * Update: [ModifyInstance](https://cloud.tencent.com/document/api/1778/116039) - This API is used to modify instance attributes. Only running clusters can call this API to perform configuration change.
-* Update: [ModifyResourceTags](https://cloud.tencent.com/document/api/651/35322) - This API is used to modify all tags associated with a resource.
+* Update: [ModifyResourceTags](https://www.tencentcloud.com/document/product/651/33012) - This API is used to modify all tags associated with a resource.
 * Delete: [DeleteInstance](https://cloud.tencent.com/document/api/1778/116042) - This API is used to delete an MQTT instance.
 * Delete: [DescribeInstance](https://cloud.tencent.com/document/api/1778/111030) - This API is used to query instance information.
 

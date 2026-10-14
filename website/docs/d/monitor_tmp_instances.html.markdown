@@ -128,5 +128,5 @@ In addition to all arguments above, the following attributes are exported:
 
 This data source queries the following TencentCloud APIs:
 
-* Read: [DescribePrometheusInstances](https://cloud.tencent.com/document/api/248/66097) - This API is used to query the details of one or multiple instances.
+* Read: [DescribePrometheusInstances](https://www.tencentcloud.com/document/product/248/48753) - This API is used to query the details of one or multiple instances.
 

@@ -94,7 +94,7 @@ In addition to all arguments above, the following attributes are exported:
 
 This resource interacts with the following TencentCloud APIs:
 
-* Create: [ExecuteScalingPolicy](https://cloud.tencent.com/document/api/377/35477) - This API is used to execute a scaling policy.
+* Create: [ExecuteScalingPolicy](https://www.tencentcloud.com/document/product/377/33207) - This API is used to execute a scaling policy.
 
 ## Import
 

@@ -51,5 +51,5 @@ In addition to all arguments above, the following attributes are exported:
 
 This data source queries the following TencentCloud APIs:
 
-* Read: [DescribeSecurityPolicyDetail](https://cloud.tencent.com/document/api/608/36959) - This API is used to obtain security policy details.
+* Read: [DescribeSecurityPolicyDetail](https://www.tencentcloud.com/document/product/608/33097) - This API is used to obtain security policy details.
 

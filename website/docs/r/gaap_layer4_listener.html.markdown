@@ -96,17 +96,17 @@ In addition to all arguments above, the following attributes are exported:
 
 This resource interacts with the following TencentCloud APIs:
 
-* Create: [BindListenerRealServers](https://cloud.tencent.com/document/api/608/37008) - This API (BindListenerRealServers) is used for the TCP/UDP listener to bind/unbind the origin server.
-* Create: [CreateTCPListeners](https://cloud.tencent.com/document/api/608/37005) - This API (CreateTCPListeners) is used to batch create TCP listeners of single connections or connection groups.
-* Create: [CreateUDPListeners](https://cloud.tencent.com/document/api/608/37004) - This API (CreateTCPListeners) is used to batch create UDP listeners of single connections or connection groups.
-* Read: [DescribeTCPListeners](https://cloud.tencent.com/document/api/608/36999) - This API (DescribeTCPListeners) is used to query the TCP listener information of a single connection or connection group.
-* Read: [DescribeUDPListeners](https://cloud.tencent.com/document/api/608/36998) - This API (DescribeUDPListeners) is used to query the UDP listener information of a single connection or connection group.
-* Update: [BindListenerRealServers](https://cloud.tencent.com/document/api/608/37008) - This API (BindListenerRealServers) is used for the TCP/UDP listener to bind/unbind the origin server.
-* Update: [ModifyTCPListenerAttribute](https://cloud.tencent.com/document/api/608/36995) - This API (ModifyTCPListenerAttribute) is used to modify the TCP listener configuration of a connection instance, including health check configuration and scheduling policies.
-* Update: [ModifyUDPListenerAttribute](https://cloud.tencent.com/document/api/608/36994) - This API (ModifyUDPListenerAttribute) is used to modify the UDP listener configuration of a connection instance, including modification of listener names and scheduling policies.
-* Delete: [DeleteListeners](https://cloud.tencent.com/document/api/608/37003) - This API (DeleteListeners) is used to batch delete the listeners of a connection or connection group, including layer-4/7 listeners.
-* Delete: [DescribeTCPListeners](https://cloud.tencent.com/document/api/608/36999) - This API (DescribeTCPListeners) is used to query the TCP listener information of a single connection or connection group.
-* Delete: [DescribeUDPListeners](https://cloud.tencent.com/document/api/608/36998) - This API (DescribeUDPListeners) is used to query the UDP listener information of a single connection or connection group.
+* Create: [BindListenerRealServers](https://www.tencentcloud.com/document/product/608/33077) - This API (BindListenerRealServers) is used for the TCP/UDP listener to bind/unbind the origin server.
+* Create: [CreateTCPListeners](https://www.tencentcloud.com/document/product/608/33074) - This API (CreateTCPListeners) is used to batch create TCP listeners of single connections or connection groups.
+* Create: [CreateUDPListeners](https://www.tencentcloud.com/document/product/608/33073) - This API (CreateTCPListeners) is used to batch create UDP listeners of single connections or connection groups.
+* Read: [DescribeTCPListeners](https://www.tencentcloud.com/document/product/608/33068) - This API (DescribeTCPListeners) is used to query the TCP listener information of a single connection or connection group.
+* Read: [DescribeUDPListeners](https://www.tencentcloud.com/document/product/608/33067) - This API (DescribeUDPListeners) is used to query the UDP listener information of a single connection or connection group.
+* Update: [BindListenerRealServers](https://www.tencentcloud.com/document/product/608/33077) - This API (BindListenerRealServers) is used for the TCP/UDP listener to bind/unbind the origin server.
+* Update: [ModifyTCPListenerAttribute](https://www.tencentcloud.com/document/product/608/33064) - This API (ModifyTCPListenerAttribute) is used to modify the TCP listener configuration of a connection instance, including health check configuration and scheduling policies.
+* Update: [ModifyUDPListenerAttribute](https://www.tencentcloud.com/document/product/608/33063) - This API (ModifyUDPListenerAttribute) is used to modify the UDP listener configuration of a connection instance, including modification of listener names and scheduling policies.
+* Delete: [DeleteListeners](https://www.tencentcloud.com/document/product/608/33072) - This API (DeleteListeners) is used to batch delete the listeners of a connection or connection group, including layer-4/7 listeners.
+* Delete: [DescribeTCPListeners](https://www.tencentcloud.com/document/product/608/33068) - This API (DescribeTCPListeners) is used to query the TCP listener information of a single connection or connection group.
+* Delete: [DescribeUDPListeners](https://www.tencentcloud.com/document/product/608/33067) - This API (DescribeUDPListeners) is used to query the UDP listener information of a single connection or connection group.
 
 ## Import
 

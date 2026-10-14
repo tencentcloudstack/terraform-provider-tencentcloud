@@ -46,8 +46,8 @@ In addition to all arguments above, the following attributes are exported:
 
 This resource interacts with the following TencentCloud APIs:
 
-* Create: [AddSmsTemplate](https://cloud.tencent.com/document/api/382/55974) - This API is used to add an SMS template. Please read the [Tencent Cloud SMS Body Template Review Standards](https://intl.cloud.tencent.com/document/product/382/39023?from_cn_redirect=1) before starting an application.
-* Read: [DescribeSmsTemplateList](https://cloud.tencent.com/document/api/382/52067)
-* Update: [ModifySmsTemplate](https://cloud.tencent.com/document/api/382/55972) - This API is used to modify an SMS body template. Please read the [Tencent Cloud SMS Body Template Review Standards](https://intl.cloud.tencent.com/document/product/382/39023?from_cn_redirect=1) before making a modification.
-* Delete: [DeleteSmsTemplate](https://cloud.tencent.com/document/api/382/55973)
+* Create: [AddSmsTemplate](https://www.tencentcloud.com/document/product/382/40526) - This API is used to add an SMS template. Please read the [Tencent Cloud SMS Body Template Review Standards](https://intl.cloud.tencent.com/document/product/382/39023?from_cn_redirect=1) before starting an application.
+* Read: [DescribeSmsTemplateList](https://www.tencentcloud.com/document/product/382/40524)
+* Update: [ModifySmsTemplate](https://www.tencentcloud.com/document/product/382/40523) - This API is used to modify an SMS body template. Please read the [Tencent Cloud SMS Body Template Review Standards](https://intl.cloud.tencent.com/document/product/382/39023?from_cn_redirect=1) before making a modification.
+* Delete: [DeleteSmsTemplate](https://www.tencentcloud.com/document/product/382/40525)
 

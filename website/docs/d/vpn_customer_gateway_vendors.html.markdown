@@ -36,5 +36,5 @@ In addition to all arguments above, the following attributes are exported:
 
 This data source queries the following TencentCloud APIs:
 
-* Read: [DescribeCustomerGatewayVendors](https://cloud.tencent.com/document/api/215/17517) - This API (DescribeCustomerGatewayVendors) is used to query the information of supported customer gateway vendors.
+* Read: [DescribeCustomerGatewayVendors](https://www.tencentcloud.com/document/product/215/17517) - This API (DescribeCustomerGatewayVendors) is used to query the information of supported customer gateway vendors.
 

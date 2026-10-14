@@ -46,12 +46,12 @@ In addition to all arguments above, the following attributes are exported:
 
 This resource interacts with the following TencentCloud APIs:
 
-* Create: [CreateTopic](https://cloud.tencent.com/document/api/214/46802) - This API is used to create a topic with the full-text index and key-value index enabled by default. The creation will fail if there is no CLB exclusive logset.
-* Create: [DescribeLogsets](https://cloud.tencent.com/document/api/614/58624) - This API is used to get the list of logsets.
-* Create: [ModifyTopic](https://cloud.tencent.com/document/api/614/56453) - This API is used to modify logs or metric topics.
-* Read: [DescribeTopics](https://cloud.tencent.com/document/api/614/56454) - This API is used to obtain logs or metric topic lists and supports pagination.
-* Update: [ModifyTopic](https://cloud.tencent.com/document/api/614/56453) - This API is used to modify logs or metric topics.
-* Delete: [DeleteTopic](https://cloud.tencent.com/document/api/614/56455) - This API is used to delete logs or metric topics.
+* Create: [CreateTopic](https://www.tencentcloud.com/document/product/214/37820) - This API is used to create a topic with the full-text index and key-value index enabled by default. The creation will fail if there is no CLB exclusive logset.
+* Create: [DescribeLogsets](https://www.tencentcloud.com/document/product/614/42778) - This API is used to get the list of logsets.
+* Create: [ModifyTopic](https://www.tencentcloud.com/document/product/614/42782) - This API is used to modify logs or metric topics.
+* Read: [DescribeTopics](https://www.tencentcloud.com/document/product/614/42783) - This API is used to obtain logs or metric topic lists and supports pagination.
+* Update: [ModifyTopic](https://www.tencentcloud.com/document/product/614/42782) - This API is used to modify logs or metric topics.
+* Delete: [DeleteTopic](https://www.tencentcloud.com/document/product/614/42784) - This API is used to delete logs or metric topics.
 
 ## Import
 

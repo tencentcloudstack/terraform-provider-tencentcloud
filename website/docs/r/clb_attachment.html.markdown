@@ -155,12 +155,12 @@ In addition to all arguments above, the following attributes are exported:
 
 This resource interacts with the following TencentCloud APIs:
 
-* Create: [RegisterTargets](https://cloud.tencent.com/document/api/214/30676) - This API is used to bind one or more backend services to a Cloud Load Balancer listener or layer-7 forwarding rule. Before that, you need to create a related CLB layer-4 listener or layer-7 forwarding rule.
-* Read: [DescribeListeners](https://cloud.tencent.com/document/api/214/30686) - This API is used to get the list of listeners by CLB ID, listener protocol, or listener port. If no filter is specified, all listeners for the CLB instance will be returned.
-* Read: [DescribeTargets](https://cloud.tencent.com/document/api/214/30684) - This API (DescribeTargets) is used to query the list of real servers bound to some listeners of a CLB instance.
-* Update: [ModifyTargetWeight](https://cloud.tencent.com/document/api/214/30677) - This API is used to modify the forwarding weight of backend service bound to Cloud Load Balancer.
-* Update: [RegisterTargets](https://cloud.tencent.com/document/api/214/30676) - This API is used to bind one or more backend services to a Cloud Load Balancer listener or layer-7 forwarding rule. Before that, you need to create a related CLB layer-4 listener or layer-7 forwarding rule.
-* Delete: [DeregisterTargets](https://cloud.tencent.com/document/api/214/30687) - This API (DeregisterTargets) is used to unbind one or more real servers from a CLB listener or forwarding rule. For layer-4 listeners, only the listener ID needs to be specified.
+* Create: [RegisterTargets](https://www.tencentcloud.com/document/product/214/33809) - This API is used to bind one or more backend services to a Cloud Load Balancer listener or layer-7 forwarding rule. Before that, you need to create a related CLB layer-4 listener or layer-7 forwarding rule.
+* Read: [DescribeListeners](https://www.tencentcloud.com/document/product/214/33831) - This API is used to get the list of listeners by CLB ID, listener protocol, or listener port. If no filter is specified, all listeners for the CLB instance will be returned.
+* Read: [DescribeTargets](https://www.tencentcloud.com/document/product/214/33824) - This API (DescribeTargets) is used to query the list of real servers bound to some listeners of a CLB instance.
+* Update: [ModifyTargetWeight](https://www.tencentcloud.com/document/product/214/33811) - This API is used to modify the forwarding weight of backend service bound to Cloud Load Balancer.
+* Update: [RegisterTargets](https://www.tencentcloud.com/document/product/214/33809) - This API is used to bind one or more backend services to a Cloud Load Balancer listener or layer-7 forwarding rule. Before that, you need to create a related CLB layer-4 listener or layer-7 forwarding rule.
+* Delete: [DeregisterTargets](https://www.tencentcloud.com/document/product/214/33832) - This API (DeregisterTargets) is used to unbind one or more real servers from a CLB listener or forwarding rule. For layer-4 listeners, only the listener ID needs to be specified.
 
 ## Import
 

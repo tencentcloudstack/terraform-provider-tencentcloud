@@ -64,9 +64,9 @@ In addition to all arguments above, the following attributes are exported:
 
 This resource interacts with the following TencentCloud APIs:
 
-* Create: [SetMfaFlag](https://cloud.tencent.com/document/api/598/36227) - This API is used to set account verification for login and sensitive operations for sub-users.
-* Read: [DescribeSafeAuthFlagColl](https://cloud.tencent.com/document/api/598/48602) - This API is used to get a sub-account’s security settings.
-* Update: [SetMfaFlag](https://cloud.tencent.com/document/api/598/36227) - This API is used to set account verification for login and sensitive operations for sub-users.
+* Create: [SetMfaFlag](https://www.tencentcloud.com/document/product/598/36305) - This API is used to set account verification for login and sensitive operations for sub-users.
+* Read: [DescribeSafeAuthFlagColl](https://www.tencentcloud.com/document/product/598/38353) - This API is used to get a sub-account’s security settings.
+* Update: [SetMfaFlag](https://www.tencentcloud.com/document/product/598/36305) - This API is used to set account verification for login and sensitive operations for sub-users.
 
 ## Import
 

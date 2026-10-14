@@ -90,10 +90,10 @@ In addition to all arguments above, the following attributes are exported:
 
 This resource interacts with the following TencentCloud APIs:
 
-* Create: [CreateAigcQuota](https://cloud.tencent.com/document/api/266/133474) - This API is used to create and enable AIGC quota configuration. Quota usage starts accumulating from the enablement of the quota feature. Once the quota is reached, AIGC features will no longer be usable.
-* Read: [DescribeAigcQuotas](https://cloud.tencent.com/document/api/266/133472) - This API is used to query AIGC quota configurations.
-* Update: [ModifyAigcQuota](https://cloud.tencent.com/document/api/266/133471) - This API is used to edit AIGC quota configuration. Quota usage starts accumulating when the quota feature is enabled. Once the quota is reached, AIGC features will no longer be usable.
-* Delete: [DeleteAigcQuota](https://cloud.tencent.com/document/api/266/133473) - This API is used to delete AIGC quota configurations. Once deleted, AIGC task initiation will no longer be limited.
+* Create: [CreateAigcQuota](https://www.tencentcloud.com/document/product/266/81192) - This API is used to create and enable AIGC quota configuration. Quota usage starts accumulating from the enablement of the quota feature. Once the quota is reached, AIGC features will no longer be usable.
+* Read: [DescribeAigcQuotas](https://www.tencentcloud.com/document/product/266/81190) - This API is used to query AIGC quota configurations.
+* Update: [ModifyAigcQuota](https://www.tencentcloud.com/document/product/266/81189) - This API is used to edit AIGC quota configuration. Quota usage starts accumulating when the quota feature is enabled. Once the quota is reached, AIGC features will no longer be usable.
+* Delete: [DeleteAigcQuota](https://www.tencentcloud.com/document/product/266/81191) - This API is used to delete AIGC quota configurations. Once deleted, AIGC task initiation will no longer be limited.
 
 ## Import
 

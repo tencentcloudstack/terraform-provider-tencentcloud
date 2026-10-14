@@ -45,12 +45,12 @@ In addition to all arguments above, the following attributes are exported:
 
 This resource interacts with the following TencentCloud APIs:
 
-* Create: [DescribeAuditInstanceList](https://cloud.tencent.com/document/api/409/131094) - Query the audit instance list
-* Create: [OpenAuditService](https://cloud.tencent.com/document/api/409/131090) - Enable the audit feature of the database instance
-* Read: [DescribeAuditInstanceList](https://cloud.tencent.com/document/api/409/131094) - Query the audit instance list
-* Update: [ModifyAuditService](https://cloud.tencent.com/document/api/409/131091) - Modify the audit feature of the database instance
-* Delete: [CloseAuditService](https://cloud.tencent.com/document/api/409/131097) - This API is used to disable the audit feature for a database instance.
-* Delete: [DescribeAuditInstanceList](https://cloud.tencent.com/document/api/409/131094) - Query the audit instance list
+* Create: [DescribeAuditInstanceList](https://www.tencentcloud.com/document/product/409/79967) - Query the audit instance list
+* Create: [OpenAuditService](https://www.tencentcloud.com/document/product/409/79963) - Enable the audit feature of the database instance
+* Read: [DescribeAuditInstanceList](https://www.tencentcloud.com/document/product/409/79967) - Query the audit instance list
+* Update: [ModifyAuditService](https://www.tencentcloud.com/document/product/409/79964) - Modify the audit feature of the database instance
+* Delete: [CloseAuditService](https://www.tencentcloud.com/document/product/409/79970) - This API is used to disable the audit feature for a database instance.
+* Delete: [DescribeAuditInstanceList](https://www.tencentcloud.com/document/product/409/79967) - Query the audit instance list
 
 ## Import
 

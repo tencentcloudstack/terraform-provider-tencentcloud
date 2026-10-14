@@ -54,6 +54,6 @@ In addition to all arguments above, the following attributes are exported:
 
 This data source queries the following TencentCloud APIs:
 
-* Read: [DescribeCfsFileSystems](https://cloud.tencent.com/document/api/582/38170) - This API is used to query file systems.
-* Read: [DescribeMountTargets](https://cloud.tencent.com/document/api/582/38169) - This API is used to query the mount targets of a file system.
+* Read: [DescribeCfsFileSystems](https://www.tencentcloud.com/document/product/582/34514) - This API is used to query file systems.
+* Read: [DescribeMountTargets](https://www.tencentcloud.com/document/product/582/34513) - This API is used to query the mount targets of a file system.
 

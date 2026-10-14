@@ -350,11 +350,11 @@ In addition to all arguments above, the following attributes are exported:
 
 This resource interacts with the following TencentCloud APIs:
 
-* Create: [ConfigureSyncJob](https://cloud.tencent.com/document/api/571/82107) - This API is used to configure a sync task.
-* Create: [DescribeSyncJobs](https://cloud.tencent.com/document/api/571/82103) - This API is used to query the information of a sync task.
-* Read: [DescribeSyncJobs](https://cloud.tencent.com/document/api/571/82103) - This API is used to query the information of a sync task.
-* Update: [ConfigureSyncJob](https://cloud.tencent.com/document/api/571/82107) - This API is used to configure a sync task.
-* Update: [DescribeSyncJobs](https://cloud.tencent.com/document/api/571/82103) - This API is used to query the information of a sync task.
+* Create: [ConfigureSyncJob](https://www.tencentcloud.com/document/product/571/51797) - This API is used to configure a sync task.
+* Create: [DescribeSyncJobs](https://www.tencentcloud.com/document/product/571/51793) - This API is used to query the information of a sync task.
+* Read: [DescribeSyncJobs](https://www.tencentcloud.com/document/product/571/51793) - This API is used to query the information of a sync task.
+* Update: [ConfigureSyncJob](https://www.tencentcloud.com/document/product/571/51797) - This API is used to configure a sync task.
+* Update: [DescribeSyncJobs](https://www.tencentcloud.com/document/product/571/51793) - This API is used to query the information of a sync task.
 
 ## Import
 

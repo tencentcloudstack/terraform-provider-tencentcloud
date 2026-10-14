@@ -50,5 +50,5 @@ In addition to all arguments above, the following attributes are exported:
 
 This resource interacts with the following TencentCloud APIs:
 
-* Create: [ModifyGroupOffsets](https://cloud.tencent.com/document/api/597/40833) - This API is used to set the consumer group (Groups) offset.
+* Create: [ModifyGroupOffsets](https://www.tencentcloud.com/document/product/597/35355) - This API is used to set the consumer group (Groups) offset.
 

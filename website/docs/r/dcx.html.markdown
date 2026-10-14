@@ -106,11 +106,11 @@ In addition to all arguments above, the following attributes are exported:
 
 This resource interacts with the following TencentCloud APIs:
 
-* Create: [CreateDirectConnectTunnel](https://cloud.tencent.com/document/api/216/19821) - This API is used to create a dedicated tunnel.
-* Create: [DescribeDirectConnectTunnels](https://cloud.tencent.com/document/api/216/19819) - This API is used to query the list of dedicated tunnels.
-* Read: [DescribeDirectConnectTunnels](https://cloud.tencent.com/document/api/216/19819) - This API is used to query the list of dedicated tunnels.
-* Update: [ModifyDirectConnectTunnelAttribute](https://cloud.tencent.com/document/api/216/19818) - This API is used to modify the dedicated tunnel attributes.
-* Delete: [DeleteDirectConnectTunnel](https://cloud.tencent.com/document/api/216/19820) - This API is used to delete a dedicated tunnel.
+* Create: [CreateDirectConnectTunnel](https://www.tencentcloud.com/document/product/216/19821) - This API is used to create a dedicated tunnel.
+* Create: [DescribeDirectConnectTunnels](https://www.tencentcloud.com/document/product/216/19819) - This API is used to query the list of dedicated tunnels.
+* Read: [DescribeDirectConnectTunnels](https://www.tencentcloud.com/document/product/216/19819) - This API is used to query the list of dedicated tunnels.
+* Update: [ModifyDirectConnectTunnelAttribute](https://www.tencentcloud.com/document/product/216/19818) - This API is used to modify the dedicated tunnel attributes.
+* Delete: [DeleteDirectConnectTunnel](https://www.tencentcloud.com/document/product/216/19820) - This API is used to delete a dedicated tunnel.
 
 ## Import
 

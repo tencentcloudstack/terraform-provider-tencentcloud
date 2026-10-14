@@ -62,7 +62,7 @@ In addition to all arguments above, the following attributes are exported:
 
 This resource interacts with the following TencentCloud APIs:
 
-* Read: [DescribeCustomizedConfigList](https://cloud.tencent.com/document/api/214/60009) - Pull the list of custom configurations. The configurations of the specified type under the user's AppId will be returned.
+* Read: [DescribeCustomizedConfigList](https://www.tencentcloud.com/document/product/214/42307) - Pull the list of custom configurations. The configurations of the specified type under the user's AppId will be returned.
 
 ## Import
 

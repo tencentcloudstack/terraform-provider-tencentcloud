@@ -42,5 +42,5 @@ In addition to all arguments above, the following attributes are exported:
 
 This data source queries the following TencentCloud APIs:
 
-* Read: [DescribeDatabaseTable](https://cloud.tencent.com/document/api/237/69130) - This API is used to query the table information of a TencentDB instance.
+* Read: [DescribeDatabaseTable](https://www.tencentcloud.com/document/product/237/45258) - This API is used to query the table information of a TencentDB instance.
 

@@ -66,18 +66,18 @@ In addition to all arguments above, the following attributes are exported:
 
 This resource interacts with the following TencentCloud APIs:
 
-* Create: [CreateDomain](https://cloud.tencent.com/document/api/608/36991) - This API (CreateDomain) is used to create the access domain name for the HTTP/HTTPS listener. Clients request the backend data by accessing this domain.
-* Create: [DescribeHTTPListeners](https://cloud.tencent.com/document/api/608/37002) - This API (DescribeHTTPListeners) is used to query HTTP listener information.
-* Create: [DescribeHTTPSListeners](https://cloud.tencent.com/document/api/608/37001) - This API (DescribeHTTPSListeners) is used to query HTTPS listener information.
-* Create: [DescribeRules](https://cloud.tencent.com/document/api/608/36986) - This API (DescribeRules) is used to query all rule information of a listener, including the domain names, paths, and list of bound origin servers. For version 3.
-* Create: [SetAuthentication](https://cloud.tencent.com/document/api/608/36982) - This API (SetAuthentication) is used for the advanced authentication configuration of connections, including authentication methods and their certificates. If only supports connections of version 3.0.
-* Read: [DescribeRules](https://cloud.tencent.com/document/api/608/36986) - This API (DescribeRules) is used to query all rule information of a listener, including the domain names, paths, and list of bound origin servers. For version 3.
-* Update: [DescribeHTTPSListeners](https://cloud.tencent.com/document/api/608/37001) - This API (DescribeHTTPSListeners) is used to query HTTPS listener information.
-* Update: [ModifyCertificate](https://cloud.tencent.com/document/api/608/36985) - This API (ModifyCertificate) is used to modify a domain name certificate of a listener. domain name certificate. This API is only applicable to connections of version 3.0.
-* Update: [ModifyDomain](https://cloud.tencent.com/document/api/608/36984) - This API (ModifyDomain) is used to modify domain names of listeners. For connections of version 3.0, it supports modifying certificates of the domain names.
-* Update: [SetAuthentication](https://cloud.tencent.com/document/api/608/36982) - This API (SetAuthentication) is used for the advanced authentication configuration of connections, including authentication methods and their certificates. If only supports connections of version 3.0.
-* Delete: [DeleteDomain](https://cloud.tencent.com/document/api/608/36989) - This API (DeleteDomain) is only applicable to layer-7 listeners. It is used to delete the domain names of this listener, and all the rules under the domain name. All rules bound to the origin server are unbound automatically.
-* Delete: [DescribeRules](https://cloud.tencent.com/document/api/608/36986) - This API (DescribeRules) is used to query all rule information of a listener, including the domain names, paths, and list of bound origin servers. For version 3.
+* Create: [CreateDomain](https://www.tencentcloud.com/document/product/608/33046) - This API (CreateDomain) is used to create the access domain name for the HTTP/HTTPS listener. Clients request the backend data by accessing this domain.
+* Create: [DescribeHTTPListeners](https://www.tencentcloud.com/document/product/608/33071) - This API (DescribeHTTPListeners) is used to query HTTP listener information.
+* Create: [DescribeHTTPSListeners](https://www.tencentcloud.com/document/product/608/33070) - This API (DescribeHTTPSListeners) is used to query HTTPS listener information.
+* Create: [DescribeRules](https://www.tencentcloud.com/document/product/608/33041) - This API (DescribeRules) is used to query all rule information of a listener, including the domain names, paths, and list of bound origin servers. For version 3.
+* Create: [SetAuthentication](https://www.tencentcloud.com/document/product/608/33037) - This API (SetAuthentication) is used for the advanced authentication configuration of connections, including authentication methods and their certificates. If only supports connections of version 3.0.
+* Read: [DescribeRules](https://www.tencentcloud.com/document/product/608/33041) - This API (DescribeRules) is used to query all rule information of a listener, including the domain names, paths, and list of bound origin servers. For version 3.
+* Update: [DescribeHTTPSListeners](https://www.tencentcloud.com/document/product/608/33070) - This API (DescribeHTTPSListeners) is used to query HTTPS listener information.
+* Update: [ModifyCertificate](https://www.tencentcloud.com/document/product/608/33040) - This API (ModifyCertificate) is used to modify a domain name certificate of a listener. domain name certificate. This API is only applicable to connections of version 3.0.
+* Update: [ModifyDomain](https://www.tencentcloud.com/document/product/608/33039) - This API (ModifyDomain) is used to modify domain names of listeners. For connections of version 3.0, it supports modifying certificates of the domain names.
+* Update: [SetAuthentication](https://www.tencentcloud.com/document/product/608/33037) - This API (SetAuthentication) is used for the advanced authentication configuration of connections, including authentication methods and their certificates. If only supports connections of version 3.0.
+* Delete: [DeleteDomain](https://www.tencentcloud.com/document/product/608/33044) - This API (DeleteDomain) is only applicable to layer-7 listeners. It is used to delete the domain names of this listener, and all the rules under the domain name. All rules bound to the origin server are unbound automatically.
+* Delete: [DescribeRules](https://www.tencentcloud.com/document/product/608/33041) - This API (DescribeRules) is used to query all rule information of a listener, including the domain names, paths, and list of bound origin servers. For version 3.
 
 ## Import
 

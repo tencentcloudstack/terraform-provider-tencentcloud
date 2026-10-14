@@ -52,14 +52,14 @@ In addition to all arguments above, the following attributes are exported:
 
 This resource interacts with the following TencentCloud APIs:
 
-* Create: [DescribeAsyncRequestInfo](https://cloud.tencent.com/document/api/240/46601) - This API is used to query the asynchronous task status.
-* Create: [EnableSRVConnectionUrl](https://cloud.tencent.com/document/api/240/127855) - This API is used to enable the SRV Access Address for MongoDB database.
-* Create: [ModifySRVConnectionUrl](https://cloud.tencent.com/document/api/240/127854) - This API is used to modify the TTL duration of the SRV Access Address for a MongoDB database.
-* Read: [DescribeSRVConnectionDomain](https://cloud.tencent.com/document/api/240/127857) - This API is used to query the current domain information of the MongoDB database.
-* Update: [DescribeAsyncRequestInfo](https://cloud.tencent.com/document/api/240/46601) - This API is used to query the asynchronous task status.
-* Update: [ModifySRVConnectionUrl](https://cloud.tencent.com/document/api/240/127854) - This API is used to modify the TTL duration of the SRV Access Address for a MongoDB database.
-* Delete: [DescribeAsyncRequestInfo](https://cloud.tencent.com/document/api/240/46601) - This API is used to query the asynchronous task status.
-* Delete: [DisableSRVConnectionUrl](https://cloud.tencent.com/document/api/240/127856) - This API is used to close the SRV Access Address of the MongoDB database.
+* Create: [DescribeAsyncRequestInfo](https://www.tencentcloud.com/document/product/240/37921) - This API is used to query the asynchronous task status.
+* Create: [EnableSRVConnectionUrl](https://www.tencentcloud.com/document/product/240/79883) - This API is used to enable the SRV Access Address for MongoDB database.
+* Create: [ModifySRVConnectionUrl](https://www.tencentcloud.com/document/product/240/79880) - This API is used to modify the TTL duration of the SRV Access Address for a MongoDB database.
+* Read: [DescribeSRVConnectionDomain](https://www.tencentcloud.com/document/product/240/79885) - This API is used to query the current domain information of the MongoDB database.
+* Update: [DescribeAsyncRequestInfo](https://www.tencentcloud.com/document/product/240/37921) - This API is used to query the asynchronous task status.
+* Update: [ModifySRVConnectionUrl](https://www.tencentcloud.com/document/product/240/79880) - This API is used to modify the TTL duration of the SRV Access Address for a MongoDB database.
+* Delete: [DescribeAsyncRequestInfo](https://www.tencentcloud.com/document/product/240/37921) - This API is used to query the asynchronous task status.
+* Delete: [DisableSRVConnectionUrl](https://www.tencentcloud.com/document/product/240/79884) - This API is used to close the SRV Access Address of the MongoDB database.
 
 ## Import
 

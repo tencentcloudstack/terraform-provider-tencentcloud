@@ -106,9 +106,9 @@ In addition to all arguments above, the following attributes are exported:
 
 This resource interacts with the following TencentCloud APIs:
 
-* Create: [DescribeAsyncRequestInfo](https://cloud.tencent.com/document/api/236/20410) - This API (DescribeAsyncRequestInfo) is used to query the async task execution result of a TencentDB instance.
-* Create: [ModifyInstancePasswordComplexity](https://cloud.tencent.com/document/api/236/78162) - This API is used to modify the password complexity of a cloud database instance.
-* Read: [DescribeInstanceParams](https://cloud.tencent.com/document/api/236/20411) - This API (DescribeInstanceParams) is used to query the list of parameters for an instance.
-* Update: [DescribeAsyncRequestInfo](https://cloud.tencent.com/document/api/236/20410) - This API (DescribeAsyncRequestInfo) is used to query the async task execution result of a TencentDB instance.
-* Update: [ModifyInstancePasswordComplexity](https://cloud.tencent.com/document/api/236/78162) - This API is used to modify the password complexity of a cloud database instance.
+* Create: [DescribeAsyncRequestInfo](https://www.tencentcloud.com/document/product/236/34462) - This API (DescribeAsyncRequestInfo) is used to query the async task execution result of a TencentDB instance.
+* Create: [ModifyInstancePasswordComplexity](https://www.tencentcloud.com/document/product/236/49500) - This API is used to modify the password complexity of a cloud database instance.
+* Read: [DescribeInstanceParams](https://www.tencentcloud.com/document/product/236/34467) - This API (DescribeInstanceParams) is used to query the list of parameters for an instance.
+* Update: [DescribeAsyncRequestInfo](https://www.tencentcloud.com/document/product/236/34462) - This API (DescribeAsyncRequestInfo) is used to query the async task execution result of a TencentDB instance.
+* Update: [ModifyInstancePasswordComplexity](https://www.tencentcloud.com/document/product/236/49500) - This API is used to modify the password complexity of a cloud database instance.
 

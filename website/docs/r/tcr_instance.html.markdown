@@ -157,7 +157,7 @@ This resource interacts with the following TencentCloud APIs:
 * Create: [DescribeExternalEndpointStatus](https://cloud.tencent.com/document/api/1141/53642) - This API is used to query the public network access entry status of an instance.
 * Create: [DescribeInstances](https://cloud.tencent.com/document/api/1141/41569) - This API is used to query the instance information.
 * Create: [ManageExternalEndpoint](https://cloud.tencent.com/document/api/1141/53597) - This API is used to manage the public network access of an instance.
-* Create: [ModifyResourceTags](https://cloud.tencent.com/document/api/651/35322) - This API is used to modify all tags associated with a resource.
+* Create: [ModifyResourceTags](https://www.tencentcloud.com/document/product/651/33012) - This API is used to modify all tags associated with a resource.
 * Read: [DescribeExternalEndpointStatus](https://cloud.tencent.com/document/api/1141/53642) - This API is used to query the public network access entry status of an instance.
 * Read: [DescribeInstances](https://cloud.tencent.com/document/api/1141/41569) - This API is used to query the instance information.
 * Read: [DescribeReplicationInstances](https://cloud.tencent.com/document/api/1141/49201) - This API is used to query the list of replication instances.
@@ -168,7 +168,7 @@ This resource interacts with the following TencentCloud APIs:
 * Update: [DescribeInstances](https://cloud.tencent.com/document/api/1141/41569) - This API is used to query the instance information.
 * Update: [ManageExternalEndpoint](https://cloud.tencent.com/document/api/1141/53597) - This API is used to manage the public network access of an instance.
 * Update: [ModifyInstance](https://cloud.tencent.com/document/api/1141/60996) - This API is used to update instance information.
-* Update: [ModifyResourceTags](https://cloud.tencent.com/document/api/651/35322) - This API is used to modify all tags associated with a resource.
+* Update: [ModifyResourceTags](https://www.tencentcloud.com/document/product/651/33012) - This API is used to modify all tags associated with a resource.
 * Update: [RenewInstance](https://cloud.tencent.com/document/api/1141/51792) - This API is used to renew a prepaid instance or change the billing mode from pay-as-you-go billing to monthly subscription billing.
 * Delete: [DeleteInstance](https://cloud.tencent.com/document/api/1141/49983) - This API is used to delete a TCR Enterprise Edition instance.
 * Delete: [DeleteNamespace](https://cloud.tencent.com/document/api/1141/42728) - This API is used to delete a namespace.

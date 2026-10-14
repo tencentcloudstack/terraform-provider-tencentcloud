@@ -56,10 +56,10 @@ This resource interacts with the following TencentCloud APIs:
 
 * Create: [CreateInstanceCustomizedDomain](https://cloud.tencent.com/document/api/1141/79579) - This API is used to create a custom domain name.
 * Create: [DescribeInstanceCustomizedDomain](https://cloud.tencent.com/document/api/1141/79573) - This API is used to query the list of custom domain names of an instance.
-* Create: [ModifyResourceTags](https://cloud.tencent.com/document/api/651/35322) - This API is used to modify all tags associated with a resource.
+* Create: [ModifyResourceTags](https://www.tencentcloud.com/document/product/651/33012) - This API is used to modify all tags associated with a resource.
 * Read: [DescribeInstanceCustomizedDomain](https://cloud.tencent.com/document/api/1141/79573) - This API is used to query the list of custom domain names of an instance.
-* Read: [DescribeResourceTagsByResourceIds](https://cloud.tencent.com/document/api/651/35319) - This API is used to query the tag key-value pairs associated with an existing resource.
-* Update: [ModifyResourceTags](https://cloud.tencent.com/document/api/651/35322) - This API is used to modify all tags associated with a resource.
+* Read: [DescribeResourceTagsByResourceIds](https://www.tencentcloud.com/document/product/651/33022) - This API is used to query the tag key-value pairs associated with an existing resource.
+* Update: [ModifyResourceTags](https://www.tencentcloud.com/document/product/651/33012) - This API is used to modify all tags associated with a resource.
 * Delete: [DeleteInstanceCustomizedDomain](https://cloud.tencent.com/document/api/1141/79576) - This API is used to delete a custom domain name.
 
 ## Import

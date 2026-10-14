@@ -47,13 +47,13 @@ In addition to all arguments above, the following attributes are exported:
 
 This resource interacts with the following TencentCloud APIs:
 
-* Create: [CreateHaVip](https://cloud.tencent.com/document/api/215/30652) - This API is used to create a highly available virtual IP (HAVIP).
-* Create: [DescribeHaVips](https://cloud.tencent.com/document/api/215/30650) - This API (DescribeHaVips) is used to query the list of highly available virtual IPs (HAVIP).
-* Read: [DescribeHaVips](https://cloud.tencent.com/document/api/215/30650) - This API (DescribeHaVips) is used to query the list of highly available virtual IPs (HAVIP).
-* Update: [DescribeHaVips](https://cloud.tencent.com/document/api/215/30650) - This API (DescribeHaVips) is used to query the list of highly available virtual IPs (HAVIP).
-* Update: [ModifyHaVipAttribute](https://cloud.tencent.com/document/api/215/30647) - This API (ModifyHaVipAttribute) is used to modify HAVIP attributes.
-* Delete: [DeleteHaVip](https://cloud.tencent.com/document/api/215/30651) - This API is used to delete an HAVIP.
-* Delete: [DescribeHaVips](https://cloud.tencent.com/document/api/215/30650) - This API (DescribeHaVips) is used to query the list of highly available virtual IPs (HAVIP).
+* Create: [CreateHaVip](https://www.tencentcloud.com/document/product/215/34764) - This API is used to create a highly available virtual IP (HAVIP).
+* Create: [DescribeHaVips](https://www.tencentcloud.com/document/product/215/34762) - This API (DescribeHaVips) is used to query the list of highly available virtual IPs (HAVIP).
+* Read: [DescribeHaVips](https://www.tencentcloud.com/document/product/215/34762) - This API (DescribeHaVips) is used to query the list of highly available virtual IPs (HAVIP).
+* Update: [DescribeHaVips](https://www.tencentcloud.com/document/product/215/34762) - This API (DescribeHaVips) is used to query the list of highly available virtual IPs (HAVIP).
+* Update: [ModifyHaVipAttribute](https://www.tencentcloud.com/document/product/215/34759) - This API (ModifyHaVipAttribute) is used to modify HAVIP attributes.
+* Delete: [DeleteHaVip](https://www.tencentcloud.com/document/product/215/34763) - This API is used to delete an HAVIP.
+* Delete: [DescribeHaVips](https://www.tencentcloud.com/document/product/215/34762) - This API (DescribeHaVips) is used to query the list of highly available virtual IPs (HAVIP).
 
 ## Import
 

@@ -82,13 +82,13 @@ In addition to all arguments above, the following attributes are exported:
 
 This resource interacts with the following TencentCloud APIs:
 
-* Create: [DescribeClusterAuthenticationOptions](https://cloud.tencent.com/document/api/457/62278) - This API is used to query cluster authentication configuration.
-* Create: [ModifyClusterAuthenticationOptions](https://cloud.tencent.com/document/api/457/62277) - This API is used to modify cluster authentication configuration.
-* Read: [DescribeClusterAuthenticationOptions](https://cloud.tencent.com/document/api/457/62278) - This API is used to query cluster authentication configuration.
-* Update: [DescribeClusterAuthenticationOptions](https://cloud.tencent.com/document/api/457/62278) - This API is used to query cluster authentication configuration.
-* Update: [ModifyClusterAuthenticationOptions](https://cloud.tencent.com/document/api/457/62277) - This API is used to modify cluster authentication configuration.
-* Delete: [DescribeClusterAuthenticationOptions](https://cloud.tencent.com/document/api/457/62278) - This API is used to query cluster authentication configuration.
-* Delete: [ModifyClusterAuthenticationOptions](https://cloud.tencent.com/document/api/457/62277) - This API is used to modify cluster authentication configuration.
+* Create: [DescribeClusterAuthenticationOptions](https://www.tencentcloud.com/document/product/457/42699) - This API is used to query cluster authentication configuration.
+* Create: [ModifyClusterAuthenticationOptions](https://www.tencentcloud.com/document/product/457/42698) - This API is used to modify cluster authentication configuration.
+* Read: [DescribeClusterAuthenticationOptions](https://www.tencentcloud.com/document/product/457/42699) - This API is used to query cluster authentication configuration.
+* Update: [DescribeClusterAuthenticationOptions](https://www.tencentcloud.com/document/product/457/42699) - This API is used to query cluster authentication configuration.
+* Update: [ModifyClusterAuthenticationOptions](https://www.tencentcloud.com/document/product/457/42698) - This API is used to modify cluster authentication configuration.
+* Delete: [DescribeClusterAuthenticationOptions](https://www.tencentcloud.com/document/product/457/42699) - This API is used to query cluster authentication configuration.
+* Delete: [ModifyClusterAuthenticationOptions](https://www.tencentcloud.com/document/product/457/42698) - This API is used to modify cluster authentication configuration.
 
 ## Import
 

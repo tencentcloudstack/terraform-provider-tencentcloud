@@ -97,6 +97,6 @@ In addition to all arguments above, the following attributes are exported:
 
 This data source queries the following TencentCloud APIs:
 
-* Read: [DescribeTargetGroupInstances](https://cloud.tencent.com/document/api/214/40556) - This API is used to get the information of servers bound to a target group.
-* Read: [DescribeTargetGroups](https://cloud.tencent.com/document/api/214/40554) - This API is used to query the target group information.
+* Read: [DescribeTargetGroupInstances](https://www.tencentcloud.com/document/product/214/33828) - This API is used to get the information of servers bound to a target group.
+* Read: [DescribeTargetGroups](https://www.tencentcloud.com/document/product/214/33826) - This API is used to query the target group information.
 

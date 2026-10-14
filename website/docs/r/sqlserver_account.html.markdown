@@ -94,14 +94,14 @@ The `timeouts` block allows you to specify [timeouts](https://developer.hashicor
 
 This resource interacts with the following TencentCloud APIs:
 
-* Create: [CreateAccount](https://cloud.tencent.com/document/api/238/19975) - This API is used to create an instance account.
-* Create: [DescribeFlowStatus](https://cloud.tencent.com/document/api/238/19967) - This API is used to query flow status.
-* Read: [DescribeAccounts](https://cloud.tencent.com/document/api/238/19970) - This API is used to pull the list of instance accounts.
-* Update: [DescribeAccounts](https://cloud.tencent.com/document/api/238/19970) - This API is used to pull the list of instance accounts.
-* Update: [ModifyAccountRemark](https://cloud.tencent.com/document/api/238/19935) - This API is used to modify account remarks.
-* Update: [ResetAccountPassword](https://cloud.tencent.com/document/api/238/19952) - This API is used to reset the account password of an instance.
-* Delete: [DeleteAccount](https://cloud.tencent.com/document/api/238/19972) - This API is used to delete an instance account.
-* Delete: [DescribeAccounts](https://cloud.tencent.com/document/api/238/19970) - This API is used to pull the list of instance accounts.
+* Create: [CreateAccount](https://www.tencentcloud.com/document/product/238/32121) - This API is used to create an instance account.
+* Create: [DescribeFlowStatus](https://www.tencentcloud.com/document/product/238/32113) - This API is used to query flow status.
+* Read: [DescribeAccounts](https://www.tencentcloud.com/document/product/238/32116) - This API is used to pull the list of instance accounts.
+* Update: [DescribeAccounts](https://www.tencentcloud.com/document/product/238/32116) - This API is used to pull the list of instance accounts.
+* Update: [ModifyAccountRemark](https://www.tencentcloud.com/document/product/238/32132) - This API is used to modify account remarks.
+* Update: [ResetAccountPassword](https://www.tencentcloud.com/document/product/238/32098) - This API is used to reset the account password of an instance.
+* Delete: [DeleteAccount](https://www.tencentcloud.com/document/product/238/32118) - This API is used to delete an instance account.
+* Delete: [DescribeAccounts](https://www.tencentcloud.com/document/product/238/32116) - This API is used to pull the list of instance accounts.
 
 ## Import
 

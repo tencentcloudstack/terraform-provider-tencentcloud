@@ -67,5 +67,5 @@ In addition to all arguments above, the following attributes are exported:
 
 This data source queries the following TencentCloud APIs:
 
-* Read: [DescribeAutoScalingGroups](https://cloud.tencent.com/document/api/377/20438) - This API (DescribeAutoScalingGroups) is used to query the information of auto scaling groups.
+* Read: [DescribeAutoScalingGroups](https://www.tencentcloud.com/document/product/377/31013) - This API (DescribeAutoScalingGroups) is used to query the information of auto scaling groups.
 

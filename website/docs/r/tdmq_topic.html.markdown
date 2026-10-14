@@ -79,7 +79,7 @@ This resource interacts with the following TencentCloud APIs:
 * Create: [CreateTopic](https://cloud.tencent.com/document/api/1179/46088) - This API is used to add a message topic in the specified partition and type.
 * Read: [DescribeTopics](https://cloud.tencent.com/document/api/1179/46086) - This API is used to get the list of topics under an environment.
 * Update: [ModifyTopic](https://cloud.tencent.com/document/api/1179/46085) - This API is used to modify the topic remarks and number of partitions.
-* Update: [TagResources](https://cloud.tencent.com/document/api/651/72280) - This API is used to create and bind a tag uniformly to multiple specified resources of multiple Tencent Cloud services.
-* Update: [UnTagResources](https://cloud.tencent.com/document/api/651/72279) - This API is used to unbind a tag uniformly from multiple specified resources of multiple Tencent Cloud services.
+* Update: [TagResources](https://www.tencentcloud.com/document/product/651/46533) - This API is used to create and bind a tag uniformly to multiple specified resources of multiple Tencent Cloud services.
+* Update: [UnTagResources](https://www.tencentcloud.com/document/product/651/46532) - This API is used to unbind a tag uniformly from multiple specified resources of multiple Tencent Cloud services.
 * Delete: [DeleteTopics](https://cloud.tencent.com/document/api/1179/46087) - This API is used to batch delete topics.
 

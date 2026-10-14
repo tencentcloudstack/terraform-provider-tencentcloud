@@ -96,5 +96,5 @@ In addition to all arguments above, the following attributes are exported:
 
 This data source queries the following TencentCloud APIs:
 
-* Read: [DescribeProcedureTemplates](https://cloud.tencent.com/document/api/266/33895) - This API is used to search the task flow template detail list based on the task flow template name.
+* Read: [DescribeProcedureTemplates](https://www.tencentcloud.com/document/product/266/34147) - This API is used to search the task flow template detail list based on the task flow template name.
 

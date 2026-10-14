@@ -68,5 +68,5 @@ In addition to all arguments above, the following attributes are exported:
 
 This data source queries the following TencentCloud APIs:
 
-* Read: [SearchAttackLog](https://cloud.tencent.com/document/api/627/86118) - The new version of the CLS API has parameter changes, with query changed to query_string to support Lucene syntax for API search queries.
+* Read: [SearchAttackLog](https://www.tencentcloud.com/document/product/627/66358) - The new version of the CLS API has parameter changes, with query changed to query_string to support Lucene syntax for API search queries.
 

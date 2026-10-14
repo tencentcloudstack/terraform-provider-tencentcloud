@@ -79,11 +79,11 @@ In addition to all arguments above, the following attributes are exported:
 
 This resource interacts with the following TencentCloud APIs:
 
-* Create: [DescribeCcns](https://cloud.tencent.com/document/api/215/19199) - This API (DescribeCcns) is used to query the CCN list.
-* Create: [SetCcnRegionBandwidthLimits](https://cloud.tencent.com/document/api/215/19194) - This API (SetCcnRegionBandwidthLimits) is used to set the outbound bandwidth cap for CCNs in each region. This API can only set the outbound bandwidth cap for regions in the network instances that have already been associated.
-* Read: [DescribeCcns](https://cloud.tencent.com/document/api/215/19199) - This API (DescribeCcns) is used to query the CCN list.
-* Read: [GetCcnRegionBandwidthLimits](https://cloud.tencent.com/document/api/215/45482) - This API is used to query the bandwidth limits of a CCN instance. Monthly-subscribed CCNs only support Inter-region Bandwidth Limits, while the pay-as-you-go CCNs support both the Inter-region Bandwidth Limits and Region Outbound Bandwidth ...
-* Update: [DescribeCcns](https://cloud.tencent.com/document/api/215/19199) - This API (DescribeCcns) is used to query the CCN list.
-* Update: [SetCcnRegionBandwidthLimits](https://cloud.tencent.com/document/api/215/19194) - This API (SetCcnRegionBandwidthLimits) is used to set the outbound bandwidth cap for CCNs in each region. This API can only set the outbound bandwidth cap for regions in the network instances that have already been associated.
-* Delete: [SetCcnRegionBandwidthLimits](https://cloud.tencent.com/document/api/215/19194) - This API (SetCcnRegionBandwidthLimits) is used to set the outbound bandwidth cap for CCNs in each region. This API can only set the outbound bandwidth cap for regions in the network instances that have already been associated.
+* Create: [DescribeCcns](https://www.tencentcloud.com/document/product/215/34787) - This API (DescribeCcns) is used to query the CCN list.
+* Create: [SetCcnRegionBandwidthLimits](https://www.tencentcloud.com/document/product/215/34779) - This API (SetCcnRegionBandwidthLimits) is used to set the outbound bandwidth cap for CCNs in each region. This API can only set the outbound bandwidth cap for regions in the network instances that have already been associated.
+* Read: [DescribeCcns](https://www.tencentcloud.com/document/product/215/34787) - This API (DescribeCcns) is used to query the CCN list.
+* Read: [GetCcnRegionBandwidthLimits](https://www.tencentcloud.com/document/product/215/37319) - This API is used to query the bandwidth limits of a CCN instance. Monthly-subscribed CCNs only support Inter-region Bandwidth Limits, while the pay-as-you-go CCNs support both the Inter-region Bandwidth Limits and Region Outbound Bandwidth ...
+* Update: [DescribeCcns](https://www.tencentcloud.com/document/product/215/34787) - This API (DescribeCcns) is used to query the CCN list.
+* Update: [SetCcnRegionBandwidthLimits](https://www.tencentcloud.com/document/product/215/34779) - This API (SetCcnRegionBandwidthLimits) is used to set the outbound bandwidth cap for CCNs in each region. This API can only set the outbound bandwidth cap for regions in the network instances that have already been associated.
+* Delete: [SetCcnRegionBandwidthLimits](https://www.tencentcloud.com/document/product/215/34779) - This API (SetCcnRegionBandwidthLimits) is used to set the outbound bandwidth cap for CCNs in each region. This API can only set the outbound bandwidth cap for regions in the network instances that have already been associated.
 

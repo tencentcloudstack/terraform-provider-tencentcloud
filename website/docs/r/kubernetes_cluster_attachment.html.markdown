@@ -206,9 +206,9 @@ The `timeouts` block allows you to specify [timeouts](https://developer.hashicor
 
 This resource interacts with the following TencentCloud APIs:
 
-* Create: [AddExistedInstances](https://cloud.tencent.com/document/api/457/31865) - This API is used to add one or more existing instances to a cluster.
-* Read: [DescribeClusterInstances](https://cloud.tencent.com/document/api/457/31863) - This API is used to query the information of node instances in a cluster.
-* Read: [DescribeClusters](https://cloud.tencent.com/document/api/457/31862) - This API is used to query clusters list.
-* Read: [DescribeInstances](https://cloud.tencent.com/document/api/213/15728) - This API is used to query the details of instances.
-* Delete: [DeleteClusterInstances](https://cloud.tencent.com/document/api/457/31864) - This API is used to delete one or more nodes from a cluster.
+* Create: [AddExistedInstances](https://www.tencentcloud.com/document/product/457/32039) - This API is used to add one or more existing instances to a cluster.
+* Read: [DescribeClusterInstances](https://www.tencentcloud.com/document/product/457/66315) - This API is used to query the information of node instances in a cluster.
+* Read: [DescribeClusters](https://www.tencentcloud.com/document/product/457/32025) - This API is used to query clusters list.
+* Read: [DescribeInstances](https://www.tencentcloud.com/document/product/213/33258) - This API is used to query the details of instances.
+* Delete: [DeleteClusterInstances](https://www.tencentcloud.com/document/product/457/32038) - This API is used to delete one or more nodes from a cluster.
 

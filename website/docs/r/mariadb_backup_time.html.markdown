@@ -40,9 +40,9 @@ In addition to all arguments above, the following attributes are exported:
 
 This resource interacts with the following TencentCloud APIs:
 
-* Create: [ModifyBackupTime](https://cloud.tencent.com/document/api/237/16173)
-* Read: [DescribeBackupTime](https://cloud.tencent.com/document/api/237/16182)
-* Update: [ModifyBackupTime](https://cloud.tencent.com/document/api/237/16173)
+* Create: [ModifyBackupTime](https://www.tencentcloud.com/document/product/237/16173)
+* Read: [DescribeBackupTime](https://www.tencentcloud.com/document/product/237/16182)
+* Update: [ModifyBackupTime](https://www.tencentcloud.com/document/product/237/16173)
 
 ## Import
 

@@ -95,10 +95,10 @@ In addition to all arguments above, the following attributes are exported:
 
 This resource interacts with the following TencentCloud APIs:
 
-* Create: [CreateScheduledAction](https://cloud.tencent.com/document/api/377/20452) - This API (CreateScheduledAction) is used to create a scheduled task.
-* Read: [DescribeScheduledActions](https://cloud.tencent.com/document/api/377/20450) - This API (DescribeScheduledActions) is used to query the details of one or more scheduled tasks.
-* Update: [ModifyScheduledAction](https://cloud.tencent.com/document/api/377/20449) - This API (ModifyScheduledAction) is used to modify a scheduled task.
-* Delete: [DeleteScheduledAction](https://cloud.tencent.com/document/api/377/20451) - This API (DeleteScheduledAction) is used to delete the specified scheduled task.
+* Create: [CreateScheduledAction](https://www.tencentcloud.com/document/product/377/30996) - This API (CreateScheduledAction) is used to create a scheduled task.
+* Read: [DescribeScheduledActions](https://www.tencentcloud.com/document/product/377/30994) - This API (DescribeScheduledActions) is used to query the details of one or more scheduled tasks.
+* Update: [ModifyScheduledAction](https://www.tencentcloud.com/document/product/377/30993) - This API (ModifyScheduledAction) is used to modify a scheduled task.
+* Delete: [DeleteScheduledAction](https://www.tencentcloud.com/document/product/377/30995) - This API (DeleteScheduledAction) is used to delete the specified scheduled task.
 
 ## Import
 

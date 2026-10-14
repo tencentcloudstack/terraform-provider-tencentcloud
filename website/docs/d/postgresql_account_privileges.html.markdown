@@ -58,5 +58,5 @@ In addition to all arguments above, the following attributes are exported:
 
 This data source queries the following TencentCloud APIs:
 
-* Read: [DescribeAccountPrivileges](https://cloud.tencent.com/document/api/409/109069) - This API is used to query the permission list of a database account on a database object.
+* Read: [DescribeAccountPrivileges](https://www.tencentcloud.com/document/product/409/78818) - This API is used to query the permission list of a database account on a database object.
 

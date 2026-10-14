@@ -60,5 +60,5 @@ In addition to all arguments above, the following attributes are exported:
 
 This data source queries the following TencentCloud APIs:
 
-* Read: [DescribeRoute](https://cloud.tencent.com/document/api/597/45484) - This API is used to view route information.
+* Read: [DescribeRoute](https://www.tencentcloud.com/document/product/597/37090) - This API is used to view route information.
 

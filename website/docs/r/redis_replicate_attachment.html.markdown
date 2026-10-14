@@ -105,16 +105,16 @@ In addition to all arguments above, the following attributes are exported:
 
 This resource interacts with the following TencentCloud APIs:
 
-* Create: [AddReplicationInstance](https://cloud.tencent.com/document/api/239/68401) - This API is used to add an instance member to the global replication group.
-* Create: [DescribeTaskInfo](https://cloud.tencent.com/document/api/239/30601) - This API is used to get the execution of a specified task.
-* Read: [DescribeReplicationGroup](https://cloud.tencent.com/document/api/239/71554) - This API is used to query a replication group.
-* Update: [AddReplicationInstance](https://cloud.tencent.com/document/api/239/68401) - This API is used to add an instance member to the global replication group.
-* Update: [ChangeMasterInstance](https://cloud.tencent.com/document/api/239/77862) - This API is used to set a read-only instance in a replication group as a master instance.
-* Update: [DescribeTaskInfo](https://cloud.tencent.com/document/api/239/30601) - This API is used to get the execution of a specified task.
-* Update: [RemoveReplicationInstance](https://cloud.tencent.com/document/api/239/90099) - This API is used to remove instances from a replication group.
-* Delete: [DescribeReplicationGroup](https://cloud.tencent.com/document/api/239/71554) - This API is used to query a replication group.
-* Delete: [DescribeTaskInfo](https://cloud.tencent.com/document/api/239/30601) - This API is used to get the execution of a specified task.
-* Delete: [RemoveReplicationInstance](https://cloud.tencent.com/document/api/239/90099) - This API is used to remove instances from a replication group.
+* Create: [AddReplicationInstance](https://www.tencentcloud.com/document/product/239/59986) - This API is used to add an instance member to the global replication group.
+* Create: [DescribeTaskInfo](https://www.tencentcloud.com/document/product/239/32064) - This API is used to get the execution of a specified task.
+* Read: [DescribeReplicationGroup](https://www.tencentcloud.com/document/product/239/46257) - This API is used to query a replication group.
+* Update: [AddReplicationInstance](https://www.tencentcloud.com/document/product/239/59986) - This API is used to add an instance member to the global replication group.
+* Update: [ChangeMasterInstance](https://www.tencentcloud.com/document/product/239/49358) - This API is used to set a read-only instance in a replication group as a master instance.
+* Update: [DescribeTaskInfo](https://www.tencentcloud.com/document/product/239/32064) - This API is used to get the execution of a specified task.
+* Update: [RemoveReplicationInstance](https://www.tencentcloud.com/document/product/239/54674) - This API is used to remove instances from a replication group.
+* Delete: [DescribeReplicationGroup](https://www.tencentcloud.com/document/product/239/46257) - This API is used to query a replication group.
+* Delete: [DescribeTaskInfo](https://www.tencentcloud.com/document/product/239/32064) - This API is used to get the execution of a specified task.
+* Delete: [RemoveReplicationInstance](https://www.tencentcloud.com/document/product/239/54674) - This API is used to remove instances from a replication group.
 
 ## Import
 

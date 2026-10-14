@@ -227,10 +227,10 @@ The `agents` object exports the following:
 
 This resource interacts with the following TencentCloud APIs:
 
-* Create: [CreatePrometheusClusterAgent](https://cloud.tencent.com/document/api/248/86044) - This API is used to associate a cluster with a Cloud Monitor (CM)-integrated Tencent Managed Service for Prometheus (TMP) 2.0 instance.
-* Create: [DescribePrometheusClusterAgents](https://cloud.tencent.com/document/api/248/86040) - This API is used to get the list of clusters associated with the TMP instance.
-* Read: [DescribePrometheusClusterAgents](https://cloud.tencent.com/document/api/248/86040) - This API is used to get the list of clusters associated with the TMP instance.
-* Update: [ModifyPrometheusAgentExternalLabels](https://cloud.tencent.com/document/api/248/86036) - This API is used to modify the external labels of the associated cluster.
-* Delete: [DeletePrometheusClusterAgent](https://cloud.tencent.com/document/api/248/86041) - This API is used to disassociate a TMP instance from a cluster.
-* Delete: [DescribePrometheusClusterAgents](https://cloud.tencent.com/document/api/248/86040) - This API is used to get the list of clusters associated with the TMP instance.
+* Create: [CreatePrometheusClusterAgent](https://www.tencentcloud.com/document/product/248/53774) - This API is used to associate a cluster with a Cloud Monitor (CM)-integrated Tencent Managed Service for Prometheus (TMP) 2.0 instance.
+* Create: [DescribePrometheusClusterAgents](https://www.tencentcloud.com/document/product/248/53770) - This API is used to get the list of clusters associated with the TMP instance.
+* Read: [DescribePrometheusClusterAgents](https://www.tencentcloud.com/document/product/248/53770) - This API is used to get the list of clusters associated with the TMP instance.
+* Update: [ModifyPrometheusAgentExternalLabels](https://www.tencentcloud.com/document/product/248/53766) - This API is used to modify the external labels of the associated cluster.
+* Delete: [DeletePrometheusClusterAgent](https://www.tencentcloud.com/document/product/248/53771) - This API is used to disassociate a TMP instance from a cluster.
+* Delete: [DescribePrometheusClusterAgents](https://www.tencentcloud.com/document/product/248/53770) - This API is used to get the list of clusters associated with the TMP instance.
 

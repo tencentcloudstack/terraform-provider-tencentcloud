@@ -133,18 +133,18 @@ The `timeouts` block allows you to specify [timeouts](https://developer.hashicor
 
 This resource interacts with the following TencentCloud APIs:
 
-* Create: [CreateCfsFileSystem](https://cloud.tencent.com/document/api/582/38174) - This API is used to create a file system.
-* Create: [DescribeCfsFileSystems](https://cloud.tencent.com/document/api/582/38170) - This API is used to query file systems.
-* Create: [ModifyResourceTags](https://cloud.tencent.com/document/api/651/35322) - This API is used to modify all tags associated with a resource.
-* Read: [DescribeCfsFileSystems](https://cloud.tencent.com/document/api/582/38170) - This API is used to query file systems.
-* Read: [DescribeMountTargets](https://cloud.tencent.com/document/api/582/38169) - This API is used to query the mount targets of a file system.
-* Read: [DescribeResourceTagsByResourceIds](https://cloud.tencent.com/document/api/651/35319) - This API is used to query the tag key-value pairs associated with an existing resource.
-* Update: [DescribeCfsFileSystems](https://cloud.tencent.com/document/api/582/38170) - This API is used to query file systems.
-* Update: [ModifyResourceTags](https://cloud.tencent.com/document/api/651/35322) - This API is used to modify all tags associated with a resource.
-* Update: [ScaleUpFileSystem](https://cloud.tencent.com/document/api/582/90456) - This API is used to expand the turbo file system. It only supports expansion and does not support scale-down. The scaling increment for the turbo standard type is 10240 GIB, and for the turbo performance type, it is 5120 GIB.
-* Update: [UpdateCfsFileSystemName](https://cloud.tencent.com/document/api/582/38168) - This API is used to update a file system name.
-* Update: [UpdateCfsFileSystemPGroup](https://cloud.tencent.com/document/api/582/38167) - This API is used to update the permission group used by a file system.
-* Delete: [DeleteCfsFileSystem](https://cloud.tencent.com/document/api/582/38173) - This API is used to delete a file system.
+* Create: [CreateCfsFileSystem](https://www.tencentcloud.com/document/product/582/34517) - This API is used to create a file system.
+* Create: [DescribeCfsFileSystems](https://www.tencentcloud.com/document/product/582/34514) - This API is used to query file systems.
+* Create: [ModifyResourceTags](https://www.tencentcloud.com/document/product/651/33012) - This API is used to modify all tags associated with a resource.
+* Read: [DescribeCfsFileSystems](https://www.tencentcloud.com/document/product/582/34514) - This API is used to query file systems.
+* Read: [DescribeMountTargets](https://www.tencentcloud.com/document/product/582/34513) - This API is used to query the mount targets of a file system.
+* Read: [DescribeResourceTagsByResourceIds](https://www.tencentcloud.com/document/product/651/33022) - This API is used to query the tag key-value pairs associated with an existing resource.
+* Update: [DescribeCfsFileSystems](https://www.tencentcloud.com/document/product/582/34514) - This API is used to query file systems.
+* Update: [ModifyResourceTags](https://www.tencentcloud.com/document/product/651/33012) - This API is used to modify all tags associated with a resource.
+* Update: [ScaleUpFileSystem](https://www.tencentcloud.com/document/product/582/55870) - This API is used to expand the turbo file system. It only supports expansion and does not support scale-down. The scaling increment for the turbo standard type is 10240 GIB, and for the turbo performance type, it is 5120 GIB.
+* Update: [UpdateCfsFileSystemName](https://www.tencentcloud.com/document/product/582/35059) - This API is used to update a file system name.
+* Update: [UpdateCfsFileSystemPGroup](https://www.tencentcloud.com/document/product/582/34512) - This API is used to update the permission group used by a file system.
+* Delete: [DeleteCfsFileSystem](https://www.tencentcloud.com/document/product/582/34516) - This API is used to delete a file system.
 
 ## Import
 

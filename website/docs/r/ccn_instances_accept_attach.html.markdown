@@ -52,5 +52,5 @@ In addition to all arguments above, the following attributes are exported:
 
 This resource interacts with the following TencentCloud APIs:
 
-* Create: [AcceptAttachCcnInstances](https://cloud.tencent.com/document/api/215/20251) - This API (AcceptAttachCcnInstances) is used to associate instances across accounts. Cloud Connect Network (CCN) owners accept and agree to the operations.
+* Create: [AcceptAttachCcnInstances](https://www.tencentcloud.com/document/product/215/34793) - This API (AcceptAttachCcnInstances) is used to associate instances across accounts. Cloud Connect Network (CCN) owners accept and agree to the operations.
 

@@ -42,9 +42,9 @@ In addition to all arguments above, the following attributes are exported:
 
 This resource interacts with the following TencentCloud APIs:
 
-* Create: [ModifyVpnGatewayCcnRoutes](https://cloud.tencent.com/document/api/215/43497) - This API is used to modify VPN gateway-based CCN routes.
-* Read: [DescribeVpnGatewayCcnRoutes](https://cloud.tencent.com/document/api/215/43514) - This API is used to query VPN gateway-based CCN routes.
-* Update: [ModifyVpnGatewayCcnRoutes](https://cloud.tencent.com/document/api/215/43497) - This API is used to modify VPN gateway-based CCN routes.
+* Create: [ModifyVpnGatewayCcnRoutes](https://www.tencentcloud.com/document/product/215/36074) - This API is used to modify VPN gateway-based CCN routes.
+* Read: [DescribeVpnGatewayCcnRoutes](https://www.tencentcloud.com/document/product/215/36075) - This API is used to query VPN gateway-based CCN routes.
+* Update: [ModifyVpnGatewayCcnRoutes](https://www.tencentcloud.com/document/product/215/36074) - This API is used to modify VPN gateway-based CCN routes.
 
 ## Import
 

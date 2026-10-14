@@ -40,11 +40,11 @@ In addition to all arguments above, the following attributes are exported:
 
 This resource interacts with the following TencentCloud APIs:
 
-* Create: [DisableCcnRoutes](https://cloud.tencent.com/document/api/215/19197) - This API (DisableCcnRoutes) is used to disable CCN routes that are already enabled.
-* Create: [EnableCcnRoutes](https://cloud.tencent.com/document/api/215/19196) - This API (EnableCcnRoutes) is used to enable CCN routes that are already added.
-* Read: [DescribeCcnRoutes](https://cloud.tencent.com/document/api/215/19200) - This API (DescribeCcnRoutes) is used to query routes that have been added to a CCN.
-* Update: [DisableCcnRoutes](https://cloud.tencent.com/document/api/215/19197) - This API (DisableCcnRoutes) is used to disable CCN routes that are already enabled.
-* Update: [EnableCcnRoutes](https://cloud.tencent.com/document/api/215/19196) - This API (EnableCcnRoutes) is used to enable CCN routes that are already added.
+* Create: [DisableCcnRoutes](https://www.tencentcloud.com/document/product/215/34785) - This API (DisableCcnRoutes) is used to disable CCN routes that are already enabled.
+* Create: [EnableCcnRoutes](https://www.tencentcloud.com/document/product/215/34784) - This API (EnableCcnRoutes) is used to enable CCN routes that are already added.
+* Read: [DescribeCcnRoutes](https://www.tencentcloud.com/document/product/215/34788) - This API (DescribeCcnRoutes) is used to query routes that have been added to a CCN.
+* Update: [DisableCcnRoutes](https://www.tencentcloud.com/document/product/215/34785) - This API (DisableCcnRoutes) is used to disable CCN routes that are already enabled.
+* Update: [EnableCcnRoutes](https://www.tencentcloud.com/document/product/215/34784) - This API (EnableCcnRoutes) is used to enable CCN routes that are already added.
 
 ## Import
 

@@ -192,5 +192,5 @@ In addition to all arguments above, the following attributes are exported:
 
 This data source queries the following TencentCloud APIs:
 
-* Read: [DescribeSyncJobs](https://cloud.tencent.com/document/api/571/82103) - This API is used to query the information of a sync task.
+* Read: [DescribeSyncJobs](https://www.tencentcloud.com/document/product/571/51793) - This API is used to query the information of a sync task.
 

@@ -46,9 +46,9 @@ In addition to all arguments above, the following attributes are exported:
 
 This resource interacts with the following TencentCloud APIs:
 
-* Create: [SetLoadBalancerClsLog](https://cloud.tencent.com/document/api/214/43266) - This API is used to add, delete, and update the CLS topic of a CLB instance.
-* Read: [DescribeLoadBalancers](https://cloud.tencent.com/document/api/214/30685) - This API is used to query the list of CLB instances in a region.
-* Delete: [SetLoadBalancerClsLog](https://cloud.tencent.com/document/api/214/43266) - This API is used to add, delete, and update the CLS topic of a CLB instance.
+* Create: [SetLoadBalancerClsLog](https://www.tencentcloud.com/document/product/214/35734) - This API is used to add, delete, and update the CLS topic of a CLB instance.
+* Read: [DescribeLoadBalancers](https://www.tencentcloud.com/document/product/214/33830) - This API is used to query the list of CLB instances in a region.
+* Delete: [SetLoadBalancerClsLog](https://www.tencentcloud.com/document/product/214/35734) - This API is used to add, delete, and update the CLS topic of a CLB instance.
 
 ## Import
 

@@ -38,11 +38,11 @@ In addition to all arguments above, the following attributes are exported:
 
 This resource interacts with the following TencentCloud APIs:
 
-* Create: [ModifySnapshotsSharePermission](https://cloud.tencent.com/document/api/362/38073) - This API is used to modify snapshot sharing information.
-* Read: [DescribeSnapshotSharePermission](https://cloud.tencent.com/document/api/362/38074) - This API is used to query the sharing information of snapshots.
-* Update: [ModifySnapshotsSharePermission](https://cloud.tencent.com/document/api/362/38073) - This API is used to modify snapshot sharing information.
-* Delete: [DescribeSnapshotSharePermission](https://cloud.tencent.com/document/api/362/38074) - This API is used to query the sharing information of snapshots.
-* Delete: [ModifySnapshotsSharePermission](https://cloud.tencent.com/document/api/362/38073) - This API is used to modify snapshot sharing information.
+* Create: [ModifySnapshotsSharePermission](https://www.tencentcloud.com/document/product/362/33299) - This API is used to modify snapshot sharing information.
+* Read: [DescribeSnapshotSharePermission](https://www.tencentcloud.com/document/product/362/33300) - This API is used to query the sharing information of snapshots.
+* Update: [ModifySnapshotsSharePermission](https://www.tencentcloud.com/document/product/362/33299) - This API is used to modify snapshot sharing information.
+* Delete: [DescribeSnapshotSharePermission](https://www.tencentcloud.com/document/product/362/33300) - This API is used to query the sharing information of snapshots.
+* Delete: [ModifySnapshotsSharePermission](https://www.tencentcloud.com/document/product/362/33299) - This API is used to modify snapshot sharing information.
 
 ## Import
 

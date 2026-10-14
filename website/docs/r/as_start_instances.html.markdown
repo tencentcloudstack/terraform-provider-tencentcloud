@@ -111,6 +111,6 @@ In addition to all arguments above, the following attributes are exported:
 
 This resource interacts with the following TencentCloud APIs:
 
-* Create: [DescribeAutoScalingActivities](https://cloud.tencent.com/document/api/377/31735) - This API is used to query the scaling activities of the scaling group. Currently, only scaling operations from the past two years are saved.
-* Create: [StartAutoScalingInstances](https://cloud.tencent.com/document/api/377/40287) - This API is used to start up CVM instances in a scaling group.
+* Create: [DescribeAutoScalingActivities](https://www.tencentcloud.com/document/product/377/31014) - This API is used to query the scaling activities of the scaling group. Currently, only scaling operations from the past two years are saved.
+* Create: [StartAutoScalingInstances](https://www.tencentcloud.com/document/product/377/37502) - This API is used to start up CVM instances in a scaling group.
 

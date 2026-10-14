@@ -123,15 +123,15 @@ In addition to all arguments above, the following attributes are exported:
 
 This resource interacts with the following TencentCloud APIs:
 
-* Create: [CreateRule](https://cloud.tencent.com/document/api/214/30691) - This API is used to create forwarding rules under an existing layer-7 CLB listener. In layer-7 CLB listeners, backend services must be bound to rules instead of the listener.
-* Create: [DescribeListeners](https://cloud.tencent.com/document/api/214/30686) - This API is used to get the list of listeners by CLB ID, listener protocol, or listener port. If no filter is specified, all listeners for the CLB instance will be returned.
-* Create: [ModifyDomainAttributes](https://cloud.tencent.com/document/api/214/38092) - This API is used to modify domain-level attributes of Cloud Load Balancer layer-7 listener forwarding rules, such as modifying domain name, changing DefaultServer, enabling/disabling Http/2, and modifying certificates.
-* Create: [ModifyRule](https://cloud.tencent.com/document/api/214/30679) - This API is used to modify the properties of forwarding rules under a layer-7 (HTTP/HTTPS) listener in Cloud Load Balancer, including forwarding path, health check attributes and forwarding policy.
-* Read: [DescribeListeners](https://cloud.tencent.com/document/api/214/30686) - This API is used to get the list of listeners by CLB ID, listener protocol, or listener port. If no filter is specified, all listeners for the CLB instance will be returned.
-* Update: [DescribeListeners](https://cloud.tencent.com/document/api/214/30686) - This API is used to get the list of listeners by CLB ID, listener protocol, or listener port. If no filter is specified, all listeners for the CLB instance will be returned.
-* Update: [ModifyDomainAttributes](https://cloud.tencent.com/document/api/214/38092) - This API is used to modify domain-level attributes of Cloud Load Balancer layer-7 listener forwarding rules, such as modifying domain name, changing DefaultServer, enabling/disabling Http/2, and modifying certificates.
-* Update: [ModifyRule](https://cloud.tencent.com/document/api/214/30679) - This API is used to modify the properties of forwarding rules under a layer-7 (HTTP/HTTPS) listener in Cloud Load Balancer, including forwarding path, health check attributes and forwarding policy.
-* Delete: [DeleteRule](https://cloud.tencent.com/document/api/214/30688) - This API is used to delete forwarding rules under a layer-7 listener of a load balancing instance.
+* Create: [CreateRule](https://www.tencentcloud.com/document/product/214/33840) - This API is used to create forwarding rules under an existing layer-7 CLB listener. In layer-7 CLB listeners, backend services must be bound to rules instead of the listener.
+* Create: [DescribeListeners](https://www.tencentcloud.com/document/product/214/33831) - This API is used to get the list of listeners by CLB ID, listener protocol, or listener port. If no filter is specified, all listeners for the CLB instance will be returned.
+* Create: [ModifyDomainAttributes](https://www.tencentcloud.com/document/product/214/33819) - This API is used to modify domain-level attributes of Cloud Load Balancer layer-7 listener forwarding rules, such as modifying domain name, changing DefaultServer, enabling/disabling Http/2, and modifying certificates.
+* Create: [ModifyRule](https://www.tencentcloud.com/document/product/214/33816) - This API is used to modify the properties of forwarding rules under a layer-7 (HTTP/HTTPS) listener in Cloud Load Balancer, including forwarding path, health check attributes and forwarding policy.
+* Read: [DescribeListeners](https://www.tencentcloud.com/document/product/214/33831) - This API is used to get the list of listeners by CLB ID, listener protocol, or listener port. If no filter is specified, all listeners for the CLB instance will be returned.
+* Update: [DescribeListeners](https://www.tencentcloud.com/document/product/214/33831) - This API is used to get the list of listeners by CLB ID, listener protocol, or listener port. If no filter is specified, all listeners for the CLB instance will be returned.
+* Update: [ModifyDomainAttributes](https://www.tencentcloud.com/document/product/214/33819) - This API is used to modify domain-level attributes of Cloud Load Balancer layer-7 listener forwarding rules, such as modifying domain name, changing DefaultServer, enabling/disabling Http/2, and modifying certificates.
+* Update: [ModifyRule](https://www.tencentcloud.com/document/product/214/33816) - This API is used to modify the properties of forwarding rules under a layer-7 (HTTP/HTTPS) listener in Cloud Load Balancer, including forwarding path, health check attributes and forwarding policy.
+* Delete: [DeleteRule](https://www.tencentcloud.com/document/product/214/33835) - This API is used to delete forwarding rules under a layer-7 listener of a load balancing instance.
 
 ## Import
 

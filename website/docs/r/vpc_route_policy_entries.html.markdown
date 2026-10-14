@@ -107,12 +107,12 @@ Note: This field may return null, indicating that no valid value was found.
 
 This resource interacts with the following TencentCloud APIs:
 
-* Create: [CreateRoutePolicyEntries](https://cloud.tencent.com/document/api/215/124428) - This API is used to create route reception policy entries.
-* Read: [DescribeRoutePolicyEntries](https://cloud.tencent.com/document/api/215/124424) - This API is used to query the route reception policy entry list.
+* Create: [CreateRoutePolicyEntries](https://www.tencentcloud.com/document/product/215/74068) - This API is used to create route reception policy entries.
+* Read: [DescribeRoutePolicyEntries](https://www.tencentcloud.com/document/product/215/74064) - This API is used to query the route reception policy entry list.
 * Update: [DescribeRoutePolicies](https://cloud.tencent.com/document/api/215/126466)
-* Update: [ResetRoutePolicyEntries](https://cloud.tencent.com/document/api/215/124419) - This API is used to reset the designated route reception policy entry based on the rule ID and supports batch modification.
-* Delete: [DeleteRoutePolicyEntries](https://cloud.tencent.com/document/api/215/124425) - This API is used to delete route reception policy entries.
-* Delete: [DescribeRoutePolicyEntries](https://cloud.tencent.com/document/api/215/124424) - This API is used to query the route reception policy entry list.
+* Update: [ResetRoutePolicyEntries](https://www.tencentcloud.com/document/product/215/74059) - This API is used to reset the designated route reception policy entry based on the rule ID and supports batch modification.
+* Delete: [DeleteRoutePolicyEntries](https://www.tencentcloud.com/document/product/215/74065) - This API is used to delete route reception policy entries.
+* Delete: [DescribeRoutePolicyEntries](https://www.tencentcloud.com/document/product/215/74064) - This API is used to query the route reception policy entry list.
 
 ## Import
 

@@ -142,19 +142,19 @@ In addition to all arguments above, the following attributes are exported:
 
 This resource interacts with the following TencentCloud APIs:
 
-* Create: [CreateVpnGateway](https://cloud.tencent.com/document/api/215/17521) - This API (CreateVpnGateway) is used to create a VPN gateway.
-* Create: [DescribeVpnGateways](https://cloud.tencent.com/document/api/215/17514) - This API (DescribeVpnGateways) is used to query the VPN gateway list.
-* Create: [ModifyResourceTags](https://cloud.tencent.com/document/api/651/35322) - This API is used to modify all tags associated with a resource.
-* Read: [DescribeResourceTagsByResourceIds](https://cloud.tencent.com/document/api/651/35319) - This API is used to query the tag key-value pairs associated with an existing resource.
-* Read: [DescribeVpnGateways](https://cloud.tencent.com/document/api/215/17514) - This API (DescribeVpnGateways) is used to query the VPN gateway list.
-* Update: [ModifyResourceTags](https://cloud.tencent.com/document/api/651/35322) - This API is used to modify all tags associated with a resource.
-* Update: [ModifyVpnGatewayAttribute](https://cloud.tencent.com/document/api/215/17507) - This API (ModifyVpnGatewayAttribute) is used to modify the attributes of VPN gateways.
-* Update: [RenewVpnGateway](https://cloud.tencent.com/document/api/215/17506) - This API (RenewVpnGateway) is used to renew prepaid (yearly/monthly subscription) VPN gateways. Currently, only IPSEC gateways are supported.
-* Update: [ResetVpnGatewayInternetMaxBandwidth](https://cloud.tencent.com/document/api/215/17504) - This API is used to adjust the bandwidth cap of a VPN gateway. The adjustment of the VPN gateway bandwidth is limited to [5,100] Mbps and [200,1000] Mbps.
-* Update: [SetVpnGatewaysRenewFlag](https://cloud.tencent.com/document/api/215/81120) - This API is used set the auto-renewal configuration of a VPN gateway.
-* Delete: [DeleteVpnGateway](https://cloud.tencent.com/document/api/215/17518) - This API (DeleteVpnGateway) is used to delete a VPN gateway. Currently, only deletion of pay-as-you-go IPSEC gateway instances in running status is supported.
-* Delete: [DescribeVpnConnections](https://cloud.tencent.com/document/api/215/17515) - This API is used to used to query the list of VPN tunnels.
-* Delete: [DescribeVpnGateways](https://cloud.tencent.com/document/api/215/17514) - This API (DescribeVpnGateways) is used to query the VPN gateway list.
+* Create: [CreateVpnGateway](https://www.tencentcloud.com/document/product/215/17521) - This API (CreateVpnGateway) is used to create a VPN gateway.
+* Create: [DescribeVpnGateways](https://www.tencentcloud.com/document/product/215/17514) - This API (DescribeVpnGateways) is used to query the VPN gateway list.
+* Create: [ModifyResourceTags](https://www.tencentcloud.com/document/product/651/33012) - This API is used to modify all tags associated with a resource.
+* Read: [DescribeResourceTagsByResourceIds](https://www.tencentcloud.com/document/product/651/33022) - This API is used to query the tag key-value pairs associated with an existing resource.
+* Read: [DescribeVpnGateways](https://www.tencentcloud.com/document/product/215/17514) - This API (DescribeVpnGateways) is used to query the VPN gateway list.
+* Update: [ModifyResourceTags](https://www.tencentcloud.com/document/product/651/33012) - This API is used to modify all tags associated with a resource.
+* Update: [ModifyVpnGatewayAttribute](https://www.tencentcloud.com/document/product/215/17507) - This API (ModifyVpnGatewayAttribute) is used to modify the attributes of VPN gateways.
+* Update: [RenewVpnGateway](https://www.tencentcloud.com/document/product/215/17506) - This API (RenewVpnGateway) is used to renew prepaid (yearly/monthly subscription) VPN gateways. Currently, only IPSEC gateways are supported.
+* Update: [ResetVpnGatewayInternetMaxBandwidth](https://www.tencentcloud.com/document/product/215/17504) - This API is used to adjust the bandwidth cap of a VPN gateway. The adjustment of the VPN gateway bandwidth is limited to [5,100] Mbps and [200,1000] Mbps.
+* Update: [SetVpnGatewaysRenewFlag](https://www.tencentcloud.com/document/product/215/52739) - This API is used set the auto-renewal configuration of a VPN gateway.
+* Delete: [DeleteVpnGateway](https://www.tencentcloud.com/document/product/215/17518) - This API (DeleteVpnGateway) is used to delete a VPN gateway. Currently, only deletion of pay-as-you-go IPSEC gateway instances in running status is supported.
+* Delete: [DescribeVpnConnections](https://www.tencentcloud.com/document/product/215/17515) - This API is used to used to query the list of VPN tunnels.
+* Delete: [DescribeVpnGateways](https://www.tencentcloud.com/document/product/215/17514) - This API (DescribeVpnGateways) is used to query the VPN gateway list.
 
 ## Import
 

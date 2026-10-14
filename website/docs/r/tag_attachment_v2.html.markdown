@@ -42,10 +42,10 @@ In addition to all arguments above, the following attributes are exported:
 
 This resource interacts with the following TencentCloud APIs:
 
-* Create: [AddResourceTag](https://cloud.tencent.com/document/api/651/35326) - This API is used to associate resources with tags.
-* Read: [GetResources](https://cloud.tencent.com/document/api/651/72278) - This API is used to query the list of resources associated with a tag.
-* Update: [UpdateResourceTagValue](https://cloud.tencent.com/document/api/651/35321) - This API is used to modify the values of tags associated with a resource (the tag key does not change).
-* Delete: [DeleteResourceTag](https://cloud.tencent.com/document/api/651/35324) - This API is used to unassociate tags and resources.
+* Create: [AddResourceTag](https://www.tencentcloud.com/document/product/651/33016) - This API is used to associate resources with tags.
+* Read: [GetResources](https://www.tencentcloud.com/document/product/651/46539) - This API is used to query the list of resources associated with a tag.
+* Update: [UpdateResourceTagValue](https://www.tencentcloud.com/document/product/651/33011) - This API is used to modify the values of tags associated with a resource (the tag key does not change).
+* Delete: [DeleteResourceTag](https://www.tencentcloud.com/document/product/651/33014) - This API is used to unassociate tags and resources.
 
 ## Import
 

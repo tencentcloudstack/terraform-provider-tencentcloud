@@ -40,9 +40,9 @@ In addition to all arguments above, the following attributes are exported:
 
 This resource interacts with the following TencentCloud APIs:
 
-* Create: [PutReservedConcurrencyConfig](https://cloud.tencent.com/document/api/583/51245) - This API is used to configure the reserved quota of a function.
-* Read: [GetReservedConcurrencyConfig](https://cloud.tencent.com/document/api/583/51247) - This API is used to obtain the reserved quota details of a function.
-* Delete: [DeleteReservedConcurrencyConfig](https://cloud.tencent.com/document/api/583/51249) - This API is used to delete the configuration of reserved quota.
+* Create: [PutReservedConcurrencyConfig](https://www.tencentcloud.com/document/product/583/39224) - This API is used to configure the reserved quota of a function.
+* Read: [GetReservedConcurrencyConfig](https://www.tencentcloud.com/document/product/583/39226) - This API is used to obtain the reserved quota details of a function.
+* Delete: [DeleteReservedConcurrencyConfig](https://www.tencentcloud.com/document/product/583/39228) - This API is used to delete the configuration of reserved quota.
 
 ## Import
 

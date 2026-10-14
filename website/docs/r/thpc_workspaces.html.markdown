@@ -331,16 +331,16 @@ This resource interacts with the following TencentCloud APIs:
 
 * Create: [CreateWorkspaces](https://cloud.tencent.com/document/api/1527/110698)
 * Create: [DescribeWorkspaces](https://cloud.tencent.com/document/api/1527/110754)
-* Read: [DescribeInstances](https://cloud.tencent.com/document/api/213/15728) - This API is used to query the details of instances.
+* Read: [DescribeInstances](https://www.tencentcloud.com/document/product/213/33258) - This API is used to query the details of instances.
 * Read: [DescribeWorkspaces](https://cloud.tencent.com/document/api/1527/110754)
-* Update: [AssociateInstancesKeyPairs](https://cloud.tencent.com/document/api/213/15698) - This API is used to associate key pairs with instances.
-* Update: [DescribeDisks](https://cloud.tencent.com/document/api/362/16315) - This API (DescribeDisks) is used to query the list of cloud disks.
-* Update: [DescribeInstances](https://cloud.tencent.com/document/api/213/15728) - This API is used to query the details of instances.
-* Update: [DisassociateInstancesKeyPairs](https://cloud.tencent.com/document/api/213/15697) - This API is used to unbind one or more key pairs from one or more instances.
+* Update: [AssociateInstancesKeyPairs](https://www.tencentcloud.com/document/product/213/33232) - This API is used to associate key pairs with instances.
+* Update: [DescribeDisks](https://www.tencentcloud.com/document/product/362/16315) - This API (DescribeDisks) is used to query the list of cloud disks.
+* Update: [DescribeInstances](https://www.tencentcloud.com/document/product/213/33258) - This API is used to query the details of instances.
+* Update: [DisassociateInstancesKeyPairs](https://www.tencentcloud.com/document/product/213/33228) - This API is used to unbind one or more key pairs from one or more instances.
 * Update: [ModifyWorkspacesAttribute](https://cloud.tencent.com/document/api/1527/110753)
-* Update: [ResetInstancesPassword](https://cloud.tencent.com/document/api/213/15736) - This API is used to reset the password of the operating system instances to a user-specified password.
-* Update: [ResizeDisk](https://cloud.tencent.com/document/api/362/16310) - This API is used to expand cloud disks.
-* Update: [ResizeInstanceDisks](https://cloud.tencent.com/document/api/213/15731) - This API (ResizeInstanceDisks) is used to expand the data disks of an instance.
+* Update: [ResetInstancesPassword](https://www.tencentcloud.com/document/product/213/33240) - This API is used to reset the password of the operating system instances to a user-specified password.
+* Update: [ResizeDisk](https://www.tencentcloud.com/document/product/362/16310) - This API is used to expand cloud disks.
+* Update: [ResizeInstanceDisks](https://www.tencentcloud.com/document/product/213/33238) - This API (ResizeInstanceDisks) is used to expand the data disks of an instance.
 * Delete: [DescribeWorkspaces](https://cloud.tencent.com/document/api/1527/110754)
 * Delete: [TerminateWorkspaces](https://cloud.tencent.com/document/api/1527/110752)
 

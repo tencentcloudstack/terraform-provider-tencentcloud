@@ -105,11 +105,11 @@ In addition to all arguments above, the following attributes are exported:
 
 This resource interacts with the following TencentCloud APIs:
 
-* Create: [AssignPrivateIpAddresses](https://cloud.tencent.com/document/api/215/15813) - This API is used to apply for private IPs for an ENI.
-* Read: [DescribeNetworkInterfaces](https://cloud.tencent.com/document/api/215/15817) - This API (DescribeNetworkInterfaces) is used to query the ENI list.
-* Delete: [DescribeNetworkInterfaces](https://cloud.tencent.com/document/api/215/15817) - This API (DescribeNetworkInterfaces) is used to query the ENI list.
-* Delete: [DescribeVpcTaskResult](https://cloud.tencent.com/document/api/215/59037) - This API is used to query the execution result of a VPC task.
-* Delete: [UnassignPrivateIpAddresses](https://cloud.tencent.com/document/api/215/15814) - This API is used to return the private IP addresses of an ENI.
+* Create: [AssignPrivateIpAddresses](https://www.tencentcloud.com/document/product/215/15813) - This API is used to apply for private IPs for an ENI.
+* Read: [DescribeNetworkInterfaces](https://www.tencentcloud.com/document/product/215/15817) - This API (DescribeNetworkInterfaces) is used to query the ENI list.
+* Delete: [DescribeNetworkInterfaces](https://www.tencentcloud.com/document/product/215/15817) - This API (DescribeNetworkInterfaces) is used to query the ENI list.
+* Delete: [DescribeVpcTaskResult](https://www.tencentcloud.com/document/product/215/41567) - This API is used to query the execution result of a VPC task.
+* Delete: [UnassignPrivateIpAddresses](https://www.tencentcloud.com/document/product/215/15814) - This API is used to return the private IP addresses of an ENI.
 
 ## Import
 

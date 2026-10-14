@@ -45,14 +45,14 @@ In addition to all arguments above, the following attributes are exported:
 
 This resource interacts with the following TencentCloud APIs:
 
-* Create: [AddRealServers](https://cloud.tencent.com/document/api/608/37014) - This API is used to add the information of the origin server (server), which supports IP or the domain name.
-* Create: [DescribeRealServers](https://cloud.tencent.com/document/api/608/37013) - This API is used to query origin server information. It can query all origin servers under the specified project name, and supports fuzzy query by specified IPs or domain names.
-* Create: [ModifyResourceTags](https://cloud.tencent.com/document/api/651/35322) - This API is used to modify all tags associated with a resource.
-* Read: [DescribeRealServers](https://cloud.tencent.com/document/api/608/37013) - This API is used to query origin server information. It can query all origin servers under the specified project name, and supports fuzzy query by specified IPs or domain names.
-* Read: [DescribeResourceTagsByResourceIds](https://cloud.tencent.com/document/api/651/35319) - This API is used to query the tag key-value pairs associated with an existing resource.
-* Update: [ModifyRealServerName](https://cloud.tencent.com/document/api/608/37011) - This API (ModifyRealServerName) is used to modify origin server names.
-* Update: [ModifyResourceTags](https://cloud.tencent.com/document/api/651/35322) - This API is used to modify all tags associated with a resource.
-* Delete: [RemoveRealServers](https://cloud.tencent.com/document/api/608/37010) - This API is used to delete the added origin server (server) IP or domain name.
+* Create: [AddRealServers](https://www.tencentcloud.com/document/product/608/33061) - This API is used to add the information of the origin server (server), which supports IP or the domain name.
+* Create: [DescribeRealServers](https://www.tencentcloud.com/document/product/608/33060) - This API is used to query origin server information. It can query all origin servers under the specified project name, and supports fuzzy query by specified IPs or domain names.
+* Create: [ModifyResourceTags](https://www.tencentcloud.com/document/product/651/33012) - This API is used to modify all tags associated with a resource.
+* Read: [DescribeRealServers](https://www.tencentcloud.com/document/product/608/33060) - This API is used to query origin server information. It can query all origin servers under the specified project name, and supports fuzzy query by specified IPs or domain names.
+* Read: [DescribeResourceTagsByResourceIds](https://www.tencentcloud.com/document/product/651/33022) - This API is used to query the tag key-value pairs associated with an existing resource.
+* Update: [ModifyRealServerName](https://www.tencentcloud.com/document/product/608/33058) - This API (ModifyRealServerName) is used to modify origin server names.
+* Update: [ModifyResourceTags](https://www.tencentcloud.com/document/product/651/33012) - This API is used to modify all tags associated with a resource.
+* Delete: [RemoveRealServers](https://www.tencentcloud.com/document/product/608/33057) - This API is used to delete the added origin server (server) IP or domain name.
 
 ## Import
 

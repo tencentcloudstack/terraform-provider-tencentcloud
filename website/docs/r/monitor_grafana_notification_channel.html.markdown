@@ -101,8 +101,8 @@ In addition to all arguments above, the following attributes are exported:
 
 This resource interacts with the following TencentCloud APIs:
 
-* Create: [CreateGrafanaNotificationChannel](https://cloud.tencent.com/document/api/248/79217) - This API is used to create a Grafana notification channel.
-* Read: [DescribeGrafanaChannels](https://cloud.tencent.com/document/api/248/80324) - This API is used to list all Grafana alert channels.
-* Update: [UpdateGrafanaNotificationChannel](https://cloud.tencent.com/document/api/248/79190) - This API is used to update the Grafana notification channel.
-* Delete: [DeleteGrafanaNotificationChannel](https://cloud.tencent.com/document/api/248/79213) - This API is used to delete a Grafana notification channel.
+* Create: [CreateGrafanaNotificationChannel](https://www.tencentcloud.com/document/product/248/49768) - This API is used to create a Grafana notification channel.
+* Read: [DescribeGrafanaChannels](https://www.tencentcloud.com/document/product/248/50845) - This API is used to list all Grafana alert channels.
+* Update: [UpdateGrafanaNotificationChannel](https://www.tencentcloud.com/document/product/248/49742) - This API is used to update the Grafana notification channel.
+* Delete: [DeleteGrafanaNotificationChannel](https://www.tencentcloud.com/document/product/248/49764) - This API is used to delete a Grafana notification channel.
 

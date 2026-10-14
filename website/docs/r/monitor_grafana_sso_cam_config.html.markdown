@@ -38,9 +38,9 @@ In addition to all arguments above, the following attributes are exported:
 
 This resource interacts with the following TencentCloud APIs:
 
-* Create: [EnableSSOCamCheck](https://cloud.tencent.com/document/api/248/79199) - This API is used to set whether to enable CAM authentication during SSO.
-* Read: [DescribeGrafanaInstances](https://cloud.tencent.com/document/api/248/79208) - This API is used to list all Grafana instances under a user account.
-* Update: [EnableSSOCamCheck](https://cloud.tencent.com/document/api/248/79199) - This API is used to set whether to enable CAM authentication during SSO.
+* Create: [EnableSSOCamCheck](https://www.tencentcloud.com/document/product/248/49751) - This API is used to set whether to enable CAM authentication during SSO.
+* Read: [DescribeGrafanaInstances](https://www.tencentcloud.com/document/product/248/49759) - This API is used to list all Grafana instances under a user account.
+* Update: [EnableSSOCamCheck](https://www.tencentcloud.com/document/product/248/49751) - This API is used to set whether to enable CAM authentication during SSO.
 
 ## Import
 

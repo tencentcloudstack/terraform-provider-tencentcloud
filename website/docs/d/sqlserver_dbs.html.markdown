@@ -92,6 +92,6 @@ In addition to all arguments above, the following attributes are exported:
 
 This data source queries the following TencentCloud APIs:
 
-* Read: [DescribeDBInstances](https://cloud.tencent.com/document/api/238/19969) - This API is used to query the list of instances.
-* Read: [DescribeDBs](https://cloud.tencent.com/document/api/238/19968) - This API is used to query the list of databases
+* Read: [DescribeDBInstances](https://www.tencentcloud.com/document/product/238/32115) - This API is used to query the list of instances.
+* Read: [DescribeDBs](https://www.tencentcloud.com/document/product/238/32114) - This API is used to query the list of databases
 

@@ -72,7 +72,7 @@ In addition to all arguments above, the following attributes are exported:
 
 This resource interacts with the following TencentCloud APIs:
 
-* Create: [RefreshDirectConnectGatewayRouteToNatGateway](https://cloud.tencent.com/document/api/215/62615) - This API is used to refresh the route between a NAT gateway and Direct Connect and update the associated route table.
+* Create: [RefreshDirectConnectGatewayRouteToNatGateway](https://www.tencentcloud.com/document/product/215/48123) - This API is used to refresh the route between a NAT gateway and Direct Connect and update the associated route table.
 
 ## Import
 

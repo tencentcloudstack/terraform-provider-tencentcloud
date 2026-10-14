@@ -39,5 +39,5 @@ In addition to all arguments above, the following attributes are exported:
 
 This data source queries the following TencentCloud APIs:
 
-* Read: [GetSecurityLastUsed](https://cloud.tencent.com/document/api/598/58230) - This API is used to get a key’s recent usage details.
+* Read: [GetSecurityLastUsed](https://www.tencentcloud.com/document/product/598/41082) - This API is used to get a key’s recent usage details.
 

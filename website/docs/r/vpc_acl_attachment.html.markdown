@@ -65,9 +65,9 @@ In addition to all arguments above, the following attributes are exported:
 
 This resource interacts with the following TencentCloud APIs:
 
-* Create: [AssociateNetworkAclSubnets](https://cloud.tencent.com/document/api/215/42163) - This API is used to associate a network ACL with subnets in a VPC instance.
-* Read: [DescribeNetworkAcls](https://cloud.tencent.com/document/api/215/42160) - This API is used to query a list of network ACLs.
-* Delete: [DisassociateNetworkAclSubnets](https://cloud.tencent.com/document/api/215/42159) - This API is used to disassociate a network ACL from subnets in a VPC instance.
+* Create: [AssociateNetworkAclSubnets](https://www.tencentcloud.com/document/product/215/35623) - This API is used to associate a network ACL with subnets in a VPC instance.
+* Read: [DescribeNetworkAcls](https://www.tencentcloud.com/document/product/215/35620) - This API is used to query a list of network ACLs.
+* Delete: [DisassociateNetworkAclSubnets](https://www.tencentcloud.com/document/product/215/35619) - This API is used to disassociate a network ACL from subnets in a VPC instance.
 
 ## Import
 

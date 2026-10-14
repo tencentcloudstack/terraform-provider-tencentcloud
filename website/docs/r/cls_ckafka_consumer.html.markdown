@@ -84,10 +84,10 @@ In addition to all arguments above, the following attributes are exported:
 
 This resource interacts with the following TencentCloud APIs:
 
-* Create: [CreateConsumer](https://cloud.tencent.com/document/api/614/66228) - This API is used to create a CKafka delivery task.
-* Read: [DescribeConsumer](https://cloud.tencent.com/document/api/614/66226) - This API is used to query a shipping task.
-* Update: [ModifyConsumer](https://cloud.tencent.com/document/api/614/66225) - This API is used to modify a CKafka delivery task.
-* Delete: [DeleteConsumer](https://cloud.tencent.com/document/api/614/66227) - Deleting a CKafka Delivery Task
+* Create: [CreateConsumer](https://www.tencentcloud.com/document/product/614/44253) - This API is used to create a CKafka delivery task.
+* Read: [DescribeConsumer](https://www.tencentcloud.com/document/product/614/44251) - This API is used to query a shipping task.
+* Update: [ModifyConsumer](https://www.tencentcloud.com/document/product/614/44250) - This API is used to modify a CKafka delivery task.
+* Delete: [DeleteConsumer](https://www.tencentcloud.com/document/product/614/44252) - Deleting a CKafka Delivery Task
 
 ## Import
 

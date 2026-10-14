@@ -150,16 +150,16 @@ In addition to all arguments above, the following attributes are exported:
 
 This resource interacts with the following TencentCloud APIs:
 
-* Create: [CreateExporterIntegration](https://cloud.tencent.com/document/api/248/76019) - Create an exporter integration in the integration center. Due to the considerable number of integrations, it is advisable to create through the console.  **Prerequisite:** Authorized to create a managed EKS cluster.
-* Create: [DescribeExporterIntegrations](https://cloud.tencent.com/document/api/248/76014) - This API is used to query the list of exporter integrations.
-* Create: [DescribePrometheusInstanceInitStatus](https://cloud.tencent.com/document/api/248/85716) - This API is used to get the initialization task status of a v2.0 instance.
-* Create: [RunPrometheusInstance](https://cloud.tencent.com/document/api/248/85710) - This API is used to initialize a TMP instance, which is called when the integration center is enabled.
-* Create: [UpdateExporterIntegration](https://cloud.tencent.com/document/api/248/76005) - This API is used to update the exporter integration configuration.
-* Read: [DescribeExporterIntegrations](https://cloud.tencent.com/document/api/248/76014) - This API is used to query the list of exporter integrations.
-* Update: [DescribeExporterIntegrations](https://cloud.tencent.com/document/api/248/76014) - This API is used to query the list of exporter integrations.
-* Update: [UpdateExporterIntegration](https://cloud.tencent.com/document/api/248/76005) - This API is used to update the exporter integration configuration.
-* Delete: [DeleteExporterIntegration](https://cloud.tencent.com/document/api/248/76016) - This API is used to delete an exporter integration.
-* Delete: [DescribeExporterIntegrations](https://cloud.tencent.com/document/api/248/76014) - This API is used to query the list of exporter integrations.
+* Create: [CreateExporterIntegration](https://www.tencentcloud.com/document/product/248/48766) - Create an exporter integration in the integration center. Due to the considerable number of integrations, it is advisable to create through the console.  **Prerequisite:** Authorized to create a managed EKS cluster.
+* Create: [DescribeExporterIntegrations](https://www.tencentcloud.com/document/product/248/48755) - This API is used to query the list of exporter integrations.
+* Create: [DescribePrometheusInstanceInitStatus](https://www.tencentcloud.com/document/product/248/53321) - This API is used to get the initialization task status of a v2.0 instance.
+* Create: [RunPrometheusInstance](https://www.tencentcloud.com/document/product/248/53315) - This API is used to initialize a TMP instance, which is called when the integration center is enabled.
+* Create: [UpdateExporterIntegration](https://www.tencentcloud.com/document/product/248/48741) - This API is used to update the exporter integration configuration.
+* Read: [DescribeExporterIntegrations](https://www.tencentcloud.com/document/product/248/48755) - This API is used to query the list of exporter integrations.
+* Update: [DescribeExporterIntegrations](https://www.tencentcloud.com/document/product/248/48755) - This API is used to query the list of exporter integrations.
+* Update: [UpdateExporterIntegration](https://www.tencentcloud.com/document/product/248/48741) - This API is used to update the exporter integration configuration.
+* Delete: [DeleteExporterIntegration](https://www.tencentcloud.com/document/product/248/48759) - This API is used to delete an exporter integration.
+* Delete: [DescribeExporterIntegrations](https://www.tencentcloud.com/document/product/248/48755) - This API is used to query the list of exporter integrations.
 
 ## Import
 

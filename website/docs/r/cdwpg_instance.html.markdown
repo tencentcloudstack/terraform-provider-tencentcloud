@@ -102,12 +102,12 @@ This resource interacts with the following TencentCloud APIs:
 
 * Create: [CreateInstanceByApi](https://cloud.tencent.com/document/api/878/98894) - This API is used to create  instance
 * Create: [DescribeInstanceState](https://cloud.tencent.com/document/api/878/100160) - This API is used to display instance status, process progress, etc., in the instance details page.
-* Create: [ModifyResourceTags](https://cloud.tencent.com/document/api/651/35322) - This API is used to modify all tags associated with a resource.
+* Create: [ModifyResourceTags](https://www.tencentcloud.com/document/product/651/33012) - This API is used to modify all tags associated with a resource.
 * Read: [DescribeInstanceInfo](https://cloud.tencent.com/document/api/878/100615) - This API is used to get instance information.
-* Read: [DescribeResourceTagsByResourceIds](https://cloud.tencent.com/document/api/651/35319) - This API is used to query the tag key-value pairs associated with an existing resource.
+* Read: [DescribeResourceTagsByResourceIds](https://www.tencentcloud.com/document/product/651/33022) - This API is used to query the tag key-value pairs associated with an existing resource.
 * Update: [DescribeInstanceState](https://cloud.tencent.com/document/api/878/100160) - This API is used to display instance status, process progress, etc., in the instance details page.
 * Update: [ModifyInstance](https://cloud.tencent.com/document/api/878/100159) - This API is used to modify instance information. Only the name of an instance can be modified currently.
-* Update: [ModifyResourceTags](https://cloud.tencent.com/document/api/651/35322) - This API is used to modify all tags associated with a resource.
+* Update: [ModifyResourceTags](https://www.tencentcloud.com/document/product/651/33012) - This API is used to modify all tags associated with a resource.
 * Update: [ScaleOutInstance](https://cloud.tencent.com/document/api/878/116649) - This API is used to scale out instance.
 * Update: [UpgradeInstance](https://cloud.tencent.com/document/api/878/116652) - This API is used to upgrade Instance.
 * Delete: [DescribeInstanceState](https://cloud.tencent.com/document/api/878/100160) - This API is used to display instance status, process progress, etc., in the instance details page.

@@ -132,11 +132,11 @@ This resource interacts with the following TencentCloud APIs:
 
 * Create: [CreateLogstashInstance](https://cloud.tencent.com/document/api/845/77244)
 * Create: [DescribeLogstashInstances](https://cloud.tencent.com/document/api/845/77239)
-* Create: [ModifyResourceTags](https://cloud.tencent.com/document/api/651/35322) - This API is used to modify all tags associated with a resource.
+* Create: [ModifyResourceTags](https://www.tencentcloud.com/document/product/651/33012) - This API is used to modify all tags associated with a resource.
 * Read: [DescribeLogstashInstances](https://cloud.tencent.com/document/api/845/77239)
-* Read: [DescribeResourceTagsByResourceIds](https://cloud.tencent.com/document/api/651/35319) - This API is used to query the tag key-value pairs associated with an existing resource.
+* Read: [DescribeResourceTagsByResourceIds](https://www.tencentcloud.com/document/product/651/33022) - This API is used to query the tag key-value pairs associated with an existing resource.
 * Update: [DescribeLogstashInstances](https://cloud.tencent.com/document/api/845/77239)
-* Update: [ModifyResourceTags](https://cloud.tencent.com/document/api/651/35322) - This API is used to modify all tags associated with a resource.
+* Update: [ModifyResourceTags](https://www.tencentcloud.com/document/product/651/33012) - This API is used to modify all tags associated with a resource.
 * Update: [UpdateLogstashInstance](https://cloud.tencent.com/document/api/845/77233)
 * Delete: [DeleteLogstashInstance](https://cloud.tencent.com/document/api/845/77243)
 * Delete: [DescribeLogstashInstances](https://cloud.tencent.com/document/api/845/77239)

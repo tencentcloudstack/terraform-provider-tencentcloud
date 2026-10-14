@@ -89,5 +89,5 @@ In addition to all arguments above, the following attributes are exported:
 
 This resource interacts with the following TencentCloud APIs:
 
-* Create: [StartInstanceXEvent](https://cloud.tencent.com/document/api/238/90297) - This API is used to start and stop an extended event.
+* Create: [StartInstanceXEvent](https://www.tencentcloud.com/document/product/238/54813) - This API is used to start and stop an extended event.
 

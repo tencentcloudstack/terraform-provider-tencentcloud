@@ -136,21 +136,21 @@ In addition to all arguments above, the following attributes are exported:
 
 This resource interacts with the following TencentCloud APIs:
 
-* Create: [CreateVpnConnection](https://cloud.tencent.com/document/api/215/17522) - This API is used to create a VPN tunnel.
-* Create: [DescribeResourceTagsByResourceIds](https://cloud.tencent.com/document/api/651/35319) - This API is used to query the tag key-value pairs associated with an existing resource.
-* Create: [DescribeVpnConnections](https://cloud.tencent.com/document/api/215/17515) - This API is used to used to query the list of VPN tunnels.
-* Create: [DescribeVpnGateways](https://cloud.tencent.com/document/api/215/17514) - This API (DescribeVpnGateways) is used to query the VPN gateway list.
-* Create: [ModifyResourceTags](https://cloud.tencent.com/document/api/651/35322) - This API is used to modify all tags associated with a resource.
-* Read: [DescribeResourceTagsByResourceIds](https://cloud.tencent.com/document/api/651/35319) - This API is used to query the tag key-value pairs associated with an existing resource.
-* Read: [DescribeVpnConnections](https://cloud.tencent.com/document/api/215/17515) - This API is used to used to query the list of VPN tunnels.
-* Read: [DescribeVpnGateways](https://cloud.tencent.com/document/api/215/17514) - This API (DescribeVpnGateways) is used to query the VPN gateway list.
-* Update: [DescribeResourceTagsByResourceIds](https://cloud.tencent.com/document/api/651/35319) - This API is used to query the tag key-value pairs associated with an existing resource.
-* Update: [DescribeVpnConnections](https://cloud.tencent.com/document/api/215/17515) - This API is used to used to query the list of VPN tunnels.
-* Update: [DescribeVpnGateways](https://cloud.tencent.com/document/api/215/17514) - This API (DescribeVpnGateways) is used to query the VPN gateway list.
-* Update: [ModifyResourceTags](https://cloud.tencent.com/document/api/651/35322) - This API is used to modify all tags associated with a resource.
-* Update: [ModifyVpnConnectionAttribute](https://cloud.tencent.com/document/api/215/17508) - This API (ModifyVpnConnectionAttribute) is used to modify VPN tunnels.
-* Delete: [DeleteVpnConnection](https://cloud.tencent.com/document/api/215/17519) - This API is used to delete a VPN tunnel.
-* Delete: [DescribeVpnConnections](https://cloud.tencent.com/document/api/215/17515) - This API is used to used to query the list of VPN tunnels.
+* Create: [CreateVpnConnection](https://www.tencentcloud.com/document/product/215/17522) - This API is used to create a VPN tunnel.
+* Create: [DescribeResourceTagsByResourceIds](https://www.tencentcloud.com/document/product/651/33022) - This API is used to query the tag key-value pairs associated with an existing resource.
+* Create: [DescribeVpnConnections](https://www.tencentcloud.com/document/product/215/17515) - This API is used to used to query the list of VPN tunnels.
+* Create: [DescribeVpnGateways](https://www.tencentcloud.com/document/product/215/17514) - This API (DescribeVpnGateways) is used to query the VPN gateway list.
+* Create: [ModifyResourceTags](https://www.tencentcloud.com/document/product/651/33012) - This API is used to modify all tags associated with a resource.
+* Read: [DescribeResourceTagsByResourceIds](https://www.tencentcloud.com/document/product/651/33022) - This API is used to query the tag key-value pairs associated with an existing resource.
+* Read: [DescribeVpnConnections](https://www.tencentcloud.com/document/product/215/17515) - This API is used to used to query the list of VPN tunnels.
+* Read: [DescribeVpnGateways](https://www.tencentcloud.com/document/product/215/17514) - This API (DescribeVpnGateways) is used to query the VPN gateway list.
+* Update: [DescribeResourceTagsByResourceIds](https://www.tencentcloud.com/document/product/651/33022) - This API is used to query the tag key-value pairs associated with an existing resource.
+* Update: [DescribeVpnConnections](https://www.tencentcloud.com/document/product/215/17515) - This API is used to used to query the list of VPN tunnels.
+* Update: [DescribeVpnGateways](https://www.tencentcloud.com/document/product/215/17514) - This API (DescribeVpnGateways) is used to query the VPN gateway list.
+* Update: [ModifyResourceTags](https://www.tencentcloud.com/document/product/651/33012) - This API is used to modify all tags associated with a resource.
+* Update: [ModifyVpnConnectionAttribute](https://www.tencentcloud.com/document/product/215/17508) - This API (ModifyVpnConnectionAttribute) is used to modify VPN tunnels.
+* Delete: [DeleteVpnConnection](https://www.tencentcloud.com/document/product/215/17519) - This API is used to delete a VPN tunnel.
+* Delete: [DescribeVpnConnections](https://www.tencentcloud.com/document/product/215/17515) - This API is used to used to query the list of VPN tunnels.
 
 ## Import
 

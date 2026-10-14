@@ -90,14 +90,14 @@ In addition to all arguments above, the following attributes are exported:
 
 This resource interacts with the following TencentCloud APIs:
 
-* Create: [CreateBusinessDBInstances](https://cloud.tencent.com/document/api/238/80332) - This API is used to create business intelligence service instances (cloud disk).
-* Create: [DescribeDBInstances](https://cloud.tencent.com/document/api/238/19969) - This API is used to query the list of instances.
-* Create: [ModifyDBInstanceName](https://cloud.tencent.com/document/api/238/19958) - This API is used to rename an instance.
-* Read: [DescribeDBInstances](https://cloud.tencent.com/document/api/238/19969) - This API is used to query the list of instances.
-* Read: [DescribeMaintenanceSpan](https://cloud.tencent.com/document/api/238/46283) - This API is used to query the maintenance time window of an instance based on its instance ID.
-* Update: [ModifyDBInstanceName](https://cloud.tencent.com/document/api/238/19958) - This API is used to rename an instance.
-* Delete: [DeleteDBInstance](https://cloud.tencent.com/document/api/238/46806) - This API is used to release SQL server instances (eliminated immediately) in the recycle bin. The released instances will be physically terminated after being retained for a period of time.
-* Delete: [TerminateDBInstance](https://cloud.tencent.com/document/api/238/38210) - This API is used to isolate an instance to move it into a recycle bin.
+* Create: [CreateBusinessDBInstances](https://www.tencentcloud.com/document/product/238/50610) - This API is used to create business intelligence service instances (cloud disk).
+* Create: [DescribeDBInstances](https://www.tencentcloud.com/document/product/238/32115) - This API is used to query the list of instances.
+* Create: [ModifyDBInstanceName](https://www.tencentcloud.com/document/product/238/32104) - This API is used to rename an instance.
+* Read: [DescribeDBInstances](https://www.tencentcloud.com/document/product/238/32115) - This API is used to query the list of instances.
+* Read: [DescribeMaintenanceSpan](https://www.tencentcloud.com/document/product/238/69303) - This API is used to query the maintenance time window of an instance based on its instance ID.
+* Update: [ModifyDBInstanceName](https://www.tencentcloud.com/document/product/238/32104) - This API is used to rename an instance.
+* Delete: [DeleteDBInstance](https://www.tencentcloud.com/document/product/238/72759) - This API is used to release SQL server instances (eliminated immediately) in the recycle bin. The released instances will be physically terminated after being retained for a period of time.
+* Delete: [TerminateDBInstance](https://www.tencentcloud.com/document/product/238/34685) - This API is used to isolate an instance to move it into a recycle bin.
 
 ## Import
 

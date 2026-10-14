@@ -47,13 +47,13 @@ In addition to all arguments above, the following attributes are exported:
 
 This resource interacts with the following TencentCloud APIs:
 
-* Create: [CreateRouteTable](https://cloud.tencent.com/document/api/215/15768) - This API is used to create a route table.
-* Create: [ModifyResourceTags](https://cloud.tencent.com/document/api/651/35322) - This API is used to modify all tags associated with a resource.
-* Read: [DescribeResourceTagsByResourceIds](https://cloud.tencent.com/document/api/651/35319) - This API is used to query the tag key-value pairs associated with an existing resource.
-* Read: [DescribeRouteTables](https://cloud.tencent.com/document/api/215/15763) - This API is used to query route tables.
-* Update: [ModifyResourceTags](https://cloud.tencent.com/document/api/651/35322) - This API is used to modify all tags associated with a resource.
-* Update: [ModifyRouteTableAttribute](https://cloud.tencent.com/document/api/215/15766) - This API (ModifyRouteTableAttribute) is used to modify the attributes of a route table.
-* Delete: [DeleteRouteTable](https://cloud.tencent.com/document/api/215/15771) - This API is used to delete a route table.
+* Create: [CreateRouteTable](https://www.tencentcloud.com/document/product/215/15768) - This API is used to create a route table.
+* Create: [ModifyResourceTags](https://www.tencentcloud.com/document/product/651/33012) - This API is used to modify all tags associated with a resource.
+* Read: [DescribeResourceTagsByResourceIds](https://www.tencentcloud.com/document/product/651/33022) - This API is used to query the tag key-value pairs associated with an existing resource.
+* Read: [DescribeRouteTables](https://www.tencentcloud.com/document/product/215/15763) - This API is used to query route tables.
+* Update: [ModifyResourceTags](https://www.tencentcloud.com/document/product/651/33012) - This API is used to modify all tags associated with a resource.
+* Update: [ModifyRouteTableAttribute](https://www.tencentcloud.com/document/product/215/15766) - This API (ModifyRouteTableAttribute) is used to modify the attributes of a route table.
+* Delete: [DeleteRouteTable](https://www.tencentcloud.com/document/product/215/15771) - This API is used to delete a route table.
 
 ## Import
 

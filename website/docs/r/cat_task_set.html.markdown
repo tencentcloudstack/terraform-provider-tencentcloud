@@ -90,10 +90,10 @@ This resource interacts with the following TencentCloud APIs:
 
 * Create: [CreateProbeTasks](https://cloud.tencent.com/document/api/280/66213)
 * Create: [DescribeProbeTasks](https://cloud.tencent.com/document/api/280/66212)
-* Create: [ModifyResourceTags](https://cloud.tencent.com/document/api/651/35322) - This API is used to modify all tags associated with a resource.
+* Create: [ModifyResourceTags](https://www.tencentcloud.com/document/product/651/33012) - This API is used to modify all tags associated with a resource.
 * Read: [DescribeProbeTasks](https://cloud.tencent.com/document/api/280/66212)
-* Read: [DescribeResourceTagsByResourceIds](https://cloud.tencent.com/document/api/651/35319) - This API is used to query the tag key-value pairs associated with an existing resource.
-* Update: [ModifyResourceTags](https://cloud.tencent.com/document/api/651/35322) - This API is used to modify all tags associated with a resource.
+* Read: [DescribeResourceTagsByResourceIds](https://www.tencentcloud.com/document/product/651/33022) - This API is used to query the tag key-value pairs associated with an existing resource.
+* Update: [ModifyResourceTags](https://www.tencentcloud.com/document/product/651/33012) - This API is used to modify all tags associated with a resource.
 * Update: [ResumeProbeTask](https://cloud.tencent.com/document/api/280/66203)
 * Update: [SuspendProbeTask](https://cloud.tencent.com/document/api/280/66202)
 * Update: [UpdateProbeTaskAttributes](https://cloud.tencent.com/document/api/280/82588)

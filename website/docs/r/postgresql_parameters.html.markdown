@@ -77,9 +77,9 @@ The `param_list` object exports the following:
 
 This resource interacts with the following TencentCloud APIs:
 
-* Create: [ModifyDBInstanceParameters](https://cloud.tencent.com/document/api/409/63342) - This API is used to modify instance parameters.
-* Read: [DescribeDBInstanceParameters](https://cloud.tencent.com/document/api/409/63344) - This API is used to query the parameters of an instance.
-* Update: [ModifyDBInstanceParameters](https://cloud.tencent.com/document/api/409/63342) - This API is used to modify instance parameters.
+* Create: [ModifyDBInstanceParameters](https://www.tencentcloud.com/document/product/409/43282) - This API is used to modify instance parameters.
+* Read: [DescribeDBInstanceParameters](https://www.tencentcloud.com/document/product/409/43284) - This API is used to query the parameters of an instance.
+* Update: [ModifyDBInstanceParameters](https://www.tencentcloud.com/document/product/409/43282) - This API is used to modify instance parameters.
 
 ## Import
 

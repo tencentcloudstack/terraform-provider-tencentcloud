@@ -429,16 +429,16 @@ In addition to all arguments above, the following attributes are exported:
 This resource interacts with the following TencentCloud APIs:
 
 * Create: [BindingPolicyTag](https://cloud.tencent.com/document/api/248/67219)
-* Create: [CreateAlarmPolicy](https://cloud.tencent.com/document/api/248/51287) - This API is used to create an alarm policy.
-* Create: [DescribeAlarmPolicy](https://cloud.tencent.com/document/api/248/51278) - This API is used to get the details of a single alarm policy.
-* Read: [DescribeAlarmPolicy](https://cloud.tencent.com/document/api/248/51278) - This API is used to get the details of a single alarm policy.
-* Update: [DescribeAlarmPolicy](https://cloud.tencent.com/document/api/248/51278) - This API is used to get the details of a single alarm policy.
-* Update: [ModifyAlarmPolicyCondition](https://cloud.tencent.com/document/api/248/51276) - This API is used to modify the trigger condition of an alarm policy.
-* Update: [ModifyAlarmPolicyInfo](https://cloud.tencent.com/document/api/248/51275) - This API is used to edit the basic information of a v2.0 alarm policy, including policy name and remarks.
-* Update: [ModifyAlarmPolicyNotice](https://cloud.tencent.com/document/api/248/51274) - This API is used to modify the alarm notification template bound to an alarm policy.
-* Update: [ModifyAlarmPolicyStatus](https://cloud.tencent.com/document/api/248/51273) - This API is used to enable/disable an alarm policy.
-* Update: [ModifyAlarmPolicyTasks](https://cloud.tencent.com/document/api/248/51272) - This API is used to modify the tasks triggered by alarm policy, which are listed by the value of the `TriggerTasks` field. If an empty array is passed in for `TriggerTasks`, it means unbinding all the trigger tasks from the policy.
-* Delete: [DeleteAlarmPolicy](https://cloud.tencent.com/document/api/248/51285) - This API is used to delete an alarm policy.
+* Create: [CreateAlarmPolicy](https://www.tencentcloud.com/document/product/248/39326) - This API is used to create an alarm policy.
+* Create: [DescribeAlarmPolicy](https://www.tencentcloud.com/document/product/248/39320) - This API is used to get the details of a single alarm policy.
+* Read: [DescribeAlarmPolicy](https://www.tencentcloud.com/document/product/248/39320) - This API is used to get the details of a single alarm policy.
+* Update: [DescribeAlarmPolicy](https://www.tencentcloud.com/document/product/248/39320) - This API is used to get the details of a single alarm policy.
+* Update: [ModifyAlarmPolicyCondition](https://www.tencentcloud.com/document/product/248/39317) - This API is used to modify the trigger condition of an alarm policy.
+* Update: [ModifyAlarmPolicyInfo](https://www.tencentcloud.com/document/product/248/39316) - This API is used to edit the basic information of a v2.0 alarm policy, including policy name and remarks.
+* Update: [ModifyAlarmPolicyNotice](https://www.tencentcloud.com/document/product/248/39315) - This API is used to modify the alarm notification template bound to an alarm policy.
+* Update: [ModifyAlarmPolicyStatus](https://www.tencentcloud.com/document/product/248/39314) - This API is used to enable/disable an alarm policy.
+* Update: [ModifyAlarmPolicyTasks](https://www.tencentcloud.com/document/product/248/39313) - This API is used to modify the tasks triggered by alarm policy, which are listed by the value of the `TriggerTasks` field. If an empty array is passed in for `TriggerTasks`, it means unbinding all the trigger tasks from the policy.
+* Delete: [DeleteAlarmPolicy](https://www.tencentcloud.com/document/product/248/39325) - This API is used to delete an alarm policy.
 
 ## Import
 

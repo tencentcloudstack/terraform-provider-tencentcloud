@@ -117,5 +117,5 @@ In addition to all arguments above, the following attributes are exported:
 
 This resource interacts with the following TencentCloud APIs:
 
-* Create: [CompleteLifecycleAction](https://cloud.tencent.com/document/api/377/34455) - This API is used to complete a lifecycle action by setting the status of lifecycle hook to `CONTINUE` or `ABANDON`.
+* Create: [CompleteLifecycleAction](https://www.tencentcloud.com/document/product/377/33200) - This API is used to complete a lifecycle action by setting the status of lifecycle hook to `CONTINUE` or `ABANDON`.
 

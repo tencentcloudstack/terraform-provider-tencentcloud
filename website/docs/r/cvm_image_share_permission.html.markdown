@@ -38,11 +38,11 @@ In addition to all arguments above, the following attributes are exported:
 
 This resource interacts with the following TencentCloud APIs:
 
-* Create: [ModifyImageSharePermission](https://cloud.tencent.com/document/api/213/15710) - This API is used to modify image sharing information.
-* Read: [DescribeImageSharePermission](https://cloud.tencent.com/document/api/213/15712) - This API is used to query image sharing information.
-* Update: [ModifyImageSharePermission](https://cloud.tencent.com/document/api/213/15710) - This API is used to modify image sharing information.
-* Delete: [DescribeImageSharePermission](https://cloud.tencent.com/document/api/213/15712) - This API is used to query image sharing information.
-* Delete: [ModifyImageSharePermission](https://cloud.tencent.com/document/api/213/15710) - This API is used to modify image sharing information.
+* Create: [ModifyImageSharePermission](https://www.tencentcloud.com/document/product/213/33268) - This API is used to modify image sharing information.
+* Read: [DescribeImageSharePermission](https://www.tencentcloud.com/document/product/213/33273) - This API is used to query image sharing information.
+* Update: [ModifyImageSharePermission](https://www.tencentcloud.com/document/product/213/33268) - This API is used to modify image sharing information.
+* Delete: [DescribeImageSharePermission](https://www.tencentcloud.com/document/product/213/33273) - This API is used to query image sharing information.
+* Delete: [ModifyImageSharePermission](https://www.tencentcloud.com/document/product/213/33268) - This API is used to modify image sharing information.
 
 ## Import
 

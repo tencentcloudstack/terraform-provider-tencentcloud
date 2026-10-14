@@ -90,9 +90,9 @@ The `policy_version` object exports the following:
 
 This resource interacts with the following TencentCloud APIs:
 
-* Create: [CreatePolicyVersion](https://cloud.tencent.com/document/api/598/43842) - This API is used to add a policy version. After creating a policy version, you can easily change the policy by changing the policy version.
-* Read: [GetPolicyVersion](https://cloud.tencent.com/document/api/598/43840) - This API is used to query policy version details.
-* Delete: [DeletePolicyVersion](https://cloud.tencent.com/document/api/598/43841) - This API is used to delete a policy version of a policy.
+* Create: [CreatePolicyVersion](https://www.tencentcloud.com/document/product/598/36313) - This API is used to add a policy version. After creating a policy version, you can easily change the policy by changing the policy version.
+* Read: [GetPolicyVersion](https://www.tencentcloud.com/document/product/598/36311) - This API is used to query policy version details.
+* Delete: [DeletePolicyVersion](https://www.tencentcloud.com/document/product/598/36312) - This API is used to delete a policy version of a policy.
 
 ## Import
 

@@ -47,15 +47,15 @@ In addition to all arguments above, the following attributes are exported:
 
 This resource interacts with the following TencentCloud APIs:
 
-* Create: [AddLiveDomain](https://cloud.tencent.com/document/api/267/33862) - This API is used to add a domain name. Only one domain name can be submitted at a time, and it must have an ICP filing.
-* Create: [AuthenticateDomainOwner](https://cloud.tencent.com/document/api/267/80524) - This API is used to verify the ownership of a domain.
-* Create: [EnableLiveDomain](https://cloud.tencent.com/document/api/267/33855) - This API is used to enable a disabled LVB domain name.
-* Create: [ForbidLiveDomain](https://cloud.tencent.com/document/api/267/33854) - This API is used to disable an LVB domain name.
-* Read: [DescribeLiveDomain](https://cloud.tencent.com/document/api/267/33858) - This API is used to query the LVB domain name information.
-* Update: [EnableLiveDomain](https://cloud.tencent.com/document/api/267/33855) - This API is used to enable a disabled LVB domain name.
-* Update: [ForbidLiveDomain](https://cloud.tencent.com/document/api/267/33854) - This API is used to disable an LVB domain name.
-* Update: [ModifyLivePlayDomain](https://cloud.tencent.com/document/api/267/33853) - This API is used to modify a playback domain name.
-* Delete: [DeleteLiveDomain](https://cloud.tencent.com/document/api/267/33860) - This API is used to delete an added LVB domain name.
+* Create: [AddLiveDomain](https://www.tencentcloud.com/document/product/267/35189) - This API is used to add a domain name. Only one domain name can be submitted at a time, and it must have an ICP filing.
+* Create: [AuthenticateDomainOwner](https://www.tencentcloud.com/document/product/267/50612) - This API is used to verify the ownership of a domain.
+* Create: [EnableLiveDomain](https://www.tencentcloud.com/document/product/267/35185) - This API is used to enable a disabled LVB domain name.
+* Create: [ForbidLiveDomain](https://www.tencentcloud.com/document/product/267/35184) - This API is used to disable an LVB domain name.
+* Read: [DescribeLiveDomain](https://www.tencentcloud.com/document/product/267/35187) - This API is used to query the LVB domain name information.
+* Update: [EnableLiveDomain](https://www.tencentcloud.com/document/product/267/35185) - This API is used to enable a disabled LVB domain name.
+* Update: [ForbidLiveDomain](https://www.tencentcloud.com/document/product/267/35184) - This API is used to disable an LVB domain name.
+* Update: [ModifyLivePlayDomain](https://www.tencentcloud.com/document/product/267/35183) - This API is used to modify a playback domain name.
+* Delete: [DeleteLiveDomain](https://www.tencentcloud.com/document/product/267/35188) - This API is used to delete an added LVB domain name.
 
 ## Import
 

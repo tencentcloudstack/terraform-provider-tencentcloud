@@ -44,9 +44,9 @@ In addition to all arguments above, the following attributes are exported:
 
 This resource interacts with the following TencentCloud APIs:
 
-* Create: [ModifyLiveDomainReferer](https://cloud.tencent.com/document/api/267/56105) - This API is used to configure referer allowlist/blocklist of a live streaming domain name.
-* Read: [DescribeLiveDomainReferer](https://cloud.tencent.com/document/api/267/56106) - This API is used to query referer allowlist/blocklist configuration of a live streaming domain name.
-* Update: [ModifyLiveDomainReferer](https://cloud.tencent.com/document/api/267/56105) - This API is used to configure referer allowlist/blocklist of a live streaming domain name.
+* Create: [ModifyLiveDomainReferer](https://www.tencentcloud.com/document/product/267/40610) - This API is used to configure referer allowlist/blocklist of a live streaming domain name.
+* Read: [DescribeLiveDomainReferer](https://www.tencentcloud.com/document/product/267/40611) - This API is used to query referer allowlist/blocklist configuration of a live streaming domain name.
+* Update: [ModifyLiveDomainReferer](https://www.tencentcloud.com/document/product/267/40610) - This API is used to configure referer allowlist/blocklist of a live streaming domain name.
 
 ## Import
 

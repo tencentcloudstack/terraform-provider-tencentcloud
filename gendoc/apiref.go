@@ -21,6 +21,7 @@ package main
 // list) maps client accessor name -> catalog product.
 
 import (
+	"encoding/json"
 	"fmt"
 	"go/ast"
 	"go/parser"
@@ -927,4 +928,18 @@ func (a *apiAnalyzer) readDataSourceAPIs(repoRoot, name string, ds *schema.Resou
 		return nil
 	}
 	return a.analyzeLifecycle(fd)
+}
+
+// loadSnapshotCatalogEntries returns the slim catalog entries from the
+// embedded snapshot (for tests and tooling).
+func loadSnapshotCatalogEntries() []apiAction {
+	raw, err := apiActionsFS.ReadFile("data/api-actions.json")
+	if err != nil {
+		return nil
+	}
+	var actions []apiAction
+	if err := json.Unmarshal(raw, &actions); err != nil {
+		return nil
+	}
+	return actions
 }

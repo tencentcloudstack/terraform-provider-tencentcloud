@@ -135,8 +135,8 @@ In addition to all arguments above, the following attributes are exported:
 This resource interacts with the following TencentCloud APIs:
 
 * Create: [ScaleOutClusterMaster](https://cloud.tencent.com/document/api/457/64791)
-* Read: [DescribeClusterInstances](https://cloud.tencent.com/document/api/457/31863) - This API is used to query the information of node instances in a cluster.
-* Read: [DescribeClusters](https://cloud.tencent.com/document/api/457/31862) - This API is used to query clusters list.
-* Read: [DescribeInstances](https://cloud.tencent.com/document/api/213/15728) - This API is used to query the details of instances.
+* Read: [DescribeClusterInstances](https://www.tencentcloud.com/document/product/457/66315) - This API is used to query the information of node instances in a cluster.
+* Read: [DescribeClusters](https://www.tencentcloud.com/document/product/457/32025) - This API is used to query clusters list.
+* Read: [DescribeInstances](https://www.tencentcloud.com/document/product/213/33258) - This API is used to query the details of instances.
 * Delete: [ScaleInClusterMaster](https://cloud.tencent.com/document/api/457/64792)
 

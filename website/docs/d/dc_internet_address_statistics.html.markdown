@@ -35,5 +35,5 @@ In addition to all arguments above, the following attributes are exported:
 
 This data source queries the following TencentCloud APIs:
 
-* Read: [DescribeInternetAddressStatistics](https://cloud.tencent.com/document/api/216/51488) - This API is used to obtain the public IP address assignment statistics of internet tunnels.
+* Read: [DescribeInternetAddressStatistics](https://www.tencentcloud.com/document/product/216/39496) - This API is used to obtain the public IP address assignment statistics of internet tunnels.
 

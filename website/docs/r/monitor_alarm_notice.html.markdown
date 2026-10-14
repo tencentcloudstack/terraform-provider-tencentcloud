@@ -125,10 +125,10 @@ In addition to all arguments above, the following attributes are exported:
 
 This resource interacts with the following TencentCloud APIs:
 
-* Create: [CreateAlarmNotice](https://cloud.tencent.com/document/api/248/51288) - This API is used to create a notification template.
-* Read: [DescribeAlarmNotices](https://cloud.tencent.com/document/api/248/51280) - This API is used to query the list of notification templates.
-* Update: [ModifyAlarmNotice](https://cloud.tencent.com/document/api/248/51277) - This API is used to edit an alarm notification template.
-* Delete: [DeleteAlarmNotices](https://cloud.tencent.com/document/api/248/51286) - This API is used to delete an alarm notification template.
+* Create: [CreateAlarmNotice](https://www.tencentcloud.com/document/product/248/39304) - This API is used to create a notification template.
+* Read: [DescribeAlarmNotices](https://www.tencentcloud.com/document/product/248/39300) - This API is used to query the list of notification templates.
+* Update: [ModifyAlarmNotice](https://www.tencentcloud.com/document/product/248/39299) - This API is used to edit an alarm notification template.
+* Delete: [DeleteAlarmNotices](https://www.tencentcloud.com/document/product/248/39303) - This API is used to delete an alarm notification template.
 
 ## Import
 

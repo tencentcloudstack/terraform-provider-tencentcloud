@@ -44,5 +44,5 @@ In addition to all arguments above, the following attributes are exported:
 
 This data source queries the following TencentCloud APIs:
 
-* Read: [DescribeDBLogFiles](https://cloud.tencent.com/document/api/237/16162) - This API is used to get the list of various logs of a database, including cold backups, binlogs, errlogs, and slowlogs.
+* Read: [DescribeDBLogFiles](https://www.tencentcloud.com/document/product/237/16162) - This API is used to get the list of various logs of a database, including cold backups, binlogs, errlogs, and slowlogs.
 

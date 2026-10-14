@@ -57,5 +57,5 @@ In addition to all arguments above, the following attributes are exported:
 
 This data source queries the following TencentCloud APIs:
 
-* Read: [DescribeCdbZoneConfig](https://cloud.tencent.com/document/api/236/80281) - This API is used to query the purchasable specifications of TencentDB instances in a region.
+* Read: [DescribeCdbZoneConfig](https://www.tencentcloud.com/document/product/236/50285) - This API is used to query the purchasable specifications of TencentDB instances in a region.
 

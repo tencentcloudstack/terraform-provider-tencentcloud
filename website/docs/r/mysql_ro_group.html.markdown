@@ -68,9 +68,9 @@ In addition to all arguments above, the following attributes are exported:
 
 This resource interacts with the following TencentCloud APIs:
 
-* Create: [DescribeAsyncRequestInfo](https://cloud.tencent.com/document/api/236/20410) - This API (DescribeAsyncRequestInfo) is used to query the async task execution result of a TencentDB instance.
-* Create: [ModifyRoGroupInfo](https://cloud.tencent.com/document/api/236/40938) - This API is used to update the information of a TencentDB RO group, such as configuring a read-only instance removal policy in case of excessive delay, setting read weights of read-only instances, and setting the replication delay.
-* Read: [DescribeRoGroups](https://cloud.tencent.com/document/api/236/40939) - This API is used to query all RO groups of a cloud database instance.
-* Update: [DescribeAsyncRequestInfo](https://cloud.tencent.com/document/api/236/20410) - This API (DescribeAsyncRequestInfo) is used to query the async task execution result of a TencentDB instance.
-* Update: [ModifyRoGroupInfo](https://cloud.tencent.com/document/api/236/40938) - This API is used to update the information of a TencentDB RO group, such as configuring a read-only instance removal policy in case of excessive delay, setting read weights of read-only instances, and setting the replication delay.
+* Create: [DescribeAsyncRequestInfo](https://www.tencentcloud.com/document/product/236/34462) - This API (DescribeAsyncRequestInfo) is used to query the async task execution result of a TencentDB instance.
+* Create: [ModifyRoGroupInfo](https://www.tencentcloud.com/document/product/236/35191) - This API is used to update the information of a TencentDB RO group, such as configuring a read-only instance removal policy in case of excessive delay, setting read weights of read-only instances, and setting the replication delay.
+* Read: [DescribeRoGroups](https://www.tencentcloud.com/document/product/236/35704) - This API is used to query all RO groups of a cloud database instance.
+* Update: [DescribeAsyncRequestInfo](https://www.tencentcloud.com/document/product/236/34462) - This API (DescribeAsyncRequestInfo) is used to query the async task execution result of a TencentDB instance.
+* Update: [ModifyRoGroupInfo](https://www.tencentcloud.com/document/product/236/35191) - This API is used to update the information of a TencentDB RO group, such as configuring a read-only instance removal policy in case of excessive delay, setting read weights of read-only instances, and setting the replication delay.
 

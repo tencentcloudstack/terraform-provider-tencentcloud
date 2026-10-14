@@ -50,5 +50,5 @@ In addition to all arguments above, the following attributes are exported:
 
 This data source queries the following TencentCloud APIs:
 
-* Read: [GetRequestStatus](https://cloud.tencent.com/document/api/583/65348) - This API is used to query the status of a single function request.
+* Read: [GetRequestStatus](https://www.tencentcloud.com/document/product/583/44481) - This API is used to query the status of a single function request.
 

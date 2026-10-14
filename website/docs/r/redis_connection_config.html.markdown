@@ -74,12 +74,12 @@ In addition to all arguments above, the following attributes are exported:
 
 This resource interacts with the following TencentCloud APIs:
 
-* Create: [DescribeTaskInfo](https://cloud.tencent.com/document/api/239/30601) - This API is used to get the execution of a specified task.
-* Create: [ModifyConnectionConfig](https://cloud.tencent.com/document/api/239/49639) - This API is used to modify the connection configuration of an instance, including the bandwidth and maximum number of connections.
-* Read: [DescribeBandwidthRange](https://cloud.tencent.com/document/api/239/90100) - This API is used to query the information of instance bandwidth.
-* Read: [DescribeInstances](https://cloud.tencent.com/document/api/239/20018) - This API is used to query the list of Redis instances.
-* Update: [DescribeTaskInfo](https://cloud.tencent.com/document/api/239/30601) - This API is used to get the execution of a specified task.
-* Update: [ModifyConnectionConfig](https://cloud.tencent.com/document/api/239/49639) - This API is used to modify the connection configuration of an instance, including the bandwidth and maximum number of connections.
+* Create: [DescribeTaskInfo](https://www.tencentcloud.com/document/product/239/32064) - This API is used to get the execution of a specified task.
+* Create: [ModifyConnectionConfig](https://www.tencentcloud.com/document/product/239/59981) - This API is used to modify the connection configuration of an instance, including the bandwidth and maximum number of connections.
+* Read: [DescribeBandwidthRange](https://www.tencentcloud.com/document/product/239/54675) - This API is used to query the information of instance bandwidth.
+* Read: [DescribeInstances](https://www.tencentcloud.com/document/product/239/32065) - This API is used to query the list of Redis instances.
+* Update: [DescribeTaskInfo](https://www.tencentcloud.com/document/product/239/32064) - This API is used to get the execution of a specified task.
+* Update: [ModifyConnectionConfig](https://www.tencentcloud.com/document/product/239/59981) - This API is used to modify the connection configuration of an instance, including the bandwidth and maximum number of connections.
 
 ## Import
 

@@ -38,6 +38,6 @@ In addition to all arguments above, the following attributes are exported:
 
 This resource interacts with the following TencentCloud APIs:
 
-* Create: [DescribeMigrationDetail](https://cloud.tencent.com/document/api/571/82085) - This API is used to query the details of a migration task.
-* Create: [ResumeMigrateJob](https://cloud.tencent.com/document/api/571/82075) - This API is used to retry an abnormal or failed Redis data migration task. Note that this operation will skip the check stage and directly start the task, just like by calling `StartMigrationJob`.
+* Create: [DescribeMigrationDetail](https://www.tencentcloud.com/document/product/571/51813) - This API is used to query the details of a migration task.
+* Create: [ResumeMigrateJob](https://www.tencentcloud.com/document/product/571/51803) - This API is used to retry an abnormal or failed Redis data migration task. Note that this operation will skip the check stage and directly start the task, just like by calling `StartMigrationJob`.
 

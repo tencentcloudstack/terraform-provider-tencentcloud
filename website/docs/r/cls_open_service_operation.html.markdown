@@ -34,7 +34,7 @@ In addition to all arguments above, the following attributes are exported:
 
 This resource interacts with the following TencentCloud APIs:
 
-* Create: [GetClsService](https://cloud.tencent.com/document/api/614/132612) - This API is used to check whether CLS is enabled.
-* Create: [OpenClsService](https://cloud.tencent.com/document/api/614/132611) - This API is used to enable CLS in all regions by filling any region for Region, recommend using Guangzhou (ap-guangzhou).
-* Read: [GetClsService](https://cloud.tencent.com/document/api/614/132612) - This API is used to check whether CLS is enabled.
+* Create: [GetClsService](https://www.tencentcloud.com/document/product/614/80501) - This API is used to check whether CLS is enabled.
+* Create: [OpenClsService](https://www.tencentcloud.com/document/product/614/80500) - This API is used to enable CLS in all regions by filling any region for Region, recommend using Guangzhou (ap-guangzhou).
+* Read: [GetClsService](https://www.tencentcloud.com/document/product/614/80501) - This API is used to check whether CLS is enabled.
 

@@ -104,11 +104,11 @@ This resource interacts with the following TencentCloud APIs:
 * Create: [DisableKey](https://cloud.tencent.com/document/api/573/34426) - This API is used to disable a master key. The disabled key cannot be used for encryption and decryption operations.
 * Create: [GetParametersForImport](https://cloud.tencent.com/document/api/573/38497) - This API is used to obtain the parameters of the material to be imported into a CMK. The returned `Token` is used as one of the parameters to execute `ImportKeyMaterial`, and the returned `PublicKey` is used to encrypt the key material.
 * Create: [ImportKeyMaterial](https://cloud.tencent.com/document/api/573/38496) - This API is used to import key material into an EXTERNAL CMK. The key obtained through the `GetParametersForImport` API is used to encrypt the key material.
-* Create: [ModifyResourceTags](https://cloud.tencent.com/document/api/651/35322) - This API is used to modify all tags associated with a resource.
+* Create: [ModifyResourceTags](https://www.tencentcloud.com/document/product/651/33012) - This API is used to modify all tags associated with a resource.
 * Read: [DescribeKey](https://cloud.tencent.com/document/api/573/34428) - This API is used to get the attribute details of the CMK with a specified `KeyId`.
-* Read: [DescribeResourceTagsByResourceIds](https://cloud.tencent.com/document/api/651/35319) - This API is used to query the tag key-value pairs associated with an existing resource.
+* Read: [DescribeResourceTagsByResourceIds](https://www.tencentcloud.com/document/product/651/33022) - This API is used to query the tag key-value pairs associated with an existing resource.
 * Update: [DescribeKey](https://cloud.tencent.com/document/api/573/34428) - This API is used to get the attribute details of the CMK with a specified `KeyId`.
-* Update: [ModifyResourceTags](https://cloud.tencent.com/document/api/651/35322) - This API is used to modify all tags associated with a resource.
+* Update: [ModifyResourceTags](https://www.tencentcloud.com/document/product/651/33012) - This API is used to modify all tags associated with a resource.
 * Update: [UpdateAlias](https://cloud.tencent.com/document/api/573/34413) - This API is used to modify the alias of a CMK. CMKs in `PendingDelete` status cannot be modified.
 * Update: [UpdateKeyDescription](https://cloud.tencent.com/document/api/573/34412) - This API is used to modify the description of the specified CMK. CMKs in `PendingDelete` status cannot be modified.
 * Delete: [DescribeKey](https://cloud.tencent.com/document/api/573/34428) - This API is used to get the attribute details of the CMK with a specified `KeyId`.

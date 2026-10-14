@@ -61,15 +61,15 @@ In addition to all arguments above, the following attributes are exported:
 
 This resource interacts with the following TencentCloud APIs:
 
-* Create: [CreateImage](https://cloud.tencent.com/document/api/213/16726) - This API is used to create a new image with the system disk of an instance. The image can be used to create new instances.
-* Create: [DescribeImages](https://cloud.tencent.com/document/api/213/15715) - This API is used to view the list of images.
-* Create: [ModifyResourceTags](https://cloud.tencent.com/document/api/651/35322) - This API is used to modify all tags associated with a resource.
-* Read: [DescribeImages](https://cloud.tencent.com/document/api/213/15715) - This API is used to view the list of images.
-* Read: [DescribeResourceTagsByResourceIds](https://cloud.tencent.com/document/api/651/35319) - This API is used to query the tag key-value pairs associated with an existing resource.
-* Update: [ModifyImageAttribute](https://cloud.tencent.com/document/api/213/15713) - This API is used to modify image attributes.
-* Update: [ModifyResourceTags](https://cloud.tencent.com/document/api/651/35322) - This API is used to modify all tags associated with a resource.
-* Delete: [DeleteImages](https://cloud.tencent.com/document/api/213/15716) - This API is used to delete one or more images.
-* Delete: [DescribeImages](https://cloud.tencent.com/document/api/213/15715) - This API is used to view the list of images.
+* Create: [CreateImage](https://www.tencentcloud.com/document/product/213/33276) - This API is used to create a new image with the system disk of an instance. The image can be used to create new instances.
+* Create: [DescribeImages](https://www.tencentcloud.com/document/product/213/33272) - This API is used to view the list of images.
+* Create: [ModifyResourceTags](https://www.tencentcloud.com/document/product/651/33012) - This API is used to modify all tags associated with a resource.
+* Read: [DescribeImages](https://www.tencentcloud.com/document/product/213/33272) - This API is used to view the list of images.
+* Read: [DescribeResourceTagsByResourceIds](https://www.tencentcloud.com/document/product/651/33022) - This API is used to query the tag key-value pairs associated with an existing resource.
+* Update: [ModifyImageAttribute](https://www.tencentcloud.com/document/product/213/33269) - This API is used to modify image attributes.
+* Update: [ModifyResourceTags](https://www.tencentcloud.com/document/product/651/33012) - This API is used to modify all tags associated with a resource.
+* Delete: [DeleteImages](https://www.tencentcloud.com/document/product/213/33275) - This API is used to delete one or more images.
+* Delete: [DescribeImages](https://www.tencentcloud.com/document/product/213/33272) - This API is used to view the list of images.
 
 ## Import
 

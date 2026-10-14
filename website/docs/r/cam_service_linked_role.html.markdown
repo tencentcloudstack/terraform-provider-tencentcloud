@@ -44,13 +44,13 @@ In addition to all arguments above, the following attributes are exported:
 
 This resource interacts with the following TencentCloud APIs:
 
-* Create: [CreateServiceLinkedRole](https://cloud.tencent.com/document/api/598/43711) - This API is used to create a service-linked role.
-* Read: [GetRole](https://cloud.tencent.com/document/api/598/36221) - This API (GetRole) is used to get the details of a specified role.
-* Update: [ModifyResourceTags](https://cloud.tencent.com/document/api/651/35322) - This API is used to modify all tags associated with a resource.
-* Update: [UpdateRoleDescription](https://cloud.tencent.com/document/api/598/36218) - This API (UpdateRoleDescription) is used to modify the description of a role.
-* Delete: [DeleteServiceLinkedRole](https://cloud.tencent.com/document/api/598/43710) - This API is used to delete a service-linked role.
-* Delete: [GetRole](https://cloud.tencent.com/document/api/598/36221) - This API (GetRole) is used to get the details of a specified role.
-* Delete: [GetServiceLinkedRoleDeletionStatus](https://cloud.tencent.com/document/api/598/43709) - This API is used to get the status of the service-linked role deletion based on the `TaskId`
+* Create: [CreateServiceLinkedRole](https://www.tencentcloud.com/document/product/598/36308) - This API is used to create a service-linked role.
+* Read: [GetRole](https://www.tencentcloud.com/document/product/598/33557) - This API (GetRole) is used to get the details of a specified role.
+* Update: [ModifyResourceTags](https://www.tencentcloud.com/document/product/651/33012) - This API is used to modify all tags associated with a resource.
+* Update: [UpdateRoleDescription](https://www.tencentcloud.com/document/product/598/33554) - This API (UpdateRoleDescription) is used to modify the description of a role.
+* Delete: [DeleteServiceLinkedRole](https://www.tencentcloud.com/document/product/598/36307) - This API is used to delete a service-linked role.
+* Delete: [GetRole](https://www.tencentcloud.com/document/product/598/33557) - This API (GetRole) is used to get the details of a specified role.
+* Delete: [GetServiceLinkedRoleDeletionStatus](https://www.tencentcloud.com/document/product/598/36306) - This API is used to get the status of the service-linked role deletion based on the `TaskId`
 
 ## Import
 

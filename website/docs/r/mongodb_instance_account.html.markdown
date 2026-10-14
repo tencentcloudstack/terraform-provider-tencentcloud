@@ -54,12 +54,12 @@ In addition to all arguments above, the following attributes are exported:
 
 This resource interacts with the following TencentCloud APIs:
 
-* Create: [CreateAccountUser](https://cloud.tencent.com/document/api/240/84704) - This API is used to customize an account to access the instance.
-* Create: [DescribeAsyncRequestInfo](https://cloud.tencent.com/document/api/240/46601) - This API is used to query the asynchronous task status.
-* Read: [DescribeAccountUsers](https://cloud.tencent.com/document/api/240/80800) - This API is used to obtain all accounts of the current instance.
-* Update: [DescribeAsyncRequestInfo](https://cloud.tencent.com/document/api/240/46601) - This API is used to query the asynchronous task status.
-* Update: [ResetDBInstancePassword](https://cloud.tencent.com/document/api/240/46598) - This API is used to reset the instance access password.
-* Update: [SetAccountUserPrivilege](https://cloud.tencent.com/document/api/240/67357) - This API is used to set the account permissions of an instance.
-* Delete: [DeleteAccountUser](https://cloud.tencent.com/document/api/240/90048) - This API is used to delete a custom account of an instance.
-* Delete: [DescribeAsyncRequestInfo](https://cloud.tencent.com/document/api/240/46601) - This API is used to query the asynchronous task status.
+* Create: [CreateAccountUser](https://www.tencentcloud.com/document/product/240/74806) - This API is used to customize an account to access the instance.
+* Create: [DescribeAsyncRequestInfo](https://www.tencentcloud.com/document/product/240/37921) - This API is used to query the asynchronous task status.
+* Read: [DescribeAccountUsers](https://www.tencentcloud.com/document/product/240/79919) - This API is used to obtain all accounts of the current instance.
+* Update: [DescribeAsyncRequestInfo](https://www.tencentcloud.com/document/product/240/37921) - This API is used to query the asynchronous task status.
+* Update: [ResetDBInstancePassword](https://www.tencentcloud.com/document/product/240/37924) - This API is used to reset the instance access password.
+* Update: [SetAccountUserPrivilege](https://www.tencentcloud.com/document/product/240/74805) - This API is used to set the account permissions of an instance.
+* Delete: [DeleteAccountUser](https://www.tencentcloud.com/document/product/240/74804) - This API is used to delete a custom account of an instance.
+* Delete: [DescribeAsyncRequestInfo](https://www.tencentcloud.com/document/product/240/37921) - This API is used to query the asynchronous task status.
 

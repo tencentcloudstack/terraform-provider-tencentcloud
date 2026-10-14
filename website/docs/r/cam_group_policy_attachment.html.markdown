@@ -57,10 +57,10 @@ In addition to all arguments above, the following attributes are exported:
 
 This resource interacts with the following TencentCloud APIs:
 
-* Create: [AttachGroupPolicy](https://cloud.tencent.com/document/api/598/34580) - This API (AttachGroupPolicy) is used to associate a policy with a user group.
-* Create: [ListAttachedGroupPolicies](https://cloud.tencent.com/document/api/598/34573) - This API (ListAttachedGroupPolicies) is used to query the list of policies associated with a user group.
-* Read: [ListAttachedGroupPolicies](https://cloud.tencent.com/document/api/598/34573) - This API (ListAttachedGroupPolicies) is used to query the list of policies associated with a user group.
-* Delete: [DetachGroupPolicy](https://cloud.tencent.com/document/api/598/34576) - This API (DetachGroupPolicy) is used to unassociate a policy and a user group.
+* Create: [AttachGroupPolicy](https://www.tencentcloud.com/document/product/598/32250) - This API (AttachGroupPolicy) is used to associate a policy with a user group.
+* Create: [ListAttachedGroupPolicies](https://www.tencentcloud.com/document/product/598/32243) - This API (ListAttachedGroupPolicies) is used to query the list of policies associated with a user group.
+* Read: [ListAttachedGroupPolicies](https://www.tencentcloud.com/document/product/598/32243) - This API (ListAttachedGroupPolicies) is used to query the list of policies associated with a user group.
+* Delete: [DetachGroupPolicy](https://www.tencentcloud.com/document/product/598/32246) - This API (DetachGroupPolicy) is used to unassociate a policy and a user group.
 
 ## Import
 

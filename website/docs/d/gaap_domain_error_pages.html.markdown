@@ -80,5 +80,5 @@ In addition to all arguments above, the following attributes are exported:
 
 This data source queries the following TencentCloud APIs:
 
-* Read: [DescribeDomainErrorPageInfo](https://cloud.tencent.com/document/api/608/39345) - This API is used to query the custom error response to a domain name.
+* Read: [DescribeDomainErrorPageInfo](https://www.tencentcloud.com/document/product/608/33135) - This API is used to query the custom error response to a domain name.
 

@@ -92,9 +92,9 @@ In addition to all arguments above, the following attributes are exported:
 
 This resource interacts with the following TencentCloud APIs:
 
-* Create: [ModifyRemoteBackupConfig](https://cloud.tencent.com/document/api/236/84374) - This API is used to modify the configuration information of a remote TencentDB instance backup.
-* Read: [DescribeRemoteBackupConfig](https://cloud.tencent.com/document/api/236/84375) - This API is used to query the configuration information of a remote TencentDB instance backup.
-* Update: [ModifyRemoteBackupConfig](https://cloud.tencent.com/document/api/236/84374) - This API is used to modify the configuration information of a remote TencentDB instance backup.
+* Create: [ModifyRemoteBackupConfig](https://www.tencentcloud.com/document/product/236/52528) - This API is used to modify the configuration information of a remote TencentDB instance backup.
+* Read: [DescribeRemoteBackupConfig](https://www.tencentcloud.com/document/product/236/52529) - This API is used to query the configuration information of a remote TencentDB instance backup.
+* Update: [ModifyRemoteBackupConfig](https://www.tencentcloud.com/document/product/236/52528) - This API is used to modify the configuration information of a remote TencentDB instance backup.
 
 ## Import
 

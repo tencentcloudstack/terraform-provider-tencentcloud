@@ -53,11 +53,11 @@ In addition to all arguments above, the following attributes are exported:
 
 This resource interacts with the following TencentCloud APIs:
 
-* Create: [DescribeTasks](https://cloud.tencent.com/document/api/409/116177) - This API is used to query the task list and show the progress of async task execution.
-* Create: [ModifyDBInstanceSSLConfig](https://cloud.tencent.com/document/api/409/116171) - This API is used to modify the SSL configuration of an instance, including enabling, disabling, and modifying the connection address protected by an SSL certificate.
-* Read: [DescribeDBInstanceSSLConfig](https://cloud.tencent.com/document/api/409/116172) - This API is used to query the SSL status of an instance.
-* Update: [DescribeTasks](https://cloud.tencent.com/document/api/409/116177) - This API is used to query the task list and show the progress of async task execution.
-* Update: [ModifyDBInstanceSSLConfig](https://cloud.tencent.com/document/api/409/116171) - This API is used to modify the SSL configuration of an instance, including enabling, disabling, and modifying the connection address protected by an SSL certificate.
+* Create: [DescribeTasks](https://www.tencentcloud.com/document/product/409/78807) - This API is used to query the task list and show the progress of async task execution.
+* Create: [ModifyDBInstanceSSLConfig](https://www.tencentcloud.com/document/product/409/78802) - This API is used to modify the SSL configuration of an instance, including enabling, disabling, and modifying the connection address protected by an SSL certificate.
+* Read: [DescribeDBInstanceSSLConfig](https://www.tencentcloud.com/document/product/409/78804) - This API is used to query the SSL status of an instance.
+* Update: [DescribeTasks](https://www.tencentcloud.com/document/product/409/78807) - This API is used to query the task list and show the progress of async task execution.
+* Update: [ModifyDBInstanceSSLConfig](https://www.tencentcloud.com/document/product/409/78802) - This API is used to modify the SSL configuration of an instance, including enabling, disabling, and modifying the connection address protected by an SSL certificate.
 
 ## Import
 

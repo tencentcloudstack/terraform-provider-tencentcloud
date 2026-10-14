@@ -100,10 +100,10 @@ In addition to all arguments above, the following attributes are exported:
 
 This resource interacts with the following TencentCloud APIs:
 
-* Create: [CreateKafkaRecharge](https://cloud.tencent.com/document/api/614/94448) - This API is used to create a Kafka data subscription task.
-* Read: [DescribeKafkaRecharges](https://cloud.tencent.com/document/api/614/94446) - This API is used to get the list of Kafka data subscription tasks.
-* Update: [ModifyKafkaRecharge](https://cloud.tencent.com/document/api/614/94445) - This API is used to modify a Kafka data subscription task.
-* Delete: [DeleteKafkaRecharge](https://cloud.tencent.com/document/api/614/94447) - This API is used to delete a Kafka data subscription task.
+* Create: [CreateKafkaRecharge](https://www.tencentcloud.com/document/product/614/56113) - This API is used to create a Kafka data subscription task.
+* Read: [DescribeKafkaRecharges](https://www.tencentcloud.com/document/product/614/56111) - This API is used to get the list of Kafka data subscription tasks.
+* Update: [ModifyKafkaRecharge](https://www.tencentcloud.com/document/product/614/56110) - This API is used to modify a Kafka data subscription task.
+* Delete: [DeleteKafkaRecharge](https://www.tencentcloud.com/document/product/614/56112) - This API is used to delete a Kafka data subscription task.
 
 ## Import
 

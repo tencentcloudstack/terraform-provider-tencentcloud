@@ -46,7 +46,7 @@ In addition to all arguments above, the following attributes are exported:
 
 This resource interacts with the following TencentCloud APIs:
 
-* Create: [CreateLivePadTemplate](https://cloud.tencent.com/document/api/267/93529)
+* Create: [CreateLivePadTemplate](https://www.tencentcloud.com/document/product/267/71831)
 * Read: [DescribeLivePadTemplate](https://cloud.tencent.com/document/api/267/93525)
 * Update: [ModifyLivePadTemplate](https://cloud.tencent.com/document/api/267/93523)
 * Delete: [DeleteLivePadTemplate](https://cloud.tencent.com/document/api/267/93527)

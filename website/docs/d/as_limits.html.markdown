@@ -36,5 +36,5 @@ In addition to all arguments above, the following attributes are exported:
 
 This data source queries the following TencentCloud APIs:
 
-* Read: [DescribeAccountLimits](https://cloud.tencent.com/document/api/377/20443) - This API (DescribeAccountLimits) is used to query the limits of user's AS resources.
+* Read: [DescribeAccountLimits](https://www.tencentcloud.com/document/product/377/31003) - This API (DescribeAccountLimits) is used to query the limits of user's AS resources.
 

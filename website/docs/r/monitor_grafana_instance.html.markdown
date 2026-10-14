@@ -73,17 +73,17 @@ In addition to all arguments above, the following attributes are exported:
 
 This resource interacts with the following TencentCloud APIs:
 
-* Create: [CreateGrafanaInstance](https://cloud.tencent.com/document/api/248/79219) - This API is used to create a yearly/monthly subscribed TCMG instance of the Basic Edition, with auto-renewal enabled and vouchers not allowed by default.
-* Create: [DescribeGrafanaInstances](https://cloud.tencent.com/document/api/248/79208) - This API is used to list all Grafana instances under a user account.
-* Create: [ModifyResourceTags](https://cloud.tencent.com/document/api/651/35322) - This API is used to modify all tags associated with a resource.
-* Read: [DescribeGrafanaInstances](https://cloud.tencent.com/document/api/248/79208) - This API is used to list all Grafana instances under a user account.
-* Read: [DescribeResourceTagsByResourceIds](https://cloud.tencent.com/document/api/651/35319) - This API is used to query the tag key-value pairs associated with an existing resource.
-* Update: [EnableGrafanaInternet](https://cloud.tencent.com/document/api/248/79201) - This API is used to set the Grafana public network access.
-* Update: [ModifyGrafanaInstance](https://cloud.tencent.com/document/api/248/79197) - This API is used to modify the attributes of a Grafana instance.
-* Update: [ModifyResourceTags](https://cloud.tencent.com/document/api/651/35322) - This API is used to modify all tags associated with a resource.
-* Delete: [CleanGrafanaInstance](https://cloud.tencent.com/document/api/248/79220) - This API is used to forcibly terminate a Grafana instance.
-* Delete: [DeleteGrafanaInstance](https://cloud.tencent.com/document/api/248/79215) - This API is used to refund a yearly/monthly subscribed TCMG instance. Once it is called, the instance cannot be used and will be automatically terminated seven days later.
-* Delete: [DescribeGrafanaInstances](https://cloud.tencent.com/document/api/248/79208) - This API is used to list all Grafana instances under a user account.
+* Create: [CreateGrafanaInstance](https://www.tencentcloud.com/document/product/248/49770) - This API is used to create a yearly/monthly subscribed TCMG instance of the Basic Edition, with auto-renewal enabled and vouchers not allowed by default.
+* Create: [DescribeGrafanaInstances](https://www.tencentcloud.com/document/product/248/49759) - This API is used to list all Grafana instances under a user account.
+* Create: [ModifyResourceTags](https://www.tencentcloud.com/document/product/651/33012) - This API is used to modify all tags associated with a resource.
+* Read: [DescribeGrafanaInstances](https://www.tencentcloud.com/document/product/248/49759) - This API is used to list all Grafana instances under a user account.
+* Read: [DescribeResourceTagsByResourceIds](https://www.tencentcloud.com/document/product/651/33022) - This API is used to query the tag key-value pairs associated with an existing resource.
+* Update: [EnableGrafanaInternet](https://www.tencentcloud.com/document/product/248/49753) - This API is used to set the Grafana public network access.
+* Update: [ModifyGrafanaInstance](https://www.tencentcloud.com/document/product/248/49749) - This API is used to modify the attributes of a Grafana instance.
+* Update: [ModifyResourceTags](https://www.tencentcloud.com/document/product/651/33012) - This API is used to modify all tags associated with a resource.
+* Delete: [CleanGrafanaInstance](https://www.tencentcloud.com/document/product/248/49771) - This API is used to forcibly terminate a Grafana instance.
+* Delete: [DeleteGrafanaInstance](https://www.tencentcloud.com/document/product/248/49766) - This API is used to refund a yearly/monthly subscribed TCMG instance. Once it is called, the instance cannot be used and will be automatically terminated seven days later.
+* Delete: [DescribeGrafanaInstances](https://www.tencentcloud.com/document/product/248/49759) - This API is used to list all Grafana instances under a user account.
 
 ## Import
 

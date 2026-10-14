@@ -389,52 +389,52 @@ The `timeouts` block allows you to specify [timeouts](https://developer.hashicor
 
 This resource interacts with the following TencentCloud APIs:
 
-* Create: [CloseDBExtranetAccess](https://cloud.tencent.com/document/api/409/18105) - This API is used to disable the public network address of an instance.
-* Create: [CreateBackupPlan](https://cloud.tencent.com/document/api/409/116174) - This API is used to create a backup policy.
-* Create: [CreateInstances](https://cloud.tencent.com/document/api/409/56107) - This API is used to create one or more PostgreSQL instances. Instances created through this interface do not need to be initialized and can be used directly.
-* Create: [DescribeDBInstanceAttribute](https://cloud.tencent.com/document/api/409/16772) - This API is used to query the details of one instance.
-* Create: [DescribeOrders](https://cloud.tencent.com/document/api/409/18104) - This API is used to query the order information.
-* Create: [DescribeProductConfig](https://cloud.tencent.com/document/api/409/16776) - This api is used to query sales specification configuration. This interface belongs to the early stage and has stopped feature iteration. It is recommended to use the new api [DescribeClasses](https://www.tencentcloud.
-* Create: [ModifyBackupPlan](https://cloud.tencent.com/document/api/409/68067) - This API is used to modify the backup plan of an instance, such as modifying the backup start time. By default, a full backup starts at midnight every day and the generated backup files will be retained for seven days.
-* Create: [ModifyDBInstanceName](https://cloud.tencent.com/document/api/409/18101) - This API is used to rename a TencentDB for PostgreSQL instance.
-* Create: [ModifyDBInstanceParameters](https://cloud.tencent.com/document/api/409/63342) - This API is used to modify instance parameters.
-* Create: [ModifyResourceTags](https://cloud.tencent.com/document/api/651/35322) - This API is used to modify all tags associated with a resource.
-* Create: [OpenDBExtranetAccess](https://cloud.tencent.com/document/api/409/18099) - This API is used to enable the public network access of an instance.
-* Read: [DescribeAccounts](https://cloud.tencent.com/document/api/409/18109) - This API is used to query the list of the database accounts for an instance.
-* Read: [DescribeBackupPlans](https://cloud.tencent.com/document/api/409/68069) - This API is used to query all backup plans of an instance.
-* Read: [DescribeDBInstanceAttribute](https://cloud.tencent.com/document/api/409/16772) - This API is used to query the details of one instance.
-* Read: [DescribeDBInstanceParameters](https://cloud.tencent.com/document/api/409/63344) - This API is used to query the parameters of an instance.
-* Read: [DescribeDBInstanceSecurityGroups](https://cloud.tencent.com/document/api/409/84064) - This API is used to query the security group of an instance.
-* Read: [DescribeDBInstances](https://cloud.tencent.com/document/api/409/16773) - This API is used to query the details of one or more instances.
-* Read: [DescribeEncryptionKeys](https://cloud.tencent.com/document/api/409/73069) - This API is used to query the instance key list.
-* Read: [DescribeParamsEvent](https://cloud.tencent.com/document/api/409/63343) - This API is used to query the parameter modification event.
-* Read: [DescribeResourceTagsByResourceIds](https://cloud.tencent.com/document/api/651/35319) - This API is used to query the tag key-value pairs associated with an existing resource.
-* Update: [CloseDBExtranetAccess](https://cloud.tencent.com/document/api/409/18105) - This API is used to disable the public network address of an instance.
-* Update: [CreateBackupPlan](https://cloud.tencent.com/document/api/409/116174) - This API is used to create a backup policy.
-* Update: [CreateDBInstanceNetworkAccess](https://cloud.tencent.com/document/api/409/70581) - This API is used to create instance networks. Each instance allows a maximum of 2 network configurations and a minimum of 1.
-* Update: [DeleteBackupPlan](https://cloud.tencent.com/document/api/409/116173) - This API is used to delete a backup policy.
-* Update: [DeleteDBInstanceNetworkAccess](https://cloud.tencent.com/document/api/409/70579) - This API is used to delete a network from an instance while keeping at least one network.
-* Update: [DescribeDBInstanceAttribute](https://cloud.tencent.com/document/api/409/16772) - This API is used to query the details of one instance.
-* Update: [DescribeDBVersions](https://cloud.tencent.com/document/api/409/89018) - This API is used to query the list of supported database versions.
-* Update: [ModifyBackupPlan](https://cloud.tencent.com/document/api/409/68067) - This API is used to modify the backup plan of an instance, such as modifying the backup start time. By default, a full backup starts at midnight every day and the generated backup files will be retained for seven days.
-* Update: [ModifyDBInstanceChargeType](https://cloud.tencent.com/document/api/409/90458) - This API is used to switch the instance billing mode from pay-as-you-go to yearly/monthly subscription.
-* Update: [ModifyDBInstanceDeletionProtection](https://cloud.tencent.com/document/api/409/125336) - This interface (DeletionProtection) is used to enable or disable instance destruction protection.
-* Update: [ModifyDBInstanceDeployment](https://cloud.tencent.com/document/api/409/68066) - This API is used to modify the AZs where the nodes of a source instance reside.
-* Update: [ModifyDBInstanceName](https://cloud.tencent.com/document/api/409/18101) - This API is used to rename a TencentDB for PostgreSQL instance.
-* Update: [ModifyDBInstanceParameters](https://cloud.tencent.com/document/api/409/63342) - This API is used to modify instance parameters.
-* Update: [ModifyDBInstanceSecurityGroups](https://cloud.tencent.com/document/api/409/84063) - This API is used to modify the security group of an instance.
-* Update: [ModifyDBInstanceSpec](https://cloud.tencent.com/document/api/409/63689) - This API is used to modify instance specifications, including memory, Disk and Cpu.
-* Update: [ModifyDBInstancesProject](https://cloud.tencent.com/document/api/409/18100) - This API is used to modify the project of an instance.
-* Update: [ModifyResourceTags](https://cloud.tencent.com/document/api/651/35322) - This API is used to modify all tags associated with a resource.
-* Update: [OpenDBExtranetAccess](https://cloud.tencent.com/document/api/409/18099) - This API is used to enable the public network access of an instance.
-* Update: [RenewInstance](https://cloud.tencent.com/document/api/409/18098) - This API is used to renew an instance.
-* Update: [ResetAccountPassword](https://cloud.tencent.com/document/api/409/18107) - This API is used to reset the account password of an instance.
-* Update: [SetAutoRenewFlag](https://cloud.tencent.com/document/api/409/18096) - This API is used to set auto-renewal.
-* Update: [UpgradeDBInstanceKernelVersion](https://cloud.tencent.com/document/api/409/89029) - This API is used to upgrade the kernel version of an instance.
-* Update: [UpgradeDBInstanceMajorVersion](https://cloud.tencent.com/document/api/409/99280) - This API is used to upgrade the major kernel version of an instance, for example, from PostgreSQL 12 to PostgreSQL 15.
-* Delete: [DescribeDBInstanceAttribute](https://cloud.tencent.com/document/api/409/16772) - This API is used to query the details of one instance.
-* Delete: [DestroyDBInstance](https://cloud.tencent.com/document/api/409/43352) - This API is used to terminate an isolated instance by specifying the `DBInstanceId` parameter. The data of a terminated instance will be deleted and cannot be recovered. Be cautious with this API calling.
-* Delete: [IsolateDBInstances](https://cloud.tencent.com/document/api/409/54790) - This API is used to isolate an instance.
+* Create: [CloseDBExtranetAccess](https://www.tencentcloud.com/document/product/409/18105) - This API is used to disable the public network address of an instance.
+* Create: [CreateBackupPlan](https://www.tencentcloud.com/document/product/409/78805) - This API is used to create a backup policy.
+* Create: [CreateInstances](https://www.tencentcloud.com/document/product/409/40583) - This API is used to create one or more PostgreSQL instances. Instances created through this interface do not need to be initialized and can be used directly.
+* Create: [DescribeDBInstanceAttribute](https://www.tencentcloud.com/document/product/409/16772) - This API is used to query the details of one instance.
+* Create: [DescribeOrders](https://www.tencentcloud.com/document/product/409/18104) - This API is used to query the order information.
+* Create: [DescribeProductConfig](https://www.tencentcloud.com/document/product/409/16776) - This api is used to query sales specification configuration. This interface belongs to the early stage and has stopped feature iteration. It is recommended to use the new api [DescribeClasses](https://www.tencentcloud.
+* Create: [ModifyBackupPlan](https://www.tencentcloud.com/document/product/409/45149) - This API is used to modify the backup plan of an instance, such as modifying the backup start time. By default, a full backup starts at midnight every day and the generated backup files will be retained for seven days.
+* Create: [ModifyDBInstanceName](https://www.tencentcloud.com/document/product/409/18101) - This API is used to rename a TencentDB for PostgreSQL instance.
+* Create: [ModifyDBInstanceParameters](https://www.tencentcloud.com/document/product/409/43282) - This API is used to modify instance parameters.
+* Create: [ModifyResourceTags](https://www.tencentcloud.com/document/product/651/33012) - This API is used to modify all tags associated with a resource.
+* Create: [OpenDBExtranetAccess](https://www.tencentcloud.com/document/product/409/18099) - This API is used to enable the public network access of an instance.
+* Read: [DescribeAccounts](https://www.tencentcloud.com/document/product/409/18109) - This API is used to query the list of the database accounts for an instance.
+* Read: [DescribeBackupPlans](https://www.tencentcloud.com/document/product/409/45151) - This API is used to query all backup plans of an instance.
+* Read: [DescribeDBInstanceAttribute](https://www.tencentcloud.com/document/product/409/16772) - This API is used to query the details of one instance.
+* Read: [DescribeDBInstanceParameters](https://www.tencentcloud.com/document/product/409/43284) - This API is used to query the parameters of an instance.
+* Read: [DescribeDBInstanceSecurityGroups](https://www.tencentcloud.com/document/product/409/52648) - This API is used to query the security group of an instance.
+* Read: [DescribeDBInstances](https://www.tencentcloud.com/document/product/409/16773) - This API is used to query the details of one or more instances.
+* Read: [DescribeEncryptionKeys](https://www.tencentcloud.com/document/product/409/46989) - This API is used to query the instance key list.
+* Read: [DescribeParamsEvent](https://www.tencentcloud.com/document/product/409/43283) - This API is used to query the parameter modification event.
+* Read: [DescribeResourceTagsByResourceIds](https://www.tencentcloud.com/document/product/651/33022) - This API is used to query the tag key-value pairs associated with an existing resource.
+* Update: [CloseDBExtranetAccess](https://www.tencentcloud.com/document/product/409/18105) - This API is used to disable the public network address of an instance.
+* Update: [CreateBackupPlan](https://www.tencentcloud.com/document/product/409/78805) - This API is used to create a backup policy.
+* Update: [CreateDBInstanceNetworkAccess](https://www.tencentcloud.com/document/product/409/45951) - This API is used to create instance networks. Each instance allows a maximum of 2 network configurations and a minimum of 1.
+* Update: [DeleteBackupPlan](https://www.tencentcloud.com/document/product/409/78814) - This API is used to delete a backup policy.
+* Update: [DeleteDBInstanceNetworkAccess](https://www.tencentcloud.com/document/product/409/45949) - This API is used to delete a network from an instance while keeping at least one network.
+* Update: [DescribeDBInstanceAttribute](https://www.tencentcloud.com/document/product/409/16772) - This API is used to query the details of one instance.
+* Update: [DescribeDBVersions](https://www.tencentcloud.com/document/product/409/54337) - This API is used to query the list of supported database versions.
+* Update: [ModifyBackupPlan](https://www.tencentcloud.com/document/product/409/45149) - This API is used to modify the backup plan of an instance, such as modifying the backup start time. By default, a full backup starts at midnight every day and the generated backup files will be retained for seven days.
+* Update: [ModifyDBInstanceChargeType](https://www.tencentcloud.com/document/product/409/55665) - This API is used to switch the instance billing mode from pay-as-you-go to yearly/monthly subscription.
+* Update: [ModifyDBInstanceDeletionProtection](https://www.tencentcloud.com/document/product/409/79011) - This interface (DeletionProtection) is used to enable or disable instance destruction protection.
+* Update: [ModifyDBInstanceDeployment](https://www.tencentcloud.com/document/product/409/45148) - This API is used to modify the AZs where the nodes of a source instance reside.
+* Update: [ModifyDBInstanceName](https://www.tencentcloud.com/document/product/409/18101) - This API is used to rename a TencentDB for PostgreSQL instance.
+* Update: [ModifyDBInstanceParameters](https://www.tencentcloud.com/document/product/409/43282) - This API is used to modify instance parameters.
+* Update: [ModifyDBInstanceSecurityGroups](https://www.tencentcloud.com/document/product/409/52647) - This API is used to modify the security group of an instance.
+* Update: [ModifyDBInstanceSpec](https://www.tencentcloud.com/document/product/409/43296) - This API is used to modify instance specifications, including memory, Disk and Cpu.
+* Update: [ModifyDBInstancesProject](https://www.tencentcloud.com/document/product/409/18100) - This API is used to modify the project of an instance.
+* Update: [ModifyResourceTags](https://www.tencentcloud.com/document/product/651/33012) - This API is used to modify all tags associated with a resource.
+* Update: [OpenDBExtranetAccess](https://www.tencentcloud.com/document/product/409/18099) - This API is used to enable the public network access of an instance.
+* Update: [RenewInstance](https://www.tencentcloud.com/document/product/409/18098) - This API is used to renew an instance.
+* Update: [ResetAccountPassword](https://www.tencentcloud.com/document/product/409/18107) - This API is used to reset the account password of an instance.
+* Update: [SetAutoRenewFlag](https://www.tencentcloud.com/document/product/409/18096) - This API is used to set auto-renewal.
+* Update: [UpgradeDBInstanceKernelVersion](https://www.tencentcloud.com/document/product/409/54340) - This API is used to upgrade the kernel version of an instance.
+* Update: [UpgradeDBInstanceMajorVersion](https://www.tencentcloud.com/document/product/409/60784) - This API is used to upgrade the major kernel version of an instance, for example, from PostgreSQL 12 to PostgreSQL 15.
+* Delete: [DescribeDBInstanceAttribute](https://www.tencentcloud.com/document/product/409/16772) - This API is used to query the details of one instance.
+* Delete: [DestroyDBInstance](https://www.tencentcloud.com/document/product/409/37117) - This API is used to terminate an isolated instance by specifying the `DBInstanceId` parameter. The data of a terminated instance will be deleted and cannot be recovered. Be cautious with this API calling.
+* Delete: [IsolateDBInstances](https://www.tencentcloud.com/document/product/409/40109) - This API is used to isolate an instance.
 
 ## Import
 

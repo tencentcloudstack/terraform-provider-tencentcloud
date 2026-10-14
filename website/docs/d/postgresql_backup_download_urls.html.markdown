@@ -70,5 +70,5 @@ In addition to all arguments above, the following attributes are exported:
 
 This data source queries the following TencentCloud APIs:
 
-* Read: [DescribeBackupDownloadURL](https://cloud.tencent.com/document/api/409/89025)
+* Read: [DescribeBackupDownloadURL](https://www.tencentcloud.com/document/product/409/54346)
 

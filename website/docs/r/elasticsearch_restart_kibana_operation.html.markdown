@@ -36,6 +36,6 @@ In addition to all arguments above, the following attributes are exported:
 
 This resource interacts with the following TencentCloud APIs:
 
-* Create: [DescribeInstances](https://cloud.tencent.com/document/api/845/30631) - Query all instances meeting conditions for the user in that region
-* Create: [RestartKibana](https://cloud.tencent.com/document/api/845/50224)
+* Create: [DescribeInstances](https://www.tencentcloud.com/document/product/845/32214) - Query all instances meeting conditions for the user in that region
+* Create: [RestartKibana](https://www.tencentcloud.com/document/product/845/38995)
 

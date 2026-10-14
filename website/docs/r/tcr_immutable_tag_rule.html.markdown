@@ -137,11 +137,11 @@ This resource interacts with the following TencentCloud APIs:
 
 * Create: [CreateImmutableTagRules](https://cloud.tencent.com/document/api/1141/58197) - This API is used to create the tag immutability rule.
 * Create: [DescribeImmutableTagRules](https://cloud.tencent.com/document/api/1141/58195) - This API is used to list the tag immutability rule.
-* Create: [ModifyResourceTags](https://cloud.tencent.com/document/api/651/35322) - This API is used to modify all tags associated with a resource.
+* Create: [ModifyResourceTags](https://www.tencentcloud.com/document/product/651/33012) - This API is used to modify all tags associated with a resource.
 * Read: [DescribeImmutableTagRules](https://cloud.tencent.com/document/api/1141/58195) - This API is used to list the tag immutability rule.
-* Read: [DescribeResourceTagsByResourceIds](https://cloud.tencent.com/document/api/651/35319) - This API is used to query the tag key-value pairs associated with an existing resource.
+* Read: [DescribeResourceTagsByResourceIds](https://www.tencentcloud.com/document/product/651/33022) - This API is used to query the tag key-value pairs associated with an existing resource.
 * Update: [ModifyImmutableTagRules](https://cloud.tencent.com/document/api/1141/58194) - This API is used to update the tag immutability rule.
-* Update: [ModifyResourceTags](https://cloud.tencent.com/document/api/651/35322) - This API is used to modify all tags associated with a resource.
+* Update: [ModifyResourceTags](https://www.tencentcloud.com/document/product/651/33012) - This API is used to modify all tags associated with a resource.
 * Delete: [DeleteImmutableTagRules](https://cloud.tencent.com/document/api/1141/58196) - This API is used to delete the tag immutability rule.
 
 ## Import

@@ -74,5 +74,5 @@ In addition to all arguments above, the following attributes are exported:
 
 This data source queries the following TencentCloud APIs:
 
-* Read: [DescribeProxyGroupList](https://cloud.tencent.com/document/api/608/36943) - This API (DescribeProxyGroupList) is used to pull the list of connection groups and the basic information of each connection group.
+* Read: [DescribeProxyGroupList](https://www.tencentcloud.com/document/product/608/33081) - This API (DescribeProxyGroupList) is used to pull the list of connection groups and the basic information of each connection group.
 

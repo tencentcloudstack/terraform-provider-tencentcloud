@@ -95,12 +95,12 @@ This resource interacts with the following TencentCloud APIs:
 
 * Create: [CreateProCluster](https://cloud.tencent.com/document/api/1179/101433) - This api is used to create a professional cluster with prepayment via api calls.
 * Create: [DescribePulsarProInstances](https://cloud.tencent.com/document/api/1179/90376) - This API is used to query the list of the purchased TDMQ for Pulsar pro instances.
-* Create: [ModifyResourceTags](https://cloud.tencent.com/document/api/651/35322) - This API is used to modify all tags associated with a resource.
+* Create: [ModifyResourceTags](https://www.tencentcloud.com/document/product/651/33012) - This API is used to modify all tags associated with a resource.
 * Read: [DescribePulsarProInstanceDetail](https://cloud.tencent.com/document/api/1179/90377) - This API is used to obtain the information of a TDMQ for Pulsar pro cluster instance.
 * Read: [DescribePulsarProInstances](https://cloud.tencent.com/document/api/1179/90376) - This API is used to query the list of the purchased TDMQ for Pulsar pro instances.
-* Read: [DescribeResourceTagsByResourceIds](https://cloud.tencent.com/document/api/651/35319) - This API is used to query the tag key-value pairs associated with an existing resource.
+* Read: [DescribeResourceTagsByResourceIds](https://www.tencentcloud.com/document/product/651/33022) - This API is used to query the tag key-value pairs associated with an existing resource.
 * Update: [ModifyCluster](https://cloud.tencent.com/document/api/1179/52189) - This API is used to update a cluster.
-* Update: [ModifyResourceTags](https://cloud.tencent.com/document/api/651/35322) - This API is used to modify all tags associated with a resource.
+* Update: [ModifyResourceTags](https://www.tencentcloud.com/document/product/651/33012) - This API is used to modify all tags associated with a resource.
 * Delete: [DeleteProCluster](https://cloud.tencent.com/document/api/1179/101986) - This API is used to delete a professional cluster with prepayment via API calls.
 
 ## Import

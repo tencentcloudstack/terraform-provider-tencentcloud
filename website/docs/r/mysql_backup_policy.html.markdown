@@ -98,7 +98,7 @@ In addition to all arguments above, the following attributes are exported:
 
 This resource interacts with the following TencentCloud APIs:
 
-* Read: [DescribeBackupConfig](https://cloud.tencent.com/document/api/236/15837) - This API is used to query database backup configuration info.
-* Update: [ModifyBackupConfig](https://cloud.tencent.com/document/api/236/15839) - This API is used to modify database backup configuration.
-* Delete: [ModifyBackupConfig](https://cloud.tencent.com/document/api/236/15839) - This API is used to modify database backup configuration.
+* Read: [DescribeBackupConfig](https://www.tencentcloud.com/document/product/236/15837) - This API is used to query database backup configuration info.
+* Update: [ModifyBackupConfig](https://www.tencentcloud.com/document/product/236/15839) - This API is used to modify database backup configuration.
+* Delete: [ModifyBackupConfig](https://www.tencentcloud.com/document/product/236/15839) - This API is used to modify database backup configuration.
 

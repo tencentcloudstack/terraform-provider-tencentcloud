@@ -108,10 +108,10 @@ In addition to all arguments above, the following attributes are exported:
 
 This resource interacts with the following TencentCloud APIs:
 
-* Create: [BindAutoSnapshotPolicy](https://cloud.tencent.com/document/api/362/33559) - This API (BindAutoSnapshotPolicy) is used to bind the cloud disk to the specified scheduled snapshot policy.
-* Read: [DescribeAutoSnapshotPolicies](https://cloud.tencent.com/document/api/362/33556) - This API is used to query scheduled snapshot policies.
-* Read: [DescribeDiskAssociatedAutoSnapshotPolicy](https://cloud.tencent.com/document/api/362/33555) - This API (DescribeDiskAssociatedAutoSnapshotPolicy) is used to query the scheduled snapshot policy bound to a cloud disk.
-* Delete: [UnbindAutoSnapshotPolicy](https://cloud.tencent.com/document/api/362/33554) - This API (UnbindAutoSnapshotPolicy) is used to unbind the cloud disk from the specified scheduled snapshot policy.
+* Create: [BindAutoSnapshotPolicy](https://www.tencentcloud.com/document/product/362/32168) - This API (BindAutoSnapshotPolicy) is used to bind the cloud disk to the specified scheduled snapshot policy.
+* Read: [DescribeAutoSnapshotPolicies](https://www.tencentcloud.com/document/product/362/32165) - This API is used to query scheduled snapshot policies.
+* Read: [DescribeDiskAssociatedAutoSnapshotPolicy](https://www.tencentcloud.com/document/product/362/32164) - This API (DescribeDiskAssociatedAutoSnapshotPolicy) is used to query the scheduled snapshot policy bound to a cloud disk.
+* Delete: [UnbindAutoSnapshotPolicy](https://www.tencentcloud.com/document/product/362/32161) - This API (UnbindAutoSnapshotPolicy) is used to unbind the cloud disk from the specified scheduled snapshot policy.
 
 ## Import
 

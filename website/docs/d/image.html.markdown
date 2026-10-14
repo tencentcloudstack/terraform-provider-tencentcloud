@@ -76,5 +76,5 @@ In addition to all arguments above, the following attributes are exported:
 
 This data source queries the following TencentCloud APIs:
 
-* Read: [DescribeImages](https://cloud.tencent.com/document/api/213/15715) - This API is used to view the list of images.
+* Read: [DescribeImages](https://www.tencentcloud.com/document/product/213/33272) - This API is used to view the list of images.
 

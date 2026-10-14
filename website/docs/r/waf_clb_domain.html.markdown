@@ -164,24 +164,24 @@ In addition to all arguments above, the following attributes are exported:
 
 This resource interacts with the following TencentCloud APIs:
 
-* Create: [CreateHost](https://cloud.tencent.com/document/api/627/89906) - Add a protection domain in CLB-WAF
-* Create: [DescribeDomains](https://cloud.tencent.com/document/api/627/72840) - Query detailed information of all user domains
-* Create: [DescribeHostLimit](https://cloud.tencent.com/document/api/627/96943) - Firstly verify when adding a domain whether a package has been purchased, whether the limit of purchased package has not been reached, and whether the domain has already been added
-* Create: [ModifyApiAnalyzeStatus](https://cloud.tencent.com/document/api/627/97282) - API analysis page switch
-* Create: [ModifyBotStatus](https://cloud.tencent.com/document/api/627/97281) - Bot_V2 bot master switch update
-* Create: [ModifyDomainsCLSStatus](https://cloud.tencent.com/document/api/627/96937) - Enable or disable access log for domain list
-* Create: [ModifyHostMode](https://cloud.tencent.com/document/api/627/96934) - Set CLB WAF protection domain status
-* Create: [ModifyHostStatus](https://cloud.tencent.com/document/api/627/96933) - This API is used to enable or disable CLB WAF for a protected domain name.
-* Read: [DescribeDomainDetailsClb](https://cloud.tencent.com/document/api/627/96946) - Obtain CLB WAF domain details
-* Read: [DescribeDomains](https://cloud.tencent.com/document/api/627/72840) - Query detailed information of all user domains
-* Update: [ModifyApiAnalyzeStatus](https://cloud.tencent.com/document/api/627/97282) - API analysis page switch
-* Update: [ModifyBotStatus](https://cloud.tencent.com/document/api/627/97281) - Bot_V2 bot master switch update
-* Update: [ModifyDomainsCLSStatus](https://cloud.tencent.com/document/api/627/96937) - Enable or disable access log for domain list
-* Update: [ModifyHost](https://cloud.tencent.com/document/api/627/96936) - This API is used to edit the configuration of domain names protected by CLB WAF.
-* Update: [ModifyHostFlowMode](https://cloud.tencent.com/document/api/627/96935) - This API is used to set the traffic mode for domain names protected by CLB WAF. The mode can be mirror mode or cleaning mode.
-* Update: [ModifyHostMode](https://cloud.tencent.com/document/api/627/96934) - Set CLB WAF protection domain status
-* Update: [ModifyHostStatus](https://cloud.tencent.com/document/api/627/96933) - This API is used to enable or disable CLB WAF for a protected domain name.
-* Delete: [DeleteHost](https://cloud.tencent.com/document/api/627/96950) - This API is used to delete a domain name protected by CLB WAF. Batch operation is supported.
+* Create: [CreateHost](https://www.tencentcloud.com/document/product/627/64570) - Add a protection domain in CLB-WAF
+* Create: [DescribeDomains](https://www.tencentcloud.com/document/product/627/64580) - Query detailed information of all user domains
+* Create: [DescribeHostLimit](https://www.tencentcloud.com/document/product/627/64546) - Firstly verify when adding a domain whether a package has been purchased, whether the limit of purchased package has not been reached, and whether the domain has already been added
+* Create: [ModifyApiAnalyzeStatus](https://www.tencentcloud.com/document/product/627/64575) - API analysis page switch
+* Create: [ModifyBotStatus](https://www.tencentcloud.com/document/product/627/64540) - Bot_V2 bot master switch update
+* Create: [ModifyDomainsCLSStatus](https://www.tencentcloud.com/document/product/627/64539) - Enable or disable access log for domain list
+* Create: [ModifyHostMode](https://www.tencentcloud.com/document/product/627/64538) - Set CLB WAF protection domain status
+* Create: [ModifyHostStatus](https://www.tencentcloud.com/document/product/627/64537) - This API is used to enable or disable CLB WAF for a protected domain name.
+* Read: [DescribeDomainDetailsClb](https://www.tencentcloud.com/document/product/627/64565) - Obtain CLB WAF domain details
+* Read: [DescribeDomains](https://www.tencentcloud.com/document/product/627/64580) - Query detailed information of all user domains
+* Update: [ModifyApiAnalyzeStatus](https://www.tencentcloud.com/document/product/627/64575) - API analysis page switch
+* Update: [ModifyBotStatus](https://www.tencentcloud.com/document/product/627/64540) - Bot_V2 bot master switch update
+* Update: [ModifyDomainsCLSStatus](https://www.tencentcloud.com/document/product/627/64539) - Enable or disable access log for domain list
+* Update: [ModifyHost](https://www.tencentcloud.com/document/product/627/64560) - This API is used to edit the configuration of domain names protected by CLB WAF.
+* Update: [ModifyHostFlowMode](https://www.tencentcloud.com/document/product/627/64559) - This API is used to set the traffic mode for domain names protected by CLB WAF. The mode can be mirror mode or cleaning mode.
+* Update: [ModifyHostMode](https://www.tencentcloud.com/document/product/627/64538) - Set CLB WAF protection domain status
+* Update: [ModifyHostStatus](https://www.tencentcloud.com/document/product/627/64537) - This API is used to enable or disable CLB WAF for a protected domain name.
+* Delete: [DeleteHost](https://www.tencentcloud.com/document/product/627/64569) - This API is used to delete a domain name protected by CLB WAF. Batch operation is supported.
 
 ## Import
 

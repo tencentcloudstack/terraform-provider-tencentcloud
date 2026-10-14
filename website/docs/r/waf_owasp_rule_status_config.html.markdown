@@ -46,9 +46,9 @@ In addition to all arguments above, the following attributes are exported:
 
 This resource interacts with the following TencentCloud APIs:
 
-* Create: [ModifyOwaspRuleStatus](https://cloud.tencent.com/document/api/627/122544) - This API is used to refresh the rule switch.
-* Read: [DescribeOwaspRules](https://cloud.tencent.com/document/api/627/122545) - This API is used to query the rule list of the rule engine.
-* Update: [ModifyOwaspRuleStatus](https://cloud.tencent.com/document/api/627/122544) - This API is used to refresh the rule switch.
+* Create: [ModifyOwaspRuleStatus](https://www.tencentcloud.com/document/product/627/73180) - This API is used to refresh the rule switch.
+* Read: [DescribeOwaspRules](https://www.tencentcloud.com/document/product/627/73182) - This API is used to query the rule list of the rule engine.
+* Update: [ModifyOwaspRuleStatus](https://www.tencentcloud.com/document/product/627/73180) - This API is used to refresh the rule switch.
 
 ## Import
 

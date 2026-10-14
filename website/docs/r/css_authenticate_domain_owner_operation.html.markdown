@@ -49,5 +49,5 @@ In addition to all arguments above, the following attributes are exported:
 
 This resource interacts with the following TencentCloud APIs:
 
-* Create: [AuthenticateDomainOwner](https://cloud.tencent.com/document/api/267/80524) - This API is used to verify the ownership of a domain.
+* Create: [AuthenticateDomainOwner](https://www.tencentcloud.com/document/product/267/50612) - This API is used to verify the ownership of a domain.
 

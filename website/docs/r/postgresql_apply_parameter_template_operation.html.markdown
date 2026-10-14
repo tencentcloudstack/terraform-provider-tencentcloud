@@ -38,9 +38,9 @@ In addition to all arguments above, the following attributes are exported:
 
 This resource interacts with the following TencentCloud APIs:
 
-* Create: [DescribeDBInstanceAttribute](https://cloud.tencent.com/document/api/409/16772) - This API is used to query the details of one instance.
-* Create: [DescribeDBInstanceParameters](https://cloud.tencent.com/document/api/409/63344) - This API is used to query the parameters of an instance.
-* Create: [DescribeParameterTemplateAttributes](https://cloud.tencent.com/document/api/409/84068) - This API is used to query the details of a parameter template, including basic information and parameter information.
-* Create: [DescribeParamsEvent](https://cloud.tencent.com/document/api/409/63343) - This API is used to query the parameter modification event.
-* Create: [ModifyDBInstanceParameters](https://cloud.tencent.com/document/api/409/63342) - This API is used to modify instance parameters.
+* Create: [DescribeDBInstanceAttribute](https://www.tencentcloud.com/document/product/409/16772) - This API is used to query the details of one instance.
+* Create: [DescribeDBInstanceParameters](https://www.tencentcloud.com/document/product/409/43284) - This API is used to query the parameters of an instance.
+* Create: [DescribeParameterTemplateAttributes](https://www.tencentcloud.com/document/product/409/52652) - This API is used to query the details of a parameter template, including basic information and parameter information.
+* Create: [DescribeParamsEvent](https://www.tencentcloud.com/document/product/409/43283) - This API is used to query the parameter modification event.
+* Create: [ModifyDBInstanceParameters](https://www.tencentcloud.com/document/product/409/43282) - This API is used to modify instance parameters.
 

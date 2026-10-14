@@ -61,5 +61,5 @@ In addition to all arguments above, the following attributes are exported:
 
 This data source queries the following TencentCloud APIs:
 
-* Read: [DescribeTaskList](https://cloud.tencent.com/document/api/239/39374) - This API is used to query the task list data for the last 30 days.
+* Read: [DescribeTaskList](https://www.tencentcloud.com/document/product/239/33293) - This API is used to query the task list data for the last 30 days.
 

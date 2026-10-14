@@ -39,7 +39,7 @@ In addition to all arguments above, the following attributes are exported:
 This resource interacts with the following TencentCloud APIs:
 
 * Create: [ModifyLoadBalancerMixIpTarget](https://cloud.tencent.com/document/api/214/70576)
-* Read: [DescribeLoadBalancers](https://cloud.tencent.com/document/api/214/30685) - This API is used to query the list of CLB instances in a region.
+* Read: [DescribeLoadBalancers](https://www.tencentcloud.com/document/product/214/33830) - This API is used to query the list of CLB instances in a region.
 * Update: [ModifyLoadBalancerMixIpTarget](https://cloud.tencent.com/document/api/214/70576)
 
 ## Import

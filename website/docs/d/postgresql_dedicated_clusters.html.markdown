@@ -52,5 +52,5 @@ In addition to all arguments above, the following attributes are exported:
 
 This data source queries the following TencentCloud APIs:
 
-* Read: [DescribeDedicatedClusters](https://cloud.tencent.com/document/api/409/111242) - This API is used to query an exclusive cluster.
+* Read: [DescribeDedicatedClusters](https://www.tencentcloud.com/document/product/409/78809) - This API is used to query an exclusive cluster.
 

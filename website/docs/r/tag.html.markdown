@@ -38,9 +38,9 @@ In addition to all arguments above, the following attributes are exported:
 
 This resource interacts with the following TencentCloud APIs:
 
-* Create: [CreateTag](https://cloud.tencent.com/document/api/651/35325) - This API is used to create a tag key and tag value pair.
-* Read: [GetTags](https://cloud.tencent.com/document/api/651/72275) - This API is used to get the list of created tags.
-* Delete: [DeleteTag](https://cloud.tencent.com/document/api/651/35323) - This API is used to delete a tag key and tag value pair.
+* Create: [CreateTag](https://www.tencentcloud.com/document/product/651/33015) - This API is used to create a tag key and tag value pair.
+* Read: [GetTags](https://www.tencentcloud.com/document/product/651/46536) - This API is used to get the list of created tags.
+* Delete: [DeleteTag](https://www.tencentcloud.com/document/product/651/33013) - This API is used to delete a tag key and tag value pair.
 
 ## Import
 

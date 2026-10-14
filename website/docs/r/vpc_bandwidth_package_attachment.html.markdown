@@ -78,7 +78,7 @@ In addition to all arguments above, the following attributes are exported:
 
 This resource interacts with the following TencentCloud APIs:
 
-* Create: [AddBandwidthPackageResources](https://cloud.tencent.com/document/api/215/19213) - This API is used to add resources to a bandwidth package, including [Elastic IP](https://intl.cloud.tencent.com/document/product/213/1941?from_cn_redirect=1), [Cloud Load Balancer](https://intl.cloud.tencent.com/document/product/214/517?
-* Read: [DescribeBandwidthPackageResources](https://cloud.tencent.com/document/api/215/48944) - This API is used to query the list of resources in a Bandwidth Package according to its unique ID, support conditional filtering of query results and paging query.
-* Delete: [RemoveBandwidthPackageResources](https://cloud.tencent.com/document/api/215/19207) - This API is used to delete a bandwidth package resource, including [Elastic IP](https://intl.cloud.tencent.com/document/product/213/1941?from_cn_redirect=1), [Cloud Load Balancer](https://intl.cloud.tencent.com/document/product/214/517?
+* Create: [AddBandwidthPackageResources](https://www.tencentcloud.com/document/product/215/36923) - This API is used to add resources to a bandwidth package, including [Elastic IP](https://intl.cloud.tencent.com/document/product/213/1941?from_cn_redirect=1), [Cloud Load Balancer](https://intl.cloud.tencent.com/document/product/214/517?
+* Read: [DescribeBandwidthPackageResources](https://www.tencentcloud.com/document/product/215/38516) - This API is used to query the list of resources in a Bandwidth Package according to its unique ID, support conditional filtering of query results and paging query.
+* Delete: [RemoveBandwidthPackageResources](https://www.tencentcloud.com/document/product/215/36917) - This API is used to delete a bandwidth package resource, including [Elastic IP](https://intl.cloud.tencent.com/document/product/213/1941?from_cn_redirect=1), [Cloud Load Balancer](https://intl.cloud.tencent.com/document/product/214/517?
 

@@ -99,5 +99,5 @@ In addition to all arguments above, the following attributes are exported:
 
 This data source queries the following TencentCloud APIs:
 
-* Read: [DescribeInstancesDetail](https://cloud.tencent.com/document/api/597/40834) - This API is used to get instance list details under a user account.
+* Read: [DescribeInstancesDetail](https://www.tencentcloud.com/document/product/597/35356) - This API is used to get instance list details under a user account.
 

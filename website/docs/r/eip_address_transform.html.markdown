@@ -77,6 +77,6 @@ In addition to all arguments above, the following attributes are exported:
 
 This resource interacts with the following TencentCloud APIs:
 
-* Create: [DescribeTaskResult](https://cloud.tencent.com/document/api/215/36271) - This API is used to query the EIP async job execution results.
-* Create: [TransformAddress](https://cloud.tencent.com/document/api/215/16706) - This API is used to convert a common public IP into an [Elastic IP](https://intl.cloud.tencent.com/document/product/213/1941?from_cn_redirect=1) (EIP for short).
+* Create: [DescribeTaskResult](https://www.tencentcloud.com/document/product/215/34772) - This API is used to query the EIP async job execution results.
+* Create: [TransformAddress](https://www.tencentcloud.com/document/product/215/16706) - This API is used to convert a common public IP into an [Elastic IP](https://intl.cloud.tencent.com/document/product/213/1941?from_cn_redirect=1) (EIP for short).
 

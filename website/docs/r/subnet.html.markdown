@@ -82,18 +82,18 @@ In addition to all arguments above, the following attributes are exported:
 
 This resource interacts with the following TencentCloud APIs:
 
-* Create: [CreateSubnet](https://cloud.tencent.com/document/api/215/15782) - This API is used to create a subnet.
-* Create: [DescribeRouteTables](https://cloud.tencent.com/document/api/215/15763) - This API is used to query route tables.
-* Create: [ModifyResourceTags](https://cloud.tencent.com/document/api/651/35322) - This API is used to modify all tags associated with a resource.
-* Create: [ModifySubnetAttribute](https://cloud.tencent.com/document/api/215/15781) - This API (ModifySubnetAttribute) is used to modify subnet attributes.
-* Create: [ReplaceRouteTableAssociation](https://cloud.tencent.com/document/api/215/15767) - This API (ReplaceRouteTableAssociation) is used to modify the route table associated with a subnet.
-* Read: [DescribeResourceTagsByResourceIds](https://cloud.tencent.com/document/api/651/35319) - This API is used to query the tag key-value pairs associated with an existing resource.
-* Read: [DescribeSubnets](https://cloud.tencent.com/document/api/215/15784) - This API (DescribeSubnets) is used to query the list of subnets.
-* Update: [DescribeRouteTables](https://cloud.tencent.com/document/api/215/15763) - This API is used to query route tables.
-* Update: [ModifyResourceTags](https://cloud.tencent.com/document/api/651/35322) - This API is used to modify all tags associated with a resource.
-* Update: [ModifySubnetAttribute](https://cloud.tencent.com/document/api/215/15781) - This API (ModifySubnetAttribute) is used to modify subnet attributes.
-* Update: [ReplaceRouteTableAssociation](https://cloud.tencent.com/document/api/215/15767) - This API (ReplaceRouteTableAssociation) is used to modify the route table associated with a subnet.
-* Delete: [DeleteSubnet](https://cloud.tencent.com/document/api/215/15783) - This API is used to delete a subnet.
+* Create: [CreateSubnet](https://www.tencentcloud.com/document/product/215/15782) - This API is used to create a subnet.
+* Create: [DescribeRouteTables](https://www.tencentcloud.com/document/product/215/15763) - This API is used to query route tables.
+* Create: [ModifyResourceTags](https://www.tencentcloud.com/document/product/651/33012) - This API is used to modify all tags associated with a resource.
+* Create: [ModifySubnetAttribute](https://www.tencentcloud.com/document/product/215/15781) - This API (ModifySubnetAttribute) is used to modify subnet attributes.
+* Create: [ReplaceRouteTableAssociation](https://www.tencentcloud.com/document/product/215/15767) - This API (ReplaceRouteTableAssociation) is used to modify the route table associated with a subnet.
+* Read: [DescribeResourceTagsByResourceIds](https://www.tencentcloud.com/document/product/651/33022) - This API is used to query the tag key-value pairs associated with an existing resource.
+* Read: [DescribeSubnets](https://www.tencentcloud.com/document/product/215/15784) - This API (DescribeSubnets) is used to query the list of subnets.
+* Update: [DescribeRouteTables](https://www.tencentcloud.com/document/product/215/15763) - This API is used to query route tables.
+* Update: [ModifyResourceTags](https://www.tencentcloud.com/document/product/651/33012) - This API is used to modify all tags associated with a resource.
+* Update: [ModifySubnetAttribute](https://www.tencentcloud.com/document/product/215/15781) - This API (ModifySubnetAttribute) is used to modify subnet attributes.
+* Update: [ReplaceRouteTableAssociation](https://www.tencentcloud.com/document/product/215/15767) - This API (ReplaceRouteTableAssociation) is used to modify the route table associated with a subnet.
+* Delete: [DeleteSubnet](https://www.tencentcloud.com/document/product/215/15783) - This API is used to delete a subnet.
 
 ## Import
 

@@ -46,5 +46,5 @@ In addition to all arguments above, the following attributes are exported:
 
 This data source queries the following TencentCloud APIs:
 
-* Read: [DescribeErrorLogData](https://cloud.tencent.com/document/api/236/43041) - This API is used to query the error logs of an instance over the past month by search criteria.
+* Read: [DescribeErrorLogData](https://www.tencentcloud.com/document/product/236/35669) - This API is used to query the error logs of an instance over the past month by search criteria.
 

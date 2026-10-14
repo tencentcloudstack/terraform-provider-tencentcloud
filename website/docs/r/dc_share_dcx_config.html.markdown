@@ -38,11 +38,11 @@ In addition to all arguments above, the following attributes are exported:
 
 This resource interacts with the following TencentCloud APIs:
 
-* Create: [AcceptDirectConnectTunnel](https://cloud.tencent.com/document/api/216/19822) - This API is used to accept an application for a dedicated tunnel.
-* Create: [RejectDirectConnectTunnel](https://cloud.tencent.com/document/api/216/19817) - This API is used to reject an application for a dedicated tunnel.
-* Read: [DescribeDirectConnectTunnels](https://cloud.tencent.com/document/api/216/19819) - This API is used to query the list of dedicated tunnels.
-* Update: [AcceptDirectConnectTunnel](https://cloud.tencent.com/document/api/216/19822) - This API is used to accept an application for a dedicated tunnel.
-* Update: [RejectDirectConnectTunnel](https://cloud.tencent.com/document/api/216/19817) - This API is used to reject an application for a dedicated tunnel.
+* Create: [AcceptDirectConnectTunnel](https://www.tencentcloud.com/document/product/216/19822) - This API is used to accept an application for a dedicated tunnel.
+* Create: [RejectDirectConnectTunnel](https://www.tencentcloud.com/document/product/216/19817) - This API is used to reject an application for a dedicated tunnel.
+* Read: [DescribeDirectConnectTunnels](https://www.tencentcloud.com/document/product/216/19819) - This API is used to query the list of dedicated tunnels.
+* Update: [AcceptDirectConnectTunnel](https://www.tencentcloud.com/document/product/216/19822) - This API is used to accept an application for a dedicated tunnel.
+* Update: [RejectDirectConnectTunnel](https://www.tencentcloud.com/document/product/216/19817) - This API is used to reject an application for a dedicated tunnel.
 
 ## Import
 

@@ -83,9 +83,9 @@ In addition to all arguments above, the following attributes are exported:
 
 This resource interacts with the following TencentCloud APIs:
 
-* Create: [SetSecurityGroupForLoadbalancers](https://cloud.tencent.com/document/api/214/36189) - This API is used to bind or unbind a security group to or from multiple public network CLB instances.
-* Read: [DescribeLoadBalancers](https://cloud.tencent.com/document/api/214/30685) - This API is used to query the list of CLB instances in a region.
-* Delete: [SetSecurityGroupForLoadbalancers](https://cloud.tencent.com/document/api/214/36189) - This API is used to bind or unbind a security group to or from multiple public network CLB instances.
+* Create: [SetSecurityGroupForLoadbalancers](https://www.tencentcloud.com/document/product/214/33797) - This API is used to bind or unbind a security group to or from multiple public network CLB instances.
+* Read: [DescribeLoadBalancers](https://www.tencentcloud.com/document/product/214/33830) - This API is used to query the list of CLB instances in a region.
+* Delete: [SetSecurityGroupForLoadbalancers](https://www.tencentcloud.com/document/product/214/33797) - This API is used to bind or unbind a security group to or from multiple public network CLB instances.
 
 ## Import
 

@@ -67,5 +67,5 @@ In addition to all arguments above, the following attributes are exported:
 
 This data source queries the following TencentCloud APIs:
 
-* Read: [GetFunctionLogs](https://cloud.tencent.com/document/api/583/18583) - This API returns function running logs based on the specified log query conditions. This API is offline. To query the returned information of function request running, please use [GetRequestStatus](https://www.tencentcloud.
+* Read: [GetFunctionLogs](https://www.tencentcloud.com/document/product/583/18583) - This API returns function running logs based on the specified log query conditions. This API is offline. To query the returned information of function request running, please use [GetRequestStatus](https://www.tencentcloud.
 

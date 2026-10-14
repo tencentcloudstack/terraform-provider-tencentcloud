@@ -103,17 +103,17 @@ In addition to all arguments above, the following attributes are exported:
 
 This resource interacts with the following TencentCloud APIs:
 
-* Create: [AssignPrivateIpAddresses](https://cloud.tencent.com/document/api/215/15813) - This API is used to apply for private IPs for an ENI.
-* Create: [CreateNetworkInterface](https://cloud.tencent.com/document/api/215/15818) - This API is used to create an ENI.
-* Create: [ModifyResourceTags](https://cloud.tencent.com/document/api/651/35322) - This API is used to modify all tags associated with a resource.
-* Read: [DescribeNetworkInterfaces](https://cloud.tencent.com/document/api/215/15817) - This API (DescribeNetworkInterfaces) is used to query the ENI list.
-* Update: [AssignPrivateIpAddresses](https://cloud.tencent.com/document/api/215/15813) - This API is used to apply for private IPs for an ENI.
-* Update: [ModifyNetworkInterfaceAttribute](https://cloud.tencent.com/document/api/215/15815) - This API (ModifyNetworkInterfaceAttribute) is used to modify ENI attributes.
-* Update: [ModifyPrivateIpAddressesAttribute](https://cloud.tencent.com/document/api/215/15823) - This API (ModifyPrivateIpAddressesAttribute) is used to modify the private IP attributes of an ENI.
-* Update: [ModifyResourceTags](https://cloud.tencent.com/document/api/651/35322) - This API is used to modify all tags associated with a resource.
-* Update: [UnassignPrivateIpAddresses](https://cloud.tencent.com/document/api/215/15814) - This API is used to return the private IP addresses of an ENI.
-* Delete: [DeleteNetworkInterface](https://cloud.tencent.com/document/api/215/15822) - This API is used to delete an ENI.
-* Delete: [DescribeNetworkInterfaces](https://cloud.tencent.com/document/api/215/15817) - This API (DescribeNetworkInterfaces) is used to query the ENI list.
+* Create: [AssignPrivateIpAddresses](https://www.tencentcloud.com/document/product/215/15813) - This API is used to apply for private IPs for an ENI.
+* Create: [CreateNetworkInterface](https://www.tencentcloud.com/document/product/215/15818) - This API is used to create an ENI.
+* Create: [ModifyResourceTags](https://www.tencentcloud.com/document/product/651/33012) - This API is used to modify all tags associated with a resource.
+* Read: [DescribeNetworkInterfaces](https://www.tencentcloud.com/document/product/215/15817) - This API (DescribeNetworkInterfaces) is used to query the ENI list.
+* Update: [AssignPrivateIpAddresses](https://www.tencentcloud.com/document/product/215/15813) - This API is used to apply for private IPs for an ENI.
+* Update: [ModifyNetworkInterfaceAttribute](https://www.tencentcloud.com/document/product/215/15815) - This API (ModifyNetworkInterfaceAttribute) is used to modify ENI attributes.
+* Update: [ModifyPrivateIpAddressesAttribute](https://www.tencentcloud.com/document/product/215/15823) - This API (ModifyPrivateIpAddressesAttribute) is used to modify the private IP attributes of an ENI.
+* Update: [ModifyResourceTags](https://www.tencentcloud.com/document/product/651/33012) - This API is used to modify all tags associated with a resource.
+* Update: [UnassignPrivateIpAddresses](https://www.tencentcloud.com/document/product/215/15814) - This API is used to return the private IP addresses of an ENI.
+* Delete: [DeleteNetworkInterface](https://www.tencentcloud.com/document/product/215/15822) - This API is used to delete an ENI.
+* Delete: [DescribeNetworkInterfaces](https://www.tencentcloud.com/document/product/215/15817) - This API (DescribeNetworkInterfaces) is used to query the ENI list.
 
 ## Import
 

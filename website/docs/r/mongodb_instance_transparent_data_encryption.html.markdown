@@ -48,9 +48,9 @@ In addition to all arguments above, the following attributes are exported:
 
 This resource interacts with the following TencentCloud APIs:
 
-* Create: [DescribeAsyncRequestInfo](https://cloud.tencent.com/document/api/240/46601) - This API is used to query the asynchronous task status.
+* Create: [DescribeAsyncRequestInfo](https://www.tencentcloud.com/document/product/240/37921) - This API is used to query the asynchronous task status.
 * Create: [DescribeTransparentDataEncryptionStatus](https://cloud.tencent.com/document/api/240/107168)
-* Create: [EnableTransparentDataEncryption](https://cloud.tencent.com/document/api/240/107167) - This API is used to enable the transparent data encryption (TDE) capability for TencentDB for MongoDB.
+* Create: [EnableTransparentDataEncryption](https://www.tencentcloud.com/document/product/240/74801) - This API is used to enable the transparent data encryption (TDE) capability for TencentDB for MongoDB.
 * Read: [DescribeTransparentDataEncryptionStatus](https://cloud.tencent.com/document/api/240/107168)
 * Update: [DescribeTransparentDataEncryptionStatus](https://cloud.tencent.com/document/api/240/107168)
 

@@ -91,11 +91,11 @@ The `timeouts` block allows you to specify [timeouts](https://developer.hashicor
 
 This resource interacts with the following TencentCloud APIs:
 
-* Create: [CreateInstance](https://cloud.tencent.com/document/api/555/127790) - Creating an instance resource will generate an order for the newly purchased instance resource and automatically complete the payment using the balance of the Tencent Cloud account.
-* Create: [DescribeDealsByCond](https://cloud.tencent.com/document/api/555/19179)
-* Read: [DescribeRenewInstances](https://cloud.tencent.com/document/api/555/127836)
-* Update: [DescribeDealsByCond](https://cloud.tencent.com/document/api/555/19179)
-* Update: [RenewInstance](https://cloud.tencent.com/document/api/555/127788) - Renewing an instance: when calling this API to renew a server, ensure that your Tencent Cloud account has sufficient balance; otherwise, the renewal will fail.
-* Delete: [DescribeDealsByCond](https://cloud.tencent.com/document/api/555/19179)
-* Delete: [RefundInstance](https://cloud.tencent.com/document/api/555/127789) - To unsubscribe from an unneeded instance, only the actual payment amount will be refunded, any used vouchers will not be returned. The refunded amount will be credited to your Tencent Cloud account balance by default.
+* Create: [CreateInstance](https://www.tencentcloud.com/document/product/555/77176) - Creating an instance resource will generate an order for the newly purchased instance resource and automatically complete the payment using the balance of the Tencent Cloud account.
+* Create: [DescribeDealsByCond](https://www.tencentcloud.com/document/product/555/67735)
+* Read: [DescribeRenewInstances](https://www.tencentcloud.com/document/product/555/78424)
+* Update: [DescribeDealsByCond](https://www.tencentcloud.com/document/product/555/67735)
+* Update: [RenewInstance](https://www.tencentcloud.com/document/product/555/77178) - Renewing an instance: when calling this API to renew a server, ensure that your Tencent Cloud account has sufficient balance; otherwise, the renewal will fail.
+* Delete: [DescribeDealsByCond](https://www.tencentcloud.com/document/product/555/67735)
+* Delete: [RefundInstance](https://www.tencentcloud.com/document/product/555/77180) - To unsubscribe from an unneeded instance, only the actual payment amount will be refunded, any used vouchers will not be returned. The refunded amount will be credited to your Tencent Cloud account balance by default.
 

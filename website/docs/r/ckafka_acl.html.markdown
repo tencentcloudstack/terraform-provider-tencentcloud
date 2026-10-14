@@ -58,11 +58,11 @@ In addition to all arguments above, the following attributes are exported:
 
 This resource interacts with the following TencentCloud APIs:
 
-* Create: [CreateAcl](https://cloud.tencent.com/document/api/597/40860) - This API is used to add an ACL policy.
-* Read: [DescribeACL](https://cloud.tencent.com/document/api/597/40856) - This API is used to enumerate ACLs.
-* Read: [DescribeInstanceAttributes](https://cloud.tencent.com/document/api/597/40836) - This API is used to obtain instance attributes.
-* Read: [DescribeTopicAttributes](https://cloud.tencent.com/document/api/597/40846) - This API is used to retrieve topic attributes.
-* Delete: [DeleteAcl](https://cloud.tencent.com/document/api/597/40858) - This API is used to delete an ACL.
+* Create: [CreateAcl](https://www.tencentcloud.com/document/product/597/35368) - This API is used to add an ACL policy.
+* Read: [DescribeACL](https://www.tencentcloud.com/document/product/597/35364) - This API is used to enumerate ACLs.
+* Read: [DescribeInstanceAttributes](https://www.tencentcloud.com/document/product/597/35358) - This API is used to obtain instance attributes.
+* Read: [DescribeTopicAttributes](https://www.tencentcloud.com/document/product/597/35342) - This API is used to retrieve topic attributes.
+* Delete: [DeleteAcl](https://www.tencentcloud.com/document/product/597/35366) - This API is used to delete an ACL.
 
 ## Import
 

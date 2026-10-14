@@ -59,11 +59,11 @@ In addition to all arguments above, the following attributes are exported:
 
 This resource interacts with the following TencentCloud APIs:
 
-* Create: [GetLayerVersion](https://cloud.tencent.com/document/api/583/41386) - This API is used to get the layer version details, including links used to download files in the layer.
+* Create: [GetLayerVersion](https://www.tencentcloud.com/document/product/583/36319) - This API is used to get the layer version details, including links used to download files in the layer.
 * Create: [GetSecretValue](https://cloud.tencent.com/document/api/1140/40522) - For user-defined credentials, this API is used to get the plaintext information of a credential by specifying the credential name and version.
-* Create: [PublishLayerVersion](https://cloud.tencent.com/document/api/583/41383) - This API is used to create a version for a layer by using the given .zip file or COS object. Each time this API is called with the same layer name, a new version will be generated.
-* Read: [GetLayerVersion](https://cloud.tencent.com/document/api/583/41386) - This API is used to get the layer version details, including links used to download files in the layer.
-* Delete: [DeleteLayerVersion](https://cloud.tencent.com/document/api/583/41387) - This API is used to delete a specified version of a specified layer. The deleted version cannot be associated with a function, but the deletion does not affect functions that are referencing this layer.
+* Create: [PublishLayerVersion](https://www.tencentcloud.com/document/product/583/36316) - This API is used to create a version for a layer by using the given .zip file or COS object. Each time this API is called with the same layer name, a new version will be generated.
+* Read: [GetLayerVersion](https://www.tencentcloud.com/document/product/583/36319) - This API is used to get the layer version details, including links used to download files in the layer.
+* Delete: [DeleteLayerVersion](https://www.tencentcloud.com/document/product/583/36320) - This API is used to delete a specified version of a specified layer. The deleted version cannot be associated with a function, but the deletion does not affect functions that are referencing this layer.
 
 ## Import
 

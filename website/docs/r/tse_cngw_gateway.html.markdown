@@ -116,13 +116,13 @@ This resource interacts with the following TencentCloud APIs:
 
 * Create: [CreateCloudNativeAPIGateway](https://cloud.tencent.com/document/api/1364/96757) - Create a cloud native API gateway instance
 * Create: [DescribeCloudNativeAPIGateway](https://cloud.tencent.com/document/api/1364/96753) - This API is used to obtain cloud native API gateway instance information.
-* Create: [ModifyResourceTags](https://cloud.tencent.com/document/api/651/35322) - This API is used to modify all tags associated with a resource.
+* Create: [ModifyResourceTags](https://www.tencentcloud.com/document/product/651/33012) - This API is used to modify all tags associated with a resource.
 * Read: [DescribeCloudNativeAPIGateway](https://cloud.tencent.com/document/api/1364/96753) - This API is used to obtain cloud native API gateway instance information.
-* Read: [DescribeResourceTagsByResourceIds](https://cloud.tencent.com/document/api/651/35319) - This API is used to query the tag key-value pairs associated with an existing resource.
+* Read: [DescribeResourceTagsByResourceIds](https://www.tencentcloud.com/document/product/651/33022) - This API is used to query the tag key-value pairs associated with an existing resource.
 * Update: [DescribeCloudNativeAPIGateway](https://cloud.tencent.com/document/api/1364/96753) - This API is used to obtain cloud native API gateway instance information.
 * Update: [DescribeNativeGatewayServerGroups](https://cloud.tencent.com/document/api/1364/97280) - Query cloud native gateway group information
 * Update: [ModifyCloudNativeAPIGateway](https://cloud.tencent.com/document/api/1364/96751) - This API is used to modify the basic information of a cloud native API gateway instance.
-* Update: [ModifyResourceTags](https://cloud.tencent.com/document/api/651/35322) - This API is used to modify all tags associated with a resource.
+* Update: [ModifyResourceTags](https://www.tencentcloud.com/document/product/651/33012) - This API is used to modify all tags associated with a resource.
 * Update: [UpdateCloudNativeAPIGatewaySpec](https://cloud.tencent.com/document/api/1364/96749) - Modify the node specification information of a cloud native API gateway instance, such as node scaling or specification adjustment
 * Delete: [DeleteCloudNativeAPIGateway](https://cloud.tencent.com/document/api/1364/96755) - Delete a cloud native API gateway instance
 * Delete: [DescribeCloudNativeAPIGateway](https://cloud.tencent.com/document/api/1364/96753) - This API is used to obtain cloud native API gateway instance information.

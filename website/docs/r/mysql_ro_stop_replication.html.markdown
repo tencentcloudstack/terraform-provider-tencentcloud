@@ -103,6 +103,6 @@ In addition to all arguments above, the following attributes are exported:
 
 This resource interacts with the following TencentCloud APIs:
 
-* Create: [DescribeAsyncRequestInfo](https://cloud.tencent.com/document/api/236/20410) - This API (DescribeAsyncRequestInfo) is used to query the async task execution result of a TencentDB instance.
-* Create: [StopReplication](https://cloud.tencent.com/document/api/236/66848) - This API is used to stop RO replication and interrupt data sync from the primary instance.
+* Create: [DescribeAsyncRequestInfo](https://www.tencentcloud.com/document/product/236/34462) - This API (DescribeAsyncRequestInfo) is used to query the async task execution result of a TencentDB instance.
+* Create: [StopReplication](https://www.tencentcloud.com/document/product/236/44328) - This API is used to stop RO replication and interrupt data sync from the primary instance.
 

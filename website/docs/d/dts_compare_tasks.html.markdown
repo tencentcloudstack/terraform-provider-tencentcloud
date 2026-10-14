@@ -61,5 +61,5 @@ In addition to all arguments above, the following attributes are exported:
 
 This data source queries the following TencentCloud APIs:
 
-* Read: [DescribeCompareTasks](https://cloud.tencent.com/document/api/571/82088) - This API is used to query the list of data consistency check tasks under the current task.
+* Read: [DescribeCompareTasks](https://www.tencentcloud.com/document/product/571/51816) - This API is used to query the list of data consistency check tasks under the current task.
 

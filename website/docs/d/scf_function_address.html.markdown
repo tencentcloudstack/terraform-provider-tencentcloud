@@ -41,5 +41,5 @@ In addition to all arguments above, the following attributes are exported:
 
 This data source queries the following TencentCloud APIs:
 
-* Read: [GetFunctionAddress](https://cloud.tencent.com/document/api/583/37164) - This API is used to obtain the download address of the function code package.
+* Read: [GetFunctionAddress](https://www.tencentcloud.com/document/product/583/34409) - This API is used to obtain the download address of the function code package.
 

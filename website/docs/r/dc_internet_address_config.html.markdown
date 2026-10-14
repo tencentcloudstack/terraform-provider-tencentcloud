@@ -44,11 +44,11 @@ In addition to all arguments above, the following attributes are exported:
 
 This resource interacts with the following TencentCloud APIs:
 
-* Create: [DisableInternetAddress](https://cloud.tencent.com/document/api/216/51487) - This API is used to disable a public IP address of internet tunnels.
-* Create: [EnableInternetAddress](https://cloud.tencent.com/document/api/216/51486) - This API is used to enable a public IP address for internet tunnels.
-* Read: [DescribeInternetAddress](https://cloud.tencent.com/document/api/216/51490) - This API is used to obtain the public IP address of an internet tunnel.
-* Update: [DisableInternetAddress](https://cloud.tencent.com/document/api/216/51487) - This API is used to disable a public IP address of internet tunnels.
-* Update: [EnableInternetAddress](https://cloud.tencent.com/document/api/216/51486) - This API is used to enable a public IP address for internet tunnels.
+* Create: [DisableInternetAddress](https://www.tencentcloud.com/document/product/216/39495) - This API is used to disable a public IP address of internet tunnels.
+* Create: [EnableInternetAddress](https://www.tencentcloud.com/document/product/216/39494) - This API is used to enable a public IP address for internet tunnels.
+* Read: [DescribeInternetAddress](https://www.tencentcloud.com/document/product/216/39498) - This API is used to obtain the public IP address of an internet tunnel.
+* Update: [DisableInternetAddress](https://www.tencentcloud.com/document/product/216/39495) - This API is used to disable a public IP address of internet tunnels.
+* Update: [EnableInternetAddress](https://www.tencentcloud.com/document/product/216/39494) - This API is used to enable a public IP address for internet tunnels.
 
 ## Import
 

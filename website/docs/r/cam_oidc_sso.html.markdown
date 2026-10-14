@@ -50,12 +50,12 @@ In addition to all arguments above, the following attributes are exported:
 
 This resource interacts with the following TencentCloud APIs:
 
-* Create: [CreateUserOIDCConfig](https://cloud.tencent.com/document/api/598/72091) - This API is used to create a user OIDC configuration. Only one user OIDC IdP can be created, and the user SAML SSO IdP will be automatically disabled after it is created.
-* Create: [DescribeUserOIDCConfig](https://cloud.tencent.com/document/api/598/72090) - This API is used to query the user OIDC configuration.
-* Read: [DescribeUserOIDCConfig](https://cloud.tencent.com/document/api/598/72090) - This API is used to query the user OIDC configuration.
-* Update: [DescribeUserOIDCConfig](https://cloud.tencent.com/document/api/598/72090) - This API is used to query the user OIDC configuration.
-* Update: [UpdateUserOIDCConfig](https://cloud.tencent.com/document/api/598/72088) - This API is used to modify the user OIDC configuration.
-* Delete: [DisableUserSSO](https://cloud.tencent.com/document/api/598/72089) - This API is used to disable user SSO.
+* Create: [CreateUserOIDCConfig](https://www.tencentcloud.com/document/product/598/46303) - This API is used to create a user OIDC configuration. Only one user OIDC IdP can be created, and the user SAML SSO IdP will be automatically disabled after it is created.
+* Create: [DescribeUserOIDCConfig](https://www.tencentcloud.com/document/product/598/46302) - This API is used to query the user OIDC configuration.
+* Read: [DescribeUserOIDCConfig](https://www.tencentcloud.com/document/product/598/46302) - This API is used to query the user OIDC configuration.
+* Update: [DescribeUserOIDCConfig](https://www.tencentcloud.com/document/product/598/46302) - This API is used to query the user OIDC configuration.
+* Update: [UpdateUserOIDCConfig](https://www.tencentcloud.com/document/product/598/46300) - This API is used to modify the user OIDC configuration.
+* Delete: [DisableUserSSO](https://www.tencentcloud.com/document/product/598/46301) - This API is used to disable user SSO.
 
 ## Import
 

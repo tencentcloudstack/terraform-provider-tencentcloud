@@ -66,5 +66,5 @@ In addition to all arguments above, the following attributes are exported:
 
 This data source queries the following TencentCloud APIs:
 
-* Read: [DescribeImageSpriteTemplates](https://cloud.tencent.com/document/api/266/37780) - Query image sprite templates based on conditions with paging.
+* Read: [DescribeImageSpriteTemplates](https://www.tencentcloud.com/document/product/266/34148) - Query image sprite templates based on conditions with paging.
 

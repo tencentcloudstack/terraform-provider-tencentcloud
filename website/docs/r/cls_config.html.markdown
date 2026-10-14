@@ -120,10 +120,10 @@ In addition to all arguments above, the following attributes are exported:
 
 This resource interacts with the following TencentCloud APIs:
 
-* Create: [CreateConfig](https://cloud.tencent.com/document/api/614/58620) - This API is used to create collection rule configuration.
-* Read: [DescribeConfigs](https://cloud.tencent.com/document/api/614/58616) - This API is used to get collection rule configuration.
-* Update: [ModifyConfig](https://cloud.tencent.com/document/api/614/58614) - This API is used to modify collection rule configuration.
-* Delete: [DeleteConfig](https://cloud.tencent.com/document/api/614/58619) - This API is used to delete collection rule configuration.
+* Create: [CreateConfig](https://www.tencentcloud.com/document/product/614/42813) - This API is used to create collection rule configuration.
+* Read: [DescribeConfigs](https://www.tencentcloud.com/document/product/614/42809) - This API is used to get collection rule configuration.
+* Update: [ModifyConfig](https://www.tencentcloud.com/document/product/614/42807) - This API is used to modify collection rule configuration.
+* Delete: [DeleteConfig](https://www.tencentcloud.com/document/product/614/42812) - This API is used to delete collection rule configuration.
 
 ## Import
 

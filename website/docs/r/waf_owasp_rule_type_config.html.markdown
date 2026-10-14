@@ -48,13 +48,13 @@ In addition to all arguments above, the following attributes are exported:
 
 This resource interacts with the following TencentCloud APIs:
 
-* Create: [ModifyOwaspRuleTypeAction](https://cloud.tencent.com/document/api/627/122543) - This API is used to update the protection mode of the rule type.
-* Create: [ModifyOwaspRuleTypeLevel](https://cloud.tencent.com/document/api/627/122542) - This API is used to update the protection level of a rule type.
-* Create: [ModifyOwaspRuleTypeStatus](https://cloud.tencent.com/document/api/627/122541) - This API is used to update the rule type switch.
-* Read: [DescribeOwaspRuleTypes](https://cloud.tencent.com/document/api/627/122546) - This API is used to query the rule types of the rule engine.
-* Update: [ModifyOwaspRuleTypeAction](https://cloud.tencent.com/document/api/627/122543) - This API is used to update the protection mode of the rule type.
-* Update: [ModifyOwaspRuleTypeLevel](https://cloud.tencent.com/document/api/627/122542) - This API is used to update the protection level of a rule type.
-* Update: [ModifyOwaspRuleTypeStatus](https://cloud.tencent.com/document/api/627/122541) - This API is used to update the rule type switch.
+* Create: [ModifyOwaspRuleTypeAction](https://www.tencentcloud.com/document/product/627/73179) - This API is used to update the protection mode of the rule type.
+* Create: [ModifyOwaspRuleTypeLevel](https://www.tencentcloud.com/document/product/627/73178) - This API is used to update the protection level of a rule type.
+* Create: [ModifyOwaspRuleTypeStatus](https://www.tencentcloud.com/document/product/627/73177) - This API is used to update the rule type switch.
+* Read: [DescribeOwaspRuleTypes](https://www.tencentcloud.com/document/product/627/73183) - This API is used to query the rule types of the rule engine.
+* Update: [ModifyOwaspRuleTypeAction](https://www.tencentcloud.com/document/product/627/73179) - This API is used to update the protection mode of the rule type.
+* Update: [ModifyOwaspRuleTypeLevel](https://www.tencentcloud.com/document/product/627/73178) - This API is used to update the protection level of a rule type.
+* Update: [ModifyOwaspRuleTypeStatus](https://www.tencentcloud.com/document/product/627/73177) - This API is used to update the rule type switch.
 
 ## Import
 

@@ -78,10 +78,10 @@ In addition to all arguments above, the following attributes are exported:
 
 This resource interacts with the following TencentCloud APIs:
 
-* Create: [BindPrometheusManagedGrafana](https://cloud.tencent.com/document/api/248/76020) - This API is used to bind a Grafana instance.
-* Read: [DescribePrometheusInstances](https://cloud.tencent.com/document/api/248/66097) - This API is used to query the details of one or multiple instances.
-* Delete: [DescribePrometheusInstances](https://cloud.tencent.com/document/api/248/66097) - This API is used to query the details of one or multiple instances.
-* Delete: [UnbindPrometheusManagedGrafana](https://cloud.tencent.com/document/api/248/76007) - This API is used to unbind a Grafana instance from an instance.
+* Create: [BindPrometheusManagedGrafana](https://www.tencentcloud.com/document/product/248/48768) - This API is used to bind a Grafana instance.
+* Read: [DescribePrometheusInstances](https://www.tencentcloud.com/document/product/248/48753) - This API is used to query the details of one or multiple instances.
+* Delete: [DescribePrometheusInstances](https://www.tencentcloud.com/document/product/248/48753) - This API is used to query the details of one or multiple instances.
+* Delete: [UnbindPrometheusManagedGrafana](https://www.tencentcloud.com/document/product/248/48745) - This API is used to unbind a Grafana instance from an instance.
 
 ## Import
 

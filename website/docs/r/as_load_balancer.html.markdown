@@ -129,10 +129,10 @@ In addition to all arguments above, the following attributes are exported:
 
 This resource interacts with the following TencentCloud APIs:
 
-* Create: [AttachLoadBalancers](https://cloud.tencent.com/document/api/377/67354) - This API is used to add CLBs to a security group.
-* Read: [DescribeAutoScalingGroups](https://cloud.tencent.com/document/api/377/20438) - This API (DescribeAutoScalingGroups) is used to query the information of auto scaling groups.
-* Update: [ModifyLoadBalancerTargetAttributes](https://cloud.tencent.com/document/api/377/67352) - This API is used to modify the target rule attributes of the CLB in the scaling group.
-* Delete: [ModifyLoadBalancers](https://cloud.tencent.com/document/api/377/32868) - This API is used to modify the cloud load balancers of a scaling group.
+* Create: [AttachLoadBalancers](https://www.tencentcloud.com/document/product/377/44582) - This API is used to add CLBs to a security group.
+* Read: [DescribeAutoScalingGroups](https://www.tencentcloud.com/document/product/377/31013) - This API (DescribeAutoScalingGroups) is used to query the information of auto scaling groups.
+* Update: [ModifyLoadBalancerTargetAttributes](https://www.tencentcloud.com/document/product/377/44579) - This API is used to modify the target rule attributes of the CLB in the scaling group.
+* Delete: [ModifyLoadBalancers](https://www.tencentcloud.com/document/product/377/31006) - This API is used to modify the cloud load balancers of a scaling group.
 
 ## Import
 

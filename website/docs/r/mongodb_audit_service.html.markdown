@@ -78,13 +78,13 @@ The `timeouts` block allows you to specify [timeouts](https://developer.hashicor
 
 This resource interacts with the following TencentCloud APIs:
 
-* Create: [DescribeAuditConfig](https://cloud.tencent.com/document/api/240/128358) - This API is used to query the service configurations for a TencentDB audit policy, including the audit log retention period.
+* Create: [DescribeAuditConfig](https://www.tencentcloud.com/document/product/240/79889) - This API is used to query the service configurations for a TencentDB audit policy, including the audit log retention period.
 * Create: [DescribeAuditInstanceList](https://cloud.tencent.com/document/api/240/125361)
 * Create: [OpenAuditService](https://cloud.tencent.com/document/api/240/125359)
-* Read: [DescribeAuditConfig](https://cloud.tencent.com/document/api/240/128358) - This API is used to query the service configurations for a TencentDB audit policy, including the audit log retention period.
-* Update: [DescribeAuditConfig](https://cloud.tencent.com/document/api/240/128358) - This API is used to query the service configurations for a TencentDB audit policy, including the audit log retention period.
+* Read: [DescribeAuditConfig](https://www.tencentcloud.com/document/product/240/79889) - This API is used to query the service configurations for a TencentDB audit policy, including the audit log retention period.
+* Update: [DescribeAuditConfig](https://www.tencentcloud.com/document/product/240/79889) - This API is used to query the service configurations for a TencentDB audit policy, including the audit log retention period.
 * Update: [ModifyAuditService](https://cloud.tencent.com/document/api/240/125360)
-* Delete: [CloseAuditService](https://cloud.tencent.com/document/api/240/128359) - This API is used to close the audit service.
+* Delete: [CloseAuditService](https://www.tencentcloud.com/document/product/240/79890) - This API is used to close the audit service.
 * Delete: [DescribeAuditInstanceList](https://cloud.tencent.com/document/api/240/125361)
 
 ## Import

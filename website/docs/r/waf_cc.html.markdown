@@ -162,8 +162,8 @@ In addition to all arguments above, the following attributes are exported:
 
 This resource interacts with the following TencentCloud APIs:
 
-* Create: [UpsertCCRule](https://cloud.tencent.com/document/api/627/97646) - WAF CC V2 upsert API
-* Read: [DescribeCCRuleList](https://cloud.tencent.com/document/api/627/97636) - Query CC rules based on multiple conditions
-* Update: [UpsertCCRule](https://cloud.tencent.com/document/api/627/97646) - WAF CC V2 upsert API
-* Delete: [DeleteCCRule](https://cloud.tencent.com/document/api/627/97648) - WAF CC V2 deletion API
+* Create: [UpsertCCRule](https://www.tencentcloud.com/document/product/627/64535) - WAF CC V2 upsert API
+* Read: [DescribeCCRuleList](https://www.tencentcloud.com/document/product/627/64524) - Query CC rules based on multiple conditions
+* Update: [UpsertCCRule](https://www.tencentcloud.com/document/product/627/64535) - WAF CC V2 upsert API
+* Delete: [DeleteCCRule](https://www.tencentcloud.com/document/product/627/64551) - WAF CC V2 deletion API
 

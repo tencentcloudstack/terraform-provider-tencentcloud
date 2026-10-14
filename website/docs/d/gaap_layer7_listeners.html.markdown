@@ -72,6 +72,6 @@ In addition to all arguments above, the following attributes are exported:
 
 This data source queries the following TencentCloud APIs:
 
-* Read: [DescribeHTTPListeners](https://cloud.tencent.com/document/api/608/37002) - This API (DescribeHTTPListeners) is used to query HTTP listener information.
-* Read: [DescribeHTTPSListeners](https://cloud.tencent.com/document/api/608/37001) - This API (DescribeHTTPSListeners) is used to query HTTPS listener information.
+* Read: [DescribeHTTPListeners](https://www.tencentcloud.com/document/product/608/33071) - This API (DescribeHTTPListeners) is used to query HTTP listener information.
+* Read: [DescribeHTTPSListeners](https://www.tencentcloud.com/document/product/608/33070) - This API (DescribeHTTPSListeners) is used to query HTTPS listener information.
 

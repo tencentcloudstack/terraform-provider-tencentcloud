@@ -38,9 +38,9 @@ In addition to all arguments above, the following attributes are exported:
 
 This resource interacts with the following TencentCloud APIs:
 
-* Create: [ActivateHourDBInstance](https://cloud.tencent.com/document/api/237/70426)
-* Create: [IsolateHourDBInstance](https://cloud.tencent.com/document/api/237/70425)
-* Read: [DescribeDBInstanceDetail](https://cloud.tencent.com/document/api/237/89390) - This API is used to query the details of a specified instance.
-* Update: [ActivateHourDBInstance](https://cloud.tencent.com/document/api/237/70426)
-* Update: [IsolateHourDBInstance](https://cloud.tencent.com/document/api/237/70425)
+* Create: [ActivateHourDBInstance](https://www.tencentcloud.com/document/product/237/45573)
+* Create: [IsolateHourDBInstance](https://www.tencentcloud.com/document/product/237/45572)
+* Read: [DescribeDBInstanceDetail](https://www.tencentcloud.com/document/product/237/54563) - This API is used to query the details of a specified instance.
+* Update: [ActivateHourDBInstance](https://www.tencentcloud.com/document/product/237/45573)
+* Update: [IsolateHourDBInstance](https://www.tencentcloud.com/document/product/237/45572)
 

@@ -82,7 +82,7 @@ This resource interacts with the following TencentCloud APIs:
 * Read: [DescribeGlobalAccelerators](https://cloud.tencent.com/document/api/1817/130161) - Modify a global acceleration instance
 * Update: [DescribeTaskResult](https://cloud.tencent.com/document/api/1817/131942) - Query asynchronous task result
 * Update: [ModifyGlobalAccelerator](https://cloud.tencent.com/document/api/1817/130156) - Modify a global acceleration instance
-* Update: [ModifyResourceTags](https://cloud.tencent.com/document/api/651/35322) - This API is used to modify all tags associated with a resource.
+* Update: [ModifyResourceTags](https://www.tencentcloud.com/document/product/651/33012) - This API is used to modify all tags associated with a resource.
 * Delete: [DeleteGlobalAccelerator](https://cloud.tencent.com/document/api/1817/130167) - Deletes a global acceleration instance
 * Delete: [DescribeTaskResult](https://cloud.tencent.com/document/api/1817/131942) - Query asynchronous task result
 

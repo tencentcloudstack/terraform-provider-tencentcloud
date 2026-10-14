@@ -220,11 +220,11 @@ In addition to all arguments above, the following attributes are exported:
 
 This resource interacts with the following TencentCloud APIs:
 
-* Create: [CreateTargetGroup](https://cloud.tencent.com/document/api/214/40559) - This API is used to create a target group. This feature is in beta test, if you want to try it out, please [submit a ticket](https://console.cloud.tencent.com/workorder/category?
-* Read: [DescribeTargetGroupList](https://cloud.tencent.com/document/api/214/40555) - This API is used to get the target group list.
-* Update: [ModifyResourceTags](https://cloud.tencent.com/document/api/651/35322) - This API is used to modify all tags associated with a resource.
-* Update: [ModifyTargetGroupAttribute](https://cloud.tencent.com/document/api/214/40552) - This API is used to rename a target group or modify its default port attribute.
-* Delete: [DeleteTargetGroups](https://cloud.tencent.com/document/api/214/40558) - This API is used to delete target groups in batches, with a maximum of 20 target groups at a time.
+* Create: [CreateTargetGroup](https://www.tencentcloud.com/document/product/214/33839) - This API is used to create a target group. This feature is in beta test, if you want to try it out, please [submit a ticket](https://console.cloud.tencent.com/workorder/category?
+* Read: [DescribeTargetGroupList](https://www.tencentcloud.com/document/product/214/33827) - This API is used to get the target group list.
+* Update: [ModifyResourceTags](https://www.tencentcloud.com/document/product/651/33012) - This API is used to modify all tags associated with a resource.
+* Update: [ModifyTargetGroupAttribute](https://www.tencentcloud.com/document/product/214/33815) - This API is used to rename a target group or modify its default port attribute.
+* Delete: [DeleteTargetGroups](https://www.tencentcloud.com/document/product/214/33834) - This API is used to delete target groups in batches, with a maximum of 20 target groups at a time.
 
 ## Import
 

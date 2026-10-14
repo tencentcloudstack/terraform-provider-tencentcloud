@@ -137,5 +137,5 @@ In addition to all arguments above, the following attributes are exported:
 
 This data source queries the following TencentCloud APIs:
 
-* Read: [DescribeBillDetail](https://cloud.tencent.com/document/api/555/19182)
+* Read: [DescribeBillDetail](https://www.tencentcloud.com/document/product/555/30756)
 

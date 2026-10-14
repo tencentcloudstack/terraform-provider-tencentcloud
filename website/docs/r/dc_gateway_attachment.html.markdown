@@ -40,9 +40,9 @@ In addition to all arguments above, the following attributes are exported:
 
 This resource interacts with the following TencentCloud APIs:
 
-* Create: [AssociateDirectConnectGatewayNatGateway](https://cloud.tencent.com/document/api/215/47109) - This API is used to bind a direct connect gateway with a NAT gateway,  and direct its default route to the NAT Gateway.
-* Read: [DescribeDirectConnectGateways](https://cloud.tencent.com/document/api/215/30644) - This API is used to query direct connect gateways.
-* Delete: [DisassociateDirectConnectGatewayNatGateway](https://cloud.tencent.com/document/api/215/47108) - This API is used to unbind a direct connect gateway from a NAT Gateway. After unbinding, the direct connect gateway cannot access internet through the NAT Gateway.
+* Create: [AssociateDirectConnectGatewayNatGateway](https://www.tencentcloud.com/document/product/215/38101) - This API is used to bind a direct connect gateway with a NAT gateway,  and direct its default route to the NAT Gateway.
+* Read: [DescribeDirectConnectGateways](https://www.tencentcloud.com/document/product/215/36913) - This API is used to query direct connect gateways.
+* Delete: [DisassociateDirectConnectGatewayNatGateway](https://www.tencentcloud.com/document/product/215/38100) - This API is used to unbind a direct connect gateway from a NAT Gateway. After unbinding, the direct connect gateway cannot access internet through the NAT Gateway.
 
 ## Import
 

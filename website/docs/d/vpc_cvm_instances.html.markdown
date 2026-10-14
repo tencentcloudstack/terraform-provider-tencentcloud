@@ -56,5 +56,5 @@ In addition to all arguments above, the following attributes are exported:
 
 This data source queries the following TencentCloud APIs:
 
-* Read: [DescribeVpcInstances](https://cloud.tencent.com/document/api/215/43273) - This API (DescribeVpcInstances) is used to query a list of VCM instances on VPC.
+* Read: [DescribeVpcInstances](https://www.tencentcloud.com/document/product/215/36078) - This API (DescribeVpcInstances) is used to query a list of VCM instances on VPC.
 

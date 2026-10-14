@@ -88,14 +88,14 @@ In addition to all arguments above, the following attributes are exported:
 
 This resource interacts with the following TencentCloud APIs:
 
-* Create: [CreateAssistantCidr](https://cloud.tencent.com/document/api/215/43276) - This API is used to batch create secondary CIDR blocks.
-* Create: [CreateVpc](https://cloud.tencent.com/document/api/215/15774) - This API is used to create a VPC instance.
-* Read: [DescribeRouteTables](https://cloud.tencent.com/document/api/215/15763) - This API is used to query route tables.
-* Read: [DescribeVpcs](https://cloud.tencent.com/document/api/215/15778) - This API (DescribeVpcs) is used to query the VPC list.
-* Update: [ModifyAssistantCidr](https://cloud.tencent.com/document/api/215/43272) - This API is used to batch modify (add or delete) secondary CIDR blocks.
-* Update: [ModifyResourceTags](https://cloud.tencent.com/document/api/651/35322) - This API is used to modify all tags associated with a resource.
-* Update: [ModifyVpcAttribute](https://cloud.tencent.com/document/api/215/15773) - This API (ModifyVpcAttribute) is used to modify VPC attributes.
-* Delete: [DeleteVpc](https://cloud.tencent.com/document/api/215/15775) - This API (DeleteVpc) is used to delete VPCs.
+* Create: [CreateAssistantCidr](https://www.tencentcloud.com/document/product/215/36081) - This API is used to batch create secondary CIDR blocks.
+* Create: [CreateVpc](https://www.tencentcloud.com/document/product/215/15774) - This API is used to create a VPC instance.
+* Read: [DescribeRouteTables](https://www.tencentcloud.com/document/product/215/15763) - This API is used to query route tables.
+* Read: [DescribeVpcs](https://www.tencentcloud.com/document/product/215/15778) - This API (DescribeVpcs) is used to query the VPC list.
+* Update: [ModifyAssistantCidr](https://www.tencentcloud.com/document/product/215/36077) - This API is used to batch modify (add or delete) secondary CIDR blocks.
+* Update: [ModifyResourceTags](https://www.tencentcloud.com/document/product/651/33012) - This API is used to modify all tags associated with a resource.
+* Update: [ModifyVpcAttribute](https://www.tencentcloud.com/document/product/215/15773) - This API (ModifyVpcAttribute) is used to modify VPC attributes.
+* Delete: [DeleteVpc](https://www.tencentcloud.com/document/product/215/15775) - This API (DeleteVpc) is used to delete VPCs.
 
 ## Import
 

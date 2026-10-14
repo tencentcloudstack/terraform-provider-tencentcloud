@@ -54,9 +54,9 @@ In addition to all arguments above, the following attributes are exported:
 
 This resource interacts with the following TencentCloud APIs:
 
-* Create: [UpdateFunctionEventInvokeConfig](https://cloud.tencent.com/document/api/583/53639) - This API is used to update the async retry configuration of a function, including the number of retry attempts and message retention period.
-* Read: [GetFunctionEventInvokeConfig](https://cloud.tencent.com/document/api/583/53640) - This API is used to get the async retry configuration of a function, including the number of retry attempts and message retention period.
-* Update: [UpdateFunctionEventInvokeConfig](https://cloud.tencent.com/document/api/583/53639) - This API is used to update the async retry configuration of a function, including the number of retry attempts and message retention period.
+* Create: [UpdateFunctionEventInvokeConfig](https://www.tencentcloud.com/document/product/583/39920) - This API is used to update the async retry configuration of a function, including the number of retry attempts and message retention period.
+* Read: [GetFunctionEventInvokeConfig](https://www.tencentcloud.com/document/product/583/39921) - This API is used to get the async retry configuration of a function, including the number of retry attempts and message retention period.
+* Update: [UpdateFunctionEventInvokeConfig](https://www.tencentcloud.com/document/product/583/39920) - This API is used to update the async retry configuration of a function, including the number of retry attempts and message retention period.
 
 ## Import
 

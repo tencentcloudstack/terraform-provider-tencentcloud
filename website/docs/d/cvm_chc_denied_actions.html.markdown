@@ -39,5 +39,5 @@ In addition to all arguments above, the following attributes are exported:
 
 This data source queries the following TencentCloud APIs:
 
-* Read: [DescribeChcDeniedActions](https://cloud.tencent.com/document/api/213/78724) - This API is used to query the actions not allowed for the specified CHC instances.
+* Read: [DescribeChcDeniedActions](https://www.tencentcloud.com/document/product/213/49703) - This API is used to query the actions not allowed for the specified CHC instances.
 

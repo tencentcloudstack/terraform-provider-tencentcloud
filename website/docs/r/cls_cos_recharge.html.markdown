@@ -97,9 +97,9 @@ In addition to all arguments above, the following attributes are exported:
 
 This resource interacts with the following TencentCloud APIs:
 
-* Create: [CreateCosRecharge](https://cloud.tencent.com/document/api/614/88100) - This API is used to create a COS import task.
-* Read: [DescribeCosRecharges](https://cloud.tencent.com/document/api/614/88099) - This API is used to get COS import configuration.
-* Update: [ModifyCosRecharge](https://cloud.tencent.com/document/api/614/88098) - This API is used to modify a COS import task.
+* Create: [CreateCosRecharge](https://www.tencentcloud.com/document/product/614/54188) - This API is used to create a COS import task.
+* Read: [DescribeCosRecharges](https://www.tencentcloud.com/document/product/614/54187) - This API is used to get COS import configuration.
+* Update: [ModifyCosRecharge](https://www.tencentcloud.com/document/product/614/54186) - This API is used to modify a COS import task.
 
 ## Import
 

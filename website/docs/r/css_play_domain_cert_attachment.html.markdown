@@ -54,9 +54,9 @@ In addition to all arguments above, the following attributes are exported:
 
 This resource interacts with the following TencentCloud APIs:
 
-* Create: [ModifyLiveDomainCertBindings](https://cloud.tencent.com/document/api/267/78655) - This API is used to bind a certificate to multiple playback domains and update the HTTPS configuration of the domains.
-* Read: [DescribeLiveDomainCertBindings](https://cloud.tencent.com/document/api/267/78656) - This API is used to query domains bound with certificates.
-* Delete: [UnBindLiveDomainCert](https://cloud.tencent.com/document/api/267/32649) - This API is used to unbind a domain name certificate.
+* Create: [ModifyLiveDomainCertBindings](https://www.tencentcloud.com/document/product/267/49644) - This API is used to bind a certificate to multiple playback domains and update the HTTPS configuration of the domains.
+* Read: [DescribeLiveDomainCertBindings](https://www.tencentcloud.com/document/product/267/49645) - This API is used to query domains bound with certificates.
+* Delete: [UnBindLiveDomainCert](https://www.tencentcloud.com/document/product/267/30774) - This API is used to unbind a domain name certificate.
 
 ## Import
 

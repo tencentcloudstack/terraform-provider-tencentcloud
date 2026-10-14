@@ -91,6 +91,6 @@ In addition to all arguments above, the following attributes are exported:
 
 This resource interacts with the following TencentCloud APIs:
 
-* Create: [DescribeAsyncRequestInfo](https://cloud.tencent.com/document/api/236/20410) - This API (DescribeAsyncRequestInfo) is used to query the async task execution result of a TencentDB instance.
-* Create: [SwitchDBInstanceMasterSlave](https://cloud.tencent.com/document/api/236/52171) - This API is used for source-to-replica switch.
+* Create: [DescribeAsyncRequestInfo](https://www.tencentcloud.com/document/product/236/34462) - This API (DescribeAsyncRequestInfo) is used to query the async task execution result of a TencentDB instance.
+* Create: [SwitchDBInstanceMasterSlave](https://www.tencentcloud.com/document/product/236/39628) - This API is used for source-to-replica switch.
 

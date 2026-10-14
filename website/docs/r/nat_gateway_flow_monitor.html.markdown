@@ -38,13 +38,13 @@ In addition to all arguments above, the following attributes are exported:
 
 This resource interacts with the following TencentCloud APIs:
 
-* Create: [CheckGatewayFlowMonitor](https://cloud.tencent.com/document/api/215/116856) - This API is used to query whether the gateway traffic monitoring is enabled.
-* Create: [DisableGatewayFlowMonitor](https://cloud.tencent.com/document/api/215/43270) - This API is used to disable gateway traffic monitor.
-* Create: [EnableGatewayFlowMonitor](https://cloud.tencent.com/document/api/215/43269) - This API is used to enable gateway traffic monitor.
-* Read: [CheckGatewayFlowMonitor](https://cloud.tencent.com/document/api/215/116856) - This API is used to query whether the gateway traffic monitoring is enabled.
-* Update: [CheckGatewayFlowMonitor](https://cloud.tencent.com/document/api/215/116856) - This API is used to query whether the gateway traffic monitoring is enabled.
-* Update: [DisableGatewayFlowMonitor](https://cloud.tencent.com/document/api/215/43270) - This API is used to disable gateway traffic monitor.
-* Update: [EnableGatewayFlowMonitor](https://cloud.tencent.com/document/api/215/43269) - This API is used to enable gateway traffic monitor.
+* Create: [CheckGatewayFlowMonitor](https://www.tencentcloud.com/document/product/215/83846) - This API is used to query whether the gateway traffic monitoring is enabled.
+* Create: [DisableGatewayFlowMonitor](https://www.tencentcloud.com/document/product/215/36087) - This API is used to disable gateway traffic monitor.
+* Create: [EnableGatewayFlowMonitor](https://www.tencentcloud.com/document/product/215/36086) - This API is used to enable gateway traffic monitor.
+* Read: [CheckGatewayFlowMonitor](https://www.tencentcloud.com/document/product/215/83846) - This API is used to query whether the gateway traffic monitoring is enabled.
+* Update: [CheckGatewayFlowMonitor](https://www.tencentcloud.com/document/product/215/83846) - This API is used to query whether the gateway traffic monitoring is enabled.
+* Update: [DisableGatewayFlowMonitor](https://www.tencentcloud.com/document/product/215/36087) - This API is used to disable gateway traffic monitor.
+* Update: [EnableGatewayFlowMonitor](https://www.tencentcloud.com/document/product/215/36086) - This API is used to enable gateway traffic monitor.
 
 ## Import
 

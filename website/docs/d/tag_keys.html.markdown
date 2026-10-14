@@ -48,5 +48,5 @@ In addition to all arguments above, the following attributes are exported:
 
 This data source queries the following TencentCloud APIs:
 
-* Read: [DescribeTagKeys](https://cloud.tencent.com/document/api/651/35318) - This API is used to query tag keys in the list of created tags.
+* Read: [DescribeTagKeys](https://www.tencentcloud.com/document/product/651/33020) - This API is used to query tag keys in the list of created tags.
 

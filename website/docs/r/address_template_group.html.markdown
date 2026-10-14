@@ -38,11 +38,11 @@ In addition to all arguments above, the following attributes are exported:
 
 This resource interacts with the following TencentCloud APIs:
 
-* Create: [CreateAddressTemplateGroup](https://cloud.tencent.com/document/api/215/16709) - This API is used to create an IP address template group.
-* Read: [DescribeAddressTemplateGroups](https://cloud.tencent.com/document/api/215/16716) - This API (DescribeAddressTemplateGroups) is used to query an IP address template group.
-* Update: [ModifyAddressTemplateGroupAttribute](https://cloud.tencent.com/document/api/215/16721) - This API (ModifyAddressTemplateGroupAttribute) is used to modify an IP address template group.
-* Delete: [DeleteAddressTemplateGroup](https://cloud.tencent.com/document/api/215/16713) - This API (DeleteAddressTemplateGroup) is used to delete an IP address template group.
-* Delete: [DescribeAddressTemplateGroups](https://cloud.tencent.com/document/api/215/16716) - This API (DescribeAddressTemplateGroups) is used to query an IP address template group.
+* Create: [CreateAddressTemplateGroup](https://www.tencentcloud.com/document/product/215/16709) - This API is used to create an IP address template group.
+* Read: [DescribeAddressTemplateGroups](https://www.tencentcloud.com/document/product/215/16716) - This API (DescribeAddressTemplateGroups) is used to query an IP address template group.
+* Update: [ModifyAddressTemplateGroupAttribute](https://www.tencentcloud.com/document/product/215/16721) - This API (ModifyAddressTemplateGroupAttribute) is used to modify an IP address template group.
+* Delete: [DeleteAddressTemplateGroup](https://www.tencentcloud.com/document/product/215/16713) - This API (DeleteAddressTemplateGroup) is used to delete an IP address template group.
+* Delete: [DescribeAddressTemplateGroups](https://www.tencentcloud.com/document/product/215/16716) - This API (DescribeAddressTemplateGroups) is used to query an IP address template group.
 
 ## Import
 

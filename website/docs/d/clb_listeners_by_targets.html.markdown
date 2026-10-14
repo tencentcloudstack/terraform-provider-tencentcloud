@@ -68,5 +68,5 @@ In addition to all arguments above, the following attributes are exported:
 
 This data source queries the following TencentCloud APIs:
 
-* Read: [DescribeLBListeners](https://cloud.tencent.com/document/api/214/61478) - This API is used to query CLB instances bound to the CVM or ENI.
+* Read: [DescribeLBListeners](https://www.tencentcloud.com/document/product/214/43272) - This API is used to query CLB instances bound to the CVM or ENI.
 

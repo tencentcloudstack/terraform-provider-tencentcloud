@@ -56,13 +56,13 @@ In addition to all arguments above, the following attributes are exported:
 
 This resource interacts with the following TencentCloud APIs:
 
-* Create: [CreateMigrationService](https://cloud.tencent.com/document/api/571/82091) - This API is used to purchase migration tasks. After the tasks are purchased successfully, a randomly generated list of task IDs will be returned.
-* Create: [DescribeMigrationDetail](https://cloud.tencent.com/document/api/571/82085) - This API is used to query the details of a migration task.
-* Read: [DescribeMigrationDetail](https://cloud.tencent.com/document/api/571/82085) - This API is used to query the details of a migration task.
-* Update: [ModifyMigrateJobSpec](https://cloud.tencent.com/document/api/571/82079) - This API is used to adjust the specification of a pay-as-you-go task. After calling this API, you can call the `DescribeMigrationJobs` API to query the latest task status.
-* Delete: [DescribeMigrationDetail](https://cloud.tencent.com/document/api/571/82085) - This API is used to query the details of a migration task.
-* Delete: [DestroyMigrateJob](https://cloud.tencent.com/document/api/571/82083) - This API is used to delete a data migration task. For a billed task, you must first call the `IsolateMigrateJob` API to isolate it and make sure that it is in **Isolated** status before calling this API to delete it.
-* Delete: [IsolateMigrateJob](https://cloud.tencent.com/document/api/571/82082) - This API is used to isolate and return a data migration task. After calling this API, you can call the `DescribeMigrationJobs` API to query the latest task status.
+* Create: [CreateMigrationService](https://www.tencentcloud.com/document/product/571/51819) - This API is used to purchase migration tasks. After the tasks are purchased successfully, a randomly generated list of task IDs will be returned.
+* Create: [DescribeMigrationDetail](https://www.tencentcloud.com/document/product/571/51813) - This API is used to query the details of a migration task.
+* Read: [DescribeMigrationDetail](https://www.tencentcloud.com/document/product/571/51813) - This API is used to query the details of a migration task.
+* Update: [ModifyMigrateJobSpec](https://www.tencentcloud.com/document/product/571/51807) - This API is used to adjust the specification of a pay-as-you-go task. After calling this API, you can call the `DescribeMigrationJobs` API to query the latest task status.
+* Delete: [DescribeMigrationDetail](https://www.tencentcloud.com/document/product/571/51813) - This API is used to query the details of a migration task.
+* Delete: [DestroyMigrateJob](https://www.tencentcloud.com/document/product/571/51811) - This API is used to delete a data migration task. For a billed task, you must first call the `IsolateMigrateJob` API to isolate it and make sure that it is in **Isolated** status before calling this API to delete it.
+* Delete: [IsolateMigrateJob](https://www.tencentcloud.com/document/product/571/51810) - This API is used to isolate and return a data migration task. After calling this API, you can call the `DescribeMigrationJobs` API to query the latest task status.
 
 ## Import
 

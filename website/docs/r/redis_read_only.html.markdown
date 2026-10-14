@@ -90,11 +90,11 @@ In addition to all arguments above, the following attributes are exported:
 
 This resource interacts with the following TencentCloud APIs:
 
-* Create: [DescribeTaskInfo](https://cloud.tencent.com/document/api/239/30601) - This API is used to get the execution of a specified task.
-* Create: [ModifyInstanceReadOnly](https://cloud.tencent.com/document/api/239/73781) - This API is used to set the instance input mode.
-* Read: [DescribeInstances](https://cloud.tencent.com/document/api/239/20018) - This API is used to query the list of Redis instances.
-* Update: [DescribeTaskInfo](https://cloud.tencent.com/document/api/239/30601) - This API is used to get the execution of a specified task.
-* Update: [ModifyInstanceReadOnly](https://cloud.tencent.com/document/api/239/73781) - This API is used to set the instance input mode.
+* Create: [DescribeTaskInfo](https://www.tencentcloud.com/document/product/239/32064) - This API is used to get the execution of a specified task.
+* Create: [ModifyInstanceReadOnly](https://www.tencentcloud.com/document/product/239/47335) - This API is used to set the instance input mode.
+* Read: [DescribeInstances](https://www.tencentcloud.com/document/product/239/32065) - This API is used to query the list of Redis instances.
+* Update: [DescribeTaskInfo](https://www.tencentcloud.com/document/product/239/32064) - This API is used to get the execution of a specified task.
+* Update: [ModifyInstanceReadOnly](https://www.tencentcloud.com/document/product/239/47335) - This API is used to set the instance input mode.
 
 ## Import
 

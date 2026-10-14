@@ -48,14 +48,14 @@ In addition to all arguments above, the following attributes are exported:
 
 This resource interacts with the following TencentCloud APIs:
 
-* Create: [CreateSnapshot](https://cloud.tencent.com/document/api/362/15648) - This API is used to create a snapshot for the specified cloud disk.
-* Create: [DescribeSnapshots](https://cloud.tencent.com/document/api/362/15647) - This API (DescribeSnapshots) is used to query the details of snapshots.
-* Create: [ModifyResourceTags](https://cloud.tencent.com/document/api/651/35322) - This API is used to modify all tags associated with a resource.
-* Read: [DescribeResourceTagsByResourceIds](https://cloud.tencent.com/document/api/651/35319) - This API is used to query the tag key-value pairs associated with an existing resource.
-* Read: [DescribeSnapshots](https://cloud.tencent.com/document/api/362/15647) - This API (DescribeSnapshots) is used to query the details of snapshots.
-* Update: [ModifyResourceTags](https://cloud.tencent.com/document/api/651/35322) - This API is used to modify all tags associated with a resource.
-* Update: [ModifySnapshotAttribute](https://cloud.tencent.com/document/api/362/15650) - This API is used to modify the attributes of a specified snapshot.
-* Delete: [DeleteSnapshots](https://cloud.tencent.com/document/api/362/15645) - This API is used to delete snapshots.
+* Create: [CreateSnapshot](https://www.tencentcloud.com/document/product/362/15648) - This API is used to create a snapshot for the specified cloud disk.
+* Create: [DescribeSnapshots](https://www.tencentcloud.com/document/product/362/15647) - This API (DescribeSnapshots) is used to query the details of snapshots.
+* Create: [ModifyResourceTags](https://www.tencentcloud.com/document/product/651/33012) - This API is used to modify all tags associated with a resource.
+* Read: [DescribeResourceTagsByResourceIds](https://www.tencentcloud.com/document/product/651/33022) - This API is used to query the tag key-value pairs associated with an existing resource.
+* Read: [DescribeSnapshots](https://www.tencentcloud.com/document/product/362/15647) - This API (DescribeSnapshots) is used to query the details of snapshots.
+* Update: [ModifyResourceTags](https://www.tencentcloud.com/document/product/651/33012) - This API is used to modify all tags associated with a resource.
+* Update: [ModifySnapshotAttribute](https://www.tencentcloud.com/document/product/362/15650) - This API is used to modify the attributes of a specified snapshot.
+* Delete: [DeleteSnapshots](https://www.tencentcloud.com/document/product/362/15645) - This API is used to delete snapshots.
 
 ## Import
 

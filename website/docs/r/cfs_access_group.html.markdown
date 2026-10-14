@@ -38,10 +38,10 @@ In addition to all arguments above, the following attributes are exported:
 
 This resource interacts with the following TencentCloud APIs:
 
-* Create: [CreateCfsPGroup](https://cloud.tencent.com/document/api/582/38161) - This API is used to create a permission group.
-* Read: [DescribeCfsPGroups](https://cloud.tencent.com/document/api/582/38157) - This API is used to query the list of permission groups.
-* Update: [UpdateCfsPGroup](https://cloud.tencent.com/document/api/582/38155) - This API is used to update the information of a permission group.
-* Delete: [DeleteCfsPGroup](https://cloud.tencent.com/document/api/582/38159) - This API is used to delete a permission group. Only permission groups not bound to a file system can be deleted by this API.
+* Create: [CreateCfsPGroup](https://www.tencentcloud.com/document/product/582/34509) - This API is used to create a permission group.
+* Read: [DescribeCfsPGroups](https://www.tencentcloud.com/document/product/582/34505) - This API is used to query the list of permission groups.
+* Update: [UpdateCfsPGroup](https://www.tencentcloud.com/document/product/582/34503) - This API is used to update the information of a permission group.
+* Delete: [DeleteCfsPGroup](https://www.tencentcloud.com/document/product/582/34507) - This API is used to delete a permission group. Only permission groups not bound to a file system can be deleted by this API.
 
 ## Import
 

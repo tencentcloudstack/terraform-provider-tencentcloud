@@ -65,13 +65,13 @@ The `timeouts` block allows you to specify [timeouts](https://developer.hashicor
 
 This resource interacts with the following TencentCloud APIs:
 
-* Create: [DescribeAddon](https://cloud.tencent.com/document/api/457/94183) - This API is used to query the list of add-ons.
-* Create: [InstallAddon](https://cloud.tencent.com/document/api/457/94181) - This API is used to install an add-on on the target cluster.
-* Read: [DescribeAddon](https://cloud.tencent.com/document/api/457/94183) - This API is used to query the list of add-ons.
-* Update: [DescribeAddon](https://cloud.tencent.com/document/api/457/94183) - This API is used to query the list of add-ons.
-* Update: [UpdateAddon](https://cloud.tencent.com/document/api/457/94180) - This API is used to update parameters and version of an add-on.
-* Delete: [DeleteAddon](https://cloud.tencent.com/document/api/457/94184) - This API is used to delete an add-on.
-* Delete: [DescribeAddon](https://cloud.tencent.com/document/api/457/94183) - This API is used to query the list of add-ons.
+* Create: [DescribeAddon](https://www.tencentcloud.com/document/product/457/56953) - This API is used to query the list of add-ons.
+* Create: [InstallAddon](https://www.tencentcloud.com/document/product/457/56951) - This API is used to install an add-on on the target cluster.
+* Read: [DescribeAddon](https://www.tencentcloud.com/document/product/457/56953) - This API is used to query the list of add-ons.
+* Update: [DescribeAddon](https://www.tencentcloud.com/document/product/457/56953) - This API is used to query the list of add-ons.
+* Update: [UpdateAddon](https://www.tencentcloud.com/document/product/457/56950) - This API is used to update parameters and version of an add-on.
+* Delete: [DeleteAddon](https://www.tencentcloud.com/document/product/457/56954) - This API is used to delete an add-on.
+* Delete: [DescribeAddon](https://www.tencentcloud.com/document/product/457/56953) - This API is used to query the list of add-ons.
 
 ## Import
 

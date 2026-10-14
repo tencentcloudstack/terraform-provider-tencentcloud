@@ -119,15 +119,15 @@ In addition to all arguments above, the following attributes are exported:
 
 This resource interacts with the following TencentCloud APIs:
 
-* Create: [CreateInstanceAccount](https://cloud.tencent.com/document/api/239/38926) - This API is used to customize the account for accessing instances.
-* Create: [DescribeInstanceAccount](https://cloud.tencent.com/document/api/239/38924) - This API is used to view instance account information.
-* Create: [DescribeTaskInfo](https://cloud.tencent.com/document/api/239/30601) - This API is used to get the execution of a specified task.
-* Read: [DescribeInstanceAccount](https://cloud.tencent.com/document/api/239/38924) - This API is used to view instance account information.
-* Update: [DescribeInstanceAccount](https://cloud.tencent.com/document/api/239/38924) - This API is used to view instance account information.
-* Update: [DescribeTaskInfo](https://cloud.tencent.com/document/api/239/30601) - This API is used to get the execution of a specified task.
-* Update: [ModifyInstanceAccount](https://cloud.tencent.com/document/api/239/38923) - This API is used to modify an instance account.
-* Delete: [DeleteInstanceAccount](https://cloud.tencent.com/document/api/239/38925) - This API is used to delete instance sub-accounts.
-* Delete: [DescribeTaskInfo](https://cloud.tencent.com/document/api/239/30601) - This API is used to get the execution of a specified task.
+* Create: [CreateInstanceAccount](https://www.tencentcloud.com/document/product/239/33297) - This API is used to customize the account for accessing instances.
+* Create: [DescribeInstanceAccount](https://www.tencentcloud.com/document/product/239/33295) - This API is used to view instance account information.
+* Create: [DescribeTaskInfo](https://www.tencentcloud.com/document/product/239/32064) - This API is used to get the execution of a specified task.
+* Read: [DescribeInstanceAccount](https://www.tencentcloud.com/document/product/239/33295) - This API is used to view instance account information.
+* Update: [DescribeInstanceAccount](https://www.tencentcloud.com/document/product/239/33295) - This API is used to view instance account information.
+* Update: [DescribeTaskInfo](https://www.tencentcloud.com/document/product/239/32064) - This API is used to get the execution of a specified task.
+* Update: [ModifyInstanceAccount](https://www.tencentcloud.com/document/product/239/33292) - This API is used to modify an instance account.
+* Delete: [DeleteInstanceAccount](https://www.tencentcloud.com/document/product/239/33296) - This API is used to delete instance sub-accounts.
+* Delete: [DescribeTaskInfo](https://www.tencentcloud.com/document/product/239/32064) - This API is used to get the execution of a specified task.
 
 ## Import
 

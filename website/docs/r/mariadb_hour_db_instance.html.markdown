@@ -101,20 +101,20 @@ In addition to all arguments above, the following attributes are exported:
 
 This resource interacts with the following TencentCloud APIs:
 
-* Create: [CreateHourDBInstance](https://cloud.tencent.com/document/api/237/67878) - This API is used to create a pay-as-you-go TencentDB for MariaDB instance.
-* Create: [DescribeDBInstances](https://cloud.tencent.com/document/api/237/16184) - This API is used to query the TencentDB instance list. It supports filtering instances by project ID, instance ID, private address, and instance name.
-* Create: [InitDBInstances](https://cloud.tencent.com/document/api/237/16185)
-* Create: [ModifyResourceTags](https://cloud.tencent.com/document/api/651/35322) - This API is used to modify all tags associated with a resource.
-* Read: [DescribeDBInstanceDetail](https://cloud.tencent.com/document/api/237/89390) - This API is used to query the details of a specified instance.
-* Read: [DescribeDBParameters](https://cloud.tencent.com/document/api/237/16154) - This API is used to get the current parameter settings of a database.
-* Read: [DescribeResourceTagsByResourceIds](https://cloud.tencent.com/document/api/651/35319) - This API is used to query the tag key-value pairs associated with an existing resource.
-* Update: [DescribeFlow](https://cloud.tencent.com/document/api/237/16177)
-* Update: [ModifyDBInstanceName](https://cloud.tencent.com/document/api/237/16190)
-* Update: [ModifyDBInstancesProject](https://cloud.tencent.com/document/api/237/16176) - This API is used to modify the project to which TencentDB instances belong.
-* Update: [ModifyDBParameters](https://cloud.tencent.com/document/api/237/16153) - This API is used to modify database parameters.
-* Update: [ModifyInstanceNetwork](https://cloud.tencent.com/document/api/237/81949) - This API is used to modify instance network.
-* Update: [ModifyResourceTags](https://cloud.tencent.com/document/api/651/35322) - This API is used to modify all tags associated with a resource.
-* Delete: [DestroyHourDBInstance](https://cloud.tencent.com/document/api/237/56487) - This API is used to terminate a pay-as-you-go TencentDB for MariaDB instance.
+* Create: [CreateHourDBInstance](https://www.tencentcloud.com/document/product/237/45098) - This API is used to create a pay-as-you-go TencentDB for MariaDB instance.
+* Create: [DescribeDBInstances](https://www.tencentcloud.com/document/product/237/16184) - This API is used to query the TencentDB instance list. It supports filtering instances by project ID, instance ID, private address, and instance name.
+* Create: [InitDBInstances](https://www.tencentcloud.com/document/product/237/16185)
+* Create: [ModifyResourceTags](https://www.tencentcloud.com/document/product/651/33012) - This API is used to modify all tags associated with a resource.
+* Read: [DescribeDBInstanceDetail](https://www.tencentcloud.com/document/product/237/54563) - This API is used to query the details of a specified instance.
+* Read: [DescribeDBParameters](https://www.tencentcloud.com/document/product/237/16154) - This API is used to get the current parameter settings of a database.
+* Read: [DescribeResourceTagsByResourceIds](https://www.tencentcloud.com/document/product/651/33022) - This API is used to query the tag key-value pairs associated with an existing resource.
+* Update: [DescribeFlow](https://www.tencentcloud.com/document/product/237/16177)
+* Update: [ModifyDBInstanceName](https://www.tencentcloud.com/document/product/237/16190)
+* Update: [ModifyDBInstancesProject](https://www.tencentcloud.com/document/product/237/16176) - This API is used to modify the project to which TencentDB instances belong.
+* Update: [ModifyDBParameters](https://www.tencentcloud.com/document/product/237/16153) - This API is used to modify database parameters.
+* Update: [ModifyInstanceNetwork](https://www.tencentcloud.com/document/product/237/51318) - This API is used to modify instance network.
+* Update: [ModifyResourceTags](https://www.tencentcloud.com/document/product/651/33012) - This API is used to modify all tags associated with a resource.
+* Delete: [DestroyHourDBInstance](https://www.tencentcloud.com/document/product/237/40958) - This API is used to terminate a pay-as-you-go TencentDB for MariaDB instance.
 
 ## Import
 

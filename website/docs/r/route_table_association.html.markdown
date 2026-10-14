@@ -38,12 +38,12 @@ In addition to all arguments above, the following attributes are exported:
 
 This resource interacts with the following TencentCloud APIs:
 
-* Create: [ReplaceRouteTableAssociation](https://cloud.tencent.com/document/api/215/15767) - This API (ReplaceRouteTableAssociation) is used to modify the route table associated with a subnet.
-* Read: [DescribeSubnets](https://cloud.tencent.com/document/api/215/15784) - This API (DescribeSubnets) is used to query the list of subnets.
-* Update: [ReplaceRouteTableAssociation](https://cloud.tencent.com/document/api/215/15767) - This API (ReplaceRouteTableAssociation) is used to modify the route table associated with a subnet.
-* Delete: [DescribeRouteTables](https://cloud.tencent.com/document/api/215/15763) - This API is used to query route tables.
-* Delete: [DescribeSubnets](https://cloud.tencent.com/document/api/215/15784) - This API (DescribeSubnets) is used to query the list of subnets.
-* Delete: [ReplaceRouteTableAssociation](https://cloud.tencent.com/document/api/215/15767) - This API (ReplaceRouteTableAssociation) is used to modify the route table associated with a subnet.
+* Create: [ReplaceRouteTableAssociation](https://www.tencentcloud.com/document/product/215/15767) - This API (ReplaceRouteTableAssociation) is used to modify the route table associated with a subnet.
+* Read: [DescribeSubnets](https://www.tencentcloud.com/document/product/215/15784) - This API (DescribeSubnets) is used to query the list of subnets.
+* Update: [ReplaceRouteTableAssociation](https://www.tencentcloud.com/document/product/215/15767) - This API (ReplaceRouteTableAssociation) is used to modify the route table associated with a subnet.
+* Delete: [DescribeRouteTables](https://www.tencentcloud.com/document/product/215/15763) - This API is used to query route tables.
+* Delete: [DescribeSubnets](https://www.tencentcloud.com/document/product/215/15784) - This API (DescribeSubnets) is used to query the list of subnets.
+* Delete: [ReplaceRouteTableAssociation](https://www.tencentcloud.com/document/product/215/15767) - This API (ReplaceRouteTableAssociation) is used to modify the route table associated with a subnet.
 
 ## Import
 

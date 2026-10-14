@@ -99,10 +99,10 @@ In addition to all arguments above, the following attributes are exported:
 
 This resource interacts with the following TencentCloud APIs:
 
-* Create: [ModifyTimeWindow](https://cloud.tencent.com/document/api/236/33888) - This API (ModifyTimeWindow) is used to update the maintenance time window of a TencentDB instance.
-* Read: [DescribeTimeWindow](https://cloud.tencent.com/document/api/236/33889) - This API (DescribeTimeWindow) is used to query the maintenance time window of a TencentDB instance.
-* Update: [ModifyTimeWindow](https://cloud.tencent.com/document/api/236/33888) - This API (ModifyTimeWindow) is used to update the maintenance time window of a TencentDB instance.
-* Delete: [DeleteTimeWindow](https://cloud.tencent.com/document/api/236/33890) - This API is used to delete the maintenance time window of a cloud database instance. After deleting the instance maintenance window, the default maintenance period is 03:00-04:00 daily with a data validation delay threshold of 10 seconds.
+* Create: [ModifyTimeWindow](https://www.tencentcloud.com/document/product/236/34476) - This API (ModifyTimeWindow) is used to update the maintenance time window of a TencentDB instance.
+* Read: [DescribeTimeWindow](https://www.tencentcloud.com/document/product/236/34480) - This API (DescribeTimeWindow) is used to query the maintenance time window of a TencentDB instance.
+* Update: [ModifyTimeWindow](https://www.tencentcloud.com/document/product/236/34476) - This API (ModifyTimeWindow) is used to update the maintenance time window of a TencentDB instance.
+* Delete: [DeleteTimeWindow](https://www.tencentcloud.com/document/product/236/34483) - This API is used to delete the maintenance time window of a cloud database instance. After deleting the instance maintenance window, the default maintenance period is 03:00-04:00 daily with a data validation delay threshold of 10 seconds.
 
 ## Import
 

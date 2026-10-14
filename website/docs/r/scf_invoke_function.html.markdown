@@ -44,5 +44,5 @@ In addition to all arguments above, the following attributes are exported:
 
 This resource interacts with the following TencentCloud APIs:
 
-* Create: [Invoke](https://cloud.tencent.com/document/api/583/17243) - This API is used to run a function.
+* Create: [Invoke](https://www.tencentcloud.com/document/product/583/17243) - This API is used to run a function.
 

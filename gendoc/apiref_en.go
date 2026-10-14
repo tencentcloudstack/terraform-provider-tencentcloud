@@ -186,15 +186,31 @@ func minEN(a, b int) int {
 }
 
 // refreshENData downloads the intl SDK master tarball, extracts the English
-// action descriptions, merges the doc URLs from rawActions (the raw catalog
-// fetched by refreshData) and rewrites gendoc/data/api-actions-en.json
-// atomically (the old snapshot survives any failure).
+// action descriptions, merges doc URLs — preferring the international site,
+// falling back to the Chinese site — and rewrites
+// gendoc/data/api-actions-en.json atomically (the old snapshot survives any
+// failure).
 func refreshENData(rawActions []rawAction) error {
+	// Prefer international URLs when the intl doc site lists the action;
+	// fall back to the Chinese-site URL otherwise.
 	urls := map[string]string{}
 	for _, a := range rawActions {
 		if a.ActionCNDocUr != "" {
 			urls[strings.ToLower(a.Product)+"."+a.Action] = a.ActionCNDocUr
 		}
+	}
+	intlURLs, err := refreshIntlURLs(rawActions)
+	if err != nil {
+		message("[WARN]international doc URLs unavailable (%v); using Chinese-site URLs only\n", err)
+	} else {
+		replaced := 0
+		for key, u := range intlURLs {
+			if _, cn := urls[key]; cn {
+				replaced++
+			}
+			urls[key] = u
+		}
+		message("[SUCC.]international doc URLs: %d entries (%d replaced Chinese URLs)\n", len(intlURLs), replaced)
 	}
 
 	client := &http.Client{Timeout: 5 * time.Minute}
@@ -227,7 +243,7 @@ func refreshENData(rawActions []rawAction) error {
 			continue
 		}
 		outIdx[key] = len(out)
-		out = append(out, enEntry{Product: a.Product, Action: a.Action, URL: a.ActionCNDocUr})
+		out = append(out, enEntry{Product: a.Product, Action: a.Action, URL: urls[key]})
 	}
 	for {
 		hdr, err := tr.Next()

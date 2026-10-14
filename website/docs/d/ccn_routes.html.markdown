@@ -69,5 +69,5 @@ In addition to all arguments above, the following attributes are exported:
 
 This data source queries the following TencentCloud APIs:
 
-* Read: [DescribeCcnRoutes](https://cloud.tencent.com/document/api/215/19200) - This API (DescribeCcnRoutes) is used to query routes that have been added to a CCN.
+* Read: [DescribeCcnRoutes](https://www.tencentcloud.com/document/product/215/34788) - This API (DescribeCcnRoutes) is used to query routes that have been added to a CCN.
 

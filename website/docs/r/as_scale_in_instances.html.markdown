@@ -78,7 +78,7 @@ In addition to all arguments above, the following attributes are exported:
 
 This resource interacts with the following TencentCloud APIs:
 
-* Create: [ScaleInInstances](https://cloud.tencent.com/document/api/377/56370) - This API is used to reduce the specified number of instances from the scaling group.
+* Create: [ScaleInInstances](https://www.tencentcloud.com/document/product/377/40718) - This API is used to reduce the specified number of instances from the scaling group.
 
 ## Import
 

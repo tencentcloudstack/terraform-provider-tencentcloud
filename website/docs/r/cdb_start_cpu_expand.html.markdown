@@ -141,11 +141,11 @@ The `timeouts` block allows you to specify [timeouts](https://developer.hashicor
 
 This resource interacts with the following TencentCloud APIs:
 
-* Create: [DescribeAsyncRequestInfo](https://cloud.tencent.com/document/api/236/20410) - This API (DescribeAsyncRequestInfo) is used to query the async task execution result of a TencentDB instance.
-* Create: [StartCpuExpand](https://cloud.tencent.com/document/api/236/96017) - This API is used to enable CPU Elastic Scaling, including one-time manual scale-out and automatic elastic scaling.
-* Read: [DescribeCPUExpandStrategyInfo](https://cloud.tencent.com/document/api/236/116999) - This API is used to query the CPU Elastic Scaling information of an instance.
-* Delete: [DescribeAsyncRequestInfo](https://cloud.tencent.com/document/api/236/20410) - This API (DescribeAsyncRequestInfo) is used to query the async task execution result of a TencentDB instance.
-* Delete: [StopCpuExpand](https://cloud.tencent.com/document/api/236/96016) - This API is used to disable elastic CPU expansion.
+* Create: [DescribeAsyncRequestInfo](https://www.tencentcloud.com/document/product/236/34462) - This API (DescribeAsyncRequestInfo) is used to query the async task execution result of a TencentDB instance.
+* Create: [StartCpuExpand](https://www.tencentcloud.com/document/product/236/57242) - This API is used to enable CPU Elastic Scaling, including one-time manual scale-out and automatic elastic scaling.
+* Read: [DescribeCPUExpandStrategyInfo](https://www.tencentcloud.com/document/product/236/80216) - This API is used to query the CPU Elastic Scaling information of an instance.
+* Delete: [DescribeAsyncRequestInfo](https://www.tencentcloud.com/document/product/236/34462) - This API (DescribeAsyncRequestInfo) is used to query the async task execution result of a TencentDB instance.
+* Delete: [StopCpuExpand](https://www.tencentcloud.com/document/product/236/57241) - This API is used to disable elastic CPU expansion.
 
 ## Import
 

@@ -166,10 +166,10 @@ In addition to all arguments above, the following attributes are exported:
 
 This resource interacts with the following TencentCloud APIs:
 
-* Create: [CreateDataTransform](https://cloud.tencent.com/document/api/614/72184) - This API is used to create a data processing task.
-* Read: [DescribeDataTransformInfo](https://cloud.tencent.com/document/api/614/72182) - This API is used to get the basic information of data processing tasks.
-* Update: [ModifyDataTransform](https://cloud.tencent.com/document/api/614/72181) - This API is used to modify a data processing task.
-* Delete: [DeleteDataTransform](https://cloud.tencent.com/document/api/614/72183) - This API is used to delete a data processing task.
+* Create: [CreateDataTransform](https://www.tencentcloud.com/document/product/614/56119) - This API is used to create a data processing task.
+* Read: [DescribeDataTransformInfo](https://www.tencentcloud.com/document/product/614/56117) - This API is used to get the basic information of data processing tasks.
+* Update: [ModifyDataTransform](https://www.tencentcloud.com/document/product/614/56116) - This API is used to modify a data processing task.
+* Delete: [DeleteDataTransform](https://www.tencentcloud.com/document/product/614/56118) - This API is used to delete a data processing task.
 
 ## Import
 

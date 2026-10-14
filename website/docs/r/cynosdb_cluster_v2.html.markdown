@@ -233,7 +233,7 @@ This resource interacts with the following TencentCloud APIs:
 * Create: [DescribeResourcesByDealName](https://cloud.tencent.com/document/api/1003/52131) - This interface (DescribeResourcesByDealName) is used to query order-associated instances.
 * Create: [ModifyDBInstanceSecurityGroups](https://cloud.tencent.com/document/api/1003/48096) - This API is used to modify the security group bound to the instance.
 * Create: [ModifyMaintainPeriodConfig](https://cloud.tencent.com/document/api/1003/48080) - This API is used to modify maintenance time configuration.
-* Create: [ModifyResourceTags](https://cloud.tencent.com/document/api/651/35322) - This API is used to modify all tags associated with a resource.
+* Create: [ModifyResourceTags](https://www.tencentcloud.com/document/product/651/33012) - This API is used to modify all tags associated with a resource.
 * Create: [OpenClusterReadOnlyInstanceGroupAccess](https://cloud.tencent.com/document/api/1003/95782) - This API is used to enable read-only instance group access.
 * Create: [PauseServerless](https://cloud.tencent.com/document/api/1003/70122) - This API is used to suspend a serverless cluster.
 * Create: [ResumeServerless](https://cloud.tencent.com/document/api/1003/70121) - This API is used to restore a serverless cluster.
@@ -245,7 +245,7 @@ This resource interacts with the following TencentCloud APIs:
 * Read: [DescribeInstanceDetail](https://cloud.tencent.com/document/api/1003/48250) - This API is used to query instance details.
 * Read: [DescribeInstances](https://cloud.tencent.com/document/api/1003/48334) - This API is used to query the list of instances.
 * Read: [DescribeMaintainPeriod](https://cloud.tencent.com/document/api/1003/48083) - This interface (DescribeMaintainPeriod) is used to query the instance maintenance window.
-* Read: [DescribeResourceTagsByResourceIds](https://cloud.tencent.com/document/api/651/35319) - This API is used to query the tag key-value pairs associated with an existing resource.
+* Read: [DescribeResourceTagsByResourceIds](https://www.tencentcloud.com/document/product/651/33022) - This API is used to query the tag key-value pairs associated with an existing resource.
 * Update: [AddClusterSlaveZone](https://cloud.tencent.com/document/api/1003/79555) - This interface (AddClusterSlaveZone) is used to enable multi-az deployment for a cluster.
 * Update: [DescribeClusterDetail](https://cloud.tencent.com/document/api/1003/48086) - This API is used to display cluster details.
 * Update: [DescribeClusterInstanceGrps](https://cloud.tencent.com/document/api/1003/48303) - This API is used to query instance groups.
@@ -261,7 +261,7 @@ This resource interacts with the following TencentCloud APIs:
 * Update: [ModifyDBInstanceSecurityGroups](https://cloud.tencent.com/document/api/1003/48096) - This API is used to modify the security group bound to the instance.
 * Update: [ModifyInstanceName](https://cloud.tencent.com/document/api/1003/71728) - This API is used to modify instance name.
 * Update: [ModifyMaintainPeriodConfig](https://cloud.tencent.com/document/api/1003/48080) - This API is used to modify maintenance time configuration.
-* Update: [ModifyResourceTags](https://cloud.tencent.com/document/api/651/35322) - This API is used to modify all tags associated with a resource.
+* Update: [ModifyResourceTags](https://www.tencentcloud.com/document/product/651/33012) - This API is used to modify all tags associated with a resource.
 * Update: [OpenClusterReadOnlyInstanceGroupAccess](https://cloud.tencent.com/document/api/1003/95782) - This API is used to enable read-only instance group access.
 * Update: [PauseServerless](https://cloud.tencent.com/document/api/1003/70122) - This API is used to suspend a serverless cluster.
 * Update: [RemoveClusterSlaveZone](https://cloud.tencent.com/document/api/1003/79553) - This API is used to disable multi-AZ deployment for a cluster.

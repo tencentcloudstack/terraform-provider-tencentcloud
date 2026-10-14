@@ -51,5 +51,5 @@ In addition to all arguments above, the following attributes are exported:
 
 This data source queries the following TencentCloud APIs:
 
-* Read: [DescribeDBVersions](https://cloud.tencent.com/document/api/409/89018) - This API is used to query the list of supported database versions.
+* Read: [DescribeDBVersions](https://www.tencentcloud.com/document/product/409/54337) - This API is used to query the list of supported database versions.
 

@@ -42,10 +42,10 @@ In addition to all arguments above, the following attributes are exported:
 
 This resource interacts with the following TencentCloud APIs:
 
-* Create: [CreateAutoSnapshotPolicy](https://cloud.tencent.com/document/api/362/33558) - This API (CreateAutoSnapshotPolicy) is used to create a scheduled snapshot policy.
-* Read: [DescribeAutoSnapshotPolicies](https://cloud.tencent.com/document/api/362/33556) - This API is used to query scheduled snapshot policies.
-* Update: [ModifyAutoSnapshotPolicyAttribute](https://cloud.tencent.com/document/api/362/35482) - This API (ModifyAutoSnapshotPolicyAttribute) is used to modify the attributes of an automatic snapshot policy.
-* Delete: [DeleteAutoSnapshotPolicies](https://cloud.tencent.com/document/api/362/33557) - This API (DeleteAutoSnapshotPolicies) is used to delete scheduled snapshot policies.
+* Create: [CreateAutoSnapshotPolicy](https://www.tencentcloud.com/document/product/362/32167) - This API (CreateAutoSnapshotPolicy) is used to create a scheduled snapshot policy.
+* Read: [DescribeAutoSnapshotPolicies](https://www.tencentcloud.com/document/product/362/32165) - This API is used to query scheduled snapshot policies.
+* Update: [ModifyAutoSnapshotPolicyAttribute](https://www.tencentcloud.com/document/product/362/32162) - This API (ModifyAutoSnapshotPolicyAttribute) is used to modify the attributes of an automatic snapshot policy.
+* Delete: [DeleteAutoSnapshotPolicies](https://www.tencentcloud.com/document/product/362/32166) - This API (DeleteAutoSnapshotPolicies) is used to delete scheduled snapshot policies.
 
 ## Import
 

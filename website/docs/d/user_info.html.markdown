@@ -36,6 +36,6 @@ In addition to all arguments above, the following attributes are exported:
 
 This data source queries the following TencentCloud APIs:
 
-* Read: [DescribeSubAccounts](https://cloud.tencent.com/document/api/598/53486) - This API is used to query sub-users through the sub-user UIN list.
-* Read: [GetUserAppId](https://cloud.tencent.com/document/api/598/70416) - This API is used to get the user AppId.
+* Read: [DescribeSubAccounts](https://www.tencentcloud.com/document/product/598/39986) - This API is used to query sub-users through the sub-user UIN list.
+* Read: [GetUserAppId](https://www.tencentcloud.com/document/product/598/45982) - This API is used to get the user AppId.
 

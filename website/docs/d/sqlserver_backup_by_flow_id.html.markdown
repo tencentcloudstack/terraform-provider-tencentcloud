@@ -104,5 +104,5 @@ In addition to all arguments above, the following attributes are exported:
 
 This data source queries the following TencentCloud APIs:
 
-* Read: [DescribeBackupByFlowId](https://cloud.tencent.com/document/api/238/47203) - This API is used to query the created backup details through the backup creation process ID. The process ID can be obtained through the CreateBackup API.
+* Read: [DescribeBackupByFlowId](https://www.tencentcloud.com/document/product/238/72780) - This API is used to query the created backup details through the backup creation process ID. The process ID can be obtained through the CreateBackup API.
 

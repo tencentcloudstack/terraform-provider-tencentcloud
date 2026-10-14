@@ -39,5 +39,5 @@ In addition to all arguments above, the following attributes are exported:
 This resource interacts with the following TencentCloud APIs:
 
 * Create: [DescribeLivePullStreamTaskStatus](https://cloud.tencent.com/document/api/267/94221)
-* Create: [RestartLivePullStreamTask](https://cloud.tencent.com/document/api/267/93478) - Restart the running live streaming pull task.
+* Create: [RestartLivePullStreamTask](https://www.tencentcloud.com/document/product/267/56967) - Restart the running live streaming pull task.
 

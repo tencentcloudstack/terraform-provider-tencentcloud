@@ -54,5 +54,5 @@ In addition to all arguments above, the following attributes are exported:
 
 This data source queries the following TencentCloud APIs:
 
-* Read: [DescribeAvailableClusterVersion](https://cloud.tencent.com/document/api/457/52135) - This API is used to obtain all versions that the cluster can upgrade to.
+* Read: [DescribeAvailableClusterVersion](https://www.tencentcloud.com/document/product/457/39569) - This API is used to obtain all versions that the cluster can upgrade to.
 

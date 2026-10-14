@@ -47,5 +47,5 @@ In addition to all arguments above, the following attributes are exported:
 
 This data source queries the following TencentCloud APIs:
 
-* Read: [DescribeInstanceShards](https://cloud.tencent.com/document/api/239/34441) - This API is used to get the shard information of the instance on cluster architecture.
+* Read: [DescribeInstanceShards](https://www.tencentcloud.com/document/product/239/32066) - This API is used to get the shard information of the instance on cluster architecture.
 

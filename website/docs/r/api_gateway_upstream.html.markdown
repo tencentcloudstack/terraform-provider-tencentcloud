@@ -205,10 +205,10 @@ In addition to all arguments above, the following attributes are exported:
 This resource interacts with the following TencentCloud APIs:
 
 * Create: [CreateUpstream](https://cloud.tencent.com/document/api/628/70414) - This API is used to create an upstream.
-* Create: [ModifyResourceTags](https://cloud.tencent.com/document/api/651/35322) - This API is used to modify all tags associated with a resource.
-* Read: [DescribeResourceTagsByResourceIds](https://cloud.tencent.com/document/api/651/35319) - This API is used to query the tag key-value pairs associated with an existing resource.
+* Create: [ModifyResourceTags](https://www.tencentcloud.com/document/product/651/33012) - This API is used to modify all tags associated with a resource.
+* Read: [DescribeResourceTagsByResourceIds](https://www.tencentcloud.com/document/product/651/33022) - This API is used to query the tag key-value pairs associated with an existing resource.
 * Read: [DescribeUpstreams](https://cloud.tencent.com/document/api/628/70411) - This API is used to query details of upstreams under the current account.
-* Update: [ModifyResourceTags](https://cloud.tencent.com/document/api/651/35322) - This API is used to modify all tags associated with a resource.
+* Update: [ModifyResourceTags](https://www.tencentcloud.com/document/product/651/33012) - This API is used to modify all tags associated with a resource.
 * Update: [ModifyUpstream](https://cloud.tencent.com/document/api/628/70410) - This API is used to modify an upstream.
 * Delete: [DeleteUpstream](https://cloud.tencent.com/document/api/628/70413) - This API is used to delete an upstream. Note that you can only delete an upstream when it’s not bound with any APIs.
 

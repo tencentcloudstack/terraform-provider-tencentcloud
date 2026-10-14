@@ -65,9 +65,9 @@ In addition to all arguments above, the following attributes are exported:
 
 This resource interacts with the following TencentCloud APIs:
 
-* Create: [CreateDomainErrorPageInfo](https://cloud.tencent.com/document/api/608/39347) - This API is used to customize the error code of an error response to the specified domain name.
-* Create: [DescribeDomainErrorPageInfoByIds](https://cloud.tencent.com/document/api/608/40489) - This API is used to query the corresponding error response by a custom error ID.
-* Read: [DescribeDomainErrorPageInfo](https://cloud.tencent.com/document/api/608/39345) - This API is used to query the custom error response to a domain name.
-* Delete: [DeleteDomainErrorPageInfo](https://cloud.tencent.com/document/api/608/39346) - This API is used to delete a custom error code for a domain name.
-* Delete: [DescribeDomainErrorPageInfoByIds](https://cloud.tencent.com/document/api/608/40489) - This API is used to query the corresponding error response by a custom error ID.
+* Create: [CreateDomainErrorPageInfo](https://www.tencentcloud.com/document/product/608/33137) - This API is used to customize the error code of an error response to the specified domain name.
+* Create: [DescribeDomainErrorPageInfoByIds](https://www.tencentcloud.com/document/product/608/37590) - This API is used to query the corresponding error response by a custom error ID.
+* Read: [DescribeDomainErrorPageInfo](https://www.tencentcloud.com/document/product/608/33135) - This API is used to query the custom error response to a domain name.
+* Delete: [DeleteDomainErrorPageInfo](https://www.tencentcloud.com/document/product/608/33136) - This API is used to delete a custom error code for a domain name.
+* Delete: [DescribeDomainErrorPageInfoByIds](https://www.tencentcloud.com/document/product/608/37590) - This API is used to query the corresponding error response by a custom error ID.
 

@@ -40,5 +40,5 @@ In addition to all arguments above, the following attributes are exported:
 
 This data source queries the following TencentCloud APIs:
 
-* Read: [DescribeDBInstanceInfo](https://cloud.tencent.com/document/api/236/44160) - This API is used to query the basic information of an instance, including instance ID, instance name, and whether encryption is enabled. Querying read-only instances is not supported.
+* Read: [DescribeDBInstanceInfo](https://www.tencentcloud.com/document/product/236/36100) - This API is used to query the basic information of an instance, including instance ID, instance name, and whether encryption is enabled. Querying read-only instances is not supported.
 

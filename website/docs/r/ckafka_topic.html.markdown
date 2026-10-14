@@ -63,20 +63,20 @@ In addition to all arguments above, the following attributes are exported:
 
 This resource interacts with the following TencentCloud APIs:
 
-* Create: [CreateTopic](https://cloud.tencent.com/document/api/597/40851) - This API is used to create a CKafka topic.
-* Create: [CreateTopicIpWhiteList](https://cloud.tencent.com/document/api/597/40850) - This API is used to create a topic IP allowlist.
-* Create: [DescribeInstanceAttributes](https://cloud.tencent.com/document/api/597/40836) - This API is used to obtain instance attributes.
-* Create: [DescribeTopicDetail](https://cloud.tencent.com/document/api/597/40845) - This API is used to get topic list details (only for call in the console).
-* Read: [DescribeInstanceAttributes](https://cloud.tencent.com/document/api/597/40836) - This API is used to obtain instance attributes.
-* Read: [DescribeTopicAttributes](https://cloud.tencent.com/document/api/597/40846) - This API is used to retrieve topic attributes.
-* Read: [DescribeTopicDetail](https://cloud.tencent.com/document/api/597/40845) - This API is used to get topic list details (only for call in the console).
-* Update: [CreatePartition](https://cloud.tencent.com/document/api/597/40852) - This API is used to add a partition in a topic.
-* Update: [DescribeInstanceAttributes](https://cloud.tencent.com/document/api/597/40836) - This API is used to obtain instance attributes.
-* Update: [DescribeTopicDetail](https://cloud.tencent.com/document/api/597/40845) - This API is used to get topic list details (only for call in the console).
-* Update: [ModifyTopicAttributes](https://cloud.tencent.com/document/api/597/40844) - This API is used to modify topic attributes.
-* Delete: [DeleteTopic](https://cloud.tencent.com/document/api/597/40849) - This API is used to delete a CKafka topic.
-* Delete: [DescribeInstanceAttributes](https://cloud.tencent.com/document/api/597/40836) - This API is used to obtain instance attributes.
-* Delete: [DescribeTopicDetail](https://cloud.tencent.com/document/api/597/40845) - This API is used to get topic list details (only for call in the console).
+* Create: [CreateTopic](https://www.tencentcloud.com/document/product/597/35347) - This API is used to create a CKafka topic.
+* Create: [CreateTopicIpWhiteList](https://www.tencentcloud.com/document/product/597/35346) - This API is used to create a topic IP allowlist.
+* Create: [DescribeInstanceAttributes](https://www.tencentcloud.com/document/product/597/35358) - This API is used to obtain instance attributes.
+* Create: [DescribeTopicDetail](https://www.tencentcloud.com/document/product/597/35341) - This API is used to get topic list details (only for call in the console).
+* Read: [DescribeInstanceAttributes](https://www.tencentcloud.com/document/product/597/35358) - This API is used to obtain instance attributes.
+* Read: [DescribeTopicAttributes](https://www.tencentcloud.com/document/product/597/35342) - This API is used to retrieve topic attributes.
+* Read: [DescribeTopicDetail](https://www.tencentcloud.com/document/product/597/35341) - This API is used to get topic list details (only for call in the console).
+* Update: [CreatePartition](https://www.tencentcloud.com/document/product/597/35348) - This API is used to add a partition in a topic.
+* Update: [DescribeInstanceAttributes](https://www.tencentcloud.com/document/product/597/35358) - This API is used to obtain instance attributes.
+* Update: [DescribeTopicDetail](https://www.tencentcloud.com/document/product/597/35341) - This API is used to get topic list details (only for call in the console).
+* Update: [ModifyTopicAttributes](https://www.tencentcloud.com/document/product/597/35340) - This API is used to modify topic attributes.
+* Delete: [DeleteTopic](https://www.tencentcloud.com/document/product/597/35345) - This API is used to delete a CKafka topic.
+* Delete: [DescribeInstanceAttributes](https://www.tencentcloud.com/document/product/597/35358) - This API is used to obtain instance attributes.
+* Delete: [DescribeTopicDetail](https://www.tencentcloud.com/document/product/597/35341) - This API is used to get topic list details (only for call in the console).
 
 ## Import
 

@@ -42,7 +42,7 @@ In addition to all arguments above, the following attributes are exported:
 
 This resource interacts with the following TencentCloud APIs:
 
-* Create: [ModifySpartaProtectionMode](https://cloud.tencent.com/document/api/627/96930) - Set WAF protection status
-* Read: [DescribeSpartaProtectionInfo](https://cloud.tencent.com/document/api/627/100463) - WAF Sparta - Obtain protection domain information
-* Update: [ModifySpartaProtectionMode](https://cloud.tencent.com/document/api/627/96930) - Set WAF protection status
+* Create: [ModifySpartaProtectionMode](https://www.tencentcloud.com/document/product/627/64507) - Set WAF protection status
+* Read: [DescribeSpartaProtectionInfo](https://www.tencentcloud.com/document/product/627/64518) - WAF Sparta - Obtain protection domain information
+* Update: [ModifySpartaProtectionMode](https://www.tencentcloud.com/document/product/627/64507) - Set WAF protection status
 

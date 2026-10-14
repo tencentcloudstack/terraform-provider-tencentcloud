@@ -54,11 +54,11 @@ In addition to all arguments above, the following attributes are exported:
 
 This resource interacts with the following TencentCloud APIs:
 
-* Create: [CreateDiskBackup](https://cloud.tencent.com/document/api/362/84591) - This API is used to create a backup point for a cloud disk.
-* Create: [DescribeDiskBackups](https://cloud.tencent.com/document/api/362/80278) - This API is used to query the details of backup points.
-* Read: [DescribeDiskBackups](https://cloud.tencent.com/document/api/362/80278) - This API is used to query the details of backup points.
-* Delete: [DeleteDiskBackups](https://cloud.tencent.com/document/api/362/80279) - This API is used to delete the backup points of the specified cloud disk in batches.
-* Delete: [DescribeDiskBackups](https://cloud.tencent.com/document/api/362/80278) - This API is used to query the details of backup points.
+* Create: [CreateDiskBackup](https://www.tencentcloud.com/document/product/362/53930) - This API is used to create a backup point for a cloud disk.
+* Create: [DescribeDiskBackups](https://www.tencentcloud.com/document/product/362/50788) - This API is used to query the details of backup points.
+* Read: [DescribeDiskBackups](https://www.tencentcloud.com/document/product/362/50788) - This API is used to query the details of backup points.
+* Delete: [DeleteDiskBackups](https://www.tencentcloud.com/document/product/362/50789) - This API is used to delete the backup points of the specified cloud disk in batches.
+* Delete: [DescribeDiskBackups](https://www.tencentcloud.com/document/product/362/50788) - This API is used to query the details of backup points.
 
 ## Import
 

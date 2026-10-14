@@ -75,15 +75,15 @@ In addition to all arguments above, the following attributes are exported:
 
 This resource interacts with the following TencentCloud APIs:
 
-* Create: [ConfigureChcAssistVpc](https://cloud.tencent.com/document/api/213/76417) - This API is used to configure the out-of-band network and deployment network of a CHC host.
-* Create: [ConfigureChcDeployVpc](https://cloud.tencent.com/document/api/213/76416) - This API is used to configure the deployment network of a CHC host.
-* Create: [DescribeChcHosts](https://cloud.tencent.com/document/api/213/76366) - This API is used to query the details of one or more CHC host.
-* Create: [ModifyChcAttribute](https://cloud.tencent.com/document/api/213/76415) - This API is used to modify the CHC host attributes.
-* Read: [DescribeChcHosts](https://cloud.tencent.com/document/api/213/76366) - This API is used to query the details of one or more CHC host.
-* Update: [ModifyChcAttribute](https://cloud.tencent.com/document/api/213/76415) - This API is used to modify the CHC host attributes.
-* Delete: [DescribeChcHosts](https://cloud.tencent.com/document/api/213/76366) - This API is used to query the details of one or more CHC host.
-* Delete: [RemoveChcAssistVpc](https://cloud.tencent.com/document/api/213/76414) - This API is used to remove the out-of-band network and deployment network of a CHC host.
-* Delete: [RemoveChcDeployVpc](https://cloud.tencent.com/document/api/213/76413) - This API is used to remove the deployment network of a CHC host.
+* Create: [ConfigureChcAssistVpc](https://www.tencentcloud.com/document/product/213/48901) - This API is used to configure the out-of-band network and deployment network of a CHC host.
+* Create: [ConfigureChcDeployVpc](https://www.tencentcloud.com/document/product/213/48900) - This API is used to configure the deployment network of a CHC host.
+* Create: [DescribeChcHosts](https://www.tencentcloud.com/document/product/213/48899) - This API is used to query the details of one or more CHC host.
+* Create: [ModifyChcAttribute](https://www.tencentcloud.com/document/product/213/48898) - This API is used to modify the CHC host attributes.
+* Read: [DescribeChcHosts](https://www.tencentcloud.com/document/product/213/48899) - This API is used to query the details of one or more CHC host.
+* Update: [ModifyChcAttribute](https://www.tencentcloud.com/document/product/213/48898) - This API is used to modify the CHC host attributes.
+* Delete: [DescribeChcHosts](https://www.tencentcloud.com/document/product/213/48899) - This API is used to query the details of one or more CHC host.
+* Delete: [RemoveChcAssistVpc](https://www.tencentcloud.com/document/product/213/48897) - This API is used to remove the out-of-band network and deployment network of a CHC host.
+* Delete: [RemoveChcDeployVpc](https://www.tencentcloud.com/document/product/213/48896) - This API is used to remove the deployment network of a CHC host.
 
 ## Import
 

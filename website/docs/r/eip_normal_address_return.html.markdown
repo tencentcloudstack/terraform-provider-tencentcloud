@@ -36,5 +36,5 @@ In addition to all arguments above, the following attributes are exported:
 
 This resource interacts with the following TencentCloud APIs:
 
-* Create: [ReturnNormalAddresses](https://cloud.tencent.com/document/api/215/83866) - This API is used to unbind and release public IPs.
+* Create: [ReturnNormalAddresses](https://www.tencentcloud.com/document/product/215/52741) - This API is used to unbind and release public IPs.
 

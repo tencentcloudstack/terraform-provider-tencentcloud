@@ -40,6 +40,6 @@ In addition to all arguments above, the following attributes are exported:
 
 This resource interacts with the following TencentCloud APIs:
 
-* Create: [DescribeFlowStatus](https://cloud.tencent.com/document/api/238/19967) - This API is used to query flow status.
-* Create: [StartIncrementalMigration](https://cloud.tencent.com/document/api/238/53180) - This API is used to start an incremental backup import task.
+* Create: [DescribeFlowStatus](https://www.tencentcloud.com/document/product/238/32113) - This API is used to query flow status.
+* Create: [StartIncrementalMigration](https://www.tencentcloud.com/document/product/238/39831) - This API is used to start an incremental backup import task.
 

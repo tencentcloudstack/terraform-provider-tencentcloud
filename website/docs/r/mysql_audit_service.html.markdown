@@ -59,12 +59,12 @@ In addition to all arguments above, the following attributes are exported:
 
 This resource interacts with the following TencentCloud APIs:
 
-* Create: [DescribeAuditInstanceList](https://cloud.tencent.com/document/api/236/101813) - This API is used to obtain the list of audit instances.
-* Create: [OpenAuditService](https://cloud.tencent.com/document/api/236/76408) - This API is used to activate audit service for CDB instance.
-* Read: [DescribeAuditInstanceList](https://cloud.tencent.com/document/api/236/101813) - This API is used to obtain the list of audit instances.
-* Update: [ModifyAuditService](https://cloud.tencent.com/document/api/236/101809) - This API is used to modify the service configurations for a TencentDB instance, including the audit log retention period and the audit rules.
-* Delete: [CloseAuditService](https://cloud.tencent.com/document/api/236/101816) - This API is used to disable the audit service for an instance.
-* Delete: [DescribeAuditInstanceList](https://cloud.tencent.com/document/api/236/101813) - This API is used to obtain the list of audit instances.
+* Create: [DescribeAuditInstanceList](https://www.tencentcloud.com/document/product/236/77031) - This API is used to obtain the list of audit instances.
+* Create: [OpenAuditService](https://www.tencentcloud.com/document/product/236/48576) - This API is used to activate audit service for CDB instance.
+* Read: [DescribeAuditInstanceList](https://www.tencentcloud.com/document/product/236/77031) - This API is used to obtain the list of audit instances.
+* Update: [ModifyAuditService](https://www.tencentcloud.com/document/product/236/77025) - This API is used to modify the service configurations for a TencentDB instance, including the audit log retention period and the audit rules.
+* Delete: [CloseAuditService](https://www.tencentcloud.com/document/product/236/77038) - This API is used to disable the audit service for an instance.
+* Delete: [DescribeAuditInstanceList](https://www.tencentcloud.com/document/product/236/77031) - This API is used to obtain the list of audit instances.
 
 ## Import
 

@@ -36,5 +36,5 @@ In addition to all arguments above, the following attributes are exported:
 
 This data source queries the following TencentCloud APIs:
 
-* Read: [DescribeCiphersDetail](https://cloud.tencent.com/document/api/627/96948) - Query SaaS WAF cipher suite information
+* Read: [DescribeCiphersDetail](https://www.tencentcloud.com/document/product/627/64566) - Query SaaS WAF cipher suite information
 

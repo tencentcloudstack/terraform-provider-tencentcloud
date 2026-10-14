@@ -58,10 +58,10 @@ In addition to all arguments above, the following attributes are exported:
 
 This resource interacts with the following TencentCloud APIs:
 
-* Create: [CreateRoute](https://cloud.tencent.com/document/api/597/70172) - This API is used to add instance routes.
-* Create: [DescribeTaskStatus](https://cloud.tencent.com/document/api/597/90934) - This API is used to query the task status.
-* Read: [DescribeRoute](https://cloud.tencent.com/document/api/597/45484) - This API is used to view route information.
-* Delete: [DeleteRoute](https://cloud.tencent.com/document/api/597/73213) - This API is used to delete a route.
+* Create: [CreateRoute](https://www.tencentcloud.com/document/product/597/74258) - This API is used to add instance routes.
+* Create: [DescribeTaskStatus](https://www.tencentcloud.com/document/product/597/55881) - This API is used to query the task status.
+* Read: [DescribeRoute](https://www.tencentcloud.com/document/product/597/37090) - This API is used to view route information.
+* Delete: [DeleteRoute](https://www.tencentcloud.com/document/product/597/47140) - This API is used to delete a route.
 
 ## Import
 

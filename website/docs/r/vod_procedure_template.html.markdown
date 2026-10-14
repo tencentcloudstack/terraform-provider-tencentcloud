@@ -300,10 +300,10 @@ In addition to all arguments above, the following attributes are exported:
 
 This resource interacts with the following TencentCloud APIs:
 
-* Create: [CreateProcedureTemplate](https://cloud.tencent.com/document/api/266/33897) - This API is used to create user-defined task flow templates. Template capacity limit: 50.
-* Read: [DescribeProcedureTemplates](https://cloud.tencent.com/document/api/266/33895) - This API is used to search the task flow template detail list based on the task flow template name.
-* Update: [ResetProcedureTemplate](https://cloud.tencent.com/document/api/266/33894) - Reset the content of the user-defined task flow template.
-* Delete: [DeleteProcedureTemplate](https://cloud.tencent.com/document/api/266/33896) - This API is used to delete a user-defined task flow template.
+* Create: [CreateProcedureTemplate](https://www.tencentcloud.com/document/product/266/34167) - This API is used to create user-defined task flow templates. Template capacity limit: 50.
+* Read: [DescribeProcedureTemplates](https://www.tencentcloud.com/document/product/266/34147) - This API is used to search the task flow template detail list based on the task flow template name.
+* Update: [ResetProcedureTemplate](https://www.tencentcloud.com/document/product/266/34134) - Reset the content of the user-defined task flow template.
+* Delete: [DeleteProcedureTemplate](https://www.tencentcloud.com/document/product/266/34158) - This API is used to delete a user-defined task flow template.
 
 ## Import
 

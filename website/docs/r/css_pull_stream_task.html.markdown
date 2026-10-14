@@ -78,10 +78,10 @@ In addition to all arguments above, the following attributes are exported:
 
 This resource interacts with the following TencentCloud APIs:
 
-* Create: [CreateLivePullStreamTask](https://cloud.tencent.com/document/api/267/56245) - This API is used to create a task to pull streams from video files or an external live streaming source and publish them to a specified destination URL.
-* Read: [DescribeLivePullStreamTasks](https://cloud.tencent.com/document/api/267/56243) - This API is used to query the stream pulling tasks created by `CreateLivePullStreamTask`.
-* Update: [ModifyLivePullStreamTask](https://cloud.tencent.com/document/api/267/56242) - This API is used to modify a stream pulling task.
-* Delete: [DeleteLivePullStreamTask](https://cloud.tencent.com/document/api/267/56244) - This API is used to delete a task created by `CreateLivePullStreamTask`.
+* Create: [CreateLivePullStreamTask](https://www.tencentcloud.com/document/product/267/48357) - This API is used to create a task to pull streams from video files or an external live streaming source and publish them to a specified destination URL.
+* Read: [DescribeLivePullStreamTasks](https://www.tencentcloud.com/document/product/267/48355) - This API is used to query the stream pulling tasks created by `CreateLivePullStreamTask`.
+* Update: [ModifyLivePullStreamTask](https://www.tencentcloud.com/document/product/267/48354) - This API is used to modify a stream pulling task.
+* Delete: [DeleteLivePullStreamTask](https://www.tencentcloud.com/document/product/267/48356) - This API is used to delete a task created by `CreateLivePullStreamTask`.
 
 ## Import
 

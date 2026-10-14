@@ -185,9 +185,9 @@ The `system_disk` object exports the following:
 
 This resource interacts with the following TencentCloud APIs:
 
-* Create: [CreateLaunchTemplateVersion](https://cloud.tencent.com/document/api/213/66326) - This API is used to create an instance launch template based on the specified template ID and the corresponding template version number. The default version number will be used when no template version numbers are specified.
-* Read: [DescribeLaunchTemplateVersions](https://cloud.tencent.com/document/api/213/66323) - This API is used to query the information of instance launch template versions.
-* Delete: [DeleteLaunchTemplateVersions](https://cloud.tencent.com/document/api/213/66324) - This API is used to delete one or more instance launch template versions.
+* Create: [CreateLaunchTemplateVersion](https://www.tencentcloud.com/document/product/213/45361) - This API is used to create an instance launch template based on the specified template ID and the corresponding template version number. The default version number will be used when no template version numbers are specified.
+* Read: [DescribeLaunchTemplateVersions](https://www.tencentcloud.com/document/product/213/45358) - This API is used to query the information of instance launch template versions.
+* Delete: [DeleteLaunchTemplateVersions](https://www.tencentcloud.com/document/product/213/45359) - This API is used to delete one or more instance launch template versions.
 
 ## Import
 

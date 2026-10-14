@@ -62,6 +62,6 @@ In addition to all arguments above, the following attributes are exported:
 
 This data source queries the following TencentCloud APIs:
 
-* Read: [DescribeCcnAttachedInstances](https://cloud.tencent.com/document/api/215/19202) - This API (DescribeCcnAttachedInstances) is used to query the network instances associated with the CCN instance.
-* Read: [DescribeCcns](https://cloud.tencent.com/document/api/215/19199) - This API (DescribeCcns) is used to query the CCN list.
+* Read: [DescribeCcnAttachedInstances](https://www.tencentcloud.com/document/product/215/34789) - This API (DescribeCcnAttachedInstances) is used to query the network instances associated with the CCN instance.
+* Read: [DescribeCcns](https://www.tencentcloud.com/document/product/215/34787) - This API (DescribeCcns) is used to query the CCN list.
 

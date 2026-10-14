@@ -68,12 +68,12 @@ In addition to all arguments above, the following attributes are exported:
 
 This resource interacts with the following TencentCloud APIs:
 
-* Create: [DescribeInstalledPlugins](https://cloud.tencent.com/document/api/248/79204) - This API is used to list the plugins installed in an instance.
-* Create: [InstallPlugins](https://cloud.tencent.com/document/api/248/79198) - This API is used to install a Grafana plugin.
-* Read: [DescribeInstalledPlugins](https://cloud.tencent.com/document/api/248/79204) - This API is used to list the plugins installed in an instance.
-* Update: [DescribeInstalledPlugins](https://cloud.tencent.com/document/api/248/79204) - This API is used to list the plugins installed in an instance.
-* Update: [InstallPlugins](https://cloud.tencent.com/document/api/248/79198) - This API is used to install a Grafana plugin.
-* Delete: [UninstallGrafanaPlugins](https://cloud.tencent.com/document/api/248/79195) - This API is used to delete installed plugins.
+* Create: [DescribeInstalledPlugins](https://www.tencentcloud.com/document/product/248/49755) - This API is used to list the plugins installed in an instance.
+* Create: [InstallPlugins](https://www.tencentcloud.com/document/product/248/49750) - This API is used to install a Grafana plugin.
+* Read: [DescribeInstalledPlugins](https://www.tencentcloud.com/document/product/248/49755) - This API is used to list the plugins installed in an instance.
+* Update: [DescribeInstalledPlugins](https://www.tencentcloud.com/document/product/248/49755) - This API is used to list the plugins installed in an instance.
+* Update: [InstallPlugins](https://www.tencentcloud.com/document/product/248/49750) - This API is used to install a Grafana plugin.
+* Delete: [UninstallGrafanaPlugins](https://www.tencentcloud.com/document/product/248/49747) - This API is used to delete installed plugins.
 
 ## Import
 

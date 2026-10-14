@@ -88,9 +88,9 @@ In addition to all arguments above, the following attributes are exported:
 
 This resource interacts with the following TencentCloud APIs:
 
-* Create: [AssociateNetworkInterfaceSecurityGroups](https://cloud.tencent.com/document/api/215/43132) - This API (AssociateNetworkInterfaceSecurityGroups) is used to attach a security group to an ENI.
-* Read: [DescribeNetworkInterfaces](https://cloud.tencent.com/document/api/215/15817) - This API (DescribeNetworkInterfaces) is used to query the ENI list.
-* Delete: [DisassociateNetworkInterfaceSecurityGroups](https://cloud.tencent.com/document/api/215/43131) - This API (DisassociateNetworkInterfaceSecurityGroups) is used to detach (or fully detach if possible) a security group from an ENI.
+* Create: [AssociateNetworkInterfaceSecurityGroups](https://www.tencentcloud.com/document/product/215/36090) - This API (AssociateNetworkInterfaceSecurityGroups) is used to attach a security group to an ENI.
+* Read: [DescribeNetworkInterfaces](https://www.tencentcloud.com/document/product/215/15817) - This API (DescribeNetworkInterfaces) is used to query the ENI list.
+* Delete: [DisassociateNetworkInterfaceSecurityGroups](https://www.tencentcloud.com/document/product/215/36089) - This API (DisassociateNetworkInterfaceSecurityGroups) is used to detach (or fully detach if possible) a security group from an ENI.
 
 ## Import
 
