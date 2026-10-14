@@ -20,6 +20,9 @@ const (
 	// CAM签名/鉴权错误。
 	AUTHFAILURE = "AuthFailure"
 
+	// 鉴权失败，无权限操作
+	AUTHFAILURE_UNAUTHORIZEDOPERATION = "AuthFailure.UnauthorizedOperation"
+
 	// 操作失败。
 	FAILEDOPERATION = "FailedOperation"
 
@@ -224,6 +227,9 @@ const (
 	// 内置账号不允许操作。
 	INVALIDPARAMETERVALUE_INTERNALACCOUNT = "InvalidParameterValue.InternalAccount"
 
+	// 存在内网域名，旧 IP 保留时间需大于 {{1}} 小时
+	INVALIDPARAMETERVALUE_INTERNALDOMAINRESERVETOOSHORTERROR = "InvalidParameterValue.InternalDomainReserveTooShortError"
+
 	// 实例版本非法。
 	INVALIDPARAMETERVALUE_INVALIDDBVERSION = "InvalidParameterValue.InvalidDBVersion"
 
@@ -269,6 +275,9 @@ const (
 	// 找不到所选子网。
 	INVALIDPARAMETERVALUE_SUBNETNOTFOUND = "InvalidParameterValue.SubnetNotFound"
 
+	// 接入组 {{1}} 所属子网与目标子网一致，无需更换
+	INVALIDPARAMETERVALUE_SUBNETUNCHANGEDERROR = "InvalidParameterValue.SubnetUnchangedError"
+
 	// 未找到该数据。
 	INVALIDPARAMETERVALUE_VALUENOTFOUND = "InvalidParameterValue.ValueNotFound"
 
@@ -286,6 +295,9 @@ const (
 
 	// 缺少参数错误。
 	MISSINGPARAMETER = "MissingParameter"
+
+	// 云账号权限不足，不支持该操作。
+	OPERATIONDENIED_ACCOUNTOPERATIONDENIED = "OperationDenied.AccountOperationDenied"
 
 	// 审计日志文件数超过最大限制数
 	OPERATIONDENIED_AUDITFILEOVERQUOTAERROR = "OperationDenied.AuditFileOverQuotaError"
@@ -398,6 +410,9 @@ const (
 	// proxy可用区校验失败
 	OPERATIONDENIED_PROXYZONECHECKERROR = "OperationDenied.ProxyZoneCheckError"
 
+	// 实例不存在
+	OPERATIONDENIED_RESOURCENOTFUNDERROR = "OperationDenied.ResourceNotFundError"
+
 	// 未知异常。请联系客服进行处理。{{1}}
 	OPERATIONDENIED_SECONDARYCACHEUNKNOWNERROR = "OperationDenied.SecondaryCacheUnknownError"
 
@@ -415,6 +430,9 @@ const (
 
 	// 不支持该类型规格售卖
 	OPERATIONDENIED_UNSUPPORTSALESPECERROR = "OperationDenied.UnSupportSaleSpecError"
+
+	// 不支持开启审计
+	OPERATIONDENIED_UNSUPPORTOPENAUDITERROR = "OperationDenied.UnsupportOpenAuditError"
 
 	// 用户未进行实名认证，请先进行实名认证才可购买。
 	OPERATIONDENIED_USERNOTAUTHENTICATEDERROR = "OperationDenied.UserNotAuthenticatedError"

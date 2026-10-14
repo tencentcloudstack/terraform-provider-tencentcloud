@@ -751,7 +751,6 @@ func resourceTencentCloudCynosdbClusterV2Update(d *schema.ResourceData, meta int
 		"max_cpu",
 		"auto_pause",
 		"auto_pause_delay",
-		"storage_pay_mode",
 		"prarm_template_id",
 		"param_template_id",
 	}
@@ -1065,6 +1064,46 @@ func resourceTencentCloudCynosdbClusterV2Update(d *schema.ResourceData, meta int
 			return nil
 		})
 
+		if err != nil {
+			return err
+		}
+	}
+
+	// update storage_pay_mode (only support transfer from prepaid(1) to postpaid(0))
+	if d.HasChange("storage_pay_mode") {
+		oldPayMode, newPayMode := d.GetChange("storage_pay_mode")
+		if oldPayMode.(int) != 1 || newPayMode.(int) != 0 {
+			return fmt.Errorf("storage_pay_mode only supports transfer from prepaid(1) to postpaid(0)")
+		}
+
+		dealNames, err := cynosdbService.TransferStoragePrepayToPostpay(ctx, clusterId)
+		if err != nil {
+			return err
+		}
+		if len(dealNames) < 1 {
+			return fmt.Errorf("TransferStoragePrepayToPostpay response DealNames is empty, cynosdb cluster id=%s", clusterId)
+		}
+
+		dealName := dealNames[0]
+		dealReq := cynosdb.NewDescribeResourcesByDealNameRequest()
+		dealReq.DealName = dealName
+		err = resource.Retry(tccommon.ReadRetryTimeout, func() *resource.RetryError {
+			ratelimit.Check(dealReq.GetAction())
+			dealRes, e := meta.(tccommon.ProviderMeta).GetAPIV3Conn().UseCynosdbClient().DescribeResourcesByDealName(dealReq)
+			if e != nil {
+				log.Printf("[CRITAL]%s api[%s] fail, reason:%s", logId, dealReq.GetAction(), e.Error())
+				if sdkErr, ok := e.(*sdkErrors.TencentCloudSDKError); ok {
+					if sdkErr.Code == "InvalidParameterValue.DealNameNotFound" {
+						return resource.RetryableError(fmt.Errorf("DealName[%s] Not Found, retry... reason: %s", *dealName, e.Error()))
+					}
+				}
+				return tccommon.RetryError(e)
+			}
+			if dealRes == nil || dealRes.Response == nil || len(dealRes.Response.BillingResourceInfos) < 1 {
+				return resource.RetryableError(fmt.Errorf("waiting for storage pay mode transfer, cynosdb cluster id=%s DealName[%s]", clusterId, *dealName))
+			}
+			return nil
+		})
 		if err != nil {
 			return err
 		}
