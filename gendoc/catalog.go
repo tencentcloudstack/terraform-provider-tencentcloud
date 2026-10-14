@@ -26,17 +26,12 @@ type catalog struct {
 	source    string // "live" or "snapshot"
 }
 
-// loadCatalog fetches the live action catalog and falls back to the
-// embedded snapshot on any error. products are not used for rendering and
-// are intentionally not fetched here.
-func loadCatalog(httpClient *http.Client) *catalog {
-	idx, err := fetchActionCatalog(httpClient)
-	if err == nil {
-		return &catalog{actionIdx: idx, source: "live"}
-	}
-	message("[WARN]live API catalog fetch failed (%v); falling back to the bundled snapshot\n", err)
-
-	idx, err = loadSnapshotCatalog()
+// loadCatalog returns the embedded snapshot catalog. Doc generation is
+// fully offline: action URLs and English descriptions both come from the
+// bundled snapshots, which are refreshed explicitly via
+// 'make doc-refresh-data' / 'make doc-refresh-en'.
+func loadCatalog(*http.Client) *catalog {
+	idx, err := loadSnapshotCatalog()
 	if err != nil {
 		message("[WARN]bundled snapshot unavailable (%v); API Reference sections will be empty\n", err)
 		return &catalog{actionIdx: map[string]apiAction{}, source: "none"}

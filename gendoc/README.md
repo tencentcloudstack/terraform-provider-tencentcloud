@@ -167,11 +167,16 @@ resource、data source、action 与 ephemeral resource 的文档均包含一个�
 1. **静态分析**（`apiref.go`）：用 `go/ast` 从生命周期函数出发，追踪 service 方法调用链（含递归展开、goroutine 委托、包级辅助函数、局部 client 变量），收集 `UseXxxClient().Action(...)` 调用；client accessor 名通过 `connectivity/client.go` 的 SDK import 路径映射为目录产品名。
 2. **API 目录**（`data/api-actions.json` 快照）：腾讯云公开 API 目录的精简快照，提供 `(product, action) -> 中文名 + 文档 URL` 的查表。
 
-**在线优先、快照兜底**：每次 `make doc` 都会先尝试拉取最新目录（10s 超时）；拉取失败时自动回退到编译期内嵌的快照并打印 `[WARN]`，文档生成不会因网络问题失败，仅 API Reference 内容可能略旧。
+**完全离线**：`make doc` 只读取仓库内的两个快照（`data/api-actions.json` 目录、`data/api-actions-en.json` 英文描述与文档链接），不发起任何网络请求，构建结果可复现。快照通过以下命令手动刷新：
+
+```
+make doc-refresh-data   # 刷新 API 目录（文档链接）
+make doc-refresh-en     # 重新提取英文描述并合并文档链接（~6MB 下载）
+```
 
 覆盖率：resource 95.7%（1302/1360）、data source 97.3%（923/949）、action 与 ephemeral 全覆盖；未覆盖项均为 S3 兼容 REST 接口（cos/ci）、已下线产品（dayu）或目录未收录的新版本 API，可用下述人工段兜底。
 
-**英文描述**：API Reference 中的描述为英文（取自官方国际版 SDK [tencentcloud-sdk-go-intl-en](https://github.com/TencentCloud/tencentcloud-sdk-go-intl-en) 的方法注释），生成的文档不会包含中文。intl SDK 未覆盖的条目（约 20%）降级为仅显示 Action 名与文档链接。刷新英文描述快照：
+**英文描述与文档链接**：API Reference 中的描述为英文（取自官方国际版 SDK [tencentcloud-sdk-go-intl-en](https://github.com/TencentCloud/tencentcloud-sdk-go-intl-en) 的方法注释），生成的文档不会包含中文。intl SDK 未覆盖的条目（约 20%）降级为仅显示 Action 名与文档链接。刷新英文描述快照：
 
 ```
 make doc-refresh-en   # 下载 intl SDK master tarball (~6MB) 并重写 gendoc/data/api-actions-en.json

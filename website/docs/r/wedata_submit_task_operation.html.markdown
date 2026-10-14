@@ -41,5 +41,5 @@ In addition to all arguments above, the following attributes are exported:
 
 This resource interacts with the following TencentCloud APIs:
 
-* Create: [SubmitTask](https://cloud.tencent.com/document/api/1267/123619) - This API is used to submit tasks. This API is deprecated. Use the CreateTaskVersionDs API.
+* Create: [SubmitTask](https://cloud.tencent.com/document/api/1267/123619) - This API is used to submit a task.
 

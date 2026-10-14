@@ -67,11 +67,11 @@ In addition to all arguments above, the following attributes are exported:
 
 This resource interacts with the following TencentCloud APIs:
 
-* Create: [CreateDnsRecord](https://cloud.tencent.com/document/api/1552/80720) - This API is used to create a DNS record.
-* Read: [DescribeDnsRecords](https://cloud.tencent.com/document/api/1552/80716) - This API is used to query DNS records. Paging, sorting and filtering are supported.
+* Create: [CreateDnsRecord](https://cloud.tencent.com/document/api/1552/80720) - After creating a site and the site is accessed in NS mode, you can create DNS records through this API.
+* Read: [DescribeDnsRecords](https://cloud.tencent.com/document/api/1552/80716) - This API is used to view DNS record information under a site, including DNS record name, record type, and record content. It supports querying specific DNS record information by specifying filter conditions.
 * Update: [ModifyDnsRecords](https://cloud.tencent.com/document/api/1552/114252) - This API is used to bulk modify DNS records.
 * Update: [ModifyDnsRecordsStatus](https://cloud.tencent.com/document/api/1552/114251) - You can batch modify the status of DNS records through this API, enabling and disabling records in bulk.
-* Delete: [DeleteDnsRecords](https://cloud.tencent.com/document/api/1552/80718) - This API is used to batch delete DNS records.
+* Delete: [DeleteDnsRecords](https://cloud.tencent.com/document/api/1552/80718) - You can use this API to batch delete DNS records.
 
 ## Import
 

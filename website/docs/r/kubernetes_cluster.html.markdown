@@ -1081,12 +1081,12 @@ This resource interacts with the following TencentCloud APIs:
 
 * Create: [CreateCluster](https://cloud.tencent.com/document/api/457/34527) - This API is used to create a cluster.
 * Read: [DescribeClusterExtraArgs](https://cloud.tencent.com/document/api/457/101764) - This API is used to query custom parameters of a cluster.
-* Read: [DescribeClusterInstances](https://cloud.tencent.com/document/api/457/31863) - This API is used to query information of node instances in a cluster.
+* Read: [DescribeClusterInstances](https://cloud.tencent.com/document/api/457/31863) - This API is used to query the information of node instances in a cluster.
 * Read: [DescribeClusterSecurity](https://cloud.tencent.com/document/api/457/36703) - This API is used to query the key information of a cluster.
 * Read: [DescribeClusters](https://cloud.tencent.com/document/api/457/31862) - This API is used to query clusters list.
 * Update: [AddVpcCniSubnets](https://cloud.tencent.com/document/api/457/56371) - This API is used to add subnets in the container network for a VPC-CNI cluster.
 * Update: [DescribeBatchModifyTagsStatus](https://cloud.tencent.com/document/api/457/111753) - This API is used to query batch modification Tag status.
-* Update: [DescribeClusterInstances](https://cloud.tencent.com/document/api/457/31863) - This API is used to query information of node instances in a cluster.
+* Update: [DescribeClusterInstances](https://cloud.tencent.com/document/api/457/31863) - This API is used to query the information of node instances in a cluster.
 * Update: [DescribeClusters](https://cloud.tencent.com/document/api/457/31862) - This API is used to query clusters list.
 * Update: [DescribeIPAMD](https://cloud.tencent.com/document/api/457/101765) - This API is used to obtain eniipamd component information.
 * Update: [DescribeInstances](https://cloud.tencent.com/document/api/213/15728) - This API is used to query the details of instances.

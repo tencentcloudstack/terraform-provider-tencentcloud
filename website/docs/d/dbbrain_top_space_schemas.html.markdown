@@ -50,5 +50,5 @@ In addition to all arguments above, the following attributes are exported:
 
 This data source queries the following TencentCloud APIs:
 
-* Read: [DescribeTopSpaceSchemas](https://cloud.tencent.com/document/api/1130/57793) - This API is used to query real-time space statistics of top databases. The return results are sorted by size by default.
+* Read: [DescribeTopSpaceSchemas](https://cloud.tencent.com/document/api/1130/57793) - This API is used to get the real-time space statistics of top databases of an instance. The returned results are sorted by size by default.
 

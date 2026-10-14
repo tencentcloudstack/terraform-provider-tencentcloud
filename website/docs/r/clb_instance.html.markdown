@@ -674,7 +674,7 @@ The `timeouts` block allows you to specify [timeouts](https://developer.hashicor
 
 This resource interacts with the following TencentCloud APIs:
 
-* Create: [CreateLoadBalancer](https://cloud.tencent.com/document/api/214/30692) - This API (CreateLoadBalancer) is used to create a CLB instance. To use the CLB service, you first need to purchase one or more instances. After this API is called successfully, a unique instance ID will be returned. There are two types of instances: public network and private network. For more information, see the product types in the product documentation.
+* Create: [CreateLoadBalancer](https://cloud.tencent.com/document/api/214/30692) - This API is used to create a Cloud Load Balancer instance (this interface supports only pay-as-you-go CLB instances. For annual/monthly subscription, proceed to purchase through the console). To use the CLB service, you must purchase one or more CLB instances. After successfully calling the API, the unique ID of the CLB instance will be returned. CLB instances are divided into public network and private network types. For details, refer to the product type in the product description.
 * Create: [DescribeAddresses](https://cloud.tencent.com/document/api/215/16702) - This API (DescribeAddresses) is used to query the information of one or multiple [Elastic IPs](https://intl.cloud.tencent.com/document/product/213/1941?from_cn_redirect=1).
 * Create: [DescribeLoadBalancers](https://cloud.tencent.com/document/api/214/30685) - This API is used to query the list of CLB instances in a region.
 * Create: [DescribeResourceTagsByResourceIds](https://cloud.tencent.com/document/api/651/35319) - This API is used to query the tag key-value pairs associated with an existing resource.

@@ -147,10 +147,10 @@ In addition to all arguments above, the following attributes are exported:
 This resource interacts with the following TencentCloud APIs:
 
 * Read: [DescribeMigrationDetail](https://cloud.tencent.com/document/api/571/82085) - This API is used to query the details of a migration task.
-* Update: [CompleteMigrateJob](https://cloud.tencent.com/document/api/571/82094) - This API (CompleteMigrateJob) is used to complete a data migration task.
+* Update: [CompleteMigrateJob](https://cloud.tencent.com/document/api/571/82094) - This API is used to complete a data migration task.
 * Update: [ContinueMigrateJob](https://cloud.tencent.com/document/api/571/85142) - This API is used to resume a paused migration task.
 * Update: [DescribeMigrationDetail](https://cloud.tencent.com/document/api/571/82085) - This API is used to query the details of a migration task.
 * Update: [PauseMigrateJob](https://cloud.tencent.com/document/api/571/85139) - This API is used to pause a migration task.
 * Update: [RecoverMigrateJob](https://cloud.tencent.com/document/api/571/82076) - This API is used to recover a data migration task in **Isolated** status. After calling this API, you can call the `DescribeMigrationJobs` API to query the latest task status.
-* Update: [StopMigrateJob](https://cloud.tencent.com/document/api/571/82071) - This API (StopMigrateJob) is used to cancel a data migration task.
+* Update: [StopMigrateJob](https://cloud.tencent.com/document/api/571/82071) - This API is used to stop a data migration task.
 

@@ -42,11 +42,11 @@ In addition to all arguments above, the following attributes are exported:
 
 This resource interacts with the following TencentCloud APIs:
 
-* Create: [AddOrganizationNode](https://cloud.tencent.com/document/api/850/82930) - This API is used to add an organizational unit.
+* Create: [AddOrganizationNode](https://cloud.tencent.com/document/api/850/82930) - This API is used to add an organization node.
 * Read: [DescribeOrganizationNodes](https://cloud.tencent.com/document/api/850/82926) - This API is used to get the list of organization nodes.
 * Update: [ModifyResourceTags](https://cloud.tencent.com/document/api/651/35322) - This API is used to modify all tags associated with a resource.
-* Update: [UpdateOrganizationNode](https://cloud.tencent.com/document/api/850/82924) - This API is used to update organizational units.
-* Delete: [DeleteOrganizationNodes](https://cloud.tencent.com/document/api/850/82928) - This API is used to delete multiple organizational units in a single request.
+* Update: [UpdateOrganizationNode](https://cloud.tencent.com/document/api/850/82924) - This API is used to update an organization node.
+* Delete: [DeleteOrganizationNodes](https://cloud.tencent.com/document/api/850/82928) - This API is used to batch delete organization nodes.
 
 ## Import
 

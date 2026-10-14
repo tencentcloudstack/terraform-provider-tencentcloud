@@ -46,5 +46,5 @@ In addition to all arguments above, the following attributes are exported:
 
 This data source queries the following TencentCloud APIs:
 
-* Read: [DescribeUserSqlAdvice](https://cloud.tencent.com/document/api/1130/57782) - This API is used to obtain SQL statement optimization suggestions.
+* Read: [DescribeUserSqlAdvice](https://cloud.tencent.com/document/api/1130/57782) - This API is used to get SQL statement optimization suggestions. It is free of charge for a limited time and will be charged after DBbrain is commercialized.
 

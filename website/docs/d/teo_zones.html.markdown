@@ -118,5 +118,5 @@ Note: This field may return null, indicating that no valid values can be obtaine
 
 This data source queries the following TencentCloud APIs:
 
-* Read: [DescribeZones](https://cloud.tencent.com/document/api/1552/80713) - This API is used to query the list of user sites.
+* Read: [DescribeZones](https://cloud.tencent.com/document/api/1552/80713) - This API is used to query the information of sites that you have access to. You can filter sites based on different query criteria.
 

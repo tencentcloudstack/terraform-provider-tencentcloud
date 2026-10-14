@@ -289,7 +289,7 @@ In addition to all arguments above, the following attributes are exported:
 
 This resource interacts with the following TencentCloud APIs:
 
-* Create: [CreateTask](https://cloud.tencent.com/document/api/1267/123640) - This API is used to create a task. This API is deprecated. Use the CreateTaskNew API.
+* Create: [CreateTask](https://cloud.tencent.com/document/api/1267/123640) - This API is used to create a task.
 * Read: [GetTask](https://cloud.tencent.com/document/api/1267/123631) - This API is used to retrieve task details.
 * Update: [UpdateTask](https://cloud.tencent.com/document/api/1267/123616) - This API is used to update a task.
 * Delete: [DeleteTask](https://cloud.tencent.com/document/api/1267/123635) - This API is used to delete an orchestration space task.

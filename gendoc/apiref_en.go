@@ -39,6 +39,7 @@ type enEntry struct {
 	Product string `json:"product"`
 	Action  string `json:"action"`
 	Desc    string `json:"desc"`
+	URL     string `json:"url,omitempty"`
 }
 
 // blockRe matches a doc-comment block starting with the action-name line:
@@ -76,6 +77,26 @@ func loadENIndex() map[string]string {
 	idx := make(map[string]string, len(entries))
 	for _, e := range entries {
 		idx[strings.ToLower(e.Product)+"."+e.Action] = e.Desc
+	}
+	return idx
+}
+
+// loadENURLIndex loads the embedded doc URLs keyed the same way. Empty
+// entries are omitted so the renderer falls back to the URL-less form.
+func loadENURLIndex() map[string]string {
+	raw, err := apiActionsEnFS.ReadFile("data/api-actions-en.json")
+	if err != nil {
+		return map[string]string{}
+	}
+	var entries []enEntry
+	if err := json.Unmarshal(raw, &entries); err != nil {
+		return map[string]string{}
+	}
+	idx := make(map[string]string, len(entries))
+	for _, e := range entries {
+		if e.URL != "" {
+			idx[strings.ToLower(e.Product)+"."+e.Action] = e.URL
+		}
 	}
 	return idx
 }
@@ -138,9 +159,24 @@ func minEN(a, b int) int {
 }
 
 // refreshENData downloads the intl SDK master tarball, extracts the English
-// action descriptions and rewrites gendoc/data/api-actions-en.json
-// atomically (the old snapshot survives any failure).
+// action descriptions, merges the official doc URLs from the public catalog
+// and rewrites gendoc/data/api-actions-en.json atomically (the old snapshot
+// survives any failure).
 func refreshENData() error {
+	// Doc URLs live in the public catalog; fetch it best-effort. Without
+	// it the snapshot still carries descriptions, just without URLs.
+	urls := map[string]string{}
+	var rawActions []rawAction
+	if err := fetchJSON(nil, actionsURL, &rawActions); err == nil {
+		for _, a := range rawActions {
+			if a.ActionCNDocUr != "" {
+				urls[strings.ToLower(a.Product)+"."+a.Action] = a.ActionCNDocUr
+			}
+		}
+	} else {
+		message("[WARN]catalog fetch for doc URLs failed (%v); writing descriptions without URLs\n", err)
+	}
+
 	client := &http.Client{Timeout: 5 * time.Minute}
 	resp, err := client.Get(intlSDKTarballURL)
 	if err != nil {
@@ -157,8 +193,19 @@ func refreshENData() error {
 	}
 	tr := tar.NewReader(gz)
 
+	// Base the snapshot on the full public catalog so that entries without
+	// an English description still carry their doc URL; the intl SDK only
+	// contributes descriptions.
 	seen := map[string]bool{}
 	var out []enEntry
+	for _, a := range rawActions {
+		key := strings.ToLower(a.Product) + "." + a.Action
+		if seen[key] || a.Action == "" {
+			continue
+		}
+		seen[key] = true
+		out = append(out, enEntry{Product: a.Product, Action: a.Action, URL: a.ActionCNDocUr})
+	}
 	for {
 		hdr, err := tr.Next()
 		if err == io.EOF {
@@ -189,6 +236,13 @@ func refreshENData() error {
 		for action, desc := range extractENFromClient(string(src)) {
 			key := product + "." + action
 			if seen[key] {
+				// Catalog-known action: attach the extracted description.
+				for i := range out {
+					if strings.ToLower(out[i].Product)+"."+out[i].Action == key {
+						out[i].Desc = desc
+						break
+					}
+				}
 				continue
 			}
 			seen[key] = true
@@ -197,7 +251,7 @@ func refreshENData() error {
 	}
 
 	if len(out) == 0 {
-		return fmt.Errorf("no descriptions extracted; refusing to overwrite the snapshot")
+		return fmt.Errorf("no catalog entries extracted; refusing to overwrite the snapshot")
 	}
 
 	var b strings.Builder
@@ -206,7 +260,11 @@ func refreshENData() error {
 		if i > 0 {
 			b.WriteString(",")
 		}
-		fmt.Fprintf(&b, `{"product":%q,"action":%q,"desc":%q}`, e.Product, e.Action, e.Desc)
+		if e.URL != "" {
+			fmt.Fprintf(&b, `{"product":%q,"action":%q,"desc":%q,"url":%q}`, e.Product, e.Action, e.Desc, e.URL)
+		} else {
+			fmt.Fprintf(&b, `{"product":%q,"action":%q,"desc":%q}`, e.Product, e.Action, e.Desc)
+		}
 	}
 	b.WriteString("]")
 
@@ -218,6 +276,12 @@ func refreshENData() error {
 	if err := os.Rename(tmp, path); err != nil {
 		return err
 	}
-	message("[SUCC.]refreshed %s (%d descriptions)\n", path, len(out))
+	withDesc := 0
+	for _, e := range out {
+		if e.Desc != "" {
+			withDesc++
+		}
+	}
+	message("[SUCC.]refreshed %s (%d entries, %d with descriptions)\n", path, len(out), withDesc)
 	return nil
 }

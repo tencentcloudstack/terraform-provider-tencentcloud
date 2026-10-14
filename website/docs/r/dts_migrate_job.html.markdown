@@ -291,7 +291,7 @@ In addition to all arguments above, the following attributes are exported:
 
 This resource interacts with the following TencentCloud APIs:
 
-* Create: [CreateMigrateCheckJob](https://cloud.tencent.com/document/api/571/82092) - This API is used to create a migration check task.
+* Create: [CreateMigrateCheckJob](https://cloud.tencent.com/document/api/571/82092) - This API is used to verify a migration task.
 * Create: [DescribeMigrationCheckJob](https://cloud.tencent.com/document/api/571/82086) - This API is used to get the check result and query the check status and progress after a check is created.
 * Create: [DescribeMigrationDetail](https://cloud.tencent.com/document/api/571/82085) - This API is used to query the details of a migration task.
 * Create: [ModifyMigrationJob](https://cloud.tencent.com/document/api/571/82077) - This API is used to configure a migration task. After it is configured successfully, you can call the `CreateMigrationCheckJob` API to create a check task, and only after it passes the check can it be started.

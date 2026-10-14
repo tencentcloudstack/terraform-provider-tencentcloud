@@ -72,10 +72,13 @@ type apiAnalyzer struct {
 
 	// clientProd maps lowercase UseXxxClient accessor name -> catalog product.
 	clientProd map[string]string
-	// actionIdx maps "<product>.<action>" -> catalog entry.
+	// actionIdx maps "<product>.<action>" -> catalog entry; only its
+	// existence is used to decide whether the action is catalog-listed.
 	actionIdx map[string]apiAction
 	// enIndex maps "<lowercase product>.<action>" -> English description.
 	enIndex map[string]string
+	// enURLIndex maps "<lowercase product>.<action>" -> doc URL.
+	enURLIndex map[string]string
 	// knownClients is the set of lowercase accessor names with a product.
 	knownClients map[string]bool
 
@@ -96,6 +99,7 @@ func newAPIAnalyzer(repoRoot string, cat *catalog) (*apiAnalyzer, error) {
 		cat = loadCatalog(nil)
 	}
 	enIndex := loadENIndex()
+	enURLIndex := loadENURLIndex()
 	known := map[string]bool{}
 	for c := range clientProd {
 		known[c] = true
@@ -107,6 +111,7 @@ func newAPIAnalyzer(repoRoot string, cat *catalog) (*apiAnalyzer, error) {
 		clientProd:   clientProd,
 		actionIdx:    cat.actionIdx,
 		enIndex:      enIndex,
+		enURLIndex:   enURLIndex,
 		knownClients: known,
 		methodIndex:  map[string][]serviceMethod{},
 		parsedFiles:  map[string]*ast.File{},
@@ -398,24 +403,26 @@ type apiCallKey struct {
 	action string // SDK method == cloud API action (e.g. "CreateVpc")
 }
 
-// resolveAPI turns a call key into a catalog-backed apiRef. The Name field
-// carries the English description when the intl SDK snapshot has one;
-// generated docs never contain the Chinese catalog names. Returns nil when
-// the (client, action) pair has no catalog entry.
+// resolveAPI turns a call key into a snapshot-backed apiRef. Both the
+// English description and the doc URL come from the bundled en snapshot;
+// the catalog entry's presence (not its Chinese name) decides whether the
+// action is rendered. Generated docs never contain Chinese text. Returns
+// nil when the (client, action) pair has no catalog entry.
 func (a *apiAnalyzer) resolveAPI(k apiCallKey) *apiRef {
 	prod := a.clientProd[k.client]
 	if prod == "" {
 		return nil
 	}
-	act, ok := a.actionIdx[strings.ToLower(prod)+"."+k.action]
+	key := strings.ToLower(prod) + "." + k.action
+	act, ok := a.actionIdx[key]
 	if !ok {
 		return nil
 	}
 	return &apiRef{
 		Product: prod,
 		Action:  act.Action,
-		Name:    a.enIndex[strings.ToLower(prod)+"."+act.Action],
-		URL:     act.URL,
+		Name:    a.enIndex[key],
+		URL:     a.enURLIndex[key],
 	}
 }
 

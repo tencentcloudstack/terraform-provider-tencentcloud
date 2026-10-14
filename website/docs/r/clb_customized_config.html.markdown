@@ -55,13 +55,13 @@ In addition to all arguments above, the following attributes are exported:
 
 This resource interacts with the following TencentCloud APIs:
 
-* Create: [DescribeCustomizedConfigAssociateList](https://cloud.tencent.com/document/api/214/60010) - This API is used to query the configured location, bound server or bound CLB instance. If there are domain names, the result will be filtered by domain name.
-* Create: [DescribeCustomizedConfigList](https://cloud.tencent.com/document/api/214/60009) - This API is used to pull custom configuration lists to return the user configuration of `AppId`.
-* Create: [SetCustomizedConfigForLoadBalancer](https://cloud.tencent.com/document/api/214/60008) - This API is used to create or manage a user-defined CLB configuration template.
-* Read: [DescribeCustomizedConfigAssociateList](https://cloud.tencent.com/document/api/214/60010) - This API is used to query the configured location, bound server or bound CLB instance. If there are domain names, the result will be filtered by domain name.
-* Read: [DescribeCustomizedConfigList](https://cloud.tencent.com/document/api/214/60009) - This API is used to pull custom configuration lists to return the user configuration of `AppId`.
-* Update: [SetCustomizedConfigForLoadBalancer](https://cloud.tencent.com/document/api/214/60008) - This API is used to create or manage a user-defined CLB configuration template.
-* Delete: [SetCustomizedConfigForLoadBalancer](https://cloud.tencent.com/document/api/214/60008) - This API is used to create or manage a user-defined CLB configuration template.
+* Create: [DescribeCustomizedConfigAssociateList](https://cloud.tencent.com/document/api/214/60010) - This API is used to query the locations, servers, or CLB instances bound to a configuration. If there are domains, the result will be filtered by domain.
+* Create: [DescribeCustomizedConfigList](https://cloud.tencent.com/document/api/214/60009) - Pull the list of custom configurations. The configurations of the specified type under the user's AppId will be returned.
+* Create: [SetCustomizedConfigForLoadBalancer](https://cloud.tencent.com/document/api/214/60008) - This API is used to create, delete, modify, bind, and unbind custom CLB configurations.
+* Read: [DescribeCustomizedConfigAssociateList](https://cloud.tencent.com/document/api/214/60010) - This API is used to query the locations, servers, or CLB instances bound to a configuration. If there are domains, the result will be filtered by domain.
+* Read: [DescribeCustomizedConfigList](https://cloud.tencent.com/document/api/214/60009) - Pull the list of custom configurations. The configurations of the specified type under the user's AppId will be returned.
+* Update: [SetCustomizedConfigForLoadBalancer](https://cloud.tencent.com/document/api/214/60008) - This API is used to create, delete, modify, bind, and unbind custom CLB configurations.
+* Delete: [SetCustomizedConfigForLoadBalancer](https://cloud.tencent.com/document/api/214/60008) - This API is used to create, delete, modify, bind, and unbind custom CLB configurations.
 
 ## Import
 

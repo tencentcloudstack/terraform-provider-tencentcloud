@@ -67,9 +67,9 @@ This resource interacts with the following TencentCloud APIs:
 * Read: [DescribeOrganizationMembers](https://cloud.tencent.com/document/api/850/67220) - This API is used to get the list of organization members.
 * Update: [ModifyResourceTags](https://cloud.tencent.com/document/api/651/35322) - This API is used to modify all tags associated with a resource.
 * Update: [MoveOrganizationNodeMembers](https://cloud.tencent.com/document/api/850/82925) - This API is used to move a member to the specified organization node.
-* Update: [UpdateOrganizationMember](https://cloud.tencent.com/document/api/850/94392) - This API is used to update information on organization members.
+* Update: [UpdateOrganizationMember](https://cloud.tencent.com/document/api/850/94392) - This API is used to update organization member information.
 * Delete: [DeleteAccount](https://cloud.tencent.com/document/api/850/100808)
-* Delete: [DeleteOrganizationMembers](https://cloud.tencent.com/document/api/850/82929) - This API is used to delete multiple organization members in a single request.
+* Delete: [DeleteOrganizationMembers](https://cloud.tencent.com/document/api/850/82929) - This API is used to remove a member account from the organization, rather than delete the account.
 
 ## Import
 
