@@ -34,4 +34,9 @@ In addition to all arguments above, the following attributes are exported:
 
 * `data` - Upstream task details.
 
+## API Reference
+
+This data source queries the following TencentCloud APIs:
+
+* Read: [ListUpstreamOpsTasks](https://cloud.tencent.com/document/api/1267/123571) - 获取任务上游
 

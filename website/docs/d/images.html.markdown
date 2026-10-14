@@ -95,4 +95,9 @@ In addition to all arguments above, the following attributes are exported:
   * `support_cloud_init` - Whether support cloud-init.
   * `sync_percent` - Sync percent of the image.
 
+## API Reference
+
+This data source queries the following TencentCloud APIs:
+
+* Read: [DescribeImages](https://cloud.tencent.com/document/api/213/15715) - 查看镜像列表
 

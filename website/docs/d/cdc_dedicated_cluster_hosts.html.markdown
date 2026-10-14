@@ -43,4 +43,9 @@ In addition to all arguments above, the following attributes are exported:
   * `run_time` - Dedicated Cluster Host Run Time.
   * `service_type` - Dedicated Cluster Service Type.
 
+## API Reference
+
+This data source queries the following TencentCloud APIs:
+
+* Read: [DescribeDedicatedClusterHosts](https://cloud.tencent.com/document/api/1346/73763) - 查询专用集群宿主机信息
 

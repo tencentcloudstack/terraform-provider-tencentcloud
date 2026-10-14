@@ -44,4 +44,10 @@ In addition to all arguments above, the following attributes are exported:
   * `parameter_name` - Parameter name.
   * `parameter_type` - Parameter type.
 
+## API Reference
+
+This data source queries the following TencentCloud APIs:
+
+* Read: [DescribeDefaultParams](https://cloud.tencent.com/document/api/236/32662) - 查询默认的可设置参数列表
+* Read: [DescribeInstanceParams](https://cloud.tencent.com/document/api/236/20411) - 查询实例的可设置参数列表
 

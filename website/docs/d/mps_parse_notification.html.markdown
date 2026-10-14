@@ -26,4 +26,9 @@ The following arguments are supported:
 * `content` - (Required, String) Event notification obtained from CMQ.
 * `result_output_file` - (Optional, String) Used to save results.
 
+## API Reference
+
+This data source queries the following TencentCloud APIs:
+
+* Read: [ParseNotification](https://cloud.tencent.com/document/api/862/39228) - 解析事件通知
 

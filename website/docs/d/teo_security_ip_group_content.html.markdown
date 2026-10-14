@@ -35,4 +35,9 @@ In addition to all arguments above, the following attributes are exported:
 * `ip_list` - List of IPs or CIDR blocks in the IP group.
 * `ip_total_count` - Total count of IPs or CIDR blocks in the IP group.
 
+## API Reference
+
+This data source queries the following TencentCloud APIs:
+
+* Read: [DescribeSecurityIPGroupContent](https://cloud.tencent.com/document/api/1552/122107) - 分页查询 IP 组中的 IP 列表
 

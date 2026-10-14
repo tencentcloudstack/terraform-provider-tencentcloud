@@ -47,4 +47,9 @@ In addition to all arguments above, the following attributes are exported:
   * `sid` - The identifier for the time-shift recording session.
   * `start_time` - The start time of the recording session is specified in Unix timestamp.
 
+## API Reference
+
+This data source queries the following TencentCloud APIs:
+
+* Read: [DescribeTimeShiftRecordDetail](https://cloud.tencent.com/document/api/267/86091) - 查询时移流录制详情
 

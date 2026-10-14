@@ -38,4 +38,9 @@ In addition to all arguments above, the following attributes are exported:
   * `ai_asr_results` - The result of intelligent speech recognition.Note: This field may return null, indicating that no valid value was found.
   * `ai_ocr_results` - The result of intelligent text recognition.Note: This field may return null, indicating that no valid value was found.
 
+## API Reference
+
+This data source queries the following TencentCloud APIs:
+
+* Read: [DescribeMonitorReport](https://cloud.tencent.com/document/api/267/93517) - 查询监播报告
 

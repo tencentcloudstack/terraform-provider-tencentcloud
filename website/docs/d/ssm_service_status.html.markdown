@@ -31,4 +31,9 @@ In addition to all arguments above, the following attributes are exported:
 * `invalid_type` - Service unavailability type: 0-Not purchased, 1-Normal, 2-Service suspended due to arrears, 3-Resource release.
 * `service_enabled` - True means the service has been activated, false means the service has not been activated yet.
 
+## API Reference
+
+This data source queries the following TencentCloud APIs:
+
+* Read: [GetServiceStatus](https://cloud.tencent.com/document/api/1140/40521) - 获取用户服务开通状态
 

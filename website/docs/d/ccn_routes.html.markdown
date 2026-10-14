@@ -65,4 +65,9 @@ In addition to all arguments above, the following attributes are exported:
   * `route_priority` - Routing priority.
   * `update_time` - update time.
 
+## API Reference
+
+This data source queries the following TencentCloud APIs:
+
+* Read: [DescribeCcnRoutes](https://cloud.tencent.com/document/api/215/19200) - 查询云联网路由条目
 

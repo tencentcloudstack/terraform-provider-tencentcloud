@@ -553,4 +553,9 @@ In addition to all arguments above, the following attributes are exported:
   * `task_progress` - Creation progress percentage.
   * `task_type` - TaskType, SOURCE|SINK.
 
+## API Reference
+
+This data source queries the following TencentCloud APIs:
+
+* Read: [DescribeDatahubTasks](https://cloud.tencent.com/document/api/597/77795) - 查询连接器任务列表
 

@@ -93,4 +93,10 @@ In addition to all arguments above, the following attributes are exported:
   * `update_time` - Modification time of the target group.
   * `vpc_id` - Name of target group.
 
+## API Reference
+
+This data source queries the following TencentCloud APIs:
+
+* Read: [DescribeTargetGroupInstances](https://cloud.tencent.com/document/api/214/40556) - 获取目标组绑定的服务器
+* Read: [DescribeTargetGroups](https://cloud.tencent.com/document/api/214/40554) - 查询目标组信息
 

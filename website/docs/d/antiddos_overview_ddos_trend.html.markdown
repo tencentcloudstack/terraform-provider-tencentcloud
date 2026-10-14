@@ -41,4 +41,9 @@ In addition to all arguments above, the following attributes are exported:
 
 * `data` - Array, attack traffic bandwidth in Mbps, packet rate in pps.
 
+## API Reference
+
+This data source queries the following TencentCloud APIs:
+
+* Read: [DescribeOverviewDDoSTrend](https://cloud.tencent.com/document/api/297/95353) - 获取防护概览DDoS攻击流量带宽和攻击包速率数据
 

@@ -42,4 +42,10 @@ In addition to all arguments above, the following attributes are exported:
     * `spec_id` - Instance specification ID.
   * `zone_id` - Number ID of availability zone.
 
+## API Reference
+
+This data source queries the following TencentCloud APIs:
+
+* Read: [DescribeProductConfig](https://cloud.tencent.com/document/api/238/19966) - 查询售卖规格配置
+* Read: [DescribeZones](https://cloud.tencent.com/document/api/238/19963) - 查询售卖可用区
 

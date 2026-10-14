@@ -37,4 +37,9 @@ In addition to all arguments above, the following attributes are exported:
   * `end_time` - End time of time range available for rollback.
   * `start_time` - Start time of time range available for rollback.
 
+## API Reference
+
+This data source queries the following TencentCloud APIs:
+
+* Read: [DescribeRollbackTime](https://cloud.tencent.com/document/api/238/19964) - 查询实例可回档时间范围
 

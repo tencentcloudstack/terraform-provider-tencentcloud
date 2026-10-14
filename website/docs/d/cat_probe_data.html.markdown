@@ -62,4 +62,9 @@ In addition to all arguments above, the following attributes are exported:
     * `value` - Value.
   * `probe_time` - Probe time.
 
+## API Reference
+
+This data source queries the following TencentCloud APIs:
+
+* Read: [DescribeDetailedSingleProbeData](https://cloud.tencent.com/document/api/280/66205) - 列出单次拨测详情数据
 

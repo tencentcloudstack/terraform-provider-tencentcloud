@@ -34,4 +34,9 @@ In addition to all arguments above, the following attributes are exported:
 * `cvm_in_sw_group_quota` - Quota on instances in a switch-type disaster recovery group.
 * `group_quota` - The maximum number of placement groups that can be created.
 
+## API Reference
+
+This data source queries the following TencentCloud APIs:
+
+* Read: [DescribeDisasterRecoverGroupQuota](https://cloud.tencent.com/document/api/213/17811) - 查询置放群组配额
 

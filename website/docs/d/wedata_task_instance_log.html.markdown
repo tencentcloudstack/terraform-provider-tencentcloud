@@ -37,4 +37,9 @@ In addition to all arguments above, the following attributes are exported:
 
 * `data` - Scheduled instance details.
 
+## API Reference
+
+This data source queries the following TencentCloud APIs:
+
+* Read: [GetTaskInstanceLog](https://cloud.tencent.com/document/api/1267/123582) - 查询调度实例日志内容
 

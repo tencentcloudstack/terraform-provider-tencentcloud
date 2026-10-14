@@ -41,4 +41,9 @@ In addition to all arguments above, the following attributes are exported:
   * `max_user_connections` - Maximum number of user connections.
   * `update_time` - Update time.
 
+## API Reference
+
+This data source queries the following TencentCloud APIs:
+
+* Read: [DescribeAccounts](https://cloud.tencent.com/document/api/1003/48075) - 查询数据库账号列表
 

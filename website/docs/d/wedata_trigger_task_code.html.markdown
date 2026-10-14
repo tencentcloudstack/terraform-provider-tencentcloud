@@ -34,4 +34,9 @@ In addition to all arguments above, the following attributes are exported:
 
 * `data` - Get task code results.
 
+## API Reference
+
+This data source queries the following TencentCloud APIs:
+
+* Read: [GetTriggerTaskCode](https://cloud.tencent.com/document/api/1267/127257) - 查看工作流调度任务代码
 

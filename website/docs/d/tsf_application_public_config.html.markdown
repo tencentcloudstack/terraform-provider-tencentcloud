@@ -52,4 +52,9 @@ In addition to all arguments above, the following attributes are exported:
     * `last_update_time` - last update time.  Note: This field may return null, indicating that no valid values can be obtained.
   * `total_count` - TsfPageConfig.
 
+## API Reference
+
+This data source queries the following TencentCloud APIs:
+
+* Read: [DescribePublicConfigs](https://cloud.tencent.com/document/api/649/38335) - 查询公共配置项列表
 

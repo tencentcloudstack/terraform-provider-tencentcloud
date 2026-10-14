@@ -46,4 +46,9 @@ In addition to all arguments above, the following attributes are exported:
   * `keepalive` - Whether to maintain a persistent connection (1: Yes, 0: No).
   * `status` - (**Deprecated**) Deprecated from version v1.82.94. -1: Unrelated certificate of domain name.1: The domain name HTTPS has been opened.0: The domain name HTTPS has been closed.
 
+## API Reference
+
+This data source queries the following TencentCloud APIs:
+
+* Read: [DescribeHostWafInstanceList](https://cloud.tencent.com/document/api/400/91650) - 查询证书waf云资源部署实例列表
 

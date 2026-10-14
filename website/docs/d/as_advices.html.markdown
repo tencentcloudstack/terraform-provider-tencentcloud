@@ -38,4 +38,9 @@ In addition to all arguments above, the following attributes are exported:
   * `auto_scaling_group_id` - Auto scaling group ID.
   * `level` - Scaling group warning level. Valid values: NORMAL, WARNING, CRITICAL.
 
+## API Reference
+
+This data source queries the following TencentCloud APIs:
+
+* Read: [DescribeAutoScalingAdvices](https://cloud.tencent.com/document/api/377/65901) - 查询弹性伸缩配置建议
 

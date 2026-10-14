@@ -46,4 +46,9 @@ In addition to all arguments above, the following attributes are exported:
   * `uin` - Account ID (Uin).
   * `user_type` - Account type. Valid values: `Owner`, `SubUser`, `CICUser`, `WechatCorpUser`, `AgentIdentity`, `Collaborator`, `MessageReceiver`, `Unknown`.
 
+## API Reference
+
+This data source queries the following TencentCloud APIs:
+
+* Read: [ListAccounts](https://cloud.tencent.com/document/api/598/133082) - 查询所有账号列表
 

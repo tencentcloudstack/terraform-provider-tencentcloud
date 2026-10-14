@@ -57,4 +57,9 @@ In addition to all arguments above, the following attributes are exported:
 
 * `result` - Return value.
 
+## API Reference
+
+This data source queries the following TencentCloud APIs:
+
+* Read: [DescribeDataSetUrlStatistics](https://cloud.tencent.com/document/api/1464/69227) - 获取DescribeDataSetUrlStatistics信息
 

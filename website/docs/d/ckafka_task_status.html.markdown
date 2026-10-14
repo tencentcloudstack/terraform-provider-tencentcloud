@@ -34,4 +34,9 @@ In addition to all arguments above, the following attributes are exported:
   * `output` - OutPut Info.
   * `status` - Status.
 
+## API Reference
+
+This data source queries the following TencentCloud APIs:
+
+* Read: [DescribeTaskStatus](https://cloud.tencent.com/document/api/597/90934) - 查询任务状态
 

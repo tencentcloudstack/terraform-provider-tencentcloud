@@ -85,4 +85,9 @@ Default is disable.
     * `tag_key` - Tag key.
     * `tag_value` - Tag value.
 
+## API Reference
+
+This data source queries the following TencentCloud APIs:
+
+* Read: [DescribeBgpInstances](https://cloud.tencent.com/document/api/297/126514) - 查询高防包资源列表
 

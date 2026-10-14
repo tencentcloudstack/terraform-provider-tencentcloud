@@ -73,4 +73,10 @@ In addition to all arguments above, the following attributes are exported:
   * `vpc_id` - ID of VPC.
   * `vport` - Port for private access.
 
+## API Reference
+
+This data source queries the following TencentCloud APIs:
+
+* Read: [DescribeDBInstances](https://cloud.tencent.com/document/api/238/19969) - 查询实例列表
+* Read: [DescribeResourceTagsByResourceIds](https://cloud.tencent.com/document/api/651/35319) - 批量查看资源关联的标签
 

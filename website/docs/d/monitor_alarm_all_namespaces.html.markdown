@@ -74,4 +74,9 @@ In addition to all arguments above, the following attributes are exported:
   * `sort_id` - Sort Id.
   * `value` - Namespace value.
 
+## API Reference
+
+This data source queries the following TencentCloud APIs:
+
+* Read: [DescribeAllNamespaces](https://cloud.tencent.com/document/api/248/48683) - 查询所有名字空间
 

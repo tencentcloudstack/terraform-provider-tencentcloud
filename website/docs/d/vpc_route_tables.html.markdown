@@ -82,4 +82,10 @@ In addition to all arguments above, the following attributes are exported:
   * `tags` - Tags of the routing table.
   * `vpc_id` - ID of the VPC.
 
+## API Reference
+
+This data source queries the following TencentCloud APIs:
+
+* Read: [DescribeResourceTagsByResourceIds](https://cloud.tencent.com/document/api/651/35319) - 批量查看资源关联的标签
+* Read: [DescribeRouteTables](https://cloud.tencent.com/document/api/215/15763) - 查询路由表
 

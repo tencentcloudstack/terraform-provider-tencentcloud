@@ -50,4 +50,10 @@ In addition to all arguments above, the following attributes are exported:
   * `status` - Status of the file system.
   * `storage_type` - Storage type of the file system.
 
+## API Reference
+
+This data source queries the following TencentCloud APIs:
+
+* Read: [DescribeCfsFileSystems](https://cloud.tencent.com/document/api/582/38170) - 查询文件系统
+* Read: [DescribeMountTargets](https://cloud.tencent.com/document/api/582/38169) - 查询文件系统挂载点
 

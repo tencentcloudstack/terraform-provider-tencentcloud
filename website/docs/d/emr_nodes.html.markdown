@@ -110,4 +110,9 @@ In addition to all arguments above, the following attributes are exported:
   * `wan_ip` - The master node is bound to the Internet IP address.
   * `zone_id` - Zone where the node is located.
 
+## API Reference
+
+This data source queries the following TencentCloud APIs:
+
+* Read: [DescribeClusterNodes](https://cloud.tencent.com/document/api/589/41707) - 查询集群节点信息
 

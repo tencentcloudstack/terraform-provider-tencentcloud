@@ -73,4 +73,9 @@ In addition to all arguments above, the following attributes are exported:
   * `storage_used` - storage used, unit is GB.
   * `zone` - zone.
 
+## API Reference
+
+This data source queries the following TencentCloud APIs:
+
+* Read: [DescribeClusters](https://cloud.tencent.com/document/api/1556/70668) - 查询集群
 

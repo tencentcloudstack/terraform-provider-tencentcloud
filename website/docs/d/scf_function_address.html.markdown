@@ -37,4 +37,9 @@ In addition to all arguments above, the following attributes are exported:
 * `code_sha256` - SHA256 code of the function.
 * `url` - Cos address of the function.
 
+## API Reference
+
+This data source queries the following TencentCloud APIs:
+
+* Read: [GetFunctionAddress](https://cloud.tencent.com/document/api/583/37164) - 获取函数代码下载地址
 

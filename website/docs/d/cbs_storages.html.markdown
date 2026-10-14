@@ -94,4 +94,9 @@ In addition to all arguments above, the following attributes are exported:
   * `tags` - The available tags within this CBS.
   * `throughput_performance` - Add extra performance to the data disk. Only works when disk type is `CLOUD_TSSD` or `CLOUD_HSSD`.
 
+## API Reference
+
+This data source queries the following TencentCloud APIs:
+
+* Read: [DescribeDisks](https://cloud.tencent.com/document/api/362/16315) - 查询云硬盘列表
 

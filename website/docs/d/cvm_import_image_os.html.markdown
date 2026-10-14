@@ -36,4 +36,9 @@ In addition to all arguments above, the following attributes are exported:
   * `os_name` - Operating system type.
   * `os_versions` - Supported operating system versions.
 
+## API Reference
+
+This data source queries the following TencentCloud APIs:
+
+* Read: [DescribeImportImageOs](https://cloud.tencent.com/document/api/213/15718) - 查询外部导入镜像支持的OS列表
 

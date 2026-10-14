@@ -39,4 +39,9 @@ In addition to all arguments above, the following attributes are exported:
   * `command` - Create backup command.
   * `request_id` - Request ID.
 
+## API Reference
+
+This data source queries the following TencentCloud APIs:
+
+* Read: [DescribeBackupCommand](https://cloud.tencent.com/document/api/238/53189) - 查询创建备份命令
 

@@ -49,4 +49,9 @@ In addition to all arguments above, the following attributes are exported:
   * `region` - Barrel areaNote: This field may return NULL, indicating that the valid value cannot be obtained.
   * `status` - Enabled: domain name online statusDisabled: Domain name offline status.
 
+## API Reference
+
+This data source queries the following TencentCloud APIs:
+
+* Read: [DescribeHostCosInstanceList](https://cloud.tencent.com/document/api/400/91661) - 查询证书cos云资源部署实例列表
 

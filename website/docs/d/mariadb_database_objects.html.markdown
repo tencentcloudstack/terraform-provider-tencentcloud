@@ -41,4 +41,9 @@ In addition to all arguments above, the following attributes are exported:
 * `views` - view list.
   * `view` - view name.
 
+## API Reference
+
+This data source queries the following TencentCloud APIs:
+
+* Read: [DescribeDatabaseObjects](https://cloud.tencent.com/document/api/237/70216) - 查询数据库对象列表
 

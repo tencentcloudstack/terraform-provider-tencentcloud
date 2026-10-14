@@ -38,4 +38,9 @@ In addition to all arguments above, the following attributes are exported:
 
 * `role_configuration_provisionings` - Department member account list.
 
+## API Reference
+
+This data source queries the following TencentCloud APIs:
+
+* Read: [ListRoleConfigurationProvisionings](https://cloud.tencent.com/document/api/850/109933) - 查询权限配置部署列表
 

@@ -41,4 +41,9 @@ In addition to all arguments above, the following attributes are exported:
   * `type` - Aggregator type.
 * `total` - Total number of aggregators.
 
+## API Reference
+
+This data source queries the following TencentCloud APIs:
+
+* Read: [ListAggregators](https://cloud.tencent.com/document/api/1579/129703) - 账号组列表
 

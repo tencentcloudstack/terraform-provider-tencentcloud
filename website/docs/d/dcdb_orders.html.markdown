@@ -38,4 +38,9 @@ In addition to all arguments above, the following attributes are exported:
   * `owner_uin` - Account.
   * `pay_mode` - Payment mode. Valid values: 0 (postpaid), 1 (prepaid).
 
+## API Reference
+
+This data source queries the following TencentCloud APIs:
+
+* Read: [DescribeOrders](https://cloud.tencent.com/document/api/557/16139) - 查询订单信息
 

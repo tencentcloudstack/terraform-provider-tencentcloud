@@ -41,4 +41,9 @@ In addition to all arguments above, the following attributes are exported:
   * `sub_entity_type` - Sub entity type.
   * `zone_id` - Site ID.
 
+## API Reference
+
+This data source queries the following TencentCloud APIs:
+
+* Read: [DescribeIPGroupReferences](https://cloud.tencent.com/document/api/1552/135282) - 查询 IP 分组引用信息
 

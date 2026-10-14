@@ -104,4 +104,9 @@ In addition to all arguments above, the following attributes are exported:
   * `usage_plan_id` - Use the unique ID of the plan.Note: This field may return null, indicating that a valid value cannot be obtained.
   * `usage_plan_name` - Use the name of the plan.Note: This field may return null, indicating that a valid value cannot be obtained.
 
+## API Reference
+
+This data source queries the following TencentCloud APIs:
+
+* Read: [DescribeApiUsagePlan](https://cloud.tencent.com/document/api/628/45240) - 查询 API 使用计划详情
 

@@ -38,4 +38,9 @@ In addition to all arguments above, the following attributes are exported:
 * `parameters_valid_to` - The validity period of the exported token and public key cannot be imported after this period, and you need to call GetParametersForImport again to obtain it.
 * `public_key` - Base64-encoded public key content.
 
+## API Reference
+
+This data source queries the following TencentCloud APIs:
+
+* Read: [GetParametersForImport](https://cloud.tencent.com/document/api/573/38497) - 获取导入主密钥（CMK）材料的参数
 

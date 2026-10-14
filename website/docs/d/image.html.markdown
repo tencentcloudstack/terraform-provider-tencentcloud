@@ -72,4 +72,9 @@ In addition to all arguments above, the following attributes are exported:
 * `image_id` - An image id indicate the uniqueness of a certain image,  which can be used for instance creation or resetting.
 * `image_name` - Name of this image.
 
+## API Reference
+
+This data source queries the following TencentCloud APIs:
+
+* Read: [DescribeImages](https://cloud.tencent.com/document/api/213/15715) - 查看镜像列表
 

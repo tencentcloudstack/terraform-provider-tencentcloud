@@ -30,4 +30,9 @@ In addition to all arguments above, the following attributes are exported:
 
 * `black_headers` - Disabled custom header listNote: This field may return null, indicating that a valid value cannot be obtained.
 
+## API Reference
+
+This data source queries the following TencentCloud APIs:
+
+* Read: [DescribeBlackHeader](https://cloud.tencent.com/document/api/608/59241) - 查询禁用自定义header 名称列表
 

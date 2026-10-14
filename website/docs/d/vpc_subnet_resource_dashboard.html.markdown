@@ -39,4 +39,9 @@ In addition to all arguments above, the following attributes are exported:
   * `subnet_id` - Subnet instance ID, such as `subnet-bthucmmy`.
   * `vpc_id` - VPC instance ID, such as vpc-f1xjkw1b.
 
+## API Reference
+
+This data source queries the following TencentCloud APIs:
+
+* Read: [DescribeSubnetResourceDashboard](https://cloud.tencent.com/document/api/215/91088) - 查看Subnet资源信息
 

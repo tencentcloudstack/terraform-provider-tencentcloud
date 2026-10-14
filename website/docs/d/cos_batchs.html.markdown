@@ -48,4 +48,7 @@ In addition to all arguments above, the following attributes are exported:
   * `status` - Task execution status. Legal parameter values include Active, Cancelled, Cancelling, Complete, Completing, Failed, Failing, New, Paused, Pausing, Preparing, Ready, Suspended.
   * `termination_date` - The end time of the batch processing job.
 
+## API Reference
+
+This data source queries the following TencentCloud APIs:
 

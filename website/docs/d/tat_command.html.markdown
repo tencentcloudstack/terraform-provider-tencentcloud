@@ -57,4 +57,9 @@ In addition to all arguments above, the following attributes are exported:
   * `username` - The user who executes the command on the instance.
   * `working_directory` - Command execution path.
 
+## API Reference
+
+This data source queries the following TencentCloud APIs:
+
+* Read: [DescribeCommands](https://cloud.tencent.com/document/api/1340/52681) - 查询命令详情
 

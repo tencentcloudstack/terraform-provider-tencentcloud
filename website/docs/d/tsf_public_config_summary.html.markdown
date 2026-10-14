@@ -56,4 +56,9 @@ In addition to all arguments above, the following attributes are exported:
     * `last_update_time` - Last update time.Note: This field may return null, indicating that no valid value was found.
   * `total_count` - total count.
 
+## API Reference
+
+This data source queries the following TencentCloud APIs:
+
+* Read: [DescribePublicConfigSummary](https://cloud.tencent.com/document/api/649/38336) - 查询公共配置汇总列表
 

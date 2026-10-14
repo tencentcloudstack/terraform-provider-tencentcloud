@@ -50,4 +50,9 @@ In addition to all arguments above, the following attributes are exported:
   * `trans_code_id` - The transcoding template ID.Note: This field may return null, indicating that no valid values can be obtained.
 * `total_size` - The total number of records in the specified time period.
 
+## API Reference
+
+This data source queries the following TencentCloud APIs:
+
+* Read: [DescribeTimeShiftStreamList](https://cloud.tencent.com/document/api/267/86090) - 查询时移流列表
 

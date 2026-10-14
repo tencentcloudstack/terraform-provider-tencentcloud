@@ -24,7 +24,7 @@ import (
 
 // probeAllResource prints the lifecycle -> cloud API mapping for one resource.
 func probeAllResource(repoRoot string) {
-	analyzer, err := newAPIAnalyzer(repoRoot)
+	analyzer, err := newAPIAnalyzer(repoRoot, loadSnapshotCatalogOnly())
 	if err != nil {
 		fmt.Fprintf(os.Stderr, "init analyzer: %v\n", err)
 		os.Exit(1)
@@ -105,7 +105,7 @@ func probeResource(repoRoot, shortName string) {
 	}
 	fmt.Printf("resource: %s\nfile: %s\n", resName, relToRepo(repoRoot, resFile))
 
-	analyzer, err := newAPIAnalyzer(repoRoot)
+	analyzer, err := newAPIAnalyzer(repoRoot, loadSnapshotCatalogOnly())
 	if err != nil {
 		fmt.Fprintf(os.Stderr, "init analyzer: %v\n", err)
 		os.Exit(1)
@@ -136,12 +136,13 @@ func probeResource(repoRoot, shortName string) {
 	fmt.Println(renderAPIRefs(dedupVerbRefs(refsByVerb)))
 }
 
-
-
 func findResourceFile(repoRoot, resName string) string {
 	short := strings.TrimPrefix(resName, "tencentcloud_")
 	candidates := []string{
 		fmt.Sprintf("resource_tc_%s.go", short),
+		fmt.Sprintf("data_source_tc_%s.go", short),
+		fmt.Sprintf("ephemeral_tc_%s.go", short),
+		fmt.Sprintf("action_tc_%s.go", short),
 		// Some resources share an implementation file with an
 		// "_operation" suffixed sibling (e.g. teo_purge_task ->
 		// teo_purge_task_operation), or a "_config" suffixed one

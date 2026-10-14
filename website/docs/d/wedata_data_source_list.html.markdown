@@ -90,4 +90,7 @@ In addition to all arguments above, the following attributes are exported:
   * `status` - Datasource status.
   * `type` - Datasource type.
 
+## API Reference
+
+This data source queries the following TencentCloud APIs:
 

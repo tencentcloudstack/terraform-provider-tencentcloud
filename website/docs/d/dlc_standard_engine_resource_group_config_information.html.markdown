@@ -46,4 +46,9 @@ In addition to all arguments above, the following attributes are exported:
 
 * `standard_engine_resource_group_config_infos` - Standard engine resource group, configuration related information.
 
+## API Reference
+
+This data source queries the following TencentCloud APIs:
+
+* Read: [DescribeStandardEngineResourceGroupConfigInfo](https://cloud.tencent.com/document/api/1342/122135) - 查询标准引擎资源组的配置信息
 

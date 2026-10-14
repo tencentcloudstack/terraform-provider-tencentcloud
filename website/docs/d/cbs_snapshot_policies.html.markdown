@@ -42,4 +42,9 @@ In addition to all arguments above, the following attributes are exported:
   * `snapshot_policy_name` - Name of the snapshot policy.
   * `status` - Status of the snapshot policy.
 
+## API Reference
+
+This data source queries the following TencentCloud APIs:
+
+* Read: [DescribeAutoSnapshotPolicies](https://cloud.tencent.com/document/api/362/33556) - 查询定期快照策略
 

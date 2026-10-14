@@ -53,4 +53,9 @@ In addition to all arguments above, the following attributes are exported:
   * `slave_deploy_modes` - Availability zone deployment method. Available values: `0` - Single availability zone; `1` - Multiple availability zones.
   * `support_slave_sync_modes` - Data replication mode. `0` - Async replication; `1` - Semisync replication; `2` - Strongsync replication.
 
+## API Reference
+
+This data source queries the following TencentCloud APIs:
+
+* Read: [DescribeCdbZoneConfig](https://cloud.tencent.com/document/api/236/80281) - 查询数据库可用区及售卖规格
 

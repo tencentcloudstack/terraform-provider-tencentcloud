@@ -37,4 +37,9 @@ In addition to all arguments above, the following attributes are exported:
   * `instance_name` - Instance name.
   * `instance_region` - Region where the instance belongs.
 
+## API Reference
+
+This data source queries the following TencentCloud APIs:
+
+* Read: [DescribeCcnAssociatedInstances](https://cloud.tencent.com/document/api/1132/127060) - 查询CCN关联实例信息（不包含云防火墙创建引流实例）
 

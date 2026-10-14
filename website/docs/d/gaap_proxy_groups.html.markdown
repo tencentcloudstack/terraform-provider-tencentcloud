@@ -70,4 +70,9 @@ In addition to all arguments above, the following attributes are exported:
     * `tag_value` - Tag Value.
   * `version` - proxy Group VersionNote: This field may return null, indicating that a valid value cannot be obtained.
 
+## API Reference
+
+This data source queries the following TencentCloud APIs:
+
+* Read: [DescribeProxyGroupList](https://cloud.tencent.com/document/api/608/36943) - 拉取通道组列表
 

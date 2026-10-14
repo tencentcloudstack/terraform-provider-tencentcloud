@@ -36,4 +36,9 @@ In addition to all arguments above, the following attributes are exported:
 
 * `items` - Shared unit resource list.
 
+## API Reference
+
+This data source queries the following TencentCloud APIs:
+
+* Read: [DescribeShareUnitResources](https://cloud.tencent.com/document/api/850/103048) - 获取共享单元资源列表
 

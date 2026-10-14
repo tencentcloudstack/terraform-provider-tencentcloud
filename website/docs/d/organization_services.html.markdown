@@ -54,4 +54,9 @@ Note: This field may return null, indicating that no valid values can be obtaine
   * `service_grant` - Whether to support organization service authorization. Valid values: 1 (yes), 2 (no). Note: This field may return null, indicating that no valid values can be obtained.
   * `service_id` - Organization service ID. Note: This field may return null, indicating that no valid values can be obtained.
 
+## API Reference
+
+This data source queries the following TencentCloud APIs:
+
+* Read: [ListOrganizationService](https://cloud.tencent.com/document/api/850/109561) - 获取集团服务设置列表
 

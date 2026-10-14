@@ -39,4 +39,9 @@ In addition to all arguments above, the following attributes are exported:
   * `vpc_id` - VPC ID.
   * `vpc_type` - vpc network type(1:CVM, 2:BM 1.0).
 
+## API Reference
+
+This data source queries the following TencentCloud APIs:
+
+* Read: [DescribeAccessGroups](https://cloud.tencent.com/document/api/1105/51141) - 查看权限组列表
 

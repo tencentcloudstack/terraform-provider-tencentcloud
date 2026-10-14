@@ -37,4 +37,9 @@ In addition to all arguments above, the following attributes are exported:
   * `security_group_referred_cvm_and_eni_limit` - number of eni and cvm can be referred.
   * `security_group_referred_svc_limit` - number of svc can be referred.
 
+## API Reference
+
+This data source queries the following TencentCloud APIs:
+
+* Read: [DescribeSecurityGroupLimits](https://cloud.tencent.com/document/api/215/41428) - 查询用户安全组配额
 

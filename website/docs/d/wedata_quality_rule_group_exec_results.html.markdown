@@ -79,4 +79,9 @@ In addition to all arguments above, the following attributes are exported:
 
 * `data` - Rule group execution result list.
 
+## API Reference
+
+This data source queries the following TencentCloud APIs:
+
+* Read: [ListQualityRuleGroupExecResultsByPage](https://cloud.tencent.com/document/api/1267/127228) - 质量规则组执行结果分页查询接口
 

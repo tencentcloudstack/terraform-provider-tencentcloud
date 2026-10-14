@@ -55,4 +55,9 @@ In addition to all arguments above, the following attributes are exported:
   * `type` - Mesh type.  Value range:- `STANDALONE`: Standalone mesh- `HOSTED`: hosted the mesh.
   * `version` - Mesh version.
 
+## API Reference
+
+This data source queries the following TencentCloud APIs:
+
+* Read: [DescribeMeshList](https://cloud.tencent.com/document/api/1261/63841) - 查询网格列表
 

@@ -66,4 +66,9 @@ In addition to all arguments above, the following attributes are exported:
   * `updated_user` - Updated by(Note: This field may return null, indicating that no valid value can be obtained).
 * `msg` - Interface information(Note: This field may return null, indicating that no valid value can be obtained).
 
+## API Reference
+
+This data source queries the following TencentCloud APIs:
+
+* Read: [DescribeProjectList](https://cloud.tencent.com/document/api/590/98835) - 项目列表数据接口
 

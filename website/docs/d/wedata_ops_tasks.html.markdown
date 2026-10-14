@@ -50,4 +50,9 @@ In addition to all arguments above, the following attributes are exported:
 
 * `data` - Task list.
 
+## API Reference
+
+This data source queries the following TencentCloud APIs:
+
+* Read: [ListOpsTasks](https://cloud.tencent.com/document/api/1267/123575) - 获取任务列表
 

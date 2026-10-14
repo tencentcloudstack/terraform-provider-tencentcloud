@@ -58,4 +58,9 @@ In addition to all arguments above, the following attributes are exported:
 
 * `result` - Return value.
 
+## API Reference
+
+This data source queries the following TencentCloud APIs:
+
+* Read: [DescribeDataPerformancePage](https://cloud.tencent.com/document/api/1464/59944) - 获取PerformancePage信息
 

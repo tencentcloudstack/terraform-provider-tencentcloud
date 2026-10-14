@@ -40,4 +40,9 @@ In addition to all arguments above, the following attributes are exported:
 
 * `slow_logs` - details of slow logs.
 
+## API Reference
+
+This data source queries the following TencentCloud APIs:
+
+* Read: [DescribeSlowLogs](https://cloud.tencent.com/document/api/240/43596) - 获取慢日志信息
 

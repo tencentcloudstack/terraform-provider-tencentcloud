@@ -77,4 +77,9 @@ In addition to all arguments above, the following attributes are exported:
   * `index_storage` - Index storage.
   * `index_type` - Index type.
 
+## API Reference
+
+This data source queries the following TencentCloud APIs:
+
+* Read: [DescribeIndexList](https://cloud.tencent.com/document/api/845/74382) - 获取索引列表
 

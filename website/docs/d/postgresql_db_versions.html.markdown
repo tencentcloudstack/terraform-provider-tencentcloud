@@ -56,4 +56,9 @@ In addition to all arguments above, the following attributes are exported:
   * `supported_feature_names` - List of features supported by the database kernel, such as:
 TDE: Supports data encryption.
 
+## API Reference
+
+This data source queries the following TencentCloud APIs:
+
+* Read: [DescribeDBVersions](https://cloud.tencent.com/document/api/409/89018) - 查询支持的数据库版本
 

@@ -49,4 +49,9 @@ In addition to all arguments above, the following attributes are exported:
   * `destination_cidr_block` - destination cidr block.
   * `route_table_id` - route table id.
 
+## API Reference
+
+This data source queries the following TencentCloud APIs:
+
+* Read: [DescribeRouteConflicts](https://cloud.tencent.com/document/api/215/19217) - 查询路由策略冲突列表
 

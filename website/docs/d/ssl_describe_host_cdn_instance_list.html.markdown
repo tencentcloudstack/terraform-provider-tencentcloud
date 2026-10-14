@@ -50,4 +50,9 @@ In addition to all arguments above, the following attributes are exported:
   * `https_billing_switch` - Domain name billing status.
   * `status` - Domain name.
 
+## API Reference
+
+This data source queries the following TencentCloud APIs:
+
+* Read: [DescribeHostCdnInstanceList](https://cloud.tencent.com/document/api/400/91663) - 查询证书cdn云资源部署实例列表
 

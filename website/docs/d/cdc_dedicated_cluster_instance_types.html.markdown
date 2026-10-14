@@ -47,4 +47,9 @@ In addition to all arguments above, the following attributes are exported:
   * `type_name` - Instance Type Name.
   * `zone` - Zone Name.
 
+## API Reference
+
+This data source queries the following TencentCloud APIs:
+
+* Read: [DescribeDedicatedClusterInstanceTypes](https://cloud.tencent.com/document/api/1346/73762) - 查询专用集群支持的实例规格列表
 

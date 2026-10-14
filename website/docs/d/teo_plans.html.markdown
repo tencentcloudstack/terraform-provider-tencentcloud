@@ -107,4 +107,9 @@ In addition to all arguments above, the following attributes are exported:
     * `zone_id` - Zone ID.
     * `zone_name` - Zone name.
 
+## API Reference
+
+This data source queries the following TencentCloud APIs:
+
+* Read: [DescribePlans](https://cloud.tencent.com/document/api/1552/118485) - 查询套餐信息列表
 

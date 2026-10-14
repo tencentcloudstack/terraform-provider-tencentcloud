@@ -50,4 +50,9 @@ In addition to all arguments above, the following attributes are exported:
   * `replica_set_name` - Replication name.
   * `state` - operation state.
 
+## API Reference
+
+This data source queries the following TencentCloud APIs:
+
+* Read: [DescribeCurrentOp](https://cloud.tencent.com/document/api/240/48120) - 查询数据库实例当前正在执行的操作
 

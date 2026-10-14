@@ -82,4 +82,9 @@ In addition to all arguments above, the following attributes are exported:
       * `original_price` - Original price.
   * `not_support_modify_message` - Package change reason information is not supported. When the package status is changed to `AVAILABLE`, the information is empty.
 
+## API Reference
+
+This data source queries the following TencentCloud APIs:
+
+* Read: [DescribeModifyInstanceBundles](https://cloud.tencent.com/document/api/1207/55550) - 查询实例可变更套餐列表
 

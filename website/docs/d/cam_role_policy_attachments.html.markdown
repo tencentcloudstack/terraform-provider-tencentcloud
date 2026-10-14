@@ -48,4 +48,9 @@ In addition to all arguments above, the following attributes are exported:
   * `policy_type` - Type of the policy strategy. 'User' means customer strategy and 'QCS' means preset strategy.
   * `role_id` - ID of CAM role.
 
+## API Reference
+
+This data source queries the following TencentCloud APIs:
+
+* Read: [ListAttachedRolePolicies](https://cloud.tencent.com/document/api/598/36220) - 获取角色绑定的策略列表
 

@@ -71,4 +71,9 @@ In addition to all arguments above, the following attributes are exported:
   * `task_status` - Execution task status. Valid values:PENDING: PendingDELIVERING: DeliveringDELIVER_DELAYED: Delivery delayedDELIVER_FAILED: Delivery failedSTART_FAILED: Failed to start the commandRUNNING: RunningSUCCESS: SuccessFAILED: Failed to execute the command. The exit code is not 0 after execution.TIMEOUT: Command timed outTASK_TIMEOUT: Task timed outCANCELLING: CancelingCANCELLED: Canceled (canceled before execution)TERMINATED: Terminated (canceled during execution).
   * `updated_time` - Update time.
 
+## API Reference
+
+This data source queries the following TencentCloud APIs:
+
+* Read: [DescribeInvocationTasks](https://cloud.tencent.com/document/api/1340/52680) - 查询执行任务
 

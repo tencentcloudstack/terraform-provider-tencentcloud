@@ -30,4 +30,9 @@ In addition to all arguments above, the following attributes are exported:
 * `product_list` - Product list.
   * `name` - Product name, e.g. `cvm`.
 
+## API Reference
+
+This data source queries the following TencentCloud APIs:
+
+* Read: [DescribeProducts](https://cloud.tencent.com/document/api/1596/77931) - 查询支持地域列表查询的产品
 

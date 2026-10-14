@@ -48,4 +48,9 @@ In addition to all arguments above, the following attributes are exported:
   * `used_quota` - Used quota Note: This field may return null, indicating that a valid value cannot be obtained.
   * `zone` - Available area Note: This field may return null, indicating that a valid value cannot be obtained.
 
+## API Reference
+
+This data source queries the following TencentCloud APIs:
+
+* Read: [DescribeCvmQuota](https://cloud.tencent.com/document/api/589/59472) - 查询账户的CVM配额
 

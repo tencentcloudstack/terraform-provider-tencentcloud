@@ -34,4 +34,9 @@ In addition to all arguments above, the following attributes are exported:
   * `key_alias` - Key alias.
   * `key_id` - Key ID.
 
+## API Reference
+
+This data source queries the following TencentCloud APIs:
+
+* Read: [ListKeyAliasByRegion](https://cloud.tencent.com/document/api/629/48173) - 根据地域获取KMS密钥别名
 

@@ -34,4 +34,9 @@ In addition to all arguments above, the following attributes are exported:
   * `sort_id` - Sort order.
 * `monitor_types` - Monitoring type, cloud product monitoring is MT_ QCE.
 
+## API Reference
+
+This data source queries the following TencentCloud APIs:
+
+* Read: [DescribeMonitorTypes](https://cloud.tencent.com/document/api/248/49979) - 查询监控类型
 

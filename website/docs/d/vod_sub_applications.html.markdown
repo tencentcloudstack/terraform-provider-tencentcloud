@@ -96,4 +96,9 @@ In addition to all arguments above, the following attributes are exported:
   * `sub_app_id` - Sub-application ID.
   * `tags` - Resource tags bound to the sub-application.
 
+## API Reference
+
+This data source queries the following TencentCloud APIs:
+
+* Read: [DescribeSubAppIds](https://cloud.tencent.com/document/api/266/36304) - 查询应用列表
 

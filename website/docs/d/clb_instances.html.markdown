@@ -116,4 +116,9 @@ In addition to all arguments above, the following attributes are exported:
   * `zone` - Available zone unique id(string representation), This field maybe null, means cannot get a valid value.
   * `zones` - Zones where rules are deployed for VPC internal load balancers with nearby access mode. Note: This field may return null, indicating no valid values can be obtained.
 
+## API Reference
+
+This data source queries the following TencentCloud APIs:
+
+* Read: [DescribeLoadBalancers](https://cloud.tencent.com/document/api/214/30685) - 查询负载均衡实例列表
 

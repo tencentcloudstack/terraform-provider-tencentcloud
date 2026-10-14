@@ -38,4 +38,9 @@ In addition to all arguments above, the following attributes are exported:
   * `qps_extend_intl_max` - Maximum qps of extend package for overseas.
   * `qps_extend_max` - Maximum qps of extend package.
 
+## API Reference
+
+This data source queries the following TencentCloud APIs:
+
+* Read: [GetInstanceQpsLimit](https://cloud.tencent.com/document/api/627/98204) - 获取套餐实例的弹性qps上限
 

@@ -66,8 +66,14 @@ func refreshData() error {
 }
 
 func fetchAndSlimActions() ([]apiAction, error) {
+	return fetchAndSlimActionsWith(http.DefaultClient)
+}
+
+// fetchAndSlimActionsWith downloads and slims the action catalog using the
+// given HTTP client.
+func fetchAndSlimActionsWith(httpClient *http.Client) ([]apiAction, error) {
 	var raw []rawAction
-	if err := fetchJSON(actionsURL, &raw); err != nil {
+	if err := fetchJSON(httpClient, actionsURL, &raw); err != nil {
 		return nil, err
 	}
 	out := make([]apiAction, 0, len(raw))
@@ -86,8 +92,14 @@ func fetchAndSlimActions() ([]apiAction, error) {
 }
 
 func fetchAndSlimProducts() ([]map[string]string, error) {
+	return fetchAndSlimProductsWith(http.DefaultClient)
+}
+
+// fetchAndSlimProductsWith downloads and slims the product catalog using
+// the given HTTP client.
+func fetchAndSlimProductsWith(httpClient *http.Client) ([]map[string]string, error) {
 	var raw []rawProduct
-	if err := fetchJSON(productsURL, &raw); err != nil {
+	if err := fetchJSON(httpClient, productsURL, &raw); err != nil {
 		return nil, err
 	}
 	out := make([]map[string]string, 0, len(raw))
@@ -106,8 +118,11 @@ func fetchAndSlimProducts() ([]map[string]string, error) {
 
 // fetchJSON downloads url (following redirects, transparent gzip) and
 // unmarshals it into v. The response is size-capped for safety.
-func fetchJSON(url string, v interface{}) error {
-	client := &http.Client{Timeout: 2 * time.Minute}
+func fetchJSON(httpClient *http.Client, url string, v interface{}) error {
+	client := httpClient
+	if client == nil {
+		client = &http.Client{Timeout: 2 * time.Minute}
+	}
 	resp, err := client.Get(url)
 	if err != nil {
 		return fmt.Errorf("download %s: %w", url, err)

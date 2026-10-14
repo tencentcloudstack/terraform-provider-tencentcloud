@@ -42,4 +42,9 @@ In addition to all arguments above, the following attributes are exported:
   * `status` - status of the file system(1: creating create success 3: create failed).
   * `super_users` - super users of the file system.
 
+## API Reference
+
+This data source queries the following TencentCloud APIs:
+
+* Read: [DescribeFileSystems](https://cloud.tencent.com/document/api/1105/51146) - 查看文件系统列表
 

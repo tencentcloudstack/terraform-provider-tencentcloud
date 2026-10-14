@@ -34,4 +34,9 @@ In addition to all arguments above, the following attributes are exported:
   * `version_desc` - Version description.Note: This field may return null, indicating that no valid value can be obtained.
   * `version_name` - Version number.Note: This field may return null, indicating that no valid value can be obtained.
 
+## API Reference
+
+This data source queries the following TencentCloud APIs:
+
+* Read: [DescribeServiceReleaseVersion](https://cloud.tencent.com/document/api/628/45196) - 查询服务已发布的版本
 

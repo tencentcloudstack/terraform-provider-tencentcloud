@@ -40,4 +40,9 @@ In addition to all arguments above, the following attributes are exported:
 * `master_region` - The region where the master instance is located.
 * `target_sub_version` - Available kernel versions for upgrade.
 
+## API Reference
+
+This data source queries the following TencentCloud APIs:
+
+* Read: [DescribeDBFeatures](https://cloud.tencent.com/document/api/236/85925) - 查询实例版本属性
 

@@ -100,4 +100,9 @@ In addition to all arguments above, the following attributes are exported:
   * `update_time` - Update time.
   * `view_name` - View.
 
+## API Reference
+
+This data source queries the following TencentCloud APIs:
+
+* Read: [DescribeConditionsTemplateList](https://cloud.tencent.com/document/api/248/70250) - 获取条件模板列表
 

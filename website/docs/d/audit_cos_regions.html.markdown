@@ -32,4 +32,9 @@ In addition to all arguments above, the following attributes are exported:
   * `cos_region_name` - Cos region chinese name.
   * `cos_region` - Cos region.
 
+## API Reference
+
+This data source queries the following TencentCloud APIs:
+
+* Read: [ListCosEnableRegion](https://cloud.tencent.com/document/api/629/35345) - 查询操作审计支持的cos可用区
 

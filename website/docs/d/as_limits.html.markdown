@@ -32,4 +32,9 @@ In addition to all arguments above, the following attributes are exported:
 * `number_of_auto_scaling_groups` - Current number of auto scaling groups under the user account.
 * `number_of_launch_configurations` - Current number of launch configurations under the user account.
 
+## API Reference
+
+This data source queries the following TencentCloud APIs:
+
+* Read: [DescribeAccountLimits](https://cloud.tencent.com/document/api/377/20443) - 查询用户账号的资源限制
 

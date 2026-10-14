@@ -41,4 +41,9 @@ In addition to all arguments above, the following attributes are exported:
   * `status` - Version statusNote: this field may return `null`, indicating that no valid values can be obtained.
   * `version` - Function version name.
 
+## API Reference
+
+This data source queries the following TencentCloud APIs:
+
+* Read: [ListVersionByFunction](https://cloud.tencent.com/document/api/583/37162) - 查询函数版本
 

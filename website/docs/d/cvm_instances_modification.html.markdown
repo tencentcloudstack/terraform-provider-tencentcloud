@@ -48,4 +48,9 @@ In addition to all arguments above, the following attributes are exported:
   * `message` - Status description information.
   * `status` - State description.
 
+## API Reference
+
+This data source queries the following TencentCloud APIs:
+
+* Read: [DescribeInstancesModification](https://cloud.tencent.com/document/api/213/60294) - 查询实例可调整配置
 

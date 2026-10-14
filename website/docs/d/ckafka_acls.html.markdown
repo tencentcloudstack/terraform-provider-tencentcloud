@@ -44,4 +44,11 @@ In addition to all arguments above, the following attributes are exported:
   * `resource_name` - ACL resource name, which is related to `resource_type`.
   * `resource_type` - ACL resource type.
 
+## API Reference
+
+This data source queries the following TencentCloud APIs:
+
+* Read: [DescribeACL](https://cloud.tencent.com/document/api/597/40856) - 枚举ACL
+* Read: [DescribeInstanceAttributes](https://cloud.tencent.com/document/api/597/40836) - 获取实例属性
+* Read: [DescribeTopicAttributes](https://cloud.tencent.com/document/api/597/40846) - 获取主题属性
 

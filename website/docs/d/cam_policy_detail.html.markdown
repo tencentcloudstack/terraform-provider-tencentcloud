@@ -43,4 +43,9 @@ In addition to all arguments above, the following attributes are exported:
   * `type` - Policy type. 1 means custom policy, 2 means preset policy.
   * `update_time` - Time the policy was last updated.
 
+## API Reference
+
+This data source queries the following TencentCloud APIs:
+
+* Read: [GetPolicy](https://cloud.tencent.com/document/api/598/34574) - 查看策略详情
 

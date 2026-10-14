@@ -57,4 +57,9 @@ In addition to all arguments above, the following attributes are exported:
 * `status` - Status: Audit: OK during the review: review passed inValid: expired expiRing: is about to expire Expired: expired.
 * `verify_time` - Verify timeNote: This field may return NULL, indicating that the valid value cannot be obtained.
 
+## API Reference
+
+This data source queries the following TencentCloud APIs:
+
+* Read: [DescribeManagerDetail](https://cloud.tencent.com/document/api/400/52673) - 查询管理人详情
 

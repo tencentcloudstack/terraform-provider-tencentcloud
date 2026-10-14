@@ -34,4 +34,9 @@ In addition to all arguments above, the following attributes are exported:
 * `keys` - A list of KMS keys.
   * `key_id` - ID of CMK.
 
+## API Reference
+
+This data source queries the following TencentCloud APIs:
+
+* Read: [ListKeys](https://cloud.tencent.com/document/api/573/34415) - 获取主密钥列表
 

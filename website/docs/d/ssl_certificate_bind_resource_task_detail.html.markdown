@@ -254,4 +254,9 @@ In addition to all arguments above, the following attributes are exported:
   * `region` - Region.
   * `total_count` - Total number of WAF instances in the region.
 
+## API Reference
+
+This data source queries the following TencentCloud APIs:
+
+* Read: [DescribeCertificateBindResourceTaskDetail](https://cloud.tencent.com/document/api/400/97758) - 查询证书关联云资源任务结果 - 返回关联详情
 

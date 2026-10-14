@@ -65,4 +65,9 @@ In addition to all arguments above, the following attributes are exported:
   * `is_resettable` - Whether the instance image can be reset to the target image.
   * `non_resettable_message` - The information cannot be reset. when the mirror can be reset ''.
 
+## API Reference
+
+This data source queries the following TencentCloud APIs:
+
+* Read: [DescribeResetInstanceBlueprints](https://cloud.tencent.com/document/api/1207/55549) - 查询重置实例的镜像信息
 

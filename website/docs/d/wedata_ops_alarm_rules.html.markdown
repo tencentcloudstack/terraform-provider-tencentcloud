@@ -43,4 +43,9 @@ In addition to all arguments above, the following attributes are exported:
 
 * `data` - Alarm information response.
 
+## API Reference
+
+This data source queries the following TencentCloud APIs:
+
+* Read: [ListOpsAlarmRules](https://cloud.tencent.com/document/api/1267/123576) - 获取告警规则列表
 

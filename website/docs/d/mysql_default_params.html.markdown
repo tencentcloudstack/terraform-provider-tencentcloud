@@ -41,4 +41,9 @@ In addition to all arguments above, the following attributes are exported:
   * `need_reboot` - Indicates weather the database instance reboot if param modified.
   * `param_type` - Type of param.
 
+## API Reference
+
+This data source queries the following TencentCloud APIs:
+
+* Read: [DescribeDefaultParams](https://cloud.tencent.com/document/api/236/32662) - 查询默认的可设置参数列表
 

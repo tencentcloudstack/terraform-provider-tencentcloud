@@ -62,4 +62,9 @@ In addition to all arguments above, the following attributes are exported:
   * `zone` - Availability zone. Note: This field may return null, indicating that no valid values can be obtained.
 * `node_roles` - List of cluster-supported node role types.
 
+## API Reference
+
+This data source queries the following TencentCloud APIs:
+
+* Read: [DescribeInstanceNodes](https://cloud.tencent.com/document/api/1387/102383) - 获取集群节点信息列表
 

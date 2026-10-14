@@ -37,4 +37,9 @@ In addition to all arguments above, the following attributes are exported:
   * `is_un_support_version` - Is the supported version.
   * `time` - connect time.
 
+## API Reference
+
+This data source queries the following TencentCloud APIs:
+
+* Read: [DescribeTopicProduceConnection](https://cloud.tencent.com/document/api/597/85306) - 查询topic生产端连接信息
 

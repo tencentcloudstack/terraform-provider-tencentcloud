@@ -59,4 +59,9 @@ In addition to all arguments above, the following attributes are exported:
     * `updated_time` - Updated time.
   * `total_count` - total number of records.
 
+## API Reference
+
+This data source queries the following TencentCloud APIs:
+
+* Read: [DescribeUnitRulesV2](https://cloud.tencent.com/document/api/649/90667) - 查询单元化规则列表V2
 

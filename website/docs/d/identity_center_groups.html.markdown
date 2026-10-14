@@ -37,4 +37,9 @@ In addition to all arguments above, the following attributes are exported:
 
 * `groups` - User group list.
 
+## API Reference
+
+This data source queries the following TencentCloud APIs:
+
+* Read: [ListGroups](https://cloud.tencent.com/document/api/850/109916) - 查询用户组列表
 

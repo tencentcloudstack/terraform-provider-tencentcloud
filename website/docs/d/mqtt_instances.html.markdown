@@ -84,4 +84,9 @@ In addition to all arguments above, the following attributes are exported:
   * `tps_limit` - Elastic TPS current limit value.
   * `version` - Instacen version.
 
+## API Reference
+
+This data source queries the following TencentCloud APIs:
+
+* Read: [DescribeInstanceList](https://cloud.tencent.com/document/api/1778/111029) - 获取MQTT实例列表
 

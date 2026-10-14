@@ -43,4 +43,9 @@ In addition to all arguments above, the following attributes are exported:
 * `tmp_secret_key` - Temporary key (Key).
 * `x_cos_security_token` - Temporary key (Token).
 
+## API Reference
+
+This data source queries the following TencentCloud APIs:
+
+* Read: [DescribeUploadIncrementalInfo](https://cloud.tencent.com/document/api/238/53184) - 查询增量备份上传权限
 

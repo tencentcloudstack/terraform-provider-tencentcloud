@@ -39,4 +39,9 @@ In addition to all arguments above, the following attributes are exported:
   * `database_name` - The name of database.
 * `items` - Returned instance information.
 
+## API Reference
+
+This data source queries the following TencentCloud APIs:
+
+* Read: [DescribeDatabases](https://cloud.tencent.com/document/api/236/17493) - 查询数据库
 

@@ -78,4 +78,9 @@ In addition to all arguments above, the following attributes are exported:
 - 11 --- In use
 - 12 --- Not in use.
 
+## API Reference
+
+This data source queries the following TencentCloud APIs:
+
+* Read: [GetResourceGroupMetrics](https://cloud.tencent.com/document/api/1267/123981) - 查看某个资源组的监控指标
 

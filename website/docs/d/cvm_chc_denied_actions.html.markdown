@@ -35,4 +35,9 @@ In addition to all arguments above, the following attributes are exported:
   * `deny_actions` - Actions not allowed for the current CHC instance.
   * `state` - CHC instance status.
 
+## API Reference
+
+This data source queries the following TencentCloud APIs:
+
+* Read: [DescribeChcDeniedActions](https://cloud.tencent.com/document/api/213/78724) - 查询CHC物理服务器禁止做的操作
 

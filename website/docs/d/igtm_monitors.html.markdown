@@ -76,4 +76,9 @@ ENABLED DISABLED.
   * `uin` - Owner user.
   * `updated_on` - Update time.
 
+## API Reference
+
+This data source queries the following TencentCloud APIs:
+
+* Read: [DescribeMonitors](https://cloud.tencent.com/document/api/1551/120446) - 获取所有监控器
 

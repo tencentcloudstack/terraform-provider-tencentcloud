@@ -46,4 +46,9 @@ In addition to all arguments above, the following attributes are exported:
 * `replication_status` - sync status.
 * `replication_time` - sync complete time.
 
+## API Reference
+
+This data source queries the following TencentCloud APIs:
+
+* Read: [DescribeReplicationInstanceSyncStatus](https://cloud.tencent.com/document/api/1141/55297) - 查询从实例同步状态
 

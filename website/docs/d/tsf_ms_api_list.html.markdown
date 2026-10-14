@@ -40,4 +40,9 @@ In addition to all arguments above, the following attributes are exported:
     * `status` - API status. 0: offline, 1: online.Note: This field may return null, indicating that no valid value was found.
   * `total_count` - Quantity.
 
+## API Reference
+
+This data source queries the following TencentCloud APIs:
+
+* Read: [DescribeMsApiList](https://cloud.tencent.com/document/api/649/45536) - 查询服务API列表
 

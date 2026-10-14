@@ -42,4 +42,9 @@ In addition to all arguments above, the following attributes are exported:
   * `description` - Compliance pack description.
   * `risk_level` - Risk level. Valid values: 1 (high risk), 2 (medium risk), 3 (low risk).
 
+## API Reference
+
+This data source queries the following TencentCloud APIs:
+
+* Read: [ListSystemCompliancePacks](https://cloud.tencent.com/document/api/1579/129740) - 获取系统合规包列表
 

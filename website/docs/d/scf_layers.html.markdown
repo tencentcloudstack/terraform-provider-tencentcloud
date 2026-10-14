@@ -39,4 +39,9 @@ In addition to all arguments above, the following attributes are exported:
   * `stamp` - StampNote: This field may return null, indicating that no valid values can be obtained.
   * `status` - Current status of specific layer version. For valid values, please see [here](https://intl.cloud.tencent.com/document/product/583/47175?from_cn_redirect=1#.E5.B1.82.EF.BC.88layer.EF.BC.89.E7.8A.B6.E6.80.81).
 
+## API Reference
+
+This data source queries the following TencentCloud APIs:
+
+* Read: [ListLayers](https://cloud.tencent.com/document/api/583/41384) - 返回层列表
 

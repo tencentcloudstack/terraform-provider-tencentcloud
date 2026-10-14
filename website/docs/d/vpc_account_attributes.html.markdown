@@ -31,4 +31,9 @@ In addition to all arguments above, the following attributes are exported:
   * `attribute_name` - Attribute name.
   * `attribute_values` - Attribute values.
 
+## API Reference
+
+This data source queries the following TencentCloud APIs:
+
+* Read: [DescribeAccountAttributes](https://cloud.tencent.com/document/api/215/17875) - 查询账户属性
 

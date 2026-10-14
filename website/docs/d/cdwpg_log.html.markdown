@@ -41,4 +41,10 @@ In addition to all arguments above, the following attributes are exported:
 * `error_log_details` - Error log details.
 * `slow_log_details` - Slow sql log details.
 
+## API Reference
+
+This data source queries the following TencentCloud APIs:
+
+* Read: [DescribeErrorLog](https://cloud.tencent.com/document/api/878/116665) - 错误日志
+* Read: [DescribeSlowLog](https://cloud.tencent.com/document/api/878/116663) - 慢SQL日志
 

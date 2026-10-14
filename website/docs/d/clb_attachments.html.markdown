@@ -45,4 +45,10 @@ In addition to all arguments above, the following attributes are exported:
     * `port` - Port of the backend server.
     * `weight` - Forwarding weight of the backend service, the range of [0, 100], defaults to `10`.
 
+## API Reference
+
+This data source queries the following TencentCloud APIs:
+
+* Read: [DescribeListeners](https://cloud.tencent.com/document/api/214/30686) - 查询负载均衡的监听器列表
+* Read: [DescribeTargets](https://cloud.tencent.com/document/api/214/30684) - 查询负载均衡绑定的后端服务列表
 

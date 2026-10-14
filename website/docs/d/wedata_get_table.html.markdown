@@ -46,4 +46,9 @@ In addition to all arguments above, the following attributes are exported:
     * `storage_size` - Storage size.
   * `update_time` - Update time.
 
+## API Reference
+
+This data source queries the following TencentCloud APIs:
+
+* Read: [GetTable](https://cloud.tencent.com/document/api/1267/123996) - 获取表详情
 

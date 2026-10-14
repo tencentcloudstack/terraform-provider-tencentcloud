@@ -21,8 +21,6 @@ package main
 // list) maps client accessor name -> catalog product.
 
 import (
-	"embed"
-	"encoding/json"
 	"fmt"
 	"go/ast"
 	"go/parser"
@@ -49,27 +47,6 @@ type apiRef struct {
 	Action  string `json:"action"`
 	Name    string `json:"name"`
 	URL     string `json:"url"`
-}
-
-//go:embed data/api-actions.json
-var apiActionsFS embed.FS
-
-// loadAPICatalog loads the embedded action catalog into a lookup index
-// keyed by "<lowercase product>.<action>".
-func loadAPICatalog() (map[string]apiAction, error) {
-	raw, err := apiActionsFS.ReadFile("data/api-actions.json")
-	if err != nil {
-		return nil, fmt.Errorf("read embedded api-actions.json: %w", err)
-	}
-	var actions []apiAction
-	if err := json.Unmarshal(raw, &actions); err != nil {
-		return nil, fmt.Errorf("parse api-actions.json: %w", err)
-	}
-	idx := make(map[string]apiAction, len(actions))
-	for _, a := range actions {
-		idx[strings.ToLower(a.Product)+"."+a.Action] = a
-	}
-	return idx, nil
 }
 
 // manualProductAlias overrides the automatic product resolution for the few
@@ -108,14 +85,13 @@ type apiAnalyzer struct {
 	parsedFiles map[string]*ast.File
 }
 
-func newAPIAnalyzer(repoRoot string) (*apiAnalyzer, error) {
+func newAPIAnalyzer(repoRoot string, cat *catalog) (*apiAnalyzer, error) {
 	clientProd, err := buildClientProductIndex(repoRoot)
 	if err != nil {
 		return nil, err
 	}
-	actionIdx, err := loadAPICatalog()
-	if err != nil {
-		return nil, err
+	if cat == nil {
+		cat = loadCatalog(nil)
 	}
 	known := map[string]bool{}
 	for c := range clientProd {
@@ -126,7 +102,7 @@ func newAPIAnalyzer(repoRoot string) (*apiAnalyzer, error) {
 		repoRoot:     repoRoot,
 		servicesRoot: filepath.Join(repoRoot, "tencentcloud", "services"),
 		clientProd:   clientProd,
-		actionIdx:    actionIdx,
+		actionIdx:    cat.actionIdx,
 		knownClients: known,
 		methodIndex:  map[string][]serviceMethod{},
 		parsedFiles:  map[string]*ast.File{},
@@ -528,14 +504,38 @@ func buildClientProductIndex(repoRoot string) (map[string]string, error) {
 	return idx, nil
 }
 
-// renderAPIRefs renders the markdown bullet list for a phase -> refs map.
+// renderAPIRefsFor renders the markdown bullet list for a phase -> refs
+// map, with the lead-in sentence matching the doc type.
+func renderAPIRefsFor(dtype string, refs map[string][]apiRef) string {
+	leads := map[string]string{
+		"resource":           "This resource interacts with the following TencentCloud APIs:",
+		"data_source":        "This data source queries the following TencentCloud APIs:",
+		"action":             "This action invokes the following TencentCloud APIs:",
+		"ephemeral":          "This ephemeral resource reads the following TencentCloud APIs:",
+		"ephemeral_resource": "This ephemeral resource reads the following TencentCloud APIs:",
+	}
+	lead, ok := leads[dtype]
+	if !ok {
+		lead = leads["resource"]
+	}
+	return renderAPIRefsLead(lead, dtype, refs)
+}
+
+// renderAPIRefs renders the markdown bullet list for a phase -> refs map
+// with the resource lead-in.
 func renderAPIRefs(refs map[string][]apiRef) string {
+	return renderAPIRefsLead("This resource interacts with the following TencentCloud APIs:", "resource", refs)
+}
+
+// renderAPIRefsLead is the shared renderer. verbOrder controls the phase
+// sequence; verbs outside the map sort after the known ones alphabetically.
+func renderAPIRefsLead(lead string, dtype string, refs map[string][]apiRef) string {
 	if len(refs) == 0 {
 		return ""
 	}
-	verbOrder := map[string]int{"Create": 0, "Read": 1, "Update": 2, "Delete": 3}
+	verbOrder := map[string]int{"Create": 0, "Read": 1, "Update": 2, "Delete": 3, "Invoke": 4, "Open": 5}
 	var b strings.Builder
-	b.WriteString("This resource interacts with the following TencentCloud APIs:\n\n")
+	b.WriteString(lead + "\n\n")
 	verbs := make([]string, 0, len(refs))
 	for v := range refs {
 		verbs = append(verbs, v)
@@ -665,7 +665,8 @@ func getSharedAPIAnalyzer() *apiAnalyzer {
 	if err != nil {
 		return nil
 	}
-	a, err := newAPIAnalyzer(repoRoot)
+	cat := loadCatalog(liveHTTPClient())
+	a, err := newAPIAnalyzer(repoRoot, cat)
 	if err != nil {
 		message("[WARN]API reference analysis unavailable: %v\n", err)
 		return nil
@@ -724,7 +725,6 @@ func dedupVerbRefs(refs map[string][]apiRef) map[string][]apiRef {
 	return out
 }
 
-
 // findFuncDeclByPointer resolves the runtime function pointer of a lifecycle
 // function back to its declaring FuncDecl via the debug symbol table.
 func findFuncDeclByPointer(a *apiAnalyzer, resFile string, fn func(*schema.ResourceData, interface{}) error) *ast.FuncDecl {
@@ -749,7 +749,6 @@ func findFuncDeclByPointer(a *apiAnalyzer, resFile string, fn func(*schema.Resou
 	}
 	return nil
 }
-
 
 // frameworkResourceRecvType resolves the Go struct receiver type name of the
 // framework resource implementation (e.g. "SsmSecretVersionV2Resource" for
@@ -780,4 +779,65 @@ func frameworkResourceRecvType(analyzer *apiAnalyzer, resFile, resName string) s
 		}
 	}
 	return ""
+}
+
+// ---- datasource / action / ephemeral rendering ----
+
+// frameworkRefKind describes a framework reference type whose lifecycle
+// methods the API section should trace.
+type frameworkRefKind struct {
+	// verbs maps the rendered verb to the Go method name on the impl.
+	verbs map[string]string
+}
+
+// frameworkRefKinds lists the lifecycle verbs per framework reference type.
+// Actions implement Invoke; ephemeral resources implement Open.
+var frameworkRefKinds = map[string]frameworkRefKind{
+	"action":             {verbs: map[string]string{"Invoke": "Invoke"}},
+	"ephemeral_resource": {verbs: map[string]string{"Open": "Open"}},
+}
+
+// renderFrameworkRefAPISection produces the "API Reference" body for
+// framework actions and ephemeral resources. The receiver type is resolved
+// from the declaring file via its Metadata method.
+func renderFrameworkRefAPISection(analyzer *apiAnalyzer, repoRoot, name, kind string) string {
+	if analyzer == nil {
+		return ""
+	}
+	spec, ok := frameworkRefKinds[kind]
+	if !ok {
+		return ""
+	}
+	resFile := findResourceFile(repoRoot, name)
+	if resFile == "" {
+		return ""
+	}
+	recv := frameworkResourceRecvType(analyzer, resFile, name)
+	if recv == "" {
+		return ""
+	}
+	refsByVerb := map[string][]apiRef{}
+	for verb, method := range spec.verbs {
+		fd := analyzer.lookupMethodByReceiver(recv, method)
+		if fd != nil {
+			refsByVerb[verb] = analyzer.analyzeLifecycle(fd)
+		}
+	}
+	return renderAPIRefsFor(kind, dedupVerbRefs(refsByVerb))
+}
+
+// readDataSourceAPIs traces one SDKv2 data source's Read function.
+func (a *apiAnalyzer) readDataSourceAPIs(repoRoot, name string, ds *schema.Resource) []apiRef {
+	if a == nil || ds == nil || ds.Read == nil {
+		return nil
+	}
+	resFile := findResourceFile(repoRoot, name)
+	if resFile == "" {
+		return nil
+	}
+	fd := findFuncDeclByPointer(a, resFile, ds.Read)
+	if fd == nil {
+		return nil
+	}
+	return a.analyzeLifecycle(fd)
 }

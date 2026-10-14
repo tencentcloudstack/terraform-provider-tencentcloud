@@ -76,4 +76,9 @@ In addition to all arguments above, the following attributes are exported:
   * `new_error_codes` - New error code.
   * `set_headers` - Response headers to be set.
 
+## API Reference
+
+This data source queries the following TencentCloud APIs:
+
+* Read: [DescribeDomainErrorPageInfo](https://cloud.tencent.com/document/api/608/39345) - 查询目前定制域名的错误响应
 

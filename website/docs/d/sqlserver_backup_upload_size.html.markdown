@@ -37,4 +37,9 @@ In addition to all arguments above, the following attributes are exported:
   * `file_name` - Backup name.
   * `size` - Backup size.
 
+## API Reference
+
+This data source queries the following TencentCloud APIs:
+
+* Read: [DescribeBackupUploadSize](https://cloud.tencent.com/document/api/238/53187) - 查询上传的备份文件大小
 

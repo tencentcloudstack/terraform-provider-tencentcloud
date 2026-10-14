@@ -38,4 +38,9 @@ In addition to all arguments above, the following attributes are exported:
 
 * `request_id` - The request ID returned by the API.
 
+## API Reference
+
+This data source queries the following TencentCloud APIs:
+
+* Read: [AcquireClusterAdminRole](https://cloud.tencent.com/document/api/457/49014) - 获取集群RBAC管理员角色
 

@@ -41,4 +41,9 @@ In addition to all arguments above, the following attributes are exported:
   * `placement_group_id` - ID of the placement group.
   * `type` - Type of the placement group.
 
+## API Reference
+
+This data source queries the following TencentCloud APIs:
+
+* Read: [DescribeDisasterRecoverGroups](https://cloud.tencent.com/document/api/213/17810) - 查询分散置放群组信息
 

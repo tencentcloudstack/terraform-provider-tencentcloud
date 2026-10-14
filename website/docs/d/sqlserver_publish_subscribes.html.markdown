@@ -146,4 +146,9 @@ In addition to all arguments above, the following attributes are exported:
   * `subscribe_instance_ip` - IP of the SQL Server instance which subscribe.
   * `subscribe_instance_name` - Name of the SQL Server instance which subscribe.
 
+## API Reference
+
+This data source queries the following TencentCloud APIs:
+
+* Read: [DescribePublishSubscribe](https://cloud.tencent.com/document/api/238/46282) - 查询订阅发布
 

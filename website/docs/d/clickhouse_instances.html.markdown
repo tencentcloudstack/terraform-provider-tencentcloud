@@ -171,4 +171,9 @@ In addition to all arguments above, the following attributes are exported:
   * `zone_desc` - Zone description.
   * `zone` - Availability zone, such as `ap-guangzhou-3`.
 
+## API Reference
+
+This data source queries the following TencentCloud APIs:
+
+* Read: [DescribeInstancesNew](https://cloud.tencent.com/document/api/1299/93328) - 获取实例简单信息列表
 

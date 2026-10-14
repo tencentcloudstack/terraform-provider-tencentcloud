@@ -60,4 +60,9 @@ In addition to all arguments above, the following attributes are exported:
   * `network_instance_id` - Type of associated network. Valid values: `VPC` and `CCN`.
   * `network_type` - IP of the DCG.
 
+## API Reference
+
+This data source queries the following TencentCloud APIs:
+
+* Read: [DescribeDirectConnectGateways](https://cloud.tencent.com/document/api/215/30644) - 查询专线网关
 

@@ -45,4 +45,9 @@ In addition to all arguments above, the following attributes are exported:
   * `real_server_id` - Real Server Id.
   * `real_server_name` - Real Server Name.
 
+## API Reference
+
+This data source queries the following TencentCloud APIs:
+
+* Read: [DescribeListenerRealServers](https://cloud.tencent.com/document/api/608/37000) - 查询监听器源站列表
 

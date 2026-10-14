@@ -52,4 +52,7 @@ In addition to all arguments above, the following attributes are exported:
   * `rule_id` - Rule id of the domain that the CC self-define https policy works for.
   * `switch` - Indicate the CC self-define https policy takes effect or not.
 
+## API Reference
+
+This data source queries the following TencentCloud APIs:
 

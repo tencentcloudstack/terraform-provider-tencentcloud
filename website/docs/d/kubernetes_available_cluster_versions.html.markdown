@@ -50,4 +50,9 @@ In addition to all arguments above, the following attributes are exported:
   * `versions` - list of cluster major version numbers, for example 1.18.4.
 * `versions` - Upgradable cluster version number. Note: This field may return null, indicating that no valid value can be obtained.
 
+## API Reference
+
+This data source queries the following TencentCloud APIs:
+
+* Read: [DescribeAvailableClusterVersion](https://cloud.tencent.com/document/api/457/52135) - 获取集群可以升级的所有版本
 

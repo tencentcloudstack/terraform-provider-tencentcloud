@@ -61,4 +61,9 @@ In addition to all arguments above, the following attributes are exported:
     * `type` - param type.
   * `status` - API status 0: offline 1: online, default 0. Note: This section may return null, indicating that no valid value can be obtained.
 
+## API Reference
+
+This data source queries the following TencentCloud APIs:
+
+* Read: [DescribeApiDetail](https://cloud.tencent.com/document/api/649/45538) - 查询API详情
 

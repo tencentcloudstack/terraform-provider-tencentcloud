@@ -43,4 +43,9 @@ In addition to all arguments above, the following attributes are exported:
   * `partition` - partition name.
   * `replica` - replica set.
 
+## API Reference
+
+This data source queries the following TencentCloud APIs:
+
+* Read: [DescribeTopicSyncReplica](https://cloud.tencent.com/document/api/597/60811) - 获取Topic 同步副本信息
 

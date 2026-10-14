@@ -50,4 +50,9 @@ In addition to all arguments above, the following attributes are exported:
   * `token` - Value of the role token.
   * `update_time` - Update time.
 
+## API Reference
+
+This data source queries the following TencentCloud APIs:
+
+* Read: [DescribeRoles](https://cloud.tencent.com/document/api/1179/62399) - 获取角色列表
 

@@ -49,4 +49,9 @@ In addition to all arguments above, the following attributes are exported:
   * `update_time` - Update time.
   * `user_uin` - Account uin.
 
+## API Reference
+
+This data source queries the following TencentCloud APIs:
+
+* Read: [DescribeUpdatableDataEngines](https://cloud.tencent.com/document/api/1342/101606) - 查询可更新配置的引擎列表
 

@@ -51,4 +51,9 @@ In addition to all arguments above, the following attributes are exported:
   * `ttl` - Retention time of unconsumed messages in milliseconds. Value range: 60 seconds-15 days.
   * `vpc_endpoint` - VPC access point address.
 
+## API Reference
+
+This data source queries the following TencentCloud APIs:
+
+* Read: [DescribeRocketMQNamespaces](https://cloud.tencent.com/document/api/1179/63419) - 查询 RocketMQ 命名空间列表
 

@@ -59,4 +59,9 @@ In addition to all arguments above, the following attributes are exported:
   * `start_time` - Effective time: July 1st, 2022 00:00:00 Attention: This field may return null, indicating that a valid value cannot be obtained.
   * `status` - Resource package status creating - creating; Using - In use; Expired - has expired; Normal_ Finish - used up; Apply_ Refund - Applying for a refund; Refund - The fee has been refunded. Note: This field may return null, indicating that a valid value cannot be obtained.
 
+## API Reference
+
+This data source queries the following TencentCloud APIs:
+
+* Read: [DescribeResourcePackageList](https://cloud.tencent.com/document/api/1003/93011) - 查询资源包列表
 

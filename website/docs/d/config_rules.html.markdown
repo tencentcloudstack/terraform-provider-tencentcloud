@@ -70,4 +70,9 @@ In addition to all arguments above, the following attributes are exported:
   * `service_function` - Corresponding service function.
   * `status` - Rule status. Valid values: ACTIVE, NO_ACTIVE.
 
+## API Reference
+
+This data source queries the following TencentCloud APIs:
+
+* Read: [ListConfigRules](https://cloud.tencent.com/document/api/1579/101781) - 获取规则列表
 

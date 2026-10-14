@@ -39,4 +39,9 @@ In addition to all arguments above, the following attributes are exported:
   * `ip` - IP address, IPv4 or IPv6.
   * `is_edge_one_ip` - Whether the IP belongs to an EdgeOne node. Values: `yes` (belongs to EdgeOne node), `no` (does not belong to EdgeOne node).
 
+## API Reference
+
+This data source queries the following TencentCloud APIs:
+
+* Read: [DescribeIPRegion](https://cloud.tencent.com/document/api/1552/102227) - 查询 IP 归属信息
 

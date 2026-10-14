@@ -31,4 +31,9 @@ In addition to all arguments above, the following attributes are exported:
   * `region` - region.
   * `subnet_num` - Number of Internet public network addresses.
 
+## API Reference
+
+This data source queries the following TencentCloud APIs:
+
+* Read: [DescribeInternetAddressStatistics](https://cloud.tencent.com/document/api/216/51488) - 获取用户互联网公网地址统计信息
 

@@ -66,4 +66,9 @@ In addition to all arguments above, the following attributes are exported:
   * `remark` - RemarksNote: This field may return null, indicating that no valid values can be obtained.
   * `update_time` - Update timeNote: This field may return null, indicating that no valid values can be obtained.
 
+## API Reference
+
+This data source queries the following TencentCloud APIs:
+
+* Read: [DescribeOrganizationMembers](https://cloud.tencent.com/document/api/850/67220) - 获取企业组织成员列表
 

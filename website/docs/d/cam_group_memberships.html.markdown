@@ -35,4 +35,9 @@ In addition to all arguments above, the following attributes are exported:
   * `user_ids` - (**Deprecated**) It has been deprecated from version 1.59.5. Use `user_names` instead. ID set of the CAM group members.
   * `user_names` - ID set of the CAM group members.
 
+## API Reference
+
+This data source queries the following TencentCloud APIs:
+
+* Read: [ListUsersForGroup](https://cloud.tencent.com/document/api/598/34586) - 查询用户组关联的用户列表
 

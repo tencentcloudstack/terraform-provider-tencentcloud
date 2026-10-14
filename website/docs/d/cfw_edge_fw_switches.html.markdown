@@ -39,4 +39,9 @@ In addition to all arguments above, the following attributes are exported:
   * `switch_mode` - switch mode.
   * `vpc_id` - vpc id.
 
+## API Reference
+
+This data source queries the following TencentCloud APIs:
+
+* Read: [DescribeFwEdgeIps](https://cloud.tencent.com/document/api/1132/97841) - 串行防火墙开关列表
 

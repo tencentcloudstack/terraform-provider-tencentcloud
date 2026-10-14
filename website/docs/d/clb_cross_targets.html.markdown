@@ -48,4 +48,9 @@ In addition to all arguments above, the following attributes are exported:
   * `vpc_id` - VPC ID of the CVM or ENI instance.
   * `vpc_name` - VPC name of the CVM or ENI instance.
 
+## API Reference
+
+This data source queries the following TencentCloud APIs:
+
+* Read: [DescribeCrossTargets](https://cloud.tencent.com/document/api/214/65902) - 查询跨域2.0版本云联网后端子机和网卡信息
 

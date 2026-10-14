@@ -32,4 +32,9 @@ In addition to all arguments above, the following attributes are exported:
 
 * `sub_accounts` - Sub-user list.
 
+## API Reference
+
+This data source queries the following TencentCloud APIs:
+
+* Read: [DescribeSubAccounts](https://cloud.tencent.com/document/api/598/53486) - 通过子用户UIN列表查询子用户
 

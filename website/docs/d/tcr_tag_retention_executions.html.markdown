@@ -39,4 +39,9 @@ In addition to all arguments above, the following attributes are exported:
   * `start_time` - execution start time.
   * `status` - execution status: Failed, Succeed, Stopped, InProgress.
 
+## API Reference
+
+This data source queries the following TencentCloud APIs:
+
+* Read: [DescribeTagRetentionExecution](https://cloud.tencent.com/document/api/1141/54801) - 查询版本保留执行记录
 

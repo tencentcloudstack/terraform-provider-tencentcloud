@@ -219,4 +219,10 @@ In addition to all arguments above, the following attributes are exported:
   * `storage_block_amount` - Number of local storage blocks.
   * `type_name` - Instance type display name.
 
+## API Reference
+
+This data source queries the following TencentCloud APIs:
+
+* Read: [DescribeDiskConfigQuota](https://cloud.tencent.com/document/api/362/16318) - 查询云硬盘配额
+* Read: [DescribeZoneInstanceConfigInfos](https://cloud.tencent.com/document/api/213/17378) - 获取可用区机型配置信息
 

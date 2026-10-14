@@ -43,4 +43,9 @@ In addition to all arguments above, the following attributes are exported:
   * `storage_slope` - Capacity tilt.
   * `storage` - Used capacity.
 
+## API Reference
+
+This data source queries the following TencentCloud APIs:
+
+* Read: [DescribeInstanceShards](https://cloud.tencent.com/document/api/239/34441) - 获取集群版实例分片信息
 

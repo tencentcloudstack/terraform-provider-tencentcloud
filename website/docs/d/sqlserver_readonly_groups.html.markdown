@@ -42,4 +42,9 @@ In addition to all arguments above, the following attributes are exported:
   * `vip` - Virtual IP address of the readonly group.
   * `vport` - Virtual port of the readonly group.
 
+## API Reference
+
+This data source queries the following TencentCloud APIs:
+
+* Read: [DescribeReadOnlyGroupList](https://cloud.tencent.com/document/api/238/46771) - 查询只读组列表
 

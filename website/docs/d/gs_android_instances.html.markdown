@@ -89,4 +89,9 @@ In addition to all arguments above, the following attributes are exported:
   * `user_id` - User ID.
   * `width` - Resolution width.
 
+## API Reference
+
+This data source queries the following TencentCloud APIs:
+
+* Read: [DescribeAndroidInstances](https://cloud.tencent.com/document/api/1162/117264) - 查询安卓实例
 

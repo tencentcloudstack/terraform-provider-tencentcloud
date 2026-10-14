@@ -46,4 +46,9 @@ In addition to all arguments above, the following attributes are exported:
   * `table_schema` - library name.
   * `total_length` - Total space used (MB).
 
+## API Reference
+
+This data source queries the following TencentCloud APIs:
+
+* Read: [DescribeTopSpaceSchemas](https://cloud.tencent.com/document/api/1130/57793) - 获取Top库的空间统计信息
 

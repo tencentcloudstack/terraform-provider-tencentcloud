@@ -59,4 +59,9 @@ In addition to all arguments above, the following attributes are exported:
   * `status` - status.
   * `zone` - zone.
 
+## API Reference
+
+This data source queries the following TencentCloud APIs:
+
+* Read: [DescribeClusterInstances](https://cloud.tencent.com/document/api/1556/70688) - 查询实例
 

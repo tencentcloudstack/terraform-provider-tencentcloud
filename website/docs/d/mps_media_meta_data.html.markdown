@@ -95,4 +95,9 @@ In addition to all arguments above, the following attributes are exported:
     * `width` - Width of a video stream in px.Note: This field may return null, indicating that no valid values can be obtained.
   * `width` - Maximum value of the width of a video stream in px.Note: This field may return null, indicating that no valid values can be obtained.
 
+## API Reference
+
+This data source queries the following TencentCloud APIs:
+
+* Read: [DescribeMediaMetaData](https://cloud.tencent.com/document/api/862/40637) - 获取媒体元信息
 

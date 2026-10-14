@@ -60,4 +60,10 @@ The `collections` object of `databases` supports the following:
 * `new_collection` - (Required, String) Collection name after restore.
 * `old_collection` - (Required, String) Original collection name to restore.
 
+## API Reference
+
+This action invokes the following TencentCloud APIs:
+
+* Invoke: [DescribeAsyncRequestInfo](https://cloud.tencent.com/document/api/236/20410) - 查询异步任务的执行结果
+* Invoke: [RestoreDBInstance](https://cloud.tencent.com/document/api/240/130468) - 回档实例
 

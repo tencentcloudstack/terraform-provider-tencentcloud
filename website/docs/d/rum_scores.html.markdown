@@ -52,4 +52,9 @@ In addition to all arguments above, the following attributes are exported:
   * `static_fail` - The number of failed request static resource.
   * `static_num` - The number of static resource on page.
 
+## API Reference
+
+This data source queries the following TencentCloud APIs:
+
+* Read: [DescribeScores](https://cloud.tencent.com/document/api/1464/61951) - 获取首页分数列表
 

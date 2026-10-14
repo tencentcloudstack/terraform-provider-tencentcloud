@@ -32,4 +32,9 @@ In addition to all arguments above, the following attributes are exported:
 
 * `status` - Flow status. 0: succeeded, 1: failed, 2: running.
 
+## API Reference
+
+This data source queries the following TencentCloud APIs:
+
+* Read: [DescribeFlow](https://cloud.tencent.com/document/api/237/16177) - 查询流程状态
 

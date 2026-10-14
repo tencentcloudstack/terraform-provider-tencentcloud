@@ -56,4 +56,7 @@ In addition to all arguments above, the following attributes are exported:
   * `session_time` - Session keep time, only valid when `session_switch` is true, the available value ranges from 1 to 300 and unit is second.
   * `source_type` - Source type, `1` for source of host, `2` for source of IP.
 
+## API Reference
+
+This data source queries the following TencentCloud APIs:
 

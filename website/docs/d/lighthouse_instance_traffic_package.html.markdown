@@ -44,4 +44,9 @@ In addition to all arguments above, the following attributes are exported:
     * `traffic_package_total` - The total traffic in bytes during the effective period of the traffic packet.
     * `traffic_used` - Traffic has been used during the effective period of the traffic packet, in bytes.
 
+## API Reference
+
+This data source queries the following TencentCloud APIs:
+
+* Read: [DescribeInstancesTrafficPackages](https://cloud.tencent.com/document/api/1207/48681) - 查看实例流量包详情
 

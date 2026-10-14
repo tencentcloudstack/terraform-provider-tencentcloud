@@ -44,4 +44,10 @@ In addition to all arguments above, the following attributes are exported:
   * `wan_ip` - Describe the WAN IP of the node.
 * `total_count` - Number of instances.
 
+## API Reference
+
+This data source queries the following TencentCloud APIs:
+
+* Read: [DescribeClusterInstances](https://cloud.tencent.com/document/api/457/31863) - 查询集群节点信息
+* Read: [DescribeInstances](https://cloud.tencent.com/document/api/213/15728) - 查看实例列表
 

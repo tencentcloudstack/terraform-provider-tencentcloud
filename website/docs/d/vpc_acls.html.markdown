@@ -66,4 +66,9 @@ In addition to all arguments above, the following attributes are exported:
     * `vpc_id` - ID of the VPC instance.
   * `vpc_id` - ID of the VPC instance.
 
+## API Reference
+
+This data source queries the following TencentCloud APIs:
+
+* Read: [DescribeNetworkAcls](https://cloud.tencent.com/document/api/215/42160) - 查询网络ACL列表
 

@@ -42,4 +42,9 @@ In addition to all arguments above, the following attributes are exported:
 * `normal_prefix` - For an instance in a common network, this prefix plus URI can be used as the download address.
 * `vpc_prefix` - For an instance in a VPC, this prefix plus URI can be used as the download address.
 
+## API Reference
+
+This data source queries the following TencentCloud APIs:
+
+* Read: [DescribeDBLogFiles](https://cloud.tencent.com/document/api/557/16133) - 获取日志列表
 

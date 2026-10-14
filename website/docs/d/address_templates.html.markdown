@@ -36,4 +36,9 @@ In addition to all arguments above, the following attributes are exported:
   * `id` - ID of the address template.
   * `name` - Name of address template.
 
+## API Reference
+
+This data source queries the following TencentCloud APIs:
+
+* Read: [DescribeAddressTemplates](https://cloud.tencent.com/document/api/215/16717) - 查询IP地址模板
 

@@ -63,4 +63,9 @@ In addition to all arguments above, the following attributes are exported:
     * `type` - Target type.
   * `type` - event bus type.
 
+## API Reference
+
+This data source queries the following TencentCloud APIs:
+
+* Read: [ListEventBuses](https://cloud.tencent.com/document/api/1359/67683) - 获取事件集列表
 

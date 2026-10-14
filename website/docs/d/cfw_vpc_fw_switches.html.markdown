@@ -37,4 +37,9 @@ In addition to all arguments above, the following attributes are exported:
   * `switch_mode` - switch mode.
   * `switch_name` - Firewall switch name.
 
+## API Reference
+
+This data source queries the following TencentCloud APIs:
+
+* Read: [DescribeVpcFwGroupSwitch](https://cloud.tencent.com/document/api/1132/97840) - VPC防火墙(组)开关列表
 

@@ -33,4 +33,9 @@ In addition to all arguments above, the following attributes are exported:
 * `child_image_version_id` - ID of the minor version of the cluster image that can be updated under the major version.
 * `is_upgrade` - Whether it can be updated.
 
+## API Reference
+
+This data source queries the following TencentCloud APIs:
+
+* Read: [CheckDataEngineImageCanBeUpgrade](https://cloud.tencent.com/document/api/1342/99275) - 查看集群镜像是否能够升级
 

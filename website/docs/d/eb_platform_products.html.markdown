@@ -32,4 +32,9 @@ In addition to all arguments above, the following attributes are exported:
   * `product_name` - Platform product name.
   * `product_type` - Platform product type.
 
+## API Reference
+
+This data source queries the following TencentCloud APIs:
+
+* Read: [ListPlatformProducts](https://cloud.tencent.com/document/api/1359/97860) - 获取平台产品列表
 

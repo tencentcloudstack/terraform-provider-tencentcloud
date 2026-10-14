@@ -49,4 +49,9 @@ In addition to all arguments above, the following attributes are exported:
   * `start_time` - Invocation start time in the format of %Y-%m-%d %H:%M:%S.%f.
   * `status` - Event status. Values: `RUNNING`; `FINISHED` (invoked successfully); `ABORTED` (invocation ended); `FAILED` (invocation failed).
 
+## API Reference
+
+This data source queries the following TencentCloud APIs:
+
+* Read: [ListAsyncEvents](https://cloud.tencent.com/document/api/583/52501) - 拉取函数异步事件列表
 

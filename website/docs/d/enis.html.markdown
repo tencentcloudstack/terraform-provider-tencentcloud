@@ -63,4 +63,9 @@ In addition to all arguments above, the following attributes are exported:
   * `tags` - Tags of the ENI.
   * `vpc_id` - ID of the vpc.
 
+## API Reference
+
+This data source queries the following TencentCloud APIs:
+
+* Read: [DescribeNetworkInterfaces](https://cloud.tencent.com/document/api/215/15817) - 查询弹性网卡列表
 

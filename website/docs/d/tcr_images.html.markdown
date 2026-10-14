@@ -48,4 +48,9 @@ In addition to all arguments above, the following attributes are exported:
   * `size` - image size (unit: byte).
   * `update_time` - update time.
 
+## API Reference
+
+This data source queries the following TencentCloud APIs:
+
+* Read: [DescribeImages](https://cloud.tencent.com/document/api/1141/42723) - 查询容器镜像信息
 

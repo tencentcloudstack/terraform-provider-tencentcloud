@@ -67,4 +67,9 @@ In addition to all arguments above, the following attributes are exported:
   * `version` - Version of the instance.
   * `vpc_id` - The ID of a VPC network.
 
+## API Reference
+
+This data source queries the following TencentCloud APIs:
+
+* Read: [DescribeInstances](https://cloud.tencent.com/document/api/845/30631) - 查询ES集群实例
 

@@ -37,4 +37,9 @@ In addition to all arguments above, the following attributes are exported:
 * `original_price` - Original price. Unit: Cent (default). If the request parameter contains `AmountUnit`, see `AmountUnit` description. Currency: CNY (Chinese site), USD (international site).
 * `price` - The actual price may be different from the original price due to discounts. Unit: Cent (default). If the request parameter contains `AmountUnit`, see `AmountUnit` description. Currency: CNY (Chinese site), USD (international site).
 
+## API Reference
+
+This data source queries the following TencentCloud APIs:
+
+* Read: [DescribeDCDBRenewalPrice](https://cloud.tencent.com/document/api/557/16138) - 续费实例询价
 

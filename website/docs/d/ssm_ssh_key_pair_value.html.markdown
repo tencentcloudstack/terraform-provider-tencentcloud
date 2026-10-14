@@ -56,4 +56,9 @@ In addition to all arguments above, the following attributes are exported:
 * `ssh_key_description` - Description of the SSH key pair. Users can modify the description information of the key pair in the CVM console.
 * `ssh_key_name` - SSH key name.
 
+## API Reference
+
+This data source queries the following TencentCloud APIs:
+
+* Read: [GetSSHKeyPairValue](https://cloud.tencent.com/document/api/1140/60330) - 获取SSH密钥对凭据明文
 

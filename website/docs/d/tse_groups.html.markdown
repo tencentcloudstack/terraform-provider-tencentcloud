@@ -87,4 +87,9 @@ In addition to all arguments above, the following attributes are exported:
     * `subnet_ids` - subnet IDs.
   * `total_count` - total count.
 
+## API Reference
+
+This data source queries the following TencentCloud APIs:
+
+* Read: [DescribeNativeGatewayServerGroups](https://cloud.tencent.com/document/api/1364/97280) - 查询云原生网关分组信息
 

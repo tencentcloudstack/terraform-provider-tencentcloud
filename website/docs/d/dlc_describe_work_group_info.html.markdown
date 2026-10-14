@@ -116,4 +116,9 @@ In addition to all arguments above, the following attributes are exported:
   * `work_group_id` - Working group IDNote: This field may return null, indicating that no valid values can be obtained.
   * `work_group_name` - Working group nameNote: This field may return null, indicating that no valid values can be obtained.
 
+## API Reference
+
+This data source queries the following TencentCloud APIs:
+
+* Read: [DescribeWorkGroupInfo](https://cloud.tencent.com/document/api/1342/99260) - 获取工作组详细信息
 

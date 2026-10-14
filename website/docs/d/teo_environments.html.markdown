@@ -45,4 +45,9 @@ In addition to all arguments above, the following attributes are exported:
   * `scope` - Effective scope of the configuration in the current environment. Valid values: ALL (It takes effect on the entire network when EnvType is set to production), It returns the IP address of the test node for host binding during testing when EnvType is set to staging.
   * `status` - Environment status. Valid values: creating (Being created), running (The environment is stable, with version changes allowed), version_deploying (The version is currently being deployed, with no more changes allowed).
 
+## API Reference
+
+This data source queries the following TencentCloud APIs:
+
+* Read: [DescribeEnvironments](https://cloud.tencent.com/document/api/1552/101862) - 查询环境信息
 

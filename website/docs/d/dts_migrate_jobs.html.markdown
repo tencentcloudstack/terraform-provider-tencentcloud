@@ -186,4 +186,9 @@ In addition to all arguments above, the following attributes are exported:
     * `trade_status` - trade status.
   * `update_time` - update time.
 
+## API Reference
+
+This data source queries the following TencentCloud APIs:
+
+* Read: [DescribeMigrationJobs](https://cloud.tencent.com/document/api/571/82084) - 查询数据迁移任务列表
 

@@ -33,4 +33,9 @@ In addition to all arguments above, the following attributes are exported:
 * `list` - A list of TcaplusDB table IDL. Each element contains the following attributes.
   * `idl_id` - ID of the IDL.
 
+## API Reference
+
+This data source queries the following TencentCloud APIs:
+
+* Read: [DescribeIdlFileInfos](https://cloud.tencent.com/document/api/596/39665) - 查询表描述文件详情
 

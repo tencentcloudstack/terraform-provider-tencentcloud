@@ -57,4 +57,9 @@ In addition to all arguments above, the following attributes are exported:
   * `vpc_id` - vpc id.
   * `zone` - zone.
 
+## API Reference
+
+This data source queries the following TencentCloud APIs:
+
+* Read: [DescribeDCDBShards](https://cloud.tencent.com/document/api/557/19990) - 查询分片信息
 

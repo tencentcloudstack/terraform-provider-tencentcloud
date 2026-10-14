@@ -129,4 +129,9 @@ In addition to all arguments above, the following attributes are exported:
     * `supported_flink` - The Flink versions supported by the cluster.Note: This field may return null, indicating that no valid values can be obtained.
   * `zone` - The availability zone.
 
+## API Reference
+
+This data source queries the following TencentCloud APIs:
+
+* Read: [DescribeClusters](https://cloud.tencent.com/document/api/849/76832) - 查询集群
 

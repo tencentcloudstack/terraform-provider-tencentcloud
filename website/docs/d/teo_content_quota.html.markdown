@@ -41,4 +41,9 @@ In addition to all arguments above, the following attributes are exported:
   * `daily` - Daily submission quota limit.
   * `type` - Quota type. Valid values: `purge_prefix`, `purge_url`, `purge_host`, `purge_all`, `purge_cache_tag`.
 
+## API Reference
+
+This data source queries the following TencentCloud APIs:
+
+* Read: [DescribeContentQuota](https://cloud.tencent.com/document/api/1552/80701) - 查询内容管理接口配额
 

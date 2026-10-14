@@ -42,4 +42,9 @@ In addition to all arguments above, the following attributes are exported:
   * `size` - Xlog file size.
   * `start_time` - Xlog file created start time.
 
+## API Reference
+
+This data source queries the following TencentCloud APIs:
+
+* Read: [DescribeDBXlogs](https://cloud.tencent.com/document/api/409/18091) - 获取实例Xlog列表
 

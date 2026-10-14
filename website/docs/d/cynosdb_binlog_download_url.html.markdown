@@ -34,4 +34,9 @@ In addition to all arguments above, the following attributes are exported:
 
 * `download_url` - Download address.
 
+## API Reference
+
+This data source queries the following TencentCloud APIs:
+
+* Read: [DescribeBinlogDownloadUrl](https://cloud.tencent.com/document/api/1003/76373) - 查询 Binlog下载地址
 

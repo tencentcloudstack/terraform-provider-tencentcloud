@@ -48,4 +48,9 @@ In addition to all arguments above, the following attributes are exported:
   * `trigger_id` - trigger Id.
   * `update_time` - update time.
 
+## API Reference
+
+This data source queries the following TencentCloud APIs:
+
+* Read: [DescribeWebhookTriggerLog](https://cloud.tencent.com/document/api/1141/43528) - 获取触发器日志
 

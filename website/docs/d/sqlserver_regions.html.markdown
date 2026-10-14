@@ -33,4 +33,9 @@ In addition to all arguments above, the following attributes are exported:
   * `region_state` - Current purchasability of this region. UNAVAILABLE: not purchasable, AVAILABLE: purchasable.
   * `region` - Region ID in the format of ap-guangzhou.
 
+## API Reference
+
+This data source queries the following TencentCloud APIs:
+
+* Read: [DescribeRegions](https://cloud.tencent.com/document/api/238/19965) - 查询售卖地域
 

@@ -44,4 +44,9 @@ In addition to all arguments above, the following attributes are exported:
   * `start_time` - File generation start time.
   * `status` - Status (1: success, 2: failure) Note: this field may return null, indicating that no valid values can be obtained.
 
+## API Reference
+
+This data source queries the following TencentCloud APIs:
+
+* Read: [DescribeSlowlogs](https://cloud.tencent.com/document/api/238/19936) - 获取慢查询日志文件信息
 

@@ -37,4 +37,9 @@ In addition to all arguments above, the following attributes are exported:
   * `ip_address` - cvm ip address.
   * `vpc_id` - vpc id.
 
+## API Reference
+
+This data source queries the following TencentCloud APIs:
+
+* Read: [DescribeGatewayFlowQos](https://cloud.tencent.com/document/api/215/43271) - 查询网关来访IP流控带宽
 

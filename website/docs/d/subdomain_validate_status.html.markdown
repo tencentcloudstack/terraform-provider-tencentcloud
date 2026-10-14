@@ -32,4 +32,9 @@ In addition to all arguments above, the following attributes are exported:
 
 * `status` - Status. 0: not ready; 1: ready.
 
+## API Reference
+
+This data source queries the following TencentCloud APIs:
+
+* Read: [DescribeSubdomainValidateStatus](https://cloud.tencent.com/document/api/1427/113011) - 查看添加子域名 Zone 域解析 TXT 记录值验证状态
 

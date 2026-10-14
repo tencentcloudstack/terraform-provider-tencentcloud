@@ -40,4 +40,9 @@ In addition to all arguments above, the following attributes are exported:
   * `database` - Database name note: This field may return null, indicating that a valid value cannot be obtained.
   * `tables` - Table Name List Note: This field may return null, indicating that a valid value cannot be obtained.
 
+## API Reference
+
+This data source queries the following TencentCloud APIs:
+
+* Read: [SearchClusterTables](https://cloud.tencent.com/document/api/1003/83593) - 搜索集群数据表列表
 

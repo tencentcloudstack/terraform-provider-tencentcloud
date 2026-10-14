@@ -39,4 +39,9 @@ In addition to all arguments above, the following attributes are exported:
 
 * `result` - Return value.
 
+## API Reference
+
+This data source queries the following TencentCloud APIs:
+
+* Read: [DescribeDataReportCount](https://cloud.tencent.com/document/api/1464/69228) - 获取上报量
 

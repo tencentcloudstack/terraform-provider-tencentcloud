@@ -85,4 +85,9 @@ In addition to all arguments above, the following attributes are exported:
     * `instance_state` - State of the cvm.
     * `lan_ip` - LAN IP of the cvm.
 
+## API Reference
+
+This data source queries the following TencentCloud APIs:
+
+* Read: [DescribeClusters](https://cloud.tencent.com/document/api/457/31862) - 查询TKE集群列表
 

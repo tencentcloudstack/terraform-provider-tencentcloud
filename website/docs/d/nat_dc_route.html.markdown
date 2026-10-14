@@ -39,4 +39,9 @@ In addition to all arguments above, the following attributes are exported:
   * `gateway_type` - Type of next-hop gateway, valid values: DIRECTCONNECT.
   * `update_time` - Update time of route.
 
+## API Reference
+
+This data source queries the following TencentCloud APIs:
+
+* Read: [DescribeNatGatewayDirectConnectGatewayRoute](https://cloud.tencent.com/document/api/215/62616) - 查询专线绑定NAT路由
 

@@ -40,4 +40,9 @@ In addition to all arguments above, the following attributes are exported:
   * `update_time` - Last update time.
   * `user_name` - User Name.
 
+## API Reference
+
+This data source queries the following TencentCloud APIs:
+
+* Read: [DescribeAccounts](https://cloud.tencent.com/document/api/557/19993) - 查询账号列表
 

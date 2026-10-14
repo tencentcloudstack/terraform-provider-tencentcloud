@@ -63,4 +63,9 @@ In addition to all arguments above, the following attributes are exported:
     * `resource_unique_id` - Entity original unique ID.
     * `update_time` - Update time.
 
+## API Reference
+
+This data source queries the following TencentCloud APIs:
+
+* Read: [ListLineage](https://cloud.tencent.com/document/api/1267/123991) - 查询血缘列表
 

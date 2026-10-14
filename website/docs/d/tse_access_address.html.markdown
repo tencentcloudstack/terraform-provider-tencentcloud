@@ -54,4 +54,9 @@ In addition to all arguments above, the following attributes are exported:
 * `limiter_address_infos` - Access IP address of the Polaris traffic limiting server nodeNote: This field may return null, indicating that a valid value is not available.
   * `intranet_address` - VPC access IP address listNote: This field may return null, indicating that a valid value is not available.
 
+## API Reference
+
+This data source queries the following TencentCloud APIs:
+
+* Read: [DescribeSREInstanceAccessAddress](https://cloud.tencent.com/document/api/1364/54941) - 查询引擎实例访问地址
 

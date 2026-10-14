@@ -38,4 +38,9 @@ In addition to all arguments above, the following attributes are exported:
   * `size` - Backup file size, unit: Byte.
   * `type` - Log specific type, possible values: slowlog - slow log.
 
+## API Reference
+
+This data source queries the following TencentCloud APIs:
+
+* Read: [DescribeSlowLogs](https://cloud.tencent.com/document/api/236/15845) - 查询慢查询日志
 

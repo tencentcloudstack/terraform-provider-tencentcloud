@@ -58,4 +58,9 @@ In addition to all arguments above, the following attributes are exported:
       * `name` - Secret name.
       * `no_match_domains` - List of domain names that are not matched with the new certificateNote: This field may return NULL, indicating that the valid value cannot be obtained.
 
+## API Reference
+
+This data source queries the following TencentCloud APIs:
+
+* Read: [DescribeHostTkeInstanceList](https://cloud.tencent.com/document/api/400/91654) - 查询证书tke云资源部署实例列表
 

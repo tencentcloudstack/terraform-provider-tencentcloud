@@ -42,4 +42,9 @@ In addition to all arguments above, the following attributes are exported:
   * `start_time` - Task start time.
   * `task_status` - Task status, including the following status: initial, running, wait_complete, success, failed.
 
+## API Reference
+
+This data source queries the following TencentCloud APIs:
+
+* Read: [DescribeCloneList](https://cloud.tencent.com/document/api/236/50423) - 查询克隆任务列表
 

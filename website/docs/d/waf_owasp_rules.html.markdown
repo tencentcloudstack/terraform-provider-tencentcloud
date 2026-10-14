@@ -66,4 +66,9 @@ In addition to all arguments above, the following attributes are exported:
   * `type_id` - Specifies the rule type ID.
   * `vul_level` - Threat level. valid values: 0 (unknown), 100 (low risk), 200 (medium risk), 300 (high risk), 400 (critical).
 
+## API Reference
+
+This data source queries the following TencentCloud APIs:
+
+* Read: [DescribeOwaspRules](https://cloud.tencent.com/document/api/627/122545) - 查询规则引擎的规则列表
 

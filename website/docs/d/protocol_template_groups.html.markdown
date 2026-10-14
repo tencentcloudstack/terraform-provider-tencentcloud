@@ -36,4 +36,9 @@ In addition to all arguments above, the following attributes are exported:
   * `name` - Name of protocol template group.
   * `template_ids` - ID set of the protocol template.
 
+## API Reference
+
+This data source queries the following TencentCloud APIs:
+
+* Read: [DescribeServiceTemplateGroups](https://cloud.tencent.com/document/api/215/16718) - 查询协议端口模板集合
 

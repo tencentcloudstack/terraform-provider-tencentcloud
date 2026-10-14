@@ -41,4 +41,9 @@ In addition to all arguments above, the following attributes are exported:
     * `qps` - maximum QPS.
     * `suit_info` - recommended usage scenarios.
 
+## API Reference
+
+This data source queries the following TencentCloud APIs:
+
+* Read: [DescribeDBInstanceSpecs](https://cloud.tencent.com/document/api/237/16188) - 查询云数据库可售卖规格
 

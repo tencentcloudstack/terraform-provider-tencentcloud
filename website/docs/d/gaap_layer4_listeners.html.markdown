@@ -80,4 +80,10 @@ In addition to all arguments above, the following attributes are exported:
   * `scheduler` - Scheduling policy of the layer4 listener.
   * `status` - Status of the layer4 listener.
 
+## API Reference
+
+This data source queries the following TencentCloud APIs:
+
+* Read: [DescribeTCPListeners](https://cloud.tencent.com/document/api/608/36999) - 查询TCP监听器列表
+* Read: [DescribeUDPListeners](https://cloud.tencent.com/document/api/608/36998) - 查询UDP监听器列表
 

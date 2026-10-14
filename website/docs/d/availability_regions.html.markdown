@@ -36,4 +36,9 @@ In addition to all arguments above, the following attributes are exported:
   * `name` - The name of the region, like `ap-guangzhou`.
   * `state` - The state of the region, indicate availability using `AVAILABLE` and `UNAVAILABLE` values.
 
+## API Reference
+
+This data source queries the following TencentCloud APIs:
+
+* Read: [DescribeRegions](https://cloud.tencent.com/document/api/213/15708) - 查询地域列表
 

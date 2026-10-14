@@ -44,4 +44,9 @@ In addition to all arguments above, the following attributes are exported:
 
 * `data` - Workflow query results.
 
+## API Reference
+
+This data source queries the following TencentCloud APIs:
+
+* Read: [ListOpsTriggerWorkflows](https://cloud.tencent.com/document/api/1267/127215) - 查看工作流列表
 

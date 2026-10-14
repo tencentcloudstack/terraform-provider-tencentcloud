@@ -51,4 +51,9 @@ In addition to all arguments above, the following attributes are exported:
 
 * `total_count` - Total number of attacks.
 
+## API Reference
+
+This data source queries the following TencentCloud APIs:
+
+* Read: [GetAttackTotalCount](https://cloud.tencent.com/document/api/627/96829) - 攻击总次数
 

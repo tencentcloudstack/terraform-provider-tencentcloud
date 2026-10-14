@@ -37,4 +37,9 @@ In addition to all arguments above, the following attributes are exported:
   * `nation_country_name` - Country name.
   * `remark` - Annotation InformationNote: This field may return null, indicating that a valid value cannot be obtained.
 
+## API Reference
+
+This data source queries the following TencentCloud APIs:
+
+* Read: [DescribeCountryAreaMapping](https://cloud.tencent.com/document/api/608/36946) - 获取国家地区编码映射表
 

@@ -45,4 +45,9 @@ In addition to all arguments above, the following attributes are exported:
   * `region_id` - ID of the region that manages the access point.
   * `state` - Access point status. Valid values: available, unavailable.
 
+## API Reference
+
+This data source queries the following TencentCloud APIs:
+
+* Read: [DescribeAccessPoints](https://cloud.tencent.com/document/api/216/34827) - 查询物理专线接入点
 

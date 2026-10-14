@@ -52,4 +52,9 @@ In addition to all arguments above, the following attributes are exported:
     * `issue_type` - Index classification: AVAILABILITY: availability, MAINTAINABILITY: maintainability, PERFORMANCE, performance, RELIABILITY reliability.
     * `total_count` - The total number of abnormal events.
 
+## API Reference
+
+This data source queries the following TencentCloud APIs:
+
+* Read: [DescribeHealthScore](https://cloud.tencent.com/document/api/1130/57797) - 获取健康得分
 

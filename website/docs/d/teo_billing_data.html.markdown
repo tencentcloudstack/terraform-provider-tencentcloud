@@ -58,4 +58,9 @@ In addition to all arguments above, the following attributes are exported:
   * `value` - Numeric value.
   * `zone_id` - Site ID to which the data point belongs.
 
+## API Reference
+
+This data source queries the following TencentCloud APIs:
+
+* Read: [DescribeBillingData](https://cloud.tencent.com/document/api/1552/103562) - 查询计费数据
 

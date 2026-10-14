@@ -59,4 +59,7 @@ In addition to all arguments above, the following attributes are exported:
   * `switch` - Indicate the rule will take effect or not.
   * `threshold` - Threshold of the rule.
 
+## API Reference
+
+This data source queries the following TencentCloud APIs:
 

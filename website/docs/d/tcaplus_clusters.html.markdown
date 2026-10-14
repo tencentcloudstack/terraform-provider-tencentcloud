@@ -53,4 +53,9 @@ In addition to all arguments above, the following attributes are exported:
   * `subnet_id` - Subnet ID of the TcaplusDB cluster.
   * `vpc_id` - VPC ID of the TcaplusDB cluster.
 
+## API Reference
+
+This data source queries the following TencentCloud APIs:
+
+* Read: [DescribeClusters](https://cloud.tencent.com/document/api/596/41489) - 查询集群信息列表
 

@@ -37,4 +37,9 @@ In addition to all arguments above, the following attributes are exported:
   * `log_file_prefix` - Prefix of the log file of the audit.
   * `name` - Name of the audit.
 
+## API Reference
+
+This data source queries the following TencentCloud APIs:
+
+* Read: [ListAudits](https://cloud.tencent.com/document/api/629/35347) - 查询跟踪集概要
 

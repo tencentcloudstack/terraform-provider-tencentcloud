@@ -50,4 +50,9 @@ In addition to all arguments above, the following attributes are exported:
   * `updated_time` - Modification time.
   * `username` - Username.
 
+## API Reference
+
+This data source queries the following TencentCloud APIs:
+
+* Read: [DescribeInvokers](https://cloud.tencent.com/document/api/1340/61759) - 查询执行器
 

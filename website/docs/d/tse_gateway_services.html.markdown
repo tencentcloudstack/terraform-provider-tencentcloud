@@ -76,4 +76,9 @@ In addition to all arguments above, the following attributes are exported:
     * `upstream_type` - service type.
   * `total_count` - total count.
 
+## API Reference
+
+This data source queries the following TencentCloud APIs:
+
+* Read: [DescribeCloudNativeAPIGatewayServices](https://cloud.tencent.com/document/api/1364/94840) - 查询云原生网关服务列表
 

@@ -35,4 +35,9 @@ In addition to all arguments above, the following attributes are exported:
 
 * `data` - Version detail.
 
+## API Reference
+
+This data source queries the following TencentCloud APIs:
+
+* Read: [GetTaskVersion](https://cloud.tencent.com/document/api/1267/123629) - 查看任务版本详情
 

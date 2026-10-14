@@ -37,4 +37,9 @@ In addition to all arguments above, the following attributes are exported:
   * `algorithm` - Algorithm.
   * `key_usage` - Key usage.
 
+## API Reference
+
+This data source queries the following TencentCloud APIs:
+
+* Read: [ListAlgorithms](https://cloud.tencent.com/document/api/573/42143) - 列出当前Region支持的加密方式
 

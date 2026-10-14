@@ -54,4 +54,9 @@ In addition to all arguments above, the following attributes are exported:
   * `status` - status.
   * `total_size` - the total size of log.
 
+## API Reference
+
+This data source queries the following TencentCloud APIs:
+
+* Read: [DescribeSecurityAuditLogExportTasks](https://cloud.tencent.com/document/api/1130/57795) - 查询安全审计日志导出任务列表
 

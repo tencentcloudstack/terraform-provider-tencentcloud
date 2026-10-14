@@ -49,4 +49,9 @@ In addition to all arguments above, the following attributes are exported:
   * `common_names` - (**Deprecated**) It has been deprecated from version 1.81.140. Please use `common_name`. The CommonName in the certificate of the client corresponding to the sub-account.
   * `subaccount_uin` - User UIN.
 
+## API Reference
+
+This data source queries the following TencentCloud APIs:
+
+* Read: [DescribeClusterCommonNames](https://cloud.tencent.com/document/api/457/55721) - 获取集群子账户CommonName映射关系
 

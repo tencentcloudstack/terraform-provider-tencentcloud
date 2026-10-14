@@ -47,4 +47,9 @@ In addition to all arguments above, the following attributes are exported:
   * `statistic` - Statistic types.
   * `threshold` - Alarm threshold.
 
+## API Reference
+
+This data source queries the following TencentCloud APIs:
+
+* Read: [DescribeScalingPolicies](https://cloud.tencent.com/document/api/377/33178) - 查询告警触发策略
 

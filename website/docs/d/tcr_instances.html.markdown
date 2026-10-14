@@ -40,4 +40,9 @@ In addition to all arguments above, the following attributes are exported:
   * `status` - Status of the TCR instance.
   * `tags` - Tags of the TCR instance.
 
+## API Reference
+
+This data source queries the following TencentCloud APIs:
+
+* Read: [DescribeInstances](https://cloud.tencent.com/document/api/1141/41569) - 查询实例信息
 

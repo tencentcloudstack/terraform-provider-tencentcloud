@@ -43,4 +43,9 @@ In addition to all arguments above, the following attributes are exported:
   * `line_id` - Line ID.
   * `name` - Line name.
 
+## API Reference
+
+This data source queries the following TencentCloud APIs:
+
+* Read: [DescribeRecordLineList](https://cloud.tencent.com/document/api/1427/56167) - 获取等级允许的线路
 

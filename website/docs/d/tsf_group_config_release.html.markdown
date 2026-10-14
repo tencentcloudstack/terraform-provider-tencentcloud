@@ -78,4 +78,9 @@ In addition to all arguments above, the following attributes are exported:
   * `repo_name` - image name.Note: This field may return null, which means no valid value was found.
   * `tag_name` - image tag name.Note: This field may return null, which means no valid value was found.
 
+## API Reference
+
+This data source queries the following TencentCloud APIs:
+
+* Read: [DescribeGroupRelease](https://cloud.tencent.com/document/api/649/60441) - 查询部署组发布信息
 

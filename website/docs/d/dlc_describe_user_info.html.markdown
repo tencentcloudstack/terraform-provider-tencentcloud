@@ -138,4 +138,9 @@ In addition to all arguments above, the following attributes are exported:
       * `work_group_id` - Unique ID of the working group.
       * `work_group_name` - Working group name.
 
+## API Reference
+
+This data source queries the following TencentCloud APIs:
+
+* Read: [DescribeUserInfo](https://cloud.tencent.com/document/api/1342/99262) - 获取用户详细信息
 

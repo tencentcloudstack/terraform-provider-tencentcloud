@@ -43,4 +43,9 @@ In addition to all arguments above, the following attributes are exported:
     * `header_value` - HTTP header value.
   * `status` - Rule status, 0 indicates successNote: This field may return null, indicating that a valid value cannot be obtained.
 
+## API Reference
+
+This data source queries the following TencentCloud APIs:
+
+* Read: [DescribeDomainErrorPageInfoByIds](https://cloud.tencent.com/document/api/608/40489) - 根据定制错误ID查询错误响应
 

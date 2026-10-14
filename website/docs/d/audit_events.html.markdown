@@ -62,4 +62,9 @@ In addition to all arguments above, the following attributes are exported:
 
 * `events` - Logset. Note: `null` may be returned for this field, indicating that no valid values can be obtained.
 
+## API Reference
+
+This data source queries the following TencentCloud APIs:
+
+* Read: [DescribeEvents](https://cloud.tencent.com/document/api/629/54488) - 查询操作审计日志
 

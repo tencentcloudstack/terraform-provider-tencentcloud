@@ -34,4 +34,9 @@ In addition to all arguments above, the following attributes are exported:
 
 * `data` - Workflow scheduling details.
 
+## API Reference
+
+This data source queries the following TencentCloud APIs:
+
+* Read: [GetOpsWorkflow](https://cloud.tencent.com/document/api/1267/123584) - 获取工作流详情
 

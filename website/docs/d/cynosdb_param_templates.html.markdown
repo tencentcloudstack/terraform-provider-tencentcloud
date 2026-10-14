@@ -56,4 +56,9 @@ In addition to all arguments above, the following attributes are exported:
   * `template_description` - The description of template.
   * `template_name` - The name of template.
 
+## API Reference
+
+This data source queries the following TencentCloud APIs:
+
+* Read: [DescribeParamTemplates](https://cloud.tencent.com/document/api/1003/77805) - 查询参数模板信息
 

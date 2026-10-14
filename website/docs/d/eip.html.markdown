@@ -47,4 +47,9 @@ In addition to all arguments above, the following attributes are exported:
 * `public_ip` - An public IP address for the EIP.
 * `status` - The status of the EIP, there are several status like `BIND`, `UNBIND`, and `BIND_ENI`.
 
+## API Reference
+
+This data source queries the following TencentCloud APIs:
+
+* Read: [DescribeAddresses](https://cloud.tencent.com/document/api/215/16702) - 查询弹性公网IP列表
 

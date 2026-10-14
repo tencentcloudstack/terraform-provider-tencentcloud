@@ -68,4 +68,9 @@ In addition to all arguments above, the following attributes are exported:
   * `tips` - descripition of parameter.
   * `value_type` - value type.
 
+## API Reference
+
+This data source queries the following TencentCloud APIs:
+
+* Read: [DescribeInstanceParams](https://cloud.tencent.com/document/api/240/65903) - 获取当前实例可修改的参数列表
 

@@ -44,4 +44,9 @@ In addition to all arguments above, the following attributes are exported:
   * `col` - The name of column.
   * `type` - Column type.
 
+## API Reference
+
+This data source queries the following TencentCloud APIs:
+
+* Read: [DescribeDatabaseTable](https://cloud.tencent.com/document/api/557/19988) - 查询数据库表信息
 

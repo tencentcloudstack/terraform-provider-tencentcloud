@@ -71,4 +71,9 @@ In addition to all arguments above, the following attributes are exported:
     * `updated_time` - Group creation time, such as: 2019-06-20 15:51:28.Note: This field may return null, indicating that no valid values can be obtained.
   * `total_count` - record count.
 
+## API Reference
+
+This data source queries the following TencentCloud APIs:
+
+* Read: [DescribeApiGroups](https://cloud.tencent.com/document/api/649/50636) - 查询API 分组信息列表
 

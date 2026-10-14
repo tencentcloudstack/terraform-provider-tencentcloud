@@ -54,4 +54,9 @@ In addition to all arguments above, the following attributes are exported:
   * `type_id` - Type ID.
   * `type_name` - Type name.
 
+## API Reference
+
+This data source queries the following TencentCloud APIs:
+
+* Read: [DescribeOwaspRuleTypes](https://cloud.tencent.com/document/api/627/122546) - 查询规则引擎规则类型列表
 

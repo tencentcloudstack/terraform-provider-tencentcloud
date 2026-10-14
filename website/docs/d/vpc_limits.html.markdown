@@ -34,4 +34,9 @@ In addition to all arguments above, the following attributes are exported:
   * `limit_type` - type of vpc limit.
   * `limit_value` - value of vpc limit.
 
+## API Reference
+
+This data source queries the following TencentCloud APIs:
+
+* Read: [DescribeVpcLimits](https://cloud.tencent.com/document/api/215/42942) - 获取私有网络配额
 

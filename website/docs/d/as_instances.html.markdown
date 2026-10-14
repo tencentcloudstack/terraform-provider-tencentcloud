@@ -67,4 +67,9 @@ In addition to all arguments above, the following attributes are exported:
   * `version_number` - Version ID.
   * `zone` - Available zone.
 
+## API Reference
+
+This data source queries the following TencentCloud APIs:
+
+* Read: [DescribeAutoScalingInstances](https://cloud.tencent.com/document/api/377/20437) - 查询实例
 

@@ -69,4 +69,9 @@ In addition to all arguments above, the following attributes are exported:
   * `time_consuming` - Flow Execution Time Consuming.
   * `wood_job_id` - Wood Subprocess ID.
 
+## API Reference
+
+This data source queries the following TencentCloud APIs:
+
+* Read: [DescribeClusterFlowStatusDetail](https://cloud.tencent.com/document/api/589/107224) - 查询EMR集群任务运行详情状态
 

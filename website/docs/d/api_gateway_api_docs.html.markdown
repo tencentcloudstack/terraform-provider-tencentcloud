@@ -33,4 +33,9 @@ In addition to all arguments above, the following attributes are exported:
   * `api_doc_name` - Api Doc Name.
   * `api_doc_status` - Api Doc Status.
 
+## API Reference
+
+This data source queries the following TencentCloud APIs:
+
+* Read: [DescribeAPIDocs](https://cloud.tencent.com/document/api/628/54948) - 查询 API 文档列表
 

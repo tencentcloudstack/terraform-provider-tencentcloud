@@ -45,4 +45,9 @@ In addition to all arguments above, the following attributes are exported:
   * `task_id` - task id.
   * `topic_id` - topic id.
 
+## API Reference
+
+This data source queries the following TencentCloud APIs:
+
+* Read: [DescribeShipperTasks](https://cloud.tencent.com/document/api/614/58745) - 获取投递任务列表
 

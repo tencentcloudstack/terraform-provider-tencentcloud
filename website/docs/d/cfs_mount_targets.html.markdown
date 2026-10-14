@@ -44,4 +44,9 @@ In addition to all arguments above, the following attributes are exported:
   * `vpc_id` - VPC ID.
   * `vpc_name` - VPC name.
 
+## API Reference
+
+This data source queries the following TencentCloud APIs:
+
+* Read: [DescribeMountTargets](https://cloud.tencent.com/document/api/582/38169) - 查询文件系统挂载点
 

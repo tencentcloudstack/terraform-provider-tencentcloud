@@ -85,4 +85,10 @@ In addition to all arguments above, the following attributes are exported:
   * `vpn_gateway_id` - ID of the VPN gateway.
   * `vpn_proto` - Vpn proto of the VPN connection.
 
+## API Reference
+
+This data source queries the following TencentCloud APIs:
+
+* Read: [DescribeResourceTagsByResourceIds](https://cloud.tencent.com/document/api/651/35319) - 批量查看资源关联的标签
+* Read: [DescribeVpnConnections](https://cloud.tencent.com/document/api/215/17515) - 查询VPN通道列表
 

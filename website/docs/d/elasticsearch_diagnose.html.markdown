@@ -68,4 +68,9 @@ In addition to all arguments above, the following attributes are exported:
   * `request_id` - Request id.
   * `score` - Total diagnostic score.
 
+## API Reference
+
+This data source queries the following TencentCloud APIs:
+
+* Read: [DescribeDiagnose](https://cloud.tencent.com/document/api/845/100954) - 查询智能运维诊断结果报告
 

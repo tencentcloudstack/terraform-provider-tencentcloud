@@ -36,4 +36,9 @@ In addition to all arguments above, the following attributes are exported:
   * `broker_version` - Broker version.
   * `kafka_version` - Kafka version.
 
+## API Reference
+
+This data source queries the following TencentCloud APIs:
+
+* Read: [DescribeCkafkaVersion](https://cloud.tencent.com/document/api/597/125479) - 查询实例版本信息
 

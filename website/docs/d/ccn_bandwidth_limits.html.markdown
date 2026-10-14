@@ -51,4 +51,9 @@ In addition to all arguments above, the following attributes are exported:
   * `dst_region` - Destination area restriction.
   * `region` - Limitation of region.
 
+## API Reference
+
+This data source queries the following TencentCloud APIs:
+
+* Read: [GetCcnRegionBandwidthLimits](https://cloud.tencent.com/document/api/215/45482) - 查询云联网相关地域带宽信息
 

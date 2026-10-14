@@ -59,4 +59,9 @@ In addition to all arguments above, the following attributes are exported:
   * `user_data` - Base64-encoded User Data text.
   * `version_number` - Version Number.
 
+## API Reference
+
+This data source queries the following TencentCloud APIs:
+
+* Read: [DescribeLaunchConfigurations](https://cloud.tencent.com/document/api/377/20445) - 查询启动配置
 

@@ -188,4 +188,9 @@ In addition to all arguments above, the following attributes are exported:
     * `tag_key` - tag key.
     * `tag_value` - tag value.
 
+## API Reference
+
+This data source queries the following TencentCloud APIs:
+
+* Read: [DescribeSyncJobs](https://cloud.tencent.com/document/api/571/82103) - 查询同步任务信息
 

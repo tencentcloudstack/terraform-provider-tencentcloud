@@ -53,4 +53,9 @@ In addition to all arguments above, the following attributes are exported:
     * `environment_name` - Authorization binding environment.
     * `service_id` - Service ID.
 
+## API Reference
+
+This data source queries the following TencentCloud APIs:
+
+* Read: [DescribeApiBindApiAppsStatus](https://cloud.tencent.com/document/api/628/58633) - 查询Api绑定的应用列表
 

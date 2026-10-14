@@ -39,4 +39,9 @@ In addition to all arguments above, the following attributes are exported:
   * `whitelist_uin` - uin: business identifier.
   * `wid` - Auto-Increment allowlist ID.
 
+## API Reference
+
+This data source queries the following TencentCloud APIs:
+
+* Read: [DescribeWhitelists](https://cloud.tencent.com/document/api/1464/69211) - 获取白名单列表
 

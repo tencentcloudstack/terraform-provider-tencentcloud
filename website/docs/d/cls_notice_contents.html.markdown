@@ -77,4 +77,9 @@ In addition to all arguments above, the following attributes are exported:
   * `uin` - Creator primary account ID.
   * `update_time` - Update time (Unix timestamp in seconds).
 
+## API Reference
+
+This data source queries the following TencentCloud APIs:
+
+* Read: [DescribeNoticeContents](https://cloud.tencent.com/document/api/614/111714) - 获取通知内容模板
 

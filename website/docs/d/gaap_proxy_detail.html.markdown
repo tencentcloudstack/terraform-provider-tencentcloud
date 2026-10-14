@@ -90,4 +90,9 @@ In addition to all arguments above, the following attributes are exported:
     * `tag_value` - Tag Value.
   * `version` - Version 1.0, 2.0, 3.0.
 
+## API Reference
+
+This data source queries the following TencentCloud APIs:
+
+* Read: [DescribeProxyDetail](https://cloud.tencent.com/document/api/608/36960) - 查询通道详情
 

@@ -35,4 +35,9 @@ In addition to all arguments above, the following attributes are exported:
 * `current_proxy_version` - Current proxy version number note: This field may return null, indicating that a valid value cannot be obtained.
 * `support_proxy_versions` - Supported Database Agent Version Collection Note: This field may return null, indicating that a valid value cannot be obtained.
 
+## API Reference
+
+This data source queries the following TencentCloud APIs:
+
+* Read: [DescribeSupportProxyVersion](https://cloud.tencent.com/document/api/1003/94260) - 查询支持的数据库代理版本
 

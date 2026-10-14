@@ -55,4 +55,9 @@ In addition to all arguments above, the following attributes are exported:
   * `send_date` - Date Note: this field may return null, indicating that no valid values can be obtained.
   * `unsubscribe_count` - Number of users who canceled subscriptions. Note: this field may return null, indicating that no valid values can be obtained.
 
+## API Reference
+
+This data source queries the following TencentCloud APIs:
+
+* Read: [GetStatisticsReport](https://cloud.tencent.com/document/api/1288/51036) - 获取发送统计数据
 

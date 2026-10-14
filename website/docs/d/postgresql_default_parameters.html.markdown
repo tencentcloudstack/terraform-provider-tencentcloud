@@ -68,4 +68,9 @@ In addition to all arguments above, the following attributes are exported:
     * `unit` - Unit of the parameter value. If the parameter has no unit, this field will return null.Note: This field may return null, indicating that no valid values can be obtained.
     * `value` - Default parameter value under the kernel version and specification of the instanceNote: This field may return null, indicating that no valid values can be obtained.
 
+## API Reference
+
+This data source queries the following TencentCloud APIs:
+
+* Read: [DescribeDefaultParameters](https://cloud.tencent.com/document/api/409/84069) - 查询默认参数列表
 

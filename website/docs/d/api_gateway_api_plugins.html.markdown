@@ -43,4 +43,9 @@ In addition to all arguments above, the following attributes are exported:
   * `plugin_name` - Plugin name.
   * `plugin_type` - Plugin type.
 
+## API Reference
+
+This data source queries the following TencentCloud APIs:
+
+* Read: [DescribePluginsByApi](https://cloud.tencent.com/document/api/628/82587) - API上已绑定的插件
 

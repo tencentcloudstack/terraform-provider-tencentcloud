@@ -34,4 +34,9 @@ In addition to all arguments above, the following attributes are exported:
   * `instance_id` - Instance ID, the format is: cdb-c1nl9rpv, which is the same as the instance ID displayed on the cloud database console page.
   * `time_in_seconds` - expected restart time.
 
+## API Reference
+
+This data source queries the following TencentCloud APIs:
+
+* Read: [DescribeDBInstanceRebootTime](https://cloud.tencent.com/document/api/236/15874) - 查询云数据库实例的预期重启时间
 

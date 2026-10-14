@@ -39,4 +39,9 @@ In addition to all arguments above, the following attributes are exported:
 * `publisher_count` - number of producersNote: This field may return null, indicating that no valid value can be obtained.
 * `storage_size` - Message store size in bytesNote: This field may return null, indicating that no valid value can be obtained.
 
+## API Reference
+
+This data source queries the following TencentCloud APIs:
+
+* Read: [DescribePublisherSummary](https://cloud.tencent.com/document/api/1179/66370) - 获取消息生产概览
 

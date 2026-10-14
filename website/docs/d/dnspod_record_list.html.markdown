@@ -111,4 +111,9 @@ In addition to all arguments above, the following attributes are exported:
   * `value` - Record value.
   * `weight` - Record weight, used for load balancing records. Note: This field may return null, indicating that no valid value can be obtained.
 
+## API Reference
+
+This data source queries the following TencentCloud APIs:
+
+* Read: [DescribeRecordFilterList](https://cloud.tencent.com/document/api/1427/95521) - 获取域名的解析记录筛选列表
 

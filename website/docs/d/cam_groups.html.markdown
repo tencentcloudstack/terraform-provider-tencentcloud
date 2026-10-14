@@ -44,4 +44,9 @@ In addition to all arguments above, the following attributes are exported:
   * `name` - Name of CAM group.
   * `remark` - Description of CAM group.
 
+## API Reference
+
+This data source queries the following TencentCloud APIs:
+
+* Read: [ListGroups](https://cloud.tencent.com/document/api/598/34589) - 查询用户组列表
 

@@ -49,4 +49,9 @@ In addition to all arguments above, the following attributes are exported:
       * `version` - Function version name.
       * `weight` - Version weight.
 
+## API Reference
+
+This data source queries the following TencentCloud APIs:
+
+* Read: [ListAliases](https://cloud.tencent.com/document/api/583/44162) - 获取别名列表
 

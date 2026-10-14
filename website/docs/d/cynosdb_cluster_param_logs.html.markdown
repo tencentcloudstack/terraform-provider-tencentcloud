@@ -46,4 +46,9 @@ In addition to all arguments above, the following attributes are exported:
   * `update_time` - Update time.
   * `update_value` - Modified value.
 
+## API Reference
+
+This data source queries the following TencentCloud APIs:
+
+* Read: [DescribeClusterParamLogs](https://cloud.tencent.com/document/api/1003/70118) - 查询参数修改记录
 

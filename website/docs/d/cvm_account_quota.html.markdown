@@ -99,4 +99,9 @@ In addition to all arguments above, the following attributes are exported:
   * `region` - Region.
 * `app_id` - User AppId.
 
+## API Reference
+
+This data source queries the following TencentCloud APIs:
+
+* Read: [DescribeAccountQuota](https://cloud.tencent.com/document/api/213/55628) - 查询用户配额详情
 

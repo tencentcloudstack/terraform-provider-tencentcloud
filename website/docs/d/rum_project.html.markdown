@@ -48,4 +48,9 @@ In addition to all arguments above, the following attributes are exported:
   * `type` - Project type.
   * `url` - Project URL.
 
+## API Reference
+
+This data source queries the following TencentCloud APIs:
+
+* Read: [DescribeProjects](https://cloud.tencent.com/document/api/1464/61475) - 获取 RUM 应用列表
 

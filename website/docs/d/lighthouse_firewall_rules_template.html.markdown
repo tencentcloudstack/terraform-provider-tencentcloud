@@ -36,4 +36,9 @@ In addition to all arguments above, the following attributes are exported:
   * `port` - Port. Valid values are ALL, one single port, multiple ports separated by commas, or port range indicated by a minus sign.
   * `protocol` - Protocol. Valid values are TCP, UDP, ICMP, ALL.
 
+## API Reference
+
+This data source queries the following TencentCloud APIs:
+
+* Read: [DescribeFirewallRulesTemplate](https://cloud.tencent.com/document/api/1207/55530) - 查询防火墙规则模板
 

@@ -38,4 +38,9 @@ In addition to all arguments above, the following attributes are exported:
   * `position` - Field position.
   * `type` - Field type.
 
+## API Reference
+
+This data source queries the following TencentCloud APIs:
+
+* Read: [GetTableColumns](https://cloud.tencent.com/document/api/1267/123995) - 获取表字段列表
 

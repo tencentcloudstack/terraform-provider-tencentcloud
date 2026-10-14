@@ -32,4 +32,9 @@ In addition to all arguments above, the following attributes are exported:
 
 * `urls` - Example connection string access address in the form of an instance URI. Contains: URI type and connection string address.
 
+## API Reference
+
+This data source queries the following TencentCloud APIs:
+
+* Read: [DescribeDBInstanceURL](https://cloud.tencent.com/document/api/240/116065) - 获取实例连接的URI
 

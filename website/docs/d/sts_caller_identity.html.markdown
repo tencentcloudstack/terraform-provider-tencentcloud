@@ -34,4 +34,9 @@ In addition to all arguments above, the following attributes are exported:
 * `type` - Identity type.
 * `user_id` - Identity:- When the caller is a cloud account, the current account `Uin` is returned.- When the caller is a role, it returns `roleId:roleSessionName`- When the caller is a federated identity, it returns `uin:federatedUserName`.
 
+## API Reference
+
+This data source queries the following TencentCloud APIs:
+
+* Read: [GetCallerIdentity](https://cloud.tencent.com/document/api/1312/66098) - 获取当前调用者的身份信息
 

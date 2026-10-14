@@ -113,4 +113,9 @@ In addition to all arguments above, the following attributes are exported:
   * `project_name` - Belonging project name.
   * `type` - Data source type: enumeration values.
 
+## API Reference
+
+This data source queries the following TencentCloud APIs:
+
+* Read: [ListDataSources](https://cloud.tencent.com/document/api/1267/123965) - 查看数据源列表
 

@@ -47,4 +47,9 @@ In addition to all arguments above, the following attributes are exported:
   * `type` - Internally defined event type.
 * `running_order_ids` - Array of running instance IDs.
 
+## API Reference
+
+This data source queries the following TencentCloud APIs:
+
+* Read: [DescribeJobEvents](https://cloud.tencent.com/document/api/849/102554) - 获取指定作业的事件
 

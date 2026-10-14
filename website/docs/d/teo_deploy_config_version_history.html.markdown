@@ -41,4 +41,9 @@ In addition to all arguments above, the following attributes are exported:
 
 * `records` - Release record details.
 
+## API Reference
+
+This data source queries the following TencentCloud APIs:
+
+* Read: [DescribeDeployHistory](https://cloud.tencent.com/document/api/1552/101863) - 查询版本发布历史
 

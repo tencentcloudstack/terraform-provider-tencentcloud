@@ -34,4 +34,9 @@ In addition to all arguments above, the following attributes are exported:
   * `header_name` - Header Name.
   * `header_value` - Header Value.
 
+## API Reference
+
+This data source queries the following TencentCloud APIs:
+
+* Read: [DescribeCustomHeader](https://cloud.tencent.com/document/api/608/59240) - 查询自定义header列表
 

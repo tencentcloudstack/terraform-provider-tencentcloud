@@ -42,4 +42,9 @@ In addition to all arguments above, the following attributes are exported:
   * `package_type` - Resource package type CCU - Compute resource package DISK - Store resource package Note: This field may return null, indicating that a valid value cannot be obtained.
   * `package_version` - Resource package version base basic version, common general version, enterprise enterprise version Note: This field may return null, indicating that a valid value cannot be obtained.
 
+## API Reference
+
+This data source queries the following TencentCloud APIs:
+
+* Read: [DescribeResourcePackageSaleSpec](https://cloud.tencent.com/document/api/1003/93010) - 查询资源包规格
 

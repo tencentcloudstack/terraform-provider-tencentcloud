@@ -38,4 +38,9 @@ In addition to all arguments above, the following attributes are exported:
 
 * `users` - User list.
 
+## API Reference
+
+This data source queries the following TencentCloud APIs:
+
+* Read: [ListUsers](https://cloud.tencent.com/document/api/850/109925) - 查询用户列表
 

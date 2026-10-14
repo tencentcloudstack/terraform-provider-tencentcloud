@@ -42,4 +42,10 @@ In addition to all arguments above, the following attributes are exported:
   * `update_time` - Last update time.
   * `url` - URL of the repository.
 
+## API Reference
+
+This data source queries the following TencentCloud APIs:
+
+* Read: [DescribeInstances](https://cloud.tencent.com/document/api/1141/41569) - 查询实例信息
+* Read: [DescribeRepositories](https://cloud.tencent.com/document/api/1141/42722) - 查询镜像仓库信息
 

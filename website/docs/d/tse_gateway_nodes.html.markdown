@@ -41,4 +41,9 @@ In addition to all arguments above, the following attributes are exported:
   * `zone_id` - Zone idNote: This field may return null, indicating that a valid value is not available.
   * `zone` - ZoneNote: This field may return null, indicating that a valid value is not available.
 
+## API Reference
+
+This data source queries the following TencentCloud APIs:
+
+* Read: [DescribeCloudNativeAPIGatewayNodes](https://cloud.tencent.com/document/api/1364/78800) - 获取云原生网关节点列表
 

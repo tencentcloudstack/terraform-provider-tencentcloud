@@ -37,4 +37,10 @@ In addition to all arguments above, the following attributes are exported:
   * `create_time` - Creation time of the account.
   * `update_time` - The last update time of the account.
 
+## API Reference
+
+This data source queries the following TencentCloud APIs:
+
+* Read: [DescribeInstanceAttributes](https://cloud.tencent.com/document/api/597/40836) - 获取实例属性
+* Read: [DescribeUser](https://cloud.tencent.com/document/api/597/40855) - 根据实例id查询用户信息
 

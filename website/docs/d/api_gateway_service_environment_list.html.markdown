@@ -36,4 +36,9 @@ In addition to all arguments above, the following attributes are exported:
   * `url` - Access path.
   * `version_name` - Running version.
 
+## API Reference
+
+This data source queries the following TencentCloud APIs:
+
+* Read: [DescribeServiceEnvironmentList](https://cloud.tencent.com/document/api/628/45198) - 查询服务环境列表
 

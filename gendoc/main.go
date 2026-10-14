@@ -428,11 +428,16 @@ func genDoc(product, dtype, fpath, name string, resource *schema.Resource) {
 
 	filename = filepath.Join(docRoot, dtype[:1], fmt.Sprintf("%s.html.markdown", data["resource"]))
 
-	// API Reference section: manual override wins, else auto-extract
-	// (resources only; data sources have no lifecycle functions).
-	if dtype == "resource" {
+	// API Reference section: manual override wins, else auto-extract.
+	// Resources trace Create/Read/Update/Delete; data sources trace Read.
+	if dtype == "resource" || dtype == "data_source" {
 		repoRoot := filepath.Dir(fpath) // fpath is <repo>/tencentcloud
-		data["api"] = renderResourceAPISection(getSharedAPIAnalyzer(), repoRoot, name, resource, manualAPI)
+		analyzer := getSharedAPIAnalyzer()
+		if dtype == "resource" {
+			data["api"] = renderResourceAPISection(analyzer, repoRoot, name, resource, manualAPI)
+		} else {
+			data["api"] = renderAPIRefsFor("data_source", map[string][]apiRef{"Read": analyzer.readDataSourceAPIs(repoRoot, name, resource)})
+		}
 	}
 
 	fd, err := os.OpenFile(filename, os.O_WRONLY|os.O_CREATE|os.O_TRUNC, 0644)

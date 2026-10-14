@@ -31,4 +31,9 @@ In addition to all arguments above, the following attributes are exported:
   * `version_id` - TLS version IDNote: This field may return null, indicating that a valid value cannot be obtained.
   * `version_name` - Tls version nameNote: This field may return null, indicating that a valid value cannot be obtained.
 
+## API Reference
+
+This data source queries the following TencentCloud APIs:
+
+* Read: [DescribeTlsVersion](https://cloud.tencent.com/document/api/627/96941) - 查询SaaS型WAF支持的TLS版本
 

@@ -42,4 +42,9 @@ In addition to all arguments above, the following attributes are exported:
     * `proxy_id` - Channel Id.
     * `proxy_name` - Channel name.
 
+## API Reference
+
+This data source queries the following TencentCloud APIs:
+
+* Read: [DescribeGroupAndStatisticsProxy](https://cloud.tencent.com/document/api/608/37022) - 查询统计通道组和通道信息
 

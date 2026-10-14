@@ -34,4 +34,9 @@ In addition to all arguments above, the following attributes are exported:
   * `event_name` - Event name.Note: This field may return null, indicating that no valid value can be obtained.
   * `event_type` - Event type.Note: This field may return null, indicating that no valid value can be obtained.
 
+## API Reference
+
+This data source queries the following TencentCloud APIs:
+
+* Read: [ListPlatformEventNames](https://cloud.tencent.com/document/api/1359/97862) - 获取平台产品事件名称
 

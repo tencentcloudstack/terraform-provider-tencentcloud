@@ -33,4 +33,9 @@ In addition to all arguments above, the following attributes are exported:
   * `service_template_group_member_limit` - service template group member limit.
   * `service_template_member_limit` - service template member limit.
 
+## API Reference
+
+This data source queries the following TencentCloud APIs:
+
+* Read: [DescribeTemplateLimits](https://cloud.tencent.com/document/api/215/42836) - 查询参数模板配额列表
 

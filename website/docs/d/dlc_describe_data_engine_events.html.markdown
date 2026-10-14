@@ -36,4 +36,9 @@ In addition to all arguments above, the following attributes are exported:
   * `events_action` - Event action.
   * `time` - Event time.
 
+## API Reference
+
+This data source queries the following TencentCloud APIs:
+
+* Read: [DescribeDataEngineEvents](https://cloud.tencent.com/document/api/1342/101534) - 查询扩缩容日志
 

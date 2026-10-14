@@ -48,4 +48,9 @@ In addition to all arguments above, the following attributes are exported:
   * `severity` - severity. The severity is divided into 5 levels, according to the degree of impact from high to low: 1: Fatal, 2: Serious, 3: Warning, 4: Prompt, 5: Healthy.
   * `start_time` - start Time.
 
+## API Reference
+
+This data source queries the following TencentCloud APIs:
+
+* Read: [DescribeDBDiagHistory](https://cloud.tencent.com/document/api/1130/57787) - 获取实例诊断历史
 

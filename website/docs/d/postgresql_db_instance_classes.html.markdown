@@ -44,4 +44,9 @@ In addition to all arguments above, the following attributes are exported:
   * `qps` - Estimated QPS for this specification.
   * `spec_code` - Specification ID.
 
+## API Reference
+
+This data source queries the following TencentCloud APIs:
+
+* Read: [DescribeClasses](https://cloud.tencent.com/document/api/409/89019) - 查询售卖规格
 

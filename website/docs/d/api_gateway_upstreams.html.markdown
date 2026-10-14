@@ -56,4 +56,9 @@ In addition to all arguments above, the following attributes are exported:
   * `service_id` - Service Unique ID.
   * `service_name` - Service NameNote: This field may return null, indicating that a valid value cannot be obtained.
 
+## API Reference
+
+This data source queries the following TencentCloud APIs:
+
+* Read: [DescribeUpstreamBindApis](https://cloud.tencent.com/document/api/628/70412) - 查询后端通道所绑定的API列表
 

@@ -36,4 +36,9 @@ In addition to all arguments above, the following attributes are exported:
 
 * `items` - The returned database table information.
 
+## API Reference
+
+This data source queries the following TencentCloud APIs:
+
+* Read: [DescribeTables](https://cloud.tencent.com/document/api/236/18727) - 查询数据库表
 

@@ -71,4 +71,9 @@ In addition to all arguments above, the following attributes are exported:
   * `status_message_simplified` - Brief description of the scaling activity status.
   * `status_message` - Description of the scaling activity status.
 
+## API Reference
+
+This data source queries the following TencentCloud APIs:
+
+* Read: [DescribeAutoScalingGroupLastActivities](https://cloud.tencent.com/document/api/377/37652) - 查询伸缩组最新一次伸缩活动
 

@@ -34,4 +34,9 @@ In addition to all arguments above, the following attributes are exported:
   * `switch_time` - Switching time, the format is: 2017-09-03 01:34:31.
   * `switch_type` - Switch type, possible return values: TRANSFER - data migration; MASTER2SLAVE - master-standby switch; RECOVERY - master-slave recovery.
 
+## API Reference
+
+This data source queries the following TencentCloud APIs:
+
+* Read: [DescribeDBSwitchRecords](https://cloud.tencent.com/document/api/236/17490) - 查询云数据库切换记录
 

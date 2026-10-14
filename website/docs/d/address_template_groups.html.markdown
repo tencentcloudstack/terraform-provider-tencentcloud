@@ -36,4 +36,9 @@ In addition to all arguments above, the following attributes are exported:
   * `name` - Name of address template group.
   * `template_ids` - ID set of the address template.
 
+## API Reference
+
+This data source queries the following TencentCloud APIs:
+
+* Read: [DescribeAddressTemplateGroups](https://cloud.tencent.com/document/api/215/16716) - 查询IP地址模板集合
 

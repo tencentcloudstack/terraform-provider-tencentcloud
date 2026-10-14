@@ -60,4 +60,9 @@ In addition to all arguments above, the following attributes are exported:
     * `tag_value` - Tag value.
   * `vpc_id` - Id of the VPCNote: This field may return null, indicating that no valid value can be obtained.
 
+## API Reference
+
+This data source queries the following TencentCloud APIs:
+
+* Read: [DescribePulsarProInstances](https://cloud.tencent.com/document/api/1179/90376) - 查询Pulsar标准版和专业版实例列表
 

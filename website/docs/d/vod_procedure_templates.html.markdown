@@ -92,4 +92,9 @@ In addition to all arguments above, the following attributes are exported:
   * `type` - Template type filter. Valid values: `Preset`, `Custom`. `Preset`: preset template; `Custom`: custom template.
   * `update_time` - Last modified time of template in ISO date format.
 
+## API Reference
+
+This data source queries the following TencentCloud APIs:
+
+* Read: [DescribeProcedureTemplates](https://cloud.tencent.com/document/api/266/33895) - 获取任务流模板列表
 

@@ -38,4 +38,9 @@ In addition to all arguments above, the following attributes are exported:
   * `private_ip_address_type` - Private `IP` type.
   * `private_ip_address` - `VPC` private `IP`.
 
+## API Reference
+
+This data source queries the following TencentCloud APIs:
+
+* Read: [DescribeVpcPrivateIpAddresses](https://cloud.tencent.com/document/api/215/32884) - 查询VPC内网IP信息
 

@@ -97,4 +97,9 @@ In addition to all arguments above, the following attributes are exported:
   * `region` - Region.
   * `vpc` - VPC of alarm object for basic product alarm.
 
+## API Reference
+
+This data source queries the following TencentCloud APIs:
+
+* Read: [DescribeAlarmHistories](https://cloud.tencent.com/document/api/248/48684) - 查询告警历史
 

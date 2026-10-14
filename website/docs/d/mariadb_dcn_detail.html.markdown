@@ -59,4 +59,9 @@ In addition to all arguments above, the following attributes are exported:
   * `vport` - Instance port.
   * `zone` - Availability zone where the instance resides.
 
+## API Reference
+
+This data source queries the following TencentCloud APIs:
+
+* Read: [DescribeDcnDetail](https://cloud.tencent.com/document/api/237/56347) - 获取实例灾备详情
 

@@ -56,4 +56,9 @@ In addition to all arguments above, the following attributes are exported:
   * `trigger_name` - Trigger name.
   * `type` - Trigger type.
 
+## API Reference
+
+This data source queries the following TencentCloud APIs:
+
+* Read: [ListTriggers](https://cloud.tencent.com/document/api/583/44268) - 获取函数触发器列表
 

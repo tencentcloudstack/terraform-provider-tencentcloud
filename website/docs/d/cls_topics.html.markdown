@@ -71,4 +71,9 @@ In addition to all arguments above, the following attributes are exported:
 
 * `topics` - Log topic list.
 
+## API Reference
+
+This data source queries the following TencentCloud APIs:
+
+* Read: [DescribeTopics](https://cloud.tencent.com/document/api/614/56454) - 获取主题列表
 

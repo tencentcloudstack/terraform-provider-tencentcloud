@@ -52,4 +52,11 @@ In addition to all arguments above, the following attributes are exported:
   * `secret_string` - The string text of secret.
   * `version_id` - Version of secret.
 
+## API Reference
+
+This data source queries the following TencentCloud APIs:
+
+* Read: [DescribeSecret](https://cloud.tencent.com/document/api/1140/40526) - 获取凭据详细信息
+* Read: [GetSecretValue](https://cloud.tencent.com/document/api/1140/40522) - 获取凭据明文
+* Read: [ListSecretVersionIds](https://cloud.tencent.com/document/api/1140/40520) - 获取指定凭据下的版本列表信息。
 

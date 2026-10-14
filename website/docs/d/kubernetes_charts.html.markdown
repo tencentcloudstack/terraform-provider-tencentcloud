@@ -53,4 +53,9 @@ In addition to all arguments above, the following attributes are exported:
   * `latest_version` - Chart latest version.
   * `name` - Name of chart.
 
+## API Reference
+
+This data source queries the following TencentCloud APIs:
+
+* Read: [GetTkeAppChartList](https://cloud.tencent.com/document/api/457/64977) - 获取TKE支持的App列表
 

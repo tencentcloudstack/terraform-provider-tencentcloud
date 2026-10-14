@@ -64,4 +64,9 @@ In addition to all arguments above, the following attributes are exported:
   * `source` - Useless.
   * `time_stamp` - Time string.
 
+## API Reference
+
+This data source queries the following TencentCloud APIs:
+
+* Read: [SearchAttackLog](https://cloud.tencent.com/document/api/627/86118) - 搜索CLS新版本攻击日志
 

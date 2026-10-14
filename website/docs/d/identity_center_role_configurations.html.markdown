@@ -35,4 +35,9 @@ In addition to all arguments above, the following attributes are exported:
 
 * `role_configurations` - Permission configuration list.
 
+## API Reference
+
+This data source queries the following TencentCloud APIs:
+
+* Read: [ListRoleConfigurations](https://cloud.tencent.com/document/api/850/109932) - 查询权限配置列表
 

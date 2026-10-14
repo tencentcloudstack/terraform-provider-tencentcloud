@@ -58,4 +58,9 @@ In addition to all arguments above, the following attributes are exported:
   * `status` - Whether the account group has been connected, 0 means not connected, 1 means connected.
   * `user_total` - Total number of users under the account group.
 
+## API Reference
+
+This data source queries the following TencentCloud APIs:
+
+* Read: [DescribeAccountGroups](https://cloud.tencent.com/document/api/1025/125477) - 获取账号组信息
 

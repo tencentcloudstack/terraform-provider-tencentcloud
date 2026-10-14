@@ -38,4 +38,9 @@ In addition to all arguments above, the following attributes are exported:
   * `support_feature` - Ability to access regional supportNote: This field may return null, indicating that a valid value cannot be obtained.
     * `network_type` - A list of network types supported by the access area, with normal indicating support for regular BGP, cn2 indicating premium BGP, triple indicating three networks, and secure_EIP represents a custom secure EIP.
 
+## API Reference
+
+This data source queries the following TencentCloud APIs:
+
+* Read: [DescribeDestRegions](https://cloud.tencent.com/document/api/608/36964) - 查询源站区域
 

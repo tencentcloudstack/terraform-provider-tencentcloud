@@ -47,4 +47,9 @@ In addition to all arguments above, the following attributes are exported:
 
 * `data` - Record list.
 
+## API Reference
+
+This data source queries the following TencentCloud APIs:
+
+* Read: [ListOpsWorkflows](https://cloud.tencent.com/document/api/1267/123574) - 获取工作流列表
 

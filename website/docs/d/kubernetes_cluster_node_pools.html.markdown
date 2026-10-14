@@ -110,4 +110,9 @@ In addition to all arguments above, the following attributes are exported:
   * `unschedulable` - Is it not schedulable.
   * `user_script` - User defined scripts.
 
+## API Reference
+
+This data source queries the following TencentCloud APIs:
+
+* Read: [DescribeClusterNodePools](https://cloud.tencent.com/document/api/457/49432) - 查询节点池列表
 

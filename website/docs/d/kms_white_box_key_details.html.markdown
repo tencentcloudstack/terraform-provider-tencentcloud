@@ -44,4 +44,9 @@ In addition to all arguments above, the following attributes are exported:
   * `resource_id` - Resource ID, format: creatorUin/$creatorUin/$keyId.
   * `status` - The status of the white box key, the value is: Enabled | Disabled.
 
+## API Reference
+
+This data source queries the following TencentCloud APIs:
+
+* Read: [DescribeWhiteBoxKeyDetails](https://cloud.tencent.com/document/api/573/43439) - 获取白盒密钥列表
 

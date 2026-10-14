@@ -57,4 +57,9 @@ In addition to all arguments above, the following attributes are exported:
     * `memory` - Memory, in GiB.
     * `pods` - Number of pods.
 
+## API Reference
+
+This data source queries the following TencentCloud APIs:
+
+* Read: [DescribeDBCustomClusterNodeResources](https://cloud.tencent.com/document/api/1322/135267) - 查询集群内节点的资源信息
 

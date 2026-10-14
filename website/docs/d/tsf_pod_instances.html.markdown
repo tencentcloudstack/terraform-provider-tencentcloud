@@ -50,4 +50,9 @@ In addition to all arguments above, the following attributes are exported:
     * `status` - Instance status. Please refer to the definition of instance and container status below. Starting (pod not ready): Starting; Running: Running; Abnormal: Abnormal; Stopped: Stopped;Note: This field may return null, which means no valid value was found.
   * `total_count` - Total number of records.Note: This field may return null, which means no valid value was found.
 
+## API Reference
+
+This data source queries the following TencentCloud APIs:
+
+* Read: [DescribePodInstances](https://cloud.tencent.com/document/api/649/43108) - 获取部署组实例列表
 

@@ -56,4 +56,9 @@ In addition to all arguments above, the following attributes are exported:
 * `running_total_count` - Total number of deploymentNote: This field may return NULL, indicating that the valid value cannot be obtained.
 * `success_total_count` - Total successNote: This field may return NULL, indicating that the valid value cannot be obtained.
 
+## API Reference
+
+This data source queries the following TencentCloud APIs:
+
+* Read: [DescribeHostDeployRecordDetail](https://cloud.tencent.com/document/api/400/91658) - 查询证书云资源部署记录详情
 

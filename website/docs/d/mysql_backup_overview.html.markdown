@@ -38,4 +38,9 @@ In addition to all arguments above, the following attributes are exported:
 * `free_volume` - The free backup capacity obtained by the user in the current region.
 * `remote_backup_volume` - The total capacity of off-site backup of the user in the current region. Note: This field may return null, indicating that no valid value can be obtained.
 
+## API Reference
+
+This data source queries the following TencentCloud APIs:
+
+* Read: [DescribeBackupOverview](https://cloud.tencent.com/document/api/236/41229) - 查询备份概览
 

@@ -153,12 +153,23 @@ map[string]*schema.Schema{
 }
 ```
 
-## API Reference（资源关联的云 API）
+## API Reference（资源/数据源关联的云 API）
 
-生成的资源文档包含一个可选的 "API Reference" 章节，列出该资源生命周期各阶段（Create/Read/Update/Delete）调用的云 API 及其官方文档链接。数据由两部分合成：
+resource、data source、action 与 ephemeral resource 的文档均包含一个可选的 "API Reference" 章节，列出该引用类型实际调用的云 API 及其官方文档链接：
 
-1. **静态分析**（`apiref.go`）：用 `go/ast` 从 resource 生命周期函数出发，追踪 service 方法调用链（含递归展开、goroutine 委托、包级辅助函数、局部 client 变量），收集 `UseXxxClient().Action(...)` 调用；client accessor 名通过 `connectivity/client.go` 的 SDK import 路径映射为目录产品名。
-2. **API 目录快照**（`data/api-actions.json`）：腾讯云公开 API 目录的精简快照，提供 `(product, action) -> 中文名 + 文档 URL` 的查表。
+- **resource**: Create / Read / Update / Delete 各阶段
+- **data source**: Read 阶段
+- **action**: Invoke 阶段
+- **ephemeral resource**: Open 阶段
+
+数据由两部分合成：
+
+1. **静态分析**（`apiref.go`）：用 `go/ast` 从生命周期函数出发，追踪 service 方法调用链（含递归展开、goroutine 委托、包级辅助函数、局部 client 变量），收集 `UseXxxClient().Action(...)` 调用；client accessor 名通过 `connectivity/client.go` 的 SDK import 路径映射为目录产品名。
+2. **API 目录**（`data/api-actions.json` 快照）：腾讯云公开 API 目录的精简快照，提供 `(product, action) -> 中文名 + 文档 URL` 的查表。
+
+**在线优先、快照兜底**：每次 `make doc` 都会先尝试拉取最新目录（10s 超时）；拉取失败时自动回退到编译期内嵌的快照并打印 `[WARN]`，文档生成不会因网络问题失败，仅 API Reference 内容可能略旧。
+
+覆盖率：resource 95.7%（1302/1360）、data source 97.3%（923/949）、action 与 ephemeral 全覆盖；未覆盖项均为 S3 兼容 REST 接口（cos/ci）、已下线产品（dayu）或目录未收录的新版本 API，可用下述人工段兜底。
 
 人工兑底：当静态分析无法覆盖（如 COS/CI 的 S3 兼容 REST API、目录未收录的老版本产品）或需要修正时，可在资源描述文件 `services/<product>/resource_tc_<name>.md` 中编写 "API" 段（位于正文与 "Example Usage" 之间），生成器会优先使用人工内容：
 

@@ -57,4 +57,9 @@ In addition to all arguments above, the following attributes are exported:
   * `vport` - Intranet port.
   * `zone` - available zone.
 
+## API Reference
+
+This data source queries the following TencentCloud APIs:
+
+* Read: [DescribeDBInstances](https://cloud.tencent.com/document/api/237/16184) - 查询实例列表
 

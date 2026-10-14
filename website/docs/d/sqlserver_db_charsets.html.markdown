@@ -32,4 +32,9 @@ In addition to all arguments above, the following attributes are exported:
 
 * `database_charsets` - Database character set list.
 
+## API Reference
+
+This data source queries the following TencentCloud APIs:
+
+* Read: [DescribeDBCharsets](https://cloud.tencent.com/document/api/238/53357) - 查询数据库字符集
 

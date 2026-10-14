@@ -40,4 +40,9 @@ In addition to all arguments above, the following attributes are exported:
     * `updated_time` - Update time. Note: This field may return null, indicating that no valid value was found.
   * `total_count` - total count.
 
+## API Reference
+
+This data source queries the following TencentCloud APIs:
+
+* Read: [DescribeUsableUnitNamespaces](https://cloud.tencent.com/document/api/649/53897) - 查询可用于被导入的命名空间列表
 

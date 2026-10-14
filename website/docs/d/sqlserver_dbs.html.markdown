@@ -88,4 +88,10 @@ In addition to all arguments above, the following attributes are exported:
   * `remark` - Remark of the DB.
   * `status` - Database status. Valid values are `creating`, `running`, `modifying`, `dropping`.
 
+## API Reference
+
+This data source queries the following TencentCloud APIs:
+
+* Read: [DescribeDBInstances](https://cloud.tencent.com/document/api/238/19969) - 查询实例列表
+* Read: [DescribeDBs](https://cloud.tencent.com/document/api/238/19968) - 查询数据库列表（已废弃）
 

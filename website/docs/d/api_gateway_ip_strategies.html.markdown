@@ -80,4 +80,10 @@ In addition to all arguments above, the following attributes are exported:
   * `strategy_name` - Name of the strategy.
   * `strategy_type` - Type of the strategy.
 
+## API Reference
+
+This data source queries the following TencentCloud APIs:
+
+* Read: [DescribeIPStrategy](https://cloud.tencent.com/document/api/628/45232) - 查询IP策略详情
+* Read: [DescribeIPStrategysStatus](https://cloud.tencent.com/document/api/628/45230) - 查询服务IP策略列表（旧）
 

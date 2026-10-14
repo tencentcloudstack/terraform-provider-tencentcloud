@@ -34,4 +34,9 @@ In addition to all arguments above, the following attributes are exported:
 * `is_rollback` - Whether it can be rolled back.
 * `to_record_id` - Log record ID after rolling back.
 
+## API Reference
+
+This data source queries the following TencentCloud APIs:
+
+* Read: [CheckDataEngineImageCanBeRollback](https://cloud.tencent.com/document/api/1342/99276) - 查看集群是否能回滚
 

@@ -58,4 +58,9 @@ In addition to all arguments above, the following attributes are exported:
     * `begin_time` - Start time of a scheduled sending task.
   * `update_time` - Task update time.
 
+## API Reference
+
+This data source queries the following TencentCloud APIs:
+
+* Read: [ListSendTasks](https://cloud.tencent.com/document/api/1288/68357) - 查询发送任务
 

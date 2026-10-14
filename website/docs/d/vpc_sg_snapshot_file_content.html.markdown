@@ -70,4 +70,9 @@ In addition to all arguments above, the following attributes are exported:
     * `service_group_id` - Protocol port group ID, such as `ppmg-f5n1f8da`.
     * `service_id` - Protocol port ID, such as `ppm-f5n1f8da`.
 
+## API Reference
+
+This data source queries the following TencentCloud APIs:
+
+* Read: [DescribeSgSnapshotFileContent](https://cloud.tencent.com/document/api/215/85156) - 查询安全组快照文件内容
 

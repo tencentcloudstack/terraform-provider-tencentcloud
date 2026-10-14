@@ -64,4 +64,9 @@ In addition to all arguments above, the following attributes are exported:
 
 * `data` - Instance list.
 
+## API Reference
+
+This data source queries the following TencentCloud APIs:
+
+* Read: [DescribeInstanceList](https://cloud.tencent.com/document/api/1493/96028) - 查询 5.X 集群列表
 

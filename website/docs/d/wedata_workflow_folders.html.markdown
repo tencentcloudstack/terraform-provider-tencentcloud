@@ -34,4 +34,9 @@ In addition to all arguments above, the following attributes are exported:
 
 * `data` - Paginated folder query result.
 
+## API Reference
+
+This data source queries the following TencentCloud APIs:
+
+* Read: [ListWorkflowFolders](https://cloud.tencent.com/document/api/1267/123621) - 查看工作流文件夹列表
 

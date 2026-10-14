@@ -56,4 +56,9 @@ In addition to all arguments above, the following attributes are exported:
   * `protocol` - Type of the network protocol. Valid values: `TCP` and `UDP`.
   * `vpc_id` - ID of the VPC.
 
+## API Reference
+
+This data source queries the following TencentCloud APIs:
+
+* Read: [DescribeNatGatewayDestinationIpPortTranslationNatRules](https://cloud.tencent.com/document/api/215/36717) - 查询NAT网关端口转发规则
 

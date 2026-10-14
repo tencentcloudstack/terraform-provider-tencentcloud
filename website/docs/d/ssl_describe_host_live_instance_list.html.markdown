@@ -45,4 +45,9 @@ In addition to all arguments above, the following attributes are exported:
   * `domain` - domain name.
   * `status` - -1: Unrelated certificate of domain name.1: The domain name HTTPS has been opened.0: The domain name HTTPS has been closed.
 
+## API Reference
+
+This data source queries the following TencentCloud APIs:
+
+* Read: [DescribeHostLiveInstanceList](https://cloud.tencent.com/document/api/400/91656) - 查询证书live云资源部署实例列表
 

@@ -40,4 +40,9 @@ In addition to all arguments above, the following attributes are exported:
   * `mount_point_name` - mount point name.
   * `status` - mount point status.
 
+## API Reference
+
+This data source queries the following TencentCloud APIs:
+
+* Read: [DescribeMountPoints](https://cloud.tencent.com/document/api/1105/51152) - 查看挂载点列表
 

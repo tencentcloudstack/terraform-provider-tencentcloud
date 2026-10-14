@@ -65,4 +65,9 @@ In addition to all arguments above, the following attributes are exported:
   * `total_concurrency_mem` - Upper limit of user concurrency memory in the current region.
   * `user_concurrency_mem_limit` - Quota of account concurrency actually configured by user.
 
+## API Reference
+
+This data source queries the following TencentCloud APIs:
+
+* Read: [GetAccount](https://cloud.tencent.com/document/api/583/53437) - 获取账户信息
 

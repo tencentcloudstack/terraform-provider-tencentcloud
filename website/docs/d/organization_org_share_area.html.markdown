@@ -38,4 +38,9 @@ In addition to all arguments above, the following attributes are exported:
   * `area` - Region identifier.
   * `name` - Region name.
 
+## API Reference
+
+This data source queries the following TencentCloud APIs:
+
+* Read: [DescribeShareAreas](https://cloud.tencent.com/document/api/850/103050) - 获取可共享地域列表
 

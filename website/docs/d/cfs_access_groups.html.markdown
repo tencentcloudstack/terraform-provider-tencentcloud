@@ -38,4 +38,9 @@ In addition to all arguments above, the following attributes are exported:
   * `description` - Description of the access group.
   * `name` - Name of the access group.
 
+## API Reference
+
+This data source queries the following TencentCloud APIs:
+
+* Read: [DescribeCfsPGroups](https://cloud.tencent.com/document/api/582/38157) - 查询权限组列表
 

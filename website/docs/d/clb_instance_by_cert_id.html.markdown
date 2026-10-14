@@ -125,4 +125,9 @@ In addition to all arguments above, the following attributes are exported:
     * `vpc_id` - VPC ID Note: This field may return null, indicating that no valid values can be obtained.
     * `zones` - Availability zone of a VPC-based private network CLB instance. Note: this field may return null, indicating that no valid values can be obtained.
 
+## API Reference
+
+This data source queries the following TencentCloud APIs:
+
+* Read: [DescribeLoadBalancerListByCertId](https://cloud.tencent.com/document/api/214/40953) - 根据证书ID查询负载均衡
 

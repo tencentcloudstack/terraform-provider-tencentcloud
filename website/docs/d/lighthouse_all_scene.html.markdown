@@ -38,4 +38,9 @@ In addition to all arguments above, the following attributes are exported:
   * `display_name` - Use the scene presentation name.
   * `scene_id` - Use scene Id.
 
+## API Reference
+
+This data source queries the following TencentCloud APIs:
+
+* Read: [DescribeAllScenes](https://cloud.tencent.com/document/api/1207/83513) - 查询全地域使用场景列表
 

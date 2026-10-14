@@ -33,4 +33,9 @@ The following arguments are supported:
 * `copy_pair_ids` - (Required, List) List of copy pair IDs to launch.
 * `copy_pair_type` - (Required, String) Type of the copy pairs to launch. Valid values: DISK, INSTANCE, CFS.
 
+## API Reference
+
+This action invokes the following TencentCloud APIs:
+
+* Invoke: [RunCopyPairTasks](https://cloud.tencent.com/document/api/1824/136749) - 启动复制对
 

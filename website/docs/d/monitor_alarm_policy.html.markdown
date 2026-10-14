@@ -250,4 +250,9 @@ In addition to all arguments above, the following attributes are exported:
   * `update_time` - Update timeNote: this field may return null, indicating that no valid values can be obtained.
   * `use_sum` - Number of instances bound to policy groupNote: this field may return null, indicating that no valid values can be obtained.
 
+## API Reference
+
+This data source queries the following TencentCloud APIs:
+
+* Read: [DescribeAlarmPolicies](https://cloud.tencent.com/document/api/248/51279) - 查询告警策略列表（支持按实例等条件筛选）
 

@@ -50,4 +50,9 @@ In addition to all arguments above, the following attributes are exported:
 * `http_ports` - Http port list for instance.
 * `https_ports` - Https port list for instance.
 
+## API Reference
+
+This data source queries the following TencentCloud APIs:
+
+* Read: [DescribePorts](https://cloud.tencent.com/document/api/627/98033) - 获取Saas型WAF防护端口列表
 

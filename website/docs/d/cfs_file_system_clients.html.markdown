@@ -38,4 +38,9 @@ In addition to all arguments above, the following attributes are exported:
   * `zone_name` - AZ name.
   * `zone` - Name of the availability zone, e.g. ap-beijing-1. For more information, see regions and availability zones in the Overview document.
 
+## API Reference
+
+This data source queries the following TencentCloud APIs:
+
+* Read: [DescribeCfsFileSystemClients](https://cloud.tencent.com/document/api/582/47581) - 查询文件系统客户端
 

@@ -47,4 +47,9 @@ In addition to all arguments above, the following attributes are exported:
 * `proxy_id` - ID of the GAAP proxy.
 * `status` - Status of the security policy.
 
+## API Reference
+
+This data source queries the following TencentCloud APIs:
+
+* Read: [DescribeSecurityPolicyDetail](https://cloud.tencent.com/document/api/608/36959) - 获取安全策略详情
 

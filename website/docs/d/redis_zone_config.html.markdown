@@ -42,4 +42,9 @@ In addition to all arguments above, the following attributes are exported:
   * `version` - Version description of an available instance. Possible values: `Redis 3.2`, `Redis 4.0`.
   * `zone` - ID of available zone.
 
+## API Reference
+
+This data source queries the following TencentCloud APIs:
+
+* Read: [DescribeProductInfo](https://cloud.tencent.com/document/api/239/30600) - 查询产品售卖规格
 

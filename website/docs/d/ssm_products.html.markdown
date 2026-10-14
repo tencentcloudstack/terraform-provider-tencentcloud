@@ -29,4 +29,9 @@ In addition to all arguments above, the following attributes are exported:
 
 * `products` - List of supported services.
 
+## API Reference
+
+This data source queries the following TencentCloud APIs:
+
+* Read: [DescribeSupportedProducts](https://cloud.tencent.com/document/api/1140/58268) - 查询支持的云产品列表
 

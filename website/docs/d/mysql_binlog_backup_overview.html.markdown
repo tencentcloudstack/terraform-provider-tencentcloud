@@ -39,4 +39,9 @@ In addition to all arguments above, the following attributes are exported:
 * `remote_binlog_count` - The number of remote log backups.
 * `remote_binlog_volume` - Remote log backup capacity (in bytes).
 
+## API Reference
+
+This data source queries the following TencentCloud APIs:
+
+* Read: [DescribeBinlogBackupOverview](https://cloud.tencent.com/document/api/236/41227) - 查询日志备份概览
 

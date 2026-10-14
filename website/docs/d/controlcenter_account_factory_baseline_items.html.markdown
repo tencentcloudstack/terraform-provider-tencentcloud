@@ -41,4 +41,9 @@ In addition to all arguments above, the following attributes are exported:
   * `required` - Specifies whether the baseline item is required (1: required; 0: optional).
   * `weight` - Baseline item weight. the smaller the value, the higher the weight. value range equal to or greater than 0.
 
+## API Reference
+
+This data source queries the following TencentCloud APIs:
+
+* Read: [ListAccountFactoryBaselineItems](https://cloud.tencent.com/document/api/1708/116708) - 获取账号工厂系统基线项
 

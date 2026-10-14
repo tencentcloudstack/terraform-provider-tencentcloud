@@ -40,4 +40,9 @@ In addition to all arguments above, the following attributes are exported:
 
 * `savepoint_status` - 1=available, 2=unavailable.
 
+## API Reference
+
+This data source queries the following TencentCloud APIs:
+
+* Read: [CheckSavepoint](https://cloud.tencent.com/document/api/849/74227) - 检查快照是否可用
 

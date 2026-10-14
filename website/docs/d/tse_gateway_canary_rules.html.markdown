@@ -53,4 +53,9 @@ In addition to all arguments above, the following attributes are exported:
     * `service_name` - service name.
   * `total_count` - total count.
 
+## API Reference
+
+This data source queries the following TencentCloud APIs:
+
+* Read: [DescribeCloudNativeAPIGatewayCanaryRules](https://cloud.tencent.com/document/api/1364/94844) - 查询云原生网关灰度规则列表
 

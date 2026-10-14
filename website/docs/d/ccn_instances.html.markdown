@@ -58,4 +58,10 @@ In addition to all arguments above, the following attributes are exported:
   * `qos` - Service quality of CCN, and the available value include 'PT', 'AU', 'AG'. The default is 'AU'.
   * `state` - States of instance. The available value include 'ISOLATED'(arrears) and 'AVAILABLE'.
 
+## API Reference
+
+This data source queries the following TencentCloud APIs:
+
+* Read: [DescribeCcnAttachedInstances](https://cloud.tencent.com/document/api/215/19202) - 查询云联网关联实例列表
+* Read: [DescribeCcns](https://cloud.tencent.com/document/api/215/19199) - 查询CCN列表
 

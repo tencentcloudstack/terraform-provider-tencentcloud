@@ -32,4 +32,9 @@ In addition to all arguments above, the following attributes are exported:
 
 * `registration_code` - Registration code.
 
+## API Reference
+
+This data source queries the following TencentCloud APIs:
+
+* Read: [ApplyRegistrationCode](https://cloud.tencent.com/document/api/1778/116204) - 申请注册ca用的注册码
 

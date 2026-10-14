@@ -83,4 +83,9 @@ In addition to all arguments above, the following attributes are exported:
   * `update_time` - The policy group update timestamp.
   * `use_sum` - Number of instances of policy group bindings.
 
+## API Reference
+
+This data source queries the following TencentCloud APIs:
+
+* Read: [DescribePolicyGroupList](https://cloud.tencent.com/document/api/248/40945) - 获取基础策略告警组列表
 

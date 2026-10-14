@@ -34,4 +34,9 @@ In addition to all arguments above, the following attributes are exported:
   * `text` - Chinese description for region.
   * `value` - English description for region.
 
+## API Reference
+
+This data source queries the following TencentCloud APIs:
+
+* Read: [DescribeUserClbWafRegions](https://cloud.tencent.com/document/api/627/53600) - 获取对客户已经开放的负载均衡型WAF(clb-waf)的地域
 

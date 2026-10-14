@@ -104,4 +104,9 @@ In addition to all arguments above, the following attributes are exported:
     * `method` - HTTP method. GET or POST.
     * `url` - Callback URL.
 
+## API Reference
+
+This data source queries the following TencentCloud APIs:
+
+* Read: [DescribeAlarmNotices](https://cloud.tencent.com/document/api/614/56462) - 获取通知渠道组列表
 

@@ -55,4 +55,9 @@ In addition to all arguments above, the following attributes are exported:
     * `status` - Status of certificate. Reference value:- expired- active. Note: This field may return null, indicating that a valid value is not available.
   * `total` - Total count. Note: This field may return null, indicating that a valid value is not available.
 
+## API Reference
+
+This data source queries the following TencentCloud APIs:
+
+* Read: [DescribeCloudNativeAPIGatewayCertificates](https://cloud.tencent.com/document/api/1364/98588) - 查询云原生网关证书列表
 

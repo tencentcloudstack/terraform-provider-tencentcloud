@@ -40,4 +40,9 @@ In addition to all arguments above, the following attributes are exported:
 
 * `items` - List details.
 
+## API Reference
+
+This data source queries the following TencentCloud APIs:
+
+* Read: [DescribeOrganizationNodes](https://cloud.tencent.com/document/api/850/82926) - 获取组织节点列表
 

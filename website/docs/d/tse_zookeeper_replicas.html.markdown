@@ -40,4 +40,9 @@ In addition to all arguments above, the following attributes are exported:
   * `zone_id` - Available area IDNote: This field may return null, indicating that a valid value is not available.
   * `zone` - Available area IDNote: This field may return null, indicating that a valid value is not available.
 
+## API Reference
+
+This data source queries the following TencentCloud APIs:
+
+* Read: [DescribeZookeeperReplicas](https://cloud.tencent.com/document/api/1364/76099) - 查询Zookeeper类型注册引擎实例副本信息
 

@@ -57,4 +57,9 @@ In addition to all arguments above, the following attributes are exported:
   * `owner` - Creator of CMK.
   * `valid_to` - Valid when origin is `EXTERNAL`, it means the effective date of the key material.
 
+## API Reference
+
+This data source queries the following TencentCloud APIs:
+
+* Read: [ListKeyDetail](https://cloud.tencent.com/document/api/573/34416) - 获取主密钥列表详情
 

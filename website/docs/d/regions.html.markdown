@@ -40,4 +40,9 @@ In addition to all arguments above, the following attributes are exported:
   * `region_type_m_c` - Console type, null when called via API.
   * `region` - Region identifier, e.g. `ap-guangzhou`.
 
+## API Reference
+
+This data source queries the following TencentCloud APIs:
+
+* Read: [DescribeRegions](https://cloud.tencent.com/document/api/1596/77930) - 查询产品支持的地域列表
 

@@ -42,4 +42,9 @@ In addition to all arguments above, the following attributes are exported:
 * `sql_plan` - The SQL execution plan can be parsed into JSON, and the output is empty when no optimization is required.
 * `tables` - The DDL information of related tables can be parsed into a JSON array.
 
+## API Reference
+
+This data source queries the following TencentCloud APIs:
+
+* Read: [DescribeUserSqlAdvice](https://cloud.tencent.com/document/api/1130/57782) - 获取SQL优化建议
 

@@ -50,4 +50,10 @@ In addition to all arguments above, the following attributes are exported:
     * `version_name` - Published version number.
   * `service_id` - Service ID for query.
 
+## API Reference
+
+This data source queries the following TencentCloud APIs:
+
+* Read: [DescribeServiceEnvironmentStrategy](https://cloud.tencent.com/document/api/628/45180) - 展示服务限流策略
+* Read: [DescribeServicesStatus](https://cloud.tencent.com/document/api/628/45194) - 查询服务列表状态
 

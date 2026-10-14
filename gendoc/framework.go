@@ -279,29 +279,41 @@ func genFrameworkDoc(servicesRoot string, dtype fwDocType, name, product string,
 		"api":               "",
 	}
 
-	// API Reference section for framework resources.
-	if dtype == fwResource {
+	// API Reference section for framework resources, actions and
+	// ephemeral resources.
+	if dtype == fwResource || dtype == fwAction || dtype == fwEphemeral {
 		analyzer := getSharedAPIAnalyzer()
 		repoRoot, _ := filepath.Abs("..")
-		resFile := findResourceFile(repoRoot, name)
 		if manualAPI != "" {
 			out["api"] = manualAPI
-		} else if analyzer != nil && resFile != "" {
-			refsByVerb := map[string][]apiRef{}
+			return
+		}
+		if analyzer == nil {
+			return
+		}
+		if dtype == fwResource {
+			resFile := findResourceFile(repoRoot, name)
+			if resFile == "" {
+				return
+			}
 			// Framework resources keep their CRUD in Create/Read/Update/
 			// Delete methods on the resource struct; resolve the receiver
 			// type from the declaring file.
 			recv := frameworkResourceRecvType(analyzer, resFile, name)
-			if recv != "" {
-				for _, verb := range []string{"Create", "Read", "Update", "Delete"} {
-					fd := analyzer.lookupMethodByReceiver(recv, verb)
-					if fd != nil {
-						refsByVerb[verb] = analyzer.analyzeLifecycle(fd)
-					}
+			if recv == "" {
+				return
+			}
+			refsByVerb := map[string][]apiRef{}
+			for _, verb := range []string{"Create", "Read", "Update", "Delete"} {
+				fd := analyzer.lookupMethodByReceiver(recv, verb)
+				if fd != nil {
+					refsByVerb[verb] = analyzer.analyzeLifecycle(fd)
 				}
 			}
-			out["api"] = renderAPIRefs(dedupVerbRefs(refsByVerb))
+			out["api"] = renderAPIRefsFor(string(dtype), dedupVerbRefs(refsByVerb))
+			return
 		}
+		out["api"] = renderFrameworkRefAPISection(analyzer, repoRoot, name, string(dtype))
 	}
 
 	outPath := filepath.Join(docRoot, dtype.outputDir(), fmt.Sprintf("%s.html.markdown", resName))

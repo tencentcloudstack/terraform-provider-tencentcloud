@@ -60,4 +60,9 @@ In addition to all arguments above, the following attributes are exported:
   * `topic_name` - Topic name.
   * `trace` - Message trace. true: enabled; false: not enabled.
 
+## API Reference
+
+This data source queries the following TencentCloud APIs:
+
+* Read: [DescribeCmqTopics](https://cloud.tencent.com/document/api/1179/55906) - 枚举cmq全量主题
 

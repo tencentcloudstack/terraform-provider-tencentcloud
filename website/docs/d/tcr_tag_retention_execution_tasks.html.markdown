@@ -44,4 +44,9 @@ In addition to all arguments above, the following attributes are exported:
   * `task_id` - task id.
   * `total` - Total number of tags.
 
+## API Reference
+
+This data source queries the following TencentCloud APIs:
+
+* Read: [DescribeTagRetentionExecutionTask](https://cloud.tencent.com/document/api/1141/54800) - 查询版本保留执行任务
 

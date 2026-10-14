@@ -33,4 +33,9 @@ In addition to all arguments above, the following attributes are exported:
 * `region` - The string ID of the region where the standby machine is located, such as: ap-guangzhou.
 * `zone` - The string ID of the availability zone where the standby machine is located, such as: ap-guangzhou-1.
 
+## API Reference
+
+This data source queries the following TencentCloud APIs:
+
+* Read: [DescribeCrossRegionZone](https://cloud.tencent.com/document/api/238/47201) - 查询备机的容灾地域和可用区
 

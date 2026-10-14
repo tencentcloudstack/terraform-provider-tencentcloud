@@ -39,4 +39,9 @@ In addition to all arguments above, the following attributes are exported:
   * `url` - Pad content.
   * `wait_duration` - Stream interruption waiting time.Value range: 0-30000.Unit: milliseconds.
 
+## API Reference
+
+This data source queries the following TencentCloud APIs:
+
+* Read: [DescribeLivePadTemplates](https://cloud.tencent.com/document/api/267/93524) - 获取直播垫片模板
 

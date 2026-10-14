@@ -32,4 +32,9 @@ In addition to all arguments above, the following attributes are exported:
 
 * `result` - Return result.
 
+## API Reference
+
+This data source queries the following TencentCloud APIs:
+
+* Read: [DescribeRumLogExports](https://cloud.tencent.com/document/api/1464/86365) - 获取Rum日志导出列表
 

@@ -64,4 +64,9 @@ In addition to all arguments above, the following attributes are exported:
 * `query_count` - Total number of statement queries.
 * `query_time_sum` - Total statement query time.
 
+## API Reference
+
+This data source queries the following TencentCloud APIs:
+
+* Read: [DescribeDBSlowLogs](https://cloud.tencent.com/document/api/237/16159) - 查询慢查询日志列表
 

@@ -40,4 +40,9 @@ In addition to all arguments above, the following attributes are exported:
   * `bounce_time` - Time when the email address is blocklisted.
   * `email_address` - Blocklisted email address.
 
+## API Reference
+
+This data source queries the following TencentCloud APIs:
+
+* Read: [ListBlackEmailAddress](https://cloud.tencent.com/document/api/1288/51031) - 获取黑名单邮箱地址
 

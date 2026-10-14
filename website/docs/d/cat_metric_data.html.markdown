@@ -43,4 +43,9 @@ In addition to all arguments above, the following attributes are exported:
 
 * `metric_set` - Return JSON string.
 
+## API Reference
+
+This data source queries the following TencentCloud APIs:
+
+* Read: [DescribeProbeMetricData](https://cloud.tencent.com/document/api/280/71856) - 列出云拨测指标详细数据
 

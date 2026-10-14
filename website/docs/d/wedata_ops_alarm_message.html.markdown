@@ -35,4 +35,9 @@ In addition to all arguments above, the following attributes are exported:
 
 * `data` - Alarm information.
 
+## API Reference
+
+This data source queries the following TencentCloud APIs:
+
+* Read: [GetAlarmMessage](https://cloud.tencent.com/document/api/1267/123589) - 查询告警信息详情
 

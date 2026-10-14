@@ -83,4 +83,9 @@ Note: This field may return null, indicating that no valid values can be obtaine
   * `value` - The record value.
   * `weight` - The record weight, which is required for round-robin DNS records.
 
+## API Reference
+
+This data source queries the following TencentCloud APIs:
+
+* Read: [DescribeRecordList](https://cloud.tencent.com/document/api/1427/56166) - 获取域名的解析记录列表
 

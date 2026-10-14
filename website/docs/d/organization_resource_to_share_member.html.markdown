@@ -38,4 +38,9 @@ In addition to all arguments above, the following attributes are exported:
 
 * `items` - Details.
 
+## API Reference
+
+This data source queries the following TencentCloud APIs:
+
+* Read: [DescribeResourceToShareMember](https://cloud.tencent.com/document/api/850/122413) - 获取与我共享的资源列表
 

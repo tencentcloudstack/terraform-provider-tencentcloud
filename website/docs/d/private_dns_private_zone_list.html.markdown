@@ -98,4 +98,9 @@ In addition to all arguments above, the following attributes are exported:
     * `uniq_vpc_id` - Vpc Id.
   * `zone_id` - PrivateZone ID.
 
+## API Reference
+
+This data source queries the following TencentCloud APIs:
+
+* Read: [DescribePrivateZoneList](https://cloud.tencent.com/document/api/1338/55939) - 获取私有域列表
 

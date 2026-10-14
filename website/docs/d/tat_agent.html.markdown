@@ -48,4 +48,9 @@ In addition to all arguments above, the following attributes are exported:
   * `support_features` - List of feature Agent support.
   * `version` - Agent version.
 
+## API Reference
+
+This data source queries the following TencentCloud APIs:
+
+* Read: [DescribeAutomationAgentStatus](https://cloud.tencent.com/document/api/1340/52682) - 查询客户端状态
 

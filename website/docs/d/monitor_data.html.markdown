@@ -74,4 +74,9 @@ In addition to all arguments above, the following attributes are exported:
   * `timestamp` - Statistical timestamp.
   * `value` - Statistical value.
 
+## API Reference
+
+This data source queries the following TencentCloud APIs:
+
+* Read: [GetMonitorData](https://cloud.tencent.com/document/api/248/31014) - 拉取指标监控数据
 

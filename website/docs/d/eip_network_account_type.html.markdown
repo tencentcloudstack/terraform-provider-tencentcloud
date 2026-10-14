@@ -29,4 +29,9 @@ In addition to all arguments above, the following attributes are exported:
 
 * `network_account_type` - The network type of the user account, STANDARD is a standard user, LEGACY is a traditional user.
 
+## API Reference
+
+This data source queries the following TencentCloud APIs:
+
+* Read: [DescribeNetworkAccountType](https://cloud.tencent.com/document/api/215/86509) - 查询用户网络类型
 

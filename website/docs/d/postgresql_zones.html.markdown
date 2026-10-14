@@ -35,4 +35,9 @@ In addition to all arguments above, the following attributes are exported:
   * `zone_support_ipv6` - Whether the AZ supports IPv6 address access.
   * `zone` - AZ abbreviation.
 
+## API Reference
+
+This data source queries the following TencentCloud APIs:
+
+* Read: [DescribeZones](https://cloud.tencent.com/document/api/409/16769) - 查询售卖可用区
 

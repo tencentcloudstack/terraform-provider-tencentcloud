@@ -43,4 +43,9 @@ In addition to all arguments above, the following attributes are exported:
   * `total_length` - Total space used (MB).
 * `timestamp` - Collection timestamp (seconds).
 
+## API Reference
+
+This data source queries the following TencentCloud APIs:
+
+* Read: [DescribeNoPrimaryKeyTables](https://cloud.tencent.com/document/api/1130/72833) - 查询实例无主键表
 

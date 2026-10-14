@@ -80,4 +80,9 @@ In addition to all arguments above, the following attributes are exported:
   * `zone` - Availability zone.
 * `total_count` - Total count of repair tasks that match the filter conditions.
 
+## API Reference
+
+This data source queries the following TencentCloud APIs:
+
+* Read: [DescribeTaskInfo](https://cloud.tencent.com/document/api/213/87933) - 查询维修任务列表
 

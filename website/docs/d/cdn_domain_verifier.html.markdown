@@ -51,4 +51,10 @@ In addition to all arguments above, the following attributes are exported:
 * `sub_domain` - Sub-domain resolution.
 * `verify_result` - Verify result.
 
+## API Reference
+
+This data source queries the following TencentCloud APIs:
+
+* Read: [CreateVerifyRecord](https://cloud.tencent.com/document/api/228/48118) - 生成解析记录
+* Read: [VerifyDomainRecord](https://cloud.tencent.com/document/api/228/48117) - 验证域名解析
 

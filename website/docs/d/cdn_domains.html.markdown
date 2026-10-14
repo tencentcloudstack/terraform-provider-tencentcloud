@@ -83,4 +83,10 @@ In addition to all arguments above, the following attributes are exported:
   * `tags` - Tags of cdn domain.
   * `update_time` - Last modified time of domain name.
 
+## API Reference
+
+This data source queries the following TencentCloud APIs:
+
+* Read: [DescribeDomainsConfig](https://cloud.tencent.com/document/api/228/41117) - 查询域名详细配置
+* Read: [DescribeResourceTagsByResourceIds](https://cloud.tencent.com/document/api/651/35319) - 批量查看资源关联的标签
 

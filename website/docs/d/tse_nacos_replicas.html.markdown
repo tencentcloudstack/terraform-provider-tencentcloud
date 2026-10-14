@@ -39,4 +39,9 @@ In addition to all arguments above, the following attributes are exported:
   * `zone_id` - Available area IDNote: This field may return null, indicating that a valid value is not available.
   * `zone` - Available area NameNote: This field may return null, indicating that a valid value is not available.
 
+## API Reference
+
+This data source queries the following TencentCloud APIs:
+
+* Read: [DescribeNacosReplicas](https://cloud.tencent.com/document/api/1364/76101) - 查询Nacos类型引擎实例副本信息
 

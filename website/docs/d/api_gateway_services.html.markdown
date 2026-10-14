@@ -63,4 +63,12 @@ In addition to all arguments above, the following attributes are exported:
     * `usage_plan_id` - ID of the usage plan.
     * `usage_plan_name` - Name of the usage plan.
 
+## API Reference
+
+This data source queries the following TencentCloud APIs:
+
+* Read: [DescribeApiUsagePlan](https://cloud.tencent.com/document/api/628/45240) - 查询 API 使用计划详情
+* Read: [DescribeService](https://cloud.tencent.com/document/api/628/45199) - 查询服务详情
+* Read: [DescribeServiceUsagePlan](https://cloud.tencent.com/document/api/628/45195) - 查询服务使用计划详情
+* Read: [DescribeServicesStatus](https://cloud.tencent.com/document/api/628/45194) - 查询服务列表状态
 

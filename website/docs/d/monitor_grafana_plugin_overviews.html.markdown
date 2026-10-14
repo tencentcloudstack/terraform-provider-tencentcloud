@@ -32,4 +32,9 @@ In addition to all arguments above, the following attributes are exported:
   * `plugin_id` - Grafana plugin ID.
   * `version` - Grafana plugin version.
 
+## API Reference
+
+This data source queries the following TencentCloud APIs:
+
+* Read: [DescribePluginOverviews](https://cloud.tencent.com/document/api/248/79203) - 列出所有 Grafana 插件
 

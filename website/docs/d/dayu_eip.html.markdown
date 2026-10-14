@@ -35,4 +35,9 @@ In addition to all arguments above, the following attributes are exported:
 
 * `list` - A list of layer 4 rules. Each element contains the following attributes:
 
+## API Reference
+
+This data source queries the following TencentCloud APIs:
+
+* Read: [DescribeListBGPIPInstances](https://cloud.tencent.com/document/api/297/95347) - 获取高防IP资产实例列表
 

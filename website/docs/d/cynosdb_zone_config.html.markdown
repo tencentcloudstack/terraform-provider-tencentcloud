@@ -39,4 +39,9 @@ In addition to all arguments above, the following attributes are exported:
     * `has_stock` - Has stock.
     * `zone` - Availability zone.
 
+## API Reference
+
+This data source queries the following TencentCloud APIs:
+
+* Read: [DescribeInstanceSpecs](https://cloud.tencent.com/document/api/1003/48084) - 查询购买页可购买的实例规格
 

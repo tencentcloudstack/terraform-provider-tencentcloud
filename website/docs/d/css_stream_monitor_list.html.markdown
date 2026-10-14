@@ -61,4 +61,9 @@ In addition to all arguments above, the following attributes are exported:
   * `stop_time` - The last stop time of the monitoring task, in Unix timestamp format.Note: This field may return null, indicating that no valid value is available.
   * `update_time` - The update time of the monitoring task, in Unix timestamp format.Note: This field may return null, indicating that no valid value is available.
 
+## API Reference
+
+This data source queries the following TencentCloud APIs:
+
+* Read: [DescribeLiveStreamMonitorList](https://cloud.tencent.com/document/api/267/93518) - 查询直播流监播任务配置列表
 

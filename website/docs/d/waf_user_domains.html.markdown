@@ -38,4 +38,9 @@ In addition to all arguments above, the following attributes are exported:
   * `level` - Instance level infoNote: This field may return null, indicating that a valid value cannot be obtained.
   * `write_config` - Switch for accessing log fieldsNote: This field may return null, indicating that a valid value cannot be obtained.
 
+## API Reference
+
+This data source queries the following TencentCloud APIs:
+
+* Read: [DescribeUserDomainInfo](https://cloud.tencent.com/document/api/627/96940) - 查询saas和clb的域名信息
 

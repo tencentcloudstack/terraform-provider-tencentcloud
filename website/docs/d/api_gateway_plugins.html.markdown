@@ -108,4 +108,9 @@ In addition to all arguments above, the following attributes are exported:
   * `method` - API method.
   * `path` - API path.
 
+## API Reference
+
+This data source queries the following TencentCloud APIs:
+
+* Read: [DescribeAllPluginApis](https://cloud.tencent.com/document/api/628/58274) - 展示插件相关的API列表
 

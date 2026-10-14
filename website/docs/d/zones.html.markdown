@@ -41,4 +41,9 @@ In addition to all arguments above, the following attributes are exported:
   * `zone_type` - Zone type.
   * `zone` - Zone name, e.g. `ap-guangzhou-3`.
 
+## API Reference
+
+This data source queries the following TencentCloud APIs:
+
+* Read: [DescribeZones](https://cloud.tencent.com/document/api/1596/77929) - 查询产品可用区列表
 

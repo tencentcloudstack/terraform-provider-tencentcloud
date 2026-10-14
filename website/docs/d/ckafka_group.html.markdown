@@ -36,4 +36,9 @@ In addition to all arguments above, the following attributes are exported:
   * `group` - groupId.
   * `protocol` - The protocol used by this group.
 
+## API Reference
+
+This data source queries the following TencentCloud APIs:
+
+* Read: [DescribeGroup](https://cloud.tencent.com/document/api/597/40840) - 枚举消费分组(精简版)
 

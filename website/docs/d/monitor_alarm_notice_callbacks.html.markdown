@@ -37,4 +37,9 @@ In addition to all arguments above, the following attributes are exported:
   * `validation_code` - Verification code.
   * `weekday` - Notification period 1-7 represents Monday to Sunday.
 
+## API Reference
+
+This data source queries the following TencentCloud APIs:
+
+* Read: [DescribeAlarmNoticeCallbacks](https://cloud.tencent.com/document/api/248/51281) - 查询账号下所有回调URL列表
 

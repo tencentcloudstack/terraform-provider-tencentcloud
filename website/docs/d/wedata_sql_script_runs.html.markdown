@@ -72,4 +72,9 @@ In addition to all arguments above, the following attributes are exported:
   * `update_time` - Update time.
   * `user_uin` - Account UIN.
 
+## API Reference
+
+This data source queries the following TencentCloud APIs:
+
+* Read: [ListSQLScriptRuns](https://cloud.tencent.com/document/api/1267/123600) - 查询SQL运行记录
 

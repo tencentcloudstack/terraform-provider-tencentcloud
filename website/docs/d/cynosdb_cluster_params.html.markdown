@@ -48,4 +48,9 @@ In addition to all arguments above, the following attributes are exported:
   * `param_name` - The name of parameter.
   * `param_type` - Parameter type: integer/float/string/enum/bool.
 
+## API Reference
+
+This data source queries the following TencentCloud APIs:
+
+* Read: [DescribeClusterParams](https://cloud.tencent.com/document/api/1003/79556) - 查询集群参数
 

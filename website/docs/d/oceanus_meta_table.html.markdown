@@ -40,4 +40,9 @@ In addition to all arguments above, the following attributes are exported:
 * `ddl` - Table creation statement, encoded in Base64.For example,Q1JFQVRFIFRBQkxFIGRhdGFnZW5fc291cmNlX3RhYmxlICggCiAgICBpZCBJTlQsIAogICAgbmFtZSBTVFJJTkcgCikgV0lUSCAoCidjb25uZWN0b3InPSdkYXRhZ2VuJywKJ3Jvd3MtcGVyLXNlY29uZCcgPSAnMScKKTs=.
 * `serial_id` - Unique identifier of the metadata table.
 
+## API Reference
+
+This data source queries the following TencentCloud APIs:
+
+* Read: [GetMetaTable](https://cloud.tencent.com/document/api/849/102773) - 查询元数据表
 

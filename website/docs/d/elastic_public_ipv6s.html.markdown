@@ -54,4 +54,9 @@ In addition to all arguments above, the following attributes are exported:
 
 * `address_set` - List of IPv6 details.
 
+## API Reference
+
+This data source queries the following TencentCloud APIs:
+
+* Read: [DescribeIPv6Addresses](https://cloud.tencent.com/document/api/215/113677) - 查询弹性公网IPv6列表
 

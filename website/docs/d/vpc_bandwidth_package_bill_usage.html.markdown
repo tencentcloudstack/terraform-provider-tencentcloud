@@ -33,4 +33,9 @@ In addition to all arguments above, the following attributes are exported:
 * `bandwidth_package_bill_bandwidth_set` - current billing amount.
   * `bandwidth_usage` - Current billing amount in Mbps.
 
+## API Reference
+
+This data source queries the following TencentCloud APIs:
+
+* Read: [DescribeBandwidthPackageBillUsage](https://cloud.tencent.com/document/api/215/48945) - 查询后付费共享带宽包当前的用量
 

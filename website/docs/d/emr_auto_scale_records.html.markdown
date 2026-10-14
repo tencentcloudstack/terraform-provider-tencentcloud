@@ -53,4 +53,9 @@ In addition to all arguments above, the following attributes are exported:
   * `strategy_name` - Rule name of expanding and shrinking capacity.
   * `strategy_type` - Strategy Type, 1 for Load scaling, 2 for Time scaling.
 
+## API Reference
+
+This data source queries the following TencentCloud APIs:
+
+* Read: [DescribeAutoScaleRecords](https://cloud.tencent.com/document/api/589/100248) - 获取自动扩缩容记录
 

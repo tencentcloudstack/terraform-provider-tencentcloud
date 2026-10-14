@@ -35,4 +35,9 @@ In addition to all arguments above, the following attributes are exported:
 * `memory` - Memory specification size, unit: MB.
 * `volume` - Disk specification size, unit: GB.
 
+## API Reference
+
+This data source queries the following TencentCloud APIs:
+
+* Read: [DescribeRoMinScale](https://cloud.tencent.com/document/api/236/46009) - 获取只读实例购买或升级的最小规格
 

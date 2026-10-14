@@ -43,4 +43,9 @@ In addition to all arguments above, the following attributes are exported:
 * `remote_backup_count` - The total number of remote backups.
 * `remote_backup_volume` - The total capacity of remote backup.
 
+## API Reference
+
+This data source queries the following TencentCloud APIs:
+
+* Read: [DescribeDataBackupOverview](https://cloud.tencent.com/document/api/236/41226) - 查询数据备份概览
 

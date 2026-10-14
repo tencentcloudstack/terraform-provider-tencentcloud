@@ -55,4 +55,9 @@ In addition to all arguments above, the following attributes are exported:
 * `retention_hours` - Consumed message storage policy, unit hour, 0 will be deleted immediately after consumption.
 * `retention_size` - Consumed message storage strategy, unit G, 0 Delete immediately after consumption.
 
+## API Reference
+
+This data source queries the following TencentCloud APIs:
+
+* Read: [DescribeEnvironmentAttributes](https://cloud.tencent.com/document/api/1179/46079) - 获取命名空间属性
 

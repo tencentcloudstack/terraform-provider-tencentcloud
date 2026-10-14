@@ -32,4 +32,9 @@ In addition to all arguments above, the following attributes are exported:
 
 * `version_ids` - The number of version numbers. The maximum number of version numbers that can be displayed to users is 10.
 
+## API Reference
+
+This data source queries the following TencentCloud APIs:
+
+* Read: [DescribeRotationHistory](https://cloud.tencent.com/document/api/1140/58263) - 查询凭据轮转历史版本
 

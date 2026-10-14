@@ -87,4 +87,9 @@ In addition to all arguments above, the following attributes are exported:
   * `state` - Clbwaf domain name listener status, 0 operation successful, 4 binding LB, 6 unbinding LB, 7 unbinding LB failed, 8 binding LB failed, 10 internal error.
   * `status` - Waf switch,0 off 1 on.
 
+## API Reference
+
+This data source queries the following TencentCloud APIs:
+
+* Read: [DescribeDomains](https://cloud.tencent.com/document/api/627/72840) - 获取域名列表
 

@@ -97,4 +97,10 @@ In addition to all arguments above, the following attributes are exported:
   * `vip` - Vip of the SCF function.
   * `vpc_id` - VPC ID of the SCF function.
 
+## API Reference
+
+This data source queries the following TencentCloud APIs:
+
+* Read: [GetFunction](https://cloud.tencent.com/document/api/583/18584) - 获取函数详细信息
+* Read: [ListFunctions](https://cloud.tencent.com/document/api/583/18582) - 获取函数列表
 

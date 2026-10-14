@@ -49,4 +49,9 @@ In addition to all arguments above, the following attributes are exported:
   * `zone_id` - Zone id of instance.
   * `zone` - Zone of instance.
 
+## API Reference
+
+This data source queries the following TencentCloud APIs:
+
+* Read: [DescribeInstances](https://cloud.tencent.com/document/api/589/34266) - 查询集群实例信息
 

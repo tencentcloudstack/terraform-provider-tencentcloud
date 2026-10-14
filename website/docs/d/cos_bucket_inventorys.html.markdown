@@ -51,4 +51,7 @@ In addition to all arguments above, the following attributes are exported:
   * `schedule` - Inventory job cycle.
     * `frequency` - Frequency of the inventory job. Enumerated values: Daily, Weekly.
 
+## API Reference
+
+This data source queries the following TencentCloud APIs:
 

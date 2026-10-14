@@ -56,4 +56,9 @@ In addition to all arguments above, the following attributes are exported:
   * `region_id` - Gateway region ID, can be obtained from DescribeMultiPathGatewayRegions API.
   * `status` - Gateway status. Valid values: creating, online, offline, disable.
 
+## API Reference
+
+This data source queries the following TencentCloud APIs:
+
+* Read: [DescribeMultiPathGateways](https://cloud.tencent.com/document/api/1552/121334) - 查询多通道安全加速网关列表
 

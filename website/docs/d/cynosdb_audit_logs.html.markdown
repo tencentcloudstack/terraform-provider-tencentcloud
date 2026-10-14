@@ -78,4 +78,9 @@ In addition to all arguments above, the following attributes are exported:
   * `timestamp` - Timestamp.
   * `user` - User name.
 
+## API Reference
+
+This data source queries the following TencentCloud APIs:
+
+* Read: [DescribeAuditLogs](https://cloud.tencent.com/document/api/1003/81437) - 查询数据库审计日志
 

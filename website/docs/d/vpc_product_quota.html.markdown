@@ -37,4 +37,9 @@ In addition to all arguments above, the following attributes are exported:
   * `quota_name` - Quota name.
   * `quota_region` - Quota region.
 
+## API Reference
+
+This data source queries the following TencentCloud APIs:
+
+* Read: [DescribeProductQuota](https://cloud.tencent.com/document/api/215/49629) - 查询网络产品配额信息
 

@@ -59,4 +59,9 @@ In addition to all arguments above, the following attributes are exported:
   * `project_owner_uin` - Project owner ID.
   * `status` - Project status: 0: disabled, 1: enabled, -3: disabling, 2: enabling.
 
+## API Reference
+
+This data source queries the following TencentCloud APIs:
+
+* Read: [ListProjects](https://cloud.tencent.com/document/api/1267/123962) - 查看项目详情列表
 

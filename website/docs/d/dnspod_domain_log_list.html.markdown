@@ -34,4 +34,9 @@ In addition to all arguments above, the following attributes are exported:
 
 * `log_list` - Domain Operation Log List. Note: This field may return null, indicating that no valid value can be obtained.
 
+## API Reference
+
+This data source queries the following TencentCloud APIs:
+
+* Read: [DescribeDomainLogList](https://cloud.tencent.com/document/api/1427/56171) - 获取域名日志
 

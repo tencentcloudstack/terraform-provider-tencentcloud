@@ -51,4 +51,10 @@ In addition to all arguments above, the following attributes are exported:
     * `path` - The domain mapping path.
   * `protocol` - Custom domain name agreement type.
 
+## API Reference
+
+This data source queries the following TencentCloud APIs:
+
+* Read: [DescribeServiceSubDomainMappings](https://cloud.tencent.com/document/api/628/45186) - 查询自定义域名的路径映射
+* Read: [DescribeServiceSubDomains](https://cloud.tencent.com/document/api/628/45185) - 查询自定义域名列表
 

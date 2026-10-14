@@ -57,4 +57,9 @@ In addition to all arguments above, the following attributes are exported:
   * `task_id` - Task ID.
   * `task_type` - Task type.
 
+## API Reference
+
+This data source queries the following TencentCloud APIs:
+
+* Read: [DescribeTaskList](https://cloud.tencent.com/document/api/239/39374) - 查询任务列表信息
 

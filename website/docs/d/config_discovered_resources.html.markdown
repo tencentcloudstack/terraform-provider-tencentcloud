@@ -84,4 +84,9 @@ In addition to all arguments above, the following attributes are exported:
     * `tag_key` - Tag key.
     * `tag_value` - Tag value.
 
+## API Reference
+
+This data source queries the following TencentCloud APIs:
+
+* Read: [ListDiscoveredResources](https://cloud.tencent.com/document/api/1579/113061) - 获取资源列表
 

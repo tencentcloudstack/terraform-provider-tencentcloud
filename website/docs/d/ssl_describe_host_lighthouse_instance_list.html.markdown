@@ -45,4 +45,9 @@ In addition to all arguments above, the following attributes are exported:
   * `instance_name` - Example name.
   * `ip` - IP address.
 
+## API Reference
+
+This data source queries the following TencentCloud APIs:
+
+* Read: [DescribeHostLighthouseInstanceList](https://cloud.tencent.com/document/api/400/91657) - 查询证书Lighthouse云资源部署实例列表
 

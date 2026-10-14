@@ -39,4 +39,9 @@ In addition to all arguments above, the following attributes are exported:
   * `proxy_id` - Proxy Id.
   * `proxy_name` - Proxy Name.
 
+## API Reference
+
+This data source queries the following TencentCloud APIs:
+
+* Read: [DescribeProxyAndStatisticsListeners](https://cloud.tencent.com/document/api/608/36961) - 查询统计通道和监听器信息
 
