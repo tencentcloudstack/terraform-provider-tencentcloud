@@ -85,6 +85,8 @@ type apiAnalyzer struct {
 	// methodIndex maps method name -> declared service methods (a name may
 	// exist on several service structs, hence a list).
 	methodIndex map[string][]serviceMethod
+	// serviceCtors maps NewXxxService constructor name -> returned type.
+	serviceCtors map[string]string
 
 	// parsedFiles caches ASTs by path.
 	parsedFiles map[string]*ast.File
@@ -96,7 +98,7 @@ func newAPIAnalyzer(repoRoot string, cat *catalog) (*apiAnalyzer, error) {
 		return nil, err
 	}
 	if cat == nil {
-		cat = loadCatalog(nil)
+		cat = loadCatalog()
 	}
 	enIndex := loadENIndex()
 	enURLIndex := loadENURLIndex()
@@ -114,6 +116,7 @@ func newAPIAnalyzer(repoRoot string, cat *catalog) (*apiAnalyzer, error) {
 		enURLIndex:   enURLIndex,
 		knownClients: known,
 		methodIndex:  map[string][]serviceMethod{},
+		serviceCtors: map[string]string{},
 		parsedFiles:  map[string]*ast.File{},
 	}
 	if err := a.indexServiceMethods(); err != nil {
@@ -167,6 +170,16 @@ func (a *apiAnalyzer) indexServiceMethods() error {
 				a.methodIndex[fd.Name.Name] = append(a.methodIndex[fd.Name.Name],
 					serviceMethod{File: path, Recv: ""})
 			}
+
+			// NewXxxService(...) constructor: record the returned service
+			// struct type so `x := NewXxxService(...)` type inference works.
+			if strings.HasPrefix(fd.Name.Name, "New") && strings.HasSuffix(fd.Name.Name, "Service") &&
+				fd.Type != nil && fd.Type.Results != nil && fd.Type.Results.NumFields() == 1 {
+				rt := fd.Type.Results.List[0].Type
+				if id, ok := rt.(*ast.Ident); ok {
+					a.serviceCtors[fd.Name.Name] = id.Name
+				}
+			}
 		}
 		return nil
 	})
@@ -200,7 +213,7 @@ func (a *apiAnalyzer) analyzeLifecycle(fn *ast.FuncDecl) []apiRef {
 	localTypes := map[string]string{}
 	if fn.Body != nil {
 		ast.Inspect(fn.Body, func(n ast.Node) bool {
-			inferLocalTypes(n, localTypes)
+			inferLocalTypes(n, localTypes, a.serviceCtors)
 			return true
 		})
 	}
@@ -253,8 +266,11 @@ func (a *apiAnalyzer) analyzeLifecycle(fn *ast.FuncDecl) []apiRef {
 		if !ok {
 			return ""
 		}
-		// Prefer a match on the expected receiver type; fall back to the
-		// first declaration (cross-package helper calls usually unique).
+		// Disambiguate by receiver type. When the call site's receiver is
+		// unknown (recvHint empty) and the name is declared on several
+		// distinct service structs, the target is ambiguous: skip it rather
+		// than guessing and emitting a wrong-product API link. A single
+		// declaration is always safe.
 		var pick *serviceMethod
 		for i := range matches {
 			if matches[i].Recv == recvHint {
@@ -263,6 +279,9 @@ func (a *apiAnalyzer) analyzeLifecycle(fn *ast.FuncDecl) []apiRef {
 			}
 		}
 		if pick == nil {
+			if recvHint == "" && distinctRecvs(matches) > 1 {
+				return ""
+			}
 			pick = &matches[0]
 		}
 		key := pick.Recv + "." + action
@@ -291,7 +310,7 @@ func (a *apiAnalyzer) analyzeLifecycle(fn *ast.FuncDecl) []apiRef {
 			// structs and held clients), then walk the call tree with the
 			// completed maps.
 			ast.Inspect(fd.Body, func(n ast.Node) bool {
-				inferLocalTypes(n, lt)
+				inferLocalTypes(n, lt, a.serviceCtors)
 				inferClientVars(n, clientVars)
 				return true
 			})
@@ -426,6 +445,15 @@ func (a *apiAnalyzer) resolveAPI(k apiCallKey) *apiRef {
 	}
 }
 
+// distinctRecvs counts the distinct receiver type names among matches.
+func distinctRecvs(matches []serviceMethod) int {
+	set := map[string]bool{}
+	for _, m := range matches {
+		set[m.Recv] = true
+	}
+	return len(set)
+}
+
 // recvTypeName extracts the receiver type name from a receiver field type
 // (handles *T and T).
 func recvTypeName(expr ast.Expr) string {
@@ -548,7 +576,11 @@ func renderAPIRefs(refs map[string][]apiRef) string {
 // renderAPIRefsLead is the shared renderer. verbOrder controls the phase
 // sequence; verbs outside the map sort after the known ones alphabetically.
 func renderAPIRefsLead(lead string, dtype string, refs map[string][]apiRef) string {
-	if len(refs) == 0 {
+	nonEmpty := 0
+	for _, list := range refs {
+		nonEmpty += len(list)
+	}
+	if nonEmpty == 0 {
 		return ""
 	}
 	verbOrder := map[string]int{"Create": 0, "Read": 1, "Update": 2, "Delete": 3, "Invoke": 4, "Open": 5}
@@ -561,6 +593,9 @@ func renderAPIRefsLead(lead string, dtype string, refs map[string][]apiRef) stri
 	sort.Slice(verbs, func(i, j int) bool { return verbOrder[verbs[i]] < verbOrder[verbs[j]] })
 	for _, v := range verbs {
 		list := refs[v]
+		if len(list) == 0 {
+			continue
+		}
 		sort.Slice(list, func(i, j int) bool { return list[i].Action < list[j].Action })
 		for _, r := range list {
 			switch {
@@ -576,16 +611,42 @@ func renderAPIRefsLead(lead string, dtype string, refs map[string][]apiRef) stri
 	return strings.TrimRight(b.String(), "\n")
 }
 
+// ctorReturnType resolves the service struct type returned by a
+// NewXxxService(...) call, supporting both plain and package-qualified
+// references (NewRedisService(...) and svccrs.NewRedisService(...)).
+func ctorReturnType(call *ast.CallExpr, ctors map[string]string) (string, string) {
+	switch fn := call.Fun.(type) {
+	case *ast.Ident:
+		if t, ok := ctors[fn.Name]; ok {
+			return t, fn.Name
+		}
+	case *ast.SelectorExpr:
+		if t, ok := ctors[fn.Sel.Name]; ok {
+			return t, fn.Sel.Name
+		}
+	}
+	return "", ""
+}
+
 // inferLocalTypes records variable -> struct-type bindings from composite
-// literal assignments (x := Service{...}, var x = Service{...}) so that
-// service method receivers can be resolved precisely.
-func inferLocalTypes(n ast.Node, out map[string]string) {
+// literal assignments (x := Service{...}, var x = Service{...}) and
+// NewXxxService(...) constructor calls so that service method receivers can
+// be resolved precisely. ctors maps constructor name -> service type and may
+// be nil.
+func inferLocalTypes(n ast.Node, out map[string]string, ctors map[string]string) {
 	switch e := n.(type) {
 	case *ast.AssignStmt:
 		if len(e.Lhs) != len(e.Rhs) {
 			return
 		}
 		for i, rhs := range e.Rhs {
+			if call, ok := rhs.(*ast.CallExpr); ok && ctors != nil {
+				if t, fnName := ctorReturnType(call, ctors); fnName != "" {
+					if lhs, ok := e.Lhs[i].(*ast.Ident); ok {
+						out[lhs.Name] = t
+					}
+				}
+			}
 			lit, ok := rhs.(*ast.CompositeLit)
 			if !ok {
 				continue
@@ -613,10 +674,15 @@ func inferLocalTypes(n ast.Node, out map[string]string) {
 				}
 				continue
 			}
-			// var x = ServiceType{...} — type inferred from the composite
-			// literal value (common in this codebase).
+			// var x = ServiceType{...} or x = NewXxxService(...) — type
+			// from the composite literal or constructor.
 			if len(ps.Names) == len(ps.Values) {
 				for i, val := range ps.Values {
+					if call, ok := val.(*ast.CallExpr); ok && ctors != nil {
+						if t, fnName := ctorReturnType(call, ctors); fnName != "" {
+							out[ps.Names[i].Name] = t
+						}
+					}
 					lit, ok := val.(*ast.CompositeLit)
 					if !ok {
 						continue
@@ -686,7 +752,7 @@ func getSharedAPIAnalyzer() *apiAnalyzer {
 	if err != nil {
 		return nil
 	}
-	cat := loadCatalog(liveHTTPClient())
+	cat := loadCatalog()
 	a, err := newAPIAnalyzer(repoRoot, cat)
 	if err != nil {
 		message("[WARN]API reference analysis unavailable: %v\n", err)

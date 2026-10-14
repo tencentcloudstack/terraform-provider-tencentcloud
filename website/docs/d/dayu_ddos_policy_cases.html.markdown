@@ -58,7 +58,4 @@ In addition to all arguments above, the following attributes are exported:
   * `udp_start_port` - Start port of the UDP service.
   * `web_api_urls` - Web API url set.
 
-## API Reference
-
-This data source queries the following TencentCloud APIs:
 

@@ -231,9 +231,6 @@ In addition to all arguments above, the following attributes are exported:
 * `created_at` - Creation time.
 * `life_state` - Node pool status.
 
-## API Reference
-
-This resource interacts with the following TencentCloud APIs:
 
 ## Import
 

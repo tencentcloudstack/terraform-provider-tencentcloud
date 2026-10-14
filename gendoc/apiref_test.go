@@ -130,3 +130,12 @@ func (c *Client) CreateVpcWithContext(ctx context.Context, request *CreateVpcReq
 		t.Errorf("desc = %q", got["CreateVpc"])
 	}
 }
+
+func TestRenderAPIRefsSkipsEmptyVerbLists(t *testing.T) {
+	// A map carrying only empty lists must render nothing, not a bare
+	// lead-in sentence (P2 regression guard).
+	refs := map[string][]apiRef{"Read": nil}
+	if got := renderAPIRefsFor("resource", refs); got != "" {
+		t.Errorf("expected empty, got %q", got)
+	}
+}

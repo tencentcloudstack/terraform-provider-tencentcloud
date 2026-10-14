@@ -1,20 +1,16 @@
 package main
 
-// catalog.go — API catalog loading with online-first, snapshot-fallback
-// semantics.
+// catalog.go — API catalog loading from the bundled snapshots.
 //
-// make doc fetches the live public catalog on every run. When the download
-// fails or times out, the bundled snapshot (go:embed) is used instead so
-// that doc generation never hard-fails on network availability; the stale
-// sections are simply rendered from the snapshot and a warning is printed.
+// Doc generation is fully offline: 'make doc' reads only the embedded
+// snapshots. Snapshot freshness is maintained explicitly via
+// 'make doc-refresh', which re-downloads the upstream catalogs.
 
 import (
 	"embed"
 	"encoding/json"
 	"fmt"
-	"net/http"
 	"strings"
-	"time"
 )
 
 //go:embed data/api-actions.json
@@ -28,27 +24,14 @@ type catalog struct {
 
 // loadCatalog returns the embedded snapshot catalog. Doc generation is
 // fully offline: action URLs and English descriptions both come from the
-// bundled snapshots, which are refreshed explicitly via
-// 'make doc-refresh-data' / 'make doc-refresh-en'.
-func loadCatalog(*http.Client) *catalog {
+// bundled snapshots, which are refreshed explicitly via 'make doc-refresh'.
+func loadCatalog() *catalog {
 	idx, err := loadSnapshotCatalog()
 	if err != nil {
 		message("[WARN]bundled snapshot unavailable (%v); API Reference sections will be empty\n", err)
 		return &catalog{actionIdx: map[string]apiAction{}, source: "none"}
 	}
 	return &catalog{actionIdx: idx, source: "snapshot"}
-}
-
-// fetchActionCatalog downloads the live catalog and builds the lookup index.
-func fetchActionCatalog(httpClient *http.Client) (map[string]apiAction, error) {
-	actions, err := fetchAndSlimActionsWith(httpClient)
-	if err != nil {
-		return nil, err
-	}
-	if len(actions) == 0 {
-		return nil, fmt.Errorf("live catalog is empty")
-	}
-	return buildActionIndex(actions), nil
 }
 
 // loadSnapshotCatalogOnly returns a snapshot-backed catalog, never touching
@@ -80,11 +63,4 @@ func buildActionIndex(actions []apiAction) map[string]apiAction {
 		idx[strings.ToLower(a.Product)+"."+a.Action] = a
 	}
 	return idx
-}
-
-// liveHTTPClient is the client used for the per-run live fetch. The timeout
-// is deliberately short: doc generation should not hang on a slow network,
-// and the snapshot fallback covers the failure case.
-func liveHTTPClient() *http.Client {
-	return &http.Client{Timeout: 10 * time.Second}
 }

@@ -45,7 +45,4 @@ In addition to all arguments above, the following attributes are exported:
   * `resource_id` - ID of the attached resource.
   * `resource_type` - Type of the resource that the DDoS policy works for.
 
-## API Reference
-
-This data source queries the following TencentCloud APIs:
 

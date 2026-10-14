@@ -41,7 +41,4 @@ In addition to all arguments above, the following attributes are exported:
 * `last_modified` - Last modified date of the object.
 * `storage_class` - Object storage type such as STANDARD.
 
-## API Reference
-
-This data source queries the following TencentCloud APIs:
 

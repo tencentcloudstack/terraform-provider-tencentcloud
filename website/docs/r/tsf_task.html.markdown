@@ -83,9 +83,6 @@ In addition to all arguments above, the following attributes are exported:
 * `task_state` - Whether to enable the task, ENABLED/DISABLED.
 * `trigger_type` - trigger type.
 
-## API Reference
-
-This resource interacts with the following TencentCloud APIs:
 
 ## Import
 

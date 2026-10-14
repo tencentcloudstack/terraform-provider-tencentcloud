@@ -173,7 +173,7 @@ resource、data source、action 与 ephemeral resource 的文档均包含一个�
 make doc-refresh        # 一次性刷新全部快照（API 目录 + 英文描述，~11MB 下载）
 ```
 
-覆盖率：resource 95.7%（1302/1360）、data source 97.3%（923/949）、action 与 ephemeral 全覆盖；未覆盖项均为 S3 兼容 REST 接口（cos/ci）、已下线产品（dayu）或目录未收录的新版本 API，可用下述人工段兜底。
+覆盖率：resource 95.7%（1302/1360）、data source 97.3%（923/949）、action 与 ephemeral 全覆盖；未覆盖项均为 S3 兼容 REST 接口（cos/ci）、已下线产品（dayu）、目录未收录的新版本 API，或**同名方法跨服务歧义**（分析器宁缺毋滥，跳过不确定的映射），可用下述人工段兜底。
 
 **英文描述与文档链接**：API Reference 中的描述为英文（取自官方国际版 SDK [tencentcloud-sdk-go-intl-en](https://github.com/TencentCloud/tencentcloud-sdk-go-intl-en) 的方法注释），生成的文档不会包含中文。intl SDK 未覆盖的条目（约 20%）降级为仅显示 Action 名与文档链接。刷新方式见下文 `make doc-refresh`。
 

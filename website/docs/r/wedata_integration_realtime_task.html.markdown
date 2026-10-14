@@ -245,9 +245,6 @@ In addition to all arguments above, the following attributes are exported:
 * `id` - ID of the resource.
 * `task_id` - Task ID.
 
-## API Reference
-
-This resource interacts with the following TencentCloud APIs:
 
 ## Import
 

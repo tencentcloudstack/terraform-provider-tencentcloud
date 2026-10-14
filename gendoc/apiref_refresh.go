@@ -23,8 +23,7 @@ import (
 // Public catalog endpoints. The raw JSON is large (~6 MB) and carries many
 // extra fields; the refresh keeps only what the doc renderer needs.
 const (
-	actionsURL  = "https://main.qcloudimg.com/qcloud/main/scripts/release/common/api-all-actions.json"
-	productsURL = "https://main.qcloudimg.com/qcloud/main/scripts/release/common/api-all-products.json"
+	actionsURL = "https://main.qcloudimg.com/qcloud/main/scripts/release/common/api-all-actions.json"
 )
 
 // rawAction mirrors one entry of api-all-actions.json.
@@ -33,13 +32,6 @@ type rawAction struct {
 	Action        string `json:"action"`
 	ActionName    string `json:"actionName"`
 	ActionCNDocUr string `json:"actionCNDocUrl"`
-}
-
-// rawProduct mirrors one entry of api-all-products.json.
-type rawProduct struct {
-	Product             string `json:"product"`
-	ProductName         string `json:"productName"`
-	ProductCNDocIntroUr string `json:"productCNDocIntroUrl"`
 }
 
 // refreshData downloads both catalogs and rewrites the slim snapshots under
@@ -52,19 +44,10 @@ func refreshData() ([]rawAction, error) {
 	if err != nil {
 		return nil, fmt.Errorf("actions: %w", err)
 	}
-	products, err := fetchAndSlimProducts()
-	if err != nil {
-		return nil, fmt.Errorf("products: %w", err)
-	}
-
 	if err := writeJSON("data/api-actions.json", actions); err != nil {
 		return nil, err
 	}
-	if err := writeJSON("data/api-products.json", products); err != nil {
-		return nil, err
-	}
-	message("[SUCC.]refreshed data/api-actions.json (%d actions) and data/api-products.json (%d products)\n",
-		len(actions), len(products))
+	message("[SUCC.]refreshed data/api-actions.json (%d actions)\n", len(actions))
 
 	var raw []rawAction
 	if err := fetchJSON(nil, actionsURL, &raw); err != nil {
@@ -96,31 +79,6 @@ func fetchAndSlimActionsWith(httpClient *http.Client) ([]apiAction, error) {
 			Action:  a.Action,
 			Name:    a.ActionName,
 			URL:     a.ActionCNDocUr,
-		})
-	}
-	return out, nil
-}
-
-func fetchAndSlimProducts() ([]map[string]string, error) {
-	return fetchAndSlimProductsWith(http.DefaultClient)
-}
-
-// fetchAndSlimProductsWith downloads and slims the product catalog using
-// the given HTTP client.
-func fetchAndSlimProductsWith(httpClient *http.Client) ([]map[string]string, error) {
-	var raw []rawProduct
-	if err := fetchJSON(httpClient, productsURL, &raw); err != nil {
-		return nil, err
-	}
-	out := make([]map[string]string, 0, len(raw))
-	for _, p := range raw {
-		if p.Product == "" {
-			continue
-		}
-		out = append(out, map[string]string{
-			"product": p.Product,
-			"name":    p.ProductName,
-			"url":     p.ProductCNDocIntroUr,
 		})
 	}
 	return out, nil

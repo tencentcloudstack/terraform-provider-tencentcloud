@@ -61,7 +61,4 @@ In addition to all arguments above, the following attributes are exported:
 * `ip_list` - Ip of the CC self-define https policy.
 * `policy_id` - Id of the CC self-define https policy.
 
-## API Reference
-
-This resource interacts with the following TencentCloud APIs:
 

@@ -64,6 +64,6 @@ The `collections` object of `databases` supports the following:
 
 This action invokes the following TencentCloud APIs:
 
-* Invoke: [DescribeAsyncRequestInfo](https://cloud.tencent.com/document/api/236/20410) - This API (DescribeAsyncRequestInfo) is used to query the async task execution result of a TencentDB instance.
+* Invoke: [DescribeAsyncRequestInfo](https://cloud.tencent.com/document/api/240/46601) - This API is used to query the asynchronous task status.
 * Invoke: [RestoreDBInstance](https://cloud.tencent.com/document/api/240/130468) - This API is used to rollback the database instance to a specified time point.
 

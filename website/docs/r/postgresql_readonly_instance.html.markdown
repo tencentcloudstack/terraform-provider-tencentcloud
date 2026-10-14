@@ -276,7 +276,7 @@ This resource interacts with the following TencentCloud APIs:
 * Update: [DescribeReadOnlyGroups](https://cloud.tencent.com/document/api/409/52599) - This API is used to query the list of RO groups.
 * Update: [ModifyDBInstanceName](https://cloud.tencent.com/document/api/409/18101) - This API is used to rename a TencentDB for PostgreSQL instance.
 * Update: [ModifyDBInstanceReadOnlyGroup](https://cloud.tencent.com/document/api/409/52598) - This API is used to modify the RO group of an instance.
-* Update: [ModifyDBInstanceSecurityGroups](https://cloud.tencent.com/document/api/236/15853) - This API (ModifyDBInstanceSecurityGroups) is used to modify the security groups bound to a TencentDB instance.
+* Update: [ModifyDBInstanceSecurityGroups](https://cloud.tencent.com/document/api/239/41256) - This API is used to modify the original security group list of an instance.
 * Update: [ModifyDBInstanceSpec](https://cloud.tencent.com/document/api/409/63689) - This API is used to modify instance specifications, including memory, Disk and Cpu.
 * Update: [ModifyDBInstancesProject](https://cloud.tencent.com/document/api/409/18100) - This API is used to modify the project of an instance.
 * Update: [ModifyResourceTags](https://cloud.tencent.com/document/api/651/35322) - This API is used to modify all tags associated with a resource.

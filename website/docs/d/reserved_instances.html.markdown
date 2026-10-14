@@ -42,7 +42,4 @@ In addition to all arguments above, the following attributes are exported:
   * `start_time` - Start time of the reserved instance.
   * `status` - Status of the reserved instance.
 
-## API Reference
-
-This data source queries the following TencentCloud APIs:
 

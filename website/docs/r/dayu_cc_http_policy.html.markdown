@@ -102,7 +102,4 @@ In addition to all arguments above, the following attributes are exported:
 * `create_time` - Create time of the CC self-define http policy.
 * `policy_id` - Id of the CC self-define http policy.
 
-## API Reference
-
-This resource interacts with the following TencentCloud APIs:
 

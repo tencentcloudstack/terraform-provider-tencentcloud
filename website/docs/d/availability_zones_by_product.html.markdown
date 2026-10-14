@@ -38,7 +38,4 @@ In addition to all arguments above, the following attributes are exported:
   * `name` - The name of the zone, like `ap-guangzhou-3`.
   * `state` - The state of the zone, indicate availability using `AVAILABLE` and `UNAVAILABLE` values.
 
-## API Reference
-
-This data source queries the following TencentCloud APIs:
 

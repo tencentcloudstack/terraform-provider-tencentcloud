@@ -55,7 +55,4 @@ In addition to all arguments above, the following attributes are exported:
   * `total_quota` - Total unblock quota.
   * `used_quota` - Used unblock quota.
 
-## API Reference
-
-This data source queries the following TencentCloud APIs:
 

@@ -189,14 +189,17 @@ func refreshENData(rawActions []rawAction) error {
 	// Base the snapshot on the full public catalog so that entries without
 	// an English description still carry their doc URL; the intl SDK only
 	// contributes descriptions.
-	seen := map[string]bool{}
+	outIdx := map[string]int{} // "<product>.<action>" -> index into out
 	var out []enEntry
 	for _, a := range rawActions {
 		key := strings.ToLower(a.Product) + "." + a.Action
-		if seen[key] || a.Action == "" {
+		if a.Action == "" {
 			continue
 		}
-		seen[key] = true
+		if _, dup := outIdx[key]; dup {
+			continue
+		}
+		outIdx[key] = len(out)
 		out = append(out, enEntry{Product: a.Product, Action: a.Action, URL: a.ActionCNDocUr})
 	}
 	for {
@@ -227,18 +230,16 @@ func refreshENData(rawActions []rawAction) error {
 			continue
 		}
 		for action, desc := range extractENFromClient(string(src)) {
-			key := product + "." + action
-			if seen[key] {
-				// Catalog-known action: attach the extracted description.
-				for i := range out {
-					if strings.ToLower(out[i].Product)+"."+out[i].Action == key {
-						out[i].Desc = desc
-						break
-					}
-				}
+			if desc == "" {
 				continue
 			}
-			seen[key] = true
+			key := product + "." + action
+			if i, ok := outIdx[key]; ok {
+				out[i].Desc = desc
+				continue
+			}
+			// Not in the catalog: keep it anyway (catalog may lag the SDK).
+			outIdx[key] = len(out)
 			out = append(out, enEntry{Product: product, Action: action, Desc: desc})
 		}
 	}

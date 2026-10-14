@@ -32,9 +32,6 @@ In addition to all arguments above, the following attributes are exported:
 * `id` - ID of the resource.
 * `ci_status` - Binding object storage state, `on`: bound, `off`: unbound, `unbinding`: unbinding.
 
-## API Reference
-
-This resource interacts with the following TencentCloud APIs:
 
 ## Import
 

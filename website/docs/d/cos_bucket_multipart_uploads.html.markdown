@@ -45,7 +45,4 @@ In addition to all arguments above, the following attributes are exported:
   * `storage_class` - Used to represent the storage level of a chunk. Enumerated value: STANDARD,STANDARD_IA,ARCHIVE.
   * `upload_id` - Mark the ID of this multipart upload.
 
-## API Reference
-
-This data source queries the following TencentCloud APIs:
 

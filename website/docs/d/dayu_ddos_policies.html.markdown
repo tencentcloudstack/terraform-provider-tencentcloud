@@ -88,7 +88,4 @@ In addition to all arguments above, the following attributes are exported:
     * `id` - Id of the watermark.
     * `open_switch` - Indicate whether to auto-remove the watermark or not.
 
-## API Reference
-
-This data source queries the following TencentCloud APIs:
 

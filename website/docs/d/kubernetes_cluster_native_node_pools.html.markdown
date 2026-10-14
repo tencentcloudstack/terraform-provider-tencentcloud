@@ -117,7 +117,4 @@ In addition to all arguments above, the following attributes are exported:
   * `type` - Node pool type. Optional value is `Native`.
   * `unschedulable` - Whether the node is not schedulable by default.
 
-## API Reference
-
-This data source queries the following TencentCloud APIs:
 

@@ -89,7 +89,4 @@ In addition to all arguments above, the following attributes are exported:
     * `error_document` - An absolute path to the document to return in case of a 4XX error.
     * `index_document` - COS returns this index document when requests are made to the root domain or any of the subfolders.
 
-## API Reference
-
-This data source queries the following TencentCloud APIs:
 

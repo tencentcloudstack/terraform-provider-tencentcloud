@@ -92,6 +92,12 @@ func collectResourceAPIRefs(analyzer *apiAnalyzer, repoRoot, resName string, res
 
 // probeResource prints the lifecycle -> cloud API mapping for one resource.
 func probeResource(repoRoot, shortName string) {
+	// The probe resolves sources relative to the repo root; refuse to run
+	// from anywhere else instead of silently producing empty results.
+	if fi, err := os.Stat(filepath.Join(repoRoot, "tencentcloud", "services")); err != nil || !fi.IsDir() {
+		fmt.Fprintf(os.Stderr, "repo root %s does not look like this repository (run from gendoc/)\n", repoRoot)
+		os.Exit(1)
+	}
 	resName := "tencentcloud_" + shortName
 	res, ok := cloud.Provider().ResourcesMap[resName]
 	if !ok {

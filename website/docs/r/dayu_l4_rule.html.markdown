@@ -76,7 +76,4 @@ In addition to all arguments above, the following attributes are exported:
 * `lb_type` - LB type of the rule. Valid values: `1`, `2`. `1` for weight cycling and `2` for IP hash.
 * `rule_id` - ID of the layer 4 rule.
 
-## API Reference
-
-This resource interacts with the following TencentCloud APIs:
 

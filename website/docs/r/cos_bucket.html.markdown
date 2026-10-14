@@ -796,9 +796,6 @@ The `website` object exports the following:
 
 * `endpoint` - `Endpoint` of the static website.
 
-## API Reference
-
-This resource interacts with the following TencentCloud APIs:
 
 ## Import
 
