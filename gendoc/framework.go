@@ -212,7 +212,7 @@ func genFrameworkDoc(servicesRoot string, dtype fwDocType, name, product string,
 	if err != nil {
 		fail(fmt.Sprintf("read %s failed: %s", mdPath, err))
 	}
-	desc := strings.TrimSpace(string(raw))
+	desc := balanceFences(strings.TrimSpace(string(raw)))
 	if desc == "" {
 		fail(fmt.Sprintf("description empty: %s", mdPath))
 	}
@@ -349,7 +349,7 @@ func genFrameworkListPlaceholder(servicesRoot, name, product string) {
 	if err != nil {
 		fail(fmt.Sprintf("read %s failed: %s", mdPath, err))
 	}
-	desc := strings.TrimSpace(string(raw))
+	desc := balanceFences(strings.TrimSpace(string(raw)))
 	if desc == "" {
 		fail(fmt.Sprintf("description empty: %s", mdPath))
 	}

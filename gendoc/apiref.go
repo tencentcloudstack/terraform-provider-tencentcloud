@@ -27,6 +27,7 @@ import (
 	"go/token"
 	"os"
 	"path/filepath"
+	"regexp"
 	"sort"
 	"strings"
 
@@ -932,4 +933,36 @@ func (a *apiAnalyzer) readDataSourceAPIs(repoRoot, name string, ds *schema.Resou
 		return nil
 	}
 	return a.analyzeLifecycle(fd)
+}
+
+// balanceFences guards against source .md files with an odd number of
+// code-fence markers. Rather than deleting content, the LAST lone fence
+// marker is escaped (\`\`\`) so it renders as literal text: a marker with
+// a language tag (```hcl) is a legitimate opener and is never touched,
+// while an untagged lone marker is the stray one upstream left behind.
+func balanceFences(s string) string {
+	if strings.Count(s, "```")%2 == 0 {
+		return s
+	}
+	lines := strings.Split(s, "\n")
+	for i := len(lines) - 1; i >= 0; i-- {
+		if strings.TrimSpace(lines[i]) == "```" {
+			lines[i] = "\\`" + "\\`" + "\\`"
+			return strings.Join(lines, "\n")
+		}
+	}
+	return s
+}
+
+// inlineFenceRe matches code-fence markers embedded inside a schema
+// description (upstream pasted table markup like ":```open: ...").
+var inlineFenceRe = regexp.MustCompile("`{3,}")
+
+// sanitizeInlineFences escapes stray code-fence markers inside a schema
+// description so they cannot break the fenced blocks of the generated doc.
+func sanitizeInlineFences(s string) string {
+	if !strings.Contains(s, "```") {
+		return s
+	}
+	return inlineFenceRe.ReplaceAllString(s, "\\`\\`\\`")
 }

@@ -211,7 +211,7 @@ func genDoc(product, dtype, fpath, name string, resource *schema.Resource) {
 	}
 	description := string(raw)
 
-	description = strings.TrimSpace(description)
+	description = balanceFences(strings.TrimSpace(description))
 	if description == "" {
 		message("[FAIL!]description empty: %s\n", filename)
 		os.Exit(1)
@@ -365,7 +365,7 @@ func genDoc(product, dtype, fpath, name string, resource *schema.Resource) {
 				opt += ", **Deprecated**"
 				v.Description = fmt.Sprintf("%s %s", v.Deprecated, v.Description)
 			}
-			requiredArgs = append(requiredArgs, fmt.Sprintf("* `%s` - (%s) %s", k, opt, v.Description))
+			requiredArgs = append(requiredArgs, fmt.Sprintf("* `%s` - (%s) %s", k, opt, sanitizeInlineFences(v.Description)))
 		} else if v.Optional {
 			opt := "Optional"
 			sub := getSubStruct(0, "", k, v)
@@ -386,7 +386,7 @@ func genDoc(product, dtype, fpath, name string, resource *schema.Resource) {
 				opt += ", **Deprecated**"
 				v.Description = fmt.Sprintf("%s %s", v.Deprecated, v.Description)
 			}
-			optionalArgs = append(optionalArgs, fmt.Sprintf("* `%s` - (%s) %s", k, opt, v.Description))
+			optionalArgs = append(optionalArgs, fmt.Sprintf("* `%s` - (%s) %s", k, opt, sanitizeInlineFences(v.Description)))
 		} else {
 			attrs := getAttributes(0, k, v)
 			if len(attrs) > 0 {
@@ -496,9 +496,9 @@ func getAttributes(step int, k string, v *schema.Schema) []string {
 			if len(listAttributes) > 0 {
 				slistAttributes = "\n" + strings.Join(listAttributes, "\n")
 			}
-			attributes = append(attributes, fmt.Sprintf("%s* `%s` - %s%s", ident, k, v.Description, slistAttributes))
+			attributes = append(attributes, fmt.Sprintf("%s* `%s` - %s%s", ident, k, sanitizeInlineFences(v.Description), slistAttributes))
 		} else {
-			attributes = append(attributes, fmt.Sprintf("%s* `%s` - %s", ident, k, v.Description))
+			attributes = append(attributes, fmt.Sprintf("%s* `%s` - %s", ident, k, sanitizeInlineFences(v.Description)))
 		}
 	}
 
@@ -539,7 +539,7 @@ func getSubStruct(step int, parentK, k string, v *schema.Schema) []string {
 						opt += ", **Deprecated**"
 						vv.Description = fmt.Sprintf("%s %s", vv.Deprecated, vv.Description)
 					}
-					requiredArgs = append(requiredArgs, fmt.Sprintf("* `%s` - (%s) %s", kk, opt, vv.Description))
+					requiredArgs = append(requiredArgs, fmt.Sprintf("* `%s` - (%s) %s", kk, opt, sanitizeInlineFences(vv.Description)))
 				} else if vv.Optional {
 					opt := "Optional"
 					valueType := parseType(vv)
@@ -551,7 +551,7 @@ func getSubStruct(step int, parentK, k string, v *schema.Schema) []string {
 						opt += ", **Deprecated**"
 						vv.Description = fmt.Sprintf("%s %s", vv.Deprecated, vv.Description)
 					}
-					optionalArgs = append(optionalArgs, fmt.Sprintf("* `%s` - (%s) %s", kk, opt, vv.Description))
+					optionalArgs = append(optionalArgs, fmt.Sprintf("* `%s` - (%s) %s", kk, opt, sanitizeInlineFences(vv.Description)))
 				}
 			}
 			sort.Strings(requiredArgs)

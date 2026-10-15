@@ -192,3 +192,30 @@ func TestCleanDescURLPeriod(t *testing.T) {
 		t.Errorf("unbalanced brackets: %q", got)
 	}
 }
+
+func TestBalanceFences(t *testing.T) {
+	// Real upstream shape: the Example Usage block is unclosed, so the
+	// Import fence markers pair with it; the lone stray ``` in the middle
+	// must be the one dropped, and the trailing fence must survive.
+	in := "prose\n\n```hcl\nresource \"x\" {}\n\nImport\n\ne.g.\n\n```\nterraform import x y\n```\n\n```"
+	got := balanceFences(in)
+	if strings.Count(got, "```")%2 != 0 {
+		t.Errorf("still unbalanced: %q", got)
+	}
+	if !strings.Contains(got, "terraform import x y") {
+		t.Errorf("content lost: %q", got)
+	}
+	// A language-tagged opener (```hcl) must never be the one escaped.
+	if !strings.Contains(got, "```hcl") {
+		t.Errorf("lost the language-tagged opener: %q", got)
+	}
+	// The stray marker is escaped to literal text, not deleted.
+	if !strings.Contains(got, "`"+"`"+"`") {
+		t.Errorf("stray fence not escaped: %q", got)
+	}
+	// Balanced input passes through unchanged.
+	ok := "```\ncode\n```"
+	if got := balanceFences(ok); got != ok {
+		t.Errorf("balanced input modified: %q", got)
+	}
+}
